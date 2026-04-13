@@ -809,7 +809,7 @@ function Home({player,onNav}){
           </div>
         ))}
       </div>
-          </div>
+    </div>
   );
 }
 
