@@ -72,7 +72,8 @@ const CHANGELOG = [
 // CONSTANTS
 // ─────────────────────────────────────────────────────────
 const LEVELS = ["U7 / Initiation","U9 / Novice","U11 / Atom","U13 / Peewee"];
-const POSITIONS = ["Forward","Defense","Goalie"];
+const POSITIONS = ["Forward","Defense","Goalie","Not Sure Yet"];
+const POSITIONS_U11UP = ["Forward","Defense","Goalie"];
 const SEASONS = ["2025-26","2024-25","2023-24","2022-23"];
 const D_WEIGHT = {1:1, 2:1.5, 3:2.2};
 const QUIZ_LENGTH = 15;
@@ -111,6 +112,17 @@ const SMART_PROMPTS = {
   T: "When will you achieve this by?",
 };
 
+
+// Percentile rating system for coaches
+const PERCENTILE_RATINGS = [
+  { value:"top10",  label:"Top 10%",   sub:"Elite / AAA track",          color:"#a855f7" },
+  { value:"top25",  label:"Top 25%",   sub:"Competitive / AA track",      color:"#3b82f6" },
+  { value:"top50",  label:"Top 50%",   sub:"Rep / A track",               color:"#22c55e" },
+  { value:"top75",  label:"Top 75%",   sub:"House / Recreational track",  color:"#eab308" },
+  { value:"dev",    label:"Developing",sub:"Too early to place",          color:"#94a3b8" },
+];
+const PR_COLOR = Object.fromEntries(PERCENTILE_RATINGS.map(r=>[r.value,r.color]));
+const PR_LABEL = Object.fromEntries(PERCENTILE_RATINGS.map(r=>[r.value,r.label]));
 
 // ─────────────────────────────────────────────────────────
 // UI PRIMITIVES
@@ -795,6 +807,26 @@ function calcBadges(results, prevScore, totalSessions, hasSeqPerfect, mistakeStr
   return [...earned].map(k => BADGES[k]).filter(Boolean);
 }
 
+async function saveCoachRatings(playerKey, ratings) {
+  if (!window.storage) return false;
+  try {
+    await window.storage.set("coach_ratings:" + playerKey, JSON.stringify({ratings, ts: Date.now()}), true);
+    return true;
+  } catch(e) { return false; }
+}
+
+async function loadCoachRatings(playerKey) {
+  if (!window.storage) return null;
+  try {
+    const r = await window.storage.get("coach_ratings:" + playerKey, true);
+    return r ? JSON.parse(r.value) : null;
+  } catch(e) { return null; }
+}
+
+function makePlayerKey(name, level) {
+  return (name + "_" + level).toLowerCase().replace(/[^a-z0-9]/g,"_").slice(0,40);
+}
+
 // Adaptive queue builder
 function buildQueue(level, position, isReturning) {
   const allQ = QB[level] || [];
@@ -802,6 +834,8 @@ function buildQueue(level, position, isReturning) {
     ? allQ.filter(q => !q.pos || q.pos.includes("G") || q.pos.includes("F"))
     : position === "Defense"
     ? allQ.filter(q => !q.pos || q.pos.includes("D") || q.pos.includes("F"))
+    : position === "Not Sure Yet"
+    ? allQ.filter(q => !q.pos || q.pos.includes("F") || q.pos.includes("D")) // all skater questions
     : allQ.filter(q => !q.pos || q.pos.includes("F") || q.pos.includes("D"));
 
   const byD = {
@@ -1242,14 +1276,20 @@ function Onboarding({ onComplete }) {
     </Screen>
   );
 
+  const isYoung = level === "U7 / Initiation" || level === "U9 / Novice";
+  const posOptions = isYoung
+    ? [{p:"Forward",i:"⚡"},{p:"Defense",i:"🛡"},{p:"Goalie",i:"🧤"},{p:"Not Sure Yet",i:"❓"}]
+    : [{p:"Forward",i:"⚡"},{p:"Defense",i:"🛡"},{p:"Goalie",i:"🧤"}];
+
   return (
     <Screen>
-      <div style={{marginBottom:"2rem"}}>
+      <div style={{marginBottom:"1.5rem"}}>
         <div style={{fontSize:10,letterSpacing:".18em",color:C.gold,textTransform:"uppercase",fontWeight:700,marginBottom:".6rem"}}>Step 3 of 3</div>
-        <h2 style={{fontFamily:FONT.display,fontWeight:800,fontSize:"2rem",margin:0}}>What position?</h2>
+        <h2 style={{fontFamily:FONT.display,fontWeight:800,fontSize:"2rem",margin:"0 0 .35rem"}}>What position?</h2>
+        {isYoung && <div style={{fontSize:13,color:C.dimmer,lineHeight:1.6}}>At {level.split(" / ")[0]}, most players are still figuring this out — that's completely normal.</div>}
       </div>
-      <div style={{display:"grid",gridTemplateColumns:"1fr 1fr 1fr",gap:".75rem",marginBottom:"1.5rem"}}>
-        {POSITIONS.map(p => (
+      <div style={{display:"grid",gridTemplateColumns:isYoung?"1fr 1fr":"1fr 1fr 1fr",gap:".75rem",marginBottom:"1.5rem"}}>
+        {posOptions.map(({p,i}) => (
           <button key={p} onClick={() => setPosition(p)} style={{
             background:position===p?C.goldDim:C.bgCard,
             border:`1px solid ${position===p?C.gold:C.border}`,
@@ -1257,11 +1297,16 @@ function Onboarding({ onComplete }) {
             cursor:"pointer",textAlign:"center",
             transition:"all .15s",
           }}>
-            <div style={{fontSize:26,marginBottom:".4rem"}}>{posIcons[p]}</div>
+            <div style={{fontSize:26,marginBottom:".4rem"}}>{i}</div>
             <div style={{fontSize:13,color:position===p?C.gold:C.dim,fontWeight:position===p?700:400,fontFamily:FONT.body}}>{p}</div>
           </button>
         ))}
       </div>
+      {isYoung && position === "Not Sure Yet" && (
+        <div style={{background:C.goldDim,border:`1px solid ${C.goldBorder}`,borderRadius:12,padding:".85rem 1rem",marginBottom:"1rem",fontSize:12,color:C.gold,lineHeight:1.6}}>
+          👍 No problem — you'll get questions that cover all positions. You can update this anytime in Settings.
+        </div>
+      )}
       <PrimaryBtn
         onClick={() => position && onComplete({name:name.trim(),level,position,selfRatings:initSR(level),quizHistory:[],goals:{},coachCode:"",season:SEASONS[0],sessionLength:15,colorblind:false})}
         disabled={!position}
@@ -1865,6 +1910,19 @@ function Report({ player, onBack }) {
   const tier = iq !== null ? getTier(iq) : null;
   const goals = player.goals || {};
   const activeGoals = Object.entries(goals).filter(([,v])=>v?.goal?.trim());
+  const [coachRatings, setCoachRatings] = useState(null);
+  const [loadingCoach, setLoadingCoach] = useState(true);
+
+  useEffect(() => {
+    const pk = makePlayerKey(player.name, player.level);
+    loadCoachRatings(pk).then(data => {
+      setCoachRatings(data?.ratings || null);
+      setLoadingCoach(false);
+    });
+  }, []);
+
+  const cats = SKILLS[player.level] || [];
+  const RCOL_SELF = {"Needs Work":C.red,"On Track":C.yellow,"Excels":C.green};
   return (
     <Screen>
       <BackBtn onClick={onBack}/>
@@ -1897,6 +1955,49 @@ function Report({ player, onBack }) {
           ))}
         </Card>
       )}
+      {/* Self vs Coach comparison */}
+      {(coachRatings || loadingCoach) && (
+        <Card style={{marginBottom:"1rem"}}>
+          <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:"1rem"}}>
+            <Label style={{marginBottom:0}}>Skills — Self vs Coach</Label>
+            {loadingCoach && <span style={{fontSize:11,color:C.dimmer}}>Loading…</span>}
+            {!loadingCoach && coachRatings && <span style={{fontSize:11,color:C.green}}>Coach rated ✓</span>}
+          </div>
+          {cats.map(cat => (
+            <div key={cat.cat} style={{marginBottom:"1.1rem"}}>
+              <div style={{display:"flex",alignItems:"center",gap:".4rem",marginBottom:".5rem"}}>
+                <span>{cat.icon}</span>
+                <span style={{fontSize:11,color:C.dimmer,fontWeight:700,textTransform:"uppercase",letterSpacing:".1em"}}>{cat.cat}</span>
+              </div>
+              {cat.skills.map(skill => {
+                const selfR = player.selfRatings?.[skill.id];
+                const coachR = coachRatings?.[skill.id];
+                return (
+                  <div key={skill.id} style={{marginBottom:".6rem",padding:".75rem .9rem",background:C.bgElevated,borderRadius:10,border:`1px solid ${C.border}`}}>
+                    <div style={{fontSize:13,fontWeight:600,color:C.white,marginBottom:".5rem"}}>{skill.name}</div>
+                    <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:".5rem"}}>
+                      <div style={{background:selfR?`${RCOL_SELF[selfR]}12`:"none",border:`1px solid ${selfR?RCOL_SELF[selfR]+"35":C.border}`,borderRadius:8,padding:".4rem .65rem"}}>
+                        <div style={{fontSize:10,color:C.dimmer,marginBottom:2}}>You said</div>
+                        <div style={{fontSize:12,fontWeight:700,color:selfR?RCOL_SELF[selfR]:C.dimmer}}>{selfR||"Not rated"}</div>
+                      </div>
+                      <div style={{background:coachR?`${PR_COLOR[coachR]}12`:"none",border:`1px solid ${coachR?PR_COLOR[coachR]+"35":C.border}`,borderRadius:8,padding:".4rem .65rem"}}>
+                        <div style={{fontSize:10,color:C.dimmer,marginBottom:2}}>Coach says</div>
+                        <div style={{fontSize:12,fontWeight:700,color:coachR?PR_COLOR[coachR]:C.dimmer}}>{coachR?PR_LABEL[coachR]:"Pending"}</div>
+                      </div>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          ))}
+          {!loadingCoach && !coachRatings && (
+            <div style={{fontSize:13,color:C.dimmer,textAlign:"center",padding:".75rem 0"}}>
+              No coach ratings yet — share your invite link from Settings.
+            </div>
+          )}
+        </Card>
+      )}
+
       <Card style={{marginBottom:"1rem"}}>
         <Label>IQ Score History</Label>
         {player.quizHistory.length === 0 ? (
@@ -1931,7 +2032,9 @@ function Profile({ player, onSave, onBack, onReset }) {
   const [s, setS] = useState({...player});
   const upd = k => v => setS(p => ({...p,[k]:v}));
   const [copied, setCopied] = useState(false);
-  function copy() { navigator.clipboard?.writeText(`https://iceiq.app/coach/${s.name?.toLowerCase().replace(/\s+/g,"-")}`).catch(()=>{}); setCopied(true); setTimeout(()=>setCopied(false),2000); }
+  const playerKey = makePlayerKey(s.name||"player", s.level||"");
+  const coachUrl = `${window.location.origin}${window.location.pathname}?coach=1&pk=${playerKey}&name=${encodeURIComponent(s.name||"Player")}&level=${encodeURIComponent(s.level||"")}`;
+  function copy() { navigator.clipboard?.writeText(coachUrl).catch(()=>{}); setCopied(true); setTimeout(()=>setCopied(false),2000); }
 
   return (
     <div style={{minHeight:"100vh",background:C.bg,color:C.white,fontFamily:FONT.body,paddingBottom:80}}>
@@ -1952,8 +2055,11 @@ function Profile({ player, onSave, onBack, onReset }) {
         </Card>
         <Card style={{marginBottom:"1rem"}}>
           <Label>Position</Label>
-          <div style={{display:"grid",gridTemplateColumns:"1fr 1fr 1fr",gap:".5rem"}}>
-            {[{p:"Forward",i:"⚡"},{p:"Defense",i:"🛡"},{p:"Goalie",i:"🧤"}].map(({p,i})=>(
+          {(s.level==="U7 / Initiation"||s.level==="U9 / Novice") && (
+            <div style={{fontSize:11,color:C.dimmer,marginBottom:".65rem",lineHeight:1.5}}>At {s.level?.split(" / ")[0]}, "Not Sure Yet" is a valid choice.</div>
+          )}
+          <div style={{display:"grid",gridTemplateColumns:(s.level==="U7 / Initiation"||s.level==="U9 / Novice")?"1fr 1fr":"1fr 1fr 1fr",gap:".5rem"}}>
+            {[{p:"Forward",i:"⚡"},{p:"Defense",i:"🛡"},{p:"Goalie",i:"🧤"},...((s.level==="U7 / Initiation"||s.level==="U9 / Novice")?[{p:"Not Sure Yet",i:"❓"}]:[])].map(({p,i})=>(
               <button key={p} onClick={()=>upd("position")(p)} style={{background:s.position===p?C.goldDim:C.bgElevated,border:`1px solid ${s.position===p?C.gold:C.border}`,borderRadius:10,padding:".75rem .5rem",cursor:"pointer",textAlign:"center",color:s.position===p?C.gold:C.dim,fontFamily:FONT.body,fontSize:13,fontWeight:s.position===p?700:400}}>
                 <div style={{fontSize:20,marginBottom:3}}>{i}</div>{p}
               </button>
@@ -2086,6 +2192,148 @@ function CoachDashboard({ onBack }) {
   );
 }
 
+// ─────────────────────────────────────────────────────────
+// COACH RATING SCREEN (accessed via invite link)
+// ─────────────────────────────────────────────────────────
+function CoachRatingScreen({ playerName, playerLevel, playerKey, skills, onDone }) {
+  const [ratings, setRatings] = useState({});
+  const [saved, setSaved] = useState(false);
+  const [saving, setSaving] = useState(false);
+  const [activeSkill, setActiveSkill] = useState(null);
+  const cats = SKILLS[playerLevel] || [];
+  const allSkills = cats.flatMap(c => c.skills.map(s => ({...s, cat:c.cat, icon:c.icon})));
+  const rated = Object.values(ratings).filter(v=>v).length;
+
+  async function save() {
+    setSaving(true);
+    const ok = await saveCoachRatings(playerKey, ratings);
+    setSaving(false);
+    setSaved(ok);
+  }
+
+  return (
+    <div style={{minHeight:"100vh",background:C.bg,color:C.white,fontFamily:FONT.body,padding:"1.5rem 1.25rem"}}>
+      <div style={{maxWidth:560,margin:"0 auto"}}>
+        {/* Header */}
+        <div style={{display:"flex",alignItems:"center",gap:".6rem",marginBottom:"2rem"}}>
+          <span style={{fontFamily:FONT.display,fontWeight:800,fontSize:"1.5rem",color:C.gold}}>IceIQ</span>
+          <span style={{fontSize:13,color:C.dimmer}}>Coach Ratings</span>
+        </div>
+
+        <Card style={{marginBottom:"1.5rem",background:`linear-gradient(135deg,${C.bgCard},${C.bgElevated})`,border:`1px solid ${C.goldBorder}`}}>
+          <div style={{fontSize:10,letterSpacing:".14em",textTransform:"uppercase",color:C.gold,marginBottom:".4rem"}}>Rating Player</div>
+          <div style={{fontFamily:FONT.display,fontWeight:800,fontSize:"1.8rem"}}>{playerName}</div>
+          <div style={{fontSize:13,color:C.dimmer,marginTop:2}}>{playerLevel}</div>
+          <div style={{marginTop:".85rem",fontSize:12,color:C.dim,lineHeight:1.6}}>
+            Rate each skill area using the percentile system. These ratings will appear alongside the player's self-assessment in their development report — visible to the player only, never shared publicly.
+          </div>
+        </Card>
+
+        {/* Percentile legend */}
+        <Card style={{marginBottom:"1.25rem"}}>
+          <Label>Percentile Scale</Label>
+          <div style={{display:"flex",flexDirection:"column",gap:".4rem"}}>
+            {PERCENTILE_RATINGS.map(r => (
+              <div key={r.value} style={{display:"flex",alignItems:"center",gap:".75rem",padding:".45rem .6rem",borderRadius:8,background:`${r.color}10`,border:`1px solid ${r.color}25`}}>
+                <div style={{width:10,height:10,borderRadius:"50%",background:r.color,flexShrink:0}}/>
+                <div style={{fontWeight:700,fontSize:13,color:r.color,minWidth:70}}>{r.label}</div>
+                <div style={{fontSize:12,color:C.dimmer}}>{r.sub}</div>
+              </div>
+            ))}
+          </div>
+        </Card>
+
+        {/* Progress */}
+        <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:".75rem"}}>
+          <div style={{fontSize:13,color:C.dim,fontWeight:600}}>{rated}/{allSkills.length} skills rated</div>
+          <div style={{fontSize:11,color:C.dimmer}}>{rated===allSkills.length?"All done ✓":"Rate each skill below"}</div>
+        </div>
+        <ProgressBar value={rated} max={allSkills.length} color={C.gold} height={5}/>
+        <div style={{height:"1rem"}}/>
+
+        {/* Skills by category */}
+        {cats.map(cat => (
+          <div key={cat.cat} style={{marginBottom:"1.25rem"}}>
+            <div style={{display:"flex",alignItems:"center",gap:".4rem",marginBottom:".6rem"}}>
+              <span style={{fontSize:15}}>{cat.icon}</span>
+              <span style={{fontSize:11,letterSpacing:".12em",textTransform:"uppercase",color:C.dimmer,fontWeight:700}}>{cat.cat}</span>
+            </div>
+            {cat.skills.map(skill => {
+              const rating = ratings[skill.id];
+              const isActive = activeSkill === skill.id;
+              return (
+                <div key={skill.id} style={{marginBottom:".6rem"}}>
+                  <button onClick={() => setActiveSkill(isActive ? null : skill.id)}
+                    style={{
+                      width:"100%",background:rating?`${PR_COLOR[rating]}10`:C.bgCard,
+                      border:`1px solid ${rating?PR_COLOR[rating]+"40":C.border}`,
+                      borderLeft:`3px solid ${rating?PR_COLOR[rating]:"transparent"}`,
+                      borderRadius:12,padding:".85rem 1rem",cursor:"pointer",
+                      display:"flex",justifyContent:"space-between",alignItems:"center",
+                      color:C.white,fontFamily:FONT.body,textAlign:"left",
+                    }}>
+                    <div>
+                      <div style={{fontSize:14,fontWeight:600,marginBottom:2}}>{skill.name}</div>
+                      <div style={{fontSize:11,color:C.dimmer}}>{skill.selfQ}</div>
+                    </div>
+                    <div style={{flexShrink:0,marginLeft:"1rem",textAlign:"right"}}>
+                      {rating ? (
+                        <div style={{fontSize:12,fontWeight:700,color:PR_COLOR[rating]}}>{PR_LABEL[rating]}</div>
+                      ) : (
+                        <div style={{fontSize:11,color:C.dimmer}}>Tap to rate</div>
+                      )}
+                      <div style={{fontSize:11,color:C.dimmer,marginTop:2}}>{isActive?"▲":"▼"}</div>
+                    </div>
+                  </button>
+                  {isActive && (
+                    <div style={{background:C.bgElevated,border:`1px solid ${C.border}`,borderRadius:12,padding:".85rem",marginTop:".35rem",display:"flex",flexDirection:"column",gap:".4rem"}}>
+                      {PERCENTILE_RATINGS.map(r => (
+                        <button key={r.value} onClick={() => { setRatings(p=>({...p,[skill.id]:r.value})); setActiveSkill(null); }}
+                          style={{
+                            background:ratings[skill.id]===r.value?`${r.color}18`:"none",
+                            border:`1px solid ${ratings[skill.id]===r.value?r.color+"50":C.border}`,
+                            borderRadius:8,padding:".65rem 1rem",cursor:"pointer",
+                            display:"flex",alignItems:"center",gap:".75rem",
+                            fontFamily:FONT.body,
+                          }}>
+                          <div style={{width:10,height:10,borderRadius:"50%",background:r.color,flexShrink:0}}/>
+                          <div style={{textAlign:"left"}}>
+                            <div style={{fontSize:13,fontWeight:700,color:r.color}}>{r.label}</div>
+                            <div style={{fontSize:11,color:C.dimmer}}>{r.sub}</div>
+                          </div>
+                          {ratings[skill.id]===r.value && <div style={{marginLeft:"auto",color:r.color,fontSize:14}}>✓</div>}
+                        </button>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              );
+            })}
+          </div>
+        ))}
+
+        {/* Save */}
+        {saved ? (
+          <Card style={{background:"rgba(34,197,94,.08)",border:`1px solid ${C.greenBorder}`,textAlign:"center",padding:"1.5rem"}}>
+            <div style={{fontSize:28,marginBottom:".5rem"}}>✅</div>
+            <div style={{fontWeight:700,fontSize:15,color:C.green,marginBottom:".35rem"}}>Ratings Saved</div>
+            <div style={{fontSize:13,color:C.dim}}>{playerName} can now see your ratings in their development report.</div>
+          </Card>
+        ) : (
+          <PrimaryBtn onClick={save} disabled={saving || rated === 0} style={{marginBottom:"1rem"}}>
+            {saving ? "Saving…" : `Save Ratings (${rated}/${allSkills.length} rated)`}
+          </PrimaryBtn>
+        )}
+
+        <div style={{fontSize:11,color:C.dimmer,textAlign:"center",lineHeight:1.6,marginTop:"1rem"}}>
+          Powered by IceIQ · bluechip-people-strategies.com<br/>
+          Ratings are private and visible only to the player.
+        </div>
+      </div>
+    </div>
+  );
+}
+
 function BottomNav({ active, onNav }) {
   const tabs = [
     {id:"home",   icon:"🏠", label:"Home"},
@@ -2120,8 +2368,19 @@ export default function App() {
   const [seqPerfect, setSeqPerfect] = useState(false);
   const [mistakeStreak, setMistakeStreak] = useState(0);
 
+  // Check if this is a coach rating URL
+  const [coachMode, setCoachMode] = useState(null);
   useEffect(() => {
     try {
+      const params = new URLSearchParams(window.location.search);
+      if (params.get("coach") === "1") {
+        setCoachMode({
+          playerKey: params.get("pk") || "",
+          playerName: params.get("name") || "Player",
+          playerLevel: params.get("level") || "U11 / Atom",
+        });
+        return;
+      }
       const saved = JSON.parse(localStorage.getItem("iceiq_player") || "null");
       if (saved) {
         setPlayer(saved);
@@ -2192,6 +2451,17 @@ export default function App() {
     try { localStorage.clear(); } catch(e) {}
     setScreen("home");
   }
+
+  // Coach rating mode — show rating screen without requiring player login
+  if (coachMode) return (
+    <CoachRatingScreen
+      playerName={coachMode.playerName}
+      playerLevel={coachMode.playerLevel}
+      playerKey={coachMode.playerKey}
+      skills={SKILLS[coachMode.playerLevel]||[]}
+      onDone={() => setCoachMode(null)}
+    />
+  );
 
   if (!player) return <Onboarding onComplete={handleOnboard}/>;
 
