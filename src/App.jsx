@@ -1381,6 +1381,7 @@ function Onboarding({ onComplete }) {
         ))}
         <PrimaryBtn onClick={() => setStep(1)} style={{marginTop:"1.75rem"}}>Build Your Profile →</PrimaryBtn>
         <div style={{fontSize:11,color:C.dimmer,textAlign:"center",marginTop:"1rem"}}>Aligned with Hockey Canada LTAD · USA Hockey ADM</div>
+        <div style={{fontSize:10,color:C.dimmer,textAlign:"center",marginTop:".5rem",opacity:.5}}>v{VERSION}</div>
       </div>
     </div>
   );
