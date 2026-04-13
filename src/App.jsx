@@ -1596,6 +1596,7 @@ function Quiz({ player, onFinish, onBack }) {
   const [results, setResults] = useState([]);
   const [seqPerfect, setSeqPerfect] = useState(true);
   const [mistakeStreak, setMistakeStreak] = useState(0);
+  const [quizDone, setQuizDone] = useState(false);
 
   useEffect(() => {
     const q = buildQueue(player.level, player.position, isReturning);
@@ -1608,8 +1609,6 @@ function Quiz({ player, onFinish, onBack }) {
   const isLast = qNum >= qLen - 1;
   const qtype = question?.type || "mc";
 
-  const [finalResults, setFinalResults] = useState(null);
-
   function handlePick(i) {
     if (sel !== null || !question) return;
     setSel(i);
@@ -1617,10 +1616,8 @@ function Quiz({ player, onFinish, onBack }) {
     const newResult = { id:question.id, cat:question.cat, ok, d:question.d||2, type:qtype };
     const newResults = [...results, newResult];
     if (question.type === "mistake" && ok) setMistakeStreak(s => s+1);
-    if (isLast) {
-      setFinalResults(newResults);
-    }
     setResults(newResults);
+    if (isLast) setQuizDone(true);
   }
 
   function handleSeqAnswer(ok) {
@@ -1629,10 +1626,8 @@ function Quiz({ player, onFinish, onBack }) {
     if (!ok) setSeqPerfect(false);
     const newResult = { id:question.id, cat:question.cat, ok, d:question.d||2, type:"seq" };
     const newResults = [...results, newResult];
-    if (isLast) {
-      setFinalResults(newResults);
-    }
     setResults(newResults);
+    if (isLast) setQuizDone(true);
   }
 
   function advance() {
@@ -1733,8 +1728,8 @@ function Quiz({ player, onFinish, onBack }) {
                 Next Question →
               </button>
             )}
-            {isLast && finalResults && (
-              <button onClick={() => onFinish(finalResults, seqPerfect, mistakeStreak)} style={{background:C.gold,color:C.bg,border:"none",borderRadius:12,padding:".9rem",cursor:"pointer",fontWeight:700,fontSize:14,fontFamily:FONT.body,width:"100%"}}>
+            {quizDone && (
+              <button onClick={() => onFinish(results, seqPerfect, mistakeStreak)} style={{background:C.gold,color:C.bg,border:"none",borderRadius:12,padding:".9rem",cursor:"pointer",fontWeight:700,fontSize:14,fontFamily:FONT.body,width:"100%"}}>
                 See Results →
               </button>
             )}
