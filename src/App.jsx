@@ -10,6 +10,16 @@ const C = {
 };
 
 const LEVELS=["U7 / Initiation","U9 / Novice","U11 / Atom","U13 / Peewee"];
+const VERSION = "1.0.0";
+const RELEASE_DATE = "April 13, 2026";
+const CHANGELOG = [
+  { v:"1.0.0", date:"April 13, 2026", notes:[
+    "Position-based quiz — Forward, Defense and Goalie each get a tailored question set",
+    "Coach Dashboard — anonymous team results by season, category breakdown, hardest questions",
+    "Goalie questions added — 45 new goalie-specific questions across U7, U9, and U11",
+  ]},
+];
+
 const POSITIONS=["Forward","Defense","Goalie","Not sure yet"];
 const ACCESS_MODES=[
   {id:"parent",label:"Parent manages everything",desc:"You control the profile. Hand the device to your player for quizzes."},
@@ -787,7 +797,19 @@ function Home({player,onNav}){
           <div style={{color:C.green}}>→</div>
         </div>
       )}
-    </div>
+      <div style={{background:C.dimmest,border:"1px solid "+C.border,borderRadius:14,padding:"1rem 1.2rem",marginBottom:"1.1rem"}}>
+        <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:".65rem"}}>
+          <div style={{fontSize:13,fontWeight:700}}>What's New</div>
+          <div style={{fontSize:11,color:C.dimmer}}>v{VERSION}</div>
+        </div>
+        {CHANGELOG[0].notes.map((note,i)=>(
+          <div key={i} style={{display:"flex",gap:".5rem",marginBottom:".35rem",alignItems:"flex-start"}}>
+            <span style={{color:C.gold,fontSize:11,flexShrink:0,marginTop:2}}>·</span>
+            <span style={{fontSize:12,color:C.dim,lineHeight:1.5}}>{note}</span>
+          </div>
+        ))}
+      </div>
+          </div>
   );
 }
 
