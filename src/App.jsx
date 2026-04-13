@@ -1,36 +1,216 @@
-import { useState } from "react";
+import { useState, useEffect, useCallback } from "react";
 
+// ─────────────────────────────────────────────────────────
+// DESIGN TOKENS
+// ─────────────────────────────────────────────────────────
 const C = {
-  navy:"#0a1628",navyMid:"#112040",navyLight:"#1a3060",
-  gold:"#c9a84c",goldLight:"#e2c06e",
-  white:"#f4f6fa",dim:"rgba(244,246,250,0.55)",dimmer:"rgba(244,246,250,0.28)",dimmest:"rgba(244,246,250,0.07)",
-  purple:"#9b8df5",purpleDim:"rgba(155,141,245,0.14)",
-  green:"#4caf82",yellow:"#e8b84b",red:"#e05252",
-  border:"rgba(244,246,250,0.09)",borderGold:"rgba(201,168,76,0.3)",
+  // Backgrounds
+  bg:       "#080e1a",
+  bgCard:   "#0d1525",
+  bgElevated:"#111e33",
+  bgGlass:  "rgba(255,255,255,0.04)",
+  // Brand
+  gold:     "#c9a84c",
+  goldDim:  "rgba(201,168,76,0.15)",
+  goldBorder:"rgba(201,168,76,0.3)",
+  // Accent
+  purple:   "#7c6fcd",
+  purpleDim:"rgba(124,111,205,0.12)",
+  purpleBorder:"rgba(124,111,205,0.3)",
+  blue:     "#3b82f6",
+  blueDim:  "rgba(59,130,246,0.1)",
+  // Status
+  green:    "#22c55e",
+  greenDim: "rgba(34,197,94,0.1)",
+  greenBorder:"rgba(34,197,94,0.25)",
+  yellow:   "#eab308",
+  yellowDim:"rgba(234,179,8,0.1)",
+  red:      "#ef4444",
+  redDim:   "rgba(239,68,68,0.08)",
+  redBorder:"rgba(239,68,68,0.25)",
+  // Text
+  white:    "#f8fafc",
+  dim:      "rgba(248,250,252,0.6)",
+  dimmer:   "rgba(248,250,252,0.35)",
+  dimmest:  "rgba(248,250,252,0.08)",
+  // Borders
+  border:   "rgba(255,255,255,0.07)",
+  borderMid:"rgba(255,255,255,0.12)",
+  // Ice
+  ice:      "#e8f4fb",
+  rink:     "#1e5799",
 };
 
-const LEVELS=["U7 / Initiation","U9 / Novice","U11 / Atom","U13 / Peewee"];
-const VERSION = "1.0.0";
+const FONT = {
+  display: "'Barlow Condensed', sans-serif",
+  body: "'DM Sans', sans-serif",
+};
+
+// ─────────────────────────────────────────────────────────
+// VERSION
+// ─────────────────────────────────────────────────────────
+const VERSION = "2.0.0";
 const RELEASE_DATE = "April 13, 2026";
 const CHANGELOG = [
+  { v:"2.0.0", date:"April 13, 2026", notes:[
+    "Full redesign — premium interface built for paid product",
+    "New question formats: Sequence Ordering, Spot the Mistake, What Happens Next, True/False",
+    "SMART Goal Setting — set, track and achieve development goals by category",
+    "Position-based quiz engine — Forward, Defense, Goalie each get tailored questions",
+    "Goalie question bank — 45 new goalie-specific questions across U7, U9, U11",
+    "Coach Dashboard — anonymous team results by season with category breakdown",
+    "Daily streak system and badge collection",
+  ]},
   { v:"1.0.0", date:"April 13, 2026", notes:[
-    "Position-based quiz — Forward, Defense and Goalie each get a tailored question set",
-    "Coach Dashboard — anonymous team results by season, category breakdown, hardest questions",
-    "Goalie questions added — 45 new goalie-specific questions across U7, U9, and U11",
+    "Position-based quiz — Forward, Defense, Goalie each get a tailored question set",
+    "Coach Dashboard — anonymous team results by season",
+    "Goalie questions added across U7, U9, U11",
   ]},
 ];
 
-const POSITIONS=["Forward","Defense","Goalie","Not sure yet"];
-const ACCESS_MODES=[
-  {id:"parent",label:"Parent manages everything",desc:"You control the profile. Hand the device to your player for quizzes."},
-  {id:"shared",label:"We'll share access",desc:"Both of you have visibility. Player takes quizzes independently."},
-  {id:"player",label:"Player has their own access",desc:"Player gets their own login. You retain full visibility."},
-];
-const RATINGS=["Needs Work","On Track","Excels"];
-const RC={"Needs Work":C.red,"On Track":C.yellow,"Excels":C.green};
-const RV={"Needs Work":1,"On Track":2,"Excels":3};
+// ─────────────────────────────────────────────────────────
+// CONSTANTS
+// ─────────────────────────────────────────────────────────
+const LEVELS = ["U7 / Initiation","U9 / Novice","U11 / Atom","U13 / Peewee"];
+const POSITIONS = ["Forward","Defense","Goalie"];
+const SEASONS = ["2025-26","2024-25","2023-24","2022-23"];
+const D_WEIGHT = {1:1, 2:1.5, 3:2.2};
+const QUIZ_LENGTH = 15;
 
-// d: 1=Easy, 2=Medium, 3=Hard (hidden from user, drives adaptive engine)
+const SCORE_TIERS = [
+  {min:80, label:"Hockey Sense",   badge:"🏒", color:C.green},
+  {min:60, label:"Two-Way Player", badge:"⚡", color:C.yellow},
+  {min:0,  label:"Tape to Tape",   badge:"🎯", color:C.red},
+];
+const getTier = s => SCORE_TIERS.find(t => s >= t.min) || SCORE_TIERS[2];
+
+const BADGES = {
+  HOT_STREAK: {icon:"🔥", name:"Hot Streak",  desc:"3 correct in a row"},
+  HOCKEY_IQ:  {icon:"🧠", name:"Hockey IQ",   desc:"Perfect session"},
+  HARD_HAT:   {icon:"💎", name:"Hard Hat",     desc:"5 Advanced correct"},
+  SNIPER:     {icon:"🎯", name:"Sniper",       desc:"100% on a category"},
+  LEVEL_UP:   {icon:"📈", name:"Level Up",     desc:"Beat your last score"},
+  IRON_MAN:   {icon:"🏒", name:"Iron Man",     desc:"5 sessions completed"},
+  TACTICIAN:  {icon:"🧩", name:"Tactician",    desc:"Sequence question perfect"},
+  DETECTIVE:  {icon:"🔍", name:"Detective",    desc:"Spot 3 mistakes correctly"},
+};
+
+// SMART goal categories
+const GOAL_CATS = {
+  "U7 / Initiation": ["Skating","Puck Control","Game Awareness","Compete"],
+  "U9 / Novice":     ["Skating","Passing","Shooting","Defense","Game IQ"],
+  "U11 / Atom":      ["Skating","Puck Protection","Gap Control","Rush Reads","Special Teams","Game IQ"],
+  "U13 / Peewee":    ["Edge Work","Shot Selection","Defensive Zone","Zone Entry","Special Teams","Leadership"],
+};
+
+const SMART_PROMPTS = {
+  S: "What specifically will you work on? (be precise)",
+  M: "How will you measure improvement?",
+  A: "Is this realistic for your current level?",
+  R: "How does this help you on the ice?",
+  T: "When will you achieve this by?",
+};
+
+
+// ─────────────────────────────────────────────────────────
+// UI PRIMITIVES
+// ─────────────────────────────────────────────────────────
+const Screen = ({children, pad=true}) => (
+  <div style={{minHeight:"100vh",background:C.bg,color:C.white,fontFamily:FONT.body}}>
+    {pad ? <div style={{padding:"1.5rem 1.25rem",maxWidth:560,margin:"0 auto"}}>{children}</div> : children}
+  </div>
+);
+
+const Card = ({children, style, onClick, glow}) => (
+  <div onClick={onClick} style={{
+    background:C.bgCard,
+    border:`1px solid ${glow?C.goldBorder:C.border}`,
+    borderRadius:16,
+    padding:"1.25rem",
+    boxShadow: glow?"0 0 24px rgba(201,168,76,0.08)":"none",
+    cursor:onClick?"pointer":"default",
+    transition:"all .2s",
+    ...style
+  }}>{children}</div>
+);
+
+const Pill = ({children, color=C.purple, bg}) => (
+  <span style={{
+    display:"inline-flex",alignItems:"center",
+    background:bg||`${color}18`,
+    color,
+    border:`1px solid ${color}35`,
+    borderRadius:20,
+    padding:"3px 10px",
+    fontSize:11,
+    fontWeight:700,
+    letterSpacing:".04em",
+  }}>{children}</span>
+);
+
+const Label = ({children, style}) => (
+  <div style={{fontSize:10,letterSpacing:".14em",textTransform:"uppercase",color:C.dimmer,fontWeight:700,marginBottom:".6rem",...style}}>{children}</div>
+);
+
+const PrimaryBtn = ({onClick,children,disabled,style}) => (
+  <button onClick={onClick} disabled={disabled} style={{
+    background:disabled?"rgba(201,168,76,.2)":C.gold,
+    color:disabled?"rgba(201,168,76,.4)":C.bg,
+    border:"none",borderRadius:12,
+    padding:"1rem 1.25rem",
+    cursor:disabled?"default":"pointer",
+    fontWeight:800,fontSize:15,
+    fontFamily:FONT.body,
+    width:"100%",
+    letterSpacing:".02em",
+    transition:"all .15s",
+    ...style
+  }}>{children}</button>
+);
+
+const SecBtn = ({onClick,children,style}) => (
+  <button onClick={onClick} style={{
+    background:"none",
+    color:C.dim,
+    border:`1px solid ${C.border}`,
+    borderRadius:12,padding:"1rem 1.25rem",
+    cursor:"pointer",fontWeight:600,fontSize:14,
+    fontFamily:FONT.body,width:"100%",
+    transition:"all .15s",
+    ...style
+  }}>{children}</button>
+);
+
+const BackBtn = ({onClick}) => (
+  <button onClick={onClick} style={{
+    background:"none",border:`1px solid ${C.border}`,
+    color:C.dimmer,borderRadius:8,
+    padding:".4rem .9rem",cursor:"pointer",
+    fontSize:13,fontFamily:FONT.body,
+    marginBottom:"1.5rem",display:"inline-flex",
+    alignItems:"center",gap:".4rem"
+  }}>← Back</button>
+);
+
+const ProgressBar = ({value, max, color=C.purple, height=5}) => (
+  <div style={{height,background:C.dimmest,borderRadius:height,overflow:"hidden"}}>
+    <div style={{height:"100%",width:`${Math.min(100,(value/max)*100)}%`,background:color,borderRadius:height,transition:"width .4s ease"}}/>
+  </div>
+);
+
+const StickyHeader = ({children}) => (
+  <div style={{
+    position:"sticky",top:0,zIndex:20,
+    background:`${C.bg}f5`,
+    backdropFilter:"blur(16px)",
+    WebkitBackdropFilter:"blur(16px)",
+    borderBottom:`1px solid ${C.border}`,
+    padding:".9rem 1.25rem",
+  }}>{children}</div>
+);
+
+
+
 const QB={
   "U7 / Initiation":[
     {id:"u7q1",cat:"Orientation",pos:["F","D"],concept:"Which way?",d:1,sit:"You just got the puck near center ice. There are two nets. What's the FIRST thing you do?",opts:["Skate as fast as you can any direction","Look up and find which net is yours","Pass to the nearest player","Spin around and wait"],ok:1,why:"Before anything else — look up. A one-second glance tells you which way you're going. The habit of looking first is the most important skill in hockey.",tip:"Got the puck? Look up first. Every time."},
@@ -492,7 +672,7 @@ const QB={
     {id:"u13q100",cat:"Puck Management",concept:"The hardest decision",d:3,sit:"You're in the offensive zone with 5 seconds left in a tied game. You have the puck at the half-wall. A teammate is breaking to the net — open but a defender is almost there. You have a shooting lane. One second to decide. What do you do?",opts:["Shoot — you have a lane and one second","Pass to the breaking teammate — they'll get there before the defender and an open player at the net beats your half-wall shot","Hold the puck","Pass back to the point"],ok:1,why:"In a tied game with 5 seconds left, a breaking teammate who'll beat the defender to the net is a higher-danger chance than a half-wall shot. The risk is the pass, the reward is the highest-danger chance on the ice. That's the elite read.",tip:"Tied game, last 5 seconds, breaking teammate beating a defender to the net? Thread it. That's the highest-danger play. That's elite hockey IQ."},
   ],
 
-};
+}
 
 const COMP={
   "U7 / Initiation":{t:[0.75,0.5],l:["Game-Ready IQ","Getting It","Still Learning"]},
@@ -501,6 +681,7 @@ const COMP={
   "U13 / Peewee":{t:[0.82,0.65],l:["Elite Game Read","Situationally Sound","Tactical Foundation"]},
 };
 function getComp(level,score){const c=COMP[level];if(!c)return"—";return score>=c.t[0]?c.l[0]:score>=c.t[1]?c.l[1]:c.l[2];}
+
 
 const SKILLS={
   "U7 / Initiation":[
@@ -556,615 +737,1491 @@ const SKILLS={
   ],
 };
 
-function initSR(level){const r={};(SKILLS[level]||[]).forEach(c=>c.skills.forEach(s=>{r[s.id]=null;}));return r;}
-function shuffle(a){return[...a].sort(()=>Math.random()-0.5);}
-function calcIQ(results){return calcWeightedIQ(results);}
 
-function Radar({data,size=200}){
-  const cx=size/2,cy=size/2,r=size*0.34,n=data.length;
-  if(n<3)return null;
-  const ang=i=>(Math.PI*2*i)/n-Math.PI/2;
-  const pt=(i,ratio)=>({x:cx+r*ratio*Math.cos(ang(i)),y:cy+r*ratio*Math.sin(ang(i))});
-  const poly=pts=>pts.map((p,i)=>`${i===0?"M":"L"}${p.x},${p.y}`).join(" ")+"Z";
-  return(
-    <svg width={size} height={size} style={{overflow:"visible"}}>
-      <defs><radialGradient id="rg"><stop offset="0%" stopColor={C.gold} stopOpacity=".35"/><stop offset="100%" stopColor={C.gold} stopOpacity=".04"/></radialGradient></defs>
-      {[.33,.67,1].map((l,i)=><path key={i} d={poly(data.map((_,j)=>pt(j,l)))} fill="none" stroke={C.border} strokeWidth="1"/>)}
-      {data.map((_,i)=>{const p=pt(i,1);return<line key={i} x1={cx} y1={cy} x2={p.x} y2={p.y} stroke={C.border} strokeWidth="1"/>;} )}
-      <path d={poly(data.map((d,i)=>pt(i,d.val||.02)))} fill="url(#rg)" stroke={C.gold} strokeWidth="2" strokeLinejoin="round"/>
-      {data.map((d,i)=>{const p=pt(i,d.val||.02);return<circle key={i} cx={p.x} cy={p.y} r="3.5" fill={d.dm?C.purple:C.gold}/>;} )}
-      {data.map((d,i)=>{const p=pt(i,1.3);const anc=p.x<cx-5?"end":p.x>cx+5?"start":"middle";const lbl=d.cat==="Game Decision-Making"?"Game IQ":d.cat;return<text key={i} x={p.x} y={p.y} textAnchor={anc} dominantBaseline="middle" style={{fontSize:9,fill:d.dm?C.purple:C.dim,fontFamily:"'DM Sans',sans-serif",fontWeight:600}}>{d.icon} {lbl}</text>;})}
-    </svg>
-  );
-}
-
-function Dots({total,current}){
-  return(<div style={{display:"flex",gap:".4rem",marginBottom:"2rem"}}>{Array.from({length:total}).map((_,i)=><div key={i} style={{height:3,flex:1,borderRadius:2,background:i<=current?C.gold:C.dimmest,transition:"background .3s"}}/>)}</div>);
-}
-
-function NavBtn({canNext,onBack,onNext,label="Continue →"}){
-  return(
-    <div style={{display:"flex",gap:".75rem"}}>
-      <button onClick={onBack} style={{background:C.dimmest,color:C.dim,border:`1px solid ${C.border}`,borderRadius:12,padding:"1rem",cursor:"pointer",fontFamily:"'DM Sans',sans-serif",fontSize:14,fontWeight:600,flex:"0 0 80px"}}>← Back</button>
-      <button onClick={onNext} disabled={!canNext} style={{background:canNext?C.gold:"rgba(201,168,76,.2)",color:canNext?C.navy:"rgba(201,168,76,.35)",border:"none",borderRadius:12,padding:"1rem",cursor:canNext?"pointer":"default",fontWeight:800,fontSize:15,fontFamily:"'DM Sans',sans-serif",flex:1,transition:"all .2s"}}>{label}</button>
-    </div>
-  );
-}
-
-function Onboarding({onComplete}){
-  const [step,setStep]=useState(0);
-  const [name,setName]=useState("");
-  const [level,setLevel]=useState("");
-  const [position,setPosition]=useState("");
-  const [mode,setMode]=useState("");
-  const S={screen:{minHeight:"100vh",background:C.navy,display:"flex",flexDirection:"column",fontFamily:"'DM Sans',sans-serif",color:C.white}};
-
-  if(step===0)return(
-    <div style={S.screen}>
-      <div style={{flex:1,display:"flex",flexDirection:"column",justifyContent:"center",padding:"2rem 1.5rem",maxWidth:480,margin:"0 auto",width:"100%"}}>
-        <div style={{display:"flex",alignItems:"center",gap:".5rem",marginBottom:"2rem"}}>
-          <span style={{fontSize:26}}>🏒</span>
-          <span style={{fontFamily:"'Barlow Condensed',sans-serif",fontWeight:800,fontSize:"1.6rem",letterSpacing:".08em",color:C.gold}}>IceIQ</span>
-        </div>
-        <div style={{fontSize:10,letterSpacing:".16em",textTransform:"uppercase",color:C.gold,marginBottom:".75rem",fontWeight:700}}>Welcome</div>
-        <h1 style={{fontFamily:"'Barlow Condensed',sans-serif",fontWeight:800,fontSize:"clamp(1.9rem,7vw,2.8rem)",lineHeight:1.1,margin:"0 0 1rem"}}>{"Know the game.\nOwn your development."}</h1>
-        <p style={{fontSize:14,color:C.dim,lineHeight:1.7,marginBottom:"2rem"}}>The first player development app built on what your child should actually know at their age — not just how fast they skate.</p>
-        <div style={{display:"flex",flexDirection:"column",gap:".7rem",marginBottom:"2.5rem"}}>
-          {[{i:"🧠",t:"84 real game scenarios calibrated to your player's age"},{i:"📊",t:"Self-assessment + coach comparison, side by side"},{i:"📈",t:"IQ Score that travels across every season and team"},{i:"📋",t:"Tryout-ready report built on Hockey Canada's LTAD"}].map((f,i)=>(
-            <div key={i} style={{display:"flex",alignItems:"flex-start",gap:".75rem",padding:".75rem 1rem",background:C.dimmest,borderRadius:10,border:`1px solid ${C.border}`}}>
-              <span style={{fontSize:17,flexShrink:0,marginTop:1}}>{f.i}</span>
-              <span style={{fontSize:13,color:C.dim,lineHeight:1.5}}>{f.t}</span>
-            </div>
-          ))}
-        </div>
-        <button onClick={()=>setStep(1)} style={{background:C.gold,color:C.navy,border:"none",borderRadius:12,padding:"1rem",cursor:"pointer",fontWeight:800,fontSize:16,fontFamily:"'DM Sans',sans-serif",width:"100%"}}>Build Your Player Profile →</button>
-        <p style={{textAlign:"center",fontSize:12,color:C.dimmer,marginTop:"1rem"}}>Free to start · No credit card required</p>
-      </div>
-    </div>
-  );
-
-  if(step===1)return(
-    <div style={S.screen}>
-      <div style={{flex:1,display:"flex",flexDirection:"column",padding:"2rem 1.5rem",maxWidth:480,margin:"0 auto",width:"100%"}}>
-        <Dots total={4} current={0}/>
-        <div style={{flex:1,display:"flex",flexDirection:"column",justifyContent:"center"}}>
-          <div style={{fontSize:10,letterSpacing:".16em",textTransform:"uppercase",color:C.gold,marginBottom:".75rem",fontWeight:700}}>Step 1 of 4</div>
-          <h2 style={{fontFamily:"'Barlow Condensed',sans-serif",fontWeight:800,fontSize:"1.9rem",marginBottom:".5rem"}}>What's your player's name?</h2>
-          <p style={{fontSize:14,color:C.dim,marginBottom:"2rem",lineHeight:1.6}}>This profile belongs to them. It travels with them across every season and every team.</p>
-          <input value={name} onChange={e=>setName(e.target.value)} placeholder="First name" autoFocus style={{background:C.dimmest,border:`1px solid ${name?C.borderGold:C.border}`,borderRadius:12,padding:"1rem 1.25rem",color:C.white,fontSize:18,fontFamily:"'DM Sans',sans-serif",width:"100%",outline:"none",marginBottom:"2rem",transition:"border-color .2s"}}/>
-        </div>
-        <NavBtn canNext={name.trim().length>0} onBack={()=>setStep(0)} onNext={()=>setStep(2)}/>
-      </div>
-    </div>
-  );
-
-  if(step===2)return(
-    <div style={S.screen}>
-      <div style={{flex:1,display:"flex",flexDirection:"column",padding:"2rem 1.5rem",maxWidth:480,margin:"0 auto",width:"100%"}}>
-        <Dots total={4} current={1}/>
-        <div style={{flex:1,display:"flex",flexDirection:"column",justifyContent:"center"}}>
-          <div style={{fontSize:10,letterSpacing:".16em",textTransform:"uppercase",color:C.gold,marginBottom:".75rem",fontWeight:700}}>Step 2 of 4</div>
-          <h2 style={{fontFamily:"'Barlow Condensed',sans-serif",fontWeight:800,fontSize:"1.9rem",marginBottom:".5rem"}}>What level does {name||"your player"} play?</h2>
-          <p style={{fontSize:14,color:C.dim,marginBottom:"2rem",lineHeight:1.6}}>Every skill, every quiz, and every evaluation is calibrated specifically to this level.</p>
-          <div style={{display:"flex",flexDirection:"column",gap:".6rem",marginBottom:"1.25rem"}}>
-            {LEVELS.map(l=>(
-              <button key={l} onClick={()=>setLevel(l)} style={{background:level===l?C.borderGold:C.dimmest,border:`1px solid ${level===l?C.gold:C.border}`,borderRadius:12,padding:"1rem 1.25rem",cursor:"pointer",textAlign:"left",color:level===l?C.gold:C.dim,fontFamily:"'DM Sans',sans-serif",fontSize:15,fontWeight:level===l?700:400,transition:"all .15s",display:"flex",justifyContent:"space-between",alignItems:"center"}}>
-                <span>{l}</span>{level===l&&<span>✓</span>}
-              </button>
-            ))}
-          </div>
-          <div style={{padding:".7rem 1rem",background:C.dimmest,borderRadius:10,border:`1px solid ${C.border}`}}>
-            <p style={{fontSize:11,color:C.dimmer,lineHeight:1.6,margin:0}}>Framework: <strong style={{color:C.dim}}>Hockey Canada LTAD · USA Hockey ADM · Sport for Life Canada</strong></p>
-          </div>
-        </div>
-        <NavBtn canNext={level!==""}  onBack={()=>setStep(1)} onNext={()=>setStep(3)}/>
-      </div>
-    </div>
-  );
-
-  if(step===3)return(
-    <div style={S.screen}>
-      <div style={{flex:1,display:"flex",flexDirection:"column",padding:"2rem 1.5rem",maxWidth:480,margin:"0 auto",width:"100%"}}>
-        <Dots total={4} current={2}/>
-        <div style={{flex:1,display:"flex",flexDirection:"column",justifyContent:"center"}}>
-          <div style={{fontSize:10,letterSpacing:".16em",textTransform:"uppercase",color:C.gold,marginBottom:".75rem",fontWeight:700}}>Step 3 of 4</div>
-          <h2 style={{fontFamily:"'Barlow Condensed',sans-serif",fontWeight:800,fontSize:"1.9rem",marginBottom:".5rem"}}>What position does {name||"your player"} play?</h2>
-          <p style={{fontSize:14,color:C.dim,marginBottom:"2rem",lineHeight:1.6}}>We'll highlight position-relevant skills and decisions throughout the app.</p>
-          <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:".6rem",marginBottom:"2rem"}}>
-            {[{p:"Forward",i:"⚡"},{p:"Defense",i:"🛡"},{p:"Goalie",i:"🧤"},{p:"Not sure yet",i:"❓"}].map(({p,i})=>(
-              <button key={p} onClick={()=>setPosition(p)} style={{background:position===p?C.borderGold:C.dimmest,border:`1px solid ${position===p?C.gold:C.border}`,borderRadius:12,padding:"1rem",cursor:"pointer",color:position===p?C.gold:C.dim,fontFamily:"'DM Sans',sans-serif",fontSize:14,fontWeight:position===p?700:400,transition:"all .15s",textAlign:"center"}}>
-                {i} {p}
-              </button>
-            ))}
-          </div>
-        </div>
-        <NavBtn canNext={position!=""} onBack={()=>setStep(2)} onNext={()=>setStep(4)}/>
-      </div>
-    </div>
-  );
-
-  return(
-    <div style={S.screen}>
-      <div style={{flex:1,display:"flex",flexDirection:"column",padding:"2rem 1.5rem",maxWidth:480,margin:"0 auto",width:"100%"}}>
-        <Dots total={4} current={3}/>
-        <div style={{flex:1,display:"flex",flexDirection:"column",justifyContent:"center"}}>
-          <div style={{fontSize:10,letterSpacing:".16em",textTransform:"uppercase",color:C.gold,marginBottom:".75rem",fontWeight:700}}>Step 4 of 4</div>
-          <h2 style={{fontFamily:"'Barlow Condensed',sans-serif",fontWeight:800,fontSize:"1.9rem",marginBottom:".5rem"}}>How will you use IceIQ?</h2>
-          <p style={{fontSize:14,color:C.dim,marginBottom:"2rem",lineHeight:1.6}}>You can change this anytime. There's no wrong answer — every family is different.</p>
-          <div style={{display:"flex",flexDirection:"column",gap:".75rem",marginBottom:"2rem"}}>
-            {ACCESS_MODES.map(m=>(
-              <button key={m.id} onClick={()=>setMode(m.id)} style={{background:mode===m.id?C.borderGold:C.dimmest,border:`1px solid ${mode===m.id?C.gold:C.border}`,borderRadius:12,padding:"1rem 1.25rem",cursor:"pointer",textAlign:"left",transition:"all .15s"}}>
-                <div style={{fontFamily:"'DM Sans',sans-serif",fontSize:14,fontWeight:700,color:mode===m.id?C.gold:C.white,marginBottom:4}}>{m.label}</div>
-                <div style={{fontSize:12,color:C.dimmer,lineHeight:1.5}}>{m.desc}</div>
-              </button>
-            ))}
-          </div>
-        </div>
-        <button onClick={()=>mode&&onComplete({name:name.trim(),level,position,mode,season:`${new Date().getFullYear()}-${new Date().getFullYear()+1}`,selfRatings:initSR(level),quizHistory:[],coachRatings:null})} style={{background:mode?C.gold:"rgba(201,168,76,.2)",color:mode?C.navy:"rgba(201,168,76,.35)",border:"none",borderRadius:12,padding:"1rem",cursor:mode?"pointer":"default",fontWeight:800,fontSize:16,fontFamily:"'DM Sans',sans-serif",width:"100%",transition:"all .2s"}}>
-          Build {name?`${name}'s`:"My"} Profile →
-        </button>
-      </div>
-    </div>
-  );
-}
-
-function Home({player,onNav}){
-  const {name,level,position,selfRatings,quizHistory,coachRatings}=player;
-  const latest=quizHistory[quizHistory.length-1];
-  const iq=latest?calcIQ(latest.results):null;
-  const comp=iq!==null?getComp(level,iq/100):null;
-  const total=Object.keys(selfRatings).length;
-  const rated=Object.values(selfRatings).filter(v=>v!==null).length;
-  const skillPct=Math.round((rated/total)*100);
-  const radarData=(SKILLS[level]||[]).map(c=>{const vals=c.skills.map(s=>RV[selfRatings[s.id]]||0);return{cat:c.cat,icon:c.icon,dm:!!c.isDM,val:vals.reduce((a,b)=>a+b,0)/(vals.length*3)};});
-  const nextAction=iq===null
-    ?{label:"Take your baseline IQ Quiz",sub:"Get your first score — takes about 10 minutes",action:()=>onNav("quiz"),cta:"Start Quiz →",color:C.purple}
-    :rated===0
-    ?{label:"Rate your skills",sub:"Tell us how you think you're doing in each area",action:()=>onNav("skills"),cta:"Start Self-Assessment →",color:C.gold}
-    :!coachRatings
-    ?{label:"Invite your coach",sub:"Send them a link — no app download required",action:()=>onNav("profile"),cta:"Invite Coach →",color:C.green}
-    :{label:"Retake the IQ Quiz",sub:"Questions shuffle every time — sharpen your score",action:()=>onNav("quiz"),cta:"Take Quiz →",color:C.purple};
-
-  return(
-    <div style={{padding:"1.5rem 1.25rem",maxWidth:520,margin:"0 auto"}}>
-      <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:"1.75rem"}}>
-        <div>
-          <div style={{fontSize:10,letterSpacing:".14em",textTransform:"uppercase",color:C.gold,fontWeight:700,marginBottom:3}}>Player Profile</div>
-          <h1 style={{fontFamily:"'Barlow Condensed',sans-serif",fontWeight:800,fontSize:"1.9rem",margin:0,lineHeight:1}}>{name}</h1>
-          <div style={{fontSize:12,color:C.dimmer,marginTop:4}}>{level} · {position}</div>
-        </div>
-        <button onClick={()=>onNav("profile")} style={{background:C.dimmest,border:`1px solid ${C.border}`,borderRadius:"50%",width:40,height:40,cursor:"pointer",fontSize:16,display:"flex",alignItems:"center",justifyContent:"center"}}>⚙</button>
-      </div>
-
-      <div style={{background:`linear-gradient(135deg,${C.navyMid} 0%,${C.navyLight} 100%)`,border:`1px solid ${C.borderGold}`,borderRadius:16,padding:"1.5rem",marginBottom:"1.1rem",position:"relative",overflow:"hidden"}}>
-        <div style={{position:"absolute",top:-20,right:-20,width:90,height:90,background:"rgba(201,168,76,.06)",borderRadius:"50%"}}/>
-        <div style={{fontSize:10,letterSpacing:".14em",textTransform:"uppercase",color:C.gold,fontWeight:700,marginBottom:".5rem"}}>Hockey IQ Score</div>
-        {iq!==null?(
-          <div style={{display:"flex",alignItems:"flex-end",gap:"1rem",flexWrap:"wrap"}}>
-            <div style={{fontFamily:"'Barlow Condensed',sans-serif",fontWeight:800,fontSize:"3.8rem",color:C.gold,lineHeight:1}}>{iq}<span style={{fontSize:"1.4rem"}}>%</span></div>
-            <div>
-              <div style={{fontWeight:700,fontSize:15,color:C.white,marginBottom:2}}>{comp}</div>
-              <div style={{fontSize:12,color:C.dimmer}}>{latest?.results.filter(r=>r.ok).length}/{latest?.results.length} correct · {new Date(latest?.date).toLocaleDateString("en-CA",{month:"short",day:"numeric"})}</div>
-            </div>
-          </div>
-        ):(
-          <div>
-            <div style={{fontFamily:"'Barlow Condensed',sans-serif",fontWeight:800,fontSize:"2.4rem",color:"rgba(201,168,76,.3)",lineHeight:1,marginBottom:4}}>—</div>
-            <div style={{fontSize:13,color:C.dimmer}}>Take your first quiz to get your baseline score</div>
-          </div>
-        )}
-        {quizHistory.length>1&&<div style={{marginTop:".75rem",display:"flex",gap:".4rem"}}>{quizHistory.slice(-5).map((q,i)=>{const s=calcIQ(q.results);return<div key={i} style={{flex:1,height:4,borderRadius:2,background:s>=80?C.green:s>=60?C.yellow:C.red,opacity:.5+i*.1}}/>;})}</div>}
-      </div>
-
-      <div onClick={nextAction.action} style={{background:C.dimmest,border:`1px solid ${C.border}`,borderRadius:14,padding:"1rem 1.2rem",marginBottom:"1.1rem",cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"space-between",gap:"1rem"}}
-        onMouseEnter={e=>e.currentTarget.style.borderColor=nextAction.color}
-        onMouseLeave={e=>e.currentTarget.style.borderColor=C.border}>
-        <div style={{flex:1}}>
-          <div style={{fontSize:14,fontWeight:700,marginBottom:3}}>{nextAction.label}</div>
-          <div style={{fontSize:12,color:C.dimmer}}>{nextAction.sub}</div>
-        </div>
-        <div style={{color:nextAction.color,fontSize:13,fontWeight:700,whiteSpace:"nowrap"}}>{nextAction.cta}</div>
-      </div>
-
-      <div style={{background:C.dimmest,border:`1px solid ${C.border}`,borderRadius:14,padding:"1rem 1.2rem",marginBottom:"1.1rem"}}>
-        <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:".6rem"}}>
-          <div style={{fontSize:13,fontWeight:700}}>Skill Self-Assessment</div>
-          <div style={{fontSize:12,color:C.dimmer}}>{rated}/{total} rated</div>
-        </div>
-        <div style={{height:5,background:C.border,borderRadius:3,overflow:"hidden",marginBottom:".65rem"}}>
-          <div style={{height:"100%",width:`${skillPct}%`,background:skillPct===100?C.green:C.gold,borderRadius:3,transition:"width .4s"}}/>
-        </div>
-        <button onClick={()=>onNav("skills")} style={{background:"none",border:"none",color:C.gold,fontSize:12,fontWeight:700,cursor:"pointer",fontFamily:"'DM Sans',sans-serif",padding:0}}>
-          {rated===0?"Start rating your skills →":rated===total?"Review your ratings →":"Continue rating →"}
-        </button>
-      </div>
-
-      {rated>0&&(
-        <div style={{background:C.dimmest,border:`1px solid ${C.border}`,borderRadius:14,padding:"1.25rem",marginBottom:"1.1rem",display:"flex",flexDirection:"column",alignItems:"center"}}>
-          <div style={{fontSize:10,letterSpacing:".14em",textTransform:"uppercase",color:C.dimmer,marginBottom:".75rem",alignSelf:"flex-start"}}>Skill Profile</div>
-          <Radar data={radarData} size={190}/>
-          <div style={{fontSize:10,color:C.dimmer,marginTop:".5rem"}}>🟡 Self · 🟣 Game IQ</div>
-        </div>
-      )}
-
-      {!coachRatings&&(
-        <div onClick={()=>onNav("profile")} style={{background:"rgba(76,175,130,.05)",border:"1px solid rgba(76,175,130,.2)",borderRadius:14,padding:"1rem 1.2rem",cursor:"pointer",display:"flex",alignItems:"center",gap:"1rem"}}>
-          <span style={{fontSize:20}}>👨‍🏫</span>
-          <div style={{flex:1}}>
-            <div style={{fontSize:13,fontWeight:700,color:C.green,marginBottom:2}}>Invite your coach</div>
-            <div style={{fontSize:12,color:C.dimmer}}>No app download needed — just a link</div>
-          </div>
-          <div style={{color:C.green}}>→</div>
-        </div>
-      )}
-      <div style={{background:C.dimmest,border:"1px solid "+C.border,borderRadius:14,padding:"1rem 1.2rem",marginBottom:"1.1rem"}}>
-        <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:".65rem"}}>
-          <div style={{fontSize:13,fontWeight:700}}>What's New</div>
-          <div style={{fontSize:11,color:C.dimmer}}>v{VERSION}</div>
-        </div>
-        {CHANGELOG[0].notes.map((note,i)=>(
-          <div key={i} style={{display:"flex",gap:".5rem",marginBottom:".35rem",alignItems:"flex-start"}}>
-            <span style={{color:C.gold,fontSize:11,flexShrink:0,marginTop:2}}>·</span>
-            <span style={{fontSize:12,color:C.dim,lineHeight:1.5}}>{note}</span>
-          </div>
-        ))}
-      </div>
-    </div>
-  );
-}
-
-// ── ADAPTIVE ENGINE ───────────────────────────────────────────────────────────
-// Difficulty weights for IQ score calculation (hidden from user)
-const D_WEIGHT={1:1,2:1.5,3:2.2};
-const QUIZ_LENGTH=15; // questions per session
-
-function buildAdaptiveQueue(allQ, isReturning, usedIds=[]) {
-  const pool = allQ.filter(q => !usedIds.includes(q.id));
-  const byD = {1:shuffle(pool.filter(q=>q.d===1)),2:shuffle(pool.filter(q=>q.d===2)),3:shuffle(pool.filter(q=>q.d===3))};
-  // Start medium for returning, easy for new
-  const startD = isReturning ? 2 : 1;
-  return { byD, currentD: startD, streak: 0 };
-}
-
-function nextQuestion(queue, results) {
-  const last2 = results.slice(-2);
-  let { byD, currentD, streak } = queue;
-  // Adjust difficulty based on last 2 answers
-  if (last2.length === 2) {
-    const bothRight = last2.every(r => r.ok);
-    const bothWrong = last2.every(r => !r.ok);
-    if (bothRight && currentD < 3) currentD = Math.min(3, currentD + 1);
-    else if (bothWrong && currentD > 1) currentD = Math.max(1, currentD - 1);
-  }
-  // Pull from current difficulty, fall back if exhausted
-  let q = byD[currentD].shift();
-  if (!q) { const fallback = [1,2,3].filter(d=>d!==currentD).find(d=>byD[d].length>0); q = fallback ? byD[fallback].shift() : null; }
-  return { q, updatedQueue: { byD, currentD, streak } };
-}
+// ─────────────────────────────────────────────────────────
+// UTILITIES
+// ─────────────────────────────────────────────────────────
+function shuffle(a) { return [...a].sort(() => Math.random() - 0.5); }
 
 function calcWeightedIQ(results) {
   if (!results.length) return 0;
-  const earned = results.reduce((sum, r) => sum + (r.ok ? D_WEIGHT[r.d||2] : 0), 0);
-  const possible = results.reduce((sum, r) => sum + D_WEIGHT[r.d||2], 0);
-  return Math.round((earned / possible) * 100);
+  const e = results.reduce((s,r) => s + (r.ok ? D_WEIGHT[r.d||2] : 0), 0);
+  const p = results.reduce((s,r) => s + D_WEIGHT[r.d||2], 0);
+  return Math.round((e/p)*100);
 }
 
-function Quiz({player,onFinish,onBack}){
-  const isReturning = (player.quizHistory||[]).length > 0;
-  const allQ = QB[player.level] || [];
-  const usedIds = (player.quizHistory||[]).flatMap(h => h.results.map(r=>r.id));
-  const [queue, setQueue] = useState(() => buildAdaptiveQueue(allQ, isReturning, usedIds));
-  const [currentQ, setCurrentQ] = useState(() => { const {q,updatedQueue} = nextQuestion(buildAdaptiveQueue(allQ,isReturning,usedIds),[]); return q; });
-  const [sel,setSel]=useState(null);
-  const [done,setDone]=useState(false);
-  const [results,setResults]=useState([]);
-  const [phase,setPhase]=useState("q");
-  const q = currentQ;
-  const total = QUIZ_LENGTH;
-  const cur = results.length;
-  const last = cur >= total - 1;
+function initSR(level) {
+  const r = {};
+  (SKILLS[level]||[]).forEach(c => c.skills.forEach(s => { r[s.id] = null; }));
+  return r;
+}
 
-  function pick(i){
-    if(done||!q)return;
-    setSel(i);
-    setDone(true);
-    setResults(r=>[...r,{id:q.id,cat:q.cat,concept:q.concept,ok:i===q.ok,d:q.d||2}]);
-  }
-  function next(){
-    if(last){setPhase("results");return;}
-    const newResults = [...results];
-    const {q:nextQ, updatedQueue} = nextQuestion(queue, newResults);
-    setQueue(updatedQueue);
-    setCurrentQ(nextQ);
-    setSel(null);
-    setDone(false);
-  }
+function getTodayKey() { return new Date().toISOString().slice(0,10); }
 
-  if(phase==="results"){
-    const sp=calcWeightedIQ(results);
-    const comp=getComp(player.level,sp/100);
-    const byCat={};results.forEach(r=>{if(!byCat[r.cat])byCat[r.cat]={ok:0,tot:0};byCat[r.cat].tot++;if(r.ok)byCat[r.cat].ok++;});
-    const weak=Object.entries(byCat).filter(([,v])=>v.ok/v.tot<0.6).map(([k])=>k);
-    const byD={1:{ok:0,tot:0},2:{ok:0,tot:0},3:{ok:0,tot:0}};
-    results.forEach(r=>{const d=r.d||2;byD[d].tot++;if(r.ok)byD[d].ok++;});
-    const dLabels={1:"Foundation",2:"Developing",3:"Advanced"};
-    return(
-      <div style={{padding:"1.5rem 1.25rem",maxWidth:520,margin:"0 auto"}}>
-        <button onClick={onBack} style={{background:"none",border:`1px solid ${C.border}`,color:C.dim,borderRadius:8,padding:".4rem .9rem",cursor:"pointer",fontSize:13,fontFamily:"'DM Sans',sans-serif",marginBottom:"1.5rem"}}>← Home</button>
-        <div style={{textAlign:"center",marginBottom:"2rem"}}>
-          <div style={{fontSize:50,marginBottom:".5rem"}}>{sp>=80?"🏆":sp>=60?"✅":"📋"}</div>
-          <h2 style={{fontFamily:"'Barlow Condensed',sans-serif",fontWeight:800,fontSize:"1.8rem",margin:"0 0 .25rem"}}>Quiz Complete</h2>
-          <div style={{fontFamily:"'Barlow Condensed',sans-serif",fontWeight:800,fontSize:"3.5rem",color:sp>=80?C.green:sp>=60?C.yellow:C.red,lineHeight:1}}>{sp}%</div>
-          <div style={{fontSize:14,color:C.dim,marginBottom:".5rem"}}>{results.filter(r=>r.ok).length}/{results.length} correct</div>
-          <div style={{display:"inline-block",background:C.purpleDim,color:C.purple,padding:"4px 14px",borderRadius:20,border:"1px solid rgba(155,141,245,.3)",fontSize:13,fontWeight:700}}>{comp}</div>
-        </div>
-        {Object.values(byD).some(v=>v.tot>0)&&(
-          <div style={{background:C.dimmest,border:`1px solid ${C.border}`,borderRadius:14,padding:"1.1rem 1.25rem",marginBottom:"1rem"}}>
-            <div style={{fontSize:10,letterSpacing:".12em",textTransform:"uppercase",color:C.dimmer,marginBottom:".85rem"}}>Question Difficulty Mix</div>
-            <div style={{display:"flex",gap:".5rem"}}>
-              {[1,2,3].map(d=>byD[d].tot>0&&(
-                <div key={d} style={{flex:1,textAlign:"center",padding:".5rem",background:d===1?"rgba(76,175,130,.08)":d===2?"rgba(232,184,75,.08)":"rgba(224,82,82,.08)",borderRadius:8,border:`1px solid ${d===1?"rgba(76,175,130,.2)":d===2?"rgba(232,184,75,.2)":"rgba(224,82,82,.2)"}`}}>
-                  <div style={{fontSize:12,fontWeight:700,color:d===1?C.green:d===2?C.yellow:C.red}}>{byD[d].ok}/{byD[d].tot}</div>
-                  <div style={{fontSize:10,color:C.dimmer,marginTop:2}}>{dLabels[d]}</div>
-                </div>
-              ))}
-            </div>
-          </div>
-        )}
-        <div style={{background:C.dimmest,border:`1px solid ${C.border}`,borderRadius:14,padding:"1.25rem",marginBottom:"1rem"}}>
-          <div style={{fontSize:10,letterSpacing:".12em",textTransform:"uppercase",color:C.dimmer,marginBottom:"1rem"}}>By Category</div>
-          {Object.entries(byCat).map(([cat,v])=>{const cp=Math.round((v.ok/v.tot)*100);return(
-            <div key={cat} style={{marginBottom:".8rem"}}>
-              <div style={{display:"flex",justifyContent:"space-between",marginBottom:4,fontSize:13}}>
-                <span style={{color:C.dim}}>{cat}</span>
-                <span style={{fontWeight:700,color:cp>=80?C.green:cp>=60?C.yellow:C.red}}>{v.ok}/{v.tot}</span>
-              </div>
-              <div style={{height:5,background:C.border,borderRadius:3,overflow:"hidden"}}><div style={{height:"100%",width:`${cp}%`,background:cp>=80?C.green:cp>=60?C.yellow:C.red,borderRadius:3}}/></div>
-            </div>
-          );})}
-        </div>
-        {weak.length>0&&<div style={{background:"rgba(232,184,75,.07)",border:"1px solid rgba(232,184,75,.2)",borderRadius:12,padding:"1rem 1.2rem",marginBottom:"1rem"}}><div style={{fontSize:10,fontWeight:700,letterSpacing:".1em",textTransform:"uppercase",color:C.yellow,marginBottom:5}}>⚡ Focus Areas</div><div style={{fontSize:13,color:C.dim}}>Put more time into: <strong style={{color:C.yellow}}>{weak.join(", ")}</strong></div></div>}
-        <div style={{display:"flex",gap:".75rem"}}>
-          <button onClick={()=>{setCur(0);setSel(null);setDone(false);setResults([]);setPhase("q");}} style={{background:C.purpleDim,color:C.purple,border:"1px solid rgba(155,141,245,.3)",borderRadius:10,padding:".75rem 1rem",cursor:"pointer",fontWeight:700,fontSize:14,fontFamily:"'DM Sans',sans-serif",flex:1}}>Retake</button>
-          <button onClick={()=>onFinish({date:new Date().toISOString(),results,score:sp,comp})} style={{background:C.gold,color:C.navy,border:"none",borderRadius:10,padding:".75rem 1rem",cursor:"pointer",fontWeight:800,fontSize:14,fontFamily:"'DM Sans',sans-serif",flex:1}}>Save & Return</button>
-        </div>
-      </div>
+function getStreakData() {
+  try { return JSON.parse(localStorage.getItem("iceiq_streak") || "{}"); }
+  catch { return {}; }
+}
+
+function updateStreak(data) {
+  const today = getTodayKey();
+  const yesterday = new Date(Date.now()-86400000).toISOString().slice(0,10);
+  if (data.last === today) return data;
+  if (data.last === yesterday) return {...data, count:(data.count||0)+1, last:today};
+  return {count:1, last:today};
+}
+
+function calcBadges(results, prevScore, totalSessions, hasSeqPerfect, mistakeStreak) {
+  const earned = new Set();
+  let streak = 0;
+  for (const r of results) {
+    if (r.ok) { streak++; if (streak >= 3) earned.add("HOT_STREAK"); }
+    else streak = 0;
+  }
+  if (results.length >= QUIZ_LENGTH && results.every(r => r.ok)) earned.add("HOCKEY_IQ");
+  if (results.filter(r => r.ok && r.d === 3).length >= 5) earned.add("HARD_HAT");
+  const byCat = {};
+  results.forEach(r => {
+    if (!byCat[r.cat]) byCat[r.cat] = {ok:0,tot:0};
+    byCat[r.cat].tot++;
+    if (r.ok) byCat[r.cat].ok++;
+  });
+  if (Object.values(byCat).some(v => v.tot >= 2 && v.ok === v.tot)) earned.add("SNIPER");
+  const score = calcWeightedIQ(results);
+  if (prevScore !== null && score > prevScore) earned.add("LEVEL_UP");
+  if (totalSessions >= 5) earned.add("IRON_MAN");
+  if (hasSeqPerfect) earned.add("TACTICIAN");
+  if (mistakeStreak >= 3) earned.add("DETECTIVE");
+  return [...earned].map(k => BADGES[k]).filter(Boolean);
+}
+
+// Adaptive queue builder
+function buildQueue(level, position, isReturning) {
+  const allQ = QB[level] || [];
+  const posFiltered = position === "Goalie"
+    ? allQ.filter(q => !q.pos || q.pos.includes("G") || q.pos.includes("F"))
+    : position === "Defense"
+    ? allQ.filter(q => !q.pos || q.pos.includes("D") || q.pos.includes("F"))
+    : allQ.filter(q => !q.pos || q.pos.includes("F") || q.pos.includes("D"));
+
+  const byD = {
+    1: shuffle(posFiltered.filter(q => q.d === 1)),
+    2: shuffle(posFiltered.filter(q => q.d === 2)),
+    3: shuffle(posFiltered.filter(q => q.d === 3)),
+  };
+  return { byD, currentD: isReturning ? 2 : 1 };
+}
+
+function pullNext(queue, results) {
+  const last2 = results.slice(-2);
+  let { byD, currentD } = queue;
+  if (last2.length === 2) {
+    if (last2.every(r => r.ok) && currentD < 3) currentD++;
+    else if (last2.every(r => !r.ok) && currentD > 1) currentD--;
+  }
+  if (!byD[currentD].length) {
+    const fb = [1,2,3].find(d => d !== currentD && byD[d].length);
+    if (!fb) return { q: null, queue };
+    currentD = fb;
+  }
+  const i = Math.floor(Math.random() * byD[currentD].length);
+  const q = byD[currentD][i];
+  return { q, queue: { byD: {...byD, [currentD]: byD[currentD].filter((_,j) => j !== i)}, currentD } };
+}
+
+// Storage (coach dashboard)
+async function saveTeamResult(coachCode, results, season) {
+  if (!coachCode || !window.storage) return;
+  const key = "team:" + coachCode.toUpperCase() + ":" + season.replace("-","");
+  let existing = [];
+  try { const r = await window.storage.get(key, true); if (r) existing = JSON.parse(r.value); } catch(e) {}
+  existing.push({ ts: Date.now(), iq: calcWeightedIQ(results), qs: results.map(r => ({id:r.id,ok:r.ok,d:r.d,cat:r.cat})) });
+  if (existing.length > 500) existing = existing.slice(-500);
+  try { await window.storage.set(key, JSON.stringify(existing), true); } catch(e) {}
+}
+
+async function loadTeamData(coachCode, season) {
+  if (!window.storage) return [];
+  const key = "team:" + coachCode.toUpperCase() + ":" + season.replace("-","");
+  try { const r = await window.storage.get(key, true); return r ? JSON.parse(r.value) : []; }
+  catch(e) { return []; }
+}
+
+
+// ─────────────────────────────────────────────────────────
+// RINK DIAGRAMS
+// ─────────────────────────────────────────────────────────
+function RinkDiagram({ type }) {
+  const w=300, h=160, cx=w/2, cy=h/2;
+  const Ice = () => (
+    <g>
+      <rect x="3" y="3" width={w-6} height={h-6} rx="26" fill={C.ice} stroke={C.rink} strokeWidth="1.5"/>
+      <line x1={cx} y1="3" x2={cx} y2={h-3} stroke={C.rink} strokeWidth="1" strokeDasharray="5,4" opacity="0.3"/>
+      <circle cx={cx} cy={cy} r="18" fill="none" stroke={C.rink} strokeWidth="1" opacity="0.3"/>
+      <circle cx={cx} cy={cy} r="3" fill={C.rink} opacity="0.25"/>
+    </g>
+  );
+  const Player = ({x,y,color,label}) => (
+    <g>
+      <circle cx={x} cy={y} r="11" fill={color} stroke="white" strokeWidth="2"/>
+      <text x={x} y={y} textAnchor="middle" dominantBaseline="middle" fill="white" fontSize="7.5" fontWeight="700">{label}</text>
+    </g>
+  );
+  const Arrow = ({x1,y1,x2,y2,color="#c9a84c",dash,arc}) => {
+    const dx=x2-x1, dy=y2-y1, len=Math.sqrt(dx*dx+dy*dy);
+    const ux=dx/len, uy=dy/len;
+    const hx=x2-ux*12, hy=y2-uy*12;
+    const d = arc ? `M${x1} ${y1} Q${(x1+x2)/2} ${y1-22} ${hx} ${hy}` : `M${x1} ${y1} L${hx} ${hy}`;
+    return (
+      <g>
+        <path d={d} fill="none" stroke={color} strokeWidth="2.5" strokeDasharray={dash} opacity="0.9"/>
+        <polygon points={`${x2},${y2} ${hx-uy*5},${hy+ux*5} ${hx+uy*5},${hy-ux*5}`} fill={color} opacity="0.9"/>
+      </g>
     );
+  };
+  const Net = ({x,y}) => <rect x={x} y={y} width="13" height="26" rx="3" fill="none" stroke={C.rink} strokeWidth="2.5"/>;
+  const Puck = ({x,y}) => <circle cx={x} cy={y} r="5" fill="#111827" stroke="white" strokeWidth="1.5"/>;
+  const Tag = ({x,y,text,color}) => (
+    <g>
+      <rect x={x-2} y={y-10} width={text.length*7+4} height={14} rx={4} fill={`${color}22`}/>
+      <text x={x} y={y} fill={color} fontSize="8" fontWeight="700">{text}</text>
+    </g>
+  );
+
+  const diagrams = {
+    "2on1": (
+      <svg width={w} height={h} style={{display:"block"}}>
+        <Ice/><Net x={w-16} y={cy-13}/>
+        <Player x={115} y={cy-18} color="#16a34a" label="A1"/>
+        <Player x={115} y={cy+18} color="#16a34a" label="A2"/>
+        <Player x={200} y={cy} color="#dc2626" label="D"/>
+        <Puck x={126} y={cy-13}/>
+        <Arrow x1={126} y1={cy-18} x2={w-20} y2={cy-8} arc/>
+        <Arrow x1={126} y1={cy+18} x2={w-20} y2={cy+12} color="rgba(22,163,74,0.5)" dash="5,3"/>
+        <Arrow x1={190} y1={cy} x2={170} y2={cy-10} color="#dc2626"/>
+        <Tag x={105} y={16} text="2-ON-1" color={C.rink}/>
+      </svg>
+    ),
+    "coverage": (
+      <svg width={w} height={h} style={{display:"block"}}>
+        <Ice/><Net x={4} y={cy-13}/>
+        <Player x={145} y={45} color="#dc2626" label="A1"/>
+        <Player x={170} y={80} color="#dc2626" label="A2"/>
+        <Player x={145} y={115} color="#dc2626" label="A3"/>
+        <Puck x={155} y={50}/>
+        <Player x={100} y={45} color="#16a34a" label="D1"/>
+        <Player x={100} y={80} color="#16a34a" label="D2"/>
+        <Player x={100} y={115} color="#16a34a" label="F"/>
+        <text x={170} y={98} textAnchor="middle" fill={C.yellow} fontSize="18" fontWeight="800">?</text>
+        <Tag x={120} y={16} text="DEFENSIVE ZONE" color={C.rink}/>
+      </svg>
+    ),
+    "blueline": (
+      <svg width={w} height={h} style={{display:"block"}}>
+        <Ice/><Net x={w-16} y={cy-13}/>
+        <line x1={cx+12} y1="3" x2={cx+12} y2={h-3} stroke="#1d4ed8" strokeWidth="3" opacity="0.8"/>
+        <text x={cx+18} y={18} fill="#1d4ed8" fontSize="8" fontWeight="700">BLUE LINE</text>
+        <Puck x={cx+8} y={cy}/>
+        <Arrow x1={cx+8} y1={cy} x2={cx+38} y2={cy} color="#dc2626"/>
+        <Player x={cx+55} y={cy} color="#16a34a" label="D"/>
+        <Arrow x1={cx+44} y1={cy} x2={cx+20} y2={cy} color="#16a34a"/>
+        <text x={cx-28} y={cy-10} fill="#dc2626" fontSize="9">exit ✗</text>
+        <text x={cx+60} y={cy-18} textAnchor="middle" fill="#16a34a" fontSize="9">keep in ✓</text>
+      </svg>
+    ),
+    "forecheck": (
+      <svg width={w} height={h} style={{display:"block"}}>
+        <Ice/><Net x={4} y={cy-13}/>
+        <Player x={88} y={cy} color="#dc2626" label="D"/>
+        <Puck x={99} y={cy-5}/>
+        <Player x={185} y={80} color="#16a34a" label="F1"/>
+        <Arrow x1={175} y1={82} x2={104} y2={cy} color="#16a34a"/>
+        <Arrow x1={88} y1={cy-12} x2={88} y2={30} color="#dc2626" dash="4,3"/>
+        <Arrow x1={88} y1={cy-12} x2={150} y2={36} color="#dc2626" dash="4,3"/>
+        <text x={60} y={24} fill="#dc2626" fontSize="8">outlet?</text>
+        <Tag x={100} y={16} text="CUT THE ANGLE" color={C.rink}/>
+      </svg>
+    ),
+    "goalie_angle": (
+      <svg width={w} height={h} style={{display:"block"}}>
+        <Ice/><Net x={4} y={cy-13}/>
+        <Player x={165} y={cy-22} color="#dc2626" label="S"/>
+        <Arrow x1={160} y1={cy-20} x2={55} y2={cy} color="#dc2626"/>
+        <Player x={62} y={cy} color="#16a34a" label="G"/>
+        <text x={62} y={cy-24} textAnchor="middle" fill="#16a34a" fontSize="8.5" fontWeight="700">angle ✓</text>
+        <rect x={14} y={cy-9} width="8" height="18" rx="2" fill="none" stroke={C.rink} strokeWidth="2.5"/>
+        <Player x={32} y={cy} color="rgba(22,163,74,0.3)" label="G"/>
+        <text x={32} y={cy-24} textAnchor="middle" fill="#dc2626" fontSize="8.5" fontWeight="700">line ✗</text>
+        <Tag x={100} y={16} text="ANGLE CUTTING" color={C.rink}/>
+      </svg>
+    ),
+    "goalie_2on1": (
+      <svg width={w} height={h} style={{display:"block"}}>
+        <Ice/><Net x={4} y={cy-13}/>
+        <Player x={168} y={cy-22} color="#dc2626" label="A1"/>
+        <Player x={168} y={cy+22} color="#dc2626" label="A2"/>
+        <Player x={105} y={cy} color="#1d4ed8" label="D"/>
+        <Puck x={176} y={cy-18}/>
+        <Player x={42} y={cy} color="#16a34a" label="G"/>
+        <Arrow x1={105} y1={cy} x2={135} y2={cy+20} color="#1d4ed8"/>
+        <text x={42} y={cy-24} textAnchor="middle" fill="#16a34a" fontSize="8">set for shot</text>
+        <Tag x={95} y={16} text="2-ON-1 GOALIE" color={C.rink}/>
+      </svg>
+    ),
+  };
+
+  return diagrams[type] ? (
+    <div style={{background:"#f0f8ff",borderRadius:14,padding:".85rem",border:`2px solid ${C.rink}28`,display:"flex",justifyContent:"center"}}>
+      {diagrams[type]}
+    </div>
+  ) : null;
+}
+
+const DIAGRAMS = {
+  u11q1:"2on1", u11q7:"2on1", u11q16:"2on1", u11q17:"2on1", u11q41:"2on1",
+  u11q2:"coverage", u11q14:"coverage", u11q19:"coverage", u11q44:"coverage",
+  u11q3:"blueline", u11q20:"blueline", u11q47:"blueline",
+  u11q4:"forecheck", u11q24:"forecheck",
+  u11g1:"goalie_angle", u11g2:"goalie_2on1", u11g7:"goalie_angle",
+};
+
+
+// ─────────────────────────────────────────────────────────
+// QUESTION FORMAT COMPONENTS
+// ─────────────────────────────────────────────────────────
+function MCQuestion({ q, sel, onPick, colorblind }) {
+  const correctColor = colorblind ? "#2563eb" : C.green;
+  const wrongColor = colorblind ? "#ea580c" : C.red;
+  return (
+    <div style={{display:"flex",flexDirection:"column",gap:".55rem"}}>
+      {q.opts.map((opt, i) => {
+        const picked = sel !== null;
+        const isCorrect = i === q.ok;
+        const isWrong = picked && i === sel && !isCorrect;
+        let bg=C.dimmest, bdr=C.border, col=C.dim, leftBdr="transparent";
+        if (picked) {
+          if (isCorrect) { bg=colorblind?"rgba(37,99,235,.1)":"rgba(34,197,94,.1)"; bdr=colorblind?"rgba(37,99,235,.35)":"rgba(34,197,94,.3)"; col=C.white; leftBdr=correctColor; }
+          else if (isWrong) { bg=colorblind?"rgba(234,88,12,.08)":C.redDim; bdr=colorblind?"rgba(234,88,12,.3)":C.redBorder; col=C.dimmer; leftBdr=wrongColor; }
+        } else if (sel === i) { bg=C.purpleDim; bdr=C.purpleBorder; col=C.white; }
+        return (
+          <button key={i} onClick={() => onPick(i)} disabled={sel !== null}
+            style={{
+              background:bg, border:`1px solid ${bdr}`,
+              borderLeft:`3px solid ${leftBdr}`,
+              borderRadius:12, padding:".95rem 1.1rem",
+              cursor:sel!==null?"default":"pointer",
+              textAlign:"left", color:col,
+              fontFamily:FONT.body, fontSize:14, lineHeight:1.55,
+              display:"flex", alignItems:"flex-start", gap:".75rem",
+              transition:"all .15s", width:"100%",
+            }}>
+            <span style={{
+              fontSize:11, fontWeight:800, minWidth:22, marginTop:1, flexShrink:0,
+              color:picked?(isCorrect?correctColor:isWrong?wrongColor:C.dimmest):C.dimmer,
+              fontFamily:FONT.display,
+            }}>
+              {picked ? (isCorrect ? "✓" : isWrong ? "✗" : String.fromCharCode(65+i)) : String.fromCharCode(65+i)}
+            </span>
+            <span>{opt}</span>
+          </button>
+        );
+      })}
+    </div>
+  );
+}
+
+function SeqQuestion({ q, onAnswer, answered }) {
+  const [order, setOrder] = useState(() => [...Array(q.items.length).keys()]);
+  const [submitted, setSubmitted] = useState(false);
+  const [correct, setCorrect] = useState(false);
+
+  function moveUp(i) { if (i === 0 || submitted) return; const o=[...order]; [o[i-1],o[i]]=[o[i],o[i-1]]; setOrder(o); }
+  function moveDown(i) { if (i === order.length-1 || submitted) return; const o=[...order]; [o[i],o[i+1]]=[o[i+1],o[i]]; setOrder(o); }
+
+  function submit() {
+    if (submitted) return;
+    const isCorrect = order.every((v,i) => v === q.correct_order[i]);
+    setSubmitted(true);
+    setCorrect(isCorrect);
+    onAnswer(isCorrect);
   }
 
-  return(
-    <div style={{minHeight:"100vh",display:"flex",flexDirection:"column"}}>
-      <div style={{position:"sticky",top:0,zIndex:10,background:"rgba(10,22,40,.97)",backdropFilter:"blur(12px)",borderBottom:`1px solid ${C.border}`,padding:".9rem 1.25rem",display:"flex",alignItems:"center",gap:"1rem"}}>
-        <button onClick={onBack} style={{background:"none",border:`1px solid ${C.border}`,color:C.dim,borderRadius:8,padding:".35rem .75rem",cursor:"pointer",fontSize:13,fontFamily:"'DM Sans',sans-serif"}}>←</button>
-        <div style={{flex:1}}><div style={{fontWeight:700,fontSize:13}}>🧠 IQ Quiz · {player.level}</div><div style={{fontSize:11,color:C.dimmer}}>{player.name} · {cur+1}/{total} · {isReturning?"Adaptive":"Baseline"}</div></div>
-        <div style={{width:80,height:4,background:C.dimmest,borderRadius:2,overflow:"hidden"}}><div style={{height:"100%",width:`${(cur/total)*100}%`,background:C.purple,borderRadius:2,transition:"width .3s"}}/></div>
+  return (
+    <div>
+      <div style={{display:"flex",flexDirection:"column",gap:".5rem",marginBottom:"1rem"}}>
+        {order.map((itemIdx, i) => {
+          const isRight = submitted && q.correct_order[i] === itemIdx;
+          const isWrong = submitted && !isRight;
+          return (
+            <div key={itemIdx} style={{
+              display:"flex", alignItems:"center", gap:".6rem",
+              background:submitted ? (isRight ? "rgba(34,197,94,.08)" : "rgba(239,68,68,.06)") : C.bgElevated,
+              border:`1px solid ${submitted ? (isRight ? C.greenBorder : C.redBorder) : C.border}`,
+              borderLeft:`3px solid ${submitted ? (isRight ? C.green : C.red) : C.purple}`,
+              borderRadius:12, padding:".8rem 1rem",
+              transition:"all .2s",
+            }}>
+              <div style={{fontFamily:FONT.display,fontWeight:800,fontSize:"1.2rem",color:C.gold,minWidth:26,textAlign:"center"}}>{i+1}</div>
+              <div style={{flex:1,fontSize:13,color:C.white,lineHeight:1.5}}>{q.items[itemIdx]}</div>
+              {!submitted && (
+                <div style={{display:"flex",flexDirection:"column",gap:1}}>
+                  <button onClick={()=>moveUp(i)} style={{background:"none",border:`1px solid ${C.border}`,color:C.dimmer,cursor:"pointer",fontSize:12,padding:"3px 7px",borderRadius:5,lineHeight:1}}>▲</button>
+                  <button onClick={()=>moveDown(i)} style={{background:"none",border:`1px solid ${C.border}`,color:C.dimmer,cursor:"pointer",fontSize:12,padding:"3px 7px",borderRadius:5,lineHeight:1}}>▼</button>
+                </div>
+              )}
+              {submitted && <span style={{fontSize:16,flexShrink:0}}>{isRight?"✓":"✗"}</span>}
+            </div>
+          );
+        })}
       </div>
-      <div style={{flex:1,padding:"1.5rem 1.25rem",maxWidth:520,margin:"0 auto",width:"100%"}}>
-        <div style={{display:"flex",gap:".4rem",marginBottom:"1.2rem",flexWrap:"wrap"}}>
-          <span style={{fontSize:11,background:C.purpleDim,color:C.purple,padding:"3px 10px",borderRadius:20,border:"1px solid rgba(155,141,245,.25)",fontWeight:600}}>{q.cat}</span>
-          <span style={{fontSize:11,background:C.dimmest,color:C.dimmer,padding:"3px 10px",borderRadius:20,border:`1px solid ${C.border}`}}>{q.concept}</span>
+      {!submitted && (
+        <button onClick={submit} style={{background:C.purple,color:C.white,border:"none",borderRadius:12,padding:".85rem",cursor:"pointer",fontWeight:700,fontSize:14,fontFamily:FONT.body,width:"100%"}}>
+          Submit Order →
+        </button>
+      )}
+    </div>
+  );
+}
+
+function TFQuestion({ q, sel, onPick }) {
+  return (
+    <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:"1rem"}}>
+      {[{label:"TRUE",val:1,color:C.green},{label:"FALSE",val:0,color:C.red}].map(({label,val,color}) => {
+        const picked = sel !== null;
+        const isCorrect = val === (q.ok ? 1 : 0);
+        const isSelected = sel === val;
+        let bg=C.bgElevated, bdr=C.border, textColor=C.dim;
+        if (picked) {
+          if (isCorrect) { bg=val===1?"rgba(34,197,94,.1)":"rgba(239,68,68,.08)"; bdr=color+"50"; textColor=color; }
+          else if (isSelected) { bg=C.redDim; bdr=C.redBorder; textColor=C.red; }
+        } else if (isSelected) { bg=C.purpleDim; bdr=C.purpleBorder; textColor=C.purple; }
+        return (
+          <button key={label} onClick={() => onPick(val)} disabled={sel !== null}
+            style={{
+              background:bg, border:`1px solid ${bdr}`,
+              borderRadius:14, padding:"1.5rem 1rem",
+              cursor:sel!==null?"default":"pointer",
+              textAlign:"center",
+              fontFamily:FONT.display, fontWeight:800,
+              fontSize:"1.5rem", letterSpacing:".06em",
+              color:textColor, transition:"all .15s",
+            }}>
+            {label}
+            {picked && isCorrect && <div style={{fontSize:11,fontFamily:FONT.body,marginTop:6,fontWeight:600}}>✓ Correct</div>}
+            {picked && isSelected && !isCorrect && <div style={{fontSize:11,fontFamily:FONT.body,marginTop:6,color:C.red,fontWeight:600}}>✗ Wrong</div>}
+          </button>
+        );
+      })}
+    </div>
+  );
+}
+
+function NextQuestion({ q, sel, onPick }) {
+  return (
+    <div style={{display:"flex",flexDirection:"column",gap:".55rem"}}>
+      {q.opts.map((opt, i) => {
+        const picked = sel !== null;
+        const isCorrect = i === q.ok;
+        const isWrong = picked && i === sel && !isCorrect;
+        let bg=C.dimmest, bdr=C.border, col=C.dim, leftBdr="transparent";
+        if (picked) {
+          if (isCorrect) { bg="rgba(34,197,94,.1)"; bdr=C.greenBorder; col=C.white; leftBdr=C.green; }
+          else if (isWrong) { bg=C.redDim; bdr=C.redBorder; col=C.dimmer; leftBdr=C.red; }
+        } else if (sel === i) { bg=C.purpleDim; bdr=C.purpleBorder; col=C.white; }
+        return (
+          <button key={i} onClick={() => onPick(i)} disabled={sel !== null}
+            style={{background:bg,border:`1px solid ${bdr}`,borderLeft:`3px solid ${leftBdr}`,borderRadius:12,padding:".95rem 1.1rem",cursor:sel!==null?"default":"pointer",textAlign:"left",color:col,fontFamily:FONT.body,fontSize:14,lineHeight:1.55,display:"flex",alignItems:"flex-start",gap:".75rem",transition:"all .15s",width:"100%"}}>
+            <span style={{fontSize:11,fontWeight:800,minWidth:22,marginTop:1,flexShrink:0,color:picked?(isCorrect?C.green:isWrong?C.red:C.dimmest):C.dimmer,fontFamily:FONT.display}}>
+              {picked?(isCorrect?"✓":isWrong?"✗":String.fromCharCode(65+i)):String.fromCharCode(65+i)}
+            </span>
+            <span>{opt}</span>
+          </button>
+        );
+      })}
+    </div>
+  );
+}
+
+// Type badge for question header
+const Q_TYPE_LABELS = {
+  mc:      {label:"Multiple Choice", color:C.purple,   icon:"📝"},
+  seq:     {label:"Put in Order",    color:C.gold,     icon:"🔢"},
+  mistake: {label:"Spot the Mistake",color:C.red,      icon:"🔍"},
+  next:    {label:"What Happens Next",color:C.yellow,  icon:"🔮"},
+  tf:      {label:"True or False",   color:C.blue,     icon:"⚡"},
+};
+
+
+// ─────────────────────────────────────────────────────────
+// ONBOARDING
+// ─────────────────────────────────────────────────────────
+function Onboarding({ onComplete }) {
+  const [step, setStep] = useState(0);
+  const [name, setName] = useState("");
+  const [level, setLevel] = useState("");
+  const [position, setPosition] = useState("");
+
+  const posIcons = {Forward:"⚡", Defense:"🛡", Goalie:"🧤"};
+
+  if (step === 0) return (
+    <div style={{minHeight:"100vh",background:`linear-gradient(160deg,#080e1a 0%,#0d1e3a 60%,#080e1a 100%)`,display:"flex",flexDirection:"column",justifyContent:"center",padding:"2rem 1.5rem",fontFamily:FONT.body,color:C.white}}>
+      <div style={{maxWidth:460,margin:"0 auto",width:"100%"}}>
+        <div style={{marginBottom:"2.5rem"}}>
+          <div style={{display:"flex",alignItems:"center",gap:".6rem",marginBottom:"1.5rem"}}>
+            <span style={{fontSize:28}}>🏒</span>
+            <span style={{fontFamily:FONT.display,fontWeight:800,fontSize:"2rem",color:C.gold,letterSpacing:".08em"}}>IceIQ</span>
+          </div>
+          <h1 style={{fontFamily:FONT.display,fontWeight:800,fontSize:"clamp(2rem,7vw,3rem)",lineHeight:1.08,margin:"0 0 1.1rem",letterSpacing:"-.01em"}}>
+            Know the game.<br/>Own your development.
+          </h1>
+          <p style={{fontSize:15,color:C.dim,lineHeight:1.75,margin:0}}>
+            The only player development tool that tests what you actually know — not just how fast you skate. Age-calibrated, position-specific, and built on real hockey frameworks.
+          </p>
         </div>
-        <div style={{background:C.purpleDim,border:"1px solid rgba(155,141,245,.2)",borderRadius:14,padding:"1.4rem",marginBottom:"1.4rem"}}>
-          <div style={{fontSize:10,letterSpacing:".14em",textTransform:"uppercase",color:C.purple,marginBottom:".7rem",fontWeight:700}}>📋 Game Situation</div>
-          <div style={{fontSize:15,lineHeight:1.75,color:C.white,fontWeight:500}}>{q.sit}</div>
+        {[
+          {icon:"🧠",text:"Real game scenarios calibrated to your age level"},
+          {icon:"📊",text:"Self-assessment + coach comparison side by side"},
+          {icon:"📈",text:"IQ Score that travels across every season and team"},
+          {icon:"🎯",text:"Multiple question formats that test true understanding"},
+        ].map((f,i) => (
+          <div key={i} style={{display:"flex",alignItems:"center",gap:".85rem",padding:".75rem 1rem",background:C.bgGlass,borderRadius:12,border:`1px solid ${C.border}`,marginBottom:".6rem"}}>
+            <span style={{fontSize:18,flexShrink:0}}>{f.icon}</span>
+            <span style={{fontSize:13,color:C.dim,lineHeight:1.5}}>{f.text}</span>
+          </div>
+        ))}
+        <PrimaryBtn onClick={() => setStep(1)} style={{marginTop:"1.75rem"}}>Build Your Profile →</PrimaryBtn>
+        <div style={{fontSize:11,color:C.dimmer,textAlign:"center",marginTop:"1rem"}}>Aligned with Hockey Canada LTAD · USA Hockey ADM</div>
+      </div>
+    </div>
+  );
+
+  if (step === 1) return (
+    <Screen>
+      <div style={{marginBottom:"2rem"}}>
+        <div style={{fontSize:10,letterSpacing:".18em",color:C.gold,textTransform:"uppercase",fontWeight:700,marginBottom:".6rem"}}>Step 1 of 3</div>
+        <h2 style={{fontFamily:FONT.display,fontWeight:800,fontSize:"2rem",margin:0}}>What's your name?</h2>
+      </div>
+      <Card style={{marginBottom:"1.5rem"}}>
+        <input value={name} onChange={e => setName(e.target.value)}
+          placeholder="First name"
+          autoFocus
+          style={{background:"none",border:"none",color:C.white,fontSize:22,fontFamily:FONT.display,fontWeight:700,width:"100%",outline:"none",padding:"0"}}
+        />
+        <div style={{height:2,background:name?C.gold:C.border,borderRadius:2,marginTop:".75rem",transition:"background .2s"}}/>
+      </Card>
+      <PrimaryBtn onClick={() => name.trim() && setStep(2)} disabled={!name.trim()}>Continue →</PrimaryBtn>
+    </Screen>
+  );
+
+  if (step === 2) return (
+    <Screen>
+      <div style={{marginBottom:"2rem"}}>
+        <div style={{fontSize:10,letterSpacing:".18em",color:C.gold,textTransform:"uppercase",fontWeight:700,marginBottom:".6rem"}}>Step 2 of 3</div>
+        <h2 style={{fontFamily:FONT.display,fontWeight:800,fontSize:"2rem",margin:0}}>What level, {name}?</h2>
+      </div>
+      <div style={{display:"flex",flexDirection:"column",gap:".6rem",marginBottom:"1.5rem"}}>
+        {LEVELS.map(l => (
+          <button key={l} onClick={() => setLevel(l)} style={{
+            background:level===l?C.goldDim:C.bgCard,
+            border:`1px solid ${level===l?C.gold:C.border}`,
+            borderLeft:`3px solid ${level===l?C.gold:"transparent"}`,
+            borderRadius:12,padding:"1rem 1.25rem",
+            cursor:"pointer",textAlign:"left",
+            color:level===l?C.gold:C.dim,
+            fontFamily:FONT.body,fontSize:15,
+            fontWeight:level===l?700:400,
+            display:"flex",justifyContent:"space-between",
+            transition:"all .15s",
+          }}>
+            <span>{l}</span>
+            {level===l && <span>✓</span>}
+          </button>
+        ))}
+      </div>
+      <PrimaryBtn onClick={() => level && setStep(3)} disabled={!level}>Continue →</PrimaryBtn>
+    </Screen>
+  );
+
+  return (
+    <Screen>
+      <div style={{marginBottom:"2rem"}}>
+        <div style={{fontSize:10,letterSpacing:".18em",color:C.gold,textTransform:"uppercase",fontWeight:700,marginBottom:".6rem"}}>Step 3 of 3</div>
+        <h2 style={{fontFamily:FONT.display,fontWeight:800,fontSize:"2rem",margin:0}}>What position?</h2>
+      </div>
+      <div style={{display:"grid",gridTemplateColumns:"1fr 1fr 1fr",gap:".75rem",marginBottom:"1.5rem"}}>
+        {POSITIONS.map(p => (
+          <button key={p} onClick={() => setPosition(p)} style={{
+            background:position===p?C.goldDim:C.bgCard,
+            border:`1px solid ${position===p?C.gold:C.border}`,
+            borderRadius:14,padding:"1.25rem .75rem",
+            cursor:"pointer",textAlign:"center",
+            transition:"all .15s",
+          }}>
+            <div style={{fontSize:26,marginBottom:".4rem"}}>{posIcons[p]}</div>
+            <div style={{fontSize:13,color:position===p?C.gold:C.dim,fontWeight:position===p?700:400,fontFamily:FONT.body}}>{p}</div>
+          </button>
+        ))}
+      </div>
+      <PrimaryBtn
+        onClick={() => position && onComplete({name:name.trim(),level,position,selfRatings:initSR(level),quizHistory:[],goals:{},coachCode:"",season:SEASONS[0],sessionLength:15,colorblind:false})}
+        disabled={!position}
+      >
+        Build {name}'s Profile →
+      </PrimaryBtn>
+    </Screen>
+  );
+}
+
+
+// ─────────────────────────────────────────────────────────
+// HOME SCREEN
+// ─────────────────────────────────────────────────────────
+function Home({ player, onNav }) {
+  const { name, level, position, selfRatings, quizHistory, goals } = player;
+  const latest = quizHistory[quizHistory.length-1];
+  const iq = latest ? calcWeightedIQ(latest.results) : null;
+  const tier = iq !== null ? getTier(iq) : null;
+  const totalSessions = quizHistory.length;
+  const ratedSkills = Object.values(selfRatings||{}).filter(v => v !== null).length;
+  const totalSkills = Object.keys(selfRatings||{}).length;
+  const goalCount = Object.keys(goals||{}).filter(k => goals[k]?.goal).length;
+  const goalCats = (GOAL_CATS[level]||[]).length;
+
+  // Streak
+  const [streak, setStreak] = useState(0);
+  useEffect(() => {
+    const sd = getStreakData();
+    const today = getTodayKey();
+    const yesterday = new Date(Date.now()-86400000).toISOString().slice(0,10);
+    if (sd.last === today || sd.last === yesterday) setStreak(sd.count || 0);
+  }, []);
+
+  return (
+    <div style={{minHeight:"100vh",background:C.bg,fontFamily:FONT.body,color:C.white,paddingBottom:80}}>
+      {/* Header */}
+      <div style={{padding:"1.5rem 1.25rem 1rem",maxWidth:560,margin:"0 auto"}}>
+        <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start",marginBottom:"1.5rem"}}>
+          <div>
+            <div style={{display:"flex",alignItems:"center",gap:".5rem",marginBottom:".2rem"}}>
+              <span style={{fontFamily:FONT.display,fontWeight:800,fontSize:"1.5rem",color:C.gold,letterSpacing:".06em"}}>IceIQ</span>
+              {streak > 0 && (
+                <div style={{background:"rgba(234,179,8,.12)",border:"1px solid rgba(234,179,8,.25)",borderRadius:20,padding:"2px 8px",fontSize:11,fontWeight:700,color:C.yellow,display:"flex",alignItems:"center",gap:".2rem"}}>
+                  🔥{streak}
+                </div>
+              )}
+            </div>
+            <div style={{fontSize:12,color:C.dimmer}}>{name} · {level} · {position}</div>
+          </div>
+          <button onClick={() => onNav("profile")} style={{background:C.bgCard,border:`1px solid ${C.border}`,borderRadius:10,width:38,height:38,cursor:"pointer",color:C.dimmer,fontSize:16,display:"flex",alignItems:"center",justifyContent:"center"}}>⚙</button>
         </div>
-        <div style={{display:"flex",flexDirection:"column",gap:".55rem",marginBottom:"1.4rem"}}>
-          {q.opts.map((opt,i)=>{
-            let bg=C.dimmest,border=C.border,col=C.dim,icon=null;
-            if(done){if(i===q.ok){bg="rgba(76,175,130,.12)";border="rgba(76,175,130,.4)";col=C.white;icon="✓";}else if(i===sel&&i!==q.ok){bg="rgba(224,82,82,.1)";border="rgba(224,82,82,.35)";col=C.dimmer;icon="✗";}}
-            else if(sel===i){bg=C.purpleDim;border="rgba(155,141,245,.4)";col=C.white;}
-            return(<button key={i} onClick={()=>pick(i)} disabled={done} style={{background:bg,border:`1px solid ${border}`,borderRadius:10,padding:".9rem 1rem",cursor:done?"default":"pointer",textAlign:"left",color:col,fontFamily:"'DM Sans',sans-serif",fontSize:14,lineHeight:1.5,display:"flex",alignItems:"flex-start",gap:".7rem",transition:"all .15s"}}>
-              <span style={{fontSize:12,fontWeight:700,color:done?(i===q.ok?C.green:i===sel?C.red:C.dimmest):C.dimmer,minWidth:20,marginTop:1}}>{done&&icon?icon:String.fromCharCode(65+i)}</span>
-              <span>{opt}</span>
-            </button>);
-          })}
+
+        {/* IQ Score Hero */}
+        <Card glow={iq !== null} style={{marginBottom:"1rem",background:`linear-gradient(135deg,${C.bgCard},${C.bgElevated})`,position:"relative",overflow:"hidden"}}>
+          <div style={{position:"absolute",top:0,right:0,width:120,height:120,background:`radial-gradient(circle at top right,${iq!==null?tier.color+"15":"rgba(255,255,255,.02)"},transparent 70%)`,pointerEvents:"none"}}/>
+          <Label>Hockey IQ Score</Label>
+          {iq !== null ? (
+            <div style={{display:"flex",alignItems:"flex-end",gap:"1rem"}}>
+              <div>
+                <div style={{fontFamily:FONT.display,fontWeight:800,fontSize:"4.5rem",color:tier.color,lineHeight:.9,letterSpacing:"-.02em"}}>{iq}<span style={{fontSize:"1.8rem"}}>%</span></div>
+                <div style={{fontSize:13,color:C.dimmer,marginTop:".4rem"}}>{latest.results.filter(r=>r.ok).length}/{latest.results.length} correct</div>
+              </div>
+              <div>
+                <div style={{fontFamily:FONT.display,fontWeight:700,fontSize:"1.2rem",color:C.white}}>{tier.badge} {tier.label}</div>
+                <div style={{fontSize:12,color:C.dimmer,marginTop:2}}>{totalSessions} session{totalSessions!==1?"s":""}</div>
+              </div>
+            </div>
+          ) : (
+            <div>
+              <div style={{fontFamily:FONT.display,fontWeight:800,fontSize:"3rem",color:"rgba(255,255,255,.1)",lineHeight:.9}}>—</div>
+              <div style={{fontSize:13,color:C.dimmer,marginTop:".5rem"}}>Take your first quiz to get your baseline score</div>
+            </div>
+          )}
+        </Card>
+
+        {/* Quick action grid */}
+        <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:".75rem",marginBottom:"1rem"}}>
+          <button onClick={() => onNav("quiz")} style={{background:`linear-gradient(135deg,rgba(124,111,205,.15),rgba(124,111,205,.05))`,border:`1px solid ${C.purpleBorder}`,borderRadius:14,padding:"1.1rem",cursor:"pointer",textAlign:"left",color:C.white,fontFamily:FONT.body}}>
+            <div style={{fontSize:22,marginBottom:".4rem"}}>🧠</div>
+            <div style={{fontWeight:700,fontSize:14,marginBottom:2}}>Take Quiz</div>
+            <div style={{fontSize:11,color:C.purple}}>Adaptive · {player.sessionLength||15}Q</div>
+          </button>
+          <button onClick={() => onNav("goals")} style={{background:`linear-gradient(135deg,rgba(201,168,76,.1),rgba(201,168,76,.03))`,border:`1px solid ${C.goldBorder}`,borderRadius:14,padding:"1.1rem",cursor:"pointer",textAlign:"left",color:C.white,fontFamily:FONT.body}}>
+            <div style={{fontSize:22,marginBottom:".4rem"}}>🎯</div>
+            <div style={{fontWeight:700,fontSize:14,marginBottom:2}}>My Goals</div>
+            <div style={{fontSize:11,color:C.gold}}>{goalCount}/{goalCats} set</div>
+          </button>
+          <button onClick={() => onNav("skills")} style={{background:C.bgCard,border:`1px solid ${C.border}`,borderRadius:14,padding:"1.1rem",cursor:"pointer",textAlign:"left",color:C.white,fontFamily:FONT.body}}>
+            <div style={{fontSize:22,marginBottom:".4rem"}}>📊</div>
+            <div style={{fontWeight:700,fontSize:14,marginBottom:2}}>My Skills</div>
+            <div style={{fontSize:11,color:C.dimmer}}>{ratedSkills}/{totalSkills} rated</div>
+          </button>
+          <button onClick={() => onNav("report")} style={{background:C.bgCard,border:`1px solid ${C.border}`,borderRadius:14,padding:"1.1rem",cursor:"pointer",textAlign:"left",color:C.white,fontFamily:FONT.body}}>
+            <div style={{fontSize:22,marginBottom:".4rem"}}>📋</div>
+            <div style={{fontWeight:700,fontSize:14,marginBottom:2}}>Report</div>
+            <div style={{fontSize:11,color:C.dimmer}}>Development arc</div>
+          </button>
         </div>
-        {done&&<div style={{background:sel===q.ok?"rgba(76,175,130,.06)":"rgba(224,82,82,.05)",border:`1px solid ${sel===q.ok?"rgba(76,175,130,.22)":"rgba(224,82,82,.22)"}`,borderRadius:12,padding:"1rem 1.2rem",marginBottom:"1.2rem"}}>
-          <div style={{fontSize:10,letterSpacing:".12em",textTransform:"uppercase",color:sel===q.ok?C.green:C.red,fontWeight:700,marginBottom:".5rem"}}>{sel===q.ok?"✓ Correct":"✗ Incorrect"}</div>
-          <div style={{fontSize:13,color:C.dim,lineHeight:1.7,marginBottom:".7rem"}}>{q.why}</div>
-          <div style={{fontSize:12,color:C.purple,fontStyle:"italic",borderTop:`1px solid ${C.border}`,paddingTop:".6rem"}}>💡 {q.tip}</div>
-        </div>}
-        {done&&<button onClick={next} style={{background:C.purple,color:C.white,border:"none",borderRadius:10,padding:".7rem 1.6rem",cursor:"pointer",fontWeight:700,fontSize:14,fontFamily:"'DM Sans',sans-serif",width:"100%"}}>{last?"See Results →":"Next Question →"}</button>}
+
+        {/* What's New */}
+        <Card style={{marginBottom:"1rem"}}>
+          <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:".75rem"}}>
+            <Label style={{marginBottom:0}}>What's New</Label>
+            <span style={{fontSize:11,color:C.dimmer}}>v{VERSION}</span>
+          </div>
+          {CHANGELOG[0].notes.slice(0,3).map((note,i) => (
+            <div key={i} style={{display:"flex",gap:".5rem",marginBottom:".35rem",alignItems:"flex-start"}}>
+              <span style={{color:C.gold,fontSize:11,flexShrink:0,marginTop:2}}>·</span>
+              <span style={{fontSize:12,color:C.dim,lineHeight:1.5}}>{note}</span>
+            </div>
+          ))}
+        </Card>
       </div>
     </div>
   );
 }
 
-function Skills({player,onSave,onBack}){
-  const [ratings,setR]=useState({...player.selfRatings});
-  const [ac,setAc]=useState(0);
-  const cats=SKILLS[player.level]||[];
-  const cat=cats[ac];
-  const total=Object.keys(ratings).length;
-  const rated=Object.values(ratings).filter(v=>v!==null).length;
-  return(
-    <div style={{minHeight:"100vh",display:"flex",flexDirection:"column"}}>
-      <div style={{position:"sticky",top:0,zIndex:10,background:"rgba(10,22,40,.97)",backdropFilter:"blur(12px)",borderBottom:`1px solid ${C.border}`,padding:".9rem 1.25rem",display:"flex",alignItems:"center",gap:"1rem"}}>
-        <button onClick={onBack} style={{background:"none",border:`1px solid ${C.border}`,color:C.dim,borderRadius:8,padding:".35rem .75rem",cursor:"pointer",fontSize:13,fontFamily:"'DM Sans',sans-serif"}}>←</button>
-        <div style={{flex:1}}><div style={{fontWeight:700,fontSize:13}}>{player.name}'s Skills</div><div style={{fontSize:11,color:C.dimmer}}>{rated}/{total} rated</div></div>
-        <div style={{width:80,height:4,background:C.dimmest,borderRadius:2,overflow:"hidden"}}><div style={{height:"100%",width:`${(rated/total)*100}%`,background:C.gold,borderRadius:2,transition:"width .3s"}}/></div>
-        <button onClick={()=>onSave(ratings)} style={{background:C.gold,color:C.navy,border:"none",borderRadius:8,padding:".45rem 1rem",cursor:"pointer",fontWeight:700,fontSize:13,fontFamily:"'DM Sans',sans-serif"}}>Save</button>
-      </div>
-      <div style={{display:"flex",overflowX:"auto",borderBottom:`1px solid ${C.border}`,background:C.navy}}>
-        {cats.map((c,i)=>{const cr=c.skills.filter(s=>ratings[s.id]!==null).length;const active=i===ac;return(
-          <button key={i} onClick={()=>setAc(i)} style={{background:"none",border:"none",borderBottom:`2px solid ${active?(c.isDM?C.purple:C.gold):"transparent"}`,color:active?C.white:C.dimmer,padding:".75rem 1rem",cursor:"pointer",fontSize:12,fontFamily:"'DM Sans',sans-serif",fontWeight:active?700:400,whiteSpace:"nowrap",transition:"all .15s",display:"flex",alignItems:"center",gap:".35rem"}}>
-            <span>{c.icon}</span><span>{c.cat==="Game Decision-Making"?"Game IQ":c.cat}</span>
-            {cr===c.skills.length&&<span style={{color:C.green,fontSize:10}}>✓</span>}
-          </button>
-        );})}
-      </div>
-      <div style={{flex:1,padding:"1.25rem",maxWidth:520,margin:"0 auto",width:"100%"}}>
-        {cat?.isDM&&<div style={{background:C.purpleDim,border:"1px solid rgba(155,141,245,.15)",borderRadius:10,padding:".75rem 1rem",marginBottom:"1rem"}}><div style={{fontSize:12,color:C.purple,lineHeight:1.6}}>🧠 Rate how you think you're doing in each game situation — be honest with yourself. Your coach will rate these too and you'll see both side by side.</div></div>}
-        <div style={{display:"flex",flexDirection:"column",gap:".75rem"}}>
-          {cat?.skills.map(s=>(
-            <div key={s.id} style={{background:C.dimmest,border:`1px solid ${ratings[s.id]?`${RC[ratings[s.id]]}35`:C.border}`,borderRadius:12,padding:"1rem 1.1rem",transition:"border-color .2s"}}>
-              <div style={{fontWeight:700,fontSize:14,marginBottom:3}}>{s.name}</div>
-              <div style={{fontSize:12,color:C.dimmer,marginBottom:".85rem",lineHeight:1.5}}>{s.selfQ||s.desc}</div>
-              {player.coachRatings?.[s.id]&&<div style={{fontSize:11,color:RC[player.coachRatings[s.id]],marginBottom:".6rem",fontWeight:600}}>Coach rated: {player.coachRatings[s.id]}</div>}
-              <div style={{display:"flex",gap:".4rem"}}>
-                {RATINGS.map(r=><button key={r} onClick={()=>setR(p=>({...p,[s.id]:r}))} style={{background:ratings[s.id]===r?RC[r]:C.dimmest,color:ratings[s.id]===r?C.white:C.dimmer,border:`1px solid ${ratings[s.id]===r?RC[r]:C.border}`,borderRadius:8,padding:".4rem .65rem",cursor:"pointer",fontSize:12,fontWeight:ratings[s.id]===r?700:400,fontFamily:"'DM Sans',sans-serif",transition:"all .15s",flex:1,textAlign:"center"}}>{r}</button>)}
+
+// ─────────────────────────────────────────────────────────
+// QUIZ SCREEN
+// ─────────────────────────────────────────────────────────
+function Quiz({ player, onFinish, onBack }) {
+  const isReturning = player.quizHistory.length > 0;
+  const qLen = player.sessionLength || 15;
+  const [queue, setQueue] = useState(null);
+  const [question, setQuestion] = useState(null);
+  const [sel, setSel] = useState(null);
+  const [seqAnswered, setSeqAnswered] = useState(false);
+  const [seqCorrect, setSeqCorrect] = useState(false);
+  const [results, setResults] = useState([]);
+  const [seqPerfect, setSeqPerfect] = useState(true);
+  const [mistakeStreak, setMistakeStreak] = useState(0);
+
+  useEffect(() => {
+    const q = buildQueue(player.level, player.position, isReturning);
+    const { q: first, queue: q2 } = pullNext(q, []);
+    setQueue(q2);
+    setQuestion(first);
+  }, []);
+
+  const qNum = results.length;
+  const isLast = qNum >= qLen - 1;
+  const qtype = question?.type || "mc";
+
+  function handlePick(i) {
+    if (sel !== null || !question) return;
+    setSel(i);
+    const ok = i === question.ok;
+    const newResult = { id:question.id, cat:question.cat, ok, d:question.d||2, type:qtype };
+    const newResults = [...results, newResult];
+    if (question.type === "mistake" && ok) setMistakeStreak(s => s+1);
+    if (isLast) {
+      onFinish(newResults, seqPerfect, mistakeStreak);
+    } else {
+      setResults(newResults);
+    }
+  }
+
+  function handleSeqAnswer(ok) {
+    setSeqAnswered(true);
+    setSeqCorrect(ok);
+    if (!ok) setSeqPerfect(false);
+    const newResult = { id:question.id, cat:question.cat, ok, d:question.d||2, type:"seq" };
+    const newResults = [...results, newResult];
+    if (isLast) {
+      onFinish(newResults, seqPerfect && ok, mistakeStreak);
+    } else {
+      setResults(newResults);
+    }
+  }
+
+  function advance() {
+    if (!question) return;
+    const { q: nextQ, queue: nextQueue } = pullNext(queue, results);
+    setQueue(nextQueue);
+    setQuestion(nextQ);
+    setSel(null);
+    setSeqAnswered(false);
+    setSeqCorrect(false);
+  }
+
+  const canAdvance = qtype === "seq" ? seqAnswered : sel !== null;
+  const answered = qtype === "seq" ? seqAnswered : sel !== null;
+  const q = question;
+  if (!q) return <Screen><div style={{color:C.dimmer,textAlign:"center",paddingTop:"4rem"}}>Loading…</div></Screen>;
+
+  const typeInfo = Q_TYPE_LABELS[qtype] || Q_TYPE_LABELS.mc;
+  const diagramType = DIAGRAMS[q.id];
+
+  return (
+    <div style={{minHeight:"100vh",background:C.bg,color:C.white,fontFamily:FONT.body}}>
+      <StickyHeader>
+        <div style={{maxWidth:560,margin:"0 auto",display:"flex",alignItems:"center",gap:"1rem"}}>
+          <button onClick={onBack} style={{background:"none",border:`1px solid ${C.border}`,color:C.dimmer,borderRadius:8,padding:".35rem .75rem",cursor:"pointer",fontSize:13,fontFamily:FONT.body}}>←</button>
+          <div style={{flex:1}}>
+            <div style={{fontFamily:FONT.display,fontWeight:800,fontSize:"1rem",color:C.gold}}>IceIQ · {player.level}</div>
+            <div style={{fontSize:11,color:C.dimmer}}>Q{qNum+1}/{qLen} · {player.position} · {player.season||SEASONS[0]}</div>
+          </div>
+          <div style={{width:80,height:4,background:C.dimmest,borderRadius:2,overflow:"hidden"}}>
+            <div style={{height:"100%",width:`${(qNum/qLen)*100}%`,background:C.purple,borderRadius:2,transition:"width .35s ease"}}/>
+          </div>
+        </div>
+      </StickyHeader>
+
+      <div style={{padding:"1.5rem 1.25rem",maxWidth:560,margin:"0 auto"}}>
+        {/* Question type badge + category */}
+        <div style={{display:"flex",gap:".5rem",marginBottom:"1rem",flexWrap:"wrap",alignItems:"center"}}>
+          <Pill color={typeInfo.color}>{typeInfo.icon} {typeInfo.label}</Pill>
+          <Pill color={C.dimmer} bg={C.dimmest}>{q.cat}</Pill>
+          {q.concept && <Pill color={C.dimmer} bg={C.dimmest}>{q.concept}</Pill>}
+        </div>
+
+        {/* Diagram */}
+        {diagramType && (
+          <div style={{marginBottom:"1rem"}}>
+            <div style={{fontSize:9,letterSpacing:".14em",textTransform:"uppercase",color:C.dimmer,fontWeight:700,marginBottom:".4rem"}}>📋 Coach's Clipboard</div>
+            <RinkDiagram type={diagramType}/>
+          </div>
+        )}
+
+        {/* Situation / Prompt */}
+        {(qtype === "mc" || qtype === "seq" || qtype === "next") && (
+          <Card style={{marginBottom:"1.25rem",background:C.purpleDim,border:`1px solid ${C.purpleBorder}`}}>
+            <div style={{fontSize:10,letterSpacing:".14em",textTransform:"uppercase",color:C.purple,marginBottom:".6rem",fontWeight:700}}>📋 Game Situation</div>
+            <div style={{fontSize:15,lineHeight:1.8,color:C.white,fontWeight:500}}>{q.sit}</div>
+          </Card>
+        )}
+
+        {qtype === "tf" && (
+          <Card style={{marginBottom:"1.25rem",background:C.blueDim,border:`1px solid rgba(59,130,246,.3)`}}>
+            <div style={{fontSize:10,letterSpacing:".14em",textTransform:"uppercase",color:C.blue,marginBottom:".6rem",fontWeight:700}}>⚡ True or False?</div>
+            <div style={{fontSize:15,lineHeight:1.8,color:C.white,fontWeight:500}}>{q.sit}</div>
+          </Card>
+        )}
+
+        {qtype === "mistake" && (
+          <Card style={{marginBottom:"1.25rem",background:C.redDim,border:`1px solid ${C.redBorder}`}}>
+            <div style={{fontSize:10,letterSpacing:".14em",textTransform:"uppercase",color:C.red,marginBottom:".6rem",fontWeight:700}}>🔍 Spot the Mistake</div>
+            <div style={{fontSize:14,color:C.dim,lineHeight:1.7,marginBottom:".75rem"}}>{q.sit}</div>
+            <div style={{fontSize:15,fontWeight:700,color:C.white}}>{q.question}</div>
+          </Card>
+        )}
+
+        {/* Question component */}
+        {qtype === "mc" && <MCQuestion q={q} sel={sel} onPick={handlePick} colorblind={player.colorblind}/>}
+        {qtype === "mistake" && <MCQuestion q={q} sel={sel} onPick={handlePick} colorblind={player.colorblind}/>}
+        {qtype === "next" && <NextQuestion q={q} sel={sel} onPick={handlePick}/>}
+        {qtype === "tf" && <TFQuestion q={q} sel={sel} onPick={i => handlePick(i)}/>}
+        {qtype === "seq" && <SeqQuestion q={q} onAnswer={handleSeqAnswer} answered={seqAnswered}/>}
+
+        {/* Explanation */}
+        {answered && (
+          <div style={{marginTop:"1rem"}}>
+            <Card style={{
+              background: (qtype==="seq"?seqCorrect:(sel===q.ok)) ? "rgba(34,197,94,.06)" : C.redDim,
+              border:`1px solid ${(qtype==="seq"?seqCorrect:(sel===q.ok)) ? C.greenBorder : C.redBorder}`,
+              marginBottom:"1rem"
+            }}>
+              <div style={{fontSize:10,letterSpacing:".12em",textTransform:"uppercase",fontWeight:700,marginBottom:".5rem",color:(qtype==="seq"?seqCorrect:(sel===q.ok))?C.green:C.red}}>
+                {(qtype==="seq"?seqCorrect:(sel===q.ok)) ? "✓ Correct" : "✗ Incorrect"}
               </div>
+              <div style={{fontSize:13,color:C.dim,lineHeight:1.75,marginBottom:".75rem"}}>{q.why}</div>
+              <div style={{fontSize:12,color:C.purple,fontStyle:"italic",borderTop:`1px solid ${C.border}`,paddingTop:".6rem"}}>💡 {q.tip}</div>
+            </Card>
+            {!isLast && (
+              <button onClick={advance} style={{background:C.purple,color:C.white,border:"none",borderRadius:12,padding:".9rem",cursor:"pointer",fontWeight:700,fontSize:14,fontFamily:FONT.body,width:"100%"}}>
+                Next Question →
+              </button>
+            )}
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
+
+
+// ─────────────────────────────────────────────────────────
+// RESULTS SCREEN
+// ─────────────────────────────────────────────────────────
+function Results({ results, player, prevScore, totalSessions, seqPerfect, mistakeStreak, onAgain, onHome }) {
+  const [saved, setSaved] = useState(false);
+  const score = calcWeightedIQ(results);
+  const tier = getTier(score);
+  const badges = calcBadges(results, prevScore, totalSessions, seqPerfect, mistakeStreak);
+  const byD = {1:{ok:0,tot:0},2:{ok:0,tot:0},3:{ok:0,tot:0}};
+  results.forEach(r => { byD[r.d||2].tot++; if(r.ok) byD[r.d||2].ok++; });
+  const byCat = {};
+  results.forEach(r => { if(!byCat[r.cat])byCat[r.cat]={ok:0,tot:0}; byCat[r.cat].tot++; if(r.ok)byCat[r.cat].ok++; });
+  const byType = {};
+  results.forEach(r => { if(!byType[r.type||"mc"])byType[r.type||"mc"]={ok:0,tot:0}; byType[r.type||"mc"].tot++; if(r.ok)byType[r.type||"mc"].ok++; });
+
+  useEffect(() => {
+    if (player.coachCode) saveTeamResult(player.coachCode, results, player.season||SEASONS[0]).then(() => setSaved(true));
+    else setSaved(true);
+    try {
+      localStorage.setItem("iceiq_score", JSON.stringify(score));
+      localStorage.setItem("iceiq_sessions", String(totalSessions));
+      const sd = updateStreak(getStreakData());
+      localStorage.setItem("iceiq_streak", JSON.stringify(sd));
+    } catch(e) {}
+  }, []);
+
+  const dLabel = {1:"Foundation",2:"Developing",3:"Advanced"};
+  const correct = results.filter(r=>r.ok).length;
+
+  return (
+    <Screen>
+      {/* Hero */}
+      <div style={{textAlign:"center",marginBottom:"2rem",paddingTop:"1rem"}}>
+        <div style={{fontSize:56,marginBottom:".5rem"}}>{tier.badge}</div>
+        <div style={{fontFamily:FONT.display,fontWeight:800,fontSize:"2rem",marginBottom:".15rem"}}>{tier.label}</div>
+        <div style={{fontFamily:FONT.display,fontWeight:800,fontSize:"5rem",color:tier.color,lineHeight:.9,letterSpacing:"-.02em"}}>{score}<span style={{fontSize:"2rem"}}>%</span></div>
+        <div style={{fontSize:13,color:C.dimmer,margin:".5rem 0 .75rem"}}>{correct}/{results.length} correct</div>
+        {saved && player.coachCode && (
+          <div style={{fontSize:11,color:C.green,display:"flex",alignItems:"center",justifyContent:"center",gap:".3rem"}}>✓ Saved to team {player.coachCode}</div>
+        )}
+      </div>
+
+      {/* Badges */}
+      {badges.length > 0 && (
+        <Card style={{marginBottom:"1rem",background:`linear-gradient(135deg,rgba(201,168,76,.08),rgba(201,168,76,.02))`,border:`1px solid ${C.goldBorder}`}}>
+          <Label>Badges Earned</Label>
+          <div style={{display:"flex",gap:".6rem",flexWrap:"wrap"}}>
+            {badges.map((b,i) => (
+              <div key={i} style={{background:C.bgElevated,border:`1px solid ${C.border}`,borderRadius:12,padding:".75rem",textAlign:"center",minWidth:80}}>
+                <div style={{fontSize:24,marginBottom:4}}>{b.icon}</div>
+                <div style={{fontSize:11,fontWeight:700,color:C.white}}>{b.name}</div>
+                <div style={{fontSize:10,color:C.dimmer,marginTop:2}}>{b.desc}</div>
+              </div>
+            ))}
+          </div>
+        </Card>
+      )}
+
+      {/* Question type breakdown */}
+      {Object.keys(byType).length > 1 && (
+        <Card style={{marginBottom:"1rem"}}>
+          <Label>By Format</Label>
+          <div style={{display:"flex",gap:".5rem",flexWrap:"wrap"}}>
+            {Object.entries(byType).map(([type,v]) => {
+              const pct = Math.round((v.ok/v.tot)*100);
+              const info = Q_TYPE_LABELS[type]||Q_TYPE_LABELS.mc;
+              return (
+                <div key={type} style={{background:C.bgElevated,border:`1px solid ${C.border}`,borderRadius:10,padding:".6rem .85rem",fontSize:12}}>
+                  <div style={{color:info.color,fontWeight:700,marginBottom:2}}>{info.icon} {info.label}</div>
+                  <div style={{color:pct>=80?C.green:pct>=60?C.yellow:C.red,fontWeight:700}}>{v.ok}/{v.tot}</div>
+                </div>
+              );
+            })}
+          </div>
+        </Card>
+      )}
+
+      {/* Difficulty mix */}
+      <Card style={{marginBottom:"1rem"}}>
+        <Label>Difficulty Mix</Label>
+        <div style={{display:"flex",gap:".5rem"}}>
+          {[1,2,3].map(d => byD[d].tot > 0 && (
+            <div key={d} style={{flex:1,textAlign:"center",padding:".7rem",borderRadius:10,
+              background:d===1?"rgba(34,197,94,.07)":d===2?"rgba(234,179,8,.07)":"rgba(239,68,68,.07)",
+              border:`1px solid ${d===1?"rgba(34,197,94,.25)":d===2?"rgba(234,179,8,.25)":"rgba(239,68,68,.25)"}`}}>
+              <div style={{fontSize:14,fontWeight:700,color:d===1?C.green:d===2?C.yellow:C.red}}>{byD[d].ok}/{byD[d].tot}</div>
+              <div style={{fontSize:10,color:C.dimmer,marginTop:2}}>{dLabel[d]}</div>
             </div>
           ))}
         </div>
-        <div style={{display:"flex",justifyContent:"flex-end",marginTop:"1.25rem",gap:".6rem"}}>
-          {ac<cats.length-1&&<button onClick={()=>setAc(i=>i+1)} style={{background:C.dimmest,color:C.dim,border:`1px solid ${C.border}`,borderRadius:8,padding:".5rem 1.1rem",cursor:"pointer",fontSize:13,fontFamily:"'DM Sans',sans-serif"}}>Next: {cats[ac+1]?.cat==="Game Decision-Making"?"Game IQ":cats[ac+1]?.cat} →</button>}
-          {ac===cats.length-1&&<button onClick={()=>onSave(ratings)} style={{background:C.gold,color:C.navy,border:"none",borderRadius:8,padding:".5rem 1.3rem",cursor:"pointer",fontWeight:800,fontSize:13,fontFamily:"'DM Sans',sans-serif"}}>Save ✓</button>}
+      </Card>
+
+      {/* By category */}
+      <Card style={{marginBottom:"1.5rem"}}>
+        <Label>By Category</Label>
+        {Object.entries(byCat).map(([cat,v]) => {
+          const pct = Math.round((v.ok/v.tot)*100);
+          return (
+            <div key={cat} style={{marginBottom:".85rem"}}>
+              <div style={{display:"flex",justifyContent:"space-between",fontSize:13,marginBottom:5}}>
+                <span style={{color:C.dim}}>{cat}</span>
+                <span style={{fontWeight:700,color:pct>=80?C.green:pct>=60?C.yellow:C.red}}>{v.ok}/{v.tot}</span>
+              </div>
+              <ProgressBar value={v.ok} max={v.tot} color={pct>=80?C.green:pct>=60?C.yellow:C.red}/>
+            </div>
+          );
+        })}
+      </Card>
+
+      <PrimaryBtn onClick={onAgain} style={{marginBottom:".75rem"}}>Take Another Quiz →</PrimaryBtn>
+      <SecBtn onClick={onHome}>← Home</SecBtn>
+    </Screen>
+  );
+}
+
+
+// ─────────────────────────────────────────────────────────
+// SMART GOALS SCREEN
+// ─────────────────────────────────────────────────────────
+function GoalsScreen({ player, onSave, onBack }) {
+  const cats = GOAL_CATS[player.level] || [];
+  const [goals, setGoals] = useState({ ...(player.goals || {}) });
+  const [active, setActive] = useState(cats[0] || "");
+  const [step, setStep] = useState("S");
+
+  const SMART_STEPS = ["S","M","A","R","T"];
+  const SMART_LABELS = {S:"Specific",M:"Measurable",A:"Achievable",R:"Relevant",T:"Time-bound"};
+  const SMART_ICONS = {S:"🎯",M:"📏",A:"✅",R:"🏒",T:"📅"};
+  const SMART_EXAMPLES = {
+    "Skating":      {S:"Improve my backward crossovers on both sides",M:"Coach rates me 'On Track' in skating within 4 weeks",A:"I can already do basic crossovers",R:"Better backward skating helps my gap control as a defender",T:"By end of October"},
+    "Gap Control":  {S:"Maintain a 10-foot gap on all rush situations",M:"Reduce missed gap assignments to 0 per game",A:"I understand gap theory already",R:"Gap control is the #1 D skill in atom hockey",T:"Before Christmas break"},
+    "Rush Reads":   {S:"Make the correct 2-on-1 decision every time",M:"Score 80%+ on Rush Reads in IceIQ",A:"I get the concept, just need reps",R:"Rush reads are my weakest IceIQ category",T:"End of this month"},
+    "Shooting":     {S:"Improve my quick-release wrist shot accuracy",M:"Hit top corners 3 out of 5 in practice drills",A:"I have good fundamentals already",R:"Quick release is what separates scorers at this level",T:"Within 6 weeks"},
+    "Game IQ":      {S:"Pre-read plays before the puck arrives",M:"IceIQ score improves from current to Hockey Sense tier",A:"I've started thinking about it more already",R:"Faster reads = better plays",T:"End of season"},
+  };
+
+  function updateGoal(cat, field, value) {
+    setGoals(g => ({...g, [cat]: {...(g[cat]||{}), [field]: value}}));
+  }
+
+  const currentGoal = goals[active] || {};
+  const completedSteps = SMART_STEPS.filter(s => currentGoal[s]?.trim());
+  const isComplete = completedSteps.length === 5 && currentGoal.goal?.trim();
+  const example = SMART_EXAMPLES[active] || {};
+
+  return (
+    <div style={{minHeight:"100vh",background:C.bg,color:C.white,fontFamily:FONT.body,paddingBottom:80}}>
+      <StickyHeader>
+        <div style={{maxWidth:560,margin:"0 auto",display:"flex",alignItems:"center",gap:"1rem"}}>
+          <BackBtn onClick={onBack}/>
+          <div style={{flex:1}}>
+            <div style={{fontFamily:FONT.display,fontWeight:800,fontSize:"1.1rem"}}>SMART Goals</div>
+            <div style={{fontSize:11,color:C.dimmer}}>{player.level} · {Object.keys(goals).filter(k=>goals[k]?.goal).length}/{cats.length} set</div>
+          </div>
+          <button onClick={() => onSave(goals)} style={{background:C.gold,color:C.bg,border:"none",borderRadius:8,padding:".4rem 1rem",cursor:"pointer",fontWeight:800,fontSize:13,fontFamily:FONT.body}}>Save</button>
         </div>
+      </StickyHeader>
+
+      <div style={{padding:"1.25rem",maxWidth:560,margin:"0 auto"}}>
+        {/* Category tabs */}
+        <div style={{display:"flex",gap:".5rem",overflowX:"auto",marginBottom:"1.25rem",paddingBottom:".25rem"}}>
+          {cats.map(cat => {
+            const g = goals[cat]||{};
+            const done = SMART_STEPS.filter(s=>g[s]?.trim()).length;
+            const hasGoal = g.goal?.trim();
+            return (
+              <button key={cat} onClick={() => {setActive(cat);setStep("S");}} style={{
+                background:active===cat?C.goldDim:C.bgCard,
+                border:`1px solid ${active===cat?C.gold:C.border}`,
+                borderRadius:20,padding:".45rem 1rem",
+                cursor:"pointer",whiteSpace:"nowrap",
+                color:active===cat?C.gold:C.dim,
+                fontFamily:FONT.body,fontSize:13,
+                fontWeight:active===cat?700:400,
+                display:"flex",alignItems:"center",gap:".4rem",
+                flexShrink:0,
+              }}>
+                {cat} {hasGoal?<span style={{color:C.green,fontSize:10}}>✓</span>:done>0?<span style={{color:C.dimmer,fontSize:10}}>{done}/5</span>:null}
+              </button>
+            );
+          })}
+        </div>
+
+        {/* Goal statement */}
+        <Card style={{marginBottom:"1rem",background:`linear-gradient(135deg,${C.goldDim},transparent)`}}>
+          <Label>Your Goal — {active}</Label>
+          <textarea
+            value={currentGoal.goal||""}
+            onChange={e => updateGoal(active,"goal",e.target.value)}
+            placeholder={`What is your development goal for ${active}?`}
+            rows={2}
+            style={{background:"none",border:"none",color:C.white,fontSize:14,fontFamily:FONT.body,width:"100%",outline:"none",resize:"none",lineHeight:1.6}}
+          />
+          <div style={{height:1,background:currentGoal.goal?C.gold:C.border,marginTop:".5rem",transition:"background .2s"}}/>
+        </Card>
+
+        {/* SMART steps */}
+        <div style={{marginBottom:"1rem"}}>
+          <div style={{display:"flex",gap:".4rem",marginBottom:"1rem"}}>
+            {SMART_STEPS.map(s => (
+              <button key={s} onClick={() => setStep(s)} style={{
+                flex:1,background:step===s?C.purpleDim:C.bgCard,
+                border:`1px solid ${step===s?C.purpleBorder:C.border}`,
+                borderRadius:8,padding:".5rem .25rem",
+                cursor:"pointer",textAlign:"center",
+              }}>
+                <div style={{fontSize:15}}>{SMART_ICONS[s]}</div>
+                <div style={{fontSize:10,color:step===s?C.purple:currentGoal[s]?C.green:C.dimmer,fontWeight:700}}>{s}</div>
+              </button>
+            ))}
+          </div>
+
+          <Card>
+            <div style={{fontSize:11,color:C.purple,fontWeight:700,letterSpacing:".08em",textTransform:"uppercase",marginBottom:".35rem"}}>{SMART_ICONS[step]} {SMART_LABELS[step]}</div>
+            <div style={{fontSize:12,color:C.dimmer,marginBottom:".85rem",lineHeight:1.6}}>{SMART_PROMPTS[step]}</div>
+            {example[step] && (
+              <div style={{fontSize:11,color:C.dimmer,background:C.dimmest,borderRadius:8,padding:".6rem .8rem",marginBottom:".85rem",lineHeight:1.5,fontStyle:"italic"}}>
+                e.g. "{example[step]}"
+              </div>
+            )}
+            <textarea
+              value={currentGoal[step]||""}
+              onChange={e => updateGoal(active,step,e.target.value)}
+              placeholder="Write your answer here..."
+              rows={3}
+              style={{background:C.bgElevated,border:`1px solid ${C.border}`,borderRadius:10,padding:".75rem 1rem",color:C.white,fontSize:13,fontFamily:FONT.body,width:"100%",outline:"none",resize:"none",lineHeight:1.6}}
+            />
+            <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginTop:".75rem"}}>
+              <div style={{fontSize:11,color:C.dimmer}}>{completedSteps.length}/5 steps complete</div>
+              {step !== "T" && (
+                <button onClick={() => setStep(SMART_STEPS[SMART_STEPS.indexOf(step)+1])} style={{background:C.purple,color:C.white,border:"none",borderRadius:8,padding:".4rem 1rem",cursor:"pointer",fontSize:12,fontWeight:700,fontFamily:FONT.body}}>
+                  Next →
+                </button>
+              )}
+              {step === "T" && isComplete && (
+                <button onClick={() => onSave(goals)} style={{background:C.gold,color:C.bg,border:"none",borderRadius:8,padding:".4rem 1rem",cursor:"pointer",fontSize:12,fontWeight:800,fontFamily:FONT.body}}>
+                  Save Goal ✓
+                </button>
+              )}
+            </div>
+          </Card>
+        </div>
+
+        {/* Completed goal preview */}
+        {isComplete && (
+          <Card style={{background:"rgba(34,197,94,.06)",border:`1px solid ${C.greenBorder}`}}>
+            <div style={{fontSize:10,letterSpacing:".12em",textTransform:"uppercase",color:C.green,fontWeight:700,marginBottom:".5rem"}}>✓ Goal Complete</div>
+            <div style={{fontSize:13,color:C.white,fontWeight:600,marginBottom:".5rem"}}>{currentGoal.goal}</div>
+            {SMART_STEPS.map(s => (
+              <div key={s} style={{fontSize:12,color:C.dim,marginBottom:".25rem",lineHeight:1.5}}>
+                <span style={{color:C.green,fontWeight:700}}>{SMART_LABELS[s]}:</span> {currentGoal[s]}
+              </div>
+            ))}
+          </Card>
+        )}
       </div>
     </div>
   );
 }
 
-function Report({player,onBack}){
-  const {name,level,position,selfRatings,coachRatings,quizHistory}=player;
-  const latest=quizHistory[quizHistory.length-1];
-  const iq=latest?calcIQ(latest.results):null;
-  const comp=iq!==null?getComp(level,iq/100):null;
-  const allCats=SKILLS[level]||[];
-  const radarData=allCats.map(c=>{const vals=c.skills.map(s=>RV[selfRatings[s.id]]||0);return{cat:c.cat,icon:c.icon,dm:!!c.isDM,val:vals.reduce((a,b)=>a+b,0)/(vals.length*3)};});
-  const selfCount={"Needs Work":0,"On Track":0,"Excels":0};
-  Object.values(selfRatings).forEach(r=>{if(r)selfCount[r]++;});
-  return(
-    <div style={{padding:"1.5rem 1.25rem",maxWidth:520,margin:"0 auto"}}>
-      <button onClick={onBack} style={{background:"none",border:`1px solid ${C.border}`,color:C.dim,borderRadius:8,padding:".4rem .9rem",cursor:"pointer",fontSize:13,fontFamily:"'DM Sans',sans-serif",marginBottom:"1.5rem"}}>← Home</button>
-      <div style={{marginBottom:"1.5rem"}}>
-        <div style={{fontSize:10,letterSpacing:".16em",color:C.gold,textTransform:"uppercase",marginBottom:4,fontWeight:700}}>Player Development Report</div>
-        <h1 style={{fontFamily:"'Barlow Condensed',sans-serif",fontWeight:800,fontSize:"clamp(1.8rem,6vw,2.6rem)",margin:"0 0 .35rem",lineHeight:1}}>{name}</h1>
-        <div style={{fontSize:13,color:C.dimmer}}>{level} · {position} · {player.season}</div>
-      </div>
-      <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:".75rem",marginBottom:"1.1rem"}}>
-        <div style={{background:C.navyMid,border:`1px solid ${C.borderGold}`,borderRadius:12,padding:"1rem",textAlign:"center"}}>
-          <div style={{fontSize:10,letterSpacing:".12em",textTransform:"uppercase",color:C.gold,marginBottom:".25rem"}}>Hockey IQ</div>
-          <div style={{fontFamily:"'Barlow Condensed',sans-serif",fontWeight:800,fontSize:"2.5rem",color:C.gold,lineHeight:1}}>{iq!==null?`${iq}%`:"—"}</div>
-          {comp&&<div style={{fontSize:11,color:C.dimmer,marginTop:3}}>{comp}</div>}
-        </div>
-        <div style={{background:C.dimmest,border:`1px solid ${C.border}`,borderRadius:12,padding:"1rem"}}>
-          <div style={{fontSize:10,letterSpacing:".12em",textTransform:"uppercase",color:C.dimmer,marginBottom:".5rem"}}>Self-Assessment</div>
-          {RATINGS.map(r=><div key={r} style={{display:"flex",justifyContent:"space-between",fontSize:12,marginBottom:3}}><span style={{color:RC[r]}}>{r}</span><span style={{fontWeight:700,color:RC[r]}}>{selfCount[r]}</span></div>)}
-        </div>
-      </div>
-      <div style={{background:C.dimmest,border:`1px solid ${C.border}`,borderRadius:14,padding:"1.25rem",marginBottom:"1.1rem",display:"flex",flexDirection:"column",alignItems:"center"}}>
-        <div style={{fontSize:10,letterSpacing:".14em",textTransform:"uppercase",color:C.dimmer,marginBottom:".75rem",alignSelf:"flex-start"}}>Skill Profile</div>
-        <Radar data={radarData} size={190}/>
-      </div>
-      <div style={{background:C.dimmest,border:`1px solid ${C.border}`,borderRadius:14,padding:"1.25rem",marginBottom:"1.1rem"}}>
-        <div style={{fontSize:10,letterSpacing:".14em",textTransform:"uppercase",color:C.dimmer,marginBottom:"1rem"}}>Category Breakdown</div>
-        {radarData.map(d=>(
-          <div key={d.cat} style={{marginBottom:".85rem"}}>
-            <div style={{display:"flex",justifyContent:"space-between",marginBottom:4,fontSize:12}}>
-              <span style={{color:d.dm?C.purple:C.dim}}>{d.icon} {d.cat==="Game Decision-Making"?"Game IQ":d.cat}</span>
-              <span style={{fontWeight:700,color:d.val>0.66?C.green:d.val>0.33?C.yellow:d.val>0?C.red:C.dimmer}}>{d.val===0?"Not rated":d.val>0.66?"Excels":d.val>0.33?"On Track":"Needs Work"}</span>
-            </div>
-            <div style={{height:5,background:C.border,borderRadius:3,overflow:"hidden"}}><div style={{height:"100%",width:`${d.val*100}%`,background:d.dm?C.purple:d.val>0.66?C.green:d.val>0.33?C.yellow:C.red,borderRadius:3,transition:"width .5s ease"}}/></div>
+
+// ─────────────────────────────────────────────────────────
+// SKILLS, REPORT, PROFILE, COACH, BOTTOM NAV (condensed)
+// ─────────────────────────────────────────────────────────
+const RATINGS = ["Needs Work","On Track","Excels"];
+const RCOL = {"Needs Work":C.red,"On Track":C.yellow,"Excels":C.green};
+
+function Skills({ player, onSave, onBack }) {
+  const [ratings, setR] = useState({...player.selfRatings});
+  const [ac, setAc] = useState(0);
+  const cats = SKILLS[player.level] || [];
+  const cat = cats[ac];
+  const total = Object.keys(ratings).length;
+  const rated = Object.values(ratings).filter(v=>v!==null).length;
+  return (
+    <div style={{minHeight:"100vh",background:C.bg,color:C.white,fontFamily:FONT.body,paddingBottom:80}}>
+      <StickyHeader>
+        <div style={{maxWidth:560,margin:"0 auto",display:"flex",alignItems:"center",gap:"1rem"}}>
+          <BackBtn onClick={onBack}/>
+          <div style={{flex:1}}>
+            <div style={{fontFamily:FONT.display,fontWeight:800,fontSize:"1.1rem"}}>My Skills</div>
+            <div style={{fontSize:11,color:C.dimmer}}>{rated}/{total} rated</div>
           </div>
-        ))}
+          <ProgressBar value={rated} max={total} color={C.gold} height={4}/>
+          <button onClick={()=>onSave(ratings)} style={{background:C.gold,color:C.bg,border:"none",borderRadius:8,padding:".4rem 1rem",cursor:"pointer",fontWeight:800,fontSize:13,fontFamily:FONT.body}}>Save</button>
+        </div>
+      </StickyHeader>
+      <div style={{display:"flex",overflowX:"auto",borderBottom:`1px solid ${C.border}`,background:C.bg}}>
+        {cats.map((c,i) => {
+          const cr = c.skills.filter(s=>ratings[s.id]!==null).length;
+          return (
+            <button key={i} onClick={()=>setAc(i)} style={{background:"none",border:"none",borderBottom:`2px solid ${i===ac?(c.isDM?C.purple:C.gold):"transparent"}`,color:i===ac?C.white:C.dimmer,padding:".8rem 1rem",cursor:"pointer",fontSize:13,fontFamily:FONT.body,fontWeight:i===ac?700:400,whiteSpace:"nowrap",display:"flex",alignItems:"center",gap:".3rem",flexShrink:0}}>
+              <span>{c.icon}</span><span>{c.cat}</span>{cr===c.skills.length&&<span style={{color:C.green,fontSize:10}}>✓</span>}
+            </button>
+          );
+        })}
       </div>
-      {!coachRatings?(
-        <div style={{background:"rgba(76,175,130,.05)",border:"1px solid rgba(76,175,130,.2)",borderRadius:12,padding:"1rem 1.2rem",marginBottom:"1.1rem"}}>
-          <div style={{fontSize:13,fontWeight:700,color:C.green,marginBottom:3}}>Coach comparison not yet available</div>
-          <div style={{fontSize:12,color:C.dimmer}}>Invite your coach from the Profile tab — their ratings will appear here alongside yours.</div>
-        </div>
-      ):(
-        <div style={{background:C.dimmest,border:`1px solid ${C.border}`,borderRadius:14,padding:"1.25rem",marginBottom:"1.1rem"}}>
-          <div style={{fontSize:10,letterSpacing:".14em",textTransform:"uppercase",color:C.dimmer,marginBottom:"1rem"}}>Self vs. Coach</div>
-          {allCats.flatMap(c=>c.skills).slice(0,8).map(s=>{const self=selfRatings[s.id];const coach=coachRatings[s.id];return(
-            <div key={s.id} style={{display:"grid",gridTemplateColumns:"1fr auto auto",gap:".75rem",alignItems:"center",padding:".55rem 0",borderBottom:`1px solid ${C.border}`}}>
-              <div style={{fontSize:12,fontWeight:600}}>{s.name}</div>
-              <div style={{fontSize:11,color:self?RC[self]:C.dimmer,fontWeight:600}}>{self||"—"}</div>
-              <div style={{fontSize:11,color:coach?RC[coach]:C.dimmer,fontWeight:600}}>{coach?`👨‍🏫 ${coach}`:"—"}</div>
+      <div style={{padding:"1.25rem",maxWidth:560,margin:"0 auto"}}>
+        {cat?.isDM && <Card style={{marginBottom:"1rem",background:C.purpleDim,border:`1px solid ${C.purpleBorder}`}}><div style={{fontSize:12,color:C.purple,lineHeight:1.6}}>🧠 Rate honestly — this is for your development, not anyone else's judgment.</div></Card>}
+        {cat?.skills.map(s => (
+          <Card key={s.id} style={{marginBottom:".75rem",border:`1px solid ${ratings[s.id]?RCOL[ratings[s.id]]+"30":C.border}`}}>
+            <div style={{fontWeight:700,fontSize:14,marginBottom:3}}>{s.name}</div>
+            <div style={{fontSize:12,color:C.dimmer,marginBottom:".85rem",lineHeight:1.5}}>{s.selfQ}</div>
+            <div style={{display:"flex",gap:".5rem"}}>
+              {RATINGS.map(r=>(
+                <button key={r} onClick={()=>setR(p=>({...p,[s.id]:r}))} style={{flex:1,background:ratings[s.id]===r?RCOL[r]+"22":"none",color:ratings[s.id]===r?RCOL[r]:C.dimmer,border:`1px solid ${ratings[s.id]===r?RCOL[r]+"60":C.border}`,borderRadius:8,padding:".45rem .4rem",cursor:"pointer",fontSize:12,fontWeight:ratings[s.id]===r?700:400,fontFamily:FONT.body,textAlign:"center"}}>
+                  {r}
+                </button>
+              ))}
             </div>
-          );})}
-        </div>
+          </Card>
+        ))}
+        {ac<cats.length-1 && <SecBtn onClick={()=>setAc(i=>i+1)}>Next Category →</SecBtn>}
+        {ac===cats.length-1 && <PrimaryBtn onClick={()=>onSave(ratings)}>Save All Ratings ✓</PrimaryBtn>}
+      </div>
+    </div>
+  );
+}
+
+function Report({ player, onBack }) {
+  const latest = player.quizHistory[player.quizHistory.length-1];
+  const iq = latest ? calcWeightedIQ(latest.results) : null;
+  const tier = iq !== null ? getTier(iq) : null;
+  const goals = player.goals || {};
+  const activeGoals = Object.entries(goals).filter(([,v])=>v?.goal?.trim());
+  return (
+    <Screen>
+      <BackBtn onClick={onBack}/>
+      <div style={{marginBottom:"1.5rem"}}>
+        <div style={{fontSize:10,letterSpacing:".16em",color:C.gold,textTransform:"uppercase",fontWeight:700,marginBottom:4}}>Player Development Report</div>
+        <h1 style={{fontFamily:FONT.display,fontWeight:800,fontSize:"clamp(1.8rem,6vw,2.6rem)",margin:"0 0 .25rem",lineHeight:1}}>{player.name}</h1>
+        <div style={{fontSize:13,color:C.dimmer}}>{player.level} · {player.position} · {player.season||SEASONS[0]}</div>
+      </div>
+      <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:".75rem",marginBottom:"1rem"}}>
+        <Card style={{background:`linear-gradient(135deg,${C.bgCard},${C.bgElevated})`,border:`1px solid ${C.goldBorder}`,textAlign:"center"}}>
+          <Label>Hockey IQ</Label>
+          <div style={{fontFamily:FONT.display,fontWeight:800,fontSize:"3rem",color:iq!==null?tier.color:"rgba(255,255,255,.15)",lineHeight:1}}>{iq!==null?`${iq}%`:"—"}</div>
+          {tier && <div style={{fontSize:12,color:C.dimmer,marginTop:4}}>{tier.label}</div>}
+        </Card>
+        <Card style={{textAlign:"center"}}>
+          <Label>Sessions</Label>
+          <div style={{fontFamily:FONT.display,fontWeight:800,fontSize:"3rem",color:C.gold,lineHeight:1}}>{player.quizHistory.length}</div>
+          <div style={{fontSize:12,color:C.dimmer,marginTop:4}}>this season</div>
+        </Card>
+      </div>
+      {activeGoals.length > 0 && (
+        <Card style={{marginBottom:"1rem"}}>
+          <Label>Active SMART Goals</Label>
+          {activeGoals.map(([cat,g]) => (
+            <div key={cat} style={{padding:".65rem 0",borderBottom:`1px solid ${C.border}`}}>
+              <div style={{fontSize:11,color:C.gold,fontWeight:700,marginBottom:2}}>{cat}</div>
+              <div style={{fontSize:13,color:C.dim,lineHeight:1.5}}>{g.goal}</div>
+              {g.T && <div style={{fontSize:11,color:C.dimmer,marginTop:2}}>📅 {g.T}</div>}
+            </div>
+          ))}
+        </Card>
       )}
-      <div style={{background:`linear-gradient(135deg,${C.navyMid},${C.navyLight})`,border:`1px solid ${C.borderGold}`,borderRadius:14,padding:"1.25rem",textAlign:"center"}}>
+      <Card style={{marginBottom:"1rem"}}>
+        <Label>IQ Score History</Label>
+        {player.quizHistory.length === 0 ? (
+          <div style={{fontSize:13,color:C.dimmer}}>No sessions yet — take your first quiz.</div>
+        ) : (
+          <div style={{display:"flex",flexDirection:"column",gap:".5rem"}}>
+            {player.quizHistory.slice(-5).reverse().map((h,i) => {
+              const s = calcWeightedIQ(h.results);
+              const t = getTier(s);
+              return (
+                <div key={i} style={{display:"flex",alignItems:"center",gap:".75rem",padding:".5rem 0",borderBottom:`1px solid ${C.border}`}}>
+                  <div style={{fontFamily:FONT.display,fontWeight:800,fontSize:"1.4rem",color:t.color,minWidth:52}}>{s}%</div>
+                  <div style={{flex:1}}><div style={{fontSize:12,color:C.dim}}>{t.label}</div></div>
+                  <ProgressBar value={s} max={100} color={t.color} height={3}/>
+                </div>
+              );
+            })}
+          </div>
+        )}
+      </Card>
+      <Card style={{marginBottom:"1rem",background:`linear-gradient(135deg,${C.bgCard},${C.bgElevated})`,border:`1px solid ${C.goldBorder}`,textAlign:"center"}}>
         <div style={{fontSize:18,marginBottom:".5rem"}}>📋</div>
         <div style={{fontWeight:700,fontSize:14,color:C.gold,marginBottom:".4rem"}}>Tryout Package</div>
-        <div style={{fontSize:12,color:C.dimmer,marginBottom:"1rem",lineHeight:1.6}}>Export a one-page PDF with your IQ Score, skill profile, and development arc — formatted for coaches to read in 30 seconds.</div>
-        <div style={{background:"rgba(201,168,76,.15)",color:C.gold,border:`1px solid ${C.borderGold}`,borderRadius:8,padding:".6rem 1rem",fontSize:13,fontWeight:700}}>🔒 Premium · $69 CAD/year</div>
-      </div>
-    </div>
+        <div style={{fontSize:12,color:C.dimmer,marginBottom:"1rem",lineHeight:1.6}}>One-page PDF with your IQ Score, skill profile, SMART goals, and development arc — formatted for coaches to read in 30 seconds.</div>
+        <div style={{background:C.goldDim,color:C.gold,border:`1px solid ${C.goldBorder}`,borderRadius:8,padding:".6rem 1rem",fontSize:13,fontWeight:700}}>🔒 Premium Feature · Coming Soon</div>
+      </Card>
+    </Screen>
   );
 }
 
-function Profile({player,onBack,onReset}){
-  const [copied,setCopied]=useState(false);
-  const link=`https://iceiq.app/coach/${player.name.toLowerCase().replace(/\s+/g,"-")}`;
-  function copyLink(){navigator.clipboard?.writeText(link).catch(()=>{});setCopied(true);setTimeout(()=>setCopied(false),2000);}
-  return(
-    <div style={{padding:"1.5rem 1.25rem",maxWidth:520,margin:"0 auto"}}>
-      <button onClick={onBack} style={{background:"none",border:`1px solid ${C.border}`,color:C.dim,borderRadius:8,padding:".4rem .9rem",cursor:"pointer",fontSize:13,fontFamily:"'DM Sans',sans-serif",marginBottom:"1.5rem"}}>← Home</button>
-      <h2 style={{fontFamily:"'Barlow Condensed',sans-serif",fontWeight:800,fontSize:"1.6rem",marginBottom:"1.5rem"}}>Profile & Settings</h2>
-      <div style={{background:C.dimmest,border:`1px solid ${C.border}`,borderRadius:14,padding:"1.25rem",marginBottom:"1.1rem"}}>
-        <div style={{fontSize:10,letterSpacing:".12em",textTransform:"uppercase",color:C.dimmer,marginBottom:"1rem"}}>Player Info</div>
-        {[["Name",player.name],["Level",player.level],["Position",player.position],["Season",player.season],["Access Mode",ACCESS_MODES.find(m=>m.id===player.mode)?.label]].map(([k,v])=>(
-          <div key={k} style={{display:"flex",justifyContent:"space-between",padding:".5rem 0",borderBottom:`1px solid ${C.border}`,fontSize:13}}>
-            <span style={{color:C.dimmer}}>{k}</span><span style={{fontWeight:600}}>{v}</span>
+function Profile({ player, onSave, onBack, onReset }) {
+  const [s, setS] = useState({...player});
+  const upd = k => v => setS(p => ({...p,[k]:v}));
+  const [copied, setCopied] = useState(false);
+  function copy() { navigator.clipboard?.writeText(`https://iceiq.app/coach/${s.name?.toLowerCase().replace(/\s+/g,"-")}`).catch(()=>{}); setCopied(true); setTimeout(()=>setCopied(false),2000); }
+
+  return (
+    <div style={{minHeight:"100vh",background:C.bg,color:C.white,fontFamily:FONT.body,paddingBottom:80}}>
+      <StickyHeader>
+        <div style={{maxWidth:560,margin:"0 auto",display:"flex",alignItems:"center",gap:"1rem"}}>
+          <BackBtn onClick={onBack}/>
+          <div style={{flex:1,fontFamily:FONT.display,fontWeight:800,fontSize:"1.1rem"}}>Settings</div>
+          <button onClick={()=>onSave(s)} style={{background:C.gold,color:C.bg,border:"none",borderRadius:8,padding:".4rem 1rem",cursor:"pointer",fontWeight:800,fontSize:13,fontFamily:FONT.body}}>Save</button>
+        </div>
+      </StickyHeader>
+      <div style={{padding:"1.25rem",maxWidth:560,margin:"0 auto"}}>
+        <Card style={{marginBottom:"1rem"}}>
+          <Label>Player Profile</Label>
+          {[["name","Display name",""],["city","City / Province or State",""],["jersey","Jersey number",""]].map(([k,ph]) => (
+            <input key={k} value={s[k]||""} onChange={e=>upd(k)(e.target.value)} placeholder={ph}
+              style={{background:C.bgElevated,border:`1px solid ${C.border}`,borderRadius:8,padding:".65rem .9rem",color:C.white,fontSize:14,fontFamily:FONT.body,width:"100%",outline:"none",marginBottom:".6rem",display:"block"}}/>
+          ))}
+        </Card>
+        <Card style={{marginBottom:"1rem"}}>
+          <Label>Position</Label>
+          <div style={{display:"grid",gridTemplateColumns:"1fr 1fr 1fr",gap:".5rem"}}>
+            {[{p:"Forward",i:"⚡"},{p:"Defense",i:"🛡"},{p:"Goalie",i:"🧤"}].map(({p,i})=>(
+              <button key={p} onClick={()=>upd("position")(p)} style={{background:s.position===p?C.goldDim:C.bgElevated,border:`1px solid ${s.position===p?C.gold:C.border}`,borderRadius:10,padding:".75rem .5rem",cursor:"pointer",textAlign:"center",color:s.position===p?C.gold:C.dim,fontFamily:FONT.body,fontSize:13,fontWeight:s.position===p?700:400}}>
+                <div style={{fontSize:20,marginBottom:3}}>{i}</div>{p}
+              </button>
+            ))}
           </div>
-        ))}
+        </Card>
+        <Card style={{marginBottom:"1rem"}}>
+          <Label>Level</Label>
+          <div style={{display:"flex",flexDirection:"column",gap:".5rem"}}>
+            {LEVELS.map(l=>(
+              <button key={l} onClick={()=>upd("level")(l)} style={{background:s.level===l?C.goldDim:"none",border:`1px solid ${s.level===l?C.gold:C.border}`,borderRadius:8,padding:".65rem 1rem",cursor:"pointer",textAlign:"left",color:s.level===l?C.gold:C.dim,fontFamily:FONT.body,fontSize:14,fontWeight:s.level===l?700:400,display:"flex",justifyContent:"space-between"}}>
+                <span>{l}</span>{s.level===l&&<span>✓</span>}
+              </button>
+            ))}
+          </div>
+        </Card>
+        <Card style={{marginBottom:"1rem"}}>
+          <Label>Season</Label>
+          <div style={{display:"flex",gap:".5rem",flexWrap:"wrap"}}>
+            {SEASONS.map(ss=><button key={ss} onClick={()=>upd("season")(ss)} style={{background:s.season===ss?C.goldDim:C.bgElevated,border:`1px solid ${s.season===ss?C.gold:C.border}`,borderRadius:8,padding:".45rem .85rem",cursor:"pointer",fontSize:13,fontFamily:FONT.body,fontWeight:s.season===ss?700:400,color:s.season===ss?C.gold:C.dim}}>{ss}</button>)}
+          </div>
+        </Card>
+        <Card style={{marginBottom:"1rem"}}>
+          <Label>Quiz Preferences</Label>
+          <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:".85rem"}}>
+            <span style={{fontSize:13,color:C.dim}}>Colorblind mode</span>
+            <button onClick={()=>upd("colorblind")(!s.colorblind)} style={{background:s.colorblind?C.purpleDim:"none",border:`1px solid ${s.colorblind?C.purpleBorder:C.border}`,borderRadius:20,padding:".3rem .9rem",cursor:"pointer",color:s.colorblind?C.purple:C.dimmer,fontSize:12,fontFamily:FONT.body,fontWeight:700}}>{s.colorblind?"ON":"OFF"}</button>
+          </div>
+          <div style={{display:"flex",justifyContent:"space-between",alignItems:"center"}}>
+            <span style={{fontSize:13,color:C.dim}}>Session length</span>
+            <div style={{display:"flex",gap:".4rem"}}>
+              {[10,15,20].map(n=><button key={n} onClick={()=>upd("sessionLength")(n)} style={{background:(s.sessionLength||15)===n?C.goldDim:C.bgElevated,border:`1px solid ${(s.sessionLength||15)===n?C.gold:C.border}`,borderRadius:8,padding:".35rem .7rem",cursor:"pointer",fontSize:13,fontFamily:FONT.body,fontWeight:(s.sessionLength||15)===n?700:400,color:(s.sessionLength||15)===n?C.gold:C.dim}}>{n}</button>)}
+            </div>
+          </div>
+        </Card>
+        <Card style={{marginBottom:"1rem"}}>
+          <Label>Coach Code</Label>
+          <input value={s.coachCode||""} onChange={e=>upd("coachCode")(e.target.value.toUpperCase().slice(0,8))} placeholder="e.g. HAWKS or 2847"
+            style={{background:C.bgElevated,border:`1px solid ${C.border}`,borderRadius:8,padding:".65rem .9rem",color:C.white,fontSize:16,fontFamily:FONT.body,width:"100%",outline:"none",letterSpacing:".1em",fontWeight:700,textAlign:"center"}}/>
+          <div style={{fontSize:11,color:C.dimmer,marginTop:".6rem",lineHeight:1.6}}>Results saved anonymously. Coaches see patterns, not individuals.</div>
+        </Card>
+        <Card style={{marginBottom:"1rem",background:"rgba(34,197,94,.04)",border:`1px solid ${C.greenBorder}`}}>
+          <div style={{fontSize:13,fontWeight:700,color:C.green,marginBottom:".5rem"}}>👨‍🏫 Invite Your Coach</div>
+          <button onClick={copy} style={{background:copied?C.greenDim:C.bgElevated,border:`1px solid ${copied?C.greenBorder:C.border}`,borderRadius:8,padding:".55rem 1rem",cursor:"pointer",fontSize:13,fontFamily:FONT.body,fontWeight:600,color:copied?C.green:C.dim,width:"100%"}}>{copied?"✓ Link Copied!":"Copy Coach Invite Link"}</button>
+        </Card>
+        <Card style={{marginBottom:"1rem"}}>
+          <Label>About</Label>
+          <div style={{fontSize:12,color:C.dimmer,lineHeight:1.9}}>
+            <div>IceIQ v{VERSION} · {RELEASE_DATE}</div>
+            <div>Hockey Canada LTAD · USA Hockey ADM</div>
+            <div>Sport for Life Canada</div>
+            <div style={{color:C.gold,marginTop:".25rem"}}>bluechip-people-strategies.com</div>
+          </div>
+        </Card>
+        <button onClick={onReset} style={{background:"rgba(239,68,68,.06)",color:C.red,border:`1px solid rgba(239,68,68,.2)`,borderRadius:10,padding:".65rem",cursor:"pointer",fontSize:13,fontFamily:FONT.body,width:"100%"}}>Reset Profile</button>
       </div>
-      <div style={{background:"rgba(76,175,130,.05)",border:"1px solid rgba(76,175,130,.2)",borderRadius:14,padding:"1.25rem",marginBottom:"1.1rem"}}>
-        <div style={{fontSize:13,fontWeight:700,color:C.green,marginBottom:".4rem"}}>👨‍🏫 Invite Your Coach</div>
-        <div style={{fontSize:12,color:C.dimmer,marginBottom:"1rem",lineHeight:1.6}}>Send this link to your coach. They open it on any device — no app download required. Their ratings will appear alongside yours in the report.</div>
-        <div style={{background:C.dimmest,border:`1px solid ${C.border}`,borderRadius:8,padding:".6rem .85rem",fontSize:11,color:C.dimmer,marginBottom:".75rem",wordBreak:"break-all"}}>{link}</div>
-        <button onClick={copyLink} style={{background:copied?"rgba(76,175,130,.2)":C.dimmest,color:copied?C.green:C.dim,border:`1px solid ${copied?"rgba(76,175,130,.4)":C.border}`,borderRadius:8,padding:".55rem 1rem",cursor:"pointer",fontSize:13,fontFamily:"'DM Sans',sans-serif",fontWeight:600,width:"100%",transition:"all .2s"}}>
-          {copied?"✓ Copied!":"Copy Coach Invite Link"}
-        </button>
-      </div>
-      <div style={{background:C.dimmest,border:`1px solid ${C.border}`,borderRadius:14,padding:"1.25rem",marginBottom:"1.1rem"}}>
-        <div style={{fontSize:10,letterSpacing:".12em",textTransform:"uppercase",color:C.dimmer,marginBottom:".75rem"}}>Development Framework</div>
-        <div style={{fontSize:12,color:C.dim,lineHeight:1.7,marginBottom:".5rem"}}>Age expectations and quiz content are calibrated to your player's level based on:</div>
-        {["Hockey Canada LTAD","USA Hockey ADM","Sport for Life Canada"].map(f=><div key={f} style={{display:"flex",alignItems:"center",gap:".5rem",fontSize:12,color:C.dimmer,marginTop:".4rem"}}><span style={{color:C.gold}}>✓</span> {f}</div>)}
-      </div>
-      <div style={{background:`linear-gradient(135deg,${C.navyMid},${C.navyLight})`,border:`1px solid ${C.borderGold}`,borderRadius:14,padding:"1.25rem",marginBottom:"1.1rem"}}>
-        <div style={{fontSize:13,fontWeight:700,color:C.gold,marginBottom:".4rem"}}>⭐ IceIQ Premium</div>
-        <div style={{fontSize:12,color:C.dimmer,marginBottom:"1rem",lineHeight:1.6}}>Full self vs. coach comparison · Season history · Tryout PDF export · Unlimited coach invites · Player independent login</div>
-        <div style={{background:C.gold,color:C.navy,borderRadius:8,padding:".65rem",fontSize:14,fontWeight:800,textAlign:"center"}}>$69 CAD / year per player</div>
-      </div>
-      <button onClick={onReset} style={{background:"rgba(224,82,82,.07)",color:C.red,border:"1px solid rgba(224,82,82,.2)",borderRadius:10,padding:".65rem",cursor:"pointer",fontSize:13,fontFamily:"'DM Sans',sans-serif",width:"100%"}}>Reset Profile (Demo)</button>
     </div>
   );
 }
 
-function BottomNav({active,onNav}){
-  const tabs=[{id:"home",icon:"🏠",label:"Home"},{id:"quiz",icon:"🧠",label:"IQ Quiz"},{id:"skills",icon:"📊",label:"My Skills"},{id:"report",icon:"📋",label:"Report"},{id:"profile",icon:"⚙",label:"Profile"}];
-  return(
-    <div style={{position:"fixed",bottom:0,left:0,right:0,background:"rgba(10,22,40,.97)",backdropFilter:"blur(12px)",borderTop:`1px solid ${C.border}`,display:"flex",zIndex:100,paddingBottom:"env(safe-area-inset-bottom)"}}>
-      {tabs.map(t=>(
-        <button key={t.id} onClick={()=>onNav(t.id)} style={{flex:1,background:"none",border:"none",padding:".6rem .25rem",cursor:"pointer",display:"flex",flexDirection:"column",alignItems:"center",gap:".2rem"}}>
-          <span style={{fontSize:17}}>{t.icon}</span>
-          <span style={{fontSize:10,color:active===t.id?C.gold:C.dimmer,fontFamily:"'DM Sans',sans-serif",fontWeight:active===t.id?700:400}}>{t.label}</span>
-          {active===t.id&&<div style={{width:4,height:4,borderRadius:"50%",background:C.gold}}/>}
+function CoachDashboard({ onBack }) {
+  const [code, setCode] = useState("");
+  const [season, setSeason] = useState(SEASONS[0]);
+  const [data, setData] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const [err, setErr] = useState("");
+
+  async function load() {
+    if (!code.trim()) { setErr("Enter your coach code"); return; }
+    setLoading(true); setErr("");
+    try { const sessions = await loadTeamData(code.trim(), season); setData(sessions); }
+    catch(e) { setErr("Could not load data"); }
+    setLoading(false);
+  }
+
+  let agg = null;
+  if (data && data.length > 0) {
+    const qStats = {}, catStats = {};
+    data.forEach(session => session.qs.forEach(q => {
+      if (!qStats[q.id]) qStats[q.id] = {ok:0,tot:0,cat:q.cat,d:q.d};
+      qStats[q.id].tot++; if(q.ok) qStats[q.id].ok++;
+      if (!catStats[q.cat]) catStats[q.cat] = {ok:0,tot:0};
+      catStats[q.cat].tot++; if(q.ok) catStats[q.cat].ok++;
+    }));
+    const avgIQ = Math.round(data.reduce((s,d)=>s+d.iq,0)/data.length);
+    const sorted = Object.entries(qStats).map(([id,v])=>({id,...v,pct:Math.round((v.ok/v.tot)*100)})).sort((a,b)=>a.pct-b.pct);
+    agg = { sessions:data.length, avgIQ, qStats:sorted, catStats };
+  }
+
+  return (
+    <Screen>
+      <BackBtn onClick={onBack}/>
+      <div style={{fontFamily:FONT.display,fontWeight:800,fontSize:"2rem",marginBottom:"1.5rem"}}>Coach Dashboard</div>
+      <Card style={{marginBottom:"1rem"}}>
+        <Label>Season</Label>
+        <div style={{display:"flex",gap:".5rem",marginBottom:"1rem",flexWrap:"wrap"}}>
+          {SEASONS.map(ss=><button key={ss} onClick={()=>{setSeason(ss);setData(null);}} style={{background:season===ss?C.goldDim:C.bgElevated,border:`1px solid ${season===ss?C.gold:C.border}`,borderRadius:8,padding:".4rem .8rem",cursor:"pointer",fontSize:12,fontFamily:FONT.body,fontWeight:season===ss?700:400,color:season===ss?C.gold:C.dim}}>{ss}</button>)}
+        </div>
+        <div style={{display:"flex",gap:".75rem"}}>
+          <input value={code} onChange={e=>{setCode(e.target.value.toUpperCase());setData(null);setErr("");}} placeholder="Coach code" maxLength={8}
+            style={{background:C.bgElevated,border:`1px solid ${err?C.red:code?C.gold:C.border}`,borderRadius:8,padding:".65rem .9rem",color:C.white,fontSize:15,fontFamily:FONT.body,flex:1,outline:"none",letterSpacing:".1em",fontWeight:700}}/>
+          <button onClick={load} disabled={loading} style={{background:C.gold,color:C.bg,border:"none",borderRadius:8,padding:".65rem 1.25rem",cursor:"pointer",fontWeight:800,fontSize:14,fontFamily:FONT.body,whiteSpace:"nowrap"}}>{loading?"…":"Load"}</button>
+        </div>
+        {err && <div style={{fontSize:12,color:C.red,marginTop:".5rem"}}>{err}</div>}
+        <div style={{fontSize:11,color:C.dimmer,marginTop:".65rem",lineHeight:1.6}}>Anonymous patterns only — no individual data ever stored.</div>
+      </Card>
+      {data && data.length === 0 && <Card><div style={{color:C.dimmer,textAlign:"center",padding:"1rem 0"}}>No sessions for this code in {season} yet.</div></Card>}
+      {agg && (<>
+        <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:".75rem",marginBottom:"1rem"}}>
+          <Card style={{textAlign:"center"}}><Label>Sessions</Label><div style={{fontFamily:FONT.display,fontWeight:800,fontSize:"2.8rem",color:C.gold}}>{agg.sessions}</div></Card>
+          <Card style={{textAlign:"center"}}><Label>Team Avg IQ</Label><div style={{fontFamily:FONT.display,fontWeight:800,fontSize:"2.8rem",color:agg.avgIQ>=80?C.green:agg.avgIQ>=60?C.yellow:C.red}}>{agg.avgIQ}%</div></Card>
+        </div>
+        <Card style={{marginBottom:"1rem"}}>
+          <Label>By Category — Worst First</Label>
+          {Object.entries(agg.catStats).sort((a,b)=>(a[1].ok/a[1].tot)-(b[1].ok/b[1].tot)).map(([cat,v])=>{
+            const pct=Math.round((v.ok/v.tot)*100);
+            return(<div key={cat} style={{marginBottom:".85rem"}}><div style={{display:"flex",justifyContent:"space-between",fontSize:13,marginBottom:5}}><span style={{color:C.dim}}>{cat}</span><span style={{fontWeight:700,color:pct>=80?C.green:pct>=60?C.yellow:C.red}}>{pct}%</span></div><ProgressBar value={pct} max={100} color={pct>=80?C.green:pct>=60?C.yellow:C.red}/></div>);
+          })}
+        </Card>
+        <Card>
+          <Label>Hardest Questions</Label>
+          {agg.qStats.slice(0,5).map(q=>{
+            const QB_flat = Object.values(QB).flat();
+            const qData = QB_flat.find(x=>x.id===q.id);
+            return(<div key={q.id} style={{padding:".7rem 0",borderBottom:`1px solid ${C.border}`}}><div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:".3rem"}}><Pill color={q.pct<40?C.red:C.yellow} bg={q.pct<40?"rgba(239,68,68,.12)":"rgba(234,179,8,.12)"}>{q.pct}%</Pill><span style={{fontSize:11,color:C.dimmer}}>{q.ok}/{q.tot} correct</span></div><div style={{fontSize:12,color:C.dim,lineHeight:1.5}}>{qData?.sit?.slice(0,90)}{qData?.sit?.length>90?"…":""}</div></div>);
+          })}
+        </Card>
+      </>)}
+    </Screen>
+  );
+}
+
+function BottomNav({ active, onNav }) {
+  const tabs = [
+    {id:"home",   icon:"🏠", label:"Home"},
+    {id:"quiz",   icon:"🧠", label:"Quiz"},
+    {id:"goals",  icon:"🎯", label:"Goals"},
+    {id:"skills", icon:"📊", label:"Skills"},
+    {id:"report", icon:"📋", label:"Report"},
+  ];
+  return (
+    <div style={{position:"fixed",bottom:0,left:0,right:0,background:`${C.bgCard}f8`,backdropFilter:"blur(16px)",WebkitBackdropFilter:"blur(16px)",borderTop:`1px solid ${C.border}`,display:"flex",zIndex:100}}>
+      {tabs.map(t => (
+        <button key={t.id} onClick={() => onNav(t.id)} style={{flex:1,background:"none",border:"none",padding:".65rem .25rem",cursor:"pointer",display:"flex",flexDirection:"column",alignItems:"center",gap:".2rem"}}>
+          <span style={{fontSize:18}}>{t.icon}</span>
+          <span style={{fontSize:10,color:active===t.id?C.gold:C.dimmer,fontFamily:FONT.body,fontWeight:active===t.id?700:400,transition:"color .15s"}}>{t.label}</span>
+          {active===t.id && <div style={{width:4,height:4,borderRadius:"50%",background:C.gold}}/>}
         </button>
       ))}
     </div>
   );
 }
 
-export default function App(){
-  const [player,setPlayer]=useState(null);
-  const [screen,setScreen]=useState("home");
-  function handleOnboard(p){setPlayer(p);setScreen("home");}
-  function handleQuizFinish(result){setPlayer(p=>({...p,quizHistory:[...(p.quizHistory||[]),result]}));setScreen("home");}
-  function handleSkillsSave(ratings){setPlayer(p=>({...p,selfRatings:ratings}));setScreen("home");}
-  function handleReset(){setPlayer(null);setScreen("home");}
-  return(
+
+// ─────────────────────────────────────────────────────────
+// ROOT APP
+// ─────────────────────────────────────────────────────────
+export default function App() {
+  const [player, setPlayer] = useState(null);
+  const [screen, setScreen] = useState("home");
+  const [prevScore, setPrevScore] = useState(null);
+  const [totalSessions, setTotalSessions] = useState(0);
+  const [quizResults, setQuizResults] = useState([]);
+  const [seqPerfect, setSeqPerfect] = useState(false);
+  const [mistakeStreak, setMistakeStreak] = useState(0);
+
+  useEffect(() => {
+    try {
+      const saved = JSON.parse(localStorage.getItem("iceiq_player") || "null");
+      if (saved) {
+        setPlayer(saved);
+        const sc = JSON.parse(localStorage.getItem("iceiq_score") || "null");
+        if (sc !== null) setPrevScore(sc);
+        const ts = parseInt(localStorage.getItem("iceiq_sessions") || "0");
+        setTotalSessions(ts);
+      }
+    } catch(e) {}
+  }, []);
+
+  function savePlayer(p) {
+    try { localStorage.setItem("iceiq_player", JSON.stringify(p)); } catch(e) {}
+  }
+
+  function handleOnboard(p) {
+    setPlayer(p);
+    savePlayer(p);
+    setScreen("home");
+  }
+
+  function handleQuizFinish(results, sq, ms) {
+    const score = calcWeightedIQ(results);
+    const newTotal = totalSessions + 1;
+    const newHistory = [...(player.quizHistory||[]), {results, score, date:new Date().toISOString()}];
+    const updatedPlayer = {...player, quizHistory: newHistory};
+    setPlayer(updatedPlayer);
+    savePlayer(updatedPlayer);
+    setQuizResults(results);
+    setSeqPerfect(sq);
+    setMistakeStreak(ms);
+    setPrevScore(score);
+    setTotalSessions(newTotal);
+    try {
+      localStorage.setItem("iceiq_score", JSON.stringify(score));
+      localStorage.setItem("iceiq_sessions", String(newTotal));
+      const sd = updateStreak(getStreakData());
+      localStorage.setItem("iceiq_streak", JSON.stringify(sd));
+    } catch(e) {}
+    setScreen("results");
+  }
+
+  function handleSkillsSave(ratings) {
+    const updated = {...player, selfRatings: ratings};
+    setPlayer(updated);
+    savePlayer(updated);
+    setScreen("home");
+  }
+
+  function handleGoalsSave(goals) {
+    const updated = {...player, goals};
+    setPlayer(updated);
+    savePlayer(updated);
+    setScreen("home");
+  }
+
+  function handleProfileSave(settings) {
+    const updated = {...player, ...settings};
+    setPlayer(updated);
+    savePlayer(updated);
+    setScreen("home");
+  }
+
+  function handleReset() {
+    setPlayer(null);
+    setPrevScore(null);
+    setTotalSessions(0);
+    try { localStorage.clear(); } catch(e) {}
+    setScreen("home");
+  }
+
+  if (!player) return <Onboarding onComplete={handleOnboard}/>;
+
+  return (
     <>
-      <style>{`@import url('https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@700;800&family=DM+Sans:wght@400;500;600;700&display=swap');*{box-sizing:border-box;margin:0;padding:0}body{background:#0a1628;color:#f4f6fa}::-webkit-scrollbar{width:4px}::-webkit-scrollbar-thumb{background:rgba(244,246,250,.1);border-radius:2px}button:active{opacity:.75}`}</style>
-      <div style={{minHeight:"100vh",background:C.navy,color:C.white,fontFamily:"'DM Sans',sans-serif"}}>
-        {!player?<Onboarding onComplete={handleOnboard}/>:(
-          <>
-            <div style={{paddingBottom:80}}>
-              {screen==="home"&&<Home player={player} onNav={setScreen}/>}
-              {screen==="quiz"&&<Quiz player={player} onFinish={handleQuizFinish} onBack={()=>setScreen("home")}/>}
-              {screen==="skills"&&<Skills player={player} onSave={handleSkillsSave} onBack={()=>setScreen("home")}/>}
-              {screen==="report"&&<Report player={player} onBack={()=>setScreen("home")}/>}
-              {screen==="profile"&&<Profile player={player} onBack={()=>setScreen("home")} onReset={handleReset}/>}
-            </div>
-            {screen!=="quiz"&&<BottomNav active={screen} onNav={setScreen}/>}
-          </>
-        )}
+      <style>{`
+        @import url('https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@700;800&family=DM+Sans:wght@400;500;600;700&display=swap');
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { background: #080e1a; color: #f8fafc; -webkit-font-smoothing: antialiased; }
+        ::-webkit-scrollbar { width: 4px; }
+        ::-webkit-scrollbar-thumb { background: rgba(248,250,252,.08); border-radius: 2px; }
+        input, textarea, button { font-family: 'DM Sans', sans-serif; }
+        button:active { opacity: .8; }
+        textarea { resize: none; }
+      `}</style>
+
+      <div style={{paddingBottom: screen==="quiz"||screen==="results" ? 0 : 80}}>
+        {screen === "home"    && <Home player={player} onNav={setScreen}/>}
+        {screen === "quiz"    && <Quiz player={player} onFinish={handleQuizFinish} onBack={()=>setScreen("home")}/>}
+        {screen === "results" && <Results results={quizResults} player={player} prevScore={prevScore} totalSessions={totalSessions} seqPerfect={seqPerfect} mistakeStreak={mistakeStreak} onAgain={()=>setScreen("quiz")} onHome={()=>setScreen("home")}/>}
+        {screen === "skills"  && <Skills player={player} onSave={handleSkillsSave} onBack={()=>setScreen("home")}/>}
+        {screen === "goals"   && <GoalsScreen player={player} onSave={handleGoalsSave} onBack={()=>setScreen("home")}/>}
+        {screen === "report"  && <Report player={player} onBack={()=>setScreen("home")}/>}
+        {screen === "profile" && <Profile player={player} onSave={handleProfileSave} onBack={()=>setScreen("home")} onReset={handleReset}/>}
+        {screen === "coach"   && <CoachDashboard onBack={()=>setScreen("home")}/>}
       </div>
+
+      {!["quiz","results","coach"].includes(screen) && (
+        <BottomNav active={screen} onNav={setScreen}/>
+      )}
     </>
   );
 }
