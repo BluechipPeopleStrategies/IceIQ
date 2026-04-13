@@ -1711,7 +1711,7 @@ function Quiz({ player, onFinish, onBack }) {
 
         {/* Explanation */}
         {answered && (
-          <div style={{marginTop:"1rem"}}>
+          <div ref={el => { if (el) setTimeout(() => el.scrollIntoView({behavior:"smooth",block:"nearest"}), 150); }} style={{marginTop:"1rem"}}>
             <Card style={{
               background: (qtype==="seq"?seqCorrect:(sel===q.ok)) ? "rgba(34,197,94,.06)" : C.redDim,
               border:`1px solid ${(qtype==="seq"?seqCorrect:(sel===q.ok)) ? C.greenBorder : C.redBorder}`,
@@ -1723,14 +1723,13 @@ function Quiz({ player, onFinish, onBack }) {
               <div style={{fontSize:13,color:C.dim,lineHeight:1.75,marginBottom:".75rem"}}>{q.why}</div>
               <div style={{fontSize:12,color:C.purple,fontStyle:"italic",borderTop:`1px solid ${C.border}`,paddingTop:".6rem"}}>💡 {q.tip}</div>
             </Card>
-            {!isLast && (
-              <button onClick={advance} style={{background:C.purple,color:C.white,border:"none",borderRadius:12,padding:".9rem",cursor:"pointer",fontWeight:700,fontSize:14,fontFamily:FONT.body,width:"100%"}}>
-                Next Question →
-              </button>
-            )}
-            {quizDone && (
+            {quizDone ? (
               <button onClick={() => onFinish(results, seqPerfect, mistakeStreak)} style={{background:C.gold,color:C.bg,border:"none",borderRadius:12,padding:".9rem",cursor:"pointer",fontWeight:700,fontSize:14,fontFamily:FONT.body,width:"100%"}}>
                 See Results →
+              </button>
+            ) : (
+              <button onClick={advance} style={{background:C.purple,color:C.white,border:"none",borderRadius:12,padding:".9rem",cursor:"pointer",fontWeight:700,fontSize:14,fontFamily:FONT.body,width:"100%"}}>
+                Next Question →
               </button>
             )}
           </div>
