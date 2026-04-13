@@ -49,7 +49,7 @@ const FONT = {
 // ─────────────────────────────────────────────────────────
 // VERSION
 // ─────────────────────────────────────────────────────────
-const VERSION = "2.0.0";
+const VERSION = "0.1.0";
 const RELEASE_DATE = "April 13, 2026";
 const CHANGELOG = [
   { v:"2.0.0", date:"April 13, 2026", notes:[
