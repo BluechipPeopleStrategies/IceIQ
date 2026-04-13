@@ -1608,6 +1608,8 @@ function Quiz({ player, onFinish, onBack }) {
   const isLast = qNum >= qLen - 1;
   const qtype = question?.type || "mc";
 
+  const [finalResults, setFinalResults] = useState(null);
+
   function handlePick(i) {
     if (sel !== null || !question) return;
     setSel(i);
@@ -1616,10 +1618,9 @@ function Quiz({ player, onFinish, onBack }) {
     const newResults = [...results, newResult];
     if (question.type === "mistake" && ok) setMistakeStreak(s => s+1);
     if (isLast) {
-      onFinish(newResults, seqPerfect, mistakeStreak);
-    } else {
-      setResults(newResults);
+      setFinalResults(newResults);
     }
+    setResults(newResults);
   }
 
   function handleSeqAnswer(ok) {
@@ -1629,10 +1630,9 @@ function Quiz({ player, onFinish, onBack }) {
     const newResult = { id:question.id, cat:question.cat, ok, d:question.d||2, type:"seq" };
     const newResults = [...results, newResult];
     if (isLast) {
-      onFinish(newResults, seqPerfect && ok, mistakeStreak);
-    } else {
-      setResults(newResults);
+      setFinalResults(newResults);
     }
+    setResults(newResults);
   }
 
   function advance() {
@@ -1731,6 +1731,11 @@ function Quiz({ player, onFinish, onBack }) {
             {!isLast && (
               <button onClick={advance} style={{background:C.purple,color:C.white,border:"none",borderRadius:12,padding:".9rem",cursor:"pointer",fontWeight:700,fontSize:14,fontFamily:FONT.body,width:"100%"}}>
                 Next Question →
+              </button>
+            )}
+            {isLast && finalResults && (
+              <button onClick={() => onFinish(finalResults, seqPerfect, mistakeStreak)} style={{background:C.gold,color:C.bg,border:"none",borderRadius:12,padding:".9rem",cursor:"pointer",fontWeight:700,fontSize:14,fontFamily:FONT.body,width:"100%"}}>
+                See Results →
               </button>
             )}
           </div>
