@@ -26,9 +26,8 @@ Mistake questions also need: question (the specific question asked about the sit
 
 ## Question ID conventions
 - Skater questions: u7q1–u7q100, u9q1–u9q100, u11q1–u11q100, u13q1–u13q100
-- Goalie questions: u7g1–u7g10, u9g1–u9g15, u11g1–u11g20
-- New format questions: u11s1+ (seq), u11m1+ (mistake), u11n1+ (next), u11tf1+ (tf)
-- U13 goalie questions not yet written (planned: u13g1–u13g20)
+- Goalie questions: u7g1–u7g10, u9g1–u9g15, u11g1–u11g20, u13g1–u13g20
+- New format questions: u{level}seq{n} (seq), u{level}mis{n} (mistake), u{level}next{n} (next), u{level}tf{n} (tf)
 
 ## Question writing voice
 - Situations written in second person ("You're on a 2-on-1...")
@@ -97,7 +96,6 @@ Coach rating screen accessed via URL params (no player login required)
 ## Planned features — do not build unless explicitly instructed
 - Supabase backend for persistent cross-device coach dashboard
 - Parent dashboard (read-only view, Year 2)
-- U13 goalie questions (20 needed, id: u13g1–u13g20)
 - Season history IQ arc chart in Report screen
 - Daily streak display on Home screen hero card
 - Position-weighted leaderboard (anonymous, team-level)
