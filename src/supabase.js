@@ -225,3 +225,19 @@ export async function getCoachRatingsForPlayer(playerId) {
   (data || []).forEach(r => { ratings[r.skill_id] = r.value; if (r.note) notes[r.skill_id] = r.note; });
   return { ratings, notes };
 }
+
+// ─────────────────────────────────────────────
+// QUESTION REPORTS (users flag bad questions)
+// ─────────────────────────────────────────────
+export async function reportQuestion({ userId, questionId, level, reason, detail }) {
+  if (!supabase) return false;
+  const { error } = await supabase.from("question_reports").insert({
+    user_id: userId || null,
+    question_id: questionId,
+    level,
+    reason,
+    detail: detail || null,
+  });
+  if (error) { console.error(error); return false; }
+  return true;
+}

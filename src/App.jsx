@@ -51,7 +51,7 @@ const FONT = {
 // ─────────────────────────────────────────────────────────
 // VERSION
 // ─────────────────────────────────────────────────────────
-const VERSION = "0.3.0";
+const VERSION = "0.4.0";
 const RELEASE_DATE = "April 13, 2026";
 const CHANGELOG = [
   { v:"2.0.0", date:"April 13, 2026", notes:[
@@ -1713,6 +1713,25 @@ function Quiz({ player, onFinish, onBack }) {
   const [seqPerfect, setSeqPerfect] = useState(true);
   const [mistakeStreak, setMistakeStreak] = useState(0);
   const [quizDone, setQuizDone] = useState(false);
+  const [showFlag, setShowFlag] = useState(false);
+  const [flagReason, setFlagReason] = useState("");
+  const [flagDetail, setFlagDetail] = useState("");
+  const [flagSent, setFlagSent] = useState(false);
+
+  async function submitFlag() {
+    if (!flagReason) return;
+    if (player.id && player.id !== "__demo__") {
+      await SB.reportQuestion({
+        userId: player.id,
+        questionId: question.id,
+        level: player.level,
+        reason: flagReason,
+        detail: flagDetail.trim() || null,
+      });
+    }
+    setFlagSent(true);
+    setTimeout(() => { setShowFlag(false); setFlagSent(false); setFlagReason(""); setFlagDetail(""); }, 1600);
+  }
 
   useEffect(() => {
     const q = buildQueue(player.level, player.position, isReturning);
@@ -1848,6 +1867,45 @@ function Quiz({ player, onFinish, onBack }) {
                 Next Question →
               </button>
             )}
+            <button onClick={() => setShowFlag(true)} style={{background:"none",border:"none",color:C.dimmer,fontSize:11,marginTop:".65rem",cursor:"pointer",fontFamily:FONT.body,width:"100%",textAlign:"center",padding:".4rem",textDecoration:"underline"}}>
+              🚩 Report this question
+            </button>
+          </div>
+        )}
+
+        {showFlag && (
+          <div onClick={()=>setShowFlag(false)} style={{position:"fixed",inset:0,background:"rgba(0,0,0,.7)",zIndex:200,display:"flex",alignItems:"center",justifyContent:"center",padding:"1rem"}}>
+            <div onClick={e=>e.stopPropagation()} style={{background:C.bgCard,border:`1px solid ${C.border}`,borderRadius:16,padding:"1.5rem",maxWidth:420,width:"100%",color:C.white,fontFamily:FONT.body}}>
+              {flagSent ? (
+                <div style={{textAlign:"center",padding:"1rem 0"}}>
+                  <div style={{fontSize:32,marginBottom:".5rem"}}>✅</div>
+                  <div style={{fontWeight:700,fontSize:15,color:C.green}}>Thanks — report sent</div>
+                  <div style={{fontSize:12,color:C.dim,marginTop:".3rem"}}>We'll review it.</div>
+                </div>
+              ) : (<>
+                <div style={{fontSize:10,letterSpacing:".14em",textTransform:"uppercase",color:C.gold,fontWeight:700,marginBottom:".4rem"}}>🚩 Report question</div>
+                <div style={{fontSize:14,color:C.dim,lineHeight:1.5,marginBottom:"1rem"}}>What's wrong with this one?</div>
+                {[
+                  {v:"wrong_answer",l:"The marked answer is wrong"},
+                  {v:"misleading",l:"Question or options are misleading"},
+                  {v:"too_hard",l:"Too advanced for this age"},
+                  {v:"too_easy",l:"Too easy for this age"},
+                  {v:"typo",l:"Typo or grammar issue"},
+                  {v:"other",l:"Something else"},
+                ].map(o => (
+                  <button key={o.v} onClick={()=>setFlagReason(o.v)} style={{display:"block",width:"100%",background:flagReason===o.v?C.goldDim:C.bgElevated,border:`1px solid ${flagReason===o.v?C.gold:C.border}`,borderRadius:8,padding:".6rem .8rem",cursor:"pointer",color:flagReason===o.v?C.gold:C.dim,fontSize:13,fontFamily:FONT.body,fontWeight:flagReason===o.v?700:500,textAlign:"left",marginBottom:".35rem"}}>
+                    {o.l}
+                  </button>
+                ))}
+                <textarea value={flagDetail} onChange={e=>setFlagDetail(e.target.value)} placeholder="Optional: add more detail (what's wrong, what should be correct, etc.)"
+                  rows={3}
+                  style={{width:"100%",background:C.bgElevated,border:`1px solid ${C.border}`,borderRadius:8,padding:".6rem .8rem",color:C.white,fontSize:13,fontFamily:FONT.body,outline:"none",lineHeight:1.5,marginTop:".5rem"}}/>
+                <div style={{display:"flex",gap:".5rem",marginTop:"1rem"}}>
+                  <button onClick={()=>setShowFlag(false)} style={{flex:1,background:"none",border:`1px solid ${C.border}`,borderRadius:10,padding:".7rem",cursor:"pointer",color:C.dimmer,fontSize:13,fontFamily:FONT.body}}>Cancel</button>
+                  <button onClick={submitFlag} disabled={!flagReason} style={{flex:2,background:C.gold,color:C.bg,border:"none",borderRadius:10,padding:".7rem",cursor:"pointer",fontWeight:800,fontSize:13,fontFamily:FONT.body}}>Send Report</button>
+                </div>
+              </>)}
+            </div>
           </div>
         )}
       </div>
@@ -2587,7 +2645,7 @@ function Profile({ player, onSave, onBack, onReset, demoMode }) {
           <div style={{display:"flex",justifyContent:"space-between",alignItems:"center"}}>
             <span style={{fontSize:13,color:C.dim}}>Session length</span>
             <div style={{display:"flex",gap:".4rem"}}>
-              {[10,15,20].map(n=><button key={n} onClick={()=>upd("sessionLength")(n)} style={{background:(s.sessionLength||15)===n?C.goldDim:C.bgElevated,border:`1px solid ${(s.sessionLength||15)===n?C.gold:C.border}`,borderRadius:8,padding:".35rem .7rem",cursor:"pointer",fontSize:13,fontFamily:FONT.body,fontWeight:(s.sessionLength||15)===n?700:400,color:(s.sessionLength||15)===n?C.gold:C.dim}}>{n}</button>)}
+              {[5,10,15,20].map(n=><button key={n} onClick={()=>upd("sessionLength")(n)} style={{background:(s.sessionLength||10)===n?C.goldDim:C.bgElevated,border:`1px solid ${(s.sessionLength||10)===n?C.gold:C.border}`,borderRadius:8,padding:".35rem .7rem",cursor:"pointer",fontSize:13,fontFamily:FONT.body,fontWeight:(s.sessionLength||10)===n?700:400,color:(s.sessionLength||10)===n?C.gold:C.dim}}>{n}</button>)}
             </div>
           </div>
         </Card>
@@ -2867,12 +2925,206 @@ function CoachRatingScreen({ playerName, playerLevel, playerKey, skills, onDone 
   );
 }
 
+// ─────────────────────────────────────────────────────────
+// STUDY SCREEN — games to watch, drills, focus areas
+// ─────────────────────────────────────────────────────────
+const STUDY_CONTENT = {
+  "U7 / Initiation": {
+    watchTips: [
+      "Watch NHL highlights for 5-10 minutes — notice which way the goalie faces and where players celebrate goals",
+      "Ask a parent to pause a game and point out your team's net vs the other team's net",
+      "Watch how fast players get up after they fall down — get up fast like they do",
+    ],
+    focusAreas: [
+      {skill:"Knowing which net to shoot at", drill:"Before every shift, look up and find your goalie"},
+      {skill:"Going after loose pucks", drill:"Race to every puck in practice — even ones you think you'll lose"},
+      {skill:"Getting up fast after falls", drill:"Fall on purpose in warmup, get up as fast as you can, 10 times"},
+    ],
+  },
+  "U9 / Novice": {
+    watchTips: [
+      "Watch one NHL game per week — pick a player on the winning team and follow only them for 5 minutes",
+      "Count how many times that player passes vs. shoots. What's their ratio?",
+      "Notice what players do when they don't have the puck — where do they skate to?",
+    ],
+    focusAreas: [
+      {skill:"Pass vs. shoot decision", drill:"In scrimmages, name out loud whether you passed or shot every time you had the puck"},
+      {skill:"Finding open ice", drill:"Play 'keep away' with 2 vs 2 — only pass to someone in open space"},
+      {skill:"Backchecking", drill:"Every time your team loses the puck, sprint back to your own blue line before doing anything else"},
+    ],
+  },
+  "U11 / Atom": {
+    watchTips: [
+      "Watch an NHL game and pick one defenseman to follow. Track their gap control on the rush — do they close early or back up?",
+      "Watch a power play and pause when it scores. Count how many passes happened before the shot.",
+      "Find a 2-on-1 in any game — pause when the defender commits. Notice what the puck carrier does.",
+    ],
+    focusAreas: [
+      {skill:"Rush reads", drill:"With a partner, run 2-on-1 drills where one defender randomly commits to the puck or the pass — force the read"},
+      {skill:"Gap control", drill:"Shadow a skater backward — stay within one stick length, match their every cut"},
+      {skill:"Cycle play", drill:"3-player board cycle — protect, pass, rotate. Never stop your feet."},
+      {skill:"Decision timing", drill:"Time yourself: can you make a pass within 1.5 seconds of receiving the puck?"},
+    ],
+    games: [
+      "Watch Oilers vs. any team — Connor McDavid's zone entries are a masterclass in reads",
+      "Watch any Colorado Avalanche game — their D-to-D-to-wing breakouts are textbook",
+      "Find clips of Patrice Bergeron defensive zone work on YouTube — positioning and stick work",
+    ],
+  },
+  "U13 / Peewee": {
+    watchTips: [
+      "Watch a full NHL period and track one player. Note every decision they make — pass, shoot, carry, dump, change. Why each one?",
+      "Watch NHL penalty kills — count how long each PK player holds their box position before rotating",
+      "Find a D-to-D power play pass on video — how does the weak-side player's shot timing work?",
+      "Watch NHL goaltenders on back-door plays — how fast do they push across?",
+    ],
+    focusAreas: [
+      {skill:"Zone entry reads", drill:"With a partner simulating a defender, practice 3 entry types: carry, drop pass, chip-and-chase — based on their gap"},
+      {skill:"Offensive zone cycling", drill:"3-player cycle below the dots — minimum 5 touches before a shot, all must be forechecked by a defender"},
+      {skill:"Shot selection", drill:"From 3 different areas (slot, half-wall, point), pick the appropriate shot type each time — wrist/snap/slap"},
+      {skill:"Defensive zone coverage", drill:"5-on-5 D-zone scrimmage — after every goal, review positioning with a video or a coach"},
+      {skill:"Contact as a tool", drill:"1-on-1 battles with legal body contact — the goal is to win the puck without taking a penalty"},
+    ],
+    games: [
+      "Watch any Panthers playoff game — structured defensive zone coverage at its best",
+      "Follow Cale Makar's rush reads — elite zone entries and timing",
+      "Watch Auston Matthews' shot selection — when he releases vs. when he holds",
+      "Watch Connor Hellebuyck on wraparound plays — textbook post integration",
+    ],
+  },
+};
+
+function StudyScreen({ player, onBack, onNav }) {
+  const content = STUDY_CONTENT[player.level] || STUDY_CONTENT["U11 / Atom"];
+  // Identify weakest skill areas from self ratings
+  const cats = SKILLS[player.level] || [];
+  const selfScale = getSelfScale(player.level);
+  const weakSkills = [];
+  cats.forEach(cat => {
+    cat.skills.forEach(skill => {
+      const rating = player.selfRatings?.[skill.id];
+      if (!rating) return;
+      const norm = normalizeRating(selfScale, rating);
+      if (norm !== null && norm <= 0.33) weakSkills.push({ ...skill, cat: cat.cat, icon: cat.icon });
+    });
+  });
+  weakSkills.splice(5);
+
+  // Pull lowest quiz categories
+  const latest = player.quizHistory[player.quizHistory.length-1];
+  const weakCats = [];
+  if (latest) {
+    const tally = {};
+    latest.results.forEach(r => {
+      if (!tally[r.cat]) tally[r.cat] = {ok:0,total:0};
+      tally[r.cat].total++;
+      if (r.ok) tally[r.cat].ok++;
+    });
+    Object.entries(tally)
+      .map(([cat, v]) => ({cat, pct: v.ok/v.total}))
+      .filter(x => x.pct < 0.6)
+      .sort((a,b) => a.pct - b.pct)
+      .slice(0,3)
+      .forEach(x => weakCats.push(x));
+  }
+
+  return (
+    <div style={{minHeight:"100vh",background:C.bg,color:C.white,fontFamily:FONT.body,paddingBottom:80}}>
+      <StickyHeader>
+        <div style={{maxWidth:560,margin:"0 auto",display:"flex",alignItems:"center",gap:"1rem"}}>
+          <BackBtn onClick={onBack}/>
+          <div style={{flex:1}}>
+            <div style={{fontFamily:FONT.display,fontWeight:800,fontSize:"1.1rem"}}>Study</div>
+            <div style={{fontSize:11,color:C.dimmer}}>Your personal development plan</div>
+          </div>
+        </div>
+      </StickyHeader>
+      <div style={{padding:"1.25rem",maxWidth:560,margin:"0 auto"}}>
+        <Card style={{marginBottom:"1rem",background:`linear-gradient(135deg,${C.bgCard},${C.bgElevated})`,border:`1px solid ${C.purpleBorder}`}}>
+          <Label>Your Focus</Label>
+          <div style={{fontSize:13,color:C.dim,lineHeight:1.6}}>{player.level} · {player.position}</div>
+          <div style={{fontSize:12,color:C.dimmer,marginTop:".5rem",lineHeight:1.6}}>Based on your quiz results and self-ratings, here's what to watch and work on.</div>
+        </Card>
+
+        {weakCats.length > 0 && (
+          <Card style={{marginBottom:"1rem",borderLeft:`3px solid ${C.gold}`}}>
+            <Label>🎯 Your Weakest Quiz Categories</Label>
+            {weakCats.map(({cat, pct}) => (
+              <div key={cat} style={{marginBottom:".65rem",padding:".65rem .8rem",background:C.bgElevated,borderRadius:8,border:`1px solid ${C.border}`}}>
+                <div style={{display:"flex",justifyContent:"space-between",alignItems:"center"}}>
+                  <span style={{fontSize:13,fontWeight:600,color:C.white}}>{cat}</span>
+                  <span style={{fontSize:12,fontWeight:700,color:pct<0.4?C.red:C.yellow}}>{Math.round(pct*100)}%</span>
+                </div>
+                <div style={{fontSize:11,color:C.dimmer,marginTop:3,lineHeight:1.5}}>Take more quizzes focused on this area — or ask your coach to build practice drills around it.</div>
+              </div>
+            ))}
+          </Card>
+        )}
+
+        {weakSkills.length > 0 && (
+          <Card style={{marginBottom:"1rem",borderLeft:`3px solid ${C.purple}`}}>
+            <Label>📊 Skills You Want to Grow</Label>
+            <div style={{fontSize:11,color:C.dimmer,marginBottom:".65rem",lineHeight:1.5}}>From your self-assessment — the areas you rated lowest. Tap a skill to make it a goal.</div>
+            {weakSkills.map(skill => (
+              <button key={skill.id} onClick={() => onNav("goals")} style={{width:"100%",background:C.bgElevated,border:`1px solid ${C.border}`,borderRadius:8,padding:".65rem .8rem",marginBottom:".4rem",cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"space-between",color:C.white,fontFamily:FONT.body,textAlign:"left"}}>
+                <div>
+                  <div style={{fontSize:13,fontWeight:600}}>{skill.icon} {skill.name}</div>
+                  <div style={{fontSize:11,color:C.dimmer,marginTop:2}}>{skill.cat}</div>
+                </div>
+                <span style={{color:C.gold,fontSize:12,fontWeight:700}}>Goal →</span>
+              </button>
+            ))}
+          </Card>
+        )}
+
+        {content.games && content.games.length > 0 && (
+          <Card style={{marginBottom:"1rem"}}>
+            <Label>📺 Games & Clips to Watch</Label>
+            <div style={{fontSize:11,color:C.dimmer,marginBottom:".65rem",lineHeight:1.5}}>Pick one this week. Watch with purpose — look for the specific things listed.</div>
+            {content.games.map((g, i) => (
+              <div key={i} style={{padding:".6rem .8rem",background:C.bgElevated,borderRadius:8,border:`1px solid ${C.border}`,marginBottom:".4rem",fontSize:13,color:C.dim,lineHeight:1.5}}>
+                {g}
+              </div>
+            ))}
+          </Card>
+        )}
+
+        <Card style={{marginBottom:"1rem"}}>
+          <Label>👀 How to Watch Hockey Like a Player</Label>
+          {content.watchTips.map((t, i) => (
+            <div key={i} style={{display:"flex",gap:".65rem",padding:".55rem 0",borderBottom:i<content.watchTips.length-1?`1px solid ${C.border}`:"none"}}>
+              <div style={{color:C.gold,fontWeight:700,fontSize:13,flexShrink:0}}>{i+1}.</div>
+              <div style={{fontSize:13,color:C.dim,lineHeight:1.55}}>{t}</div>
+            </div>
+          ))}
+        </Card>
+
+        <Card style={{marginBottom:"1rem"}}>
+          <Label>🏒 Focus Drills</Label>
+          <div style={{fontSize:11,color:C.dimmer,marginBottom:".65rem",lineHeight:1.5}}>Ask your coach to build these into practice, or work on them in your own ice time.</div>
+          {content.focusAreas.map((f, i) => (
+            <div key={i} style={{padding:".7rem .85rem",background:C.bgElevated,borderRadius:8,border:`1px solid ${C.border}`,marginBottom:".45rem"}}>
+              <div style={{fontSize:13,fontWeight:700,color:C.white,marginBottom:3}}>{f.skill}</div>
+              <div style={{fontSize:12,color:C.dim,lineHeight:1.5}}>{f.drill}</div>
+            </div>
+          ))}
+        </Card>
+
+        <Card style={{background:C.purpleDim,border:`1px solid ${C.purpleBorder}`}}>
+          <div style={{fontSize:13,color:C.purple,fontWeight:700,marginBottom:".4rem"}}>💡 Study Tip</div>
+          <div style={{fontSize:12,color:C.dim,lineHeight:1.6}}>The best players watch hockey differently than fans. They watch the player <strong style={{color:C.white}}>without</strong> the puck — because that's where the game really happens. Try it this week.</div>
+        </Card>
+      </div>
+    </div>
+  );
+}
+
 function BottomNav({ active, onNav }) {
   const tabs = [
     {id:"home",   icon:"🏠", label:"Home"},
     {id:"quiz",   icon:"🧠", label:"Quiz"},
+    {id:"study",  icon:"📺", label:"Study"},
     {id:"goals",  icon:"🎯", label:"Goals"},
-    {id:"skills", icon:"📊", label:"Skills"},
     {id:"report", icon:"📋", label:"Report"},
   ];
   return (
@@ -3516,6 +3768,7 @@ export default function App() {
         {screen === "quiz"    && <Quiz player={player} onFinish={handleQuizFinish} onBack={()=>setScreen("home")}/>}
         {screen === "results" && <Results results={quizResults} player={player} prevScore={prevScore} totalSessions={totalSessions} seqPerfect={seqPerfect} mistakeStreak={mistakeStreak} onAgain={()=>setScreen("quiz")} onHome={()=>setScreen("home")}/>}
         {screen === "skills"  && <Skills player={player} onSave={handleSkillsSave} onBack={()=>setScreen("home")}/>}
+        {screen === "study"   && <StudyScreen player={player} onBack={()=>setScreen("home")} onNav={setScreen}/>}
         {screen === "goals"   && <GoalsScreen player={player} onSave={handleGoalsSave} onBack={()=>setScreen("home")}/>}
         {screen === "report"  && <Report player={player} onBack={()=>setScreen("home")} demoCoachData={demoMode?demoCoachRatings:null}/>}
         {screen === "profile" && <Profile player={player} onSave={handleProfileSave} onBack={()=>setScreen("home")} onReset={handleSignOut} demoMode={demoMode}/>}
