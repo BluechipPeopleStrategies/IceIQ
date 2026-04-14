@@ -939,7 +939,7 @@ const SKILLS={
   "U7 / Initiation":[
     {cat:"Skating",icon:"⛸",skills:[{id:"u7s1",name:"Forward Stride",desc:"Pushes and glides with both feet"},{id:"u7s2",name:"Stopping",desc:"Attempts a two-foot snowplow stop"},{id:"u7s3",name:"Turning",desc:"Turns in both directions while moving"},{id:"u7s4",name:"Balance & Falls",desc:"Gets up from ice independently"}]},
     {cat:"Puck Skills",icon:"🏒",skills:[{id:"u7p1",name:"Stick Handling",desc:"Controls puck while stationary"},{id:"u7p2",name:"Shooting",desc:"Attempts a forehand push/shot on net"}]},
-    {cat:"Compete & Attitude",icon:"🔥",skills:[{id:"u7c1",name:"Effort",desc:"Full effort throughout practice and games"},{id:"u7c2",name:"Listening",desc:"Follows coach instructions on ice"},{id:"u7c3",name:"Fun & Enjoyment",desc:"Shows enthusiasm for the game"}]},
+    {cat:"Compete & Attitude",icon:"🔥",skills:[{id:"u7c1",name:"Effort",desc:"Full effort throughout practice and games"},{id:"u7c2",name:"Listening",desc:"Follows coach instructions on ice"},{id:"u7c3",name:"Fun & Enjoyment",desc:"Shows enthusiasm for the game"},{id:"u7c4",name:"Team Spirit",desc:"Cheers for teammates and plays like part of a team",selfQ:"Do you cheer for your teammates and play as a team?"}]},
     {cat:"Game Decision-Making",icon:"🧠",isDM:true,skills:[
       {id:"u7d1",name:"Shooting at the Right Net",desc:"Knows which net to shoot at",selfQ:"How well do you know which net to shoot at?"},
       {id:"u7d2",name:"Following the Puck",desc:"Pursues loose pucks instinctively",selfQ:"Do you always go after the puck when it's loose?"},
@@ -950,7 +950,7 @@ const SKILLS={
     {cat:"Skating",icon:"⛸",skills:[{id:"u9s1",name:"Forward Crossovers",desc:"Executes crossovers on both sides"},{id:"u9s2",name:"Backward Skating",desc:"Skates backward with control"},{id:"u9s3",name:"Edge Control",desc:"Uses inside/outside edges intentionally"},{id:"u9s4",name:"Stopping (One-Foot)",desc:"Executes a hockey stop on dominant side"}]},
     {cat:"Puck Skills",icon:"🏒",skills:[{id:"u9p1",name:"Stickhandling in Motion",desc:"Handles puck while skating at moderate speed"},{id:"u9p2",name:"Passing (Forehand)",desc:"Delivers accurate forehand pass"},{id:"u9p3",name:"Receiving Passes",desc:"Cushions and controls received passes"},{id:"u9p4",name:"Wrist Shot",desc:"Generates power and accuracy on wrist shot"}]},
     {cat:"Hockey Sense",icon:"👁",skills:[{id:"u9h1",name:"Puck Awareness",desc:"Knows where the puck is at all times"},{id:"u9h2",name:"Space Awareness",desc:"Begins to find open ice"}]},
-    {cat:"Compete & Attitude",icon:"🔥",skills:[{id:"u9c1",name:"Battle Level",desc:"Competes for loose pucks"},{id:"u9c2",name:"Coachability",desc:"Accepts feedback and applies it"}]},
+    {cat:"Compete & Attitude",icon:"🔥",skills:[{id:"u9c1",name:"Battle Level",desc:"Competes for loose pucks"},{id:"u9c2",name:"Coachability",desc:"Accepts feedback and applies it"},{id:"u9c3",name:"Team-First Attitude",desc:"Supports teammates, celebrates their success, plays unselfishly",selfQ:"Do you put the team before personal stats and celebrate teammates?"}]},
     {cat:"Game Decision-Making",icon:"🧠",isDM:true,skills:[
       {id:"u9d1",name:"Pass or Shoot Recognition",desc:"Chooses appropriately between passing and shooting",selfQ:"Can you read when to pass vs. shoot in the zone?"},
       {id:"u9d2",name:"Finding Open Ice",desc:"Moves to open space rather than following the puck",selfQ:"Do you look for open ice or follow the puck?"},
@@ -963,7 +963,7 @@ const SKILLS={
     {cat:"Puck Skills",icon:"🏒",skills:[{id:"u11p1",name:"Backhand Stickhandling",desc:"Controls puck on backhand side comfortably"},{id:"u11p2",name:"Backhand Pass",desc:"Delivers an accurate backhand pass"},{id:"u11p3",name:"Shooting off the Catch",desc:"Quick release without extra stickhandling"},{id:"u11p4",name:"Puck Protection",desc:"Uses body and stick to shield puck"}]},
     {cat:"Hockey Sense",icon:"👁",skills:[{id:"u11h1",name:"Offensive Zone Positioning",desc:"Understands basic offensive zone positions"},{id:"u11h2",name:"Backchecking Awareness",desc:"Recognizes when to transition back"},{id:"u11h3",name:"Reading the Play",desc:"Anticipates where the puck is going"}]},
     {cat:"Defensive Skills",icon:"🛡",skills:[{id:"u11d1",name:"Gap Control",desc:"Maintains appropriate gap on the rush"},{id:"u11d2",name:"Angling",desc:"Uses body position to angle opponent to boards"}]},
-    {cat:"Compete & Attitude",icon:"🔥",skills:[{id:"u11c1",name:"Compete Level",desc:"Consistently battles hard in all situations"},{id:"u11c2",name:"Coachability",desc:"Implements feedback between shifts"}]},
+    {cat:"Compete & Attitude",icon:"🔥",skills:[{id:"u11c1",name:"Compete Level",desc:"Consistently battles hard in all situations"},{id:"u11c2",name:"Coachability",desc:"Implements feedback between shifts"},{id:"u11c3",name:"Team-Centred Play",desc:"Makes team decisions — passes when a teammate is open, supports on defense, accepts role",selfQ:"Do you make the team-first play even when it's not the flashy one?"}]},
     {cat:"Game Decision-Making",icon:"🧠",isDM:true,skills:[
       {id:"u11dm1",name:"Rush Read: 2-on-1",desc:"Puck carrier reads defender and makes correct decision",selfQ:"Can you read a 2-on-1 and make the right play?"},
       {id:"u11dm2",name:"Defensive Zone Assignment",desc:"Finds their man without being told every play",selfQ:"Do you find your check automatically in your own zone?"},
@@ -977,7 +977,7 @@ const SKILLS={
     {cat:"Puck Skills",icon:"🏒",skills:[{id:"u13p1",name:"Deking Under Pressure",desc:"Executes effective moves against active defenders"},{id:"u13p2",name:"Saucer Pass",desc:"Uses saucer pass to beat sticks in traffic"},{id:"u13p3",name:"Shot Selection",desc:"Chooses the right shot type for the situation"},{id:"u13p4",name:"Shooting in Stride",desc:"Releases accurate shots at full speed"}]},
     {cat:"Hockey Sense",icon:"👁",skills:[{id:"u13h1",name:"Zone Entry Reads",desc:"Chooses correct entry based on situation"},{id:"u13h2",name:"Offensive Zone Cycling",desc:"Participates in cycle play below the dots"},{id:"u13h3",name:"Defensive Zone Coverage",desc:"Understands man/zone responsibilities in own end"},{id:"u13h4",name:"Neutral Zone Reads",desc:"Makes quick decisions at the blue line"}]},
     {cat:"Defensive Skills",icon:"🛡",skills:[{id:"u13df1",name:"Body Contact",desc:"Uses body legally and effectively in battles"},{id:"u13df2",name:"Shot Blocking",desc:"Willing and positioned to block shots"},{id:"u13df3",name:"Defensive-Zone Breakout",desc:"Executes breakout patterns correctly"}]},
-    {cat:"Compete & Attitude",icon:"🔥",skills:[{id:"u13c1",name:"Compete Level",desc:"Battles hard every shift, every practice"},{id:"u13c2",name:"Coachability",desc:"Seeks feedback and self-corrects between reps"},{id:"u13c3",name:"Leadership",desc:"Positive leadership on bench and in the room"}]},
+    {cat:"Compete & Attitude",icon:"🔥",skills:[{id:"u13c1",name:"Compete Level",desc:"Battles hard every shift, every practice"},{id:"u13c2",name:"Coachability",desc:"Seeks feedback and self-corrects between reps"},{id:"u13c3",name:"Leadership",desc:"Positive leadership on bench and in the room"},{id:"u13c4",name:"Team-Centred Mindset",desc:"Prioritizes team success over personal stats, elevates teammates, makes the right play over the selfish play",selfQ:"Do you consistently choose the team play — and make teammates better around you?"}]},
     {cat:"Game Decision-Making",icon:"🧠",isDM:true,skills:[
       {id:"u13dm1",name:"Zone Entry Decision",desc:"Reads the defensive setup and chooses correct entry",selfQ:"Can you read the defense and pick the right zone entry?"},
       {id:"u13dm2",name:"3-on-2 Rush Read",desc:"Middle player reads defender positioning correctly",selfQ:"On a 3-on-2, do you read whether to shoot or pass?"},
@@ -2251,6 +2251,106 @@ function Skills({ player, onSave, onBack }) {
   );
 }
 
+// ─────────────────────────────────────────────────────────
+// RADAR / SPIDER CHART — skill breakdown visualization
+// Averages each skill category and plots self + coach on the same axes
+// ─────────────────────────────────────────────────────────
+function SkillsRadar({ cats, selfRatings, coachRatings, selfScale, coachScale }) {
+  const W = 320, H = 320;
+  const cx = W / 2, cy = H / 2;
+  const radius = 110;
+  const rings = [0.25, 0.5, 0.75, 1.0];
+  // One axis per category — average the skills within each category
+  const axes = cats.map(cat => {
+    const selfVals = cat.skills.map(s => selfRatings?.[s.id]).filter(Boolean);
+    const coachVals = cat.skills.map(s => coachRatings?.[s.id]).filter(Boolean);
+    const avgSelf = selfVals.length
+      ? selfVals.map(v => normalizeRating(selfScale, v)).filter(x => x !== null).reduce((a,b)=>a+b,0) / Math.max(1, selfVals.filter(v => normalizeRating(selfScale, v) !== null).length)
+      : null;
+    const avgCoach = coachVals.length
+      ? coachVals.map(v => normalizeRating(coachScale, v)).filter(x => x !== null).reduce((a,b)=>a+b,0) / Math.max(1, coachVals.filter(v => normalizeRating(coachScale, v) !== null).length)
+      : null;
+    return { label: cat.cat, icon: cat.icon, self: avgSelf, coach: avgCoach };
+  }).filter(a => a.self !== null || a.coach !== null);
+
+  if (axes.length < 3) return (
+    <div style={{fontSize:12,color:C.dimmer,fontStyle:"italic",textAlign:"center",padding:"1rem 0"}}>Rate at least 3 skill categories to see your Skills Map.</div>
+  );
+
+  const n = axes.length;
+  // Angle 0 at top, clockwise
+  const angle = i => -Math.PI/2 + (i * 2*Math.PI/n);
+  const point = (i, r) => [cx + r * Math.cos(angle(i)), cy + r * Math.sin(angle(i))];
+
+  // Build polygons for self and coach
+  const selfPath = axes.map((a, i) => {
+    const [x, y] = point(i, (a.self ?? 0) * radius);
+    return `${i===0?"M":"L"}${x.toFixed(1)},${y.toFixed(1)}`;
+  }).join(" ") + " Z";
+  const hasCoach = axes.some(a => a.coach !== null);
+  const coachPath = hasCoach ? axes.map((a, i) => {
+    const [x, y] = point(i, (a.coach ?? 0) * radius);
+    return `${i===0?"M":"L"}${x.toFixed(1)},${y.toFixed(1)}`;
+  }).join(" ") + " Z" : null;
+
+  return (
+    <div style={{display:"flex",flexDirection:"column",alignItems:"center"}}>
+      <svg width={W} height={H} viewBox={`0 0 ${W} ${H}`} style={{display:"block",maxWidth:"100%",height:"auto"}}>
+        {/* Grid rings */}
+        {rings.map(r => {
+          const pts = axes.map((_, i) => point(i, r * radius).map(v => v.toFixed(1)).join(",")).join(" ");
+          return <polygon key={r} points={pts} fill="none" stroke={C.border} strokeWidth="1" opacity={0.5}/>;
+        })}
+        {/* Axis lines */}
+        {axes.map((_, i) => {
+          const [x, y] = point(i, radius);
+          return <line key={i} x1={cx} y1={cy} x2={x.toFixed(1)} y2={y.toFixed(1)} stroke={C.border} strokeWidth="1" opacity={0.4}/>;
+        })}
+        {/* Coach polygon (under self) */}
+        {coachPath && (
+          <path d={coachPath} fill={C.gold} fillOpacity="0.08" stroke={C.gold} strokeWidth="2" strokeOpacity="0.65"/>
+        )}
+        {/* Self polygon */}
+        <path d={selfPath} fill={C.purple} fillOpacity="0.18" stroke={C.purple} strokeWidth="2"/>
+        {/* Self data points */}
+        {axes.map((a, i) => {
+          if (a.self === null) return null;
+          const [x, y] = point(i, a.self * radius);
+          return <circle key={`s${i}`} cx={x.toFixed(1)} cy={y.toFixed(1)} r="3.5" fill={C.purple}/>;
+        })}
+        {/* Coach data points */}
+        {hasCoach && axes.map((a, i) => {
+          if (a.coach === null) return null;
+          const [x, y] = point(i, a.coach * radius);
+          return <circle key={`c${i}`} cx={x.toFixed(1)} cy={y.toFixed(1)} r="3.5" fill={C.gold}/>;
+        })}
+        {/* Category labels */}
+        {axes.map((a, i) => {
+          const [lx, ly] = point(i, radius + 22);
+          const anchor = Math.abs(lx - cx) < 8 ? "middle" : (lx > cx ? "start" : "end");
+          return (
+            <g key={`l${i}`}>
+              <text x={lx.toFixed(1)} y={ly.toFixed(1)} fontSize="10" fontWeight="700" fill={C.white} textAnchor={anchor} dominantBaseline="middle" fontFamily="'DM Sans', sans-serif">
+                {a.icon} {a.label}
+              </text>
+            </g>
+          );
+        })}
+      </svg>
+      <div style={{display:"flex",gap:"1.25rem",marginTop:".75rem",fontSize:11}}>
+        <div style={{display:"flex",alignItems:"center",gap:".3rem",color:C.dim}}>
+          <span style={{display:"inline-block",width:10,height:10,background:C.purple,borderRadius:"50%"}}/> Self
+        </div>
+        {hasCoach && (
+          <div style={{display:"flex",alignItems:"center",gap:".3rem",color:C.dim}}>
+            <span style={{display:"inline-block",width:10,height:10,background:C.gold,borderRadius:"50%"}}/> Coach
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
+
 function Report({ player, onBack, demoCoachData }) {
   const latest = player.quizHistory[player.quizHistory.length-1];
   const iq = latest ? calcWeightedIQ(latest.results) : null;
@@ -2350,6 +2450,15 @@ function Report({ player, onBack, demoCoachData }) {
               ))}
             </div>
           )}
+        </Card>
+      )}
+
+      {/* Radar / Spider chart */}
+      {Object.values(player.selfRatings||{}).some(v=>v) && (
+        <Card style={{marginBottom:"1rem"}}>
+          <Label>Skills Map</Label>
+          <div style={{fontSize:11,color:C.dimmer,marginBottom:".75rem",lineHeight:1.5}}>Each axis is a skill category. Purple = your self-rating. Gold = your coach.</div>
+          <SkillsRadar cats={cats} selfRatings={player.selfRatings} coachRatings={coachRatings} selfScale={selfScale} coachScale={coachScale}/>
         </Card>
       )}
 
@@ -3253,7 +3362,7 @@ function buildDemoPlayer() {
       u11p1:"consistent", u11p2:"developing", u11p3:"developing", u11p4:"consistent",
       u11h1:"consistent", u11h2:"developing", u11h3:"developing",
       u11d1:"developing", u11d2:"introduced",
-      u11c1:"advanced", u11c2:"proficient",
+      u11c1:"advanced", u11c2:"proficient", u11c3:"consistent",
       u11dm1:"developing", u11dm2:"developing", u11dm3:"introduced", u11dm4:"consistent", u11dm5:"developing",
     },
     goals: {
@@ -3284,7 +3393,7 @@ function buildDemoCoachRatings() {
       u11p1:"consistent", u11p2:"developing", u11p3:"consistent", u11p4:"proficient",
       u11h1:"consistent", u11h2:"developing", u11h3:"developing",
       u11d1:"introduced", u11d2:"introduced",
-      u11c1:"advanced", u11c2:"proficient",
+      u11c1:"advanced", u11c2:"proficient", u11c3:"proficient",
       u11dm1:"developing", u11dm2:"developing", u11dm3:"developing", u11dm4:"consistent", u11dm5:"developing",
     },
     notes: {
