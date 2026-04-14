@@ -3577,6 +3577,86 @@ function buildDemoCoachRatings() {
 }
 
 // ─────────────────────────────────────────────────────────
+// RINK BACKGROUND — standard NHL rink geometry for the splash page
+// Dimensions follow regulation proportions (200 ft × 85 ft) in SVG units.
+// preserveAspectRatio="xMidYMid slice" fills the viewport on any aspect ratio.
+// ─────────────────────────────────────────────────────────
+function RinkBackground() {
+  const ICE    = "#d7e8f5";     // pale blue ice
+  const LINE_R = "#b8232e";     // red lines
+  const LINE_B = "#0c5ab5";     // blue lines
+  const OUTLINE= "#1c1c1c";
+  const CREASE = "#5aa8e6";     // pale blue crease fill
+  return (
+    <svg
+      viewBox="0 0 200 85"
+      preserveAspectRatio="xMidYMid slice"
+      style={{position:"absolute",inset:0,width:"100%",height:"100%",opacity:0.85}}
+      aria-hidden="true"
+    >
+      {/* Ice surface */}
+      <rect x="0.5" y="0.5" width="199" height="84" rx="28" ry="28" fill={ICE} />
+      {/* Rink outline */}
+      <rect x="0.5" y="0.5" width="199" height="84" rx="28" ry="28" fill="none" stroke={OUTLINE} strokeWidth="0.6" />
+
+      {/* Goal lines */}
+      <line x1="11" y1="5" x2="11" y2="80" stroke={LINE_R} strokeWidth="0.35" />
+      <line x1="189" y1="5" x2="189" y2="80" stroke={LINE_R} strokeWidth="0.35" />
+
+      {/* Blue lines */}
+      <line x1="75" y1="0.5" x2="75" y2="84.5" stroke={LINE_B} strokeWidth="1.3" />
+      <line x1="125" y1="0.5" x2="125" y2="84.5" stroke={LINE_B} strokeWidth="1.3" />
+
+      {/* Center red line */}
+      <line x1="100" y1="0.5" x2="100" y2="84.5" stroke={LINE_R} strokeWidth="1.3" />
+
+      {/* Center faceoff circle + dot */}
+      <circle cx="100" cy="42.5" r="15" fill="none" stroke={LINE_B} strokeWidth="0.4" />
+      <circle cx="100" cy="42.5" r="0.8" fill={LINE_B} />
+
+      {/* Referee crease (semicircle at center) */}
+      <path d="M 90 85 A 10 10 0 0 1 110 85" fill="none" stroke={LINE_R} strokeWidth="0.3" />
+
+      {/* Neutral zone faceoff dots (red) */}
+      <circle cx="80" cy="20.5" r="0.9" fill={LINE_R} />
+      <circle cx="80" cy="64.5" r="0.9" fill={LINE_R} />
+      <circle cx="120" cy="20.5" r="0.9" fill={LINE_R} />
+      <circle cx="120" cy="64.5" r="0.9" fill={LINE_R} />
+
+      {/* End-zone faceoff circles (4 total) with hash marks + dots */}
+      {[
+        {cx:31,  cy:20.5},
+        {cx:31,  cy:64.5},
+        {cx:169, cy:20.5},
+        {cx:169, cy:64.5},
+      ].map((c, i) => (
+        <g key={i}>
+          <circle cx={c.cx} cy={c.cy} r="15" fill="none" stroke={LINE_R} strokeWidth="0.4" />
+          <circle cx={c.cx} cy={c.cy} r="0.9" fill={LINE_R} />
+          {/* L-hash guides inside the circle */}
+          <path d={`M ${c.cx-2} ${c.cy-3.8} L ${c.cx-2} ${c.cy-5.8} L ${c.cx-0.3} ${c.cy-5.8}`} fill="none" stroke={LINE_R} strokeWidth="0.3" />
+          <path d={`M ${c.cx+2} ${c.cy-3.8} L ${c.cx+2} ${c.cy-5.8} L ${c.cx+0.3} ${c.cy-5.8}`} fill="none" stroke={LINE_R} strokeWidth="0.3" />
+          <path d={`M ${c.cx-2} ${c.cy+3.8} L ${c.cx-2} ${c.cy+5.8} L ${c.cx-0.3} ${c.cy+5.8}`} fill="none" stroke={LINE_R} strokeWidth="0.3" />
+          <path d={`M ${c.cx+2} ${c.cy+3.8} L ${c.cx+2} ${c.cy+5.8} L ${c.cx+0.3} ${c.cy+5.8}`} fill="none" stroke={LINE_R} strokeWidth="0.3" />
+        </g>
+      ))}
+
+      {/* Goal creases (semicircles facing center) */}
+      <path d="M 11 37.5 A 6 6 0 0 1 11 47.5 Z" fill={CREASE} fillOpacity="0.35" stroke={LINE_R} strokeWidth="0.3" />
+      <path d="M 189 37.5 A 6 6 0 0 0 189 47.5 Z" fill={CREASE} fillOpacity="0.35" stroke={LINE_R} strokeWidth="0.3" />
+
+      {/* Goal nets (small rectangles behind goal lines) */}
+      <rect x="9" y="40" width="2" height="5" fill="none" stroke={LINE_R} strokeWidth="0.25" />
+      <rect x="189" y="40" width="2" height="5" fill="none" stroke={LINE_R} strokeWidth="0.25" />
+
+      {/* Goalie trapezoid behind each net */}
+      <path d="M 11 34 L 0.5 28 M 11 51 L 0.5 57" stroke={LINE_R} strokeWidth="0.25" fill="none" />
+      <path d="M 189 34 L 199.5 28 M 189 51 L 199.5 57" stroke={LINE_R} strokeWidth="0.25" fill="none" />
+    </svg>
+  );
+}
+
+// ─────────────────────────────────────────────────────────
 // AUTH SCREEN — login / signup
 // ─────────────────────────────────────────────────────────
 function AuthScreen({ onAuthenticated, onDemo }) {
@@ -3634,8 +3714,13 @@ function AuthScreen({ onAuthenticated, onDemo }) {
     : (hasSignedInBefore ? "Sign in to see your development report." : "Sign in or create a free account to get started.");
 
   return (
-    <div style={{minHeight:"100vh",background:`linear-gradient(160deg,#080e1a 0%,#0d1e3a 60%,#080e1a 100%)`,display:"flex",flexDirection:"column",justifyContent:"center",padding:"2rem 1.5rem",fontFamily:FONT.body,color:C.white}}>
-      <div style={{maxWidth:440,margin:"0 auto",width:"100%"}}>
+    <div style={{minHeight:"100vh",position:"relative",background:"#0d1e3a",display:"flex",flexDirection:"column",justifyContent:"center",padding:"2rem 1.5rem",fontFamily:FONT.body,color:C.white,overflow:"hidden"}}>
+      {/* Ice rink background */}
+      <RinkBackground/>
+      {/* Dark vignette to keep form readable */}
+      <div style={{position:"absolute",inset:0,background:"radial-gradient(ellipse at center, rgba(8,14,26,0.55) 0%, rgba(8,14,26,0.85) 70%, rgba(8,14,26,0.95) 100%)",pointerEvents:"none"}}/>
+
+      <div style={{position:"relative",maxWidth:440,margin:"0 auto",width:"100%",background:"rgba(8,14,26,0.78)",backdropFilter:"blur(10px)",WebkitBackdropFilter:"blur(10px)",border:`1px solid ${C.border}`,borderRadius:16,padding:"2rem 1.5rem",boxShadow:"0 24px 60px rgba(0,0,0,0.5)"}}>
         <div style={{display:"flex",alignItems:"center",gap:".6rem",marginBottom:"2rem"}}>
           <span style={{fontSize:28}}>🏒</span>
           <span style={{fontFamily:FONT.display,fontWeight:800,fontSize:"2rem",color:C.gold,letterSpacing:".08em"}}>IceIQ</span>
