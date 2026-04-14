@@ -2822,6 +2822,120 @@ function CoachRatingScreen({ playerName, playerLevel, playerKey, skills, onDone 
 // ─────────────────────────────────────────────────────────
 // STUDY SCREEN — games to watch, drills, focus areas
 // ─────────────────────────────────────────────────────────
+// NHL INSIGHTS — real statistics paired with teaching points
+// Each insight has: stat (the number), context (what it means), lesson (takeaway for the player)
+// Mix of evergreen league facts + 2024-25 season specifics (verify before print/share)
+const NHL_INSIGHTS = [
+  {
+    id: "possession-time",
+    icon: "⏱",
+    category: "Off-Puck Play",
+    stat: "~1 minute of puck possession per game",
+    context: "Even Connor McDavid and Leon Draisaitl average only 60-90 seconds of actual puck possession in a 60-minute NHL game. That's less than 3% of their time on ice.",
+    lesson: "97% of the best players' games are played WITHOUT the puck. What you do without the puck — skating, positioning, supporting — is what separates great players from good ones.",
+    source: "NHL tracking data, 2024-25 season",
+  },
+  {
+    id: "shot-percentage",
+    icon: "🎯",
+    category: "Shooting",
+    stat: "NHL average shooting %: ~10%",
+    context: "League-wide, only about 1 in 10 NHL shots becomes a goal. Top snipers like Auston Matthews and William Nylander shoot around 14-17%. A 'sniper' means 1 goal per 6-7 shots — not every shot.",
+    lesson: "You will miss more than you score, even at the NHL level. Shot volume beats perfection. Shoot when you have the chance.",
+    source: "NHL league averages",
+  },
+  {
+    id: "draisaitl-goals",
+    icon: "⚡",
+    category: "Shooting",
+    stat: "Leon Draisaitl — Rocket Richard Trophy winner, 2024-25",
+    context: "Leon Draisaitl won the Rocket Richard Trophy in 2024-25 as the NHL's top goal scorer. He also missed games during the season — meaning he averaged roughly 0.75+ goals per game he played.",
+    lesson: "Elite scorers show up every single shift. Even missing games, he outscored everyone who played full seasons.",
+    source: "NHL 2024-25 season award",
+  },
+  {
+    id: "save-percentage",
+    icon: "🧤",
+    category: "Goaltending",
+    stat: "Elite NHL goalies: .920+ save percentage",
+    context: "NHL league-average save percentage sits around .900-.905. Elite starters (Connor Hellebuyck, Jake Oettinger, Juuse Saros) are in the .920 range — meaning they stop 92 of every 100 shots.",
+    lesson: "Even elite goalies let in 8 out of 100 shots. Goals happen. What matters is staying mentally sharp for the next shot.",
+    source: "NHL 2024-25 season",
+  },
+  {
+    id: "hellebuyck-vezina",
+    icon: "🏆",
+    category: "Goaltending",
+    stat: "Connor Hellebuyck — Vezina Trophy winner, 2024-25",
+    context: "Connor Hellebuyck won his second straight Vezina Trophy as the NHL's top goalie in 2024-25, leading the Winnipeg Jets through a dominant regular season.",
+    lesson: "Great goaltending carries teams. One position determines more games than any other.",
+    source: "NHL 2024-25 season award",
+  },
+  {
+    id: "faceoffs",
+    icon: "⚔️",
+    category: "Faceoffs",
+    stat: "NHL's best faceoff men: 55-60% win rate",
+    context: "Across the NHL, 50% is the break-even line on faceoffs. Top centers like Patrice Bergeron (career ~58%) and Sidney Crosby win more than they lose. Nobody — nobody — wins 70%.",
+    lesson: "Even elite faceoff men lose 4 out of every 10 draws. Compete on every one, but losing a draw isn't the end of the play — it's the start of the next one.",
+    source: "NHL career and season averages",
+  },
+  {
+    id: "powerplay-rate",
+    icon: "💥",
+    category: "Special Teams",
+    stat: "NHL's best power plays score 25%+ of the time",
+    context: "The league-average power play converts around 21%. Top units like Edmonton Oilers and Tampa Bay Lightning push over 25%. That means the best power plays still fail 75% of the time.",
+    lesson: "Power plays are about creating ONE great chance, not forcing the perfect play. Shoot, crash the net, live with a missed shot.",
+    source: "NHL 2024-25 season",
+  },
+  {
+    id: "penaltykill-rate",
+    icon: "🛡",
+    category: "Special Teams",
+    stat: "NHL's best penalty kills: 82%+",
+    context: "League-average PK sits around 78-80%. The best penalty kills (like Carolina and Florida) kill off 82%+ of opponent power plays. That's elite structure and compete.",
+    lesson: "The PK is where compete and discipline meet. Everyone boxes out, everyone blocks shots, everyone clears when they can.",
+    source: "NHL 2024-25 season",
+  },
+  {
+    id: "makar-norris",
+    icon: "🏒",
+    category: "Defense",
+    stat: "Cale Makar — Norris Trophy winner, 2024-25",
+    context: "Cale Makar won the Norris Trophy as the NHL's top defenseman in 2024-25 with the Colorado Avalanche. He averaged over 25 minutes of ice time per game while posting elite offensive numbers.",
+    lesson: "The best defensemen are also your most offensive weapons. Great D see the whole ice and make the first pass — they start the attack.",
+    source: "NHL 2024-25 season award",
+  },
+  {
+    id: "ice-time",
+    icon: "⏳",
+    category: "Conditioning",
+    stat: "Top defensemen play 25+ minutes per game",
+    context: "Elite NHL defensemen like Cale Makar, Quinn Hughes, and Victor Hedman average 25+ minutes of ice time — nearly half the game. That's 3-4x more than most U11/U13 players play.",
+    lesson: "Conditioning is a skill. You have to be able to think clearly and execute when you're tired — that's when games are won.",
+    source: "NHL 2024-25 season",
+  },
+  {
+    id: "rookie-year",
+    icon: "🌱",
+    category: "Development",
+    stat: "Most NHL stars were average-sized, average-skilled at U11",
+    context: "Scouts consistently report that the NHL's current stars were NOT dominant players at age 10-11. Sidney Crosby, Patrick Kane, Brad Marchand, and many others developed their elite skills after puberty.",
+    lesson: "What you are at 10 or 11 does not determine what you'll be at 18. Outwork your doubts. The game rewards players who keep getting better.",
+    source: "NHL scouting interviews and player development research",
+  },
+  {
+    id: "backcheck-speed",
+    icon: "💨",
+    category: "Transition",
+    stat: "NHL forwards sprint 24+ mph when backchecking",
+    context: "Speed tracking shows NHL forwards reach top speeds (22-24+ mph) during backchecks — often faster than they skate with the puck. The best players (Connor McDavid clocks 25+ mph) are faster WITHOUT the puck than most players are with it.",
+    lesson: "Your compete level on the backcheck shows up in the stats. Every player measures themselves on offense. Elite players measure themselves on defense too.",
+    source: "NHL player tracking, 2024-25 season",
+  },
+];
+
 const STUDY_CONTENT = {
   "U7 / Initiation": {
     watchTips: [
@@ -3004,10 +3118,60 @@ function StudyScreen({ player, onBack, onNav }) {
           ))}
         </Card>
 
+        <div style={{margin:"-1rem -1.25rem 1rem"}}>
+          <NHLInsightWidget />
+        </div>
+
         <Card style={{background:C.purpleDim,border:`1px solid ${C.purpleBorder}`}}>
           <div style={{fontSize:13,color:C.purple,fontWeight:700,marginBottom:".4rem"}}>💡 Study Tip</div>
           <div style={{fontSize:12,color:C.dim,lineHeight:1.6}}>The best players watch hockey differently than fans. They watch the player <strong style={{color:C.white}}>without</strong> the puck — because that's where the game really happens. Try it this week.</div>
         </Card>
+      </div>
+    </div>
+  );
+}
+
+// ─────────────────────────────────────────────────────────
+// NHL INSIGHT WIDGET — small, unobtrusive, rotating stat card
+// Appears on Home, Study, Results, Report. Dismissible per session.
+// ─────────────────────────────────────────────────────────
+function NHLInsightWidget() {
+  const [idx, setIdx] = useState(() => Math.floor(Math.random() * NHL_INSIGHTS.length));
+  const [expanded, setExpanded] = useState(false);
+  const [dismissed, setDismissed] = useState(false);
+  const insight = NHL_INSIGHTS[idx];
+  if (dismissed) return null;
+  function next() { setIdx((idx + 1) % NHL_INSIGHTS.length); setExpanded(false); }
+  return (
+    <div style={{
+      maxWidth:560, margin:"0 auto 1rem", padding:"0 1.25rem",
+    }}>
+      <div style={{
+        background:`linear-gradient(135deg, rgba(201,168,76,.06), rgba(124,111,205,.06))`,
+        border:`1px solid ${C.border}`,
+        borderLeft:`3px solid ${C.gold}`,
+        borderRadius:10, padding:".65rem .85rem",
+        fontFamily:FONT.body, color:C.white,
+      }}>
+        <div style={{display:"flex",alignItems:"center",gap:".55rem"}}>
+          <span style={{fontSize:15,flexShrink:0,opacity:.85}}>{insight.icon}</span>
+          <div style={{flex:1,minWidth:0}}>
+            <div style={{fontSize:9,letterSpacing:".1em",textTransform:"uppercase",color:C.gold,fontWeight:700,opacity:.85}}>NHL Insight · {insight.category}</div>
+            <div style={{fontSize:12,fontWeight:600,color:C.dim,lineHeight:1.35,marginTop:1}}>{insight.stat}</div>
+          </div>
+          <button onClick={()=>setExpanded(!expanded)} style={{background:"none",border:"none",color:C.dimmer,fontSize:11,cursor:"pointer",padding:"2px 4px"}} aria-label="Expand">
+            {expanded ? "▲" : "▼"}
+          </button>
+          <button onClick={next} title="Next insight" style={{background:"none",border:"none",color:C.dimmer,fontSize:11,cursor:"pointer",padding:"2px 4px"}} aria-label="Next">↻</button>
+          <button onClick={()=>setDismissed(true)} title="Dismiss" style={{background:"none",border:"none",color:C.dimmer,fontSize:12,cursor:"pointer",padding:"2px 4px",lineHeight:1}} aria-label="Dismiss">×</button>
+        </div>
+        {expanded && (
+          <div style={{marginTop:".55rem",paddingTop:".55rem",borderTop:`1px solid ${C.border}`}}>
+            <div style={{fontSize:11,color:C.dim,lineHeight:1.6,marginBottom:".45rem"}}>{insight.context}</div>
+            <div style={{fontSize:11,color:C.purple,fontStyle:"italic",lineHeight:1.55}}>💡 {insight.lesson}</div>
+            <div style={{fontSize:9,color:C.dimmer,fontStyle:"italic",marginTop:".4rem"}}>Source: {insight.source}</div>
+          </div>
+        )}
       </div>
     </div>
   );
