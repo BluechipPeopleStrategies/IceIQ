@@ -113,14 +113,106 @@ const SMART_PROMPTS = {
 };
 
 
-// Percentile rating system for coaches
-const PERCENTILE_RATINGS = [
-  { value:"top10",  label:"Top 10%",   sub:"Elite / AAA track",          color:"#a855f7" },
-  { value:"top25",  label:"Top 25%",   sub:"Competitive / AA track",      color:"#3b82f6" },
-  { value:"top50",  label:"Top 50%",   sub:"Rep / A track",               color:"#22c55e" },
-  { value:"top75",  label:"Top 75%",   sub:"House / Recreational track",  color:"#eab308" },
-  { value:"dev",    label:"Developing",sub:"Too early to place",          color:"#94a3b8" },
-];
+// Age-appropriate rating scales
+const RATING_SCALES = {
+  "U7 / Initiation": {
+    self: { type:"emoji", options:[
+      {value:"hard",      label:"This is hard",   emoji:"😣", color:"#f87171"},
+      {value:"sometimes", label:"Sometimes",      emoji:"🤔", color:"#facc15"},
+      {value:"easy",      label:"I can do it!",   emoji:"🤩", color:"#4ade80"},
+    ]},
+    coach: { type:"growth", options:[
+      {value:"emerging",   label:"Emerging",    sub:"Has been introduced, still building",  color:"#94a3b8"},
+      {value:"developing", label:"Developing",  sub:"Shows progress with support",          color:"#facc15"},
+      {value:"confident",  label:"Confident",   sub:"Performs consistently for this age",   color:"#4ade80"},
+    ]},
+  },
+  "U9 / Novice": {
+    self: { type:"frequency", options:[
+      {value:"never",     label:"Not yet",    emoji:"🔴", color:"#f87171"},
+      {value:"sometimes", label:"Sometimes",  emoji:"🟡", color:"#facc15"},
+      {value:"usually",   label:"Usually",    emoji:"🟢", color:"#22c55e"},
+      {value:"always",    label:"Always!",    emoji:"⭐", color:"#a855f7"},
+    ]},
+    coach: { type:"growth", options:[
+      {value:"emerging",   label:"Emerging",    sub:"Introduced but inconsistent",           color:"#94a3b8"},
+      {value:"developing", label:"Developing",  sub:"Growing with reminders",                color:"#facc15"},
+      {value:"competent",  label:"Competent",   sub:"Performs well with consistency",         color:"#22c55e"},
+      {value:"proficient", label:"Proficient",  sub:"Strong for age — ready for next level", color:"#a855f7"},
+    ]},
+  },
+  "U11 / Atom": {
+    self: { type:"growth", options:[
+      {value:"beginning",  label:"Just Starting",     sub:"I'm learning this",                    color:"#f87171"},
+      {value:"developing", label:"Getting Better",    sub:"I can do it sometimes",                color:"#facc15"},
+      {value:"applying",   label:"I Can Do This",     sub:"I do it in games without thinking",    color:"#22c55e"},
+      {value:"extending",  label:"I Can Teach This",  sub:"I could explain it to a teammate",     color:"#a855f7"},
+    ]},
+    coach: { type:"competency", options:[
+      {value:"beginning",  label:"Beginning",   sub:"Needs consistent support and reminders",  color:"#f87171"},
+      {value:"developing", label:"Developing",  sub:"Shows awareness, inconsistent execution", color:"#facc15"},
+      {value:"competent",  label:"Competent",   sub:"Performs reliably in game situations",    color:"#22c55e"},
+      {value:"proficient", label:"Proficient",  sub:"Reads situations ahead of the play",     color:"#3b82f6"},
+      {value:"advanced",   label:"Advanced",    sub:"Elite for age — impacts teammates",      color:"#a855f7"},
+    ]},
+  },
+  "U13 / Peewee": {
+    self: { type:"rubric", options:[
+      {value:"beginning",  label:"Just Starting",     sub:"I know what this is but I'm still learning it",     color:"#f87171"},
+      {value:"developing", label:"Getting Better",    sub:"I can do it in practice, not always in games",      color:"#facc15"},
+      {value:"applying",   label:"I Do This",         sub:"I execute this in games without being reminded",    color:"#22c55e"},
+      {value:"extending",  label:"I Lead This",       sub:"I do this consistently and help teammates with it", color:"#a855f7"},
+    ]},
+    coach: { type:"percentile", options:[
+      {value:"top10",  label:"Top 10%",    sub:"Elite / AAA track",         color:"#a855f7"},
+      {value:"top25",  label:"Top 25%",    sub:"Competitive / AA track",    color:"#3b82f6"},
+      {value:"top50",  label:"Top 50%",    sub:"Rep / A track",             color:"#22c55e"},
+      {value:"top75",  label:"Top 75%",    sub:"House / Recreational",      color:"#eab308"},
+      {value:"dev",    label:"Developing", sub:"Too early to place",        color:"#94a3b8"},
+    ]},
+  },
+};
+
+// Scale helpers
+function getSelfScale(level) { return RATING_SCALES[level]?.self?.options || []; }
+function getCoachScale(level) { return RATING_SCALES[level]?.coach?.options || []; }
+function getScaleColor(scale, value) { const o = scale.find(s => s.value === value); return o ? o.color : C.dimmer; }
+function getScaleLabel(scale, value) { const o = scale.find(s => s.value === value); return o ? o.label : "Not rated"; }
+function normalizeRating(scale, value) {
+  const idx = scale.findIndex(o => o.value === value);
+  if (idx < 0) return null;
+  return scale.length > 1 ? idx / (scale.length - 1) : 0;
+}
+function getDiscussionPrompt(skillName, selfNorm, coachNorm) {
+  if (selfNorm === null || coachNorm === null) return null;
+  if (selfNorm > coachNorm + 0.25) return `You rated "${skillName}" higher than your coach — ask what specific things to work on to close that gap.`;
+  if (coachNorm > selfNorm + 0.25) return `Your coach sees more progress in "${skillName}" than you do — you might be better than you think! Ask for examples.`;
+  return null;
+}
+
+// Migrate old ratings to new scale values
+function migrateRatings(ratings, level) {
+  if (!ratings) return ratings;
+  const OLD_MAP = {"Needs Work":"hard","On Track":"sometimes","Excels":"easy"};
+  const selfScale = getSelfScale(level);
+  const migrated = {...ratings};
+  let changed = false;
+  for (const [k,v] of Object.entries(migrated)) {
+    if (v && OLD_MAP[v]) {
+      const oldNorm = v === "Needs Work" ? 0 : v === "On Track" ? 0.5 : 1;
+      const closest = selfScale.reduce((best, opt, i) => {
+        const norm = selfScale.length > 1 ? i / (selfScale.length - 1) : 0;
+        return Math.abs(norm - oldNorm) < Math.abs(best.dist) ? {val:opt.value, dist:norm-oldNorm} : best;
+      }, {val:selfScale[0]?.value, dist:999});
+      migrated[k] = closest.val;
+      changed = true;
+    }
+  }
+  return changed ? migrated : ratings;
+}
+
+// Legacy lookups (used by U13 coach percentile)
+const PERCENTILE_RATINGS = RATING_SCALES["U13 / Peewee"].coach.options;
 const PR_COLOR = Object.fromEntries(PERCENTILE_RATINGS.map(r=>[r.value,r.color]));
 const PR_LABEL = Object.fromEntries(PERCENTILE_RATINGS.map(r=>[r.value,r.label]));
 
@@ -963,10 +1055,10 @@ function calcBadges(results, prevScore, totalSessions, hasSeqPerfect, mistakeStr
   return [...earned].map(k => BADGES[k]).filter(Boolean);
 }
 
-async function saveCoachRatings(playerKey, ratings) {
+async function saveCoachRatings(playerKey, ratings, notes) {
   if (!window.storage) return false;
   try {
-    await window.storage.set("coach_ratings:" + playerKey, JSON.stringify({ratings, ts: Date.now()}), true);
+    await window.storage.set("coach_ratings:" + playerKey, JSON.stringify({ratings, notes: notes || {}, ts: Date.now()}), true);
     return true;
   } catch(e) { return false; }
 }
@@ -2004,8 +2096,124 @@ function GoalsScreen({ player, onSave, onBack }) {
 // ─────────────────────────────────────────────────────────
 // SKILLS, REPORT, PROFILE, COACH, BOTTOM NAV (condensed)
 // ─────────────────────────────────────────────────────────
-const RATINGS = ["Needs Work","On Track","Excels"];
-const RCOL = {"Needs Work":C.red,"On Track":C.yellow,"Excels":C.green};
+
+// Rating button renderer — branches by scale type (emoji/frequency/growth/rubric)
+function RatingButtons({ level, value, onChange }) {
+  const scaleInfo = RATING_SCALES[level]?.self;
+  if (!scaleInfo) return null;
+  const { type, options } = scaleInfo;
+
+  if (type === "emoji") {
+    return (
+      <div style={{display:"grid",gridTemplateColumns:"1fr 1fr 1fr",gap:".6rem"}}>
+        {options.map(o => {
+          const picked = value === o.value;
+          return (
+            <button key={o.value} onClick={() => onChange(o.value)} style={{
+              background: picked ? `${o.color}22` : C.bgElevated,
+              border: `1px solid ${picked ? o.color+"80" : C.border}`,
+              borderRadius: 14, padding:"1rem .5rem", cursor:"pointer",
+              display:"flex", flexDirection:"column", alignItems:"center", gap:".35rem",
+              transition:"all .15s", transform: picked ? "scale(1.02)" : "scale(1)",
+              fontFamily:FONT.body,
+            }}>
+              <div style={{fontSize:32,lineHeight:1}}>{o.emoji}</div>
+              <div style={{fontSize:11,fontWeight:picked?700:500,color:picked?o.color:C.dim,textAlign:"center",lineHeight:1.2}}>{o.label}</div>
+            </button>
+          );
+        })}
+      </div>
+    );
+  }
+
+  if (type === "frequency") {
+    return (
+      <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:".5rem"}}>
+        {options.map(o => {
+          const picked = value === o.value;
+          return (
+            <button key={o.value} onClick={() => onChange(o.value)} style={{
+              background: picked ? `${o.color}1f` : C.bgElevated,
+              border: `1px solid ${picked ? o.color+"70" : C.border}`,
+              borderLeft: `3px solid ${picked ? o.color : "transparent"}`,
+              borderRadius: 10, padding:".65rem .75rem", cursor:"pointer",
+              display:"flex", alignItems:"center", gap:".55rem",
+              fontFamily:FONT.body, color:picked?C.white:C.dim, fontSize:13,
+              fontWeight:picked?700:500, textAlign:"left",
+            }}>
+              <span style={{fontSize:14}}>{o.emoji}</span>
+              <span>{o.label}</span>
+            </button>
+          );
+        })}
+      </div>
+    );
+  }
+
+  // growth (U11) — 2x2 grid with behavioral anchor
+  if (type === "growth") {
+    return (
+      <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:".5rem"}}>
+        {options.map(o => {
+          const picked = value === o.value;
+          return (
+            <button key={o.value} onClick={() => onChange(o.value)} style={{
+              background: picked ? `${o.color}1a` : C.bgElevated,
+              border: `1px solid ${picked ? o.color+"60" : C.border}`,
+              borderRadius: 10, padding:".7rem .75rem", cursor:"pointer",
+              textAlign:"left", fontFamily:FONT.body,
+            }}>
+              <div style={{fontSize:12,fontWeight:700,color:picked?o.color:C.white,marginBottom:2}}>{o.label}</div>
+              <div style={{fontSize:10,color:C.dimmer,lineHeight:1.4}}>{o.sub}</div>
+            </button>
+          );
+        })}
+      </div>
+    );
+  }
+
+  // rubric (U13) — vertical stack with full descriptor
+  if (type === "rubric") {
+    return (
+      <div style={{display:"flex",flexDirection:"column",gap:".4rem"}}>
+        {options.map(o => {
+          const picked = value === o.value;
+          return (
+            <button key={o.value} onClick={() => onChange(o.value)} style={{
+              background: picked ? `${o.color}1a` : C.bgElevated,
+              border: `1px solid ${picked ? o.color+"60" : C.border}`,
+              borderLeft: `3px solid ${picked ? o.color : "transparent"}`,
+              borderRadius: 10, padding:".65rem .85rem", cursor:"pointer",
+              display:"flex", alignItems:"flex-start", gap:".7rem",
+              textAlign:"left", fontFamily:FONT.body,
+            }}>
+              <div style={{width:8,height:8,borderRadius:"50%",background:o.color,marginTop:6,flexShrink:0}}/>
+              <div style={{flex:1}}>
+                <div style={{fontSize:13,fontWeight:700,color:picked?o.color:C.white,marginBottom:2}}>{o.label}</div>
+                <div style={{fontSize:11,color:C.dimmer,lineHeight:1.45}}>{o.sub}</div>
+              </div>
+              {picked && <div style={{color:o.color,fontSize:14,marginTop:2}}>✓</div>}
+            </button>
+          );
+        })}
+      </div>
+    );
+  }
+  return null;
+}
+
+// Level-aware question phrasing
+function getSelfPrompt(level, skill) {
+  if (level === "U7 / Initiation") return skill.desc;
+  if (level === "U9 / Novice") {
+    const q = skill.selfQ || skill.desc;
+    // Reframe as frequency-friendly if needed
+    if (q.startsWith("Can you ")) return "How often can you " + q.slice(8);
+    if (q.startsWith("Do you ")) return "How often do you " + q.slice(7);
+    return q;
+  }
+  return skill.selfQ || skill.desc;
+}
 
 function Skills({ player, onSave, onBack }) {
   const [ratings, setR] = useState({...player.selfRatings});
@@ -2014,6 +2222,8 @@ function Skills({ player, onSave, onBack }) {
   const cat = cats[ac];
   const total = Object.keys(ratings).length;
   const rated = Object.values(ratings).filter(v=>v!==null).length;
+  const selfScale = getSelfScale(player.level);
+  const scaleType = RATING_SCALES[player.level]?.self?.type;
   return (
     <div style={{minHeight:"100vh",background:C.bg,color:C.white,fontFamily:FONT.body,paddingBottom:80}}>
       <StickyHeader>
@@ -2039,19 +2249,23 @@ function Skills({ player, onSave, onBack }) {
       </div>
       <div style={{padding:"1.25rem",maxWidth:560,margin:"0 auto"}}>
         {cat?.isDM && <Card style={{marginBottom:"1rem",background:C.purpleDim,border:`1px solid ${C.purpleBorder}`}}><div style={{fontSize:12,color:C.purple,lineHeight:1.6}}>🧠 Rate honestly — this is for your development, not anyone else's judgment.</div></Card>}
-        {cat?.skills.map(s => (
-          <Card key={s.id} style={{marginBottom:".75rem",border:`1px solid ${ratings[s.id]?RCOL[ratings[s.id]]+"30":C.border}`}}>
-            <div style={{fontWeight:700,fontSize:14,marginBottom:3}}>{s.name}</div>
-            <div style={{fontSize:12,color:C.dimmer,marginBottom:".85rem",lineHeight:1.5}}>{s.selfQ}</div>
-            <div style={{display:"flex",gap:".5rem"}}>
-              {RATINGS.map(r=>(
-                <button key={r} onClick={()=>setR(p=>({...p,[s.id]:r}))} style={{flex:1,background:ratings[s.id]===r?RCOL[r]+"22":"none",color:ratings[s.id]===r?RCOL[r]:C.dimmer,border:`1px solid ${ratings[s.id]===r?RCOL[r]+"60":C.border}`,borderRadius:8,padding:".45rem .4rem",cursor:"pointer",fontSize:12,fontWeight:ratings[s.id]===r?700:400,fontFamily:FONT.body,textAlign:"center"}}>
-                  {r}
-                </button>
-              ))}
-            </div>
+        {scaleType === "rubric" && (
+          <Card style={{marginBottom:"1rem",background:C.bgElevated}}>
+            <div style={{fontSize:10,letterSpacing:".12em",textTransform:"uppercase",color:C.gold,fontWeight:700,marginBottom:".5rem"}}>How to rate yourself</div>
+            <div style={{fontSize:12,color:C.dim,lineHeight:1.6}}>Each level has a specific behavior. Pick the one that sounds most like you in games — not practice. Be honest: this creates better conversations with your coach.</div>
           </Card>
-        ))}
+        )}
+        {cat?.skills.map(s => {
+          const selfVal = ratings[s.id];
+          const selfColor = selfVal ? getScaleColor(selfScale, selfVal) : null;
+          return (
+            <Card key={s.id} style={{marginBottom:".75rem",border:`1px solid ${selfColor?selfColor+"40":C.border}`,borderLeft:`3px solid ${selfColor||"transparent"}`}}>
+              <div style={{fontWeight:700,fontSize:14,marginBottom:3}}>{s.name}</div>
+              <div style={{fontSize:12,color:C.dimmer,marginBottom:".85rem",lineHeight:1.5}}>{getSelfPrompt(player.level, s)}</div>
+              <RatingButtons level={player.level} value={selfVal} onChange={v => setR(p=>({...p,[s.id]:v}))} />
+            </Card>
+          );
+        })}
         {ac<cats.length-1 && <SecBtn onClick={()=>setAc(i=>i+1)}>Next Category →</SecBtn>}
         {ac===cats.length-1 && <PrimaryBtn onClick={()=>onSave(ratings)}>Save All Ratings ✓</PrimaryBtn>}
       </div>
@@ -2066,18 +2280,39 @@ function Report({ player, onBack }) {
   const goals = player.goals || {};
   const activeGoals = Object.entries(goals).filter(([,v])=>v?.goal?.trim());
   const [coachRatings, setCoachRatings] = useState(null);
+  const [coachNotes, setCoachNotes] = useState({});
   const [loadingCoach, setLoadingCoach] = useState(true);
 
   useEffect(() => {
     const pk = makePlayerKey(player.name, player.level);
     loadCoachRatings(pk).then(data => {
       setCoachRatings(data?.ratings || null);
+      setCoachNotes(data?.notes || {});
       setLoadingCoach(false);
     });
   }, []);
 
   const cats = SKILLS[player.level] || [];
-  const RCOL_SELF = {"Needs Work":C.red,"On Track":C.yellow,"Excels":C.green};
+  const selfScale = getSelfScale(player.level);
+  const coachScale = getCoachScale(player.level);
+
+  // Compute alignment across all rated skills
+  const allSkills = cats.flatMap(c => c.skills);
+  const aligned = [], gaps = [];
+  allSkills.forEach(skill => {
+    const sv = player.selfRatings?.[skill.id];
+    const cv = coachRatings?.[skill.id];
+    if (!sv || !cv) return;
+    const sn = normalizeRating(selfScale, sv);
+    const cn = normalizeRating(coachScale, cv);
+    if (sn === null || cn === null) return;
+    const diff = Math.abs(sn - cn);
+    if (diff <= 0.2) aligned.push({skill, sn, cn, diff});
+    else gaps.push({skill, sn, cn, diff, selfHigher: sn > cn});
+  });
+  gaps.sort((a,b) => b.diff - a.diff);
+  const bothRatedCount = aligned.length + gaps.length;
+  const topDiscussion = gaps.slice(0, 3);
   return (
     <Screen>
       <BackBtn onClick={onBack}/>
@@ -2110,8 +2345,29 @@ function Report({ player, onBack }) {
           ))}
         </Card>
       )}
+      {/* Alignment Score — summary */}
+      {coachRatings && bothRatedCount > 0 && (
+        <Card style={{marginBottom:"1rem",background:`linear-gradient(135deg,${C.bgCard},${C.bgElevated})`,border:`1px solid ${C.purpleBorder}`}}>
+          <Label>Coach Alignment</Label>
+          <div style={{display:"flex",alignItems:"flex-end",gap:"1rem",marginBottom:".75rem"}}>
+            <div style={{fontFamily:FONT.display,fontWeight:800,fontSize:"2.8rem",color:C.purple,lineHeight:1}}>{aligned.length}<span style={{fontSize:"1.2rem",color:C.dimmer}}>/{bothRatedCount}</span></div>
+            <div style={{fontSize:12,color:C.dim,lineHeight:1.5,paddingBottom:".4rem"}}>skills where you and your coach see things the same way</div>
+          </div>
+          {topDiscussion.length > 0 && (
+            <div style={{marginTop:".75rem",paddingTop:".75rem",borderTop:`1px solid ${C.border}`}}>
+              <div style={{fontSize:10,letterSpacing:".12em",textTransform:"uppercase",color:C.gold,fontWeight:700,marginBottom:".5rem"}}>💬 Recommended Discussion Topics</div>
+              {topDiscussion.map(({skill, selfHigher}) => (
+                <div key={skill.id} style={{fontSize:12,color:C.dim,lineHeight:1.5,padding:".35rem 0"}}>
+                  <span style={{color:C.white,fontWeight:600}}>{skill.name}</span> — {selfHigher ? "you rated higher than your coach" : "your coach rated higher than you"}
+                </div>
+              ))}
+            </div>
+          )}
+        </Card>
+      )}
+
       {/* Self vs Coach comparison */}
-      {(coachRatings || loadingCoach) && (
+      {(coachRatings || loadingCoach || Object.values(player.selfRatings||{}).some(v=>v)) && (
         <Card style={{marginBottom:"1rem"}}>
           <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:"1rem"}}>
             <Label style={{marginBottom:0}}>Skills — Self vs Coach</Label>
@@ -2127,19 +2383,50 @@ function Report({ player, onBack }) {
               {cat.skills.map(skill => {
                 const selfR = player.selfRatings?.[skill.id];
                 const coachR = coachRatings?.[skill.id];
+                const selfLabel = selfR ? getScaleLabel(selfScale, selfR) : null;
+                const selfColor = selfR ? getScaleColor(selfScale, selfR) : null;
+                const coachLabel = coachR ? getScaleLabel(coachScale, coachR) : null;
+                const coachColor = coachR ? getScaleColor(coachScale, coachR) : null;
+                const sn = selfR ? normalizeRating(selfScale, selfR) : null;
+                const cn = coachR ? normalizeRating(coachScale, coachR) : null;
+                const prompt = getDiscussionPrompt(skill.name, sn, cn);
+                const gap = (sn!==null && cn!==null) ? Math.abs(sn-cn) : 0;
+                const hasGap = gap > 0.2;
+                const note = coachNotes?.[skill.id];
                 return (
-                  <div key={skill.id} style={{marginBottom:".6rem",padding:".75rem .9rem",background:C.bgElevated,borderRadius:10,border:`1px solid ${C.border}`}}>
-                    <div style={{fontSize:13,fontWeight:600,color:C.white,marginBottom:".5rem"}}>{skill.name}</div>
-                    <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:".5rem"}}>
-                      <div style={{background:selfR?`${RCOL_SELF[selfR]}12`:"none",border:`1px solid ${selfR?RCOL_SELF[selfR]+"35":C.border}`,borderRadius:8,padding:".4rem .65rem"}}>
-                        <div style={{fontSize:10,color:C.dimmer,marginBottom:2}}>You said</div>
-                        <div style={{fontSize:12,fontWeight:700,color:selfR?RCOL_SELF[selfR]:C.dimmer}}>{selfR||"Not rated"}</div>
+                  <div key={skill.id} style={{marginBottom:".6rem",padding:".75rem .9rem",background:C.bgElevated,borderRadius:10,border:`1px solid ${hasGap?C.goldBorder:C.border}`,borderLeft:hasGap?`3px solid ${C.gold}`:`1px solid ${C.border}`}}>
+                    <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:".6rem"}}>
+                      <div style={{fontSize:13,fontWeight:600,color:C.white}}>{skill.name}</div>
+                      {hasGap && <div style={{fontSize:9,letterSpacing:".08em",textTransform:"uppercase",color:C.gold,fontWeight:700,background:C.goldDim,padding:"2px 6px",borderRadius:4}}>Discuss</div>}
+                    </div>
+                    {/* Alignment bar */}
+                    {(sn!==null || cn!==null) && (
+                      <div style={{position:"relative",height:6,background:C.dimmest,borderRadius:3,marginBottom:".55rem"}}>
+                        {sn!==null && <div style={{position:"absolute",left:`${sn*100}%`,top:-3,width:12,height:12,marginLeft:-6,borderRadius:"50%",background:selfColor,border:`2px solid ${C.bg}`,zIndex:2}} title="You"/>}
+                        {cn!==null && <div style={{position:"absolute",left:`${cn*100}%`,top:-3,width:12,height:12,marginLeft:-6,borderRadius:"50%",background:coachColor,border:`2px solid ${C.bg}`,boxShadow:`0 0 0 2px ${coachColor}40`,zIndex:1}} title="Coach"/>}
                       </div>
-                      <div style={{background:coachR?`${PR_COLOR[coachR]}12`:"none",border:`1px solid ${coachR?PR_COLOR[coachR]+"35":C.border}`,borderRadius:8,padding:".4rem .65rem"}}>
+                    )}
+                    <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:".5rem"}}>
+                      <div style={{background:selfR?`${selfColor}12`:"none",border:`1px solid ${selfR?selfColor+"35":C.border}`,borderRadius:8,padding:".4rem .65rem"}}>
+                        <div style={{fontSize:10,color:C.dimmer,marginBottom:2}}>You said</div>
+                        <div style={{fontSize:12,fontWeight:700,color:selfR?selfColor:C.dimmer}}>{selfLabel||"Not rated"}</div>
+                      </div>
+                      <div style={{background:coachR?`${coachColor}12`:"none",border:`1px solid ${coachR?coachColor+"35":C.border}`,borderRadius:8,padding:".4rem .65rem"}}>
                         <div style={{fontSize:10,color:C.dimmer,marginBottom:2}}>Coach says</div>
-                        <div style={{fontSize:12,fontWeight:700,color:coachR?PR_COLOR[coachR]:C.dimmer}}>{coachR?PR_LABEL[coachR]:"Pending"}</div>
+                        <div style={{fontSize:12,fontWeight:700,color:coachR?coachColor:C.dimmer}}>{coachLabel||"Pending"}</div>
                       </div>
                     </div>
+                    {prompt && (
+                      <div style={{marginTop:".55rem",padding:".5rem .65rem",background:C.goldDim,borderRadius:6,fontSize:11,color:C.gold,lineHeight:1.5,borderLeft:`2px solid ${C.gold}`}}>
+                        💬 {prompt}
+                      </div>
+                    )}
+                    {note && (
+                      <div style={{marginTop:".55rem",padding:".55rem .7rem",background:C.purpleDim,borderRadius:6,fontSize:12,color:C.white,lineHeight:1.5,borderLeft:`2px solid ${C.purple}`}}>
+                        <div style={{fontSize:9,letterSpacing:".1em",textTransform:"uppercase",color:C.purple,fontWeight:700,marginBottom:3}}>Coach's note</div>
+                        {note}
+                      </div>
+                    )}
                   </div>
                 );
               })}
@@ -2349,16 +2636,26 @@ function CoachDashboard({ onBack }) {
 // ─────────────────────────────────────────────────────────
 function CoachRatingScreen({ playerName, playerLevel, playerKey, skills, onDone }) {
   const [ratings, setRatings] = useState({});
+  const [notes, setNotes] = useState({});
   const [saved, setSaved] = useState(false);
   const [saving, setSaving] = useState(false);
   const [activeSkill, setActiveSkill] = useState(null);
   const cats = SKILLS[playerLevel] || [];
   const allSkills = cats.flatMap(c => c.skills.map(s => ({...s, cat:c.cat, icon:c.icon})));
   const rated = Object.values(ratings).filter(v=>v).length;
+  const coachScale = getCoachScale(playerLevel);
+  const coachScaleType = RATING_SCALES[playerLevel]?.coach?.type;
+
+  const scaleIntro = {
+    "growth":     "Rate each skill using the growth scale — where is this player in their development journey? Focus on what they show consistently, not a single moment.",
+    "competency": "Rate each skill using the competency scale — how reliably does this player execute this skill in game situations?",
+    "percentile": "Rate each skill using the percentile system. These ratings will appear alongside the player's self-assessment in their development report — visible to the player only, never shared publicly.",
+  };
+  const legendTitle = {growth:"Growth Scale",competency:"Competency Scale",percentile:"Percentile Scale"};
 
   async function save() {
     setSaving(true);
-    const ok = await saveCoachRatings(playerKey, ratings);
+    const ok = await saveCoachRatings(playerKey, ratings, notes);
     setSaving(false);
     setSaved(ok);
   }
@@ -2377,18 +2674,18 @@ function CoachRatingScreen({ playerName, playerLevel, playerKey, skills, onDone 
           <div style={{fontFamily:FONT.display,fontWeight:800,fontSize:"1.8rem"}}>{playerName}</div>
           <div style={{fontSize:13,color:C.dimmer,marginTop:2}}>{playerLevel}</div>
           <div style={{marginTop:".85rem",fontSize:12,color:C.dim,lineHeight:1.6}}>
-            Rate each skill area using the percentile system. These ratings will appear alongside the player's self-assessment in their development report — visible to the player only, never shared publicly.
+            {scaleIntro[coachScaleType] || scaleIntro.percentile}
           </div>
         </Card>
 
-        {/* Percentile legend */}
+        {/* Scale legend */}
         <Card style={{marginBottom:"1.25rem"}}>
-          <Label>Percentile Scale</Label>
+          <Label>{legendTitle[coachScaleType] || "Scale"}</Label>
           <div style={{display:"flex",flexDirection:"column",gap:".4rem"}}>
-            {PERCENTILE_RATINGS.map(r => (
+            {coachScale.map(r => (
               <div key={r.value} style={{display:"flex",alignItems:"center",gap:".75rem",padding:".45rem .6rem",borderRadius:8,background:`${r.color}10`,border:`1px solid ${r.color}25`}}>
                 <div style={{width:10,height:10,borderRadius:"50%",background:r.color,flexShrink:0}}/>
-                <div style={{fontWeight:700,fontSize:13,color:r.color,minWidth:70}}>{r.label}</div>
+                <div style={{fontWeight:700,fontSize:13,color:r.color,minWidth:95}}>{r.label}</div>
                 <div style={{fontSize:12,color:C.dimmer}}>{r.sub}</div>
               </div>
             ))}
@@ -2413,24 +2710,26 @@ function CoachRatingScreen({ playerName, playerLevel, playerKey, skills, onDone 
             {cat.skills.map(skill => {
               const rating = ratings[skill.id];
               const isActive = activeSkill === skill.id;
+              const ratingColor = rating ? getScaleColor(coachScale, rating) : null;
+              const ratingLabel = rating ? getScaleLabel(coachScale, rating) : null;
               return (
                 <div key={skill.id} style={{marginBottom:".6rem"}}>
                   <button onClick={() => setActiveSkill(isActive ? null : skill.id)}
                     style={{
-                      width:"100%",background:rating?`${PR_COLOR[rating]}10`:C.bgCard,
-                      border:`1px solid ${rating?PR_COLOR[rating]+"40":C.border}`,
-                      borderLeft:`3px solid ${rating?PR_COLOR[rating]:"transparent"}`,
+                      width:"100%",background:rating?`${ratingColor}10`:C.bgCard,
+                      border:`1px solid ${rating?ratingColor+"40":C.border}`,
+                      borderLeft:`3px solid ${rating?ratingColor:"transparent"}`,
                       borderRadius:12,padding:".85rem 1rem",cursor:"pointer",
                       display:"flex",justifyContent:"space-between",alignItems:"center",
                       color:C.white,fontFamily:FONT.body,textAlign:"left",
                     }}>
-                    <div>
+                    <div style={{flex:1,minWidth:0}}>
                       <div style={{fontSize:14,fontWeight:600,marginBottom:2}}>{skill.name}</div>
-                      <div style={{fontSize:11,color:C.dimmer}}>{skill.selfQ}</div>
+                      <div style={{fontSize:11,color:C.dimmer,lineHeight:1.4}}>{skill.desc}</div>
                     </div>
                     <div style={{flexShrink:0,marginLeft:"1rem",textAlign:"right"}}>
                       {rating ? (
-                        <div style={{fontSize:12,fontWeight:700,color:PR_COLOR[rating]}}>{PR_LABEL[rating]}</div>
+                        <div style={{fontSize:12,fontWeight:700,color:ratingColor}}>{ratingLabel}</div>
                       ) : (
                         <div style={{fontSize:11,color:C.dimmer}}>Tap to rate</div>
                       )}
@@ -2439,8 +2738,8 @@ function CoachRatingScreen({ playerName, playerLevel, playerKey, skills, onDone 
                   </button>
                   {isActive && (
                     <div style={{background:C.bgElevated,border:`1px solid ${C.border}`,borderRadius:12,padding:".85rem",marginTop:".35rem",display:"flex",flexDirection:"column",gap:".4rem"}}>
-                      {PERCENTILE_RATINGS.map(r => (
-                        <button key={r.value} onClick={() => { setRatings(p=>({...p,[skill.id]:r.value})); setActiveSkill(null); }}
+                      {coachScale.map(r => (
+                        <button key={r.value} onClick={() => setRatings(p=>({...p,[skill.id]:r.value}))}
                           style={{
                             background:ratings[skill.id]===r.value?`${r.color}18`:"none",
                             border:`1px solid ${ratings[skill.id]===r.value?r.color+"50":C.border}`,
@@ -2456,6 +2755,16 @@ function CoachRatingScreen({ playerName, playerLevel, playerKey, skills, onDone 
                           {ratings[skill.id]===r.value && <div style={{marginLeft:"auto",color:r.color,fontSize:14}}>✓</div>}
                         </button>
                       ))}
+                      {rating && (
+                        <div style={{marginTop:".5rem",paddingTop:".6rem",borderTop:`1px solid ${C.border}`}}>
+                          <div style={{fontSize:10,letterSpacing:".1em",textTransform:"uppercase",color:C.gold,fontWeight:700,marginBottom:".35rem"}}>💬 Discussion note (optional)</div>
+                          <textarea value={notes[skill.id]||""} onChange={e=>setNotes(p=>({...p,[skill.id]:e.target.value}))}
+                            placeholder={`What's one thing ${playerName} could work on for this skill?`}
+                            rows={2}
+                            style={{width:"100%",background:C.bgCard,border:`1px solid ${C.border}`,borderRadius:8,padding:".55rem .7rem",color:C.white,fontSize:12,fontFamily:FONT.body,outline:"none",lineHeight:1.5}}/>
+                          <div style={{fontSize:10,color:C.dimmer,marginTop:4,fontStyle:"italic"}}>This note appears in the player's report to spark a conversation — keep it specific and growth-focused.</div>
+                        </div>
+                      )}
                     </div>
                   )}
                 </div>
@@ -2535,6 +2844,10 @@ export default function App() {
       }
       const saved = JSON.parse(localStorage.getItem("iceiq_player") || "null");
       if (saved) {
+        // Migrate legacy skill ratings to new scale values
+        if (saved.selfRatings && saved.level) {
+          saved.selfRatings = migrateRatings(saved.selfRatings, saved.level);
+        }
         setPlayer(saved);
         const sc = JSON.parse(localStorage.getItem("iceiq_score") || "null");
         if (sc !== null) setPrevScore(sc);
