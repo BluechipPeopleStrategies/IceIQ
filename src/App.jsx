@@ -3777,7 +3777,7 @@ function AuthScreen({ onAuthenticated, onDemo }) {
             <div style={{marginBottom:"1rem"}}>
               <div style={{fontSize:10,letterSpacing:".14em",textTransform:"uppercase",color:C.dimmer,fontWeight:700,marginBottom:".5rem"}}>I am a...</div>
               <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:".5rem"}}>
-                {[{v:"player",l:"Player / Parent",i:"🏒"},{v:"coach",l:"Coach",i:"👨‍🏫"}].map(o => (
+                {[{v:"player",l:"Parent/Guardian (on behalf of player)",i:"👪"},{v:"coach",l:"Coach",i:"👨‍🏫"}].map(o => (
                   <button key={o.v} onClick={()=>setRole(o.v)} style={{background:role===o.v?C.goldDim:C.bgCard,border:`1px solid ${role===o.v?C.gold:C.border}`,borderRadius:10,padding:".75rem",cursor:"pointer",color:role===o.v?C.gold:C.dim,fontFamily:FONT.body,fontWeight:role===o.v?700:500,fontSize:13,display:"flex",alignItems:"center",justifyContent:"center",gap:".4rem"}}>
                     <span style={{fontSize:16}}>{o.i}</span>{o.l}
                   </button>
@@ -3786,7 +3786,7 @@ function AuthScreen({ onAuthenticated, onDemo }) {
             </div>
             <div style={{background:C.bgCard,border:`1px solid ${C.border}`,borderRadius:10,padding:".6rem .85rem",marginBottom:".6rem"}}>
               <div style={{fontSize:10,letterSpacing:".1em",textTransform:"uppercase",color:C.dimmer,fontWeight:700,marginBottom:2}}>Name</div>
-              <input value={name} onChange={e=>setName(e.target.value)} placeholder={role==="coach"?"Coach name":"Player name"}
+              <input value={name} onChange={e=>setName(e.target.value)} placeholder={role==="coach"?"Coach name":"Player's name"}
                 style={{background:"none",border:"none",color:C.white,fontSize:15,fontFamily:FONT.body,width:"100%",outline:"none",padding:0}}/>
             </div>
           </>
