@@ -66,8 +66,8 @@ const C = {
   rink:     "#1e5799",
 };
 
-// IceIQ logo mark — a hockey puck with a strategic play arrow drawn across it.
-// Captures both the sport (puck, viewed from above) and the IQ (a coach's play diagram).
+// IceIQ logo mark — a hockey puck (viewed from above) with a brain inside.
+// Captures the sport (puck silhouette) + the IQ (brain folds / hemispheres / strategy arrow).
 function IceIQLogo({ size = 32, color = "#c9a84c" }) {
   const id = `arrow-${size}`;
   return (
@@ -79,29 +79,33 @@ function IceIQLogo({ size = 32, color = "#c9a84c" }) {
       style={{display:"block",flexShrink:0}}
     >
       <defs>
-        <marker id={id} viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse">
+        <marker id={id} viewBox="0 0 10 10" refX="8" refY="5" markerWidth="4.5" markerHeight="4.5" orient="auto-start-reverse">
           <path d="M 0 0 L 10 5 L 0 10 Z" fill={color} />
         </marker>
       </defs>
       {/* Puck — dark disc with gold rim, viewed from above */}
       <circle cx="16" cy="16" r="14.5" fill="#0d1525" stroke={color} strokeWidth="2" />
-      {/* Thin inner ring (puck edge detail) */}
-      <circle cx="16" cy="16" r="11.5" fill="none" stroke={color} strokeWidth="0.6" strokeOpacity="0.35" />
-      {/* Strategic play arrow — sweeping curve across the puck */}
-      <path
-        d="M 7.5 21.5 Q 12 13 18 14.5 T 25.5 10.5"
-        fill="none"
-        stroke={color}
-        strokeWidth="1.8"
-        strokeLinecap="round"
-        strokeDasharray="2.4 1.6"
-        markerEnd={`url(#${id})`}
-      />
-      {/* Starting position X (where the play begins) */}
-      <g stroke={color} strokeWidth="1.5" strokeLinecap="round">
-        <line x1="5.5" y1="20" x2="9" y2="23.5" />
-        <line x1="9" y1="20" x2="5.5" y2="23.5" />
-      </g>
+      {/* Subtle inner ring (puck edge) */}
+      <circle cx="16" cy="16" r="11.5" fill="none" stroke={color} strokeWidth="0.5" strokeOpacity="0.3" />
+
+      {/* Brain — longitudinal fissure down the middle */}
+      <path d="M 16 5 C 15 9, 17 13, 16 16 C 15 19, 17 23, 16 27"
+            stroke={color} strokeWidth="1.4" fill="none" strokeLinecap="round" />
+
+      {/* Left hemisphere — 3 gyri (brain folds) */}
+      <path d="M 12 8 Q 8.5 10.5 10 13"   stroke={color} strokeWidth="1.15" fill="none" strokeLinecap="round" />
+      <path d="M 11 14 Q 7.5 16 10 19"    stroke={color} strokeWidth="1.15" fill="none" strokeLinecap="round" />
+      <path d="M 12 20.5 Q 9 22.5 12 25"  stroke={color} strokeWidth="1.15" fill="none" strokeLinecap="round" />
+
+      {/* Right hemisphere — mirror */}
+      <path d="M 20 8 Q 23.5 10.5 22 13"  stroke={color} strokeWidth="1.15" fill="none" strokeLinecap="round" />
+      <path d="M 21 14 Q 24.5 16 22 19"   stroke={color} strokeWidth="1.15" fill="none" strokeLinecap="round" />
+      <path d="M 20 20.5 Q 23 22.5 20 25" stroke={color} strokeWidth="1.15" fill="none" strokeLinecap="round" />
+
+      {/* Small strategic-thought arrow in the top-right (the "idea" or play direction) */}
+      <path d="M 23 5.5 L 27 3"
+            stroke={color} strokeWidth="1.3" fill="none" strokeLinecap="round"
+            markerEnd={`url(#${id})`} />
     </svg>
   );
 }
