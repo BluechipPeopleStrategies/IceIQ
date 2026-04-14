@@ -76,7 +76,7 @@ Current version: 2.0.0
 - Session count stored in localStorage under "iceiq_sessions"
 - Adaptive engine: 2 correct in a row = step up difficulty, 2 wrong = step down
 - D_WEIGHT: {1:1, 2:1.5, 3:2.2} — do not change these values
-- QUIZ_LENGTH default is 15 — player can set 10/15/20 in settings
+- QUIZ_LENGTH default is 10 — player can set 10/15/20 in settings
 
 ## Score tiers (do not change labels)
 - 80%+: Hockey Sense 🏒

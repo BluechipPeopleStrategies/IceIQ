@@ -11,7 +11,7 @@ create table if not exists public.profiles (
   level text,
   position text,
   season text default '2025-26',
-  session_length int default 15,
+  session_length int default 10,
   colorblind boolean default false,
   created_at timestamptz default now(),
   updated_at timestamptz default now()

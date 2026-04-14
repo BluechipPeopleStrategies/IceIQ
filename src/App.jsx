@@ -76,9 +76,9 @@ const CHANGELOG = [
 const LEVELS = ["U7 / Initiation","U9 / Novice","U11 / Atom","U13 / Peewee"];
 const POSITIONS = ["Forward","Defense","Goalie","Not Sure"];
 const POSITIONS_U11UP = ["Forward","Defense","Goalie"];
-const SEASONS = ["2025-26","2024-25","2023-24","2022-23"];
+const SEASONS = ["2025-26","2026 Spring/Summer","2026-27"];
 const D_WEIGHT = {1:1, 2:1.5, 3:2.2};
-const QUIZ_LENGTH = 15;
+const QUIZ_LENGTH = 10;
 
 const SCORE_TIERS = [
   {min:80, label:"Hockey Sense",   badge:"🏒", color:C.green},
@@ -1579,7 +1579,7 @@ function Onboarding({ onComplete }) {
         </div>
       )}
       <PrimaryBtn
-        onClick={() => position && onComplete({name:name.trim(),level,position,selfRatings:initSR(level),quizHistory:[],goals:{},coachCode:"",season:SEASONS[0],sessionLength:15,colorblind:false})}
+        onClick={() => position && onComplete({name:name.trim(),level,position,selfRatings:initSR(level),quizHistory:[],goals:{},coachCode:"",season:SEASONS[0],sessionLength:10,colorblind:false})}
         disabled={!position}
       >
         Build {name}'s Profile →
@@ -1660,7 +1660,7 @@ function Home({ player, onNav }) {
           <button onClick={() => onNav("quiz")} style={{background:`linear-gradient(135deg,rgba(124,111,205,.15),rgba(124,111,205,.05))`,border:`1px solid ${C.purpleBorder}`,borderRadius:14,padding:"1.1rem",cursor:"pointer",textAlign:"left",color:C.white,fontFamily:FONT.body}}>
             <div style={{fontSize:22,marginBottom:".4rem"}}>🧠</div>
             <div style={{fontWeight:700,fontSize:14,marginBottom:2}}>Take Quiz</div>
-            <div style={{fontSize:11,color:C.purple}}>Adaptive · {player.sessionLength||15}Q</div>
+            <div style={{fontSize:11,color:C.purple}}>Adaptive · {player.sessionLength||10}Q</div>
           </button>
           <button onClick={() => onNav("goals")} style={{background:`linear-gradient(135deg,rgba(201,168,76,.1),rgba(201,168,76,.03))`,border:`1px solid ${C.goldBorder}`,borderRadius:14,padding:"1.1rem",cursor:"pointer",textAlign:"left",color:C.white,fontFamily:FONT.body}}>
             <div style={{fontSize:22,marginBottom:".4rem"}}>🎯</div>
@@ -1703,7 +1703,7 @@ function Home({ player, onNav }) {
 // ─────────────────────────────────────────────────────────
 function Quiz({ player, onFinish, onBack }) {
   const isReturning = player.quizHistory.length > 0;
-  const qLen = player.sessionLength || 15;
+  const qLen = player.sessionLength || 10;
   const [queue, setQueue] = useState(null);
   const [question, setQuestion] = useState(null);
   const [sel, setSel] = useState(null);
@@ -2929,7 +2929,7 @@ function buildDemoPlayer() {
     level: "U11 / Atom",
     position: "Forward",
     season: SEASONS[0],
-    sessionLength: 15,
+    sessionLength: 10,
     colorblind: false,
     coachCode: "",
     quizHistory: [
@@ -3350,7 +3350,7 @@ export default function App() {
         quizHistory,
         goals,
         season: p.season || SEASONS[0],
-        sessionLength: p.session_length || 15,
+        sessionLength: p.session_length || 10,
         colorblind: !!p.colorblind,
         coachCode: "",
       };
