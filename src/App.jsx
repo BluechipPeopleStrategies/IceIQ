@@ -3717,8 +3717,6 @@ function AuthScreen({ onAuthenticated, onDemo }) {
     <div style={{minHeight:"100vh",position:"relative",background:"#0d1e3a",display:"flex",flexDirection:"column",justifyContent:"center",padding:"2rem 1.5rem",fontFamily:FONT.body,color:C.white,overflow:"hidden"}}>
       {/* Ice rink background */}
       <RinkBackground/>
-      {/* Light vignette — keeps edges softly dark without hiding the rink */}
-      <div style={{position:"absolute",inset:0,background:"radial-gradient(ellipse at center, rgba(8,14,26,0) 0%, rgba(8,14,26,0.15) 60%, rgba(8,14,26,0.45) 100%)",pointerEvents:"none"}}/>
 
       <div style={{position:"relative",maxWidth:440,margin:"0 auto",width:"100%",background:"rgba(8,14,26,0.78)",backdropFilter:"blur(10px)",WebkitBackdropFilter:"blur(10px)",border:`1px solid ${C.border}`,borderRadius:16,padding:"2rem 1.5rem",boxShadow:"0 24px 60px rgba(0,0,0,0.5)"}}>
         <div style={{display:"flex",alignItems:"center",gap:".6rem",marginBottom:"2rem"}}>
