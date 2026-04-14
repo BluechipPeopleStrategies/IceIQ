@@ -1,4 +1,6 @@
 import { useState, useEffect, useCallback } from "react";
+import * as SB from "./supabase";
+import { supabase, hasSupabase } from "./supabase";
 
 // ─────────────────────────────────────────────────────────
 // DESIGN TOKENS
@@ -49,7 +51,7 @@ const FONT = {
 // ─────────────────────────────────────────────────────────
 // VERSION
 // ─────────────────────────────────────────────────────────
-const VERSION = "0.1.0";
+const VERSION = "0.2.0";
 const RELEASE_DATE = "April 13, 2026";
 const CHANGELOG = [
   { v:"2.0.0", date:"April 13, 2026", notes:[
@@ -2306,12 +2308,15 @@ function Report({ player, onBack }) {
   const [loadingCoach, setLoadingCoach] = useState(true);
 
   useEffect(() => {
-    const pk = makePlayerKey(player.name, player.level);
-    loadCoachRatings(pk).then(data => {
-      setCoachRatings(data?.ratings || null);
-      setCoachNotes(data?.notes || {});
+    if (player.id) {
+      SB.getCoachRatingsForPlayer(player.id).then(data => {
+        setCoachRatings(Object.keys(data.ratings || {}).length ? data.ratings : null);
+        setCoachNotes(data.notes || {});
+        setLoadingCoach(false);
+      });
+    } else {
       setLoadingCoach(false);
-    });
+    }
   }, []);
 
   const cats = SKILLS[player.level] || [];
@@ -2495,10 +2500,28 @@ function Report({ player, onBack }) {
 function Profile({ player, onSave, onBack, onReset }) {
   const [s, setS] = useState({...player});
   const upd = k => v => setS(p => ({...p,[k]:v}));
-  const [copied, setCopied] = useState(false);
-  const playerKey = makePlayerKey(s.name||"player", s.level||"");
-  const coachUrl = `${window.location.origin}${window.location.pathname}?coach=1&pk=${playerKey}&name=${encodeURIComponent(s.name||"Player")}&level=${encodeURIComponent(s.level||"")}`;
-  function copy() { navigator.clipboard?.writeText(coachUrl).catch(()=>{}); setCopied(true); setTimeout(()=>setCopied(false),2000); }
+  const [teams, setTeams] = useState([]);
+  const [joinCode, setJoinCode] = useState("");
+  const [joining, setJoining] = useState(false);
+  const [joinMsg, setJoinMsg] = useState("");
+
+  useEffect(() => {
+    if (player.id) SB.getPlayerTeams(player.id).then(setTeams);
+  }, [player.id]);
+
+  async function joinTeam() {
+    if (!joinCode.trim()) return;
+    setJoining(true); setJoinMsg("");
+    try {
+      const team = await SB.joinTeamByCode(player.id, joinCode.trim());
+      setTeams([...teams, team]);
+      setJoinCode("");
+      setJoinMsg(`Joined ${team.name} ✓`);
+    } catch (e) {
+      setJoinMsg(e.message || "Could not join team");
+    }
+    setJoining(false);
+  }
 
   return (
     <div style={{minHeight:"100vh",background:C.bg,color:C.white,fontFamily:FONT.body,paddingBottom:80}}>
@@ -2557,14 +2580,29 @@ function Profile({ player, onSave, onBack, onReset }) {
           </div>
         </Card>
         <Card style={{marginBottom:"1rem"}}>
-          <Label>Coach Code</Label>
-          <input value={s.coachCode||""} onChange={e=>upd("coachCode")(e.target.value.toUpperCase().slice(0,8))} placeholder="e.g. HAWKS or 2847"
-            style={{background:C.bgElevated,border:`1px solid ${C.border}`,borderRadius:8,padding:".65rem .9rem",color:C.white,fontSize:16,fontFamily:FONT.body,width:"100%",outline:"none",letterSpacing:".1em",fontWeight:700,textAlign:"center"}}/>
-          <div style={{fontSize:11,color:C.dimmer,marginTop:".6rem",lineHeight:1.6}}>Results saved anonymously. Coaches see patterns, not individuals.</div>
-        </Card>
-        <Card style={{marginBottom:"1rem",background:"rgba(34,197,94,.04)",border:`1px solid ${C.greenBorder}`}}>
-          <div style={{fontSize:13,fontWeight:700,color:C.green,marginBottom:".5rem"}}>👨‍🏫 Invite Your Coach</div>
-          <button onClick={copy} style={{background:copied?C.greenDim:C.bgElevated,border:`1px solid ${copied?C.greenBorder:C.border}`,borderRadius:8,padding:".55rem 1rem",cursor:"pointer",fontSize:13,fontFamily:FONT.body,fontWeight:600,color:copied?C.green:C.dim,width:"100%"}}>{copied?"✓ Link Copied!":"Copy Coach Invite Link"}</button>
+          <Label>Your Teams</Label>
+          {teams.length === 0 ? (
+            <div style={{fontSize:12,color:C.dimmer,marginBottom:".85rem",lineHeight:1.6,fontStyle:"italic"}}>You're not on any teams yet. Ask your coach for their team join code.</div>
+          ) : (
+            <div style={{marginBottom:".85rem"}}>
+              {teams.map(t => (
+                <div key={t.id} style={{display:"flex",justifyContent:"space-between",alignItems:"center",padding:".55rem .75rem",background:C.bgElevated,border:`1px solid ${C.border}`,borderRadius:8,marginBottom:".4rem"}}>
+                  <div>
+                    <div style={{fontSize:13,fontWeight:600,color:C.white}}>{t.name}</div>
+                    <div style={{fontSize:11,color:C.dimmer}}>{t.level} · {t.season}</div>
+                  </div>
+                  <div style={{fontSize:11,color:C.green}}>✓ Joined</div>
+                </div>
+              ))}
+            </div>
+          )}
+          <div style={{display:"flex",gap:".5rem"}}>
+            <input value={joinCode} onChange={e=>setJoinCode(e.target.value.toUpperCase().slice(0,8))} placeholder="Team join code"
+              style={{flex:1,background:C.bgElevated,border:`1px solid ${C.border}`,borderRadius:8,padding:".55rem .8rem",color:C.white,fontSize:14,fontFamily:FONT.body,outline:"none",letterSpacing:".1em",fontWeight:700,textAlign:"center"}}/>
+            <button onClick={joinTeam} disabled={joining||!joinCode.trim()} style={{background:C.gold,color:C.bg,border:"none",borderRadius:8,padding:".55rem 1rem",cursor:"pointer",fontSize:13,fontFamily:FONT.body,fontWeight:800}}>{joining?"…":"Join"}</button>
+          </div>
+          {joinMsg && <div style={{fontSize:12,color:joinMsg.includes("✓")?C.green:C.red,marginTop:".5rem"}}>{joinMsg}</div>}
+          <div style={{fontSize:11,color:C.dimmer,marginTop:".6rem",lineHeight:1.6}}>Coaches on your teams can rate you and leave feedback notes in your Report.</div>
         </Card>
         <Card style={{marginBottom:"1rem"}}>
           <Label>About</Label>
@@ -2575,7 +2613,7 @@ function Profile({ player, onSave, onBack, onReset }) {
             <div style={{color:C.gold,marginTop:".25rem"}}>bluechip-people-strategies.com</div>
           </div>
         </Card>
-        <button onClick={onReset} style={{background:"rgba(239,68,68,.06)",color:C.red,border:`1px solid rgba(239,68,68,.2)`,borderRadius:10,padding:".65rem",cursor:"pointer",fontSize:13,fontFamily:FONT.body,width:"100%"}}>Reset Profile</button>
+        <button onClick={onReset} style={{background:"rgba(239,68,68,.06)",color:C.red,border:`1px solid rgba(239,68,68,.2)`,borderRadius:10,padding:".65rem",cursor:"pointer",fontSize:13,fontFamily:FONT.body,width:"100%"}}>Sign Out</button>
       </div>
     </div>
   );
@@ -2842,8 +2880,294 @@ function BottomNav({ active, onNav }) {
 // ─────────────────────────────────────────────────────────
 // ROOT APP
 // ─────────────────────────────────────────────────────────
+// ─────────────────────────────────────────────────────────
+// AUTH SCREEN — login / signup
+// ─────────────────────────────────────────────────────────
+function AuthScreen({ onAuthenticated }) {
+  const [mode, setMode] = useState("login"); // login | signup
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [name, setName] = useState("");
+  const [role, setRole] = useState("player");
+  const [loading, setLoading] = useState(false);
+  const [err, setErr] = useState("");
+
+  async function submit() {
+    setErr("");
+    setLoading(true);
+    try {
+      if (mode === "signup") {
+        if (!email.trim() || !password || !name.trim()) throw new Error("All fields required");
+        if (password.length < 6) throw new Error("Password must be at least 6 characters");
+        await SB.signUp({ email: email.trim(), password, role, name: name.trim() });
+        // After signup, auth state listener in App will fire and load profile
+      } else {
+        if (!email.trim() || !password) throw new Error("Email and password required");
+        await SB.signIn({ email: email.trim(), password });
+      }
+      onAuthenticated();
+    } catch (e) {
+      setErr(e.message || "Something went wrong");
+    }
+    setLoading(false);
+  }
+
+  return (
+    <div style={{minHeight:"100vh",background:`linear-gradient(160deg,#080e1a 0%,#0d1e3a 60%,#080e1a 100%)`,display:"flex",flexDirection:"column",justifyContent:"center",padding:"2rem 1.5rem",fontFamily:FONT.body,color:C.white}}>
+      <div style={{maxWidth:440,margin:"0 auto",width:"100%"}}>
+        <div style={{display:"flex",alignItems:"center",gap:".6rem",marginBottom:"2rem"}}>
+          <span style={{fontSize:28}}>🏒</span>
+          <span style={{fontFamily:FONT.display,fontWeight:800,fontSize:"2rem",color:C.gold,letterSpacing:".08em"}}>IceIQ</span>
+        </div>
+        <h1 style={{fontFamily:FONT.display,fontWeight:800,fontSize:"clamp(1.8rem,6vw,2.4rem)",margin:"0 0 .5rem",lineHeight:1.1}}>
+          {mode === "login" ? "Welcome back." : "Get started."}
+        </h1>
+        <p style={{fontSize:14,color:C.dim,marginBottom:"1.75rem",lineHeight:1.6}}>
+          {mode === "login" ? "Sign in to see your development report." : "Create an account to start tracking hockey IQ."}
+        </p>
+
+        {mode === "signup" && (
+          <>
+            <div style={{marginBottom:"1rem"}}>
+              <div style={{fontSize:10,letterSpacing:".14em",textTransform:"uppercase",color:C.dimmer,fontWeight:700,marginBottom:".5rem"}}>I am a...</div>
+              <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:".5rem"}}>
+                {[{v:"player",l:"Player / Parent",i:"🏒"},{v:"coach",l:"Coach",i:"👨‍🏫"}].map(o => (
+                  <button key={o.v} onClick={()=>setRole(o.v)} style={{background:role===o.v?C.goldDim:C.bgCard,border:`1px solid ${role===o.v?C.gold:C.border}`,borderRadius:10,padding:".75rem",cursor:"pointer",color:role===o.v?C.gold:C.dim,fontFamily:FONT.body,fontWeight:role===o.v?700:500,fontSize:13,display:"flex",alignItems:"center",justifyContent:"center",gap:".4rem"}}>
+                    <span style={{fontSize:16}}>{o.i}</span>{o.l}
+                  </button>
+                ))}
+              </div>
+            </div>
+            <Card style={{marginBottom:".75rem"}}>
+              <Label>Name</Label>
+              <input value={name} onChange={e=>setName(e.target.value)} placeholder={role==="coach"?"Coach name":"Player name"}
+                style={{background:"none",border:"none",color:C.white,fontSize:16,fontFamily:FONT.body,width:"100%",outline:"none"}}/>
+            </Card>
+          </>
+        )}
+
+        <Card style={{marginBottom:".75rem"}}>
+          <Label>Email</Label>
+          <input type="email" value={email} onChange={e=>setEmail(e.target.value)} placeholder="you@example.com" autoComplete="email"
+            style={{background:"none",border:"none",color:C.white,fontSize:16,fontFamily:FONT.body,width:"100%",outline:"none"}}/>
+        </Card>
+
+        <Card style={{marginBottom:".75rem"}}>
+          <Label>Password</Label>
+          <input type="password" value={password} onChange={e=>setPassword(e.target.value)} placeholder={mode==="signup"?"At least 6 characters":"Your password"} autoComplete={mode==="signup"?"new-password":"current-password"}
+            style={{background:"none",border:"none",color:C.white,fontSize:16,fontFamily:FONT.body,width:"100%",outline:"none"}}/>
+        </Card>
+
+        {err && (
+          <div style={{fontSize:13,color:C.red,background:C.redDim,border:`1px solid ${C.redBorder}`,borderRadius:8,padding:".6rem .8rem",marginBottom:".75rem"}}>
+            {err}
+          </div>
+        )}
+
+        <PrimaryBtn onClick={submit} disabled={loading}>
+          {loading ? "…" : (mode === "login" ? "Sign In →" : "Create Account →")}
+        </PrimaryBtn>
+
+        <div style={{textAlign:"center",marginTop:"1.25rem",fontSize:13,color:C.dimmer}}>
+          {mode === "login" ? "New to IceIQ? " : "Already have an account? "}
+          <button onClick={()=>{setMode(mode==="login"?"signup":"login");setErr("");}} style={{background:"none",border:"none",color:C.gold,cursor:"pointer",fontWeight:700,fontSize:13,fontFamily:FONT.body,padding:0,textDecoration:"underline"}}>
+            {mode === "login" ? "Create account" : "Sign in"}
+          </button>
+        </div>
+
+        <div style={{fontSize:10,color:C.dimmer,textAlign:"center",marginTop:"2rem",opacity:.6}}>v{VERSION}</div>
+      </div>
+    </div>
+  );
+}
+
+// ─────────────────────────────────────────────────────────
+// COACH HOME — teams list, create team, roster
+// ─────────────────────────────────────────────────────────
+function CoachHome({ profile, onSignOut, onOpenPlayer }) {
+  const [teams, setTeams] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [creating, setCreating] = useState(false);
+  const [newName, setNewName] = useState("");
+  const [newLevel, setNewLevel] = useState("U11 / Atom");
+  const [newSeason, setNewSeason] = useState(SEASONS[0]);
+  const [expandedTeam, setExpandedTeam] = useState(null);
+  const [rosters, setRosters] = useState({});
+
+  useEffect(() => { (async () => {
+    const t = await SB.getCoachTeams(profile.id);
+    setTeams(t);
+    setLoading(false);
+  })(); }, []);
+
+  async function createTeam() {
+    if (!newName.trim()) return;
+    try {
+      const team = await SB.createTeam({ coachId: profile.id, name: newName.trim(), level: newLevel, season: newSeason });
+      setTeams([team, ...teams]);
+      setCreating(false); setNewName("");
+    } catch (e) { alert(e.message); }
+  }
+
+  async function toggleRoster(teamId) {
+    if (expandedTeam === teamId) { setExpandedTeam(null); return; }
+    setExpandedTeam(teamId);
+    if (!rosters[teamId]) {
+      const r = await SB.getTeamRoster(teamId);
+      setRosters(p => ({...p, [teamId]: r}));
+    }
+  }
+
+  return (
+    <div style={{minHeight:"100vh",background:C.bg,color:C.white,fontFamily:FONT.body,paddingBottom:40}}>
+      <div style={{padding:"1.5rem 1.25rem",maxWidth:560,margin:"0 auto"}}>
+        <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start",marginBottom:"1.5rem"}}>
+          <div>
+            <div style={{display:"flex",alignItems:"center",gap:".5rem",marginBottom:".25rem"}}>
+              <span style={{fontFamily:FONT.display,fontWeight:800,fontSize:"1.5rem",color:C.gold,letterSpacing:".06em"}}>IceIQ</span>
+              <span style={{fontSize:10,color:C.dimmer,fontWeight:500}}>v{VERSION}</span>
+            </div>
+            <div style={{fontSize:13,color:C.dimmer}}>{profile.name} · Coach</div>
+          </div>
+          <button onClick={onSignOut} style={{background:C.bgCard,border:`1px solid ${C.border}`,borderRadius:10,padding:".5rem .85rem",color:C.dimmer,cursor:"pointer",fontSize:12,fontFamily:FONT.body}}>Sign out</button>
+        </div>
+
+        <Card style={{marginBottom:"1rem",background:`linear-gradient(135deg,${C.bgCard},${C.bgElevated})`,border:`1px solid ${C.goldBorder}`}}>
+          <Label>Coach Dashboard</Label>
+          <div style={{fontFamily:FONT.display,fontWeight:800,fontSize:"2.2rem",color:C.gold,lineHeight:1}}>{teams.length}</div>
+          <div style={{fontSize:12,color:C.dimmer,marginTop:4}}>team{teams.length===1?"":"s"} you coach</div>
+        </Card>
+
+        {!creating ? (
+          <PrimaryBtn onClick={()=>setCreating(true)} style={{marginBottom:"1rem"}}>+ Create New Team</PrimaryBtn>
+        ) : (
+          <Card style={{marginBottom:"1rem"}}>
+            <Label>New Team</Label>
+            <input value={newName} onChange={e=>setNewName(e.target.value)} placeholder="Team name (e.g. Oilers U11 A)" autoFocus
+              style={{background:C.bgElevated,border:`1px solid ${C.border}`,borderRadius:8,padding:".6rem .8rem",color:C.white,fontSize:14,fontFamily:FONT.body,width:"100%",outline:"none",marginBottom:".6rem"}}/>
+            <div style={{display:"flex",gap:".5rem",marginBottom:".6rem"}}>
+              <select value={newLevel} onChange={e=>setNewLevel(e.target.value)}
+                style={{flex:1,background:C.bgElevated,border:`1px solid ${C.border}`,borderRadius:8,padding:".6rem .6rem",color:C.white,fontSize:13,fontFamily:FONT.body,outline:"none"}}>
+                {LEVELS.map(l => <option key={l} value={l}>{l}</option>)}
+              </select>
+              <select value={newSeason} onChange={e=>setNewSeason(e.target.value)}
+                style={{flex:1,background:C.bgElevated,border:`1px solid ${C.border}`,borderRadius:8,padding:".6rem .6rem",color:C.white,fontSize:13,fontFamily:FONT.body,outline:"none"}}>
+                {SEASONS.map(s => <option key={s} value={s}>{s}</option>)}
+              </select>
+            </div>
+            <div style={{display:"flex",gap:".5rem"}}>
+              <button onClick={()=>setCreating(false)} style={{flex:1,background:"none",border:`1px solid ${C.border}`,borderRadius:8,padding:".65rem",cursor:"pointer",color:C.dimmer,fontSize:13,fontFamily:FONT.body,fontWeight:600}}>Cancel</button>
+              <button onClick={createTeam} disabled={!newName.trim()} style={{flex:2,background:C.gold,color:C.bg,border:"none",borderRadius:8,padding:".65rem",cursor:"pointer",fontSize:13,fontFamily:FONT.body,fontWeight:800}}>Create</button>
+            </div>
+          </Card>
+        )}
+
+        {loading ? (
+          <div style={{color:C.dimmer,textAlign:"center",padding:"2rem"}}>Loading…</div>
+        ) : teams.length === 0 ? (
+          <Card><div style={{color:C.dimmer,textAlign:"center",padding:"1rem"}}>No teams yet. Create your first team to get started.</div></Card>
+        ) : teams.map(t => {
+          const roster = rosters[t.id] || [];
+          const expanded = expandedTeam === t.id;
+          return (
+            <Card key={t.id} style={{marginBottom:".75rem"}}>
+              <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start",cursor:"pointer"}} onClick={()=>toggleRoster(t.id)}>
+                <div style={{flex:1,minWidth:0}}>
+                  <div style={{fontWeight:700,fontSize:15,marginBottom:2}}>{t.name}</div>
+                  <div style={{fontSize:11,color:C.dimmer}}>{t.level} · {t.season}</div>
+                </div>
+                <div style={{textAlign:"right",flexShrink:0,marginLeft:"1rem"}}>
+                  <div style={{fontSize:10,letterSpacing:".14em",color:C.dimmer,fontWeight:700,textTransform:"uppercase",marginBottom:2}}>Join Code</div>
+                  <div style={{fontFamily:FONT.display,fontWeight:800,fontSize:"1.2rem",color:C.gold,letterSpacing:".1em"}}>{t.code}</div>
+                </div>
+              </div>
+              {expanded && (
+                <div style={{marginTop:".85rem",paddingTop:".85rem",borderTop:`1px solid ${C.border}`}}>
+                  <Label>Roster ({roster.length})</Label>
+                  {roster.length === 0 ? (
+                    <div style={{fontSize:12,color:C.dimmer,fontStyle:"italic"}}>No players yet — share the join code <span style={{color:C.gold,fontWeight:700}}>{t.code}</span> with players.</div>
+                  ) : roster.map(p => (
+                    <button key={p.id} onClick={()=>onOpenPlayer(p)} style={{width:"100%",background:C.bgElevated,border:`1px solid ${C.border}`,borderRadius:8,padding:".7rem .85rem",marginBottom:".4rem",cursor:"pointer",display:"flex",justifyContent:"space-between",alignItems:"center",color:C.white,fontFamily:FONT.body,textAlign:"left"}}>
+                      <div>
+                        <div style={{fontSize:13,fontWeight:600}}>{p.name}</div>
+                        <div style={{fontSize:11,color:C.dimmer}}>{p.level || "No level set"} · {p.position || "No position"}</div>
+                      </div>
+                      <span style={{color:C.gold,fontSize:14}}>→</span>
+                    </button>
+                  ))}
+                </div>
+              )}
+            </Card>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+
+// ─────────────────────────────────────────────────────────
+// POST-SIGNUP PROFILE SETUP (player picks level/position)
+// ─────────────────────────────────────────────────────────
+function ProfileSetup({ profile, onComplete }) {
+  const [level, setLevel] = useState(profile.level || "");
+  const [position, setPosition] = useState(profile.position || "");
+  const [saving, setSaving] = useState(false);
+
+  async function save() {
+    setSaving(true);
+    try {
+      await SB.updateProfile(profile.id, { level, position });
+      onComplete({ ...profile, level, position });
+    } catch (e) { alert(e.message); }
+    setSaving(false);
+  }
+
+  if (!level) return (
+    <Screen>
+      <div style={{marginBottom:"2rem"}}>
+        <div style={{fontSize:10,letterSpacing:".18em",color:C.gold,textTransform:"uppercase",fontWeight:700,marginBottom:".6rem"}}>Step 1 of 2</div>
+        <h2 style={{fontFamily:FONT.display,fontWeight:800,fontSize:"2rem",margin:0}}>What age group?</h2>
+      </div>
+      <div style={{display:"flex",flexDirection:"column",gap:".5rem"}}>
+        {LEVELS.map(l => (
+          <button key={l} onClick={()=>setLevel(l)} style={{background:C.bgCard,border:`1px solid ${C.border}`,borderRadius:12,padding:"1rem 1.25rem",cursor:"pointer",color:C.white,fontFamily:FONT.body,fontSize:15,textAlign:"left",fontWeight:600}}>
+            {l}
+          </button>
+        ))}
+      </div>
+    </Screen>
+  );
+
+  const posOptions = [{p:"Forward",i:"⚡"},{p:"Defense",i:"🛡"},{p:"Goalie",i:"🧤"},{p:"Not Sure",i:"❓"}];
+  return (
+    <Screen>
+      <div style={{marginBottom:"1.5rem"}}>
+        <div style={{fontSize:10,letterSpacing:".18em",color:C.gold,textTransform:"uppercase",fontWeight:700,marginBottom:".6rem"}}>Step 2 of 2</div>
+        <h2 style={{fontFamily:FONT.display,fontWeight:800,fontSize:"2rem",margin:"0 0 .35rem"}}>What position?</h2>
+      </div>
+      <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:".75rem",marginBottom:"1.5rem"}}>
+        {posOptions.map(({p,i}) => (
+          <button key={p} onClick={()=>setPosition(p)} style={{background:position===p?C.goldDim:C.bgCard,border:`1px solid ${position===p?C.gold:C.border}`,borderRadius:14,padding:"1.25rem .75rem",cursor:"pointer",textAlign:"center",transition:"all .15s"}}>
+            <div style={{fontSize:26,marginBottom:".4rem"}}>{i}</div>
+            <div style={{fontSize:13,color:position===p?C.gold:C.dim,fontWeight:position===p?700:400,fontFamily:FONT.body}}>{p}</div>
+          </button>
+        ))}
+      </div>
+      <div style={{display:"flex",gap:".5rem"}}>
+        <button onClick={()=>setLevel("")} style={{background:"none",border:`1px solid ${C.border}`,borderRadius:10,padding:".75rem 1rem",cursor:"pointer",color:C.dimmer,fontSize:13,fontFamily:FONT.body}}>← Back</button>
+        <PrimaryBtn onClick={save} disabled={!position||saving} style={{flex:1,margin:0}}>{saving?"Saving…":"Finish Setup →"}</PrimaryBtn>
+      </div>
+    </Screen>
+  );
+}
+
+// ─────────────────────────────────────────────────────────
+// APP ROOT
+// ─────────────────────────────────────────────────────────
 export default function App() {
-  const [player, setPlayer] = useState(null);
+  const [authReady, setAuthReady] = useState(false);
+  const [profile, setProfile] = useState(null);
+  const [player, setPlayer] = useState(null); // enriched player object (profile + synced data)
   const [screen, setScreen] = useState("home");
   const [prevScore, setPrevScore] = useState(null);
   const [totalSessions, setTotalSessions] = useState(0);
@@ -2851,106 +3175,176 @@ export default function App() {
   const [seqPerfect, setSeqPerfect] = useState(false);
   const [mistakeStreak, setMistakeStreak] = useState(0);
 
-  // Check if this is a coach rating URL
-  const [coachMode, setCoachMode] = useState(null);
+  // Hydrate from Supabase on mount, subscribe to auth changes
   useEffect(() => {
-    try {
-      const params = new URLSearchParams(window.location.search);
-      if (params.get("coach") === "1") {
-        setCoachMode({
-          playerKey: params.get("pk") || "",
-          playerName: params.get("name") || "Player",
-          playerLevel: params.get("level") || "U11 / Atom",
-        });
-        return;
-      }
-      const saved = JSON.parse(localStorage.getItem("iceiq_player") || "null");
-      if (saved) {
-        // Migrate legacy skill ratings to new scale values
-        if (saved.selfRatings && saved.level) {
-          saved.selfRatings = migrateRatings(saved.selfRatings, saved.level);
-        }
-        setPlayer(saved);
-        const sc = JSON.parse(localStorage.getItem("iceiq_score") || "null");
-        if (sc !== null) setPrevScore(sc);
-        const ts = parseInt(localStorage.getItem("iceiq_sessions") || "0");
-        setTotalSessions(ts);
-      }
-    } catch(e) {}
+    if (!hasSupabase) { setAuthReady(true); return; }
+    let mounted = true;
+    (async () => {
+      const session = await SB.getSession();
+      if (session?.user && mounted) await loadUser(session.user.id);
+      if (mounted) setAuthReady(true);
+    })();
+    const { data } = SB.onAuthChange(async (session) => {
+      if (!mounted) return;
+      if (session?.user) await loadUser(session.user.id);
+      else { setProfile(null); setPlayer(null); }
+    });
+    return () => { mounted = false; data?.subscription?.unsubscribe?.(); };
   }, []);
 
-  function savePlayer(p) {
-    try { localStorage.setItem("iceiq_player", JSON.stringify(p)); } catch(e) {}
+  async function loadUser(userId) {
+    const p = await SB.getProfile(userId);
+    if (!p) return;
+    setProfile(p);
+    if (p.role === "player" && p.level) {
+      // Build enriched player object from Supabase data
+      const [sessions, goals, selfRatings] = await Promise.all([
+        SB.getPlayerSessions(userId),
+        SB.getPlayerGoals(userId),
+        SB.getSelfRatings(userId),
+      ]);
+      const quizHistory = sessions.map(s => ({ results: s.results, score: s.score, date: s.completed_at }));
+      const enriched = {
+        id: p.id,
+        name: p.name,
+        level: p.level,
+        position: p.position || "Not Sure",
+        selfRatings,
+        quizHistory,
+        goals,
+        season: p.season || SEASONS[0],
+        sessionLength: p.session_length || 15,
+        colorblind: !!p.colorblind,
+        coachCode: "",
+      };
+      setPlayer(enriched);
+      const latest = quizHistory[quizHistory.length-1];
+      setPrevScore(latest ? latest.score : null);
+      setTotalSessions(quizHistory.length);
+    }
   }
 
-  function handleOnboard(p) {
-    setPlayer(p);
-    savePlayer(p);
-    setScreen("home");
-  }
-
-  function handleQuizFinish(results, sq, ms) {
+  async function handleQuizFinish(results, sq, ms) {
     const score = calcWeightedIQ(results);
     const newTotal = totalSessions + 1;
     const newHistory = [...(player.quizHistory||[]), {results, score, date:new Date().toISOString()}];
     const updatedPlayer = {...player, quizHistory: newHistory};
     setPlayer(updatedPlayer);
-    savePlayer(updatedPlayer);
     setQuizResults(results);
     setSeqPerfect(sq);
     setMistakeStreak(ms);
     setPrevScore(score);
     setTotalSessions(newTotal);
     try {
-      localStorage.setItem("iceiq_score", JSON.stringify(score));
-      localStorage.setItem("iceiq_sessions", String(newTotal));
       const sd = updateStreak(getStreakData());
       localStorage.setItem("iceiq_streak", JSON.stringify(sd));
     } catch(e) {}
+    try {
+      await SB.saveQuizSession(player.id, { results, score, sessionLength: player.sessionLength });
+    } catch(e) { console.error(e); }
     setScreen("results");
   }
 
-  function handleSkillsSave(ratings) {
-    const updated = {...player, selfRatings: ratings};
-    setPlayer(updated);
-    savePlayer(updated);
+  async function handleSkillsSave(ratings) {
+    setPlayer({...player, selfRatings: ratings});
+    try { await SB.saveSelfRatings(player.id, ratings); } catch(e) { console.error(e); }
     setScreen("home");
   }
 
-  function handleGoalsSave(goals) {
-    const updated = {...player, goals};
-    setPlayer(updated);
-    savePlayer(updated);
+  async function handleGoalsSave(goals) {
+    setPlayer({...player, goals});
+    try {
+      for (const [cat, g] of Object.entries(goals)) {
+        if (g?.goal) await SB.saveGoal(player.id, cat, g);
+      }
+    } catch(e) { console.error(e); }
     setScreen("home");
   }
 
-  function handleProfileSave(settings) {
+  async function handleProfileSave(settings) {
     const updated = {...player, ...settings};
     setPlayer(updated);
-    savePlayer(updated);
+    try {
+      await SB.updateProfile(player.id, {
+        name: settings.name,
+        level: settings.level,
+        position: settings.position,
+        season: settings.season,
+        session_length: settings.sessionLength,
+        colorblind: settings.colorblind,
+      });
+    } catch(e) { console.error(e); }
     setScreen("home");
   }
 
-  function handleReset() {
-    setPlayer(null);
-    setPrevScore(null);
-    setTotalSessions(0);
-    try { localStorage.clear(); } catch(e) {}
+  async function handleSignOut() {
+    await SB.signOut();
+    setProfile(null); setPlayer(null);
     setScreen("home");
   }
 
-  // Coach rating mode — show rating screen without requiring player login
-  if (coachMode) return (
-    <CoachRatingScreen
-      playerName={coachMode.playerName}
-      playerLevel={coachMode.playerLevel}
-      playerKey={coachMode.playerKey}
-      skills={SKILLS[coachMode.playerLevel]||[]}
-      onDone={() => setCoachMode(null)}
-    />
-  );
+  // Loading while auth settles
+  if (!authReady) {
+    return <div style={{minHeight:"100vh",background:C.bg,color:C.dimmer,display:"flex",alignItems:"center",justifyContent:"center",fontFamily:FONT.body}}>Loading…</div>;
+  }
 
-  if (!player) return <Onboarding onComplete={handleOnboard}/>;
+  // Not logged in → auth screen
+  if (!profile) {
+    if (!hasSupabase) {
+      return <div style={{minHeight:"100vh",background:C.bg,color:C.white,display:"flex",alignItems:"center",justifyContent:"center",padding:"2rem",fontFamily:FONT.body,textAlign:"center"}}>
+        <div>
+          <div style={{fontSize:"1.2rem",color:C.red,marginBottom:"1rem"}}>Supabase not configured</div>
+          <div style={{fontSize:13,color:C.dimmer,lineHeight:1.6}}>Create a <code style={{color:C.gold}}>.env</code> file with<br/><code>VITE_SUPABASE_URL</code> and <code>VITE_SUPABASE_ANON_KEY</code>.</div>
+        </div>
+      </div>;
+    }
+    return <AuthScreen onAuthenticated={()=>{}}/>;
+  }
+
+  // Coach home
+  if (profile.role === "coach") {
+    return (
+      <>
+        <style>{`
+          @import url('https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@700;800&family=DM+Sans:wght@400;500;600;700&display=swap');
+          * { box-sizing: border-box; margin: 0; padding: 0; }
+          body { background: #080e1a; color: #f8fafc; -webkit-font-smoothing: antialiased; }
+          ::-webkit-scrollbar { width: 4px; }
+          ::-webkit-scrollbar-thumb { background: rgba(248,250,252,.08); border-radius: 2px; }
+          input, textarea, button, select { font-family: 'DM Sans', sans-serif; }
+          button:active { opacity: .8; }
+          textarea { resize: none; }
+        `}</style>
+        <CoachHome
+          profile={profile}
+          onSignOut={handleSignOut}
+          onOpenPlayer={(p) => {
+            // Coach rating for this player
+            const pk = p.id;
+            const playerLevel = p.level || "U11 / Atom";
+            // We'll open a rating screen inline
+            setScreen({kind:"rate", player:p, playerLevel});
+          }}
+        />
+        {typeof screen === "object" && screen.kind === "rate" && (
+          <CoachRatingScreenAuthed
+            coach={profile}
+            player={screen.player}
+            playerLevel={screen.playerLevel}
+            onDone={()=>setScreen("home")}
+          />
+        )}
+      </>
+    );
+  }
+
+  // Player without completed profile → profile setup
+  if (profile.role === "player" && (!profile.level || !profile.position)) {
+    return <ProfileSetup profile={profile} onComplete={async () => { await loadUser(profile.id); }}/>;
+  }
+
+  // Player not fully loaded yet
+  if (!player) return <div style={{minHeight:"100vh",background:C.bg,color:C.dimmer,display:"flex",alignItems:"center",justifyContent:"center",fontFamily:FONT.body}}>Loading profile…</div>;
 
   return (
     <>
@@ -2960,7 +3354,7 @@ export default function App() {
         body { background: #080e1a; color: #f8fafc; -webkit-font-smoothing: antialiased; }
         ::-webkit-scrollbar { width: 4px; }
         ::-webkit-scrollbar-thumb { background: rgba(248,250,252,.08); border-radius: 2px; }
-        input, textarea, button { font-family: 'DM Sans', sans-serif; }
+        input, textarea, button, select { font-family: 'DM Sans', sans-serif; }
         button:active { opacity: .8; }
         textarea { resize: none; }
       `}</style>
@@ -2972,13 +3366,155 @@ export default function App() {
         {screen === "skills"  && <Skills player={player} onSave={handleSkillsSave} onBack={()=>setScreen("home")}/>}
         {screen === "goals"   && <GoalsScreen player={player} onSave={handleGoalsSave} onBack={()=>setScreen("home")}/>}
         {screen === "report"  && <Report player={player} onBack={()=>setScreen("home")}/>}
-        {screen === "profile" && <Profile player={player} onSave={handleProfileSave} onBack={()=>setScreen("home")} onReset={handleReset}/>}
-        {screen === "coach"   && <CoachDashboard onBack={()=>setScreen("home")}/>}
+        {screen === "profile" && <Profile player={player} onSave={handleProfileSave} onBack={()=>setScreen("home")} onReset={handleSignOut}/>}
       </div>
 
-      {!["quiz","results","coach"].includes(screen) && (
+      {!["quiz","results"].includes(screen) && (
         <BottomNav active={screen} onNav={setScreen}/>
       )}
     </>
+  );
+}
+
+// ─────────────────────────────────────────────────────────
+// COACH RATING SCREEN (authenticated version)
+// ─────────────────────────────────────────────────────────
+function CoachRatingScreenAuthed({ coach, player, playerLevel, onDone }) {
+  const [ratings, setRatings] = useState({});
+  const [notes, setNotes] = useState({});
+  const [loading, setLoading] = useState(true);
+  const [saving, setSaving] = useState(false);
+  const [saved, setSaved] = useState(false);
+  const [activeSkill, setActiveSkill] = useState(null);
+  const cats = SKILLS[playerLevel] || [];
+  const allSkills = cats.flatMap(c => c.skills.map(s => ({...s, cat:c.cat, icon:c.icon})));
+  const rated = Object.values(ratings).filter(v=>v).length;
+  const coachScale = getCoachScale(playerLevel);
+  const coachScaleType = RATING_SCALES[playerLevel]?.coach?.type;
+
+  const scaleIntro = {
+    "growth":     "Rate each skill using the growth scale — where is this player in their development journey?",
+    "competency": "Rate each skill using the competency scale — how reliably does this player execute in games?",
+    "percentile": "Rate each skill using the percentile system.",
+  };
+  const legendTitle = {growth:"Growth Scale",competency:"Competency Scale",percentile:"Percentile Scale"};
+
+  useEffect(() => { (async () => {
+    const existing = await SB.getCoachRatingsForPlayer(player.id);
+    setRatings(existing.ratings || {});
+    setNotes(existing.notes || {});
+    setLoading(false);
+  })(); }, []);
+
+  async function save() {
+    setSaving(true);
+    try {
+      await SB.saveCoachRatingsForPlayer(coach.id, player.id, ratings, notes);
+      setSaved(true);
+    } catch (e) { alert(e.message); }
+    setSaving(false);
+  }
+
+  return (
+    <div style={{position:"fixed",inset:0,background:C.bg,color:C.white,fontFamily:FONT.body,padding:"1.5rem 1.25rem",overflowY:"auto",zIndex:100}}>
+      <div style={{maxWidth:560,margin:"0 auto"}}>
+        <BackBtn onClick={onDone}/>
+        <Card style={{marginBottom:"1.5rem",background:`linear-gradient(135deg,${C.bgCard},${C.bgElevated})`,border:`1px solid ${C.goldBorder}`}}>
+          <div style={{fontSize:10,letterSpacing:".14em",textTransform:"uppercase",color:C.gold,marginBottom:".4rem"}}>Rating Player</div>
+          <div style={{fontFamily:FONT.display,fontWeight:800,fontSize:"1.8rem"}}>{player.name}</div>
+          <div style={{fontSize:13,color:C.dimmer,marginTop:2}}>{playerLevel}</div>
+          <div style={{marginTop:".85rem",fontSize:12,color:C.dim,lineHeight:1.6}}>{scaleIntro[coachScaleType] || scaleIntro.percentile}</div>
+        </Card>
+
+        {loading ? <div style={{color:C.dimmer,textAlign:"center",padding:"2rem"}}>Loading…</div> : (<>
+          <Card style={{marginBottom:"1.25rem"}}>
+            <Label>{legendTitle[coachScaleType]}</Label>
+            <div style={{display:"flex",flexDirection:"column",gap:".4rem"}}>
+              {coachScale.map(r => (
+                <div key={r.value} style={{display:"flex",alignItems:"center",gap:".75rem",padding:".45rem .6rem",borderRadius:8,background:`${r.color}10`,border:`1px solid ${r.color}25`}}>
+                  <div style={{width:10,height:10,borderRadius:"50%",background:r.color,flexShrink:0}}/>
+                  <div style={{fontWeight:700,fontSize:13,color:r.color,minWidth:95}}>{r.label}</div>
+                  <div style={{fontSize:12,color:C.dimmer}}>{r.sub}</div>
+                </div>
+              ))}
+            </div>
+          </Card>
+
+          <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:".75rem"}}>
+            <div style={{fontSize:13,color:C.dim,fontWeight:600}}>{rated}/{allSkills.length} skills rated</div>
+            <div style={{fontSize:11,color:C.dimmer}}>{rated===allSkills.length?"All done ✓":"Rate each skill below"}</div>
+          </div>
+          <ProgressBar value={rated} max={allSkills.length} color={C.gold} height={5}/>
+          <div style={{height:"1rem"}}/>
+
+          {cats.map(cat => (
+            <div key={cat.cat} style={{marginBottom:"1.25rem"}}>
+              <div style={{display:"flex",alignItems:"center",gap:".4rem",marginBottom:".6rem"}}>
+                <span style={{fontSize:15}}>{cat.icon}</span>
+                <span style={{fontSize:11,letterSpacing:".12em",textTransform:"uppercase",color:C.dimmer,fontWeight:700}}>{cat.cat}</span>
+              </div>
+              {cat.skills.map(skill => {
+                const rating = ratings[skill.id];
+                const isActive = activeSkill === skill.id;
+                const ratingColor = rating ? getScaleColor(coachScale, rating) : null;
+                const ratingLabel = rating ? getScaleLabel(coachScale, rating) : null;
+                return (
+                  <div key={skill.id} style={{marginBottom:".6rem"}}>
+                    <button onClick={() => setActiveSkill(isActive ? null : skill.id)}
+                      style={{width:"100%",background:rating?`${ratingColor}10`:C.bgCard,border:`1px solid ${rating?ratingColor+"40":C.border}`,borderLeft:`3px solid ${rating?ratingColor:"transparent"}`,borderRadius:12,padding:".85rem 1rem",cursor:"pointer",display:"flex",justifyContent:"space-between",alignItems:"center",color:C.white,fontFamily:FONT.body,textAlign:"left"}}>
+                      <div style={{flex:1,minWidth:0}}>
+                        <div style={{fontSize:14,fontWeight:600,marginBottom:2}}>{skill.name}</div>
+                        <div style={{fontSize:11,color:C.dimmer,lineHeight:1.4}}>{skill.desc}</div>
+                      </div>
+                      <div style={{flexShrink:0,marginLeft:"1rem",textAlign:"right"}}>
+                        {rating ? <div style={{fontSize:12,fontWeight:700,color:ratingColor}}>{ratingLabel}</div> : <div style={{fontSize:11,color:C.dimmer}}>Tap to rate</div>}
+                        <div style={{fontSize:11,color:C.dimmer,marginTop:2}}>{isActive?"▲":"▼"}</div>
+                      </div>
+                    </button>
+                    {isActive && (
+                      <div style={{background:C.bgElevated,border:`1px solid ${C.border}`,borderRadius:12,padding:".85rem",marginTop:".35rem",display:"flex",flexDirection:"column",gap:".4rem"}}>
+                        {coachScale.map(r => (
+                          <button key={r.value} onClick={() => setRatings(p=>({...p,[skill.id]:r.value}))}
+                            style={{background:ratings[skill.id]===r.value?`${r.color}18`:"none",border:`1px solid ${ratings[skill.id]===r.value?r.color+"50":C.border}`,borderRadius:8,padding:".65rem 1rem",cursor:"pointer",display:"flex",alignItems:"center",gap:".75rem",fontFamily:FONT.body}}>
+                            <div style={{width:10,height:10,borderRadius:"50%",background:r.color,flexShrink:0}}/>
+                            <div style={{textAlign:"left"}}>
+                              <div style={{fontSize:13,fontWeight:700,color:r.color}}>{r.label}</div>
+                              <div style={{fontSize:11,color:C.dimmer}}>{r.sub}</div>
+                            </div>
+                            {ratings[skill.id]===r.value && <div style={{marginLeft:"auto",color:r.color,fontSize:14}}>✓</div>}
+                          </button>
+                        ))}
+                        {rating && (
+                          <div style={{marginTop:".5rem",paddingTop:".6rem",borderTop:`1px solid ${C.border}`}}>
+                            <div style={{fontSize:10,letterSpacing:".1em",textTransform:"uppercase",color:C.gold,fontWeight:700,marginBottom:".35rem"}}>💬 Discussion note (optional)</div>
+                            <textarea value={notes[skill.id]||""} onChange={e=>setNotes(p=>({...p,[skill.id]:e.target.value}))}
+                              placeholder={`What's one thing ${player.name} could work on?`}
+                              rows={2}
+                              style={{width:"100%",background:C.bgCard,border:`1px solid ${C.border}`,borderRadius:8,padding:".55rem .7rem",color:C.white,fontSize:12,fontFamily:FONT.body,outline:"none",lineHeight:1.5}}/>
+                          </div>
+                        )}
+                      </div>
+                    )}
+                  </div>
+                );
+              })}
+            </div>
+          ))}
+
+          {saved ? (
+            <Card style={{background:"rgba(34,197,94,.08)",border:`1px solid ${C.greenBorder}`,textAlign:"center",padding:"1.5rem"}}>
+              <div style={{fontSize:28,marginBottom:".5rem"}}>✅</div>
+              <div style={{fontWeight:700,fontSize:15,color:C.green,marginBottom:".35rem"}}>Ratings Saved</div>
+              <div style={{fontSize:13,color:C.dim}}>{player.name} will see your ratings and notes in their report.</div>
+              <PrimaryBtn onClick={onDone} style={{marginTop:"1rem"}}>Back to Teams</PrimaryBtn>
+            </Card>
+          ) : (
+            <PrimaryBtn onClick={save} disabled={saving || rated === 0} style={{marginBottom:"1rem"}}>
+              {saving ? "Saving…" : `Save Ratings (${rated}/${allSkills.length} rated)`}
+            </PrimaryBtn>
+          )}
+        </>)}
+      </div>
+    </div>
   );
 }
