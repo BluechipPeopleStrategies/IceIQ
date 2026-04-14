@@ -66,10 +66,9 @@ const C = {
   rink:     "#1e5799",
 };
 
-// IceIQ logo mark — a hockey puck (viewed from above) with a brain inside.
-// Captures the sport (puck silhouette) + the IQ (brain folds / hemispheres / strategy arrow).
+// IceIQ logo mark — realistic side-profile brain with hockey stick and puck below.
+// Brain: bumpy outline with internal sulci (folds). Stick: angled shaft + blade. Puck: flat oval.
 function IceIQLogo({ size = 32, color = "#c9a84c" }) {
-  const id = `arrow-${size}`;
   return (
     <svg
       width={size}
@@ -78,34 +77,53 @@ function IceIQLogo({ size = 32, color = "#c9a84c" }) {
       aria-label="IceIQ logo"
       style={{display:"block",flexShrink:0}}
     >
-      <defs>
-        <marker id={id} viewBox="0 0 10 10" refX="8" refY="5" markerWidth="4.5" markerHeight="4.5" orient="auto-start-reverse">
-          <path d="M 0 0 L 10 5 L 0 10 Z" fill={color} />
-        </marker>
-      </defs>
-      {/* Puck — dark disc with gold rim, viewed from above */}
-      <circle cx="16" cy="16" r="14.5" fill="#0d1525" stroke={color} strokeWidth="2" />
-      {/* Subtle inner ring (puck edge) */}
-      <circle cx="16" cy="16" r="11.5" fill="none" stroke={color} strokeWidth="0.5" strokeOpacity="0.3" />
+      {/* === BRAIN — side profile, facing right === */}
+      {/* Outer contour: frontal bulge, bumpy top (gyri), curved back, cerebellum, brain stem */}
+      <path d="
+        M 7 12
+        C 6.5 9.5, 8.5 7, 10.5 6.8
+        C 11.5 5.2, 13.5 5, 14.8 6.3
+        C 16 5, 17.8 5.3, 18.8 6.5
+        C 20 5.3, 22 5.8, 23 7.2
+        C 25 6.8, 27 8.5, 27.2 10.8
+        C 29 11.5, 29 13.5, 27.5 14
+        C 28.5 15, 28.8 16.5, 27.2 17.2
+        C 27 19, 25.5 19.8, 23.5 19.3
+        C 24 20.5, 23 21.5, 21.8 21
+        C 21.3 22.5, 19.5 22.8, 18.3 21.8
+        C 17.2 22.8, 15 22.5, 14 21.3
+        C 12 22, 9.8 21.3, 9 19.5
+        C 7 19, 6 17, 7 14.8
+        C 5.8 14, 5.8 12.8, 7 12 Z"
+        fill="none" stroke={color} strokeWidth="1.3" strokeLinejoin="round" strokeLinecap="round"/>
 
-      {/* Brain — longitudinal fissure down the middle */}
-      <path d="M 16 5 C 15 9, 17 13, 16 16 C 15 19, 17 23, 16 27"
-            stroke={color} strokeWidth="1.4" fill="none" strokeLinecap="round" />
+      {/* Internal sulci (brain folds) — wavy horizontal lines suggesting folds across the surface */}
+      <path d="M 10.5 9 Q 12.5 7.8 13.5 9.3 Q 15 8 16.2 9.3 Q 17.8 8 19 9.3"
+            stroke={color} strokeWidth="0.85" fill="none" strokeLinecap="round"/>
+      <path d="M 19 7.8 Q 21.5 8.5 23.5 8"
+            stroke={color} strokeWidth="0.85" fill="none" strokeLinecap="round"/>
+      <path d="M 9 12.5 Q 12 11.2 15 12.8 Q 18 11.5 21 12.8 Q 23.5 11.5 26 12.8"
+            stroke={color} strokeWidth="0.85" fill="none" strokeLinecap="round"/>
+      <path d="M 8.5 15.5 Q 12 14.5 16 15.5 Q 20 14.8 24 15.8"
+            stroke={color} strokeWidth="0.85" fill="none" strokeLinecap="round"/>
+      <path d="M 11 18 Q 14 17, 17.5 18 Q 20.5 17.3, 23 18.2"
+            stroke={color} strokeWidth="0.85" fill="none" strokeLinecap="round"/>
+      {/* Cerebellum-stem indicator — small curl at back-bottom */}
+      <path d="M 24 19.5 Q 25.5 20.5, 24.5 21.5" stroke={color} strokeWidth="0.85" fill="none" strokeLinecap="round"/>
 
-      {/* Left hemisphere — 3 gyri (brain folds) */}
-      <path d="M 12 8 Q 8.5 10.5 10 13"   stroke={color} strokeWidth="1.15" fill="none" strokeLinecap="round" />
-      <path d="M 11 14 Q 7.5 16 10 19"    stroke={color} strokeWidth="1.15" fill="none" strokeLinecap="round" />
-      <path d="M 12 20.5 Q 9 22.5 12 25"  stroke={color} strokeWidth="1.15" fill="none" strokeLinecap="round" />
+      {/* === HOCKEY STICK === */}
+      {/* Shaft: diagonal from lower-left upward into the brain area */}
+      <line x1="3.5" y1="29.5" x2="22" y2="25.2" stroke={color} strokeWidth="1.5" strokeLinecap="round"/>
+      {/* Blade: short angled piece at the bottom/tip of the shaft (toe curving slightly) */}
+      <path d="M 3.2 29.8 Q 1.5 30.5, 1.2 28.8"
+            stroke={color} strokeWidth="2" fill="none" strokeLinecap="round" strokeLinejoin="round"/>
 
-      {/* Right hemisphere — mirror */}
-      <path d="M 20 8 Q 23.5 10.5 22 13"  stroke={color} strokeWidth="1.15" fill="none" strokeLinecap="round" />
-      <path d="M 21 14 Q 24.5 16 22 19"   stroke={color} strokeWidth="1.15" fill="none" strokeLinecap="round" />
-      <path d="M 20 20.5 Q 23 22.5 20 25" stroke={color} strokeWidth="1.15" fill="none" strokeLinecap="round" />
-
-      {/* Small strategic-thought arrow in the top-right (the "idea" or play direction) */}
-      <path d="M 23 5.5 L 27 3"
-            stroke={color} strokeWidth="1.3" fill="none" strokeLinecap="round"
-            markerEnd={`url(#${id})`} />
+      {/* === PUCK — flat oval at the blade tip === */}
+      <ellipse cx="28" cy="28.5" rx="2.8" ry="1" fill={color}/>
+      <ellipse cx="28" cy="28.5" rx="2.8" ry="1" fill="none" stroke="#0d1525" strokeWidth="0.3"/>
+      {/* Stick blade that's about to strike the puck (near the puck) */}
+      <path d="M 21.5 25.4 L 25.8 28"
+            stroke={color} strokeWidth="2.1" fill="none" strokeLinecap="round"/>
     </svg>
   );
 }
