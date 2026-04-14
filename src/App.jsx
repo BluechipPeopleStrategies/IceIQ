@@ -51,7 +51,7 @@ const FONT = {
 // ─────────────────────────────────────────────────────────
 // VERSION
 // ─────────────────────────────────────────────────────────
-const VERSION = "0.2.0";
+const VERSION = "0.3.0";
 const RELEASE_DATE = "April 13, 2026";
 const CHANGELOG = [
   { v:"2.0.0", date:"April 13, 2026", notes:[
@@ -2297,7 +2297,7 @@ function Skills({ player, onSave, onBack }) {
   );
 }
 
-function Report({ player, onBack }) {
+function Report({ player, onBack, demoCoachData }) {
   const latest = player.quizHistory[player.quizHistory.length-1];
   const iq = latest ? calcWeightedIQ(latest.results) : null;
   const tier = iq !== null ? getTier(iq) : null;
@@ -2308,7 +2308,13 @@ function Report({ player, onBack }) {
   const [loadingCoach, setLoadingCoach] = useState(true);
 
   useEffect(() => {
-    if (player.id) {
+    if (demoCoachData) {
+      setCoachRatings(demoCoachData.ratings || null);
+      setCoachNotes(demoCoachData.notes || {});
+      setLoadingCoach(false);
+      return;
+    }
+    if (player.id && player.id !== "__demo__") {
       SB.getCoachRatingsForPlayer(player.id).then(data => {
         setCoachRatings(Object.keys(data.ratings || {}).length ? data.ratings : null);
         setCoachNotes(data.notes || {});
@@ -2497,7 +2503,7 @@ function Report({ player, onBack }) {
   );
 }
 
-function Profile({ player, onSave, onBack, onReset }) {
+function Profile({ player, onSave, onBack, onReset, demoMode }) {
   const [s, setS] = useState({...player});
   const upd = k => v => setS(p => ({...p,[k]:v}));
   const [teams, setTeams] = useState([]);
@@ -2506,11 +2512,17 @@ function Profile({ player, onSave, onBack, onReset }) {
   const [joinMsg, setJoinMsg] = useState("");
 
   useEffect(() => {
-    if (player.id) SB.getPlayerTeams(player.id).then(setTeams);
-  }, [player.id]);
+    if (demoMode) {
+      // Fake demo team
+      setTeams([{ id:"demo-team", name:"Edmonton Stars U11", level:"U11 / Atom", season:SEASONS[0] }]);
+      return;
+    }
+    if (player.id && player.id !== "__demo__") SB.getPlayerTeams(player.id).then(setTeams);
+  }, [player.id, demoMode]);
 
   async function joinTeam() {
     if (!joinCode.trim()) return;
+    if (demoMode) { setJoinMsg("Sign up to join real teams"); return; }
     setJoining(true); setJoinMsg("");
     try {
       const team = await SB.joinTeamByCode(player.id, joinCode.trim());
@@ -2613,7 +2625,7 @@ function Profile({ player, onSave, onBack, onReset }) {
             <div style={{color:C.gold,marginTop:".25rem"}}>bluechip-people-strategies.com</div>
           </div>
         </Card>
-        <button onClick={onReset} style={{background:"rgba(239,68,68,.06)",color:C.red,border:`1px solid rgba(239,68,68,.2)`,borderRadius:10,padding:".65rem",cursor:"pointer",fontSize:13,fontFamily:FONT.body,width:"100%"}}>Sign Out</button>
+        <button onClick={onReset} style={{background:"rgba(239,68,68,.06)",color:C.red,border:`1px solid rgba(239,68,68,.2)`,borderRadius:10,padding:".65rem",cursor:"pointer",fontSize:13,fontFamily:FONT.body,width:"100%"}}>{demoMode ? "Exit Demo" : "Sign Out"}</button>
       </div>
     </div>
   );
@@ -2883,7 +2895,100 @@ function BottomNav({ active, onNav }) {
 // ─────────────────────────────────────────────────────────
 // AUTH SCREEN — login / signup
 // ─────────────────────────────────────────────────────────
-function AuthScreen({ onAuthenticated }) {
+// ─────────────────────────────────────────────────────────
+// DEMO MODE — pre-populated sample player, no signup required
+// ─────────────────────────────────────────────────────────
+function buildDemoPlayer() {
+  const now = Date.now();
+  const day = 86400000;
+  // Fabricate three past quiz sessions with realistic progression
+  const mkSession = (ok1, ok2, ok3, daysAgo, score) => ({
+    results: [
+      {id:"u11q1",cat:"Rush Reads",ok:ok1,d:1,type:"mc"},
+      {id:"u11q2",cat:"Coverage",ok:ok1,d:1,type:"mc"},
+      {id:"u11q6",cat:"Puck Protection",ok:ok1,d:1,type:"mc"},
+      {id:"u11q11",cat:"Exiting the Zone",ok:ok1,d:1,type:"mc"},
+      {id:"u11q20",cat:"Coverage",ok:ok2,d:2,type:"mc"},
+      {id:"u11seq1",cat:"Exiting the Zone",ok:ok2,d:1,type:"seq"},
+      {id:"u11mis1",cat:"Coverage",ok:ok2,d:1,type:"mistake"},
+      {id:"u11next1",cat:"Rush Reads",ok:ok2,d:1,type:"next"},
+      {id:"u11tf2",cat:"Coverage",ok:ok2,d:1,type:"tf"},
+      {id:"u11q92",cat:"Blue Line Decisions",ok:ok3,d:3,type:"mc"},
+      {id:"u11q95",cat:"Decision Timing",ok:ok3,d:3,type:"mc"},
+      {id:"u11q100",cat:"Decision Timing",ok:ok3,d:3,type:"mc"},
+      {id:"u11seq8",cat:"Puck Protection",ok:ok3,d:3,type:"seq"},
+      {id:"u11tf10",cat:"Blue Line Decisions",ok:ok3,d:2,type:"tf"},
+      {id:"u11mis8",cat:"Puck Protection",ok:ok2,d:2,type:"mistake"},
+    ],
+    score,
+    date: new Date(now - daysAgo*day).toISOString(),
+  });
+  return {
+    id: "__demo__",
+    name: "Alex (Demo)",
+    level: "U11 / Atom",
+    position: "Forward",
+    season: SEASONS[0],
+    sessionLength: 15,
+    colorblind: false,
+    coachCode: "",
+    quizHistory: [
+      mkSession(true, false, false, 14, 58),
+      mkSession(true, true, false, 7, 71),
+      mkSession(true, true, true, 1, 83),
+    ],
+    selfRatings: {
+      // U11 skills - growth scale values
+      u11s1:"developing", u11s2:"applying", u11s3:"developing", u11s4:"beginning",
+      u11p1:"applying", u11p2:"developing", u11p3:"developing", u11p4:"applying",
+      u11h1:"applying", u11h2:"developing", u11h3:"developing",
+      u11d1:"developing", u11d2:"beginning",
+      u11c1:"extending", u11c2:"applying",
+      u11dm1:"developing", u11dm2:"developing", u11dm3:"beginning", u11dm4:"applying", u11dm5:"developing",
+    },
+    goals: {
+      "Gap Control": {
+        goal: "Work on closing the gap at the blue line instead of backing up to the crease",
+        S: "Close the gap by the top of the circles on every rush",
+        M: "Track number of clean gap closes per game using coach feedback",
+        A: "Yes — drill this with my D-partner in warmups and 1-on-1 practice reps",
+        R: "This is my biggest weakness and most games I give up the blue line",
+        T: "By end of November 2026",
+      },
+      "Special Teams": {
+        goal: "Learn the 1-3-1 power play setup and execute my position consistently",
+        S: "Know my spot and responsibilities in the 1-3-1",
+        M: "Ask coach to review video after next 3 power plays",
+        A: "Yes, coach said this is where I'll play",
+        R: "I get power play time and want to earn more",
+        T: "Next 4 weeks",
+      },
+    },
+    __demo: true,
+  };
+}
+function buildDemoCoachRatings() {
+  return {
+    ratings: {
+      u11s1:"developing", u11s2:"competent", u11s3:"developing", u11s4:"developing",
+      u11p1:"competent", u11p2:"developing", u11p3:"competent", u11p4:"proficient",
+      u11h1:"competent", u11h2:"developing", u11h3:"developing",
+      u11d1:"beginning", u11d2:"beginning",
+      u11c1:"advanced", u11c2:"proficient",
+      u11dm1:"developing", u11dm2:"developing", u11dm3:"developing", u11dm4:"competent", u11dm5:"developing",
+    },
+    notes: {
+      u11d1: "Work on matching attacker speed and closing the gap — you back up too far and give them time.",
+      u11c1: "Elite compete level — you set the tone for the line every shift. Keep it.",
+      u11p4: "Great body position in puck battles. Now add the quick outlet pass once you win it.",
+    },
+  };
+}
+
+// ─────────────────────────────────────────────────────────
+// AUTH SCREEN — login / signup
+// ─────────────────────────────────────────────────────────
+function AuthScreen({ onAuthenticated, onDemo }) {
   const [mode, setMode] = useState("login"); // login | signup
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -2973,6 +3078,14 @@ function AuthScreen({ onAuthenticated }) {
           <button onClick={()=>{setMode(mode==="login"?"signup":"login");setErr("");}} style={{background:"none",border:"none",color:C.gold,cursor:"pointer",fontWeight:700,fontSize:13,fontFamily:FONT.body,padding:0,textDecoration:"underline"}}>
             {mode === "login" ? "Create account" : "Sign in"}
           </button>
+        </div>
+
+        <div style={{marginTop:"2rem",paddingTop:"1.5rem",borderTop:`1px solid ${C.border}`}}>
+          <div style={{fontSize:11,letterSpacing:".14em",textTransform:"uppercase",color:C.dimmer,fontWeight:700,textAlign:"center",marginBottom:".85rem"}}>Or try it first</div>
+          <button onClick={onDemo} style={{width:"100%",background:C.bgCard,border:`1px solid ${C.purpleBorder}`,borderRadius:10,padding:".85rem",cursor:"pointer",color:C.purple,fontFamily:FONT.body,fontWeight:700,fontSize:14,display:"flex",alignItems:"center",justifyContent:"center",gap:".5rem"}}>
+            <span style={{fontSize:16}}>🎮</span> Try the Demo — No Signup
+          </button>
+          <div style={{fontSize:11,color:C.dimmer,textAlign:"center",marginTop:".65rem",lineHeight:1.5}}>Explore with a sample U11 player. Nothing is saved.</div>
         </div>
 
         <div style={{fontSize:10,color:C.dimmer,textAlign:"center",marginTop:"2rem",opacity:.6}}>v{VERSION}</div>
@@ -3168,12 +3281,36 @@ export default function App() {
   const [authReady, setAuthReady] = useState(false);
   const [profile, setProfile] = useState(null);
   const [player, setPlayer] = useState(null); // enriched player object (profile + synced data)
+  const [demoMode, setDemoMode] = useState(false);
+  const [demoCoachRatings, setDemoCoachRatings] = useState(null);
   const [screen, setScreen] = useState("home");
   const [prevScore, setPrevScore] = useState(null);
   const [totalSessions, setTotalSessions] = useState(0);
   const [quizResults, setQuizResults] = useState([]);
   const [seqPerfect, setSeqPerfect] = useState(false);
   const [mistakeStreak, setMistakeStreak] = useState(0);
+
+  function enterDemo() {
+    const p = buildDemoPlayer();
+    const coachData = buildDemoCoachRatings();
+    setDemoMode(true);
+    setDemoCoachRatings(coachData);
+    setProfile({ id: "__demo__", role: "player", name: p.name, level: p.level, position: p.position });
+    setPlayer(p);
+    setPrevScore(p.quizHistory[p.quizHistory.length-1]?.score || null);
+    setTotalSessions(p.quizHistory.length);
+    setScreen("home");
+  }
+
+  function exitDemo() {
+    setDemoMode(false);
+    setDemoCoachRatings(null);
+    setProfile(null);
+    setPlayer(null);
+    setPrevScore(null);
+    setTotalSessions(0);
+    setScreen("home");
+  }
 
   // Hydrate from Supabase on mount, subscribe to auth changes
   useEffect(() => {
@@ -3239,45 +3376,53 @@ export default function App() {
       const sd = updateStreak(getStreakData());
       localStorage.setItem("iceiq_streak", JSON.stringify(sd));
     } catch(e) {}
-    try {
-      await SB.saveQuizSession(player.id, { results, score, sessionLength: player.sessionLength });
-    } catch(e) { console.error(e); }
+    if (!demoMode) {
+      try { await SB.saveQuizSession(player.id, { results, score, sessionLength: player.sessionLength }); }
+      catch(e) { console.error(e); }
+    }
     setScreen("results");
   }
 
   async function handleSkillsSave(ratings) {
     setPlayer({...player, selfRatings: ratings});
-    try { await SB.saveSelfRatings(player.id, ratings); } catch(e) { console.error(e); }
+    if (!demoMode) {
+      try { await SB.saveSelfRatings(player.id, ratings); } catch(e) { console.error(e); }
+    }
     setScreen("home");
   }
 
   async function handleGoalsSave(goals) {
     setPlayer({...player, goals});
-    try {
-      for (const [cat, g] of Object.entries(goals)) {
-        if (g?.goal) await SB.saveGoal(player.id, cat, g);
-      }
-    } catch(e) { console.error(e); }
+    if (!demoMode) {
+      try {
+        for (const [cat, g] of Object.entries(goals)) {
+          if (g?.goal) await SB.saveGoal(player.id, cat, g);
+        }
+      } catch(e) { console.error(e); }
+    }
     setScreen("home");
   }
 
   async function handleProfileSave(settings) {
     const updated = {...player, ...settings};
     setPlayer(updated);
-    try {
-      await SB.updateProfile(player.id, {
-        name: settings.name,
-        level: settings.level,
-        position: settings.position,
-        season: settings.season,
-        session_length: settings.sessionLength,
-        colorblind: settings.colorblind,
-      });
-    } catch(e) { console.error(e); }
+    if (!demoMode) {
+      try {
+        await SB.updateProfile(player.id, {
+          name: settings.name,
+          level: settings.level,
+          position: settings.position,
+          season: settings.season,
+          session_length: settings.sessionLength,
+          colorblind: settings.colorblind,
+        });
+      } catch(e) { console.error(e); }
+    }
     setScreen("home");
   }
 
   async function handleSignOut() {
+    if (demoMode) { exitDemo(); return; }
     await SB.signOut();
     setProfile(null); setPlayer(null);
     setScreen("home");
@@ -3298,7 +3443,7 @@ export default function App() {
         </div>
       </div>;
     }
-    return <AuthScreen onAuthenticated={()=>{}}/>;
+    return <AuthScreen onAuthenticated={()=>{}} onDemo={enterDemo}/>;
   }
 
   // Coach home
@@ -3359,14 +3504,21 @@ export default function App() {
         textarea { resize: none; }
       `}</style>
 
+      {demoMode && (
+        <div style={{position:"sticky",top:0,background:C.purple,color:C.white,padding:".45rem 1rem",fontSize:12,fontWeight:600,textAlign:"center",zIndex:200,display:"flex",alignItems:"center",justifyContent:"center",gap:".75rem"}}>
+          🎮 Demo mode — data won't be saved.
+          <button onClick={exitDemo} style={{background:C.white,color:C.purple,border:"none",borderRadius:6,padding:".25rem .7rem",fontWeight:800,fontSize:11,cursor:"pointer",fontFamily:FONT.body}}>Sign Up →</button>
+        </div>
+      )}
+
       <div style={{paddingBottom: screen==="quiz"||screen==="results" ? 0 : 80}}>
         {screen === "home"    && <Home player={player} onNav={setScreen}/>}
         {screen === "quiz"    && <Quiz player={player} onFinish={handleQuizFinish} onBack={()=>setScreen("home")}/>}
         {screen === "results" && <Results results={quizResults} player={player} prevScore={prevScore} totalSessions={totalSessions} seqPerfect={seqPerfect} mistakeStreak={mistakeStreak} onAgain={()=>setScreen("quiz")} onHome={()=>setScreen("home")}/>}
         {screen === "skills"  && <Skills player={player} onSave={handleSkillsSave} onBack={()=>setScreen("home")}/>}
         {screen === "goals"   && <GoalsScreen player={player} onSave={handleGoalsSave} onBack={()=>setScreen("home")}/>}
-        {screen === "report"  && <Report player={player} onBack={()=>setScreen("home")}/>}
-        {screen === "profile" && <Profile player={player} onSave={handleProfileSave} onBack={()=>setScreen("home")} onReset={handleSignOut}/>}
+        {screen === "report"  && <Report player={player} onBack={()=>setScreen("home")} demoCoachData={demoMode?demoCoachRatings:null}/>}
+        {screen === "profile" && <Profile player={player} onSave={handleProfileSave} onBack={()=>setScreen("home")} onReset={handleSignOut} demoMode={demoMode}/>}
       </div>
 
       {!["quiz","results"].includes(screen) && (
