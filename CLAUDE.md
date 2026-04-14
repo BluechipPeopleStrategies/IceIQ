@@ -1,108 +1,141 @@
 # IceIQ — Claude Code Instructions
 
-## Auto-deploy rule
-After every change to src/App.jsx, automatically run:
-git add . && git commit -m "Auto: [brief description of change]" && git push
+## What this project is
 
-## Project overview
-IceIQ is a youth hockey player development app built by Thomas (BlueChip People Strategies).
-- Live: ice-iq.vercel.app
-- GitHub: BluechipPeopleStrategies/IceIQ
-- Stack: React + Vite + Vercel
-- Single file app: src/App.jsx (~410KB)
-- Do NOT touch: index.html, src/main.jsx, package.json, vite.config.js
+IceIQ is a youth hockey player development app. Players answer hockey IQ questions across age groups, build knowledge through an adaptive engine, track progress, and set SMART goals. Coaches can view roster-level data on the Team tier.
 
-## Question bank structure
-QB is an object keyed by level: "U7 / Initiation", "U9 / Novice", "U11 / Atom", "U13 / Peewee"
+Live URL: ice-iq.vercel.app  
+Repo: BluechipPeopleStrategies/IceIQ  
+Stack: React + Vite + Vercel  
+Dev environment: Claude Code in PowerShell (Windows)
 
-Each question has:
-- id, type, cat, concept, d (1/2/3), pos (["F"], ["D"], ["F","D"], or ["G"])
-- sit (game situation), opts (array of 4 options), ok (index of correct answer)
-- why (explanation), tip (one-line coaching tip)
+---
 
-New format questions also need: type ("mc" / "seq" / "mistake" / "next" / "tf")
-Seq questions use: items (array of strings) and correct_order (array of indices) instead of opts/ok
-Mistake questions also need: question (the specific question asked about the situation)
+## Architecture — read this before touching anything
 
-## Question ID conventions
-- Skater questions: u7q1–u7q100, u9q1–u9q100, u11q1–u11q100, u13q1–u13q100
-- Goalie questions: u7g1–u7g10, u9g1–u9g15, u11g1–u11g20, u13g1–u13g20
-- New format questions: u{level}seq{n} (seq), u{level}mis{n} (mistake), u{level}next{n} (next), u{level}tf{n} (tf)
+**Single-file architecture.** All application logic lives in `src/App.jsx`. This is intentional and must be maintained. Do not split components into separate files unless explicitly instructed. Do not create a `components/` folder. Do not refactor into multiple files.
 
-## Question writing voice
-- Situations written in second person ("You're on a 2-on-1...")
-- Options are plain English — no jargon, no trick answers
-- The correct answer should feel inevitable once explained
-- why: explains the reasoning, not just restates the answer
-- tip: one sentence, punchy, actionable ("D takes you? Pass. Every time.")
-- Difficulty 1 = foundational concept, 2 = developing read, 3 = elite anticipation
-- No corporate buzzwords, no therapy-speak, no easy absolutes
-- Match the directness and confidence of existing questions
+**No backend.** There is no server, no database, no API calls to external services. All state is managed in the browser via localStorage. Do not introduce a backend dependency.
 
-## Design rules
-- All colors use the C object — do not hardcode hex values
-- Fonts: Barlow Condensed for display (FONT.display), DM Sans for body (FONT.body)
-- Never add inline styles that contradict the design token system
-- Keep colorblind mode working — never use color as the only indicator
-- Cards use C.bgCard background, C.border borders, borderRadius 16
-- StickyHeader uses backdropFilter blur(16px)
-- PrimaryBtn uses C.gold background, C.bg text
+**Vercel deployment.** Every push to main triggers an automatic Vercel deploy. Keep the build clean — no console errors, no broken imports.
 
-## Version bumping
-When adding features, bump VERSION constant following semver:
-- Bug fix: patch (e.g. 2.0.1)
-- New feature: minor (e.g. 2.1.0)
-- Full rebuild: major (e.g. 3.0.0)
-Always add a CHANGELOG entry at the top of the CHANGELOG array describing what changed.
-Current version: 2.0.0
+---
 
-## Build validation — check before every push
-- No double commas at QB level boundaries (],, is a syntax error)
-- All question arrays properly closed with ],
-- No unclosed JSX tags
-- No template literals with broken ${} expressions
-- VERSION and CHANGELOG updated if features were added
-- Run a mental grep for ],, before committing
+## Question bank
 
-## Critical — do not break these features
-- Coach invite URL uses query params: ?coach=1&pk=&name=&level=
-- makePlayerKey() generates the shared storage key for coach ratings
-- Coach ratings stored in window.storage (shared: true) under "coach_ratings:[playerKey]"
-- Coach team quiz data stored in window.storage under "team:[coachCode]:[season]"
-- Position "Not Sure Yet" is valid for U7/U9 only — routes to skater question pool
-- Streak data stored in localStorage under "iceiq_streak"
-- Player profile stored in localStorage under "iceiq_player"
-- IQ score stored in localStorage under "iceiq_score"
-- Session count stored in localStorage under "iceiq_sessions"
-- Adaptive engine: 2 correct in a row = step up difficulty, 2 wrong = step down
-- D_WEIGHT: {1:1, 2:1.5, 3:2.2} — do not change these values
-- QUIZ_LENGTH default is 10 — player can set 10/15/20 in settings
+- 445 total questions across age groups U7, U9, U11, U13
+- Includes goalie-specific questions
+- Five question formats: multiple choice, true/false, scenario, fill-in-the-blank, image-based
+- Questions are tagged by age group, position (forward / defence / goalie), and topic area
+- Do not remove or modify existing questions without explicit instruction
+- New questions must follow the existing data structure exactly
 
-## Score tiers (do not change labels)
-- 80%+: Hockey Sense 🏒
-- 60–79%: Two-Way Player ⚡
-- 0–59%: Tape to Tape 🎯
+---
 
-## Screens and navigation
-Home → Quiz → Results → Home
-Home → Goals (SMART goal setting)
-Home → Skills (self-assessment)
-Home → Report (self vs coach comparison + IQ history)
-Home → Profile (settings)
-BottomNav covers: Home, Quiz, Goals, Skills, Report
-Coach dashboard accessed via Home (separate flow, no bottom nav)
-Coach rating screen accessed via URL params (no player login required)
+## Pricing tiers — locked spec
 
-## Planned features — do not build unless explicitly instructed
-- Supabase backend for persistent cross-device coach dashboard
-- Parent dashboard (read-only view, Year 2)
-- Season history IQ arc chart in Report screen
-- Daily streak display on Home screen hero card
-- Position-weighted leaderboard (anonymous, team-level)
-- More rink SVG diagram types (currently: 2on1, coverage, blueline, forecheck, goalie_angle, goalie_2on1)
+### Free (device-locked)
+- 1 age group per device install
+- Multiple choice format only
+- 5 sessions saved in history
+- 1 free age group switch allowed
+- Annual re-select permitted on September 1 each year (seasonReset flag)
+- No position filter, no adaptive engine, no SMART goals, no progress snapshots
 
-## Owner
-Thomas — BlueChip People Strategies
-Edmonton, Alberta, Canada
-bluechip-people-strategies.com
-Do not add ads, tracking, or third-party analytics without explicit instruction.
+### Pro — $12.99 CAD/month or $89.99/year
+- 1 child profile
+- All age groups (U7–U13)
+- All 5 question formats
+- Full session history
+- Position filter including goalie
+- Adaptive engine
+- SMART goal tracking
+- Shareable progress snapshots
+- No coach dashboard
+
+### Family — $19.99 CAD/month or $139.99/year
+- Up to 3 child profiles under 1 parent account
+- Each profile independently locked (own age group, history, goals)
+- All Pro features for each profile
+- No coach dashboard
+
+### Team — $49.99 CAD/month or $249.99 season pass (Sept 1–Mar 31)
+- Up to 20 players per roster
+- All Pro features for every player
+- Coach dashboard with individual and aggregate views
+- Assign focus areas by position
+- Exportable progress reports
+- Hard expiry April 1 — read-only mode after expiry
+- Re-enrollment prompt triggers August 15
+
+---
+
+## Device locking — implementation rules
+
+Tier enforcement is device-first, not account-first. A new email address must not bypass the free tier age group lock.
+
+**localStorage keys:**
+
+| Key | Purpose |
+|-----|---------|
+| `iceiq_device_id` | UUID generated on first launch. Never overwrite. Survives logout/re-login. |
+| `iceiq_age_group_lock` | Selected age group for free tier. Tied to device, not account. |
+| `iceiq_switch_count` | Tracks age group switches. Free tier allows 1. After that, trigger Pro prompt. |
+| `iceiq_season_reset_year` | Stores year of last September re-select. Reset switchCount to 0 on Sept 1 if year doesn't match current year. |
+| `iceiq_child_profiles` | JSON array of child profiles for Family tier. Max 3. |
+| `iceiq_season_pass` | Team tier season pass purchase and expiry dates. |
+| `iceiq_reenrollment_prompt_shown` | Boolean flag. Show re-enrollment prompt once on August 15. |
+
+**Logic:**
+- Free user switches age group → increment `iceiq_switch_count`
+- If `iceiq_switch_count` > 1 → block switch, surface Pro upgrade prompt
+- On app load, check if current date is Sept 1 or later and `iceiq_season_reset_year` !== current year → allow one free re-select, reset switch count, write current year to `iceiq_season_reset_year`
+- Team tier: on app load, check `iceiq_season_pass.expiryDate` → if past April 1, set `readOnly: true`
+
+---
+
+## Tier enforcement — feature gate rules
+
+All feature gating runs through a single `canAccess(feature, currentTier)` check. Do not scatter tier logic throughout the app. Gate features in one place.
+
+**Upgrade prompt copy by feature:**
+
+| Feature | Prompt |
+|---------|--------|
+| positionFilter | "Filter by position with IceIQ Pro" |
+| allAgeGroups | "Unlock all age groups with IceIQ Pro" |
+| adaptiveEngine | "Get smarter practice with IceIQ Pro's adaptive engine" |
+| smartGoals | "Set and track SMART goals with IceIQ Pro" |
+| progressSnapshots | "Share your progress with IceIQ Pro" |
+| fullSessionHistory | "See your full history with IceIQ Pro" |
+| additionalProfiles | "Add up to 3 players with the IceIQ Family plan" |
+| coachDashboard | "Track your full roster with IceIQ Team" |
+
+**Never hard-block mid-session.** Surface upgrade prompts at the moment a gated feature is tapped — do not interrupt an active question session.
+
+---
+
+## Natural upgrade triggers
+
+Build these moments into the UX. They are not popups — they are contextual prompts that appear at the right time:
+
+- User taps position filter (free/unverified) → Pro prompt
+- User tries to switch age group after free switch used → Pro prompt
+- User views session 6+ in history → Pro prompt
+- ~80% of free tier question pool seen → adaptive engine Pro prompt
+- User taps "Share progress" → Pro prompt
+- User tries to create a second child profile → Family prompt
+- Coach tries to view player data without Team tier → Team prompt
+- Season pass expires (Apr 1) → re-enrollment prompt
+
+---
+
+## What not to do
+
+- Do not split App.jsx into multiple component files
+- Do not add a backend or external database
+- Do not modify the question bank structure without instruction
+- Do not add npm packages without checking first — keep dependencies minimal
+- Do not add hard session caps (daily question limits, etc.) — the free tier limit is depth, not access frequency
+- Do not use position: fixed in CSS — causes Vercel iframe rendering issues
+- Do not introduce TypeScript — the project is plain JavaScript/JSX
