@@ -3580,13 +3580,20 @@ function buildDemoCoachRatings() {
 // AUTH SCREEN — login / signup
 // ─────────────────────────────────────────────────────────
 function AuthScreen({ onAuthenticated, onDemo }) {
-  const [mode, setMode] = useState("login"); // login | signup
+  const [mode, setMode] = useState("login"); // login | signup | forgot
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [name, setName] = useState("");
   const [role, setRole] = useState("player");
   const [loading, setLoading] = useState(false);
   const [err, setErr] = useState("");
+  const [resetSent, setResetSent] = useState(false);
+
+  // Returning user detection: any prior sign-in or signup stamps this flag
+  const hasSignedInBefore = (() => {
+    try { return typeof window !== "undefined" && !!window.localStorage.getItem("iceiq_has_signed_in_before"); }
+    catch { return false; }
+  })();
 
   async function submit() {
     setErr("");
@@ -3596,10 +3603,21 @@ function AuthScreen({ onAuthenticated, onDemo }) {
         if (!email.trim() || !password || !name.trim()) throw new Error("All fields required");
         if (password.length < 6) throw new Error("Password must be at least 6 characters");
         await SB.signUp({ email: email.trim(), password, role, name: name.trim() });
-        // After signup, auth state listener in App will fire and load profile
+        try { window.localStorage.setItem("iceiq_has_signed_in_before", "1"); } catch {}
+      } else if (mode === "forgot") {
+        if (!email.trim()) throw new Error("Enter your email to reset your password");
+        if (!supabase) throw new Error("Password reset unavailable — Supabase not configured");
+        const { error } = await supabase.auth.resetPasswordForEmail(email.trim(), {
+          redirectTo: typeof window !== "undefined" ? window.location.origin : undefined,
+        });
+        if (error) throw error;
+        setResetSent(true);
+        setLoading(false);
+        return;
       } else {
         if (!email.trim() || !password) throw new Error("Email and password required");
         await SB.signIn({ email: email.trim(), password });
+        try { window.localStorage.setItem("iceiq_has_signed_in_before", "1"); } catch {}
       }
       onAuthenticated();
     } catch (e) {
@@ -3607,6 +3625,13 @@ function AuthScreen({ onAuthenticated, onDemo }) {
     }
     setLoading(false);
   }
+
+  const headline = mode === "signup" ? "Get started."
+    : mode === "forgot" ? "Reset password"
+    : (hasSignedInBefore ? "Welcome back." : "Welcome.");
+  const subhead = mode === "signup" ? "Create an account to start tracking hockey IQ."
+    : mode === "forgot" ? "Enter your email — we'll send you a reset link."
+    : (hasSignedInBefore ? "Sign in to see your development report." : "Sign in or create a free account to get started.");
 
   return (
     <div style={{minHeight:"100vh",background:`linear-gradient(160deg,#080e1a 0%,#0d1e3a 60%,#080e1a 100%)`,display:"flex",flexDirection:"column",justifyContent:"center",padding:"2rem 1.5rem",fontFamily:FONT.body,color:C.white}}>
@@ -3616,11 +3641,9 @@ function AuthScreen({ onAuthenticated, onDemo }) {
           <span style={{fontFamily:FONT.display,fontWeight:800,fontSize:"2rem",color:C.gold,letterSpacing:".08em"}}>IceIQ</span>
         </div>
         <h1 style={{fontFamily:FONT.display,fontWeight:800,fontSize:"clamp(1.8rem,6vw,2.4rem)",margin:"0 0 .5rem",lineHeight:1.1}}>
-          {mode === "login" ? "Welcome back." : "Get started."}
+          {headline}
         </h1>
-        <p style={{fontSize:14,color:C.dim,marginBottom:"1.75rem",lineHeight:1.6}}>
-          {mode === "login" ? "Sign in to see your development report." : "Create an account to start tracking hockey IQ."}
-        </p>
+        <p style={{fontSize:14,color:C.dim,marginBottom:"1.5rem",lineHeight:1.6}}>{subhead}</p>
 
         {mode === "signup" && (
           <>
@@ -3634,42 +3657,76 @@ function AuthScreen({ onAuthenticated, onDemo }) {
                 ))}
               </div>
             </div>
-            <Card style={{marginBottom:".75rem"}}>
-              <Label>Name</Label>
+            <div style={{background:C.bgCard,border:`1px solid ${C.border}`,borderRadius:10,padding:".6rem .85rem",marginBottom:".6rem"}}>
+              <div style={{fontSize:10,letterSpacing:".1em",textTransform:"uppercase",color:C.dimmer,fontWeight:700,marginBottom:2}}>Name</div>
               <input value={name} onChange={e=>setName(e.target.value)} placeholder={role==="coach"?"Coach name":"Player name"}
-                style={{background:"none",border:"none",color:C.white,fontSize:16,fontFamily:FONT.body,width:"100%",outline:"none"}}/>
-            </Card>
+                style={{background:"none",border:"none",color:C.white,fontSize:15,fontFamily:FONT.body,width:"100%",outline:"none",padding:0}}/>
+            </div>
           </>
         )}
 
-        <Card style={{marginBottom:".75rem"}}>
-          <Label>Email</Label>
-          <input type="email" value={email} onChange={e=>setEmail(e.target.value)} placeholder="you@example.com" autoComplete="email"
-            style={{background:"none",border:"none",color:C.white,fontSize:16,fontFamily:FONT.body,width:"100%",outline:"none"}}/>
-        </Card>
-
-        <Card style={{marginBottom:".75rem"}}>
-          <Label>Password</Label>
-          <input type="password" value={password} onChange={e=>setPassword(e.target.value)} placeholder={mode==="signup"?"At least 6 characters":"Your password"} autoComplete={mode==="signup"?"new-password":"current-password"}
-            style={{background:"none",border:"none",color:C.white,fontSize:16,fontFamily:FONT.body,width:"100%",outline:"none"}}/>
-        </Card>
+        {/* Email + password side-by-side on wider screens, stacked on narrow */}
+        {mode !== "forgot" ? (
+          <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:".5rem",marginBottom:".65rem"}}>
+            <div style={{background:C.bgCard,border:`1px solid ${C.border}`,borderRadius:10,padding:".6rem .85rem"}}>
+              <div style={{fontSize:10,letterSpacing:".1em",textTransform:"uppercase",color:C.dimmer,fontWeight:700,marginBottom:2}}>Email</div>
+              <input type="email" value={email} onChange={e=>setEmail(e.target.value)} placeholder="you@example.com" autoComplete="email"
+                style={{background:"none",border:"none",color:C.white,fontSize:14,fontFamily:FONT.body,width:"100%",outline:"none",padding:0}}/>
+            </div>
+            <div style={{background:C.bgCard,border:`1px solid ${C.border}`,borderRadius:10,padding:".6rem .85rem"}}>
+              <div style={{fontSize:10,letterSpacing:".1em",textTransform:"uppercase",color:C.dimmer,fontWeight:700,marginBottom:2}}>Password</div>
+              <input type="password" value={password} onChange={e=>setPassword(e.target.value)} placeholder={mode==="signup"?"6+ chars":"••••••"} autoComplete={mode==="signup"?"new-password":"current-password"}
+                style={{background:"none",border:"none",color:C.white,fontSize:14,fontFamily:FONT.body,width:"100%",outline:"none",padding:0}}/>
+            </div>
+          </div>
+        ) : (
+          <div style={{background:C.bgCard,border:`1px solid ${C.border}`,borderRadius:10,padding:".6rem .85rem",marginBottom:".65rem"}}>
+            <div style={{fontSize:10,letterSpacing:".1em",textTransform:"uppercase",color:C.dimmer,fontWeight:700,marginBottom:2}}>Email</div>
+            <input type="email" value={email} onChange={e=>setEmail(e.target.value)} placeholder="you@example.com" autoComplete="email"
+              style={{background:"none",border:"none",color:C.white,fontSize:15,fontFamily:FONT.body,width:"100%",outline:"none",padding:0}}/>
+          </div>
+        )}
 
         {err && (
           <div style={{fontSize:13,color:C.red,background:C.redDim,border:`1px solid ${C.redBorder}`,borderRadius:8,padding:".6rem .8rem",marginBottom:".75rem"}}>
             {err}
           </div>
         )}
+        {resetSent && (
+          <div style={{fontSize:13,color:C.green,background:"rgba(34,197,94,.08)",border:`1px solid ${C.greenBorder}`,borderRadius:8,padding:".65rem .8rem",marginBottom:".75rem",lineHeight:1.5}}>
+            ✓ Check your email for a reset link. It may take a minute to arrive.
+          </div>
+        )}
 
-        <PrimaryBtn onClick={submit} disabled={loading}>
-          {loading ? "…" : (mode === "login" ? "Sign In →" : "Create Account →")}
-        </PrimaryBtn>
+        {/* Big primary button — bigger than the email/password fields */}
+        <button onClick={submit} disabled={loading} style={{width:"100%",background:C.gold,color:C.bg,border:"none",borderRadius:12,padding:"1.1rem",cursor:loading?"default":"pointer",fontWeight:800,fontSize:17,fontFamily:FONT.body,letterSpacing:".02em",boxShadow:`0 4px 16px ${C.gold}33`}}>
+          {loading ? "…" : (mode === "signup" ? "Create Account →" : mode === "forgot" ? "Send Reset Link →" : "Sign In →")}
+        </button>
 
-        <div style={{textAlign:"center",marginTop:"1.25rem",fontSize:13,color:C.dimmer}}>
-          {mode === "login" ? "New to IceIQ? " : "Already have an account? "}
-          <button onClick={()=>{setMode(mode==="login"?"signup":"login");setErr("");}} style={{background:"none",border:"none",color:C.gold,cursor:"pointer",fontWeight:700,fontSize:13,fontFamily:FONT.body,padding:0,textDecoration:"underline"}}>
-            {mode === "login" ? "Create account" : "Sign in"}
-          </button>
-        </div>
+        {/* Forgot password link — visible only on login mode */}
+        {mode === "login" && (
+          <div style={{textAlign:"center",marginTop:".75rem"}}>
+            <button onClick={()=>{setMode("forgot");setErr("");setResetSent(false);}} style={{background:"none",border:"none",color:C.dimmer,cursor:"pointer",fontSize:12,fontFamily:FONT.body,padding:0,textDecoration:"underline"}}>
+              Forgot password?
+            </button>
+          </div>
+        )}
+        {mode === "forgot" && (
+          <div style={{textAlign:"center",marginTop:".75rem"}}>
+            <button onClick={()=>{setMode("login");setErr("");setResetSent(false);}} style={{background:"none",border:"none",color:C.dimmer,cursor:"pointer",fontSize:12,fontFamily:FONT.body,padding:0,textDecoration:"underline"}}>
+              ← Back to sign in
+            </button>
+          </div>
+        )}
+
+        {mode !== "forgot" && (
+          <div style={{textAlign:"center",marginTop:"1.25rem",fontSize:13,color:C.dimmer}}>
+            {mode === "login" ? "New to IceIQ? " : "Already have an account? "}
+            <button onClick={()=>{setMode(mode==="login"?"signup":"login");setErr("");}} style={{background:"none",border:"none",color:C.gold,cursor:"pointer",fontWeight:700,fontSize:13,fontFamily:FONT.body,padding:0,textDecoration:"underline"}}>
+              {mode === "login" ? "Create account" : "Sign in"}
+            </button>
+          </div>
+        )}
 
         <div style={{marginTop:"2rem",paddingTop:"1.5rem",borderTop:`1px solid ${C.border}`}}>
           <div style={{fontSize:11,letterSpacing:".14em",textTransform:"uppercase",color:C.dimmer,fontWeight:700,textAlign:"center",marginBottom:".85rem"}}>Or try it first</div>
