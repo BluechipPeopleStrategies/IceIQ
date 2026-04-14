@@ -1,6 +1,29 @@
 import { useState, useEffect, useCallback } from "react";
 import * as SB from "./supabase";
 import { supabase, hasSupabase } from "./supabase";
+import { canAccess, getUpgradeTriggerMessage } from "./utils/tierGate";
+import { canSwitchAgeGroup, recordAgeGroupSwitch, getAgeGroupLock, setAgeGroupLock, checkSeasonReset } from "./utils/deviceLock";
+
+// Resolve the user's tier for gating decisions.
+// Priority: demo mode → PRO (full showcase)
+//           dev override (localStorage iceiq_tier_override) → that tier
+//           profile.tier field (future Supabase subscriptions) → that tier
+//           default → FREE
+function resolveTier({ profile, demoMode } = {}) {
+  // Demo mode experiences the FREE tier — people see exactly what they get for free
+  if (demoMode) return "FREE";
+  try {
+    const override = typeof window !== "undefined" ? window.localStorage.getItem("iceiq_tier_override") : null;
+    if (override && ["FREE","PRO","FAMILY","TEAM"].includes(override.toUpperCase())) {
+      return override.toUpperCase();
+    }
+  } catch {}
+  if (profile?.tier) {
+    const t = String(profile.tier).toUpperCase();
+    if (["FREE","PRO","FAMILY","TEAM"].includes(t)) return t;
+  }
+  return "FREE";
+}
 
 // ─────────────────────────────────────────────────────────
 // DESIGN TOKENS
@@ -51,7 +74,7 @@ const FONT = {
 // ─────────────────────────────────────────────────────────
 // VERSION
 // ─────────────────────────────────────────────────────────
-const VERSION = "0.5.0";
+const VERSION = "0.6.0";
 const RELEASE_DATE = "April 13, 2026";
 const CHANGELOG = [
   { v:"2.0.0", date:"April 13, 2026", notes:[
@@ -1068,28 +1091,45 @@ function makePlayerKey(name, level) {
 }
 
 // Adaptive queue builder
-function buildQueue(level, position, isReturning) {
+function buildQueue(level, position, isReturning, tier) {
   const allQ = QB[level] || [];
-  const posFiltered = position === "Goalie"
-    ? allQ.filter(q => !q.pos || q.pos.includes("G") || q.pos.includes("F"))
-    : position === "Defense"
-    ? allQ.filter(q => !q.pos || q.pos.includes("D") || q.pos.includes("F"))
-    : position === "Not Sure"
-    ? allQ.filter(q => !q.pos || q.pos.includes("F") || q.pos.includes("D")) // all skater questions
-    : allQ.filter(q => !q.pos || q.pos.includes("F") || q.pos.includes("D"));
+  // Gate: FREE only gets basic multiple-choice questions
+  const formatAllowed = canAccess("allQuestionFormats", tier).allowed;
+  const positionAllowed = canAccess("positionFilter", tier).allowed;
+
+  let posFiltered;
+  if (!positionAllowed) {
+    // Free: ignore position filter, serve all skater questions
+    posFiltered = allQ.filter(q => !q.pos || q.pos.includes("F") || q.pos.includes("D"));
+  } else {
+    posFiltered = position === "Goalie"
+      ? allQ.filter(q => !q.pos || q.pos.includes("G") || q.pos.includes("F"))
+      : position === "Defense"
+      ? allQ.filter(q => !q.pos || q.pos.includes("D") || q.pos.includes("F"))
+      : position === "Not Sure"
+      ? allQ.filter(q => !q.pos || q.pos.includes("F") || q.pos.includes("D"))
+      : allQ.filter(q => !q.pos || q.pos.includes("F") || q.pos.includes("D"));
+  }
+
+  if (!formatAllowed) {
+    // Free: only standard multiple-choice questions (no tf/seq/mistake/next)
+    posFiltered = posFiltered.filter(q => !q.type || q.type === "mc");
+  }
 
   const byD = {
     1: shuffle(posFiltered.filter(q => q.d === 1)),
     2: shuffle(posFiltered.filter(q => q.d === 2)),
     3: shuffle(posFiltered.filter(q => q.d === 3)),
   };
-  return { byD, currentD: isReturning ? 2 : 1 };
+  return { byD, currentD: isReturning ? 2 : 1, tier };
 }
 
 function pullNext(queue, results) {
   const last2 = results.slice(-2);
-  let { byD, currentD } = queue;
-  if (last2.length === 2) {
+  let { byD, currentD, tier } = queue;
+  // Gate: FREE users get random difficulty, no adaptive engine
+  const adaptive = canAccess("adaptiveEngine", tier).allowed;
+  if (adaptive && last2.length === 2) {
     if (last2.every(r => r.ok) && currentD < 3) currentD++;
     else if (last2.every(r => !r.ok) && currentD > 1) currentD--;
   }
@@ -1100,7 +1140,7 @@ function pullNext(queue, results) {
   }
   const i = Math.floor(Math.random() * byD[currentD].length);
   const q = byD[currentD][i];
-  return { q, queue: { byD: {...byD, [currentD]: byD[currentD].filter((_,j) => j !== i)}, currentD } };
+  return { q, queue: { byD: {...byD, [currentD]: byD[currentD].filter((_,j) => j !== i)}, currentD, tier } };
 }
 
 // Storage (coach dashboard)
@@ -1560,11 +1600,12 @@ function Onboarding({ onComplete }) {
 // ─────────────────────────────────────────────────────────
 // HOME SCREEN
 // ─────────────────────────────────────────────────────────
-function Home({ player, onNav }) {
+function Home({ player, onNav, demoMode, subscriptionTier }) {
   const { name, level, position, selfRatings, quizHistory, goals } = player;
   const latest = quizHistory[quizHistory.length-1];
   const iq = latest ? calcWeightedIQ(latest.results) : null;
   const tier = iq !== null ? getTier(iq) : null;
+  const showProPreview = demoMode || subscriptionTier === "FREE";
   const totalSessions = quizHistory.length;
   const ratedSkills = Object.values(selfRatings||{}).filter(v => v !== null).length;
   const totalSkills = Object.keys(selfRatings||{}).length;
@@ -1647,6 +1688,33 @@ function Home({ player, onNav }) {
           </button>
         </div>
 
+        {showProPreview && (
+          <button onClick={()=>onNav("plans")} style={{width:"100%",display:"block",textAlign:"left",background:`linear-gradient(135deg,rgba(201,168,76,.12),rgba(124,111,205,.08))`,border:`1px solid ${C.goldBorder}`,borderRadius:14,padding:"1rem 1.1rem",cursor:"pointer",color:C.white,fontFamily:FONT.body,marginBottom:"1rem"}}>
+            <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:".5rem"}}>
+              <div style={{display:"flex",alignItems:"center",gap:".5rem"}}>
+                <span style={{fontSize:16}}>⭐</span>
+                <span style={{fontSize:10,letterSpacing:".14em",textTransform:"uppercase",color:C.gold,fontWeight:800}}>Upgrade to IceIQ Pro</span>
+              </div>
+              <span style={{color:C.gold,fontSize:13}}>→</span>
+            </div>
+            <div style={{fontSize:13,color:C.dim,lineHeight:1.5,marginBottom:".55rem"}}>See what unlocks with Pro — all age groups, adaptive difficulty, position-specific questions, SMART goals, full history + Skills Map.</div>
+            <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:".35rem",marginTop:".5rem"}}>
+              {[
+                {icon:"🔓",t:"All age groups"},
+                {icon:"🎮",t:"5 question formats"},
+                {icon:"🎯",t:"Position-specific"},
+                {icon:"🧠",t:"Adaptive difficulty"},
+                {icon:"⭐",t:"SMART goals"},
+                {icon:"📊",t:"Skills Map radar"},
+              ].map((b,i) => (
+                <div key={i} style={{fontSize:11,color:C.dimmer,display:"flex",alignItems:"center",gap:".35rem"}}>
+                  <span>{b.icon}</span><span>{b.t}</span>
+                </div>
+              ))}
+            </div>
+          </button>
+        )}
+
         {/* What's New */}
         <Card style={{marginBottom:"1rem"}}>
           <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:".75rem"}}>
@@ -1669,7 +1737,7 @@ function Home({ player, onNav }) {
 // ─────────────────────────────────────────────────────────
 // QUIZ SCREEN
 // ─────────────────────────────────────────────────────────
-function Quiz({ player, onFinish, onBack }) {
+function Quiz({ player, onFinish, onBack, tier }) {
   const isReturning = player.quizHistory.length > 0;
   const qLen = player.sessionLength || 10;
   const [queue, setQueue] = useState(null);
@@ -1702,7 +1770,7 @@ function Quiz({ player, onFinish, onBack }) {
   }
 
   useEffect(() => {
-    const q = buildQueue(player.level, player.position, isReturning);
+    const q = buildQueue(player.level, player.position, isReturning, tier);
     const { q: first, queue: q2 } = pullNext(q, []);
     setQueue(q2);
     setQuestion(first);
@@ -2180,6 +2248,77 @@ function RatingButtons({ level, value, onChange }) {
   );
 }
 
+// ─────────────────────────────────────────────────────────
+// UPGRADE PROMPT — reusable modal for gated features
+// ─────────────────────────────────────────────────────────
+const PRO_BENEFITS = [
+  {icon:"🔓", text:"Access to all age groups (U7 → U13)"},
+  {icon:"🎮", text:"All 5 question formats — sequence, spot the mistake, what happens next, true/false"},
+  {icon:"🎯", text:"Position-specific questions (Forward, Defense, Goalie)"},
+  {icon:"🧠", text:"Adaptive engine — difficulty matches your level"},
+  {icon:"⭐", text:"SMART goals with category tracking"},
+  {icon:"📊", text:"Full progress snapshots + Skills Map radar"},
+  {icon:"♾️", text:"Unlimited session history"},
+];
+const FAMILY_BENEFITS = [
+  {icon:"👨‍👩‍👧", text:"Everything in Pro"},
+  {icon:"👥", text:"Up to 3 player profiles on one plan (siblings or parent-managed kids)"},
+  {icon:"🔀", text:"Each profile has its own age group, ratings, goals"},
+];
+const TEAM_BENEFITS = [
+  {icon:"👨‍🏫", text:"Everything in Pro"},
+  {icon:"📋", text:"Coach dashboard — full roster view"},
+  {icon:"⭐", text:"Per-player ratings & development notes for up to 20 players"},
+  {icon:"📅", text:"Season pass: September → March (renews each season)"},
+];
+
+function UpgradePrompt({ feature, onClose, onViewPlans, target }) {
+  const message = getUpgradeTriggerMessage(feature);
+  const upgradeTarget = target || "pro";
+  const benefits =
+    upgradeTarget === "family" ? FAMILY_BENEFITS :
+    upgradeTarget === "team"   ? TEAM_BENEFITS :
+    PRO_BENEFITS;
+  const tierName = upgradeTarget === "family" ? "Family" : upgradeTarget === "team" ? "Team" : "Pro";
+  return (
+    <div onClick={onClose} style={{position:"fixed",inset:0,background:"rgba(0,0,0,.75)",zIndex:300,display:"flex",alignItems:"center",justifyContent:"center",padding:"1rem",fontFamily:FONT.body}}>
+      <div onClick={e=>e.stopPropagation()} style={{background:C.bgCard,border:`1px solid ${C.goldBorder}`,borderRadius:16,padding:"1.5rem",maxWidth:440,width:"100%",color:C.white}}>
+        <div style={{fontSize:32,textAlign:"center",marginBottom:".5rem"}}>🔒</div>
+        <div style={{fontFamily:FONT.display,fontWeight:800,fontSize:"1.5rem",textAlign:"center",marginBottom:".35rem",color:C.gold}}>{message}</div>
+        <div style={{fontSize:12,color:C.dimmer,textAlign:"center",marginBottom:"1.25rem"}}>Unlock this and more with IceIQ {tierName}</div>
+
+        <div style={{background:C.bgElevated,border:`1px solid ${C.border}`,borderRadius:10,padding:".85rem 1rem",marginBottom:"1rem"}}>
+          <div style={{fontSize:10,letterSpacing:".14em",textTransform:"uppercase",color:C.gold,fontWeight:700,marginBottom:".6rem"}}>What you get with {tierName}</div>
+          {benefits.map((b, i) => (
+            <div key={i} style={{display:"flex",alignItems:"flex-start",gap:".55rem",padding:".3rem 0",fontSize:12,color:C.dim,lineHeight:1.5}}>
+              <span style={{fontSize:14,flexShrink:0}}>{b.icon}</span>
+              <span>{b.text}</span>
+            </div>
+          ))}
+        </div>
+
+        <div style={{display:"flex",gap:".5rem"}}>
+          <button onClick={onClose} style={{flex:1,background:"none",border:`1px solid ${C.border}`,borderRadius:10,padding:".75rem",cursor:"pointer",color:C.dimmer,fontSize:13,fontFamily:FONT.body}}>Not now</button>
+          <button onClick={onViewPlans} style={{flex:2,background:C.gold,color:C.bg,border:"none",borderRadius:10,padding:".75rem",cursor:"pointer",fontWeight:800,fontSize:13,fontFamily:FONT.body}}>View Plans →</button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function LockedCard({ feature, title, description, onUnlock }) {
+  return (
+    <Card style={{marginBottom:"1rem",background:C.bgElevated,border:`1px dashed ${C.border}`,textAlign:"center",padding:"1.5rem"}}>
+      <div style={{fontSize:32,marginBottom:".5rem",opacity:.5}}>🔒</div>
+      <div style={{fontFamily:FONT.display,fontWeight:800,fontSize:"1.1rem",color:C.dim,marginBottom:".35rem"}}>{title}</div>
+      <div style={{fontSize:12,color:C.dimmer,marginBottom:"1rem",lineHeight:1.5}}>{description}</div>
+      <button onClick={onUnlock} style={{background:C.gold,color:C.bg,border:"none",borderRadius:10,padding:".6rem 1.25rem",cursor:"pointer",fontWeight:800,fontSize:13,fontFamily:FONT.body}}>
+        Unlock with Pro →
+      </button>
+    </Card>
+  );
+}
+
 // Level-aware question phrasing
 function getSelfPrompt(level, skill) {
   if (level === "U7 / Initiation") return skill.desc;
@@ -2566,7 +2705,9 @@ function Report({ player, onBack, demoCoachData }) {
   );
 }
 
-function Profile({ player, onSave, onBack, onReset, demoMode }) {
+function Profile({ player, onSave, onBack, onReset, demoMode, tier, onUpgrade }) {
+  const positionLocked = !canAccess("positionFilter", tier || "FREE").allowed;
+  const levelSwitchGated = !canAccess("multipleAgeGroups", tier || "FREE").allowed;
   const [s, setS] = useState({...player});
   const upd = k => v => setS(p => ({...p,[k]:v}));
   const [teams, setTeams] = useState([]);
@@ -2616,8 +2757,12 @@ function Profile({ player, onSave, onBack, onReset, demoMode }) {
           ))}
         </Card>
         <Card style={{marginBottom:"1rem"}}>
-          <Label>Position</Label>
-          <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:".5rem"}}>
+          <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:".25rem"}}>
+            <Label style={{marginBottom:0}}>Position</Label>
+            {positionLocked && <button onClick={()=>onUpgrade && onUpgrade("positionFilter","pro")} style={{background:"none",border:"none",color:C.gold,fontSize:11,cursor:"pointer",fontFamily:FONT.body,fontWeight:700,textDecoration:"underline"}}>🔒 Unlock</button>}
+          </div>
+          {positionLocked && <div style={{fontSize:11,color:C.dimmer,marginBottom:".6rem",lineHeight:1.5}}>Position-specific questions are a Pro feature. Free tier serves all skater questions.</div>}
+          <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:".5rem",opacity:positionLocked?0.5:1,pointerEvents:positionLocked?"none":"auto"}}>
             {[{p:"Forward",i:"⚡"},{p:"Defense",i:"🛡"},{p:"Goalie",i:"🧤"},{p:"Not Sure",i:"❓"}].map(({p,i})=>(
               <button key={p} onClick={()=>upd("position")(p)} style={{background:s.position===p?C.goldDim:C.bgElevated,border:`1px solid ${s.position===p?C.gold:C.border}`,borderRadius:10,padding:".75rem .5rem",cursor:"pointer",textAlign:"center",color:s.position===p?C.gold:C.dim,fontFamily:FONT.body,fontSize:13,fontWeight:s.position===p?700:400}}>
                 <div style={{fontSize:20,marginBottom:3}}>{i}</div>{p}
@@ -2626,13 +2771,26 @@ function Profile({ player, onSave, onBack, onReset, demoMode }) {
           </div>
         </Card>
         <Card style={{marginBottom:"1rem"}}>
-          <Label>Level</Label>
+          <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:".25rem"}}>
+            <Label style={{marginBottom:0}}>Level</Label>
+            {levelSwitchGated && <button onClick={()=>onUpgrade && onUpgrade("multipleAgeGroups","pro")} style={{background:"none",border:"none",color:C.gold,fontSize:11,cursor:"pointer",fontFamily:FONT.body,fontWeight:700,textDecoration:"underline"}}>🔒 Unlock all ages</button>}
+          </div>
+          {levelSwitchGated && <div style={{fontSize:11,color:C.dimmer,marginBottom:".6rem",lineHeight:1.5}}>Free tier is locked to one age group. Upgrade to Pro for all age groups.</div>}
           <div style={{display:"flex",flexDirection:"column",gap:".5rem"}}>
-            {LEVELS.map(l=>(
-              <button key={l} onClick={()=>upd("level")(l)} style={{background:s.level===l?C.goldDim:"none",border:`1px solid ${s.level===l?C.gold:C.border}`,borderRadius:8,padding:".65rem 1rem",cursor:"pointer",textAlign:"left",color:s.level===l?C.gold:C.dim,fontFamily:FONT.body,fontSize:14,fontWeight:s.level===l?700:400,display:"flex",justifyContent:"space-between"}}>
-                <span>{l}</span>{s.level===l&&<span>✓</span>}
-              </button>
-            ))}
+            {LEVELS.map(l=>{
+              const isCurrent = s.level === l;
+              const locked = levelSwitchGated && !isCurrent;
+              return (
+                <button key={l} disabled={locked} onClick={()=>{
+                  if (locked) { onUpgrade && onUpgrade("multipleAgeGroups","pro"); return; }
+                  upd("level")(l);
+                }} style={{background:isCurrent?C.goldDim:"none",border:`1px solid ${isCurrent?C.gold:C.border}`,borderRadius:8,padding:".65rem 1rem",cursor:"pointer",textAlign:"left",color:isCurrent?C.gold:(locked?C.dimmer:C.dim),fontFamily:FONT.body,fontSize:14,fontWeight:isCurrent?700:400,display:"flex",justifyContent:"space-between",alignItems:"center",opacity:locked?0.5:1}}>
+                  <span>{l}</span>
+                  {isCurrent && <span>✓</span>}
+                  {locked && <span style={{fontSize:11}}>🔒</span>}
+                </button>
+              );
+            })}
           </div>
         </Card>
         <Card style={{marginBottom:"1rem"}}>
@@ -2678,6 +2836,20 @@ function Profile({ player, onSave, onBack, onReset, demoMode }) {
           </div>
           {joinMsg && <div style={{fontSize:12,color:joinMsg.includes("✓")?C.green:C.red,marginTop:".5rem"}}>{joinMsg}</div>}
           <div style={{fontSize:11,color:C.dimmer,marginTop:".6rem",lineHeight:1.6}}>Coaches on your teams can rate you and leave feedback notes in your Report.</div>
+        </Card>
+        <Card style={{marginBottom:"1rem",background:tier==="FREE"?C.bgElevated:`linear-gradient(135deg,${C.bgCard},${C.bgElevated})`,border:`1px solid ${tier==="FREE"?C.border:C.goldBorder}`}}>
+          <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:".4rem"}}>
+            <Label style={{marginBottom:0}}>Your Plan</Label>
+            <div style={{fontSize:10,letterSpacing:".14em",background:tier==="FREE"?C.dimmest:C.goldDim,color:tier==="FREE"?C.dimmer:C.gold,padding:"3px 8px",borderRadius:4,fontWeight:800,textTransform:"uppercase"}}>{tier || "FREE"}</div>
+          </div>
+          {tier === "FREE" ? (
+            <>
+              <div style={{fontSize:12,color:C.dim,lineHeight:1.6,marginBottom:".75rem"}}>You're on the free plan — 1 age group, multiple-choice questions, last 5 sessions of history.</div>
+              <button onClick={()=>onUpgrade && onUpgrade("multipleAgeGroups","pro")} style={{width:"100%",background:C.gold,color:C.bg,border:"none",borderRadius:10,padding:".7rem",cursor:"pointer",fontWeight:800,fontSize:13,fontFamily:FONT.body}}>See Pro Plans →</button>
+            </>
+          ) : (
+            <div style={{fontSize:12,color:C.dim,lineHeight:1.6}}>You have access to the {tier} tier features.</div>
+          )}
         </Card>
         <Card style={{marginBottom:"1rem"}}>
           <Label>About</Label>
@@ -3708,6 +3880,18 @@ export default function App() {
   const [quizResults, setQuizResults] = useState([]);
   const [seqPerfect, setSeqPerfect] = useState(false);
   const [mistakeStreak, setMistakeStreak] = useState(0);
+  const [upgradePrompt, setUpgradePrompt] = useState(null); // {feature, target} | null
+
+  // Resolve tier once per render
+  const tier = resolveTier({ profile, demoMode });
+
+  function promptUpgrade(feature, target) {
+    setUpgradePrompt({ feature, target: target || null });
+  }
+  function closeUpgrade() { setUpgradePrompt(null); }
+
+  // Run season reset check on boot so free-tier switch counters refresh each September
+  useEffect(() => { try { checkSeasonReset(); } catch {} }, []);
 
   function enterDemo() {
     const p = buildDemoPlayer();
@@ -3931,20 +4115,129 @@ export default function App() {
       )}
 
       <div style={{paddingBottom: screen==="quiz"||screen==="results" ? 0 : 80}}>
-        {screen === "home"    && <Home player={player} onNav={setScreen}/>}
-        {screen === "quiz"    && <Quiz player={player} onFinish={handleQuizFinish} onBack={()=>setScreen("home")}/>}
+        {screen === "home"    && <Home player={tierLimitedPlayer(player, tier)} onNav={setScreen} demoMode={demoMode} subscriptionTier={tier}/>}
+        {screen === "quiz"    && <Quiz player={player} onFinish={handleQuizFinish} onBack={()=>setScreen("home")} tier={tier}/>}
         {screen === "results" && <Results results={quizResults} player={player} prevScore={prevScore} totalSessions={totalSessions} seqPerfect={seqPerfect} mistakeStreak={mistakeStreak} onAgain={()=>setScreen("quiz")} onHome={()=>setScreen("home")}/>}
         {screen === "skills"  && <Skills player={player} onSave={handleSkillsSave} onBack={()=>setScreen("home")}/>}
         {screen === "study"   && <StudyScreen player={player} onBack={()=>setScreen("home")} onNav={setScreen}/>}
-        {screen === "goals"   && <GoalsScreen player={player} onSave={handleGoalsSave} onBack={()=>setScreen("home")}/>}
-        {screen === "report"  && <Report player={player} onBack={()=>setScreen("home")} demoCoachData={demoMode?demoCoachRatings:null}/>}
-        {screen === "profile" && <Profile player={player} onSave={handleProfileSave} onBack={()=>setScreen("home")} onReset={handleSignOut} demoMode={demoMode}/>}
+        {screen === "goals"   && (canAccess("smartGoals", tier).allowed
+          ? <GoalsScreen player={player} onSave={handleGoalsSave} onBack={()=>setScreen("home")}/>
+          : <GatedScreen feature="smartGoals" title="SMART Goals" description="Set specific, measurable, achievable development goals across every skill category — tied to your self-assessment and coach feedback." onBack={()=>setScreen("home")} onUnlock={()=>promptUpgrade("smartGoals","pro")}/>
+        )}
+        {screen === "report"  && <Report player={tierLimitedPlayer(player, tier)} onBack={()=>setScreen("home")} demoCoachData={demoMode?demoCoachRatings:null} tier={tier} onUpgrade={(f,t)=>promptUpgrade(f,t)}/>}
+        {screen === "profile" && <Profile player={player} onSave={handleProfileSave} onBack={()=>setScreen("home")} onReset={handleSignOut} demoMode={demoMode} tier={tier} onUpgrade={(f,t)=>promptUpgrade(f,t)}/>}
       </div>
 
       {!["quiz","results"].includes(screen) && (
         <BottomNav active={screen} onNav={setScreen}/>
       )}
+
+      {upgradePrompt && (
+        <UpgradePrompt
+          feature={upgradePrompt.feature}
+          target={upgradePrompt.target}
+          onClose={closeUpgrade}
+          onViewPlans={() => { closeUpgrade(); setScreen("plans"); }}
+        />
+      )}
+      {screen === "plans" && <PlansScreen onBack={()=>setScreen("home")} tier={tier}/>}
     </>
+  );
+}
+
+// Helper: cap quiz history for tiers without fullSessionHistory
+function tierLimitedPlayer(player, tier) {
+  if (!player) return player;
+  if (canAccess("fullSessionHistory", tier).allowed) return player;
+  const cap = 5;
+  if (!player.quizHistory || player.quizHistory.length <= cap) return player;
+  return { ...player, quizHistory: player.quizHistory.slice(-cap) };
+}
+
+// Generic gated-screen wrapper for full-screen locked features
+function GatedScreen({ feature, title, description, onBack, onUnlock }) {
+  return (
+    <div style={{minHeight:"100vh",background:C.bg,color:C.white,fontFamily:FONT.body,paddingBottom:80}}>
+      <StickyHeader>
+        <div style={{maxWidth:560,margin:"0 auto",display:"flex",alignItems:"center",gap:"1rem"}}>
+          <BackBtn onClick={onBack}/>
+          <div style={{flex:1,fontFamily:FONT.display,fontWeight:800,fontSize:"1.1rem"}}>{title}</div>
+        </div>
+      </StickyHeader>
+      <div style={{padding:"2rem 1.25rem",maxWidth:560,margin:"0 auto"}}>
+        <Card style={{textAlign:"center",padding:"2rem 1.25rem",background:`linear-gradient(135deg,${C.bgCard},${C.bgElevated})`,border:`1px solid ${C.goldBorder}`}}>
+          <div style={{fontSize:40,marginBottom:".75rem"}}>🔒</div>
+          <div style={{fontFamily:FONT.display,fontWeight:800,fontSize:"1.6rem",color:C.gold,marginBottom:".5rem"}}>{title}</div>
+          <div style={{fontSize:13,color:C.dim,lineHeight:1.6,marginBottom:"1.5rem"}}>{description}</div>
+          <button onClick={onUnlock} style={{background:C.gold,color:C.bg,border:"none",borderRadius:10,padding:".8rem 1.5rem",cursor:"pointer",fontWeight:800,fontSize:14,fontFamily:FONT.body}}>
+            Unlock with Pro →
+          </button>
+        </Card>
+      </div>
+    </div>
+  );
+}
+
+// Plans screen — showcase all tiers
+function PlansScreen({ onBack, tier }) {
+  return (
+    <div style={{minHeight:"100vh",background:C.bg,color:C.white,fontFamily:FONT.body,paddingBottom:80}}>
+      <StickyHeader>
+        <div style={{maxWidth:560,margin:"0 auto",display:"flex",alignItems:"center",gap:"1rem"}}>
+          <BackBtn onClick={onBack}/>
+          <div style={{flex:1,fontFamily:FONT.display,fontWeight:800,fontSize:"1.1rem"}}>Plans & Pricing</div>
+          <div style={{fontSize:11,color:C.dimmer}}>You're on {tier}</div>
+        </div>
+      </StickyHeader>
+      <div style={{padding:"1.25rem",maxWidth:560,margin:"0 auto"}}>
+        <Card style={{marginBottom:"1rem"}}>
+          <Label>Free</Label>
+          <div style={{fontFamily:FONT.display,fontWeight:800,fontSize:"2rem",color:C.white}}>$0</div>
+          <div style={{fontSize:11,color:C.dimmer,marginBottom:".75rem"}}>Get started, one age group, basic questions</div>
+          <div style={{fontSize:12,color:C.dim,lineHeight:1.7}}>✓ 1 age group (device-locked)<br/>✓ Multiple choice questions only<br/>✓ Last 5 sessions of history</div>
+        </Card>
+
+        <Card style={{marginBottom:"1rem",background:`linear-gradient(135deg,${C.bgCard},${C.bgElevated})`,border:`1px solid ${C.goldBorder}`}}>
+          <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start",marginBottom:".5rem"}}>
+            <Label>Pro</Label>
+            <div style={{fontSize:10,background:C.goldDim,color:C.gold,padding:"2px 8px",borderRadius:4,fontWeight:800,letterSpacing:".08em"}}>MOST POPULAR</div>
+          </div>
+          <div style={{fontFamily:FONT.display,fontWeight:800,fontSize:"2rem",color:C.gold}}>$12.99<span style={{fontSize:13,color:C.dimmer,fontWeight:500}}> / month</span></div>
+          <div style={{fontSize:11,color:C.dimmer,marginBottom:".75rem"}}>or $89.99 / year (save 42%)</div>
+          {PRO_BENEFITS.map((b,i) => (
+            <div key={i} style={{display:"flex",alignItems:"flex-start",gap:".55rem",padding:".3rem 0",fontSize:12,color:C.dim,lineHeight:1.5}}>
+              <span style={{fontSize:14,flexShrink:0}}>{b.icon}</span><span>{b.text}</span>
+            </div>
+          ))}
+        </Card>
+
+        <Card style={{marginBottom:"1rem"}}>
+          <Label>Family</Label>
+          <div style={{fontFamily:FONT.display,fontWeight:800,fontSize:"2rem",color:C.white}}>$19.99<span style={{fontSize:13,color:C.dimmer,fontWeight:500}}> / month</span></div>
+          <div style={{fontSize:11,color:C.dimmer,marginBottom:".75rem"}}>or $139.99 / year · 3 players</div>
+          {FAMILY_BENEFITS.map((b,i) => (
+            <div key={i} style={{display:"flex",alignItems:"flex-start",gap:".55rem",padding:".3rem 0",fontSize:12,color:C.dim,lineHeight:1.5}}>
+              <span style={{fontSize:14,flexShrink:0}}>{b.icon}</span><span>{b.text}</span>
+            </div>
+          ))}
+        </Card>
+
+        <Card style={{marginBottom:"1rem"}}>
+          <Label>Team</Label>
+          <div style={{fontFamily:FONT.display,fontWeight:800,fontSize:"2rem",color:C.white}}>$49.99<span style={{fontSize:13,color:C.dimmer,fontWeight:500}}> / month</span></div>
+          <div style={{fontSize:11,color:C.dimmer,marginBottom:".75rem"}}>or $249.99 season pass (Sep–Mar) · up to 20 players</div>
+          {TEAM_BENEFITS.map((b,i) => (
+            <div key={i} style={{display:"flex",alignItems:"flex-start",gap:".55rem",padding:".3rem 0",fontSize:12,color:C.dim,lineHeight:1.5}}>
+              <span style={{fontSize:14,flexShrink:0}}>{b.icon}</span><span>{b.text}</span>
+            </div>
+          ))}
+        </Card>
+
+        <div style={{fontSize:11,color:C.dimmer,textAlign:"center",marginTop:"1rem",lineHeight:1.6}}>
+          Payment processing is coming soon. Contact us at <span style={{color:C.gold}}>bluechip-people-strategies.com</span> for early access.
+        </div>
+      </div>
+    </div>
   );
 }
 
