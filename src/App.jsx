@@ -2925,7 +2925,7 @@ function buildDemoPlayer() {
   });
   return {
     id: "__demo__",
-    name: "Connor McDavid",
+    name: "Connor Crosby",
     level: "U11 / Atom",
     position: "Forward",
     season: SEASONS[0],
@@ -3085,7 +3085,7 @@ function AuthScreen({ onAuthenticated, onDemo }) {
           <button onClick={onDemo} style={{width:"100%",background:C.bgCard,border:`1px solid ${C.purpleBorder}`,borderRadius:10,padding:".85rem",cursor:"pointer",color:C.purple,fontFamily:FONT.body,fontWeight:700,fontSize:14,display:"flex",alignItems:"center",justifyContent:"center",gap:".5rem"}}>
             <span style={{fontSize:16}}>🎮</span> Try the Demo — No Signup
           </button>
-          <div style={{fontSize:11,color:C.dimmer,textAlign:"center",marginTop:".65rem",lineHeight:1.5}}>Explore as Connor McDavid (U11 AA Edmonton Selects). Nothing is saved.</div>
+          <div style={{fontSize:11,color:C.dimmer,textAlign:"center",marginTop:".65rem",lineHeight:1.5}}>Explore as Connor Crosby (U11 AA Edmonton Selects). Nothing is saved.</div>
         </div>
 
         <div style={{fontSize:10,color:C.dimmer,textAlign:"center",marginTop:"2rem",opacity:.6}}>v{VERSION}</div>
