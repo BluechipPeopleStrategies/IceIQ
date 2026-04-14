@@ -51,7 +51,7 @@ const FONT = {
 // ─────────────────────────────────────────────────────────
 // VERSION
 // ─────────────────────────────────────────────────────────
-const VERSION = "0.4.0";
+const VERSION = "0.5.0";
 const RELEASE_DATE = "April 13, 2026";
 const CHANGELOG = [
   { v:"2.0.0", date:"April 13, 2026", notes:[
@@ -115,64 +115,25 @@ const SMART_PROMPTS = {
 };
 
 
-// Age-appropriate rating scales
+// Unified escalating competency ladder — same values for self AND coach
+const COMPETENCY_LADDER = [
+  {value:"introduced", label:"Introduced",  sub_self:"I'm learning what this is",               sub_coach:"Has been introduced — needs consistent support",   color:"#f87171"},
+  {value:"developing", label:"Developing",  sub_self:"I can do it sometimes, needs reminders",  sub_coach:"Shows progress with reminders / in practice",       color:"#facc15"},
+  {value:"consistent", label:"Consistent",  sub_self:"I do it reliably in practice",            sub_coach:"Reliable in practice, inconsistent in games",      color:"#22c55e"},
+  {value:"proficient", label:"Proficient",  sub_self:"I do it in games without thinking",       sub_coach:"Performs reliably in game situations",            color:"#3b82f6"},
+  {value:"advanced",   label:"Advanced",    sub_self:"I can teach this to a teammate",          sub_coach:"Standout for age — impacts and helps teammates",  color:"#a855f7"},
+];
+function ladderFor(n, forSelf) {
+  return COMPETENCY_LADDER.slice(0, n).map(o => ({
+    value: o.value, label: o.label, color: o.color,
+    sub: forSelf ? o.sub_self : o.sub_coach,
+  }));
+}
 const RATING_SCALES = {
-  "U7 / Initiation": {
-    self: { type:"emoji", options:[
-      {value:"hard",      label:"This is hard",   emoji:"😣", color:"#f87171"},
-      {value:"sometimes", label:"Sometimes",      emoji:"🤔", color:"#facc15"},
-      {value:"easy",      label:"I can do it!",   emoji:"🤩", color:"#4ade80"},
-    ]},
-    coach: { type:"growth", options:[
-      {value:"emerging",   label:"Emerging",    sub:"Has been introduced, still building",  color:"#94a3b8"},
-      {value:"developing", label:"Developing",  sub:"Shows progress with support",          color:"#facc15"},
-      {value:"confident",  label:"Confident",   sub:"Performs consistently for this age",   color:"#4ade80"},
-    ]},
-  },
-  "U9 / Novice": {
-    self: { type:"frequency", options:[
-      {value:"never",     label:"Not yet",    emoji:"🔴", color:"#f87171"},
-      {value:"sometimes", label:"Sometimes",  emoji:"🟡", color:"#facc15"},
-      {value:"usually",   label:"Usually",    emoji:"🟢", color:"#22c55e"},
-      {value:"always",    label:"Always!",    emoji:"⭐", color:"#a855f7"},
-    ]},
-    coach: { type:"growth", options:[
-      {value:"emerging",   label:"Emerging",    sub:"Introduced but inconsistent",           color:"#94a3b8"},
-      {value:"developing", label:"Developing",  sub:"Growing with reminders",                color:"#facc15"},
-      {value:"competent",  label:"Competent",   sub:"Performs well with consistency",         color:"#22c55e"},
-      {value:"proficient", label:"Proficient",  sub:"Strong for age — ready for next level", color:"#a855f7"},
-    ]},
-  },
-  "U11 / Atom": {
-    self: { type:"growth", options:[
-      {value:"beginning",  label:"Just Starting",     sub:"I'm learning this",                    color:"#f87171"},
-      {value:"developing", label:"Getting Better",    sub:"I can do it sometimes",                color:"#facc15"},
-      {value:"applying",   label:"I Can Do This",     sub:"I do it in games without thinking",    color:"#22c55e"},
-      {value:"extending",  label:"I Can Teach This",  sub:"I could explain it to a teammate",     color:"#a855f7"},
-    ]},
-    coach: { type:"competency", options:[
-      {value:"beginning",  label:"Beginning",   sub:"Needs consistent support and reminders",  color:"#f87171"},
-      {value:"developing", label:"Developing",  sub:"Shows awareness, inconsistent execution", color:"#facc15"},
-      {value:"competent",  label:"Competent",   sub:"Performs reliably in game situations",    color:"#22c55e"},
-      {value:"proficient", label:"Proficient",  sub:"Reads situations ahead of the play",     color:"#3b82f6"},
-      {value:"advanced",   label:"Advanced",    sub:"Elite for age — impacts teammates",      color:"#a855f7"},
-    ]},
-  },
-  "U13 / Peewee": {
-    self: { type:"rubric", options:[
-      {value:"beginning",  label:"Just Starting",     sub:"I know what this is but I'm still learning it",     color:"#f87171"},
-      {value:"developing", label:"Getting Better",    sub:"I can do it in practice, not always in games",      color:"#facc15"},
-      {value:"applying",   label:"I Do This",         sub:"I execute this in games without being reminded",    color:"#22c55e"},
-      {value:"extending",  label:"I Lead This",       sub:"I do this consistently and help teammates with it", color:"#a855f7"},
-    ]},
-    coach: { type:"percentile", options:[
-      {value:"top10",  label:"Top 10%",    sub:"Elite / AAA track",         color:"#a855f7"},
-      {value:"top25",  label:"Top 25%",    sub:"Competitive / AA track",    color:"#3b82f6"},
-      {value:"top50",  label:"Top 50%",    sub:"Rep / A track",             color:"#22c55e"},
-      {value:"top75",  label:"Top 75%",    sub:"House / Recreational",      color:"#eab308"},
-      {value:"dev",    label:"Developing", sub:"Too early to place",        color:"#94a3b8"},
-    ]},
-  },
+  "U7 / Initiation": { self:{type:"ladder", options:ladderFor(3,true)},  coach:{type:"ladder", options:ladderFor(3,false)} },
+  "U9 / Novice":     { self:{type:"ladder", options:ladderFor(4,true)},  coach:{type:"ladder", options:ladderFor(4,false)} },
+  "U11 / Atom":      { self:{type:"ladder", options:ladderFor(5,true)},  coach:{type:"ladder", options:ladderFor(5,false)} },
+  "U13 / Peewee":    { self:{type:"ladder", options:ladderFor(5,true)},  coach:{type:"ladder", options:ladderFor(5,false)} },
 };
 
 // Scale helpers
@@ -192,23 +153,30 @@ function getDiscussionPrompt(skillName, selfNorm, coachNorm) {
   return null;
 }
 
-// Migrate old ratings to new scale values
+// Migrate any old rating values to the new unified ladder
 function migrateRatings(ratings, level) {
   if (!ratings) return ratings;
-  const OLD_MAP = {"Needs Work":"hard","On Track":"sometimes","Excels":"easy"};
+  const OLD_NORM = {
+    "Needs Work":0, "On Track":0.5, "Excels":1,
+    "hard":0, "sometimes":0.33, "easy":1,
+    "never":0, "usually":0.67, "always":1,
+    "beginning":0, "applying":0.5, "extending":1,
+    "emerging":0, "competent":0.5, "confident":0.67,
+    "top10":1, "top25":0.75, "top50":0.5, "top75":0.25, "dev":0,
+  };
   const selfScale = getSelfScale(level);
   const migrated = {...ratings};
   let changed = false;
   for (const [k,v] of Object.entries(migrated)) {
-    if (v && OLD_MAP[v]) {
-      const oldNorm = v === "Needs Work" ? 0 : v === "On Track" ? 0.5 : 1;
-      const closest = selfScale.reduce((best, opt, i) => {
-        const norm = selfScale.length > 1 ? i / (selfScale.length - 1) : 0;
-        return Math.abs(norm - oldNorm) < Math.abs(best.dist) ? {val:opt.value, dist:norm-oldNorm} : best;
-      }, {val:selfScale[0]?.value, dist:999});
-      migrated[k] = closest.val;
-      changed = true;
-    }
+    if (!v || selfScale.some(o => o.value === v)) continue;
+    const norm = OLD_NORM[v];
+    if (norm === undefined) continue;
+    const closest = selfScale.reduce((best, opt, i) => {
+      const n = selfScale.length > 1 ? i / (selfScale.length - 1) : 0;
+      return Math.abs(n - norm) < Math.abs(best.dist) ? {val:opt.value, dist:n-norm} : best;
+    }, {val:selfScale[0]?.value, dist:999});
+    migrated[k] = closest.val;
+    changed = true;
   }
   return changed ? migrated : ratings;
 }
@@ -2183,105 +2151,33 @@ function GoalsScreen({ player, onSave, onBack }) {
 function RatingButtons({ level, value, onChange }) {
   const scaleInfo = RATING_SCALES[level]?.self;
   if (!scaleInfo) return null;
-  const { type, options } = scaleInfo;
-
-  if (type === "emoji") {
-    return (
-      <div style={{display:"grid",gridTemplateColumns:"1fr 1fr 1fr",gap:".6rem"}}>
-        {options.map(o => {
-          const picked = value === o.value;
-          return (
-            <button key={o.value} onClick={() => onChange(o.value)} style={{
-              background: picked ? `${o.color}22` : C.bgElevated,
-              border: `1px solid ${picked ? o.color+"80" : C.border}`,
-              borderRadius: 14, padding:"1rem .5rem", cursor:"pointer",
-              display:"flex", flexDirection:"column", alignItems:"center", gap:".35rem",
-              transition:"all .15s", transform: picked ? "scale(1.02)" : "scale(1)",
-              fontFamily:FONT.body,
-            }}>
-              <div style={{fontSize:32,lineHeight:1}}>{o.emoji}</div>
-              <div style={{fontSize:11,fontWeight:picked?700:500,color:picked?o.color:C.dim,textAlign:"center",lineHeight:1.2}}>{o.label}</div>
-            </button>
-          );
-        })}
-      </div>
-    );
-  }
-
-  if (type === "frequency") {
-    return (
-      <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:".5rem"}}>
-        {options.map(o => {
-          const picked = value === o.value;
-          return (
-            <button key={o.value} onClick={() => onChange(o.value)} style={{
-              background: picked ? `${o.color}1f` : C.bgElevated,
-              border: `1px solid ${picked ? o.color+"70" : C.border}`,
-              borderLeft: `3px solid ${picked ? o.color : "transparent"}`,
-              borderRadius: 10, padding:".65rem .75rem", cursor:"pointer",
-              display:"flex", alignItems:"center", gap:".55rem",
-              fontFamily:FONT.body, color:picked?C.white:C.dim, fontSize:13,
-              fontWeight:picked?700:500, textAlign:"left",
-            }}>
-              <span style={{fontSize:14}}>{o.emoji}</span>
-              <span>{o.label}</span>
-            </button>
-          );
-        })}
-      </div>
-    );
-  }
-
-  // growth (U11) — 2x2 grid with behavioral anchor
-  if (type === "growth") {
-    return (
-      <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:".5rem"}}>
-        {options.map(o => {
-          const picked = value === o.value;
-          return (
-            <button key={o.value} onClick={() => onChange(o.value)} style={{
-              background: picked ? `${o.color}1a` : C.bgElevated,
-              border: `1px solid ${picked ? o.color+"60" : C.border}`,
-              borderRadius: 10, padding:".7rem .75rem", cursor:"pointer",
-              textAlign:"left", fontFamily:FONT.body,
-            }}>
-              <div style={{fontSize:12,fontWeight:700,color:picked?o.color:C.white,marginBottom:2}}>{o.label}</div>
-              <div style={{fontSize:10,color:C.dimmer,lineHeight:1.4}}>{o.sub}</div>
-            </button>
-          );
-        })}
-      </div>
-    );
-  }
-
-  // rubric (U13) — vertical stack with full descriptor
-  if (type === "rubric") {
-    return (
-      <div style={{display:"flex",flexDirection:"column",gap:".4rem"}}>
-        {options.map(o => {
-          const picked = value === o.value;
-          return (
-            <button key={o.value} onClick={() => onChange(o.value)} style={{
-              background: picked ? `${o.color}1a` : C.bgElevated,
-              border: `1px solid ${picked ? o.color+"60" : C.border}`,
-              borderLeft: `3px solid ${picked ? o.color : "transparent"}`,
-              borderRadius: 10, padding:".65rem .85rem", cursor:"pointer",
-              display:"flex", alignItems:"flex-start", gap:".7rem",
-              textAlign:"left", fontFamily:FONT.body,
-            }}>
-              <div style={{width:8,height:8,borderRadius:"50%",background:o.color,marginTop:6,flexShrink:0}}/>
-              <div style={{flex:1}}>
-                <div style={{fontSize:13,fontWeight:700,color:picked?o.color:C.white,marginBottom:2}}>{o.label}</div>
-                <div style={{fontSize:11,color:C.dimmer,lineHeight:1.45}}>{o.sub}</div>
-              </div>
-              {picked && <div style={{color:o.color,fontSize:14,marginTop:2}}>✓</div>}
-            </button>
-          );
-        })}
-      </div>
-    );
-  }
-  return null;
+  const { options } = scaleInfo;
+  return (
+    <div style={{display:"flex",flexDirection:"column",gap:".4rem"}}>
+      {options.map((o, i) => {
+        const picked = value === o.value;
+        return (
+          <button key={o.value} onClick={() => onChange(o.value)} style={{
+            background: picked ? `${o.color}1a` : C.bgElevated,
+            border: `1px solid ${picked ? o.color+"60" : C.border}`,
+            borderLeft: `3px solid ${picked ? o.color : "transparent"}`,
+            borderRadius: 10, padding:".65rem .85rem", cursor:"pointer",
+            display:"flex", alignItems:"center", gap:".7rem",
+            textAlign:"left", fontFamily:FONT.body,
+          }}>
+            <div style={{display:"flex",flexDirection:"column",alignItems:"center",flexShrink:0,minWidth:26}}>
+              <div style={{fontFamily:FONT.display,fontWeight:800,fontSize:"1.1rem",color:o.color,lineHeight:1}}>{i+1}</div>
+            </div>
+            <div style={{flex:1}}>
+              <div style={{fontSize:13,fontWeight:700,color:picked?o.color:C.white,marginBottom:2}}>{o.label}</div>
+              <div style={{fontSize:11,color:C.dimmer,lineHeight:1.45}}>{o.sub}</div>
+            </div>
+            {picked && <div style={{color:o.color,fontSize:14,flexShrink:0}}>✓</div>}
+          </button>
+        );
+      })}
+    </div>
+  );
 }
 
 // Level-aware question phrasing
@@ -2777,11 +2673,9 @@ function CoachRatingScreen({ playerName, playerLevel, playerKey, skills, onDone 
   const coachScaleType = RATING_SCALES[playerLevel]?.coach?.type;
 
   const scaleIntro = {
-    "growth":     "Rate each skill using the growth scale — where is this player in their development journey? Focus on what they show consistently, not a single moment.",
-    "competency": "Rate each skill using the competency scale — how reliably does this player execute this skill in game situations?",
-    "percentile": "Rate each skill using the percentile system. These ratings will appear alongside the player's self-assessment in their development report — visible to the player only, never shared publicly.",
+    "ladder": "Rate each skill using the competency ladder — where is this player in their development? Focus on what they show consistently across games and practices.",
   };
-  const legendTitle = {growth:"Growth Scale",competency:"Competency Scale",percentile:"Percentile Scale"};
+  const legendTitle = {ladder:"Competency Ladder"};
 
   async function save() {
     setSaving(true);
@@ -2804,7 +2698,7 @@ function CoachRatingScreen({ playerName, playerLevel, playerKey, skills, onDone 
           <div style={{fontFamily:FONT.display,fontWeight:800,fontSize:"1.8rem"}}>{playerName}</div>
           <div style={{fontSize:13,color:C.dimmer,marginTop:2}}>{playerLevel}</div>
           <div style={{marginTop:".85rem",fontSize:12,color:C.dim,lineHeight:1.6}}>
-            {scaleIntro[coachScaleType] || scaleIntro.percentile}
+            {scaleIntro[coachScaleType] || scaleIntro.ladder}
           </div>
         </Card>
 
@@ -3190,13 +3084,13 @@ function buildDemoPlayer() {
       mkSession(true, true, true, 1, 83),
     ],
     selfRatings: {
-      // U11 skills - growth scale values
-      u11s1:"developing", u11s2:"applying", u11s3:"developing", u11s4:"beginning",
-      u11p1:"applying", u11p2:"developing", u11p3:"developing", u11p4:"applying",
-      u11h1:"applying", u11h2:"developing", u11h3:"developing",
-      u11d1:"developing", u11d2:"beginning",
-      u11c1:"extending", u11c2:"applying",
-      u11dm1:"developing", u11dm2:"developing", u11dm3:"beginning", u11dm4:"applying", u11dm5:"developing",
+      // U11 skills — unified competency ladder values
+      u11s1:"developing", u11s2:"consistent", u11s3:"developing", u11s4:"introduced",
+      u11p1:"consistent", u11p2:"developing", u11p3:"developing", u11p4:"consistent",
+      u11h1:"consistent", u11h2:"developing", u11h3:"developing",
+      u11d1:"developing", u11d2:"introduced",
+      u11c1:"advanced", u11c2:"proficient",
+      u11dm1:"developing", u11dm2:"developing", u11dm3:"introduced", u11dm4:"consistent", u11dm5:"developing",
     },
     goals: {
       "Gap Control": {
@@ -3222,12 +3116,12 @@ function buildDemoPlayer() {
 function buildDemoCoachRatings() {
   return {
     ratings: {
-      u11s1:"developing", u11s2:"competent", u11s3:"developing", u11s4:"developing",
-      u11p1:"competent", u11p2:"developing", u11p3:"competent", u11p4:"proficient",
-      u11h1:"competent", u11h2:"developing", u11h3:"developing",
-      u11d1:"beginning", u11d2:"beginning",
+      u11s1:"developing", u11s2:"consistent", u11s3:"developing", u11s4:"developing",
+      u11p1:"consistent", u11p2:"developing", u11p3:"consistent", u11p4:"proficient",
+      u11h1:"consistent", u11h2:"developing", u11h3:"developing",
+      u11d1:"introduced", u11d2:"introduced",
       u11c1:"advanced", u11c2:"proficient",
-      u11dm1:"developing", u11dm2:"developing", u11dm3:"developing", u11dm4:"competent", u11dm5:"developing",
+      u11dm1:"developing", u11dm2:"developing", u11dm3:"developing", u11dm4:"consistent", u11dm5:"developing",
     },
     notes: {
       u11d1: "Work on matching attacker speed and closing the gap — you back up too far and give them time.",
@@ -3828,7 +3722,7 @@ function CoachRatingScreenAuthed({ coach, player, playerLevel, onDone }) {
           <div style={{fontSize:10,letterSpacing:".14em",textTransform:"uppercase",color:C.gold,marginBottom:".4rem"}}>Rating Player</div>
           <div style={{fontFamily:FONT.display,fontWeight:800,fontSize:"1.8rem"}}>{player.name}</div>
           <div style={{fontSize:13,color:C.dimmer,marginTop:2}}>{playerLevel}</div>
-          <div style={{marginTop:".85rem",fontSize:12,color:C.dim,lineHeight:1.6}}>{scaleIntro[coachScaleType] || scaleIntro.percentile}</div>
+          <div style={{marginTop:".85rem",fontSize:12,color:C.dim,lineHeight:1.6}}>{scaleIntro[coachScaleType] || scaleIntro.ladder}</div>
         </Card>
 
         {loading ? <div style={{color:C.dimmer,textAlign:"center",padding:"2rem"}}>Loading…</div> : (<>
