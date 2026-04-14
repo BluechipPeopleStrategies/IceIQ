@@ -67,8 +67,8 @@ const C = {
 };
 
 const FONT = {
-  display: "'Barlow Condensed', sans-serif",
-  body: "'DM Sans', sans-serif",
+  display: "'Oswald', 'Barlow Condensed', Impact, sans-serif",
+  body: "'Inter', 'DM Sans', system-ui, sans-serif",
 };
 
 // ─────────────────────────────────────────────────────────
@@ -2469,7 +2469,7 @@ function SkillsRadar({ cats, selfRatings, coachRatings, selfScale, coachScale })
           const anchor = Math.abs(lx - cx) < 8 ? "middle" : (lx > cx ? "start" : "end");
           return (
             <g key={`l${i}`}>
-              <text x={lx.toFixed(1)} y={ly.toFixed(1)} fontSize="10" fontWeight="700" fill={C.white} textAnchor={anchor} dominantBaseline="middle" fontFamily="'DM Sans', sans-serif">
+              <text x={lx.toFixed(1)} y={ly.toFixed(1)} fontSize="10" fontWeight="700" fill={C.white} textAnchor={anchor} dominantBaseline="middle" fontFamily="'Inter', 'DM Sans', sans-serif">
                 {a.icon} {a.label}
               </text>
             </g>
@@ -4196,12 +4196,12 @@ export default function App() {
     return (
       <>
         <style>{`
-          @import url('https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@700;800&family=DM+Sans:wght@400;500;600;700&display=swap');
+          @import url('https://fonts.googleapis.com/css2?family=Oswald:wght@500;600;700;800&family=Barlow+Condensed:wght@700;800&family=Inter:wght@400;500;600;700;800&display=swap');
           * { box-sizing: border-box; margin: 0; padding: 0; }
           body { background: #080e1a; color: #f8fafc; -webkit-font-smoothing: antialiased; }
           ::-webkit-scrollbar { width: 4px; }
           ::-webkit-scrollbar-thumb { background: rgba(248,250,252,.08); border-radius: 2px; }
-          input, textarea, button, select { font-family: 'DM Sans', sans-serif; }
+          input, textarea, button, select { font-family: 'Inter', 'DM Sans', system-ui, sans-serif; }
           button:active { opacity: .8; }
           textarea { resize: none; }
         `}</style>
@@ -4239,12 +4239,12 @@ export default function App() {
   return (
     <>
       <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@700;800&family=DM+Sans:wght@400;500;600;700&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Oswald:wght@500;600;700;800&family=Barlow+Condensed:wght@700;800&family=Inter:wght@400;500;600;700;800&display=swap');
         * { box-sizing: border-box; margin: 0; padding: 0; }
         body { background: #080e1a; color: #f8fafc; -webkit-font-smoothing: antialiased; }
         ::-webkit-scrollbar { width: 4px; }
         ::-webkit-scrollbar-thumb { background: rgba(248,250,252,.08); border-radius: 2px; }
-        input, textarea, button, select { font-family: 'DM Sans', sans-serif; }
+        input, textarea, button, select { font-family: 'Inter', 'DM Sans', system-ui, sans-serif; }
         button:active { opacity: .8; }
         textarea { resize: none; }
       `}</style>
