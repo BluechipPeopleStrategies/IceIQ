@@ -66,8 +66,8 @@ const C = {
   rink:     "#1e5799",
 };
 
-// IceIQ logo mark — realistic side-profile brain with hockey stick and puck below.
-// Brain: bumpy outline with internal sulci (folds). Stick: angled shaft + blade. Puck: flat oval.
+// IceIQ logo mark — realistic brain up top, two crossed hockey sticks forming an X below, puck centered.
+// Captures "hockey IQ" as a team crest — the mind on top, the tools of the game crossed beneath.
 function IceIQLogo({ size = 32, color = "#c9a84c" }) {
   return (
     <svg
@@ -77,53 +77,53 @@ function IceIQLogo({ size = 32, color = "#c9a84c" }) {
       aria-label="IceIQ logo"
       style={{display:"block",flexShrink:0}}
     >
-      {/* === BRAIN — side profile, facing right === */}
-      {/* Outer contour: frontal bulge, bumpy top (gyri), curved back, cerebellum, brain stem */}
+      {/* === BRAIN — compact side-profile, top third === */}
+      {/* Bumpy outline: frontal bulge → gyri peaks → occipital → cerebellum → underside */}
       <path d="
-        M 7 12
-        C 6.5 9.5, 8.5 7, 10.5 6.8
-        C 11.5 5.2, 13.5 5, 14.8 6.3
-        C 16 5, 17.8 5.3, 18.8 6.5
-        C 20 5.3, 22 5.8, 23 7.2
-        C 25 6.8, 27 8.5, 27.2 10.8
-        C 29 11.5, 29 13.5, 27.5 14
-        C 28.5 15, 28.8 16.5, 27.2 17.2
-        C 27 19, 25.5 19.8, 23.5 19.3
-        C 24 20.5, 23 21.5, 21.8 21
-        C 21.3 22.5, 19.5 22.8, 18.3 21.8
-        C 17.2 22.8, 15 22.5, 14 21.3
-        C 12 22, 9.8 21.3, 9 19.5
-        C 7 19, 6 17, 7 14.8
-        C 5.8 14, 5.8 12.8, 7 12 Z"
+        M 8 11.5
+        C 7.5 9.5, 9 7.2, 10.8 7
+        C 11.5 5.8, 13 5.5, 14 6.5
+        C 15 5.5, 16.5 5.5, 17.5 6.5
+        C 18.8 5.5, 20.5 5.8, 21.3 7
+        C 23 6.8, 24.5 8.3, 24.5 10.3
+        C 26 10.8, 26 12.3, 24.8 12.8
+        C 25.3 13.5, 25 14.8, 23.8 15.2
+        C 23.5 16.3, 22 16.8, 20.5 16.3
+        C 19.8 17.2, 18 17.3, 17 16.5
+        C 16 17.3, 14 17.3, 13 16.5
+        C 11.5 17, 9.8 16.5, 9.2 15.3
+        C 7.8 14.8, 7 13.3, 7.8 12
+        C 6.8 11.5, 7.2 10.8, 8 11.5 Z"
         fill="none" stroke={color} strokeWidth="1.3" strokeLinejoin="round" strokeLinecap="round"/>
 
-      {/* Internal sulci (brain folds) — wavy horizontal lines suggesting folds across the surface */}
-      <path d="M 10.5 9 Q 12.5 7.8 13.5 9.3 Q 15 8 16.2 9.3 Q 17.8 8 19 9.3"
+      {/* Internal sulci — wavy folds across the brain surface */}
+      <path d="M 10.5 8.5 Q 12.5 7.5 13.8 8.8 Q 15.5 7.8 16.8 8.8 Q 18.3 7.8 19.5 8.8"
             stroke={color} strokeWidth="0.85" fill="none" strokeLinecap="round"/>
-      <path d="M 19 7.8 Q 21.5 8.5 23.5 8"
+      <path d="M 19.5 7.5 Q 21.5 8.2 23.5 7.8"
             stroke={color} strokeWidth="0.85" fill="none" strokeLinecap="round"/>
-      <path d="M 9 12.5 Q 12 11.2 15 12.8 Q 18 11.5 21 12.8 Q 23.5 11.5 26 12.8"
+      <path d="M 9 11 Q 12 10, 15 11.3 Q 18 10.2, 21 11.3 Q 23 10.3, 25 11.3"
             stroke={color} strokeWidth="0.85" fill="none" strokeLinecap="round"/>
-      <path d="M 8.5 15.5 Q 12 14.5 16 15.5 Q 20 14.8 24 15.8"
+      <path d="M 9.3 13.8 Q 12.5 13, 16 14 Q 19.5 13.2, 23 14.2"
             stroke={color} strokeWidth="0.85" fill="none" strokeLinecap="round"/>
-      <path d="M 11 18 Q 14 17, 17.5 18 Q 20.5 17.3, 23 18.2"
-            stroke={color} strokeWidth="0.85" fill="none" strokeLinecap="round"/>
-      {/* Cerebellum-stem indicator — small curl at back-bottom */}
-      <path d="M 24 19.5 Q 25.5 20.5, 24.5 21.5" stroke={color} strokeWidth="0.85" fill="none" strokeLinecap="round"/>
 
-      {/* === HOCKEY STICK === */}
-      {/* Shaft: diagonal from lower-left upward into the brain area */}
-      <line x1="3.5" y1="29.5" x2="22" y2="25.2" stroke={color} strokeWidth="1.5" strokeLinecap="round"/>
-      {/* Blade: short angled piece at the bottom/tip of the shaft (toe curving slightly) */}
-      <path d="M 3.2 29.8 Q 1.5 30.5, 1.2 28.8"
-            stroke={color} strokeWidth="2" fill="none" strokeLinecap="round" strokeLinejoin="round"/>
+      {/* === TWO CROSSED HOCKEY STICKS — prominent X === */}
+      {/* Stick A: butt top-right, shaft down-left, blade at bottom-left */}
+      <line x1="24" y1="17" x2="7" y2="28" stroke={color} strokeWidth="2.2" strokeLinecap="round"/>
+      {/* Stick A blade — curved toe pointing outward/up */}
+      <path d="M 7 28 Q 3 28.5, 2.5 26.2" stroke={color} strokeWidth="3" fill="none" strokeLinecap="round" strokeLinejoin="round"/>
+      {/* Stick A grip tape (dark band near butt) */}
+      <line x1="21.5" y1="18.6" x2="24" y2="17" stroke="#0d1525" strokeWidth="1.1" strokeLinecap="round"/>
 
-      {/* === PUCK — flat oval at the blade tip === */}
-      <ellipse cx="28" cy="28.5" rx="2.8" ry="1" fill={color}/>
-      <ellipse cx="28" cy="28.5" rx="2.8" ry="1" fill="none" stroke="#0d1525" strokeWidth="0.3"/>
-      {/* Stick blade that's about to strike the puck (near the puck) */}
-      <path d="M 21.5 25.4 L 25.8 28"
-            stroke={color} strokeWidth="2.1" fill="none" strokeLinecap="round"/>
+      {/* Stick B: butt top-left, shaft down-right, blade at bottom-right */}
+      <line x1="8" y1="17" x2="25" y2="28" stroke={color} strokeWidth="2.2" strokeLinecap="round"/>
+      {/* Stick B blade — curved toe pointing outward/up */}
+      <path d="M 25 28 Q 29 28.5, 29.5 26.2" stroke={color} strokeWidth="3" fill="none" strokeLinecap="round" strokeLinejoin="round"/>
+      {/* Stick B grip tape */}
+      <line x1="10.5" y1="18.6" x2="8" y2="17" stroke="#0d1525" strokeWidth="1.1" strokeLinecap="round"/>
+
+      {/* === PUCK — bottom center, sitting between the crossed sticks === */}
+      <ellipse cx="16" cy="30" rx="3.2" ry="1.1" fill={color}/>
+      <ellipse cx="16" cy="30" rx="3.2" ry="1.1" fill="none" stroke="#0d1525" strokeWidth="0.3"/>
     </svg>
   );
 }
