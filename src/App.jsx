@@ -1080,6 +1080,16 @@ const SKILLS={
 // ─────────────────────────────────────────────────────────
 function shuffle(a) { return [...a].sort(() => Math.random() - 0.5); }
 
+function shuffleOpts(q) {
+  if (!q || !Array.isArray(q.opts) || q.opts.length < 2) return q;
+  if (q.type && q.type !== "mc" && q.type !== "mistake" && q.type !== "next") return q;
+  if (typeof q.ok !== "number") return q;
+  const order = shuffle(q.opts.map((_, i) => i));
+  const newOk = order.indexOf(q.ok);
+  if (newOk < 0) return q;
+  return { ...q, opts: order.map(i => q.opts[i]), ok: newOk };
+}
+
 function calcWeightedIQ(results) {
   if (!results.length) return 0;
   const e = results.reduce((s,r) => s + (r.ok ? D_WEIGHT[r.d||2] : 0), 0);
@@ -1201,7 +1211,7 @@ function pullNext(queue, results) {
     currentD = fb;
   }
   const i = Math.floor(Math.random() * byD[currentD].length);
-  const q = byD[currentD][i];
+  const q = shuffleOpts(byD[currentD][i]);
   return { q, queue: { byD: {...byD, [currentD]: byD[currentD].filter((_,j) => j !== i)}, currentD, tier } };
 }
 
