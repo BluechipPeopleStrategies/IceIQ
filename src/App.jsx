@@ -1080,6 +1080,17 @@ const SKILLS={
 // ─────────────────────────────────────────────────────────
 function shuffle(a) { return [...a].sort(() => Math.random() - 0.5); }
 
+// Stable sample % for demo mode: deterministic per question id, shaped by difficulty.
+// d=1 → 70-90%, d=2 → 50-75%, d=3 → 30-60%.
+function demoStatPct(qid, d) {
+  let h = 0;
+  for (let i = 0; i < qid.length; i++) h = ((h << 5) - h + qid.charCodeAt(i)) | 0;
+  const n = Math.abs(h) % 100; // 0-99 stable
+  if (d === 1) return 70 + Math.floor(n * 21 / 100);       // 70-90
+  if (d === 3) return 30 + Math.floor(n * 31 / 100);       // 30-60
+  return 50 + Math.floor(n * 26 / 100);                    // 50-75 (d=2 or undef)
+}
+
 function shuffleOpts(q) {
   if (!q || !Array.isArray(q.opts) || q.opts.length < 2) return q;
   if (q.type && q.type !== "mc" && q.type !== "mistake" && q.type !== "next") return q;
@@ -1696,6 +1707,8 @@ function Quiz({ player, onFinish, onBack, tier }) {
   const [flagReason, setFlagReason] = useState("");
   const [flagDetail, setFlagDetail] = useState("");
   const [flagSent, setFlagSent] = useState(false);
+  const [statsMap, setStatsMap] = useState({});
+  const isDemo = !player.id || player.id === "__demo__";
 
   async function submitFlag() {
     if (!flagReason) return;
@@ -1717,6 +1730,7 @@ function Quiz({ player, onFinish, onBack, tier }) {
     const { q: first, queue: q2 } = pullNext(q, []);
     setQueue(q2);
     setQuestion(first);
+    if (!isDemo) SB.getQuestionStats().then(setStatsMap).catch(() => {});
   }, []);
 
   const qNum = results.length;
@@ -1731,6 +1745,7 @@ function Quiz({ player, onFinish, onBack, tier }) {
     const newResults = [...results, newResult];
     if (question.type === "mistake" && ok) setMistakeStreak(s => s+1);
     setResults(newResults);
+    if (!isDemo) SB.recordQuestionAnswer(question.id, ok);
     if (isLast) setQuizDone(true);
   }
 
@@ -1741,6 +1756,7 @@ function Quiz({ player, onFinish, onBack, tier }) {
     const newResult = { id:question.id, cat:question.cat, ok, d:question.d||2, type:"seq" };
     const newResults = [...results, newResult];
     setResults(newResults);
+    if (!isDemo && question) SB.recordQuestionAnswer(question.id, ok);
     if (isLast) setQuizDone(true);
   }
 
@@ -1835,6 +1851,26 @@ function Quiz({ player, onFinish, onBack, tier }) {
                 {(qtype==="seq"?seqCorrect:(sel===q.ok)) ? "✓ Correct" : "✗ Incorrect"}
               </div>
               <div style={{fontSize:13,color:C.dim,lineHeight:1.75,marginBottom:".75rem"}}>{q.why}</div>
+              {(() => {
+                const userCorrect = qtype === "seq" ? seqCorrect : (sel === q.ok);
+                let pct = null, isSample = false;
+                if (isDemo) { pct = demoStatPct(q.id, q.d); isSample = true; }
+                else {
+                  const s = statsMap[q.id];
+                  if (s && s.attempts >= 10) pct = Math.round((s.correct / s.attempts) * 100);
+                }
+                if (pct === null) return null;
+                const displayPct = userCorrect ? pct : pct;
+                const msg = userCorrect
+                  ? `🎯 ${displayPct}% of players got this right`
+                  : (pct <= 40 ? `💪 Only ${pct}% got this right — tough one` : `📊 ${pct}% of players got this right`);
+                return (
+                  <div style={{fontSize:11,color:C.dimmer,marginBottom:".6rem",display:"flex",alignItems:"center",gap:".4rem"}}>
+                    <span>{msg}</span>
+                    {isSample && <span style={{background:C.dimmest,color:C.dimmer,padding:"1px 6px",borderRadius:4,fontSize:9,letterSpacing:".08em",fontWeight:700}}>SAMPLE</span>}
+                  </div>
+                );
+              })()}
               <div style={{fontSize:12,color:C.purple,fontStyle:"italic",borderTop:`1px solid ${C.border}`,paddingTop:".6rem"}}>💡 {q.tip}</div>
             </Card>
             {quizDone ? (
