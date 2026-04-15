@@ -227,6 +227,29 @@ export async function getCoachRatingsForPlayer(playerId) {
 }
 
 // ─────────────────────────────────────────────
+// QUESTION STATS (aggregate % correct across all users)
+// ─────────────────────────────────────────────
+export async function recordQuestionAnswer(questionId, correct) {
+  if (!supabase || !questionId) return;
+  try {
+    await supabase.rpc("record_question_answer", {
+      p_question_id: questionId,
+      p_correct: !!correct,
+    });
+  } catch (e) { /* silent — stats are best-effort */ }
+}
+
+export async function getQuestionStats() {
+  if (!supabase) return {};
+  const { data } = await supabase.from("question_stats").select("question_id, attempts, correct");
+  const out = {};
+  (data || []).forEach(r => {
+    out[r.question_id] = { attempts: r.attempts, correct: r.correct };
+  });
+  return out;
+}
+
+// ─────────────────────────────────────────────
 // QUESTION REPORTS (users flag bad questions)
 // ─────────────────────────────────────────────
 export async function reportQuestion({ userId, questionId, level, reason, detail }) {
