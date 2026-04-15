@@ -1528,136 +1528,6 @@ const Q_TYPE_LABELS = {
 };
 
 
-// ─────────────────────────────────────────────────────────
-// ONBOARDING
-// ─────────────────────────────────────────────────────────
-function Onboarding({ onComplete }) {
-  const [step, setStep] = useState(0);
-  const [name, setName] = useState("");
-  const [level, setLevel] = useState("");
-  const [position, setPosition] = useState("");
-
-  const posIcons = {Forward:"⚡", Defense:"🛡", Goalie:"🧤"};
-
-  if (step === 0) return (
-    <div style={{minHeight:"100vh",background:`linear-gradient(160deg,#080e1a 0%,#0d1e3a 60%,#080e1a 100%)`,display:"flex",flexDirection:"column",justifyContent:"center",padding:"2rem 1.5rem",fontFamily:FONT.body,color:C.white}}>
-      <div style={{maxWidth:460,margin:"0 auto",width:"100%"}}>
-        <div style={{marginBottom:"2.5rem"}}>
-          <div style={{display:"flex",alignItems:"center",gap:".6rem",marginBottom:"1.5rem"}}>
-            <IceIQLogo size={32}/>
-            <span style={{fontFamily:FONT.display,fontWeight:800,fontSize:"2rem",color:C.gold,letterSpacing:".08em"}}>IceIQ</span>
-          </div>
-          <h1 style={{fontFamily:FONT.display,fontWeight:800,fontSize:"clamp(2rem,7vw,3rem)",lineHeight:1.08,margin:"0 0 1.1rem",letterSpacing:"-.01em"}}>
-            Know the game.<br/>Own your development.
-          </h1>
-          <p style={{fontSize:15,color:C.dim,lineHeight:1.75,margin:0}}>
-            The only player development tool that tests what you actually know — not just how fast you skate. Age-calibrated, position-specific, and built on real hockey frameworks.
-          </p>
-        </div>
-        {[
-          {icon:"🧠",text:"Real game scenarios calibrated to your age level"},
-          {icon:"📊",text:"Self-assessment + coach comparison side by side"},
-          {icon:"📈",text:"IQ Score that travels across every season and team"},
-          {icon:"🎯",text:"Multiple question formats that test true understanding"},
-        ].map((f,i) => (
-          <div key={i} style={{display:"flex",alignItems:"center",gap:".85rem",padding:".75rem 1rem",background:C.bgGlass,borderRadius:12,border:`1px solid ${C.border}`,marginBottom:".6rem"}}>
-            <span style={{fontSize:18,flexShrink:0}}>{f.icon}</span>
-            <span style={{fontSize:13,color:C.dim,lineHeight:1.5}}>{f.text}</span>
-          </div>
-        ))}
-        <PrimaryBtn onClick={() => setStep(1)} style={{marginTop:"1.75rem"}}>Build Your Profile →</PrimaryBtn>
-        <div style={{fontSize:11,color:C.dimmer,textAlign:"center",marginTop:"1rem"}}>Aligned with Hockey Canada LTAD · USA Hockey ADM</div>
-        <div style={{fontSize:10,color:C.dimmer,textAlign:"center",marginTop:".5rem",opacity:.5}}>v{VERSION}</div>
-      </div>
-    </div>
-  );
-
-  if (step === 1) return (
-    <Screen>
-      <div style={{marginBottom:"2rem"}}>
-        <div style={{fontSize:10,letterSpacing:".18em",color:C.gold,textTransform:"uppercase",fontWeight:700,marginBottom:".6rem"}}>Step 1 of 3</div>
-        <h2 style={{fontFamily:FONT.display,fontWeight:800,fontSize:"2rem",margin:0}}>What's your name?</h2>
-      </div>
-      <Card style={{marginBottom:"1.5rem"}}>
-        <input value={name} onChange={e => setName(e.target.value)}
-          placeholder="First name"
-          autoFocus
-          style={{background:"none",border:"none",color:C.white,fontSize:22,fontFamily:FONT.display,fontWeight:700,width:"100%",outline:"none",padding:"0"}}
-        />
-        <div style={{height:2,background:name?C.gold:C.border,borderRadius:2,marginTop:".75rem",transition:"background .2s"}}/>
-      </Card>
-      <PrimaryBtn onClick={() => name.trim() && setStep(2)} disabled={!name.trim()}>Continue →</PrimaryBtn>
-    </Screen>
-  );
-
-  if (step === 2) return (
-    <Screen>
-      <div style={{marginBottom:"2rem"}}>
-        <div style={{fontSize:10,letterSpacing:".18em",color:C.gold,textTransform:"uppercase",fontWeight:700,marginBottom:".6rem"}}>Step 2 of 3</div>
-        <h2 style={{fontFamily:FONT.display,fontWeight:800,fontSize:"2rem",margin:0}}>What level, {name}?</h2>
-      </div>
-      <div style={{display:"flex",flexDirection:"column",gap:".6rem",marginBottom:"1.5rem"}}>
-        {LEVELS.map(l => (
-          <button key={l} onClick={() => setLevel(l)} style={{
-            background:level===l?C.goldDim:C.bgCard,
-            border:`1px solid ${level===l?C.gold:C.border}`,
-            borderLeft:`3px solid ${level===l?C.gold:"transparent"}`,
-            borderRadius:12,padding:"1rem 1.25rem",
-            cursor:"pointer",textAlign:"left",
-            color:level===l?C.gold:C.dim,
-            fontFamily:FONT.body,fontSize:15,
-            fontWeight:level===l?700:400,
-            display:"flex",justifyContent:"space-between",
-            transition:"all .15s",
-          }}>
-            <span>{l}</span>
-            {level===l && <span>✓</span>}
-          </button>
-        ))}
-      </div>
-      <PrimaryBtn onClick={() => level && setStep(3)} disabled={!level}>Continue →</PrimaryBtn>
-    </Screen>
-  );
-
-  const isYoung = level === "U7 / Initiation" || level === "U9 / Novice";
-  const posOptions = [{p:"Forward",i:"⚡"},{p:"Defense",i:"🛡"},{p:"Goalie",i:"🧤"},{p:"Not Sure",i:"❓"}];
-
-  return (
-    <Screen>
-      <div style={{marginBottom:"1.5rem"}}>
-        <div style={{fontSize:10,letterSpacing:".18em",color:C.gold,textTransform:"uppercase",fontWeight:700,marginBottom:".6rem"}}>Step 3 of 3</div>
-        <h2 style={{fontFamily:FONT.display,fontWeight:800,fontSize:"2rem",margin:"0 0 .35rem"}}>What is the player's preferred position?</h2>
-        {isYoung && <div style={{fontSize:13,color:C.dimmer,lineHeight:1.6}}>At {level.split(" / ")[0]}, most players are still figuring this out — that's completely normal.</div>}
-      </div>
-      <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:".75rem",marginBottom:"1.5rem"}}>
-        {posOptions.map(({p,i}) => (
-          <button key={p} onClick={() => setPosition(p)} style={{
-            background:position===p?C.goldDim:C.bgCard,
-            border:`1px solid ${position===p?C.gold:C.border}`,
-            borderRadius:14,padding:"1.25rem .75rem",
-            cursor:"pointer",textAlign:"center",
-            transition:"all .15s",
-          }}>
-            <div style={{fontSize:26,marginBottom:".4rem"}}>{i}</div>
-            <div style={{fontSize:13,color:position===p?C.gold:C.dim,fontWeight:position===p?700:400,fontFamily:FONT.body}}>{p}</div>
-          </button>
-        ))}
-      </div>
-      {position === "Not Sure" && (
-        <div style={{background:C.goldDim,border:`1px solid ${C.goldBorder}`,borderRadius:12,padding:".85rem 1rem",marginBottom:"1rem",fontSize:12,color:C.gold,lineHeight:1.6}}>
-          👍 No problem — you'll get questions that cover all positions. You can update this anytime in Settings.
-        </div>
-      )}
-      <PrimaryBtn
-        onClick={() => position && onComplete({name:name.trim(),level,position,selfRatings:initSR(level),quizHistory:[],goals:{},coachCode:"",season:SEASONS[0],sessionLength:10,colorblind:false})}
-        disabled={!position}
-      >
-        Build {name}'s Profile →
-      </PrimaryBtn>
-    </Screen>
-  );
-}
-
 
 // ─────────────────────────────────────────────────────────
 // HOME SCREEN
@@ -1739,10 +1609,10 @@ function Home({ player, onNav, demoMode, subscriptionTier }) {
             <div style={{fontWeight:700,fontSize:14,marginBottom:2}}>My Goals</div>
             <div style={{fontSize:11,color:C.gold}}>{goalCount}/{goalCats} set</div>
           </button>
-          <button onClick={() => onNav("skills")} style={{background:C.bgCard,border:`1px solid ${C.border}`,borderRadius:14,padding:"1.1rem",cursor:"pointer",textAlign:"left",color:C.white,fontFamily:FONT.body}}>
-            <div style={{fontSize:22,marginBottom:".4rem"}}>📊</div>
-            <div style={{fontWeight:700,fontSize:14,marginBottom:2}}>My Skills</div>
-            <div style={{fontSize:11,color:C.dimmer}}>{ratedSkills}/{totalSkills} rated</div>
+          <button onClick={() => onNav("study")} style={{background:C.bgCard,border:`1px solid ${C.border}`,borderRadius:14,padding:"1.1rem",cursor:"pointer",textAlign:"left",color:C.white,fontFamily:FONT.body}}>
+            <div style={{fontSize:22,marginBottom:".4rem"}}>📺</div>
+            <div style={{fontWeight:700,fontSize:14,marginBottom:2}}>Study</div>
+            <div style={{fontSize:11,color:C.dimmer}}>Games, drills, NHL stats</div>
           </button>
           <button onClick={() => onNav("report")} style={{background:C.bgCard,border:`1px solid ${C.border}`,borderRadius:14,padding:"1.1rem",cursor:"pointer",textAlign:"left",color:C.white,fontFamily:FONT.body}}>
             <div style={{fontSize:22,marginBottom:".4rem"}}>📋</div>
@@ -2553,10 +2423,11 @@ function SkillsRadar({ cats, selfRatings, coachRatings, selfScale, coachScale })
   );
 }
 
-function Report({ player, onBack, demoCoachData }) {
+function Report({ player, onBack, demoCoachData, tier, onUpgrade }) {
   const latest = player.quizHistory[player.quizHistory.length-1];
   const iq = latest ? calcWeightedIQ(latest.results) : null;
-  const tier = iq !== null ? getTier(iq) : null;
+  const iqTier = iq !== null ? getTier(iq) : null;
+  const canSeeRadar = canAccess("progressSnapshots", tier || "FREE").allowed;
   const goals = player.goals || {};
   const activeGoals = Object.entries(goals).filter(([,v])=>v?.goal?.trim());
   const [coachRatings, setCoachRatings] = useState(null);
@@ -2613,8 +2484,8 @@ function Report({ player, onBack, demoCoachData }) {
       <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:".75rem",marginBottom:"1rem"}}>
         <Card style={{background:`linear-gradient(135deg,${C.bgCard},${C.bgElevated})`,border:`1px solid ${C.goldBorder}`,textAlign:"center"}}>
           <Label>Hockey IQ</Label>
-          <div style={{fontFamily:FONT.display,fontWeight:800,fontSize:"3rem",color:iq!==null?tier.color:"rgba(255,255,255,.15)",lineHeight:1}}>{iq!==null?`${iq}%`:"—"}</div>
-          {tier && <div style={{fontSize:12,color:C.dimmer,marginTop:4}}>{tier.label}</div>}
+          <div style={{fontFamily:FONT.display,fontWeight:800,fontSize:"3rem",color:iq!==null?iqTier.color:"rgba(255,255,255,.15)",lineHeight:1}}>{iq!==null?`${iq}%`:"—"}</div>
+          {iqTier && <div style={{fontSize:12,color:C.dimmer,marginTop:4}}>{iqTier.label}</div>}
         </Card>
         <Card style={{textAlign:"center"}}>
           <Label>Sessions</Label>
@@ -2655,13 +2526,24 @@ function Report({ player, onBack, demoCoachData }) {
         </Card>
       )}
 
-      {/* Radar / Spider chart */}
+      {/* Radar / Spider chart — gated to Pro (progressSnapshots) */}
       {Object.values(player.selfRatings||{}).some(v=>v) && (
-        <Card style={{marginBottom:"1rem"}}>
-          <Label>Skills Map</Label>
-          <div style={{fontSize:11,color:C.dimmer,marginBottom:".75rem",lineHeight:1.5}}>Each axis is a skill category. Purple = your self-rating. Gold = your coach.</div>
-          <SkillsRadar cats={cats} selfRatings={player.selfRatings} coachRatings={coachRatings} selfScale={selfScale} coachScale={coachScale}/>
-        </Card>
+        canSeeRadar ? (
+          <Card style={{marginBottom:"1rem"}}>
+            <Label>Skills Map</Label>
+            <div style={{fontSize:11,color:C.dimmer,marginBottom:".75rem",lineHeight:1.5}}>Each axis is a skill category. Purple = your self-rating. Gold = your coach.</div>
+            <SkillsRadar cats={cats} selfRatings={player.selfRatings} coachRatings={coachRatings} selfScale={selfScale} coachScale={coachScale}/>
+          </Card>
+        ) : (
+          <Card style={{marginBottom:"1rem",background:C.bgElevated,border:`1px dashed ${C.border}`,textAlign:"center",padding:"1.25rem"}}>
+            <div style={{fontSize:24,marginBottom:".35rem",opacity:.6}}>🔒</div>
+            <Label>Skills Map</Label>
+            <div style={{fontSize:12,color:C.dimmer,marginBottom:"0.85rem",lineHeight:1.5}}>See all your skill categories at a glance — your self-rating vs. coach, visualized.</div>
+            <button onClick={()=>onUpgrade && onUpgrade("progressSnapshots","pro")} style={{background:C.gold,color:C.bg,border:"none",borderRadius:8,padding:".55rem 1.1rem",cursor:"pointer",fontWeight:800,fontSize:12,fontFamily:FONT.body}}>
+              Unlock with Pro →
+            </button>
+          </Card>
+        )
       )}
 
       {/* Self vs Coach comparison */}
@@ -3001,168 +2883,6 @@ function CoachDashboard({ onBack }) {
   );
 }
 
-// ─────────────────────────────────────────────────────────
-// COACH RATING SCREEN (accessed via invite link)
-// ─────────────────────────────────────────────────────────
-function CoachRatingScreen({ playerName, playerLevel, playerKey, skills, onDone }) {
-  const [ratings, setRatings] = useState({});
-  const [notes, setNotes] = useState({});
-  const [saved, setSaved] = useState(false);
-  const [saving, setSaving] = useState(false);
-  const [activeSkill, setActiveSkill] = useState(null);
-  const cats = SKILLS[playerLevel] || [];
-  const allSkills = cats.flatMap(c => c.skills.map(s => ({...s, cat:c.cat, icon:c.icon})));
-  const rated = Object.values(ratings).filter(v=>v).length;
-  const coachScale = getCoachScale(playerLevel);
-  const coachScaleType = RATING_SCALES[playerLevel]?.coach?.type;
-
-  const scaleIntro = {
-    "ladder": "Rate each skill using the competency ladder — where is this player in their development? Focus on what they show consistently across games and practices.",
-  };
-  const legendTitle = {ladder:"Competency Ladder"};
-
-  async function save() {
-    setSaving(true);
-    const ok = await saveCoachRatings(playerKey, ratings, notes);
-    setSaving(false);
-    setSaved(ok);
-  }
-
-  return (
-    <div style={{minHeight:"100vh",background:C.bg,color:C.white,fontFamily:FONT.body,padding:"1.5rem 1.25rem"}}>
-      <div style={{maxWidth:560,margin:"0 auto"}}>
-        {/* Header */}
-        <div style={{display:"flex",alignItems:"center",gap:".45rem",marginBottom:"2rem"}}>
-          <IceIQLogo size={22}/>
-          <span style={{fontFamily:FONT.display,fontWeight:800,fontSize:"1.5rem",color:C.gold}}>IceIQ</span>
-          <span style={{fontSize:13,color:C.dimmer}}>Coach Ratings</span>
-        </div>
-
-        <Card style={{marginBottom:"1.5rem",background:`linear-gradient(135deg,${C.bgCard},${C.bgElevated})`,border:`1px solid ${C.goldBorder}`}}>
-          <div style={{fontSize:10,letterSpacing:".14em",textTransform:"uppercase",color:C.gold,marginBottom:".4rem"}}>Rating Player</div>
-          <div style={{fontFamily:FONT.display,fontWeight:800,fontSize:"1.8rem"}}>{playerName}</div>
-          <div style={{fontSize:13,color:C.dimmer,marginTop:2}}>{playerLevel}</div>
-          <div style={{marginTop:".85rem",fontSize:12,color:C.dim,lineHeight:1.6}}>
-            {scaleIntro[coachScaleType] || scaleIntro.ladder}
-          </div>
-        </Card>
-
-        {/* Scale legend */}
-        <Card style={{marginBottom:"1.25rem"}}>
-          <Label>{legendTitle[coachScaleType] || "Scale"}</Label>
-          <div style={{display:"flex",flexDirection:"column",gap:".4rem"}}>
-            {coachScale.map(r => (
-              <div key={r.value} style={{display:"flex",alignItems:"center",gap:".75rem",padding:".45rem .6rem",borderRadius:8,background:`${r.color}10`,border:`1px solid ${r.color}25`}}>
-                <div style={{width:10,height:10,borderRadius:"50%",background:r.color,flexShrink:0}}/>
-                <div style={{fontWeight:700,fontSize:13,color:r.color,minWidth:95}}>{r.label}</div>
-                <div style={{fontSize:12,color:C.dimmer}}>{r.sub}</div>
-              </div>
-            ))}
-          </div>
-        </Card>
-
-        {/* Progress */}
-        <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:".75rem"}}>
-          <div style={{fontSize:13,color:C.dim,fontWeight:600}}>{rated}/{allSkills.length} skills rated</div>
-          <div style={{fontSize:11,color:C.dimmer}}>{rated===allSkills.length?"All done ✓":"Rate each skill below"}</div>
-        </div>
-        <ProgressBar value={rated} max={allSkills.length} color={C.gold} height={5}/>
-        <div style={{height:"1rem"}}/>
-
-        {/* Skills by category */}
-        {cats.map(cat => (
-          <div key={cat.cat} style={{marginBottom:"1.25rem"}}>
-            <div style={{display:"flex",alignItems:"center",gap:".4rem",marginBottom:".6rem"}}>
-              <span style={{fontSize:15}}>{cat.icon}</span>
-              <span style={{fontSize:11,letterSpacing:".12em",textTransform:"uppercase",color:C.dimmer,fontWeight:700}}>{cat.cat}</span>
-            </div>
-            {cat.skills.map(skill => {
-              const rating = ratings[skill.id];
-              const isActive = activeSkill === skill.id;
-              const ratingColor = rating ? getScaleColor(coachScale, rating) : null;
-              const ratingLabel = rating ? getScaleLabel(coachScale, rating) : null;
-              return (
-                <div key={skill.id} style={{marginBottom:".6rem"}}>
-                  <button onClick={() => setActiveSkill(isActive ? null : skill.id)}
-                    style={{
-                      width:"100%",background:rating?`${ratingColor}10`:C.bgCard,
-                      border:`1px solid ${rating?ratingColor+"40":C.border}`,
-                      borderLeft:`3px solid ${rating?ratingColor:"transparent"}`,
-                      borderRadius:12,padding:".85rem 1rem",cursor:"pointer",
-                      display:"flex",justifyContent:"space-between",alignItems:"center",
-                      color:C.white,fontFamily:FONT.body,textAlign:"left",
-                    }}>
-                    <div style={{flex:1,minWidth:0}}>
-                      <div style={{fontSize:14,fontWeight:600,marginBottom:2}}>{skill.name}</div>
-                      <div style={{fontSize:11,color:C.dimmer,lineHeight:1.4}}>{skill.desc}</div>
-                    </div>
-                    <div style={{flexShrink:0,marginLeft:"1rem",textAlign:"right"}}>
-                      {rating ? (
-                        <div style={{fontSize:12,fontWeight:700,color:ratingColor}}>{ratingLabel}</div>
-                      ) : (
-                        <div style={{fontSize:11,color:C.dimmer}}>Tap to rate</div>
-                      )}
-                      <div style={{fontSize:11,color:C.dimmer,marginTop:2}}>{isActive?"▲":"▼"}</div>
-                    </div>
-                  </button>
-                  {isActive && (
-                    <div style={{background:C.bgElevated,border:`1px solid ${C.border}`,borderRadius:12,padding:".85rem",marginTop:".35rem",display:"flex",flexDirection:"column",gap:".4rem"}}>
-                      {coachScale.map(r => (
-                        <button key={r.value} onClick={() => setRatings(p=>({...p,[skill.id]:r.value}))}
-                          style={{
-                            background:ratings[skill.id]===r.value?`${r.color}18`:"none",
-                            border:`1px solid ${ratings[skill.id]===r.value?r.color+"50":C.border}`,
-                            borderRadius:8,padding:".65rem 1rem",cursor:"pointer",
-                            display:"flex",alignItems:"center",gap:".75rem",
-                            fontFamily:FONT.body,
-                          }}>
-                          <div style={{width:10,height:10,borderRadius:"50%",background:r.color,flexShrink:0}}/>
-                          <div style={{textAlign:"left"}}>
-                            <div style={{fontSize:13,fontWeight:700,color:r.color}}>{r.label}</div>
-                            <div style={{fontSize:11,color:C.dimmer}}>{r.sub}</div>
-                          </div>
-                          {ratings[skill.id]===r.value && <div style={{marginLeft:"auto",color:r.color,fontSize:14}}>✓</div>}
-                        </button>
-                      ))}
-                      {rating && (
-                        <div style={{marginTop:".5rem",paddingTop:".6rem",borderTop:`1px solid ${C.border}`}}>
-                          <div style={{fontSize:10,letterSpacing:".1em",textTransform:"uppercase",color:C.gold,fontWeight:700,marginBottom:".35rem"}}>💬 Discussion note (optional)</div>
-                          <textarea value={notes[skill.id]||""} onChange={e=>setNotes(p=>({...p,[skill.id]:e.target.value}))}
-                            placeholder={`What's one thing ${playerName} could work on for this skill?`}
-                            rows={2}
-                            style={{width:"100%",background:C.bgCard,border:`1px solid ${C.border}`,borderRadius:8,padding:".55rem .7rem",color:C.white,fontSize:12,fontFamily:FONT.body,outline:"none",lineHeight:1.5}}/>
-                          <div style={{fontSize:10,color:C.dimmer,marginTop:4,fontStyle:"italic"}}>This note appears in the player's report to spark a conversation — keep it specific and growth-focused.</div>
-                        </div>
-                      )}
-                    </div>
-                  )}
-                </div>
-              );
-            })}
-          </div>
-        ))}
-
-        {/* Save */}
-        {saved ? (
-          <Card style={{background:"rgba(34,197,94,.08)",border:`1px solid ${C.greenBorder}`,textAlign:"center",padding:"1.5rem"}}>
-            <div style={{fontSize:28,marginBottom:".5rem"}}>✅</div>
-            <div style={{fontWeight:700,fontSize:15,color:C.green,marginBottom:".35rem"}}>Ratings Saved</div>
-            <div style={{fontSize:13,color:C.dim}}>{playerName} can now see your ratings in their development report.</div>
-          </Card>
-        ) : (
-          <PrimaryBtn onClick={save} disabled={saving || rated === 0} style={{marginBottom:"1rem"}}>
-            {saving ? "Saving…" : `Save Ratings (${rated}/${allSkills.length} rated)`}
-          </PrimaryBtn>
-        )}
-
-        <div style={{fontSize:11,color:C.dimmer,textAlign:"center",lineHeight:1.6,marginTop:"1rem"}}>
-          Powered by IceIQ · bluechip-people-strategies.com<br/>
-          Ratings are private and visible only to the player.
-        </div>
-      </div>
-    </div>
-  );
-}
 
 // ─────────────────────────────────────────────────────────
 // STUDY SCREEN — games to watch, drills, focus areas
@@ -3526,7 +3246,7 @@ function BottomNav({ active, onNav }) {
   const tabs = [
     {id:"home",   icon:"🏠", label:"Home"},
     {id:"quiz",   icon:"🧠", label:"Quiz"},
-    {id:"study",  icon:"📺", label:"Study"},
+    {id:"skills", icon:"📊", label:"Skills"},
     {id:"goals",  icon:"🎯", label:"Goals"},
     {id:"report", icon:"📋", label:"Report"},
   ];
