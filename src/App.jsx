@@ -825,7 +825,7 @@ function MCQuestion({ q, sel, onPick, colorblind }) {
             }}>
               {picked ? (isCorrect ? "✓" : isWrong ? "✗" : String.fromCharCode(65+i)) : String.fromCharCode(65+i)}
             </span>
-            <span>{opt}</span>
+            <span style={{wordBreak:"break-word",whiteSpace:"normal",flex:1,fontSize:opt.length>100?13:14}}>{opt}</span>
           </button>
         );
       })}
@@ -937,7 +937,7 @@ function NextQuestion({ q, sel, onPick }) {
             <span style={{fontSize:11,fontWeight:800,minWidth:22,marginTop:1,flexShrink:0,color:picked?(isCorrect?C.green:isWrong?C.red:C.dimmest):C.dimmer,fontFamily:FONT.display}}>
               {picked?(isCorrect?"✓":isWrong?"✗":String.fromCharCode(65+i)):String.fromCharCode(65+i)}
             </span>
-            <span>{opt}</span>
+            <span style={{wordBreak:"break-word",whiteSpace:"normal",flex:1,fontSize:opt.length>100?13:14}}>{opt}</span>
           </button>
         );
       })}
