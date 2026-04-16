@@ -4261,7 +4261,7 @@ function AuthScreen({ onAuthenticated, onDemo }) {
         )}
 
         <div style={{marginTop:"2rem",paddingTop:"1.5rem",borderTop:`1px solid ${C.border}`}}>
-          <div style={{fontSize:11,letterSpacing:".14em",textTransform:"uppercase",color:C.dimmer,fontWeight:700,textAlign:"center",marginBottom:".85rem"}}>Try the demo</div>
+          <div style={{fontSize:11,letterSpacing:".14em",textTransform:"uppercase",color:C.dimmer,fontWeight:700,textAlign:"center",marginBottom:".85rem"}}>See it in action — pick a player</div>
           <div style={{fontSize:10,letterSpacing:".12em",textTransform:"uppercase",color:C.purple,fontWeight:700,marginBottom:".4rem"}}>Player</div>
           <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:".5rem",marginBottom:".75rem"}}>
             {LEVELS.map(lvl => {
