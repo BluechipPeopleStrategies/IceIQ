@@ -3890,6 +3890,21 @@ function BottomNav({ active, onNav }) {
 // DEMO MODE — pre-populated sample player, no signup required
 // ─────────────────────────────────────────────────────────
 const DEMO_PROFILES = {
+  "U7 / Initiation":{
+    name:"Nora McDavid",position:"Not Sure",team:"U7 IP Calgary Flames",
+    sessions:(mk)=>[mk(true,false,false,10,52),mk(true,true,false,5,65),mk(true,true,false,1,70)],
+    results:(ok1,ok2,ok3)=>[
+      {id:"u7q1",cat:"Skating",ok:ok1,d:1,type:"mc"},{id:"u7q3",cat:"Puck Control",ok:ok1,d:1,type:"mc"},
+      {id:"u7q5",cat:"Game Awareness",ok:ok1,d:1,type:"mc"},{id:"u7q10",cat:"Compete",ok:ok1,d:1,type:"mc"},
+      {id:"u7q20",cat:"Skating",ok:ok2,d:2,type:"mc"},{id:"u7q25",cat:"Compete",ok:ok2,d:1,type:"mc"},
+      {id:"u7q30",cat:"Game Awareness",ok:ok2,d:2,type:"mc"},{id:"u7tf1",cat:"Game Awareness",ok:ok2,d:1,type:"tf"},
+      {id:"u7q40",cat:"Compete",ok:ok3,d:3,type:"mc"},{id:"u7q50",cat:"Puck Control",ok:ok3,d:2,type:"mc"},
+    ],
+    selfRatings:{u7s1:"developing",u7s2:"introduced",u7s3:"introduced",u7s4:"developing",u7p1:"introduced",u7p2:"introduced",u7c1:"developing",u7c2:"developing",u7c3:"consistent",u7c4:"developing"},
+    coachRatings:{u7s1:"introduced",u7s2:"introduced",u7s3:"introduced",u7s4:"developing",u7p1:"introduced",u7p2:"introduced",u7c1:"consistent",u7c2:"developing",u7c3:"consistent",u7c4:"developing"},
+    coachNotes:{u7c1:"Great hustle — always gives full effort.",u7s2:"Still learning the snowplow stop. Keep practising at home."},
+    goals:{"Skating":{goal:"Learn to stop on both sides",S:"Do 10 snowplow stops each practice",M:"Coach checks off each practice",A:"Yes — we practice stops every session",R:"I fall when I try to stop on my left side",T:"By end of December 2026"}},
+  },
   "U9 / Novice":{
     name:"Luca Crosby",position:"Defense",team:"U9 A Saskatoon Blazers",
     sessions:(mk)=>[mk(true,false,false,12,55),mk(true,true,false,6,68),mk(true,true,true,2,78)],
@@ -3919,6 +3934,47 @@ const DEMO_PROFILES = {
     coachRatings:{u13s1:"consistent",u13s2:"developing",u13s3:"introduced",u13p1:"developing",u13p2:"introduced",u13p3:"developing",u13p4:"developing",u13h1:"developing",u13h2:"developing",u13h3:"consistent",u13h4:"developing",u13d1:"developing",u13d2:"consistent",u13c1:"proficient",u13c2:"consistent",u13c3:"consistent",u13c4:"consistent"},
     coachNotes:{u13h3:"Strong defensive zone awareness for a goalie — reads plays well.",u13c1:"Natural leader. Keeps the team calm under pressure."},
     goals:{"Leadership":{goal:"Be more vocal in the room and on the ice during games",S:"Call out plays and communicate with D on every shift",M:"Coach gives feedback after each game on communication",A:"Yes — I already talk to my D but need to be louder",R:"Coach says I read the game well but teammates don't hear me",T:"By January 2027"}},
+  },
+  "U11 / Atom":{
+    name:"Connor Crosby",position:"Forward",team:"U11 AA Edmonton Selects",
+    sessions:(mk)=>[mk(true,false,false,14,58),mk(true,true,false,7,71),mk(true,true,true,1,83)],
+    results:(ok1,ok2,ok3)=>[
+      {id:"u11q1",cat:"Rush Reads",ok:ok1,d:1,type:"mc"},{id:"u11q2",cat:"Coverage",ok:ok1,d:1,type:"mc"},
+      {id:"u11q6",cat:"Puck Protection",ok:ok1,d:1,type:"mc"},{id:"u11q11",cat:"Exiting the Zone",ok:ok1,d:1,type:"mc"},
+      {id:"u11q20",cat:"Coverage",ok:ok2,d:2,type:"mc"},{id:"u11q30",cat:"Special Teams",ok:ok2,d:2,type:"mc"},
+      {id:"u11q40",cat:"Puck Protection",ok:ok2,d:2,type:"mc"},{id:"u11q50",cat:"Coverage",ok:ok2,d:2,type:"mc"},
+      {id:"u11q92",cat:"Blue Line Decisions",ok:ok3,d:3,type:"mc"},{id:"u11q100",cat:"Decision Timing",ok:ok3,d:3,type:"mc"},
+    ],
+    selfRatings:{u11s1:"developing",u11s2:"consistent",u11s3:"developing",u11s4:"introduced",u11p1:"consistent",u11p2:"developing",u11p3:"developing",u11p4:"consistent",u11h1:"consistent",u11h2:"developing",u11h3:"developing",u11d1:"developing",u11d2:"introduced",u11c1:"advanced",u11c2:"proficient",u11c3:"consistent",u11dm1:"developing",u11dm2:"developing",u11dm3:"introduced",u11dm4:"consistent",u11dm5:"developing"},
+    coachRatings:{u11s1:"developing",u11s2:"consistent",u11s3:"developing",u11s4:"developing",u11p1:"consistent",u11p2:"developing",u11p3:"consistent",u11p4:"proficient",u11h1:"consistent",u11h2:"developing",u11h3:"developing",u11d1:"introduced",u11d2:"introduced",u11c1:"advanced",u11c2:"proficient",u11c3:"proficient",u11dm1:"developing",u11dm2:"developing",u11dm3:"developing",u11dm4:"consistent",u11dm5:"developing"},
+    coachNotes:{u11d1:"Work on matching attacker speed and closing the gap.",u11c1:"Elite compete level — sets the tone every shift."},
+    goals:{"Gap Control":{goal:"Close the gap at the blue line instead of backing up",S:"Close gap by top of circles on every rush",M:"Track clean gap closes per game",A:"Yes — drill with D-partner in warmups",R:"Biggest weakness — I give up the blue line",T:"By end of November 2026"}},
+  },
+  "U15 / Bantam":{
+    name:"Jake Lemieux",position:"Defense",team:"U15 AAA Winnipeg Warriors",
+    sessions:(mk)=>[mk(true,false,false,8,60),mk(true,true,false,3,74),mk(true,true,true,1,85)],
+    results:(ok1,ok2,ok3)=>[
+      {id:"u15q1",cat:"Systems Play",ok:ok1,d:1,type:"mc"},{id:"u15q5",cat:"Transition Game",ok:ok1,d:1,type:"mc"},
+      {id:"u15q10",cat:"Special Teams",ok:ok1,d:1,type:"mc"},{id:"u15q15",cat:"Gap Control",ok:ok1,d:1,type:"mc"},
+      {id:"u15q25",cat:"Physical Play",ok:ok2,d:2,type:"mc"},{id:"u15q35",cat:"Leadership",ok:ok2,d:2,type:"mc"},
+      {id:"u15q45",cat:"Systems Play",ok:ok2,d:2,type:"mc"},{id:"u15q55",cat:"Transition Game",ok:ok2,d:2,type:"mc"},
+      {id:"u15q75",cat:"Gap Control",ok:ok3,d:3,type:"mc"},{id:"u15q90",cat:"Special Teams",ok:ok3,d:3,type:"mc"},
+    ],
+    selfRatings:{},coachRatings:{},coachNotes:{},
+    goals:{"Systems Play":{goal:"Master the 1-2-2 forecheck",S:"Execute my role in the 1-2-2 every shift",M:"Coach reviews video after each game",A:"Yes — we run this system every practice",R:"I freelance too much and break structure",T:"By end of January 2027"}},
+  },
+  "U18 / Midget":{
+    name:"Sarah Wickenheiser",position:"Forward",team:"U18 Prep Toronto Jr. Canadiens",
+    sessions:(mk)=>[mk(true,true,false,6,72),mk(true,true,true,3,81),mk(true,true,true,1,89)],
+    results:(ok1,ok2,ok3)=>[
+      {id:"u18q1",cat:"Game Management",ok:ok1,d:1,type:"mc"},{id:"u18q5",cat:"Advanced Tactics",ok:ok1,d:1,type:"mc"},
+      {id:"u18q10",cat:"Special Teams",ok:ok1,d:1,type:"mc"},{id:"u18q15",cat:"Breakout Execution",ok:ok1,d:1,type:"mc"},
+      {id:"u18q25",cat:"Neutral Zone Play",ok:ok2,d:2,type:"mc"},{id:"u18q35",cat:"Leadership",ok:ok2,d:2,type:"mc"},
+      {id:"u18q48",cat:"Advanced Tactics",ok:ok2,d:2,type:"mc"},{id:"u18q55",cat:"Breakout Execution",ok:ok2,d:2,type:"mc"},
+      {id:"u18q81",cat:"Breakout Execution",ok:ok3,d:3,type:"mc"},{id:"u18q99",cat:"Breakout Execution",ok:ok3,d:3,type:"mc"},
+    ],
+    selfRatings:{},coachRatings:{},coachNotes:{},
+    goals:{"Leadership":{goal:"Lead the room as an alternate captain",S:"Speak up in team meetings and set the tone pre-game",M:"Coaches track leadership moments weekly",A:"Yes — coaches gave me the A",R:"I lead by example but need to be more vocal",T:"By March 2027"}},
   },
 };
 
@@ -4183,7 +4239,7 @@ function AuthScreen({ onAuthenticated, onDemo }) {
           <div style={{fontSize:11,letterSpacing:".14em",textTransform:"uppercase",color:C.dimmer,fontWeight:700,textAlign:"center",marginBottom:".85rem"}}>Try the demo</div>
           <div style={{fontSize:10,letterSpacing:".12em",textTransform:"uppercase",color:C.purple,fontWeight:700,marginBottom:".4rem"}}>Player</div>
           <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:".5rem",marginBottom:".75rem"}}>
-            {["U9 / Novice","U13 / Peewee"].map(lvl => {
+            {LEVELS.map(lvl => {
               const cfg = DEMO_PROFILES[lvl];
               if (!cfg) return null;
               const short = lvl.split(" / ")[0];
