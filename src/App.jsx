@@ -4218,23 +4218,25 @@ function AuthScreen({ onAuthenticated, onDemo }) {
         )}
 
         <div style={{marginTop:"2rem",paddingTop:"1.5rem",borderTop:`1px solid ${C.border}`}}>
-          <div style={{fontSize:11,letterSpacing:".14em",textTransform:"uppercase",color:C.dimmer,fontWeight:700,textAlign:"center",marginBottom:".85rem"}}>Try the demo — pick a role</div>
-          <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:".5rem",marginBottom:".5rem"}}>
-            {LEVELS.map(lvl => {
+          <div style={{fontSize:11,letterSpacing:".14em",textTransform:"uppercase",color:C.dimmer,fontWeight:700,textAlign:"center",marginBottom:".85rem"}}>Try the demo</div>
+          <div style={{fontSize:10,letterSpacing:".12em",textTransform:"uppercase",color:C.purple,fontWeight:700,marginBottom:".4rem"}}>Player</div>
+          <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:".5rem",marginBottom:".75rem"}}>
+            {["U9 / Novice","U13 / Peewee"].map(lvl => {
               const cfg = DEMO_PROFILES[lvl];
               if (!cfg) return null;
               const short = lvl.split(" / ")[0];
               return (
                 <button key={lvl} onClick={()=>onDemo(lvl)} style={{background:C.bgCard,border:`1px solid ${C.purpleBorder}`,borderRadius:10,padding:".7rem .6rem",cursor:"pointer",color:C.white,fontFamily:FONT.body,textAlign:"left"}}>
-                  <div style={{fontWeight:700,fontSize:13,color:C.purple,marginBottom:2}}>{short}</div>
-                  <div style={{fontSize:11,color:C.dimmer,lineHeight:1.4}}>{cfg.name} · {cfg.position}</div>
+                  <div style={{fontWeight:700,fontSize:13,color:C.purple,marginBottom:2}}>{short} · {cfg.position}</div>
+                  <div style={{fontSize:11,color:C.dimmer,lineHeight:1.4}}>{cfg.name} · {cfg.team}</div>
                 </button>
               );
             })}
           </div>
+          <div style={{fontSize:10,letterSpacing:".12em",textTransform:"uppercase",color:C.gold,fontWeight:700,marginBottom:".4rem"}}>Coach</div>
           <button onClick={()=>onDemo("__coach__")} style={{width:"100%",background:`linear-gradient(135deg,rgba(201,168,76,.12),rgba(201,168,76,.04))`,border:`1px solid ${C.goldBorder}`,borderRadius:10,padding:".7rem .6rem",cursor:"pointer",color:C.white,fontFamily:FONT.body,textAlign:"left"}}>
-            <div style={{fontWeight:700,fontSize:13,color:C.gold,marginBottom:2}}>Coach Demo</div>
-            <div style={{fontSize:11,color:C.dimmer,lineHeight:1.4}}>View a team roster, rate players, and explore the coach dashboard</div>
+            <div style={{fontWeight:700,fontSize:13,color:C.gold,marginBottom:2}}>Coach Dashboard</div>
+            <div style={{fontSize:11,color:C.dimmer,lineHeight:1.4}}>View a team roster, rate players, and explore the coach tools</div>
           </button>
           <div style={{fontSize:11,color:C.dimmer,textAlign:"center",marginTop:".65rem",lineHeight:1.5}}>Nothing is saved in demo mode.</div>
         </div>
