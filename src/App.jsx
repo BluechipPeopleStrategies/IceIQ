@@ -3,6 +3,12 @@ import * as SB from "./supabase";
 import { supabase, hasSupabase } from "./supabase";
 import { canAccess, getUpgradeTriggerMessage } from "./utils/tierGate";
 import { canSwitchAgeGroup, recordAgeGroupSwitch, getAgeGroupLock, setAgeGroupLock, checkSeasonReset } from "./utils/deviceLock";
+import imgSplash from "./assets/images/Splash-Screen.jpg";
+import imgCoreApp from "./assets/images/Core-App.jpg";
+import imgDataPanel from "./assets/images/Data-Panel.jpg";
+import imgProfile from "./assets/images/Profile-Analytics.jpg";
+import imgTactics from "./assets/images/Tactics-Playbook.jpg";
+import imgSuccess from "./assets/images/Success-Icon.jpg";
 
 // Resolve the user's tier for gating decisions.
 // Priority: demo mode → PRO (full showcase)
@@ -1911,25 +1917,34 @@ function Home({ player, onNav, demoMode, subscriptionTier }) {
 
         {/* Quick action grid */}
         <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:".75rem",marginBottom:"1rem"}}>
-          <button onClick={() => onNav("quiz")} style={{background:`linear-gradient(135deg,rgba(124,111,205,.15),rgba(124,111,205,.05))`,border:`1px solid ${C.purpleBorder}`,borderRadius:14,padding:"1.1rem",cursor:"pointer",textAlign:"left",color:C.white,fontFamily:FONT.body}}>
+          <button onClick={() => onNav("quiz")} style={{background:`linear-gradient(135deg,rgba(124,111,205,.15),rgba(124,111,205,.05))`,border:`1px solid ${C.purpleBorder}`,borderRadius:14,padding:"1.1rem",cursor:"pointer",textAlign:"left",color:C.white,fontFamily:FONT.body,position:"relative",overflow:"hidden"}}>
+            <img src={imgCoreApp} alt="" style={{position:"absolute",inset:0,width:"100%",height:"100%",objectFit:"cover",opacity:0.12,pointerEvents:"none"}}/>
+            <div style={{position:"relative"}}>
             <div style={{fontSize:22,marginBottom:".4rem"}}>🧠</div>
             <div style={{fontWeight:700,fontSize:14,marginBottom:2}}>Take Quiz</div>
             <div style={{fontSize:11,color:C.purple}}>Adaptive · {player.sessionLength||10}Q</div>
+            </div>
           </button>
           <button onClick={() => onNav("goals")} style={{background:`linear-gradient(135deg,rgba(201,168,76,.1),rgba(201,168,76,.03))`,border:`1px solid ${C.goldBorder}`,borderRadius:14,padding:"1.1rem",cursor:"pointer",textAlign:"left",color:C.white,fontFamily:FONT.body}}>
             <div style={{fontSize:22,marginBottom:".4rem"}}>🎯</div>
             <div style={{fontWeight:700,fontSize:14,marginBottom:2}}>My Goals</div>
             <div style={{fontSize:11,color:C.gold}}>{goalCount}/{goalCats} set</div>
           </button>
-          <button onClick={() => onNav("study")} style={{background:C.bgCard,border:`1px solid ${C.border}`,borderRadius:14,padding:"1.1rem",cursor:"pointer",textAlign:"left",color:C.white,fontFamily:FONT.body}}>
+          <button onClick={() => onNav("study")} style={{background:C.bgCard,border:`1px solid ${C.border}`,borderRadius:14,padding:"1.1rem",cursor:"pointer",textAlign:"left",color:C.white,fontFamily:FONT.body,position:"relative",overflow:"hidden"}}>
+            <img src={imgTactics} alt="" style={{position:"absolute",inset:0,width:"100%",height:"100%",objectFit:"cover",opacity:0.12,pointerEvents:"none"}}/>
+            <div style={{position:"relative"}}>
             <div style={{fontSize:22,marginBottom:".4rem"}}>📺</div>
             <div style={{fontWeight:700,fontSize:14,marginBottom:2}}>Study</div>
-            <div style={{fontSize:11,color:C.dimmer}}>Games, drills, NHL stats</div>
+            <div style={{fontSize:11,color:C.dimmer}}>Games, drills, Pro Hockey Intel</div>
+            </div>
           </button>
-          <button onClick={() => onNav("report")} style={{background:C.bgCard,border:`1px solid ${C.border}`,borderRadius:14,padding:"1.1rem",cursor:"pointer",textAlign:"left",color:C.white,fontFamily:FONT.body}}>
+          <button onClick={() => onNav("report")} style={{background:C.bgCard,border:`1px solid ${C.border}`,borderRadius:14,padding:"1.1rem",cursor:"pointer",textAlign:"left",color:C.white,fontFamily:FONT.body,position:"relative",overflow:"hidden"}}>
+            <img src={imgDataPanel} alt="" style={{position:"absolute",inset:0,width:"100%",height:"100%",objectFit:"cover",opacity:0.12,pointerEvents:"none"}}/>
+            <div style={{position:"relative"}}>
             <div style={{fontSize:22,marginBottom:".4rem"}}>📋</div>
             <div style={{fontWeight:700,fontSize:14,marginBottom:2}}>Report</div>
             <div style={{fontSize:11,color:C.dimmer}}>Development arc</div>
+            </div>
           </button>
         </div>
 
@@ -2252,7 +2267,9 @@ function Results({ results, player, prevScore, totalSessions, seqPerfect, mistak
   return (
     <Screen>
       {/* Hero */}
-      <div style={{textAlign:"center",marginBottom:"2rem",paddingTop:"1rem"}}>
+      <div style={{textAlign:"center",marginBottom:"2rem",paddingTop:"1rem",position:"relative",overflow:"hidden"}}>
+        <img src={imgSuccess} alt="" style={{position:"absolute",inset:0,width:"100%",height:"100%",objectFit:"cover",opacity:0.08,pointerEvents:"none",borderRadius:16}}/>
+        <div style={{position:"relative"}}>
         <div style={{fontSize:56,marginBottom:".5rem"}}>{tier.badge}</div>
         <div style={{fontFamily:FONT.display,fontWeight:800,fontSize:"2rem",marginBottom:".15rem"}}>{tier.label}</div>
         <div style={{fontFamily:FONT.display,fontWeight:800,fontSize:"5rem",color:tier.color,lineHeight:.9,letterSpacing:"-.02em"}}>{score}<span style={{fontSize:"2rem"}}>%</span></div>
@@ -2260,6 +2277,7 @@ function Results({ results, player, prevScore, totalSessions, seqPerfect, mistak
         {saved && player.coachCode && (
           <div style={{fontSize:11,color:C.green,display:"flex",alignItems:"center",justifyContent:"center",gap:".3rem"}}>✓ Saved to team {player.coachCode}</div>
         )}
+        </div>
       </div>
 
       {/* Badges */}
@@ -2812,6 +2830,10 @@ function Report({ player, onBack, demoCoachData, tier, onUpgrade }) {
   const topDiscussion = gaps.slice(0, 3);
   return (
     <Screen>
+      <div style={{position:"relative",height:100,overflow:"hidden",borderRadius:16,marginBottom:"1rem"}}>
+        <img src={imgDataPanel} alt="" style={{width:"100%",height:"100%",objectFit:"cover",opacity:0.2}}/>
+        <div style={{position:"absolute",inset:0,background:"linear-gradient(to top,rgba(8,14,26,1) 0%,transparent 100%)"}}/>
+      </div>
       <BackBtn onClick={onBack}/>
       <div style={{marginBottom:"1.5rem"}}>
         <div style={{fontSize:10,letterSpacing:".16em",color:C.gold,textTransform:"uppercase",fontWeight:700,marginBottom:4}}>Player Development Report</div>
@@ -3023,6 +3045,10 @@ function Profile({ player, onSave, onBack, onReset, demoMode, tier, onUpgrade })
 
   return (
     <div style={{minHeight:"100vh",background:C.bg,color:C.white,fontFamily:FONT.body,paddingBottom:80}}>
+      <div style={{position:"relative",height:120,overflow:"hidden"}}>
+        <img src={imgProfile} alt="" style={{width:"100%",height:"100%",objectFit:"cover",opacity:0.2}}/>
+        <div style={{position:"absolute",inset:0,background:"linear-gradient(to top,rgba(8,14,26,1) 0%,transparent 100%)"}}/>
+      </div>
       <StickyHeader>
         <div style={{maxWidth:560,margin:"0 auto",display:"flex",alignItems:"center",gap:"1rem"}}>
           <BackBtn onClick={onBack}/>
@@ -4580,6 +4606,10 @@ function StudyScreen({ player, onBack, onNav }) {
 
   return (
     <div style={{minHeight:"100vh",background:C.bg,color:C.white,fontFamily:FONT.body,paddingBottom:80}}>
+      <div style={{position:"relative",height:100,overflow:"hidden"}}>
+        <img src={imgTactics} alt="" style={{width:"100%",height:"100%",objectFit:"cover",opacity:0.15}}/>
+        <div style={{position:"absolute",inset:0,background:"linear-gradient(to top,rgba(8,14,26,1) 0%,transparent 100%)"}}/>
+      </div>
       <StickyHeader>
         <div style={{maxWidth:560,margin:"0 auto",display:"flex",alignItems:"center",gap:"1rem"}}>
           <BackBtn onClick={onBack}/>
@@ -4982,6 +5012,7 @@ function AuthScreen({ onAuthenticated, onDemo }) {
 
   return (
     <div style={{minHeight:"100vh",position:"relative",background:"#0d1e3a",display:"flex",flexDirection:"column",justifyContent:"center",padding:"2rem 1.5rem",fontFamily:FONT.body,color:C.white,overflow:"hidden"}}>
+      <img src={imgSplash} alt="" style={{position:"absolute",inset:0,width:"100%",height:"100%",objectFit:"cover",opacity:0.18,pointerEvents:"none"}}/>
       {/* Ice rink background */}
       <RinkBackground/>
       {/* Very subtle edge vignette */}
