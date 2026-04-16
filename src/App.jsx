@@ -5012,11 +5012,8 @@ function AuthScreen({ onAuthenticated, onDemo }) {
 
   return (
     <div style={{minHeight:"100vh",position:"relative",background:"#0d1e3a",display:"flex",flexDirection:"column",justifyContent:"center",padding:"2rem 1.5rem",fontFamily:FONT.body,color:C.white,overflow:"hidden"}}>
-      <img src={imgSplash} alt="" style={{position:"absolute",inset:0,width:"100%",height:"100%",objectFit:"cover",opacity:0.18,pointerEvents:"none"}}/>
-      {/* Ice rink background */}
-      <RinkBackground/>
-      {/* Very subtle edge vignette */}
-      <div style={{position:"absolute",inset:0,background:"radial-gradient(ellipse at center, rgba(8,14,26,0) 55%, rgba(8,14,26,0.25) 100%)",pointerEvents:"none"}}/>
+      <img src={imgSplash} alt="" style={{position:"absolute",inset:0,width:"100%",height:"100%",objectFit:"cover",opacity:0.45,pointerEvents:"none"}}/>
+      <div style={{position:"absolute",inset:0,background:"radial-gradient(ellipse at center, rgba(8,14,26,0) 30%, rgba(8,14,26,0.7) 100%)",pointerEvents:"none"}}/>
 
       <div style={{position:"relative",maxWidth:440,margin:"0 auto",width:"100%",background:"rgba(8,14,26,0.78)",backdropFilter:"blur(10px)",WebkitBackdropFilter:"blur(10px)",border:`1px solid ${C.border}`,borderRadius:16,padding:"2rem 1.5rem",boxShadow:"0 24px 60px rgba(0,0,0,0.5)"}}>
         <div style={{display:"flex",alignItems:"center",gap:".6rem",marginBottom:"2rem"}}>
