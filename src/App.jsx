@@ -2118,7 +2118,89 @@ function Report({ player, onBack, demoCoachData, tier, onUpgrade }) {
   );
 }
 
-function Profile({ player, onSave, onBack, onReset, demoMode, tier, onUpgrade }) {
+// ─────────────────────────────────────────────────────────
+// ADMIN: QUESTION REPORTS
+// ─────────────────────────────────────────────────────────
+const ADMIN_EMAIL = "mtslifka@gmail.com";
+
+function AdminReports({ onBack }) {
+  const [reports, setReports] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    (async () => {
+      setLoading(true);
+      const data = await SB.getQuestionReports();
+      setReports(data);
+      setLoading(false);
+    })();
+  }, []);
+
+  async function handleResolve(id) {
+    const ok = await SB.resolveReport(id);
+    if (ok) setReports(prev => prev.map(r => r.id === id ? { ...r, resolved: true } : r));
+  }
+
+  const unresolvedCount = reports.filter(r => !r.resolved).length;
+
+  // Build a flat lookup from QB for question text
+  const qbFlat = Object.values(QB).flat();
+  function getQuestionText(questionId) {
+    const q = qbFlat.find(x => x.id === questionId);
+    return q ? (q.q || q.question || q.prompt || JSON.stringify(q).slice(0, 120)) : null;
+  }
+
+  return (
+    <Screen>
+      <BackBtn onClick={onBack} />
+      <div style={{ fontFamily: FONT.display, fontWeight: 800, fontSize: "1.8rem", marginBottom: ".5rem" }}>Question Reports</div>
+      <div style={{ fontSize: 13, color: C.dim, marginBottom: "1.25rem" }}>
+        {loading ? "Loading..." : `${unresolvedCount} unresolved report${unresolvedCount !== 1 ? "s" : ""}`}
+      </div>
+      {!loading && reports.length === 0 && (
+        <Card><div style={{ color: C.dimmer, textAlign: "center", padding: "1.5rem 0" }}>No reports yet.</div></Card>
+      )}
+      {reports.map(r => {
+        const qText = getQuestionText(r.question_id);
+        return (
+          <Card key={r.id} style={{ marginBottom: ".75rem", border: `1px solid ${r.resolved ? C.greenBorder : C.redBorder}` }}>
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: ".5rem" }}>
+              <Pill color={r.resolved ? C.green : C.red}>{r.resolved ? "Resolved" : "Open"}</Pill>
+              <span style={{ fontSize: 11, color: C.dimmer }}>{new Date(r.created_at).toLocaleDateString()}</span>
+            </div>
+            <Label>Question ID</Label>
+            <div style={{ fontSize: 13, color: C.white, marginBottom: ".5rem", wordBreak: "break-all" }}>{r.question_id}</div>
+            {qText && (
+              <>
+                <Label>Question Text</Label>
+                <div style={{ fontSize: 12, color: C.dim, marginBottom: ".5rem", lineHeight: 1.5, background: C.bgElevated, borderRadius: 8, padding: ".6rem .75rem", border: `1px solid ${C.border}` }}>{qText}</div>
+              </>
+            )}
+            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: ".5rem", marginBottom: ".5rem" }}>
+              <div><Label>Level</Label><div style={{ fontSize: 13, color: C.dim }}>{r.level || "—"}</div></div>
+              <div><Label>Reason</Label><div style={{ fontSize: 13, color: C.gold }}>{r.reason || "—"}</div></div>
+            </div>
+            {r.detail && (
+              <>
+                <Label>Detail</Label>
+                <div style={{ fontSize: 12, color: C.dim, lineHeight: 1.5, marginBottom: ".5rem" }}>{r.detail}</div>
+              </>
+            )}
+            {!r.resolved && (
+              <button onClick={() => handleResolve(r.id)} style={{
+                background: C.greenDim, color: C.green, border: `1px solid ${C.greenBorder}`,
+                borderRadius: 10, padding: ".55rem", cursor: "pointer", fontSize: 13,
+                fontFamily: FONT.body, fontWeight: 700, width: "100%", marginTop: ".25rem"
+              }}>Mark Resolved</button>
+            )}
+          </Card>
+        );
+      })}
+    </Screen>
+  );
+}
+
+function Profile({ player, onSave, onBack, onReset, demoMode, tier, onUpgrade, userEmail, onAdminReports }) {
   const positionLocked = !canAccess("positionFilter", tier || "FREE").allowed;
   const levelSwitchGated = !canAccess("multipleAgeGroups", tier || "FREE").allowed;
   const [s, setS] = useState({...player});
@@ -2277,6 +2359,16 @@ function Profile({ player, onSave, onBack, onReset, demoMode, tier, onUpgrade })
             <div style={{color:C.gold,marginTop:".25rem"}}>bluechip-people-strategies.com</div>
           </div>
         </Card>
+        {userEmail === ADMIN_EMAIL && onAdminReports && (
+          <Card style={{ marginBottom: "1rem", border: `1px solid ${C.purpleBorder}` }}>
+            <Label>Admin</Label>
+            <button onClick={onAdminReports} style={{
+              background: C.purpleDim, color: C.purple, border: `1px solid ${C.purpleBorder}`,
+              borderRadius: 10, padding: ".65rem", cursor: "pointer", fontSize: 13,
+              fontFamily: FONT.body, fontWeight: 700, width: "100%"
+            }}>Review Question Reports</button>
+          </Card>
+        )}
         <button onClick={onReset} style={{background:"rgba(239,68,68,.06)",color:C.red,border:`1px solid rgba(239,68,68,.2)`,borderRadius:10,padding:".65rem",cursor:"pointer",fontSize:13,fontFamily:FONT.body,width:"100%"}}>{demoMode ? "Exit Demo" : "Sign Out"}</button>
       </div>
     </div>
@@ -4500,6 +4592,7 @@ export default function App() {
   const [seqPerfect, setSeqPerfect] = useState(false);
   const [mistakeStreak, setMistakeStreak] = useState(0);
   const [upgradePrompt, setUpgradePrompt] = useState(null); // {feature, target} | null
+  const [userEmail, setUserEmail] = useState(null);
 
   // Resolve tier once per render
   const tier = resolveTier({ profile, demoMode });
@@ -4550,14 +4643,20 @@ export default function App() {
     (async () => {
       try {
         const session = await SB.getSession();
-        if (session?.user && mounted) await loadUser(session.user.id);
+        if (session?.user && mounted) {
+          setUserEmail(session.user.email || null);
+          await loadUser(session.user.id);
+        }
       } catch(e) { console.error("Session check failed:", e); }
       if (mounted) { clearTimeout(timeout); setAuthReady(true); }
     })();
     const { data } = SB.onAuthChange(async (session) => {
       if (!mounted) return;
-      if (session?.user) await loadUser(session.user.id);
-      else { setProfile(null); setPlayer(null); }
+      if (session?.user) {
+        setUserEmail(session.user.email || null);
+        await loadUser(session.user.id);
+      }
+      else { setProfile(null); setPlayer(null); setUserEmail(null); }
     });
     return () => { mounted = false; data?.subscription?.unsubscribe?.(); };
   }, []);
@@ -4756,7 +4855,8 @@ export default function App() {
           : <GatedScreen feature="smartGoals" title="SMART Goals" description="Set specific, measurable, achievable development goals across every skill category — tied to your self-assessment and coach feedback." onBack={()=>setScreen("home")} onUnlock={()=>promptUpgrade("smartGoals","pro")}/>
         )}
         {screen === "report"  && <Report player={tierLimitedPlayer(player, tier)} onBack={()=>setScreen("home")} demoCoachData={demoMode?demoCoachRatings:null} tier={tier} onUpgrade={(f,t)=>promptUpgrade(f,t)}/>}
-        {screen === "profile" && <Profile player={player} onSave={handleProfileSave} onBack={()=>setScreen("home")} onReset={handleSignOut} demoMode={demoMode} tier={tier} onUpgrade={(f,t)=>promptUpgrade(f,t)}/>}
+        {screen === "profile" && <Profile player={player} onSave={handleProfileSave} onBack={()=>setScreen("home")} onReset={handleSignOut} demoMode={demoMode} tier={tier} onUpgrade={(f,t)=>promptUpgrade(f,t)} userEmail={userEmail} onAdminReports={()=>setScreen("admin")}/>}
+        {screen === "admin" && <AdminReports onBack={()=>setScreen("profile")}/>}
       </div>
 
       {!["quiz","results"].includes(screen) && (

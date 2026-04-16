@@ -264,3 +264,36 @@ export async function reportQuestion({ userId, questionId, level, reason, detail
   if (error) { console.error(error); return false; }
   return true;
 }
+
+// ─────────────────────────────────────────────
+// ADMIN: QUESTION REPORTS
+// ─────────────────────────────────────────────
+// RLS NOTE: The admin user needs a policy on question_reports that allows
+// SELECT and UPDATE for their auth.uid(). Example policy:
+//   CREATE POLICY "Admin can read all reports"
+//     ON question_reports FOR SELECT
+//     USING (auth.uid() = '<your-admin-user-uuid>');
+//   CREATE POLICY "Admin can update all reports"
+//     ON question_reports FOR UPDATE
+//     USING (auth.uid() = '<your-admin-user-uuid>');
+
+export async function getQuestionReports() {
+  if (!supabase) return [];
+  const { data, error } = await supabase
+    .from("question_reports")
+    .select("*")
+    .order("resolved", { ascending: true })
+    .order("created_at", { ascending: false });
+  if (error) { console.error(error); return []; }
+  return data || [];
+}
+
+export async function resolveReport(reportId) {
+  if (!supabase) return false;
+  const { error } = await supabase
+    .from("question_reports")
+    .update({ resolved: true })
+    .eq("id", reportId);
+  if (error) { console.error(error); return false; }
+  return true;
+}
