@@ -5109,11 +5109,25 @@ function AuthScreen({ onAuthenticated, onDemo }) {
         )}
 
         <div style={{marginTop:"2rem",paddingTop:"1.5rem",borderTop:`1px solid ${C.border}`}}>
-          <div style={{fontSize:11,letterSpacing:".14em",textTransform:"uppercase",color:C.dimmer,fontWeight:700,textAlign:"center",marginBottom:".85rem"}}>Or try it first</div>
-          <button onClick={onDemo} style={{width:"100%",background:C.bgCard,border:`1px solid ${C.purpleBorder}`,borderRadius:10,padding:".85rem",cursor:"pointer",color:C.purple,fontFamily:FONT.body,fontWeight:700,fontSize:14,display:"flex",alignItems:"center",justifyContent:"center",gap:".5rem"}}>
-            <span style={{fontSize:16}}>🎮</span> Try the Demo — No Signup
+          <div style={{fontSize:11,letterSpacing:".14em",textTransform:"uppercase",color:C.dimmer,fontWeight:700,textAlign:"center",marginBottom:".85rem"}}>Try the demo — pick a role</div>
+          <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:".5rem",marginBottom:".5rem"}}>
+            {LEVELS.map(lvl => {
+              const cfg = DEMO_PROFILES[lvl];
+              if (!cfg) return null;
+              const short = lvl.split(" / ")[0];
+              return (
+                <button key={lvl} onClick={()=>onDemo(lvl)} style={{background:C.bgCard,border:`1px solid ${C.purpleBorder}`,borderRadius:10,padding:".7rem .6rem",cursor:"pointer",color:C.white,fontFamily:FONT.body,textAlign:"left"}}>
+                  <div style={{fontWeight:700,fontSize:13,color:C.purple,marginBottom:2}}>{short}</div>
+                  <div style={{fontSize:11,color:C.dimmer,lineHeight:1.4}}>{cfg.name} · {cfg.position}</div>
+                </button>
+              );
+            })}
+          </div>
+          <button onClick={()=>onDemo("__coach__")} style={{width:"100%",background:`linear-gradient(135deg,rgba(201,168,76,.12),rgba(201,168,76,.04))`,border:`1px solid ${C.goldBorder}`,borderRadius:10,padding:".7rem .6rem",cursor:"pointer",color:C.white,fontFamily:FONT.body,textAlign:"left"}}>
+            <div style={{fontWeight:700,fontSize:13,color:C.gold,marginBottom:2}}>Coach Demo</div>
+            <div style={{fontSize:11,color:C.dimmer,lineHeight:1.4}}>View a team roster, rate players, and explore the coach dashboard</div>
           </button>
-          <div style={{fontSize:11,color:C.dimmer,textAlign:"center",marginTop:".65rem",lineHeight:1.5}}>Explore as Connor Crosby (U11 AA Edmonton Selects). Nothing is saved.</div>
+          <div style={{fontSize:11,color:C.dimmer,textAlign:"center",marginTop:".65rem",lineHeight:1.5}}>Nothing is saved in demo mode.</div>
         </div>
 
         <div style={{fontSize:10,color:C.dimmer,textAlign:"center",marginTop:"2rem",opacity:.6}}>v{VERSION}</div>
@@ -5125,17 +5139,29 @@ function AuthScreen({ onAuthenticated, onDemo }) {
 // ─────────────────────────────────────────────────────────
 // COACH HOME — teams list, create team, roster
 // ─────────────────────────────────────────────────────────
-function CoachHome({ profile, onSignOut, onOpenPlayer }) {
-  const [teams, setTeams] = useState([]);
-  const [loading, setLoading] = useState(true);
+const DEMO_COACH_TEAMS = [
+  {id:"demo-t1",name:"U11 AA Edmonton Selects",level:"U11 / Atom",season:SEASONS[0],code:"SELECTS"},
+];
+const DEMO_COACH_ROSTER = [
+  {id:"dr1",name:"Connor Crosby",level:"U11 / Atom",position:"Forward",iq:83,sessions:3},
+  {id:"dr2",name:"Ava Hughes",level:"U11 / Atom",position:"Defense",iq:71,sessions:2},
+  {id:"dr3",name:"Marcus Chen",level:"U11 / Atom",position:"Forward",iq:65,sessions:1},
+  {id:"dr4",name:"Sophie Larsson",level:"U11 / Atom",position:"Goalie",iq:78,sessions:3},
+  {id:"dr5",name:"Tyler Blackwood",level:"U11 / Atom",position:"Defense",iq:58,sessions:1},
+];
+
+function CoachHome({ profile, onSignOut, onOpenPlayer, demoMode }) {
+  const isDemo = demoMode || profile.id === "__demo_coach__";
+  const [teams, setTeams] = useState(isDemo ? DEMO_COACH_TEAMS : []);
+  const [loading, setLoading] = useState(!isDemo);
   const [creating, setCreating] = useState(false);
   const [newName, setNewName] = useState("");
   const [newLevel, setNewLevel] = useState("U11 / Atom");
   const [newSeason, setNewSeason] = useState(SEASONS[0]);
-  const [expandedTeam, setExpandedTeam] = useState(null);
-  const [rosters, setRosters] = useState({});
+  const [expandedTeam, setExpandedTeam] = useState(isDemo ? "demo-t1" : null);
+  const [rosters, setRosters] = useState(isDemo ? {"demo-t1": DEMO_COACH_ROSTER} : {});
 
-  useEffect(() => { (async () => {
+  useEffect(() => { if (isDemo) return; (async () => {
     const t = await SB.getCoachTeams(profile.id);
     setTeams(t);
     setLoading(false);
@@ -5331,9 +5357,17 @@ export default function App() {
   // Run season reset check on boot so free-tier switch counters refresh each September
   useEffect(() => { try { checkSeasonReset(); } catch {} }, []);
 
-  function enterDemo() {
-    const p = buildDemoPlayer();
-    const coachData = buildDemoCoachRatings();
+  function enterDemo(levelOrRole) {
+    if (levelOrRole === "__coach__") {
+      setDemoMode(true);
+      setDemoCoachRatings(null);
+      setProfile({ id: "__demo_coach__", role: "coach", name: "Coach Demo" });
+      setScreen("home");
+      return;
+    }
+    const level = levelOrRole || "U11 / Atom";
+    const p = buildDemoPlayer(level);
+    const coachData = buildDemoCoachRatings(level);
     setDemoMode(true);
     setDemoCoachRatings(coachData);
     setProfile({ id: "__demo__", role: "player", name: p.name, level: p.level, position: p.position });
@@ -5504,6 +5538,7 @@ export default function App() {
         <CoachHome
           profile={profile}
           onSignOut={handleSignOut}
+          demoMode={demoMode}
           onOpenPlayer={(p) => {
             // Coach rating for this player
             const pk = p.id;
