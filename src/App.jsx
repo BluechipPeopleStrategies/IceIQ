@@ -4500,10 +4500,13 @@ export default function App() {
   useEffect(() => {
     if (!hasSupabase) { setAuthReady(true); return; }
     let mounted = true;
+    const timeout = setTimeout(() => { if (mounted) setAuthReady(true); }, 5000);
     (async () => {
-      const session = await SB.getSession();
-      if (session?.user && mounted) await loadUser(session.user.id);
-      if (mounted) setAuthReady(true);
+      try {
+        const session = await SB.getSession();
+        if (session?.user && mounted) await loadUser(session.user.id);
+      } catch(e) { console.error("Session check failed:", e); }
+      if (mounted) { clearTimeout(timeout); setAuthReady(true); }
     })();
     const { data } = SB.onAuthChange(async (session) => {
       if (!mounted) return;
