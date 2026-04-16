@@ -4142,7 +4142,32 @@ function AuthScreen({ onAuthenticated, onDemo }) {
       <img src={imgSplash} alt="" style={{position:"absolute",inset:0,width:"100%",height:"100%",objectFit:"cover",opacity:0.45,pointerEvents:"none"}}/>
       <div style={{position:"absolute",inset:0,background:"radial-gradient(ellipse at center, rgba(8,14,26,0) 30%, rgba(8,14,26,0.7) 100%)",pointerEvents:"none"}}/>
 
-      <div style={{position:"relative",maxWidth:440,margin:"0 auto",width:"100%",background:"rgba(8,14,26,0.78)",backdropFilter:"blur(10px)",WebkitBackdropFilter:"blur(10px)",border:`1px solid ${C.border}`,borderRadius:16,padding:"2rem 1.5rem",boxShadow:"0 24px 60px rgba(0,0,0,0.5)"}}>
+      <div style={{position:"relative",maxWidth:440,margin:"0 auto",width:"100%"}}>
+        {/* What is IceIQ */}
+        <div style={{textAlign:"center",marginBottom:"1.5rem"}}>
+          <div style={{display:"flex",alignItems:"center",justifyContent:"center",gap:".6rem",marginBottom:".75rem"}}>
+            <IceIQLogo size={38}/>
+            <span style={{fontFamily:FONT.display,fontWeight:800,fontSize:"2.5rem",color:C.gold,letterSpacing:".08em"}}>IceIQ</span>
+          </div>
+          <p style={{fontSize:15,color:"rgba(248,250,252,.85)",lineHeight:1.6,margin:"0 0 1rem",maxWidth:380,marginLeft:"auto",marginRight:"auto"}}>
+            The hockey development app that measures what matters — game sense, decision-making, and tactical IQ.
+          </p>
+          <div style={{display:"grid",gridTemplateColumns:"1fr 1fr 1fr",gap:".5rem",marginBottom:".25rem"}}>
+            {[
+              {icon:"🧠",label:"Adaptive quizzes",sub:"700+ questions across 6 age groups"},
+              {icon:"📊",label:"Track your IQ",sub:"See your score improve over time"},
+              {icon:"🏒",label:"Pro insights",sub:"Learn from NHL, SHL, KHL & more"},
+            ].map((f,i) => (
+              <div key={i} style={{background:"rgba(8,14,26,0.5)",border:`1px solid ${C.border}`,borderRadius:12,padding:".65rem .5rem",textAlign:"center"}}>
+                <div style={{fontSize:20,marginBottom:4}}>{f.icon}</div>
+                <div style={{fontSize:11,fontWeight:700,color:C.white,marginBottom:2}}>{f.label}</div>
+                <div style={{fontSize:10,color:C.dimmer,lineHeight:1.3}}>{f.sub}</div>
+              </div>
+            ))}
+          </div>
+        </div>
+
+      <div style={{background:"rgba(8,14,26,0.78)",backdropFilter:"blur(10px)",WebkitBackdropFilter:"blur(10px)",border:`1px solid ${C.border}`,borderRadius:16,padding:"2rem 1.5rem",boxShadow:"0 24px 60px rgba(0,0,0,0.5)"}}>
         <div style={{display:"flex",alignItems:"center",gap:".6rem",marginBottom:"2rem"}}>
           <IceIQLogo size={32}/>
           <span style={{fontFamily:FONT.display,fontWeight:800,fontSize:"2rem",color:C.gold,letterSpacing:".08em"}}>IceIQ</span>
@@ -4260,6 +4285,7 @@ function AuthScreen({ onAuthenticated, onDemo }) {
         </div>
 
         <div style={{fontSize:10,color:C.dimmer,textAlign:"center",marginTop:"2rem",opacity:.6}}>v{VERSION}</div>
+      </div>
       </div>
     </div>
   );
