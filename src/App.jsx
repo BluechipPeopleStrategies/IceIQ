@@ -3890,96 +3890,58 @@ function BottomNav({ active, onNav }) {
 // DEMO MODE — pre-populated sample player, no signup required
 // ─────────────────────────────────────────────────────────
 const DEMO_PROFILES = {
-  "U11 / Atom":    {name:"Connor Crosby",      position:"Forward", team:"U11 AA Toronto Marlboros"},
-  "U15 / Bantam":  {name:"Jake Lemieux",        position:"Defense", team:"U15 AAA Winnipeg Warriors"},
-  "U18 / Midget":  {name:"Sarah Wickenheiser",  position:"Forward", team:"U18 Prep Toronto Jr. Canadiens"},
+  "U9 / Novice":{
+    name:"Luca Crosby",position:"Defense",team:"U9 A Saskatoon Blazers",
+    sessions:(mk)=>[mk(true,false,false,12,55),mk(true,true,false,6,68),mk(true,true,true,2,78)],
+    results:(ok1,ok2,ok3)=>[
+      {id:"u9q1",cat:"Decision Making",ok:ok1,d:1,type:"mc"},{id:"u9q3",cat:"Positioning",ok:ok1,d:1,type:"mc"},
+      {id:"u9q7",cat:"Exiting the Zone",ok:ok1,d:1,type:"mc"},{id:"u9q10",cat:"Defense",ok:ok1,d:1,type:"mc"},
+      {id:"u9q16",cat:"Decision Making",ok:ok2,d:2,type:"mc"},{id:"u9q21",cat:"Defense",ok:ok2,d:2,type:"mc"},
+      {id:"u9q27",cat:"Defense",ok:ok2,d:2,type:"mc"},{id:"u9q30",cat:"Decision Making",ok:ok2,d:2,type:"mc"},
+      {id:"u9q41",cat:"Decision Making",ok:ok3,d:3,type:"mc"},{id:"u9q42",cat:"Defense",ok:ok3,d:3,type:"mc"},
+    ],
+    selfRatings:{u9s1:"developing",u9s2:"consistent",u9s3:"developing",u9s4:"introduced",u9p1:"developing",u9p2:"developing",u9p3:"introduced",u9p4:"introduced",u9h1:"developing",u9h2:"introduced",u9d1:"developing",u9d2:"introduced",u9c1:"consistent",u9c2:"developing",u9c3:"developing"},
+    coachRatings:{u9s1:"developing",u9s2:"developing",u9s3:"introduced",u9s4:"introduced",u9p1:"developing",u9p2:"developing",u9p3:"developing",u9p4:"introduced",u9h1:"developing",u9h2:"introduced",u9d1:"introduced",u9d2:"introduced",u9c1:"consistent",u9c2:"consistent",u9c3:"developing"},
+    coachNotes:{u9d1:"Good positioning but needs to close gap faster on rushes.",u9c1:"Competes hard every shift — great example for the team."},
+    goals:{"Defense":{goal:"Improve gap control on the rush",S:"Hold the blue line and close gap by top of circles",M:"Coach tracks clean gap closes per game",A:"Yes — 1-on-1 rush drills in practice",R:"I back up too much and give attackers time",T:"By end of October 2026"}},
+  },
+  "U13 / Peewee":{
+    name:"Maya Gretzky",position:"Goalie",team:"U13 AAA Vancouver Hawks",
+    sessions:(mk)=>[mk(true,false,false,10,62),mk(true,true,false,4,75),mk(true,true,true,1,86)],
+    results:(ok1,ok2,ok3)=>[
+      {id:"u13q1",cat:"Rush Reads",ok:ok1,d:1,type:"mc"},{id:"u13q5",cat:"Defensive Zone",ok:ok1,d:1,type:"mc"},
+      {id:"u13q10",cat:"Zone Entry",ok:ok1,d:1,type:"mc"},{id:"u13q15",cat:"Special Teams",ok:ok1,d:1,type:"mc"},
+      {id:"u13q25",cat:"Shot Selection",ok:ok2,d:2,type:"mc"},{id:"u13q35",cat:"Defensive Zone",ok:ok2,d:2,type:"mc"},
+      {id:"u13q45",cat:"Special Teams",ok:ok2,d:2,type:"mc"},{id:"u13g1",cat:"Goalie",ok:ok2,d:1,type:"mc"},
+      {id:"u13g5",cat:"Goalie",ok:ok3,d:2,type:"mc"},{id:"u13g10",cat:"Goalie",ok:ok3,d:3,type:"mc"},
+    ],
+    selfRatings:{u13s1:"consistent",u13s2:"developing",u13s3:"developing",u13p1:"developing",u13p2:"introduced",u13p3:"consistent",u13p4:"developing",u13h1:"consistent",u13h2:"developing",u13h3:"consistent",u13h4:"developing",u13d1:"developing",u13d2:"consistent",u13c1:"proficient",u13c2:"consistent",u13c3:"developing",u13c4:"consistent"},
+    coachRatings:{u13s1:"consistent",u13s2:"developing",u13s3:"introduced",u13p1:"developing",u13p2:"introduced",u13p3:"developing",u13p4:"developing",u13h1:"developing",u13h2:"developing",u13h3:"consistent",u13h4:"developing",u13d1:"developing",u13d2:"consistent",u13c1:"proficient",u13c2:"consistent",u13c3:"consistent",u13c4:"consistent"},
+    coachNotes:{u13h3:"Strong defensive zone awareness for a goalie — reads plays well.",u13c1:"Natural leader. Keeps the team calm under pressure."},
+    goals:{"Leadership":{goal:"Be more vocal in the room and on the ice during games",S:"Call out plays and communicate with D on every shift",M:"Coach gives feedback after each game on communication",A:"Yes — I already talk to my D but need to be louder",R:"Coach says I read the game well but teammates don't hear me",T:"By January 2027"}},
+  },
 };
 
-function buildDemoPlayer() {
+function buildDemoPlayer(level) {
+  const cfg = DEMO_PROFILES[level];
+  if (!cfg) return null;
   const now = Date.now();
   const day = 86400000;
-  // Fabricate three past quiz sessions with realistic progression
   const mkSession = (ok1, ok2, ok3, daysAgo, score) => ({
-    results: [
-      {id:"u11q1",cat:"Rush Reads",ok:ok1,d:1,type:"mc"},
-      {id:"u11q2",cat:"Coverage",ok:ok1,d:1,type:"mc"},
-      {id:"u11q6",cat:"Puck Protection",ok:ok1,d:1,type:"mc"},
-      {id:"u11q11",cat:"Exiting the Zone",ok:ok1,d:1,type:"mc"},
-      {id:"u11q20",cat:"Coverage",ok:ok2,d:2,type:"mc"},
-      {id:"u11seq1",cat:"Exiting the Zone",ok:ok2,d:1,type:"seq"},
-      {id:"u11mis1",cat:"Coverage",ok:ok2,d:1,type:"mistake"},
-      {id:"u11next1",cat:"Rush Reads",ok:ok2,d:1,type:"next"},
-      {id:"u11tf2",cat:"Coverage",ok:ok2,d:1,type:"tf"},
-      {id:"u11q92",cat:"Blue Line Decisions",ok:ok3,d:3,type:"mc"},
-      {id:"u11q95",cat:"Decision Timing",ok:ok3,d:3,type:"mc"},
-      {id:"u11q100",cat:"Decision Timing",ok:ok3,d:3,type:"mc"},
-      {id:"u11seq8",cat:"Puck Protection",ok:ok3,d:3,type:"seq"},
-      {id:"u11tf10",cat:"Blue Line Decisions",ok:ok3,d:2,type:"tf"},
-      {id:"u11mis8",cat:"Puck Protection",ok:ok2,d:2,type:"mistake"},
-    ],
-    score,
+    results: cfg.results(ok1, ok2, ok3), score,
     date: new Date(now - daysAgo*day).toISOString(),
   });
   return {
-    id: "__demo__",
-    name: "Connor Crosby",
-    level: "U11 / Atom",
-    position: "Forward",
-    season: SEASONS[0],
-    sessionLength: 10,
-    colorblind: false,
-    coachCode: "",
-    quizHistory: [
-      mkSession(true, false, false, 14, 58),
-      mkSession(true, true, false, 7, 71),
-      mkSession(true, true, true, 1, 83),
-    ],
-    selfRatings: {
-      // U11 skills — unified competency ladder values
-      u11s1:"developing", u11s2:"consistent", u11s3:"developing", u11s4:"introduced",
-      u11p1:"consistent", u11p2:"developing", u11p3:"developing", u11p4:"consistent",
-      u11h1:"consistent", u11h2:"developing", u11h3:"developing",
-      u11d1:"developing", u11d2:"introduced",
-      u11c1:"advanced", u11c2:"proficient", u11c3:"consistent",
-      u11dm1:"developing", u11dm2:"developing", u11dm3:"introduced", u11dm4:"consistent", u11dm5:"developing",
-    },
-    goals: {
-      "Gap Control": {
-        goal: "Work on closing the gap at the blue line instead of backing up to the crease",
-        S: "Close the gap by the top of the circles on every rush",
-        M: "Track number of clean gap closes per game using coach feedback",
-        A: "Yes — drill this with my D-partner in warmups and 1-on-1 practice reps",
-        R: "This is my biggest weakness and most games I give up the blue line",
-        T: "By end of November 2026",
-      },
-      "Special Teams": {
-        goal: "Learn the 1-3-1 power play setup and execute my position consistently",
-        S: "Know my spot and responsibilities in the 1-3-1",
-        M: "Ask coach to review video after next 3 power plays",
-        A: "Yes, coach said this is where I'll play",
-        R: "I get power play time and want to earn more",
-        T: "Next 4 weeks",
-      },
-    },
-    __demo: true,
+    id: "__demo__", name: cfg.name, level, position: cfg.position,
+    season: SEASONS[0], sessionLength: 10, colorblind: false, coachCode: "",
+    quizHistory: cfg.sessions(mkSession),
+    selfRatings: {...cfg.selfRatings}, goals: {...cfg.goals}, __demo: true,
   };
 }
-function buildDemoCoachRatings() {
-  return {
-    ratings: {
-      u11s1:"developing", u11s2:"consistent", u11s3:"developing", u11s4:"developing",
-      u11p1:"consistent", u11p2:"developing", u11p3:"consistent", u11p4:"proficient",
-      u11h1:"consistent", u11h2:"developing", u11h3:"developing",
-      u11d1:"introduced", u11d2:"introduced",
-      u11c1:"advanced", u11c2:"proficient", u11c3:"proficient",
-      u11dm1:"developing", u11dm2:"developing", u11dm3:"developing", u11dm4:"consistent", u11dm5:"developing",
-    },
-    notes: {
-      u11d1: "Work on matching attacker speed and closing the gap — you back up too far and give them time.",
-      u11c1: "Elite compete level — you set the tone for the line every shift. Keep it.",
-      u11p4: "Great body position in puck battles. Now add the quick outlet pass once you win it.",
-    },
-  };
+function buildDemoCoachRatings(level) {
+  const cfg = DEMO_PROFILES[level];
+  if (!cfg) return { ratings: {}, notes: {} };
+  return { ratings: {...cfg.coachRatings}, notes: {...cfg.coachNotes} };
 }
 
 // ─────────────────────────────────────────────────────────
@@ -4476,7 +4438,7 @@ export default function App() {
       setScreen("home");
       return;
     }
-    const level = levelOrRole || "U11 / Atom";
+    const level = levelOrRole || "U9 / Novice";
     const p = buildDemoPlayer(level);
     const coachData = buildDemoCoachRatings(level);
     setDemoMode(true);
