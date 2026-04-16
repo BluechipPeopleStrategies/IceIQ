@@ -3891,7 +3891,7 @@ function BottomNav({ active, onNav }) {
 // ─────────────────────────────────────────────────────────
 const DEMO_PROFILES = {
   "U7 / Initiation":{
-    name:"Nora McDavid",position:"Not Sure",team:"U7 IP Calgary Flames",
+    name:"Nora Orr",position:"Not Sure",team:"U7 IP Calgary Flames",
     sessions:(mk)=>[mk(true,false,false,10,52),mk(true,true,false,5,65),mk(true,true,false,1,70)],
     results:(ok1,ok2,ok3)=>[
       {id:"u7q1",cat:"Skating",ok:ok1,d:1,type:"mc"},{id:"u7q3",cat:"Puck Control",ok:ok1,d:1,type:"mc"},
@@ -3906,7 +3906,7 @@ const DEMO_PROFILES = {
     goals:{"Skating":{goal:"Learn to stop on both sides",S:"Do 10 snowplow stops each practice",M:"Coach checks off each practice",A:"Yes — we practice stops every session",R:"I fall when I try to stop on my left side",T:"By end of December 2026"}},
   },
   "U9 / Novice":{
-    name:"Luca Crosby",position:"Defense",team:"U9 A Saskatoon Blazers",
+    name:"Luca Lidstrom",position:"Defense",team:"U9 A Saskatoon Blazers",
     sessions:(mk)=>[mk(true,false,false,12,55),mk(true,true,false,6,68),mk(true,true,true,2,78)],
     results:(ok1,ok2,ok3)=>[
       {id:"u9q1",cat:"Decision Making",ok:ok1,d:1,type:"mc"},{id:"u9q3",cat:"Positioning",ok:ok1,d:1,type:"mc"},
@@ -3921,7 +3921,7 @@ const DEMO_PROFILES = {
     goals:{"Defense":{goal:"Improve gap control on the rush",S:"Hold the blue line and close gap by top of circles",M:"Coach tracks clean gap closes per game",A:"Yes — 1-on-1 rush drills in practice",R:"I back up too much and give attackers time",T:"By end of October 2026"}},
   },
   "U13 / Peewee":{
-    name:"Maya Gretzky",position:"Goalie",team:"U13 AAA Vancouver Hawks",
+    name:"Maya Roy",position:"Goalie",team:"U13 AAA Vancouver Hawks",
     sessions:(mk)=>[mk(true,false,false,10,62),mk(true,true,false,4,75),mk(true,true,true,1,86)],
     results:(ok1,ok2,ok3)=>[
       {id:"u13q1",cat:"Rush Reads",ok:ok1,d:1,type:"mc"},{id:"u13q5",cat:"Defensive Zone",ok:ok1,d:1,type:"mc"},
@@ -3936,7 +3936,7 @@ const DEMO_PROFILES = {
     goals:{"Leadership":{goal:"Be more vocal in the room and on the ice during games",S:"Call out plays and communicate with D on every shift",M:"Coach gives feedback after each game on communication",A:"Yes — I already talk to my D but need to be louder",R:"Coach says I read the game well but teammates don't hear me",T:"By January 2027"}},
   },
   "U11 / Atom":{
-    name:"Connor Crosby",position:"Forward",team:"U11 AA Edmonton Selects",
+    name:"Cole Gretzky",position:"Forward",team:"U11 AA Edmonton Selects",
     sessions:(mk)=>[mk(true,false,false,14,58),mk(true,true,false,7,71),mk(true,true,true,1,83)],
     results:(ok1,ok2,ok3)=>[
       {id:"u11q1",cat:"Rush Reads",ok:ok1,d:1,type:"mc"},{id:"u11q2",cat:"Coverage",ok:ok1,d:1,type:"mc"},
@@ -3951,7 +3951,7 @@ const DEMO_PROFILES = {
     goals:{"Gap Control":{goal:"Close the gap at the blue line instead of backing up",S:"Close gap by top of circles on every rush",M:"Track clean gap closes per game",A:"Yes — drill with D-partner in warmups",R:"Biggest weakness — I give up the blue line",T:"By end of November 2026"}},
   },
   "U15 / Bantam":{
-    name:"Jake Lemieux",position:"Defense",team:"U15 AAA Winnipeg Warriors",
+    name:"Jack Bourque",position:"Defense",team:"U15 AAA Winnipeg Warriors",
     sessions:(mk)=>[mk(true,false,false,8,60),mk(true,true,false,3,74),mk(true,true,true,1,85)],
     results:(ok1,ok2,ok3)=>[
       {id:"u15q1",cat:"Systems Play",ok:ok1,d:1,type:"mc"},{id:"u15q5",cat:"Transition Game",ok:ok1,d:1,type:"mc"},
@@ -3964,7 +3964,7 @@ const DEMO_PROFILES = {
     goals:{"Systems Play":{goal:"Master the 1-2-2 forecheck",S:"Execute my role in the 1-2-2 every shift",M:"Coach reviews video after each game",A:"Yes — we run this system every practice",R:"I freelance too much and break structure",T:"By end of January 2027"}},
   },
   "U18 / Midget":{
-    name:"Sarah Wickenheiser",position:"Forward",team:"U18 Prep Toronto Jr. Canadiens",
+    name:"Eli Lemieux",position:"Forward",team:"U18 Prep Toronto Jr. Canadiens",
     sessions:(mk)=>[mk(true,true,false,6,72),mk(true,true,true,3,81),mk(true,true,true,1,89)],
     results:(ok1,ok2,ok3)=>[
       {id:"u18q1",cat:"Game Management",ok:ok1,d:1,type:"mc"},{id:"u18q5",cat:"Advanced Tactics",ok:ok1,d:1,type:"mc"},
@@ -4272,10 +4272,10 @@ const DEMO_COACH_TEAMS = [
   {id:"demo-t1",name:"U11 AA Edmonton Selects",level:"U11 / Atom",season:SEASONS[0],code:"SELECTS"},
 ];
 const DEMO_COACH_ROSTER = [
-  {id:"dr1",name:"Connor Crosby",level:"U11 / Atom",position:"Forward",iq:83,sessions:3},
-  {id:"dr2",name:"Ava Hughes",level:"U11 / Atom",position:"Defense",iq:71,sessions:2},
-  {id:"dr3",name:"Marcus Chen",level:"U11 / Atom",position:"Forward",iq:65,sessions:1},
-  {id:"dr4",name:"Sophie Larsson",level:"U11 / Atom",position:"Goalie",iq:78,sessions:3},
+  {id:"dr1",name:"Cole Gretzky",level:"U11 / Atom",position:"Forward",iq:83,sessions:3},
+  {id:"dr2",name:"Nora Howe",level:"U11 / Atom",position:"Defense",iq:71,sessions:2},
+  {id:"dr3",name:"Marcus Sakic",level:"U11 / Atom",position:"Forward",iq:65,sessions:1},
+  {id:"dr4",name:"Maya Hasek",level:"U11 / Atom",position:"Goalie",iq:78,sessions:3},
   {id:"dr5",name:"Tyler Blackwood",level:"U11 / Atom",position:"Defense",iq:58,sessions:1},
 ];
 
