@@ -1,9 +1,9 @@
 export const COMPETENCY_LADDER = [
-  {value:"introduced", label:"Introduced",  sub_self:"I'm learning what this is",               sub_coach:"Has been introduced — needs consistent support",   color:"#f87171"},
-  {value:"developing", label:"Developing",  sub_self:"I can do it sometimes, needs reminders",  sub_coach:"Shows progress with reminders / in practice",       color:"#facc15"},
-  {value:"consistent", label:"Consistent",  sub_self:"I do it reliably in practice",            sub_coach:"Reliable in practice, inconsistent in games",      color:"#22c55e"},
-  {value:"proficient", label:"Proficient",  sub_self:"I do it in games without thinking",       sub_coach:"Performs reliably in game situations",            color:"#3b82f6"},
-  {value:"advanced",   label:"Advanced",    sub_self:"I can teach this to a teammate",          sub_coach:"Standout for age — impacts and helps teammates",  color:"#a855f7"},
+  {value:"introduced", label:"Introduced",  sub_self:"I'm learning what this is",               sub_coach:"Has been introduced — needs consistent support · ~bottom 35%",   color:"#f87171"},
+  {value:"developing", label:"Developing",  sub_self:"I can do it sometimes, needs reminders",  sub_coach:"Shows progress with reminders / in practice · ~35–60%",       color:"#facc15"},
+  {value:"consistent", label:"Consistent",  sub_self:"I do it reliably in practice",            sub_coach:"Reliable in practice, inconsistent in games · ~top 40%",      color:"#22c55e"},
+  {value:"proficient", label:"Proficient",  sub_self:"I do it in games without thinking",       sub_coach:"Performs reliably in game situations · ~top 20%",            color:"#3b82f6"},
+  {value:"advanced",   label:"Advanced",    sub_self:"I can teach this to a teammate",          sub_coach:"Standout for age — impacts and helps teammates · ~top 5%",  color:"#a855f7"},
 ];
 
 export function ladderFor(n, forSelf) {

@@ -44,20 +44,24 @@ export const SEASONS = ["2025-26","2026 Spring/Summer","2026-27"];
 
 export function IceIQLogo({ size = 32, color = "#c9a84c" }) {
   return (
-    <svg width={size} height={size} viewBox="0 0 32 32" aria-label="IceIQ logo" style={{display:"block",flexShrink:0}}>
-      <path d="M 8 11.5 C 7.5 9.5, 9 7.2, 10.8 7 C 11.5 5.8, 13 5.5, 14 6.5 C 15 5.5, 16.5 5.5, 17.5 6.5 C 18.8 5.5, 20.5 5.8, 21.3 7 C 23 6.8, 24.5 8.3, 24.5 10.3 C 26 10.8, 26 12.3, 24.8 12.8 C 25.3 13.5, 25 14.8, 23.8 15.2 C 23.5 16.3, 22 16.8, 20.5 16.3 C 19.8 17.2, 18 17.3, 17 16.5 C 16 17.3, 14 17.3, 13 16.5 C 11.5 17, 9.8 16.5, 9.2 15.3 C 7.8 14.8, 7 13.3, 7.8 12 C 6.8 11.5, 7.2 10.8, 8 11.5 Z" fill="none" stroke={color} strokeWidth="1.3" strokeLinejoin="round" strokeLinecap="round"/>
-      <path d="M 10.5 8.5 Q 12.5 7.5 13.8 8.8 Q 15.5 7.8 16.8 8.8 Q 18.3 7.8 19.5 8.8" stroke={color} strokeWidth="0.85" fill="none" strokeLinecap="round"/>
-      <path d="M 19.5 7.5 Q 21.5 8.2 23.5 7.8" stroke={color} strokeWidth="0.85" fill="none" strokeLinecap="round"/>
-      <path d="M 9 11 Q 12 10, 15 11.3 Q 18 10.2, 21 11.3 Q 23 10.3, 25 11.3" stroke={color} strokeWidth="0.85" fill="none" strokeLinecap="round"/>
-      <path d="M 9.3 13.8 Q 12.5 13, 16 14 Q 19.5 13.2, 23 14.2" stroke={color} strokeWidth="0.85" fill="none" strokeLinecap="round"/>
-      <line x1="24" y1="17" x2="7" y2="28" stroke={color} strokeWidth="2.2" strokeLinecap="round"/>
-      <path d="M 7 28 Q 3 28.5, 2.5 26.2" stroke={color} strokeWidth="3" fill="none" strokeLinecap="round" strokeLinejoin="round"/>
-      <line x1="21.5" y1="18.6" x2="24" y2="17" stroke="#0d1525" strokeWidth="1.1" strokeLinecap="round"/>
-      <line x1="8" y1="17" x2="25" y2="28" stroke={color} strokeWidth="2.2" strokeLinecap="round"/>
-      <path d="M 25 28 Q 29 28.5, 29.5 26.2" stroke={color} strokeWidth="3" fill="none" strokeLinecap="round" strokeLinejoin="round"/>
-      <line x1="10.5" y1="18.6" x2="8" y2="17" stroke="#0d1525" strokeWidth="1.1" strokeLinecap="round"/>
-      <ellipse cx="16" cy="30" rx="3.2" ry="1.1" fill={color}/>
-      <ellipse cx="16" cy="30" rx="3.2" ry="1.1" fill="none" stroke="#0d1525" strokeWidth="0.3"/>
+    <svg width={size} height={size} viewBox="0 0 40 40" aria-label="IceIQ logo" style={{display:"block",flexShrink:0}}>
+      {/* Outer circle ring */}
+      <circle cx="20" cy="20" r="18" fill="none" stroke={color} strokeWidth="1.5" opacity="0.4"/>
+
+      {/* Hockey stick — modern clean lines */}
+      <path d="M 20 8 L 20 24" stroke={color} strokeWidth="2.4" strokeLinecap="round" fill="none"/>
+      <path d="M 20 24 Q 28 24 32 28" stroke={color} strokeWidth="2.4" strokeLinecap="round" fill="none"/>
+
+      {/* Puck — filled circle with motion lines */}
+      <circle cx="20" cy="10" r="3.5" fill={color}/>
+
+      {/* Motion blur lines (indicate speed/growth) */}
+      <line x1="12" y1="10" x2="8" y2="10" stroke={color} strokeWidth="1.2" opacity="0.5" strokeLinecap="round"/>
+      <line x1="11" y1="6" x2="7" y2="4" stroke={color} strokeWidth="1" opacity="0.4" strokeLinecap="round"/>
+      <line x1="11" y1="14" x2="7" y2="16" stroke={color} strokeWidth="1" opacity="0.4" strokeLinecap="round"/>
+
+      {/* Ice accent — subtle triangles at base */}
+      <path d="M 18 32 L 20 28 L 22 32" fill="none" stroke={color} strokeWidth="1" opacity="0.6" strokeLinejoin="round"/>
     </svg>
   );
 }

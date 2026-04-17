@@ -20,8 +20,8 @@ import imgSuccess from "./assets/images/Success-Icon.jpg";
 //           profile.tier field (future Supabase subscriptions) → that tier
 //           default → FREE
 function resolveTier({ profile, demoMode } = {}) {
-  // Demo mode experiences the FREE tier — people see exactly what they get for free
-  if (demoMode) return "FREE";
+  // Coach demo gets TEAM so they see the full dashboard; player demo gets FREE
+  if (demoMode) return profile?.role === "coach" ? "TEAM" : "FREE";
   try {
     const override = typeof window !== "undefined" ? window.localStorage.getItem("iceiq_tier_override") : null;
     if (override && ["FREE","PRO","FAMILY","TEAM"].includes(override.toUpperCase())) {
@@ -42,19 +42,12 @@ function resolveTier({ profile, demoMode } = {}) {
 const VERSION = "0.6.0";
 const RELEASE_DATE = "April 13, 2026";
 const CHANGELOG = [
-  { v:"2.0.0", date:"April 13, 2026", notes:[
-    "Full redesign — premium interface built for paid product",
-    "New question formats: Sequence Ordering, Spot the Mistake, What Happens Next, True/False",
-    "SMART Goal Setting — set, track and achieve development goals by category",
-    "Position-based quiz engine — Forward, Defense, Goalie each get tailored questions",
-    "Goalie question bank — 45 new goalie-specific questions across U7, U9, U11",
-    "Coach Dashboard — anonymous team results by season with category breakdown",
-    "Daily streak system and badge collection",
-  ]},
-  { v:"1.0.0", date:"April 13, 2026", notes:[
-    "Position-based quiz — Forward, Defense, Goalie each get a tailored question set",
-    "Coach Dashboard — anonymous team results by season",
-    "Goalie questions added across U7, U9, U11",
+  { v:"2.0.0", date:"April 2026", notes:[
+    {icon:"🏒", title:"5 Question Formats", desc:"Multiple choice, True/False, Sequence, Spot the Mistake, and What Happens Next"},
+    {icon:"🎯", title:"Adaptive Quiz Engine", desc:"Difficulty shifts in real time based on your answers — always the right challenge"},
+    {icon:"📊", title:"SMART Goal Tracking", desc:"Set development goals by category, tie them to your self-assessment and coach feedback"},
+    {icon:"🥅", title:"Goalie Question Bank", desc:"45 new goalie-specific questions across U7, U9, and U11"},
+    {icon:"🏆", title:"Weekly Challenge", desc:"New curated quiz drops every Monday — same questions for every player at your level"},
   ]},
 ];
 
@@ -73,7 +66,7 @@ const getTier = s => SCORE_TIERS.find(t => s >= t.min) || SCORE_TIERS[2];
 
 const BADGES = {
   HOT_STREAK: {icon:"🔥", name:"Hot Streak",  desc:"3 correct in a row"},
-  HOCKEY_IQ:  {icon:"🧠", name:"Hockey IQ",   desc:"Perfect session"},
+  HOCKEY_IQ:  {icon:"🧠", name:"Game Sense",   desc:"Perfect session"},
   HARD_HAT:   {icon:"💎", name:"Hard Hat",     desc:"5 Advanced correct"},
   SNIPER:     {icon:"🎯", name:"Sniper",       desc:"100% on a category"},
   LEVEL_UP:   {icon:"📈", name:"Level Up",     desc:"Beat your last score"},
@@ -107,7 +100,7 @@ const SMART_PROMPTS = {
 
 
 import { loadQB, preloadQB } from "./qbLoader.js";
-import { getWeekKey, getThisWeekRecord, markWeeklyComplete, seededShuffle, weekSeed, formatCountdown, msUntilNextWeek } from "./utils/weeklyChallenge.js";
+import { getWeekKey, getThisWeekRecord, markWeeklyComplete, seededShuffle, weekSeed, formatCountdown, msUntilNextWeek, getFreeQuizCount, isAtFreeQuizCap, incrementFreeQuizCount, FREE_WEEKLY_QUIZ_CAP } from "./utils/weeklyChallenge.js";
 import { COMPETENCY_LADDER, RATING_SCALES, SKILLS, ladderFor, getSelfScale, getCoachScale, getScaleColor, getScaleLabel, normalizeRating, getDiscussionPrompt, migrateRatings, PERCENTILE_RATINGS, PR_COLOR, PR_LABEL } from "./data/constants.js";
 
 const AdminReports = lazy(() => import("./screens.jsx").then(m => ({ default: m.AdminReports })));
@@ -116,9 +109,9 @@ const PlansScreen = lazy(() => import("./screens.jsx").then(m => ({ default: m.P
 const LazyFallback = () => <div style={{minHeight:"100vh",background:C.bg,color:C.dimmer,display:"flex",alignItems:"center",justifyContent:"center",fontFamily:FONT.body}}>Loading…</div>;
 
 const COMP={
-  "U7 / Initiation":{t:[0.75,0.5],l:["Game-Ready IQ","Getting It","Still Learning"]},
+  "U7 / Initiation":{t:[0.75,0.5],l:["Game-Ready","Getting It","Still Learning"]},
   "U9 / Novice":{t:[0.8,0.55],l:["Smart Player","Making Reads","Building Awareness"]},
-  "U11 / Atom":{t:[0.8,0.6],l:["Hockey IQ Player","System Aware","Instinct Stage"]},
+  "U11 / Atom":{t:[0.8,0.6],l:["Hockey Sense","System Aware","Instinct Stage"]},
   "U13 / Peewee":{t:[0.82,0.65],l:["Elite Game Read","Situationally Sound","Tactical Foundation"]},
   "U15 / Bantam":{t:[0.84,0.68],l:["Systems Thinker","Positionally Sound","Developing Reads"]},
   "U18 / Midget":{t:[0.86,0.70],l:["Complete Player","Tactically Aware","Building Foundation"]},
@@ -691,7 +684,7 @@ function Home({ player, onNav, demoMode, subscriptionTier }) {
           <div>
             <div style={{display:"flex",alignItems:"center",gap:".45rem",marginBottom:".2rem"}}>
               <IceIQLogo size={22}/>
-              <span style={{fontFamily:FONT.display,fontWeight:800,fontSize:"1.5rem",color:C.gold,letterSpacing:".06em"}}>IceIQ</span>
+              <span style={{fontFamily:FONT.display,fontWeight:800,fontSize:"1.5rem",color:C.gold,letterSpacing:".06em"}}>Ice-IQ</span>
               <span style={{fontSize:10,color:C.dimmer,fontWeight:500,letterSpacing:".04em"}}>v{VERSION}</span>
               {streak > 0 && (
                 <div style={{background:"rgba(234,179,8,.12)",border:"1px solid rgba(234,179,8,.25)",borderRadius:20,padding:"2px 8px",fontSize:11,fontWeight:700,color:C.yellow,display:"flex",alignItems:"center",gap:".2rem"}}>
@@ -707,7 +700,7 @@ function Home({ player, onNav, demoMode, subscriptionTier }) {
         {/* IQ Score Hero */}
         <Card glow={iq !== null} style={{marginBottom:"1rem",background:`linear-gradient(135deg,${C.bgCard},${C.bgElevated})`,position:"relative",overflow:"hidden"}}>
           <div style={{position:"absolute",top:0,right:0,width:120,height:120,background:`radial-gradient(circle at top right,${iq!==null?tier.color+"15":"rgba(255,255,255,.02)"},transparent 70%)`,pointerEvents:"none"}}/>
-          <Label>Hockey IQ Score</Label>
+          <Label>Game Sense Score</Label>
           {iq !== null ? (
             <div style={{display:"flex",alignItems:"flex-end",gap:"1rem"}}>
               <div>
@@ -796,7 +789,7 @@ function Home({ player, onNav, demoMode, subscriptionTier }) {
             <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:".5rem"}}>
               <div style={{display:"flex",alignItems:"center",gap:".5rem"}}>
                 <span style={{fontSize:16}}>⭐</span>
-                <span style={{fontSize:10,letterSpacing:".14em",textTransform:"uppercase",color:C.gold,fontWeight:800}}>Upgrade to IceIQ Pro</span>
+                <span style={{fontSize:10,letterSpacing:".14em",textTransform:"uppercase",color:C.gold,fontWeight:800}}>Upgrade to Ice-IQ Pro</span>
               </div>
               <span style={{color:C.gold,fontSize:13}}>→</span>
             </div>
@@ -819,18 +812,26 @@ function Home({ player, onNav, demoMode, subscriptionTier }) {
         )}
 
         {/* What's New */}
-        <Card style={{marginBottom:"1rem"}}>
-          <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:".75rem"}}>
-            <Label style={{marginBottom:0}}>What's New</Label>
-            <span style={{fontSize:11,color:C.dimmer}}>v{VERSION}</span>
-          </div>
-          {CHANGELOG[0].notes.slice(0,3).map((note,i) => (
-            <div key={i} style={{display:"flex",gap:".5rem",marginBottom:".35rem",alignItems:"flex-start"}}>
-              <span style={{color:C.gold,fontSize:11,flexShrink:0,marginTop:2}}>·</span>
-              <span style={{fontSize:12,color:C.dim,lineHeight:1.5}}>{note}</span>
+        <div style={{marginBottom:"1rem",background:`linear-gradient(135deg,${C.bgCard} 0%,${C.bgElevated} 100%)`,border:`1px solid ${C.border}`,borderRadius:16,overflow:"hidden"}}>
+          <div style={{padding:".75rem 1rem .6rem",display:"flex",alignItems:"center",justifyContent:"space-between",borderBottom:`1px solid rgba(255,255,255,0.05)`}}>
+            <div style={{display:"flex",alignItems:"center",gap:".5rem"}}>
+              <span style={{background:C.gold,color:C.bg,fontSize:9,fontWeight:800,letterSpacing:".1em",textTransform:"uppercase",padding:"2px 7px",borderRadius:20}}>NEW</span>
+              <span style={{fontFamily:FONT.display,fontWeight:800,fontSize:13,color:C.white,letterSpacing:".02em"}}>What's New</span>
             </div>
-          ))}
-        </Card>
+            <span style={{fontSize:10,color:C.dimmer,fontWeight:600}}>v{VERSION} · {CHANGELOG[0].date}</span>
+          </div>
+          <div style={{padding:".65rem .85rem"}}>
+            {CHANGELOG[0].notes.slice(0,3).map((item,i) => (
+              <div key={i} style={{display:"flex",alignItems:"flex-start",gap:".65rem",padding:".5rem 0",borderBottom:i<2?`1px solid rgba(255,255,255,0.04)`:"none"}}>
+                <div style={{width:32,height:32,borderRadius:10,background:"rgba(255,255,255,0.05)",display:"flex",alignItems:"center",justifyContent:"center",fontSize:15,flexShrink:0}}>{item.icon}</div>
+                <div style={{minWidth:0}}>
+                  <div style={{fontSize:12,fontWeight:700,color:C.white,marginBottom:2}}>{item.title}</div>
+                  <div style={{fontSize:11,color:C.dimmer,lineHeight:1.45}}>{item.desc}</div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
       </div>
     </div>
   );
@@ -943,7 +944,7 @@ function Quiz({ player, onFinish, onBack, tier, onUpgrade }) {
           <div style={{maxWidth:560,margin:"0 auto",display:"flex",alignItems:"center",gap:"1rem"}}>
             <button onClick={onBack} style={{background:"none",border:`1px solid ${C.border}`,color:C.dimmer,borderRadius:8,padding:".35rem .75rem",cursor:"pointer",fontSize:13,fontFamily:FONT.body}}>←</button>
             <div style={{flex:1}}>
-              <div style={{fontFamily:FONT.display,fontWeight:800,fontSize:"1rem",color:C.gold}}>IceIQ · {player.level}</div>
+              <div style={{fontFamily:FONT.display,fontWeight:800,fontSize:"1rem",color:C.gold}}>Ice-IQ · {player.level}</div>
               <div style={{fontSize:11,color:C.dimmer}}>Q{qNum+1}/{qLen} · {player.position}</div>
             </div>
           </div>
@@ -954,7 +955,7 @@ function Quiz({ player, onFinish, onBack, tier, onUpgrade }) {
           <div style={{fontSize:13,color:C.dim,lineHeight:1.7,marginBottom:"1.75rem",maxWidth:360}}>{FORMAT_PREVIEW_DESC[fmt]}</div>
           <div style={{background:C.bgElevated,border:`1px solid ${C.goldBorder}`,borderRadius:12,padding:"1.25rem",marginBottom:"1.5rem",width:"100%",textAlign:"left"}}>
             <div style={{fontSize:11,color:C.gold,fontWeight:700,marginBottom:".5rem"}}>🔒 PRO QUESTION TYPE</div>
-            <div style={{fontSize:12,color:C.dim,lineHeight:1.6}}>This question type is available on IceIQ Pro. Unlock all 5 question formats to challenge yourself in new ways.</div>
+            <div style={{fontSize:12,color:C.dim,lineHeight:1.6}}>This question type is available on Ice-IQ Pro. Unlock all 5 question formats to challenge yourself in new ways.</div>
           </div>
           <button onClick={() => onUpgrade("allQuestionFormats","pro")} style={{background:C.gold,color:C.bg,border:"none",borderRadius:10,padding:".85rem 1.75rem",cursor:"pointer",fontWeight:800,fontSize:15,fontFamily:FONT.body,marginBottom:".75rem",width:"100%"}}>Unlock All Question Types →</button>
           <button onClick={advance} style={{background:"none",border:`1px solid ${C.border}`,color:C.dimmer,borderRadius:10,padding:".7rem 1.5rem",cursor:"pointer",fontWeight:600,fontSize:13,fontFamily:FONT.body,width:"100%"}}>Skip for now</button>
@@ -972,7 +973,7 @@ function Quiz({ player, onFinish, onBack, tier, onUpgrade }) {
         <div style={{maxWidth:560,margin:"0 auto",display:"flex",alignItems:"center",gap:"1rem"}}>
           <button onClick={onBack} style={{background:"none",border:`1px solid ${C.border}`,color:C.dimmer,borderRadius:8,padding:".35rem .75rem",cursor:"pointer",fontSize:13,fontFamily:FONT.body}}>←</button>
           <div style={{flex:1}}>
-            <div style={{fontFamily:FONT.display,fontWeight:800,fontSize:"1rem",color:C.gold}}>IceIQ · {player.level}</div>
+            <div style={{fontFamily:FONT.display,fontWeight:800,fontSize:"1rem",color:C.gold}}>Ice-IQ · {player.level}</div>
             <div style={{fontSize:11,color:C.dimmer}}>Q{qNum+1}/{qLen} · {player.position} · {player.season||SEASONS[0]}</div>
           </div>
           <div style={{width:80,height:4,background:C.dimmest,borderRadius:2,overflow:"hidden"}}>
@@ -1248,6 +1249,32 @@ function Results({ results, player, prevScore, totalSessions, seqPerfect, mistak
 // ─────────────────────────────────────────────────────────
 // GATED SMART GOALS SCREEN (with blurred preview)
 // ─────────────────────────────────────────────────────────
+function FreeQuizCapScreen({ onBack, onUpgrade }) {
+  const [countdown, setCountdown] = useState(formatCountdown(msUntilNextWeek()));
+  useEffect(() => {
+    const t = setInterval(() => setCountdown(formatCountdown(msUntilNextWeek())), 60000);
+    return () => clearInterval(t);
+  }, []);
+  const used = getFreeQuizCount();
+  return (
+    <div style={{minHeight:"100vh",background:C.bg,color:C.white,fontFamily:FONT.body,display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",padding:"2rem 1.25rem",textAlign:"center"}}>
+      <div style={{maxWidth:380,width:"100%"}}>
+        <div style={{fontSize:48,marginBottom:"1rem"}}>🏒</div>
+        <div style={{fontFamily:FONT.display,fontWeight:800,fontSize:"1.8rem",marginBottom:".5rem"}}>Weekly limit reached</div>
+        <div style={{fontSize:14,color:C.dim,lineHeight:1.65,marginBottom:"1.75rem"}}>
+          Free players get <strong style={{color:C.white}}>{FREE_WEEKLY_QUIZ_CAP} quizzes per week</strong>. You've completed {used} this week. New quizzes unlock in <strong style={{color:C.gold}}>{countdown}</strong>.
+        </div>
+        <button onClick={onUpgrade} style={{width:"100%",background:C.gold,color:C.bg,border:"none",borderRadius:12,padding:"1rem",cursor:"pointer",fontWeight:800,fontSize:16,fontFamily:FONT.body,marginBottom:".75rem",boxShadow:`0 4px 16px ${C.gold}33`}}>
+          Unlock unlimited quizzes →
+        </button>
+        <button onClick={onBack} style={{width:"100%",background:"none",border:`1px solid ${C.border}`,borderRadius:12,padding:".85rem",cursor:"pointer",color:C.dimmer,fontWeight:600,fontSize:14,fontFamily:FONT.body}}>
+          Back to home
+        </button>
+      </div>
+    </div>
+  );
+}
+
 function GatedGoalsScreen({ onBack, onUnlock }) {
   return (
     <div style={{minHeight:"100vh",background:C.bg,color:C.white,fontFamily:FONT.body,paddingBottom:80,position:"relative"}}>
@@ -1464,9 +1491,9 @@ function GoalsScreen({ player, onSave, onBack }) {
   const SMART_EXAMPLES = {
     "Skating":      {S:"Improve my backward crossovers on both sides",M:"Coach rates me 'On Track' in skating within 4 weeks",A:"I can already do basic crossovers",R:"Better backward skating helps my gap control as a defender",T:"By end of October"},
     "Gap Control":  {S:"Maintain a 10-foot gap on all rush situations",M:"Reduce missed gap assignments to 0 per game",A:"I understand gap theory already",R:"Gap control is the #1 D skill in atom hockey",T:"Before Christmas break"},
-    "Rush Reads":   {S:"Make the correct 2-on-1 decision every time",M:"Score 80%+ on Rush Reads in IceIQ",A:"I get the concept, just need reps",R:"Rush reads are my weakest IceIQ category",T:"End of this month"},
+    "Rush Reads":   {S:"Make the correct 2-on-1 decision every time",M:"Score 80%+ on Rush Reads in Ice-IQ",A:"I get the concept, just need reps",R:"Rush reads are my weakest Ice-IQ category",T:"End of this month"},
     "Shooting":     {S:"Improve my quick-release wrist shot accuracy",M:"Hit top corners 3 out of 5 in practice drills",A:"I have good fundamentals already",R:"Quick release is what separates scorers at this level",T:"Within 6 weeks"},
-    "Game IQ":      {S:"Pre-read plays before the puck arrives",M:"IceIQ score improves from current to Hockey Sense tier",A:"I've started thinking about it more already",R:"Faster reads = better plays",T:"End of season"},
+    "Game IQ":      {S:"Pre-read plays before the puck arrives",M:"Ice-IQ score improves from current to Hockey Sense tier",A:"I've started thinking about it more already",R:"Faster reads = better plays",T:"End of season"},
   };
 
   function updateGoal(cat, field, value) {
@@ -1648,7 +1675,7 @@ function UpgradePrompt({ feature, onClose, onViewPlans, target }) {
       <div onClick={e=>e.stopPropagation()} style={{background:C.bgCard,border:`1px solid ${C.goldBorder}`,borderRadius:16,padding:"1.5rem",maxWidth:440,width:"100%",color:C.white}}>
         <div style={{fontSize:32,textAlign:"center",marginBottom:".5rem"}}>🔒</div>
         <div style={{fontFamily:FONT.display,fontWeight:800,fontSize:"1.5rem",textAlign:"center",marginBottom:".35rem",color:C.gold}}>{message}</div>
-        <div style={{fontSize:12,color:C.dimmer,textAlign:"center",marginBottom:"1.25rem"}}>Unlock this and more with IceIQ {tierName}</div>
+        <div style={{fontSize:12,color:C.dimmer,textAlign:"center",marginBottom:"1.25rem"}}>Unlock this and more with Ice-IQ {tierName}</div>
 
         <div style={{background:C.bgElevated,border:`1px solid ${C.border}`,borderRadius:10,padding:".85rem 1rem",marginBottom:"1rem"}}>
           <div style={{fontSize:10,letterSpacing:".14em",textTransform:"uppercase",color:C.gold,fontWeight:700,marginBottom:".6rem"}}>What you get with {tierName}</div>
@@ -1918,7 +1945,7 @@ function Report({ player, onBack, demoCoachData, tier, onUpgrade }) {
       </div>
       <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:".75rem",marginBottom:"1rem"}}>
         <Card style={{background:`linear-gradient(135deg,${C.bgCard},${C.bgElevated})`,border:`1px solid ${C.goldBorder}`,textAlign:"center"}}>
-          <Label>Hockey IQ</Label>
+          <Label>Game Sense</Label>
           <div style={{fontFamily:FONT.display,fontWeight:800,fontSize:"3rem",color:iq!==null?iqTier.color:"rgba(255,255,255,.15)",lineHeight:1}}>{iq!==null?`${iq}%`:"—"}</div>
           {iqTier && <div style={{fontSize:12,color:C.dimmer,marginTop:4}}>{iqTier.label}</div>}
         </Card>
@@ -2056,7 +2083,7 @@ function Report({ player, onBack, demoCoachData, tier, onUpgrade }) {
       )}
 
       <Card style={{marginBottom:"1rem"}}>
-        <Label>IQ Score History</Label>
+        <Label>Game Sense History</Label>
         {player.quizHistory.length === 0 ? (
           <div style={{fontSize:13,color:C.dimmer}}>No sessions yet — take your first quiz.</div>
         ) : (
@@ -2074,12 +2101,6 @@ function Report({ player, onBack, demoCoachData, tier, onUpgrade }) {
             })}
           </div>
         )}
-      </Card>
-      <Card style={{marginBottom:"1rem",background:`linear-gradient(135deg,${C.bgCard},${C.bgElevated})`,border:`1px solid ${C.goldBorder}`,textAlign:"center"}}>
-        <div style={{fontSize:18,marginBottom:".5rem"}}>📋</div>
-        <div style={{fontWeight:700,fontSize:14,color:C.gold,marginBottom:".4rem"}}>Tryout Package</div>
-        <div style={{fontSize:12,color:C.dimmer,marginBottom:"1rem",lineHeight:1.6}}>One-page PDF with your IQ Score, skill profile, SMART goals, and development arc — formatted for coaches to read in 30 seconds.</div>
-        <div style={{background:C.goldDim,color:C.gold,border:`1px solid ${C.goldBorder}`,borderRadius:8,padding:".6rem 1rem",fontSize:13,fontWeight:700}}>🔒 Premium Feature · Coming Soon</div>
       </Card>
     </Screen>
   );
@@ -2242,7 +2263,7 @@ function Profile({ player, onSave, onBack, onReset, demoMode, tier, onUpgrade, u
         <Card style={{marginBottom:"1rem"}}>
           <Label>About</Label>
           <div style={{fontSize:12,color:C.dimmer,lineHeight:1.9}}>
-            <div>IceIQ v{VERSION} · {RELEASE_DATE}</div>
+            <div>Ice-IQ v{VERSION} · {RELEASE_DATE}</div>
             <div>Hockey Canada LTAD · USA Hockey ADM</div>
             <div>Sport for Life Canada</div>
             <div style={{color:C.gold,marginTop:".25rem"}}>bluechip-people-strategies.com</div>
@@ -2499,7 +2520,7 @@ function BottomNav({ active, onNav, tier = "FREE" }) {
 // ─────────────────────────────────────────────────────────
 const DEMO_PROFILES = {
   "U7 / Initiation":{
-    name:"Nora Orr",position:"Not Sure",team:"U7 IP Calgary Flames",
+    name:"Nora Orr",position:"Not Sure",jersey:7,team:"U7 IP Calgary Flames",
     sessions:(mk)=>[mk(true,false,false,10,52),mk(true,true,false,5,65),mk(true,true,false,1,70)],
     results:(ok1,ok2,ok3)=>[
       {id:"u7q1",cat:"Skating",ok:ok1,d:1,type:"mc"},{id:"u7q3",cat:"Puck Control",ok:ok1,d:1,type:"mc"},
@@ -2514,7 +2535,7 @@ const DEMO_PROFILES = {
     goals:{"Skating":{goal:"Learn to stop on both sides",S:"Do 10 snowplow stops each practice",M:"Coach checks off each practice",A:"Yes — we practice stops every session",R:"I fall when I try to stop on my left side",T:"By end of December 2026"}},
   },
   "U9 / Novice":{
-    name:"Luca Lidstrom",position:"Defense",team:"U9 A Saskatoon Blazers",
+    name:"Luca Lidstrom",position:"Defense",jersey:5,team:"U9 A Saskatoon Blazers",
     sessions:(mk)=>[mk(true,false,false,12,55),mk(true,true,false,6,68),mk(true,true,true,2,78)],
     results:(ok1,ok2,ok3)=>[
       {id:"u9q1",cat:"Decision Making",ok:ok1,d:1,type:"mc"},{id:"u9q3",cat:"Positioning",ok:ok1,d:1,type:"mc"},
@@ -2529,7 +2550,7 @@ const DEMO_PROFILES = {
     goals:{"Defense":{goal:"Improve gap control on the rush",S:"Hold the blue line and close gap by top of circles",M:"Coach tracks clean gap closes per game",A:"Yes — 1-on-1 rush drills in practice",R:"I back up too much and give attackers time",T:"By end of October 2026"}},
   },
   "U13 / Peewee":{
-    name:"Maya Roy",position:"Goalie",team:"U13 AAA Vancouver Hawks",
+    name:"Maya Roy",position:"Goalie",jersey:30,team:"U13 AAA Vancouver Hawks",
     sessions:(mk)=>[mk(true,false,false,10,62),mk(true,true,false,4,75),mk(true,true,true,1,86)],
     results:(ok1,ok2,ok3)=>[
       {id:"u13q1",cat:"Rush Reads",ok:ok1,d:1,type:"mc"},{id:"u13q5",cat:"Defensive Zone",ok:ok1,d:1,type:"mc"},
@@ -2544,7 +2565,7 @@ const DEMO_PROFILES = {
     goals:{"Leadership":{goal:"Be more vocal in the room and on the ice during games",S:"Call out plays and communicate with D on every shift",M:"Coach gives feedback after each game on communication",A:"Yes — I already talk to my D but need to be louder",R:"Coach says I read the game well but teammates don't hear me",T:"By January 2027"}},
   },
   "U11 / Atom":{
-    name:"Cole Gretzky",position:"Forward",team:"U11 AA Edmonton Selects",
+    name:"Cole Gretzky",position:"Forward",jersey:99,team:"U11 AA Edmonton Selects",
     sessions:(mk)=>[mk(true,false,false,14,58),mk(true,true,false,7,71),mk(true,true,true,1,83)],
     results:(ok1,ok2,ok3)=>[
       {id:"u11q1",cat:"Rush Reads",ok:ok1,d:1,type:"mc"},{id:"u11q2",cat:"Coverage",ok:ok1,d:1,type:"mc"},
@@ -2559,7 +2580,7 @@ const DEMO_PROFILES = {
     goals:{"Gap Control":{goal:"Close the gap at the blue line instead of backing up",S:"Close gap by top of circles on every rush",M:"Track clean gap closes per game",A:"Yes — drill with D-partner in warmups",R:"Biggest weakness — I give up the blue line",T:"By end of November 2026"}},
   },
   "U15 / Bantam":{
-    name:"Jack Bourque",position:"Defense",team:"U15 AAA Winnipeg Warriors",
+    name:"Jack Bourque",position:"Defense",jersey:77,team:"U15 AAA Winnipeg Warriors",
     sessions:(mk)=>[mk(true,false,false,8,60),mk(true,true,false,3,74),mk(true,true,true,1,85)],
     results:(ok1,ok2,ok3)=>[
       {id:"u15q1",cat:"Systems Play",ok:ok1,d:1,type:"mc"},{id:"u15q5",cat:"Transition Game",ok:ok1,d:1,type:"mc"},
@@ -2572,7 +2593,7 @@ const DEMO_PROFILES = {
     goals:{"Systems Play":{goal:"Master the 1-2-2 forecheck",S:"Execute my role in the 1-2-2 every shift",M:"Coach reviews video after each game",A:"Yes — we run this system every practice",R:"I freelance too much and break structure",T:"By end of January 2027"}},
   },
   "U18 / Midget":{
-    name:"Eli Lemieux",position:"Forward",team:"U18 Prep Toronto Jr. Canadiens",
+    name:"Eli Lemieux",position:"Forward",jersey:19,team:"U18 Prep Toronto Jr. Canadiens",
     sessions:(mk)=>[mk(true,true,false,6,72),mk(true,true,true,3,81),mk(true,true,true,1,89)],
     results:(ok1,ok2,ok3)=>[
       {id:"u18q1",cat:"Game Management",ok:ok1,d:1,type:"mc"},{id:"u18q5",cat:"Advanced Tactics",ok:ok1,d:1,type:"mc"},
@@ -2748,7 +2769,7 @@ function AuthScreen({ onAuthenticated, onDemo }) {
   const headline = mode === "signup" ? "Get started."
     : mode === "forgot" ? "Reset password"
     : (hasSignedInBefore ? "Welcome back." : "Welcome.");
-  const subhead = mode === "signup" ? "Create an account to start tracking hockey IQ."
+  const subhead = mode === "signup" ? "Create an account to start tracking your game sense."
     : mode === "forgot" ? "Enter your email — we'll send you a reset link."
     : (hasSignedInBefore ? "Sign in to see your development report." : "Sign in or create a free account to get started.");
 
@@ -2768,7 +2789,7 @@ function AuthScreen({ onAuthenticated, onDemo }) {
         <div style={{textAlign:"center",marginBottom:"1.75rem"}}>
           <div style={{display:"inline-flex",alignItems:"center",gap:".55rem",background:"rgba(3,9,15,0.6)",backdropFilter:"blur(12px)",WebkitBackdropFilter:"blur(12px)",border:`1px solid rgba(201,168,76,0.2)`,borderRadius:14,padding:".55rem 1.1rem",marginBottom:"1.1rem"}}>
             <IceIQLogo size={26}/>
-            <span style={{fontFamily:FONT.display,fontWeight:800,fontSize:"1.6rem",color:C.gold,letterSpacing:".1em"}}>IceIQ</span>
+            <span style={{fontFamily:FONT.display,fontWeight:800,fontSize:"1.6rem",color:C.gold,letterSpacing:".1em"}}>Ice-IQ</span>
           </div>
           <h1 style={{fontFamily:FONT.display,fontWeight:800,fontSize:"clamp(2rem,8vw,2.75rem)",lineHeight:1.05,margin:"0 0 .6rem",letterSpacing:"-.01em"}}>
             Train smarter.<br/><span style={{color:C.gold}}>Play sharper.</span>
@@ -2875,7 +2896,7 @@ function AuthScreen({ onAuthenticated, onDemo }) {
 
         {mode !== "forgot" && (
           <div style={{textAlign:"center",marginTop:"1.1rem",fontSize:13,color:"rgba(248,250,252,.4)"}}>
-            {mode === "login" ? "New to IceIQ? " : "Already have an account? "}
+            {mode === "login" ? "New to Ice-IQ?" : "Already have an account? "}
             <button onClick={()=>{setMode(mode==="login"?"signup":"login");setErr("");}} style={{background:"none",border:"none",color:C.gold,cursor:"pointer",fontWeight:700,fontSize:13,fontFamily:FONT.body,padding:0}}>
               {mode === "login" ? "Create account →" : "Sign in →"}
             </button>
@@ -2892,19 +2913,37 @@ function AuthScreen({ onAuthenticated, onDemo }) {
               const short = lvl.split(" / ")[0];
               return (
                 <button key={lvl} onClick={()=>onDemo(lvl)} style={{background:"rgba(124,111,205,0.08)",border:"1px solid rgba(124,111,205,0.2)",borderRadius:10,padding:".65rem .6rem",cursor:"pointer",color:C.white,fontFamily:FONT.body,textAlign:"left",transition:"background .15s"}}>
-                  <div style={{fontWeight:700,fontSize:12,color:"rgba(167,155,240,.9)",marginBottom:2}}>{short} · {cfg.position}</div>
-                  <div style={{fontSize:10,color:"rgba(248,250,252,.45)",lineHeight:1.4}}>{cfg.name}</div>
+                  <div style={{display:"flex",alignItems:"baseline",gap:".3rem",marginBottom:2}}>
+                    <span style={{fontWeight:800,fontSize:13,color:C.white}}>{cfg.name}</span>
+                    <span style={{fontWeight:700,fontSize:11,color:C.gold}}>#{cfg.jersey}</span>
+                  </div>
+                  <div style={{fontSize:10,color:"rgba(167,155,240,.75)",marginBottom:1,lineHeight:1.3,whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis"}}>{cfg.team}</div>
+                  <div style={{fontSize:9,color:"rgba(248,250,252,.3)",lineHeight:1.3}}>{cfg.position}</div>
                 </button>
               );
             })}
           </div>
           <div style={{fontSize:10,letterSpacing:".12em",textTransform:"uppercase",color:C.gold,fontWeight:700,marginBottom:".4rem",opacity:.85}}>Coach</div>
-          <button onClick={()=>onDemo("__coach__")} style={{width:"100%",background:"rgba(201,168,76,0.07)",border:"1px solid rgba(201,168,76,0.2)",borderRadius:10,padding:".65rem .75rem",cursor:"pointer",color:C.white,fontFamily:FONT.body,textAlign:"left",display:"flex",alignItems:"center",justifyContent:"space-between"}}>
-            <div>
-              <div style={{fontWeight:700,fontSize:12,color:"rgba(201,168,76,.9)",marginBottom:2}}>Coach Dashboard</div>
-              <div style={{fontSize:10,color:"rgba(248,250,252,.45)",lineHeight:1.4}}>Roster, ratings, and coach tools</div>
+          <button onClick={()=>onDemo("__coach__")} style={{width:"100%",background:"rgba(201,168,76,0.07)",border:"1px solid rgba(201,168,76,0.2)",borderRadius:10,padding:".65rem .75rem",cursor:"pointer",color:C.white,fontFamily:FONT.body,textAlign:"left"}}>
+            <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:".5rem"}}>
+              <div>
+                <div style={{fontWeight:700,fontSize:12,color:"rgba(201,168,76,.9)",marginBottom:1}}>Coach Dashboard</div>
+                <div style={{fontSize:10,color:"rgba(248,250,252,.4)"}}>U11 AA Edmonton Selects</div>
+              </div>
+              <span style={{color:"rgba(201,168,76,.6)",fontSize:14}}>→</span>
             </div>
-            <span style={{color:"rgba(201,168,76,.6)",fontSize:14}}>→</span>
+            <div style={{borderTop:"1px solid rgba(201,168,76,0.12)",paddingTop:".45rem"}}>
+              {DEMO_COACH_ROSTER.slice(0,3).map(p => (
+                <div key={p.id} style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:".3rem"}}>
+                  <div style={{display:"flex",alignItems:"center",gap:".35rem"}}>
+                    <span style={{fontSize:9,color:"rgba(248,250,252,.28)",width:40,flexShrink:0}}>{p.position}</span>
+                    <span style={{fontSize:11,color:"rgba(248,250,252,.72)",fontWeight:600}}>{p.name}</span>
+                  </div>
+                  <span style={{fontSize:10,color:"rgba(201,168,76,.85)",fontWeight:700}}>GS {p.iq}</span>
+                </div>
+              ))}
+              <div style={{fontSize:9,color:"rgba(248,250,252,.22)",textAlign:"right",marginTop:".1rem"}}>+{DEMO_COACH_ROSTER.length - 3} more players</div>
+            </div>
           </button>
           <div style={{fontSize:10,color:"rgba(248,250,252,.3)",textAlign:"center",marginTop:".6rem"}}>Nothing is saved in demo mode.</div>
         </div>
@@ -2972,7 +3011,7 @@ function CoachHome({ profile, onSignOut, onOpenPlayer, demoMode }) {
           <div>
             <div style={{display:"flex",alignItems:"center",gap:".45rem",marginBottom:".25rem"}}>
               <IceIQLogo size={22}/>
-              <span style={{fontFamily:FONT.display,fontWeight:800,fontSize:"1.5rem",color:C.gold,letterSpacing:".06em"}}>IceIQ</span>
+              <span style={{fontFamily:FONT.display,fontWeight:800,fontSize:"1.5rem",color:C.gold,letterSpacing:".06em"}}>Ice-IQ</span>
               <span style={{fontSize:10,color:C.dimmer,fontWeight:500}}>v{VERSION}</span>
             </div>
             <div style={{fontSize:13,color:C.dimmer}}>{profile.name} · Coach</div>
@@ -3188,6 +3227,7 @@ export default function App() {
     setMistakeStreak(ms);
     setPrevScore(score);
     setTotalSessions(newTotal);
+    if (tier === "FREE") incrementFreeQuizCount();
     if (newTotal === 5 && tier === "FREE" && !localStorage.getItem("iceiq_milestone5_shown")) {
       setShowMilestone5Banner(true);
       localStorage.setItem("iceiq_milestone5_shown", "true");
@@ -3275,7 +3315,7 @@ export default function App() {
         <div style={{minHeight:"100vh",background:C.bg,color:C.white,fontFamily:FONT.body,paddingBottom:80}}>
           <StickyHeader>
             <div style={{maxWidth:560,margin:"0 auto",display:"flex",alignItems:"center",gap:"1rem"}}>
-              <button onClick={()=>setSupersetPage("start")} style={{background:"none",border:"none",color:C.white,cursor:"pointer",fontSize:24,padding:0}}>←</button>
+              <button onClick={handleSignOut} style={{background:"none",border:"none",color:C.white,cursor:"pointer",fontSize:24,padding:0}}>←</button>
               <div style={{flex:1,fontFamily:FONT.display,fontWeight:800,fontSize:"1.1rem"}}>Coach Dashboard</div>
             </div>
           </StickyHeader>
@@ -3284,7 +3324,7 @@ export default function App() {
               <div style={{fontSize:40,marginBottom:".75rem"}}>🔒</div>
               <div style={{fontFamily:FONT.display,fontWeight:800,fontSize:"1.6rem",color:C.gold,marginBottom:".5rem"}}>Coach Dashboard</div>
               <div style={{fontSize:13,color:C.dim,lineHeight:1.6,marginBottom:"1.5rem"}}>Full team management, player ratings, and coaching tools are available on the TEAM plan. Contact us to upgrade.</div>
-              <a href="mailto:mtslifka@gmail.com?subject=IceIQ TEAM Plan" style={{display:"inline-block",background:C.gold,color:C.bg,border:"none",borderRadius:10,padding:".8rem 1.5rem",cursor:"pointer",fontWeight:800,fontSize:14,fontFamily:FONT.body,textDecoration:"none"}}>Contact us for TEAM plan →</a>
+              <a href="mailto:mtslifka@gmail.com?subject=Ice-IQ TEAM Plan" style={{display:"inline-block",background:C.gold,color:C.bg,border:"none",borderRadius:10,padding:".8rem 1.5rem",cursor:"pointer",fontWeight:800,fontSize:14,fontFamily:FONT.body,textDecoration:"none"}}>Contact us for TEAM plan →</a>
             </Card>
           </div>
         </div>
@@ -3355,7 +3395,10 @@ export default function App() {
 
       <div style={{paddingBottom: screen==="quiz"||screen==="results" ? 0 : 80}}>
         {screen === "home"    && <Home player={tierLimitedPlayer(player, tier)} onNav={setScreen} demoMode={demoMode} subscriptionTier={tier}/>}
-        {screen === "quiz"    && <Quiz player={player} onFinish={handleQuizFinish} onBack={()=>setScreen("home")} tier={tier} onUpgrade={promptUpgrade}/>}
+        {screen === "quiz"    && (tier === "FREE" && isAtFreeQuizCap()
+          ? <FreeQuizCapScreen onBack={()=>setScreen("home")} onUpgrade={()=>setScreen("plans")}/>
+          : <Quiz player={player} onFinish={handleQuizFinish} onBack={()=>setScreen("home")} tier={tier} onUpgrade={promptUpgrade}/>
+        )}
         {screen === "results" && <Results results={quizResults} player={player} prevScore={prevScore} totalSessions={totalSessions} seqPerfect={seqPerfect} mistakeStreak={mistakeStreak} onAgain={()=>setScreen("quiz")} onHome={()=>setScreen("home")} showMilestoneBanner={showMilestone5Banner} onViewPlans={()=>{setShowMilestone5Banner(false);setScreen("plans");}}/>}
         {screen === "skills"  && <Skills player={player} onSave={handleSkillsSave} onBack={()=>setScreen("home")}/>}
         {screen === "study"   && <StudyScreen player={player} onBack={()=>setScreen("home")} onNav={setScreen}/>}
@@ -3489,7 +3532,16 @@ function CoachRatingScreenAuthed({ coach, player, playerLevel, onDone }) {
                 <div key={r.value} style={{display:"flex",alignItems:"center",gap:".75rem",padding:".45rem .6rem",borderRadius:8,background:`${r.color}10`,border:`1px solid ${r.color}25`}}>
                   <div style={{width:10,height:10,borderRadius:"50%",background:r.color,flexShrink:0}}/>
                   <div style={{fontWeight:700,fontSize:13,color:r.color,minWidth:95}}>{r.label}</div>
-                  <div style={{fontSize:12,color:C.dimmer}}>{r.sub}</div>
+                  {r.sub && (
+                    <div style={{fontSize:12,color:C.dimmer}}>
+                      {r.sub.includes("·") ? (
+                        <>
+                          <span>{r.sub.split("·")[0].trim()}</span>
+                          <span style={{color:C.dimmest,marginLeft:".35rem"}}>· {r.sub.split("·")[1].trim()}</span>
+                        </>
+                      ) : r.sub}
+                    </div>
+                  )}
                 </div>
               ))}
             </div>
@@ -3534,7 +3586,16 @@ function CoachRatingScreenAuthed({ coach, player, playerLevel, onDone }) {
                             <div style={{width:10,height:10,borderRadius:"50%",background:r.color,flexShrink:0}}/>
                             <div style={{textAlign:"left"}}>
                               <div style={{fontSize:13,fontWeight:700,color:r.color}}>{r.label}</div>
-                              <div style={{fontSize:11,color:C.dimmer}}>{r.sub}</div>
+                              {r.sub ? (
+                                <div style={{fontSize:11,color:C.dimmer}}>
+                                  {r.sub.includes("·") ? (
+                                    <>
+                                      <span>{r.sub.split("·")[0].trim()}</span>
+                                      <span style={{color:C.dimmest,marginLeft:".35rem"}}>· {r.sub.split("·")[1].trim()}</span>
+                                    </>
+                                  ) : r.sub}
+                                </div>
+                              ) : null}
                             </div>
                             {ratings[skill.id]===r.value && <div style={{marginLeft:"auto",color:r.color,fontSize:14}}>✓</div>}
                           </button>

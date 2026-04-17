@@ -151,7 +151,7 @@ export function CoachDashboard({ onBack }) {
       {agg && (<>
         <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:".75rem",marginBottom:"1rem"}}>
           <Card style={{textAlign:"center"}}><Label>Sessions</Label><div style={{fontFamily:FONT.display,fontWeight:800,fontSize:"2.8rem",color:C.gold}}>{agg.sessions}</div></Card>
-          <Card style={{textAlign:"center"}}><Label>Team Avg IQ</Label><div style={{fontFamily:FONT.display,fontWeight:800,fontSize:"2.8rem",color:agg.avgIQ>=80?C.green:agg.avgIQ>=60?C.yellow:C.red}}>{agg.avgIQ}%</div></Card>
+          <Card style={{textAlign:"center"}}><Label>Team Avg GS</Label><div style={{fontFamily:FONT.display,fontWeight:800,fontSize:"2.8rem",color:agg.avgIQ>=80?C.green:agg.avgIQ>=60?C.yellow:C.red}}>{agg.avgIQ}%</div></Card>
         </div>
         <Card style={{marginBottom:"1rem"}}>
           <Label>By Category — Worst First</Label>
@@ -308,7 +308,7 @@ export function PlansScreen({ onBack, tier }) {
 
         <div style={{textAlign:"center",marginTop:"1rem"}}>
           <div style={{fontSize:11,color:C.dimmer,marginBottom:".75rem",lineHeight:1.6}}>Online payment coming soon — get early access now.</div>
-          <a href="mailto:mtslifka@gmail.com?subject=IceIQ Pro Early Access" style={{display:"inline-block",background:C.gold,color:C.bg,border:"none",borderRadius:10,padding:".65rem 1.5rem",cursor:"pointer",fontWeight:800,fontSize:13,fontFamily:FONT.body,textDecoration:"none"}}>Contact us for early access →</a>
+          <a href="mailto:mtslifka@gmail.com?subject=Ice-IQ Pro Early Access" style={{display:"inline-block",background:C.gold,color:C.bg,border:"none",borderRadius:10,padding:".65rem 1.5rem",cursor:"pointer",fontWeight:800,fontSize:13,fontFamily:FONT.body,textDecoration:"none"}}>Contact us for early access →</a>
         </div>
       </div>
     </div>

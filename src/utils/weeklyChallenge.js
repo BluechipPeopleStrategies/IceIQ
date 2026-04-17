@@ -89,3 +89,29 @@ export function markWeeklyComplete(score) {
   keys.slice(8).forEach(k => delete state[k]);
   try { localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); } catch {}
 }
+
+// ─── Free tier weekly quiz cap ────────────────────────────
+const CAP_KEY = "iceiq_free_cap";
+export const FREE_WEEKLY_QUIZ_CAP = 3;
+
+function getCapState() {
+  try { const r = localStorage.getItem(CAP_KEY); return r ? JSON.parse(r) : {}; } catch { return {}; }
+}
+
+export function getFreeQuizCount() {
+  return getCapState()[getWeekKey()] || 0;
+}
+
+export function isAtFreeQuizCap() {
+  return getFreeQuizCount() >= FREE_WEEKLY_QUIZ_CAP;
+}
+
+export function incrementFreeQuizCount() {
+  const state = getCapState();
+  const key = getWeekKey();
+  state[key] = (state[key] || 0) + 1;
+  // Prune entries older than 4 weeks
+  const keys = Object.keys(state).sort().reverse();
+  keys.slice(4).forEach(k => delete state[k]);
+  try { localStorage.setItem(CAP_KEY, JSON.stringify(state)); } catch {}
+}
