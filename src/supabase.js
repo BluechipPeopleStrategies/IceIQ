@@ -239,6 +239,15 @@ export async function recordQuestionAnswer(questionId, correct) {
   } catch (e) { /* silent — stats are best-effort */ }
 }
 
+export async function recordQuestionAnswersBatch(answers) {
+  if (!supabase || !answers?.length) return;
+  try {
+    await supabase.rpc("record_question_answers_batch", {
+      p_answers: JSON.stringify(answers.map(a => ({ question_id: a.questionId, correct: !!a.correct })))
+    });
+  } catch (e) { /* silent — stats are best-effort */ }
+}
+
 export async function getQuestionStats() {
   if (!supabase) return {};
   const { data } = await supabase.from("question_stats").select("question_id, attempts, correct");

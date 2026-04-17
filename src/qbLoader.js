@@ -4,8 +4,8 @@ let inflight = null;
 export function loadQB() {
   if (cached) return Promise.resolve(cached);
   if (!inflight) {
-    inflight = import("./questionBank.js").then(m => {
-      cached = m.QB;
+    inflight = import("./data/questions.json").then(m => {
+      cached = m.default;
       return cached;
     });
   }
