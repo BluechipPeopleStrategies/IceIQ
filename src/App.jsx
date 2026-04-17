@@ -135,8 +135,8 @@ function IceIQLogo({ size = 32, color = "#c9a84c" }) {
 }
 
 const FONT = {
-  display: "'Oswald', 'Barlow Condensed', Impact, sans-serif",
-  body: "'Inter', 'DM Sans', system-ui, sans-serif",
+  display: "'Anton', 'Oswald', 'Barlow Condensed', Impact, sans-serif",
+  body: "'DM Sans', 'Inter', system-ui, sans-serif",
 };
 
 // ─────────────────────────────────────────────────────────
