@@ -19,10 +19,27 @@
     <meta name="twitter:description" content="Hockey IQ development for youth players." />
 
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="preload" as="image" href="/splash.jpg" fetchpriority="high" />
 
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anton&family=DM+Sans:wght@400;500;600;700;800&display=swap" />
+
+    <style>
+      html, body { margin: 0; padding: 0; background: #080e1a; color: #f8fafc; }
+      body { font-family: 'DM Sans', system-ui, sans-serif; -webkit-font-smoothing: antialiased; }
+      #root:empty::before {
+        content: "IceIQ";
+        position: fixed; inset: 0;
+        display: flex; align-items: center; justify-content: center;
+        font-family: 'Anton', Impact, sans-serif;
+        font-size: 3rem; letter-spacing: 0.08em;
+        color: #c9a84c;
+        background: #080e1a;
+        animation: iceiqPulse 1.4s ease-in-out infinite;
+      }
+      @keyframes iceiqPulse { 0%,100% { opacity: 0.55; } 50% { opacity: 1; } }
+    </style>
   </head>
   <body>
     <div id="root"></div>

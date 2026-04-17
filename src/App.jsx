@@ -3,7 +3,7 @@ import * as SB from "./supabase";
 import { supabase, hasSupabase } from "./supabase";
 import { canAccess, getUpgradeTriggerMessage } from "./utils/tierGate";
 import { canSwitchAgeGroup, recordAgeGroupSwitch, getAgeGroupLock, setAgeGroupLock, checkSeasonReset } from "./utils/deviceLock";
-import imgSplash from "./assets/images/Splash-Screen.jpg";
+const imgSplash = "/splash.jpg";
 import imgCoreApp from "./assets/images/Core-App.jpg";
 import imgDataPanel from "./assets/images/Data-Panel.jpg";
 import imgProfile from "./assets/images/Profile-Analytics.jpg";
@@ -3530,12 +3530,11 @@ export default function App() {
   return (
     <>
       <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Oswald:wght@500;600;700;800&family=Barlow+Condensed:wght@700;800&family=Inter:wght@400;500;600;700;800&display=swap');
         * { box-sizing: border-box; margin: 0; padding: 0; }
         body { background: #080e1a; color: #f8fafc; -webkit-font-smoothing: antialiased; }
         ::-webkit-scrollbar { width: 4px; }
         ::-webkit-scrollbar-thumb { background: rgba(248,250,252,.08); border-radius: 2px; }
-        input, textarea, button, select { font-family: 'Inter', 'DM Sans', system-ui, sans-serif; }
+        input, textarea, button, select { font-family: 'DM Sans', 'Inter', system-ui, sans-serif; }
         button:active { opacity: .8; }
         textarea { resize: none; }
       `}</style>
