@@ -63,20 +63,40 @@ export function IceIQLogo({ size = 32, color = "#c9a84c" }) {
 }
 
 export const Screen = ({children, pad=true}) => (
-  <div style={{minHeight:"100vh",background:C.bg,color:C.white,fontFamily:FONT.body}}>
-    {pad ? <div style={{padding:"1.5rem 1.25rem",maxWidth:560,margin:"0 auto"}}>{children}</div> : children}
+  <div style={{
+    minHeight:"100vh",
+    background:`linear-gradient(135deg, ${C.bg} 0%, ${C.bg} 70%, rgba(30, 87, 153, 0.15) 100%)`,
+    backgroundAttachment:"fixed",
+    color:C.white,
+    fontFamily:FONT.body,
+    position:"relative",
+    overflow:"hidden"
+  }}>
+    <div style={{
+      position:"absolute",
+      top:0,left:0,right:0,bottom:0,
+      backgroundImage:`
+        linear-gradient(90deg, transparent 0%, rgba(201, 168, 76, 0.02) 50%, transparent 100%),
+        repeating-linear-gradient(0deg, transparent 0px, rgba(59, 130, 246, 0.03) 2px, transparent 4px)
+      `,
+      pointerEvents:"none"
+    }}/>
+    {pad ? <div style={{padding:"1.5rem 1.25rem",maxWidth:560,margin:"0 auto",position:"relative",zIndex:1}}>{children}</div> : children}
   </div>
 );
 
 export const Card = ({children, style, onClick, glow}) => (
   <div onClick={onClick} style={{
-    background:C.bgCard,
-    border:`1px solid ${glow?C.goldBorder:C.border}`,
+    background:"rgba(13, 21, 37, 0.45)",
+    backdropFilter:"blur(12px)",
+    WebkitBackdropFilter:"blur(12px)",
+    border:`1px solid ${glow?C.goldBorder:"rgba(255, 255, 255, 0.1)"}`,
     borderRadius:16,
     padding:"1.25rem",
-    boxShadow: glow?"0 0 24px rgba(201,168,76,0.08)":"none",
+    boxShadow: glow?"0 0 24px rgba(201,168,76,0.08)":"0 8px 32px rgba(0, 0, 0, 0.1)",
     cursor:onClick?"pointer":"default",
-    transition:"all .2s",
+    transition:"all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.3s ease",
+    animation:"slideInUp 0.5s ease-out",
     ...style
   }}>{children}</div>
 );
