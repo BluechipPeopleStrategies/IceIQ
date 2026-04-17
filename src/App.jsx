@@ -2609,53 +2609,61 @@ function buildDemoCoachRatings(level) {
 }
 
 // ─────────────────────────────────────────────────────────
-// RINK BACKGROUND — standard NHL rink geometry for the splash page
-// Dimensions follow regulation proportions (200 ft × 85 ft) in SVG units.
-// preserveAspectRatio="xMidYMid slice" fills the viewport on any aspect ratio.
+// RINK BACKGROUND — NHL rink geometry.
+// dark=true → night-rink for splash page (dark ice, glowing lines)
+// dark=false → pale rink for in-app diagrams
 // ─────────────────────────────────────────────────────────
-function RinkBackground() {
-  const ICE    = "#d7e8f5";     // pale blue ice
-  const LINE_R = "#b8232e";     // red lines
-  const LINE_B = "#0c5ab5";     // blue lines
-  const OUTLINE= "#1c1c1c";
-  const CREASE = "#5aa8e6";     // pale blue crease fill
+function RinkBackground({ dark = false }) {
+  const ICE    = dark ? "#03090f" : "#d7e8f5";
+  const LINE_R = dark ? "rgba(220,60,60,0.7)"  : "#b8232e";
+  const LINE_B = dark ? "rgba(50,110,230,0.75)" : "#0c5ab5";
+  const OUTLINE= dark ? "rgba(255,255,255,0.07)" : "#1c1c1c";
+  const CREASE = dark ? "rgba(50,110,230,0.18)"  : "#5aa8e6";
+  const GLOW_R = dark ? "rgba(220,60,60,0.18)"   : "none";
+  const GLOW_B = dark ? "rgba(50,110,230,0.15)"  : "none";
   return (
     <svg
       viewBox="0 0 200 85"
       preserveAspectRatio="xMidYMid slice"
-      style={{position:"absolute",inset:0,width:"100%",height:"100%",opacity:1}}
+      style={{position:"absolute",inset:0,width:"100%",height:"100%"}}
       aria-hidden="true"
     >
+      <defs>
+        {dark && <filter id="glow-r"><feGaussianBlur stdDeviation="1.2" result="blur"/><feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge></filter>}
+        {dark && <filter id="glow-b"><feGaussianBlur stdDeviation="1.5" result="blur"/><feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge></filter>}
+      </defs>
+
       {/* Ice surface */}
       <rect x="0.5" y="0.5" width="199" height="84" rx="28" ry="28" fill={ICE} />
+      {dark && <rect x="0.5" y="0.5" width="199" height="84" rx="28" ry="28" fill="url(#ice-sheen)" />}
       {/* Rink outline */}
       <rect x="0.5" y="0.5" width="199" height="84" rx="28" ry="28" fill="none" stroke={OUTLINE} strokeWidth="0.6" />
 
       {/* Goal lines */}
-      <line x1="11" y1="5" x2="11" y2="80" stroke={LINE_R} strokeWidth="0.35" />
-      <line x1="189" y1="5" x2="189" y2="80" stroke={LINE_R} strokeWidth="0.35" />
+      <line x1="11" y1="5" x2="11" y2="80" stroke={LINE_R} strokeWidth={dark?"0.5":"0.35"} filter={dark?"url(#glow-r)":undefined}/>
+      <line x1="189" y1="5" x2="189" y2="80" stroke={LINE_R} strokeWidth={dark?"0.5":"0.35"} filter={dark?"url(#glow-r)":undefined}/>
 
       {/* Blue lines */}
-      <line x1="75" y1="0.5" x2="75" y2="84.5" stroke={LINE_B} strokeWidth="1.3" />
-      <line x1="125" y1="0.5" x2="125" y2="84.5" stroke={LINE_B} strokeWidth="1.3" />
+      <line x1="75" y1="0.5" x2="75" y2="84.5" stroke={LINE_B} strokeWidth={dark?"1.8":"1.3"} filter={dark?"url(#glow-b)":undefined}/>
+      <line x1="125" y1="0.5" x2="125" y2="84.5" stroke={LINE_B} strokeWidth={dark?"1.8":"1.3"} filter={dark?"url(#glow-b)":undefined}/>
 
       {/* Center red line */}
-      <line x1="100" y1="0.5" x2="100" y2="84.5" stroke={LINE_R} strokeWidth="1.3" />
+      <line x1="100" y1="0.5" x2="100" y2="84.5" stroke={LINE_R} strokeWidth={dark?"1.8":"1.3"} filter={dark?"url(#glow-r)":undefined}/>
 
       {/* Center faceoff circle + dot */}
-      <circle cx="100" cy="42.5" r="15" fill="none" stroke={LINE_B} strokeWidth="0.4" />
+      <circle cx="100" cy="42.5" r="15" fill={dark?GLOW_B:"none"} stroke={LINE_B} strokeWidth="0.5" filter={dark?"url(#glow-b)":undefined}/>
       <circle cx="100" cy="42.5" r="0.8" fill={LINE_B} />
 
-      {/* Referee crease (semicircle at center) */}
+      {/* Referee crease */}
       <path d="M 90 85 A 10 10 0 0 1 110 85" fill="none" stroke={LINE_R} strokeWidth="0.3" />
 
-      {/* Neutral zone faceoff dots (red) */}
+      {/* Neutral zone faceoff dots */}
       <circle cx="80" cy="20.5" r="0.9" fill={LINE_R} />
       <circle cx="80" cy="64.5" r="0.9" fill={LINE_R} />
       <circle cx="120" cy="20.5" r="0.9" fill={LINE_R} />
       <circle cx="120" cy="64.5" r="0.9" fill={LINE_R} />
 
-      {/* End-zone faceoff circles (4 total) with hash marks + dots */}
+      {/* End-zone faceoff circles */}
       {[
         {cx:31,  cy:20.5},
         {cx:31,  cy:64.5},
@@ -2663,9 +2671,8 @@ function RinkBackground() {
         {cx:169, cy:64.5},
       ].map((c, i) => (
         <g key={i}>
-          <circle cx={c.cx} cy={c.cy} r="15" fill="none" stroke={LINE_R} strokeWidth="0.4" />
+          <circle cx={c.cx} cy={c.cy} r="15" fill={dark?GLOW_R:"none"} stroke={LINE_R} strokeWidth="0.5" filter={dark?"url(#glow-r)":undefined}/>
           <circle cx={c.cx} cy={c.cy} r="0.9" fill={LINE_R} />
-          {/* L-hash guides inside the circle */}
           <path d={`M ${c.cx-2} ${c.cy-3.8} L ${c.cx-2} ${c.cy-5.8} L ${c.cx-0.3} ${c.cy-5.8}`} fill="none" stroke={LINE_R} strokeWidth="0.3" />
           <path d={`M ${c.cx+2} ${c.cy-3.8} L ${c.cx+2} ${c.cy-5.8} L ${c.cx+0.3} ${c.cy-5.8}`} fill="none" stroke={LINE_R} strokeWidth="0.3" />
           <path d={`M ${c.cx-2} ${c.cy+3.8} L ${c.cx-2} ${c.cy+5.8} L ${c.cx-0.3} ${c.cy+5.8}`} fill="none" stroke={LINE_R} strokeWidth="0.3" />
@@ -2673,15 +2680,15 @@ function RinkBackground() {
         </g>
       ))}
 
-      {/* Goal creases (semicircles facing center) */}
-      <path d="M 11 37.5 A 6 6 0 0 1 11 47.5 Z" fill={CREASE} fillOpacity="0.35" stroke={LINE_R} strokeWidth="0.3" />
-      <path d="M 189 37.5 A 6 6 0 0 0 189 47.5 Z" fill={CREASE} fillOpacity="0.35" stroke={LINE_R} strokeWidth="0.3" />
+      {/* Goal creases */}
+      <path d="M 11 37.5 A 6 6 0 0 1 11 47.5 Z" fill={CREASE} stroke={LINE_R} strokeWidth="0.3" />
+      <path d="M 189 37.5 A 6 6 0 0 0 189 47.5 Z" fill={CREASE} stroke={LINE_R} strokeWidth="0.3" />
 
-      {/* Goal nets (small rectangles behind goal lines) */}
+      {/* Goal nets */}
       <rect x="9" y="40" width="2" height="5" fill="none" stroke={LINE_R} strokeWidth="0.25" />
       <rect x="189" y="40" width="2" height="5" fill="none" stroke={LINE_R} strokeWidth="0.25" />
 
-      {/* Goalie trapezoid behind each net */}
+      {/* Goalie trapezoid */}
       <path d="M 11 34 L 0.5 28 M 11 51 L 0.5 57" stroke={LINE_R} strokeWidth="0.25" fill="none" />
       <path d="M 189 34 L 199.5 28 M 189 51 L 199.5 57" stroke={LINE_R} strokeWidth="0.25" fill="none" />
     </svg>
@@ -2746,44 +2753,51 @@ function AuthScreen({ onAuthenticated, onDemo }) {
     : (hasSignedInBefore ? "Sign in to see your development report." : "Sign in or create a free account to get started.");
 
   return (
-    <div style={{minHeight:"100vh",position:"relative",background:"#0d1e3a",display:"flex",flexDirection:"column",justifyContent:"center",padding:"2rem 1.5rem",fontFamily:FONT.body,color:C.white,overflow:"hidden"}}>
-      <img src={imgSplash} alt="" style={{position:"absolute",inset:0,width:"100%",height:"100%",objectFit:"cover",opacity:0.45,pointerEvents:"none"}}/>
-      <div style={{position:"absolute",inset:0,background:"radial-gradient(ellipse at center, rgba(8,14,26,0) 30%, rgba(8,14,26,0.7) 100%)",pointerEvents:"none"}}/>
+    <div style={{minHeight:"100vh",position:"relative",background:"#03090f",display:"flex",flexDirection:"column",justifyContent:"center",padding:"2rem 1.25rem",fontFamily:FONT.body,color:C.white,overflow:"hidden"}}>
 
-      <div style={{position:"relative",maxWidth:440,margin:"0 auto",width:"100%"}}>
-        {/* What is IceIQ */}
-        <div style={{textAlign:"center",marginBottom:"1.5rem"}}>
-          <div style={{display:"flex",alignItems:"center",justifyContent:"center",gap:".6rem",marginBottom:".75rem"}}>
-            <IceIQLogo size={38}/>
-            <span style={{fontFamily:FONT.display,fontWeight:800,fontSize:"2.5rem",color:C.gold,letterSpacing:".08em"}}>IceIQ</span>
+      {/* Dark night-rink SVG background */}
+      <RinkBackground dark={true}/>
+
+      {/* Layered gradient overlays for depth */}
+      <div style={{position:"absolute",inset:0,background:"linear-gradient(180deg,rgba(3,9,15,0.55) 0%,rgba(3,9,15,0.35) 45%,rgba(3,9,15,0.82) 100%)",pointerEvents:"none"}}/>
+      <div style={{position:"absolute",inset:0,background:"radial-gradient(ellipse 80% 60% at 50% 40%,rgba(201,168,76,0.04) 0%,transparent 70%)",pointerEvents:"none"}}/>
+
+      <div style={{position:"relative",maxWidth:420,margin:"0 auto",width:"100%"}}>
+
+        {/* Hero brand block */}
+        <div style={{textAlign:"center",marginBottom:"1.75rem"}}>
+          <div style={{display:"inline-flex",alignItems:"center",gap:".55rem",background:"rgba(3,9,15,0.6)",backdropFilter:"blur(12px)",WebkitBackdropFilter:"blur(12px)",border:`1px solid rgba(201,168,76,0.2)`,borderRadius:14,padding:".55rem 1.1rem",marginBottom:"1.1rem"}}>
+            <IceIQLogo size={26}/>
+            <span style={{fontFamily:FONT.display,fontWeight:800,fontSize:"1.6rem",color:C.gold,letterSpacing:".1em"}}>IceIQ</span>
           </div>
-          <p style={{fontSize:15,color:"rgba(248,250,252,.85)",lineHeight:1.6,margin:"0 0 1rem",maxWidth:380,marginLeft:"auto",marginRight:"auto"}}>
-            The hockey development app that measures what matters — game sense, decision-making, and tactical IQ.
+          <h1 style={{fontFamily:FONT.display,fontWeight:800,fontSize:"clamp(2rem,8vw,2.75rem)",lineHeight:1.05,margin:"0 0 .6rem",letterSpacing:"-.01em"}}>
+            Train smarter.<br/><span style={{color:C.gold}}>Play sharper.</span>
+          </h1>
+          <p style={{fontSize:14,color:"rgba(248,250,252,.7)",lineHeight:1.65,margin:"0 auto 1.25rem",maxWidth:340}}>
+            Hockey development built on game sense — 880+ adaptive questions, SMART goals, and pro insights for U7 to U18.
           </p>
-          <div style={{display:"grid",gridTemplateColumns:"1fr 1fr 1fr",gap:".5rem",marginBottom:".25rem"}}>
+          {/* Stat chips */}
+          <div style={{display:"flex",gap:".5rem",justifyContent:"center",flexWrap:"wrap"}}>
             {[
-              {icon:"🧠",label:"Adaptive quizzes",sub:"700+ questions across 6 age groups"},
-              {icon:"📊",label:"Track your IQ",sub:"See your score improve over time"},
-              {icon:"🏒",label:"Pro insights",sub:"Learn from NHL, SHL, KHL & more"},
-            ].map((f,i) => (
-              <div key={i} style={{background:"rgba(8,14,26,0.5)",border:`1px solid ${C.border}`,borderRadius:12,padding:".65rem .5rem",textAlign:"center"}}>
-                <div style={{fontSize:20,marginBottom:4}}>{f.icon}</div>
-                <div style={{fontSize:11,fontWeight:700,color:C.white,marginBottom:2}}>{f.label}</div>
-                <div style={{fontSize:10,color:C.dimmer,lineHeight:1.3}}>{f.sub}</div>
+              {n:"880+",l:"Questions"},
+              {n:"6",l:"Age groups"},
+              {n:"5",l:"Question types"},
+            ].map((s,i) => (
+              <div key={i} style={{background:"rgba(255,255,255,0.06)",border:"1px solid rgba(255,255,255,0.1)",borderRadius:20,padding:".3rem .85rem",display:"flex",alignItems:"baseline",gap:".3rem"}}>
+                <span style={{fontFamily:FONT.display,fontWeight:800,fontSize:15,color:C.gold}}>{s.n}</span>
+                <span style={{fontSize:11,color:"rgba(248,250,252,.55)"}}>{ s.l}</span>
               </div>
             ))}
           </div>
         </div>
 
-      <div style={{background:"rgba(8,14,26,0.78)",backdropFilter:"blur(10px)",WebkitBackdropFilter:"blur(10px)",border:`1px solid ${C.border}`,borderRadius:16,padding:"2rem 1.5rem",boxShadow:"0 24px 60px rgba(0,0,0,0.5)"}}>
-        <div style={{display:"flex",alignItems:"center",gap:".6rem",marginBottom:"2rem"}}>
-          <IceIQLogo size={32}/>
-          <span style={{fontFamily:FONT.display,fontWeight:800,fontSize:"2rem",color:C.gold,letterSpacing:".08em"}}>IceIQ</span>
-        </div>
-        <h1 style={{fontFamily:FONT.display,fontWeight:800,fontSize:"clamp(1.8rem,6vw,2.4rem)",margin:"0 0 .5rem",lineHeight:1.1}}>
+      {/* Auth card */}
+      <div style={{background:"rgba(6,12,22,0.82)",backdropFilter:"blur(20px)",WebkitBackdropFilter:"blur(20px)",border:`1px solid rgba(255,255,255,0.08)`,borderTop:`1px solid rgba(255,255,255,0.13)`,borderRadius:20,padding:"1.75rem 1.5rem",boxShadow:"0 32px 80px rgba(0,0,0,0.6),inset 0 1px 0 rgba(255,255,255,0.06)"}}>
+
+        <h2 style={{fontFamily:FONT.display,fontWeight:800,fontSize:"clamp(1.6rem,5vw,2.1rem)",margin:"0 0 .35rem",lineHeight:1.1}}>
           {headline}
-        </h1>
-        <p style={{fontSize:14,color:C.dim,marginBottom:"1.5rem",lineHeight:1.6}}>{subhead}</p>
+        </h2>
+        <p style={{fontSize:13,color:"rgba(248,250,252,.5)",marginBottom:"1.5rem",lineHeight:1.55}}>{subhead}</p>
 
         {mode === "signup" && (
           <>
@@ -2860,39 +2874,42 @@ function AuthScreen({ onAuthenticated, onDemo }) {
         )}
 
         {mode !== "forgot" && (
-          <div style={{textAlign:"center",marginTop:"1.25rem",fontSize:13,color:C.dimmer}}>
+          <div style={{textAlign:"center",marginTop:"1.1rem",fontSize:13,color:"rgba(248,250,252,.4)"}}>
             {mode === "login" ? "New to IceIQ? " : "Already have an account? "}
-            <button onClick={()=>{setMode(mode==="login"?"signup":"login");setErr("");}} style={{background:"none",border:"none",color:C.gold,cursor:"pointer",fontWeight:700,fontSize:13,fontFamily:FONT.body,padding:0,textDecoration:"underline"}}>
-              {mode === "login" ? "Create account" : "Sign in"}
+            <button onClick={()=>{setMode(mode==="login"?"signup":"login");setErr("");}} style={{background:"none",border:"none",color:C.gold,cursor:"pointer",fontWeight:700,fontSize:13,fontFamily:FONT.body,padding:0}}>
+              {mode === "login" ? "Create account →" : "Sign in →"}
             </button>
           </div>
         )}
 
-        <div style={{marginTop:"2rem",paddingTop:"1.5rem",borderTop:`1px solid ${C.border}`}}>
-          <div style={{fontSize:11,letterSpacing:".14em",textTransform:"uppercase",color:C.dimmer,fontWeight:700,textAlign:"center",marginBottom:".85rem"}}>See it in action — pick a player</div>
-          <div style={{fontSize:10,letterSpacing:".12em",textTransform:"uppercase",color:C.purple,fontWeight:700,marginBottom:".4rem"}}>Player</div>
-          <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:".5rem",marginBottom:".75rem"}}>
+        <div style={{marginTop:"1.75rem",paddingTop:"1.5rem",borderTop:"1px solid rgba(255,255,255,0.07)"}}>
+          <div style={{fontSize:11,letterSpacing:".14em",textTransform:"uppercase",color:"rgba(248,250,252,.35)",fontWeight:700,textAlign:"center",marginBottom:"1rem"}}>Try without signing up</div>
+          <div style={{fontSize:10,letterSpacing:".12em",textTransform:"uppercase",color:C.purple,fontWeight:700,marginBottom:".4rem",opacity:.85}}>Player</div>
+          <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:".4rem",marginBottom:".65rem"}}>
             {LEVELS.map(lvl => {
               const cfg = DEMO_PROFILES[lvl];
               if (!cfg) return null;
               const short = lvl.split(" / ")[0];
               return (
-                <button key={lvl} onClick={()=>onDemo(lvl)} style={{background:C.bgCard,border:`1px solid ${C.purpleBorder}`,borderRadius:10,padding:".7rem .6rem",cursor:"pointer",color:C.white,fontFamily:FONT.body,textAlign:"left"}}>
-                  <div style={{fontWeight:700,fontSize:13,color:C.purple,marginBottom:2}}>{short} · {cfg.position}</div>
-                  <div style={{fontSize:11,color:C.dimmer,lineHeight:1.4}}>{cfg.name} · {cfg.team}</div>
+                <button key={lvl} onClick={()=>onDemo(lvl)} style={{background:"rgba(124,111,205,0.08)",border:"1px solid rgba(124,111,205,0.2)",borderRadius:10,padding:".65rem .6rem",cursor:"pointer",color:C.white,fontFamily:FONT.body,textAlign:"left",transition:"background .15s"}}>
+                  <div style={{fontWeight:700,fontSize:12,color:"rgba(167,155,240,.9)",marginBottom:2}}>{short} · {cfg.position}</div>
+                  <div style={{fontSize:10,color:"rgba(248,250,252,.45)",lineHeight:1.4}}>{cfg.name}</div>
                 </button>
               );
             })}
           </div>
-          <div style={{fontSize:10,letterSpacing:".12em",textTransform:"uppercase",color:C.gold,fontWeight:700,marginBottom:".4rem"}}>Coach</div>
-          <button onClick={()=>onDemo("__coach__")} style={{width:"100%",background:`linear-gradient(135deg,rgba(201,168,76,.12),rgba(201,168,76,.04))`,border:`1px solid ${C.goldBorder}`,borderRadius:10,padding:".7rem .6rem",cursor:"pointer",color:C.white,fontFamily:FONT.body,textAlign:"left"}}>
-            <div style={{fontWeight:700,fontSize:13,color:C.gold,marginBottom:2}}>Coach Dashboard</div>
-            <div style={{fontSize:11,color:C.dimmer,lineHeight:1.4}}>View a team roster, rate players, and explore the coach tools</div>
+          <div style={{fontSize:10,letterSpacing:".12em",textTransform:"uppercase",color:C.gold,fontWeight:700,marginBottom:".4rem",opacity:.85}}>Coach</div>
+          <button onClick={()=>onDemo("__coach__")} style={{width:"100%",background:"rgba(201,168,76,0.07)",border:"1px solid rgba(201,168,76,0.2)",borderRadius:10,padding:".65rem .75rem",cursor:"pointer",color:C.white,fontFamily:FONT.body,textAlign:"left",display:"flex",alignItems:"center",justifyContent:"space-between"}}>
+            <div>
+              <div style={{fontWeight:700,fontSize:12,color:"rgba(201,168,76,.9)",marginBottom:2}}>Coach Dashboard</div>
+              <div style={{fontSize:10,color:"rgba(248,250,252,.45)",lineHeight:1.4}}>Roster, ratings, and coach tools</div>
+            </div>
+            <span style={{color:"rgba(201,168,76,.6)",fontSize:14}}>→</span>
           </button>
-          <div style={{fontSize:11,color:C.dimmer,textAlign:"center",marginTop:".65rem",lineHeight:1.5}}>Nothing is saved in demo mode.</div>
+          <div style={{fontSize:10,color:"rgba(248,250,252,.3)",textAlign:"center",marginTop:".6rem"}}>Nothing is saved in demo mode.</div>
         </div>
 
-        <div style={{fontSize:10,color:C.dimmer,textAlign:"center",marginTop:"2rem",opacity:.6}}>v{VERSION}</div>
+        <div style={{fontSize:10,color:"rgba(248,250,252,.3)",textAlign:"center",marginTop:"1.5rem"}}>v{VERSION}</div>
       </div>
       </div>
     </div>
