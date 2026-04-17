@@ -305,8 +305,9 @@ export function PlansScreen({ onBack, tier }) {
           ))}
         </Card>
 
-        <div style={{fontSize:11,color:C.dimmer,textAlign:"center",marginTop:"1rem",lineHeight:1.6}}>
-          Payment processing is coming soon. Contact us at <span style={{color:C.gold}}>bluechip-people-strategies.com</span> for early access.
+        <div style={{textAlign:"center",marginTop:"1rem"}}>
+          <div style={{fontSize:11,color:C.dimmer,marginBottom:".75rem",lineHeight:1.6}}>Online payment coming soon — get early access now.</div>
+          <a href="mailto:mtslifka@gmail.com?subject=IceIQ Pro Early Access" style={{display:"inline-block",background:C.gold,color:C.bg,border:"none",borderRadius:10,padding:".65rem 1.5rem",cursor:"pointer",fontWeight:800,fontSize:13,fontFamily:FONT.body,textDecoration:"none"}}>Contact us for early access →</a>
         </div>
       </div>
     </div>

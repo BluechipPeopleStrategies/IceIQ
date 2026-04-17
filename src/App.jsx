@@ -268,6 +268,19 @@ function buildQueue(qb, level, position, isReturning, tier) {
     2: shuffle(pool[2]),
     3: shuffle(pool[3]),
   };
+
+  // For FREE users: inject one format-preview sentinel mid-queue to show locked formats exist
+  if (!formatAllowed) {
+    const formats = ["seq","tf","mistake","next"];
+    const previewFormat = formats[Math.floor(Math.random() * formats.length)];
+    const sentinel = { id: "__format_preview__", type: "formatPreview", _format: previewFormat, d: 2 };
+    const d2 = byD[2];
+    if (d2.length >= 4) {
+      const insertAt = Math.floor(d2.length / 2);
+      byD[2] = [...d2.slice(0, insertAt), sentinel, ...d2.slice(insertAt)];
+    }
+  }
+
   return { byD, currentD: isReturning ? 2 : 1, tier };
 }
 
@@ -759,7 +772,7 @@ function Home({ player, onNav, demoMode, subscriptionTier }) {
 // ─────────────────────────────────────────────────────────
 // QUIZ SCREEN
 // ─────────────────────────────────────────────────────────
-function Quiz({ player, onFinish, onBack, tier }) {
+function Quiz({ player, onFinish, onBack, tier, onUpgrade }) {
   const isReturning = player.quizHistory.length > 0;
   const qLen = player.sessionLength || 10;
   const [queue, setQueue] = useState(null);
@@ -845,6 +858,42 @@ function Quiz({ player, onFinish, onBack, tier }) {
   const answered = qtype === "seq" ? seqAnswered : sel !== null;
   const q = question;
   if (!q) return <Screen><div style={{color:C.dimmer,textAlign:"center",paddingTop:"4rem"}}>Loading…</div></Screen>;
+
+  const FORMAT_PREVIEW_LABELS = { seq:"Sequence Ordering", tf:"True or False", mistake:"Spot the Mistake", next:"What Happens Next" };
+  const FORMAT_PREVIEW_ICONS = { seq:"🔢", tf:"⚡", mistake:"🔍", next:"⏭️" };
+  const FORMAT_PREVIEW_DESC = {
+    seq: "Put the steps of a play in the correct order — tests whether you understand decision sequences, not just outcomes.",
+    tf: "Is this hockey statement True or False? Myth-busting questions that reveal what actually works on the ice.",
+    mistake: "Read the situation, spot the error. Identify exactly what the player did wrong and why it hurts the team.",
+    next: "Given this game situation, what's the smartest next move? Tests game sense under pressure.",
+  };
+  if (qtype === "formatPreview") {
+    const fmt = q._format || "tf";
+    return (
+      <div style={{minHeight:"100vh",background:C.bg,color:C.white,fontFamily:FONT.body}}>
+        <StickyHeader>
+          <div style={{maxWidth:560,margin:"0 auto",display:"flex",alignItems:"center",gap:"1rem"}}>
+            <button onClick={onBack} style={{background:"none",border:`1px solid ${C.border}`,color:C.dimmer,borderRadius:8,padding:".35rem .75rem",cursor:"pointer",fontSize:13,fontFamily:FONT.body}}>←</button>
+            <div style={{flex:1}}>
+              <div style={{fontFamily:FONT.display,fontWeight:800,fontSize:"1rem",color:C.gold}}>IceIQ · {player.level}</div>
+              <div style={{fontSize:11,color:C.dimmer}}>Q{qNum+1}/{qLen} · {player.position}</div>
+            </div>
+          </div>
+        </StickyHeader>
+        <div style={{padding:"1.5rem 1.25rem",maxWidth:560,margin:"0 auto",display:"flex",flexDirection:"column",alignItems:"center",textAlign:"center"}}>
+          <div style={{fontSize:48,margin:"1.5rem 0 .75rem"}}>{FORMAT_PREVIEW_ICONS[fmt]}</div>
+          <div style={{fontFamily:FONT.display,fontWeight:800,fontSize:"1.6rem",color:C.gold,marginBottom:".5rem"}}>{FORMAT_PREVIEW_LABELS[fmt]}</div>
+          <div style={{fontSize:13,color:C.dim,lineHeight:1.7,marginBottom:"1.75rem",maxWidth:360}}>{FORMAT_PREVIEW_DESC[fmt]}</div>
+          <div style={{background:C.bgElevated,border:`1px solid ${C.goldBorder}`,borderRadius:12,padding:"1.25rem",marginBottom:"1.5rem",width:"100%",textAlign:"left"}}>
+            <div style={{fontSize:11,color:C.gold,fontWeight:700,marginBottom:".5rem"}}>🔒 PRO QUESTION TYPE</div>
+            <div style={{fontSize:12,color:C.dim,lineHeight:1.6}}>This question type is available on IceIQ Pro. Unlock all 5 question formats to challenge yourself in new ways.</div>
+          </div>
+          <button onClick={() => onUpgrade("allQuestionFormats","pro")} style={{background:C.gold,color:C.bg,border:"none",borderRadius:10,padding:".85rem 1.75rem",cursor:"pointer",fontWeight:800,fontSize:15,fontFamily:FONT.body,marginBottom:".75rem",width:"100%"}}>Unlock All Question Types →</button>
+          <button onClick={advance} style={{background:"none",border:`1px solid ${C.border}`,color:C.dimmer,borderRadius:10,padding:".7rem 1.5rem",cursor:"pointer",fontWeight:600,fontSize:13,fontFamily:FONT.body,width:"100%"}}>Skip for now</button>
+        </div>
+      </div>
+    );
+  }
 
   const typeInfo = Q_TYPE_LABELS[qtype] || Q_TYPE_LABELS.mc;
   const diagramType = DIAGRAMS[q.id];
@@ -1003,7 +1052,7 @@ function Quiz({ player, onFinish, onBack, tier }) {
 // ─────────────────────────────────────────────────────────
 // RESULTS SCREEN
 // ─────────────────────────────────────────────────────────
-function Results({ results, player, prevScore, totalSessions, seqPerfect, mistakeStreak, onAgain, onHome }) {
+function Results({ results, player, prevScore, totalSessions, seqPerfect, mistakeStreak, onAgain, onHome, showMilestoneBanner, onViewPlans }) {
   const [saved, setSaved] = useState(false);
   const score = calcWeightedIQ(results);
   const tier = getTier(score);
@@ -1112,12 +1161,67 @@ function Results({ results, player, prevScore, totalSessions, seqPerfect, mistak
         })}
       </Card>
 
+      {showMilestoneBanner && (
+        <Card style={{marginBottom:"1rem",background:`linear-gradient(135deg,rgba(201,168,76,.12),rgba(201,168,76,.04))`,border:`1px solid ${C.goldBorder}`,textAlign:"center",padding:"1.25rem"}}>
+          <div style={{fontSize:24,marginBottom:".4rem"}}>🏆</div>
+          <div style={{fontFamily:FONT.display,fontWeight:800,fontSize:"1.1rem",color:C.gold,marginBottom:".3rem"}}>5 quizzes complete!</div>
+          <div style={{fontSize:12,color:C.dim,lineHeight:1.5,marginBottom:".85rem"}}>Free keeps only your last 5 sessions. Upgrade to track your full journey and see your progress over time.</div>
+          <button onClick={onViewPlans} style={{background:C.gold,color:C.bg,border:"none",borderRadius:8,padding:".55rem 1.1rem",cursor:"pointer",fontWeight:800,fontSize:13,fontFamily:FONT.body}}>See Pro Plans →</button>
+        </Card>
+      )}
+
       <PrimaryBtn onClick={onAgain} style={{marginBottom:".75rem"}}>Take Another Quiz →</PrimaryBtn>
       <SecBtn onClick={onHome}>← Home</SecBtn>
     </Screen>
   );
 }
 
+
+// ─────────────────────────────────────────────────────────
+// GATED SMART GOALS SCREEN (with blurred preview)
+// ─────────────────────────────────────────────────────────
+function GatedGoalsScreen({ onBack, onUnlock }) {
+  return (
+    <div style={{minHeight:"100vh",background:C.bg,color:C.white,fontFamily:FONT.body,paddingBottom:80,position:"relative"}}>
+      <StickyHeader>
+        <div style={{maxWidth:560,margin:"0 auto",display:"flex",alignItems:"center",gap:"1rem"}}>
+          <BackBtn onClick={onBack}/>
+          <div style={{flex:1,fontFamily:FONT.display,fontWeight:800,fontSize:"1.1rem"}}>SMART Goals</div>
+        </div>
+      </StickyHeader>
+
+      {/* Blurred background preview */}
+      <div style={{padding:"1.25rem",maxWidth:560,margin:"0 auto",filter:"blur(4px)",opacity:0.6}}>
+        <Card style={{marginBottom:"1rem",background:C.bgElevated,border:`1px solid ${C.border}`}}>
+          <div style={{display:"flex",alignItems:"center",gap:".5rem",marginBottom:".75rem"}}>
+            <span style={{fontSize:18}}>🎯</span>
+            <div>
+              <div style={{fontWeight:700,fontSize:14}}>Improve my gap control</div>
+              <div style={{fontSize:11,color:C.dimmer}}>Gap Control · Specificity 80%</div>
+            </div>
+          </div>
+          <div style={{fontSize:12,lineHeight:1.6,color:C.dim}}>
+            <div><strong>Specific:</strong> Maintain a 10-foot gap on all rush situations</div>
+            <div style={{marginTop:".5rem"}}><strong>Measurable:</strong> Reduce missed gap assignments to 0 per game</div>
+            <div style={{marginTop:".5rem"}}><strong>Achievable:</strong> I understand gap theory already</div>
+            <div style={{marginTop:".5rem"}}><strong>Relevant:</strong> Gap control is the #1 D skill</div>
+            <div style={{marginTop:".5rem"}}><strong>Time-bound:</strong> Before Christmas break</div>
+          </div>
+        </Card>
+      </div>
+
+      {/* Gate overlay */}
+      <div style={{position:"absolute",top:0,left:0,right:0,bottom:0,background:`linear-gradient(180deg,transparent 30%,${C.bg}90% 100%)`,display:"flex",alignItems:"flex-end",justifyContent:"center",paddingBottom:"120px"}}>
+        <Card style={{textAlign:"center",padding:"2rem 1.25rem",background:`linear-gradient(135deg,${C.bgCard},${C.bgElevated})`,border:`1px solid ${C.goldBorder}`,maxWidth:"100%"}}>
+          <div style={{fontSize:40,marginBottom:".75rem"}}>🔒</div>
+          <div style={{fontFamily:FONT.display,fontWeight:800,fontSize:"1.6rem",color:C.gold,marginBottom:".5rem"}}>SMART Goals</div>
+          <div style={{fontSize:13,color:C.dim,lineHeight:1.6,marginBottom:"1.5rem"}}>Set specific, measurable, achievable development goals across every skill category — tied to your self-assessment and coach feedback.</div>
+          <button onClick={onUnlock} style={{background:C.gold,color:C.bg,border:"none",borderRadius:10,padding:".8rem 1.5rem",cursor:"pointer",fontWeight:800,fontSize:14,fontFamily:FONT.body}}>Unlock with Pro →</button>
+        </Card>
+      </div>
+    </div>
+  );
+}
 
 // ─────────────────────────────────────────────────────────
 // SMART GOALS SCREEN
@@ -2135,19 +2239,20 @@ function HockeyInsightWidget() {
   );
 }
 
-function BottomNav({ active, onNav }) {
+function BottomNav({ active, onNav, tier = "FREE" }) {
   const tabs = [
     {id:"home",   icon:"🏠", label:"Home"},
     {id:"quiz",   icon:"🧠", label:"Quiz"},
     {id:"skills", icon:"📊", label:"Skills"},
-    {id:"goals",  icon:"🎯", label:"Goals"},
+    {id:"goals",  icon:"🎯", label:"Goals", gated: tier === "FREE"},
     {id:"report", icon:"📋", label:"Report"},
   ];
   return (
     <div style={{position:"fixed",bottom:0,left:0,right:0,background:`${C.bgCard}f8`,backdropFilter:"blur(16px)",WebkitBackdropFilter:"blur(16px)",borderTop:`1px solid ${C.border}`,display:"flex",zIndex:100}}>
       {tabs.map(t => (
-        <button key={t.id} onClick={() => onNav(t.id)} style={{flex:1,background:"none",border:"none",padding:".65rem .25rem",cursor:"pointer",display:"flex",flexDirection:"column",alignItems:"center",gap:".2rem"}}>
+        <button key={t.id} onClick={() => onNav(t.id)} style={{flex:1,background:"none",border:"none",padding:".65rem .25rem",cursor:"pointer",display:"flex",flexDirection:"column",alignItems:"center",gap:".2rem",position:"relative"}}>
           <span style={{fontSize:18}}>{t.icon}</span>
+          {t.gated && <span style={{position:"absolute",top:"1px",right:"8px",width:"12px",height:"12px",background:C.gold,borderRadius:"50%",fontSize:"8px",display:"flex",alignItems:"center",justifyContent:"center",color:C.bg,fontWeight:800}}>🔒</span>}
           <span style={{fontSize:10,color:active===t.id?C.gold:C.dimmer,fontFamily:FONT.body,fontWeight:active===t.id?700:400,transition:"color .15s"}}>{t.label}</span>
           {active===t.id && <div style={{width:4,height:4,borderRadius:"50%",background:C.gold}}/>}
         </button>
@@ -2726,6 +2831,7 @@ export default function App() {
   const [mistakeStreak, setMistakeStreak] = useState(0);
   const [upgradePrompt, setUpgradePrompt] = useState(null); // {feature, target} | null
   const [userEmail, setUserEmail] = useState(null);
+  const [showMilestone5Banner, setShowMilestone5Banner] = useState(false);
 
   // Resolve tier once per render
   const tier = resolveTier({ profile, demoMode });
@@ -2837,6 +2943,10 @@ export default function App() {
     setMistakeStreak(ms);
     setPrevScore(score);
     setTotalSessions(newTotal);
+    if (newTotal === 5 && tier === "FREE" && !localStorage.getItem("iceiq_milestone5_shown")) {
+      setShowMilestone5Banner(true);
+      localStorage.setItem("iceiq_milestone5_shown", "true");
+    }
     try {
       const sd = updateStreak(getStreakData());
       localStorage.setItem("iceiq_streak", JSON.stringify(sd));
@@ -3000,13 +3110,13 @@ export default function App() {
 
       <div style={{paddingBottom: screen==="quiz"||screen==="results" ? 0 : 80}}>
         {screen === "home"    && <Home player={tierLimitedPlayer(player, tier)} onNav={setScreen} demoMode={demoMode} subscriptionTier={tier}/>}
-        {screen === "quiz"    && <Quiz player={player} onFinish={handleQuizFinish} onBack={()=>setScreen("home")} tier={tier}/>}
-        {screen === "results" && <Results results={quizResults} player={player} prevScore={prevScore} totalSessions={totalSessions} seqPerfect={seqPerfect} mistakeStreak={mistakeStreak} onAgain={()=>setScreen("quiz")} onHome={()=>setScreen("home")}/>}
+        {screen === "quiz"    && <Quiz player={player} onFinish={handleQuizFinish} onBack={()=>setScreen("home")} tier={tier} onUpgrade={promptUpgrade}/>}
+        {screen === "results" && <Results results={quizResults} player={player} prevScore={prevScore} totalSessions={totalSessions} seqPerfect={seqPerfect} mistakeStreak={mistakeStreak} onAgain={()=>setScreen("quiz")} onHome={()=>setScreen("home")} showMilestoneBanner={showMilestone5Banner} onViewPlans={()=>{setShowMilestone5Banner(false);setScreen("plans");}}/>}
         {screen === "skills"  && <Skills player={player} onSave={handleSkillsSave} onBack={()=>setScreen("home")}/>}
         {screen === "study"   && <StudyScreen player={player} onBack={()=>setScreen("home")} onNav={setScreen}/>}
         {screen === "goals"   && (canAccess("smartGoals", tier).allowed
           ? <GoalsScreen player={player} onSave={handleGoalsSave} onBack={()=>setScreen("home")}/>
-          : <GatedScreen feature="smartGoals" title="SMART Goals" description="Set specific, measurable, achievable development goals across every skill category — tied to your self-assessment and coach feedback." onBack={()=>setScreen("home")} onUnlock={()=>promptUpgrade("smartGoals","pro")} target="pro"/>
+          : <GatedGoalsScreen onBack={()=>setScreen("home")} onUnlock={()=>promptUpgrade("smartGoals","pro")}/>
         )}
         {screen === "report"  && <Report player={tierLimitedPlayer(player, tier)} onBack={()=>setScreen("home")} demoCoachData={demoMode?demoCoachRatings:null} tier={tier} onUpgrade={(f,t)=>promptUpgrade(f,t)}/>}
         {screen === "profile" && <Profile player={player} onSave={handleProfileSave} onBack={()=>setScreen("home")} onReset={handleSignOut} demoMode={demoMode} tier={tier} onUpgrade={(f,t)=>promptUpgrade(f,t)} userEmail={userEmail} onAdminReports={()=>setScreen("admin")}/>}
@@ -3014,7 +3124,7 @@ export default function App() {
       </div>
 
       {!["quiz","results"].includes(screen) && (
-        <BottomNav active={screen} onNav={setScreen}/>
+        <BottomNav active={screen} onNav={setScreen} tier={tier}/>
       )}
 
       {upgradePrompt && (
