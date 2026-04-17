@@ -13,11 +13,11 @@ Dev environment: Claude Code in PowerShell (Windows)
 
 ## Architecture — read this before touching anything
 
-**Single-file architecture.** All application logic lives in `src/App.jsx`. This is intentional and must be maintained. Do not split components into separate files unless explicitly instructed. Do not create a `components/` folder. Do not refactor into multiple files.
+STRICT ARCHITECTURE: > - Root: src/App.jsx (Single-file ONLY).
 
-**No backend.** There is no server, no database, no API calls to external services. All state is managed in the browser via localStorage. Do not introduce a backend dependency.
+NO /components folder. NO refactoring.
 
-**Vercel deployment.** Every push to main triggers an automatic Vercel deploy. Keep the build clean — no console errors, no broken imports.
+State: localStorage only. NO backend/API.
 
 ---
 
