@@ -1339,14 +1339,15 @@ function UpgradePrompt({ feature, onClose, onViewPlans, target }) {
   );
 }
 
-function LockedCard({ feature, title, description, onUnlock }) {
+function LockedCard({ feature, title, description, onUnlock, target = "pro" }) {
+  const tierName = target.charAt(0).toUpperCase() + target.slice(1);
   return (
     <Card style={{marginBottom:"1rem",background:C.bgElevated,border:`1px dashed ${C.border}`,textAlign:"center",padding:"1.5rem"}}>
       <div style={{fontSize:32,marginBottom:".5rem",opacity:.5}}>🔒</div>
       <div style={{fontFamily:FONT.display,fontWeight:800,fontSize:"1.1rem",color:C.dim,marginBottom:".35rem"}}>{title}</div>
       <div style={{fontSize:12,color:C.dimmer,marginBottom:"1rem",lineHeight:1.5}}>{description}</div>
       <button onClick={onUnlock} style={{background:C.gold,color:C.bg,border:"none",borderRadius:10,padding:".6rem 1.25rem",cursor:"pointer",fontWeight:800,fontSize:13,fontFamily:FONT.body}}>
-        Unlock with Pro →
+        Unlock with {tierName} →
       </button>
     </Card>
   );
@@ -1818,10 +1819,8 @@ function Profile({ player, onSave, onBack, onReset, demoMode, tier, onUpgrade, u
         <Card style={{marginBottom:"1rem"}}>
           <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:".25rem"}}>
             <Label style={{marginBottom:0}}>Position</Label>
-            {positionLocked && <button onClick={()=>onUpgrade && onUpgrade("positionFilter","pro")} style={{background:"none",border:"none",color:C.gold,fontSize:11,cursor:"pointer",fontFamily:FONT.body,fontWeight:700,textDecoration:"underline"}}>🔒 Unlock</button>}
           </div>
-          {positionLocked && <div style={{fontSize:11,color:C.dimmer,marginBottom:".6rem",lineHeight:1.5}}>Position-specific questions are a Pro feature. Free tier serves all skater questions.</div>}
-          <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:".5rem",opacity:positionLocked?0.5:1,pointerEvents:positionLocked?"none":"auto"}}>
+          <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:".5rem"}}>
             {[{p:"Forward",i:"⚡"},{p:"Defense",i:"🛡"},{p:"Goalie",i:"🧤"},{p:"Not Sure",i:"❓"}].map(({p,i})=>(
               <button key={p} onClick={()=>upd("position")(p)} style={{background:s.position===p?C.goldDim:C.bgElevated,border:`1px solid ${s.position===p?C.gold:C.border}`,borderRadius:10,padding:".75rem .5rem",cursor:"pointer",textAlign:"center",color:s.position===p?C.gold:C.dim,fontFamily:FONT.body,fontSize:13,fontWeight:s.position===p?700:400}}>
                 <div style={{fontSize:20,marginBottom:3}}>{i}</div>{p}
@@ -2915,6 +2914,27 @@ export default function App() {
 
   // Coach home
   if (profile.role === "coach") {
+    const coachAccess = canAccess("coachDashboard", tier);
+    if (!coachAccess.allowed) {
+      return (
+        <div style={{minHeight:"100vh",background:C.bg,color:C.white,fontFamily:FONT.body,paddingBottom:80}}>
+          <StickyHeader>
+            <div style={{maxWidth:560,margin:"0 auto",display:"flex",alignItems:"center",gap:"1rem"}}>
+              <button onClick={()=>setSupersetPage("start")} style={{background:"none",border:"none",color:C.white,cursor:"pointer",fontSize:24,padding:0}}>←</button>
+              <div style={{flex:1,fontFamily:FONT.display,fontWeight:800,fontSize:"1.1rem"}}>Coach Dashboard</div>
+            </div>
+          </StickyHeader>
+          <div style={{padding:"2rem 1.25rem",maxWidth:560,margin:"0 auto"}}>
+            <Card style={{textAlign:"center",padding:"2rem 1.25rem",background:`linear-gradient(135deg,${C.bgCard},${C.bgElevated})`,border:`1px solid ${C.goldBorder}`}}>
+              <div style={{fontSize:40,marginBottom:".75rem"}}>🔒</div>
+              <div style={{fontFamily:FONT.display,fontWeight:800,fontSize:"1.6rem",color:C.gold,marginBottom:".5rem"}}>Coach Dashboard</div>
+              <div style={{fontSize:13,color:C.dim,lineHeight:1.6,marginBottom:"1.5rem"}}>Full team management, player ratings, and coaching tools are available on the TEAM plan. Contact us to upgrade.</div>
+              <a href="mailto:mtslifka@gmail.com?subject=IceIQ TEAM Plan" style={{display:"inline-block",background:C.gold,color:C.bg,border:"none",borderRadius:10,padding:".8rem 1.5rem",cursor:"pointer",fontWeight:800,fontSize:14,fontFamily:FONT.body,textDecoration:"none"}}>Contact us for TEAM plan →</a>
+            </Card>
+          </div>
+        </div>
+      );
+    }
     return (
       <>
         <style>{`
@@ -2986,7 +3006,7 @@ export default function App() {
         {screen === "study"   && <StudyScreen player={player} onBack={()=>setScreen("home")} onNav={setScreen}/>}
         {screen === "goals"   && (canAccess("smartGoals", tier).allowed
           ? <GoalsScreen player={player} onSave={handleGoalsSave} onBack={()=>setScreen("home")}/>
-          : <GatedScreen feature="smartGoals" title="SMART Goals" description="Set specific, measurable, achievable development goals across every skill category — tied to your self-assessment and coach feedback." onBack={()=>setScreen("home")} onUnlock={()=>promptUpgrade("smartGoals","pro")}/>
+          : <GatedScreen feature="smartGoals" title="SMART Goals" description="Set specific, measurable, achievable development goals across every skill category — tied to your self-assessment and coach feedback." onBack={()=>setScreen("home")} onUnlock={()=>promptUpgrade("smartGoals","pro")} target="pro"/>
         )}
         {screen === "report"  && <Report player={tierLimitedPlayer(player, tier)} onBack={()=>setScreen("home")} demoCoachData={demoMode?demoCoachRatings:null} tier={tier} onUpgrade={(f,t)=>promptUpgrade(f,t)}/>}
         {screen === "profile" && <Profile player={player} onSave={handleProfileSave} onBack={()=>setScreen("home")} onReset={handleSignOut} demoMode={demoMode} tier={tier} onUpgrade={(f,t)=>promptUpgrade(f,t)} userEmail={userEmail} onAdminReports={()=>setScreen("admin")}/>}
@@ -3020,7 +3040,8 @@ function tierLimitedPlayer(player, tier) {
 }
 
 // Generic gated-screen wrapper for full-screen locked features
-function GatedScreen({ feature, title, description, onBack, onUnlock }) {
+function GatedScreen({ feature, title, description, onBack, onUnlock, target = "pro" }) {
+  const tierName = target.charAt(0).toUpperCase() + target.slice(1);
   return (
     <div style={{minHeight:"100vh",background:C.bg,color:C.white,fontFamily:FONT.body,paddingBottom:80}}>
       <StickyHeader>
@@ -3035,7 +3056,7 @@ function GatedScreen({ feature, title, description, onBack, onUnlock }) {
           <div style={{fontFamily:FONT.display,fontWeight:800,fontSize:"1.6rem",color:C.gold,marginBottom:".5rem"}}>{title}</div>
           <div style={{fontSize:13,color:C.dim,lineHeight:1.6,marginBottom:"1.5rem"}}>{description}</div>
           <button onClick={onUnlock} style={{background:C.gold,color:C.bg,border:"none",borderRadius:10,padding:".8rem 1.5rem",cursor:"pointer",fontWeight:800,fontSize:14,fontFamily:FONT.body}}>
-            Unlock with Pro →
+            Unlock with {tierName} →
           </button>
         </Card>
       </div>

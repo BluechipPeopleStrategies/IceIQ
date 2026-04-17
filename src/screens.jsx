@@ -232,9 +232,8 @@ export function ProfileSetup({ profile, onComplete }) {
 // PlansScreen
 // ─────────────────────────────────────────────────────────
 const PRO_BENEFITS = [
-  {icon:"🔓", text:"Access to all age groups (U7 → U13)"},
+  {icon:"🔓", text:"Access to all age groups (U7 → U18)"},
   {icon:"🎮", text:"All 5 question formats — sequence, spot the mistake, what happens next, true/false"},
-  {icon:"🎯", text:"Position-specific questions (Forward, Defense, Goalie)"},
   {icon:"🧠", text:"Adaptive engine — difficulty matches your level"},
   {icon:"⭐", text:"SMART goals with category tracking"},
   {icon:"📊", text:"Full progress snapshots + Skills Map radar"},

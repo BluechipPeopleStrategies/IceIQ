@@ -9,7 +9,7 @@ export const FREE = {
   ageGroups: 1,
   sessionHistory: 5,
   questionFormats: ["multipleChoice"],
-  positionFilter: false,
+  positionFilter: true,
   adaptiveEngine: false,
   smartGoals: false,
   progressSnapshots: false,

@@ -21,7 +21,9 @@ const FEATURE_KEYS = [
 // Per-tier allow list — what each tier can access.
 // Anything not listed is denied.
 const TIER_FEATURES = {
-  FREE: new Set([]),
+  FREE: new Set([
+    "positionFilter",
+  ]),
   PRO: new Set([
     "multipleAgeGroups",
     "allQuestionFormats",
