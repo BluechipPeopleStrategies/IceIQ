@@ -1,8 +1,12 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, lazy, Suspense } from "react";
 import * as SB from "./supabase";
 import { supabase, hasSupabase } from "./supabase";
 import { canAccess, getUpgradeTriggerMessage } from "./utils/tierGate";
 import { canSwitchAgeGroup, recordAgeGroupSwitch, getAgeGroupLock, setAgeGroupLock, checkSeasonReset } from "./utils/deviceLock";
+import {
+  C, FONT, LEVELS, POSITIONS, POSITIONS_U11UP, SEASONS,
+  IceIQLogo, Screen, Card, Pill, Label, PrimaryBtn, SecBtn, BackBtn, ProgressBar, StickyHeader,
+} from "./shared.jsx";
 const imgSplash = "/splash.jpg";
 import imgCoreApp from "./assets/images/Core-App.jpg";
 import imgDataPanel from "./assets/images/Data-Panel.jpg";
@@ -31,113 +35,6 @@ function resolveTier({ profile, demoMode } = {}) {
   return "FREE";
 }
 
-// ─────────────────────────────────────────────────────────
-// DESIGN TOKENS
-// ─────────────────────────────────────────────────────────
-const C = {
-  // Backgrounds
-  bg:       "#080e1a",
-  bgCard:   "#0d1525",
-  bgElevated:"#111e33",
-  bgGlass:  "rgba(255,255,255,0.04)",
-  // Brand
-  gold:     "#c9a84c",
-  goldDim:  "rgba(201,168,76,0.15)",
-  goldBorder:"rgba(201,168,76,0.3)",
-  // Accent
-  purple:   "#7c6fcd",
-  purpleDim:"rgba(124,111,205,0.12)",
-  purpleBorder:"rgba(124,111,205,0.3)",
-  blue:     "#3b82f6",
-  blueDim:  "rgba(59,130,246,0.1)",
-  // Status
-  green:    "#22c55e",
-  greenDim: "rgba(34,197,94,0.1)",
-  greenBorder:"rgba(34,197,94,0.25)",
-  yellow:   "#eab308",
-  yellowDim:"rgba(234,179,8,0.1)",
-  red:      "#ef4444",
-  redDim:   "rgba(239,68,68,0.08)",
-  redBorder:"rgba(239,68,68,0.25)",
-  // Text
-  white:    "#f8fafc",
-  dim:      "rgba(248,250,252,0.6)",
-  dimmer:   "rgba(248,250,252,0.35)",
-  dimmest:  "rgba(248,250,252,0.08)",
-  // Borders
-  border:   "rgba(255,255,255,0.07)",
-  borderMid:"rgba(255,255,255,0.12)",
-  // Ice
-  ice:      "#e8f4fb",
-  rink:     "#1e5799",
-};
-
-// IceIQ logo mark — realistic brain up top, two crossed hockey sticks forming an X below, puck centered.
-// Captures "hockey IQ" as a team crest — the mind on top, the tools of the game crossed beneath.
-function IceIQLogo({ size = 32, color = "#c9a84c" }) {
-  return (
-    <svg
-      width={size}
-      height={size}
-      viewBox="0 0 32 32"
-      aria-label="IceIQ logo"
-      style={{display:"block",flexShrink:0}}
-    >
-      {/* === BRAIN — compact side-profile, top third === */}
-      {/* Bumpy outline: frontal bulge → gyri peaks → occipital → cerebellum → underside */}
-      <path d="
-        M 8 11.5
-        C 7.5 9.5, 9 7.2, 10.8 7
-        C 11.5 5.8, 13 5.5, 14 6.5
-        C 15 5.5, 16.5 5.5, 17.5 6.5
-        C 18.8 5.5, 20.5 5.8, 21.3 7
-        C 23 6.8, 24.5 8.3, 24.5 10.3
-        C 26 10.8, 26 12.3, 24.8 12.8
-        C 25.3 13.5, 25 14.8, 23.8 15.2
-        C 23.5 16.3, 22 16.8, 20.5 16.3
-        C 19.8 17.2, 18 17.3, 17 16.5
-        C 16 17.3, 14 17.3, 13 16.5
-        C 11.5 17, 9.8 16.5, 9.2 15.3
-        C 7.8 14.8, 7 13.3, 7.8 12
-        C 6.8 11.5, 7.2 10.8, 8 11.5 Z"
-        fill="none" stroke={color} strokeWidth="1.3" strokeLinejoin="round" strokeLinecap="round"/>
-
-      {/* Internal sulci — wavy folds across the brain surface */}
-      <path d="M 10.5 8.5 Q 12.5 7.5 13.8 8.8 Q 15.5 7.8 16.8 8.8 Q 18.3 7.8 19.5 8.8"
-            stroke={color} strokeWidth="0.85" fill="none" strokeLinecap="round"/>
-      <path d="M 19.5 7.5 Q 21.5 8.2 23.5 7.8"
-            stroke={color} strokeWidth="0.85" fill="none" strokeLinecap="round"/>
-      <path d="M 9 11 Q 12 10, 15 11.3 Q 18 10.2, 21 11.3 Q 23 10.3, 25 11.3"
-            stroke={color} strokeWidth="0.85" fill="none" strokeLinecap="round"/>
-      <path d="M 9.3 13.8 Q 12.5 13, 16 14 Q 19.5 13.2, 23 14.2"
-            stroke={color} strokeWidth="0.85" fill="none" strokeLinecap="round"/>
-
-      {/* === TWO CROSSED HOCKEY STICKS — prominent X === */}
-      {/* Stick A: butt top-right, shaft down-left, blade at bottom-left */}
-      <line x1="24" y1="17" x2="7" y2="28" stroke={color} strokeWidth="2.2" strokeLinecap="round"/>
-      {/* Stick A blade — curved toe pointing outward/up */}
-      <path d="M 7 28 Q 3 28.5, 2.5 26.2" stroke={color} strokeWidth="3" fill="none" strokeLinecap="round" strokeLinejoin="round"/>
-      {/* Stick A grip tape (dark band near butt) */}
-      <line x1="21.5" y1="18.6" x2="24" y2="17" stroke="#0d1525" strokeWidth="1.1" strokeLinecap="round"/>
-
-      {/* Stick B: butt top-left, shaft down-right, blade at bottom-right */}
-      <line x1="8" y1="17" x2="25" y2="28" stroke={color} strokeWidth="2.2" strokeLinecap="round"/>
-      {/* Stick B blade — curved toe pointing outward/up */}
-      <path d="M 25 28 Q 29 28.5, 29.5 26.2" stroke={color} strokeWidth="3" fill="none" strokeLinecap="round" strokeLinejoin="round"/>
-      {/* Stick B grip tape */}
-      <line x1="10.5" y1="18.6" x2="8" y2="17" stroke="#0d1525" strokeWidth="1.1" strokeLinecap="round"/>
-
-      {/* === PUCK — bottom center, sitting between the crossed sticks === */}
-      <ellipse cx="16" cy="30" rx="3.2" ry="1.1" fill={color}/>
-      <ellipse cx="16" cy="30" rx="3.2" ry="1.1" fill="none" stroke="#0d1525" strokeWidth="0.3"/>
-    </svg>
-  );
-}
-
-const FONT = {
-  display: "'Anton', 'Oswald', 'Barlow Condensed', Impact, sans-serif",
-  body: "'DM Sans', 'Inter', system-ui, sans-serif",
-};
 
 // ─────────────────────────────────────────────────────────
 // VERSION
@@ -164,10 +61,6 @@ const CHANGELOG = [
 // ─────────────────────────────────────────────────────────
 // CONSTANTS
 // ─────────────────────────────────────────────────────────
-const LEVELS = ["U7 / Initiation","U9 / Novice","U11 / Atom","U13 / Peewee","U15 / Bantam","U18 / Midget"];
-const POSITIONS = ["Forward","Defense","Goalie","Not Sure"];
-const POSITIONS_U11UP = ["Forward","Defense","Goalie"];
-const SEASONS = ["2025-26","2026 Spring/Summer","2026-27"];
 const D_WEIGHT = {1:1, 2:1.5, 3:2.2};
 const QUIZ_LENGTH = 10;
 
@@ -282,105 +175,15 @@ const PR_COLOR = Object.fromEntries(PERCENTILE_RATINGS.map(r=>[r.value,r.color])
 const PR_LABEL = Object.fromEntries(PERCENTILE_RATINGS.map(r=>[r.value,r.label]));
 
 // ─────────────────────────────────────────────────────────
-// UI PRIMITIVES
-// ─────────────────────────────────────────────────────────
-const Screen = ({children, pad=true}) => (
-  <div style={{minHeight:"100vh",background:C.bg,color:C.white,fontFamily:FONT.body}}>
-    {pad ? <div style={{padding:"1.5rem 1.25rem",maxWidth:560,margin:"0 auto"}}>{children}</div> : children}
-  </div>
-);
-
-const Card = ({children, style, onClick, glow}) => (
-  <div onClick={onClick} style={{
-    background:C.bgCard,
-    border:`1px solid ${glow?C.goldBorder:C.border}`,
-    borderRadius:16,
-    padding:"1.25rem",
-    boxShadow: glow?"0 0 24px rgba(201,168,76,0.08)":"none",
-    cursor:onClick?"pointer":"default",
-    transition:"all .2s",
-    ...style
-  }}>{children}</div>
-);
-
-const Pill = ({children, color=C.purple, bg}) => (
-  <span style={{
-    display:"inline-flex",alignItems:"center",
-    background:bg||`${color}18`,
-    color,
-    border:`1px solid ${color}35`,
-    borderRadius:20,
-    padding:"3px 10px",
-    fontSize:11,
-    fontWeight:700,
-    letterSpacing:".04em",
-  }}>{children}</span>
-);
-
-const Label = ({children, style}) => (
-  <div style={{fontSize:10,letterSpacing:".14em",textTransform:"uppercase",color:C.dimmer,fontWeight:700,marginBottom:".6rem",...style}}>{children}</div>
-);
-
-const PrimaryBtn = ({onClick,children,disabled,style}) => (
-  <button onClick={onClick} disabled={disabled} style={{
-    background:disabled?"rgba(201,168,76,.2)":C.gold,
-    color:disabled?"rgba(201,168,76,.4)":C.bg,
-    border:"none",borderRadius:12,
-    padding:"1rem 1.25rem",
-    cursor:disabled?"default":"pointer",
-    fontWeight:800,fontSize:15,
-    fontFamily:FONT.body,
-    width:"100%",
-    letterSpacing:".02em",
-    transition:"all .15s",
-    ...style
-  }}>{children}</button>
-);
-
-const SecBtn = ({onClick,children,style}) => (
-  <button onClick={onClick} style={{
-    background:"none",
-    color:C.dim,
-    border:`1px solid ${C.border}`,
-    borderRadius:12,padding:"1rem 1.25rem",
-    cursor:"pointer",fontWeight:600,fontSize:14,
-    fontFamily:FONT.body,width:"100%",
-    transition:"all .15s",
-    ...style
-  }}>{children}</button>
-);
-
-const BackBtn = ({onClick}) => (
-  <button onClick={onClick} style={{
-    background:"none",border:`1px solid ${C.border}`,
-    color:C.dimmer,borderRadius:8,
-    padding:".4rem .9rem",cursor:"pointer",
-    fontSize:13,fontFamily:FONT.body,
-    marginBottom:"1.5rem",display:"inline-flex",
-    alignItems:"center",gap:".4rem"
-  }}>← Back</button>
-);
-
-const ProgressBar = ({value, max, color=C.purple, height=5}) => (
-  <div style={{height,background:C.dimmest,borderRadius:height,overflow:"hidden"}}>
-    <div style={{height:"100%",width:`${Math.min(100,(value/max)*100)}%`,background:color,borderRadius:height,transition:"width .4s ease"}}/>
-  </div>
-);
-
-const StickyHeader = ({children}) => (
-  <div style={{
-    position:"sticky",top:0,zIndex:20,
-    background:`${C.bg}f5`,
-    backdropFilter:"blur(16px)",
-    WebkitBackdropFilter:"blur(16px)",
-    borderBottom:`1px solid ${C.border}`,
-    padding:".9rem 1.25rem",
-  }}>{children}</div>
-);
 
 
 
 import { loadQB, preloadQB } from "./qbLoader.js";
+
+const AdminReports = lazy(() => import("./screens.jsx").then(m => ({ default: m.AdminReports })));
+const ProfileSetup = lazy(() => import("./screens.jsx").then(m => ({ default: m.ProfileSetup })));
+const PlansScreen = lazy(() => import("./screens.jsx").then(m => ({ default: m.PlansScreen })));
+const LazyFallback = () => <div style={{minHeight:"100vh",background:C.bg,color:C.dimmer,display:"flex",alignItems:"center",justifyContent:"center",fontFamily:FONT.body}}>Loading…</div>;
 
 const COMP={
   "U7 / Initiation":{t:[0.75,0.5],l:["Game-Ready IQ","Getting It","Still Learning"]},
@@ -643,12 +446,6 @@ async function saveTeamResult(coachCode, results, season) {
   try { await window.storage.set(key, JSON.stringify(existing), true); } catch(e) {}
 }
 
-async function loadTeamData(coachCode, season) {
-  if (!window.storage) return [];
-  const key = "team:" + coachCode.toUpperCase() + ":" + season.replace("-","");
-  try { const r = await window.storage.get(key, true); return r ? JSON.parse(r.value) : []; }
-  catch(e) { return []; }
-}
 
 
 // ─────────────────────────────────────────────────────────
@@ -1654,26 +1451,6 @@ function RatingButtons({ level, value, onChange }) {
 // ─────────────────────────────────────────────────────────
 // UPGRADE PROMPT — reusable modal for gated features
 // ─────────────────────────────────────────────────────────
-const PRO_BENEFITS = [
-  {icon:"🔓", text:"Access to all age groups (U7 → U13)"},
-  {icon:"🎮", text:"All 5 question formats — sequence, spot the mistake, what happens next, true/false"},
-  {icon:"🎯", text:"Position-specific questions (Forward, Defense, Goalie)"},
-  {icon:"🧠", text:"Adaptive engine — difficulty matches your level"},
-  {icon:"⭐", text:"SMART goals with category tracking"},
-  {icon:"📊", text:"Full progress snapshots + Skills Map radar"},
-  {icon:"♾️", text:"Unlimited session history"},
-];
-const FAMILY_BENEFITS = [
-  {icon:"👨‍👩‍👧", text:"Everything in Pro"},
-  {icon:"👥", text:"Up to 3 player profiles on one plan (siblings or parent-managed kids)"},
-  {icon:"🔀", text:"Each profile has its own age group, ratings, goals"},
-];
-const TEAM_BENEFITS = [
-  {icon:"👨‍🏫", text:"Everything in Pro"},
-  {icon:"📋", text:"Coach dashboard — full roster view"},
-  {icon:"⭐", text:"Per-player ratings & development notes for up to 20 players"},
-  {icon:"📅", text:"Season pass: September → March (renews each season)"},
-];
 
 function UpgradePrompt({ feature, onClose, onViewPlans, target }) {
   const message = getUpgradeTriggerMessage(feature);
@@ -2129,81 +1906,6 @@ function Report({ player, onBack, demoCoachData, tier, onUpgrade }) {
 // ─────────────────────────────────────────────────────────
 const ADMIN_EMAIL = "mtslifka@gmail.com";
 
-function AdminReports({ onBack }) {
-  const [reports, setReports] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [qbFlat, setQbFlat] = useState([]);
-
-  useEffect(() => {
-    (async () => {
-      setLoading(true);
-      const [data, qb] = await Promise.all([SB.getQuestionReports(), loadQB()]);
-      setReports(data);
-      setQbFlat(Object.values(qb).flat());
-      setLoading(false);
-    })();
-  }, []);
-
-  async function handleResolve(id) {
-    const ok = await SB.resolveReport(id);
-    if (ok) setReports(prev => prev.map(r => r.id === id ? { ...r, resolved: true } : r));
-  }
-
-  const unresolvedCount = reports.filter(r => !r.resolved).length;
-  function getQuestionText(questionId) {
-    const q = qbFlat.find(x => x.id === questionId);
-    return q ? (q.q || q.question || q.prompt || JSON.stringify(q).slice(0, 120)) : null;
-  }
-
-  return (
-    <Screen>
-      <BackBtn onClick={onBack} />
-      <div style={{ fontFamily: FONT.display, fontWeight: 800, fontSize: "1.8rem", marginBottom: ".5rem" }}>Question Reports</div>
-      <div style={{ fontSize: 13, color: C.dim, marginBottom: "1.25rem" }}>
-        {loading ? "Loading..." : `${unresolvedCount} unresolved report${unresolvedCount !== 1 ? "s" : ""}`}
-      </div>
-      {!loading && reports.length === 0 && (
-        <Card><div style={{ color: C.dimmer, textAlign: "center", padding: "1.5rem 0" }}>No reports yet.</div></Card>
-      )}
-      {reports.map(r => {
-        const qText = getQuestionText(r.question_id);
-        return (
-          <Card key={r.id} style={{ marginBottom: ".75rem", border: `1px solid ${r.resolved ? C.greenBorder : C.redBorder}` }}>
-            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: ".5rem" }}>
-              <Pill color={r.resolved ? C.green : C.red}>{r.resolved ? "Resolved" : "Open"}</Pill>
-              <span style={{ fontSize: 11, color: C.dimmer }}>{new Date(r.created_at).toLocaleDateString()}</span>
-            </div>
-            <Label>Question ID</Label>
-            <div style={{ fontSize: 13, color: C.white, marginBottom: ".5rem", wordBreak: "break-all" }}>{r.question_id}</div>
-            {qText && (
-              <>
-                <Label>Question Text</Label>
-                <div style={{ fontSize: 12, color: C.dim, marginBottom: ".5rem", lineHeight: 1.5, background: C.bgElevated, borderRadius: 8, padding: ".6rem .75rem", border: `1px solid ${C.border}` }}>{qText}</div>
-              </>
-            )}
-            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: ".5rem", marginBottom: ".5rem" }}>
-              <div><Label>Level</Label><div style={{ fontSize: 13, color: C.dim }}>{r.level || "—"}</div></div>
-              <div><Label>Reason</Label><div style={{ fontSize: 13, color: C.gold }}>{r.reason || "—"}</div></div>
-            </div>
-            {r.detail && (
-              <>
-                <Label>Detail</Label>
-                <div style={{ fontSize: 12, color: C.dim, lineHeight: 1.5, marginBottom: ".5rem" }}>{r.detail}</div>
-              </>
-            )}
-            {!r.resolved && (
-              <button onClick={() => handleResolve(r.id)} style={{
-                background: C.greenDim, color: C.green, border: `1px solid ${C.greenBorder}`,
-                borderRadius: 10, padding: ".55rem", cursor: "pointer", fontSize: 13,
-                fontFamily: FONT.body, fontWeight: 700, width: "100%", marginTop: ".25rem"
-              }}>Mark Resolved</button>
-            )}
-          </Card>
-        );
-      })}
-    </Screen>
-  );
-}
 
 function Profile({ player, onSave, onBack, onReset, demoMode, tier, onUpgrade, userEmail, onAdminReports }) {
   const positionLocked = !canAccess("positionFilter", tier || "FREE").allowed;
@@ -2380,78 +2082,6 @@ function Profile({ player, onSave, onBack, onReset, demoMode, tier, onUpgrade, u
   );
 }
 
-function CoachDashboard({ onBack }) {
-  const [code, setCode] = useState("");
-  const [season, setSeason] = useState(SEASONS[0]);
-  const [data, setData] = useState(null);
-  const [loading, setLoading] = useState(false);
-  const [err, setErr] = useState("");
-  const [qbFlat, setQbFlat] = useState([]);
-  useEffect(() => { loadQB().then(qb => setQbFlat(Object.values(qb).flat())); }, []);
-
-  async function load() {
-    if (!code.trim()) { setErr("Enter your coach code"); return; }
-    setLoading(true); setErr("");
-    try { const sessions = await loadTeamData(code.trim(), season); setData(sessions); }
-    catch(e) { setErr("Could not load data"); }
-    setLoading(false);
-  }
-
-  let agg = null;
-  if (data && data.length > 0) {
-    const qStats = {}, catStats = {};
-    data.forEach(session => session.qs.forEach(q => {
-      if (!qStats[q.id]) qStats[q.id] = {ok:0,tot:0,cat:q.cat,d:q.d};
-      qStats[q.id].tot++; if(q.ok) qStats[q.id].ok++;
-      if (!catStats[q.cat]) catStats[q.cat] = {ok:0,tot:0};
-      catStats[q.cat].tot++; if(q.ok) catStats[q.cat].ok++;
-    }));
-    const avgIQ = Math.round(data.reduce((s,d)=>s+d.iq,0)/data.length);
-    const sorted = Object.entries(qStats).map(([id,v])=>({id,...v,pct:Math.round((v.ok/v.tot)*100)})).sort((a,b)=>a.pct-b.pct);
-    agg = { sessions:data.length, avgIQ, qStats:sorted, catStats };
-  }
-
-  return (
-    <Screen>
-      <BackBtn onClick={onBack}/>
-      <div style={{fontFamily:FONT.display,fontWeight:800,fontSize:"2rem",marginBottom:"1.5rem"}}>Coach Dashboard</div>
-      <Card style={{marginBottom:"1rem"}}>
-        <Label>Season</Label>
-        <div style={{display:"flex",gap:".5rem",marginBottom:"1rem",flexWrap:"wrap"}}>
-          {SEASONS.map(ss=><button key={ss} onClick={()=>{setSeason(ss);setData(null);}} style={{background:season===ss?C.goldDim:C.bgElevated,border:`1px solid ${season===ss?C.gold:C.border}`,borderRadius:8,padding:".4rem .8rem",cursor:"pointer",fontSize:12,fontFamily:FONT.body,fontWeight:season===ss?700:400,color:season===ss?C.gold:C.dim}}>{ss}</button>)}
-        </div>
-        <div style={{display:"flex",gap:".75rem"}}>
-          <input value={code} onChange={e=>{setCode(e.target.value.toUpperCase());setData(null);setErr("");}} placeholder="Coach code" maxLength={8}
-            style={{background:C.bgElevated,border:`1px solid ${err?C.red:code?C.gold:C.border}`,borderRadius:8,padding:".65rem .9rem",color:C.white,fontSize:15,fontFamily:FONT.body,flex:1,outline:"none",letterSpacing:".1em",fontWeight:700}}/>
-          <button onClick={load} disabled={loading} style={{background:C.gold,color:C.bg,border:"none",borderRadius:8,padding:".65rem 1.25rem",cursor:"pointer",fontWeight:800,fontSize:14,fontFamily:FONT.body,whiteSpace:"nowrap"}}>{loading?"…":"Load"}</button>
-        </div>
-        {err && <div style={{fontSize:12,color:C.red,marginTop:".5rem"}}>{err}</div>}
-        <div style={{fontSize:11,color:C.dimmer,marginTop:".65rem",lineHeight:1.6}}>Anonymous patterns only — no individual data ever stored.</div>
-      </Card>
-      {data && data.length === 0 && <Card><div style={{color:C.dimmer,textAlign:"center",padding:"1rem 0"}}>No sessions for this code in {season} yet.</div></Card>}
-      {agg && (<>
-        <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:".75rem",marginBottom:"1rem"}}>
-          <Card style={{textAlign:"center"}}><Label>Sessions</Label><div style={{fontFamily:FONT.display,fontWeight:800,fontSize:"2.8rem",color:C.gold}}>{agg.sessions}</div></Card>
-          <Card style={{textAlign:"center"}}><Label>Team Avg IQ</Label><div style={{fontFamily:FONT.display,fontWeight:800,fontSize:"2.8rem",color:agg.avgIQ>=80?C.green:agg.avgIQ>=60?C.yellow:C.red}}>{agg.avgIQ}%</div></Card>
-        </div>
-        <Card style={{marginBottom:"1rem"}}>
-          <Label>By Category — Worst First</Label>
-          {Object.entries(agg.catStats).sort((a,b)=>(a[1].ok/a[1].tot)-(b[1].ok/b[1].tot)).map(([cat,v])=>{
-            const pct=Math.round((v.ok/v.tot)*100);
-            return(<div key={cat} style={{marginBottom:".85rem"}}><div style={{display:"flex",justifyContent:"space-between",fontSize:13,marginBottom:5}}><span style={{color:C.dim}}>{cat}</span><span style={{fontWeight:700,color:pct>=80?C.green:pct>=60?C.yellow:C.red}}>{pct}%</span></div><ProgressBar value={pct} max={100} color={pct>=80?C.green:pct>=60?C.yellow:C.red}/></div>);
-          })}
-        </Card>
-        <Card>
-          <Label>Hardest Questions</Label>
-          {agg.qStats.slice(0,5).map(q=>{
-            const qData = qbFlat.find(x=>x.id===q.id);
-            return(<div key={q.id} style={{padding:".7rem 0",borderBottom:`1px solid ${C.border}`}}><div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:".3rem"}}><Pill color={q.pct<40?C.red:C.yellow} bg={q.pct<40?"rgba(239,68,68,.12)":"rgba(234,179,8,.12)"}>{q.pct}%</Pill><span style={{fontSize:11,color:C.dimmer}}>{q.ok}/{q.tot} correct</span></div><div style={{fontSize:12,color:C.dim,lineHeight:1.5}}>{qData?.sit?.slice(0,90)}{qData?.sit?.length>90?"…":""}</div></div>);
-          })}
-        </Card>
-      </>)}
-    </Screen>
-  );
-}
 
 
 // ─────────────────────────────────────────────────────────
@@ -3226,58 +2856,6 @@ function CoachHome({ profile, onSignOut, onOpenPlayer, demoMode }) {
 // ─────────────────────────────────────────────────────────
 // POST-SIGNUP PROFILE SETUP (player picks level/position)
 // ─────────────────────────────────────────────────────────
-function ProfileSetup({ profile, onComplete }) {
-  const [level, setLevel] = useState(profile.level || "");
-  const [position, setPosition] = useState(profile.position || "");
-  const [saving, setSaving] = useState(false);
-
-  async function save() {
-    setSaving(true);
-    try {
-      await SB.updateProfile(profile.id, { level, position });
-      onComplete({ ...profile, level, position });
-    } catch (e) { alert(e.message); }
-    setSaving(false);
-  }
-
-  if (!level) return (
-    <Screen>
-      <div style={{marginBottom:"2rem"}}>
-        <div style={{fontSize:10,letterSpacing:".18em",color:C.gold,textTransform:"uppercase",fontWeight:700,marginBottom:".6rem"}}>Step 1 of 2</div>
-        <h2 style={{fontFamily:FONT.display,fontWeight:800,fontSize:"2rem",margin:0}}>What age group?</h2>
-      </div>
-      <div style={{display:"flex",flexDirection:"column",gap:".5rem"}}>
-        {LEVELS.map(l => (
-          <button key={l} onClick={()=>setLevel(l)} style={{background:C.bgCard,border:`1px solid ${C.border}`,borderRadius:12,padding:"1rem 1.25rem",cursor:"pointer",color:C.white,fontFamily:FONT.body,fontSize:15,textAlign:"left",fontWeight:600}}>
-            {l}
-          </button>
-        ))}
-      </div>
-    </Screen>
-  );
-
-  const posOptions = [{p:"Forward",i:"⚡"},{p:"Defense",i:"🛡"},{p:"Goalie",i:"🧤"},{p:"Not Sure",i:"❓"}];
-  return (
-    <Screen>
-      <div style={{marginBottom:"1.5rem"}}>
-        <div style={{fontSize:10,letterSpacing:".18em",color:C.gold,textTransform:"uppercase",fontWeight:700,marginBottom:".6rem"}}>Step 2 of 2</div>
-        <h2 style={{fontFamily:FONT.display,fontWeight:800,fontSize:"2rem",margin:"0 0 .35rem"}}>What position?</h2>
-      </div>
-      <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:".75rem",marginBottom:"1.5rem"}}>
-        {posOptions.map(({p,i}) => (
-          <button key={p} onClick={()=>setPosition(p)} style={{background:position===p?C.goldDim:C.bgCard,border:`1px solid ${position===p?C.gold:C.border}`,borderRadius:14,padding:"1.25rem .75rem",cursor:"pointer",textAlign:"center",transition:"all .15s"}}>
-            <div style={{fontSize:26,marginBottom:".4rem"}}>{i}</div>
-            <div style={{fontSize:13,color:position===p?C.gold:C.dim,fontWeight:position===p?700:400,fontFamily:FONT.body}}>{p}</div>
-          </button>
-        ))}
-      </div>
-      <div style={{display:"flex",gap:".5rem"}}>
-        <button onClick={()=>setLevel("")} style={{background:"none",border:`1px solid ${C.border}`,borderRadius:10,padding:".75rem 1rem",cursor:"pointer",color:C.dimmer,fontSize:13,fontFamily:FONT.body}}>← Back</button>
-        <PrimaryBtn onClick={save} disabled={!position||saving} style={{flex:1,margin:0}}>{saving?"Saving…":"Finish Setup →"}</PrimaryBtn>
-      </div>
-    </Screen>
-  );
-}
 
 // ─────────────────────────────────────────────────────────
 // APP ROOT
@@ -3521,7 +3099,7 @@ export default function App() {
 
   // Player without completed profile → profile setup
   if (profile.role === "player" && (!profile.level || !profile.position)) {
-    return <ProfileSetup profile={profile} onComplete={async () => { await loadUser(profile.id); }}/>;
+    return <Suspense fallback={<LazyFallback/>}><ProfileSetup profile={profile} onComplete={async () => { await loadUser(profile.id); }}/></Suspense>;
   }
 
   // Player not fully loaded yet
@@ -3558,7 +3136,7 @@ export default function App() {
         )}
         {screen === "report"  && <Report player={tierLimitedPlayer(player, tier)} onBack={()=>setScreen("home")} demoCoachData={demoMode?demoCoachRatings:null} tier={tier} onUpgrade={(f,t)=>promptUpgrade(f,t)}/>}
         {screen === "profile" && <Profile player={player} onSave={handleProfileSave} onBack={()=>setScreen("home")} onReset={handleSignOut} demoMode={demoMode} tier={tier} onUpgrade={(f,t)=>promptUpgrade(f,t)} userEmail={userEmail} onAdminReports={()=>setScreen("admin")}/>}
-        {screen === "admin" && <AdminReports onBack={()=>setScreen("profile")}/>}
+        {screen === "admin" && <Suspense fallback={<LazyFallback/>}><AdminReports onBack={()=>setScreen("profile")}/></Suspense>}
       </div>
 
       {!["quiz","results"].includes(screen) && (
@@ -3573,7 +3151,7 @@ export default function App() {
           onViewPlans={() => { closeUpgrade(); setScreen("plans"); }}
         />
       )}
-      {screen === "plans" && <PlansScreen onBack={()=>setScreen("home")} tier={tier}/>}
+      {screen === "plans" && <Suspense fallback={<LazyFallback/>}><PlansScreen onBack={()=>setScreen("home")} tier={tier}/></Suspense>}
     </>
   );
 }
@@ -3612,67 +3190,6 @@ function GatedScreen({ feature, title, description, onBack, onUnlock }) {
 }
 
 // Plans screen — showcase all tiers
-function PlansScreen({ onBack, tier }) {
-  return (
-    <div style={{minHeight:"100vh",background:C.bg,color:C.white,fontFamily:FONT.body,paddingBottom:80}}>
-      <StickyHeader>
-        <div style={{maxWidth:560,margin:"0 auto",display:"flex",alignItems:"center",gap:"1rem"}}>
-          <BackBtn onClick={onBack}/>
-          <div style={{flex:1,fontFamily:FONT.display,fontWeight:800,fontSize:"1.1rem"}}>Plans & Pricing</div>
-          <div style={{fontSize:11,color:C.dimmer}}>You're on {tier}</div>
-        </div>
-      </StickyHeader>
-      <div style={{padding:"1.25rem",maxWidth:560,margin:"0 auto"}}>
-        <Card style={{marginBottom:"1rem"}}>
-          <Label>Free</Label>
-          <div style={{fontFamily:FONT.display,fontWeight:800,fontSize:"2rem",color:C.white}}>$0</div>
-          <div style={{fontSize:11,color:C.dimmer,marginBottom:".75rem"}}>Get started, one age group, basic questions</div>
-          <div style={{fontSize:12,color:C.dim,lineHeight:1.7}}>✓ 1 age group (device-locked)<br/>✓ Multiple choice questions only<br/>✓ Last 5 sessions of history</div>
-        </Card>
-
-        <Card style={{marginBottom:"1rem",background:`linear-gradient(135deg,${C.bgCard},${C.bgElevated})`,border:`1px solid ${C.goldBorder}`}}>
-          <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start",marginBottom:".5rem"}}>
-            <Label>Pro</Label>
-            <div style={{fontSize:10,background:C.goldDim,color:C.gold,padding:"2px 8px",borderRadius:4,fontWeight:800,letterSpacing:".08em"}}>MOST POPULAR</div>
-          </div>
-          <div style={{fontFamily:FONT.display,fontWeight:800,fontSize:"2rem",color:C.gold}}>$12.99<span style={{fontSize:13,color:C.dimmer,fontWeight:500}}> / month</span></div>
-          <div style={{fontSize:11,color:C.dimmer,marginBottom:".75rem"}}>or $89.99 / year (save 42%)</div>
-          {PRO_BENEFITS.map((b,i) => (
-            <div key={i} style={{display:"flex",alignItems:"flex-start",gap:".55rem",padding:".3rem 0",fontSize:12,color:C.dim,lineHeight:1.5}}>
-              <span style={{fontSize:14,flexShrink:0}}>{b.icon}</span><span>{b.text}</span>
-            </div>
-          ))}
-        </Card>
-
-        <Card style={{marginBottom:"1rem"}}>
-          <Label>Family</Label>
-          <div style={{fontFamily:FONT.display,fontWeight:800,fontSize:"2rem",color:C.white}}>$19.99<span style={{fontSize:13,color:C.dimmer,fontWeight:500}}> / month</span></div>
-          <div style={{fontSize:11,color:C.dimmer,marginBottom:".75rem"}}>or $139.99 / year · 3 players</div>
-          {FAMILY_BENEFITS.map((b,i) => (
-            <div key={i} style={{display:"flex",alignItems:"flex-start",gap:".55rem",padding:".3rem 0",fontSize:12,color:C.dim,lineHeight:1.5}}>
-              <span style={{fontSize:14,flexShrink:0}}>{b.icon}</span><span>{b.text}</span>
-            </div>
-          ))}
-        </Card>
-
-        <Card style={{marginBottom:"1rem"}}>
-          <Label>Team</Label>
-          <div style={{fontFamily:FONT.display,fontWeight:800,fontSize:"2rem",color:C.white}}>$49.99<span style={{fontSize:13,color:C.dimmer,fontWeight:500}}> / month</span></div>
-          <div style={{fontSize:11,color:C.dimmer,marginBottom:".75rem"}}>or $249.99 season pass (Sep–Mar) · up to 20 players</div>
-          {TEAM_BENEFITS.map((b,i) => (
-            <div key={i} style={{display:"flex",alignItems:"flex-start",gap:".55rem",padding:".3rem 0",fontSize:12,color:C.dim,lineHeight:1.5}}>
-              <span style={{fontSize:14,flexShrink:0}}>{b.icon}</span><span>{b.text}</span>
-            </div>
-          ))}
-        </Card>
-
-        <div style={{fontSize:11,color:C.dimmer,textAlign:"center",marginTop:"1rem",lineHeight:1.6}}>
-          Payment processing is coming soon. Contact us at <span style={{color:C.gold}}>bluechip-people-strategies.com</span> for early access.
-        </div>
-      </div>
-    </div>
-  );
-}
 
 // ─────────────────────────────────────────────────────────
 // COACH RATING SCREEN (authenticated version)
