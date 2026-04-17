@@ -3697,17 +3697,21 @@ function CoachRatingScreenAuthed({ coach, player, playerLevel, onDone }) {
   };
   const legendTitle = {growth:"Growth Scale",competency:"Competency Scale",percentile:"Percentile Scale"};
 
-  useEffect(() => { (async () => {
-    const existing = await SB.getCoachRatingsForPlayer(player.id);
-    setRatings(existing.ratings || {});
-    setNotes(existing.notes || {});
-    setLoading(false);
-  })(); }, []);
+  const isDemo = coach?.id === "__demo_coach__" || String(player?.id || "").startsWith("dr") || String(player?.id || "").startsWith("__demo");
+  useEffect(() => {
+    if (isDemo) { setLoading(false); return; }
+    (async () => {
+      const existing = await SB.getCoachRatingsForPlayer(player.id);
+      setRatings(existing.ratings || {});
+      setNotes(existing.notes || {});
+      setLoading(false);
+    })();
+  }, []);
 
   async function save() {
     setSaving(true);
     try {
-      await SB.saveCoachRatingsForPlayer(coach.id, player.id, ratings, notes);
+      if (!isDemo) await SB.saveCoachRatingsForPlayer(coach.id, player.id, ratings, notes);
       setSaved(true);
     } catch (e) { alert(e.message); }
     setSaving(false);
