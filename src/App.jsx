@@ -107,6 +107,7 @@ const SMART_PROMPTS = {
 
 
 import { loadQB, preloadQB } from "./qbLoader.js";
+import { getWeekKey, getThisWeekRecord, markWeeklyComplete, seededShuffle, weekSeed, formatCountdown, msUntilNextWeek } from "./utils/weeklyChallenge.js";
 import { COMPETENCY_LADDER, RATING_SCALES, SKILLS, ladderFor, getSelfScale, getCoachScale, getScaleColor, getScaleLabel, normalizeRating, getDiscussionPrompt, migrateRatings, PERCENTILE_RATINGS, PR_COLOR, PR_LABEL } from "./data/constants.js";
 
 const AdminReports = lazy(() => import("./screens.jsx").then(m => ({ default: m.AdminReports })));
@@ -282,6 +283,34 @@ function buildQueue(qb, level, position, isReturning, tier) {
   }
 
   return { byD, currentD: isReturning ? 2 : 1, tier };
+}
+
+// Weekly challenge queue — seeded shuffle so every player gets the same 10 questions that week.
+// All formats included (weekly challenge is PRO+, so allQuestionFormats is guaranteed).
+function buildWeeklyQueue(qb, level, position) {
+  const allQ = qb[level] || [];
+  const posFiltered = position === "Goalie"
+    ? allQ.filter(q => !q.pos || q.pos.includes("G") || q.pos.includes("F"))
+    : position === "Defense"
+    ? allQ.filter(q => !q.pos || q.pos.includes("D") || q.pos.includes("F"))
+    : allQ.filter(q => !q.pos || q.pos.includes("F") || q.pos.includes("D"));
+  const seed = weekSeed(getWeekKey() + "|" + level + "|" + position);
+  const shuffled = seededShuffle(posFiltered, seed);
+  // Pick a balanced 10: aim for 3 easy, 4 medium, 3 hard, fill from remaining if short
+  const d1 = shuffled.filter(q => q.d === 1);
+  const d2 = shuffled.filter(q => q.d === 2);
+  const d3 = shuffled.filter(q => q.d === 3);
+  const pick = (arr, n) => arr.slice(0, n);
+  const questions = [...pick(d1, 3), ...pick(d2, 4), ...pick(d3, 3)];
+  // If any bucket was short, fill from overflow
+  const used = new Set(questions.map(q => q.id));
+  const overflow = shuffled.filter(q => !used.has(q.id));
+  let filled = [...questions];
+  for (const q of overflow) {
+    if (filled.length >= 10) break;
+    filled.push(q);
+  }
+  return filled.slice(0, 10);
 }
 
 function pullNext(queue, results) {
@@ -635,15 +664,23 @@ function Home({ player, onNav, demoMode, subscriptionTier }) {
   const totalSkills = Object.keys(selfRatings||{}).length;
   const goalCount = Object.keys(goals||{}).filter(k => goals[k]?.goal).length;
   const goalCats = (GOAL_CATS[level]||[]).length;
+  const weeklyRecord = getThisWeekRecord();
+  const weeklyAllowed = canAccess("weeklyChallenge", subscriptionTier).allowed;
 
-  // Streak
+  // Streak + countdown timer
   const [streak, setStreak] = useState(0);
+  const [countdown, setCountdown] = useState("");
   useEffect(() => {
     const sd = getStreakData();
     const today = getTodayKey();
     const yesterday = new Date(Date.now()-86400000).toISOString().slice(0,10);
     if (sd.last === today || sd.last === yesterday) setStreak(sd.count || 0);
     preloadQB();
+    // Update countdown every minute
+    const tick = () => setCountdown(formatCountdown(msUntilNextWeek()));
+    tick();
+    const iv = setInterval(tick, 60000);
+    return () => clearInterval(iv);
   }, []);
 
   return (
@@ -722,6 +759,37 @@ function Home({ player, onNav, demoMode, subscriptionTier }) {
             </div>
           </button>
         </div>
+
+        {/* Weekly Challenge card */}
+        {weeklyAllowed ? (
+          <button onClick={() => onNav("weekly")} style={{width:"100%",display:"block",textAlign:"left",background: weeklyRecord
+            ? `linear-gradient(135deg,rgba(34,197,94,.1),rgba(34,197,94,.03))`
+            : `linear-gradient(135deg,rgba(201,168,76,.14),rgba(201,168,76,.04))`,border:`1px solid ${weeklyRecord ? "rgba(34,197,94,.35)" : C.goldBorder}`,borderRadius:14,padding:"1rem 1.1rem",cursor:"pointer",color:C.white,fontFamily:FONT.body,marginBottom:"1rem"}}>
+            <div style={{display:"flex",alignItems:"center",justifyContent:"space-between"}}>
+              <div style={{display:"flex",alignItems:"center",gap:".6rem"}}>
+                <span style={{fontSize:20}}>{weeklyRecord ? "✅" : "🏆"}</span>
+                <div>
+                  <div style={{fontSize:10,letterSpacing:".14em",textTransform:"uppercase",color:weeklyRecord ? "rgba(34,197,94,.9)" : C.gold,fontWeight:800}}>Weekly Challenge</div>
+                  <div style={{fontSize:12,color:C.dim,marginTop:1}}>{weeklyRecord ? `Score: ${weeklyRecord.score}% · Resets in ${countdown}` : `New this week · Resets in ${countdown}`}</div>
+                </div>
+              </div>
+              <span style={{color:weeklyRecord ? "rgba(34,197,94,.8)" : C.gold,fontSize:13}}>{weeklyRecord ? "View" : "Play →"}</span>
+            </div>
+          </button>
+        ) : (
+          <button onClick={() => onNav("plans")} style={{width:"100%",display:"block",textAlign:"left",background:`linear-gradient(135deg,rgba(201,168,76,.08),rgba(201,168,76,.02))`,border:`1px dashed ${C.goldBorder}`,borderRadius:14,padding:"1rem 1.1rem",cursor:"pointer",color:C.white,fontFamily:FONT.body,marginBottom:"1rem",opacity:0.85}}>
+            <div style={{display:"flex",alignItems:"center",justifyContent:"space-between"}}>
+              <div style={{display:"flex",alignItems:"center",gap:".6rem"}}>
+                <span style={{fontSize:20}}>🔒</span>
+                <div>
+                  <div style={{fontSize:10,letterSpacing:".14em",textTransform:"uppercase",color:C.gold,fontWeight:800}}>Weekly Challenge</div>
+                  <div style={{fontSize:12,color:C.dimmer,marginTop:1}}>New curated quiz every Monday — PRO feature</div>
+                </div>
+              </div>
+              <span style={{color:C.gold,fontSize:11,fontWeight:700}}>Unlock →</span>
+            </div>
+          </button>
+        )}
 
         {showProPreview && (
           <button onClick={()=>onNav("plans")} style={{width:"100%",display:"block",textAlign:"left",background:`linear-gradient(135deg,rgba(201,168,76,.12),rgba(124,111,205,.08))`,border:`1px solid ${C.goldBorder}`,borderRadius:14,padding:"1rem 1.1rem",cursor:"pointer",color:C.white,fontFamily:FONT.body,marginBottom:"1rem"}}>
@@ -1220,6 +1288,164 @@ function GatedGoalsScreen({ onBack, onUnlock }) {
         </Card>
       </div>
     </div>
+  );
+}
+
+// ─────────────────────────────────────────────────────────
+// WEEKLY CHALLENGE
+// ─────────────────────────────────────────────────────────
+function WeeklyQuiz({ player, onBack, onFinish }) {
+  const [questions, setQuestions] = useState(null);
+  const [current, setCurrent] = useState(0);
+  const [results, setResults] = useState([]);
+  const [sel, setSel] = useState(null);
+  const [seqAnswered, setSeqAnswered] = useState(false);
+  const [seqCorrect, setSeqCorrect] = useState(false);
+  const [done, setDone] = useState(false);
+  const weekRecord = getThisWeekRecord();
+
+  useEffect(() => {
+    loadQB().then(qb => {
+      setQuestions(buildWeeklyQueue(qb, player.level, player.position));
+    });
+  }, []);
+
+  if (!questions) return <Screen><div style={{color:C.dimmer,textAlign:"center",paddingTop:"4rem"}}>Loading challenge…</div></Screen>;
+
+  const q = questions[current];
+  const qtype = q?.type || "mc";
+  const qLen = questions.length;
+  const typeInfo = Q_TYPE_LABELS[qtype] || Q_TYPE_LABELS.mc;
+
+  function submitAnswer(ok, extra = {}) {
+    const result = { id: q.id, cat: q.cat, type: qtype, d: q.d || 2, ok, ...extra };
+    const newResults = [...results, result];
+    setResults(newResults);
+    if (current + 1 >= qLen) {
+      const score = calcWeightedIQ(newResults);
+      markWeeklyComplete(score);
+      onFinish(newResults, score);
+      setDone(true);
+    } else {
+      setTimeout(() => { setCurrent(c => c + 1); setSel(null); setSeqAnswered(false); setSeqCorrect(false); }, 900);
+    }
+  }
+
+  function handlePick(i) {
+    if (sel !== null) return;
+    setSel(i);
+    submitAnswer(i === q.ok);
+  }
+
+  function handleTF(val) {
+    if (sel !== null) return;
+    setSel(val ? "true" : "false");
+    submitAnswer(val === q.ok);
+  }
+
+  function handleSeqAnswer(isCorrect) {
+    if (seqAnswered) return;
+    setSeqAnswered(true);
+    setSeqCorrect(isCorrect);
+    submitAnswer(isCorrect);
+  }
+
+  if (done) return null;
+
+  return (
+    <div style={{minHeight:"100vh",background:C.bg,color:C.white,fontFamily:FONT.body,paddingBottom:40}}>
+      <StickyHeader>
+        <div style={{maxWidth:560,margin:"0 auto",display:"flex",alignItems:"center",gap:"1rem"}}>
+          <button onClick={onBack} style={{background:"none",border:`1px solid ${C.border}`,color:C.dimmer,borderRadius:8,padding:".35rem .75rem",cursor:"pointer",fontSize:13,fontFamily:FONT.body}}>←</button>
+          <div style={{flex:1}}>
+            <div style={{fontFamily:FONT.display,fontWeight:800,fontSize:"1rem",color:C.gold}}>🏆 Weekly Challenge</div>
+            <div style={{fontSize:11,color:C.dimmer}}>Q{current+1}/{qLen} · {getWeekKey()}</div>
+          </div>
+          <div style={{width:80,height:4,background:C.dimmest,borderRadius:2,overflow:"hidden"}}>
+            <div style={{height:"100%",width:`${(current/qLen)*100}%`,background:C.gold,borderRadius:2,transition:"width .35s ease"}}/>
+          </div>
+        </div>
+      </StickyHeader>
+
+      <div style={{padding:"1.5rem 1.25rem",maxWidth:560,margin:"0 auto"}}>
+        <div style={{display:"flex",gap:".5rem",marginBottom:"1rem",flexWrap:"wrap",alignItems:"center"}}>
+          <Pill color={typeInfo.color}>{typeInfo.icon} {typeInfo.label}</Pill>
+          <Pill color={C.dimmer} bg={C.dimmest}>{q.cat}</Pill>
+        </div>
+
+        {(qtype === "mc" || qtype === "next") && (
+          <Card style={{marginBottom:"1.25rem",background:C.purpleDim,border:`1px solid ${C.purpleBorder}`}}>
+            <div style={{fontSize:10,letterSpacing:".14em",textTransform:"uppercase",color:C.purple,marginBottom:".6rem",fontWeight:700}}>📋 Game Situation</div>
+            <div style={{fontSize:15,lineHeight:1.8,color:C.white,fontWeight:500}}>{q.sit}</div>
+          </Card>
+        )}
+        {qtype === "tf" && (
+          <Card style={{marginBottom:"1.25rem",background:C.blueDim,border:`1px solid rgba(59,130,246,.3)`}}>
+            <div style={{fontSize:10,letterSpacing:".14em",textTransform:"uppercase",color:C.blue,marginBottom:".6rem",fontWeight:700}}>⚡ True or False?</div>
+            <div style={{fontSize:15,lineHeight:1.8,color:C.white,fontWeight:500}}>{q.sit}</div>
+          </Card>
+        )}
+        {qtype === "mistake" && (
+          <Card style={{marginBottom:"1.25rem",background:C.redDim,border:`1px solid ${C.redBorder}`}}>
+            <div style={{fontSize:10,letterSpacing:".14em",textTransform:"uppercase",color:C.red,marginBottom:".6rem",fontWeight:700}}>🔍 Spot the Mistake</div>
+            <div style={{fontSize:14,color:C.dim,lineHeight:1.7,marginBottom:".75rem"}}>{q.sit}</div>
+          </Card>
+        )}
+        {qtype === "seq" && (
+          <Card style={{marginBottom:"1.25rem",background:C.goldDim,border:`1px solid ${C.goldBorder}`}}>
+            <div style={{fontSize:10,letterSpacing:".14em",textTransform:"uppercase",color:C.gold,marginBottom:".6rem",fontWeight:700}}>🔢 Put in Order</div>
+            <div style={{fontSize:15,lineHeight:1.8,color:C.white,fontWeight:500}}>{q.sit}</div>
+          </Card>
+        )}
+
+        {qtype === "mc" && <MCQuestion q={q} sel={sel} onPick={handlePick} colorblind={player.colorblind}/>}
+        {qtype === "next" && <MCQuestion q={q} sel={sel} onPick={handlePick} colorblind={player.colorblind}/>}
+        {qtype === "mistake" && <MCQuestion q={q} sel={sel} onPick={handlePick} colorblind={player.colorblind}/>}
+        {qtype === "tf" && (
+          <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:".75rem",marginBottom:"1rem"}}>
+            {["True","False"].map((label, i) => {
+              const isTrue = i === 0;
+              const isSelected = sel === (isTrue ? "true" : "false");
+              const isCorrect = isTrue === q.ok;
+              const revealColor = sel !== null ? (isCorrect ? C.green : C.red) : null;
+              return (
+                <button key={label} onClick={() => handleTF(isTrue)} disabled={sel !== null} style={{background:isSelected?(isCorrect?"rgba(34,197,94,.15)":"rgba(239,68,68,.15)"):C.bgElevated,border:`2px solid ${revealColor && isSelected ? revealColor : (revealColor && isCorrect && sel !== null ? revealColor : C.border)}`,borderRadius:12,padding:"1.25rem",cursor:sel!==null?"default":"pointer",fontWeight:700,fontSize:16,color:isSelected?(isCorrect?C.green:C.red):C.white,fontFamily:FONT.body}}>
+                  {label}
+                </button>
+              );
+            })}
+          </div>
+        )}
+        {qtype === "seq" && <SeqQuestion q={q} answered={seqAnswered} onAnswer={handleSeqAnswer}/>}
+
+        {sel !== null && qtype !== "seq" && (() => {
+          const wasCorrect = qtype === "tf" ? (sel === "true") === q.ok : sel === q.ok;
+          return (
+            <Card style={{marginTop:".5rem",background:wasCorrect ? "rgba(34,197,94,.08)" : "rgba(239,68,68,.08)",border:`1px solid ${wasCorrect ? "rgba(34,197,94,.3)" : "rgba(239,68,68,.3)"}`}}>
+              <div style={{fontSize:11,fontWeight:700,color:wasCorrect ? C.green : C.red,marginBottom:".4rem"}}>{wasCorrect ? "✓ Correct" : "✗ Incorrect"}</div>
+              <div style={{fontSize:13,color:C.dim,lineHeight:1.6}}>{q.why}</div>
+            </Card>
+          );
+        })()}
+      </div>
+    </div>
+  );
+}
+
+function WeeklyResults({ score, results, onHome, player }) {
+  const tierInfo = getTier(score);
+  const weekRecord = getThisWeekRecord();
+  return (
+    <Screen>
+      <div style={{textAlign:"center",marginBottom:"2rem",paddingTop:"1rem"}}>
+        <div style={{fontSize:48,marginBottom:".5rem"}}>🏆</div>
+        <div style={{fontFamily:FONT.display,fontWeight:800,fontSize:"1.4rem",color:C.gold,marginBottom:".25rem"}}>Weekly Challenge Complete!</div>
+        <div style={{fontFamily:FONT.display,fontWeight:800,fontSize:"5rem",color:tierInfo.color,lineHeight:.9,letterSpacing:"-.02em"}}>{score}<span style={{fontSize:"2rem"}}>%</span></div>
+        <div style={{fontSize:13,color:C.dimmer,marginTop:".5rem"}}>{results.filter(r=>r.ok).length}/{results.length} correct · {getWeekKey()}</div>
+        <div style={{fontSize:12,color:C.dimmer,marginTop:".35rem"}}>New challenge drops every Monday</div>
+      </div>
+      <PrimaryBtn onClick={onHome} style={{marginBottom:".75rem"}}>← Back to Home</PrimaryBtn>
+    </Screen>
   );
 }
 
@@ -2832,6 +3058,8 @@ export default function App() {
   const [upgradePrompt, setUpgradePrompt] = useState(null); // {feature, target} | null
   const [userEmail, setUserEmail] = useState(null);
   const [showMilestone5Banner, setShowMilestone5Banner] = useState(false);
+  const [weeklyResults, setWeeklyResults] = useState(null);
+  const [weeklyScore, setWeeklyScore] = useState(null);
 
   // Resolve tier once per render
   const tier = resolveTier({ profile, demoMode });
@@ -3118,12 +3346,18 @@ export default function App() {
           ? <GoalsScreen player={player} onSave={handleGoalsSave} onBack={()=>setScreen("home")}/>
           : <GatedGoalsScreen onBack={()=>setScreen("home")} onUnlock={()=>promptUpgrade("smartGoals","pro")}/>
         )}
+        {screen === "weekly"  && (canAccess("weeklyChallenge", tier).allowed
+          ? (weeklyResults
+            ? <WeeklyResults score={weeklyScore} results={weeklyResults} player={player} onHome={()=>{setWeeklyResults(null);setScreen("home");}}/>
+            : <WeeklyQuiz player={player} onBack={()=>setScreen("home")} onFinish={(res, sc) => { setWeeklyResults(res); setWeeklyScore(sc); }}/>)
+          : <GatedScreen feature="weeklyChallenge" title="Weekly Challenge" description="A new curated 10-question challenge every Monday. Same questions for every player — compete against yourself and compare with teammates." onBack={()=>setScreen("home")} onUnlock={()=>promptUpgrade("weeklyChallenge","pro")} target="pro"/>
+        )}
         {screen === "report"  && <Report player={tierLimitedPlayer(player, tier)} onBack={()=>setScreen("home")} demoCoachData={demoMode?demoCoachRatings:null} tier={tier} onUpgrade={(f,t)=>promptUpgrade(f,t)}/>}
         {screen === "profile" && <Profile player={player} onSave={handleProfileSave} onBack={()=>setScreen("home")} onReset={handleSignOut} demoMode={demoMode} tier={tier} onUpgrade={(f,t)=>promptUpgrade(f,t)} userEmail={userEmail} onAdminReports={()=>setScreen("admin")}/>}
         {screen === "admin" && <Suspense fallback={<LazyFallback/>}><AdminReports onBack={()=>setScreen("profile")}/></Suspense>}
       </div>
 
-      {!["quiz","results"].includes(screen) && (
+      {!["quiz","results","weekly"].includes(screen) && (
         <BottomNav active={screen} onNav={setScreen} tier={tier}/>
       )}
 

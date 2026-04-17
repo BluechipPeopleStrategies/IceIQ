@@ -235,6 +235,7 @@ const PRO_BENEFITS = [
   {icon:"🔓", text:"Access to all age groups (U7 → U18)"},
   {icon:"🎮", text:"All 5 question formats — sequence, spot the mistake, what happens next, true/false"},
   {icon:"🧠", text:"Adaptive engine — difficulty matches your level"},
+  {icon:"🏆", text:"Weekly Challenge — new curated quiz every Monday"},
   {icon:"⭐", text:"SMART goals with category tracking"},
   {icon:"📊", text:"Full progress snapshots + Skills Map radar"},
   {icon:"♾️", text:"Unlimited session history"},

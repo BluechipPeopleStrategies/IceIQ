@@ -16,6 +16,7 @@ const FEATURE_KEYS = [
   "fullSessionHistory",
   "coachDashboard",
   "additionalProfiles",
+  "weeklyChallenge",
 ];
 
 // Per-tier allow list — what each tier can access.
@@ -32,6 +33,7 @@ const TIER_FEATURES = {
     "smartGoals",
     "progressSnapshots",
     "fullSessionHistory",
+    "weeklyChallenge",
   ]),
   FAMILY: new Set([
     "multipleAgeGroups",
@@ -42,6 +44,7 @@ const TIER_FEATURES = {
     "progressSnapshots",
     "fullSessionHistory",
     "additionalProfiles",
+    "weeklyChallenge",
   ]),
   TEAM: new Set([
     "multipleAgeGroups",
@@ -52,6 +55,7 @@ const TIER_FEATURES = {
     "progressSnapshots",
     "fullSessionHistory",
     "coachDashboard",
+    "weeklyChallenge",
     // Team tier typically has a single coach-owned workspace, not additional child profiles
   ]),
 };
@@ -67,6 +71,7 @@ const UPGRADE_TARGET = {
   fullSessionHistory:  "pro",
   additionalProfiles:  "family",
   coachDashboard:      "team",
+  weeklyChallenge:     "pro",
 };
 
 const UPGRADE_MESSAGES = {
@@ -79,6 +84,7 @@ const UPGRADE_MESSAGES = {
   fullSessionHistory:  "Unlock full session history with IceIQ Pro",
   additionalProfiles:  "Add up to 3 players with the Family plan",
   coachDashboard:      "Track your full roster with IceIQ Team",
+  weeklyChallenge:     "Compete in weekly challenges with IceIQ Pro",
 };
 
 // ─────────────────────────────────────────────────────────

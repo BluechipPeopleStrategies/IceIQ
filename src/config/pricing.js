@@ -14,6 +14,7 @@ export const FREE = {
   smartGoals: false,
   progressSnapshots: false,
   coachDashboard: false,
+  weeklyChallenge: false,
 };
 
 export const PRO = {
@@ -29,6 +30,7 @@ export const PRO = {
   smartGoals: true,
   progressSnapshots: true,
   coachDashboard: false,
+  weeklyChallenge: true,
 };
 
 export const FAMILY = {
@@ -44,6 +46,7 @@ export const FAMILY = {
   smartGoals: true,
   progressSnapshots: true,
   coachDashboard: false,
+  weeklyChallenge: true,
 };
 
 export const TEAM = {
@@ -62,6 +65,7 @@ export const TEAM = {
   smartGoals: true,
   progressSnapshots: true,
   coachDashboard: true,
+  weeklyChallenge: true,
 };
 
 // Convenience exports
