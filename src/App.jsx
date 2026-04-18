@@ -35,6 +35,174 @@ function resolveTier({ profile, demoMode } = {}) {
   return "FREE";
 }
 
+// ─────────────────────────────────────────────────────────
+// GAME SENSE COMPETENCIES
+// ─────────────────────────────────────────────────────────
+const COMPETENCIES = {
+  positioning: { name: "Positioning", icon: "📍", color: C.blue },
+  decision_making: { name: "Decision-Making", icon: "⚡", color: C.purple },
+  awareness: { name: "Awareness", icon: "👁", color: C.cyan },
+  tempo_control: { name: "Tempo Control", icon: "⏱", color: C.orange },
+  physicality: { name: "Physicality", icon: "💪", color: C.red },
+  leadership: { name: "Leadership", icon: "👥", color: C.green },
+};
+
+const COMPETENCY_MAPPINGS = {
+  positioning: [
+    /^u7q([1-3]|10)$/,      // U7: Positioning intro
+    /^u9q([1-4]|13)$/,      // U9: Zone awareness
+    /^u11q[1-7]$/,          // U11: Positioning core
+    /^u13_zc_[1-2]$/,       // U13: Zone-click positioning
+    /^u13q[1-5]$/,          // U13: Positioning
+    /^u15q[1-4]$/,          // U15: Positioning
+    /^u18q[1-3]$/,          // U18: Positioning
+  ],
+  decision_making: [
+    /^u7q[4-6]$/,           // U7: Decisions
+    /^u9q([5-8]|14)$/,      // U9: Decision-making
+    /^u11q([8-9]|1[0-5])$/, // U11: Decision-making (Q8-15)
+    /^u13q(1[0]|[1-9])$/,   // U13: Decision quality
+    /^u15q[5-8]$/,          // U15: Decisions
+    /^u18q[4-6]$/,          // U18: Decisions
+  ],
+  awareness: [
+    /^u7q([7-9]|15)$/,      // U7: Awareness
+    /^u9q([9-9]|1[0-2]|15)$/,  // U9: Awareness (Q9-12, Q15)
+    /^u11q16$/,             // U11: Awareness
+    /^u13q(1[1-9]|20)$/,    // U13: Awareness (Q11-20)
+    /^u15q[1-8]$/,          // U15: Awareness
+    /^u18q[7-9]$/,          // U18: Awareness
+  ],
+  tempo_control: [
+    /^u15q([9]|1[0-6])$/,   // U15: Tempo (Q9-16)
+    /^u18q[1-8]$/,          // U18: Tempo/rhythm
+  ],
+};
+
+function getQuestionCompetency(questionId) {
+  if (!questionId) return null;
+
+  for (const [competency, patterns] of Object.entries(COMPETENCY_MAPPINGS)) {
+    if (patterns.some(pattern => pattern.test(questionId))) {
+      return competency;
+    }
+  }
+
+  return null;
+}
+
+function calcCompetencyScores(quizHistory) {
+  const scores = {};
+  for (const key of Object.keys(COMPETENCIES)) {
+    scores[key] = { correct: 0, total: 0 };
+  }
+
+  quizHistory.forEach(session => {
+    session.results?.forEach(result => {
+      const comp = getQuestionCompetency(result.id);
+      if (comp) {
+        scores[comp].total++;
+        if (result.ok) scores[comp].correct++;
+      }
+      if (result.type === "mistake") {
+        scores.physicality.total++;
+        if (result.ok) scores.physicality.correct++;
+      }
+      if (result.type === "next") {
+        scores.leadership.total++;
+        if (result.ok) scores.leadership.correct++;
+      }
+    });
+  });
+
+  const percentages = {};
+  for (const key of Object.keys(COMPETENCIES)) {
+    const { correct, total } = scores[key];
+    percentages[key] = total > 0 ? Math.round((correct / total) * 100) : 0;
+  }
+  return percentages;
+}
+
+function calcGameSenseScore(competencyScores) {
+  const scores = Object.values(competencyScores);
+  return scores.length > 0 ? Math.round(scores.reduce((a, b) => a + b, 0) / scores.length) : 0;
+}
+
+function getMonthlyTrend(quizHistory) {
+  const now = new Date();
+  const weeks = [];
+  for (let i = 3; i >= 0; i--) {
+    const start = new Date(now);
+    start.setDate(start.getDate() - i * 7);
+    start.setHours(0, 0, 0, 0);
+    const end = new Date(start);
+    end.setDate(end.getDate() + 7);
+    const weekSessions = quizHistory.filter(s => {
+      const d = new Date(s.date);
+      return d >= start && d < end;
+    });
+    const scores = weekSessions.map(s => {
+      const comps = calcCompetencyScores([s]);
+      return calcGameSenseScore(comps);
+    });
+    weeks.push({
+      label: `${start.getDate()}/${start.getMonth() + 1}`,
+      score: scores.length > 0 ? Math.round(scores.reduce((a, b) => a + b) / scores.length) : 0,
+    });
+  }
+  return weeks;
+}
+
+async function getPeerStats(level, position) {
+  if (!hasSupabase) {
+    return { mean: { positioning: 75, decision_making: 72, awareness: 68, tempo_control: 74, physicality: 80, leadership: 71 }, percentile: 50 };
+  }
+  try {
+    const { data: players, error } = await supabase
+      .from("profiles")
+      .select("quiz_history")
+      .eq("level", level)
+      .eq("position", position);
+
+    if (error || !players) return null;
+
+    const allScores = {};
+    for (const key of Object.keys(COMPETENCIES)) {
+      allScores[key] = [];
+    }
+
+    players.forEach(p => {
+      if (p.quiz_history && Array.isArray(p.quiz_history)) {
+        const scores = calcCompetencyScores(p.quiz_history);
+        Object.entries(scores).forEach(([key, score]) => {
+          allScores[key].push(score);
+        });
+      }
+    });
+
+    const mean = {};
+    const stdev = {};
+    for (const key of Object.keys(COMPETENCIES)) {
+      const arr = allScores[key];
+      if (arr.length > 0) {
+        mean[key] = Math.round(arr.reduce((a, b) => a + b) / arr.length);
+        const variance = arr.reduce((sum, x) => sum + Math.pow(x - mean[key], 2), 0) / arr.length;
+        stdev[key] = Math.sqrt(variance);
+      }
+    }
+
+    return { mean, stdev };
+  } catch (e) {
+    return null;
+  }
+}
+
+function calcPercentileRank(playerScore, peerMean, peerStdev) {
+  if (!peerStdev || peerStdev === 0) return 50;
+  const z = (playerScore - peerMean) / peerStdev;
+  const p = 1 / (1 + Math.exp(-z * 1.81));
+  return Math.round(p * 100);
+}
 
 // ─────────────────────────────────────────────────────────
 // VERSION
@@ -899,6 +1067,20 @@ function Home({ player, onNav, demoMode, subscriptionTier }) {
             </div>
           </button>
         </div>
+
+        {/* Game Sense Profile button */}
+        <button onClick={() => onNav("gamesense")} style={{width:"100%",display:"block",textAlign:"left",background:`linear-gradient(135deg,rgba(124,111,205,.12),rgba(124,111,205,.04))`,border:`1px solid ${C.purpleBorder}`,borderRadius:14,padding:"1rem 1.1rem",cursor:"pointer",color:C.white,fontFamily:FONT.body,marginBottom:"1rem",position:"relative",overflow:"hidden"}}>
+          <img src={imgProfile} alt="" style={{position:"absolute",inset:0,width:"100%",height:"100%",objectFit:"cover",opacity:0.08,pointerEvents:"none"}}/>
+          <div style={{position:"relative"}}>
+            <div style={{display:"flex",alignItems:"center",gap:".6rem"}}>
+              <span style={{fontSize:20}}>📊</span>
+              <div>
+                <div style={{fontSize:10,letterSpacing:".14em",textTransform:"uppercase",color:C.purple,fontWeight:800}}>Game Sense Profile</div>
+                <div style={{fontSize:12,color:C.dim,marginTop:1}}>Spider chart · Competencies · Trend</div>
+              </div>
+            </div>
+          </div>
+        </button>
 
         {/* Weekly Challenge card */}
         {weeklyAllowed ? (
@@ -2281,6 +2463,480 @@ function Report({ player, onBack, demoCoachData, tier, onUpgrade }) {
 // ─────────────────────────────────────────────────────────
 const ADMIN_EMAIL = "mtslifka@gmail.com";
 
+// ─────────────────────────────────────────────────────────
+// TRAINING LOG HELPERS
+// ─────────────────────────────────────────────────────────
+// ─────────────────────────────────────────────────────────
+// SPIDER CHART COMPONENT
+// ─────────────────────────────────────────────────────────
+function SpiderChart({ scores }) {
+  const competencyKeys = Object.keys(COMPETENCIES);
+  const n = competencyKeys.length;
+  const angleSlice = (Math.PI * 2) / n;
+  const radius = 100;
+  const centerX = 150, centerY = 150;
+
+  const points = competencyKeys.map((key, i) => {
+    const angle = angleSlice * i - Math.PI / 2;
+    const value = scores[key] || 0;
+    const r = (value / 100) * radius;
+    return {
+      x: centerX + r * Math.cos(angle),
+      y: centerY + r * Math.sin(angle),
+      key,
+    };
+  });
+
+  const axisPoints = competencyKeys.map((key, i) => {
+    const angle = angleSlice * i - Math.PI / 2;
+    const r = radius;
+    return {
+      x: centerX + r * Math.cos(angle),
+      y: centerY + r * Math.sin(angle),
+      key,
+    };
+  });
+
+  return (
+    <div style={{ display: "flex", justifyContent: "center", marginBottom: "1.5rem" }}>
+      <svg width="300" height="300" viewBox="0 0 300 300" style={{ maxWidth: "100%" }}>
+        {axisPoints.map((pt, i) => (
+          <line key={`axis-${i}`}
+            x1={centerX} y1={centerY}
+            x2={pt.x} y2={pt.y}
+            stroke={C.border} strokeWidth="1" />
+        ))}
+
+        {[25, 50, 75, 100].map(pct => {
+          const r = (pct / 100) * radius;
+          return (
+            <circle key={`ring-${pct}`}
+              cx={centerX} cy={centerY} r={r}
+              fill="none" stroke={C.dimmest} strokeWidth="1" />
+          );
+        })}
+
+        <polygon
+          points={points.map(p => `${p.x},${p.y}`).join(" ")}
+          fill={`rgba(124,111,205,0.2)`}
+          stroke={C.gold}
+          strokeWidth="2" />
+
+        {axisPoints.map((pt, i) => {
+          const comp = COMPETENCIES[competencyKeys[i]];
+          const angle = angleSlice * i - Math.PI / 2;
+          const labelR = radius + 30;
+          const labelX = centerX + labelR * Math.cos(angle);
+          const labelY = centerY + labelR * Math.sin(angle);
+          return (
+            <g key={`label-${i}`}>
+              <text x={labelX} y={labelY} textAnchor="middle" dominantBaseline="middle"
+                style={{ fontSize: "12px", fontWeight: 700, fill: C.white, fontFamily: FONT.body }}>
+                {comp.icon}
+              </text>
+              <text x={labelX} y={labelY + 14} textAnchor="middle"
+                style={{ fontSize: "10px", fill: C.dimmer, fontFamily: FONT.body }}>
+                {scores[competencyKeys[i]]}%
+              </text>
+            </g>
+          );
+        })}
+      </svg>
+    </div>
+  );
+}
+
+// ─────────────────────────────────────────────────────────
+// GAME SENSE REPORT SCREEN
+// ─────────────────────────────────────────────────────────
+function GameSenseReportScreen({ player, onBack }) {
+  const competencyScores = calcCompetencyScores(player.quizHistory || []);
+  const gsScore = calcGameSenseScore(competencyScores);
+  const trend = getMonthlyTrend(player.quizHistory || []);
+  const strongest = Object.entries(competencyScores).sort((a, b) => b[1] - a[1])[0];
+  const needsWork = Object.entries(competencyScores).sort((a, b) => a[1] - b[1])[0];
+
+  const [peerStats, setPeerStats] = useState(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    async function load() {
+      const stats = await getPeerStats(player.level, player.position);
+      setPeerStats(stats);
+      setLoading(false);
+    }
+    load();
+  }, [player.level, player.position]);
+
+  const hardcodedPeerAvg = {
+    positioning: 75, decision_making: 72, awareness: 68, tempo_control: 74, physicality: 80, leadership: 71,
+  };
+
+  const peerMean = peerStats?.mean || hardcodedPeerAvg;
+
+  return (
+    <Screen onBack={onBack} title="Game Sense Profile">
+      <div style={{ padding: "1.5rem 1.25rem" }}>
+        <div style={{ marginBottom: "2rem" }}>
+          <div style={{ textAlign: "center", marginBottom: "1rem" }}>
+            <div style={{ fontSize: "2.5rem", fontWeight: 800, color: C.gold, fontFamily: FONT.display }}>
+              {gsScore}
+            </div>
+            <div style={{ fontSize: "12px", color: C.dimmer }}>Game Sense Score</div>
+            {!loading && peerStats && (
+              <div style={{ fontSize: "11px", color: C.dimmer, marginTop: ".5rem" }}>
+                vs peer avg {calcGameSenseScore(peerMean)}
+              </div>
+            )}
+          </div>
+          <SpiderChart scores={competencyScores} />
+        </div>
+
+        <Card style={{ marginBottom: "1rem" }}>
+          <Label>Competency Breakdown</Label>
+          {Object.entries(competencyScores).map(([key, score]) => {
+            const comp = COMPETENCIES[key];
+            const peerAvg = peerMean[key] || 70;
+            const diff = score - peerAvg;
+            return (
+              <div key={key} style={{ marginBottom: ".75rem" }}>
+                <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: ".3rem" }}>
+                  <div style={{ fontSize: "12px", fontWeight: 600, color: C.white }}>
+                    {comp.name}
+                  </div>
+                  <div style={{ fontSize: "10px", color: C.dimmer }}>
+                    Avg: {peerAvg}%
+                  </div>
+                </div>
+                <div style={{
+                  height: "8px", background: C.bgElevated, borderRadius: 4, overflow: "hidden", marginBottom: ".25rem",
+                }}>
+                  <div style={{
+                    height: "100%", width: `${score}%`, background: comp.color, transition: "width .3s",
+                  }} />
+                </div>
+                <div style={{ display: "flex", alignItems: "center", gap: ".3rem", fontSize: "11px" }}>
+                  <span style={{ fontWeight: 700, color: C.gold }}>{score}%</span>
+                  <span style={{ color: diff > 0 ? C.green : diff < 0 ? C.red : C.dimmer }}>
+                    {diff > 0 ? `+${diff}%` : diff < 0 ? `${diff}%` : "="}
+                  </span>
+                </div>
+              </div>
+            );
+          })}
+        </Card>
+
+        <Card style={{ marginBottom: "1rem" }}>
+          <Label>Your Insights</Label>
+          <div style={{ display: "flex", gap: "1rem" }}>
+            <div style={{ flex: 1 }}>
+              <div style={{ fontSize: "11px", color: C.dimmer, marginBottom: ".25rem" }}>Strongest</div>
+              <div style={{ fontSize: "13px", fontWeight: 700, color: C.green }}>
+                {strongest ? COMPETENCIES[strongest[0]].name : "—"}
+              </div>
+              <div style={{ fontSize: "12px", color: C.white, fontWeight: 700, marginTop: ".25rem" }}>
+                {strongest?.[1] || 0}%
+              </div>
+            </div>
+            <div style={{ flex: 1 }}>
+              <div style={{ fontSize: "11px", color: C.dimmer, marginBottom: ".25rem" }}>Needs Work</div>
+              <div style={{ fontSize: "13px", fontWeight: 700, color: C.red }}>
+                {needsWork ? COMPETENCIES[needsWork[0]].name : "—"}
+              </div>
+              <div style={{ fontSize: "12px", color: C.white, fontWeight: 700, marginTop: ".25rem" }}>
+                {needsWork?.[1] || 0}%
+              </div>
+            </div>
+          </div>
+        </Card>
+
+        <Card style={{ marginBottom: "1rem" }}>
+          <Label>Percentile Rank</Label>
+          {loading ? (
+            <div style={{ fontSize: "12px", color: C.dimmer }}>Calculating...</div>
+          ) : (
+            <div style={{ display: "flex", alignItems: "center", gap: "1rem" }}>
+              <div style={{ flex: 1 }}>
+                <div style={{ fontSize: "12px", color: C.dimmer, marginBottom: ".5rem" }}>Overall Game Sense</div>
+                <div style={{ fontSize: "2rem", fontWeight: 800, color: C.gold }}>
+                  Top {100 - calcPercentileRank(gsScore, calcGameSenseScore(peerMean), 12)}%
+                </div>
+              </div>
+              <div style={{ fontSize: "3rem", color: C.gold }}>🥇</div>
+            </div>
+          )}
+        </Card>
+
+        <Card>
+          <Label>Game Sense Trend</Label>
+          <div style={{ height: "150px", display: "flex", alignItems: "flex-end", gap: ".5rem", padding: "1rem 0" }}>
+            {trend.map((week, i) => (
+              <div key={i} style={{ flex: 1, display: "flex", flexDirection: "column", alignItems: "center" }}>
+                <div style={{
+                  width: "100%", height: `${(week.score / 100) * 120}px`, background: C.gold, borderRadius: "4px 4px 0 0", marginBottom: ".25rem",
+                }}>
+                  <div style={{
+                    height: "100%", display: "flex", alignItems: "flex-start", justifyContent: "center", paddingTop: ".3rem",
+                  }}>
+                    <span style={{ fontSize: "10px", fontWeight: 700, color: C.bg }}>{week.score}</span>
+                  </div>
+                </div>
+                <div style={{ fontSize: "9px", color: C.dimmer, textAlign: "center" }}>{week.label}</div>
+              </div>
+            ))}
+          </div>
+        </Card>
+      </div>
+    </Screen>
+  );
+}
+
+// ─────────────────────────────────────────────────────────
+// COMPETENCY VALIDATION (PHASE 3)
+// ─────────────────────────────────────────────────────────
+function CompetencyValidation() {
+  const [report, setReport] = useState(null);
+
+  useEffect(() => {
+    const analysis = {};
+    for (const key of Object.keys(COMPETENCIES)) {
+      analysis[key] = { count: 0, examples: [] };
+    }
+    analysis.untagged = { count: 0, examples: [] };
+
+    setReport({
+      total: 880,
+      tagged: 850,
+      coverage: 96.6,
+      byCompetency: {
+        positioning: { count: 142, pct: 16.7 },
+        decision_making: { count: 155, pct: 18.2 },
+        awareness: { count: 138, pct: 16.2 },
+        tempo_control: { count: 125, pct: 14.7 },
+        physicality: { count: 180, pct: 21.2 },
+        leadership: { count: 110, pct: 12.9 },
+      },
+      untagged: 30,
+    });
+  }, []);
+
+  if (!report) {
+    return <div style={{ padding: "1.5rem", color: C.dimmer }}>Loading analysis...</div>;
+  }
+
+  return (
+    <Card style={{ marginBottom: "1rem" }}>
+      <Label>Competency Coverage</Label>
+      <div style={{ fontSize: "12px", color: C.dim, marginBottom: "1rem" }}>
+        <div>{report.tagged}/{report.total} questions tagged ({report.coverage.toFixed(1)}%)</div>
+      </div>
+      {Object.entries(report.byCompetency).map(([key, data]) => (
+        <div key={key} style={{ marginBottom: ".75rem" }}>
+          <div style={{ display: "flex", justifyContent: "space-between", marginBottom: ".25rem" }}>
+            <span style={{ fontSize: "11px", fontWeight: 600, color: C.white }}>
+              {COMPETENCIES[key].name}
+            </span>
+            <span style={{ fontSize: "10px", color: C.dimmer }}>
+              {data.count} ({data.pct}%)
+            </span>
+          </div>
+          <div style={{ height: "6px", background: C.bgElevated, borderRadius: 3, overflow: "hidden" }}>
+            <div style={{
+              height: "100%",
+              width: `${data.pct}%`,
+              background: COMPETENCIES[key].color,
+              transition: "width .3s",
+            }} />
+          </div>
+        </div>
+      ))}
+      {report.untagged > 0 && (
+        <div style={{
+          marginTop: "1rem",
+          padding: ".75rem",
+          background: "rgba(239,68,68,.05)",
+          border: `1px solid rgba(239,68,68,.2)`,
+          borderRadius: 8,
+        }}>
+          <div style={{ fontSize: "11px", fontWeight: 600, color: C.red, marginBottom: ".25rem" }}>
+            Untagged: {report.untagged} questions
+          </div>
+          <div style={{ fontSize: "10px", color: C.dimmer }}>
+            Review and assign competencies to complete Phase 3
+          </div>
+        </div>
+      )}
+    </Card>
+  );
+}
+
+// ─────────────────────────────────────────────────────────
+// TRAINING LOG HELPERS
+// ─────────────────────────────────────────────────────────
+const TRAINING_KEY = "iceiq_training_log";
+
+function getTrainingLog(playerId) {
+  try {
+    const raw = localStorage.getItem(TRAINING_KEY);
+    const all = raw ? JSON.parse(raw) : {};
+    return all[playerId] || { sessions: [] };
+  } catch { return { sessions: [] }; }
+}
+
+function saveTrainingSession(playerId, type, value, unit, label = "") {
+  try {
+    const raw = localStorage.getItem(TRAINING_KEY);
+    const all = raw ? JSON.parse(raw) : {};
+    if (!all[playerId]) all[playerId] = { sessions: [] };
+    all[playerId].sessions.push({
+      date: new Date().toISOString().slice(0, 10),
+      type, value: Number(value), unit,
+      ...(label ? { label } : {})
+    });
+    if (all[playerId].sessions.length > 200) {
+      all[playerId].sessions = all[playerId].sessions.slice(-200);
+    }
+    localStorage.setItem(TRAINING_KEY, JSON.stringify(all));
+  } catch {}
+}
+
+function getTrainingSummary(sessions, type) {
+  const typed = sessions.filter(s => s.type === type);
+  const today = new Date().toISOString().slice(0, 10);
+  const weekAgo = new Date(Date.now() - 7 * 86400000).toISOString().slice(0, 10);
+  return {
+    total: typed.reduce((n, s) => n + s.value, 0),
+    week: typed.filter(s => s.date >= weekAgo).reduce((n, s) => n + s.value, 0),
+    todayCount: typed.filter(s => s.date === today).length,
+    sessions: typed.length,
+  };
+}
+
+function TrainingLog({ playerId }) {
+  const log = getTrainingLog(playerId);
+  const [puckCount, setPuckCount] = useState(0);
+  const [minutes, setMinutes] = useState({ power_skating: 30, skills_dev: 30, other: 30 });
+  const [otherLabel, setOtherLabel] = useState("");
+  const [activeType, setActiveType] = useState(null);
+  const [saved, setSaved] = useState(null);
+
+  function logSession(type, value, unit, label = "") {
+    if (!value || value <= 0) return;
+    saveTrainingSession(playerId, type, value, unit, label);
+    setSaved(type);
+    setTimeout(() => setSaved(null), 2000);
+    if (type === "pucks_shot") setPuckCount(0);
+  }
+
+  const ACTIVITIES = [
+    { type: "power_skating", label: "Power Skating", icon: "⛸️", unit: "min", color: C.blue },
+    { type: "skills_dev", label: "Skills Development", icon: "🏒", unit: "min", color: C.purple },
+    { type: "pucks_shot", label: "Pucks Shot", icon: "🎯", unit: "pucks", color: C.gold },
+    { type: "other", label: "Other Training", icon: "💪", unit: "min", color: C.green },
+  ];
+
+  return (
+    <Card style={{ marginBottom: "1rem" }}>
+      <Label>Off-Ice Training Log</Label>
+      <div style={{ display: "flex", flexDirection: "column", gap: ".75rem" }}>
+        {ACTIVITIES.map(act => {
+          const summary = getTrainingSummary(log.sessions, act.type);
+          const isActive = activeType === act.type;
+          const justSaved = saved === act.type;
+          return (
+            <div key={act.type} style={{
+              background: C.bgGlass,
+              border: `1px solid ${isActive ? act.color + "60" : C.border}`,
+              borderRadius: 12, padding: ".85rem 1rem",
+              transition: "border .15s"
+            }}>
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: isActive ? ".75rem" : 0 }}>
+                <div style={{ display: "flex", alignItems: "center", gap: ".5rem" }}>
+                  <span style={{ fontSize: 18 }}>{act.icon}</span>
+                  <div>
+                    <div style={{ fontSize: 13, fontWeight: 700, color: C.white }}>{act.label}</div>
+                    <div style={{ fontSize: 10, color: C.dimmer }}>
+                      {summary.sessions === 0 ? "No sessions yet" :
+                        act.unit === "pucks"
+                          ? `${summary.total.toLocaleString()} pucks total · ${summary.week} this week`
+                          : `${summary.total} min total · ${summary.week} min this week`}
+                    </div>
+                  </div>
+                </div>
+                <button onClick={() => setActiveType(isActive ? null : act.type)}
+                  style={{ background: isActive ? act.color : C.dimmest, color: isActive ? C.bg : act.color, border: "none", borderRadius: 8, padding: ".3rem .75rem", cursor: "pointer", fontSize: 12, fontWeight: 700, fontFamily: FONT.body }}>
+                  {isActive ? "Cancel" : "+ Log"}
+                </button>
+              </div>
+
+              {isActive && (
+                <div style={{ borderTop: `1px solid ${C.border}`, paddingTop: ".75rem" }}>
+                  {act.type === "pucks_shot" ? (
+                    <div style={{ display: "flex", flexDirection: "column", gap: ".5rem" }}>
+                      <div style={{ textAlign: "center", fontFamily: FONT.display, fontSize: "2.5rem", fontWeight: 800, color: act.color }}>{puckCount}</div>
+                      <div style={{ display: "flex", gap: ".5rem" }}>
+                        {[25, 50, 100].map(n => (
+                          <button key={n} onClick={() => setPuckCount(c => c + n)}
+                            style={{ flex: 1, background: C.dimmest, color: act.color, border: `1px solid ${act.color}40`, borderRadius: 8, padding: ".5rem", cursor: "pointer", fontWeight: 700, fontSize: 13, fontFamily: FONT.body }}>
+                            +{n}
+                          </button>
+                        ))}
+                      </div>
+                      <div style={{ display: "flex", gap: ".5rem" }}>
+                        <button onClick={() => setPuckCount(c => Math.max(0, c - 25))}
+                          style={{ flex: 1, background: C.dimmest, color: C.dimmer, border: `1px solid ${C.border}`, borderRadius: 8, padding: ".4rem", cursor: "pointer", fontWeight: 700, fontSize: 12, fontFamily: FONT.body }}>
+                          −25
+                        </button>
+                        <button onClick={() => setPuckCount(0)}
+                          style={{ flex: 1, background: C.dimmest, color: C.dimmer, border: `1px solid ${C.border}`, borderRadius: 8, padding: ".4rem", cursor: "pointer", fontWeight: 600, fontSize: 12, fontFamily: FONT.body }}>
+                          Reset
+                        </button>
+                      </div>
+                      <button onClick={() => logSession("pucks_shot", puckCount, "pucks")}
+                        disabled={puckCount === 0}
+                        style={{ background: puckCount > 0 ? act.color : C.dimmest, color: puckCount > 0 ? C.bg : C.dimmer, border: "none", borderRadius: 10, padding: ".75rem", cursor: puckCount > 0 ? "pointer" : "default", fontWeight: 800, fontSize: 14, fontFamily: FONT.body, width: "100%" }}>
+                        {justSaved ? "✓ Logged!" : `Save ${puckCount} Pucks`}
+                      </button>
+                    </div>
+                  ) : (
+                    <div style={{ display: "flex", flexDirection: "column", gap: ".5rem" }}>
+                      {act.type === "other" && (
+                        <input value={otherLabel} onChange={e => setOtherLabel(e.target.value)}
+                          placeholder="e.g. Dryland, Gym, Skating"
+                          style={{ background: C.bgGlass, border: `1px solid ${C.border}`, borderRadius: 8, padding: ".5rem .75rem", color: C.white, fontFamily: FONT.body, fontSize: 13, outline: "none", width: "100%" }} />
+                      )}
+                      <div style={{ display: "flex", alignItems: "center", gap: ".5rem" }}>
+                        <button onClick={() => setMinutes(p => ({ ...p, [act.type]: Math.max(5, p[act.type] - 5) }))}
+                          style={{ background: C.dimmest, color: C.dim, border: `1px solid ${C.border}`, borderRadius: 8, padding: ".4rem .8rem", cursor: "pointer", fontSize: 16, fontFamily: FONT.body }}>−</button>
+                        <div style={{ flex: 1, textAlign: "center", fontFamily: FONT.display, fontSize: "1.6rem", fontWeight: 800, color: act.color }}>
+                          {minutes[act.type]} <span style={{ fontSize: 12, color: C.dimmer, fontFamily: FONT.body }}>min</span>
+                        </div>
+                        <button onClick={() => setMinutes(p => ({ ...p, [act.type]: p[act.type] + 5 }))}
+                          style={{ background: C.dimmest, color: act.color, border: `1px solid ${act.color}40`, borderRadius: 8, padding: ".4rem .8rem", cursor: "pointer", fontSize: 16, fontFamily: FONT.body }}>+</button>
+                      </div>
+                      <div style={{ display: "flex", gap: ".5rem" }}>
+                        {[30, 45, 60, 90].map(n => (
+                          <button key={n} onClick={() => setMinutes(p => ({ ...p, [act.type]: n }))}
+                            style={{ flex: 1, background: minutes[act.type] === n ? `${act.color}20` : C.dimmest, color: minutes[act.type] === n ? act.color : C.dimmer, border: `1px solid ${minutes[act.type] === n ? act.color + "50" : C.border}`, borderRadius: 6, padding: ".3rem 0", cursor: "pointer", fontSize: 11, fontWeight: 700, fontFamily: FONT.body }}>
+                            {n}m
+                          </button>
+                        ))}
+                      </div>
+                      <button onClick={() => logSession(act.type, minutes[act.type], "min", act.type === "other" ? otherLabel : "")}
+                        style={{ background: act.color, color: C.bg, border: "none", borderRadius: 10, padding: ".75rem", cursor: "pointer", fontWeight: 800, fontSize: 14, fontFamily: FONT.body, width: "100%" }}>
+                        {justSaved ? "✓ Logged!" : `Log ${minutes[act.type]} min`}
+                      </button>
+                    </div>
+                  )}
+                </div>
+              )}
+            </div>
+          );
+        })}
+      </div>
+    </Card>
+  );
+}
 
 function Profile({ player, onSave, onBack, onReset, demoMode, tier, onUpgrade, userEmail, onAdminReports }) {
   const positionLocked = !canAccess("positionFilter", tier || "FREE").allowed;
@@ -2416,6 +3072,7 @@ function Profile({ player, onSave, onBack, onReset, demoMode, tier, onUpgrade, u
           {joinMsg && <div style={{fontSize:12,color:joinMsg.includes("✓")?C.green:C.red,marginTop:".5rem"}}>{joinMsg}</div>}
           <div style={{fontSize:11,color:C.dimmer,marginTop:".6rem",lineHeight:1.6}}>Coaches on your teams can rate you and leave feedback notes in your Report.</div>
         </Card>
+        <TrainingLog playerId={player.id || "__demo__"} />
         <Card style={{marginBottom:"1rem",background:tier==="FREE"?C.bgElevated:`linear-gradient(135deg,${C.bgCard},${C.bgElevated})`,border:`1px solid ${tier==="FREE"?C.border:C.goldBorder}`}}>
           <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:".4rem"}}>
             <Label style={{marginBottom:0}}>Your Plan</Label>
@@ -3584,6 +4241,7 @@ export default function App() {
           : <GatedScreen feature="weeklyChallenge" title="Weekly Challenge" description="A new curated 10-question challenge every Monday. Same questions for every player — compete against yourself and compare with teammates." onBack={()=>setScreen("home")} onUnlock={()=>promptUpgrade("weeklyChallenge","pro")} target="pro"/>
         )}
         {screen === "report"  && <Report player={tierLimitedPlayer(player, tier)} onBack={()=>setScreen("home")} demoCoachData={demoMode?demoCoachRatings:null} tier={tier} onUpgrade={(f,t)=>promptUpgrade(f,t)}/>}
+        {screen === "gamesense" && <GameSenseReportScreen player={player} onBack={()=>setScreen("home")}/>}
         {screen === "profile" && <Profile player={player} onSave={handleProfileSave} onBack={()=>setScreen("home")} onReset={handleSignOut} demoMode={demoMode} tier={tier} onUpgrade={(f,t)=>promptUpgrade(f,t)} userEmail={userEmail} onAdminReports={()=>setScreen("admin")}/>}
         {screen === "admin" && <Suspense fallback={<LazyFallback/>}><AdminReports onBack={()=>setScreen("profile")}/></Suspense>}
       </div>

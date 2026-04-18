@@ -1,0 +1,44 @@
+REWRITE TASK: Fix boilerplate-contaminated wrong answers in U13 Peewee hockey quiz.
+
+Each question below has one wrong-answer option (opt[X]) that contains generic boilerplate reasoning ("forcing pass through traffic", "teammates need time", etc.) completely unrelated to the question's actual topic.
+
+Rewrite each contaminated opt so:
+1. It remains a wrong answer (doesn't match the correct reasoning)
+2. The reasoning is SPECIFIC to the question's situation
+3. Length similar to correct answer (~80-120 chars)
+4. Ends with a period
+5. Sounds like plausible hockey-thinking but wrong
+
+Format response as:
+[questionId] opt[index]: "new text here."
+
+QUESTIONS (Blue Line Reads category):
+
+
+[u13q1]
+Situation: "You're the puck carrier entering the offensive zone. One defender is set at the blue line right in front of you. What's the right decision?"
+Correct answer: "Read the defender — if they're set, use your linemate or chip it behind them."
+Why correct: "A set defender at the blue line is telling you something. Read them — if they're set and you try to carry, you risk a turnover in the worst spot. Use your linemate or chip the puck in."
+Contaminated opt[0]: "Dump it in because your teammates need time to set up and look for support." ← FIX THIS
+Other opts: "Read the defender — if they're set, use your linemate or chip it behind them."
+
+[u13q16]
+Situation: "You're the puck carrier in the neutral zone at full speed. Two defenders are set at the blue line. Your linemate is trailing. Best entry?"
+Correct answer: "Chip the puck past the inside defender and go get it, or use a give-and-go with your trailer."
+Why correct: "Carrying against two set defenders at the blue line is low-percentage. The chip-and-chase or give-and-go with the trailer are the smart options."
+Contaminated opt[3]: "Skate to the corner and dig it out since the other team has committed to the other side instead." ← FIX THIS
+Other opts: "Shoot from wherever you are now since that creates the best look while staying in position."
+
+[u13q42]
+Situation: "You're the offensive zone D at the blue line. Your forward is about to lose possession of the puck in the corner to a defender who can break with speed. Should you pinch?"
+Correct answer: "No — if possession is about to be lost, pinching puts you deep with no coverage during a fast breakout."
+Why correct: "The moment possession is about to be lost is the worst time to pinch. If the D gets the puck clean, they'll have a speed advantage with you caught deep."
+Contaminated opt[3]: "Try to stickhandle through them because your teammates need time to set up while staying in position." ← FIX THIS
+Other opts: "Swing wide along the boards because the defenders have committed to the strong side of the ice again."
+
+[u13q43]
+Situation: "You're the D at the point. You see the opposing center beginning to break toward your blue line for a potential counter. Your team still has the puck. What do you do?"
+Correct answer: "Hold the blue line but cheat back slightly — be ready to pursue if the puck turns over."
+Why correct: "Reading a player beginning to position for a counter lets you cheat back slightly. You stay at the line but you're ready. If the puck turns, you're in position."
+Contaminated opt[2]: "Force a play through traffic since the other team has committed to the other side." ← FIX THIS
+Other opts: "Chip it past them because the defenders have committed to the strong side of the ice."
