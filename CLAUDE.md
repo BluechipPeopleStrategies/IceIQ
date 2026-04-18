@@ -14,10 +14,34 @@
 - Coach dashboard stat label: "Team Avg GS".
 
 ## Pricing & Gating (`src/utils/tierGate.js`, `src/config/pricing.js`)
+Seasonal pricing model (aligns with hockey season cycle Sept–Mar + summer off-season Apr–Aug).
+
 - **Free:** positionFilter ✓, multipleChoice only, 5 session history, 1 profile, 1 age group, **3 quizzes/week cap** (localStorage, resets Monday).
-- **Pro ($12.99/mo · $89.99/yr CAD):** All question formats (5 types), adaptive engine, SMART goals, progress snapshots/radar, full session history, weekly challenge.
-- **Family ($19.99/mo · $139.99/yr CAD):** All Pro features + 3 profiles.
-- **Team ($49.99/mo · $249.99 season pass CAD):** All features + coach dashboard. Season Sept–Mar, hard expiry Apr 1 (read-only after).
+- **Pro:** All question formats (5 types), adaptive engine, SMART goals, progress snapshots/radar, full session history, weekly challenge.
+  - Hockey Season (Sept–Mar): **$89.99 CAD** — primary competitive season
+  - Summer Off-Season (Apr–Aug): **$44.99 CAD** — development & training focus, lower friction
+  - Full Year (Sept–Aug): **$124.99 CAD** — continuous access, saves $10.98
+- **Family:** All Pro features + 3 profiles.
+  - Hockey Season (Sept–Mar): **$139.99 CAD**
+  - Summer Off-Season (Apr–Aug): **$69.99 CAD**
+  - Full Year (Sept–Aug): **$199.99 CAD** — saves $10.98
+- **Team:** All features + coach dashboard. Hockey season only (Sept–Mar, hard expiry Apr 1, read-only after).
+  - Hockey Season (Sept–Mar): **$249.99 CAD** — typically covers 15–20 players on a roster
+
+## Pricing Rationale (Seasonal Model)
+**Strategy:** Aggressive Summer Growth — lower friction for off-season learners.
+
+| Metric | Rationale |
+|--------|-----------|
+| **Hockey Season ($89.99/$139.99/$249.99)** | Peak competitive season (Sept–Mar); game sense is most relevant; full-feature parity with historical pricing. |
+| **Summer Off-Season ($44.99/$69.99)** | ~49–50% discount vs hockey season; targets coaches/parents running summer camps & development programs; lower barrier to trial. |
+| **Full Year ($124.99/$199.99)** | ~$10.98 savings per tier; incentivizes annual commitment & continuous progress tracking Sept–Aug. |
+| **No Team Summer option** | Coaches rarely run team programs Apr–Aug; seasonal hard stop (Apr 1) reduces confusion. |
+
+**Expected outcomes:**
+- **Activation:** Summer discounts capture off-season learners (development camps, July clinics).
+- **Retention:** Full-year bundles extend LTV beyond single season; reduce churn at April 1 hard stop.
+- **Revenue:** $89.99 (hockey) + $44.99 (summer) = $134.98 (if both purchased separately) vs $124.99 full-year bundle = ~$10/user rebate for commitment. Annual revenue ~$90K per 500 Pro users (blended ~$180/user/year).
 
 ## Free Weekly Quiz Cap
 - `src/utils/weeklyChallenge.js` — `FREE_WEEKLY_QUIZ_CAP = 3`, `isAtFreeQuizCap()`, `incrementFreeQuizCount()`.

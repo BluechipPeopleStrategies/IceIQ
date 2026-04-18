@@ -275,8 +275,11 @@ export function PlansScreen({ onBack, tier }) {
             <Label>Pro</Label>
             <div style={{fontSize:10,background:C.goldDim,color:C.gold,padding:"2px 8px",borderRadius:4,fontWeight:800,letterSpacing:".08em"}}>MOST POPULAR</div>
           </div>
-          <div style={{fontFamily:FONT.display,fontWeight:800,fontSize:"2rem",color:C.gold}}>$12.99<span style={{fontSize:13,color:C.dimmer,fontWeight:500}}> / month</span></div>
-          <div style={{fontSize:11,color:C.dimmer,marginBottom:".75rem"}}>or $89.99 / year (save 42%)</div>
+          <div style={{display:"flex",flexDirection:"column",gap:".4rem",marginBottom:".75rem"}}>
+            <div><div style={{fontSize:10,color:C.dimmer,marginBottom:".2rem"}}>Hockey Season (Sep–Mar)</div><div style={{fontFamily:FONT.display,fontWeight:800,fontSize:"1.8rem",color:C.gold}}>$89.99</div></div>
+            <div><div style={{fontSize:10,color:C.dimmer,marginBottom:".2rem"}}>Summer (Apr–Aug)</div><div style={{fontFamily:FONT.display,fontWeight:800,fontSize:"1.4rem",color:C.gold}}>$44.99</div></div>
+            <div style={{paddingTop:".4rem",borderTop:`1px solid ${C.border}`}}><div style={{fontSize:10,color:C.dimmer,marginBottom:".2rem"}}>Full Year (Best Value)</div><div style={{fontFamily:FONT.display,fontWeight:800,fontSize:"1.6rem",color:C.gold}}>$124.99 <span style={{fontSize:10,color:C.green,fontWeight:600}}>save $10.98</span></div></div>
+          </div>
           {PRO_BENEFITS.map((b,i) => (
             <div key={i} style={{display:"flex",alignItems:"flex-start",gap:".55rem",padding:".3rem 0",fontSize:12,color:C.dim,lineHeight:1.5}}>
               <span style={{fontSize:14,flexShrink:0}}>{b.icon}</span><span>{b.text}</span>
@@ -286,8 +289,12 @@ export function PlansScreen({ onBack, tier }) {
 
         <Card style={{marginBottom:"1rem"}}>
           <Label>Family</Label>
-          <div style={{fontFamily:FONT.display,fontWeight:800,fontSize:"2rem",color:C.white}}>$19.99<span style={{fontSize:13,color:C.dimmer,fontWeight:500}}> / month</span></div>
-          <div style={{fontSize:11,color:C.dimmer,marginBottom:".75rem"}}>or $139.99 / year · 3 players</div>
+          <div style={{display:"flex",flexDirection:"column",gap:".4rem",marginBottom:".75rem"}}>
+            <div><div style={{fontSize:10,color:C.dimmer,marginBottom:".2rem"}}>Hockey Season (Sep–Mar)</div><div style={{fontFamily:FONT.display,fontWeight:800,fontSize:"1.8rem",color:C.white}}>$139.99</div></div>
+            <div><div style={{fontSize:10,color:C.dimmer,marginBottom:".2rem"}}>Summer (Apr–Aug)</div><div style={{fontFamily:FONT.display,fontWeight:800,fontSize:"1.4rem",color:C.white}}>$69.99</div></div>
+            <div style={{paddingTop:".4rem",borderTop:`1px solid ${C.border}`}}><div style={{fontSize:10,color:C.dimmer,marginBottom:".2rem"}}>Full Year (Best Value)</div><div style={{fontFamily:FONT.display,fontWeight:800,fontSize:"1.6rem",color:C.white}}>$199.99 <span style={{fontSize:10,color:C.green,fontWeight:600}}>save $10.98</span></div></div>
+          </div>
+          <div style={{fontSize:11,color:C.dimmer,marginBottom:".75rem"}}>Includes 3 profiles</div>
           {FAMILY_BENEFITS.map((b,i) => (
             <div key={i} style={{display:"flex",alignItems:"flex-start",gap:".55rem",padding:".3rem 0",fontSize:12,color:C.dim,lineHeight:1.5}}>
               <span style={{fontSize:14,flexShrink:0}}>{b.icon}</span><span>{b.text}</span>
@@ -297,8 +304,11 @@ export function PlansScreen({ onBack, tier }) {
 
         <Card style={{marginBottom:"1rem"}}>
           <Label>Team</Label>
-          <div style={{fontFamily:FONT.display,fontWeight:800,fontSize:"2rem",color:C.white}}>$49.99<span style={{fontSize:13,color:C.dimmer,fontWeight:500}}> / month</span></div>
-          <div style={{fontSize:11,color:C.dimmer,marginBottom:".75rem"}}>or $249.99 season pass (Sep–Mar) · up to 20 players</div>
+          <div style={{display:"flex",flexDirection:"column",gap:".4rem",marginBottom:".75rem"}}>
+            <div><div style={{fontSize:10,color:C.dimmer,marginBottom:".2rem"}}>Hockey Season (Sep–Mar)</div><div style={{fontFamily:FONT.display,fontWeight:800,fontSize:"1.8rem",color:C.white}}>$249.99</div></div>
+            <div style={{fontSize:11,color:C.dimmer}}>Covers entire competitive season</div>
+          </div>
+          <div style={{fontSize:11,color:C.dimmer,marginBottom:".75rem"}}>Up to 20 players · Coach dashboard</div>
           {TEAM_BENEFITS.map((b,i) => (
             <div key={i} style={{display:"flex",alignItems:"flex-start",gap:".55rem",padding:".3rem 0",fontSize:12,color:C.dim,lineHeight:1.5}}>
               <span style={{fontSize:14,flexShrink:0}}>{b.icon}</span><span>{b.text}</span>

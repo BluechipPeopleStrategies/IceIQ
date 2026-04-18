@@ -18,9 +18,15 @@ export const FREE = {
 };
 
 export const PRO = {
-  name: "Pro",
-  monthlyCAD: 12.99,
-  annualCAD: 89.99,
+  name: "Ice-IQ Pro",
+  // Hockey season (Sept–Mar): 7 months
+  hockeySeasonCAD: 89.99,
+  // Summer off-season (Apr–Aug): 5 months
+  summerSeasonCAD: 44.99,
+  // Full year (Sept–Aug): continuous access, better value
+  fullYearCAD: 124.99,
+  hockeySeasonMonths: "Sept–Mar",
+  summerSeasonMonths: "Apr–Aug",
   profiles: 1,
   ageGroups: "all",
   sessionHistory: "unlimited",
@@ -34,9 +40,15 @@ export const PRO = {
 };
 
 export const FAMILY = {
-  name: "Family",
-  monthlyCAD: 19.99,
-  annualCAD: 139.99,
+  name: "Ice-IQ Family",
+  // Hockey season (Sept–Mar): 7 months
+  hockeySeasonCAD: 139.99,
+  // Summer off-season (Apr–Aug): 5 months
+  summerSeasonCAD: 69.99,
+  // Full year (Sept–Aug): continuous access, better value
+  fullYearCAD: 199.99,
+  hockeySeasonMonths: "Sept–Mar",
+  summerSeasonMonths: "Apr–Aug",
   profiles: 3,
   ageGroups: "all",
   sessionHistory: "unlimited",
@@ -50,9 +62,10 @@ export const FAMILY = {
 };
 
 export const TEAM = {
-  name: "Team",
-  monthlyCAD: 49.99,
-  seasonPassCAD: 249.99,
+  name: "Ice-IQ Team",
+  // Hockey season only (Sept–Mar): 7 months
+  hockeySeasonCAD: 249.99,
+  hockeySeasonMonths: "Sept–Mar",
   seasonStart: "September",
   seasonEnd: "March",
   seasonExpiryDate: "April 1",
