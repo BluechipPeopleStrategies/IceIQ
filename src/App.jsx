@@ -399,9 +399,10 @@ function buildDemoQueue(qb, level, position) {
     const pool = type === "zone-click"
       ? ZONE_CLICK_QUESTIONS
       : (qb[level] || []).filter(q => q.type === type);
-    const levelMatch = pool.filter(q =>
-      q.level.includes(level) && (q.pos?.includes(position) || !q.pos || position === "Not Sure")
-    );
+    const levelMatch = pool.filter(q => {
+      if (!q.level) return false;
+      return q.level.includes(level) && (q.pos?.includes(position) || !q.pos || position === "Not Sure");
+    });
     const fallback = pool.filter(q => q.pos?.includes(position) || !q.pos || position === "Not Sure");
     const source = levelMatch.length > 0 ? levelMatch : fallback;
     if (source.length > 0) result.push(source[Math.floor(Math.random() * source.length)]);
