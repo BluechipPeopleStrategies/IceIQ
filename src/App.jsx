@@ -3989,6 +3989,7 @@ export default function App() {
   useEffect(() => {
     preloadQB();
     if (!hasSupabase) { setAuthReady(true); return; }
+    if (demoMode) return;
     let mounted = true;
     const timeout = setTimeout(() => { if (mounted) setAuthReady(true); }, 2000);
     (async () => {
@@ -4010,7 +4011,7 @@ export default function App() {
       else { setProfile(null); setPlayer(null); setUserEmail(null); }
     });
     return () => { mounted = false; data?.subscription?.unsubscribe?.(); };
-  }, []);
+  }, [demoMode]);
 
   async function loadUser(userId) {
     if (demoMode) return;
