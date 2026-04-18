@@ -66,6 +66,96 @@ export function IceIQLogo({ size = 32, color = "#c9a84c" }) {
   );
 }
 
+export const RINK_ZONE_DEFS = [
+  { id: "dz-left-corner",  label: "Left Corner",    x: 0,   y: 50, w: 55,  h: 35 },
+  { id: "dz-left-point",   label: "Left Point",     x: 0,   y: 0,  w: 55,  h: 35 },
+  { id: "dz-slot",         label: "Slot",           x: 55,  y: 15, w: 90,  h: 55 },
+  { id: "dz-right-corner", label: "Right Corner",   x: 145, y: 50, w: 55,  h: 35 },
+  { id: "dz-right-point",  label: "Right Point",    x: 145, y: 0,  w: 55,  h: 35 },
+  { id: "dz-behind-net",   label: "Behind Net",     x: 55,  y: 62, w: 90,  h: 23 },
+  { id: "nz-left",         label: "Neutral Left",   x: 0,   y: 0,  w: 45,  h: 85 },
+  { id: "nz-center",       label: "Neutral Center", x: 45,  y: 0,  w: 110, h: 85 },
+  { id: "nz-right",        label: "Neutral Right",  x: 155, y: 0,  w: 45,  h: 85 },
+  { id: "oz-slot",         label: "Offensive Slot", x: 55,  y: 15, w: 90,  h: 55 },
+  { id: "oz-left-wing",    label: "Left Wing",      x: 0,   y: 0,  w: 55,  h: 85 },
+  { id: "oz-right-wing",   label: "Right Wing",     x: 145, y: 0,  w: 55,  h: 85 },
+];
+
+export function RinkDiagramZones({ zones, onZoneClick, selected, correct, dark = false }) {
+  const bg = dark ? "#03090f" : "#e8f4f8";
+  const iceColor = dark ? "#0a1929" : "#dceefa";
+
+  return (
+    <svg width="100%" height="auto" viewBox="0 0 200 85" style={{maxWidth:"100%",border:`1px solid ${C.border}`,borderRadius:12,background:bg}} preserveAspectRatio="xMidYMid meet">
+      <defs>
+        <filter id="ice-glow">
+          <feGaussianBlur stdDeviation="1" />
+        </filter>
+      </defs>
+
+      {/* Ice surface */}
+      <rect x="0" y="0" width="200" height="85" rx="8" fill={iceColor}/>
+
+      {/* Red center line */}
+      <line x1="100" y1="0" x2="100" y2="85" stroke="#ef4444" strokeWidth="0.8" opacity="0.6"/>
+
+      {/* Blue lines */}
+      <line x1="55" y1="0" x2="55" y2="85" stroke="#3b82f6" strokeWidth="1.2" opacity="0.5"/>
+      <line x1="145" y1="0" x2="145" y2="85" stroke="#3b82f6" strokeWidth="1.2" opacity="0.5"/>
+
+      {/* Left net area */}
+      <rect x="0" y="30" width="8" height="25" fill="#ef4444" opacity="0.15" rx="2"/>
+
+      {/* Right net area */}
+      <rect x="192" y="30" width="8" height="25" fill="#ef4444" opacity="0.15" rx="2"/>
+
+      {/* Face-off circles — subtle dots */}
+      <circle cx="40" cy="23" r="1.5" fill="#3b82f6" opacity="0.3"/>
+      <circle cx="40" cy="62" r="1.5" fill="#3b82f6" opacity="0.3"/>
+      <circle cx="160" cy="23" r="1.5" fill="#3b82f6" opacity="0.3"/>
+      <circle cx="160" cy="62" r="1.5" fill="#3b82f6" opacity="0.3"/>
+
+      {/* Zone overlay rects */}
+      {zones && zones.map(zoneId => {
+        const zone = RINK_ZONE_DEFS.find(z => z.id === zoneId);
+        if (!zone) return null;
+        const isSelected = zoneId === selected;
+        const isCorrect = zoneId === correct;
+        let fillColor = C.dimmest;
+        let fillOpacity = 0.15;
+        if (isCorrect) {
+          fillColor = C.green;
+          fillOpacity = 0.25;
+        } else if (isSelected) {
+          fillColor = C.gold;
+          fillOpacity = 0.3;
+        }
+        return (
+          <g key={zoneId}>
+            <rect
+              x={zone.x} y={zone.y} width={zone.w} height={zone.h}
+              fill={fillColor} fillOpacity={fillOpacity}
+              stroke={isCorrect ? C.green : isSelected ? C.gold : C.border}
+              strokeWidth={isCorrect || isSelected ? 1.2 : 0.5}
+              onClick={() => onZoneClick && onZoneClick(zoneId)}
+              style={{cursor: onZoneClick ? "pointer" : "default", transition:"all 0.2s"}}
+            />
+            {onZoneClick && (
+              <text
+                x={zone.x + zone.w / 2} y={zone.y + zone.h / 2 + 1.5}
+                textAnchor="middle" dominantBaseline="middle"
+                fontSize="4" fill={C.dim} fontWeight="600" pointerEvents="none"
+              >
+                {zone.label}
+              </text>
+            )}
+          </g>
+        );
+      })}
+    </svg>
+  );
+}
+
 export const Screen = ({children, pad=true}) => (
   <div style={{
     minHeight:"100vh",

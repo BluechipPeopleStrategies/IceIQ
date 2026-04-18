@@ -5,7 +5,7 @@ import { canAccess, getUpgradeTriggerMessage } from "./utils/tierGate";
 import { canSwitchAgeGroup, recordAgeGroupSwitch, getAgeGroupLock, setAgeGroupLock, checkSeasonReset } from "./utils/deviceLock";
 import {
   C, FONT, LEVELS, POSITIONS, POSITIONS_U11UP, SEASONS,
-  IceIQLogo, Screen, Card, Pill, Label, PrimaryBtn, SecBtn, BackBtn, ProgressBar, StickyHeader,
+  IceIQLogo, RinkDiagramZones, RINK_ZONE_DEFS, Screen, Card, Pill, Label, PrimaryBtn, SecBtn, BackBtn, ProgressBar, StickyHeader,
 } from "./shared.jsx";
 const imgSplash = "/splash.jpg";
 import imgCoreApp from "./assets/images/Core-App.jpg";
@@ -223,6 +223,29 @@ function makePlayerKey(name, level) {
   return (name + "_" + level).toLowerCase().replace(/[^a-z0-9]/g,"_").slice(0,40);
 }
 
+// Demo queue builder — guarantees one of each question type
+function buildDemoQueue(qb, level, position) {
+  const types = ["mc", "tf", "seq", "mistake", "next", "zone-click"];
+  const result = [];
+  for (const type of types) {
+    const pool = type === "zone-click"
+      ? ZONE_CLICK_QUESTIONS
+      : (qb[level] || []).filter(q => q.type === type);
+    const levelMatch = pool.filter(q =>
+      q.level.includes(level) && (q.pos?.includes(position) || !q.pos || position === "Not Sure")
+    );
+    const fallback = pool.filter(q => q.pos?.includes(position) || !q.pos || position === "Not Sure");
+    const source = levelMatch.length > 0 ? levelMatch : fallback;
+    if (source.length > 0) result.push(source[Math.floor(Math.random() * source.length)]);
+  }
+  // Pad to 10 with random mc questions if needed
+  const mcPad = (qb[level] || []).filter(q => q.type === "mc");
+  while (result.length < 10 && mcPad.length > 0) {
+    result.push(mcPad[Math.floor(Math.random() * mcPad.length)]);
+  }
+  return result;
+}
+
 // Adaptive queue builder — with memoization of filtered pools
 const _queueCache = new Map();
 
@@ -235,7 +258,7 @@ function buildQueue(qb, level, position, isReturning, tier) {
   if (_queueCache.has(cacheKey)) {
     pool = _queueCache.get(cacheKey);
   } else {
-    const allQ = qb[level] || [];
+    const allQ = [...(qb[level] || []), ...ZONE_CLICK_QUESTIONS];
     let posFiltered;
     if (!positionAllowed) {
       posFiltered = allQ.filter(q => !q.pos || q.pos.includes("F") || q.pos.includes("D"));
@@ -251,6 +274,8 @@ function buildQueue(qb, level, position, isReturning, tier) {
 
     if (!formatAllowed) {
       posFiltered = posFiltered.filter(q => !q.type || q.type === "mc");
+      // zone-click at d:3 requires PRO+
+      posFiltered = posFiltered.filter(q => !(q.type === "zone-click" && q.d === 3));
     }
 
     pool = {
@@ -276,6 +301,17 @@ function buildQueue(qb, level, position, isReturning, tier) {
     if (d2.length >= 4) {
       const insertAt = Math.floor(d2.length / 2);
       byD[2] = [...d2.slice(0, insertAt), sentinel, ...d2.slice(insertAt)];
+    }
+
+    // Inject 1 zone-click teaser for FREE tier (d:1 or d:2 only)
+    if (byD[1].length >= 2) {
+      const zcPool = ZONE_CLICK_QUESTIONS.filter(q =>
+        q.d <= 2 && q.level.includes(level) && (q.pos.includes(position) || position === "Not Sure")
+      );
+      if (zcPool.length > 0) {
+        const zcQ = zcPool[Math.floor(Math.random() * zcPool.length)];
+        byD[1].splice(3, 0, zcQ);
+      }
     }
   }
 
@@ -479,6 +515,69 @@ const DIAGRAMS = {
   u11g1:"goalie_angle", u11g2:"goalie_2on1", u11g7:"goalie_angle",
 };
 
+const ZONE_CLICK_QUESTIONS = [
+  {
+    id: "u13_zc_1", type: "zone-click", d: 1,
+    level: ["U13 / Peewee", "U15 / Bantam", "U18 / Midget"],
+    pos: ["F"],
+    sit: "Your team wins the puck behind the net. You're the strong-side winger.",
+    question: "Where should you position yourself to create a scoring chance?",
+    correctZone: "dz-slot",
+    zones: ["dz-slot", "dz-left-corner", "dz-right-corner", "dz-left-point"],
+    explanation: "The slot is the highest-danger area — be ready before the pass arrives."
+  },
+  {
+    id: "u13_zc_2", type: "zone-click", d: 2,
+    level: ["U13 / Peewee", "U15 / Bantam"],
+    pos: ["D"],
+    sit: "The opposing team has the puck in the left corner of your zone. You're the off-side D.",
+    question: "Where should you position to protect against a pass to the high slot?",
+    correctZone: "dz-right-point",
+    zones: ["dz-right-point", "dz-slot", "dz-behind-net", "dz-right-corner"],
+    explanation: "Off-side D guards the strong-side point to cut off the high-danger pass."
+  },
+  {
+    id: "u15_zc_1", type: "zone-click", d: 2,
+    level: ["U15 / Bantam", "U18 / Midget"],
+    pos: ["F","D"],
+    sit: "Your team is breaking out 3-on-2. The puck carrier is at center ice.",
+    question: "As the trailing winger, which zone gives you the best outlet option?",
+    correctZone: "nz-right",
+    zones: ["nz-right", "nz-left", "nz-center", "oz-slot"],
+    explanation: "The trailing winger stays wide to give the puck carrier a lateral option and prevent an intercept."
+  },
+  {
+    id: "u13_zc_goalie", type: "zone-click", d: 1,
+    level: ["U13 / Peewee", "U15 / Bantam", "U18 / Midget"],
+    pos: ["G"],
+    sit: "A 2-on-1 develops. The puck carrier is coming down the left side.",
+    question: "Where should you position yourself to cut off the angle?",
+    correctZone: "dz-slot",
+    zones: ["dz-slot", "dz-left-corner", "dz-behind-net", "dz-left-point"],
+    explanation: "Come out to the top of the crease/slot edge to cut angle — don't cheat too far to the shooter."
+  },
+  {
+    id: "u15_zc_2", type: "zone-click", d: 3,
+    level: ["U15 / Bantam", "U18 / Midget"],
+    pos: ["F","D"],
+    sit: "Your team is caught on a line change. Opponents have the puck in your neutral zone.",
+    question: "Where should the nearest backchecking forward pressure first?",
+    correctZone: "nz-center",
+    zones: ["nz-center", "nz-left", "oz-slot", "dz-slot"],
+    explanation: "Force the play through the center lane — compressing neutral ice reduces time/space before help arrives."
+  },
+  {
+    id: "u11_zc_1", type: "zone-click", d: 1,
+    level: ["U11 / Atom", "U13 / Peewee"],
+    pos: ["F","D"],
+    sit: "Your team has the puck at the blue line in the offensive zone.",
+    question: "Where should the center go to be ready for a rebound?",
+    correctZone: "oz-slot",
+    zones: ["oz-slot", "oz-left-wing", "oz-right-wing", "nz-center"],
+    explanation: "The center parks in the slot — highest rebound and redirect opportunities."
+  },
+];
+
 
 // ─────────────────────────────────────────────────────────
 // QUESTION FORMAT COMPONENTS
@@ -643,7 +742,52 @@ const Q_TYPE_LABELS = {
   mistake: {label:"Spot the Mistake",color:C.red,      icon:"🔍"},
   next:    {label:"What Happens Next",color:C.yellow,  icon:"🔮"},
   tf:      {label:"True or False",   color:C.blue,     icon:"⚡"},
+  "zone-click": {label:"Zone Click", color:C.green,   icon:"🎯"},
 };
+
+function ZoneClickQuestion({ q, onAnswer, C }) {
+  const [selected, setSelected] = useState(null);
+  const [revealed, setRevealed] = useState(false);
+
+  function handleZone(zoneId) {
+    if (revealed) return;
+    setSelected(zoneId);
+  }
+
+  function handleConfirm() {
+    if (!selected || revealed) return;
+    setRevealed(true);
+    setTimeout(() => onAnswer(selected === q.correctZone), 1200);
+  }
+
+  const isCorrect = selected === q.correctZone;
+
+  return (
+    <div style={{ display:"flex", flexDirection:"column", gap:12 }}>
+      <RinkDiagramZones
+        zones={q.zones}
+        onZoneClick={revealed ? null : handleZone}
+        selected={selected}
+        correct={revealed ? q.correctZone : null}
+      />
+      {!revealed && selected && (
+        <button onClick={handleConfirm} style={{
+          background:C.gold, color:C.bg, border:"none", borderRadius:12,
+          padding:"1rem 1.25rem", cursor:"pointer", fontWeight:800, fontSize:15,
+          fontFamily:FONT.body, letterSpacing:".02em", transition:"all .15s", width:"100%"
+        }}>
+          Confirm: {RINK_ZONE_DEFS.find(z => z.id === selected)?.label}
+        </button>
+      )}
+      {revealed && (
+        <div style={{ color: isCorrect ? C.green : C.red, fontWeight:600 }}>
+          {isCorrect ? "✓ Correct!" : `✗ The answer is: ${RINK_ZONE_DEFS.find(z=>z.id===q.correctZone)?.label}`}
+          <p style={{ color: C.dim, fontWeight:400, fontSize:14, marginTop:6 }}>{q.explanation}</p>
+        </div>
+      )}
+    </div>
+  );
+}
 
 
 
@@ -889,10 +1033,16 @@ function Quiz({ player, onFinish, onBack, tier, onUpgrade }) {
     let cancelled = false;
     loadQB().then(qb => {
       if (cancelled) return;
-      const q = buildQueue(qb, player.level, player.position, isReturning, tier);
-      const { q: first, queue: q2 } = pullNext(q, []);
-      setQueue(q2);
-      setQuestion(first);
+      if (isDemo) {
+        const demoQs = buildDemoQueue(qb, player.level, player.position);
+        setQueue({ byD: {1: demoQs.slice(1), 2: [], 3: []}, currentD: 1, tier: "DEMO" });
+        setQuestion(demoQs[0]);
+      } else {
+        const q = buildQueue(qb, player.level, player.position, isReturning, tier);
+        const { q: first, queue: q2 } = pullNext(q, []);
+        setQueue(q2);
+        setQuestion(first);
+      }
     });
     if (!isDemo) SB.getQuestionStats().then(setStatsMap).catch(() => {});
     return () => { cancelled = true; };
@@ -1031,12 +1181,26 @@ function Quiz({ player, onFinish, onBack, tier, onUpgrade }) {
           </Card>
         )}
 
+        {qtype === "zone-click" && (
+          <Card style={{marginBottom:"1.25rem",background:C.greenDim,border:`1px solid rgba(34,197,94,.3)`}}>
+            <div style={{fontSize:10,letterSpacing:".14em",textTransform:"uppercase",color:C.green,marginBottom:".6rem",fontWeight:700}}>🎯 Zone Click</div>
+            <div style={{fontSize:15,lineHeight:1.8,color:C.white,fontWeight:500}}>{q.sit}</div>
+          </Card>
+        )}
+
         {/* Question component */}
         {qtype === "mc" && <MCQuestion q={q} sel={sel} onPick={handlePick} colorblind={player.colorblind}/>}
         {qtype === "mistake" && <MCQuestion q={q} sel={sel} onPick={handlePick} colorblind={player.colorblind}/>}
         {qtype === "next" && <NextQuestion q={q} sel={sel} onPick={handlePick}/>}
         {qtype === "tf" && <TFQuestion q={q} sel={sel} onPick={i => handlePick(i)}/>}
         {qtype === "seq" && <SeqQuestion q={q} onAnswer={handleSeqAnswer} answered={seqAnswered}/>}
+        {qtype === "zone-click" && <ZoneClickQuestion q={q} onAnswer={ok => {
+          const newResult = { id:q.id, cat:q.cat, ok, d:q.d||2, type:"zone-click" };
+          const newResults = [...results, newResult];
+          setResults(newResults);
+          if (results.length + 1 >= qLen) setQuizDone(true);
+          setTimeout(advance, 1200);
+        }} C={C} />}
 
         {/* Explanation */}
         {answered && (
