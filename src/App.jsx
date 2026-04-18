@@ -1213,10 +1213,13 @@ function Quiz({ player, onFinish, onBack, tier, onUpgrade }) {
 
   useEffect(() => {
     let cancelled = false;
+    console.log("Quiz useEffect running", { isDemo, level: player.level, position: player.position });
     loadQB().then(qb => {
+      console.log("QB loaded", { qbLevels: Object.keys(qb), cancelled });
       if (cancelled) return;
       if (isDemo) {
         const demoQs = buildDemoQueue(qb, player.level, player.position);
+        console.log("Demo queue built", { count: demoQs.length, first: demoQs[0]?.id });
         setQueue({ byD: {1: demoQs.slice(1), 2: [], 3: []}, currentD: 1, tier: "DEMO" });
         setQuestion(demoQs[0]);
       } else {
@@ -1225,7 +1228,7 @@ function Quiz({ player, onFinish, onBack, tier, onUpgrade }) {
         setQueue(q2);
         setQuestion(first);
       }
-    });
+    }).catch(e => console.error("QB load error:", e));
     if (!isDemo) SB.getQuestionStats().then(setStatsMap).catch(() => {});
     return () => { cancelled = true; };
   }, []);
