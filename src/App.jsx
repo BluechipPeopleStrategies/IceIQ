@@ -3989,7 +3989,7 @@ export default function App() {
   useEffect(() => {
     preloadQB();
     if (!hasSupabase) { setAuthReady(true); return; }
-    if (demoMode) return;
+    if (demoMode) { setAuthReady(true); return; }
     let mounted = true;
     const timeout = setTimeout(() => { if (mounted) setAuthReady(true); }, 2000);
     (async () => {
@@ -4014,7 +4014,6 @@ export default function App() {
   }, [demoMode]);
 
   async function loadUser(userId) {
-    if (demoMode) return;
     const p = await SB.getProfile(userId);
     if (!p) return;
     setProfile(p);
