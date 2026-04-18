@@ -57,9 +57,13 @@ const CHANGELOG = [
 const D_WEIGHT = {1:1, 2:1.5, 3:2.2};
 const QUIZ_LENGTH = 10;
 
+const TOAST_DURATION_MS = 1600;
+const TIER_GOLD_THRESHOLD = 80;
+const TIER_YELLOW_THRESHOLD = 60;
+
 const SCORE_TIERS = [
-  {min:80, label:"Hockey Sense",   badge:"🏒", color:C.green},
-  {min:60, label:"Two-Way Player", badge:"⚡", color:C.yellow},
+  {min:TIER_GOLD_THRESHOLD, label:"Hockey Sense",   badge:"🏒", color:C.green},
+  {min:TIER_YELLOW_THRESHOLD, label:"Two-Way Player", badge:"⚡", color:C.yellow},
   {min:0,  label:"Tape to Tape",   badge:"🎯", color:C.red},
 ];
 const getTier = s => SCORE_TIERS.find(t => s >= t.min) || SCORE_TIERS[2];
@@ -839,6 +843,17 @@ function Home({ player, onNav, demoMode, subscriptionTier }) {
 
 
 // ─────────────────────────────────────────────────────────
+// QUIZ STATE HOOK (shared by Quiz and WeeklyQuiz)
+// ─────────────────────────────────────────────────────────
+function useQuizState() {
+  const [sel, setSel] = useState(null);
+  const [seqAnswered, setSeqAnswered] = useState(false);
+  const [seqCorrect, setSeqCorrect] = useState(false);
+  const [results, setResults] = useState([]);
+  return { sel, setSel, seqAnswered, setSeqAnswered, seqCorrect, setSeqCorrect, results, setResults };
+}
+
+// ─────────────────────────────────────────────────────────
 // QUIZ SCREEN
 // ─────────────────────────────────────────────────────────
 function Quiz({ player, onFinish, onBack, tier, onUpgrade }) {
@@ -846,17 +861,13 @@ function Quiz({ player, onFinish, onBack, tier, onUpgrade }) {
   const qLen = player.sessionLength || 10;
   const [queue, setQueue] = useState(null);
   const [question, setQuestion] = useState(null);
-  const [sel, setSel] = useState(null);
-  const [seqAnswered, setSeqAnswered] = useState(false);
-  const [seqCorrect, setSeqCorrect] = useState(false);
-  const [results, setResults] = useState([]);
+  const { sel, setSel, seqAnswered, setSeqAnswered, seqCorrect, setSeqCorrect, results, setResults } = useQuizState();
   const [seqPerfect, setSeqPerfect] = useState(true);
   const [mistakeStreak, setMistakeStreak] = useState(0);
   const [quizDone, setQuizDone] = useState(false);
   const [showFlag, setShowFlag] = useState(false);
   const [flagReason, setFlagReason] = useState("");
   const [flagDetail, setFlagDetail] = useState("");
-  const [flagSent, setFlagSent] = useState(false);
   const [statsMap, setStatsMap] = useState({});
   const isDemo = !player.id || player.id === "__demo__";
 
@@ -871,8 +882,7 @@ function Quiz({ player, onFinish, onBack, tier, onUpgrade }) {
         detail: flagDetail.trim() || null,
       });
     }
-    setFlagSent(true);
-    setTimeout(() => { setShowFlag(false); setFlagSent(false); setFlagReason(""); setFlagDetail(""); }, 1600);
+    setTimeout(() => { setShowFlag(false); setFlagReason(""); setFlagDetail(""); }, TOAST_DURATION_MS);
   }
 
   useEffect(() => {
@@ -1324,10 +1334,7 @@ function GatedGoalsScreen({ onBack, onUnlock }) {
 function WeeklyQuiz({ player, onBack, onFinish }) {
   const [questions, setQuestions] = useState(null);
   const [current, setCurrent] = useState(0);
-  const [results, setResults] = useState([]);
-  const [sel, setSel] = useState(null);
-  const [seqAnswered, setSeqAnswered] = useState(false);
-  const [seqCorrect, setSeqCorrect] = useState(false);
+  const { sel, setSel, seqAnswered, setSeqAnswered, seqCorrect, setSeqCorrect, results, setResults } = useQuizState();
   const [done, setDone] = useState(false);
   const weekRecord = getThisWeekRecord();
 
@@ -1724,10 +1731,10 @@ function getSelfPrompt(level, skill) {
 }
 
 function Skills({ player, onSave, onBack }) {
-  const [ratings, setR] = useState({...player.selfRatings});
-  const [ac, setAc] = useState(0);
+  const [ratings, setRatings] = useState({...player.selfRatings});
+  const [activeCategory, setActiveCategory] = useState(0);
   const cats = SKILLS[player.level] || [];
-  const cat = cats[ac];
+  const cat = cats[activeCategory];
   const total = Object.keys(ratings).length;
   const rated = Object.values(ratings).filter(v=>v!==null).length;
   const selfScale = getSelfScale(player.level);
@@ -1749,7 +1756,7 @@ function Skills({ player, onSave, onBack }) {
         {cats.map((c,i) => {
           const cr = c.skills.filter(s=>ratings[s.id]!==null).length;
           return (
-            <button key={i} onClick={()=>setAc(i)} style={{background:"none",border:"none",borderBottom:`2px solid ${i===ac?(c.isDM?C.purple:C.gold):"transparent"}`,color:i===ac?C.white:C.dimmer,padding:".8rem 1rem",cursor:"pointer",fontSize:13,fontFamily:FONT.body,fontWeight:i===ac?700:400,whiteSpace:"nowrap",display:"flex",alignItems:"center",gap:".3rem",flexShrink:0}}>
+            <button key={i} onClick={()=>setActiveCategory(i)} style={{background:"none",border:"none",borderBottom:`2px solid ${i===activeCategory?(c.isDM?C.purple:C.gold):"transparent"}`,color:i===activeCategory?C.white:C.dimmer,padding:".8rem 1rem",cursor:"pointer",fontSize:13,fontFamily:FONT.body,fontWeight:i===activeCategory?700:400,whiteSpace:"nowrap",display:"flex",alignItems:"center",gap:".3rem",flexShrink:0}}>
               <span>{c.icon}</span><span>{c.cat}</span>{cr===c.skills.length&&<span style={{color:C.green,fontSize:10}}>✓</span>}
             </button>
           );
@@ -1770,12 +1777,12 @@ function Skills({ player, onSave, onBack }) {
             <Card key={s.id} style={{marginBottom:".75rem",border:`1px solid ${selfColor?selfColor+"40":C.border}`,borderLeft:`3px solid ${selfColor||"transparent"}`}}>
               <div style={{fontWeight:700,fontSize:14,marginBottom:3}}>{s.name}</div>
               <div style={{fontSize:12,color:C.dimmer,marginBottom:".85rem",lineHeight:1.5}}>{getSelfPrompt(player.level, s)}</div>
-              <RatingButtons level={player.level} value={selfVal} onChange={v => setR(p=>({...p,[s.id]:v}))} />
+              <RatingButtons level={player.level} value={selfVal} onChange={v => setRatings(p=>({...p,[s.id]:v}))} />
             </Card>
           );
         })}
-        {ac<cats.length-1 && <SecBtn onClick={()=>setAc(i=>i+1)}>Next Category →</SecBtn>}
-        {ac===cats.length-1 && <PrimaryBtn onClick={()=>onSave(ratings)}>Save All Ratings ✓</PrimaryBtn>}
+        {activeCategory<cats.length-1 && <SecBtn onClick={()=>setActiveCategory(i=>i+1)}>Next Category →</SecBtn>}
+        {activeCategory===cats.length-1 && <PrimaryBtn onClick={()=>onSave(ratings)}>Save All Ratings ✓</PrimaryBtn>}
       </div>
     </div>
   );
