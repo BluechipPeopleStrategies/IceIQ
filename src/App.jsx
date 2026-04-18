@@ -1196,7 +1196,6 @@ function Quiz({ player, onFinish, onBack, tier, onUpgrade }) {
   const [flagDetail, setFlagDetail] = useState("");
   const [statsMap, setStatsMap] = useState({});
   const isDemo = !player.id || player.id === "__demo__";
-  console.log("Quiz mounted:", { playerId: player.id, isDemo, tier });
 
   async function submitFlag() {
     if (!flagReason) return;
@@ -3968,7 +3967,6 @@ export default function App() {
     const level = levelOrRole || "U9 / Novice";
     const p = buildDemoPlayer(level);
     const coachData = buildDemoCoachRatings(level);
-    console.log("Entering demo mode:", { level, player: p, demoMode: true });
     setDemoMode(true);
     setDemoCoachRatings(coachData);
     setProfile({ id: "__demo__", role: "player", name: p.name, level: p.level, position: p.position });
@@ -4123,7 +4121,6 @@ export default function App() {
 
   // Loading while auth settles
   if (!authReady) {
-    console.log("App not ready - authReady:", authReady);
     return <div style={{minHeight:"100vh",background:C.bg,color:C.dimmer,display:"flex",alignItems:"center",justifyContent:"center",fontFamily:FONT.body}}>Loading…</div>;
   }
 
@@ -4228,13 +4225,10 @@ export default function App() {
 
       <div style={{paddingBottom: screen==="quiz"||screen==="results" ? 0 : 80}}>
         {screen === "home"    && <Home player={tierLimitedPlayer(player, tier)} onNav={setScreen} demoMode={demoMode} subscriptionTier={tier}/>}
-        {screen === "quiz"    && (() => {
-          const isAtCap = tier === "FREE" && isAtFreeQuizCap();
-          console.log("Quiz screen:", { tier, isAtCap, demoMode });
-          return isAtCap
-            ? <FreeQuizCapScreen onBack={()=>setScreen("home")} onUpgrade={()=>setScreen("plans")}/>
-            : <Quiz player={player} onFinish={handleQuizFinish} onBack={()=>setScreen("home")} tier={tier} onUpgrade={promptUpgrade}/>
-        })()}
+        {screen === "quiz"    && (tier === "FREE" && isAtFreeQuizCap()
+          ? <FreeQuizCapScreen onBack={()=>setScreen("home")} onUpgrade={()=>setScreen("plans")}/>
+          : <Quiz player={player} onFinish={handleQuizFinish} onBack={()=>setScreen("home")} tier={tier} onUpgrade={promptUpgrade}/>
+        )}
         {screen === "results" && <Results results={quizResults} player={player} prevScore={prevScore} totalSessions={totalSessions} seqPerfect={seqPerfect} mistakeStreak={mistakeStreak} onAgain={()=>setScreen("quiz")} onHome={()=>setScreen("home")} showMilestoneBanner={showMilestone5Banner} onViewPlans={()=>{setShowMilestone5Banner(false);setScreen("plans");}}/>}
         {screen === "skills"  && <Skills player={player} onSave={handleSkillsSave} onBack={()=>setScreen("home")}/>}
         {screen === "study"   && <StudyScreen player={player} onBack={()=>setScreen("home")} onNav={setScreen}/>}
