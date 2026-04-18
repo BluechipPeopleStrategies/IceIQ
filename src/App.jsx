@@ -4225,7 +4225,7 @@ export default function App() {
 
       <div style={{paddingBottom: screen==="quiz"||screen==="results" ? 0 : 80}}>
         {screen === "home"    && <Home player={tierLimitedPlayer(player, tier)} onNav={setScreen} demoMode={demoMode} subscriptionTier={tier}/>}
-        {screen === "quiz"    && (tier === "FREE" && isAtFreeQuizCap()
+        {screen === "quiz"    && (tier === "FREE" && !demoMode && isAtFreeQuizCap()
           ? <FreeQuizCapScreen onBack={()=>setScreen("home")} onUpgrade={()=>setScreen("plans")}/>
           : <Quiz player={player} onFinish={handleQuizFinish} onBack={()=>setScreen("home")} tier={tier} onUpgrade={promptUpgrade}/>
         )}
