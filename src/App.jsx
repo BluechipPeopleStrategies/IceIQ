@@ -4002,7 +4002,7 @@ export default function App() {
       if (mounted) { clearTimeout(timeout); setAuthReady(true); }
     })();
     const { data } = SB.onAuthChange(async (session) => {
-      if (!mounted || demoMode) return;
+      if (!mounted) return;
       if (session?.user) {
         setUserEmail(session.user.email || null);
         await loadUser(session.user.id);
@@ -4013,6 +4013,7 @@ export default function App() {
   }, []);
 
   async function loadUser(userId) {
+    if (demoMode) return;
     const p = await SB.getProfile(userId);
     if (!p) return;
     setProfile(p);
