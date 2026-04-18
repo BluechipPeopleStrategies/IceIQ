@@ -4002,7 +4002,7 @@ export default function App() {
       if (mounted) { clearTimeout(timeout); setAuthReady(true); }
     })();
     const { data } = SB.onAuthChange(async (session) => {
-      if (!mounted) return;
+      if (!mounted || demoMode) return;
       if (session?.user) {
         setUserEmail(session.user.email || null);
         await loadUser(session.user.id);
