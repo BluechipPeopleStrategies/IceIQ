@@ -816,7 +816,6 @@ function Home({ player, onNav, demoMode, subscriptionTier }) {
     const today = getTodayKey();
     const yesterday = new Date(Date.now()-86400000).toISOString().slice(0,10);
     if (sd.last === today || sd.last === yesterday) setStreak(sd.count || 0);
-    preloadQB();
     // Update countdown every minute
     const tick = () => setCountdown(formatCountdown(msUntilNextWeek()));
     tick();
@@ -3331,9 +3330,10 @@ export default function App() {
 
   // Hydrate from Supabase on mount, subscribe to auth changes
   useEffect(() => {
+    preloadQB();
     if (!hasSupabase) { setAuthReady(true); return; }
     let mounted = true;
-    const timeout = setTimeout(() => { if (mounted) setAuthReady(true); }, 5000);
+    const timeout = setTimeout(() => { if (mounted) setAuthReady(true); }, 2000);
     (async () => {
       try {
         const session = await SB.getSession();
