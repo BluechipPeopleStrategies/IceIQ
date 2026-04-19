@@ -1101,7 +1101,7 @@ export const HOCKEY_INSIGHTS = [
     stat: "PWHL: Girls' hockey registration has grown 30%+ in the last decade",
     context: "Driven by Olympic success, the PWHL, and growing visibility, girls' hockey participation has surged. More girls playing means more talent, deeper competition, and a better game.",
     lesson: "Every player who joins the game makes it better. If you know someone thinking about hockey, encourage them. The more people play, the stronger the sport becomes.",
-    source: "USA Hockey / Hockey Canada registration data",
+    source: "North American minor hockey registration data",
   },
   {
     id: "pwhl-college-path",

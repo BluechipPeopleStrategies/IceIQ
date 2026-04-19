@@ -3462,8 +3462,7 @@ function Profile({ player, onSave, onBack, onReset, demoMode, tier, onUpgrade, u
           <Label>About</Label>
           <div style={{fontSize:12,color:C.dimmer,lineHeight:1.9}}>
             <div>Ice-IQ v{VERSION} · {RELEASE_DATE}</div>
-            <div>Hockey Canada LTAD · USA Hockey ADM</div>
-            <div>Sport for Life Canada</div>
+            <div>Built on modern player-development principles</div>
             <div style={{color:C.gold,marginTop:".25rem"}}>bluechip-people-strategies.com</div>
           </div>
         </Card>
