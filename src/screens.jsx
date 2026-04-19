@@ -9,6 +9,13 @@ import {
   SEASONS,
 } from "./shared.jsx";
 import { loadQB } from "./qbLoader.js";
+import {
+  COMPETENCIES, calcCompetencyScores, calcGameSenseScore, getMonthlyTrend,
+  getPeerStats, calcPercentileRank, getPositioningJourneyState, GAME_SENSE_UNLOCK_SESSIONS,
+} from "./utils/gameSense.js";
+import { calcPlayerProfile, PROFILE_AXES } from "./utils/playerProfile.js";
+import { getTrainingLog } from "./utils/trainingLog.js";
+import { getParentRatings, saveParentRatings, PARENT_DIMENSIONS, PARENT_SCALE } from "./utils/parentAssessment.js";
 
 async function loadTeamData(coachCode, season) {
   if (!window.storage) return [];
@@ -322,6 +329,405 @@ export function PlansScreen({ onBack, tier }) {
           <div style={{fontSize:11,color:C.dimmer,marginBottom:".75rem",lineHeight:1.6}}>Online payment coming soon — get early access now.</div>
           <a href="mailto:mtslifka@gmail.com?subject=Ice-IQ Pro Early Access" style={{display:"inline-block",background:C.gold,color:C.bg,border:"none",borderRadius:10,padding:".65rem 1.5rem",cursor:"pointer",fontWeight:800,fontSize:13,fontFamily:FONT.body,textDecoration:"none"}}>Contact us for early access →</a>
         </div>
+      </div>
+    </div>
+  );
+}
+
+// ─────────────────────────────────────────────────────────
+// SPIDER CHART
+// ─────────────────────────────────────────────────────────
+function SpiderChart({ scores }) {
+  const competencyKeys = Object.keys(COMPETENCIES);
+  const n = competencyKeys.length;
+  const angleSlice = (Math.PI * 2) / n;
+  const radius = 100;
+  const centerX = 150, centerY = 150;
+
+  const points = competencyKeys.map((key, i) => {
+    const angle = angleSlice * i - Math.PI / 2;
+    const value = scores[key] || 0;
+    const r = (value / 100) * radius;
+    return {
+      x: centerX + r * Math.cos(angle),
+      y: centerY + r * Math.sin(angle),
+      key,
+    };
+  });
+
+  const axisPoints = competencyKeys.map((key, i) => {
+    const angle = angleSlice * i - Math.PI / 2;
+    const r = radius;
+    return {
+      x: centerX + r * Math.cos(angle),
+      y: centerY + r * Math.sin(angle),
+      key,
+    };
+  });
+
+  return (
+    <div style={{ display: "flex", justifyContent: "center", marginBottom: "1.5rem" }}>
+      <svg width="300" height="300" viewBox="0 0 300 300" style={{ maxWidth: "100%" }}>
+        {axisPoints.map((pt, i) => (
+          <line key={`axis-${i}`}
+            x1={centerX} y1={centerY}
+            x2={pt.x} y2={pt.y}
+            stroke={C.border} strokeWidth="1" />
+        ))}
+
+        {[25, 50, 75, 100].map(pct => {
+          const r = (pct / 100) * radius;
+          return (
+            <circle key={`ring-${pct}`}
+              cx={centerX} cy={centerY} r={r}
+              fill="none" stroke={C.dimmest} strokeWidth="1" />
+          );
+        })}
+
+        <polygon
+          points={points.map(p => `${p.x},${p.y}`).join(" ")}
+          fill={`rgba(124,111,205,0.2)`}
+          stroke={C.gold}
+          strokeWidth="2" />
+
+        {axisPoints.map((pt, i) => {
+          const comp = COMPETENCIES[competencyKeys[i]];
+          const angle = angleSlice * i - Math.PI / 2;
+          const labelR = radius + 30;
+          const labelX = centerX + labelR * Math.cos(angle);
+          const labelY = centerY + labelR * Math.sin(angle);
+          return (
+            <g key={`label-${i}`}>
+              <text x={labelX} y={labelY} textAnchor="middle" dominantBaseline="middle"
+                style={{ fontSize: "12px", fontWeight: 700, fill: C.white, fontFamily: FONT.body }}>
+                {comp.icon}
+              </text>
+              <text x={labelX} y={labelY + 14} textAnchor="middle"
+                style={{ fontSize: "10px", fill: C.dimmer, fontFamily: FONT.body }}>
+                {scores[competencyKeys[i]]}%
+              </text>
+            </g>
+          );
+        })}
+      </svg>
+    </div>
+  );
+}
+
+// ─────────────────────────────────────────────────────────
+// PLAYER PROFILE CARD (Layer 2)
+// ─────────────────────────────────────────────────────────
+function PlayerProfileCard({ player, coachRatings, parentRatings, onNavigate }) {
+  const log = getTrainingLog(player.id);
+  const trainingSessions = player.trainingSessions || log.sessions || [];
+  const journey = getPositioningJourneyState(player.quizHistory || []);
+  const profile = calcPlayerProfile(player, {
+    coachRatings,
+    parentRatings,
+    trainingSessions,
+    journeyAttempts: journey.attempts || 0,
+  });
+
+  const emptyCta = (axisKey) => {
+    if (axisKey === "technical") return { text: "Coach hasn't added ratings yet", target: null };
+    if (axisKey === "compete")   return { text: "Add Parent's View →", target: "parent" };
+    if (axisKey === "habits")    return { text: "Log your first training session →", target: "profile" };
+    return { text: "", target: null };
+  };
+
+  return (
+    <Card style={{ marginBottom: "1rem" }}>
+      <Label>Player Profile</Label>
+      <div style={{ fontSize: "10px", color: C.dimmer, marginBottom: ".75rem", lineHeight: 1.4 }}>
+        Off-ice signals: coach feedback, parent's view, and training volume.
+      </div>
+      {Object.entries(PROFILE_AXES).map(([key, axis]) => {
+        const score = profile[key];
+        const isEmpty = score === null || score === undefined;
+        const cta = emptyCta(key);
+        return (
+          <div key={key} style={{ marginBottom: ".75rem" }}>
+            <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: ".3rem" }}>
+              <div style={{ fontSize: "12px", fontWeight: 600, color: C.white }}>
+                <span style={{ marginRight: ".4rem" }}>{axis.icon}</span>{axis.name}
+              </div>
+              {!isEmpty && (
+                <div style={{ fontSize: "11px", fontWeight: 700, color: C.gold }}>{score}%</div>
+              )}
+            </div>
+            {isEmpty ? (
+              cta.target ? (
+                <button
+                  onClick={() => onNavigate?.(cta.target)}
+                  style={{ width: "100%", textAlign: "left", padding: ".5rem .65rem", background: C.bgElevated, border: `1px dashed ${C.border}`, borderRadius: 6, color: C.dim, fontSize: "11px", cursor: "pointer", fontFamily: "inherit" }}
+                >
+                  {cta.text}
+                </button>
+              ) : (
+                <div style={{ padding: ".5rem .65rem", background: C.bgElevated, borderRadius: 6, color: C.dimmer, fontSize: "11px" }}>
+                  {cta.text}
+                </div>
+              )
+            ) : (
+              <div style={{ height: "8px", background: C.bgElevated, borderRadius: 4, overflow: "hidden" }}>
+                <div style={{ height: "100%", width: `${score}%`, background: axis.color, transition: "width .3s" }} />
+              </div>
+            )}
+          </div>
+        );
+      })}
+    </Card>
+  );
+}
+
+// ─────────────────────────────────────────────────────────
+// GAME SENSE REPORT SCREEN
+// ─────────────────────────────────────────────────────────
+export function GameSenseReportScreen({ player, onBack, demoMode, demoCoachData, onNavigate }) {
+  const competencyScores = calcCompetencyScores(player.quizHistory || []);
+  const gsScore = calcGameSenseScore(competencyScores);
+  const trend = getMonthlyTrend(player.quizHistory || []);
+  const strongest = Object.entries(competencyScores).sort((a, b) => b[1] - a[1])[0];
+  const needsWork = Object.entries(competencyScores).sort((a, b) => a[1] - b[1])[0];
+  const totalSessions = (player.quizHistory || []).length;
+  const scoreUnlocked = totalSessions >= GAME_SENSE_UNLOCK_SESSIONS;
+  const remaining = Math.max(0, GAME_SENSE_UNLOCK_SESSIONS - totalSessions);
+
+  const [peerStats, setPeerStats] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [coachRatings, setCoachRatings] = useState(null);
+
+  useEffect(() => {
+    async function load() {
+      const stats = await getPeerStats(player.level, player.position);
+      setPeerStats(stats);
+      setLoading(false);
+    }
+    load();
+  }, [player.level, player.position]);
+
+  useEffect(() => {
+    if (demoCoachData) {
+      setCoachRatings(demoCoachData.ratings || null);
+      return;
+    }
+    if (player.id && player.id !== "__demo__") {
+      SB.getCoachRatingsForPlayer(player.id).then(data => {
+        setCoachRatings(Object.keys(data.ratings || {}).length ? data.ratings : null);
+      });
+    }
+  }, [player.id, demoCoachData]);
+
+  const hardcodedPeerAvg = {
+    positioning: 75, decision_making: 72, awareness: 68, tempo_control: 74, physicality: 80, leadership: 71,
+  };
+
+  const peerMean = peerStats?.mean || hardcodedPeerAvg;
+
+  return (
+    <Screen onBack={onBack} title="Game Sense Profile">
+      <div style={{ padding: "1.5rem 1.25rem" }}>
+        <div style={{ marginBottom: "2rem" }}>
+          <div style={{ textAlign: "center", marginBottom: "1rem" }}>
+            {scoreUnlocked ? (
+              <>
+                <div style={{ fontSize: "2.5rem", fontWeight: 800, color: C.gold, fontFamily: FONT.display }}>
+                  {gsScore}
+                </div>
+                <div style={{ fontSize: "12px", color: C.dimmer }}>Game Sense Score</div>
+                {!loading && peerStats && (
+                  <div style={{ fontSize: "11px", color: C.dimmer, marginTop: ".5rem" }}>
+                    vs peer avg {calcGameSenseScore(peerMean)}
+                  </div>
+                )}
+              </>
+            ) : (
+              <>
+                <div style={{ fontSize: "2.2rem", fontFamily: FONT.display, fontWeight: 800, color: "rgba(255,255,255,.2)" }}>🔒</div>
+                <div style={{ fontSize: "12px", color: C.dim, marginTop: ".4rem" }}>Game Sense Score</div>
+                <div style={{ fontSize: "11px", color: C.dimmer, marginTop: ".4rem", lineHeight: 1.5 }}>
+                  {remaining} more quiz{remaining===1?"":"zes"} to unlock your score · {totalSessions}/{GAME_SENSE_UNLOCK_SESSIONS} done
+                </div>
+              </>
+            )}
+          </div>
+          <SpiderChart scores={competencyScores} />
+        </div>
+
+        <Card style={{ marginBottom: "1rem" }}>
+          <Label>Competency Breakdown</Label>
+          {Object.entries(competencyScores).map(([key, score]) => {
+            const comp = COMPETENCIES[key];
+            const peerAvg = peerMean[key] || 70;
+            const diff = score - peerAvg;
+            return (
+              <div key={key} style={{ marginBottom: ".75rem" }}>
+                <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: ".3rem" }}>
+                  <div style={{ fontSize: "12px", fontWeight: 600, color: C.white }}>
+                    {comp.name}
+                  </div>
+                  <div style={{ fontSize: "10px", color: C.dimmer }}>
+                    Avg: {peerAvg}%
+                  </div>
+                </div>
+                <div style={{
+                  height: "8px", background: C.bgElevated, borderRadius: 4, overflow: "hidden", marginBottom: ".25rem",
+                }}>
+                  <div style={{
+                    height: "100%", width: `${score}%`, background: comp.color, transition: "width .3s",
+                  }} />
+                </div>
+                <div style={{ display: "flex", alignItems: "center", gap: ".3rem", fontSize: "11px" }}>
+                  <span style={{ fontWeight: 700, color: C.gold }}>{score}%</span>
+                  <span style={{ color: diff > 0 ? C.green : diff < 0 ? C.red : C.dimmer }}>
+                    {diff > 0 ? `+${diff}%` : diff < 0 ? `${diff}%` : "="}
+                  </span>
+                </div>
+              </div>
+            );
+          })}
+        </Card>
+
+        <PlayerProfileCard
+          player={player}
+          coachRatings={coachRatings}
+          parentRatings={getParentRatings(player.id)}
+          onNavigate={onNavigate}
+        />
+
+        <Card style={{ marginBottom: "1rem" }}>
+          <Label>Your Insights</Label>
+          <div style={{ display: "flex", gap: "1rem" }}>
+            <div style={{ flex: 1 }}>
+              <div style={{ fontSize: "11px", color: C.dimmer, marginBottom: ".25rem" }}>Strongest</div>
+              <div style={{ fontSize: "13px", fontWeight: 700, color: C.green }}>
+                {strongest ? COMPETENCIES[strongest[0]].name : "—"}
+              </div>
+              <div style={{ fontSize: "12px", color: C.white, fontWeight: 700, marginTop: ".25rem" }}>
+                {strongest?.[1] || 0}%
+              </div>
+            </div>
+            <div style={{ flex: 1 }}>
+              <div style={{ fontSize: "11px", color: C.dimmer, marginBottom: ".25rem" }}>Needs Work</div>
+              <div style={{ fontSize: "13px", fontWeight: 700, color: C.red }}>
+                {needsWork ? COMPETENCIES[needsWork[0]].name : "—"}
+              </div>
+              <div style={{ fontSize: "12px", color: C.white, fontWeight: 700, marginTop: ".25rem" }}>
+                {needsWork?.[1] || 0}%
+              </div>
+            </div>
+          </div>
+        </Card>
+
+        <Card style={{ marginBottom: "1rem" }}>
+          <Label>Percentile Rank</Label>
+          {loading ? (
+            <div style={{ fontSize: "12px", color: C.dimmer }}>Calculating...</div>
+          ) : (
+            <div style={{ display: "flex", alignItems: "center", gap: "1rem" }}>
+              <div style={{ flex: 1 }}>
+                <div style={{ fontSize: "12px", color: C.dimmer, marginBottom: ".5rem" }}>Overall Game Sense</div>
+                <div style={{ fontSize: "2rem", fontWeight: 800, color: C.gold }}>
+                  Top {100 - calcPercentileRank(gsScore, calcGameSenseScore(peerMean), 12)}%
+                </div>
+              </div>
+              <div style={{ fontSize: "3rem", color: C.gold }}>🥇</div>
+            </div>
+          )}
+        </Card>
+
+        <Card>
+          <Label>Game Sense Trend</Label>
+          <div style={{ height: "150px", display: "flex", alignItems: "flex-end", gap: ".5rem", padding: "1rem 0" }}>
+            {trend.map((week, i) => (
+              <div key={i} style={{ flex: 1, display: "flex", flexDirection: "column", alignItems: "center" }}>
+                <div style={{
+                  width: "100%", height: `${(week.score / 100) * 120}px`, background: C.gold, borderRadius: "4px 4px 0 0", marginBottom: ".25rem",
+                }}>
+                  <div style={{
+                    height: "100%", display: "flex", alignItems: "flex-start", justifyContent: "center", paddingTop: ".3rem",
+                  }}>
+                    <span style={{ fontSize: "10px", fontWeight: 700, color: C.bg }}>{week.score}</span>
+                  </div>
+                </div>
+                <div style={{ fontSize: "9px", color: C.dimmer, textAlign: "center" }}>{week.label}</div>
+              </div>
+            ))}
+          </div>
+        </Card>
+      </div>
+    </Screen>
+  );
+}
+
+// ─────────────────────────────────────────────────────────
+// PARENT ASSESSMENT SCREEN
+// ─────────────────────────────────────────────────────────
+export function ParentAssessmentScreen({ player, onBack, onSave }) {
+  const existing = getParentRatings(player.id) || player.parentRatings || {};
+  const [ratings, setRatings] = useState(() => {
+    const seed = {};
+    for (const d of PARENT_DIMENSIONS) seed[d.id] = existing[d.id] || null;
+    return seed;
+  });
+  const level = player.level || "U11 / Atom";
+  const completed = Object.values(ratings).filter(Boolean).length;
+  const total = PARENT_DIMENSIONS.length;
+
+  function pick(id, value) { setRatings(r => ({ ...r, [id]: value })); }
+  function handleSave() {
+    saveParentRatings(player.id, ratings);
+    onSave && onSave(ratings);
+  }
+
+  return (
+    <div style={{minHeight:"100vh",background:C.bg,color:C.white,fontFamily:FONT.body,paddingBottom:120}}>
+      <StickyHeader>
+        <div style={{maxWidth:560,margin:"0 auto",display:"flex",alignItems:"center",gap:"1rem"}}>
+          <BackBtn onClick={onBack}/>
+          <div style={{flex:1}}>
+            <div style={{fontFamily:FONT.display,fontWeight:800,fontSize:"1.1rem"}}>Parent Assessment</div>
+            <div style={{fontSize:11,color:C.dimmer}}>{level} · {completed}/{total} answered</div>
+          </div>
+          <button onClick={handleSave} disabled={completed === 0} style={{background:completed>0?C.gold:C.dimmest,color:completed>0?C.bg:C.dimmer,border:"none",borderRadius:8,padding:".4rem 1rem",cursor:completed>0?"pointer":"default",fontWeight:800,fontSize:13,fontFamily:FONT.body}}>Save</button>
+        </div>
+      </StickyHeader>
+
+      <div style={{padding:"1.25rem",maxWidth:560,margin:"0 auto"}}>
+        <Card style={{marginBottom:"1rem",background:`linear-gradient(135deg,${C.purpleDim},transparent)`,border:`1px solid ${C.purpleBorder}`}}>
+          <Label>👋 For parents</Label>
+          <div style={{fontSize:13,color:C.dim,lineHeight:1.6,marginTop:".4rem"}}>
+            Rate how your child shows up at the rink — the character, habits, and attitude you see that a coach often can't. This isn't about skill; it's about who your child is becoming. Takes 2 minutes.
+          </div>
+        </Card>
+
+        {PARENT_DIMENSIONS.map(dim => {
+          const prompt = dim.prompts[level] || dim.prompts["U11 / Atom"];
+          const current = ratings[dim.id];
+          return (
+            <Card key={dim.id} style={{marginBottom:".75rem"}}>
+              <div style={{display:"flex",alignItems:"center",gap:".55rem",marginBottom:".35rem"}}>
+                <span style={{fontSize:18}}>{dim.icon}</span>
+                <div style={{fontFamily:FONT.display,fontWeight:800,fontSize:14,color:C.white}}>{dim.label}</div>
+              </div>
+              <div style={{fontSize:12,color:C.dim,lineHeight:1.6,marginBottom:".7rem"}}>{prompt}</div>
+              <div style={{display:"grid",gridTemplateColumns:"1fr 1fr 1fr",gap:".4rem"}}>
+                {PARENT_SCALE.map(opt => {
+                  const isActive = current === opt.value;
+                  return (
+                    <button key={opt.value} onClick={() => pick(dim.id, opt.value)} style={{
+                      background: isActive ? `${opt.color}22` : C.bgElevated,
+                      border: `1px solid ${isActive ? opt.color : C.border}`,
+                      color: isActive ? opt.color : C.dim,
+                      borderRadius: 8, padding: ".55rem .35rem", cursor: "pointer",
+                      fontFamily: FONT.body, fontSize: 12, fontWeight: isActive ? 800 : 600,
+                    }}>{opt.label}</button>
+                  );
+                })}
+              </div>
+            </Card>
+          );
+        })}
       </div>
     </div>
   );
