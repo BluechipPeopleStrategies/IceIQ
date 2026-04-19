@@ -3,6 +3,7 @@ import * as SB from "./supabase";
 import { supabase, hasSupabase } from "./supabase";
 import { canAccess, getUpgradeTriggerMessage } from "./utils/tierGate";
 import { getParentRatings, saveParentRatings, hasParentRatings, daysSinceUpdated } from "./utils/parentAssessment";
+import { calcPlayerProfile, PROFILE_AXES } from "./utils/playerProfile";
 import { canSwitchAgeGroup, recordAgeGroupSwitch, getAgeGroupLock, setAgeGroupLock, checkSeasonReset } from "./utils/deviceLock";
 import {
   C, FONT, LEVELS, POSITIONS, POSITIONS_U11UP, SEASONS,
@@ -2917,7 +2918,70 @@ function SpiderChart({ scores }) {
 // ─────────────────────────────────────────────────────────
 // GAME SENSE REPORT SCREEN
 // ─────────────────────────────────────────────────────────
-function GameSenseReportScreen({ player, onBack }) {
+function PlayerProfileCard({ player, coachRatings, parentRatings, onNavigate }) {
+  const log = getTrainingLog(player.id);
+  const trainingSessions = player.trainingSessions || log.sessions || [];
+  const journey = getPositioningJourneyState(player.quizHistory || []);
+  const profile = calcPlayerProfile(player, {
+    coachRatings,
+    parentRatings,
+    trainingSessions,
+    journeyAttempts: journey.attempts || 0,
+  });
+
+  const emptyCta = (axisKey) => {
+    if (axisKey === "technical") return { text: "Coach hasn't added ratings yet", target: null };
+    if (axisKey === "compete")   return { text: "Add Parent's View →", target: "parent" };
+    if (axisKey === "habits")    return { text: "Log your first training session →", target: "profile" };
+    return { text: "", target: null };
+  };
+
+  return (
+    <Card style={{ marginBottom: "1rem" }}>
+      <Label>Player Profile</Label>
+      <div style={{ fontSize: "10px", color: C.dimmer, marginBottom: ".75rem", lineHeight: 1.4 }}>
+        Off-ice signals: coach feedback, parent's view, and training volume.
+      </div>
+      {Object.entries(PROFILE_AXES).map(([key, axis]) => {
+        const score = profile[key];
+        const isEmpty = score === null || score === undefined;
+        const cta = emptyCta(key);
+        return (
+          <div key={key} style={{ marginBottom: ".75rem" }}>
+            <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: ".3rem" }}>
+              <div style={{ fontSize: "12px", fontWeight: 600, color: C.white }}>
+                <span style={{ marginRight: ".4rem" }}>{axis.icon}</span>{axis.name}
+              </div>
+              {!isEmpty && (
+                <div style={{ fontSize: "11px", fontWeight: 700, color: C.gold }}>{score}%</div>
+              )}
+            </div>
+            {isEmpty ? (
+              cta.target ? (
+                <button
+                  onClick={() => onNavigate?.(cta.target)}
+                  style={{ width: "100%", textAlign: "left", padding: ".5rem .65rem", background: C.bgElevated, border: `1px dashed ${C.border}`, borderRadius: 6, color: C.dim, fontSize: "11px", cursor: "pointer", fontFamily: "inherit" }}
+                >
+                  {cta.text}
+                </button>
+              ) : (
+                <div style={{ padding: ".5rem .65rem", background: C.bgElevated, borderRadius: 6, color: C.dimmer, fontSize: "11px" }}>
+                  {cta.text}
+                </div>
+              )
+            ) : (
+              <div style={{ height: "8px", background: C.bgElevated, borderRadius: 4, overflow: "hidden" }}>
+                <div style={{ height: "100%", width: `${score}%`, background: axis.color, transition: "width .3s" }} />
+              </div>
+            )}
+          </div>
+        );
+      })}
+    </Card>
+  );
+}
+
+function GameSenseReportScreen({ player, onBack, demoMode, demoCoachData, onNavigate }) {
   const competencyScores = calcCompetencyScores(player.quizHistory || []);
   const gsScore = calcGameSenseScore(competencyScores);
   const trend = getMonthlyTrend(player.quizHistory || []);
@@ -2929,6 +2993,7 @@ function GameSenseReportScreen({ player, onBack }) {
 
   const [peerStats, setPeerStats] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [coachRatings, setCoachRatings] = useState(null);
 
   useEffect(() => {
     async function load() {
@@ -2938,6 +3003,18 @@ function GameSenseReportScreen({ player, onBack }) {
     }
     load();
   }, [player.level, player.position]);
+
+  useEffect(() => {
+    if (demoCoachData) {
+      setCoachRatings(demoCoachData.ratings || null);
+      return;
+    }
+    if (player.id && player.id !== "__demo__") {
+      SB.getCoachRatingsForPlayer(player.id).then(data => {
+        setCoachRatings(Object.keys(data.ratings || {}).length ? data.ratings : null);
+      });
+    }
+  }, [player.id, demoCoachData]);
 
   const hardcodedPeerAvg = {
     positioning: 75, decision_making: 72, awareness: 68, tempo_control: 74, physicality: 80, leadership: 71,
@@ -3008,6 +3085,13 @@ function GameSenseReportScreen({ player, onBack }) {
             );
           })}
         </Card>
+
+        <PlayerProfileCard
+          player={player}
+          coachRatings={coachRatings}
+          parentRatings={getParentRatings(player.id)}
+          onNavigate={onNavigate}
+        />
 
         <Card style={{ marginBottom: "1rem" }}>
           <Label>Your Insights</Label>
@@ -4033,12 +4117,22 @@ function buildDemoPlayer(level) {
   const parentRatings = DEMO_PARENT_RATINGS[level]
     ? { ...DEMO_PARENT_RATINGS[level], updated_at: new Date(now - 14*day).toISOString().slice(0, 10) }
     : null;
+  const dStr = (daysAgo) => new Date(now - daysAgo*day).toISOString().slice(0, 10);
+  const trainingSessions = [
+    { date: dStr(1),  type: "pucks_shot",    value: 50, unit: "pucks" },
+    { date: dStr(3),  type: "skills_dev",    value: 30, unit: "min" },
+    { date: dStr(5),  type: "power_skating", value: 30, unit: "min" },
+    { date: dStr(8),  type: "pucks_shot",    value: 50, unit: "pucks" },
+    { date: dStr(10), type: "skills_dev",    value: 30, unit: "min" },
+    { date: dStr(12), type: "power_skating", value: 30, unit: "min" },
+  ];
   return {
     id: "__demo__", name: cfg.name, level, position: cfg.position,
     season: SEASONS[0], sessionLength: 10, colorblind: false, coachCode: "",
     quizHistory: cfg.sessions(mkSession),
     selfRatings: {...cfg.selfRatings}, goals: {...cfg.goals},
     parentRatings,
+    trainingSessions,
     __demo: true,
   };
 }
@@ -4641,6 +4735,7 @@ export default function App() {
   useEffect(() => { try { checkSeasonReset(); } catch {} }, []);
 
   function enterDemo(levelOrRole) {
+    window.scrollTo(0, 0);
     if (levelOrRole === "__coach__") {
       setDemoMode(true);
       setDemoCoachRatings(null);
@@ -4930,7 +5025,7 @@ export default function App() {
           : <GatedScreen feature="weeklyChallenge" title="Weekly Challenge" description="A new curated 10-question challenge every Monday. Same questions for every player — compete against yourself and compare with teammates." onBack={()=>setScreen("home")} onUnlock={()=>promptUpgrade("weeklyChallenge","pro")} target="pro"/>
         )}
         {screen === "report"  && <Report player={tierLimitedPlayer(player, tier)} onBack={()=>setScreen("home")} demoCoachData={demoMode?demoCoachRatings:null} tier={tier} onUpgrade={(f,t)=>promptUpgrade(f,t)}/>}
-        {screen === "gamesense" && <GameSenseReportScreen player={player} onBack={()=>setScreen("home")}/>}
+        {screen === "gamesense" && <GameSenseReportScreen player={player} onBack={()=>setScreen("home")} demoMode={demoMode} demoCoachData={demoMode?demoCoachRatings:null} onNavigate={setScreen}/>}
         {screen === "journey" && <JourneyScreen player={player} onBack={()=>setScreen("home")} onNav={setScreen}/>}
         {screen === "parent" && <ParentAssessmentScreen player={player} onBack={()=>setScreen("profile")} onSave={(ratings)=>{ setPlayer(p => ({...p, parentRatings: {...ratings, updated_at: new Date().toISOString().slice(0,10)}})); setScreen("profile"); }}/>}
         {screen === "profile" && <Profile player={player} onSave={handleProfileSave} onBack={()=>setScreen("home")} onReset={handleSignOut} demoMode={demoMode} tier={tier} onUpgrade={(f,t)=>promptUpgrade(f,t)} userEmail={userEmail} onAdminReports={()=>setScreen("admin")} onNav={setScreen}/>}
