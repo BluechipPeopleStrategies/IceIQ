@@ -15,6 +15,7 @@ const FEATURE_KEYS = [
   "progressSnapshots",
   "fullSessionHistory",
   "coachDashboard",
+  "coachFeedback",
   "additionalProfiles",
   "weeklyChallenge",
 ];
@@ -34,6 +35,7 @@ const TIER_FEATURES = {
     "progressSnapshots",
     "fullSessionHistory",
     "weeklyChallenge",
+    "coachFeedback",
   ]),
   FAMILY: new Set([
     "multipleAgeGroups",
@@ -45,6 +47,7 @@ const TIER_FEATURES = {
     "fullSessionHistory",
     "additionalProfiles",
     "weeklyChallenge",
+    "coachFeedback",
   ]),
   TEAM: new Set([
     "multipleAgeGroups",
@@ -56,6 +59,7 @@ const TIER_FEATURES = {
     "fullSessionHistory",
     "coachDashboard",
     "weeklyChallenge",
+    "coachFeedback",
     // Team tier typically has a single coach-owned workspace, not additional child profiles
   ]),
 };
@@ -72,6 +76,7 @@ const UPGRADE_TARGET = {
   additionalProfiles:  "family",
   coachDashboard:      "team",
   weeklyChallenge:     "pro",
+  coachFeedback:       "pro",
 };
 
 const UPGRADE_MESSAGES = {
@@ -85,6 +90,7 @@ const UPGRADE_MESSAGES = {
   additionalProfiles:  "Add up to 3 players with the Family plan",
   coachDashboard:      "Track your full roster with Ice-IQ Team",
   weeklyChallenge:     "Compete in weekly challenges with Ice-IQ Pro",
+  coachFeedback:       "See ratings and notes from every coach on your team with Ice-IQ Pro",
 };
 
 // ─────────────────────────────────────────────────────────

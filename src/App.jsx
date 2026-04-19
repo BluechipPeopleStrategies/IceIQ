@@ -128,6 +128,33 @@ function calcGameSenseScore(competencyScores) {
   return scores.length > 0 ? Math.round(scores.reduce((a, b) => a + b, 0) / scores.length) : 0;
 }
 
+// Gamification MVP: Positioning competency skill tree ("Journey")
+const POSITIONING_JOURNEY = [
+  { id:"first-read",       title:"First Read",       icon:"📍", threshold:20, title_unlock:"Rookie Eyes",      desc:"You're starting to look up before you move." },
+  { id:"zone-awareness",   title:"Zone Awareness",   icon:"🗺️", threshold:40, title_unlock:"Zone-Smart",       desc:"You know where you belong in each zone." },
+  { id:"gap-control",      title:"Gap Control",      icon:"📏", threshold:60, title_unlock:"Gap Closer",       desc:"You keep the right distance on the rush." },
+  { id:"structure-reader", title:"Structure Reader", icon:"🧠", threshold:80, title_unlock:"Structure Reader", desc:"You read team shape before the puck moves." },
+  { id:"rink-general",     title:"Rink General",     icon:"👑", threshold:90, minAttempts:15, title_unlock:"Rink General", desc:"You think the game at the highest positioning level." },
+];
+
+function getPositioningJourneyState(quizHistory) {
+  const pcts = calcCompetencyScores(quizHistory || []);
+  const pct = pcts.positioning || 0;
+  const posPatterns = COMPETENCY_MAPPINGS.positioning;
+  let attempts = 0;
+  (quizHistory || []).forEach(session => {
+    (session.results || []).forEach(r => {
+      if (posPatterns.some(p => p.test(r.id))) attempts++;
+    });
+  });
+  const nodes = POSITIONING_JOURNEY.map(n => ({
+    ...n,
+    unlocked: pct >= n.threshold && (!n.minAttempts || attempts >= n.minAttempts),
+  }));
+  const nextIdx = nodes.findIndex(n => !n.unlocked);
+  return { pct, attempts, nodes, nextIdx: nextIdx === -1 ? null : nextIdx };
+}
+
 function getMonthlyTrend(quizHistory) {
   const now = new Date();
   const weeks = [];
@@ -207,15 +234,17 @@ function calcPercentileRank(playerScore, peerMean, peerStdev) {
 // ─────────────────────────────────────────────────────────
 // VERSION
 // ─────────────────────────────────────────────────────────
-const VERSION = "0.6.0";
-const RELEASE_DATE = "April 13, 2026";
+const VERSION = "1.0.0";
+const RELEASE_DATE = "April 18, 2026";
 const CHANGELOG = [
-  { v:"2.0.0", date:"April 2026", notes:[
-    {icon:"🏒", title:"5 Question Formats", desc:"Multiple choice, True/False, Sequence, Spot the Mistake, and What Happens Next"},
+  { v:"1.0.0", date:"April 2026", notes:[
+    {icon:"🚀", title:"Ice-IQ v1 is here", desc:"Our first full release — built for players, parents, and coaches to train game sense off the ice"},
+    {icon:"🏒", title:"5 Question Formats", desc:"Multiple choice, True/False, Sequence, Spot the Mistake, What Happens Next — plus interactive Zone-Click questions"},
     {icon:"🎯", title:"Adaptive Quiz Engine", desc:"Difficulty shifts in real time based on your answers — always the right challenge"},
-    {icon:"📊", title:"SMART Goal Tracking", desc:"Set development goals by category, tie them to your self-assessment and coach feedback"},
-    {icon:"🥅", title:"Goalie Question Bank", desc:"45 new goalie-specific questions across U7, U9, and U11"},
-    {icon:"🏆", title:"Weekly Challenge", desc:"New curated quiz drops every Monday — same questions for every player at your level"},
+    {icon:"🏒", title:"Hockey-Specific Goal Setting", desc:"Set development goals by category, tie them to your self-assessment and coach feedback"},
+    {icon:"📊", title:"Game Sense Profile", desc:"Spider chart, competency breakdown, month-over-month trend, peer percentile ranking"},
+    {icon:"👨‍🏫", title:"Coach Dashboard", desc:"Roster view, per-player ratings, development notes, and per-question reports"},
+    {icon:"🏆", title:"Weekly Challenge", desc:"A new curated quiz drops every Monday — same questions for every player at your level"},
   ]},
 ];
 
@@ -228,6 +257,7 @@ const QUIZ_LENGTH = 10;
 const TOAST_DURATION_MS = 1600;
 const TIER_GOLD_THRESHOLD = 80;
 const TIER_YELLOW_THRESHOLD = 60;
+const GAME_SENSE_UNLOCK_SESSIONS = 3;
 
 const SCORE_TIERS = [
   {min:TIER_GOLD_THRESHOLD, label:"Hockey Sense",   badge:"🏒", color:C.green},
@@ -393,26 +423,51 @@ function makePlayerKey(name, level) {
 
 // Demo queue builder — guarantees one of each question type
 function buildDemoQueue(qb, level, position) {
-  const types = ["mc", "tf", "seq", "mistake", "next", "zone-click"];
+  const posCode = { Forward: "F", Defense: "D", Goalie: "G" }[position] || null;
+  const posMatch = (q) => !q.pos || !posCode || q.pos.includes(posCode);
+  // Demo quiz: 7 questions — 3 zone-click + 1 mc + 1 tf + 1 seq + 1 mistake
+  const targetCounts = { "zone-click": 3, mc: 1, tf: 1, seq: 1, mistake: 1 };
   const result = [];
-  for (const type of types) {
+  const usedIds = new Set();
+
+  for (const [type, count] of Object.entries(targetCounts)) {
     const pool = type === "zone-click"
       ? ZONE_CLICK_QUESTIONS
       : (qb[level] || []).filter(q => q.type === type);
     const levelMatch = pool.filter(q => {
-      if (!q.level) return false;
-      return q.level.includes(level) && (q.pos?.includes(position) || !q.pos || position === "Not Sure");
+      if (type === "zone-click" && !q.level?.includes(level)) return false;
+      return posMatch(q);
     });
-    const fallback = pool.filter(q => q.pos?.includes(position) || !q.pos || position === "Not Sure");
-    const source = levelMatch.length > 0 ? levelMatch : fallback;
-    if (source.length > 0) result.push(source[Math.floor(Math.random() * source.length)]);
+    const fallback = pool.filter(posMatch);
+    // If no position-matched question exists (e.g. goalie + tf), fall back to any question of the type
+    const broadFallback = fallback.length > 0 ? fallback : pool;
+    const source = (levelMatch.length > 0 ? levelMatch : broadFallback).filter(q => !usedIds.has(q.id));
+    const shuffled = [...source].sort(() => Math.random() - 0.5);
+    for (let i = 0; i < Math.min(count, shuffled.length); i++) {
+      result.push(shuffled[i]);
+      usedIds.add(shuffled[i].id);
+    }
   }
-  // Pad to 10 with random mc questions if needed
-  const mcPad = (qb[level] || []).filter(q => q.type === "mc");
-  while (result.length < 10 && mcPad.length > 0) {
-    result.push(mcPad[Math.floor(Math.random() * mcPad.length)]);
+
+  // Pad to 7 with MC (cap MC at 2 total)
+  const mcInQueue = result.filter(q => q.type === "mc").length;
+  const mcPool = (qb[level] || []).filter(q => q.type === "mc" && !usedIds.has(q.id) && posMatch(q));
+  const mcShuffled = [...mcPool].sort(() => Math.random() - 0.5);
+  while (result.length < 7 && mcShuffled.length > 0 && result.filter(q => q.type === "mc").length < 2) {
+    const q = mcShuffled.shift();
+    result.push(q);
+    usedIds.add(q.id);
   }
-  return result;
+  // If still short (very unlikely), pad with any remaining questions
+  const anyPool = [...(qb[level] || []), ...ZONE_CLICK_QUESTIONS]
+    .filter(q => !usedIds.has(q.id) && posMatch(q))
+    .sort(() => Math.random() - 0.5);
+  while (result.length < 7 && anyPool.length > 0) {
+    const q = anyPool.shift();
+    result.push(q);
+    usedIds.add(q.id);
+  }
+  return result.slice(0, 7);
 }
 
 // Adaptive queue builder — with memoization of filtered pools
@@ -685,65 +740,174 @@ const DIAGRAMS = {
 };
 
 const ZONE_CLICK_QUESTIONS = [
+  // ───── U7 / Initiation (simple: own net vs other net) ─────
+  {
+    id: "u7_zc_1", type: "zone-click", d: 1,
+    level: ["U7 / Initiation"],
+    pos: ["F","D"],
+    sit: "Your teammate has the puck and is skating toward the other team's net.",
+    question: "Where should you skate so you can help score a goal?",
+    correctZone: "oz-slot",
+    zones: ["oz-slot", "oz-left-wing", "oz-right-wing"],
+    explanation: "Skate in front of the other team's net — that's where you can get a pass and shoot."
+  },
+  {
+    id: "u7_zc_2", type: "zone-click", d: 1,
+    level: ["U7 / Initiation"],
+    pos: ["F","D"],
+    sit: "The other team is skating toward your own net with the puck.",
+    question: "Where should you skate to help your goalie?",
+    correctZone: "dz-slot",
+    zones: ["dz-slot", "dz-left-corner", "dz-right-corner", "dz-left-point"],
+    explanation: "Get back in front of your own net — that's where you can block shots and help your goalie."
+  },
+  {
+    id: "u7_zc_3", type: "zone-click", d: 1,
+    level: ["U7 / Initiation"],
+    pos: ["F","D"],
+    sit: "You just got a pass at center ice. The other team's net is in front of you.",
+    question: "Where should you skate with the puck?",
+    correctZone: "oz-slot",
+    zones: ["oz-slot", "oz-left-wing", "oz-right-wing"],
+    explanation: "Skate forward toward the other team's net — that's how your team scores."
+  },
+
+  // ───── U9 / Novice (positions: winger, center, defense) ─────
+  {
+    id: "u9_zc_1", type: "zone-click", d: 1,
+    level: ["U9 / Novice"],
+    pos: ["F","D"],
+    sit: "The other team has the puck in the corner of your defensive zone. You're the center, covering in front of your net.",
+    question: "Where should you stay to stop a pass to a dangerous shooter?",
+    correctZone: "dz-slot",
+    zones: ["dz-slot", "dz-left-corner", "dz-right-corner", "dz-behind-net"],
+    explanation: "Stay in the slot — it's the most dangerous spot for an opponent to get a shot from."
+  },
+  {
+    id: "u9_zc_2", type: "zone-click", d: 1,
+    level: ["U9 / Novice"],
+    pos: ["F","D"],
+    sit: "Your defenseman has the puck in your own zone and is looking to pass it up. You're the right winger.",
+    question: "Where should you skate to give your D a safe pass?",
+    correctZone: "nz-right",
+    zones: ["nz-right", "nz-left", "nz-center"],
+    explanation: "Wingers stay wide on their side — skate up to the neutral zone so the puck carrier has a safe target."
+  },
+  {
+    id: "u9_zc_3", type: "zone-click", d: 2,
+    level: ["U9 / Novice"],
+    pos: ["F","D"],
+    sit: "Your team shoots the puck into the opposing team's left corner. Your left winger is chasing it.",
+    question: "As the center, where should you go to be ready to score?",
+    correctZone: "oz-slot",
+    zones: ["oz-slot", "oz-left-wing", "oz-right-wing"],
+    explanation: "The center sets up in front of the net — if the winger gets the puck out, you're ready to shoot."
+  },
+
+  // ───── U11 / Atom (basic systems: breakout, forecheck, backcheck) ─────
+  {
+    id: "u11_zc_1", type: "zone-click", d: 1,
+    level: ["U11 / Atom", "U13 / Peewee"],
+    pos: ["F","D"],
+    sit: "Your team has the puck in the opposing team's zone and your D is about to shoot from the point.",
+    question: "As the center, where should you position for a rebound or tip?",
+    correctZone: "oz-slot",
+    zones: ["oz-slot", "oz-left-wing", "oz-right-wing"],
+    explanation: "Park in the slot — most rebounds and tip-in chances happen right in front of the net."
+  },
+  {
+    id: "u11_zc_2", type: "zone-click", d: 2,
+    level: ["U11 / Atom", "U13 / Peewee"],
+    pos: ["F","D"],
+    sit: "The other team has the puck and is skating back through the neutral zone toward your end.",
+    question: "Where should the first backchecking forward skate to slow them down?",
+    correctZone: "nz-center",
+    zones: ["nz-center", "nz-left", "nz-right"],
+    explanation: "Backcheck through the middle — take away the cross-ice pass and force the puck carrier wide where help can arrive."
+  },
+  {
+    id: "u11_zc_3", type: "zone-click", d: 2,
+    level: ["U11 / Atom"],
+    pos: ["F","D"],
+    sit: "Your defenseman has the puck behind your own net and your team needs to break out.",
+    question: "As the center, where should you swing to get open for a breakout pass?",
+    correctZone: "dz-slot",
+    zones: ["dz-slot", "dz-behind-net", "dz-left-corner", "dz-right-corner"],
+    explanation: "The center circles through the middle of your zone — that's the primary outlet to start the breakout up the ice."
+  },
+
+  // ───── U13 / Peewee (F, D, and goalie roles) ─────
   {
     id: "u13_zc_1", type: "zone-click", d: 1,
     level: ["U13 / Peewee", "U15 / Bantam", "U18 / Midget"],
     pos: ["F"],
-    sit: "Your team wins the puck behind the net. You're the strong-side winger.",
-    question: "Where should you position yourself to create a scoring chance?",
-    correctZone: "dz-slot",
-    zones: ["dz-slot", "dz-left-corner", "dz-right-corner", "dz-left-point"],
-    explanation: "The slot is the highest-danger area — be ready before the pass arrives."
+    sit: "Your team just won the puck in the opposing team's corner. You're the strong-side winger on the boards.",
+    question: "Where should you move to give your teammate a scoring option?",
+    correctZone: "oz-slot",
+    zones: ["oz-slot", "oz-left-wing", "oz-right-wing"],
+    explanation: "Get off the wall into the slot — that's the highest-danger shooting area, so the puck carrier can feed you for a scoring chance."
   },
   {
     id: "u13_zc_2", type: "zone-click", d: 2,
     level: ["U13 / Peewee", "U15 / Bantam"],
     pos: ["D"],
-    sit: "The opposing team has the puck in the left corner of your zone. You're the off-side D.",
-    question: "Where should you position to protect against a pass to the high slot?",
-    correctZone: "dz-right-point",
-    zones: ["dz-right-point", "dz-slot", "dz-behind-net", "dz-right-corner"],
-    explanation: "Off-side D guards the strong-side point to cut off the high-danger pass."
-  },
-  {
-    id: "u15_zc_1", type: "zone-click", d: 2,
-    level: ["U15 / Bantam", "U18 / Midget"],
-    pos: ["F","D"],
-    sit: "Your team is breaking out 3-on-2. The puck carrier is at center ice.",
-    question: "As the trailing winger, which zone gives you the best outlet option?",
-    correctZone: "nz-right",
-    zones: ["nz-right", "nz-left", "nz-center", "oz-slot"],
-    explanation: "The trailing winger stays wide to give the puck carrier a lateral option and prevent an intercept."
+    sit: "The opposing team has the puck in the left corner of your defensive zone. You're the off-side (right) defenseman.",
+    question: "Where should you position to protect the most dangerous scoring area?",
+    correctZone: "dz-slot",
+    zones: ["dz-slot", "dz-right-point", "dz-right-corner", "dz-behind-net"],
+    explanation: "The off-side D holds the net front — block cross-ice passes and tie up anyone trying to tip in a shot."
   },
   {
     id: "u13_zc_goalie", type: "zone-click", d: 1,
     level: ["U13 / Peewee", "U15 / Bantam", "U18 / Midget"],
     pos: ["G"],
-    sit: "A 2-on-1 develops. The puck carrier is coming down the left side.",
-    question: "Where should you position yourself to cut off the angle?",
+    sit: "A 2-on-1 is coming down the left side into your zone. The puck carrier is skating wide.",
+    question: "Where should you set up to cut off the shooting angle?",
     correctZone: "dz-slot",
     zones: ["dz-slot", "dz-left-corner", "dz-behind-net", "dz-left-point"],
-    explanation: "Come out to the top of the crease/slot edge to cut angle — don't cheat too far to the shooter."
+    explanation: "Stay centered at the top of your crease — square up to the shooter but don't overcommit, so you can still slide across on a pass."
+  },
+  {
+    id: "u13_zc_goalie_2", type: "zone-click", d: 2,
+    level: ["U13 / Peewee", "U15 / Bantam", "U18 / Midget"],
+    pos: ["G"],
+    sit: "An opposing player has the puck behind your net and is trying to wrap it around the post on the right side.",
+    question: "Where should you be to seal off the wrap-around?",
+    correctZone: "dz-behind-net",
+    zones: ["dz-behind-net", "dz-slot", "dz-right-corner", "dz-left-corner"],
+    explanation: "Hug the short-side post tight to the goal line — the puck can't sneak in if you're sealed to the post."
+  },
+  {
+    id: "u13_zc_goalie_3", type: "zone-click", d: 2,
+    level: ["U13 / Peewee", "U15 / Bantam", "U18 / Midget"],
+    pos: ["G"],
+    sit: "The opposing team has the puck in the right corner and is looking to pass it to the slot for a shot.",
+    question: "Where should you square up to prepare for the expected shot?",
+    correctZone: "dz-slot",
+    zones: ["dz-slot", "dz-right-corner", "dz-right-point", "dz-left-corner"],
+    explanation: "Face the slot — that's where the pass-and-shoot play will develop, so you want to be squared to the most likely shooter."
+  },
+
+  // ───── U15 / Bantam & U18 / Midget (advanced: D-zone systems, breakouts, backchecks) ─────
+  {
+    id: "u15_zc_1", type: "zone-click", d: 2,
+    level: ["U15 / Bantam", "U18 / Midget"],
+    pos: ["F","D"],
+    sit: "Your team is breaking out of the zone on a 3-on-2. The puck carrier is already at center ice.",
+    question: "As the trailing winger, where should you skate to give a safe outlet if the rush stalls?",
+    correctZone: "nz-right",
+    zones: ["nz-right", "nz-left", "nz-center"],
+    explanation: "Stay wide on your lane behind the play — you give the puck carrier a lateral drop option and kill an interception that could spring a 2-on-1 the other way."
   },
   {
     id: "u15_zc_2", type: "zone-click", d: 3,
     level: ["U15 / Bantam", "U18 / Midget"],
     pos: ["F","D"],
-    sit: "Your team is caught on a line change. Opponents have the puck in your neutral zone.",
-    question: "Where should the nearest backchecking forward pressure first?",
+    sit: "Your team is caught mid-line-change. Opponents just grabbed a loose puck in your neutral zone and are skating in.",
+    question: "Where should the backchecking forward position to take away the middle lane?",
     correctZone: "nz-center",
-    zones: ["nz-center", "nz-left", "oz-slot", "dz-slot"],
-    explanation: "Force the play through the center lane — compressing neutral ice reduces time/space before help arrives."
-  },
-  {
-    id: "u11_zc_1", type: "zone-click", d: 1,
-    level: ["U11 / Atom", "U13 / Peewee"],
-    pos: ["F","D"],
-    sit: "Your team has the puck at the blue line in the offensive zone.",
-    question: "Where should the center go to be ready for a rebound?",
-    correctZone: "oz-slot",
-    zones: ["oz-slot", "oz-left-wing", "oz-right-wing", "nz-center"],
-    explanation: "The center parks in the slot — highest rebound and redirect opportunities."
+    zones: ["nz-center", "nz-left", "nz-right"],
+    explanation: "Backcheck through the middle — deny the drop pass and force the puck carrier wide where your D can step up and angle them off."
   },
 ];
 
@@ -914,32 +1078,28 @@ const Q_TYPE_LABELS = {
   "zone-click": {label:"Zone Click", color:C.green,   icon:"🎯"},
 };
 
-function ZoneClickQuestion({ q, onAnswer, C }) {
+function ZoneClickQuestion({ q, onAnswer, answered, C }) {
   const [selected, setSelected] = useState(null);
-  const [revealed, setRevealed] = useState(false);
 
   function handleZone(zoneId) {
-    if (revealed) return;
+    if (answered) return;
     setSelected(zoneId);
   }
 
   function handleConfirm() {
-    if (!selected || revealed) return;
-    setRevealed(true);
-    setTimeout(() => onAnswer(selected === q.correctZone), 1200);
+    if (!selected || answered) return;
+    onAnswer(selected === q.correctZone);
   }
-
-  const isCorrect = selected === q.correctZone;
 
   return (
     <div style={{ display:"flex", flexDirection:"column", gap:12 }}>
       <RinkDiagramZones
         zones={q.zones}
-        onZoneClick={revealed ? null : handleZone}
+        onZoneClick={answered ? null : handleZone}
         selected={selected}
-        correct={revealed ? q.correctZone : null}
+        correct={answered ? q.correctZone : null}
       />
-      {!revealed && selected && (
+      {!answered && selected && (
         <button onClick={handleConfirm} style={{
           background:C.gold, color:C.bg, border:"none", borderRadius:12,
           padding:"1rem 1.25rem", cursor:"pointer", fontWeight:800, fontSize:15,
@@ -947,12 +1107,6 @@ function ZoneClickQuestion({ q, onAnswer, C }) {
         }}>
           Confirm: {RINK_ZONE_DEFS.find(z => z.id === selected)?.label}
         </button>
-      )}
-      {revealed && (
-        <div style={{ color: isCorrect ? C.green : C.red, fontWeight:600 }}>
-          {isCorrect ? "✓ Correct!" : `✗ The answer is: ${RINK_ZONE_DEFS.find(z=>z.id===q.correctZone)?.label}`}
-          <p style={{ color: C.dim, fontWeight:400, fontSize:14, marginTop:6 }}>{q.explanation}</p>
-        </div>
       )}
     </div>
   );
@@ -1013,28 +1167,62 @@ function Home({ player, onNav, demoMode, subscriptionTier }) {
           <button onClick={() => onNav("profile")} style={{background:C.bgCard,border:`1px solid ${C.border}`,borderRadius:10,width:38,height:38,cursor:"pointer",color:C.dimmer,fontSize:16,display:"flex",alignItems:"center",justifyContent:"center"}}>⚙</button>
         </div>
 
-        {/* IQ Score Hero */}
-        <Card glow={iq !== null} style={{marginBottom:"1rem",background:`linear-gradient(135deg,${C.bgCard},${C.bgElevated})`,position:"relative",overflow:"hidden"}}>
-          <div style={{position:"absolute",top:0,right:0,width:120,height:120,background:`radial-gradient(circle at top right,${iq!==null?tier.color+"15":"rgba(255,255,255,.02)"},transparent 70%)`,pointerEvents:"none"}}/>
-          <Label>Game Sense Score</Label>
-          {iq !== null ? (
-            <div style={{display:"flex",alignItems:"flex-end",gap:"1rem"}}>
-              <div>
-                <div style={{fontFamily:FONT.display,fontWeight:800,fontSize:"4.5rem",color:tier.color,lineHeight:.9,letterSpacing:"-.02em"}}>{iq}<span style={{fontSize:"1.8rem"}}>%</span></div>
-                <div style={{fontSize:13,color:C.dimmer,marginTop:".4rem"}}>{latest.results.filter(r=>r.ok).length}/{latest.results.length} correct</div>
-              </div>
-              <div>
-                <div style={{fontFamily:FONT.display,fontWeight:700,fontSize:"1.2rem",color:C.white}}>{tier.badge} {tier.label}</div>
-                <div style={{fontSize:12,color:C.dimmer,marginTop:2}}>{totalSessions} session{totalSessions!==1?"s":""}</div>
-              </div>
-            </div>
-          ) : (
-            <div>
-              <div style={{fontFamily:FONT.display,fontWeight:800,fontSize:"3rem",color:"rgba(255,255,255,.1)",lineHeight:.9}}>—</div>
-              <div style={{fontSize:13,color:C.dimmer,marginTop:".5rem"}}>Take your first quiz to get your baseline score</div>
-            </div>
-          )}
-        </Card>
+        {/* IQ Score Hero — locked until GAME_SENSE_UNLOCK_SESSIONS quizzes completed */}
+        {(() => {
+          const unlocked = totalSessions >= GAME_SENSE_UNLOCK_SESSIONS && iq !== null;
+          const remaining = Math.max(0, GAME_SENSE_UNLOCK_SESSIONS - totalSessions);
+          return (
+            <Card glow={unlocked} style={{marginBottom:"1rem",background:`linear-gradient(135deg,${C.bgCard},${C.bgElevated})`,position:"relative",overflow:"hidden"}}>
+              <div style={{position:"absolute",top:0,right:0,width:120,height:120,background:`radial-gradient(circle at top right,${unlocked?tier.color+"15":"rgba(255,255,255,.02)"},transparent 70%)`,pointerEvents:"none"}}/>
+              <Label>Game Sense Score</Label>
+              {unlocked ? (
+                <div style={{display:"flex",alignItems:"flex-end",gap:"1rem"}}>
+                  <div>
+                    <div style={{fontFamily:FONT.display,fontWeight:800,fontSize:"4.5rem",color:tier.color,lineHeight:.9,letterSpacing:"-.02em"}}>{iq}<span style={{fontSize:"1.8rem"}}>%</span></div>
+                    <div style={{fontSize:13,color:C.dimmer,marginTop:".4rem"}}>{latest.results.filter(r=>r.ok).length}/{latest.results.length} correct</div>
+                  </div>
+                  <div>
+                    <div style={{fontFamily:FONT.display,fontWeight:700,fontSize:"1.2rem",color:C.white}}>{tier.badge} {tier.label}</div>
+                    <div style={{fontSize:12,color:C.dimmer,marginTop:2}}>{totalSessions} session{totalSessions!==1?"s":""}</div>
+                  </div>
+                </div>
+              ) : (
+                <div>
+                  <div style={{display:"flex",alignItems:"center",gap:".6rem",marginBottom:".4rem"}}>
+                    <span style={{fontSize:"2.2rem"}}>🔒</span>
+                    <div style={{fontFamily:FONT.display,fontWeight:800,fontSize:"2.6rem",color:"rgba(255,255,255,.15)",lineHeight:.9}}>—</div>
+                  </div>
+                  <div style={{fontSize:13,color:C.dim,marginTop:".5rem",lineHeight:1.5}}>
+                    {totalSessions === 0
+                      ? `Take ${GAME_SENSE_UNLOCK_SESSIONS} quizzes to unlock your Game Sense Score — one quiz isn't enough to measure you fairly.`
+                      : `${remaining} more quiz${remaining===1?"":"zes"} to unlock your Game Sense Score.`}
+                  </div>
+                  <div style={{marginTop:".7rem",height:6,background:C.dimmest,borderRadius:4,overflow:"hidden"}}>
+                    <div style={{width:`${Math.min(100, (totalSessions/GAME_SENSE_UNLOCK_SESSIONS)*100)}%`,height:"100%",background:C.gold,borderRadius:4,transition:"width .3s"}}/>
+                  </div>
+                  <div style={{fontSize:11,color:C.dimmer,marginTop:".35rem"}}>{totalSessions}/{GAME_SENSE_UNLOCK_SESSIONS} quizzes done</div>
+                </div>
+              )}
+            </Card>
+          );
+        })()}
+
+        {/* Positioning Journey entry */}
+        {(() => {
+          const js = getPositioningJourneyState(quizHistory);
+          const unlockedCount = js.nodes.filter(n => n.unlocked).length;
+          const latestTitle = [...js.nodes].reverse().find(n => n.unlocked)?.title_unlock;
+          return (
+            <button onClick={() => onNav("journey")} style={{width:"100%",display:"flex",alignItems:"center",justifyContent:"space-between",background:`linear-gradient(135deg,${COMPETENCIES.positioning.color}14,rgba(255,255,255,0.02))`,border:`1px solid ${COMPETENCIES.positioning.color}40`,borderRadius:12,padding:".7rem .95rem",cursor:"pointer",color:C.white,fontFamily:FONT.body,marginBottom:"1rem"}}>
+              <span style={{display:"flex",alignItems:"center",gap:".55rem",minWidth:0}}>
+                <span style={{fontSize:16}}>🗺️</span>
+                <span style={{fontWeight:700,fontSize:13}}>Positioning Journey</span>
+                <span style={{color:C.dimmer,fontSize:12,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>· {unlockedCount}/{js.nodes.length}{latestTitle?` · ${latestTitle}`:""}</span>
+              </span>
+              <span style={{color:COMPETENCIES.positioning.color,fontSize:12}}>→</span>
+            </button>
+          );
+        })()}
 
         {/* Quick action grid */}
         <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:".75rem",marginBottom:"1rem"}}>
@@ -1083,34 +1271,15 @@ function Home({ player, onNav, demoMode, subscriptionTier }) {
           </div>
         </button>
 
-        {/* Weekly Challenge card */}
-        {weeklyAllowed ? (
-          <button onClick={() => onNav("weekly")} style={{width:"100%",display:"block",textAlign:"left",background: weeklyRecord
-            ? `linear-gradient(135deg,rgba(34,197,94,.1),rgba(34,197,94,.03))`
-            : `linear-gradient(135deg,rgba(201,168,76,.14),rgba(201,168,76,.04))`,border:`1px solid ${weeklyRecord ? "rgba(34,197,94,.35)" : C.goldBorder}`,borderRadius:14,padding:"1rem 1.1rem",cursor:"pointer",color:C.white,fontFamily:FONT.body,marginBottom:"1rem"}}>
-            <div style={{display:"flex",alignItems:"center",justifyContent:"space-between"}}>
-              <div style={{display:"flex",alignItems:"center",gap:".6rem"}}>
-                <span style={{fontSize:20}}>{weeklyRecord ? "✅" : "🏆"}</span>
-                <div>
-                  <div style={{fontSize:10,letterSpacing:".14em",textTransform:"uppercase",color:weeklyRecord ? "rgba(34,197,94,.9)" : C.gold,fontWeight:800}}>Weekly Challenge</div>
-                  <div style={{fontSize:12,color:C.dim,marginTop:1}}>{weeklyRecord ? `Score: ${weeklyRecord.score}% · Resets in ${countdown}` : `New this week · Resets in ${countdown}`}</div>
-                </div>
-              </div>
-              <span style={{color:weeklyRecord ? "rgba(34,197,94,.8)" : C.gold,fontSize:13}}>{weeklyRecord ? "View" : "Play →"}</span>
-            </div>
-          </button>
-        ) : (
-          <button onClick={() => onNav("plans")} style={{width:"100%",display:"block",textAlign:"left",background:`linear-gradient(135deg,rgba(201,168,76,.08),rgba(201,168,76,.02))`,border:`1px dashed ${C.goldBorder}`,borderRadius:14,padding:"1rem 1.1rem",cursor:"pointer",color:C.white,fontFamily:FONT.body,marginBottom:"1rem",opacity:0.85}}>
-            <div style={{display:"flex",alignItems:"center",justifyContent:"space-between"}}>
-              <div style={{display:"flex",alignItems:"center",gap:".6rem"}}>
-                <span style={{fontSize:20}}>🔒</span>
-                <div>
-                  <div style={{fontSize:10,letterSpacing:".14em",textTransform:"uppercase",color:C.gold,fontWeight:800}}>Weekly Challenge</div>
-                  <div style={{fontSize:12,color:C.dimmer,marginTop:1}}>New curated quiz every Monday — PRO feature</div>
-                </div>
-              </div>
-              <span style={{color:C.gold,fontSize:11,fontWeight:700}}>Unlock →</span>
-            </div>
+        {/* Weekly Challenge — compact entry for PRO+ users; FREE users see it in the Pro upgrade button below */}
+        {weeklyAllowed && (
+          <button onClick={() => onNav("weekly")} style={{width:"100%",display:"flex",alignItems:"center",justifyContent:"space-between",background:"none",border:`1px solid ${C.border}`,borderRadius:10,padding:".55rem .85rem",cursor:"pointer",color:C.dim,fontFamily:FONT.body,marginBottom:"1rem",fontSize:12}}>
+            <span style={{display:"flex",alignItems:"center",gap:".5rem"}}>
+              <span style={{fontSize:13}}>{weeklyRecord ? "✅" : "🏆"}</span>
+              <span style={{fontWeight:600,color:C.white}}>Weekly Challenge</span>
+              <span style={{color:C.dimmer}}>· {weeklyRecord ? `${weeklyRecord.score}% · resets in ${countdown}` : `resets in ${countdown}`}</span>
+            </span>
+            <span style={{color:C.dimmer,fontSize:11}}>{weeklyRecord ? "View" : "Play →"}</span>
           </button>
         )}
 
@@ -1123,15 +1292,18 @@ function Home({ player, onNav, demoMode, subscriptionTier }) {
               </div>
               <span style={{color:C.gold,fontSize:13}}>→</span>
             </div>
-            <div style={{fontSize:13,color:C.dim,lineHeight:1.5,marginBottom:".55rem"}}>See what unlocks with Pro — all age groups, adaptive difficulty, position-specific questions, SMART goals, full history + Skills Map.</div>
+            <div style={{fontSize:13,color:C.dim,lineHeight:1.5,marginBottom:".55rem"}}>See what unlocks with Pro — unlimited quizzes, adaptive difficulty, position-specific questions, hockey goal setting, Weekly Challenge, coach feedback, and unlimited NHL Insights.</div>
             <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:".35rem",marginTop:".5rem"}}>
               {[
-                {icon:"🔓",t:"All age groups"},
+                {icon:"♾️",t:"Unlimited quizzes"},
                 {icon:"🎮",t:"5 question formats"},
                 {icon:"🎯",t:"Position-specific"},
                 {icon:"🧠",t:"Adaptive difficulty"},
-                {icon:"⭐",t:"SMART goals"},
+                {icon:"🏒",t:"Hockey goal setting"},
                 {icon:"📊",t:"Skills Map radar"},
+                {icon:"🏆",t:"Weekly Challenge"},
+                {icon:"👨‍🏫",t:"Coach feedback"},
+                {icon:"📰",t:"Unlimited NHL Insights"},
               ].map((b,i) => (
                 <div key={i} style={{fontSize:11,color:C.dimmer,display:"flex",alignItems:"center",gap:".35rem"}}>
                   <span>{b.icon}</span><span>{b.t}</span>
@@ -1184,18 +1356,19 @@ function useQuizState() {
 // ─────────────────────────────────────────────────────────
 function Quiz({ player, onFinish, onBack, tier, onUpgrade }) {
   const isReturning = player.quizHistory.length > 0;
-  const qLen = player.sessionLength || 10;
+  const isDemo = !player.id || player.id === "__demo__";
+  const qLen = isDemo ? 7 : (player.sessionLength || 10);
   const [queue, setQueue] = useState(null);
   const [question, setQuestion] = useState(null);
   const { sel, setSel, seqAnswered, setSeqAnswered, seqCorrect, setSeqCorrect, results, setResults } = useQuizState();
   const [seqPerfect, setSeqPerfect] = useState(true);
   const [mistakeStreak, setMistakeStreak] = useState(0);
   const [quizDone, setQuizDone] = useState(false);
+  const [zoneCorrect, setZoneCorrect] = useState(null);
   const [showFlag, setShowFlag] = useState(false);
   const [flagReason, setFlagReason] = useState("");
   const [flagDetail, setFlagDetail] = useState("");
   const [statsMap, setStatsMap] = useState({});
-  const isDemo = !player.id || player.id === "__demo__";
 
   async function submitFlag() {
     if (!flagReason) return;
@@ -1266,10 +1439,11 @@ function Quiz({ player, onFinish, onBack, tier, onUpgrade }) {
     setSel(null);
     setSeqAnswered(false);
     setSeqCorrect(false);
+    setZoneCorrect(null);
   }
 
-  const canAdvance = qtype === "seq" ? seqAnswered : sel !== null;
-  const answered = qtype === "seq" ? seqAnswered : sel !== null;
+  const canAdvance = qtype === "seq" ? seqAnswered : qtype === "zone-click" ? zoneCorrect !== null : sel !== null;
+  const answered = qtype === "seq" ? seqAnswered : qtype === "zone-click" ? zoneCorrect !== null : sel !== null;
   const q = question;
   if (!q) return <Screen><div style={{color:C.dimmer,textAlign:"center",paddingTop:"4rem"}}>Loading…</div></Screen>;
 
@@ -1369,7 +1543,8 @@ function Quiz({ player, onFinish, onBack, tier, onUpgrade }) {
         {qtype === "zone-click" && (
           <Card style={{marginBottom:"1.25rem",background:C.greenDim,border:`1px solid rgba(34,197,94,.3)`}}>
             <div style={{fontSize:10,letterSpacing:".14em",textTransform:"uppercase",color:C.green,marginBottom:".6rem",fontWeight:700}}>🎯 Zone Click</div>
-            <div style={{fontSize:15,lineHeight:1.8,color:C.white,fontWeight:500}}>{q.sit}</div>
+            <div style={{fontSize:14,color:C.dim,lineHeight:1.7,marginBottom:".75rem"}}>{q.sit}</div>
+            <div style={{fontSize:15,fontWeight:700,color:C.white}}>{q.question}</div>
           </Card>
         )}
 
@@ -1379,28 +1554,28 @@ function Quiz({ player, onFinish, onBack, tier, onUpgrade }) {
         {qtype === "next" && <NextQuestion q={q} sel={sel} onPick={handlePick}/>}
         {qtype === "tf" && <TFQuestion q={q} sel={sel} onPick={i => handlePick(i)}/>}
         {qtype === "seq" && <SeqQuestion q={q} onAnswer={handleSeqAnswer} answered={seqAnswered}/>}
-        {qtype === "zone-click" && <ZoneClickQuestion q={q} onAnswer={ok => {
+        {qtype === "zone-click" && <ZoneClickQuestion q={q} answered={zoneCorrect !== null} onAnswer={ok => {
+          setZoneCorrect(ok);
           const newResult = { id:q.id, cat:q.cat, ok, d:q.d||2, type:"zone-click" };
           const newResults = [...results, newResult];
           setResults(newResults);
           if (results.length + 1 >= qLen) setQuizDone(true);
-          setTimeout(advance, 1200);
         }} C={C} />}
 
         {/* Explanation */}
         {answered && (
           <div ref={el => { if (el) setTimeout(() => el.scrollIntoView({behavior:"smooth",block:"nearest"}), 150); }} style={{marginTop:"1rem"}}>
             <Card style={{
-              background: (qtype==="seq"?seqCorrect:(sel===q.ok)) ? "rgba(34,197,94,.06)" : C.redDim,
-              border:`1px solid ${(qtype==="seq"?seqCorrect:(sel===q.ok)) ? C.greenBorder : C.redBorder}`,
+              background: (qtype==="seq"?seqCorrect:qtype==="zone-click"?zoneCorrect:(sel===q.ok)) ? "rgba(34,197,94,.06)" : C.redDim,
+              border:`1px solid ${(qtype==="seq"?seqCorrect:qtype==="zone-click"?zoneCorrect:(sel===q.ok)) ? C.greenBorder : C.redBorder}`,
               marginBottom:"1rem"
             }}>
-              <div style={{fontSize:10,letterSpacing:".12em",textTransform:"uppercase",fontWeight:700,marginBottom:".5rem",color:(qtype==="seq"?seqCorrect:(sel===q.ok))?C.green:C.red}}>
-                {(qtype==="seq"?seqCorrect:(sel===q.ok)) ? "✓ Correct" : "✗ Incorrect"}
+              <div style={{fontSize:10,letterSpacing:".12em",textTransform:"uppercase",fontWeight:700,marginBottom:".5rem",color:(qtype==="seq"?seqCorrect:qtype==="zone-click"?zoneCorrect:(sel===q.ok))?C.green:C.red}}>
+                {(qtype==="seq"?seqCorrect:qtype==="zone-click"?zoneCorrect:(sel===q.ok)) ? "✓ Correct" : "✗ Incorrect"}
               </div>
-              <div style={{fontSize:13,color:C.dim,lineHeight:1.75,marginBottom:".75rem"}}>{q.why}</div>
+              <div style={{fontSize:13,color:C.dim,lineHeight:1.75,marginBottom:".75rem"}}>{q.why || q.explanation}</div>
               {(() => {
-                const userCorrect = qtype === "seq" ? seqCorrect : (sel === q.ok);
+                const userCorrect = qtype === "seq" ? seqCorrect : qtype === "zone-click" ? zoneCorrect : (sel === q.ok);
                 let pct = null, isSample = false;
                 if (isDemo) { pct = demoStatPct(q.id, q.d); isSample = true; }
                 else {
@@ -1419,7 +1594,7 @@ function Quiz({ player, onFinish, onBack, tier, onUpgrade }) {
                   </div>
                 );
               })()}
-              <div style={{fontSize:12,color:C.purple,fontStyle:"italic",borderTop:`1px solid ${C.border}`,paddingTop:".6rem"}}>💡 {q.tip}</div>
+              {q.tip && <div style={{fontSize:12,color:C.purple,fontStyle:"italic",borderTop:`1px solid ${C.border}`,paddingTop:".6rem"}}>💡 {q.tip}</div>}
             </Card>
             {quizDone ? (
               <button onClick={() => onFinish(results, seqPerfect, mistakeStreak)} style={{background:C.gold,color:C.bg,border:"none",borderRadius:12,padding:".9rem",cursor:"pointer",fontWeight:700,fontSize:14,fontFamily:FONT.body,width:"100%"}}>
@@ -1608,6 +1783,26 @@ function Results({ results, player, prevScore, totalSessions, seqPerfect, mistak
 // ─────────────────────────────────────────────────────────
 // GATED SMART GOALS SCREEN (with blurred preview)
 // ─────────────────────────────────────────────────────────
+function DemoQuizCapScreen({ onBack, onSignUp }) {
+  return (
+    <div style={{minHeight:"100vh",background:C.bg,color:C.white,fontFamily:FONT.body,display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",padding:"2rem 1.25rem",textAlign:"center"}}>
+      <div style={{maxWidth:380,width:"100%"}}>
+        <div style={{fontSize:48,marginBottom:"1rem"}}>🎮</div>
+        <div style={{fontFamily:FONT.display,fontWeight:800,fontSize:"1.8rem",marginBottom:".5rem"}}>Enjoying the demo?</div>
+        <div style={{fontSize:14,color:C.dim,lineHeight:1.65,marginBottom:"1.75rem"}}>
+          You've completed your demo quiz. <strong style={{color:C.white}}>Sign up for a free account</strong> to keep playing, track your progress, and build your Game Sense profile.
+        </div>
+        <button onClick={onSignUp} style={{width:"100%",background:C.gold,color:C.bg,border:"none",borderRadius:12,padding:"1rem",cursor:"pointer",fontWeight:800,fontSize:16,fontFamily:FONT.body,marginBottom:".75rem",boxShadow:`0 4px 16px ${C.gold}33`}}>
+          Create your free account →
+        </button>
+        <button onClick={onBack} style={{width:"100%",background:"none",border:`1px solid ${C.border}`,borderRadius:12,padding:".85rem",cursor:"pointer",color:C.dimmer,fontWeight:600,fontSize:14,fontFamily:FONT.body}}>
+          Back to home
+        </button>
+      </div>
+    </div>
+  );
+}
+
 function FreeQuizCapScreen({ onBack, onUpgrade }) {
   const [countdown, setCountdown] = useState(formatCountdown(msUntilNextWeek()));
   useEffect(() => {
@@ -2242,16 +2437,21 @@ function Report({ player, onBack, demoCoachData, tier, onUpgrade }) {
   const iq = latest ? calcWeightedIQ(latest.results) : null;
   const iqTier = iq !== null ? getTier(iq) : null;
   const canSeeRadar = canAccess("progressSnapshots", tier || "FREE").allowed;
+  // Demo bypasses the feedback gate for showcase; real FREE users see the upgrade teaser.
+  const coachFeedbackAllowed = canAccess("coachFeedback", tier || "FREE").allowed || !!demoCoachData;
   const goals = player.goals || {};
   const activeGoals = Object.entries(goals).filter(([,v])=>v?.goal?.trim());
   const [coachRatings, setCoachRatings] = useState(null);
   const [coachNotes, setCoachNotes] = useState({});
+  const [coachList, setCoachList] = useState([]);
+  const [activeCoachIdx, setActiveCoachIdx] = useState(-1); // -1 = All (aggregate)
   const [loadingCoach, setLoadingCoach] = useState(true);
 
   useEffect(() => {
     if (demoCoachData) {
       setCoachRatings(demoCoachData.ratings || null);
       setCoachNotes(demoCoachData.notes || {});
+      setCoachList(demoCoachData.coaches || []);
       setLoadingCoach(false);
       return;
     }
@@ -2259,12 +2459,17 @@ function Report({ player, onBack, demoCoachData, tier, onUpgrade }) {
       SB.getCoachRatingsForPlayer(player.id).then(data => {
         setCoachRatings(Object.keys(data.ratings || {}).length ? data.ratings : null);
         setCoachNotes(data.notes || {});
+        setCoachList([]); // SB path is single-coach today; multi-coach is demo-only for now
         setLoadingCoach(false);
       });
     } else {
       setLoadingCoach(false);
     }
   }, []);
+
+  const activeCoach = activeCoachIdx >= 0 ? coachList[activeCoachIdx] : null;
+  const activeCoachRatings = activeCoach ? activeCoach.ratings : coachRatings;
+  const activeCoachNotes = activeCoach ? activeCoach.notes : coachNotes;
 
   const cats = SKILLS[player.level] || [];
   const selfScale = getSelfScale(player.level);
@@ -2323,8 +2528,54 @@ function Report({ player, onBack, demoCoachData, tier, onUpgrade }) {
           ))}
         </Card>
       )}
-      {/* Alignment Score — summary */}
-      {coachRatings && bothRatedCount > 0 && (
+      {/* Coach Feedback — FREE tier teaser */}
+      {!coachFeedbackAllowed && (
+        <Card style={{marginBottom:"1rem",background:C.bgElevated,border:`1px dashed ${C.goldBorder}`,textAlign:"center",padding:"1.25rem"}}>
+          <div style={{fontSize:24,marginBottom:".35rem"}}>🔒</div>
+          <Label>Coach Feedback</Label>
+          <div style={{fontSize:12,color:C.dimmer,marginBottom:"0.85rem",lineHeight:1.5}}>See ratings and notes from every coach on your team — Head Coach, Assistants, Skills Coach, and more.</div>
+          <button onClick={()=>onUpgrade && onUpgrade("coachFeedback","pro")} style={{background:C.gold,color:C.bg,border:"none",borderRadius:8,padding:".55rem 1.1rem",cursor:"pointer",fontWeight:800,fontSize:12,fontFamily:FONT.body}}>
+            Unlock with Pro →
+          </button>
+        </Card>
+      )}
+
+      {/* Coach tab bar — shown when there are 2+ coaches */}
+      {coachFeedbackAllowed && coachList.length > 1 && (
+        <Card style={{marginBottom:"1rem"}}>
+          <Label>Coach Feedback · {coachList.length} coaches</Label>
+          <div style={{display:"flex",gap:".4rem",overflowX:"auto",paddingBottom:".25rem",marginTop:".4rem"}}>
+            <button onClick={() => setActiveCoachIdx(-1)} style={{
+              background: activeCoachIdx===-1 ? C.goldDim : C.bgCard,
+              border:`1px solid ${activeCoachIdx===-1 ? C.gold : C.border}`,
+              borderRadius:20, padding:".4rem .85rem", cursor:"pointer", whiteSpace:"nowrap",
+              color: activeCoachIdx===-1 ? C.gold : C.dim,
+              fontFamily:FONT.body, fontSize:12, fontWeight: activeCoachIdx===-1 ? 700 : 500, flexShrink:0,
+            }}>All coaches</button>
+            {coachList.map((c, i) => (
+              <button key={c.id} onClick={() => setActiveCoachIdx(i)} style={{
+                background: activeCoachIdx===i ? C.purpleDim : C.bgCard,
+                border:`1px solid ${activeCoachIdx===i ? C.purple : C.border}`,
+                borderRadius:20, padding:".4rem .85rem", cursor:"pointer", whiteSpace:"nowrap",
+                color: activeCoachIdx===i ? C.purple : C.dim,
+                fontFamily:FONT.body, fontSize:12, fontWeight: activeCoachIdx===i ? 700 : 500, flexShrink:0,
+              }}>{c.name}</button>
+            ))}
+          </div>
+          {activeCoach && (
+            <div style={{marginTop:".75rem",padding:".7rem .85rem",background:C.purpleDim,borderRadius:8,borderLeft:`2px solid ${C.purple}`}}>
+              <div style={{fontSize:10,letterSpacing:".1em",textTransform:"uppercase",color:C.purple,fontWeight:700,marginBottom:".3rem"}}>{activeCoach.role} · {activeCoach.date}</div>
+              <div style={{fontSize:13,color:C.white,lineHeight:1.5}}>{activeCoach.summary}</div>
+            </div>
+          )}
+          {activeCoachIdx === -1 && (
+            <div style={{marginTop:".75rem",fontSize:11,color:C.dimmer,lineHeight:1.5}}>Averaged across all {coachList.length} coaches. Tap a coach to see their individual ratings.</div>
+          )}
+        </Card>
+      )}
+
+      {/* Alignment Score — summary (hidden for FREE) */}
+      {coachFeedbackAllowed && coachRatings && bothRatedCount > 0 && (
         <Card style={{marginBottom:"1rem",background:`linear-gradient(135deg,${C.bgCard},${C.bgElevated})`,border:`1px solid ${C.purpleBorder}`}}>
           <Label>Coach Alignment</Label>
           <div style={{display:"flex",alignItems:"flex-end",gap:"1rem",marginBottom:".75rem"}}>
@@ -2350,7 +2601,7 @@ function Report({ player, onBack, demoCoachData, tier, onUpgrade }) {
           <Card style={{marginBottom:"1rem"}}>
             <Label>Skills Map</Label>
             <div style={{fontSize:11,color:C.dimmer,marginBottom:".75rem",lineHeight:1.5}}>Each axis is a skill category. Purple = your self-rating. Gold = your coach.</div>
-            <SkillsRadar cats={cats} selfRatings={player.selfRatings} coachRatings={coachRatings} selfScale={selfScale} coachScale={coachScale}/>
+            <SkillsRadar cats={cats} selfRatings={player.selfRatings} coachRatings={activeCoachRatings} selfScale={selfScale} coachScale={coachScale}/>
           </Card>
         ) : (
           <Card style={{marginBottom:"1rem",background:C.bgElevated,border:`1px dashed ${C.border}`,textAlign:"center",padding:"1.25rem"}}>
@@ -2364,13 +2615,13 @@ function Report({ player, onBack, demoCoachData, tier, onUpgrade }) {
         )
       )}
 
-      {/* Self vs Coach comparison */}
-      {(coachRatings || loadingCoach || Object.values(player.selfRatings||{}).some(v=>v)) && (
+      {/* Self vs Coach comparison (hidden for FREE — teaser card above handles it) */}
+      {coachFeedbackAllowed && (coachRatings || loadingCoach || Object.values(player.selfRatings||{}).some(v=>v)) && (
         <Card style={{marginBottom:"1rem"}}>
           <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:"1rem"}}>
             <Label style={{marginBottom:0}}>Skills — Self vs Coach</Label>
             {loadingCoach && <span style={{fontSize:11,color:C.dimmer}}>Loading…</span>}
-            {!loadingCoach && coachRatings && <span style={{fontSize:11,color:C.green}}>Coach rated ✓</span>}
+            {!loadingCoach && activeCoachRatings && <span style={{fontSize:11,color:C.green}}>Coach rated ✓</span>}
           </div>
           {cats.map(cat => (
             <div key={cat.cat} style={{marginBottom:"1.1rem"}}>
@@ -2380,7 +2631,7 @@ function Report({ player, onBack, demoCoachData, tier, onUpgrade }) {
               </div>
               {cat.skills.map(skill => {
                 const selfR = player.selfRatings?.[skill.id];
-                const coachR = coachRatings?.[skill.id];
+                const coachR = activeCoachRatings?.[skill.id];
                 const selfLabel = selfR ? getScaleLabel(selfScale, selfR) : null;
                 const selfColor = selfR ? getScaleColor(selfScale, selfR) : null;
                 const coachLabel = coachR ? getScaleLabel(coachScale, coachR) : null;
@@ -2390,7 +2641,7 @@ function Report({ player, onBack, demoCoachData, tier, onUpgrade }) {
                 const prompt = getDiscussionPrompt(skill.name, sn, cn);
                 const gap = (sn!==null && cn!==null) ? Math.abs(sn-cn) : 0;
                 const hasGap = gap > 0.2;
-                const note = coachNotes?.[skill.id];
+                const note = activeCoachNotes?.[skill.id];
                 return (
                   <div key={skill.id} style={{marginBottom:".6rem",padding:".75rem .9rem",background:C.bgElevated,borderRadius:10,border:`1px solid ${hasGap?C.goldBorder:C.border}`,borderLeft:hasGap?`3px solid ${C.gold}`:`1px solid ${C.border}`}}>
                     <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:".6rem"}}>
@@ -2559,6 +2810,9 @@ function GameSenseReportScreen({ player, onBack }) {
   const trend = getMonthlyTrend(player.quizHistory || []);
   const strongest = Object.entries(competencyScores).sort((a, b) => b[1] - a[1])[0];
   const needsWork = Object.entries(competencyScores).sort((a, b) => a[1] - b[1])[0];
+  const totalSessions = (player.quizHistory || []).length;
+  const scoreUnlocked = totalSessions >= GAME_SENSE_UNLOCK_SESSIONS;
+  const remaining = Math.max(0, GAME_SENSE_UNLOCK_SESSIONS - totalSessions);
 
   const [peerStats, setPeerStats] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -2583,14 +2837,26 @@ function GameSenseReportScreen({ player, onBack }) {
       <div style={{ padding: "1.5rem 1.25rem" }}>
         <div style={{ marginBottom: "2rem" }}>
           <div style={{ textAlign: "center", marginBottom: "1rem" }}>
-            <div style={{ fontSize: "2.5rem", fontWeight: 800, color: C.gold, fontFamily: FONT.display }}>
-              {gsScore}
-            </div>
-            <div style={{ fontSize: "12px", color: C.dimmer }}>Game Sense Score</div>
-            {!loading && peerStats && (
-              <div style={{ fontSize: "11px", color: C.dimmer, marginTop: ".5rem" }}>
-                vs peer avg {calcGameSenseScore(peerMean)}
-              </div>
+            {scoreUnlocked ? (
+              <>
+                <div style={{ fontSize: "2.5rem", fontWeight: 800, color: C.gold, fontFamily: FONT.display }}>
+                  {gsScore}
+                </div>
+                <div style={{ fontSize: "12px", color: C.dimmer }}>Game Sense Score</div>
+                {!loading && peerStats && (
+                  <div style={{ fontSize: "11px", color: C.dimmer, marginTop: ".5rem" }}>
+                    vs peer avg {calcGameSenseScore(peerMean)}
+                  </div>
+                )}
+              </>
+            ) : (
+              <>
+                <div style={{ fontSize: "2.2rem", fontFamily: FONT.display, fontWeight: 800, color: "rgba(255,255,255,.2)" }}>🔒</div>
+                <div style={{ fontSize: "12px", color: C.dim, marginTop: ".4rem" }}>Game Sense Score</div>
+                <div style={{ fontSize: "11px", color: C.dimmer, marginTop: ".4rem", lineHeight: 1.5 }}>
+                  {remaining} more quiz{remaining===1?"":"zes"} to unlock your score · {totalSessions}/{GAME_SENSE_UNLOCK_SESSIONS} done
+                </div>
+              </>
             )}
           </div>
           <SpiderChart scores={competencyScores} />
@@ -2787,15 +3053,17 @@ function getTrainingLog(playerId) {
   } catch { return { sessions: [] }; }
 }
 
-function saveTrainingSession(playerId, type, value, unit, label = "") {
+function saveTrainingSession(playerId, type, value, unit, label = "", date = "", notes = "") {
   try {
     const raw = localStorage.getItem(TRAINING_KEY);
     const all = raw ? JSON.parse(raw) : {};
     if (!all[playerId]) all[playerId] = { sessions: [] };
+    const today = new Date().toISOString().slice(0, 10);
     all[playerId].sessions.push({
-      date: new Date().toISOString().slice(0, 10),
+      date: date || today,
       type, value: Number(value), unit,
-      ...(label ? { label } : {})
+      ...(label ? { label } : {}),
+      ...(notes ? { notes } : {})
     });
     if (all[playerId].sessions.length > 200) {
       all[playerId].sessions = all[playerId].sessions.slice(-200);
@@ -2818,16 +3086,26 @@ function getTrainingSummary(sessions, type) {
 
 function TrainingLog({ playerId }) {
   const log = getTrainingLog(playerId);
+  const today = new Date().toISOString().slice(0, 10);
   const [puckCount, setPuckCount] = useState(0);
   const [minutes, setMinutes] = useState({ power_skating: 30, skills_dev: 30, other: 30 });
   const [otherLabel, setOtherLabel] = useState("");
+  const [sessionDate, setSessionDate] = useState(today);
+  const [sessionNotes, setSessionNotes] = useState("");
   const [activeType, setActiveType] = useState(null);
   const [saved, setSaved] = useState(null);
 
+  function openActivity(type) {
+    const isOpening = activeType !== type;
+    setActiveType(isOpening ? type : null);
+    if (isOpening) { setSessionDate(today); setSessionNotes(""); }
+  }
+
   function logSession(type, value, unit, label = "") {
     if (!value || value <= 0) return;
-    saveTrainingSession(playerId, type, value, unit, label);
+    saveTrainingSession(playerId, type, value, unit, label, sessionDate, sessionNotes.trim());
     setSaved(type);
+    setSessionNotes("");
     setTimeout(() => setSaved(null), 2000);
     if (type === "pucks_shot") setPuckCount(0);
   }
@@ -2867,7 +3145,7 @@ function TrainingLog({ playerId }) {
                     </div>
                   </div>
                 </div>
-                <button onClick={() => setActiveType(isActive ? null : act.type)}
+                <button onClick={() => openActivity(act.type)}
                   style={{ background: isActive ? act.color : C.dimmest, color: isActive ? C.bg : act.color, border: "none", borderRadius: 8, padding: ".3rem .75rem", cursor: "pointer", fontSize: 12, fontWeight: 700, fontFamily: FONT.body }}>
                   {isActive ? "Cancel" : "+ Log"}
                 </button>
@@ -2875,6 +3153,11 @@ function TrainingLog({ playerId }) {
 
               {isActive && (
                 <div style={{ borderTop: `1px solid ${C.border}`, paddingTop: ".75rem" }}>
+                  <div style={{ display: "flex", flexDirection: "column", gap: ".35rem", marginBottom: ".75rem" }}>
+                    <label style={{ fontSize: 10, color: C.dimmer, letterSpacing: ".08em", textTransform: "uppercase", fontWeight: 700 }}>Date</label>
+                    <input type="date" value={sessionDate} max={today} onChange={e => setSessionDate(e.target.value)}
+                      style={{ background: C.bgGlass, border: `1px solid ${C.border}`, borderRadius: 8, padding: ".5rem .75rem", color: C.white, fontFamily: FONT.body, fontSize: 13, outline: "none", colorScheme: "dark" }} />
+                  </div>
                   {act.type === "pucks_shot" ? (
                     <div style={{ display: "flex", flexDirection: "column", gap: ".5rem" }}>
                       <div style={{ textAlign: "center", fontFamily: FONT.display, fontSize: "2.5rem", fontWeight: 800, color: act.color }}>{puckCount}</div>
@@ -2896,6 +3179,10 @@ function TrainingLog({ playerId }) {
                           Reset
                         </button>
                       </div>
+                      <textarea value={sessionNotes} onChange={e => setSessionNotes(e.target.value)}
+                        placeholder="Notes — who led it, location, company, what you worked on…"
+                        rows={2}
+                        style={{ background: C.bgGlass, border: `1px solid ${C.border}`, borderRadius: 8, padding: ".55rem .75rem", color: C.white, fontFamily: FONT.body, fontSize: 13, outline: "none", width: "100%", resize: "vertical", boxSizing: "border-box" }} />
                       <button onClick={() => logSession("pucks_shot", puckCount, "pucks")}
                         disabled={puckCount === 0}
                         style={{ background: puckCount > 0 ? act.color : C.dimmest, color: puckCount > 0 ? C.bg : C.dimmer, border: "none", borderRadius: 10, padding: ".75rem", cursor: puckCount > 0 ? "pointer" : "default", fontWeight: 800, fontSize: 14, fontFamily: FONT.body, width: "100%" }}>
@@ -2926,6 +3213,10 @@ function TrainingLog({ playerId }) {
                           </button>
                         ))}
                       </div>
+                      <textarea value={sessionNotes} onChange={e => setSessionNotes(e.target.value)}
+                        placeholder="Notes — who led it, location, company, what you worked on…"
+                        rows={2}
+                        style={{ background: C.bgGlass, border: `1px solid ${C.border}`, borderRadius: 8, padding: ".55rem .75rem", color: C.white, fontFamily: FONT.body, fontSize: 13, outline: "none", width: "100%", resize: "vertical", boxSizing: "border-box" }} />
                       <button onClick={() => logSession(act.type, minutes[act.type], "min", act.type === "other" ? otherLabel : "")}
                         style={{ background: act.color, color: C.bg, border: "none", borderRadius: 10, padding: ".75rem", cursor: "pointer", fontWeight: 800, fontSize: 14, fontFamily: FONT.body, width: "100%" }}>
                         {justSaved ? "✓ Logged!" : `Log ${minutes[act.type]} min`}
@@ -2939,6 +3230,82 @@ function TrainingLog({ playerId }) {
         })}
       </div>
     </Card>
+  );
+}
+
+function JourneyScreen({ player, onBack, onNav }) {
+  const state = getPositioningJourneyState(player.quizHistory);
+  const { pct, attempts, nodes, nextIdx } = state;
+  const nextNode = nextIdx !== null ? nodes[nextIdx] : null;
+  const competencyColor = COMPETENCIES.positioning.color;
+
+  return (
+    <div style={{minHeight:"100vh",background:C.bg,color:C.white,fontFamily:FONT.body,paddingBottom:80}}>
+      <StickyHeader>
+        <div style={{maxWidth:560,margin:"0 auto",display:"flex",alignItems:"center",gap:"1rem"}}>
+          <BackBtn onClick={onBack}/>
+          <div style={{flex:1}}>
+            <div style={{fontFamily:FONT.display,fontWeight:800,fontSize:"1.1rem"}}>Journey — Positioning</div>
+            <div style={{fontSize:11,color:C.dimmer}}>{nodes.filter(n=>n.unlocked).length}/{nodes.length} unlocked · {attempts} positioning question{attempts===1?"":"s"} answered</div>
+          </div>
+        </div>
+      </StickyHeader>
+
+      <div style={{padding:"1.25rem",maxWidth:560,margin:"0 auto"}}>
+        {/* Header progress card */}
+        <Card style={{marginBottom:"1rem",background:`linear-gradient(135deg,${competencyColor}18,${C.bgElevated})`,border:`1px solid ${competencyColor}40`}}>
+          <Label>{COMPETENCIES.positioning.icon} Positioning score</Label>
+          <div style={{display:"flex",alignItems:"baseline",gap:".5rem",marginTop:".3rem",marginBottom:".6rem"}}>
+            <div style={{fontFamily:FONT.display,fontWeight:800,fontSize:"2.2rem",color:competencyColor,lineHeight:1}}>{pct}</div>
+            <div style={{fontSize:12,color:C.dimmer}}>/ 100</div>
+          </div>
+          {nextNode ? (
+            <>
+              <div style={{fontSize:12,color:C.dim,marginBottom:".4rem"}}>Next: <strong style={{color:C.white}}>{nextNode.icon} {nextNode.title}</strong> at {nextNode.threshold}%{nextNode.minAttempts?` + ${nextNode.minAttempts} attempts`:""}</div>
+              <ProgressBar value={Math.min(pct, nextNode.threshold)} max={nextNode.threshold} color={competencyColor}/>
+            </>
+          ) : (
+            <div style={{fontSize:12,color:C.green,fontWeight:700}}>✓ All positioning nodes unlocked — you're a Rink General.</div>
+          )}
+        </Card>
+
+        {/* Nodes */}
+        <div style={{display:"flex",flexDirection:"column",gap:".75rem"}}>
+          {nodes.map((n, i) => {
+            const isNext = i === nextIdx;
+            const isUnlocked = n.unlocked;
+            const accent = isUnlocked ? C.green : isNext ? C.gold : C.dimmer;
+            const bg = isUnlocked ? "rgba(34,197,94,.06)" : isNext ? "rgba(201,168,76,.08)" : C.bgCard;
+            const border = isUnlocked ? "rgba(34,197,94,.35)" : isNext ? C.goldBorder : C.border;
+            return (
+              <Card key={n.id} style={{background:bg,border:`1px solid ${border}`}}>
+                <div style={{display:"flex",alignItems:"center",gap:".75rem"}}>
+                  <div style={{fontSize:28,opacity:isUnlocked?1:isNext?0.9:0.3,filter:isUnlocked?"none":isNext?"none":"grayscale(100%)"}}>{n.icon}</div>
+                  <div style={{flex:1,minWidth:0}}>
+                    <div style={{display:"flex",alignItems:"center",gap:".5rem",marginBottom:".15rem"}}>
+                      <div style={{fontFamily:FONT.display,fontWeight:800,fontSize:15,color:isUnlocked?C.white:isNext?C.white:C.dimmer}}>{n.title}</div>
+                      {isUnlocked && <Pill color={C.green}>✓ {n.title_unlock}</Pill>}
+                      {isNext && <Pill color={C.gold}>Next up</Pill>}
+                    </div>
+                    <div style={{fontSize:12,color:isUnlocked||isNext?C.dim:C.dimmer,lineHeight:1.5}}>{n.desc}</div>
+                    <div style={{fontSize:11,color:C.dimmer,marginTop:".35rem"}}>
+                      {isUnlocked
+                        ? `Unlocked at ${n.threshold}% positioning${n.minAttempts?` + ${n.minAttempts} attempts`:""}`
+                        : `Unlocks at ${n.threshold}% positioning${n.minAttempts?` + ${n.minAttempts} attempts`:""}`}
+                    </div>
+                  </div>
+                  <div style={{fontSize:18,color:accent,flexShrink:0}}>{isUnlocked?"✓":"🔒"}</div>
+                </div>
+              </Card>
+            );
+          })}
+        </div>
+
+        <div style={{marginTop:"1.25rem"}}>
+          <PrimaryBtn onClick={() => onNav("quiz")}>Take a quiz →</PrimaryBtn>
+        </div>
+      </div>
+    </div>
   );
 }
 
@@ -3454,10 +3821,103 @@ function buildDemoPlayer(level) {
     selfRatings: {...cfg.selfRatings}, goals: {...cfg.goals}, __demo: true,
   };
 }
+// Multi-coach feedback (demo) — persona roster with per-level staffing caps
+const COACH_PERSONAS = [
+  { id:"head",          name:"Coach Reynolds",  role:"Head Coach",                     tilts:[],         summary:"Leads by example — coachable and brings full effort every practice." },
+  { id:"assistant",     name:"Coach Martinez",  role:"Assistant Coach",                tilts:[],         summary:"Brings energy to practice every day — good teammate in the room." },
+  { id:"skills",        name:"Coach Chen",      role:"Skills Coach",                   tilts:["s","p"],  summary:"Strong work ethic in skill sessions — hands keep getting better." },
+  { id:"goalie",        name:"Coach Thompson",  role:"Goalie Coach",                   tilts:["h","d"],  summary:"Good tracking and composure in the crease. Work on push recovery." },
+  { id:"power_skating", name:"Coach Andersson", role:"Power Skating Coach",            tilts:["s"],      summary:"Refine outside edges and crossovers — stride mechanics coming along nicely." },
+  { id:"video",         name:"Coach O'Brien",   role:"Video / Analytics Coach",        tilts:["h","dm"], summary:"Sees the ice well when they slow the game down and look up first." },
+  { id:"asst2",         name:"Coach Patel",     role:"Assistant Coach",                tilts:[],         summary:"Listens well in meetings — asks great questions and applies the feedback." },
+  { id:"mental",        name:"Coach Yamamoto",  role:"Mental Performance Coach",       tilts:["c"],      summary:"Stays composed after mistakes — keep building confidence through routine." },
+  { id:"strength",      name:"Coach Petrov",    role:"Strength & Conditioning Coach",  tilts:["p"],      summary:"Off-ice consistency is paying off — stronger on pucks, finishing checks better." },
+];
+
+function getDemoCoachRoster(level, position) {
+  const isGoalie = position === "Goalie";
+  const pick = (ids) => ids.map(id => COACH_PERSONAS.find(p => p.id === id)).filter(Boolean);
+  if (level === "U7 / Initiation")  return pick(["head","assistant"]);
+  if (level === "U9 / Novice")      return pick(["head","assistant","skills"]);
+  if (level === "U11 / Atom")       return pick(["head","assistant","skills","power_skating"]);
+  if (level === "U13 / Peewee")     return isGoalie
+    ? pick(["head","assistant","skills","goalie","power_skating"])
+    : pick(["head","assistant","skills","power_skating","video"]);
+  if (level === "U15 / Bantam")     return isGoalie
+    ? pick(["head","assistant","asst2","skills","goalie","power_skating"])
+    : pick(["head","assistant","asst2","skills","power_skating","video"]);
+  if (level === "U18 / Midget")     return isGoalie
+    ? pick(["head","assistant","asst2","skills","goalie","power_skating","video","mental"])
+    : pick(["head","assistant","asst2","skills","power_skating","video","mental","strength"]);
+  return pick(["head","assistant"]);
+}
+
+// Skill IDs look like "u11s2" (skating-2), "u13dm4" (decision-making-4). Extract the domain prefix.
+function skillDomain(skillId) {
+  const m = skillId?.match(/^u\d+([a-z]+)\d+$/);
+  return m ? m[1] : null;
+}
+
+function bumpRating(value, scale) {
+  if (!value || !scale?.length) return value;
+  const idx = scale.findIndex(o => o.value === value);
+  if (idx < 0 || idx >= scale.length - 1) return value;
+  return scale[idx + 1].value;
+}
+
+function tiltedRatings(baseline, persona, scale) {
+  if (!persona.tilts?.length) return {...baseline};
+  const out = {...baseline};
+  for (const skillId of Object.keys(baseline)) {
+    const d = skillDomain(skillId);
+    if (d && persona.tilts.includes(d)) out[skillId] = bumpRating(baseline[skillId], scale);
+  }
+  return out;
+}
+
+function aggregateCoachRatings(coaches, scale) {
+  if (!coaches?.length || !scale?.length) return {};
+  const skillIds = new Set();
+  coaches.forEach(c => Object.keys(c.ratings || {}).forEach(id => skillIds.add(id)));
+  const agg = {};
+  for (const id of skillIds) {
+    const indices = coaches
+      .map(c => c.ratings?.[id])
+      .filter(Boolean)
+      .map(v => scale.findIndex(o => o.value === v))
+      .filter(i => i >= 0);
+    if (!indices.length) continue;
+    const avg = Math.round(indices.reduce((a,b) => a+b, 0) / indices.length);
+    agg[id] = scale[Math.min(Math.max(avg, 0), scale.length - 1)].value;
+  }
+  return agg;
+}
+
 function buildDemoCoachRatings(level) {
   const cfg = DEMO_PROFILES[level];
-  if (!cfg) return { ratings: {}, notes: {} };
-  return { ratings: {...cfg.coachRatings}, notes: {...cfg.coachNotes} };
+  if (!cfg) return { coaches: [], ratings: {}, notes: {} };
+  const position = cfg.position || "Forward";
+  const personas = getDemoCoachRoster(level, position);
+  const baseline = cfg.coachRatings || {};
+  const baselineNotes = cfg.coachNotes || {};
+  const scale = getCoachScale(level);
+  // Stagger dates so each coach's session looks distinct
+  const baseDate = new Date("2026-03-15");
+  const coaches = personas.map((p, i) => {
+    const d = new Date(baseDate); d.setDate(d.getDate() - i * 7);
+    return {
+      id: p.id,
+      name: p.name,
+      role: p.role,
+      date: d.toISOString().slice(0, 10),
+      summary: p.summary,
+      ratings: tiltedRatings(baseline, p, scale),
+      notes: i === 0 ? {...baselineNotes} : {},
+    };
+  });
+  const aggregate = aggregateCoachRatings(coaches, scale);
+  const mergedNotes = coaches.reduce((acc, c) => ({...acc, ...c.notes}), {});
+  return { coaches, ratings: aggregate, notes: mergedNotes };
 }
 
 // ─────────────────────────────────────────────────────────
@@ -4061,6 +4521,7 @@ export default function App() {
     setPrevScore(score);
     setTotalSessions(newTotal);
     if (tier === "FREE") incrementFreeQuizCount();
+    if (demoMode) { try { localStorage.setItem("iceiq_demo_quiz_taken", "1"); } catch {} }
     if (newTotal === 5 && tier === "FREE" && !localStorage.getItem("iceiq_milestone5_shown")) {
       setShowMilestone5Banner(true);
       localStorage.setItem("iceiq_milestone5_shown", "true");
@@ -4228,7 +4689,9 @@ export default function App() {
 
       <div style={{paddingBottom: screen==="quiz"||screen==="results" ? 0 : 80}}>
         {screen === "home"    && <Home player={tierLimitedPlayer(player, tier)} onNav={setScreen} demoMode={demoMode} subscriptionTier={tier}/>}
-        {screen === "quiz"    && (tier === "FREE" && !demoMode && isAtFreeQuizCap()
+        {screen === "quiz"    && (demoMode && (()=>{ try { return localStorage.getItem("iceiq_demo_quiz_taken") === "1"; } catch { return false; } })()
+          ? <DemoQuizCapScreen onBack={()=>setScreen("home")} onSignUp={exitDemo}/>
+          : tier === "FREE" && !demoMode && isAtFreeQuizCap()
           ? <FreeQuizCapScreen onBack={()=>setScreen("home")} onUpgrade={()=>setScreen("plans")}/>
           : <Quiz player={player} onFinish={handleQuizFinish} onBack={()=>setScreen("home")} tier={tier} onUpgrade={promptUpgrade}/>
         )}
@@ -4247,6 +4710,7 @@ export default function App() {
         )}
         {screen === "report"  && <Report player={tierLimitedPlayer(player, tier)} onBack={()=>setScreen("home")} demoCoachData={demoMode?demoCoachRatings:null} tier={tier} onUpgrade={(f,t)=>promptUpgrade(f,t)}/>}
         {screen === "gamesense" && <GameSenseReportScreen player={player} onBack={()=>setScreen("home")}/>}
+        {screen === "journey" && <JourneyScreen player={player} onBack={()=>setScreen("home")} onNav={setScreen}/>}
         {screen === "profile" && <Profile player={player} onSave={handleProfileSave} onBack={()=>setScreen("home")} onReset={handleSignOut} demoMode={demoMode} tier={tier} onUpgrade={(f,t)=>promptUpgrade(f,t)} userEmail={userEmail} onAdminReports={()=>setScreen("admin")}/>}
         {screen === "admin" && <Suspense fallback={<LazyFallback/>}><AdminReports onBack={()=>setScreen("profile")}/></Suspense>}
       </div>
