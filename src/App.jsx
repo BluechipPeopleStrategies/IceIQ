@@ -4007,16 +4007,16 @@ function BottomNav({ active, onNav, tier = "FREE" }) {
 // ─────────────────────────────────────────────────────────
 // DEMO MODE — pre-populated sample player, no signup required
 // ─────────────────────────────────────────────────────────
+// Result stubs in DEMO_PROFILES omit `type` when "mc" — readers default via `r.type || "mc"`.
+const R = (id, cat, ok, d, type) => type ? {id,cat,ok,d,type} : {id,cat,ok,d};
 const DEMO_PROFILES = {
   "U7 / Initiation":{
     name:"Nora Orr",position:"Not Sure",jersey:7,team:"U7 IP Calgary Flames",
     sessions:(mk)=>[mk(true,false,false,10,52),mk(true,true,false,5,65),mk(true,true,false,1,70)],
-    results:(ok1,ok2,ok3)=>[
-      {id:"u7q1",cat:"Skating",ok:ok1,d:1,type:"mc"},{id:"u7q3",cat:"Puck Control",ok:ok1,d:1,type:"mc"},
-      {id:"u7q5",cat:"Game Awareness",ok:ok1,d:1,type:"mc"},{id:"u7q10",cat:"Compete",ok:ok1,d:1,type:"mc"},
-      {id:"u7q20",cat:"Skating",ok:ok2,d:2,type:"mc"},{id:"u7q25",cat:"Compete",ok:ok2,d:1,type:"mc"},
-      {id:"u7q30",cat:"Game Awareness",ok:ok2,d:2,type:"mc"},{id:"u7tf1",cat:"Game Awareness",ok:ok2,d:1,type:"tf"},
-      {id:"u7q40",cat:"Compete",ok:ok3,d:3,type:"mc"},{id:"u7q50",cat:"Puck Control",ok:ok3,d:2,type:"mc"},
+    results:(a,b,c)=>[
+      R("u7q1","Skating",a,1), R("u7q3","Puck Control",a,1), R("u7q5","Game Awareness",a,1), R("u7q10","Compete",a,1),
+      R("u7q20","Skating",b,2), R("u7q25","Compete",b,1), R("u7q30","Game Awareness",b,2), R("u7tf1","Game Awareness",b,1,"tf"),
+      R("u7q40","Compete",c,3), R("u7q50","Puck Control",c,2),
     ],
     selfRatings:{u7s1:"developing",u7s2:"introduced",u7s3:"introduced",u7s4:"developing",u7p1:"introduced",u7p2:"introduced",u7c1:"developing",u7c2:"developing",u7c3:"consistent",u7c4:"developing"},
     coachRatings:{u7s1:"introduced",u7s2:"introduced",u7s3:"introduced",u7s4:"developing",u7p1:"introduced",u7p2:"introduced",u7c1:"consistent",u7c2:"developing",u7c3:"consistent",u7c4:"developing"},
@@ -4026,12 +4026,10 @@ const DEMO_PROFILES = {
   "U9 / Novice":{
     name:"Luca Lidstrom",position:"Defense",jersey:5,team:"U9 A Saskatoon Blazers",
     sessions:(mk)=>[mk(true,false,false,12,55),mk(true,true,false,6,68),mk(true,true,true,2,78)],
-    results:(ok1,ok2,ok3)=>[
-      {id:"u9q1",cat:"Decision Making",ok:ok1,d:1,type:"mc"},{id:"u9q3",cat:"Positioning",ok:ok1,d:1,type:"mc"},
-      {id:"u9q7",cat:"Exiting the Zone",ok:ok1,d:1,type:"mc"},{id:"u9q10",cat:"Defense",ok:ok1,d:1,type:"mc"},
-      {id:"u9q16",cat:"Decision Making",ok:ok2,d:2,type:"mc"},{id:"u9q21",cat:"Defense",ok:ok2,d:2,type:"mc"},
-      {id:"u9q27",cat:"Defense",ok:ok2,d:2,type:"mc"},{id:"u9q30",cat:"Decision Making",ok:ok2,d:2,type:"mc"},
-      {id:"u9q41",cat:"Decision Making",ok:ok3,d:3,type:"mc"},{id:"u9q42",cat:"Defense",ok:ok3,d:3,type:"mc"},
+    results:(a,b,c)=>[
+      R("u9q1","Decision Making",a,1), R("u9q3","Positioning",a,1), R("u9q7","Exiting the Zone",a,1), R("u9q10","Defense",a,1),
+      R("u9q16","Decision Making",b,2), R("u9q21","Defense",b,2), R("u9q27","Defense",b,2), R("u9q30","Decision Making",b,2),
+      R("u9q41","Decision Making",c,3), R("u9q42","Defense",c,3),
     ],
     selfRatings:{u9s1:"developing",u9s2:"consistent",u9s3:"developing",u9s4:"introduced",u9p1:"developing",u9p2:"developing",u9p3:"introduced",u9p4:"introduced",u9h1:"developing",u9h2:"introduced",u9d1:"developing",u9d2:"introduced",u9c1:"consistent",u9c2:"developing",u9c3:"developing"},
     coachRatings:{u9s1:"developing",u9s2:"developing",u9s3:"introduced",u9s4:"introduced",u9p1:"developing",u9p2:"developing",u9p3:"developing",u9p4:"introduced",u9h1:"developing",u9h2:"introduced",u9d1:"introduced",u9d2:"introduced",u9c1:"consistent",u9c2:"consistent",u9c3:"developing"},
@@ -4041,12 +4039,10 @@ const DEMO_PROFILES = {
   "U13 / Peewee":{
     name:"Maya Roy",position:"Goalie",jersey:30,team:"U13 AAA Vancouver Hawks",
     sessions:(mk)=>[mk(true,false,false,10,62),mk(true,true,false,4,75),mk(true,true,true,1,86)],
-    results:(ok1,ok2,ok3)=>[
-      {id:"u13q1",cat:"Rush Reads",ok:ok1,d:1,type:"mc"},{id:"u13q5",cat:"Defensive Zone",ok:ok1,d:1,type:"mc"},
-      {id:"u13q10",cat:"Zone Entry",ok:ok1,d:1,type:"mc"},{id:"u13q15",cat:"Special Teams",ok:ok1,d:1,type:"mc"},
-      {id:"u13q25",cat:"Shot Selection",ok:ok2,d:2,type:"mc"},{id:"u13q35",cat:"Defensive Zone",ok:ok2,d:2,type:"mc"},
-      {id:"u13q45",cat:"Special Teams",ok:ok2,d:2,type:"mc"},{id:"u13g1",cat:"Goalie",ok:ok2,d:1,type:"mc"},
-      {id:"u13g5",cat:"Goalie",ok:ok3,d:2,type:"mc"},{id:"u13g10",cat:"Goalie",ok:ok3,d:3,type:"mc"},
+    results:(a,b,c)=>[
+      R("u13q1","Rush Reads",a,1), R("u13q5","Defensive Zone",a,1), R("u13q10","Zone Entry",a,1), R("u13q15","Special Teams",a,1),
+      R("u13q25","Shot Selection",b,2), R("u13q35","Defensive Zone",b,2), R("u13q45","Special Teams",b,2), R("u13g1","Goalie",b,1),
+      R("u13g5","Goalie",c,2), R("u13g10","Goalie",c,3),
     ],
     selfRatings:{u13s1:"consistent",u13s2:"developing",u13s3:"developing",u13p1:"developing",u13p2:"introduced",u13p3:"consistent",u13p4:"developing",u13h1:"consistent",u13h2:"developing",u13h3:"consistent",u13h4:"developing",u13d1:"developing",u13d2:"consistent",u13c1:"proficient",u13c2:"consistent",u13c3:"developing",u13c4:"consistent"},
     coachRatings:{u13s1:"consistent",u13s2:"developing",u13s3:"introduced",u13p1:"developing",u13p2:"introduced",u13p3:"developing",u13p4:"developing",u13h1:"developing",u13h2:"developing",u13h3:"consistent",u13h4:"developing",u13d1:"developing",u13d2:"consistent",u13c1:"proficient",u13c2:"consistent",u13c3:"consistent",u13c4:"consistent"},
@@ -4056,12 +4052,10 @@ const DEMO_PROFILES = {
   "U11 / Atom":{
     name:"Cole Gretzky",position:"Forward",jersey:99,team:"U11 AA Edmonton Selects",
     sessions:(mk)=>[mk(true,false,false,14,58),mk(true,true,false,7,71),mk(true,true,true,1,83)],
-    results:(ok1,ok2,ok3)=>[
-      {id:"u11q1",cat:"Rush Reads",ok:ok1,d:1,type:"mc"},{id:"u11q2",cat:"Coverage",ok:ok1,d:1,type:"mc"},
-      {id:"u11q6",cat:"Puck Protection",ok:ok1,d:1,type:"mc"},{id:"u11q11",cat:"Exiting the Zone",ok:ok1,d:1,type:"mc"},
-      {id:"u11q20",cat:"Coverage",ok:ok2,d:2,type:"mc"},{id:"u11q30",cat:"Special Teams",ok:ok2,d:2,type:"mc"},
-      {id:"u11q40",cat:"Puck Protection",ok:ok2,d:2,type:"mc"},{id:"u11q50",cat:"Coverage",ok:ok2,d:2,type:"mc"},
-      {id:"u11q92",cat:"Blue Line Decisions",ok:ok3,d:3,type:"mc"},{id:"u11q100",cat:"Decision Timing",ok:ok3,d:3,type:"mc"},
+    results:(a,b,c)=>[
+      R("u11q1","Rush Reads",a,1), R("u11q2","Coverage",a,1), R("u11q6","Puck Protection",a,1), R("u11q11","Exiting the Zone",a,1),
+      R("u11q20","Coverage",b,2), R("u11q30","Special Teams",b,2), R("u11q40","Puck Protection",b,2), R("u11q50","Coverage",b,2),
+      R("u11q92","Blue Line Decisions",c,3), R("u11q100","Decision Timing",c,3),
     ],
     selfRatings:{u11s1:"developing",u11s2:"consistent",u11s3:"developing",u11s4:"introduced",u11p1:"consistent",u11p2:"developing",u11p3:"developing",u11p4:"consistent",u11h1:"consistent",u11h2:"developing",u11h3:"developing",u11d1:"developing",u11d2:"introduced",u11c1:"advanced",u11c2:"proficient",u11c3:"consistent",u11dm1:"developing",u11dm2:"developing",u11dm3:"introduced",u11dm4:"consistent",u11dm5:"developing"},
     coachRatings:{u11s1:"developing",u11s2:"consistent",u11s3:"developing",u11s4:"developing",u11p1:"consistent",u11p2:"developing",u11p3:"consistent",u11p4:"proficient",u11h1:"consistent",u11h2:"developing",u11h3:"developing",u11d1:"introduced",u11d2:"introduced",u11c1:"advanced",u11c2:"proficient",u11c3:"proficient",u11dm1:"developing",u11dm2:"developing",u11dm3:"developing",u11dm4:"consistent",u11dm5:"developing"},
@@ -4071,12 +4065,10 @@ const DEMO_PROFILES = {
   "U15 / Bantam":{
     name:"Jack Bourque",position:"Defense",jersey:77,team:"U15 AAA Winnipeg Warriors",
     sessions:(mk)=>[mk(true,false,false,8,60),mk(true,true,false,3,74),mk(true,true,true,1,85)],
-    results:(ok1,ok2,ok3)=>[
-      {id:"u15q1",cat:"Systems Play",ok:ok1,d:1,type:"mc"},{id:"u15q5",cat:"Transition Game",ok:ok1,d:1,type:"mc"},
-      {id:"u15q10",cat:"Special Teams",ok:ok1,d:1,type:"mc"},{id:"u15q15",cat:"Gap Control",ok:ok1,d:1,type:"mc"},
-      {id:"u15q25",cat:"Physical Play",ok:ok2,d:2,type:"mc"},{id:"u15q35",cat:"Leadership",ok:ok2,d:2,type:"mc"},
-      {id:"u15q45",cat:"Systems Play",ok:ok2,d:2,type:"mc"},{id:"u15q55",cat:"Transition Game",ok:ok2,d:2,type:"mc"},
-      {id:"u15q75",cat:"Gap Control",ok:ok3,d:3,type:"mc"},{id:"u15q90",cat:"Special Teams",ok:ok3,d:3,type:"mc"},
+    results:(a,b,c)=>[
+      R("u15q1","Systems Play",a,1), R("u15q5","Transition Game",a,1), R("u15q10","Special Teams",a,1), R("u15q15","Gap Control",a,1),
+      R("u15q25","Physical Play",b,2), R("u15q35","Leadership",b,2), R("u15q45","Systems Play",b,2), R("u15q55","Transition Game",b,2),
+      R("u15q75","Gap Control",c,3), R("u15q90","Special Teams",c,3),
     ],
     selfRatings:{},coachRatings:{},coachNotes:{},
     goals:{"Systems Play":{goal:"Master the 1-2-2 forecheck",S:"Execute my role in the 1-2-2 every shift",M:"Coach reviews video after each game",A:"Yes — we run this system every practice",R:"I freelance too much and break structure",T:"By end of January 2027"}},
@@ -4084,12 +4076,10 @@ const DEMO_PROFILES = {
   "U18 / Midget":{
     name:"Eli Lemieux",position:"Forward",jersey:19,team:"U18 Prep Toronto Jr. Canadiens",
     sessions:(mk)=>[mk(true,true,false,6,72),mk(true,true,true,3,81),mk(true,true,true,1,89)],
-    results:(ok1,ok2,ok3)=>[
-      {id:"u18q1",cat:"Game Management",ok:ok1,d:1,type:"mc"},{id:"u18q5",cat:"Advanced Tactics",ok:ok1,d:1,type:"mc"},
-      {id:"u18q10",cat:"Special Teams",ok:ok1,d:1,type:"mc"},{id:"u18q15",cat:"Breakout Execution",ok:ok1,d:1,type:"mc"},
-      {id:"u18q25",cat:"Neutral Zone Play",ok:ok2,d:2,type:"mc"},{id:"u18q35",cat:"Leadership",ok:ok2,d:2,type:"mc"},
-      {id:"u18q48",cat:"Advanced Tactics",ok:ok2,d:2,type:"mc"},{id:"u18q55",cat:"Breakout Execution",ok:ok2,d:2,type:"mc"},
-      {id:"u18q81",cat:"Breakout Execution",ok:ok3,d:3,type:"mc"},{id:"u18q99",cat:"Breakout Execution",ok:ok3,d:3,type:"mc"},
+    results:(a,b,c)=>[
+      R("u18q1","Game Management",a,1), R("u18q5","Advanced Tactics",a,1), R("u18q10","Special Teams",a,1), R("u18q15","Breakout Execution",a,1),
+      R("u18q25","Neutral Zone Play",b,2), R("u18q35","Leadership",b,2), R("u18q48","Advanced Tactics",b,2), R("u18q55","Breakout Execution",b,2),
+      R("u18q81","Breakout Execution",c,3), R("u18q99","Breakout Execution",c,3),
     ],
     selfRatings:{},coachRatings:{},coachNotes:{},
     goals:{"Leadership":{goal:"Lead the room as an alternate captain",S:"Speak up in team meetings and set the tone pre-game",M:"Coaches track leadership moments weekly",A:"Yes — coaches gave me the A",R:"I lead by example but need to be more vocal",T:"By March 2027"}},
@@ -4118,13 +4108,10 @@ function buildDemoPlayer(level) {
     ? { ...DEMO_PARENT_RATINGS[level], updated_at: new Date(now - 14*day).toISOString().slice(0, 10) }
     : null;
   const dStr = (daysAgo) => new Date(now - daysAgo*day).toISOString().slice(0, 10);
+  const T = (d, type, value, unit) => ({ date: dStr(d), type, value, unit });
   const trainingSessions = [
-    { date: dStr(1),  type: "pucks_shot",    value: 50, unit: "pucks" },
-    { date: dStr(3),  type: "skills_dev",    value: 30, unit: "min" },
-    { date: dStr(5),  type: "power_skating", value: 30, unit: "min" },
-    { date: dStr(8),  type: "pucks_shot",    value: 50, unit: "pucks" },
-    { date: dStr(10), type: "skills_dev",    value: 30, unit: "min" },
-    { date: dStr(12), type: "power_skating", value: 30, unit: "min" },
+    T(1,"pucks_shot",50,"pucks"),  T(3,"skills_dev",30,"min"),  T(5,"power_skating",30,"min"),
+    T(8,"pucks_shot",50,"pucks"),  T(10,"skills_dev",30,"min"), T(12,"power_skating",30,"min"),
   ];
   return {
     id: "__demo__", name: cfg.name, level, position: cfg.position,
@@ -4149,22 +4136,18 @@ const COACH_PERSONAS = [
   { id:"strength",      name:"Coach Petrov",    role:"Strength & Conditioning Coach",  tilts:["p"],      summary:"Off-ice consistency is paying off — stronger on pucks, finishing checks better." },
 ];
 
+const DEMO_ROSTERS = {
+  "U7 / Initiation": { all:["head","assistant"] },
+  "U9 / Novice":     { all:["head","assistant","skills"] },
+  "U11 / Atom":      { all:["head","assistant","skills","power_skating"] },
+  "U13 / Peewee":    { all:["head","assistant","skills","power_skating","video"],                    goalie:["head","assistant","skills","goalie","power_skating"] },
+  "U15 / Bantam":    { all:["head","assistant","asst2","skills","power_skating","video"],            goalie:["head","assistant","asst2","skills","goalie","power_skating"] },
+  "U18 / Midget":    { all:["head","assistant","asst2","skills","power_skating","video","mental","strength"], goalie:["head","assistant","asst2","skills","goalie","power_skating","video","mental"] },
+};
 function getDemoCoachRoster(level, position) {
-  const isGoalie = position === "Goalie";
-  const pick = (ids) => ids.map(id => COACH_PERSONAS.find(p => p.id === id)).filter(Boolean);
-  if (level === "U7 / Initiation")  return pick(["head","assistant"]);
-  if (level === "U9 / Novice")      return pick(["head","assistant","skills"]);
-  if (level === "U11 / Atom")       return pick(["head","assistant","skills","power_skating"]);
-  if (level === "U13 / Peewee")     return isGoalie
-    ? pick(["head","assistant","skills","goalie","power_skating"])
-    : pick(["head","assistant","skills","power_skating","video"]);
-  if (level === "U15 / Bantam")     return isGoalie
-    ? pick(["head","assistant","asst2","skills","goalie","power_skating"])
-    : pick(["head","assistant","asst2","skills","power_skating","video"]);
-  if (level === "U18 / Midget")     return isGoalie
-    ? pick(["head","assistant","asst2","skills","goalie","power_skating","video","mental"])
-    : pick(["head","assistant","asst2","skills","power_skating","video","mental","strength"]);
-  return pick(["head","assistant"]);
+  const r = DEMO_ROSTERS[level] || DEMO_ROSTERS["U7 / Initiation"];
+  const ids = (position === "Goalie" && r.goalie) ? r.goalie : r.all;
+  return ids.map(id => COACH_PERSONAS.find(p => p.id === id)).filter(Boolean);
 }
 
 // Skill IDs look like "u11s2" (skating-2), "u13dm4" (decision-making-4). Extract the domain prefix.
