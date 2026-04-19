@@ -2,6 +2,7 @@ import { useState, useEffect, useCallback, lazy, Suspense } from "react";
 import * as SB from "./supabase";
 import { supabase, hasSupabase } from "./supabase";
 import { canAccess, getUpgradeTriggerMessage } from "./utils/tierGate";
+import { getParentRatings, saveParentRatings, hasParentRatings, daysSinceUpdated } from "./utils/parentAssessment";
 import { canSwitchAgeGroup, recordAgeGroupSwitch, getAgeGroupLock, setAgeGroupLock, checkSeasonReset } from "./utils/deviceLock";
 import {
   C, FONT, LEVELS, POSITIONS, POSITIONS_U11UP, SEASONS,
@@ -276,6 +277,80 @@ const BADGES = {
   TACTICIAN:  {icon:"🧩", name:"Tactician",    desc:"Sequence question perfect"},
   DETECTIVE:  {icon:"🔍", name:"Detective",    desc:"Spot 3 mistakes correctly"},
 };
+
+// Parent Assessment — character/habits, 8 dimensions × 6 age groups, 3-point scale
+const PARENT_SCALE = [
+  { value: "growing",  label: "Growing",  color: "#facc15" },
+  { value: "steady",   label: "Steady",   color: "#22c55e" },
+  { value: "thriving", label: "Thriving", color: "#a855f7" },
+];
+
+const PARENT_DIMENSIONS = [
+  { id: "passion", icon: "❤️", label: "Love of the game", prompts: {
+    "U7 / Initiation":"Does your child get excited to go to the rink?",
+    "U9 / Novice":"Does your child look forward to practices and games?",
+    "U11 / Atom":"Does your child talk about hockey outside the rink — watching games, asking questions?",
+    "U13 / Peewee":"Is hockey something your child genuinely enjoys, not just something they do?",
+    "U15 / Bantam":"Does your child still light up about hockey after years of playing?",
+    "U18 / Midget":"Is hockey still a source of joy — or has it become a job?",
+  }},
+  { id: "readiness", icon: "🎒", label: "Pre-game readiness", prompts: {
+    "U7 / Initiation":"Does your child help get gear packed and eat before practice?",
+    "U9 / Novice":"Does your child prepare their gear and snacks with reminders?",
+    "U11 / Atom":"Does your child own most of their pre-game prep (gear, snacks, water)?",
+    "U13 / Peewee":"Does your child handle their own pre-game routine most days?",
+    "U15 / Bantam":"Does your child take ownership of nutrition, sleep, and gear prep?",
+    "U18 / Midget":"Does your child own their pre-game prep (nutrition, sleep, recovery)?",
+  }},
+  { id: "effort", icon: "💪", label: "Effort mindset", prompts: {
+    "U7 / Initiation":"Does your child try hard even when practice is tough?",
+    "U9 / Novice":"Does your child give effort in practice, not just games?",
+    "U11 / Atom":"Does your child push themselves in drills, even boring ones?",
+    "U13 / Peewee":"Does your child work hard when the coach isn't looking?",
+    "U15 / Bantam":"Does your child push past comfortable when it gets hard?",
+    "U18 / Midget":"Does your child push at 100% when no one's watching?",
+  }},
+  { id: "adversity", icon: "🛡️", label: "Handling adversity", prompts: {
+    "U7 / Initiation":"How does your child react after a tough game or mistake?",
+    "U9 / Novice":"Does your child bounce back after losses or bad shifts?",
+    "U11 / Atom":"Does your child recover from mistakes without melting down?",
+    "U13 / Peewee":"Does your child handle benchings, losses, or rough shifts maturely?",
+    "U15 / Bantam":"Does your child respond to adversity with effort, not excuses?",
+    "U18 / Midget":"Does your child respond to adversity — a bad game, benching, tough loss — with maturity?",
+  }},
+  { id: "sportsmanship", icon: "🤝", label: "Sportsmanship", prompts: {
+    "U7 / Initiation":"Does your child cheer for teammates and shake hands after games?",
+    "U9 / Novice":"Does your child treat teammates and opponents with respect?",
+    "U11 / Atom":"Does your child stay composed with refs and opponents, win or lose?",
+    "U13 / Peewee":"Does your child represent the team well on and off the ice?",
+    "U15 / Bantam":"Does your child respect teammates, refs, and opponents, even in tough moments?",
+    "U18 / Midget":"Does your child respect teammates, refs, and opponents, even when it's hard?",
+  }},
+  { id: "confidence", icon: "✨", label: "Confidence", prompts: {
+    "U7 / Initiation":"Does your child seem ready and happy stepping on the ice?",
+    "U9 / Novice":"Does your child show up to games ready, or nervous?",
+    "U11 / Atom":"Does your child play with belief in themselves?",
+    "U13 / Peewee":"Does your child trust their game without needing constant reassurance?",
+    "U15 / Bantam":"Does your child back themselves in pressure moments?",
+    "U18 / Midget":"Does your child trust their game under pressure?",
+  }},
+  { id: "coachability", icon: "🎧", label: "Coachability", prompts: {
+    "U7 / Initiation":"Does your child listen when the coach talks?",
+    "U9 / Novice":"Does your child try to do what the coach asks?",
+    "U11 / Atom":"Does your child apply coaching notes from practice to practice?",
+    "U13 / Peewee":"Does your child take coaching feedback seriously, even when it's critical?",
+    "U15 / Bantam":"Does your child apply feedback, not just hear it?",
+    "U18 / Midget":"Does your child apply coaching feedback, even when they disagree?",
+  }},
+  { id: "balance", icon: "⚖️", label: "Life balance", prompts: {
+    "U7 / Initiation":"Is your child enjoying hockey alongside school and play?",
+    "U9 / Novice":"Is hockey balanced with school, other activities, and downtime?",
+    "U11 / Atom":"Is your child managing hockey without burning out on school or friends?",
+    "U13 / Peewee":"Is hockey balanced with school, sleep, and rest?",
+    "U15 / Bantam":"Is hockey sustainable alongside school pressure and teen life?",
+    "U18 / Midget":"Is hockey balanced with school, sleep, friends, and rest?",
+  }},
+];
 
 // SMART goal categories
 const GOAL_CATS = {
@@ -2689,6 +2764,44 @@ function Report({ player, onBack, demoCoachData, tier, onUpgrade }) {
         </Card>
       )}
 
+      {/* Parent's View — always FREE, no gate */}
+      {(() => {
+        const stored = getParentRatings(player.id);
+        const pr = stored || player.parentRatings || null;
+        if (!hasParentRatings(pr)) return null;
+        const days = daysSinceUpdated(pr);
+        const byValue = (val) => PARENT_DIMENSIONS.filter(d => pr[d.id] === val);
+        const thriving = byValue("thriving");
+        const growing = byValue("growing");
+        return (
+          <Card style={{marginBottom:"1rem",background:`linear-gradient(135deg,${C.purpleDim},transparent)`,border:`1px solid ${C.purpleBorder}`}}>
+            <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:".6rem"}}>
+              <Label style={{marginBottom:0}}>👋 Parent's View</Label>
+              <span style={{fontSize:10,color:C.dimmer}}>{days === 0 ? "Today" : `${days}d ago`}</span>
+            </div>
+            <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:".4rem",marginBottom:".5rem"}}>
+              {PARENT_DIMENSIONS.map(dim => {
+                const v = pr[dim.id];
+                if (!v) return null;
+                const opt = PARENT_SCALE.find(o => o.value === v);
+                return (
+                  <div key={dim.id} style={{background:`${opt.color}12`,border:`1px solid ${opt.color}35`,borderRadius:8,padding:".45rem .6rem"}}>
+                    <div style={{fontSize:10,color:C.dimmer,marginBottom:2}}>{dim.icon} {dim.label}</div>
+                    <div style={{fontSize:12,fontWeight:700,color:opt.color}}>{opt.label}</div>
+                  </div>
+                );
+              })}
+            </div>
+            {(thriving.length > 0 || growing.length > 0) && (
+              <div style={{marginTop:".5rem",paddingTop:".5rem",borderTop:`1px solid ${C.border}`,fontSize:11,color:C.dim,lineHeight:1.55}}>
+                {thriving.length > 0 && <div>✨ Thriving: {thriving.map(d => d.label).join(", ")}</div>}
+                {growing.length > 0 && <div style={{marginTop:thriving.length?4:0}}>🌱 Growing: {growing.map(d => d.label).join(", ")}</div>}
+              </div>
+            )}
+          </Card>
+        );
+      })()}
+
       <Card style={{marginBottom:"1rem"}}>
         <Label>Game Sense History</Label>
         {player.quizHistory.length === 0 ? (
@@ -3233,6 +3346,76 @@ function TrainingLog({ playerId }) {
   );
 }
 
+function ParentAssessmentScreen({ player, onBack, onSave }) {
+  const existing = getParentRatings(player.id) || player.parentRatings || {};
+  const [ratings, setRatings] = useState(() => {
+    const seed = {};
+    for (const d of PARENT_DIMENSIONS) seed[d.id] = existing[d.id] || null;
+    return seed;
+  });
+  const level = player.level || "U11 / Atom";
+  const completed = Object.values(ratings).filter(Boolean).length;
+  const total = PARENT_DIMENSIONS.length;
+
+  function pick(id, value) { setRatings(r => ({ ...r, [id]: value })); }
+  function handleSave() {
+    saveParentRatings(player.id, ratings);
+    onSave && onSave(ratings);
+  }
+
+  return (
+    <div style={{minHeight:"100vh",background:C.bg,color:C.white,fontFamily:FONT.body,paddingBottom:120}}>
+      <StickyHeader>
+        <div style={{maxWidth:560,margin:"0 auto",display:"flex",alignItems:"center",gap:"1rem"}}>
+          <BackBtn onClick={onBack}/>
+          <div style={{flex:1}}>
+            <div style={{fontFamily:FONT.display,fontWeight:800,fontSize:"1.1rem"}}>Parent Assessment</div>
+            <div style={{fontSize:11,color:C.dimmer}}>{level} · {completed}/{total} answered</div>
+          </div>
+          <button onClick={handleSave} disabled={completed === 0} style={{background:completed>0?C.gold:C.dimmest,color:completed>0?C.bg:C.dimmer,border:"none",borderRadius:8,padding:".4rem 1rem",cursor:completed>0?"pointer":"default",fontWeight:800,fontSize:13,fontFamily:FONT.body}}>Save</button>
+        </div>
+      </StickyHeader>
+
+      <div style={{padding:"1.25rem",maxWidth:560,margin:"0 auto"}}>
+        <Card style={{marginBottom:"1rem",background:`linear-gradient(135deg,${C.purpleDim},transparent)`,border:`1px solid ${C.purpleBorder}`}}>
+          <Label>👋 For parents</Label>
+          <div style={{fontSize:13,color:C.dim,lineHeight:1.6,marginTop:".4rem"}}>
+            Rate how your child shows up at the rink — the character, habits, and attitude you see that a coach often can't. This isn't about skill; it's about who your child is becoming. Takes 2 minutes.
+          </div>
+        </Card>
+
+        {PARENT_DIMENSIONS.map(dim => {
+          const prompt = dim.prompts[level] || dim.prompts["U11 / Atom"];
+          const current = ratings[dim.id];
+          return (
+            <Card key={dim.id} style={{marginBottom:".75rem"}}>
+              <div style={{display:"flex",alignItems:"center",gap:".55rem",marginBottom:".35rem"}}>
+                <span style={{fontSize:18}}>{dim.icon}</span>
+                <div style={{fontFamily:FONT.display,fontWeight:800,fontSize:14,color:C.white}}>{dim.label}</div>
+              </div>
+              <div style={{fontSize:12,color:C.dim,lineHeight:1.6,marginBottom:".7rem"}}>{prompt}</div>
+              <div style={{display:"grid",gridTemplateColumns:"1fr 1fr 1fr",gap:".4rem"}}>
+                {PARENT_SCALE.map(opt => {
+                  const isActive = current === opt.value;
+                  return (
+                    <button key={opt.value} onClick={() => pick(dim.id, opt.value)} style={{
+                      background: isActive ? `${opt.color}22` : C.bgElevated,
+                      border: `1px solid ${isActive ? opt.color : C.border}`,
+                      color: isActive ? opt.color : C.dim,
+                      borderRadius: 8, padding: ".55rem .35rem", cursor: "pointer",
+                      fontFamily: FONT.body, fontSize: 12, fontWeight: isActive ? 800 : 600,
+                    }}>{opt.label}</button>
+                  );
+                })}
+              </div>
+            </Card>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+
 function JourneyScreen({ player, onBack, onNav }) {
   const state = getPositioningJourneyState(player.quizHistory);
   const { pct, attempts, nodes, nextIdx } = state;
@@ -3309,7 +3492,7 @@ function JourneyScreen({ player, onBack, onNav }) {
   );
 }
 
-function Profile({ player, onSave, onBack, onReset, demoMode, tier, onUpgrade, userEmail, onAdminReports }) {
+function Profile({ player, onSave, onBack, onReset, demoMode, tier, onUpgrade, userEmail, onAdminReports, onNav }) {
   const positionLocked = !canAccess("positionFilter", tier || "FREE").allowed;
   const levelSwitchGated = !canAccess("multipleAgeGroups", tier || "FREE").allowed;
   const [s, setS] = useState({...player});
@@ -3444,6 +3627,31 @@ function Profile({ player, onSave, onBack, onReset, demoMode, tier, onUpgrade, u
           <div style={{fontSize:11,color:C.dimmer,marginTop:".6rem",lineHeight:1.6}}>Coaches on your teams can rate you and leave feedback notes in your Report.</div>
         </Card>
         <TrainingLog playerId={player.id || "__demo__"} />
+        {(() => {
+          const stored = getParentRatings(player.id);
+          const pr = stored || player.parentRatings || null;
+          const done = hasParentRatings(pr);
+          const days = daysSinceUpdated(pr);
+          const subtitle = done
+            ? (days === 0 ? "Completed today" : days === 1 ? "Completed yesterday" : `Completed ${days} days ago`)
+            : "2 minutes · 8 quick questions";
+          return (
+            <Card style={{marginBottom:"1rem"}}>
+              <div style={{display:"flex",alignItems:"center",justifyContent:"space-between"}}>
+                <div style={{display:"flex",alignItems:"center",gap:".6rem",minWidth:0,flex:1}}>
+                  <span style={{fontSize:20}}>👋</span>
+                  <div style={{minWidth:0}}>
+                    <div style={{fontSize:10,letterSpacing:".14em",textTransform:"uppercase",color:C.purple,fontWeight:800}}>Parent Assessment</div>
+                    <div style={{fontSize:12,color:C.dim,marginTop:1}}>{subtitle}</div>
+                  </div>
+                </div>
+                <button onClick={() => onNav && onNav("parent")} style={{background:done?C.bgElevated:C.purple,color:done?C.purple:C.white,border:`1px solid ${C.purpleBorder}`,borderRadius:8,padding:".45rem 1rem",cursor:"pointer",fontSize:12,fontWeight:700,fontFamily:FONT.body,flexShrink:0}}>
+                  {done ? "Update →" : "Start →"}
+                </button>
+              </div>
+            </Card>
+          );
+        })()}
         <Card style={{marginBottom:"1rem",background:tier==="FREE"?C.bgElevated:`linear-gradient(135deg,${C.bgCard},${C.bgElevated})`,border:`1px solid ${tier==="FREE"?C.border:C.goldBorder}`}}>
           <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:".4rem"}}>
             <Label style={{marginBottom:0}}>Your Plan</Label>
@@ -3804,6 +4012,15 @@ const DEMO_PROFILES = {
   },
 };
 
+const DEMO_PARENT_RATINGS = {
+  "U7 / Initiation": { passion:"thriving", readiness:"steady",   effort:"thriving", adversity:"growing", sportsmanship:"thriving", confidence:"steady",   coachability:"steady",   balance:"thriving" },
+  "U9 / Novice":     { passion:"thriving", readiness:"growing",  effort:"steady",   adversity:"steady",  sportsmanship:"steady",   confidence:"growing",  coachability:"steady",   balance:"steady"   },
+  "U11 / Atom":      { passion:"thriving", readiness:"steady",   effort:"thriving", adversity:"steady",  sportsmanship:"thriving", confidence:"steady",   coachability:"thriving", balance:"steady"   },
+  "U13 / Peewee":    { passion:"steady",   readiness:"steady",   effort:"thriving", adversity:"growing", sportsmanship:"steady",   confidence:"steady",   coachability:"steady",   balance:"growing"  },
+  "U15 / Bantam":    { passion:"steady",   readiness:"thriving", effort:"thriving", adversity:"steady",  sportsmanship:"thriving", confidence:"thriving", coachability:"steady",   balance:"growing"  },
+  "U18 / Midget":    { passion:"steady",   readiness:"thriving", effort:"thriving", adversity:"thriving",sportsmanship:"thriving", confidence:"thriving", coachability:"thriving", balance:"growing"  },
+};
+
 function buildDemoPlayer(level) {
   const cfg = DEMO_PROFILES[level];
   if (!cfg) return null;
@@ -3813,11 +4030,16 @@ function buildDemoPlayer(level) {
     results: cfg.results(ok1, ok2, ok3), score,
     date: new Date(now - daysAgo*day).toISOString(),
   });
+  const parentRatings = DEMO_PARENT_RATINGS[level]
+    ? { ...DEMO_PARENT_RATINGS[level], updated_at: new Date(now - 14*day).toISOString().slice(0, 10) }
+    : null;
   return {
     id: "__demo__", name: cfg.name, level, position: cfg.position,
     season: SEASONS[0], sessionLength: 10, colorblind: false, coachCode: "",
     quizHistory: cfg.sessions(mkSession),
-    selfRatings: {...cfg.selfRatings}, goals: {...cfg.goals}, __demo: true,
+    selfRatings: {...cfg.selfRatings}, goals: {...cfg.goals},
+    parentRatings,
+    __demo: true,
   };
 }
 // Multi-coach feedback (demo) — persona roster with per-level staffing caps
@@ -4710,7 +4932,8 @@ export default function App() {
         {screen === "report"  && <Report player={tierLimitedPlayer(player, tier)} onBack={()=>setScreen("home")} demoCoachData={demoMode?demoCoachRatings:null} tier={tier} onUpgrade={(f,t)=>promptUpgrade(f,t)}/>}
         {screen === "gamesense" && <GameSenseReportScreen player={player} onBack={()=>setScreen("home")}/>}
         {screen === "journey" && <JourneyScreen player={player} onBack={()=>setScreen("home")} onNav={setScreen}/>}
-        {screen === "profile" && <Profile player={player} onSave={handleProfileSave} onBack={()=>setScreen("home")} onReset={handleSignOut} demoMode={demoMode} tier={tier} onUpgrade={(f,t)=>promptUpgrade(f,t)} userEmail={userEmail} onAdminReports={()=>setScreen("admin")}/>}
+        {screen === "parent" && <ParentAssessmentScreen player={player} onBack={()=>setScreen("profile")} onSave={(ratings)=>{ setPlayer(p => ({...p, parentRatings: {...ratings, updated_at: new Date().toISOString().slice(0,10)}})); setScreen("profile"); }}/>}
+        {screen === "profile" && <Profile player={player} onSave={handleProfileSave} onBack={()=>setScreen("home")} onReset={handleSignOut} demoMode={demoMode} tier={tier} onUpgrade={(f,t)=>promptUpgrade(f,t)} userEmail={userEmail} onAdminReports={()=>setScreen("admin")} onNav={setScreen}/>}
         {screen === "admin" && <Suspense fallback={<LazyFallback/>}><AdminReports onBack={()=>setScreen("profile")}/></Suspense>}
       </div>
 
