@@ -5,6 +5,7 @@ import { canAccess, getUpgradeTriggerMessage } from "./utils/tierGate";
 import { getParentRatings, saveParentRatings, hasParentRatings, daysSinceUpdated, PARENT_DIMENSIONS, PARENT_SCALE } from "./utils/parentAssessment";
 import { calcPlayerProfile, PROFILE_AXES } from "./utils/playerProfile";
 import { markSignupIntent, logSignupComplete } from "./utils/signupTelemetry";
+import { recordDemoSnapshot, clearDemoSnapshot, captureDemoTransfer, writePendingTransfer, applyPendingTransfer } from "./utils/demoTransfer";
 import { COMPETENCIES, getPositioningJourneyState, GAME_SENSE_UNLOCK_SESSIONS } from "./utils/gameSense.js";
 import { HockeyInsightWidget, BottomNav, TrainingLog } from "./widgets.jsx";
 import { canSwitchAgeGroup, recordAgeGroupSwitch, getAgeGroupLock, setAgeGroupLock, checkSeasonReset } from "./utils/deviceLock";
@@ -4206,6 +4207,11 @@ export default function App() {
   }
   function triggerSignup(source = "auth_direct") {
     markSignupIntent(source);
+    // Capture any in-session demo work before we tear down React state in exitDemo.
+    if (demoMode) {
+      const transfer = captureDemoTransfer(player);
+      if (transfer) writePendingTransfer(transfer);
+    }
     setSignupPrefill({
       role: profile?.role || "player",
       level: player?.level || null,
@@ -4252,6 +4258,7 @@ export default function App() {
       all["__demo__"] = { sessions: p.trainingSessions };
       localStorage.setItem("iceiq_training_log", JSON.stringify(all));
     } catch {}
+    recordDemoSnapshot(p);
     setScreen("home");
   }
 
@@ -4271,6 +4278,7 @@ export default function App() {
         localStorage.setItem("iceiq_training_log", JSON.stringify(all));
       }
     } catch {}
+    clearDemoSnapshot();
     setScreen("home");
   }
 
@@ -4306,6 +4314,11 @@ export default function App() {
     const p = await SB.getProfile(userId);
     if (!p) return;
     setProfile(p);
+    // If the user just signed up from a demo, replay their in-session work
+    // onto the new real account before fetching so the hydrated state includes it.
+    if (p.role === "player") {
+      try { await applyPendingTransfer(userId, SB); } catch (e) { console.error(e); }
+    }
     if (p.role === "player" && p.level) {
       // Build enriched player object from Supabase data
       const [sessions, goals, selfRatings] = await Promise.all([
@@ -4589,14 +4602,8 @@ export default function App() {
             <div style={{fontFamily:FONT.display,fontWeight:800,fontSize:"1.4rem",lineHeight:1.15,marginBottom:".5rem"}}>Save your First-Five progress</div>
             <div style={{fontSize:13,color:C.dim,lineHeight:1.6,marginBottom:"1.1rem"}}>Create a free account and we'll keep your quiz history, self-ratings, and goals so you can pick up where you left off.</div>
             <button onClick={()=>{
-              markSignupIntent("save_progress");
-              setSignupPrefill({
-                role: saveProgressFor === "__demo_coach__" ? "coach" : "player",
-                level: player?.level || null,
-                name: player?.name || profile?.name || "",
-              });
               setSaveProgressFor(null);
-              exitDemo();
+              triggerSignup("save_progress");
             }} style={{width:"100%",background:C.gold,color:C.bg,border:"none",borderRadius:12,padding:".85rem",cursor:"pointer",fontWeight:800,fontSize:14,fontFamily:FONT.body,marginBottom:".5rem"}}>
               Create free account →
             </button>
