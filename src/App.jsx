@@ -82,7 +82,24 @@ const BADGES = {
   IRON_MAN:   {icon:"🏒", name:"Iron Man",     desc:"5 sessions completed"},
   TACTICIAN:  {icon:"🧩", name:"Tactician",    desc:"Sequence question perfect"},
   DETECTIVE:  {icon:"🔍", name:"Detective",    desc:"Spot 3 mistakes correctly"},
+  FIRST_LINE: {icon:"🏒", name:"First Line",   desc:"Completed your First-Five"},
 };
+
+// First-Five quest checklist — guided onboarding for new users.
+const QUESTS_PLAYER = [
+  { id:"rate5",   label:"Rate yourself on 5 skills",    nav:"skills",    gate:null,                target:5 },
+  { id:"quiz1",   label:"Take your first quiz",         nav:"quiz",      gate:null,                target:1 },
+  { id:"read3",   label:"Read 3 pro insights",          nav:"home",      gate:null,                target:3 },
+  { id:"goal1",   label:"Set your first SMART goal",    nav:"goals",     gate:"smartGoals",        target:1 },
+  { id:"profile", label:"View your Game Sense profile", nav:"gamesense", gate:"progressSnapshots", target:1 },
+];
+const QUESTS_COACH = [
+  { id:"team1",    label:"Add your first team",         nav:"home",  gate:"coachDashboard", target:1 },
+  { id:"invite1",  label:"Invite 1 player",             nav:"home",  gate:"coachDashboard", target:1 },
+  { id:"rate1",    label:"Rate 1 skill on 1 player",    nav:"home",  gate:"coachFeedback",  target:1 },
+  { id:"note1",    label:"Leave a coach note",          nav:"home",  gate:"coachFeedback",  target:1 },
+  { id:"insight1", label:"Read 1 pro insight",          nav:"home",  gate:null,             target:1 },
+];
 
 // SMART goal categories
 const GOAL_CATS = {
@@ -132,6 +149,146 @@ function AvatarDisc({ name, kind = "player", size = 48 }) {
 
 const FLAVOR_CORRECT   = ["Good read.", "That's the one.", "Nice.", "Exactly right.", "Smart play."];
 const FLAVOR_INCORRECT = ["Not quite.", "Let's break this down.", "Close, but watch this.", "Let's dial it in.", "Common mistake — here's why."];
+
+// ── Quest-flag localStorage keys ──────────────────────────
+const LS_INSIGHTS_READ   = "iceiq_insights_read_v1";    // Array of insight "stat" strings.
+const LS_PROFILE_VIEWED  = "iceiq_profile_viewed_v1";   // "1" once viewed / ack'd.
+const LS_GATED_ACK       = "iceiq_gated_quests_ack_v1"; // Array of feature keys.
+const LS_COACH_RATED     = "iceiq_coach_rated_v1";      // "1" once coach rates a skill.
+const LS_COACH_NOTED     = "iceiq_coach_noted_v1";      // "1" once coach leaves a note.
+const LS_FIRST_LINE_SEEN = "iceiq_first_line_seen_v1";  // JSON: {[identity]: "1"}.
+const LS_QUEST_DISMISSED = "iceiq_quest_dismissed_v1";  // JSON: {[identity]: "1"}.
+
+function lsGetJSON(key, fallback) {
+  try { const v = window.localStorage.getItem(key); return v ? JSON.parse(v) : fallback; } catch { return fallback; }
+}
+function lsSetJSON(key, value) { try { window.localStorage.setItem(key, JSON.stringify(value)); } catch {} }
+function lsGetStr(key) { try { return window.localStorage.getItem(key); } catch { return null; } }
+function lsSetStr(key, v) { try { window.localStorage.setItem(key, v); } catch {} }
+
+export function markInsightRead(key) {
+  if (!key) return;
+  const arr = lsGetJSON(LS_INSIGHTS_READ, []);
+  if (!arr.includes(key)) { arr.push(key); lsSetJSON(LS_INSIGHTS_READ, arr); }
+}
+function markProfileViewed() { lsSetStr(LS_PROFILE_VIEWED, "1"); }
+function markGatedAck(feature) {
+  if (!feature) return;
+  const arr = lsGetJSON(LS_GATED_ACK, []);
+  if (!arr.includes(feature)) { arr.push(feature); lsSetJSON(LS_GATED_ACK, arr); }
+}
+
+function useQuestFlags(bump) {
+  // `bump` is a counter from the parent — re-read localStorage whenever it increments.
+  const [flags, setFlags] = useState(() => readQuestFlags());
+  useEffect(() => { setFlags(readQuestFlags()); }, [bump]);
+  return flags;
+}
+
+function readQuestFlags() {
+  return {
+    insightsRead: new Set(lsGetJSON(LS_INSIGHTS_READ, [])),
+    profileViewed: lsGetStr(LS_PROFILE_VIEWED) === "1",
+    gatedAck: new Set(lsGetJSON(LS_GATED_ACK, [])),
+    coachRated: lsGetStr(LS_COACH_RATED) === "1",
+    coachNoted: lsGetStr(LS_COACH_NOTED) === "1",
+  };
+}
+
+function computeQuestProgress(def, ctx) {
+  const { player, flags, teams, rosters, tier } = ctx;
+  let progress = 0;
+  switch (def.id) {
+    case "rate5":
+      progress = Object.values(player?.selfRatings || {}).filter(v => v).length;
+      break;
+    case "quiz1":
+      progress = (player?.quizHistory || []).length;
+      break;
+    case "read3":
+    case "insight1":
+      progress = flags.insightsRead.size;
+      break;
+    case "goal1":
+      progress = Object.values(player?.goals || {}).filter(g => g?.goal).length;
+      break;
+    case "profile":
+      progress = flags.profileViewed ? 1 : 0;
+      break;
+    case "team1":
+      progress = (teams || []).length;
+      break;
+    case "invite1":
+      progress = Object.values(rosters || {}).reduce((n, r) => n + (r?.length || 0), 0);
+      break;
+    case "rate1":
+      progress = flags.coachRated ? 1 : 0;
+      break;
+    case "note1":
+      progress = flags.coachNoted ? 1 : 0;
+      break;
+    default:
+      progress = 0;
+  }
+  const done = progress >= def.target;
+  const locked = def.gate ? !canAccess(def.gate, tier).allowed : false;
+  const acknowledged = locked && flags.gatedAck.has(def.gate);
+  return { id: def.id, progress, done, locked, acknowledged };
+}
+
+function QuestChecklist({ role, quests, results, onTap, onDismiss, onAllComplete }) {
+  const total = quests.length;
+  const checked = results.filter(r => r.done || r.acknowledged).length;
+  const allDone = checked >= total;
+  const [collapsed, setCollapsed] = useState(false);
+  useEffect(() => {
+    if (allDone && onAllComplete) onAllComplete();
+  }, [allDone, onAllComplete]);
+  const coachName = "Coach Reynolds";
+  return (
+    <div style={{background:`linear-gradient(135deg, rgba(201,168,76,0.08), rgba(124,111,205,0.06))`,border:`1px solid ${C.goldBorder}`,borderRadius:14,padding:"1rem 1rem .9rem",marginBottom:"1rem"}}>
+      <div style={{display:"flex",alignItems:"center",gap:".65rem",marginBottom:collapsed ? 0 : ".85rem"}}>
+        <AvatarDisc name={coachName} kind="coach" size={36}/>
+        <div style={{flex:1,minWidth:0}}>
+          <div style={{fontSize:10,letterSpacing:".14em",textTransform:"uppercase",color:C.gold,fontWeight:700}}>First Five · {role === "coach" ? "Coach" : "Player"}</div>
+          <div style={{fontSize:13,color:C.white,fontWeight:700,marginTop:1}}>
+            {allDone ? "🏒 First Line — complete!" : `Welcome — try these ${total} to learn the app`}
+          </div>
+        </div>
+        <button onClick={() => setCollapsed(c => !c)} style={{background:"none",border:"none",color:C.dimmer,cursor:"pointer",fontSize:12,padding:"4px 8px"}} aria-label={collapsed?"Expand":"Collapse"}>
+          {collapsed ? "▼" : "▲"}
+        </button>
+        {onDismiss && <button onClick={onDismiss} style={{background:"none",border:"none",color:C.dimmer,cursor:"pointer",fontSize:14,padding:"2px 6px",lineHeight:1}} aria-label="Dismiss">×</button>}
+      </div>
+      {!collapsed && (
+        <>
+          {quests.map((q, i) => {
+            const r = results[i];
+            const tick = r.done ? "✓" : r.acknowledged ? "✓" : r.locked ? "🔒" : `${r.progress}/${q.target}`;
+            const tickColor = r.done ? C.green : r.acknowledged ? C.dimmer : r.locked ? C.gold : C.dim;
+            return (
+              <button key={q.id} onClick={() => onTap(q)} style={{display:"flex",alignItems:"center",gap:".65rem",width:"100%",background:r.done?"rgba(34,197,94,0.05)":"rgba(255,255,255,0.02)",border:`1px solid ${r.done?"rgba(34,197,94,0.25)":C.border}`,borderRadius:10,padding:".55rem .7rem",marginBottom:".4rem",cursor:"pointer",textAlign:"left",fontFamily:FONT.body}}>
+                <span style={{display:"inline-flex",alignItems:"center",justifyContent:"center",width:28,height:28,borderRadius:"50%",background:r.done?"rgba(34,197,94,.15)":C.bgElevated,border:`1px solid ${r.done?"rgba(34,197,94,.4)":C.border}`,color:tickColor,fontWeight:800,fontSize:11,flexShrink:0}}>{tick}</span>
+                <div style={{flex:1,minWidth:0}}>
+                  <div style={{fontSize:12.5,color:r.done?C.dim:C.white,fontWeight:600,textDecoration:r.done?"line-through":"none",lineHeight:1.3}}>{q.label}</div>
+                  {r.locked && r.acknowledged && <div style={{fontSize:10,color:C.gold,marginTop:1}}>Unlocks with Pro →</div>}
+                  {r.locked && !r.acknowledged && <div style={{fontSize:10,color:C.dimmer,marginTop:1}}>Tap to preview</div>}
+                </div>
+                <span style={{color:C.dimmer,fontSize:14,flexShrink:0}}>›</span>
+              </button>
+            );
+          })}
+          <div style={{display:"flex",alignItems:"center",gap:".5rem",marginTop:".5rem"}}>
+            <div style={{flex:1,height:5,background:C.bgElevated,borderRadius:3,overflow:"hidden"}}>
+              <div style={{width:`${(checked/total)*100}%`,height:"100%",background:allDone?C.green:C.gold,transition:"width .3s"}}/>
+            </div>
+            <div style={{fontSize:10,color:C.dimmer,fontWeight:700,letterSpacing:".04em"}}>{checked} of {total}</div>
+          </div>
+        </>
+      )}
+    </div>
+  );
+}
 
 
 
@@ -957,12 +1114,39 @@ function ZoneClickQuestion({ q, onAnswer, answered, C }) {
 // ─────────────────────────────────────────────────────────
 // HOME SCREEN
 // ─────────────────────────────────────────────────────────
-function Home({ player, onNav, demoMode, subscriptionTier }) {
+function Home({ player, onNav, demoMode, subscriptionTier, questFlagsBump, onPromptUpgrade, onBumpQuestFlags, onSaveProgress, onFirstLine }) {
   const { name, level, position, selfRatings, quizHistory, goals } = player;
   const latest = quizHistory[quizHistory.length-1];
   const iq = latest ? calcWeightedIQ(latest.results) : null;
   const tier = iq !== null ? getTier(iq) : null;
   const showProPreview = demoMode || subscriptionTier === "FREE";
+
+  // Quest checklist state
+  const flags = useQuestFlags(questFlagsBump);
+  const identity = demoMode ? "__demo__" : (player?.id || "__anon__");
+  const questResults = QUESTS_PLAYER.map(q => computeQuestProgress(q, { player, flags, tier: subscriptionTier }));
+  const questDismissed = lsGetJSON(LS_QUEST_DISMISSED, {})[identity] === "1";
+  const firstLineSeen = lsGetJSON(LS_FIRST_LINE_SEEN, {})[identity] === "1";
+  function handleQuestTap(q) {
+    if (q.gate && !canAccess(q.gate, subscriptionTier).allowed) {
+      onPromptUpgrade(q.gate);
+    } else {
+      onNav(q.nav);
+    }
+  }
+  function handleDismissQuest() {
+    const m = lsGetJSON(LS_QUEST_DISMISSED, {});
+    m[identity] = "1";
+    lsSetJSON(LS_QUEST_DISMISSED, m);
+    onBumpQuestFlags();
+  }
+  function handleAllComplete() {
+    const m = lsGetJSON(LS_FIRST_LINE_SEEN, {});
+    if (m[identity] === "1") return;
+    m[identity] = "1";
+    lsSetJSON(LS_FIRST_LINE_SEEN, m);
+    if (demoMode) onSaveProgress(); else onFirstLine();
+  }
   const totalSessions = quizHistory.length;
   const ratedSkills = Object.values(selfRatings||{}).filter(v => v !== null).length;
   const totalSkills = Object.keys(selfRatings||{}).length;
@@ -1006,6 +1190,25 @@ function Home({ player, onNav, demoMode, subscriptionTier }) {
           </div>
           <button onClick={() => onNav("profile")} style={{background:C.bgCard,border:`1px solid ${C.border}`,borderRadius:10,width:38,height:38,cursor:"pointer",color:C.dimmer,fontSize:16,display:"flex",alignItems:"center",justifyContent:"center"}}>⚙</button>
         </div>
+
+        {/* First-Five quest checklist — hidden once dismissed */}
+        {!questDismissed && !firstLineSeen && (
+          <QuestChecklist
+            role="player"
+            quests={QUESTS_PLAYER}
+            results={questResults}
+            onTap={handleQuestTap}
+            onDismiss={handleDismissQuest}
+            onAllComplete={handleAllComplete}
+          />
+        )}
+
+        {/* Pro Hockey Intel — inline insights with quest-flag tracking */}
+        {!questDismissed && !firstLineSeen && (
+          <div style={{margin:"0 -1.25rem 1rem"}}>
+            <HockeyInsightWidget onInsightRead={onBumpQuestFlags}/>
+          </div>
+        )}
 
         {/* IQ Score Hero — locked until GAME_SENSE_UNLOCK_SESSIONS quizzes completed */}
         {(() => {
@@ -3499,12 +3702,12 @@ function RinkBackground({ dark = false }) {
 // ─────────────────────────────────────────────────────────
 // AUTH SCREEN — login / signup
 // ─────────────────────────────────────────────────────────
-function AuthScreen({ onAuthenticated, onDemo }) {
-  const [mode, setMode] = useState("login"); // login | signup | forgot
+function AuthScreen({ onAuthenticated, onDemo, prefill }) {
+  const [mode, setMode] = useState(prefill ? "signup" : "login"); // login | signup | forgot
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [name, setName] = useState("");
-  const [role, setRole] = useState("player");
+  const [name, setName] = useState(prefill?.name || "");
+  const [role, setRole] = useState(prefill?.role || "player");
   const [loading, setLoading] = useState(false);
   const [err, setErr] = useState("");
   const [resetSent, setResetSent] = useState(false);
@@ -3765,7 +3968,7 @@ const DEMO_COACH_ROSTER = [
   {id:"dr5",name:"Tyler Blackwood",level:"U11 / Atom",position:"Defense",iq:58,sessions:1},
 ];
 
-function CoachHome({ profile, onSignOut, onOpenPlayer, demoMode }) {
+function CoachHome({ profile, onSignOut, onOpenPlayer, demoMode, subscriptionTier, questFlagsBump, onPromptUpgrade, onBumpQuestFlags, onSaveProgress, onFirstLine }) {
   const isDemo = demoMode || profile.id === "__demo_coach__";
   const [teams, setTeams] = useState(isDemo ? DEMO_COACH_TEAMS : []);
   const [loading, setLoading] = useState(!isDemo);
@@ -3775,6 +3978,33 @@ function CoachHome({ profile, onSignOut, onOpenPlayer, demoMode }) {
   const [newSeason, setNewSeason] = useState(SEASONS[0]);
   const [expandedTeam, setExpandedTeam] = useState(isDemo ? "demo-t1" : null);
   const [rosters, setRosters] = useState(isDemo ? {"demo-t1": DEMO_COACH_ROSTER} : {});
+
+  // Quest checklist state (coach variant)
+  const flags = useQuestFlags(questFlagsBump);
+  const identity = isDemo ? "__demo_coach__" : (profile?.id || "__anon_coach__");
+  const effectiveTier = subscriptionTier || (isDemo ? "TEAM" : "FREE");
+  const questResults = QUESTS_COACH.map(q => computeQuestProgress(q, { flags, teams, rosters, tier: effectiveTier }));
+  const questDismissed = lsGetJSON(LS_QUEST_DISMISSED, {})[identity] === "1";
+  const firstLineSeen = lsGetJSON(LS_FIRST_LINE_SEEN, {})[identity] === "1";
+  function handleQuestTap(q) {
+    if (q.gate && !canAccess(q.gate, effectiveTier).allowed) {
+      onPromptUpgrade && onPromptUpgrade(q.gate);
+    }
+  }
+  function handleDismissQuest() {
+    const m = lsGetJSON(LS_QUEST_DISMISSED, {});
+    m[identity] = "1";
+    lsSetJSON(LS_QUEST_DISMISSED, m);
+    onBumpQuestFlags && onBumpQuestFlags();
+  }
+  function handleAllComplete() {
+    const m = lsGetJSON(LS_FIRST_LINE_SEEN, {});
+    if (m[identity] === "1") return;
+    m[identity] = "1";
+    lsSetJSON(LS_FIRST_LINE_SEEN, m);
+    if (isDemo) onSaveProgress && onSaveProgress();
+    else onFirstLine && onFirstLine();
+  }
 
   useEffect(() => { if (isDemo) return; (async () => {
     const t = await SB.getCoachTeams(profile.id);
@@ -3814,6 +4044,23 @@ function CoachHome({ profile, onSignOut, onOpenPlayer, demoMode }) {
           </div>
           <button onClick={onSignOut} style={{background:C.bgCard,border:`1px solid ${C.border}`,borderRadius:10,padding:".5rem .85rem",color:C.dimmer,cursor:"pointer",fontSize:12,fontFamily:FONT.body}}>Sign out</button>
         </div>
+
+        {!questDismissed && !firstLineSeen && (
+          <QuestChecklist
+            role="coach"
+            quests={QUESTS_COACH}
+            results={questResults}
+            onTap={handleQuestTap}
+            onDismiss={handleDismissQuest}
+            onAllComplete={handleAllComplete}
+          />
+        )}
+
+        {!questDismissed && !firstLineSeen && (
+          <div style={{margin:"0 -1.25rem 1rem"}}>
+            <HockeyInsightWidget onInsightRead={onBumpQuestFlags}/>
+          </div>
+        )}
 
         <Card style={{marginBottom:"1rem",background:`linear-gradient(135deg,${C.bgCard},${C.bgElevated})`,border:`1px solid ${C.goldBorder}`}}>
           <Label>Coach Dashboard</Label>
@@ -3909,6 +4156,11 @@ export default function App() {
   const [mistakeStreak, setMistakeStreak] = useState(0);
   const [upgradePrompt, setUpgradePrompt] = useState(null); // {feature, target} | null
   const [demoIntroFor, setDemoIntroFor] = useState(null);
+  const [signupPrefill, setSignupPrefill] = useState(null); // {role, level, name} | null
+  const [saveProgressFor, setSaveProgressFor] = useState(null); // identity string | null
+  const [firstLineToast, setFirstLineToast] = useState(false);
+  const [questFlagsBump, setQuestFlagsBump] = useState(0);
+  const bumpQuestFlags = useCallback(() => setQuestFlagsBump(b => b + 1), []);
   const [userEmail, setUserEmail] = useState(null);
   const [showMilestone5Banner, setShowMilestone5Banner] = useState(false);
   const [weeklyResults, setWeeklyResults] = useState(null);
@@ -3920,10 +4172,18 @@ export default function App() {
   function promptUpgrade(feature, target) {
     setUpgradePrompt({ feature, target: target || null });
   }
-  function closeUpgrade() { setUpgradePrompt(null); }
+  function closeUpgrade() {
+    if (upgradePrompt?.feature) { markGatedAck(upgradePrompt.feature); bumpQuestFlags(); }
+    setUpgradePrompt(null);
+  }
 
   // Run season reset check on boot so free-tier switch counters refresh each September
   useEffect(() => { try { checkSeasonReset(); } catch {} }, []);
+
+  // Mark profile-viewed quest flag when user opens Game Sense report
+  useEffect(() => {
+    if (screen === "gamesense") { markProfileViewed(); bumpQuestFlags(); }
+  }, [screen, bumpQuestFlags]);
 
   function enterDemo(levelOrRole) {
     window.scrollTo(0, 0);
@@ -4106,7 +4366,7 @@ export default function App() {
         </div>
       </div>;
     }
-    return <AuthScreen onAuthenticated={()=>{}} onDemo={enterDemo}/>;
+    return <AuthScreen onAuthenticated={()=>{}} onDemo={enterDemo} prefill={signupPrefill}/>;
   }
 
   // Coach home
@@ -4148,6 +4408,12 @@ export default function App() {
           profile={profile}
           onSignOut={handleSignOut}
           demoMode={demoMode}
+          subscriptionTier={tier}
+          questFlagsBump={questFlagsBump}
+          onPromptUpgrade={promptUpgrade}
+          onBumpQuestFlags={bumpQuestFlags}
+          onSaveProgress={() => setSaveProgressFor(demoMode ? "__demo_coach__" : (profile?.id || null))}
+          onFirstLine={() => setFirstLineToast(true)}
           onOpenPlayer={(p) => {
             // Coach rating for this player
             const pk = p.id;
@@ -4196,7 +4462,7 @@ export default function App() {
       )}
 
       <div style={{paddingBottom: screen==="quiz"||screen==="results" ? 0 : 80}}>
-        {screen === "home"    && <Home player={tierLimitedPlayer(player, tier)} onNav={setScreen} demoMode={demoMode} subscriptionTier={tier}/>}
+        {screen === "home"    && <Home player={tierLimitedPlayer(player, tier)} onNav={setScreen} demoMode={demoMode} subscriptionTier={tier} questFlagsBump={questFlagsBump} onPromptUpgrade={promptUpgrade} onBumpQuestFlags={bumpQuestFlags} onSaveProgress={() => setSaveProgressFor(demoMode ? "__demo__" : (player?.id || null))} onFirstLine={() => setFirstLineToast(true)}/>}
         {screen === "quiz"    && (demoMode && (()=>{ try { return localStorage.getItem("iceiq_demo_quiz_taken") === "1"; } catch { return false; } })()
           ? <DemoQuizCapScreen onBack={()=>setScreen("home")} onSignUp={exitDemo}/>
           : tier === "FREE" && !demoMode && isAtFreeQuizCap()
@@ -4253,6 +4519,43 @@ export default function App() {
             <div style={{fontSize:13,color:C.dim,lineHeight:1.6,marginBottom:"1.1rem"}}>{getDemoBio(demoIntroFor.level, demoIntroFor.position)}</div>
             <button onClick={()=>setDemoIntroFor(null)} style={{width:"100%",background:C.gold,color:C.bg,border:"none",borderRadius:12,padding:".85rem",cursor:"pointer",fontWeight:800,fontSize:14,fontFamily:FONT.body}}>
               Start playing →
+            </button>
+          </div>
+        </div>
+      )}
+      {saveProgressFor && (
+        <div onClick={()=>setSaveProgressFor(null)} style={{position:"fixed",inset:0,background:"rgba(0,0,0,.78)",zIndex:210,display:"flex",alignItems:"center",justifyContent:"center",padding:"1rem"}}>
+          <div onClick={e=>e.stopPropagation()} style={{background:C.bgCard,border:`1px solid ${C.goldBorder}`,borderRadius:18,padding:"1.5rem 1.4rem",maxWidth:380,width:"100%",color:C.white,fontFamily:FONT.body,textAlign:"center",boxShadow:"0 24px 60px rgba(0,0,0,.55)"}}>
+            <div style={{fontSize:28,marginBottom:".4rem"}}>🏒</div>
+            <div style={{fontSize:10,letterSpacing:".16em",textTransform:"uppercase",color:C.gold,fontWeight:700,marginBottom:".5rem"}}>First Line · Complete!</div>
+            <div style={{fontFamily:FONT.display,fontWeight:800,fontSize:"1.4rem",lineHeight:1.15,marginBottom:".5rem"}}>Save your First-Five progress</div>
+            <div style={{fontSize:13,color:C.dim,lineHeight:1.6,marginBottom:"1.1rem"}}>Create a free account and we'll keep your quiz history, self-ratings, and goals so you can pick up where you left off.</div>
+            <button onClick={()=>{
+              setSignupPrefill({
+                role: saveProgressFor === "__demo_coach__" ? "coach" : "player",
+                level: player?.level || null,
+                name: player?.name || profile?.name || "",
+              });
+              setSaveProgressFor(null);
+              exitDemo();
+            }} style={{width:"100%",background:C.gold,color:C.bg,border:"none",borderRadius:12,padding:".85rem",cursor:"pointer",fontWeight:800,fontSize:14,fontFamily:FONT.body,marginBottom:".5rem"}}>
+              Create free account →
+            </button>
+            <button onClick={()=>setSaveProgressFor(null)} style={{width:"100%",background:"none",color:C.dimmer,border:`1px solid ${C.border}`,borderRadius:12,padding:".7rem",cursor:"pointer",fontWeight:600,fontSize:13,fontFamily:FONT.body}}>
+              Maybe later
+            </button>
+          </div>
+        </div>
+      )}
+      {firstLineToast && (
+        <div onClick={()=>setFirstLineToast(false)} style={{position:"fixed",inset:0,background:"rgba(0,0,0,.7)",zIndex:210,display:"flex",alignItems:"center",justifyContent:"center",padding:"1rem"}}>
+          <div onClick={e=>e.stopPropagation()} style={{background:C.bgCard,border:`1px solid ${C.goldBorder}`,borderRadius:18,padding:"1.75rem 1.5rem",maxWidth:360,width:"100%",color:C.white,fontFamily:FONT.body,textAlign:"center",boxShadow:"0 24px 60px rgba(0,0,0,.55)"}}>
+            <div style={{fontSize:42,marginBottom:".3rem"}}>{BADGES.FIRST_LINE.icon}</div>
+            <div style={{fontSize:10,letterSpacing:".16em",textTransform:"uppercase",color:C.gold,fontWeight:700,marginBottom:".5rem"}}>Badge unlocked</div>
+            <div style={{fontFamily:FONT.display,fontWeight:800,fontSize:"1.6rem",lineHeight:1.15,marginBottom:".4rem"}}>{BADGES.FIRST_LINE.name}</div>
+            <div style={{fontSize:13,color:C.dim,lineHeight:1.5,marginBottom:"1.1rem"}}>{BADGES.FIRST_LINE.desc}. Welcome to Ice-IQ.</div>
+            <button onClick={()=>setFirstLineToast(false)} style={{width:"100%",background:C.gold,color:C.bg,border:"none",borderRadius:12,padding:".8rem",cursor:"pointer",fontWeight:800,fontSize:14,fontFamily:FONT.body}}>
+              Keep going →
             </button>
           </div>
         </div>
@@ -4336,6 +4639,8 @@ function CoachRatingScreenAuthed({ coach, player, playerLevel, onDone }) {
     setSaving(true);
     try {
       if (!isDemo) await SB.saveCoachRatingsForPlayer(coach.id, player.id, ratings, notes);
+      if (Object.values(ratings || {}).some(v => v)) lsSetStr(LS_COACH_RATED, "1");
+      if (Object.values(notes || {}).some(v => v && String(v).trim())) lsSetStr(LS_COACH_NOTED, "1");
       setSaved(true);
     } catch (e) { alert(e.message); }
     setSaving(false);

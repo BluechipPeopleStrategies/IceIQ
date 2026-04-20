@@ -9,7 +9,7 @@ import { getTrainingLog, saveTrainingSession, getTrainingSummary } from "./utils
 // PRO HOCKEY INTEL WIDGET — small, unobtrusive, rotating stat card
 // Appears on Home, Study, Results, Report. Dismissible per session.
 // ─────────────────────────────────────────────────────────
-export function HockeyInsightWidget() {
+export function HockeyInsightWidget({ onInsightRead } = {}) {
   const [insights, setInsights] = useState(null);
   const [idx, setIdx] = useState(0);
   const [expanded, setExpanded] = useState(false);
@@ -22,7 +22,21 @@ export function HockeyInsightWidget() {
   }, []);
   if (dismissed || !insights) return null;
   const insight = insights[idx];
-  function next() { setIdx((idx + 1) % insights.length); setExpanded(false); }
+  function markRead(i) {
+    const key = insights[i]?.stat;
+    if (!key) return;
+    try {
+      const raw = window.localStorage.getItem("iceiq_insights_read_v1");
+      const arr = raw ? JSON.parse(raw) : [];
+      if (!arr.includes(key)) {
+        arr.push(key);
+        window.localStorage.setItem("iceiq_insights_read_v1", JSON.stringify(arr));
+      }
+    } catch {}
+    if (onInsightRead) onInsightRead();
+  }
+  function next() { const n = (idx + 1) % insights.length; setIdx(n); setExpanded(false); markRead(n); }
+  function toggleExpand() { setExpanded(e => { if (!e) markRead(idx); return !e; }); }
   return (
     <div style={{
       maxWidth:560, margin:"0 auto 1rem", padding:"0 1.25rem",
@@ -40,7 +54,7 @@ export function HockeyInsightWidget() {
             <div style={{fontSize:9,letterSpacing:".1em",textTransform:"uppercase",color:C.gold,fontWeight:700,opacity:.85}}>Pro Hockey Intel · {insight.category}</div>
             <div style={{fontSize:12,fontWeight:600,color:C.dim,lineHeight:1.35,marginTop:1}}>{insight.stat}</div>
           </div>
-          <button onClick={()=>setExpanded(!expanded)} style={{background:"none",border:"none",color:C.dimmer,fontSize:11,cursor:"pointer",padding:"2px 4px"}} aria-label="Expand">
+          <button onClick={toggleExpand} style={{background:"none",border:"none",color:C.dimmer,fontSize:11,cursor:"pointer",padding:"2px 4px"}} aria-label="Expand">
             {expanded ? "▲" : "▼"}
           </button>
           <button onClick={next} title="Next insight" style={{background:"none",border:"none",color:C.dimmer,fontSize:11,cursor:"pointer",padding:"2px 4px"}} aria-label="Next">↻</button>
