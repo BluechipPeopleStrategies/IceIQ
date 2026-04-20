@@ -664,71 +664,211 @@ export function GameSenseReportScreen({ player, onBack, demoMode, demoCoachData,
 // ─────────────────────────────────────────────────────────
 // PARENT ASSESSMENT SCREEN
 // ─────────────────────────────────────────────────────────
-export function ParentAssessmentScreen({ player, onBack, onSave }) {
+export function ParentAssessmentScreen({ player, onBack, onSave, demoMode, onSignup }) {
+  const level = player.level || "U11 / Atom";
   const existing = getParentRatings(player.id) || player.parentRatings || {};
+
+  // Hooks must be called unconditionally — wizard state lives at the top.
   const [ratings, setRatings] = useState(() => {
     const seed = {};
-    for (const d of PARENT_DIMENSIONS) seed[d.id] = existing[d.id] || null;
+    for (const d of PARENT_DIMENSIONS) seed[d.id] = existing[d.id] ?? null;
     return seed;
   });
-  const level = player.level || "U11 / Atom";
-  const completed = Object.values(ratings).filter(Boolean).length;
+  const [idx, setIdx] = useState(0);
+  const [onSummary, setOnSummary] = useState(false);
   const total = PARENT_DIMENSIONS.length;
 
-  function pick(id, value) { setRatings(r => ({ ...r, [id]: value })); }
+  // ── Demo mode: read-only summary + signup CTA ─────────────
+  if (demoMode) {
+    return (
+      <div style={{minHeight:"100vh",background:C.bg,color:C.white,fontFamily:FONT.body,paddingBottom:120}}>
+        <StickyHeader>
+          <div style={{maxWidth:560,margin:"0 auto",display:"flex",alignItems:"center",gap:"1rem"}}>
+            <BackBtn onClick={onBack}/>
+            <div style={{flex:1}}>
+              <div style={{fontFamily:FONT.display,fontWeight:800,fontSize:"1.1rem"}}>Sample Parent Assessment</div>
+              <div style={{fontSize:11,color:C.dimmer}}>{level} · 8/8 answered (sample data)</div>
+            </div>
+          </div>
+        </StickyHeader>
+
+        <div style={{padding:"1.25rem",maxWidth:560,margin:"0 auto"}}>
+          <Card style={{marginBottom:"1rem",background:`linear-gradient(135deg,${C.purpleDim},transparent)`,border:`1px solid ${C.purpleBorder}`}}>
+            <Label>👀 Preview</Label>
+            <div style={{fontSize:13,color:C.dim,lineHeight:1.6,marginTop:".4rem"}}>
+              This is what a completed parent assessment looks like for {player.name}. Parents rate how their child shows up at the rink — character, habits, and attitude. Sign up to fill one out for your own player.
+            </div>
+          </Card>
+
+          {PARENT_DIMENSIONS.map(dim => {
+            const prompt = dim.prompts[level] || dim.prompts["U11 / Atom"];
+            const val = existing[dim.id];
+            const scaleOpt = PARENT_SCALE.find(s => s.value === val);
+            return (
+              <Card key={dim.id} style={{marginBottom:".75rem"}}>
+                <div style={{display:"flex",alignItems:"center",gap:".55rem",marginBottom:".35rem"}}>
+                  <span style={{fontSize:18}}>{dim.icon}</span>
+                  <div style={{flex:1,fontFamily:FONT.display,fontWeight:800,fontSize:14,color:C.white}}>{dim.label}</div>
+                  {scaleOpt && (
+                    <span style={{background:`${scaleOpt.color}22`,border:`1px solid ${scaleOpt.color}`,color:scaleOpt.color,borderRadius:999,padding:".2rem .7rem",fontSize:11,fontWeight:800}}>
+                      {scaleOpt.label}
+                    </span>
+                  )}
+                </div>
+                <div style={{fontSize:12,color:C.dim,lineHeight:1.6}}>{prompt}</div>
+              </Card>
+            );
+          })}
+
+          {onSignup && (
+            <button onClick={onSignup} style={{marginTop:".75rem",width:"100%",background:`linear-gradient(135deg, ${C.gold}, #b8860b)`,color:C.bg,border:"none",borderRadius:12,padding:".9rem",cursor:"pointer",fontWeight:800,fontSize:14,fontFamily:FONT.body,letterSpacing:".02em",boxShadow:"0 4px 14px rgba(201,168,76,.25), inset 0 1px 0 rgba(255,255,255,.25)"}}>
+              🏒 Sign up free to fill this out yourself →
+            </button>
+          )}
+        </div>
+      </div>
+    );
+  }
+
+  // ── Real-user mode: step-through wizard ───────────────────
+  function advance() {
+    if (idx >= total - 1) setOnSummary(true);
+    else setIdx(i => i + 1);
+  }
+  function goBack() {
+    if (onSummary) setOnSummary(false);
+    else if (idx > 0) setIdx(i => i - 1);
+    else onBack();
+  }
+  function pick(id, value) {
+    setRatings(r => ({ ...r, [id]: value }));
+    setTimeout(advance, 150);
+  }
+  function skip(id) {
+    setRatings(r => ({ ...r, [id]: null }));
+    advance();
+  }
   function handleSave() {
     saveParentRatings(player.id, ratings);
     onSave && onSave(ratings);
   }
 
+  // Summary screen
+  if (onSummary) {
+    const answered = PARENT_DIMENSIONS.filter(d => ratings[d.id]);
+    const skipped = PARENT_DIMENSIONS.filter(d => ratings[d.id] == null);
+    return (
+      <div style={{minHeight:"100vh",background:C.bg,color:C.white,fontFamily:FONT.body,paddingBottom:120}}>
+        <StickyHeader>
+          <div style={{maxWidth:560,margin:"0 auto",display:"flex",alignItems:"center",gap:"1rem"}}>
+            <BackBtn onClick={goBack}/>
+            <div style={{flex:1}}>
+              <div style={{fontFamily:FONT.display,fontWeight:800,fontSize:"1.1rem"}}>Review Your Assessment</div>
+              <div style={{fontSize:11,color:C.dimmer}}>{answered.length}/{total} answered · {skipped.length} skipped</div>
+            </div>
+          </div>
+        </StickyHeader>
+
+        <div style={{padding:"1.25rem",maxWidth:560,margin:"0 auto"}}>
+          {answered.length > 0 && (
+            <>
+              <Label style={{marginBottom:".5rem"}}>Your answers</Label>
+              {answered.map(dim => {
+                const opt = PARENT_SCALE.find(s => s.value === ratings[dim.id]);
+                return (
+                  <Card key={dim.id} style={{marginBottom:".5rem"}}>
+                    <div style={{display:"flex",alignItems:"center",gap:".55rem"}}>
+                      <span style={{fontSize:16}}>{dim.icon}</span>
+                      <div style={{flex:1,fontSize:13,color:C.white,fontWeight:600}}>{dim.label}</div>
+                      <span style={{background:`${opt.color}22`,border:`1px solid ${opt.color}`,color:opt.color,borderRadius:999,padding:".2rem .7rem",fontSize:11,fontWeight:800}}>{opt.label}</span>
+                    </div>
+                  </Card>
+                );
+              })}
+            </>
+          )}
+
+          {skipped.length > 0 && (
+            <>
+              <Label style={{marginTop:"1rem",marginBottom:".5rem"}}>Skipped</Label>
+              {skipped.map(dim => (
+                <Card key={dim.id} style={{marginBottom:".5rem",opacity:.6}}>
+                  <div style={{display:"flex",alignItems:"center",gap:".55rem"}}>
+                    <span style={{fontSize:16}}>{dim.icon}</span>
+                    <div style={{flex:1,fontSize:13,color:C.dim,fontWeight:600}}>{dim.label}</div>
+                    <button onClick={()=>{ setOnSummary(false); setIdx(PARENT_DIMENSIONS.indexOf(dim)); }} style={{background:"none",border:`1px solid ${C.border}`,color:C.dimmer,borderRadius:8,padding:".25rem .7rem",fontSize:11,cursor:"pointer",fontFamily:FONT.body}}>Answer now</button>
+                  </div>
+                </Card>
+              ))}
+            </>
+          )}
+
+          <button onClick={handleSave} disabled={answered.length === 0} style={{marginTop:"1.25rem",width:"100%",background:answered.length>0?C.gold:C.dimmest,color:answered.length>0?C.bg:C.dimmer,border:"none",borderRadius:12,padding:".9rem",cursor:answered.length>0?"pointer":"default",fontWeight:800,fontSize:14,fontFamily:FONT.body}}>
+            Save assessment →
+          </button>
+          {answered.length === 0 && <div style={{fontSize:11,color:C.dimmer,textAlign:"center",marginTop:".5rem"}}>Answer at least one dimension to save.</div>}
+        </div>
+      </div>
+    );
+  }
+
+  // Step-through screen for the current dimension
+  const dim = PARENT_DIMENSIONS[idx];
+  const prompt = dim.prompts[level] || dim.prompts["U11 / Atom"];
+  const current = ratings[dim.id];
+  const pct = ((idx) / total) * 100;
+
   return (
     <div style={{minHeight:"100vh",background:C.bg,color:C.white,fontFamily:FONT.body,paddingBottom:120}}>
       <StickyHeader>
         <div style={{maxWidth:560,margin:"0 auto",display:"flex",alignItems:"center",gap:"1rem"}}>
-          <BackBtn onClick={onBack}/>
+          <BackBtn onClick={goBack}/>
           <div style={{flex:1}}>
             <div style={{fontFamily:FONT.display,fontWeight:800,fontSize:"1.1rem"}}>Parent Assessment</div>
-            <div style={{fontSize:11,color:C.dimmer}}>{level} · {completed}/{total} answered</div>
+            <div style={{fontSize:11,color:C.dimmer}}>{level} · Question {idx+1} of {total}</div>
           </div>
-          <button onClick={handleSave} disabled={completed === 0} style={{background:completed>0?C.gold:C.dimmest,color:completed>0?C.bg:C.dimmer,border:"none",borderRadius:8,padding:".4rem 1rem",cursor:completed>0?"pointer":"default",fontWeight:800,fontSize:13,fontFamily:FONT.body}}>Save</button>
+        </div>
+        <div style={{maxWidth:560,margin:"0.5rem auto 0"}}>
+          <div style={{height:4,background:C.bgElevated,borderRadius:2,overflow:"hidden"}}>
+            <div style={{width:`${pct}%`,height:"100%",background:C.gold,transition:"width .3s"}}/>
+          </div>
         </div>
       </StickyHeader>
 
       <div style={{padding:"1.25rem",maxWidth:560,margin:"0 auto"}}>
-        <Card style={{marginBottom:"1rem",background:`linear-gradient(135deg,${C.purpleDim},transparent)`,border:`1px solid ${C.purpleBorder}`}}>
-          <Label>👋 For parents</Label>
-          <div style={{fontSize:13,color:C.dim,lineHeight:1.6,marginTop:".4rem"}}>
-            Rate how your child shows up at the rink — the character, habits, and attitude you see that a coach often can't. This isn't about skill; it's about who your child is becoming. Takes 2 minutes.
-          </div>
-        </Card>
+        {idx === 0 && (
+          <Card style={{marginBottom:"1rem",background:`linear-gradient(135deg,${C.purpleDim},transparent)`,border:`1px solid ${C.purpleBorder}`}}>
+            <Label>👋 For parents</Label>
+            <div style={{fontSize:13,color:C.dim,lineHeight:1.6,marginTop:".4rem"}}>
+              Rate how your child shows up at the rink — the character, habits, and attitude you see that a coach often can't. This isn't about skill; it's about who your child is becoming. Takes 2 minutes.
+            </div>
+          </Card>
+        )}
 
-        {PARENT_DIMENSIONS.map(dim => {
-          const prompt = dim.prompts[level] || dim.prompts["U11 / Atom"];
-          const current = ratings[dim.id];
-          return (
-            <Card key={dim.id} style={{marginBottom:".75rem"}}>
-              <div style={{display:"flex",alignItems:"center",gap:".55rem",marginBottom:".35rem"}}>
-                <span style={{fontSize:18}}>{dim.icon}</span>
-                <div style={{fontFamily:FONT.display,fontWeight:800,fontSize:14,color:C.white}}>{dim.label}</div>
-              </div>
-              <div style={{fontSize:12,color:C.dim,lineHeight:1.6,marginBottom:".7rem"}}>{prompt}</div>
-              <div style={{display:"grid",gridTemplateColumns:"1fr 1fr 1fr",gap:".4rem"}}>
-                {PARENT_SCALE.map(opt => {
-                  const isActive = current === opt.value;
-                  return (
-                    <button key={opt.value} onClick={() => pick(dim.id, opt.value)} style={{
-                      background: isActive ? `${opt.color}22` : C.bgElevated,
-                      border: `1px solid ${isActive ? opt.color : C.border}`,
-                      color: isActive ? opt.color : C.dim,
-                      borderRadius: 8, padding: ".55rem .35rem", cursor: "pointer",
-                      fontFamily: FONT.body, fontSize: 12, fontWeight: isActive ? 800 : 600,
-                    }}>{opt.label}</button>
-                  );
-                })}
-              </div>
-            </Card>
-          );
-        })}
+        <Card style={{marginBottom:".85rem",padding:"1.25rem"}}>
+          <div style={{display:"flex",alignItems:"center",gap:".6rem",marginBottom:".65rem"}}>
+            <span style={{fontSize:28}}>{dim.icon}</span>
+            <div style={{fontFamily:FONT.display,fontWeight:800,fontSize:18,color:C.white}}>{dim.label}</div>
+          </div>
+          <div style={{fontSize:14,color:C.dim,lineHeight:1.6,marginBottom:"1rem"}}>{prompt}</div>
+          <div style={{display:"grid",gridTemplateColumns:"1fr 1fr 1fr",gap:".5rem"}}>
+            {PARENT_SCALE.map(opt => {
+              const isActive = current === opt.value;
+              return (
+                <button key={opt.value} onClick={() => pick(dim.id, opt.value)} style={{
+                  background: isActive ? `${opt.color}22` : C.bgElevated,
+                  border: `1px solid ${isActive ? opt.color : C.border}`,
+                  color: isActive ? opt.color : C.dim,
+                  borderRadius: 10, padding: ".75rem .4rem", cursor: "pointer",
+                  fontFamily: FONT.body, fontSize: 13, fontWeight: isActive ? 800 : 600,
+                }}>{opt.label}</button>
+              );
+            })}
+          </div>
+          <button onClick={() => skip(dim.id)} style={{marginTop:".85rem",background:"none",border:"none",color:C.dimmer,fontSize:12,cursor:"pointer",fontFamily:FONT.body,width:"100%",textAlign:"center",padding:".3rem",textDecoration:"underline"}}>
+            I'm not sure — skip this
+          </button>
+        </Card>
       </div>
     </div>
   );

@@ -1,6 +1,6 @@
 import { getCoachScale } from "../data/constants.js";
 
-const PARENT_VALUE_TO_PCT = { growing: 33, steady: 67, thriving: 100 };
+const PARENT_VALUE_TO_PCT = { rarely: 33, sometimes: 67, often: 100 };
 
 const TRAINING_VOLUME_TARGETS = {
   power_skating: 300,

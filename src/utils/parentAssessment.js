@@ -1,8 +1,19 @@
 export const PARENT_SCALE = [
-  { value: "growing",  label: "Growing",  color: "#facc15" },
-  { value: "steady",   label: "Steady",   color: "#22c55e" },
-  { value: "thriving", label: "Thriving", color: "#a855f7" },
+  { value: "rarely",    label: "Rarely",    color: "#facc15" },
+  { value: "sometimes", label: "Sometimes", color: "#22c55e" },
+  { value: "often",     label: "Often",     color: "#a855f7" },
 ];
+
+// Legacy values from the pre-v2 scale. getParentRatings migrates on read.
+const LEGACY_TO_NEW = { growing: "rarely", steady: "sometimes", thriving: "often" };
+function migrateRatings(raw) {
+  if (!raw || typeof raw !== "object") return raw;
+  const out = { ...raw };
+  for (const k of Object.keys(out)) {
+    if (LEGACY_TO_NEW[out[k]]) out[k] = LEGACY_TO_NEW[out[k]];
+  }
+  return out;
+}
 
 export const PARENT_DIMENSIONS = [
   { id: "passion", icon: "❤️", label: "Love of the game", prompts: {
@@ -70,7 +81,7 @@ export function getParentRatings(playerId) {
   try {
     const raw = localStorage.getItem(KEY);
     const all = raw ? JSON.parse(raw) : {};
-    return all[playerId] || null;
+    return migrateRatings(all[playerId] || null);
   } catch { return null; }
 }
 

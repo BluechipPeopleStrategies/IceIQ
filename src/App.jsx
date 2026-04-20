@@ -3467,11 +3467,11 @@ function getDemoBio(level, position) {
 }
 
 const DEMO_PARENT_RATINGS = {
-  "U9 / Novice":     { passion:"thriving", readiness:"growing",  effort:"steady",   adversity:"steady",  sportsmanship:"steady",   confidence:"growing",  coachability:"steady",   balance:"steady"   },
-  "U11 / Atom":      { passion:"thriving", readiness:"steady",   effort:"thriving", adversity:"steady",  sportsmanship:"thriving", confidence:"steady",   coachability:"thriving", balance:"steady"   },
-  "U13 / Peewee":    { passion:"steady",   readiness:"steady",   effort:"thriving", adversity:"growing", sportsmanship:"steady",   confidence:"steady",   coachability:"steady",   balance:"growing"  },
-  "U15 / Bantam":    { passion:"steady",   readiness:"thriving", effort:"thriving", adversity:"steady",  sportsmanship:"thriving", confidence:"thriving", coachability:"steady",   balance:"growing"  },
-  "U18 / Midget":    { passion:"steady",   readiness:"thriving", effort:"thriving", adversity:"thriving",sportsmanship:"thriving", confidence:"thriving", coachability:"thriving", balance:"growing"  },
+  "U9 / Novice":     { passion:"often",     readiness:"rarely",    effort:"sometimes", adversity:"sometimes", sportsmanship:"sometimes", confidence:"rarely",    coachability:"sometimes", balance:"sometimes" },
+  "U11 / Atom":      { passion:"often",     readiness:"sometimes", effort:"often",     adversity:"sometimes", sportsmanship:"often",     confidence:"sometimes", coachability:"often",     balance:"sometimes" },
+  "U13 / Peewee":    { passion:"sometimes", readiness:"sometimes", effort:"often",     adversity:"rarely",    sportsmanship:"sometimes", confidence:"sometimes", coachability:"sometimes", balance:"rarely"    },
+  "U15 / Bantam":    { passion:"sometimes", readiness:"often",     effort:"often",     adversity:"sometimes", sportsmanship:"often",     confidence:"often",     coachability:"sometimes", balance:"rarely"    },
+  "U18 / Midget":    { passion:"sometimes", readiness:"often",     effort:"often",     adversity:"often",     sportsmanship:"often",     confidence:"often",     coachability:"often",     balance:"rarely"    },
 };
 
 function buildDemoPlayer(level) {
@@ -4540,7 +4540,7 @@ export default function App() {
         {screen === "report"  && <Report player={tierLimitedPlayer(player, tier)} onBack={()=>setScreen("home")} demoCoachData={demoMode?demoCoachRatings:null} tier={tier} onUpgrade={(f,t)=>promptUpgrade(f,t)}/>}
         {screen === "gamesense" && <Suspense fallback={<LazyFallback/>}><GameSenseReportScreen player={player} onBack={()=>setScreen("home")} demoMode={demoMode} demoCoachData={demoMode?demoCoachRatings:null} onNavigate={setScreen}/></Suspense>}
         {screen === "journey" && <JourneyScreen player={player} onBack={()=>setScreen("home")} onNav={setScreen}/>}
-        {screen === "parent" && <Suspense fallback={<LazyFallback/>}><ParentAssessmentScreen player={player} onBack={()=>setScreen("profile")} onSave={(ratings)=>{ setPlayer(p => ({...p, parentRatings: {...ratings, updated_at: new Date().toISOString().slice(0,10)}})); setScreen("profile"); }}/></Suspense>}
+        {screen === "parent" && <Suspense fallback={<LazyFallback/>}><ParentAssessmentScreen player={player} demoMode={demoMode} onSignup={triggerSignup} onBack={()=>setScreen("profile")} onSave={(ratings)=>{ setPlayer(p => ({...p, parentRatings: {...ratings, updated_at: new Date().toISOString().slice(0,10)}})); setScreen("profile"); }}/></Suspense>}
         {screen === "profile" && <Profile player={player} onSave={handleProfileSave} onBack={()=>setScreen("home")} onReset={handleSignOut} demoMode={demoMode} tier={tier} onUpgrade={(f,t)=>promptUpgrade(f,t)} userEmail={userEmail} onAdminReports={()=>setScreen("admin")} onNav={setScreen}/>}
         {screen === "admin" && <Suspense fallback={<LazyFallback/>}><AdminReports onBack={()=>setScreen("profile")}/></Suspense>}
         {screen === "question-review" && <Suspense fallback={<LazyFallback/>}><QuestionReviewScreen onBack={()=>setScreen("profile")}/></Suspense>}
