@@ -6351,6 +6351,47 @@
       "ok": false,
       "why": "Defensemen can and should join the rush when the situation is right — when there's a clear odd-man advantage or your partner is back to cover. Good D join the play; they just do it smartly.",
       "tip": "D can join the rush — just make sure your partner has you covered. Smart D jump in at the right time."
+    },
+    {
+      "id": "u11rink1",
+      "cat": "Offensive Pressure",
+      "pos": ["F", "D"],
+      "concept": "Shot selection",
+      "d": 2,
+      "type": "rink",
+      "sit": "You've got the puck on the left faceoff dot. The goalie is set, and there's one opponent collapsing toward the high slot.",
+      "why": "The slot is the highest-danger area on the ice. Getting a shot from there beats goalies far more often than shots from the perimeter.",
+      "tip": "Drive to the middle. Inside shots score more.",
+      "scene": {
+        "team": [
+          { "id": "you1", "label": "LW", "zone": "left-faceoff", "hasPuck": true, "isYou": true },
+          { "id": "tm1", "label": "C", "zone": "slot" },
+          { "id": "tm2", "label": "RW", "zone": "right-corner" }
+        ],
+        "opponents": [
+          { "id": "op1", "zone": "high-slot" }
+        ],
+        "puck": { "zone": "left-faceoff", "offsetX": 10, "offsetY": 0 },
+        "showGoalie": true,
+        "showHomePlate": false,
+        "texts": [],
+        "arrows": [],
+        "flags": [],
+        "question": {
+          "mode": "zone-click",
+          "prompt": "Click the best spot to attack from.",
+          "zones": {
+            "correct": ["slot"],
+            "partial": ["net-front"],
+            "wrong": ["left-corner", "right-corner", "behind-net", "left-point", "right-point", "high-slot"]
+          },
+          "feedback": {
+            "correct": "Slot is right. Highest-danger area, best shooting angle, goalie can't see through screens.",
+            "partial": "Net-front is okay — rebounds and tips — but the slot gives you a direct shot with more scoring chance.",
+            "wrong": "That spot is too low-danger for this look. You want the middle of the ice."
+          }
+        }
+      }
     }
   ],
   "U13 / Peewee": [

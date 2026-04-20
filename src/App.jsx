@@ -7,6 +7,7 @@ import { calcPlayerProfile, PROFILE_AXES } from "./utils/playerProfile";
 import { markSignupIntent, logSignupComplete } from "./utils/signupTelemetry";
 import { recordDemoSnapshot, clearDemoSnapshot, captureDemoTransfer, writePendingTransfer, applyPendingTransfer } from "./utils/demoTransfer";
 import { DEPTH_SLOTS, getDepthChart, setAssignment as setDepthAssignment, seedDemoDepthChart, clearDemoDepthChart } from "./utils/depthChart";
+import Rink from "./Rink.jsx";
 import { COMPETENCIES, getPositioningJourneyState, GAME_SENSE_UNLOCK_SESSIONS } from "./utils/gameSense.js";
 import { HockeyInsightWidget, BottomNav, TrainingLog } from "./widgets.jsx";
 import { canSwitchAgeGroup, recordAgeGroupSwitch, getAgeGroupLock, setAgeGroupLock, checkSeasonReset } from "./utils/deviceLock";
@@ -1087,6 +1088,7 @@ const Q_TYPE_LABELS = {
   next:    {label:"What Happens Next",color:C.yellow,  icon:"🔮"},
   tf:      {label:"True or False",   color:C.blue,     icon:"⚡"},
   "zone-click": {label:"Zone Click", color:C.green,   icon:"🎯"},
+  rink:    {label:"Rink Scenario", color:C.blue,    icon:"🏒"},
 };
 
 function ZoneClickQuestion({ q, onAnswer, answered, C }) {
@@ -1424,6 +1426,7 @@ function Quiz({ player, onFinish, onBack, tier, onUpgrade }) {
   const [mistakeStreak, setMistakeStreak] = useState(0);
   const [quizDone, setQuizDone] = useState(false);
   const [zoneCorrect, setZoneCorrect] = useState(null);
+  const [rinkVerdict, setRinkVerdict] = useState(null); // null | "correct" | "partial" | "wrong"
   const [showFlag, setShowFlag] = useState(false);
   const [flagReason, setFlagReason] = useState("");
   const [flagDetail, setFlagDetail] = useState("");
@@ -1499,10 +1502,12 @@ function Quiz({ player, onFinish, onBack, tier, onUpgrade }) {
     setSeqAnswered(false);
     setSeqCorrect(false);
     setZoneCorrect(null);
+    setRinkVerdict(null);
   }
 
-  const canAdvance = qtype === "seq" ? seqAnswered : qtype === "zone-click" ? zoneCorrect !== null : sel !== null;
-  const answered = qtype === "seq" ? seqAnswered : qtype === "zone-click" ? zoneCorrect !== null : sel !== null;
+  const rinkOk = rinkVerdict && rinkVerdict !== "wrong"; // partial counts as "ok" for scoring
+  const canAdvance = qtype === "seq" ? seqAnswered : qtype === "zone-click" ? zoneCorrect !== null : qtype === "rink" ? rinkVerdict !== null : sel !== null;
+  const answered = qtype === "seq" ? seqAnswered : qtype === "zone-click" ? zoneCorrect !== null : qtype === "rink" ? rinkVerdict !== null : sel !== null;
   const q = question;
   if (!q) return <Screen><div style={{color:C.dimmer,textAlign:"center",paddingTop:"4rem"}}>Loading…</div></Screen>;
 
@@ -1607,6 +1612,14 @@ function Quiz({ player, onFinish, onBack, tier, onUpgrade }) {
           </Card>
         )}
 
+        {qtype === "rink" && (
+          <Card style={{marginBottom:"1.25rem",background:C.blueDim,border:`1px solid rgba(59,130,246,.3)`}}>
+            <div style={{fontSize:10,letterSpacing:".14em",textTransform:"uppercase",color:C.blue,marginBottom:".6rem",fontWeight:700}}>🏒 Rink Scenario</div>
+            {q.sit && <div style={{fontSize:14,color:C.dim,lineHeight:1.7,marginBottom:".5rem"}}>{q.sit}</div>}
+            {q.scene?.question?.prompt && <div style={{fontSize:15,fontWeight:700,color:C.white}}>{q.scene.question.prompt}</div>}
+          </Card>
+        )}
+
         {/* Question component */}
         {qtype === "mc" && <MCQuestion q={q} sel={sel} onPick={handlePick} colorblind={player.colorblind}/>}
         {qtype === "mistake" && <MCQuestion q={q} sel={sel} onPick={handlePick} colorblind={player.colorblind}/>}
@@ -1620,21 +1633,43 @@ function Quiz({ player, onFinish, onBack, tier, onUpgrade }) {
           setResults(newResults);
           if (results.length + 1 >= qLen) setQuizDone(true);
         }} C={C} />}
+        {qtype === "rink" && q.scene && (
+          <Rink
+            scene={q.scene}
+            mode="play"
+            ageGroup={player.level?.split(" ")[0]}
+            lockAnswer={true}
+            onAnswer={result => {
+              if (rinkVerdict !== null) return; // already answered — ignore
+              setRinkVerdict(result.verdict);
+              const ok = result.verdict !== "wrong";
+              const newResult = { id:q.id, cat:q.cat, ok, d:q.d||2, type:"rink", verdict:result.verdict, choice:result.choice };
+              const newResults = [...results, newResult];
+              setResults(newResults);
+              if (results.length + 1 >= qLen) setQuizDone(true);
+            }}
+          />
+        )}
 
         {/* Explanation */}
         {answered && (
           <div ref={el => { if (el) setTimeout(() => el.scrollIntoView({behavior:"smooth",block:"nearest"}), 150); }} style={{marginTop:"1rem"}}>
             <Card style={{
-              background: (qtype==="seq"?seqCorrect:qtype==="zone-click"?zoneCorrect:(sel===q.ok)) ? "rgba(34,197,94,.06)" : C.redDim,
-              border:`1px solid ${(qtype==="seq"?seqCorrect:qtype==="zone-click"?zoneCorrect:(sel===q.ok)) ? C.greenBorder : C.redBorder}`,
+              background: (qtype==="seq"?seqCorrect:qtype==="zone-click"?zoneCorrect:qtype==="rink"?rinkOk:(sel===q.ok)) ? "rgba(34,197,94,.06)" : C.redDim,
+              border:`1px solid ${(qtype==="seq"?seqCorrect:qtype==="zone-click"?zoneCorrect:qtype==="rink"?rinkOk:(sel===q.ok)) ? C.greenBorder : C.redBorder}`,
               marginBottom:"1rem"
             }}>
-              <div style={{fontSize:10,letterSpacing:".12em",textTransform:"uppercase",fontWeight:700,marginBottom:".5rem",color:(qtype==="seq"?seqCorrect:qtype==="zone-click"?zoneCorrect:(sel===q.ok))?C.green:C.red}}>
-                {(qtype==="seq"?seqCorrect:qtype==="zone-click"?zoneCorrect:(sel===q.ok)) ? "✓ Correct" : "✗ Incorrect"}
+              <div style={{fontSize:10,letterSpacing:".12em",textTransform:"uppercase",fontWeight:700,marginBottom:".5rem",color:(qtype==="seq"?seqCorrect:qtype==="zone-click"?zoneCorrect:qtype==="rink"?rinkOk:(sel===q.ok))?C.green:C.red}}>
+                {qtype==="rink" && rinkVerdict==="partial"
+                  ? "~ Partial credit"
+                  : ((qtype==="seq"?seqCorrect:qtype==="zone-click"?zoneCorrect:qtype==="rink"?rinkOk:(sel===q.ok)) ? "✓ Correct" : "✗ Incorrect")}
               </div>
+              {qtype==="rink" && q.scene?.question?.feedback?.[rinkVerdict] && (
+                <div style={{fontSize:13,color:C.white,lineHeight:1.75,marginBottom:".5rem",fontWeight:500}}>{q.scene.question.feedback[rinkVerdict]}</div>
+              )}
               <div style={{fontSize:13,color:C.dim,lineHeight:1.75,marginBottom:".75rem"}}>{q.why || q.explanation}</div>
               {(() => {
-                const userCorrect = qtype === "seq" ? seqCorrect : qtype === "zone-click" ? zoneCorrect : (sel === q.ok);
+                const userCorrect = qtype === "seq" ? seqCorrect : qtype === "zone-click" ? zoneCorrect : qtype === "rink" ? rinkOk : (sel === q.ok);
                 let pct = null, isSample = false;
                 if (isDemo) { pct = demoStatPct(q.id, q.d); isSample = true; }
                 else {
@@ -1654,7 +1689,7 @@ function Quiz({ player, onFinish, onBack, tier, onUpgrade }) {
                 );
               })()}
               {(() => {
-                const userCorrect = qtype === "seq" ? seqCorrect : qtype === "zone-click" ? zoneCorrect : (sel === q.ok);
+                const userCorrect = qtype === "seq" ? seqCorrect : qtype === "zone-click" ? zoneCorrect : qtype === "rink" ? rinkOk : (sel === q.ok);
                 const coach = getCoachForQuestion(q, player.level, player.position);
                 if (!coach) return null;
                 const flavorPool = userCorrect ? FLAVOR_CORRECT : FLAVOR_INCORRECT;
