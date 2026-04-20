@@ -318,6 +318,12 @@
   </div>
 </div>
 
+<!-- React + Babel (for the rink-type scene editor) -->
+<script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+<script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+<script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+<script type="text/babel" data-presets="react" src="rink-editor.jsx"></script>
+
 <script>
 // =========================================================================
 // Constants
@@ -332,15 +338,15 @@ const LEVEL_FOR_AGE = {
 const AGE_FOR_LEVEL = Object.fromEntries(Object.entries(LEVEL_FOR_AGE).map(([k,v])=>[v,k]));
 const AGES = ["u9","u11","u13","u15","u18"];
 const LEVEL_ORDER = AGES.map(a => LEVEL_FOR_AGE[a]);
-const ALL_TYPES = ["mc","tf","seq","mistake","next"];
+const ALL_TYPES = ["mc","tf","seq","mistake","next","rink"];
 const RECOMMENDED_TYPES_BY_AGE = {
   u9:  ["mc","tf","seq"],
-  u11: ["mc","tf","seq","mistake"],
-  u13: ["mc","tf","seq","mistake","next"],
-  u15: ["mc","tf","seq","mistake","next"],
-  u18: ["mc","tf","seq","mistake","next"],
+  u11: ["mc","tf","seq","mistake","rink"],
+  u13: ["mc","tf","seq","mistake","next","rink"],
+  u15: ["mc","tf","seq","mistake","next","rink"],
+  u18: ["mc","tf","seq","mistake","next","rink"],
 };
-const TYPE_LABELS = { mc: "MC", tf: "T/F", seq: "Seq", mistake: "Mistake", next: "Next" };
+const TYPE_LABELS = { mc: "MC", tf: "T/F", seq: "Seq", mistake: "Mistake", next: "Next", rink: "Rink" };
 const LS_KEY = "iceiq_dashboard_v1";
 const PAGE_SIZE = 100;
 
@@ -743,6 +749,63 @@ function renderCardBody(id, q, level, age, type) {
         <button class="btn-ghost" data-action="seq-add" style="margin-top:.3rem;">+ Add step</button>
       </div>
     `;
+  } else if (type === "rink") {
+    const sq = (q.scene && q.scene.question) || {};
+    const qMode = sq.mode || "choice";
+    const prompt = sq.prompt || "";
+    const opts = Array.isArray(sq.options) ? sq.options : [];
+    const fb = sq.feedback || {};
+    const VERDICTS = ["correct","partial","wrong"];
+    typeBody = `
+      <div class="field">
+        <label>Rink scene — drag items to reposition, click zones (zone-click mode) to cycle correct/partial/wrong</label>
+        <div class="rink-editor-slot" data-rink-slot="${id}"></div>
+        ${!(window.IceIQRink) ? `<div style="font-size:11px;color:var(--dimmer);padding:.4rem 0;">Loading rink editor…</div>` : ""}
+      </div>
+      <div class="row2">
+        <div class="field">
+          <label>Answer mode</label>
+          <select class="field-select" data-action="rink-mode">
+            <option value="choice" ${qMode==="choice"?"selected":""}>Multiple choice</option>
+            <option value="zone-click" ${qMode==="zone-click"?"selected":""}>Zone click</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>Question prompt</label>
+          <textarea class="field-textarea" data-action="rink-prompt">${escapeHtml(prompt)}</textarea>
+        </div>
+      </div>
+      ${qMode === "choice" ? `
+        <div class="field">
+          <label>Options — each has a verdict (correct/partial/wrong) and per-option feedback</label>
+          ${opts.map((o, i) => `
+            <div class="opt-row" style="flex-wrap:wrap;gap:.35rem;padding:.5rem;background:var(--bg-elev);border:1px solid var(--border);border-radius:6px;margin-bottom:.35rem;">
+              <span class="opt-letter">${String.fromCharCode(65+i)}</span>
+              <input class="field-input" data-action="rink-opt-text" data-idx="${i}" placeholder="Option text" value="${escapeAttr(o.text || "")}" style="flex:1 1 200px;">
+              <select class="field-select" data-action="rink-opt-verdict" data-idx="${i}" style="width:auto;">
+                ${VERDICTS.map(v => `<option value="${v}" ${o.verdict===v?"selected":""}>${v}</option>`).join("")}
+              </select>
+              <button class="opt-remove" data-action="rink-opt-del" data-idx="${i}">✕</button>
+              <textarea class="field-textarea" data-action="rink-opt-fb" data-idx="${i}" placeholder="Feedback shown when the player picks this option" style="width:100%;margin-top:.3rem;">${escapeHtml(o.feedback || "")}</textarea>
+            </div>
+          `).join("")}
+          <button class="btn-ghost" data-action="rink-opt-add" style="margin-top:.3rem;">+ Add option</button>
+        </div>
+      ` : `
+        <div class="field">
+          <label>Zone-click feedback (shown based on which verdict the clicked zone has)</label>
+          ${VERDICTS.map(v => `
+            <div style="margin-top:.4rem;">
+              <div style="font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--dim);margin-bottom:.2rem;">${v} feedback</div>
+              <textarea class="field-textarea" data-action="rink-fb-${v}" placeholder="Shown when the player clicks a ${v} zone">${escapeHtml(fb[v] || "")}</textarea>
+            </div>
+          `).join("")}
+          <div style="font-size:11px;color:var(--dimmer);margin-top:.5rem;line-height:1.5;">
+            Tip: click any zone on the rink above to cycle its verdict (unassigned → correct → partial → wrong → unassigned).
+          </div>
+        </div>
+      `}
+    `;
   }
 
   const tail = `
@@ -833,6 +896,8 @@ function onCardClick(e) {
     const items = Array.isArray(q.items) ? [...q.items, ""] : [""];
     setField(id, "items", items); render(); return;
   }
+  if (action === "rink-opt-add") { addRinkOption(id); render(); return; }
+  if (action === "rink-opt-del") { removeRinkOption(id, parseInt(idx, 10)); render(); return; }
   if (action === "seq-remove") {
     const q = getMergedById(id);
     const items = (q.items || []).filter((_, i) => i !== parseInt(idx, 10));
@@ -867,7 +932,48 @@ function onCardInput(e) {
     const items = [...(q.items || [])];
     items[parseInt(idx, 10)] = e.target.value;
     setField(id, "items", items);
+  } else if (action === "rink-prompt") {
+    updateRinkQuestion(id, { prompt: e.target.value });
+  } else if (action === "rink-opt-text" && idx != null) {
+    setRinkOption(id, parseInt(idx, 10), { text: e.target.value });
+  } else if (action === "rink-opt-fb" && idx != null) {
+    setRinkOption(id, parseInt(idx, 10), { feedback: e.target.value });
+  } else if (action === "rink-fb-correct" || action === "rink-fb-partial" || action === "rink-fb-wrong") {
+    const verdict = action.slice("rink-fb-".length);
+    updateRinkQuestion(id, { feedback: { ...(currentScene(id).question?.feedback || {}), [verdict]: e.target.value } });
   }
+}
+
+// ── Rink scene.question helpers ─────────────────────────────────────────────
+function currentScene(id) {
+  const q = getMergedById(id);
+  if (q.scene) return q.scene;
+  return window.IceIQEmptyScene
+    ? window.IceIQEmptyScene()
+    : { team: [], opponents: [], puck: { zone: "slot", offsetX: 26, offsetY: -2 }, showGoalie: true, showHomePlate: false, texts: [], arrows: [], flags: [], question: { mode: "choice", prompt: "", options: [], zones: { correct: [], partial: [], wrong: [] }, feedback: { correct: "", partial: "", wrong: "" } } };
+}
+function updateRinkQuestion(id, patch) {
+  const scene = currentScene(id);
+  const nextScene = { ...scene, question: { ...(scene.question || {}), ...patch } };
+  setField(id, "scene", nextScene);
+  mountRinkEditors(); // push the fresh scene into the live React root
+}
+function setRinkOption(id, idx, patch) {
+  const scene = currentScene(id);
+  const opts = Array.isArray(scene.question?.options) ? [...scene.question.options] : [];
+  opts[idx] = { ...(opts[idx] || { text: "", verdict: "correct", feedback: "" }), ...patch };
+  updateRinkQuestion(id, { options: opts });
+}
+function addRinkOption(id) {
+  const scene = currentScene(id);
+  const opts = Array.isArray(scene.question?.options) ? [...scene.question.options] : [];
+  opts.push({ text: "", verdict: "correct", feedback: "" });
+  updateRinkQuestion(id, { options: opts });
+}
+function removeRinkOption(id, idx) {
+  const scene = currentScene(id);
+  const opts = Array.isArray(scene.question?.options) ? scene.question.options.filter((_, i) => i !== idx) : [];
+  updateRinkQuestion(id, { options: opts });
 }
 
 function onCardChange(e) {
@@ -884,6 +990,15 @@ function onCardChange(e) {
       STATE.moves[id] = target;
     }
     saveState(); render(); return;
+  }
+  if (action === "rink-mode") {
+    updateRinkQuestion(id, { mode: e.target.value });
+    render(); return;
+  }
+  if (action === "rink-opt-verdict") {
+    const idx = parseInt(e.target.dataset.idx, 10);
+    setRinkOption(id, idx, { verdict: e.target.value });
+    return;
   }
   if (action === "pos") {
     const q = getMergedById(id);
@@ -902,6 +1017,7 @@ function onCardChange(e) {
     // Clear incompatible fields from edit
     if (newType !== "seq") setField(id, "items", undefined);
     if (newType === "tf" || newType === "seq") setField(id, "opts", undefined);
+    if (newType !== "rink") setField(id, "scene", undefined);
     render();
   }
 }
@@ -913,6 +1029,24 @@ function blankTypeFields(type, age) {
   }
   if (type === "tf") return { ok: true };
   if (type === "seq") return { items: ["", "", ""] };
+  if (type === "rink") {
+    // window.IceIQEmptyScene is loaded from rink-editor.jsx via Babel standalone.
+    // Fallback inline if the React bundle hasn't finished loading yet.
+    const scene = (typeof window !== "undefined" && window.IceIQEmptyScene)
+      ? window.IceIQEmptyScene()
+      : {
+          team: [], opponents: [],
+          puck: { zone: "slot", offsetX: 26, offsetY: -2 },
+          showGoalie: true, showHomePlate: false,
+          texts: [], arrows: [], flags: [],
+          question: {
+            mode: "choice", prompt: "", options: [],
+            zones: { correct: [], partial: [], wrong: [] },
+            feedback: { correct: "", partial: "", wrong: "" },
+          },
+        };
+    return { scene };
+  }
   return {};
 }
 
@@ -970,6 +1104,11 @@ function rebuildAddTypeFields() {
       <div class="field"><label>Steps in correct order (one per line)</label>
         <textarea class="field-textarea" id="add-items" placeholder="Step 1&#10;Step 2&#10;Step 3" rows="5"></textarea>
       </div>`;
+  } else if (type === "rink") {
+    c.innerHTML = `
+      <div class="field" style="padding:.6rem .8rem;background:var(--bg-elev);border:1px solid var(--border);border-radius:8px;font-size:12px;color:var(--dim);line-height:1.5;">
+        Rink scenes are built using the visual editor. Save this question with an empty scene — you can drag in players, opponents, arrows, flags, and configure the question mode (choice or zone-click) from the question's edit card.
+      </div>`;
   }
   c.insertAdjacentHTML("beforeend", `
     <div class="row2">
@@ -1005,6 +1144,16 @@ function saveAdded() {
     row.ok = okEl?.value === "true";
   } else if (type === "seq") {
     row.items = (document.getElementById("add-items").value || "").split(/\r?\n/).map(s => s.trim()).filter(Boolean);
+  } else if (type === "rink") {
+    row.scene = (typeof window !== "undefined" && window.IceIQEmptyScene)
+      ? window.IceIQEmptyScene()
+      : {
+          team: [], opponents: [],
+          puck: { zone: "slot", offsetX: 26, offsetY: -2 },
+          showGoalie: true, showHomePlate: false,
+          texts: [], arrows: [], flags: [],
+          question: { mode: "choice", prompt: "", options: [], zones: { correct: [], partial: [], wrong: [] }, feedback: { correct: "", partial: "", wrong: "" } },
+        };
   }
   row.why = document.getElementById("add-why").value.trim();
   row.tip = document.getElementById("add-tip").value.trim();
@@ -1191,6 +1340,66 @@ function render() {
   renderDashboard();
   renderFilterChips();
   renderCards();
+  mountRinkEditors();
+}
+
+// =========================================================================
+// Rink editor mounts — persistent React roots keyed by question id.
+// The dashboard rebuilds card HTML on every edit, which would wipe any
+// React tree inside the card. We keep an off-DOM container alive per
+// question id and re-parent it into the card's slot on every render.
+// Scene onChange uses setFieldSilent so typing/dragging doesn't trigger
+// a full card re-render (which would flash the editor).
+// =========================================================================
+const rinkRoots = new Map(); // id -> { container, root }
+
+function setFieldSilent(id, key, value) {
+  STATE.edits[id] = STATE.edits[id] || {};
+  const orig = getOriginalById(id);
+  if (orig && JSON.stringify(orig[key]) === JSON.stringify(value)) {
+    delete STATE.edits[id][key];
+    if (Object.keys(STATE.edits[id]).length === 0) delete STATE.edits[id];
+  } else {
+    STATE.edits[id][key] = value;
+  }
+  saveState();
+}
+
+function mountRinkEditors() {
+  if (!window.IceIQRink || !window.ReactDOM) return;
+  const slots = document.querySelectorAll("[data-rink-slot]");
+  const liveIds = new Set();
+  slots.forEach(slot => {
+    const id = slot.dataset.rinkSlot;
+    liveIds.add(id);
+    let entry = rinkRoots.get(id);
+    if (!entry) {
+      const container = document.createElement("div");
+      container.style.minHeight = "200px";
+      const root = ReactDOM.createRoot(container);
+      entry = { container, root };
+      rinkRoots.set(id, entry);
+    }
+    if (entry.container.parentElement !== slot) slot.appendChild(entry.container);
+    const q = getMergedById(id);
+    const age = ageOf(id);
+    const ageGroup = age ? age.toUpperCase() : undefined;
+    entry.root.render(
+      React.createElement(window.IceIQRink, {
+        mode: "edit",
+        scene: q.scene || window.IceIQEmptyScene(),
+        ageGroup,
+        onChange: (next) => setFieldSilent(id, "scene", next),
+      })
+    );
+  });
+  // Unmount roots for questions whose card is no longer in the DOM
+  for (const [id, entry] of Array.from(rinkRoots.entries())) {
+    if (!liveIds.has(id)) {
+      try { entry.root.unmount(); } catch {}
+      rinkRoots.delete(id);
+    }
+  }
 }
 
 // =========================================================================
@@ -1198,6 +1407,9 @@ function render() {
 // =========================================================================
 (function init() {
   loadState();
+  // Rink editor loads asynchronously via Babel standalone — re-render once it's ready
+  // so rink-type cards get their mount slots populated.
+  window.addEventListener("iceiq-rink-ready", () => { try { render(); } catch {} });
   document.getElementById("btn-load").addEventListener("click", () => document.getElementById("file-input").click());
   document.getElementById("file-input").addEventListener("change", (e) => {
     const f = e.target.files?.[0]; if (f) handleFile(f);
