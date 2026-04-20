@@ -236,7 +236,7 @@ function computeQuestProgress(def, ctx) {
   return { id: def.id, progress, done, locked, acknowledged };
 }
 
-function QuestChecklist({ role, quests, results, onTap, onDismiss, onAllComplete }) {
+function QuestChecklist({ role, quests, results, onTap, onDismiss, onAllComplete, showSignupCTA, onSignup }) {
   const total = quests.length;
   const checked = results.filter(r => r.done || r.acknowledged).length;
   const allDone = checked >= total;
@@ -284,6 +284,12 @@ function QuestChecklist({ role, quests, results, onTap, onDismiss, onAllComplete
             </div>
             <div style={{fontSize:10,color:C.dimmer,fontWeight:700,letterSpacing:".04em"}}>{checked} of {total}</div>
           </div>
+          {showSignupCTA && onSignup && (
+            <button onClick={onSignup} style={{marginTop:".75rem",width:"100%",background:`linear-gradient(135deg, ${C.gold}, #b8860b)`,color:C.bg,border:"none",borderRadius:12,padding:".75rem",cursor:"pointer",fontWeight:800,fontSize:13,fontFamily:FONT.body,letterSpacing:".02em",boxShadow:"0 4px 14px rgba(201,168,76,.25), inset 0 1px 0 rgba(255,255,255,.25)",display:"flex",alignItems:"center",justifyContent:"center",gap:".4rem"}}>
+              <span style={{fontSize:14}}>🏒</span>
+              Create your free account →
+            </button>
+          )}
         </>
       )}
     </div>
@@ -1114,7 +1120,7 @@ function ZoneClickQuestion({ q, onAnswer, answered, C }) {
 // ─────────────────────────────────────────────────────────
 // HOME SCREEN
 // ─────────────────────────────────────────────────────────
-function Home({ player, onNav, demoMode, subscriptionTier, questFlagsBump, onPromptUpgrade, onBumpQuestFlags, onSaveProgress, onFirstLine }) {
+function Home({ player, onNav, demoMode, subscriptionTier, questFlagsBump, onPromptUpgrade, onBumpQuestFlags, onSaveProgress, onFirstLine, onSignup }) {
   const { name, level, position, selfRatings, quizHistory, goals } = player;
   const latest = quizHistory[quizHistory.length-1];
   const iq = latest ? calcWeightedIQ(latest.results) : null;
@@ -1200,6 +1206,8 @@ function Home({ player, onNav, demoMode, subscriptionTier, questFlagsBump, onPro
             onTap={handleQuestTap}
             onDismiss={handleDismissQuest}
             onAllComplete={handleAllComplete}
+            showSignupCTA={demoMode}
+            onSignup={onSignup}
           />
         )}
 
@@ -3350,7 +3358,11 @@ const DEMO_PROFILES = {
     selfRatings:{u9s1:"developing",u9s2:"consistent",u9s3:"developing",u9s4:"introduced",u9p1:"developing",u9p2:"developing",u9p3:"introduced",u9p4:"introduced",u9h1:"developing",u9h2:"introduced",u9d1:"developing",u9d2:"introduced",u9c1:"consistent",u9c2:"developing",u9c3:"developing"},
     coachRatings:{u9s1:"developing",u9s2:"developing",u9s3:"introduced",u9s4:"introduced",u9p1:"developing",u9p2:"developing",u9p3:"developing",u9p4:"introduced",u9h1:"developing",u9h2:"introduced",u9d1:"introduced",u9d2:"introduced",u9c1:"consistent",u9c2:"consistent",u9c3:"developing"},
     coachNotes:{u9d1:"Good positioning but needs to close gap faster on rushes.",u9c1:"Competes hard every shift — great example for the team."},
-    goals:{"Defense":{goal:"Improve gap control on the rush",S:"Hold the blue line and close gap by top of circles",M:"Coach tracks clean gap closes per game",A:"Yes — 1-on-1 rush drills in practice",R:"I back up too much and give attackers time",T:"By end of October 2026"}},
+    goals:{
+      "Defense":{goal:"Improve gap control on the rush",S:"Hold the blue line and close gap by top of circles",M:"Coach tracks clean gap closes per game",A:"Yes — 1-on-1 rush drills in practice",R:"I back up too much and give attackers time",T:"By end of October 2026"},
+      "Skating":{goal:"Get faster first three strides",S:"Explosive starts on every stoppage",M:"Coach times my acceleration each practice",A:"Yes — power skating once a week",R:"I'm always second to the puck",T:"By end of November 2026"},
+      "Game IQ":{goal:"Keep my head up on every touch",S:"Find an open teammate before taking the puck",M:"Count head-up touches per shift on video",A:"Yes — practice every day in small-area games",R:"I stare at the puck and miss open ice",T:"By end of December 2026"},
+    },
   },
   "U13 / Peewee":{
     name:"Maya Roy",position:"Goalie",jersey:30,team:"U13 AAA Vancouver Hawks",
@@ -3363,7 +3375,11 @@ const DEMO_PROFILES = {
     selfRatings:{u13s1:"consistent",u13s2:"developing",u13s3:"developing",u13p1:"developing",u13p2:"introduced",u13p3:"consistent",u13p4:"developing",u13h1:"consistent",u13h2:"developing",u13h3:"consistent",u13h4:"developing",u13d1:"developing",u13d2:"consistent",u13c1:"proficient",u13c2:"consistent",u13c3:"developing",u13c4:"consistent"},
     coachRatings:{u13s1:"consistent",u13s2:"developing",u13s3:"introduced",u13p1:"developing",u13p2:"introduced",u13p3:"developing",u13p4:"developing",u13h1:"developing",u13h2:"developing",u13h3:"consistent",u13h4:"developing",u13d1:"developing",u13d2:"consistent",u13c1:"proficient",u13c2:"consistent",u13c3:"consistent",u13c4:"consistent"},
     coachNotes:{u13h3:"Strong defensive zone awareness for a goalie — reads plays well.",u13c1:"Natural leader. Keeps the team calm under pressure."},
-    goals:{"Leadership":{goal:"Be more vocal in the room and on the ice during games",S:"Call out plays and communicate with D on every shift",M:"Coach gives feedback after each game on communication",A:"Yes — I already talk to my D but need to be louder",R:"Coach says I read the game well but teammates don't hear me",T:"By January 2027"}},
+    goals:{
+      "Leadership":{goal:"Be more vocal in the room and on the ice during games",S:"Call out plays and communicate with D on every shift",M:"Coach gives feedback after each game on communication",A:"Yes — I already talk to my D but need to be louder",R:"Coach says I read the game well but teammates don't hear me",T:"By January 2027"},
+      "Defensive Zone":{goal:"Control rebounds to my corners",S:"Steer every shot away from the slot",M:"Track second-chance goals against per game",A:"Yes — rebound drills twice a week",R:"Too many rebounds dropping in the slot",T:"By end of December 2026"},
+      "Edge Work":{goal:"Sharpen post-to-post push recovery",S:"Explosive push off the post on cross-seam passes",M:"Coach times my push recovery each practice",A:"Yes — goalie-specific power skating sessions",R:"I'm late getting across on cross-crease passes",T:"By end of February 2027"},
+    },
   },
   "U11 / Atom":{
     name:"Cole Gretzky",position:"Forward",jersey:99,team:"U11 AA Edmonton Selects",
@@ -3376,7 +3392,11 @@ const DEMO_PROFILES = {
     selfRatings:{u11s1:"developing",u11s2:"consistent",u11s3:"developing",u11s4:"introduced",u11p1:"consistent",u11p2:"developing",u11p3:"developing",u11p4:"consistent",u11h1:"consistent",u11h2:"developing",u11h3:"developing",u11d1:"developing",u11d2:"introduced",u11c1:"advanced",u11c2:"proficient",u11c3:"consistent",u11dm1:"developing",u11dm2:"developing",u11dm3:"introduced",u11dm4:"consistent",u11dm5:"developing"},
     coachRatings:{u11s1:"developing",u11s2:"consistent",u11s3:"developing",u11s4:"developing",u11p1:"consistent",u11p2:"developing",u11p3:"consistent",u11p4:"proficient",u11h1:"consistent",u11h2:"developing",u11h3:"developing",u11d1:"introduced",u11d2:"introduced",u11c1:"advanced",u11c2:"proficient",u11c3:"proficient",u11dm1:"developing",u11dm2:"developing",u11dm3:"developing",u11dm4:"consistent",u11dm5:"developing"},
     coachNotes:{u11d1:"Work on matching attacker speed and closing the gap.",u11c1:"Elite compete level — sets the tone every shift."},
-    goals:{"Gap Control":{goal:"Close the gap at the blue line instead of backing up",S:"Close gap by top of circles on every rush",M:"Track clean gap closes per game",A:"Yes — drill with D-partner in warmups",R:"Biggest weakness — I give up the blue line",T:"By end of November 2026"}},
+    goals:{
+      "Gap Control":{goal:"Close the gap at the blue line instead of backing up",S:"Close gap by top of circles on every rush",M:"Track clean gap closes per game",A:"Yes — drill with D-partner in warmups",R:"Biggest weakness — I give up the blue line",T:"By end of November 2026"},
+      "Puck Protection":{goal:"Protect the puck on the wall",S:"Use body between defender and puck on every wall battle",M:"Count wall wins per game",A:"Yes — small-area battle drills in practice",R:"I lose too many wall battles on zone entries",T:"By end of December 2026"},
+      "Game IQ":{goal:"Find open ice on the rush",S:"Read the D-pair and hit the seam on every 3-on-3",M:"Coach reviews rush chances on video weekly",A:"Yes — neutral zone rush drills twice a week",R:"I chase the puck instead of finding the quiet ice",T:"By end of January 2027"},
+    },
   },
   "U15 / Bantam":{
     name:"Jack Bourque",position:"Defense",jersey:77,team:"U15 AAA Winnipeg Warriors",
@@ -3387,7 +3407,11 @@ const DEMO_PROFILES = {
       R("u15q75","Gap Control",c,3), R("u15q90","Special Teams",c,3),
     ],
     selfRatings:{},coachRatings:{},coachNotes:{},
-    goals:{"Systems Play":{goal:"Master the 1-2-2 forecheck",S:"Execute my role in the 1-2-2 every shift",M:"Coach reviews video after each game",A:"Yes — we run this system every practice",R:"I freelance too much and break structure",T:"By end of January 2027"}},
+    goals:{
+      "Systems Play":{goal:"Master the 1-2-2 forecheck",S:"Execute my role in the 1-2-2 every shift",M:"Coach reviews video after each game",A:"Yes — we run this system every practice",R:"I freelance too much and break structure",T:"By end of January 2027"},
+      "Gap Control":{goal:"Close gap at the blueline, not center ice",S:"Close by top of circles, stick in the passing lane",M:"Coach grades each defensive-zone entry on video",A:"Yes — reps every practice with the D-pair",R:"I back off too early and give up the zone",T:"By end of November 2026"},
+      "Physical Play":{goal:"Finish every check hard but clean",S:"Complete the check when I'm in the position to hit",M:"Game-by-game count of completed body checks",A:"Yes — part of my role at this level",R:"Too many missed angles and soft separations",T:"By end of December 2026"},
+    },
   },
   "U18 / Midget":{
     name:"Eli Lemieux",position:"Forward",jersey:19,team:"U18 Prep Toronto Jr. Canadiens",
@@ -3398,7 +3422,11 @@ const DEMO_PROFILES = {
       R("u18q81","Breakout Execution",c,3), R("u18q99","Breakout Execution",c,3),
     ],
     selfRatings:{},coachRatings:{},coachNotes:{},
-    goals:{"Leadership":{goal:"Lead the room as an alternate captain",S:"Speak up in team meetings and set the tone pre-game",M:"Coaches track leadership moments weekly",A:"Yes — coaches gave me the A",R:"I lead by example but need to be more vocal",T:"By March 2027"}},
+    goals:{
+      "Leadership":{goal:"Lead the room as an alternate captain",S:"Speak up in team meetings and set the tone pre-game",M:"Coaches track leadership moments weekly",A:"Yes — coaches gave me the A",R:"I lead by example but need to be more vocal",T:"By March 2027"},
+      "Breakout Execution":{goal:"Beat the first forechecker every time",S:"Support the D on weak-side, take the pass in stride",M:"Coach tracks clean breakouts per game on video",A:"Yes — daily breakout reps at practice",R:"Too many turnovers at the first-forechecker level",T:"By end of December 2026"},
+      "Advanced Tactics":{goal:"Exploit weak-side in transition",S:"Read pressure side and swing weak-side on every rush",M:"Scoring chances created from weak-side per game",A:"Yes — video review + small-area games",R:"Prep teams will collapse strong-side — I need to punish it",T:"By end of February 2027"},
+    },
   },
 };
 
@@ -3968,7 +3996,7 @@ const DEMO_COACH_ROSTER = [
   {id:"dr5",name:"Tyler Blackwood",level:"U11 / Atom",position:"Defense",iq:58,sessions:1},
 ];
 
-function CoachHome({ profile, onSignOut, onOpenPlayer, demoMode, subscriptionTier, questFlagsBump, onPromptUpgrade, onBumpQuestFlags, onSaveProgress, onFirstLine }) {
+function CoachHome({ profile, onSignOut, onOpenPlayer, demoMode, subscriptionTier, questFlagsBump, onPromptUpgrade, onBumpQuestFlags, onSaveProgress, onFirstLine, onSignup }) {
   const isDemo = demoMode || profile.id === "__demo_coach__";
   const [teams, setTeams] = useState(isDemo ? DEMO_COACH_TEAMS : []);
   const [loading, setLoading] = useState(!isDemo);
@@ -4053,6 +4081,8 @@ function CoachHome({ profile, onSignOut, onOpenPlayer, demoMode, subscriptionTie
             onTap={handleQuestTap}
             onDismiss={handleDismissQuest}
             onAllComplete={handleAllComplete}
+            showSignupCTA={isDemo}
+            onSignup={onSignup}
           />
         )}
 
@@ -4172,6 +4202,14 @@ export default function App() {
   function promptUpgrade(feature, target) {
     setUpgradePrompt({ feature, target: target || null });
   }
+  function triggerSignup() {
+    setSignupPrefill({
+      role: profile?.role || "player",
+      level: player?.level || null,
+      name: player?.name || profile?.name || "",
+    });
+    exitDemo();
+  }
   function closeUpgrade() {
     if (upgradePrompt?.feature) { markGatedAck(upgradePrompt.feature); bumpQuestFlags(); }
     setUpgradePrompt(null);
@@ -4204,6 +4242,13 @@ export default function App() {
     setPrevScore(p.quizHistory[p.quizHistory.length-1]?.score || null);
     setTotalSessions(p.quizHistory.length);
     setDemoIntroFor(p);
+    // Seed localStorage so TrainingLog (reads LS directly) shows the demo off-ice activity.
+    try {
+      const raw = localStorage.getItem("iceiq_training_log");
+      const all = raw ? JSON.parse(raw) : {};
+      all["__demo__"] = { sessions: p.trainingSessions };
+      localStorage.setItem("iceiq_training_log", JSON.stringify(all));
+    } catch {}
     setScreen("home");
   }
 
@@ -4214,6 +4259,15 @@ export default function App() {
     setPlayer(null);
     setPrevScore(null);
     setTotalSessions(0);
+    // Clean up demo-seeded training log so a later real signup starts fresh.
+    try {
+      const raw = localStorage.getItem("iceiq_training_log");
+      if (raw) {
+        const all = JSON.parse(raw);
+        delete all["__demo__"];
+        localStorage.setItem("iceiq_training_log", JSON.stringify(all));
+      }
+    } catch {}
     setScreen("home");
   }
 
@@ -4414,6 +4468,7 @@ export default function App() {
           onBumpQuestFlags={bumpQuestFlags}
           onSaveProgress={() => setSaveProgressFor(demoMode ? "__demo_coach__" : (profile?.id || null))}
           onFirstLine={() => setFirstLineToast(true)}
+          onSignup={triggerSignup}
           onOpenPlayer={(p) => {
             // Coach rating for this player
             const pk = p.id;
@@ -4462,7 +4517,7 @@ export default function App() {
       )}
 
       <div style={{paddingBottom: screen==="quiz"||screen==="results" ? 0 : 80}}>
-        {screen === "home"    && <Home player={tierLimitedPlayer(player, tier)} onNav={setScreen} demoMode={demoMode} subscriptionTier={tier} questFlagsBump={questFlagsBump} onPromptUpgrade={promptUpgrade} onBumpQuestFlags={bumpQuestFlags} onSaveProgress={() => setSaveProgressFor(demoMode ? "__demo__" : (player?.id || null))} onFirstLine={() => setFirstLineToast(true)}/>}
+        {screen === "home"    && <Home player={tierLimitedPlayer(player, tier)} onNav={setScreen} demoMode={demoMode} subscriptionTier={tier} questFlagsBump={questFlagsBump} onPromptUpgrade={promptUpgrade} onBumpQuestFlags={bumpQuestFlags} onSaveProgress={() => setSaveProgressFor(demoMode ? "__demo__" : (player?.id || null))} onFirstLine={() => setFirstLineToast(true)} onSignup={triggerSignup}/>}
         {screen === "quiz"    && (demoMode && (()=>{ try { return localStorage.getItem("iceiq_demo_quiz_taken") === "1"; } catch { return false; } })()
           ? <DemoQuizCapScreen onBack={()=>setScreen("home")} onSignUp={exitDemo}/>
           : tier === "FREE" && !demoMode && isAtFreeQuizCap()
@@ -4559,6 +4614,12 @@ export default function App() {
             </button>
           </div>
         </div>
+      )}
+      {demoMode && !saveProgressFor && !firstLineToast && screen !== "results" && (
+        <button onClick={triggerSignup} style={{position:"fixed",top:10,right:10,zIndex:150,background:`linear-gradient(135deg, ${C.gold}, #b8860b)`,color:C.bg,border:"none",borderRadius:999,padding:"6px 12px 6px 10px",cursor:"pointer",fontSize:11,fontWeight:800,fontFamily:FONT.body,letterSpacing:".02em",display:"flex",alignItems:"center",gap:"4px",boxShadow:"0 4px 14px rgba(201,168,76,.35), inset 0 1px 0 rgba(255,255,255,.25)"}}>
+          <span style={{fontSize:12}}>🏒</span>
+          Sign Up Free →
+        </button>
       )}
       {screen === "plans" && <Suspense fallback={<LazyFallback/>}><PlansScreen onBack={()=>setScreen("home")} tier={tier}/></Suspense>}
     </>
