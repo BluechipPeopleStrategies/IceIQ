@@ -1,0 +1,1271 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>IceIQ Question Review Dashboard</title>
+<style>
+  :root {
+    --bg: #0b1020;
+    --bg-elev: #111831;
+    --bg-card: #151d3b;
+    --border: #232b4d;
+    --text: #e6eaff;
+    --dim: #9aa3c7;
+    --dimmer: #6b7399;
+    --accent: #6ea8ff;
+    --accent-dim: rgba(110,168,255,.15);
+    --green: #4ade80;
+    --green-dim: rgba(74,222,128,.15);
+    --gold: #f5b544;
+    --gold-dim: rgba(245,181,68,.15);
+    --red: #ef4444;
+    --red-dim: rgba(239,68,68,.15);
+    --amber: #f59e0b;
+    --amber-dim: rgba(245,158,11,.12);
+    --purple: #a78bfa;
+    --purple-dim: rgba(167,139,250,.15);
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--text);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+    font-size: 14px;
+    line-height: 1.4;
+  }
+  .wrap { max-width: 1200px; margin: 0 auto; padding: 1rem 1.5rem 6rem; }
+  h1 { font-size: 1.4rem; margin: 0 0 .25rem; }
+  h2 { font-size: 1rem; margin: 1.5rem 0 .5rem; color: var(--dim); font-weight: 600; }
+  .sub { color: var(--dim); font-size: 12px; }
+
+  /* Header */
+  .header {
+    display: flex; flex-wrap: wrap; gap: .5rem; align-items: center;
+    padding: 1rem 0; border-bottom: 1px solid var(--border); margin-bottom: 1rem;
+  }
+  .header .title-col { flex: 1 1 auto; min-width: 200px; }
+  .header .actions { display: flex; gap: .5rem; flex-wrap: wrap; }
+
+  button, .btn {
+    background: var(--bg-card); color: var(--text);
+    border: 1px solid var(--border); border-radius: 8px;
+    padding: .45rem .8rem; cursor: pointer;
+    font-size: 13px; font-family: inherit;
+    transition: all .12s;
+  }
+  button:hover, .btn:hover { border-color: var(--accent); }
+  button:disabled { opacity: .4; cursor: not-allowed; }
+  .btn-primary { background: var(--accent-dim); border-color: var(--accent); color: var(--accent); font-weight: 600; }
+  .btn-danger { background: var(--red-dim); border-color: var(--red); color: var(--red); }
+  .btn-ghost { background: transparent; color: var(--dim); }
+
+  .pill {
+    display: inline-flex; align-items: center; gap: .25rem;
+    background: var(--bg-elev); border: 1px solid var(--border);
+    border-radius: 999px; padding: .15rem .55rem; font-size: 11px; color: var(--dim);
+  }
+  .pill.status-keep { background: var(--green-dim); border-color: var(--green); color: var(--green); }
+  .pill.status-flag { background: var(--gold-dim); border-color: var(--gold); color: var(--gold); }
+  .pill.status-kill { background: var(--red-dim); border-color: var(--red); color: var(--red); }
+  .pill.status-unreviewed { background: var(--bg-elev); border-color: var(--border); color: var(--dim); }
+  .pill.edited { background: var(--purple-dim); border-color: var(--purple); color: var(--purple); }
+  .pill.added { background: var(--accent-dim); border-color: var(--accent); color: var(--accent); }
+  .pill.offage { background: var(--amber-dim); border-color: var(--amber); color: var(--amber); }
+
+  /* Saved flash */
+  .saved-flash {
+    position: fixed; top: 12px; right: 12px; z-index: 50;
+    background: var(--green-dim); color: var(--green);
+    border: 1px solid var(--green); border-radius: 8px;
+    padding: .4rem .7rem; font-size: 12px;
+    opacity: 0; transition: opacity .2s;
+    pointer-events: none;
+  }
+  .saved-flash.show { opacity: 1; }
+
+  /* Dashboard */
+  .dashboard { background: var(--bg-elev); border: 1px solid var(--border); border-radius: 10px; padding: 1rem; margin-bottom: 1rem; }
+  .tiles { display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: .5rem; margin-bottom: 1rem; }
+  .tile { background: var(--bg-card); border: 1px solid var(--border); border-radius: 8px; padding: .7rem; }
+  .tile .label { font-size: 10px; text-transform: uppercase; letter-spacing: .05em; color: var(--dimmer); }
+  .tile .value { font-size: 1.4rem; font-weight: 700; margin-top: .2rem; }
+  .tile.t-keep .value { color: var(--green); }
+  .tile.t-flag .value { color: var(--gold); }
+  .tile.t-kill .value { color: var(--red); }
+  .tile.t-unreviewed .value { color: var(--dim); }
+  .tile.t-edited .value { color: var(--purple); }
+
+  table.matrix { width: 100%; border-collapse: collapse; font-size: 12px; }
+  table.matrix th, table.matrix td { border: 1px solid var(--border); padding: .4rem .5rem; text-align: center; }
+  table.matrix th { background: var(--bg-card); color: var(--dim); font-weight: 600; }
+  table.matrix td.age-label { background: var(--bg-card); color: var(--dim); font-weight: 600; text-align: left; }
+  table.matrix td.offage { background: rgba(239,68,68,.05); }
+  table.matrix .cell-count { font-weight: 700; }
+  table.matrix .cell-breakdown { color: var(--dimmer); font-size: 10px; margin-top: .15rem; }
+
+  /* Filters */
+  .filters { display: flex; flex-wrap: wrap; gap: .5rem; align-items: center; margin-bottom: 1rem; }
+  .chip-group { display: inline-flex; background: var(--bg-elev); border: 1px solid var(--border); border-radius: 8px; overflow: hidden; }
+  .chip {
+    background: transparent; color: var(--dim); border: none;
+    padding: .35rem .65rem; font-size: 12px; cursor: pointer;
+    border-right: 1px solid var(--border);
+  }
+  .chip:last-child { border-right: none; }
+  .chip:hover { color: var(--text); }
+  .chip.active { background: var(--accent-dim); color: var(--accent); font-weight: 600; }
+  .search-input {
+    flex: 1; min-width: 160px;
+    background: var(--bg-card); border: 1px solid var(--border); border-radius: 8px;
+    padding: .4rem .65rem; font-size: 13px; color: var(--text);
+    font-family: inherit;
+  }
+  .search-input:focus { outline: none; border-color: var(--accent); }
+
+  /* Card list */
+  .list-info { color: var(--dim); font-size: 12px; margin-bottom: .5rem; }
+  .card {
+    background: var(--bg-card); border: 1px solid var(--border);
+    border-left: 3px solid var(--border);
+    border-radius: 8px; padding: .75rem 1rem; margin-bottom: .5rem;
+    transition: border-color .1s;
+  }
+  .card[data-status="keep"] { border-left-color: var(--green); }
+  .card[data-status="flag"] { border-left-color: var(--gold); }
+  .card[data-status="kill"] { border-left-color: var(--red); opacity: .55; }
+  .card-head { display: flex; align-items: center; gap: .5rem; flex-wrap: wrap; cursor: pointer; }
+  .card-head .preview { flex: 1 1 auto; min-width: 160px; color: var(--dim); font-size: 12px; }
+  .card-head .mono { font-family: ui-monospace, "Menlo", monospace; font-size: 11px; color: var(--accent); background: var(--accent-dim); padding: .1rem .4rem; border-radius: 4px; }
+  .card-body { margin-top: .75rem; padding-top: .75rem; border-top: 1px solid var(--border); display: none; }
+  .card.expanded .card-body { display: block; }
+  .card-body .field { margin-bottom: .65rem; }
+  .card-body .field label { display: block; font-size: 10px; text-transform: uppercase; color: var(--dimmer); letter-spacing: .05em; margin-bottom: .2rem; }
+  .field-input, .field-textarea, select.field-select {
+    width: 100%; background: var(--bg-elev); color: var(--text);
+    border: 1px solid var(--border); border-radius: 6px;
+    padding: .4rem .55rem; font-family: inherit; font-size: 13px;
+  }
+  .field-textarea { resize: vertical; min-height: 42px; }
+  .field-input:focus, .field-textarea:focus, select.field-select:focus { outline: none; border-color: var(--accent); }
+  .row2 { display: grid; grid-template-columns: 1fr 1fr; gap: .5rem; }
+  .row3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: .5rem; }
+  .inline-row { display: flex; gap: .5rem; flex-wrap: wrap; align-items: center; }
+  .pos-check { display: inline-flex; gap: .25rem; align-items: center; color: var(--dim); font-size: 12px; margin-right: .5rem; }
+  .difficulty-row { display: inline-flex; gap: .25rem; }
+  .d-btn { padding: .25rem .6rem; font-size: 12px; }
+  .d-btn.active { background: var(--accent-dim); border-color: var(--accent); color: var(--accent); }
+
+  .opt-row { display: flex; gap: .4rem; align-items: center; margin-bottom: .3rem; }
+  .opt-letter { font-family: ui-monospace, monospace; font-size: 11px; color: var(--dimmer); width: 16px; }
+  .opt-correct-btn { padding: .15rem .45rem; font-size: 11px; min-width: 34px; }
+  .opt-correct-btn.active { background: var(--green-dim); border-color: var(--green); color: var(--green); }
+  .opt-remove { padding: .2rem .4rem; font-size: 11px; color: var(--red); }
+
+  .seq-item { display: flex; gap: .4rem; align-items: center; margin-bottom: .3rem; }
+  .seq-index { font-family: ui-monospace, monospace; font-size: 11px; color: var(--dimmer); width: 20px; }
+  .seq-move { padding: .2rem .4rem; font-size: 11px; }
+
+  .tf-row { display: flex; gap: .5rem; }
+  .tf-btn { flex: 1; }
+  .tf-btn.active { background: var(--green-dim); border-color: var(--green); color: var(--green); font-weight: 600; }
+
+  .card-actions { display: flex; gap: .4rem; flex-wrap: wrap; margin-top: .75rem; padding-top: .5rem; border-top: 1px solid var(--border); }
+  .card-actions button { font-size: 12px; }
+
+  .empty {
+    text-align: center; padding: 3rem 1rem; color: var(--dim);
+    border: 2px dashed var(--border); border-radius: 10px; margin: 2rem 0;
+  }
+  .empty .big { font-size: 2rem; margin-bottom: .5rem; }
+
+  /* Modal */
+  .modal-backdrop {
+    position: fixed; inset: 0; background: rgba(0,0,0,.7); z-index: 100;
+    display: none; align-items: center; justify-content: center; padding: 1rem;
+  }
+  .modal-backdrop.show { display: flex; }
+  .modal {
+    background: var(--bg-elev); border: 1px solid var(--border); border-radius: 12px;
+    width: 100%; max-width: 600px; max-height: 90vh; overflow: auto;
+    padding: 1.25rem;
+  }
+  .modal h3 { margin: 0 0 1rem; font-size: 1.1rem; }
+  .modal .footer { display: flex; gap: .5rem; justify-content: flex-end; margin-top: 1rem; padding-top: .75rem; border-top: 1px solid var(--border); }
+
+  /* Bulk bar */
+  .bulk-bar {
+    display: none; flex-wrap: wrap; gap: .4rem; align-items: center;
+    position: sticky; top: 0; z-index: 20;
+    background: var(--bg-elev); border: 1px solid var(--accent);
+    border-radius: 8px; padding: .5rem .65rem; margin-bottom: .5rem;
+    box-shadow: 0 4px 12px rgba(0,0,0,.35);
+  }
+  .bulk-bar.show { display: flex; }
+  .bulk-count { color: var(--accent); font-weight: 600; font-size: 13px; margin-right: .35rem; }
+  .pill.moved { background: var(--purple-dim); border-color: var(--purple); color: var(--purple); }
+  .card-checkbox { margin-right: .5rem; cursor: pointer; }
+
+  /* Load-more */
+  .load-more-wrap { text-align: center; margin: 1.25rem 0; }
+
+  /* File input hidden */
+  input[type="file"] { display: none; }
+
+  /* Responsive */
+  @media (max-width: 600px) {
+    .wrap { padding: 1rem .75rem 6rem; }
+    .row2, .row3 { grid-template-columns: 1fr; }
+    table.matrix { font-size: 11px; }
+    table.matrix th, table.matrix td { padding: .3rem .35rem; }
+  }
+</style>
+</head>
+<body>
+<div class="saved-flash" id="saved-flash">✓ Saved</div>
+<div class="wrap">
+
+  <div class="header">
+    <div class="title-col">
+      <h1>IceIQ Question Review</h1>
+      <div class="sub" id="file-status">No file loaded. Click "Load questions.json" to start.</div>
+    </div>
+    <div class="actions">
+      <button class="btn-primary" id="btn-load">📁 Load questions.json</button>
+      <input type="file" id="file-input" accept=".json,application/json">
+      <button id="btn-export" disabled>💾 Export questions.json</button>
+      <button class="btn-ghost" id="btn-reset-state">Reset local edits</button>
+    </div>
+  </div>
+
+  <div id="dashboard" class="dashboard" style="display:none;">
+    <div class="tiles" id="tiles"></div>
+    <div style="overflow-x:auto;"><table class="matrix" id="matrix"></table></div>
+  </div>
+
+  <div id="main" style="display:none;">
+    <div class="filters">
+      <div class="chip-group" id="age-chips"></div>
+      <div class="chip-group" id="type-chips"></div>
+      <div class="chip-group" id="status-chips"></div>
+      <input class="search-input" id="search" placeholder="🔍 Search id / concept / situation...">
+      <button class="btn-primary" id="btn-add">+ Add Question</button>
+      <button class="btn-danger" id="btn-kill-offage" title="Mark every off-age-type question as Kill">☠ Kill all off-age</button>
+      <button class="btn-danger" id="btn-cull-mc" title="Keep max 50 MC per age for U11-U18 (U9 untouched)">📉 Cull MC to 50</button>
+    </div>
+    <div class="bulk-bar" id="bulk-bar">
+      <span id="bulk-count" class="bulk-count">0 selected</span>
+      <select class="field-select" id="bulk-target" style="max-width:180px;">
+        <option value="">Move to age group…</option>
+      </select>
+      <button class="btn-primary" id="bulk-move">Move</button>
+      <button id="bulk-keep">Keep</button>
+      <button id="bulk-flag">Flag</button>
+      <button class="btn-danger" id="bulk-kill">Kill</button>
+      <button class="btn-ghost" id="bulk-unreviewed">Unreviewed</button>
+      <button class="btn-ghost" id="bulk-clear">Clear</button>
+    </div>
+    <div class="list-info" id="list-info">
+      <label style="cursor:pointer;"><input type="checkbox" id="select-all-visible"> Select all visible</label>
+      <span id="list-count" style="margin-left:.75rem;"></span>
+    </div>
+    <div id="card-list"></div>
+    <div class="load-more-wrap"><button id="btn-load-more" style="display:none;">Load more</button></div>
+  </div>
+
+  <div id="empty-state" class="empty">
+    <div class="big">📊</div>
+    <div>Load your <code>questions.json</code> to begin reviewing.</div>
+  </div>
+
+</div>
+
+<!-- Add Question Modal -->
+<div class="modal-backdrop" id="add-modal">
+  <div class="modal">
+    <h3>Add New Question</h3>
+    <div class="field">
+      <label>Age Group</label>
+      <select class="field-select" id="add-age"></select>
+    </div>
+    <div class="field">
+      <label>Question Type <span class="sub" id="add-type-hint"></span></label>
+      <div class="inline-row">
+        <select class="field-select" id="add-type" style="flex:1;"></select>
+        <label class="sub" style="display:flex; align-items:center; gap:.25rem; cursor:pointer;">
+          <input type="checkbox" id="add-advanced"> advanced (all types)
+        </label>
+      </div>
+    </div>
+    <div class="field">
+      <label>Category</label>
+      <input class="field-input" id="add-cat" placeholder="e.g. Orientation">
+    </div>
+    <div class="field">
+      <label>Concept (short title)</label>
+      <input class="field-input" id="add-concept" placeholder="e.g. Which way?">
+    </div>
+    <div class="field">
+      <label>Situation / Prompt</label>
+      <textarea class="field-textarea" id="add-sit" placeholder="The question text..."></textarea>
+    </div>
+    <div id="add-type-fields"></div>
+    <div class="footer">
+      <button class="btn-ghost" id="add-cancel">Cancel</button>
+      <button class="btn-primary" id="add-save">Save</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// =========================================================================
+// Constants
+// =========================================================================
+const LEVEL_FOR_AGE = {
+  u9:  "U9 / Novice",
+  u11: "U11 / Atom",
+  u13: "U13 / Peewee",
+  u15: "U15 / Bantam",
+  u18: "U18 / Midget",
+};
+const AGE_FOR_LEVEL = Object.fromEntries(Object.entries(LEVEL_FOR_AGE).map(([k,v])=>[v,k]));
+const AGES = ["u9","u11","u13","u15","u18"];
+const LEVEL_ORDER = AGES.map(a => LEVEL_FOR_AGE[a]);
+const ALL_TYPES = ["mc","tf","seq","mistake","next"];
+const RECOMMENDED_TYPES_BY_AGE = {
+  u9:  ["mc","tf","seq"],
+  u11: ["mc","tf","seq","mistake"],
+  u13: ["mc","tf","seq","mistake","next"],
+  u15: ["mc","tf","seq","mistake","next"],
+  u18: ["mc","tf","seq","mistake","next"],
+};
+const TYPE_LABELS = { mc: "MC", tf: "T/F", seq: "Seq", mistake: "Mistake", next: "Next" };
+const LS_KEY = "iceiq_dashboard_v1";
+const PAGE_SIZE = 100;
+
+// =========================================================================
+// State
+// =========================================================================
+let BANK = {};
+let STATE = { edits: {}, statuses: {}, added: [], moves: {} };
+let FILTERS = { age: "all", type: "all", status: "all", search: "" };
+let VISIBLE_COUNT = PAGE_SIZE;
+const EXPANDED = new Set();
+const SELECTED = new Set();
+
+// =========================================================================
+// Storage
+// =========================================================================
+function loadState() {
+  try {
+    const raw = localStorage.getItem(LS_KEY);
+    if (raw) {
+      const parsed = JSON.parse(raw);
+      STATE = {
+        edits: parsed.edits || {},
+        statuses: parsed.statuses || {},
+        added: parsed.added || [],
+        moves: parsed.moves || {},
+      };
+    }
+  } catch (e) { console.warn("Failed to load state:", e); }
+}
+let saveTimer = null;
+function saveState() {
+  clearTimeout(saveTimer);
+  saveTimer = setTimeout(() => {
+    try {
+      localStorage.setItem(LS_KEY, JSON.stringify(STATE));
+      flashSaved();
+    } catch (e) { console.error("Save failed:", e); }
+  }, 400);
+}
+function flashSaved() {
+  const el = document.getElementById("saved-flash");
+  el.classList.add("show");
+  clearTimeout(flashSaved._t);
+  flashSaved._t = setTimeout(() => el.classList.remove("show"), 900);
+}
+
+// =========================================================================
+// Question helpers
+// =========================================================================
+function getType(q) { return q.type || "mc"; }
+function ageOf(id) {
+  // Prefer bucket lookup — id prefix can lie post-merge (e.g. u7q* now lives under U9 bucket)
+  const level = getLevelForId(id);
+  if (level && AGE_FOR_LEVEL[level]) return AGE_FOR_LEVEL[level];
+  const m = id.match(/^(u\d+)/); return m ? m[1] : "";
+}
+function isOffAgeType(age, type) {
+  const rec = RECOMMENDED_TYPES_BY_AGE[age];
+  return rec && !rec.includes(type);
+}
+function statusOf(id) { return STATE.statuses[id] || "unreviewed"; }
+function isEdited(id) {
+  const e = STATE.edits[id];
+  return !!e && Object.keys(e).length > 0;
+}
+function isAdded(id) { return STATE.added.some(r => r.id === id); }
+function getOriginalById(id) {
+  for (const level of Object.keys(BANK)) {
+    for (const q of BANK[level]) if (q.id === id) return q;
+  }
+  for (const r of STATE.added) if (r.id === id) return r;
+  return null;
+}
+function getMergedById(id) {
+  const orig = getOriginalById(id);
+  if (!orig) return null;
+  const edit = STATE.edits[id];
+  return edit ? { ...orig, ...edit } : { ...orig };
+}
+function getOriginalLevelForId(id) {
+  for (const level of Object.keys(BANK)) {
+    for (const q of BANK[level]) if (q.id === id) return level;
+  }
+  for (const r of STATE.added) if (r.id === id) return r.level;
+  return "";
+}
+function getLevelForId(id) {
+  // Effective level = move override if present, else original bucket
+  return STATE.moves[id] || getOriginalLevelForId(id);
+}
+function setField(id, key, value) {
+  STATE.edits[id] = STATE.edits[id] || {};
+  const orig = getOriginalById(id);
+  if (orig && JSON.stringify(orig[key]) === JSON.stringify(value)) {
+    delete STATE.edits[id][key];
+    if (Object.keys(STATE.edits[id]).length === 0) delete STATE.edits[id];
+  } else {
+    STATE.edits[id][key] = value;
+  }
+  saveState();
+}
+function nextIdForAge(age) {
+  let max = 0;
+  const level = LEVEL_FOR_AGE[age];
+  const scan = (arr) => { for (const q of arr) {
+    const m = q.id && q.id.match(new RegExp("^" + age + "q(\\d+)$"));
+    if (m) max = Math.max(max, parseInt(m[1], 10));
+  }};
+  if (BANK[level]) scan(BANK[level]);
+  scan(STATE.added.filter(r => r.level === level));
+  return `${age}q${max + 1}`;
+}
+
+// =========================================================================
+// Iteration
+// =========================================================================
+function* iterAllQuestions() {
+  for (const level of Object.keys(BANK)) {
+    const rows = BANK[level] || [];
+    for (const q of rows) {
+      const effLevel = STATE.moves[q.id] || level;
+      yield { level: effLevel, age: AGE_FOR_LEVEL[effLevel] || AGE_FOR_LEVEL[level], q, originalLevel: level };
+    }
+  }
+  for (const r of STATE.added) {
+    const effLevel = STATE.moves[r.id] || r.level;
+    yield { level: effLevel, age: AGE_FOR_LEVEL[effLevel] || AGE_FOR_LEVEL[r.level], q: r, added: true, originalLevel: r.level };
+  }
+}
+
+function getFilteredQuestions() {
+  const out = [];
+  const search = FILTERS.search.trim().toLowerCase();
+  for (const entry of iterAllQuestions()) {
+    const { level, age, q } = entry;
+    if (FILTERS.age !== "all" && age !== FILTERS.age) continue;
+    const merged = getMergedById(q.id) || q;
+    const type = getType(merged);
+    if (FILTERS.type !== "all" && type !== FILTERS.type) continue;
+    if (FILTERS.status !== "all" && statusOf(q.id) !== FILTERS.status) continue;
+    if (search) {
+      const hay = `${q.id} ${merged.concept || ""} ${merged.sit || ""} ${merged.cat || ""}`.toLowerCase();
+      if (!hay.includes(search)) continue;
+    }
+    out.push(entry);
+  }
+  return out;
+}
+
+// =========================================================================
+// Rendering — dashboard
+// =========================================================================
+function renderDashboard() {
+  const allList = [...iterAllQuestions()];
+  const counts = { total: allList.length, unreviewed: 0, keep: 0, flag: 0, kill: 0, edited: 0 };
+  for (const { q } of allList) {
+    counts[statusOf(q.id)]++;
+    if (isEdited(q.id)) counts.edited++;
+  }
+
+  // Tiles
+  const tiles = document.getElementById("tiles");
+  tiles.innerHTML = `
+    <div class="tile"><div class="label">Total</div><div class="value">${counts.total}</div></div>
+    <div class="tile t-unreviewed"><div class="label">Unreviewed</div><div class="value">${counts.unreviewed}</div></div>
+    <div class="tile t-keep"><div class="label">Keep</div><div class="value">${counts.keep}</div></div>
+    <div class="tile t-flag"><div class="label">Flag</div><div class="value">${counts.flag}</div></div>
+    <div class="tile t-kill"><div class="label">Kill</div><div class="value">${counts.kill}</div></div>
+    <div class="tile t-edited"><div class="label">Edited</div><div class="value">${counts.edited}</div></div>
+  `;
+
+  // Matrix
+  const m = {};
+  for (const age of AGES) { m[age] = {}; for (const t of ALL_TYPES) m[age][t] = { total: 0, unreviewed: 0, keep: 0, flag: 0, kill: 0 }; }
+  for (const { q, age } of allList) {
+    const merged = getMergedById(q.id) || q;
+    const t = getType(merged);
+    if (!m[age] || !m[age][t]) continue;
+    m[age][t].total++;
+    m[age][t][statusOf(q.id)]++;
+  }
+  const matrix = document.getElementById("matrix");
+  let html = "<thead><tr><th>Age</th>";
+  for (const t of ALL_TYPES) html += `<th>${TYPE_LABELS[t]}</th>`;
+  html += "<th>Row Total</th></tr></thead><tbody>";
+  for (const age of AGES) {
+    html += `<tr><td class="age-label">${age.toUpperCase()}</td>`;
+    let rowTotal = 0;
+    for (const t of ALL_TYPES) {
+      const c = m[age][t];
+      rowTotal += c.total;
+      const off = isOffAgeType(age, t) ? " offage" : "";
+      const breakdown = c.total > 0
+        ? `U:${c.unreviewed} K:${c.keep} F:${c.flag} X:${c.kill}`
+        : "—";
+      html += `<td class="${off.trim()}"><div class="cell-count">${c.total}</div><div class="cell-breakdown">${breakdown}</div></td>`;
+    }
+    html += `<td class="cell-count">${rowTotal}</td></tr>`;
+  }
+  html += "</tbody>";
+  matrix.innerHTML = html;
+}
+
+// =========================================================================
+// Rendering — filters
+// =========================================================================
+function renderFilterChips() {
+  const mkChips = (containerId, options, active, onClick) => {
+    const el = document.getElementById(containerId);
+    el.innerHTML = options.map(o => `<button class="chip ${o.value === active ? "active" : ""}" data-value="${o.value}">${o.label}</button>`).join("");
+    el.onclick = (e) => {
+      const btn = e.target.closest(".chip"); if (!btn) return;
+      onClick(btn.dataset.value);
+    };
+  };
+  mkChips("age-chips", [{value:"all",label:"All ages"}, ...AGES.map(a=>({value:a,label:a.toUpperCase()}))], FILTERS.age, (v) => { FILTERS.age = v; VISIBLE_COUNT = PAGE_SIZE; render(); });
+  mkChips("type-chips", [{value:"all",label:"All types"}, ...ALL_TYPES.map(t=>({value:t,label:TYPE_LABELS[t]}))], FILTERS.type, (v) => { FILTERS.type = v; VISIBLE_COUNT = PAGE_SIZE; render(); });
+  mkChips("status-chips", [
+    {value:"all",label:"All"},
+    {value:"unreviewed",label:"Unreviewed"},
+    {value:"keep",label:"Keep"},
+    {value:"flag",label:"Flag"},
+    {value:"kill",label:"Kill"},
+  ], FILTERS.status, (v) => { FILTERS.status = v; VISIBLE_COUNT = PAGE_SIZE; render(); });
+}
+
+// =========================================================================
+// Rendering — card list
+// =========================================================================
+function renderCards() {
+  const list = getFilteredQuestions();
+  document.getElementById("list-count").textContent = `Showing ${Math.min(VISIBLE_COUNT, list.length)} of ${list.length} matching questions.`;
+
+  const container = document.getElementById("card-list");
+  const slice = list.slice(0, VISIBLE_COUNT);
+  container.innerHTML = slice.map(renderCard).join("");
+
+  const lm = document.getElementById("btn-load-more");
+  lm.style.display = list.length > VISIBLE_COUNT ? "inline-block" : "none";
+
+  // Sync "select all visible" checkbox state
+  const visibleIds = slice.map(e => e.q.id);
+  const sa = document.getElementById("select-all-visible");
+  if (sa) {
+    const allSelected = visibleIds.length > 0 && visibleIds.every(id => SELECTED.has(id));
+    sa.checked = allSelected;
+  }
+
+  renderBulkBar();
+
+  container.onclick = onCardClick;
+  container.oninput = onCardInput;
+  container.onchange = onCardChange;
+}
+
+function renderBulkBar() {
+  const bar = document.getElementById("bulk-bar");
+  const count = SELECTED.size;
+  if (count === 0) { bar.classList.remove("show"); return; }
+  bar.classList.add("show");
+  document.getElementById("bulk-count").textContent = `${count} selected`;
+
+  // Populate target dropdown (once is enough, but idempotent)
+  const sel = document.getElementById("bulk-target");
+  if (!sel.dataset.populated) {
+    const opts = AGES.map(a => `<option value="${LEVEL_FOR_AGE[a]}">${a.toUpperCase()} · ${LEVEL_FOR_AGE[a]}</option>`).join("");
+    sel.innerHTML = `<option value="">Move to age group…</option>` + opts;
+    sel.dataset.populated = "1";
+  }
+}
+
+function renderCard(entry) {
+  const { q, level, age, added, originalLevel } = entry;
+  const id = q.id;
+  const merged = getMergedById(id) || q;
+  const type = getType(merged);
+  const status = statusOf(id);
+  const edited = isEdited(id);
+  const isNew = isAdded(id);
+  const offage = isOffAgeType(age, type);
+  const expanded = EXPANDED.has(id);
+  const isMoved = !!STATE.moves[id] && STATE.moves[id] !== originalLevel;
+  const isSelected = SELECTED.has(id);
+
+  const sitPreview = (merged.sit || merged.concept || "").replace(/\s+/g, " ").slice(0, 90);
+
+  const moveLabel = isMoved ? `${AGE_FOR_LEVEL[originalLevel]?.toUpperCase() || "?"} → ${age.toUpperCase()}` : "";
+
+  const pills = [
+    `<span class="pill mono" style="font-family:ui-monospace,monospace;">${id}</span>`,
+    `<span class="pill">${age.toUpperCase()}</span>`,
+    `<span class="pill">${TYPE_LABELS[type]}</span>`,
+    `<span class="pill status-${status}">${status}</span>`,
+    edited ? `<span class="pill edited">edited</span>` : "",
+    isNew ? `<span class="pill added">new</span>` : "",
+    isMoved ? `<span class="pill moved">moved: ${escapeHtml(moveLabel)}</span>` : "",
+    offage ? `<span class="pill offage">off-age type</span>` : "",
+  ].filter(Boolean).join("");
+
+  return `
+<div class="card ${expanded ? "expanded" : ""}" data-id="${id}" data-status="${status}">
+  <div class="card-head" data-action="toggle">
+    <input type="checkbox" class="card-checkbox" data-action="select" ${isSelected ? "checked" : ""}>
+    ${pills}
+    <div class="preview">${escapeHtml(merged.concept || "")} ${merged.concept && sitPreview ? "·" : ""} ${escapeHtml(sitPreview)}${(merged.sit || "").length > 90 ? "…" : ""}</div>
+  </div>
+  <div class="card-body">
+    ${renderCardBody(id, merged, level, age, type)}
+    <div class="card-actions">
+      <button data-action="status" data-val="keep" class="${status==="keep"?"btn-primary":""}">Keep</button>
+      <button data-action="status" data-val="flag" class="${status==="flag"?"btn-primary":""}">Flag</button>
+      <button data-action="status" data-val="kill" class="btn-danger ${status==="kill"?"btn-primary":""}">Kill</button>
+      <button data-action="status" data-val="unreviewed">Unreviewed</button>
+      <select class="field-select" data-action="move-single" style="max-width:170px;">
+        <option value="">Move to…</option>
+        ${AGES.map(a => {
+          const lvl = LEVEL_FOR_AGE[a];
+          const selected = STATE.moves[id] === lvl ? "selected" : "";
+          return `<option value="${lvl}" ${selected}>${a.toUpperCase()} · ${escapeHtml(lvl)}</option>`;
+        }).join("")}
+      </select>
+      ${isMoved ? `<button data-action="undo-move" class="btn-ghost">Undo move</button>` : ""}
+      <button data-action="reset" class="btn-ghost">Reset</button>
+      ${isNew ? `<button data-action="delete-added" class="btn-danger">Delete</button>` : ""}
+    </div>
+  </div>
+</div>`;
+}
+
+function renderCardBody(id, q, level, age, type) {
+  const pos = Array.isArray(q.pos) ? q.pos : [];
+  const posChecks = ["F","D","G"].map(p =>
+    `<label class="pos-check"><input type="checkbox" data-action="pos" data-val="${p}" ${pos.includes(p) ? "checked" : ""}> ${p}</label>`
+  ).join("");
+
+  const dRow = [1,2,3].map(n =>
+    `<button class="d-btn ${q.d===n?"active":""}" data-action="difficulty" data-val="${n}">d${n}</button>`
+  ).join("");
+
+  const common = `
+    <div class="row3">
+      <div class="field"><label>Category</label><input class="field-input" data-action="field" data-key="cat" value="${escapeAttr(q.cat || "")}"></div>
+      <div class="field"><label>Concept</label><input class="field-input" data-action="field" data-key="concept" value="${escapeAttr(q.concept || "")}"></div>
+      <div class="field"><label>Type</label><select class="field-select" data-action="change-type">${ALL_TYPES.map(t => `<option value="${t}" ${t===type?"selected":""}>${TYPE_LABELS[t]}</option>`).join("")}</select></div>
+    </div>
+    <div class="inline-row field">
+      <span style="font-size:10px;text-transform:uppercase;color:var(--dimmer);letter-spacing:.05em;">Positions:</span>
+      ${posChecks}
+      <span style="font-size:10px;text-transform:uppercase;color:var(--dimmer);letter-spacing:.05em;margin-left:1rem;">Difficulty:</span>
+      <div class="difficulty-row">${dRow}</div>
+    </div>
+    <div class="field"><label>Situation / Prompt</label><textarea class="field-textarea" data-action="field" data-key="sit">${escapeHtml(q.sit || "")}</textarea></div>
+  `;
+
+  let typeBody = "";
+  if (type === "mc" || type === "mistake" || type === "next") {
+    const opts = Array.isArray(q.opts) ? q.opts : ["","","",""];
+    const okIdx = typeof q.ok === "number" ? q.ok : 0;
+    const labelOk = type === "mistake" ? "the mistake" : "correct";
+    typeBody = `
+      <div class="field">
+        <label>Options (click button to mark ${labelOk})</label>
+        ${opts.map((o, i) => `
+          <div class="opt-row">
+            <span class="opt-letter">${String.fromCharCode(65+i)}</span>
+            <button class="opt-correct-btn ${okIdx===i?"active":""}" data-action="set-ok" data-val="${i}">${okIdx===i?"✓":"·"}</button>
+            <input class="field-input" data-action="opt" data-idx="${i}" value="${escapeAttr(o)}">
+            ${opts.length > 2 ? `<button class="opt-remove" data-action="remove-opt" data-idx="${i}">✕</button>` : ""}
+          </div>
+        `).join("")}
+        ${opts.length < 6 ? `<button class="btn-ghost" data-action="add-opt" style="margin-top:.3rem;">+ Add option</button>` : ""}
+      </div>
+    `;
+  } else if (type === "tf") {
+    const ok = q.ok === true || q.ok === "true" || q.ok === 1;
+    typeBody = `
+      <div class="field">
+        <label>Correct Answer</label>
+        <div class="tf-row">
+          <button class="tf-btn ${ok===true?"active":""}" data-action="set-tf" data-val="true">TRUE</button>
+          <button class="tf-btn ${ok===false?"active":""}" data-action="set-tf" data-val="false">FALSE</button>
+        </div>
+      </div>
+    `;
+  } else if (type === "seq") {
+    const items = Array.isArray(q.items) ? q.items : [];
+    typeBody = `
+      <div class="field">
+        <label>Steps (in correct order)</label>
+        ${items.map((it, i) => `
+          <div class="seq-item">
+            <span class="seq-index">${i+1}.</span>
+            <button class="seq-move" data-action="seq-up" data-idx="${i}" ${i===0?"disabled":""}>▲</button>
+            <button class="seq-move" data-action="seq-down" data-idx="${i}" ${i===items.length-1?"disabled":""}>▼</button>
+            <input class="field-input" data-action="seq-edit" data-idx="${i}" value="${escapeAttr(it)}">
+            <button class="opt-remove" data-action="seq-remove" data-idx="${i}">✕</button>
+          </div>
+        `).join("")}
+        <button class="btn-ghost" data-action="seq-add" style="margin-top:.3rem;">+ Add step</button>
+      </div>
+    `;
+  }
+
+  const tail = `
+    <div class="row2">
+      <div class="field"><label>Why (explanation)</label><textarea class="field-textarea" data-action="field" data-key="why">${escapeHtml(q.why || "")}</textarea></div>
+      <div class="field"><label>Tip</label><textarea class="field-textarea" data-action="field" data-key="tip">${escapeHtml(q.tip || "")}</textarea></div>
+    </div>
+  `;
+
+  return common + typeBody + tail;
+}
+
+// =========================================================================
+// Event handlers — cards
+// =========================================================================
+function onCardClick(e) {
+  const card = e.target.closest(".card"); if (!card) return;
+  const id = card.dataset.id;
+  const action = e.target.dataset.action || e.target.closest("[data-action]")?.dataset.action;
+  if (!action) return;
+  const actionEl = e.target.closest("[data-action]");
+  const val = actionEl?.dataset.val;
+  const idx = actionEl?.dataset.idx;
+
+  if (action === "select") {
+    // Checkbox in header — toggle selection, don't expand
+    if (e.target.checked) SELECTED.add(id); else SELECTED.delete(id);
+    renderBulkBar();
+    // Also sync "select all visible"
+    const list = getFilteredQuestions().slice(0, VISIBLE_COUNT).map(e => e.q.id);
+    const sa = document.getElementById("select-all-visible");
+    if (sa) sa.checked = list.length > 0 && list.every(x => SELECTED.has(x));
+    return;
+  }
+  if (action === "toggle") {
+    // Only toggle if they didn't click an interactive element
+    if (e.target.closest("input, textarea, select, button")) return;
+    if (EXPANDED.has(id)) EXPANDED.delete(id); else EXPANDED.add(id);
+    card.classList.toggle("expanded");
+    return;
+  }
+  if (action === "undo-move") {
+    delete STATE.moves[id];
+    saveState(); render(); return;
+  }
+  if (action === "status") {
+    if (val === "unreviewed") delete STATE.statuses[id];
+    else STATE.statuses[id] = val;
+    saveState(); render(); return;
+  }
+  if (action === "reset") {
+    if (!confirm(`Reset all local edits + status for ${id}?`)) return;
+    delete STATE.edits[id]; delete STATE.statuses[id];
+    saveState(); render(); return;
+  }
+  if (action === "delete-added") {
+    if (!confirm(`Permanently delete new question ${id}? (Cannot undo.)`)) return;
+    STATE.added = STATE.added.filter(r => r.id !== id);
+    delete STATE.edits[id]; delete STATE.statuses[id];
+    saveState(); render(); return;
+  }
+  if (action === "set-ok") {
+    setField(id, "ok", parseInt(val, 10)); render(); return;
+  }
+  if (action === "set-tf") {
+    setField(id, "ok", val === "true"); render(); return;
+  }
+  if (action === "difficulty") {
+    setField(id, "d", parseInt(val, 10)); render(); return;
+  }
+  if (action === "pos") {
+    // handled in change
+  }
+  if (action === "add-opt") {
+    const q = getMergedById(id);
+    const opts = Array.isArray(q.opts) ? [...q.opts, ""] : ["",""];
+    setField(id, "opts", opts); render(); return;
+  }
+  if (action === "remove-opt") {
+    const q = getMergedById(id);
+    const opts = (q.opts || []).filter((_, i) => i !== parseInt(idx, 10));
+    setField(id, "opts", opts);
+    if (typeof q.ok === "number" && q.ok >= opts.length) setField(id, "ok", Math.max(0, opts.length - 1));
+    render(); return;
+  }
+  if (action === "seq-add") {
+    const q = getMergedById(id);
+    const items = Array.isArray(q.items) ? [...q.items, ""] : [""];
+    setField(id, "items", items); render(); return;
+  }
+  if (action === "seq-remove") {
+    const q = getMergedById(id);
+    const items = (q.items || []).filter((_, i) => i !== parseInt(idx, 10));
+    setField(id, "items", items); render(); return;
+  }
+  if (action === "seq-up" || action === "seq-down") {
+    const q = getMergedById(id);
+    const items = [...(q.items || [])];
+    const i = parseInt(idx, 10);
+    const j = action === "seq-up" ? i - 1 : i + 1;
+    if (j < 0 || j >= items.length) return;
+    [items[i], items[j]] = [items[j], items[i]];
+    setField(id, "items", items); render(); return;
+  }
+}
+
+function onCardInput(e) {
+  const card = e.target.closest(".card"); if (!card) return;
+  const id = card.dataset.id;
+  const action = e.target.dataset.action;
+  const key = e.target.dataset.key;
+  const idx = e.target.dataset.idx;
+  if (action === "field" && key) {
+    setField(id, key, e.target.value);
+  } else if (action === "opt" && idx != null) {
+    const q = getMergedById(id);
+    const opts = [...(q.opts || [])];
+    opts[parseInt(idx, 10)] = e.target.value;
+    setField(id, "opts", opts);
+  } else if (action === "seq-edit" && idx != null) {
+    const q = getMergedById(id);
+    const items = [...(q.items || [])];
+    items[parseInt(idx, 10)] = e.target.value;
+    setField(id, "items", items);
+  }
+}
+
+function onCardChange(e) {
+  const card = e.target.closest(".card"); if (!card) return;
+  const id = card.dataset.id;
+  const action = e.target.dataset.action;
+  const val = e.target.dataset.val;
+  if (action === "move-single") {
+    const target = e.target.value;
+    const origLevel = getOriginalLevelForId(id);
+    if (!target || target === origLevel) {
+      delete STATE.moves[id];
+    } else {
+      STATE.moves[id] = target;
+    }
+    saveState(); render(); return;
+  }
+  if (action === "pos") {
+    const q = getMergedById(id);
+    const current = new Set(Array.isArray(q.pos) ? q.pos : []);
+    if (e.target.checked) current.add(val); else current.delete(val);
+    setField(id, "pos", [...current]);
+  } else if (action === "change-type") {
+    const newType = e.target.value;
+    const q = getMergedById(id);
+    if (!confirm(`Change type from ${getType(q)} to ${newType}? This resets type-specific fields.`)) { render(); return; }
+    const fresh = blankTypeFields(newType, ageOf(id));
+    const patch = { ...fresh };
+    if (newType === "mc") delete patch.type; // mc is default
+    else patch.type = newType;
+    for (const [k, v] of Object.entries(patch)) setField(id, k, v);
+    // Clear incompatible fields from edit
+    if (newType !== "seq") setField(id, "items", undefined);
+    if (newType === "tf" || newType === "seq") setField(id, "opts", undefined);
+    render();
+  }
+}
+
+function blankTypeFields(type, age) {
+  if (type === "mc" || type === "mistake" || type === "next") {
+    const numOpts = age === "u5" ? 2 : 4;
+    return { opts: Array(numOpts).fill(""), ok: 0 };
+  }
+  if (type === "tf") return { ok: true };
+  if (type === "seq") return { items: ["", "", ""] };
+  return {};
+}
+
+// =========================================================================
+// Add Question Modal
+// =========================================================================
+function openAddModal() {
+  const modal = document.getElementById("add-modal");
+  const ageSel = document.getElementById("add-age");
+  ageSel.innerHTML = AGES.map(a => `<option value="${a}" ${a === (FILTERS.age !== "all" ? FILTERS.age : "u5") ? "selected" : ""}>${a.toUpperCase()} · ${LEVEL_FOR_AGE[a]}</option>`).join("");
+  document.getElementById("add-cat").value = "";
+  document.getElementById("add-concept").value = "";
+  document.getElementById("add-sit").value = "";
+  document.getElementById("add-advanced").checked = false;
+  rebuildAddTypeOptions();
+  modal.classList.add("show");
+}
+function closeAddModal() { document.getElementById("add-modal").classList.remove("show"); }
+function rebuildAddTypeOptions() {
+  const age = document.getElementById("add-age").value;
+  const adv = document.getElementById("add-advanced").checked;
+  const sel = document.getElementById("add-type");
+  const types = adv ? ALL_TYPES : RECOMMENDED_TYPES_BY_AGE[age];
+  const prev = sel.value;
+  sel.innerHTML = types.map(t => `<option value="${t}">${TYPE_LABELS[t]}</option>`).join("");
+  if (types.includes(prev)) sel.value = prev;
+  document.getElementById("add-type-hint").textContent = `(recommended for ${age.toUpperCase()}: ${RECOMMENDED_TYPES_BY_AGE[age].map(t=>TYPE_LABELS[t]).join(", ")})`;
+  rebuildAddTypeFields();
+}
+function rebuildAddTypeFields() {
+  const age = document.getElementById("add-age").value;
+  const type = document.getElementById("add-type").value;
+  const c = document.getElementById("add-type-fields");
+  if (type === "mc" || type === "mistake" || type === "next") {
+    const n = age === "u5" ? 2 : 4;
+    c.innerHTML = `
+      <div class="field"><label>Options (${n}) — radio picks ${type==="mistake"?"the mistake":"correct"}</label>
+        ${Array.from({length:n}, (_,i)=>`
+          <div class="opt-row">
+            <span class="opt-letter">${String.fromCharCode(65+i)}</span>
+            <input type="radio" name="add-ok" value="${i}" ${i===0?"checked":""}>
+            <input class="field-input" id="add-opt-${i}" placeholder="Option ${String.fromCharCode(65+i)}">
+          </div>`).join("")}
+      </div>`;
+  } else if (type === "tf") {
+    c.innerHTML = `
+      <div class="field"><label>Correct Answer</label>
+        <div class="tf-row">
+          <label class="tf-btn btn"><input type="radio" name="add-ok" value="true" checked> TRUE</label>
+          <label class="tf-btn btn"><input type="radio" name="add-ok" value="false"> FALSE</label>
+        </div>
+      </div>`;
+  } else if (type === "seq") {
+    c.innerHTML = `
+      <div class="field"><label>Steps in correct order (one per line)</label>
+        <textarea class="field-textarea" id="add-items" placeholder="Step 1&#10;Step 2&#10;Step 3" rows="5"></textarea>
+      </div>`;
+  }
+  c.insertAdjacentHTML("beforeend", `
+    <div class="row2">
+      <div class="field"><label>Why (explanation)</label><textarea class="field-textarea" id="add-why"></textarea></div>
+      <div class="field"><label>Tip</label><textarea class="field-textarea" id="add-tip"></textarea></div>
+    </div>`);
+}
+function saveAdded() {
+  const age = document.getElementById("add-age").value;
+  const type = document.getElementById("add-type").value;
+  const cat = document.getElementById("add-cat").value.trim();
+  const concept = document.getElementById("add-concept").value.trim();
+  const sit = document.getElementById("add-sit").value.trim();
+  if (!sit) { alert("Situation is required."); return; }
+
+  const row = {
+    id: nextIdForAge(age),
+    level: LEVEL_FOR_AGE[age],
+    cat: cat || "General",
+    pos: ["F","D"],
+    concept: concept || "",
+    d: 1,
+    sit,
+  };
+  if (type !== "mc") row.type = type;
+  if (type === "mc" || type === "mistake" || type === "next") {
+    const n = age === "u5" ? 2 : 4;
+    row.opts = Array.from({length:n}, (_,i)=>document.getElementById(`add-opt-${i}`).value);
+    const okEl = document.querySelector('input[name="add-ok"]:checked');
+    row.ok = okEl ? parseInt(okEl.value, 10) : 0;
+  } else if (type === "tf") {
+    const okEl = document.querySelector('input[name="add-ok"]:checked');
+    row.ok = okEl?.value === "true";
+  } else if (type === "seq") {
+    row.items = (document.getElementById("add-items").value || "").split(/\r?\n/).map(s => s.trim()).filter(Boolean);
+  }
+  row.why = document.getElementById("add-why").value.trim();
+  row.tip = document.getElementById("add-tip").value.trim();
+
+  STATE.added.push(row);
+  saveState();
+  closeAddModal();
+  render();
+}
+
+// =========================================================================
+// File IO
+// =========================================================================
+async function handleFile(file) {
+  try {
+    const text = await file.text();
+    const parsed = JSON.parse(text);
+    if (!parsed || typeof parsed !== "object" || Array.isArray(parsed)) throw new Error("Expected a level-keyed object");
+    BANK = parsed;
+    document.getElementById("file-status").innerHTML = `<span style="color:var(--green);">✓</span> Loaded <code>${escapeHtml(file.name)}</code> — ${countQuestions()} questions across ${Object.keys(BANK).length} age groups.`;
+    document.getElementById("btn-export").disabled = false;
+    document.getElementById("empty-state").style.display = "none";
+    document.getElementById("dashboard").style.display = "block";
+    document.getElementById("main").style.display = "block";
+    VISIBLE_COUNT = PAGE_SIZE;
+    render();
+  } catch (e) {
+    alert("Could not parse file: " + e.message);
+  }
+}
+function countQuestions() {
+  let n = 0;
+  for (const level of Object.keys(BANK)) n += (BANK[level] || []).length;
+  return n;
+}
+
+function buildExport() {
+  const out = {};
+  // Preserve level order; rows go into their EFFECTIVE (moved) level
+  for (const level of LEVEL_ORDER) out[level] = [];
+
+  for (const entry of iterAllQuestions()) {
+    const { q, level } = entry;
+    if (statusOf(q.id) === "kill") continue;
+    if (!out[level]) out[level] = [];
+    out[level].push(getMergedById(q.id) || q);
+  }
+  // Drop empty buckets so output stays clean
+  for (const level of Object.keys(out)) {
+    if (out[level].length === 0) delete out[level];
+  }
+  return out;
+}
+
+function killAllOffAge() {
+  if (!Object.keys(BANK).length && STATE.added.length === 0) { alert("Load a questions.json file first."); return; }
+  const targets = [];
+  for (const entry of iterAllQuestions()) {
+    const { q, age } = entry;
+    const merged = getMergedById(q.id) || q;
+    if (isOffAgeType(age, getType(merged)) && statusOf(q.id) !== "kill") {
+      targets.push(q.id);
+    }
+  }
+  if (targets.length === 0) { alert("No off-age questions found."); return; }
+  const breakdown = {};
+  for (const id of targets) {
+    const age = ageOf(id);
+    const t = getType(getMergedById(id));
+    const key = `${age.toUpperCase()} × ${TYPE_LABELS[t] || t}`;
+    breakdown[key] = (breakdown[key] || 0) + 1;
+  }
+  const summary = Object.entries(breakdown).map(([k,v]) => `  ${k}: ${v}`).join("\n");
+  if (!confirm(`Mark ${targets.length} off-age questions as Kill?\n\n${summary}\n\nThis is reversible — just click Unreviewed / Keep / Flag on any card, or use "Reset local edits" to clear everything.`)) return;
+  for (const id of targets) STATE.statuses[id] = "kill";
+  saveState();
+  render();
+  alert(`Killed ${targets.length} off-age questions. They're still in the list (tinted) — export to drop them from questions.json.`);
+}
+
+function cullMcToFifty() {
+  if (!Object.keys(BANK).length && STATE.added.length === 0) { alert("Load a questions.json file first."); return; }
+  const TARGETS = ["u11","u13","u15","u18"];
+  const MAX = 50;
+
+  const byAge = {};
+  for (const age of TARGETS) byAge[age] = [];
+  for (const entry of iterAllQuestions()) {
+    if (!TARGETS.includes(entry.age)) continue;
+    const merged = getMergedById(entry.q.id) || entry.q;
+    if (getType(merged) !== "mc") continue;
+    if (statusOf(entry.q.id) === "kill") continue;
+    byAge[entry.age].push({
+      id: entry.q.id,
+      d: Number(merged.d) || 1,
+      pos: Array.isArray(merged.pos) ? merged.pos.slice().sort().join("/") : "",
+      cat: merged.cat || "",
+    });
+  }
+
+  const plan = {};
+  let totalKill = 0;
+  for (const age of TARGETS) {
+    const list = byAge[age];
+    if (list.length <= MAX) { plan[age] = { kill: [], keep: list.map(q=>q.id), size: list.length }; continue; }
+
+    // Group by difficulty
+    const byD = { 1: [], 2: [], 3: [] };
+    for (const q of list) (byD[q.d] || byD[1]).push(q);
+
+    // Proportional allocation per difficulty bucket, rounded, then reconciled to exactly MAX
+    const alloc = {};
+    let sum = 0;
+    for (const d of [1,2,3]) { alloc[d] = Math.round((byD[d].length / list.length) * MAX); sum += alloc[d]; }
+    while (sum !== MAX) {
+      if (sum > MAX) {
+        const bigD = [1,2,3].sort((a,b) => alloc[b] - alloc[a])[0];
+        alloc[bigD]--; sum--;
+      } else {
+        const smallD = [1,2,3].sort((a,b) => (alloc[a] / (byD[a].length||1)) - (alloc[b] / (byD[b].length||1)))[0];
+        alloc[smallD]++; sum++;
+      }
+    }
+    // Clamp alloc to available
+    for (const d of [1,2,3]) alloc[d] = Math.min(alloc[d], byD[d].length);
+
+    // Within each bucket, sort by (pos, cat, id numerically) to spread by position+category, then take evenly
+    const keeps = [], kills = [];
+    for (const d of [1,2,3]) {
+      const bucket = byD[d].slice().sort((a,b) =>
+        (a.pos || "").localeCompare(b.pos || "") ||
+        (a.cat || "").localeCompare(b.cat || "") ||
+        a.id.localeCompare(b.id, undefined, { numeric: true })
+      );
+      const target = alloc[d];
+      if (bucket.length <= target) { bucket.forEach(q => keeps.push(q.id)); continue; }
+      const step = bucket.length / target;
+      const keepSet = new Set(Array.from({length: target}, (_, i) => Math.floor(i * step)));
+      for (let i = 0; i < bucket.length; i++) {
+        if (keepSet.has(i)) keeps.push(bucket[i].id);
+        else kills.push(bucket[i].id);
+      }
+    }
+    plan[age] = { kill: kills, keep: keeps, size: list.length };
+    totalKill += kills.length;
+  }
+
+  if (totalKill === 0) { alert("No MC questions to cull — U11-U18 are already at or below 50."); return; }
+
+  const breakdown = TARGETS.map(age => {
+    const p = plan[age];
+    if (p.kill.length === 0) return `  ${age.toUpperCase()}: ${p.size} MC — already ≤ 50`;
+    return `  ${age.toUpperCase()}: ${p.size} MC → kill ${p.kill.length}, keep ${p.keep.length}`;
+  }).join("\n");
+
+  if (!confirm(`Balanced MC cull — max 50 per age (U11-U18 only; U9 untouched).\n\n${breakdown}\n\nTotal killed: ${totalKill}\n\nReversible — click Unreviewed/Keep on any tinted card to save it. Export only when happy.`)) return;
+
+  for (const age of TARGETS) for (const id of plan[age].kill) STATE.statuses[id] = "kill";
+  saveState(); render();
+  alert(`Killed ${totalKill} MC questions across U11-U18. Review by filtering: age + type=MC + status=Kill. Un-kill any you want to save.`);
+}
+
+function handleExport() {
+  const out = buildExport();
+  const json = JSON.stringify(out, null, 2) + "\n";
+  const blob = new Blob([json], { type: "application/json" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = "questions.json";
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+}
+
+// =========================================================================
+// Utility
+// =========================================================================
+function escapeHtml(s) { return String(s).replace(/[&<>"']/g, c => ({ "&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;" }[c])); }
+function escapeAttr(s) { return escapeHtml(s); }
+
+function render() {
+  renderDashboard();
+  renderFilterChips();
+  renderCards();
+}
+
+// =========================================================================
+// Init
+// =========================================================================
+(function init() {
+  loadState();
+  document.getElementById("btn-load").addEventListener("click", () => document.getElementById("file-input").click());
+  document.getElementById("file-input").addEventListener("change", (e) => {
+    const f = e.target.files?.[0]; if (f) handleFile(f);
+    e.target.value = "";
+  });
+  document.getElementById("btn-export").addEventListener("click", handleExport);
+  document.getElementById("btn-reset-state").addEventListener("click", () => {
+    if (!confirm("Clear ALL local edits, statuses, and added questions? (The loaded file is not affected.)")) return;
+    STATE = { edits: {}, statuses: {}, added: [] };
+    localStorage.removeItem(LS_KEY);
+    render();
+  });
+  document.getElementById("btn-load-more").addEventListener("click", () => { VISIBLE_COUNT += PAGE_SIZE; render(); });
+  document.getElementById("search").addEventListener("input", (e) => { FILTERS.search = e.target.value; VISIBLE_COUNT = PAGE_SIZE; render(); });
+
+  // Add modal
+  document.getElementById("btn-add").addEventListener("click", openAddModal);
+  document.getElementById("btn-kill-offage").addEventListener("click", killAllOffAge);
+  document.getElementById("btn-cull-mc").addEventListener("click", cullMcToFifty);
+
+  // Select all visible
+  document.getElementById("select-all-visible").addEventListener("change", (e) => {
+    const visible = getFilteredQuestions().slice(0, VISIBLE_COUNT).map(x => x.q.id);
+    if (e.target.checked) visible.forEach(id => SELECTED.add(id));
+    else visible.forEach(id => SELECTED.delete(id));
+    render();
+  });
+
+  // Bulk actions
+  document.getElementById("bulk-move").addEventListener("click", () => {
+    const target = document.getElementById("bulk-target").value;
+    if (!target) { alert("Pick a target age group first."); return; }
+    const ids = [...SELECTED];
+    if (!confirm(`Move ${ids.length} question(s) to ${target}?`)) return;
+    for (const id of ids) {
+      const orig = getOriginalLevelForId(id);
+      if (orig === target) delete STATE.moves[id];
+      else STATE.moves[id] = target;
+    }
+    SELECTED.clear();
+    document.getElementById("bulk-target").value = "";
+    saveState(); render();
+  });
+  const bulkStatus = (status) => {
+    const ids = [...SELECTED];
+    if (ids.length === 0) return;
+    if (!confirm(`Mark ${ids.length} question(s) as ${status}?`)) return;
+    for (const id of ids) {
+      if (status === "unreviewed") delete STATE.statuses[id];
+      else STATE.statuses[id] = status;
+    }
+    SELECTED.clear();
+    saveState(); render();
+  };
+  document.getElementById("bulk-keep").addEventListener("click", () => bulkStatus("keep"));
+  document.getElementById("bulk-flag").addEventListener("click", () => bulkStatus("flag"));
+  document.getElementById("bulk-kill").addEventListener("click", () => bulkStatus("kill"));
+  document.getElementById("bulk-unreviewed").addEventListener("click", () => bulkStatus("unreviewed"));
+  document.getElementById("bulk-clear").addEventListener("click", () => { SELECTED.clear(); render(); });
+  document.getElementById("add-cancel").addEventListener("click", closeAddModal);
+  document.getElementById("add-save").addEventListener("click", saveAdded);
+  document.getElementById("add-age").addEventListener("change", rebuildAddTypeOptions);
+  document.getElementById("add-advanced").addEventListener("change", rebuildAddTypeOptions);
+  document.getElementById("add-type").addEventListener("change", rebuildAddTypeFields);
+  document.getElementById("add-modal").addEventListener("click", (e) => {
+    if (e.target.id === "add-modal") closeAddModal();
+  });
+})();
+</script>
+</body>
+</html>

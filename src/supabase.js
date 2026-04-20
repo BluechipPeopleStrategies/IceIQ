@@ -306,3 +306,83 @@ export async function resolveReport(reportId) {
   if (error) { console.error(error); return false; }
   return true;
 }
+
+// ─────────────────────────────────────────────
+// ADMIN: REVIEW QUESTIONS (curation workspace)
+// ─────────────────────────────────────────────
+// Admin-only RLS via auth.jwt() ->> 'email' = mtslifka@gmail.com.
+// See supabase/migration_0004_review_questions.sql.
+
+export async function listReviewQuestions() {
+  if (!supabase) return [];
+  const { data, error } = await supabase
+    .from("review_questions")
+    .select("*")
+    .order("age", { ascending: true })
+    .order("id", { ascending: true });
+  if (error) { console.error(error); return []; }
+  return data || [];
+}
+
+export async function updateReviewQuestionCurrent(id, current) {
+  if (!supabase) return null;
+  const { data, error } = await supabase
+    .from("review_questions")
+    .update({ current, updated_at: new Date().toISOString() })
+    .eq("id", id)
+    .select()
+    .single();
+  if (error) { console.error(error); return null; }
+  return data;
+}
+
+export async function setReviewQuestionStatus(id, status) {
+  if (!supabase) return null;
+  const { data, error } = await supabase
+    .from("review_questions")
+    .update({ status, updated_at: new Date().toISOString() })
+    .eq("id", id)
+    .select()
+    .single();
+  if (error) { console.error(error); return null; }
+  return data;
+}
+
+export async function resetReviewQuestion(id) {
+  if (!supabase) return null;
+  // Fetch original first, then overwrite current with it and clear status.
+  const { data: row, error: fErr } = await supabase
+    .from("review_questions")
+    .select("original")
+    .eq("id", id)
+    .single();
+  if (fErr || !row) { console.error(fErr); return null; }
+  const newCurrent = row.original || { type: "mc", cat: "", sit: "", opts: [], ok: 0, tip: "" };
+  const { data, error } = await supabase
+    .from("review_questions")
+    .update({ current: newCurrent, status: "unreviewed", updated_at: new Date().toISOString() })
+    .eq("id", id)
+    .select()
+    .single();
+  if (error) { console.error(error); return null; }
+  return data;
+}
+
+export async function createReviewQuestion({ age, level, current, id }) {
+  if (!supabase) return null;
+  const { data, error } = await supabase
+    .from("review_questions")
+    .insert({
+      id,
+      age,
+      level,
+      original: null,
+      current,
+      status: "unreviewed",
+      created_in_tool: true,
+    })
+    .select()
+    .single();
+  if (error) { console.error(error); return null; }
+  return data;
+}

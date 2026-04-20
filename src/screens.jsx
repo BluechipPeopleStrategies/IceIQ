@@ -1,7 +1,7 @@
 // Cold-path screens — code-split out of App.jsx so they don't ship with the first paint.
 // These are only loaded when the user navigates to them.
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import * as SB from "./supabase";
 import {
   C, FONT, LEVELS,
@@ -16,6 +16,7 @@ import {
 import { calcPlayerProfile, PROFILE_AXES } from "./utils/playerProfile.js";
 import { getTrainingLog } from "./utils/trainingLog.js";
 import { getParentRatings, saveParentRatings, PARENT_DIMENSIONS, PARENT_SCALE } from "./utils/parentAssessment.js";
+import { AGES, LEVEL_FOR_AGE, ALL_TYPES, RECOMMENDED_TYPES_BY_AGE, TYPE_LABELS, isOffAgeType, blankQuestion } from "./utils/ageQuestionTypes.js";
 
 async function loadTeamData(coachCode, season) {
   if (!window.storage) return [];
@@ -732,3 +733,593 @@ export function ParentAssessmentScreen({ player, onBack, onSave }) {
     </div>
   );
 }
+
+// ─────────────────────────────────────────────────────────
+// QuestionReviewScreen — admin-only curation workspace.
+// Reads/writes review_questions table. See supabase/migration_0004.
+// ─────────────────────────────────────────────────────────
+
+const STATUSES = ["unreviewed", "keep", "flag", "kill"];
+const STATUS_COLORS = {
+  unreviewed: C.dimmer,
+  keep: C.green,
+  flag: C.gold,
+  kill: C.red,
+};
+const STATUS_BG = {
+  unreviewed: C.dimmest,
+  keep: C.greenDim,
+  flag: C.goldDim,
+  kill: C.redDim,
+};
+
+function isEdited(row) {
+  if (!row.original) return false; // tool-created rows: always considered "fresh" until edited
+  try { return JSON.stringify(row.original) !== JSON.stringify(row.current); }
+  catch { return false; }
+}
+
+export function QuestionReviewScreen({ onBack }) {
+  const [rows, setRows] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [filters, setFilters] = useState({ age: "all", type: "all", status: "all" });
+  const [visible, setVisible] = useState(100);
+  const [showDashboard, setShowDashboard] = useState(true);
+  const [adding, setAdding] = useState(false);
+  const [expanded, setExpanded] = useState({});
+
+  useEffect(() => {
+    (async () => {
+      setLoading(true);
+      const data = await SB.listReviewQuestions();
+      setRows(data);
+      setLoading(false);
+    })();
+  }, []);
+
+  // Apply filters
+  const filtered = rows.filter(r => {
+    if (filters.age !== "all" && r.age !== filters.age) return false;
+    const t = r.current?.type || "mc";
+    if (filters.type !== "all" && t !== filters.type) return false;
+    if (filters.status !== "all" && r.status !== filters.status) return false;
+    return true;
+  });
+
+  // Dashboard stats
+  const totals = { total: rows.length, unreviewed: 0, keep: 0, flag: 0, kill: 0, edited: 0 };
+  const matrix = {}; // matrix[age][type] = { total, unreviewed, keep, flag, kill }
+  for (const a of AGES) {
+    matrix[a] = {};
+    for (const t of ALL_TYPES) matrix[a][t] = { total: 0, unreviewed: 0, keep: 0, flag: 0, kill: 0 };
+  }
+  for (const r of rows) {
+    totals[r.status] = (totals[r.status] || 0) + 1;
+    if (isEdited(r)) totals.edited += 1;
+    const t = r.current?.type || "mc";
+    if (matrix[r.age] && matrix[r.age][t]) {
+      matrix[r.age][t].total += 1;
+      matrix[r.age][t][r.status] = (matrix[r.age][t][r.status] || 0) + 1;
+    }
+  }
+
+  async function handleStatus(id, nextStatus) {
+    // Toggle off if same status clicked twice → revert to unreviewed
+    const row = rows.find(r => r.id === id);
+    const target = row?.status === nextStatus ? "unreviewed" : nextStatus;
+    setRows(prev => prev.map(r => r.id === id ? { ...r, status: target } : r));
+    await SB.setReviewQuestionStatus(id, target);
+  }
+
+  async function handleReset(id) {
+    if (!confirm("Reset this question (revert edits + clear status)?")) return;
+    const updated = await SB.resetReviewQuestion(id);
+    if (updated) setRows(prev => prev.map(r => r.id === id ? updated : r));
+  }
+
+  // Debounced edit: keeps a per-id timer so edits coalesce
+  const saveTimersRef = useRef({});
+  function handleCurrentChange(id, patch) {
+    setRows(prev => prev.map(r => r.id === id ? { ...r, current: { ...r.current, ...patch } } : r));
+    clearTimeout(saveTimersRef.current[id]);
+    saveTimersRef.current[id] = setTimeout(async () => {
+      const row = (rowsRef.current || []).find(r => r.id === id);
+      if (!row) return;
+      await SB.updateReviewQuestionCurrent(id, row.current);
+    }, 500);
+  }
+
+  // Keep a ref to current rows so the debounced closure reads the latest value
+  const rowsRef = useRef(rows);
+  useEffect(() => { rowsRef.current = rows; }, [rows]);
+
+  async function handleCreate(newRow) {
+    const created = await SB.createReviewQuestion(newRow);
+    if (created) {
+      setRows(prev => [...prev, created]);
+      setAdding(false);
+    }
+  }
+
+  return (
+    <Screen>
+      <BackBtn onClick={onBack} />
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", marginBottom: ".5rem" }}>
+        <div style={{ fontFamily: FONT.display, fontWeight: 800, fontSize: "1.8rem" }}>Question Review</div>
+        <button onClick={() => setShowDashboard(s => !s)} style={{
+          background: "transparent", color: C.dim, border: `1px solid ${C.border}`,
+          borderRadius: 8, padding: ".35rem .6rem", cursor: "pointer", fontSize: 11,
+          fontFamily: FONT.body, fontWeight: 700,
+        }}>{showDashboard ? "Hide dashboard" : "Show dashboard"}</button>
+      </div>
+      <div style={{ fontSize: 12, color: C.dim, marginBottom: "1rem" }}>
+        {loading ? "Loading…" : `${rows.length} questions loaded`}
+      </div>
+
+      {showDashboard && !loading && (
+        <Card style={{ marginBottom: "1rem" }}>
+          <Label>Dashboard</Label>
+          {/* Status totals row */}
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(6, 1fr)", gap: ".5rem", marginBottom: ".75rem" }}>
+            <StatTile label="Total" n={totals.total} color={C.white}/>
+            <StatTile label="Unreviewed" n={totals.unreviewed} color={C.dim}/>
+            <StatTile label="Keep" n={totals.keep} color={C.green}/>
+            <StatTile label="Flag" n={totals.flag} color={C.gold}/>
+            <StatTile label="Kill" n={totals.kill} color={C.red}/>
+            <StatTile label="Edited" n={totals.edited} color={C.purple}/>
+          </div>
+          {/* Age × Type matrix */}
+          <Label>Age × Type</Label>
+          <div style={{ overflowX: "auto", marginTop: ".25rem" }}>
+            <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 11, fontFamily: FONT.body }}>
+              <thead>
+                <tr>
+                  <th style={thSt}></th>
+                  {ALL_TYPES.map(t => (
+                    <th key={t} style={thSt} title={TYPE_LABELS[t]}>{t.toUpperCase()}</th>
+                  ))}
+                  <th style={thSt}>Total</th>
+                </tr>
+              </thead>
+              <tbody>
+                {AGES.map(a => {
+                  const rowTotal = ALL_TYPES.reduce((s, t) => s + matrix[a][t].total, 0);
+                  return (
+                    <tr key={a}>
+                      <td style={{ ...tdSt, fontWeight: 800, color: C.white }}>{a.toUpperCase()}</td>
+                      {ALL_TYPES.map(t => {
+                        const cell = matrix[a][t];
+                        const off = isOffAgeType(a, t) && cell.total > 0;
+                        return (
+                          <td key={t} style={{ ...tdSt, background: off ? C.redDim : "transparent" }}>
+                            <div style={{ color: C.white, fontWeight: 700 }}>{cell.total}</div>
+                            {cell.total > 0 && (
+                              <div style={{ fontSize: 9, color: C.dimmer, lineHeight: 1.3 }}>
+                                <span style={{ color: STATUS_COLORS.unreviewed }}>U:{cell.unreviewed}</span>{" "}
+                                <span style={{ color: STATUS_COLORS.keep }}>K:{cell.keep}</span>{" "}
+                                <span style={{ color: STATUS_COLORS.flag }}>F:{cell.flag}</span>{" "}
+                                <span style={{ color: STATUS_COLORS.kill }}>X:{cell.kill}</span>
+                              </div>
+                            )}
+                          </td>
+                        );
+                      })}
+                      <td style={{ ...tdSt, color: C.dim, fontWeight: 700 }}>{rowTotal}</td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
+          </div>
+          <div style={{ fontSize: 10, color: C.dimmer, marginTop: ".5rem" }}>
+            Red-shaded cells = off-age type (not in the recommended type set for that age).
+            U=unreviewed · K=keep · F=flag · X=kill
+          </div>
+        </Card>
+      )}
+
+      {/* Filter chips */}
+      <Card style={{ marginBottom: "1rem" }}>
+        <FilterRow label="Age"    value={filters.age}    options={["all", ...AGES]}     onChange={v => { setFilters(f => ({ ...f, age: v })); setVisible(100); }}/>
+        <FilterRow label="Type"   value={filters.type}   options={["all", ...ALL_TYPES]} onChange={v => { setFilters(f => ({ ...f, type: v })); setVisible(100); }}/>
+        <FilterRow label="Status" value={filters.status} options={["all", ...STATUSES]}  onChange={v => { setFilters(f => ({ ...f, status: v })); setVisible(100); }} colorMap={STATUS_COLORS}/>
+        <button onClick={() => setAdding(a => !a)} style={{
+          background: adding ? C.greenDim : C.purpleDim,
+          color: adding ? C.green : C.purple,
+          border: `1px solid ${adding ? C.greenBorder : C.purpleBorder}`,
+          borderRadius: 10, padding: ".5rem", cursor: "pointer", fontSize: 12,
+          fontFamily: FONT.body, fontWeight: 700, width: "100%", marginTop: ".75rem",
+        }}>{adding ? "Cancel add" : "+ Add Question"}</button>
+      </Card>
+
+      {adding && (
+        <AddQuestionForm
+          defaultAge={filters.age !== "all" ? filters.age : "u5"}
+          existingIds={rows.map(r => r.id)}
+          onCancel={() => setAdding(false)}
+          onCreate={handleCreate}
+        />
+      )}
+
+      {/* Card list */}
+      {!loading && filtered.slice(0, visible).map(row => (
+        <ReviewCard
+          key={row.id}
+          row={row}
+          expanded={!!expanded[row.id]}
+          onToggle={() => setExpanded(e => ({ ...e, [row.id]: !e[row.id] }))}
+          onStatus={(s) => handleStatus(row.id, s)}
+          onReset={() => handleReset(row.id)}
+          onEdit={(patch) => handleCurrentChange(row.id, patch)}
+        />
+      ))}
+
+      {!loading && filtered.length > visible && (
+        <button onClick={() => setVisible(v => v + 100)} style={{
+          background: "transparent", color: C.dim, border: `1px dashed ${C.border}`,
+          borderRadius: 10, padding: ".75rem", cursor: "pointer", fontSize: 12,
+          fontFamily: FONT.body, fontWeight: 700, width: "100%",
+        }}>Load more ({filtered.length - visible} remaining)</button>
+      )}
+
+      {!loading && filtered.length === 0 && (
+        <Card><div style={{ color: C.dimmer, textAlign: "center", padding: "1.5rem 0" }}>
+          No questions match these filters.
+        </div></Card>
+      )}
+    </Screen>
+  );
+}
+
+// ─── helpers: dashboard styling ───
+const thSt = {
+  fontSize: 10, color: C.dimmer, fontWeight: 700, padding: ".3rem .4rem",
+  textAlign: "center", borderBottom: `1px solid ${C.border}`,
+  letterSpacing: "0.05em", textTransform: "uppercase",
+};
+const tdSt = {
+  padding: ".35rem .4rem", borderBottom: `1px solid ${C.border}`,
+  textAlign: "center", verticalAlign: "middle",
+};
+
+function StatTile({ label, n, color }) {
+  return (
+    <div style={{
+      background: C.bgElevated, border: `1px solid ${C.border}`,
+      borderRadius: 8, padding: ".5rem", textAlign: "center",
+    }}>
+      <div style={{ fontSize: 20, color, fontWeight: 800, fontFamily: FONT.display, lineHeight: 1 }}>{n}</div>
+      <div style={{ fontSize: 9, color: C.dimmer, marginTop: ".2rem", letterSpacing: "0.08em", textTransform: "uppercase" }}>{label}</div>
+    </div>
+  );
+}
+
+function FilterRow({ label, value, options, onChange, colorMap }) {
+  return (
+    <div style={{ marginBottom: ".5rem" }}>
+      <Label>{label}</Label>
+      <div style={{ display: "flex", gap: ".25rem", flexWrap: "wrap" }}>
+        {options.map(o => {
+          const active = value === o;
+          const tint = colorMap && colorMap[o];
+          return (
+            <button key={o} onClick={() => onChange(o)} style={{
+              background: active ? (tint || C.purple) : "transparent",
+              color: active ? C.bg : (tint || C.dim),
+              border: `1px solid ${active ? (tint || C.purple) : C.border}`,
+              borderRadius: 14, padding: ".25rem .65rem", cursor: "pointer",
+              fontSize: 11, fontFamily: FONT.body, fontWeight: 700,
+              textTransform: "uppercase", letterSpacing: "0.03em",
+            }}>{o}</button>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+
+// ─── Review card ───
+function ReviewCard({ row, expanded, onToggle, onStatus, onReset, onEdit }) {
+  const c = row.current || {};
+  const type = c.type || "mc";
+  const edited = isEdited(row);
+  const off = isOffAgeType(row.age, type);
+
+  return (
+    <Card style={{
+      marginBottom: ".65rem",
+      borderLeft: `3px solid ${STATUS_COLORS[row.status]}`,
+      opacity: row.status === "kill" ? 0.55 : 1,
+    }}>
+      {/* Header */}
+      <div style={{ display: "flex", gap: ".35rem", flexWrap: "wrap", alignItems: "center", marginBottom: ".5rem" }}>
+        <span style={{ background: C.bg, color: C.purple, fontSize: 10, padding: ".15rem .5rem", borderRadius: 3, fontFamily: FONT.body, fontWeight: 700 }}>{row.id}</span>
+        <Pill color={STATUS_COLORS[row.status]}>{row.age.toUpperCase()}</Pill>
+        <span style={{ background: C.blueDim, color: C.blue, fontSize: 10, padding: ".15rem .5rem", borderRadius: 3, fontWeight: 700 }}>
+          {type.toUpperCase()}
+        </span>
+        {c.cat && <span style={{ background: C.bg, color: C.dim, fontSize: 10, padding: ".15rem .5rem", borderRadius: 3 }}>{c.cat}</span>}
+        {c.d && <span style={{ color: c.d === 1 ? C.green : c.d === 2 ? C.gold : C.red, fontSize: 10, fontWeight: 700 }}>
+          {c.d === 1 ? "EASY" : c.d === 2 ? "MED" : "HARD"}
+        </span>}
+        {off && (
+          <span style={{ background: C.redDim, color: C.red, fontSize: 9, padding: ".15rem .4rem", borderRadius: 3, fontWeight: 700 }}
+                title={`Type "${type}" not in recommended set for ${row.age.toUpperCase()}`}>
+            OFF-AGE
+          </span>
+        )}
+        {edited && <span style={{ background: C.purpleDim, color: C.purple, fontSize: 9, padding: ".15rem .4rem", borderRadius: 3, fontWeight: 700, marginLeft: "auto" }}>EDITED</span>}
+        {row.created_in_tool && <span style={{ background: C.greenDim, color: C.green, fontSize: 9, padding: ".15rem .4rem", borderRadius: 3, fontWeight: 700 }}>NEW</span>}
+      </div>
+
+      {/* Prompt (collapsed: preview only) */}
+      <div
+        contentEditable={expanded}
+        suppressContentEditableWarning
+        onBlur={(e) => expanded && onEdit({ sit: e.currentTarget.textContent })}
+        style={{
+          fontSize: 14, color: C.white, fontWeight: 600, lineHeight: 1.5,
+          marginBottom: ".5rem", cursor: expanded ? "text" : "pointer",
+          outline: expanded ? `1px solid ${C.border}` : "none",
+          padding: expanded ? ".4rem .5rem" : 0, borderRadius: 6,
+        }}
+        onClick={() => { if (!expanded) onToggle(); }}
+      >
+        {c.sit || c.q || "(no prompt)"}
+      </div>
+
+      {/* Expanded body */}
+      {expanded && (
+        <>
+          {/* MC / TF / mistake / next — opts + correct index */}
+          {(type === "mc" || type === "tf" || type === "mistake" || type === "next") && Array.isArray(c.opts) && (
+            <div style={{ display: "grid", gap: ".35rem", marginBottom: ".6rem" }}>
+              {c.opts.map((opt, i) => (
+                <div key={i} style={{
+                  display: "flex", gap: ".5rem", alignItems: "center",
+                  background: i === c.ok ? C.greenDim : C.bgElevated,
+                  border: `1px solid ${i === c.ok ? C.greenBorder : C.border}`,
+                  borderRadius: 6, padding: ".4rem .5rem",
+                }}>
+                  <button onClick={() => onEdit({ ok: i })} style={{
+                    background: i === c.ok ? C.green : "transparent",
+                    color: i === c.ok ? C.bg : C.dimmer,
+                    border: `1px solid ${i === c.ok ? C.green : C.border}`,
+                    borderRadius: 12, width: 22, height: 22, cursor: "pointer",
+                    fontSize: 10, fontWeight: 800, flexShrink: 0,
+                  }}>{String.fromCharCode(65 + i)}</button>
+                  <div
+                    contentEditable suppressContentEditableWarning
+                    onBlur={(e) => {
+                      const next = [...c.opts]; next[i] = e.currentTarget.textContent;
+                      onEdit({ opts: next });
+                    }}
+                    style={{ flex: 1, fontSize: 13, color: C.white, outline: "none" }}
+                  >{opt}</div>
+                </div>
+              ))}
+            </div>
+          )}
+
+          {/* Sequence — items */}
+          {type === "seq" && Array.isArray(c.items) && (
+            <div style={{ marginBottom: ".6rem" }}>
+              <Label>Correct order (top = 1st)</Label>
+              <div style={{ display: "grid", gap: ".3rem" }}>
+                {(c.correct_order || c.items.map((_, i) => i)).map((origIdx, rank) => (
+                  <div key={rank} style={{
+                    display: "flex", gap: ".5rem", alignItems: "center",
+                    background: C.bgElevated, border: `1px solid ${C.border}`,
+                    borderRadius: 6, padding: ".35rem .5rem",
+                  }}>
+                    <span style={{ color: C.green, fontWeight: 800, fontSize: 12, minWidth: 18 }}>{rank + 1}</span>
+                    <div
+                      contentEditable suppressContentEditableWarning
+                      onBlur={(e) => {
+                        const next = [...c.items]; next[origIdx] = e.currentTarget.textContent;
+                        onEdit({ items: next });
+                      }}
+                      style={{ flex: 1, fontSize: 13, color: C.white, outline: "none" }}
+                    >{c.items[origIdx] || ""}</div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* Tip */}
+          <Label>Coach tip</Label>
+          <div
+            contentEditable suppressContentEditableWarning
+            onBlur={(e) => onEdit({ tip: e.currentTarget.textContent })}
+            style={{
+              fontSize: 12, color: C.dim, background: C.bgElevated,
+              border: `1px solid ${C.border}`, borderRadius: 6,
+              padding: ".4rem .5rem", outline: "none", marginBottom: ".6rem",
+            }}
+          >{c.tip || ""}</div>
+
+          {/* Why */}
+          <Label>Why (explanation)</Label>
+          <div
+            contentEditable suppressContentEditableWarning
+            onBlur={(e) => onEdit({ why: e.currentTarget.textContent })}
+            style={{
+              fontSize: 12, color: C.dim, background: C.bgElevated,
+              border: `1px solid ${C.border}`, borderRadius: 6,
+              padding: ".4rem .5rem", outline: "none", marginBottom: ".6rem",
+            }}
+          >{c.why || ""}</div>
+        </>
+      )}
+
+      {/* Status bar */}
+      <div style={{ display: "flex", gap: ".35rem", marginTop: ".5rem", paddingTop: ".5rem", borderTop: `1px solid ${C.border}` }}>
+        {STATUSES.filter(s => s !== "unreviewed").map(s => {
+          const active = row.status === s;
+          return (
+            <button key={s} onClick={() => onStatus(s)} style={{
+              background: active ? STATUS_COLORS[s] : "transparent",
+              color: active ? C.bg : STATUS_COLORS[s],
+              border: `1px solid ${STATUS_COLORS[s]}`,
+              borderRadius: 6, padding: ".3rem .7rem", cursor: "pointer",
+              fontSize: 10, fontFamily: FONT.body, fontWeight: 800,
+              letterSpacing: "0.05em", textTransform: "uppercase",
+            }}>{s}</button>
+          );
+        })}
+        <button onClick={onToggle} style={{
+          background: "transparent", color: C.dim, border: `1px solid ${C.border}`,
+          borderRadius: 6, padding: ".3rem .7rem", cursor: "pointer",
+          fontSize: 10, fontFamily: FONT.body, fontWeight: 700,
+          letterSpacing: "0.05em", textTransform: "uppercase",
+        }}>{expanded ? "Collapse" : "Edit"}</button>
+        <button onClick={onReset} style={{
+          marginLeft: "auto",
+          background: "transparent", color: C.dimmer, border: `1px solid ${C.border}`,
+          borderRadius: 6, padding: ".3rem .7rem", cursor: "pointer",
+          fontSize: 10, fontFamily: FONT.body, fontWeight: 700,
+          letterSpacing: "0.05em", textTransform: "uppercase",
+        }}>Reset</button>
+      </div>
+    </Card>
+  );
+}
+
+// ─── Add Question form ───
+function AddQuestionForm({ defaultAge, existingIds, onCancel, onCreate }) {
+  const [age, setAge] = useState(defaultAge);
+  const [type, setType] = useState(RECOMMENDED_TYPES_BY_AGE[defaultAge][0] || "mc");
+  const [advanced, setAdvanced] = useState(false);
+  const [draft, setDraft] = useState(() => blankQuestion(type, defaultAge));
+
+  useEffect(() => {
+    setDraft(blankQuestion(type, age));
+  }, [type, age]);
+
+  function nextIdFor(a) {
+    const nums = existingIds
+      .filter(id => id.startsWith(a + "q"))
+      .map(id => Number(id.slice((a + "q").length)))
+      .filter(n => !isNaN(n));
+    const n = (nums.length ? Math.max(...nums) : 0) + 1;
+    return `${a}q${n}`;
+  }
+
+  function submit() {
+    const id = nextIdFor(age);
+    const cleaned = { ...draft };
+    cleaned.id = id;
+    onCreate({ id, age, level: LEVEL_FOR_AGE[age], current: cleaned });
+  }
+
+  const typeOptions = advanced ? ALL_TYPES : (RECOMMENDED_TYPES_BY_AGE[age] || ALL_TYPES);
+
+  return (
+    <Card style={{ marginBottom: "1rem", border: `1px solid ${C.purpleBorder}` }}>
+      <Label>New question</Label>
+      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: ".5rem", marginBottom: ".5rem" }}>
+        <div>
+          <div style={{ fontSize: 10, color: C.dimmer, marginBottom: ".2rem" }}>Age</div>
+          <select value={age} onChange={e => setAge(e.target.value)} style={selectSt}>
+            {AGES.map(a => <option key={a} value={a}>{a.toUpperCase()}</option>)}
+          </select>
+        </div>
+        <div>
+          <div style={{ fontSize: 10, color: C.dimmer, marginBottom: ".2rem" }}>Type</div>
+          <select value={type} onChange={e => setType(e.target.value)} style={selectSt}>
+            {typeOptions.map(t => <option key={t} value={t}>{TYPE_LABELS[t] || t}</option>)}
+          </select>
+        </div>
+      </div>
+      <label style={{ display: "flex", alignItems: "center", gap: ".35rem", fontSize: 11, color: C.dim, marginBottom: ".5rem" }}>
+        <input type="checkbox" checked={advanced} onChange={e => setAdvanced(e.target.checked)}/>
+        Show advanced types (off-age allowed)
+      </label>
+
+      <div style={{ fontSize: 10, color: C.dimmer, marginBottom: ".2rem" }}>Prompt</div>
+      <textarea value={draft.sit} onChange={e => setDraft(d => ({ ...d, sit: e.target.value }))}
+        placeholder="The situation / question text"
+        style={{ ...inputSt, minHeight: 60, marginBottom: ".5rem" }}/>
+
+      <div style={{ fontSize: 10, color: C.dimmer, marginBottom: ".2rem" }}>Category</div>
+      <input value={draft.cat} onChange={e => setDraft(d => ({ ...d, cat: e.target.value }))}
+        placeholder="e.g. Orientation, Compete, Game Awareness"
+        style={{ ...inputSt, marginBottom: ".5rem" }}/>
+
+      {(type === "mc" || type === "tf" || type === "mistake" || type === "next") && (
+        <>
+          <div style={{ fontSize: 10, color: C.dimmer, marginBottom: ".2rem" }}>Choices (click A/B/C/D to mark correct)</div>
+          {draft.opts.map((opt, i) => (
+            <div key={i} style={{ display: "flex", gap: ".35rem", alignItems: "center", marginBottom: ".25rem" }}>
+              <button onClick={() => setDraft(d => ({ ...d, ok: i }))} style={{
+                background: i === draft.ok ? C.green : "transparent",
+                color: i === draft.ok ? C.bg : C.dim,
+                border: `1px solid ${i === draft.ok ? C.green : C.border}`,
+                borderRadius: 12, width: 26, height: 26, cursor: "pointer",
+                fontSize: 11, fontWeight: 800, flexShrink: 0,
+              }}>{String.fromCharCode(65 + i)}</button>
+              <input value={opt} onChange={e => {
+                const next = [...draft.opts]; next[i] = e.target.value;
+                setDraft(d => ({ ...d, opts: next }));
+              }} style={inputSt}/>
+            </div>
+          ))}
+          {type === "mc" && (
+            <button onClick={() => setDraft(d => ({ ...d, opts: [...d.opts, ""] }))} style={{
+              background: "transparent", color: C.dim, border: `1px dashed ${C.border}`,
+              borderRadius: 6, padding: ".25rem .5rem", cursor: "pointer",
+              fontSize: 10, fontWeight: 700, marginTop: ".25rem",
+            }}>+ Add choice</button>
+          )}
+        </>
+      )}
+
+      {type === "seq" && (
+        <>
+          <div style={{ fontSize: 10, color: C.dimmer, marginBottom: ".2rem" }}>Sequence items (top = 1st, in correct order)</div>
+          {draft.items.map((item, i) => (
+            <div key={i} style={{ display: "flex", gap: ".35rem", alignItems: "center", marginBottom: ".25rem" }}>
+              <span style={{ color: C.green, fontWeight: 800, fontSize: 11, minWidth: 18 }}>{i + 1}</span>
+              <input value={item} onChange={e => {
+                const next = [...draft.items]; next[i] = e.target.value;
+                setDraft(d => ({ ...d, items: next }));
+              }} style={inputSt}/>
+            </div>
+          ))}
+        </>
+      )}
+
+      <div style={{ fontSize: 10, color: C.dimmer, margin: ".5rem 0 .2rem" }}>Coach tip</div>
+      <input value={draft.tip} onChange={e => setDraft(d => ({ ...d, tip: e.target.value }))}
+        placeholder="The takeaway — one sentence"
+        style={{ ...inputSt, marginBottom: ".5rem" }}/>
+
+      <div style={{ display: "flex", gap: ".5rem", marginTop: ".5rem" }}>
+        <button onClick={submit} style={{
+          background: C.green, color: C.bg, border: "none",
+          borderRadius: 8, padding: ".5rem .9rem", cursor: "pointer",
+          fontSize: 12, fontFamily: FONT.body, fontWeight: 800,
+          letterSpacing: "0.05em", textTransform: "uppercase", flex: 1,
+        }}>Create</button>
+        <button onClick={onCancel} style={{
+          background: "transparent", color: C.dim, border: `1px solid ${C.border}`,
+          borderRadius: 8, padding: ".5rem .9rem", cursor: "pointer",
+          fontSize: 12, fontFamily: FONT.body, fontWeight: 700,
+        }}>Cancel</button>
+      </div>
+    </Card>
+  );
+}
+
+const selectSt = {
+  width: "100%", background: C.bgElevated, color: C.white,
+  border: `1px solid ${C.border}`, borderRadius: 6,
+  padding: ".4rem .5rem", fontSize: 12, fontFamily: FONT.body,
+};
+const inputSt = {
+  width: "100%", background: C.bgElevated, color: C.white,
+  border: `1px solid ${C.border}`, borderRadius: 6,
+  padding: ".4rem .5rem", fontSize: 12, fontFamily: FONT.body,
+  outline: "none",
+};

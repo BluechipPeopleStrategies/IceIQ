@@ -37,7 +37,7 @@ export const FONT = {
   body: "'DM Sans', 'Inter', system-ui, sans-serif",
 };
 
-export const LEVELS = ["U7 / Initiation","U9 / Novice","U11 / Atom","U13 / Peewee","U15 / Bantam","U18 / Midget"];
+export const LEVELS = ["U9 / Novice","U11 / Atom","U13 / Peewee","U15 / Bantam","U18 / Midget"];
 export const POSITIONS = ["Forward","Defense","Goalie","Not Sure"];
 export const POSITIONS_U11UP = ["Forward","Defense","Goalie"];
 export const SEASONS = ["2025-26","2026 Spring/Summer","2026-27"];

@@ -1,0 +1,1121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>IceIQ Review</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;700&display=swap');
+
+  :root {
+    --bg: #0a0e14;
+    --bg-2: #0f1520;
+    --surface: #141b28;
+    --surface-2: #1a2333;
+    --line: #243047;
+    --line-2: #2e3d5a;
+    --ink: #e8ecf2;
+    --ink-dim: #8a95a8;
+    --ink-faint: #5a6478;
+    --ice: #7fd4ff;
+    --edge: #ff4d5e;
+    --edge-2: #ff8a4d;
+    --gold: #ffd166;
+    --u5: #ff8a4d;
+    --u7: #7fd4ff;
+    --u9: #b47fff;
+    --ok: #5dd39e;
+    --warn: #ffd166;
+    --kill: #ff4d5e;
+  }
+
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body { background: var(--bg); color: var(--ink); font-family: 'Archivo', sans-serif; line-height: 1.45; }
+
+  /* === HEADER === */
+  .topbar {
+    position: sticky; top: 0; z-index: 100;
+    background: var(--bg); border-bottom: 1px solid var(--line);
+  }
+  .topbar-inner {
+    max-width: 1200px; margin: 0 auto;
+    padding: 16px 20px;
+    display: flex; gap: 16px; align-items: center; flex-wrap: wrap;
+  }
+  .brand { display: flex; align-items: baseline; gap: 10px; }
+  .brand h1 { margin: 0; font-weight: 900; font-size: 20px; letter-spacing: -0.02em; }
+  .brand h1 .accent { color: var(--ice); }
+  .brand .sub {
+    font-family: 'JetBrains Mono', monospace; font-size: 10px;
+    color: var(--ink-faint); letter-spacing: 0.15em; text-transform: uppercase;
+  }
+
+  .progress {
+    margin-left: auto;
+    display: flex; align-items: center; gap: 12px;
+    font-family: 'JetBrains Mono', monospace; font-size: 11px;
+  }
+  .progress-stat { color: var(--ink-dim); }
+  .progress-stat .n { color: var(--ice); font-weight: 700; }
+  .progress-stat.keep .n { color: var(--ok); }
+  .progress-stat.flag .n { color: var(--warn); }
+  .progress-stat.kill .n { color: var(--kill); }
+  .progress-stat.edit .n { color: var(--edge-2); }
+
+  .export-btn {
+    background: var(--ok); color: var(--bg); border: none;
+    padding: 8px 14px; border-radius: 4px;
+    font-family: 'JetBrains Mono', monospace; font-size: 11px;
+    font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase;
+    cursor: pointer; transition: all 0.15s ease;
+  }
+  .export-btn:hover { background: #7ee5b0; transform: translateY(-1px); }
+
+  /* === CONTROLS PANEL === */
+  .controls {
+    max-width: 1200px; margin: 20px auto 0;
+    padding: 16px 20px;
+    background: var(--surface); border: 1px solid var(--line);
+    border-radius: 6px;
+    display: flex; gap: 14px; flex-wrap: wrap; align-items: center;
+  }
+  .filter-row { display: flex; gap: 6px; flex-wrap: wrap; align-items: center; }
+  .filter-label {
+    font-family: 'JetBrains Mono', monospace; font-size: 10px;
+    letter-spacing: 0.12em; text-transform: uppercase;
+    color: var(--ink-faint); margin-right: 4px;
+  }
+  .chip {
+    background: transparent; border: 1px solid var(--line-2); color: var(--ink-dim);
+    padding: 5px 11px; border-radius: 16px;
+    font-family: 'Archivo', sans-serif; font-size: 12px; font-weight: 600;
+    cursor: pointer; transition: all 0.15s ease;
+  }
+  .chip:hover { border-color: var(--ice); color: var(--ice); }
+  .chip.active { background: var(--ice); color: var(--bg); border-color: var(--ice); }
+  .chip.u5.active { background: var(--u5); border-color: var(--u5); color: var(--bg); }
+  .chip.u7.active { background: var(--u7); border-color: var(--u7); color: var(--bg); }
+  .chip.u9.active { background: var(--u9); border-color: var(--u9); color: var(--bg); }
+  .chip.keep.active { background: var(--ok); border-color: var(--ok); color: var(--bg); }
+  .chip.flag.active { background: var(--warn); border-color: var(--warn); color: var(--bg); }
+  .chip.kill.active { background: var(--kill); border-color: var(--kill); color: var(--bg); }
+  .chip.unrev.active { background: var(--ink-dim); border-color: var(--ink-dim); color: var(--bg); }
+
+  .danger-btn {
+    background: transparent; border: 1px solid var(--kill); color: var(--kill);
+    padding: 5px 11px; border-radius: 4px;
+    font-family: 'JetBrains Mono', monospace; font-size: 10px;
+    font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase;
+    cursor: pointer;
+  }
+  .danger-btn:hover { background: var(--kill); color: #fff; }
+
+  /* === QUESTION LIST === */
+  .list { max-width: 1200px; margin: 20px auto; padding: 0 20px; }
+
+  .q-card {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    padding: 18px 20px;
+    margin-bottom: 14px;
+    position: relative;
+    transition: border-color 0.15s ease;
+  }
+  .q-card:hover { border-color: var(--line-2); }
+  .q-card.status-keep { border-left: 4px solid var(--ok); }
+  .q-card.status-flag { border-left: 4px solid var(--warn); }
+  .q-card.status-kill { border-left: 4px solid var(--kill); opacity: 0.55; }
+  .q-card.status-unrev { border-left: 4px solid var(--line-2); }
+
+  .q-card-head {
+    display: flex; gap: 8px; flex-wrap: wrap;
+    margin-bottom: 12px;
+    align-items: center;
+    font-family: 'JetBrains Mono', monospace; font-size: 10px;
+  }
+  .q-id {
+    background: var(--bg); color: var(--ice); padding: 3px 8px;
+    border-radius: 3px; letter-spacing: 0.05em; font-weight: 700;
+  }
+  .q-tag {
+    background: var(--bg); color: var(--ink-dim); padding: 3px 8px;
+    border-radius: 3px; letter-spacing: 0.1em; text-transform: uppercase;
+    font-weight: 600;
+  }
+  .q-tag.age-u5 { background: var(--u5); color: var(--bg); }
+  .q-tag.age-u7 { background: var(--u7); color: var(--bg); }
+  .q-tag.age-u9 { background: var(--u9); color: var(--bg); }
+  .q-tag.type-mc { background: var(--ice); color: var(--bg); }
+  .q-tag.type-diagram { background: #b47fff; color: var(--bg); }
+  .q-tag.type-rank { background: var(--ok); color: var(--bg); }
+  .q-tag.type-two-step { background: var(--edge-2); color: var(--bg); }
+  .q-tag.type-sequence { background: #5dc3d3; color: var(--bg); }
+  .q-tag.type-fill { background: #d395dd; color: var(--bg); }
+  .q-tag.type-multi { background: #ffd166; color: var(--bg); }
+  .q-tag.diff-E { color: var(--ok); }
+  .q-tag.diff-M { color: var(--warn); }
+  .q-tag.diff-H { color: var(--kill); }
+  .q-tag.pos-F { color: var(--ice); }
+  .q-tag.pos-D { color: var(--u9); }
+  .q-tag.pos-G { color: var(--kill); }
+  .edited-marker {
+    margin-left: auto; background: var(--edge-2); color: var(--bg);
+    padding: 2px 6px; border-radius: 3px;
+    font-size: 9px; font-weight: 700;
+    letter-spacing: 0.1em; text-transform: uppercase;
+  }
+
+  /* === EDITABLE FIELDS === */
+  .editable {
+    position: relative;
+    cursor: text;
+    border-radius: 3px;
+    transition: background 0.15s ease;
+    padding: 2px 4px;
+    margin: -2px -4px;
+  }
+  .editable:hover { background: rgba(127, 212, 255, 0.06); }
+  .editable:focus {
+    outline: none;
+    background: rgba(127, 212, 255, 0.1);
+    box-shadow: inset 0 0 0 1px var(--ice);
+  }
+  .editable[contenteditable="true"]:empty::before {
+    content: attr(data-placeholder);
+    color: var(--ink-faint);
+    font-style: italic;
+  }
+
+  .q-text {
+    font-size: 15px; font-weight: 600; color: var(--ink);
+    margin: 6px 0 14px; line-height: 1.5;
+  }
+  .cat-input {
+    display: inline-block;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px; color: var(--ink-dim);
+    text-transform: uppercase; letter-spacing: 0.1em;
+    background: var(--bg); padding: 3px 8px; border-radius: 3px;
+    min-width: 80px;
+  }
+
+  /* Choices */
+  .choices {
+    list-style: none; padding: 0; margin: 0 0 14px;
+    display: grid; gap: 6px;
+  }
+  .choice-row {
+    display: flex; gap: 8px; align-items: stretch;
+    background: var(--bg-2); border: 1px solid var(--line);
+    border-radius: 4px;
+    padding: 8px 10px;
+    transition: all 0.15s ease;
+  }
+  .choice-row:hover { border-color: var(--line-2); }
+  .choice-row.correct {
+    border-color: var(--ok);
+    background: rgba(93, 211, 158, 0.08);
+  }
+  .correct-btn {
+    background: transparent; border: 1.5px solid var(--line-2);
+    color: var(--ink-faint);
+    width: 22px; height: 22px; border-radius: 50%;
+    font-size: 11px; font-weight: 700;
+    cursor: pointer; transition: all 0.15s ease;
+    flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .correct-btn:hover { border-color: var(--ok); color: var(--ok); }
+  .choice-row.correct .correct-btn {
+    background: var(--ok); border-color: var(--ok); color: var(--bg);
+  }
+  .choice-text {
+    flex: 1; font-size: 13px; color: var(--ink-dim);
+    outline: none;
+  }
+  .choice-row.correct .choice-text { color: var(--ink); }
+  .choice-remove {
+    background: transparent; border: none; color: var(--ink-faint);
+    cursor: pointer; padding: 0 4px;
+    font-size: 16px; font-weight: 700;
+    transition: color 0.15s ease;
+  }
+  .choice-remove:hover { color: var(--kill); }
+  .add-choice-btn {
+    background: transparent; border: 1px dashed var(--line-2);
+    color: var(--ink-faint);
+    padding: 6px 10px; border-radius: 4px;
+    font-family: 'JetBrains Mono', monospace; font-size: 10px;
+    letter-spacing: 0.1em; text-transform: uppercase;
+    cursor: pointer; width: 100%;
+    transition: all 0.15s ease;
+  }
+  .add-choice-btn:hover { border-color: var(--ice); color: var(--ice); }
+
+  /* Rank order display */
+  .rank-answer {
+    background: var(--bg-2); border: 1px solid var(--ok);
+    border-radius: 4px; padding: 10px 12px; margin-bottom: 12px;
+    font-size: 12px;
+  }
+  .rank-answer-label {
+    font-family: 'JetBrains Mono', monospace; font-size: 10px;
+    color: var(--ok); letter-spacing: 0.12em; text-transform: uppercase;
+    display: block; margin-bottom: 6px; font-weight: 700;
+  }
+  .rank-order { display: flex; flex-direction: column; gap: 4px; }
+  .rank-item {
+    display: flex; gap: 8px; align-items: center;
+    color: var(--ink); padding: 4px 8px;
+    background: var(--bg); border-radius: 3px;
+    font-size: 12px;
+  }
+  .rank-num {
+    font-family: 'JetBrains Mono', monospace; font-weight: 700;
+    color: var(--ok); min-width: 18px;
+  }
+  .rank-controls { display: flex; gap: 2px; margin-left: auto; }
+  .rank-btn {
+    background: transparent; border: 1px solid var(--line-2);
+    color: var(--ink-faint); cursor: pointer;
+    padding: 0 6px; border-radius: 3px;
+    font-size: 12px; font-weight: 700;
+  }
+  .rank-btn:hover { border-color: var(--ice); color: var(--ice); }
+  .rank-btn:disabled { opacity: 0.3; cursor: not-allowed; }
+
+  /* Two-step display */
+  .two-step-block {
+    background: var(--bg-2); border: 1px solid var(--line);
+    border-radius: 4px; padding: 12px; margin-bottom: 10px;
+  }
+  .two-step-block.step-2 { border-left: 2px solid var(--edge-2); }
+  .step-label {
+    font-family: 'JetBrains Mono', monospace; font-size: 10px;
+    color: var(--edge-2); letter-spacing: 0.12em; text-transform: uppercase;
+    font-weight: 700; margin-bottom: 8px;
+  }
+  .step-prompt { font-size: 14px; color: var(--ink); margin-bottom: 10px; font-weight: 500; }
+
+  /* Sequence display */
+  .sequence-answer {
+    background: var(--bg-2); border: 1px solid #5dc3d3;
+    border-radius: 4px; padding: 10px 12px; margin-bottom: 12px;
+  }
+
+  /* Fill display */
+  .fill-answer {
+    display: flex; gap: 8px; align-items: center;
+    background: var(--bg-2); border: 1px solid #d395dd;
+    border-radius: 4px; padding: 8px 12px; margin-bottom: 12px;
+    font-size: 13px;
+  }
+  .fill-answer-label {
+    font-family: 'JetBrains Mono', monospace; font-size: 10px;
+    color: #d395dd; letter-spacing: 0.12em; text-transform: uppercase;
+    font-weight: 700;
+  }
+  .fill-answer-text {
+    flex: 1; color: var(--ink); font-weight: 600;
+    outline: none;
+  }
+  .alternates {
+    font-size: 11px; color: var(--ink-dim); margin-top: 4px;
+    font-style: italic;
+  }
+
+  /* Multi display */
+  .multi-hint {
+    font-size: 11px; color: var(--warn); margin-bottom: 8px;
+    font-family: 'JetBrains Mono', monospace; letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+  .choice-row.multi-correct {
+    border-color: var(--warn);
+    background: rgba(255, 209, 102, 0.08);
+  }
+  .choice-row.multi-correct .correct-btn {
+    background: var(--warn); border-color: var(--warn); color: var(--bg);
+  }
+
+  /* Diagram */
+  .diagram-wrap {
+    background: #0a1628; border: 1px solid var(--line-2);
+    border-radius: 4px; padding: 10px; margin-bottom: 12px;
+    display: flex; justify-content: center;
+  }
+  .diagram-wrap svg { max-width: 100%; height: auto; max-height: 300px; }
+
+  /* Tip */
+  .tip {
+    font-size: 13px; color: var(--ink-dim); padding: 10px 12px;
+    border-top: 1px dashed var(--line-2);
+    border-left: 2px solid var(--ice);
+    background: rgba(127, 212, 255, 0.03);
+    border-radius: 0 3px 3px 0;
+    font-style: italic; line-height: 1.5;
+    margin: 10px -4px -4px;
+  }
+  .tip::before {
+    content: 'COACH TIP'; font-family: 'JetBrains Mono', monospace;
+    font-style: normal; font-weight: 700; font-size: 9px;
+    letter-spacing: 0.12em;
+    color: var(--ice); margin-right: 8px;
+    background: var(--bg); padding: 2px 6px; border-radius: 2px;
+    vertical-align: middle;
+  }
+
+  /* === STATUS BAR === */
+  .status-bar {
+    display: flex; gap: 6px; align-items: center;
+    margin-top: 14px;
+    padding-top: 12px;
+    border-top: 1px solid var(--line);
+  }
+  .status-btn {
+    background: transparent; border: 1px solid var(--line-2);
+    color: var(--ink-dim);
+    padding: 6px 14px; border-radius: 4px;
+    font-family: 'JetBrains Mono', monospace; font-size: 10px;
+    font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase;
+    cursor: pointer; transition: all 0.15s ease;
+    display: flex; align-items: center; gap: 6px;
+  }
+  .status-btn:hover { border-color: var(--ice); color: var(--ice); }
+  .status-btn.active-keep { background: var(--ok); border-color: var(--ok); color: var(--bg); }
+  .status-btn.active-flag { background: var(--warn); border-color: var(--warn); color: var(--bg); }
+  .status-btn.active-kill { background: var(--kill); border-color: var(--kill); color: #fff; }
+  .reset-btn {
+    margin-left: auto;
+    background: transparent; border: 1px solid var(--line-2); color: var(--ink-faint);
+    padding: 6px 10px; border-radius: 4px;
+    font-family: 'JetBrains Mono', monospace; font-size: 10px;
+    cursor: pointer; letter-spacing: 0.08em; text-transform: uppercase;
+  }
+  .reset-btn:hover { border-color: var(--warn); color: var(--warn); }
+
+  /* === EXPORT MODAL === */
+  .modal-overlay {
+    position: fixed; inset: 0;
+    background: rgba(0, 0, 0, 0.85);
+    display: none; align-items: center; justify-content: center;
+    z-index: 200;
+    padding: 20px;
+  }
+  .modal-overlay.visible { display: flex; }
+  .modal {
+    background: var(--surface); border: 1px solid var(--line-2);
+    border-radius: 8px;
+    max-width: 900px; width: 100%;
+    max-height: 85vh;
+    display: flex; flex-direction: column;
+  }
+  .modal-head {
+    padding: 18px 20px;
+    border-bottom: 1px solid var(--line);
+    display: flex; align-items: center; gap: 12px;
+  }
+  .modal-head h2 { margin: 0; font-size: 18px; font-weight: 800; }
+  .modal-head .count {
+    font-family: 'JetBrains Mono', monospace; font-size: 11px;
+    color: var(--ok); padding: 3px 8px;
+    background: rgba(93, 211, 158, 0.1);
+    border-radius: 3px; letter-spacing: 0.08em;
+  }
+  .modal-close {
+    margin-left: auto;
+    background: transparent; border: none;
+    color: var(--ink-dim); font-size: 22px;
+    cursor: pointer;
+  }
+  .modal-body { padding: 20px; overflow-y: auto; flex: 1; }
+  .modal-json {
+    background: var(--bg-2); border: 1px solid var(--line);
+    border-radius: 4px;
+    padding: 14px;
+    font-family: 'JetBrains Mono', monospace; font-size: 11px;
+    color: var(--ink-dim);
+    white-space: pre; overflow-x: auto;
+    line-height: 1.55;
+    max-height: 500px;
+    overflow-y: auto;
+  }
+  .modal-foot { padding: 14px 20px; border-top: 1px solid var(--line); display: flex; gap: 10px; }
+  .modal-btn {
+    background: var(--ice); color: var(--bg); border: none;
+    padding: 10px 16px; border-radius: 4px;
+    font-family: 'JetBrains Mono', monospace; font-size: 11px;
+    font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase;
+    cursor: pointer;
+  }
+  .modal-btn.copied { background: var(--ok); }
+
+  /* === EMPTY STATE === */
+  .empty {
+    text-align: center; padding: 80px 20px;
+    color: var(--ink-faint); font-size: 14px;
+  }
+
+  /* === HIDDEN === */
+  .hidden { display: none !important; }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="topbar-inner">
+    <div class="brand">
+      <h1>IceIQ <span class="accent">Review</span></h1>
+      <div class="sub">U5 &middot; U7 &middot; U9 &mdash; reimagine the bank</div>
+    </div>
+    <div class="progress">
+      <div class="progress-stat"><span class="n" id="stat-total">0</span> total</div>
+      <div class="progress-stat keep">K <span class="n" id="stat-keep">0</span></div>
+      <div class="progress-stat flag">F <span class="n" id="stat-flag">0</span></div>
+      <div class="progress-stat kill">X <span class="n" id="stat-kill">0</span></div>
+      <div class="progress-stat edit">E <span class="n" id="stat-edit">0</span></div>
+    </div>
+    <button class="export-btn" id="exportBtn">Export Keep Set &rarr;</button>
+  </div>
+</div>
+
+<div class="controls">
+  <div class="filter-row">
+    <span class="filter-label">Age</span>
+    <button class="chip active" data-f="age" data-v="all">All</button>
+    <button class="chip u5" data-f="age" data-v="u5">U5</button>
+    <button class="chip u7" data-f="age" data-v="u7">U7</button>
+    <button class="chip u9" data-f="age" data-v="u9">U9</button>
+  </div>
+  <div class="filter-row">
+    <span class="filter-label">Type</span>
+    <button class="chip active" data-f="type" data-v="all">All</button>
+    <button class="chip" data-f="type" data-v="diagram">Diagram</button>
+    <button class="chip" data-f="type" data-v="rank">Rank</button>
+    <button class="chip" data-f="type" data-v="two-step">Two-step</button>
+    <button class="chip" data-f="type" data-v="sequence">Sequence</button>
+    <button class="chip" data-f="type" data-v="fill">Fill</button>
+    <button class="chip" data-f="type" data-v="multi">Multi</button>
+    <button class="chip" data-f="type" data-v="mc">MC</button>
+  </div>
+  <div class="filter-row">
+    <span class="filter-label">Status</span>
+    <button class="chip active" data-f="status" data-v="all">All</button>
+    <button class="chip keep" data-f="status" data-v="keep">Keep</button>
+    <button class="chip flag" data-f="status" data-v="flag">Flag</button>
+    <button class="chip kill" data-f="status" data-v="kill">Kill</button>
+    <button class="chip unrev" data-f="status" data-v="unreviewed">Unreviewed</button>
+  </div>
+  <button class="danger-btn" id="resetAllBtn" title="Reset all edits and statuses">Reset All</button>
+</div>
+
+<div class="list" id="list"></div>
+
+<div class="modal-overlay" id="modal">
+  <div class="modal">
+    <div class="modal-head">
+      <h2>Export &mdash; Keep Set</h2>
+      <span class="count" id="modal-count"></span>
+      <button class="modal-close" id="modalClose">&times;</button>
+    </div>
+    <div class="modal-body">
+      <pre class="modal-json" id="modalJson"></pre>
+    </div>
+    <div class="modal-foot">
+      <button class="modal-btn" id="copyJsonBtn">Copy JSON to Clipboard</button>
+      <button class="modal-btn" id="downloadJsonBtn" style="background: var(--u9);">Download as .js File</button>
+    </div>
+  </div>
+</div>
+
+<!-- Question data: transformed from src/data/questions.json (U7 + U9 bank) -->
+<script src="data.js"></script>
+
+<script>
+// ===================================================================
+// localStorage shim — replaces the custom window.storage API
+// ===================================================================
+window.storage = {
+  get: async (key) => {
+    const v = localStorage.getItem(key);
+    return v !== null ? { value: v } : null;
+  },
+  set: async (key, value) => {
+    localStorage.setItem(key, value);
+  },
+};
+
+// ===================================================================
+// TOOL SHELL — question data is loaded via data.js above
+// ===================================================================
+
+window.QUESTIONS = window.QUESTIONS || [];
+
+const STATE_KEY = 'iceiq_review_state_v1';
+let state = { edits: {}, statuses: {} };
+
+async function loadState() {
+  try {
+    const r = await window.storage.get(STATE_KEY);
+    if (r && r.value) state = JSON.parse(r.value);
+  } catch (e) { /* no state yet */ }
+}
+
+async function saveState() {
+  try { await window.storage.set(STATE_KEY, JSON.stringify(state)); }
+  catch (e) { console.error('save failed', e); }
+}
+
+function getQ(id) {
+  const orig = window.QUESTIONS.find(q => q.id === id);
+  if (!orig) return null;
+  const edits = state.edits[id] || {};
+  return { ...orig, ...edits };
+}
+
+function getStatus(id) {
+  return state.statuses[id] || 'unreviewed';
+}
+
+async function setEdit(id, patch) {
+  state.edits[id] = { ...(state.edits[id] || {}), ...patch };
+  await saveState();
+  updateStats();
+  const card = document.querySelector(`[data-card-id="${id}"]`);
+  if (card) {
+    const marker = card.querySelector('.edited-marker');
+    if (marker) marker.classList.remove('hidden');
+  }
+}
+
+async function resetEdit(id) {
+  delete state.edits[id];
+  delete state.statuses[id];
+  await saveState();
+  renderList();
+  updateStats();
+}
+
+async function setStatus(id, status) {
+  if (state.statuses[id] === status) {
+    delete state.statuses[id];
+  } else {
+    state.statuses[id] = status;
+  }
+  await saveState();
+  const card = document.querySelector(`[data-card-id="${id}"]`);
+  if (card) {
+    card.className = card.className.replace(/\bstatus-\w+\b/g, '');
+    card.classList.add(`status-${getStatus(id)}`);
+    card.querySelectorAll('.status-btn').forEach(b => {
+      b.classList.remove('active-keep','active-flag','active-kill');
+      const bs = b.dataset.status;
+      if (bs === getStatus(id)) b.classList.add(`active-${bs}`);
+    });
+  }
+  updateStats();
+}
+
+// === FILTERS ===
+const filters = { age: 'all', type: 'all', status: 'all' };
+
+function applyFilters() {
+  return window.QUESTIONS.filter(q => {
+    if (filters.age !== 'all' && q.age !== filters.age) return false;
+    if (filters.type !== 'all' && q.type !== filters.type) return false;
+    if (filters.status !== 'all' && getStatus(q.id) !== filters.status) return false;
+    return true;
+  });
+}
+
+document.querySelectorAll('.chip').forEach(chip => {
+  chip.addEventListener('click', () => {
+    const f = chip.dataset.f;
+    const v = chip.dataset.v;
+    filters[f] = v;
+    document.querySelectorAll(`.chip[data-f="${f}"]`).forEach(c => c.classList.remove('active'));
+    chip.classList.add('active');
+    renderList();
+  });
+});
+
+// === STATS ===
+function updateStats() {
+  document.getElementById('stat-total').textContent = window.QUESTIONS.length;
+  let keep = 0, flag = 0, kill = 0, edit = 0;
+  for (const q of window.QUESTIONS) {
+    const s = getStatus(q.id);
+    if (s === 'keep') keep++;
+    else if (s === 'flag') flag++;
+    else if (s === 'kill') kill++;
+    if (state.edits[q.id]) edit++;
+  }
+  document.getElementById('stat-keep').textContent = keep;
+  document.getElementById('stat-flag').textContent = flag;
+  document.getElementById('stat-kill').textContent = kill;
+  document.getElementById('stat-edit').textContent = edit;
+}
+
+// === RENDER A CARD ===
+function renderCard(q) {
+  const eff = getQ(q.id);
+  const status = getStatus(q.id);
+  const isEdited = !!state.edits[q.id];
+  const posTag = eff.pos ? `<span class="q-tag pos-${eff.pos}">${eff.pos === 'F' ? 'FWD' : eff.pos === 'D' ? 'DEF' : 'G'}</span>` : '';
+
+  const typeLabel = {mc:'MC',diagram:'Diagram',rank:'Rank','two-step':'Two-step',sequence:'Sequence',fill:'Fill',multi:'Multi'}[eff.type] || eff.type;
+
+  let body = '';
+
+  if (eff.type === 'mc' || eff.type === 'diagram') {
+    const diagramHtml = eff.type === 'diagram' && eff.svg ? `<div class="diagram-wrap">${eff.svg}</div>` : '';
+    const choiceRows = eff.choices.map((c, i) => `
+      <div class="choice-row ${i === eff.correct ? 'correct' : ''}" data-ci="${i}">
+        <button class="correct-btn" data-action="set-correct" data-idx="${i}">${String.fromCharCode(65+i)}</button>
+        <div class="choice-text editable" contenteditable="true" data-field="choice" data-idx="${i}">${escapeHtml(c)}</div>
+        <button class="choice-remove" data-action="remove-choice" data-idx="${i}" title="Remove choice">&times;</button>
+      </div>
+    `).join('');
+    body = `
+      <div class="q-text editable" contenteditable="true" data-field="q">${escapeHtml(eff.q)}</div>
+      ${diagramHtml}
+      <div class="choices">${choiceRows}</div>
+      <button class="add-choice-btn" data-action="add-choice">+ Add Choice</button>
+    `;
+  }
+
+  else if (eff.type === 'rank') {
+    const choiceRows = eff.choices.map((c, i) => `
+      <div class="choice-row" data-ci="${i}">
+        <div class="correct-btn" style="background: var(--line); color: var(--ink-dim); cursor: default;">${String.fromCharCode(65+i)}</div>
+        <div class="choice-text editable" contenteditable="true" data-field="choice" data-idx="${i}">${escapeHtml(c)}</div>
+        <button class="choice-remove" data-action="remove-choice" data-idx="${i}">&times;</button>
+      </div>
+    `).join('');
+    const orderItems = (eff.correctOrder || []).map((origIdx, rank) => `
+      <div class="rank-item">
+        <span class="rank-num">${rank + 1}</span>
+        <span>${escapeHtml(eff.choices[origIdx] || '')}</span>
+        <span class="rank-controls">
+          <button class="rank-btn" data-action="rank-up" data-pos="${rank}" ${rank === 0 ? 'disabled' : ''}>&uarr;</button>
+          <button class="rank-btn" data-action="rank-down" data-pos="${rank}" ${rank === (eff.correctOrder||[]).length - 1 ? 'disabled' : ''}>&darr;</button>
+        </span>
+      </div>
+    `).join('');
+    body = `
+      <div class="q-text editable" contenteditable="true" data-field="q">${escapeHtml(eff.q)}</div>
+      <div class="choices">${choiceRows}</div>
+      <button class="add-choice-btn" data-action="add-choice">+ Add Choice</button>
+      <div class="rank-answer">
+        <span class="rank-answer-label">Correct order (best to worst)</span>
+        <div class="rank-order">${orderItems}</div>
+      </div>
+    `;
+  }
+
+  else if (eff.type === 'two-step') {
+    const renderStepChoices = (choices, correct, stepKey) => choices.map((c, i) => `
+      <div class="choice-row ${i === correct ? 'correct' : ''}" data-ci="${i}">
+        <button class="correct-btn" data-action="set-correct" data-step="${stepKey}" data-idx="${i}">${String.fromCharCode(65+i)}</button>
+        <div class="choice-text editable" contenteditable="true" data-field="${stepKey}Choice" data-idx="${i}">${escapeHtml(c)}</div>
+        <button class="choice-remove" data-action="remove-choice" data-step="${stepKey}" data-idx="${i}">&times;</button>
+      </div>
+    `).join('');
+    body = `
+      <div class="two-step-block">
+        <div class="step-label">Step 1</div>
+        <div class="step-prompt editable" contenteditable="true" data-field="step1Prompt">${escapeHtml(eff.step1Prompt || '')}</div>
+        <div class="choices">${renderStepChoices(eff.step1Choices || [], eff.step1Correct, 'step1')}</div>
+        <button class="add-choice-btn" data-action="add-choice" data-step="step1">+ Add Step 1 Choice</button>
+      </div>
+      <div class="two-step-block step-2">
+        <div class="step-label">Step 2 (if step 1 correct)</div>
+        <div class="step-prompt editable" contenteditable="true" data-field="step2Prompt">${escapeHtml(eff.step2Prompt || '')}</div>
+        <div class="choices">${renderStepChoices(eff.step2Choices || [], eff.step2Correct, 'step2')}</div>
+        <button class="add-choice-btn" data-action="add-choice" data-step="step2">+ Add Step 2 Choice</button>
+      </div>
+    `;
+  }
+
+  else if (eff.type === 'sequence') {
+    const orderItems = (eff.correctOrder || []).map((origIdx, rank) => `
+      <div class="rank-item">
+        <span class="rank-num">${rank + 1}</span>
+        <span class="editable" contenteditable="true" data-field="item" data-idx="${origIdx}">${escapeHtml(eff.items[origIdx] || '')}</span>
+        <span class="rank-controls">
+          <button class="rank-btn" data-action="rank-up" data-pos="${rank}" ${rank === 0 ? 'disabled' : ''}>&uarr;</button>
+          <button class="rank-btn" data-action="rank-down" data-pos="${rank}" ${rank === (eff.correctOrder||[]).length - 1 ? 'disabled' : ''}>&darr;</button>
+        </span>
+      </div>
+    `).join('');
+    body = `
+      <div class="q-text editable" contenteditable="true" data-field="q">${escapeHtml(eff.q)}</div>
+      <div class="sequence-answer">
+        <span class="rank-answer-label" style="color: #5dc3d3;">Correct sequence</span>
+        <div class="rank-order">${orderItems}</div>
+      </div>
+    `;
+  }
+
+  else if (eff.type === 'fill') {
+    const alts = (eff.alternates || []).join(', ');
+    body = `
+      <div class="q-text editable" contenteditable="true" data-field="q">${escapeHtml(eff.q)}</div>
+      <div class="fill-answer">
+        <span class="fill-answer-label">Answer:</span>
+        <span class="fill-answer-text editable" contenteditable="true" data-field="answer">${escapeHtml(eff.answer || '')}</span>
+      </div>
+      <div style="font-size: 11px; color: var(--ink-faint); margin-top: -6px; margin-bottom: 10px;">
+        <strong style="color: var(--ink-dim);">Alts:</strong>
+        <span class="editable" contenteditable="true" data-field="alternates" data-placeholder="comma,separated">${escapeHtml(alts)}</span>
+      </div>
+    `;
+  }
+
+  else if (eff.type === 'multi') {
+    const correctSet = new Set(eff.correctIndices || []);
+    const choiceRows = eff.choices.map((c, i) => `
+      <div class="choice-row ${correctSet.has(i) ? 'multi-correct' : ''}" data-ci="${i}">
+        <button class="correct-btn" data-action="toggle-multi" data-idx="${i}">${String.fromCharCode(65+i)}</button>
+        <div class="choice-text editable" contenteditable="true" data-field="choice" data-idx="${i}">${escapeHtml(c)}</div>
+        <button class="choice-remove" data-action="remove-choice" data-idx="${i}">&times;</button>
+      </div>
+    `).join('');
+    body = `
+      <div class="q-text editable" contenteditable="true" data-field="q">${escapeHtml(eff.q)}</div>
+      <div class="multi-hint">Multi-select &mdash; tap letter to toggle</div>
+      <div class="choices">${choiceRows}</div>
+      <button class="add-choice-btn" data-action="add-choice">+ Add Choice</button>
+    `;
+  }
+
+  return `
+    <div class="q-card status-${status}" data-card-id="${q.id}">
+      <div class="q-card-head">
+        <span class="q-id">${q.id}</span>
+        <span class="q-tag age-${eff.age}">${eff.age.toUpperCase()}</span>
+        <span class="q-tag type-${eff.type}">${typeLabel}</span>
+        <span class="q-tag cat-input editable" contenteditable="true" data-field="cat">${escapeHtml(eff.cat || '')}</span>
+        <span class="q-tag diff-${eff.diff}">${eff.diff === 'E' ? 'EASY' : eff.diff === 'M' ? 'MED' : 'HARD'}</span>
+        ${posTag}
+        <span class="edited-marker ${isEdited ? '' : 'hidden'}">Edited</span>
+      </div>
+      ${body}
+      <div class="tip editable" contenteditable="true" data-field="tip">${escapeHtml(eff.tip || '')}</div>
+      <div class="status-bar">
+        <button class="status-btn ${status === 'keep' ? 'active-keep' : ''}" data-status="keep" data-qid="${q.id}">Keep</button>
+        <button class="status-btn ${status === 'flag' ? 'active-flag' : ''}" data-status="flag" data-qid="${q.id}">Flag</button>
+        <button class="status-btn ${status === 'kill' ? 'active-kill' : ''}" data-status="kill" data-qid="${q.id}">Kill</button>
+        <button class="reset-btn" data-action="reset-q" data-qid="${q.id}">Reset</button>
+      </div>
+    </div>
+  `;
+}
+
+function escapeHtml(s) {
+  if (s === undefined || s === null) return '';
+  return String(s)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;');
+}
+
+// === RENDER LIST ===
+function renderList() {
+  const list = document.getElementById('list');
+  const qs = applyFilters();
+  if (qs.length === 0) {
+    list.innerHTML = `<div class="empty">No questions match filters. ${window.QUESTIONS.length === 0 ? 'Waiting for data to load...' : 'Change filters or mark some as Unreviewed.'}</div>`;
+    return;
+  }
+  list.innerHTML = qs.map(renderCard).join('');
+}
+
+// === EVENT DELEGATION ===
+document.addEventListener('click', async (e) => {
+  const t = e.target;
+  const action = t.dataset.action;
+  const card = t.closest('.q-card');
+  if (!card && !t.classList.contains('status-btn')) return;
+
+  if (t.classList.contains('status-btn') && t.dataset.status) {
+    const qid = t.dataset.qid;
+    await setStatus(qid, t.dataset.status);
+    return;
+  }
+
+  if (!card) return;
+  const qid = card.dataset.cardId;
+  const eff = getQ(qid);
+
+  if (action === 'set-correct') {
+    if (t.dataset.step) {
+      const stepKey = t.dataset.step === 'step1' ? 'step1Correct' : 'step2Correct';
+      await setEdit(qid, { [stepKey]: Number(t.dataset.idx) });
+    } else {
+      await setEdit(qid, { correct: Number(t.dataset.idx) });
+    }
+    renderList();
+    return;
+  }
+
+  if (action === 'toggle-multi') {
+    const idx = Number(t.dataset.idx);
+    const curr = new Set(eff.correctIndices || []);
+    if (curr.has(idx)) curr.delete(idx); else curr.add(idx);
+    await setEdit(qid, { correctIndices: [...curr].sort((a,b)=>a-b) });
+    renderList();
+    return;
+  }
+
+  if (action === 'remove-choice') {
+    const idx = Number(t.dataset.idx);
+    const step = t.dataset.step;
+    if (step) {
+      const key = step === 'step1' ? 'step1Choices' : 'step2Choices';
+      const correctKey = step === 'step1' ? 'step1Correct' : 'step2Correct';
+      const newChoices = [...eff[key]];
+      newChoices.splice(idx, 1);
+      let newCorrect = eff[correctKey];
+      if (newCorrect === idx) newCorrect = 0;
+      else if (newCorrect > idx) newCorrect -= 1;
+      await setEdit(qid, { [key]: newChoices, [correctKey]: newCorrect });
+    } else if (eff.type === 'rank' || eff.type === 'sequence') {
+      const key = eff.type === 'rank' ? 'choices' : 'items';
+      const newItems = [...eff[key]];
+      newItems.splice(idx, 1);
+      const newOrder = (eff.correctOrder || [])
+        .filter(o => o !== idx)
+        .map(o => o > idx ? o - 1 : o);
+      await setEdit(qid, { [key]: newItems, correctOrder: newOrder });
+    } else if (eff.type === 'multi') {
+      const newChoices = [...eff.choices];
+      newChoices.splice(idx, 1);
+      const newCorrect = (eff.correctIndices || [])
+        .filter(o => o !== idx)
+        .map(o => o > idx ? o - 1 : o);
+      await setEdit(qid, { choices: newChoices, correctIndices: newCorrect });
+    } else {
+      const newChoices = [...eff.choices];
+      newChoices.splice(idx, 1);
+      let newCorrect = eff.correct;
+      if (newCorrect === idx) newCorrect = 0;
+      else if (newCorrect > idx) newCorrect -= 1;
+      await setEdit(qid, { choices: newChoices, correct: newCorrect });
+    }
+    renderList();
+    return;
+  }
+
+  if (action === 'add-choice') {
+    const step = t.dataset.step;
+    if (step) {
+      const key = step === 'step1' ? 'step1Choices' : 'step2Choices';
+      await setEdit(qid, { [key]: [...(eff[key] || []), 'New choice'] });
+    } else if (eff.type === 'rank') {
+      const newChoices = [...eff.choices, 'New choice'];
+      const newOrder = [...(eff.correctOrder || []), newChoices.length - 1];
+      await setEdit(qid, { choices: newChoices, correctOrder: newOrder });
+    } else if (eff.type === 'sequence') {
+      const newItems = [...eff.items, 'New step'];
+      const newOrder = [...(eff.correctOrder || []), newItems.length - 1];
+      await setEdit(qid, { items: newItems, correctOrder: newOrder });
+    } else {
+      await setEdit(qid, { choices: [...(eff.choices || []), 'New choice'] });
+    }
+    renderList();
+    return;
+  }
+
+  if (action === 'rank-up' || action === 'rank-down') {
+    const pos = Number(t.dataset.pos);
+    const order = [...(eff.correctOrder || [])];
+    const swap = action === 'rank-up' ? pos - 1 : pos + 1;
+    if (swap < 0 || swap >= order.length) return;
+    [order[pos], order[swap]] = [order[swap], order[pos]];
+    await setEdit(qid, { correctOrder: order });
+    renderList();
+    return;
+  }
+
+  if (action === 'reset-q') {
+    if (!confirm('Reset this question (clear edits + status)?')) return;
+    await resetEdit(qid);
+    return;
+  }
+});
+
+// === INLINE TEXT EDITING ===
+document.addEventListener('blur', async (e) => {
+  const t = e.target;
+  if (!t.classList || !t.classList.contains('editable')) return;
+  const card = t.closest('.q-card');
+  if (!card) return;
+  const qid = card.dataset.cardId;
+  const field = t.dataset.field;
+  const val = t.textContent.trim();
+  const eff = getQ(qid);
+
+  if (field === 'q' || field === 'cat' || field === 'tip' ||
+      field === 'step1Prompt' || field === 'step2Prompt' || field === 'answer') {
+    await setEdit(qid, { [field]: val });
+  } else if (field === 'alternates') {
+    await setEdit(qid, { alternates: val.split(',').map(s => s.trim()).filter(Boolean) });
+  } else if (field === 'choice') {
+    const idx = Number(t.dataset.idx);
+    const newChoices = [...eff.choices];
+    newChoices[idx] = val;
+    await setEdit(qid, { choices: newChoices });
+  } else if (field === 'item') {
+    const idx = Number(t.dataset.idx);
+    const newItems = [...eff.items];
+    newItems[idx] = val;
+    await setEdit(qid, { items: newItems });
+  } else if (field === 'step1Choice' || field === 'step2Choice') {
+    const key = field === 'step1Choice' ? 'step1Choices' : 'step2Choices';
+    const idx = Number(t.dataset.idx);
+    const newChoices = [...eff[key]];
+    newChoices[idx] = val;
+    await setEdit(qid, { [key]: newChoices });
+  }
+}, true);
+
+document.addEventListener('keydown', (e) => {
+  if (e.target.classList && e.target.classList.contains('editable') && e.key === 'Enter') {
+    e.preventDefault();
+    e.target.blur();
+  }
+});
+
+// === EXPORT ===
+function buildExportJson() {
+  const keepQs = window.QUESTIONS
+    .filter(q => getStatus(q.id) === 'keep')
+    .map(q => getQ(q.id));
+
+  const grouped = { u5: [], u7: [], u9: [] };
+  for (const q of keepQs) {
+    if (grouped[q.age]) grouped[q.age].push(q);
+  }
+
+  const formatQ = (q) => {
+    const parts = [
+      `id:"${q.id}"`,
+      `cat:${JSON.stringify(q.cat)}`,
+      `diff:"${q.diff}"`,
+      `type:"${q.type}"`,
+    ];
+    if (q.pos) parts.push(`pos:["${q.pos}"]`);
+    if (q.type === 'mc' || q.type === 'diagram') {
+      parts.push(`q:${JSON.stringify(q.q)}`);
+      if (q.type === 'diagram') parts.push(`svg:${JSON.stringify(q.svg)}`);
+      parts.push(`choices:${JSON.stringify(q.choices)}`);
+      parts.push(`correct:${q.correct}`);
+    } else if (q.type === 'rank') {
+      parts.push(`q:${JSON.stringify(q.q)}`);
+      parts.push(`choices:${JSON.stringify(q.choices)}`);
+      parts.push(`correctOrder:${JSON.stringify(q.correctOrder)}`);
+    } else if (q.type === 'two-step') {
+      parts.push(`step1Prompt:${JSON.stringify(q.step1Prompt)}`);
+      parts.push(`step1Choices:${JSON.stringify(q.step1Choices)}`);
+      parts.push(`step1Correct:${q.step1Correct}`);
+      parts.push(`step2Prompt:${JSON.stringify(q.step2Prompt)}`);
+      parts.push(`step2Choices:${JSON.stringify(q.step2Choices)}`);
+      parts.push(`step2Correct:${q.step2Correct}`);
+    } else if (q.type === 'sequence') {
+      parts.push(`q:${JSON.stringify(q.q)}`);
+      parts.push(`items:${JSON.stringify(q.items)}`);
+      parts.push(`correctOrder:${JSON.stringify(q.correctOrder)}`);
+    } else if (q.type === 'fill') {
+      parts.push(`q:${JSON.stringify(q.q)}`);
+      parts.push(`answer:${JSON.stringify(q.answer)}`);
+      if (q.alternates && q.alternates.length) parts.push(`alternates:${JSON.stringify(q.alternates)}`);
+    } else if (q.type === 'multi') {
+      parts.push(`q:${JSON.stringify(q.q)}`);
+      parts.push(`choices:${JSON.stringify(q.choices)}`);
+      parts.push(`correctIndices:${JSON.stringify(q.correctIndices)}`);
+    }
+    parts.push(`tip:${JSON.stringify(q.tip)}`);
+    return `  {${parts.join(',')}}`;
+  };
+
+  let out = '// IceIQ - Reimagined Question Bank (U5 / U7 / U9)\n';
+  out += '// Exported from review tool\n\n';
+  out += `// U5 - ${grouped.u5.length} questions\n`;
+  out += 'const U5_BANK = [\n' + grouped.u5.map(formatQ).join(',\n') + '\n];\n\n';
+  out += `// U7 - ${grouped.u7.length} questions\n`;
+  out += 'const U7_BANK = [\n' + grouped.u7.map(formatQ).join(',\n') + '\n];\n\n';
+  out += `// U9 - ${grouped.u9.length} questions\n`;
+  out += 'const U9_BANK = [\n' + grouped.u9.map(formatQ).join(',\n') + '\n];\n';
+
+  return { text: out, count: keepQs.length };
+}
+
+document.getElementById('exportBtn').addEventListener('click', () => {
+  const { text, count } = buildExportJson();
+  if (count === 0) {
+    alert('No questions marked "Keep" yet. Mark some first.');
+    return;
+  }
+  document.getElementById('modalJson').textContent = text;
+  document.getElementById('modal-count').textContent = `${count} questions`;
+  document.getElementById('modal').classList.add('visible');
+});
+
+document.getElementById('modalClose').addEventListener('click', () => {
+  document.getElementById('modal').classList.remove('visible');
+});
+
+document.getElementById('copyJsonBtn').addEventListener('click', async (e) => {
+  const btn = e.currentTarget;
+  try {
+    await navigator.clipboard.writeText(document.getElementById('modalJson').textContent);
+    btn.textContent = 'Copied';
+    btn.classList.add('copied');
+    setTimeout(() => {
+      btn.textContent = 'Copy JSON to Clipboard';
+      btn.classList.remove('copied');
+    }, 2200);
+  } catch (err) {
+    alert('Copy failed. Select the JSON text manually.');
+  }
+});
+
+document.getElementById('downloadJsonBtn').addEventListener('click', () => {
+  const text = document.getElementById('modalJson').textContent;
+  const blob = new Blob([text], { type: 'text/javascript' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = 'iceiq_reimagined_bank.js';
+  a.click();
+  URL.revokeObjectURL(url);
+});
+
+document.getElementById('resetAllBtn').addEventListener('click', async () => {
+  if (!confirm('Reset ALL edits and statuses? This cannot be undone.')) return;
+  state = { edits: {}, statuses: {} };
+  await saveState();
+  renderList();
+  updateStats();
+});
+
+// === INIT ===
+(async function init() {
+  await loadState();
+  renderList();
+  updateStats();
+
+  const loadWatcher = setInterval(() => {
+    if (window.QUESTIONS && window.QUESTIONS.length > 0) {
+      renderList();
+      updateStats();
+      clearInterval(loadWatcher);
+    }
+  }, 200);
+})();
+</script>
+
+</body>
+</html>

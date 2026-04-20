@@ -86,7 +86,6 @@ const BADGES = {
 
 // SMART goal categories
 const GOAL_CATS = {
-  "U7 / Initiation": ["Skating","Puck Control","Game Awareness","Compete"],
   "U9 / Novice":     ["Skating","Passing","Shooting","Defense","Game IQ"],
   "U11 / Atom":      ["Skating","Puck Protection","Gap Control","Rush Reads","Special Teams","Game IQ"],
   "U13 / Peewee":    ["Edge Work","Shot Selection","Defensive Zone","Zone Entry","Special Teams","Leadership"],
@@ -113,6 +112,7 @@ import { getWeekKey, getThisWeekRecord, markWeeklyComplete, seededShuffle, weekS
 import { COMPETENCY_LADDER, RATING_SCALES, SKILLS, ladderFor, getSelfScale, getCoachScale, getScaleColor, getScaleLabel, normalizeRating, getDiscussionPrompt, migrateRatings, PERCENTILE_RATINGS, PR_COLOR, PR_LABEL } from "./data/constants.js";
 
 const AdminReports = lazy(() => import("./screens.jsx").then(m => ({ default: m.AdminReports })));
+const QuestionReviewScreen = lazy(() => import("./screens.jsx").then(m => ({ default: m.QuestionReviewScreen })));
 const ProfileSetup = lazy(() => import("./screens.jsx").then(m => ({ default: m.ProfileSetup })));
 const PlansScreen = lazy(() => import("./screens.jsx").then(m => ({ default: m.PlansScreen })));
 const GameSenseReportScreen = lazy(() => import("./screens.jsx").then(m => ({ default: m.GameSenseReportScreen })));
@@ -120,7 +120,6 @@ const ParentAssessmentScreen = lazy(() => import("./screens.jsx").then(m => ({ d
 const LazyFallback = () => <div style={{minHeight:"100vh",background:C.bg,color:C.dimmer,display:"flex",alignItems:"center",justifyContent:"center",fontFamily:FONT.body}}>Loading…</div>;
 
 const COMP={
-  "U7 / Initiation":{t:[0.75,0.5],l:["Game-Ready","Getting It","Still Learning"]},
   "U9 / Novice":{t:[0.8,0.55],l:["Smart Player","Making Reads","Building Awareness"]},
   "U11 / Atom":{t:[0.8,0.6],l:["Hockey Sense","System Aware","Instinct Stage"]},
   "U13 / Peewee":{t:[0.82,0.65],l:["Elite Game Read","Situationally Sound","Tactical Foundation"]},
@@ -549,10 +548,10 @@ const DIAGRAMS = {
 };
 
 const ZONE_CLICK_QUESTIONS = [
-  // ───── U7 / Initiation (simple: own net vs other net) ─────
+  // ───── Merged into U9 / Novice (simple: own net vs other net) ─────
   {
     id: "u7_zc_1", type: "zone-click", d: 1,
-    level: ["U7 / Initiation"],
+    level: ["U9 / Novice"],
     pos: ["F","D"],
     sit: "Your teammate has the puck and is skating toward the other team's net.",
     question: "Where should you skate so you can help score a goal?",
@@ -562,7 +561,7 @@ const ZONE_CLICK_QUESTIONS = [
   },
   {
     id: "u7_zc_2", type: "zone-click", d: 1,
-    level: ["U7 / Initiation"],
+    level: ["U9 / Novice"],
     pos: ["F","D"],
     sit: "The other team is skating toward your own net with the puck.",
     question: "Where should you skate to help your goalie?",
@@ -572,7 +571,7 @@ const ZONE_CLICK_QUESTIONS = [
   },
   {
     id: "u7_zc_3", type: "zone-click", d: 1,
-    level: ["U7 / Initiation"],
+    level: ["U9 / Novice"],
     pos: ["F","D"],
     sit: "You just got a pass at center ice. The other team's net is in front of you.",
     question: "Where should you skate with the puck?",
@@ -2072,7 +2071,6 @@ function LockedCard({ feature, title, description, onUnlock, target = "pro" }) {
 
 // Level-aware question phrasing
 function getSelfPrompt(level, skill) {
-  if (level === "U7 / Initiation") return skill.desc;
   if (level === "U9 / Novice") {
     const q = skill.selfQ || skill.desc;
     // Reframe as frequency-friendly if needed
@@ -2909,8 +2907,13 @@ function Profile({ player, onSave, onBack, onReset, demoMode, tier, onUpgrade, u
             <button onClick={onAdminReports} style={{
               background: C.purpleDim, color: C.purple, border: `1px solid ${C.purpleBorder}`,
               borderRadius: 10, padding: ".65rem", cursor: "pointer", fontSize: 13,
-              fontFamily: FONT.body, fontWeight: 700, width: "100%"
+              fontFamily: FONT.body, fontWeight: 700, width: "100%", marginBottom: ".5rem"
             }}>Review Question Reports</button>
+            <button onClick={() => onNav && onNav("question-review")} style={{
+              background: C.purpleDim, color: C.purple, border: `1px solid ${C.purpleBorder}`,
+              borderRadius: 10, padding: ".65rem", cursor: "pointer", fontSize: 13,
+              fontFamily: FONT.body, fontWeight: 700, width: "100%"
+            }}>Question Review Dashboard</button>
           </Card>
         )}
         <button onClick={onReset} style={{background:"rgba(239,68,68,.06)",color:C.red,border:`1px solid rgba(239,68,68,.2)`,borderRadius:10,padding:".65rem",cursor:"pointer",fontSize:13,fontFamily:FONT.body,width:"100%"}}>{demoMode ? "Exit Demo" : "Sign Out"}</button>
@@ -3080,21 +3083,8 @@ function StudyScreen({ player, onBack, onNav }) {
 // Result stubs in DEMO_PROFILES omit `type` when "mc" — readers default via `r.type || "mc"`.
 const R = (id, cat, ok, d, type) => type ? {id,cat,ok,d,type} : {id,cat,ok,d};
 const DEMO_PROFILES = {
-  "U7 / Initiation":{
-    name:"Nora Orr",position:"Not Sure",jersey:7,team:"U7 IP Calgary Flames",
-    sessions:(mk)=>[mk(true,false,false,10,52),mk(true,true,false,5,65),mk(true,true,false,1,70)],
-    results:(a,b,c)=>[
-      R("u7q1","Skating",a,1), R("u7q3","Puck Control",a,1), R("u7q5","Game Awareness",a,1), R("u7q10","Compete",a,1),
-      R("u7q20","Skating",b,2), R("u7q25","Compete",b,1), R("u7q30","Game Awareness",b,2), R("u7tf1","Game Awareness",b,1,"tf"),
-      R("u7q40","Compete",c,3), R("u7q50","Puck Control",c,2),
-    ],
-    selfRatings:{u7s1:"developing",u7s2:"introduced",u7s3:"introduced",u7s4:"developing",u7p1:"introduced",u7p2:"introduced",u7c1:"developing",u7c2:"developing",u7c3:"consistent",u7c4:"developing"},
-    coachRatings:{u7s1:"introduced",u7s2:"introduced",u7s3:"introduced",u7s4:"developing",u7p1:"introduced",u7p2:"introduced",u7c1:"consistent",u7c2:"developing",u7c3:"consistent",u7c4:"developing"},
-    coachNotes:{u7c1:"Great hustle — always gives full effort.",u7s2:"Still learning the snowplow stop. Keep practising at home."},
-    goals:{"Skating":{goal:"Learn to stop on both sides",S:"Do 10 snowplow stops each practice",M:"Coach checks off each practice",A:"Yes — we practice stops every session",R:"I fall when I try to stop on my left side",T:"By end of December 2026"}},
-  },
   "U9 / Novice":{
-    name:"Luca Lidstrom",position:"Defense",jersey:5,team:"U9 A Saskatoon Blazers",
+    name:"Nora Orr",position:"Not Sure",jersey:7,team:"U9 A Calgary Flames",
     sessions:(mk)=>[mk(true,false,false,12,55),mk(true,true,false,6,68),mk(true,true,true,2,78)],
     results:(a,b,c)=>[
       R("u9q1","Decision Making",a,1), R("u9q3","Positioning",a,1), R("u9q7","Exiting the Zone",a,1), R("u9q10","Defense",a,1),
@@ -3157,7 +3147,6 @@ const DEMO_PROFILES = {
 };
 
 const DEMO_PARENT_RATINGS = {
-  "U7 / Initiation": { passion:"thriving", readiness:"steady",   effort:"thriving", adversity:"growing", sportsmanship:"thriving", confidence:"steady",   coachability:"steady",   balance:"thriving" },
   "U9 / Novice":     { passion:"thriving", readiness:"growing",  effort:"steady",   adversity:"steady",  sportsmanship:"steady",   confidence:"growing",  coachability:"steady",   balance:"steady"   },
   "U11 / Atom":      { passion:"thriving", readiness:"steady",   effort:"thriving", adversity:"steady",  sportsmanship:"thriving", confidence:"steady",   coachability:"thriving", balance:"steady"   },
   "U13 / Peewee":    { passion:"steady",   readiness:"steady",   effort:"thriving", adversity:"growing", sportsmanship:"steady",   confidence:"steady",   coachability:"steady",   balance:"growing"  },
@@ -3207,7 +3196,6 @@ const COACH_PERSONAS = [
 ];
 
 const DEMO_ROSTERS = {
-  "U7 / Initiation": { all:["head","assistant"] },
   "U9 / Novice":     { all:["head","assistant","skills"] },
   "U11 / Atom":      { all:["head","assistant","skills","power_skating"] },
   "U13 / Peewee":    { all:["head","assistant","skills","power_skating","video"],                    goalie:["head","assistant","skills","goalie","power_skating"] },
@@ -3215,7 +3203,7 @@ const DEMO_ROSTERS = {
   "U18 / Midget":    { all:["head","assistant","asst2","skills","power_skating","video","mental","strength"], goalie:["head","assistant","asst2","skills","goalie","power_skating","video","mental"] },
 };
 function getDemoCoachRoster(level, position) {
-  const r = DEMO_ROSTERS[level] || DEMO_ROSTERS["U7 / Initiation"];
+  const r = DEMO_ROSTERS[level] || DEMO_ROSTERS["U9 / Novice"];
   const ids = (position === "Goalie" && r.goalie) ? r.goalie : r.all;
   return ids.map(id => COACH_PERSONAS.find(p => p.id === id)).filter(Boolean);
 }
@@ -3454,7 +3442,7 @@ function AuthScreen({ onAuthenticated, onDemo }) {
             Train smarter.<br/><span style={{color:C.gold}}>Play sharper.</span>
           </h1>
           <p style={{fontSize:14,color:"rgba(248,250,252,.7)",lineHeight:1.65,margin:"0 auto 1.25rem",maxWidth:340}}>
-            Hockey development built on game sense — 880+ adaptive questions, SMART goals, and pro insights for U7 to U18.
+            Hockey development built on game sense — adaptive questions, SMART goals, and pro insights for U9 to U18.
           </p>
           {/* Stat chips */}
           <div style={{display:"flex",gap:".5rem",justifyContent:"center",flexWrap:"wrap"}}>
@@ -4083,6 +4071,7 @@ export default function App() {
         {screen === "parent" && <Suspense fallback={<LazyFallback/>}><ParentAssessmentScreen player={player} onBack={()=>setScreen("profile")} onSave={(ratings)=>{ setPlayer(p => ({...p, parentRatings: {...ratings, updated_at: new Date().toISOString().slice(0,10)}})); setScreen("profile"); }}/></Suspense>}
         {screen === "profile" && <Profile player={player} onSave={handleProfileSave} onBack={()=>setScreen("home")} onReset={handleSignOut} demoMode={demoMode} tier={tier} onUpgrade={(f,t)=>promptUpgrade(f,t)} userEmail={userEmail} onAdminReports={()=>setScreen("admin")} onNav={setScreen}/>}
         {screen === "admin" && <Suspense fallback={<LazyFallback/>}><AdminReports onBack={()=>setScreen("profile")}/></Suspense>}
+        {screen === "question-review" && <Suspense fallback={<LazyFallback/>}><QuestionReviewScreen onBack={()=>setScreen("profile")}/></Suspense>}
       </div>
 
       {!["quiz","results","weekly"].includes(screen) && (

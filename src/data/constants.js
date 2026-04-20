@@ -14,7 +14,6 @@ export function ladderFor(n, forSelf) {
 }
 
 export const RATING_SCALES = {
-  "U7 / Initiation": { self:{type:"ladder", options:ladderFor(3,true)},  coach:{type:"ladder", options:ladderFor(3,false)} },
   "U9 / Novice":     { self:{type:"ladder", options:ladderFor(4,true)},  coach:{type:"ladder", options:ladderFor(4,false)} },
   "U11 / Atom":      { self:{type:"ladder", options:ladderFor(5,true)},  coach:{type:"ladder", options:ladderFor(5,false)} },
   "U13 / Peewee":    { self:{type:"ladder", options:ladderFor(5,true)},  coach:{type:"ladder", options:ladderFor(5,false)} },
@@ -70,16 +69,6 @@ export const PR_COLOR = Object.fromEntries(PERCENTILE_RATINGS.map(r=>[r.value,r.
 export const PR_LABEL = Object.fromEntries(PERCENTILE_RATINGS.map(r=>[r.value,r.label]));
 
 export const SKILLS={
-  "U7 / Initiation":[
-    {cat:"Skating",icon:"⛸",skills:[{id:"u7s1",name:"Forward Stride",desc:"Pushes and glides with both feet"},{id:"u7s2",name:"Stopping",desc:"Attempts a two-foot snowplow stop"},{id:"u7s3",name:"Turning",desc:"Turns in both directions while moving"},{id:"u7s4",name:"Balance & Falls",desc:"Gets up from ice independently"}]},
-    {cat:"Puck Skills",icon:"🏒",skills:[{id:"u7p1",name:"Stick Handling",desc:"Controls puck while stationary"},{id:"u7p2",name:"Shooting",desc:"Attempts a forehand push/shot on net"}]},
-    {cat:"Compete & Attitude",icon:"🔥",skills:[{id:"u7c1",name:"Effort",desc:"Full effort throughout practice and games"},{id:"u7c2",name:"Listening",desc:"Follows coach instructions on ice"},{id:"u7c3",name:"Fun & Enjoyment",desc:"Shows enthusiasm for the game"},{id:"u7c4",name:"Team Spirit",desc:"Cheers for teammates and plays like part of a team",selfQ:"Do you cheer for your teammates and play as a team?"}]},
-    {cat:"Game Decision-Making",icon:"🧠",isDM:true,skills:[
-      {id:"u7d1",name:"Shooting at the Right Net",desc:"Knows which net to shoot at",selfQ:"How well do you know which net to shoot at?"},
-      {id:"u7d2",name:"Following the Puck",desc:"Pursues loose pucks instinctively",selfQ:"Do you always go after the puck when it's loose?"},
-      {id:"u7d3",name:"Reacting After a Whistle",desc:"Stops and looks for next direction",selfQ:"Do you stop right away when the whistle blows?"},
-    ]},
-  ],
   "U9 / Novice":[
     {cat:"Skating",icon:"⛸",skills:[{id:"u9s1",name:"Forward Crossovers",desc:"Executes crossovers on both sides"},{id:"u9s2",name:"Backward Skating",desc:"Skates backward with control"},{id:"u9s3",name:"Edge Control",desc:"Uses inside/outside edges intentionally"},{id:"u9s4",name:"Stopping (One-Foot)",desc:"Executes a hockey stop on dominant side"}]},
     {cat:"Puck Skills",icon:"🏒",skills:[{id:"u9p1",name:"Stickhandling in Motion",desc:"Handles puck while skating at moderate speed"},{id:"u9p2",name:"Passing (Forehand)",desc:"Delivers accurate forehand pass"},{id:"u9p3",name:"Receiving Passes",desc:"Cushions and controls received passes"},{id:"u9p4",name:"Wrist Shot",desc:"Generates power and accuracy on wrist shot"}]},

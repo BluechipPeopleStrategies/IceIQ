@@ -1,16 +1,4 @@
 export const STUDY_CONTENT = {
-  "U7 / Initiation": {
-    watchTips: [
-      "Watch NHL highlights for 5-10 minutes — notice which way the goalie faces and where players celebrate goals",
-      "Ask a parent to pause a game and point out your team's net vs the other team's net",
-      "Watch how fast players get up after they fall down — get up fast like they do",
-    ],
-    focusAreas: [
-      {skill:"Knowing which net to shoot at", drill:"Before every shift, look up and find your goalie"},
-      {skill:"Going after loose pucks", drill:"Race to every puck in practice — even ones you think you'll lose"},
-      {skill:"Getting up fast after falls", drill:"Fall on purpose in warmup, get up as fast as you can, 10 times"},
-    ],
-  },
   "U9 / Novice": {
     watchTips: [
       "Watch one NHL game per week — pick a player on the winning team and follow only them for 5 minutes",
