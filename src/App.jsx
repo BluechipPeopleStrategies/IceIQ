@@ -4,6 +4,7 @@ import { supabase, hasSupabase } from "./supabase";
 import { canAccess, getUpgradeTriggerMessage } from "./utils/tierGate";
 import { getParentRatings, saveParentRatings, hasParentRatings, daysSinceUpdated, PARENT_DIMENSIONS, PARENT_SCALE } from "./utils/parentAssessment";
 import { calcPlayerProfile, PROFILE_AXES } from "./utils/playerProfile";
+import { markSignupIntent, logSignupComplete } from "./utils/signupTelemetry";
 import { COMPETENCIES, getPositioningJourneyState, GAME_SENSE_UNLOCK_SESSIONS } from "./utils/gameSense.js";
 import { HockeyInsightWidget, BottomNav, TrainingLog } from "./widgets.jsx";
 import { canSwitchAgeGroup, recordAgeGroupSwitch, getAgeGroupLock, setAgeGroupLock, checkSeasonReset } from "./utils/deviceLock";
@@ -3768,6 +3769,7 @@ function AuthScreen({ onAuthenticated, onDemo, prefill }) {
         if (password.length < 6) throw new Error("Password must be at least 6 characters");
         await SB.signUp({ email: email.trim(), password, role, name: name.trim() });
         try { window.localStorage.setItem("iceiq_has_signed_in_before", "1"); } catch {}
+        logSignupComplete({ role, level: prefill?.level || null });
       } else if (mode === "forgot") {
         if (!email.trim()) throw new Error("Enter your email to reset your password");
         if (!supabase) throw new Error("Password reset unavailable — Supabase not configured");
@@ -4202,7 +4204,8 @@ export default function App() {
   function promptUpgrade(feature, target) {
     setUpgradePrompt({ feature, target: target || null });
   }
-  function triggerSignup() {
+  function triggerSignup(source = "auth_direct") {
+    markSignupIntent(source);
     setSignupPrefill({
       role: profile?.role || "player",
       level: player?.level || null,
@@ -4468,7 +4471,7 @@ export default function App() {
           onBumpQuestFlags={bumpQuestFlags}
           onSaveProgress={() => setSaveProgressFor(demoMode ? "__demo_coach__" : (profile?.id || null))}
           onFirstLine={() => setFirstLineToast(true)}
-          onSignup={triggerSignup}
+          onSignup={() => triggerSignup("quest_cta_coach")}
           onOpenPlayer={(p) => {
             // Coach rating for this player
             const pk = p.id;
@@ -4517,7 +4520,7 @@ export default function App() {
       )}
 
       <div style={{paddingBottom: screen==="quiz"||screen==="results" ? 0 : 80}}>
-        {screen === "home"    && <Home player={tierLimitedPlayer(player, tier)} onNav={setScreen} demoMode={demoMode} subscriptionTier={tier} questFlagsBump={questFlagsBump} onPromptUpgrade={promptUpgrade} onBumpQuestFlags={bumpQuestFlags} onSaveProgress={() => setSaveProgressFor(demoMode ? "__demo__" : (player?.id || null))} onFirstLine={() => setFirstLineToast(true)} onSignup={triggerSignup}/>}
+        {screen === "home"    && <Home player={tierLimitedPlayer(player, tier)} onNav={setScreen} demoMode={demoMode} subscriptionTier={tier} questFlagsBump={questFlagsBump} onPromptUpgrade={promptUpgrade} onBumpQuestFlags={bumpQuestFlags} onSaveProgress={() => setSaveProgressFor(demoMode ? "__demo__" : (player?.id || null))} onFirstLine={() => setFirstLineToast(true)} onSignup={() => triggerSignup("quest_cta")}/>}
         {screen === "quiz"    && (demoMode && (()=>{ try { return localStorage.getItem("iceiq_demo_quiz_taken") === "1"; } catch { return false; } })()
           ? <DemoQuizCapScreen onBack={()=>setScreen("home")} onSignUp={exitDemo}/>
           : tier === "FREE" && !demoMode && isAtFreeQuizCap()
@@ -4540,7 +4543,7 @@ export default function App() {
         {screen === "report"  && <Report player={tierLimitedPlayer(player, tier)} onBack={()=>setScreen("home")} demoCoachData={demoMode?demoCoachRatings:null} tier={tier} onUpgrade={(f,t)=>promptUpgrade(f,t)}/>}
         {screen === "gamesense" && <Suspense fallback={<LazyFallback/>}><GameSenseReportScreen player={player} onBack={()=>setScreen("home")} demoMode={demoMode} demoCoachData={demoMode?demoCoachRatings:null} onNavigate={setScreen}/></Suspense>}
         {screen === "journey" && <JourneyScreen player={player} onBack={()=>setScreen("home")} onNav={setScreen}/>}
-        {screen === "parent" && <Suspense fallback={<LazyFallback/>}><ParentAssessmentScreen player={player} demoMode={demoMode} onSignup={triggerSignup} onBack={()=>setScreen("profile")} onSave={(ratings)=>{ setPlayer(p => ({...p, parentRatings: {...ratings, updated_at: new Date().toISOString().slice(0,10)}})); setScreen("profile"); }}/></Suspense>}
+        {screen === "parent" && <Suspense fallback={<LazyFallback/>}><ParentAssessmentScreen player={player} demoMode={demoMode} onSignup={() => triggerSignup("parent_demo")} onBack={()=>setScreen("profile")} onSave={(ratings)=>{ setPlayer(p => ({...p, parentRatings: {...ratings, updated_at: new Date().toISOString().slice(0,10)}})); setScreen("profile"); }}/></Suspense>}
         {screen === "profile" && <Profile player={player} onSave={handleProfileSave} onBack={()=>setScreen("home")} onReset={handleSignOut} demoMode={demoMode} tier={tier} onUpgrade={(f,t)=>promptUpgrade(f,t)} userEmail={userEmail} onAdminReports={()=>setScreen("admin")} onNav={setScreen}/>}
         {screen === "admin" && <Suspense fallback={<LazyFallback/>}><AdminReports onBack={()=>setScreen("profile")}/></Suspense>}
         {screen === "question-review" && <Suspense fallback={<LazyFallback/>}><QuestionReviewScreen onBack={()=>setScreen("profile")}/></Suspense>}
@@ -4586,6 +4589,7 @@ export default function App() {
             <div style={{fontFamily:FONT.display,fontWeight:800,fontSize:"1.4rem",lineHeight:1.15,marginBottom:".5rem"}}>Save your First-Five progress</div>
             <div style={{fontSize:13,color:C.dim,lineHeight:1.6,marginBottom:"1.1rem"}}>Create a free account and we'll keep your quiz history, self-ratings, and goals so you can pick up where you left off.</div>
             <button onClick={()=>{
+              markSignupIntent("save_progress");
               setSignupPrefill({
                 role: saveProgressFor === "__demo_coach__" ? "coach" : "player",
                 level: player?.level || null,
@@ -4616,7 +4620,7 @@ export default function App() {
         </div>
       )}
       {demoMode && !saveProgressFor && !firstLineToast && screen !== "results" && (
-        <button onClick={triggerSignup} style={{position:"fixed",top:10,right:10,zIndex:150,background:`linear-gradient(135deg, ${C.gold}, #b8860b)`,color:C.bg,border:"none",borderRadius:999,padding:"6px 12px 6px 10px",cursor:"pointer",fontSize:11,fontWeight:800,fontFamily:FONT.body,letterSpacing:".02em",display:"flex",alignItems:"center",gap:"4px",boxShadow:"0 4px 14px rgba(201,168,76,.35), inset 0 1px 0 rgba(255,255,255,.25)"}}>
+        <button onClick={() => triggerSignup("demo_chip")} style={{position:"fixed",top:10,right:10,zIndex:150,background:`linear-gradient(135deg, ${C.gold}, #b8860b)`,color:C.bg,border:"none",borderRadius:999,padding:"6px 12px 6px 10px",cursor:"pointer",fontSize:11,fontWeight:800,fontFamily:FONT.body,letterSpacing:".02em",display:"flex",alignItems:"center",gap:"4px",boxShadow:"0 4px 14px rgba(201,168,76,.35), inset 0 1px 0 rgba(255,255,255,.25)"}}>
           <span style={{fontSize:12}}>🏒</span>
           Sign Up Free →
         </button>
