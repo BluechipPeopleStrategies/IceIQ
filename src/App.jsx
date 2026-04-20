@@ -101,6 +101,38 @@ const SMART_PROMPTS = {
   T: "When will you achieve this by?",
 };
 
+function avatarInitials(name) {
+  const parts = String(name || "").trim().split(/\s+/).filter(Boolean);
+  if (!parts.length) return "?";
+  if (parts.length === 1) return parts[0].slice(0, 2).toUpperCase();
+  return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
+}
+
+function AvatarDisc({ name, kind = "player", size = 48 }) {
+  const display = kind === "coach" ? String(name || "").replace(/^Coach\s+/i, "") : name;
+  const initials = avatarInitials(display);
+  const bg = kind === "coach"
+    ? "linear-gradient(135deg, #475569 0%, #1e293b 100%)"
+    : `linear-gradient(135deg, ${C.gold} 0%, #b8860b 100%)`;
+  const fg = kind === "coach" ? "#f1f5f9" : "#0b1220";
+  return (
+    <div style={{
+      width: size, height: size, borderRadius: "50%",
+      background: bg, color: fg,
+      display: "flex", alignItems: "center", justifyContent: "center",
+      fontFamily: FONT.display, fontWeight: 800, fontSize: Math.round(size * 0.38),
+      border: "1px solid rgba(255,255,255,0.12)",
+      boxShadow: "0 2px 8px rgba(0,0,0,0.25), inset 0 1px 0 rgba(255,255,255,0.1)",
+      letterSpacing: ".02em", flexShrink: 0,
+    }}>
+      {initials}
+    </div>
+  );
+}
+
+const FLAVOR_CORRECT   = ["Good read.", "That's the one.", "Nice.", "Exactly right.", "Smart play."];
+const FLAVOR_INCORRECT = ["Not quite.", "Let's break this down.", "Close, but watch this.", "Let's dial it in.", "Common mistake — here's why."];
+
 
 
 // ─────────────────────────────────────────────────────────
@@ -1402,7 +1434,28 @@ function Quiz({ player, onFinish, onBack, tier, onUpgrade }) {
                   </div>
                 );
               })()}
-              {q.tip && <div style={{fontSize:12,color:C.purple,fontStyle:"italic",borderTop:`1px solid ${C.border}`,paddingTop:".6rem"}}>💡 {q.tip}</div>}
+              {(() => {
+                const userCorrect = qtype === "seq" ? seqCorrect : qtype === "zone-click" ? zoneCorrect : (sel === q.ok);
+                const coach = getCoachForQuestion(q, player.level, player.position);
+                if (!coach) return null;
+                const flavorPool = userCorrect ? FLAVOR_CORRECT : FLAVOR_INCORRECT;
+                const flavor = flavorPool[(q.id?.length || 0) % flavorPool.length];
+                return (
+                  <div style={{display:"flex",gap:".6rem",alignItems:"flex-start",borderTop:`1px solid ${C.border}`,paddingTop:".7rem",marginTop:".2rem"}}>
+                    <AvatarDisc name={coach.name} kind="coach" size={40}/>
+                    <div style={{flex:1,minWidth:0}}>
+                      <div style={{display:"flex",alignItems:"baseline",gap:".4rem",flexWrap:"wrap",marginBottom:".2rem"}}>
+                        <span style={{fontWeight:800,fontSize:12,color:C.white}}>{coach.name}</span>
+                        <span style={{fontSize:10,color:C.dimmer,letterSpacing:".04em"}}>{coach.role}</span>
+                      </div>
+                      <div style={{fontSize:12,color:C.dim,lineHeight:1.55}}>
+                        <span style={{fontWeight:700,color:userCorrect?C.green:C.yellow,marginRight:".3rem"}}>{flavor}</span>
+                        {q.tip || (userCorrect ? "Keep reading the ice like that." : "Re-read the play and reset — you'll get the next one.")}
+                      </div>
+                    </div>
+                  </div>
+                );
+              })()}
             </Card>
             {quizDone ? (
               <button onClick={() => onFinish(results, seqPerfect, mistakeStreak)} style={{background:C.gold,color:C.bg,border:"none",borderRadius:12,padding:".9rem",cursor:"pointer",fontWeight:700,fontSize:14,fontFamily:FONT.body,width:"100%"}}>
@@ -3146,6 +3199,42 @@ const DEMO_PROFILES = {
   },
 };
 
+const TAGLINE_BY_LEVEL = {
+  "U9 / Novice":  "First full-ice reads",
+  "U11 / Atom":   "Learning the speed game",
+  "U13 / Peewee": "Reading plays like a vet",
+  "U15 / Bantam": "Battles on every shift",
+  "U18 / Midget": "Prep-level systems player",
+};
+
+const BIO_BY_LEVEL_POSITION = {
+  "U9 / Novice::Not Sure": "New to full-ice — still figuring out the best fit on the ice, but competes hard every shift.",
+  "U9 / Novice::Forward":  "Loves the puck and drives the net. Still learning zones, but the instincts are there.",
+  "U9 / Novice::Defense":  "Steady for a first-year D. Moves pucks out when the lane opens.",
+  "U9 / Novice::Goalie":   "Tracks shots well for a young goalie. Composed when the puck is in tight.",
+
+  "U11 / Atom::Forward":   "Creative forward who sees the play develop. Quick hands in traffic, reads the rush.",
+  "U11 / Atom::Defense":   "Reliable D who keeps the stick in the lane. Starting to read the rush and close gaps.",
+  "U11 / Atom::Goalie":    "Square to the shooter and tracking pucks well. Rebound control is a focus.",
+
+  "U13 / Peewee::Forward": "Smart forward with feel for timing. Picks spots and drives play off the wall.",
+  "U13 / Peewee::Defense": "Defender who defends with positioning first. Calm puck-mover under pressure.",
+  "U13 / Peewee::Goalie":  "Anchors the crease with calm vision. Tracks plays high and stops pucks with calm confidence.",
+
+  "U15 / Bantam::Forward": "Heavy-minutes forward who finishes checks and wins battles. Reads the neutral zone well.",
+  "U15 / Bantam::Defense": "Two-way defender — closes the gap at the line and jumps up when the play opens.",
+  "U15 / Bantam::Goalie":  "Battle goalie. Fights for pucks in the crease and recovers fast for the second chance.",
+
+  "U18 / Midget::Forward": "Prep-level forward. Wins the neutral zone, executes breakouts clean, plays a 200-foot game.",
+  "U18 / Midget::Defense": "Structured D-man with pro-style gap. Runs the power play and eats minutes.",
+  "U18 / Midget::Goalie":  "Technical goalie with pro-level tracking. Reads plays two passes ahead.",
+};
+
+function getDemoBio(level, position) {
+  return BIO_BY_LEVEL_POSITION[`${level}::${position}`] ||
+    `Plays ${position || "hockey"} at the ${level} level — a great window into how Ice-IQ reads the game for this age group.`;
+}
+
 const DEMO_PARENT_RATINGS = {
   "U9 / Novice":     { passion:"thriving", readiness:"growing",  effort:"steady",   adversity:"steady",  sportsmanship:"steady",   confidence:"growing",  coachability:"steady",   balance:"steady"   },
   "U11 / Atom":      { passion:"thriving", readiness:"steady",   effort:"thriving", adversity:"steady",  sportsmanship:"thriving", confidence:"steady",   coachability:"thriving", balance:"steady"   },
@@ -3182,6 +3271,40 @@ function buildDemoPlayer(level) {
     __demo: true,
   };
 }
+// question.cat → coach tilt code (see COACH_PERSONAS.tilts). null → head-coach fallback.
+const CAT_TO_TILT = {
+  "Orientation":    "h",
+  "Compete":        "p",
+  "Game Awareness": "h",
+  "Teamwork":       null,
+  "Scoring":        "s",
+  "Defense":        "d",
+  "Positioning":    "dm",
+  "Coachability":   "c",
+  // Level-specific legacy categories seen in DEMO_PROFILES
+  "Decision Making":   "dm",
+  "Exiting the Zone":  "h",
+  "Rush Reads":        "h",
+  "Zone Entry":        "h",
+  "Special Teams":     null,
+  "Shot Selection":    "s",
+  "Defensive Zone":    "d",
+  "Coverage":          "d",
+  "Puck Protection":   "p",
+  "Blue Line Decisions":"dm",
+  "Decision Timing":   "dm",
+  "Systems Play":      null,
+  "Transition Game":   "h",
+  "Gap Control":       "d",
+  "Physical Play":     "p",
+  "Leadership":        "c",
+  "Game Management":   "h",
+  "Advanced Tactics":  "dm",
+  "Neutral Zone Play": "h",
+  "Breakout Execution":"h",
+  "Goalie":            "d",
+};
+
 // Multi-coach feedback (demo) — persona roster with per-level staffing caps
 const COACH_PERSONAS = [
   { id:"head",          name:"Coach Reynolds",  role:"Head Coach",                     tilts:[],         summary:"Leads by example — coachable and brings full effort every practice." },
@@ -3206,6 +3329,16 @@ function getDemoCoachRoster(level, position) {
   const r = DEMO_ROSTERS[level] || DEMO_ROSTERS["U9 / Novice"];
   const ids = (position === "Goalie" && r.goalie) ? r.goalie : r.all;
   return ids.map(id => COACH_PERSONAS.find(p => p.id === id)).filter(Boolean);
+}
+
+function getCoachForQuestion(question, playerLevel, playerPosition) {
+  const tilt = question?.cat ? CAT_TO_TILT[question.cat] : null;
+  const roster = getDemoCoachRoster(playerLevel, playerPosition) || COACH_PERSONAS;
+  if (tilt) {
+    const match = roster.find(c => c.tilts?.includes(tilt));
+    if (match) return match;
+  }
+  return roster.find(c => c.role === "Head Coach") || roster[0] || COACH_PERSONAS[0];
 }
 
 // Skill IDs look like "u11s2" (skating-2), "u13dm4" (decision-making-4). Extract the domain prefix.
@@ -3375,6 +3508,19 @@ function AuthScreen({ onAuthenticated, onDemo }) {
   const [loading, setLoading] = useState(false);
   const [err, setErr] = useState("");
   const [resetSent, setResetSent] = useState(false);
+  const [qbStats, setQbStats] = useState({ questionCount: null, ageGroupCount: null });
+
+  useEffect(() => {
+    let alive = true;
+    loadQB().then(qb => {
+      if (!alive) return;
+      const ageGroupCount = Object.keys(qb).length;
+      const total = Object.values(qb).reduce((n, arr) => n + arr.length, 0);
+      const questionCount = Math.floor(total / 10) * 10;
+      setQbStats({ questionCount, ageGroupCount });
+    }).catch(() => {});
+    return () => { alive = false; };
+  }, []);
 
   // Returning user detection: any prior sign-in or signup stamps this flag
   const hasSignedInBefore = (() => {
@@ -3447,8 +3593,8 @@ function AuthScreen({ onAuthenticated, onDemo }) {
           {/* Stat chips */}
           <div style={{display:"flex",gap:".5rem",justifyContent:"center",flexWrap:"wrap"}}>
             {[
-              {n:"880+",l:"Questions"},
-              {n:"6",l:"Age groups"},
+              {n: qbStats.questionCount != null ? `${qbStats.questionCount}+` : "—", l:"Questions"},
+              {n: qbStats.ageGroupCount != null ? String(qbStats.ageGroupCount) : "—", l:"Age groups"},
               {n:"5",l:"Question types"},
             ].map((s,i) => (
               <div key={i} style={{background:"rgba(255,255,255,0.06)",border:"1px solid rgba(255,255,255,0.1)",borderRadius:20,padding:".3rem .85rem",display:"flex",alignItems:"baseline",gap:".3rem"}}>
@@ -3559,13 +3705,16 @@ function AuthScreen({ onAuthenticated, onDemo }) {
               if (!cfg) return null;
               const short = lvl.split(" / ")[0];
               return (
-                <button key={lvl} onClick={()=>onDemo(lvl)} style={{background:"rgba(124,111,205,0.08)",border:"1px solid rgba(124,111,205,0.2)",borderRadius:10,padding:".65rem .6rem",cursor:"pointer",color:C.white,fontFamily:FONT.body,textAlign:"left",transition:"background .15s"}}>
-                  <div style={{display:"flex",alignItems:"baseline",gap:".3rem",marginBottom:2}}>
-                    <span style={{fontWeight:800,fontSize:13,color:C.white}}>{cfg.name}</span>
-                    <span style={{fontWeight:700,fontSize:11,color:C.gold}}>#{cfg.jersey}</span>
+                <button key={lvl} onClick={()=>onDemo(lvl)} style={{background:"rgba(124,111,205,0.08)",border:"1px solid rgba(124,111,205,0.2)",borderRadius:10,padding:".65rem .6rem",cursor:"pointer",color:C.white,fontFamily:FONT.body,textAlign:"left",transition:"background .15s",display:"flex",alignItems:"center",gap:".55rem"}}>
+                  <AvatarDisc name={cfg.name} kind="player" size={38}/>
+                  <div style={{minWidth:0,flex:1}}>
+                    <div style={{display:"flex",alignItems:"baseline",gap:".3rem",marginBottom:1}}>
+                      <span style={{fontWeight:800,fontSize:13,color:C.white}}>{cfg.name}</span>
+                      <span style={{fontWeight:700,fontSize:11,color:C.gold}}>#{cfg.jersey}</span>
+                    </div>
+                    <div style={{fontSize:10,color:"rgba(167,155,240,.75)",lineHeight:1.3,whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis"}}>{cfg.team}</div>
+                    <div style={{fontSize:9,color:"rgba(248,250,252,.35)",lineHeight:1.3}}>{short} · {cfg.position}</div>
                   </div>
-                  <div style={{fontSize:10,color:"rgba(167,155,240,.75)",marginBottom:1,lineHeight:1.3,whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis"}}>{cfg.team}</div>
-                  <div style={{fontSize:9,color:"rgba(248,250,252,.3)",lineHeight:1.3}}>{cfg.position}</div>
                 </button>
               );
             })}
@@ -3759,6 +3908,7 @@ export default function App() {
   const [seqPerfect, setSeqPerfect] = useState(false);
   const [mistakeStreak, setMistakeStreak] = useState(0);
   const [upgradePrompt, setUpgradePrompt] = useState(null); // {feature, target} | null
+  const [demoIntroFor, setDemoIntroFor] = useState(null);
   const [userEmail, setUserEmail] = useState(null);
   const [showMilestone5Banner, setShowMilestone5Banner] = useState(false);
   const [weeklyResults, setWeeklyResults] = useState(null);
@@ -3793,6 +3943,7 @@ export default function App() {
     setPlayer(p);
     setPrevScore(p.quizHistory[p.quizHistory.length-1]?.score || null);
     setTotalSessions(p.quizHistory.length);
+    setDemoIntroFor(p);
     setScreen("home");
   }
 
@@ -4085,6 +4236,26 @@ export default function App() {
           onClose={closeUpgrade}
           onViewPlans={() => { closeUpgrade(); setScreen("plans"); }}
         />
+      )}
+      {demoIntroFor && (
+        <div onClick={()=>setDemoIntroFor(null)} style={{position:"fixed",inset:0,background:"rgba(0,0,0,.78)",zIndex:200,display:"flex",alignItems:"center",justifyContent:"center",padding:"1rem"}}>
+          <div onClick={e=>e.stopPropagation()} style={{background:C.bgCard,border:`1px solid ${C.border}`,borderRadius:18,padding:"1.5rem 1.4rem",maxWidth:380,width:"100%",color:C.white,fontFamily:FONT.body,textAlign:"center",boxShadow:"0 24px 60px rgba(0,0,0,.55)"}}>
+            <div style={{fontSize:10,letterSpacing:".16em",textTransform:"uppercase",color:C.gold,fontWeight:700,marginBottom:".9rem"}}>Meet your demo player</div>
+            <div style={{display:"flex",justifyContent:"center",marginBottom:".9rem"}}>
+              <AvatarDisc name={demoIntroFor.name} kind="player" size={88}/>
+            </div>
+            <div style={{fontFamily:FONT.display,fontWeight:800,fontSize:"1.5rem",lineHeight:1.1,marginBottom:".2rem"}}>{demoIntroFor.name}</div>
+            <div style={{fontSize:13,color:C.dim,marginBottom:".75rem"}}>#{DEMO_PROFILES[demoIntroFor.level]?.jersey} · {DEMO_PROFILES[demoIntroFor.level]?.team}</div>
+            <div style={{display:"flex",gap:".4rem",justifyContent:"center",flexWrap:"wrap",marginBottom:"1rem"}}>
+              <span style={{background:"rgba(201,168,76,0.12)",border:`1px solid ${C.goldBorder}`,borderRadius:999,padding:".25rem .7rem",fontSize:11,color:C.gold,fontWeight:700}}>{demoIntroFor.level}</span>
+              <span style={{background:"rgba(124,111,205,0.12)",border:"1px solid rgba(124,111,205,0.3)",borderRadius:999,padding:".25rem .7rem",fontSize:11,color:C.purple,fontWeight:700}}>{demoIntroFor.position}</span>
+            </div>
+            <div style={{fontSize:13,color:C.dim,lineHeight:1.6,marginBottom:"1.1rem"}}>{getDemoBio(demoIntroFor.level, demoIntroFor.position)}</div>
+            <button onClick={()=>setDemoIntroFor(null)} style={{width:"100%",background:C.gold,color:C.bg,border:"none",borderRadius:12,padding:".85rem",cursor:"pointer",fontWeight:800,fontSize:14,fontFamily:FONT.body}}>
+              Start playing →
+            </button>
+          </div>
+        </div>
       )}
       {screen === "plans" && <Suspense fallback={<LazyFallback/>}><PlansScreen onBack={()=>setScreen("home")} tier={tier}/></Suspense>}
     </>
