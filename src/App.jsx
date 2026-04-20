@@ -6,6 +6,7 @@ import { getParentRatings, saveParentRatings, hasParentRatings, daysSinceUpdated
 import { calcPlayerProfile, PROFILE_AXES } from "./utils/playerProfile";
 import { markSignupIntent, logSignupComplete } from "./utils/signupTelemetry";
 import { recordDemoSnapshot, clearDemoSnapshot, captureDemoTransfer, writePendingTransfer, applyPendingTransfer } from "./utils/demoTransfer";
+import { DEPTH_SLOTS, getDepthChart, setAssignment as setDepthAssignment, seedDemoDepthChart, clearDemoDepthChart } from "./utils/depthChart";
 import { COMPETENCIES, getPositioningJourneyState, GAME_SENSE_UNLOCK_SESSIONS } from "./utils/gameSense.js";
 import { HockeyInsightWidget, BottomNav, TrainingLog } from "./widgets.jsx";
 import { canSwitchAgeGroup, recordAgeGroupSwitch, getAgeGroupLock, setAgeGroupLock, checkSeasonReset } from "./utils/deviceLock";
@@ -96,11 +97,11 @@ const QUESTS_PLAYER = [
   { id:"profile", label:"View your Game Sense profile", nav:"gamesense", gate:"progressSnapshots", target:1 },
 ];
 const QUESTS_COACH = [
-  { id:"team1",    label:"Add your first team",         nav:"home",  gate:"coachDashboard", target:1 },
-  { id:"invite1",  label:"Invite 1 player",             nav:"home",  gate:"coachDashboard", target:1 },
-  { id:"rate1",    label:"Rate 1 skill on 1 player",    nav:"home",  gate:"coachFeedback",  target:1 },
-  { id:"note1",    label:"Leave a coach note",          nav:"home",  gate:"coachFeedback",  target:1 },
-  { id:"insight1", label:"Read 1 pro insight",          nav:"home",  gate:null,             target:1 },
+  { id:"team1",    label:"Add your first team",           nav:"home",  gate:"coachDashboard", target:1 },
+  { id:"invite1",  label:"Invite 1 player",               nav:"home",  gate:"coachDashboard", target:1 },
+  { id:"rate1",    label:"Rate 1 skill on 1 player",      nav:"home",  gate:"coachFeedback",  target:1 },
+  { id:"depth1",   label:"Set your team's depth chart",   nav:"home",  gate:"coachDashboard", target:1 },
+  { id:"insight1", label:"Read 1 pro insight",            nav:"home",  gate:null,             target:1 },
 ];
 
 // SMART goal categories
@@ -158,6 +159,7 @@ const LS_PROFILE_VIEWED  = "iceiq_profile_viewed_v1";   // "1" once viewed / ack
 const LS_GATED_ACK       = "iceiq_gated_quests_ack_v1"; // Array of feature keys.
 const LS_COACH_RATED     = "iceiq_coach_rated_v1";      // "1" once coach rates a skill.
 const LS_COACH_NOTED     = "iceiq_coach_noted_v1";      // "1" once coach leaves a note.
+const LS_DEPTH_CHART_SET = "iceiq_depth_chart_set_v1";  // "1" once coach assigns any line. (Managed by utils/depthChart.js.)
 const LS_FIRST_LINE_SEEN = "iceiq_first_line_seen_v1";  // JSON: {[identity]: "1"}.
 const LS_QUEST_DISMISSED = "iceiq_quest_dismissed_v1";  // JSON: {[identity]: "1"}.
 
@@ -194,6 +196,7 @@ function readQuestFlags() {
     gatedAck: new Set(lsGetJSON(LS_GATED_ACK, [])),
     coachRated: lsGetStr(LS_COACH_RATED) === "1",
     coachNoted: lsGetStr(LS_COACH_NOTED) === "1",
+    depthChartSet: lsGetStr(LS_DEPTH_CHART_SET) === "1",
   };
 }
 
@@ -228,6 +231,9 @@ function computeQuestProgress(def, ctx) {
       break;
     case "note1":
       progress = flags.coachNoted ? 1 : 0;
+      break;
+    case "depth1":
+      progress = flags.depthChartSet ? 1 : 0;
       break;
     default:
       progress = 0;
@@ -3986,6 +3992,77 @@ function AuthScreen({ onAuthenticated, onDemo, prefill }) {
 }
 
 // ─────────────────────────────────────────────────────────
+// DEPTH CHART — coach-private lineup tool, rendered inside each team card
+// ─────────────────────────────────────────────────────────
+function DepthChartSection({ teamId, roster, onChange }) {
+  const [open, setOpen] = useState(false);
+  const [chart, setChart] = useState(() => getDepthChart(teamId));
+
+  function assign(playerId, slot) {
+    setDepthAssignment(teamId, playerId, slot || null);
+    setChart(getDepthChart(teamId));
+    if (onChange) onChange();
+  }
+
+  const grouped = Object.fromEntries(DEPTH_SLOTS.map(s => [s.id, []]));
+  for (const p of roster) {
+    const s = chart[p.id];
+    if (s && grouped[s]) grouped[s].push(p);
+  }
+  const anyAssigned = Object.values(grouped).some(arr => arr.length);
+
+  return (
+    <div style={{marginTop:".85rem",paddingTop:".85rem",borderTop:`1px solid ${C.border}`}}>
+      <div onClick={()=>setOpen(o=>!o)} style={{display:"flex",alignItems:"center",justifyContent:"space-between",cursor:"pointer"}}>
+        <div style={{display:"flex",alignItems:"center",gap:".5rem"}}>
+          <Label style={{margin:0}}>Depth Chart</Label>
+          <span style={{fontSize:9,letterSpacing:".14em",textTransform:"uppercase",color:C.dimmer,fontWeight:700}}>Coach only</span>
+        </div>
+        <span style={{color:C.dimmer,fontSize:12}}>{open ? "▲" : "▼"}</span>
+      </div>
+      {open && (
+        <div style={{marginTop:".5rem"}}>
+          {roster.length === 0 ? (
+            <div style={{fontSize:12,color:C.dimmer,fontStyle:"italic"}}>Invite players to start building your depth chart.</div>
+          ) : (
+            <>
+              <div style={{fontSize:11,color:C.dimmer,lineHeight:1.5,marginBottom:".5rem"}}>Private to you — players never see this.</div>
+              {roster.map(p => (
+                <div key={p.id} style={{display:"flex",alignItems:"center",gap:".5rem",padding:".35rem 0"}}>
+                  <div style={{flex:1,minWidth:0}}>
+                    <div style={{fontSize:13,fontWeight:600}}>{p.name}</div>
+                    <div style={{fontSize:10,color:C.dimmer}}>{p.position || "—"}</div>
+                  </div>
+                  <select
+                    value={chart[p.id] || ""}
+                    onChange={e=>assign(p.id, e.target.value)}
+                    style={{background:C.bgElevated,color:C.white,border:`1px solid ${C.border}`,borderRadius:6,padding:".35rem .5rem",fontSize:12,fontFamily:FONT.body,cursor:"pointer"}}
+                  >
+                    <option value="">Unassigned</option>
+                    {DEPTH_SLOTS.map(s => <option key={s.id} value={s.id}>{s.label}</option>)}
+                  </select>
+                </div>
+              ))}
+              {anyAssigned && (
+                <div style={{marginTop:".75rem",paddingTop:".5rem",borderTop:`1px dashed ${C.border}`}}>
+                  <Label>Lineup</Label>
+                  {DEPTH_SLOTS.filter(s => grouped[s.id].length).map(s => (
+                    <div key={s.id} style={{display:"flex",gap:".5rem",alignItems:"center",fontSize:12,padding:".15rem 0"}}>
+                      <div style={{fontSize:10,color:C.dimmer,fontWeight:700,width:72,flexShrink:0,letterSpacing:".04em"}}>{s.label}</div>
+                      <div style={{color:C.white}}>{grouped[s.id].map(p=>p.name).join(", ")}</div>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </>
+          )}
+        </div>
+      )}
+    </div>
+  );
+}
+
+// ─────────────────────────────────────────────────────────
 // COACH HOME — teams list, create team, roster
 // ─────────────────────────────────────────────────────────
 const DEMO_COACH_TEAMS = [
@@ -4158,6 +4235,7 @@ function CoachHome({ profile, onSignOut, onOpenPlayer, demoMode, subscriptionTie
                       <span style={{color:C.gold,fontSize:14}}>→</span>
                     </button>
                   ))}
+                  <DepthChartSection teamId={t.id} roster={roster} onChange={onBumpQuestFlags}/>
                 </div>
               )}
             </Card>
@@ -4238,6 +4316,7 @@ export default function App() {
       setDemoMode(true);
       setDemoCoachRatings(null);
       setProfile({ id: "__demo_coach__", role: "coach", name: "Coach Demo" });
+      seedDemoDepthChart("demo-t1", DEMO_COACH_ROSTER);
       setScreen("home");
       return;
     }
@@ -4279,6 +4358,7 @@ export default function App() {
       }
     } catch {}
     clearDemoSnapshot();
+    clearDemoDepthChart("demo-t1");
     setScreen("home");
   }
 
