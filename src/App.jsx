@@ -4573,7 +4573,7 @@ export default function App() {
             </div>
             <div style={{fontSize:13,color:C.dim,lineHeight:1.6,marginBottom:"1.1rem"}}>{getDemoBio(demoIntroFor.level, demoIntroFor.position)}</div>
             <button onClick={()=>setDemoIntroFor(null)} style={{width:"100%",background:C.gold,color:C.bg,border:"none",borderRadius:12,padding:".85rem",cursor:"pointer",fontWeight:800,fontSize:14,fontFamily:FONT.body}}>
-              Start playing →
+              View {demoIntroFor.name.split(" ")[0]}'s demo profile →
             </button>
           </div>
         </div>
