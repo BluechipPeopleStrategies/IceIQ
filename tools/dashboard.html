@@ -452,6 +452,7 @@ function emptyScene() {
     texts: [],
     arrows: [],
     flags: [],
+    hiddenLabels: [],
     question: {
       mode: 'choice',
       prompt: '',
@@ -479,7 +480,21 @@ function resolveArrowPoints(a) {
 // ─────────────────────────────────────────────────────────────────────────────
 // SVG PRIMITIVES
 // ─────────────────────────────────────────────────────────────────────────────
-function RinkBackground({ lineOpacity = 0.45, showHomePlate, showZoneOutlines }) {
+// Keys for every rink label — referenced by `scene.hiddenLabels` and by the
+// edit-mode toggle chips so authors can remove any subset per scenario.
+export const LABEL_KEYS = [
+  { key: 'corner-L',   text: 'Corner' },
+  { key: 'corner-R',   text: 'Corner' },
+  { key: 'behind-net', text: 'Behind the net' },
+  { key: 'slot',       text: 'Slot' },
+  { key: 'high-slot',  text: 'High slot' },
+  { key: 'point-L',    text: 'Point' },
+  { key: 'point-R',    text: 'Point' },
+  { key: 'blue-line',  text: 'BLUE LINE' },
+];
+
+function RinkBackground({ lineOpacity = 0.45, showHomePlate, showZoneOutlines, hiddenLabels = [] }) {
+  const hide = (k) => hiddenLabels.includes(k);
   // Reduced-opacity rink lines — see CLAUDE's note: "players & positioning
   // are more important than the lines". We keep all lines visible, just
   // dimmed, so on-ice objects dominate.
@@ -549,18 +564,19 @@ function RinkBackground({ lineOpacity = 0.45, showHomePlate, showZoneOutlines })
         </g>
       )}
 
-      {/* Zone labels — kept at FULL opacity so coaches/kids can read them
-          even when the rink lines are dim. No "half-wall" label. */}
-      <ZoneLabel x={RINK_LEFT + 55}  y={GOAL_LINE_Y - 58} text="Corner" />
-      <ZoneLabel x={RINK_RIGHT - 55} y={GOAL_LINE_Y - 58} text="Corner" />
-      <ZoneLabel x={RINK_CENTER_X}   y={RINK_TOP - 8}     text="Behind the net" />
-      <ZoneLabel x={RINK_CENTER_X}   y={FACEOFF_Y - 30}   text="Slot" />
-      <ZoneLabel x={RINK_CENTER_X}   y={FACEOFF_Y + 80}   text="High slot" />
-      <ZoneLabel x={L_FACEOFF_X - 56} y={BLUE_LINE_Y - 24} text="Point" />
-      <ZoneLabel x={R_FACEOFF_X + 56} y={BLUE_LINE_Y - 24} text="Point" />
-      <text x={RINK_CENTER_X} y={BLUE_LINE_Y + 30}
-            fontFamily="'Anthropic Sans',sans-serif" fontSize="14"
-            fontWeight="700" fill="#3B8BD4" textAnchor="middle">BLUE LINE</text>
+      {/* Zone labels — each toggleable via scene.hiddenLabels (see LABEL_KEYS) */}
+      {!hide('corner-L')   && <ZoneLabel x={RINK_LEFT + 55}  y={GOAL_LINE_Y - 58} text="Corner" />}
+      {!hide('corner-R')   && <ZoneLabel x={RINK_RIGHT - 55} y={GOAL_LINE_Y - 58} text="Corner" />}
+      {!hide('behind-net') && <ZoneLabel x={RINK_CENTER_X}   y={RINK_TOP - 8}     text="Behind the net" />}
+      {!hide('slot')       && <ZoneLabel x={RINK_CENTER_X}   y={FACEOFF_Y - 30}   text="Slot" />}
+      {!hide('high-slot')  && <ZoneLabel x={RINK_CENTER_X}   y={FACEOFF_Y + 80}   text="High slot" />}
+      {!hide('point-L')    && <ZoneLabel x={L_FACEOFF_X - 56} y={BLUE_LINE_Y - 24} text="Point" />}
+      {!hide('point-R')    && <ZoneLabel x={R_FACEOFF_X + 56} y={BLUE_LINE_Y - 24} text="Point" />}
+      {!hide('blue-line')  && (
+        <text x={RINK_CENTER_X} y={BLUE_LINE_Y + 30}
+              fontFamily="'Anthropic Sans',sans-serif" fontSize="14"
+              fontWeight="700" fill="#3B8BD4" textAnchor="middle">BLUE LINE</text>
+      )}
     </>
   );
 }
@@ -830,6 +846,29 @@ function Rink({
     if (sceneProp) setSceneInternal(sceneProp);
   }, [sceneProp]);
 
+  // Delete/Backspace removes the selected item in edit mode. Listener is
+  // scoped to the rink wrapper so typing in other fields on the page stays
+  // safe (inputs/textareas still take the keys because we only fire when
+  // no text-input-like element is focused).
+  useEffect(() => {
+    if (mode !== 'edit' || !selectedId) return;
+    const onKey = (e) => {
+      if (e.key !== 'Delete' && e.key !== 'Backspace') return;
+      const ae = document.activeElement;
+      const tag = ae && ae.tagName;
+      if (tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT' || (ae && ae.isContentEditable)) return;
+      e.preventDefault();
+      setSceneInternal(prev => {
+        const next = deleteItem(prev, selectedId);
+        if (onChange) onChange(next);
+        return next;
+      });
+      setSelectedId(null);
+    };
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, [mode, selectedId, onChange]);
+
   // Unified updater: mutates internal copy and fires onChange (edit mode)
   const updateScene = useCallback((updater) => {
     setSceneInternal(prev => {
@@ -970,14 +1009,24 @@ function Rink({
   return (
     <div className={`rnk-wrap ${className}`} style={styles.wrap}>
       {mode === 'edit' && (
-        <Toolbar
-          active={placementTool}
-          onSelect={(tool) => {
-            setPlacementTool(prev => prev === tool ? null : tool);
-            setArrowDraft(null);
-          }}
-          arrowDraft={arrowDraft}
-        />
+        <>
+          <Toolbar
+            active={placementTool}
+            onSelect={(tool) => {
+              setPlacementTool(prev => prev === tool ? null : tool);
+              setArrowDraft(null);
+            }}
+            arrowDraft={arrowDraft}
+          />
+          <LabelToggles
+            hiddenLabels={scene.hiddenLabels || []}
+            onToggle={(keys, hide) => updateScene(prev => {
+              const set = new Set(prev.hiddenLabels || []);
+              keys.forEach(k => hide ? set.add(k) : set.delete(k));
+              return { ...prev, hiddenLabels: Array.from(set) };
+            })}
+          />
+        </>
       )}
 
       <div style={styles.canvasWrap}>
@@ -1009,7 +1058,8 @@ function Rink({
           {/* Rink background (dimmed) */}
           <RinkBackground lineOpacity={0.45}
                           showHomePlate={scene.showHomePlate}
-                          showZoneOutlines={showZoneOutlines} />
+                          showZoneOutlines={showZoneOutlines}
+                          hiddenLabels={scene.hiddenLabels || []} />
 
           {/* Faint center-ice IceIQ brand mark */}
           <IceIQBrand variant="ghost" />
@@ -1084,6 +1134,23 @@ function Rink({
             <circle cx={arrowDraft.x1} cy={arrowDraft.y1} r="8"
                     fill="none" stroke="#22A06B" strokeWidth="2.5" strokeDasharray="3 3" />
           )}
+
+          {/* Inline delete handle for the currently selected item */}
+          {mode === 'edit' && selectedId && (() => {
+            const pos = getItemPos(scene, selectedId);
+            if (!pos) return null;
+            return (
+              <DeleteHandle
+                cx={pos.x + 24}
+                cy={pos.y - 22}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  updateScene(prev => deleteItem(prev, selectedId));
+                  setSelectedId(null);
+                }}
+              />
+            );
+          })()}
 
           {/* Corner IceIQ wordmark */}
           <IceIQBrand variant="corner" />
@@ -1169,6 +1236,49 @@ function Toolbar({ active, onSelect, arrowDraft }) {
         <button onClick={() => onSelect(active)} style={styles.toolCancel}>Stop</button>
       )}
     </div>
+  );
+}
+
+// Per-scene toggles for which zone labels ("Corner", "Point", etc.) show up.
+// Hidden labels are stored in scene.hiddenLabels (array of LABEL_KEYS keys).
+function LabelToggles({ hiddenLabels, onToggle }) {
+  const hidden = new Set(hiddenLabels || []);
+  // Dedupe the left/right "Corner" & "Point" so the UI shows one chip per name
+  // but toggling hides both sides at once (kids don't care which corner label).
+  const groups = [
+    { keys: ['corner-L', 'corner-R'], text: 'Corner' },
+    { keys: ['behind-net'],           text: 'Behind the net' },
+    { keys: ['slot'],                 text: 'Slot' },
+    { keys: ['high-slot'],            text: 'High slot' },
+    { keys: ['point-L', 'point-R'],   text: 'Point' },
+    { keys: ['blue-line'],            text: 'BLUE LINE' },
+  ];
+  return (
+    <div style={styles.labelToggles}>
+      <span style={styles.labelTogglesLabel}>Labels:</span>
+      {groups.map(g => {
+        const isHidden = g.keys.every(k => hidden.has(k));
+        return (
+          <button key={g.keys[0]}
+                  onClick={() => onToggle(g.keys, !isHidden)}
+                  style={{ ...styles.labelChip, ...(isHidden ? styles.labelChipOff : null) }}>
+            {isHidden ? '○' : '●'} {g.text}
+          </button>
+        );
+      })}
+    </div>
+  );
+}
+
+// Small red "×" button rendered in SVG near a selected item — gives visible
+// one-click deletion alongside the Inspector delete button and Del/Backspace.
+function DeleteHandle({ cx, cy, onClick }) {
+  return (
+    <g style={{ cursor: 'pointer' }} onClick={onClick}>
+      <circle cx={cx} cy={cy} r="11" fill="#E24B4A" stroke="#FFFFFF" strokeWidth="2.5" />
+      <line x1={cx - 4.5} y1={cy - 4.5} x2={cx + 4.5} y2={cy + 4.5} stroke="#FFFFFF" strokeWidth="2.5" strokeLinecap="round" />
+      <line x1={cx + 4.5} y1={cy - 4.5} x2={cx - 4.5} y2={cy + 4.5} stroke="#FFFFFF" strokeWidth="2.5" strokeLinecap="round" />
+    </g>
   );
 }
 
@@ -1449,6 +1559,42 @@ const styles = {
     color: '#791F1F',
     cursor: 'pointer',
   },
+  labelToggles: {
+    display: 'flex',
+    flexWrap: 'wrap',
+    gap: '5px',
+    padding: '6px 10px',
+    background: '#F8FAFC',
+    borderRadius: '10px',
+    border: '1px solid #D6DEE8',
+    alignItems: 'center',
+  },
+  labelTogglesLabel: {
+    fontSize: '11px',
+    fontWeight: 600,
+    color: '#4A5C6E',
+    textTransform: 'uppercase',
+    letterSpacing: '0.6px',
+    marginRight: '4px',
+  },
+  labelChip: {
+    display: 'inline-flex',
+    alignItems: 'center',
+    gap: '4px',
+    padding: '4px 9px',
+    fontSize: '11px',
+    fontWeight: 500,
+    borderRadius: '12px',
+    border: '1px solid #B8D4E8',
+    background: '#FFFFFF',
+    color: '#1F2937',
+    cursor: 'pointer',
+  },
+  labelChipOff: {
+    background: '#F3F6FA',
+    color: '#9AA8B6',
+    borderColor: '#D6DEE8',
+  },
   canvasWrap: {
     background: '#EAF3FB',
     borderRadius: '18px',
@@ -1576,7 +1722,7 @@ const AGES = ["u9","u11","u13","u15","u18"];
 const LEVEL_ORDER = AGES.map(a => LEVEL_FOR_AGE[a]);
 const ALL_TYPES = ["mc","tf","seq","mistake","next","rink"];
 const RECOMMENDED_TYPES_BY_AGE = {
-  u9:  ["mc","tf","seq"],
+  u9:  ["mc","tf","seq","rink"],
   u11: ["mc","tf","seq","mistake","rink"],
   u13: ["mc","tf","seq","mistake","next","rink"],
   u15: ["mc","tf","seq","mistake","next","rink"],
