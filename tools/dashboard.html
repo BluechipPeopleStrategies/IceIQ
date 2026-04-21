@@ -1795,6 +1795,7 @@ window.dispatchEvent(new CustomEvent('iceiq-rink-ready'));
 // Constants
 // =========================================================================
 const LEVEL_FOR_AGE = {
+  u7:  "U7 / Initiation",
   u9:  "U9 / Novice",
   u11: "U11 / Atom",
   u13: "U13 / Peewee",
@@ -1802,10 +1803,11 @@ const LEVEL_FOR_AGE = {
   u18: "U18 / Midget",
 };
 const AGE_FOR_LEVEL = Object.fromEntries(Object.entries(LEVEL_FOR_AGE).map(([k,v])=>[v,k]));
-const AGES = ["u9","u11","u13","u15","u18"];
+const AGES = ["u7","u9","u11","u13","u15","u18"];
 const LEVEL_ORDER = AGES.map(a => LEVEL_FOR_AGE[a]);
 const ALL_TYPES = ["mc","tf","seq","mistake","next","rink"];
 const RECOMMENDED_TYPES_BY_AGE = {
+  u7:  ["mc","tf","rink"],
   u9:  ["mc","tf","seq","rink"],
   u11: ["mc","tf","seq","mistake","rink"],
   u13: ["mc","tf","seq","mistake","next","rink"],
