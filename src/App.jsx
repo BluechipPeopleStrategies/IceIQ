@@ -95,6 +95,7 @@ const QUESTS_PLAYER = [
   { id:"rate5",   label:"Rate yourself on 5 skills",    nav:"skills",    gate:null,                target:5 },
   { id:"quiz1",   label:"Take your first quiz",         nav:"quiz",      gate:null,                target:1 },
   { id:"read3",   label:"Read 3 pro insights",          nav:"home",      gate:null,                target:3 },
+  { id:"train1",  label:"Log a training session",       nav:"profile",   gate:null,                target:1 },
   { id:"goal1",   label:"Set your first SMART goal",    nav:"goals",     gate:"smartGoals",        target:1 },
   { id:"profile", label:"View your Game Sense profile", nav:"gamesense", gate:"progressSnapshots", target:1 },
 ];
@@ -222,6 +223,17 @@ function computeQuestProgress(def, ctx) {
     case "profile":
       progress = flags.profileViewed ? 1 : 0;
       break;
+    case "train1": {
+      // Count localStorage training sessions for this player. Demo players
+      // use the "__demo__" key; real players use their Supabase id.
+      try {
+        const raw = window.localStorage.getItem("iceiq_training_log");
+        const all = raw ? JSON.parse(raw) : {};
+        const pid = player?.id || "__demo__";
+        progress = (all[pid]?.sessions?.length) || 0;
+      } catch { progress = 0; }
+      break;
+    }
     case "team1":
       progress = (teams || []).length;
       break;

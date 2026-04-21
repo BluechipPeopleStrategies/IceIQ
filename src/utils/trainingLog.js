@@ -8,17 +8,20 @@ export function getTrainingLog(playerId) {
   } catch { return { sessions: [] }; }
 }
 
-export function saveTrainingSession(playerId, type, value, unit, label = "", date = "", notes = "") {
+export function saveTrainingSession(playerId, type, value, unit, label = "", date = "", notes = "", coach = "", price = null) {
   try {
     const raw = localStorage.getItem(TRAINING_KEY);
     const all = raw ? JSON.parse(raw) : {};
     if (!all[playerId]) all[playerId] = { sessions: [] };
     const today = new Date().toISOString().slice(0, 10);
+    const priceNum = (price === null || price === "" || price === undefined) ? null : Number(price);
     all[playerId].sessions.push({
       date: date || today,
       type, value: Number(value), unit,
       ...(label ? { label } : {}),
-      ...(notes ? { notes } : {})
+      ...(notes ? { notes } : {}),
+      ...(coach ? { coach } : {}),
+      ...(Number.isFinite(priceNum) && priceNum > 0 ? { price: priceNum } : {}),
     });
     if (all[playerId].sessions.length > 200) {
       all[playerId].sessions = all[playerId].sessions.slice(-200);

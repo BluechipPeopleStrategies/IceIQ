@@ -102,20 +102,28 @@ export function TrainingLog({ playerId }) {
   const [otherLabel, setOtherLabel] = useState("");
   const [sessionDate, setSessionDate] = useState(today);
   const [sessionNotes, setSessionNotes] = useState("");
+  const [sessionCoach, setSessionCoach] = useState("");
+  const [sessionPrice, setSessionPrice] = useState("");
   const [activeType, setActiveType] = useState(null);
   const [saved, setSaved] = useState(null);
 
   function openActivity(type) {
     const isOpening = activeType !== type;
     setActiveType(isOpening ? type : null);
-    if (isOpening) { setSessionDate(today); setSessionNotes(""); }
+    if (isOpening) { setSessionDate(today); setSessionNotes(""); setSessionCoach(""); setSessionPrice(""); }
   }
 
   function logSession(type, value, unit, label = "") {
     if (!value || value <= 0) return;
-    saveTrainingSession(playerId, type, value, unit, label, sessionDate, sessionNotes.trim());
+    saveTrainingSession(
+      playerId, type, value, unit, label,
+      sessionDate, sessionNotes.trim(),
+      sessionCoach.trim(), sessionPrice,
+    );
     setSaved(type);
     setSessionNotes("");
+    setSessionCoach("");
+    setSessionPrice("");
     setTimeout(() => setSaved(null), 2000);
     if (type === "pucks_shot") setPuckCount(0);
   }
@@ -167,6 +175,23 @@ export function TrainingLog({ playerId }) {
                     <label style={{ fontSize: 10, color: C.dimmer, letterSpacing: ".08em", textTransform: "uppercase", fontWeight: 700 }}>Date</label>
                     <input type="date" value={sessionDate} max={today} onChange={e => setSessionDate(e.target.value)}
                       style={{ background: C.bgGlass, border: `1px solid ${C.border}`, borderRadius: 8, padding: ".5rem .75rem", color: C.white, fontFamily: FONT.body, fontSize: 13, outline: "none", colorScheme: "dark" }} />
+                  </div>
+                  <div style={{ display: "flex", gap: ".5rem", marginBottom: ".75rem" }}>
+                    <div style={{ flex: 2, display: "flex", flexDirection: "column", gap: ".35rem" }}>
+                      <label style={{ fontSize: 10, color: C.dimmer, letterSpacing: ".08em", textTransform: "uppercase", fontWeight: 700 }}>Coach</label>
+                      <input type="text" value={sessionCoach} onChange={e => setSessionCoach(e.target.value)}
+                        placeholder="Who led the session? (optional)"
+                        style={{ background: C.bgGlass, border: `1px solid ${C.border}`, borderRadius: 8, padding: ".5rem .75rem", color: C.white, fontFamily: FONT.body, fontSize: 13, outline: "none", width: "100%", boxSizing: "border-box" }} />
+                    </div>
+                    <div style={{ flex: 1, display: "flex", flexDirection: "column", gap: ".35rem" }}>
+                      <label style={{ fontSize: 10, color: C.dimmer, letterSpacing: ".08em", textTransform: "uppercase", fontWeight: 700 }}>Price</label>
+                      <div style={{ position: "relative" }}>
+                        <span style={{ position: "absolute", left: ".6rem", top: "50%", transform: "translateY(-50%)", color: C.dimmer, fontSize: 13, fontFamily: FONT.body, pointerEvents: "none" }}>$</span>
+                        <input type="number" inputMode="decimal" min="0" step="0.01" value={sessionPrice} onChange={e => setSessionPrice(e.target.value)}
+                          placeholder="Cost"
+                          style={{ background: C.bgGlass, border: `1px solid ${C.border}`, borderRadius: 8, padding: ".5rem .75rem .5rem 1.3rem", color: C.white, fontFamily: FONT.body, fontSize: 13, outline: "none", width: "100%", boxSizing: "border-box" }} />
+                      </div>
+                    </div>
                   </div>
                   {act.type === "pucks_shot" ? (
                     <div style={{ display: "flex", flexDirection: "column", gap: ".5rem" }}>
