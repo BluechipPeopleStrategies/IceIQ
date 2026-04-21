@@ -3678,6 +3678,99 @@ function RinkBackground({ dark = false }) {
 // ─────────────────────────────────────────────────────────
 // AUTH SCREEN — login / signup
 // ─────────────────────────────────────────────────────────
+// Visual-only sample radar for the landing showcase. Hardcoded scores mirror
+// what a typical U11 Forward looks like after a handful of sessions — six
+// competencies plotted on the same polar layout the real GameSenseReportScreen
+// uses. No lazy-load, no data deps — it's a first-paint showcase asset.
+function LandingRadarCard() {
+  const comps = [
+    { label: "Positioning",  score: 62 },
+    { label: "Reads",         score: 74 },
+    { label: "Decisions",     score: 58 },
+    { label: "Battles",       score: 82 },
+    { label: "Support",       score: 66 },
+    { label: "Composure",     score: 71 },
+  ];
+  const cx = 130, cy = 130, radius = 92;
+  const n = comps.length;
+  const pts = comps.map((c, i) => {
+    const a = (Math.PI * 2 * i) / n - Math.PI / 2;
+    const r = (c.score / 100) * radius;
+    return { x: cx + r * Math.cos(a), y: cy + r * Math.sin(a), label: c.label, a };
+  });
+  const axisPts = comps.map((_, i) => {
+    const a = (Math.PI * 2 * i) / n - Math.PI / 2;
+    return { x: cx + radius * Math.cos(a), y: cy + radius * Math.sin(a), a };
+  });
+  const polyPts = pts.map(p => `${p.x},${p.y}`).join(" ");
+
+  return (
+    <div style={{background:"rgba(6,12,22,0.82)",backdropFilter:"blur(20px)",WebkitBackdropFilter:"blur(20px)",border:`1px solid ${C.border}`,borderRadius:14,padding:"1rem",marginBottom:"1.25rem"}}>
+      <div style={{display:"flex",alignItems:"center",gap:".5rem",marginBottom:".65rem"}}>
+        <div style={{fontSize:10,letterSpacing:".14em",textTransform:"uppercase",color:C.gold,fontWeight:700}}>Sample · U11 Forward</div>
+        <div style={{flex:1}}/>
+        <div style={{background:C.dimmest,color:C.dimmer,padding:"1px 6px",borderRadius:4,fontSize:9,letterSpacing:".08em",fontWeight:700}}>SAMPLE</div>
+      </div>
+      <div style={{display:"flex",alignItems:"center",gap:".75rem"}}>
+        <svg width="200" height="200" viewBox="0 0 260 260" style={{flexShrink:0,maxWidth:"55%"}}>
+          {[25,50,75,100].map(pct => {
+            const r = (pct/100) * radius;
+            const ring = comps.map((_, i) => {
+              const a = (Math.PI*2*i)/n - Math.PI/2;
+              return `${cx + r*Math.cos(a)},${cy + r*Math.sin(a)}`;
+            }).join(" ");
+            return <polygon key={pct} points={ring} fill="none" stroke={C.border} strokeWidth="1" opacity={pct===100?0.6:0.25}/>;
+          })}
+          {axisPts.map((p, i) => (
+            <line key={i} x1={cx} y1={cy} x2={p.x} y2={p.y} stroke={C.border} strokeWidth="1" opacity="0.4"/>
+          ))}
+          <polygon points={polyPts} fill={C.gold} fillOpacity="0.22" stroke={C.gold} strokeWidth="2"/>
+          {pts.map((p, i) => <circle key={i} cx={p.x} cy={p.y} r="3.5" fill={C.gold}/>)}
+        </svg>
+        <div style={{flex:1,minWidth:0}}>
+          <div style={{fontFamily:FONT.display,fontWeight:800,fontSize:"1.4rem",color:C.white,lineHeight:1.05,marginBottom:".2rem"}}>GS 68</div>
+          <div style={{fontSize:11,color:C.dimmer,marginBottom:".6rem"}}>Game Sense Score · 8 sessions</div>
+          <div style={{fontSize:12,color:C.dim,lineHeight:1.5}}>
+            Six competencies. Every answer moves a number. See your own profile after a few quizzes.
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// Landing insights preview — shows 3 rotating insights with a locked 4th
+// slot ("Unlock more insights — free account"). Insights come from the
+// same hockeyInsights data module the in-app widget uses. Dynamic import
+// keeps the ~60KB insights chunk off the critical path.
+function LandingInsightsCard() {
+  const [insights, setInsights] = useState(null);
+  useEffect(() => {
+    import("./data/hockeyInsights.js").then(m => {
+      const list = m.HOCKEY_INSIGHTS || [];
+      // Pick 3 random insights so each visit feels fresh.
+      const shuffled = [...list].sort(() => Math.random() - 0.5);
+      setInsights(shuffled.slice(0, 3));
+    });
+  }, []);
+  if (!insights) return null;
+  return (
+    <div style={{background:"rgba(6,12,22,0.82)",backdropFilter:"blur(20px)",WebkitBackdropFilter:"blur(20px)",border:`1px solid ${C.border}`,borderRadius:14,padding:"1rem",marginBottom:"1.25rem"}}>
+      <div style={{fontSize:10,letterSpacing:".14em",textTransform:"uppercase",color:C.gold,fontWeight:700,marginBottom:".65rem"}}>Pro Hockey Intel · 3 free samples</div>
+      {insights.map((ins, i) => (
+        <div key={i} style={{display:"flex",alignItems:"baseline",gap:".6rem",padding:".55rem 0",borderBottom:i < insights.length-1 ? `1px solid ${C.border}` : "none"}}>
+          <span style={{fontFamily:FONT.display,fontWeight:800,fontSize:"1.05rem",color:C.gold,flexShrink:0,minWidth:54}}>{ins.stat}</span>
+          <span style={{fontSize:12.5,color:C.white,lineHeight:1.45,flex:1}}>{ins.headline}</span>
+        </div>
+      ))}
+      <div style={{marginTop:".85rem",padding:".7rem .85rem",background:"rgba(201,168,76,0.06)",border:`1px dashed ${C.goldBorder}`,borderRadius:10,display:"flex",alignItems:"center",gap:".55rem"}}>
+        <span style={{fontSize:14}}>🔒</span>
+        <span style={{fontSize:12,color:C.dim,flex:1,lineHeight:1.45}}>Unlock more insights — free account.</span>
+      </div>
+    </div>
+  );
+}
+
 // Sample scene used by the landing-page rink teaser. Mirrors u9rink11
 // ("Click the slot") so the first interactive touch a visitor has is the
 // most unique feature of the app.
@@ -3879,6 +3972,13 @@ function AuthScreen({ onAuthenticated, onDemo, onDevEnter, prefill }) {
             )}
           </div>
         )}
+
+        {/* Sample Game Sense radar — visual-only preview of what a player's
+            profile looks like. No data persists pre-signup. */}
+        <LandingRadarCard />
+
+        {/* Rotating insights preview — 3 free, locked CTA for the rest. */}
+        <LandingInsightsCard />
 
       {/* Auth card */}
       <div style={{background:"rgba(6,12,22,0.82)",backdropFilter:"blur(20px)",WebkitBackdropFilter:"blur(20px)",border:`1px solid rgba(255,255,255,0.08)`,borderTop:`1px solid rgba(255,255,255,0.13)`,borderRadius:20,padding:"1.75rem 1.5rem",boxShadow:"0 32px 80px rgba(0,0,0,0.6),inset 0 1px 0 rgba(255,255,255,0.06)"}}>
