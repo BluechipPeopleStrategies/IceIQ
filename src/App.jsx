@@ -3,6 +3,7 @@ import * as SB from "./supabase";
 import { supabase, hasSupabase } from "./supabase";
 import { canAccess, getUpgradeTriggerMessage } from "./utils/tierGate";
 import { rinksRemainingForFree, recordRinkSeen, RINK_FREE_PER_AGE } from "./utils/rinkProgress";
+import { isDevBypassEnabled, getDevProfile, setDevProfile, clearDevProfile, buildDevPlayer } from "./utils/devBypass";
 import { getParentRatings, saveParentRatings, hasParentRatings, daysSinceUpdated, PARENT_DIMENSIONS, PARENT_SCALE } from "./utils/parentAssessment";
 import { calcPlayerProfile, PROFILE_AXES } from "./utils/playerProfile";
 import { markSignupIntent, logSignupComplete } from "./utils/signupTelemetry";
@@ -25,19 +26,20 @@ import imgTactics from "./assets/images/Tactics-Playbook.jpg";
 import imgSuccess from "./assets/images/Success-Icon.jpg";
 
 // Resolve the user's tier for gating decisions.
-// Priority: demo mode → PRO (full showcase)
-//           dev override (localStorage iceiq_tier_override) → that tier
+// Priority: dev override (localStorage iceiq_tier_override) → that tier
+//           demo mode → coach demo = TEAM
 //           profile.tier field (future Supabase subscriptions) → that tier
 //           default → FREE
 function resolveTier({ profile, demoMode } = {}) {
-  // Coach demo gets TEAM so they see the full dashboard; player demo gets FREE
-  if (demoMode) return profile?.role === "coach" ? "TEAM" : "FREE";
+  // Dev override wins unconditionally so devs can test any tier from any
+  // state — including from inside coach demo or a dev-bypass session.
   try {
     const override = typeof window !== "undefined" ? window.localStorage.getItem("iceiq_tier_override") : null;
     if (override && ["FREE","PRO","FAMILY","TEAM"].includes(override.toUpperCase())) {
       return override.toUpperCase();
     }
   } catch {}
+  if (demoMode) return profile?.role === "coach" ? "TEAM" : "FREE";
   if (profile?.tier) {
     const t = String(profile.tier).toUpperCase();
     if (["FREE","PRO","FAMILY","TEAM"].includes(t)) return t;
@@ -3688,7 +3690,7 @@ const LANDING_RINK_SCENE = {
   },
 };
 
-function AuthScreen({ onAuthenticated, onDemo, prefill }) {
+function AuthScreen({ onAuthenticated, onDemo, onDevEnter, prefill }) {
   const [mode, setMode] = useState(prefill ? "signup" : "login"); // login | signup | forgot
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -3700,6 +3702,10 @@ function AuthScreen({ onAuthenticated, onDemo, prefill }) {
   const [qbStats, setQbStats] = useState({ questionCount: null, ageGroupCount: null });
   const [rinkTeaserOpen, setRinkTeaserOpen] = useState(false);
   const [teaserAnswered, setTeaserAnswered] = useState(false);
+  const devBypass = isDevBypassEnabled();
+  const [devRole, setDevRole] = useState("player");
+  const [devLevel, setDevLevel] = useState("U11 / Atom");
+  const [devPosition, setDevPosition] = useState("Forward");
 
   useEffect(() => {
     let alive = true;
@@ -3754,7 +3760,7 @@ function AuthScreen({ onAuthenticated, onDemo, prefill }) {
   const headline = mode === "signup" ? "Get started."
     : mode === "forgot" ? "Reset password"
     : (hasSignedInBefore ? "Welcome back." : "Welcome.");
-  const subhead = mode === "signup" ? "Create an account to start tracking your game sense."
+  const subhead = mode === "signup" ? "Create an account to start tracking your progress."
     : mode === "forgot" ? "Enter your email — we'll send you a reset link."
     : (hasSignedInBefore ? "Sign in to see your development report." : "Sign in or create a free account to get started.");
 
@@ -3769,6 +3775,45 @@ function AuthScreen({ onAuthenticated, onDemo, prefill }) {
       <div style={{position:"absolute",inset:0,background:"radial-gradient(ellipse 80% 60% at 50% 40%,rgba(201,168,76,0.04) 0%,transparent 70%)",pointerEvents:"none"}}/>
 
       <div style={{position:"relative",maxWidth:420,margin:"0 auto",width:"100%"}}>
+
+        {/* Dev bypass panel — gated by iceiq_dev_bypass LS flag; invisible
+            to real users. Jump straight into any state without email/password. */}
+        {devBypass && (
+          <div style={{background:"rgba(147,51,234,0.12)",border:"1px solid rgba(168,85,247,0.4)",borderRadius:12,padding:"0.85rem 1rem",marginBottom:"1.25rem",color:C.white,fontFamily:FONT.body}}>
+            <div style={{display:"flex",alignItems:"center",gap:".5rem",marginBottom:".65rem"}}>
+              <span style={{fontSize:14}}>🧪</span>
+              <span style={{fontSize:11,letterSpacing:".14em",textTransform:"uppercase",color:"#c4b5fd",fontWeight:700}}>Dev bypass</span>
+              <span style={{flex:1}}/>
+              <button onClick={() => { try { window.localStorage.removeItem("iceiq_dev_bypass"); window.location.reload(); } catch {} }}
+                style={{background:"none",border:"none",color:"rgba(196,181,253,.6)",cursor:"pointer",fontSize:11,fontFamily:FONT.body,padding:0,textDecoration:"underline"}}>disable</button>
+            </div>
+            <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:".4rem",marginBottom:".5rem"}}>
+              {["player","coach"].map(r => (
+                <button key={r} onClick={() => setDevRole(r)}
+                  style={{background:devRole===r?"rgba(168,85,247,0.25)":"rgba(255,255,255,0.04)",border:`1px solid ${devRole===r?"rgba(168,85,247,0.6)":"rgba(255,255,255,0.1)"}`,borderRadius:8,padding:".45rem",cursor:"pointer",color:devRole===r?"#e9d5ff":"rgba(248,250,252,.7)",fontFamily:FONT.body,fontSize:12,fontWeight:devRole===r?700:500,textTransform:"capitalize"}}>{r}</button>
+              ))}
+            </div>
+            {devRole === "player" && (
+              <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:".4rem",marginBottom:".5rem"}}>
+                <select value={devLevel} onChange={e=>setDevLevel(e.target.value)}
+                  style={{background:"rgba(255,255,255,0.04)",border:"1px solid rgba(255,255,255,0.1)",borderRadius:8,padding:".45rem .55rem",color:C.white,fontFamily:FONT.body,fontSize:12,outline:"none"}}>
+                  {LEVELS.map(l => <option key={l} value={l} style={{background:"#1a1a2e",color:C.white}}>{l}</option>)}
+                </select>
+                <select value={devPosition} onChange={e=>setDevPosition(e.target.value)}
+                  style={{background:"rgba(255,255,255,0.04)",border:"1px solid rgba(255,255,255,0.1)",borderRadius:8,padding:".45rem .55rem",color:C.white,fontFamily:FONT.body,fontSize:12,outline:"none"}}>
+                  {["Forward","Defense","Goalie","Not Sure"].map(p => <option key={p} value={p} style={{background:"#1a1a2e",color:C.white}}>{p}</option>)}
+                </select>
+              </div>
+            )}
+            <button onClick={() => onDevEnter && onDevEnter(devRole === "coach" ? {role:"coach"} : {role:"player", level:devLevel, position:devPosition, name:"Dev User"})}
+              style={{width:"100%",background:"linear-gradient(135deg,#a855f7,#7c3aed)",color:"#fff",border:"none",borderRadius:10,padding:".6rem",cursor:"pointer",fontFamily:FONT.body,fontWeight:700,fontSize:13}}>
+              Enter as dev →
+            </button>
+            <div style={{fontSize:10,color:"rgba(196,181,253,.55)",marginTop:".5rem",lineHeight:1.5}}>
+              Console: <code style={{color:"#e9d5ff"}}>window.__dev</code> — <code style={{color:"#e9d5ff"}}>setTier</code>, <code style={{color:"#e9d5ff"}}>markFirstSixDone</code>, <code style={{color:"#e9d5ff"}}>reset</code>, <code style={{color:"#e9d5ff"}}>exitBypass</code>
+            </div>
+          </div>
+        )}
 
         {/* Hero brand block */}
         <div style={{textAlign:"center",marginBottom:"1.5rem"}}>
@@ -3804,7 +3849,7 @@ function AuthScreen({ onAuthenticated, onDemo, prefill }) {
             <span style={{fontSize:32,flexShrink:0}}>🏒</span>
             <div style={{flex:1,minWidth:0}}>
               <div style={{fontSize:10,letterSpacing:".14em",textTransform:"uppercase",color:C.gold,fontWeight:700,marginBottom:2}}>Try it — no signup</div>
-              <div style={{fontSize:14,color:C.white,fontWeight:700,lineHeight:1.3}}>Tap the slot on a real rink →</div>
+              <div style={{fontSize:14,color:C.white,fontWeight:700,lineHeight:1.3}}>Try some sample questions now →</div>
               <div style={{fontSize:11,color:"rgba(248,250,252,.55)",marginTop:2}}>See how Ice-IQ teaches game sense.</div>
             </div>
             <span style={{color:C.gold,fontSize:18,flexShrink:0}}>→</span>
@@ -3918,7 +3963,7 @@ function AuthScreen({ onAuthenticated, onDemo, prefill }) {
 
         {/* Coach preview — only coach-side demo remains; players sign up. */}
         <div style={{marginTop:"1.75rem",paddingTop:"1.5rem",borderTop:"1px solid rgba(255,255,255,0.07)"}}>
-          <div style={{fontSize:11,letterSpacing:".14em",textTransform:"uppercase",color:"rgba(248,250,252,.35)",fontWeight:700,textAlign:"center",marginBottom:"1rem"}}>Coach? Preview the dashboard</div>
+          <div style={{fontSize:11,letterSpacing:".14em",textTransform:"uppercase",color:"rgba(248,250,252,.35)",fontWeight:700,textAlign:"center",marginBottom:"1rem"}}>Are you a coach? Preview the dashboard</div>
           <button onClick={()=>onDemo("__coach__")} style={{width:"100%",background:"rgba(201,168,76,0.07)",border:"1px solid rgba(201,168,76,0.2)",borderRadius:10,padding:".65rem .75rem",cursor:"pointer",color:C.white,fontFamily:FONT.body,textAlign:"left"}}>
             <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:".5rem"}}>
               <div>
@@ -4301,6 +4346,63 @@ export default function App() {
     setScreen("home");
   }
 
+  // Dev bypass: same "skip Supabase" plumbing as demo mode, but with a real
+  // empty player state (not seeded fantasy data) so the UI matches what a
+  // brand-new signup looks like. Only reachable when iceiq_dev_bypass === "1".
+  function enterDevBypass(cfg) {
+    window.scrollTo(0, 0);
+    if (cfg.role === "coach") {
+      const prof = { id: "__dev_coach__", role: "coach", name: cfg.name || "Dev Coach", __dev: true };
+      setDevProfile(prof);
+      setDemoMode(true);
+      setDemoCoachRatings(null);
+      setProfile(prof);
+      seedDemoDepthChart("demo-t1", DEMO_COACH_ROSTER);
+      setScreen("home");
+      return;
+    }
+    const p = buildDevPlayer(cfg);
+    const prof = { id: p.id, role: "player", name: p.name, level: p.level, position: p.position, __dev: true };
+    setDevProfile(prof);
+    setDemoMode(true);
+    setDemoCoachRatings(null);
+    setProfile(prof);
+    setPlayer(p);
+    setPrevScore(null);
+    setTotalSessions(0);
+    setScreen("home");
+  }
+
+  // Restore dev bypass on reload + expose window.__dev helpers.
+  useEffect(() => {
+    if (!isDevBypassEnabled()) return;
+    const saved = getDevProfile();
+    if (saved && !demoMode) {
+      if (saved.role === "coach") {
+        enterDevBypass({ role: "coach", name: saved.name });
+      } else {
+        enterDevBypass({ role: "player", level: saved.level, position: saved.position, name: saved.name });
+      }
+    }
+    window.__dev = {
+      enterAs: (cfg) => enterDevBypass(cfg || {}),
+      setTier: (t) => { try { window.localStorage.setItem("iceiq_tier_override", String(t).toUpperCase()); window.location.reload(); } catch {} },
+      clearTier: () => { try { window.localStorage.removeItem("iceiq_tier_override"); window.location.reload(); } catch {} },
+      reset: () => { clearDevProfile(); try { window.localStorage.removeItem("iceiq_tier_override"); } catch {} window.location.reload(); },
+      exitBypass: () => { clearDevProfile(); try { window.localStorage.removeItem("iceiq_dev_bypass"); } catch {} window.location.reload(); },
+      markFirstSixDone: () => {
+        try {
+          // Acknowledge every gated feature so locked quests count as done
+          window.localStorage.setItem("iceiq_gated_quests_ack_v1", JSON.stringify(["smartGoals","progressSnapshots"]));
+          window.localStorage.setItem("iceiq_profile_viewed_v1", "1");
+          window.localStorage.setItem("iceiq_insights_read_v1", JSON.stringify(["a","b","c"]));
+        } catch {}
+        window.location.reload();
+      },
+    };
+    console.log("[Ice-IQ] Dev bypass active. Helpers: window.__dev", Object.keys(window.__dev));
+  }, []); // intentionally run once; no deps
+
   // Hydrate from Supabase on mount, subscribe to auth changes
   useEffect(() => {
     preloadQB();
@@ -4450,7 +4552,7 @@ export default function App() {
         </div>
       </div>;
     }
-    return <AuthScreen onAuthenticated={()=>{}} onDemo={enterDemo} prefill={signupPrefill}/>;
+    return <AuthScreen onAuthenticated={()=>{}} onDemo={enterDemo} onDevEnter={enterDevBypass} prefill={signupPrefill}/>;
   }
 
   // Coach home
