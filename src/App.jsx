@@ -533,7 +533,7 @@ function buildQueue(qb, level, position, isReturning, tier) {
         ? allQ.filter(q => !q.pos || q.pos.includes("G") || q.pos.includes("F"))
         : position === "Defense"
         ? allQ.filter(q => !q.pos || q.pos.includes("D") || q.pos.includes("F"))
-        : position === "Not Sure"
+        : position === "Multiple"
         ? allQ.filter(q => !q.pos || q.pos.includes("F") || q.pos.includes("D"))
         : allQ.filter(q => !q.pos || q.pos.includes("F") || q.pos.includes("D"));
     }
@@ -592,7 +592,7 @@ function buildQueue(qb, level, position, isReturning, tier) {
     // Inject 1 zone-click teaser for FREE tier (d:1 or d:2 only)
     if (byD[1].length >= 2) {
       const zcPool = ZONE_CLICK_QUESTIONS.filter(q =>
-        q.d <= 2 && q.level.includes(level) && (q.pos.includes(position) || position === "Not Sure")
+        q.d <= 2 && q.level.includes(level) && (q.pos.includes(position) || position === "Multiple")
       );
       if (zcPool.length > 0) {
         const zcQ = zcPool[Math.floor(Math.random() * zcPool.length)];
@@ -3171,7 +3171,7 @@ function Profile({ player, onSave, onBack, onReset, demoMode, tier, onUpgrade, u
             <Label style={{marginBottom:0}}>Position</Label>
           </div>
           <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:".5rem"}}>
-            {[{p:"Forward",i:"⚡"},{p:"Defense",i:"🛡"},{p:"Goalie",i:"🧤"},{p:"Not Sure",i:"❓"}].map(({p,i})=>(
+            {[{p:"Forward",i:"⚡"},{p:"Defense",i:"🛡"},{p:"Goalie",i:"🧤"},{p:"Multiple",i:"🔀"}].map(({p,i})=>(
               <button key={p} onClick={()=>upd("position")(p)} style={{background:s.position===p?C.goldDim:C.bgElevated,border:`1px solid ${s.position===p?C.gold:C.border}`,borderRadius:10,padding:".75rem .5rem",cursor:"pointer",textAlign:"center",color:s.position===p?C.gold:C.dim,fontFamily:FONT.body,fontSize:13,fontWeight:s.position===p?700:400}}>
                 <div style={{fontSize:20,marginBottom:3}}>{i}</div>{p}
               </button>
@@ -3806,7 +3806,7 @@ function AuthScreen({ onAuthenticated, onDemo, onDevEnter, prefill }) {
                 </select>
                 <select value={devPosition} onChange={e=>setDevPosition(e.target.value)}
                   style={{background:"rgba(255,255,255,0.04)",border:"1px solid rgba(255,255,255,0.1)",borderRadius:8,padding:".45rem .55rem",color:C.white,fontFamily:FONT.body,fontSize:12,outline:"none"}}>
-                  {["Forward","Defense","Goalie","Not Sure"].map(p => <option key={p} value={p} style={{background:"#1a1a2e",color:C.white}}>{p}</option>)}
+                  {["Forward","Defense","Goalie","Multiple"].map(p => <option key={p} value={p} style={{background:"#1a1a2e",color:C.white}}>{p}</option>)}
                 </select>
               </div>
             )}
@@ -4452,7 +4452,7 @@ export default function App() {
         id: p.id,
         name: p.name,
         level: p.level,
-        position: p.position || "Not Sure",
+        position: p.position === "Not Sure" ? "Multiple" : (p.position || "Multiple"),
         selfRatings,
         quizHistory,
         goals,

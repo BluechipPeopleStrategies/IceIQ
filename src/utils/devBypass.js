@@ -34,7 +34,7 @@ export function buildDevPlayer({ level, position, name }) {
     id: "__dev__",
     name: name || "Dev User",
     level: level || "U11 / Atom",
-    position: position || "Not Sure",
+    position: position || "Multiple",
     season: undefined,
     sessionLength: 10,
     colorblind: false,

@@ -202,7 +202,7 @@ export function ProfileSetup({ profile, onComplete }) {
     <Screen>
       <div style={{marginBottom:"2rem"}}>
         <div style={{fontSize:10,letterSpacing:".18em",color:C.gold,textTransform:"uppercase",fontWeight:700,marginBottom:".6rem"}}>Welcome · Step 1 of 2</div>
-        <h2 style={{fontFamily:FONT.display,fontWeight:800,fontSize:"2rem",margin:"0 0 .35rem"}}>What age group do you play?</h2>
+        <h2 style={{fontFamily:FONT.display,fontWeight:800,fontSize:"2rem",margin:"0 0 .35rem"}}>What age group do you (or your child) play?</h2>
         <div style={{fontSize:13,color:C.dim,lineHeight:1.55}}>Two quick questions and we'll get you on the ice.</div>
       </div>
       <div style={{display:"flex",flexDirection:"column",gap:".5rem"}}>
@@ -215,12 +215,12 @@ export function ProfileSetup({ profile, onComplete }) {
     </Screen>
   );
 
-  const posOptions = [{p:"Forward",i:"⚡"},{p:"Defense",i:"🛡"},{p:"Goalie",i:"🧤"},{p:"Not Sure",i:"❓"}];
+  const posOptions = [{p:"Forward",i:"⚡"},{p:"Defense",i:"🛡"},{p:"Goalie",i:"🧤"},{p:"Multiple",i:"🔀"}];
   return (
     <Screen>
       <div style={{marginBottom:"1.5rem"}}>
         <div style={{fontSize:10,letterSpacing:".18em",color:C.gold,textTransform:"uppercase",fontWeight:700,marginBottom:".6rem"}}>Step 2 of 2</div>
-        <h2 style={{fontFamily:FONT.display,fontWeight:800,fontSize:"2rem",margin:"0 0 .35rem"}}>What position?</h2>
+        <h2 style={{fontFamily:FONT.display,fontWeight:800,fontSize:"2rem",margin:"0 0 .35rem"}}>What position do you (or your child) play?</h2>
       </div>
       <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:".75rem",marginBottom:"1.5rem"}}>
         {posOptions.map(({p,i}) => (
@@ -1559,12 +1559,16 @@ export function SkillsOnboarding({ player, onSave, onBack }) {
             ))}
           </div>
         </Card>
-        <div style={{display:"flex",gap:".5rem"}}>
+        <div style={{display:"flex",gap:".5rem",flexWrap:"wrap"}}>
           <button onClick={() => setIdx(Math.max(0, idx - 1))} disabled={idx === 0}
             style={{background:"none",border:`1px solid ${C.border}`,borderRadius:10,padding:".7rem 1rem",cursor:idx===0?"default":"pointer",color:idx===0?C.dimmest:C.dimmer,fontSize:13,fontFamily:FONT.body,opacity:idx===0?0.5:1}}>← Back</button>
+          <button onClick={() => advance("n/a")} disabled={saving}
+            style={{flex:"1 1 40%",background:"none",border:`1px solid ${C.border}`,borderRadius:10,padding:".7rem 1rem",cursor:"pointer",color:C.dimmer,fontSize:13,fontFamily:FONT.body}}>
+            Not applicable
+          </button>
           <button onClick={() => advance(null)} disabled={saving}
-            style={{flex:1,background:"none",border:`1px solid ${C.border}`,borderRadius:10,padding:".7rem 1rem",cursor:"pointer",color:C.dimmer,fontSize:13,fontFamily:FONT.body}}>
-            {idx + 1 === total ? (saving ? "Saving…" : "Skip & finish") : "Skip this one →"}
+            style={{flex:"1 1 40%",background:"none",border:`1px solid ${C.border}`,borderRadius:10,padding:".7rem 1rem",cursor:"pointer",color:C.dimmer,fontSize:13,fontFamily:FONT.body}}>
+            {idx + 1 === total ? (saving ? "Saving…" : "Skip & finish") : "Skip →"}
           </button>
         </div>
       </div>
