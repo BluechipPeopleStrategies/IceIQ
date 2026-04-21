@@ -95,12 +95,11 @@ const BADGES = {
 
 // First-Five quest checklist — guided onboarding for new users.
 const QUESTS_PLAYER = [
-  { id:"rate6",   label:"Rate yourself on 6 skills",                nav:"skills-onboarding", gate:null,                target:6 },
-  { id:"quiz1",   label:"Take your first quiz",                     nav:"quiz",              gate:null,                target:1 },
-  { id:"read3",   label:"Read 3 pro insights",                      nav:"insights",          gate:null,                target:3 },
-  { id:"train1",  label:"Log a past or future training session",    nav:"profile",           gate:null,                target:1 },
-  { id:"goal1",   label:"Set your first SMART goal",                nav:"goals",             gate:"smartGoals",        target:1 },
-  { id:"profile", label:"View your Game Sense profile",             nav:"gamesense",         gate:"progressSnapshots", target:1 },
+  { id:"rate6",   label:"Rate yourself on 6 skills",                nav:"skills-onboarding", gate:null, target:6 },
+  { id:"quiz1",   label:"Take your first quiz",                     nav:"quiz",              gate:null, target:1 },
+  { id:"read3",   label:"Read 3 pro insights",                      nav:"insights",          gate:null, target:3 },
+  { id:"train1",  label:"Log a past or future training session",    nav:"profile",           gate:null, target:1 },
+  { id:"goal1",   label:"Set your first goal",                      nav:"goals",             gate:null, target:1 },
 ];
 const QUESTS_COACH = [
   { id:"team1",    label:"Add your first team",           nav:"home",  gate:"coachDashboard", target:1 },
