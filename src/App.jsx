@@ -6,7 +6,8 @@ import { rinksRemainingForFree, recordRinkSeen, RINK_FREE_PER_AGE } from "./util
 import { getParentRatings, saveParentRatings, hasParentRatings, daysSinceUpdated, PARENT_DIMENSIONS, PARENT_SCALE } from "./utils/parentAssessment";
 import { calcPlayerProfile, PROFILE_AXES } from "./utils/playerProfile";
 import { markSignupIntent, logSignupComplete } from "./utils/signupTelemetry";
-import { recordDemoSnapshot, clearDemoSnapshot, captureDemoTransfer, writePendingTransfer, applyPendingTransfer } from "./utils/demoTransfer";
+// utils/demoTransfer removed — player demo was killed; signup now writes
+// to Supabase from the first interaction, no LS→cloud transfer needed.
 import { DEPTH_SLOTS, getDepthChart, setAssignment as setDepthAssignment, seedDemoDepthChart, clearDemoDepthChart } from "./utils/depthChart";
 import Rink from "./Rink.jsx";
 import { COMPETENCIES, getPositioningJourneyState, GAME_SENSE_UNLOCK_SESSIONS } from "./utils/gameSense.js";
@@ -3449,166 +3450,7 @@ function StudyScreen({ player, onBack, onNav }) {
 // AUTH SCREEN — login / signup
 // ─────────────────────────────────────────────────────────
 // ─────────────────────────────────────────────────────────
-// DEMO MODE — pre-populated sample player, no signup required
-// ─────────────────────────────────────────────────────────
-// Result stubs in DEMO_PROFILES omit `type` when "mc" — readers default via `r.type || "mc"`.
-const R = (id, cat, ok, d, type) => type ? {id,cat,ok,d,type} : {id,cat,ok,d};
-const DEMO_PROFILES = {
-  "U9 / Novice":{
-    name:"Nora Orr",position:"Not Sure",jersey:7,team:"U9 A Calgary Flames",
-    sessions:(mk)=>[mk(true,false,false,12,55),mk(true,true,false,6,68),mk(true,true,true,2,78)],
-    results:(a,b,c)=>[
-      R("u9q1","Decision Making",a,1), R("u9q3","Positioning",a,1), R("u9q7","Exiting the Zone",a,1), R("u9q10","Defense",a,1),
-      R("u9q16","Decision Making",b,2), R("u9q21","Defense",b,2), R("u9q27","Defense",b,2), R("u9q30","Decision Making",b,2),
-      R("u9q41","Decision Making",c,3), R("u9q42","Defense",c,3),
-    ],
-    selfRatings:{u9s1:"developing",u9s2:"consistent",u9s3:"developing",u9s4:"introduced",u9p1:"developing",u9p2:"developing",u9p3:"introduced",u9p4:"introduced",u9h1:"developing",u9h2:"introduced",u9d1:"developing",u9d2:"introduced",u9c1:"consistent",u9c2:"developing",u9c3:"developing"},
-    coachRatings:{u9s1:"developing",u9s2:"developing",u9s3:"introduced",u9s4:"introduced",u9p1:"developing",u9p2:"developing",u9p3:"developing",u9p4:"introduced",u9h1:"developing",u9h2:"introduced",u9d1:"introduced",u9d2:"introduced",u9c1:"consistent",u9c2:"consistent",u9c3:"developing"},
-    coachNotes:{u9d1:"Good positioning but needs to close gap faster on rushes.",u9c1:"Competes hard every shift — great example for the team."},
-    goals:{
-      "Defense":{goal:"Improve gap control on the rush",S:"Hold the blue line and close gap by top of circles",M:"Coach tracks clean gap closes per game",A:"Yes — 1-on-1 rush drills in practice",R:"I back up too much and give attackers time",T:"By end of October 2026"},
-      "Skating":{goal:"Get faster first three strides",S:"Explosive starts on every stoppage",M:"Coach times my acceleration each practice",A:"Yes — power skating once a week",R:"I'm always second to the puck",T:"By end of November 2026"},
-      "Game IQ":{goal:"Keep my head up on every touch",S:"Find an open teammate before taking the puck",M:"Count head-up touches per shift on video",A:"Yes — practice every day in small-area games",R:"I stare at the puck and miss open ice",T:"By end of December 2026"},
-    },
-  },
-  "U13 / Peewee":{
-    name:"Maya Roy",position:"Goalie",jersey:30,team:"U13 AAA Vancouver Hawks",
-    sessions:(mk)=>[mk(true,false,false,10,62),mk(true,true,false,4,75),mk(true,true,true,1,86)],
-    results:(a,b,c)=>[
-      R("u13q1","Rush Reads",a,1), R("u13q5","Defensive Zone",a,1), R("u13q10","Zone Entry",a,1), R("u13q15","Special Teams",a,1),
-      R("u13q25","Shot Selection",b,2), R("u13q35","Defensive Zone",b,2), R("u13q45","Special Teams",b,2), R("u13g1","Goalie",b,1),
-      R("u13g5","Goalie",c,2), R("u13g10","Goalie",c,3),
-    ],
-    selfRatings:{u13s1:"consistent",u13s2:"developing",u13s3:"developing",u13p1:"developing",u13p2:"introduced",u13p3:"consistent",u13p4:"developing",u13h1:"consistent",u13h2:"developing",u13h3:"consistent",u13h4:"developing",u13d1:"developing",u13d2:"consistent",u13c1:"proficient",u13c2:"consistent",u13c3:"developing",u13c4:"consistent"},
-    coachRatings:{u13s1:"consistent",u13s2:"developing",u13s3:"introduced",u13p1:"developing",u13p2:"introduced",u13p3:"developing",u13p4:"developing",u13h1:"developing",u13h2:"developing",u13h3:"consistent",u13h4:"developing",u13d1:"developing",u13d2:"consistent",u13c1:"proficient",u13c2:"consistent",u13c3:"consistent",u13c4:"consistent"},
-    coachNotes:{u13h3:"Strong defensive zone awareness for a goalie — reads plays well.",u13c1:"Natural leader. Keeps the team calm under pressure."},
-    goals:{
-      "Leadership":{goal:"Be more vocal in the room and on the ice during games",S:"Call out plays and communicate with D on every shift",M:"Coach gives feedback after each game on communication",A:"Yes — I already talk to my D but need to be louder",R:"Coach says I read the game well but teammates don't hear me",T:"By January 2027"},
-      "Defensive Zone":{goal:"Control rebounds to my corners",S:"Steer every shot away from the slot",M:"Track second-chance goals against per game",A:"Yes — rebound drills twice a week",R:"Too many rebounds dropping in the slot",T:"By end of December 2026"},
-      "Edge Work":{goal:"Sharpen post-to-post push recovery",S:"Explosive push off the post on cross-seam passes",M:"Coach times my push recovery each practice",A:"Yes — goalie-specific power skating sessions",R:"I'm late getting across on cross-crease passes",T:"By end of February 2027"},
-    },
-  },
-  "U11 / Atom":{
-    name:"Cole Gretzky",position:"Forward",jersey:99,team:"U11 AA Edmonton Selects",
-    sessions:(mk)=>[mk(true,false,false,14,58),mk(true,true,false,7,71),mk(true,true,true,1,83)],
-    results:(a,b,c)=>[
-      R("u11q1","Rush Reads",a,1), R("u11q2","Coverage",a,1), R("u11q6","Puck Protection",a,1), R("u11q11","Exiting the Zone",a,1),
-      R("u11q20","Coverage",b,2), R("u11q30","Special Teams",b,2), R("u11q40","Puck Protection",b,2), R("u11q50","Coverage",b,2),
-      R("u11q92","Blue Line Decisions",c,3), R("u11q100","Decision Timing",c,3),
-    ],
-    selfRatings:{u11s1:"developing",u11s2:"consistent",u11s3:"developing",u11s4:"introduced",u11p1:"consistent",u11p2:"developing",u11p3:"developing",u11p4:"consistent",u11h1:"consistent",u11h2:"developing",u11h3:"developing",u11d1:"developing",u11d2:"introduced",u11c1:"advanced",u11c2:"proficient",u11c3:"consistent",u11dm1:"developing",u11dm2:"developing",u11dm3:"introduced",u11dm4:"consistent",u11dm5:"developing"},
-    coachRatings:{u11s1:"developing",u11s2:"consistent",u11s3:"developing",u11s4:"developing",u11p1:"consistent",u11p2:"developing",u11p3:"consistent",u11p4:"proficient",u11h1:"consistent",u11h2:"developing",u11h3:"developing",u11d1:"introduced",u11d2:"introduced",u11c1:"advanced",u11c2:"proficient",u11c3:"proficient",u11dm1:"developing",u11dm2:"developing",u11dm3:"developing",u11dm4:"consistent",u11dm5:"developing"},
-    coachNotes:{u11d1:"Work on matching attacker speed and closing the gap.",u11c1:"Elite compete level — sets the tone every shift."},
-    goals:{
-      "Gap Control":{goal:"Close the gap at the blue line instead of backing up",S:"Close gap by top of circles on every rush",M:"Track clean gap closes per game",A:"Yes — drill with D-partner in warmups",R:"Biggest weakness — I give up the blue line",T:"By end of November 2026"},
-      "Puck Protection":{goal:"Protect the puck on the wall",S:"Use body between defender and puck on every wall battle",M:"Count wall wins per game",A:"Yes — small-area battle drills in practice",R:"I lose too many wall battles on zone entries",T:"By end of December 2026"},
-      "Game IQ":{goal:"Find open ice on the rush",S:"Read the D-pair and hit the seam on every 3-on-3",M:"Coach reviews rush chances on video weekly",A:"Yes — neutral zone rush drills twice a week",R:"I chase the puck instead of finding the quiet ice",T:"By end of January 2027"},
-    },
-  },
-  "U15 / Bantam":{
-    name:"Jack Bourque",position:"Defense",jersey:77,team:"U15 AAA Winnipeg Warriors",
-    sessions:(mk)=>[mk(true,false,false,8,60),mk(true,true,false,3,74),mk(true,true,true,1,85)],
-    results:(a,b,c)=>[
-      R("u15q1","Systems Play",a,1), R("u15q5","Transition Game",a,1), R("u15q10","Special Teams",a,1), R("u15q15","Gap Control",a,1),
-      R("u15q25","Physical Play",b,2), R("u15q35","Leadership",b,2), R("u15q45","Systems Play",b,2), R("u15q55","Transition Game",b,2),
-      R("u15q75","Gap Control",c,3), R("u15q90","Special Teams",c,3),
-    ],
-    selfRatings:{},coachRatings:{},coachNotes:{},
-    goals:{
-      "Systems Play":{goal:"Master the 1-2-2 forecheck",S:"Execute my role in the 1-2-2 every shift",M:"Coach reviews video after each game",A:"Yes — we run this system every practice",R:"I freelance too much and break structure",T:"By end of January 2027"},
-      "Gap Control":{goal:"Close gap at the blueline, not center ice",S:"Close by top of circles, stick in the passing lane",M:"Coach grades each defensive-zone entry on video",A:"Yes — reps every practice with the D-pair",R:"I back off too early and give up the zone",T:"By end of November 2026"},
-      "Physical Play":{goal:"Finish every check hard but clean",S:"Complete the check when I'm in the position to hit",M:"Game-by-game count of completed body checks",A:"Yes — part of my role at this level",R:"Too many missed angles and soft separations",T:"By end of December 2026"},
-    },
-  },
-  "U18 / Midget":{
-    name:"Eli Lemieux",position:"Forward",jersey:19,team:"U18 Prep Toronto Jr. Canadiens",
-    sessions:(mk)=>[mk(true,true,false,6,72),mk(true,true,true,3,81),mk(true,true,true,1,89)],
-    results:(a,b,c)=>[
-      R("u18q1","Game Management",a,1), R("u18q5","Advanced Tactics",a,1), R("u18q10","Special Teams",a,1), R("u18q15","Breakout Execution",a,1),
-      R("u18q25","Neutral Zone Play",b,2), R("u18q35","Leadership",b,2), R("u18q48","Advanced Tactics",b,2), R("u18q55","Breakout Execution",b,2),
-      R("u18q81","Breakout Execution",c,3), R("u18q99","Breakout Execution",c,3),
-    ],
-    selfRatings:{},coachRatings:{},coachNotes:{},
-    goals:{
-      "Leadership":{goal:"Lead the room as an alternate captain",S:"Speak up in team meetings and set the tone pre-game",M:"Coaches track leadership moments weekly",A:"Yes — coaches gave me the A",R:"I lead by example but need to be more vocal",T:"By March 2027"},
-      "Breakout Execution":{goal:"Beat the first forechecker every time",S:"Support the D on weak-side, take the pass in stride",M:"Coach tracks clean breakouts per game on video",A:"Yes — daily breakout reps at practice",R:"Too many turnovers at the first-forechecker level",T:"By end of December 2026"},
-      "Advanced Tactics":{goal:"Exploit weak-side in transition",S:"Read pressure side and swing weak-side on every rush",M:"Scoring chances created from weak-side per game",A:"Yes — video review + small-area games",R:"Prep teams will collapse strong-side — I need to punish it",T:"By end of February 2027"},
-    },
-  },
-};
-
-const TAGLINE_BY_LEVEL = {
-  "U9 / Novice":  "First full-ice reads",
-  "U11 / Atom":   "Learning the speed game",
-  "U13 / Peewee": "Reading plays like a vet",
-  "U15 / Bantam": "Battles on every shift",
-  "U18 / Midget": "Prep-level systems player",
-};
-
-const BIO_BY_LEVEL_POSITION = {
-  "U9 / Novice::Not Sure": "New to full-ice — still figuring out the best fit on the ice, but competes hard every shift.",
-  "U9 / Novice::Forward":  "Loves the puck and drives the net. Still learning zones, but the instincts are there.",
-  "U9 / Novice::Defense":  "Steady for a first-year D. Moves pucks out when the lane opens.",
-  "U9 / Novice::Goalie":   "Tracks shots well for a young goalie. Composed when the puck is in tight.",
-
-  "U11 / Atom::Forward":   "Creative forward who sees the play develop. Quick hands in traffic, reads the rush.",
-  "U11 / Atom::Defense":   "Reliable D who keeps the stick in the lane. Starting to read the rush and close gaps.",
-  "U11 / Atom::Goalie":    "Square to the shooter and tracking pucks well. Rebound control is a focus.",
-
-  "U13 / Peewee::Forward": "Smart forward with feel for timing. Picks spots and drives play off the wall.",
-  "U13 / Peewee::Defense": "Defender who defends with positioning first. Calm puck-mover under pressure.",
-  "U13 / Peewee::Goalie":  "Anchors the crease with calm vision. Tracks plays high and stops pucks with calm confidence.",
-
-  "U15 / Bantam::Forward": "Heavy-minutes forward who finishes checks and wins battles. Reads the neutral zone well.",
-  "U15 / Bantam::Defense": "Two-way defender — closes the gap at the line and jumps up when the play opens.",
-  "U15 / Bantam::Goalie":  "Battle goalie. Fights for pucks in the crease and recovers fast for the second chance.",
-
-  "U18 / Midget::Forward": "Prep-level forward. Wins the neutral zone, executes breakouts clean, plays a 200-foot game.",
-  "U18 / Midget::Defense": "Structured D-man with pro-style gap. Runs the power play and eats minutes.",
-  "U18 / Midget::Goalie":  "Technical goalie with pro-level tracking. Reads plays two passes ahead.",
-};
-
-function getDemoBio(level, position) {
-  return BIO_BY_LEVEL_POSITION[`${level}::${position}`] ||
-    `Plays ${position || "hockey"} at the ${level} level — a great window into how Ice-IQ reads the game for this age group.`;
-}
-
-const DEMO_PARENT_RATINGS = {
-  "U9 / Novice":     { passion:"often",     readiness:"rarely",    effort:"sometimes", adversity:"sometimes", sportsmanship:"sometimes", confidence:"rarely",    coachability:"sometimes", balance:"sometimes" },
-  "U11 / Atom":      { passion:"often",     readiness:"sometimes", effort:"often",     adversity:"sometimes", sportsmanship:"often",     confidence:"sometimes", coachability:"often",     balance:"sometimes" },
-  "U13 / Peewee":    { passion:"sometimes", readiness:"sometimes", effort:"often",     adversity:"rarely",    sportsmanship:"sometimes", confidence:"sometimes", coachability:"sometimes", balance:"rarely"    },
-  "U15 / Bantam":    { passion:"sometimes", readiness:"often",     effort:"often",     adversity:"sometimes", sportsmanship:"often",     confidence:"often",     coachability:"sometimes", balance:"rarely"    },
-  "U18 / Midget":    { passion:"sometimes", readiness:"often",     effort:"often",     adversity:"often",     sportsmanship:"often",     confidence:"often",     coachability:"often",     balance:"rarely"    },
-};
-
-function buildDemoPlayer(level) {
-  const cfg = DEMO_PROFILES[level];
-  if (!cfg) return null;
-  const now = Date.now();
-  const day = 86400000;
-  const mkSession = (ok1, ok2, ok3, daysAgo, score) => ({
-    results: cfg.results(ok1, ok2, ok3), score,
-    date: new Date(now - daysAgo*day).toISOString(),
-  });
-  const parentRatings = DEMO_PARENT_RATINGS[level]
-    ? { ...DEMO_PARENT_RATINGS[level], updated_at: new Date(now - 14*day).toISOString().slice(0, 10) }
-    : null;
-  const dStr = (daysAgo) => new Date(now - daysAgo*day).toISOString().slice(0, 10);
-  const T = (d, type, value, unit) => ({ date: dStr(d), type, value, unit });
-  const trainingSessions = [
-    T(1,"pucks_shot",50,"pucks"),  T(3,"skills_dev",30,"min"),  T(5,"power_skating",30,"min"),
-    T(8,"pucks_shot",50,"pucks"),  T(10,"skills_dev",30,"min"), T(12,"power_skating",30,"min"),
-  ];
-  return {
-    id: "__demo__", name: cfg.name, level, position: cfg.position,
-    season: SEASONS[0], sessionLength: 10, colorblind: false, coachCode: "",
-    quizHistory: cfg.sessions(mkSession),
-    selfRatings: {...cfg.selfRatings}, goals: {...cfg.goals},
-    parentRatings,
-    trainingSessions,
-    __demo: true,
-  };
-}
+// DEMO MODE — coach preview only. Player demo was removed; players sign up.
 // question.cat → coach tilt code (see COACH_PERSONAS.tilts). null → head-coach fallback.
 const CAT_TO_TILT = {
   "Orientation":    "h",
@@ -3619,7 +3461,7 @@ const CAT_TO_TILT = {
   "Defense":        "d",
   "Positioning":    "dm",
   "Coachability":   "c",
-  // Level-specific legacy categories seen in DEMO_PROFILES
+  // Level-specific legacy categories also mapped here so older questions route correctly
   "Decision Making":   "dm",
   "Exiting the Zone":  "h",
   "Rush Reads":        "h",
@@ -3720,32 +3562,6 @@ function aggregateCoachRatings(coaches, scale) {
   return agg;
 }
 
-function buildDemoCoachRatings(level) {
-  const cfg = DEMO_PROFILES[level];
-  if (!cfg) return { coaches: [], ratings: {}, notes: {} };
-  const position = cfg.position || "Forward";
-  const personas = getDemoCoachRoster(level, position);
-  const baseline = cfg.coachRatings || {};
-  const baselineNotes = cfg.coachNotes || {};
-  const scale = getCoachScale(level);
-  // Stagger dates so each coach's session looks distinct
-  const baseDate = new Date("2026-03-15");
-  const coaches = personas.map((p, i) => {
-    const d = new Date(baseDate); d.setDate(d.getDate() - i * 7);
-    return {
-      id: p.id,
-      name: p.name,
-      role: p.role,
-      date: d.toISOString().slice(0, 10),
-      summary: p.summary,
-      ratings: tiltedRatings(baseline, p, scale),
-      notes: i === 0 ? {...baselineNotes} : {},
-    };
-  });
-  const aggregate = aggregateCoachRatings(coaches, scale);
-  const mergedNotes = coaches.reduce((acc, c) => ({...acc, ...c.notes}), {});
-  return { coaches, ratings: aggregate, notes: mergedNotes };
-}
 
 // ─────────────────────────────────────────────────────────
 // RINK BACKGROUND — NHL rink geometry.
@@ -3837,6 +3653,28 @@ function RinkBackground({ dark = false }) {
 // ─────────────────────────────────────────────────────────
 // AUTH SCREEN — login / signup
 // ─────────────────────────────────────────────────────────
+// Sample scene used by the landing-page rink teaser. Mirrors u9rink11
+// ("Click the slot") so the first interactive touch a visitor has is the
+// most unique feature of the app.
+const LANDING_RINK_SCENE = {
+  team: [], opponents: [], puck: { zone: "slot" },
+  showGoalie: true, showHomePlate: false, texts: [], arrows: [], flags: [],
+  question: {
+    mode: "zone-click",
+    prompt: "The slot is the middle spot in front of the net. Tap it on the rink.",
+    zones: {
+      correct: ["slot"],
+      partial: ["home-plate"],
+      wrong: ["net-front","high-slot","behind-net","left-corner","right-corner","left-point","right-point","left-faceoff","right-faceoff","left-boards","right-boards"],
+    },
+    feedback: {
+      correct: "That's the slot — the most dangerous shot on the ice. This is what Ice-IQ trains.",
+      partial: "Close. The home-plate area includes the slot, but the slot itself is dead centre.",
+      wrong: "Middle of the ice, right in front of the net. That's the slot.",
+    },
+  },
+};
+
 function AuthScreen({ onAuthenticated, onDemo, prefill }) {
   const [mode, setMode] = useState(prefill ? "signup" : "login"); // login | signup | forgot
   const [email, setEmail] = useState("");
@@ -3847,6 +3685,8 @@ function AuthScreen({ onAuthenticated, onDemo, prefill }) {
   const [err, setErr] = useState("");
   const [resetSent, setResetSent] = useState(false);
   const [qbStats, setQbStats] = useState({ questionCount: null, ageGroupCount: null });
+  const [rinkTeaserOpen, setRinkTeaserOpen] = useState(false);
+  const [teaserAnswered, setTeaserAnswered] = useState(false);
 
   useEffect(() => {
     let alive = true;
@@ -3918,23 +3758,23 @@ function AuthScreen({ onAuthenticated, onDemo, prefill }) {
       <div style={{position:"relative",maxWidth:420,margin:"0 auto",width:"100%"}}>
 
         {/* Hero brand block */}
-        <div style={{textAlign:"center",marginBottom:"1.75rem"}}>
+        <div style={{textAlign:"center",marginBottom:"1.5rem"}}>
           <div style={{display:"inline-flex",alignItems:"center",gap:".55rem",background:"rgba(3,9,15,0.6)",backdropFilter:"blur(12px)",WebkitBackdropFilter:"blur(12px)",border:`1px solid rgba(201,168,76,0.2)`,borderRadius:14,padding:".55rem 1.1rem",marginBottom:"1.1rem"}}>
             <IceIQLogo size={26}/>
             <span style={{fontFamily:FONT.display,fontWeight:800,fontSize:"1.6rem",color:C.gold,letterSpacing:".1em"}}>Ice-IQ</span>
           </div>
-          <h1 style={{fontFamily:FONT.display,fontWeight:800,fontSize:"clamp(2rem,8vw,2.75rem)",lineHeight:1.05,margin:"0 0 .6rem",letterSpacing:"-.01em"}}>
-            Train smarter.<br/><span style={{color:C.gold}}>Play sharper.</span>
+          <h1 style={{fontFamily:FONT.display,fontWeight:800,fontSize:"clamp(1.9rem,7.5vw,2.6rem)",lineHeight:1.05,margin:"0 0 .55rem",letterSpacing:"-.01em"}}>
+            Hockey is played<br/>between the ears.<br/><span style={{color:C.gold}}>Ice-IQ trains the other 80%.</span>
           </h1>
           <p style={{fontSize:14,color:"rgba(248,250,252,.7)",lineHeight:1.65,margin:"0 auto 1.25rem",maxWidth:340}}>
-            Hockey development built on game sense — adaptive questions, SMART goals, and pro insights for U9 to U18.
+            Game sense, systems reads, and decision-making for U7 to U18.
           </p>
           {/* Stat chips */}
           <div style={{display:"flex",gap:".5rem",justifyContent:"center",flexWrap:"wrap"}}>
             {[
               {n: qbStats.questionCount != null ? `${qbStats.questionCount}+` : "—", l:"Questions"},
               {n: qbStats.ageGroupCount != null ? String(qbStats.ageGroupCount) : "—", l:"Age groups"},
-              {n:"5",l:"Question types"},
+              {n:"6",l:"Question types"},
             ].map((s,i) => (
               <div key={i} style={{background:"rgba(255,255,255,0.06)",border:"1px solid rgba(255,255,255,0.1)",borderRadius:20,padding:".3rem .85rem",display:"flex",alignItems:"baseline",gap:".3rem"}}>
                 <span style={{fontFamily:FONT.display,fontWeight:800,fontSize:15,color:C.gold}}>{s.n}</span>
@@ -3943,6 +3783,34 @@ function AuthScreen({ onAuthenticated, onDemo, prefill }) {
             ))}
           </div>
         </div>
+
+        {/* Live rink teaser — lazy-reveals a real playable scenario on tap */}
+        {!rinkTeaserOpen ? (
+          <button onClick={() => setRinkTeaserOpen(true)}
+            style={{width:"100%",background:"linear-gradient(135deg,rgba(201,168,76,0.12),rgba(59,139,212,0.08))",border:`1px solid ${C.goldBorder}`,borderRadius:14,padding:"1rem 1.1rem",cursor:"pointer",color:C.white,fontFamily:FONT.body,textAlign:"left",marginBottom:"1.25rem",display:"flex",alignItems:"center",gap:".85rem"}}>
+            <span style={{fontSize:32,flexShrink:0}}>🏒</span>
+            <div style={{flex:1,minWidth:0}}>
+              <div style={{fontSize:10,letterSpacing:".14em",textTransform:"uppercase",color:C.gold,fontWeight:700,marginBottom:2}}>Try it — no signup</div>
+              <div style={{fontSize:14,color:C.white,fontWeight:700,lineHeight:1.3}}>Tap the slot on a real rink →</div>
+              <div style={{fontSize:11,color:"rgba(248,250,252,.55)",marginTop:2}}>See how Ice-IQ teaches game sense.</div>
+            </div>
+            <span style={{color:C.gold,fontSize:18,flexShrink:0}}>→</span>
+          </button>
+        ) : (
+          <div style={{background:"rgba(6,12,22,0.82)",backdropFilter:"blur(20px)",WebkitBackdropFilter:"blur(20px)",border:`1px solid ${C.goldBorder}`,borderRadius:14,padding:"1rem",marginBottom:"1.25rem"}}>
+            <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:".6rem"}}>
+              <div style={{fontSize:10,letterSpacing:".14em",textTransform:"uppercase",color:C.gold,fontWeight:700}}>Sample scenario · U9</div>
+              <button onClick={() => { setRinkTeaserOpen(false); setTeaserAnswered(false); }} style={{background:"none",border:"none",color:C.dimmer,cursor:"pointer",fontSize:12,fontFamily:FONT.body,padding:0}}>Close</button>
+            </div>
+            <Rink mode="play" scene={LANDING_RINK_SCENE} ageGroup="U9"
+              onAnswer={() => setTeaserAnswered(true)} />
+            {teaserAnswered && (
+              <div style={{marginTop:".85rem",padding:".85rem 1rem",background:"rgba(201,168,76,0.1)",border:`1px solid ${C.goldBorder}`,borderRadius:10,fontSize:13,color:C.white,textAlign:"center"}}>
+                That's a taste. Sign up below to unlock 100+ rink scenarios across every age group.
+              </div>
+            )}
+          </div>
+        )}
 
       {/* Auth card */}
       <div style={{background:"rgba(6,12,22,0.82)",backdropFilter:"blur(20px)",WebkitBackdropFilter:"blur(20px)",border:`1px solid rgba(255,255,255,0.08)`,borderTop:`1px solid rgba(255,255,255,0.13)`,borderRadius:20,padding:"1.75rem 1.5rem",boxShadow:"0 32px 80px rgba(0,0,0,0.6),inset 0 1px 0 rgba(255,255,255,0.06)"}}>
@@ -4035,30 +3903,9 @@ function AuthScreen({ onAuthenticated, onDemo, prefill }) {
           </div>
         )}
 
+        {/* Coach preview — only coach-side demo remains; players sign up. */}
         <div style={{marginTop:"1.75rem",paddingTop:"1.5rem",borderTop:"1px solid rgba(255,255,255,0.07)"}}>
-          <div style={{fontSize:11,letterSpacing:".14em",textTransform:"uppercase",color:"rgba(248,250,252,.35)",fontWeight:700,textAlign:"center",marginBottom:"1rem"}}>Try without signing up</div>
-          <div style={{fontSize:10,letterSpacing:".12em",textTransform:"uppercase",color:C.purple,fontWeight:700,marginBottom:".4rem",opacity:.85}}>Player</div>
-          <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:".4rem",marginBottom:".65rem"}}>
-            {LEVELS.map(lvl => {
-              const cfg = DEMO_PROFILES[lvl];
-              if (!cfg) return null;
-              const short = lvl.split(" / ")[0];
-              return (
-                <button key={lvl} onClick={()=>onDemo(lvl)} style={{background:"rgba(124,111,205,0.08)",border:"1px solid rgba(124,111,205,0.2)",borderRadius:10,padding:".65rem .6rem",cursor:"pointer",color:C.white,fontFamily:FONT.body,textAlign:"left",transition:"background .15s",display:"flex",alignItems:"center",gap:".55rem"}}>
-                  <AvatarDisc name={cfg.name} kind="player" size={38}/>
-                  <div style={{minWidth:0,flex:1}}>
-                    <div style={{display:"flex",alignItems:"baseline",gap:".3rem",marginBottom:1}}>
-                      <span style={{fontWeight:800,fontSize:13,color:C.white}}>{cfg.name}</span>
-                      <span style={{fontWeight:700,fontSize:11,color:C.gold}}>#{cfg.jersey}</span>
-                    </div>
-                    <div style={{fontSize:10,color:"rgba(167,155,240,.75)",lineHeight:1.3,whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis"}}>{cfg.team}</div>
-                    <div style={{fontSize:9,color:"rgba(248,250,252,.35)",lineHeight:1.3}}>{short} · {cfg.position}</div>
-                  </div>
-                </button>
-              );
-            })}
-          </div>
-          <div style={{fontSize:10,letterSpacing:".12em",textTransform:"uppercase",color:C.gold,fontWeight:700,marginBottom:".4rem",opacity:.85}}>Coach</div>
+          <div style={{fontSize:11,letterSpacing:".14em",textTransform:"uppercase",color:"rgba(248,250,252,.35)",fontWeight:700,textAlign:"center",marginBottom:"1rem"}}>Coach? Preview the dashboard</div>
           <button onClick={()=>onDemo("__coach__")} style={{width:"100%",background:"rgba(201,168,76,0.07)",border:"1px solid rgba(201,168,76,0.2)",borderRadius:10,padding:".65rem .75rem",cursor:"pointer",color:C.white,fontFamily:FONT.body,textAlign:"left"}}>
             <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:".5rem"}}>
               <div>
@@ -4080,7 +3927,7 @@ function AuthScreen({ onAuthenticated, onDemo, prefill }) {
               <div style={{fontSize:9,color:"rgba(248,250,252,.22)",textAlign:"right",marginTop:".1rem"}}>+{DEMO_COACH_ROSTER.length - 3} more players</div>
             </div>
           </button>
-          <div style={{fontSize:10,color:"rgba(248,250,252,.3)",textAlign:"center",marginTop:".6rem"}}>Nothing is saved in demo mode.</div>
+          <div style={{fontSize:10,color:"rgba(248,250,252,.3)",textAlign:"center",marginTop:".6rem"}}>Preview only — nothing is saved.</div>
         </div>
 
         <div style={{fontSize:10,color:"rgba(248,250,252,.3)",textAlign:"center",marginTop:"1.5rem"}}>v{VERSION}</div>
@@ -4365,9 +4212,7 @@ export default function App() {
   const [seqPerfect, setSeqPerfect] = useState(false);
   const [mistakeStreak, setMistakeStreak] = useState(0);
   const [upgradePrompt, setUpgradePrompt] = useState(null); // {feature, target} | null
-  const [demoIntroFor, setDemoIntroFor] = useState(null);
   const [signupPrefill, setSignupPrefill] = useState(null); // {role, level, name} | null
-  const [saveProgressFor, setSaveProgressFor] = useState(null); // identity string | null
   const [firstLineToast, setFirstLineToast] = useState(false);
   const [questFlagsBump, setQuestFlagsBump] = useState(0);
   const bumpQuestFlags = useCallback(() => setQuestFlagsBump(b => b + 1), []);
@@ -4384,11 +4229,6 @@ export default function App() {
   }
   function triggerSignup(source = "auth_direct") {
     markSignupIntent(source);
-    // Capture any in-session demo work before we tear down React state in exitDemo.
-    if (demoMode) {
-      const transfer = captureDemoTransfer(player);
-      if (transfer) writePendingTransfer(transfer);
-    }
     setSignupPrefill({
       role: profile?.role || "player",
       level: player?.level || null,
@@ -4404,39 +4244,36 @@ export default function App() {
   // Run season reset check on boot so free-tier switch counters refresh each September
   useEffect(() => { try { checkSeasonReset(); } catch {} }, []);
 
+  // One-time cleanup: the player-demo scaffold used __demo__ LS slots in a few
+  // tables. Now that player demo is gone, silently drop them on boot so a
+  // fresh install doesn't carry any stale fantasy-world data.
+  useEffect(() => {
+    try {
+      const tk = window.localStorage.getItem("iceiq_training_log");
+      if (tk) {
+        const all = JSON.parse(tk);
+        if (all && "__demo__" in all) { delete all["__demo__"]; window.localStorage.setItem("iceiq_training_log", JSON.stringify(all)); }
+      }
+      window.localStorage.removeItem("iceiq_pending_transfer_v1");
+      window.localStorage.removeItem("iceiq_demo_snapshot_v1");
+      window.localStorage.removeItem("iceiq_demo_quiz_taken");
+    } catch {}
+  }, []);
+
   // Mark profile-viewed quest flag when user opens Game Sense report
   useEffect(() => {
     if (screen === "gamesense") { markProfileViewed(); bumpQuestFlags(); }
   }, [screen, bumpQuestFlags]);
 
   function enterDemo(levelOrRole) {
+    // Only coach demo remains. Player demo was removed — players sign up and
+    // work is persisted from the start.
+    if (levelOrRole !== "__coach__") return;
     window.scrollTo(0, 0);
-    if (levelOrRole === "__coach__") {
-      setDemoMode(true);
-      setDemoCoachRatings(null);
-      setProfile({ id: "__demo_coach__", role: "coach", name: "Coach Demo" });
-      seedDemoDepthChart("demo-t1", DEMO_COACH_ROSTER);
-      setScreen("home");
-      return;
-    }
-    const level = levelOrRole || "U9 / Novice";
-    const p = buildDemoPlayer(level);
-    const coachData = buildDemoCoachRatings(level);
     setDemoMode(true);
-    setDemoCoachRatings(coachData);
-    setProfile({ id: "__demo__", role: "player", name: p.name, level: p.level, position: p.position });
-    setPlayer(p);
-    setPrevScore(p.quizHistory[p.quizHistory.length-1]?.score || null);
-    setTotalSessions(p.quizHistory.length);
-    setDemoIntroFor(p);
-    // Seed localStorage so TrainingLog (reads LS directly) shows the demo off-ice activity.
-    try {
-      const raw = localStorage.getItem("iceiq_training_log");
-      const all = raw ? JSON.parse(raw) : {};
-      all["__demo__"] = { sessions: p.trainingSessions };
-      localStorage.setItem("iceiq_training_log", JSON.stringify(all));
-    } catch {}
-    recordDemoSnapshot(p);
+    setDemoCoachRatings(null);
+    setProfile({ id: "__demo_coach__", role: "coach", name: "Coach Demo" });
+    seedDemoDepthChart("demo-t1", DEMO_COACH_ROSTER);
     setScreen("home");
   }
 
@@ -4447,16 +4284,6 @@ export default function App() {
     setPlayer(null);
     setPrevScore(null);
     setTotalSessions(0);
-    // Clean up demo-seeded training log so a later real signup starts fresh.
-    try {
-      const raw = localStorage.getItem("iceiq_training_log");
-      if (raw) {
-        const all = JSON.parse(raw);
-        delete all["__demo__"];
-        localStorage.setItem("iceiq_training_log", JSON.stringify(all));
-      }
-    } catch {}
-    clearDemoSnapshot();
     clearDemoDepthChart("demo-t1");
     setScreen("home");
   }
@@ -4493,11 +4320,6 @@ export default function App() {
     const p = await SB.getProfile(userId);
     if (!p) return;
     setProfile(p);
-    // If the user just signed up from a demo, replay their in-session work
-    // onto the new real account before fetching so the hydrated state includes it.
-    if (p.role === "player") {
-      try { await applyPendingTransfer(userId, SB); } catch (e) { console.error(e); }
-    }
     if (p.role === "player" && p.level) {
       // Build enriched player object from Supabase data
       const [sessions, goals, selfRatings] = await Promise.all([
@@ -4661,7 +4483,7 @@ export default function App() {
           questFlagsBump={questFlagsBump}
           onPromptUpgrade={promptUpgrade}
           onBumpQuestFlags={bumpQuestFlags}
-          onSaveProgress={() => setSaveProgressFor(demoMode ? "__demo_coach__" : (profile?.id || null))}
+          onSaveProgress={() => triggerSignup("save_progress")}
           onFirstLine={() => setFirstLineToast(true)}
           onSignup={() => triggerSignup("quest_cta_coach")}
           onOpenPlayer={(p) => {
@@ -4712,7 +4534,7 @@ export default function App() {
       )}
 
       <div style={{paddingBottom: screen==="quiz"||screen==="results" ? 0 : 80}}>
-        {screen === "home"    && <Home player={tierLimitedPlayer(player, tier)} onNav={setScreen} demoMode={demoMode} subscriptionTier={tier} questFlagsBump={questFlagsBump} onPromptUpgrade={promptUpgrade} onBumpQuestFlags={bumpQuestFlags} onSaveProgress={() => setSaveProgressFor(demoMode ? "__demo__" : (player?.id || null))} onFirstLine={() => setFirstLineToast(true)} onSignup={() => triggerSignup("quest_cta")}/>}
+        {screen === "home"    && <Home player={tierLimitedPlayer(player, tier)} onNav={setScreen} demoMode={demoMode} subscriptionTier={tier} questFlagsBump={questFlagsBump} onPromptUpgrade={promptUpgrade} onBumpQuestFlags={bumpQuestFlags} onSaveProgress={() => triggerSignup("save_progress")} onFirstLine={() => setFirstLineToast(true)} onSignup={() => triggerSignup("quest_cta")}/>}
         {screen === "quiz"    && (demoMode && (()=>{ try { return localStorage.getItem("iceiq_demo_quiz_taken") === "1"; } catch { return false; } })()
           ? <DemoQuizCapScreen onBack={()=>setScreen("home")} onSignUp={exitDemo}/>
           : tier === "FREE" && !demoMode && isAtFreeQuizCap()
@@ -4753,45 +4575,6 @@ export default function App() {
           onViewPlans={() => { closeUpgrade(); setScreen("plans"); }}
         />
       )}
-      {demoIntroFor && (
-        <div onClick={()=>setDemoIntroFor(null)} style={{position:"fixed",inset:0,background:"rgba(0,0,0,.78)",zIndex:200,display:"flex",alignItems:"center",justifyContent:"center",padding:"1rem"}}>
-          <div onClick={e=>e.stopPropagation()} style={{background:C.bgCard,border:`1px solid ${C.border}`,borderRadius:18,padding:"1.5rem 1.4rem",maxWidth:380,width:"100%",color:C.white,fontFamily:FONT.body,textAlign:"center",boxShadow:"0 24px 60px rgba(0,0,0,.55)"}}>
-            <div style={{fontSize:10,letterSpacing:".16em",textTransform:"uppercase",color:C.gold,fontWeight:700,marginBottom:".9rem"}}>Meet your demo player</div>
-            <div style={{display:"flex",justifyContent:"center",marginBottom:".9rem"}}>
-              <AvatarDisc name={demoIntroFor.name} kind="player" size={88}/>
-            </div>
-            <div style={{fontFamily:FONT.display,fontWeight:800,fontSize:"1.5rem",lineHeight:1.1,marginBottom:".2rem"}}>{demoIntroFor.name}</div>
-            <div style={{fontSize:13,color:C.dim,marginBottom:".75rem"}}>#{DEMO_PROFILES[demoIntroFor.level]?.jersey} · {DEMO_PROFILES[demoIntroFor.level]?.team}</div>
-            <div style={{display:"flex",gap:".4rem",justifyContent:"center",flexWrap:"wrap",marginBottom:"1rem"}}>
-              <span style={{background:"rgba(201,168,76,0.12)",border:`1px solid ${C.goldBorder}`,borderRadius:999,padding:".25rem .7rem",fontSize:11,color:C.gold,fontWeight:700}}>{demoIntroFor.level}</span>
-              <span style={{background:"rgba(124,111,205,0.12)",border:"1px solid rgba(124,111,205,0.3)",borderRadius:999,padding:".25rem .7rem",fontSize:11,color:C.purple,fontWeight:700}}>{demoIntroFor.position}</span>
-            </div>
-            <div style={{fontSize:13,color:C.dim,lineHeight:1.6,marginBottom:"1.1rem"}}>{getDemoBio(demoIntroFor.level, demoIntroFor.position)}</div>
-            <button onClick={()=>setDemoIntroFor(null)} style={{width:"100%",background:C.gold,color:C.bg,border:"none",borderRadius:12,padding:".85rem",cursor:"pointer",fontWeight:800,fontSize:14,fontFamily:FONT.body}}>
-              View {demoIntroFor.name.split(" ")[0]}'s demo profile →
-            </button>
-          </div>
-        </div>
-      )}
-      {saveProgressFor && (
-        <div onClick={()=>setSaveProgressFor(null)} style={{position:"fixed",inset:0,background:"rgba(0,0,0,.78)",zIndex:210,display:"flex",alignItems:"center",justifyContent:"center",padding:"1rem"}}>
-          <div onClick={e=>e.stopPropagation()} style={{background:C.bgCard,border:`1px solid ${C.goldBorder}`,borderRadius:18,padding:"1.5rem 1.4rem",maxWidth:380,width:"100%",color:C.white,fontFamily:FONT.body,textAlign:"center",boxShadow:"0 24px 60px rgba(0,0,0,.55)"}}>
-            <div style={{fontSize:28,marginBottom:".4rem"}}>🏒</div>
-            <div style={{fontSize:10,letterSpacing:".16em",textTransform:"uppercase",color:C.gold,fontWeight:700,marginBottom:".5rem"}}>First Line · Complete!</div>
-            <div style={{fontFamily:FONT.display,fontWeight:800,fontSize:"1.4rem",lineHeight:1.15,marginBottom:".5rem"}}>Save your First-Five progress</div>
-            <div style={{fontSize:13,color:C.dim,lineHeight:1.6,marginBottom:"1.1rem"}}>Create a free account and we'll keep your quiz history, self-ratings, and goals so you can pick up where you left off.</div>
-            <button onClick={()=>{
-              setSaveProgressFor(null);
-              triggerSignup("save_progress");
-            }} style={{width:"100%",background:C.gold,color:C.bg,border:"none",borderRadius:12,padding:".85rem",cursor:"pointer",fontWeight:800,fontSize:14,fontFamily:FONT.body,marginBottom:".5rem"}}>
-              Create free account →
-            </button>
-            <button onClick={()=>setSaveProgressFor(null)} style={{width:"100%",background:"none",color:C.dimmer,border:`1px solid ${C.border}`,borderRadius:12,padding:".7rem",cursor:"pointer",fontWeight:600,fontSize:13,fontFamily:FONT.body}}>
-              Maybe later
-            </button>
-          </div>
-        </div>
-      )}
       {firstLineToast && (
         <div onClick={()=>setFirstLineToast(false)} style={{position:"fixed",inset:0,background:"rgba(0,0,0,.7)",zIndex:210,display:"flex",alignItems:"center",justifyContent:"center",padding:"1rem"}}>
           <div onClick={e=>e.stopPropagation()} style={{background:C.bgCard,border:`1px solid ${C.goldBorder}`,borderRadius:18,padding:"1.75rem 1.5rem",maxWidth:360,width:"100%",color:C.white,fontFamily:FONT.body,textAlign:"center",boxShadow:"0 24px 60px rgba(0,0,0,.55)"}}>
@@ -4805,7 +4588,7 @@ export default function App() {
           </div>
         </div>
       )}
-      {demoMode && !saveProgressFor && !firstLineToast && screen !== "results" && (
+      {demoMode && !firstLineToast && screen !== "results" && (
         <button onClick={() => triggerSignup("demo_chip")} style={{position:"fixed",top:10,right:10,zIndex:150,background:`linear-gradient(135deg, ${C.gold}, #b8860b)`,color:C.bg,border:"none",borderRadius:999,padding:"6px 12px 6px 10px",cursor:"pointer",fontSize:11,fontWeight:800,fontFamily:FONT.body,letterSpacing:".02em",display:"flex",alignItems:"center",gap:"4px",boxShadow:"0 4px 14px rgba(201,168,76,.35), inset 0 1px 0 rgba(255,255,255,.25)"}}>
           <span style={{fontSize:12}}>🏒</span>
           Sign Up Free →
