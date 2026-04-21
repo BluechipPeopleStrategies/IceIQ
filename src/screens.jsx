@@ -17,6 +17,7 @@ import { calcPlayerProfile, PROFILE_AXES } from "./utils/playerProfile.js";
 import { getTrainingLog } from "./utils/trainingLog.js";
 import { getParentRatings, saveParentRatings, PARENT_DIMENSIONS, PARENT_SCALE } from "./utils/parentAssessment.js";
 import { AGES, LEVEL_FOR_AGE, ALL_TYPES, RECOMMENDED_TYPES_BY_AGE, TYPE_LABELS, isOffAgeType, blankQuestion } from "./utils/ageQuestionTypes.js";
+import { SKILLS, RATING_SCALES, getSelfScale, getScaleColor } from "./data/constants.js";
 
 async function loadTeamData(coachCode, season) {
   if (!window.storage) return [];
@@ -1464,3 +1465,190 @@ const inputSt = {
   padding: ".4rem .5rem", fontSize: 12, fontFamily: FONT.body,
   outline: "none",
 };
+
+// ─────────────────────────────────────────────────────────
+// SkillsOnboarding — First-Six guided rating flow.
+// Picks 6 random skills from the player's level and walks them through
+// one-at-a-time. Does not replace the full Skills screen (still
+// accessible via Profile). Goal is to get onboarding done fast.
+// ─────────────────────────────────────────────────────────
+
+// Simple deterministic shuffle keyed by player id + day so a refresh
+// doesn't re-scramble the 6 mid-session.
+function seededShuffle(arr, seedStr) {
+  let h = 2166136261 >>> 0;
+  for (let i = 0; i < seedStr.length; i++) { h ^= seedStr.charCodeAt(i); h = (h * 16777619) >>> 0; }
+  const out = arr.slice();
+  for (let i = out.length - 1; i > 0; i--) {
+    h = (h * 1103515245 + 12345) >>> 0;
+    const j = h % (i + 1);
+    [out[i], out[j]] = [out[j], out[i]];
+  }
+  return out;
+}
+
+function getSelfPromptLocal(level, skill) {
+  if (level === "U9 / Novice") {
+    const q = skill.selfQ || skill.desc;
+    if (q.startsWith("Can you ")) return "How often can you " + q.slice(8);
+    if (q.startsWith("Do you ")) return "How often do you " + q.slice(7);
+    return q;
+  }
+  return skill.selfQ || skill.desc;
+}
+
+export function SkillsOnboarding({ player, onSave, onBack }) {
+  const scale = getSelfScale(player.level);
+  const allSkills = (SKILLS[player.level] || []).flatMap(c => c.skills.map(s => ({...s, catName: c.cat, catIcon: c.icon})));
+  const seed = (player.id || "__local__") + "|" + new Date().toISOString().slice(0, 10);
+  const picked = seededShuffle(allSkills, seed).slice(0, 6);
+  const [idx, setIdx] = useState(0);
+  const [ratings, setRatings] = useState({});
+  const [saving, setSaving] = useState(false);
+  const total = picked.length;
+  const current = picked[idx];
+
+  function advance(val) {
+    const next = val != null ? { ...ratings, [current.id]: val } : ratings;
+    setRatings(next);
+    if (idx + 1 < total) {
+      setIdx(idx + 1);
+    } else {
+      // Finalize — merge into existing selfRatings and save
+      setSaving(true);
+      const merged = { ...(player.selfRatings || {}), ...next };
+      Promise.resolve(onSave(merged)).finally(() => setSaving(false));
+    }
+  }
+
+  return (
+    <div style={{minHeight:"100vh",background:C.bg,color:C.white,fontFamily:FONT.body}}>
+      <StickyHeader>
+        <div style={{maxWidth:560,margin:"0 auto",display:"flex",alignItems:"center",gap:"1rem"}}>
+          <BackBtn onClick={onBack}/>
+          <div style={{flex:1}}>
+            <div style={{fontFamily:FONT.display,fontWeight:800,fontSize:"1.1rem"}}>Rate yourself</div>
+            <div style={{fontSize:11,color:C.dimmer}}>Skill {idx+1} of {total}</div>
+          </div>
+          <ProgressBar value={idx+1} max={total} color={C.gold} height={4}/>
+        </div>
+      </StickyHeader>
+      <div style={{padding:"1.25rem",maxWidth:560,margin:"0 auto"}}>
+        {/* Progress dots */}
+        <div style={{display:"flex",gap:6,justifyContent:"center",marginBottom:"1.25rem"}}>
+          {picked.map((s, i) => (
+            <span key={s.id} style={{
+              width: i === idx ? 20 : 8, height: 8, borderRadius: 4,
+              background: i < idx ? C.gold : i === idx ? C.gold : C.bgElevated,
+              border: `1px solid ${i <= idx ? C.gold : C.border}`,
+              transition: "width .15s"
+            }}/>
+          ))}
+        </div>
+        <Card style={{marginBottom:"1.25rem",borderLeft:`3px solid ${C.gold}`}}>
+          <div style={{fontSize:10,letterSpacing:".12em",textTransform:"uppercase",color:C.dimmer,fontWeight:700,marginBottom:".45rem"}}>{current.catIcon} {current.catName}</div>
+          <div style={{fontFamily:FONT.display,fontWeight:800,fontSize:"1.4rem",lineHeight:1.15,marginBottom:".45rem"}}>{current.name}</div>
+          <div style={{fontSize:13,color:C.dim,lineHeight:1.55,marginBottom:"1.1rem"}}>{getSelfPromptLocal(player.level, current)}</div>
+          <div style={{display:"flex",flexDirection:"column",gap:".5rem"}}>
+            {scale.map(opt => (
+              <button key={opt.value} onClick={() => advance(opt.value)}
+                style={{background:C.bgElevated,border:`1px solid ${getScaleColor(scale, opt.value)}40`,borderLeft:`3px solid ${getScaleColor(scale, opt.value)}`,borderRadius:10,padding:".8rem 1rem",cursor:"pointer",color:C.white,fontFamily:FONT.body,fontSize:14,fontWeight:600,textAlign:"left"}}>
+                <div>{opt.label}</div>
+                {opt.desc && <div style={{fontSize:11,color:C.dim,marginTop:2,fontWeight:400}}>{opt.desc}</div>}
+              </button>
+            ))}
+          </div>
+        </Card>
+        <div style={{display:"flex",gap:".5rem"}}>
+          <button onClick={() => setIdx(Math.max(0, idx - 1))} disabled={idx === 0}
+            style={{background:"none",border:`1px solid ${C.border}`,borderRadius:10,padding:".7rem 1rem",cursor:idx===0?"default":"pointer",color:idx===0?C.dimmest:C.dimmer,fontSize:13,fontFamily:FONT.body,opacity:idx===0?0.5:1}}>← Back</button>
+          <button onClick={() => advance(null)} disabled={saving}
+            style={{flex:1,background:"none",border:`1px solid ${C.border}`,borderRadius:10,padding:".7rem 1rem",cursor:"pointer",color:C.dimmer,fontSize:13,fontFamily:FONT.body}}>
+            {idx + 1 === total ? (saving ? "Saving…" : "Skip & finish") : "Skip this one →"}
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// ─────────────────────────────────────────────────────────
+// InsightsScreen — browsable full list of HOCKEY_INSIGHTS,
+// destination for the "Read 3 pro insights" First-Six quest.
+// Each card, when expanded, marks its stat as read (same LS key
+// as the inline HockeyInsightWidget on Home).
+// ─────────────────────────────────────────────────────────
+export function InsightsScreen({ onBack, onInsightRead }) {
+  const [insights, setInsights] = useState(null);
+  const [openIds, setOpenIds] = useState(() => new Set());
+  const [readSet, setReadSet] = useState(() => {
+    try { const raw = window.localStorage.getItem("iceiq_insights_read_v1"); return new Set(raw ? JSON.parse(raw) : []); }
+    catch { return new Set(); }
+  });
+
+  useEffect(() => {
+    import("./data/hockeyInsights.js").then(m => setInsights(m.HOCKEY_INSIGHTS));
+  }, []);
+
+  function markRead(stat) {
+    if (!stat) return;
+    try {
+      const raw = window.localStorage.getItem("iceiq_insights_read_v1");
+      const arr = raw ? JSON.parse(raw) : [];
+      if (!arr.includes(stat)) {
+        arr.push(stat);
+        window.localStorage.setItem("iceiq_insights_read_v1", JSON.stringify(arr));
+        setReadSet(new Set(arr));
+      }
+    } catch {}
+    if (onInsightRead) onInsightRead();
+  }
+
+  function toggle(i, stat) {
+    setOpenIds(prev => {
+      const next = new Set(prev);
+      if (next.has(i)) { next.delete(i); }
+      else { next.add(i); markRead(stat); }
+      return next;
+    });
+  }
+
+  const readCount = readSet.size;
+
+  return (
+    <div style={{minHeight:"100vh",background:C.bg,color:C.white,fontFamily:FONT.body,paddingBottom:80}}>
+      <StickyHeader>
+        <div style={{maxWidth:560,margin:"0 auto",display:"flex",alignItems:"center",gap:"1rem"}}>
+          <BackBtn onClick={onBack}/>
+          <div style={{flex:1}}>
+            <div style={{fontFamily:FONT.display,fontWeight:800,fontSize:"1.1rem"}}>Pro Hockey Intel</div>
+            <div style={{fontSize:11,color:C.dimmer}}>{readCount} read · {insights ? insights.length : "…"} total</div>
+          </div>
+        </div>
+      </StickyHeader>
+      <div style={{padding:"1.25rem",maxWidth:560,margin:"0 auto"}}>
+        {!insights && <div style={{color:C.dimmer,fontSize:13}}>Loading…</div>}
+        {insights && insights.map((ins, i) => {
+          const isOpen = openIds.has(i);
+          const isRead = readSet.has(ins.stat);
+          return (
+            <button key={i} onClick={() => toggle(i, ins.stat)}
+              style={{display:"block",width:"100%",textAlign:"left",background:isOpen?C.bgElevated:C.bgCard,border:`1px solid ${isOpen?C.goldBorder:C.border}`,borderLeft:`3px solid ${isRead?C.gold:C.border}`,borderRadius:10,padding:".85rem 1rem",cursor:"pointer",color:C.white,fontFamily:FONT.body,marginBottom:".55rem"}}>
+              <div style={{display:"flex",alignItems:"baseline",gap:".6rem",marginBottom:isOpen?".55rem":0}}>
+                <span style={{fontFamily:FONT.display,fontWeight:800,fontSize:"1.2rem",color:C.gold,flexShrink:0}}>{ins.stat}</span>
+                <span style={{fontSize:13,color:C.white,lineHeight:1.45,flex:1}}>{ins.headline}</span>
+                {isRead && <span style={{fontSize:10,color:C.green,fontWeight:700,flexShrink:0}}>✓</span>}
+              </div>
+              {isOpen && ins.detail && (
+                <div style={{fontSize:12,color:C.dim,lineHeight:1.65,paddingTop:".35rem",borderTop:`1px solid ${C.border}`,marginTop:".35rem"}}>{ins.detail}</div>
+              )}
+              {isOpen && ins.source && (
+                <div style={{fontSize:10,color:C.dimmer,marginTop:".45rem",letterSpacing:".05em"}}>— {ins.source}</div>
+              )}
+            </button>
+          );
+        })}
+      </div>
+    </div>
+  );
+}

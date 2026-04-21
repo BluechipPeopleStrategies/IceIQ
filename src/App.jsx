@@ -95,12 +95,12 @@ const BADGES = {
 
 // First-Five quest checklist — guided onboarding for new users.
 const QUESTS_PLAYER = [
-  { id:"rate5",   label:"Rate yourself on 5 skills",    nav:"skills",    gate:null,                target:5 },
-  { id:"quiz1",   label:"Take your first quiz",         nav:"quiz",      gate:null,                target:1 },
-  { id:"read3",   label:"Read 3 pro insights",          nav:"home",      gate:null,                target:3 },
-  { id:"train1",  label:"Log a training session",       nav:"profile",   gate:null,                target:1 },
-  { id:"goal1",   label:"Set your first SMART goal",    nav:"goals",     gate:"smartGoals",        target:1 },
-  { id:"profile", label:"View your Game Sense profile", nav:"gamesense", gate:"progressSnapshots", target:1 },
+  { id:"rate6",   label:"Rate yourself on 6 skills",                nav:"skills-onboarding", gate:null,                target:6 },
+  { id:"quiz1",   label:"Take your first quiz",                     nav:"quiz",              gate:null,                target:1 },
+  { id:"read3",   label:"Read 3 pro insights",                      nav:"insights",          gate:null,                target:3 },
+  { id:"train1",  label:"Log a past or future training session",    nav:"profile",           gate:null,                target:1 },
+  { id:"goal1",   label:"Set your first SMART goal",                nav:"goals",             gate:"smartGoals",        target:1 },
+  { id:"profile", label:"View your Game Sense profile",             nav:"gamesense",         gate:"progressSnapshots", target:1 },
 ];
 const QUESTS_COACH = [
   { id:"team1",    label:"Add your first team",           nav:"home",  gate:"coachDashboard", target:1 },
@@ -210,7 +210,7 @@ function computeQuestProgress(def, ctx) {
   const { player, flags, teams, rosters, tier } = ctx;
   let progress = 0;
   switch (def.id) {
-    case "rate5":
+    case "rate6":
       progress = Object.values(player?.selfRatings || {}).filter(v => v).length;
       break;
     case "quiz1":
@@ -349,6 +349,8 @@ const QuestionReviewScreen = lazy(() => import("./screens.jsx").then(m => ({ def
 const ProfileSetup = lazy(() => import("./screens.jsx").then(m => ({ default: m.ProfileSetup })));
 const PlansScreen = lazy(() => import("./screens.jsx").then(m => ({ default: m.PlansScreen })));
 const GameSenseReportScreen = lazy(() => import("./screens.jsx").then(m => ({ default: m.GameSenseReportScreen })));
+const SkillsOnboarding = lazy(() => import("./screens.jsx").then(m => ({ default: m.SkillsOnboarding })));
+const InsightsScreen = lazy(() => import("./screens.jsx").then(m => ({ default: m.InsightsScreen })));
 const ParentAssessmentScreen = lazy(() => import("./screens.jsx").then(m => ({ default: m.ParentAssessmentScreen })));
 const LazyFallback = () => <div style={{minHeight:"100vh",background:C.bg,color:C.dimmer,display:"flex",alignItems:"center",justifyContent:"center",fontFamily:FONT.body}}>Loading…</div>;
 
@@ -1467,7 +1469,11 @@ function useQuizState() {
 function Quiz({ player, onFinish, onBack, tier, onUpgrade }) {
   const isReturning = player.quizHistory.length > 0;
   const isDemo = !player.id || player.id === "__demo__";
-  const qLen = isDemo ? 7 : (player.sessionLength || 10);
+  // First-time quizzes (no session history yet) are capped at 5 so the
+  // First-Six onboarding feels quick. Subsequent quizzes use the player's
+  // configured sessionLength.
+  const firstTime = !isReturning;
+  const qLen = isDemo ? 7 : (firstTime ? 5 : (player.sessionLength || 10));
   const [queue, setQueue] = useState(null);
   const [question, setQuestion] = useState(null);
   const { sel, setSel, seqAnswered, setSeqAnswered, seqCorrect, setSeqCorrect, results, setResults } = useQuizState();
@@ -4658,6 +4664,8 @@ export default function App() {
         )}
         {screen === "results" && <Results results={quizResults} player={player} prevScore={prevScore} totalSessions={totalSessions} seqPerfect={seqPerfect} mistakeStreak={mistakeStreak} onAgain={()=>setScreen("quiz")} onHome={()=>setScreen("home")} showMilestoneBanner={showMilestone5Banner} onViewPlans={()=>{setShowMilestone5Banner(false);setScreen("plans");}}/>}
         {screen === "skills"  && <Skills player={player} onSave={handleSkillsSave} onBack={()=>setScreen("home")}/>}
+        {screen === "skills-onboarding" && <Suspense fallback={<LazyFallback/>}><SkillsOnboarding player={player} onSave={async (r)=>{ await handleSkillsSave(r); setScreen("home"); }} onBack={()=>setScreen("home")}/></Suspense>}
+        {screen === "insights" && <Suspense fallback={<LazyFallback/>}><InsightsScreen onBack={()=>setScreen("home")} onInsightRead={bumpQuestFlags}/></Suspense>}
         {screen === "study"   && <StudyScreen player={player} onBack={()=>setScreen("home")} onNav={setScreen}/>}
         {screen === "goals"   && (canAccess("smartGoals", tier).allowed
           ? <GoalsScreen player={player} onSave={handleGoalsSave} onBack={()=>setScreen("home")}/>
