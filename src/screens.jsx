@@ -1755,3 +1755,318 @@ export function InsightsScreen({ onBack, onInsightRead }) {
     </div>
   );
 }
+
+// ─────────────────────────────────────────────────────────
+// PARENTS PAGE — first-time parents marketing/explainer surface.
+// Seven sections: why, not, use, progress, pricing, privacy, developer.
+// Reachable via hash #parents (pre- and post-auth).
+// Palette translated from the design spec's light-theme blues to Ice-IQ's
+// dark-theme `C` tokens. Copy preserved verbatim from the spec.
+// ─────────────────────────────────────────────────────────
+export function ParentsPage({ onNavigate, onContact, photoSrc }) {
+  useEffect(() => {
+    try {
+      document.title = "For parents — Ice-IQ";
+      let meta = document.querySelector('meta[name="description"]');
+      if (!meta) {
+        meta = document.createElement("meta");
+        meta.name = "description";
+        document.head.appendChild(meta);
+      }
+      meta.content = "What Ice-IQ is, how to use it with your kid, and what to expect — written for first-time hockey parents.";
+    } catch {}
+  }, []);
+
+  function handleNav(route) { if (typeof onNavigate === "function") onNavigate(route); }
+  function handleContact() {
+    if (typeof onContact === "function") onContact();
+    else window.location.href = "mailto:thomas@bluechip-people-strategies.com";
+  }
+
+  return (
+    <div style={{minHeight:"100vh",background:C.bg,padding:"2.5rem 1rem",fontFamily:FONT.body,color:C.white}}>
+      <div style={{maxWidth:760,margin:"0 auto",lineHeight:1.65}}>
+
+        {/* Hero */}
+        <div style={S.eyebrow}>For first-time parents</div>
+        <h1 style={S.h1}>Welcome to Ice-IQ.</h1>
+        <p style={S.lead}>
+          Your kid already knows how to chase a puck. This is where they learn
+          to think the game.
+        </p>
+
+        {/* Table of contents */}
+        <nav style={S.toc} aria-label="On this page">
+          <a href="#why" style={S.tocLink}>1. Why Ice-IQ exists</a>
+          <a href="#not" style={S.tocLink}>2. What Ice-IQ is <em>not</em></a>
+          <a href="#use" style={S.tocLink}>3. How to use it</a>
+          <a href="#progress" style={S.tocLink}>4. Reading progress</a>
+          <a href="#pricing" style={S.tocLink}>5. Free vs paid</a>
+          <a href="#privacyinfo" style={S.tocLink}>6. Privacy</a>
+          <a href="#developer" style={S.tocLink}>7. About the developer</a>
+        </nav>
+
+        {/* 01 — Why Ice-IQ exists */}
+        <section id="why" style={S.section}>
+          <div style={S.sectionEyebrow}>01 — Why Ice-IQ exists</div>
+          <h2 style={S.h2}>Hockey sense isn't taught — it's assumed.</h2>
+          <p style={S.body}>
+            Kids spend thousands of dollars and hundreds of hours working on
+            skating, shooting, and stickhandling. The part that actually
+            separates players as they move up — reading the play, making the
+            right decision, knowing where to be — barely gets coached at all.
+          </p>
+          <p style={S.body}>
+            Ice-IQ is the off-ice reps your kid doesn't get anywhere else. Short
+            scenarios. Real situations. Age-appropriate. Built so they can do
+            it in 5 minutes before bed.
+          </p>
+        </section>
+
+        {/* 02 — What Ice-IQ is not */}
+        <section id="not" style={S.section}>
+          <div style={S.sectionEyebrow}>02 — What Ice-IQ is not</div>
+          <h2 style={S.h2}>Three things to get clear before you start.</h2>
+          <div style={S.cardGrid3}>
+            <_NotCard
+              title="Not a replacement for ice time"
+              body="Skating and skills still come from practice. This is the thinking layer on top."
+            />
+            <_NotCard
+              title="Not a test or ranking"
+              body="No scores get sent to coaches. No comparison to other kids. It's practice, not evaluation."
+            />
+            <_NotCard
+              title="Not a shortcut to AA"
+              body="It's a tool, not a ticket. Kids who use it consistently build sharper instincts over time — that's it."
+            />
+          </div>
+        </section>
+
+        {/* 03 — How to use it */}
+        <section id="use" style={S.section}>
+          <div style={S.sectionEyebrow}>03 — How to use it with your kid</div>
+          <h2 style={S.h2}>Short, consistent, theirs.</h2>
+          <dl style={S.dl}>
+            <_HowRow
+              label="Age group"
+              body="Pick the one that matches their current season, not their skill level. The scenarios are built around what an average U9, U11 or U13 player actually faces on the ice."
+            />
+            <_HowRow
+              label="Session length"
+              body="5 to 10 minutes, 3 to 4 times a week. Longer isn't better — fatigue kills decision-making practice."
+            />
+            <_HowRow
+              label="Your role"
+              body="Sit beside them the first couple of sessions if they're under 10. After that, step back. This is their tool."
+            />
+            <_HowRow
+              label="Tone"
+              body={<>Curious, not coach-y. <em>"Why did you pick that one?"</em> travels further than <em>"That's wrong."</em></>}
+            />
+          </dl>
+        </section>
+
+        {/* 04 — Reading progress */}
+        <section id="progress" style={S.section}>
+          <div style={S.sectionEyebrow}>04 — Reading progress (and talking about it)</div>
+          <h2 style={S.h2}>Progress ≠ the percentage.</h2>
+          <p style={S.body}>
+            The dashboard shows which concepts your kid is getting, which
+            they're still working through, and where they're improving
+            week-over-week. What it doesn't show is a grade. There's no passing
+            score.
+          </p>
+          <div style={S.callout}>
+            <div style={S.calloutLabel}>If you take one thing from this section</div>
+            <div style={S.calloutBody}>
+              Ask them what they <em>learned</em>, not what they <em>got right</em>.
+              Kids who can explain why an answer was wrong improve twice as fast
+              as kids who just get it right and move on.
+            </div>
+          </div>
+        </section>
+
+        {/* 05 — Free vs paid */}
+        <section id="pricing" style={S.section}>
+          <div style={S.sectionEyebrow}>05 — Free vs paid</div>
+          <h2 style={S.h2}>Free is real. Paid unlocks more.</h2>
+          <div style={S.tierGrid}>
+            <_TierCard tier="Free" price="$0" body="One age group. Core scenarios. Forever — no trial clock." />
+            <_TierCard tier="Pro" price="$12.99/mo" body="Full library, adaptive engine, progress tracking, goalie content." highlighted />
+            <_TierCard tier="Family" price="$19.99/mo" body="Everything in Pro, up to 3 kids." />
+            <_TierCard tier="Team" price="$49.99/mo" body="For coaches. Season pass available." />
+          </div>
+          <p style={S.bodyMuted}>
+            The free tier is genuinely useful on its own. Upgrade when your kid
+            has outgrown the scenarios in their age group — not before.
+          </p>
+        </section>
+
+        {/* 06 — Privacy */}
+        <section id="privacyinfo" style={S.section}>
+          <div style={S.sectionEyebrow}>06 — Privacy &amp; your kid's data</div>
+          <h2 style={S.h2}>We collect as little as possible.</h2>
+          <p style={S.body}>
+            Ice-IQ asks for a first name (or nickname) and an age group. That's
+            it. No email required for your kid's profile. No last name, no
+            school, no team affiliation unless you're on the Team tier and a
+            coach invites you.
+          </p>
+          <p style={S.body}>
+            We store what questions your kid has answered so the adaptive
+            engine can stop repeating what they already know. We don't sell
+            data. We don't share it with teams, associations, or advertisers.
+            Ever.
+          </p>
+        </section>
+
+        {/* 07 — About the developer */}
+        <section id="developer" style={{...S.section, borderTop:`1px solid ${C.border}`, paddingTop:32, marginTop:16}}>
+          <div style={S.sectionEyebrow}>07 — About the developer</div>
+          <h2 style={S.h2}>Who's behind this.</h2>
+
+          <div style={S.devIntro}>
+            <div style={S.photo}>
+              {photoSrc ? (
+                <img src={photoSrc} alt="Thomas, Ice-IQ developer" style={S.photoImg}/>
+              ) : (
+                <div style={S.photoPlaceholder}>Photo</div>
+              )}
+            </div>
+            <div>
+              <p style={S.body}>
+                Ice-IQ was built by Thomas, a hockey parent and coach born in
+                the United States and based in Alberta. His own kid plays —
+                the gaps in how hockey sense gets taught showed up at the
+                kitchen table long before they showed up in a product.
+              </p>
+              <p style={S.body}>
+                He's also the founder of BlueChip People Strategies, a
+                performance and decision-making advisory serving small
+                businesses, post-secondary institutions, and municipalities.
+              </p>
+            </div>
+          </div>
+
+          <div style={S.lensGrid}>
+            <_LensCard
+              label="The hockey side"
+              body="Has coached at the provincial level. A hockey parent first, which is why the app is built for parents, not around them."
+            />
+            <_LensCard
+              label="The learning side"
+              body="Master's in coaching. Has taught leadership and people development at the post-secondary level and delivered training across the municipal sector. Adults and young people learn differently — the scenarios are built for how kids actually process information."
+            />
+            <_LensCard
+              label="The decision-making side"
+              body="20+ years of high-stakes decision-making and a career in HR and labour relations. Both are fields where the quality of a decision matters more than knowing the right answer. That's the lens Ice-IQ is built through."
+            />
+          </div>
+
+          <div style={S.contactCallout}>
+            Questions, feedback, or want to pilot Ice-IQ with your team or
+            association? Reach out directly —{" "}
+            <a
+              href="mailto:thomas@bluechip-people-strategies.com"
+              style={S.contactEmail}
+              onClick={(e) => { if (onContact) { e.preventDefault(); handleContact(); } }}
+            >
+              thomas@bluechip-people-strategies.com
+            </a>
+          </div>
+        </section>
+
+        {/* Footer CTAs */}
+        <div style={S.footerCtas}>
+          <button style={S.btn} onClick={() => handleNav("home")}>
+            Pick your kid's age group
+          </button>
+          <button style={S.btn} onClick={() => handleNav("sample")}>
+            See a sample scenario
+          </button>
+          <button style={S.btn} onClick={handleContact}>
+            Questions? Get in touch
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function _NotCard({ title, body }) {
+  return (
+    <div style={S.notCard}>
+      <div style={S.notCardTitle}>{title}</div>
+      <div style={S.notCardBody}>{body}</div>
+    </div>
+  );
+}
+function _HowRow({ label, body }) {
+  return (
+    <>
+      <dt style={S.dt}>{label}</dt>
+      <dd style={S.dd}>{body}</dd>
+    </>
+  );
+}
+function _TierCard({ tier, price, body, highlighted }) {
+  return (
+    <div style={{...S.tierCard, ...(highlighted ? S.tierCardHighlighted : {})}}>
+      <div style={{...S.tierLabel, ...(highlighted ? S.tierLabelHighlighted : {})}}>{tier}</div>
+      <div style={S.tierPrice}>{price}</div>
+      <div style={S.tierBody}>{body}</div>
+    </div>
+  );
+}
+function _LensCard({ label, body }) {
+  return (
+    <div style={S.lensCard}>
+      <div style={S.lensLabel}>{label}</div>
+      <div style={S.lensBody}>{body}</div>
+    </div>
+  );
+}
+
+// Styles for ParentsPage — dark-theme translation of the light-theme spec.
+const S = {
+  eyebrow: { fontSize:11, letterSpacing:".14em", textTransform:"uppercase", color:C.blue, fontWeight:700, marginBottom:10 },
+  h1: { margin:"0 0 10px", fontSize:32, fontWeight:800, fontFamily:FONT.display, letterSpacing:"-.01em", color:C.white },
+  lead: { margin:"0 0 32px", fontSize:16, color:C.dim, lineHeight:1.7, borderLeft:`2px solid ${C.blue}`, paddingLeft:14 },
+  toc: { display:"flex", flexWrap:"wrap", gap:14, padding:"12px 14px", background:C.bgCard, border:`1px solid ${C.border}`, borderRadius:10, marginBottom:40, fontSize:13 },
+  tocLink: { color:C.dim, textDecoration:"none" },
+  section: { marginBottom:40 },
+  sectionEyebrow: { fontSize:11, letterSpacing:".12em", textTransform:"uppercase", color:C.dimmer, marginBottom:6, fontWeight:700 },
+  h2: { margin:"0 0 12px", fontSize:22, fontWeight:700, fontFamily:FONT.display, color:C.white, letterSpacing:"-.005em" },
+  body: { margin:"0 0 10px", fontSize:15, lineHeight:1.7, color:C.white },
+  bodyMuted: { margin:"14px 0 0", fontSize:13, color:C.dim, lineHeight:1.6 },
+  cardGrid3: { display:"grid", gridTemplateColumns:"repeat(auto-fit, minmax(180px, 1fr))", gap:12, marginTop:14 },
+  notCard: { background:C.bgCard, border:`1px solid ${C.border}`, borderRadius:10, padding:14 },
+  notCardTitle: { fontSize:13, fontWeight:700, color:C.white, marginBottom:6 },
+  notCardBody: { fontSize:13, color:C.dim, lineHeight:1.6 },
+  dl: { display:"grid", gridTemplateColumns:"120px 1fr", gap:"10px 20px", fontSize:14, lineHeight:1.7, marginTop:10 },
+  dt: { color:C.dimmer, fontSize:13, fontWeight:700, letterSpacing:".02em" },
+  dd: { margin:0, color:C.white },
+  callout: { background:C.blueDim, border:`1px solid rgba(59,130,246,.25)`, borderRadius:10, padding:"14px 16px", marginTop:14 },
+  calloutLabel: { fontSize:12, fontWeight:700, color:C.blue, marginBottom:6, letterSpacing:".04em", textTransform:"uppercase" },
+  calloutBody: { fontSize:14, color:C.white, lineHeight:1.6 },
+  tierGrid: { display:"grid", gridTemplateColumns:"repeat(auto-fit, minmax(140px, 1fr))", gap:10, marginTop:14 },
+  tierCard: { background:C.bgCard, border:`1px solid ${C.border}`, borderRadius:10, padding:14 },
+  tierCardHighlighted: { border:`2px solid ${C.gold}`, background:`linear-gradient(135deg,${C.bgCard},rgba(201,168,76,.06))` },
+  tierLabel: { fontSize:11, letterSpacing:".1em", textTransform:"uppercase", color:C.dimmer, marginBottom:4, fontWeight:700 },
+  tierLabelHighlighted: { color:C.gold },
+  tierPrice: { fontSize:14, fontWeight:700, marginBottom:6, color:C.white },
+  tierBody: { fontSize:12, color:C.dim, lineHeight:1.6 },
+  devIntro: { display:"grid", gridTemplateColumns:"96px 1fr", gap:20, alignItems:"start", marginBottom:18 },
+  photo: { width:96, height:96, borderRadius:10, overflow:"hidden", background:C.bgCard },
+  photoImg: { width:"100%", height:"100%", objectFit:"cover" },
+  photoPlaceholder: { width:"100%", height:"100%", border:`1px dashed ${C.border}`, borderRadius:10, display:"flex", alignItems:"center", justifyContent:"center", fontSize:11, color:C.dimmer },
+  lensGrid: { display:"grid", gridTemplateColumns:"repeat(auto-fit, minmax(180px, 1fr))", gap:12, marginTop:18, marginBottom:20 },
+  lensCard: { background:C.bgCard, border:`1px solid ${C.border}`, borderRadius:10, padding:14 },
+  lensLabel: { fontSize:11, letterSpacing:".08em", textTransform:"uppercase", color:C.dimmer, marginBottom:6, fontWeight:700 },
+  lensBody: { fontSize:13, lineHeight:1.6, color:C.white },
+  contactCallout: { background:C.blueDim, border:`1px solid rgba(59,130,246,.25)`, borderRadius:10, padding:"14px 16px", fontSize:14, color:C.white, lineHeight:1.6 },
+  contactEmail: { color:C.blue, fontWeight:700, textDecoration:"none" },
+  footerCtas: { marginTop:40, paddingTop:24, borderTop:`1px solid ${C.border}`, display:"flex", gap:10, flexWrap:"wrap" },
+  btn: { fontSize:13, padding:".55rem 1rem", background:C.bgCard, border:`1px solid ${C.border}`, borderRadius:10, cursor:"pointer", color:C.white, fontFamily:FONT.body, fontWeight:600 },
+};

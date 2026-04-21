@@ -267,3 +267,76 @@ export function TrainingLog({ playerId }) {
     </Card>
   );
 }
+
+// ─────────────────────────────────────────────────────────
+// HOME START-HERE CARD — Dismissible "For parents — start here" card.
+// Placed above QuestChecklist on the home screen. Once dismissed, doesn't
+// return unless localStorage key `iceiq_parents_card_dismissed` is cleared.
+// ─────────────────────────────────────────────────────────
+const PARENTS_CARD_STORAGE_KEY = "iceiq_parents_card_dismissed";
+
+export function HomeStartHereCard({ onRead }) {
+  // Start dismissed to avoid a flash before the LS read resolves.
+  const [dismissed, setDismissed] = useState(true);
+
+  useEffect(() => {
+    try {
+      const isDismissed = localStorage.getItem(PARENTS_CARD_STORAGE_KEY) === "true";
+      setDismissed(isDismissed);
+    } catch {
+      setDismissed(false);
+    }
+  }, []);
+
+  function handleDismiss() {
+    try { localStorage.setItem(PARENTS_CARD_STORAGE_KEY, "true"); } catch {}
+    setDismissed(true);
+  }
+  function handleRead() { if (typeof onRead === "function") onRead(); }
+
+  if (dismissed) return null;
+
+  return (
+    <div
+      role="complementary"
+      aria-label="For first-time parents"
+      style={{
+        background: `linear-gradient(135deg,${C.bgCard},${C.bgElevated})`,
+        border: `1px solid ${C.border}`,
+        borderLeft: `3px solid ${C.blue}`,
+        borderRadius: 12,
+        padding: "1rem 1.1rem",
+        marginBottom: "1rem",
+        fontFamily: FONT.body,
+        color: C.white,
+      }}
+    >
+      <div style={{display:"flex",alignItems:"flex-start",justifyContent:"space-between",gap:"1rem"}}>
+        <div style={{flex:1,minWidth:0}}>
+          <div style={{display:"flex",alignItems:"center",gap:".5rem",marginBottom:".35rem"}}>
+            <div style={{width:6,height:6,background:C.blue,borderRadius:"50%"}}/>
+            <span style={{fontSize:10,letterSpacing:".14em",textTransform:"uppercase",color:C.blue,fontWeight:700}}>For parents</span>
+          </div>
+          <h3 style={{margin:"0 0 .35rem",fontSize:15,fontWeight:700,color:C.white,fontFamily:FONT.body,letterSpacing:"-.005em"}}>
+            New to Ice-IQ? Start here.
+          </h3>
+          <p style={{margin:0,fontSize:13,color:C.dim,lineHeight:1.55}}>
+            A 2-minute read on what this is, how to use it with your kid, and what to expect.
+          </p>
+        </div>
+        <div style={{display:"flex",flexDirection:"column",gap:".35rem",flexShrink:0}}>
+          <button onClick={handleRead} style={{
+            fontSize:12,padding:".4rem .85rem",
+            background:C.gold,color:C.bg,border:"none",borderRadius:8,
+            cursor:"pointer",fontWeight:800,fontFamily:FONT.body,
+          }}>Read</button>
+          <button onClick={handleDismiss} style={{
+            fontSize:11,padding:".25rem .5rem",
+            background:"none",color:C.dimmer,border:"none",borderRadius:6,
+            cursor:"pointer",fontFamily:FONT.body,
+          }}>Dismiss</button>
+        </div>
+      </div>
+    </div>
+  );
+}

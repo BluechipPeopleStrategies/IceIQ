@@ -61,6 +61,7 @@ Seasonal pricing model (aligns with hockey season cycle Sept–Mar + summer off-
 - `iceiq_free_cap`: Free tier weekly quiz count keyed by week (4-week pruning).
 - `iceiq_rink_seen`: `{ seen: {u7:n,u9:n,...}, ids: {u7:[id,...],...} }` — FREE tier rink teaser counter, caps at `RINK_FREE_PER_AGE` (3) per age group.
 - `iceiq_milestone5_shown`: Flag — shown once when free user completes 5th quiz.
+- `iceiq_parents_card_dismissed`: "true" once user dismisses the Home "For parents — start here" card. Never returns unless cleared.
 
 ## Tier Resolution (`resolveTier`)
 - Demo coach → **TEAM** (sees full coach dashboard).
@@ -104,6 +105,13 @@ Demo coach roster: `DEMO_COACH_ROSTER` — 5 U11 players with `iq` field (displa
 - Quiz format preview: 1 locked-format sentinel mid-quiz for FREE.
 - Weekly quiz cap: `FreeQuizCapScreen` with countdown + upgrade CTA.
 - Upgrade prompt surface: positionFilter, >1 age switch, session 6+, weekly cap hit, weekly challenge tap.
+
+## First-Time Parents Surface
+- **Route:** `#parents` hash route, shareable as `ice-iq.vercel.app/#parents`, reachable pre- and post-auth.
+- **Page:** `ParentsPage` in `screens.jsx` (lazy-loaded) — seven sections: why, not, use, progress, pricing, privacy, developer.
+- **Card:** `HomeStartHereCard` in `widgets.jsx` — dismissible home-screen card mounted above `QuestChecklist` in `Home`. Dismiss persists via `iceiq_parents_card_dismissed`.
+- **Entry points:** AuthScreen footer link, Home card, `#parents` direct URL.
+- **Follow-ups:** (1) `/privacy` route doesn't exist — Section 06 privacy-policy link omitted; (2) no public sample-scenario route — "See a sample scenario" button routes to home.
 
 ## Token Optimization
 - `App.jsx` contains 880+ questions. Do NOT read large question bank sections unless editing content.

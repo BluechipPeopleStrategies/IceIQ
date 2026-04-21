@@ -13,7 +13,7 @@ import { markSignupIntent, logSignupComplete } from "./utils/signupTelemetry";
 import { DEPTH_SLOTS, getDepthChart, setAssignment as setDepthAssignment, seedDemoDepthChart, clearDemoDepthChart } from "./utils/depthChart";
 import Rink from "./Rink.jsx";
 import { COMPETENCIES, getPositioningJourneyState, GAME_SENSE_UNLOCK_SESSIONS } from "./utils/gameSense.js";
-import { HockeyInsightWidget, BottomNav, TrainingLog } from "./widgets.jsx";
+import { HockeyInsightWidget, BottomNav, TrainingLog, HomeStartHereCard } from "./widgets.jsx";
 import { canSwitchAgeGroup, recordAgeGroupSwitch, getAgeGroupLock, setAgeGroupLock, checkSeasonReset } from "./utils/deviceLock";
 import {
   C, FONT, LEVELS, POSITIONS, POSITIONS_U11UP, SEASONS,
@@ -352,6 +352,7 @@ const GameSenseReportScreen = lazy(() => import("./screens.jsx").then(m => ({ de
 const SkillsOnboarding = lazy(() => import("./screens.jsx").then(m => ({ default: m.SkillsOnboarding })));
 const InsightsScreen = lazy(() => import("./screens.jsx").then(m => ({ default: m.InsightsScreen })));
 const ParentAssessmentScreen = lazy(() => import("./screens.jsx").then(m => ({ default: m.ParentAssessmentScreen })));
+const ParentsPage = lazy(() => import("./screens.jsx").then(m => ({ default: m.ParentsPage })));
 const LazyFallback = () => <div style={{minHeight:"100vh",background:C.bg,color:C.dimmer,display:"flex",alignItems:"center",justifyContent:"center",fontFamily:FONT.body}}>Loading…</div>;
 
 const COMP={
@@ -1257,6 +1258,9 @@ function Home({ player, onNav, demoMode, subscriptionTier, questFlagsBump, onPro
           </div>
           <button onClick={() => onNav("profile")} style={{background:C.bgCard,border:`1px solid ${C.border}`,borderRadius:10,width:38,height:38,cursor:"pointer",color:C.dimmer,fontSize:16,display:"flex",alignItems:"center",justifyContent:"center"}}>⚙</button>
         </div>
+
+        {/* For-parents start-here card — dismissible, persists via LS */}
+        <HomeStartHereCard onRead={() => onNav("parents")} />
 
         {/* First-Five quest checklist — hidden once dismissed */}
         {!questDismissed && !firstLineSeen && (
@@ -4098,7 +4102,14 @@ function AuthScreen({ onAuthenticated, onDemo, onDevEnter, prefill }) {
           <div style={{fontSize:10,color:"rgba(248,250,252,.3)",textAlign:"center",marginTop:".6rem"}}>Preview only — nothing is saved.</div>
         </div>
 
-        <div style={{fontSize:10,color:"rgba(248,250,252,.3)",textAlign:"center",marginTop:"1.5rem"}}>v{VERSION}</div>
+        {/* For-parents entry point — pre-auth marketing surface. */}
+        <div style={{textAlign:"center",marginTop:"1.25rem"}}>
+          <a href="#parents" style={{color:"rgba(59,130,246,.85)",fontSize:12,fontFamily:FONT.body,textDecoration:"none",fontWeight:600,letterSpacing:".02em"}}>
+            For first-time parents →
+          </a>
+        </div>
+
+        <div style={{fontSize:10,color:"rgba(248,250,252,.3)",textAlign:"center",marginTop:"1rem"}}>v{VERSION}</div>
       </div>
       </div>
     </div>
@@ -4389,6 +4400,31 @@ export default function App() {
   const [weeklyResults, setWeeklyResults] = useState(null);
   const [weeklyScore, setWeeklyScore] = useState(null);
 
+  // Hash routing — shareable #parents URL reachable pre- and post-auth.
+  // TOC anchors inside ParentsPage (#why, #not, etc.) don't match this route
+  // marker, so intra-page scroll links don't trigger navigation.
+  const [hashRoute, setHashRoute] = useState(() => {
+    try { return (window.location.hash || "").replace(/^#/, ""); } catch { return ""; }
+  });
+  useEffect(() => {
+    const handler = () => {
+      try { setHashRoute((window.location.hash || "").replace(/^#/, "")); } catch {}
+    };
+    window.addEventListener("hashchange", handler);
+    return () => window.removeEventListener("hashchange", handler);
+  }, []);
+  useEffect(() => {
+    if (hashRoute === "parents" && screen !== "parents") setScreen("parents");
+  }, [hashRoute, screen]);
+  function clearParentsHash() {
+    try {
+      if ((window.location.hash || "").replace(/^#/, "") === "parents") {
+        history.replaceState(null, "", window.location.pathname + window.location.search);
+        setHashRoute("");
+      }
+    } catch {}
+  }
+
   // Resolve tier once per render
   const tier = resolveTier({ profile, demoMode });
 
@@ -4657,6 +4693,18 @@ export default function App() {
     return <div style={{minHeight:"100vh",background:C.bg,color:C.dimmer,display:"flex",alignItems:"center",justifyContent:"center",fontFamily:FONT.body}}>Loading…</div>;
   }
 
+  // Pre-auth hash route: parents can share ice-iq.vercel.app/#parents without logging in.
+  if (!profile && hashRoute === "parents") {
+    return (
+      <Suspense fallback={<LazyFallback/>}>
+        <ParentsPage
+          onNavigate={() => clearParentsHash()}
+          onContact={() => { window.location.href = "mailto:thomas@bluechip-people-strategies.com"; }}
+        />
+      </Suspense>
+    );
+  }
+
   // Not logged in → auth screen
   if (!profile) {
     if (!hasSupabase) {
@@ -4793,9 +4841,13 @@ export default function App() {
         {screen === "profile" && <Profile player={player} onSave={handleProfileSave} onBack={()=>setScreen("home")} onReset={handleSignOut} demoMode={demoMode} tier={tier} onUpgrade={(f,t)=>promptUpgrade(f,t)} userEmail={userEmail} onAdminReports={()=>setScreen("admin")} onNav={setScreen}/>}
         {screen === "admin" && <Suspense fallback={<LazyFallback/>}><AdminReports onBack={()=>setScreen("profile")}/></Suspense>}
         {screen === "question-review" && <Suspense fallback={<LazyFallback/>}><QuestionReviewScreen onBack={()=>setScreen("profile")}/></Suspense>}
+        {screen === "parents" && <Suspense fallback={<LazyFallback/>}><ParentsPage
+          onNavigate={(route) => { clearParentsHash(); setScreen("home"); /* "sample" also routes home for now — no public sample route yet */ }}
+          onContact={() => { window.location.href = "mailto:thomas@bluechip-people-strategies.com"; }}
+        /></Suspense>}
       </div>
 
-      {!["quiz","results","weekly"].includes(screen) && (
+      {!["quiz","results","weekly","parents"].includes(screen) && (
         <BottomNav active={screen} onNav={setScreen} tier={tier}/>
       )}
 
