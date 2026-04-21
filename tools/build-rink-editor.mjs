@@ -17,13 +17,15 @@ const outPath = path.join(here, "rink-editor.jsx");
 const dashPath = path.join(here, "dashboard.html");
 
 const src = fs.readFileSync(srcPath, "utf8");
+// Drop ES module syntax — the inline <script> in dashboard.html runs in
+// plain-script context, where `export` / `import` are syntax errors.
 const patched = src
   .replace(/^import React, \{ useState, useRef, useEffect, useCallback \} from 'react';/m,
            "const { useState, useRef, useEffect, useCallback } = React;")
-  .replace(/^export const ZONES =/m, "const ZONES =")
-  .replace(/^export const ZONE_KEYS =/m, "const ZONE_KEYS =")
-  .replace(/^export function emptyScene/m, "function emptyScene")
-  .replace(/^export default function Rink/m, "function Rink");
+  .replace(/^export default function Rink/m, "function Rink")
+  .replace(/^export function (\w+)/gm, "function $1")
+  .replace(/^export const (\w+)/gm, "const $1")
+  .replace(/^export let (\w+)/gm, "let $1");
 
 const body =
   "// AUTO-GENERATED from src/Rink.jsx — do not edit directly.\n" +
