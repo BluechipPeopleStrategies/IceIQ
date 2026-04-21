@@ -18,6 +18,7 @@ const FEATURE_KEYS = [
   "coachFeedback",
   "additionalProfiles",
   "weeklyChallenge",
+  "rinkQuestions",
 ];
 
 // Per-tier allow list — what each tier can access.
@@ -25,6 +26,9 @@ const FEATURE_KEYS = [
 const TIER_FEATURES = {
   FREE: new Set([
     "positionFilter",
+    // FREE gets a rink teaser (first 3 per age group) — the per-age counter
+    // in utils/rinkProgress.js does the rationing; canAccess("rinkQuestions")
+    // reflects whether *unlimited* rink access is available.
   ]),
   PRO: new Set([
     "multipleAgeGroups",
@@ -36,6 +40,7 @@ const TIER_FEATURES = {
     "fullSessionHistory",
     "weeklyChallenge",
     "coachFeedback",
+    "rinkQuestions",
   ]),
   FAMILY: new Set([
     "multipleAgeGroups",
@@ -48,6 +53,7 @@ const TIER_FEATURES = {
     "additionalProfiles",
     "weeklyChallenge",
     "coachFeedback",
+    "rinkQuestions",
   ]),
   TEAM: new Set([
     "multipleAgeGroups",
@@ -60,6 +66,7 @@ const TIER_FEATURES = {
     "coachDashboard",
     "weeklyChallenge",
     "coachFeedback",
+    "rinkQuestions",
     // Team tier typically has a single coach-owned workspace, not additional child profiles
   ]),
 };
@@ -77,6 +84,7 @@ const UPGRADE_TARGET = {
   coachDashboard:      "team",
   weeklyChallenge:     "pro",
   coachFeedback:       "pro",
+  rinkQuestions:       "pro",
 };
 
 const UPGRADE_MESSAGES = {
@@ -91,6 +99,7 @@ const UPGRADE_MESSAGES = {
   coachDashboard:      "Track your full roster with Ice-IQ Team",
   weeklyChallenge:     "Compete in weekly challenges with Ice-IQ Pro",
   coachFeedback:       "See ratings and notes from every coach on your team with Ice-IQ Pro",
+  rinkQuestions:       "Unlock every rink scenario with Ice-IQ Pro",
 };
 
 // ─────────────────────────────────────────────────────────

@@ -16,7 +16,8 @@
 ## Pricing & Gating (`src/utils/tierGate.js`, `src/config/pricing.js`)
 Seasonal pricing model (aligns with hockey season cycle Sept–Mar + summer off-season Apr–Aug).
 
-- **Free:** positionFilter ✓, multipleChoice only, 5 session history, 1 profile, 1 age group, **3 quizzes/week cap** (localStorage, resets Monday).
+- **Free:** positionFilter ✓, multipleChoice + **3 rink scenarios per age group (teaser)**, 5 session history, 1 profile, 1 age group, **3 quizzes/week cap** (localStorage, resets Monday).
+  - Rink teaser counter lives in `src/utils/rinkProgress.js` — `RINK_FREE_PER_AGE = 3`, localStorage key `iceiq_rink_seen` (`{ u7: n, u9: n, ... }`). After the cap, `buildQueue` in `App.jsx` injects a `rinkLocked` sentinel that routes to the `rinkQuestions` upgrade prompt.
 - **Pro:** All question formats (5 types), adaptive engine, SMART goals, progress snapshots/radar, full session history, weekly challenge.
   - Hockey Season (Sept–Mar): **$89.99 CAD** — primary competitive season
   - Summer Off-Season (Apr–Aug): **$44.99 CAD** — development & training focus, lower friction
@@ -58,6 +59,7 @@ Seasonal pricing model (aligns with hockey season cycle Sept–Mar + summer off-
 - `iceiq_season_pass`: {purchaseDate, expiryDate}.
 - `iceiq_weekly`: Weekly challenge completion record (8-week pruning).
 - `iceiq_free_cap`: Free tier weekly quiz count keyed by week (4-week pruning).
+- `iceiq_rink_seen`: `{ seen: {u7:n,u9:n,...}, ids: {u7:[id,...],...} }` — FREE tier rink teaser counter, caps at `RINK_FREE_PER_AGE` (3) per age group.
 - `iceiq_milestone5_shown`: Flag — shown once when free user completes 5th quiz.
 
 ## Tier Resolution (`resolveTier`)

@@ -2,6 +2,7 @@ import { useState, useEffect, useCallback, lazy, Suspense } from "react";
 import * as SB from "./supabase";
 import { supabase, hasSupabase } from "./supabase";
 import { canAccess, getUpgradeTriggerMessage } from "./utils/tierGate";
+import { rinksRemainingForFree, recordRinkSeen, RINK_FREE_PER_AGE } from "./utils/rinkProgress";
 import { getParentRatings, saveParentRatings, hasParentRatings, daysSinceUpdated, PARENT_DIMENSIONS, PARENT_SCALE } from "./utils/parentAssessment";
 import { calcPlayerProfile, PROFILE_AXES } from "./utils/playerProfile";
 import { markSignupIntent, logSignupComplete } from "./utils/signupTelemetry";
@@ -509,7 +510,9 @@ function buildQueue(qb, level, position, isReturning, tier) {
     }
 
     if (!formatAllowed) {
-      posFiltered = posFiltered.filter(q => !q.type || q.type === "mc");
+      // FREE: MC always allowed. Rinks allowed up to the per-age cap (see
+      // utils/rinkProgress.js); rationing happens at queue-build time below.
+      posFiltered = posFiltered.filter(q => !q.type || q.type === "mc" || q.type === "rink");
       // zone-click at d:3 requires PRO+
       posFiltered = posFiltered.filter(q => !(q.type === "zone-click" && q.d === 3));
     }
@@ -527,6 +530,24 @@ function buildQueue(qb, level, position, isReturning, tier) {
     2: shuffle(pool[2]),
     3: shuffle(pool[3]),
   };
+
+  // For FREE users: cap rink scenarios at RINK_FREE_PER_AGE for the active
+  // age. If the cap is already hit, swap in a rinkLocked sentinel so the
+  // quiz shows the upgrade prompt instead of silently dropping rinks.
+  if (!formatAllowed) {
+    const remainingRinks = rinksRemainingForFree(level);
+    const allRinks = [...byD[1], ...byD[2], ...byD[3]].filter(q => q.type === "rink");
+    const keepIds = new Set(shuffle(allRinks).slice(0, remainingRinks).map(q => q.id));
+    for (const d of [1, 2, 3]) {
+      byD[d] = byD[d].filter(q => q.type !== "rink" || keepIds.has(q.id));
+    }
+    if (remainingRinks === 0) {
+      const sentinel = { id: "__rink_locked__", type: "rinkLocked", d: 2 };
+      if (byD[2].length >= 3) {
+        byD[2] = [...byD[2].slice(0, 2), sentinel, ...byD[2].slice(2)];
+      }
+    }
+  }
 
   // For FREE users: inject one format-preview sentinel mid-queue to show locked formats exist
   if (!formatAllowed) {
@@ -1547,6 +1568,35 @@ function Quiz({ player, onFinish, onBack, tier, onUpgrade }) {
     );
   }
 
+  // FREE-tier rink cap sentinel — fires once the user has already answered
+  // RINK_FREE_PER_AGE rink scenarios in this age group.
+  if (qtype === "rinkLocked") {
+    return (
+      <div style={{minHeight:"100vh",background:C.bg,color:C.white,fontFamily:FONT.body}}>
+        <StickyHeader>
+          <div style={{maxWidth:560,margin:"0 auto",display:"flex",alignItems:"center",gap:"1rem"}}>
+            <button onClick={onBack} style={{background:"none",border:`1px solid ${C.border}`,color:C.dimmer,borderRadius:8,padding:".35rem .75rem",cursor:"pointer",fontSize:13,fontFamily:FONT.body}}>←</button>
+            <div style={{flex:1}}>
+              <div style={{fontFamily:FONT.display,fontWeight:800,fontSize:"1rem",color:C.gold}}>Ice-IQ · {player.level}</div>
+              <div style={{fontSize:11,color:C.dimmer}}>Q{qNum+1}/{qLen} · {player.position}</div>
+            </div>
+          </div>
+        </StickyHeader>
+        <div style={{padding:"1.5rem 1.25rem",maxWidth:560,margin:"0 auto",display:"flex",flexDirection:"column",alignItems:"center",textAlign:"center"}}>
+          <div style={{fontSize:48,margin:"1.5rem 0 .75rem"}}>🏒</div>
+          <div style={{fontFamily:FONT.display,fontWeight:800,fontSize:"1.6rem",color:C.gold,marginBottom:".5rem"}}>Rink Scenarios</div>
+          <div style={{fontSize:13,color:C.dim,lineHeight:1.7,marginBottom:"1.75rem",maxWidth:360}}>You've used your {RINK_FREE_PER_AGE} free rink scenarios for {player.level?.split(" ")[0] || "this age group"}. Ice-IQ Pro unlocks the full set.</div>
+          <div style={{background:C.bgElevated,border:`1px solid ${C.goldBorder}`,borderRadius:12,padding:"1.25rem",marginBottom:"1.5rem",width:"100%",textAlign:"left"}}>
+            <div style={{fontSize:11,color:C.gold,fontWeight:700,marginBottom:".5rem"}}>🔒 PRO QUESTION TYPE</div>
+            <div style={{fontSize:12,color:C.dim,lineHeight:1.6}}>Rink scenarios put you on the ice — drag players, read the play, click the right spot. Every rink question, every age group, with Ice-IQ Pro.</div>
+          </div>
+          <button onClick={() => onUpgrade("rinkQuestions","pro")} style={{background:C.gold,color:C.bg,border:"none",borderRadius:10,padding:".85rem 1.75rem",cursor:"pointer",fontWeight:800,fontSize:15,fontFamily:FONT.body,marginBottom:".75rem",width:"100%"}}>Unlock All Rink Scenarios →</button>
+          <button onClick={advance} style={{background:"none",border:`1px solid ${C.border}`,color:C.dimmer,borderRadius:10,padding:".7rem 1.5rem",cursor:"pointer",fontWeight:600,fontSize:13,fontFamily:FONT.body,width:"100%"}}>Skip for now</button>
+        </div>
+      </div>
+    );
+  }
+
   const typeInfo = Q_TYPE_LABELS[qtype] || Q_TYPE_LABELS.mc;
   const diagramType = DIAGRAMS[q.id];
 
@@ -1646,6 +1696,8 @@ function Quiz({ player, onFinish, onBack, tier, onUpgrade }) {
               const newResult = { id:q.id, cat:q.cat, ok, d:q.d||2, type:"rink", verdict:result.verdict, choice:result.choice };
               const newResults = [...results, newResult];
               setResults(newResults);
+              // Count toward the FREE-tier per-age rink cap (idempotent per id).
+              try { recordRinkSeen(player.level, q.id); } catch {}
               if (results.length + 1 >= qLen) setQuizDone(true);
             }}
           />
