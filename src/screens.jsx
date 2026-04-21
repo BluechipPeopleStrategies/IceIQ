@@ -200,8 +200,9 @@ export function ProfileSetup({ profile, onComplete }) {
   if (!level) return (
     <Screen>
       <div style={{marginBottom:"2rem"}}>
-        <div style={{fontSize:10,letterSpacing:".18em",color:C.gold,textTransform:"uppercase",fontWeight:700,marginBottom:".6rem"}}>Step 1 of 2</div>
-        <h2 style={{fontFamily:FONT.display,fontWeight:800,fontSize:"2rem",margin:0}}>What age group?</h2>
+        <div style={{fontSize:10,letterSpacing:".18em",color:C.gold,textTransform:"uppercase",fontWeight:700,marginBottom:".6rem"}}>Welcome · Step 1 of 2</div>
+        <h2 style={{fontFamily:FONT.display,fontWeight:800,fontSize:"2rem",margin:"0 0 .35rem"}}>What age group do you play?</h2>
+        <div style={{fontSize:13,color:C.dim,lineHeight:1.55}}>Two quick questions and we'll get you on the ice.</div>
       </div>
       <div style={{display:"flex",flexDirection:"column",gap:".5rem"}}>
         {LEVELS.map(l => (

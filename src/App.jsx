@@ -268,6 +268,11 @@ function QuestChecklist({ role, quests, results, onTap, onDismiss, onAllComplete
     if (allDone && onAllComplete) onAllComplete();
   }, [allDone, onAllComplete]);
   const coachName = "Coach Reynolds";
+  // Prescriptive mode: first quest that isn't done/acknowledged is the
+  // "Next up" — surfaced as a hero CTA at the top of the card so brand-new
+  // users have one obvious thing to tap, not 6.
+  const nextIdx = results.findIndex(r => !r.done && !r.acknowledged);
+  const nextQuest = nextIdx >= 0 ? quests[nextIdx] : null;
   return (
     <div style={{background:`linear-gradient(135deg, rgba(201,168,76,0.08), rgba(124,111,205,0.06))`,border:`1px solid ${C.goldBorder}`,borderRadius:14,padding:"1rem 1rem .9rem",marginBottom:"1rem"}}>
       <div style={{display:"flex",alignItems:"center",gap:".65rem",marginBottom:collapsed ? 0 : ".85rem"}}>
@@ -275,7 +280,7 @@ function QuestChecklist({ role, quests, results, onTap, onDismiss, onAllComplete
         <div style={{flex:1,minWidth:0}}>
           <div style={{fontSize:10,letterSpacing:".14em",textTransform:"uppercase",color:C.gold,fontWeight:700}}>First Five · {role === "coach" ? "Coach" : "Player"}</div>
           <div style={{fontSize:13,color:C.white,fontWeight:700,marginTop:1}}>
-            {allDone ? "🏒 First Line — complete!" : `Welcome — try these ${total} to learn the app`}
+            {allDone ? "🏒 First Line — complete!" : nextQuest ? `Next up: ${nextQuest.label}` : `Welcome — try these ${total} to learn the app`}
           </div>
         </div>
         <button onClick={() => setCollapsed(c => !c)} style={{background:"none",border:"none",color:C.dimmer,cursor:"pointer",fontSize:12,padding:"4px 8px"}} aria-label={collapsed?"Expand":"Collapse"}>
@@ -283,6 +288,14 @@ function QuestChecklist({ role, quests, results, onTap, onDismiss, onAllComplete
         </button>
         {onDismiss && <button onClick={onDismiss} style={{background:"none",border:"none",color:C.dimmer,cursor:"pointer",fontSize:14,padding:"2px 6px",lineHeight:1}} aria-label="Dismiss">×</button>}
       </div>
+      {/* Prescriptive hero CTA — brand-new users tap one big button instead
+          of scanning the whole list. Hidden when collapsed or when all done. */}
+      {!collapsed && nextQuest && !allDone && (
+        <button onClick={() => onTap(nextQuest)} style={{display:"block",width:"100%",background:`linear-gradient(135deg, ${C.gold}, #b8860b)`,color:C.bg,border:"none",borderRadius:12,padding:".85rem 1rem",cursor:"pointer",fontFamily:FONT.body,fontWeight:800,fontSize:14,letterSpacing:".02em",marginBottom:".85rem",boxShadow:`0 4px 14px ${C.gold}33, inset 0 1px 0 rgba(255,255,255,.25)`,textAlign:"left",display:"flex",alignItems:"center",justifyContent:"space-between",gap:".5rem"}}>
+          <span>Start: {nextQuest.label}</span>
+          <span style={{fontSize:16}}>→</span>
+        </button>
+      )}
       {!collapsed && (
         <>
           {quests.map((q, i) => {
