@@ -4,6 +4,7 @@ import { supabase, hasSupabase } from "./supabase";
 import { canAccess, getUpgradeTriggerMessage } from "./utils/tierGate";
 import { rinksRemainingForFree, recordRinkSeen, RINK_FREE_PER_AGE } from "./utils/rinkProgress";
 import { isDevBypassEnabled, getDevProfile, setDevProfile, clearDevProfile, buildDevPlayer } from "./utils/devBypass";
+import { getLevelDisplay } from "./utils/ageGroup";
 import { getParentRatings, saveParentRatings, hasParentRatings, daysSinceUpdated, PARENT_DIMENSIONS, PARENT_SCALE } from "./utils/parentAssessment";
 import { calcPlayerProfile, PROFILE_AXES } from "./utils/playerProfile";
 import { markSignupIntent, logSignupComplete } from "./utils/signupTelemetry";
@@ -1581,7 +1582,7 @@ function Quiz({ player, onFinish, onBack, tier, onUpgrade }) {
           <div style={{maxWidth:560,margin:"0 auto",display:"flex",alignItems:"center",gap:"1rem"}}>
             <button onClick={onBack} style={{background:"none",border:`1px solid ${C.border}`,color:C.dimmer,borderRadius:8,padding:".35rem .75rem",cursor:"pointer",fontSize:13,fontFamily:FONT.body}}>←</button>
             <div style={{flex:1}}>
-              <div style={{fontFamily:FONT.display,fontWeight:800,fontSize:"1rem",color:C.gold}}>Ice-IQ · {player.level}</div>
+              <div style={{fontFamily:FONT.display,fontWeight:800,fontSize:"1rem",color:C.gold}}>Ice-IQ · {getLevelDisplay(player)}</div>
               <div style={{fontSize:11,color:C.dimmer}}>Q{qNum+1}/{qLen} · {player.position}</div>
             </div>
           </div>
@@ -1610,7 +1611,7 @@ function Quiz({ player, onFinish, onBack, tier, onUpgrade }) {
           <div style={{maxWidth:560,margin:"0 auto",display:"flex",alignItems:"center",gap:"1rem"}}>
             <button onClick={onBack} style={{background:"none",border:`1px solid ${C.border}`,color:C.dimmer,borderRadius:8,padding:".35rem .75rem",cursor:"pointer",fontSize:13,fontFamily:FONT.body}}>←</button>
             <div style={{flex:1}}>
-              <div style={{fontFamily:FONT.display,fontWeight:800,fontSize:"1rem",color:C.gold}}>Ice-IQ · {player.level}</div>
+              <div style={{fontFamily:FONT.display,fontWeight:800,fontSize:"1rem",color:C.gold}}>Ice-IQ · {getLevelDisplay(player)}</div>
               <div style={{fontSize:11,color:C.dimmer}}>Q{qNum+1}/{qLen} · {player.position}</div>
             </div>
           </div>
@@ -1639,7 +1640,7 @@ function Quiz({ player, onFinish, onBack, tier, onUpgrade }) {
         <div style={{maxWidth:560,margin:"0 auto",display:"flex",alignItems:"center",gap:"1rem"}}>
           <button onClick={onBack} style={{background:"none",border:`1px solid ${C.border}`,color:C.dimmer,borderRadius:8,padding:".35rem .75rem",cursor:"pointer",fontSize:13,fontFamily:FONT.body}}>←</button>
           <div style={{flex:1}}>
-            <div style={{fontFamily:FONT.display,fontWeight:800,fontSize:"1rem",color:C.gold}}>Ice-IQ · {player.level}</div>
+            <div style={{fontFamily:FONT.display,fontWeight:800,fontSize:"1rem",color:C.gold}}>Ice-IQ · {getLevelDisplay(player)}</div>
             <div style={{fontSize:11,color:C.dimmer}}>Q{qNum+1}/{qLen} · {player.position} · {player.season||SEASONS[0]}</div>
           </div>
           <div style={{width:80,height:4,background:C.dimmest,borderRadius:2,overflow:"hidden"}}>
@@ -2267,7 +2268,7 @@ function GoalsScreen({ player, onSave, onBack }) {
           <BackBtn onClick={onBack}/>
           <div style={{flex:1}}>
             <div style={{fontFamily:FONT.display,fontWeight:800,fontSize:"1.1rem"}}>SMART Goals</div>
-            <div style={{fontSize:11,color:C.dimmer}}>{player.level} · {Object.keys(goals).filter(k=>goals[k]?.goal).length}/{cats.length} set</div>
+            <div style={{fontSize:11,color:C.dimmer}}>{getLevelDisplay(player)} · {Object.keys(goals).filter(k=>goals[k]?.goal).length}/{cats.length} set</div>
           </div>
           <button onClick={() => onSave(goals)} style={{background:C.gold,color:C.bg,border:"none",borderRadius:8,padding:".4rem 1rem",cursor:"pointer",fontWeight:800,fontSize:13,fontFamily:FONT.body}}>Save</button>
         </div>
@@ -2705,7 +2706,7 @@ function Report({ player, onBack, demoCoachData, tier, onUpgrade }) {
       <div style={{marginBottom:"1.5rem"}}>
         <div style={{fontSize:10,letterSpacing:".16em",color:C.gold,textTransform:"uppercase",fontWeight:700,marginBottom:4}}>Player Development Report</div>
         <h1 style={{fontFamily:FONT.display,fontWeight:800,fontSize:"clamp(1.8rem,6vw,2.6rem)",margin:"0 0 .25rem",lineHeight:1}}>{player.name}</h1>
-        <div style={{fontSize:13,color:C.dimmer}}>{player.level} · {player.position} · {player.season||SEASONS[0]}</div>
+        <div style={{fontSize:13,color:C.dimmer}}>{getLevelDisplay(player)} · {player.position} · {player.season||SEASONS[0]}</div>
       </div>
       <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:".75rem",marginBottom:"1rem"}}>
         <Card style={{background:`linear-gradient(135deg,${C.bgCard},${C.bgElevated})`,border:`1px solid ${C.goldBorder}`,textAlign:"center"}}>
@@ -3385,7 +3386,7 @@ function StudyScreen({ player, onBack, onNav }) {
       <div style={{padding:"1.25rem",maxWidth:560,margin:"0 auto"}}>
         <Card style={{marginBottom:"1rem",background:`linear-gradient(135deg,${C.bgCard},${C.bgElevated})`,border:`1px solid ${C.purpleBorder}`}}>
           <Label>Your Focus</Label>
-          <div style={{fontSize:13,color:C.dim,lineHeight:1.6}}>{player.level} · {player.position}</div>
+          <div style={{fontSize:13,color:C.dim,lineHeight:1.6}}>{getLevelDisplay(player)} · {player.position}</div>
           <div style={{fontSize:12,color:C.dimmer,marginTop:".5rem",lineHeight:1.6}}>Based on your quiz results and self-ratings, here's what to watch and work on.</div>
         </Card>
 
@@ -4457,6 +4458,11 @@ export default function App() {
         name: p.name,
         level: p.level,
         position: p.position === "Not Sure" ? "Multiple" : (p.position || "Multiple"),
+        // birth_year is optional — only populated when the user chose year
+        // of birth during the welcome wizard. Absence is fine; display
+        // helpers fall back to `level` ("U11 / Atom").
+        ...(p.birth_year ? { birthYear: p.birth_year } : {}),
+        ...(p.signup_mode ? { signupMode: p.signup_mode } : {}),
         selfRatings,
         quizHistory,
         goals,

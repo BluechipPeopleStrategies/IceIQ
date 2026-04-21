@@ -18,6 +18,7 @@ import { getTrainingLog } from "./utils/trainingLog.js";
 import { getParentRatings, saveParentRatings, PARENT_DIMENSIONS, PARENT_SCALE } from "./utils/parentAssessment.js";
 import { AGES, LEVEL_FOR_AGE, ALL_TYPES, RECOMMENDED_TYPES_BY_AGE, TYPE_LABELS, isOffAgeType, blankQuestion } from "./utils/ageQuestionTypes.js";
 import { SKILLS, RATING_SCALES, getSelfScale, getScaleColor } from "./data/constants.js";
+import { deriveLevelFromBirthYear, validBirthYears } from "./utils/ageGroup.js";
 
 async function loadTeamData(coachCode, season) {
   if (!window.storage) return [];
@@ -184,43 +185,141 @@ export function CoachDashboard({ onBack }) {
 // ─────────────────────────────────────────────────────────
 // ProfileSetup
 // ─────────────────────────────────────────────────────────
+// Three-step welcome wizard. Step 1 asks whether the signup is the player
+// themselves or a parent/guardian filling in for a kid — that toggle drives
+// pronoun copy on the remaining steps. Step 2 captures age either by
+// division pick OR year-of-birth; if birth year is chosen, all downstream
+// UI reads "Born YYYY" instead of "U11 / Atom". Step 3 is position.
 export function ProfileSetup({ profile, onComplete }) {
+  // Step 1 — "Who's signing up?"
+  const [who, setWho] = useState(profile.signupMode || ""); // "self" | "parent"
+  // Step 2 — age capture
+  const [ageMode, setAgeMode] = useState("level");           // "level" | "birthYear"
   const [level, setLevel] = useState(profile.level || "");
+  const [birthYear, setBirthYear] = useState(profile.birthYear || null);
+  // Step 3 — position
   const [position, setPosition] = useState(profile.position || "");
   const [saving, setSaving] = useState(false);
+
+  // Pronouns flex based on the step-1 answer so we're not saying "you or your
+  // child" all the way through. Default to self-phrasing before step 1 picks.
+  const subject       = who === "parent" ? "your child" : "you";
+  const subjectCap    = who === "parent" ? "Your child" : "You";
+  const possessive    = who === "parent" ? "their" : "your";
+
+  // When the user enters a year of birth we need a level to slot them into
+  // questions / SKILLS — derive it on the fly.
+  const derivedLevel = birthYear ? deriveLevelFromBirthYear(birthYear) : null;
+  const effectiveLevel = ageMode === "birthYear" ? derivedLevel : level;
+  const ageDone = !!effectiveLevel;
 
   async function save() {
     setSaving(true);
     try {
-      await SB.updateProfile(profile.id, { level, position });
-      onComplete({ ...profile, level, position });
-    } catch (e) { alert(e.message); }
-    setSaving(false);
+      const patch = { level: effectiveLevel, position, signup_mode: who };
+      if (ageMode === "birthYear") patch.birth_year = birthYear;
+      // updateProfile passes everything through; if birth_year column doesn't
+      // exist yet in Supabase, the save will error — caller logs and keeps
+      // going so the user isn't blocked.
+      try { await SB.updateProfile(profile.id, patch); } catch (e) { console.warn("[ProfileSetup] updateProfile:", e?.message || e); }
+      onComplete({
+        ...profile,
+        level: effectiveLevel,
+        position,
+        signupMode: who,
+        ...(ageMode === "birthYear" ? { birthYear } : {}),
+      });
+    } finally {
+      setSaving(false);
+    }
   }
 
-  if (!level) return (
+  // ── Step 1: Who's signing up? ─────────────────────────────────────────
+  if (!who) return (
     <Screen>
       <div style={{marginBottom:"2rem"}}>
-        <div style={{fontSize:10,letterSpacing:".18em",color:C.gold,textTransform:"uppercase",fontWeight:700,marginBottom:".6rem"}}>Welcome · Step 1 of 2</div>
-        <h2 style={{fontFamily:FONT.display,fontWeight:800,fontSize:"2rem",margin:"0 0 .35rem"}}>What age group do you (or your child) play?</h2>
-        <div style={{fontSize:13,color:C.dim,lineHeight:1.55}}>Two quick questions and we'll get you on the ice.</div>
+        <div style={{fontSize:10,letterSpacing:".18em",color:C.gold,textTransform:"uppercase",fontWeight:700,marginBottom:".6rem"}}>Welcome · Step 1 of 3</div>
+        <h2 style={{fontFamily:FONT.display,fontWeight:800,fontSize:"2rem",margin:"0 0 .35rem"}}>Who's signing up?</h2>
+        <div style={{fontSize:13,color:C.dim,lineHeight:1.55}}>Three quick questions and we'll get you on the ice.</div>
       </div>
-      <div style={{display:"flex",flexDirection:"column",gap:".5rem"}}>
-        {LEVELS.map(l => (
-          <button key={l} onClick={()=>setLevel(l)} style={{background:C.bgCard,border:`1px solid ${C.border}`,borderRadius:12,padding:"1rem 1.25rem",cursor:"pointer",color:C.white,fontFamily:FONT.body,fontSize:15,textAlign:"left",fontWeight:600}}>
-            {l}
-          </button>
-        ))}
+      <div style={{display:"flex",flexDirection:"column",gap:".6rem"}}>
+        <button onClick={()=>setWho("self")} style={{background:C.bgCard,border:`1px solid ${C.border}`,borderRadius:14,padding:"1.15rem 1.25rem",cursor:"pointer",color:C.white,fontFamily:FONT.body,textAlign:"left"}}>
+          <div style={{fontSize:26,marginBottom:".2rem"}}>🏒</div>
+          <div style={{fontSize:15,fontWeight:700,marginBottom:2}}>I'm the player</div>
+          <div style={{fontSize:12,color:C.dim,lineHeight:1.5}}>Track my own skills, quizzes, and goals.</div>
+        </button>
+        <button onClick={()=>setWho("parent")} style={{background:C.bgCard,border:`1px solid ${C.border}`,borderRadius:14,padding:"1.15rem 1.25rem",cursor:"pointer",color:C.white,fontFamily:FONT.body,textAlign:"left"}}>
+          <div style={{fontSize:26,marginBottom:".2rem"}}>👪</div>
+          <div style={{fontSize:15,fontWeight:700,marginBottom:2}}>I'm a parent or guardian</div>
+          <div style={{fontSize:12,color:C.dim,lineHeight:1.5}}>I'm tracking on behalf of my child.</div>
+        </button>
       </div>
     </Screen>
   );
 
+  // ── Step 2: Age (level picker OR birth year) ──────────────────────────
+  if (!ageDone) return (
+    <Screen>
+      <div style={{marginBottom:"1.5rem"}}>
+        <div style={{fontSize:10,letterSpacing:".18em",color:C.gold,textTransform:"uppercase",fontWeight:700,marginBottom:".6rem"}}>Step 2 of 3</div>
+        <h2 style={{fontFamily:FONT.display,fontWeight:800,fontSize:"2rem",margin:"0 0 .35rem"}}>
+          {ageMode === "birthYear"
+            ? `What year ${who==="parent"?"was your child":"were you"} born?`
+            : `What age group does ${subject} play?`}
+        </h2>
+        <div style={{fontSize:13,color:C.dim,lineHeight:1.55}}>
+          {ageMode === "birthYear"
+            ? `We'll slot ${subject} into the right division automatically.`
+            : `Or enter a year of birth — ${possessive} age group will be calculated.`}
+        </div>
+      </div>
+
+      {/* Mode toggle */}
+      <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:".4rem",marginBottom:"1rem"}}>
+        <button onClick={()=>{ setAgeMode("level"); setBirthYear(null); }}
+          style={{background:ageMode==="level"?C.goldDim:C.bgCard,border:`1px solid ${ageMode==="level"?C.gold:C.border}`,borderRadius:10,padding:".6rem",cursor:"pointer",color:ageMode==="level"?C.gold:C.dim,fontFamily:FONT.body,fontSize:12,fontWeight:ageMode==="level"?700:500}}>
+          Division
+        </button>
+        <button onClick={()=>{ setAgeMode("birthYear"); setLevel(""); }}
+          style={{background:ageMode==="birthYear"?C.goldDim:C.bgCard,border:`1px solid ${ageMode==="birthYear"?C.gold:C.border}`,borderRadius:10,padding:".6rem",cursor:"pointer",color:ageMode==="birthYear"?C.gold:C.dim,fontFamily:FONT.body,fontSize:12,fontWeight:ageMode==="birthYear"?700:500}}>
+          Year of birth
+        </button>
+      </div>
+
+      {ageMode === "level" ? (
+        <div style={{display:"flex",flexDirection:"column",gap:".5rem"}}>
+          {LEVELS.map(l => (
+            <button key={l} onClick={()=>setLevel(l)} style={{background:C.bgCard,border:`1px solid ${C.border}`,borderRadius:12,padding:"1rem 1.25rem",cursor:"pointer",color:C.white,fontFamily:FONT.body,fontSize:15,textAlign:"left",fontWeight:600}}>
+              {l}
+            </button>
+          ))}
+        </div>
+      ) : (
+        <div style={{display:"flex",flexDirection:"column",gap:".5rem"}}>
+          {validBirthYears().map(y => (
+            <button key={y} onClick={()=>setBirthYear(y)} style={{background:C.bgCard,border:`1px solid ${C.border}`,borderRadius:12,padding:"1rem 1.25rem",cursor:"pointer",color:C.white,fontFamily:FONT.body,fontSize:15,textAlign:"left",fontWeight:600}}>
+              Born {y}
+            </button>
+          ))}
+        </div>
+      )}
+
+      <div style={{marginTop:"1rem"}}>
+        <button onClick={()=>setWho("")} style={{background:"none",border:`1px solid ${C.border}`,borderRadius:10,padding:".7rem 1rem",cursor:"pointer",color:C.dimmer,fontSize:13,fontFamily:FONT.body}}>← Back</button>
+      </div>
+    </Screen>
+  );
+
+  // ── Step 3: Position ──────────────────────────────────────────────────
   const posOptions = [{p:"Forward",i:"⚡"},{p:"Defense",i:"🛡"},{p:"Goalie",i:"🧤"},{p:"Multiple",i:"🔀"}];
   return (
     <Screen>
       <div style={{marginBottom:"1.5rem"}}>
-        <div style={{fontSize:10,letterSpacing:".18em",color:C.gold,textTransform:"uppercase",fontWeight:700,marginBottom:".6rem"}}>Step 2 of 2</div>
-        <h2 style={{fontFamily:FONT.display,fontWeight:800,fontSize:"2rem",margin:"0 0 .35rem"}}>What position do you (or your child) play?</h2>
+        <div style={{fontSize:10,letterSpacing:".18em",color:C.gold,textTransform:"uppercase",fontWeight:700,marginBottom:".6rem"}}>Step 3 of 3</div>
+        <h2 style={{fontFamily:FONT.display,fontWeight:800,fontSize:"2rem",margin:"0 0 .35rem"}}>What position does {subject} play?</h2>
+        <div style={{fontSize:12,color:C.dim,marginTop:".35rem"}}>
+          {ageMode === "birthYear" ? `Born ${birthYear}` : effectiveLevel}
+        </div>
       </div>
       <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:".75rem",marginBottom:"1.5rem"}}>
         {posOptions.map(({p,i}) => (
@@ -231,7 +330,7 @@ export function ProfileSetup({ profile, onComplete }) {
         ))}
       </div>
       <div style={{display:"flex",gap:".5rem"}}>
-        <button onClick={()=>setLevel("")} style={{background:"none",border:`1px solid ${C.border}`,borderRadius:10,padding:".75rem 1rem",cursor:"pointer",color:C.dimmer,fontSize:13,fontFamily:FONT.body}}>← Back</button>
+        <button onClick={()=>{ setLevel(""); setBirthYear(null); }} style={{background:"none",border:`1px solid ${C.border}`,borderRadius:10,padding:".75rem 1rem",cursor:"pointer",color:C.dimmer,fontSize:13,fontFamily:FONT.body}}>← Back</button>
         <PrimaryBtn onClick={save} disabled={!position||saving} style={{flex:1,margin:0}}>{saving?"Saving…":"Finish Setup →"}</PrimaryBtn>
       </div>
     </Screen>
