@@ -156,6 +156,11 @@
   .difficulty-row { display: inline-flex; gap: .25rem; }
   .d-btn { padding: .25rem .6rem; font-size: 12px; }
   .d-btn.active { background: var(--accent-dim); border-color: var(--accent); color: var(--accent); }
+  .age-chip { display: inline-flex; align-items: center; gap: .3rem; padding: .2rem .55rem; font-size: 11px;
+              border-radius: 11px; border: 1px solid var(--border); background: var(--bg-elev);
+              color: var(--dim); cursor: pointer; }
+  .age-chip.on { background: var(--accent-dim); border-color: var(--accent); color: var(--accent); }
+  .age-chip.primary { cursor: default; background: var(--bg-card); border-color: var(--accent); color: var(--accent); font-weight: 600; }
 
   .opt-row { display: flex; gap: .4rem; align-items: center; margin-bottom: .3rem; }
   .opt-letter { font-family: ui-monospace, monospace; font-size: 11px; color: var(--dimmer); width: 16px; }
@@ -1932,17 +1937,33 @@ function nextIdForAge(age) {
 // =========================================================================
 // Iteration
 // =========================================================================
+// Returns the full list of level keys this question appears in. A question
+// has one "primary" level (the bank-array or the move-target) and can
+// optionally expose a `levels: [levelKey, ...]` field to appear in extra
+// age groups without duplicating the row in questions.json.
+function getEffectiveLevels(id, primaryLevel) {
+  const merged = getMergedById(id);
+  const explicit = merged && Array.isArray(merged.levels) ? merged.levels : null;
+  if (explicit && explicit.length > 0) {
+    // Make sure the primary is included even if a user removed it by mistake.
+    return explicit.includes(primaryLevel) ? explicit : [primaryLevel, ...explicit];
+  }
+  return [primaryLevel];
+}
+
 function* iterAllQuestions() {
   for (const level of Object.keys(BANK)) {
     const rows = BANK[level] || [];
     for (const q of rows) {
       const effLevel = STATE.moves[q.id] || level;
-      yield { level: effLevel, age: AGE_FOR_LEVEL[effLevel] || AGE_FOR_LEVEL[level], q, originalLevel: level };
+      const levels = getEffectiveLevels(q.id, effLevel);
+      yield { level: effLevel, age: AGE_FOR_LEVEL[effLevel] || AGE_FOR_LEVEL[level], levels, q, originalLevel: level };
     }
   }
   for (const r of STATE.added) {
     const effLevel = STATE.moves[r.id] || r.level;
-    yield { level: effLevel, age: AGE_FOR_LEVEL[effLevel] || AGE_FOR_LEVEL[r.level], q: r, added: true, originalLevel: r.level };
+    const levels = getEffectiveLevels(r.id, effLevel);
+    yield { level: effLevel, age: AGE_FOR_LEVEL[effLevel] || AGE_FOR_LEVEL[r.level], levels, q: r, added: true, originalLevel: r.level };
   }
 }
 
@@ -1950,8 +1971,12 @@ function getFilteredQuestions() {
   const out = [];
   const search = FILTERS.search.trim().toLowerCase();
   for (const entry of iterAllQuestions()) {
-    const { level, age, q } = entry;
-    if (FILTERS.age !== "all" && age !== FILTERS.age) continue;
+    const { q, levels } = entry;
+    if (FILTERS.age !== "all") {
+      // Multi-age: include if ANY of the question's effective levels is in the filtered age.
+      const ages = levels.map(l => AGE_FOR_LEVEL[l]).filter(Boolean);
+      if (!ages.includes(FILTERS.age)) continue;
+    }
     const merged = getMergedById(q.id) || q;
     const type = getType(merged);
     if (FILTERS.type !== "all" && type !== FILTERS.type) continue;
@@ -1990,12 +2015,16 @@ function renderDashboard() {
   // Matrix
   const m = {};
   for (const age of AGES) { m[age] = {}; for (const t of ALL_TYPES) m[age][t] = { total: 0, unreviewed: 0, keep: 0, flag: 0, kill: 0 }; }
-  for (const { q, age } of allList) {
+  for (const { q, levels } of allList) {
     const merged = getMergedById(q.id) || q;
     const t = getType(merged);
-    if (!m[age] || !m[age][t]) continue;
-    m[age][t].total++;
-    m[age][t][statusOf(q.id)]++;
+    // Multi-age contribution: count this question in every level it belongs to.
+    for (const lvl of levels) {
+      const a = AGE_FOR_LEVEL[lvl];
+      if (!a || !m[a] || !m[a][t]) continue;
+      m[a][t].total++;
+      m[a][t][statusOf(q.id)]++;
+    }
   }
   const matrix = document.getElementById("matrix");
   let html = "<thead><tr><th>Age</th>";
@@ -2088,7 +2117,7 @@ function renderBulkBar() {
 }
 
 function renderCard(entry) {
-  const { q, level, age, added, originalLevel } = entry;
+  const { q, level, age, added, originalLevel, levels } = entry;
   const id = q.id;
   const merged = getMergedById(id) || q;
   const type = getType(merged);
@@ -2104,9 +2133,14 @@ function renderCard(entry) {
 
   const moveLabel = isMoved ? `${AGE_FOR_LEVEL[originalLevel]?.toUpperCase() || "?"} → ${age.toUpperCase()}` : "";
 
+  // When a question belongs to multiple ages, show them all as "U9 / U11" in
+  // the pill instead of just the primary. Primary is first so it's obvious.
+  const levelAges = (levels || [level]).map(l => AGE_FOR_LEVEL[l]).filter(Boolean);
+  const ageLabel = levelAges.length > 1 ? levelAges.map(a => a.toUpperCase()).join(" / ") : age.toUpperCase();
+
   const pills = [
     `<span class="pill mono" style="font-family:ui-monospace,monospace;">${id}</span>`,
-    `<span class="pill">${age.toUpperCase()}</span>`,
+    `<span class="pill">${ageLabel}</span>`,
     `<span class="pill">${TYPE_LABELS[type]}</span>`,
     `<span class="pill status-${status}">${status}</span>`,
     edited ? `<span class="pill edited">edited</span>` : "",
@@ -2155,7 +2189,28 @@ function renderCardBody(id, q, level, age, type) {
     `<button class="d-btn ${q.d===n?"active":""}" data-action="difficulty" data-val="${n}">d${n}</button>`
   ).join("");
 
+  // Multi-age toggles: primary level is the one the question is stored in
+  // (its bank-array key or its move target); it's locked. Other ages can be
+  // ticked on/off to mark that this question also belongs in those levels.
+  const primaryLevel = STATE.moves[id] || level;
+  const effectiveLevels = new Set(Array.isArray(q.levels) && q.levels.length > 0 ? q.levels : [primaryLevel]);
+  effectiveLevels.add(primaryLevel);
+  const ageRow = AGES.map(a => {
+    const lvl = LEVEL_FOR_AGE[a];
+    const on = effectiveLevels.has(lvl);
+    const isPrimary = lvl === primaryLevel;
+    const cls = ["age-chip", on ? "on" : "off", isPrimary ? "primary" : ""].filter(Boolean).join(" ");
+    return `<button class="${cls}" data-action="toggle-age" data-age="${a}" ${isPrimary ? "title='Primary level — move the question to change'" : ""}>
+      ${on ? "●" : "○"} ${a.toUpperCase()}${isPrimary ? " ★" : ""}
+    </button>`;
+  }).join("");
+
   const common = `
+    <div class="inline-row field" style="padding-bottom:.25rem;">
+      <span style="font-size:10px;text-transform:uppercase;color:var(--dimmer);letter-spacing:.05em;">Show in:</span>
+      ${ageRow}
+    </div>`;
+  const commonRest = `
     <div class="row3">
       <div class="field"><label>Category</label><input class="field-input" data-action="field" data-key="cat" value="${escapeAttr(q.cat || "")}"></div>
       <div class="field"><label>Concept</label><input class="field-input" data-action="field" data-key="concept" value="${escapeAttr(q.concept || "")}"></div>
@@ -2283,7 +2338,7 @@ function renderCardBody(id, q, level, age, type) {
     </div>
   `;
 
-  return common + typeBody + tail;
+  return common + commonRest + typeBody + tail;
 }
 
 // =========================================================================
@@ -2318,6 +2373,24 @@ function onCardClick(e) {
   if (action === "undo-move") {
     delete STATE.moves[id];
     saveState(); render(); return;
+  }
+  if (action === "toggle-age") {
+    const toggledLvl = LEVEL_FOR_AGE[actionEl.dataset.age];
+    const merged = getMergedById(id);
+    const primaryLvl = STATE.moves[id] || getOriginalLevelForId(id);
+    // Primary is where the row lives in questions.json — move it instead of toggling.
+    if (toggledLvl === primaryLvl) return;
+    const current = Array.isArray(merged.levels) && merged.levels.length > 0
+      ? [...merged.levels]
+      : [primaryLvl];
+    if (!current.includes(primaryLvl)) current.unshift(primaryLvl);
+    const next = current.includes(toggledLvl)
+      ? current.filter(l => l !== toggledLvl)
+      : [...current, toggledLvl];
+    // setField diff-matches against orig.levels; when `next` equals the original,
+    // the edit is auto-cleared — so this handles both "add" and "revert" cases.
+    setField(id, "levels", next);
+    render(); return;
   }
   if (action === "status") {
     if (val === "unreviewed") delete STATE.statuses[id];
