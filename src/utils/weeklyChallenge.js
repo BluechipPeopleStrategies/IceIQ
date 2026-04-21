@@ -17,13 +17,31 @@ export function getWeekKey() {
   return `${year}_W${String(week).padStart(2, "0")}`;
 }
 
-// Milliseconds until next Monday 00:00 UTC
-export function msUntilNextWeek() {
+// Date of the next weekly unlock (Monday 00:00 UTC) as a real Date object.
+// Format locally with Intl.DateTimeFormat to show the user their local
+// equivalent (e.g. Sunday 5 PM Pacific, Sunday 8 PM Eastern).
+export function getNextUnlockDate() {
   const now = new Date();
   const utcDay = now.getUTCDay(); // 0=Sun, 1=Mon … 6=Sat
   const daysUntilMon = utcDay === 0 ? 1 : 8 - utcDay;
-  const nextMon = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate() + daysUntilMon));
-  return nextMon - now;
+  return new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate() + daysUntilMon));
+}
+
+// Milliseconds until next Monday 00:00 UTC (kept for existing callers).
+export function msUntilNextWeek() {
+  return getNextUnlockDate() - new Date();
+}
+
+// Formatted unlock moment in the user's local timezone.
+// Returns e.g. "Sunday, April 27 at 8:00 PM EDT".
+export function formatUnlockMoment(date = getNextUnlockDate()) {
+  try {
+    const dayStr = date.toLocaleString(undefined, { weekday: "long", month: "long", day: "numeric" });
+    const timeStr = date.toLocaleString(undefined, { hour: "numeric", minute: "2-digit", timeZoneName: "short" });
+    return `${dayStr} at ${timeStr}`;
+  } catch {
+    return date.toString();
+  }
 }
 
 // Format countdown string "Xd Yh" or "Xh Ym"

@@ -340,7 +340,7 @@ function QuestChecklist({ role, quests, results, onTap, onDismiss, onAllComplete
 
 
 import { loadQB, preloadQB } from "./qbLoader.js";
-import { getWeekKey, getThisWeekRecord, markWeeklyComplete, seededShuffle, weekSeed, formatCountdown, msUntilNextWeek, getFreeQuizCount, isAtFreeQuizCap, incrementFreeQuizCount, FREE_WEEKLY_QUIZ_CAP } from "./utils/weeklyChallenge.js";
+import { getWeekKey, getThisWeekRecord, markWeeklyComplete, seededShuffle, weekSeed, formatCountdown, msUntilNextWeek, getNextUnlockDate, formatUnlockMoment, getFreeQuizCount, isAtFreeQuizCap, incrementFreeQuizCount, FREE_WEEKLY_QUIZ_CAP } from "./utils/weeklyChallenge.js";
 import { COMPETENCY_LADDER, RATING_SCALES, SKILLS, ladderFor, getSelfScale, getCoachScale, getScaleColor, getScaleLabel, normalizeRating, getDiscussionPrompt, migrateRatings, PERCENTILE_RATINGS, PR_COLOR, PR_LABEL } from "./data/constants.js";
 
 const AdminReports = lazy(() => import("./screens.jsx").then(m => ({ default: m.AdminReports })));
@@ -2004,9 +2004,12 @@ function DemoQuizCapScreen({ onBack, onSignUp }) {
 }
 
 function FreeQuizCapScreen({ onBack, onUpgrade }) {
-  const [countdown, setCountdown] = useState(formatCountdown(msUntilNextWeek()));
+  // Re-derive the unlock moment each minute so the local time stays fresh
+  // if a user leaves the screen open across a timezone-relevant boundary
+  // (e.g. DST switchover).
+  const [unlockStr, setUnlockStr] = useState(() => formatUnlockMoment());
   useEffect(() => {
-    const t = setInterval(() => setCountdown(formatCountdown(msUntilNextWeek())), 60000);
+    const t = setInterval(() => setUnlockStr(formatUnlockMoment()), 60000);
     return () => clearInterval(t);
   }, []);
   const used = getFreeQuizCount();
@@ -2016,7 +2019,8 @@ function FreeQuizCapScreen({ onBack, onUpgrade }) {
         <div style={{fontSize:48,marginBottom:"1rem"}}>🏒</div>
         <div style={{fontFamily:FONT.display,fontWeight:800,fontSize:"1.8rem",marginBottom:".5rem"}}>Weekly limit reached</div>
         <div style={{fontSize:14,color:C.dim,lineHeight:1.65,marginBottom:"1.75rem"}}>
-          Free players get <strong style={{color:C.white}}>{FREE_WEEKLY_QUIZ_CAP} quizzes per week</strong>. You've completed {used} this week. New quizzes unlock in <strong style={{color:C.gold}}>{countdown}</strong>.
+          Free players get <strong style={{color:C.white}}>{FREE_WEEKLY_QUIZ_CAP} quizzes per week</strong>. You've completed {used} this week.
+          <div style={{marginTop:".65rem"}}>New quizzes unlocked <strong style={{color:C.gold}}>{unlockStr}</strong>.</div>
         </div>
         <button onClick={onUpgrade} style={{width:"100%",background:C.gold,color:C.bg,border:"none",borderRadius:12,padding:"1rem",cursor:"pointer",fontWeight:800,fontSize:16,fontFamily:FONT.body,marginBottom:".75rem",boxShadow:`0 4px 16px ${C.gold}33`}}>
           Unlock unlimited quizzes →
