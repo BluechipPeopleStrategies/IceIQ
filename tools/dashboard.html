@@ -240,6 +240,7 @@
       <button class="btn-primary" id="btn-load">📁 Load questions.json</button>
       <input type="file" id="file-input" accept=".json,application/json">
       <button id="btn-export" disabled>💾 Export questions.json</button>
+      <button id="btn-export-added" title="Download only the scenarios you authored here (STATE.added) as a patch file. Apply via: node tools/apply-dashboard-patch.mjs &lt;file.json&gt;">📦 Download NEW only</button>
       <button class="btn-ghost" id="btn-reset-state">Reset local edits</button>
     </div>
   </div>
@@ -2871,6 +2872,38 @@ function handleExport() {
   URL.revokeObjectURL(url);
 }
 
+function handleExportAdded() {
+  if (!STATE.added.length) {
+    alert("No new scenarios authored yet. Click '+ Add question' to create one.");
+    return;
+  }
+  const out = {};
+  let count = 0;
+  for (const row of STATE.added) {
+    if (statusOf(row.id) === "kill") continue;
+    const merged = getMergedById(row.id) || row;
+    const { level, ...question } = merged;
+    if (!level) continue;
+    if (!out[level]) out[level] = [];
+    out[level].push(question);
+    count++;
+  }
+  if (count === 0) { alert("All added scenarios are marked Kill — nothing to export."); return; }
+  const stamp = new Date().toISOString().slice(0,10);
+  const json = JSON.stringify(out, null, 2) + "\n";
+  const blob = new Blob([json], { type: "application/json" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = `questions-patch-${stamp}.json`;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+  const perLevel = Object.entries(out).map(([L, rows]) => `  ${L}: ${rows.length}`).join("\n");
+  alert(`Downloaded questions-patch-${stamp}.json with ${count} scenario(s):\n\n${perLevel}\n\nApply to the live bank with:\n  node tools/apply-dashboard-patch.mjs <path-to-file>`);
+}
+
 // =========================================================================
 // Utility
 // =========================================================================
@@ -2957,6 +2990,7 @@ function mountRinkEditors() {
     e.target.value = "";
   });
   document.getElementById("btn-export").addEventListener("click", handleExport);
+  document.getElementById("btn-export-added").addEventListener("click", handleExportAdded);
   document.getElementById("btn-reset-state").addEventListener("click", () => {
     if (!confirm("Clear ALL local edits, statuses, and added questions? (The loaded file is not affected.)")) return;
     STATE = { edits: {}, statuses: {}, added: [] };
