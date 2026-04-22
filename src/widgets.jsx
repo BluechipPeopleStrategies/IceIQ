@@ -1,7 +1,7 @@
 // Widgets — small eager-loaded components extracted from App.jsx.
 // These render on the first-paint path (Home/Profile/etc.) so they are NOT lazy-loaded.
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { C, FONT, Card, Label } from "./shared.jsx";
 import { getTrainingLog, saveTrainingSession, getTrainingSummary } from "./utils/trainingLog.js";
 
@@ -42,7 +42,7 @@ export function HockeyInsightWidget({ onInsightRead } = {}) {
       maxWidth:560, margin:"0 auto 1rem", padding:"0 1.25rem",
     }}>
       <div style={{
-        background:`linear-gradient(135deg, rgba(201,168,76,.06), rgba(124,111,205,.06))`,
+        background:`linear-gradient(135deg, rgba(252,76,2,.06), rgba(207,69,32,.06))`,
         border:`1px solid ${C.border}`,
         borderLeft:`3px solid ${C.gold}`,
         borderRadius:10, padding:".65rem .85rem",
@@ -95,7 +95,9 @@ export function BottomNav({ active, onNav, tier = "FREE" }) {
 }
 
 export function TrainingLog({ playerId }) {
-  const log = getTrainingLog(playerId);
+  // Bump this whenever we save so the running log re-reads fresh LS.
+  const [refreshTick, setRefreshTick] = useState(0);
+  const log = useMemo(() => getTrainingLog(playerId), [playerId, refreshTick]);
   const today = new Date().toISOString().slice(0, 10);
   const [puckCount, setPuckCount] = useState(0);
   const [minutes, setMinutes] = useState({ power_skating: 30, skills_dev: 30, other: 30 });
@@ -106,6 +108,7 @@ export function TrainingLog({ playerId }) {
   const [sessionPrice, setSessionPrice] = useState("");
   const [activeType, setActiveType] = useState(null);
   const [saved, setSaved] = useState(null);
+  const [showAllSessions, setShowAllSessions] = useState(false);
 
   function openActivity(type) {
     const isOpening = activeType !== type;
@@ -124,6 +127,7 @@ export function TrainingLog({ playerId }) {
     setSessionNotes("");
     setSessionCoach("");
     setSessionPrice("");
+    setRefreshTick(t => t + 1);
     setTimeout(() => setSaved(null), 2000);
     if (type === "pucks_shot") setPuckCount(0);
   }
@@ -264,7 +268,62 @@ export function TrainingLog({ playerId }) {
           );
         })}
       </div>
+
+      {/* Running log — past 10 sessions visible by default; expandable. */}
+      <TrainingLogRunning sessions={log.sessions || []} showAll={showAllSessions} onToggle={() => setShowAllSessions(v => !v)}/>
     </Card>
+  );
+}
+
+// Running log of past training sessions. Pure presentation — consumes the
+// full sessions array and windows to 10 (or all if expanded).
+function TrainingLogRunning({ sessions, showAll, onToggle }) {
+  const ICONS = { power_skating:"⛸️", skills_dev:"🏒", pucks_shot:"🎯", other:"💪" };
+  const LABELS = { power_skating:"Power Skating", skills_dev:"Skills Dev", pucks_shot:"Pucks Shot", other:"Training" };
+  if (!sessions || sessions.length === 0) {
+    return (
+      <div style={{marginTop:"1rem",paddingTop:"1rem",borderTop:`1px solid ${C.border}`}}>
+        <Label>Recent sessions</Label>
+        <div style={{fontSize:12,color:C.dimmer,fontStyle:"italic",padding:".5rem 0"}}>
+          No sessions logged yet. Log a session above and it'll show up here.
+        </div>
+      </div>
+    );
+  }
+  // Newest first.
+  const sorted = [...sessions].sort((a, b) => String(b.date || "").localeCompare(String(a.date || "")));
+  const visible = showAll ? sorted : sorted.slice(0, 10);
+  return (
+    <div style={{marginTop:"1rem",paddingTop:"1rem",borderTop:`1px solid ${C.border}`}}>
+      <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:".5rem"}}>
+        <Label>Recent sessions</Label>
+        <div style={{fontSize:10,color:C.dimmer,fontWeight:600}}>{sessions.length} total</div>
+      </div>
+      <div style={{display:"flex",flexDirection:"column",gap:".35rem"}}>
+        {visible.map((s, i) => {
+          const icon = ICONS[s.type] || "📓";
+          const typeLabel = s.type === "other" && s.label ? s.label : (LABELS[s.type] || s.type);
+          const unitLabel = s.unit === "pucks" ? `${s.value} pucks` : `${s.value} ${s.unit || "min"}`;
+          return (
+            <div key={i} style={{display:"flex",alignItems:"center",gap:".55rem",background:C.bgGlass,border:`1px solid ${C.border}`,borderRadius:8,padding:".5rem .7rem"}}>
+              <span style={{fontSize:15,flexShrink:0}}>{icon}</span>
+              <div style={{flex:1,minWidth:0,display:"flex",flexWrap:"wrap",gap:".45rem",alignItems:"baseline"}}>
+                <span style={{fontSize:12,fontWeight:700,color:C.white}}>{typeLabel}</span>
+                <span style={{fontSize:11,color:C.gold,fontWeight:700}}>{unitLabel}</span>
+                {s.coach && <span style={{fontSize:11,color:C.dim}}>· {s.coach}</span>}
+              </div>
+              <span style={{fontSize:10,color:C.dimmer,flexShrink:0}}>{s.date || ""}</span>
+            </div>
+          );
+        })}
+      </div>
+      {sessions.length > 10 && (
+        <button onClick={onToggle}
+          style={{background:"none",border:"none",color:C.gold,cursor:"pointer",fontSize:12,fontFamily:FONT.body,fontWeight:700,padding:".55rem 0 0",width:"100%",textAlign:"center"}}>
+          {showAll ? "Show fewer" : `View all ${sessions.length} sessions →`}
+        </button>
+      )}
+    </div>
   );
 }
 

@@ -13,7 +13,7 @@ const TRAINING_FREQUENCY_TARGET = 8;
 const JOURNEY_ATTEMPTS_TARGET = 15;
 
 export const PROFILE_AXES = {
-  technical: { name: "Technical Foundation", icon: "🛠️", color: "#3b82f6" },
+  technical: { name: "Technical Foundation", icon: "🛠️", color: "#5BA4E8" },
   compete:   { name: "Compete & Character", icon: "🔥", color: "#ef4444" },
   habits:    { name: "Habits & Preparation", icon: "⏰", color: "#eab308" },
 };

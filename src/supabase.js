@@ -226,6 +226,36 @@ export async function getCoachRatingsForPlayer(playerId) {
   return { ratings, notes };
 }
 
+// Private coach notes per player. Reuses the coach_ratings table with a
+// sentinel skill_id so no new migration is needed — the RLS policies that
+// already govern coach_ratings apply unchanged (coach can only read/write
+// their own rows for players on a team they coach).
+const COACH_NOTE_SENTINEL = "__general_notes__";
+
+export async function saveCoachPlayerNote(coachId, playerId, note) {
+  if (!supabase) return;
+  const row = {
+    coach_id: coachId,
+    player_id: playerId,
+    skill_id: COACH_NOTE_SENTINEL,
+    value: "note",
+    note: note || null,
+    updated_at: new Date().toISOString(),
+  };
+  const { error } = await supabase.from("coach_ratings").upsert(row);
+  if (error) throw error;
+}
+
+export async function getCoachPlayerNote(playerId) {
+  if (!supabase) return "";
+  const { data } = await supabase.from("coach_ratings")
+    .select("note")
+    .eq("player_id", playerId)
+    .eq("skill_id", COACH_NOTE_SENTINEL)
+    .maybeSingle();
+  return data?.note || "";
+}
+
 // ─────────────────────────────────────────────
 // QUESTION STATS (aggregate % correct across all users)
 // ─────────────────────────────────────────────

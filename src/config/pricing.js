@@ -21,12 +21,7 @@ export const PRO = {
   name: "Ice-IQ Pro",
   // Hockey season (Sept–Mar): 7 months
   hockeySeasonCAD: 89.99,
-  // Summer off-season (Apr–Aug): 5 months
-  summerSeasonCAD: 44.99,
-  // Full year (Sept–Aug): continuous access, better value
-  fullYearCAD: 124.99,
   hockeySeasonMonths: "Sept–Mar",
-  summerSeasonMonths: "Apr–Aug",
   profiles: 1,
   ageGroups: "all",
   sessionHistory: "unlimited",
@@ -43,12 +38,7 @@ export const FAMILY = {
   name: "Ice-IQ Family",
   // Hockey season (Sept–Mar): 7 months
   hockeySeasonCAD: 139.99,
-  // Summer off-season (Apr–Aug): 5 months
-  summerSeasonCAD: 69.99,
-  // Full year (Sept–Aug): continuous access, better value
-  fullYearCAD: 199.99,
   hockeySeasonMonths: "Sept–Mar",
-  summerSeasonMonths: "Apr–Aug",
   profiles: 3,
   ageGroups: "all",
   sessionHistory: "unlimited",

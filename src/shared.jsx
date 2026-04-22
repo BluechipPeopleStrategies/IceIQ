@@ -2,18 +2,23 @@
 // Keeping these in one place lets Rollup split screen chunks without pulling in the rest of App.jsx.
 
 export const C = {
-  bg:       "#080e1a",
-  bgCard:   "#0d1525",
-  bgElevated:"#111e33",
-  bgGlass:  "rgba(255,255,255,0.04)",
-  gold:     "#c9a84c",
-  goldDim:  "rgba(201,168,76,0.15)",
-  goldBorder:"rgba(201,168,76,0.3)",
-  purple:   "#7c6fcd",
-  purpleDim:"rgba(124,111,205,0.12)",
-  purpleBorder:"rgba(124,111,205,0.3)",
-  blue:     "#3b82f6",
-  blueDim:  "rgba(59,130,246,0.1)",
+  // Oilers navy family for surfaces
+  bg:       "#041E42",
+  bgCard:   "#0a2850",
+  bgElevated:"#0e3566",
+  bgGlass:  "rgba(255,255,255,0.05)",
+  // Primary brand: Oilers orange (token name kept as `gold` to avoid ~500 call-site renames)
+  gold:     "#FC4C02",
+  goldDim:  "rgba(252,76,2,0.15)",
+  goldBorder:"rgba(252,76,2,0.35)",
+  // Secondary accent: retro-dynasty deep orange (token name kept as `purple` to avoid renames)
+  purple:   "#CF4520",
+  purpleDim:"rgba(207,69,32,0.14)",
+  purpleBorder:"rgba(207,69,32,0.32)",
+  // Info/data blue — tuned to sit on navy
+  blue:     "#5BA4E8",
+  blueDim:  "rgba(91,164,232,0.12)",
+  // Semantic — unchanged (universal error/success/warning conventions)
   green:    "#22c55e",
   greenDim: "rgba(34,197,94,0.1)",
   greenBorder:"rgba(34,197,94,0.25)",
@@ -26,10 +31,10 @@ export const C = {
   dim:      "rgba(248,250,252,0.6)",
   dimmer:   "rgba(248,250,252,0.35)",
   dimmest:  "rgba(248,250,252,0.08)",
-  border:   "rgba(255,255,255,0.07)",
-  borderMid:"rgba(255,255,255,0.12)",
+  border:   "rgba(255,255,255,0.08)",
+  borderMid:"rgba(255,255,255,0.14)",
   ice:      "#e8f4fb",
-  rink:     "#1e5799",
+  rink:     "#0e3566",
 };
 
 export const FONT = {
@@ -42,7 +47,7 @@ export const POSITIONS = ["Forward","Defense","Goalie","Multiple"];
 export const POSITIONS_U11UP = ["Forward","Defense","Goalie"];
 export const SEASONS = ["2025-26","2026 Spring/Summer","2026-27"];
 
-export function IceIQLogo({ size = 32, color = "#c9a84c" }) {
+export function IceIQLogo({ size = 32, color = "#FC4C02" }) {
   return (
     <svg width={size} height={size} viewBox="0 0 40 40" aria-label="IceIQ logo" style={{display:"block",flexShrink:0}}>
       {/* Outer circle ring */}
@@ -100,8 +105,8 @@ export function RinkDiagramZones({ zones, onZoneClick, selected, correct, dark =
       <line x1="100" y1="0" x2="100" y2="85" stroke="#ef4444" strokeWidth="0.8" opacity="0.6"/>
 
       {/* Blue lines */}
-      <line x1="55" y1="0" x2="55" y2="85" stroke="#3b82f6" strokeWidth="1.2" opacity="0.5"/>
-      <line x1="145" y1="0" x2="145" y2="85" stroke="#3b82f6" strokeWidth="1.2" opacity="0.5"/>
+      <line x1="55" y1="0" x2="55" y2="85" stroke="#5BA4E8" strokeWidth="1.2" opacity="0.5"/>
+      <line x1="145" y1="0" x2="145" y2="85" stroke="#5BA4E8" strokeWidth="1.2" opacity="0.5"/>
 
       {/* Left net area */}
       <rect x="0" y="30" width="8" height="25" fill="#ef4444" opacity="0.15" rx="2"/>
@@ -110,10 +115,10 @@ export function RinkDiagramZones({ zones, onZoneClick, selected, correct, dark =
       <rect x="192" y="30" width="8" height="25" fill="#ef4444" opacity="0.15" rx="2"/>
 
       {/* Face-off circles — subtle dots */}
-      <circle cx="40" cy="23" r="1.5" fill="#3b82f6" opacity="0.3"/>
-      <circle cx="40" cy="62" r="1.5" fill="#3b82f6" opacity="0.3"/>
-      <circle cx="160" cy="23" r="1.5" fill="#3b82f6" opacity="0.3"/>
-      <circle cx="160" cy="62" r="1.5" fill="#3b82f6" opacity="0.3"/>
+      <circle cx="40" cy="23" r="1.5" fill="#5BA4E8" opacity="0.3"/>
+      <circle cx="40" cy="62" r="1.5" fill="#5BA4E8" opacity="0.3"/>
+      <circle cx="160" cy="23" r="1.5" fill="#5BA4E8" opacity="0.3"/>
+      <circle cx="160" cy="62" r="1.5" fill="#5BA4E8" opacity="0.3"/>
 
       {/* Zone overlay rects */}
       {zones && zones.map(zoneId => {
@@ -187,7 +192,7 @@ export const Card = ({children, style, onClick, glow}) => (
     border:`1px solid ${glow?C.goldBorder:"rgba(255, 255, 255, 0.1)"}`,
     borderRadius:16,
     padding:"1.25rem",
-    boxShadow: glow?"0 0 24px rgba(201,168,76,0.08)":"0 8px 32px rgba(0, 0, 0, 0.1)",
+    boxShadow: glow?"0 0 24px rgba(252,76,2,0.08)":"0 8px 32px rgba(0, 0, 0, 0.1)",
     cursor:onClick?"pointer":"default",
     transition:"all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.3s ease",
     animation:"slideInUp 0.5s ease-out",
@@ -215,8 +220,8 @@ export const Label = ({children, style}) => (
 
 export const PrimaryBtn = ({onClick,children,disabled,style}) => (
   <button onClick={onClick} disabled={disabled} style={{
-    background:disabled?"rgba(201,168,76,.2)":C.gold,
-    color:disabled?"rgba(201,168,76,.4)":C.bg,
+    background:disabled?"rgba(252,76,2,.2)":C.gold,
+    color:disabled?"rgba(252,76,2,.4)":C.bg,
     border:"none",borderRadius:12,
     padding:"1rem 1.25rem",
     cursor:disabled?"default":"pointer",

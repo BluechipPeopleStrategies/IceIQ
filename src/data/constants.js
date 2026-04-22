@@ -2,15 +2,21 @@ export const COMPETENCY_LADDER = [
   {value:"introduced", label:"Introduced",  sub_self:"I'm learning what this is",               sub_coach:"Has been introduced — needs consistent support · ~bottom 35%",   color:"#f87171"},
   {value:"developing", label:"Developing",  sub_self:"I can do it sometimes, needs reminders",  sub_coach:"Shows progress with reminders / in practice · ~35–60%",       color:"#facc15"},
   {value:"consistent", label:"Consistent",  sub_self:"I do it reliably in practice",            sub_coach:"Reliable in practice, inconsistent in games · ~top 40%",      color:"#22c55e"},
-  {value:"proficient", label:"Proficient",  sub_self:"I do it in games without thinking",       sub_coach:"Performs reliably in game situations · ~top 20%",            color:"#3b82f6"},
+  {value:"proficient", label:"Proficient",  sub_self:"I do it in games without thinking",       sub_coach:"Performs reliably in game situations · ~top 20%",            color:"#5BA4E8"},
   {value:"advanced",   label:"Advanced",    sub_self:"I can teach this to a teammate",          sub_coach:"Standout for age — impacts and helps teammates · ~top 5%",  color:"#a855f7"},
 ];
 
+// "N/A" is a deliberate opt-out (skill hasn't been exposed / doesn't apply).
+// Counts as "rated" for completion but excluded from radar/weak-skill averaging.
+export const NA_RATING = { value:"n/a", label:"N/A", sub_self:"Doesn't apply / haven't tried", sub_coach:"Not observed / not applicable", color:"#6b7280" };
+
 export function ladderFor(n, forSelf) {
-  return COMPETENCY_LADDER.slice(0, n).map(o => ({
+  const base = COMPETENCY_LADDER.slice(0, n).map(o => ({
     value: o.value, label: o.label, color: o.color,
     sub: forSelf ? o.sub_self : o.sub_coach,
   }));
+  base.push({ value: NA_RATING.value, label: NA_RATING.label, color: NA_RATING.color, sub: forSelf ? NA_RATING.sub_self : NA_RATING.sub_coach });
+  return base;
 }
 
 export const RATING_SCALES = {
@@ -26,9 +32,13 @@ export function getCoachScale(level) { return RATING_SCALES[level]?.coach?.optio
 export function getScaleColor(scale, value) { const o = scale.find(s => s.value === value); return o ? o.color : "#999"; }
 export function getScaleLabel(scale, value) { const o = scale.find(s => s.value === value); return o ? o.label : "Not rated"; }
 export function normalizeRating(scale, value) {
-  const idx = scale.findIndex(o => o.value === value);
+  if (value === "n/a") return null;
+  // Exclude the appended N/A entry from the denominator so the ladder spans 0..1
+  // across the real rungs only.
+  const rungs = scale.filter(o => o.value !== "n/a");
+  const idx = rungs.findIndex(o => o.value === value);
   if (idx < 0) return null;
-  return scale.length > 1 ? idx / (scale.length - 1) : 0;
+  return rungs.length > 1 ? idx / (rungs.length - 1) : 0;
 }
 export function getDiscussionPrompt(skillName, selfNorm, coachNorm) {
   if (selfNorm === null || coachNorm === null) return null;

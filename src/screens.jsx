@@ -19,6 +19,7 @@ import { getParentRatings, saveParentRatings, PARENT_DIMENSIONS, PARENT_SCALE } 
 import { AGES, LEVEL_FOR_AGE, ALL_TYPES, RECOMMENDED_TYPES_BY_AGE, TYPE_LABELS, isOffAgeType, blankQuestion } from "./utils/ageQuestionTypes.js";
 import { SKILLS, RATING_SCALES, getSelfScale, getScaleColor } from "./data/constants.js";
 import { deriveLevelFromBirthYear, validBirthYears } from "./utils/ageGroup.js";
+import { isEphemeralPlayer } from "./utils/devBypass.js";
 
 async function loadTeamData(coachCode, season) {
   if (!window.storage) return [];
@@ -350,11 +351,13 @@ const PRO_BENEFITS = [
   {icon:"📰", text:"Unlimited NHL Insights"},
   {icon:"📊", text:"Full progress snapshots + Skills Map radar"},
   {icon:"♾️", text:"Unlimited session history"},
+  {icon:"📅", text:"Season pass: September → March (renews each season)"},
 ];
 const FAMILY_BENEFITS = [
   {icon:"👨‍👩‍👧", text:"Everything in Pro"},
   {icon:"👥", text:"Up to 3 player profiles on one plan (siblings or parent-managed kids)"},
   {icon:"🔀", text:"Each profile has its own age group, ratings, goals"},
+  {icon:"📅", text:"Season pass: September → March (renews each season)"},
 ];
 const TEAM_BENEFITS = [
   {icon:"👨‍🏫", text:"Everything in Pro"},
@@ -386,10 +389,9 @@ export function PlansScreen({ onBack, tier }) {
             <Label>Pro</Label>
             <div style={{fontSize:10,background:C.goldDim,color:C.gold,padding:"2px 8px",borderRadius:4,fontWeight:800,letterSpacing:".08em"}}>MOST POPULAR</div>
           </div>
-          <div style={{display:"flex",flexDirection:"column",gap:".4rem",marginBottom:".75rem"}}>
-            <div><div style={{fontSize:10,color:C.dimmer,marginBottom:".2rem"}}>Hockey Season (Sep–Mar)</div><div style={{fontFamily:FONT.display,fontWeight:800,fontSize:"1.8rem",color:C.gold}}>$89.99</div></div>
-            <div><div style={{fontSize:10,color:C.dimmer,marginBottom:".2rem"}}>Summer (Apr–Aug)</div><div style={{fontFamily:FONT.display,fontWeight:800,fontSize:"1.4rem",color:C.gold}}>$44.99</div></div>
-            <div style={{paddingTop:".4rem",borderTop:`1px solid ${C.border}`}}><div style={{fontSize:10,color:C.dimmer,marginBottom:".2rem"}}>Full Year (Best Value)</div><div style={{fontFamily:FONT.display,fontWeight:800,fontSize:"1.6rem",color:C.gold}}>$124.99 <span style={{fontSize:10,color:C.green,fontWeight:600}}>save $10.98</span></div></div>
+          <div style={{marginBottom:".75rem"}}>
+            <div style={{fontSize:10,color:C.dimmer,marginBottom:".2rem"}}>Hockey Season (Sep–Mar)</div>
+            <div style={{fontFamily:FONT.display,fontWeight:800,fontSize:"1.8rem",color:C.gold}}>$89.99</div>
           </div>
           {PRO_BENEFITS.map((b,i) => (
             <div key={i} style={{display:"flex",alignItems:"flex-start",gap:".55rem",padding:".3rem 0",fontSize:12,color:C.dim,lineHeight:1.5}}>
@@ -400,10 +402,9 @@ export function PlansScreen({ onBack, tier }) {
 
         <Card style={{marginBottom:"1rem"}}>
           <Label>Family</Label>
-          <div style={{display:"flex",flexDirection:"column",gap:".4rem",marginBottom:".75rem"}}>
-            <div><div style={{fontSize:10,color:C.dimmer,marginBottom:".2rem"}}>Hockey Season (Sep–Mar)</div><div style={{fontFamily:FONT.display,fontWeight:800,fontSize:"1.8rem",color:C.white}}>$139.99</div></div>
-            <div><div style={{fontSize:10,color:C.dimmer,marginBottom:".2rem"}}>Summer (Apr–Aug)</div><div style={{fontFamily:FONT.display,fontWeight:800,fontSize:"1.4rem",color:C.white}}>$69.99</div></div>
-            <div style={{paddingTop:".4rem",borderTop:`1px solid ${C.border}`}}><div style={{fontSize:10,color:C.dimmer,marginBottom:".2rem"}}>Full Year (Best Value)</div><div style={{fontFamily:FONT.display,fontWeight:800,fontSize:"1.6rem",color:C.white}}>$199.99 <span style={{fontSize:10,color:C.green,fontWeight:600}}>save $10.98</span></div></div>
+          <div style={{marginBottom:".75rem"}}>
+            <div style={{fontSize:10,color:C.dimmer,marginBottom:".2rem"}}>Hockey Season (Sep–Mar)</div>
+            <div style={{fontFamily:FONT.display,fontWeight:800,fontSize:"1.8rem",color:C.white}}>$139.99</div>
           </div>
           <div style={{fontSize:11,color:C.dimmer,marginBottom:".75rem"}}>Includes 3 profiles</div>
           {FAMILY_BENEFITS.map((b,i) => (
@@ -488,7 +489,7 @@ function SpiderChart({ scores }) {
 
         <polygon
           points={points.map(p => `${p.x},${p.y}`).join(" ")}
-          fill={`rgba(124,111,205,0.2)`}
+          fill={`rgba(207,69,32,0.2)`}
           stroke={C.gold}
           strokeWidth="2" />
 
@@ -613,7 +614,7 @@ export function GameSenseReportScreen({ player, onBack, demoMode, demoCoachData,
       setCoachRatings(demoCoachData.ratings || null);
       return;
     }
-    if (player.id && player.id !== "__demo__") {
+    if (player.id && !isEphemeralPlayer(player.id)) {
       SB.getCoachRatingsForPlayer(player.id).then(data => {
         setCoachRatings(Object.keys(data.ratings || {}).length ? data.ratings : null);
       });
@@ -822,7 +823,7 @@ export function ParentAssessmentScreen({ player, onBack, onSave, demoMode, onSig
           })}
 
           {onSignup && (
-            <button onClick={onSignup} style={{marginTop:".75rem",width:"100%",background:`linear-gradient(135deg, ${C.gold}, #b8860b)`,color:C.bg,border:"none",borderRadius:12,padding:".9rem",cursor:"pointer",fontWeight:800,fontSize:14,fontFamily:FONT.body,letterSpacing:".02em",boxShadow:"0 4px 14px rgba(201,168,76,.25), inset 0 1px 0 rgba(255,255,255,.25)"}}>
+            <button onClick={onSignup} style={{marginTop:".75rem",width:"100%",background:`linear-gradient(135deg, ${C.gold}, #CF4520)`,color:C.bg,border:"none",borderRadius:12,padding:".9rem",cursor:"pointer",fontWeight:800,fontSize:14,fontFamily:FONT.body,letterSpacing:".02em",boxShadow:"0 4px 14px rgba(252,76,2,.25), inset 0 1px 0 rgba(255,255,255,.25)"}}>
               🏒 Sign up free to fill this out yourself →
             </button>
           )}
@@ -1787,10 +1788,11 @@ export function ParentsPage({ onNavigate, onContact, photoSrc }) {
     <div style={{minHeight:"100vh",background:C.bg,padding:"2.5rem 1rem",fontFamily:FONT.body,color:C.white}}>
       <div style={{maxWidth:760,margin:"0 auto",lineHeight:1.65}}>
 
-        {/* Hero */}
+        {/* Hero — personal-note typography (Caveat) to signal this section
+            is a direct address to the reader, not marketing copy. */}
         <div style={S.eyebrow}>For first-time parents</div>
-        <h1 style={S.h1}>Welcome to Ice-IQ.</h1>
-        <p style={S.lead}>
+        <h1 style={{...S.h1, fontFamily:"'Caveat', 'Kalam', cursive", fontWeight:700, fontSize:44, letterSpacing:0}}>Welcome to Ice-IQ.</h1>
+        <p style={{...S.lead, fontFamily:"'Caveat', 'Kalam', cursive", fontWeight:500, fontSize:22, lineHeight:1.5}}>
           Your kid already knows how to chase a puck. This is where they learn
           to think the game.
         </p>
@@ -1801,9 +1803,10 @@ export function ParentsPage({ onNavigate, onContact, photoSrc }) {
           <a href="#not" style={S.tocLink}>2. What Ice-IQ is <em>not</em></a>
           <a href="#use" style={S.tocLink}>3. How to use it</a>
           <a href="#progress" style={S.tocLink}>4. Reading progress</a>
-          <a href="#pricing" style={S.tocLink}>5. Free vs paid</a>
-          <a href="#privacyinfo" style={S.tocLink}>6. Privacy</a>
-          <a href="#developer" style={S.tocLink}>7. About the developer</a>
+          <a href="#yours" style={S.tocLink}>5. This is yours — help us build it</a>
+          <a href="#pricing" style={S.tocLink}>6. Free vs paid</a>
+          <a href="#privacyinfo" style={S.tocLink}>7. Privacy</a>
+          <a href="#developer" style={S.tocLink}>8. About the developer</a>
         </nav>
 
         {/* 01 — Why Ice-IQ exists */}
@@ -1847,6 +1850,13 @@ export function ParentsPage({ onNavigate, onContact, photoSrc }) {
         <section id="use" style={S.section}>
           <div style={S.sectionEyebrow}>03 — How to use it with your kid</div>
           <h2 style={S.h2}>Short, consistent, theirs.</h2>
+          <p style={S.body}>
+            The strongest signal we see from families who stick with this is
+            simple: the kid owns it. Not the parent. Ice-IQ works when it's a
+            tool the player reaches for themselves — the way they'd reach for
+            a stickhandling ball or a net in the driveway. Your job is to set
+            them up and then get out of the way.
+          </p>
           <dl style={S.dl}>
             <_HowRow
               label="Age group"
@@ -1858,7 +1868,7 @@ export function ParentsPage({ onNavigate, onContact, photoSrc }) {
             />
             <_HowRow
               label="Your role"
-              body="Sit beside them the first couple of sessions if they're under 10. After that, step back. This is their tool."
+              body="Sit beside them the first couple of sessions if they're under 10. After that, step back. This is their tool — their profile, their goals, their streak. Let them feel that."
             />
             <_HowRow
               label="Tone"
@@ -1887,15 +1897,47 @@ export function ParentsPage({ onNavigate, onContact, photoSrc }) {
           </div>
         </section>
 
-        {/* 05 — Free vs paid */}
+        {/* 05 — This is yours */}
+        <section id="yours" style={S.section}>
+          <div style={S.sectionEyebrow}>05 — This is yours — help us build it</div>
+          <h2 style={S.h2}>Tell us what's missing. Often.</h2>
+          <p style={S.body}>
+            Ice-IQ isn't a finished product shipped down from somewhere. It's
+            a living tool — and the parents using it are the ones shaping what
+            it becomes next. Every question we add, every screen we redesign,
+            every age-group gap we fill starts with a parent or a kid saying
+            "this doesn't work for me yet."
+          </p>
+          <p style={S.body}>
+            What's your kid actually struggling with in their games? What's a
+            concept you wish we explained better? Is there a scenario they keep
+            running into on the ice that we don't cover? A question that feels
+            too easy, too hard, or just wrong for their age? Tell us.
+          </p>
+          <div style={S.callout}>
+            <div style={S.calloutLabel}>Use the report button. Often.</div>
+            <div style={S.calloutBody}>
+              Every screen has a small report button — tucked in the corner, not
+              in your way. Tap it any time something feels off, confusing, or
+              missing. We read every report. Most fixes happen within a week.
+              The more we hear from you, the better this gets for your kid.
+            </div>
+          </div>
+          <p style={S.bodyMuted}>
+            If this doesn't fit how your family trains, we want to know why.
+            Silence doesn't help us build the thing you actually need.
+          </p>
+        </section>
+
+        {/* 06 — Free vs paid */}
         <section id="pricing" style={S.section}>
-          <div style={S.sectionEyebrow}>05 — Free vs paid</div>
+          <div style={S.sectionEyebrow}>06 — Free vs paid</div>
           <h2 style={S.h2}>Free is real. Paid unlocks more.</h2>
           <div style={S.tierGrid}>
             <_TierCard tier="Free" price="$0" body="One age group. Core scenarios. Forever — no trial clock." />
-            <_TierCard tier="Pro" price="$12.99/mo" body="Full library, adaptive engine, progress tracking, goalie content." highlighted />
-            <_TierCard tier="Family" price="$19.99/mo" body="Everything in Pro, up to 3 kids." />
-            <_TierCard tier="Team" price="$49.99/mo" body="For coaches. Season pass available." />
+            <_TierCard tier="Pro" price="$89.99/season" body="Full library, adaptive engine, progress tracking, goalie content." highlighted />
+            <_TierCard tier="Family" price="$139.99/season" body="Everything in Pro, up to 3 kids." />
+            <_TierCard tier="Team" price="$249.99/season" body="For coaches. Up to 20 players." />
           </div>
           <p style={S.bodyMuted}>
             The free tier is genuinely useful on its own. Upgrade when your kid
@@ -1903,9 +1945,9 @@ export function ParentsPage({ onNavigate, onContact, photoSrc }) {
           </p>
         </section>
 
-        {/* 06 — Privacy */}
+        {/* 07 — Privacy */}
         <section id="privacyinfo" style={S.section}>
-          <div style={S.sectionEyebrow}>06 — Privacy &amp; your kid's data</div>
+          <div style={S.sectionEyebrow}>07 — Privacy &amp; your kid's data</div>
           <h2 style={S.h2}>We collect as little as possible.</h2>
           <p style={S.body}>
             Ice-IQ asks for a first name (or nickname) and an age group. That's
@@ -1921,9 +1963,9 @@ export function ParentsPage({ onNavigate, onContact, photoSrc }) {
           </p>
         </section>
 
-        {/* 07 — About the developer */}
+        {/* 08 — About the developer */}
         <section id="developer" style={{...S.section, borderTop:`1px solid ${C.border}`, paddingTop:32, marginTop:16}}>
-          <div style={S.sectionEyebrow}>07 — About the developer</div>
+          <div style={S.sectionEyebrow}>08 — About the developer</div>
           <h2 style={S.h2}>Who's behind this.</h2>
 
           <div style={S.devIntro}>
@@ -1994,6 +2036,465 @@ export function ParentsPage({ onNavigate, onContact, photoSrc }) {
   );
 }
 
+export function CoachesPage({ onNavigate, onContact }) {
+  useEffect(() => {
+    try {
+      document.title = "For coaches — Ice-IQ";
+      let meta = document.querySelector('meta[name="description"]');
+      if (!meta) {
+        meta = document.createElement("meta");
+        meta.name = "description";
+        document.head.appendChild(meta);
+      }
+      meta.content = "What Ice-IQ gives a coach, how to run your team on it, and what to read off the dashboard — written for volunteer and association-level coaches.";
+    } catch {}
+  }, []);
+
+  function handleNav(route) { if (typeof onNavigate === "function") onNavigate(route); }
+  function handleContact() {
+    if (typeof onContact === "function") onContact();
+    else window.location.href = "mailto:thomas@bluechip-people-strategies.com";
+  }
+
+  return (
+    <div style={{minHeight:"100vh",background:C.bg,padding:"2.5rem 1rem",fontFamily:FONT.body,color:C.white}}>
+      <div style={{maxWidth:760,margin:"0 auto",lineHeight:1.65}}>
+
+        {/* Hero — personal-note typography (Caveat). Only the direct-address
+            lead is handwritten; the rest of the page stays in the body font. */}
+        <div style={S.eyebrow}>For coaches</div>
+        <h1 style={{...S.h1, fontFamily:"'Caveat', 'Kalam', cursive", fontWeight:700, fontSize:44, letterSpacing:0}}>Thank you, Coach.</h1>
+        <p style={{...S.lead, fontFamily:"'Caveat', 'Kalam', cursive", fontWeight:500, fontSize:22, lineHeight:1.5}}>
+          Coaching is hard. You give up weeknights, you eat cold dinners, you
+          field parent emails you didn't ask for, and you carry a team's
+          development on your shoulders for reasons most people will never
+          understand. We see it. Ice-IQ exists to give you a few minutes of
+          your week back — and to put the <em>thinking</em> layer you don't
+          have time to teach into your players' hands between practices.
+        </p>
+
+        <nav style={S.toc} aria-label="On this page">
+          <a href="#why-coach" style={S.tocLink}>1. What Ice-IQ does for you</a>
+          <a href="#not-coach" style={S.tocLink}>2. What Ice-IQ is <em>not</em></a>
+          <a href="#setup" style={S.tocLink}>3. Setting up your team</a>
+          <a href="#dashboard" style={S.tocLink}>4. Reading your dashboard</a>
+          <a href="#notes" style={S.tocLink}>5. Player notes &amp; ratings</a>
+          <a href="#yours-coach" style={S.tocLink}>6. This is yours — help us build it</a>
+          <a href="#pricing-coach" style={S.tocLink}>7. Pricing for teams</a>
+          <a href="#privacy-coach" style={S.tocLink}>8. Privacy</a>
+        </nav>
+
+        <section id="why-coach" style={S.section}>
+          <div style={S.sectionEyebrow}>01 — What Ice-IQ does for you</div>
+          <h2 style={S.h2}>The thinking layer you don't have time to teach.</h2>
+          <p style={S.body}>
+            If you're lucky, you get 60 minutes of ice — maybe twice a week,
+            maybe less, maybe more depending on your association and the
+            season. You spend most of it on skating, skills, and the systems
+            basics that keep a U-whatever team from looking like bumper-cars.
+            By the time you'd get to the decision-making layer — when to pass
+            versus shoot, when to pinch, where to be on a 2-on-1, how to read
+            a forecheck — the Zamboni's on. So that layer usually gets taught
+            in the car on the way home, by a parent who means well but doesn't
+            quite teach it the way you would, or doesn't get taught at all.
+          </p>
+          <p style={S.body}>
+            Ice-IQ is that layer. Your players do the off-ice reps. You open
+            one screen and see — in plain English — the one concept your team
+            is getting wrong right now, and how many of your kids are getting
+            it wrong. Then you pick one drill that addresses it and run it at
+            your next practice. No clipboard. No spreadsheet. No evaluation
+            report to write.
+          </p>
+          <p style={S.body}>
+            What you get back is time, clarity, and a team that shows up on
+            Saturday already half-taught on whatever you're about to cover.
+            Parents stop guessing at what their kid should be working on.
+            You stop repeating yourself across a season. And the conversation
+            at the rink shifts from "did we win?" to "did we get better?"
+          </p>
+        </section>
+
+        <section id="not-coach" style={S.section}>
+          <div style={S.sectionEyebrow}>02 — What Ice-IQ is not</div>
+          <h2 style={S.h2}>Three things to set straight.</h2>
+          <div style={S.cardGrid3}>
+            <_NotCard
+              title="Not a scouting or ranking tool"
+              body="Nothing here gets shared with leagues or sent up to evaluators. Your team's data belongs to your team."
+            />
+            <_NotCard
+              title="Not a replacement for practice"
+              body="Ice is where things get cemented. Ice-IQ is the reps between practices, so when they hit the ice they're already halfway there."
+            />
+            <_NotCard
+              title="Not a coaching manual"
+              body="We show you the gap. You decide the drill. The app assumes you know your team better than any dashboard ever will."
+            />
+          </div>
+        </section>
+
+        <section id="setup" style={S.section}>
+          <div style={S.sectionEyebrow}>03 — Setting up your team</div>
+          <h2 style={S.h2}>Five minutes, one code.</h2>
+          <dl style={S.dl}>
+            <_HowRow
+              label="Create the team"
+              body="Pick your age group and season. The app generates a 6-character join code."
+            />
+            <_HowRow
+              label="Share the code"
+              body="Text it to the team group chat or put it on your practice plan. Parents sign up their kid, enter the code, done."
+            />
+            <_HowRow
+              label="Wait a few sessions"
+              body="Allow a few weeks for player entries to populate so you can start to accurately glean information from the data. A dashboard is only as useful as the reps behind it."
+            />
+            <_HowRow
+              label="Check in weekly"
+              body="Before your practice plan goes out. Two minutes. See the team's weakest concept, pick one drill that addresses it."
+            />
+          </dl>
+        </section>
+
+        <section id="dashboard" style={S.section}>
+          <div style={S.sectionEyebrow}>04 — Reading your dashboard</div>
+          <h2 style={S.h2}>One number to watch.</h2>
+          <p style={S.body}>
+            The hero card on your coach home tells you the one competency
+            your team is weakest at right now — Positioning, Decision-Making,
+            Awareness, Tempo Control, Physicality, or Leadership — with how
+            many players are below grade level on it.
+          </p>
+          <p style={S.body}>
+            Below that, a tiny heatmap shows all six competencies ranked. Tap
+            the orange button and we'll take you to age-appropriate drills for
+            whatever the weakness is. Pick one. Run it Tuesday.
+          </p>
+          <div style={S.callout}>
+            <div style={S.calloutLabel}>The play you're making</div>
+            <div style={S.calloutBody}>
+              Trust the pattern, not the single quiz. If one kid tanks on a bad
+              day, the team average barely moves. If the whole team is weak on
+              a concept for three weeks running, that's your practice focus.
+            </div>
+          </div>
+        </section>
+
+        <section id="notes" style={S.section}>
+          <div style={S.sectionEyebrow}>05 — Player notes &amp; ratings</div>
+          <h2 style={S.h2}>Your private coaching log.</h2>
+          <p style={S.body}>
+            Tap any player on your roster. You'll see two things: a skill
+            rating grid (growth, competency, or percentile, age-appropriate)
+            and a private notes field. Only you can see the notes. Use it for
+            the stuff that doesn't fit a rating — effort patterns, parent
+            conversations, who's due for a tougher role, who's struggling off
+            the ice.
+          </p>
+          <p style={S.bodyMuted}>
+            Every rating and note is tied to that player for the season. Pull
+            it up before parent conversations. Pull it up before call-up
+            decisions. Pull it up at season end when you're writing the
+            evaluations you actually want to write.
+          </p>
+        </section>
+
+        <section id="yours-coach" style={S.section}>
+          <div style={S.sectionEyebrow}>06 — This is yours — help us build it</div>
+          <h2 style={S.h2}>Tell us what's missing. Often.</h2>
+          <p style={S.body}>
+            Ice-IQ for coaches is early. The feature set will look different
+            in six months, and the thing driving that difference is coaches
+            telling us what works, what doesn't, and what they actually
+            need. We're not guessing — we're asking.
+          </p>
+          <p style={S.body}>
+            What's the report you'd check every morning if it existed? What
+            pre-game or post-game surface would you use? What's a concept we
+            should add to the taxonomy? What's the drill library missing?
+            What feels clunky?
+          </p>
+          <div style={S.callout}>
+            <div style={S.calloutLabel}>Use the report button. Often.</div>
+            <div style={S.calloutBody}>
+              It's on every screen, small, out of your way. Tap it any time
+              something's off or missing. We read every report. Most fixes land
+              within a week. The coaches who report the most shape the product
+              the most — it's that simple.
+            </div>
+          </div>
+        </section>
+
+        <section id="pricing-coach" style={S.section}>
+          <div style={S.sectionEyebrow}>07 — Pricing for teams</div>
+          <h2 style={S.h2}>One tier. One price. Your whole team.</h2>
+          <div style={S.tierGrid}>
+            <_TierCard tier="Team" price="$249.99/season" body="Up to 20 players. Full coach dashboard, team aggregations, per-player ratings and notes, drill deep-links." highlighted/>
+            <_TierCard tier="Association" price="Contact" body="Running multiple teams across an association? Get in touch."/>
+          </div>
+          <div style={{marginTop:16,display:"flex",flexWrap:"wrap",gap:10}}>
+            <button
+              style={{...S.btn,background:C.goldDim,border:`1px solid ${C.goldBorder}`,color:C.gold,fontWeight:800}}
+              onClick={() => {
+                const subject = encodeURIComponent("Ice-IQ for our association");
+                const body = encodeURIComponent(
+                  "Hi — I coach a team in our association and I think Ice-IQ could be a good fit for us at a broader level.\n\n" +
+                  "Take a look: https://ice-iq.vercel.app/#coaches\n\n" +
+                  "Thanks,"
+                );
+                try { window.location.href = `mailto:?subject=${subject}&body=${body}`; } catch {}
+              }}>
+              ✉️ Forward to your association
+            </button>
+            <button style={S.btn} onClick={() => {
+              const url = "https://ice-iq.vercel.app/#coaches";
+              if (navigator?.share) {
+                navigator.share({ title: "Ice-IQ for coaches", url }).catch(() => {});
+              } else if (navigator?.clipboard) {
+                navigator.clipboard.writeText(url).then(() => alert("Link copied — paste it wherever you need to share it.")).catch(() => {});
+              }
+            }}>
+              🔗 Copy share link
+            </button>
+          </div>
+        </section>
+
+        <section id="privacy-coach" style={S.section}>
+          <div style={S.sectionEyebrow}>08 — Privacy</div>
+          <h2 style={S.h2}>Your team's data belongs to your team.</h2>
+          <p style={S.body}>
+            Player quiz results, self-ratings, and goals are visible to the
+            coach of the team they've joined — nobody else. Your private coach
+            notes on each player are visible only to you, the coach who wrote
+            them. No associations, no scouts, no advertisers. Not negotiable.
+          </p>
+        </section>
+
+        <div style={S.footerCtas}>
+          <button style={S.btn} onClick={() => handleNav("coach-demo")}>
+            Try the coach dashboard demo →
+          </button>
+          <button style={S.btn} onClick={() => handleNav("coach-signup")}>
+            Sign up as a coach (free) →
+          </button>
+          <button style={S.btn} onClick={() => handleNav("parents")}>
+            See the parents page
+          </button>
+          <button style={S.btn} onClick={handleContact}>
+            Questions? Get in touch
+          </button>
+        </div>
+        <p style={{...S.bodyMuted,fontSize:12,marginTop:14,textAlign:"center"}}>
+          Free accounts can browse the coach dashboard and preview the demo roster. To invite
+          real players and run a real team, upgrade to the Team tier.
+        </p>
+      </div>
+    </div>
+  );
+}
+
+export function PlayersPage({ onNavigate, onContact }) {
+  useEffect(() => {
+    try {
+      document.title = "For players — Ice-IQ";
+      let meta = document.querySelector('meta[name="description"]');
+      if (!meta) { meta = document.createElement("meta"); meta.name = "description"; document.head.appendChild(meta); }
+      meta.content = "The player's guide to Ice-IQ — what it is, how to use it, and how to get the most out of the off-ice reps.";
+    } catch {}
+  }, []);
+  function handleNav(route) { if (typeof onNavigate === "function") onNavigate(route); }
+  function handleContact() {
+    if (typeof onContact === "function") onContact();
+    else window.location.href = "mailto:thomas@bluechip-people-strategies.com";
+  }
+  return (
+    <div style={{minHeight:"100vh",background:C.bg,padding:"2.5rem 1rem",fontFamily:FONT.body,color:C.white}}>
+      <div style={{maxWidth:760,margin:"0 auto",lineHeight:1.65}}>
+        <div style={S.eyebrow}>For players</div>
+        <h1 style={{...S.h1, fontFamily:"'Caveat', 'Kalam', cursive", fontWeight:700, fontSize:44, letterSpacing:0}}>Hey, player. This is yours.</h1>
+        <p style={{...S.lead, fontFamily:"'Caveat', 'Kalam', cursive", fontWeight:500, fontSize:22, lineHeight:1.5}}>
+          Your parents signed you up, but this app isn't theirs. It's yours.
+          Your profile. Your goals. Your streak. The kids who get the most out
+          of Ice-IQ are the ones who open it on their own, pick their own
+          drills to watch, and chase their own score.
+        </p>
+
+        <nav style={S.toc} aria-label="On this page">
+          <a href="#why-player" style={S.tocLink}>1. Why it matters</a>
+          <a href="#how-player" style={S.tocLink}>2. How to use it</a>
+          <a href="#pro-player" style={S.tocLink}>3. Pro habits</a>
+          <a href="#yours-player" style={S.tocLink}>4. This is yours — help us build it</a>
+        </nav>
+
+        <section id="why-player" style={S.section}>
+          <div style={S.sectionEyebrow}>01 — Why it matters</div>
+          <h2 style={S.h2}>Hockey sense is built off the ice.</h2>
+          <p style={S.body}>
+            The hardest part of hockey isn't the skating — it's the reading.
+            Knowing where to be. Knowing when to pass, when to shoot, when to
+            pinch, when to back off. Those reads get faster the more you see
+            them. Ice-IQ is where you see them, over and over, until they're
+            automatic when the puck drops.
+          </p>
+          <p style={S.body}>
+            Five minutes a day. Three days a week. That's enough to be the
+            kid on your team who always seems to know what's about to happen.
+          </p>
+        </section>
+
+        <section id="how-player" style={S.section}>
+          <div style={S.sectionEyebrow}>02 — How to use it</div>
+          <h2 style={S.h2}>Short, consistent, honest.</h2>
+          <dl style={S.dl}>
+            <_HowRow label="Session length" body="5 to 10 minutes. Longer isn't better — your brain gets tired faster than your legs."/>
+            <_HowRow label="Consistency" body="Three or four times a week beats one long session. Build a habit, not a marathon."/>
+            <_HowRow label="Rate yourself honestly" body="When you rate your skills, don't just tap 'consistent' on everything. Real growth comes from knowing what you actually need to work on."/>
+            <_HowRow label="Read the tips" body="When you get a question wrong, read WHY before tapping next. The tip is the lesson."/>
+          </dl>
+        </section>
+
+        <section id="pro-player" style={S.section}>
+          <div style={S.sectionEyebrow}>03 — Pro habits</div>
+          <h2 style={S.h2}>Things pros do that most kids don't.</h2>
+          <div style={S.cardGrid3}>
+            <_NotCard title="Pre-scan every touch" body="Before the puck arrives, look over both shoulders. Know what you'll do BEFORE you have to do it."/>
+            <_NotCard title="Second efforts" body="If you lose a puck battle, the next two seconds matter. Get back in it. Every time."/>
+            <_NotCard title="Short memory" body="Bad shift? Forget it. Next shift. The best players don't carry mistakes into their next touch."/>
+          </div>
+        </section>
+
+        <section id="yours-player" style={S.section}>
+          <div style={S.sectionEyebrow}>04 — This is yours — help us build it</div>
+          <h2 style={S.h2}>Tell us what's missing. Often.</h2>
+          <p style={S.body}>
+            A question feels too easy? Too hard? A concept your coach talks
+            about that we don't cover? A drill video that was boring, or
+            confusing, or wrong? Tell us. The report button is on every
+            screen — tap it, say what's on your mind. We read every report.
+          </p>
+          <div style={S.callout}>
+            <div style={S.calloutLabel}>The players who shape the app the most</div>
+            <div style={S.calloutBody}>
+              …are the ones who use the report button most. You're not
+              bothering us. You're helping us build the thing you actually want.
+            </div>
+          </div>
+        </section>
+
+        <div style={S.footerCtas}>
+          <button style={S.btn} onClick={() => handleNav("home")}>Take a quiz →</button>
+          <button style={S.btn} onClick={() => handleNav("parents")}>For my parents</button>
+          <button style={S.btn} onClick={handleContact}>Questions? Get in touch</button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+export function AssociationsPage({ onNavigate, onContact }) {
+  useEffect(() => {
+    try {
+      document.title = "For associations — Ice-IQ";
+      let meta = document.querySelector('meta[name="description"]');
+      if (!meta) { meta = document.createElement("meta"); meta.name = "description"; document.head.appendChild(meta); }
+      meta.content = "How Ice-IQ fits inside a minor-hockey association: development standards, coach support, and player literacy at scale.";
+    } catch {}
+  }, []);
+  function handleNav(route) { if (typeof onNavigate === "function") onNavigate(route); }
+  function handleContact() {
+    if (typeof onContact === "function") onContact();
+    else window.location.href = "mailto:thomas@bluechip-people-strategies.com";
+  }
+  return (
+    <div style={{minHeight:"100vh",background:C.bg,padding:"2.5rem 1rem",fontFamily:FONT.body,color:C.white}}>
+      <div style={{maxWidth:760,margin:"0 auto",lineHeight:1.65}}>
+        <div style={S.eyebrow}>For associations</div>
+        <h1 style={{...S.h1, fontFamily:"'Caveat', 'Kalam', cursive", fontWeight:700, fontSize:44, letterSpacing:0}}>Thank you for running hockey.</h1>
+        <p style={{...S.lead, fontFamily:"'Caveat', 'Kalam', cursive", fontWeight:500, fontSize:22, lineHeight:1.5}}>
+          Associations are the volunteers nobody claps for — the ones who
+          keep ice booked, coaches trained, and kids on teams season after
+          season. We built Ice-IQ to give your coaches a tool they can
+          actually use on Tuesday night, and your players a standard of
+          hockey sense they can carry from house league up to rep.
+        </p>
+
+        <nav style={S.toc} aria-label="On this page">
+          <a href="#why-assoc" style={S.tocLink}>1. Why this matters for your association</a>
+          <a href="#what-assoc" style={S.tocLink}>2. What an association rollout looks like</a>
+          <a href="#pricing-assoc" style={S.tocLink}>3. Pricing & tiers</a>
+          <a href="#yours-assoc" style={S.tocLink}>4. This is yours — help us build it</a>
+        </nav>
+
+        <section id="why-assoc" style={S.section}>
+          <div style={S.sectionEyebrow}>01 — Why this matters for your association</div>
+          <h2 style={S.h2}>One standard, across every age group.</h2>
+          <p style={S.body}>
+            The hardest part of running minor hockey isn't ice; it's
+            consistency. Every coach has their own philosophy, every team
+            learns systems differently, every age group arrives with wildly
+            different readiness. Ice-IQ gives you a common language —
+            age-appropriate, progressive, and opinion-free — that lives
+            alongside whatever your coaches are already doing.
+          </p>
+          <p style={S.body}>
+            Players who use Ice-IQ through their U9, U11 and U13 seasons
+            show up to tryouts able to articulate their own reads. That's
+            evaluators dream material, and it's the kind of development
+            record that makes your association look exactly as serious as
+            it is.
+          </p>
+        </section>
+
+        <section id="what-assoc" style={S.section}>
+          <div style={S.sectionEyebrow}>02 — What an association rollout looks like</div>
+          <h2 style={S.h2}>Low-lift. No mandatory anything.</h2>
+          <dl style={S.dl}>
+            <_HowRow label="Pilot first" body="Pick one age group or one division. Three to five coaches run with Team tier for a season. No commitment from the association."/>
+            <_HowRow label="Tools for coaches" body="Each coach sees their own team dashboard — what their players are getting, what the team is missing. No admin panel, no spreadsheets to maintain."/>
+            <_HowRow label="No data obligation" body="Associations don't need to collect or store anything. Players and coaches own their own data. We don't share it with leagues, evaluators, or anyone else."/>
+            <_HowRow label="Opt-in for players" body="Parents sign their kids up individually. It's never mandatory, and it never becomes the coach's administrative problem."/>
+          </dl>
+        </section>
+
+        <section id="pricing-assoc" style={S.section}>
+          <div style={S.sectionEyebrow}>03 — Pricing & tiers</div>
+          <h2 style={S.h2}>Flexible — reach out.</h2>
+          <div style={S.tierGrid}>
+            <_TierCard tier="Team" price="$249.99/season" body="Per team. Up to 20 players. Full coach dashboard." highlighted/>
+            <_TierCard tier="Association" price="Contact" body="Multi-team pricing, custom onboarding. Reach out and we'll build it around your association." />
+          </div>
+        </section>
+
+        <section id="yours-assoc" style={S.section}>
+          <div style={S.sectionEyebrow}>04 — This is yours — help us build it</div>
+          <h2 style={S.h2}>Tell us what an association actually needs.</h2>
+          <p style={S.body}>
+            Every association is different. We're building Ice-IQ by
+            listening to the associations using it, not by guessing. What
+            reporting would help your VP Hockey? What's the development
+            conversation you wish you could have but don't have the tools
+            for? What do you wish every coach in your association had?
+          </p>
+          <div style={S.callout}>
+            <div style={S.calloutLabel}>Reach out directly</div>
+            <div style={S.calloutBody}>
+              Email and we'll find a fit — pilot scope, pricing, onboarding.
+              Associations who come in early shape where this product goes next.
+            </div>
+          </div>
+        </section>
+
+        <div style={S.footerCtas}>
+          <button style={S.btn} onClick={handleContact}>Contact us →</button>
+          <button style={S.btn} onClick={() => handleNav("coaches")}>See the coaches page</button>
+          <button style={S.btn} onClick={() => handleNav("home")}>Back to Ice-IQ</button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 function _NotCard({ title, body }) {
   return (
     <div style={S.notCard}>
@@ -2047,12 +2548,12 @@ const S = {
   dl: { display:"grid", gridTemplateColumns:"120px 1fr", gap:"10px 20px", fontSize:14, lineHeight:1.7, marginTop:10 },
   dt: { color:C.dimmer, fontSize:13, fontWeight:700, letterSpacing:".02em" },
   dd: { margin:0, color:C.white },
-  callout: { background:C.blueDim, border:`1px solid rgba(59,130,246,.25)`, borderRadius:10, padding:"14px 16px", marginTop:14 },
+  callout: { background:C.blueDim, border:`1px solid rgba(91,164,232,.25)`, borderRadius:10, padding:"14px 16px", marginTop:14 },
   calloutLabel: { fontSize:12, fontWeight:700, color:C.blue, marginBottom:6, letterSpacing:".04em", textTransform:"uppercase" },
   calloutBody: { fontSize:14, color:C.white, lineHeight:1.6 },
   tierGrid: { display:"grid", gridTemplateColumns:"repeat(auto-fit, minmax(140px, 1fr))", gap:10, marginTop:14 },
   tierCard: { background:C.bgCard, border:`1px solid ${C.border}`, borderRadius:10, padding:14 },
-  tierCardHighlighted: { border:`2px solid ${C.gold}`, background:`linear-gradient(135deg,${C.bgCard},rgba(201,168,76,.06))` },
+  tierCardHighlighted: { border:`2px solid ${C.gold}`, background:`linear-gradient(135deg,${C.bgCard},rgba(252,76,2,.06))` },
   tierLabel: { fontSize:11, letterSpacing:".1em", textTransform:"uppercase", color:C.dimmer, marginBottom:4, fontWeight:700 },
   tierLabelHighlighted: { color:C.gold },
   tierPrice: { fontSize:14, fontWeight:700, marginBottom:6, color:C.white },
@@ -2065,7 +2566,7 @@ const S = {
   lensCard: { background:C.bgCard, border:`1px solid ${C.border}`, borderRadius:10, padding:14 },
   lensLabel: { fontSize:11, letterSpacing:".08em", textTransform:"uppercase", color:C.dimmer, marginBottom:6, fontWeight:700 },
   lensBody: { fontSize:13, lineHeight:1.6, color:C.white },
-  contactCallout: { background:C.blueDim, border:`1px solid rgba(59,130,246,.25)`, borderRadius:10, padding:"14px 16px", fontSize:14, color:C.white, lineHeight:1.6 },
+  contactCallout: { background:C.blueDim, border:`1px solid rgba(91,164,232,.25)`, borderRadius:10, padding:"14px 16px", fontSize:14, color:C.white, lineHeight:1.6 },
   contactEmail: { color:C.blue, fontWeight:700, textDecoration:"none" },
   footerCtas: { marginTop:40, paddingTop:24, borderTop:`1px solid ${C.border}`, display:"flex", gap:10, flexWrap:"wrap" },
   btn: { fontSize:13, padding:".55rem 1rem", background:C.bgCard, border:`1px solid ${C.border}`, borderRadius:10, cursor:"pointer", color:C.white, fontFamily:FONT.body, fontWeight:600 },

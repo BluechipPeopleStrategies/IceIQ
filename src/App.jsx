@@ -1,9 +1,9 @@
-import { useState, useEffect, useCallback, lazy, Suspense } from "react";
+import { useState, useEffect, useCallback, useMemo, lazy, Suspense } from "react";
 import * as SB from "./supabase";
 import { supabase, hasSupabase } from "./supabase";
 import { canAccess, getUpgradeTriggerMessage } from "./utils/tierGate";
 import { rinksRemainingForFree, recordRinkSeen, RINK_FREE_PER_AGE } from "./utils/rinkProgress";
-import { isDevBypassEnabled, getDevProfile, setDevProfile, clearDevProfile, buildDevPlayer } from "./utils/devBypass";
+import { isDevBypassEnabled, getDevProfile, setDevProfile, clearDevProfile, buildDevPlayer, isEphemeralPlayer } from "./utils/devBypass";
 import { getLevelDisplay } from "./utils/ageGroup";
 import { getParentRatings, saveParentRatings, hasParentRatings, daysSinceUpdated, PARENT_DIMENSIONS, PARENT_SCALE } from "./utils/parentAssessment";
 import { calcPlayerProfile, PROFILE_AXES } from "./utils/playerProfile";
@@ -12,7 +12,10 @@ import { markSignupIntent, logSignupComplete } from "./utils/signupTelemetry";
 // to Supabase from the first interaction, no LS→cloud transfer needed.
 import { DEPTH_SLOTS, getDepthChart, setAssignment as setDepthAssignment, seedDemoDepthChart, clearDemoDepthChart } from "./utils/depthChart";
 import Rink from "./Rink.jsx";
-import { COMPETENCIES, getPositioningJourneyState, GAME_SENSE_UNLOCK_SESSIONS } from "./utils/gameSense.js";
+import { COMPETENCIES, getIceIQJourneyState, GAME_SENSE_UNLOCK_SESSIONS, calcCompetencyScores, calcGameSenseScore, ICE_IQ_THRESHOLDS, ICE_IQ_JOURNEY_LABELS } from "./utils/gameSense.js";
+import { getTrainingLog } from "./utils/trainingLog.js";
+import { buildU11ForwardPreview, PREVIEW_PLAYER_ID } from "./data/previewPlayer.js";
+import { calcTeamCompetencyAverages, GRADE_LEVEL_THRESHOLD } from "./utils/coachStats.js";
 import { HockeyInsightWidget, BottomNav, TrainingLog, HomeStartHereCard } from "./widgets.jsx";
 import { canSwitchAgeGroup, recordAgeGroupSwitch, getAgeGroupLock, setAgeGroupLock, checkSeasonReset } from "./utils/deviceLock";
 import {
@@ -51,17 +54,13 @@ function resolveTier({ profile, demoMode } = {}) {
 // ─────────────────────────────────────────────────────────
 // VERSION
 // ─────────────────────────────────────────────────────────
-const VERSION = "1.0.0";
-const RELEASE_DATE = "April 18, 2026";
+const VERSION = "0.9-beta";
+const RELEASE_DATE = "April 2026";
 const CHANGELOG = [
-  { v:"1.0.0", date:"April 2026", notes:[
-    {icon:"🚀", title:"Ice-IQ v1 is here", desc:"Our first full release — built for players, parents, and coaches to train game sense off the ice"},
-    {icon:"🏒", title:"5 Question Formats", desc:"Multiple choice, True/False, Sequence, Spot the Mistake, What Happens Next — plus interactive Zone-Click questions"},
-    {icon:"🎯", title:"Adaptive Quiz Engine", desc:"Difficulty shifts in real time based on your answers — always the right challenge"},
-    {icon:"🏒", title:"Hockey-Specific Goal Setting", desc:"Set development goals by category, tie them to your self-assessment and coach feedback"},
-    {icon:"📊", title:"Game Sense Profile", desc:"Spider chart, competency breakdown, month-over-month trend, peer percentile ranking"},
-    {icon:"👨‍🏫", title:"Coach Dashboard", desc:"Roster view, per-player ratings, development notes, and per-question reports"},
-    {icon:"🏆", title:"Weekly Challenge", desc:"A new curated quiz drops every Monday — same questions for every player at your level"},
+  { v:"0.9-beta", date:"April 2026", notes:[
+    {icon:"🏒", title:"Welcome — you're early", desc:"This is Ice-IQ's first public preview. You're one of the first players, parents, and coaches to use it. Nothing here is final — everything is shaped by what you tell us."},
+    {icon:"🛠️", title:"Built with you, not for you", desc:"Every feature on this app came from a question a real coach, parent, or kid asked. Tap the report button whenever something feels off, confusing, or missing. We read every single one."},
+    {icon:"📈", title:"Active development", desc:"Questions are being added weekly. Screens will change. Your feedback directly shapes what ships next — so be loud, be specific, and don't sugarcoat it."},
   ]},
 ];
 
@@ -107,7 +106,7 @@ const QUESTS_COACH = [
   { id:"invite1",  label:"Invite 1 player",               nav:"home",  gate:"coachDashboard", target:1 },
   { id:"rate1",    label:"Rate 1 skill on 1 player",      nav:"home",  gate:"coachFeedback",  target:1 },
   { id:"depth1",   label:"Set your team's depth chart",   nav:"home",  gate:"coachDashboard", target:1 },
-  { id:"insight1", label:"Read 1 pro insight",            nav:"home",  gate:null,             target:1 },
+  { id:"focus1",   label:"Check your team's focus",       nav:"home",  gate:null,             target:1 },
 ];
 
 // SMART goal categories
@@ -139,7 +138,7 @@ function AvatarDisc({ name, kind = "player", size = 48 }) {
   const initials = avatarInitials(display);
   const bg = kind === "coach"
     ? "linear-gradient(135deg, #475569 0%, #1e293b 100%)"
-    : `linear-gradient(135deg, ${C.gold} 0%, #b8860b 100%)`;
+    : `linear-gradient(135deg, ${C.gold} 0%, #CF4520 100%)`;
   const fg = kind === "coach" ? "#f1f5f9" : "#0b1220";
   return (
     <div style={{
@@ -168,6 +167,10 @@ const LS_COACH_NOTED     = "iceiq_coach_noted_v1";      // "1" once coach leaves
 const LS_DEPTH_CHART_SET = "iceiq_depth_chart_set_v1";  // "1" once coach assigns any line. (Managed by utils/depthChart.js.)
 const LS_FIRST_LINE_SEEN = "iceiq_first_line_seen_v1";  // JSON: {[identity]: "1"}.
 const LS_QUEST_DISMISSED = "iceiq_quest_dismissed_v1";  // JSON: {[identity]: "1"}.
+const LS_WHATSNEW_DISMISSED = "iceiq_whatsnew_dismissed_v1"; // JSON: {[identity]: version}.
+const LS_UPGRADE_DISMISSED  = "iceiq_upgrade_dismissed_v1";  // JSON: {[identity]: "1"}.
+const LS_CLIPS_WATCHED      = "iceiq_clips_watched_v1";      // JSON: {[identity]: string[]}.
+const LS_HOMEWORK_DONE      = "iceiq_homework_done_v1";      // JSON: {[identity]: string[]}.
 
 function lsGetJSON(key, fallback) {
   try { const v = window.localStorage.getItem(key); return v ? JSON.parse(v) : fallback; } catch { return fallback; }
@@ -219,6 +222,10 @@ function computeQuestProgress(def, ctx) {
     case "read3":
     case "insight1":
       progress = flags.insightsRead.size;
+      break;
+    case "focus1":
+      try { progress = window.localStorage.getItem("iceiq_coach_focus_seen_v1") === "1" ? 1 : 0; }
+      catch { progress = 0; }
       break;
     case "goal1":
       progress = Object.values(player?.goals || {}).filter(g => g?.goal).length;
@@ -276,7 +283,7 @@ function QuestChecklist({ role, quests, results, onTap, onDismiss, onAllComplete
   const nextIdx = results.findIndex(r => !r.done && !r.acknowledged);
   const nextQuest = nextIdx >= 0 ? quests[nextIdx] : null;
   return (
-    <div style={{background:`linear-gradient(135deg, rgba(201,168,76,0.08), rgba(124,111,205,0.06))`,border:`1px solid ${C.goldBorder}`,borderRadius:14,padding:"1rem 1rem .9rem",marginBottom:"1rem"}}>
+    <div style={{background:`linear-gradient(135deg, rgba(252,76,2,0.08), rgba(207,69,32,0.06))`,border:`1px solid ${C.goldBorder}`,borderRadius:14,padding:"1rem 1rem .9rem",marginBottom:"1rem"}}>
       <div style={{display:"flex",alignItems:"center",gap:".65rem",marginBottom:collapsed ? 0 : ".85rem"}}>
         <AvatarDisc name={coachName} kind="coach" size={36}/>
         <div style={{flex:1,minWidth:0}}>
@@ -293,7 +300,7 @@ function QuestChecklist({ role, quests, results, onTap, onDismiss, onAllComplete
       {/* Prescriptive hero CTA — brand-new users tap one big button instead
           of scanning the whole list. Hidden when collapsed or when all done. */}
       {!collapsed && nextQuest && !allDone && (
-        <button onClick={() => onTap(nextQuest)} style={{display:"block",width:"100%",background:`linear-gradient(135deg, ${C.gold}, #b8860b)`,color:C.bg,border:"none",borderRadius:12,padding:".85rem 1rem",cursor:"pointer",fontFamily:FONT.body,fontWeight:800,fontSize:14,letterSpacing:".02em",marginBottom:".85rem",boxShadow:`0 4px 14px ${C.gold}33, inset 0 1px 0 rgba(255,255,255,.25)`,textAlign:"left",display:"flex",alignItems:"center",justifyContent:"space-between",gap:".5rem"}}>
+        <button onClick={() => onTap(nextQuest)} style={{display:"block",width:"100%",background:`linear-gradient(135deg, ${C.gold}, #CF4520)`,color:C.bg,border:"none",borderRadius:12,padding:".85rem 1rem",cursor:"pointer",fontFamily:FONT.body,fontWeight:800,fontSize:14,letterSpacing:".02em",marginBottom:".85rem",boxShadow:`0 4px 14px ${C.gold}33, inset 0 1px 0 rgba(255,255,255,.25)`,textAlign:"left",display:"flex",alignItems:"center",justifyContent:"space-between",gap:".5rem"}}>
           <span>Start: {nextQuest.label}</span>
           <span style={{fontSize:16}}>→</span>
         </button>
@@ -323,7 +330,7 @@ function QuestChecklist({ role, quests, results, onTap, onDismiss, onAllComplete
             <div style={{fontSize:10,color:C.dimmer,fontWeight:700,letterSpacing:".04em"}}>{checked} of {total}</div>
           </div>
           {showSignupCTA && onSignup && (
-            <button onClick={onSignup} style={{marginTop:".75rem",width:"100%",background:`linear-gradient(135deg, ${C.gold}, #b8860b)`,color:C.bg,border:"none",borderRadius:12,padding:".75rem",cursor:"pointer",fontWeight:800,fontSize:13,fontFamily:FONT.body,letterSpacing:".02em",boxShadow:"0 4px 14px rgba(201,168,76,.25), inset 0 1px 0 rgba(255,255,255,.25)",display:"flex",alignItems:"center",justifyContent:"center",gap:".4rem"}}>
+            <button onClick={onSignup} style={{marginTop:".75rem",width:"100%",background:`linear-gradient(135deg, ${C.gold}, #CF4520)`,color:C.bg,border:"none",borderRadius:12,padding:".75rem",cursor:"pointer",fontWeight:800,fontSize:13,fontFamily:FONT.body,letterSpacing:".02em",boxShadow:"0 4px 14px rgba(252,76,2,.25), inset 0 1px 0 rgba(255,255,255,.25)",display:"flex",alignItems:"center",justifyContent:"center",gap:".4rem"}}>
               <span style={{fontSize:14}}>🏒</span>
               Create your free account →
             </button>
@@ -353,6 +360,9 @@ const SkillsOnboarding = lazy(() => import("./screens.jsx").then(m => ({ default
 const InsightsScreen = lazy(() => import("./screens.jsx").then(m => ({ default: m.InsightsScreen })));
 const ParentAssessmentScreen = lazy(() => import("./screens.jsx").then(m => ({ default: m.ParentAssessmentScreen })));
 const ParentsPage = lazy(() => import("./screens.jsx").then(m => ({ default: m.ParentsPage })));
+const CoachesPage = lazy(() => import("./screens.jsx").then(m => ({ default: m.CoachesPage })));
+const PlayersPage = lazy(() => import("./screens.jsx").then(m => ({ default: m.PlayersPage })));
+const AssociationsPage = lazy(() => import("./screens.jsx").then(m => ({ default: m.AssociationsPage })));
 const LazyFallback = () => <div style={{minHeight:"100vh",background:C.bg,color:C.dimmer,display:"flex",alignItems:"center",justifyContent:"center",fontFamily:FONT.body}}>Loading…</div>;
 
 const COMP={
@@ -685,7 +695,7 @@ function RinkDiagram({ type }) {
       <text x={x} y={y} textAnchor="middle" dominantBaseline="middle" fill="white" fontSize="7.5" fontWeight="700">{label}</text>
     </g>
   );
-  const Arrow = ({x1,y1,x2,y2,color="#c9a84c",dash,arc}) => {
+  const Arrow = ({x1,y1,x2,y2,color="#FC4C02",dash,arc}) => {
     const dx=x2-x1, dy=y2-y1, len=Math.sqrt(dx*dx+dy*dy);
     const ux=dx/len, uy=dy/len;
     const hx=x2-ux*12, hy=y2-uy*12;
@@ -1195,6 +1205,17 @@ function Home({ player, onNav, demoMode, subscriptionTier, questFlagsBump, onPro
   const questResults = QUESTS_PLAYER.map(q => computeQuestProgress(q, { player, flags, tier: subscriptionTier }));
   const questDismissed = lsGetJSON(LS_QUEST_DISMISSED, {})[identity] === "1";
   const firstLineSeen = lsGetJSON(LS_FIRST_LINE_SEEN, {})[identity] === "1";
+  const [dismissTick, setDismissTick] = useState(0); // eslint-disable-line no-unused-vars
+  const whatsNewDismissed = lsGetJSON(LS_WHATSNEW_DISMISSED, {})[identity] === VERSION;
+  const upgradeDismissed  = lsGetJSON(LS_UPGRADE_DISMISSED, {})[identity] === "1";
+  function dismissWhatsNew() {
+    const m = lsGetJSON(LS_WHATSNEW_DISMISSED, {}); m[identity] = VERSION; lsSetJSON(LS_WHATSNEW_DISMISSED, m);
+    setDismissTick(t => t + 1);
+  }
+  function dismissUpgrade() {
+    const m = lsGetJSON(LS_UPGRADE_DISMISSED, {}); m[identity] = "1"; lsSetJSON(LS_UPGRADE_DISMISSED, m);
+    setDismissTick(t => t + 1);
+  }
   function handleQuestTap(q) {
     if (q.gate && !canAccess(q.gate, subscriptionTier).allowed) {
       onPromptUpgrade(q.gate);
@@ -1288,61 +1309,69 @@ function Home({ player, onNav, demoMode, subscriptionTier, questFlagsBump, onPro
           const unlocked = totalSessions >= GAME_SENSE_UNLOCK_SESSIONS && iq !== null;
           const remaining = Math.max(0, GAME_SENSE_UNLOCK_SESSIONS - totalSessions);
           return (
-            <Card glow={unlocked} style={{marginBottom:"1rem",background:`linear-gradient(135deg,${C.bgCard},${C.bgElevated})`,position:"relative",overflow:"hidden"}}>
-              <div style={{position:"absolute",top:0,right:0,width:120,height:120,background:`radial-gradient(circle at top right,${unlocked?tier.color+"15":"rgba(255,255,255,.02)"},transparent 70%)`,pointerEvents:"none"}}/>
-              <Label>Game Sense Score</Label>
+            <Card glow={unlocked} style={{marginBottom:"1rem",background:`linear-gradient(135deg,${C.bgCard},${C.bgElevated})`,position:"relative",overflow:"hidden",padding:".85rem 1rem"}}>
+              <div style={{position:"absolute",top:0,right:0,width:100,height:100,background:`radial-gradient(circle at top right,${unlocked?tier.color+"15":"rgba(255,255,255,.02)"},transparent 70%)`,pointerEvents:"none"}}/>
               {unlocked ? (
-                <div style={{display:"flex",alignItems:"flex-end",gap:"1rem"}}>
-                  <div>
-                    <div style={{fontFamily:FONT.display,fontWeight:800,fontSize:"4.5rem",color:tier.color,lineHeight:.9,letterSpacing:"-.02em"}}>{iq}<span style={{fontSize:"1.8rem"}}>%</span></div>
-                    <div style={{fontSize:13,color:C.dimmer,marginTop:".4rem"}}>{latest.results.filter(r=>r.ok).length}/{latest.results.length} correct</div>
+                <>
+                  <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:".25rem"}}>
+                    <Label style={{marginBottom:0}}>Game Sense Score</Label>
+                    <div style={{fontSize:11,color:C.dimmer,fontWeight:600}}>{totalSessions} session{totalSessions!==1?"s":""}</div>
                   </div>
-                  <div>
-                    <div style={{fontFamily:FONT.display,fontWeight:700,fontSize:"1.2rem",color:C.white}}>{tier.badge} {tier.label}</div>
-                    <div style={{fontSize:12,color:C.dimmer,marginTop:2}}>{totalSessions} session{totalSessions!==1?"s":""}</div>
+                  <div style={{display:"flex",alignItems:"baseline",gap:".7rem"}}>
+                    <div style={{fontFamily:FONT.display,fontWeight:800,fontSize:"2.6rem",color:tier.color,lineHeight:1,letterSpacing:"-.02em"}}>{iq}<span style={{fontSize:"1.1rem"}}>%</span></div>
+                    <div style={{fontSize:12,color:C.dim,fontWeight:700}}>{tier.badge} {tier.label}</div>
+                    <div style={{flex:1}}/>
+                    <div style={{fontSize:11,color:C.dimmer}}>{latest.results.filter(r=>r.ok).length}/{latest.results.length} correct</div>
                   </div>
-                </div>
+                </>
               ) : (
-                <div>
-                  <div style={{display:"flex",alignItems:"center",gap:".6rem",marginBottom:".4rem"}}>
-                    <span style={{fontSize:"2.2rem"}}>🔒</span>
-                    <div style={{fontFamily:FONT.display,fontWeight:800,fontSize:"2.6rem",color:"rgba(255,255,255,.15)",lineHeight:.9}}>—</div>
+                <>
+                  <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:".35rem"}}>
+                    <Label style={{marginBottom:0}}>Game Sense Score</Label>
+                    <div style={{fontSize:10,color:C.dimmer,fontWeight:600}}>
+                      {totalSessions === 0 ? "Locked" : `${totalSessions} session${totalSessions===1?"":"s"} logged`}
+                    </div>
                   </div>
-                  <div style={{fontSize:13,color:C.dim,marginTop:".5rem",lineHeight:1.5}}>
+                  <div style={{fontSize:12.5,color:C.dim,lineHeight:1.55}}>
                     {totalSessions === 0
-                      ? `Take ${GAME_SENSE_UNLOCK_SESSIONS} quizzes to unlock your Game Sense Score — one quiz isn't enough to measure you fairly.`
-                      : `${remaining} more quiz${remaining===1?"":"zes"} to unlock your Game Sense Score.`}
+                      ? "Keep working through the app — quizzes, skills, goals — and come back later. Your Game Sense Score unlocks once you've given us enough to measure fairly."
+                      : "Nice start. Keep working through the app and come back later — your Game Sense Score unlocks once there's enough to measure fairly."}
                   </div>
-                  <div style={{marginTop:".7rem",height:6,background:C.dimmest,borderRadius:4,overflow:"hidden"}}>
-                    <div style={{width:`${Math.min(100, (totalSessions/GAME_SENSE_UNLOCK_SESSIONS)*100)}%`,height:"100%",background:C.gold,borderRadius:4,transition:"width .3s"}}/>
+                  <div style={{marginTop:".55rem",height:4,background:C.dimmest,borderRadius:3,overflow:"hidden"}}>
+                    <div style={{width:`${Math.min(100, (totalSessions/GAME_SENSE_UNLOCK_SESSIONS)*100)}%`,height:"100%",background:C.gold,borderRadius:3,transition:"width .3s"}}/>
                   </div>
-                  <div style={{fontSize:11,color:C.dimmer,marginTop:".35rem"}}>{totalSessions}/{GAME_SENSE_UNLOCK_SESSIONS} quizzes done</div>
-                </div>
+                </>
               )}
             </Card>
           );
         })()}
 
-        {/* Positioning Journey entry */}
+        {/* Ice IQ Journey entry — rink-path progression, activity-based. */}
         {(() => {
-          const js = getPositioningJourneyState(quizHistory);
-          const unlockedCount = js.nodes.filter(n => n.unlocked).length;
-          const latestTitle = [...js.nodes].reverse().find(n => n.unlocked)?.title_unlock;
+          const trainingSessions = (() => {
+            try {
+              const all = getTrainingLog(player?.id || "__demo__");
+              return all?.sessions || [];
+            } catch { return []; }
+          })();
+          const js = getIceIQJourneyState(quizHistory, trainingSessions, player?.level);
+          const unlockedCount = js.stations.filter(s => s.unlocked).length;
+          const latest = [...js.stations].reverse().find(s => s.unlocked);
           return (
-            <button onClick={() => onNav("journey")} style={{width:"100%",display:"flex",alignItems:"center",justifyContent:"space-between",background:`linear-gradient(135deg,${COMPETENCIES.positioning.color}14,rgba(255,255,255,0.02))`,border:`1px solid ${COMPETENCIES.positioning.color}40`,borderRadius:12,padding:".7rem .95rem",cursor:"pointer",color:C.white,fontFamily:FONT.body,marginBottom:"1rem"}}>
+            <button onClick={() => onNav("journey")} style={{width:"100%",display:"flex",alignItems:"center",justifyContent:"space-between",background:`linear-gradient(135deg,rgba(252,76,2,.14),rgba(252,76,2,.03))`,border:`1px solid ${C.goldBorder}`,borderRadius:12,padding:".7rem .95rem",cursor:"pointer",color:C.white,fontFamily:FONT.body,marginBottom:"1rem"}}>
               <span style={{display:"flex",alignItems:"center",gap:".55rem",minWidth:0}}>
-                <span style={{fontSize:16}}>🗺️</span>
-                <span style={{fontWeight:700,fontSize:13}}>Positioning Journey</span>
-                <span style={{color:C.dimmer,fontSize:12,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>· {unlockedCount}/{js.nodes.length}{latestTitle?` · ${latestTitle}`:""}</span>
+                <span style={{fontSize:16}}>🏒</span>
+                <span style={{fontWeight:700,fontSize:13}}>Ice IQ Journey</span>
+                <span style={{color:C.dimmer,fontSize:12,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>· {unlockedCount}/{js.stations.length}{latest?` · ${latest.title}`:""}</span>
               </span>
-              <span style={{color:COMPETENCIES.positioning.color,fontSize:12}}>→</span>
+              <span style={{color:C.gold,fontSize:12}}>→</span>
             </button>
           );
         })()}
 
         {/* Quick action grid */}
         <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:".75rem",marginBottom:"1rem"}}>
-          <button onClick={() => onNav("quiz")} style={{background:`linear-gradient(135deg,rgba(124,111,205,.15),rgba(124,111,205,.05))`,border:`1px solid ${C.purpleBorder}`,borderRadius:14,padding:"1.1rem",cursor:"pointer",textAlign:"left",color:C.white,fontFamily:FONT.body,position:"relative",overflow:"hidden"}}>
+          <button onClick={() => onNav("quiz")} style={{background:`linear-gradient(135deg,rgba(207,69,32,.15),rgba(207,69,32,.05))`,border:`1px solid ${C.purpleBorder}`,borderRadius:14,padding:"1.1rem",cursor:"pointer",textAlign:"left",color:C.white,fontFamily:FONT.body,position:"relative",overflow:"hidden"}}>
             <img src={imgCoreApp} alt="" style={{position:"absolute",inset:0,width:"100%",height:"100%",objectFit:"cover",opacity:0.12,pointerEvents:"none"}}/>
             <div style={{position:"relative"}}>
             <div style={{fontSize:22,marginBottom:".4rem"}}>🧠</div>
@@ -1350,7 +1379,7 @@ function Home({ player, onNav, demoMode, subscriptionTier, questFlagsBump, onPro
             <div style={{fontSize:11,color:C.purple}}>Adaptive · {player.sessionLength||10}Q</div>
             </div>
           </button>
-          <button onClick={() => onNav("goals")} style={{background:`linear-gradient(135deg,rgba(201,168,76,.1),rgba(201,168,76,.03))`,border:`1px solid ${C.goldBorder}`,borderRadius:14,padding:"1.1rem",cursor:"pointer",textAlign:"left",color:C.white,fontFamily:FONT.body}}>
+          <button onClick={() => onNav("goals")} style={{background:`linear-gradient(135deg,rgba(252,76,2,.1),rgba(252,76,2,.03))`,border:`1px solid ${C.goldBorder}`,borderRadius:14,padding:"1.1rem",cursor:"pointer",textAlign:"left",color:C.white,fontFamily:FONT.body}}>
             <div style={{fontSize:22,marginBottom:".4rem"}}>🎯</div>
             <div style={{fontWeight:700,fontSize:14,marginBottom:2}}>My Goals</div>
             <div style={{fontSize:11,color:C.gold}}>{goalCount}/{goalCats} set</div>
@@ -1374,7 +1403,7 @@ function Home({ player, onNav, demoMode, subscriptionTier, questFlagsBump, onPro
         </div>
 
         {/* Game Sense Profile button */}
-        <button onClick={() => onNav("gamesense")} style={{width:"100%",display:"block",textAlign:"left",background:`linear-gradient(135deg,rgba(124,111,205,.12),rgba(124,111,205,.04))`,border:`1px solid ${C.purpleBorder}`,borderRadius:14,padding:"1rem 1.1rem",cursor:"pointer",color:C.white,fontFamily:FONT.body,marginBottom:"1rem",position:"relative",overflow:"hidden"}}>
+        <button onClick={() => onNav("gamesense")} style={{width:"100%",display:"block",textAlign:"left",background:`linear-gradient(135deg,rgba(207,69,32,.12),rgba(207,69,32,.04))`,border:`1px solid ${C.purpleBorder}`,borderRadius:14,padding:"1rem 1.1rem",cursor:"pointer",color:C.white,fontFamily:FONT.body,marginBottom:"1rem",position:"relative",overflow:"hidden"}}>
           <img src={imgProfile} alt="" style={{position:"absolute",inset:0,width:"100%",height:"100%",objectFit:"cover",opacity:0.08,pointerEvents:"none"}}/>
           <div style={{position:"relative"}}>
             <div style={{display:"flex",alignItems:"center",gap:".6rem"}}>
@@ -1399,9 +1428,10 @@ function Home({ player, onNav, demoMode, subscriptionTier, questFlagsBump, onPro
           </button>
         )}
 
-        {showProPreview && (
-          <button onClick={()=>onNav("plans")} style={{width:"100%",display:"block",textAlign:"left",background:`linear-gradient(135deg,rgba(201,168,76,.12),rgba(124,111,205,.08))`,border:`1px solid ${C.goldBorder}`,borderRadius:14,padding:"1rem 1.1rem",cursor:"pointer",color:C.white,fontFamily:FONT.body,marginBottom:"1rem"}}>
-            <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:".5rem"}}>
+        {showProPreview && !upgradeDismissed && (
+          <button onClick={()=>onNav("plans")} style={{width:"100%",display:"block",textAlign:"left",background:`linear-gradient(135deg,rgba(252,76,2,.12),rgba(207,69,32,.08))`,border:`1px solid ${C.goldBorder}`,borderRadius:14,padding:"1rem 1.1rem",cursor:"pointer",color:C.white,fontFamily:FONT.body,marginBottom:"1rem",position:"relative"}}>
+            <span onClick={(e)=>{e.stopPropagation();e.preventDefault();dismissUpgrade();}} role="button" aria-label="Dismiss" style={{position:"absolute",top:6,right:8,width:22,height:22,display:"flex",alignItems:"center",justifyContent:"center",color:C.dimmer,fontSize:14,cursor:"pointer",borderRadius:6,lineHeight:1}}>✕</span>
+            <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:".5rem",paddingRight:"1.6rem"}}>
               <div style={{display:"flex",alignItems:"center",gap:".5rem"}}>
                 <span style={{fontSize:16}}>⭐</span>
                 <span style={{fontSize:10,letterSpacing:".14em",textTransform:"uppercase",color:C.gold,fontWeight:800}}>Upgrade to Ice-IQ Pro</span>
@@ -1430,13 +1460,17 @@ function Home({ player, onNav, demoMode, subscriptionTier, questFlagsBump, onPro
         )}
 
         {/* What's New */}
+        {!whatsNewDismissed && (
         <div style={{marginBottom:"1rem",background:`linear-gradient(135deg,${C.bgCard} 0%,${C.bgElevated} 100%)`,border:`1px solid ${C.border}`,borderRadius:16,overflow:"hidden"}}>
           <div style={{padding:".75rem 1rem .6rem",display:"flex",alignItems:"center",justifyContent:"space-between",borderBottom:`1px solid rgba(255,255,255,0.05)`}}>
             <div style={{display:"flex",alignItems:"center",gap:".5rem"}}>
               <span style={{background:C.gold,color:C.bg,fontSize:9,fontWeight:800,letterSpacing:".1em",textTransform:"uppercase",padding:"2px 7px",borderRadius:20}}>NEW</span>
               <span style={{fontFamily:FONT.display,fontWeight:800,fontSize:13,color:C.white,letterSpacing:".02em"}}>What's New</span>
             </div>
-            <span style={{fontSize:10,color:C.dimmer,fontWeight:600}}>v{VERSION} · {CHANGELOG[0].date}</span>
+            <div style={{display:"flex",alignItems:"center",gap:".5rem"}}>
+              <span style={{fontSize:10,color:C.dimmer,fontWeight:600}}>v{VERSION} · {CHANGELOG[0].date}</span>
+              <button onClick={dismissWhatsNew} aria-label="Dismiss" style={{background:"none",border:"none",color:C.dimmer,fontSize:14,cursor:"pointer",padding:"0 2px",lineHeight:1}}>✕</button>
+            </div>
           </div>
           <div style={{padding:".65rem .85rem"}}>
             {CHANGELOG[0].notes.slice(0,3).map((item,i) => (
@@ -1450,6 +1484,7 @@ function Home({ player, onNav, demoMode, subscriptionTier, questFlagsBump, onPro
             ))}
           </div>
         </div>
+        )}
       </div>
     </div>
   );
@@ -1472,7 +1507,7 @@ function useQuizState() {
 // ─────────────────────────────────────────────────────────
 function Quiz({ player, onFinish, onBack, tier, onUpgrade }) {
   const isReturning = player.quizHistory.length > 0;
-  const isDemo = !player.id || player.id === "__demo__";
+  const isDemo = !player.id || isEphemeralPlayer(player.id);
   // First-time quizzes (no session history yet) are capped at 5 so the
   // First-Six onboarding feels quick. Subsequent quizzes use the player's
   // configured sessionLength.
@@ -1489,11 +1524,12 @@ function Quiz({ player, onFinish, onBack, tier, onUpgrade }) {
   const [showFlag, setShowFlag] = useState(false);
   const [flagReason, setFlagReason] = useState("");
   const [flagDetail, setFlagDetail] = useState("");
+  const [flagSent, setFlagSent] = useState(false);
   const [statsMap, setStatsMap] = useState({});
 
   async function submitFlag() {
     if (!flagReason) return;
-    if (player.id && player.id !== "__demo__") {
+    if (player.id && !isEphemeralPlayer(player.id)) {
       await SB.reportQuestion({
         userId: player.id,
         questionId: question.id,
@@ -1502,7 +1538,8 @@ function Quiz({ player, onFinish, onBack, tier, onUpgrade }) {
         detail: flagDetail.trim() || null,
       });
     }
-    setTimeout(() => { setShowFlag(false); setFlagReason(""); setFlagDetail(""); }, TOAST_DURATION_MS);
+    setFlagSent(true);
+    setTimeout(() => { setShowFlag(false); setFlagReason(""); setFlagDetail(""); setFlagSent(false); }, TOAST_DURATION_MS);
   }
 
   useEffect(() => {
@@ -1539,7 +1576,7 @@ function Quiz({ player, onFinish, onBack, tier, onUpgrade }) {
     const newResults = [...results, newResult];
     if (question.type === "mistake" && ok) setMistakeStreak(s => s+1);
     setResults(newResults);
-    if (isLast) setQuizDone(true);
+    if (newResults.length >= qLen) setQuizDone(true);
   }
 
   function handleSeqAnswer(ok) {
@@ -1549,12 +1586,14 @@ function Quiz({ player, onFinish, onBack, tier, onUpgrade }) {
     const newResult = { id:question.id, cat:question.cat, ok, d:question.d||2, type:"seq" };
     const newResults = [...results, newResult];
     setResults(newResults);
-    if (isLast) setQuizDone(true);
+    if (newResults.length >= qLen) setQuizDone(true);
   }
 
   function advance() {
     if (!question) return;
+    if (results.length >= qLen) { setQuizDone(true); return; }
     const { q: nextQ, queue: nextQueue } = pullNext(queue, results);
+    if (!nextQ) { setQuizDone(true); return; }
     setQueue(nextQueue);
     setQuestion(nextQ);
     setSel(null);
@@ -1678,7 +1717,7 @@ function Quiz({ player, onFinish, onBack, tier, onUpgrade }) {
         )}
 
         {qtype === "tf" && (
-          <Card style={{marginBottom:"1.25rem",background:C.blueDim,border:`1px solid rgba(59,130,246,.3)`}}>
+          <Card style={{marginBottom:"1.25rem",background:C.blueDim,border:`1px solid rgba(91,164,232,.3)`}}>
             <div style={{fontSize:10,letterSpacing:".14em",textTransform:"uppercase",color:C.blue,marginBottom:".6rem",fontWeight:700}}>⚡ True or False?</div>
             <div style={{fontSize:15,lineHeight:1.8,color:C.white,fontWeight:500}}>{q.sit}</div>
           </Card>
@@ -1701,7 +1740,7 @@ function Quiz({ player, onFinish, onBack, tier, onUpgrade }) {
         )}
 
         {qtype === "rink" && (
-          <Card style={{marginBottom:"1.25rem",background:C.blueDim,border:`1px solid rgba(59,130,246,.3)`}}>
+          <Card style={{marginBottom:"1.25rem",background:C.blueDim,border:`1px solid rgba(91,164,232,.3)`}}>
             <div style={{fontSize:10,letterSpacing:".14em",textTransform:"uppercase",color:C.blue,marginBottom:".6rem",fontWeight:700}}>🏒 Rink Scenario</div>
             {q.sit && <div style={{fontSize:14,color:C.dim,lineHeight:1.7,marginBottom:".5rem"}}>{q.sit}</div>}
             {q.scene?.question?.prompt && <div style={{fontSize:15,fontWeight:700,color:C.white}}>{q.scene.question.prompt}</div>}
@@ -1803,7 +1842,7 @@ function Quiz({ player, onFinish, onBack, tier, onUpgrade }) {
             </Card>
             {quizDone ? (
               <button onClick={() => onFinish(results, seqPerfect, mistakeStreak)} style={{background:C.gold,color:C.bg,border:"none",borderRadius:12,padding:".9rem",cursor:"pointer",fontWeight:700,fontSize:14,fontFamily:FONT.body,width:"100%"}}>
-                See Results →
+                Finish & See Results →
               </button>
             ) : (
               <button onClick={advance} style={{background:C.purple,color:C.white,border:"none",borderRadius:12,padding:".9rem",cursor:"pointer",fontWeight:700,fontSize:14,fontFamily:FONT.body,width:"100%"}}>
@@ -1904,7 +1943,7 @@ function Results({ results, player, prevScore, totalSessions, seqPerfect, mistak
 
       {/* Badges */}
       {badges.length > 0 && (
-        <Card style={{marginBottom:"1rem",background:`linear-gradient(135deg,rgba(201,168,76,.08),rgba(201,168,76,.02))`,border:`1px solid ${C.goldBorder}`}}>
+        <Card style={{marginBottom:"1rem",background:`linear-gradient(135deg,rgba(252,76,2,.08),rgba(252,76,2,.02))`,border:`1px solid ${C.goldBorder}`}}>
           <Label>Badges Earned</Label>
           <div style={{display:"flex",gap:".6rem",flexWrap:"wrap"}}>
             {badges.map((b,i) => (
@@ -1970,7 +2009,7 @@ function Results({ results, player, prevScore, totalSessions, seqPerfect, mistak
       </Card>
 
       {showMilestoneBanner && (
-        <Card style={{marginBottom:"1rem",background:`linear-gradient(135deg,rgba(201,168,76,.12),rgba(201,168,76,.04))`,border:`1px solid ${C.goldBorder}`,textAlign:"center",padding:"1.25rem"}}>
+        <Card style={{marginBottom:"1rem",background:`linear-gradient(135deg,rgba(252,76,2,.12),rgba(252,76,2,.04))`,border:`1px solid ${C.goldBorder}`,textAlign:"center",padding:"1.25rem"}}>
           <div style={{fontSize:24,marginBottom:".4rem"}}>🏆</div>
           <div style={{fontFamily:FONT.display,fontWeight:800,fontSize:"1.1rem",color:C.gold,marginBottom:".3rem"}}>5 quizzes complete!</div>
           <div style={{fontSize:12,color:C.dim,lineHeight:1.5,marginBottom:".85rem"}}>Free keeps only your last 5 sessions. Upgrade to track your full journey and see your progress over time.</div>
@@ -2167,7 +2206,7 @@ function WeeklyQuiz({ player, onBack, onFinish }) {
           </Card>
         )}
         {qtype === "tf" && (
-          <Card style={{marginBottom:"1.25rem",background:C.blueDim,border:`1px solid rgba(59,130,246,.3)`}}>
+          <Card style={{marginBottom:"1.25rem",background:C.blueDim,border:`1px solid rgba(91,164,232,.3)`}}>
             <div style={{fontSize:10,letterSpacing:".14em",textTransform:"uppercase",color:C.blue,marginBottom:".6rem",fontWeight:700}}>⚡ True or False?</div>
             <div style={{fontSize:15,lineHeight:1.8,color:C.white,fontWeight:500}}>{q.sit}</div>
           </Card>
@@ -2262,8 +2301,24 @@ function GoalsScreen({ player, onSave, onBack }) {
 
   const currentGoal = goals[active] || {};
   const completedSteps = SMART_STEPS.filter(s => currentGoal[s]?.trim());
-  const isComplete = completedSteps.length === 5 && currentGoal.goal?.trim();
+  // The top "Your Goal" field is conceptually a summary; the 5 SMART fields
+  // carry the real content. If the user filled all 5 but left the goal field
+  // blank, treat the Specific (S) field as the goal so the save button appears.
+  const isComplete = completedSteps.length === 5 && (currentGoal.goal?.trim() || currentGoal.S?.trim());
   const example = SMART_EXAMPLES[active] || {};
+
+  function handleSaveGoal() {
+    const g = goals[active] || {};
+    // Fallback: if the top goal field is empty, backfill it from S so the
+    // downstream save (SB.saveGoal) doesn't silently drop the entry.
+    if (!g.goal?.trim() && g.S?.trim()) {
+      const patched = { ...goals, [active]: { ...g, goal: g.S.trim() } };
+      setGoals(patched);
+      onSave(patched);
+    } else {
+      onSave(goals);
+    }
+  }
 
   return (
     <div style={{minHeight:"100vh",background:C.bg,color:C.white,fontFamily:FONT.body,paddingBottom:80}}>
@@ -2274,7 +2329,7 @@ function GoalsScreen({ player, onSave, onBack }) {
             <div style={{fontFamily:FONT.display,fontWeight:800,fontSize:"1.1rem"}}>SMART Goals</div>
             <div style={{fontSize:11,color:C.dimmer}}>{getLevelDisplay(player)} · {Object.keys(goals).filter(k=>goals[k]?.goal).length}/{cats.length} set</div>
           </div>
-          <button onClick={() => onSave(goals)} style={{background:C.gold,color:C.bg,border:"none",borderRadius:8,padding:".4rem 1rem",cursor:"pointer",fontWeight:800,fontSize:13,fontFamily:FONT.body}}>Save</button>
+          <button onClick={handleSaveGoal} style={{background:C.gold,color:C.bg,border:"none",borderRadius:8,padding:".4rem 1rem",cursor:"pointer",fontWeight:800,fontSize:13,fontFamily:FONT.body}}>Save</button>
         </div>
       </StickyHeader>
 
@@ -2355,7 +2410,7 @@ function GoalsScreen({ player, onSave, onBack }) {
                 </button>
               )}
               {step === "T" && isComplete && (
-                <button onClick={() => onSave(goals)} style={{background:C.gold,color:C.bg,border:"none",borderRadius:8,padding:".4rem 1rem",cursor:"pointer",fontSize:12,fontWeight:800,fontFamily:FONT.body}}>
+                <button onClick={handleSaveGoal} style={{background:C.gold,color:C.bg,border:"none",borderRadius:8,padding:".4rem 1rem",cursor:"pointer",fontSize:12,fontWeight:800,fontFamily:FONT.body}}>
                   Save Goal ✓
                 </button>
               )}
@@ -2365,9 +2420,9 @@ function GoalsScreen({ player, onSave, onBack }) {
 
         {/* Completed goal preview */}
         {isComplete && (
-          <Card style={{background:"rgba(34,197,94,.06)",border:`1px solid ${C.greenBorder}`}}>
+          <Card style={{background:"rgba(34,197,94,.06)",border:`1px solid ${C.greenBorder}`,marginBottom:"1rem"}}>
             <div style={{fontSize:10,letterSpacing:".12em",textTransform:"uppercase",color:C.green,fontWeight:700,marginBottom:".5rem"}}>✓ Goal Complete</div>
-            <div style={{fontSize:13,color:C.white,fontWeight:600,marginBottom:".5rem"}}>{currentGoal.goal}</div>
+            <div style={{fontSize:13,color:C.white,fontWeight:600,marginBottom:".5rem"}}>{currentGoal.goal || currentGoal.S}</div>
             {SMART_STEPS.map(s => (
               <div key={s} style={{fontSize:12,color:C.dim,marginBottom:".25rem",lineHeight:1.5}}>
                 <span style={{color:C.green,fontWeight:700}}>{SMART_LABELS[s]}:</span> {currentGoal[s]}
@@ -2375,6 +2430,13 @@ function GoalsScreen({ player, onSave, onBack }) {
             ))}
           </Card>
         )}
+
+        {/* Always-visible bottom Save button — users naturally look down
+            for save; the StickyHeader save is easy to miss on long pages. */}
+        <button onClick={handleSaveGoal}
+                style={{width:"100%",background:isComplete?C.gold:C.goldDim,color:isComplete?C.bg:C.dim,border:`1px solid ${C.goldBorder}`,borderRadius:12,padding:"1rem",cursor:"pointer",fontWeight:800,fontSize:15,fontFamily:FONT.body,letterSpacing:".02em",marginTop:"1rem"}}>
+          {isComplete ? "Save Goal ✓" : "Save Progress"}
+        </button>
       </div>
     </div>
   );
@@ -2404,7 +2466,7 @@ function RatingButtons({ level, value, onChange }) {
             textAlign:"left", fontFamily:FONT.body,
           }}>
             <div style={{display:"flex",flexDirection:"column",alignItems:"center",flexShrink:0,minWidth:26}}>
-              <div style={{fontFamily:FONT.display,fontWeight:800,fontSize:"1.1rem",color:o.color,lineHeight:1}}>{i+1}</div>
+              <div style={{fontFamily:FONT.display,fontWeight:800,fontSize:"1.1rem",color:o.color,lineHeight:1}}>{o.value === "n/a" ? "—" : i+1}</div>
             </div>
             <div style={{flex:1}}>
               <div style={{fontSize:13,fontWeight:700,color:picked?o.color:C.white,marginBottom:2}}>{o.label}</div>
@@ -2545,7 +2607,7 @@ function Skills({ player, onSave, onBack }) {
 // Averages each skill category and plots self + coach on the same axes
 // ─────────────────────────────────────────────────────────
 function SkillsRadar({ cats, selfRatings, coachRatings, selfScale, coachScale }) {
-  const W = 320, H = 320;
+  const W = 420, H = 340;
   const cx = W / 2, cy = H / 2;
   const radius = 110;
   const rings = [0.25, 0.5, 0.75, 1.0];
@@ -2617,10 +2679,22 @@ function SkillsRadar({ cats, selfRatings, coachRatings, selfScale, coachScale })
         {axes.map((a, i) => {
           const [lx, ly] = point(i, radius + 22);
           const anchor = Math.abs(lx - cx) < 8 ? "middle" : (lx > cx ? "start" : "end");
+          const full = `${a.icon} ${a.label}`;
+          const parts = full.length > 14 ? (() => {
+            const words = a.label.split(" ");
+            if (words.length < 2) return [full];
+            const mid = Math.ceil(words.length / 2);
+            return [`${a.icon} ${words.slice(0, mid).join(" ")}`, words.slice(mid).join(" ")];
+          })() : [full];
           return (
             <g key={`l${i}`}>
               <text x={lx.toFixed(1)} y={ly.toFixed(1)} fontSize="10" fontWeight="700" fill={C.white} textAnchor={anchor} dominantBaseline="middle" fontFamily="'Inter', 'DM Sans', sans-serif">
-                {a.icon} {a.label}
+                {parts.length === 1 ? parts[0] : (
+                  <>
+                    <tspan x={lx.toFixed(1)} dy="-0.4em">{parts[0]}</tspan>
+                    <tspan x={lx.toFixed(1)} dy="1.1em">{parts[1]}</tspan>
+                  </>
+                )}
               </text>
             </g>
           );
@@ -2663,7 +2737,7 @@ function Report({ player, onBack, demoCoachData, tier, onUpgrade }) {
       setLoadingCoach(false);
       return;
     }
-    if (player.id && player.id !== "__demo__") {
+    if (player.id && !isEphemeralPlayer(player.id)) {
       SB.getCoachRatingsForPlayer(player.id).then(data => {
         setCoachRatings(Object.keys(data.ratings || {}).length ? data.ratings : null);
         setCoachNotes(data.notes || {});
@@ -2736,15 +2810,51 @@ function Report({ player, onBack, demoCoachData, tier, onUpgrade }) {
           ))}
         </Card>
       )}
-      {/* Coach Feedback — FREE tier teaser */}
+      {/* Coach Feedback — FREE tier teaser. Three paths:
+          (1) individual upgrade to Pro,
+          (2) ask your coach to get the team on a Team account (unlocks coach feedback team-wide),
+          (3) ask your association to sign up so coach feedback is an association-provided benefit. */}
       {!coachFeedbackAllowed && (
-        <Card style={{marginBottom:"1rem",background:C.bgElevated,border:`1px dashed ${C.goldBorder}`,textAlign:"center",padding:"1.25rem"}}>
-          <div style={{fontSize:24,marginBottom:".35rem"}}>🔒</div>
-          <Label>Coach Feedback</Label>
-          <div style={{fontSize:12,color:C.dimmer,marginBottom:"0.85rem",lineHeight:1.5}}>See ratings and notes from every coach on your team — Head Coach, Assistants, Skills Coach, and more.</div>
-          <button onClick={()=>onUpgrade && onUpgrade("coachFeedback","pro")} style={{background:C.gold,color:C.bg,border:"none",borderRadius:8,padding:".55rem 1.1rem",cursor:"pointer",fontWeight:800,fontSize:12,fontFamily:FONT.body}}>
-            Unlock with Pro →
-          </button>
+        <Card style={{marginBottom:"1rem",background:C.bgElevated,border:`1px dashed ${C.goldBorder}`,padding:"1.25rem"}}>
+          <div style={{display:"flex",alignItems:"flex-start",gap:".75rem",marginBottom:".8rem"}}>
+            <div style={{fontSize:26,flexShrink:0}}>🔒</div>
+            <div style={{flex:1}}>
+              <Label>Coach Feedback</Label>
+              <div style={{fontSize:12,color:C.dimmer,lineHeight:1.55}}>See ratings and notes from every coach on your team — Head Coach, Assistants, Skills Coach, and more.</div>
+            </div>
+          </div>
+          <div style={{display:"flex",flexDirection:"column",gap:".45rem"}}>
+            <button onClick={()=>onUpgrade && onUpgrade("coachFeedback","pro")}
+              style={{background:C.gold,color:C.bg,border:"none",borderRadius:8,padding:".55rem .9rem",cursor:"pointer",fontWeight:800,fontSize:12,fontFamily:FONT.body,width:"100%"}}>
+              Unlock with Ice-IQ Pro →
+            </button>
+            <div style={{fontSize:10,letterSpacing:".08em",textTransform:"uppercase",color:C.dimmer,fontWeight:700,textAlign:"center",marginTop:".15rem"}}>or — at no cost to you</div>
+            <button onClick={() => {
+                const subject = encodeURIComponent("Ice-IQ for our team");
+                const body = encodeURIComponent(
+                  "Hi Coach,\n\nI started using an app called Ice-IQ to work on game sense off the ice. " +
+                  "There's a Team tier that unlocks coach feedback — so you could rate me (and other players) and I'd see your notes in-app.\n\n" +
+                  "Would you be open to setting up a Team account? Here's the page for coaches:\n" +
+                  "https://ice-iq.vercel.app/#coaches\n\nThanks!"
+                );
+                try { window.location.href = `mailto:?subject=${subject}&body=${body}`; } catch {}
+              }}
+              style={{background:"none",color:C.gold,border:`1px solid ${C.goldBorder}`,borderRadius:8,padding:".5rem .9rem",cursor:"pointer",fontWeight:700,fontSize:12,fontFamily:FONT.body,width:"100%"}}>
+              🏒 Ask your coach to set up a Team account
+            </button>
+            <button onClick={() => {
+                const subject = encodeURIComponent("Ice-IQ for our association");
+                const body = encodeURIComponent(
+                  "Hi,\n\nMy kid uses an app called Ice-IQ to train hockey sense off the ice. " +
+                  "They offer an Association tier that lets multiple teams run on it — coaches get a dashboard, players see coach feedback.\n\n" +
+                  "Would you take a look? Here's the association page:\nhttps://ice-iq.vercel.app/#associations\n\nThanks!"
+                );
+                try { window.location.href = `mailto:?subject=${subject}&body=${body}`; } catch {}
+              }}
+              style={{background:"none",color:C.gold,border:`1px solid ${C.goldBorder}`,borderRadius:8,padding:".5rem .9rem",cursor:"pointer",fontWeight:700,fontSize:12,fontFamily:FONT.body,width:"100%"}}>
+              🏟️ Ask your association to sign up
+            </button>
+          </div>
         </Card>
       )}
 
@@ -3044,11 +3154,34 @@ function CompetencyValidation() {
   );
 }
 
+// Rink-path visual for the Ice IQ Journey. 8 stations plotted along a
+// horizontal rink from own goal (left) to opposing net (right). Locked
+// stations show 🔒, current station glows, unlocked stations trail a
+// trailing path behind the skater.
+const JOURNEY_NODE_XY = [
+  { x:82,  y:180 },   // showed-up — just out of own goal
+  { x:170, y:220 },   // face-off — own face-off dot area
+  { x:258, y:150 },   // blue-line — own blue line
+  { x:348, y:215 },   // find-slot — neutral zone left side
+  { x:432, y:130 },   // back-check — center
+  { x:520, y:215 },   // pressure-puck — offensive blue-line entry
+  { x:608, y:150 },   // read-rush — high slot
+  { x:712, y:195 },   // captain-c — at the opposing net
+];
+
 function JourneyScreen({ player, onBack, onNav }) {
-  const state = getPositioningJourneyState(player.quizHistory);
-  const { pct, attempts, nodes, nextIdx } = state;
-  const nextNode = nextIdx !== null ? nodes[nextIdx] : null;
-  const competencyColor = COMPETENCIES.positioning.color;
+  const [selectedIdx, setSelectedIdx] = useState(null);
+  const trainingSessions = (() => {
+    try { return (getTrainingLog(player?.id || "__demo__")?.sessions) || []; }
+    catch { return []; }
+  })();
+  const state = getIceIQJourneyState(player.quizHistory, trainingSessions, player?.level);
+  const { quizzes, training, stations, nextIdx } = state;
+  const nextStation = nextIdx !== null ? stations[nextIdx] : null;
+  const unlockedCount = stations.filter(s => s.unlocked).length;
+  const currentIdx = nextIdx === null ? stations.length - 1 : Math.max(0, nextIdx - 1);
+  const skaterPos = JOURNEY_NODE_XY[nextIdx !== null ? nextIdx : stations.length - 1];
+  const selected = selectedIdx !== null ? stations[selectedIdx] : null;
 
   return (
     <div style={{minHeight:"100vh",background:C.bg,color:C.white,fontFamily:FONT.body,paddingBottom:80}}>
@@ -3056,64 +3189,128 @@ function JourneyScreen({ player, onBack, onNav }) {
         <div style={{maxWidth:560,margin:"0 auto",display:"flex",alignItems:"center",gap:"1rem"}}>
           <BackBtn onClick={onBack}/>
           <div style={{flex:1}}>
-            <div style={{fontFamily:FONT.display,fontWeight:800,fontSize:"1.1rem"}}>Journey — Positioning</div>
-            <div style={{fontSize:11,color:C.dimmer}}>{nodes.filter(n=>n.unlocked).length}/{nodes.length} unlocked · {attempts} positioning question{attempts===1?"":"s"} answered</div>
+            <div style={{fontFamily:FONT.display,fontWeight:800,fontSize:"1.1rem"}}>Ice IQ Journey</div>
+            <div style={{fontSize:11,color:C.dimmer}}>{unlockedCount}/{stations.length} stations · {quizzes} quiz{quizzes===1?"":"zes"} · {training} training session{training===1?"":"s"}</div>
           </div>
         </div>
       </StickyHeader>
 
       <div style={{padding:"1.25rem",maxWidth:560,margin:"0 auto"}}>
-        {/* Header progress card */}
-        <Card style={{marginBottom:"1rem",background:`linear-gradient(135deg,${competencyColor}18,${C.bgElevated})`,border:`1px solid ${competencyColor}40`}}>
-          <Label>{COMPETENCIES.positioning.icon} Positioning score</Label>
-          <div style={{display:"flex",alignItems:"baseline",gap:".5rem",marginTop:".3rem",marginBottom:".6rem"}}>
-            <div style={{fontFamily:FONT.display,fontWeight:800,fontSize:"2.2rem",color:competencyColor,lineHeight:1}}>{pct}</div>
-            <div style={{fontSize:12,color:C.dimmer}}>/ 100</div>
-          </div>
-          {nextNode ? (
-            <>
-              <div style={{fontSize:12,color:C.dim,marginBottom:".4rem"}}>Next: <strong style={{color:C.white}}>{nextNode.icon} {nextNode.title}</strong> at {nextNode.threshold}%{nextNode.minAttempts?` + ${nextNode.minAttempts} attempts`:""}</div>
-              <ProgressBar value={Math.min(pct, nextNode.threshold)} max={nextNode.threshold} color={competencyColor}/>
-            </>
-          ) : (
-            <div style={{fontSize:12,color:C.green,fontWeight:700}}>✓ All positioning nodes unlocked — you're a Rink General.</div>
-          )}
+        {/* Rink-path visual */}
+        <Card style={{marginBottom:"1rem",padding:"1rem .75rem .5rem"}}>
+          <svg viewBox="0 0 800 320" style={{width:"100%",height:"auto",display:"block"}}>
+            {/* Ice */}
+            <rect x="20" y="40" width="760" height="260" rx="40" fill={C.ice} stroke={C.rink} strokeWidth="2" opacity="0.22"/>
+            {/* Center line */}
+            <line x1="400" y1="40" x2="400" y2="300" stroke="#dc2626" strokeWidth="2" opacity="0.5"/>
+            {/* Blue lines */}
+            <line x1="240" y1="40" x2="240" y2="300" stroke="#1e5799" strokeWidth="3" opacity="0.55"/>
+            <line x1="560" y1="40" x2="560" y2="300" stroke="#1e5799" strokeWidth="3" opacity="0.55"/>
+            {/* Goal lines */}
+            <line x1="50"  y1="40" x2="50"  y2="300" stroke="#dc2626" strokeWidth="1.5" opacity="0.4"/>
+            <line x1="750" y1="40" x2="750" y2="300" stroke="#dc2626" strokeWidth="1.5" opacity="0.4"/>
+            {/* Goals */}
+            <rect x="40" y="155" width="12" height="30" fill="none" stroke="#dc2626" strokeWidth="2" opacity="0.7"/>
+            <rect x="748" y="155" width="12" height="30" fill="none" stroke="#dc2626" strokeWidth="2" opacity="0.7"/>
+            {/* Center circle */}
+            <circle cx="400" cy="170" r="34" fill="none" stroke="#dc2626" strokeWidth="1.5" opacity="0.4"/>
+            {/* Path connecting stations */}
+            {stations.map((s, i) => {
+              if (i === stations.length - 1) return null;
+              const a = JOURNEY_NODE_XY[i];
+              const b = JOURNEY_NODE_XY[i+1];
+              const isTrail = s.unlocked && stations[i+1].unlocked;
+              const isCurrent = s.unlocked && !stations[i+1].unlocked;
+              return (
+                <line key={`p${i}`} x1={a.x} y1={a.y} x2={b.x} y2={b.y}
+                  stroke={isTrail ? C.gold : isCurrent ? C.gold : "rgba(248,250,252,0.15)"}
+                  strokeWidth={isTrail ? 3 : isCurrent ? 2.5 : 1.5}
+                  strokeDasharray={isTrail ? "0" : isCurrent ? "0" : "6 6"}
+                  opacity={isTrail ? 0.9 : isCurrent ? 0.75 : 0.55}/>
+              );
+            })}
+            {/* Stations */}
+            {stations.map((s, i) => {
+              const {x, y} = JOURNEY_NODE_XY[i];
+              const isUnlocked = s.unlocked;
+              const isNext = i === nextIdx;
+              const isSelected = i === selectedIdx;
+              const fill = isUnlocked ? C.gold : isNext ? C.bgElevated : C.bgCard;
+              const stroke = isUnlocked ? "#fff" : isNext ? C.gold : "rgba(248,250,252,0.25)";
+              return (
+                <g key={s.id} style={{cursor:"pointer"}} onClick={() => setSelectedIdx(isSelected ? null : i)}>
+                  {isNext && (
+                    <circle cx={x} cy={y} r="30" fill="none" stroke={C.gold} strokeWidth="2" opacity="0.35">
+                      <animate attributeName="r" values="26;32;26" dur="1.8s" repeatCount="indefinite"/>
+                      <animate attributeName="opacity" values="0.15;0.5;0.15" dur="1.8s" repeatCount="indefinite"/>
+                    </circle>
+                  )}
+                  <circle cx={x} cy={y} r={isSelected ? 26 : 22}
+                    fill={fill} stroke={stroke} strokeWidth={isUnlocked ? 2.5 : 2} opacity={isUnlocked || isNext ? 1 : 0.55}/>
+                  <text x={x} y={y+6} textAnchor="middle" fontSize="20" style={{userSelect:"none", pointerEvents:"none", filter: isUnlocked || isNext ? "none" : "grayscale(100%)", opacity: isUnlocked || isNext ? 1 : 0.45}}>
+                    {isUnlocked ? s.icon : isNext ? s.icon : "🔒"}
+                  </text>
+                  <text x={x} y={y+46} textAnchor="middle" fontSize="10" fontWeight="700"
+                    fill={isUnlocked ? C.white : isNext ? C.gold : "rgba(248,250,252,0.45)"}
+                    style={{fontFamily:"'Inter','DM Sans',sans-serif",userSelect:"none", pointerEvents:"none"}}>
+                    {s.title}
+                  </text>
+                </g>
+              );
+            })}
+            {/* Skater icon — sits on the current (next-to-unlock) station,
+                or on the final station if fully complete. */}
+            {skaterPos && (
+              <g style={{pointerEvents:"none"}}>
+                <text x={skaterPos.x} y={skaterPos.y - 30} textAnchor="middle" fontSize="24">⛸️</text>
+              </g>
+            )}
+          </svg>
         </Card>
 
-        {/* Nodes */}
-        <div style={{display:"flex",flexDirection:"column",gap:".75rem"}}>
-          {nodes.map((n, i) => {
-            const isNext = i === nextIdx;
-            const isUnlocked = n.unlocked;
-            const accent = isUnlocked ? C.green : isNext ? C.gold : C.dimmer;
-            const bg = isUnlocked ? "rgba(34,197,94,.06)" : isNext ? "rgba(201,168,76,.08)" : C.bgCard;
-            const border = isUnlocked ? "rgba(34,197,94,.35)" : isNext ? C.goldBorder : C.border;
-            return (
-              <Card key={n.id} style={{background:bg,border:`1px solid ${border}`}}>
-                <div style={{display:"flex",alignItems:"center",gap:".75rem"}}>
-                  <div style={{fontSize:28,opacity:isUnlocked?1:isNext?0.9:0.3,filter:isUnlocked?"none":isNext?"none":"grayscale(100%)"}}>{n.icon}</div>
-                  <div style={{flex:1,minWidth:0}}>
-                    <div style={{display:"flex",alignItems:"center",gap:".5rem",marginBottom:".15rem"}}>
-                      <div style={{fontFamily:FONT.display,fontWeight:800,fontSize:15,color:isUnlocked?C.white:isNext?C.white:C.dimmer}}>{n.title}</div>
-                      {isUnlocked && <Pill color={C.green}>✓ {n.title_unlock}</Pill>}
-                      {isNext && <Pill color={C.gold}>Next up</Pill>}
-                    </div>
-                    <div style={{fontSize:12,color:isUnlocked||isNext?C.dim:C.dimmer,lineHeight:1.5}}>{n.desc}</div>
-                    <div style={{fontSize:11,color:C.dimmer,marginTop:".35rem"}}>
-                      {isUnlocked
-                        ? `Unlocked at ${n.threshold}% positioning${n.minAttempts?` + ${n.minAttempts} attempts`:""}`
-                        : `Unlocks at ${n.threshold}% positioning${n.minAttempts?` + ${n.minAttempts} attempts`:""}`}
-                    </div>
-                  </div>
-                  <div style={{fontSize:18,color:accent,flexShrink:0}}>{isUnlocked?"✓":"🔒"}</div>
+        {/* Station detail — tap any station to inspect, default to "Next up". */}
+        {(() => {
+          const show = selected || nextStation || stations[stations.length - 1];
+          if (!show) return null;
+          const showIdx = selectedIdx !== null ? selectedIdx : (nextIdx !== null ? nextIdx : stations.length - 1);
+          const showState = stations[showIdx];
+          const bg = showState.unlocked ? "rgba(34,197,94,.08)" : "rgba(252,76,2,.08)";
+          const border = showState.unlocked ? C.greenBorder : C.goldBorder;
+          const quizGap = Math.max(0, showState.quizzes - quizzes);
+          const trainGap = Math.max(0, showState.training - training);
+          return (
+            <Card style={{marginBottom:"1rem",background:bg,border:`1px solid ${border}`}}>
+              <div style={{display:"flex",alignItems:"center",gap:".75rem",marginBottom:".55rem"}}>
+                <div style={{fontSize:32}}>{showState.icon}</div>
+                <div style={{flex:1,minWidth:0}}>
+                  <div style={{fontFamily:FONT.display,fontWeight:800,fontSize:"1.2rem",color:C.white,lineHeight:1.2}}>{showState.title}</div>
+                  <div style={{fontSize:11,color:C.dimmer,marginTop:2}}>Station {showIdx+1} of {stations.length}</div>
                 </div>
-              </Card>
-            );
-          })}
-        </div>
+                <div style={{fontSize:11,color:showState.unlocked?C.green:C.gold,fontWeight:700}}>
+                  {showState.unlocked ? "✓ UNLOCKED" : selectedIdx === null ? "NEXT UP" : "LOCKED"}
+                </div>
+              </div>
+              <div style={{fontSize:13,color:C.dim,lineHeight:1.55,marginBottom:".65rem"}}>{showState.desc}</div>
+              {!showState.unlocked && (
+                <div style={{fontSize:12,color:C.dimmer,lineHeight:1.6,padding:".55rem .75rem",background:C.bgElevated,borderRadius:8,border:`1px solid ${C.border}`}}>
+                  Unlocks at <b style={{color:C.white}}>{showState.quizzes}</b> quiz{showState.quizzes===1?"":"zes"} taken
+                  {showState.training > 0 && <> and <b style={{color:C.white}}>{showState.training}</b> training session{showState.training===1?"":"s"} logged</>}.
+                  {(quizGap > 0 || trainGap > 0) && (
+                    <> You're <b style={{color:C.gold}}>
+                      {quizGap > 0 && `${quizGap} quiz${quizGap===1?"":"zes"}`}
+                      {quizGap > 0 && trainGap > 0 && " + "}
+                      {trainGap > 0 && `${trainGap} training session${trainGap===1?"":"s"}`}
+                    </b> away.</>
+                  )}
+                </div>
+              )}
+            </Card>
+          );
+        })()}
 
-        <div style={{marginTop:"1.25rem"}}>
+        <div style={{marginTop:"1rem",display:"grid",gridTemplateColumns:"1fr 1fr",gap:".6rem"}}>
           <PrimaryBtn onClick={() => onNav("quiz")}>Take a quiz →</PrimaryBtn>
+          <button onClick={() => onNav("profile")} style={{background:C.bgElevated,color:C.white,border:`1px solid ${C.border}`,borderRadius:10,padding:".85rem",cursor:"pointer",fontWeight:800,fontSize:14,fontFamily:FONT.body}}>Log a session →</button>
         </div>
       </div>
     </div>
@@ -3136,7 +3333,7 @@ function Profile({ player, onSave, onBack, onReset, demoMode, tier, onUpgrade, u
       setTeams([{ id:"demo-team", name:"U11 AA Edmonton Selects", level:"U11 / Atom", season:SEASONS[0] }]);
       return;
     }
-    if (player.id && player.id !== "__demo__") SB.getPlayerTeams(player.id).then(setTeams);
+    if (player.id && !isEphemeralPlayer(player.id)) SB.getPlayerTeams(player.id).then(setTeams);
   }, [player.id, demoMode]);
 
   async function joinTeam() {
@@ -3168,6 +3365,10 @@ function Profile({ player, onSave, onBack, onReset, demoMode, tier, onUpgrade, u
         </div>
       </StickyHeader>
       <div style={{padding:"1.25rem",maxWidth:560,margin:"0 auto"}}>
+        {/* Training log sits at the top of Profile — prominent enough that
+            parents can log a session without scrolling, and see a running
+            log of what's been logged so far. */}
+        <TrainingLog playerId={player.id || "__demo__"} />
         <Card style={{marginBottom:"1rem"}}>
           <Label>Player Profile</Label>
           {[["name","Display name",""],["city","City / Province or State",""],["jersey","Jersey number",""]].map(([k,ph]) => (
@@ -3254,7 +3455,6 @@ function Profile({ player, onSave, onBack, onReset, demoMode, tier, onUpgrade, u
           {joinMsg && <div style={{fontSize:12,color:joinMsg.includes("✓")?C.green:C.red,marginTop:".5rem"}}>{joinMsg}</div>}
           <div style={{fontSize:11,color:C.dimmer,marginTop:".6rem",lineHeight:1.6}}>Coaches on your teams can rate you and leave feedback notes in your Report.</div>
         </Card>
-        <TrainingLog playerId={player.id || "__demo__"} />
         {(() => {
           const stored = getParentRatings(player.id);
           const pr = stored || player.parentRatings || null;
@@ -3317,7 +3517,7 @@ function Profile({ player, onSave, onBack, onReset, demoMode, tier, onUpgrade, u
             }}>Question Review Dashboard</button>
           </Card>
         )}
-        <button onClick={onReset} style={{background:"rgba(239,68,68,.06)",color:C.red,border:`1px solid rgba(239,68,68,.2)`,borderRadius:10,padding:".65rem",cursor:"pointer",fontSize:13,fontFamily:FONT.body,width:"100%"}}>{demoMode ? "Exit Demo" : "Sign Out"}</button>
+        <button onClick={onReset} style={{background:"rgba(239,68,68,.06)",color:C.red,border:`1px solid rgba(239,68,68,.2)`,borderRadius:10,padding:".65rem",cursor:"pointer",fontSize:13,fontFamily:FONT.body,width:"100%"}}>{player?.__preview ? "Exit Preview" : demoMode ? "Exit Demo" : "Sign Out"}</button>
       </div>
     </div>
   );
@@ -3327,7 +3527,7 @@ function Profile({ player, onSave, onBack, onReset, demoMode, tier, onUpgrade, u
 
 // ─────────────────────────────────────────────────────────
 
-function StudyScreen({ player, onBack, onNav }) {
+function StudyScreen({ player, onBack, onNav, focusCompetency }) {
   const [studyContent, setStudyContent] = useState(null);
   useEffect(() => {
     import("./data/studyContent.js").then(m => setStudyContent(m.STUDY_CONTENT));
@@ -3372,6 +3572,38 @@ function StudyScreen({ player, onBack, onNav }) {
       .forEach(x => weakCats.push(x));
   }
 
+  const identity = isEphemeralPlayer(player?.id) ? (player.id || "__anon__") : (player?.id || "__anon__");
+  const [watchedClips, setWatchedClips] = useState(() => new Set(lsGetJSON(LS_CLIPS_WATCHED, {})[identity] || []));
+  const [homeworkDone, setHomeworkDone] = useState(() => new Set(lsGetJSON(LS_HOMEWORK_DONE, {})[identity] || []));
+  function toggleClip(key) {
+    setWatchedClips(prev => {
+      const next = new Set(prev);
+      next.has(key) ? next.delete(key) : next.add(key);
+      const m = lsGetJSON(LS_CLIPS_WATCHED, {}); m[identity] = [...next]; lsSetJSON(LS_CLIPS_WATCHED, m);
+      return next;
+    });
+  }
+  function toggleHomework(key) {
+    setHomeworkDone(prev => {
+      const next = new Set(prev);
+      next.has(key) ? next.delete(key) : next.add(key);
+      const m = lsGetJSON(LS_HOMEWORK_DONE, {}); m[identity] = [...next]; lsSetJSON(LS_HOMEWORK_DONE, m);
+      return next;
+    });
+  }
+  function resetHomework() {
+    setHomeworkDone(new Set());
+    const m = lsGetJSON(LS_HOMEWORK_DONE, {}); delete m[identity]; lsSetJSON(LS_HOMEWORK_DONE, m);
+  }
+
+  const weakestCat = weakCats[0]?.cat || weakSkills[0]?.cat || "your weakest area";
+  const weakestSkill = weakSkills[0]?.name || "the fundamentals";
+  const homeworkItems = [
+    { key: "hw-watch",   text: `Watch 1 NHL game this week — focus on ${weakestCat}.` },
+    { key: "hw-practice",text: `10 minutes on ${weakestSkill} every practice this week.` },
+    { key: "hw-ask",     text: `Ask your coach one specific question after your next practice.` },
+  ];
+
   return (
     <div style={{minHeight:"100vh",background:C.bg,color:C.white,fontFamily:FONT.body,paddingBottom:80}}>
       <div style={{position:"relative",height:100,overflow:"hidden"}}>
@@ -3388,11 +3620,25 @@ function StudyScreen({ player, onBack, onNav }) {
         </div>
       </StickyHeader>
       <div style={{padding:"1.25rem",maxWidth:560,margin:"0 auto"}}>
-        <Card style={{marginBottom:"1rem",background:`linear-gradient(135deg,${C.bgCard},${C.bgElevated})`,border:`1px solid ${C.purpleBorder}`}}>
-          <Label>Your Focus</Label>
-          <div style={{fontSize:13,color:C.dim,lineHeight:1.6}}>{getLevelDisplay(player)} · {player.position}</div>
-          <div style={{fontSize:12,color:C.dimmer,marginTop:".5rem",lineHeight:1.6}}>Based on your quiz results and self-ratings, here's what to watch and work on.</div>
-        </Card>
+        {player.__coach ? (
+          <Card style={{marginBottom:"1rem",background:`linear-gradient(135deg,${C.bgCard},${C.bgElevated})`,border:`1px solid ${C.goldBorder}`}}>
+            <Label>Coach Focus</Label>
+            <div style={{fontSize:13,color:C.dim,lineHeight:1.6}}>
+              {getLevelDisplay(player)}{focusCompetency && COMPETENCIES[focusCompetency] ? ` · ${COMPETENCIES[focusCompetency].icon} ${COMPETENCIES[focusCompetency].name}` : ""}
+            </div>
+            <div style={{fontSize:12,color:C.dimmer,marginTop:".5rem",lineHeight:1.6}}>
+              {focusCompetency && COMPETENCIES[focusCompetency]
+                ? `Drills below are age-appropriate for your roster. Pick one to run at your next practice.`
+                : `Age-appropriate drills and clips for your roster.`}
+            </div>
+          </Card>
+        ) : (
+          <Card style={{marginBottom:"1rem",background:`linear-gradient(135deg,${C.bgCard},${C.bgElevated})`,border:`1px solid ${C.purpleBorder}`}}>
+            <Label>Your Focus</Label>
+            <div style={{fontSize:13,color:C.dim,lineHeight:1.6}}>{getLevelDisplay(player)} · {player.position}</div>
+            <div style={{fontSize:12,color:C.dimmer,marginTop:".5rem",lineHeight:1.6}}>Based on your quiz results and self-ratings, here's what to watch and work on.</div>
+          </Card>
+        )}
 
         {weakCats.length > 0 && (
           <Card style={{marginBottom:"1rem",borderLeft:`3px solid ${C.gold}`}}>
@@ -3427,13 +3673,20 @@ function StudyScreen({ player, onBack, onNav }) {
 
         {content.games && content.games.length > 0 && (
           <Card style={{marginBottom:"1rem"}}>
-            <Label>📺 Games & Clips to Watch</Label>
-            <div style={{fontSize:11,color:C.dimmer,marginBottom:".65rem",lineHeight:1.5}}>Pick one this week. Watch with purpose — look for the specific things listed.</div>
-            {content.games.map((g, i) => (
-              <div key={i} style={{padding:".6rem .8rem",background:C.bgElevated,borderRadius:8,border:`1px solid ${C.border}`,marginBottom:".4rem",fontSize:13,color:C.dim,lineHeight:1.5}}>
-                {g}
-              </div>
-            ))}
+            <Label>📺 Games & Clips to Watch{watchedClips.size > 0 ? ` · ${[...watchedClips].filter(k => content.games.includes(k)).length}/${content.games.length} watched` : ""}</Label>
+            <div style={{fontSize:11,color:C.dimmer,marginBottom:".65rem",lineHeight:1.5}}>Pick one this week. Watch with purpose — look for the specific things listed. Tap "Watched" when you've finished one.</div>
+            {content.games.map((g, i) => {
+              const isWatched = watchedClips.has(g);
+              return (
+                <button key={i} onClick={() => toggleClip(g)}
+                  style={{width:"100%",textAlign:"left",padding:".6rem .8rem",background:isWatched ? "rgba(34,197,94,.07)" : C.bgElevated,borderRadius:8,border:`1px solid ${isWatched ? C.greenBorder : C.border}`,marginBottom:".4rem",fontSize:13,color:isWatched ? C.dim : C.dim,lineHeight:1.5,cursor:"pointer",fontFamily:FONT.body,display:"flex",alignItems:"flex-start",gap:".65rem"}}>
+                  <span style={{flex:1,minWidth:0}}>{g}</span>
+                  <span style={{flexShrink:0,fontSize:10,fontWeight:800,letterSpacing:".06em",textTransform:"uppercase",color:isWatched ? C.green : C.dimmer,border:`1px solid ${isWatched ? C.greenBorder : C.border}`,padding:"2px 7px",borderRadius:10}}>
+                    {isWatched ? "✓ Watched" : "Mark watched"}
+                  </span>
+                </button>
+              );
+            })}
           </Card>
         )}
 
@@ -3456,6 +3709,28 @@ function StudyScreen({ player, onBack, onNav }) {
               <div style={{fontSize:12,color:C.dim,lineHeight:1.5}}>{f.drill}</div>
             </div>
           ))}
+        </Card>
+
+        <Card style={{marginBottom:"1rem"}}>
+          <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:".35rem"}}>
+            <Label style={{marginBottom:0}}>📋 Homework{homeworkDone.size > 0 ? ` · ${homeworkDone.size}/${homeworkItems.length} done` : ""}</Label>
+            {homeworkDone.size > 0 && (
+              <button onClick={resetHomework} style={{background:"none",border:"none",color:C.dimmer,fontSize:11,cursor:"pointer",fontFamily:FONT.body,textDecoration:"underline",padding:0}}>Reset for next week</button>
+            )}
+          </div>
+          <div style={{fontSize:11,color:C.dimmer,marginBottom:".65rem",lineHeight:1.5}}>Three small commitments this week. Check them off as you finish.</div>
+          {homeworkItems.map(item => {
+            const isDone = homeworkDone.has(item.key);
+            return (
+              <button key={item.key} onClick={() => toggleHomework(item.key)}
+                style={{width:"100%",textAlign:"left",padding:".7rem .85rem",background:isDone ? "rgba(34,197,94,.07)" : C.bgElevated,borderRadius:8,border:`1px solid ${isDone ? C.greenBorder : C.border}`,marginBottom:".45rem",fontSize:13,color:C.dim,lineHeight:1.5,cursor:"pointer",fontFamily:FONT.body,display:"flex",alignItems:"flex-start",gap:".65rem"}}>
+                <span style={{flexShrink:0,width:20,height:20,borderRadius:5,border:`1.5px solid ${isDone ? C.green : C.border}`,background:isDone ? C.green : "transparent",display:"flex",alignItems:"center",justifyContent:"center",color:C.bg,fontSize:12,fontWeight:800,marginTop:1}}>
+                  {isDone ? "✓" : ""}
+                </span>
+                <span style={{flex:1,minWidth:0,textDecoration:isDone ? "line-through" : "none",color:isDone ? C.dimmer : C.dim}}>{item.text}</span>
+              </button>
+            );
+          })}
         </Card>
 
         <div style={{margin:"-1rem -1.25rem 1rem"}}>
@@ -3685,17 +3960,30 @@ function RinkBackground({ dark = false }) {
 // Visual-only sample radar for the landing showcase. Hardcoded scores mirror
 // what a typical U11 Forward looks like after a handful of sessions — six
 // competencies plotted on the same polar layout the real GameSenseReportScreen
-// uses. No lazy-load, no data deps — it's a first-paint showcase asset.
-function LandingRadarCard() {
-  const comps = [
-    { label: "Positioning",  score: 62 },
-    { label: "Reads",         score: 74 },
-    { label: "Decisions",     score: 58 },
-    { label: "Battles",       score: 82 },
-    { label: "Support",       score: 66 },
-    { label: "Composure",     score: 71 },
-  ];
-  const cx = 130, cy = 130, radius = 92;
+// uses. Computes once at module load from the U11 Forward preview player so
+// the landing teaser matches what a visitor actually sees inside the sample.
+// Preview quiz history only populates positioning/decision_making/awareness;
+// synthesize plausible values for tempo/physicality/leadership so the chart
+// renders a full shape rather than a degenerate triangle.
+const PREVIEW_RADAR = (() => {
+  const { player } = buildU11ForwardPreview();
+  const real = calcCompetencyScores(player.quizHistory);
+  const synthesized = { tempo_control: 66, physicality: 74, leadership: 58 };
+  const order = ["positioning","decision_making","awareness","tempo_control","physicality","leadership"];
+  const comps = order.map(k => ({
+    key: k,
+    label: COMPETENCIES[k].name,
+    score: real[k] > 0 ? real[k] : synthesized[k],
+  }));
+  const gs = calcGameSenseScore(Object.fromEntries(comps.map(c => [c.key, c.score])));
+  return { comps, gs };
+})();
+
+function LandingRadarCard({ onPreview }) {
+  const { comps, gs } = PREVIEW_RADAR;
+  // Widened viewBox + centered so the longer labels ("Decision-Making",
+  // "Awareness") don't clip on narrow landing cards.
+  const cx = 200, cy = 150, radius = 84;
   const n = comps.length;
   const pts = comps.map((c, i) => {
     const a = (Math.PI * 2 * i) / n - Math.PI / 2;
@@ -3708,15 +3996,15 @@ function LandingRadarCard() {
   });
   const polyPts = pts.map(p => `${p.x},${p.y}`).join(" ");
 
-  return (
-    <div style={{background:"rgba(6,12,22,0.82)",backdropFilter:"blur(20px)",WebkitBackdropFilter:"blur(20px)",border:`1px solid ${C.border}`,borderRadius:14,padding:"1rem",marginBottom:"1.25rem"}}>
+  const Inner = (
+    <>
       <div style={{display:"flex",alignItems:"center",gap:".5rem",marginBottom:".65rem"}}>
         <div style={{fontSize:10,letterSpacing:".14em",textTransform:"uppercase",color:C.gold,fontWeight:700}}>Sample · U11 Forward</div>
         <div style={{flex:1}}/>
         <div style={{background:C.dimmest,color:C.dimmer,padding:"1px 6px",borderRadius:4,fontSize:9,letterSpacing:".08em",fontWeight:700}}>SAMPLE</div>
       </div>
       <div style={{display:"flex",alignItems:"center",gap:".75rem"}}>
-        <svg width="200" height="200" viewBox="0 0 260 260" style={{flexShrink:0,maxWidth:"55%"}}>
+        <svg width="230" height="200" viewBox="0 0 400 300" style={{flexShrink:0,maxWidth:"58%"}}>
           {[25,50,75,100].map(pct => {
             const r = (pct/100) * radius;
             const ring = comps.map((_, i) => {
@@ -3728,18 +4016,65 @@ function LandingRadarCard() {
           {axisPts.map((p, i) => (
             <line key={i} x1={cx} y1={cy} x2={p.x} y2={p.y} stroke={C.border} strokeWidth="1" opacity="0.4"/>
           ))}
+          {comps.map((c, i) => {
+            const a = (Math.PI * 2 * i) / n - Math.PI / 2;
+            const lx = cx + (radius + 24) * Math.cos(a);
+            const ly = cy + (radius + 24) * Math.sin(a);
+            const anchor = Math.abs(lx - cx) < 8 ? "middle" : (lx > cx ? "start" : "end");
+            // Wrap long two-word labels onto two lines so they don't clip.
+            const words = c.label.split(/[-\s]/).filter(Boolean);
+            const twoLine = c.label.length > 9 && words.length >= 2;
+            return (
+              <text key={`l${i}`} x={lx.toFixed(1)} y={ly.toFixed(1)}
+                    fontSize="10" fontWeight="700" fill={C.dim}
+                    textAnchor={anchor} dominantBaseline="middle"
+                    fontFamily="'Inter','DM Sans',sans-serif">
+                {twoLine ? (
+                  <>
+                    <tspan x={lx.toFixed(1)} dy="-0.45em">{words[0]}</tspan>
+                    <tspan x={lx.toFixed(1)} dy="1.1em">{words.slice(1).join(" ")}</tspan>
+                  </>
+                ) : c.label}
+              </text>
+            );
+          })}
           <polygon points={polyPts} fill={C.gold} fillOpacity="0.22" stroke={C.gold} strokeWidth="2"/>
           {pts.map((p, i) => <circle key={i} cx={p.x} cy={p.y} r="3.5" fill={C.gold}/>)}
         </svg>
         <div style={{flex:1,minWidth:0}}>
-          <div style={{fontFamily:FONT.display,fontWeight:800,fontSize:"1.4rem",color:C.white,lineHeight:1.05,marginBottom:".2rem"}}>GS 68</div>
+          <div style={{fontFamily:FONT.display,fontWeight:800,fontSize:"1.1rem",color:C.white,lineHeight:1.1,marginBottom:".15rem"}}>Alex <span style={{color:C.dimmer,fontWeight:600,fontSize:"0.85rem"}}>· U11 Forward</span></div>
+          <div style={{fontFamily:FONT.display,fontWeight:800,fontSize:"1.4rem",color:C.white,lineHeight:1.05,marginBottom:".2rem"}}>GS {gs}</div>
           <div style={{fontSize:11,color:C.dimmer,marginBottom:".6rem"}}>Game Sense Score · 8 sessions</div>
-          <div style={{fontSize:12,color:C.dim,lineHeight:1.5}}>
-            Six competencies. Every answer moves a number. See your own profile after a few quizzes.
+          <div style={{fontSize:12,color:C.dim,lineHeight:1.5,marginBottom:onPreview ? ".55rem" : 0}}>
+            Six competencies. Every answer moves a number.
           </div>
+          {onPreview && (
+            <div style={{fontSize:12,color:C.gold,fontWeight:700,letterSpacing:".01em"}}>
+              Try a demo as a U11 Forward →
+            </div>
+          )}
         </div>
       </div>
-    </div>
+    </>
+  );
+
+  if (!onPreview) {
+    return (
+      <div style={{background:"rgba(6,12,22,0.82)",backdropFilter:"blur(20px)",WebkitBackdropFilter:"blur(20px)",border:`1px solid ${C.border}`,borderRadius:14,padding:"1rem",marginBottom:"1.25rem"}}>
+        {Inner}
+      </div>
+    );
+  }
+  return (
+    <button
+      type="button"
+      onClick={onPreview}
+      style={{display:"block",width:"100%",textAlign:"left",background:"rgba(6,12,22,0.82)",backdropFilter:"blur(20px)",WebkitBackdropFilter:"blur(20px)",border:`1px solid ${C.goldBorder}`,borderRadius:14,padding:"1rem",marginBottom:"1.25rem",cursor:"pointer",fontFamily:FONT.body,color:C.white,transition:"transform .15s ease, border-color .15s ease, box-shadow .15s ease"}}
+      onMouseEnter={e => { e.currentTarget.style.transform = "translateY(-2px)"; e.currentTarget.style.boxShadow = `0 8px 24px ${C.gold}22`; }}
+      onMouseLeave={e => { e.currentTarget.style.transform = "translateY(0)"; e.currentTarget.style.boxShadow = "none"; }}
+    >
+      {Inner}
+    </button>
   );
 }
 
@@ -3767,7 +4102,7 @@ function LandingInsightsCard() {
           <span style={{fontSize:12.5,color:C.white,lineHeight:1.45,flex:1}}>{ins.headline}</span>
         </div>
       ))}
-      <div style={{marginTop:".85rem",padding:".7rem .85rem",background:"rgba(201,168,76,0.06)",border:`1px dashed ${C.goldBorder}`,borderRadius:10,display:"flex",alignItems:"center",gap:".55rem"}}>
+      <div style={{marginTop:".85rem",padding:".7rem .85rem",background:"rgba(252,76,2,0.06)",border:`1px dashed ${C.goldBorder}`,borderRadius:10,display:"flex",alignItems:"center",gap:".55rem"}}>
         <span style={{fontSize:14}}>🔒</span>
         <span style={{fontSize:12,color:C.dim,flex:1,lineHeight:1.45}}>Unlock more insights — free account.</span>
       </div>
@@ -3797,7 +4132,7 @@ const LANDING_RINK_SCENE = {
   },
 };
 
-function AuthScreen({ onAuthenticated, onDemo, onDevEnter, prefill }) {
+function AuthScreen({ onAuthenticated, onDemo, onDevEnter, onPreview, prefill }) {
   const [mode, setMode] = useState(prefill ? "signup" : "login"); // login | signup | forgot
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -3809,10 +4144,16 @@ function AuthScreen({ onAuthenticated, onDemo, onDevEnter, prefill }) {
   const [qbStats, setQbStats] = useState({ questionCount: null, ageGroupCount: null });
   const [rinkTeaserOpen, setRinkTeaserOpen] = useState(false);
   const [teaserAnswered, setTeaserAnswered] = useState(false);
-  const devBypass = isDevBypassEnabled();
+  // Show the dev-bypass panel whenever running `npm run dev` — the LS flag
+  // is still honoured in production builds so it stays invisible to real users.
+  const devBypass = isDevBypassEnabled() || (typeof import.meta !== "undefined" && import.meta.env && import.meta.env.DEV);
   const [devRole, setDevRole] = useState("player");
   const [devLevel, setDevLevel] = useState("U11 / Atom");
   const [devPosition, setDevPosition] = useState("Forward");
+  const [devTier, setDevTier] = useState(() => {
+    try { return (window.localStorage.getItem("iceiq_tier_override") || "").toUpperCase() || null; }
+    catch { return null; }
+  });
 
   useEffect(() => {
     let alive = true;
@@ -3879,7 +4220,22 @@ function AuthScreen({ onAuthenticated, onDemo, onDevEnter, prefill }) {
 
       {/* Layered gradient overlays for depth */}
       <div style={{position:"absolute",inset:0,background:"linear-gradient(180deg,rgba(3,9,15,0.55) 0%,rgba(3,9,15,0.35) 45%,rgba(3,9,15,0.82) 100%)",pointerEvents:"none"}}/>
-      <div style={{position:"absolute",inset:0,background:"radial-gradient(ellipse 80% 60% at 50% 40%,rgba(201,168,76,0.04) 0%,transparent 70%)",pointerEvents:"none"}}/>
+      <div style={{position:"absolute",inset:0,background:"radial-gradient(ellipse 80% 60% at 50% 40%,rgba(252,76,2,0.04) 0%,transparent 70%)",pointerEvents:"none"}}/>
+
+      {/* Subtle top-right door for returning members. Clicking flips the auth
+          card to login mode AND scrolls to the auth section so the user
+          actually sees the form change. */}
+      <button type="button"
+         onClick={() => {
+           setMode("login");
+           // Give React a tick to render then scroll to the auth card.
+           setTimeout(() => {
+             try { document.getElementById("auth")?.scrollIntoView({ behavior: "smooth", block: "start" }); } catch {}
+           }, 30);
+         }}
+         style={{position:"absolute",top:16,right:18,fontSize:12,color:"rgba(248,250,252,.6)",textDecoration:"underline dotted",fontFamily:FONT.body,cursor:"pointer",zIndex:5,background:"none",border:"none",padding:0}}>
+        Already a member? Sign in
+      </button>
 
       <div style={{position:"relative",maxWidth:420,margin:"0 auto",width:"100%"}}>
 
@@ -3912,6 +4268,25 @@ function AuthScreen({ onAuthenticated, onDemo, onDevEnter, prefill }) {
                 </select>
               </div>
             )}
+            {/* Tier picker — writes iceiq_tier_override so resolveTier returns the chosen tier
+                for the next dev session. Tap again to clear. */}
+            <div style={{fontSize:10,letterSpacing:".12em",textTransform:"uppercase",color:"#c4b5fd",fontWeight:700,marginBottom:".3rem",marginTop:".15rem"}}>View-as tier</div>
+            <div style={{display:"grid",gridTemplateColumns:"1fr 1fr 1fr",gap:".35rem",marginBottom:".55rem"}}>
+              {["FREE","PRO","TEAM"].map(t => {
+                const active = devTier === t;
+                return (
+                  <button key={t} onClick={() => {
+                    try {
+                      if (active) { window.localStorage.removeItem("iceiq_tier_override"); setDevTier(null); }
+                      else { window.localStorage.setItem("iceiq_tier_override", t); setDevTier(t); }
+                    } catch {}
+                  }}
+                    style={{background:active?"rgba(168,85,247,0.25)":"rgba(255,255,255,0.04)",border:`1px solid ${active?"rgba(168,85,247,0.6)":"rgba(255,255,255,0.1)"}`,borderRadius:8,padding:".4rem",cursor:"pointer",color:active?"#e9d5ff":"rgba(248,250,252,.7)",fontFamily:FONT.body,fontSize:11,fontWeight:active?700:500}}>
+                    {t}
+                  </button>
+                );
+              })}
+            </div>
             <button onClick={() => onDevEnter && onDevEnter(devRole === "coach" ? {role:"coach"} : {role:"player", level:devLevel, position:devPosition, name:"Dev User"})}
               style={{width:"100%",background:"linear-gradient(135deg,#a855f7,#7c3aed)",color:"#fff",border:"none",borderRadius:10,padding:".6rem",cursor:"pointer",fontFamily:FONT.body,fontWeight:700,fontSize:13}}>
               Enter as dev →
@@ -3924,7 +4299,7 @@ function AuthScreen({ onAuthenticated, onDemo, onDevEnter, prefill }) {
 
         {/* Hero brand block */}
         <div style={{textAlign:"center",marginBottom:"1.5rem"}}>
-          <div style={{display:"inline-flex",alignItems:"center",gap:".55rem",background:"rgba(3,9,15,0.6)",backdropFilter:"blur(12px)",WebkitBackdropFilter:"blur(12px)",border:`1px solid rgba(201,168,76,0.2)`,borderRadius:14,padding:".55rem 1.1rem",marginBottom:"1.1rem"}}>
+          <div style={{display:"inline-flex",alignItems:"center",gap:".55rem",background:"rgba(3,9,15,0.6)",backdropFilter:"blur(12px)",WebkitBackdropFilter:"blur(12px)",border:`1px solid rgba(252,76,2,0.2)`,borderRadius:14,padding:".55rem 1.1rem",marginBottom:"1.1rem"}}>
             <IceIQLogo size={26}/>
             <span style={{fontFamily:FONT.display,fontWeight:800,fontSize:"1.6rem",color:C.gold,letterSpacing:".1em"}}>Ice-IQ</span>
           </div>
@@ -3949,10 +4324,33 @@ function AuthScreen({ onAuthenticated, onDemo, onDevEnter, prefill }) {
           </div>
         </div>
 
+        {/* Role-based entry points — four small chips so each audience
+            (parents, players, coaches, associations) has a guide without
+            overwhelming the landing hero. */}
+        <div style={{display:"flex",flexWrap:"wrap",gap:".35rem",justifyContent:"center",marginBottom:"1rem"}}>
+          {[
+            { hash:"#parents",      icon:"👪", label:"Parents — start here" },
+            { hash:"#players",      icon:"🏒", label:"Players — start here" },
+            { hash:"#coaches",      icon:"🎯", label:"Coaches — start here" },
+            { hash:"#associations", icon:"🏟️", label:"Associations — start here" },
+          ].map(x => (
+            <a key={x.hash} href={x.hash}
+               style={{display:"inline-flex",alignItems:"center",gap:".3rem",
+                       background:"rgba(252,76,2,0.06)",
+                       border:`1px solid rgba(252,76,2,0.25)`,
+                       borderRadius:999,padding:".3rem .7rem",
+                       color:"rgba(252,76,2,.85)",fontSize:11,fontFamily:FONT.body,
+                       textDecoration:"none",fontWeight:600,letterSpacing:".01em"}}>
+              <span style={{fontSize:12}}>{x.icon}</span>
+              <span>{x.label}</span>
+            </a>
+          ))}
+        </div>
+
         {/* Live rink teaser — lazy-reveals a real playable scenario on tap */}
         {!rinkTeaserOpen ? (
           <button onClick={() => setRinkTeaserOpen(true)}
-            style={{width:"100%",background:"linear-gradient(135deg,rgba(201,168,76,0.12),rgba(59,139,212,0.08))",border:`1px solid ${C.goldBorder}`,borderRadius:14,padding:"1rem 1.1rem",cursor:"pointer",color:C.white,fontFamily:FONT.body,textAlign:"left",marginBottom:"1.25rem",display:"flex",alignItems:"center",gap:".85rem"}}>
+            style={{width:"100%",background:"linear-gradient(135deg,rgba(252,76,2,0.12),rgba(91,164,232,0.08))",border:`1px solid ${C.goldBorder}`,borderRadius:14,padding:"1rem 1.1rem",cursor:"pointer",color:C.white,fontFamily:FONT.body,textAlign:"left",marginBottom:"1.25rem",display:"flex",alignItems:"center",gap:".85rem"}}>
             <span style={{fontSize:32,flexShrink:0}}>🏒</span>
             <div style={{flex:1,minWidth:0}}>
               <div style={{fontSize:10,letterSpacing:".14em",textTransform:"uppercase",color:C.gold,fontWeight:700,marginBottom:2}}>Try it — no signup</div>
@@ -3970,7 +4368,7 @@ function AuthScreen({ onAuthenticated, onDemo, onDevEnter, prefill }) {
             <Rink mode="play" scene={LANDING_RINK_SCENE} ageGroup="U9"
               onAnswer={() => setTeaserAnswered(true)} />
             {teaserAnswered && (
-              <div style={{marginTop:".85rem",padding:".85rem 1rem",background:"rgba(201,168,76,0.1)",border:`1px solid ${C.goldBorder}`,borderRadius:10,fontSize:13,color:C.white,textAlign:"center"}}>
+              <div style={{marginTop:".85rem",padding:".85rem 1rem",background:"rgba(252,76,2,0.1)",border:`1px solid ${C.goldBorder}`,borderRadius:10,fontSize:13,color:C.white,textAlign:"center"}}>
                 That's a taste. Sign up below to unlock 100+ rink scenarios across every age group.
               </div>
             )}
@@ -3979,13 +4377,10 @@ function AuthScreen({ onAuthenticated, onDemo, onDevEnter, prefill }) {
 
         {/* Sample Game Sense radar — visual-only preview of what a player's
             profile looks like. No data persists pre-signup. */}
-        <LandingRadarCard />
-
-        {/* Rotating insights preview — 3 free, locked CTA for the rest. */}
-        <LandingInsightsCard />
+        <LandingRadarCard onPreview={onPreview} />
 
       {/* Auth card */}
-      <div style={{background:"rgba(6,12,22,0.82)",backdropFilter:"blur(20px)",WebkitBackdropFilter:"blur(20px)",border:`1px solid rgba(255,255,255,0.08)`,borderTop:`1px solid rgba(255,255,255,0.13)`,borderRadius:20,padding:"1.75rem 1.5rem",boxShadow:"0 32px 80px rgba(0,0,0,0.6),inset 0 1px 0 rgba(255,255,255,0.06)"}}>
+      <div id="auth" style={{background:"rgba(6,12,22,0.82)",backdropFilter:"blur(20px)",WebkitBackdropFilter:"blur(20px)",border:`1px solid rgba(255,255,255,0.08)`,borderTop:`1px solid rgba(255,255,255,0.13)`,borderRadius:20,padding:"1.75rem 1.5rem",boxShadow:"0 32px 80px rgba(0,0,0,0.6),inset 0 1px 0 rgba(255,255,255,0.06)",scrollMarginTop:"1rem"}}>
 
         <h2 style={{fontFamily:FONT.display,fontWeight:800,fontSize:"clamp(1.6rem,5vw,2.1rem)",margin:"0 0 .35rem",lineHeight:1.1}}>
           {headline}
@@ -4066,47 +4461,43 @@ function AuthScreen({ onAuthenticated, onDemo, onDevEnter, prefill }) {
           </div>
         )}
 
-        {mode !== "forgot" && (
-          <div style={{textAlign:"center",marginTop:"1.1rem",fontSize:13,color:"rgba(248,250,252,.4)"}}>
-            {mode === "login" ? "New to Ice-IQ?" : "Already have an account? "}
-            <button onClick={()=>{setMode(mode==="login"?"signup":"login");setErr("");}} style={{background:"none",border:"none",color:C.gold,cursor:"pointer",fontWeight:700,fontSize:13,fontFamily:FONT.body,padding:0}}>
-              {mode === "login" ? "Create account →" : "Sign in →"}
+        {/* Returning users use the top-right "Already a member? Sign in" link.
+            Keep a minimal signup->login escape hatch visible only when already in login
+            mode isn't the case and user might want to create an account instead. */}
+        {mode === "signup" && (
+          <div style={{textAlign:"center",marginTop:"1.1rem",fontSize:12,color:"rgba(248,250,252,.4)"}}>
+            Already have an account?{" "}
+            <button onClick={()=>{setMode("login");setErr("");}} style={{background:"none",border:"none",color:C.dimmer,cursor:"pointer",fontSize:12,fontFamily:FONT.body,padding:0,textDecoration:"underline"}}>
+              Sign in
             </button>
           </div>
         )}
 
         {/* Coach preview — only coach-side demo remains; players sign up. */}
         <div style={{marginTop:"1.75rem",paddingTop:"1.5rem",borderTop:"1px solid rgba(255,255,255,0.07)"}}>
-          <div style={{fontSize:11,letterSpacing:".14em",textTransform:"uppercase",color:"rgba(248,250,252,.35)",fontWeight:700,textAlign:"center",marginBottom:"1rem"}}>Are you a coach? Preview the dashboard</div>
-          <button onClick={()=>onDemo("__coach__")} style={{width:"100%",background:"rgba(201,168,76,0.07)",border:"1px solid rgba(201,168,76,0.2)",borderRadius:10,padding:".65rem .75rem",cursor:"pointer",color:C.white,fontFamily:FONT.body,textAlign:"left"}}>
+          <div style={{fontSize:11,letterSpacing:".14em",textTransform:"uppercase",color:"rgba(248,250,252,.35)",fontWeight:700,textAlign:"center",marginBottom:"1rem"}}>Coaching a team? See what's working</div>
+          <button onClick={()=>onDemo("__coach__")} style={{width:"100%",background:"rgba(252,76,2,0.07)",border:"1px solid rgba(252,76,2,0.2)",borderRadius:10,padding:".65rem .75rem",cursor:"pointer",color:C.white,fontFamily:FONT.body,textAlign:"left"}}>
             <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:".5rem"}}>
               <div>
-                <div style={{fontWeight:700,fontSize:12,color:"rgba(201,168,76,.9)",marginBottom:1}}>Coach Dashboard</div>
+                <div style={{fontWeight:700,fontSize:12,color:"rgba(252,76,2,.9)",marginBottom:1}}>Find your team's weakest concept — fix it Tuesday.</div>
                 <div style={{fontSize:10,color:"rgba(248,250,252,.4)"}}>U11 AA Edmonton Selects</div>
               </div>
-              <span style={{color:"rgba(201,168,76,.6)",fontSize:14}}>→</span>
+              <span style={{color:"rgba(252,76,2,.6)",fontSize:14}}>→</span>
             </div>
-            <div style={{borderTop:"1px solid rgba(201,168,76,0.12)",paddingTop:".45rem"}}>
+            <div style={{borderTop:"1px solid rgba(252,76,2,0.12)",paddingTop:".45rem"}}>
               {DEMO_COACH_ROSTER.slice(0,3).map(p => (
                 <div key={p.id} style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:".3rem"}}>
                   <div style={{display:"flex",alignItems:"center",gap:".35rem"}}>
-                    <span style={{fontSize:9,color:"rgba(248,250,252,.28)",width:40,flexShrink:0}}>{p.position}</span>
+                    <span style={{fontSize:9,color:"rgba(248,250,252,.28)",width:50,flexShrink:0}}>{p.position || "TBD"}</span>
                     <span style={{fontSize:11,color:"rgba(248,250,252,.72)",fontWeight:600}}>{p.name}</span>
                   </div>
-                  <span style={{fontSize:10,color:"rgba(201,168,76,.85)",fontWeight:700}}>GS {p.iq}</span>
+                  <span style={{fontSize:10,color:"rgba(252,76,2,.85)",fontWeight:700}}>GS {p.iq}</span>
                 </div>
               ))}
               <div style={{fontSize:9,color:"rgba(248,250,252,.22)",textAlign:"right",marginTop:".1rem"}}>+{DEMO_COACH_ROSTER.length - 3} more players</div>
             </div>
           </button>
-          <div style={{fontSize:10,color:"rgba(248,250,252,.3)",textAlign:"center",marginTop:".6rem"}}>Preview only — nothing is saved.</div>
-        </div>
-
-        {/* For-parents entry point — pre-auth marketing surface. */}
-        <div style={{textAlign:"center",marginTop:"1.25rem"}}>
-          <a href="#parents" style={{color:"rgba(59,130,246,.85)",fontSize:12,fontFamily:FONT.body,textDecoration:"none",fontWeight:600,letterSpacing:".02em"}}>
-            For first-time parents →
-          </a>
+          <div style={{fontSize:10,color:"rgba(248,250,252,.3)",textAlign:"center",marginTop:".6rem"}}>Preview only — nothing is saved until you create a free account.</div>
         </div>
 
         <div style={{fontSize:10,color:"rgba(248,250,252,.3)",textAlign:"center",marginTop:"1rem"}}>v{VERSION}</div>
@@ -4119,67 +4510,132 @@ function AuthScreen({ onAuthenticated, onDemo, onDevEnter, prefill }) {
 // ─────────────────────────────────────────────────────────
 // DEPTH CHART — coach-private lineup tool, rendered inside each team card
 // ─────────────────────────────────────────────────────────
+// NHL-style lineup card. Reads from depthChart storage, renders as forward
+// lines (LW / C / RW), D pairs (LD / RD), and goalies (Starter / Backup).
+// Coach can reassign a slot by tapping a player cell and picking from the
+// roster (bench includes anyone not yet on a line).
 function DepthChartSection({ teamId, roster, onChange }) {
-  const [open, setOpen] = useState(false);
+  const [open, setOpen] = useState(true);
   const [chart, setChart] = useState(() => getDepthChart(teamId));
+  const [editingSlot, setEditingSlot] = useState(null);
 
-  function assign(playerId, slot) {
-    setDepthAssignment(teamId, playerId, slot || null);
+  // Re-read when teamId changes (e.g., coach toggling between teams).
+  useEffect(() => { setChart(getDepthChart(teamId)); }, [teamId]);
+
+  function assignSlot(slotId, playerId) {
+    // Pin playerId to slotId. If another player already holds the slot,
+    // reverse-lookup + clear them first (storage is keyed by playerId).
+    const current = getDepthChart(teamId);
+    const prevHolderId = Object.entries(current).find(([, s]) => s === slotId)?.[0];
+    if (prevHolderId && prevHolderId !== playerId) {
+      setDepthAssignment(teamId, prevHolderId, null);
+    }
+    if (playerId) {
+      // Also clear the new player's previous slot so a move doesn't leave them
+      // on two cells.
+      setDepthAssignment(teamId, playerId, slotId);
+    }
     setChart(getDepthChart(teamId));
+    setEditingSlot(null);
     if (onChange) onChange();
   }
 
-  const grouped = Object.fromEntries(DEPTH_SLOTS.map(s => [s.id, []]));
-  for (const p of roster) {
-    const s = chart[p.id];
-    if (s && grouped[s]) grouped[s].push(p);
-  }
-  const anyAssigned = Object.values(grouped).some(arr => arr.length);
+  const playerForSlot = (slotId) => {
+    const pid = Object.entries(chart).find(([, s]) => s === slotId)?.[0];
+    return pid ? roster.find(p => p.id === pid) : null;
+  };
+  const assignedIds = new Set(Object.keys(chart).filter(k => chart[k]));
+  const bench = roster.filter(p => !assignedIds.has(p.id));
+
+  const SlotCell = ({ slot }) => {
+    const p = playerForSlot(slot.id);
+    const isEditing = editingSlot === slot.id;
+    return (
+      <div style={{flex:1,minWidth:0,background:p?C.bgElevated:C.bgCard,border:`1px solid ${p?C.border:"rgba(255,255,255,0.04)"}`,borderRadius:8,padding:".45rem .55rem",cursor:"pointer",position:"relative"}}
+           onClick={() => setEditingSlot(isEditing ? null : slot.id)}>
+        <div style={{fontSize:9,letterSpacing:".14em",textTransform:"uppercase",color:C.dimmer,fontWeight:700,marginBottom:2}}>{slot.label}</div>
+        <div style={{fontSize:12,color:p?C.white:C.dimmer,fontWeight:p?700:500,lineHeight:1.2,textOverflow:"ellipsis",overflow:"hidden",whiteSpace:"nowrap"}}>
+          {p ? p.name : "—"}
+        </div>
+        {p && <div style={{fontSize:9,color:C.gold,marginTop:1,fontWeight:700}}>GS {p.iq}</div>}
+        {isEditing && (
+          <div style={{position:"absolute",top:"100%",left:0,right:0,marginTop:4,background:C.bgElevated,border:`1px solid ${C.goldBorder}`,borderRadius:8,maxHeight:200,overflowY:"auto",zIndex:50,boxShadow:"0 8px 24px rgba(0,0,0,0.5)"}}>
+            <div onClick={(e) => { e.stopPropagation(); assignSlot(slot.id, null); }} style={{padding:".45rem .6rem",fontSize:11,color:C.dimmer,borderBottom:`1px solid ${C.border}`,cursor:"pointer"}}>— Unassign</div>
+            {[...(p ? [] : []), ...bench, ...(p ? [p] : [])].map(op => (
+              <div key={op.id} onClick={(e) => { e.stopPropagation(); assignSlot(slot.id, op.id); }}
+                   style={{padding:".45rem .6rem",fontSize:11,color:C.white,cursor:"pointer",display:"flex",justifyContent:"space-between",gap:".4rem"}}>
+                <span style={{whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis"}}>{op.name}</span>
+                <span style={{fontSize:10,color:C.dimmer}}>{op.position || "TBD"}</span>
+              </div>
+            ))}
+            {bench.length === 0 && !p && (
+              <div style={{padding:".5rem .6rem",fontSize:11,color:C.dimmer,fontStyle:"italic"}}>All players assigned.</div>
+            )}
+          </div>
+        )}
+      </div>
+    );
+  };
+
+  const fSlotsByLine = (n) => DEPTH_SLOTS.filter(s => s.role === "F" && s.line === n).sort((a,b) => a.order - b.order);
+  const dSlotsByPair = (n) => DEPTH_SLOTS.filter(s => s.role === "D" && s.line === n).sort((a,b) => a.order - b.order);
+  const gSlots = DEPTH_SLOTS.filter(s => s.role === "G");
 
   return (
     <div style={{marginTop:".85rem",paddingTop:".85rem",borderTop:`1px solid ${C.border}`}}>
-      <div onClick={()=>setOpen(o=>!o)} style={{display:"flex",alignItems:"center",justifyContent:"space-between",cursor:"pointer"}}>
+      <div onClick={()=>setOpen(o=>!o)} style={{display:"flex",alignItems:"center",justifyContent:"space-between",cursor:"pointer",marginBottom:".5rem"}}>
         <div style={{display:"flex",alignItems:"center",gap:".5rem"}}>
-          <Label style={{margin:0}}>Depth Chart</Label>
+          <Label style={{margin:0}}>🏒 Lineup Card</Label>
           <span style={{fontSize:9,letterSpacing:".14em",textTransform:"uppercase",color:C.dimmer,fontWeight:700}}>Coach only</span>
         </div>
         <span style={{color:C.dimmer,fontSize:12}}>{open ? "▲" : "▼"}</span>
       </div>
       {open && (
-        <div style={{marginTop:".5rem"}}>
+        <div onClick={() => setEditingSlot(null)}>
           {roster.length === 0 ? (
-            <div style={{fontSize:12,color:C.dimmer,fontStyle:"italic"}}>Invite players to start building your depth chart.</div>
+            <div style={{fontSize:12,color:C.dimmer,fontStyle:"italic"}}>Invite players to start building your lineup.</div>
           ) : (
-            <>
-              <div style={{fontSize:11,color:C.dimmer,lineHeight:1.5,marginBottom:".5rem"}}>Private to you — players never see this.</div>
-              {roster.map(p => (
-                <div key={p.id} style={{display:"flex",alignItems:"center",gap:".5rem",padding:".35rem 0"}}>
-                  <div style={{flex:1,minWidth:0}}>
-                    <div style={{fontSize:13,fontWeight:600}}>{p.name}</div>
-                    <div style={{fontSize:10,color:C.dimmer}}>{p.position || "—"}</div>
+            <div style={{display:"flex",flexDirection:"column",gap:".7rem"}}>
+              {/* Forward lines */}
+              {[1,2,3].map(n => (
+                <div key={`f${n}`}>
+                  <div style={{fontSize:10,letterSpacing:".14em",textTransform:"uppercase",color:C.gold,fontWeight:800,marginBottom:".3rem"}}>Line {n}</div>
+                  <div style={{display:"flex",gap:".35rem"}}>
+                    {fSlotsByLine(n).map(s => <SlotCell key={s.id} slot={s}/>)}
                   </div>
-                  <select
-                    value={chart[p.id] || ""}
-                    onChange={e=>assign(p.id, e.target.value)}
-                    style={{background:C.bgElevated,color:C.white,border:`1px solid ${C.border}`,borderRadius:6,padding:".35rem .5rem",fontSize:12,fontFamily:FONT.body,cursor:"pointer"}}
-                  >
-                    <option value="">Unassigned</option>
-                    {DEPTH_SLOTS.map(s => <option key={s.id} value={s.id}>{s.label}</option>)}
-                  </select>
                 </div>
               ))}
-              {anyAssigned && (
-                <div style={{marginTop:".75rem",paddingTop:".5rem",borderTop:`1px dashed ${C.border}`}}>
-                  <Label>Lineup</Label>
-                  {DEPTH_SLOTS.filter(s => grouped[s.id].length).map(s => (
-                    <div key={s.id} style={{display:"flex",gap:".5rem",alignItems:"center",fontSize:12,padding:".15rem 0"}}>
-                      <div style={{fontSize:10,color:C.dimmer,fontWeight:700,width:72,flexShrink:0,letterSpacing:".04em"}}>{s.label}</div>
-                      <div style={{color:C.white}}>{grouped[s.id].map(p=>p.name).join(", ")}</div>
-                    </div>
-                  ))}
+              {/* D pairs */}
+              {[1,2,3].map(n => (
+                <div key={`d${n}`}>
+                  <div style={{fontSize:10,letterSpacing:".14em",textTransform:"uppercase",color:C.blue,fontWeight:800,marginBottom:".3rem"}}>Pair {n}</div>
+                  <div style={{display:"flex",gap:".35rem"}}>
+                    {dSlotsByPair(n).map(s => <SlotCell key={s.id} slot={s}/>)}
+                  </div>
+                </div>
+              ))}
+              {/* Goalies */}
+              <div>
+                <div style={{fontSize:10,letterSpacing:".14em",textTransform:"uppercase",color:C.purple,fontWeight:800,marginBottom:".3rem"}}>Goaltenders</div>
+                <div style={{display:"flex",gap:".35rem"}}>
+                  {gSlots.map(s => <SlotCell key={s.id} slot={s}/>)}
+                </div>
+              </div>
+              {/* Bench */}
+              {bench.length > 0 && (
+                <div style={{marginTop:".35rem",paddingTop:".5rem",borderTop:`1px dashed ${C.border}`}}>
+                  <div style={{fontSize:10,letterSpacing:".14em",textTransform:"uppercase",color:C.dimmer,fontWeight:700,marginBottom:".35rem"}}>Bench ({bench.length})</div>
+                  <div style={{display:"flex",flexWrap:"wrap",gap:".35rem"}}>
+                    {bench.map(p => (
+                      <div key={p.id} style={{fontSize:11,color:C.dim,background:C.bgCard,border:`1px solid ${C.border}`,borderRadius:999,padding:".2rem .6rem"}}>
+                        {p.name}<span style={{color:C.dimmer}}> · {p.position || "TBD"}</span>
+                      </div>
+                    ))}
+                  </div>
                 </div>
               )}
-            </>
+              <div style={{fontSize:10,color:C.dimmer,fontStyle:"italic",marginTop:".35rem"}}>Tap any slot to swap players. Private to you — players never see this.</div>
+            </div>
           )}
         </div>
       )}
@@ -4193,15 +4649,206 @@ function DepthChartSection({ teamId, roster, onChange }) {
 const DEMO_COACH_TEAMS = [
   {id:"demo-t1",name:"U11 AA Edmonton Selects",level:"U11 / Atom",season:SEASONS[0],code:"SELECTS"},
 ];
+// Synthetic quiz history for each demo roster player. Shape matches real
+// quiz sessions (results[].id patterns aligned with COMPETENCY_MAPPINGS so
+// calcCompetencyScores lights up positioning/decision_making/awareness).
+// Tuned so the team is weakest at decision_making — lets the demo hero card
+// show a credible "Your team is weakest at Decision-Making" headline.
+function _buildCoachDemoSession(daysAgo, posCorrect, decCorrect, awaCorrect) {
+  const results = [];
+  for (let i = 0; i < 4; i++) results.push({ id: `u11q${i+1}`, ok: i < posCorrect, d: 2, cat: "Hockey Sense" });
+  for (let i = 0; i < 4; i++) results.push({ id: `u11q${i+8}`, ok: i < decCorrect, d: 2, cat: "Game Decision-Making" });
+  results.push({ id: "u11q16", ok: awaCorrect > 0, d: 2, cat: "Hockey Sense" });
+  const correct = results.filter(r => r.ok).length;
+  return { results, score: Math.round(correct / results.length * 100), date: new Date(Date.now() - daysAgo * 86400000).toISOString() };
+}
+function _buildCoachDemoHistory(perSession) {
+  return perSession.map((s, i) => _buildCoachDemoSession([15, 8, 2][i] ?? (20 - i * 4), s[0], s[1], s[2]));
+}
+// Realistic U11 roster size (15 skaters + 1 goalie). Mix of positions
+// and ability levels; team weakness stays on decision_making so the hero
+// card has something concrete to show.
 const DEMO_COACH_ROSTER = [
-  {id:"dr1",name:"Cole Gretzky",level:"U11 / Atom",position:"Forward",iq:83,sessions:3},
-  {id:"dr2",name:"Nora Howe",level:"U11 / Atom",position:"Defense",iq:71,sessions:2},
-  {id:"dr3",name:"Marcus Sakic",level:"U11 / Atom",position:"Forward",iq:65,sessions:1},
-  {id:"dr4",name:"Maya Hasek",level:"U11 / Atom",position:"Goalie",iq:78,sessions:3},
-  {id:"dr5",name:"Tyler Blackwood",level:"U11 / Atom",position:"Defense",iq:58,sessions:1},
+  // Forwards (9)
+  {id:"dr1", name:"Cole Gretzky",      level:"U11 / Atom",position:"Forward",iq:83,sessions:3,
+   quizHistory:_buildCoachDemoHistory([[3,3,1],[3,3,1],[3,3,1]])},   // pos 75 dec 75 awa 100
+  {id:"dr3", name:"Marcus Sakic",      level:"U11 / Atom",position:"Forward",iq:65,sessions:1,
+   quizHistory:_buildCoachDemoHistory([[3,1,1],[2,2,0],[3,2,1]])},   // pos 67 dec 42 awa 67
+  {id:"dr6", name:"Ethan MacKinnon",   level:"U11 / Atom",position:"Forward",iq:77,sessions:3,
+   quizHistory:_buildCoachDemoHistory([[3,2,1],[3,3,1],[3,2,0]])},   // pos 75 dec 58 awa 67
+  {id:"dr7", name:"Zoe Crosby",        level:"U11 / Atom",position:"Forward",iq:69,sessions:2,
+   quizHistory:_buildCoachDemoHistory([[3,2,1],[2,2,0],[3,1,1]])},   // pos 67 dec 42 awa 67
+  {id:"dr8", name:"Leo Bergeron",      level:"U11 / Atom",position:"Forward",iq:72,sessions:2,
+   quizHistory:_buildCoachDemoHistory([[3,3,0],[2,2,1],[3,2,1]])},   // pos 67 dec 58 awa 67
+  {id:"dr9", name:"Ava Marchand",      level:"U11 / Atom",position:"Multiple",iq:61,sessions:1,
+   quizHistory:_buildCoachDemoHistory([[2,1,0],[2,2,1],[3,2,0]])},   // pos 58 dec 42 awa 33
+  {id:"dr10",name:"Jaxon Draisaitl",   level:"U11 / Atom",position:"Forward",iq:80,sessions:3,
+   quizHistory:_buildCoachDemoHistory([[3,3,1],[4,3,1],[3,2,0]])},   // pos 83 dec 67 awa 67
+  {id:"dr11",name:"Riley McDavid",     level:"U11 / Atom",position:"Forward",iq:74,sessions:2,
+   quizHistory:_buildCoachDemoHistory([[3,2,1],[3,2,0],[3,3,1]])},   // pos 75 dec 58 awa 67
+  {id:"dr12",name:"Sam Pettersson",    level:"U11 / Atom",position:"",       iq:56,sessions:1,
+   quizHistory:_buildCoachDemoHistory([[2,1,0],[2,1,1],[2,2,0]])},   // pos 50 dec 33 awa 33 · Not sure
+  // Defense (5)
+  {id:"dr2", name:"Nora Howe",         level:"U11 / Atom",position:"Defense",iq:71,sessions:2,
+   quizHistory:_buildCoachDemoHistory([[2,3,1],[3,3,0],[3,2,1]])},   // pos 67 dec 67 awa 67
+  {id:"dr5", name:"Tyler Blackwood",   level:"U11 / Atom",position:"Defense",iq:58,sessions:1,
+   quizHistory:_buildCoachDemoHistory([[2,1,1],[2,2,0],[3,2,0]])},   // pos 58 dec 42 awa 33
+  {id:"dr13",name:"Charlie Bouchard",  level:"U11 / Atom",position:"Defense",iq:66,sessions:2,
+   quizHistory:_buildCoachDemoHistory([[3,2,0],[2,2,1],[3,2,1]])},   // pos 67 dec 50 awa 67
+  {id:"dr14",name:"Mason Pronger",     level:"U11 / Atom",position:"Defense",iq:79,sessions:3,
+   quizHistory:_buildCoachDemoHistory([[3,2,1],[3,3,1],[4,3,0]])},   // pos 83 dec 67 awa 67
+  {id:"dr15",name:"Quinn Lidstrom",    level:"U11 / Atom",position:"Multiple",iq:63,sessions:1,
+   quizHistory:_buildCoachDemoHistory([[2,2,1],[2,1,0],[3,2,1]])},   // pos 58 dec 42 awa 67
+  // Goalies (2)
+  {id:"dr4", name:"Maya Hasek",        level:"U11 / Atom",position:"Goalie", iq:78,sessions:3,
+   quizHistory:_buildCoachDemoHistory([[3,3,1],[4,3,0],[3,2,1]])},   // pos 83 dec 67 awa 67
+  {id:"dr16",name:"Noah Price",        level:"U11 / Atom",position:"Goalie", iq:68,sessions:1,
+   quizHistory:_buildCoachDemoHistory([[2,2,0],[3,1,1],[2,2,0]])},   // pos 58 dec 42 awa 33
 ];
 
-function CoachHome({ profile, onSignOut, onOpenPlayer, demoMode, subscriptionTier, questFlagsBump, onPromptUpgrade, onBumpQuestFlags, onSaveProgress, onFirstLine, onSignup }) {
+// Roster row in CoachHome — compact by default, expands to show a per-player
+// 6-competency radar + top/weakest headline. Makes the coach dashboard feel
+// populated with real per-player data, not just a list of names.
+function RosterRow({ player, onRate }) {
+  const [expanded, setExpanded] = useState(false);
+  const scores = useMemo(() => calcCompetencyScores(player?.quizHistory || []), [player]);
+  const compKeys = Object.keys(COMPETENCIES);
+  const real = compKeys.filter(k => (scores[k] || 0) > 0);
+  const avg = real.length ? Math.round(real.reduce((a, k) => a + scores[k], 0) / real.length) : null;
+  const weakest = real.length ? real.reduce((min, k) => scores[k] < scores[min] ? k : min, real[0]) : null;
+  const strongest = real.length ? real.reduce((max, k) => scores[k] > scores[max] ? k : max, real[0]) : null;
+
+  // Mini radar geometry
+  const cx = 70, cy = 70, radius = 54, n = compKeys.length;
+  const pts = compKeys.map((k, i) => {
+    const a = (Math.PI * 2 * i) / n - Math.PI / 2;
+    const r = ((scores[k] || 0) / 100) * radius;
+    return { x: cx + r * Math.cos(a), y: cy + r * Math.sin(a) };
+  });
+  const axisPts = compKeys.map((_, i) => {
+    const a = (Math.PI * 2 * i) / n - Math.PI / 2;
+    return { x: cx + radius * Math.cos(a), y: cy + radius * Math.sin(a) };
+  });
+  const poly = pts.map(p => `${p.x.toFixed(1)},${p.y.toFixed(1)}`).join(" ");
+
+  return (
+    <div style={{background:C.bgElevated,border:`1px solid ${C.border}`,borderRadius:8,marginBottom:".4rem",color:C.white,fontFamily:FONT.body}}>
+      <button onClick={() => setExpanded(e => !e)}
+        style={{width:"100%",background:"none",border:"none",padding:".7rem .85rem",cursor:"pointer",display:"flex",justifyContent:"space-between",alignItems:"center",color:C.white,fontFamily:FONT.body,textAlign:"left"}}>
+        <div style={{minWidth:0,flex:1}}>
+          <div style={{fontSize:13,fontWeight:600}}>{player.name}</div>
+          <div style={{fontSize:11,color:C.dimmer}}>{player.level || "No level"} · {player.position || "TBD"}</div>
+        </div>
+        {avg !== null && (
+          <div style={{display:"flex",alignItems:"center",gap:".55rem",marginRight:".55rem"}}>
+            <div style={{fontSize:10,color:C.dimmer,fontWeight:700,textAlign:"right",lineHeight:1.1}}>
+              <div>GS {avg}</div>
+              {weakest && <div style={{color:C.gold}}>↓ {COMPETENCIES[weakest].name.split("-")[0]}</div>}
+            </div>
+          </div>
+        )}
+        <span style={{color:C.gold,fontSize:14,flexShrink:0}}>{expanded ? "▲" : "▼"}</span>
+      </button>
+      {expanded && (
+        <div style={{padding:".2rem .85rem .85rem",borderTop:`1px solid ${C.border}`}}>
+          <div style={{display:"flex",alignItems:"flex-start",gap:".75rem",marginTop:".55rem"}}>
+            <svg width="140" height="140" viewBox="0 0 140 140" style={{flexShrink:0}}>
+              {[33,66,100].map(pct => {
+                const r = (pct/100) * radius;
+                const ring = compKeys.map((_, i) => {
+                  const a = (Math.PI * 2 * i) / n - Math.PI / 2;
+                  return `${(cx + r*Math.cos(a)).toFixed(1)},${(cy + r*Math.sin(a)).toFixed(1)}`;
+                }).join(" ");
+                return <polygon key={pct} points={ring} fill="none" stroke={C.border} strokeWidth="1" opacity={pct===100?0.5:0.2}/>;
+              })}
+              {axisPts.map((p, i) => (
+                <line key={i} x1={cx} y1={cy} x2={p.x} y2={p.y} stroke={C.border} strokeWidth="0.6" opacity="0.3"/>
+              ))}
+              <polygon points={poly} fill={C.gold} fillOpacity="0.25" stroke={C.gold} strokeWidth="1.5"/>
+              {pts.map((p, i) => <circle key={i} cx={p.x} cy={p.y} r="2" fill={C.gold}/>)}
+            </svg>
+            <div style={{flex:1,minWidth:0}}>
+              {real.length === 0 ? (
+                <div style={{fontSize:12,color:C.dimmer,fontStyle:"italic",lineHeight:1.5}}>No quiz data yet — {player.name?.split(" ")[0] || "this player"} hasn't completed any quizzes.</div>
+              ) : (
+                <>
+                  {strongest && <div style={{fontSize:11,color:C.dim,marginBottom:".2rem"}}><span style={{color:C.green,fontWeight:700}}>Strongest:</span> {COMPETENCIES[strongest].icon} {COMPETENCIES[strongest].name} ({scores[strongest]}%)</div>}
+                  {weakest && weakest !== strongest && <div style={{fontSize:11,color:C.dim,marginBottom:".45rem"}}><span style={{color:C.gold,fontWeight:700}}>Weakest:</span> {COMPETENCIES[weakest].icon} {COMPETENCIES[weakest].name} ({scores[weakest]}%)</div>}
+                </>
+              )}
+              <button onClick={(e) => { e.stopPropagation(); onRate && onRate(); }}
+                style={{background:C.gold,color:C.bg,border:"none",borderRadius:8,padding:".4rem .8rem",cursor:"pointer",fontSize:11,fontWeight:800,fontFamily:FONT.body,marginTop:".25rem"}}>
+                Rate + private notes →
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+// Coach-facing "Focus this week" card. Renders the weakest competency
+// across the team plus a tiny heatmap of all 6 so the coach can see context.
+// CTA hands off to the existing StudyScreen with the team's level — we reuse
+// the drill/study content the app already ships rather than building a coach
+// drill picker.
+function TeamFocusCard({ team, roster, onOpenDrills }) {
+  const agg = useMemo(() => calcTeamCompetencyAverages(roster), [roster]);
+  if (agg.activePlayers === 0 || !agg.weakestKey) {
+    return (
+      <div style={{background:C.bgElevated,border:`1px dashed ${C.border}`,borderRadius:12,padding:".9rem 1rem",marginBottom:"1rem",fontSize:12,color:C.dim,lineHeight:1.5}}>
+        Add players and have them take a quiz to see what your team should work on.
+      </div>
+    );
+  }
+  const weakest = COMPETENCIES[agg.weakestKey];
+  const ageShort = (team.level || "").split(" / ")[0] || team.level || "";
+  const ordered = Object.keys(COMPETENCIES).sort((a, b) => agg.teamAverages[a] - agg.teamAverages[b]);
+  return (
+    <>
+      <div style={{background:`linear-gradient(135deg, rgba(252,76,2,0.14), rgba(207,69,32,0.06))`,
+                   border:`1px solid ${C.goldBorder}`, borderRadius:14,
+                   padding:"1rem 1.1rem", marginBottom:"1rem"}}>
+        <div style={{fontSize:10,letterSpacing:".14em",textTransform:"uppercase",
+                     color:C.gold,fontWeight:700,marginBottom:".35rem"}}>
+          Focus this week
+        </div>
+        <div style={{fontFamily:FONT.display,fontWeight:800,fontSize:"1.25rem",
+                     color:C.white,lineHeight:1.2,marginBottom:".35rem"}}>
+          Your team is weakest at <span style={{color:weakest.color}}>{weakest.icon} {weakest.name}</span>
+        </div>
+        <div style={{fontSize:12.5,color:C.dim,marginBottom:".1rem",lineHeight:1.5}}>
+          Team average: <b style={{color:C.white}}>{agg.weakestPct}%</b>
+          {" · "}
+          <b style={{color:C.white}}>{agg.playersBelowGrade} of {agg.activePlayers}</b> below developmental level
+        </div>
+      </div>
+      <div style={{marginBottom:"1rem"}}>
+        <Label>Team competencies</Label>
+        {ordered.map(k => {
+          const comp = COMPETENCIES[k];
+          const pct = agg.teamAverages[k] || 0;
+          const isWeakest = k === agg.weakestKey;
+          return (
+            <div key={k} style={{display:"flex",alignItems:"center",gap:".6rem",padding:"4px 0"}}>
+              <div style={{flex:"0 0 120px",fontSize:12,color:C.dim,display:"flex",alignItems:"center",gap:".35rem"}}>
+                <span>{comp.icon}</span>
+                <span style={{color:isWeakest?C.white:C.dim,fontWeight:isWeakest?700:500}}>{comp.name}</span>
+              </div>
+              <div style={{flex:1,height:8,background:C.bgElevated,borderRadius:4,border:isWeakest?`1px solid ${C.goldBorder}`:"1px solid transparent",overflow:"hidden",position:"relative"}}>
+                <div style={{width:`${Math.max(2,Math.min(100,pct))}%`,height:"100%",background:comp.color,borderRadius:3}}/>
+              </div>
+              <div style={{flex:"0 0 36px",textAlign:"right",fontSize:11,color:isWeakest?C.gold:C.dim,fontWeight:isWeakest?700:500}}>{pct}%</div>
+            </div>
+          );
+        })}
+      </div>
+    </>
+  );
+}
+
+function CoachHome({ profile, onSignOut, onOpenPlayer, demoMode, subscriptionTier, questFlagsBump, onPromptUpgrade, onBumpQuestFlags, onSaveProgress, onFirstLine, onSignup, onOpenDrills }) {
   const isDemo = demoMode || profile.id === "__demo_coach__";
   const [teams, setTeams] = useState(isDemo ? DEMO_COACH_TEAMS : []);
   const [loading, setLoading] = useState(!isDemo);
@@ -4348,17 +4995,12 @@ function CoachHome({ profile, onSignOut, onOpenPlayer, demoMode, subscriptionTie
               </div>
               {expanded && (
                 <div style={{marginTop:".85rem",paddingTop:".85rem",borderTop:`1px solid ${C.border}`}}>
+                  <TeamFocusCard team={t} roster={roster} onOpenDrills={onOpenDrills}/>
                   <Label>Roster ({roster.length})</Label>
                   {roster.length === 0 ? (
                     <div style={{fontSize:12,color:C.dimmer,fontStyle:"italic"}}>No players yet — share the join code <span style={{color:C.gold,fontWeight:700}}>{t.code}</span> with players.</div>
                   ) : roster.map(p => (
-                    <button key={p.id} onClick={()=>onOpenPlayer(p)} style={{width:"100%",background:C.bgElevated,border:`1px solid ${C.border}`,borderRadius:8,padding:".7rem .85rem",marginBottom:".4rem",cursor:"pointer",display:"flex",justifyContent:"space-between",alignItems:"center",color:C.white,fontFamily:FONT.body,textAlign:"left"}}>
-                      <div>
-                        <div style={{fontSize:13,fontWeight:600}}>{p.name}</div>
-                        <div style={{fontSize:11,color:C.dimmer}}>{p.level || "No level set"} · {p.position || "No position"}</div>
-                      </div>
-                      <span style={{color:C.gold,fontSize:14}}>→</span>
-                    </button>
+                    <RosterRow key={p.id} player={p} onRate={() => onOpenPlayer(p)}/>
                   ))}
                   <DepthChartSection teamId={t.id} roster={roster} onChange={onBumpQuestFlags}/>
                 </div>
@@ -4415,10 +5057,14 @@ export default function App() {
   }, []);
   useEffect(() => {
     if (hashRoute === "parents" && screen !== "parents") setScreen("parents");
+    if (hashRoute === "coaches" && screen !== "coaches") setScreen("coaches");
+    if (hashRoute === "players" && screen !== "players") setScreen("players");
+    if (hashRoute === "associations" && screen !== "associations") setScreen("associations");
   }, [hashRoute, screen]);
   function clearParentsHash() {
     try {
-      if ((window.location.hash || "").replace(/^#/, "") === "parents") {
+      const h = (window.location.hash || "").replace(/^#/, "");
+      if (["parents","coaches","players","associations"].includes(h)) {
         history.replaceState(null, "", window.location.pathname + window.location.search);
         setHashRoute("");
       }
@@ -4456,7 +5102,10 @@ export default function App() {
       const tk = window.localStorage.getItem("iceiq_training_log");
       if (tk) {
         const all = JSON.parse(tk);
-        if (all && "__demo__" in all) { delete all["__demo__"]; window.localStorage.setItem("iceiq_training_log", JSON.stringify(all)); }
+        let mutated = false;
+        if (all && "__demo__" in all) { delete all["__demo__"]; mutated = true; }
+        if (all && "__preview__" in all) { delete all["__preview__"]; mutated = true; }
+        if (mutated) window.localStorage.setItem("iceiq_training_log", JSON.stringify(all));
       }
       window.localStorage.removeItem("iceiq_pending_transfer_v1");
       window.localStorage.removeItem("iceiq_demo_snapshot_v1");
@@ -4481,7 +5130,59 @@ export default function App() {
     setScreen("home");
   }
 
+  // Ephemeral Pro-tier preview. Dynamic-import the seed so the landing bundle
+  // stays small. Snapshot LS keys we'll overwrite so exitDemo can restore.
+  async function enterPlayerPreview() {
+    window.scrollTo(0, 0);
+    const seed = buildU11ForwardPreview();
+    try {
+      // Insights-read: merge seed keys with whatever was there, stash the
+      // original so exitDemo can restore it.
+      const priorInsights = window.localStorage.getItem("iceiq_insights_read_v1");
+      window.localStorage.setItem("iceiq_preview_snap_insights_v1", priorInsights || "");
+      const prior = priorInsights ? JSON.parse(priorInsights) : [];
+      const merged = Array.from(new Set([...(Array.isArray(prior)?prior:[]), ...seed.insightsReadKeys]));
+      window.localStorage.setItem("iceiq_insights_read_v1", JSON.stringify(merged));
+      // Training log slot under the preview id.
+      const tk = window.localStorage.getItem("iceiq_training_log");
+      const all = tk ? JSON.parse(tk) : {};
+      all[PREVIEW_PLAYER_ID] = { sessions: seed.trainingSessions };
+      window.localStorage.setItem("iceiq_training_log", JSON.stringify(all));
+      // Fake tier. resolveTier reads LS on every render → next render returns PRO.
+      window.localStorage.setItem("iceiq_tier_override", "PRO");
+    } catch {}
+    setDemoMode(true);
+    setDemoCoachRatings(seed.coachRatings);
+    setProfile({ id: PREVIEW_PLAYER_ID, role: "player", name: seed.player.name, level: seed.player.level, position: seed.player.position, __preview: true });
+    setPlayer(seed.player);
+    const latest = seed.player.quizHistory[seed.player.quizHistory.length - 1];
+    setPrevScore(latest ? latest.score : null);
+    setTotalSessions(seed.player.quizHistory.length);
+    setScreen("home");
+  }
+
   function exitDemo() {
+    try {
+      window.localStorage.removeItem("iceiq_tier_override");
+      // Restore insights-read snapshot (if one was stashed by enterPlayerPreview).
+      const snap = window.localStorage.getItem("iceiq_preview_snap_insights_v1");
+      if (snap !== null) {
+        if (snap) window.localStorage.setItem("iceiq_insights_read_v1", snap);
+        else window.localStorage.removeItem("iceiq_insights_read_v1");
+        window.localStorage.removeItem("iceiq_preview_snap_insights_v1");
+      }
+      // Drop preview training slot.
+      const tk = window.localStorage.getItem("iceiq_training_log");
+      if (tk) {
+        const all = JSON.parse(tk);
+        if (all && "__preview__" in all) { delete all["__preview__"]; window.localStorage.setItem("iceiq_training_log", JSON.stringify(all)); }
+      }
+      window.localStorage.removeItem("iceiq_demo_quiz_taken");
+      // Clear dev bypass so a one-time troubleshooting session doesn't keep
+      // auto-entering on every subsequent reload.
+      clearDevProfile();
+      window.localStorage.removeItem("iceiq_dev_bypass");
+    } catch {}
     setDemoMode(false);
     setDemoCoachRatings(null);
     setProfile(null);
@@ -4520,14 +5221,20 @@ export default function App() {
   }
 
   // Restore dev bypass on reload + expose window.__dev helpers.
+  // Auto-entry requires `?devbypass=1` in the URL so a stale LS flag from a
+  // past troubleshooting session never hijacks the landing page.
   useEffect(() => {
     if (!isDevBypassEnabled()) return;
-    const saved = getDevProfile();
-    if (saved && !demoMode) {
-      if (saved.role === "coach") {
-        enterDevBypass({ role: "coach", name: saved.name });
-      } else {
-        enterDevBypass({ role: "player", level: saved.level, position: saved.position, name: saved.name });
+    let autoRestore = false;
+    try { autoRestore = new URLSearchParams(window.location.search).get("devbypass") === "1"; } catch {}
+    if (autoRestore) {
+      const saved = getDevProfile();
+      if (saved && !demoMode) {
+        if (saved.role === "coach") {
+          enterDevBypass({ role: "coach", name: saved.name });
+        } else {
+          enterDevBypass({ role: "player", level: saved.level, position: saved.position, name: saved.name });
+        }
       }
     }
     window.__dev = {
@@ -4626,7 +5333,9 @@ export default function App() {
     setPrevScore(score);
     setTotalSessions(newTotal);
     if (tier === "FREE") incrementFreeQuizCount();
-    if (demoMode) { try { localStorage.setItem("iceiq_demo_quiz_taken", "1"); } catch {} }
+    // Only the acquisition-demo flow (sample preview, landing "Coach Dashboard")
+    // should hit the cap. Dev-bypass testing sessions must not burn this flag.
+    if (demoMode && !profile?.__dev) { try { localStorage.setItem("iceiq_demo_quiz_taken", "1"); } catch {} }
     if (newTotal === 5 && tier === "FREE" && !localStorage.getItem("iceiq_milestone5_shown")) {
       setShowMilestone5Banner(true);
       localStorage.setItem("iceiq_milestone5_shown", "true");
@@ -4704,6 +5413,30 @@ export default function App() {
       </Suspense>
     );
   }
+  if (!profile && hashRoute === "coaches") {
+    return (
+      <Suspense fallback={<LazyFallback/>}>
+        <CoachesPage
+          onNavigate={() => clearParentsHash()}
+          onContact={() => { window.location.href = "mailto:thomas@bluechip-people-strategies.com"; }}
+        />
+      </Suspense>
+    );
+  }
+  if (!profile && hashRoute === "players") {
+    return (
+      <Suspense fallback={<LazyFallback/>}>
+        <PlayersPage onNavigate={() => clearParentsHash()} onContact={() => { window.location.href = "mailto:thomas@bluechip-people-strategies.com"; }}/>
+      </Suspense>
+    );
+  }
+  if (!profile && hashRoute === "associations") {
+    return (
+      <Suspense fallback={<LazyFallback/>}>
+        <AssociationsPage onNavigate={() => clearParentsHash()} onContact={() => { window.location.href = "mailto:thomas@bluechip-people-strategies.com"; }}/>
+      </Suspense>
+    );
+  }
 
   // Not logged in → auth screen
   if (!profile) {
@@ -4715,7 +5448,7 @@ export default function App() {
         </div>
       </div>;
     }
-    return <AuthScreen onAuthenticated={()=>{}} onDemo={enterDemo} onDevEnter={enterDevBypass} prefill={signupPrefill}/>;
+    return <AuthScreen onAuthenticated={()=>{}} onDemo={enterDemo} onDevEnter={enterDevBypass} onPreview={enterPlayerPreview} prefill={signupPrefill}/>;
   }
 
   // Coach home
@@ -4771,6 +5504,11 @@ export default function App() {
             // We'll open a rating screen inline
             setScreen({kind:"rate", player:p, playerLevel});
           }}
+          onOpenDrills={(level, competencyKey) => {
+            try { window.localStorage.setItem("iceiq_coach_focus_seen_v1", "1"); } catch {}
+            bumpQuestFlags && bumpQuestFlags();
+            setScreen({kind:"drills", level: level || "U11 / Atom", competencyKey});
+          }}
         />
         {typeof screen === "object" && screen.kind === "rate" && (
           <CoachRatingScreenAuthed
@@ -4778,6 +5516,14 @@ export default function App() {
             player={screen.player}
             playerLevel={screen.playerLevel}
             onDone={()=>setScreen("home")}
+          />
+        )}
+        {typeof screen === "object" && screen.kind === "drills" && (
+          <StudyScreen
+            player={{ id:"__coach__", level: screen.level, selfRatings:{}, quizHistory:[], __coach:true }}
+            onBack={()=>setScreen("home")}
+            onNav={setScreen}
+            focusCompetency={screen.competencyKey}
           />
         )}
       </>
@@ -4804,16 +5550,19 @@ export default function App() {
         textarea { resize: none; }
       `}</style>
 
-      {demoMode && (
+      {/* Demo banner hidden for dev-bypass sessions — tester wants to see
+          exactly the UI a real user at that tier/role would see. Demo and
+          preview flows still show it. */}
+      {demoMode && !profile?.__dev && (
         <div style={{position:"sticky",top:0,background:C.purple,color:C.white,padding:".45rem 1rem",fontSize:12,fontWeight:600,textAlign:"center",zIndex:200,display:"flex",alignItems:"center",justifyContent:"center",gap:".75rem"}}>
-          🎮 Demo mode — data won't be saved.
-          <button onClick={exitDemo} style={{background:C.white,color:C.purple,border:"none",borderRadius:6,padding:".25rem .7rem",fontWeight:800,fontSize:11,cursor:"pointer",fontFamily:FONT.body}}>Sign Up →</button>
+          {profile?.__preview ? "👀 Preview — nothing you do is saved." : "🎮 Demo mode — data won't be saved."}
+          <button onClick={exitDemo} style={{background:C.white,color:C.purple,border:"none",borderRadius:6,padding:".25rem .7rem",fontWeight:800,fontSize:11,cursor:"pointer",fontFamily:FONT.body}}>← Back to landing</button>
         </div>
       )}
 
       <div style={{paddingBottom: screen==="quiz"||screen==="results" ? 0 : 80}}>
         {screen === "home"    && <Home player={tierLimitedPlayer(player, tier)} onNav={setScreen} demoMode={demoMode} subscriptionTier={tier} questFlagsBump={questFlagsBump} onPromptUpgrade={promptUpgrade} onBumpQuestFlags={bumpQuestFlags} onSaveProgress={() => triggerSignup("save_progress")} onFirstLine={() => setFirstLineToast(true)} onSignup={() => triggerSignup("quest_cta")}/>}
-        {screen === "quiz"    && (demoMode && (()=>{ try { return localStorage.getItem("iceiq_demo_quiz_taken") === "1"; } catch { return false; } })()
+        {screen === "quiz"    && (demoMode && !profile?.__dev && (()=>{ try { return localStorage.getItem("iceiq_demo_quiz_taken") === "1"; } catch { return false; } })()
           ? <DemoQuizCapScreen onBack={()=>setScreen("home")} onSignUp={exitDemo}/>
           : tier === "FREE" && !demoMode && isAtFreeQuizCap()
           ? <FreeQuizCapScreen onBack={()=>setScreen("home")} onUpgrade={()=>setScreen("plans")}/>
@@ -4845,9 +5594,29 @@ export default function App() {
           onNavigate={(route) => { clearParentsHash(); setScreen("home"); /* "sample" also routes home for now — no public sample route yet */ }}
           onContact={() => { window.location.href = "mailto:thomas@bluechip-people-strategies.com"; }}
         /></Suspense>}
+        {screen === "players" && <Suspense fallback={<LazyFallback/>}><PlayersPage onNavigate={() => { clearParentsHash(); setScreen("home"); }} onContact={() => { window.location.href = "mailto:thomas@bluechip-people-strategies.com"; }}/></Suspense>}
+        {screen === "associations" && <Suspense fallback={<LazyFallback/>}><AssociationsPage onNavigate={(r)=>{ clearParentsHash(); if (r==="coaches") setScreen("coaches"); else setScreen("home"); }} onContact={() => { window.location.href = "mailto:thomas@bluechip-people-strategies.com"; }}/></Suspense>}
+        {screen === "coaches" && <Suspense fallback={<LazyFallback/>}><CoachesPage
+          onNavigate={(route) => {
+            clearParentsHash();
+            if (route === "coach-demo") {
+              // Launch the coach preview with the demo roster — same flow the
+              // landing card uses, no sign-up required.
+              enterDemo("__coach__");
+            } else if (route === "coach-signup" && !profile) {
+              setSignupPrefill({ role: "coach" });
+              setScreen("home");
+            } else if (route === "parents") {
+              setScreen("parents");
+            } else {
+              setScreen("home");
+            }
+          }}
+          onContact={() => { window.location.href = "mailto:thomas@bluechip-people-strategies.com"; }}
+        /></Suspense>}
       </div>
 
-      {!["quiz","results","weekly","parents"].includes(screen) && (
+      {!["quiz","results","weekly","parents","coaches","players","associations"].includes(screen) && (
         <BottomNav active={screen} onNav={setScreen} tier={tier}/>
       )}
 
@@ -4872,8 +5641,11 @@ export default function App() {
           </div>
         </div>
       )}
-      {demoMode && !firstLineToast && screen !== "results" && (
-        <button onClick={() => triggerSignup("demo_chip")} style={{position:"fixed",top:10,right:10,zIndex:150,background:`linear-gradient(135deg, ${C.gold}, #b8860b)`,color:C.bg,border:"none",borderRadius:999,padding:"6px 12px 6px 10px",cursor:"pointer",fontSize:11,fontWeight:800,fontFamily:FONT.body,letterSpacing:".02em",display:"flex",alignItems:"center",gap:"4px",boxShadow:"0 4px 14px rgba(201,168,76,.35), inset 0 1px 0 rgba(255,255,255,.25)"}}>
+      {/* Sign-up chip only shows for genuine demo/preview flows — not dev-bypass
+          sessions (the tester is impersonating a real FREE/PRO/TEAM user and
+          shouldn't see a sign-up CTA). */}
+      {demoMode && !profile?.__dev && !firstLineToast && screen !== "results" && (
+        <button onClick={() => triggerSignup("demo_chip")} style={{position:"fixed",top:48,right:10,zIndex:150,background:`linear-gradient(135deg, ${C.gold}, #CF4520)`,color:C.bg,border:"none",borderRadius:999,padding:"6px 12px 6px 10px",cursor:"pointer",fontSize:11,fontWeight:800,fontFamily:FONT.body,letterSpacing:".02em",display:"flex",alignItems:"center",gap:"4px",boxShadow:"0 4px 14px rgba(252,76,2,.35), inset 0 1px 0 rgba(255,255,255,.25)"}}>
           <span style={{fontSize:12}}>🏒</span>
           Sign Up Free →
         </button>
@@ -4925,6 +5697,7 @@ function GatedScreen({ feature, title, description, onBack, onUnlock, target = "
 function CoachRatingScreenAuthed({ coach, player, playerLevel, onDone }) {
   const [ratings, setRatings] = useState({});
   const [notes, setNotes] = useState({});
+  const [privateNote, setPrivateNote] = useState("");
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [saved, setSaved] = useState(false);
@@ -4934,6 +5707,18 @@ function CoachRatingScreenAuthed({ coach, player, playerLevel, onDone }) {
   const rated = Object.values(ratings).filter(v=>v).length;
   const coachScale = getCoachScale(playerLevel);
   const coachScaleType = RATING_SCALES[playerLevel]?.coach?.type;
+  const LS_DEMO_NOTES = "iceiq_demo_coach_notes_v1";
+  function loadDemoNote(pid) {
+    try { const m = JSON.parse(window.localStorage.getItem(LS_DEMO_NOTES) || "{}"); return m[pid] || ""; }
+    catch { return ""; }
+  }
+  function saveDemoNote(pid, text) {
+    try {
+      const m = JSON.parse(window.localStorage.getItem(LS_DEMO_NOTES) || "{}");
+      if (text) m[pid] = text; else delete m[pid];
+      window.localStorage.setItem(LS_DEMO_NOTES, JSON.stringify(m));
+    } catch {}
+  }
 
   const scaleIntro = {
     "growth":     "Rate each skill using the growth scale — where is this player in their development journey?",
@@ -4944,11 +5729,19 @@ function CoachRatingScreenAuthed({ coach, player, playerLevel, onDone }) {
 
   const isDemo = coach?.id === "__demo_coach__" || String(player?.id || "").startsWith("dr") || String(player?.id || "").startsWith("__demo");
   useEffect(() => {
-    if (isDemo) { setLoading(false); return; }
+    if (isDemo) {
+      setPrivateNote(loadDemoNote(player.id));
+      setLoading(false);
+      return;
+    }
     (async () => {
-      const existing = await SB.getCoachRatingsForPlayer(player.id);
+      const [existing, note] = await Promise.all([
+        SB.getCoachRatingsForPlayer(player.id),
+        SB.getCoachPlayerNote(player.id),
+      ]);
       setRatings(existing.ratings || {});
       setNotes(existing.notes || {});
+      setPrivateNote(note || "");
       setLoading(false);
     })();
   }, []);
@@ -4956,9 +5749,14 @@ function CoachRatingScreenAuthed({ coach, player, playerLevel, onDone }) {
   async function save() {
     setSaving(true);
     try {
-      if (!isDemo) await SB.saveCoachRatingsForPlayer(coach.id, player.id, ratings, notes);
+      if (isDemo) {
+        saveDemoNote(player.id, privateNote.trim());
+      } else {
+        await SB.saveCoachRatingsForPlayer(coach.id, player.id, ratings, notes);
+        await SB.saveCoachPlayerNote(coach.id, player.id, privateNote.trim());
+      }
       if (Object.values(ratings || {}).some(v => v)) lsSetStr(LS_COACH_RATED, "1");
-      if (Object.values(notes || {}).some(v => v && String(v).trim())) lsSetStr(LS_COACH_NOTED, "1");
+      if (Object.values(notes || {}).some(v => v && String(v).trim()) || privateNote.trim()) lsSetStr(LS_COACH_NOTED, "1");
       setSaved(true);
     } catch (e) { alert(e.message); }
     setSaving(false);
@@ -4968,11 +5766,29 @@ function CoachRatingScreenAuthed({ coach, player, playerLevel, onDone }) {
     <div style={{position:"fixed",inset:0,background:C.bg,color:C.white,fontFamily:FONT.body,padding:"1.5rem 1.25rem",overflowY:"auto",zIndex:100}}>
       <div style={{maxWidth:560,margin:"0 auto"}}>
         <BackBtn onClick={onDone}/>
-        <Card style={{marginBottom:"1.5rem",background:`linear-gradient(135deg,${C.bgCard},${C.bgElevated})`,border:`1px solid ${C.goldBorder}`}}>
+        <Card style={{marginBottom:"1rem",background:`linear-gradient(135deg,${C.bgCard},${C.bgElevated})`,border:`1px solid ${C.goldBorder}`}}>
           <div style={{fontSize:10,letterSpacing:".14em",textTransform:"uppercase",color:C.gold,marginBottom:".4rem"}}>Rating Player</div>
           <div style={{fontFamily:FONT.display,fontWeight:800,fontSize:"1.8rem"}}>{player.name}</div>
           <div style={{fontSize:13,color:C.dimmer,marginTop:2}}>{playerLevel}</div>
           <div style={{marginTop:".85rem",fontSize:12,color:C.dim,lineHeight:1.6}}>{scaleIntro[coachScaleType] || scaleIntro.ladder}</div>
+        </Card>
+
+        {/* Private coach notes — only the coach who writes them can read them.
+            Intended for season-long observations, parent conversations, call-ups,
+            behaviour patterns, etc. Persisted to coach_ratings with a sentinel
+            skill_id so no schema change was required. */}
+        <Card style={{marginBottom:"1.5rem",borderLeft:`3px solid ${C.gold}`}}>
+          <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:".4rem"}}>
+            <Label>🔒 Private Notes</Label>
+            <div style={{fontSize:10,color:C.dimmer,fontWeight:600}}>Only you can see these</div>
+          </div>
+          <textarea
+            value={privateNote}
+            onChange={e => setPrivateNote(e.target.value)}
+            placeholder={`Observations about ${player.name?.split(" ")[0] || "this player"} — effort, attitude, patterns you notice, what to work on next, conversations with parents…`}
+            rows={4}
+            style={{background:C.bgElevated,border:`1px solid ${C.border}`,borderRadius:10,padding:".75rem 1rem",color:C.white,fontSize:13,fontFamily:FONT.body,width:"100%",outline:"none",resize:"vertical",lineHeight:1.6,minHeight:90}}
+          />
         </Card>
 
         {loading ? <div style={{color:C.dimmer,textAlign:"center",padding:"2rem"}}>Loading…</div> : (<>

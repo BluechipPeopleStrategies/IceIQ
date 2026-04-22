@@ -6,6 +6,12 @@
 const LS_FLAG     = "iceiq_dev_bypass";
 const LS_PROFILE  = "iceiq_dev_profile";
 
+// Player ids that are NOT Supabase UUIDs. Call sites that guard
+// Supabase calls must skip when the id is ephemeral.
+export function isEphemeralPlayer(id) {
+  return id === "__demo__" || id === "__preview__" || id === "__dev__" || id === "__dev_coach__" || id === "__demo_coach__";
+}
+
 export function isDevBypassEnabled() {
   try { return typeof window !== "undefined" && window.localStorage.getItem(LS_FLAG) === "1"; }
   catch { return false; }
