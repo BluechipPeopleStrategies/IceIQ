@@ -20,6 +20,7 @@ import { AGES, LEVEL_FOR_AGE, ALL_TYPES, RECOMMENDED_TYPES_BY_AGE, TYPE_LABELS, 
 import { SKILLS, RATING_SCALES, getSelfScale, getScaleColor } from "./data/constants.js";
 import { deriveLevelFromBirthYear, validBirthYears } from "./utils/ageGroup.js";
 import { isEphemeralPlayer } from "./utils/devBypass.js";
+import Rink from "./Rink.jsx";
 
 async function loadTeamData(coachCode, season) {
   if (!window.storage) return [];
@@ -1266,6 +1267,7 @@ function ReviewCard({ row, expanded, onToggle, onStatus, onReset, onEdit }) {
   const type = c.type || "mc";
   const edited = isEdited(row);
   const off = isOffAgeType(row.age, type);
+  const [showRink, setShowRink] = useState(false);
 
   return (
     <Card style={{
@@ -1340,6 +1342,40 @@ function ReviewCard({ row, expanded, onToggle, onStatus, onReset, onEdit }) {
                   >{opt}</div>
                 </div>
               ))}
+            </div>
+          )}
+
+          {/* Rink scene — toggleable inline preview for rink-type questions.
+              Reviewer sees the actual scene (players, arrows, zones, flags)
+              that the player will see, with the lower-third prompt overlay
+              rendered so the full visual read is in view. lockAnswer=true
+              so clicking zones/options doesn't try to score. */}
+          {type === "rink" && c.scene && (
+            <div style={{ marginBottom: ".6rem" }}>
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: ".35rem" }}>
+                <Label style={{ margin: 0 }}>Rink scene</Label>
+                <button onClick={() => setShowRink(s => !s)} style={{
+                  background: showRink ? C.gold : "transparent",
+                  color: showRink ? C.bg : C.gold,
+                  border: `1px solid ${C.gold}`,
+                  borderRadius: 14, padding: ".2rem .65rem", cursor: "pointer",
+                  fontSize: 10, fontFamily: FONT.body, fontWeight: 800,
+                  letterSpacing: "0.05em", textTransform: "uppercase",
+                }}>{showRink ? "Hide scene ▲" : "Show scene ▼"}</button>
+              </div>
+              {showRink && (
+                <div style={{ background: C.bgElevated, border: `1px solid ${C.border}`, borderRadius: 8, padding: ".5rem", overflow: "hidden" }}>
+                  <Rink
+                    scene={c.scene}
+                    mode="play"
+                    ageGroup={(row.age || "").toUpperCase()}
+                    lockAnswer={true}
+                  />
+                  <div style={{ fontSize: 10, color: C.dimmer, fontStyle: "italic", marginTop: ".35rem", paddingTop: ".35rem", borderTop: `1px dashed ${C.border}` }}>
+                    Preview mode — clicks don't record.{c.scene.question?.mode ? ` Mode: ${c.scene.question.mode}.` : ""}
+                  </div>
+                </div>
+              )}
             </div>
           )}
 
