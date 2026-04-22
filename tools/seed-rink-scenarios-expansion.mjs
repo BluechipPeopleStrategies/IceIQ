@@ -1,13 +1,9 @@
-// Authors 100 new rink scenarios as INSERT rows for the review_questions
-// table. Run:
+// Seeds 100 new rink scenarios directly into src/data/questions.json.
+// Idempotent — skips ids that already exist in the bank.
 //
-//   node tools/author-100-rink-review.mjs
+//   node tools/seed-rink-scenarios-expansion.mjs
 //
-// Outputs: tools/100-rink-review.sql — paste it into the Supabase SQL editor
-// under your admin account. Rows land with status='unreviewed' and
-// created_in_tool=true, ready to review/edit/cull in the QuestionReviewScreen.
-//
-// Distribution (+ new ids continue from the existing bank):
+// Additive to the existing bank. New ids:
 //   U7 / Initiation  +10  u7rink31 .. u7rink40
 //   U9 / Novice      +10  u9rink21 .. u9rink30
 //   U11 / Atom       +20  u11rink25 .. u11rink44
@@ -19,13 +15,16 @@
 // Zone keys mirror src/Rink.jsx: net-front, slot, high-slot, left-faceoff,
 // right-faceoff, left-corner, right-corner, behind-net, left-boards,
 // right-boards, left-point, right-point, home-plate.
+//
+// To cull scenarios after-the-fact, edit src/data/questions.json directly —
+// no dashboard round-trip required.
 
 import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 
 const here = path.dirname(fileURLToPath(import.meta.url));
-const outPath = path.join(here, "100-rink-review.sql");
+const qPath = path.join(here, "..", "src", "data", "questions.json");
 
 const baseScene = () => ({
   team: [], opponents: [], puck: { zone: "slot" },
@@ -1749,40 +1748,21 @@ const SCENARIOS = [
 ];
 
 // ───────────────────────────────────────────────────────────────────────────
-// SQL emission
+// Apply to questions.json
 // ───────────────────────────────────────────────────────────────────────────
-const LEVEL_TO_AGE = {
-  "U7 / Initiation": "u7",
-  "U9 / Novice": "u9",
-  "U11 / Atom": "u11",
-  "U13 / Peewee": "u13",
-  "U15 / Bantam": "u15",
-  "U18 / Midget": "u18",
-};
 
-function sqlString(s) {
-  return "'" + String(s).replace(/'/g, "''") + "'";
-}
-function sqlJson(obj) {
-  // JSONB literal: stringify then escape single quotes.
-  return sqlString(JSON.stringify(obj));
-}
+const raw = fs.readFileSync(qPath, "utf8");
+const bank = JSON.parse(raw);
 
-const lines = [];
-lines.push("-- 100 new rink scenarios for the review_questions workspace.");
-lines.push("-- Emitted by tools/author-100-rink-review.mjs. Paste into the Supabase SQL editor");
-lines.push("-- under the admin account (RLS requires email = mtslifka@gmail.com).");
-lines.push("--");
-lines.push("-- Safe to re-run: ON CONFLICT (id) DO NOTHING preserves any edits you've made.");
-lines.push("");
-lines.push("begin;");
-lines.push("");
-
+let added = 0, skipped = 0;
 for (const sc of SCENARIOS) {
-  const age = LEVEL_TO_AGE[sc.level];
-  if (!age) throw new Error(`Unknown level: ${sc.level}`);
-  const current = {
-    level: sc.level,
+  if (!Array.isArray(bank[sc.level])) throw new Error(`Level not found in bank: ${sc.level}`);
+  if (bank[sc.level].some(q => q.id === sc.id)) {
+    console.log(`skip  ${sc.id} (already in ${sc.level})`);
+    skipped++;
+    continue;
+  }
+  const question = {
     id: sc.id,
     type: "rink",
     cat: sc.cat,
@@ -1794,25 +1774,13 @@ for (const sc of SCENARIOS) {
     tip: sc.tip,
     scene: sc.scene,
   };
-  lines.push(`insert into review_questions (id, level, age, original, current, status, created_in_tool) values (`);
-  lines.push(`  ${sqlString(sc.id)},`);
-  lines.push(`  ${sqlString(sc.level)},`);
-  lines.push(`  ${sqlString(age)},`);
-  lines.push(`  null,`);
-  lines.push(`  ${sqlJson(current)},`);
-  lines.push(`  'unreviewed',`);
-  lines.push(`  true`);
-  lines.push(`) on conflict (id) do nothing;`);
-  lines.push("");
+  bank[sc.level].push(question);
+  console.log(`add   ${sc.id} → ${sc.level}`);
+  added++;
 }
 
-lines.push("commit;");
-lines.push("");
-lines.push(`-- Total rows: ${SCENARIOS.length}`);
+fs.writeFileSync(qPath, JSON.stringify(bank, null, 2) + "\n");
 
-fs.writeFileSync(outPath, lines.join("\n"), "utf8");
-
-// Summary log
 const byLevel = SCENARIOS.reduce((acc, s) => { acc[s.level] = (acc[s.level] || 0) + 1; return acc; }, {});
-console.log(`Wrote ${SCENARIOS.length} scenarios to ${outPath}`);
+console.log(`\nExpansion batch done. ${added} added, ${skipped} skipped (total target ${SCENARIOS.length}).`);
 for (const L of Object.keys(byLevel)) console.log(`  ${L}: ${byLevel[L]}`);
