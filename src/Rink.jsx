@@ -313,7 +313,8 @@ function Teammate({ item, selected, onPointerDown, playMode }) {
       )}
       {/* Jersey */}
       <path d={`M ${cx - 18} ${cy} Q ${cx - 20} ${cy + 20} ${cx - 12} ${cy + 24} Q ${cx} ${cy + 28} ${cx + 12} ${cy + 24} Q ${cx + 20} ${cy + 20} ${cx + 18} ${cy} Q ${cx + 10} ${cy - 4} ${cx} ${cy - 4} Q ${cx - 10} ${cy - 4} ${cx - 18} ${cy} Z`}
-            fill="#FFFFFF" stroke="#1E5FA5" strokeWidth={strokeW} strokeLinejoin="round" />
+            fill="#FFFFFF" stroke="#1E5FA5" strokeWidth={strokeW} strokeLinejoin="round"
+            filter="url(#bcastShadow)" />
       {labelOnChest && (
         <text x={cx} y={cy + 15}
               fontFamily="'Anthropic Sans',sans-serif" fontSize="13"
@@ -346,7 +347,8 @@ function Opponent({ item, selected, onPointerDown, playMode }) {
               fill="none" stroke="#378ADD" strokeWidth="2" strokeDasharray="4 3" />
       )}
       <path d={`M ${cx - 17} ${cy} Q ${cx - 19} ${cy + 18} ${cx - 11} ${cy + 22} Q ${cx} ${cy + 25} ${cx + 11} ${cy + 22} Q ${cx + 19} ${cy + 18} ${cx + 17} ${cy} Q ${cx + 9} ${cy - 3} ${cx} ${cy - 3} Q ${cx - 9} ${cy - 3} ${cx - 17} ${cy} Z`}
-            fill="url(#oppStripes)" stroke="#2F4A6B" strokeWidth="2.5" strokeLinejoin="round" />
+            fill="url(#oppStripes)" stroke="#2F4A6B" strokeWidth="2.5" strokeLinejoin="round"
+            filter="url(#bcastShadow)" />
       <Helmet cx={cx} cy={cy - 6} />
     </g>
   );
@@ -394,7 +396,8 @@ function BigPuck({ puck, selected, onPointerDown, playMode }) {
       {selected && (
         <circle cx={cx} cy={cy} r="22" fill="none" stroke="#378ADD" strokeWidth="2" strokeDasharray="4 3" />
       )}
-      <circle cx={cx} cy={cy} r="16" fill="url(#puckGlow)" stroke="#6B4A00" strokeWidth="2.4" />
+      <circle cx={cx} cy={cy} r="16" fill="url(#puckGlow)" stroke="#6B4A00" strokeWidth="2.4"
+              filter="url(#bcastShadow)" />
       <ellipse cx={cx - 4} cy={cy - 6} rx="6" ry="3.5" fill="#FFF4B8" opacity="0.8" />
       <text x={cx} y={cy + 1}
             fontFamily="'Anthropic Sans',sans-serif" fontSize="9"
@@ -446,6 +449,62 @@ function Flag({ item, selected, onPointerDown, playMode }) {
   );
 }
 
+// Broadcast-style overlay shown in play mode: "READ THE PLAY" chip top-left,
+// age badge top-right, and a lower-third prompt bar along the bottom of the
+// SVG so the prompt sits inside the image frame like a real coach's-corner
+// replay graphic. Intentionally pointerEvents="none" so it doesn't steal
+// clicks from zones or players beneath it.
+function BroadcastOverlay({ prompt, age, mode, hasHomePlate }) {
+  if (mode !== 'play') return null;
+  const BAR_TOP = VIEWBOX_H - 76;
+  const BAR_H = 76;
+  const VIEW_W = 680;
+  const promptText = prompt && prompt.length > 90 ? prompt.slice(0, 87) + '…' : (prompt || '');
+  return (
+    <g pointerEvents="none">
+      {/* Lower-third gradient bar */}
+      <rect x="0" y={BAR_TOP} width={VIEW_W} height={BAR_H}
+            fill="url(#bcastLowerThird)" />
+      {/* Gold accent rule across the top of the bar */}
+      <rect x="0" y={BAR_TOP} width={VIEW_W} height="2.2" fill="#FC4C02" />
+      {/* Subtle vertical gradient highlight in the accent for polish */}
+      <rect x="0" y={BAR_TOP + 2.2} width={VIEW_W} height="1" fill="#FFFFFF" opacity="0.22" />
+      {/* Prompt text — centered inside the bar */}
+      {promptText && (
+        <text x={VIEW_W / 2} y={BAR_TOP + 42}
+              fontFamily="'Anthropic Sans',sans-serif" fontSize="20"
+              fontWeight="700" fill="#FFFFFF" textAnchor="middle"
+              dominantBaseline="central" letterSpacing="0.2">
+          {promptText}
+        </text>
+      )}
+      {/* Small READ THE PLAY lozenge top-left inside the rink frame */}
+      <g transform="translate(14, 14)">
+        <rect x="0" y="0" width="130" height="22" rx="11" fill="#FC4C02" />
+        <text x="65" y="12"
+              fontFamily="'Anthropic Sans',sans-serif" fontSize="11"
+              fontWeight="700" fill="#FFFFFF" textAnchor="middle"
+              dominantBaseline="central" letterSpacing="2">READ THE PLAY</text>
+      </g>
+      {/* Age badge top-right */}
+      {age && (
+        <g transform={`translate(${VIEW_W - 96}, 14)`}>
+          <rect x="0" y="0" width="82" height="22" rx="11" fill="#041E42" stroke="#FC4C02" strokeWidth="1.2" />
+          <text x="41" y="12"
+                fontFamily="'Anthropic Sans',sans-serif" fontSize="11"
+                fontWeight="700" fill="#FC4C02" textAnchor="middle"
+                dominantBaseline="central" letterSpacing="1.5">{String(age).toUpperCase()}</text>
+        </g>
+      )}
+      {/* Faint high-danger wash over home plate (only if scene shows it) */}
+      {hasHomePlate && (
+        <rect x="230" y="70" width="220" height="260"
+              fill="url(#highDangerWash)" />
+      )}
+    </g>
+  );
+}
+
 function Arrow({ a }) {
   const { p1, p2 } = resolveArrowPoints(a);
   const dx = p2.x - p1.x, dy = p2.y - p1.y;
@@ -454,11 +513,16 @@ function Arrow({ a }) {
   const sX = p1.x + nx * 10, sY = p1.y + ny * 10;
   const eX = p2.x - nx * 10, eY = p2.y - ny * 10;
   const mX = (sX + eX) / 2, mY = (sY + eY) / 2;
+  const pathD = `M ${sX} ${sY} Q ${mX + -ny * 12} ${mY + nx * 12} ${eX} ${eY}`;
   return (
-    <path d={`M ${sX} ${sY} Q ${mX + -ny * 12} ${mY + nx * 12} ${eX} ${eY}`}
-          fill="none" stroke="#22A06B" strokeWidth="4.5"
-          strokeLinecap="round" strokeDasharray="9 5"
-          markerEnd="url(#move-arrow)" />
+    <g>
+      {/* Broadcast motion halo — wider stroke under the dashed line */}
+      <path d={pathD} fill="none" stroke="#22A06B" strokeWidth="11"
+            strokeLinecap="round" opacity="0.18" />
+      <path d={pathD} fill="none" stroke="#22A06B" strokeWidth="4.5"
+            strokeLinecap="round" strokeDasharray="9 5"
+            markerEnd="url(#move-arrow)" />
+    </g>
   );
 }
 
@@ -743,6 +807,27 @@ export default function Rink({
               <rect width="7" height="7" fill="#FFFFFF" />
               <line x1="0" y1="0" x2="0" y2="7" stroke="#2F4A6B" strokeWidth="3.5" />
             </pattern>
+            {/* Broadcast: subtle drop shadow under players/puck for depth */}
+            <filter id="bcastShadow" x="-40%" y="-40%" width="180%" height="180%">
+              <feDropShadow dx="0" dy="2.2" stdDeviation="1.4" floodColor="#0B1B2B" floodOpacity="0.38" />
+            </filter>
+            {/* Broadcast: halo gradient used under motion arrows */}
+            <linearGradient id="trailGlow" x1="0" y1="0" x2="1" y2="0">
+              <stop offset="0%"   stopColor="#22A06B" stopOpacity="0.05" />
+              <stop offset="100%" stopColor="#22A06B" stopOpacity="0.35" />
+            </linearGradient>
+            {/* Broadcast: lower-third prompt bar gradient */}
+            <linearGradient id="bcastLowerThird" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stopColor="#041E42" stopOpacity="0" />
+              <stop offset="35%" stopColor="#041E42" stopOpacity="0.88" />
+              <stop offset="100%" stopColor="#000814" stopOpacity="0.96" />
+            </linearGradient>
+            {/* Broadcast: high-danger red-orange wash for home plate */}
+            <radialGradient id="highDangerWash" cx="0.5" cy="0.4" r="0.6">
+              <stop offset="0%"  stopColor="#FC4C02" stopOpacity="0.14" />
+              <stop offset="60%" stopColor="#FC4C02" stopOpacity="0.06" />
+              <stop offset="100%" stopColor="#FC4C02" stopOpacity="0" />
+            </radialGradient>
           </defs>
 
           {/* Rink background (dimmed) */}
@@ -846,8 +931,16 @@ export default function Rink({
             );
           })()}
 
-          {/* Corner IceIQ wordmark — hideable per scene */}
-          {!scene.hideBranding && <IceIQBrand variant="corner" />}
+          {/* Corner IceIQ wordmark — hideable per scene. In play mode we
+              dim it further so the broadcast overlay reads cleaner. */}
+          {!scene.hideBranding && mode !== 'play' && <IceIQBrand variant="corner" />}
+
+          {/* Broadcast chrome — lower-third prompt + READ THE PLAY chip.
+              Renders last so it sits on top of rink content. */}
+          <BroadcastOverlay mode={mode}
+                            prompt={scene.question?.prompt}
+                            age={ageGroup}
+                            hasHomePlate={scene.showHomePlate} />
         </svg>
       </div>
 
