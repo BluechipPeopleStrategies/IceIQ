@@ -622,7 +622,7 @@ export function GameSenseReportScreen({ player, onBack, demoMode, demoCoachData,
   }, [player.id, demoCoachData]);
 
   const hardcodedPeerAvg = {
-    positioning: 75, decision_making: 72, awareness: 68, tempo_control: 74, physicality: 80, leadership: 71,
+    positioning: 75, decision_making: 72, awareness: 68, tempo_control: 74, leadership: 71,
   };
 
   const peerMean = peerStats?.mean || hardcodedPeerAvg;

@@ -9,7 +9,6 @@ export const COMPETENCIES = {
   decision_making: { name: "Decision-Making", icon: "⚡", color: C.purple },
   awareness: { name: "Awareness", icon: "👁", color: C.cyan },
   tempo_control: { name: "Tempo Control", icon: "⏱", color: C.orange },
-  physicality: { name: "Physicality", icon: "💪", color: C.red },
   leadership: { name: "Leadership", icon: "👥", color: C.green },
 };
 
@@ -42,6 +41,10 @@ export const COMPETENCY_MAPPINGS = {
   tempo_control: [
     /^u15q([9]|1[0-6])$/,
     /^u18q[1-8]$/,
+    /^u\d+tempo\d+$/,
+  ],
+  leadership: [
+    /^u\d+lead\d+$/,
   ],
 };
 
@@ -67,10 +70,6 @@ export function calcCompetencyScores(quizHistory) {
       if (comp) {
         scores[comp].total++;
         if (result.ok) scores[comp].correct++;
-      }
-      if (result.type === "mistake") {
-        scores.physicality.total++;
-        if (result.ok) scores.physicality.correct++;
       }
       if (result.type === "next") {
         scores.leadership.total++;
@@ -228,7 +227,7 @@ export function getMonthlyTrend(quizHistory) {
 
 export async function getPeerStats(level, position) {
   if (!hasSupabase) {
-    return { mean: { positioning: 75, decision_making: 72, awareness: 68, tempo_control: 74, physicality: 80, leadership: 71 }, percentile: 50 };
+    return { mean: { positioning: 75, decision_making: 72, awareness: 68, tempo_control: 74, leadership: 71 }, percentile: 50 };
   }
   try {
     const { data: players, error } = await supabase

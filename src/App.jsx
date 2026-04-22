@@ -13,7 +13,7 @@ import { markSignupIntent, logSignupComplete } from "./utils/signupTelemetry";
 import { DEPTH_SLOTS, getDepthChart, setAssignment as setDepthAssignment, seedDemoDepthChart, clearDemoDepthChart } from "./utils/depthChart";
 import Rink from "./Rink.jsx";
 import { COMPETENCIES, getIceIQJourneyState, GAME_SENSE_UNLOCK_SESSIONS, calcCompetencyScores, calcGameSenseScore, ICE_IQ_THRESHOLDS, ICE_IQ_JOURNEY_LABELS } from "./utils/gameSense.js";
-import { getTrainingLog } from "./utils/trainingLog.js";
+import { getTrainingLog, seedDemoTrainingForRoster } from "./utils/trainingLog.js";
 import { buildU11ForwardPreview, PREVIEW_PLAYER_ID } from "./data/previewPlayer.js";
 import { calcTeamCompetencyAverages, GRADE_LEVEL_THRESHOLD } from "./utils/coachStats.js";
 import { HockeyInsightWidget, BottomNav, TrainingLog, HomeStartHereCard } from "./widgets.jsx";
@@ -3097,7 +3097,6 @@ function CompetencyValidation() {
         decision_making: { count: 155, pct: 18.2 },
         awareness: { count: 138, pct: 16.2 },
         tempo_control: { count: 125, pct: 14.7 },
-        physicality: { count: 180, pct: 21.2 },
         leadership: { count: 110, pct: 12.9 },
       },
       untagged: 30,
@@ -3963,13 +3962,13 @@ function RinkBackground({ dark = false }) {
 // uses. Computes once at module load from the U11 Forward preview player so
 // the landing teaser matches what a visitor actually sees inside the sample.
 // Preview quiz history only populates positioning/decision_making/awareness;
-// synthesize plausible values for tempo/physicality/leadership so the chart
-// renders a full shape rather than a degenerate triangle.
+// synthesize plausible values for tempo/leadership so the chart renders a
+// full shape rather than a degenerate triangle.
 const PREVIEW_RADAR = (() => {
   const { player } = buildU11ForwardPreview();
   const real = calcCompetencyScores(player.quizHistory);
-  const synthesized = { tempo_control: 66, physicality: 74, leadership: 58 };
-  const order = ["positioning","decision_making","awareness","tempo_control","physicality","leadership"];
+  const synthesized = { tempo_control: 66, leadership: 58 };
+  const order = ["positioning","decision_making","awareness","tempo_control","leadership"];
   const comps = order.map(k => ({
     key: k,
     label: COMPETENCIES[k].name,
@@ -4552,7 +4551,7 @@ function DepthChartSection({ teamId, roster, onChange }) {
     const isEditing = editingSlot === slot.id;
     return (
       <div style={{flex:1,minWidth:0,background:p?C.bgElevated:C.bgCard,border:`1px solid ${p?C.border:"rgba(255,255,255,0.04)"}`,borderRadius:8,padding:".45rem .55rem",cursor:"pointer",position:"relative"}}
-           onClick={() => setEditingSlot(isEditing ? null : slot.id)}>
+           onClick={(e) => { e.stopPropagation(); setEditingSlot(isEditing ? null : slot.id); }}>
         <div style={{fontSize:9,letterSpacing:".14em",textTransform:"uppercase",color:C.dimmer,fontWeight:700,marginBottom:2}}>{slot.label}</div>
         <div style={{fontSize:12,color:p?C.white:C.dimmer,fontWeight:p?700:500,lineHeight:1.2,textOverflow:"ellipsis",overflow:"hidden",whiteSpace:"nowrap"}}>
           {p ? p.name : "—"}
@@ -4647,23 +4646,36 @@ function DepthChartSection({ teamId, roster, onChange }) {
 // COACH HOME — teams list, create team, roster
 // ─────────────────────────────────────────────────────────
 const DEMO_COACH_TEAMS = [
-  {id:"demo-t1",name:"U11 AA Edmonton Selects",level:"U11 / Atom",season:SEASONS[0],code:"SELECTS"},
+  {id:"demo-t1",name:"U11 AA Edmonton Selects",level:"U11 / Atom",season:SEASONS[0],code:"SELECTS",role:"Head Coach"},
+  {id:"demo-t2",name:"U13 AAA River City Rush",level:"U13 / Peewee",season:SEASONS[0],code:"RUSH13",role:"Assistant Coach"},
+  {id:"demo-t3",name:"U9 B St. Albert Raiders",level:"U9 / Novice",season:SEASONS[0],code:"RAIDERS",role:"Assistant Coach"},
 ];
-// Synthetic quiz history for each demo roster player. Shape matches real
-// quiz sessions (results[].id patterns aligned with COMPETENCY_MAPPINGS so
-// calcCompetencyScores lights up positioning/decision_making/awareness).
+// Synthetic quiz history for each demo roster player. Result IDs align with
+// COMPETENCY_MAPPINGS so calcCompetencyScores populates all five competencies
+// (positioning, decision_making, awareness, tempo_control, leadership).
 // Tuned so the team is weakest at decision_making — lets the demo hero card
 // show a credible "Your team is weakest at Decision-Making" headline.
-function _buildCoachDemoSession(daysAgo, posCorrect, decCorrect, awaCorrect) {
+function _buildCoachDemoSession(daysAgo, posCorrect, decCorrect, awaCorrect, tmpCorrect, ldrCorrect) {
   const results = [];
   for (let i = 0; i < 4; i++) results.push({ id: `u11q${i+1}`, ok: i < posCorrect, d: 2, cat: "Hockey Sense" });
   for (let i = 0; i < 4; i++) results.push({ id: `u11q${i+8}`, ok: i < decCorrect, d: 2, cat: "Game Decision-Making" });
   results.push({ id: "u11q16", ok: awaCorrect > 0, d: 2, cat: "Hockey Sense" });
+  // Synthetic tempo_control + leadership entries — COMPETENCY_MAPPINGS picks
+  // these up via /^u\d+tempo\d+$/ and /^u\d+lead\d+$/ patterns.
+  for (let i = 0; i < 3; i++) results.push({ id: `u11tempo${i+1}`, ok: i < tmpCorrect, d: 2, cat: "Tempo" });
+  for (let i = 0; i < 3; i++) results.push({ id: `u11lead${i+1}`, ok: i < ldrCorrect, d: 2, cat: "Leadership" });
   const correct = results.filter(r => r.ok).length;
   return { results, score: Math.round(correct / results.length * 100), date: new Date(Date.now() - daysAgo * 86400000).toISOString() };
 }
 function _buildCoachDemoHistory(perSession) {
-  return perSession.map((s, i) => _buildCoachDemoSession([15, 8, 2][i] ?? (20 - i * 4), s[0], s[1], s[2]));
+  // perSession: array of 3 [pos, dec, awa, tmp, ldr] tuples. If tmp/ldr aren't
+  // supplied (legacy 3-tuple rows) they default to plausible mid-range values.
+  return perSession.map((s, i) => _buildCoachDemoSession(
+    [15, 8, 2][i] ?? (20 - i * 4),
+    s[0], s[1], s[2],
+    s[3] ?? 2,                 // tempo default: 2/3 correct
+    s[4] ?? (s[2] >= 1 ? 2 : 1) // leadership loosely follows awareness
+  ));
 }
 // Realistic U11 roster size (15 skaters + 1 goalie). Mix of positions
 // and ability levels; team weakness stays on decision_making so the hero
@@ -4717,6 +4729,13 @@ function RosterRow({ player, onRate }) {
   const avg = real.length ? Math.round(real.reduce((a, k) => a + scores[k], 0) / real.length) : null;
   const weakest = real.length ? real.reduce((min, k) => scores[k] < scores[min] ? k : min, real[0]) : null;
   const strongest = real.length ? real.reduce((max, k) => scores[k] > scores[max] ? k : max, real[0]) : null;
+
+  // Extra-training digest: pull latest sessions per player so the coach sees
+  // at a glance how much ice time / off-ice / video this athlete has logged.
+  const trainingLog = useMemo(() => getTrainingLog(player?.id), [player?.id]);
+  const recentSessions = (trainingLog?.sessions || []).slice().sort((a,b) => (a.date < b.date ? 1 : -1));
+  const totalMin = recentSessions.reduce((n,s) => n + (Number(s.value) || 0), 0);
+  const TRAINING_ICONS = { ice_time:"🏒", practice:"🎯", off_ice:"💪", stick_handling:"🪵", video:"📺" };
 
   // Mini radar geometry
   const cx = 70, cy = 70, radius = 54, n = compKeys.length;
@@ -4782,6 +4801,31 @@ function RosterRow({ player, onRate }) {
               </button>
             </div>
           </div>
+          {/* Extra training log — last few sessions the player logged
+              outside the app's core quizzes. Shows the coach what extra
+              work the athlete is putting in off the team schedule. */}
+          {recentSessions.length > 0 && (
+            <div style={{marginTop:".7rem",paddingTop:".55rem",borderTop:`1px dashed ${C.border}`}}>
+              <div style={{display:"flex",justifyContent:"space-between",alignItems:"baseline",marginBottom:".35rem"}}>
+                <Label style={{margin:0}}>Extra training</Label>
+                <div style={{fontSize:10,color:C.dimmer,fontWeight:600}}>{recentSessions.length} session{recentSessions.length===1?"":"s"} · {totalMin} min total</div>
+              </div>
+              <div style={{display:"flex",flexDirection:"column",gap:".25rem"}}>
+                {recentSessions.slice(0,5).map((s, i) => (
+                  <div key={i} style={{display:"flex",justifyContent:"space-between",alignItems:"center",fontSize:11,color:C.dim,background:C.bgCard,borderRadius:6,padding:".3rem .5rem"}}>
+                    <div style={{display:"flex",alignItems:"center",gap:".4rem",minWidth:0}}>
+                      <span style={{fontSize:13}}>{TRAINING_ICONS[s.type] || "•"}</span>
+                      <span style={{whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis"}}>{s.label || s.type.replace(/_/g," ")}</span>
+                    </div>
+                    <div style={{display:"flex",gap:".55rem",alignItems:"center",flexShrink:0}}>
+                      <span style={{color:C.gold,fontWeight:700}}>{s.value} {s.unit}</span>
+                      <span style={{fontSize:10,color:C.dimmer}}>{s.date}</span>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
         </div>
       )}
     </div>
@@ -4925,6 +4969,50 @@ function CoachHome({ profile, onSignOut, onOpenPlayer, demoMode, subscriptionTie
           <button onClick={onSignOut} style={{background:C.bgCard,border:`1px solid ${C.border}`,borderRadius:10,padding:".5rem .85rem",color:C.dimmer,cursor:"pointer",fontSize:12,fontFamily:FONT.body}}>Sign out</button>
         </div>
 
+        {/* Teams up top — first thing a coach sees. Each card shows the
+            coach's role on that team (Head Coach / Assistant Coach) so a
+            multi-team coach can tell at a glance what they're in charge of. */}
+        <Label style={{marginTop:".25rem"}}>Your teams</Label>
+        {loading ? (
+          <div style={{color:C.dimmer,textAlign:"center",padding:"2rem"}}>Loading…</div>
+        ) : teams.length === 0 ? (
+          <Card style={{marginBottom:"1rem"}}><div style={{color:C.dimmer,textAlign:"center",padding:"1rem"}}>No teams yet. Create your first team to get started.</div></Card>
+        ) : teams.map(t => {
+          const roster = rosters[t.id] || [];
+          const expanded = expandedTeam === t.id;
+          const role = t.role || "Head Coach";
+          const isHeadCoach = role === "Head Coach";
+          return (
+            <Card key={t.id} style={{marginBottom:".75rem"}}>
+              <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start",cursor:"pointer"}} onClick={()=>toggleRoster(t.id)}>
+                <div style={{flex:1,minWidth:0}}>
+                  <div style={{fontWeight:700,fontSize:15,marginBottom:2}}>{t.name}</div>
+                  <div style={{fontSize:11,color:C.dimmer,marginBottom:4}}>{t.level} · {t.season}</div>
+                  <span style={{display:"inline-block",fontSize:10,letterSpacing:".12em",textTransform:"uppercase",fontWeight:700,padding:"2px 8px",borderRadius:999,background:isHeadCoach?"rgba(252,76,2,0.12)":"rgba(91,164,232,0.12)",color:isHeadCoach?C.gold:C.blue,border:`1px solid ${isHeadCoach?"rgba(252,76,2,0.35)":"rgba(91,164,232,0.35)"}`}}>
+                    {isHeadCoach ? "★ Head Coach" : "Assistant Coach"}
+                  </span>
+                </div>
+                <div style={{textAlign:"right",flexShrink:0,marginLeft:"1rem"}}>
+                  <div style={{fontSize:10,letterSpacing:".14em",color:C.dimmer,fontWeight:700,textTransform:"uppercase",marginBottom:2}}>Join Code</div>
+                  <div style={{fontFamily:FONT.display,fontWeight:800,fontSize:"1.2rem",color:C.gold,letterSpacing:".1em"}}>{t.code}</div>
+                </div>
+              </div>
+              {expanded && (
+                <div style={{marginTop:".85rem",paddingTop:".85rem",borderTop:`1px solid ${C.border}`}}>
+                  <TeamFocusCard team={t} roster={roster} onOpenDrills={onOpenDrills}/>
+                  <Label>Roster ({roster.length})</Label>
+                  {roster.length === 0 ? (
+                    <div style={{fontSize:12,color:C.dimmer,fontStyle:"italic"}}>No players yet — share the join code <span style={{color:C.gold,fontWeight:700}}>{t.code}</span> with players.</div>
+                  ) : roster.map(p => (
+                    <RosterRow key={p.id} player={p} onRate={() => onOpenPlayer(p)}/>
+                  ))}
+                  <DepthChartSection teamId={t.id} roster={roster} onChange={onBumpQuestFlags}/>
+                </div>
+              )}
+            </Card>
+          );
+        })}
+
         {/* Coach demo skips the First-Five onboarding journey — we want
             demo coaches to see a fully-populated team right away, the way
             it looks once they've been using the app with real data. */}
@@ -4947,14 +5035,8 @@ function CoachHome({ profile, onSignOut, onOpenPlayer, demoMode, subscriptionTie
           </div>
         )}
 
-        <Card style={{marginBottom:"1rem",background:`linear-gradient(135deg,${C.bgCard},${C.bgElevated})`,border:`1px solid ${C.goldBorder}`}}>
-          <Label>Coach Dashboard</Label>
-          <div style={{fontFamily:FONT.display,fontWeight:800,fontSize:"2.2rem",color:C.gold,lineHeight:1}}>{teams.length}</div>
-          <div style={{fontSize:12,color:C.dimmer,marginTop:4}}>team{teams.length===1?"":"s"} you coach</div>
-        </Card>
-
         {!creating ? (
-          <PrimaryBtn onClick={()=>setCreating(true)} style={{marginBottom:"1rem"}}>+ Create New Team</PrimaryBtn>
+          <PrimaryBtn onClick={()=>setCreating(true)} style={{marginBottom:"1rem",marginTop:".5rem"}}>+ Create New Team</PrimaryBtn>
         ) : (
           <Card style={{marginBottom:"1rem"}}>
             <Label>New Team</Label>
@@ -4977,40 +5059,6 @@ function CoachHome({ profile, onSignOut, onOpenPlayer, demoMode, subscriptionTie
           </Card>
         )}
 
-        {loading ? (
-          <div style={{color:C.dimmer,textAlign:"center",padding:"2rem"}}>Loading…</div>
-        ) : teams.length === 0 ? (
-          <Card><div style={{color:C.dimmer,textAlign:"center",padding:"1rem"}}>No teams yet. Create your first team to get started.</div></Card>
-        ) : teams.map(t => {
-          const roster = rosters[t.id] || [];
-          const expanded = expandedTeam === t.id;
-          return (
-            <Card key={t.id} style={{marginBottom:".75rem"}}>
-              <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start",cursor:"pointer"}} onClick={()=>toggleRoster(t.id)}>
-                <div style={{flex:1,minWidth:0}}>
-                  <div style={{fontWeight:700,fontSize:15,marginBottom:2}}>{t.name}</div>
-                  <div style={{fontSize:11,color:C.dimmer}}>{t.level} · {t.season}</div>
-                </div>
-                <div style={{textAlign:"right",flexShrink:0,marginLeft:"1rem"}}>
-                  <div style={{fontSize:10,letterSpacing:".14em",color:C.dimmer,fontWeight:700,textTransform:"uppercase",marginBottom:2}}>Join Code</div>
-                  <div style={{fontFamily:FONT.display,fontWeight:800,fontSize:"1.2rem",color:C.gold,letterSpacing:".1em"}}>{t.code}</div>
-                </div>
-              </div>
-              {expanded && (
-                <div style={{marginTop:".85rem",paddingTop:".85rem",borderTop:`1px solid ${C.border}`}}>
-                  <TeamFocusCard team={t} roster={roster} onOpenDrills={onOpenDrills}/>
-                  <Label>Roster ({roster.length})</Label>
-                  {roster.length === 0 ? (
-                    <div style={{fontSize:12,color:C.dimmer,fontStyle:"italic"}}>No players yet — share the join code <span style={{color:C.gold,fontWeight:700}}>{t.code}</span> with players.</div>
-                  ) : roster.map(p => (
-                    <RosterRow key={p.id} player={p} onRate={() => onOpenPlayer(p)}/>
-                  ))}
-                  <DepthChartSection teamId={t.id} roster={roster} onChange={onBumpQuestFlags}/>
-                </div>
-              )}
-            </Card>
-          );
-        })}
       </div>
     </div>
   );
@@ -5130,6 +5178,10 @@ export default function App() {
     setDemoCoachRatings(null);
     setProfile({ id: "__demo_coach__", role: "coach", name: "Coach Demo" });
     seedDemoDepthChart("demo-t1", DEMO_COACH_ROSTER);
+    // Pre-seed realistic training history per player so the coach dashboard
+    // shows extra-training data (ice time, practice, off-ice, stick-handling,
+    // video review) next to each athlete the moment the demo opens.
+    seedDemoTrainingForRoster(DEMO_COACH_ROSTER, 5);
     setScreen("home");
   }
 
