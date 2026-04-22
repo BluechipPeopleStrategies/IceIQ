@@ -4925,7 +4925,10 @@ function CoachHome({ profile, onSignOut, onOpenPlayer, demoMode, subscriptionTie
           <button onClick={onSignOut} style={{background:C.bgCard,border:`1px solid ${C.border}`,borderRadius:10,padding:".5rem .85rem",color:C.dimmer,cursor:"pointer",fontSize:12,fontFamily:FONT.body}}>Sign out</button>
         </div>
 
-        {!questDismissed && !firstLineSeen && (
+        {/* Coach demo skips the First-Five onboarding journey — we want
+            demo coaches to see a fully-populated team right away, the way
+            it looks once they've been using the app with real data. */}
+        {!isDemo && !questDismissed && !firstLineSeen && (
           <QuestChecklist
             role="coach"
             quests={QUESTS_COACH}
@@ -4938,7 +4941,7 @@ function CoachHome({ profile, onSignOut, onOpenPlayer, demoMode, subscriptionTie
           />
         )}
 
-        {!questDismissed && !firstLineSeen && (
+        {!isDemo && !questDismissed && !firstLineSeen && (
           <div style={{margin:"0 -1.25rem 1rem"}}>
             <HockeyInsightWidget onInsightRead={onBumpQuestFlags}/>
           </div>
