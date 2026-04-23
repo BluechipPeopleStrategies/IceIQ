@@ -2567,7 +2567,7 @@ function renderCardBody(id, q, level, age, type) {
     const VERDICTS = ["correct","partial","wrong"];
     typeBody = `
       <div class="field">
-        <label>Rink scene — drag items to reposition, click zones (zone-click mode) to cycle correct/partial/wrong</label>
+        <label>Rink scene — drag items to reposition; click zones (zone-click mode) or items (spot-mistake mode) to cycle correct/partial/wrong</label>
         <div class="rink-editor-slot" data-rink-slot="${id}"></div>
         ${!(window.IceIQRink) ? `<div style="font-size:11px;color:var(--dimmer);padding:.4rem 0;">Loading rink editor…</div>` : ""}
       </div>
@@ -2577,6 +2577,7 @@ function renderCardBody(id, q, level, age, type) {
           <select class="field-select" data-action="rink-mode">
             <option value="choice" ${qMode==="choice"?"selected":""}>Multiple choice</option>
             <option value="zone-click" ${qMode==="zone-click"?"selected":""}>Zone click</option>
+            <option value="spot-mistake" ${qMode==="spot-mistake"?"selected":""}>Spot the mistake</option>
           </select>
         </div>
         <div class="field">
@@ -2602,15 +2603,17 @@ function renderCardBody(id, q, level, age, type) {
         </div>
       ` : `
         <div class="field">
-          <label>Zone-click feedback (shown based on which verdict the clicked zone has)</label>
+          <label>${qMode === "spot-mistake" ? "Spot-the-mistake" : "Zone-click"} feedback (shown based on which verdict the clicked ${qMode === "spot-mistake" ? "item" : "zone"} has)</label>
           ${VERDICTS.map(v => `
             <div style="margin-top:.4rem;">
               <div style="font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--dim);margin-bottom:.2rem;">${v} feedback</div>
-              <textarea class="field-textarea" data-action="rink-fb-${v}" placeholder="Shown when the player clicks a ${v} zone">${escapeHtml(fb[v] || "")}</textarea>
+              <textarea class="field-textarea" data-action="rink-fb-${v}" placeholder="Shown when the player clicks a ${v} ${qMode === "spot-mistake" ? "item" : "zone"}">${escapeHtml(fb[v] || "")}</textarea>
             </div>
           `).join("")}
           <div style="font-size:11px;color:var(--dimmer);margin-top:.5rem;line-height:1.5;">
-            Tip: click any zone on the rink above to cycle its verdict (unassigned → correct → partial → wrong → unassigned).
+            ${qMode === "spot-mistake"
+              ? "Tip: click any teammate, opponent, puck, goalie, or flag on the rink above to cycle its verdict (unassigned → correct → partial → wrong → unassigned). You'll see a dashed ring appear in the verdict's color."
+              : "Tip: click any zone on the rink above to cycle its verdict (unassigned → correct → partial → wrong → unassigned)."}
           </div>
         </div>
       `}
@@ -2777,7 +2780,7 @@ function currentScene(id) {
   if (q.scene) return q.scene;
   return window.IceIQEmptyScene
     ? window.IceIQEmptyScene()
-    : { team: [], opponents: [], puck: { zone: "slot", offsetX: 26, offsetY: -2 }, showGoalie: true, showHomePlate: false, texts: [], arrows: [], flags: [], question: { mode: "choice", prompt: "", options: [], zones: { correct: [], partial: [], wrong: [] }, feedback: { correct: "", partial: "", wrong: "" } } };
+    : { team: [], opponents: [], puck: { zone: "slot", offsetX: 26, offsetY: -2 }, showGoalie: true, showHomePlate: false, texts: [], arrows: [], flags: [], question: { mode: "choice", prompt: "", options: [], zones: { correct: [], partial: [], wrong: [] }, targets: { correct: [], partial: [], wrong: [] }, feedback: { correct: "", partial: "", wrong: "" } } };
 }
 function updateRinkQuestion(id, patch) {
   const scene = currentScene(id);
@@ -2869,6 +2872,7 @@ function blankTypeFields(type, age) {
           question: {
             mode: "choice", prompt: "", options: [],
             zones: { correct: [], partial: [], wrong: [] },
+            targets: { correct: [], partial: [], wrong: [] },
             feedback: { correct: "", partial: "", wrong: "" },
           },
         };
@@ -2934,7 +2938,7 @@ function rebuildAddTypeFields() {
   } else if (type === "rink") {
     c.innerHTML = `
       <div class="field" style="padding:.6rem .8rem;background:var(--bg-elev);border:1px solid var(--border);border-radius:8px;font-size:12px;color:var(--dim);line-height:1.5;">
-        Rink scenes are built using the visual editor. Save this question with an empty scene — you can drag in players, opponents, arrows, flags, and configure the question mode (choice or zone-click) from the question's edit card.
+        Rink scenes are built using the visual editor. Save this question with an empty scene — you can drag in players, opponents, arrows, flags, and configure the question mode (choice, zone-click, or spot-mistake) from the question's edit card.
       </div>`;
   }
   c.insertAdjacentHTML("beforeend", `
