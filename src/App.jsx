@@ -35,14 +35,17 @@ import imgSuccess from "./assets/images/Success-Icon.jpg";
 //           profile.tier field (future Supabase subscriptions) → that tier
 //           default → FREE
 function resolveTier({ profile, demoMode } = {}) {
-  // Dev override wins unconditionally so devs can test any tier from any
-  // state — including from inside coach demo or a dev-bypass session.
-  try {
-    const override = typeof window !== "undefined" ? window.localStorage.getItem("iceiq_tier_override") : null;
-    if (override && ["FREE","PRO","FAMILY","TEAM"].includes(override.toUpperCase())) {
-      return override.toUpperCase();
-    }
-  } catch {}
+  // Dev override only honored inside a dev-bypass session — otherwise any
+  // user could flip themselves to TEAM via DevTools. RLS still blocks writes,
+  // but without this gate the UI renders as if upgraded.
+  if (isDevBypassEnabled()) {
+    try {
+      const override = typeof window !== "undefined" ? window.localStorage.getItem("iceiq_tier_override") : null;
+      if (override && ["FREE","PRO","FAMILY","TEAM"].includes(override.toUpperCase())) {
+        return override.toUpperCase();
+      }
+    } catch {}
+  }
   if (demoMode) return profile?.role === "coach" ? "TEAM" : "FREE";
   if (profile?.tier) {
     const t = String(profile.tier).toUpperCase();
