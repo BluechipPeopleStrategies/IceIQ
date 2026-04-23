@@ -2107,25 +2107,72 @@ const RECOMMENDED_TYPES_BY_AGE = {
 };
 const TYPE_LABELS = { mc: "MC", tf: "T/F", seq: "Seq", mistake: "Mistake", next: "Next", "zone-click": "Zone", rink: "Rink" };
 
-// Zone-click zones — mirrors RINK_ZONE_DEFS in src/shared.jsx. Authors pick
-// which zones are in play for a question and mark one as correct. The
-// dz-/oz-/nz- prefixes group them; questions must not mix prefixes
-// (the rink diagram shows one zone context at a time — see
-// feedback_zone_click_zones.md in memory).
+// Zone-click zones — mirrors RINK_ZONE_DEFS in src/shared.jsx. Coordinates
+// are in the same 200×85 viewBox the player's <RinkDiagramZones> renderer
+// uses, so the dashboard preview is pixel-identical to what kids see.
+// The dz-/oz-/nz- prefixes group them; questions must not mix prefixes
+// (rink coordinates overlap — see feedback_zone_click_zones.md in memory).
 const ZONE_CLICK_ZONES = [
-  { id: "dz-left-corner",  label: "DZ Left Corner" },
-  { id: "dz-left-point",   label: "DZ Left Point" },
-  { id: "dz-slot",         label: "DZ Slot" },
-  { id: "dz-right-corner", label: "DZ Right Corner" },
-  { id: "dz-right-point",  label: "DZ Right Point" },
-  { id: "dz-behind-net",   label: "DZ Behind Net" },
-  { id: "nz-left",         label: "NZ Left" },
-  { id: "nz-center",       label: "NZ Center" },
-  { id: "nz-right",        label: "NZ Right" },
-  { id: "oz-slot",         label: "OZ Slot" },
-  { id: "oz-left-wing",    label: "OZ Left Wing" },
-  { id: "oz-right-wing",   label: "OZ Right Wing" },
+  { id: "dz-left-corner",  label: "DZ Left Corner",  x: 0,   y: 50, w: 55,  h: 35 },
+  { id: "dz-left-point",   label: "DZ Left Point",   x: 0,   y: 0,  w: 55,  h: 35 },
+  { id: "dz-slot",         label: "DZ Slot",         x: 55,  y: 15, w: 90,  h: 55 },
+  { id: "dz-right-corner", label: "DZ Right Corner", x: 145, y: 50, w: 55,  h: 35 },
+  { id: "dz-right-point",  label: "DZ Right Point",  x: 145, y: 0,  w: 55,  h: 35 },
+  { id: "dz-behind-net",   label: "DZ Behind Net",   x: 55,  y: 62, w: 90,  h: 23 },
+  { id: "nz-left",         label: "NZ Left",         x: 0,   y: 0,  w: 45,  h: 85 },
+  { id: "nz-center",       label: "NZ Center",       x: 45,  y: 0,  w: 110, h: 85 },
+  { id: "nz-right",        label: "NZ Right",        x: 155, y: 0,  w: 45,  h: 85 },
+  { id: "oz-slot",         label: "OZ Slot",         x: 55,  y: 15, w: 90,  h: 55 },
+  { id: "oz-left-wing",    label: "OZ Left Wing",    x: 0,   y: 0,  w: 55,  h: 85 },
+  { id: "oz-right-wing",   label: "OZ Right Wing",   x: 145, y: 0,  w: 55,  h: 85 },
 ];
+const ZONE_BY_ID = Object.fromEntries(ZONE_CLICK_ZONES.map(z => [z.id, z]));
+
+// Renders the exact same rink diagram the player sees when answering a
+// zone-click question. `selectedZones` is the author's included-zones list
+// (q.zones); `correctZone` is q.correctZone (highlighted green). Pure SVG
+// string so it drops into any innerHTML assignment.
+function renderZoneClickPreview(selectedZones, correctZone) {
+  const zones = Array.isArray(selectedZones) ? selectedZones : [];
+  const overlays = zones.map(zoneId => {
+    const z = ZONE_BY_ID[zoneId];
+    if (!z) return "";
+    const isCorrect = zoneId === correctZone;
+    const fill = isCorrect ? "#22c55e" : "#6b7280";
+    const fillOp = isCorrect ? 0.28 : 0.14;
+    const stroke = isCorrect ? "#22c55e" : "#94a3b8";
+    const strokeW = isCorrect ? 1.4 : 0.6;
+    return `
+      <g>
+        <rect x="${z.x}" y="${z.y}" width="${z.w}" height="${z.h}"
+              fill="${fill}" fill-opacity="${fillOp}"
+              stroke="${stroke}" stroke-width="${strokeW}" />
+        <text x="${z.x + z.w/2}" y="${z.y + z.h/2 + 1.5}"
+              text-anchor="middle" dominant-baseline="middle"
+              font-size="4" font-weight="600"
+              fill="${isCorrect ? '#86efac' : '#cbd5e1'}"
+              pointer-events="none">${z.label.replace(/^(DZ|NZ|OZ) /, '')}</text>
+      </g>
+    `;
+  }).join("");
+  return `
+    <svg viewBox="0 0 200 85" width="100%"
+         style="max-width:100%;border:1px solid var(--border);border-radius:8px;background:#0a1929;display:block;"
+         preserveAspectRatio="xMidYMid meet">
+      <rect x="0" y="0" width="200" height="85" rx="6" fill="#0e223a"/>
+      <line x1="100" y1="0" x2="100" y2="85" stroke="#ef4444" stroke-width="0.8" opacity="0.6"/>
+      <line x1="55"  y1="0" x2="55"  y2="85" stroke="#5BA4E8" stroke-width="1.2" opacity="0.5"/>
+      <line x1="145" y1="0" x2="145" y2="85" stroke="#5BA4E8" stroke-width="1.2" opacity="0.5"/>
+      <rect x="0"   y="30" width="8" height="25" fill="#ef4444" opacity="0.15" rx="2"/>
+      <rect x="192" y="30" width="8" height="25" fill="#ef4444" opacity="0.15" rx="2"/>
+      <circle cx="40"  cy="23" r="1.5" fill="#5BA4E8" opacity="0.3"/>
+      <circle cx="40"  cy="62" r="1.5" fill="#5BA4E8" opacity="0.3"/>
+      <circle cx="160" cy="23" r="1.5" fill="#5BA4E8" opacity="0.3"/>
+      <circle cx="160" cy="62" r="1.5" fill="#5BA4E8" opacity="0.3"/>
+      ${overlays}
+    </svg>
+  `;
+}
 const LS_KEY = "iceiq_dashboard_v1";
 const PAGE_SIZE = 100;
 
@@ -2594,6 +2641,10 @@ function renderCardBody(id, q, level, age, type) {
         <textarea class="field-textarea" data-action="field" data-key="question">${escapeHtml(question)}</textarea>
       </div>
       <div class="field">
+        <label>Rink preview — exactly what the player sees (correct zone highlighted in green)</label>
+        ${renderZoneClickPreview(selectedZones, correctZone)}
+      </div>
+      <div class="field">
         <label>Zones — check to include as a clickable option; select one as the correct answer</label>
         <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:.35rem;">
           ${ZONE_CLICK_ZONES.map(z => {
@@ -3035,6 +3086,10 @@ function rebuildAddTypeFields() {
         <textarea class="field-textarea" id="add-zc-question" placeholder="Where should you skate?"></textarea>
       </div>
       <div class="field">
+        <label>Rink preview</label>
+        <div id="add-zc-preview">${renderZoneClickPreview(defaults.zones, defaults.correctZone)}</div>
+      </div>
+      <div class="field">
         <label>Zones — check to include; radio marks the correct answer</label>
         <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:.35rem;">
           ${ZONE_CLICK_ZONES.map(z => {
@@ -3054,15 +3109,28 @@ function rebuildAddTypeFields() {
         </div>
       </div>`;
     // Keep radio enabled only when its checkbox is checked.
+    // Also refresh the rink preview whenever zones or correct change.
     setTimeout(() => {
+      const refreshPreview = () => {
+        const zones = [...c.querySelectorAll(".add-zc-zone:checked")].map(cb => cb.dataset.zone);
+        const correctEl = c.querySelector(".add-zc-correct:checked");
+        const correct = correctEl ? correctEl.dataset.zone : "";
+        const slot = c.querySelector("#add-zc-preview");
+        if (slot) slot.innerHTML = renderZoneClickPreview(zones, correct);
+      };
       c.querySelectorAll(".add-zc-zone").forEach(cb => {
         cb.addEventListener("change", () => {
           const zone = cb.dataset.zone;
           const radio = c.querySelector(`.add-zc-correct[data-zone="${zone}"]`);
-          if (!radio) return;
-          radio.disabled = !cb.checked;
-          if (!cb.checked && radio.checked) radio.checked = false;
+          if (radio) {
+            radio.disabled = !cb.checked;
+            if (!cb.checked && radio.checked) radio.checked = false;
+          }
+          refreshPreview();
         });
+      });
+      c.querySelectorAll(".add-zc-correct").forEach(r => {
+        r.addEventListener("change", refreshPreview);
       });
     }, 0);
   } else if (type === "rink") {
