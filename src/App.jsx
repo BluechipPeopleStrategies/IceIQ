@@ -1433,15 +1433,79 @@ function Quiz({ player, onFinish, onBack, tier, onUpgrade }) {
   }
 
   const rinkOk = rinkVerdict && rinkVerdict !== "wrong"; // partial counts as "ok" for scoring
-  // IceIQRinkQuestion dispatcher: triggers when q.rink is set, or for the new
-  // rink-native interactive types. Legacy "zone-click" without q.rink stays on
-  // ZoneClickQuestion so prior-schema questions keep working.
+  // IceIQRinkQuestion dispatcher routes when q.rink is set OR the type is one
+  // of the new rink-native interactive types. Legacy "zone-click" / "rink"
+  // questions (no q.rink, with q.scene) stay on the original renderers.
   const NEW_RINK_TYPES = ["drag-target","drag-place","multi-tap","sequence-rink","path-draw","lane-select","hot-spots"];
   const isRinkQ = !!question?.rink || NEW_RINK_TYPES.includes(qtype);
-  const canAdvance = isRinkQ ? rinkQResult !== null : qtype === "seq" ? seqAnswered : qtype === "zone-click" ? zoneCorrect !== null : qtype === "rink" ? rinkVerdict !== null : sel !== null;
-  const answered = isRinkQ ? rinkQResult !== null : qtype === "seq" ? seqAnswered : qtype === "zone-click" ? zoneCorrect !== null : qtype === "rink" ? rinkVerdict !== null : sel !== null;
+  const answered = isRinkQ
+    ? rinkQResult !== null
+    : qtype === "seq"        ? seqAnswered
+    : qtype === "zone-click" ? zoneCorrect !== null
+    : qtype === "rink"       ? rinkVerdict !== null
+    :                          sel !== null;
   const q = question;
   if (!q) return <Screen><div style={{color:C.dimmer,textAlign:"center",paddingTop:"4rem"}}>Loading…</div></Screen>;
+
+  // Records a result for a question dispatched to IceIQRinkQuestion. The child
+  // component fires onAnswer(true|false); we dedupe via rinkQResult so a player
+  // toggling/retrying inside the rink widget can't double-record.
+  function handleRinkQAnswer(ok) {
+    if (rinkQResult !== null) return;
+    const okBool = !!ok;
+    setRinkQResult(okBool);
+    const nextResults = [...results, { id:q.id, cat:q.cat, ok:okBool, d:q.d||2, type:qtype }];
+    setResults(nextResults);
+    if (nextResults.length >= qLen) setQuizDone(true);
+  }
+
+  // Records a result for a legacy zone-click question. Inline previously; pulled
+  // out so the dispatch switch reads as one shape per branch.
+  function handleZoneClickAnswer(ok) {
+    setZoneCorrect(ok);
+    const nextResults = [...results, { id:q.id, cat:q.cat, ok, d:q.d||2, type:"zone-click" }];
+    setResults(nextResults);
+    if (nextResults.length >= qLen) setQuizDone(true);
+  }
+
+  // Records a result for a legacy q.scene rink question.
+  function handleLegacyRinkAnswer(result) {
+    if (rinkVerdict !== null) return;
+    setRinkVerdict(result.verdict);
+    const ok = result.verdict !== "wrong";
+    const nextResults = [...results, { id:q.id, cat:q.cat, ok, d:q.d||2, type:"rink", verdict:result.verdict, choice:result.choice }];
+    setResults(nextResults);
+    try { recordRinkSeen(player.level, q.id); } catch {} // FREE-tier per-age cap
+    if (nextResults.length >= qLen) setQuizDone(true);
+  }
+
+  // Single dispatch site. New schema (q.rink or NEW_RINK_TYPES) goes through
+  // IceIQRinkQuestion which handles its own type-specific UI internally.
+  // Everything else falls through to the existing per-type renderers.
+  function renderQuestionBody() {
+    if (isRinkQ) {
+      return <IceIQRinkQuestion question={q} onAnswer={handleRinkQAnswer} onSkip={advance} />;
+    }
+    switch (qtype) {
+      case "mc":
+      case "mistake":
+        return <MCQuestion q={q} sel={sel} onPick={handlePick} colorblind={player.colorblind}/>;
+      case "next":
+        return <NextQuestion q={q} sel={sel} onPick={handlePick}/>;
+      case "tf":
+        return <TFQuestion q={q} sel={sel} onPick={i => handlePick(i)}/>;
+      case "seq":
+        return <SeqQuestion q={q} onAnswer={handleSeqAnswer} answered={seqAnswered}/>;
+      case "zone-click":
+        return <ZoneClickQuestion q={q} answered={zoneCorrect !== null} onAnswer={handleZoneClickAnswer} C={C} />;
+      case "rink":
+        return q.scene ? (
+          <Rink scene={q.scene} mode="play" ageGroup={player.level?.split(" ")[0]} lockAnswer={true} onAnswer={handleLegacyRinkAnswer}/>
+        ) : null;
+      default:
+        return null;
+    }
+  }
 
   const FORMAT_PREVIEW_LABELS = { seq:"Sequence Ordering", tf:"True or False", mistake:"Spot the Mistake", next:"What Happens Next" };
   const FORMAT_PREVIEW_ICONS = { seq:"🔢", tf:"⚡", mistake:"🔍", next:"⏭️" };
@@ -1581,54 +1645,8 @@ function Quiz({ player, onFinish, onBack, tier, onUpgrade }) {
           </Card>
         )}
 
-        {/* Question component */}
-        {isRinkQ ? (
-          <IceIQRinkQuestion
-            question={q}
-            onAnswer={ok => {
-              if (rinkQResult !== null) return;
-              const okBool = !!ok;
-              setRinkQResult(okBool);
-              const newResult = { id:q.id, cat:q.cat, ok:okBool, d:q.d||2, type:qtype };
-              const newResults = [...results, newResult];
-              setResults(newResults);
-              if (newResults.length >= qLen) setQuizDone(true);
-            }}
-            onSkip={advance}
-          />
-        ) : (<>
-        {qtype === "mc" && <MCQuestion q={q} sel={sel} onPick={handlePick} colorblind={player.colorblind}/>}
-        {qtype === "mistake" && <MCQuestion q={q} sel={sel} onPick={handlePick} colorblind={player.colorblind}/>}
-        {qtype === "next" && <NextQuestion q={q} sel={sel} onPick={handlePick}/>}
-        {qtype === "tf" && <TFQuestion q={q} sel={sel} onPick={i => handlePick(i)}/>}
-        {qtype === "seq" && <SeqQuestion q={q} onAnswer={handleSeqAnswer} answered={seqAnswered}/>}
-        {qtype === "zone-click" && <ZoneClickQuestion q={q} answered={zoneCorrect !== null} onAnswer={ok => {
-          setZoneCorrect(ok);
-          const newResult = { id:q.id, cat:q.cat, ok, d:q.d||2, type:"zone-click" };
-          const newResults = [...results, newResult];
-          setResults(newResults);
-          if (results.length + 1 >= qLen) setQuizDone(true);
-        }} C={C} />}
-        {qtype === "rink" && q.scene && (
-          <Rink
-            scene={q.scene}
-            mode="play"
-            ageGroup={player.level?.split(" ")[0]}
-            lockAnswer={true}
-            onAnswer={result => {
-              if (rinkVerdict !== null) return; // already answered — ignore
-              setRinkVerdict(result.verdict);
-              const ok = result.verdict !== "wrong";
-              const newResult = { id:q.id, cat:q.cat, ok, d:q.d||2, type:"rink", verdict:result.verdict, choice:result.choice };
-              const newResults = [...results, newResult];
-              setResults(newResults);
-              // Count toward the FREE-tier per-age rink cap (idempotent per id).
-              try { recordRinkSeen(player.level, q.id); } catch {}
-              if (results.length + 1 >= qLen) setQuizDone(true);
-            }}
-          />
-        )}
-        </>)}
+        {/* Question component — single dispatch in renderQuestionBody() */}
+        {renderQuestionBody()}
 
         {/* Report flag — always visible, not gated on answered */}
         <button onClick={() => setShowFlag(true)} style={{background:"none",border:"none",color:C.dimmer,fontSize:11,marginTop:".65rem",cursor:"pointer",fontFamily:FONT.body,width:"100%",textAlign:"center",padding:".4rem",textDecoration:"underline"}}>
