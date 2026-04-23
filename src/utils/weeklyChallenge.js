@@ -1,6 +1,8 @@
 // Weekly Challenge — ISO week tracking and seeded shuffle
 // A new challenge drops every Monday. Same questions for everyone that week.
 
+import { lsGetJSON, lsSetJSON } from "./storage.js";
+
 const STORAGE_KEY = "iceiq_weekly";
 
 // ISO week number: 1–52 (or 53). Changes every Monday.
@@ -89,10 +91,7 @@ export function weekSeed(weekKey = getWeekKey()) {
 
 // Persistence
 export function getWeeklyState() {
-  try {
-    const raw = localStorage.getItem(STORAGE_KEY);
-    return raw ? JSON.parse(raw) : {};
-  } catch { return {}; }
+  return lsGetJSON(STORAGE_KEY, {});
 }
 
 export function getThisWeekRecord() {
@@ -105,7 +104,7 @@ export function markWeeklyComplete(score) {
   // Prune entries older than 8 weeks
   const keys = Object.keys(state).sort().reverse();
   keys.slice(8).forEach(k => delete state[k]);
-  try { localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); } catch {}
+  lsSetJSON(STORAGE_KEY, state);
 }
 
 // ─── Free tier weekly quiz cap ────────────────────────────
@@ -113,7 +112,7 @@ const CAP_KEY = "iceiq_free_cap";
 export const FREE_WEEKLY_QUIZ_CAP = 3;
 
 function getCapState() {
-  try { const r = localStorage.getItem(CAP_KEY); return r ? JSON.parse(r) : {}; } catch { return {}; }
+  return lsGetJSON(CAP_KEY, {});
 }
 
 export function getFreeQuizCount() {
@@ -131,5 +130,5 @@ export function incrementFreeQuizCount() {
   // Prune entries older than 4 weeks
   const keys = Object.keys(state).sort().reverse();
   keys.slice(4).forEach(k => delete state[k]);
-  try { localStorage.setItem(CAP_KEY, JSON.stringify(state)); } catch {}
+  lsSetJSON(CAP_KEY, state);
 }

@@ -10,6 +10,8 @@
 // We count IDs rather than raw increments so re-answering the same
 // scenario (e.g. after a refresh) doesn't double-count.
 
+import { lsGetJSON, lsSetJSON } from "./storage.js";
+
 const LS_KEY = "iceiq_rink_seen";
 
 export const RINK_FREE_PER_AGE = 3;
@@ -23,21 +25,16 @@ function normalizeAge(ageOrLevel) {
 }
 
 function read() {
-  try {
-    const raw = localStorage.getItem(LS_KEY);
-    if (!raw) return { seen: {}, ids: {} };
-    const parsed = JSON.parse(raw);
-    return {
-      seen: parsed.seen || {},
-      ids: parsed.ids || {},
-    };
-  } catch {
-    return { seen: {}, ids: {} };
-  }
+  const parsed = lsGetJSON(LS_KEY, null);
+  if (!parsed) return { seen: {}, ids: {} };
+  return {
+    seen: parsed.seen || {},
+    ids: parsed.ids || {},
+  };
 }
 
 function write(state) {
-  try { localStorage.setItem(LS_KEY, JSON.stringify(state)); } catch {}
+  lsSetJSON(LS_KEY, state);
 }
 
 /** How many rinks has this device answered in the given age group? */

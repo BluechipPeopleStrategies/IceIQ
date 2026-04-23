@@ -12,6 +12,8 @@
 // scanning the chart. The flag is sticky — once the coach has tried
 // the feature, the quest stays completed.
 
+import { lsGetJSON, lsSetJSON, lsSetStr, lsRemove } from "./storage.js";
+
 const STORE_KEY = "iceiq_depth_charts_v1";
 const FLAG_KEY  = "iceiq_depth_chart_set_v1";
 
@@ -44,14 +46,11 @@ export const DEPTH_LINES = {
 };
 
 function readAll() {
-  try {
-    const raw = localStorage.getItem(STORE_KEY);
-    return raw ? JSON.parse(raw) : {};
-  } catch { return {}; }
+  return lsGetJSON(STORE_KEY, {});
 }
 
 function writeAll(all) {
-  try { localStorage.setItem(STORE_KEY, JSON.stringify(all)); } catch {}
+  lsSetJSON(STORE_KEY, all);
 }
 
 export function getDepthChart(teamId) {
@@ -68,7 +67,7 @@ export function setAssignment(teamId, playerId, slot) {
   else delete team[playerId];
   all[teamId] = team;
   writeAll(all);
-  try { localStorage.setItem(FLAG_KEY, "1"); } catch {}
+  lsSetStr(FLAG_KEY, "1");
 }
 
 export function clearAssignment(teamId, playerId) {
@@ -99,7 +98,7 @@ export function seedDemoDepthChart(teamId, roster) {
   const all = readAll();
   all[teamId] = assignments;
   writeAll(all);
-  try { localStorage.setItem(FLAG_KEY, "1"); } catch {}
+  lsSetStr(FLAG_KEY, "1");
 }
 
 export function clearDemoDepthChart(teamId) {
@@ -111,5 +110,5 @@ export function clearDemoDepthChart(teamId) {
   }
   // Also clear the "has tried" flag so a real signup starts with an
   // unchecked quest.
-  try { localStorage.removeItem(FLAG_KEY); } catch {}
+  lsRemove(FLAG_KEY);
 }
