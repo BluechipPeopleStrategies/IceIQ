@@ -35,6 +35,10 @@ export const C = {
   borderMid:"rgba(255,255,255,0.14)",
   ice:      "#e8f4fb",
   rink:     "#0e3566",
+  // Brand-primary gradient — gold → retro-dynasty orange. Used on all
+  // primary CTA buttons and the landing signup chip. Centralized here so
+  // a brand tweak is a one-line change, not a grep-and-replace.
+  gradientPrimary: "linear-gradient(135deg, #FC4C02, #CF4520)",
 };
 
 export const FONT = {

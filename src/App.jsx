@@ -141,7 +141,7 @@ function AvatarDisc({ name, kind = "player", size = 48 }) {
   const initials = avatarInitials(display);
   const bg = kind === "coach"
     ? "linear-gradient(135deg, #475569 0%, #1e293b 100%)"
-    : `linear-gradient(135deg, ${C.gold} 0%, #CF4520 100%)`;
+    : C.gradientPrimary;
   const fg = kind === "coach" ? "#f1f5f9" : "#0b1220";
   return (
     <div style={{
@@ -303,7 +303,7 @@ function QuestChecklist({ role, quests, results, onTap, onDismiss, onAllComplete
       {/* Prescriptive hero CTA — brand-new users tap one big button instead
           of scanning the whole list. Hidden when collapsed or when all done. */}
       {!collapsed && nextQuest && !allDone && (
-        <button onClick={() => onTap(nextQuest)} style={{display:"block",width:"100%",background:`linear-gradient(135deg, ${C.gold}, #CF4520)`,color:C.bg,border:"none",borderRadius:12,padding:".85rem 1rem",cursor:"pointer",fontFamily:FONT.body,fontWeight:800,fontSize:14,letterSpacing:".02em",marginBottom:".85rem",boxShadow:`0 4px 14px ${C.gold}33, inset 0 1px 0 rgba(255,255,255,.25)`,textAlign:"left",display:"flex",alignItems:"center",justifyContent:"space-between",gap:".5rem"}}>
+        <button onClick={() => onTap(nextQuest)} style={{display:"block",width:"100%",background:C.gradientPrimary,color:C.bg,border:"none",borderRadius:12,padding:".85rem 1rem",cursor:"pointer",fontFamily:FONT.body,fontWeight:800,fontSize:14,letterSpacing:".02em",marginBottom:".85rem",boxShadow:`0 4px 14px ${C.gold}33, inset 0 1px 0 rgba(255,255,255,.25)`,textAlign:"left",display:"flex",alignItems:"center",justifyContent:"space-between",gap:".5rem"}}>
           <span>Start: {nextQuest.label}</span>
           <span style={{fontSize:16}}>→</span>
         </button>
@@ -333,7 +333,7 @@ function QuestChecklist({ role, quests, results, onTap, onDismiss, onAllComplete
             <div style={{fontSize:10,color:C.dimmer,fontWeight:700,letterSpacing:".04em"}}>{checked} of {total}</div>
           </div>
           {showSignupCTA && onSignup && (
-            <button onClick={onSignup} style={{marginTop:".75rem",width:"100%",background:`linear-gradient(135deg, ${C.gold}, #CF4520)`,color:C.bg,border:"none",borderRadius:12,padding:".75rem",cursor:"pointer",fontWeight:800,fontSize:13,fontFamily:FONT.body,letterSpacing:".02em",boxShadow:"0 4px 14px rgba(252,76,2,.25), inset 0 1px 0 rgba(255,255,255,.25)",display:"flex",alignItems:"center",justifyContent:"center",gap:".4rem"}}>
+            <button onClick={onSignup} style={{marginTop:".75rem",width:"100%",background:C.gradientPrimary,color:C.bg,border:"none",borderRadius:12,padding:".75rem",cursor:"pointer",fontWeight:800,fontSize:13,fontFamily:FONT.body,letterSpacing:".02em",boxShadow:"0 4px 14px rgba(252,76,2,.25), inset 0 1px 0 rgba(255,255,255,.25)",display:"flex",alignItems:"center",justifyContent:"center",gap:".4rem"}}>
               <span style={{fontSize:14}}>🏒</span>
               Create your free account →
             </button>
@@ -5700,7 +5700,7 @@ export default function App() {
           sessions (the tester is impersonating a real FREE/PRO/TEAM user and
           shouldn't see a sign-up CTA). */}
       {demoMode && !profile?.__dev && !firstLineToast && screen !== "results" && (
-        <button onClick={() => triggerSignup("demo_chip")} style={{position:"fixed",top:48,right:10,zIndex:150,background:`linear-gradient(135deg, ${C.gold}, #CF4520)`,color:C.bg,border:"none",borderRadius:999,padding:"6px 12px 6px 10px",cursor:"pointer",fontSize:11,fontWeight:800,fontFamily:FONT.body,letterSpacing:".02em",display:"flex",alignItems:"center",gap:"4px",boxShadow:"0 4px 14px rgba(252,76,2,.35), inset 0 1px 0 rgba(255,255,255,.25)"}}>
+        <button onClick={() => triggerSignup("demo_chip")} style={{position:"fixed",top:48,right:10,zIndex:150,background:C.gradientPrimary,color:C.bg,border:"none",borderRadius:999,padding:"6px 12px 6px 10px",cursor:"pointer",fontSize:11,fontWeight:800,fontFamily:FONT.body,letterSpacing:".02em",display:"flex",alignItems:"center",gap:"4px",boxShadow:"0 4px 14px rgba(252,76,2,.35), inset 0 1px 0 rgba(255,255,255,.25)"}}>
           <span style={{fontSize:12}}>🏒</span>
           Sign Up Free →
         </button>
