@@ -12,25 +12,45 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 
 const here = path.dirname(fileURLToPath(import.meta.url));
-const srcPath = path.join(here, "..", "src", "Rink.jsx");
-const outPath = path.join(here, "rink-editor.jsx");
-const dashPath = path.join(here, "dashboard.html");
+const srcPath   = path.join(here, "..", "src", "Rink.jsx");
+const modesPath = path.join(here, "..", "src", "rinkQuestionModes.js");
+const outPath   = path.join(here, "rink-editor.jsx");
+const dashPath  = path.join(here, "dashboard.html");
+
+// Strip ES-export syntax from a source string so it can be concatenated into a
+// plain-<script> IIFE. (The inline block in dashboard.html isn't a module.)
+function stripExports(src) {
+  return src
+    .replace(/^export default function (\w+)/m, "function $1")
+    .replace(/^export function (\w+)/gm, "function $1")
+    .replace(/^export const (\w+)/gm, "const $1")
+    .replace(/^export let (\w+)/gm, "let $1");
+}
+
+// rinkQuestionModes.js first — its exports are used by Rink.jsx, so it must
+// be defined earlier in the IIFE scope. Strip its imports (it has none that
+// affect runtime, but future-proof) and its exports.
+const modesRaw = fs.readFileSync(modesPath, "utf8");
+const modesPatched = stripExports(modesRaw).replace(/^import .+?;$/gm, "");
 
 const src = fs.readFileSync(srcPath, "utf8");
-// Drop ES module syntax — the inline <script> in dashboard.html runs in
-// plain-script context, where `export` / `import` are syntax errors.
-const patched = src
-  .replace(/^import React, \{ useState, useRef, useEffect, useCallback \} from 'react';/m,
-           "const { useState, useRef, useEffect, useCallback } = React;")
-  .replace(/^export default function Rink/m, "function Rink")
-  .replace(/^export function (\w+)/gm, "function $1")
-  .replace(/^export const (\w+)/gm, "const $1")
-  .replace(/^export let (\w+)/gm, "let $1");
+// Drop ES module syntax from Rink.jsx. The React import becomes a destructure
+// off the global React, and the rinkQuestionModes import disappears (the
+// registry is inlined above this file in the IIFE scope).
+const patched = stripExports(
+  src
+    .replace(/^import React, \{ useState, useRef, useEffect, useCallback \} from 'react';$/m,
+             "const { useState, useRef, useEffect, useCallback } = React;")
+    .replace(/^import \{[^}]+\} from '\.\/rinkQuestionModes\.js';$/m, "")
+);
 
 const body =
-  "// AUTO-GENERATED from src/Rink.jsx — do not edit directly.\n" +
-  "// When src/Rink.jsx changes, run: npm run build:dashboard\n" +
+  "// AUTO-GENERATED from src/Rink.jsx + src/rinkQuestionModes.js — do not edit directly.\n" +
+  "// When either source changes, run: npm run build:dashboard\n" +
   "(function(){\n" +
+  "// ── rinkQuestionModes.js (inlined) ─────────────────────────────────────\n" +
+  modesPatched +
+  "\n// ── Rink.jsx (inlined) ─────────────────────────────────────────────────\n" +
   patched +
   "\nwindow.IceIQRink = Rink;\nwindow.IceIQEmptyScene = emptyScene;\n" +
   "window.dispatchEvent(new CustomEvent('iceiq-rink-ready'));\n" +

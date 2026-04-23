@@ -34,6 +34,7 @@
  */
 
 import React, { useState, useRef, useEffect, useCallback } from 'react';
+import { QUESTION_MODES, cycleBucket, bucketVerdict } from './rinkQuestionModes.js';
 
 // ─────────────────────────────────────────────────────────────────────────────
 // GEOMETRY — true NHL proportions, offensive-zone only, net at top.
@@ -740,15 +741,12 @@ export default function Rink({
   }, [placementTool, arrowDraft, mode, ageGroup, svgPoint, updateScene]);
 
   // ─── Zone-click answer (play mode, zone-click questions) ─────────────────
+  // Scoring delegates to QUESTION_MODES['zone-click'].score so all rink-mode
+  // scoring lives in a single registry (see src/rinkQuestionModes.js).
   const onZoneClickAnswer = useCallback((zoneKey) => {
     if (mode !== 'play' || scene.question?.mode !== 'zone-click') return;
     if (lockAnswer && playAnswer) return; // host has recorded result — ignore re-clicks
-    const zones = scene.question.zones || {};
-    const fb    = scene.question.feedback || {};
-    let verdict = 'wrong';
-    if ((zones.correct || []).includes(zoneKey)) verdict = 'correct';
-    else if ((zones.partial || []).includes(zoneKey)) verdict = 'partial';
-    const result = { verdict, choice: zoneKey, feedback: fb[verdict] || '' };
+    const result = QUESTION_MODES['zone-click'].score(zoneKey, scene.question);
     setPlayAnswer(result);
     if (onAnswer) onAnswer(result);
   }, [mode, scene, onAnswer, lockAnswer, playAnswer]);
@@ -977,7 +975,7 @@ export default function Rink({
         <ChoiceQuestion
           question={scene.question}
           onAnswer={(opt) => {
-            const result = { verdict: opt.verdict, choice: opt.text, feedback: opt.feedback };
+            const result = QUESTION_MODES.choice.score(opt, scene.question);
             setPlayAnswer(result);
             if (onAnswer) onAnswer(result);
           }} />
