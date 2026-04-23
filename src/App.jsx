@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback, useMemo, lazy, Suspense } from "react";
+import { useState, useEffect, useRef, useCallback, useMemo, lazy, Suspense } from "react";
 import * as SB from "./supabase";
 import { supabase, hasSupabase } from "./supabase";
 import { canAccess, getUpgradeTriggerMessage } from "./utils/tierGate";
@@ -1436,7 +1436,7 @@ function Quiz({ player, onFinish, onBack, tier, onUpgrade }) {
   // IceIQRinkQuestion dispatcher routes when q.rink is set OR the type is one
   // of the new rink-native interactive types. Legacy "zone-click" / "rink"
   // questions (no q.rink, with q.scene) stay on the original renderers.
-  const NEW_RINK_TYPES = ["drag-target","drag-place","multi-tap","sequence-rink","path-draw","lane-select","hot-spots"];
+  const NEW_RINK_TYPES = ["drag-target","drag-place","multi-tap","sequence-rink","path-draw","lane-select","hot-spots","pov-pick","pov-mc"];
   const isRinkQ = !!question?.rink || NEW_RINK_TYPES.includes(qtype);
   const answered = isRinkQ
     ? rinkQResult !== null
@@ -4945,6 +4945,13 @@ export default function App() {
   const [profile, setProfile] = useState(null);
   const [player, setPlayer] = useState(null); // enriched player object (profile + synced data)
   const [demoMode, setDemoMode] = useState(false);
+  // Tracked-fresh ref so async Supabase auth callbacks see the latest demoMode
+  // even when their closure was captured before dev-bypass entry. Without this,
+  // a stale `onAuthChange` callback firing INITIAL_SESSION / TOKEN_REFRESHED /
+  // SIGNED_OUT with `session === null` clobbers a dev/demo profile via the
+  // `else { setProfile(null) }` branch (root cause of the gear→landing bug).
+  const demoModeRef = useRef(false);
+  demoModeRef.current = demoMode;
   const [demoCoachRatings, setDemoCoachRatings] = useState(null);
   const [screen, setScreen] = useState("home");
   const [prevScore, setPrevScore] = useState(null);
@@ -5198,7 +5205,11 @@ export default function App() {
       if (mounted) { clearTimeout(timeout); setAuthReady(true); }
     })();
     const { data } = SB.onAuthChange(async (session) => {
-      if (!mounted) return;
+      // Demo / dev-bypass sessions must be immune to Supabase auth events:
+      // there is no real Supabase session in those modes, so an async
+      // INITIAL_SESSION / SIGNED_OUT firing after dev-bypass entry would
+      // otherwise wipe the synthetic profile and bounce the user to landing.
+      if (!mounted || demoModeRef.current) return;
       if (session?.user) {
         setUserEmail(session.user.email || null);
         await loadUser(session.user.id);

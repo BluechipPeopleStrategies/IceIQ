@@ -1,5 +1,6 @@
 import { useState, useRef, useEffect, useCallback, Component } from "react";
 import IceIQRink from "./IceIQRink";
+import IceIQPOVRink from "./IceIQPOVRink";
 
 const M = 10;
 const RINK_VIEWS = {
@@ -13,6 +14,7 @@ const VALID_QUESTION_TYPES = [
   "mc", "diagram", "rank", "two-step", "sequence", "fill", "multi", "true-false",
   "drag-target", "drag-place", "zone-click", "multi-tap",
   "sequence-rink", "path-draw", "lane-select", "hot-spots",
+  "pov-pick", "pov-mc",
 ];
 
 function getViewBox(view) {
@@ -134,6 +136,14 @@ function validateQuestion(q) {
   if ((q.type === "mc" || q.type === "diagram") && !Array.isArray(q.choices)) {
     errors.push("mc/diagram requires choices array");
   }
+  if (q.type === "pov-pick") {
+    if (!q.pov || typeof q.pov !== "object") errors.push("pov-pick requires a pov config (camera + povRole)");
+    if (!Array.isArray(q.targets) || q.targets.length === 0) errors.push("pov-pick requires a targets array");
+  }
+  if (q.type === "pov-mc") {
+    if (!q.pov || typeof q.pov !== "object") errors.push("pov-mc requires a pov config (camera + povRole)");
+    if (!Array.isArray(q.choices) || q.choices.length === 0) errors.push("pov-mc requires a choices array");
+  }
 
   return { errors, warnings, valid: errors.length === 0 };
 }
@@ -182,6 +192,8 @@ export default function IceIQRinkQuestion({ question, onAnswer, onReset, onSkip 
   else if (t === "path-draw") Renderer = PathDraw;
   else if (t === "lane-select") Renderer = LaneSelect;
   else if (t === "hot-spots") Renderer = HotSpots;
+  else if (t === "pov-pick") Renderer = POVPick;
+  else if (t === "pov-mc") Renderer = POVMC;
   else Renderer = question.choices ? MCFallback : null;
 
   if (!Renderer) {
@@ -876,6 +888,92 @@ function LaneSelect({ question, onAnswer, onReset }) {
           </div>
         </>
       )}
+    </div>
+  );
+}
+
+// POV-pick: player sees a first-person scene and taps the correct target on
+// the ice (open lane, open net side, screened shooter, etc.). q.pov is the
+// camera/role config; q.targets[] are world-space hit zones. Each target has
+// `correct: bool` plus optional `msg`. The first tap locks the answer.
+function POVPick({ question, onAnswer, onReset }) {
+  const targets = Array.isArray(question.targets) ? question.targets : [];
+  const [picked, setPicked] = useState(null); // index
+  const done = picked !== null;
+
+  const reset = () => { setPicked(null); onReset?.(); };
+  const handle = (target, i) => {
+    if (done) return;
+    setPicked(i);
+    onAnswer?.(!!target.correct);
+  };
+
+  const pickedTarget = picked !== null ? targets[picked] : null;
+  const povProps = question.pov && typeof question.pov === "object" ? question.pov : {};
+
+  return (
+    <div>
+      <p className="text-base font-medium mb-1">{question.q}</p>
+      <p className="text-xs text-gray-500 mb-3">Tap what you see from the player's perspective.</p>
+      <IceIQPOVRink
+        camera={povProps.camera}
+        povRole={povProps.povRole || "skater"}
+        markers={povProps.markers}
+        targets={targets.map((t, i) => ({ ...t, id: t.id || `t${i}` }))}
+        showPrompt={povProps.prompt}
+        onTargetClick={done ? null : (t) => {
+          const idx = targets.findIndex(x => (x.id || `t${targets.indexOf(x)}`) === t.id);
+          if (idx >= 0) handle(targets[idx], idx);
+        }}
+        className="rounded-md border"
+      />
+      {done && pickedTarget && (
+        <>
+          <Feedback state={pickedTarget.correct ? "ok" : "no"} message={pickedTarget.msg || question.tip} />
+          <div className="flex gap-2 mt-2 justify-end">
+            <button onClick={reset} className="px-3 py-1.5 text-xs border rounded hover:bg-gray-50">Try again</button>
+          </div>
+        </>
+      )}
+    </div>
+  );
+}
+
+// POV-mc: first-person scene above multiple-choice options. Use when the
+// decision is verbal ("what should you do?") but the read is positional.
+function POVMC({ question, onAnswer }) {
+  const [picked, setPicked] = useState(null);
+  const choices = Array.isArray(question.choices) ? question.choices : [];
+  const correct = toFiniteNumber(question.correct, 0);
+  const done = picked !== null;
+  const povProps = question.pov && typeof question.pov === "object" ? question.pov : {};
+
+  return (
+    <div>
+      <p className="text-base font-medium mb-3">{question.q}</p>
+      <IceIQPOVRink
+        camera={povProps.camera}
+        povRole={povProps.povRole || "skater"}
+        markers={povProps.markers}
+        showPrompt={povProps.prompt}
+        className="rounded-md border"
+      />
+      <div className="mt-3 flex flex-col gap-2">
+        {choices.map((c, i) => {
+          const cls = !done ? "bg-white border-gray-300 hover:bg-gray-50"
+            : i === correct ? "bg-green-50 border-green-500 text-green-900"
+            : i === picked ? "bg-red-50 border-red-500 text-red-900"
+            : "bg-white border-gray-200 opacity-60";
+          return (
+            <button key={i} disabled={done}
+              onClick={() => { setPicked(i); onAnswer?.(i === correct); }}
+              className={`p-3 rounded border text-left text-sm ${cls}`}>
+              {c}
+            </button>
+          );
+        })}
+      </div>
+      {done && <Feedback state={picked === correct ? "ok" : "no"} message={question.tip} />}
     </div>
   );
 }

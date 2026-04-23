@@ -8042,6 +8042,82 @@
         { "type": "teammate", "x": 200, "y": 150, "label": "C",  "order": 3 },
         { "type": "teammate", "x": 220, "y": 50,  "label": "W",  "order": 4 }
       ]
+    },
+    {
+      "id": "u13q_pov01",
+      "cat": "Goaltending",
+      "diff": "M",
+      "type": "pov-mc",
+      "pos": ["G"],
+      "q": "You're screened. The shooter is winding up. What's your priority?",
+      "choices": [
+        "Drop into your butterfly and get big — if you can't see it, take away the bottom of the net.",
+        "Skate out hard to challenge the shooter.",
+        "Wave at your D to clear the screen.",
+        "Reach around your defender to try to track the puck."
+      ],
+      "correct": 0,
+      "tip": "Screened shots beat goalies low more than high. Get big, get square, take away the bottom — let the shooter try to pick a corner you can't see.",
+      "pov": {
+        "povRole": "goalie",
+        "camera": { "x": 558, "y": 150, "z": 18, "lookAt": { "x": 300, "y": 150 } },
+        "prompt": "You can't see the puck. Decide.",
+        "markers": [
+          { "type": "attacker", "x": 470, "y": 150, "facing": 4.71, "label": "X" },
+          { "type": "defender", "x": 510, "y": 150, "facing": 1.57, "label": "D" },
+          { "type": "teammate", "x": 450, "y": 100, "facing": 4.71, "label": "F" }
+        ]
+      }
+    },
+    {
+      "id": "u13q_pov02",
+      "cat": "Shooting",
+      "diff": "M",
+      "type": "pov-mc",
+      "pos": ["F"],
+      "q": "You're at the right faceoff dot with the puck. Goalie is square. Where do you shoot?",
+      "choices": [
+        "Glove side high — over the goalie's catching glove.",
+        "Five-hole through the legs.",
+        "Blocker side low — into the corner.",
+        "Pass back to the point."
+      ],
+      "correct": 0,
+      "tip": "From a sharp angle off the dot, the high glove side is the biggest opening when the goalie is square — the catching glove is usually carried lower than the blocker side.",
+      "pov": {
+        "povRole": "skater",
+        "camera": { "x": 510, "y": 165, "z": 17, "lookAt": { "x": 560, "y": 150 } },
+        "prompt": "You have 0.8 seconds. Shoot.",
+        "markers": [
+          { "type": "goalie", "x": 558, "y": 150, "facing": 3.14, "label": "G" },
+          { "type": "teammate", "x": 480, "y": 80, "facing": 1.57, "label": "T" }
+        ]
+      }
+    },
+    {
+      "id": "u13q_pov03",
+      "cat": "Gap Control",
+      "diff": "H",
+      "type": "pov-mc",
+      "pos": ["D"],
+      "q": "The attacker is carrying the puck at the blue line, cutting to your right. Your gap is two stick-lengths. Best move?",
+      "choices": [
+        "Back off and give yourself reaction time.",
+        "Skate straight at them and lay a hit.",
+        "Angle them toward the boards — keep your inside shoulder on theirs.",
+        "Pivot to face them and dive to block the pass."
+      ],
+      "correct": 2,
+      "tip": "When the gap is already tight, take away the middle. Angling to the boards forces a low-percentage outside drive instead of a clean cut to the slot. The hit isn't the goal; the angle is.",
+      "pov": {
+        "povRole": "skater",
+        "camera": { "x": 220, "y": 150, "z": 17, "lookAt": { "x": 320, "y": 150 } },
+        "prompt": "Gap = 2 sticks. They're cutting right.",
+        "markers": [
+          { "type": "attacker", "x": 280, "y": 160, "facing": 3.14, "label": "X" },
+          { "type": "teammate", "x": 320, "y": 110, "facing": 4.71, "label": "F" }
+        ]
+      }
     }
   ],
   "U15 / Bantam": [
