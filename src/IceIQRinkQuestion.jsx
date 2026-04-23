@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect, useCallback, Component } from "react";
 import IceIQRink from "./IceIQRink";
 import IceIQPOVRink from "./IceIQPOVRink";
+import { C, FONT } from "./shared.jsx";
 
 const M = 10;
 const RINK_VIEWS = {
@@ -53,14 +54,38 @@ function useSVGPoint(ref) {
 
 function Feedback({ state, message }) {
   if (!state || !message) return null;
-  const bg = state === "ok" ? "bg-green-50 text-green-900 border-green-200"
-    : state === "partial" ? "bg-amber-50 text-amber-900 border-amber-200"
-    : "bg-red-50 text-red-900 border-red-200";
+  const palette = state === "ok"
+    ? { bg: C.greenDim, border: C.greenBorder, color: C.white }
+    : state === "partial"
+    ? { bg: C.yellowDim, border: "rgba(234,179,8,0.3)", color: C.white }
+    : { bg: C.redDim, border: C.redBorder, color: C.white };
   return (
-    <div className={`mt-3 p-3 rounded border text-sm leading-relaxed ${bg}`}>
+    <div style={{
+      marginTop: "0.75rem", padding: "0.75rem 0.9rem",
+      background: palette.bg, border: `1px solid ${palette.border}`,
+      color: palette.color, borderRadius: 10,
+      fontFamily: FONT.body, fontSize: 13, lineHeight: 1.55,
+    }}>
       {message}
     </div>
   );
+}
+
+function mcButtonStyle({ done, isCorrect, isPicked }) {
+  let bg = C.dimmest, bdr = C.border, col = C.dim, leftBdr = "transparent";
+  if (done) {
+    if (isCorrect) { bg = C.greenDim; bdr = C.greenBorder; col = C.white; leftBdr = C.green; }
+    else if (isPicked) { bg = C.redDim; bdr = C.redBorder; col = C.dimmer; leftBdr = C.red; }
+  }
+  return {
+    background: bg, border: `1px solid ${bdr}`, borderLeft: `3px solid ${leftBdr}`,
+    borderRadius: 12, padding: "0.95rem 1.1rem",
+    cursor: done ? "default" : "pointer",
+    textAlign: "left", color: col,
+    fontFamily: FONT.body, fontSize: 14, lineHeight: 1.55,
+    display: "flex", alignItems: "flex-start", gap: "0.75rem",
+    transition: "all 0.15s", width: "100%",
+  };
 }
 
 class QuestionErrorBoundary extends Component {
@@ -212,61 +237,54 @@ export default function IceIQRinkQuestion({ question, onAnswer, onReset, onSkip 
   );
 }
 
-function MCFallback({ question, onAnswer }) {
+function MCChoiceList({ question, onAnswer }) {
   const [picked, setPicked] = useState(null);
   const choices = Array.isArray(question.choices) ? question.choices : [];
   const correct = toFiniteNumber(question.correct, 0);
   const done = picked !== null;
 
   return (
-    <div>
-      <p className="text-base font-medium mb-3">{question.q}</p>
-      <div className="flex flex-col gap-2">
-        {choices.map((c, i) => {
-          const cls = !done ? "bg-white border-gray-300 hover:bg-gray-50"
-            : i === correct ? "bg-green-50 border-green-500 text-green-900"
-            : i === picked ? "bg-red-50 border-red-500 text-red-900"
-            : "bg-white border-gray-200 opacity-60";
-          return (
-            <button key={i} disabled={done}
-              onClick={() => { setPicked(i); onAnswer?.(i === correct); }}
-              className={`p-3 rounded border text-left text-sm ${cls}`}>
-              {c}
-            </button>
-          );
-        })}
-      </div>
+    <div style={{ display: "flex", flexDirection: "column", gap: "0.55rem" }}>
+      {choices.map((c, i) => {
+        const isCorrect = i === correct;
+        const isPicked = i === picked;
+        return (
+          <button key={i} disabled={done}
+            onClick={() => { setPicked(i); onAnswer?.(i === correct); }}
+            style={mcButtonStyle({ done, isCorrect, isPicked })}>
+            <span style={{
+              fontSize: 11, fontWeight: 800, minWidth: 22, marginTop: 1, flexShrink: 0,
+              color: done ? (isCorrect ? C.green : isPicked ? C.red : C.dimmest) : C.dimmer,
+              fontFamily: FONT.display,
+            }}>
+              {done ? (isCorrect ? "✓" : isPicked ? "✗" : String.fromCharCode(65 + i)) : String.fromCharCode(65 + i)}
+            </span>
+            <span style={{ wordBreak: "break-word", whiteSpace: "normal", flex: 1, fontSize: c.length > 100 ? 13 : 14 }}>{c}</span>
+          </button>
+        );
+      })}
       {done && <Feedback state={picked === correct ? "ok" : "no"} message={question.tip} />}
     </div>
   );
 }
 
-function MCWithRink({ question, onAnswer }) {
-  const [picked, setPicked] = useState(null);
-  const choices = Array.isArray(question.choices) ? question.choices : [];
-  const correct = toFiniteNumber(question.correct, 0);
-  const done = picked !== null;
-
+function MCFallback({ question, onAnswer }) {
   return (
     <div>
-      <p className="text-base font-medium mb-3">{question.q}</p>
-      <IceIQRink {...(question.rink || {})} className="rounded-md border" />
-      <div className="mt-3 flex flex-col gap-2">
-        {choices.map((c, i) => {
-          const cls = !done ? "bg-white border-gray-300 hover:bg-gray-50"
-            : i === correct ? "bg-green-50 border-green-500 text-green-900"
-            : i === picked ? "bg-red-50 border-red-500 text-red-900"
-            : "bg-white border-gray-200 opacity-60";
-          return (
-            <button key={i} disabled={done}
-              onClick={() => { setPicked(i); onAnswer?.(i === correct); }}
-              className={`p-3 rounded border text-left text-sm ${cls}`}>
-              {c}
-            </button>
-          );
-        })}
+      <p style={{ color: C.white, fontFamily: FONT.body, fontSize: 15, lineHeight: 1.5, margin: "0 0 0.9rem" }}>{question.q}</p>
+      <MCChoiceList question={question} onAnswer={onAnswer} />
+    </div>
+  );
+}
+
+function MCWithRink({ question, onAnswer }) {
+  return (
+    <div>
+      <p style={{ color: C.white, fontFamily: FONT.body, fontSize: 15, lineHeight: 1.5, margin: "0 0 0.9rem" }}>{question.q}</p>
+      <div style={{ borderRadius: 10, overflow: "hidden", border: `1px solid ${C.border}`, background: C.bgCard, marginBottom: "0.9rem" }}>
+        <IceIQRink {...(question.rink || {})} />
       </div>
-      {done && <Feedback state={picked === correct ? "ok" : "no"} message={question.tip} />}
+      <MCChoiceList question={question} onAnswer={onAnswer} />
     </div>
   );
 }

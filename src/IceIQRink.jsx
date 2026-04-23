@@ -276,36 +276,36 @@ function Marker({ marker }) {
   if (marker.type === "puck") {
     return (
       <g transform={`translate(${marker.x}, ${marker.y})`}>
-        <ellipse cx={0} cy={0.1} rx={0.7} ry={0.25} fill="#2C2C2A" />
+        <ellipse cx={0} cy={0.3} rx={2.2} ry={0.9} fill="#2C2C2A" />
       </g>
     );
   }
   if (marker.type === "goalie") {
     return (
       <g transform={`translate(${marker.x}, ${marker.y})`}>
-        <ellipse cx={0} cy={0} rx={0.9} ry={1.2} fill="#444441" stroke="#fff" strokeWidth="0.15" />
-        <text x={0} y={0.4} textAnchor="middle" fill="#fff"
-          fontSize="1.1" fontWeight="500" fontFamily="system-ui">G</text>
+        <ellipse cx={0} cy={0} rx={3.2} ry={4.2} fill="#444441" stroke="#fff" strokeWidth="0.5" />
+        <text x={0} y={1.3} textAnchor="middle" fill="#fff"
+          fontSize="3.8" fontWeight="600" fontFamily="system-ui">G</text>
       </g>
     );
   }
   if (marker.type === "text") {
     return (
       <g transform={`translate(${marker.x}, ${marker.y})`}>
-        <text x={0} y={0.4} textAnchor="middle" fill="#2C2C2A"
-          fontSize="1.5" fontWeight="500" fontFamily="system-ui">{marker.label || "Text"}</text>
+        <text x={0} y={1.2} textAnchor="middle" fill="#2C2C2A"
+          fontSize="4.5" fontWeight="600" fontFamily="system-ui">{marker.label || "Text"}</text>
       </g>
     );
   }
   if (marker.type === "number") {
     return (
       <g transform={`translate(${marker.x}, ${marker.y})`}>
-        <circle cx={0} cy={0} r={1} fill="#EEEDFE" stroke="#3C3489" strokeWidth="0.15" />
-        <text x={0} y={0.4} textAnchor="middle" fill="#3C3489"
-          fontSize="1.1" fontWeight="500" fontFamily="system-ui">{marker.label || "1"}</text>
+        <circle cx={0} cy={0} r={3.5} fill="#EEEDFE" stroke="#3C3489" strokeWidth="0.5" />
+        <text x={0} y={1.3} textAnchor="middle" fill="#3C3489"
+          fontSize="3.8" fontWeight="600" fontFamily="system-ui">{marker.label || "1"}</text>
         {marker.caption && (
-          <text x={0} y={2.6} textAnchor="middle" fill={COLORS.textMuted}
-            fontSize="0.9" fontWeight="500" fontFamily="system-ui">{marker.caption}</text>
+          <text x={0} y={8} textAnchor="middle" fill={COLORS.textMuted}
+            fontSize="2.8" fontWeight="500" fontFamily="system-ui">{marker.caption}</text>
         )}
       </g>
     );
@@ -315,12 +315,12 @@ function Marker({ marker }) {
   const label = marker.label || labels[marker.type] || "";
   return (
     <g transform={`translate(${marker.x}, ${marker.y})`}>
-      <circle cx={0} cy={0} r={1.1} fill={fill} stroke="#fff" strokeWidth="0.15" />
-      <text x={0} y={0.4} textAnchor="middle" fill="#fff"
-        fontSize="1.1" fontWeight="500" fontFamily="system-ui">{label}</text>
+      <circle cx={0} cy={0} r={4} fill={fill} stroke="#fff" strokeWidth="0.5" />
+      <text x={0} y={1.4} textAnchor="middle" fill="#fff"
+        fontSize="3.8" fontWeight="600" fontFamily="system-ui">{label}</text>
       {marker.caption && (
-        <text x={0} y={2.6} textAnchor="middle" fill={COLORS.textMuted}
-          fontSize="0.9" fontWeight="500" fontFamily="system-ui">{marker.caption}</text>
+        <text x={0} y={8.5} textAnchor="middle" fill={COLORS.textMuted}
+          fontSize="2.8" fontWeight="500" fontFamily="system-ui">{marker.caption}</text>
       )}
     </g>
   );
@@ -340,8 +340,8 @@ function Line({ line }) {
     : line.color === "amber" ? "#BA7517"
     : "#2C2C2A";
 
-  const dasharray = line.type === "pass" ? "1.5 1.2" : undefined;
-  const strokeWidth = line.type === "shoot" ? 0.6 : 0.4;
+  const dasharray = line.type === "pass" ? "3 2" : undefined;
+  const strokeWidth = line.type === "shoot" ? 1.8 : 1.2;
 
   if (line.type === "handle") {
     const { x1, y1, x2, y2 } = line;
@@ -361,7 +361,7 @@ function Line({ line }) {
       const cY = py - uy * (len / steps / 2) + ny * amp;
       d += ` Q ${cX} ${cY} ${px} ${py}`;
     }
-    return <path d={d} stroke={stroke} strokeWidth={0.35} fill="none"
+    return <path d={d} stroke={stroke} strokeWidth={1.1} fill="none"
       strokeLinecap="round" markerEnd={markerEnd} />;
   }
   return (
