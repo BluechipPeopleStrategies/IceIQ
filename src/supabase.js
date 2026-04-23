@@ -1,7 +1,28 @@
 import { createClient } from "@supabase/supabase-js";
 
+// Error-handling conventions for this module:
+//
+//   Writes (saveX / createX / updateX / signX):
+//     - If `supabase` is null (env vars missing), return a no-op sentinel
+//       (null / undefined) and do not throw — the app works offline.
+//     - If the network call errors, THROW the Supabase error so callers can
+//       map it to a user-visible message.
+//
+//   Reads (getX / listX):
+//     - Return the expected shape on success (e.g. array, object, string).
+//     - Return the empty/null equivalent on failure and log via `warn` so
+//       errors surface in DevTools without crashing the UI. Do NOT throw
+//       from reads — the render tree doesn't want to branch on read errors.
+//
+//   Telemetry (recordX):
+//     - Best-effort fire-and-forget. Silent catch by design, annotated.
+
 const url = import.meta.env.VITE_SUPABASE_URL;
 const key = import.meta.env.VITE_SUPABASE_ANON_KEY;
+
+function warn(context, error) {
+  if (error) console.warn(`[IceIQ/supabase] ${context}:`, error.message || error);
+}
 
 if (!url || !key) {
   console.warn("[IceIQ] Supabase env vars missing — auth/sync disabled. Copy .env.example to .env and fill in your Supabase project URL and anon key.");
@@ -64,7 +85,7 @@ export function onAuthChange(callback) {
 export async function getProfile(userId) {
   if (!supabase) return null;
   const { data, error } = await supabase.from("profiles").select("*").eq("id", userId).single();
-  if (error) return null;
+  if (error) { warn("getProfile", error); return null; }
   return data;
 }
 
@@ -94,15 +115,17 @@ export async function createTeam({ coachId, name, level, season }) {
 
 export async function getCoachTeams(coachId) {
   if (!supabase) return [];
-  const { data } = await supabase.from("teams").select("*").eq("coach_id", coachId).order("created_at", { ascending: false });
+  const { data, error } = await supabase.from("teams").select("*").eq("coach_id", coachId).order("created_at", { ascending: false });
+  if (error) { warn("getCoachTeams", error); return []; }
   return data || [];
 }
 
 export async function getPlayerTeams(playerId) {
   if (!supabase) return [];
-  const { data } = await supabase.from("team_members")
+  const { data, error } = await supabase.from("team_members")
     .select("team_id, teams(*)")
     .eq("player_id", playerId);
+  if (error) { warn("getPlayerTeams", error); return []; }
   return (data || []).map(r => r.teams).filter(Boolean);
 }
 
@@ -117,9 +140,10 @@ export async function joinTeamByCode(playerId, code) {
 
 export async function getTeamRoster(teamId) {
   if (!supabase) return [];
-  const { data } = await supabase.from("team_members")
+  const { data, error } = await supabase.from("team_members")
     .select("player_id, profiles(*)")
     .eq("team_id", teamId);
+  if (error) { warn("getTeamRoster", error); return []; }
   return (data || []).map(r => r.profiles).filter(Boolean);
 }
 
@@ -144,8 +168,9 @@ export async function saveQuizSession(playerId, { results, score, sessionLength 
 
 export async function getPlayerSessions(playerId) {
   if (!supabase) return [];
-  const { data } = await supabase.from("quiz_sessions")
+  const { data, error } = await supabase.from("quiz_sessions")
     .select("*").eq("player_id", playerId).order("completed_at", { ascending: true });
+  if (error) { warn("getPlayerSessions", error); return []; }
   return data || [];
 }
 
@@ -170,7 +195,8 @@ export async function saveGoal(playerId, category, goalData) {
 
 export async function getPlayerGoals(playerId) {
   if (!supabase) return {};
-  const { data } = await supabase.from("goals").select("*").eq("player_id", playerId);
+  const { data, error } = await supabase.from("goals").select("*").eq("player_id", playerId);
+  if (error) { warn("getPlayerGoals", error); return {}; }
   const out = {};
   (data || []).forEach(g => {
     out[g.category] = { goal: g.goal, S: g.s, M: g.m, A: g.a, R: g.r, T: g.t, completed: g.completed };
@@ -193,7 +219,8 @@ export async function saveSelfRatings(playerId, ratings) {
 
 export async function getSelfRatings(playerId) {
   if (!supabase) return {};
-  const { data } = await supabase.from("self_ratings").select("skill_id, value").eq("player_id", playerId);
+  const { data, error } = await supabase.from("self_ratings").select("skill_id, value").eq("player_id", playerId);
+  if (error) { warn("getSelfRatings", error); return {}; }
   const out = {};
   (data || []).forEach(r => { out[r.skill_id] = r.value; });
   return out;
@@ -218,9 +245,10 @@ export async function saveCoachRatingsForPlayer(coachId, playerId, ratings, note
 
 export async function getCoachRatingsForPlayer(playerId) {
   if (!supabase) return { ratings: {}, notes: {} };
-  const { data } = await supabase.from("coach_ratings")
+  const { data, error } = await supabase.from("coach_ratings")
     .select("skill_id, value, note")
     .eq("player_id", playerId);
+  if (error) { warn("getCoachRatingsForPlayer", error); return { ratings: {}, notes: {} }; }
   const ratings = {}, notes = {};
   (data || []).forEach(r => { ratings[r.skill_id] = r.value; if (r.note) notes[r.skill_id] = r.note; });
   return { ratings, notes };
@@ -248,17 +276,20 @@ export async function saveCoachPlayerNote(coachId, playerId, note) {
 
 export async function getCoachPlayerNote(playerId) {
   if (!supabase) return "";
-  const { data } = await supabase.from("coach_ratings")
+  const { data, error } = await supabase.from("coach_ratings")
     .select("note")
     .eq("player_id", playerId)
     .eq("skill_id", COACH_NOTE_SENTINEL)
     .maybeSingle();
+  if (error) { warn("getCoachPlayerNote", error); return ""; }
   return data?.note || "";
 }
 
 // ─────────────────────────────────────────────
 // QUESTION STATS (aggregate % correct across all users)
 // ─────────────────────────────────────────────
+// Telemetry — intentionally silent. Stats are best-effort and must never
+// block or crash a session. No warn() here on purpose.
 export async function recordQuestionAnswer(questionId, correct) {
   if (!supabase || !questionId) return;
   try {
@@ -266,21 +297,23 @@ export async function recordQuestionAnswer(questionId, correct) {
       p_question_id: questionId,
       p_correct: !!correct,
     });
-  } catch (e) { /* silent — stats are best-effort */ }
+  } catch { /* telemetry — silent by design */ }
 }
 
+// Telemetry — silent by design (see recordQuestionAnswer).
 export async function recordQuestionAnswersBatch(answers) {
   if (!supabase || !answers?.length) return;
   try {
     await supabase.rpc("record_question_answers_batch", {
       p_answers: JSON.stringify(answers.map(a => ({ question_id: a.questionId, correct: !!a.correct })))
     });
-  } catch (e) { /* silent — stats are best-effort */ }
+  } catch { /* telemetry — silent by design */ }
 }
 
 export async function getQuestionStats() {
   if (!supabase) return {};
-  const { data } = await supabase.from("question_stats").select("question_id, attempts, correct");
+  const { data, error } = await supabase.from("question_stats").select("question_id, attempts, correct");
+  if (error) { warn("getQuestionStats", error); return {}; }
   const out = {};
   (data || []).forEach(r => {
     out[r.question_id] = { attempts: r.attempts, correct: r.correct };
@@ -300,7 +333,7 @@ export async function reportQuestion({ userId, questionId, level, reason, detail
     reason,
     detail: detail || null,
   });
-  if (error) { console.error(error); return false; }
+  if (error) { warn("question_reports write", error); return false; }
   return true;
 }
 
@@ -323,7 +356,7 @@ export async function getQuestionReports() {
     .select("*")
     .order("resolved", { ascending: true })
     .order("created_at", { ascending: false });
-  if (error) { console.error(error); return []; }
+  if (error) { warn("getQuestionReports", error); return []; }
   return data || [];
 }
 
@@ -333,7 +366,7 @@ export async function resolveReport(reportId) {
     .from("question_reports")
     .update({ resolved: true })
     .eq("id", reportId);
-  if (error) { console.error(error); return false; }
+  if (error) { warn("question_reports write", error); return false; }
   return true;
 }
 
@@ -350,7 +383,7 @@ export async function listReviewQuestions() {
     .select("*")
     .order("age", { ascending: true })
     .order("id", { ascending: true });
-  if (error) { console.error(error); return []; }
+  if (error) { warn("listReviewQuestions", error); return []; }
   return data || [];
 }
 
@@ -362,7 +395,7 @@ export async function updateReviewQuestionCurrent(id, current) {
     .eq("id", id)
     .select()
     .single();
-  if (error) { console.error(error); return null; }
+  if (error) { warn("updateReviewQuestionCurrent", error); return null; }
   return data;
 }
 
@@ -374,7 +407,7 @@ export async function setReviewQuestionStatus(id, status) {
     .eq("id", id)
     .select()
     .single();
-  if (error) { console.error(error); return null; }
+  if (error) { warn("setReviewQuestionStatus", error); return null; }
   return data;
 }
 
@@ -386,7 +419,7 @@ export async function resetReviewQuestion(id) {
     .select("original")
     .eq("id", id)
     .single();
-  if (fErr || !row) { console.error(fErr); return null; }
+  if (fErr || !row) { warn("resetReviewQuestion.fetch", fErr); return null; }
   const newCurrent = row.original || { type: "mc", cat: "", sit: "", opts: [], ok: 0, tip: "" };
   const { data, error } = await supabase
     .from("review_questions")
@@ -394,7 +427,7 @@ export async function resetReviewQuestion(id) {
     .eq("id", id)
     .select()
     .single();
-  if (error) { console.error(error); return null; }
+  if (error) { warn("resetReviewQuestion.update", error); return null; }
   return data;
 }
 
@@ -413,6 +446,6 @@ export async function createReviewQuestion({ age, level, current, id }) {
     })
     .select()
     .single();
-  if (error) { console.error(error); return null; }
+  if (error) { warn("createReviewQuestion", error); return null; }
   return data;
 }
