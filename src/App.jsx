@@ -5810,6 +5810,17 @@ function CoachRatingScreenAuthed({ coach, player, playerLevel, onDone }) {
       if (isDemo) {
         saveDemoNote(player.id, privateNote.trim());
       } else {
+        // Verify the coach id we're about to write with matches the
+        // authenticated session. RLS would reject a mismatch anyway, but a
+        // stale profile object or swapped session produces a cryptic error;
+        // catch it here with a user-actionable message.
+        const session = await SB.getSession();
+        if (!session?.user?.id) {
+          throw new Error("Your session may have expired — try signing in again.");
+        }
+        if (session.user.id !== coach.id) {
+          throw new Error("Coach identity mismatch — please sign out and sign back in.");
+        }
         await SB.saveCoachRatingsForPlayer(coach.id, player.id, ratings, notes);
         await SB.saveCoachPlayerNote(coach.id, player.id, privateNote.trim());
       }
