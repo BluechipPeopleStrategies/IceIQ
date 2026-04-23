@@ -71,6 +71,32 @@ function Feedback({ state, message }) {
   );
 }
 
+const questionTextStyle = { color: C.white, fontFamily: FONT.body, fontSize: 15, lineHeight: 1.5, margin: "0 0 0.25rem" };
+const hintTextStyle = { color: C.dim, fontFamily: FONT.body, fontSize: 12, margin: "0 0 0.75rem" };
+const rinkFrameStyle = { position: "relative", borderRadius: 10, overflow: "hidden", border: `1px solid ${C.border}`, background: C.bgCard, marginBottom: "0.75rem" };
+const overlaySvgStyle = (interactive = true) => ({ position: "absolute", inset: 0, width: "100%", height: "100%", pointerEvents: interactive ? "auto" : "none" });
+const actionRowStyle = (justify = "flex-end") => ({ display: "flex", gap: "0.5rem", marginTop: "0.5rem", justifyContent: justify });
+const secondaryBtnStyle = {
+  padding: "0.4rem 0.8rem", fontSize: 12, fontFamily: FONT.body,
+  background: "transparent", color: C.dim, border: `1px solid ${C.border}`,
+  borderRadius: 8, cursor: "pointer",
+};
+const primaryBtnStyle = {
+  padding: "0.45rem 1rem", fontSize: 12, fontFamily: FONT.body, fontWeight: 700,
+  background: C.gold, color: C.bg, border: "none", borderRadius: 8, cursor: "pointer",
+};
+const primaryBtnDisabledStyle = { ...primaryBtnStyle, background: C.dimmest, color: C.dimmer, cursor: "default" };
+const chipBaseStyle = {
+  padding: "0.35rem 0.85rem", fontFamily: FONT.body, fontSize: 13, fontWeight: 600,
+  borderRadius: 999, userSelect: "none", border: "1px solid transparent",
+};
+const CHIP_PALETTE = {
+  attacker: { bg: "rgba(239,68,68,0.18)", border: "rgba(239,68,68,0.45)", color: "#FCA5A5" },
+  defender: { bg: "rgba(255,255,255,0.1)", border: "rgba(255,255,255,0.25)", color: C.white },
+  teammate: { bg: "rgba(34,197,94,0.15)", border: "rgba(34,197,94,0.4)", color: "#86EFAC" },
+  player:   { bg: "rgba(91,164,232,0.15)", border: "rgba(91,164,232,0.4)", color: "#93C5FD" },
+};
+
 function mcButtonStyle({ done, isCorrect, isPicked }) {
   let bg = C.dimmest, bdr = C.border, col = C.dim, leftBdr = "transparent";
   if (done) {
@@ -103,17 +129,25 @@ class QuestionErrorBoundary extends Component {
   render() {
     if (this.state.hasError) {
       return (
-        <div className="p-4 bg-amber-50 border border-amber-200 rounded text-sm leading-relaxed text-amber-900">
-          <p className="font-medium mb-1">Question couldn't render</p>
-          <p className="text-xs mb-2">
+        <div style={{
+          padding: "1rem", background: "rgba(234,179,8,0.1)",
+          border: "1px solid rgba(234,179,8,0.3)", borderRadius: 10,
+          color: C.white, fontFamily: FONT.body, fontSize: 13, lineHeight: 1.55,
+        }}>
+          <p style={{ fontWeight: 600, marginBottom: "0.35rem" }}>Question couldn't render</p>
+          <p style={{ fontSize: 12, color: C.dim, marginBottom: "0.5rem" }}>
             This question has a data issue. The app will skip to the next question.
-            You can report this so it gets fixed — look for the ID: <code className="bg-white px-1 rounded">{this.props.questionId || "unknown"}</code>
+            You can report this so it gets fixed — look for the ID:{" "}
+            <code style={{ background: C.dimmest, padding: "0 0.3rem", borderRadius: 4, color: C.white }}>
+              {this.props.questionId || "unknown"}
+            </code>
           </p>
           {this.props.onSkip && (
-            <button
-              onClick={this.props.onSkip}
-              className="mt-2 px-3 py-1 bg-amber-700 text-white rounded text-xs hover:bg-amber-800"
-            >
+            <button onClick={this.props.onSkip} style={{
+              marginTop: "0.5rem", padding: "0.35rem 0.75rem",
+              background: C.gold, color: C.bg, border: "none",
+              borderRadius: 8, fontSize: 12, fontFamily: FONT.body, fontWeight: 700, cursor: "pointer",
+            }}>
               Skip to next question
             </button>
           )}
@@ -187,17 +221,28 @@ export default function IceIQRinkQuestion({ question, onAnswer, onReset, onSkip 
 
   if (!validation.valid) {
     return (
-      <div className="p-4 bg-amber-50 border border-amber-200 rounded text-sm">
-        <p className="font-medium text-amber-900 mb-1">Question data incomplete</p>
-        <p className="text-xs text-amber-800 mb-2">
-          ID <code className="bg-white px-1 rounded">{question?.id || "unknown"}</code> is missing required fields:
+      <div style={{
+        padding: "1rem", background: "rgba(234,179,8,0.1)",
+        border: "1px solid rgba(234,179,8,0.3)", borderRadius: 10,
+        color: C.white, fontFamily: FONT.body, fontSize: 13, lineHeight: 1.55,
+      }}>
+        <p style={{ fontWeight: 600, marginBottom: "0.35rem" }}>Question data incomplete</p>
+        <p style={{ fontSize: 12, color: C.dim, marginBottom: "0.5rem" }}>
+          ID{" "}
+          <code style={{ background: C.dimmest, padding: "0 0.3rem", borderRadius: 4, color: C.white }}>
+            {question?.id || "unknown"}
+          </code>{" "}
+          is missing required fields:
         </p>
-        <ul className="text-xs text-amber-800 list-disc pl-5 mb-2">
+        <ul style={{ fontSize: 12, color: C.dim, margin: "0 0 0.6rem", paddingLeft: "1.25rem" }}>
           {validation.errors.map((e, i) => <li key={i}>{e}</li>)}
         </ul>
         {onSkip && (
-          <button onClick={onSkip}
-            className="px-3 py-1 bg-amber-700 text-white rounded text-xs hover:bg-amber-800">
+          <button onClick={onSkip} style={{
+            padding: "0.35rem 0.75rem", background: C.gold, color: C.bg,
+            border: "none", borderRadius: 8, fontSize: 12,
+            fontFamily: FONT.body, fontWeight: 700, cursor: "pointer",
+          }}>
             Skip this question
           </button>
         )}
@@ -223,9 +268,19 @@ export default function IceIQRinkQuestion({ question, onAnswer, onReset, onSkip 
 
   if (!Renderer) {
     return (
-      <div className="p-4 bg-amber-50 border border-amber-200 rounded text-sm text-amber-900">
-        <p className="font-medium mb-1">Unsupported question type: {t}</p>
-        {onSkip && <button onClick={onSkip} className="mt-2 px-3 py-1 bg-amber-700 text-white rounded text-xs">Skip</button>}
+      <div style={{
+        padding: "1rem", background: "rgba(234,179,8,0.1)",
+        border: "1px solid rgba(234,179,8,0.3)", borderRadius: 10,
+        color: C.white, fontFamily: FONT.body, fontSize: 13, lineHeight: 1.55,
+      }}>
+        <p style={{ fontWeight: 600, marginBottom: "0.5rem" }}>Unsupported question type: {t}</p>
+        {onSkip && (
+          <button onClick={onSkip} style={{
+            marginTop: "0.3rem", padding: "0.35rem 0.75rem",
+            background: C.gold, color: C.bg, border: "none",
+            borderRadius: 8, fontSize: 12, fontFamily: FONT.body, fontWeight: 700, cursor: "pointer",
+          }}>Skip</button>
+        )}
       </div>
     );
   }
@@ -354,22 +409,21 @@ function DragTarget({ question, onAnswer, onReset }) {
 
   return (
     <div>
-      <p className="text-base font-medium mb-1">{question.q}</p>
-      <p className="text-xs text-gray-500 mb-3">Drag the red puck to where it should go.</p>
-      <div className="relative">
-        <IceIQRink {...(question.rink || {})} className="rounded-md border" />
-        <svg ref={svgRef} viewBox={getViewBox(question.rink?.view)}
-          className="absolute inset-0 w-full h-full"
-          style={{ pointerEvents: verdict ? "none" : "auto" }}>
+      <p style={questionTextStyle}>{question.q}</p>
+      <p style={hintTextStyle}>Drag the red puck to where it should go.</p>
+      <div style={rinkFrameStyle}>
+        <IceIQRink {...(question.rink || {})} />
+        <svg ref={svgRef} viewBox={getViewBox(question.rink?.view)} preserveAspectRatio="none"
+          style={overlaySvgStyle(!verdict)}>
           {targets.map((t, i) => (
             <g key={i}>
               <circle cx={toFiniteNumber(t.x, 300)} cy={toFiniteNumber(t.y, 150)}
                 r={toFiniteNumber(t.radius, 30)}
-                fill="rgba(29,158,117,0.08)" stroke="#1D9E75"
-                strokeWidth="1" strokeDasharray="4 3" />
+                fill="rgba(34,197,94,0.14)" stroke="#22c55e"
+                strokeWidth="1.4" strokeDasharray="4 2.5" />
               {t.label && (
                 <text x={toFiniteNumber(t.x, 300)} y={toFiniteNumber(t.y, 150) + 4}
-                  textAnchor="middle" fill="#085041" fontSize="10" fontWeight="500">
+                  textAnchor="middle" fill="#86EFAC" fontSize="11" fontWeight="600">
                   {t.label}
                 </text>
               )}
@@ -378,15 +432,15 @@ function DragTarget({ question, onAnswer, onReset }) {
           <g transform={`translate(${puckPos.x},${puckPos.y})`}
             style={{ cursor: verdict ? "default" : "grab" }}
             onMouseDown={onDown} onTouchStart={onDown}>
-            <ellipse cx="0" cy="1" rx="10" ry="3.5" fill="#E24B4A" stroke="#fff" strokeWidth="1" />
+            <ellipse cx="0" cy="1" rx="10" ry="3.5" fill="#ef4444" stroke="#fff" strokeWidth="1.2" />
           </g>
         </svg>
       </div>
       {verdict && (
         <>
           <Feedback state={verdict === "best" ? "ok" : verdict === "okay" ? "partial" : "no"} message={feedback} />
-          <div className="flex gap-2 mt-2 justify-end">
-            <button onClick={reset} className="px-3 py-1.5 text-xs border rounded hover:bg-gray-50">Try again</button>
+          <div style={actionRowStyle()}>
+            <button onClick={reset} style={secondaryBtnStyle}>Try again</button>
           </div>
         </>
       )}
@@ -441,21 +495,19 @@ function DragPlace({ question, onAnswer, onReset }) {
   const allCorrect = checked && correctCount === slots.length;
   const partial = checked && correctCount > 0 && correctCount < slots.length;
 
-  const chipColors = {
-    attacker: "bg-red-100 border-red-300 text-red-900",
-    defender: "bg-gray-200 border-gray-400 text-gray-900",
-    teammate: "bg-green-100 border-green-300 text-green-900",
-    player: "bg-blue-100 border-blue-300 text-blue-900",
-  };
-
   return (
     <div>
-      <p className="text-base font-medium mb-1">{question.q}</p>
-      <p className="text-xs text-gray-500 mb-3">Drag each chip onto the highlighted slot on the ice.</p>
+      <p style={questionTextStyle}>{question.q}</p>
+      <p style={hintTextStyle}>Drag each chip onto the highlighted slot on the ice.</p>
 
-      <div className="flex flex-wrap gap-2 mb-3 p-2 bg-gray-50 rounded min-h-[44px]">
+      <div style={{
+        display: "flex", flexWrap: "wrap", gap: "0.4rem",
+        marginBottom: "0.75rem", padding: "0.5rem",
+        background: C.dimmest, borderRadius: 10, minHeight: 44, border: `1px solid ${C.border}`,
+      }}>
         {chips.map(c => {
           const isUsed = used.has(c.id);
+          const palette = CHIP_PALETTE[c.kind] || { bg: C.dimmest, border: C.border, color: C.white };
           return (
             <span key={c.id}
               draggable={!isUsed && !checked}
@@ -468,25 +520,28 @@ function DragPlace({ question, onAnswer, onReset }) {
                   setUsed(u => { const n = new Set(u); n.delete(c.id); return n; });
                 }
               }}
-              style={{ cursor: isUsed ? "pointer" : "grab", opacity: isUsed ? 0.25 : 1 }}
-              className={`px-3 py-1 border rounded-full text-sm font-medium select-none ${chipColors[c.kind] || "bg-white border-gray-300"}`}>
+              style={{
+                ...chipBaseStyle,
+                background: palette.bg, borderColor: palette.border, color: palette.color,
+                cursor: isUsed ? "pointer" : "grab", opacity: isUsed ? 0.25 : 1,
+              }}>
               {c.label || c.id}
             </span>
           );
         })}
       </div>
 
-      <div className="relative">
-        <IceIQRink {...(question.rink || {})} className="rounded-md border" />
-        <svg ref={svgRef} viewBox={getViewBox(question.rink?.view)}
-          className="absolute inset-0 w-full h-full"
+      <div style={rinkFrameStyle}>
+        <IceIQRink {...(question.rink || {})} />
+        <svg ref={svgRef} viewBox={getViewBox(question.rink?.view)} preserveAspectRatio="none"
+          style={overlaySvgStyle(true)}
           onDragOver={onDragOver} onDrop={onDrop}>
           {slots.map(s => (
             <g key={s.id}>
               <circle cx={toFiniteNumber(s.x, 0)} cy={toFiniteNumber(s.y, 0)} r="22"
-                fill="rgba(29,158,117,0.08)" stroke="#1D9E75" strokeWidth="1" strokeDasharray="4 3" />
-              <text x={toFiniteNumber(s.x, 0)} y={toFiniteNumber(s.y, 0) + 2} textAnchor="middle"
-                fill="#5F5E5A" fontSize="9" fontWeight="500">{s.id}</text>
+                fill="rgba(34,197,94,0.12)" stroke="#22c55e" strokeWidth="1.4" strokeDasharray="4 2.5" />
+              <text x={toFiniteNumber(s.x, 0)} y={toFiniteNumber(s.y, 0) + 3} textAnchor="middle"
+                fill="rgba(134,239,172,0.85)" fontSize="10" fontWeight="600">{s.id}</text>
             </g>
           ))}
           {Object.entries(placed).map(([slotId, chipId]) => {
@@ -499,9 +554,9 @@ function DragPlace({ question, onAnswer, onReset }) {
             return (
               <g key={slotId} transform={`translate(${toFiniteNumber(slot.x, 0)},${toFiniteNumber(slot.y, 0)})`}>
                 <circle cx="0" cy="0" r="11" fill={fills[chip.kind] || "#185FA5"}
-                  stroke={isCorrect ? "#1D9E75" : isWrong ? "#E24B4A" : "#fff"}
-                  strokeWidth={isCorrect || isWrong ? "2" : "1.5"} />
-                <text x="0" y="4" textAnchor="middle" fill="#fff" fontSize="10" fontWeight="500">{chipId}</text>
+                  stroke={isCorrect ? "#22c55e" : isWrong ? "#ef4444" : "#fff"}
+                  strokeWidth={isCorrect || isWrong ? "2.2" : "1.5"} />
+                <text x="0" y="4" textAnchor="middle" fill="#fff" fontSize="10" fontWeight="600">{chipId}</text>
               </g>
             );
           })}
@@ -512,15 +567,15 @@ function DragPlace({ question, onAnswer, onReset }) {
         <>
           <Feedback state={allCorrect ? "ok" : partial ? "partial" : "no"}
             message={allCorrect ? question.tip : partial ? `${correctCount} of ${slots.length} correct. ${question.tip || ""}` : question.tip} />
-          <div className="flex gap-2 mt-2 justify-end">
-            <button onClick={reset} className="px-3 py-1.5 text-xs border rounded hover:bg-gray-50">Try again</button>
+          <div style={actionRowStyle()}>
+            <button onClick={reset} style={secondaryBtnStyle}>Try again</button>
           </div>
         </>
       ) : (
-        <div className="flex gap-2 mt-3 justify-end">
-          <button onClick={reset} className="px-3 py-1.5 text-xs border rounded hover:bg-gray-50">Reset</button>
+        <div style={actionRowStyle()}>
+          <button onClick={reset} style={secondaryBtnStyle}>Reset</button>
           <button onClick={check} disabled={Object.keys(placed).length === 0}
-            className="px-4 py-1.5 text-xs bg-blue-700 text-white rounded hover:bg-blue-800 disabled:opacity-40">
+            style={Object.keys(placed).length === 0 ? primaryBtnDisabledStyle : primaryBtnStyle}>
             Check formation
           </button>
         </div>
@@ -636,11 +691,12 @@ function MultiTap({ question, onAnswer, onReset }) {
 
   return (
     <div>
-      <p className="text-base font-medium mb-1">{question.q}</p>
-      <p className="text-xs text-gray-500 mb-3">Tap every correct marker. More than one may be right.</p>
-      <div className="relative">
-        <IceIQRink {...(question.rink || {})} className="rounded-md border" />
-        <svg viewBox={getViewBox(question.rink?.view)} className="absolute inset-0 w-full h-full">
+      <p style={questionTextStyle}>{question.q}</p>
+      <p style={hintTextStyle}>Tap every correct marker. More than one may be right.</p>
+      <div style={rinkFrameStyle}>
+        <IceIQRink {...(question.rink || {})} />
+        <svg viewBox={getViewBox(question.rink?.view)} preserveAspectRatio="none"
+          style={overlaySvgStyle(!checked)}>
           {markers.map((m, i) => {
             const fills = { attacker: "#E24B4A", defender: "#2C2C2A", teammate: "#1D9E75", player: "#185FA5" };
             const labels = { attacker: "X", defender: "D", teammate: "T", player: "O" };
@@ -648,20 +704,20 @@ function MultiTap({ question, onAnswer, onReset }) {
             const isCorrectPick = checked && sel && m.correct;
             const isWrongPick = checked && sel && !m.correct;
             const isMissed = checked && !sel && m.correct;
-            let ringColor = "#185FA5", ringDash = "3 2", ringOp = sel ? "1" : "0.5";
-            if (isCorrectPick) { ringColor = "#1D9E75"; ringDash = "none"; ringOp = "1"; }
-            if (isWrongPick) { ringColor = "#E24B4A"; ringDash = "none"; ringOp = "1"; }
-            if (isMissed) { ringColor = "#BA7517"; ringDash = "2 2"; ringOp = "1"; }
+            let ringColor = "#5BA4E8", ringDash = "4 2.5", ringOp = sel ? "1" : "0.55";
+            if (isCorrectPick) { ringColor = "#22c55e"; ringDash = "none"; ringOp = "1"; }
+            if (isWrongPick) { ringColor = "#ef4444"; ringDash = "none"; ringOp = "1"; }
+            if (isMissed) { ringColor = "#eab308"; ringDash = "3 2"; ringOp = "1"; }
             return (
               <g key={i} transform={`translate(${toFiniteNumber(m.x, 0)},${toFiniteNumber(m.y, 0)})`}
                 style={{ cursor: checked ? "default" : "pointer" }}
                 onClick={() => toggle(i)}>
                 <circle cx="0" cy="0" r="18"
-                  fill={sel ? "rgba(24,95,165,0.15)" : "none"}
-                  stroke={ringColor} strokeWidth="1.5"
+                  fill={sel ? "rgba(91,164,232,0.2)" : "none"}
+                  stroke={ringColor} strokeWidth="1.8"
                   strokeDasharray={ringDash} opacity={ringOp} />
                 <circle cx="0" cy="0" r="11" fill={fills[m.type] || "#185FA5"} stroke="#fff" strokeWidth="1.5" />
-                <text x="0" y="4" textAnchor="middle" fill="#fff" fontSize="10" fontWeight="500">
+                <text x="0" y="4" textAnchor="middle" fill="#fff" fontSize="10" fontWeight="600">
                   {m.label || labels[m.type] || ""}
                 </text>
               </g>
@@ -673,15 +729,15 @@ function MultiTap({ question, onAnswer, onReset }) {
         <>
           <Feedback state={perfect ? "ok" : got > 0 && wrong === 0 ? "partial" : "no"}
             message={perfect ? question.tip : `You got ${got} right, ${wrong} wrong, missed ${missed}. ${question.tip || ""}`} />
-          <div className="flex gap-2 mt-2 justify-end">
-            <button onClick={reset} className="px-3 py-1.5 text-xs border rounded hover:bg-gray-50">Try again</button>
+          <div style={actionRowStyle()}>
+            <button onClick={reset} style={secondaryBtnStyle}>Try again</button>
           </div>
         </>
       ) : (
-        <div className="flex gap-2 mt-3 justify-end">
-          <button onClick={reset} className="px-3 py-1.5 text-xs border rounded hover:bg-gray-50">Reset</button>
+        <div style={actionRowStyle()}>
+          <button onClick={reset} style={secondaryBtnStyle}>Reset</button>
           <button onClick={check} disabled={selected.size === 0}
-            className="px-4 py-1.5 text-xs bg-blue-700 text-white rounded hover:bg-blue-800 disabled:opacity-40">
+            style={selected.size === 0 ? primaryBtnDisabledStyle : primaryBtnStyle}>
             Check answers
           </button>
         </div>
@@ -712,11 +768,12 @@ function Sequence({ question, onAnswer, onReset }) {
 
   return (
     <div>
-      <p className="text-base font-medium mb-1">{question.q}</p>
-      <p className="text-xs text-gray-500 mb-3">Tap the markers in the correct order, 1 → {markers.length}.</p>
-      <div className="relative">
-        <IceIQRink {...(question.rink || {})} className="rounded-md border" />
-        <svg viewBox={getViewBox(question.rink?.view)} className="absolute inset-0 w-full h-full">
+      <p style={questionTextStyle}>{question.q}</p>
+      <p style={hintTextStyle}>Tap the markers in the correct order, 1 → {markers.length}.</p>
+      <div style={rinkFrameStyle}>
+        <IceIQRink {...(question.rink || {})} />
+        <svg viewBox={getViewBox(question.rink?.view)} preserveAspectRatio="none"
+          style={overlaySvgStyle(!done)}>
           {markers.map((m, i) => {
             const fills = { attacker: "#E24B4A", defender: "#2C2C2A", teammate: "#1D9E75", player: "#185FA5" };
             const labels = { attacker: "X", defender: "D", teammate: "T", player: "O" };
@@ -730,17 +787,17 @@ function Sequence({ question, onAnswer, onReset }) {
                 onClick={() => tap(i)}>
                 {tapped && (
                   <circle cx="0" cy="0" r="16" fill="none"
-                    stroke={correctAtThisPos ? "#1D9E75" : wrongAtThisPos ? "#E24B4A" : "#3C3489"}
-                    strokeWidth="2" />
+                    stroke={correctAtThisPos ? "#22c55e" : wrongAtThisPos ? "#ef4444" : "#5BA4E8"}
+                    strokeWidth="2.2" />
                 )}
                 <circle cx="0" cy="0" r="11" fill={fills[m.type] || "#185FA5"} stroke="#fff" strokeWidth="1.5" />
-                <text x="0" y="4" textAnchor="middle" fill="#fff" fontSize="10" fontWeight="500">
+                <text x="0" y="4" textAnchor="middle" fill="#fff" fontSize="10" fontWeight="600">
                   {m.label || labels[m.type] || ""}
                 </text>
                 {tapped && (
                   <>
-                    <circle cx="14" cy="-12" r="8" fill="#3C3489" />
-                    <text x="14" y="-9" textAnchor="middle" fill="#fff" fontSize="9" fontWeight="500">{seqPos + 1}</text>
+                    <circle cx="14" cy="-12" r="8" fill={C.gold} />
+                    <text x="14" y="-9" textAnchor="middle" fill="#fff" fontSize="9" fontWeight="700">{seqPos + 1}</text>
                   </>
                 )}
               </g>
@@ -751,8 +808,8 @@ function Sequence({ question, onAnswer, onReset }) {
       {done && (
         <>
           <Feedback state={correct ? "ok" : "no"} message={question.tip} />
-          <div className="flex gap-2 mt-2 justify-end">
-            <button onClick={reset} className="px-3 py-1.5 text-xs border rounded hover:bg-gray-50">Try again</button>
+          <div style={actionRowStyle()}>
+            <button onClick={reset} style={secondaryBtnStyle}>Try again</button>
           </div>
         </>
       )}
@@ -833,24 +890,23 @@ function PathDraw({ question, onAnswer, onReset }) {
 
   return (
     <div>
-      <p className="text-base font-medium mb-1">{question.q}</p>
-      <p className="text-xs text-gray-500 mb-3">Click and drag from the starting player to the open ice.</p>
-      <div className="relative">
-        <IceIQRink {...(question.rink || {})} className="rounded-md border" />
-        <svg ref={svgRef} viewBox={getViewBox(question.rink?.view)}
-          className="absolute inset-0 w-full h-full"
-          onMouseDown={onDown} onTouchStart={onDown}
-          style={{ cursor: result ? "default" : "crosshair" }}>
+      <p style={questionTextStyle}>{question.q}</p>
+      <p style={hintTextStyle}>Click and drag from the starting player to the open ice.</p>
+      <div style={rinkFrameStyle}>
+        <IceIQRink {...(question.rink || {})} />
+        <svg ref={svgRef} viewBox={getViewBox(question.rink?.view)} preserveAspectRatio="none"
+          style={{ ...overlaySvgStyle(!result), cursor: result ? "default" : "crosshair" }}
+          onMouseDown={onDown} onTouchStart={onDown}>
           {target && (
             <g>
               <circle cx={target.x} cy={target.y} r={target.radius}
-                fill="rgba(29,158,117,0.12)" stroke="#1D9E75" strokeWidth="1" strokeDasharray="4 3" />
-              <text x={target.x} y={target.y + 3} textAnchor="middle" fill="#085041" fontSize="9" fontWeight="500">target</text>
+                fill="rgba(34,197,94,0.14)" stroke="#22c55e" strokeWidth="1.4" strokeDasharray="4 2.5" />
+              <text x={target.x} y={target.y + 3} textAnchor="middle" fill="#86EFAC" fontSize="10" fontWeight="600">target</text>
             </g>
           )}
           {pathD && (
             <path d={pathD} fill="none"
-              stroke={result ? (result.state === "ok" ? "#1D9E75" : "#E24B4A") : "#185FA5"}
+              stroke={result ? (result.state === "ok" ? "#22c55e" : "#ef4444") : "#5BA4E8"}
               strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" />
           )}
         </svg>
@@ -858,8 +914,8 @@ function PathDraw({ question, onAnswer, onReset }) {
       {result && (
         <>
           <Feedback state={result.state} message={result.msg} />
-          <div className="flex gap-2 mt-2 justify-end">
-            <button onClick={reset} className="px-3 py-1.5 text-xs border rounded hover:bg-gray-50">Try again</button>
+          <div style={actionRowStyle()}>
+            <button onClick={reset} style={secondaryBtnStyle}>Try again</button>
           </div>
         </>
       )}
@@ -883,15 +939,16 @@ function LaneSelect({ question, onAnswer, onReset }) {
 
   return (
     <div>
-      <p className="text-base font-medium mb-1">{question.q}</p>
-      <p className="text-xs text-gray-500 mb-3">Tap the lane with no defender in it.</p>
-      <div className="relative">
-        <IceIQRink {...(question.rink || {})} className="rounded-md border" />
-        <svg viewBox={getViewBox(question.rink?.view)} className="absolute inset-0 w-full h-full">
+      <p style={questionTextStyle}>{question.q}</p>
+      <p style={hintTextStyle}>Tap the lane with no defender in it.</p>
+      <div style={rinkFrameStyle}>
+        <IceIQRink {...(question.rink || {})} />
+        <svg viewBox={getViewBox(question.rink?.view)} preserveAspectRatio="none"
+          style={overlaySvgStyle(!done)}>
           {lanes.map((l, i) => {
             const isPicked = picked === i;
-            let stroke = "#185FA5", opacity = 0.2;
-            if (done && isPicked) { stroke = l.clear ? "#1D9E75" : "#E24B4A"; opacity = 0.5; }
+            let stroke = "#5BA4E8", opacity = 0.28;
+            if (done && isPicked) { stroke = l.clear ? "#22c55e" : "#ef4444"; opacity = 0.6; }
             return (
               <line key={i}
                 x1={toFiniteNumber(l.x1, 0)} y1={toFiniteNumber(l.y1, 0)}
@@ -906,8 +963,8 @@ function LaneSelect({ question, onAnswer, onReset }) {
       {done && pickedLane && (
         <>
           <Feedback state={pickedLane.clear ? "ok" : "no"} message={pickedLane.msg || question.tip} />
-          <div className="flex gap-2 mt-2 justify-end">
-            <button onClick={reset} className="px-3 py-1.5 text-xs border rounded hover:bg-gray-50">Try again</button>
+          <div style={actionRowStyle()}>
+            <button onClick={reset} style={secondaryBtnStyle}>Try again</button>
           </div>
         </>
       )}
@@ -936,25 +993,26 @@ function POVPick({ question, onAnswer, onReset }) {
 
   return (
     <div>
-      <p className="text-base font-medium mb-1">{question.q}</p>
-      <p className="text-xs text-gray-500 mb-3">Tap what you see from the player's perspective.</p>
-      <IceIQPOVRink
-        camera={povProps.camera}
-        povRole={povProps.povRole || "skater"}
-        markers={povProps.markers}
-        targets={targets.map((t, i) => ({ ...t, id: t.id || `t${i}` }))}
-        showPrompt={povProps.prompt}
-        onTargetClick={done ? null : (t) => {
-          const idx = targets.findIndex(x => (x.id || `t${targets.indexOf(x)}`) === t.id);
-          if (idx >= 0) handle(targets[idx], idx);
-        }}
-        className="rounded-md border"
-      />
+      <p style={questionTextStyle}>{question.q}</p>
+      <p style={hintTextStyle}>Tap what you see from the player's perspective.</p>
+      <div style={{ ...rinkFrameStyle, marginBottom: "0.75rem" }}>
+        <IceIQPOVRink
+          camera={povProps.camera}
+          povRole={povProps.povRole || "skater"}
+          markers={povProps.markers}
+          targets={targets.map((t, i) => ({ ...t, id: t.id || `t${i}` }))}
+          showPrompt={povProps.prompt}
+          onTargetClick={done ? null : (t) => {
+            const idx = targets.findIndex(x => (x.id || `t${targets.indexOf(x)}`) === t.id);
+            if (idx >= 0) handle(targets[idx], idx);
+          }}
+        />
+      </div>
       {done && pickedTarget && (
         <>
           <Feedback state={pickedTarget.correct ? "ok" : "no"} message={pickedTarget.msg || question.tip} />
-          <div className="flex gap-2 mt-2 justify-end">
-            <button onClick={reset} className="px-3 py-1.5 text-xs border rounded hover:bg-gray-50">Try again</button>
+          <div style={actionRowStyle()}>
+            <button onClick={reset} style={secondaryBtnStyle}>Try again</button>
           </div>
         </>
       )}
@@ -965,38 +1023,20 @@ function POVPick({ question, onAnswer, onReset }) {
 // POV-mc: first-person scene above multiple-choice options. Use when the
 // decision is verbal ("what should you do?") but the read is positional.
 function POVMC({ question, onAnswer }) {
-  const [picked, setPicked] = useState(null);
-  const choices = Array.isArray(question.choices) ? question.choices : [];
-  const correct = toFiniteNumber(question.correct, 0);
-  const done = picked !== null;
   const povProps = question.pov && typeof question.pov === "object" ? question.pov : {};
 
   return (
     <div>
-      <p className="text-base font-medium mb-3">{question.q}</p>
-      <IceIQPOVRink
-        camera={povProps.camera}
-        povRole={povProps.povRole || "skater"}
-        markers={povProps.markers}
-        showPrompt={povProps.prompt}
-        className="rounded-md border"
-      />
-      <div className="mt-3 flex flex-col gap-2">
-        {choices.map((c, i) => {
-          const cls = !done ? "bg-white border-gray-300 hover:bg-gray-50"
-            : i === correct ? "bg-green-50 border-green-500 text-green-900"
-            : i === picked ? "bg-red-50 border-red-500 text-red-900"
-            : "bg-white border-gray-200 opacity-60";
-          return (
-            <button key={i} disabled={done}
-              onClick={() => { setPicked(i); onAnswer?.(i === correct); }}
-              className={`p-3 rounded border text-left text-sm ${cls}`}>
-              {c}
-            </button>
-          );
-        })}
+      <p style={{ ...questionTextStyle, marginBottom: "0.9rem" }}>{question.q}</p>
+      <div style={{ ...rinkFrameStyle, marginBottom: "0.9rem" }}>
+        <IceIQPOVRink
+          camera={povProps.camera}
+          povRole={povProps.povRole || "skater"}
+          markers={povProps.markers}
+          showPrompt={povProps.prompt}
+        />
       </div>
-      {done && <Feedback state={picked === correct ? "ok" : "no"} message={question.tip} />}
+      <MCChoiceList question={question} onAnswer={onAnswer} />
     </div>
   );
 }
@@ -1017,25 +1057,26 @@ function HotSpots({ question, onAnswer, onReset }) {
 
   return (
     <div>
-      <p className="text-base font-medium mb-1">{question.q}</p>
-      <p className="text-xs text-gray-500 mb-3">Tap the best position.</p>
-      <div className="relative">
-        <IceIQRink {...(question.rink || {})} className="rounded-md border" />
-        <svg viewBox={getViewBox(question.rink?.view)} className="absolute inset-0 w-full h-full">
+      <p style={questionTextStyle}>{question.q}</p>
+      <p style={hintTextStyle}>Tap the best position.</p>
+      <div style={rinkFrameStyle}>
+        <IceIQRink {...(question.rink || {})} />
+        <svg viewBox={getViewBox(question.rink?.view)} preserveAspectRatio="none"
+          style={overlaySvgStyle(!done)}>
           {spots.map((s, i) => {
             const isPicked = picked === i;
-            let stroke = "#185FA5", fill = "none", dash = "3 2";
+            let stroke = "#5BA4E8", fill = "none", dash = "4 2.5";
             if (done && isPicked) {
-              stroke = s.correct ? "#1D9E75" : "#E24B4A";
-              fill = s.correct ? "rgba(29,158,117,0.2)" : "rgba(226,75,74,0.2)";
+              stroke = s.correct ? "#22c55e" : "#ef4444";
+              fill = s.correct ? "rgba(34,197,94,0.25)" : "rgba(239,68,68,0.25)";
               dash = "none";
             }
             return (
               <g key={i} transform={`translate(${toFiniteNumber(s.x, 0)},${toFiniteNumber(s.y, 0)})`}
                 style={{ cursor: done ? "default" : "pointer" }}
                 onClick={() => handle(s, i)}>
-                <circle cx="0" cy="0" r="15" fill={fill} stroke={stroke} strokeWidth="1.5" strokeDasharray={dash} />
-                <circle cx="0" cy="0" r="5" fill="#185FA5" opacity="0.5" />
+                <circle cx="0" cy="0" r="15" fill={fill} stroke={stroke} strokeWidth="1.8" strokeDasharray={dash} />
+                <circle cx="0" cy="0" r="5" fill="#5BA4E8" opacity="0.55" />
               </g>
             );
           })}
@@ -1044,8 +1085,8 @@ function HotSpots({ question, onAnswer, onReset }) {
       {done && pickedSpot && (
         <>
           <Feedback state={pickedSpot.correct ? "ok" : "no"} message={pickedSpot.msg || question.tip} />
-          <div className="flex gap-2 mt-2 justify-end">
-            <button onClick={reset} className="px-3 py-1.5 text-xs border rounded hover:bg-gray-50">Try again</button>
+          <div style={actionRowStyle()}>
+            <button onClick={reset} style={secondaryBtnStyle}>Try again</button>
           </div>
         </>
       )}
