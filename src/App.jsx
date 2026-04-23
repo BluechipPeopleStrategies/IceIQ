@@ -4177,7 +4177,7 @@ function AuthScreen({ onAuthenticated, onDemo, onDevEnter, onPreview, prefill })
         if (!email.trim() || !password || !name.trim()) throw new Error("All fields required");
         if (password.length < 6) throw new Error("Password must be at least 6 characters");
         await SB.signUp({ email: email.trim(), password, role, name: name.trim() });
-        try { window.localStorage.setItem("iceiq_has_signed_in_before", "1"); } catch {}
+        lsSetStr("iceiq_has_signed_in_before", "1");
         logSignupComplete({ role, level: prefill?.level || null });
       } else if (mode === "forgot") {
         if (!email.trim()) throw new Error("Enter your email to reset your password");
@@ -4192,7 +4192,7 @@ function AuthScreen({ onAuthenticated, onDemo, onDevEnter, onPreview, prefill })
       } else {
         if (!email.trim() || !password) throw new Error("Email and password required");
         await SB.signIn({ email: email.trim(), password });
-        try { window.localStorage.setItem("iceiq_has_signed_in_before", "1"); } catch {}
+        lsSetStr("iceiq_has_signed_in_before", "1");
       }
       onAuthenticated();
     } catch (e) {
@@ -5387,7 +5387,7 @@ export default function App() {
     if (tier === "FREE") incrementFreeQuizCount();
     // Only the acquisition-demo flow (sample preview, landing "Coach Dashboard")
     // should hit the cap. Dev-bypass testing sessions must not burn this flag.
-    if (demoMode && !profile?.__dev) { try { localStorage.setItem("iceiq_demo_quiz_taken", "1"); } catch {} }
+    if (demoMode && !profile?.__dev) { lsSetStr("iceiq_demo_quiz_taken", "1"); }
     if (newTotal === 5 && tier === "FREE" && !localStorage.getItem("iceiq_milestone5_shown")) {
       setShowMilestone5Banner(true);
       localStorage.setItem("iceiq_milestone5_shown", "true");
@@ -5557,7 +5557,7 @@ export default function App() {
             setScreen({kind:"rate", player:p, playerLevel});
           }}
           onOpenDrills={(level, competencyKey) => {
-            try { window.localStorage.setItem("iceiq_coach_focus_seen_v1", "1"); } catch {}
+            lsSetStr("iceiq_coach_focus_seen_v1", "1");
             bumpQuestFlags && bumpQuestFlags();
             setScreen({kind:"drills", level: level || "U11 / Atom", competencyKey});
           }}
