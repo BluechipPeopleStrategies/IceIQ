@@ -117,3 +117,33 @@ Demo coach roster: `DEMO_COACH_ROSTER` — 5 U11 players with `iq` field (displa
 - `App.jsx` contains 880+ questions. Do NOT read large question bank sections unless editing content.
 - Provide modified snippets only. Use `// ... existing code` placeholders.
 - Run `/compact` after every UI/CSS tweak session.
+
+## Rink Visualization Schema (v2)
+
+Olympic IIHF rink renderer for top-down hockey questions. Components: `src/IceIQRink.jsx` (SVG rink + zones + markers + lines) and `src/IceIQRinkQuestion.jsx` (dispatches `q` to the right interactive component by type).
+
+### Coordinate system
+- 1 SVG unit = 0.1 meter. Rink is **600 × 300** units (60m × 30m). Origin top-left.
+- Landmarks: left goal line `x=40`, left blue `x=213`, center red `x=300`, right blue `x=387`, right goal line `x=560`. Top boards `y=0`, center `y=150`, bottom boards `y=300`.
+- End-zone faceoff dots: `(100,80)`, `(100,220)`, `(500,80)`, `(500,220)`. NZ dots: `(228,80)`, `(228,220)`, `(372,80)`, `(372,220)`.
+
+### Question types (dispatcher in `IceIQRinkQuestion.jsx`)
+- `mc` / `diagram` — optional `q.rink` field renders rink above choices.
+- `drag-target` — `targets[]` (`{x,y,radius,verdict,feedback}`); `puckStart{x,y}` optional.
+- `drag-place` — `slots[]` + `chips[]`. Match chip id to slot id.
+- `zone-click` — `zones[]` (`{shape:"poly"|"circle", points|x/y/radius, correct, msg}`).
+- `multi-tap` — `markers[]` at the question level with `correct: true|false`.
+- `sequence-rink` — `markers[]` with `order: 1..N`; tap in order.
+- `path-draw` — `start{x,y,radius}`, `target{x,y,radius}`, `avoid[]`.
+- `lane-select` — `lanes[]` (`{x1,y1,x2,y2,clear,msg}`).
+- `hot-spots` — `spots[]` (`{x,y,correct,msg}`).
+
+Legacy `type:"rink"` (with `q.scene`) and legacy `type:"zone-click"` (no `q.rink`, with `q.zones` in old format) still dispatch to the original `Rink.jsx` / `ZoneClickQuestion` paths. New schema is detected by `q.rink` presence or by one of the new type names — see `NEW_RINK_TYPES` and `isRinkQ` in `App.jsx`.
+
+### Self-healing
+Both components validate and auto-fix bad data: coord clamping, unknown marker/line/zone fallbacks, NaN → defaults, non-array fields → `[]`. Auto-fixes log `console.warn` with prefix `[IceIQRink]` / `[IceIQRinkQuestion]`. Unrecoverable questions (missing required arrays for the type) render an amber **Skip this question** card via the validator + error boundary — never crash the session.
+
+### Authoring workflow
+1. Use the standalone Rink Editor v2 artifact to build scenes visually.
+2. Copy JSON → paste into the right age-group array in `src/data/questions.json`.
+3. Verify in dev: open the question, watch the console for `[IceIQRink*]` warnings (clean = no auto-fixes needed).

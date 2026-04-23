@@ -12,6 +12,8 @@ import { markSignupIntent, logSignupComplete } from "./utils/signupTelemetry";
 // to Supabase from the first interaction, no LS→cloud transfer needed.
 import { DEPTH_SLOTS, getDepthChart, setAssignment as setDepthAssignment, seedDemoDepthChart, clearDemoDepthChart } from "./utils/depthChart";
 import Rink from "./Rink.jsx";
+import IceIQRink from "./IceIQRink.jsx";
+import IceIQRinkQuestion from "./IceIQRinkQuestion.jsx";
 import { COMPETENCIES, getIceIQJourneyState, GAME_SENSE_UNLOCK_SESSIONS, calcCompetencyScores, calcGameSenseScore, ICE_IQ_THRESHOLDS, ICE_IQ_JOURNEY_LABELS } from "./utils/gameSense.js";
 import { getTrainingLog, seedDemoTrainingForRoster } from "./utils/trainingLog.js";
 import { buildU11ForwardPreview, PREVIEW_PLAYER_ID } from "./data/previewPlayer.js";
@@ -79,9 +81,9 @@ const TIER_GOLD_THRESHOLD = 80;
 const TIER_YELLOW_THRESHOLD = 60;
 
 const SCORE_TIERS = [
-  {min:TIER_GOLD_THRESHOLD, label:"Hockey Sense",   badge:"🏒", color:C.green},
-  {min:TIER_YELLOW_THRESHOLD, label:"Two-Way Player", badge:"⚡", color:C.yellow},
-  {min:0,  label:"Tape to Tape",   badge:"🎯", color:C.red},
+  {min:TIER_GOLD_THRESHOLD, label:"First Star",  badge:"⭐", color:C.green},
+  {min:TIER_YELLOW_THRESHOLD, label:"Second Star", badge:"⭐", color:C.yellow},
+  {min:0,  label:"Third Star",  badge:"⭐", color:C.red},
 ];
 const getTier = s => SCORE_TIERS.find(t => s >= t.min) || SCORE_TIERS[2];
 
@@ -1350,6 +1352,7 @@ function Quiz({ player, onFinish, onBack, tier, onUpgrade }) {
   const [zoneCorrect, setZoneCorrect] = useState(null);
   const [rinkVerdict, setRinkVerdict] = useState(null); // null | "correct" | "partial" | "wrong"
   const [showFlag, setShowFlag] = useState(false);
+  const [rinkQResult, setRinkQResult] = useState(null); // null | true (correct) | false (wrong) — for IceIQRinkQuestion dispatcher
   const [flagReason, setFlagReason] = useState("");
   const [flagDetail, setFlagDetail] = useState("");
   const [flagSent, setFlagSent] = useState(false);
@@ -1426,11 +1429,17 @@ function Quiz({ player, onFinish, onBack, tier, onUpgrade }) {
     setSeqCorrect(false);
     setZoneCorrect(null);
     setRinkVerdict(null);
+    setRinkQResult(null);
   }
 
   const rinkOk = rinkVerdict && rinkVerdict !== "wrong"; // partial counts as "ok" for scoring
-  const canAdvance = qtype === "seq" ? seqAnswered : qtype === "zone-click" ? zoneCorrect !== null : qtype === "rink" ? rinkVerdict !== null : sel !== null;
-  const answered = qtype === "seq" ? seqAnswered : qtype === "zone-click" ? zoneCorrect !== null : qtype === "rink" ? rinkVerdict !== null : sel !== null;
+  // IceIQRinkQuestion dispatcher: triggers when q.rink is set, or for the new
+  // rink-native interactive types. Legacy "zone-click" without q.rink stays on
+  // ZoneClickQuestion so prior-schema questions keep working.
+  const NEW_RINK_TYPES = ["drag-target","drag-place","multi-tap","sequence-rink","path-draw","lane-select","hot-spots"];
+  const isRinkQ = !!question?.rink || NEW_RINK_TYPES.includes(qtype);
+  const canAdvance = isRinkQ ? rinkQResult !== null : qtype === "seq" ? seqAnswered : qtype === "zone-click" ? zoneCorrect !== null : qtype === "rink" ? rinkVerdict !== null : sel !== null;
+  const answered = isRinkQ ? rinkQResult !== null : qtype === "seq" ? seqAnswered : qtype === "zone-click" ? zoneCorrect !== null : qtype === "rink" ? rinkVerdict !== null : sel !== null;
   const q = question;
   if (!q) return <Screen><div style={{color:C.dimmer,textAlign:"center",paddingTop:"4rem"}}>Loading…</div></Screen>;
 
@@ -1573,6 +1582,21 @@ function Quiz({ player, onFinish, onBack, tier, onUpgrade }) {
         )}
 
         {/* Question component */}
+        {isRinkQ ? (
+          <IceIQRinkQuestion
+            question={q}
+            onAnswer={ok => {
+              if (rinkQResult !== null) return;
+              const okBool = !!ok;
+              setRinkQResult(okBool);
+              const newResult = { id:q.id, cat:q.cat, ok:okBool, d:q.d||2, type:qtype };
+              const newResults = [...results, newResult];
+              setResults(newResults);
+              if (newResults.length >= qLen) setQuizDone(true);
+            }}
+            onSkip={advance}
+          />
+        ) : (<>
         {qtype === "mc" && <MCQuestion q={q} sel={sel} onPick={handlePick} colorblind={player.colorblind}/>}
         {qtype === "mistake" && <MCQuestion q={q} sel={sel} onPick={handlePick} colorblind={player.colorblind}/>}
         {qtype === "next" && <NextQuestion q={q} sel={sel} onPick={handlePick}/>}
@@ -1604,6 +1628,12 @@ function Quiz({ player, onFinish, onBack, tier, onUpgrade }) {
             }}
           />
         )}
+        </>)}
+
+        {/* Report flag — always visible, not gated on answered */}
+        <button onClick={() => setShowFlag(true)} style={{background:"none",border:"none",color:C.dimmer,fontSize:11,marginTop:".65rem",cursor:"pointer",fontFamily:FONT.body,width:"100%",textAlign:"center",padding:".4rem",textDecoration:"underline"}}>
+          🚩 Report this question
+        </button>
 
         {/* Explanation */}
         {answered && (
@@ -1674,9 +1704,6 @@ function Quiz({ player, onFinish, onBack, tier, onUpgrade }) {
                 Next Question →
               </button>
             )}
-            <button onClick={() => setShowFlag(true)} style={{background:"none",border:"none",color:C.dimmer,fontSize:11,marginTop:".65rem",cursor:"pointer",fontFamily:FONT.body,width:"100%",textAlign:"center",padding:".4rem",textDecoration:"underline"}}>
-              🚩 Report this question
-            </button>
           </div>
         )}
 
@@ -3356,6 +3383,9 @@ function StudyScreen({ player, onBack, onNav, focusCompetency }) {
   useEffect(() => {
     import("./data/studyContent.js").then(m => setStudyContent(m.STUDY_CONTENT));
   }, []);
+  const identity = isEphemeralPlayer(player?.id) ? (player.id || "__anon__") : (player?.id || "__anon__");
+  const [watchedClips, setWatchedClips] = useState(() => new Set(lsGetJSON(LS_CLIPS_WATCHED, {})[identity] || []));
+  const [homeworkDone, setHomeworkDone] = useState(() => new Set(lsGetJSON(LS_HOMEWORK_DONE, {})[identity] || []));
   if (!studyContent) {
     return (
       <div style={{minHeight:"100vh",background:C.bg,color:C.dim,fontFamily:FONT.body,display:"flex",alignItems:"center",justifyContent:"center"}}>
@@ -3396,9 +3426,6 @@ function StudyScreen({ player, onBack, onNav, focusCompetency }) {
       .forEach(x => weakCats.push(x));
   }
 
-  const identity = isEphemeralPlayer(player?.id) ? (player.id || "__anon__") : (player?.id || "__anon__");
-  const [watchedClips, setWatchedClips] = useState(() => new Set(lsGetJSON(LS_CLIPS_WATCHED, {})[identity] || []));
-  const [homeworkDone, setHomeworkDone] = useState(() => new Set(lsGetJSON(LS_HOMEWORK_DONE, {})[identity] || []));
   function toggleClip(key) {
     setWatchedClips(prev => {
       const next = new Set(prev);
@@ -5524,7 +5551,7 @@ export default function App() {
           sessions (the tester is impersonating a real FREE/PRO/TEAM user and
           shouldn't see a sign-up CTA). */}
       {demoMode && !profile?.__dev && !firstLineToast && screen !== "results" && (
-        <button onClick={() => triggerSignup("demo_chip")} style={{position:"fixed",top:48,right:10,zIndex:150,background:C.gradientPrimary,color:C.bg,border:"none",borderRadius:999,padding:"6px 12px 6px 10px",cursor:"pointer",fontSize:11,fontWeight:800,fontFamily:FONT.body,letterSpacing:".02em",display:"flex",alignItems:"center",gap:"4px",boxShadow:"0 4px 14px rgba(252,76,2,.35), inset 0 1px 0 rgba(255,255,255,.25)"}}>
+        <button onClick={() => triggerSignup("demo_chip")} style={{position:"fixed",bottom:88,right:10,zIndex:150,background:C.gradientPrimary,color:C.bg,border:"none",borderRadius:999,padding:"6px 12px 6px 10px",cursor:"pointer",fontSize:11,fontWeight:800,fontFamily:FONT.body,letterSpacing:".02em",display:"flex",alignItems:"center",gap:"4px",boxShadow:"0 4px 14px rgba(252,76,2,.35), inset 0 1px 0 rgba(255,255,255,.25)"}}>
           <span style={{fontSize:12}}>🏒</span>
           Sign Up Free →
         </button>
