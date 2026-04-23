@@ -485,13 +485,10 @@ function buildDemoQueue(qb, level, position) {
   const usedIds = new Set();
 
   for (const [type, count] of Object.entries(targetCounts)) {
-    const pool = type === "zone-click"
-      ? ZONE_CLICK_QUESTIONS
-      : (qb[level] || []).filter(q => q.type === type);
-    const levelMatch = pool.filter(q => {
-      if (type === "zone-click" && !q.level?.includes(level)) return false;
-      return posMatch(q);
-    });
+    // All types — including zone-click — live in the bank now; qbLoader
+    // replicates multi-age questions into each applicable level array.
+    const pool = (qb[level] || []).filter(q => q.type === type);
+    const levelMatch = pool.filter(posMatch);
     const fallback = pool.filter(posMatch);
     // If no position-matched question exists (e.g. goalie + tf), fall back to any question of the type
     const broadFallback = fallback.length > 0 ? fallback : pool;
@@ -513,7 +510,7 @@ function buildDemoQueue(qb, level, position) {
     usedIds.add(q.id);
   }
   // If still short (very unlikely), pad with any remaining questions
-  const anyPool = [...(qb[level] || []), ...ZONE_CLICK_QUESTIONS]
+  const anyPool = (qb[level] || [])
     .filter(q => !usedIds.has(q.id) && posMatch(q))
     .sort(() => Math.random() - 0.5);
   while (result.length < 7 && anyPool.length > 0) {
@@ -536,7 +533,7 @@ function buildQueue(qb, level, position, isReturning, tier) {
   if (_queueCache.has(cacheKey)) {
     pool = _queueCache.get(cacheKey);
   } else {
-    const allQ = [...(qb[level] || []), ...ZONE_CLICK_QUESTIONS];
+    const allQ = qb[level] || [];
     let posFiltered;
     if (!positionAllowed) {
       posFiltered = allQ.filter(q => !q.pos || q.pos.includes("F") || q.pos.includes("D"));
@@ -601,10 +598,14 @@ function buildQueue(qb, level, position, isReturning, tier) {
       byD[2] = [...d2.slice(0, insertAt), sentinel, ...d2.slice(insertAt)];
     }
 
-    // Inject 1 zone-click teaser for FREE tier (d:1 or d:2 only)
+    // Inject 1 zone-click teaser for FREE tier (d:1 or d:2 only).
+    // Zone-click questions are already in qb[level] post-migration —
+    // qbLoader replicates multi-age ones across every applicable level.
     if (byD[1].length >= 2) {
-      const zcPool = ZONE_CLICK_QUESTIONS.filter(q =>
-        q.d <= 2 && q.level.includes(level) && (q.pos.includes(position) || position === "Multiple")
+      const zcPool = (qb[level] || []).filter(q =>
+        q.type === "zone-click" &&
+        q.d <= 2 &&
+        (!q.pos || q.pos.includes(position) || position === "Multiple")
       );
       if (zcPool.length > 0) {
         const zcQ = zcPool[Math.floor(Math.random() * zcPool.length)];
@@ -812,179 +813,6 @@ const DIAGRAMS = {
   u11q4:"forecheck", u11q24:"forecheck",
   u11g1:"goalie_angle", u11g2:"goalie_2on1", u11g7:"goalie_angle",
 };
-
-const ZONE_CLICK_QUESTIONS = [
-  // ───── Merged into U9 / Novice (simple: own net vs other net) ─────
-  {
-    id: "u7_zc_1", type: "zone-click", d: 1,
-    level: ["U9 / Novice"],
-    pos: ["F","D"],
-    sit: "Your teammate has the puck and is skating toward the other team's net.",
-    question: "Where should you skate so you can help score a goal?",
-    correctZone: "oz-slot",
-    zones: ["oz-slot", "oz-left-wing", "oz-right-wing"],
-    explanation: "Skate in front of the other team's net — that's where you can get a pass and shoot."
-  },
-  {
-    id: "u7_zc_2", type: "zone-click", d: 1,
-    level: ["U9 / Novice"],
-    pos: ["F","D"],
-    sit: "The other team is skating toward your own net with the puck.",
-    question: "Where should you skate to help your goalie?",
-    correctZone: "dz-slot",
-    zones: ["dz-slot", "dz-left-corner", "dz-right-corner", "dz-left-point"],
-    explanation: "Get back in front of your own net — that's where you can block shots and help your goalie."
-  },
-  {
-    id: "u7_zc_3", type: "zone-click", d: 1,
-    level: ["U9 / Novice"],
-    pos: ["F","D"],
-    sit: "You just got a pass at center ice. The other team's net is in front of you.",
-    question: "Where should you skate with the puck?",
-    correctZone: "oz-slot",
-    zones: ["oz-slot", "oz-left-wing", "oz-right-wing"],
-    explanation: "Skate forward toward the other team's net — that's how your team scores."
-  },
-
-  // ───── U9 / Novice (positions: winger, center, defense) ─────
-  {
-    id: "u9_zc_1", type: "zone-click", d: 1,
-    level: ["U9 / Novice"],
-    pos: ["F","D"],
-    sit: "The other team has the puck in the corner of your defensive zone. You're the center, covering in front of your net.",
-    question: "Where should you stay to stop a pass to a dangerous shooter?",
-    correctZone: "dz-slot",
-    zones: ["dz-slot", "dz-left-corner", "dz-right-corner", "dz-behind-net"],
-    explanation: "Stay in the slot — it's the most dangerous spot for an opponent to get a shot from."
-  },
-  {
-    id: "u9_zc_2", type: "zone-click", d: 1,
-    level: ["U9 / Novice"],
-    pos: ["F","D"],
-    sit: "Your defenseman has the puck in your own zone and is looking to pass it up. You're the right winger.",
-    question: "Where should you skate to give your D a safe pass?",
-    correctZone: "nz-right",
-    zones: ["nz-right", "nz-left", "nz-center"],
-    explanation: "Wingers stay wide on their side — skate up to the neutral zone so the puck carrier has a safe target."
-  },
-  {
-    id: "u9_zc_3", type: "zone-click", d: 2,
-    level: ["U9 / Novice"],
-    pos: ["F","D"],
-    sit: "Your team shoots the puck into the opposing team's left corner. Your left winger is chasing it.",
-    question: "As the center, where should you go to be ready to score?",
-    correctZone: "oz-slot",
-    zones: ["oz-slot", "oz-left-wing", "oz-right-wing"],
-    explanation: "The center sets up in front of the net — if the winger gets the puck out, you're ready to shoot."
-  },
-
-  // ───── U11 / Atom (basic systems: breakout, forecheck, backcheck) ─────
-  {
-    id: "u11_zc_1", type: "zone-click", d: 1,
-    level: ["U11 / Atom", "U13 / Peewee"],
-    pos: ["F","D"],
-    sit: "Your team has the puck in the opposing team's zone and your D is about to shoot from the point.",
-    question: "As the center, where should you position for a rebound or tip?",
-    correctZone: "oz-slot",
-    zones: ["oz-slot", "oz-left-wing", "oz-right-wing"],
-    explanation: "Park in the slot — most rebounds and tip-in chances happen right in front of the net."
-  },
-  {
-    id: "u11_zc_2", type: "zone-click", d: 2,
-    level: ["U11 / Atom", "U13 / Peewee"],
-    pos: ["F","D"],
-    sit: "The other team has the puck and is skating back through the neutral zone toward your end.",
-    question: "Where should the first backchecking forward skate to slow them down?",
-    correctZone: "nz-center",
-    zones: ["nz-center", "nz-left", "nz-right"],
-    explanation: "Backcheck through the middle — take away the cross-ice pass and force the puck carrier wide where help can arrive."
-  },
-  {
-    id: "u11_zc_3", type: "zone-click", d: 2,
-    level: ["U11 / Atom"],
-    pos: ["F","D"],
-    sit: "Your defenseman has the puck behind your own net and your team needs to break out.",
-    question: "As the center, where should you swing to get open for a breakout pass?",
-    correctZone: "dz-slot",
-    zones: ["dz-slot", "dz-behind-net", "dz-left-corner", "dz-right-corner"],
-    explanation: "The center circles through the middle of your zone — that's the primary outlet to start the breakout up the ice."
-  },
-
-  // ───── U13 / Peewee (F, D, and goalie roles) ─────
-  {
-    id: "u13_zc_1", type: "zone-click", d: 1,
-    level: ["U13 / Peewee", "U15 / Bantam", "U18 / Midget"],
-    pos: ["F"],
-    sit: "Your team just won the puck in the opposing team's corner. You're the strong-side winger on the boards.",
-    question: "Where should you move to give your teammate a scoring option?",
-    correctZone: "oz-slot",
-    zones: ["oz-slot", "oz-left-wing", "oz-right-wing"],
-    explanation: "Get off the wall into the slot — that's the highest-danger shooting area, so the puck carrier can feed you for a scoring chance."
-  },
-  {
-    id: "u13_zc_2", type: "zone-click", d: 2,
-    level: ["U13 / Peewee", "U15 / Bantam"],
-    pos: ["D"],
-    sit: "The opposing team has the puck in the left corner of your defensive zone. You're the off-side (right) defenseman.",
-    question: "Where should you position to protect the most dangerous scoring area?",
-    correctZone: "dz-slot",
-    zones: ["dz-slot", "dz-right-point", "dz-right-corner", "dz-behind-net"],
-    explanation: "The off-side D holds the net front — block cross-ice passes and tie up anyone trying to tip in a shot."
-  },
-  {
-    id: "u13_zc_goalie", type: "zone-click", d: 1,
-    level: ["U13 / Peewee", "U15 / Bantam", "U18 / Midget"],
-    pos: ["G"],
-    sit: "A 2-on-1 is coming down the left side into your zone. The puck carrier is skating wide.",
-    question: "Where should you set up to cut off the shooting angle?",
-    correctZone: "dz-slot",
-    zones: ["dz-slot", "dz-left-corner", "dz-behind-net", "dz-left-point"],
-    explanation: "Stay centered at the top of your crease — square up to the shooter but don't overcommit, so you can still slide across on a pass."
-  },
-  {
-    id: "u13_zc_goalie_2", type: "zone-click", d: 2,
-    level: ["U13 / Peewee", "U15 / Bantam", "U18 / Midget"],
-    pos: ["G"],
-    sit: "An opposing player has the puck behind your net and is trying to wrap it around the post on the right side.",
-    question: "Where should you be to seal off the wrap-around?",
-    correctZone: "dz-behind-net",
-    zones: ["dz-behind-net", "dz-slot", "dz-right-corner", "dz-left-corner"],
-    explanation: "Hug the short-side post tight to the goal line — the puck can't sneak in if you're sealed to the post."
-  },
-  {
-    id: "u13_zc_goalie_3", type: "zone-click", d: 2,
-    level: ["U13 / Peewee", "U15 / Bantam", "U18 / Midget"],
-    pos: ["G"],
-    sit: "The opposing team has the puck in the right corner and is looking to pass it to the slot for a shot.",
-    question: "Where should you square up to prepare for the expected shot?",
-    correctZone: "dz-slot",
-    zones: ["dz-slot", "dz-right-corner", "dz-right-point", "dz-left-corner"],
-    explanation: "Face the slot — that's where the pass-and-shoot play will develop, so you want to be squared to the most likely shooter."
-  },
-
-  // ───── U15 / Bantam & U18 / Midget (advanced: D-zone systems, breakouts, backchecks) ─────
-  {
-    id: "u15_zc_1", type: "zone-click", d: 2,
-    level: ["U15 / Bantam", "U18 / Midget"],
-    pos: ["F","D"],
-    sit: "Your team is breaking out of the zone on a 3-on-2. The puck carrier is already at center ice.",
-    question: "As the trailing winger, where should you skate to give a safe outlet if the rush stalls?",
-    correctZone: "nz-right",
-    zones: ["nz-right", "nz-left", "nz-center"],
-    explanation: "Stay wide on your lane behind the play — you give the puck carrier a lateral drop option and kill an interception that could spring a 2-on-1 the other way."
-  },
-  {
-    id: "u15_zc_2", type: "zone-click", d: 3,
-    level: ["U15 / Bantam", "U18 / Midget"],
-    pos: ["F","D"],
-    sit: "Your team is caught mid-line-change. Opponents just grabbed a loose puck in your neutral zone and are skating in.",
-    question: "Where should the backchecking forward position to take away the middle lane?",
-    correctZone: "nz-center",
-    zones: ["nz-center", "nz-left", "nz-right"],
-    explanation: "Backcheck through the middle — deny the drop pass and force the puck carrier wide where your D can step up and angle them off."
-  },
-];
-
 
 // ─────────────────────────────────────────────────────────
 // QUESTION FORMAT COMPONENTS
