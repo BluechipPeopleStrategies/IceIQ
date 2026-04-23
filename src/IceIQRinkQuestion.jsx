@@ -549,26 +549,27 @@ function ZoneClick({ question, onAnswer, onReset }) {
 
   return (
     <div>
-      <p className="text-base font-medium mb-1">{question.q}</p>
-      <p className="text-xs text-gray-500 mb-3">Tap the correct area of the rink.</p>
-      <div className="relative">
-        <IceIQRink {...(question.rink || {})} className="rounded-md border" />
-        <svg viewBox={getViewBox(question.rink?.view)} className="absolute inset-0 w-full h-full">
+      <p style={{ color: C.white, fontFamily: FONT.body, fontSize: 15, lineHeight: 1.5, margin: "0 0 0.25rem" }}>{question.q}</p>
+      <p style={{ color: C.dim, fontFamily: FONT.body, fontSize: 12, margin: "0 0 0.75rem" }}>Tap the correct area of the rink.</p>
+      <div style={{ position: "relative", borderRadius: 10, overflow: "hidden", border: `1px solid ${C.border}`, background: C.bgCard, marginBottom: "0.75rem" }}>
+        <IceIQRink {...(question.rink || {})} />
+        <svg viewBox={getViewBox(question.rink?.view)} preserveAspectRatio="none"
+          style={{ position: "absolute", inset: 0, width: "100%", height: "100%", pointerEvents: done ? "none" : "auto" }}>
           {zones.map((z, i) => {
             const isPicked = picked === i;
-            let fill = "rgba(24,95,165,0.1)";
-            let stroke = "#185FA5";
-            let sw = "1";
+            let fill = "rgba(91,164,232,0.14)";
+            let stroke = "#5BA4E8";
+            let sw = 1.2;
             if (done && isPicked) {
-              fill = z.correct ? "rgba(29,158,117,0.3)" : "rgba(226,75,74,0.3)";
-              stroke = z.correct ? "#1D9E75" : "#E24B4A";
-              sw = "2";
+              fill = z.correct ? "rgba(34,197,94,0.28)" : "rgba(239,68,68,0.28)";
+              stroke = z.correct ? "#22c55e" : "#ef4444";
+              sw = 2;
             }
             if (z.shape === "circle") {
               return (
                 <circle key={i} cx={toFiniteNumber(z.x, 0)} cy={toFiniteNumber(z.y, 0)}
                   r={toFiniteNumber(z.radius, 30)}
-                  fill={fill} stroke={stroke} strokeWidth={sw} strokeDasharray="3 2"
+                  fill={fill} stroke={stroke} strokeWidth={sw} strokeDasharray="4 2.5"
                   style={{ cursor: done ? "default" : "pointer" }}
                   onClick={() => handle(z, i)} />
               );
@@ -577,7 +578,7 @@ function ZoneClick({ question, onAnswer, onReset }) {
               const pts = z.points.map(p => `${toFiniteNumber(p.x, 0)},${toFiniteNumber(p.y, 0)}`).join(" ");
               return (
                 <polygon key={i} points={pts}
-                  fill={fill} stroke={stroke} strokeWidth={sw} strokeDasharray="3 2"
+                  fill={fill} stroke={stroke} strokeWidth={sw} strokeDasharray="4 2.5"
                   style={{ cursor: done ? "default" : "pointer" }}
                   onClick={() => handle(z, i)} />
               );
@@ -589,8 +590,12 @@ function ZoneClick({ question, onAnswer, onReset }) {
       {done && pickedZone && (
         <>
           <Feedback state={pickedZone.correct ? "ok" : "no"} message={pickedZone.msg || question.tip} />
-          <div className="flex gap-2 mt-2 justify-end">
-            <button onClick={reset} className="px-3 py-1.5 text-xs border rounded hover:bg-gray-50">Try again</button>
+          <div style={{ display: "flex", gap: "0.5rem", marginTop: "0.5rem", justifyContent: "flex-end" }}>
+            <button onClick={reset} style={{
+              padding: "0.4rem 0.8rem", fontSize: 12, fontFamily: FONT.body,
+              background: "transparent", color: C.dim, border: `1px solid ${C.border}`,
+              borderRadius: 8, cursor: "pointer",
+            }}>Try again</button>
           </div>
         </>
       )}
