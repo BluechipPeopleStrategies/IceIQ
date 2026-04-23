@@ -414,7 +414,23 @@ function JerseyStar({ cx, cy }) {
   return <polygon points={pts} fill="#FFD93D" stroke="#C89B0A" strokeWidth="1.3" />;
 }
 
-function Teammate({ item, selected, onPointerDown, playMode }) {
+// Verdict ring — rendered under an item when it's been assigned to a
+// spot-mistake bucket (correct/partial/wrong). Invisible otherwise.
+const VERDICT_COLORS = {
+  correct: '#639922',
+  partial: '#BA7517',
+  wrong:   '#A32D2D',
+};
+function VerdictRing({ cx, cy, r, verdict }) {
+  if (!verdict) return null;
+  const c = VERDICT_COLORS[verdict] || '#888';
+  return (
+    <circle cx={cx} cy={cy} r={r} fill="none" stroke={c} strokeWidth="3.5"
+            strokeDasharray="4 4" opacity="0.85" pointerEvents="none" />
+  );
+}
+
+function Teammate({ item, selected, onPointerDown, onClick, verdict, playMode }) {
   const { x: cx, y: cy } = resolvePos(item);
   const strokeW = item.hasPuck ? 4 : 2.5;
   const labelOnChest = item.label && !item.isYou;
@@ -425,7 +441,9 @@ function Teammate({ item, selected, onPointerDown, playMode }) {
     <g className="rnk-draggable" data-id={item.id}
        style={{ cursor: playMode ? 'default' : 'grab' }}
        onPointerDown={onPointerDown}
+       onClick={onClick}
        transform={s !== 1 ? `translate(${cx} ${cy}) scale(${s}) translate(${-cx} ${-cy})` : undefined}>
+      <VerdictRing cx={cx} cy={cy + 8} r={32} verdict={verdict} />
       {selected && (
         <rect x={cx - 26} y={cy - 20} width="52" height="56" rx="8"
               fill="none" stroke="#378ADD" strokeWidth="2" strokeDasharray="4 3" />
@@ -453,14 +471,16 @@ function Teammate({ item, selected, onPointerDown, playMode }) {
   );
 }
 
-function Opponent({ item, selected, onPointerDown, playMode }) {
+function Opponent({ item, selected, onPointerDown, onClick, verdict, playMode }) {
   const { x: cx, y: cy } = resolvePos(item);
   const s = item.size || 1;
   return (
     <g className="rnk-draggable" data-id={item.id}
        style={{ cursor: playMode ? 'default' : 'grab' }}
        onPointerDown={onPointerDown}
+       onClick={onClick}
        transform={s !== 1 ? `translate(${cx} ${cy}) scale(${s}) translate(${-cx} ${-cy})` : undefined}>
+      <VerdictRing cx={cx} cy={cy + 7} r={30} verdict={verdict} />
       {selected && (
         <rect x={cx - 24} y={cy - 16} width="48" height="50" rx="8"
               fill="none" stroke="#378ADD" strokeWidth="2" strokeDasharray="4 3" />
@@ -478,13 +498,17 @@ function Opponent({ item, selected, onPointerDown, playMode }) {
 // in play mode it's non-interactive.
 const GOALIE_POS = { x: RINK_CENTER_X, y: GOAL_LINE_Y + 16 };
 
-function Goalie({ selected, playMode, onSelect }) {
+function Goalie({ selected, playMode, onSelect, onClick, verdict, interactive }) {
   const cx = GOALIE_POS.x;
   const cy = GOALIE_POS.y;
+  // `interactive` — true when play-mode spot-mistake wants the goalie clickable.
+  const pe = (playMode && !interactive) ? 'none' : 'auto';
   return (
-    <g style={{ cursor: playMode ? 'default' : 'pointer' }}
-       pointerEvents={playMode ? 'none' : 'auto'}
+    <g style={{ cursor: playMode && !interactive ? 'default' : 'pointer' }}
+       pointerEvents={pe}
+       onClick={onClick}
        onPointerDown={(e) => { if (onSelect) { e.stopPropagation(); onSelect(e); } }}>
+      <VerdictRing cx={cx} cy={cy + 6} r={32} verdict={verdict} />
       {selected && (
         <rect x={cx - 28} y={cy - 24} width="56" height="60" rx="8"
               fill="none" stroke="#378ADD" strokeWidth="2" strokeDasharray="4 3" />
@@ -504,14 +528,16 @@ function Goalie({ selected, playMode, onSelect }) {
   );
 }
 
-function BigPuck({ puck, selected, onPointerDown, playMode }) {
+function BigPuck({ puck, selected, onPointerDown, onClick, verdict, playMode }) {
   const { x: cx, y: cy } = resolvePos(puck);
   const s = puck.size || 1;
   return (
     <g className="rnk-draggable" data-id="puck"
        style={{ cursor: playMode ? 'default' : 'grab' }}
        onPointerDown={onPointerDown}
+       onClick={onClick}
        transform={s !== 1 ? `translate(${cx} ${cy}) scale(${s}) translate(${-cx} ${-cy})` : undefined}>
+      <VerdictRing cx={cx} cy={cy} r={22} verdict={verdict} />
       {selected && (
         <circle cx={cx} cy={cy} r="22" fill="none" stroke="#378ADD" strokeWidth="2" strokeDasharray="4 3" />
       )}
@@ -546,12 +572,14 @@ function TextLabel({ item, selected, onPointerDown, playMode }) {
   );
 }
 
-function Flag({ item, selected, onPointerDown, playMode }) {
+function Flag({ item, selected, onPointerDown, onClick, verdict, playMode }) {
   const { x, y } = resolvePos(item);
   return (
     <g className="rnk-draggable" data-id={item.id}
        style={{ cursor: playMode ? 'default' : 'grab' }}
-       onPointerDown={onPointerDown}>
+       onPointerDown={onPointerDown}
+       onClick={onClick}>
+      <VerdictRing cx={x} cy={y + 8} r={16} verdict={verdict} />
       {selected && (
         <circle cx={x} cy={y + 8} r="36" fill="none"
                 stroke="#378ADD" strokeWidth="2" strokeDasharray="4 3" />
@@ -762,6 +790,9 @@ function Rink({
 
   // ─── Drag handling ───────────────────────────────────────────────────────
   const onItemPointerDown = useCallback((e) => {
+    // In play mode, spot-mistake items are click-to-answer (handled by
+    // onItemClick). Other play-mode items are non-interactive. Either way,
+    // no drag setup.
     if (mode === 'play') return;
     // If a placement tool is active, clicking an existing item cancels the tool.
     if (placementTool) { setPlacementTool(null); setArrowDraft(null); }
@@ -868,6 +899,35 @@ function Rink({
     setPlayAnswer(result);
     if (onAnswer) onAnswer(result);
   }, [mode, scene, onAnswer, lockAnswer, playAnswer]);
+
+  // ─── Spot-mistake handling ───────────────────────────────────────────────
+  // Edit mode: clicking an item cycles its assignment through the targets
+  // bucket (unassigned → correct → partial → wrong → unassigned), mirroring
+  // the zone-click authoring pattern.
+  // Play mode: clicking any item answers the question via the registry.
+  const isSpotMistakeQuestion = scene.question?.mode === 'spot-mistake';
+  const onItemClick = useCallback((itemId) => (e) => {
+    if (!isSpotMistakeQuestion) return;
+    if (e) e.stopPropagation();
+    if (mode === 'edit') {
+      updateScene(prev => {
+        const q = prev.question || {};
+        const nextTargets = cycleBucket(q.targets, itemId);
+        return { ...prev, question: { ...q, targets: nextTargets } };
+      });
+      return;
+    }
+    if (mode === 'play') {
+      if (lockAnswer && playAnswer) return;
+      const result = QUESTION_MODES['spot-mistake'].score(itemId, scene.question);
+      setPlayAnswer(result);
+      if (onAnswer) onAnswer(result);
+    }
+  }, [isSpotMistakeQuestion, mode, scene, updateScene, onAnswer, lockAnswer, playAnswer]);
+  const itemVerdict = useCallback((itemId) => {
+    if (!isSpotMistakeQuestion || mode !== 'edit') return null;
+    return bucketVerdict(scene.question?.targets, itemId);
+  }, [isSpotMistakeQuestion, mode, scene]);
 
   // ─── Derived UI flags ────────────────────────────────────────────────────
   const isZoneClickQuestion = scene.question?.mode === 'zone-click';
@@ -982,14 +1042,19 @@ function Rink({
             <Flag key={f.id} item={f}
                   selected={selectedId === f.id}
                   playMode={mode === 'play'}
-                  onPointerDown={onItemPointerDown} />
+                  verdict={itemVerdict(f.id)}
+                  onPointerDown={onItemPointerDown}
+                  onClick={onItemClick(f.id)} />
           ))}
 
           {/* Goalie */}
           {scene.showGoalie && (
             <Goalie selected={selectedId === 'goalie'}
                     playMode={mode === 'play'}
-                    onSelect={() => setSelectedId('goalie')} />
+                    interactive={mode === 'play' && isSpotMistakeQuestion}
+                    verdict={itemVerdict('goalie')}
+                    onSelect={() => setSelectedId('goalie')}
+                    onClick={onItemClick('goalie')} />
           )}
 
           {/* Teammates */}
@@ -997,7 +1062,9 @@ function Rink({
             <Teammate key={p.id} item={p}
                       selected={selectedId === p.id}
                       playMode={mode === 'play'}
-                      onPointerDown={onItemPointerDown} />
+                      verdict={itemVerdict(p.id)}
+                      onPointerDown={onItemPointerDown}
+                      onClick={onItemClick(p.id)} />
           ))}
 
           {/* Opponents */}
@@ -1005,7 +1072,9 @@ function Rink({
             <Opponent key={p.id} item={p}
                       selected={selectedId === p.id}
                       playMode={mode === 'play'}
-                      onPointerDown={onItemPointerDown} />
+                      verdict={itemVerdict(p.id)}
+                      onPointerDown={onItemPointerDown}
+                      onClick={onItemClick(p.id)} />
           ))}
 
           {/* Puck */}
@@ -1013,7 +1082,9 @@ function Rink({
             <BigPuck puck={scene.puck}
                      selected={selectedId === 'puck'}
                      playMode={mode === 'play'}
-                     onPointerDown={onItemPointerDown} />
+                     verdict={itemVerdict('puck')}
+                     onPointerDown={onItemPointerDown}
+                     onClick={onItemClick('puck')} />
           )}
 
           {/* Custom text labels */}
@@ -1103,6 +1174,13 @@ function Rink({
       {mode === 'play' && scene.question?.mode === 'zone-click' && !playAnswer && (
         <div style={styles.zonePrompt}>
           <strong>{scene.question.prompt || 'Click the right spot on the ice.'}</strong>
+        </div>
+      )}
+
+      {/* Play-mode spot-mistake prompt */}
+      {mode === 'play' && scene.question?.mode === 'spot-mistake' && !playAnswer && (
+        <div style={styles.zonePrompt}>
+          <strong>{scene.question.prompt || 'Tap the player (or puck) making the mistake.'}</strong>
         </div>
       )}
     </div>
