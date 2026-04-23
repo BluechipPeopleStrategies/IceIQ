@@ -2096,16 +2096,36 @@ const LEVEL_FOR_AGE = {
 const AGE_FOR_LEVEL = Object.fromEntries(Object.entries(LEVEL_FOR_AGE).map(([k,v])=>[v,k]));
 const AGES = ["u7","u9","u11","u13","u15","u18"];
 const LEVEL_ORDER = AGES.map(a => LEVEL_FOR_AGE[a]);
-const ALL_TYPES = ["mc","tf","seq","mistake","next","rink"];
+const ALL_TYPES = ["mc","tf","seq","mistake","next","zone-click","rink"];
 const RECOMMENDED_TYPES_BY_AGE = {
   u7:  ["mc","tf","rink"],
-  u9:  ["mc","tf","seq","rink"],
-  u11: ["mc","tf","seq","mistake","rink"],
-  u13: ["mc","tf","seq","mistake","next","rink"],
-  u15: ["mc","tf","seq","mistake","next","rink"],
-  u18: ["mc","tf","seq","mistake","next","rink"],
+  u9:  ["mc","tf","seq","zone-click","rink"],
+  u11: ["mc","tf","seq","mistake","zone-click","rink"],
+  u13: ["mc","tf","seq","mistake","next","zone-click","rink"],
+  u15: ["mc","tf","seq","mistake","next","zone-click","rink"],
+  u18: ["mc","tf","seq","mistake","next","zone-click","rink"],
 };
-const TYPE_LABELS = { mc: "MC", tf: "T/F", seq: "Seq", mistake: "Mistake", next: "Next", rink: "Rink" };
+const TYPE_LABELS = { mc: "MC", tf: "T/F", seq: "Seq", mistake: "Mistake", next: "Next", "zone-click": "Zone", rink: "Rink" };
+
+// Zone-click zones — mirrors RINK_ZONE_DEFS in src/shared.jsx. Authors pick
+// which zones are in play for a question and mark one as correct. The
+// dz-/oz-/nz- prefixes group them; questions must not mix prefixes
+// (the rink diagram shows one zone context at a time — see
+// feedback_zone_click_zones.md in memory).
+const ZONE_CLICK_ZONES = [
+  { id: "dz-left-corner",  label: "DZ Left Corner" },
+  { id: "dz-left-point",   label: "DZ Left Point" },
+  { id: "dz-slot",         label: "DZ Slot" },
+  { id: "dz-right-corner", label: "DZ Right Corner" },
+  { id: "dz-right-point",  label: "DZ Right Point" },
+  { id: "dz-behind-net",   label: "DZ Behind Net" },
+  { id: "nz-left",         label: "NZ Left" },
+  { id: "nz-center",       label: "NZ Center" },
+  { id: "nz-right",        label: "NZ Right" },
+  { id: "oz-slot",         label: "OZ Slot" },
+  { id: "oz-left-wing",    label: "OZ Left Wing" },
+  { id: "oz-right-wing",   label: "OZ Right Wing" },
+];
 const LS_KEY = "iceiq_dashboard_v1";
 const PAGE_SIZE = 100;
 
@@ -2558,6 +2578,42 @@ function renderCardBody(id, q, level, age, type) {
         <button class="btn-ghost" data-action="seq-add" style="margin-top:.3rem;">+ Add step</button>
       </div>
     `;
+  } else if (type === "zone-click") {
+    const question = q.question || "";
+    const selectedZones = Array.isArray(q.zones) ? q.zones : [];
+    const correctZone = q.correctZone || "";
+    // Flag mixed dz-/oz-/nz- prefixes — rink diagram overlays are shared
+    // across contexts so dz-slot and oz-slot collide. Keep within one bucket.
+    const prefixes = new Set(selectedZones.map(z => z.split("-")[0]));
+    const mixedWarning = prefixes.size > 1
+      ? `<div style="margin-top:.4rem;padding:.4rem .6rem;background:rgba(212,86,86,.12);border:1px solid rgba(212,86,86,.35);border-radius:6px;color:#F2B4B4;font-size:11px;line-height:1.5;">⚠ Mixed zone prefixes (${[...prefixes].join(" + ")}) — dz-/oz-/nz- zones share coordinates and will overlap. Pick one context.</div>`
+      : "";
+    typeBody = `
+      <div class="field">
+        <label>Question prompt (shown to the player above the rink)</label>
+        <textarea class="field-textarea" data-action="field" data-key="question">${escapeHtml(question)}</textarea>
+      </div>
+      <div class="field">
+        <label>Zones — check to include as a clickable option; select one as the correct answer</label>
+        <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:.35rem;">
+          ${ZONE_CLICK_ZONES.map(z => {
+            const checked = selectedZones.includes(z.id);
+            const isCorrect = z.id === correctZone;
+            return `
+              <label style="display:flex;align-items:center;gap:.35rem;padding:.35rem .5rem;background:var(--bg-elev);border:1px solid ${isCorrect ? 'var(--accent)' : 'var(--border)'};border-radius:6px;font-size:12px;cursor:pointer;">
+                <input type="checkbox" data-action="zc-zone-toggle" data-zone="${z.id}" ${checked?"checked":""} style="accent-color:var(--accent);">
+                <input type="radio" name="zc-correct-${id}" data-action="zc-set-correct" data-zone="${z.id}" ${isCorrect?"checked":""} ${!checked?"disabled":""} style="accent-color:var(--accent);" title="Mark as correct">
+                <span style="flex:1;color:${isCorrect?'var(--accent)':'inherit'};font-weight:${isCorrect?'700':'400'};">${z.label}</span>
+              </label>
+            `;
+          }).join("")}
+        </div>
+        ${mixedWarning}
+        <div style="font-size:11px;color:var(--dimmer);margin-top:.5rem;line-height:1.5;">
+          Tip: pick 3–4 zones from one context (DZ, NZ, or OZ). Check the box to include a zone, then use the radio to mark it correct.
+        </div>
+      </div>
+    `;
   } else if (type === "rink") {
     const sq = (q.scene && q.scene.question) || {};
     const qMode = sq.mode || "choice";
@@ -2830,6 +2886,24 @@ function onCardChange(e) {
     setRinkOption(id, idx, { verdict: e.target.value });
     return;
   }
+  if (action === "zc-zone-toggle") {
+    const zone = e.target.dataset.zone;
+    const q = getMergedById(id);
+    const zones = new Set(Array.isArray(q.zones) ? q.zones : []);
+    if (e.target.checked) zones.add(zone);
+    else {
+      zones.delete(zone);
+      // If we just unchecked the correct zone, clear correctZone too.
+      if (q.correctZone === zone) setField(id, "correctZone", "");
+    }
+    setField(id, "zones", [...zones]);
+    render(); return;
+  }
+  if (action === "zc-set-correct") {
+    const zone = e.target.dataset.zone;
+    setField(id, "correctZone", zone);
+    render(); return;
+  }
   if (action === "pos") {
     const q = getMergedById(id);
     const current = new Set(Array.isArray(q.pos) ? q.pos : []);
@@ -2848,6 +2922,11 @@ function onCardChange(e) {
     if (newType !== "seq") setField(id, "items", undefined);
     if (newType === "tf" || newType === "seq") setField(id, "opts", undefined);
     if (newType !== "rink") setField(id, "scene", undefined);
+    if (newType !== "zone-click") {
+      setField(id, "zones", undefined);
+      setField(id, "correctZone", undefined);
+      setField(id, "question", undefined);
+    }
     render();
   }
 }
@@ -2859,6 +2938,19 @@ function blankTypeFields(type, age) {
   }
   if (type === "tf") return { ok: true };
   if (type === "seq") return { items: ["", "", ""] };
+  if (type === "zone-click") {
+    // Sensible starter: 3 OZ zones with the slot marked correct — this is
+    // the most common pattern in the existing bank. Author picks zones and
+    // correct answer in the card. `d` defaults to 1 for U9, up through
+    // older ages' harder defaults.
+    const d = (age === "u7" || age === "u9") ? 1 : 2;
+    return {
+      d,
+      question: "",
+      zones: ["oz-slot", "oz-left-wing", "oz-right-wing"],
+      correctZone: "oz-slot",
+    };
+  }
   if (type === "rink") {
     // window.IceIQEmptyScene is loaded from rink-editor.jsx via Babel standalone.
     // Fallback inline if the React bundle hasn't finished loading yet.
@@ -2935,6 +3027,44 @@ function rebuildAddTypeFields() {
       <div class="field"><label>Steps in correct order (one per line)</label>
         <textarea class="field-textarea" id="add-items" placeholder="Step 1&#10;Step 2&#10;Step 3" rows="5"></textarea>
       </div>`;
+  } else if (type === "zone-click") {
+    const defaults = blankTypeFields("zone-click", age);
+    c.innerHTML = `
+      <div class="field">
+        <label>Question prompt</label>
+        <textarea class="field-textarea" id="add-zc-question" placeholder="Where should you skate?"></textarea>
+      </div>
+      <div class="field">
+        <label>Zones — check to include; radio marks the correct answer</label>
+        <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:.35rem;">
+          ${ZONE_CLICK_ZONES.map(z => {
+            const checked = defaults.zones.includes(z.id);
+            const isCorrect = z.id === defaults.correctZone;
+            return `
+              <label style="display:flex;align-items:center;gap:.35rem;padding:.35rem .5rem;background:var(--bg-elev);border:1px solid var(--border);border-radius:6px;font-size:12px;cursor:pointer;">
+                <input type="checkbox" class="add-zc-zone" data-zone="${z.id}" ${checked?"checked":""}>
+                <input type="radio" name="add-zc-correct" class="add-zc-correct" data-zone="${z.id}" ${isCorrect?"checked":""} ${!checked?"disabled":""}>
+                <span style="flex:1;">${z.label}</span>
+              </label>
+            `;
+          }).join("")}
+        </div>
+        <div style="font-size:11px;color:var(--dimmer);margin-top:.35rem;line-height:1.5;">
+          Pick 3–4 zones from one context (DZ / NZ / OZ). Mixed prefixes overlap on the rink.
+        </div>
+      </div>`;
+    // Keep radio enabled only when its checkbox is checked.
+    setTimeout(() => {
+      c.querySelectorAll(".add-zc-zone").forEach(cb => {
+        cb.addEventListener("change", () => {
+          const zone = cb.dataset.zone;
+          const radio = c.querySelector(`.add-zc-correct[data-zone="${zone}"]`);
+          if (!radio) return;
+          radio.disabled = !cb.checked;
+          if (!cb.checked && radio.checked) radio.checked = false;
+        });
+      });
+    }, 0);
   } else if (type === "rink") {
     c.innerHTML = `
       <div class="field" style="padding:.6rem .8rem;background:var(--bg-elev);border:1px solid var(--border);border-radius:8px;font-size:12px;color:var(--dim);line-height:1.5;">
@@ -2975,6 +3105,12 @@ function saveAdded() {
     row.ok = okEl?.value === "true";
   } else if (type === "seq") {
     row.items = (document.getElementById("add-items").value || "").split(/\r?\n/).map(s => s.trim()).filter(Boolean);
+  } else if (type === "zone-click") {
+    row.question = document.getElementById("add-zc-question").value.trim();
+    const zones = [...document.querySelectorAll(".add-zc-zone:checked")].map(cb => cb.dataset.zone);
+    const correctEl = document.querySelector(".add-zc-correct:checked");
+    row.zones = zones;
+    row.correctZone = correctEl ? correctEl.dataset.zone : (zones[0] || "");
   } else if (type === "rink") {
     row.scene = (typeof window !== "undefined" && window.IceIQEmptyScene)
       ? window.IceIQEmptyScene()
