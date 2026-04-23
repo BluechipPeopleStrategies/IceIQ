@@ -35,8 +35,8 @@ function buildQuizHistory() {
   // Pool of U11 question IDs aligned with COMPETENCY_MAPPINGS regex.
   // Each result needs {id, ok, d, cat}. We spread positioning (q1-7),
   // decision_making (q8-15), awareness (q16) across each 10-question session.
-  const idBank = ["u11q1","u11q2","u11q3","u11q5","u11q8","u11q10","u11q12","u11q14","u11q16","u11rink11"];
-  const catBank  = ["Hockey Sense","Hockey Sense","Skating","Hockey Sense","Game Decision-Making","Game Decision-Making","Game Decision-Making","Game Decision-Making","Hockey Sense","Rink Reads"];
+  const idBank = ["u11q1","u11q2","u11q3","u11q5","u11q8","u11q10","u11q12","u11q14","u11q16","u11q4"];
+  const catBank  = ["Hockey Sense","Hockey Sense","Skating","Hockey Sense","Game Decision-Making","Game Decision-Making","Game Decision-Making","Game Decision-Making","Hockey Sense","Hockey Sense"];
   const dBank    = [1,2,1,2,2,3,2,2,3,2];
   return sessions.map(s => {
     const results = s.ok.map((ok, i) => ({

@@ -3934,9 +3934,8 @@ function LandingInsightsCard() {
   );
 }
 
-// Sample scene used by the landing-page rink teaser. Mirrors u9rink11
-// ("Click the slot") so the first interactive touch a visitor has is the
-// most unique feature of the app.
+// Sample scene used by the landing-page rink teaser — "Click the slot",
+// the first interactive touch a visitor has with the rink feature.
 const LANDING_RINK_SCENE = {
   team: [], opponents: [], puck: { zone: "slot" },
   showGoalie: true, showHomePlate: false, texts: [], arrows: [], flags: [],
