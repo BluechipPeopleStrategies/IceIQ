@@ -3,6 +3,8 @@
 // do via DevTools. When enabled, AuthScreen surfaces a dev panel and
 // `window.__dev` exposes state helpers for rapid iteration.
 
+import { lsGet, lsSet, lsRemove, lsGetJSON } from "./storage.js";
+
 const LS_FLAG     = "iceiq_dev_bypass";
 const LS_PROFILE  = "iceiq_dev_profile";
 
@@ -13,23 +15,19 @@ export function isEphemeralPlayer(id) {
 }
 
 export function isDevBypassEnabled() {
-  try { return typeof window !== "undefined" && window.localStorage.getItem(LS_FLAG) === "1"; }
-  catch { return false; }
+  return lsGet(LS_FLAG) === "1";
 }
 
 export function getDevProfile() {
-  try {
-    const raw = window.localStorage.getItem(LS_PROFILE);
-    return raw ? JSON.parse(raw) : null;
-  } catch { return null; }
+  return lsGetJSON(LS_PROFILE, null);
 }
 
 export function setDevProfile(profile) {
-  try { window.localStorage.setItem(LS_PROFILE, JSON.stringify(profile)); } catch {}
+  lsSet(LS_PROFILE, JSON.stringify(profile));
 }
 
 export function clearDevProfile() {
-  try { window.localStorage.removeItem(LS_PROFILE); } catch {}
+  lsRemove(LS_PROFILE);
 }
 
 // Build a minimal dev player object — no seeded history, matches what a real

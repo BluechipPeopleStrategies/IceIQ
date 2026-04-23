@@ -1,33 +1,29 @@
+import { lsGetJSON, lsSetJSON } from "./storage.js";
+
 const TRAINING_KEY = "iceiq_training_log";
 
 export function getTrainingLog(playerId) {
-  try {
-    const raw = localStorage.getItem(TRAINING_KEY);
-    const all = raw ? JSON.parse(raw) : {};
-    return all[playerId] || { sessions: [] };
-  } catch { return { sessions: [] }; }
+  const all = lsGetJSON(TRAINING_KEY, {});
+  return all[playerId] || { sessions: [] };
 }
 
 export function saveTrainingSession(playerId, type, value, unit, label = "", date = "", notes = "", coach = "", price = null) {
-  try {
-    const raw = localStorage.getItem(TRAINING_KEY);
-    const all = raw ? JSON.parse(raw) : {};
-    if (!all[playerId]) all[playerId] = { sessions: [] };
-    const today = new Date().toISOString().slice(0, 10);
-    const priceNum = (price === null || price === "" || price === undefined) ? null : Number(price);
-    all[playerId].sessions.push({
-      date: date || today,
-      type, value: Number(value), unit,
-      ...(label ? { label } : {}),
-      ...(notes ? { notes } : {}),
-      ...(coach ? { coach } : {}),
-      ...(Number.isFinite(priceNum) && priceNum > 0 ? { price: priceNum } : {}),
-    });
-    if (all[playerId].sessions.length > 200) {
-      all[playerId].sessions = all[playerId].sessions.slice(-200);
-    }
-    localStorage.setItem(TRAINING_KEY, JSON.stringify(all));
-  } catch {}
+  const all = lsGetJSON(TRAINING_KEY, {});
+  if (!all[playerId]) all[playerId] = { sessions: [] };
+  const today = new Date().toISOString().slice(0, 10);
+  const priceNum = (price === null || price === "" || price === undefined) ? null : Number(price);
+  all[playerId].sessions.push({
+    date: date || today,
+    type, value: Number(value), unit,
+    ...(label ? { label } : {}),
+    ...(notes ? { notes } : {}),
+    ...(coach ? { coach } : {}),
+    ...(Number.isFinite(priceNum) && priceNum > 0 ? { price: priceNum } : {}),
+  });
+  if (all[playerId].sessions.length > 200) {
+    all[playerId].sessions = all[playerId].sessions.slice(-200);
+  }
+  lsSetJSON(TRAINING_KEY, all);
 }
 
 // Bulk-seed plausible training sessions across a roster. Used by coach demo
@@ -37,9 +33,8 @@ export function saveTrainingSession(playerId, type, value, unit, label = "", dat
 // we skip them (don't double-seed). Safe to call multiple times.
 export function seedDemoTrainingForRoster(roster, perPlayer = 4) {
   if (!Array.isArray(roster) || !roster.length) return;
-  try {
-    const raw = localStorage.getItem(TRAINING_KEY);
-    const all = raw ? JSON.parse(raw) : {};
+  const all = lsGetJSON(TRAINING_KEY, {});
+  {
     const TYPES = [
       { type: "ice_time",       unit: "min", min: 50, max: 80, coach: "Coach Benetti",     label: "Team practice" },
       { type: "practice",       unit: "min", min: 25, max: 55, coach: "Coach Benetti",     label: "Skills session" },
@@ -66,8 +61,8 @@ export function seedDemoTrainingForRoster(roster, perPlayer = 4) {
         });
       }
     }
-    localStorage.setItem(TRAINING_KEY, JSON.stringify(all));
-  } catch {}
+    lsSetJSON(TRAINING_KEY, all);
+  }
 }
 
 export function getTrainingSummary(sessions, type) {

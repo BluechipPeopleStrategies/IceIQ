@@ -18,6 +18,7 @@ import { buildU11ForwardPreview, PREVIEW_PLAYER_ID } from "./data/previewPlayer.
 import { calcTeamCompetencyAverages, GRADE_LEVEL_THRESHOLD } from "./utils/coachStats.js";
 import { HockeyInsightWidget, BottomNav, TrainingLog, HomeStartHereCard } from "./widgets.jsx";
 import { canSwitchAgeGroup, recordAgeGroupSwitch, getAgeGroupLock, setAgeGroupLock, checkSeasonReset } from "./utils/deviceLock";
+import { lsGetStr, lsSetStr, lsGetJSON, lsSetJSON } from "./utils/storage.js";
 import {
   C, FONT, LEVELS, POSITIONS, POSITIONS_U11UP, SEASONS,
   IceIQLogo, RinkDiagramZones, RINK_ZONE_DEFS, Screen, Card, Pill, Label, PrimaryBtn, SecBtn, BackBtn, ProgressBar, StickyHeader,
@@ -175,12 +176,8 @@ const LS_UPGRADE_DISMISSED  = "iceiq_upgrade_dismissed_v1";  // JSON: {[identity
 const LS_CLIPS_WATCHED      = "iceiq_clips_watched_v1";      // JSON: {[identity]: string[]}.
 const LS_HOMEWORK_DONE      = "iceiq_homework_done_v1";      // JSON: {[identity]: string[]}.
 
-function lsGetJSON(key, fallback) {
-  try { const v = window.localStorage.getItem(key); return v ? JSON.parse(v) : fallback; } catch { return fallback; }
-}
-function lsSetJSON(key, value) { try { window.localStorage.setItem(key, JSON.stringify(value)); } catch {} }
-function lsGetStr(key) { try { return window.localStorage.getItem(key); } catch { return null; } }
-function lsSetStr(key, v) { try { window.localStorage.setItem(key, v); } catch {} }
+// lsGetStr / lsSetStr / lsGetJSON / lsSetJSON come from src/utils/storage.js
+// (imported at the top of this file). Keep call sites terse.
 
 export function markInsightRead(key) {
   if (!key) return;

@@ -3,6 +3,8 @@
 // Bypassable by a determined user (localStorage can be cleared), but good enough
 // for the free tier's one-age-group-per-device enforcement.
 
+import { lsGet, lsSet } from "./storage.js";
+
 const KEYS = {
   deviceId:         "iceiq_device_id",
   ageGroupLock:     "iceiq_age_group_lock",
@@ -11,15 +13,6 @@ const KEYS = {
 };
 
 const FREE_SWITCH_ALLOWANCE = 1; // one free switch, then Pro prompt
-
-function lsGet(k) {
-  try { return typeof window !== "undefined" ? window.localStorage.getItem(k) : null; }
-  catch { return null; }
-}
-function lsSet(k, v) {
-  try { if (typeof window !== "undefined") window.localStorage.setItem(k, v); }
-  catch {}
-}
 
 function generateUUID() {
   if (typeof crypto !== "undefined" && crypto.randomUUID) return crypto.randomUUID();

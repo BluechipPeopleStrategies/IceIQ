@@ -5,26 +5,15 @@
 //   visible, but no new focus areas / no new reports).
 // Re-enrollment nudge: August 15 each year, shown once.
 
+import { lsGet, lsSet, lsGetJSON } from "./storage.js";
+
 const KEYS = {
   seasonPass:            "iceiq_season_pass",
   reenrollmentShown:     "iceiq_reenrollment_prompt_shown",
 };
 
-function lsGet(k) {
-  try { return typeof window !== "undefined" ? window.localStorage.getItem(k) : null; }
-  catch { return null; }
-}
-function lsSet(k, v) {
-  try { if (typeof window !== "undefined") window.localStorage.setItem(k, v); }
-  catch {}
-}
-
 function readPass() {
-  try {
-    const raw = lsGet(KEYS.seasonPass);
-    if (!raw) return null;
-    return JSON.parse(raw);
-  } catch { return null; }
+  return lsGetJSON(KEYS.seasonPass, null);
 }
 
 /**

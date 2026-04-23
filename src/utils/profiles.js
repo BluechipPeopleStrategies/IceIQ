@@ -6,20 +6,12 @@
 // (which only applies to the Free tier). Pro and Family bypass the device lock.
 
 import { TIERS } from "../config/pricing";
+import { lsGet, lsSet, lsGetJSON, lsRemove } from "./storage.js";
 
 const KEYS = {
   profiles:       "iceiq_child_profiles",
   activeProfile:  "iceiq_active_profile",
 };
-
-function lsGet(k) {
-  try { return typeof window !== "undefined" ? window.localStorage.getItem(k) : null; }
-  catch { return null; }
-}
-function lsSet(k, v) {
-  try { if (typeof window !== "undefined") window.localStorage.setItem(k, v); }
-  catch {}
-}
 
 function generateUUID() {
   if (typeof crypto !== "undefined" && crypto.randomUUID) return crypto.randomUUID();
@@ -30,12 +22,8 @@ function generateUUID() {
 }
 
 function readProfiles() {
-  try {
-    const raw = lsGet(KEYS.profiles);
-    if (!raw) return [];
-    const parsed = JSON.parse(raw);
-    return Array.isArray(parsed) ? parsed : [];
-  } catch { return []; }
+  const parsed = lsGetJSON(KEYS.profiles, []);
+  return Array.isArray(parsed) ? parsed : [];
 }
 function writeProfiles(list) {
   lsSet(KEYS.profiles, JSON.stringify(list));
@@ -132,10 +120,7 @@ export function deleteProfile(profileId) {
   const activeId = lsGet(KEYS.activeProfile);
   if (activeId === profileId) {
     if (next.length > 0) lsSet(KEYS.activeProfile, next[0].id);
-    else {
-      try { if (typeof window !== "undefined") window.localStorage.removeItem(KEYS.activeProfile); }
-      catch {}
-    }
+    else lsRemove(KEYS.activeProfile);
   }
   return { ok: true };
 }
