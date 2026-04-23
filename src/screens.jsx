@@ -1014,8 +1014,8 @@ export function QuestionReviewScreen({ onBack }) {
   useEffect(() => {
     (async () => {
       setLoading(true);
-      const data = await SB.listReviewQuestions();
-      setRows(data);
+      const reviewQuestions = await SB.listReviewQuestions();
+      setRows(reviewQuestions);
       setLoading(false);
     })();
   }, []);
