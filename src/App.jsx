@@ -4257,14 +4257,13 @@ function AuthScreen({ onAuthenticated, onDemo, onDevEnter, onPreview, prefill })
 
         {/* Coach preview — only coach-side demo remains; players sign up. */}
         <div style={{marginTop:"1.75rem",paddingTop:"1.5rem",borderTop:"1px solid rgba(255,255,255,0.07)"}}>
-          <div style={{fontSize:11,letterSpacing:".14em",textTransform:"uppercase",color:"rgba(248,250,252,.35)",fontWeight:700,textAlign:"center",marginBottom:"1rem"}}>Coaching a team? See what's working</div>
-          <button onClick={()=>onDemo("__coach__")} style={{width:"100%",background:"rgba(252,76,2,0.07)",border:"1px solid rgba(252,76,2,0.2)",borderRadius:10,padding:".65rem .75rem",cursor:"pointer",color:C.white,fontFamily:FONT.body,textAlign:"left"}}>
+          <div style={{fontSize:11,letterSpacing:".14em",textTransform:"uppercase",color:"rgba(248,250,252,.35)",fontWeight:700,textAlign:"center",marginBottom:"1rem"}}>Coaching a team? See the dashboard</div>
+          <div style={{background:"rgba(252,76,2,0.07)",border:"1px solid rgba(252,76,2,0.2)",borderRadius:10,padding:".65rem .75rem",color:C.white,fontFamily:FONT.body,textAlign:"left",marginBottom:".75rem"}}>
             <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:".5rem"}}>
               <div>
                 <div style={{fontWeight:700,fontSize:12,color:"rgba(252,76,2,.9)",marginBottom:1}}>Find your team's weakest concept — fix it Tuesday.</div>
                 <div style={{fontSize:10,color:"rgba(248,250,252,.4)"}}>U11 AA Edmonton Selects</div>
               </div>
-              <span style={{color:"rgba(252,76,2,.6)",fontSize:14}}>→</span>
             </div>
             <div style={{borderTop:"1px solid rgba(252,76,2,0.12)",paddingTop:".45rem"}}>
               {DEMO_COACH_ROSTER.slice(0,3).map(p => (
@@ -4278,6 +4277,17 @@ function AuthScreen({ onAuthenticated, onDemo, onDevEnter, onPreview, prefill })
               ))}
               <div style={{fontSize:9,color:"rgba(248,250,252,.22)",textAlign:"right",marginTop:".1rem"}}>+{DEMO_COACH_ROSTER.length - 3} more players</div>
             </div>
+          </div>
+          <button onClick={()=>onDemo("__coach__")} style={{
+            width:"100%", background:C.gold, color:C.bg, border:"none",
+            borderRadius:12, padding:"0.95rem 1rem", cursor:"pointer",
+            fontWeight:800, fontSize:15, fontFamily:FONT.body,
+            letterSpacing:".02em", boxShadow:`0 4px 16px ${C.gold}33`,
+            display:"flex", alignItems:"center", justifyContent:"center", gap:".55rem",
+          }}>
+            <span style={{fontSize:16}}>🎯</span>
+            <span>Open the Coach Dashboard</span>
+            <span>→</span>
           </button>
           <div style={{fontSize:10,color:"rgba(248,250,252,.3)",textAlign:"center",marginTop:".6rem"}}>Preview only — nothing is saved until you create a free account.</div>
         </div>
