@@ -3987,11 +3987,12 @@ function AuthScreen({ onAuthenticated, onDemo, onDevEnter, onPreview, prefill })
   return (
     <div style={{minHeight:"100vh",position:"relative",background:C.bg,display:"flex",flexDirection:"column",justifyContent:"center",padding:"2rem 1.25rem",fontFamily:FONT.body,color:C.white,overflow:"hidden"}}>
 
-      {/* Hockey-player hero photo as landing background */}
-      <img src={imgSplash} alt="" style={{position:"absolute",inset:0,width:"100%",height:"100%",objectFit:"cover",opacity:0.55,pointerEvents:"none"}}/>
+      {/* Hockey-player hero photo as landing background — heavily dimmed so
+          copy reads crisply; the player is atmosphere, not foreground. */}
+      <img src={imgSplash} alt="" style={{position:"absolute",inset:0,width:"100%",height:"100%",objectFit:"cover",opacity:0.22,filter:"saturate(0.7) contrast(0.9)",pointerEvents:"none"}}/>
 
-      {/* Layered overlays — navy fade for readability + warm Oilers-orange radial glow */}
-      <div style={{position:"absolute",inset:0,background:"linear-gradient(180deg,rgba(4,30,66,0.45) 0%,rgba(4,30,66,0.3) 45%,rgba(4,30,66,0.88) 100%)",pointerEvents:"none"}}/>
+      {/* Layered overlays — heavier navy fade + warm Oilers-orange radial glow */}
+      <div style={{position:"absolute",inset:0,background:"linear-gradient(180deg,rgba(4,30,66,0.78) 0%,rgba(4,30,66,0.6) 45%,rgba(4,30,66,0.94) 100%)",pointerEvents:"none"}}/>
       <div style={{position:"absolute",inset:0,background:"radial-gradient(ellipse 80% 60% at 50% 40%,rgba(252,76,2,0.08) 0%,transparent 70%)",pointerEvents:"none"}}/>
 
       {/* Subtle top-right door for returning members. Clicking flips the auth
@@ -4094,6 +4095,28 @@ function AuthScreen({ onAuthenticated, onDemo, onDevEnter, onPreview, prefill })
               </div>
             ))}
           </div>
+        </div>
+
+        {/* Decision-making pearls — what a player should be thinking *before*
+            the puck arrives on their stick. Each line is a short tactical
+            truth we want to lodge in muscle memory. */}
+        <div style={{background:"rgba(3,9,15,0.45)",backdropFilter:"blur(10px)",WebkitBackdropFilter:"blur(10px)",border:`1px solid rgba(252,76,2,0.18)`,borderRadius:14,padding:"1rem 1.1rem",marginBottom:"1.25rem"}}>
+          <div style={{fontSize:10,letterSpacing:".16em",textTransform:"uppercase",color:C.gold,fontWeight:800,marginBottom:".7rem",textAlign:"center"}}>How good players think</div>
+          {[
+            { lead: "See the next play", rest: "— not the current one. Read two moves ahead." },
+            { lead: "Decide before the puck arrives", rest: "— if you're still deciding when you get it, you're late." },
+            { lead: "Scan with your head up", rest: "— three looks a shift before you even touch the puck." },
+            { lead: "Support is a verb", rest: "— good linemates move the second you win the puck." },
+            { lead: "Pressure is a signal", rest: "— the defender's angle tells you where the open ice is." },
+          ].map((p,i) => (
+            <div key={i} style={{display:"flex",gap:".55rem",alignItems:"flex-start",marginBottom:i===4?0:".55rem",lineHeight:1.5}}>
+              <span style={{color:C.gold,fontSize:13,marginTop:1,flexShrink:0,fontWeight:800}}>▸</span>
+              <div style={{fontSize:13,color:C.white}}>
+                <span style={{fontWeight:700}}>{p.lead}</span>
+                <span style={{color:"rgba(248,250,252,.62)"}}>{p.rest}</span>
+              </div>
+            </div>
+          ))}
         </div>
 
         {/* Role-based entry points — four small chips so each audience
