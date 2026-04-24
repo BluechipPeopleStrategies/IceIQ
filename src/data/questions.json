@@ -3216,6 +3216,134 @@
         "U9 / Novice",
         "U11 / Atom"
       ]
+    },
+    {
+      "id": "u9r3",
+      "cat": "Positioning",
+      "pos": [
+        "F",
+        "D"
+      ],
+      "d": 1,
+      "type": "zone-click",
+      "q": "Tap your DEFENSIVE zone — the end you protect.",
+      "tip": "Defensive zone is the end where YOUR goalie stands.",
+      "rink": {
+        "view": "left",
+        "markers": [
+          {
+            "type": "goalie",
+            "x": 40,
+            "y": 150
+          }
+        ]
+      },
+      "zones": [
+        {
+          "shape": "poly",
+          "points": [
+            {
+              "x": 20,
+              "y": 20
+            },
+            {
+              "x": 220,
+              "y": 20
+            },
+            {
+              "x": 220,
+              "y": 280
+            },
+            {
+              "x": 20,
+              "y": 280
+            }
+          ],
+          "correct": true,
+          "msg": "✓ That's your end — where your goalie stands."
+        },
+        {
+          "shape": "poly",
+          "points": [
+            {
+              "x": 220,
+              "y": 20
+            },
+            {
+              "x": 400,
+              "y": 20
+            },
+            {
+              "x": 400,
+              "y": 280
+            },
+            {
+              "x": 220,
+              "y": 280
+            }
+          ],
+          "correct": false,
+          "msg": "Neutral zone — the middle."
+        },
+        {
+          "shape": "poly",
+          "points": [
+            {
+              "x": 400,
+              "y": 20
+            },
+            {
+              "x": 600,
+              "y": 20
+            },
+            {
+              "x": 600,
+              "y": 280
+            },
+            {
+              "x": 400,
+              "y": 280
+            }
+          ],
+          "correct": false,
+          "msg": "That's where you want to score — offensive zone."
+        }
+      ]
+    },
+    {
+      "id": "u9r4",
+      "cat": "Teamwork",
+      "pos": [
+        "F"
+      ],
+      "d": 1,
+      "type": "mc",
+      "q": "Your teammate has the puck in the corner. The goalie is on the far side. Where's the best place to stand?",
+      "choices": [
+        "In the slot — ready for a pass.",
+        "Right next to your teammate.",
+        "Behind your goalie.",
+        "At center ice."
+      ],
+      "correct": 0,
+      "tip": "The slot is in front of the net — that's where your friend can pass to you to score.",
+      "rink": {
+        "view": "right",
+        "zone": "slot",
+        "markers": [
+          {
+            "type": "teammate",
+            "x": 560,
+            "y": 80,
+            "label": "friend"
+          },
+          {
+            "type": "goalie",
+            "x": 560,
+            "y": 150
+          }
+        ]
+      }
     }
   ],
   "U11 / Atom": [
@@ -6796,6 +6924,337 @@
           "radius": 24,
           "correct": true,
           "msg": "✓ B is wide open. Hit them in stride."
+        }
+      ]
+    },
+    {
+      "id": "u11_sk1",
+      "cat": "Skating",
+      "pos": [
+        "F",
+        "D"
+      ],
+      "d": 1,
+      "sit": "You're on defense and the play is moving laterally along the blue line. What stride helps you stay with it?",
+      "opts": [
+        "Crossovers — stay square with power to either side.",
+        "Straight-line skating.",
+        "Snowplow stops.",
+        "One-foot glide."
+      ],
+      "ok": 0,
+      "why": "Crossovers let a defender mirror lateral puck movement without losing power or losing balance.",
+      "tip": "Lateral play = crossovers."
+    },
+    {
+      "id": "u11_sk2",
+      "cat": "Skating",
+      "pos": [
+        "F",
+        "D"
+      ],
+      "d": 1,
+      "type": "tf",
+      "sit": "Backwards skating is just as important as forward skating for defensemen.",
+      "ok": true,
+      "why": "D-men spend most of their shift skating backwards or in transition. Backward skating, pivots, and crossovers are the core.",
+      "tip": "D = backward machine."
+    },
+    {
+      "id": "u11_sk3",
+      "cat": "Skating",
+      "pos": [
+        "F",
+        "D"
+      ],
+      "d": 1,
+      "sit": "What's the most efficient way to change directions quickly?",
+      "opts": [
+        "Edge work — dig in and push off.",
+        "Slow down, then turn.",
+        "Stop completely.",
+        "Jump."
+      ],
+      "ok": 0,
+      "why": "Inside and outside edges are how fast players change directions without losing speed.",
+      "tip": "Edges win races."
+    },
+    {
+      "id": "u11_cyc1",
+      "cat": "Cycle Play",
+      "pos": [
+        "F"
+      ],
+      "d": 2,
+      "sit": "Your teammate passes to you on the half-wall in the offensive zone. What do you usually do next?",
+      "opts": [
+        "Protect the puck and cycle it low or find the next option.",
+        "Shoot from the wall.",
+        "Skate to the point.",
+        "Dump it out of the zone."
+      ],
+      "ok": 0,
+      "why": "The cycle is about maintaining possession. Protect, look, and move the puck low or back — wear defenders out.",
+      "tip": "Protect → look → move."
+    },
+    {
+      "id": "u11_cyc2",
+      "cat": "Cycle Play",
+      "pos": [
+        "F"
+      ],
+      "d": 1,
+      "type": "tf",
+      "sit": "In a cycle, the most important job is to keep moving your feet so you're always a pass option.",
+      "ok": true,
+      "why": "Stationary cyclers die. Keep feet moving, support the carrier, give them an outlet with speed.",
+      "tip": "Cycle = feet always moving."
+    },
+    {
+      "id": "u11_cyc3",
+      "cat": "Cycle Play",
+      "pos": [
+        "F"
+      ],
+      "d": 2,
+      "sit": "The defender pins your teammate on the boards. What's the cycle read?",
+      "opts": [
+        "Sit above and be the outlet.",
+        "Crash the net.",
+        "Go back to the point.",
+        "Head to the bench."
+      ],
+      "ok": 0,
+      "why": "Pinned teammate needs a release valve. Sit a stick's length above the battle — not in it — and take the chip-up.",
+      "tip": "Pinned teammate → outlet above."
+    },
+    {
+      "id": "u11_iq1",
+      "cat": "Game IQ",
+      "pos": [
+        "F",
+        "D"
+      ],
+      "d": 2,
+      "sit": "Your team just scored to tie the game. What's the best mindset for your next shift?",
+      "opts": [
+        "Stay smart — don't chase the go-ahead goal with risky plays.",
+        "Force everything into the net.",
+        "Celebrate longer at the bench.",
+        "Play dump-and-chase only."
+      ],
+      "ok": 0,
+      "why": "After a big goal, the team that stays disciplined usually wins. Don't chase the next one and gift the other team a rush.",
+      "tip": "Tie game = stay disciplined."
+    },
+    {
+      "id": "u11_iq2",
+      "cat": "Game IQ",
+      "pos": [
+        "F",
+        "D"
+      ],
+      "d": 1,
+      "type": "tf",
+      "sit": "A player with high hockey IQ thinks about where the puck is going, not just where it is.",
+      "ok": true,
+      "why": "Anticipation is the difference between chasing and controlling. See the play a half-second ahead.",
+      "tip": "See the next play, not the current one."
+    },
+    {
+      "id": "u11_iq3",
+      "cat": "Game IQ",
+      "pos": [
+        "F",
+        "D"
+      ],
+      "d": 2,
+      "sit": "It's the end of the game and you're up 1-0. What's a smart play in your offensive zone?",
+      "opts": [
+        "Keep the puck low and cycle — eat clock.",
+        "Take a flashy shot from the point.",
+        "Try a saucer pass through the slot.",
+        "Dump it out of the zone."
+      ],
+      "ok": 0,
+      "why": "Up a goal late = game management. Cycle low, eat clock, make them come get it.",
+      "tip": "Up a goal late = cycle low."
+    },
+    {
+      "id": "u11_sh1",
+      "cat": "Shooting",
+      "pos": [
+        "F"
+      ],
+      "d": 1,
+      "sit": "You're at the side of the net with the puck. The goalie is sprawled. Best shot?",
+      "opts": [
+        "Tuck it into the empty top corner.",
+        "Slap shot at the goalie.",
+        "Pass it back to the point.",
+        "Skate behind the net."
+      ],
+      "ok": 0,
+      "why": "Empty net = calm, accurate, top corner. Don't overthink it.",
+      "tip": "Goalie down = top corner, calm."
+    },
+    {
+      "id": "u11_sh2",
+      "cat": "Shooting",
+      "pos": [
+        "F"
+      ],
+      "d": 1,
+      "type": "tf",
+      "sit": "A quick release matters more than shot power for most goals.",
+      "ok": true,
+      "why": "Goalies mostly track shots they see cleanly. Quick release on and off your stick = they don't have time to react.",
+      "tip": "Quick release > raw power."
+    },
+    {
+      "id": "u11_sh3",
+      "cat": "Shooting",
+      "pos": [
+        "F"
+      ],
+      "d": 1,
+      "sit": "You're in the slot. Your shot is blocked. What's the next play?",
+      "opts": [
+        "Get the rebound or fake and shoot again.",
+        "Skate back to the bench.",
+        "Blame your stick.",
+        "Freeze the puck."
+      ],
+      "ok": 0,
+      "why": "Shots get blocked. Good shooters stay hunting — track the rebound or reset the shot.",
+      "tip": "Blocked? Hunt it again."
+    },
+    {
+      "id": "u11_rink_fill2",
+      "cat": "Breakout",
+      "pos": [
+        "F",
+        "D"
+      ],
+      "d": 2,
+      "type": "lane-select",
+      "q": "Your D has the puck behind the net on a breakout. Which winger is the best outlet?",
+      "tip": "The winger who's unchecked AND parallel to the goal line is the safest pass.",
+      "rink": {
+        "view": "left",
+        "zone": "def-zone",
+        "markers": [
+          {
+            "type": "defender",
+            "x": 60,
+            "y": 170,
+            "label": "D"
+          },
+          {
+            "type": "teammate",
+            "x": 140,
+            "y": 40,
+            "label": "LW"
+          },
+          {
+            "type": "teammate",
+            "x": 140,
+            "y": 260,
+            "label": "RW"
+          },
+          {
+            "type": "attacker",
+            "x": 160,
+            "y": 260
+          }
+        ]
+      },
+      "lanes": [
+        {
+          "id": "to-lw",
+          "from": {
+            "x": 60,
+            "y": 170
+          },
+          "to": {
+            "x": 140,
+            "y": 40
+          },
+          "correct": true,
+          "msg": "✓ Wide open — unchecked LW on the wall."
+        },
+        {
+          "id": "to-rw",
+          "from": {
+            "x": 60,
+            "y": 170
+          },
+          "to": {
+            "x": 140,
+            "y": 260
+          },
+          "correct": false,
+          "msg": "Covered — the forechecker is right there."
+        }
+      ]
+    },
+    {
+      "id": "u11_rink_fill4",
+      "cat": "Coverage",
+      "pos": [
+        "D"
+      ],
+      "d": 2,
+      "type": "drag-target",
+      "q": "The puck carrier is cutting to the slot. You're the weak-side D. Where should you be?",
+      "tip": "Weak-side D protects the net front. Stand between the puck and the backdoor, stick in the passing lane.",
+      "rink": {
+        "view": "right",
+        "zone": "def-zone",
+        "markers": [
+          {
+            "type": "attacker",
+            "x": 490,
+            "y": 130,
+            "label": "X"
+          },
+          {
+            "type": "defender",
+            "x": 510,
+            "y": 210,
+            "label": "YOU"
+          },
+          {
+            "type": "teammate",
+            "x": 480,
+            "y": 140,
+            "label": "D1"
+          },
+          {
+            "type": "goalie",
+            "x": 560,
+            "y": 150
+          }
+        ]
+      },
+      "puckStart": {
+        "x": 510,
+        "y": 210
+      },
+      "targets": [
+        {
+          "x": 540,
+          "y": 180,
+          "radius": 30,
+          "verdict": "best",
+          "feedback": "✓ Net-front seal. Stick in the backdoor lane, body between puck and net."
+        },
+        {
+          "x": 460,
+          "y": 130,
+          "radius": 30,
+          "verdict": "worst",
+          "feedback": "You just doubled up on the puck carrier — nobody's at the net. Goalie's alone."
         }
       ]
     }
@@ -11034,6 +11493,227 @@
         "U13 / Peewee",
         "U15 / Bantam"
       ]
+    },
+    {
+      "id": "u13_rink_fill1",
+      "cat": "Vision",
+      "pos": [
+        "F",
+        "D"
+      ],
+      "d": 2,
+      "type": "pov-pick",
+      "q": "You're carrying in on the weak side. Who's the best late-arriving outlet?",
+      "tip": "Late support = the player skating IN with speed, not the one parked.",
+      "pov": {
+        "povRole": "skater",
+        "camera": {
+          "x": 420,
+          "y": 180,
+          "z": 17,
+          "lookAt": {
+            "x": 540,
+            "y": 140
+          }
+        },
+        "prompt": "Best trail option?",
+        "markers": [
+          {
+            "type": "teammate",
+            "x": 500,
+            "y": 80,
+            "label": "A"
+          },
+          {
+            "type": "teammate",
+            "x": 450,
+            "y": 230,
+            "label": "B"
+          },
+          {
+            "type": "defender",
+            "x": 520,
+            "y": 110
+          },
+          {
+            "type": "goalie",
+            "x": 560,
+            "y": 150
+          }
+        ]
+      },
+      "targets": [
+        {
+          "id": "A",
+          "x": 500,
+          "y": 80,
+          "radius": 24,
+          "correct": false,
+          "msg": "Covered. Defender reads that pass all day."
+        },
+        {
+          "id": "B",
+          "x": 450,
+          "y": 230,
+          "radius": 24,
+          "correct": true,
+          "msg": "✓ B is skating IN with speed — clean lane, soft feed."
+        }
+      ]
+    },
+    {
+      "id": "u13_rink_fill2",
+      "cat": "Gap Control",
+      "pos": [
+        "D"
+      ],
+      "d": 2,
+      "type": "drag-target",
+      "q": "A forward is coming at you with speed through the neutral zone. Drag to your ideal gap.",
+      "tip": "Stay 1-2 stick lengths away, angle them toward the boards, stick in the lane.",
+      "rink": {
+        "view": "left",
+        "zone": "neutral-zone",
+        "markers": [
+          {
+            "type": "attacker",
+            "x": 240,
+            "y": 120,
+            "label": "X"
+          },
+          {
+            "type": "defender",
+            "x": 180,
+            "y": 150,
+            "label": "YOU"
+          }
+        ]
+      },
+      "puckStart": {
+        "x": 180,
+        "y": 150
+      },
+      "targets": [
+        {
+          "x": 220,
+          "y": 130,
+          "radius": 32,
+          "verdict": "best",
+          "feedback": "✓ Tight gap, angling them outside, stick available. Classic D read."
+        },
+        {
+          "x": 110,
+          "y": 150,
+          "radius": 40,
+          "verdict": "worst",
+          "feedback": "Way too passive. You just gave them the whole neutral zone."
+        }
+      ]
+    },
+    {
+      "id": "u13_rink_fill3",
+      "cat": "Zone Entry",
+      "pos": [
+        "F"
+      ],
+      "d": 2,
+      "type": "hot-spots",
+      "q": "You have the puck at the offensive blue line with clean speed. Tap every good entry option.",
+      "tip": "Carry (yourself), drop pass (to a trailer), chip (behind D). Dump back into your own zone is wrong.",
+      "rink": {
+        "view": "right",
+        "zone": "neutral-zone",
+        "markers": [
+          {
+            "type": "attacker",
+            "x": 400,
+            "y": 150,
+            "label": "YOU"
+          },
+          {
+            "type": "defender",
+            "x": 440,
+            "y": 150
+          },
+          {
+            "type": "teammate",
+            "x": 360,
+            "y": 210,
+            "label": "F2"
+          }
+        ]
+      },
+      "spots": [
+        {
+          "x": 500,
+          "y": 80,
+          "correct": true,
+          "msg": "✓ Chip-and-chase — behind the D. Good if they're tight."
+        },
+        {
+          "x": 370,
+          "y": 200,
+          "correct": true,
+          "msg": "✓ Drop to F2 — lets you carry through with speed."
+        },
+        {
+          "x": 150,
+          "y": 150,
+          "correct": false,
+          "msg": "Dumping back into your own zone? No. You had speed."
+        }
+      ]
+    },
+    {
+      "id": "u13_rink_fill4",
+      "cat": "Goaltending",
+      "pos": [
+        "G"
+      ],
+      "d": 2,
+      "type": "pov-mc",
+      "q": "It's 2-on-1. The defender is playing the pass. What's your priority?",
+      "choices": [
+        "Play the shooter — square up, get to the top of the crease.",
+        "Drop into butterfly early and slide.",
+        "Wait to see what they do.",
+        "Come out aggressively to challenge."
+      ],
+      "correct": 0,
+      "tip": "When your D is taking the pass, they're giving you the shooter. Square up, challenge the angle — don't get caught moving.",
+      "pov": {
+        "povRole": "goalie",
+        "camera": {
+          "x": 558,
+          "y": 150,
+          "z": 18,
+          "lookAt": {
+            "x": 420,
+            "y": 150
+          }
+        },
+        "prompt": "2-on-1 coming. Your read.",
+        "markers": [
+          {
+            "type": "attacker",
+            "x": 440,
+            "y": 120,
+            "label": "shooter"
+          },
+          {
+            "type": "attacker",
+            "x": 440,
+            "y": 200,
+            "label": "X"
+          },
+          {
+            "type": "defender",
+            "x": 470,
+            "y": 180,
+            "label": "D"
+          }
+        ]
+      }
     }
   ],
   "U15 / Bantam": [
@@ -13275,6 +13955,107 @@
         "U15 / Bantam",
         "U18 / Midget"
       ]
+    },
+    {
+      "id": "u15_gm1",
+      "cat": "Game Management",
+      "pos": [
+        "F",
+        "D"
+      ],
+      "d": 2,
+      "sit": "3rd period, your team is up by 1, 4 minutes to go. Best line philosophy?",
+      "opts": [
+        "Simple plays, short shifts, get pucks out clean.",
+        "Force the extra goal with risky plays.",
+        "Hold the puck as long as possible.",
+        "Take more shots from bad angles."
+      ],
+      "ok": 0,
+      "why": "Late with a lead = short shifts, simple plays, clean exits. Don't give them oxygen.",
+      "tip": "Lead late = simple + short."
+    },
+    {
+      "id": "u15_gm2",
+      "cat": "Game Management",
+      "pos": [
+        "F",
+        "D"
+      ],
+      "d": 2,
+      "sit": "You're down by a goal with 90 seconds left. You have the puck in your zone. Best play?",
+      "opts": [
+        "Join the rush — calculated risk is worth it.",
+        "Play it safe and cycle.",
+        "Glass-and-out.",
+        "Freeze the puck."
+      ],
+      "ok": 0,
+      "why": "Down late = calculated risk > safe. Join the attack, create numbers, force a chance.",
+      "tip": "Down late = push, don't coast."
+    },
+    {
+      "id": "u15_gm3",
+      "cat": "Game Management",
+      "pos": [
+        "F",
+        "D"
+      ],
+      "d": 2,
+      "type": "tf",
+      "sit": "Your team should play the same way in minute 1 as minute 59 — score + time don't matter.",
+      "ok": false,
+      "why": "Elite teams adjust constantly. Tight playoff game ≠ 6-1 blowout ≠ early-period feel-out. Read the state.",
+      "tip": "Score + time = adjust."
+    },
+    {
+      "id": "u15_fin1",
+      "cat": "Finishing",
+      "pos": [
+        "F"
+      ],
+      "d": 2,
+      "sit": "You break in alone on the goalie. What's the highest-percentage move?",
+      "opts": [
+        "Deke to your forehand and elevate.",
+        "Shoot from the blue line.",
+        "Pass back to no one.",
+        "Dump it in."
+      ],
+      "ok": 0,
+      "why": "Breakaways favor the attacker. Get to your forehand, pick the corner, elevate. Quick eyes on the goalie's pads.",
+      "tip": "Breakaway = forehand, elevate."
+    },
+    {
+      "id": "u15_fin2",
+      "cat": "Finishing",
+      "pos": [
+        "F"
+      ],
+      "d": 2,
+      "sit": "You receive a pass backdoor in the slot. What's the play?",
+      "opts": [
+        "One-timer into the open net.",
+        "Stop and stickhandle.",
+        "Look for another pass.",
+        "Hesitate."
+      ],
+      "ok": 0,
+      "why": "Backdoor feeds die when the goalie recovers. One-time it into the open side — speed beats stickhandling here.",
+      "tip": "Backdoor = one-time it."
+    },
+    {
+      "id": "u15_fin3",
+      "cat": "Finishing",
+      "pos": [
+        "F"
+      ],
+      "d": 2,
+      "type": "tf",
+      "sit": "Great finishers look at the goalie, not the puck, right before they shoot.",
+      "ok": true,
+      "why": "Top finishers scan the goalie's position AND what the goalie is giving up. Their hands find the puck by feel.",
+      "tip": "Finisher's eyes = goalie, not puck."
     }
   ],
   "U18 / Midget": [
@@ -14976,6 +15757,99 @@
           "radius": 40,
           "verdict": "worst",
           "feedback": "Stayed flat-footed. The attacker's gone wide — you lost the gap."
+        }
+      ]
+    },
+    {
+      "id": "u18r3",
+      "cat": "Decision-Making",
+      "pos": [
+        "F"
+      ],
+      "d": 2,
+      "type": "hot-spots",
+      "q": "Power play, 5-on-4, set up in the offensive zone. Tap every spot where a one-timer becomes dangerous.",
+      "tip": "One-timer zones = the far-side dot and the bumper slot. Low walls only work if the defender strong-sides the puck.",
+      "rink": {
+        "view": "right",
+        "zone": "off-zone",
+        "markers": [
+          {
+            "type": "teammate",
+            "x": 430,
+            "y": 150,
+            "label": "QB"
+          },
+          {
+            "type": "goalie",
+            "x": 560,
+            "y": 150
+          }
+        ]
+      },
+      "spots": [
+        {
+          "x": 500,
+          "y": 220,
+          "correct": true,
+          "msg": "✓ Far-side dot — classic one-timer spot. Shot from the QB travels cross-ice to you."
+        },
+        {
+          "x": 510,
+          "y": 150,
+          "correct": true,
+          "msg": "✓ Bumper position (high slot) — live redirect or one-timer from a seam feed."
+        },
+        {
+          "x": 540,
+          "y": 90,
+          "correct": false,
+          "msg": "Near-side half-wall is a feed spot, not a shooter spot on this look."
+        }
+      ]
+    },
+    {
+      "id": "u18r4",
+      "cat": "Transition Game",
+      "pos": [
+        "F",
+        "D"
+      ],
+      "d": 2,
+      "type": "sequence-rink",
+      "q": "Rebuild the fastest breakout on this regroup. Tap players in order 1 → 4.",
+      "tip": "D retrieves (1) → D-to-D reverse (2) → strong-side winger (3) → stretch to the F3 high (4).",
+      "rink": {
+        "view": "left"
+      },
+      "markers": [
+        {
+          "type": "defender",
+          "x": 60,
+          "y": 200,
+          "label": "D1",
+          "order": 1
+        },
+        {
+          "type": "defender",
+          "x": 80,
+          "y": 100,
+          "label": "D2",
+          "order": 2
+        },
+        {
+          "type": "teammate",
+          "x": 180,
+          "y": 40,
+          "label": "LW",
+          "order": 3
+        },
+        {
+          "type": "teammate",
+          "x": 280,
+          "y": 170,
+          "label": "C",
+          "order": 4
         }
       ]
     }
