@@ -351,15 +351,20 @@ function DragTarget({ question, onAnswer, onReset }) {
   const startPos = question.puckStart && typeof question.puckStart === "object"
     ? { x: toFiniteNumber(question.puckStart.x, 300), y: toFiniteNumber(question.puckStart.y, 150) }
     : { x: 300, y: 150 };
+  const bestTarget = targets.find(t => t?.verdict === "best") || null;
   const [puckPos, setPuckPos] = useState(startPos);
   const [verdict, setVerdict] = useState(null);
   const [feedback, setFeedback] = useState("");
+  const [landedAt, setLandedAt] = useState(null); // target the puck landed in
+  const [trail, setTrail] = useState([]); // drag trail for replay
   const dragRef = useRef({ dragging: false, offset: { x: 0, y: 0 }, last: startPos });
 
   const reset = () => {
     setPuckPos(startPos);
     setVerdict(null);
     setFeedback("");
+    setLandedAt(null);
+    setTrail([]);
     dragRef.current.last = startPos;
     onReset?.();
   };
@@ -369,6 +374,7 @@ function DragTarget({ question, onAnswer, onReset }) {
     const p = svgPoint(e);
     dragRef.current.dragging = true;
     dragRef.current.offset = { x: p.x - puckPos.x, y: p.y - puckPos.y };
+    setTrail([{ x: puckPos.x, y: puckPos.y }]);
     e.preventDefault();
   };
 
@@ -380,6 +386,7 @@ function DragTarget({ question, onAnswer, onReset }) {
       const ny = clamp(p.y - dragRef.current.offset.y, 0, 300);
       dragRef.current.last = { x: nx, y: ny };
       setPuckPos({ x: nx, y: ny });
+      setTrail(prev => [...prev, { x: nx, y: ny }]);
       e.preventDefault();
     };
     const onUp = () => {
@@ -392,6 +399,7 @@ function DragTarget({ question, onAnswer, onReset }) {
       if (hit) {
         setVerdict(hit.verdict || "poor");
         setFeedback(hit.feedback || question.tip || "");
+        setLandedAt(hit);
         onAnswer?.(hit.verdict === "best");
       }
     };
@@ -407,6 +415,28 @@ function DragTarget({ question, onAnswer, onReset }) {
     };
   }, [question, svgPoint, onAnswer, targets]);
 
+  // Drive a 1.4s replay after drop: puck animates from start to landing,
+  // and if the player's choice wasn't the best, the ideal puck also
+  // travels from start to the best target in parallel.
+  const replayActive = !!verdict;
+  const t = useReplayT(replayActive, 1400);
+  const verdictColor = !verdict ? "#ef4444"
+    : verdict === "best" ? "#22c55e"
+    : verdict === "okay" || verdict === "good" ? "#eab308"
+    : "#ef4444";
+
+  // Animated puck position — interpolates from start to where the player dropped.
+  const animPuck = verdict && landedAt
+    ? { x: startPos.x + (toFiniteNumber(landedAt.x, 300) - startPos.x) * t,
+        y: startPos.y + (toFiniteNumber(landedAt.y, 150) - startPos.y) * t }
+    : puckPos;
+  // "What the right play looked like" — second puck for wrong answers.
+  const showIdeal = verdict && verdict !== "best" && bestTarget;
+  const idealPuck = showIdeal ? {
+    x: startPos.x + (toFiniteNumber(bestTarget.x, 300) - startPos.x) * t,
+    y: startPos.y + (toFiniteNumber(bestTarget.y, 150) - startPos.y) * t,
+  } : null;
+
   return (
     <div>
       <p style={questionTextStyle}>{question.q}</p>
@@ -415,30 +445,67 @@ function DragTarget({ question, onAnswer, onReset }) {
         <IceIQRink {...(question.rink || {})} />
         <svg ref={svgRef} viewBox={getViewBox(question.rink?.view)} preserveAspectRatio="none"
           style={overlaySvgStyle(!verdict)}>
-          {targets.map((t, i) => (
-            <g key={i}>
-              <circle cx={toFiniteNumber(t.x, 300)} cy={toFiniteNumber(t.y, 150)}
-                r={toFiniteNumber(t.radius, 30)}
-                fill="rgba(34,197,94,0.14)" stroke="#22c55e"
-                strokeWidth="1.4" strokeDasharray="4 2.5" />
-              {t.label && (
-                <text x={toFiniteNumber(t.x, 300)} y={toFiniteNumber(t.y, 150) + 4}
-                  textAnchor="middle" fill="#86EFAC" fontSize="11" fontWeight="600">
-                  {t.label}
-                </text>
-              )}
-            </g>
-          ))}
-          <g transform={`translate(${puckPos.x},${puckPos.y})`}
+          {/* Target zones — fade dashed hints while dragging, highlight the
+              correct one after drop. */}
+          {targets.map((tgt, i) => {
+            const isBest = tgt?.verdict === "best";
+            const isPicked = verdict && landedAt === tgt;
+            const ringColor = !verdict ? "#22c55e"
+              : isBest ? "#22c55e"
+              : isPicked ? verdictColor
+              : "#64748b";
+            return (
+              <g key={i} opacity={!verdict ? 1 : (isBest || isPicked ? 1 : 0.35)}>
+                <circle cx={toFiniteNumber(tgt.x, 300)} cy={toFiniteNumber(tgt.y, 150)}
+                  r={toFiniteNumber(tgt.radius, 30)}
+                  fill={isBest && verdict ? "rgba(34,197,94,0.18)" : isPicked ? `${ringColor}22` : "rgba(34,197,94,0.14)"}
+                  stroke={ringColor}
+                  strokeWidth={verdict && (isBest || isPicked) ? 2 : 1.4}
+                  strokeDasharray={verdict && isBest ? "none" : "4 2.5"} />
+                {tgt.label && (
+                  <text x={toFiniteNumber(tgt.x, 300)} y={toFiniteNumber(tgt.y, 150) + 4}
+                    textAnchor="middle" fill={isBest && verdict ? "#86EFAC" : "#86EFAC"} fontSize="11" fontWeight="600">
+                    {tgt.label}
+                  </text>
+                )}
+              </g>
+            );
+          })}
+          {/* Drag trail (visible during drag AND during replay so the
+              player can see the path they took). */}
+          {trail.length > 1 && (
+            <path d={smoothPathD(trail)} fill="none" stroke={verdictColor} strokeWidth="2.5"
+              strokeDasharray={verdict ? "4 3" : "none"} strokeLinecap="round" opacity={verdict ? 0.6 : 0.9}/>
+          )}
+          {/* Ghost line showing where the ideal puck WOULD have gone on a wrong answer. */}
+          {showIdeal && (
+            <line x1={startPos.x} y1={startPos.y}
+              x2={toFiniteNumber(bestTarget.x, 300)} y2={toFiniteNumber(bestTarget.y, 150)}
+              stroke="#22c55e" strokeWidth="2" strokeDasharray="5 3" opacity="0.65"/>
+          )}
+          {/* The actual puck — animates to the chosen target after drop. */}
+          <g transform={`translate(${animPuck.x},${animPuck.y})`}
             style={{ cursor: verdict ? "default" : "grab" }}
             onMouseDown={onDown} onTouchStart={onDown}>
             <ellipse cx="0" cy="1" rx="10" ry="3.5" fill="#ef4444" stroke="#fff" strokeWidth="1.2" />
           </g>
+          {/* A green "what should have happened" puck for wrong answers. */}
+          {showIdeal && idealPuck && (
+            <g transform={`translate(${idealPuck.x},${idealPuck.y})`} style={{pointerEvents:"none"}}>
+              <ellipse cx="0" cy="1" rx="10" ry="3.5" fill="#22c55e" stroke="#fff" strokeWidth="1.2" opacity="0.8"/>
+            </g>
+          )}
         </svg>
       </div>
       {verdict && (
         <>
-          <Feedback state={verdict === "best" ? "ok" : verdict === "okay" ? "partial" : "no"} message={feedback} />
+          {showIdeal && (
+            <div style={{display:"flex",gap:".85rem",padding:".5rem .25rem",fontSize:11,color:"#94a3b8",justifyContent:"center"}}>
+              <span><span style={{color:verdictColor,fontWeight:800}}>●</span> your puck</span>
+              <span><span style={{color:"#22c55e",fontWeight:800}}>●</span> ideal</span>
+            </div>
+          )}
+          <Feedback state={verdict === "best" ? "ok" : (verdict === "okay" || verdict === "good") ? "partial" : "no"} message={feedback} />
           <div style={actionRowStyle()}>
             <button onClick={reset} style={secondaryBtnStyle}>Try again</button>
           </div>
@@ -612,29 +679,53 @@ function ZoneClick({ question, onAnswer, onReset }) {
           style={{ position: "absolute", inset: 0, width: "100%", height: "100%", pointerEvents: done ? "none" : "auto" }}>
           {zones.map((z, i) => {
             const isPicked = picked === i;
+            const isUnpickedCorrect = done && !isPicked && z.correct;
             let fill = "rgba(91,164,232,0.14)";
             let stroke = "#5BA4E8";
             let sw = 1.2;
+            let dash = "4 2.5";
             if (done && isPicked) {
-              fill = z.correct ? "rgba(34,197,94,0.28)" : "rgba(239,68,68,0.28)";
+              fill = z.correct ? "rgba(34,197,94,0.35)" : "rgba(239,68,68,0.3)";
               stroke = z.correct ? "#22c55e" : "#ef4444";
+              sw = 2.5;
+              dash = "none";
+            } else if (isUnpickedCorrect) {
+              // Show the right zone if the player picked wrong — pulsing
+              // yellow so they can see what they should have tapped.
+              fill = "rgba(234,179,8,0.2)";
+              stroke = "#eab308";
               sw = 2;
+              dash = "3 2";
+            } else if (done) {
+              fill = "rgba(100,116,139,0.08)";
+              stroke = "#64748b";
+              sw = 1;
             }
             if (z.shape === "circle") {
               return (
-                <circle key={i} cx={toFiniteNumber(z.x, 0)} cy={toFiniteNumber(z.y, 0)}
-                  r={toFiniteNumber(z.radius, 30)}
-                  fill={fill} stroke={stroke} strokeWidth={sw} strokeDasharray="4 2.5"
-                  style={{ cursor: done ? "default" : "pointer" }}
-                  onClick={() => handle(z, i)} />
+                <g key={i}>
+                  {done && isPicked && z.correct && (
+                    <circle cx={toFiniteNumber(z.x, 0)} cy={toFiniteNumber(z.y, 0)}
+                      r={toFiniteNumber(z.radius, 30)}
+                      fill="none" stroke="#22c55e" strokeWidth="2">
+                      <animate attributeName="r" values={`${toFiniteNumber(z.radius, 30)};${toFiniteNumber(z.radius, 30) + 12};${toFiniteNumber(z.radius, 30)}`} dur="1.4s" repeatCount="indefinite"/>
+                      <animate attributeName="opacity" values="0.9;0;0.9" dur="1.4s" repeatCount="indefinite"/>
+                    </circle>
+                  )}
+                  <circle cx={toFiniteNumber(z.x, 0)} cy={toFiniteNumber(z.y, 0)}
+                    r={toFiniteNumber(z.radius, 30)}
+                    fill={fill} stroke={stroke} strokeWidth={sw} strokeDasharray={dash}
+                    style={{ cursor: done ? "default" : "pointer" }}
+                    onClick={() => handle(z, i)} />
+                </g>
               );
             }
             if (Array.isArray(z.points)) {
               const pts = z.points.map(p => `${toFiniteNumber(p.x, 0)},${toFiniteNumber(p.y, 0)}`).join(" ");
               return (
                 <polygon key={i} points={pts}
-                  fill={fill} stroke={stroke} strokeWidth={sw} strokeDasharray="4 2.5"
-                  style={{ cursor: done ? "default" : "pointer" }}
+                  fill={fill} stroke={stroke} strokeWidth={sw} strokeDasharray={dash}
+                  style={{ cursor: done ? "default" : "pointer", transition: "fill .3s, stroke .3s" }}
                   onClick={() => handle(z, i)} />
               );
             }
@@ -712,6 +803,20 @@ function MultiTap({ question, onAnswer, onReset }) {
               <g key={i} transform={`translate(${toFiniteNumber(m.x, 0)},${toFiniteNumber(m.y, 0)})`}
                 style={{ cursor: checked ? "default" : "pointer" }}
                 onClick={() => toggle(i)}>
+                {/* Pulsing ring on correctly-picked spots after check — reward tap. */}
+                {isCorrectPick && (
+                  <circle cx="0" cy="0" r="22" fill="none" stroke="#22c55e" strokeWidth="2">
+                    <animate attributeName="r" values="18;30;18" dur="1.4s" repeatCount="indefinite"/>
+                    <animate attributeName="opacity" values="0.9;0;0.9" dur="1.4s" repeatCount="indefinite"/>
+                  </circle>
+                )}
+                {/* Pulsing yellow ring on missed-correct spots. "You should have hit these too." */}
+                {isMissed && (
+                  <circle cx="0" cy="0" r="22" fill="none" stroke="#eab308" strokeWidth="2" strokeDasharray="3 2">
+                    <animate attributeName="r" values="18;26;18" dur="1.2s" repeatCount="indefinite"/>
+                    <animate attributeName="opacity" values="1;0.35;1" dur="1.2s" repeatCount="indefinite"/>
+                  </circle>
+                )}
                 <circle cx="0" cy="0" r="18"
                   fill={sel ? "rgba(91,164,232,0.2)" : "none"}
                   stroke={ringColor} strokeWidth="1.8"
@@ -720,6 +825,9 @@ function MultiTap({ question, onAnswer, onReset }) {
                 <text x="0" y="4" textAnchor="middle" fill="#fff" fontSize="10" fontWeight="600">
                   {m.label || labels[m.type] || ""}
                 </text>
+                {isMissed && (
+                  <text x="0" y="-24" textAnchor="middle" fontSize="9" fontWeight="800" fill="#eab308">missed</text>
+                )}
               </g>
             );
           })}
@@ -766,6 +874,37 @@ function Sequence({ question, onAnswer, onReset }) {
 
   const correct = done && sequence.every((idx, pos) => markers[idx]?.order === pos + 1);
 
+  // Ideal-order markers, sorted by `order`. Drives the auto-playthrough
+  // puck animation on a correct sequence AND the ghost overlay on a wrong one.
+  const ordered = useMemo(
+    () => [...markers].filter(m => typeof m.order === "number").sort((a, b) => a.order - b.order),
+    [markers]
+  );
+  const orderedPoints = useMemo(
+    () => ordered.map(m => ({ x: toFiniteNumber(m.x, 0), y: toFiniteNumber(m.y, 0) })),
+    [ordered]
+  );
+  // The puck visits each numbered marker in sequence over `playDuration` ms.
+  // `playT` counts from 0 to `ordered.length - 1` across the run.
+  const playDuration = 400 * Math.max(1, ordered.length - 1);
+  const rawT = useReplayT(done, playDuration);
+  const playT = rawT * Math.max(1, ordered.length - 1);
+  function puckAt() {
+    if (!ordered.length) return null;
+    const i0 = Math.max(0, Math.min(ordered.length - 1, Math.floor(playT)));
+    const i1 = Math.min(ordered.length - 1, i0 + 1);
+    const f = playT - i0;
+    const p0 = orderedPoints[i0];
+    const p1 = orderedPoints[i1];
+    if (!p0 || !p1) return null;
+    return { x: p0.x + (p1.x - p0.x) * f, y: p0.y + (p1.y - p0.y) * f };
+  }
+  const puckPos = done && orderedPoints.length ? puckAt() : null;
+  // For the path polyline showing the ideal route.
+  const pathD = orderedPoints.length > 1
+    ? orderedPoints.map((p, i) => (i === 0 ? "M" : "L") + ` ${p.x} ${p.y}`).join(" ")
+    : "";
+
   return (
     <div>
       <p style={questionTextStyle}>{question.q}</p>
@@ -774,6 +913,11 @@ function Sequence({ question, onAnswer, onReset }) {
         <IceIQRink {...(question.rink || {})} />
         <svg viewBox={getViewBox(question.rink?.view)} preserveAspectRatio="none"
           style={overlaySvgStyle(!done)}>
+          {/* Ideal-sequence path revealed after submission. */}
+          {done && pathD && (
+            <path d={pathD} fill="none" stroke={correct ? "#22c55e" : "#eab308"}
+              strokeWidth="2.5" strokeLinecap="round" strokeDasharray="5 3" opacity="0.7"/>
+          )}
           {markers.map((m, i) => {
             const fills = { attacker: "#E24B4A", defender: "#2C2C2A", teammate: "#1D9E75", player: "#185FA5" };
             const labels = { attacker: "X", defender: "D", teammate: "T", player: "O" };
@@ -800,14 +944,26 @@ function Sequence({ question, onAnswer, onReset }) {
                     <text x="14" y="-9" textAnchor="middle" fill="#fff" fontSize="9" fontWeight="700">{seqPos + 1}</text>
                   </>
                 )}
+                {done && typeof m.order === "number" && (
+                  <text x="-14" y="-12" textAnchor="middle" fontSize="9" fontWeight="800"
+                    fill={correct ? "#22c55e" : "#eab308"}>{m.order}</text>
+                )}
               </g>
             );
           })}
+          {/* Animated puck traveling the ideal sequence. */}
+          {puckPos && (
+            <g transform={`translate(${puckPos.x},${puckPos.y})`} style={{pointerEvents:"none"}}>
+              <ellipse cx="0" cy="1" rx="10" ry="3.5" fill={correct ? "#22c55e" : "#eab308"} stroke="#fff" strokeWidth="1.2" />
+            </g>
+          )}
         </svg>
       </div>
       {done && (
         <>
-          <Feedback state={correct ? "ok" : "no"} message={question.tip} />
+          <Feedback state={correct ? "ok" : "no"} message={correct
+            ? (question.tip || "Nice order — watch the puck move through your sequence.")
+            : `The numbers show the correct order. ${question.tip || ""}`} />
           <div style={actionRowStyle()}>
             <button onClick={reset} style={secondaryBtnStyle}>Try again</button>
           </div>
@@ -815,6 +971,44 @@ function Sequence({ question, onAnswer, onReset }) {
       )}
     </div>
   );
+}
+
+// ───────────────────────────────────────────────────────────────────
+// Shared polish helpers — used by PathDraw, DragTarget, LaneSelect,
+// Sequence, and the other interactive renderers. Extracted so each
+// renderer can add "play develops" animations without reinventing the
+// same math.
+// ───────────────────────────────────────────────────────────────────
+
+// Interpolate a point t ∈ [0,1] along a list of resampled points.
+function ptAt(pts, t) {
+  if (!pts || pts.length === 0) return null;
+  if (t <= 0) return pts[0];
+  if (t >= 1) return pts[pts.length - 1];
+  const idx = t * (pts.length - 1);
+  const i0 = Math.floor(idx);
+  const i1 = Math.min(pts.length - 1, i0 + 1);
+  const f = idx - i0;
+  return { x: pts[i0].x + f * (pts[i1].x - pts[i0].x), y: pts[i0].y + f * (pts[i1].y - pts[i0].y) };
+}
+
+// Drive a t ∈ [0,1] value via requestAnimationFrame. Starts when `active`
+// flips to true; pass `duration` in ms (default 1500). Returns current t.
+function useReplayT(active, duration = 1500) {
+  const [t, setT] = useState(0);
+  const raf = useRef(null);
+  useEffect(() => {
+    if (!active) { setT(0); return; }
+    const start = performance.now();
+    const tick = (now) => {
+      const frac = Math.min(1, (now - start) / duration);
+      setT(frac);
+      if (frac < 1) raf.current = requestAnimationFrame(tick);
+    };
+    raf.current = requestAnimationFrame(tick);
+    return () => { if (raf.current) cancelAnimationFrame(raf.current); };
+  }, [active, duration]);
+  return t;
 }
 
 // ───────────────────────────────────────────────────────────────────
@@ -1008,17 +1202,7 @@ function PathDraw({ question, onAnswer, onReset }) {
   const playerResampled = useMemo(() => (path.length > 1 ? resamplePath(path, 24) : null), [path]);
   const playerD = smoothPathD(path);
 
-  // Skater positions at time t along each path.
-  function ptAt(pts, t) {
-    if (!pts || pts.length === 0) return null;
-    if (t <= 0) return pts[0];
-    if (t >= 1) return pts[pts.length - 1];
-    const idx = t * (pts.length - 1);
-    const i0 = Math.floor(idx);
-    const i1 = Math.min(pts.length - 1, i0 + 1);
-    const f = idx - i0;
-    return { x: pts[i0].x + f * (pts[i1].x - pts[i0].x), y: pts[i0].y + f * (pts[i1].y - pts[i0].y) };
-  }
+  // Skater positions at time t along each path (helper shared at top of file).
   const playerSkater = result && playerResampled ? ptAt(playerResampled, replayT) : null;
   const idealSkater = result && idealResampled ? ptAt(idealResampled, replayT) : null;
 
@@ -1099,15 +1283,50 @@ function LaneSelect({ question, onAnswer, onReset }) {
   const lanes = Array.isArray(question.lanes) ? question.lanes : [];
   const [picked, setPicked] = useState(null);
   const done = picked !== null;
+  const t = useReplayT(done, 1200);
 
   const reset = () => { setPicked(null); onReset?.(); };
   const handle = (lane, i) => {
     if (done) return;
     setPicked(i);
-    onAnswer?.(!!lane.clear);
+    // Support both the `clear` boolean convention and the newer `correct`.
+    const ok = !!(lane.clear || lane.correct);
+    onAnswer?.(ok);
   };
 
   const pickedLane = picked !== null ? lanes[picked] : null;
+  // Support both old (x1,y1,x2,y2) and new (from:{x,y}, to:{x,y}) shapes.
+  function laneEnds(l) {
+    if (!l) return { x1: 0, y1: 0, x2: 0, y2: 0 };
+    const x1 = toFiniteNumber(l.x1 ?? l.from?.x, 0);
+    const y1 = toFiniteNumber(l.y1 ?? l.from?.y, 0);
+    const x2 = toFiniteNumber(l.x2 ?? l.to?.x, 0);
+    const y2 = toFiniteNumber(l.y2 ?? l.to?.y, 0);
+    return { x1, y1, x2, y2 };
+  }
+
+  // For a wrong pick — if any other lane is explicitly `clear` or `correct`,
+  // show the ideal puck traveling that route too.
+  const idealLane = done && pickedLane && !(pickedLane.clear || pickedLane.correct)
+    ? lanes.find(l => l.clear || l.correct)
+    : null;
+
+  // Intercept effect for wrong passes: puck stops halfway and a defender
+  // "appears" to show where it got picked off.
+  const interceptFrac = done && pickedLane && !(pickedLane.clear || pickedLane.correct) ? 0.55 : 1;
+
+  // Puck position at time t along the chosen lane.
+  let puckPos = null;
+  if (pickedLane) {
+    const { x1, y1, x2, y2 } = laneEnds(pickedLane);
+    const stopT = Math.min(t, interceptFrac);
+    puckPos = { x: x1 + (x2 - x1) * stopT, y: y1 + (y2 - y1) * stopT };
+  }
+  let idealPuckPos = null;
+  if (idealLane) {
+    const { x1, y1, x2, y2 } = laneEnds(idealLane);
+    idealPuckPos = { x: x1 + (x2 - x1) * t, y: y1 + (y2 - y1) * t };
+  }
 
   return (
     <div>
@@ -1119,22 +1338,53 @@ function LaneSelect({ question, onAnswer, onReset }) {
           style={overlaySvgStyle(!done)}>
           {lanes.map((l, i) => {
             const isPicked = picked === i;
+            const ok = !!(l.clear || l.correct);
+            const { x1, y1, x2, y2 } = laneEnds(l);
             let stroke = "#5BA4E8", opacity = 0.28;
-            if (done && isPicked) { stroke = l.clear ? "#22c55e" : "#ef4444"; opacity = 0.6; }
+            if (done && isPicked) { stroke = ok ? "#22c55e" : "#ef4444"; opacity = 0.7; }
+            else if (done && ok) { stroke = "#22c55e"; opacity = 0.45; }
             return (
-              <line key={i}
-                x1={toFiniteNumber(l.x1, 0)} y1={toFiniteNumber(l.y1, 0)}
-                x2={toFiniteNumber(l.x2, 0)} y2={toFiniteNumber(l.y2, 0)}
+              <line key={i} x1={x1} y1={y1} x2={x2} y2={y2}
                 stroke={stroke} strokeWidth="18" strokeLinecap="round" strokeOpacity={opacity}
                 style={{ cursor: done ? "default" : "pointer" }}
                 onClick={() => handle(l, i)} />
             );
           })}
+          {/* Puck traveling along the chosen lane. */}
+          {done && puckPos && (
+            <g transform={`translate(${puckPos.x},${puckPos.y})`} style={{pointerEvents:"none"}}>
+              <ellipse cx="0" cy="1" rx="9" ry="3.5"
+                fill={pickedLane?.clear || pickedLane?.correct ? "#22c55e" : "#ef4444"}
+                stroke="#fff" strokeWidth="1.2"/>
+            </g>
+          )}
+          {/* Intercept marker — the defender that picked it off. */}
+          {done && pickedLane && !(pickedLane.clear || pickedLane.correct) && t >= interceptFrac - 0.01 && puckPos && (
+            <g transform={`translate(${puckPos.x},${puckPos.y})`} style={{pointerEvents:"none"}}>
+              <circle cx="0" cy="0" r="14" fill="none" stroke="#ef4444" strokeWidth="2">
+                <animate attributeName="r" values="14;22;14" dur="1.2s" repeatCount="indefinite"/>
+                <animate attributeName="opacity" values="1;0.3;1" dur="1.2s" repeatCount="indefinite"/>
+              </circle>
+              <text x="0" y="-18" textAnchor="middle" fontSize="10" fontWeight="700" fill="#ef4444">intercepted</text>
+            </g>
+          )}
+          {/* Ideal puck — what the right pass would have looked like. */}
+          {done && idealPuckPos && (
+            <g transform={`translate(${idealPuckPos.x},${idealPuckPos.y})`} style={{pointerEvents:"none"}}>
+              <ellipse cx="0" cy="1" rx="9" ry="3.5" fill="#22c55e" stroke="#fff" strokeWidth="1.2" opacity="0.85"/>
+            </g>
+          )}
         </svg>
       </div>
       {done && pickedLane && (
         <>
-          <Feedback state={pickedLane.clear ? "ok" : "no"} message={pickedLane.msg || question.tip} />
+          {idealLane && (
+            <div style={{display:"flex",gap:".85rem",padding:".5rem .25rem",fontSize:11,color:"#94a3b8",justifyContent:"center"}}>
+              <span><span style={{color:"#ef4444",fontWeight:800}}>●</span> your pass</span>
+              <span><span style={{color:"#22c55e",fontWeight:800}}>●</span> the clean lane</span>
+            </div>
+          )}
+          <Feedback state={pickedLane.clear || pickedLane.correct ? "ok" : "no"} message={pickedLane.msg || question.tip} />
           <div style={actionRowStyle()}>
             <button onClick={reset} style={secondaryBtnStyle}>Try again</button>
           </div>
@@ -1161,7 +1411,9 @@ function POVPick({ question, onAnswer, onReset }) {
   };
 
   const pickedTarget = picked !== null ? targets[picked] : null;
+  const correctTarget = targets.find(t => t?.correct);
   const povProps = question.pov && typeof question.pov === "object" ? question.pov : {};
+  const wrongAndHasCorrect = done && pickedTarget && !pickedTarget.correct && correctTarget;
 
   return (
     <div>
@@ -1172,7 +1424,18 @@ function POVPick({ question, onAnswer, onReset }) {
           camera={povProps.camera}
           povRole={povProps.povRole || "skater"}
           markers={povProps.markers}
-          targets={targets.map((t, i) => ({ ...t, id: t.id || `t${i}` }))}
+          targets={targets.map((t, i) => {
+            const id = t.id || `t${i}`;
+            const isCorrect = t.correct;
+            const isPicked = picked === i;
+            // Tint targets post-submission so the right answer is visible
+            // in the POV scene even if the renderer draws them as dots.
+            const tint = !done ? null
+              : isCorrect ? "#22c55e"
+              : isPicked ? "#ef4444"
+              : null;
+            return { ...t, id, ...(tint ? { tint, highlight: isCorrect && done } : {}) };
+          })}
           showPrompt={povProps.prompt}
           onTargetClick={done ? null : (t) => {
             const idx = targets.findIndex(x => (x.id || `t${targets.indexOf(x)}`) === t.id);
@@ -1183,6 +1446,17 @@ function POVPick({ question, onAnswer, onReset }) {
       {done && pickedTarget && (
         <>
           <Feedback state={pickedTarget.correct ? "ok" : "no"} message={pickedTarget.msg || question.tip} />
+          {/* On a wrong pick, surface the correct target's msg (if any)
+              as a secondary "the right read was:" explanation. */}
+          {wrongAndHasCorrect && correctTarget.msg && correctTarget.msg !== pickedTarget.msg && (
+            <div style={{
+              marginTop: "0.6rem", padding: "0.7rem 0.9rem",
+              background: "rgba(34,197,94,0.08)", border: `1px solid rgba(34,197,94,0.3)`,
+              borderRadius: 10, fontSize: 12.5, color: "#86EFAC", fontFamily: FONT.body, lineHeight: 1.55,
+            }}>
+              <b style={{color:"#22c55e"}}>The right read:</b> {correctTarget.msg}
+            </div>
+          )}
           <div style={actionRowStyle()}>
             <button onClick={reset} style={secondaryBtnStyle}>Try again</button>
           </div>
@@ -1237,18 +1511,40 @@ function HotSpots({ question, onAnswer, onReset }) {
           style={overlaySvgStyle(!done)}>
           {spots.map((s, i) => {
             const isPicked = picked === i;
+            // After a wrong pick, surface EVERY correct spot so the player
+            // sees the options they missed. A right pick still lights up
+            // green; the unpicked-correct spots get a yellow "also here"
+            // treatment so it doesn't look like they only had one answer.
+            const isUnpickedCorrect = done && !isPicked && s.correct;
             let stroke = "#5BA4E8", fill = "none", dash = "4 2.5";
             if (done && isPicked) {
               stroke = s.correct ? "#22c55e" : "#ef4444";
               fill = s.correct ? "rgba(34,197,94,0.25)" : "rgba(239,68,68,0.25)";
               dash = "none";
+            } else if (isUnpickedCorrect) {
+              stroke = "#eab308"; fill = "rgba(234,179,8,0.15)"; dash = "3 2";
             }
             return (
               <g key={i} transform={`translate(${toFiniteNumber(s.x, 0)},${toFiniteNumber(s.y, 0)})`}
                 style={{ cursor: done ? "default" : "pointer" }}
                 onClick={() => handle(s, i)}>
+                {done && isPicked && s.correct && (
+                  <circle cx="0" cy="0" r="22" fill="none" stroke="#22c55e" strokeWidth="2">
+                    <animate attributeName="r" values="18;30;18" dur="1.4s" repeatCount="indefinite"/>
+                    <animate attributeName="opacity" values="0.9;0;0.9" dur="1.4s" repeatCount="indefinite"/>
+                  </circle>
+                )}
+                {isUnpickedCorrect && (
+                  <circle cx="0" cy="0" r="22" fill="none" stroke="#eab308" strokeWidth="2" strokeDasharray="3 2">
+                    <animate attributeName="r" values="18;26;18" dur="1.2s" repeatCount="indefinite"/>
+                    <animate attributeName="opacity" values="1;0.35;1" dur="1.2s" repeatCount="indefinite"/>
+                  </circle>
+                )}
                 <circle cx="0" cy="0" r="15" fill={fill} stroke={stroke} strokeWidth="1.8" strokeDasharray={dash} />
-                <circle cx="0" cy="0" r="5" fill="#5BA4E8" opacity="0.55" />
+                <circle cx="0" cy="0" r="5" fill={isUnpickedCorrect ? "#eab308" : "#5BA4E8"} opacity="0.65" />
+                {isUnpickedCorrect && (
+                  <text x="0" y="-20" textAnchor="middle" fontSize="9" fontWeight="800" fill="#eab308">also here</text>
+                )}
               </g>
             );
           })}
