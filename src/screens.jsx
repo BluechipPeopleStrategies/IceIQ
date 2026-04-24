@@ -2070,14 +2070,20 @@ export function ParentsPage({ onNavigate, onContact, photoSrc }) {
                 The app is built for parents, not around them.
               </p>
               <p style={S.body}>
-                He's also the founder of BlueChip People Strategies, a
-                performance and decision-making advisory serving small
-                businesses, post-secondary institutions, and municipalities.
-                A Master's in coaching plus 20+ years of HR and labour-relations
-                work — fields where the quality of a decision matters more than
-                knowing the right answer — is the lens Ice-IQ is built through.
-                The scenarios are built for how kids actually process
-                information, not how adults do.
+                He's a senior HR consultant and the founder of BlueChip People
+                Strategies, a performance and decision-making advisory. Holds
+                a Master's in coaching, has taught at multiple post-secondary
+                institutions, and has significant experience leading people
+                and teams across the private, public, and post-secondary
+                sectors.
+              </p>
+              <p style={S.body}>
+                The lens Ice-IQ is built through is high-pressure
+                decision-making — labour relations bargaining tables,
+                organizational crises, the kind of moments where the quality
+                of a decision matters more than knowing the right answer. The
+                scenarios are built for how kids actually process information
+                in those moments, not how adults do.
               </p>
             </div>
           </div>
@@ -2628,14 +2634,19 @@ export function DeveloperBlurb({ photoSrc }) {
         </div>
         <div>
           <p style={S.body}>
-            Ice-IQ is built by Thomas — a hockey parent, provincial-level
-            coach, and founder of BlueChip People Strategies, a performance
-            and decision-making advisory. A Master's in coaching plus 20+
-            years in HR and labour relations sit under the product. Both
-            are fields where the quality of a decision matters more than
-            knowing the right answer — that's the lens Ice-IQ is built
-            through, and it's why the scenarios are written for how kids
-            actually process information, not how adults do.
+            Ice-IQ is built by Thomas — a hockey parent and provincial-level
+            coach, senior HR consultant, and founder of BlueChip People
+            Strategies. Holds a Master's in coaching, has taught at multiple
+            post-secondary institutions, and has significant experience
+            leading people and teams across the private, public, and
+            post-secondary sectors.
+          </p>
+          <p style={S.body}>
+            The lens Ice-IQ is built through is high-pressure decision-making
+            — bargaining tables, organizational crises, the moments where the
+            quality of a decision matters more than knowing the right answer.
+            That's why the scenarios are written for how kids actually
+            process information under pressure, not how adults do.
           </p>
         </div>
       </div>
