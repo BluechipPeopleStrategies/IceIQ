@@ -11,7 +11,7 @@ import {
 import { loadQB } from "./qbLoader.js";
 import {
   COMPETENCIES, calcCompetencyScores, calcGameSenseScore, getMonthlyTrend,
-  getPeerStats, calcPercentileRank, getPositioningJourneyState, GAME_SENSE_UNLOCK_SESSIONS,
+  getPeerStats, calcPercentileRank, GAME_SENSE_UNLOCK_SESSIONS,
 } from "./utils/gameSense.js";
 import { calcPlayerProfile, PROFILE_AXES } from "./utils/playerProfile.js";
 import { getTrainingLog } from "./utils/trainingLog.js";
@@ -593,12 +593,11 @@ function SpiderChart({ scores }) {
 function PlayerProfileCard({ player, coachRatings, parentRatings, onNavigate }) {
   const log = getTrainingLog(player.id);
   const trainingSessions = player.trainingSessions || log.sessions || [];
-  const journey = getPositioningJourneyState(player.quizHistory || []);
   const profile = calcPlayerProfile(player, {
     coachRatings,
     parentRatings,
     trainingSessions,
-    journeyAttempts: journey.attempts || 0,
+    journeyAttempts: (player.quizHistory || []).length,
   });
 
   const emptyCta = (axisKey) => {

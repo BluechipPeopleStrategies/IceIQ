@@ -5,7 +5,7 @@
 import { calcCompetencyScores, COMPETENCIES } from "./gameSense.js";
 
 // Below this percentage a player is considered "below grade level" on the
-// weakest competency. Matches the gap-control threshold in POSITIONING_JOURNEY.
+// weakest competency.
 const GRADE_LEVEL_THRESHOLD = 60;
 
 export function calcTeamCompetencyAverages(roster) {

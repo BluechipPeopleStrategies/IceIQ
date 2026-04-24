@@ -91,139 +91,6 @@ export function calcGameSenseScore(competencyScores) {
 }
 
 // ─────────────────────────────────────────────────────────
-// ICE IQ JOURNEY — rink-path progression.
-// Shared 8 stations, shared activity thresholds, age-specific labels.
-// Unlocks are activity-based (quizzes taken + training sessions logged)
-// rather than correctness-%, so a kid who shows up every week but still
-// works at 55% accuracy continues to progress.
-// ─────────────────────────────────────────────────────────
-// Paid tiers (PRO, TEAM) — the baseline. Comfortable cadence for a player
-// who quizzes a few times a week and logs training sporadically.
-export const ICE_IQ_THRESHOLDS = [
-  { id:"showed-up",       quizzes:1,  training:0  },
-  { id:"face-off",        quizzes:3,  training:1  },
-  { id:"blue-line",       quizzes:8,  training:2  },
-  { id:"find-slot",       quizzes:18, training:4  },
-  { id:"back-check",      quizzes:30, training:7  },
-  { id:"pressure-puck",   quizzes:45, training:12 },
-  { id:"read-rush",       quizzes:65, training:18 },
-  { id:"captain-c",       quizzes:90, training:25 },
-];
-
-// FREE tier — same 8 stations, but ~1.7–2× the workload. FREE is capped at
-// 3 quizzes/week, so "captain-c" at 150 quizzes is reachable in ~50 weeks
-// of disciplined play. Stations 2–3 stay close to paid so new users still
-// see early wins; the later stations diverge sharply to make PRO worth it.
-export const ICE_IQ_THRESHOLDS_FREE = [
-  { id:"showed-up",       quizzes:1,   training:0  },
-  { id:"face-off",        quizzes:5,   training:2  },
-  { id:"blue-line",       quizzes:14,  training:4  },
-  { id:"find-slot",       quizzes:30,  training:8  },
-  { id:"back-check",      quizzes:50,  training:14 },
-  { id:"pressure-puck",   quizzes:80,  training:22 },
-  { id:"read-rush",       quizzes:115, training:32 },
-  { id:"captain-c",       quizzes:150, training:45 },
-];
-
-export function thresholdsForTier(tier) {
-  return tier === "FREE" ? ICE_IQ_THRESHOLDS_FREE : ICE_IQ_THRESHOLDS;
-}
-
-// FREE-path station names — gamey, Mario-world-map style. One shared set
-// across age groups because the FREE path is framed as a grind mode rather
-// than an age-bespoke narrative. Paid tiers keep the age-specific labels.
-export const ICE_IQ_JOURNEY_LABELS_FREE_MAP = {
-  "showed-up":     { title:"Frozen Pond",      icon:"🧊", desc:"Lace up. Your first quiz opens the map." },
-  "face-off":      { title:"Home Rink",        icon:"🏟️", desc:"You know the barn. Now learn the whistle." },
-  "blue-line":     { title:"Blue Line Bridge", icon:"🌉", desc:"Cross the first line with the puck on your stick." },
-  "find-slot":     { title:"Neutral Zone",     icon:"🗺️", desc:"No-man's-land. Pick your route." },
-  "back-check":    { title:"Forecheck Forest", icon:"🌲", desc:"Hunt the puck through traffic." },
-  "pressure-puck": { title:"Slot Summit",      icon:"⛰️", desc:"The high-danger peak. Plant your flag." },
-  "read-rush":     { title:"Rush Ridge",       icon:"🏔️", desc:"Read the attack before it crests." },
-  "captain-c":     { title:"Captain's Castle", icon:"🏰", desc:"Boss map. The team plays through you." },
-};
-
-export const ICE_IQ_JOURNEY_LABELS = {
-  "U7 / Initiation": {
-    "showed-up":     { title:"You showed up",      icon:"🏒", desc:"Your first quiz is on the board." },
-    "face-off":      { title:"Know your side",     icon:"🟢", desc:"You know which end is yours." },
-    "blue-line":     { title:"Chase smart",        icon:"🎯", desc:"You skate toward the puck on purpose." },
-    "find-slot":     { title:"Pass to a friend",   icon:"🤝", desc:"You look up before you shoot." },
-    "back-check":    { title:"Find the net",       icon:"🥅", desc:"You know where you're trying to go." },
-    "pressure-puck": { title:"Help on D",          icon:"🛡️", desc:"You come back when your team needs help." },
-    "read-rush":     { title:"Skate back",         icon:"↩️", desc:"You hustle back every shift." },
-    "captain-c":     { title:"Little coach",       icon:"⭐", desc:"Teammates follow where you go." },
-  },
-  "U9 / Novice": {
-    "showed-up":     { title:"You showed up",      icon:"🏒", desc:"Every journey starts with one quiz." },
-    "face-off":      { title:"Face-off ready",     icon:"⚪", desc:"You know where you start." },
-    "blue-line":     { title:"Stay on your wing",  icon:"🟦", desc:"You hold your side of the ice." },
-    "find-slot":     { title:"Pass to open ice",   icon:"🎯", desc:"You look up before you pass." },
-    "back-check":    { title:"Crash the net",      icon:"🥅", desc:"You get to the scoring area." },
-    "pressure-puck": { title:"Back-check brain",   icon:"🛡️", desc:"You come back hard every shift." },
-    "read-rush":     { title:"Read the rush",      icon:"👀", desc:"You see 2-on-1s before they happen." },
-    "captain-c":     { title:"Captain's C",        icon:"🅒", desc:"You anchor the team." },
-  },
-  "U11 / Atom": {
-    "showed-up":     { title:"Rookie reps",        icon:"🏒", desc:"Reps are on the board." },
-    "face-off":      { title:"Blue-line reader",   icon:"🟦", desc:"You read zone entries." },
-    "blue-line":     { title:"Support the puck",   icon:"🤝", desc:"You're an option, not a spectator." },
-    "find-slot":     { title:"Find the slot",      icon:"🎯", desc:"You know where goals come from." },
-    "back-check":    { title:"Angle + pin",        icon:"🛡️", desc:"You take away time and space." },
-    "pressure-puck": { title:"Pressure the puck",  icon:"⚡", desc:"Your forecheck creates turnovers." },
-    "read-rush":     { title:"Read before receive",icon:"👁️", desc:"You know what you'll do before the puck arrives." },
-    "captain-c":     { title:"Rink General",       icon:"👑", desc:"You read team shape before the puck moves." },
-  },
-  "U13 / Peewee": {
-    "showed-up":     { title:"Showing up",         icon:"🏒", desc:"On the board." },
-    "face-off":      { title:"Zone entry options", icon:"🟦", desc:"You carry, chip, or dump with intent." },
-    "blue-line":     { title:"NZ regroup",         icon:"🔄", desc:"You reset when the entry isn't there." },
-    "find-slot":     { title:"High-danger reads",  icon:"🎯", desc:"You know which ice creates goals." },
-    "back-check":    { title:"Gap control",        icon:"📏", desc:"You keep the right distance on the rush." },
-    "pressure-puck": { title:"Tempo change-ups",   icon:"⏱️", desc:"You vary speed to open time and space." },
-    "read-rush":     { title:"Two steps ahead",    icon:"👁️", desc:"You anticipate the reset, not just the shot." },
-    "captain-c":     { title:"Team engine",        icon:"⚙️", desc:"The team moves because you moved first." },
-  },
-  "U15 / Bantam": {
-    "showed-up":     { title:"Checked in",         icon:"🏒", desc:"Reps logged." },
-    "face-off":      { title:"Breakout options",   icon:"🟦", desc:"You read the forecheck before receiving." },
-    "blue-line":     { title:"Pre-scan reception", icon:"👀", desc:"You scan before the puck arrives." },
-    "find-slot":     { title:"Slot priority",      icon:"🎯", desc:"You protect and attack the slot." },
-    "back-check":    { title:"Stick-on-puck",      icon:"🛡️", desc:"Your stick takes away plays, not bodies." },
-    "pressure-puck": { title:"Transition triggers",icon:"⚡", desc:"You turn defense into offense in one touch." },
-    "read-rush":     { title:"Anticipate reset",   icon:"👁️", desc:"You read where the puck's going next, not where it is." },
-    "captain-c":     { title:"Systems anchor",     icon:"⚙️", desc:"The system runs through you." },
-  },
-  "U18 / Midget": {
-    "showed-up":     { title:"Locked in",          icon:"🏒", desc:"First reps recorded." },
-    "face-off":      { title:"Pre-scan every touch",icon:"👀", desc:"Your head is up before the puck arrives." },
-    "blue-line":     { title:"Manage the puck",    icon:"🟦", desc:"You make the right play, not the pretty one." },
-    "find-slot":     { title:"High-% plays",       icon:"🎯", desc:"You pick the percentage, not the highlight." },
-    "back-check":    { title:"Defensive posture", icon:"🛡️", desc:"You're always between the puck and your net." },
-    "pressure-puck": { title:"Tempo manipulation",icon:"⏱️", desc:"You control pace — yours and theirs." },
-    "read-rush":     { title:"Pre-game reads",    icon:"📋", desc:"You prepare for what the other team does." },
-    "captain-c":     { title:"Team captain",      icon:"🅒", desc:"The team plays at your standard." },
-  },
-};
-
-export function getIceIQJourneyState(quizHistory, trainingSessions, level, tier) {
-  const quizzes = Array.isArray(quizHistory) ? quizHistory.length : 0;
-  const training = Array.isArray(trainingSessions) ? trainingSessions.length : 0;
-  const labels = tier === "FREE"
-    ? ICE_IQ_JOURNEY_LABELS_FREE_MAP
-    : (ICE_IQ_JOURNEY_LABELS[level] || ICE_IQ_JOURNEY_LABELS["U9 / Novice"]);
-  const thresholds = thresholdsForTier(tier);
-  const stations = thresholds.map((t, i) => ({
-    ...t,
-    ...(labels[t.id] || {}),
-    unlocked: quizzes >= t.quizzes && training >= t.training,
-    index: i,
-  }));
-  const nextIdx = stations.findIndex(s => !s.unlocked);
-  return { quizzes, training, stations, nextIdx: nextIdx === -1 ? null : nextIdx, tier: tier === "FREE" ? "FREE" : "PAID" };
-}
-
-// ─────────────────────────────────────────────────────────
 // 64-LEVEL JOURNEY (8 worlds × 8 levels). Each world is a themed map
 // with its own gradient, icon, and 8 level names that follow the theme
 // narrative. Curve is easy-front / grind-back: clearing the first world
@@ -328,35 +195,12 @@ export function levelRequirementsForTier(tier) {
   return out;
 }
 
-// Legacy export — kept so any residual code referencing the old flat-shape
-// thresholds doesn't break. Produces just {quizzes, training} per level.
-export const LEVEL_THRESHOLDS_PAID = levelRequirementsForTier("PRO").map(r => ({ quizzes: r.quizzes, training: r.training || 0 }));
-export const LEVEL_THRESHOLDS_FREE = levelRequirementsForTier("FREE").map(r => ({ quizzes: r.quizzes, training: r.training || 0 }));
-
-export function levelThresholdsForTier(tier) {
-  return tier === "FREE" ? LEVEL_THRESHOLDS_FREE : LEVEL_THRESHOLDS_PAID;
-}
-
 // `state` is a bag of activity counts: { quizzes, training, clipsWatched,
 // insightsRead, goalsSet, skillsRated, coachRated, assignmentsDone }. Caller
 // assembles it from player state + LS + (optionally) coach feedback / team
 // homework fetches. Missing keys are treated as 0.
-//
-// Backward-compat: if state is actually an array (old quizHistory signature),
-// we coerce — turning `getJourneyV2(quizHistory, trainingSessions, tier)` into
-// a minimal state bag. Remove after all callers migrate.
-export function getJourneyV2(state, trainingSessionsOrTier, maybeTier) {
-  let s, tier;
-  if (Array.isArray(state)) {
-    s = {
-      quizzes: state.length,
-      training: Array.isArray(trainingSessionsOrTier) ? trainingSessionsOrTier.length : 0,
-    };
-    tier = maybeTier;
-  } else {
-    s = state || {};
-    tier = trainingSessionsOrTier;
-  }
+export function getJourneyV2(state, tier) {
+  const s = state || {};
   const reqs = levelRequirementsForTier(tier);
   const levels = reqs.map((req, i) => {
     const worldIdx = Math.floor(i / 8);
@@ -395,20 +239,6 @@ export function getJourneyV2(state, trainingSessionsOrTier, maybeTier) {
     quizzes: s.quizzes || 0,
     training: s.training || 0,
   };
-}
-
-// Legacy name — keep so existing callsites don't explode during HMR. Shape
-// mapped to the new station list. Delete after all callsites migrate.
-export const POSITIONING_JOURNEY = ICE_IQ_THRESHOLDS;
-export function getPositioningJourneyState(quizHistory, trainingSessions, level) {
-  const s = getIceIQJourneyState(quizHistory, trainingSessions, level);
-  // Old-shape compatibility: expose `pct` + `attempts` + `nodes` keys.
-  const nodes = s.stations.map(st => ({
-    id: st.id, title: st.title, icon: st.icon, desc: st.desc,
-    threshold: 0, minAttempts: st.quizzes,
-    unlocked: st.unlocked,
-  }));
-  return { pct: 0, attempts: s.quizzes, nodes, nextIdx: s.nextIdx, quizzes: s.quizzes, training: s.training, stations: s.stations };
 }
 
 export function getMonthlyTrend(quizHistory) {
