@@ -2133,15 +2133,10 @@ function GoalsScreen({ player, onSave, onBack }) {
           <Card>
             <div style={{fontSize:11,color:C.purple,fontWeight:700,letterSpacing:".08em",textTransform:"uppercase",marginBottom:".35rem"}}>{SMART_ICONS[step]} {SMART_LABELS[step]}</div>
             <div style={{fontSize:12,color:C.dimmer,marginBottom:".85rem",lineHeight:1.6}}>{SMART_PROMPTS[step]}</div>
-            {example[step] && (
-              <div style={{fontSize:11,color:C.dimmer,background:C.dimmest,borderRadius:8,padding:".6rem .8rem",marginBottom:".85rem",lineHeight:1.5,fontStyle:"italic"}}>
-                e.g. "{example[step]}"
-              </div>
-            )}
             <textarea
               value={currentGoal[step]||""}
               onChange={e => updateGoal(active,step,e.target.value)}
-              placeholder="Write your answer here..."
+              placeholder={example[step] ? `Write your answer here... e.g. "${example[step]}"` : "Write your answer here..."}
               rows={3}
               style={{background:C.bgElevated,border:`1px solid ${C.border}`,borderRadius:10,padding:".75rem 1rem",color:C.white,fontSize:13,fontFamily:FONT.body,width:"100%",outline:"none",resize:"none",lineHeight:1.6}}
             />
