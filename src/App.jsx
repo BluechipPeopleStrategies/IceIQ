@@ -858,6 +858,105 @@ function MCQuestion({ q, sel, onPick, colorblind }) {
   );
 }
 
+// MULTI-SELECT MC — "Select all that apply." Player ticks checkboxes;
+// only an exact match across the selected set vs q.correct (array of
+// correct indices) counts as correct. Used for higher-difficulty
+// concept questions where there's >1 right answer.
+function MultiMCQuestion({ q, onAnswer, answered, colorblind }) {
+  const correctSet = new Set(Array.isArray(q.correct) ? q.correct : []);
+  const [picks, setPicks] = useState(new Set());
+  const [submitted, setSubmitted] = useState(false);
+  const [wasCorrect, setWasCorrect] = useState(false);
+
+  // Reset internal state when the question id changes (parent advances).
+  useEffect(() => { setPicks(new Set()); setSubmitted(false); setWasCorrect(false); }, [q.id]);
+
+  // Treat the parent-driven "answered" prop as authoritative — keeps the
+  // submitted-once guarantee in sync if a parent collapses the question.
+  const locked = submitted || answered;
+
+  function toggle(i) {
+    if (locked) return;
+    setPicks(prev => {
+      const n = new Set(prev);
+      if (n.has(i)) n.delete(i); else n.add(i);
+      return n;
+    });
+  }
+
+  function submit() {
+    if (locked || picks.size === 0) return;
+    setSubmitted(true);
+    const allCorrectPicked = [...correctSet].every(i => picks.has(i));
+    const noWrongPicked = [...picks].every(i => correctSet.has(i));
+    const isCorrect = allCorrectPicked && noWrongPicked;
+    setWasCorrect(isCorrect);
+    onAnswer?.(isCorrect);
+  }
+
+  const correctColor = colorblind ? "#2563eb" : C.green;
+  const wrongColor = colorblind ? "#ea580c" : C.red;
+
+  return (
+    <div>
+      <div style={{display:"flex",flexDirection:"column",gap:".55rem"}}>
+        {q.opts.map((opt, i) => {
+          const isPicked = picks.has(i);
+          const isRight = correctSet.has(i);
+          let bg=C.dimmest, bdr=C.border, col=C.dim, leftBdr="transparent";
+          if (locked) {
+            // Reveal: green for correct picks (matched or missed), red for wrong picks.
+            if (isRight && isPicked) { bg="rgba(34,197,94,.12)"; bdr="rgba(34,197,94,.35)"; col=C.white; leftBdr=correctColor; }
+            else if (isRight && !isPicked) { bg="rgba(34,197,94,.05)"; bdr="rgba(34,197,94,.2)"; col=C.white; leftBdr=correctColor; }
+            else if (!isRight && isPicked) { bg=C.redDim; bdr=C.redBorder; col=C.dimmer; leftBdr=wrongColor; }
+          } else if (isPicked) { bg=C.purpleDim; bdr=C.purpleBorder; col=C.white; }
+          const mark = locked
+            ? (isRight ? "✓" : isPicked ? "✗" : "")
+            : (isPicked ? "☑" : "☐");
+          const markColor = locked
+            ? (isRight ? correctColor : isPicked ? wrongColor : C.dimmest)
+            : (isPicked ? C.purple : C.dimmer);
+          return (
+            <button key={i} onClick={() => toggle(i)} disabled={locked}
+              style={{
+                background:bg, border:`1px solid ${bdr}`,
+                borderLeft:`3px solid ${leftBdr}`,
+                borderRadius:12, padding:".95rem 1.1rem",
+                cursor:locked?"default":"pointer",
+                textAlign:"left", color:col,
+                fontFamily:FONT.body, fontSize:14, lineHeight:1.55,
+                display:"flex", alignItems:"flex-start", gap:".75rem",
+                transition:"all .15s", width:"100%",
+              }}>
+              <span style={{fontSize:14,fontWeight:800,minWidth:22,marginTop:1,flexShrink:0,color:markColor,fontFamily:FONT.display}}>
+                {mark}
+              </span>
+              <span style={{wordBreak:"break-word",whiteSpace:"normal",flex:1,fontSize:opt.length>100?13:14}}>{opt}</span>
+            </button>
+          );
+        })}
+      </div>
+      {!locked && (
+        <button onClick={submit} disabled={picks.size === 0}
+          style={{
+            marginTop:".85rem",width:"100%",padding:".75rem",borderRadius:10,
+            background: picks.size === 0 ? C.dimmest : C.gold,
+            color: picks.size === 0 ? C.dimmer : C.bg,
+            border:"none",fontFamily:FONT.display,fontWeight:800,fontSize:14,letterSpacing:".02em",
+            cursor: picks.size === 0 ? "default" : "pointer",
+          }}>
+          Submit ({picks.size})
+        </button>
+      )}
+      {locked && (
+        <div style={{marginTop:".75rem",fontSize:11,color:C.dimmer,letterSpacing:".06em",textAlign:"center"}}>
+          {wasCorrect ? "All correct — partial credit not given for half-right answers." : "Need every correct option (and no wrong ones) for credit."}
+        </div>
+      )}
+    </div>
+  );
+}
+
 function SeqQuestion({ q, onAnswer, answered }) {
   const [order, setOrder] = useState(() => [...Array(q.items.length).keys()]);
   const [submitted, setSubmitted] = useState(false);
@@ -973,6 +1072,7 @@ function NextQuestion({ q, sel, onPick }) {
 // Type badge for question header
 const Q_TYPE_LABELS = {
   mc:      {label:"Multiple Choice", color:C.purple,   icon:"📝"},
+  multi:   {label:"Select All That Apply", color:C.gold, icon:"☑️"},
   seq:     {label:"Put in Order",    color:C.gold,     icon:"🔢"},
   mistake: {label:"Spot the Mistake",color:C.red,      icon:"🔍"},
   next:    {label:"What Happens Next",color:C.yellow,  icon:"🔮"},
@@ -1460,7 +1560,7 @@ function Quiz({ player, onFinish, onBack, tier, onUpgrade }) {
     setSeqAnswered(true);
     setSeqCorrect(ok);
     if (!ok) setSeqPerfect(false);
-    const newResult = { id:question.id, cat:question.cat, ok, d:question.d||2, type:"seq" };
+    const newResult = { id:question.id, cat:question.cat, ok, d:question.d||2, type:question.type || "seq" };
     const newResults = [...results, newResult];
     setResults(newResults);
     if (newResults.length >= qLen) setQuizDone(true);
@@ -1485,7 +1585,7 @@ function Quiz({ player, onFinish, onBack, tier, onUpgrade }) {
   const isRinkQ = !!question?.rink || NEW_RINK_TYPES.includes(qtype);
   const answered = isRinkQ
     ? rinkQResult !== null
-    : qtype === "seq"        ? seqAnswered
+    : (qtype === "seq" || qtype === "multi") ? seqAnswered
     :                          sel !== null;
   const q = question;
   if (!q) return <Screen><div style={{color:C.dimmer,textAlign:"center",paddingTop:"4rem"}}>Loading…</div></Screen>;
@@ -1519,6 +1619,8 @@ function Quiz({ player, onFinish, onBack, tier, onUpgrade }) {
         return <TFQuestion q={q} sel={sel} onPick={i => handlePick(i)}/>;
       case "seq":
         return <SeqQuestion q={q} onAnswer={handleSeqAnswer} answered={seqAnswered}/>;
+      case "multi":
+        return <MultiMCQuestion q={q} onAnswer={handleSeqAnswer} answered={seqAnswered} colorblind={player.colorblind}/>;
       default:
         return null;
     }
@@ -1602,6 +1704,14 @@ function Quiz({ player, onFinish, onBack, tier, onUpgrade }) {
           <Card style={{marginBottom:"1.25rem",background:C.purpleDim,border:`1px solid ${C.purpleBorder}`}}>
             <div style={{fontSize:10,letterSpacing:".14em",textTransform:"uppercase",color:C.purple,marginBottom:".6rem",fontWeight:700}}>📋 Game Situation</div>
             <div style={{fontSize:15,lineHeight:1.8,color:C.white,fontWeight:500}}>{q.sit}</div>
+          </Card>
+        )}
+
+        {qtype === "multi" && (
+          <Card style={{marginBottom:"1.25rem",background:C.goldDim,border:`1px solid ${C.goldBorder}`}}>
+            <div style={{fontSize:10,letterSpacing:".14em",textTransform:"uppercase",color:C.gold,marginBottom:".6rem",fontWeight:700}}>☑️ Select All That Apply</div>
+            {q.sit && <div style={{fontSize:14,color:C.dim,lineHeight:1.7,marginBottom:".5rem"}}>{q.sit}</div>}
+            {q.q && <div style={{fontSize:15,fontWeight:700,color:C.white,lineHeight:1.6}}>{q.q}</div>}
           </Card>
         )}
 
@@ -2123,10 +2233,18 @@ function WeeklyQuiz({ player, onBack, onFinish }) {
             <div style={{fontSize:15,lineHeight:1.8,color:C.white,fontWeight:500}}>{q.sit}</div>
           </Card>
         )}
+        {qtype === "multi" && (
+          <Card style={{marginBottom:"1.25rem",background:C.goldDim,border:`1px solid ${C.goldBorder}`}}>
+            <div style={{fontSize:10,letterSpacing:".14em",textTransform:"uppercase",color:C.gold,marginBottom:".6rem",fontWeight:700}}>☑️ Select All That Apply</div>
+            {q.sit && <div style={{fontSize:14,color:C.dim,lineHeight:1.7,marginBottom:".5rem"}}>{q.sit}</div>}
+            {q.q && <div style={{fontSize:15,fontWeight:700,color:C.white,lineHeight:1.6}}>{q.q}</div>}
+          </Card>
+        )}
 
         {qtype === "mc" && <MCQuestion q={q} sel={sel} onPick={handlePick} colorblind={player.colorblind}/>}
         {qtype === "next" && <MCQuestion q={q} sel={sel} onPick={handlePick} colorblind={player.colorblind}/>}
         {qtype === "mistake" && <MCQuestion q={q} sel={sel} onPick={handlePick} colorblind={player.colorblind}/>}
+        {qtype === "multi" && <MultiMCQuestion q={q} answered={seqAnswered} onAnswer={handleSeqAnswer} colorblind={player.colorblind}/>}
         {qtype === "tf" && (
           <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:".75rem",marginBottom:"1rem"}}>
             {["True","False"].map((label, i) => {
@@ -2144,7 +2262,7 @@ function WeeklyQuiz({ player, onBack, onFinish }) {
         )}
         {qtype === "seq" && <SeqQuestion q={q} answered={seqAnswered} onAnswer={handleSeqAnswer}/>}
 
-        {sel !== null && qtype !== "seq" && (() => {
+        {sel !== null && qtype !== "seq" && qtype !== "multi" && (() => {
           const wasCorrect = qtype === "tf" ? (sel === "true") === q.ok : sel === q.ok;
           return (
             <Card style={{marginTop:".5rem",background:wasCorrect ? "rgba(34,197,94,.08)" : "rgba(239,68,68,.08)",border:`1px solid ${wasCorrect ? "rgba(34,197,94,.3)" : "rgba(239,68,68,.3)"}`}}>
@@ -3414,6 +3532,8 @@ function QuestionPreviewPage({ questionId }) {
       )}
       {isRinkQ ? (
         <IceIQRinkQuestion question={question} onAnswer={(ok) => setVerdict(ok ? "ok" : "wrong")} />
+      ) : question.type === "multi" ? (
+        <MultiMCQuestion q={question} onAnswer={(ok) => setVerdict(ok ? "ok" : "wrong")}/>
       ) : (
         <QuestionPreviewFallback question={question} onAnswer={(ok) => setVerdict(ok ? "ok" : "wrong")}/>
       )}

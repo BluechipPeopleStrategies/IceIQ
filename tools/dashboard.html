@@ -913,7 +913,20 @@ function detailHTML(q, primaryLevel) {
   const catOptions = getAllCats();
   const ageOptions = AGE_ORDER;
   const merged = { ...q, ...(EDITS[id] || {}) };
+  // For most types `correct`/`ok` is a single index; for `multi` it's an
+  // array of indices. We fall back to a Set so the renderer below can do
+  // membership checks uniformly.
+  const correctSet = new Set(
+    Array.isArray(q.correct) ? q.correct
+      : typeof q.correct === "number" ? [q.correct]
+      : typeof q.ok === "number" ? [q.ok]
+      : []
+  );
   const correct = typeof q.correct === "number" ? q.correct : q.ok;
+  const isMulti = q.type === "multi";
+  const choices = Array.isArray(q.choices) && q.choices.length
+    ? q.choices
+    : (Array.isArray(q.opts) ? q.opts : null);
 
   return `
     <div class="detail-actions">
@@ -980,16 +993,18 @@ function detailHTML(q, primaryLevel) {
         `).join("")}
       </div>
 
-      ${Array.isArray(q.choices) ? `
-      <div class="k">Choices</div>
+      ${choices ? `
+      <div class="k">${isMulti ? "Choices · select all correct" : "Choices"}</div>
       <div class="v">
-        ${q.choices.map((c, i) => `
-          <div class="choice-card ${i === correct ? "correct" : ""}">
+        ${choices.map((c, i) => {
+          const isCorrect = correctSet.has(i);
+          return `
+          <div class="choice-card ${isCorrect ? "correct" : ""}">
             <span class="ltr">${String.fromCharCode(65 + i)}</span>
             <span class="text">${escHtml(String(c))}</span>
-            ${i === correct ? '<span class="ok-badge">✓ Correct</span>' : ""}
+            ${isCorrect ? '<span class="ok-badge">✓ Correct</span>' : ""}
           </div>
-        `).join("")}
+        `;}).join("")}
       </div>` : ""}
 
       ${q.type === "tf" ? `

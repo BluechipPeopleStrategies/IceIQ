@@ -156,7 +156,10 @@ function checkBank() {
       const isNew = q.q != null || q.choices != null || q.correct != null || NEW_TYPES.has(q.type) || q.rink != null;
       const isLegacy = q.sit != null || q.opts != null || q.ok !== undefined || q.why != null;
 
-      if (isNew && isLegacy) {
+      if (isNew && isLegacy && q.type !== "multi") {
+        // `multi` legitimately combines a setup line (sit) + prompt (q) +
+        // legacy opts[] + new correct[] (array of indices), so the
+        // mixed-schema heuristic doesn't apply.
         warn(`[bank] ${loc} mixes legacy (sit/opts/ok) and new (q/choices/correct) fields — pick one schema`);
       }
 
