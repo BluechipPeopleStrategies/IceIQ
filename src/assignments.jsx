@@ -15,11 +15,33 @@ import { Card, Label, C, FONT } from "./shared.jsx";
 // ─────────────────────────────────────────────
 // PLAYER SIDE — Home screen card
 // ─────────────────────────────────────────────
+// LS key storing the ISO timestamp of the most-recent assignment created_at
+// the player has already seen. Used to flag new assignments with a pulse
+// badge on the Homework card.
+const LS_LAST_HW_SEEN = "iceiq_last_homework_seen_v1";
+
+function getLastHomeworkSeen(playerId) {
+  try {
+    const raw = localStorage.getItem(LS_LAST_HW_SEEN);
+    const map = raw ? JSON.parse(raw) : {};
+    return map[playerId] || null;
+  } catch { return null; }
+}
+function setLastHomeworkSeen(playerId, ts) {
+  try {
+    const raw = localStorage.getItem(LS_LAST_HW_SEEN);
+    const map = raw ? JSON.parse(raw) : {};
+    map[playerId] = ts;
+    localStorage.setItem(LS_LAST_HW_SEEN, JSON.stringify(map));
+  } catch {}
+}
+
 export function HomeworkCard({ playerId, demoMode }) {
   const [assignments, setAssignments] = useState([]);
   const [done, setDone] = useState(new Set());
   const [loading, setLoading] = useState(true);
   const [busy, setBusy] = useState(null); // assignment id currently flipping
+  const [lastSeenAtMount] = useState(() => (playerId ? getLastHomeworkSeen(playerId) : null));
 
   useEffect(() => {
     if (demoMode || !playerId) { setLoading(false); return; }
@@ -33,6 +55,13 @@ export function HomeworkCard({ playerId, demoMode }) {
       setAssignments(asn);
       setDone(comp);
       setLoading(false);
+      // Mark everything as seen the moment the list is shown. The
+      // lastSeenAtMount snapshot above is what drives the "NEW" badge so
+      // items stay flagged until the card unmounts.
+      if (asn && asn.length) {
+        const newest = asn.reduce((max, a) => a.created_at > max ? a.created_at : max, asn[0].created_at);
+        setLastHomeworkSeen(playerId, newest);
+      }
     })();
     return () => { cancelled = true; };
   }, [playerId, demoMode]);
@@ -83,23 +112,43 @@ export function HomeworkCard({ playerId, demoMode }) {
 
   const open = assignments.filter(a => !done.has(a.id));
   const recent = open.slice(0, 4);
+  // An assignment counts as "new" if it was created after the latest
+  // timestamp stored before this mount. lastSeenAtMount is captured in the
+  // state initializer so it reflects what the player saw LAST visit.
+  const newCount = lastSeenAtMount
+    ? assignments.filter(a => a.created_at > lastSeenAtMount && !done.has(a.id)).length
+    : assignments.filter(a => !done.has(a.id)).length;
 
   return (
     <Card style={{marginBottom:"1rem",background:`linear-gradient(135deg,rgba(91,164,232,.1),rgba(91,164,232,.02))`,border:`1px solid rgba(91,164,232,.3)`}}>
-      <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:".5rem"}}>
-        <Label style={{marginBottom:0}}>📋 Homework from Coach</Label>
-        <span style={{fontSize:11,color:C.dimmer,fontWeight:600}}>{open.length} open · {done.size} done</span>
+      <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:".5rem",gap:".5rem"}}>
+        <div style={{display:"flex",alignItems:"center",gap:".45rem",minWidth:0}}>
+          <Label style={{marginBottom:0}}>📋 Homework from Coach</Label>
+          {newCount > 0 && (
+            <span style={{
+              fontSize:9,letterSpacing:".1em",textTransform:"uppercase",
+              background:C.gold,color:C.bg,padding:"2px 7px",borderRadius:4,
+              fontWeight:800,flexShrink:0,
+              animation:"iceiq-pulse 1.6s ease-in-out infinite",
+            }}>
+              {newCount} new
+            </span>
+          )}
+        </div>
+        <span style={{fontSize:11,color:C.dimmer,fontWeight:600,flexShrink:0}}>{open.length} open · {done.size} done</span>
       </div>
+      <style>{`@keyframes iceiq-pulse { 0%,100% { opacity:1 } 50% { opacity:.55 } }`}</style>
       {recent.map(a => {
         const isDone = done.has(a.id);
         const overdue = a.due_date && new Date(a.due_date) < new Date() && !isDone;
+        const isNew = lastSeenAtMount ? a.created_at > lastSeenAtMount && !isDone : !isDone;
         const teamName = a.teams?.name;
         return (
           <button key={a.id} onClick={() => toggle(a.id)} disabled={busy === a.id}
             style={{
               width:"100%",textAlign:"left",padding:".65rem .85rem",
               background: isDone ? "rgba(34,197,94,.08)" : C.bgElevated,
-              border:`1px solid ${isDone ? C.greenBorder : overdue ? C.goldBorder : C.border}`,
+              border:`1px solid ${isDone ? C.greenBorder : overdue ? C.goldBorder : isNew && lastSeenAtMount ? C.goldBorder : C.border}`,
               borderRadius:8,marginBottom:".4rem",cursor:busy===a.id?"wait":"pointer",
               fontFamily:FONT.body,display:"flex",alignItems:"flex-start",gap:".65rem",
             }}>
@@ -111,7 +160,12 @@ export function HomeworkCard({ playerId, demoMode }) {
               color:C.bg,fontSize:12,fontWeight:800,marginTop:1,
             }}>{isDone ? "✓" : ""}</span>
             <span style={{flex:1,minWidth:0,color: isDone ? C.dimmer : C.white}}>
-              <div style={{fontSize:13,fontWeight:700,textDecoration:isDone?"line-through":"none",lineHeight:1.3}}>{a.title}</div>
+              <div style={{display:"flex",alignItems:"center",gap:".4rem",flexWrap:"wrap"}}>
+                <div style={{fontSize:13,fontWeight:700,textDecoration:isDone?"line-through":"none",lineHeight:1.3}}>{a.title}</div>
+                {isNew && lastSeenAtMount && (
+                  <span style={{fontSize:8,letterSpacing:".1em",textTransform:"uppercase",background:C.gold,color:C.bg,padding:"1px 5px",borderRadius:3,fontWeight:800}}>New</span>
+                )}
+              </div>
               {a.description && <div style={{fontSize:11,color:C.dim,marginTop:3,lineHeight:1.45}}>{a.description}</div>}
               <div style={{fontSize:10,color:C.dimmer,marginTop:4,display:"flex",gap:".75rem",flexWrap:"wrap"}}>
                 {teamName && <span>🏒 {teamName}</span>}
