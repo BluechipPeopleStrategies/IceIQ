@@ -1,34 +1,40 @@
 {
-  "id": "u13q_rink07_v2",
+  "id": "u13_pp_bumper_v1",
   "type": "scenario",
-  "themes": ["puck-support", "rush-reads"],
-  "cat": "Puck Support",
+  "themes": ["power-play", "decision-making"],
+  "cat": "Power Play",
   "difficulty": 2,
   "stage": {
     "view": "right",
     "zone": "off-zone"
   },
   "actors": [
-    { "id": "you", "kind": "player",   "x": 0.667, "y": 0.500, "label": "F3 (YOU)" },
-    { "id": "f1",  "kind": "teammate", "x": 0.833, "y": 0.400, "label": "F1" },
-    { "id": "f2",  "kind": "teammate", "x": 0.883, "y": 0.667, "label": "F2" },
-    { "id": "d1",  "kind": "defender", "x": 0.858, "y": 0.500 },
-    { "id": "g",   "kind": "goalie",   "x": 0.933, "y": 0.500 }
+    { "id": "you",     "kind": "player",   "x": 0.900, "y": 0.780, "label": "YOU" },
+    { "id": "puck",    "kind": "puck",     "x": 0.882, "y": 0.762 },
+
+    { "id": "bumper",  "kind": "teammate", "x": 0.780, "y": 0.500, "label": "OPEN" },
+    { "id": "point",   "kind": "teammate", "x": 0.700, "y": 0.220 },
+    { "id": "wing",    "kind": "teammate", "x": 0.900, "y": 0.220 },
+
+    { "id": "pk1",     "kind": "defender", "x": 0.870, "y": 0.660 },
+    { "id": "pk2",     "kind": "defender", "x": 0.700, "y": 0.300 },
+    { "id": "pk3",     "kind": "defender", "x": 0.780, "y": 0.330 },
+    { "id": "g",       "kind": "goalie",   "x": 0.933, "y": 0.500 }
   ],
   "interaction": {
     "kind": "path",
-    "verb": "skate",
+    "verb": "pass",
     "from": "you",
-    "prompt": "You're F3, trailing the rush. Draw your path to the best support position."
+    "prompt": "Power play, 1-3-1. The PK has collapsed up high to take away your point and cross-ice. Where's the open pass?"
   },
   "correct": {
     "kind": "path",
-    "end": { "zoneId": "oz-high-slot" }
+    "end": { "zoneId": "oz-bumper" }
   },
   "feedback": {
-    "right": "Trail high, top of the slot — you're shot support AND backcheck coverage if it turns over.",
-    "wrong": "You drifted into the play. Trail high through the middle so you read the next layer."
+    "right": "Bumper is open — PK collapsed too high, the slot is yours.",
+    "wrong": "Look again at the PK. The point and the cross-ice winger are both covered. The middle of the ice is open."
   },
-  "tip": "Trail high — through the middle to the top of the slot gives you shot support AND backcheck coverage if it turns over.",
-  "why": "F3 is the safety on offense. Top of the slot covers a rebound shot, sets up a high screen, and lets you peel back if the puck turns over."
+  "tip": "When the PK overcommits up high on a 1-3-1, the bumper IS the play.",
+  "why": "1-3-1 power plays live off three options: bumper, weak-side flank, and point. When the kill cheats one, the others open up."
 }
