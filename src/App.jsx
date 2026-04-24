@@ -1567,7 +1567,11 @@ function Quiz({ player, onFinish, onBack, tier, onUpgrade }) {
               {(() => {
                 const coach = getCoachForQuestion(q, player.level, player.position);
                 if (!coach) return null;
-                const flavorPool = userCorrect ? FLAVOR_CORRECT : FLAVOR_INCORRECT;
+                const ageTier = getAgeTier(player.level);
+                const perCoachPool = (userCorrect ? coach.flavorCorrect : coach.flavorIncorrect)?.[ageTier];
+                const flavorPool = (perCoachPool && perCoachPool.length)
+                  ? perCoachPool
+                  : (userCorrect ? FLAVOR_CORRECT : FLAVOR_INCORRECT);
                 const flavor = flavorPool[(q.id?.length || 0) % flavorPool.length];
                 return (
                   <div style={{display:"flex",gap:".6rem",alignItems:"flex-start",borderTop:`1px solid ${C.border}`,paddingTop:".7rem",marginTop:".2rem"}}>
@@ -3718,25 +3722,215 @@ const CAT_TO_TILT = {
   "Goalie":            "d",
 };
 
-// Multi-coach feedback (demo) — persona roster with per-level staffing caps
+// Age-tier key used to pick how silly / how dry the coach's voice gets.
+//   young = U7/U9 (silly, wholesome, parent-winks)
+//   mid   = U11/U13 (dry one-liners kids + parents both catch)
+//   older = U15/U18 (sports-talk-radio sarcasm; still PG)
+function getAgeTier(level) {
+  if (!level) return "mid";
+  if (/U(5|7|9)/.test(level) || /Initiation|Timbits|Novice/i.test(level)) return "young";
+  if (/U(15|18)/.test(level) || /Bantam|Midget/i.test(level)) return "older";
+  return "mid";
+}
+
+// Coach personas. Three voices, sprinkled across every age group. Each
+// coach carries its own age-tiered flavor pools so the short zinger above
+// the teaching tip matches the player's age without losing the persona.
 const COACH_PERSONAS = [
-  { id:"head",          name:"Coach Reynolds",  role:"Head Coach",                     tilts:[],         summary:"Leads by example — coachable and brings full effort every practice." },
-  { id:"assistant",     name:"Coach Martinez",  role:"Assistant Coach",                tilts:[],         summary:"Brings energy to practice every day — good teammate in the room." },
-  { id:"skills",        name:"Coach Chen",      role:"Skills Coach",                   tilts:["s","p"],  summary:"Strong work ethic in skill sessions — hands keep getting better." },
-  { id:"goalie",        name:"Coach Thompson",  role:"Goalie Coach",                   tilts:["h","d"],  summary:"Good tracking and composure in the crease. Work on push recovery." },
-  { id:"power_skating", name:"Coach Andersson", role:"Power Skating Coach",            tilts:["s"],      summary:"Refine outside edges and crossovers — stride mechanics coming along nicely." },
-  { id:"video",         name:"Coach O'Brien",   role:"Video / Analytics Coach",        tilts:["h","dm"], summary:"Sees the ice well when they slow the game down and look up first." },
-  { id:"asst2",         name:"Coach Patel",     role:"Assistant Coach",                tilts:[],         summary:"Listens well in meetings — asks great questions and applies the feedback." },
-  { id:"mental",        name:"Coach Yamamoto",  role:"Mental Performance Coach",       tilts:["c"],      summary:"Stays composed after mistakes — keep building confidence through routine." },
-  { id:"strength",      name:"Coach Petrov",    role:"Strength & Conditioning Coach",  tilts:["p"],      summary:"Off-ice consistency is paying off — stronger on pucks, finishing checks better." },
+  {
+    id: "slifka",
+    name: "Coach Slifka",
+    role: "Head Coach",
+    archetype: "technical",
+    tilts: ["dm", "h"],
+    summary: "Sees every detail on tape and loves a teaching moment — plays hard, coaches harder, brings the one-liners.",
+    flavorCorrect: {
+      young: [
+        "Textbook. Shocking.",
+        "Fine. I'll allow it.",
+        "You were LISTENING? Who taught you that? … Oh, right, me.",
+        "Ooh, big brain play. Do it again.",
+        "Correct. I'll take my credit later.",
+        "See? I'm not ALWAYS grumpy.",
+      ],
+      mid: [
+        "That's the read. And yes, I noticed.",
+        "Technically correct — the best kind of correct.",
+        "Clinic material. Pity nobody else caught it.",
+        "Fine, I'll stop pretending to be grumpy. For one shift.",
+        "That'll be on the video. In a GOOD way.",
+        "I'd say 'great job' but we both know I hate compliments.",
+        "You just made my job easier. Don't ruin it.",
+      ],
+      older: [
+        "Quiet. Surgical. Annoying to the other team. Love it.",
+        "There's the IQ I've been billing for.",
+        "File under: 'I told you so.' I'll be pointing to it later.",
+        "So clean I almost said something nice. Almost.",
+        "Some guys play hockey. You just played chess. Don't get a big head.",
+        "A masterclass in doing exactly what I said. Shocking.",
+      ],
+    },
+    flavorIncorrect: {
+      young: [
+        "Reset. Tie your skates. Try again.",
+        "We just talked about this. Literally just now.",
+        "Ope. That's a no from me.",
+        "Try the other one. Yeah, the one that works.",
+        "Do we need the whiteboard? I'll get the whiteboard.",
+        "Hockey does that sometimes. Rude.",
+      ],
+      mid: [
+        "That's… a choice. Not THE choice. But a choice.",
+        "I'm not mad. I'm disappointed. Also a little mad.",
+        "We went over this. Fifteen times. Sixteen now, I guess.",
+        "Hockey IQ: loading. Please hold.",
+        "Look at me. What did we SAY to do there?",
+        "Bench-worthy, but I'll keep you on. For now.",
+        "Same play, different brain. Rewind.",
+      ],
+      older: [
+        "That was a decision. Not a good one, but a decision.",
+        "I'm drawing this on the whiteboard so you can't un-see it.",
+        "You've read the book. Did you… skip a chapter?",
+        "That's how we get 'film session' in the group chat.",
+        "Respectfully: no. With love: absolutely not.",
+        "Let's call that a 'learning experience' and never speak of it again.",
+      ],
+    },
+  },
+  {
+    id: "danno",
+    name: "Coach Danno",
+    role: "Skills Coach",
+    archetype: "chill",
+    tilts: ["s", "p"],
+    summary: "Low-key, high-reps, never loses the room. Gets guys to relax, skate through mistakes, and stack clean shifts.",
+    flavorCorrect: {
+      young: [
+        "Nice one, buddy!",
+        "Yeah! Good work.",
+        "There you go — easy.",
+        "Oooooh, smooth move.",
+        "That's hockey.",
+        "Love that. Keep going.",
+      ],
+      mid: [
+        "Nice read, bud. Smooth.",
+        "There it is. Knew it was coming.",
+        "Love that. Nice and simple.",
+        "That's the easy play. Good pick.",
+        "Pretty play. Don't celebrate too hard.",
+        "Smart. Don't overthink the next one.",
+      ],
+      older: [
+        "Yeah, buddy. Clean look.",
+        "That's the simple play. More of those, please.",
+        "Love it. Stack shifts like that.",
+        "Hockey's easy when you make it easy.",
+        "Save that one for the tape.",
+        "Quiet confidence. Exactly what I ask for.",
+      ],
+    },
+    flavorIncorrect: {
+      young: [
+        "No worries — next one!",
+        "All good, buddy.",
+        "Shake it off. We got this.",
+        "Easy fix. No biggie.",
+        "Smile. It's only one play.",
+        "Everybody misses. Next.",
+      ],
+      mid: [
+        "No sweat — next shift.",
+        "Easy mistake, bud. Reset.",
+        "Happens. Let's talk through it at practice.",
+        "Stick with it, you're close.",
+        "Little fix. We'll get it.",
+        "Not the worst miss I've seen today. Not close.",
+      ],
+      older: [
+        "Hey, shake it. It happens.",
+        "Not a huge deal. Gone by next shift.",
+        "Reset, we'll run it again in practice.",
+        "Little adjustment, nothing wild.",
+        "You're overthinking. Easy fix.",
+        "No panic. Breathe. Next puck.",
+      ],
+    },
+  },
+  {
+    id: "marques",
+    name: "Coach Marques",
+    role: "Mental Performance Coach",
+    archetype: "motivator",
+    tilts: ["c"],
+    summary: "Belief factory. Keeps the tank full, turns missed shifts into fuel, and gets the most out of every player in the room.",
+    flavorCorrect: {
+      young: [
+        "YEAHHHH!! That's MY player!",
+        "LOOK AT YOU GO!",
+        "SUPERSTAR ALERT!",
+        "You are on FIRE right now!",
+        "BOOM! Hockey hero!",
+        "Attagirl / attaboy! Keep COOKING!",
+      ],
+      mid: [
+        "YESSIR! That's what I'm TALKING about!",
+        "THAT is championship hockey!",
+        "This is why we show up. BECAUSE of that!",
+        "UNREAL read. Absolutely unreal.",
+        "SEE? Told you you had it!",
+        "Chef's kiss. Actually — gold-medal kiss.",
+      ],
+      older: [
+        "THAT. IS. EXECUTION. Ten out of ten.",
+        "Pro-level read. I'm not kidding.",
+        "Championship mentality on display. Love it.",
+        "When the game slows down like that? That's scouting-reel energy.",
+        "You just answered the bell. Gorgeous.",
+        "Elite. Quietly elite. Get used to it.",
+      ],
+    },
+    flavorIncorrect: {
+      young: [
+        "Hey! We don't care! NEXT ONE!",
+        "You got this — I believe in YOU!",
+        "CHAMPIONS keep going. And you? A champion.",
+        "One more try! Superpowers engaged!",
+        "Hockey is tough — you're TOUGHER!",
+        "Deep breath, big smile, next one!",
+      ],
+      mid: [
+        "GUARANTEED you get the next one.",
+        "That's called data. We LOVE data.",
+        "One rep away from owning this. I BELIEVE.",
+        "This is where great ones grow. RIGHT HERE.",
+        "You swung. RESPECT. Next swing lands.",
+        "Tomorrow you OWN this. Write it down.",
+      ],
+      older: [
+        "The next one is YOURS. Tell yourself that.",
+        "Greats miss. They don't miss twice. Let's go.",
+        "This is a chapter, not the ending. Write it.",
+        "Adversity is the resume of champions. Welcome to the resume.",
+        "Too much work behind you to fold now. Ice head, hot feet.",
+        "Next shift is a new script. You're the lead.",
+      ],
+    },
+  },
 ];
 
+// All three personas show up at every age group — user wants them sprinkled
+// everywhere, not siloed by level. `goalie` overrides kept so goalies at
+// older ages see a specialized coach assignment in the roster view.
 const DEMO_ROSTERS = {
-  "U9 / Novice":     { all:["head","assistant","skills"] },
-  "U11 / Atom":      { all:["head","assistant","skills","power_skating"] },
-  "U13 / Peewee":    { all:["head","assistant","skills","power_skating","video"],                    goalie:["head","assistant","skills","goalie","power_skating"] },
-  "U15 / Bantam":    { all:["head","assistant","asst2","skills","power_skating","video"],            goalie:["head","assistant","asst2","skills","goalie","power_skating"] },
-  "U18 / Midget":    { all:["head","assistant","asst2","skills","power_skating","video","mental","strength"], goalie:["head","assistant","asst2","skills","goalie","power_skating","video","mental"] },
+  "U7 / Initiation": { all: ["slifka", "danno", "marques"] },
+  "U9 / Novice":     { all: ["slifka", "danno", "marques"] },
+  "U11 / Atom":      { all: ["slifka", "danno", "marques"] },
+  "U13 / Peewee":    { all: ["slifka", "danno", "marques"] },
+  "U15 / Bantam":    { all: ["slifka", "danno", "marques"] },
+  "U18 / Midget":    { all: ["slifka", "danno", "marques"] },
 };
 function getDemoCoachRoster(level, position) {
   const r = DEMO_ROSTERS[level] || DEMO_ROSTERS["U9 / Novice"];
@@ -3751,7 +3945,14 @@ function getCoachForQuestion(question, playerLevel, playerPosition) {
     const match = roster.find(c => c.tilts?.includes(tilt));
     if (match) return match;
   }
-  return roster.find(c => c.role === "Head Coach") || roster[0] || COACH_PERSONAS[0];
+  // No category tilt → rotate across the full 3-persona roster so every
+  // coach gets air time. Deterministic by question id so the same question
+  // always gets the same voice.
+  if (roster.length) {
+    const seed = (question?.id || "").split("").reduce((a, c) => a + c.charCodeAt(0), 0);
+    return roster[seed % roster.length];
+  }
+  return COACH_PERSONAS[0];
 }
 
 // Skill IDs look like "u11s2" (skating-2), "u13dm4" (decision-making-4). Extract the domain prefix.
