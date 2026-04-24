@@ -10,7 +10,6 @@ import { markSignupIntent, logSignupComplete } from "./utils/signupTelemetry";
 // utils/demoTransfer removed — player demo was killed; signup now writes
 // to Supabase from the first interaction, no LS→cloud transfer needed.
 import { DEPTH_SLOTS, getDepthChart, setAssignment as setDepthAssignment, seedDemoDepthChart, clearDemoDepthChart } from "./utils/depthChart";
-import Rink from "./Rink.jsx";
 import IceIQRink from "./IceIQRink.jsx";
 import IceIQRinkQuestion from "./IceIQRinkQuestion.jsx";
 import { COMPETENCIES, getIceIQJourneyState, GAME_SENSE_UNLOCK_SESSIONS, calcCompetencyScores, calcGameSenseScore, ICE_IQ_THRESHOLDS, ICE_IQ_JOURNEY_LABELS } from "./utils/gameSense.js";
