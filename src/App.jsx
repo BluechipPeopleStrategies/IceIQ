@@ -3510,14 +3510,34 @@ function StudyScreen({ player, onBack, onNav, focusCompetency }) {
         </Card>
 
         <Card style={{marginBottom:"1rem"}}>
-          <Label>🏒 Focus Drills</Label>
-          <div style={{fontSize:11,color:C.dimmer,marginBottom:".65rem",lineHeight:1.5}}>Ask your coach to build these into practice, or work on them in your own ice time.</div>
-          {content.focusAreas.map((f, i) => (
-            <div key={i} style={{padding:".7rem .85rem",background:C.bgElevated,borderRadius:8,border:`1px solid ${C.border}`,marginBottom:".45rem"}}>
-              <div style={{fontSize:13,fontWeight:700,color:C.white,marginBottom:3}}>{f.skill}</div>
-              <div style={{fontSize:12,color:C.dim,lineHeight:1.5}}>{f.drill}</div>
-            </div>
-          ))}
+          <Label>🎯 Train Your Weak Spots</Label>
+          <div style={{fontSize:11,color:C.dimmer,marginBottom:".65rem",lineHeight:1.5}}>
+            {weakCats.length > 0
+              ? `Your last quiz flagged ${weakCats.map(w => w.cat).slice(0,2).join(" and ")} as weak. Drill these between sessions — you'll see the bump on your next quiz.`
+              : weakSkills.length > 0
+              ? `You rated yourself lowest on ${weakSkills[0].cat}. Pick a drill below and work it into every practice this week.`
+              : `Take a quiz to find your weakest categories — then come back and drill them here.`}
+          </div>
+          {(() => {
+            const weakCatSet = new Set(weakCats.map(w => w.cat.toLowerCase()));
+            const ranked = [...content.focusAreas].sort((a, b) => {
+              const aHit = weakCatSet.has((a.skill || "").toLowerCase()) ? 0 : 1;
+              const bHit = weakCatSet.has((b.skill || "").toLowerCase()) ? 0 : 1;
+              return aHit - bHit;
+            });
+            return ranked.map((f, i) => {
+              const isWeakHit = weakCatSet.has((f.skill || "").toLowerCase());
+              return (
+                <div key={i} style={{padding:".7rem .85rem",background:isWeakHit?"rgba(252,76,2,.06)":C.bgElevated,borderRadius:8,border:`1px solid ${isWeakHit?C.goldBorder:C.border}`,marginBottom:".45rem"}}>
+                  <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",gap:".5rem",marginBottom:3}}>
+                    <div style={{fontSize:13,fontWeight:700,color:C.white}}>{f.skill}</div>
+                    {isWeakHit && <div style={{fontSize:9,letterSpacing:".1em",textTransform:"uppercase",color:C.gold,fontWeight:800,flexShrink:0}}>Weak spot</div>}
+                  </div>
+                  <div style={{fontSize:12,color:C.dim,lineHeight:1.5}}>{f.drill}</div>
+                </div>
+              );
+            });
+          })()}
         </Card>
 
         <Card style={{marginBottom:"1rem"}}>
