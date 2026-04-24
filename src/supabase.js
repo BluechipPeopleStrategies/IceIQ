@@ -411,6 +411,86 @@ export async function getCompletionsForAssignment(assignmentId) {
 }
 
 // ─────────────────────────────────────────────
+// TEAM CHALLENGES (coach-authored fixed quiz + team leaderboard)
+// ─────────────────────────────────────────────
+
+export async function createTeamChallenge(coachId, teamId, { title, questionIds, dueDate }) {
+  if (!supabase) return null;
+  const row = {
+    coach_id: coachId,
+    team_id: teamId,
+    title: title?.trim(),
+    question_ids: Array.isArray(questionIds) ? questionIds : [],
+    due_date: dueDate || null,
+  };
+  const { data, error } = await supabase.from("team_challenges").insert(row).select().single();
+  if (error) throw error;
+  return data;
+}
+
+export async function deleteTeamChallenge(challengeId) {
+  if (!supabase) return;
+  const { error } = await supabase.from("team_challenges").delete().eq("id", challengeId);
+  if (error) throw error;
+}
+
+export async function getTeamChallenges(teamId) {
+  if (!supabase) return [];
+  const { data, error } = await supabase.from("team_challenges")
+    .select("*")
+    .eq("team_id", teamId)
+    .order("created_at", { ascending: false });
+  if (error) { warn("getTeamChallenges", error); return []; }
+  return data || [];
+}
+
+// Player-side: list every challenge visible to the player (RLS filters by
+// team membership). Includes team name for card display.
+export async function getChallengesForPlayer(playerId) {
+  if (!supabase) return [];
+  const { data, error } = await supabase.from("team_challenges")
+    .select("*, teams(name, level)")
+    .order("created_at", { ascending: false });
+  if (error) { warn("getChallengesForPlayer", error); return []; }
+  return data || [];
+}
+
+export async function submitChallengeResult(challengeId, playerId, { score, results }) {
+  if (!supabase) return;
+  const row = {
+    challenge_id: challengeId,
+    player_id: playerId,
+    score: Math.round(score),
+    results,
+  };
+  const { error } = await supabase.from("challenge_results").upsert(row);
+  if (error) throw error;
+}
+
+export async function getChallengeResults(challengeId) {
+  if (!supabase) return [];
+  const { data, error } = await supabase.from("challenge_results")
+    .select("player_id, score, completed_at, profiles(name)")
+    .eq("challenge_id", challengeId)
+    .order("score", { ascending: false });
+  if (error) { warn("getChallengeResults", error); return []; }
+  return (data || []).map(r => ({
+    player_id: r.player_id,
+    score: r.score,
+    completed_at: r.completed_at,
+    name: r.profiles?.name || "",
+  }));
+}
+
+export async function getChallengeCompletionsForPlayer(playerId) {
+  if (!supabase) return new Set();
+  const { data, error } = await supabase.from("challenge_results")
+    .select("challenge_id").eq("player_id", playerId);
+  if (error) { warn("getChallengeCompletionsForPlayer", error); return new Set(); }
+  return new Set((data || []).map(r => r.challenge_id));
+}
+
+// ─────────────────────────────────────────────
 // TRAINING SESSIONS (off-ice log, coach-visible on TEAM tier)
 // ─────────────────────────────────────────────
 // Storage is dual-write: the player's local LS cache stays the primary

@@ -19,6 +19,7 @@ import { HockeyInsightWidget, BottomNav, TrainingLog, HomeStartHereCard } from "
 import { HomeworkCard, CoachAssignmentsSection } from "./assignments.jsx";
 import { CoachTrainingSection } from "./trainingLogCoach.jsx";
 import { CoachTeamAnalyticsSection } from "./coachAnalytics.jsx";
+import { CoachChallengeSection, ChallengeCard, ChallengeRunScreen } from "./teamChallenges.jsx";
 import { canSwitchAgeGroup, recordAgeGroupSwitch, getAgeGroupLock, setAgeGroupLock, checkSeasonReset } from "./utils/deviceLock";
 import { lsGetStr, lsSetStr, lsGetJSON, lsSetJSON } from "./utils/storage.js";
 import {
@@ -1062,6 +1063,9 @@ function Home({ player, onNav, demoMode, subscriptionTier, questFlagsBump, onPro
 
         {/* Homework from coach — shows only when there's anything assigned */}
         <HomeworkCard playerId={player.id} demoMode={demoMode} />
+
+        {/* Team challenge — fixed quiz everyone on the team takes */}
+        <ChallengeCard playerId={player.id} demoMode={demoMode} onStart={(c) => onNav({ kind: "challenge", challenge: c })} />
 
         {/* First-Five quest checklist — hidden once dismissed */}
         {!questDismissed && !firstLineSeen && (
@@ -5404,6 +5408,7 @@ function CoachHome({ profile, onSignOut, onOpenPlayer, demoMode, subscriptionTie
                   <DepthChartSection teamId={t.id} roster={roster} onChange={onBumpQuestFlags}/>
                   <CoachTeamAnalyticsSection roster={roster}/>
                   <CoachAssignmentsSection teamId={t.id} coachId={profile.id} roster={roster}/>
+                  <CoachChallengeSection teamId={t.id} coachId={profile.id} teamLevel={t.level} roster={roster}/>
                   {canAccess("coachDashboard", subscriptionTier || "FREE").allowed && (
                     <CoachTrainingSection teamId={t.id} roster={roster}/>
                   )}
@@ -6060,6 +6065,14 @@ export default function App() {
         {screen === "report"  && <Report player={tierLimitedPlayer(player, tier)} onBack={()=>setScreen("home")} demoCoachData={demoMode?demoCoachRatings:null} tier={tier} onUpgrade={(f,t)=>promptUpgrade(f,t)}/>}
         {screen === "gamesense" && <Suspense fallback={<LazyFallback/>}><GameSenseReportScreen player={player} onBack={()=>setScreen("home")} demoMode={demoMode} demoCoachData={demoMode?demoCoachRatings:null} onNavigate={setScreen}/></Suspense>}
         {screen === "journey" && <JourneyScreen player={player} tier={tier} demoMode={demoMode} onBack={()=>setScreen("home")} onNav={setScreen} onUpgrade={promptUpgrade}/>}
+        {typeof screen === "object" && screen.kind === "challenge" && (
+          <ChallengeRunScreen
+            challenge={screen.challenge}
+            playerId={player.id}
+            onBack={() => setScreen("home")}
+            onDone={() => setScreen("home")}
+          />
+        )}
         {screen === "parent" && <Suspense fallback={<LazyFallback/>}><ParentAssessmentScreen player={player} demoMode={demoMode} onSignup={() => triggerSignup("parent_demo")} onBack={()=>setScreen("profile")} onSave={(ratings)=>{ setPlayer(p => ({...p, parentRatings: {...ratings, updated_at: new Date().toISOString().slice(0,10)}})); setScreen("profile"); }}/></Suspense>}
         {screen === "profile" && <Profile player={player} onSave={handleProfileSave} onBack={()=>setScreen("home")} onReset={handleSignOut} demoMode={demoMode} tier={tier} onUpgrade={(f,t)=>promptUpgrade(f,t)} userEmail={userEmail} onAdminReports={()=>setScreen("admin")} onNav={setScreen}/>}
         {screen === "admin" && <Suspense fallback={<LazyFallback/>}><AdminReports onBack={()=>setScreen("profile")}/></Suspense>}
@@ -6090,7 +6103,7 @@ export default function App() {
         /></Suspense>}
       </div>
 
-      {!["quiz","results","weekly","parents","coaches","players","associations"].includes(screen) && (
+      {typeof screen === "string" && !["quiz","results","weekly","parents","coaches","players","associations"].includes(screen) && (
         <BottomNav active={screen} onNav={(next) => {
           // In preview mode, tapping Home while already on home returns to
           // the public landing — otherwise the button appears inert and
