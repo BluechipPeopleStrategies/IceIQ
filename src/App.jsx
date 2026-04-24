@@ -1015,6 +1015,47 @@ function Home({ player, onNav, demoMode, subscriptionTier, questFlagsBump, onPro
     if (demoMode) onSaveProgress(); else onFirstLine();
   }
   const totalSessions = quizHistory.length;
+  // Game Sense Score hero — built once here so unlocked rendering can sit
+  // at the top of Home and locked rendering can drop further down the page.
+  // Rule: unlocked = loud, locked = quiet (don't make new players stare at
+  // a padlock as the first thing they see).
+  const iqUnlocked = totalSessions >= GAME_SENSE_UNLOCK_SESSIONS && iq !== null;
+  const iqHero = (
+    <Card glow={iqUnlocked} style={{marginBottom:"1rem",background:`linear-gradient(135deg,${C.bgCard},${C.bgElevated})`,position:"relative",overflow:"hidden",padding:".85rem 1rem"}}>
+      <div style={{position:"absolute",top:0,right:0,width:100,height:100,background:`radial-gradient(circle at top right,${iqUnlocked?tier.color+"15":"rgba(255,255,255,.02)"},transparent 70%)`,pointerEvents:"none"}}/>
+      {iqUnlocked ? (
+        <>
+          <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:".25rem"}}>
+            <Label style={{marginBottom:0}}>Game Sense Score</Label>
+            <div style={{fontSize:11,color:C.dimmer,fontWeight:600}}>{totalSessions} session{totalSessions!==1?"s":""}</div>
+          </div>
+          <div style={{display:"flex",alignItems:"baseline",gap:".7rem"}}>
+            <div style={{fontFamily:FONT.display,fontWeight:800,fontSize:"2.6rem",color:tier.color,lineHeight:1,letterSpacing:"-.02em"}}>{iq}<span style={{fontSize:"1.1rem"}}>%</span></div>
+            <div style={{fontSize:12,color:C.dim,fontWeight:700}}>{tier.badge} {tier.label}</div>
+            <div style={{flex:1}}/>
+            <div style={{fontSize:11,color:C.dimmer}}>{latest.results.filter(r=>r.ok).length}/{latest.results.length} correct</div>
+          </div>
+        </>
+      ) : (
+        <>
+          <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:".35rem"}}>
+            <Label style={{marginBottom:0}}>Game Sense Score</Label>
+            <div style={{fontSize:10,color:C.dimmer,fontWeight:600}}>
+              {totalSessions === 0 ? "Locked" : `${totalSessions} session${totalSessions===1?"":"s"} logged`}
+            </div>
+          </div>
+          <div style={{fontSize:12.5,color:C.dim,lineHeight:1.55}}>
+            {totalSessions === 0
+              ? "Keep working through the app — quizzes, skills, goals — and come back later. Your Game Sense Score unlocks once you've given us enough to measure fairly."
+              : "Nice start. Keep working through the app and come back later — your Game Sense Score unlocks once there's enough to measure fairly."}
+          </div>
+          <div style={{marginTop:".55rem",height:4,background:C.dimmest,borderRadius:3,overflow:"hidden"}}>
+            <div style={{width:`${Math.min(100, (totalSessions/GAME_SENSE_UNLOCK_SESSIONS)*100)}%`,height:"100%",background:C.gold,borderRadius:3,transition:"width .3s"}}/>
+          </div>
+        </>
+      )}
+    </Card>
+  );
   const ratedSkills = Object.values(selfRatings||{}).filter(v => v !== null).length;
   const totalSkills = Object.keys(selfRatings||{}).length;
   const goalCount = Object.keys(goals||{}).filter(k => goals[k]?.goal).length;
@@ -1093,47 +1134,9 @@ function Home({ player, onNav, demoMode, subscriptionTier, questFlagsBump, onPro
             the "View full →" link on the card header. */}
         <JourneyBody player={player} tier={subscriptionTier} demoMode={demoMode} onViewFull={() => onNav("journey")} onUpgrade={onPromptUpgrade} />
 
-        {/* IQ Score Hero — locked until GAME_SENSE_UNLOCK_SESSIONS quizzes completed */}
-        {(() => {
-          const unlocked = totalSessions >= GAME_SENSE_UNLOCK_SESSIONS && iq !== null;
-          const remaining = Math.max(0, GAME_SENSE_UNLOCK_SESSIONS - totalSessions);
-          return (
-            <Card glow={unlocked} style={{marginBottom:"1rem",background:`linear-gradient(135deg,${C.bgCard},${C.bgElevated})`,position:"relative",overflow:"hidden",padding:".85rem 1rem"}}>
-              <div style={{position:"absolute",top:0,right:0,width:100,height:100,background:`radial-gradient(circle at top right,${unlocked?tier.color+"15":"rgba(255,255,255,.02)"},transparent 70%)`,pointerEvents:"none"}}/>
-              {unlocked ? (
-                <>
-                  <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:".25rem"}}>
-                    <Label style={{marginBottom:0}}>Game Sense Score</Label>
-                    <div style={{fontSize:11,color:C.dimmer,fontWeight:600}}>{totalSessions} session{totalSessions!==1?"s":""}</div>
-                  </div>
-                  <div style={{display:"flex",alignItems:"baseline",gap:".7rem"}}>
-                    <div style={{fontFamily:FONT.display,fontWeight:800,fontSize:"2.6rem",color:tier.color,lineHeight:1,letterSpacing:"-.02em"}}>{iq}<span style={{fontSize:"1.1rem"}}>%</span></div>
-                    <div style={{fontSize:12,color:C.dim,fontWeight:700}}>{tier.badge} {tier.label}</div>
-                    <div style={{flex:1}}/>
-                    <div style={{fontSize:11,color:C.dimmer}}>{latest.results.filter(r=>r.ok).length}/{latest.results.length} correct</div>
-                  </div>
-                </>
-              ) : (
-                <>
-                  <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:".35rem"}}>
-                    <Label style={{marginBottom:0}}>Game Sense Score</Label>
-                    <div style={{fontSize:10,color:C.dimmer,fontWeight:600}}>
-                      {totalSessions === 0 ? "Locked" : `${totalSessions} session${totalSessions===1?"":"s"} logged`}
-                    </div>
-                  </div>
-                  <div style={{fontSize:12.5,color:C.dim,lineHeight:1.55}}>
-                    {totalSessions === 0
-                      ? "Keep working through the app — quizzes, skills, goals — and come back later. Your Game Sense Score unlocks once you've given us enough to measure fairly."
-                      : "Nice start. Keep working through the app and come back later — your Game Sense Score unlocks once there's enough to measure fairly."}
-                  </div>
-                  <div style={{marginTop:".55rem",height:4,background:C.dimmest,borderRadius:3,overflow:"hidden"}}>
-                    <div style={{width:`${Math.min(100, (totalSessions/GAME_SENSE_UNLOCK_SESSIONS)*100)}%`,height:"100%",background:C.gold,borderRadius:3,transition:"width .3s"}}/>
-                  </div>
-                </>
-              )}
-            </Card>
-          );
-        })()}
+        {/* IQ Score Hero — only at the top when unlocked. Locked state
+            drops further down the page (see below). */}
+        {iqUnlocked && iqHero}
 
         {/* Quick action grid */}
         <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:".75rem",marginBottom:"1rem"}}>
@@ -1191,6 +1194,10 @@ function Home({ player, onNav, demoMode, subscriptionTier, questFlagsBump, onPro
             </div>
           </div>
         </button>
+
+        {/* Locked Game Sense hero drops here so early-game players see
+            action tiles first and the progress gauge as follow-up context. */}
+        {!iqUnlocked && iqHero}
 
         {/* Weekly Challenge — compact entry for PRO+ users; FREE users see it in the Pro upgrade button below */}
         {weeklyAllowed && (
