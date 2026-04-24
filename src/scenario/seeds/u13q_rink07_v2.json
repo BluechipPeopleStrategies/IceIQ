@@ -9,16 +9,17 @@
     "zone": "off-zone"
   },
   "actors": [
-    { "id": "you",     "kind": "player",   "x": 0.900, "y": 0.780, "label": "YOU" },
+    { "id": "you",     "kind": "player",   "x": 0.900, "y": 0.780, "tag": "RW",  "label": "YOU" },
     { "id": "puck",    "kind": "puck",     "x": 0.882, "y": 0.762 },
 
-    { "id": "bumper",  "kind": "teammate", "x": 0.780, "y": 0.500, "label": "OPEN" },
-    { "id": "point",   "kind": "teammate", "x": 0.700, "y": 0.220 },
-    { "id": "wing",    "kind": "teammate", "x": 0.900, "y": 0.220 },
+    { "id": "bumper",  "kind": "teammate", "x": 0.780, "y": 0.500, "tag": "C",   "label": "OPEN" },
+    { "id": "point",   "kind": "teammate", "x": 0.700, "y": 0.220, "tag": "RD" },
+    { "id": "wing",    "kind": "teammate", "x": 0.900, "y": 0.220, "tag": "LW" },
 
     { "id": "pk1",     "kind": "defender", "x": 0.870, "y": 0.660 },
     { "id": "pk2",     "kind": "defender", "x": 0.700, "y": 0.300 },
     { "id": "pk3",     "kind": "defender", "x": 0.780, "y": 0.330 },
+
     { "id": "g",       "kind": "goalie",   "x": 0.933, "y": 0.500 }
   ],
   "interaction": {
@@ -32,8 +33,8 @@
     "end": { "zoneId": "oz-bumper" }
   },
   "feedback": {
-    "right": "Bumper is open — PK collapsed too high, the slot is yours.",
-    "wrong": "Look again at the PK. The point and the cross-ice winger are both covered. The middle of the ice is open."
+    "right": "Bumper is open — the PK collapsed too high, the slot is yours.",
+    "wrong": "Look at the PK again. The point and the cross-ice winger are both covered. The middle of the ice is open."
   },
   "tip": "When the PK overcommits up high on a 1-3-1, the bumper IS the play.",
   "why": "1-3-1 power plays live off three options: bumper, weak-side flank, and point. When the kill cheats one, the others open up."

@@ -19,7 +19,8 @@
  * @property {ActorKind} kind
  * @property {number} x             // 0..1 normalized
  * @property {number} y             // 0..1 normalized
- * @property {string} [label]       // optional caption ("YOU", "F1", "Puck")
+ * @property {string} [tag]         // short label rendered ON the marker ("F1", "C", "RD")
+ * @property {string} [label]       // optional caption ABOVE the marker ("YOU", "OPEN")
  */
 
 // ─────────────────────────────────────────────────────────────────────────
