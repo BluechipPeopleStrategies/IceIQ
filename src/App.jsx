@@ -1024,6 +1024,46 @@ function Home({ player, onNav, demoMode, subscriptionTier, questFlagsBump, onPro
     if (demoMode) onSaveProgress(); else onFirstLine();
   }
   const totalSessions = quizHistory.length;
+  // Journey world-unlock celebration. When the player crosses into a new
+  // world (or clears the final one), fire a one-shot celebrate toast. LS
+  // tracker is per-player so switching accounts doesn't replay old wins.
+  // First-ever load stores the current world without firing so existing
+  // players don't get a retroactive popup.
+  useEffect(() => {
+    if (demoMode || player?.__dev || player?.__preview) return;
+    const pid = player?.id;
+    if (!pid) return;
+    try {
+      const clipsWatched = new Set(lsGetJSON(LS_CLIPS_WATCHED, {})[identity] || []).size;
+      const insightsRead = lsGetJSON(LS_INSIGHTS_READ, []).length;
+      const goalsSet = Object.values(player?.goals || {}).filter(g => g?.goal).length;
+      const skillsRated = Object.values(player?.selfRatings || {}).filter(v => v).length;
+      const state = getJourneyV2({
+        quizzes: totalSessions, training: 0, clipsWatched, insightsRead, goalsSet, skillsRated, coachRated: 0, assignmentsDone: 0,
+      }, subscriptionTier);
+      const world = state.worlds[state.currentWorldIdx];
+      const map = lsGetJSON("iceiq_last_world_seen_v1", {});
+      const prev = map[pid];
+      if (typeof prev !== "number") {
+        map[pid] = state.currentWorldIdx;
+        lsSetJSON("iceiq_last_world_seen_v1", map);
+        return;
+      }
+      if (state.currentWorldIdx > prev) {
+        const nextWorld = state.worlds[state.currentWorldIdx];
+        toast.celebrate({
+          title: `World ${state.currentWorldIdx + 1} unlocked!`,
+          body: `Welcome to ${nextWorld.name}. ${nextWorld.desc}`,
+          icon: nextWorld.icon,
+        });
+        map[pid] = state.currentWorldIdx;
+        lsSetJSON("iceiq_last_world_seen_v1", map);
+      }
+    } catch { /* LS blocked — silent */ }
+    // Intentionally only re-runs when quiz count or tier changes so the
+    // toast fires at the moment a new world becomes reachable.
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [totalSessions, subscriptionTier, player?.id]);
   // Game Sense Score hero — built once here so unlocked rendering can sit
   // at the top of Home and locked rendering can drop further down the page.
   // Rule: unlocked = loud, locked = quiet (don't make new players stare at
