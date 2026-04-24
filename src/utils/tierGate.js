@@ -19,6 +19,7 @@ const FEATURE_KEYS = [
   "additionalProfiles",
   "weeklyChallenge",
   "rinkQuestions",
+  "fullSkillRating",
 ];
 
 // Per-tier allow list — what each tier can access.
@@ -42,6 +43,7 @@ const TIER_FEATURES = {
     "weeklyChallenge",
     "coachFeedback",
     "rinkQuestions",
+    "fullSkillRating",
   ]),
   FAMILY: new Set([
     "multipleAgeGroups",
@@ -55,6 +57,7 @@ const TIER_FEATURES = {
     "weeklyChallenge",
     "coachFeedback",
     "rinkQuestions",
+    "fullSkillRating",
   ]),
   TEAM: new Set([
     "multipleAgeGroups",
@@ -68,6 +71,7 @@ const TIER_FEATURES = {
     "weeklyChallenge",
     "coachFeedback",
     "rinkQuestions",
+    "fullSkillRating",
     // Team tier typically has a single coach-owned workspace, not additional child profiles
   ]),
 };
@@ -86,6 +90,7 @@ const UPGRADE_TARGET = {
   weeklyChallenge:     "pro",
   coachFeedback:       "pro",
   rinkQuestions:       "pro",
+  fullSkillRating:     "pro",
 };
 
 const UPGRADE_MESSAGES = {
@@ -101,6 +106,7 @@ const UPGRADE_MESSAGES = {
   weeklyChallenge:     "Compete in weekly challenges with Ice-IQ Pro",
   coachFeedback:       "See ratings and notes from every coach on your team with Ice-IQ Pro",
   rinkQuestions:       "Unlock every rink scenario with Ice-IQ Pro",
+  fullSkillRating:     "Rate every skill in your development profile with Ice-IQ Pro",
 };
 
 // ─────────────────────────────────────────────────────────

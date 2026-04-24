@@ -154,3 +154,20 @@ export const SKILLS={
     ]},
   ],
 };
+
+// Skills a FREE-tier user can rate. PRO and TEAM unlock the rest. Policy:
+// the first skill of every category in every age group is free, so players
+// taste each competency without ever completing a full assessment. Upgrade
+// unlocks the remaining skills + the full radar + coach/parent side-by-side.
+export const FREE_SKILL_IDS = new Set([
+  // U9 / Novice (1 per cat · 5 total of 17)
+  "u9s1", "u9p1", "u9h1", "u9c1", "u9d1",
+  // U11 / Atom (1 per cat · 6 total of 21)
+  "u11s1", "u11p1", "u11h1", "u11d1", "u11c1", "u11dm1",
+  // U13 / Peewee (1 per cat · 6 total of 24)
+  "u13s1", "u13p1", "u13h1", "u13df1", "u13c1", "u13dm1",
+  // U15 / Bantam (1 per cat · 7 total of 27)
+  "u15s1", "u15p1", "u15sys1", "u15h1", "u15phy1", "u15c1", "u15dm1",
+  // U18 / Midget (1 per cat · 7 total of 30)
+  "u18s1", "u18p1", "u18tac1", "u18h1", "u18phy1", "u18c1", "u18dm1",
+]);

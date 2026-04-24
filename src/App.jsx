@@ -350,7 +350,7 @@ function QuestChecklist({ role, quests, results, onTap, onDismiss, onAllComplete
 
 import { loadQB, preloadQB } from "./qbLoader.js";
 import { getWeekKey, getThisWeekRecord, markWeeklyComplete, seededShuffle, weekSeed, formatCountdown, msUntilNextWeek, getNextUnlockDate, formatUnlockMoment, getFreeQuizCount, isAtFreeQuizCap, incrementFreeQuizCount, FREE_WEEKLY_QUIZ_CAP } from "./utils/weeklyChallenge.js";
-import { COMPETENCY_LADDER, RATING_SCALES, SKILLS, ladderFor, getSelfScale, getCoachScale, getScaleColor, getScaleLabel, normalizeRating, getDiscussionPrompt, migrateRatings, PERCENTILE_RATINGS, PR_COLOR, PR_LABEL } from "./data/constants.js";
+import { COMPETENCY_LADDER, RATING_SCALES, SKILLS, FREE_SKILL_IDS, ladderFor, getSelfScale, getCoachScale, getScaleColor, getScaleLabel, normalizeRating, getDiscussionPrompt, migrateRatings, PERCENTILE_RATINGS, PR_COLOR, PR_LABEL } from "./data/constants.js";
 
 const AdminReports = lazy(() => import("./screens.jsx").then(m => ({ default: m.AdminReports })));
 const QuestionReviewScreen = lazy(() => import("./screens.jsx").then(m => ({ default: m.QuestionReviewScreen })));
@@ -2288,13 +2288,20 @@ function getSelfPrompt(level, skill) {
   return skill.selfQ || skill.desc;
 }
 
-function Skills({ player, onSave, onBack }) {
+function Skills({ player, tier, onSave, onBack, onUpgrade }) {
   const [ratings, setRatings] = useState({...player.selfRatings});
   const [activeCategory, setActiveCategory] = useState(0);
   const cats = SKILLS[player.level] || [];
   const cat = cats[activeCategory];
-  const total = Object.keys(ratings).length;
-  const rated = Object.values(ratings).filter(v=>v!==null).length;
+  const hasFullAccess = canAccess("fullSkillRating", tier).allowed;
+  const visibleSkills = (c) => hasFullAccess ? c.skills : c.skills.filter(s => FREE_SKILL_IDS.has(s.id));
+  const lockedCount = hasFullAccess ? 0 : cats.reduce((n, c) => n + c.skills.filter(s => !FREE_SKILL_IDS.has(s.id)).length, 0);
+  const total = hasFullAccess
+    ? Object.keys(ratings).length
+    : cats.reduce((n, c) => n + visibleSkills(c).length, 0);
+  const rated = hasFullAccess
+    ? Object.values(ratings).filter(v=>v!==null).length
+    : cats.reduce((n, c) => n + visibleSkills(c).filter(s => ratings[s.id] !== null && ratings[s.id] !== undefined).length, 0);
   const selfScale = getSelfScale(player.level);
   const scaleType = RATING_SCALES[player.level]?.self?.type;
   return (
@@ -2312,15 +2319,25 @@ function Skills({ player, onSave, onBack }) {
       </StickyHeader>
       <div style={{display:"flex",overflowX:"auto",borderBottom:`1px solid ${C.border}`,background:C.bg}}>
         {cats.map((c,i) => {
-          const cr = c.skills.filter(s=>ratings[s.id]!==null).length;
+          const vs = visibleSkills(c);
+          const cr = vs.filter(s=>ratings[s.id]!==null && ratings[s.id]!==undefined).length;
+          const catLocked = !hasFullAccess && c.skills.some(s => !FREE_SKILL_IDS.has(s.id));
           return (
             <button key={i} onClick={()=>setActiveCategory(i)} style={{background:"none",border:"none",borderBottom:`2px solid ${i===activeCategory?(c.isDM?C.purple:C.gold):"transparent"}`,color:i===activeCategory?C.white:C.dimmer,padding:".8rem 1rem",cursor:"pointer",fontSize:13,fontFamily:FONT.body,fontWeight:i===activeCategory?700:400,whiteSpace:"nowrap",display:"flex",alignItems:"center",gap:".3rem",flexShrink:0}}>
-              <span>{c.icon}</span><span>{c.cat}</span>{cr===c.skills.length&&<span style={{color:C.green,fontSize:10}}>✓</span>}
+              <span>{c.icon}</span><span>{c.cat}</span>
+              {cr===vs.length && vs.length>0 && <span style={{color:C.green,fontSize:10}}>✓</span>}
+              {catLocked && <span style={{color:C.gold,fontSize:10}}>🔒</span>}
             </button>
           );
         })}
       </div>
       <div style={{padding:"1.25rem",maxWidth:560,margin:"0 auto"}}>
+        {!hasFullAccess && (
+          <Card style={{marginBottom:"1rem",background:C.goldDim,border:`1px solid ${C.goldBorder}`}}>
+            <div style={{fontSize:10,letterSpacing:".12em",textTransform:"uppercase",color:C.gold,fontWeight:800,marginBottom:".35rem"}}>🔒 Preview mode</div>
+            <div style={{fontSize:12,color:C.white,lineHeight:1.55}}>You're rating one skill per category as a FREE taste. Ice-IQ Pro unlocks all {total + lockedCount} skills + full radar + coach side-by-side.</div>
+          </Card>
+        )}
         {cat?.isDM && <Card style={{marginBottom:"1rem",background:C.purpleDim,border:`1px solid ${C.purpleBorder}`}}><div style={{fontSize:12,color:C.purple,lineHeight:1.6}}>🧠 Rate honestly — this is for your development, not anyone else's judgment.</div></Card>}
         {scaleType === "rubric" && (
           <Card style={{marginBottom:"1rem",background:C.bgElevated}}>
@@ -2329,8 +2346,20 @@ function Skills({ player, onSave, onBack }) {
           </Card>
         )}
         {cat?.skills.map(s => {
+          const isLocked = !hasFullAccess && !FREE_SKILL_IDS.has(s.id);
           const selfVal = ratings[s.id];
           const selfColor = selfVal ? getScaleColor(selfScale, selfVal) : null;
+          if (isLocked) {
+            return (
+              <Card key={s.id} style={{marginBottom:".75rem",border:`1px dashed ${C.goldBorder}`,background:"rgba(252,76,2,0.04)",opacity:0.7}}>
+                <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",gap:".5rem",marginBottom:3}}>
+                  <div style={{fontWeight:700,fontSize:14,color:C.dim}}>{s.name}</div>
+                  <div style={{fontSize:10,letterSpacing:".1em",color:C.gold,fontWeight:800,flexShrink:0}}>🔒 PRO</div>
+                </div>
+                <div style={{fontSize:12,color:C.dimmer,lineHeight:1.5}}>{s.desc}</div>
+              </Card>
+            );
+          }
           return (
             <Card key={s.id} style={{marginBottom:".75rem",border:`1px solid ${selfColor?selfColor+"40":C.border}`,borderLeft:`3px solid ${selfColor||"transparent"}`}}>
               <div style={{fontWeight:700,fontSize:14,marginBottom:3}}>{s.name}</div>
@@ -2339,6 +2368,16 @@ function Skills({ player, onSave, onBack }) {
             </Card>
           );
         })}
+        {!hasFullAccess && activeCategory === cats.length - 1 && (
+          <button onClick={() => onUpgrade?.("fullSkillRating", "pro")} style={{
+            width:"100%", background:C.gold, color:C.bg, border:"none",
+            borderRadius:12, padding:"1rem", cursor:"pointer",
+            fontWeight:800, fontSize:15, fontFamily:FONT.body,
+            marginBottom:".75rem", boxShadow:`0 4px 16px ${C.gold}33`,
+          }}>
+            Unlock all {lockedCount} locked skills →
+          </button>
+        )}
         {activeCategory<cats.length-1 && <SecBtn onClick={()=>setActiveCategory(i=>i+1)}>Next Category →</SecBtn>}
         {activeCategory===cats.length-1 && <PrimaryBtn onClick={()=>onSave(ratings)}>Save All Ratings ✓</PrimaryBtn>}
       </div>
@@ -5391,8 +5430,8 @@ export default function App() {
           : <Quiz player={player} onFinish={handleQuizFinish} onBack={()=>setScreen("home")} tier={tier} onUpgrade={promptUpgrade}/>
         )}
         {screen === "results" && <Results results={quizResults} player={player} prevScore={prevScore} totalSessions={totalSessions} seqPerfect={seqPerfect} mistakeStreak={mistakeStreak} onAgain={()=>setScreen("quiz")} onHome={()=>setScreen("home")} showMilestoneBanner={showMilestone5Banner} onViewPlans={()=>{setShowMilestone5Banner(false);setScreen("plans");}}/>}
-        {screen === "skills"  && <Skills player={player} onSave={handleSkillsSave} onBack={()=>setScreen("home")}/>}
-        {screen === "skills-onboarding" && <Suspense fallback={<LazyFallback/>}><SkillsOnboarding player={player} onSave={async (r)=>{ await handleSkillsSave(r); setScreen("home"); }} onBack={()=>setScreen("home")}/></Suspense>}
+        {screen === "skills"  && <Skills player={player} tier={tier} onUpgrade={promptUpgrade} onSave={handleSkillsSave} onBack={()=>setScreen("home")}/>}
+        {screen === "skills-onboarding" && <Suspense fallback={<LazyFallback/>}><SkillsOnboarding player={player} tier={tier} onUpgrade={promptUpgrade} onSave={async (r)=>{ await handleSkillsSave(r); setScreen("home"); }} onBack={()=>setScreen("home")}/></Suspense>}
         {screen === "insights" && <Suspense fallback={<LazyFallback/>}><InsightsScreen onBack={()=>setScreen("home")} onInsightRead={bumpQuestFlags}/></Suspense>}
         {screen === "study"   && <StudyScreen player={player} onBack={()=>setScreen("home")} onNav={setScreen}/>}
         {screen === "goals"   && (canAccess("smartGoals", tier).allowed

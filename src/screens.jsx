@@ -17,7 +17,8 @@ import { calcPlayerProfile, PROFILE_AXES } from "./utils/playerProfile.js";
 import { getTrainingLog } from "./utils/trainingLog.js";
 import { getParentRatings, saveParentRatings, PARENT_DIMENSIONS, PARENT_SCALE } from "./utils/parentAssessment.js";
 import { AGES, LEVEL_FOR_AGE, ALL_TYPES, RECOMMENDED_TYPES_BY_AGE, TYPE_LABELS, isOffAgeType, blankQuestion } from "./utils/ageQuestionTypes.js";
-import { SKILLS, RATING_SCALES, getSelfScale, getScaleColor } from "./data/constants.js";
+import { SKILLS, RATING_SCALES, FREE_SKILL_IDS, getSelfScale, getScaleColor } from "./data/constants.js";
+import { canAccess } from "./utils/tierGate.js";
 import { deriveLevelFromBirthYear, validBirthYears } from "./utils/ageGroup.js";
 import { isEphemeralPlayer } from "./utils/devBypass.js";
 import Rink from "./Rink.jsx";
@@ -1633,11 +1634,13 @@ function getSelfPromptLocal(level, skill) {
   return skill.selfQ || skill.desc;
 }
 
-export function SkillsOnboarding({ player, onSave, onBack }) {
+export function SkillsOnboarding({ player, tier, onSave, onBack, onUpgrade }) {
   const scale = getSelfScale(player.level);
+  const hasFullAccess = canAccess("fullSkillRating", tier).allowed;
   const allSkills = (SKILLS[player.level] || []).flatMap(c => c.skills.map(s => ({...s, catName: c.cat, catIcon: c.icon})));
+  const pool = hasFullAccess ? allSkills : allSkills.filter(s => FREE_SKILL_IDS.has(s.id));
   const seed = (player.id || "__local__") + "|" + new Date().toISOString().slice(0, 10);
-  const picked = seededShuffle(allSkills, seed).slice(0, 6);
+  const picked = seededShuffle(pool, seed).slice(0, Math.min(6, pool.length));
   const [idx, setIdx] = useState(0);
   const [ratings, setRatings] = useState({});
   const [saving, setSaving] = useState(false);
