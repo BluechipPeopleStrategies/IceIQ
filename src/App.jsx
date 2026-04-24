@@ -4166,6 +4166,7 @@ function AuthScreen({ onAuthenticated, onDemo, onDevEnter, onPreview, prefill })
             { hash:"#players",      icon:"🏒", label:"Players — start here" },
             { hash:"#coaches",      icon:"🎯", label:"Coaches — start here" },
             { hash:"#associations", icon:"🏟️", label:"Associations — start here" },
+            { hash:"#pricing",      icon:"💳", label:"Plans & Pricing" },
           ].map(x => (
             <a key={x.hash} href={x.hash}
                style={{display:"inline-flex",alignItems:"center",gap:".3rem",
@@ -4938,7 +4939,7 @@ export default function App() {
   function clearParentsHash() {
     try {
       const h = (window.location.hash || "").replace(/^#/, "");
-      if (["parents","coaches","players","associations"].includes(h)) {
+      if (["parents","coaches","players","associations","pricing"].includes(h)) {
         history.replaceState(null, "", window.location.pathname + window.location.search);
         setHashRoute("");
       }
@@ -5316,6 +5317,13 @@ export default function App() {
     return (
       <Suspense fallback={<LazyFallback/>}>
         <AssociationsPage onNavigate={() => clearParentsHash()} onContact={() => { window.location.href = "mailto:thomas@bluechip-people-strategies.com"; }}/>
+      </Suspense>
+    );
+  }
+  if (!profile && hashRoute === "pricing") {
+    return (
+      <Suspense fallback={<LazyFallback/>}>
+        <PlansScreen onBack={() => clearParentsHash()} tier="FREE"/>
       </Suspense>
     );
   }

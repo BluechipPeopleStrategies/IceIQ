@@ -340,98 +340,165 @@ export function ProfileSetup({ profile, onComplete }) {
 }
 
 // ─────────────────────────────────────────────────────────
-// PlansScreen
+// PlansScreen — robust pricing + feature-matrix page.
+//
+// The matrix below is the source of user-facing tier marketing. Columns
+// (FREE / PRO / FAMILY / TEAM) correspond to `TIER_FEATURES` allow-lists
+// in src/utils/tierGate.js. Keep the two in sync when adding a feature.
 // ─────────────────────────────────────────────────────────
-const PRO_BENEFITS = [
-  {icon:"♾️", text:"Unlimited quiz taking"},
-  {icon:"🎮", text:"All 5 question formats — sequence, spot the mistake, what happens next, true/false"},
-  {icon:"🧠", text:"Adaptive engine — difficulty matches your level"},
-  {icon:"🏆", text:"Weekly Challenge — new curated quiz every Monday"},
-  {icon:"🏒", text:"Hockey specific goal setting with category tracking"},
-  {icon:"👨‍🏫", text:"Requestable coach feedback"},
-  {icon:"📰", text:"Unlimited NHL Insights"},
-  {icon:"📊", text:"Full progress snapshots + Skills Map radar"},
-  {icon:"♾️", text:"Unlimited session history"},
-  {icon:"📅", text:"Season pass: September → March (renews each season)"},
+const TIER_COLS = [
+  { key:"FREE",   label:"Free",   price:"$0",     sub:"Forever",          accent:"#9ca3af", headline:"Try it before you commit" },
+  { key:"PRO",    label:"Pro",    price:"$89.99", sub:"per season · Sep–Mar", accent:"#fc4c02", headline:"For the serious player",    badge:"MOST POPULAR" },
+  { key:"FAMILY", label:"Family", price:"$139.99",sub:"per season · Sep–Mar", accent:"#a855f7", headline:"Two or three kids on one plan" },
+  { key:"TEAM",   label:"Team",   price:"$249.99",sub:"per season · up to 20 players", accent:"#3b82f6", headline:"For coaches & associations" },
 ];
-const FAMILY_BENEFITS = [
-  {icon:"👨‍👩‍👧", text:"Everything in Pro"},
-  {icon:"👥", text:"Up to 3 player profiles on one plan (siblings or parent-managed kids)"},
-  {icon:"🔀", text:"Each profile has its own age group, ratings, goals"},
-  {icon:"📅", text:"Season pass: September → March (renews each season)"},
+
+// Feature rows. `values` indexes must match TIER_COLS order. A string shows
+// a literal value; `true` shows ✓; `false` shows — (dash); `"soon"` shows a
+// "Soon" chip. Group headers are `{ group: "..." }` rows.
+const FEATURE_MATRIX = [
+  { group:"Quiz access" },
+  { label:"Quizzes per week",            values:["3",       "Unlimited",  "Unlimited",  "Unlimited"] },
+  { label:"Question formats",            values:["MC only", "All 5",      "All 5",      "All 5"] },
+  { label:"Age groups",                  values:["1 (locked)","All",      "All",        "All"] },
+  { label:"Rink scenarios",              values:[false,     true,         true,         true] },
+  { label:"Adaptive difficulty engine",  values:[false,     true,         true,         true] },
+
+  { group:"Development tools" },
+  { label:"SMART goal setting",          values:[true,      true,         true,         true] },
+  { label:"Skills Map radar",            values:[false,     true,         true,         true] },
+  { label:"Full skill rating (every category)", values:[false,true,       true,         true] },
+  { label:"Ice IQ Journey levels",       values:["64 (harder path)", "64", "64",        "64"] },
+  { label:"Full session history",        values:["Last 5",  "Unlimited",  "Unlimited",  "Unlimited"] },
+  { label:"Progress snapshots over time",values:[false,     true,         true,         true] },
+
+  { group:"Coaching + social" },
+  { label:"Weekly Challenge",            values:[false,     true,         true,         true] },
+  { label:"Coach feedback (ratings + notes)", values:[false,true,         true,         true] },
+  { label:"Coach dashboard (roster view)",values:[false,    false,        false,        true] },
+  { label:"Homework assignments",        values:[false,     "soon",       "soon",       "soon"] },
+
+  { group:"Account" },
+  { label:"Player profiles",             values:["1",       "1",          "Up to 3",    "Up to 20"] },
+  { label:"Unlimited NHL Insights feed", values:[false,     true,         true,         true] },
+  { label:"Season pass auto-reminder",   values:[false,     true,         true,         true] },
 ];
-const TEAM_BENEFITS = [
-  {icon:"👨‍🏫", text:"Everything in Pro"},
-  {icon:"📋", text:"Coach dashboard — full roster view"},
-  {icon:"⭐", text:"Per-player ratings & development notes for up to 20 players"},
-  {icon:"📅", text:"Season pass: September → March (renews each season)"},
+
+function MatrixCell({ value, accent }) {
+  if (value === true) return <span style={{color:"#22c55e",fontSize:15,fontWeight:700}}>✓</span>;
+  if (value === false) return <span style={{color:C.dimmer,fontSize:14}}>—</span>;
+  if (value === "soon") return <span style={{fontSize:9,letterSpacing:".08em",color:accent,background:`${accent}18`,padding:"2px 6px",borderRadius:4,fontWeight:800,textTransform:"uppercase"}}>Soon</span>;
+  return <span style={{fontSize:11,color:C.white,fontWeight:600,lineHeight:1.2}}>{value}</span>;
+}
+
+const PLAN_FAQ = [
+  { q:"Why is the season Sept → March?", a:"Ice-IQ is built around the Canadian/US minor hockey season. The Pro, Family, and Team passes give you the entire season in one payment — no monthly billing to chase between practices." },
+  { q:"What happens on April 1?", a:"Paid passes enter a read-only offseason (you can review everything you did) and we'll prompt you to re-enroll starting August 15 for the next season. No surprise charges." },
+  { q:"What if I want to coach a team?", a:"Ice-IQ Team gives one coach a full roster dashboard for up to 20 players, plus per-player ratings, notes, and (coming soon) homework assignments you push to the whole team." },
+  { q:"Can my kid use Free and I just upgrade later?", a:"Yes. Everything your kid does on Free — quizzes, goals, skill ratings — carries over when you upgrade. Free is capped at 3 quizzes/week and one age group, but nothing is lost." },
+  { q:"Is my payment data stored in Ice-IQ?", a:"No. Online payments route through Stripe. Ice-IQ stores only the tier flag and pass expiry. You can cancel reminder emails anytime from Profile → Notifications." },
 ];
 
 export function PlansScreen({ onBack, tier }) {
+  const currentKey = typeof tier === "string" ? tier.toUpperCase() : "FREE";
   return (
     <div style={{minHeight:"100vh",background:C.bg,color:C.white,fontFamily:FONT.body,paddingBottom:80}}>
       <StickyHeader>
-        <div style={{maxWidth:560,margin:"0 auto",display:"flex",alignItems:"center",gap:"1rem"}}>
+        <div style={{maxWidth:720,margin:"0 auto",display:"flex",alignItems:"center",gap:"1rem"}}>
           <BackBtn onClick={onBack}/>
           <div style={{flex:1,fontFamily:FONT.display,fontWeight:800,fontSize:"1.1rem"}}>Plans & Pricing</div>
-          <div style={{fontSize:11,color:C.dimmer}}>You're on {tier}</div>
+          <div style={{fontSize:11,color:C.dimmer}}>You're on <b style={{color:C.white}}>{currentKey}</b></div>
         </div>
       </StickyHeader>
-      <div style={{padding:"1.25rem",maxWidth:560,margin:"0 auto"}}>
-        <Card style={{marginBottom:"1rem"}}>
-          <Label>Free</Label>
-          <div style={{fontFamily:FONT.display,fontWeight:800,fontSize:"2rem",color:C.white}}>$0</div>
-          <div style={{fontSize:11,color:C.dimmer,marginBottom:".75rem"}}>Get started, one age group, basic questions</div>
-          <div style={{fontSize:12,color:C.dim,lineHeight:1.7}}>✓ 1 age group (device-locked)<br/>✓ Multiple choice questions only<br/>✓ Last 5 sessions of history</div>
-        </Card>
 
-        <Card style={{marginBottom:"1rem",background:`linear-gradient(135deg,${C.bgCard},${C.bgElevated})`,border:`1px solid ${C.goldBorder}`}}>
-          <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start",marginBottom:".5rem"}}>
-            <Label>Pro</Label>
-            <div style={{fontSize:10,background:C.goldDim,color:C.gold,padding:"2px 8px",borderRadius:4,fontWeight:800,letterSpacing:".08em"}}>MOST POPULAR</div>
+      <div style={{padding:"1.5rem 1rem",maxWidth:720,margin:"0 auto"}}>
+        {/* Hero — anchors the page with a clear value prop */}
+        <div style={{textAlign:"center",marginBottom:"1.5rem"}}>
+          <div style={{fontSize:10,letterSpacing:".16em",textTransform:"uppercase",color:C.gold,fontWeight:800,marginBottom:".35rem"}}>One price. One season.</div>
+          <h1 style={{fontFamily:FONT.display,fontWeight:800,fontSize:"clamp(1.6rem,5vw,2rem)",margin:"0 0 .4rem",lineHeight:1.1}}>Pick the plan that fits your hockey year.</h1>
+          <p style={{fontSize:13,color:C.dim,lineHeight:1.55,maxWidth:480,margin:"0 auto"}}>Ice-IQ runs on the minor hockey calendar (September → March). Pay once, get the whole season. No monthly subscription chase.</p>
+        </div>
+
+        {/* Tier summary cards — top row */}
+        <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fit,minmax(160px,1fr))",gap:".6rem",marginBottom:"1.5rem"}}>
+          {TIER_COLS.map(c => {
+            const isCurrent = c.key === currentKey;
+            const isPopular = c.key === "PRO";
+            return (
+              <div key={c.key} style={{
+                background: isPopular ? `linear-gradient(135deg,${C.bgCard},${C.bgElevated})` : C.bgCard,
+                border: `1px solid ${isCurrent ? C.green : isPopular ? C.goldBorder : C.border}`,
+                borderRadius: 14, padding: ".9rem .8rem", position:"relative",
+              }}>
+                {c.badge && <div style={{position:"absolute",top:-9,left:"50%",transform:"translateX(-50%)",fontSize:9,background:C.gold,color:C.bg,padding:"2px 8px",borderRadius:4,fontWeight:800,letterSpacing:".1em",whiteSpace:"nowrap"}}>{c.badge}</div>}
+                {isCurrent && <div style={{position:"absolute",top:-9,right:10,fontSize:9,background:C.green,color:"#fff",padding:"2px 8px",borderRadius:4,fontWeight:800,letterSpacing:".1em"}}>CURRENT</div>}
+                <div style={{fontSize:10,letterSpacing:".14em",textTransform:"uppercase",color:c.accent,fontWeight:800,marginBottom:4}}>{c.label}</div>
+                <div style={{fontFamily:FONT.display,fontWeight:800,fontSize:"1.5rem",color:C.white,lineHeight:1}}>{c.price}</div>
+                <div style={{fontSize:10,color:C.dimmer,marginTop:3,marginBottom:".65rem"}}>{c.sub}</div>
+                <div style={{fontSize:11.5,color:C.dim,lineHeight:1.4,minHeight:32}}>{c.headline}</div>
+              </div>
+            );
+          })}
+        </div>
+
+        {/* Feature matrix — the robust breakdown */}
+        <div style={{background:C.bgCard,border:`1px solid ${C.border}`,borderRadius:14,overflow:"hidden",marginBottom:"1.5rem"}}>
+          <div style={{padding:".85rem 1rem",borderBottom:`1px solid ${C.border}`,background:C.bgElevated}}>
+            <Label style={{marginBottom:0}}>What's in each plan</Label>
           </div>
-          <div style={{marginBottom:".75rem"}}>
-            <div style={{fontSize:10,color:C.dimmer,marginBottom:".2rem"}}>Hockey Season (Sep–Mar)</div>
-            <div style={{fontFamily:FONT.display,fontWeight:800,fontSize:"1.8rem",color:C.gold}}>$89.99</div>
+          <div style={{overflowX:"auto"}}>
+            <table style={{width:"100%",borderCollapse:"collapse",fontFamily:FONT.body,fontSize:12}}>
+              <thead>
+                <tr style={{background:"rgba(255,255,255,.02)"}}>
+                  <th style={{textAlign:"left",padding:".6rem .75rem",fontSize:10,letterSpacing:".1em",textTransform:"uppercase",color:C.dimmer,fontWeight:700,borderBottom:`1px solid ${C.border}`,minWidth:170}}>Feature</th>
+                  {TIER_COLS.map(c => (
+                    <th key={c.key} style={{padding:".6rem .5rem",fontSize:10,letterSpacing:".1em",textTransform:"uppercase",color:c.accent,fontWeight:800,borderBottom:`1px solid ${C.border}`,minWidth:72,textAlign:"center"}}>{c.label}</th>
+                  ))}
+                </tr>
+              </thead>
+              <tbody>
+                {FEATURE_MATRIX.map((row, i) => {
+                  if (row.group) {
+                    return (
+                      <tr key={i}>
+                        <td colSpan={5} style={{padding:".65rem .75rem .3rem",fontSize:10,letterSpacing:".12em",textTransform:"uppercase",color:C.gold,fontWeight:800,background:"rgba(252,76,2,.04)"}}>{row.group}</td>
+                      </tr>
+                    );
+                  }
+                  return (
+                    <tr key={i} style={{borderTop:`1px solid ${C.border}`}}>
+                      <td style={{padding:".5rem .75rem",color:C.dim,lineHeight:1.35}}>{row.label}</td>
+                      {row.values.map((v, j) => (
+                        <td key={j} style={{padding:".5rem",textAlign:"center",verticalAlign:"middle"}}>
+                          <MatrixCell value={v} accent={TIER_COLS[j].accent}/>
+                        </td>
+                      ))}
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
           </div>
-          {PRO_BENEFITS.map((b,i) => (
-            <div key={i} style={{display:"flex",alignItems:"flex-start",gap:".55rem",padding:".3rem 0",fontSize:12,color:C.dim,lineHeight:1.5}}>
-              <span style={{fontSize:14,flexShrink:0}}>{b.icon}</span><span>{b.text}</span>
+        </div>
+
+        {/* FAQ */}
+        <div style={{background:C.bgCard,border:`1px solid ${C.border}`,borderRadius:14,marginBottom:"1.5rem"}}>
+          <div style={{padding:".85rem 1rem",borderBottom:`1px solid ${C.border}`,background:C.bgElevated}}>
+            <Label style={{marginBottom:0}}>Common questions</Label>
+          </div>
+          {PLAN_FAQ.map((item, i) => (
+            <div key={i} style={{padding:"1rem",borderBottom: i < PLAN_FAQ.length - 1 ? `1px solid ${C.border}` : "none"}}>
+              <div style={{fontSize:13,fontWeight:700,color:C.white,marginBottom:".3rem",lineHeight:1.35}}>{item.q}</div>
+              <div style={{fontSize:12,color:C.dim,lineHeight:1.55}}>{item.a}</div>
             </div>
           ))}
-        </Card>
+        </div>
 
-        <Card style={{marginBottom:"1rem"}}>
-          <Label>Family</Label>
-          <div style={{marginBottom:".75rem"}}>
-            <div style={{fontSize:10,color:C.dimmer,marginBottom:".2rem"}}>Hockey Season (Sep–Mar)</div>
-            <div style={{fontFamily:FONT.display,fontWeight:800,fontSize:"1.8rem",color:C.white}}>$139.99</div>
-          </div>
-          <div style={{fontSize:11,color:C.dimmer,marginBottom:".75rem"}}>Includes 3 profiles</div>
-          {FAMILY_BENEFITS.map((b,i) => (
-            <div key={i} style={{display:"flex",alignItems:"flex-start",gap:".55rem",padding:".3rem 0",fontSize:12,color:C.dim,lineHeight:1.5}}>
-              <span style={{fontSize:14,flexShrink:0}}>{b.icon}</span><span>{b.text}</span>
-            </div>
-          ))}
-        </Card>
-
-        <Card style={{marginBottom:"1rem"}}>
-          <Label>Team</Label>
-          <div style={{display:"flex",flexDirection:"column",gap:".4rem",marginBottom:".75rem"}}>
-            <div><div style={{fontSize:10,color:C.dimmer,marginBottom:".2rem"}}>Hockey Season (Sep–Mar)</div><div style={{fontFamily:FONT.display,fontWeight:800,fontSize:"1.8rem",color:C.white}}>$249.99</div></div>
-            <div style={{fontSize:11,color:C.dimmer}}>Covers entire competitive season</div>
-          </div>
-          <div style={{fontSize:11,color:C.dimmer,marginBottom:".75rem"}}>Up to 20 players · Coach dashboard</div>
-          {TEAM_BENEFITS.map((b,i) => (
-            <div key={i} style={{display:"flex",alignItems:"flex-start",gap:".55rem",padding:".3rem 0",fontSize:12,color:C.dim,lineHeight:1.5}}>
-              <span style={{fontSize:14,flexShrink:0}}>{b.icon}</span><span>{b.text}</span>
-            </div>
-          ))}
-        </Card>
-
-        <div style={{textAlign:"center",marginTop:"1rem"}}>
-          <div style={{fontSize:11,color:C.dimmer,marginBottom:".75rem",lineHeight:1.6}}>Online payment coming soon — get early access now.</div>
-          <a href="mailto:mtslifka@gmail.com?subject=Ice-IQ Pro Early Access" style={{display:"inline-block",background:C.gold,color:C.bg,border:"none",borderRadius:10,padding:".65rem 1.5rem",cursor:"pointer",fontWeight:800,fontSize:13,fontFamily:FONT.body,textDecoration:"none"}}>Contact us for early access →</a>
+        {/* CTA */}
+        <div style={{background:`linear-gradient(135deg,rgba(252,76,2,.1),rgba(207,69,32,.04))`,border:`1px solid ${C.goldBorder}`,borderRadius:14,padding:"1.25rem",textAlign:"center"}}>
+          <div style={{fontSize:10,letterSpacing:".14em",textTransform:"uppercase",color:C.gold,fontWeight:800,marginBottom:".35rem"}}>Early access</div>
+          <div style={{fontSize:14,fontWeight:700,color:C.white,marginBottom:".55rem",lineHeight:1.3}}>Online checkout is coming soon. In the meantime, reach out and we'll set you up directly.</div>
+          <a href="mailto:mtslifka@gmail.com?subject=Ice-IQ Pro Early Access" style={{display:"inline-block",background:C.gold,color:C.bg,border:"none",borderRadius:10,padding:".7rem 1.5rem",cursor:"pointer",fontWeight:800,fontSize:13,fontFamily:FONT.body,textDecoration:"none"}}>Contact us for early access →</a>
         </div>
       </div>
     </div>
