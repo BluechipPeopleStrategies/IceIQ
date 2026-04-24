@@ -11,7 +11,7 @@ import { markSignupIntent, logSignupComplete } from "./utils/signupTelemetry";
 // to Supabase from the first interaction, no LS→cloud transfer needed.
 import { DEPTH_SLOTS, getDepthChart, setAssignment as setDepthAssignment, seedDemoDepthChart, clearDemoDepthChart } from "./utils/depthChart";
 import IceIQRinkQuestion from "./IceIQRinkQuestion.jsx";
-import { COMPETENCIES, getIceIQJourneyState, GAME_SENSE_UNLOCK_SESSIONS, calcCompetencyScores, calcGameSenseScore, ICE_IQ_THRESHOLDS, ICE_IQ_JOURNEY_LABELS } from "./utils/gameSense.js";
+import { COMPETENCIES, getIceIQJourneyState, getJourneyV2, GAME_SENSE_UNLOCK_SESSIONS, calcCompetencyScores, calcGameSenseScore, ICE_IQ_THRESHOLDS, ICE_IQ_JOURNEY_LABELS } from "./utils/gameSense.js";
 import { getTrainingLog, seedDemoTrainingForRoster } from "./utils/trainingLog.js";
 import { buildU11ForwardPreview, PREVIEW_PLAYER_ID } from "./data/previewPlayer.js";
 import { calcTeamCompetencyAverages, GRADE_LEVEL_THRESHOLD } from "./utils/coachStats.js";
@@ -2940,165 +2940,177 @@ function CompetencyValidation() {
   );
 }
 
-// Rink-path visual for the Ice IQ Journey. 8 stations plotted along a
-// horizontal rink from own goal (left) to opposing net (right). Locked
-// stations show 🔒, current station glows, unlocked stations trail a
-// trailing path behind the skater.
-const JOURNEY_NODE_XY = [
-  { x:82,  y:180 },   // showed-up — just out of own goal
-  { x:170, y:220 },   // face-off — own face-off dot area
-  { x:258, y:150 },   // blue-line — own blue line
-  { x:348, y:215 },   // find-slot — neutral zone left side
-  { x:432, y:130 },   // back-check — center
-  { x:520, y:215 },   // pressure-puck — offensive blue-line entry
-  { x:608, y:150 },   // read-rush — high slot
-  { x:712, y:195 },   // captain-c — at the opposing net
+// Level-node positions inside a single world map. 8 nodes plotted on a
+// winding path so the progression feels map-like (Mario-style).
+const WORLD_NODE_XY = [
+  { x: 50,  y: 180 }, { x: 125, y: 120 }, { x: 200, y: 180 }, { x: 275, y: 110 },
+  { x: 350, y: 190 }, { x: 425, y: 130 }, { x: 500, y: 200 }, { x: 575, y: 115 },
 ];
 
-// Inline Journey rink + station-detail pair, reused by the dedicated
-// JourneyScreen and the Home hero. `onViewFull` surfaces a small link
-// back to the full screen when rendered inline on Home.
+// Inline Journey — 64 levels across 8 themed worlds. Reused by the dedicated
+// JourneyScreen and the Home hero. `onViewFull` surfaces a small link back to
+// the full screen when rendered inline on Home.
 function JourneyBody({ player, tier, onViewFull, onUpgrade }) {
-  const [selectedIdx, setSelectedIdx] = useState(null);
   const trainingSessions = (() => {
     try { return (getTrainingLog(player?.id || "__demo__")?.sessions) || []; }
     catch { return []; }
   })();
-  const state = getIceIQJourneyState(player.quizHistory, trainingSessions, player?.level, tier);
-  const { quizzes, training, stations, nextIdx } = state;
-  const nextStation = nextIdx !== null ? stations[nextIdx] : null;
-  const unlockedCount = stations.filter(s => s.unlocked).length;
-  const skaterPos = JOURNEY_NODE_XY[nextIdx !== null ? nextIdx : stations.length - 1];
-  const selected = selectedIdx !== null ? stations[selectedIdx] : null;
+  const state = getJourneyV2(player.quizHistory, trainingSessions, tier);
+  const { levels, quizzes, training, currentIdx, currentWorldIdx, worlds, nextIdx } = state;
+  const [activeWorldIdx, setActiveWorldIdx] = useState(currentWorldIdx);
+  const [selectedLevelIdx, setSelectedLevelIdx] = useState(null);
+  const world = worlds[activeWorldIdx];
+  const worldLevels = levels.filter(l => l.worldIdx === activeWorldIdx);
+  const worldUnlocked = worldLevels.filter(l => l.unlocked).length;
+  const showLevel = selectedLevelIdx !== null
+    ? levels[selectedLevelIdx]
+    : (nextIdx !== null ? levels[nextIdx] : levels[levels.length - 1]);
+  const quizGap = Math.max(0, showLevel.quizzes - quizzes);
+  const trainGap = Math.max(0, showLevel.training - training);
 
   return (
     <>
-      <Card style={{marginBottom:"1rem",padding:"1rem .75rem .5rem"}}>
-        {onViewFull && (
-          <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:".4rem"}}>
-            <div>
-              <Label style={{marginBottom:0}}>Ice IQ Journey</Label>
-              <div style={{fontSize:11,color:C.dimmer,marginTop:2}}>World {Math.min(unlockedCount+1, stations.length)} of {stations.length} · {quizzes} quiz{quizzes===1?"":"zes"} · {training} session{training===1?"":"s"}</div>
-            </div>
-            <button onClick={onViewFull} style={{background:"none",border:"none",color:C.gold,cursor:"pointer",fontSize:12,fontFamily:FONT.body,fontWeight:700,padding:0}}>View full →</button>
+      {onViewFull && (
+        <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:".55rem"}}>
+          <div>
+            <Label style={{marginBottom:0}}>Ice IQ Journey</Label>
+            <div style={{fontSize:11,color:C.dimmer,marginTop:2}}>Level {currentIdx+1} of 64 · World {currentWorldIdx+1}: {worlds[currentWorldIdx].name}</div>
           </div>
-        )}
-          <svg viewBox="0 0 800 320" style={{width:"100%",height:"auto",display:"block"}}>
-            {/* Ice */}
-            <rect x="20" y="40" width="760" height="260" rx="40" fill={C.ice} stroke={C.rink} strokeWidth="2" opacity="0.22"/>
-            {/* Center line */}
-            <line x1="400" y1="40" x2="400" y2="300" stroke="#dc2626" strokeWidth="2" opacity="0.5"/>
-            {/* Blue lines */}
-            <line x1="240" y1="40" x2="240" y2="300" stroke="#1e5799" strokeWidth="3" opacity="0.55"/>
-            <line x1="560" y1="40" x2="560" y2="300" stroke="#1e5799" strokeWidth="3" opacity="0.55"/>
-            {/* Goal lines */}
-            <line x1="50"  y1="40" x2="50"  y2="300" stroke="#dc2626" strokeWidth="1.5" opacity="0.4"/>
-            <line x1="750" y1="40" x2="750" y2="300" stroke="#dc2626" strokeWidth="1.5" opacity="0.4"/>
-            {/* Goals */}
-            <rect x="40" y="155" width="12" height="30" fill="none" stroke="#dc2626" strokeWidth="2" opacity="0.7"/>
-            <rect x="748" y="155" width="12" height="30" fill="none" stroke="#dc2626" strokeWidth="2" opacity="0.7"/>
-            {/* Center circle */}
-            <circle cx="400" cy="170" r="34" fill="none" stroke="#dc2626" strokeWidth="1.5" opacity="0.4"/>
-            {/* Path connecting stations */}
-            {stations.map((s, i) => {
-              if (i === stations.length - 1) return null;
-              const a = JOURNEY_NODE_XY[i];
-              const b = JOURNEY_NODE_XY[i+1];
-              const isTrail = s.unlocked && stations[i+1].unlocked;
-              const isCurrent = s.unlocked && !stations[i+1].unlocked;
-              return (
-                <line key={`p${i}`} x1={a.x} y1={a.y} x2={b.x} y2={b.y}
-                  stroke={isTrail ? C.gold : isCurrent ? C.gold : "rgba(248,250,252,0.15)"}
-                  strokeWidth={isTrail ? 3 : isCurrent ? 2.5 : 1.5}
-                  strokeDasharray={isTrail ? "0" : isCurrent ? "0" : "6 6"}
-                  opacity={isTrail ? 0.9 : isCurrent ? 0.75 : 0.55}/>
-              );
-            })}
-            {/* Stations */}
-            {stations.map((s, i) => {
-              const {x, y} = JOURNEY_NODE_XY[i];
-              const isUnlocked = s.unlocked;
-              const isNext = i === nextIdx;
-              const isSelected = i === selectedIdx;
-              const fill = isUnlocked ? C.gold : isNext ? C.bgElevated : C.bgCard;
-              const stroke = isUnlocked ? "#fff" : isNext ? C.gold : "rgba(248,250,252,0.25)";
-              return (
-                <g key={s.id} style={{cursor:"pointer"}} onClick={() => setSelectedIdx(isSelected ? null : i)}>
-                  {isNext && (
-                    <circle cx={x} cy={y} r="30" fill="none" stroke={C.gold} strokeWidth="2" opacity="0.35">
-                      <animate attributeName="r" values="26;32;26" dur="1.8s" repeatCount="indefinite"/>
-                      <animate attributeName="opacity" values="0.15;0.5;0.15" dur="1.8s" repeatCount="indefinite"/>
-                    </circle>
-                  )}
-                  <circle cx={x} cy={y} r={isSelected ? 26 : 22}
-                    fill={fill} stroke={stroke} strokeWidth={isUnlocked ? 2.5 : 2} opacity={isUnlocked || isNext ? 1 : 0.55}/>
-                  <text x={x} y={y+6} textAnchor="middle" fontSize="20" style={{userSelect:"none", pointerEvents:"none", filter: isUnlocked || isNext ? "none" : "grayscale(100%)", opacity: isUnlocked || isNext ? 1 : 0.45}}>
-                    {isUnlocked ? s.icon : isNext ? s.icon : "🔒"}
-                  </text>
-                  <text x={x} y={y+46} textAnchor="middle" fontSize="10" fontWeight="700"
-                    fill={isUnlocked ? C.white : isNext ? C.gold : "rgba(248,250,252,0.45)"}
-                    style={{fontFamily:"'Inter','DM Sans',sans-serif",userSelect:"none", pointerEvents:"none"}}>
-                    {s.title}
-                  </text>
-                </g>
-              );
-            })}
-            {/* Skater icon — sits on the current (next-to-unlock) station,
-                or on the final station if fully complete. */}
-            {skaterPos && (
-              <g style={{pointerEvents:"none"}}>
-                <text x={skaterPos.x} y={skaterPos.y - 30} textAnchor="middle" fontSize="24">⛸️</text>
-              </g>
-            )}
-          </svg>
-        </Card>
+          <button onClick={onViewFull} style={{background:"none",border:"none",color:C.gold,cursor:"pointer",fontSize:12,fontFamily:FONT.body,fontWeight:700,padding:0}}>View full →</button>
+        </div>
+      )}
 
-        {/* Station detail — tap any station to inspect, default to "Next up". */}
-        {(() => {
-          const show = selected || nextStation || stations[stations.length - 1];
-          if (!show) return null;
-          const showIdx = selectedIdx !== null ? selectedIdx : (nextIdx !== null ? nextIdx : stations.length - 1);
-          const showState = stations[showIdx];
-          const bg = showState.unlocked ? "rgba(34,197,94,.08)" : "rgba(252,76,2,.08)";
-          const border = showState.unlocked ? C.greenBorder : C.goldBorder;
-          const quizGap = Math.max(0, showState.quizzes - quizzes);
-          const trainGap = Math.max(0, showState.training - training);
+      {/* World selector strip — 8 tiles, horizontal scroll */}
+      <div style={{display:"flex",gap:".4rem",overflowX:"auto",marginBottom:".85rem",paddingBottom:".25rem",marginLeft:-4,marginRight:-4,paddingLeft:4,paddingRight:4}}>
+        {worlds.map((w, i) => {
+          const isActive = i === activeWorldIdx;
+          const worldFirstLevelIdx = i * 8;
+          const isUnlocked = i === 0 || levels[worldFirstLevelIdx - 1]?.unlocked;
+          const cleared = levels.filter(l => l.worldIdx === i && l.unlocked).length;
           return (
-            <Card style={{marginBottom:"1rem",background:bg,border:`1px solid ${border}`}}>
-              <div style={{display:"flex",alignItems:"center",gap:".75rem",marginBottom:".55rem"}}>
-                <div style={{fontSize:32}}>{showState.icon}</div>
-                <div style={{flex:1,minWidth:0}}>
-                  <div style={{fontFamily:FONT.display,fontWeight:800,fontSize:"1.2rem",color:C.white,lineHeight:1.2}}>{showState.title}</div>
-                  <div style={{fontSize:11,color:C.gold,marginTop:2,fontWeight:700,letterSpacing:".08em"}}>WORLD {showIdx+1} OF {stations.length}</div>
-                </div>
-                <div style={{fontSize:11,color:showState.unlocked?C.green:C.gold,fontWeight:700}}>
-                  {showState.unlocked ? "✓ UNLOCKED" : selectedIdx === null ? "NEXT UP" : "LOCKED"}
-                </div>
-              </div>
-              <div style={{fontSize:13,color:C.dim,lineHeight:1.55,marginBottom:".65rem"}}>{showState.desc}</div>
-              {!showState.unlocked && (
-                <div style={{fontSize:12,color:C.dimmer,lineHeight:1.6,padding:".55rem .75rem",background:C.bgElevated,borderRadius:8,border:`1px solid ${C.border}`}}>
-                  Unlocks at <b style={{color:C.white}}>{showState.quizzes}</b> quiz{showState.quizzes===1?"":"zes"} taken
-                  {showState.training > 0 && <> and <b style={{color:C.white}}>{showState.training}</b> training session{showState.training===1?"":"s"} logged</>}.
-                  {(quizGap > 0 || trainGap > 0) && (
-                    <> You're <b style={{color:C.gold}}>
-                      {quizGap > 0 && `${quizGap} quiz${quizGap===1?"":"zes"}`}
-                      {quizGap > 0 && trainGap > 0 && " + "}
-                      {trainGap > 0 && `${trainGap} training session${trainGap===1?"":"s"}`}
-                    </b> away.</>
-                  )}
-                </div>
-              )}
-            </Card>
+            <button key={i} onClick={() => isUnlocked && (setActiveWorldIdx(i), setSelectedLevelIdx(null))}
+              disabled={!isUnlocked}
+              style={{
+                flexShrink: 0, minWidth: 92, padding: ".5rem .65rem",
+                background: isActive ? w.gradient : C.bgCard,
+                border: `1.5px solid ${isActive ? "#fff" : isUnlocked ? C.border : "transparent"}`,
+                borderRadius: 10,
+                opacity: isUnlocked ? 1 : 0.35,
+                cursor: isUnlocked ? "pointer" : "default",
+                color: C.white, fontFamily: FONT.body, textAlign: "left",
+                boxShadow: isActive ? `0 4px 14px ${w.accent}55` : "none",
+                transition: "transform .12s ease",
+              }}>
+              <div style={{fontSize:20,marginBottom:2}}>{isUnlocked ? w.icon : "🔒"}</div>
+              <div style={{fontSize:9,letterSpacing:".12em",color:isActive?"rgba(255,255,255,.9)":C.dimmer,fontWeight:800}}>WORLD {i+1}</div>
+              <div style={{fontSize:11,fontWeight:700,color:isActive?"#fff":isUnlocked?C.white:C.dimmer,whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis"}}>{w.name}</div>
+              <div style={{fontSize:9,color:isActive?"rgba(255,255,255,.8)":C.dimmer,marginTop:2,fontWeight:600}}>{cleared}/8 cleared</div>
+            </button>
           );
-        })()}
+        })}
+      </div>
+
+      {/* Active world map */}
+      <Card style={{padding:0,background:world.gradient,border:`1px solid rgba(255,255,255,.1)`,marginBottom:"1rem",overflow:"hidden"}}>
+        <div style={{padding:".85rem 1rem .65rem",background:"rgba(0,0,0,.35)",backdropFilter:"blur(2px)"}}>
+          <div style={{fontSize:10,color:"rgba(255,255,255,.75)",letterSpacing:".16em",textTransform:"uppercase",fontWeight:800,marginBottom:1}}>World {activeWorldIdx+1}</div>
+          <div style={{fontFamily:FONT.display,fontWeight:800,fontSize:"1.3rem",color:"#fff",lineHeight:1.1,display:"flex",alignItems:"center",gap:".5rem"}}>
+            <span style={{fontSize:24}}>{world.icon}</span>
+            {world.name}
+          </div>
+          <div style={{fontSize:11,color:"rgba(255,255,255,.82)",marginTop:4,lineHeight:1.4}}>{world.desc} <span style={{color:"rgba(255,255,255,.6)",marginLeft:6}}>{worldUnlocked}/8 cleared</span></div>
+        </div>
+        {/* 8 level nodes on a winding path */}
+        <svg viewBox="0 0 625 250" style={{width:"100%",height:"auto",display:"block",background:"rgba(0,0,0,.15)"}}>
+          {/* Decorative clouds/stars per theme */}
+          <g opacity=".35">
+            {[...Array(6)].map((_, i) => (
+              <circle key={i} cx={50 + i * 100} cy={30 + (i%2)*12} r={3 + (i%3)} fill="#fff"/>
+            ))}
+          </g>
+          {/* Connecting path */}
+          {worldLevels.map((l, i) => {
+            if (i === worldLevels.length - 1) return null;
+            const a = WORLD_NODE_XY[i], b = WORLD_NODE_XY[i+1];
+            const isTrail = l.unlocked && worldLevels[i+1].unlocked;
+            const isCurrent = l.unlocked && !worldLevels[i+1].unlocked;
+            return (
+              <line key={`p${i}`} x1={a.x} y1={a.y} x2={b.x} y2={b.y}
+                stroke={isTrail ? "#fff" : isCurrent ? world.accent : "rgba(255,255,255,.25)"}
+                strokeWidth={isTrail ? 4 : isCurrent ? 3.5 : 2}
+                strokeDasharray={isTrail || isCurrent ? "0" : "6 6"}
+                strokeLinecap="round" opacity={isTrail ? .85 : isCurrent ? .85 : .55}/>
+            );
+          })}
+          {/* Nodes */}
+          {worldLevels.map((l, i) => {
+            const {x, y} = WORLD_NODE_XY[i];
+            const isNext = l.idx === nextIdx;
+            const isSelected = l.idx === selectedLevelIdx;
+            const fill = l.unlocked ? world.accent : isNext ? "#fff" : "rgba(255,255,255,.2)";
+            const stroke = l.unlocked ? "#fff" : isNext ? world.accent : "rgba(255,255,255,.4)";
+            return (
+              <g key={l.idx} style={{cursor:"pointer"}} onClick={() => setSelectedLevelIdx(isSelected ? null : l.idx)}>
+                {isNext && (
+                  <circle cx={x} cy={y} r="28" fill="none" stroke="#fff" strokeWidth="2" opacity=".4">
+                    <animate attributeName="r" values="22;30;22" dur="1.8s" repeatCount="indefinite"/>
+                    <animate attributeName="opacity" values=".2;.6;.2" dur="1.8s" repeatCount="indefinite"/>
+                  </circle>
+                )}
+                <circle cx={x} cy={y} r={isSelected ? 22 : 19}
+                  fill={fill} stroke={stroke} strokeWidth={2.5} opacity={l.unlocked || isNext ? 1 : .7}/>
+                <text x={x} y={y+5} textAnchor="middle" fontSize="14" fontWeight="800"
+                  fill={l.unlocked ? "#fff" : isNext ? world.accent : "rgba(255,255,255,.6)"}
+                  style={{userSelect:"none",pointerEvents:"none",fontFamily:"'Inter','DM Sans',sans-serif"}}>
+                  {l.unlocked ? "✓" : l.levelInWorld + 1}
+                </text>
+                <text x={x} y={y+40} textAnchor="middle" fontSize="9" fontWeight="700"
+                  fill={l.unlocked || isNext ? "#fff" : "rgba(255,255,255,.55)"}
+                  style={{userSelect:"none",pointerEvents:"none",fontFamily:"'Inter','DM Sans',sans-serif"}}>
+                  {l.name}
+                </text>
+              </g>
+            );
+          })}
+        </svg>
+      </Card>
+
+      {/* Level detail */}
+      {showLevel && (
+        <Card style={{marginBottom:"1rem",background:showLevel.unlocked?"rgba(34,197,94,.08)":"rgba(252,76,2,.08)",border:`1px solid ${showLevel.unlocked?C.greenBorder:C.goldBorder}`}}>
+          <div style={{display:"flex",alignItems:"center",gap:".75rem",marginBottom:".55rem"}}>
+            <div style={{fontSize:28,width:44,height:44,borderRadius:10,background:showLevel.worldGradient,display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0}}>{showLevel.worldIcon}</div>
+            <div style={{flex:1,minWidth:0}}>
+              <div style={{fontFamily:FONT.display,fontWeight:800,fontSize:"1.15rem",color:C.white,lineHeight:1.2}}>{showLevel.name}</div>
+              <div style={{fontSize:10,color:showLevel.worldAccent,marginTop:2,fontWeight:800,letterSpacing:".1em"}}>WORLD {showLevel.worldIdx+1}-{showLevel.levelInWorld+1} · {showLevel.worldName}</div>
+            </div>
+            <div style={{fontSize:10,color:showLevel.unlocked?C.green:C.gold,fontWeight:800,letterSpacing:".08em"}}>
+              {showLevel.unlocked ? "✓ CLEARED" : showLevel.idx === nextIdx ? "NEXT UP" : "LOCKED"}
+            </div>
+          </div>
+          {!showLevel.unlocked && (
+            <div style={{fontSize:12,color:C.dimmer,lineHeight:1.6,padding:".55rem .75rem",background:C.bgElevated,borderRadius:8,border:`1px solid ${C.border}`}}>
+              Clears at <b style={{color:C.white}}>{showLevel.quizzes}</b> quiz{showLevel.quizzes===1?"":"zes"}
+              {showLevel.training > 0 && <> + <b style={{color:C.white}}>{showLevel.training}</b> session{showLevel.training===1?"":"s"}</>}.
+              {(quizGap > 0 || trainGap > 0) && (
+                <> You're <b style={{color:C.gold}}>
+                  {quizGap > 0 && `${quizGap} quiz${quizGap===1?"":"zes"}`}
+                  {quizGap > 0 && trainGap > 0 && " + "}
+                  {trainGap > 0 && `${trainGap} session${trainGap===1?"":"s"}`}
+                </b> away.</>
+              )}
+            </div>
+          )}
+        </Card>
+      )}
+
       {tier === "FREE" && (
         <Card style={{marginBottom:"1rem",background:`linear-gradient(135deg,rgba(252,76,2,.08),rgba(207,69,32,.04))`,border:`1px dashed ${C.goldBorder}`,padding:"1rem 1.1rem"}}>
           <div style={{display:"flex",alignItems:"flex-start",gap:".65rem",marginBottom:".55rem"}}>
             <div style={{fontSize:22,flexShrink:0}}>⛰️</div>
             <div style={{flex:1,minWidth:0}}>
               <div style={{fontSize:10,letterSpacing:".14em",textTransform:"uppercase",color:C.gold,fontWeight:800,marginBottom:2}}>FREE path</div>
-              <div style={{fontSize:12.5,color:C.dim,lineHeight:1.55}}>You're on the harder journey. Every station needs ~1.7× the reps of Ice-IQ Pro — still reachable on Free's 3 quizzes/week, just a longer climb.</div>
+              <div style={{fontSize:12.5,color:C.dim,lineHeight:1.55}}>64 levels across 8 themed worlds — from Frozen Pond to The Show. FREE reps-per-level are ~1.7× the Pro climb. Still reachable on Free's 3 quizzes/week.</div>
             </div>
           </div>
           {onUpgrade && (
@@ -3117,9 +3129,8 @@ function JourneyScreen({ player, tier, onBack, onNav, onUpgrade }) {
     try { return (getTrainingLog(player?.id || "__demo__")?.sessions) || []; }
     catch { return []; }
   })();
-  const state = getIceIQJourneyState(player.quizHistory, trainingSessions, player?.level, tier);
-  const { quizzes, training, stations } = state;
-  const unlockedCount = stations.filter(s => s.unlocked).length;
+  const state = getJourneyV2(player.quizHistory, trainingSessions, tier);
+  const { quizzes, training, currentIdx, currentWorldIdx, worlds } = state;
   const isFree = tier === "FREE";
   return (
     <div style={{minHeight:"100vh",background:C.bg,color:C.white,fontFamily:FONT.body,paddingBottom:80}}>
@@ -3128,7 +3139,7 @@ function JourneyScreen({ player, tier, onBack, onNav, onUpgrade }) {
           <BackBtn onClick={onBack}/>
           <div style={{flex:1}}>
             <div style={{fontFamily:FONT.display,fontWeight:800,fontSize:"1.1rem"}}>Ice IQ Journey</div>
-            <div style={{fontSize:11,color:C.dimmer}}>World {Math.min(unlockedCount+1, stations.length)} of {stations.length} · {quizzes} quiz{quizzes===1?"":"zes"} · {training} training session{training===1?"":"s"}{isFree?" · FREE path":""}</div>
+            <div style={{fontSize:11,color:C.dimmer}}>Level {currentIdx+1}/64 · World {currentWorldIdx+1}: {worlds[currentWorldIdx].name} · {quizzes} quiz{quizzes===1?"":"zes"}{isFree?" · FREE path":""}</div>
           </div>
         </div>
       </StickyHeader>
@@ -3138,6 +3149,11 @@ function JourneyScreen({ player, tier, onBack, onNav, onUpgrade }) {
           <PrimaryBtn onClick={() => onNav("quiz")}>Take a quiz →</PrimaryBtn>
           <button onClick={() => onNav("profile")} style={{background:C.bgElevated,color:C.white,border:`1px solid ${C.border}`,borderRadius:10,padding:".85rem",cursor:"pointer",fontWeight:800,fontSize:14,fontFamily:FONT.body}}>Log a session →</button>
         </div>
+        {/* Prominent back-to-home exit. The sticky-header BackBtn wasn't
+            discoverable enough — users reported the Home nav felt inert. */}
+        <button onClick={onBack} style={{marginTop:"1rem",width:"100%",background:"none",color:C.gold,border:`1px solid ${C.goldBorder}`,borderRadius:10,padding:".8rem",cursor:"pointer",fontWeight:700,fontSize:13,fontFamily:FONT.body}}>
+          ← Back to Home
+        </button>
       </div>
     </div>
   );

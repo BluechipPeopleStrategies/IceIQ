@@ -223,6 +223,105 @@ export function getIceIQJourneyState(quizHistory, trainingSessions, level, tier)
   return { quizzes, training, stations, nextIdx: nextIdx === -1 ? null : nextIdx, tier: tier === "FREE" ? "FREE" : "PAID" };
 }
 
+// ─────────────────────────────────────────────────────────
+// 64-LEVEL JOURNEY (8 worlds × 8 levels). Each world is a themed map
+// with its own gradient, icon, and 8 level names that follow the theme
+// narrative. Curve is easy-front / grind-back: clearing the first world
+// takes ~8 quizzes, the last world pushes ~150 (FREE) / ~90 (PRO).
+// ─────────────────────────────────────────────────────────
+export const WORLD_THEMES = [
+  { id:1, name:"Frozen Pond",          icon:"🧊", gradient:"linear-gradient(135deg,#7dd3fc,#1e3a8a)",   accent:"#60a5fa",
+    desc:"Backyard ice. Where every player starts.",
+    levelNames:["Lace-Up","First Stride","Open Ice","Snow Angel","Puck Drop","Blue Line Dash","Pond Hero","Pond Champ"] },
+  { id:2, name:"Learn-to-Play Rink",   icon:"🏟️", gradient:"linear-gradient(135deg,#86efac,#14532d)",   accent:"#22c55e",
+    desc:"The first real barn. Learn the whistle.",
+    levelNames:["Cone Drill","Two-Touch","Find a Friend","Pass & Skate","Shoot on Net","Change on Fly","Whistle Stop","Scrimmage Star"] },
+  { id:3, name:"Minor Hockey Arena",   icon:"🏒", gradient:"linear-gradient(135deg,#fbbf24,#78350f)",   accent:"#f59e0b",
+    desc:"House league Saturdays. Team hockey begins.",
+    levelNames:["Team Shift","Face-Off Win","Wall Support","Neutral Zone","Backcheck","Breakout Pass","Cycle Down","First Goal"] },
+  { id:4, name:"City Tournament",      icon:"🏆", gradient:"linear-gradient(135deg,#fb923c,#7c2d12)",   accent:"#f97316",
+    desc:"Hotel hockey. Back-to-backs. Medal weekend.",
+    levelNames:["Bus Ride","Warm-Up Lap","First Shift","Between Periods","Hat Trick Hunt","Comeback Kid","OT Hero","Medal Moment"] },
+  { id:5, name:"Regional Select",      icon:"⭐", gradient:"linear-gradient(135deg,#c084fc,#581c87)",   accent:"#a855f7",
+    desc:"Tryout camps. Where the game speeds up.",
+    levelNames:["Tryout Tape","Camp Mile","Wall of Selects","System Day","Power Play Run","PK Minute","Shutout Shift","Selection Day"] },
+  { id:6, name:"Provincial Cup",       icon:"🥇", gradient:"linear-gradient(135deg,#60a5fa,#1e3a8a)",   accent:"#3b82f6",
+    desc:"Best of the province. Everyone can play.",
+    levelNames:["Road Game","Faster Ice","Bigger Bodies","Video Session","Special Teams","Battle Bracket","Semi-Final","Provincial Final"] },
+  { id:7, name:"National Championship",icon:"🏅", gradient:"linear-gradient(135deg,#fb7185,#881337)",   accent:"#e11d48",
+    desc:"Country's best. Every game is a test.",
+    levelNames:["National Skate","Elite Camp","Weight Room","Film Room","Round Robin","Quarterfinal","Semi-Final","Gold Medal Game"] },
+  { id:8, name:"The Show",             icon:"👑", gradient:"linear-gradient(135deg,#fde68a,#1f2937)",   accent:"#fbbf24",
+    desc:"The top level. Captain the team through it.",
+    levelNames:["Draft Day","Rookie Camp","Training Camp","Opening Night","Playoff Push","Division Final","Conference Final","Captain's Cup"] },
+];
+
+// Build 64 thresholds with a power curve. Front-loaded easy wins, back-loaded
+// grind. Early levels stay small so a brand-new player clears the first world
+// (levels 1–8) in their first week of 3-quizzes/week cadence.
+function makeLevelThresholds(maxQuizzes, maxTraining, curve) {
+  const out = [];
+  for (let i = 1; i <= 64; i++) {
+    const pct = Math.pow(i / 64, curve);
+    const qRaw = Math.round(pct * maxQuizzes);
+    const q = Math.max(i, qRaw, (out[i-2]?.quizzes ?? 0) + 1); // monotonic, floor i to keep first world gentle
+    const tRaw = Math.round(Math.pow(i / 64, curve + 0.2) * maxTraining);
+    const t = Math.max(tRaw, (out[i-2]?.training ?? 0));
+    out.push({ quizzes: q, training: t });
+  }
+  // Stomp the first 8 levels to a hand-tuned easy ramp so the dopamine hits
+  // keep coming: 1, 2, 3, 4, 5, 6, 7, 8 quizzes, minimal training.
+  for (let i = 0; i < 8; i++) out[i] = { quizzes: i + 1, training: 0 };
+  // Monotonic fix in case the stomp bumped level-9 below level-8.
+  for (let i = 1; i < out.length; i++) {
+    if (out[i].quizzes <= out[i-1].quizzes) out[i].quizzes = out[i-1].quizzes + 1;
+    if (out[i].training < out[i-1].training) out[i].training = out[i-1].training;
+  }
+  return out;
+}
+
+export const LEVEL_THRESHOLDS_PAID = makeLevelThresholds(90, 25, 1.55);
+export const LEVEL_THRESHOLDS_FREE = makeLevelThresholds(150, 45, 1.6);
+
+export function levelThresholdsForTier(tier) {
+  return tier === "FREE" ? LEVEL_THRESHOLDS_FREE : LEVEL_THRESHOLDS_PAID;
+}
+
+export function getJourneyV2(quizHistory, trainingSessions, tier) {
+  const quizzes = Array.isArray(quizHistory) ? quizHistory.length : 0;
+  const training = Array.isArray(trainingSessions) ? trainingSessions.length : 0;
+  const thresholds = levelThresholdsForTier(tier);
+  const levels = thresholds.map((t, i) => {
+    const worldIdx = Math.floor(i / 8);
+    const levelInWorld = i % 8;
+    const world = WORLD_THEMES[worldIdx];
+    return {
+      idx: i,
+      worldIdx,
+      levelInWorld,
+      name: world.levelNames[levelInWorld],
+      worldName: world.name,
+      worldIcon: world.icon,
+      worldGradient: world.gradient,
+      worldAccent: world.accent,
+      quizzes: t.quizzes,
+      training: t.training,
+      unlocked: quizzes >= t.quizzes && training >= t.training,
+    };
+  });
+  const nextIdx = levels.findIndex(l => !l.unlocked);
+  const currentIdx = nextIdx === -1 ? levels.length - 1 : Math.max(0, nextIdx - 1);
+  const currentWorldIdx = nextIdx === -1 ? 7 : Math.floor(nextIdx / 8);
+  return {
+    quizzes, training, levels,
+    nextIdx: nextIdx === -1 ? null : nextIdx,
+    currentIdx,
+    currentWorldIdx,
+    worlds: WORLD_THEMES,
+    tier: tier === "FREE" ? "FREE" : "PAID",
+  };
+}
+
 // Legacy name — keep so existing callsites don't explode during HMR. Shape
 // mapped to the new station list. Delete after all callsites migrate.
 export const POSITIONING_JOURNEY = ICE_IQ_THRESHOLDS;
