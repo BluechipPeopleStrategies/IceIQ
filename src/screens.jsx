@@ -376,7 +376,9 @@ const FEATURE_MATRIX = [
   { label:"Weekly Challenge",            values:[false,     true,         true,         true] },
   { label:"Coach feedback (ratings + notes)", values:[false,true,         true,         true] },
   { label:"Coach dashboard (roster view)",values:[false,    false,        false,        true] },
-  { label:"Homework assignments",        values:[false,     "soon",       "soon",       "soon"] },
+  { label:"Homework assignments from coach", values:[false, true,         true,         true] },
+  { label:"Off-ice training log",        values:["Basic (last 5)", "Unlimited + analytics", "Unlimited + analytics", "Unlimited + coach rollup"] },
+  { label:"Coach-visible training activity", values:[false, false,        false,        true] },
 
   { group:"Account" },
   { label:"Player profiles",             values:["1",       "1",          "Up to 3",    "Up to 20"] },

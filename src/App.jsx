@@ -36,10 +36,12 @@ import imgSuccess from "./assets/images/Success-Icon.jpg";
 //           profile.tier field (future Supabase subscriptions) → that tier
 //           default → FREE
 function resolveTier({ profile, demoMode } = {}) {
-  // Dev override only honored inside a dev-bypass session — otherwise any
-  // user could flip themselves to TEAM via DevTools. RLS still blocks writes,
-  // but without this gate the UI renders as if upgraded.
-  if (isDevBypassEnabled()) {
+  // The Pro-player preview flow (enterPlayerPreview) marks profile.__preview
+  // and writes iceiq_tier_override="PRO" so the preview renders with Pro
+  // features unlocked. Dev-bypass sessions honor the override the same way.
+  // Production users never hit either branch, so they can't self-promote.
+  const allowLsOverride = isDevBypassEnabled() || !!profile?.__preview;
+  if (allowLsOverride) {
     try {
       const override = typeof window !== "undefined" ? window.localStorage.getItem("iceiq_tier_override") : null;
       if (override && ["FREE","PRO","FAMILY","TEAM"].includes(override.toUpperCase())) {
@@ -3202,6 +3204,12 @@ function Profile({ player, onSave, onBack, onReset, demoMode, tier, onUpgrade, u
       <div style={{position:"relative",height:120,overflow:"hidden"}}>
         <img src={imgProfile} alt="" style={{width:"100%",height:"100%",objectFit:"cover",opacity:0.2}}/>
         <div style={{position:"absolute",inset:0,background:"linear-gradient(to top,rgba(8,14,26,1) 0%,transparent 100%)"}}/>
+        {/* Floating back button — the sticky header sits below the hero
+            image on first render, so surface an explicit exit up top. */}
+        <button onClick={onBack} aria-label="Back to home"
+          style={{position:"absolute",top:12,left:12,background:"rgba(6,12,22,.72)",border:`1px solid ${C.border}`,color:C.white,borderRadius:999,width:36,height:36,cursor:"pointer",fontSize:16,fontFamily:FONT.body,display:"flex",alignItems:"center",justifyContent:"center",backdropFilter:"blur(8px)",WebkitBackdropFilter:"blur(8px)"}}>
+          ←
+        </button>
       </div>
       <StickyHeader>
         <div style={{maxWidth:560,margin:"0 auto",display:"flex",alignItems:"center",gap:"1rem"}}>
