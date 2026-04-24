@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect, useCallback, Component } from "react";
+import { useState, useRef, useEffect, useCallback, useMemo, Component } from "react";
 import IceIQRink from "./IceIQRink";
 import IceIQPOVRink from "./IceIQPOVRink";
 import { C, FONT } from "./shared.jsx";
@@ -817,12 +817,84 @@ function Sequence({ question, onAnswer, onReset }) {
   );
 }
 
+// ───────────────────────────────────────────────────────────────────
+// Polish helpers for PathDraw
+// ───────────────────────────────────────────────────────────────────
+
+// Quadratic-midpoint smoothing — turns a list of raw points into a
+// flowing SVG `d` string. Good enough to make shaky finger-drags look
+// like clean skate routes without a heavy spline library.
+function smoothPathD(points) {
+  if (!points || points.length === 0) return "";
+  if (points.length < 3) {
+    return points.map((p, i) => (i === 0 ? "M" : "L") + ` ${p.x} ${p.y}`).join(" ");
+  }
+  let d = `M ${points[0].x} ${points[0].y}`;
+  for (let i = 1; i < points.length - 1; i++) {
+    const curr = points[i];
+    const next = points[i + 1];
+    const midX = (curr.x + next.x) / 2;
+    const midY = (curr.y + next.y) / 2;
+    d += ` Q ${curr.x} ${curr.y} ${midX} ${midY}`;
+  }
+  const last = points[points.length - 1];
+  d += ` L ${last.x} ${last.y}`;
+  return d;
+}
+
+// Resample a point list to exactly `n` equally-spaced points along its
+// arc length. Lets us compare paths of different lengths fairly.
+function resamplePath(points, n = 24) {
+  if (!points || points.length < 2) return points ? points.slice() : [];
+  const segLens = [];
+  let total = 0;
+  for (let i = 1; i < points.length; i++) {
+    const d = Math.hypot(points[i].x - points[i-1].x, points[i].y - points[i-1].y);
+    segLens.push(d);
+    total += d;
+  }
+  if (total === 0) return points.slice(0, 1);
+  const out = [points[0]];
+  const step = total / (n - 1);
+  let targetD = step;
+  let accum = 0;
+  for (let i = 1; i < points.length && out.length < n - 1; i++) {
+    const segLen = segLens[i-1];
+    while (accum + segLen >= targetD && out.length < n - 1) {
+      const t = (targetD - accum) / segLen;
+      out.push({
+        x: points[i-1].x + t * (points[i].x - points[i-1].x),
+        y: points[i-1].y + t * (points[i].y - points[i-1].y),
+      });
+      targetD += step;
+    }
+    accum += segLen;
+  }
+  out.push(points[points.length - 1]);
+  return out;
+}
+
+// Average distance between two same-length resampled paths. Lower = closer.
+function pathDeviation(a, b) {
+  const n = Math.min(a.length, b.length);
+  if (n === 0) return Infinity;
+  let sum = 0;
+  for (let i = 0; i < n; i++) {
+    sum += Math.hypot(a[i].x - b[i].x, a[i].y - b[i].y);
+  }
+  return sum / n;
+}
+
 function PathDraw({ question, onAnswer, onReset }) {
   const svgRef = useRef(null);
   const svgPoint = useSVGPoint(svgRef);
   const [path, setPath] = useState([]);
   const [drawing, setDrawing] = useState(false);
   const [result, setResult] = useState(null);
+  // Replay state: `t` in [0, 1] drives the skater positions along both
+  // player and ideal paths after submission. Animates over 2s.
+  const [replayT, setReplayT] = useState(0);
+  const replayRef = useRef(null);
 
   const start = question.start && typeof question.start === "object"
     ? { x: toFiniteNumber(question.start.x, 300), y: toFiniteNumber(question.start.y, 150), radius: toFiniteNumber(question.start.radius, 30) }
@@ -833,8 +905,19 @@ function PathDraw({ question, onAnswer, onReset }) {
   const avoid = Array.isArray(question.avoid) ? question.avoid.map(a => ({
     x: toFiniteNumber(a.x, 0), y: toFiniteNumber(a.y, 0), radius: toFiniteNumber(a.radius, 14)
   })) : [];
+  // Ideal path — array of {x,y}. Present on polished questions. When set,
+  // scoring is based on average deviation instead of binary target-hit.
+  const idealRaw = Array.isArray(question.idealPath)
+    ? question.idealPath.map(p => ({ x: toFiniteNumber(p.x, 0), y: toFiniteNumber(p.y, 0) }))
+    : null;
+  const idealResampled = useMemo(() => idealRaw ? resamplePath(idealRaw, 24) : null, [idealRaw]);
+  const idealD = idealRaw ? smoothPathD(idealRaw) : "";
 
-  const reset = () => { setPath([]); setDrawing(false); setResult(null); onReset?.(); };
+  const reset = () => {
+    if (replayRef.current) cancelAnimationFrame(replayRef.current);
+    setPath([]); setDrawing(false); setResult(null); setReplayT(0);
+    onReset?.();
+  };
 
   const onDown = (e) => {
     if (result) return;
@@ -859,14 +942,35 @@ function PathDraw({ question, onAnswer, onReset }) {
       setPath(prev => {
         const end = prev[prev.length - 1];
         if (!end) return prev;
-        const nearTarget = target ? Math.hypot(end.x - target.x, end.y - target.y) < target.radius : true;
+        // Hard fail: ran through a defender.
         const hitAvoid = avoid.some(a => prev.some(pt => Math.hypot(pt.x - a.x, pt.y - a.y) < a.radius));
-        if (nearTarget && !hitAvoid) {
+        if (hitAvoid) {
+          setResult({ state: "no", msg: "Your path crossed a defender. Try curling around traffic. " + (question.tip || "") });
+          onAnswer?.(false);
+          return prev;
+        }
+        // Polished-question path: deviation-based scoring when idealPath exists.
+        if (idealResampled) {
+          const playerResampled = resamplePath(prev, 24);
+          const dev = pathDeviation(playerResampled, idealResampled);
+          const endNearTarget = target ? Math.hypot(end.x - target.x, end.y - target.y) < target.radius * 1.3 : true;
+          if (dev <= 22 && endNearTarget) {
+            setResult({ state: "ok", dev, msg: "Excellent route. " + (question.tip || "") });
+            onAnswer?.(true);
+          } else if (dev <= 42 && endNearTarget) {
+            setResult({ state: "partial", dev, msg: `Close — about ${Math.round(dev)} units off the ideal line. ` + (question.tip || "") });
+            onAnswer?.(false);
+          } else {
+            setResult({ state: "no", dev, msg: `Off the read — ${Math.round(dev)} units wide. ` + (question.tip || "") });
+            onAnswer?.(false);
+          }
+          return prev;
+        }
+        // Legacy fallback: binary target-hit for questions without an idealPath.
+        const nearTarget = target ? Math.hypot(end.x - target.x, end.y - target.y) < target.radius : true;
+        if (nearTarget) {
           setResult({ state: "ok", msg: question.tip || "Nice route." });
           onAnswer?.(true);
-        } else if (hitAvoid) {
-          setResult({ state: "no", msg: "Your path crossed a defender. Try curling around the traffic. " + (question.tip || "") });
-          onAnswer?.(false);
         } else {
           setResult({ state: "partial", msg: "You avoided pressure but didn't reach the open ice. " + (question.tip || "") });
           onAnswer?.(false);
@@ -884,9 +988,44 @@ function PathDraw({ question, onAnswer, onReset }) {
       window.removeEventListener("mouseup", onUp);
       window.removeEventListener("touchend", onUp);
     };
-  }, [drawing, svgPoint, onAnswer, target, avoid, question.tip]);
+  }, [drawing, svgPoint, onAnswer, target, avoid, question.tip, idealResampled]);
 
-  const pathD = path.length > 0 ? path.map((pt, i) => (i === 0 ? "M" : "L") + ` ${pt.x} ${pt.y}`).join(" ") : "";
+  // Drive the side-by-side replay once the answer locks.
+  useEffect(() => {
+    if (!result || !idealResampled || path.length < 2) return;
+    const startTs = performance.now();
+    const DURATION = 2000;
+    const tick = (now) => {
+      const elapsed = now - startTs;
+      const frac = Math.min(1, elapsed / DURATION);
+      setReplayT(frac);
+      if (frac < 1) replayRef.current = requestAnimationFrame(tick);
+    };
+    replayRef.current = requestAnimationFrame(tick);
+    return () => { if (replayRef.current) cancelAnimationFrame(replayRef.current); };
+  }, [result, idealResampled, path.length]);
+
+  const playerResampled = useMemo(() => (path.length > 1 ? resamplePath(path, 24) : null), [path]);
+  const playerD = smoothPathD(path);
+
+  // Skater positions at time t along each path.
+  function ptAt(pts, t) {
+    if (!pts || pts.length === 0) return null;
+    if (t <= 0) return pts[0];
+    if (t >= 1) return pts[pts.length - 1];
+    const idx = t * (pts.length - 1);
+    const i0 = Math.floor(idx);
+    const i1 = Math.min(pts.length - 1, i0 + 1);
+    const f = idx - i0;
+    return { x: pts[i0].x + f * (pts[i1].x - pts[i0].x), y: pts[i0].y + f * (pts[i1].y - pts[i0].y) };
+  }
+  const playerSkater = result && playerResampled ? ptAt(playerResampled, replayT) : null;
+  const idealSkater = result && idealResampled ? ptAt(idealResampled, replayT) : null;
+
+  const resultColor = !result ? "#5BA4E8"
+    : result.state === "ok" ? "#22c55e"
+    : result.state === "partial" ? "#eab308"
+    : "#ef4444";
 
   return (
     <div>
@@ -897,22 +1036,55 @@ function PathDraw({ question, onAnswer, onReset }) {
         <svg ref={svgRef} viewBox={getViewBox(question.rink?.view)} preserveAspectRatio="none"
           style={{ ...overlaySvgStyle(!result), cursor: result ? "default" : "crosshair" }}
           onMouseDown={onDown} onTouchStart={onDown}>
-          {target && (
+          {/* Start anchor — the player icon draws from here. */}
+          <circle cx={start.x} cy={start.y} r={start.radius}
+            fill={result ? "rgba(91,164,232,0.08)" : "rgba(91,164,232,0.16)"}
+            stroke="#5BA4E8" strokeWidth="1.2" strokeDasharray={result ? "3 3" : "5 3"} opacity={result ? 0.5 : 1}/>
+          {/* Target — only show the ghost zone while drawing; replay shows skater. */}
+          {target && !result && (
             <g>
               <circle cx={target.x} cy={target.y} r={target.radius}
                 fill="rgba(34,197,94,0.14)" stroke="#22c55e" strokeWidth="1.4" strokeDasharray="4 2.5" />
               <text x={target.x} y={target.y + 3} textAnchor="middle" fill="#86EFAC" fontSize="10" fontWeight="600">target</text>
             </g>
           )}
-          {pathD && (
-            <path d={pathD} fill="none"
-              stroke={result ? (result.state === "ok" ? "#22c55e" : "#ef4444") : "#5BA4E8"}
-              strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" />
+          {/* Ideal-path ghost line (only visible after submission and only
+              when the question provides one). */}
+          {result && idealD && (
+            <path d={idealD} fill="none" stroke="#22c55e" strokeWidth="2.5"
+              strokeDasharray="5 3" strokeLinecap="round" strokeLinejoin="round" opacity="0.75"/>
+          )}
+          {/* Player's drawn path — smoothed. */}
+          {playerD && (
+            <path d={playerD} fill="none" stroke={resultColor} strokeWidth="3"
+              strokeLinecap="round" strokeLinejoin="round"
+              opacity={result ? 0.85 : 1}/>
+          )}
+          {/* Replay skaters — two icons moving in sync along both paths. */}
+          {result && playerSkater && (
+            <g style={{pointerEvents:"none"}}>
+              <circle cx={playerSkater.x} cy={playerSkater.y} r="10" fill={resultColor} stroke="#0b1220" strokeWidth="2"/>
+              <text x={playerSkater.x} y={playerSkater.y + 3} textAnchor="middle" fontSize="11">⛸️</text>
+            </g>
+          )}
+          {result && idealSkater && idealD && (
+            <g style={{pointerEvents:"none"}}>
+              <circle cx={idealSkater.x} cy={idealSkater.y} r="10" fill="#22c55e" stroke="#0b1220" strokeWidth="2"/>
+              <text x={idealSkater.x} y={idealSkater.y + 3} textAnchor="middle" fontSize="11">✓</text>
+            </g>
           )}
         </svg>
       </div>
       {result && (
         <>
+          {/* Legend for the replay — only shown when we actually have two
+              paths comparing side by side. */}
+          {idealD && (
+            <div style={{display:"flex",gap:".85rem",padding:".5rem .25rem",fontSize:11,color:"#94a3b8",justifyContent:"center"}}>
+              <span><span style={{color:resultColor,fontWeight:800}}>●</span> your route</span>
+              <span><span style={{color:"#22c55e",fontWeight:800}}>● ✓</span> ideal</span>
+            </div>
+          )}
           <Feedback state={result.state} message={result.msg} />
           <div style={actionRowStyle()}>
             <button onClick={reset} style={secondaryBtnStyle}>Try again</button>
