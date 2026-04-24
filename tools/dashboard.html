@@ -192,6 +192,27 @@
   .pagination button { min-width: 32px; padding: 4px 8px; font-size: 12px; }
   .pagination button.active { background: var(--accent); color: #0b1220; font-weight: 700; border-color: var(--accent); }
 
+  /* Floating action dock — pins to the bottom of the viewport whenever
+     a question is expanded, so the reviewer can Keep/Flag/Kill without
+     scrolling back up through the iframe + detail fields. */
+  .action-dock {
+    position: fixed; bottom: 1rem; left: 50%; transform: translateX(-50%);
+    display: none; gap: .4rem; align-items: center;
+    padding: .55rem .75rem; background: rgba(11,18,32,0.96);
+    -webkit-backdrop-filter: blur(12px); backdrop-filter: blur(12px);
+    border: 1px solid var(--border); border-radius: 999px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.55), 0 2px 6px rgba(0,0,0,0.35);
+    z-index: 40; font-size: 12px; max-width: calc(100vw - 2rem);
+    flex-wrap: nowrap; overflow-x: auto;
+  }
+  .action-dock.visible { display: flex; }
+  .action-dock .dock-meta {
+    display: flex; flex-direction: column; min-width: 0; margin-right: .35rem;
+    padding-right: .6rem; border-right: 1px solid var(--border);
+  }
+  .action-dock .dock-id { font-size: 11px; color: var(--text); font-weight: 800; white-space: nowrap; }
+  .action-dock .dock-sub { font-size: 9px; color: var(--dim); letter-spacing: .06em; text-transform: uppercase; font-weight: 700; }
+  .action-dock button { padding: 5px 11px; font-size: 12px; }
   .toast {
     position: fixed; top: 1rem; right: 1rem; border-radius: 10px; padding: .7rem 1rem;
     font-size: 13px; z-index: 50; max-width: 380px; animation: slide-in .2s;
@@ -224,6 +245,8 @@
     <p>Click <b>Load</b> above and pick <code>src/data/questions.json</code>, or drag the file anywhere on this page.</p>
     <p style="margin-top:.5rem; font-size:12px;">Status (keep / flag / kill) and text edits persist in browser storage until you Export or Reset.</p>
   </div>
+
+  <div id="action-dock" class="action-dock"></div>
 
   <div id="dashboard" style="display:none;">
     <div class="summary" id="summary"></div>
@@ -270,6 +293,7 @@ let BANK = null;                      // { [level]: [q, ...] }
 let FILTERS = { age: "", type: "", cat: "", tag: "", status: "", search: "" };
 let PAGE = 0;
 let EXPANDED = new Set();             // ids currently expanded
+let LAST_EXPANDED_ID = null;          // most recent expansion → drives the action dock
 let SELECTED = new Set();             // ids checkboxed
 let STATUS = loadLS(LS_STATUS, {});
 let EDITS  = loadLS(LS_EDITS, {});
@@ -295,9 +319,47 @@ function setStatus(id, status) {
   updateDirtyBadge();
   renderSummary();
   renderTableRow(id);
+  renderDock();
 }
 function toggleStatus(id, status) {
-  setStatus(id, STATUS[id] === status ? null : status);
+  const newStatus = STATUS[id] === status ? null : status;
+  setStatus(id, newStatus);
+  // Reviewer flow: applying a status (not clearing one) on the currently
+  // expanded question auto-advances to the next filtered question.
+  if (newStatus !== null && EXPANDED.has(id)) advanceToNext(id);
+}
+
+// Find the question that comes after `currentId` in the active filter
+// list, expand it, scroll it into view. If currentId is the last row,
+// just collapse and don't expand anything.
+function advanceToNext(currentId) {
+  const rows = filteredRows();
+  const idx = rows.findIndex(r => r.q.id === currentId);
+  EXPANDED.delete(currentId);
+  if (idx === -1 || idx >= rows.length - 1) {
+    // No next — collapse + render. Dock follows whatever else is expanded.
+    LAST_EXPANDED_ID = EXPANDED.size ? [...EXPANDED][EXPANDED.size - 1] : null;
+    renderTable();
+    return;
+  }
+  // Page-jump if the next row is on a different page.
+  const nextIdx = idx + 1;
+  const nextPage = Math.floor(nextIdx / PAGE_SIZE);
+  if (nextPage !== PAGE) PAGE = nextPage;
+  const nextId = rows[nextIdx].q.id;
+  EXPANDED.add(nextId);
+  LAST_EXPANDED_ID = nextId;
+  renderTable();
+  // Scroll the newly-expanded row into view (behind the sticky header).
+  setTimeout(() => {
+    const row = document.querySelector(`tr[data-qid="${cssEscape(nextId)}"]`);
+    if (row) row.scrollIntoView({ behavior: "smooth", block: "start" });
+  }, 30);
+}
+
+function cssEscape(s) {
+  if (window.CSS && CSS.escape) return CSS.escape(s);
+  return String(s).replace(/[\W]/g, "\\$&");
 }
 function bulkStatus(status) {
   for (const id of SELECTED) {
@@ -391,6 +453,7 @@ async function loadFile(file) {
     document.getElementById("dashboard").style.display = "block";
     PAGE = 0;
     EXPANDED.clear();
+    LAST_EXPANDED_ID = null;
     SELECTED.clear();
     updateDirtyBadge();
     render();
@@ -466,6 +529,7 @@ function addQuestion() {
     why: "Why the correct answer is correct." };
   BANK[lvl].push(newQ);
   EXPANDED.add(id);
+  LAST_EXPANDED_ID = id;
   successToast(`Added new question ${id} to ${lvl}`);
   render();
 }
@@ -478,6 +542,7 @@ function duplicateQuestion(id) {
   const dup = { ...merged, id: newId };
   BANK[found.level].push(dup);
   EXPANDED.add(newId);
+  LAST_EXPANDED_ID = newId;
   successToast(`Duplicated → ${newId}`);
   render();
 }
@@ -490,6 +555,7 @@ function deleteQuestion(id) {
   delete STATUS[id]; delete EDITS[id];
   saveLS(LS_STATUS, STATUS); saveLS(LS_EDITS, EDITS);
   EXPANDED.delete(id); SELECTED.delete(id);
+  if (LAST_EXPANDED_ID === id) LAST_EXPANDED_ID = EXPANDED.size ? [...EXPANDED][EXPANDED.size - 1] : null;
   updateDirtyBadge();
   successToast(`Deleted ${id}`);
   render();
@@ -764,6 +830,7 @@ function renderTable() {
   }
 
   document.getElementById("select-all").checked = slice.length > 0 && slice.every(r => SELECTED.has(r.q.id));
+  renderDock();
 }
 
 function renderTableRow(id) {
@@ -794,7 +861,7 @@ function rowHTML({ level, q }) {
   const rowClass = `q-row ${expanded ? "expanded" : ""} ${status ? status + "ed" : ""}`;
 
   return `
-    <tr class="${rowClass}">
+    <tr class="${rowClass}" data-qid="${escAttr(q.id)}">
       <td onclick="event.stopPropagation(); toggleRowSelect('${escAttr(q.id)}'); renderTable();"><input type="checkbox" ${isSelected ? "checked" : ""}></td>
       <td class="clickable" onclick="toggleExpand('${escAttr(q.id)}')"><code>${escHtml(q.id || "")}</code>${hasEdits ? ' <span style="color:var(--gold); font-size:10px;">●</span>' : ""}</td>
       <td class="clickable" onclick="toggleExpand('${escAttr(q.id)}')">${escHtml(ageShort)}</td>
@@ -1175,9 +1242,58 @@ function getAllCats() {
 }
 
 function toggleExpand(id) {
-  if (EXPANDED.has(id)) EXPANDED.delete(id);
-  else EXPANDED.add(id);
+  if (EXPANDED.has(id)) {
+    EXPANDED.delete(id);
+    if (LAST_EXPANDED_ID === id) {
+      // Pin the dock to whatever is still expanded, if anything.
+      LAST_EXPANDED_ID = EXPANDED.size ? [...EXPANDED][EXPANDED.size - 1] : null;
+    }
+  } else {
+    EXPANDED.add(id);
+    LAST_EXPANDED_ID = id;
+  }
   renderTable();
+}
+
+// ─────────────────────────────────────────────
+// Floating action dock — pinned keep/flag/kill for the open question.
+// ─────────────────────────────────────────────
+function renderDock() {
+  const dock = document.getElementById("action-dock");
+  if (!dock) return;
+  // Pick the open question to anchor on. Prefer LAST_EXPANDED_ID; fall
+  // back to any remaining expanded id if state drifted.
+  let id = LAST_EXPANDED_ID;
+  if (!id || !EXPANDED.has(id)) id = EXPANDED.size ? [...EXPANDED][EXPANDED.size - 1] : null;
+  if (!id) {
+    dock.classList.remove("visible");
+    dock.innerHTML = "";
+    return;
+  }
+  const found = (allRows() || []).find(r => r.q.id === id);
+  if (!found) {
+    dock.classList.remove("visible");
+    dock.innerHTML = "";
+    return;
+  }
+  const { level, q } = found;
+  const status = STATUS[id] || "";
+  const ageShort = (level || "").split(" / ")[0] || level || "";
+  const t = q.type || "mc";
+  dock.innerHTML = `
+    <div class="dock-meta">
+      <div class="dock-id">${escHtml(id)}</div>
+      <div class="dock-sub">${escHtml(ageShort)} · ${escHtml(t)}</div>
+    </div>
+    <button type="button" class="keep ${status === "keep" ? "active" : ""}" title="Keep + next"
+      onclick="toggleStatus('${escAttr(id)}', 'keep')">✓ Keep</button>
+    <button type="button" class="flag ${status === "flag" ? "active" : ""}" title="Flag + next"
+      onclick="toggleStatus('${escAttr(id)}', 'flag')">⚑ Flag</button>
+    <button type="button" class="kill ${status === "kill" ? "active" : ""}" title="Kill + next"
+      onclick="toggleStatus('${escAttr(id)}', 'kill')">✗ Kill</button>
+    <button type="button" class="ghost" title="Close" onclick="toggleExpand('${escAttr(id)}')">✕</button>
+  `;
+  dock.classList.add("visible");
 }
 
 function setPage(p) { PAGE = p; renderTable(); window.scrollTo({ top: 0, behavior: "smooth" }); }
