@@ -1897,10 +1897,12 @@ export function ParentsPage({ onNavigate, onContact, photoSrc }) {
           <div style={S.sectionEyebrow}>01 — Why Ice-IQ exists</div>
           <h2 style={S.h2}>Hockey sense isn't taught — it's assumed.</h2>
           <p style={S.body}>
-            Kids spend thousands of dollars and hundreds of hours working on
-            skating, shooting, and stickhandling. The part that actually
-            separates players as they move up — reading the play, making the
-            right decision, knowing where to be — barely gets coached at all.
+            You spend thousands of dollars — on ice time, skates, sticks,
+            tournaments, travel, private lessons. Your kid spends untold
+            hours grinding skating, shooting, and stickhandling. And yet
+            the part that actually separates players as they move up —
+            reading the play, making the right decision, knowing where to
+            be — barely gets coached at all.
           </p>
           <p style={S.body}>
             Ice-IQ is the off-ice reps your kid doesn't get anywhere else. Short
@@ -2061,32 +2063,23 @@ export function ParentsPage({ onNavigate, onContact, photoSrc }) {
             </div>
             <div>
               <p style={S.body}>
-                Ice-IQ was built by Thomas, a hockey parent and coach born in
-                the United States and based in Alberta. His own kid plays —
-                the gaps in how hockey sense gets taught showed up at the
-                kitchen table long before they showed up in a product.
+                Ice-IQ was built by Thomas, a hockey parent and provincial-level
+                coach born in the United States and based in Alberta. His own
+                kid plays — the gaps in how hockey sense gets taught showed up
+                at the kitchen table long before they showed up in a product.
+                The app is built for parents, not around them.
               </p>
               <p style={S.body}>
                 He's also the founder of BlueChip People Strategies, a
                 performance and decision-making advisory serving small
                 businesses, post-secondary institutions, and municipalities.
+                A Master's in coaching plus 20+ years of HR and labour-relations
+                work — fields where the quality of a decision matters more than
+                knowing the right answer — is the lens Ice-IQ is built through.
+                The scenarios are built for how kids actually process
+                information, not how adults do.
               </p>
             </div>
-          </div>
-
-          <div style={S.lensGrid}>
-            <_LensCard
-              label="The hockey side"
-              body="Has coached at the provincial level. A hockey parent first, which is why the app is built for parents, not around them."
-            />
-            <_LensCard
-              label="The learning side"
-              body="Master's in coaching. Has taught leadership and people development at the post-secondary level and delivered training across the municipal sector. Adults and young people learn differently — the scenarios are built for how kids actually process information."
-            />
-            <_LensCard
-              label="The decision-making side"
-              body="20+ years of high-stakes decision-making and a career in HR and labour relations. Both are fields where the quality of a decision matters more than knowing the right answer. That's the lens Ice-IQ is built through."
-            />
           </div>
 
           <div style={S.contactCallout}>
@@ -2354,6 +2347,8 @@ export function CoachesPage({ onNavigate, onContact }) {
           </p>
         </section>
 
+        <DeveloperBlurb />
+
         <div style={S.footerCtas}>
           <button style={S.btn} onClick={() => handleNav("coach-demo")}>
             Try the coach dashboard demo →
@@ -2464,6 +2459,8 @@ export function PlayersPage({ onNavigate, onContact }) {
             </div>
           </div>
         </section>
+
+        <DeveloperBlurb />
 
         <div style={S.footerCtas}>
           <button style={S.btn} onClick={() => handleNav("home")}>Take a quiz →</button>
@@ -2609,6 +2606,40 @@ function _LensCard({ label, body }) {
       <div style={S.lensLabel}>{label}</div>
       <div style={S.lensBody}>{body}</div>
     </div>
+  );
+}
+
+// Compact developer section used at the bottom of every "first-time X" page.
+// Mirrors the full "Who's behind this" block on ParentsPage but without the
+// 3-bucket lens grid — collapsed into prose so the section is one paragraph,
+// not a separate marketing module.
+export function DeveloperBlurb({ photoSrc }) {
+  return (
+    <section style={{...S.section, borderTop:`1px solid ${C.border}`, paddingTop:32, marginTop:16}}>
+      <div style={S.sectionEyebrow}>Who's behind this</div>
+      <h2 style={S.h2}>One builder, three lenses.</h2>
+      <div style={S.devIntro}>
+        <div style={S.photo}>
+          {photoSrc ? (
+            <img src={photoSrc} alt="Thomas, Ice-IQ developer" style={S.photoImg}/>
+          ) : (
+            <div style={S.photoPlaceholder}>Photo</div>
+          )}
+        </div>
+        <div>
+          <p style={S.body}>
+            Ice-IQ is built by Thomas — a hockey parent, provincial-level
+            coach, and founder of BlueChip People Strategies, a performance
+            and decision-making advisory. A Master's in coaching plus 20+
+            years in HR and labour relations sit under the product. Both
+            are fields where the quality of a decision matters more than
+            knowing the right answer — that's the lens Ice-IQ is built
+            through, and it's why the scenarios are written for how kids
+            actually process information, not how adults do.
+          </p>
+        </div>
+      </div>
+    </section>
   );
 }
 
