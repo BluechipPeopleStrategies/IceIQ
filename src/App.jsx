@@ -1351,6 +1351,27 @@ function Quiz({ player, onFinish, onBack, tier, onUpgrade }) {
   const [seqPerfect, setSeqPerfect] = useState(true);
   const [mistakeStreak, setMistakeStreak] = useState(0);
   const [quizDone, setQuizDone] = useState(false);
+  // Highest streak we've already celebrated via toast this session. Keeps
+  // the 5-in-a-row celebration from firing repeatedly as the player keeps
+  // rolling.
+  const [celebratedStreak, setCelebratedStreak] = useState(0);
+  // Fire a one-shot celebrate toast when the player hits a streak of 5+
+  // (or each new milestone at 5, 7, 10). Recomputes on every results change.
+  useEffect(() => {
+    let streak = 0;
+    for (let i = results.length - 1; i >= 0; i--) {
+      if (results[i].ok) streak++; else break;
+    }
+    if ((streak === 5 || streak === 7 || streak === 10) && streak > celebratedStreak) {
+      const msgs = {
+        5: { title: `${streak} in a row!`, body: "Five straight. That's a real read." },
+        7: { title: `${streak} straight!`, body: "Seven clean. Tell your coach." },
+        10: { title: `PERFECT start — ${streak}!`, body: "Ten in a row. Hockey brain confirmed." },
+      };
+      toast.celebrate({ ...msgs[streak], icon: streak >= 10 ? "🏆" : "🔥" });
+      setCelebratedStreak(streak);
+    }
+  }, [results, celebratedStreak]);
   const [showFlag, setShowFlag] = useState(false);
   const [rinkQResult, setRinkQResult] = useState(null); // null | true (correct) | false (wrong) — for IceIQRinkQuestion dispatcher
   const [flagReason, setFlagReason] = useState("");
@@ -1606,15 +1627,41 @@ function Quiz({ player, onFinish, onBack, tier, onUpgrade }) {
             : qtype === "tf"
             ? (sel === "true") === q.ok
             : (sel === q.ok);
+          // Variable-reward reveal — consecutive-correct streak across this
+          // session drives the verdict flavor. Baseline single "✓ Correct"
+          // becomes "🔥 Two in a row!", "🔥 Three in a row!", etc. Streaks of
+          // 5+ also fire a one-shot celebrate toast (see useEffect below).
+          let streak = 0;
+          for (let i = results.length - 1; i >= 0; i--) {
+            if (results[i].ok) streak++; else break;
+          }
+          const SINGLE_FLAVORS = ["✓ Correct", "✓ That's a read.", "✓ Locked in.", "✓ Clean."];
+          let verdict, verdictColor = userCorrect ? C.green : C.red;
+          if (!userCorrect) {
+            verdict = "✗ Incorrect";
+          } else if (streak >= 5) {
+            verdict = `⚡ ${streak} STRAIGHT!`;
+            verdictColor = C.gold;
+          } else if (streak === 4) {
+            verdict = "🔥🔥 Four in a row!";
+            verdictColor = C.gold;
+          } else if (streak === 3) {
+            verdict = "🔥 Three in a row!";
+          } else if (streak === 2) {
+            verdict = "🔥 Two in a row!";
+          } else {
+            const seed = (q.id || "").split("").reduce((a, c) => a + c.charCodeAt(0), 0);
+            verdict = SINGLE_FLAVORS[seed % SINGLE_FLAVORS.length];
+          }
           return (
           <div ref={el => { if (el) setTimeout(() => el.scrollIntoView({behavior:"smooth",block:"nearest"}), 150); }} style={{marginTop:"1rem"}}>
             <Card style={{
-              background: userCorrect ? "rgba(34,197,94,.06)" : C.redDim,
-              border:`1px solid ${userCorrect ? C.greenBorder : C.redBorder}`,
+              background: userCorrect ? (streak >= 4 ? "rgba(252,76,2,.1)" : "rgba(34,197,94,.06)") : C.redDim,
+              border:`1px solid ${userCorrect ? (streak >= 4 ? C.goldBorder : C.greenBorder) : C.redBorder}`,
               marginBottom:"1rem"
             }}>
-              <div style={{fontSize:10,letterSpacing:".12em",textTransform:"uppercase",fontWeight:700,marginBottom:".5rem",color:userCorrect?C.green:C.red}}>
-                {userCorrect ? "✓ Correct" : "✗ Incorrect"}
+              <div style={{fontSize:userCorrect && streak >= 2 ? 12 : 10,letterSpacing:".12em",textTransform:"uppercase",fontWeight:800,marginBottom:".5rem",color:verdictColor}}>
+                {verdict}
               </div>
               <div style={{fontSize:13,color:C.dim,lineHeight:1.75,marginBottom:".75rem"}}>{q.why || q.explanation}</div>
               {(() => {
