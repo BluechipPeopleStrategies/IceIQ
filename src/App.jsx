@@ -28,6 +28,12 @@ import { canSwitchAgeGroup, recordAgeGroupSwitch, getAgeGroupLock, setAgeGroupLo
 import { lsGetStr, lsSetStr, lsGetJSON, lsSetJSON } from "./utils/storage.js";
 import { computeCategoryMastery, rankCategories, nextThreshold } from "./utils/mastery.js";
 import {
+  REASONS as REFLECTION_REASONS,
+  getReflectionFor, saveReflection,
+  isReflectionsDisabled, setReflectionsDisabled,
+  reflectionCounts,
+} from "./utils/reflections.js";
+import {
   C, FONT, LEVELS, POSITIONS, POSITIONS_U11UP, SEASONS,
   IceIQLogo, Screen, Card, Pill, Label, PrimaryBtn, SecBtn, BackBtn, ProgressBar, StickyHeader,
 } from "./shared.jsx";
@@ -1852,6 +1858,7 @@ function Quiz({ player, onFinish, onBack, tier, onUpgrade }) {
                   </div>
                 );
               })()}
+              {!userCorrect && <ReflectionPrompt question={q} />}
             </Card>
             {quizDone ? (
               <button onClick={() => onFinish(results, seqPerfect, mistakeStreak)} style={{background:C.gold,color:C.bg,border:"none",borderRadius:12,padding:".9rem",cursor:"pointer",fontWeight:700,fontSize:14,fontFamily:FONT.body,width:"100%"}}>
@@ -2773,6 +2780,77 @@ function SkillsRadar({ cats, selfRatings, coachRatings, selfScale, coachScale })
   );
 }
 
+// Inline reflection prompt — "what tripped you up?" 4 quick chips, always
+// dismissable. Shown after a wrong answer in the Quiz explanation card.
+// Three exit paths:
+//   - Pick a reason → saved to LS keyed by question id, prompt collapses.
+//   - ✕ Dismiss → hides for THIS question only (per-render state).
+//   - "Don't show these" → flips a global LS flag, suppresses on every
+//      question going forward. Re-enable from Profile (if ever wired).
+function ReflectionPrompt({ question, onSaved }) {
+  const [hidden, setHidden] = useState(false);
+  const [picked, setPicked] = useState(() => getReflectionFor(question?.id)?.reason || null);
+  if (!question?.id) return null;
+  if (hidden) return null;
+  if (isReflectionsDisabled()) return null;
+
+  function pick(reason) {
+    saveReflection(question.id, reason, question.cat);
+    setPicked(reason);
+    onSaved?.(reason);
+  }
+
+  function disableForever() {
+    setReflectionsDisabled(true);
+    setHidden(true);
+  }
+
+  return (
+    <div style={{
+      marginTop:".75rem", padding:".7rem .85rem",
+      background:C.bgCard, border:`1px dashed ${C.purpleBorder}`, borderRadius:10,
+    }}>
+      <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:".5rem",gap:".5rem"}}>
+        <div style={{fontSize:11,color:C.purple,fontWeight:800,letterSpacing:".06em",textTransform:"uppercase"}}>
+          {picked ? "✓ Logged" : "What tripped you up?"}
+        </div>
+        <button onClick={() => setHidden(true)} title="Dismiss"
+          style={{background:"none",border:"none",color:C.dimmer,cursor:"pointer",fontSize:14,padding:"0 .25rem",lineHeight:1}}>
+          ✕
+        </button>
+      </div>
+      {!picked && (
+        <>
+          <div style={{display:"flex",gap:".35rem",flexWrap:"wrap",marginBottom:".5rem"}}>
+            {REFLECTION_REASONS.map(r => (
+              <button key={r.id} onClick={() => pick(r.id)}
+                style={{
+                  flex:"1 1 auto",minWidth:0,
+                  background:C.bgElevated,color:C.dim,
+                  border:`1px solid ${C.border}`,borderRadius:999,
+                  padding:".4rem .75rem",cursor:"pointer",
+                  fontSize:11,fontWeight:700,fontFamily:FONT.body,whiteSpace:"nowrap",
+                }}>
+                {r.label}
+              </button>
+            ))}
+          </div>
+          <button onClick={disableForever}
+            style={{background:"none",border:"none",color:C.dimmer,cursor:"pointer",fontSize:10,padding:0,textDecoration:"underline",letterSpacing:".04em"}}>
+            Don't show these
+          </button>
+        </>
+      )}
+      {picked && (
+        <div style={{fontSize:11,color:C.dim,lineHeight:1.4}}>
+          Logged as <b style={{color:C.white}}>"{REFLECTION_REASONS.find(r => r.id === picked)?.label}"</b>.
+          You'll see a roll-up on your Report.
+        </div>
+      )}
+    </div>
+  );
+}
+
 // Compact mastery strip — surfaces per-category attempts × accuracy
 // as a 3-star meter. Drives a "show me a target I can hit" loop on the
 // Report screen without conflicting with the Journey progression.
@@ -2815,6 +2893,53 @@ function MasteryStrip({ quizHistory }) {
             </div>
           );
         })}
+      </div>
+    </Card>
+  );
+}
+
+// Roll-up of the reflection journal on the Report screen. Shows a count
+// per reason + a re-enable toggle if the player previously hit "Don't
+// show these." Hides entirely when there's nothing to show AND prompts
+// aren't disabled — no zero-state noise.
+function ReflectionSummary() {
+  const [, force] = useState(0);
+  const counts = reflectionCounts();
+  const disabled = isReflectionsDisabled();
+  if (counts.__total === 0 && !disabled) return null;
+  return (
+    <Card style={{marginBottom:"1rem"}}>
+      <div style={{display:"flex",alignItems:"baseline",justifyContent:"space-between",marginBottom:".5rem"}}>
+        <Label>What's Tripping You Up</Label>
+        <div style={{fontSize:11,color:C.dimmer,fontWeight:700,letterSpacing:".06em"}}>
+          {counts.__total > 0 ? `${counts.__total} LOGGED` : "PROMPTS OFF"}
+        </div>
+      </div>
+      {counts.__total > 0 && (
+        <div style={{display:"flex",flexDirection:"column",gap:".4rem"}}>
+          {REFLECTION_REASONS.map(r => {
+            const n = counts[r.id] || 0;
+            if (n === 0) return null;
+            const pct = Math.round((n / counts.__total) * 100);
+            return (
+              <div key={r.id} style={{padding:".5rem .65rem",background:C.bgCard,border:`1px solid ${C.border}`,borderRadius:10}}>
+                <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:".25rem"}}>
+                  <div style={{fontSize:13,fontWeight:700,color:C.white}}>{r.label}</div>
+                  <div style={{fontSize:11,color:C.dim}}>{n} · {pct}%</div>
+                </div>
+                <div style={{height:4,background:C.dimmest,borderRadius:2,overflow:"hidden"}}>
+                  <div style={{height:"100%",width:`${pct}%`,background:C.purple,borderRadius:2}}/>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      )}
+      <div style={{marginTop:".75rem",display:"flex",justifyContent:"flex-end"}}>
+        <button onClick={() => { setReflectionsDisabled(!disabled); force(x => x + 1); }}
+          style={{background:"none",border:"none",color:C.dimmer,cursor:"pointer",fontSize:11,padding:0,textDecoration:"underline",letterSpacing:".04em"}}>
+          {disabled ? "Re-enable post-quiz prompts" : "Turn off post-quiz prompts"}
+        </button>
       </div>
     </Card>
   );
@@ -2918,6 +3043,8 @@ function Report({ player, onBack, demoCoachData, tier, onUpgrade }) {
       )}
 
       <MasteryStrip quizHistory={player.quizHistory} />
+
+      <ReflectionSummary />
 
       {/* Locked upsell cards (Coach Feedback teaser + Skills Map) have been
           moved to the bottom of this screen so FREE users see their own
