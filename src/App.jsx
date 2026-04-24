@@ -1166,6 +1166,16 @@ function Home({ player, onNav, demoMode, subscriptionTier, questFlagsBump, onPro
             <div style={{fontSize:11,color:C.dimmer}}>Development arc</div>
             </div>
           </button>
+          <button onClick={() => onNav("training")} style={{background:`linear-gradient(135deg,rgba(91,164,232,.14),rgba(91,164,232,.03))`,border:`1px solid rgba(91,164,232,.35)`,borderRadius:14,padding:"1.1rem",cursor:"pointer",textAlign:"left",color:C.white,fontFamily:FONT.body,position:"relative",overflow:"hidden",gridColumn:"1 / span 2"}}>
+            <div style={{display:"flex",alignItems:"center",gap:".7rem"}}>
+              <div style={{fontSize:28,flexShrink:0}}>💪</div>
+              <div style={{flex:1,minWidth:0}}>
+                <div style={{fontWeight:700,fontSize:14,marginBottom:2}}>Off-Ice Training</div>
+                <div style={{fontSize:11,color:C.blue}}>Log practice, skills, pucks — fuels your journey</div>
+              </div>
+              <span style={{color:C.blue,fontSize:16,flexShrink:0}}>→</span>
+            </div>
+          </button>
         </div>
 
         {/* Game Sense Profile button */}
@@ -6065,6 +6075,19 @@ export default function App() {
         {screen === "report"  && <Report player={tierLimitedPlayer(player, tier)} onBack={()=>setScreen("home")} demoCoachData={demoMode?demoCoachRatings:null} tier={tier} onUpgrade={(f,t)=>promptUpgrade(f,t)}/>}
         {screen === "gamesense" && <Suspense fallback={<LazyFallback/>}><GameSenseReportScreen player={player} onBack={()=>setScreen("home")} demoMode={demoMode} demoCoachData={demoMode?demoCoachRatings:null} onNavigate={setScreen}/></Suspense>}
         {screen === "journey" && <JourneyScreen player={player} tier={tier} demoMode={demoMode} onBack={()=>setScreen("home")} onNav={setScreen} onUpgrade={promptUpgrade}/>}
+        {screen === "training" && (
+          <div style={{minHeight:"100vh",background:C.bg,color:C.white,fontFamily:FONT.body,paddingBottom:80}}>
+            <StickyHeader>
+              <div style={{maxWidth:560,margin:"0 auto",display:"flex",alignItems:"center",gap:"1rem"}}>
+                <BackBtn onClick={()=>setScreen("home")}/>
+                <div style={{flex:1,fontFamily:FONT.display,fontWeight:800,fontSize:"1.1rem"}}>💪 Off-Ice Training</div>
+              </div>
+            </StickyHeader>
+            <div style={{padding:"1.25rem",maxWidth:560,margin:"0 auto"}}>
+              <TrainingLog playerId={player.id || "__demo__"} />
+            </div>
+          </div>
+        )}
         {typeof screen === "object" && screen.kind === "challenge" && (
           <ChallengeRunScreen
             challenge={screen.challenge}
