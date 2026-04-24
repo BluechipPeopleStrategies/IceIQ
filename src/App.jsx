@@ -26,6 +26,7 @@ import { SpeedRoundCard, SpeedRoundScreen } from "./speedRound.jsx";
 import { getWeeklyStreak, bumpWeeklyStreak, topCategoryStreak, updateCategoryStreaks } from "./utils/streaks.js";
 import { canSwitchAgeGroup, recordAgeGroupSwitch, getAgeGroupLock, setAgeGroupLock, checkSeasonReset } from "./utils/deviceLock";
 import { lsGetStr, lsSetStr, lsGetJSON, lsSetJSON } from "./utils/storage.js";
+import { computeCategoryMastery, rankCategories, nextThreshold } from "./utils/mastery.js";
 import {
   C, FONT, LEVELS, POSITIONS, POSITIONS_U11UP, SEASONS,
   IceIQLogo, Screen, Card, Pill, Label, PrimaryBtn, SecBtn, BackBtn, ProgressBar, StickyHeader,
@@ -2772,6 +2773,53 @@ function SkillsRadar({ cats, selfRatings, coachRatings, selfScale, coachScale })
   );
 }
 
+// Compact mastery strip — surfaces per-category attempts × accuracy
+// as a 3-star meter. Drives a "show me a target I can hit" loop on the
+// Report screen without conflicting with the Journey progression.
+function MasteryStrip({ quizHistory }) {
+  const mastery = computeCategoryMastery(quizHistory);
+  const ranked = rankCategories(mastery);
+  if (!ranked.length) return null;
+  const top = ranked.slice(0, 6);
+  const earned = ranked.filter(([, m]) => m.stars > 0).length;
+  return (
+    <Card style={{marginBottom:"1rem"}}>
+      <div style={{display:"flex",alignItems:"baseline",justifyContent:"space-between",marginBottom:".5rem"}}>
+        <Label>Category Mastery</Label>
+        <div style={{fontSize:11,color:C.dimmer,fontWeight:700,letterSpacing:".06em"}}>{earned}/{ranked.length} CATEGORIES STARTED</div>
+      </div>
+      <div style={{display:"flex",flexDirection:"column",gap:".5rem"}}>
+        {top.map(([cat, m]) => {
+          const pct = Math.round(m.accuracy * 100);
+          const next = nextThreshold(m.stars, m.attempts, m.accuracy);
+          const stars = "★".repeat(m.stars) + "☆".repeat(3 - m.stars);
+          const starColor = m.stars === 3 ? C.gold : m.stars > 0 ? C.gold : C.dimmest;
+          return (
+            <div key={cat} style={{padding:".55rem .7rem",background:C.bgCard,border:`1px solid ${C.border}`,borderRadius:10}}>
+              <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",gap:".75rem",marginBottom:".25rem"}}>
+                <div style={{fontSize:13,fontWeight:700,color:C.white,minWidth:0,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{cat}</div>
+                <div style={{fontSize:14,color:starColor,letterSpacing:".05em",flexShrink:0}}>{stars}</div>
+              </div>
+              <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",fontSize:11,color:C.dimmer}}>
+                <span>{m.attempts} attempts · {pct}%</span>
+                {next ? (
+                  <span style={{color:C.dim}}>
+                    {next.needAttempts > 0
+                      ? `${next.needAttempts} more @ ${Math.round(next.needAccuracy * 100)}%+ → ${next.target}`
+                      : `Hit ${Math.round(next.needAccuracy * 100)}% → ${next.target}`}
+                  </span>
+                ) : (
+                  <span style={{color:C.gold,fontWeight:700}}>Mastered ★</span>
+                )}
+              </div>
+            </div>
+          );
+        })}
+      </div>
+    </Card>
+  );
+}
+
 function Report({ player, onBack, demoCoachData, tier, onUpgrade }) {
   const latest = player.quizHistory[player.quizHistory.length-1];
   const iq = latest ? calcWeightedIQ(latest.results) : null;
@@ -2868,6 +2916,9 @@ function Report({ player, onBack, demoCoachData, tier, onUpgrade }) {
           ))}
         </Card>
       )}
+
+      <MasteryStrip quizHistory={player.quizHistory} />
+
       {/* Locked upsell cards (Coach Feedback teaser + Skills Map) have been
           moved to the bottom of this screen so FREE users see their own
           content (stats, goals, parent's view, quiz history) first. Look

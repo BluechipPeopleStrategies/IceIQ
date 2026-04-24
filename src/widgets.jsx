@@ -100,6 +100,7 @@ export function TrainingLog({ playerId }) {
   const log = useMemo(() => getTrainingLog(playerId), [playerId, refreshTick]);
   const today = new Date().toISOString().slice(0, 10);
   const [puckCount, setPuckCount] = useState(0);
+  const [shotType, setShotType] = useState(null); // "wrist" | "snap" | "slap" | "backhand" | null = mixed
   const [minutes, setMinutes] = useState({ power_skating: 30, skills_dev: 30, other: 30 });
   const [otherLabel, setOtherLabel] = useState("");
   const [sessionDate, setSessionDate] = useState(today);
@@ -113,13 +114,16 @@ export function TrainingLog({ playerId }) {
   function openActivity(type) {
     const isOpening = activeType !== type;
     setActiveType(isOpening ? type : null);
-    if (isOpening) { setSessionDate(today); setSessionNotes(""); setSessionCoach(""); setSessionPrice(""); }
+    if (isOpening) { setSessionDate(today); setSessionNotes(""); setSessionCoach(""); setSessionPrice(""); setShotType(null); }
   }
 
   function logSession(type, value, unit, label = "") {
     if (!value || value <= 0) return;
+    // For pucks_shot, fold the chosen shot type into the label so the
+    // running log can surface "Pucks Shot · wrist" without a schema change.
+    const finalLabel = type === "pucks_shot" && shotType ? shotType : label;
     saveTrainingSession(
-      playerId, type, value, unit, label,
+      playerId, type, value, unit, finalLabel,
       sessionDate, sessionNotes.trim(),
       sessionCoach.trim(), sessionPrice,
     );
@@ -129,7 +133,7 @@ export function TrainingLog({ playerId }) {
     setSessionPrice("");
     setRefreshTick(t => t + 1);
     setTimeout(() => setSaved(null), 2000);
-    if (type === "pucks_shot") setPuckCount(0);
+    if (type === "pucks_shot") { setPuckCount(0); setShotType(null); }
   }
 
   const ACTIVITIES = [
@@ -188,11 +192,13 @@ export function TrainingLog({ playerId }) {
                         style={{ background: C.bgGlass, border: `1px solid ${C.border}`, borderRadius: 8, padding: ".5rem .75rem", color: C.white, fontFamily: FONT.body, fontSize: 13, outline: "none", width: "100%", boxSizing: "border-box" }} />
                     </div>
                     <div style={{ flex: 1, display: "flex", flexDirection: "column", gap: ".35rem" }}>
-                      <label style={{ fontSize: 10, color: C.dimmer, letterSpacing: ".08em", textTransform: "uppercase", fontWeight: 700 }}>Price</label>
+                      <label style={{ fontSize: 10, color: C.dimmer, letterSpacing: ".08em", textTransform: "uppercase", fontWeight: 700 }}>
+                        Price <span style={{ color: C.dimmest, fontWeight: 600 }}>(optional)</span>
+                      </label>
                       <div style={{ position: "relative" }}>
                         <span style={{ position: "absolute", left: ".6rem", top: "50%", transform: "translateY(-50%)", color: C.dimmer, fontSize: 13, fontFamily: FONT.body, pointerEvents: "none" }}>$</span>
                         <input type="number" inputMode="decimal" min="0" step="0.01" value={sessionPrice} onChange={e => setSessionPrice(e.target.value)}
-                          placeholder="Cost"
+                          placeholder="Skip if free"
                           style={{ background: C.bgGlass, border: `1px solid ${C.border}`, borderRadius: 8, padding: ".5rem .75rem .5rem 1.3rem", color: C.white, fontFamily: FONT.body, fontSize: 13, outline: "none", width: "100%", boxSizing: "border-box" }} />
                       </div>
                     </div>
@@ -200,6 +206,36 @@ export function TrainingLog({ playerId }) {
                   {act.type === "pucks_shot" ? (
                     <div style={{ display: "flex", flexDirection: "column", gap: ".5rem" }}>
                       <div style={{ textAlign: "center", fontFamily: FONT.display, fontSize: "2.5rem", fontWeight: 800, color: act.color }}>{puckCount}</div>
+                      <div style={{ display: "flex", flexDirection: "column", gap: ".35rem" }}>
+                        <label style={{ fontSize: 10, color: C.dimmer, letterSpacing: ".08em", textTransform: "uppercase", fontWeight: 700 }}>
+                          Shot type <span style={{ color: C.dimmest, fontWeight: 600 }}>(optional)</span>
+                        </label>
+                        <div style={{ display: "flex", gap: ".35rem", flexWrap: "wrap" }}>
+                          {[
+                            { id: "wrist", label: "Wrist" },
+                            { id: "snap", label: "Snap" },
+                            { id: "slap", label: "Slap" },
+                            { id: "backhand", label: "Backhand" },
+                          ].map(s => {
+                            const isOn = shotType === s.id;
+                            return (
+                              <button key={s.id} type="button"
+                                onClick={() => setShotType(isOn ? null : s.id)}
+                                style={{
+                                  flex: "1 1 auto", minWidth: 0,
+                                  background: isOn ? `${act.color}20` : C.dimmest,
+                                  color: isOn ? act.color : C.dimmer,
+                                  border: `1px solid ${isOn ? act.color + "70" : C.border}`,
+                                  borderRadius: 8, padding: ".4rem .25rem",
+                                  cursor: "pointer", fontWeight: 700, fontSize: 11,
+                                  fontFamily: FONT.body,
+                                }}>
+                                {s.label}
+                              </button>
+                            );
+                          })}
+                        </div>
+                      </div>
                       <div style={{ display: "flex", gap: ".5rem" }}>
                         {[25, 50, 100].map(n => (
                           <button key={n} onClick={() => setPuckCount(c => c + n)}
