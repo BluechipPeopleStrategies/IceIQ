@@ -3939,12 +3939,6 @@ function AuthScreen({ onAuthenticated, onDemo, onDevEnter, onPreview, prefill })
     return () => { alive = false; };
   }, []);
 
-  // Returning user detection: any prior sign-in or signup stamps this flag
-  const hasSignedInBefore = (() => {
-    try { return typeof window !== "undefined" && !!window.localStorage.getItem("iceiq_has_signed_in_before"); }
-    catch { return false; }
-  })();
-
   async function submit() {
     setErr("");
     setLoading(true);
@@ -3979,10 +3973,10 @@ function AuthScreen({ onAuthenticated, onDemo, onDevEnter, onPreview, prefill })
 
   const headline = mode === "signup" ? "Get started."
     : mode === "forgot" ? "Reset password"
-    : (hasSignedInBefore ? "Welcome back." : "Welcome.");
+    : "Sign in.";
   const subhead = mode === "signup" ? "Create an account to start tracking your progress."
     : mode === "forgot" ? "Enter your email — we'll send you a reset link."
-    : (hasSignedInBefore ? "Sign in to see your development report." : "Sign in or create a free account to get started.");
+    : "Enter your credentials to see your development report.";
 
   return (
     <div style={{minHeight:"100vh",position:"relative",background:C.bg,display:"flex",flexDirection:"column",justifyContent:"center",padding:"2rem 1.25rem",fontFamily:FONT.body,color:C.white,overflow:"hidden"}}>
