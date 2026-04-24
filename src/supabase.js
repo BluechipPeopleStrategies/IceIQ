@@ -286,6 +286,106 @@ export async function getCoachPlayerNote(playerId) {
 }
 
 // ─────────────────────────────────────────────
+// ASSIGNMENTS (coach → team homework)
+// ─────────────────────────────────────────────
+// `target_players` is null when the assignment is for the whole team; a uuid[]
+// when it's scoped to specific players. RLS enforces that only team members
+// in the target audience can read the row.
+
+export async function createAssignment(coachId, teamId, { title, description, dueDate, targetPlayers }) {
+  if (!supabase) return null;
+  const row = {
+    coach_id: coachId,
+    team_id: teamId,
+    title: title?.trim(),
+    description: description?.trim() || null,
+    due_date: dueDate || null,
+    target_players: Array.isArray(targetPlayers) && targetPlayers.length ? targetPlayers : null,
+    updated_at: new Date().toISOString(),
+  };
+  const { data, error } = await supabase.from("assignments").insert(row).select().single();
+  if (error) throw error;
+  return data;
+}
+
+export async function updateAssignment(assignmentId, patch) {
+  if (!supabase) return null;
+  const row = {
+    ...patch,
+    updated_at: new Date().toISOString(),
+  };
+  const { data, error } = await supabase.from("assignments").update(row).eq("id", assignmentId).select().single();
+  if (error) throw error;
+  return data;
+}
+
+export async function deleteAssignment(assignmentId) {
+  if (!supabase) return;
+  const { error } = await supabase.from("assignments").delete().eq("id", assignmentId);
+  if (error) throw error;
+}
+
+export async function getAssignmentsForTeam(teamId) {
+  if (!supabase) return [];
+  const { data, error } = await supabase.from("assignments")
+    .select("*")
+    .eq("team_id", teamId)
+    .order("created_at", { ascending: false });
+  if (error) { warn("getAssignmentsForTeam", error); return []; }
+  return data || [];
+}
+
+// Player-side: RLS filters down to assignments where the player is a member
+// of the team AND either the whole-team row or targeted explicitly.
+export async function getAssignmentsForPlayer(playerId) {
+  if (!supabase) return [];
+  const { data, error } = await supabase.from("assignments")
+    .select("*, teams(name, level)")
+    .order("created_at", { ascending: false });
+  if (error) { warn("getAssignmentsForPlayer", error); return []; }
+  return data || [];
+}
+
+export async function markAssignmentComplete(assignmentId, playerId, note) {
+  if (!supabase) return;
+  const row = {
+    assignment_id: assignmentId,
+    player_id: playerId,
+    completed_at: new Date().toISOString(),
+    note: note || null,
+  };
+  const { error } = await supabase.from("assignment_completions").upsert(row);
+  if (error) throw error;
+}
+
+export async function unmarkAssignmentComplete(assignmentId, playerId) {
+  if (!supabase) return;
+  const { error } = await supabase.from("assignment_completions")
+    .delete()
+    .eq("assignment_id", assignmentId)
+    .eq("player_id", playerId);
+  if (error) throw error;
+}
+
+export async function getCompletionsForPlayer(playerId) {
+  if (!supabase) return new Set();
+  const { data, error } = await supabase.from("assignment_completions")
+    .select("assignment_id")
+    .eq("player_id", playerId);
+  if (error) { warn("getCompletionsForPlayer", error); return new Set(); }
+  return new Set((data || []).map(r => r.assignment_id));
+}
+
+export async function getCompletionsForAssignment(assignmentId) {
+  if (!supabase) return [];
+  const { data, error } = await supabase.from("assignment_completions")
+    .select("player_id, completed_at, note")
+    .eq("assignment_id", assignmentId);
+  if (error) { warn("getCompletionsForAssignment", error); return []; }
+  return data || [];
+}
+
+// ─────────────────────────────────────────────
 // QUESTION STATS (aggregate % correct across all users)
 // ─────────────────────────────────────────────
 // Telemetry — intentionally silent. Stats are best-effort and must never

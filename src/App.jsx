@@ -16,6 +16,7 @@ import { getTrainingLog, seedDemoTrainingForRoster } from "./utils/trainingLog.j
 import { buildU11ForwardPreview, PREVIEW_PLAYER_ID } from "./data/previewPlayer.js";
 import { calcTeamCompetencyAverages, GRADE_LEVEL_THRESHOLD } from "./utils/coachStats.js";
 import { HockeyInsightWidget, BottomNav, TrainingLog, HomeStartHereCard } from "./widgets.jsx";
+import { HomeworkCard, CoachAssignmentsSection } from "./assignments.jsx";
 import { canSwitchAgeGroup, recordAgeGroupSwitch, getAgeGroupLock, setAgeGroupLock, checkSeasonReset } from "./utils/deviceLock";
 import { lsGetStr, lsSetStr, lsGetJSON, lsSetJSON } from "./utils/storage.js";
 import {
@@ -1051,6 +1052,9 @@ function Home({ player, onNav, demoMode, subscriptionTier, questFlagsBump, onPro
 
         {/* For-parents start-here card — dismissible, persists via LS */}
         <HomeStartHereCard onRead={() => onNav("parents")} subscriptionTier={subscriptionTier} />
+
+        {/* Homework from coach — shows only when there's anything assigned */}
+        <HomeworkCard playerId={player.id} demoMode={demoMode} />
 
         {/* First-Five quest checklist — hidden once dismissed */}
         {!questDismissed && !firstLineSeen && (
@@ -4824,6 +4828,7 @@ function CoachHome({ profile, onSignOut, onOpenPlayer, demoMode, subscriptionTie
                     <RosterRow key={p.id} player={p} onRate={() => onOpenPlayer(p)}/>
                   ))}
                   <DepthChartSection teamId={t.id} roster={roster} onChange={onBumpQuestFlags}/>
+                  <CoachAssignmentsSection teamId={t.id} coachId={profile.id} roster={roster}/>
                 </div>
               )}
             </Card>
