@@ -49,7 +49,23 @@ export function HomeworkCard({ playerId, demoMode }) {
     });
     try {
       if (wasDone) await SB.unmarkAssignmentComplete(assignmentId, playerId);
-      else await SB.markAssignmentComplete(assignmentId, playerId);
+      else {
+        await SB.markAssignmentComplete(assignmentId, playerId);
+        // Bump the daily streak on the first completion of the day, same
+        // contract as finishing a quiz. Inline so this component stays
+        // independent of App's streak helpers.
+        try {
+          const today = new Date().toISOString().slice(0, 10);
+          const yest = new Date(Date.now() - 86400000).toISOString().slice(0, 10);
+          const cur = JSON.parse(localStorage.getItem("iceiq_streak") || "{}");
+          if (cur.last !== today) {
+            const next = cur.last === yest
+              ? { ...cur, count: (cur.count || 0) + 1, last: today }
+              : { count: 1, last: today };
+            localStorage.setItem("iceiq_streak", JSON.stringify(next));
+          }
+        } catch { /* LS blocked — silent */ }
+      }
     } catch {
       // Roll back on failure.
       setDone(prev => {
@@ -111,6 +127,42 @@ export function HomeworkCard({ playerId, demoMode }) {
   );
 }
 
+// Coach-facing quick-pick templates for common weekly homework. Tapping a
+// template pre-fills title + description + a sensible default due date so
+// the coach can post a new assignment in 3 clicks.
+const ASSIGNMENT_TEMPLATES = [
+  {
+    label: "📺 Watch an NHL game",
+    title: "Watch an NHL game this week",
+    description: "Pick one player. Follow only them for 5 minutes. Come ready to talk about one thing they did off the puck.",
+    offsetDays: 7,
+  },
+  {
+    label: "🏒 Off-ice skills",
+    title: "30 minutes of off-ice skills",
+    description: "Stickhandling + shooting at home this week. Log it in your training log.",
+    offsetDays: 7,
+  },
+  {
+    label: "🎯 200 pucks",
+    title: "Shoot 200 pucks this week",
+    description: "Wrist, snap, backhand — mix of all three. Aim for corners, not just net.",
+    offsetDays: 7,
+  },
+  {
+    label: "📓 Review your weakest category",
+    title: "Review your weakest quiz category",
+    description: "Open Ice-IQ → your Report → pick the category you scored lowest on. Read the tips. Take a quiz this weekend and try to bump that %.",
+    offsetDays: 7,
+  },
+  {
+    label: "🧠 Extra quiz reps",
+    title: "Take 3 quizzes this week",
+    description: "Any category, any age group setting — just three 10-question quizzes. Your journey levels tick forward.",
+    offsetDays: 7,
+  },
+];
+
 // ─────────────────────────────────────────────
 // COACH SIDE — inside expanded team on CoachHome
 // ─────────────────────────────────────────────
@@ -125,6 +177,26 @@ export function CoachAssignmentsSection({ teamId, coachId, roster }) {
   const [targeted, setTargeted] = useState(new Set()); // empty = whole team
   const [saving, setSaving] = useState(false);
   const [err, setErr] = useState("");
+
+  function daysFromNow(n) {
+    return new Date(Date.now() + n * 86400000).toISOString().slice(0, 10);
+  }
+  function applyTemplate(t) {
+    setTitle(t.title);
+    setDescription(t.description);
+    setDueDate(daysFromNow(t.offsetDays));
+    setTargeted(new Set());
+    setShowForm(true);
+    setErr("");
+  }
+  function duplicateAssignment(a) {
+    setTitle(a.title || "");
+    setDescription(a.description || "");
+    setDueDate(daysFromNow(7));
+    setTargeted(new Set(a.target_players || []));
+    setShowForm(true);
+    setErr("");
+  }
 
   async function refresh() {
     setLoading(true);
@@ -181,14 +253,28 @@ export function CoachAssignmentsSection({ teamId, coachId, roster }) {
   }
 
   const targetSize = roster.length;
+  const todayStr = new Date().toISOString().slice(0, 10);
+  const overdueCount = assignments.filter(a => {
+    if (!a.due_date || a.due_date >= todayStr) return false;
+    const done = completionCounts[a.id] ?? 0;
+    const audience = a.target_players?.length || targetSize;
+    return done < audience;
+  }).length;
 
   return (
     <div style={{marginTop:"1rem",paddingTop:"1rem",borderTop:`1px solid ${C.border}`}}>
-      <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:".5rem"}}>
-        <Label style={{marginBottom:0}}>📋 Assignments</Label>
+      <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:".5rem",gap:".5rem"}}>
+        <div style={{display:"flex",alignItems:"center",gap:".5rem",minWidth:0}}>
+          <Label style={{marginBottom:0}}>📋 Assignments</Label>
+          {overdueCount > 0 && (
+            <span style={{fontSize:9,letterSpacing:".1em",textTransform:"uppercase",background:"rgba(239,68,68,.15)",color:C.red,border:`1px solid ${C.redBorder}`,padding:"2px 7px",borderRadius:4,fontWeight:800,flexShrink:0}}>
+              {overdueCount} overdue
+            </span>
+          )}
+        </div>
         {!showForm && (
           <button onClick={() => setShowForm(true)}
-            style={{background:C.gold,color:C.bg,border:"none",borderRadius:8,padding:".35rem .75rem",cursor:"pointer",fontSize:11,fontWeight:800,fontFamily:FONT.body}}>
+            style={{background:C.gold,color:C.bg,border:"none",borderRadius:8,padding:".35rem .75rem",cursor:"pointer",fontSize:11,fontWeight:800,fontFamily:FONT.body,flexShrink:0}}>
             + New
           </button>
         )}
@@ -196,6 +282,19 @@ export function CoachAssignmentsSection({ teamId, coachId, roster }) {
 
       {showForm && (
         <div style={{background:C.bgElevated,border:`1px solid ${C.border}`,borderRadius:10,padding:".85rem",marginBottom:".75rem"}}>
+          {/* Quick-pick templates — one tap pre-fills the form. Scrollable
+              row so we don't lose real estate on the create UI. */}
+          <div style={{fontSize:10,letterSpacing:".1em",textTransform:"uppercase",color:C.dimmer,fontWeight:700,marginBottom:".35rem"}}>
+            Quick templates
+          </div>
+          <div style={{display:"flex",gap:".3rem",overflowX:"auto",marginBottom:".6rem",paddingBottom:".2rem",marginLeft:-3,marginRight:-3,paddingLeft:3,paddingRight:3}}>
+            {ASSIGNMENT_TEMPLATES.map((t, i) => (
+              <button key={i} onClick={() => applyTemplate(t)}
+                style={{flexShrink:0,background:C.bgCard,border:`1px solid ${C.border}`,borderRadius:999,padding:".3rem .7rem",cursor:"pointer",fontFamily:FONT.body,fontSize:11,fontWeight:600,color:C.dim,whiteSpace:"nowrap"}}>
+                {t.label}
+              </button>
+            ))}
+          </div>
           <input value={title} onChange={e=>setTitle(e.target.value)} placeholder="Title (e.g., Watch the video on gap control)"
             style={{width:"100%",background:C.bgCard,border:`1px solid ${C.border}`,borderRadius:8,padding:".6rem .75rem",color:C.white,fontSize:13,fontFamily:FONT.body,marginBottom:".5rem",outline:"none"}}/>
           <textarea value={description} onChange={e=>setDescription(e.target.value)} placeholder="Optional — details, link, what to focus on"
@@ -252,22 +351,36 @@ export function CoachAssignmentsSection({ teamId, coachId, roster }) {
         assignments.map(a => {
           const done = completionCounts[a.id] ?? 0;
           const audience = a.target_players?.length || targetSize;
+          const overdue = a.due_date && a.due_date < todayStr && done < audience;
           return (
-            <div key={a.id} style={{background:C.bgElevated,border:`1px solid ${C.border}`,borderRadius:8,padding:".6rem .75rem",marginBottom:".4rem"}}>
+            <div key={a.id} style={{background:overdue?"rgba(239,68,68,.04)":C.bgElevated,border:`1px solid ${overdue?C.redBorder:C.border}`,borderRadius:8,padding:".6rem .75rem",marginBottom:".4rem"}}>
               <div style={{display:"flex",alignItems:"flex-start",justifyContent:"space-between",gap:".5rem"}}>
                 <div style={{flex:1,minWidth:0}}>
-                  <div style={{fontSize:13,fontWeight:700,color:C.white,lineHeight:1.3}}>{a.title}</div>
+                  <div style={{display:"flex",alignItems:"center",gap:".4rem",flexWrap:"wrap"}}>
+                    <div style={{fontSize:13,fontWeight:700,color:C.white,lineHeight:1.3}}>{a.title}</div>
+                    {overdue && (
+                      <span style={{fontSize:9,letterSpacing:".1em",textTransform:"uppercase",background:"rgba(239,68,68,.15)",color:C.red,padding:"2px 7px",borderRadius:4,fontWeight:800}}>
+                        Overdue
+                      </span>
+                    )}
+                  </div>
                   {a.description && <div style={{fontSize:11,color:C.dim,marginTop:3,lineHeight:1.45}}>{a.description}</div>}
                   <div style={{fontSize:10,color:C.dimmer,marginTop:4,display:"flex",gap:".75rem",flexWrap:"wrap"}}>
                     <span>✅ {done}/{audience} complete</span>
-                    {a.due_date && <span>📅 Due {new Date(a.due_date).toLocaleDateString(undefined,{month:"short",day:"numeric"})}</span>}
+                    {a.due_date && <span style={{color:overdue?C.red:C.dimmer,fontWeight:overdue?700:500}}>📅 Due {new Date(a.due_date).toLocaleDateString(undefined,{month:"short",day:"numeric"})}</span>}
                     {a.target_players?.length && <span>👥 Targeted</span>}
                   </div>
                 </div>
-                <button onClick={() => remove(a.id)} title="Delete"
-                  style={{background:"none",border:"none",color:C.dimmer,fontSize:14,cursor:"pointer",padding:"2px 6px",lineHeight:1}}>
-                  ✕
-                </button>
+                <div style={{display:"flex",gap:".15rem",flexShrink:0}}>
+                  <button onClick={() => duplicateAssignment(a)} title="Reuse — prefill a new assignment from this one"
+                    style={{background:"none",border:"none",color:C.gold,fontSize:14,cursor:"pointer",padding:"2px 6px",lineHeight:1}}>
+                    ↻
+                  </button>
+                  <button onClick={() => remove(a.id)} title="Delete"
+                    style={{background:"none",border:"none",color:C.dimmer,fontSize:14,cursor:"pointer",padding:"2px 6px",lineHeight:1}}>
+                    ✕
+                  </button>
+                </div>
               </div>
             </div>
           );
