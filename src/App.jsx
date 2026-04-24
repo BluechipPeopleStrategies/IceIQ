@@ -3738,8 +3738,8 @@ function getAgeTier(level) {
 // the teaching tip matches the player's age without losing the persona.
 const COACH_PERSONAS = [
   {
-    id: "slifka",
-    name: "Coach Slifka",
+    id: "kincaid",
+    name: "Coach Kincaid",
     role: "Head Coach",
     archetype: "technical",
     tilts: ["dm", "h"],
@@ -3919,18 +3919,78 @@ const COACH_PERSONAS = [
       ],
     },
   },
+  {
+    id: "kowalski",
+    name: "Coach Kowalski",
+    role: "Assistant Coach",
+    archetype: "deadpan",
+    tilts: ["d"],
+    summary: "Old-school, dry as chalk, speaks about six words per shift — but the ones that land, land hard. Has literally seen it all.",
+    flavorCorrect: {
+      young: [
+        "Huh. Good for you.",
+        "Not bad. Actually not bad.",
+        "I'll allow it.",
+        "Acceptable.",
+        "That'll work.",
+        "Mm. Yeah. That's a play.",
+      ],
+      mid: [
+        "Sure. That works.",
+        "Huh. A play.",
+        "Not wrong. Not wrong at all.",
+        "I'll let the others clap. I'm busy.",
+        "You can keep doing that.",
+        "Fine. Small nod from me. Enjoy it.",
+      ],
+      older: [
+        "That's hockey. You can stop now.",
+        "Quietly good. Respect.",
+        "No notes. Terrifying for me, good for you.",
+        "Correct. Let's not make a habit of surprising me.",
+        "I'll write this down so I remember you can do it.",
+        "Okay. Coach yourself tomorrow.",
+      ],
+    },
+    flavorIncorrect: {
+      young: [
+        "Mm. Okay.",
+        "Try again. No big deal.",
+        "Not today. Tomorrow, maybe.",
+        "Hockey's hard. Shrug.",
+        "Breathe. Move on.",
+        "We reset. That's the whole thing.",
+      ],
+      mid: [
+        "Well. There it is.",
+        "Neat. Don't do that.",
+        "Yep. That happens.",
+        "I've seen worse. Barely.",
+        "No comment. Many comments. Later.",
+        "Hockey giveth, hockey taketh away. Mostly the second one.",
+      ],
+      older: [
+        "Sure. Why not.",
+        "Bold. Not good, but bold.",
+        "Moving on. Quickly. For both our sakes.",
+        "Noted. Filed. Never to be spoken of.",
+        "You'll want to delete that from your memory.",
+        "I've seen that play before. It didn't work then either.",
+      ],
+    },
+  },
 ];
 
 // All three personas show up at every age group — user wants them sprinkled
 // everywhere, not siloed by level. `goalie` overrides kept so goalies at
 // older ages see a specialized coach assignment in the roster view.
 const DEMO_ROSTERS = {
-  "U7 / Initiation": { all: ["slifka", "danno", "marques"] },
-  "U9 / Novice":     { all: ["slifka", "danno", "marques"] },
-  "U11 / Atom":      { all: ["slifka", "danno", "marques"] },
-  "U13 / Peewee":    { all: ["slifka", "danno", "marques"] },
-  "U15 / Bantam":    { all: ["slifka", "danno", "marques"] },
-  "U18 / Midget":    { all: ["slifka", "danno", "marques"] },
+  "U7 / Initiation": { all: ["kincaid", "danno", "marques", "kowalski"] },
+  "U9 / Novice":     { all: ["kincaid", "danno", "marques", "kowalski"] },
+  "U11 / Atom":      { all: ["kincaid", "danno", "marques", "kowalski"] },
+  "U13 / Peewee":    { all: ["kincaid", "danno", "marques", "kowalski"] },
+  "U15 / Bantam":    { all: ["kincaid", "danno", "marques", "kowalski"] },
+  "U18 / Midget":    { all: ["kincaid", "danno", "marques", "kowalski"] },
 };
 function getDemoCoachRoster(level, position) {
   const r = DEMO_ROSTERS[level] || DEMO_ROSTERS["U9 / Novice"];
