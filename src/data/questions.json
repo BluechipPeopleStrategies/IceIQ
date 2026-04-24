@@ -583,24 +583,6 @@
       ]
     },
     {
-      "id": "u7i28",
-      "cat": "Puck Skills",
-      "pos": [
-        "F",
-        "D"
-      ],
-      "d": 1,
-      "type": "tf",
-      "sit": "You should hold your stick with two hands when you have the puck.",
-      "ok": true,
-      "why": "Two hands means more control. You can pass, shoot, and protect better with two hands.",
-      "tip": "Two hands on your stick.",
-      "levels": [
-        "U7 / Initiation",
-        "U9 / Novice"
-      ]
-    },
-    {
       "id": "u7i29",
       "cat": "Safety",
       "pos": [
@@ -2975,24 +2957,6 @@
       ]
     },
     {
-      "id": "u9_or2",
-      "cat": "Orientation",
-      "pos": [
-        "F",
-        "D"
-      ],
-      "d": 1,
-      "type": "tf",
-      "sit": "You always defend the goal with the same color as your team's jerseys.",
-      "ok": false,
-      "why": "Nope! You defend the goalie on YOUR team — not the team color. Always know which goal is yours.",
-      "tip": "Know your goalie. Defend their net.",
-      "levels": [
-        "U9 / Novice",
-        "U11 / Atom"
-      ]
-    },
-    {
       "id": "u9_or3",
       "cat": "Orientation",
       "pos": [
@@ -3080,270 +3044,75 @@
       ]
     },
     {
-      "id": "u9r2",
-      "cat": "Shooting",
+      "id": "u13q_rink04",
+      "cat": "Vision",
+      "diff": "M",
+      "type": "multi-tap",
       "pos": [
         "F"
       ],
-      "d": 1,
-      "type": "mc",
-      "q": "You have the puck in the marked spot. The goalie is square. Where's the best place to aim?",
-      "choices": [
-        "Corner of the net — away from the goalie's pads.",
-        "Right at the goalie's chest.",
-        "Way over the net.",
-        "Back to your own end."
-      ],
-      "correct": 0,
-      "tip": "Aim where the goalie isn't. Corners are small but hard to save.",
+      "q": "You have the puck. Tap every teammate who's open for a pass.",
+      "tip": "Open means no defender in the passing lane.",
       "rink": {
         "view": "right",
-        "zone": "slot",
         "markers": [
           {
             "type": "attacker",
-            "x": 500,
+            "x": 410,
             "y": 150,
             "label": "YOU"
           },
           {
-            "type": "goalie",
-            "x": 560,
-            "y": 150,
-            "label": "G"
-          }
-        ]
-      },
-      "levels": [
-        "U9 / Novice",
-        "U11 / Atom"
-      ]
-    },
-    {
-      "id": "u9r1",
-      "cat": "Positioning",
-      "pos": [
-        "F",
-        "D"
-      ],
-      "d": 1,
-      "type": "zone-click",
-      "q": "You just lost the puck in the offensive zone. Tap the zone you should skate toward first.",
-      "tip": "When the other team gets the puck, you go back to your own end to help defend.",
-      "rink": {
-        "view": "right",
-        "markers": [
+            "type": "defender",
+            "x": 470,
+            "y": 130
+          },
           {
-            "type": "attacker",
-            "x": 480,
-            "y": 150,
-            "label": "THEM"
-          }
-        ]
-      },
-      "zones": [
-        {
-          "shape": "poly",
-          "points": [
-            {
-              "x": 20,
-              "y": 20
-            },
-            {
-              "x": 200,
-              "y": 20
-            },
-            {
-              "x": 200,
-              "y": 280
-            },
-            {
-              "x": 20,
-              "y": 280
-            }
-          ],
-          "correct": true,
-          "msg": "✓ Back to your own end — help your D."
-        },
-        {
-          "shape": "poly",
-          "points": [
-            {
-              "x": 210,
-              "y": 20
-            },
-            {
-              "x": 390,
-              "y": 20
-            },
-            {
-              "x": 390,
-              "y": 280
-            },
-            {
-              "x": 210,
-              "y": 280
-            }
-          ],
-          "correct": false,
-          "msg": "Neutral zone. Keep going — all the way back to your net."
-        },
-        {
-          "shape": "poly",
-          "points": [
-            {
-              "x": 400,
-              "y": 20
-            },
-            {
-              "x": 600,
-              "y": 20
-            },
-            {
-              "x": 600,
-              "y": 280
-            },
-            {
-              "x": 400,
-              "y": 280
-            }
-          ],
-          "correct": false,
-          "msg": "Offensive zone. You just lost it here — you need to go BACK."
-        }
-      ],
-      "levels": [
-        "U9 / Novice",
-        "U11 / Atom"
-      ]
-    },
-    {
-      "id": "u9r3",
-      "cat": "Positioning",
-      "pos": [
-        "F",
-        "D"
-      ],
-      "d": 1,
-      "type": "zone-click",
-      "q": "Tap your DEFENSIVE zone — the end you protect.",
-      "tip": "Defensive zone is the end where YOUR goalie stands.",
-      "rink": {
-        "view": "left",
-        "markers": [
-          {
-            "type": "goalie",
-            "x": 40,
-            "y": 150
-          }
-        ]
-      },
-      "zones": [
-        {
-          "shape": "poly",
-          "points": [
-            {
-              "x": 20,
-              "y": 20
-            },
-            {
-              "x": 220,
-              "y": 20
-            },
-            {
-              "x": 220,
-              "y": 280
-            },
-            {
-              "x": 20,
-              "y": 280
-            }
-          ],
-          "correct": true,
-          "msg": "✓ That's your end — where your goalie stands."
-        },
-        {
-          "shape": "poly",
-          "points": [
-            {
-              "x": 220,
-              "y": 20
-            },
-            {
-              "x": 400,
-              "y": 20
-            },
-            {
-              "x": 400,
-              "y": 280
-            },
-            {
-              "x": 220,
-              "y": 280
-            }
-          ],
-          "correct": false,
-          "msg": "Neutral zone — the middle."
-        },
-        {
-          "shape": "poly",
-          "points": [
-            {
-              "x": 400,
-              "y": 20
-            },
-            {
-              "x": 600,
-              "y": 20
-            },
-            {
-              "x": 600,
-              "y": 280
-            },
-            {
-              "x": 400,
-              "y": 280
-            }
-          ],
-          "correct": false,
-          "msg": "That's where you want to score — offensive zone."
-        }
-      ]
-    },
-    {
-      "id": "u9r4",
-      "cat": "Teamwork",
-      "pos": [
-        "F"
-      ],
-      "d": 1,
-      "type": "mc",
-      "q": "Your teammate has the puck in the corner. The goalie is on the far side. Where's the best place to stand?",
-      "choices": [
-        "In the slot — ready for a pass.",
-        "Right next to your teammate.",
-        "Behind your goalie.",
-        "At center ice."
-      ],
-      "correct": 0,
-      "tip": "The slot is in front of the net — that's where your friend can pass to you to score.",
-      "rink": {
-        "view": "right",
-        "zone": "slot",
-        "markers": [
-          {
-            "type": "teammate",
-            "x": 560,
-            "y": 80,
-            "label": "friend"
+            "type": "defender",
+            "x": 470,
+            "y": 110
           },
           {
             "type": "goalie",
-            "x": 560,
+            "x": 555,
             "y": 150
           }
         ]
-      }
+      },
+      "markers": [
+        {
+          "type": "teammate",
+          "x": 500,
+          "y": 80,
+          "label": "T1",
+          "correct": true
+        },
+        {
+          "type": "teammate",
+          "x": 470,
+          "y": 170,
+          "label": "T2",
+          "correct": false
+        },
+        {
+          "type": "teammate",
+          "x": 520,
+          "y": 230,
+          "label": "T3",
+          "correct": true
+        },
+        {
+          "type": "teammate",
+          "x": 440,
+          "y": 110,
+          "label": "T4",
+          "correct": false
+        }
+      ],
+      "levels": [
+        "U9 / Novice",
+        "U7 / Initiation"
+      ]
     }
   ],
   "U11 / Atom": [
@@ -5044,56 +4813,6 @@
       ]
     },
     {
-      "id": "u11q_rink01",
-      "cat": "Puck Support",
-      "diff": "E",
-      "type": "mc",
-      "pos": [
-        "F"
-      ],
-      "q": "Your teammate is pinned in the right corner with a defender on him. You're F2 coming into the zone. Where should you support?",
-      "tip": "Good puck support stays about a stick-length away — close enough for a short pass, far enough to give the carrier options.",
-      "rink": {
-        "view": "right",
-        "zone": "off-zone",
-        "markers": [
-          {
-            "type": "teammate",
-            "x": 558,
-            "y": 248,
-            "caption": "Puck"
-          },
-          {
-            "type": "defender",
-            "x": 548,
-            "y": 238
-          },
-          {
-            "type": "attacker",
-            "x": 415,
-            "y": 140,
-            "label": "YOU"
-          },
-          {
-            "type": "puck",
-            "x": 560,
-            "y": 248
-          }
-        ]
-      },
-      "choices": [
-        "Charge straight to the front of the net.",
-        "Stay close — about a stick-length away, ready for a short pass.",
-        "Sprint to the high slot for a long outlet.",
-        "Skate to the far corner to open up space."
-      ],
-      "correct": 1,
-      "levels": [
-        "U11 / Atom",
-        "U13 / Peewee"
-      ]
-    },
-    {
       "id": "u11q_rink02",
       "cat": "2-on-1",
       "diff": "M",
@@ -5147,105 +4866,6 @@
           "radius": 22,
           "verdict": "poor",
           "feedback": "Shot into the goalie. The goalie is cheating to you — the open ice is the pass."
-        }
-      ],
-      "levels": [
-        "U11 / Atom",
-        "U13 / Peewee"
-      ]
-    },
-    {
-      "id": "u11q_rink03",
-      "cat": "Gap Control",
-      "diff": "M",
-      "type": "zone-click",
-      "pos": [
-        "D"
-      ],
-      "q": "A forechecker is pressuring your D. Which area should the D move the puck to for a clean breakout?",
-      "tip": "Strong-side board support — get the puck to the winger on the wall.",
-      "rink": {
-        "view": "left",
-        "markers": [
-          {
-            "type": "defender",
-            "x": 80,
-            "y": 200,
-            "label": "D1"
-          },
-          {
-            "type": "attacker",
-            "x": 130,
-            "y": 210,
-            "label": "F"
-          },
-          {
-            "type": "teammate",
-            "x": 160,
-            "y": 50,
-            "label": "W"
-          },
-          {
-            "type": "goalie",
-            "x": 45,
-            "y": 150
-          }
-        ]
-      },
-      "zones": [
-        {
-          "shape": "poly",
-          "points": [
-            {
-              "x": 140,
-              "y": 20
-            },
-            {
-              "x": 200,
-              "y": 20
-            },
-            {
-              "x": 200,
-              "y": 80
-            },
-            {
-              "x": 140,
-              "y": 80
-            }
-          ],
-          "correct": true,
-          "msg": "Yes — up the strong-side wall to the winger. Fast, simple, moves the puck up."
-        },
-        {
-          "shape": "poly",
-          "points": [
-            {
-              "x": 20,
-              "y": 20
-            },
-            {
-              "x": 80,
-              "y": 20
-            },
-            {
-              "x": 80,
-              "y": 80
-            },
-            {
-              "x": 20,
-              "y": 80
-            }
-          ],
-          "correct": false,
-          "msg": "Behind your own net under pressure. Goes nowhere."
-        },
-        {
-          "shape": "circle",
-          "x": 150,
-          "y": 150,
-          "radius": 25,
-          "correct": false,
-          "msg": "Into the middle with a forechecker right there. Turnover."
         }
       ],
       "levels": [
@@ -9041,73 +8661,6 @@
       "ok": 1,
       "why": "A goalie who can play a D-to-D pass under pressure is a major asset. Identifying the uncovered defender and getting them the puck clean starts the breakout before the forecheck sets up. This is an advanced skill worth developing.",
       "tip": "Weak-side D wide open? Play it to them. D-to-D breaks forechecks."
-    },
-    {
-      "id": "u13q_rink04",
-      "cat": "Vision",
-      "diff": "M",
-      "type": "multi-tap",
-      "pos": [
-        "F"
-      ],
-      "q": "You have the puck. Tap every teammate who's open for a pass.",
-      "tip": "Open means no defender in the passing lane.",
-      "rink": {
-        "view": "right",
-        "markers": [
-          {
-            "type": "attacker",
-            "x": 410,
-            "y": 150,
-            "label": "YOU"
-          },
-          {
-            "type": "defender",
-            "x": 470,
-            "y": 130
-          },
-          {
-            "type": "defender",
-            "x": 470,
-            "y": 110
-          },
-          {
-            "type": "goalie",
-            "x": 555,
-            "y": 150
-          }
-        ]
-      },
-      "markers": [
-        {
-          "type": "teammate",
-          "x": 500,
-          "y": 80,
-          "label": "T1",
-          "correct": true
-        },
-        {
-          "type": "teammate",
-          "x": 470,
-          "y": 170,
-          "label": "T2",
-          "correct": false
-        },
-        {
-          "type": "teammate",
-          "x": 520,
-          "y": 230,
-          "label": "T3",
-          "correct": true
-        },
-        {
-          "type": "teammate",
-          "x": 440,
-          "y": 110,
-          "label": "T4",
-          "correct": false
-        }
-      ]
     },
     {
       "id": "u13q_rink05",
