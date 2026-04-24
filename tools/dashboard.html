@@ -167,10 +167,26 @@
   }
   .editable:hover { background: var(--dimmest); border-color: var(--dimmer); }
   .edit-input { width: 100%; font-family: inherit; font-size: 12px; padding: 6px 8px; }
-  .choice-row { display: flex; align-items: center; gap: .5rem; padding: 3px 0; }
-  .choice-idx { width: 20px; text-align: right; color: var(--dimmer); font-size: 11px; }
-  .choice-correct { color: var(--green); font-weight: 800; width: 14px; text-align: center; }
-  .choice-wrong { color: var(--dimmer); width: 14px; text-align: center; font-size: 11px; }
+  .choice-card {
+    display: flex; align-items: center; gap: .6rem; padding: .55rem .75rem;
+    background: var(--bg); border: 1px solid var(--border); border-radius: 8px;
+    margin: 0 0 .35rem; font-size: 13px; line-height: 1.4; color: var(--text);
+  }
+  .choice-card.correct {
+    background: rgba(34,197,94,0.08); border-color: var(--green); border-width: 1.5px;
+  }
+  .choice-card .ltr {
+    width: 22px; height: 22px; border-radius: 50%; background: var(--dimmest);
+    color: var(--dim); font-size: 11px; font-weight: 800; display: inline-flex;
+    align-items: center; justify-content: center; flex-shrink: 0;
+  }
+  .choice-card.correct .ltr { background: var(--green); color: #0b1220; }
+  .choice-card .text { flex: 1; }
+  .choice-card .ok-badge {
+    background: var(--green); color: #0b1220; font-size: 9px; letter-spacing: .08em;
+    text-transform: uppercase; font-weight: 800; padding: 2px 8px; border-radius: 4px;
+    flex-shrink: 0;
+  }
 
   .pagination { display: flex; justify-content: center; gap: .3rem; margin: 1rem 0; flex-wrap: wrap; }
   .pagination button { min-width: 32px; padding: 4px 8px; font-size: 12px; }
@@ -887,17 +903,26 @@ function detailHTML(q, primaryLevel) {
       <div class="k">Choices</div>
       <div class="v">
         ${q.choices.map((c, i) => `
-          <div class="choice-row">
-            ${i === correct ? '<span class="choice-correct">✓</span>' : '<span class="choice-wrong">—</span>'}
-            <span class="choice-idx">${i}.</span>
-            <span style="flex:1;">${escHtml(String(c))}</span>
+          <div class="choice-card ${i === correct ? "correct" : ""}">
+            <span class="ltr">${String.fromCharCode(65 + i)}</span>
+            <span class="text">${escHtml(String(c))}</span>
+            ${i === correct ? '<span class="ok-badge">✓ Correct</span>' : ""}
           </div>
         `).join("")}
       </div>` : ""}
 
       ${q.type === "tf" ? `
       <div class="k">Answer</div>
-      <div class="v"><b style="color:var(--green);">${q.ok ? "True" : "False"}</b></div>
+      <div class="v">
+        <div class="choice-card ${q.ok ? "correct" : ""}">
+          <span class="ltr">T</span><span class="text">True</span>
+          ${q.ok ? '<span class="ok-badge">✓ Correct</span>' : ""}
+        </div>
+        <div class="choice-card ${!q.ok ? "correct" : ""}">
+          <span class="ltr">F</span><span class="text">False</span>
+          ${!q.ok ? '<span class="ok-badge">✓ Correct</span>' : ""}
+        </div>
+      </div>
       ` : ""}
 
       <div class="k">Raw JSON</div>

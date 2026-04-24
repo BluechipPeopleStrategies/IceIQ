@@ -138,8 +138,8 @@ const GOAL_CATS = {
   "U9 / Novice":     ["Skating","Passing","Shooting","Defense","Game IQ"],
   "U11 / Atom":      ["Skating","Puck Protection","Gap Control","Rush Reads","Special Teams","Game IQ"],
   "U13 / Peewee":    ["Edge Work","Shot Selection","Defensive Zone","Zone Entry","Special Teams","Leadership"],
-  "U15 / Bantam":    ["Systems Play","Transition Game","Special Teams","Physical Play","Gap Control","Leadership"],
-  "U18 / Midget":    ["Game Management","Advanced Tactics","Special Teams","Neutral Zone Play","Breakout Execution","Leadership"],
+  "U15 / Bantam":    ["Systems Play","Transition","Special Teams","Physical Play","Gap Control","Leadership"],
+  "U18 / Midget":    ["Game Management","Advanced Tactics","Special Teams","Neutral Zone Play","Breakouts","Leadership"],
 };
 
 const SMART_PROMPTS = {
@@ -3972,9 +3972,12 @@ const CAT_TO_TILT = {
   "Defense":        "d",
   "Positioning":    "dm",
   "Coachability":   "c",
-  // Level-specific legacy categories also mapped here so older questions route correctly
-  "Decision Making":   "dm",
-  "Exiting the Zone":  "h",
+  // Level-specific + canonical categories. Post-2026-04-24 consolidation
+  // merged several variants (Decision Making/Decision Timing → Decision-Making,
+  // Breakout/Breakout Execution/Exiting the Zone → Breakouts, Goalie →
+  // Goaltending, Transition Game → Transition, Support → Puck Support).
+  "Decision-Making":   "dm",
+  "Breakouts":         "h",
   "Rush Reads":        "h",
   "Zone Entry":        "h",
   "Special Teams":     null,
@@ -3982,18 +3985,21 @@ const CAT_TO_TILT = {
   "Defensive Zone":    "d",
   "Coverage":          "d",
   "Puck Protection":   "p",
+  "Puck Support":      "dm",
   "Blue Line Decisions":"dm",
-  "Decision Timing":   "dm",
+  "Blue Line Reads":   "h",
   "Systems Play":      null,
-  "Transition Game":   "h",
+  "Transition":        "h",
   "Gap Control":       "d",
   "Physical Play":     "p",
   "Leadership":        "c",
   "Game Management":   "h",
   "Advanced Tactics":  "dm",
   "Neutral Zone Play": "h",
-  "Breakout Execution":"h",
-  "Goalie":            "d",
+  "Goaltending":       "d",
+  "Finishing":         "s",
+  "Vision":            "h",
+  "Zone Awareness":    "h",
 };
 
 // Age-tier key used to pick how silly / how dry the coach's voice gets.
