@@ -3853,26 +3853,18 @@ function LandingInsightsCard() {
   );
 }
 
-// Sample scene used by the landing-page rink teaser — "Click the slot",
-// the first interactive touch a visitor has with the rink feature.
-const LANDING_RINK_SCENE = {
-  team: [], opponents: [], puck: { zone: "slot" },
-  showGoalie: true, showHomePlate: false, texts: [], arrows: [], flags: [],
-  question: {
-    mode: "zone-click",
-    prompt: "The slot is the middle spot in front of the net. Tap it on the rink.",
-    zones: {
-      correct: ["slot"],
-      partial: ["home-plate"],
-      wrong: ["net-front","high-slot","behind-net","left-corner","right-corner","left-point","right-point","left-faceoff","right-faceoff","left-boards","right-boards"],
-    },
-    feedback: {
-      correct: "That's the slot — the most dangerous shot on the ice. This is what Ice-IQ trains.",
-      partial: "Close. The home-plate area includes the slot, but the slot itself is dead centre.",
-      wrong: "Middle of the ice, right in front of the net. That's the slot.",
-    },
-  },
-};
+// Landing-page rink teaser — "Click the slot". Self-contained question
+// object for the inline zone-click renderer in AuthScreen. Not routed
+// through the bank or IceIQRinkQuestion dispatcher; it only needs a
+// rink scene + a slot polygon + a couple of wrong-answer polygons.
+const LANDING_RINK_SLOT_POLYGON = [
+  { x: 470, y: 120 }, { x: 560, y: 135 },
+  { x: 560, y: 165 }, { x: 470, y: 180 },
+];
+const LANDING_RINK_HOMEPLATE_POLYGON = [
+  { x: 430, y: 105 }, { x: 560, y: 115 },
+  { x: 560, y: 185 }, { x: 430, y: 195 },
+];
 
 function AuthScreen({ onAuthenticated, onDemo, onDevEnter, onPreview, prefill }) {
   const [mode, setMode] = useState(prefill ? "signup" : "login"); // login | signup | forgot
@@ -4107,11 +4099,32 @@ function AuthScreen({ onAuthenticated, onDemo, onDevEnter, onPreview, prefill })
               <div style={{fontSize:10,letterSpacing:".14em",textTransform:"uppercase",color:C.gold,fontWeight:700}}>Sample scenario · U9</div>
               <button onClick={() => { setRinkTeaserOpen(false); setTeaserAnswered(false); }} style={{background:"none",border:"none",color:C.dimmer,cursor:"pointer",fontSize:12,fontFamily:FONT.body,padding:0}}>Close</button>
             </div>
-            <Rink mode="play" scene={LANDING_RINK_SCENE} ageGroup="U9"
-              onAnswer={() => setTeaserAnswered(true)} />
+            <div style={{fontSize:13,color:C.white,fontWeight:600,margin:"0 0 .6rem"}}>The slot is the middle spot in front of the net. Tap it on the rink.</div>
+            <div style={{position:"relative",borderRadius:10,overflow:"hidden",border:`1px solid ${C.border}`}}>
+              <IceIQRink view="right" zone="slot" markers={[{type:"goalie",x:560,y:150}]} />
+              <svg viewBox="285 -15 330 330" preserveAspectRatio="none"
+                style={{position:"absolute",inset:0,width:"100%",height:"100%",pointerEvents:teaserAnswered?"none":"auto"}}>
+                <polygon points={LANDING_RINK_SLOT_POLYGON.map(p=>`${p.x},${p.y}`).join(" ")}
+                  fill={teaserAnswered?"rgba(34,197,94,0.3)":"transparent"} stroke={teaserAnswered?"#22c55e":"transparent"}
+                  strokeWidth="2" style={{cursor:teaserAnswered?"default":"pointer"}}
+                  onClick={() => !teaserAnswered && setTeaserAnswered("correct")} />
+                <polygon points={LANDING_RINK_HOMEPLATE_POLYGON.map(p=>`${p.x},${p.y}`).join(" ")}
+                  fill="transparent" stroke="transparent"
+                  style={{cursor:teaserAnswered?"default":"pointer"}}
+                  onClick={() => !teaserAnswered && setTeaserAnswered("partial")} />
+                <rect x="387" y="0" width="213" height="300" fill="transparent"
+                  style={{cursor:teaserAnswered?"default":"pointer"}}
+                  onClick={() => !teaserAnswered && setTeaserAnswered("wrong")} />
+              </svg>
+            </div>
             {teaserAnswered && (
-              <div style={{marginTop:".85rem",padding:".85rem 1rem",background:"rgba(252,76,2,0.1)",border:`1px solid ${C.goldBorder}`,borderRadius:10,fontSize:13,color:C.white,textAlign:"center"}}>
-                That's a taste. Sign up below to unlock 100+ rink scenarios across every age group.
+              <div style={{marginTop:".85rem",padding:".85rem 1rem",
+                background:teaserAnswered==="correct"?"rgba(34,197,94,0.12)":teaserAnswered==="partial"?"rgba(234,179,8,0.12)":"rgba(252,76,2,0.1)",
+                border:`1px solid ${teaserAnswered==="correct"?C.greenBorder:teaserAnswered==="partial"?"rgba(234,179,8,0.3)":C.goldBorder}`,
+                borderRadius:10,fontSize:13,color:C.white,textAlign:"center",lineHeight:1.55}}>
+                {teaserAnswered==="correct" && "✓ That's the slot — the most dangerous shot on the ice. This is what Ice-IQ trains. Sign up below to unlock 100+ rink scenarios."}
+                {teaserAnswered==="partial" && "~ Close. The home-plate area includes the slot, but the slot itself is dead centre. Sign up below to dig into reads like this."}
+                {teaserAnswered==="wrong" && "Middle of the ice, right in front of the net. That's the slot. Sign up below to practice 100+ reads like this."}
               </div>
             )}
           </div>
