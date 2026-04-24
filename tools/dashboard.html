@@ -3,3549 +3,560 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>IceIQ Question Review Dashboard</title>
+<title>Ice-IQ Question Bank — Viewer</title>
 <style>
   :root {
-    --bg: #0b1020;
-    --bg-elev: #111831;
-    --bg-card: #151d3b;
+    --bg: #0b1220;
+    --bg-elev: #111a2e;
+    --bg-card: #151f38;
     --border: #232b4d;
     --text: #e6eaff;
-    --dim: #9aa3c7;
-    --dimmer: #6b7399;
-    --accent: #6ea8ff;
-    --accent-dim: rgba(110,168,255,.15);
-    --green: #4ade80;
-    --green-dim: rgba(74,222,128,.15);
-    --gold: #f5b544;
-    --gold-dim: rgba(245,181,68,.15);
+    --dim: #94a3b8;
+    --dimmer: #64748b;
+    --dimmest: rgba(148,163,184,0.12);
+    --accent: #fc4c02;
+    --accent-dim: rgba(252,76,2,0.15);
+    --green: #22c55e;
+    --green-dim: rgba(34,197,94,0.15);
+    --gold: #fbbf24;
     --red: #ef4444;
-    --red-dim: rgba(239,68,68,.15);
-    --amber: #f59e0b;
-    --amber-dim: rgba(245,158,11,.12);
-    --purple: #a78bfa;
-    --purple-dim: rgba(167,139,250,.15);
+    --blue: #5ba4e8;
+    --purple: #a855f7;
   }
-  * { box-sizing: border-box; }
-  body {
-    margin: 0;
-    background: var(--bg);
-    color: var(--text);
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
-    font-size: 14px;
-    line-height: 1.4;
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { background: var(--bg); color: var(--text); font-family: ui-sans-serif, system-ui, sans-serif; min-height: 100vh; font-size: 14px; }
+  a { color: var(--accent); }
+  code { background: var(--dimmest); padding: 1px 5px; border-radius: 4px; font-size: 12px; }
+  button {
+    background: var(--bg-elev); color: var(--text); border: 1px solid var(--border);
+    border-radius: 8px; padding: 6px 12px; font-size: 13px; font-family: inherit;
+    cursor: pointer; transition: border .15s, background .15s;
   }
-  .wrap { max-width: 1200px; margin: 0 auto; padding: 1rem 1.5rem 6rem; }
-  h1 { font-size: 1.4rem; margin: 0 0 .25rem; }
-  h2 { font-size: 1rem; margin: 1.5rem 0 .5rem; color: var(--dim); font-weight: 600; }
-  .sub { color: var(--dim); font-size: 12px; }
+  button:hover:not(:disabled) { border-color: var(--accent); }
+  button:disabled { opacity: 0.45; cursor: not-allowed; }
+  button.primary { background: var(--accent); border-color: var(--accent); color: #0b1220; font-weight: 700; }
+  button.primary:hover { background: #ff6a22; }
+  input, select {
+    background: var(--bg-elev); color: var(--text); border: 1px solid var(--border);
+    border-radius: 8px; padding: 6px 10px; font-size: 13px; font-family: inherit; outline: none;
+  }
+  input:focus, select:focus { border-color: var(--accent); }
 
-  /* Header */
-  .header {
-    display: flex; flex-wrap: wrap; gap: .5rem; align-items: center;
-    padding: 1rem 0; border-bottom: 1px solid var(--border); margin-bottom: 1rem;
+  header {
+    padding: 1rem 1.25rem; border-bottom: 1px solid var(--border);
+    background: rgba(11,18,32,0.9);
+    -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px);
+    position: sticky; top: 0; z-index: 20;
   }
-  .header .title-col { flex: 1 1 auto; min-width: 200px; }
-  .header .actions { display: flex; gap: .5rem; flex-wrap: wrap; }
+  .header-row { display: flex; align-items: center; gap: 1rem; flex-wrap: wrap; }
+  h1 { font-size: 1.1rem; font-weight: 800; letter-spacing: -0.01em; }
+  .sub { font-size: 11px; color: var(--dim); }
+  .spacer { flex: 1; }
 
-  button, .btn {
-    background: var(--bg-card); color: var(--text);
-    border: 1px solid var(--border); border-radius: 8px;
-    padding: .45rem .8rem; cursor: pointer;
-    font-size: 13px; font-family: inherit;
-    transition: all .12s;
+  main { max-width: 1400px; margin: 0 auto; padding: 1.25rem; }
+  .empty {
+    text-align: center; padding: 4rem 2rem; color: var(--dim);
+    background: var(--bg-elev); border: 1px dashed var(--border); border-radius: 14px;
   }
-  button:hover, .btn:hover { border-color: var(--accent); }
-  button:disabled { opacity: .4; cursor: not-allowed; }
-  .btn-primary { background: var(--accent-dim); border-color: var(--accent); color: var(--accent); font-weight: 600; }
-  .btn-danger { background: var(--red-dim); border-color: var(--red); color: var(--red); }
-  .btn-ghost { background: transparent; color: var(--dim); }
+  .empty h2 { font-size: 1.4rem; margin-bottom: .6rem; color: var(--text); }
+
+  .summary {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+    gap: .5rem; margin-bottom: 1rem;
+  }
+  .stat {
+    background: var(--bg-elev); border: 1px solid var(--border); border-radius: 10px;
+    padding: .65rem .85rem;
+  }
+  .stat-label { font-size: 10px; letter-spacing: .1em; color: var(--dimmer); text-transform: uppercase; font-weight: 700; }
+  .stat-value { font-size: 1.3rem; font-weight: 800; color: var(--text); margin-top: 2px; line-height: 1; }
+  .stat-sub { font-size: 10px; color: var(--dim); margin-top: 3px; }
+
+  .filters {
+    display: flex; gap: .5rem; flex-wrap: wrap; align-items: center;
+    padding: .75rem; background: var(--bg-elev); border: 1px solid var(--border);
+    border-radius: 10px; margin-bottom: 1rem;
+  }
+  .filters label { font-size: 10px; letter-spacing: .08em; color: var(--dimmer); text-transform: uppercase; font-weight: 700; }
+  .filter-chip {
+    padding: 3px 10px; border-radius: 999px; font-size: 11px; font-weight: 600; cursor: pointer;
+    background: var(--dimmest); color: var(--dim); border: 1px solid transparent;
+  }
+  .filter-chip.active { background: var(--accent-dim); color: var(--accent); border-color: var(--accent); }
+
+  table { width: 100%; border-collapse: collapse; background: var(--bg-elev); border: 1px solid var(--border); border-radius: 10px; overflow: hidden; }
+  thead { background: var(--bg-card); }
+  th, td { padding: .55rem .7rem; text-align: left; border-bottom: 1px solid var(--border); font-size: 12.5px; }
+  th { font-size: 10px; letter-spacing: .1em; color: var(--dimmer); font-weight: 700; text-transform: uppercase; }
+  tr { cursor: pointer; }
+  tr:hover td { background: rgba(252,76,2,0.04); }
+  tr.expanded td { background: rgba(252,76,2,0.06); }
+  td.trunc { max-width: 400px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 
   .pill {
-    display: inline-flex; align-items: center; gap: .25rem;
-    background: var(--bg-elev); border: 1px solid var(--border);
-    border-radius: 999px; padding: .15rem .55rem; font-size: 11px; color: var(--dim);
+    display: inline-block; padding: 1px 7px; border-radius: 4px;
+    font-size: 9px; letter-spacing: .06em; font-weight: 700; text-transform: uppercase;
+    margin-right: 3px;
   }
-  .pill.status-keep { background: var(--green-dim); border-color: var(--green); color: var(--green); }
-  .pill.status-flag { background: var(--gold-dim); border-color: var(--gold); color: var(--gold); }
-  .pill.status-kill { background: var(--red-dim); border-color: var(--red); color: var(--red); }
-  .pill.status-unreviewed { background: var(--bg-elev); border-color: var(--border); color: var(--dim); }
-  .pill.edited { background: var(--purple-dim); border-color: var(--purple); color: var(--purple); }
-  .pill.added { background: var(--accent-dim); border-color: var(--accent); color: var(--accent); }
-  .pill.offage { background: var(--amber-dim); border-color: var(--amber); color: var(--amber); }
+  .pill-type { background: rgba(91,164,232,.15); color: var(--blue); }
+  .pill-rink { background: rgba(168,85,247,.15); color: var(--purple); }
+  .pill-multi { background: rgba(252,76,2,.15); color: var(--accent); }
+  .pill-polished { background: var(--green-dim); color: var(--green); }
+  .pill-cat { background: var(--dimmest); color: var(--dim); }
 
-  /* Saved flash */
-  .saved-flash {
-    position: fixed; top: 12px; right: 12px; z-index: 50;
-    background: var(--green-dim); color: var(--green);
-    border: 1px solid var(--green); border-radius: 8px;
-    padding: .4rem .7rem; font-size: 12px;
-    opacity: 0; transition: opacity .2s;
-    pointer-events: none;
+  .detail { background: #0d1424; padding: .85rem 1rem; border-left: 2px solid var(--accent); }
+  .detail pre {
+    margin: .4rem 0 0; padding: .6rem .75rem; background: var(--bg); border: 1px solid var(--border);
+    border-radius: 8px; font-family: ui-monospace, monospace; font-size: 11.5px;
+    color: var(--text); overflow-x: auto; white-space: pre-wrap;
   }
-  .saved-flash.show { opacity: 1; }
+  .detail-row { display: flex; gap: .75rem; padding: 2px 0; font-size: 12px; }
+  .detail-row .k { color: var(--dimmer); min-width: 80px; font-weight: 600; font-size: 10px; letter-spacing: .08em; text-transform: uppercase; margin-top: 3px; }
+  .detail-row .v { color: var(--text); flex: 1; }
+  .detail-actions { margin-top: .6rem; display: flex; gap: .35rem; }
 
-  /* Dashboard */
-  .dashboard { background: var(--bg-elev); border: 1px solid var(--border); border-radius: 10px; padding: 1rem; margin-bottom: 1rem; }
-  .tiles { display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: .5rem; margin-bottom: 1rem; }
-  .tile { background: var(--bg-card); border: 1px solid var(--border); border-radius: 8px; padding: .7rem; }
-  .tile .label { font-size: 10px; text-transform: uppercase; letter-spacing: .05em; color: var(--dimmer); }
-  .tile .value { font-size: 1.4rem; font-weight: 700; margin-top: .2rem; }
-  .tile.t-keep .value { color: var(--green); }
-  .tile.t-flag .value { color: var(--gold); }
-  .tile.t-kill .value { color: var(--red); }
-  .tile.t-unreviewed .value { color: var(--dim); }
-  .tile.t-edited .value { color: var(--purple); }
+  .pagination { display: flex; justify-content: center; gap: .4rem; margin: 1rem 0; }
+  .pagination button { min-width: 34px; }
+  .pagination button.active { background: var(--accent); color: #0b1220; font-weight: 700; }
 
-  table.matrix { width: 100%; border-collapse: collapse; font-size: 12px; }
-  table.matrix th, table.matrix td { border: 1px solid var(--border); padding: .4rem .5rem; text-align: center; }
-  table.matrix th { background: var(--bg-card); color: var(--dim); font-weight: 600; }
-  table.matrix td.age-label { background: var(--bg-card); color: var(--dim); font-weight: 600; text-align: left; }
-  table.matrix td.offage { background: rgba(239,68,68,.05); }
-  table.matrix .cell-count { font-weight: 700; }
-  table.matrix .cell-breakdown { color: var(--dimmer); font-size: 10px; margin-top: .15rem; }
-
-  /* Filters */
-  .filters { display: flex; flex-wrap: wrap; gap: .5rem; align-items: center; margin-bottom: 1rem; }
-  .chip-group { display: inline-flex; background: var(--bg-elev); border: 1px solid var(--border); border-radius: 8px; overflow: hidden; }
-  .chip {
-    background: transparent; color: var(--dim); border: none;
-    padding: .35rem .65rem; font-size: 12px; cursor: pointer;
-    border-right: 1px solid var(--border);
+  .error-toast {
+    position: fixed; top: 1rem; right: 1rem; background: rgba(239,68,68,.15);
+    border: 1px solid var(--red); border-radius: 10px; padding: .7rem 1rem;
+    color: var(--red); font-size: 13px; z-index: 50; max-width: 420px;
   }
-  .chip:last-child { border-right: none; }
-  .chip:hover { color: var(--text); }
-  .chip.active { background: var(--accent-dim); color: var(--accent); font-weight: 600; }
-  .search-input {
-    flex: 1; min-width: 160px;
-    background: var(--bg-card); border: 1px solid var(--border); border-radius: 8px;
-    padding: .4rem .65rem; font-size: 13px; color: var(--text);
-    font-family: inherit;
-  }
-  .search-input:focus { outline: none; border-color: var(--accent); }
-
-  /* Card list */
-  .list-info { color: var(--dim); font-size: 12px; margin-bottom: .5rem; }
-  .card {
-    background: var(--bg-card); border: 1px solid var(--border);
-    border-left: 3px solid var(--border);
-    border-radius: 8px; padding: .75rem 1rem; margin-bottom: .5rem;
-    transition: border-color .1s;
-  }
-  .card[data-status="keep"] { border-left-color: var(--green); }
-  .card[data-status="flag"] { border-left-color: var(--gold); }
-  .card[data-status="kill"] { border-left-color: var(--red); opacity: .55; }
-  .card-head { display: flex; align-items: center; gap: .5rem; flex-wrap: wrap; cursor: pointer; }
-  .card-head .preview { flex: 1 1 auto; min-width: 160px; color: var(--dim); font-size: 12px; }
-  .card-head .mono { font-family: ui-monospace, "Menlo", monospace; font-size: 11px; color: var(--accent); background: var(--accent-dim); padding: .1rem .4rem; border-radius: 4px; }
-  .card-body { margin-top: .75rem; padding-top: .75rem; border-top: 1px solid var(--border); display: none; }
-  .card.expanded .card-body { display: block; }
-  .card-body .field { margin-bottom: .65rem; }
-  .card-body .field label { display: block; font-size: 10px; text-transform: uppercase; color: var(--dimmer); letter-spacing: .05em; margin-bottom: .2rem; }
-  .field-input, .field-textarea, select.field-select {
-    width: 100%; background: var(--bg-elev); color: var(--text);
-    border: 1px solid var(--border); border-radius: 6px;
-    padding: .4rem .55rem; font-family: inherit; font-size: 13px;
-  }
-  .field-textarea { resize: vertical; min-height: 42px; }
-  .field-input:focus, .field-textarea:focus, select.field-select:focus { outline: none; border-color: var(--accent); }
-  .row2 { display: grid; grid-template-columns: 1fr 1fr; gap: .5rem; }
-  .row3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: .5rem; }
-  .inline-row { display: flex; gap: .5rem; flex-wrap: wrap; align-items: center; }
-  .pos-check { display: inline-flex; gap: .25rem; align-items: center; color: var(--dim); font-size: 12px; margin-right: .5rem; }
-  .difficulty-row { display: inline-flex; gap: .25rem; }
-  .d-btn { padding: .25rem .6rem; font-size: 12px; }
-  .d-btn.active { background: var(--accent-dim); border-color: var(--accent); color: var(--accent); }
-  .age-chip { display: inline-flex; align-items: center; gap: .3rem; padding: .2rem .55rem; font-size: 11px;
-              border-radius: 11px; border: 1px solid var(--border); background: var(--bg-elev);
-              color: var(--dim); cursor: pointer; }
-  .age-chip.on { background: var(--accent-dim); border-color: var(--accent); color: var(--accent); }
-  .age-chip.primary { cursor: default; background: var(--bg-card); border-color: var(--accent); color: var(--accent); font-weight: 600; }
-
-  .opt-row { display: flex; gap: .4rem; align-items: center; margin-bottom: .3rem; }
-  .opt-letter { font-family: ui-monospace, monospace; font-size: 11px; color: var(--dimmer); width: 16px; }
-  .opt-correct-btn { padding: .15rem .45rem; font-size: 11px; min-width: 34px; }
-  .opt-correct-btn.active { background: var(--green-dim); border-color: var(--green); color: var(--green); }
-  .opt-remove { padding: .2rem .4rem; font-size: 11px; color: var(--red); }
-
-  .seq-item { display: flex; gap: .4rem; align-items: center; margin-bottom: .3rem; }
-  .seq-index { font-family: ui-monospace, monospace; font-size: 11px; color: var(--dimmer); width: 20px; }
-  .seq-move { padding: .2rem .4rem; font-size: 11px; }
-
-  .tf-row { display: flex; gap: .5rem; }
-  .tf-btn { flex: 1; }
-  .tf-btn.active { background: var(--green-dim); border-color: var(--green); color: var(--green); font-weight: 600; }
-
-  .card-actions { display: flex; gap: .4rem; flex-wrap: wrap; margin-top: .75rem; padding-top: .5rem; border-top: 1px solid var(--border); }
-  .card-actions button { font-size: 12px; }
-
-  .empty {
-    text-align: center; padding: 3rem 1rem; color: var(--dim);
-    border: 2px dashed var(--border); border-radius: 10px; margin: 2rem 0;
-  }
-  .empty .big { font-size: 2rem; margin-bottom: .5rem; }
-
-  /* Modal */
-  .modal-backdrop {
-    position: fixed; inset: 0; background: rgba(0,0,0,.7); z-index: 100;
-    display: none; align-items: center; justify-content: center; padding: 1rem;
-  }
-  .modal-backdrop.show { display: flex; }
-  .modal {
-    background: var(--bg-elev); border: 1px solid var(--border); border-radius: 12px;
-    width: 100%; max-width: 600px; max-height: 90vh; overflow: auto;
-    padding: 1.25rem;
-  }
-  .modal h3 { margin: 0 0 1rem; font-size: 1.1rem; }
-  .modal .footer { display: flex; gap: .5rem; justify-content: flex-end; margin-top: 1rem; padding-top: .75rem; border-top: 1px solid var(--border); }
-
-  /* Bulk bar */
-  .bulk-bar {
-    display: none; flex-wrap: wrap; gap: .4rem; align-items: center;
-    position: sticky; top: 0; z-index: 20;
-    background: var(--bg-elev); border: 1px solid var(--accent);
-    border-radius: 8px; padding: .5rem .65rem; margin-bottom: .5rem;
-    box-shadow: 0 4px 12px rgba(0,0,0,.35);
-  }
-  .bulk-bar.show { display: flex; }
-  .bulk-count { color: var(--accent); font-weight: 600; font-size: 13px; margin-right: .35rem; }
-  .pill.moved { background: var(--purple-dim); border-color: var(--purple); color: var(--purple); }
-  .card-checkbox { margin-right: .5rem; cursor: pointer; }
-
-  /* Load-more */
-  .load-more-wrap { text-align: center; margin: 1.25rem 0; }
-
-  /* File input hidden */
-  input[type="file"] { display: none; }
-
-  /* Responsive */
-  @media (max-width: 600px) {
-    .wrap { padding: 1rem .75rem 6rem; }
-    .row2, .row3 { grid-template-columns: 1fr; }
-    table.matrix { font-size: 11px; }
-    table.matrix th, table.matrix td { padding: .3rem .35rem; }
+  .success-toast {
+    position: fixed; top: 1rem; right: 1rem; background: var(--green-dim);
+    border: 1px solid var(--green); border-radius: 10px; padding: .7rem 1rem;
+    color: var(--green); font-size: 13px; z-index: 50;
   }
 </style>
 </head>
 <body>
-<div class="saved-flash" id="saved-flash">✓ Saved</div>
-<div class="wrap">
 
-  <div class="header">
-    <div class="title-col">
-      <h1>IceIQ Question Review</h1>
-      <div class="sub" id="file-status">No file loaded. Click "Load questions.json" to start.</div>
-    </div>
-    <div class="actions">
-      <button class="btn-primary" id="btn-load">📁 Load questions.json</button>
-      <input type="file" id="file-input" accept=".json,application/json">
-      <button id="btn-export" disabled>💾 Export questions.json</button>
-      <button id="btn-export-added" title="Download only the scenarios you authored here (STATE.added) as a patch file. Apply via: node tools/apply-dashboard-patch.mjs &lt;file.json&gt;">📦 Download NEW only</button>
-      <button class="btn-ghost" id="btn-reset-state">Reset local edits</button>
-    </div>
+<header>
+  <div class="header-row">
+    <h1>🏒 Ice-IQ Question Bank — Viewer</h1>
+    <div class="sub">v2 · matches current schema (<span id="schema-date">2026-04</span>)</div>
+    <div class="spacer"></div>
+    <input type="file" id="file-input" accept=".json" style="display:none">
+    <button type="button" onclick="document.getElementById('file-input').click()">📁 Load questions.json</button>
+    <button type="button" id="btn-export" disabled onclick="exportBank()">💾 Export</button>
+    <button type="button" id="btn-clear" disabled onclick="clearBank()">↺ Clear</button>
   </div>
+  <div id="file-status" class="sub" style="margin-top:.4rem; min-height:1em;"></div>
+</header>
 
-  <div id="dashboard" class="dashboard" style="display:none;">
-    <div class="tiles" id="tiles"></div>
-    <div style="overflow-x:auto;"><table class="matrix" id="matrix"></table></div>
-  </div>
-
-  <div id="main" style="display:none;">
-    <div class="filters">
-      <div class="chip-group" id="age-chips"></div>
-      <div class="chip-group" id="type-chips"></div>
-      <div class="chip-group" id="status-chips"></div>
-      <input class="search-input" id="search" placeholder="🔍 Search id / concept / situation...">
-      <button class="btn-primary" id="btn-add">+ Add Question</button>
-      <button class="btn-danger" id="btn-kill-offage" title="Mark every off-age-type question as Kill">☠ Kill all off-age</button>
-      <button class="btn-danger" id="btn-cull-mc" title="Keep max 50 MC per age for U11-U18 (U9 untouched)">📉 Cull MC to 50</button>
-    </div>
-    <div class="bulk-bar" id="bulk-bar">
-      <span id="bulk-count" class="bulk-count">0 selected</span>
-      <select class="field-select" id="bulk-target" style="max-width:180px;">
-        <option value="">Move to age group…</option>
-      </select>
-      <button class="btn-primary" id="bulk-move">Move</button>
-      <button id="bulk-keep">Keep</button>
-      <button id="bulk-flag">Flag</button>
-      <button class="btn-danger" id="bulk-kill">Kill</button>
-      <button class="btn-ghost" id="bulk-unreviewed">Unreviewed</button>
-      <button class="btn-ghost" id="bulk-clear">Clear</button>
-    </div>
-    <div class="list-info" id="list-info">
-      <label style="cursor:pointer;"><input type="checkbox" id="select-all-visible"> Select all visible</label>
-      <span id="list-count" style="margin-left:.75rem;"></span>
-    </div>
-    <div id="card-list"></div>
-    <div class="load-more-wrap"><button id="btn-load-more" style="display:none;">Load more</button></div>
-  </div>
-
+<main>
   <div id="empty-state" class="empty">
-    <div class="big">📊</div>
-    <div>Load your <code>questions.json</code> to begin reviewing.</div>
+    <h2>Load the bank to begin</h2>
+    <p>Click <b>Load questions.json</b> above and pick <code>src/data/questions.json</code>.</p>
+    <p style="margin-top:.5rem; font-size:12px;">This viewer parses the current schema including <code>levels[]</code>, <code>idealPath</code>, POV scenes, and the 10 rink-interaction types.</p>
   </div>
 
-</div>
-
-<!-- Add Question Modal -->
-<div class="modal-backdrop" id="add-modal">
-  <div class="modal">
-    <h3>Add New Question</h3>
-    <div class="field">
-      <label>Age Group</label>
-      <select class="field-select" id="add-age"></select>
-    </div>
-    <div class="field">
-      <label>Question Type <span class="sub" id="add-type-hint"></span></label>
-      <div class="inline-row">
-        <select class="field-select" id="add-type" style="flex:1;"></select>
-        <label class="sub" style="display:flex; align-items:center; gap:.25rem; cursor:pointer;">
-          <input type="checkbox" id="add-advanced"> advanced (all types)
-        </label>
-      </div>
-    </div>
-    <div class="field">
-      <label>Category</label>
-      <input class="field-input" id="add-cat" placeholder="e.g. Orientation">
-    </div>
-    <div class="field">
-      <label>Concept (short title)</label>
-      <input class="field-input" id="add-concept" placeholder="e.g. Which way?">
-    </div>
-    <div class="field">
-      <label>Situation / Prompt</label>
-      <textarea class="field-textarea" id="add-sit" placeholder="The question text..."></textarea>
-    </div>
-    <div id="add-type-fields"></div>
-    <div class="footer">
-      <button class="btn-ghost" id="add-cancel">Cancel</button>
-      <button class="btn-primary" id="add-save">Save</button>
-    </div>
+  <div id="dashboard" style="display:none;">
+    <div class="summary" id="summary"></div>
+    <div class="filters" id="filters"></div>
+    <table id="qtable">
+      <thead>
+        <tr>
+          <th style="width:90px">ID</th>
+          <th style="width:80px">Age</th>
+          <th style="width:60px">Type</th>
+          <th style="width:110px">Category</th>
+          <th>Question</th>
+          <th style="width:140px">Tags</th>
+        </tr>
+      </thead>
+      <tbody id="qtable-body"></tbody>
+    </table>
+    <div class="pagination" id="pagination"></div>
   </div>
-</div>
-
-<!-- React + Babel (for the rink-type scene editor). Vendored under ./vendor/
-     so this page works fully offline on file:// — no CDN hang. -->
-<script src="./vendor/react.production.min.js"></script>
-<script src="./vendor/react-dom.production.min.js"></script>
-<script src="./vendor/babel.min.js"></script>
-<!-- BEGIN RINK_EDITOR_INLINE · generated by tools/build-rink-editor.mjs from src/Rink.jsx -->
-<script type="text/babel" data-presets="react">
-// AUTO-GENERATED from src/Rink.jsx + src/rinkQuestionModes.js — do not edit directly.
-// When either source changes, run: npm run build:dashboard
-(function(){
-// ── rinkQuestionModes.js (inlined) ─────────────────────────────────────
-// Rink question-mode registry.
-//
-// Each entry describes a way a player can answer a rink-type scenario. The
-// Rink component consults this registry to score a player's action and to
-// render mode-specific prompts. The dashboard authoring UI reads the same
-// registry to list available modes and generate a blank question object.
-//
-// To add a new mode:
-//   1. Add an entry below with `id`, `label`, `defaultQuestion`, `score`.
-//   2. If the mode needs play-mode UI beyond a bottom prompt (e.g. a
-//      draggable marker, a path-drawing overlay), extend Rink.jsx where it
-//      checks `scene.question?.mode` — the minimal new-mode cost is editing
-//      this file only; richer UX costs a Rink.jsx change too.
-//   3. Run `npm run build:dashboard` so tools/dashboard.html picks up the
-//      new mode in its dropdown.
-//
-// Contract for each entry:
-//   id                string matching scene.question.mode
-//   label             human-readable, shown in author dropdowns
-//   defaultQuestion() factory for a blank question object of this mode
-//   score(action, q)  returns { verdict, choice, feedback } given the user's
-//                     action payload (zone key for zone-click, item id for
-//                     spot-mistake, option object for choice, etc.) and the
-//                     question config.
-
-function pickFeedback(q, verdict) {
-  return (q?.feedback && q.feedback[verdict]) || '';
-}
-
-const QUESTION_MODES = {
-  choice: {
-    id: 'choice',
-    label: 'Multiple choice',
-    defaultQuestion: () => ({
-      mode: 'choice',
-      prompt: '',
-      options: [],
-    }),
-    // action === the selected option object { text, verdict, feedback }
-    score: (action, _q) => ({
-      verdict: action?.verdict || 'wrong',
-      choice: action?.text || '',
-      feedback: action?.feedback || '',
-    }),
-  },
-
-  'zone-click': {
-    id: 'zone-click',
-    label: 'Zone click',
-    defaultQuestion: () => ({
-      mode: 'zone-click',
-      prompt: '',
-      zones: { correct: [], partial: [], wrong: [] },
-      feedback: { correct: '', partial: '', wrong: '' },
-    }),
-    // action === zoneKey string
-    score: (zoneKey, q) => {
-      const zones = q?.zones || {};
-      let verdict = 'wrong';
-      if ((zones.correct || []).includes(zoneKey)) verdict = 'correct';
-      else if ((zones.partial || []).includes(zoneKey)) verdict = 'partial';
-      return { verdict, choice: zoneKey, feedback: pickFeedback(q, verdict) };
-    },
-  },
-
-  'spot-mistake': {
-    id: 'spot-mistake',
-    label: 'Spot the mistake',
-    defaultQuestion: () => ({
-      mode: 'spot-mistake',
-      prompt: '',
-      targets: { correct: [], partial: [], wrong: [] },
-      feedback: { correct: '', partial: '', wrong: '' },
-    }),
-    // action === item id (teammate / opponent / puck / flag)
-    score: (itemId, q) => {
-      const t = q?.targets || {};
-      let verdict = 'wrong';
-      if ((t.correct || []).includes(itemId)) verdict = 'correct';
-      else if ((t.partial || []).includes(itemId)) verdict = 'partial';
-      return { verdict, choice: itemId, feedback: pickFeedback(q, verdict) };
-    },
-  },
-};
-
-// Cycle helper shared by authoring tools: unassigned → correct → partial → wrong → unassigned.
-// Works on either { zones } (zone-click) or { targets } (spot-mistake) bucket sets.
-function cycleBucket(buckets, key) {
-  const b = buckets || { correct: [], partial: [], wrong: [] };
-  const inC = (b.correct || []).includes(key);
-  const inP = (b.partial || []).includes(key);
-  const inW = (b.wrong || []).includes(key);
-  const without = {
-    correct: (b.correct || []).filter(k => k !== key),
-    partial: (b.partial || []).filter(k => k !== key),
-    wrong:   (b.wrong   || []).filter(k => k !== key),
-  };
-  if (!inC && !inP && !inW) return { ...without, correct: [...without.correct, key] };
-  if (inC)                  return { ...without, partial: [...without.partial, key] };
-  if (inP)                  return { ...without, wrong:   [...without.wrong,   key] };
-  return without;
-}
-
-// Lookup used by renderers to style an item/zone based on its assigned verdict.
-// Returns 'correct' | 'partial' | 'wrong' | null.
-function bucketVerdict(buckets, key) {
-  if (!buckets) return null;
-  if ((buckets.correct || []).includes(key)) return 'correct';
-  if ((buckets.partial || []).includes(key)) return 'partial';
-  if ((buckets.wrong   || []).includes(key)) return 'wrong';
-  return null;
-}
-
-// ── Rink.jsx (inlined) ─────────────────────────────────────────────────
-/**
- * Rink.jsx — IceIQ offensive-zone scenario editor + renderer
- * ----------------------------------------------------------
- * Self-contained React component for authoring and displaying hockey
- * decision-making scenarios. Designed to plug into an existing question
- * dashboard as a new question type: `type: "rink"`.
- *
- * Two modes:
- *   <Rink mode="edit"  scene={scene} onChange={setScene} />   // authoring
- *   <Rink mode="play"  scene={scene} onAnswer={handleAnswer}/> // kid playing
- *
- * Scene schema (JSON-serializable, store in Supabase jsonb or local state):
- *   {
- *     team: [{ id, label?, zone, hasPuck?, isYou?, x?, y?, offsetX?, offsetY? }],
- *     opponents: [{ id, zone, x?, y?, offsetX?, offsetY? }],
- *     puck: { zone, x?, y?, offsetX?, offsetY? },
- *     showGoalie: bool,
- *     showHomePlate: bool,
- *     texts:  [{ id, text, x, y }],
- *     arrows: [{ id, from, to, x1?, y1?, x2?, y2? }],
- *     flags:  [{ id, zone, x?, y? }],
- *     question: {
- *       mode: "choice" | "zone-click",
- *       prompt: string,
- *       // choice mode:
- *       options?: [{ text, verdict, feedback }],
- *       // zone-click mode:
- *       zones?:   { correct: [zoneKey], partial: [zoneKey], wrong: [zoneKey] },
- *       feedback?:{ correct, partial, wrong }
- *     }
- *   }
- *
- * No external dependencies beyond React. Drop into any IceIQ question editor.
- */
-
-const { useState, useRef, useEffect, useCallback } = React;
-
-
-// ─────────────────────────────────────────────────────────────────────────────
-// GEOMETRY — true NHL proportions, offensive-zone only, net at top.
-// 1 ft ≈ 7.06px horizontal, 6.3px vertical (slight vertical compression).
-// ─────────────────────────────────────────────────────────────────────────────
-const FX = 7.06, FY = 6.3;
-const RINK_LEFT = 40, RINK_RIGHT = 640, RINK_CENTER_X = 340;
-const RINK_TOP = 40;
-const GOAL_LINE_Y    = RINK_TOP + 11 * FY;
-const BLUE_LINE_Y    = RINK_TOP + 75 * FY;
-const FACEOFF_Y      = GOAL_LINE_Y + 20 * FY;
-const FACEOFF_X_OFF  = 22 * FX;
-const L_FACEOFF_X    = RINK_CENTER_X - FACEOFF_X_OFF;
-const R_FACEOFF_X    = RINK_CENTER_X + FACEOFF_X_OFF;
-const FACEOFF_R      = 15 * FX;
-const CORNER_R       = 28 * FX;
-const NET_W          = 6 * FX;
-const NET_DEPTH      = 3.3 * FY;
-const BOARD_INSET    = 28;
-const VIEWBOX_H      = 640;
-
-// Zone anchor points. Players "live" at a zone; when dragged, their (x,y)
-// override takes precedence. Change the zone dropdown to reset back to anchor.
-const ZONES = {
-  'net-front':      { x: RINK_CENTER_X,               y: GOAL_LINE_Y + 36,  label: 'Net-front' },
-  'slot':           { x: RINK_CENTER_X,               y: FACEOFF_Y - 20,    label: 'Slot' },
-  'high-slot':      { x: RINK_CENTER_X,               y: FACEOFF_Y + 46,    label: 'High slot' },
-  'left-faceoff':   { x: L_FACEOFF_X,                 y: FACEOFF_Y,         label: 'Left faceoff dot' },
-  'right-faceoff':  { x: R_FACEOFF_X,                 y: FACEOFF_Y,         label: 'Right faceoff dot' },
-  'left-corner':    { x: RINK_LEFT + BOARD_INSET + 48,  y: GOAL_LINE_Y - 18,  label: 'Left corner' },
-  'right-corner':   { x: RINK_RIGHT - BOARD_INSET - 48, y: GOAL_LINE_Y - 18,  label: 'Right corner' },
-  'behind-net':     { x: RINK_CENTER_X,               y: GOAL_LINE_Y - 52,  label: 'Behind the net' },
-  'left-boards':    { x: RINK_LEFT + BOARD_INSET + 18,  y: FACEOFF_Y + 6,     label: 'Left boards' },
-  'right-boards':   { x: RINK_RIGHT - BOARD_INSET - 18, y: FACEOFF_Y + 6,     label: 'Right boards' },
-  'left-point':     { x: L_FACEOFF_X - 42,            y: BLUE_LINE_Y - 34,  label: 'Left point' },
-  'right-point':    { x: R_FACEOFF_X + 42,            y: BLUE_LINE_Y - 34,  label: 'Right point' },
-};
-const ZONE_KEYS = Object.keys(ZONES);
-
-// Home plate (high-danger zone): pentagon from the top of the faceoff circles
-// tapering down to just outside the crease at the goal line.
-const HP_TOP_Y         = FACEOFF_Y - 8;
-const HP_BOT_Y         = GOAL_LINE_Y;
-const HP_TOP_LEFT_X    = L_FACEOFF_X + 6;
-const HP_TOP_RIGHT_X   = R_FACEOFF_X - 6;
-const HP_BOT_LEFT_X    = RINK_CENTER_X - 4 * FX;
-const HP_BOT_RIGHT_X   = RINK_CENTER_X + 4 * FX;
-const HP_MID_Y         = (HP_TOP_Y + HP_BOT_Y) / 2 + 10;
-const HOME_PLATE_PATH  =
-  `M ${HP_TOP_LEFT_X} ${HP_TOP_Y} ` +
-  `L ${HP_TOP_RIGHT_X} ${HP_TOP_Y} ` +
-  `L ${HP_TOP_RIGHT_X} ${HP_MID_Y} ` +
-  `L ${HP_BOT_RIGHT_X} ${HP_BOT_Y} ` +
-  `L ${HP_BOT_LEFT_X} ${HP_BOT_Y} ` +
-  `L ${HP_TOP_LEFT_X} ${HP_MID_Y} Z`;
-
-// Zone-click hit regions. For the "click a zone" question type we draw
-// invisible <rect>/<path> hit targets over each nameable region.
-// These are generous and non-overlapping so kids can click with confidence.
-const ZONE_HIT_SHAPES = {
-  'slot':        { d: `M ${RINK_CENTER_X - 55} ${GOAL_LINE_Y + 16} L ${RINK_CENTER_X + 55} ${GOAL_LINE_Y + 16} L ${RINK_CENTER_X + 55} ${FACEOFF_Y - 8} L ${RINK_CENTER_X - 55} ${FACEOFF_Y - 8} Z` },
-  'high-slot':   { d: `M ${RINK_CENTER_X - 60} ${FACEOFF_Y + 16} L ${RINK_CENTER_X + 60} ${FACEOFF_Y + 16} L ${RINK_CENTER_X + 60} ${BLUE_LINE_Y - 10} L ${RINK_CENTER_X - 60} ${BLUE_LINE_Y - 10} Z` },
-  'net-front':   { d: `M ${RINK_CENTER_X - 30} ${GOAL_LINE_Y} L ${RINK_CENTER_X + 30} ${GOAL_LINE_Y} L ${RINK_CENTER_X + 30} ${GOAL_LINE_Y + 50} L ${RINK_CENTER_X - 30} ${GOAL_LINE_Y + 50} Z` },
-  'left-corner': { d: `M ${RINK_LEFT + 5} ${GOAL_LINE_Y - 70} L ${RINK_LEFT + 125} ${GOAL_LINE_Y - 70} L ${RINK_LEFT + 125} ${GOAL_LINE_Y + 30} L ${RINK_LEFT + 5} ${GOAL_LINE_Y + 30} Z` },
-  'right-corner':{ d: `M ${RINK_RIGHT - 125} ${GOAL_LINE_Y - 70} L ${RINK_RIGHT - 5} ${GOAL_LINE_Y - 70} L ${RINK_RIGHT - 5} ${GOAL_LINE_Y + 30} L ${RINK_RIGHT - 125} ${GOAL_LINE_Y + 30} Z` },
-  'behind-net':  { d: `M ${RINK_CENTER_X - 70} ${RINK_TOP + 4} L ${RINK_CENTER_X + 70} ${RINK_TOP + 4} L ${RINK_CENTER_X + 70} ${GOAL_LINE_Y - 8} L ${RINK_CENTER_X - 70} ${GOAL_LINE_Y - 8} Z` },
-  'left-point':  { d: `M ${L_FACEOFF_X - 85} ${BLUE_LINE_Y - 65} L ${L_FACEOFF_X + 5} ${BLUE_LINE_Y - 65} L ${L_FACEOFF_X + 5} ${BLUE_LINE_Y - 8} L ${L_FACEOFF_X - 85} ${BLUE_LINE_Y - 8} Z` },
-  'right-point': { d: `M ${R_FACEOFF_X - 5} ${BLUE_LINE_Y - 65} L ${R_FACEOFF_X + 85} ${BLUE_LINE_Y - 65} L ${R_FACEOFF_X + 85} ${BLUE_LINE_Y - 8} L ${R_FACEOFF_X - 5} ${BLUE_LINE_Y - 8} Z` },
-  'home-plate':  { d: HOME_PLATE_PATH },
-};
-
-// ─────────────────────────────────────────────────────────────────────────────
-// ID helper
-// ─────────────────────────────────────────────────────────────────────────────
-const uid = () => 'id_' + Math.random().toString(36).slice(2, 10);
-
-// ─────────────────────────────────────────────────────────────────────────────
-// Scene default + empty-scene factory
-// ─────────────────────────────────────────────────────────────────────────────
-function emptyScene() {
-  return {
-    team: [],
-    opponents: [],
-    puck: { zone: 'slot', offsetX: 26, offsetY: -2 },
-    showGoalie: true,
-    showHomePlate: false,
-    hideBranding: false,
-    texts: [],
-    arrows: [],
-    flags: [],
-    hiddenLabels: [],
-    question: {
-      mode: 'choice',
-      prompt: '',
-      options: [],
-      zones: { correct: [], partial: [], wrong: [] },
-      feedback: { correct: '', partial: '', wrong: '' },
-    },
-  };
-}
-
-// Resolve a player/puck/text/flag to its rendered position. Explicit (x,y)
-// from a drag takes precedence; otherwise zone anchor + optional offset.
-function resolvePos(item) {
-  if (item && item.x != null && item.y != null) return { x: item.x, y: item.y };
-  const z = ZONES[item?.zone] || ZONES['slot'];
-  return { x: z.x + (item?.offsetX || 0), y: z.y + (item?.offsetY || 0) };
-}
-
-function resolveArrowPoints(a) {
-  const p1 = (a.x1 != null && a.y1 != null) ? { x: a.x1, y: a.y1 } : (ZONES[a.from] || ZONES.slot);
-  const p2 = (a.x2 != null && a.y2 != null) ? { x: a.x2, y: a.y2 } : (ZONES[a.to] || ZONES['net-front']);
-  return { p1, p2 };
-}
-
-// ─────────────────────────────────────────────────────────────────────────────
-// SVG PRIMITIVES
-// ─────────────────────────────────────────────────────────────────────────────
-// Keys for every rink label — referenced by `scene.hiddenLabels` and by the
-// edit-mode toggle chips so authors can remove any subset per scenario.
-const LABEL_KEYS = [
-  { key: 'corner-L',   text: 'Corner' },
-  { key: 'corner-R',   text: 'Corner' },
-  { key: 'behind-net', text: 'Behind the net' },
-  { key: 'slot',       text: 'Slot' },
-  { key: 'high-slot',  text: 'High slot' },
-  { key: 'point-L',    text: 'Point' },
-  { key: 'point-R',    text: 'Point' },
-  { key: 'blue-line',  text: 'BLUE LINE' },
-];
-
-function RinkBackground({ lineOpacity = 0.45, showHomePlate, showZoneOutlines, hiddenLabels = [] }) {
-  const hide = (k) => hiddenLabels.includes(k);
-  // Reduced-opacity rink lines — see CLAUDE's note: "players & positioning
-  // are more important than the lines". We keep all lines visible, just
-  // dimmed, so on-ice objects dominate.
-  const r = CORNER_R;
-  const rinkPath =
-    `M ${RINK_LEFT + r} ${RINK_TOP} L ${RINK_RIGHT - r} ${RINK_TOP} ` +
-    `A ${r} ${r} 0 0 1 ${RINK_RIGHT} ${RINK_TOP + r} ` +
-    `L ${RINK_RIGHT} ${BLUE_LINE_Y + 40} ` +
-    `L ${RINK_LEFT} ${BLUE_LINE_Y + 40} ` +
-    `L ${RINK_LEFT} ${RINK_TOP + r} ` +
-    `A ${r} ${r} 0 0 1 ${RINK_LEFT + r} ${RINK_TOP} Z`;
-  const netX = RINK_CENTER_X - NET_W / 2;
-  const netYTop = GOAL_LINE_Y - NET_DEPTH;
-  const creaseR = 6 * FX;
-
-  return (
-    <>
-      {/* Rink board — kept fully opaque so the canvas has a clean edge */}
-      <path d={rinkPath} fill="#FDFEFF" stroke="#2F4A6B" strokeWidth="3" />
-
-      <g clipPath="url(#rink-clip)" opacity={lineOpacity}>
-        <ellipse cx={RINK_CENTER_X} cy={RINK_TOP + 40} rx="280" ry="40" fill="#E8F1FA" opacity="0.5" />
-
-        {/* Home plate overlay — always rendered if toggled, behind players */}
-        {showHomePlate && (
-          <path d={HOME_PLATE_PATH}
-                fill="#FF9A3C"
-                fillOpacity="0.22"
-                stroke="#B8570A"
-                strokeWidth="2"
-                strokeDasharray="5 3" />
-        )}
-
-        {/* Crease */}
-        <path d={`M ${RINK_CENTER_X - 4 * FX} ${GOAL_LINE_Y} L ${RINK_CENTER_X - 4 * FX} ${GOAL_LINE_Y + 4.5 * FY} A ${creaseR} ${creaseR} 0 0 0 ${RINK_CENTER_X + 4 * FX} ${GOAL_LINE_Y + 4.5 * FY} L ${RINK_CENTER_X + 4 * FX} ${GOAL_LINE_Y} Z`}
-              fill="#A8D0EC" stroke="#3B7FC4" strokeWidth="1.5" opacity="0.85" />
-
-        {/* Goal line */}
-        <line x1={RINK_LEFT} y1={GOAL_LINE_Y} x2={RINK_RIGHT} y2={GOAL_LINE_Y} stroke="#E8453E" strokeWidth="2.5" />
-
-        {/* Faceoff circles */}
-        <circle cx={L_FACEOFF_X} cy={FACEOFF_Y} r={FACEOFF_R} fill="none" stroke="#E8453E" strokeWidth="2" />
-        <circle cx={R_FACEOFF_X} cy={FACEOFF_Y} r={FACEOFF_R} fill="none" stroke="#E8453E" strokeWidth="2" />
-
-        {/* Hashmarks */}
-        <Hashmarks cx={L_FACEOFF_X} cy={FACEOFF_Y} />
-        <Hashmarks cx={R_FACEOFF_X} cy={FACEOFF_Y} />
-
-        {/* Faceoff dots */}
-        <circle cx={L_FACEOFF_X} cy={FACEOFF_Y} r="7" fill="#E8453E" />
-        <circle cx={R_FACEOFF_X} cy={FACEOFF_Y} r="7" fill="#E8453E" />
-
-        {/* Net */}
-        <rect x={netX} y={netYTop} width={NET_W} height={NET_DEPTH} fill="#FFFFFF" stroke="#2F4A6B" strokeWidth="2" rx="2" />
-
-        {/* Blue line */}
-        <rect x={RINK_LEFT} y={BLUE_LINE_Y - 4} width={RINK_RIGHT - RINK_LEFT} height="8" fill="#3B8BD4" />
-      </g>
-
-      {/* Zone outlines (only in zone-click authoring/play) — drawn above bg but below players */}
-      {showZoneOutlines && (
-        <g pointerEvents="none">
-          {Object.entries(ZONE_HIT_SHAPES).map(([k, s]) => (
-            <path key={k} d={s.d} fill="none" stroke="#378ADD" strokeWidth="1.5"
-                  strokeDasharray="4 3" opacity="0.35" />
-          ))}
-        </g>
-      )}
-
-      {/* Zone labels — each toggleable via scene.hiddenLabels (see LABEL_KEYS) */}
-      {!hide('corner-L')   && <ZoneLabel x={RINK_LEFT + 55}  y={GOAL_LINE_Y - 58} text="Corner" />}
-      {!hide('corner-R')   && <ZoneLabel x={RINK_RIGHT - 55} y={GOAL_LINE_Y - 58} text="Corner" />}
-      {!hide('behind-net') && <ZoneLabel x={RINK_CENTER_X}   y={RINK_TOP - 8}     text="Behind the net" />}
-      {!hide('slot')       && <ZoneLabel x={RINK_CENTER_X}   y={FACEOFF_Y - 30}   text="Slot" />}
-      {!hide('high-slot')  && <ZoneLabel x={RINK_CENTER_X}   y={FACEOFF_Y + 80}   text="High slot" />}
-      {!hide('point-L')    && <ZoneLabel x={L_FACEOFF_X - 56} y={BLUE_LINE_Y - 24} text="Point" />}
-      {!hide('point-R')    && <ZoneLabel x={R_FACEOFF_X + 56} y={BLUE_LINE_Y - 24} text="Point" />}
-      {!hide('blue-line')  && (
-        <text x={RINK_CENTER_X} y={BLUE_LINE_Y + 30}
-              fontFamily="'Anthropic Sans',sans-serif" fontSize="14"
-              fontWeight="700" fill="#3B8BD4" textAnchor="middle">BLUE LINE</text>
-      )}
-    </>
-  );
-}
-
-function Hashmarks({ cx, cy }) {
-  const r = FACEOFF_R;
-  return (
-    <>
-      <line x1={cx - 18} y1={cy - r} x2={cx - 18} y2={cy - r - 14} stroke="#E8453E" strokeWidth="2" />
-      <line x1={cx + 18} y1={cy - r} x2={cx + 18} y2={cy - r - 14} stroke="#E8453E" strokeWidth="2" />
-      <line x1={cx - 18} y1={cy + r} x2={cx - 18} y2={cy + r + 14} stroke="#E8453E" strokeWidth="2" />
-      <line x1={cx + 18} y1={cy + r} x2={cx + 18} y2={cy + r + 14} stroke="#E8453E" strokeWidth="2" />
-    </>
-  );
-}
-
-function ZoneLabel({ x, y, text }) {
-  return (
-    <text x={x} y={y}
-          fontFamily="'Anthropic Sans',sans-serif" fontSize="13"
-          fontWeight="600" fill="#4A5C6E" textAnchor="middle">{text}</text>
-  );
-}
-
-// Generic helmet (replaces hair styles — per user request, hair is removed)
-function Helmet({ cx, cy }) {
-  return (
-    <>
-      <ellipse cx={cx} cy={cy} rx="11" ry="10" fill="#2F4A6B" stroke="#1A2B3E" strokeWidth="1.5" />
-      <rect x={cx - 1.4} y={cy - 10} width="2.8" height="20" fill="#1A2B3E" />
-      <path d={`M ${cx - 7} ${cy + 4} Q ${cx} ${cy + 7} ${cx + 7} ${cy + 4}`} fill="none" stroke="#1A2B3E" strokeWidth="1" />
-    </>
-  );
-}
-
-// Star drawn directly on the jersey chest — indicates "YOU"
-function JerseyStar({ cx, cy }) {
-  const sy = cy + 13;
-  const pts = [
-    [cx, sy - 7], [cx + 2, sy - 2.3], [cx + 7, sy - 2.3],
-    [cx + 3, sy + 1], [cx + 4.5, sy + 6.5], [cx, sy + 3.5],
-    [cx - 4.5, sy + 6.5], [cx - 3, sy + 1], [cx - 7, sy - 2.3], [cx - 2, sy - 2.3]
-  ].map(p => p.join(',')).join(' ');
-  return <polygon points={pts} fill="#FFD93D" stroke="#C89B0A" strokeWidth="1.3" />;
-}
-
-// Verdict ring — rendered under an item when it's been assigned to a
-// spot-mistake bucket (correct/partial/wrong). Invisible otherwise.
-const VERDICT_COLORS = {
-  correct: '#639922',
-  partial: '#BA7517',
-  wrong:   '#A32D2D',
-};
-function VerdictRing({ cx, cy, r, verdict }) {
-  if (!verdict) return null;
-  const c = VERDICT_COLORS[verdict] || '#888';
-  return (
-    <circle cx={cx} cy={cy} r={r} fill="none" stroke={c} strokeWidth="3.5"
-            strokeDasharray="4 4" opacity="0.85" pointerEvents="none" />
-  );
-}
-
-function Teammate({ item, selected, onPointerDown, onClick, verdict, playMode }) {
-  const { x: cx, y: cy } = resolvePos(item);
-  const strokeW = item.hasPuck ? 4 : 2.5;
-  const labelOnChest = item.label && !item.isYou;
-  const showYouBelow = item.isYou;
-  const s = item.size || 1;
-
-  return (
-    <g className="rnk-draggable" data-id={item.id}
-       style={{ cursor: playMode ? 'default' : 'grab' }}
-       onPointerDown={onPointerDown}
-       onClick={onClick}
-       transform={s !== 1 ? `translate(${cx} ${cy}) scale(${s}) translate(${-cx} ${-cy})` : undefined}>
-      <VerdictRing cx={cx} cy={cy + 8} r={32} verdict={verdict} />
-      {selected && (
-        <rect x={cx - 26} y={cy - 20} width="52" height="56" rx="8"
-              fill="none" stroke="#378ADD" strokeWidth="2" strokeDasharray="4 3" />
-      )}
-      {/* Jersey */}
-      <path d={`M ${cx - 18} ${cy} Q ${cx - 20} ${cy + 20} ${cx - 12} ${cy + 24} Q ${cx} ${cy + 28} ${cx + 12} ${cy + 24} Q ${cx + 20} ${cy + 20} ${cx + 18} ${cy} Q ${cx + 10} ${cy - 4} ${cx} ${cy - 4} Q ${cx - 10} ${cy - 4} ${cx - 18} ${cy} Z`}
-            fill="#FFFFFF" stroke="#1E5FA5" strokeWidth={strokeW} strokeLinejoin="round"
-            filter="url(#bcastShadow)" />
-      {labelOnChest && (
-        <text x={cx} y={cy + 15}
-              fontFamily="'Anthropic Sans',sans-serif" fontSize="13"
-              fontWeight="700" fill="#1E5FA5" textAnchor="middle"
-              dominantBaseline="central">{item.label}</text>
-      )}
-      {item.isYou && <JerseyStar cx={cx} cy={cy} />}
-      <Helmet cx={cx} cy={cy - 6} />
-      {showYouBelow && (
-        <text x={cx} y={cy + 38}
-              fontFamily="'Anthropic Sans',sans-serif" fontSize="12"
-              fontWeight="700" fill="#C89B0A" textAnchor="middle">
-          {item.label ? `${item.label} (you)` : 'YOU'}
-        </text>
-      )}
-    </g>
-  );
-}
-
-function Opponent({ item, selected, onPointerDown, onClick, verdict, playMode }) {
-  const { x: cx, y: cy } = resolvePos(item);
-  const s = item.size || 1;
-  return (
-    <g className="rnk-draggable" data-id={item.id}
-       style={{ cursor: playMode ? 'default' : 'grab' }}
-       onPointerDown={onPointerDown}
-       onClick={onClick}
-       transform={s !== 1 ? `translate(${cx} ${cy}) scale(${s}) translate(${-cx} ${-cy})` : undefined}>
-      <VerdictRing cx={cx} cy={cy + 7} r={30} verdict={verdict} />
-      {selected && (
-        <rect x={cx - 24} y={cy - 16} width="48" height="50" rx="8"
-              fill="none" stroke="#378ADD" strokeWidth="2" strokeDasharray="4 3" />
-      )}
-      <path d={`M ${cx - 17} ${cy} Q ${cx - 19} ${cy + 18} ${cx - 11} ${cy + 22} Q ${cx} ${cy + 25} ${cx + 11} ${cy + 22} Q ${cx + 19} ${cy + 18} ${cx + 17} ${cy} Q ${cx + 9} ${cy - 3} ${cx} ${cy - 3} Q ${cx - 9} ${cy - 3} ${cx - 17} ${cy} Z`}
-            fill="url(#oppStripes)" stroke="#2F4A6B" strokeWidth="2.5" strokeLinejoin="round"
-            filter="url(#bcastShadow)" />
-      <Helmet cx={cx} cy={cy - 6} />
-    </g>
-  );
-}
-
-// Goalie is a fixed-position fixture (not draggable). In edit mode it's
-// clickable so it can be selected and removed via the × handle / Del key;
-// in play mode it's non-interactive.
-const GOALIE_POS = { x: RINK_CENTER_X, y: GOAL_LINE_Y + 16 };
-
-function Goalie({ selected, playMode, onSelect, onClick, verdict, interactive }) {
-  const cx = GOALIE_POS.x;
-  const cy = GOALIE_POS.y;
-  // `interactive` — true when play-mode spot-mistake wants the goalie clickable.
-  const pe = (playMode && !interactive) ? 'none' : 'auto';
-  return (
-    <g style={{ cursor: playMode && !interactive ? 'default' : 'pointer' }}
-       pointerEvents={pe}
-       onClick={onClick}
-       onPointerDown={(e) => { if (onSelect) { e.stopPropagation(); onSelect(e); } }}>
-      <VerdictRing cx={cx} cy={cy + 6} r={32} verdict={verdict} />
-      {selected && (
-        <rect x={cx - 28} y={cy - 24} width="56" height="60" rx="8"
-              fill="none" stroke="#378ADD" strokeWidth="2" strokeDasharray="4 3" />
-      )}
-      <rect x={cx - 19} y={cy + 8} width="12" height="24" rx="3" fill="#FFFFFF" stroke="#1A1A1A" strokeWidth="2" />
-      <rect x={cx + 7}  y={cy + 8} width="12" height="24" rx="3" fill="#FFFFFF" stroke="#1A1A1A" strokeWidth="2" />
-      <path d={`M ${cx - 20} ${cy - 2} Q ${cx - 23} ${cy + 17} ${cx - 14} ${cy + 19} L ${cx + 14} ${cy + 19} Q ${cx + 23} ${cy + 17} ${cx + 20} ${cy - 2} Q ${cx + 10} ${cy - 6} ${cx} ${cy - 6} Q ${cx - 10} ${cy - 6} ${cx - 20} ${cy - 2} Z`}
-            fill="url(#oppStripes)" stroke="#1A1A1A" strokeWidth="2.5" />
-      <rect x={cx + 18} y={cy + 2} width="10" height="13" rx="1.5" fill="#FFFFFF" stroke="#1A1A1A" strokeWidth="1.5" />
-      <circle cx={cx - 23} cy={cy + 7} r="8" fill="#FFFFFF" stroke="#1A1A1A" strokeWidth="1.5" />
-      <ellipse cx={cx} cy={cy - 11} rx="11" ry="10" fill="#FFFFFF" stroke="#1A1A1A" strokeWidth="2" />
-      <text x={cx} y={cy + 9}
-            fontFamily="'Anthropic Sans',sans-serif" fontSize="12"
-            fontWeight="700" fill="#1E5FA5" textAnchor="middle"
-            dominantBaseline="central">G</text>
-    </g>
-  );
-}
-
-function BigPuck({ puck, selected, onPointerDown, onClick, verdict, playMode }) {
-  const { x: cx, y: cy } = resolvePos(puck);
-  const s = puck.size || 1;
-  return (
-    <g className="rnk-draggable" data-id="puck"
-       style={{ cursor: playMode ? 'default' : 'grab' }}
-       onPointerDown={onPointerDown}
-       onClick={onClick}
-       transform={s !== 1 ? `translate(${cx} ${cy}) scale(${s}) translate(${-cx} ${-cy})` : undefined}>
-      <VerdictRing cx={cx} cy={cy} r={22} verdict={verdict} />
-      {selected && (
-        <circle cx={cx} cy={cy} r="22" fill="none" stroke="#378ADD" strokeWidth="2" strokeDasharray="4 3" />
-      )}
-      <circle cx={cx} cy={cy} r="16" fill="url(#puckGlow)" stroke="#6B4A00" strokeWidth="2.4"
-              filter="url(#bcastShadow)" />
-      <ellipse cx={cx - 4} cy={cy - 6} rx="6" ry="3.5" fill="#FFF4B8" opacity="0.8" />
-      <text x={cx} y={cy + 1}
-            fontFamily="'Anthropic Sans',sans-serif" fontSize="9"
-            fontWeight="700" fill="#6B4A00" textAnchor="middle"
-            dominantBaseline="central">PUCK</text>
-    </g>
-  );
-}
-
-function TextLabel({ item, selected, onPointerDown, playMode }) {
-  const cx = item.x, cy = item.y;
-  const w = Math.max(40, (item.text || '').length * 7.8 + 14);
-  return (
-    <g className="rnk-draggable" data-id={item.id}
-       style={{ cursor: playMode ? 'default' : 'grab' }}
-       onPointerDown={onPointerDown}>
-      {selected && (
-        <rect x={cx - 7} y={cy - 18} width={w + 4} height="24" rx="4"
-              fill="none" stroke="#378ADD" strokeWidth="2" strokeDasharray="4 3" />
-      )}
-      <rect x={cx - 5} y={cy - 16} width={w} height="20" rx="3"
-            fill="#FFFFE0" stroke="#C89B0A" strokeWidth="1" opacity="0.95" />
-      <text x={cx} y={cy}
-            fontFamily="'Anthropic Sans',sans-serif" fontSize="13"
-            fontWeight="600" fill="#6B4A00">{item.text || 'Text'}</text>
-    </g>
-  );
-}
-
-function Flag({ item, selected, onPointerDown, onClick, verdict, playMode }) {
-  const { x, y } = resolvePos(item);
-  return (
-    <g className="rnk-draggable" data-id={item.id}
-       style={{ cursor: playMode ? 'default' : 'grab' }}
-       onPointerDown={onPointerDown}
-       onClick={onClick}>
-      <VerdictRing cx={x} cy={y + 8} r={16} verdict={verdict} />
-      {selected && (
-        <circle cx={x} cy={y + 8} r="36" fill="none"
-                stroke="#378ADD" strokeWidth="2" strokeDasharray="4 3" />
-      )}
-      <circle cx={x} cy={y + 8} r="32" fill="none"
-              stroke="#FF9A3C" strokeWidth="3" strokeDasharray="5 4" opacity="0.85" />
-      <circle cx={x + 26} cy={y - 26} r="14"
-              fill="#FF9A3C" stroke="#B8570A" strokeWidth="2" />
-      <text x={x + 26} y={y - 26}
-            fontFamily="'Anthropic Sans',sans-serif" fontSize="18"
-            fontWeight="700" fill="#FFFFFF" textAnchor="middle"
-            dominantBaseline="central">?</text>
-    </g>
-  );
-}
-
-// Broadcast-style overlay shown in play mode: "READ THE PLAY" chip top-left,
-// age badge top-right, and a lower-third prompt bar along the bottom of the
-// SVG so the prompt sits inside the image frame like a real coach's-corner
-// replay graphic. Intentionally pointerEvents="none" so it doesn't steal
-// clicks from zones or players beneath it.
-function BroadcastOverlay({ prompt, age, mode, hasHomePlate }) {
-  if (mode !== 'play') return null;
-  const BAR_TOP = VIEWBOX_H - 76;
-  const BAR_H = 76;
-  const VIEW_W = 680;
-  const promptText = prompt && prompt.length > 90 ? prompt.slice(0, 87) + '…' : (prompt || '');
-  return (
-    <g pointerEvents="none">
-      {/* Lower-third gradient bar */}
-      <rect x="0" y={BAR_TOP} width={VIEW_W} height={BAR_H}
-            fill="url(#bcastLowerThird)" />
-      {/* Gold accent rule across the top of the bar */}
-      <rect x="0" y={BAR_TOP} width={VIEW_W} height="2.2" fill="#FC4C02" />
-      {/* Subtle vertical gradient highlight in the accent for polish */}
-      <rect x="0" y={BAR_TOP + 2.2} width={VIEW_W} height="1" fill="#FFFFFF" opacity="0.22" />
-      {/* Prompt text — centered inside the bar */}
-      {promptText && (
-        <text x={VIEW_W / 2} y={BAR_TOP + 42}
-              fontFamily="'Anthropic Sans',sans-serif" fontSize="20"
-              fontWeight="700" fill="#FFFFFF" textAnchor="middle"
-              dominantBaseline="central" letterSpacing="0.2">
-          {promptText}
-        </text>
-      )}
-      {/* Small READ THE PLAY lozenge top-left inside the rink frame */}
-      <g transform="translate(14, 14)">
-        <rect x="0" y="0" width="130" height="22" rx="11" fill="#FC4C02" />
-        <text x="65" y="12"
-              fontFamily="'Anthropic Sans',sans-serif" fontSize="11"
-              fontWeight="700" fill="#FFFFFF" textAnchor="middle"
-              dominantBaseline="central" letterSpacing="2">READ THE PLAY</text>
-      </g>
-      {/* Age badge top-right */}
-      {age && (
-        <g transform={`translate(${VIEW_W - 96}, 14)`}>
-          <rect x="0" y="0" width="82" height="22" rx="11" fill="#041E42" stroke="#FC4C02" strokeWidth="1.2" />
-          <text x="41" y="12"
-                fontFamily="'Anthropic Sans',sans-serif" fontSize="11"
-                fontWeight="700" fill="#FC4C02" textAnchor="middle"
-                dominantBaseline="central" letterSpacing="1.5">{String(age).toUpperCase()}</text>
-        </g>
-      )}
-      {/* Faint high-danger wash over home plate (only if scene shows it) */}
-      {hasHomePlate && (
-        <rect x="230" y="70" width="220" height="260"
-              fill="url(#highDangerWash)" />
-      )}
-    </g>
-  );
-}
-
-function Arrow({ a }) {
-  const { p1, p2 } = resolveArrowPoints(a);
-  const dx = p2.x - p1.x, dy = p2.y - p1.y;
-  const len = Math.sqrt(dx * dx + dy * dy) || 1;
-  const nx = dx / len, ny = dy / len;
-  const sX = p1.x + nx * 10, sY = p1.y + ny * 10;
-  const eX = p2.x - nx * 10, eY = p2.y - ny * 10;
-  const mX = (sX + eX) / 2, mY = (sY + eY) / 2;
-  const pathD = `M ${sX} ${sY} Q ${mX + -ny * 12} ${mY + nx * 12} ${eX} ${eY}`;
-  return (
-    <g>
-      {/* Broadcast motion halo — wider stroke under the dashed line */}
-      <path d={pathD} fill="none" stroke="#22A06B" strokeWidth="11"
-            strokeLinecap="round" opacity="0.18" />
-      <path d={pathD} fill="none" stroke="#22A06B" strokeWidth="4.5"
-            strokeLinecap="round" strokeDasharray="9 5"
-            markerEnd="url(#move-arrow)" />
-    </g>
-  );
-}
-
-// IceIQ branding watermark. Positioned bottom-right of the rink. Subtle but
-// unmistakable — a stylized "IQ" monogram in ice-blue with a faint puck mark.
-function IceIQBrand({ variant = 'corner' }) {
-  if (variant === 'corner') {
-    const x = RINK_RIGHT - 52;
-    const y = BLUE_LINE_Y + 62;
-    return (
-      <g pointerEvents="none" opacity="0.9">
-        {/* subtle chip behind wordmark */}
-        <rect x={x - 62} y={y - 18} width="118" height="28" rx="14"
-              fill="#0B2942" />
-        <circle cx={x - 45} cy={y - 4} r="7" fill="url(#puckGlow)" stroke="#6B4A00" strokeWidth="1" />
-        <text x={x - 32} y={y}
-              fontFamily="'Anthropic Sans',sans-serif" fontSize="14"
-              fontWeight="700" fill="#FFFFFF" letterSpacing="1.2"
-              dominantBaseline="central">
-          ICE<tspan fill="#3B8BD4">·</tspan>IQ
-        </text>
-        <text x={x + 12} y={y + 18}
-              fontFamily="'Anthropic Sans',sans-serif" fontSize="8"
-              fill="#6B8DAD" letterSpacing="2" textAnchor="middle">PLAYER DEV</text>
-      </g>
-    );
-  }
-  // Center-ice "ghost" variant — very faint, large, behind everything
-  return (
-    <g pointerEvents="none" opacity="0.05">
-      <text x={RINK_CENTER_X} y={FACEOFF_Y + 30}
-            fontFamily="'Anthropic Sans',sans-serif" fontSize="72"
-            fontWeight="900" fill="#1E5FA5" textAnchor="middle"
-            letterSpacing="6">ICE·IQ</text>
-    </g>
-  );
-}
-
-// ─────────────────────────────────────────────────────────────────────────────
-// MAIN COMPONENT
-// ─────────────────────────────────────────────────────────────────────────────
-/**
- * <Rink />
- *
- * Props:
- *   scene       — required. Scene object (see schema above).
- *   onChange    — edit mode. Called with updated scene on every change.
- *   mode        — "edit" (default) | "play"
- *   onAnswer    — play mode. Called with { verdict, choice, feedback } when
- *                 the kid picks an option or clicks a zone.
- *   ageGroup    — optional: "U9" | "U11" | ... — used for UI affordances
- *                 (e.g. U9 defaults to no position labels).
- *   className   — optional wrapper class.
- */
-function Rink({
-  scene: sceneProp,
-  onChange,
-  mode = 'edit',
-  onAnswer,
-  ageGroup,
-  className = '',
-  lockAnswer = false, // when true, hides internal AnswerFeedback + blocks re-answering (host renders its own feedback)
-}) {
-  const [scene, setSceneInternal] = useState(sceneProp || emptyScene());
-  const [selectedId, setSelectedId] = useState(null);
-  const [placementTool, setPlacementTool] = useState(null); // 'teammate'|'opponent'|'puck'|'text'|'flag'|'arrow'
-  const [arrowDraft, setArrowDraft] = useState(null);       // { x1, y1 } while placing an arrow
-  const [playAnswer, setPlayAnswer] = useState(null);       // in play mode: the kid's chosen verdict+feedback
-  const svgRef = useRef(null);
-  const dragRef = useRef(null);                             // { id, offsetX, offsetY }
-
-  // Keep internal scene in sync with prop changes (if parent controls)
-  useEffect(() => {
-    if (sceneProp) setSceneInternal(sceneProp);
-  }, [sceneProp]);
-
-  // Delete/Backspace removes the selected item in edit mode. Listener is
-  // scoped to the rink wrapper so typing in other fields on the page stays
-  // safe (inputs/textareas still take the keys because we only fire when
-  // no text-input-like element is focused).
-  useEffect(() => {
-    if (mode !== 'edit' || !selectedId) return;
-    const onKey = (e) => {
-      if (e.key !== 'Delete' && e.key !== 'Backspace') return;
-      const ae = document.activeElement;
-      const tag = ae && ae.tagName;
-      if (tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT' || (ae && ae.isContentEditable)) return;
-      e.preventDefault();
-      setSceneInternal(prev => {
-        const next = deleteItem(prev, selectedId);
-        if (onChange) onChange(next);
-        return next;
-      });
-      setSelectedId(null);
-    };
-    window.addEventListener('keydown', onKey);
-    return () => window.removeEventListener('keydown', onKey);
-  }, [mode, selectedId, onChange]);
-
-  // Unified updater: mutates internal copy and fires onChange (edit mode)
-  const updateScene = useCallback((updater) => {
-    setSceneInternal(prev => {
-      const next = typeof updater === 'function' ? updater(prev) : updater;
-      if (onChange) onChange(next);
-      return next;
-    });
-  }, [onChange]);
-
-  // ─── Coordinate conversion (screen → SVG) ────────────────────────────────
-  const svgPoint = useCallback((e) => {
-    const svg = svgRef.current;
-    if (!svg) return { x: 0, y: 0 };
-    const pt = svg.createSVGPoint();
-    pt.x = e.clientX;
-    pt.y = e.clientY;
-    return pt.matrixTransform(svg.getScreenCTM().inverse());
-  }, []);
-
-  // ─── Drag handling ───────────────────────────────────────────────────────
-  const onItemPointerDown = useCallback((e) => {
-    // In play mode, spot-mistake items are click-to-answer (handled by
-    // onItemClick). Other play-mode items are non-interactive. Either way,
-    // no drag setup.
-    if (mode === 'play') return;
-    // If a placement tool is active, clicking an existing item cancels the tool.
-    if (placementTool) { setPlacementTool(null); setArrowDraft(null); }
-    e.stopPropagation();
-    const id = e.currentTarget.getAttribute('data-id');
-    setSelectedId(id);
-    const pos = getItemPos(scene, id);
-    const pt = svgPoint(e);
-    dragRef.current = { id, offsetX: pt.x - pos.x, offsetY: pt.y - pos.y };
-    e.currentTarget.setPointerCapture(e.pointerId);
-    document.addEventListener('pointermove', onDragMove);
-    document.addEventListener('pointerup', onDragEnd, { once: true });
-  }, [scene, mode, placementTool, svgPoint]);
-
-  const onDragMove = useCallback((e) => {
-    const d = dragRef.current;
-    if (!d) return;
-    const pt = svgPoint(e);
-    updateScene(prev => setItemPos(prev, d.id, pt.x - d.offsetX, pt.y - d.offsetY));
-  }, [svgPoint, updateScene]);
-
-  const onDragEnd = useCallback(() => {
-    dragRef.current = null;
-    document.removeEventListener('pointermove', onDragMove);
-  }, [onDragMove]);
-
-  // ─── Click-to-place (edit mode) ──────────────────────────────────────────
-  const onRinkClick = useCallback((e) => {
-    if (mode === 'play') {
-      // In play mode, zone-click questions are handled by zone hit regions
-      // directly (see renderZoneHits). A raw click on empty ice is a no-op.
-      return;
-    }
-    if (!placementTool) return;
-    // Ignore clicks that originated on an existing item
-    if (e.target.closest('.rnk-draggable')) return;
-    const pt = svgPoint(e);
-    const x = pt.x, y = pt.y;
-
-    updateScene(prev => {
-      const next = { ...prev };
-      const id = uid();
-      switch (placementTool) {
-        case 'teammate': {
-          const newItem = {
-            id,
-            label: (ageGroup && ageGroup !== 'U9') ? 'C' : '',
-            zone: nearestZone(x, y),
-            x, y,
-            hasPuck: false,
-            isYou: false,
-          };
-          next.team = [...(prev.team || []), newItem];
-          break;
-        }
-        case 'opponent': {
-          const newItem = { id, zone: nearestZone(x, y), x, y };
-          next.opponents = [...(prev.opponents || []), newItem];
-          break;
-        }
-        case 'puck': {
-          next.puck = { zone: nearestZone(x, y), x, y };
-          break;
-        }
-        case 'text': {
-          const text = window.prompt('Label text:', 'Note');
-          if (!text) return prev;
-          next.texts = [...(prev.texts || []), { id, text, x, y }];
-          break;
-        }
-        case 'flag': {
-          next.flags = [...(prev.flags || []), { id, zone: nearestZone(x, y), x, y }];
-          break;
-        }
-        case 'arrow': {
-          if (!arrowDraft) {
-            setArrowDraft({ x1: x, y1: y });
-            return prev;
-          }
-          const newArrow = { id, from: nearestZone(arrowDraft.x1, arrowDraft.y1), to: nearestZone(x, y), x1: arrowDraft.x1, y1: arrowDraft.y1, x2: x, y2: y };
-          next.arrows = [...(prev.arrows || []), newArrow];
-          setArrowDraft(null);
-          break;
-        }
-        default: return prev;
-      }
-      setSelectedId(id);
-      return next;
-    });
-    // After placing a single-click tool, keep the tool active so user can
-    // place multiple in a row. They click the toolbar item again to deactivate.
-    if (placementTool !== 'arrow') {
-      // no-op: tool stays active
-    }
-  }, [placementTool, arrowDraft, mode, ageGroup, svgPoint, updateScene]);
-
-  // ─── Zone-click answer (play mode, zone-click questions) ─────────────────
-  // Scoring delegates to QUESTION_MODES['zone-click'].score so all rink-mode
-  // scoring lives in a single registry (see src/rinkQuestionModes.js).
-  const onZoneClickAnswer = useCallback((zoneKey) => {
-    if (mode !== 'play' || scene.question?.mode !== 'zone-click') return;
-    if (lockAnswer && playAnswer) return; // host has recorded result — ignore re-clicks
-    const result = QUESTION_MODES['zone-click'].score(zoneKey, scene.question);
-    setPlayAnswer(result);
-    if (onAnswer) onAnswer(result);
-  }, [mode, scene, onAnswer, lockAnswer, playAnswer]);
-
-  // ─── Spot-mistake handling ───────────────────────────────────────────────
-  // Edit mode: clicking an item cycles its assignment through the targets
-  // bucket (unassigned → correct → partial → wrong → unassigned), mirroring
-  // the zone-click authoring pattern.
-  // Play mode: clicking any item answers the question via the registry.
-  const isSpotMistakeQuestion = scene.question?.mode === 'spot-mistake';
-  const onItemClick = useCallback((itemId) => (e) => {
-    if (!isSpotMistakeQuestion) return;
-    if (e) e.stopPropagation();
-    if (mode === 'edit') {
-      updateScene(prev => {
-        const q = prev.question || {};
-        const nextTargets = cycleBucket(q.targets, itemId);
-        return { ...prev, question: { ...q, targets: nextTargets } };
-      });
-      return;
-    }
-    if (mode === 'play') {
-      if (lockAnswer && playAnswer) return;
-      const result = QUESTION_MODES['spot-mistake'].score(itemId, scene.question);
-      setPlayAnswer(result);
-      if (onAnswer) onAnswer(result);
-    }
-  }, [isSpotMistakeQuestion, mode, scene, updateScene, onAnswer, lockAnswer, playAnswer]);
-  const itemVerdict = useCallback((itemId) => {
-    if (!isSpotMistakeQuestion || mode !== 'edit') return null;
-    return bucketVerdict(scene.question?.targets, itemId);
-  }, [isSpotMistakeQuestion, mode, scene]);
-
-  // ─── Derived UI flags ────────────────────────────────────────────────────
-  const isZoneClickQuestion = scene.question?.mode === 'zone-click';
-  const showZoneOutlines = (mode === 'edit' && isZoneClickQuestion) ||
-                           (mode === 'play' && isZoneClickQuestion && !playAnswer);
-
-  // ─── Render ──────────────────────────────────────────────────────────────
-  return (
-    <div className={`rnk-wrap ${className}`} style={styles.wrap}>
-      {mode === 'edit' && (
-        <>
-          <Toolbar
-            active={placementTool}
-            onSelect={(tool) => {
-              setPlacementTool(prev => prev === tool ? null : tool);
-              setArrowDraft(null);
-            }}
-            arrowDraft={arrowDraft}
-          />
-          <SceneToggles
-            scene={scene}
-            onLabelToggle={(keys, hide) => updateScene(prev => {
-              const set = new Set(prev.hiddenLabels || []);
-              keys.forEach(k => hide ? set.add(k) : set.delete(k));
-              return { ...prev, hiddenLabels: Array.from(set) };
-            })}
-            onSceneToggle={(field, on) => updateScene(prev => ({ ...prev, [field]: on }))}
-          />
-        </>
-      )}
-
-      <div style={styles.canvasWrap}>
-        <svg ref={svgRef}
-             viewBox={`0 0 680 ${VIEWBOX_H}`}
-             width="100%"
-             style={{ display: 'block', userSelect: 'none', touchAction: 'none', cursor: placementTool ? 'crosshair' : 'default' }}
-             onClick={onRinkClick}
-             role="img">
-          <title>IceIQ offensive-zone scenario</title>
-          <defs>
-            <marker id="move-arrow" viewBox="0 0 12 12" refX="10" refY="6" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
-              <path d="M2 1 L10 6 L2 11 Z" fill="context-stroke" />
-            </marker>
-            <clipPath id="rink-clip">
-              <path d={`M ${RINK_LEFT + CORNER_R} ${RINK_TOP} L ${RINK_RIGHT - CORNER_R} ${RINK_TOP} A ${CORNER_R} ${CORNER_R} 0 0 1 ${RINK_RIGHT} ${RINK_TOP + CORNER_R} L ${RINK_RIGHT} ${BLUE_LINE_Y + 40} L ${RINK_LEFT} ${BLUE_LINE_Y + 40} L ${RINK_LEFT} ${RINK_TOP + CORNER_R} A ${CORNER_R} ${CORNER_R} 0 0 1 ${RINK_LEFT + CORNER_R} ${RINK_TOP} Z`} />
-            </clipPath>
-            <radialGradient id="puckGlow" cx="0.35" cy="0.3">
-              <stop offset="0%"   stopColor="#FFE88F" />
-              <stop offset="60%"  stopColor="#F2C744" />
-              <stop offset="100%" stopColor="#B8860B" />
-            </radialGradient>
-            <pattern id="oppStripes" patternUnits="userSpaceOnUse" width="7" height="7" patternTransform="rotate(45)">
-              <rect width="7" height="7" fill="#FFFFFF" />
-              <line x1="0" y1="0" x2="0" y2="7" stroke="#2F4A6B" strokeWidth="3.5" />
-            </pattern>
-            {/* Broadcast: subtle drop shadow under players/puck for depth */}
-            <filter id="bcastShadow" x="-40%" y="-40%" width="180%" height="180%">
-              <feDropShadow dx="0" dy="2.2" stdDeviation="1.4" floodColor="#0B1B2B" floodOpacity="0.38" />
-            </filter>
-            {/* Broadcast: halo gradient used under motion arrows */}
-            <linearGradient id="trailGlow" x1="0" y1="0" x2="1" y2="0">
-              <stop offset="0%"   stopColor="#22A06B" stopOpacity="0.05" />
-              <stop offset="100%" stopColor="#22A06B" stopOpacity="0.35" />
-            </linearGradient>
-            {/* Broadcast: lower-third prompt bar gradient */}
-            <linearGradient id="bcastLowerThird" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0%" stopColor="#041E42" stopOpacity="0" />
-              <stop offset="35%" stopColor="#041E42" stopOpacity="0.88" />
-              <stop offset="100%" stopColor="#000814" stopOpacity="0.96" />
-            </linearGradient>
-            {/* Broadcast: high-danger red-orange wash for home plate */}
-            <radialGradient id="highDangerWash" cx="0.5" cy="0.4" r="0.6">
-              <stop offset="0%"  stopColor="#FC4C02" stopOpacity="0.14" />
-              <stop offset="60%" stopColor="#FC4C02" stopOpacity="0.06" />
-              <stop offset="100%" stopColor="#FC4C02" stopOpacity="0" />
-            </radialGradient>
-          </defs>
-
-          {/* Rink background (dimmed) */}
-          <RinkBackground lineOpacity={0.45}
-                          showHomePlate={scene.showHomePlate}
-                          showZoneOutlines={showZoneOutlines}
-                          hiddenLabels={scene.hiddenLabels || []} />
-
-          {/* Faint center-ice IceIQ brand mark — hideable per scene */}
-          {!scene.hideBranding && <IceIQBrand variant="ghost" />}
-
-          {/* Zone click hit targets — only active when relevant */}
-          {isZoneClickQuestion && (
-            <g>
-              {Object.entries(ZONE_HIT_SHAPES).map(([k, s]) => (
-                <ZoneHit key={k}
-                         zoneKey={k}
-                         d={s.d}
-                         mode={mode}
-                         question={scene.question}
-                         playAnswer={playAnswer}
-                         onEditorClick={(zk) => {
-                           if (mode !== 'edit') return;
-                           updateScene(prev => cycleZoneAssignment(prev, zk));
-                         }}
-                         onPlayClick={onZoneClickAnswer} />
-              ))}
-            </g>
-          )}
-
-          {/* Arrows (below players) */}
-          {(scene.arrows || []).map(a => <Arrow key={a.id} a={a} />)}
-
-          {/* Flags */}
-          {(scene.flags || []).map(f => (
-            <Flag key={f.id} item={f}
-                  selected={selectedId === f.id}
-                  playMode={mode === 'play'}
-                  verdict={itemVerdict(f.id)}
-                  onPointerDown={onItemPointerDown}
-                  onClick={onItemClick(f.id)} />
-          ))}
-
-          {/* Goalie */}
-          {scene.showGoalie && (
-            <Goalie selected={selectedId === 'goalie'}
-                    playMode={mode === 'play'}
-                    interactive={mode === 'play' && isSpotMistakeQuestion}
-                    verdict={itemVerdict('goalie')}
-                    onSelect={() => setSelectedId('goalie')}
-                    onClick={onItemClick('goalie')} />
-          )}
-
-          {/* Teammates */}
-          {(scene.team || []).map(p => (
-            <Teammate key={p.id} item={p}
-                      selected={selectedId === p.id}
-                      playMode={mode === 'play'}
-                      verdict={itemVerdict(p.id)}
-                      onPointerDown={onItemPointerDown}
-                      onClick={onItemClick(p.id)} />
-          ))}
-
-          {/* Opponents */}
-          {(scene.opponents || []).map(p => (
-            <Opponent key={p.id} item={p}
-                      selected={selectedId === p.id}
-                      playMode={mode === 'play'}
-                      verdict={itemVerdict(p.id)}
-                      onPointerDown={onItemPointerDown}
-                      onClick={onItemClick(p.id)} />
-          ))}
-
-          {/* Puck */}
-          {scene.puck && (
-            <BigPuck puck={scene.puck}
-                     selected={selectedId === 'puck'}
-                     playMode={mode === 'play'}
-                     verdict={itemVerdict('puck')}
-                     onPointerDown={onItemPointerDown}
-                     onClick={onItemClick('puck')} />
-          )}
-
-          {/* Custom text labels */}
-          {(scene.texts || []).map(t => (
-            <TextLabel key={t.id} item={t}
-                       selected={selectedId === t.id}
-                       playMode={mode === 'play'}
-                       onPointerDown={onItemPointerDown} />
-          ))}
-
-          {/* Arrow-in-progress marker */}
-          {arrowDraft && (
-            <circle cx={arrowDraft.x1} cy={arrowDraft.y1} r="8"
-                    fill="none" stroke="#22A06B" strokeWidth="2.5" strokeDasharray="3 3" />
-          )}
-
-          {/* Inline delete handle for the currently selected item */}
-          {mode === 'edit' && selectedId && (() => {
-            const pos = getItemPos(scene, selectedId);
-            if (!pos) return null;
-            return (
-              <DeleteHandle
-                cx={pos.x + 24}
-                cy={pos.y - 22}
-                onClick={(e) => {
-                  e.stopPropagation();
-                  updateScene(prev => deleteItem(prev, selectedId));
-                  setSelectedId(null);
-                }}
-              />
-            );
-          })()}
-
-          {/* Corner IceIQ wordmark — hideable per scene. In play mode we
-              dim it further so the broadcast overlay reads cleaner. */}
-          {!scene.hideBranding && mode !== 'play' && <IceIQBrand variant="corner" />}
-
-          {/* Broadcast chrome — lower-third prompt + READ THE PLAY chip.
-              Renders last so it sits on top of rink content. */}
-          <BroadcastOverlay mode={mode}
-                            prompt={scene.question?.prompt}
-                            age={ageGroup}
-                            hasHomePlate={scene.showHomePlate} />
-        </svg>
-      </div>
-
-      {/* Edit-mode helper text */}
-      {mode === 'edit' && placementTool && (
-        <div style={styles.hint}>
-          {placementTool === 'arrow' && !arrowDraft && 'Click the starting point of the arrow.'}
-          {placementTool === 'arrow' && arrowDraft && 'Click the ending point of the arrow.'}
-          {placementTool !== 'arrow' && `Click anywhere on the ice to place a ${placementTool}. Click the tool again to finish.`}
-        </div>
-      )}
-
-      {/* Selected item inspector (edit mode) */}
-      {mode === 'edit' && selectedId && (
-        <Inspector
-          scene={scene}
-          id={selectedId}
-          ageGroup={ageGroup}
-          onChange={updateScene}
-          onDelete={() => {
-            updateScene(prev => deleteItem(prev, selectedId));
-            setSelectedId(null);
-          }}
-        />
-      )}
-
-      {/* Play-mode answer feedback — suppressed when host renders its own */}
-      {mode === 'play' && playAnswer && !lockAnswer && (
-        <AnswerFeedback answer={playAnswer} onReset={() => setPlayAnswer(null)} />
-      )}
-
-      {/* Play-mode choice question renderer */}
-      {mode === 'play' && scene.question?.mode === 'choice' && !playAnswer && (
-        <ChoiceQuestion
-          question={scene.question}
-          onAnswer={(opt) => {
-            const result = QUESTION_MODES.choice.score(opt, scene.question);
-            setPlayAnswer(result);
-            if (onAnswer) onAnswer(result);
-          }} />
-      )}
-
-      {/* Play-mode zone-click prompt */}
-      {mode === 'play' && scene.question?.mode === 'zone-click' && !playAnswer && (
-        <div style={styles.zonePrompt}>
-          <strong>{scene.question.prompt || 'Click the right spot on the ice.'}</strong>
-        </div>
-      )}
-
-      {/* Play-mode spot-mistake prompt */}
-      {mode === 'play' && scene.question?.mode === 'spot-mistake' && !playAnswer && (
-        <div style={styles.zonePrompt}>
-          <strong>{scene.question.prompt || 'Tap the player (or puck) making the mistake.'}</strong>
-        </div>
-      )}
-    </div>
-  );
-}
-
-// ─────────────────────────────────────────────────────────────────────────────
-// SUB-COMPONENTS
-// ─────────────────────────────────────────────────────────────────────────────
-function Toolbar({ active, onSelect, arrowDraft }) {
-  const tools = [
-    { key: 'teammate', label: 'Teammate', icon: '👤' },
-    { key: 'opponent', label: 'Opponent', icon: '⚔' },
-    { key: 'puck',     label: 'Puck',     icon: '●' },
-    { key: 'text',     label: 'Text',     icon: 'T' },
-    { key: 'flag',     label: 'Flag',     icon: '?' },
-    { key: 'arrow',    label: 'Arrow',    icon: '→' },
-  ];
-  return (
-    <div style={styles.toolbar}>
-      {tools.map(t => (
-        <button key={t.key}
-                onClick={() => onSelect(t.key)}
-                style={{
-                  ...styles.toolBtn,
-                  ...(active === t.key ? styles.toolBtnActive : null),
-                }}>
-          <span style={styles.toolIcon}>{t.icon}</span>
-          {t.label}
-          {active === t.key && t.key === 'arrow' && arrowDraft ? ' (end?)' : ''}
-        </button>
-      ))}
-      {active && (
-        <button onClick={() => onSelect(active)} style={styles.toolCancel}>Stop</button>
-      )}
-    </div>
-  );
-}
-
-// Per-scene visibility toggles: goalie, home plate, IceIQ branding,
-// and each of the 6 distinct zone labels (left/right "Corner" & "Point"
-// are grouped into one chip so you don't have to toggle each side).
-function SceneToggles({ scene, onLabelToggle, onSceneToggle }) {
-  const hidden = new Set(scene.hiddenLabels || []);
-  const labelGroups = [
-    { keys: ['corner-L', 'corner-R'], text: 'Corner' },
-    { keys: ['behind-net'],           text: 'Behind the net' },
-    { keys: ['slot'],                 text: 'Slot' },
-    { keys: ['high-slot'],            text: 'High slot' },
-    { keys: ['point-L', 'point-R'],   text: 'Point' },
-    { keys: ['blue-line'],            text: 'BLUE LINE' },
-  ];
-  const sceneChips = [
-    { field: 'showGoalie',    text: 'Goalie',    showWhenTrue: true  },
-    { field: 'showHomePlate', text: 'Home plate', showWhenTrue: true  },
-    { field: 'hideBranding',  text: 'IceIQ mark', showWhenTrue: false },
-  ];
-  return (
-    <div style={styles.labelToggles}>
-      <span style={styles.labelTogglesLabel}>Show:</span>
-      {sceneChips.map(c => {
-        const visible = c.showWhenTrue ? !!scene[c.field] : !scene[c.field];
-        return (
-          <button key={c.field}
-                  onClick={() => onSceneToggle(c.field, c.showWhenTrue ? !visible : visible)}
-                  style={{ ...styles.labelChip, ...(visible ? null : styles.labelChipOff) }}>
-            {visible ? '●' : '○'} {c.text}
-          </button>
-        );
-      })}
-      <span style={{ ...styles.labelTogglesLabel, marginLeft: '10px' }}>Labels:</span>
-      {labelGroups.map(g => {
-        const isHidden = g.keys.every(k => hidden.has(k));
-        return (
-          <button key={g.keys[0]}
-                  onClick={() => onLabelToggle(g.keys, !isHidden)}
-                  style={{ ...styles.labelChip, ...(isHidden ? styles.labelChipOff : null) }}>
-            {isHidden ? '○' : '●'} {g.text}
-          </button>
-        );
-      })}
-    </div>
-  );
-}
-
-// Small red "×" button rendered in SVG near a selected item — gives visible
-// one-click deletion alongside the Inspector delete button and Del/Backspace.
-function DeleteHandle({ cx, cy, onClick }) {
-  return (
-    <g style={{ cursor: 'pointer' }} onClick={onClick}>
-      <circle cx={cx} cy={cy} r="11" fill="#E24B4A" stroke="#FFFFFF" strokeWidth="2.5" />
-      <line x1={cx - 4.5} y1={cy - 4.5} x2={cx + 4.5} y2={cy + 4.5} stroke="#FFFFFF" strokeWidth="2.5" strokeLinecap="round" />
-      <line x1={cx + 4.5} y1={cy - 4.5} x2={cx - 4.5} y2={cy + 4.5} stroke="#FFFFFF" strokeWidth="2.5" strokeLinecap="round" />
-    </g>
-  );
-}
-
-function Inspector({ scene, id, ageGroup, onChange, onDelete }) {
-  const item = findItem(scene, id);
-  if (!item) return null;
-  const kind = itemKind(scene, id);
-  const canResize = kind === 'team' || kind === 'opp' || kind === 'puck';
-
-  return (
-    <div style={styles.inspector}>
-      <div style={styles.inspectorHeader}>
-        <strong>
-          {kind === 'team'   && `Teammate ${item.label ? '(' + item.label + ')' : ''}`}
-          {kind === 'opp'    && 'Opponent'}
-          {kind === 'puck'   && 'Puck'}
-          {kind === 'text'   && 'Text label'}
-          {kind === 'flag'   && 'Flag marker'}
-          {kind === 'goalie' && 'Goalie'}
-        </strong>
-        <button style={styles.deleteBtn} onClick={onDelete}>Delete</button>
-      </div>
-      {canResize && (
-        <LabeledField label="Size">
-          <input type="range" min="0.6" max="1.6" step="0.1"
-                 value={item.size ?? 1}
-                 onChange={e => {
-                   const size = Number(e.target.value);
-                   onChange(prev => kind === 'puck'
-                     ? { ...prev, puck: { ...(prev.puck || {}), size } }
-                     : updateItem(prev, id, { size }));
-                 }}
-                 style={{ width: '140px' }} />
-          <span style={{ fontSize: '12px', color: '#4A5C6E', marginLeft: '8px' }}>
-            {(item.size ?? 1).toFixed(1)}×
-          </span>
-          {(item.size ?? 1) !== 1 && (
-            <button style={styles.sizeResetBtn}
-                    onClick={() => onChange(prev => kind === 'puck'
-                      ? { ...prev, puck: { ...(prev.puck || {}), size: 1 } }
-                      : updateItem(prev, id, { size: 1 }))}>
-              Reset
-            </button>
-          )}
-        </LabeledField>
-      )}
-      {kind === 'team' && (
-        <>
-          {(ageGroup !== 'U9') && (
-            <LabeledField label="Position">
-              <select value={item.label || ''}
-                      onChange={e => onChange(prev => updateItem(prev, id, { label: e.target.value }))}
-                      style={styles.input}>
-                {['', 'C', 'LW', 'RW', 'LD', 'RD'].map(p =>
-                  <option key={p} value={p}>{p || '—'}</option>
-                )}
-              </select>
-            </LabeledField>
-          )}
-          <LabeledField label="Has puck">
-            <input type="checkbox" checked={!!item.hasPuck}
-                   onChange={e => onChange(prev => setPuckCarrier(prev, id, e.target.checked))} />
-          </LabeledField>
-          <LabeledField label='"You" marker'>
-            <input type="checkbox" checked={!!item.isYou}
-                   onChange={e => onChange(prev => setYouMarker(prev, id, e.target.checked))} />
-          </LabeledField>
-        </>
-      )}
-      {kind === 'text' && (
-        <LabeledField label="Text">
-          <input value={item.text || ''}
-                 onChange={e => onChange(prev => updateItem(prev, id, { text: e.target.value }))}
-                 style={styles.input} />
-        </LabeledField>
-      )}
-      {kind === 'goalie' && (
-        <div style={{ fontSize: '12px', color: '#4A5C6E', padding: '4px 0' }}>
-          The goalie stays in the crease. Use Delete or the red × to remove;
-          re-enable with the "Goalie" chip above.
-        </div>
-      )}
-    </div>
-  );
-}
-
-function LabeledField({ label, children }) {
-  return (
-    <div style={styles.field}>
-      <label style={styles.fieldLabel}>{label}</label>
-      <div>{children}</div>
-    </div>
-  );
-}
-
-function ChoiceQuestion({ question, onAnswer }) {
-  return (
-    <div style={styles.playBlock}>
-      <p style={styles.prompt}>{question.prompt}</p>
-      <div style={styles.optList}>
-        {(question.options || []).map((opt, i) => (
-          <button key={i} onClick={() => onAnswer(opt)} style={styles.optBtn}>
-            {opt.text}
-          </button>
-        ))}
-      </div>
-    </div>
-  );
-}
-
-function AnswerFeedback({ answer, onReset }) {
-  const tones = {
-    correct: { bg: '#EAF3DE', fg: '#27500A', label: '✓ Correct!' },
-    partial: { bg: '#FAEEDA', fg: '#633806', label: '~ Partial credit' },
-    wrong:   { bg: '#FCEBEB', fg: '#501313', label: '✗ Not quite' },
-  };
-  const t = tones[answer.verdict] || tones.wrong;
-  return (
-    <div style={{ ...styles.feedback, background: t.bg, color: t.fg }}>
-      <div style={{ fontWeight: 600, marginBottom: 4 }}>{t.label}</div>
-      <div>{answer.feedback}</div>
-      <button style={styles.resetBtn} onClick={onReset}>Try another</button>
-    </div>
-  );
-}
-
-function ZoneHit({ zoneKey, d, mode, question, playAnswer, onEditorClick, onPlayClick }) {
-  const zones = question?.zones || { correct: [], partial: [], wrong: [] };
-  let fill = 'rgba(55, 138, 221, 0.08)';
-  let stroke = 'rgba(55, 138, 221, 0.0)';
-  if (mode === 'edit') {
-    if (zones.correct?.includes(zoneKey)) { fill = 'rgba(99, 153, 34, 0.28)'; stroke = '#639922'; }
-    else if (zones.partial?.includes(zoneKey)) { fill = 'rgba(186, 117, 23, 0.28)'; stroke = '#BA7517'; }
-    else if (zones.wrong?.includes(zoneKey))   { fill = 'rgba(163, 45, 45, 0.24)'; stroke = '#A32D2D'; }
-  }
-  if (mode === 'play' && playAnswer && playAnswer.choice === zoneKey) {
-    const map = { correct: '#639922', partial: '#BA7517', wrong: '#A32D2D' };
-    stroke = map[playAnswer.verdict] || stroke;
-    fill = stroke.replace(')', ', 0.25)').replace('rgb', 'rgba') || fill;
-  }
-  return (
-    <path d={d}
-          fill={fill}
-          stroke={stroke}
-          strokeWidth="2"
-          strokeDasharray="4 3"
-          style={{ cursor: 'pointer' }}
-          onClick={(e) => {
-            e.stopPropagation();
-            if (mode === 'edit') onEditorClick(zoneKey);
-            else onPlayClick(zoneKey);
-          }} />
-  );
-}
-
-// ─────────────────────────────────────────────────────────────────────────────
-// STATE HELPERS (pure — take scene, return new scene)
-// ─────────────────────────────────────────────────────────────────────────────
-function findItem(scene, id) {
-  if (id === 'puck') return scene.puck;
-  if (id === 'goalie') return { x: GOALIE_POS.x, y: GOALIE_POS.y };
-  return (scene.team || []).find(x => x.id === id)
-      || (scene.opponents || []).find(x => x.id === id)
-      || (scene.texts || []).find(x => x.id === id)
-      || (scene.flags || []).find(x => x.id === id)
-      || null;
-}
-
-function itemKind(scene, id) {
-  if (id === 'puck') return 'puck';
-  if (id === 'goalie') return 'goalie';
-  if ((scene.team || []).some(x => x.id === id)) return 'team';
-  if ((scene.opponents || []).some(x => x.id === id)) return 'opp';
-  if ((scene.texts || []).some(x => x.id === id)) return 'text';
-  if ((scene.flags || []).some(x => x.id === id)) return 'flag';
-  return null;
-}
-
-function getItemPos(scene, id) {
-  if (id === 'goalie') return { x: GOALIE_POS.x, y: GOALIE_POS.y };
-  const item = findItem(scene, id);
-  return resolvePos(item);
-}
-
-function setItemPos(scene, id, x, y) {
-  return mutateItem(scene, id, { x, y });
-}
-
-function updateItem(scene, id, patch) {
-  return mutateItem(scene, id, patch);
-}
-
-function mutateItem(scene, id, patch) {
-  if (id === 'puck') return { ...scene, puck: { ...(scene.puck || {}), ...patch } };
-  if ((scene.team || []).some(x => x.id === id)) return { ...scene, team: scene.team.map(x => x.id === id ? { ...x, ...patch } : x) };
-  if ((scene.opponents || []).some(x => x.id === id)) return { ...scene, opponents: scene.opponents.map(x => x.id === id ? { ...x, ...patch } : x) };
-  if ((scene.texts || []).some(x => x.id === id)) return { ...scene, texts: scene.texts.map(x => x.id === id ? { ...x, ...patch } : x) };
-  if ((scene.flags || []).some(x => x.id === id)) return { ...scene, flags: scene.flags.map(x => x.id === id ? { ...x, ...patch } : x) };
-  return scene;
-}
-
-function deleteItem(scene, id) {
-  if (id === 'puck') return { ...scene, puck: null };
-  if (id === 'goalie') return { ...scene, showGoalie: false };
-  return {
-    ...scene,
-    team:      (scene.team || []).filter(x => x.id !== id),
-    opponents: (scene.opponents || []).filter(x => x.id !== id),
-    texts:     (scene.texts || []).filter(x => x.id !== id),
-    flags:     (scene.flags || []).filter(x => x.id !== id),
-    arrows:    (scene.arrows || []).filter(x => x.id !== id),
-  };
-}
-
-function setPuckCarrier(scene, id, carrying) {
-  return {
-    ...scene,
-    team: (scene.team || []).map(x => ({
-      ...x,
-      hasPuck: x.id === id ? carrying : false,
-    })),
-  };
-}
-
-function setYouMarker(scene, id, isYou) {
-  return {
-    ...scene,
-    team: (scene.team || []).map(x => ({
-      ...x,
-      isYou: x.id === id ? isYou : false,
-    })),
-  };
-}
-
-// Cycle a zone through: unassigned → correct → partial → wrong → unassigned
-function cycleZoneAssignment(scene, zoneKey) {
-  const z = scene.question?.zones || { correct: [], partial: [], wrong: [] };
-  const inC = z.correct?.includes(zoneKey);
-  const inP = z.partial?.includes(zoneKey);
-  const inW = z.wrong?.includes(zoneKey);
-  const without = {
-    correct: (z.correct || []).filter(k => k !== zoneKey),
-    partial: (z.partial || []).filter(k => k !== zoneKey),
-    wrong:   (z.wrong   || []).filter(k => k !== zoneKey),
-  };
-  let next;
-  if (!inC && !inP && !inW)      next = { ...without, correct: [...without.correct, zoneKey] };
-  else if (inC)                  next = { ...without, partial: [...without.partial, zoneKey] };
-  else if (inP)                  next = { ...without, wrong:   [...without.wrong,   zoneKey] };
-  else                            next = without;
-  return { ...scene, question: { ...(scene.question || {}), mode: 'zone-click', zones: next } };
-}
-
-// Find the zone whose anchor is closest to (x,y) — used when click-placing
-function nearestZone(x, y) {
-  let bestKey = 'slot', bestDist = Infinity;
-  for (const [k, z] of Object.entries(ZONES)) {
-    const dx = z.x - x, dy = z.y - y;
-    const d = dx * dx + dy * dy;
-    if (d < bestDist) { bestDist = d; bestKey = k; }
-  }
-  return bestKey;
-}
-
-// ─────────────────────────────────────────────────────────────────────────────
-// STYLES (inline so the component is self-contained — no CSS imports needed)
-// ─────────────────────────────────────────────────────────────────────────────
-const styles = {
-  wrap: {
-    fontFamily: "'Anthropic Sans', -apple-system, system-ui, sans-serif",
-    display: 'flex',
-    flexDirection: 'column',
-    gap: '10px',
-  },
-  toolbar: {
-    display: 'flex',
-    flexWrap: 'wrap',
-    gap: '6px',
-    padding: '8px 10px',
-    background: '#F3F6FA',
-    borderRadius: '12px',
-    border: '1px solid #D6DEE8',
-    alignItems: 'center',
-  },
-  toolBtn: {
-    display: 'inline-flex',
-    alignItems: 'center',
-    gap: '6px',
-    padding: '7px 12px',
-    fontSize: '13px',
-    fontWeight: 500,
-    borderRadius: '8px',
-    border: '1px solid #D6DEE8',
-    background: '#FFFFFF',
-    color: '#1F2937',
-    cursor: 'pointer',
-  },
-  toolBtnActive: {
-    background: '#1E5FA5',
-    color: '#FFFFFF',
-    borderColor: '#0C447C',
-  },
-  toolIcon: {
-    fontWeight: 700,
-    fontSize: '14px',
-  },
-  toolCancel: {
-    marginLeft: 'auto',
-    padding: '7px 12px',
-    fontSize: '12px',
-    borderRadius: '8px',
-    border: '1px solid #E24B4A',
-    background: '#FCEBEB',
-    color: '#791F1F',
-    cursor: 'pointer',
-  },
-  labelToggles: {
-    display: 'flex',
-    flexWrap: 'wrap',
-    gap: '5px',
-    padding: '6px 10px',
-    background: '#F8FAFC',
-    borderRadius: '10px',
-    border: '1px solid #D6DEE8',
-    alignItems: 'center',
-  },
-  labelTogglesLabel: {
-    fontSize: '11px',
-    fontWeight: 600,
-    color: '#4A5C6E',
-    textTransform: 'uppercase',
-    letterSpacing: '0.6px',
-    marginRight: '4px',
-  },
-  labelChip: {
-    display: 'inline-flex',
-    alignItems: 'center',
-    gap: '4px',
-    padding: '4px 9px',
-    fontSize: '11px',
-    fontWeight: 500,
-    borderRadius: '12px',
-    border: '1px solid #B8D4E8',
-    background: '#FFFFFF',
-    color: '#1F2937',
-    cursor: 'pointer',
-  },
-  labelChipOff: {
-    background: '#F3F6FA',
-    color: '#9AA8B6',
-    borderColor: '#D6DEE8',
-  },
-  sizeResetBtn: {
-    marginLeft: '10px',
-    padding: '3px 9px',
-    fontSize: '11px',
-    borderRadius: '6px',
-    border: '1px solid #D6DEE8',
-    background: '#FFFFFF',
-    color: '#4A5C6E',
-    cursor: 'pointer',
-  },
-  canvasWrap: {
-    background: '#EAF3FB',
-    borderRadius: '18px',
-    padding: '14px',
-    border: '2px solid #B8D4E8',
-  },
-  hint: {
-    fontSize: '13px',
-    padding: '8px 12px',
-    background: '#FFF7D6',
-    border: '1px solid #E8C76A',
-    borderRadius: '8px',
-    color: '#6B4A00',
-  },
-  inspector: {
-    padding: '10px 12px',
-    background: '#F8FAFC',
-    border: '1px solid #D6DEE8',
-    borderRadius: '10px',
-  },
-  inspectorHeader: {
-    display: 'flex',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    marginBottom: '8px',
-  },
-  deleteBtn: {
-    padding: '4px 10px',
-    fontSize: '12px',
-    borderRadius: '6px',
-    border: '1px solid #E24B4A',
-    background: '#FCEBEB',
-    color: '#791F1F',
-    cursor: 'pointer',
-  },
-  field: {
-    display: 'flex',
-    alignItems: 'center',
-    gap: '10px',
-    padding: '4px 0',
-  },
-  fieldLabel: {
-    fontSize: '12px',
-    color: '#4A5C6E',
-    fontWeight: 500,
-    minWidth: '100px',
-  },
-  input: {
-    padding: '5px 8px',
-    fontSize: '13px',
-    borderRadius: '6px',
-    border: '1px solid #D6DEE8',
-    fontFamily: 'inherit',
-  },
-  playBlock: {
-    padding: '12px',
-    background: '#F8FAFC',
-    borderRadius: '10px',
-  },
-  prompt: {
-    fontSize: '15px',
-    fontWeight: 500,
-    margin: '0 0 10px 0',
-    color: '#1F2937',
-  },
-  optList: {
-    display: 'flex',
-    flexDirection: 'column',
-    gap: '6px',
-  },
-  optBtn: {
-    textAlign: 'left',
-    padding: '10px 12px',
-    fontSize: '14px',
-    borderRadius: '8px',
-    border: '1px solid #D6DEE8',
-    background: '#FFFFFF',
-    cursor: 'pointer',
-  },
-  zonePrompt: {
-    padding: '10px 14px',
-    background: '#EAF3FB',
-    borderRadius: '10px',
-    color: '#0B2942',
-    fontSize: '15px',
-  },
-  feedback: {
-    padding: '12px 14px',
-    borderRadius: '10px',
-    fontSize: '14px',
-    lineHeight: 1.5,
-  },
-  resetBtn: {
-    display: 'block',
-    marginTop: '8px',
-    padding: '5px 10px',
-    fontSize: '12px',
-    borderRadius: '6px',
-    border: '1px solid #D6DEE8',
-    background: '#FFFFFF',
-    cursor: 'pointer',
-  },
-};
-
-window.IceIQRink = Rink;
-window.IceIQEmptyScene = emptyScene;
-window.dispatchEvent(new CustomEvent('iceiq-rink-ready'));
-})();
-</script>
-<!-- END RINK_EDITOR_INLINE -->
+</main>
 
 <script>
-// =========================================================================
-// Constants
-// =========================================================================
-const LEVEL_FOR_AGE = {
-  u7:  "U7 / Initiation",
-  u9:  "U9 / Novice",
-  u11: "U11 / Atom",
-  u13: "U13 / Peewee",
-  u15: "U15 / Bantam",
-  u18: "U18 / Midget",
-};
-const AGE_FOR_LEVEL = Object.fromEntries(Object.entries(LEVEL_FOR_AGE).map(([k,v])=>[v,k]));
-const AGES = ["u7","u9","u11","u13","u15","u18"];
-const LEVEL_ORDER = AGES.map(a => LEVEL_FOR_AGE[a]);
-const ALL_TYPES = ["mc","tf","seq","mistake","next","zone-click","rink"];
-const RECOMMENDED_TYPES_BY_AGE = {
-  u7:  ["mc","tf","rink"],
-  u9:  ["mc","tf","seq","zone-click","rink"],
-  u11: ["mc","tf","seq","mistake","zone-click","rink"],
-  u13: ["mc","tf","seq","mistake","next","zone-click","rink"],
-  u15: ["mc","tf","seq","mistake","next","zone-click","rink"],
-  u18: ["mc","tf","seq","mistake","next","zone-click","rink"],
-};
-const TYPE_LABELS = { mc: "MC", tf: "T/F", seq: "Seq", mistake: "Mistake", next: "Next", "zone-click": "Zone", rink: "Rink" };
-
-// Zone-click zones — mirrors RINK_ZONE_DEFS in src/shared.jsx. Coordinates
-// are in the same 200×85 viewBox the player's <RinkDiagramZones> renderer
-// uses, so the dashboard preview is pixel-identical to what kids see.
-// The dz-/oz-/nz- prefixes group them; questions must not mix prefixes
-// (rink coordinates overlap — see feedback_zone_click_zones.md in memory).
-const ZONE_CLICK_ZONES = [
-  { id: "dz-left-corner",  label: "DZ Left Corner",  x: 0,   y: 50, w: 55,  h: 35 },
-  { id: "dz-left-point",   label: "DZ Left Point",   x: 0,   y: 0,  w: 55,  h: 35 },
-  { id: "dz-slot",         label: "DZ Slot",         x: 55,  y: 15, w: 90,  h: 55 },
-  { id: "dz-right-corner", label: "DZ Right Corner", x: 145, y: 50, w: 55,  h: 35 },
-  { id: "dz-right-point",  label: "DZ Right Point",  x: 145, y: 0,  w: 55,  h: 35 },
-  { id: "dz-behind-net",   label: "DZ Behind Net",   x: 55,  y: 62, w: 90,  h: 23 },
-  { id: "nz-left",         label: "NZ Left",         x: 0,   y: 0,  w: 45,  h: 85 },
-  { id: "nz-center",       label: "NZ Center",       x: 45,  y: 0,  w: 110, h: 85 },
-  { id: "nz-right",        label: "NZ Right",        x: 155, y: 0,  w: 45,  h: 85 },
-  { id: "oz-slot",         label: "OZ Slot",         x: 55,  y: 15, w: 90,  h: 55 },
-  { id: "oz-left-wing",    label: "OZ Left Wing",    x: 0,   y: 0,  w: 55,  h: 85 },
-  { id: "oz-right-wing",   label: "OZ Right Wing",   x: 145, y: 0,  w: 55,  h: 85 },
-];
-const ZONE_BY_ID = Object.fromEntries(ZONE_CLICK_ZONES.map(z => [z.id, z]));
-
-// Renders the exact same rink diagram the player sees when answering a
-// zone-click question. `selectedZones` is the author's included-zones list
-// (q.zones); `correctZone` is q.correctZone (highlighted green). Pure SVG
-// string so it drops into any innerHTML assignment.
-function renderZoneClickPreview(selectedZones, correctZone) {
-  const zones = Array.isArray(selectedZones) ? selectedZones : [];
-  const overlays = zones.map(zoneId => {
-    const z = ZONE_BY_ID[zoneId];
-    if (!z) return "";
-    const isCorrect = zoneId === correctZone;
-    const fill = isCorrect ? "#22c55e" : "#6b7280";
-    const fillOp = isCorrect ? 0.28 : 0.14;
-    const stroke = isCorrect ? "#22c55e" : "#94a3b8";
-    const strokeW = isCorrect ? 1.4 : 0.6;
-    return `
-      <g>
-        <rect x="${z.x}" y="${z.y}" width="${z.w}" height="${z.h}"
-              fill="${fill}" fill-opacity="${fillOp}"
-              stroke="${stroke}" stroke-width="${strokeW}" />
-        <text x="${z.x + z.w/2}" y="${z.y + z.h/2 + 1.5}"
-              text-anchor="middle" dominant-baseline="middle"
-              font-size="4" font-weight="600"
-              fill="${isCorrect ? '#86efac' : '#cbd5e1'}"
-              pointer-events="none">${z.label.replace(/^(DZ|NZ|OZ) /, '')}</text>
-      </g>
-    `;
-  }).join("");
-  return `
-    <svg viewBox="0 0 200 85" width="100%"
-         style="max-width:100%;border:1px solid var(--border);border-radius:8px;background:#0a1929;display:block;"
-         preserveAspectRatio="xMidYMid meet">
-      <rect x="0" y="0" width="200" height="85" rx="6" fill="#0e223a"/>
-      <line x1="100" y1="0" x2="100" y2="85" stroke="#ef4444" stroke-width="0.8" opacity="0.6"/>
-      <line x1="55"  y1="0" x2="55"  y2="85" stroke="#5BA4E8" stroke-width="1.2" opacity="0.5"/>
-      <line x1="145" y1="0" x2="145" y2="85" stroke="#5BA4E8" stroke-width="1.2" opacity="0.5"/>
-      <rect x="0"   y="30" width="8" height="25" fill="#ef4444" opacity="0.15" rx="2"/>
-      <rect x="192" y="30" width="8" height="25" fill="#ef4444" opacity="0.15" rx="2"/>
-      <circle cx="40"  cy="23" r="1.5" fill="#5BA4E8" opacity="0.3"/>
-      <circle cx="40"  cy="62" r="1.5" fill="#5BA4E8" opacity="0.3"/>
-      <circle cx="160" cy="23" r="1.5" fill="#5BA4E8" opacity="0.3"/>
-      <circle cx="160" cy="62" r="1.5" fill="#5BA4E8" opacity="0.3"/>
-      ${overlays}
-    </svg>
-  `;
-}
-const LS_KEY = "iceiq_dashboard_v1";
-const PAGE_SIZE = 100;
-
-// =========================================================================
+// ─────────────────────────────────────────────
 // State
-// =========================================================================
-let BANK = {};
-let STATE = { edits: {}, statuses: {}, added: [], moves: {} };
-let FILTERS = { age: "all", type: "all", status: "all", search: "" };
-let VISIBLE_COUNT = PAGE_SIZE;
-const EXPANDED = new Set();
-const SELECTED = new Set();
+// ─────────────────────────────────────────────
+let BANK = null;
+let FILTERS = { age: "", type: "", cat: "", tag: "", search: "" };
+let PAGE = 0;
+const PAGE_SIZE = 50;
+let EXPANDED = new Set();
+const AGE_ORDER = [
+  "U7 / Initiation", "U9 / Novice", "U11 / Atom",
+  "U13 / Peewee", "U15 / Bantam", "U18 / Midget",
+];
 
-// =========================================================================
-// Storage
-// =========================================================================
-function loadState() {
-  try {
-    const raw = localStorage.getItem(LS_KEY);
-    if (raw) {
-      const parsed = JSON.parse(raw);
-      STATE = {
-        edits: parsed.edits || {},
-        statuses: parsed.statuses || {},
-        added: parsed.added || [],
-        moves: parsed.moves || {},
-      };
-    }
-  } catch (e) { console.warn("Failed to load state:", e); }
-}
-let saveTimer = null;
-function saveState() {
-  clearTimeout(saveTimer);
-  saveTimer = setTimeout(() => {
-    try {
-      localStorage.setItem(LS_KEY, JSON.stringify(STATE));
-      flashSaved();
-    } catch (e) { console.error("Save failed:", e); }
-  }, 400);
-}
-function flashSaved() {
-  const el = document.getElementById("saved-flash");
-  el.classList.add("show");
-  clearTimeout(flashSaved._t);
-  flashSaved._t = setTimeout(() => el.classList.remove("show"), 900);
-}
-
-// =========================================================================
-// Question helpers
-// =========================================================================
-function getType(q) { return q.type || "mc"; }
-function ageOf(id) {
-  // Prefer bucket lookup — id prefix can lie post-merge (e.g. u7q* now lives under U9 bucket)
-  const level = getLevelForId(id);
-  if (level && AGE_FOR_LEVEL[level]) return AGE_FOR_LEVEL[level];
-  const m = id.match(/^(u\d+)/); return m ? m[1] : "";
-}
-function isOffAgeType(age, type) {
-  const rec = RECOMMENDED_TYPES_BY_AGE[age];
-  return rec && !rec.includes(type);
-}
-function statusOf(id) { return STATE.statuses[id] || "unreviewed"; }
-function isEdited(id) {
-  const e = STATE.edits[id];
-  return !!e && Object.keys(e).length > 0;
-}
-function isAdded(id) { return STATE.added.some(r => r.id === id); }
-function getOriginalById(id) {
-  for (const level of Object.keys(BANK)) {
-    for (const q of BANK[level]) if (q.id === id) return q;
-  }
-  for (const r of STATE.added) if (r.id === id) return r;
-  return null;
-}
-function getMergedById(id) {
-  const orig = getOriginalById(id);
-  if (!orig) return null;
-  const edit = STATE.edits[id];
-  return edit ? { ...orig, ...edit } : { ...orig };
-}
-function getOriginalLevelForId(id) {
-  for (const level of Object.keys(BANK)) {
-    for (const q of BANK[level]) if (q.id === id) return level;
-  }
-  for (const r of STATE.added) if (r.id === id) return r.level;
-  return "";
-}
-function getLevelForId(id) {
-  // Effective level = move override if present, else original bucket
-  return STATE.moves[id] || getOriginalLevelForId(id);
-}
-function setField(id, key, value) {
-  STATE.edits[id] = STATE.edits[id] || {};
-  const orig = getOriginalById(id);
-  if (orig && JSON.stringify(orig[key]) === JSON.stringify(value)) {
-    delete STATE.edits[id][key];
-    if (Object.keys(STATE.edits[id]).length === 0) delete STATE.edits[id];
-  } else {
-    STATE.edits[id][key] = value;
-  }
-  saveState();
-}
-function nextIdForAge(age) {
-  let max = 0;
-  const level = LEVEL_FOR_AGE[age];
-  const scan = (arr) => { for (const q of arr) {
-    const m = q.id && q.id.match(new RegExp("^" + age + "q(\\d+)$"));
-    if (m) max = Math.max(max, parseInt(m[1], 10));
-  }};
-  if (BANK[level]) scan(BANK[level]);
-  scan(STATE.added.filter(r => r.level === level));
-  return `${age}q${max + 1}`;
-}
-
-// =========================================================================
-// Iteration
-// =========================================================================
-// Returns the full list of level keys this question appears in. A question
-// has one "primary" level (the bank-array or the move-target) and can
-// optionally expose a `levels: [levelKey, ...]` field to appear in extra
-// age groups without duplicating the row in questions.json.
-function getEffectiveLevels(id, primaryLevel) {
-  const merged = getMergedById(id);
-  const explicit = merged && Array.isArray(merged.levels) ? merged.levels : null;
-  if (explicit && explicit.length > 0) {
-    // Make sure the primary is included even if a user removed it by mistake.
-    return explicit.includes(primaryLevel) ? explicit : [primaryLevel, ...explicit];
-  }
-  return [primaryLevel];
-}
-
-function* iterAllQuestions() {
-  for (const level of Object.keys(BANK)) {
-    const rows = BANK[level] || [];
-    for (const q of rows) {
-      const effLevel = STATE.moves[q.id] || level;
-      const levels = getEffectiveLevels(q.id, effLevel);
-      yield { level: effLevel, age: AGE_FOR_LEVEL[effLevel] || AGE_FOR_LEVEL[level], levels, q, originalLevel: level };
-    }
-  }
-  for (const r of STATE.added) {
-    const effLevel = STATE.moves[r.id] || r.level;
-    const levels = getEffectiveLevels(r.id, effLevel);
-    yield { level: effLevel, age: AGE_FOR_LEVEL[effLevel] || AGE_FOR_LEVEL[r.level], levels, q: r, added: true, originalLevel: r.level };
-  }
-}
-
-function getFilteredQuestions() {
-  const out = [];
-  const search = FILTERS.search.trim().toLowerCase();
-  for (const entry of iterAllQuestions()) {
-    const { q, levels } = entry;
-    if (FILTERS.age !== "all") {
-      // Multi-age: include if ANY of the question's effective levels is in the filtered age.
-      const ages = levels.map(l => AGE_FOR_LEVEL[l]).filter(Boolean);
-      if (!ages.includes(FILTERS.age)) continue;
-    }
-    const merged = getMergedById(q.id) || q;
-    const type = getType(merged);
-    if (FILTERS.type !== "all" && type !== FILTERS.type) continue;
-    if (FILTERS.status !== "all" && statusOf(q.id) !== FILTERS.status) continue;
-    if (search) {
-      const hay = `${q.id} ${merged.concept || ""} ${merged.sit || ""} ${merged.cat || ""}`.toLowerCase();
-      if (!hay.includes(search)) continue;
-    }
-    out.push(entry);
-  }
-  return out;
-}
-
-// =========================================================================
-// Rendering — dashboard
-// =========================================================================
-function renderDashboard() {
-  const allList = [...iterAllQuestions()];
-  const counts = { total: allList.length, unreviewed: 0, keep: 0, flag: 0, kill: 0, edited: 0 };
-  for (const { q } of allList) {
-    counts[statusOf(q.id)]++;
-    if (isEdited(q.id)) counts.edited++;
-  }
-
-  // Tiles
-  const tiles = document.getElementById("tiles");
-  tiles.innerHTML = `
-    <div class="tile"><div class="label">Total</div><div class="value">${counts.total}</div></div>
-    <div class="tile t-unreviewed"><div class="label">Unreviewed</div><div class="value">${counts.unreviewed}</div></div>
-    <div class="tile t-keep"><div class="label">Keep</div><div class="value">${counts.keep}</div></div>
-    <div class="tile t-flag"><div class="label">Flag</div><div class="value">${counts.flag}</div></div>
-    <div class="tile t-kill"><div class="label">Kill</div><div class="value">${counts.kill}</div></div>
-    <div class="tile t-edited"><div class="label">Edited</div><div class="value">${counts.edited}</div></div>
-  `;
-
-  // Matrix
-  const m = {};
-  for (const age of AGES) { m[age] = {}; for (const t of ALL_TYPES) m[age][t] = { total: 0, unreviewed: 0, keep: 0, flag: 0, kill: 0 }; }
-  for (const { q, levels } of allList) {
-    const merged = getMergedById(q.id) || q;
-    const t = getType(merged);
-    // Multi-age contribution: count this question in every level it belongs to.
-    for (const lvl of levels) {
-      const a = AGE_FOR_LEVEL[lvl];
-      if (!a || !m[a] || !m[a][t]) continue;
-      m[a][t].total++;
-      m[a][t][statusOf(q.id)]++;
-    }
-  }
-  const matrix = document.getElementById("matrix");
-  let html = "<thead><tr><th>Age</th>";
-  for (const t of ALL_TYPES) html += `<th>${TYPE_LABELS[t]}</th>`;
-  html += "<th>Row Total</th></tr></thead><tbody>";
-  for (const age of AGES) {
-    html += `<tr><td class="age-label">${age.toUpperCase()}</td>`;
-    let rowTotal = 0;
-    for (const t of ALL_TYPES) {
-      const c = m[age][t];
-      rowTotal += c.total;
-      const off = isOffAgeType(age, t) ? " offage" : "";
-      const breakdown = c.total > 0
-        ? `U:${c.unreviewed} K:${c.keep} F:${c.flag} X:${c.kill}`
-        : "—";
-      html += `<td class="${off.trim()}"><div class="cell-count">${c.total}</div><div class="cell-breakdown">${breakdown}</div></td>`;
-    }
-    html += `<td class="cell-count">${rowTotal}</td></tr>`;
-  }
-  html += "</tbody>";
-  matrix.innerHTML = html;
-}
-
-// =========================================================================
-// Rendering — filters
-// =========================================================================
-function renderFilterChips() {
-  const mkChips = (containerId, options, active, onClick) => {
-    const el = document.getElementById(containerId);
-    el.innerHTML = options.map(o => `<button class="chip ${o.value === active ? "active" : ""}" data-value="${o.value}">${o.label}</button>`).join("");
-    el.onclick = (e) => {
-      const btn = e.target.closest(".chip"); if (!btn) return;
-      onClick(btn.dataset.value);
-    };
-  };
-  mkChips("age-chips", [{value:"all",label:"All ages"}, ...AGES.map(a=>({value:a,label:a.toUpperCase()}))], FILTERS.age, (v) => { FILTERS.age = v; VISIBLE_COUNT = PAGE_SIZE; render(); });
-  mkChips("type-chips", [{value:"all",label:"All types"}, ...ALL_TYPES.map(t=>({value:t,label:TYPE_LABELS[t]}))], FILTERS.type, (v) => { FILTERS.type = v; VISIBLE_COUNT = PAGE_SIZE; render(); });
-  mkChips("status-chips", [
-    {value:"all",label:"All"},
-    {value:"unreviewed",label:"Unreviewed"},
-    {value:"keep",label:"Keep"},
-    {value:"flag",label:"Flag"},
-    {value:"kill",label:"Kill"},
-  ], FILTERS.status, (v) => { FILTERS.status = v; VISIBLE_COUNT = PAGE_SIZE; render(); });
-}
-
-// =========================================================================
-// Rendering — card list
-// =========================================================================
-function renderCards() {
-  const list = getFilteredQuestions();
-  document.getElementById("list-count").textContent = `Showing ${Math.min(VISIBLE_COUNT, list.length)} of ${list.length} matching questions.`;
-
-  const container = document.getElementById("card-list");
-  const slice = list.slice(0, VISIBLE_COUNT);
-  container.innerHTML = slice.map(renderCard).join("");
-
-  const lm = document.getElementById("btn-load-more");
-  lm.style.display = list.length > VISIBLE_COUNT ? "inline-block" : "none";
-
-  // Sync "select all visible" checkbox state
-  const visibleIds = slice.map(e => e.q.id);
-  const sa = document.getElementById("select-all-visible");
-  if (sa) {
-    const allSelected = visibleIds.length > 0 && visibleIds.every(id => SELECTED.has(id));
-    sa.checked = allSelected;
-  }
-
-  renderBulkBar();
-
-  container.onclick = onCardClick;
-  container.oninput = onCardInput;
-  container.onchange = onCardChange;
-}
-
-function renderBulkBar() {
-  const bar = document.getElementById("bulk-bar");
-  const count = SELECTED.size;
-  if (count === 0) { bar.classList.remove("show"); return; }
-  bar.classList.add("show");
-  document.getElementById("bulk-count").textContent = `${count} selected`;
-
-  // Populate target dropdown (once is enough, but idempotent)
-  const sel = document.getElementById("bulk-target");
-  if (!sel.dataset.populated) {
-    const opts = AGES.map(a => `<option value="${LEVEL_FOR_AGE[a]}">${a.toUpperCase()} · ${LEVEL_FOR_AGE[a]}</option>`).join("");
-    sel.innerHTML = `<option value="">Move to age group…</option>` + opts;
-    sel.dataset.populated = "1";
-  }
-}
-
-function renderCard(entry) {
-  const { q, level, age, added, originalLevel, levels } = entry;
-  const id = q.id;
-  const merged = getMergedById(id) || q;
-  const type = getType(merged);
-  const status = statusOf(id);
-  const edited = isEdited(id);
-  const isNew = isAdded(id);
-  const offage = isOffAgeType(age, type);
-  const expanded = EXPANDED.has(id);
-  const isMoved = !!STATE.moves[id] && STATE.moves[id] !== originalLevel;
-  const isSelected = SELECTED.has(id);
-
-  const sitPreview = (merged.sit || merged.concept || "").replace(/\s+/g, " ").slice(0, 90);
-
-  const moveLabel = isMoved ? `${AGE_FOR_LEVEL[originalLevel]?.toUpperCase() || "?"} → ${age.toUpperCase()}` : "";
-
-  // When a question belongs to multiple ages, show them all as "U9 / U11" in
-  // the pill instead of just the primary. Primary is first so it's obvious.
-  const levelAges = (levels || [level]).map(l => AGE_FOR_LEVEL[l]).filter(Boolean);
-  const ageLabel = levelAges.length > 1 ? levelAges.map(a => a.toUpperCase()).join(" / ") : age.toUpperCase();
-
-  const pills = [
-    `<span class="pill mono" style="font-family:ui-monospace,monospace;">${id}</span>`,
-    `<span class="pill">${ageLabel}</span>`,
-    `<span class="pill">${TYPE_LABELS[type]}</span>`,
-    `<span class="pill status-${status}">${status}</span>`,
-    edited ? `<span class="pill edited">edited</span>` : "",
-    isNew ? `<span class="pill added">new</span>` : "",
-    isMoved ? `<span class="pill moved">moved: ${escapeHtml(moveLabel)}</span>` : "",
-    offage ? `<span class="pill offage">off-age type</span>` : "",
-  ].filter(Boolean).join("");
-
-  return `
-<div class="card ${expanded ? "expanded" : ""}" data-id="${id}" data-status="${status}">
-  <div class="card-head" data-action="toggle">
-    <input type="checkbox" class="card-checkbox" data-action="select" ${isSelected ? "checked" : ""}>
-    ${pills}
-    <div class="preview">${escapeHtml(merged.concept || "")} ${merged.concept && sitPreview ? "·" : ""} ${escapeHtml(sitPreview)}${(merged.sit || "").length > 90 ? "…" : ""}</div>
-  </div>
-  <div class="card-body">
-    ${renderCardBody(id, merged, level, age, type)}
-    <div class="card-actions">
-      <button data-action="status" data-val="keep" class="${status==="keep"?"btn-primary":""}">Keep</button>
-      <button data-action="status" data-val="flag" class="${status==="flag"?"btn-primary":""}">Flag</button>
-      <button data-action="status" data-val="kill" class="btn-danger ${status==="kill"?"btn-primary":""}">Kill</button>
-      <button data-action="status" data-val="unreviewed">Unreviewed</button>
-      <select class="field-select" data-action="move-single" style="max-width:170px;">
-        <option value="">Move to…</option>
-        ${AGES.map(a => {
-          const lvl = LEVEL_FOR_AGE[a];
-          const selected = STATE.moves[id] === lvl ? "selected" : "";
-          return `<option value="${lvl}" ${selected}>${a.toUpperCase()} · ${escapeHtml(lvl)}</option>`;
-        }).join("")}
-      </select>
-      ${isMoved ? `<button data-action="undo-move" class="btn-ghost">Undo move</button>` : ""}
-      <button data-action="reset" class="btn-ghost">Reset</button>
-      ${isNew ? `<button data-action="delete-added" class="btn-danger">Delete</button>` : ""}
-    </div>
-  </div>
-</div>`;
-}
-
-function renderCardBody(id, q, level, age, type) {
-  const pos = Array.isArray(q.pos) ? q.pos : [];
-  const posChecks = ["F","D","G"].map(p =>
-    `<label class="pos-check"><input type="checkbox" data-action="pos" data-val="${p}" ${pos.includes(p) ? "checked" : ""}> ${p}</label>`
-  ).join("");
-
-  const dRow = [1,2,3].map(n =>
-    `<button class="d-btn ${q.d===n?"active":""}" data-action="difficulty" data-val="${n}">d${n}</button>`
-  ).join("");
-
-  // Multi-age toggles: primary level is the one the question is stored in
-  // (its bank-array key or its move target); it's locked. Other ages can be
-  // ticked on/off to mark that this question also belongs in those levels.
-  const primaryLevel = STATE.moves[id] || level;
-  const effectiveLevels = new Set(Array.isArray(q.levels) && q.levels.length > 0 ? q.levels : [primaryLevel]);
-  effectiveLevels.add(primaryLevel);
-  const ageRow = AGES.map(a => {
-    const lvl = LEVEL_FOR_AGE[a];
-    const on = effectiveLevels.has(lvl);
-    const isPrimary = lvl === primaryLevel;
-    const cls = ["age-chip", on ? "on" : "off", isPrimary ? "primary" : ""].filter(Boolean).join(" ");
-    return `<button class="${cls}" data-action="toggle-age" data-age="${a}" ${isPrimary ? "title='Primary level — move the question to change'" : ""}>
-      ${on ? "●" : "○"} ${a.toUpperCase()}${isPrimary ? " ★" : ""}
-    </button>`;
-  }).join("");
-
-  const common = `
-    <div class="inline-row field" style="padding-bottom:.25rem;">
-      <span style="font-size:10px;text-transform:uppercase;color:var(--dimmer);letter-spacing:.05em;">Show in:</span>
-      ${ageRow}
-    </div>`;
-  const commonRest = `
-    <div class="row3">
-      <div class="field"><label>Category</label><input class="field-input" data-action="field" data-key="cat" value="${escapeAttr(q.cat || "")}"></div>
-      <div class="field"><label>Concept</label><input class="field-input" data-action="field" data-key="concept" value="${escapeAttr(q.concept || "")}"></div>
-      <div class="field"><label>Type</label><select class="field-select" data-action="change-type">${ALL_TYPES.map(t => `<option value="${t}" ${t===type?"selected":""}>${TYPE_LABELS[t]}</option>`).join("")}</select></div>
-    </div>
-    <div class="inline-row field">
-      <span style="font-size:10px;text-transform:uppercase;color:var(--dimmer);letter-spacing:.05em;">Positions:</span>
-      ${posChecks}
-      <span style="font-size:10px;text-transform:uppercase;color:var(--dimmer);letter-spacing:.05em;margin-left:1rem;">Difficulty:</span>
-      <div class="difficulty-row">${dRow}</div>
-    </div>
-    <div class="field"><label>Situation / Prompt</label><textarea class="field-textarea" data-action="field" data-key="sit">${escapeHtml(q.sit || "")}</textarea></div>
-  `;
-
-  let typeBody = "";
-  if (type === "mc" || type === "mistake" || type === "next") {
-    const opts = Array.isArray(q.opts) ? q.opts : ["","","",""];
-    const okIdx = typeof q.ok === "number" ? q.ok : 0;
-    const labelOk = type === "mistake" ? "the mistake" : "correct";
-    typeBody = `
-      <div class="field">
-        <label>Options (click button to mark ${labelOk})</label>
-        ${opts.map((o, i) => `
-          <div class="opt-row">
-            <span class="opt-letter">${String.fromCharCode(65+i)}</span>
-            <button class="opt-correct-btn ${okIdx===i?"active":""}" data-action="set-ok" data-val="${i}">${okIdx===i?"✓":"·"}</button>
-            <input class="field-input" data-action="opt" data-idx="${i}" value="${escapeAttr(o)}">
-            ${opts.length > 2 ? `<button class="opt-remove" data-action="remove-opt" data-idx="${i}">✕</button>` : ""}
-          </div>
-        `).join("")}
-        ${opts.length < 6 ? `<button class="btn-ghost" data-action="add-opt" style="margin-top:.3rem;">+ Add option</button>` : ""}
-      </div>
-    `;
-  } else if (type === "tf") {
-    const ok = q.ok === true || q.ok === "true" || q.ok === 1;
-    typeBody = `
-      <div class="field">
-        <label>Correct Answer</label>
-        <div class="tf-row">
-          <button class="tf-btn ${ok===true?"active":""}" data-action="set-tf" data-val="true">TRUE</button>
-          <button class="tf-btn ${ok===false?"active":""}" data-action="set-tf" data-val="false">FALSE</button>
-        </div>
-      </div>
-    `;
-  } else if (type === "seq") {
-    const items = Array.isArray(q.items) ? q.items : [];
-    typeBody = `
-      <div class="field">
-        <label>Steps (in correct order)</label>
-        ${items.map((it, i) => `
-          <div class="seq-item">
-            <span class="seq-index">${i+1}.</span>
-            <button class="seq-move" data-action="seq-up" data-idx="${i}" ${i===0?"disabled":""}>▲</button>
-            <button class="seq-move" data-action="seq-down" data-idx="${i}" ${i===items.length-1?"disabled":""}>▼</button>
-            <input class="field-input" data-action="seq-edit" data-idx="${i}" value="${escapeAttr(it)}">
-            <button class="opt-remove" data-action="seq-remove" data-idx="${i}">✕</button>
-          </div>
-        `).join("")}
-        <button class="btn-ghost" data-action="seq-add" style="margin-top:.3rem;">+ Add step</button>
-      </div>
-    `;
-  } else if (type === "zone-click") {
-    const question = q.question || "";
-    const selectedZones = Array.isArray(q.zones) ? q.zones : [];
-    const correctZone = q.correctZone || "";
-    // Flag mixed dz-/oz-/nz- prefixes — rink diagram overlays are shared
-    // across contexts so dz-slot and oz-slot collide. Keep within one bucket.
-    const prefixes = new Set(selectedZones.map(z => z.split("-")[0]));
-    const mixedWarning = prefixes.size > 1
-      ? `<div style="margin-top:.4rem;padding:.4rem .6rem;background:rgba(212,86,86,.12);border:1px solid rgba(212,86,86,.35);border-radius:6px;color:#F2B4B4;font-size:11px;line-height:1.5;">⚠ Mixed zone prefixes (${[...prefixes].join(" + ")}) — dz-/oz-/nz- zones share coordinates and will overlap. Pick one context.</div>`
-      : "";
-    typeBody = `
-      <div class="field">
-        <label>Question prompt (shown to the player above the rink)</label>
-        <textarea class="field-textarea" data-action="field" data-key="question">${escapeHtml(question)}</textarea>
-      </div>
-      <div class="field">
-        <label>Rink preview — exactly what the player sees (correct zone highlighted in green)</label>
-        ${renderZoneClickPreview(selectedZones, correctZone)}
-      </div>
-      <div class="field">
-        <label>Zones — check to include as a clickable option; select one as the correct answer</label>
-        <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:.35rem;">
-          ${ZONE_CLICK_ZONES.map(z => {
-            const checked = selectedZones.includes(z.id);
-            const isCorrect = z.id === correctZone;
-            return `
-              <label style="display:flex;align-items:center;gap:.35rem;padding:.35rem .5rem;background:var(--bg-elev);border:1px solid ${isCorrect ? 'var(--accent)' : 'var(--border)'};border-radius:6px;font-size:12px;cursor:pointer;">
-                <input type="checkbox" data-action="zc-zone-toggle" data-zone="${z.id}" ${checked?"checked":""} style="accent-color:var(--accent);">
-                <input type="radio" name="zc-correct-${id}" data-action="zc-set-correct" data-zone="${z.id}" ${isCorrect?"checked":""} ${!checked?"disabled":""} style="accent-color:var(--accent);" title="Mark as correct">
-                <span style="flex:1;color:${isCorrect?'var(--accent)':'inherit'};font-weight:${isCorrect?'700':'400'};">${z.label}</span>
-              </label>
-            `;
-          }).join("")}
-        </div>
-        ${mixedWarning}
-        <div style="font-size:11px;color:var(--dimmer);margin-top:.5rem;line-height:1.5;">
-          Tip: pick 3–4 zones from one context (DZ, NZ, or OZ). Check the box to include a zone, then use the radio to mark it correct.
-        </div>
-      </div>
-    `;
-  } else if (type === "rink") {
-    const sq = (q.scene && q.scene.question) || {};
-    const qMode = sq.mode || "choice";
-    const prompt = sq.prompt || "";
-    const opts = Array.isArray(sq.options) ? sq.options : [];
-    const fb = sq.feedback || {};
-    const VERDICTS = ["correct","partial","wrong"];
-    typeBody = `
-      <div class="field">
-        <label>Rink scene — drag items to reposition; click zones (zone-click mode) or items (spot-mistake mode) to cycle correct/partial/wrong</label>
-        <div class="rink-editor-slot" data-rink-slot="${id}"></div>
-        ${!(window.IceIQRink) ? `<div style="font-size:11px;color:var(--dimmer);padding:.4rem 0;">Loading rink editor…</div>` : ""}
-      </div>
-      <div class="row2">
-        <div class="field">
-          <label>Answer mode</label>
-          <select class="field-select" data-action="rink-mode">
-            <option value="choice" ${qMode==="choice"?"selected":""}>Multiple choice</option>
-            <option value="zone-click" ${qMode==="zone-click"?"selected":""}>Zone click</option>
-            <option value="spot-mistake" ${qMode==="spot-mistake"?"selected":""}>Spot the mistake</option>
-          </select>
-        </div>
-        <div class="field">
-          <label>Question prompt</label>
-          <textarea class="field-textarea" data-action="rink-prompt">${escapeHtml(prompt)}</textarea>
-        </div>
-      </div>
-      ${qMode === "choice" ? `
-        <div class="field">
-          <label>Options — each has a verdict (correct/partial/wrong) and per-option feedback</label>
-          ${opts.map((o, i) => `
-            <div class="opt-row" style="flex-wrap:wrap;gap:.35rem;padding:.5rem;background:var(--bg-elev);border:1px solid var(--border);border-radius:6px;margin-bottom:.35rem;">
-              <span class="opt-letter">${String.fromCharCode(65+i)}</span>
-              <input class="field-input" data-action="rink-opt-text" data-idx="${i}" placeholder="Option text" value="${escapeAttr(o.text || "")}" style="flex:1 1 200px;">
-              <select class="field-select" data-action="rink-opt-verdict" data-idx="${i}" style="width:auto;">
-                ${VERDICTS.map(v => `<option value="${v}" ${o.verdict===v?"selected":""}>${v}</option>`).join("")}
-              </select>
-              <button class="opt-remove" data-action="rink-opt-del" data-idx="${i}">✕</button>
-              <textarea class="field-textarea" data-action="rink-opt-fb" data-idx="${i}" placeholder="Feedback shown when the player picks this option" style="width:100%;margin-top:.3rem;">${escapeHtml(o.feedback || "")}</textarea>
-            </div>
-          `).join("")}
-          <button class="btn-ghost" data-action="rink-opt-add" style="margin-top:.3rem;">+ Add option</button>
-        </div>
-      ` : `
-        <div class="field">
-          <label>${qMode === "spot-mistake" ? "Spot-the-mistake" : "Zone-click"} feedback (shown based on which verdict the clicked ${qMode === "spot-mistake" ? "item" : "zone"} has)</label>
-          ${VERDICTS.map(v => `
-            <div style="margin-top:.4rem;">
-              <div style="font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--dim);margin-bottom:.2rem;">${v} feedback</div>
-              <textarea class="field-textarea" data-action="rink-fb-${v}" placeholder="Shown when the player clicks a ${v} ${qMode === "spot-mistake" ? "item" : "zone"}">${escapeHtml(fb[v] || "")}</textarea>
-            </div>
-          `).join("")}
-          <div style="font-size:11px;color:var(--dimmer);margin-top:.5rem;line-height:1.5;">
-            ${qMode === "spot-mistake"
-              ? "Tip: click any teammate, opponent, puck, goalie, or flag on the rink above to cycle its verdict (unassigned → correct → partial → wrong → unassigned). You'll see a dashed ring appear in the verdict's color."
-              : "Tip: click any zone on the rink above to cycle its verdict (unassigned → correct → partial → wrong → unassigned)."}
-          </div>
-        </div>
-      `}
-    `;
-  }
-
-  const tail = `
-    <div class="row2">
-      <div class="field"><label>Why (explanation)</label><textarea class="field-textarea" data-action="field" data-key="why">${escapeHtml(q.why || "")}</textarea></div>
-      <div class="field"><label>Tip</label><textarea class="field-textarea" data-action="field" data-key="tip">${escapeHtml(q.tip || "")}</textarea></div>
-    </div>
-  `;
-
-  return common + commonRest + typeBody + tail;
-}
-
-// =========================================================================
-// Event handlers — cards
-// =========================================================================
-function onCardClick(e) {
-  const card = e.target.closest(".card"); if (!card) return;
-  const id = card.dataset.id;
-  const action = e.target.dataset.action || e.target.closest("[data-action]")?.dataset.action;
-  if (!action) return;
-  const actionEl = e.target.closest("[data-action]");
-  const val = actionEl?.dataset.val;
-  const idx = actionEl?.dataset.idx;
-
-  if (action === "select") {
-    // Checkbox in header — toggle selection, don't expand
-    if (e.target.checked) SELECTED.add(id); else SELECTED.delete(id);
-    renderBulkBar();
-    // Also sync "select all visible"
-    const list = getFilteredQuestions().slice(0, VISIBLE_COUNT).map(e => e.q.id);
-    const sa = document.getElementById("select-all-visible");
-    if (sa) sa.checked = list.length > 0 && list.every(x => SELECTED.has(x));
-    return;
-  }
-  if (action === "toggle") {
-    // Only toggle if they didn't click an interactive element
-    if (e.target.closest("input, textarea, select, button")) return;
-    if (EXPANDED.has(id)) EXPANDED.delete(id); else EXPANDED.add(id);
-    card.classList.toggle("expanded");
-    return;
-  }
-  if (action === "undo-move") {
-    delete STATE.moves[id];
-    saveState(); render(); return;
-  }
-  if (action === "toggle-age") {
-    const toggledLvl = LEVEL_FOR_AGE[actionEl.dataset.age];
-    const merged = getMergedById(id);
-    const primaryLvl = STATE.moves[id] || getOriginalLevelForId(id);
-    // Primary is where the row lives in questions.json — move it instead of toggling.
-    if (toggledLvl === primaryLvl) return;
-    const current = Array.isArray(merged.levels) && merged.levels.length > 0
-      ? [...merged.levels]
-      : [primaryLvl];
-    if (!current.includes(primaryLvl)) current.unshift(primaryLvl);
-    const next = current.includes(toggledLvl)
-      ? current.filter(l => l !== toggledLvl)
-      : [...current, toggledLvl];
-    // setField diff-matches against orig.levels; when `next` equals the original,
-    // the edit is auto-cleared — so this handles both "add" and "revert" cases.
-    setField(id, "levels", next);
-    render(); return;
-  }
-  if (action === "status") {
-    if (val === "unreviewed") delete STATE.statuses[id];
-    else STATE.statuses[id] = val;
-    saveState(); render(); return;
-  }
-  if (action === "reset") {
-    if (!confirm(`Reset all local edits + status for ${id}?`)) return;
-    delete STATE.edits[id]; delete STATE.statuses[id];
-    saveState(); render(); return;
-  }
-  if (action === "delete-added") {
-    if (!confirm(`Permanently delete new question ${id}? (Cannot undo.)`)) return;
-    STATE.added = STATE.added.filter(r => r.id !== id);
-    delete STATE.edits[id]; delete STATE.statuses[id];
-    saveState(); render(); return;
-  }
-  if (action === "set-ok") {
-    setField(id, "ok", parseInt(val, 10)); render(); return;
-  }
-  if (action === "set-tf") {
-    setField(id, "ok", val === "true"); render(); return;
-  }
-  if (action === "difficulty") {
-    setField(id, "d", parseInt(val, 10)); render(); return;
-  }
-  if (action === "pos") {
-    // handled in change
-  }
-  if (action === "add-opt") {
-    const q = getMergedById(id);
-    const opts = Array.isArray(q.opts) ? [...q.opts, ""] : ["",""];
-    setField(id, "opts", opts); render(); return;
-  }
-  if (action === "remove-opt") {
-    const q = getMergedById(id);
-    const opts = (q.opts || []).filter((_, i) => i !== parseInt(idx, 10));
-    setField(id, "opts", opts);
-    if (typeof q.ok === "number" && q.ok >= opts.length) setField(id, "ok", Math.max(0, opts.length - 1));
-    render(); return;
-  }
-  if (action === "seq-add") {
-    const q = getMergedById(id);
-    const items = Array.isArray(q.items) ? [...q.items, ""] : [""];
-    setField(id, "items", items); render(); return;
-  }
-  if (action === "rink-opt-add") { addRinkOption(id); render(); return; }
-  if (action === "rink-opt-del") { removeRinkOption(id, parseInt(idx, 10)); render(); return; }
-  if (action === "seq-remove") {
-    const q = getMergedById(id);
-    const items = (q.items || []).filter((_, i) => i !== parseInt(idx, 10));
-    setField(id, "items", items); render(); return;
-  }
-  if (action === "seq-up" || action === "seq-down") {
-    const q = getMergedById(id);
-    const items = [...(q.items || [])];
-    const i = parseInt(idx, 10);
-    const j = action === "seq-up" ? i - 1 : i + 1;
-    if (j < 0 || j >= items.length) return;
-    [items[i], items[j]] = [items[j], items[i]];
-    setField(id, "items", items); render(); return;
-  }
-}
-
-function onCardInput(e) {
-  const card = e.target.closest(".card"); if (!card) return;
-  const id = card.dataset.id;
-  const action = e.target.dataset.action;
-  const key = e.target.dataset.key;
-  const idx = e.target.dataset.idx;
-  if (action === "field" && key) {
-    setField(id, key, e.target.value);
-  } else if (action === "opt" && idx != null) {
-    const q = getMergedById(id);
-    const opts = [...(q.opts || [])];
-    opts[parseInt(idx, 10)] = e.target.value;
-    setField(id, "opts", opts);
-  } else if (action === "seq-edit" && idx != null) {
-    const q = getMergedById(id);
-    const items = [...(q.items || [])];
-    items[parseInt(idx, 10)] = e.target.value;
-    setField(id, "items", items);
-  } else if (action === "rink-prompt") {
-    updateRinkQuestion(id, { prompt: e.target.value });
-  } else if (action === "rink-opt-text" && idx != null) {
-    setRinkOption(id, parseInt(idx, 10), { text: e.target.value });
-  } else if (action === "rink-opt-fb" && idx != null) {
-    setRinkOption(id, parseInt(idx, 10), { feedback: e.target.value });
-  } else if (action === "rink-fb-correct" || action === "rink-fb-partial" || action === "rink-fb-wrong") {
-    const verdict = action.slice("rink-fb-".length);
-    updateRinkQuestion(id, { feedback: { ...(currentScene(id).question?.feedback || {}), [verdict]: e.target.value } });
-  }
-}
-
-// ── Rink scene.question helpers ─────────────────────────────────────────────
-function currentScene(id) {
-  const q = getMergedById(id);
-  if (q.scene) return q.scene;
-  return window.IceIQEmptyScene
-    ? window.IceIQEmptyScene()
-    : { team: [], opponents: [], puck: { zone: "slot", offsetX: 26, offsetY: -2 }, showGoalie: true, showHomePlate: false, texts: [], arrows: [], flags: [], question: { mode: "choice", prompt: "", options: [], zones: { correct: [], partial: [], wrong: [] }, targets: { correct: [], partial: [], wrong: [] }, feedback: { correct: "", partial: "", wrong: "" } } };
-}
-function updateRinkQuestion(id, patch) {
-  const scene = currentScene(id);
-  const nextScene = { ...scene, question: { ...(scene.question || {}), ...patch } };
-  setField(id, "scene", nextScene);
-  mountRinkEditors(); // push the fresh scene into the live React root
-}
-function setRinkOption(id, idx, patch) {
-  const scene = currentScene(id);
-  const opts = Array.isArray(scene.question?.options) ? [...scene.question.options] : [];
-  opts[idx] = { ...(opts[idx] || { text: "", verdict: "correct", feedback: "" }), ...patch };
-  updateRinkQuestion(id, { options: opts });
-}
-function addRinkOption(id) {
-  const scene = currentScene(id);
-  const opts = Array.isArray(scene.question?.options) ? [...scene.question.options] : [];
-  opts.push({ text: "", verdict: "correct", feedback: "" });
-  updateRinkQuestion(id, { options: opts });
-}
-function removeRinkOption(id, idx) {
-  const scene = currentScene(id);
-  const opts = Array.isArray(scene.question?.options) ? scene.question.options.filter((_, i) => i !== idx) : [];
-  updateRinkQuestion(id, { options: opts });
-}
-
-function onCardChange(e) {
-  const card = e.target.closest(".card"); if (!card) return;
-  const id = card.dataset.id;
-  const action = e.target.dataset.action;
-  const val = e.target.dataset.val;
-  if (action === "move-single") {
-    const target = e.target.value;
-    const origLevel = getOriginalLevelForId(id);
-    if (!target || target === origLevel) {
-      delete STATE.moves[id];
-    } else {
-      STATE.moves[id] = target;
-    }
-    saveState(); render(); return;
-  }
-  if (action === "rink-mode") {
-    updateRinkQuestion(id, { mode: e.target.value });
-    render(); return;
-  }
-  if (action === "rink-opt-verdict") {
-    const idx = parseInt(e.target.dataset.idx, 10);
-    setRinkOption(id, idx, { verdict: e.target.value });
-    return;
-  }
-  if (action === "zc-zone-toggle") {
-    const zone = e.target.dataset.zone;
-    const q = getMergedById(id);
-    const zones = new Set(Array.isArray(q.zones) ? q.zones : []);
-    if (e.target.checked) zones.add(zone);
-    else {
-      zones.delete(zone);
-      // If we just unchecked the correct zone, clear correctZone too.
-      if (q.correctZone === zone) setField(id, "correctZone", "");
-    }
-    setField(id, "zones", [...zones]);
-    render(); return;
-  }
-  if (action === "zc-set-correct") {
-    const zone = e.target.dataset.zone;
-    setField(id, "correctZone", zone);
-    render(); return;
-  }
-  if (action === "pos") {
-    const q = getMergedById(id);
-    const current = new Set(Array.isArray(q.pos) ? q.pos : []);
-    if (e.target.checked) current.add(val); else current.delete(val);
-    setField(id, "pos", [...current]);
-  } else if (action === "change-type") {
-    const newType = e.target.value;
-    const q = getMergedById(id);
-    if (!confirm(`Change type from ${getType(q)} to ${newType}? This resets type-specific fields.`)) { render(); return; }
-    const fresh = blankTypeFields(newType, ageOf(id));
-    const patch = { ...fresh };
-    if (newType === "mc") delete patch.type; // mc is default
-    else patch.type = newType;
-    for (const [k, v] of Object.entries(patch)) setField(id, k, v);
-    // Clear incompatible fields from edit
-    if (newType !== "seq") setField(id, "items", undefined);
-    if (newType === "tf" || newType === "seq") setField(id, "opts", undefined);
-    if (newType !== "rink") setField(id, "scene", undefined);
-    if (newType !== "zone-click") {
-      setField(id, "zones", undefined);
-      setField(id, "correctZone", undefined);
-      setField(id, "question", undefined);
-    }
-    render();
-  }
-}
-
-function blankTypeFields(type, age) {
-  if (type === "mc" || type === "mistake" || type === "next") {
-    const numOpts = age === "u5" ? 2 : 4;
-    return { opts: Array(numOpts).fill(""), ok: 0 };
-  }
-  if (type === "tf") return { ok: true };
-  if (type === "seq") return { items: ["", "", ""] };
-  if (type === "zone-click") {
-    // Sensible starter: 3 OZ zones with the slot marked correct — this is
-    // the most common pattern in the existing bank. Author picks zones and
-    // correct answer in the card. `d` defaults to 1 for U9, up through
-    // older ages' harder defaults.
-    const d = (age === "u7" || age === "u9") ? 1 : 2;
-    return {
-      d,
-      question: "",
-      zones: ["oz-slot", "oz-left-wing", "oz-right-wing"],
-      correctZone: "oz-slot",
-    };
-  }
-  if (type === "rink") {
-    // window.IceIQEmptyScene is loaded from rink-editor.jsx via Babel standalone.
-    // Fallback inline if the React bundle hasn't finished loading yet.
-    const scene = (typeof window !== "undefined" && window.IceIQEmptyScene)
-      ? window.IceIQEmptyScene()
-      : {
-          team: [], opponents: [],
-          puck: { zone: "slot", offsetX: 26, offsetY: -2 },
-          showGoalie: true, showHomePlate: false,
-          texts: [], arrows: [], flags: [],
-          question: {
-            mode: "choice", prompt: "", options: [],
-            zones: { correct: [], partial: [], wrong: [] },
-            targets: { correct: [], partial: [], wrong: [] },
-            feedback: { correct: "", partial: "", wrong: "" },
-          },
-        };
-    return { scene };
-  }
-  return {};
-}
-
-// =========================================================================
-// Add Question Modal
-// =========================================================================
-function openAddModal() {
-  const modal = document.getElementById("add-modal");
-  const ageSel = document.getElementById("add-age");
-  ageSel.innerHTML = AGES.map(a => `<option value="${a}" ${a === (FILTERS.age !== "all" ? FILTERS.age : "u5") ? "selected" : ""}>${a.toUpperCase()} · ${LEVEL_FOR_AGE[a]}</option>`).join("");
-  document.getElementById("add-cat").value = "";
-  document.getElementById("add-concept").value = "";
-  document.getElementById("add-sit").value = "";
-  document.getElementById("add-advanced").checked = false;
-  rebuildAddTypeOptions();
-  modal.classList.add("show");
-}
-function closeAddModal() { document.getElementById("add-modal").classList.remove("show"); }
-function rebuildAddTypeOptions() {
-  const age = document.getElementById("add-age").value;
-  const adv = document.getElementById("add-advanced").checked;
-  const sel = document.getElementById("add-type");
-  const types = adv ? ALL_TYPES : RECOMMENDED_TYPES_BY_AGE[age];
-  const prev = sel.value;
-  sel.innerHTML = types.map(t => `<option value="${t}">${TYPE_LABELS[t]}</option>`).join("");
-  if (types.includes(prev)) sel.value = prev;
-  document.getElementById("add-type-hint").textContent = `(recommended for ${age.toUpperCase()}: ${RECOMMENDED_TYPES_BY_AGE[age].map(t=>TYPE_LABELS[t]).join(", ")})`;
-  rebuildAddTypeFields();
-}
-function rebuildAddTypeFields() {
-  const age = document.getElementById("add-age").value;
-  const type = document.getElementById("add-type").value;
-  const c = document.getElementById("add-type-fields");
-  if (type === "mc" || type === "mistake" || type === "next") {
-    const n = age === "u5" ? 2 : 4;
-    c.innerHTML = `
-      <div class="field"><label>Options (${n}) — radio picks ${type==="mistake"?"the mistake":"correct"}</label>
-        ${Array.from({length:n}, (_,i)=>`
-          <div class="opt-row">
-            <span class="opt-letter">${String.fromCharCode(65+i)}</span>
-            <input type="radio" name="add-ok" value="${i}" ${i===0?"checked":""}>
-            <input class="field-input" id="add-opt-${i}" placeholder="Option ${String.fromCharCode(65+i)}">
-          </div>`).join("")}
-      </div>`;
-  } else if (type === "tf") {
-    c.innerHTML = `
-      <div class="field"><label>Correct Answer</label>
-        <div class="tf-row">
-          <label class="tf-btn btn"><input type="radio" name="add-ok" value="true" checked> TRUE</label>
-          <label class="tf-btn btn"><input type="radio" name="add-ok" value="false"> FALSE</label>
-        </div>
-      </div>`;
-  } else if (type === "seq") {
-    c.innerHTML = `
-      <div class="field"><label>Steps in correct order (one per line)</label>
-        <textarea class="field-textarea" id="add-items" placeholder="Step 1&#10;Step 2&#10;Step 3" rows="5"></textarea>
-      </div>`;
-  } else if (type === "zone-click") {
-    const defaults = blankTypeFields("zone-click", age);
-    c.innerHTML = `
-      <div class="field">
-        <label>Question prompt</label>
-        <textarea class="field-textarea" id="add-zc-question" placeholder="Where should you skate?"></textarea>
-      </div>
-      <div class="field">
-        <label>Rink preview</label>
-        <div id="add-zc-preview">${renderZoneClickPreview(defaults.zones, defaults.correctZone)}</div>
-      </div>
-      <div class="field">
-        <label>Zones — check to include; radio marks the correct answer</label>
-        <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:.35rem;">
-          ${ZONE_CLICK_ZONES.map(z => {
-            const checked = defaults.zones.includes(z.id);
-            const isCorrect = z.id === defaults.correctZone;
-            return `
-              <label style="display:flex;align-items:center;gap:.35rem;padding:.35rem .5rem;background:var(--bg-elev);border:1px solid var(--border);border-radius:6px;font-size:12px;cursor:pointer;">
-                <input type="checkbox" class="add-zc-zone" data-zone="${z.id}" ${checked?"checked":""}>
-                <input type="radio" name="add-zc-correct" class="add-zc-correct" data-zone="${z.id}" ${isCorrect?"checked":""} ${!checked?"disabled":""}>
-                <span style="flex:1;">${z.label}</span>
-              </label>
-            `;
-          }).join("")}
-        </div>
-        <div style="font-size:11px;color:var(--dimmer);margin-top:.35rem;line-height:1.5;">
-          Pick 3–4 zones from one context (DZ / NZ / OZ). Mixed prefixes overlap on the rink.
-        </div>
-      </div>`;
-    // Keep radio enabled only when its checkbox is checked.
-    // Also refresh the rink preview whenever zones or correct change.
-    setTimeout(() => {
-      const refreshPreview = () => {
-        const zones = [...c.querySelectorAll(".add-zc-zone:checked")].map(cb => cb.dataset.zone);
-        const correctEl = c.querySelector(".add-zc-correct:checked");
-        const correct = correctEl ? correctEl.dataset.zone : "";
-        const slot = c.querySelector("#add-zc-preview");
-        if (slot) slot.innerHTML = renderZoneClickPreview(zones, correct);
-      };
-      c.querySelectorAll(".add-zc-zone").forEach(cb => {
-        cb.addEventListener("change", () => {
-          const zone = cb.dataset.zone;
-          const radio = c.querySelector(`.add-zc-correct[data-zone="${zone}"]`);
-          if (radio) {
-            radio.disabled = !cb.checked;
-            if (!cb.checked && radio.checked) radio.checked = false;
-          }
-          refreshPreview();
-        });
-      });
-      c.querySelectorAll(".add-zc-correct").forEach(r => {
-        r.addEventListener("change", refreshPreview);
-      });
-    }, 0);
-  } else if (type === "rink") {
-    c.innerHTML = `
-      <div class="field" style="padding:.6rem .8rem;background:var(--bg-elev);border:1px solid var(--border);border-radius:8px;font-size:12px;color:var(--dim);line-height:1.5;">
-        Rink scenes are built using the visual editor. Save this question with an empty scene — you can drag in players, opponents, arrows, flags, and configure the question mode (choice, zone-click, or spot-mistake) from the question's edit card.
-      </div>`;
-  }
-  c.insertAdjacentHTML("beforeend", `
-    <div class="row2">
-      <div class="field"><label>Why (explanation)</label><textarea class="field-textarea" id="add-why"></textarea></div>
-      <div class="field"><label>Tip</label><textarea class="field-textarea" id="add-tip"></textarea></div>
-    </div>`);
-}
-function saveAdded() {
-  const age = document.getElementById("add-age").value;
-  const type = document.getElementById("add-type").value;
-  const cat = document.getElementById("add-cat").value.trim();
-  const concept = document.getElementById("add-concept").value.trim();
-  const sit = document.getElementById("add-sit").value.trim();
-  if (!sit) { alert("Situation is required."); return; }
-
-  const row = {
-    id: nextIdForAge(age),
-    level: LEVEL_FOR_AGE[age],
-    cat: cat || "General",
-    pos: ["F","D"],
-    concept: concept || "",
-    d: 1,
-    sit,
-  };
-  if (type !== "mc") row.type = type;
-  if (type === "mc" || type === "mistake" || type === "next") {
-    const n = age === "u5" ? 2 : 4;
-    row.opts = Array.from({length:n}, (_,i)=>document.getElementById(`add-opt-${i}`).value);
-    const okEl = document.querySelector('input[name="add-ok"]:checked');
-    row.ok = okEl ? parseInt(okEl.value, 10) : 0;
-  } else if (type === "tf") {
-    const okEl = document.querySelector('input[name="add-ok"]:checked');
-    row.ok = okEl?.value === "true";
-  } else if (type === "seq") {
-    row.items = (document.getElementById("add-items").value || "").split(/\r?\n/).map(s => s.trim()).filter(Boolean);
-  } else if (type === "zone-click") {
-    row.question = document.getElementById("add-zc-question").value.trim();
-    const zones = [...document.querySelectorAll(".add-zc-zone:checked")].map(cb => cb.dataset.zone);
-    const correctEl = document.querySelector(".add-zc-correct:checked");
-    row.zones = zones;
-    row.correctZone = correctEl ? correctEl.dataset.zone : (zones[0] || "");
-  } else if (type === "rink") {
-    row.scene = (typeof window !== "undefined" && window.IceIQEmptyScene)
-      ? window.IceIQEmptyScene()
-      : {
-          team: [], opponents: [],
-          puck: { zone: "slot", offsetX: 26, offsetY: -2 },
-          showGoalie: true, showHomePlate: false,
-          texts: [], arrows: [], flags: [],
-          question: { mode: "choice", prompt: "", options: [], zones: { correct: [], partial: [], wrong: [] }, feedback: { correct: "", partial: "", wrong: "" } },
-        };
-  }
-  row.why = document.getElementById("add-why").value.trim();
-  row.tip = document.getElementById("add-tip").value.trim();
-
-  STATE.added.push(row);
-  saveState();
-  closeAddModal();
-  render();
-}
-
-// =========================================================================
+// ─────────────────────────────────────────────
 // File IO
-// =========================================================================
-async function handleFile(file) {
+// ─────────────────────────────────────────────
+document.getElementById("file-input").addEventListener("change", (e) => {
+  const f = e.target.files?.[0];
+  if (f) loadFile(f);
+  e.target.value = ""; // allow re-load of same file
+});
+
+async function loadFile(file) {
+  setStatus(`Loading <code>${escapeHtml(file.name)}</code>…`, "dim");
   try {
-    const text = await file.text();
-    const parsed = JSON.parse(text);
-    if (!parsed || typeof parsed !== "object" || Array.isArray(parsed)) throw new Error("Expected a level-keyed object");
+    let text = await file.text();
+    // Strip BOM defensively.
+    if (text.charCodeAt(0) === 0xFEFF) text = text.slice(1);
+    text = text.trim();
+    if (!text) throw new Error("File is empty.");
+    let parsed;
+    try {
+      parsed = JSON.parse(text);
+    } catch (e) {
+      // Try to show where parse failed. JSON.parse errors look like
+      // "Unexpected token X in JSON at position 12345".
+      const m = /at position (\d+)/.exec(e.message);
+      if (m) {
+        const pos = parseInt(m[1], 10);
+        const context = text.slice(Math.max(0, pos - 50), Math.min(text.length, pos + 50));
+        throw new Error(`${e.message}\nNear: …${context}…`);
+      }
+      throw e;
+    }
+    if (!parsed || typeof parsed !== "object" || Array.isArray(parsed)) {
+      throw new Error("Expected a level-keyed object (e.g. {\"U11 / Atom\": [...], ...}).");
+    }
+    // Validate each level is an array.
+    for (const [lvl, rows] of Object.entries(parsed)) {
+      if (!Array.isArray(rows)) throw new Error(`Level "${lvl}" is not an array.`);
+    }
     BANK = parsed;
-    document.getElementById("file-status").innerHTML = `<span style="color:var(--green);">✓</span> Loaded <code>${escapeHtml(file.name)}</code> — ${countQuestions()} questions across ${Object.keys(BANK).length} age groups.`;
+    setStatus(
+      `✓ Loaded <code>${escapeHtml(file.name)}</code> — <b>${countQuestions()}</b> questions across <b>${Object.keys(BANK).length}</b> ages.`,
+      "green"
+    );
     document.getElementById("btn-export").disabled = false;
+    document.getElementById("btn-clear").disabled = false;
     document.getElementById("empty-state").style.display = "none";
     document.getElementById("dashboard").style.display = "block";
-    document.getElementById("main").style.display = "block";
-    VISIBLE_COUNT = PAGE_SIZE;
+    PAGE = 0;
+    EXPANDED.clear();
     render();
   } catch (e) {
-    alert("Could not parse file: " + e.message);
+    errorToast("Could not parse file: " + e.message);
+    setStatus(`✗ Load failed: ${escapeHtml(e.message)}`, "red");
   }
 }
-function countQuestions() {
-  let n = 0;
-  for (const level of Object.keys(BANK)) n += (BANK[level] || []).length;
-  return n;
-}
 
-function buildExport() {
-  const out = {};
-  // Preserve level order; rows go into their EFFECTIVE (moved) level
-  for (const level of LEVEL_ORDER) out[level] = [];
-
-  for (const entry of iterAllQuestions()) {
-    const { q, level } = entry;
-    if (statusOf(q.id) === "kill") continue;
-    if (!out[level]) out[level] = [];
-    out[level].push(getMergedById(q.id) || q);
-  }
-  // Drop empty buckets so output stays clean
-  for (const level of Object.keys(out)) {
-    if (out[level].length === 0) delete out[level];
-  }
-  return out;
-}
-
-function killAllOffAge() {
-  if (!Object.keys(BANK).length && STATE.added.length === 0) { alert("Load a questions.json file first."); return; }
-  const targets = [];
-  for (const entry of iterAllQuestions()) {
-    const { q, age } = entry;
-    const merged = getMergedById(q.id) || q;
-    if (isOffAgeType(age, getType(merged)) && statusOf(q.id) !== "kill") {
-      targets.push(q.id);
-    }
-  }
-  if (targets.length === 0) { alert("No off-age questions found."); return; }
-  const breakdown = {};
-  for (const id of targets) {
-    const age = ageOf(id);
-    const t = getType(getMergedById(id));
-    const key = `${age.toUpperCase()} × ${TYPE_LABELS[t] || t}`;
-    breakdown[key] = (breakdown[key] || 0) + 1;
-  }
-  const summary = Object.entries(breakdown).map(([k,v]) => `  ${k}: ${v}`).join("\n");
-  if (!confirm(`Mark ${targets.length} off-age questions as Kill?\n\n${summary}\n\nThis is reversible — just click Unreviewed / Keep / Flag on any card, or use "Reset local edits" to clear everything.`)) return;
-  for (const id of targets) STATE.statuses[id] = "kill";
-  saveState();
-  render();
-  alert(`Killed ${targets.length} off-age questions. They're still in the list (tinted) — export to drop them from questions.json.`);
-}
-
-function cullMcToFifty() {
-  if (!Object.keys(BANK).length && STATE.added.length === 0) { alert("Load a questions.json file first."); return; }
-  const TARGETS = ["u11","u13","u15","u18"];
-  const MAX = 50;
-
-  const byAge = {};
-  for (const age of TARGETS) byAge[age] = [];
-  for (const entry of iterAllQuestions()) {
-    if (!TARGETS.includes(entry.age)) continue;
-    const merged = getMergedById(entry.q.id) || entry.q;
-    if (getType(merged) !== "mc") continue;
-    if (statusOf(entry.q.id) === "kill") continue;
-    byAge[entry.age].push({
-      id: entry.q.id,
-      d: Number(merged.d) || 1,
-      pos: Array.isArray(merged.pos) ? merged.pos.slice().sort().join("/") : "",
-      cat: merged.cat || "",
-    });
-  }
-
-  const plan = {};
-  let totalKill = 0;
-  for (const age of TARGETS) {
-    const list = byAge[age];
-    if (list.length <= MAX) { plan[age] = { kill: [], keep: list.map(q=>q.id), size: list.length }; continue; }
-
-    // Group by difficulty
-    const byD = { 1: [], 2: [], 3: [] };
-    for (const q of list) (byD[q.d] || byD[1]).push(q);
-
-    // Proportional allocation per difficulty bucket, rounded, then reconciled to exactly MAX
-    const alloc = {};
-    let sum = 0;
-    for (const d of [1,2,3]) { alloc[d] = Math.round((byD[d].length / list.length) * MAX); sum += alloc[d]; }
-    while (sum !== MAX) {
-      if (sum > MAX) {
-        const bigD = [1,2,3].sort((a,b) => alloc[b] - alloc[a])[0];
-        alloc[bigD]--; sum--;
-      } else {
-        const smallD = [1,2,3].sort((a,b) => (alloc[a] / (byD[a].length||1)) - (alloc[b] / (byD[b].length||1)))[0];
-        alloc[smallD]++; sum++;
-      }
-    }
-    // Clamp alloc to available
-    for (const d of [1,2,3]) alloc[d] = Math.min(alloc[d], byD[d].length);
-
-    // Within each bucket, sort by (pos, cat, id numerically) to spread by position+category, then take evenly
-    const keeps = [], kills = [];
-    for (const d of [1,2,3]) {
-      const bucket = byD[d].slice().sort((a,b) =>
-        (a.pos || "").localeCompare(b.pos || "") ||
-        (a.cat || "").localeCompare(b.cat || "") ||
-        a.id.localeCompare(b.id, undefined, { numeric: true })
-      );
-      const target = alloc[d];
-      if (bucket.length <= target) { bucket.forEach(q => keeps.push(q.id)); continue; }
-      const step = bucket.length / target;
-      const keepSet = new Set(Array.from({length: target}, (_, i) => Math.floor(i * step)));
-      for (let i = 0; i < bucket.length; i++) {
-        if (keepSet.has(i)) keeps.push(bucket[i].id);
-        else kills.push(bucket[i].id);
-      }
-    }
-    plan[age] = { kill: kills, keep: keeps, size: list.length };
-    totalKill += kills.length;
-  }
-
-  if (totalKill === 0) { alert("No MC questions to cull — U11-U18 are already at or below 50."); return; }
-
-  const breakdown = TARGETS.map(age => {
-    const p = plan[age];
-    if (p.kill.length === 0) return `  ${age.toUpperCase()}: ${p.size} MC — already ≤ 50`;
-    return `  ${age.toUpperCase()}: ${p.size} MC → kill ${p.kill.length}, keep ${p.keep.length}`;
-  }).join("\n");
-
-  if (!confirm(`Balanced MC cull — max 50 per age (U11-U18 only; U9 untouched).\n\n${breakdown}\n\nTotal killed: ${totalKill}\n\nReversible — click Unreviewed/Keep on any tinted card to save it. Export only when happy.`)) return;
-
-  for (const age of TARGETS) for (const id of plan[age].kill) STATE.statuses[id] = "kill";
-  saveState(); render();
-  alert(`Killed ${totalKill} MC questions across U11-U18. Review by filtering: age + type=MC + status=Kill. Un-kill any you want to save.`);
-}
-
-function handleExport() {
-  const out = buildExport();
-  const json = JSON.stringify(out, null, 2) + "\n";
-  const blob = new Blob([json], { type: "application/json" });
+function exportBank() {
+  if (!BANK) return;
+  const text = JSON.stringify(BANK, null, 2) + "\n";
+  const blob = new Blob([text], { type: "application/json" });
   const url = URL.createObjectURL(blob);
   const a = document.createElement("a");
   a.href = url;
   a.download = "questions.json";
-  document.body.appendChild(a);
   a.click();
-  document.body.removeChild(a);
   URL.revokeObjectURL(url);
+  successToast("Exported questions.json");
 }
 
-function handleExportAdded() {
-  if (!STATE.added.length) {
-    alert("No new scenarios authored yet. Click '+ Add question' to create one.");
-    return;
-  }
-  const out = {};
-  let count = 0;
-  for (const row of STATE.added) {
-    if (statusOf(row.id) === "kill") continue;
-    const merged = getMergedById(row.id) || row;
-    const { level, ...question } = merged;
-    if (!level) continue;
-    if (!out[level]) out[level] = [];
-    out[level].push(question);
-    count++;
-  }
-  if (count === 0) { alert("All added scenarios are marked Kill — nothing to export."); return; }
-  const stamp = new Date().toISOString().slice(0,10);
-  const json = JSON.stringify(out, null, 2) + "\n";
-  const blob = new Blob([json], { type: "application/json" });
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement("a");
-  a.href = url;
-  a.download = `questions-patch-${stamp}.json`;
-  document.body.appendChild(a);
-  a.click();
-  document.body.removeChild(a);
-  URL.revokeObjectURL(url);
-  const perLevel = Object.entries(out).map(([L, rows]) => `  ${L}: ${rows.length}`).join("\n");
-  alert(`Downloaded questions-patch-${stamp}.json with ${count} scenario(s):\n\n${perLevel}\n\nApply to the live bank with:\n  node tools/apply-dashboard-patch.mjs <path-to-file>`);
+function clearBank() {
+  BANK = null;
+  document.getElementById("btn-export").disabled = true;
+  document.getElementById("btn-clear").disabled = true;
+  document.getElementById("empty-state").style.display = "block";
+  document.getElementById("dashboard").style.display = "none";
+  setStatus("", "");
 }
 
-// =========================================================================
-// Utility
-// =========================================================================
-function escapeHtml(s) { return String(s).replace(/[&<>"']/g, c => ({ "&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;" }[c])); }
-function escapeAttr(s) { return escapeHtml(s); }
+function countQuestions() {
+  if (!BANK) return 0;
+  let n = 0;
+  for (const lvl of Object.keys(BANK)) n += (BANK[lvl] || []).length;
+  return n;
+}
+
+// ─────────────────────────────────────────────
+// Render
+// ─────────────────────────────────────────────
+function allRows() {
+  if (!BANK) return [];
+  const out = [];
+  for (const lvl of AGE_ORDER.concat(Object.keys(BANK).filter(k => !AGE_ORDER.includes(k)))) {
+    const rows = BANK[lvl] || [];
+    for (const q of rows) out.push({ level: lvl, q });
+  }
+  return out;
+}
+
+function filteredRows() {
+  const rows = allRows();
+  return rows.filter(({ level, q }) => {
+    if (FILTERS.age && level !== FILTERS.age) return false;
+    if (FILTERS.type) {
+      const t = q.type || "mc";
+      if (FILTERS.type === "rink") {
+        const rinkTypes = ["drag-target","drag-place","multi-tap","sequence-rink","path-draw","lane-select","hot-spots","pov-pick","pov-mc","zone-click"];
+        if (!rinkTypes.includes(t) && !q.rink) return false;
+      } else if (t !== FILTERS.type) return false;
+    }
+    if (FILTERS.cat && q.cat !== FILTERS.cat) return false;
+    if (FILTERS.tag === "multi" && !(Array.isArray(q.levels) && q.levels.length > 1)) return false;
+    if (FILTERS.tag === "polished") {
+      const hasPolish = Array.isArray(q.idealPath) ||
+        (Array.isArray(q.targets) && q.targets.some(t => t && t.verdict));
+      if (!hasPolish) return false;
+    }
+    if (FILTERS.search) {
+      const s = FILTERS.search.toLowerCase();
+      const blob = [q.id, q.q, q.sit, q.cat, q.tip, q.why].filter(Boolean).join(" ").toLowerCase();
+      if (!blob.includes(s)) return false;
+    }
+    return true;
+  });
+}
 
 function render() {
-  renderDashboard();
-  renderFilterChips();
-  renderCards();
-  mountRinkEditors();
+  if (!BANK) return;
+  renderSummary();
+  renderFilters();
+  renderTable();
 }
 
-// =========================================================================
-// Rink editor mounts — persistent React roots keyed by question id.
-// The dashboard rebuilds card HTML on every edit, which would wipe any
-// React tree inside the card. We keep an off-DOM container alive per
-// question id and re-parent it into the card's slot on every render.
-// Scene onChange uses setFieldSilent so typing/dragging doesn't trigger
-// a full card re-render (which would flash the editor).
-// =========================================================================
-const rinkRoots = new Map(); // id -> { container, root }
+function renderSummary() {
+  const total = countQuestions();
+  const rows = allRows();
+  const multi = rows.filter(r => Array.isArray(r.q.levels) && r.q.levels.length > 1).length;
+  const rinkTypes = ["drag-target","drag-place","multi-tap","sequence-rink","path-draw","lane-select","hot-spots","pov-pick","pov-mc","zone-click"];
+  const rink = rows.filter(r => rinkTypes.includes(r.q.type) || r.q.rink).length;
+  const polished = rows.filter(r => Array.isArray(r.q.idealPath) || (Array.isArray(r.q.targets) && r.q.targets.some(t => t && t.verdict))).length;
 
-function setFieldSilent(id, key, value) {
-  STATE.edits[id] = STATE.edits[id] || {};
-  const orig = getOriginalById(id);
-  if (orig && JSON.stringify(orig[key]) === JSON.stringify(value)) {
-    delete STATE.edits[id][key];
-    if (Object.keys(STATE.edits[id]).length === 0) delete STATE.edits[id];
+  const byAge = AGE_ORDER.map(lvl => ({ lvl, n: (BANK[lvl] || []).length })).filter(x => x.n > 0);
+  const byAgeHtml = byAge.map(x => `<div><b>${x.n}</b> ${escapeHtml(x.lvl.split(" / ")[0])}</div>`).join("");
+
+  document.getElementById("summary").innerHTML = `
+    <div class="stat">
+      <div class="stat-label">Total</div>
+      <div class="stat-value">${total}</div>
+      <div class="stat-sub">unique rows</div>
+    </div>
+    <div class="stat">
+      <div class="stat-label">Multi-age</div>
+      <div class="stat-value">${multi}</div>
+      <div class="stat-sub">${Math.round(multi/total*100)}% tagged</div>
+    </div>
+    <div class="stat">
+      <div class="stat-label">Rink</div>
+      <div class="stat-value">${rink}</div>
+      <div class="stat-sub">interactive</div>
+    </div>
+    <div class="stat">
+      <div class="stat-label">Polished</div>
+      <div class="stat-value">${polished}</div>
+      <div class="stat-sub">idealPath / verdicts</div>
+    </div>
+    <div class="stat" style="grid-column: span 2;">
+      <div class="stat-label">By age</div>
+      <div style="display:flex; gap:.75rem; flex-wrap:wrap; margin-top:3px; font-size:11px; color:var(--dim);">
+        ${byAgeHtml}
+      </div>
+    </div>
+  `;
+}
+
+function renderFilters() {
+  const rows = allRows();
+  const ages = [...new Set(rows.map(r => r.level))].filter(Boolean);
+  const types = [...new Set(rows.map(r => r.q.type || "mc"))].sort();
+  const cats = [...new Set(rows.map(r => r.q.cat).filter(Boolean))].sort();
+
+  const chip = (label, value, active, group) =>
+    `<span class="filter-chip ${active ? "active" : ""}" data-group="${group}" data-value="${escapeAttr(value)}">${escapeHtml(label)}</span>`;
+
+  document.getElementById("filters").innerHTML = `
+    <input id="search-input" placeholder="Search id, text, tip…" style="min-width:220px;" value="${escapeAttr(FILTERS.search)}">
+    <label>Age:</label>
+    <select id="age-select">
+      <option value="">All</option>
+      ${ages.map(a => `<option value="${escapeAttr(a)}" ${FILTERS.age === a ? "selected" : ""}>${escapeHtml(a)}</option>`).join("")}
+    </select>
+    <label>Type:</label>
+    <select id="type-select">
+      <option value="">All</option>
+      <option value="rink" ${FILTERS.type === "rink" ? "selected" : ""}>Any Rink</option>
+      ${types.map(t => `<option value="${escapeAttr(t)}" ${FILTERS.type === t ? "selected" : ""}>${escapeHtml(t)}</option>`).join("")}
+    </select>
+    <label>Cat:</label>
+    <select id="cat-select">
+      <option value="">All</option>
+      ${cats.map(c => `<option value="${escapeAttr(c)}" ${FILTERS.cat === c ? "selected" : ""}>${escapeHtml(c)}</option>`).join("")}
+    </select>
+    <span style="flex:1;"></span>
+    <label>Tag:</label>
+    ${chip("All", "", !FILTERS.tag, "tag")}
+    ${chip("Multi-age", "multi", FILTERS.tag === "multi", "tag")}
+    ${chip("Polished", "polished", FILTERS.tag === "polished", "tag")}
+  `;
+
+  document.getElementById("search-input").addEventListener("input", (e) => {
+    FILTERS.search = e.target.value;
+    PAGE = 0;
+    renderTable();
+  });
+  document.getElementById("age-select").addEventListener("change", (e) => { FILTERS.age = e.target.value; PAGE = 0; renderTable(); });
+  document.getElementById("type-select").addEventListener("change", (e) => { FILTERS.type = e.target.value; PAGE = 0; renderTable(); });
+  document.getElementById("cat-select").addEventListener("change", (e) => { FILTERS.cat = e.target.value; PAGE = 0; renderTable(); });
+  document.querySelectorAll(".filter-chip").forEach(el => {
+    el.addEventListener("click", () => {
+      const group = el.dataset.group;
+      const value = el.dataset.value;
+      FILTERS[group] = value;
+      PAGE = 0;
+      render();
+    });
+  });
+}
+
+function renderTable() {
+  const rows = filteredRows();
+  const total = rows.length;
+  const start = PAGE * PAGE_SIZE;
+  const end = Math.min(total, start + PAGE_SIZE);
+  const slice = rows.slice(start, end);
+  const rinkTypes = new Set(["drag-target","drag-place","multi-tap","sequence-rink","path-draw","lane-select","hot-spots","pov-pick","pov-mc","zone-click"]);
+
+  const body = document.getElementById("qtable-body");
+  body.innerHTML = slice.map(({ level, q }) => {
+    const t = q.type || "mc";
+    const isMulti = Array.isArray(q.levels) && q.levels.length > 1;
+    const isRink = rinkTypes.has(t) || !!q.rink;
+    const isPolished = Array.isArray(q.idealPath) || (Array.isArray(q.targets) && q.targets.some(tg => tg && tg.verdict));
+    const questionText = q.q || q.sit || "(no text)";
+    const tags = [
+      isRink ? `<span class="pill pill-rink">rink</span>` : "",
+      isMulti ? `<span class="pill pill-multi">${q.levels.length} ages</span>` : "",
+      isPolished ? `<span class="pill pill-polished">polished</span>` : "",
+    ].filter(Boolean).join("");
+    const expanded = EXPANDED.has(q.id);
+    const ageShort = level.split(" / ")[0] || level;
+    return `
+      <tr class="${expanded ? 'expanded' : ''}" onclick="toggleExpand('${escapeAttr(q.id)}')">
+        <td><code>${escapeHtml(q.id || "")}</code></td>
+        <td>${escapeHtml(ageShort)}</td>
+        <td><span class="pill pill-type">${escapeHtml(t)}</span></td>
+        <td><span class="pill pill-cat">${escapeHtml(q.cat || "")}</span></td>
+        <td class="trunc">${escapeHtml(questionText)}</td>
+        <td>${tags}</td>
+      </tr>
+      ${expanded ? `<tr class="detail-row-wrap"><td colspan="6"><div class="detail">${detailHTML(q, level)}</div></td></tr>` : ""}
+    `;
+  }).join("");
+
+  // Pagination.
+  const pages = Math.ceil(total / PAGE_SIZE);
+  if (pages <= 1) {
+    document.getElementById("pagination").innerHTML = total === 0
+      ? `<div style="text-align:center; padding:2rem; color:var(--dim);">No questions match the current filters.</div>`
+      : "";
   } else {
-    STATE.edits[id][key] = value;
-  }
-  saveState();
-}
-
-function mountRinkEditors() {
-  if (!window.IceIQRink || !window.ReactDOM) return;
-  const slots = document.querySelectorAll("[data-rink-slot]");
-  const liveIds = new Set();
-  slots.forEach(slot => {
-    const id = slot.dataset.rinkSlot;
-    liveIds.add(id);
-    let entry = rinkRoots.get(id);
-    if (!entry) {
-      const container = document.createElement("div");
-      container.style.minHeight = "200px";
-      const root = ReactDOM.createRoot(container);
-      entry = { container, root };
-      rinkRoots.set(id, entry);
+    const buttons = [];
+    buttons.push(`<button ${PAGE === 0 ? "disabled" : ""} onclick="setPage(${PAGE - 1})">‹ Prev</button>`);
+    const around = [0, PAGE - 1, PAGE, PAGE + 1, pages - 1].filter(p => p >= 0 && p < pages);
+    const set = [...new Set(around)].sort((a, b) => a - b);
+    let last = -2;
+    for (const p of set) {
+      if (p - last > 1) buttons.push(`<span style="padding:6px; color:var(--dimmer);">…</span>`);
+      buttons.push(`<button class="${PAGE === p ? "active" : ""}" onclick="setPage(${p})">${p + 1}</button>`);
+      last = p;
     }
-    if (entry.container.parentElement !== slot) slot.appendChild(entry.container);
-    const q = getMergedById(id);
-    const age = ageOf(id);
-    const ageGroup = age ? age.toUpperCase() : undefined;
-    entry.root.render(
-      React.createElement(window.IceIQRink, {
-        mode: "edit",
-        scene: q.scene || window.IceIQEmptyScene(),
-        ageGroup,
-        onChange: (next) => setFieldSilent(id, "scene", next),
-      })
-    );
-  });
-  // Unmount roots for questions whose card is no longer in the DOM
-  for (const [id, entry] of Array.from(rinkRoots.entries())) {
-    if (!liveIds.has(id)) {
-      try { entry.root.unmount(); } catch {}
-      rinkRoots.delete(id);
-    }
+    buttons.push(`<button ${PAGE >= pages - 1 ? "disabled" : ""} onclick="setPage(${PAGE + 1})">Next ›</button>`);
+    document.getElementById("pagination").innerHTML = buttons.join("");
   }
 }
 
-// =========================================================================
-// Init
-// =========================================================================
-(function init() {
-  loadState();
-  // Rink editor loads asynchronously via Babel standalone — re-render once it's ready
-  // so rink-type cards get their mount slots populated.
-  window.addEventListener("iceiq-rink-ready", () => { try { render(); } catch {} });
-  document.getElementById("btn-load").addEventListener("click", () => document.getElementById("file-input").click());
-  document.getElementById("file-input").addEventListener("change", (e) => {
-    const f = e.target.files?.[0]; if (f) handleFile(f);
-    e.target.value = "";
-  });
-  document.getElementById("btn-export").addEventListener("click", handleExport);
-  document.getElementById("btn-export-added").addEventListener("click", handleExportAdded);
-  document.getElementById("btn-reset-state").addEventListener("click", () => {
-    if (!confirm("Clear ALL local edits, statuses, and added questions? (The loaded file is not affected.)")) return;
-    STATE = { edits: {}, statuses: {}, added: [] };
-    localStorage.removeItem(LS_KEY);
-    render();
-  });
-  document.getElementById("btn-load-more").addEventListener("click", () => { VISIBLE_COUNT += PAGE_SIZE; render(); });
-  document.getElementById("search").addEventListener("input", (e) => { FILTERS.search = e.target.value; VISIBLE_COUNT = PAGE_SIZE; render(); });
+function detailHTML(q, primaryLevel) {
+  const rows = [];
+  if (q.sit) rows.push(["Situation", escapeHtml(q.sit)]);
+  if (q.tip) rows.push(["Tip", escapeHtml(q.tip)]);
+  if (q.why) rows.push(["Why", escapeHtml(q.why)]);
+  if (Array.isArray(q.choices)) {
+    const correct = typeof q.correct === "number" ? q.correct : q.ok;
+    rows.push(["Choices", q.choices.map((c, i) =>
+      `${i === correct ? '<b style="color:var(--green);">✓</b>' : `<span style="color:var(--dimmer);">${i}.</span>`} ${escapeHtml(String(c))}`
+    ).join("<br>")]);
+  }
+  if (q.type === "tf") rows.push(["Answer", `<b style="color:var(--green);">${q.ok ? "True" : "False"}</b>`]);
+  if (Array.isArray(q.levels)) rows.push(["Multi-age", q.levels.map(l => `<span class="pill pill-multi">${escapeHtml(l.split(" / ")[0])}</span>`).join(" ")]);
+  if (Array.isArray(q.pos)) rows.push(["Positions", q.pos.map(p => `<span class="pill pill-cat">${escapeHtml(p)}</span>`).join(" ")]);
+  if (q.d) rows.push(["Difficulty", `d=${q.d}`]);
+  if (q.diff) rows.push(["Difficulty", q.diff]);
 
-  // Add modal
-  document.getElementById("btn-add").addEventListener("click", openAddModal);
-  document.getElementById("btn-kill-offage").addEventListener("click", killAllOffAge);
-  document.getElementById("btn-cull-mc").addEventListener("click", cullMcToFifty);
+  const detailRows = rows.map(([k, v]) => `<div class="detail-row"><div class="k">${k}</div><div class="v">${v}</div></div>`).join("");
 
-  // Select all visible
-  document.getElementById("select-all-visible").addEventListener("change", (e) => {
-    const visible = getFilteredQuestions().slice(0, VISIBLE_COUNT).map(x => x.q.id);
-    if (e.target.checked) visible.forEach(id => SELECTED.add(id));
-    else visible.forEach(id => SELECTED.delete(id));
-    render();
-  });
+  // Pretty-print the full JSON for authoring reference.
+  const json = JSON.stringify(q, null, 2);
 
-  // Bulk actions
-  document.getElementById("bulk-move").addEventListener("click", () => {
-    const target = document.getElementById("bulk-target").value;
-    if (!target) { alert("Pick a target age group first."); return; }
-    const ids = [...SELECTED];
-    if (!confirm(`Move ${ids.length} question(s) to ${target}?`)) return;
-    for (const id of ids) {
-      const orig = getOriginalLevelForId(id);
-      if (orig === target) delete STATE.moves[id];
-      else STATE.moves[id] = target;
-    }
-    SELECTED.clear();
-    document.getElementById("bulk-target").value = "";
-    saveState(); render();
-  });
-  const bulkStatus = (status) => {
-    const ids = [...SELECTED];
-    if (ids.length === 0) return;
-    if (!confirm(`Mark ${ids.length} question(s) as ${status}?`)) return;
-    for (const id of ids) {
-      if (status === "unreviewed") delete STATE.statuses[id];
-      else STATE.statuses[id] = status;
-    }
-    SELECTED.clear();
-    saveState(); render();
-  };
-  document.getElementById("bulk-keep").addEventListener("click", () => bulkStatus("keep"));
-  document.getElementById("bulk-flag").addEventListener("click", () => bulkStatus("flag"));
-  document.getElementById("bulk-kill").addEventListener("click", () => bulkStatus("kill"));
-  document.getElementById("bulk-unreviewed").addEventListener("click", () => bulkStatus("unreviewed"));
-  document.getElementById("bulk-clear").addEventListener("click", () => { SELECTED.clear(); render(); });
-  document.getElementById("add-cancel").addEventListener("click", closeAddModal);
-  document.getElementById("add-save").addEventListener("click", saveAdded);
-  document.getElementById("add-age").addEventListener("change", rebuildAddTypeOptions);
-  document.getElementById("add-advanced").addEventListener("change", rebuildAddTypeOptions);
-  document.getElementById("add-type").addEventListener("change", rebuildAddTypeFields);
-  document.getElementById("add-modal").addEventListener("click", (e) => {
-    if (e.target.id === "add-modal") closeAddModal();
-  });
-})();
+  return `
+    ${detailRows}
+    <div class="detail-row"><div class="k">Raw JSON</div><div class="v"><pre>${escapeHtml(json)}</pre></div></div>
+    <div class="detail-actions">
+      <button onclick="copyJson('${escapeAttr(q.id)}')">Copy JSON</button>
+      <button onclick="event.stopPropagation(); toggleExpand('${escapeAttr(q.id)}')">Close</button>
+    </div>
+  `;
+}
+
+function toggleExpand(id) {
+  if (EXPANDED.has(id)) EXPANDED.delete(id);
+  else EXPANDED.add(id);
+  renderTable();
+}
+
+function setPage(p) { PAGE = p; renderTable(); window.scrollTo({ top: 0, behavior: "smooth" }); }
+
+function copyJson(id) {
+  event.stopPropagation?.();
+  const found = allRows().find(r => r.q.id === id);
+  if (!found) return;
+  navigator.clipboard.writeText(JSON.stringify(found.q, null, 2))
+    .then(() => successToast(`Copied ${id}`))
+    .catch(() => errorToast("Clipboard blocked — select the JSON manually."));
+}
+
+// ─────────────────────────────────────────────
+// Utility
+// ─────────────────────────────────────────────
+function setStatus(html, tone) {
+  const el = document.getElementById("file-status");
+  el.innerHTML = html;
+  el.style.color = tone === "red" ? "var(--red)" : tone === "green" ? "var(--green)" : "var(--dim)";
+}
+
+function errorToast(msg) {
+  const el = document.createElement("div");
+  el.className = "error-toast";
+  el.textContent = msg;
+  document.body.appendChild(el);
+  setTimeout(() => el.remove(), 6000);
+}
+function successToast(msg) {
+  const el = document.createElement("div");
+  el.className = "success-toast";
+  el.textContent = msg;
+  document.body.appendChild(el);
+  setTimeout(() => el.remove(), 3000);
+}
+
+function escapeHtml(s) {
+  if (s == null) return "";
+  return String(s).replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+}
+function escapeAttr(s) { return escapeHtml(s); }
+
+// Drag-and-drop support — drop a file anywhere on the window.
+window.addEventListener("dragover", (e) => { e.preventDefault(); });
+window.addEventListener("drop", (e) => {
+  e.preventDefault();
+  const f = e.dataTransfer?.files?.[0];
+  if (f) loadFile(f);
+});
 </script>
+
 </body>
 </html>
