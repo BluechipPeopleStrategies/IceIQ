@@ -20,6 +20,7 @@ import { HomeworkCard, CoachAssignmentsSection } from "./assignments.jsx";
 import { CoachTrainingSection } from "./trainingLogCoach.jsx";
 import { CoachTeamAnalyticsSection } from "./coachAnalytics.jsx";
 import { CoachChallengeSection, ChallengeCard, ChallengeRunScreen } from "./teamChallenges.jsx";
+import { ToastContainer, toast } from "./toast.jsx";
 import { canSwitchAgeGroup, recordAgeGroupSwitch, getAgeGroupLock, setAgeGroupLock, checkSeasonReset } from "./utils/deviceLock";
 import { lsGetStr, lsSetStr, lsGetJSON, lsSetJSON } from "./utils/storage.js";
 import {
@@ -5371,7 +5372,7 @@ function CoachHome({ profile, onSignOut, onOpenPlayer, demoMode, subscriptionTie
       const team = await SB.createTeam({ coachId: profile.id, name: newName.trim(), level: newLevel, season: newSeason });
       setTeams([team, ...teams]);
       setCreating(false); setNewName("");
-    } catch (e) { alert(e.message); }
+    } catch (e) { toast.error(e.message || "Could not create team."); }
   }
 
   async function toggleRoster(teamId) {
@@ -6214,6 +6215,7 @@ export default function App() {
         </button>
       )}
       {screen === "plans" && <Suspense fallback={<LazyFallback/>}><PlansScreen onBack={()=>setScreen("home")} tier={tier}/></Suspense>}
+      <ToastContainer/>
     </>
   );
 }
@@ -6332,7 +6334,7 @@ function CoachRatingScreenAuthed({ coach, player, playerLevel, onDone }) {
       if (Object.values(ratings || {}).some(v => v)) lsSetStr(LS_COACH_RATED, "1");
       if (Object.values(notes || {}).some(v => v && String(v).trim()) || privateNote.trim()) lsSetStr(LS_COACH_NOTED, "1");
       setSaved(true);
-    } catch (e) { alert(e.message); }
+    } catch (e) { toast.error(e.message || "Could not save ratings."); }
     setSaving(false);
   }
 

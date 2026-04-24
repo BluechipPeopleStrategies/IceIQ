@@ -21,6 +21,7 @@ import { SKILLS, RATING_SCALES, FREE_SKILL_IDS, getSelfScale, getScaleColor } fr
 import { canAccess } from "./utils/tierGate.js";
 import { deriveLevelFromBirthYear, validBirthYears } from "./utils/ageGroup.js";
 import { isEphemeralPlayer } from "./utils/devBypass.js";
+import { toast } from "./toast.jsx";
 
 async function loadTeamData(coachCode, season) {
   if (!window.storage) return [];
@@ -2334,7 +2335,7 @@ export function CoachesPage({ onNavigate, onContact }) {
               if (navigator?.share) {
                 navigator.share({ title: "Ice-IQ for coaches", url }).catch(() => {});
               } else if (navigator?.clipboard) {
-                navigator.clipboard.writeText(url).then(() => alert("Link copied — paste it wherever you need to share it.")).catch(() => {});
+                navigator.clipboard.writeText(url).then(() => toast.success("Link copied — paste it wherever you need to share it.")).catch(() => {});
               }
             }}>
               🔗 Copy share link
