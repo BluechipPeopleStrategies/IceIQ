@@ -1076,7 +1076,7 @@ function Home({ player, onNav, demoMode, subscriptionTier, questFlagsBump, onPro
         {/* Ice IQ Journey — laid out inline so it's the first thing on the
             Home screen. The full-screen JourneyScreen is still reachable via
             the "View full →" link on the card header. */}
-        <JourneyBody player={player} onViewFull={() => onNav("journey")} />
+        <JourneyBody player={player} tier={subscriptionTier} onViewFull={() => onNav("journey")} onUpgrade={onPromptUpgrade} />
 
         {/* IQ Score Hero — locked until GAME_SENSE_UNLOCK_SESSIONS quizzes completed */}
         {(() => {
@@ -2958,13 +2958,13 @@ const JOURNEY_NODE_XY = [
 // Inline Journey rink + station-detail pair, reused by the dedicated
 // JourneyScreen and the Home hero. `onViewFull` surfaces a small link
 // back to the full screen when rendered inline on Home.
-function JourneyBody({ player, onViewFull }) {
+function JourneyBody({ player, tier, onViewFull, onUpgrade }) {
   const [selectedIdx, setSelectedIdx] = useState(null);
   const trainingSessions = (() => {
     try { return (getTrainingLog(player?.id || "__demo__")?.sessions) || []; }
     catch { return []; }
   })();
-  const state = getIceIQJourneyState(player.quizHistory, trainingSessions, player?.level);
+  const state = getIceIQJourneyState(player.quizHistory, trainingSessions, player?.level, tier);
   const { quizzes, training, stations, nextIdx } = state;
   const nextStation = nextIdx !== null ? stations[nextIdx] : null;
   const unlockedCount = stations.filter(s => s.unlocked).length;
@@ -2978,7 +2978,7 @@ function JourneyBody({ player, onViewFull }) {
           <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:".4rem"}}>
             <div>
               <Label style={{marginBottom:0}}>Ice IQ Journey</Label>
-              <div style={{fontSize:11,color:C.dimmer,marginTop:2}}>{unlockedCount}/{stations.length} stations · {quizzes} quiz{quizzes===1?"":"zes"} · {training} session{training===1?"":"s"}</div>
+              <div style={{fontSize:11,color:C.dimmer,marginTop:2}}>World {Math.min(unlockedCount+1, stations.length)} of {stations.length} · {quizzes} quiz{quizzes===1?"":"zes"} · {training} session{training===1?"":"s"}</div>
             </div>
             <button onClick={onViewFull} style={{background:"none",border:"none",color:C.gold,cursor:"pointer",fontSize:12,fontFamily:FONT.body,fontWeight:700,padding:0}}>View full →</button>
           </div>
@@ -3069,7 +3069,7 @@ function JourneyBody({ player, onViewFull }) {
                 <div style={{fontSize:32}}>{showState.icon}</div>
                 <div style={{flex:1,minWidth:0}}>
                   <div style={{fontFamily:FONT.display,fontWeight:800,fontSize:"1.2rem",color:C.white,lineHeight:1.2}}>{showState.title}</div>
-                  <div style={{fontSize:11,color:C.dimmer,marginTop:2}}>Station {showIdx+1} of {stations.length}</div>
+                  <div style={{fontSize:11,color:C.gold,marginTop:2,fontWeight:700,letterSpacing:".08em"}}>WORLD {showIdx+1} OF {stations.length}</div>
                 </div>
                 <div style={{fontSize:11,color:showState.unlocked?C.green:C.gold,fontWeight:700}}>
                   {showState.unlocked ? "✓ UNLOCKED" : selectedIdx === null ? "NEXT UP" : "LOCKED"}
@@ -3092,18 +3092,35 @@ function JourneyBody({ player, onViewFull }) {
             </Card>
           );
         })()}
+      {tier === "FREE" && (
+        <Card style={{marginBottom:"1rem",background:`linear-gradient(135deg,rgba(252,76,2,.08),rgba(207,69,32,.04))`,border:`1px dashed ${C.goldBorder}`,padding:"1rem 1.1rem"}}>
+          <div style={{display:"flex",alignItems:"flex-start",gap:".65rem",marginBottom:".55rem"}}>
+            <div style={{fontSize:22,flexShrink:0}}>⛰️</div>
+            <div style={{flex:1,minWidth:0}}>
+              <div style={{fontSize:10,letterSpacing:".14em",textTransform:"uppercase",color:C.gold,fontWeight:800,marginBottom:2}}>FREE path</div>
+              <div style={{fontSize:12.5,color:C.dim,lineHeight:1.55}}>You're on the harder journey. Every station needs ~1.7× the reps of Ice-IQ Pro — still reachable on Free's 3 quizzes/week, just a longer climb.</div>
+            </div>
+          </div>
+          {onUpgrade && (
+            <button onClick={()=>onUpgrade("unlimitedQuizzes","pro")} style={{background:C.gold,color:C.bg,border:"none",borderRadius:8,padding:".55rem .9rem",cursor:"pointer",fontWeight:800,fontSize:12,fontFamily:FONT.body,width:"100%"}}>
+              Shorten the climb — unlock Pro →
+            </button>
+          )}
+        </Card>
+      )}
     </>
   );
 }
 
-function JourneyScreen({ player, onBack, onNav }) {
+function JourneyScreen({ player, tier, onBack, onNav, onUpgrade }) {
   const trainingSessions = (() => {
     try { return (getTrainingLog(player?.id || "__demo__")?.sessions) || []; }
     catch { return []; }
   })();
-  const state = getIceIQJourneyState(player.quizHistory, trainingSessions, player?.level);
+  const state = getIceIQJourneyState(player.quizHistory, trainingSessions, player?.level, tier);
   const { quizzes, training, stations } = state;
   const unlockedCount = stations.filter(s => s.unlocked).length;
+  const isFree = tier === "FREE";
   return (
     <div style={{minHeight:"100vh",background:C.bg,color:C.white,fontFamily:FONT.body,paddingBottom:80}}>
       <StickyHeader>
@@ -3111,12 +3128,12 @@ function JourneyScreen({ player, onBack, onNav }) {
           <BackBtn onClick={onBack}/>
           <div style={{flex:1}}>
             <div style={{fontFamily:FONT.display,fontWeight:800,fontSize:"1.1rem"}}>Ice IQ Journey</div>
-            <div style={{fontSize:11,color:C.dimmer}}>{unlockedCount}/{stations.length} stations · {quizzes} quiz{quizzes===1?"":"zes"} · {training} training session{training===1?"":"s"}</div>
+            <div style={{fontSize:11,color:C.dimmer}}>World {Math.min(unlockedCount+1, stations.length)} of {stations.length} · {quizzes} quiz{quizzes===1?"":"zes"} · {training} training session{training===1?"":"s"}{isFree?" · FREE path":""}</div>
           </div>
         </div>
       </StickyHeader>
       <div style={{padding:"1.25rem",maxWidth:560,margin:"0 auto"}}>
-        <JourneyBody player={player}/>
+        <JourneyBody player={player} tier={tier} onUpgrade={onUpgrade}/>
         <div style={{marginTop:"1rem",display:"grid",gridTemplateColumns:"1fr 1fr",gap:".6rem"}}>
           <PrimaryBtn onClick={() => onNav("quiz")}>Take a quiz →</PrimaryBtn>
           <button onClick={() => onNav("profile")} style={{background:C.bgElevated,color:C.white,border:`1px solid ${C.border}`,borderRadius:10,padding:".85rem",cursor:"pointer",fontWeight:800,fontSize:14,fontFamily:FONT.body}}>Log a session →</button>
@@ -5434,7 +5451,7 @@ export default function App() {
         )}
         {screen === "report"  && <Report player={tierLimitedPlayer(player, tier)} onBack={()=>setScreen("home")} demoCoachData={demoMode?demoCoachRatings:null} tier={tier} onUpgrade={(f,t)=>promptUpgrade(f,t)}/>}
         {screen === "gamesense" && <Suspense fallback={<LazyFallback/>}><GameSenseReportScreen player={player} onBack={()=>setScreen("home")} demoMode={demoMode} demoCoachData={demoMode?demoCoachRatings:null} onNavigate={setScreen}/></Suspense>}
-        {screen === "journey" && <JourneyScreen player={player} onBack={()=>setScreen("home")} onNav={setScreen}/>}
+        {screen === "journey" && <JourneyScreen player={player} tier={tier} onBack={()=>setScreen("home")} onNav={setScreen} onUpgrade={promptUpgrade}/>}
         {screen === "parent" && <Suspense fallback={<LazyFallback/>}><ParentAssessmentScreen player={player} demoMode={demoMode} onSignup={() => triggerSignup("parent_demo")} onBack={()=>setScreen("profile")} onSave={(ratings)=>{ setPlayer(p => ({...p, parentRatings: {...ratings, updated_at: new Date().toISOString().slice(0,10)}})); setScreen("profile"); }}/></Suspense>}
         {screen === "profile" && <Profile player={player} onSave={handleProfileSave} onBack={()=>setScreen("home")} onReset={handleSignOut} demoMode={demoMode} tier={tier} onUpgrade={(f,t)=>promptUpgrade(f,t)} userEmail={userEmail} onAdminReports={()=>setScreen("admin")} onNav={setScreen}/>}
         {screen === "admin" && <Suspense fallback={<LazyFallback/>}><AdminReports onBack={()=>setScreen("profile")}/></Suspense>}

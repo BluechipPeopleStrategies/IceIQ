@@ -97,6 +97,8 @@ export function calcGameSenseScore(competencyScores) {
 // rather than correctness-%, so a kid who shows up every week but still
 // works at 55% accuracy continues to progress.
 // ─────────────────────────────────────────────────────────
+// Paid tiers (PRO, TEAM) — the baseline. Comfortable cadence for a player
+// who quizzes a few times a week and logs training sporadically.
 export const ICE_IQ_THRESHOLDS = [
   { id:"showed-up",       quizzes:1,  training:0  },
   { id:"face-off",        quizzes:3,  training:1  },
@@ -107,6 +109,39 @@ export const ICE_IQ_THRESHOLDS = [
   { id:"read-rush",       quizzes:65, training:18 },
   { id:"captain-c",       quizzes:90, training:25 },
 ];
+
+// FREE tier — same 8 stations, but ~1.7–2× the workload. FREE is capped at
+// 3 quizzes/week, so "captain-c" at 150 quizzes is reachable in ~50 weeks
+// of disciplined play. Stations 2–3 stay close to paid so new users still
+// see early wins; the later stations diverge sharply to make PRO worth it.
+export const ICE_IQ_THRESHOLDS_FREE = [
+  { id:"showed-up",       quizzes:1,   training:0  },
+  { id:"face-off",        quizzes:5,   training:2  },
+  { id:"blue-line",       quizzes:14,  training:4  },
+  { id:"find-slot",       quizzes:30,  training:8  },
+  { id:"back-check",      quizzes:50,  training:14 },
+  { id:"pressure-puck",   quizzes:80,  training:22 },
+  { id:"read-rush",       quizzes:115, training:32 },
+  { id:"captain-c",       quizzes:150, training:45 },
+];
+
+export function thresholdsForTier(tier) {
+  return tier === "FREE" ? ICE_IQ_THRESHOLDS_FREE : ICE_IQ_THRESHOLDS;
+}
+
+// FREE-path station names — gamey, Mario-world-map style. One shared set
+// across age groups because the FREE path is framed as a grind mode rather
+// than an age-bespoke narrative. Paid tiers keep the age-specific labels.
+export const ICE_IQ_JOURNEY_LABELS_FREE_MAP = {
+  "showed-up":     { title:"Frozen Pond",      icon:"🧊", desc:"Lace up. Your first quiz opens the map." },
+  "face-off":      { title:"Home Rink",        icon:"🏟️", desc:"You know the barn. Now learn the whistle." },
+  "blue-line":     { title:"Blue Line Bridge", icon:"🌉", desc:"Cross the first line with the puck on your stick." },
+  "find-slot":     { title:"Neutral Zone",     icon:"🗺️", desc:"No-man's-land. Pick your route." },
+  "back-check":    { title:"Forecheck Forest", icon:"🌲", desc:"Hunt the puck through traffic." },
+  "pressure-puck": { title:"Slot Summit",      icon:"⛰️", desc:"The high-danger peak. Plant your flag." },
+  "read-rush":     { title:"Rush Ridge",       icon:"🏔️", desc:"Read the attack before it crests." },
+  "captain-c":     { title:"Captain's Castle", icon:"🏰", desc:"Boss map. The team plays through you." },
+};
 
 export const ICE_IQ_JOURNEY_LABELS = {
   "U7 / Initiation": {
@@ -171,18 +206,21 @@ export const ICE_IQ_JOURNEY_LABELS = {
   },
 };
 
-export function getIceIQJourneyState(quizHistory, trainingSessions, level) {
+export function getIceIQJourneyState(quizHistory, trainingSessions, level, tier) {
   const quizzes = Array.isArray(quizHistory) ? quizHistory.length : 0;
   const training = Array.isArray(trainingSessions) ? trainingSessions.length : 0;
-  const labels = ICE_IQ_JOURNEY_LABELS[level] || ICE_IQ_JOURNEY_LABELS["U9 / Novice"];
-  const stations = ICE_IQ_THRESHOLDS.map((t, i) => ({
+  const labels = tier === "FREE"
+    ? ICE_IQ_JOURNEY_LABELS_FREE_MAP
+    : (ICE_IQ_JOURNEY_LABELS[level] || ICE_IQ_JOURNEY_LABELS["U9 / Novice"]);
+  const thresholds = thresholdsForTier(tier);
+  const stations = thresholds.map((t, i) => ({
     ...t,
     ...(labels[t.id] || {}),
     unlocked: quizzes >= t.quizzes && training >= t.training,
     index: i,
   }));
   const nextIdx = stations.findIndex(s => !s.unlocked);
-  return { quizzes, training, stations, nextIdx: nextIdx === -1 ? null : nextIdx };
+  return { quizzes, training, stations, nextIdx: nextIdx === -1 ? null : nextIdx, tier: tier === "FREE" ? "FREE" : "PAID" };
 }
 
 // Legacy name — keep so existing callsites don't explode during HMR. Shape
