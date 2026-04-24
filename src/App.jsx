@@ -21,6 +21,7 @@ import { CoachTrainingSection } from "./trainingLogCoach.jsx";
 import { CoachTeamAnalyticsSection } from "./coachAnalytics.jsx";
 import { CoachChallengeSection, ChallengeCard, ChallengeRunScreen } from "./teamChallenges.jsx";
 import { ToastContainer, toast } from "./toast.jsx";
+import { QotDCard, QotDScreen } from "./questionOfDay.jsx";
 import { canSwitchAgeGroup, recordAgeGroupSwitch, getAgeGroupLock, setAgeGroupLock, checkSeasonReset } from "./utils/deviceLock";
 import { lsGetStr, lsSetStr, lsGetJSON, lsSetJSON } from "./utils/storage.js";
 import {
@@ -1156,6 +1157,9 @@ function Home({ player, onNav, demoMode, subscriptionTier, questFlagsBump, onPro
 
         {/* Team challenge — fixed quiz everyone on the team takes */}
         <ChallengeCard playerId={player.id} demoMode={demoMode} onStart={(c) => onNav({ kind: "challenge", challenge: c })} />
+
+        {/* Question of the Day — one shared question per age per day */}
+        <QotDCard player={player} demoMode={demoMode} onOpen={(q) => onNav({ kind: "qotd", question: q })} />
 
         {/* First-Five quest checklist — hidden once dismissed */}
         {!questDismissed && !firstLineSeen && (
@@ -6229,6 +6233,13 @@ export default function App() {
             playerId={player.id}
             onBack={() => setScreen("home")}
             onDone={() => setScreen("home")}
+          />
+        )}
+        {typeof screen === "object" && screen.kind === "qotd" && (
+          <QotDScreen
+            question={screen.question}
+            player={player}
+            onBack={() => setScreen("home")}
           />
         )}
         {screen === "parent" && <Suspense fallback={<LazyFallback/>}><ParentAssessmentScreen player={player} demoMode={demoMode} onSignup={() => triggerSignup("parent_demo")} onBack={()=>setScreen("profile")} onSave={(ratings)=>{ setPlayer(p => ({...p, parentRatings: {...ratings, updated_at: new Date().toISOString().slice(0,10)}})); setScreen("profile"); }}/></Suspense>}
