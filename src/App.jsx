@@ -39,6 +39,14 @@ import imgSuccess from "./assets/images/Success-Icon.jpg";
 //           profile.tier field (future Supabase subscriptions) → that tier
 //           default → FREE
 function resolveTier({ profile, demoMode } = {}) {
+  // Coaches in any non-production session (demo / preview / dev-bypass)
+  // always get TEAM tier, regardless of what the tier picker reads. There
+  // is no real "coach on PRO" account — in production, coaches sign up on
+  // the TEAM plan — so forcing TEAM here keeps the coach dashboard
+  // reachable when a tester picks the wrong tier in the dev panel.
+  if (profile?.role === "coach" && (demoMode || profile?.__dev || profile?.__preview)) {
+    return "TEAM";
+  }
   // The Pro-player preview flow (enterPlayerPreview) marks profile.__preview
   // and writes iceiq_tier_override="PRO" so the preview renders with Pro
   // features unlocked. Dev-bypass sessions honor the override the same way
@@ -2372,7 +2380,13 @@ function Skills({ player, tier, onSave, onBack, onUpgrade }) {
             <div style={{fontSize:12,color:C.dim,lineHeight:1.6}}>Each level has a specific behavior. Pick the one that sounds most like you in games — not practice. Be honest: this creates better conversations with your coach.</div>
           </Card>
         )}
-        {cat?.skills.map(s => {
+        {/* Render unlocked skills first, then locked at the bottom of the
+            category. Keeps the rate-me path continuous on FREE instead of
+            making the player scan past padlocks to find their next card. */}
+        {[
+          ...(cat?.skills || []).filter(s => hasFullAccess || FREE_SKILL_IDS.has(s.id)),
+          ...(cat?.skills || []).filter(s => !hasFullAccess && !FREE_SKILL_IDS.has(s.id)),
+        ].map(s => {
           const isLocked = !hasFullAccess && !FREE_SKILL_IDS.has(s.id);
           const selfVal = ratings[s.id];
           const selfColor = selfVal ? getScaleColor(selfScale, selfVal) : null;
@@ -2620,53 +2634,10 @@ function Report({ player, onBack, demoCoachData, tier, onUpgrade }) {
           ))}
         </Card>
       )}
-      {/* Coach Feedback — FREE tier teaser. Three paths:
-          (1) individual upgrade to Pro,
-          (2) ask your coach to get the team on a Team account (unlocks coach feedback team-wide),
-          (3) ask your association to sign up so coach feedback is an association-provided benefit. */}
-      {!coachFeedbackAllowed && (
-        <Card style={{marginBottom:"1rem",background:C.bgElevated,border:`1px dashed ${C.goldBorder}`,padding:"1.25rem"}}>
-          <div style={{display:"flex",alignItems:"flex-start",gap:".75rem",marginBottom:".8rem"}}>
-            <div style={{fontSize:26,flexShrink:0}}>🔒</div>
-            <div style={{flex:1}}>
-              <Label>Coach Feedback</Label>
-              <div style={{fontSize:12,color:C.dimmer,lineHeight:1.55}}>See ratings and notes from every coach on your team — Head Coach, Assistants, Skills Coach, and more.</div>
-            </div>
-          </div>
-          <div style={{display:"flex",flexDirection:"column",gap:".45rem"}}>
-            <button onClick={()=>onUpgrade && onUpgrade("coachFeedback","pro")}
-              style={{background:C.gold,color:C.bg,border:"none",borderRadius:8,padding:".55rem .9rem",cursor:"pointer",fontWeight:800,fontSize:12,fontFamily:FONT.body,width:"100%"}}>
-              Unlock with Ice-IQ Pro →
-            </button>
-            <div style={{fontSize:10,letterSpacing:".08em",textTransform:"uppercase",color:C.dimmer,fontWeight:700,textAlign:"center",marginTop:".15rem"}}>or — at no cost to you</div>
-            <button onClick={() => {
-                const subject = encodeURIComponent("Ice-IQ for our team");
-                const body = encodeURIComponent(
-                  "Hi Coach,\n\nI started using an app called Ice-IQ to work on game sense off the ice. " +
-                  "There's a Team tier that unlocks coach feedback — so you could rate me (and other players) and I'd see your notes in-app.\n\n" +
-                  "Would you be open to setting up a Team account? Here's the page for coaches:\n" +
-                  "https://ice-iq.vercel.app/#coaches\n\nThanks!"
-                );
-                try { window.location.href = `mailto:?subject=${subject}&body=${body}`; } catch {}
-              }}
-              style={{background:"none",color:C.gold,border:`1px solid ${C.goldBorder}`,borderRadius:8,padding:".5rem .9rem",cursor:"pointer",fontWeight:700,fontSize:12,fontFamily:FONT.body,width:"100%"}}>
-              🏒 Ask your coach to set up a Team account
-            </button>
-            <button onClick={() => {
-                const subject = encodeURIComponent("Ice-IQ for our association");
-                const body = encodeURIComponent(
-                  "Hi,\n\nMy kid uses an app called Ice-IQ to train hockey sense off the ice. " +
-                  "They offer an Association tier that lets multiple teams run on it — coaches get a dashboard, players see coach feedback.\n\n" +
-                  "Would you take a look? Here's the association page:\nhttps://ice-iq.vercel.app/#associations\n\nThanks!"
-                );
-                try { window.location.href = `mailto:?subject=${subject}&body=${body}`; } catch {}
-              }}
-              style={{background:"none",color:C.gold,border:`1px solid ${C.goldBorder}`,borderRadius:8,padding:".5rem .9rem",cursor:"pointer",fontWeight:700,fontSize:12,fontFamily:FONT.body,width:"100%"}}>
-              🏟️ Ask your association to sign up
-            </button>
-          </div>
-        </Card>
-      )}
+      {/* Locked upsell cards (Coach Feedback teaser + Skills Map) have been
+          moved to the bottom of this screen so FREE users see their own
+          content (stats, goals, parent's view, quiz history) first. Look
+          for the "Locked previews" group near </Screen>. */}
 
       {/* Coach Feedback empty-state — PRO/TEAM have the feature unlocked but
           no coach has rated yet. Nudge them to invite a coach. */}
@@ -2749,24 +2720,14 @@ function Report({ player, onBack, demoCoachData, tier, onUpgrade }) {
         </Card>
       )}
 
-      {/* Radar / Spider chart — gated to Pro (progressSnapshots) */}
-      {Object.values(player.selfRatings||{}).some(v=>v) && (
-        canSeeRadar ? (
-          <Card style={{marginBottom:"1rem"}}>
-            <Label>Skills Map</Label>
-            <div style={{fontSize:11,color:C.dimmer,marginBottom:".75rem",lineHeight:1.5}}>Each axis is a skill category. Purple = your self-rating. Gold = your coach.</div>
-            <SkillsRadar cats={cats} selfRatings={player.selfRatings} coachRatings={activeCoachRatings} selfScale={selfScale} coachScale={coachScale}/>
-          </Card>
-        ) : (
-          <Card style={{marginBottom:"1rem",background:C.bgElevated,border:`1px dashed ${C.border}`,textAlign:"center",padding:"1.25rem"}}>
-            <div style={{fontSize:24,marginBottom:".35rem",opacity:.6}}>🔒</div>
-            <Label>Skills Map</Label>
-            <div style={{fontSize:12,color:C.dimmer,marginBottom:"0.85rem",lineHeight:1.5}}>See all your skill categories at a glance — your self-rating vs. coach, visualized.</div>
-            <button onClick={()=>onUpgrade && onUpgrade("progressSnapshots","pro")} style={{background:C.gold,color:C.bg,border:"none",borderRadius:8,padding:".55rem 1.1rem",cursor:"pointer",fontWeight:800,fontSize:12,fontFamily:FONT.body}}>
-              Unlock with Pro →
-            </button>
-          </Card>
-        )
+      {/* Skills Map radar — only the unlocked version renders inline. The
+          locked teaser is relocated to the "Locked previews" group below. */}
+      {canSeeRadar && Object.values(player.selfRatings||{}).some(v=>v) && (
+        <Card style={{marginBottom:"1rem"}}>
+          <Label>Skills Map</Label>
+          <div style={{fontSize:11,color:C.dimmer,marginBottom:".75rem",lineHeight:1.5}}>Each axis is a skill category. Purple = your self-rating. Gold = your coach.</div>
+          <SkillsRadar cats={cats} selfRatings={player.selfRatings} coachRatings={activeCoachRatings} selfScale={selfScale} coachScale={coachScale}/>
+        </Card>
       )}
 
       {/* Self vs Coach comparison (hidden for FREE — teaser card above handles it) */}
@@ -2901,6 +2862,64 @@ function Report({ player, onBack, demoCoachData, tier, onUpgrade }) {
           </div>
         )}
       </Card>
+
+      {/* ─────────────── Locked previews ───────────────
+          Upsell cards for features the current tier doesn't have. Kept at
+          the bottom of the Report so FREE users see everything they *do*
+          have first, then see what Pro/Team would add. */}
+      {!canSeeRadar && Object.values(player.selfRatings||{}).some(v=>v) && (
+        <Card style={{marginBottom:"1rem",background:C.bgElevated,border:`1px dashed ${C.border}`,textAlign:"center",padding:"1.25rem"}}>
+          <div style={{fontSize:24,marginBottom:".35rem",opacity:.6}}>🔒</div>
+          <Label>Skills Map</Label>
+          <div style={{fontSize:12,color:C.dimmer,marginBottom:"0.85rem",lineHeight:1.5}}>See all your skill categories at a glance — your self-rating vs. coach, visualized.</div>
+          <button onClick={()=>onUpgrade && onUpgrade("progressSnapshots","pro")} style={{background:C.gold,color:C.bg,border:"none",borderRadius:8,padding:".55rem 1.1rem",cursor:"pointer",fontWeight:800,fontSize:12,fontFamily:FONT.body}}>
+            Unlock with Pro →
+          </button>
+        </Card>
+      )}
+      {!coachFeedbackAllowed && (
+        <Card style={{marginBottom:"1rem",background:C.bgElevated,border:`1px dashed ${C.goldBorder}`,padding:"1.25rem"}}>
+          <div style={{display:"flex",alignItems:"flex-start",gap:".75rem",marginBottom:".8rem"}}>
+            <div style={{fontSize:26,flexShrink:0}}>🔒</div>
+            <div style={{flex:1}}>
+              <Label>Coach Feedback</Label>
+              <div style={{fontSize:12,color:C.dimmer,lineHeight:1.55}}>See ratings and notes from every coach on your team — Head Coach, Assistants, Skills Coach, and more.</div>
+            </div>
+          </div>
+          <div style={{display:"flex",flexDirection:"column",gap:".45rem"}}>
+            <button onClick={()=>onUpgrade && onUpgrade("coachFeedback","pro")}
+              style={{background:C.gold,color:C.bg,border:"none",borderRadius:8,padding:".55rem .9rem",cursor:"pointer",fontWeight:800,fontSize:12,fontFamily:FONT.body,width:"100%"}}>
+              Unlock with Ice-IQ Pro →
+            </button>
+            <div style={{fontSize:10,letterSpacing:".08em",textTransform:"uppercase",color:C.dimmer,fontWeight:700,textAlign:"center",marginTop:".15rem"}}>or — at no cost to you</div>
+            <button onClick={() => {
+                const subject = encodeURIComponent("Ice-IQ for our team");
+                const body = encodeURIComponent(
+                  "Hi Coach,\n\nI started using an app called Ice-IQ to work on game sense off the ice. " +
+                  "There's a Team tier that unlocks coach feedback — so you could rate me (and other players) and I'd see your notes in-app.\n\n" +
+                  "Would you be open to setting up a Team account? Here's the page for coaches:\n" +
+                  "https://ice-iq.vercel.app/#coaches\n\nThanks!"
+                );
+                try { window.location.href = `mailto:?subject=${subject}&body=${body}`; } catch {}
+              }}
+              style={{background:"none",color:C.gold,border:`1px solid ${C.goldBorder}`,borderRadius:8,padding:".5rem .9rem",cursor:"pointer",fontWeight:700,fontSize:12,fontFamily:FONT.body,width:"100%"}}>
+              🏒 Ask your coach to set up a Team account
+            </button>
+            <button onClick={() => {
+                const subject = encodeURIComponent("Ice-IQ for our association");
+                const body = encodeURIComponent(
+                  "Hi,\n\nMy kid uses an app called Ice-IQ to train hockey sense off the ice. " +
+                  "They offer an Association tier that lets multiple teams run on it — coaches get a dashboard, players see coach feedback.\n\n" +
+                  "Would you take a look? Here's the association page:\nhttps://ice-iq.vercel.app/#associations\n\nThanks!"
+                );
+                try { window.location.href = `mailto:?subject=${subject}&body=${body}`; } catch {}
+              }}
+              style={{background:"none",color:C.gold,border:`1px solid ${C.goldBorder}`,borderRadius:8,padding:".5rem .9rem",cursor:"pointer",fontWeight:700,fontSize:12,fontFamily:FONT.body,width:"100%"}}>
+              🏟️ Ask your association to sign up
+            </button>
+          </div>
+        </Card>
+      )}
     </Screen>
   );
 }
