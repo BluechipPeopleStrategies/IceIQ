@@ -17,6 +17,7 @@ import { buildU11ForwardPreview, PREVIEW_PLAYER_ID } from "./data/previewPlayer.
 import { calcTeamCompetencyAverages, GRADE_LEVEL_THRESHOLD } from "./utils/coachStats.js";
 import { HockeyInsightWidget, BottomNav, TrainingLog, HomeStartHereCard } from "./widgets.jsx";
 import { HomeworkCard, CoachAssignmentsSection } from "./assignments.jsx";
+import { CoachTrainingSection } from "./trainingLogCoach.jsx";
 import { canSwitchAgeGroup, recordAgeGroupSwitch, getAgeGroupLock, setAgeGroupLock, checkSeasonReset } from "./utils/deviceLock";
 import { lsGetStr, lsSetStr, lsGetJSON, lsSetJSON } from "./utils/storage.js";
 import {
@@ -5392,6 +5393,9 @@ function CoachHome({ profile, onSignOut, onOpenPlayer, demoMode, subscriptionTie
                   ))}
                   <DepthChartSection teamId={t.id} roster={roster} onChange={onBumpQuestFlags}/>
                   <CoachAssignmentsSection teamId={t.id} coachId={profile.id} roster={roster}/>
+                  {canAccess("coachDashboard", subscriptionTier || "FREE").allowed && (
+                    <CoachTrainingSection teamId={t.id} roster={roster}/>
+                  )}
                 </div>
               )}
             </Card>

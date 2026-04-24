@@ -386,6 +386,57 @@ export async function getCompletionsForAssignment(assignmentId) {
 }
 
 // ─────────────────────────────────────────────
+// TRAINING SESSIONS (off-ice log, coach-visible on TEAM tier)
+// ─────────────────────────────────────────────
+// Storage is dual-write: the player's local LS cache stays the primary
+// record (it works offline and doesn't need auth), and each save fires a
+// background upsert here so coaches can read the team's activity. Read
+// shape mirrors utils/trainingLog.js so the CoachTrainingSection can use
+// the same getTrainingSummary() helper against the remote rows.
+
+export async function saveTrainingSessionRemote(playerId, session) {
+  if (!supabase || !playerId) return;
+  // Silent best-effort — a failed Supabase write must NOT break the LS save
+  // the player already did. Coaches just see slightly stale data.
+  try {
+    const row = {
+      player_id: playerId,
+      session_date: session.date || new Date().toISOString().slice(0, 10),
+      type: session.type,
+      value: Number(session.value) || 0,
+      unit: session.unit || "min",
+      label: session.label || null,
+      notes: session.notes || null,
+      coach: session.coach || null,
+      price: (session.price === null || session.price === undefined || session.price === "") ? null : Number(session.price),
+    };
+    await supabase.from("training_sessions").insert(row);
+  } catch { /* silent */ }
+}
+
+export async function getTrainingSessionsForPlayer(playerId) {
+  if (!supabase || !playerId) return [];
+  const { data, error } = await supabase.from("training_sessions")
+    .select("session_date, type, value, unit, label, notes, coach, price")
+    .eq("player_id", playerId)
+    .order("session_date", { ascending: false })
+    .limit(200);
+  if (error) { warn("getTrainingSessionsForPlayer", error); return []; }
+  // Reshape to match the LS "sessions" array shape so existing summary
+  // helpers work unchanged.
+  return (data || []).map(r => ({
+    date: r.session_date,
+    type: r.type,
+    value: Number(r.value),
+    unit: r.unit,
+    ...(r.label ? { label: r.label } : {}),
+    ...(r.notes ? { notes: r.notes } : {}),
+    ...(r.coach ? { coach: r.coach } : {}),
+    ...(r.price ? { price: Number(r.price) } : {}),
+  }));
+}
+
+// ─────────────────────────────────────────────
 // QUESTION STATS (aggregate % correct across all users)
 // ─────────────────────────────────────────────
 // Telemetry — intentionally silent. Stats are best-effort and must never

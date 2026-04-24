@@ -1,4 +1,6 @@
 import { lsGetJSON, lsSetJSON } from "./storage.js";
+import { saveTrainingSessionRemote } from "../supabase.js";
+import { isEphemeralPlayer } from "./devBypass.js";
 
 const TRAINING_KEY = "iceiq_training_log";
 
@@ -12,18 +14,25 @@ export function saveTrainingSession(playerId, type, value, unit, label = "", dat
   if (!all[playerId]) all[playerId] = { sessions: [] };
   const today = new Date().toISOString().slice(0, 10);
   const priceNum = (price === null || price === "" || price === undefined) ? null : Number(price);
-  all[playerId].sessions.push({
+  const session = {
     date: date || today,
     type, value: Number(value), unit,
     ...(label ? { label } : {}),
     ...(notes ? { notes } : {}),
     ...(coach ? { coach } : {}),
     ...(Number.isFinite(priceNum) && priceNum > 0 ? { price: priceNum } : {}),
-  });
+  };
+  all[playerId].sessions.push(session);
   if (all[playerId].sessions.length > 200) {
     all[playerId].sessions = all[playerId].sessions.slice(-200);
   }
   lsSetJSON(TRAINING_KEY, all);
+  // Dual-write to Supabase in the background so coaches can see the activity
+  // on their dashboard. Skip ephemeral ids (demo/preview/dev) since they have
+  // no real auth session — RLS would drop the write anyway.
+  if (!isEphemeralPlayer(playerId)) {
+    saveTrainingSessionRemote(playerId, session);
+  }
 }
 
 // Bulk-seed plausible training sessions across a roster. Used by coach demo
