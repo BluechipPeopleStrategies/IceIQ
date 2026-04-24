@@ -4258,24 +4258,36 @@ function AuthScreen({ onAuthenticated, onDemo, onDevEnter, onPreview, prefill })
         {/* Coach preview — only coach-side demo remains; players sign up. */}
         <div style={{marginTop:"1.75rem",paddingTop:"1.5rem",borderTop:"1px solid rgba(255,255,255,0.07)"}}>
           <div style={{fontSize:11,letterSpacing:".14em",textTransform:"uppercase",color:"rgba(248,250,252,.35)",fontWeight:700,textAlign:"center",marginBottom:"1rem"}}>Coaching a team? See the dashboard</div>
-          <div style={{background:"rgba(252,76,2,0.07)",border:"1px solid rgba(252,76,2,0.2)",borderRadius:10,padding:".65rem .75rem",color:C.white,fontFamily:FONT.body,textAlign:"left",marginBottom:".75rem"}}>
-            <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:".5rem"}}>
+          <div style={{background:"rgba(252,76,2,0.07)",border:"1px solid rgba(252,76,2,0.2)",borderRadius:10,padding:".75rem .85rem",color:C.white,fontFamily:FONT.body,textAlign:"left",marginBottom:".75rem"}}>
+            <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:".55rem"}}>
               <div>
-                <div style={{fontWeight:700,fontSize:12,color:"rgba(252,76,2,.9)",marginBottom:1}}>Find your team's weakest concept — fix it Tuesday.</div>
-                <div style={{fontSize:10,color:"rgba(248,250,252,.4)"}}>U11 AA Edmonton Selects</div>
+                <div style={{fontWeight:700,fontSize:12,color:"rgba(252,76,2,.9)",marginBottom:1}}>Team IQ by concept — where to coach next.</div>
+                <div style={{fontSize:10,color:"rgba(248,250,252,.4)"}}>U11 AA Edmonton Selects · 16 players</div>
               </div>
             </div>
-            <div style={{borderTop:"1px solid rgba(252,76,2,0.12)",paddingTop:".45rem"}}>
-              {DEMO_COACH_ROSTER.slice(0,3).map(p => (
-                <div key={p.id} style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:".3rem"}}>
-                  <div style={{display:"flex",alignItems:"center",gap:".35rem"}}>
-                    <span style={{fontSize:9,color:"rgba(248,250,252,.28)",width:50,flexShrink:0}}>{p.position || "TBD"}</span>
-                    <span style={{fontSize:11,color:"rgba(248,250,252,.72)",fontWeight:600}}>{p.name}</span>
+            <div style={{borderTop:"1px solid rgba(252,76,2,0.12)",paddingTop:".5rem",display:"flex",flexDirection:"column",gap:".35rem"}}>
+              {[
+                { label: "Decision-Making", pct: 72, weak: false },
+                { label: "Compete",         pct: 88, weak: false },
+                { label: "D-zone Coverage", pct: 41, weak: true  },
+                { label: "Breakouts",       pct: 64, weak: false },
+                { label: "Net-Front",       pct: 58, weak: false },
+              ].map(row => {
+                const barColor = row.weak ? "#ef4444" : row.pct >= 80 ? "#22c55e" : "rgba(252,76,2,.85)";
+                const labelColor = row.weak ? "#fca5a5" : "rgba(248,250,252,.75)";
+                return (
+                  <div key={row.label} style={{display:"grid",gridTemplateColumns:"92px 1fr 32px",alignItems:"center",gap:".5rem"}}>
+                    <span style={{fontSize:11,color:labelColor,fontWeight:row.weak?700:500,whiteSpace:"nowrap"}}>{row.label}</span>
+                    <div style={{height:6,background:"rgba(255,255,255,0.06)",borderRadius:3,overflow:"hidden"}}>
+                      <div style={{height:"100%",width:`${row.pct}%`,background:barColor,borderRadius:3,transition:"width .3s"}}/>
+                    </div>
+                    <span style={{fontSize:10,color:barColor,fontWeight:700,textAlign:"right"}}>{row.pct}%</span>
                   </div>
-                  <span style={{fontSize:10,color:"rgba(252,76,2,.85)",fontWeight:700}}>GS {p.iq}</span>
-                </div>
-              ))}
-              <div style={{fontSize:9,color:"rgba(248,250,252,.22)",textAlign:"right",marginTop:".1rem"}}>+{DEMO_COACH_ROSTER.length - 3} more players</div>
+                );
+              })}
+            </div>
+            <div style={{marginTop:".65rem",paddingTop:".45rem",borderTop:"1px solid rgba(252,76,2,0.12)",fontSize:10,color:"rgba(248,250,252,.55)",lineHeight:1.45}}>
+              <span style={{color:"#ef4444",fontWeight:800}}>🎯 Tuesday's focus:</span> D-zone coverage — 9 of 16 players below 50%.
             </div>
           </div>
           <button onClick={()=>onDemo("__coach__")} style={{
