@@ -2,7 +2,6 @@ import { useState, useEffect, useRef, useCallback, useMemo, lazy, Suspense } fro
 import * as SB from "./supabase";
 import { supabase, hasSupabase } from "./supabase";
 import { canAccess, getUpgradeTriggerMessage } from "./utils/tierGate";
-import { rinksRemainingForFree, recordRinkSeen, RINK_FREE_PER_AGE } from "./utils/rinkProgress";
 import { isDevBypassEnabled, getDevProfile, setDevProfile, clearDevProfile, buildDevPlayer, isEphemeralPlayer } from "./utils/devBypass";
 import { getLevelDisplay } from "./utils/ageGroup";
 import { getParentRatings, saveParentRatings, hasParentRatings, daysSinceUpdated, PARENT_DIMENSIONS, PARENT_SCALE } from "./utils/parentAssessment";
@@ -23,7 +22,7 @@ import { canSwitchAgeGroup, recordAgeGroupSwitch, getAgeGroupLock, setAgeGroupLo
 import { lsGetStr, lsSetStr, lsGetJSON, lsSetJSON } from "./utils/storage.js";
 import {
   C, FONT, LEVELS, POSITIONS, POSITIONS_U11UP, SEASONS,
-  IceIQLogo, RinkDiagramZones, RINK_ZONE_DEFS, Screen, Card, Pill, Label, PrimaryBtn, SecBtn, BackBtn, ProgressBar, StickyHeader,
+  IceIQLogo, Screen, Card, Pill, Label, PrimaryBtn, SecBtn, BackBtn, ProgressBar, StickyHeader,
 } from "./shared.jsx";
 const imgSplash = "/splash.jpg";
 import imgCoreApp from "./assets/images/Core-App.jpg";
@@ -550,11 +549,9 @@ function buildQueue(qb, level, position, isReturning, tier) {
     }
 
     if (!formatAllowed) {
-      // FREE: MC always allowed. Rinks allowed up to the per-age cap (see
-      // utils/rinkProgress.js); rationing happens at queue-build time below.
-      posFiltered = posFiltered.filter(q => !q.type || q.type === "mc" || q.type === "rink");
-      // zone-click at d:3 requires PRO+
-      posFiltered = posFiltered.filter(q => !(q.type === "zone-click" && q.d === 3));
+      // FREE: MC and TF only. Other types (seq, mistake, next, rink-native)
+      // are PRO surface — players see format-preview sentinels instead.
+      posFiltered = posFiltered.filter(q => !q.type || q.type === "mc");
     }
 
     pool = {
@@ -570,24 +567,6 @@ function buildQueue(qb, level, position, isReturning, tier) {
     2: shuffle(pool[2]),
     3: shuffle(pool[3]),
   };
-
-  // For FREE users: cap rink scenarios at RINK_FREE_PER_AGE for the active
-  // age. If the cap is already hit, swap in a rinkLocked sentinel so the
-  // quiz shows the upgrade prompt instead of silently dropping rinks.
-  if (!formatAllowed) {
-    const remainingRinks = rinksRemainingForFree(level);
-    const allRinks = [...byD[1], ...byD[2], ...byD[3]].filter(q => q.type === "rink");
-    const keepIds = new Set(shuffle(allRinks).slice(0, remainingRinks).map(q => q.id));
-    for (const d of [1, 2, 3]) {
-      byD[d] = byD[d].filter(q => q.type !== "rink" || keepIds.has(q.id));
-    }
-    if (remainingRinks === 0) {
-      const sentinel = { id: "__rink_locked__", type: "rinkLocked", d: 2 };
-      if (byD[2].length >= 3) {
-        byD[2] = [...byD[2].slice(0, 2), sentinel, ...byD[2].slice(2)];
-      }
-    }
-  }
 
   // For FREE users: inject one format-preview sentinel mid-queue to show locked formats exist
   if (!formatAllowed) {
@@ -979,45 +958,7 @@ const Q_TYPE_LABELS = {
   mistake: {label:"Spot the Mistake",color:C.red,      icon:"🔍"},
   next:    {label:"What Happens Next",color:C.yellow,  icon:"🔮"},
   tf:      {label:"True or False",   color:C.blue,     icon:"⚡"},
-  "zone-click": {label:"Zone Click", color:C.green,   icon:"🎯"},
-  rink:    {label:"Rink Scenario", color:C.blue,    icon:"🏒"},
 };
-
-function ZoneClickQuestion({ q, onAnswer, answered, C }) {
-  const [selected, setSelected] = useState(null);
-
-  function handleZone(zoneId) {
-    if (answered) return;
-    setSelected(zoneId);
-  }
-
-  function handleConfirm() {
-    if (!selected || answered) return;
-    onAnswer(selected === q.correctZone);
-  }
-
-  return (
-    <div style={{ display:"flex", flexDirection:"column", gap:12 }}>
-      <RinkDiagramZones
-        zones={q.zones}
-        onZoneClick={answered ? null : handleZone}
-        selected={selected}
-        correct={answered ? q.correctZone : null}
-      />
-      {!answered && selected && (
-        <button onClick={handleConfirm} style={{
-          background:C.gold, color:C.bg, border:"none", borderRadius:12,
-          padding:"1rem 1.25rem", cursor:"pointer", fontWeight:800, fontSize:15,
-          fontFamily:FONT.body, letterSpacing:".02em", transition:"all .15s", width:"100%"
-        }}>
-          Confirm: {RINK_ZONE_DEFS.find(z => z.id === selected)?.label}
-        </button>
-      )}
-    </div>
-  );
-}
-
-
 
 // ─────────────────────────────────────────────────────────
 // HOME SCREEN
@@ -1349,8 +1290,6 @@ function Quiz({ player, onFinish, onBack, tier, onUpgrade }) {
   const [seqPerfect, setSeqPerfect] = useState(true);
   const [mistakeStreak, setMistakeStreak] = useState(0);
   const [quizDone, setQuizDone] = useState(false);
-  const [zoneCorrect, setZoneCorrect] = useState(null);
-  const [rinkVerdict, setRinkVerdict] = useState(null); // null | "correct" | "partial" | "wrong"
   const [showFlag, setShowFlag] = useState(false);
   const [rinkQResult, setRinkQResult] = useState(null); // null | true (correct) | false (wrong) — for IceIQRinkQuestion dispatcher
   const [flagReason, setFlagReason] = useState("");
@@ -1427,22 +1366,16 @@ function Quiz({ player, onFinish, onBack, tier, onUpgrade }) {
     setSel(null);
     setSeqAnswered(false);
     setSeqCorrect(false);
-    setZoneCorrect(null);
-    setRinkVerdict(null);
     setRinkQResult(null);
   }
 
-  const rinkOk = rinkVerdict && rinkVerdict !== "wrong"; // partial counts as "ok" for scoring
   // IceIQRinkQuestion dispatcher routes when q.rink is set OR the type is one
-  // of the new rink-native interactive types. Legacy "zone-click" / "rink"
-  // questions (no q.rink, with q.scene) stay on the original renderers.
-  const NEW_RINK_TYPES = ["drag-target","drag-place","multi-tap","sequence-rink","path-draw","lane-select","hot-spots","pov-pick","pov-mc"];
+  // of the new rink-native interactive types.
+  const NEW_RINK_TYPES = ["drag-target","drag-place","multi-tap","sequence-rink","path-draw","lane-select","hot-spots","pov-pick","pov-mc","zone-click"];
   const isRinkQ = !!question?.rink || NEW_RINK_TYPES.includes(qtype);
   const answered = isRinkQ
     ? rinkQResult !== null
     : qtype === "seq"        ? seqAnswered
-    : qtype === "zone-click" ? zoneCorrect !== null
-    : qtype === "rink"       ? rinkVerdict !== null
     :                          sel !== null;
   const q = question;
   if (!q) return <Screen><div style={{color:C.dimmer,textAlign:"center",paddingTop:"4rem"}}>Loading…</div></Screen>;
@@ -1456,26 +1389,6 @@ function Quiz({ player, onFinish, onBack, tier, onUpgrade }) {
     setRinkQResult(okBool);
     const nextResults = [...results, { id:q.id, cat:q.cat, ok:okBool, d:q.d||2, type:qtype }];
     setResults(nextResults);
-    if (nextResults.length >= qLen) setQuizDone(true);
-  }
-
-  // Records a result for a legacy zone-click question. Inline previously; pulled
-  // out so the dispatch switch reads as one shape per branch.
-  function handleZoneClickAnswer(ok) {
-    setZoneCorrect(ok);
-    const nextResults = [...results, { id:q.id, cat:q.cat, ok, d:q.d||2, type:"zone-click" }];
-    setResults(nextResults);
-    if (nextResults.length >= qLen) setQuizDone(true);
-  }
-
-  // Records a result for a legacy q.scene rink question.
-  function handleLegacyRinkAnswer(result) {
-    if (rinkVerdict !== null) return;
-    setRinkVerdict(result.verdict);
-    const ok = result.verdict !== "wrong";
-    const nextResults = [...results, { id:q.id, cat:q.cat, ok, d:q.d||2, type:"rink", verdict:result.verdict, choice:result.choice }];
-    setResults(nextResults);
-    try { recordRinkSeen(player.level, q.id); } catch {} // FREE-tier per-age cap
     if (nextResults.length >= qLen) setQuizDone(true);
   }
 
@@ -1496,12 +1409,6 @@ function Quiz({ player, onFinish, onBack, tier, onUpgrade }) {
         return <TFQuestion q={q} sel={sel} onPick={i => handlePick(i)}/>;
       case "seq":
         return <SeqQuestion q={q} onAnswer={handleSeqAnswer} answered={seqAnswered}/>;
-      case "zone-click":
-        return <ZoneClickQuestion q={q} answered={zoneCorrect !== null} onAnswer={handleZoneClickAnswer} C={C} />;
-      case "rink":
-        return q.scene ? (
-          <Rink scene={q.scene} mode="play" ageGroup={player.level?.split(" ")[0]} lockAnswer={true} onAnswer={handleLegacyRinkAnswer}/>
-        ) : null;
       default:
         return null;
     }
@@ -1537,35 +1444,6 @@ function Quiz({ player, onFinish, onBack, tier, onUpgrade }) {
             <div style={{fontSize:12,color:C.dim,lineHeight:1.6}}>This question type is available on Ice-IQ Pro. Unlock all 5 question formats to challenge yourself in new ways.</div>
           </div>
           <button onClick={() => onUpgrade("allQuestionFormats","pro")} style={{background:C.gold,color:C.bg,border:"none",borderRadius:10,padding:".85rem 1.75rem",cursor:"pointer",fontWeight:800,fontSize:15,fontFamily:FONT.body,marginBottom:".75rem",width:"100%"}}>Unlock All Question Types →</button>
-          <button onClick={advance} style={{background:"none",border:`1px solid ${C.border}`,color:C.dimmer,borderRadius:10,padding:".7rem 1.5rem",cursor:"pointer",fontWeight:600,fontSize:13,fontFamily:FONT.body,width:"100%"}}>Skip for now</button>
-        </div>
-      </div>
-    );
-  }
-
-  // FREE-tier rink cap sentinel — fires once the user has already answered
-  // RINK_FREE_PER_AGE rink scenarios in this age group.
-  if (qtype === "rinkLocked") {
-    return (
-      <div style={{minHeight:"100vh",background:C.bg,color:C.white,fontFamily:FONT.body}}>
-        <StickyHeader>
-          <div style={{maxWidth:560,margin:"0 auto",display:"flex",alignItems:"center",gap:"1rem"}}>
-            <button onClick={onBack} style={{background:"none",border:`1px solid ${C.border}`,color:C.dimmer,borderRadius:8,padding:".35rem .75rem",cursor:"pointer",fontSize:13,fontFamily:FONT.body}}>←</button>
-            <div style={{flex:1}}>
-              <div style={{fontFamily:FONT.display,fontWeight:800,fontSize:"1rem",color:C.gold}}>Ice-IQ · {getLevelDisplay(player)}</div>
-              <div style={{fontSize:11,color:C.dimmer}}>Q{qNum+1}/{qLen} · {player.position}</div>
-            </div>
-          </div>
-        </StickyHeader>
-        <div style={{padding:"1.5rem 1.25rem",maxWidth:560,margin:"0 auto",display:"flex",flexDirection:"column",alignItems:"center",textAlign:"center"}}>
-          <div style={{fontSize:48,margin:"1.5rem 0 .75rem"}}>🏒</div>
-          <div style={{fontFamily:FONT.display,fontWeight:800,fontSize:"1.6rem",color:C.gold,marginBottom:".5rem"}}>Rink Scenarios</div>
-          <div style={{fontSize:13,color:C.dim,lineHeight:1.7,marginBottom:"1.75rem",maxWidth:360}}>You've used your {RINK_FREE_PER_AGE} free rink scenarios for {player.level?.split(" ")[0] || "this age group"}. Ice-IQ Pro unlocks the full set.</div>
-          <div style={{background:C.bgElevated,border:`1px solid ${C.goldBorder}`,borderRadius:12,padding:"1.25rem",marginBottom:"1.5rem",width:"100%",textAlign:"left"}}>
-            <div style={{fontSize:11,color:C.gold,fontWeight:700,marginBottom:".5rem"}}>🔒 PRO QUESTION TYPE</div>
-            <div style={{fontSize:12,color:C.dim,lineHeight:1.6}}>Rink scenarios put you on the ice — drag players, read the play, click the right spot. Every rink question, every age group, with Ice-IQ Pro.</div>
-          </div>
-          <button onClick={() => onUpgrade("rinkQuestions","pro")} style={{background:C.gold,color:C.bg,border:"none",borderRadius:10,padding:".85rem 1.75rem",cursor:"pointer",fontWeight:800,fontSize:15,fontFamily:FONT.body,marginBottom:".75rem",width:"100%"}}>Unlock All Rink Scenarios →</button>
           <button onClick={advance} style={{background:"none",border:`1px solid ${C.border}`,color:C.dimmer,borderRadius:10,padding:".7rem 1.5rem",cursor:"pointer",fontWeight:600,fontSize:13,fontFamily:FONT.body,width:"100%"}}>Skip for now</button>
         </div>
       </div>
@@ -1654,24 +1532,20 @@ function Quiz({ player, onFinish, onBack, tier, onUpgrade }) {
         </button>
 
         {/* Explanation */}
-        {answered && (
+        {answered && (() => {
+          const userCorrect = isRinkQ ? rinkQResult : qtype === "seq" ? seqCorrect : (sel === q.ok);
+          return (
           <div ref={el => { if (el) setTimeout(() => el.scrollIntoView({behavior:"smooth",block:"nearest"}), 150); }} style={{marginTop:"1rem"}}>
             <Card style={{
-              background: (qtype==="seq"?seqCorrect:qtype==="zone-click"?zoneCorrect:qtype==="rink"?rinkOk:(sel===q.ok)) ? "rgba(34,197,94,.06)" : C.redDim,
-              border:`1px solid ${(qtype==="seq"?seqCorrect:qtype==="zone-click"?zoneCorrect:qtype==="rink"?rinkOk:(sel===q.ok)) ? C.greenBorder : C.redBorder}`,
+              background: userCorrect ? "rgba(34,197,94,.06)" : C.redDim,
+              border:`1px solid ${userCorrect ? C.greenBorder : C.redBorder}`,
               marginBottom:"1rem"
             }}>
-              <div style={{fontSize:10,letterSpacing:".12em",textTransform:"uppercase",fontWeight:700,marginBottom:".5rem",color:(qtype==="seq"?seqCorrect:qtype==="zone-click"?zoneCorrect:qtype==="rink"?rinkOk:(sel===q.ok))?C.green:C.red}}>
-                {qtype==="rink" && rinkVerdict==="partial"
-                  ? "~ Partial credit"
-                  : ((qtype==="seq"?seqCorrect:qtype==="zone-click"?zoneCorrect:qtype==="rink"?rinkOk:(sel===q.ok)) ? "✓ Correct" : "✗ Incorrect")}
+              <div style={{fontSize:10,letterSpacing:".12em",textTransform:"uppercase",fontWeight:700,marginBottom:".5rem",color:userCorrect?C.green:C.red}}>
+                {userCorrect ? "✓ Correct" : "✗ Incorrect"}
               </div>
-              {qtype==="rink" && q.scene?.question?.feedback?.[rinkVerdict] && (
-                <div style={{fontSize:13,color:C.white,lineHeight:1.75,marginBottom:".5rem",fontWeight:500}}>{q.scene.question.feedback[rinkVerdict]}</div>
-              )}
               <div style={{fontSize:13,color:C.dim,lineHeight:1.75,marginBottom:".75rem"}}>{q.why || q.explanation}</div>
               {(() => {
-                const userCorrect = qtype === "seq" ? seqCorrect : qtype === "zone-click" ? zoneCorrect : qtype === "rink" ? rinkOk : (sel === q.ok);
                 let pct = null, isSample = false;
                 if (isDemo) { pct = demoStatPct(q.id, q.d); isSample = true; }
                 else {
@@ -1691,7 +1565,6 @@ function Quiz({ player, onFinish, onBack, tier, onUpgrade }) {
                 );
               })()}
               {(() => {
-                const userCorrect = qtype === "seq" ? seqCorrect : qtype === "zone-click" ? zoneCorrect : qtype === "rink" ? rinkOk : (sel === q.ok);
                 const coach = getCoachForQuestion(q, player.level, player.position);
                 if (!coach) return null;
                 const flavorPool = userCorrect ? FLAVOR_CORRECT : FLAVOR_INCORRECT;
@@ -1723,7 +1596,8 @@ function Quiz({ player, onFinish, onBack, tier, onUpgrade }) {
               </button>
             )}
           </div>
-        )}
+          );
+        })()}
 
         {showFlag && (
           <div onClick={()=>setShowFlag(false)} style={{position:"fixed",inset:0,background:"rgba(0,0,0,.7)",zIndex:200,display:"flex",alignItems:"center",justifyContent:"center",padding:"1rem"}}>

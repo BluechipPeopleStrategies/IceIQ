@@ -30,9 +30,6 @@ const TIER_FEATURES = {
     // through setting their first development goal. Pro still adds category
     // coverage, adaptive engine, snapshots, etc.
     "smartGoals",
-    // FREE gets a rink teaser (first 3 per age group) — the per-age counter
-    // in utils/rinkProgress.js does the rationing; canAccess("rinkQuestions")
-    // reflects whether *unlimited* rink access is available.
   ]),
   PRO: new Set([
     "multipleAgeGroups",
