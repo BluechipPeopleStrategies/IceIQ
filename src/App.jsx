@@ -11,7 +11,7 @@ import { markSignupIntent, logSignupComplete } from "./utils/signupTelemetry";
 // to Supabase from the first interaction, no LS→cloud transfer needed.
 import { DEPTH_SLOTS, getDepthChart, setAssignment as setDepthAssignment, seedDemoDepthChart, clearDemoDepthChart } from "./utils/depthChart";
 import IceIQRinkQuestion from "./IceIQRinkQuestion.jsx";
-import { COMPETENCIES, getIceIQJourneyState, getJourneyV2, GAME_SENSE_UNLOCK_SESSIONS, calcCompetencyScores, calcGameSenseScore, ICE_IQ_THRESHOLDS, ICE_IQ_JOURNEY_LABELS } from "./utils/gameSense.js";
+import { COMPETENCIES, getIceIQJourneyState, getJourneyV2, ACTIVITY_METRICS, GAME_SENSE_UNLOCK_SESSIONS, calcCompetencyScores, calcGameSenseScore, ICE_IQ_THRESHOLDS, ICE_IQ_JOURNEY_LABELS } from "./utils/gameSense.js";
 import { getTrainingLog, seedDemoTrainingForRoster } from "./utils/trainingLog.js";
 import { buildU11ForwardPreview, PREVIEW_PLAYER_ID } from "./data/previewPlayer.js";
 import { calcTeamCompetencyAverages, GRADE_LEVEL_THRESHOLD } from "./utils/coachStats.js";
@@ -1085,7 +1085,7 @@ function Home({ player, onNav, demoMode, subscriptionTier, questFlagsBump, onPro
         {/* Ice IQ Journey — laid out inline so it's the first thing on the
             Home screen. The full-screen JourneyScreen is still reachable via
             the "View full →" link on the card header. */}
-        <JourneyBody player={player} tier={subscriptionTier} onViewFull={() => onNav("journey")} onUpgrade={onPromptUpgrade} />
+        <JourneyBody player={player} tier={subscriptionTier} demoMode={demoMode} onViewFull={() => onNav("journey")} onUpgrade={onPromptUpgrade} />
 
         {/* IQ Score Hero — locked until GAME_SENSE_UNLOCK_SESSIONS quizzes completed */}
         {(() => {
@@ -2959,13 +2959,47 @@ const WORLD_NODE_XY = [
 // Inline Journey — 64 levels across 8 themed worlds. Reused by the dedicated
 // JourneyScreen and the Home hero. `onViewFull` surfaces a small link back to
 // the full screen when rendered inline on Home.
-function JourneyBody({ player, tier, onViewFull, onUpgrade }) {
+function JourneyBody({ player, tier, demoMode, onViewFull, onUpgrade }) {
   const trainingSessions = (() => {
     try { return (getTrainingLog(player?.id || "__demo__")?.sessions) || []; }
     catch { return []; }
   })();
-  const state = getJourneyV2(player.quizHistory, trainingSessions, tier);
-  const { levels, quizzes, training, currentIdx, currentWorldIdx, worlds, nextIdx } = state;
+  // Async activity counts — coach feedback + assignment completions. Fetched
+  // once on mount; treated as 0 until they resolve so the UI never blocks.
+  const [coachRated, setCoachRated] = useState(0);
+  const [assignmentsDone, setAssignmentsDone] = useState(0);
+  useEffect(() => {
+    if (demoMode || !player?.id || isEphemeralPlayer(player.id)) return;
+    let cancelled = false;
+    SB.getCoachRatingsForPlayer(player.id).then(r => {
+      if (!cancelled) setCoachRated(Object.keys(r?.ratings || {}).length > 0 ? 1 : 0);
+    });
+    SB.getCompletionsForPlayer(player.id).then(set => {
+      if (!cancelled) setAssignmentsDone(set?.size || 0);
+    });
+    return () => { cancelled = true; };
+  }, [player?.id, demoMode]);
+
+  // Assemble the full activity-count bag the journey scores against.
+  const identity = demoMode ? "__demo__" : (player?.id || "__anon__");
+  const clipsWatched = (() => {
+    try { return new Set(lsGetJSON(LS_CLIPS_WATCHED, {})[identity] || []).size; }
+    catch { return 0; }
+  })();
+  const insightsRead = (() => {
+    try { return lsGetJSON(LS_INSIGHTS_READ, []).length; }
+    catch { return 0; }
+  })();
+  const goalsSet = Object.values(player?.goals || {}).filter(g => g?.goal).length;
+  const skillsRated = Object.values(player?.selfRatings || {}).filter(v => v).length;
+
+  const journeyState = {
+    quizzes: player?.quizHistory?.length || 0,
+    training: trainingSessions.length,
+    clipsWatched, insightsRead, goalsSet, skillsRated, coachRated, assignmentsDone,
+  };
+  const state = getJourneyV2(journeyState, tier);
+  const { levels, currentIdx, currentWorldIdx, worlds, nextIdx } = state;
   const [activeWorldIdx, setActiveWorldIdx] = useState(currentWorldIdx);
   const [selectedLevelIdx, setSelectedLevelIdx] = useState(null);
   const world = worlds[activeWorldIdx];
@@ -2974,8 +3008,6 @@ function JourneyBody({ player, tier, onViewFull, onUpgrade }) {
   const showLevel = selectedLevelIdx !== null
     ? levels[selectedLevelIdx]
     : (nextIdx !== null ? levels[nextIdx] : levels[levels.length - 1]);
-  const quizGap = Math.max(0, showLevel.quizzes - quizzes);
-  const trainGap = Math.max(0, showLevel.training - training);
 
   return (
     <>
@@ -3084,7 +3116,7 @@ function JourneyBody({ player, tier, onViewFull, onUpgrade }) {
         </svg>
       </Card>
 
-      {/* Level detail */}
+      {/* Level detail — lists every activity requirement for the chosen level */}
       {showLevel && (
         <Card style={{marginBottom:"1rem",background:showLevel.unlocked?"rgba(34,197,94,.08)":"rgba(252,76,2,.08)",border:`1px solid ${showLevel.unlocked?C.greenBorder:C.goldBorder}`}}>
           <div style={{display:"flex",alignItems:"center",gap:".75rem",marginBottom:".55rem"}}>
@@ -3097,19 +3129,23 @@ function JourneyBody({ player, tier, onViewFull, onUpgrade }) {
               {showLevel.unlocked ? "✓ CLEARED" : showLevel.idx === nextIdx ? "NEXT UP" : "LOCKED"}
             </div>
           </div>
-          {!showLevel.unlocked && (
-            <div style={{fontSize:12,color:C.dimmer,lineHeight:1.6,padding:".55rem .75rem",background:C.bgElevated,borderRadius:8,border:`1px solid ${C.border}`}}>
-              Clears at <b style={{color:C.white}}>{showLevel.quizzes}</b> quiz{showLevel.quizzes===1?"":"zes"}
-              {showLevel.training > 0 && <> + <b style={{color:C.white}}>{showLevel.training}</b> session{showLevel.training===1?"":"s"}</>}.
-              {(quizGap > 0 || trainGap > 0) && (
-                <> You're <b style={{color:C.gold}}>
-                  {quizGap > 0 && `${quizGap} quiz${quizGap===1?"":"zes"}`}
-                  {quizGap > 0 && trainGap > 0 && " + "}
-                  {trainGap > 0 && `${trainGap} session${trainGap===1?"":"s"}`}
-                </b> away.</>
-              )}
-            </div>
-          )}
+          <div style={{display:"flex",flexDirection:"column",gap:".3rem"}}>
+            {Object.entries(showLevel.requirements).map(([act, need]) => {
+              const metric = ACTIVITY_METRICS[act];
+              if (!metric) return null;
+              const have = journeyState[act] || 0;
+              const met = have >= need;
+              return (
+                <div key={act} style={{display:"flex",alignItems:"center",gap:".55rem",padding:".45rem .7rem",background:met?"rgba(34,197,94,.06)":C.bgElevated,borderRadius:8,border:`1px solid ${met?C.greenBorder:C.border}`}}>
+                  <div style={{fontSize:16,flexShrink:0}}>{metric.icon}</div>
+                  <div style={{flex:1,fontSize:12,color:met?C.dim:C.white,lineHeight:1.35}}>
+                    <b style={{color:met?C.green:C.white}}>{metric.boolean ? (met?"Done":"Needed") : `${Math.min(have,need)}/${need}`}</b> {metric.label}
+                  </div>
+                  {met && <span style={{color:C.green,fontSize:14,fontWeight:800,flexShrink:0}}>✓</span>}
+                </div>
+              );
+            })}
+          </div>
         </Card>
       )}
 
@@ -3133,12 +3169,15 @@ function JourneyBody({ player, tier, onViewFull, onUpgrade }) {
   );
 }
 
-function JourneyScreen({ player, tier, onBack, onNav, onUpgrade }) {
+function JourneyScreen({ player, tier, demoMode, onBack, onNav, onUpgrade }) {
   const trainingSessions = (() => {
     try { return (getTrainingLog(player?.id || "__demo__")?.sessions) || []; }
     catch { return []; }
   })();
-  const state = getJourneyV2(player.quizHistory, trainingSessions, tier);
+  const state = getJourneyV2({
+    quizzes: player?.quizHistory?.length || 0,
+    training: trainingSessions.length,
+  }, tier);
   const { quizzes, training, currentIdx, currentWorldIdx, worlds } = state;
   const isFree = tier === "FREE";
   return (
@@ -3153,7 +3192,7 @@ function JourneyScreen({ player, tier, onBack, onNav, onUpgrade }) {
         </div>
       </StickyHeader>
       <div style={{padding:"1.25rem",maxWidth:560,margin:"0 auto"}}>
-        <JourneyBody player={player} tier={tier} onUpgrade={onUpgrade}/>
+        <JourneyBody player={player} tier={tier} demoMode={demoMode} onUpgrade={onUpgrade}/>
         <div style={{marginTop:"1rem",display:"grid",gridTemplateColumns:"1fr 1fr",gap:".6rem"}}>
           <PrimaryBtn onClick={() => onNav("quiz")}>Take a quiz →</PrimaryBtn>
           <button onClick={() => onNav("profile")} style={{background:C.bgElevated,color:C.white,border:`1px solid ${C.border}`,borderRadius:10,padding:".85rem",cursor:"pointer",fontWeight:800,fontSize:14,fontFamily:FONT.body}}>Log a session →</button>
@@ -5492,7 +5531,7 @@ export default function App() {
         )}
         {screen === "report"  && <Report player={tierLimitedPlayer(player, tier)} onBack={()=>setScreen("home")} demoCoachData={demoMode?demoCoachRatings:null} tier={tier} onUpgrade={(f,t)=>promptUpgrade(f,t)}/>}
         {screen === "gamesense" && <Suspense fallback={<LazyFallback/>}><GameSenseReportScreen player={player} onBack={()=>setScreen("home")} demoMode={demoMode} demoCoachData={demoMode?demoCoachRatings:null} onNavigate={setScreen}/></Suspense>}
-        {screen === "journey" && <JourneyScreen player={player} tier={tier} onBack={()=>setScreen("home")} onNav={setScreen} onUpgrade={promptUpgrade}/>}
+        {screen === "journey" && <JourneyScreen player={player} tier={tier} demoMode={demoMode} onBack={()=>setScreen("home")} onNav={setScreen} onUpgrade={promptUpgrade}/>}
         {screen === "parent" && <Suspense fallback={<LazyFallback/>}><ParentAssessmentScreen player={player} demoMode={demoMode} onSignup={() => triggerSignup("parent_demo")} onBack={()=>setScreen("profile")} onSave={(ratings)=>{ setPlayer(p => ({...p, parentRatings: {...ratings, updated_at: new Date().toISOString().slice(0,10)}})); setScreen("profile"); }}/></Suspense>}
         {screen === "profile" && <Profile player={player} onSave={handleProfileSave} onBack={()=>setScreen("home")} onReset={handleSignOut} demoMode={demoMode} tier={tier} onUpgrade={(f,t)=>promptUpgrade(f,t)} userEmail={userEmail} onAdminReports={()=>setScreen("admin")} onNav={setScreen}/>}
         {screen === "admin" && <Suspense fallback={<LazyFallback/>}><AdminReports onBack={()=>setScreen("profile")}/></Suspense>}

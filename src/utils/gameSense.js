@@ -256,45 +256,113 @@ export const WORLD_THEMES = [
     levelNames:["Draft Day","Rookie Camp","Training Camp","Opening Night","Playoff Push","Division Final","Conference Final","Captain's Cup"] },
 ];
 
-// Build 64 thresholds with a power curve. Front-loaded easy wins, back-loaded
-// grind. Early levels stay small so a brand-new player clears the first world
-// (levels 1–8) in their first week of 3-quizzes/week cadence.
-function makeLevelThresholds(maxQuizzes, maxTraining, curve) {
-  const out = [];
-  for (let i = 1; i <= 64; i++) {
-    const pct = Math.pow(i / 64, curve);
-    const qRaw = Math.round(pct * maxQuizzes);
-    const q = Math.max(i, qRaw, (out[i-2]?.quizzes ?? 0) + 1); // monotonic, floor i to keep first world gentle
-    const tRaw = Math.round(Math.pow(i / 64, curve + 0.2) * maxTraining);
-    const t = Math.max(tRaw, (out[i-2]?.training ?? 0));
-    out.push({ quizzes: q, training: t });
+// Every activity the journey can require. Each world picks a subset — quizzes
+// is the spine for all 64 levels, other metrics are per-world so the journey
+// tours what the product actually offers (watching clips, logging training,
+// setting goals, coach feedback, team homework).
+export const ACTIVITY_METRICS = {
+  quizzes:         { label:"Quizzes taken",        short:"quiz",     icon:"🧠" },
+  training:        { label:"Off-ice sessions logged", short:"session", icon:"💪" },
+  clipsWatched:    { label:"Game clips studied",   short:"clip",     icon:"📺" },
+  insightsRead:    { label:"NHL Insights read",    short:"insight",  icon:"📰" },
+  goalsSet:        { label:"SMART goals set",      short:"goal",     icon:"🎯" },
+  skillsRated:     { label:"Skills self-rated",    short:"skill",    icon:"📊" },
+  coachRated:      { label:"Coach rating on file", short:"coach rating", icon:"👨‍🏫", boolean:true },
+  assignmentsDone: { label:"Coach homework done",  short:"homework", icon:"📋" },
+};
+
+// Per-world activity recipe. Worlds 1–4 keep things age-friendly (quizzes,
+// watching, training, goals). Worlds 5+ tour the Pro/Team features (skills
+// rating, coach feedback, insights, homework) so the back half of the journey
+// shows off the full product.
+export const WORLD_ACTIVITIES = [
+  ["quizzes"],                                       // 1 Frozen Pond
+  ["quizzes", "clipsWatched"],                       // 2 Learn-to-Play Rink
+  ["quizzes", "training"],                           // 3 Minor Hockey Arena
+  ["quizzes", "goalsSet"],                           // 4 City Tournament
+  ["quizzes", "skillsRated", "coachRated"],          // 5 Regional Select
+  ["quizzes", "insightsRead", "clipsWatched"],       // 6 Provincial Cup
+  ["quizzes", "assignmentsDone", "training"],        // 7 National Championship
+  ["quizzes", "coachRated", "training", "goalsSet"], // 8 The Show
+];
+
+// Build the full requirement object for a single level.
+//   `globalIdx` 0..63 · `tier` "FREE" | "PRO" | "FAMILY" | "TEAM"
+// quizzes follow a power curve (easy-front, grind-back). Secondary activities
+// ramp gently within their home world (1,1,2,2,3,3,4,4) and scale 1.5× for
+// FREE so the paid tiers feel faster. Boolean metrics (coach rating) only
+// need a single completion.
+function buildLevelRequirements(globalIdx, tier) {
+  const worldIdx = Math.floor(globalIdx / 8);
+  const levelInWorld = globalIdx % 8;
+  const isFree = tier === "FREE";
+  const maxQuizzes = isFree ? 150 : 90;
+  const curve = isFree ? 1.6 : 1.55;
+  // Quizzes — hand-tuned first world (1..8), power-curve thereafter.
+  const quizzesRaw = globalIdx < 8
+    ? globalIdx + 1
+    : Math.round(Math.pow(globalIdx / 64, curve) * maxQuizzes);
+  const quizzes = Math.max(globalIdx + 1, quizzesRaw);
+  const req = { quizzes };
+  const scale = isFree ? 1.5 : 1;
+  for (const act of WORLD_ACTIVITIES[worldIdx]) {
+    if (act === "quizzes") continue;
+    if (ACTIVITY_METRICS[act]?.boolean) {
+      req[act] = 1;
+    } else {
+      const base = Math.ceil((levelInWorld + 1) / 2); // 1,1,2,2,3,3,4,4
+      req[act] = Math.max(1, Math.ceil(base * scale));
+    }
   }
-  // Stomp the first 8 levels to a hand-tuned easy ramp so the dopamine hits
-  // keep coming: 1, 2, 3, 4, 5, 6, 7, 8 quizzes, minimal training.
-  for (let i = 0; i < 8; i++) out[i] = { quizzes: i + 1, training: 0 };
-  // Monotonic fix in case the stomp bumped level-9 below level-8.
+  return req;
+}
+
+export function levelRequirementsForTier(tier) {
+  const out = [];
+  for (let i = 0; i < 64; i++) out.push(buildLevelRequirements(i, tier));
+  // Quiz threshold is monotonic by construction via Math.max(globalIdx+1, …),
+  // but we re-run the monotonic fence to guard against curve tweaks.
   for (let i = 1; i < out.length; i++) {
     if (out[i].quizzes <= out[i-1].quizzes) out[i].quizzes = out[i-1].quizzes + 1;
-    if (out[i].training < out[i-1].training) out[i].training = out[i-1].training;
   }
   return out;
 }
 
-export const LEVEL_THRESHOLDS_PAID = makeLevelThresholds(90, 25, 1.55);
-export const LEVEL_THRESHOLDS_FREE = makeLevelThresholds(150, 45, 1.6);
+// Legacy export — kept so any residual code referencing the old flat-shape
+// thresholds doesn't break. Produces just {quizzes, training} per level.
+export const LEVEL_THRESHOLDS_PAID = levelRequirementsForTier("PRO").map(r => ({ quizzes: r.quizzes, training: r.training || 0 }));
+export const LEVEL_THRESHOLDS_FREE = levelRequirementsForTier("FREE").map(r => ({ quizzes: r.quizzes, training: r.training || 0 }));
 
 export function levelThresholdsForTier(tier) {
   return tier === "FREE" ? LEVEL_THRESHOLDS_FREE : LEVEL_THRESHOLDS_PAID;
 }
 
-export function getJourneyV2(quizHistory, trainingSessions, tier) {
-  const quizzes = Array.isArray(quizHistory) ? quizHistory.length : 0;
-  const training = Array.isArray(trainingSessions) ? trainingSessions.length : 0;
-  const thresholds = levelThresholdsForTier(tier);
-  const levels = thresholds.map((t, i) => {
+// `state` is a bag of activity counts: { quizzes, training, clipsWatched,
+// insightsRead, goalsSet, skillsRated, coachRated, assignmentsDone }. Caller
+// assembles it from player state + LS + (optionally) coach feedback / team
+// homework fetches. Missing keys are treated as 0.
+//
+// Backward-compat: if state is actually an array (old quizHistory signature),
+// we coerce — turning `getJourneyV2(quizHistory, trainingSessions, tier)` into
+// a minimal state bag. Remove after all callers migrate.
+export function getJourneyV2(state, trainingSessionsOrTier, maybeTier) {
+  let s, tier;
+  if (Array.isArray(state)) {
+    s = {
+      quizzes: state.length,
+      training: Array.isArray(trainingSessionsOrTier) ? trainingSessionsOrTier.length : 0,
+    };
+    tier = maybeTier;
+  } else {
+    s = state || {};
+    tier = trainingSessionsOrTier;
+  }
+  const reqs = levelRequirementsForTier(tier);
+  const levels = reqs.map((req, i) => {
     const worldIdx = Math.floor(i / 8);
     const levelInWorld = i % 8;
     const world = WORLD_THEMES[worldIdx];
+    const unmet = Object.entries(req).filter(([k, v]) => (s[k] || 0) < v).map(([k]) => k);
     return {
       idx: i,
       worldIdx,
@@ -304,21 +372,28 @@ export function getJourneyV2(quizHistory, trainingSessions, tier) {
       worldIcon: world.icon,
       worldGradient: world.gradient,
       worldAccent: world.accent,
-      quizzes: t.quizzes,
-      training: t.training,
-      unlocked: quizzes >= t.quizzes && training >= t.training,
+      requirements: req,
+      unmet,
+      unlocked: unmet.length === 0,
+      // Legacy keys kept for old callers.
+      quizzes: req.quizzes,
+      training: req.training || 0,
     };
   });
   const nextIdx = levels.findIndex(l => !l.unlocked);
   const currentIdx = nextIdx === -1 ? levels.length - 1 : Math.max(0, nextIdx - 1);
   const currentWorldIdx = nextIdx === -1 ? 7 : Math.floor(nextIdx / 8);
   return {
-    quizzes, training, levels,
+    state: s,
+    levels,
     nextIdx: nextIdx === -1 ? null : nextIdx,
     currentIdx,
     currentWorldIdx,
     worlds: WORLD_THEMES,
     tier: tier === "FREE" ? "FREE" : "PAID",
+    // Legacy keys for code that read these directly.
+    quizzes: s.quizzes || 0,
+    training: s.training || 0,
   };
 }
 
