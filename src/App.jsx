@@ -4097,28 +4097,6 @@ function AuthScreen({ onAuthenticated, onDemo, onDevEnter, onPreview, prefill })
           </div>
         </div>
 
-        {/* Decision-making pearls — what a player should be thinking *before*
-            the puck arrives on their stick. Each line is a short tactical
-            truth we want to lodge in muscle memory. */}
-        <div style={{background:"rgba(3,9,15,0.45)",backdropFilter:"blur(10px)",WebkitBackdropFilter:"blur(10px)",border:`1px solid rgba(252,76,2,0.18)`,borderRadius:14,padding:"1rem 1.1rem",marginBottom:"1.25rem"}}>
-          <div style={{fontSize:10,letterSpacing:".16em",textTransform:"uppercase",color:C.gold,fontWeight:800,marginBottom:".7rem",textAlign:"center"}}>How good players think</div>
-          {[
-            { lead: "See the next play", rest: "— not the current one. Read two moves ahead." },
-            { lead: "Decide before the puck arrives", rest: "— if you're still deciding when you get it, you're late." },
-            { lead: "Scan with your head up", rest: "— three looks a shift before you even touch the puck." },
-            { lead: "Support is a verb", rest: "— good linemates move the second you win the puck." },
-            { lead: "Pressure is a signal", rest: "— the defender's angle tells you where the open ice is." },
-          ].map((p,i) => (
-            <div key={i} style={{display:"flex",gap:".55rem",alignItems:"flex-start",marginBottom:i===4?0:".55rem",lineHeight:1.5}}>
-              <span style={{color:C.gold,fontSize:13,marginTop:1,flexShrink:0,fontWeight:800}}>▸</span>
-              <div style={{fontSize:13,color:C.white}}>
-                <span style={{fontWeight:700}}>{p.lead}</span>
-                <span style={{color:"rgba(248,250,252,.62)"}}>{p.rest}</span>
-              </div>
-            </div>
-          ))}
-        </div>
-
         {/* Role-based entry points — four small chips so each audience
             (parents, players, coaches, associations) has a guide without
             overwhelming the landing hero. */}
@@ -4273,18 +4251,6 @@ function AuthScreen({ onAuthenticated, onDemo, onDevEnter, onPreview, prefill })
           <div style={{textAlign:"center",marginTop:".75rem"}}>
             <button onClick={()=>{setMode("login");setErr("");setResetSent(false);}} style={{background:"none",border:"none",color:C.dimmer,cursor:"pointer",fontSize:12,fontFamily:FONT.body,padding:0,textDecoration:"underline"}}>
               ← Back to sign in
-            </button>
-          </div>
-        )}
-
-        {/* Returning users use the top-right "Already a member? Sign in" link.
-            Keep a minimal signup->login escape hatch visible only when already in login
-            mode isn't the case and user might want to create an account instead. */}
-        {mode === "signup" && (
-          <div style={{textAlign:"center",marginTop:"1.1rem",fontSize:12,color:"rgba(248,250,252,.4)"}}>
-            Already have an account?{" "}
-            <button onClick={()=>{setMode("login");setErr("");}} style={{background:"none",border:"none",color:C.dimmer,cursor:"pointer",fontSize:12,fontFamily:FONT.body,padding:0,textDecoration:"underline"}}>
-              Sign in
             </button>
           </div>
         )}
