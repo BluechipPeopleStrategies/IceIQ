@@ -23,6 +23,7 @@ import { CoachChallengeSection, ChallengeCard, ChallengeRunScreen } from "./team
 import { ToastContainer, toast } from "./toast.jsx";
 import { QotDCard, QotDScreen } from "./questionOfDay.jsx";
 import { SpeedRoundCard, SpeedRoundScreen } from "./speedRound.jsx";
+import { getWeeklyStreak, bumpWeeklyStreak, topCategoryStreak, updateCategoryStreaks } from "./utils/streaks.js";
 import { canSwitchAgeGroup, recordAgeGroupSwitch, getAgeGroupLock, setAgeGroupLock, checkSeasonReset } from "./utils/deviceLock";
 import { lsGetStr, lsSetStr, lsGetJSON, lsSetJSON } from "./utils/storage.js";
 import {
@@ -1116,18 +1117,27 @@ function Home({ player, onNav, demoMode, subscriptionTier, questFlagsBump, onPro
 
   // Streak + countdown timer
   const [streak, setStreak] = useState(0);
+  const [weeklyStreak, setWeeklyStreak] = useState(0);
+  const [topCatStreak, setTopCatStreak] = useState(null); // [cat, count] | null
   const [countdown, setCountdown] = useState("");
   useEffect(() => {
     const sd = getStreakData();
     const today = getTodayKey();
     const yesterday = new Date(Date.now()-86400000).toISOString().slice(0,10);
     if (sd.last === today || sd.last === yesterday) setStreak(sd.count || 0);
+    // Read the weekly + category streaks built from quiz results.
+    if (player?.id) {
+      const ws = getWeeklyStreak(player.id);
+      if (ws?.count >= 2) setWeeklyStreak(ws.count);
+      const top = topCategoryStreak(player.id);
+      if (top) setTopCatStreak(top);
+    }
     // Update countdown every minute
     const tick = () => setCountdown(formatCountdown(msUntilNextWeek()));
     tick();
     const iv = setInterval(tick, 60000);
     return () => clearInterval(iv);
-  }, []);
+  }, [player?.id]);
 
   return (
     <div style={{minHeight:"100vh",background:C.bg,fontFamily:FONT.body,color:C.white,paddingBottom:80}}>
@@ -1140,8 +1150,18 @@ function Home({ player, onNav, demoMode, subscriptionTier, questFlagsBump, onPro
               <span style={{fontFamily:FONT.display,fontWeight:800,fontSize:"1.5rem",color:C.gold,letterSpacing:".06em"}}>Ice-IQ</span>
               <span style={{fontSize:10,color:C.dimmer,fontWeight:500,letterSpacing:".04em"}}>v{VERSION}</span>
               {streak > 0 && (
-                <div style={{background:"rgba(234,179,8,.12)",border:"1px solid rgba(234,179,8,.25)",borderRadius:20,padding:"2px 8px",fontSize:11,fontWeight:700,color:C.yellow,display:"flex",alignItems:"center",gap:".2rem"}}>
+                <div style={{background:"rgba(234,179,8,.12)",border:"1px solid rgba(234,179,8,.25)",borderRadius:20,padding:"2px 8px",fontSize:11,fontWeight:700,color:C.yellow,display:"flex",alignItems:"center",gap:".2rem"}} title={`${streak}-day streak`}>
                   🔥{streak}
+                </div>
+              )}
+              {weeklyStreak >= 2 && (
+                <div style={{background:"rgba(91,164,232,.12)",border:"1px solid rgba(91,164,232,.3)",borderRadius:20,padding:"2px 8px",fontSize:11,fontWeight:700,color:C.blue,display:"flex",alignItems:"center",gap:".2rem"}} title={`${weeklyStreak} weeks in a row with a quiz`}>
+                  🗓️{weeklyStreak}
+                </div>
+              )}
+              {topCatStreak && topCatStreak[1] >= 3 && (
+                <div style={{background:"rgba(34,197,94,.12)",border:"1px solid rgba(34,197,94,.3)",borderRadius:20,padding:"2px 8px",fontSize:11,fontWeight:700,color:C.green,display:"flex",alignItems:"center",gap:".2rem"}} title={`${topCatStreak[1]} correct in a row in ${topCatStreak[0]}`}>
+                  📊{topCatStreak[1]}
                 </div>
               )}
             </div>
@@ -5968,6 +5988,20 @@ export default function App() {
       const sd = updateStreak(getStreakData());
       localStorage.setItem("iceiq_streak", JSON.stringify(sd));
     } catch(e) {}
+    // Bump the weekly + category streaks and fire celebrate toasts on
+    // meaningful milestones. Best-effort — silent on LS failure.
+    if (player?.id && !isEphemeralPlayer(player.id)) {
+      try {
+        const weekly = bumpWeeklyStreak(player.id);
+        if (weekly.milestone) {
+          toast.celebrate({ title: `${weekly.milestone}-week streak!`, body: "Showing up is half of getting better.", icon: "🗓️" });
+        }
+        const catMilestones = updateCategoryStreaks(player.id, results);
+        for (const m of catMilestones) {
+          toast.celebrate({ title: `${m.count} straight in ${m.cat}!`, body: "Pattern-matching locked in.", icon: "📊" });
+        }
+      } catch {}
+    }
     if (!demoMode) {
       try { await SB.saveQuizSession(player.id, { results, score, sessionLength: player.sessionLength }); }
       catch(e) { console.error(e); }
