@@ -38,9 +38,12 @@ import imgSuccess from "./assets/images/Success-Icon.jpg";
 function resolveTier({ profile, demoMode } = {}) {
   // The Pro-player preview flow (enterPlayerPreview) marks profile.__preview
   // and writes iceiq_tier_override="PRO" so the preview renders with Pro
-  // features unlocked. Dev-bypass sessions honor the override the same way.
-  // Production users never hit either branch, so they can't self-promote.
-  const allowLsOverride = isDevBypassEnabled() || !!profile?.__preview;
+  // features unlocked. Dev-bypass sessions honor the override the same way
+  // — either via the iceiq_dev_bypass LS flag or by having __dev set on the
+  // profile (which the AuthScreen dev panel writes when entering via DEV
+  // mode without the LS flag). Production users never hit any branch, so
+  // they can't self-promote.
+  const allowLsOverride = isDevBypassEnabled() || !!profile?.__preview || !!profile?.__dev;
   if (allowLsOverride) {
     try {
       const override = typeof window !== "undefined" ? window.localStorage.getItem("iceiq_tier_override") : null;
@@ -5453,13 +5456,14 @@ export default function App() {
         textarea { resize: none; }
       `}</style>
 
-      {/* Demo banner hidden for dev-bypass sessions — tester wants to see
-          exactly the UI a real user at that tier/role would see. Demo and
-          preview flows still show it. */}
-      {demoMode && !profile?.__dev && (
-        <div style={{position:"sticky",top:0,background:C.purple,color:C.white,padding:".45rem 1rem",fontSize:12,fontWeight:600,textAlign:"center",zIndex:200,display:"flex",alignItems:"center",justifyContent:"center",gap:".75rem"}}>
-          {profile?.__preview ? "👀 Preview — nothing you do is saved." : "🎮 Demo mode — data won't be saved."}
-          <button onClick={exitDemo} style={{background:C.white,color:C.purple,border:"none",borderRadius:6,padding:".25rem .7rem",fontWeight:800,fontSize:11,cursor:"pointer",fontFamily:FONT.body}}>← Back to landing</button>
+      {/* Top-of-page exit banner. Dev sessions get a muted variant (so the
+          tester still sees ~the real UI) but the exit button is always
+          reachable — the previous version hid the banner entirely for dev
+          users, leaving no way back to landing. */}
+      {demoMode && (
+        <div style={{position:"sticky",top:0,background:profile?.__dev ? C.bgElevated : C.purple,color:profile?.__dev ? C.dim : C.white,padding:".4rem 1rem",fontSize:11,fontWeight:600,textAlign:"center",zIndex:200,display:"flex",alignItems:"center",justifyContent:"center",gap:".75rem",borderBottom:profile?.__dev ? `1px solid ${C.border}` : "none"}}>
+          {profile?.__dev ? `🛠️ Dev bypass · ${tier}` : profile?.__preview ? "👀 Preview — nothing you do is saved." : "🎮 Demo mode — data won't be saved."}
+          <button onClick={exitDemo} style={{background:profile?.__dev ? C.bgCard : C.white,color:profile?.__dev ? C.gold : C.purple,border:profile?.__dev ? `1px solid ${C.goldBorder}` : "none",borderRadius:6,padding:"3px 10px",fontWeight:800,fontSize:11,cursor:"pointer",fontFamily:FONT.body}}>← Back to landing</button>
         </div>
       )}
 
