@@ -1509,6 +1509,13 @@ function Quiz({ player, onFinish, onBack, tier, onUpgrade }) {
   }, [results, celebratedStreak]);
   const [showFlag, setShowFlag] = useState(false);
   const [rinkQResult, setRinkQResult] = useState(null); // null | true (correct) | false (wrong) — for IceIQRinkQuestion dispatcher
+  // Speed bonus: when an interactive question is on screen, track when it
+  // loaded so a correct answer can earn a time-based bonus. 15-second
+  // window, max 50 bonus points per question, linear decay to 0. Wrong
+  // answers earn no bonus regardless of speed.
+  const [questionStartedAt, setQuestionStartedAt] = useState(() => Date.now());
+  const [lastSpeedBonus, setLastSpeedBonus] = useState(0);
+  const [speedTotal, setSpeedTotal] = useState(0);
   const [flagReason, setFlagReason] = useState("");
   const [flagDetail, setFlagDetail] = useState("");
   const [flagSent, setFlagSent] = useState(false);
@@ -1548,15 +1555,37 @@ function Quiz({ player, onFinish, onBack, tier, onUpgrade }) {
     return () => { cancelled = true; };
   }, []);
 
+  // Reset the speed-bonus timer whenever the displayed question changes.
+  useEffect(() => {
+    if (question) setQuestionStartedAt(Date.now());
+  }, [question?.id]);
+
   const qNum = results.length;
   const isLast = qNum >= qLen - 1;
   const qtype = question?.type || "mc";
+
+  // Speed-bonus window. Interactive (rink) questions get a timed bonus;
+  // MC/TF/seq don't because reading-speed is mostly literacy, not hockey IQ.
+  const SPEED_TYPES = new Set(["drag-target","drag-place","multi-tap","sequence-rink","path-draw","lane-select","hot-spots","pov-pick","pov-mc","zone-click"]);
+  const SPEED_DURATION_MS = 15000;
+  const SPEED_MAX_BONUS = 50;
+
+  function computeSpeedBonus(qt, ok, startedAt) {
+    if (!ok) return 0;
+    if (!SPEED_TYPES.has(qt)) return 0;
+    const elapsed = Date.now() - startedAt;
+    const remaining = Math.max(0, SPEED_DURATION_MS - elapsed);
+    return Math.floor((remaining / SPEED_DURATION_MS) * SPEED_MAX_BONUS);
+  }
 
   function handlePick(i) {
     if (sel !== null || !question) return;
     setSel(i);
     const ok = i === question.ok;
-    const newResult = { id:question.id, cat:question.cat, ok, d:question.d||2, type:qtype };
+    const bonus = computeSpeedBonus(qtype, ok, questionStartedAt);
+    setLastSpeedBonus(bonus);
+    if (bonus) setSpeedTotal(t => t + bonus);
+    const newResult = { id:question.id, cat:question.cat, ok, d:question.d||2, type:qtype, speedBonus:bonus };
     const newResults = [...results, newResult];
     if (question.type === "mistake" && ok) setMistakeStreak(s => s+1);
     setResults(newResults);
@@ -1567,7 +1596,10 @@ function Quiz({ player, onFinish, onBack, tier, onUpgrade }) {
     setSeqAnswered(true);
     setSeqCorrect(ok);
     if (!ok) setSeqPerfect(false);
-    const newResult = { id:question.id, cat:question.cat, ok, d:question.d||2, type:question.type || "seq" };
+    const bonus = computeSpeedBonus(qtype, ok, questionStartedAt);
+    setLastSpeedBonus(bonus);
+    if (bonus) setSpeedTotal(t => t + bonus);
+    const newResult = { id:question.id, cat:question.cat, ok, d:question.d||2, type:question.type || "seq", speedBonus:bonus };
     const newResults = [...results, newResult];
     setResults(newResults);
     if (newResults.length >= qLen) setQuizDone(true);
@@ -1584,6 +1616,8 @@ function Quiz({ player, onFinish, onBack, tier, onUpgrade }) {
     setSeqAnswered(false);
     setSeqCorrect(false);
     setRinkQResult(null);
+    setLastSpeedBonus(0);
+    setQuestionStartedAt(Date.now());
   }
 
   // IceIQRinkQuestion dispatcher routes when q.rink is set OR the type is one
@@ -1604,7 +1638,10 @@ function Quiz({ player, onFinish, onBack, tier, onUpgrade }) {
     if (rinkQResult !== null) return;
     const okBool = !!ok;
     setRinkQResult(okBool);
-    const nextResults = [...results, { id:q.id, cat:q.cat, ok:okBool, d:q.d||2, type:qtype }];
+    const bonus = computeSpeedBonus(qtype, okBool, questionStartedAt);
+    setLastSpeedBonus(bonus);
+    if (bonus) setSpeedTotal(t => t + bonus);
+    const nextResults = [...results, { id:q.id, cat:q.cat, ok:okBool, d:q.d||2, type:qtype, speedBonus:bonus }];
     setResults(nextResults);
     if (nextResults.length >= qLen) setQuizDone(true);
   }
@@ -1681,6 +1718,11 @@ function Quiz({ player, onFinish, onBack, tier, onUpgrade }) {
             <div style={{fontFamily:FONT.display,fontWeight:800,fontSize:"1rem",color:C.gold}}>Ice-IQ · {getLevelDisplay(player)}</div>
             <div style={{fontSize:11,color:C.dimmer}}>Q{qNum+1}/{qLen} · {player.position} · {player.season||SEASONS[0]}</div>
           </div>
+          {speedTotal > 0 && (
+            <div style={{display:"flex",alignItems:"center",gap:".25rem",padding:".15rem .5rem",background:C.goldDim,border:`1px solid ${C.goldBorder}`,borderRadius:999,fontSize:11,fontWeight:800,color:C.gold}}>
+              ⚡ +{speedTotal}
+            </div>
+          )}
           <div style={{display:"flex",flexDirection:"column",alignItems:"flex-end",gap:3}}>
             <div style={{fontSize:10,color:C.dimmer,fontWeight:700,letterSpacing:".04em"}}>Question {qNum+1} of {qLen}</div>
             <div style={{width:100,height:4,background:C.dimmest,borderRadius:2,overflow:"hidden"}}>
@@ -1751,6 +1793,18 @@ function Quiz({ player, onFinish, onBack, tier, onUpgrade }) {
             {q.sit && <div style={{fontSize:14,color:C.dim,lineHeight:1.7,marginBottom:".5rem"}}>{q.sit}</div>}
             {q.scene?.question?.prompt && <div style={{fontSize:15,fontWeight:700,color:C.white}}>{q.scene.question.prompt}</div>}
           </Card>
+        )}
+
+        {/* Speed-bonus timer — only for interactive types. Drains live; freezes
+            on answer with the awarded bonus. Wrong answers freeze at 0. */}
+        {SPEED_TYPES.has(qtype) && (
+          <SpeedTimerBar
+            startedAt={questionStartedAt}
+            durationMs={SPEED_DURATION_MS}
+            maxBonus={SPEED_MAX_BONUS}
+            frozen={answered}
+            achieved={lastSpeedBonus}
+          />
         )}
 
         {/* Question component — single dispatch in renderQuestionBody() */}
@@ -2774,6 +2828,49 @@ function SkillsRadar({ cats, selfRatings, coachRatings, selfScale, coachScale })
             <span style={{display:"inline-block",width:10,height:10,background:C.gold,borderRadius:"50%"}}/> Coach
           </div>
         )}
+      </div>
+    </div>
+  );
+}
+
+// Live countdown bar above interactive questions — drains over the
+// SPEED_DURATION_MS window. Resets when `startedAt` changes (next question)
+// and freezes when `frozen` is true (after the player answers).
+function SpeedTimerBar({ startedAt, durationMs, maxBonus, frozen, achieved }) {
+  const [tick, setTick] = useState(0);
+  useEffect(() => {
+    if (frozen) return;
+    const id = setInterval(() => setTick(t => t + 1), 100);
+    return () => clearInterval(id);
+  }, [frozen, startedAt]);
+  const elapsed = Date.now() - startedAt;
+  const remaining = Math.max(0, durationMs - elapsed);
+  const pct = Math.max(0, Math.min(100, (remaining / durationMs) * 100));
+  const inWindow = remaining > 0;
+  // Frozen → show what was earned. Live → show "up to +N" while ticking.
+  const label = frozen
+    ? (achieved > 0 ? `⚡ +${achieved} speed pts` : `⏱ Out of time`)
+    : (inWindow ? `⏱ Answer fast — up to +${Math.floor((remaining / durationMs) * maxBonus)} pts` : `⏱ Bonus window closed`);
+  const color = frozen
+    ? (achieved > 0 ? C.gold : C.dimmer)
+    : (pct > 60 ? C.gold : pct > 25 ? "#eab308" : C.red);
+  return (
+    <div style={{
+      marginBottom: ".75rem", padding: ".5rem .75rem",
+      background: C.bgCard, border: `1px solid ${C.border}`, borderRadius: 10,
+    }}>
+      <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:".35rem",fontSize:11,fontWeight:800,color:color,letterSpacing:".04em"}}>
+        <span>{label}</span>
+        {!frozen && inWindow && <span style={{color:C.dimmer,fontWeight:700}}>{(remaining / 1000).toFixed(1)}s</span>}
+      </div>
+      <div style={{height:4,background:C.dimmest,borderRadius:2,overflow:"hidden"}}>
+        <div style={{
+          height:"100%",
+          width:frozen ? `${(achieved / maxBonus) * 100}%` : `${pct}%`,
+          background: color,
+          borderRadius:2,
+          transition: frozen ? "width .2s" : "none",
+        }}/>
       </div>
     </div>
   );
