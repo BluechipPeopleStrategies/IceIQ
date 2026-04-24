@@ -33,6 +33,7 @@ import {
   isReflectionsDisabled, setReflectionsDisabled,
   reflectionCounts,
 } from "./utils/reflections.js";
+import { ScenarioRenderer } from "./scenario/index.js";
 import {
   C, FONT, LEVELS, POSITIONS, POSITIONS_U11UP, SEASONS,
   IceIQLogo, Screen, Card, Pill, Label, PrimaryBtn, SecBtn, BackBtn, ProgressBar, StickyHeader,
@@ -3739,6 +3740,59 @@ function JourneyBody({ player, tier, demoMode, onViewFull, onUpgrade }) {
 // surrounding UI. Loads the QB, finds the id, renders it through the
 // normal IceIQRinkQuestion dispatcher (for rink/POV types) or a
 // lightweight MC/TF fallback for non-rink types.
+// Side-by-side parity tester for the unified scenario engine. Loads the
+// legacy `u13q_rink07` (path-draw) and the ported `u13q_rink07_v2` and
+// renders both in the same viewport. Validates that the new engine
+// produces the same answer behavior as the bespoke component before any
+// bank migration ships.
+function ScenarioParityTest() {
+  const [legacy, setLegacy] = useState(null);
+  const [errLegacy, setErrLegacy] = useState(null);
+  const [scenarioJson, setScenarioJson] = useState(null);
+
+  useEffect(() => {
+    let cancelled = false;
+    loadQB().then(qb => {
+      if (cancelled) return;
+      let found = null;
+      for (const lvl of Object.keys(qb)) {
+        const hit = (qb[lvl] || []).find(q => q.id === "u13q_rink07");
+        if (hit) { found = hit; break; }
+      }
+      if (!found) setErrLegacy("Legacy u13q_rink07 not found in bank.");
+      else setLegacy(found);
+    }).catch(e => { if (!cancelled) setErrLegacy(e.message); });
+    import("./scenario/seeds/u13q_rink07_v2.json").then(m => {
+      if (!cancelled) setScenarioJson(m.default);
+    });
+    return () => { cancelled = true; };
+  }, []);
+
+  return (
+    <div style={{minHeight:"100vh",background:C.bg,color:C.white,fontFamily:FONT.body,padding:"1rem 1rem 4rem"}}>
+      <div style={{maxWidth:1200,margin:"0 auto"}}>
+        <div style={{paddingBottom:".75rem",borderBottom:`1px solid ${C.border}`,marginBottom:"1rem"}}>
+          <div style={{fontSize:10,letterSpacing:".14em",textTransform:"uppercase",color:C.gold,fontWeight:700}}>Scenario engine — parity test</div>
+          <div style={{fontSize:13,color:C.dim,marginTop:4}}>
+            Same question, two renderers. Left: legacy bespoke <code>path-draw</code>. Right: unified <code>scenario</code> engine.
+          </div>
+        </div>
+        <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:"1.5rem"}}>
+          <div>
+            <div style={{fontSize:11,color:C.dimmer,fontWeight:800,letterSpacing:".06em",marginBottom:".5rem"}}>LEGACY (u13q_rink07)</div>
+            {errLegacy && <div style={{color:C.red,fontSize:13}}>{errLegacy}</div>}
+            {legacy && <IceIQRinkQuestion question={legacy} onAnswer={() => {}}/>}
+          </div>
+          <div>
+            <div style={{fontSize:11,color:C.dimmer,fontWeight:800,letterSpacing:".06em",marginBottom:".5rem"}}>NEW SCENARIO (u13q_rink07_v2)</div>
+            {scenarioJson && <ScenarioRenderer scenario={scenarioJson} onAnswer={() => {}}/>}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 function QuestionPreviewPage({ questionId }) {
   const [question, setQuestion] = useState(null);
   const [err, setErr] = useState(null);
@@ -6601,6 +6655,12 @@ export default function App() {
   if (hashRoute.startsWith("q=")) {
     const qid = decodeURIComponent(hashRoute.slice(2));
     return <QuestionPreviewPage questionId={qid}/>;
+  }
+  // Scenario-engine POC route — `#scenario-test` renders the new unified
+  // engine side-by-side with the old bespoke component for the same
+  // question, so authors can verify parity before migrating the bank.
+  if (hashRoute === "scenario-test") {
+    return <ScenarioParityTest/>;
   }
 
   // Pre-auth hash route: parents can share ice-iq.vercel.app/#parents without logging in.

@@ -1,0 +1,34 @@
+{
+  "id": "u13q_rink07_v2",
+  "type": "scenario",
+  "themes": ["puck-support", "rush-reads"],
+  "cat": "Puck Support",
+  "difficulty": 2,
+  "stage": {
+    "view": "right",
+    "zone": "off-zone"
+  },
+  "actors": [
+    { "id": "you", "kind": "player",   "x": 0.667, "y": 0.500, "label": "F3 (YOU)" },
+    { "id": "f1",  "kind": "teammate", "x": 0.833, "y": 0.400, "label": "F1" },
+    { "id": "f2",  "kind": "teammate", "x": 0.883, "y": 0.667, "label": "F2" },
+    { "id": "d1",  "kind": "defender", "x": 0.858, "y": 0.500 },
+    { "id": "g",   "kind": "goalie",   "x": 0.933, "y": 0.500 }
+  ],
+  "interaction": {
+    "kind": "path",
+    "verb": "skate",
+    "from": "you",
+    "prompt": "You're F3, trailing the rush. Draw your path to the best support position."
+  },
+  "correct": {
+    "kind": "path",
+    "end": { "zoneId": "oz-high-slot" }
+  },
+  "feedback": {
+    "right": "Trail high, top of the slot — you're shot support AND backcheck coverage if it turns over.",
+    "wrong": "You drifted into the play. Trail high through the middle so you read the next layer."
+  },
+  "tip": "Trail high — through the middle to the top of the slot gives you shot support AND backcheck coverage if it turns over.",
+  "why": "F3 is the safety on offense. Top of the slot covers a rebound shot, sets up a high screen, and lets you peel back if the puck turns over."
+}
