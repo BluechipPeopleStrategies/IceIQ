@@ -3344,6 +3344,122 @@ function JourneyBody({ player, tier, demoMode, onViewFull, onUpgrade }) {
   );
 }
 
+// Preview-only page. Lets tools/dashboard.html iframe a single question at
+// `#q=<id>` so an author can see EXACTLY what a player sees without any
+// surrounding UI. Loads the QB, finds the id, renders it through the
+// normal IceIQRinkQuestion dispatcher (for rink/POV types) or a
+// lightweight MC/TF fallback for non-rink types.
+function QuestionPreviewPage({ questionId }) {
+  const [question, setQuestion] = useState(null);
+  const [err, setErr] = useState(null);
+  const [key, setKey] = useState(0); // forces a re-mount on Retry
+  useEffect(() => {
+    let cancelled = false;
+    loadQB().then(qb => {
+      if (cancelled) return;
+      let found = null;
+      for (const lvl of Object.keys(qb)) {
+        const hit = (qb[lvl] || []).find(q => q.id === questionId);
+        if (hit) { found = { ...hit, __previewLevel: lvl }; break; }
+      }
+      if (!found) setErr(`Question id "${questionId}" not found in the bank.`);
+      else setQuestion(found);
+    }).catch(e => { if (!cancelled) setErr(e.message || String(e)); });
+    return () => { cancelled = true; };
+  }, [questionId]);
+
+  if (err) {
+    return (
+      <div style={{minHeight:"100vh",background:C.bg,color:C.white,fontFamily:FONT.body,padding:"2rem 1.25rem",maxWidth:640,margin:"0 auto"}}>
+        <div style={{fontSize:10,letterSpacing:".16em",textTransform:"uppercase",color:C.red,fontWeight:700,marginBottom:".4rem"}}>Preview error</div>
+        <div style={{fontSize:14,color:C.dim,lineHeight:1.55}}>{err}</div>
+      </div>
+    );
+  }
+  if (!question) {
+    return <div style={{minHeight:"100vh",background:C.bg,color:C.dimmer,display:"flex",alignItems:"center",justifyContent:"center",fontFamily:FONT.body,fontSize:13}}>Loading question…</div>;
+  }
+
+  const isRinkQ = !!question.rink ||
+    ["drag-target","drag-place","multi-tap","sequence-rink","path-draw","lane-select","hot-spots","pov-pick","pov-mc","zone-click"].includes(question.type);
+
+  return (
+    <div key={key} style={{minHeight:"100vh",background:C.bg,color:C.white,fontFamily:FONT.body,padding:"1rem 1rem 4rem",maxWidth:700,margin:"0 auto"}}>
+      <div style={{display:"flex",alignItems:"baseline",justifyContent:"space-between",gap:".5rem",marginBottom:".9rem",paddingBottom:".6rem",borderBottom:`1px solid ${C.border}`}}>
+        <div style={{minWidth:0}}>
+          <div style={{fontSize:10,letterSpacing:".14em",textTransform:"uppercase",color:C.gold,fontWeight:700}}>Preview</div>
+          <div style={{fontSize:12,color:C.dim,marginTop:2}}>
+            <code style={{background:C.bgElevated,padding:"1px 6px",borderRadius:4}}>{question.id}</code>
+            <span style={{marginLeft:".5rem"}}>· {question.__previewLevel} · {question.cat} · {question.type || "mc"}</span>
+          </div>
+        </div>
+        <button onClick={() => setKey(k => k + 1)} style={{background:C.bgElevated,border:`1px solid ${C.border}`,color:C.dimmer,borderRadius:8,padding:".3rem .75rem",cursor:"pointer",fontSize:12,fontFamily:FONT.body}}>↺ Reset</button>
+      </div>
+      {isRinkQ ? (
+        <IceIQRinkQuestion question={question} onAnswer={() => {}} />
+      ) : (
+        <QuestionPreviewFallback question={question}/>
+      )}
+    </div>
+  );
+}
+
+// Minimal MC / TF / Sequence fallback for non-rink types so the preview
+// URL works for any question id, not just interactive rink ones.
+function QuestionPreviewFallback({ question }) {
+  const [sel, setSel] = useState(null);
+  const q = question;
+  const isTF = q.type === "tf";
+  const answered = sel !== null;
+  const ok = isTF ? (sel === q.ok) : (sel === q.ok);
+  return (
+    <div>
+      <div style={{background:C.purpleDim,border:`1px solid ${C.purpleBorder}`,borderRadius:12,padding:"1rem 1.1rem",marginBottom:"1.25rem"}}>
+        <div style={{fontSize:10,letterSpacing:".14em",textTransform:"uppercase",color:C.purple,marginBottom:".5rem",fontWeight:700}}>{isTF ? "True or False?" : q.sit ? "Game Situation" : "Question"}</div>
+        <div style={{fontSize:15,lineHeight:1.7,color:C.white,fontWeight:500}}>{q.sit || q.q}</div>
+      </div>
+      {isTF ? (
+        <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:".75rem",marginBottom:"1rem"}}>
+          {[true, false].map(v => {
+            const isSel = sel === v;
+            const isRight = answered && v === q.ok;
+            const isWrongSel = answered && isSel && v !== q.ok;
+            return (
+              <button key={String(v)} onClick={() => !answered && setSel(v)} disabled={answered}
+                style={{background:isRight?"rgba(34,197,94,.15)":isWrongSel?"rgba(239,68,68,.15)":C.bgElevated,border:`2px solid ${isRight?C.green:isWrongSel?C.red:C.border}`,borderRadius:12,padding:"1.25rem",cursor:answered?"default":"pointer",fontWeight:700,fontSize:16,color:isRight?C.green:isWrongSel?C.red:C.white,fontFamily:FONT.body}}>
+                {v ? "True" : "False"}
+              </button>
+            );
+          })}
+        </div>
+      ) : (
+        <div style={{marginBottom:"1rem"}}>
+          {(q.choices || q.opts || []).map((choice, i) => {
+            const isSel = sel === i;
+            const showRight = answered && i === q.ok;
+            const showWrong = answered && isSel && i !== q.ok;
+            return (
+              <button key={i} onClick={() => !answered && setSel(i)} disabled={answered}
+                style={{width:"100%",textAlign:"left",marginBottom:".5rem",background:showRight?"rgba(34,197,94,.12)":showWrong?"rgba(239,68,68,.12)":C.bgElevated,border:`1.5px solid ${showRight?C.green:showWrong?C.red:C.border}`,borderRadius:10,padding:".85rem 1rem",cursor:answered?"default":"pointer",color:showRight?C.green:showWrong?C.red:C.white,fontFamily:FONT.body,fontSize:14}}>
+                {choice}
+              </button>
+            );
+          })}
+        </div>
+      )}
+      {answered && (
+        <Card style={{background:ok?"rgba(34,197,94,.06)":"rgba(239,68,68,.06)",border:`1px solid ${ok?C.greenBorder:C.redBorder}`,marginBottom:"1rem"}}>
+          <div style={{fontSize:11,fontWeight:800,color:ok?C.green:C.red,marginBottom:".4rem",letterSpacing:".06em"}}>
+            {ok ? "✓ Correct" : "✗ Incorrect"}
+          </div>
+          {q.why && <div style={{fontSize:13,color:C.dim,lineHeight:1.65,marginBottom:q.tip?".5rem":0}}>{q.why}</div>}
+          {q.tip && <div style={{fontSize:12,color:C.dimmer,lineHeight:1.55,fontStyle:"italic"}}>💡 {q.tip}</div>}
+        </Card>
+      )}
+    </div>
+  );
+}
+
 function JourneyScreen({ player, tier, demoMode, onBack, onNav, onUpgrade }) {
   const trainingSessions = (() => {
     try { return (getTrainingLog(player?.id || "__demo__")?.sessions) || []; }
@@ -6058,6 +6174,14 @@ export default function App() {
   // Loading while auth settles
   if (!authReady) {
     return <div style={{minHeight:"100vh",background:C.bg,color:C.dimmer,display:"flex",alignItems:"center",justifyContent:"center",fontFamily:FONT.body}}>Loading…</div>;
+  }
+
+  // Pre-auth question-preview route: `#q=<questionId>` renders the question
+  // standalone with no header/nav/auth gate. Used by tools/dashboard.html
+  // to iframe the actual rendered scene next to each bank row.
+  if (hashRoute.startsWith("q=")) {
+    const qid = decodeURIComponent(hashRoute.slice(2));
+    return <QuestionPreviewPage questionId={qid}/>;
   }
 
   // Pre-auth hash route: parents can share ice-iq.vercel.app/#parents without logging in.
