@@ -5334,6 +5334,9 @@ function CoachHome({ profile, onSignOut, onOpenPlayer, demoMode, subscriptionTie
     const t = await SB.getCoachTeams(profile.id);
     setTeams(t);
     setLoading(false);
+    // Single-team coach (common case) — auto-expand so training / analytics /
+    // homework are all one scroll away, no tap required.
+    if (t.length === 1 && !expandedTeam) toggleRoster(t[0].id);
   })(); }, []);
 
   async function createTeam() {
@@ -5406,6 +5409,24 @@ function CoachHome({ profile, onSignOut, onOpenPlayer, demoMode, subscriptionTie
                   <div style={{fontFamily:FONT.display,fontWeight:800,fontSize:"1.2rem",color:C.gold,letterSpacing:".1em"}}>{t.code}</div>
                 </div>
               </div>
+              {/* Quick-access chip row, visible when collapsed so the coach
+                  sees what's inside the team without expanding first. */}
+              {!expanded && (
+                <div style={{display:"flex",gap:".3rem",marginTop:".5rem",flexWrap:"wrap"}}>
+                  {[
+                    {icon:"💪",label:"Training"},
+                    {icon:"📋",label:"Homework"},
+                    {icon:"🏆",label:"Challenges"},
+                    {icon:"📊",label:"Analytics"},
+                  ].map((chip, i) => (
+                    <span key={i} onClick={(e)=>{e.stopPropagation();toggleRoster(t.id);}}
+                      style={{background:C.bgElevated,border:`1px solid ${C.border}`,borderRadius:999,padding:".2rem .55rem",fontSize:10.5,color:C.dim,fontFamily:FONT.body,fontWeight:600,cursor:"pointer",display:"inline-flex",alignItems:"center",gap:".25rem"}}>
+                      <span style={{fontSize:12}}>{chip.icon}</span>
+                      <span>{chip.label}</span>
+                    </span>
+                  ))}
+                </div>
+              )}
               {expanded && (
                 <div style={{marginTop:".85rem",paddingTop:".85rem",borderTop:`1px solid ${C.border}`}}>
                   <TeamFocusCard team={t} roster={roster} onOpenDrills={onOpenDrills}/>
