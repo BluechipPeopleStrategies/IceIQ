@@ -59,12 +59,46 @@ function ptAt(points, t) {
   return { x: a.x + (b.x - a.x) * frac, y: a.y + (b.y - a.y) * frac };
 }
 
-export function scorePath(userPath, correct) {
-  if (!userPath || userPath.length < 2) return { ok: false };
+// Path-segment vs point distance — for interception detection. Returns
+// the minimum distance from `pt` to any segment of `path` (normalized).
+function minDistanceToPath(pt, path) {
+  let best = Infinity;
+  for (let i = 1; i < path.length; i++) {
+    const a = path[i - 1], b = path[i];
+    const dx = b.x - a.x, dy = b.y - a.y;
+    const len2 = dx * dx + dy * dy;
+    let t = 0;
+    if (len2 > 0) {
+      t = ((pt.x - a.x) * dx + (pt.y - a.y) * dy) / len2;
+      t = Math.max(0, Math.min(1, t));
+    }
+    const px = a.x + t * dx, py = a.y + t * dy;
+    const d = Math.sqrt((pt.x - px) ** 2 + (pt.y - py) ** 2);
+    if (d < best) best = d;
+  }
+  return best;
+}
+
+const INTERCEPT_RADIUS = 0.035; // a defender within ~21px of the line "intercepts"
+
+export function scorePath(userPath, correct, opts = {}) {
+  if (!userPath || userPath.length < 2) return { ok: false, reason: "tooShort" };
   const target = resolveTarget(correct.end);
   const endPoint = userPath[userPath.length - 1];
   const d = distance(endPoint, target);
-  return { ok: d <= target.tolerance, distance: d, endPoint, target };
+  // Interception check (only when defenders are passed in — primitive is
+  // pure otherwise).
+  const defenders = Array.isArray(opts.defenders) ? opts.defenders : [];
+  for (const def of defenders) {
+    if (minDistanceToPath(def, userPath) < INTERCEPT_RADIUS) {
+      return { ok: false, reason: "intercepted", endPoint, target, intercepter: def };
+    }
+  }
+  return {
+    ok: d <= target.tolerance,
+    reason: d <= target.tolerance ? "ok" : "offTarget",
+    distance: d, endPoint, target,
+  };
 }
 
 const START_RING_NORM_RADIUS = 0.045; // ~27px on the 600-wide rink
@@ -95,6 +129,13 @@ export function PathPrimitive({ interaction, correct, actors, svgPoint, onAnswer
     return () => { if (replayRef.current) cancelAnimationFrame(replayRef.current); };
   }, [score, path.length]);
 
+  // Defenders fed to the scorer for interception detection. Primitive
+  // remains pure on tests — defenders are sourced from the actor list.
+  const defenders = useMemo(
+    () => actors.filter(a => a.kind === "defender").map(a => ({ x: a.x, y: a.y })),
+    [actors],
+  );
+
   // Drag handlers as document-level listeners — survive cursor leaving
   // the rink frame, which the inline-svg handlers in v0 didn't.
   useEffect(() => {
@@ -108,9 +149,9 @@ export function PathPrimitive({ interaction, correct, actors, svgPoint, onAnswer
       setDrawing(false);
       setPath(prev => {
         if (prev.length < 2) return prev;
-        const result = scorePath(prev, correct);
+        const result = scorePath(prev, correct, { defenders });
         setScore(result);
-        onAnswer?.({ ok: result.ok, userPath: prev });
+        onAnswer?.({ ok: result.ok, reason: result.reason, userPath: prev });
         return prev;
       });
     };
@@ -124,7 +165,7 @@ export function PathPrimitive({ interaction, correct, actors, svgPoint, onAnswer
       window.removeEventListener("mouseup", onUp);
       window.removeEventListener("touchend", onUp);
     };
-  }, [drawing, svgPoint, correct, onAnswer]);
+  }, [drawing, svgPoint, correct, onAnswer, defenders]);
 
   if (!fromActor) {
     return <text x="300" y="150" textAnchor="middle" fill="#ef4444" fontSize="12">missing actor "{interaction.from}"</text>;
@@ -161,9 +202,10 @@ export function PathPrimitive({ interaction, correct, actors, svgPoint, onAnswer
     <g
       onMouseDown={onDown} onTouchStart={onDown}
       style={{ touchAction: "none" }}>
-      {/* Capture surface — invisible rect gets pointer events without
-          blocking the underlying RinkStage actor markers. */}
-      <rect x="0" y="0" width="600" height="300" fill="transparent" pointerEvents="all"/>
+      {/* Capture surface — invisible rect spans wide enough to cover any
+          half-view's viewBox. Padded negatives so the user can drag past
+          the rink edges without losing pointer events. */}
+      <rect x="-50" y="-50" width="700" height="400" fill="transparent" pointerEvents="all"/>
 
       {/* Target zone — faint dashed circle while idle, fills in on reveal.
           Always shown so the player knows what they're aiming at. The
@@ -193,10 +235,15 @@ export function PathPrimitive({ interaction, correct, actors, svgPoint, onAnswer
         </g>
       )}
 
-      {/* Ideal-path ghost end-marker — only after wrong answer. */}
+      {/* Ideal-path overlay — only after wrong answer. Dashed green line
+          from the start actor to the target zone + a checkmark glyph at
+          the target so the player sees the read they missed. */}
       {idealPx && (
         <g style={{ pointerEvents: "none" }}>
-          <circle cx={idealPx.x} cy={idealPx.y} r="9" fill="#22c55e" stroke="#0b1220" strokeWidth="2" opacity="0.85"/>
+          <line x1={startPx.x} y1={startPx.y} x2={idealPx.x} y2={idealPx.y}
+            stroke="#22c55e" strokeWidth="2.5" strokeDasharray="6 4"
+            strokeLinecap="round" opacity="0.8"/>
+          <circle cx={idealPx.x} cy={idealPx.y} r="9" fill="#22c55e" stroke="#0b1220" strokeWidth="2" opacity="0.9"/>
           <text x={idealPx.x} y={idealPx.y + 3} textAnchor="middle" fontSize="10" fontWeight="800" fill="#0b1220">✓</text>
         </g>
       )}

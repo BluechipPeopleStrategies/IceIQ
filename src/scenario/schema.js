@@ -19,8 +19,9 @@
  * @property {ActorKind} kind
  * @property {number} x             // 0..1 normalized
  * @property {number} y             // 0..1 normalized
- * @property {string} [tag]         // short label rendered ON the marker ("F1", "C", "RD")
- * @property {string} [label]       // optional caption ABOVE the marker ("YOU", "OPEN")
+ * @property {string} [tag]         // short label rendered ON the marker ("YOU", "C", "RD")
+ * @property {string} [label]       // optional caption ABOVE the marker (rare callouts)
+ * @property {{x:number,y:number}} [facing]  // optional point this actor's stick points toward (normalized 0..1)
  */
 
 // ─────────────────────────────────────────────────────────────────────────

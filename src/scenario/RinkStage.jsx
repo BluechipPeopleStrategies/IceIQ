@@ -5,10 +5,25 @@
 // Primitives don't render the rink themselves — they receive the SVG
 // coord-conversion helpers and a ref to the overlay <svg>.
 
-import { useRef } from "react";
+import { useMemo, useRef } from "react";
 import IceIQRink from "../IceIQRink.jsx";
 import { RINK_W, RINK_H, denorm } from "./schema.js";
 import { C } from "../shared.jsx";
+
+// Mirror IceIQRink's internal viewBox math so the overlay coord system
+// matches the rink's. Without this the overlay sits in a 0..600 / 0..300
+// window while the rink crops to a half-view, and actors appear shifted.
+function computeViewBox(view) {
+  const pad = 15; // IceIQRink uses 1.5 * M = 15
+  const w = RINK_W, h = RINK_H;
+  if (view === "left")    return `${-pad} ${-pad} ${w / 2 + pad * 2} ${h + pad * 2}`;
+  if (view === "right")   return `${w / 2 - pad} ${-pad} ${w / 2 + pad * 2} ${h + pad * 2}`;
+  if (view === "neutral") {
+    // LEFT_BLUE_X = 213, RIGHT_BLUE_X = 387 from IceIQRink dimensions
+    return `${213 - pad} ${-pad} ${(387 - 213) + pad * 2} ${h + pad * 2}`;
+  }
+  return `${-pad} ${-pad} ${w + pad * 2} ${h + pad * 2}`;
+}
 
 // Playbook conventions — distinguishable by SHAPE, not color, so the
 // scene reads correctly when printed black-and-white or in a colorblind
@@ -47,14 +62,36 @@ function ActorMarker({ actor }) {
                  : actor.kind === "player" ? -22
                  : -16;
 
-  // Inner letter (e.g. "F1", "C", "RD") shown ON the marker for teammates
-  // and as part of the X glyph for defenders. Caption above the marker
-  // ("YOU", "OPEN", etc.) is whatever the author put in `label` — used
-  // when authors want a callout, not just a position tag.
   const positionTag = actor.tag || "";
+
+  // Optional stick line — small line from the marker toward `facing`.
+  // Adds tactical realism without rewriting the marker. Only shown for
+  // skater kinds (player / teammate / defender), not goalies/pucks.
+  const showStick = actor.facing &&
+    (actor.kind === "player" || actor.kind === "teammate" || actor.kind === "defender");
+  let stickLine = null;
+  if (showStick) {
+    const fp = denorm(actor.facing);
+    const dx = fp.x - p.x, dy = fp.y - p.y;
+    const len = Math.sqrt(dx * dx + dy * dy);
+    if (len > 0.5) {
+      // Stick reaches ~16px out from the body in the facing direction.
+      const STICK_LEN = 16;
+      const ex = (dx / len) * STICK_LEN;
+      const ey = (dy / len) * STICK_LEN;
+      const bodyR = actor.kind === "player" ? 14 : 11;
+      const sx = (dx / len) * (bodyR + 1);
+      const sy = (dy / len) * (bodyR + 1);
+      stickLine = (
+        <line x1={sx} y1={sy} x2={sx + ex} y2={sy + ey}
+          stroke="#fff" strokeWidth="2" strokeLinecap="round" opacity="0.85"/>
+      );
+    }
+  }
 
   return (
     <g transform={`translate(${p.x},${p.y})`}>
+      {stickLine}
       {/* GOALIE — rounded square */}
       {actor.kind === "goalie" && (
         <>
@@ -137,6 +174,7 @@ function ActorMarker({ actor }) {
  */
 export default function RinkStage({ stage, actors, children }) {
   const svgRef = useRef(null);
+  const viewBox = useMemo(() => computeViewBox(stage.view), [stage.view]);
 
   // Convert a DOM event into normalized 0..1 rink coords. Primitives use
   // this for hit-testing and drag tracking — they never see pixel coords.
@@ -159,7 +197,7 @@ export default function RinkStage({ stage, actors, children }) {
     }}>
       <IceIQRink view={stage.view} zone={stage.zone} markers={[]} />
       <svg ref={svgRef}
-        viewBox={`0 0 ${RINK_W} ${RINK_H}`}
+        viewBox={viewBox}
         preserveAspectRatio="none"
         style={{ position: "absolute", inset: 0, width: "100%", height: "100%" }}>
         {/* Actors plotted underneath the primitive's interactive layer. */}
