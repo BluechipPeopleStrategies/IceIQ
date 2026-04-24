@@ -103,7 +103,7 @@ export function scorePath(userPath, correct, opts = {}) {
 
 const START_RING_NORM_RADIUS = 0.045; // ~27px on the 600-wide rink
 
-export function PathPrimitive({ interaction, correct, actors, svgPoint, onAnswer }) {
+export function PathPrimitive({ interaction, correct, actors, svgPoint, onAnswer, locked }) {
   const fromActor = useMemo(() => actors.find(a => a.id === interaction.from), [actors, interaction.from]);
   const target = useMemo(() => resolveTarget(correct.end), [correct.end]);
   const verb = VERB_STYLE[interaction.verb] || VERB_STYLE.skate;
@@ -172,9 +172,8 @@ export function PathPrimitive({ interaction, correct, actors, svgPoint, onAnswer
   }
 
   function onDown(e) {
-    if (score) return;
+    if (score || locked) return;
     const p = svgPoint(e);
-    // Enforce drag-from-actor: click must land inside the start ring.
     const d = distance(p, fromActor);
     if (d > START_RING_NORM_RADIUS) return;
     setDrawing(true);

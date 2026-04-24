@@ -125,6 +125,32 @@
  */
 
 /**
+/**
+ * @typedef {Object} TimerSpec
+ * @property {number} duration   // milliseconds before the scenario auto-fails
+ * @property {boolean} [hard]    // true = lock + fail on expire (default true)
+ */
+
+/**
+ * @typedef {Object} ScanWindow
+ * IntelliGym working-memory drill. Show the full scene for `showMs`, then
+ * hide actors of the listed kinds (typically "defender") so the player
+ * must REMEMBER where the pressure was when picking the right read.
+ *
+ * @property {number} showMs                     // visible duration before hide
+ * @property {Array<"teammate"|"defender"|"goalie"|"puck">} [hideKinds]
+ */
+
+/**
+ * @typedef {Object} PreviewWindow
+ * IntelliGym pattern-recognition drill. Lock interaction for `lockMs`
+ * before allowing input — forces the player to read the play before
+ * they can act, training visual scanning + anticipation. Pairs with timer.
+ *
+ * @property {number} lockMs                     // interaction is disabled this long
+ */
+
+/**
  * @typedef {Object} Scenario
  * @property {string} id
  * @property {"scenario"} type        // discriminator from legacy types in the bank
@@ -139,6 +165,9 @@
  * @property {string} [tip]
  * @property {string} [why]
  * @property {string[]} [levels]      // multi-age expansion, mirrors existing bank field
+ * @property {TimerSpec} [timer]      // IntelliGym-style hard timer
+ * @property {ScanWindow} [scanWindow]// IntelliGym working-memory drill
+ * @property {PreviewWindow} [preview]// IntelliGym pattern-recognition lock
  */
 
 // ─────────────────────────────────────────────────────────────────────────

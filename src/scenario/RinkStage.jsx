@@ -5,7 +5,7 @@
 // Primitives don't render the rink themselves — they receive the SVG
 // coord-conversion helpers and a ref to the overlay <svg>.
 
-import { useMemo, useRef } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import IceIQRink from "../IceIQRink.jsx";
 import { RINK_W, RINK_H, denorm } from "./schema.js";
 import { C } from "../shared.jsx";
@@ -172,9 +172,26 @@ function ActorMarker({ actor }) {
  *        Render-prop: the primitive layer. Receives a helper that converts
  *        a DOM event to normalized 0..1 rink coords.
  */
-export default function RinkStage({ stage, actors, children }) {
+export default function RinkStage({ stage, actors, scanWindow, children }) {
   const svgRef = useRef(null);
   const viewBox = useMemo(() => computeViewBox(stage.view), [stage.view]);
+
+  // IntelliGym scan-then-hide drill. Show the full scene for showMs;
+  // after that, drop actors whose kind appears in hideKinds. Player must
+  // answer from memory.
+  const [scanElapsed, setScanElapsed] = useState(false);
+  useEffect(() => {
+    if (!scanWindow || !scanWindow.showMs) return;
+    setScanElapsed(false);
+    const id = setTimeout(() => setScanElapsed(true), scanWindow.showMs);
+    return () => clearTimeout(id);
+  }, [scanWindow]);
+  const hideKinds = scanWindow && Array.isArray(scanWindow.hideKinds)
+    ? new Set(scanWindow.hideKinds) : null;
+  const visibleActors = useMemo(() => {
+    if (!scanElapsed || !hideKinds) return actors;
+    return actors.filter(a => !hideKinds.has(a.kind));
+  }, [actors, scanElapsed, hideKinds]);
 
   // Convert a DOM event into normalized 0..1 rink coords. Primitives use
   // this for hit-testing and drag tracking — they never see pixel coords.
@@ -200,8 +217,16 @@ export default function RinkStage({ stage, actors, children }) {
         viewBox={viewBox}
         preserveAspectRatio="none"
         style={{ position: "absolute", inset: 0, width: "100%", height: "100%" }}>
-        {/* Actors plotted underneath the primitive's interactive layer. */}
-        {actors.map(a => <ActorMarker key={a.id} actor={a}/>)}
+        {/* Actors plotted underneath the primitive's interactive layer.
+            Filtered by the scan-then-hide drill when active. */}
+        {visibleActors.map(a => <ActorMarker key={a.id} actor={a}/>)}
+        {scanElapsed && hideKinds && hideKinds.size > 0 && (
+          <text x="50%" y="20" textAnchor="middle" fill="#eab308"
+            fontSize="11" fontWeight="800" letterSpacing="0.06em"
+            style={{ textShadow: "0 1px 2px rgba(0,0,0,.85)", pointerEvents: "none" }}>
+            FROM MEMORY
+          </text>
+        )}
         {/* Primitive renders over the actors. */}
         {typeof children === "function" ? children(svgPoint) : children}
       </svg>

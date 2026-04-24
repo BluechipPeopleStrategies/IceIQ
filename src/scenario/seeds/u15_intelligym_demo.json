@@ -1,0 +1,44 @@
+{
+  "id": "u15_intelligym_pp_v1",
+  "type": "scenario",
+  "themes": ["power-play", "scan", "anticipate", "memory"],
+  "cat": "Power Play",
+  "difficulty": 3,
+
+  "preview": { "lockMs": 1500 },
+  "timer": { "duration": 4500, "hard": true },
+  "scanWindow": { "showMs": 2200, "hideKinds": ["defender"] },
+
+  "stage": { "view": "right", "zone": "off-zone" },
+  "actors": [
+    { "id": "you",     "kind": "player",   "x": 0.900, "y": 0.780, "tag": "YOU" },
+    { "id": "puck",    "kind": "puck",     "x": 0.882, "y": 0.762 },
+
+    { "id": "bumper",  "kind": "teammate", "x": 0.780, "y": 0.500, "tag": "C"  },
+    { "id": "point",   "kind": "teammate", "x": 0.680, "y": 0.500, "tag": "RD" },
+    { "id": "wing",    "kind": "teammate", "x": 0.900, "y": 0.220, "tag": "LW" },
+
+    { "id": "pk1",     "kind": "defender", "x": 0.870, "y": 0.660 },
+    { "id": "pk2",     "kind": "defender", "x": 0.700, "y": 0.350 },
+    { "id": "pk3",     "kind": "defender", "x": 0.770, "y": 0.330 },
+    { "id": "pk4",     "kind": "defender", "x": 0.870, "y": 0.300 },
+
+    { "id": "g",       "kind": "goalie",   "x": 0.918, "y": 0.500 }
+  ],
+  "interaction": {
+    "kind": "path",
+    "verb": "pass",
+    "from": "you",
+    "prompt": "Power play. The PK is in a passive box collapsing high. You have 4.5 seconds — and the X marks vanish before you decide. Pass to the open option."
+  },
+  "correct": {
+    "kind": "path",
+    "end": { "zoneId": "oz-bumper" }
+  },
+  "feedback": {
+    "right": "Bumper. The PK was high and to the weak side; the slot was open and you remembered it.",
+    "wrong": "The PK was loaded high and weak-side. Bumper was the read."
+  },
+  "tip": "On a 1-3-1 PP against a passive box, the bumper opens up when the kill cheats up to take away the points.",
+  "why": "Pattern recognition + working memory: you read the PK shape early, hold it in your head, and act before you have time to second-guess. That's the whole point of this drill."
+}
