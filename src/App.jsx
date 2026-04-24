@@ -1073,6 +1073,11 @@ function Home({ player, onNav, demoMode, subscriptionTier, questFlagsBump, onPro
           </div>
         )}
 
+        {/* Ice IQ Journey — laid out inline so it's the first thing on the
+            Home screen. The full-screen JourneyScreen is still reachable via
+            the "View full →" link on the card header. */}
+        <JourneyBody player={player} onViewFull={() => onNav("journey")} />
+
         {/* IQ Score Hero — locked until GAME_SENSE_UNLOCK_SESSIONS quizzes completed */}
         {(() => {
           const unlocked = totalSessions >= GAME_SENSE_UNLOCK_SESSIONS && iq !== null;
@@ -1112,29 +1117,6 @@ function Home({ player, onNav, demoMode, subscriptionTier, questFlagsBump, onPro
                 </>
               )}
             </Card>
-          );
-        })()}
-
-        {/* Ice IQ Journey entry — rink-path progression, activity-based. */}
-        {(() => {
-          const trainingSessions = (() => {
-            try {
-              const all = getTrainingLog(player?.id || "__demo__");
-              return all?.sessions || [];
-            } catch { return []; }
-          })();
-          const js = getIceIQJourneyState(quizHistory, trainingSessions, player?.level);
-          const unlockedCount = js.stations.filter(s => s.unlocked).length;
-          const latest = [...js.stations].reverse().find(s => s.unlocked);
-          return (
-            <button onClick={() => onNav("journey")} style={{width:"100%",display:"flex",alignItems:"center",justifyContent:"space-between",background:`linear-gradient(135deg,rgba(252,76,2,.14),rgba(252,76,2,.03))`,border:`1px solid ${C.goldBorder}`,borderRadius:12,padding:".7rem .95rem",cursor:"pointer",color:C.white,fontFamily:FONT.body,marginBottom:"1rem"}}>
-              <span style={{display:"flex",alignItems:"center",gap:".55rem",minWidth:0}}>
-                <span style={{fontSize:16}}>🏒</span>
-                <span style={{fontWeight:700,fontSize:13}}>Ice IQ Journey</span>
-                <span style={{color:C.dimmer,fontSize:12,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>· {unlockedCount}/{js.stations.length}{latest?` · ${latest.title}`:""}</span>
-              </span>
-              <span style={{color:C.gold,fontSize:12}}>→</span>
-            </button>
           );
         })()}
 
@@ -1460,8 +1442,11 @@ function Quiz({ player, onFinish, onBack, tier, onUpgrade }) {
             <div style={{fontFamily:FONT.display,fontWeight:800,fontSize:"1rem",color:C.gold}}>Ice-IQ · {getLevelDisplay(player)}</div>
             <div style={{fontSize:11,color:C.dimmer}}>Q{qNum+1}/{qLen} · {player.position} · {player.season||SEASONS[0]}</div>
           </div>
-          <div style={{width:80,height:4,background:C.dimmest,borderRadius:2,overflow:"hidden"}}>
-            <div style={{height:"100%",width:`${(qNum/qLen)*100}%`,background:C.purple,borderRadius:2,transition:"width .35s ease"}}/>
+          <div style={{display:"flex",flexDirection:"column",alignItems:"flex-end",gap:3}}>
+            <div style={{fontSize:10,color:C.dimmer,fontWeight:700,letterSpacing:".04em"}}>Question {qNum+1} of {qLen}</div>
+            <div style={{width:100,height:4,background:C.dimmest,borderRadius:2,overflow:"hidden"}}>
+              <div style={{height:"100%",width:`${(qNum/qLen)*100}%`,background:C.purple,borderRadius:2,transition:"width .35s ease"}}/>
+            </div>
           </div>
         </div>
       </StickyHeader>
@@ -2970,7 +2955,10 @@ const JOURNEY_NODE_XY = [
   { x:712, y:195 },   // captain-c — at the opposing net
 ];
 
-function JourneyScreen({ player, onBack, onNav }) {
+// Inline Journey rink + station-detail pair, reused by the dedicated
+// JourneyScreen and the Home hero. `onViewFull` surfaces a small link
+// back to the full screen when rendered inline on Home.
+function JourneyBody({ player, onViewFull }) {
   const [selectedIdx, setSelectedIdx] = useState(null);
   const trainingSessions = (() => {
     try { return (getTrainingLog(player?.id || "__demo__")?.sessions) || []; }
@@ -2980,25 +2968,21 @@ function JourneyScreen({ player, onBack, onNav }) {
   const { quizzes, training, stations, nextIdx } = state;
   const nextStation = nextIdx !== null ? stations[nextIdx] : null;
   const unlockedCount = stations.filter(s => s.unlocked).length;
-  const currentIdx = nextIdx === null ? stations.length - 1 : Math.max(0, nextIdx - 1);
   const skaterPos = JOURNEY_NODE_XY[nextIdx !== null ? nextIdx : stations.length - 1];
   const selected = selectedIdx !== null ? stations[selectedIdx] : null;
 
   return (
-    <div style={{minHeight:"100vh",background:C.bg,color:C.white,fontFamily:FONT.body,paddingBottom:80}}>
-      <StickyHeader>
-        <div style={{maxWidth:560,margin:"0 auto",display:"flex",alignItems:"center",gap:"1rem"}}>
-          <BackBtn onClick={onBack}/>
-          <div style={{flex:1}}>
-            <div style={{fontFamily:FONT.display,fontWeight:800,fontSize:"1.1rem"}}>Ice IQ Journey</div>
-            <div style={{fontSize:11,color:C.dimmer}}>{unlockedCount}/{stations.length} stations · {quizzes} quiz{quizzes===1?"":"zes"} · {training} training session{training===1?"":"s"}</div>
+    <>
+      <Card style={{marginBottom:"1rem",padding:"1rem .75rem .5rem"}}>
+        {onViewFull && (
+          <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:".4rem"}}>
+            <div>
+              <Label style={{marginBottom:0}}>Ice IQ Journey</Label>
+              <div style={{fontSize:11,color:C.dimmer,marginTop:2}}>{unlockedCount}/{stations.length} stations · {quizzes} quiz{quizzes===1?"":"zes"} · {training} session{training===1?"":"s"}</div>
+            </div>
+            <button onClick={onViewFull} style={{background:"none",border:"none",color:C.gold,cursor:"pointer",fontSize:12,fontFamily:FONT.body,fontWeight:700,padding:0}}>View full →</button>
           </div>
-        </div>
-      </StickyHeader>
-
-      <div style={{padding:"1.25rem",maxWidth:560,margin:"0 auto"}}>
-        {/* Rink-path visual */}
-        <Card style={{marginBottom:"1rem",padding:"1rem .75rem .5rem"}}>
+        )}
           <svg viewBox="0 0 800 320" style={{width:"100%",height:"auto",display:"block"}}>
             {/* Ice */}
             <rect x="20" y="40" width="760" height="260" rx="40" fill={C.ice} stroke={C.rink} strokeWidth="2" opacity="0.22"/>
@@ -3108,7 +3092,31 @@ function JourneyScreen({ player, onBack, onNav }) {
             </Card>
           );
         })()}
+    </>
+  );
+}
 
+function JourneyScreen({ player, onBack, onNav }) {
+  const trainingSessions = (() => {
+    try { return (getTrainingLog(player?.id || "__demo__")?.sessions) || []; }
+    catch { return []; }
+  })();
+  const state = getIceIQJourneyState(player.quizHistory, trainingSessions, player?.level);
+  const { quizzes, training, stations } = state;
+  const unlockedCount = stations.filter(s => s.unlocked).length;
+  return (
+    <div style={{minHeight:"100vh",background:C.bg,color:C.white,fontFamily:FONT.body,paddingBottom:80}}>
+      <StickyHeader>
+        <div style={{maxWidth:560,margin:"0 auto",display:"flex",alignItems:"center",gap:"1rem"}}>
+          <BackBtn onClick={onBack}/>
+          <div style={{flex:1}}>
+            <div style={{fontFamily:FONT.display,fontWeight:800,fontSize:"1.1rem"}}>Ice IQ Journey</div>
+            <div style={{fontSize:11,color:C.dimmer}}>{unlockedCount}/{stations.length} stations · {quizzes} quiz{quizzes===1?"":"zes"} · {training} training session{training===1?"":"s"}</div>
+          </div>
+        </div>
+      </StickyHeader>
+      <div style={{padding:"1.25rem",maxWidth:560,margin:"0 auto"}}>
+        <JourneyBody player={player}/>
         <div style={{marginTop:"1rem",display:"grid",gridTemplateColumns:"1fr 1fr",gap:".6rem"}}>
           <PrimaryBtn onClick={() => onNav("quiz")}>Take a quiz →</PrimaryBtn>
           <button onClick={() => onNav("profile")} style={{background:C.bgElevated,color:C.white,border:`1px solid ${C.border}`,borderRadius:10,padding:".85rem",cursor:"pointer",fontWeight:800,fontSize:14,fontFamily:FONT.body}}>Log a session →</button>
