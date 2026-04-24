@@ -1858,7 +1858,6 @@ function Quiz({ player, onFinish, onBack, tier, onUpgrade }) {
                   </div>
                 );
               })()}
-              {!userCorrect && <ReflectionPrompt question={q} />}
             </Card>
             {quizDone ? (
               <button onClick={() => onFinish(results, seqPerfect, mistakeStreak)} style={{background:C.gold,color:C.bg,border:"none",borderRadius:12,padding:".9rem",cursor:"pointer",fontWeight:700,fontSize:14,fontFamily:FONT.body,width:"100%"}}>
@@ -3043,8 +3042,6 @@ function Report({ player, onBack, demoCoachData, tier, onUpgrade }) {
       )}
 
       <MasteryStrip quizHistory={player.quizHistory} />
-
-      <ReflectionSummary />
 
       {/* Locked upsell cards (Coach Feedback teaser + Skills Map) have been
           moved to the bottom of this screen so FREE users see their own
