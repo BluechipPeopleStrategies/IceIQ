@@ -1050,7 +1050,7 @@ function Home({ player, onNav, demoMode, subscriptionTier, questFlagsBump, onPro
         </div>
 
         {/* For-parents start-here card — dismissible, persists via LS */}
-        <HomeStartHereCard onRead={() => onNav("parents")} />
+        <HomeStartHereCard onRead={() => onNav("parents")} subscriptionTier={subscriptionTier} />
 
         {/* First-Five quest checklist — hidden once dismissed */}
         {!questDismissed && !firstLineSeen && (
