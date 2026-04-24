@@ -10,7 +10,6 @@ import { markSignupIntent, logSignupComplete } from "./utils/signupTelemetry";
 // utils/demoTransfer removed — player demo was killed; signup now writes
 // to Supabase from the first interaction, no LS→cloud transfer needed.
 import { DEPTH_SLOTS, getDepthChart, setAssignment as setDepthAssignment, seedDemoDepthChart, clearDemoDepthChart } from "./utils/depthChart";
-import IceIQRink from "./IceIQRink.jsx";
 import IceIQRinkQuestion from "./IceIQRinkQuestion.jsx";
 import { COMPETENCIES, getIceIQJourneyState, GAME_SENSE_UNLOCK_SESSIONS, calcCompetencyScores, calcGameSenseScore, ICE_IQ_THRESHOLDS, ICE_IQ_JOURNEY_LABELS } from "./utils/gameSense.js";
 import { getTrainingLog, seedDemoTrainingForRoster } from "./utils/trainingLog.js";
@@ -967,7 +966,7 @@ function Home({ player, onNav, demoMode, subscriptionTier, questFlagsBump, onPro
   const latest = quizHistory[quizHistory.length-1];
   const iq = latest ? calcWeightedIQ(latest.results) : null;
   const tier = iq !== null ? getTier(iq) : null;
-  const showProPreview = demoMode || subscriptionTier === "FREE";
+  const showProPreview = (demoMode || subscriptionTier === "FREE") && subscriptionTier !== "PRO" && subscriptionTier !== "TEAM";
 
   // Quest checklist state
   const flags = useQuestFlags(questFlagsBump);
@@ -3886,19 +3885,6 @@ function LandingInsightsCard() {
   );
 }
 
-// Landing-page rink teaser — "Click the slot". Self-contained question
-// object for the inline zone-click renderer in AuthScreen. Not routed
-// through the bank or IceIQRinkQuestion dispatcher; it only needs a
-// rink scene + a slot polygon + a couple of wrong-answer polygons.
-const LANDING_RINK_SLOT_POLYGON = [
-  { x: 470, y: 120 }, { x: 560, y: 135 },
-  { x: 560, y: 165 }, { x: 470, y: 180 },
-];
-const LANDING_RINK_HOMEPLATE_POLYGON = [
-  { x: 430, y: 105 }, { x: 560, y: 115 },
-  { x: 560, y: 185 }, { x: 430, y: 195 },
-];
-
 function AuthScreen({ onAuthenticated, onDemo, onDevEnter, onPreview, prefill }) {
   const [mode, setMode] = useState(prefill ? "signup" : "login"); // login | signup | forgot
   const [email, setEmail] = useState("");
@@ -3909,8 +3895,6 @@ function AuthScreen({ onAuthenticated, onDemo, onDevEnter, onPreview, prefill })
   const [err, setErr] = useState("");
   const [resetSent, setResetSent] = useState(false);
   const [qbStats, setQbStats] = useState({ questionCount: null, ageGroupCount: null });
-  const [rinkTeaserOpen, setRinkTeaserOpen] = useState(false);
-  const [teaserAnswered, setTeaserAnswered] = useState(false);
   // Show the dev-bypass panel whenever running `npm run dev` — the LS flag
   // is still honoured in production builds so it stays invisible to real users.
   const devBypass = isDevBypassEnabled() || (typeof import.meta !== "undefined" && import.meta.env && import.meta.env.DEV);
@@ -4108,55 +4092,6 @@ function AuthScreen({ onAuthenticated, onDemo, onDevEnter, onPreview, prefill })
             </a>
           ))}
         </div>
-
-        {/* Live rink teaser — lazy-reveals a real playable scenario on tap */}
-        {!rinkTeaserOpen ? (
-          <button onClick={() => setRinkTeaserOpen(true)}
-            style={{width:"100%",background:"linear-gradient(135deg,rgba(252,76,2,0.12),rgba(91,164,232,0.08))",border:`1px solid ${C.goldBorder}`,borderRadius:14,padding:"1rem 1.1rem",cursor:"pointer",color:C.white,fontFamily:FONT.body,textAlign:"left",marginBottom:"1.25rem",display:"flex",alignItems:"center",gap:".85rem"}}>
-            <span style={{fontSize:32,flexShrink:0}}>🏒</span>
-            <div style={{flex:1,minWidth:0}}>
-              <div style={{fontSize:10,letterSpacing:".14em",textTransform:"uppercase",color:C.gold,fontWeight:700,marginBottom:2}}>Try it — no signup</div>
-              <div style={{fontSize:14,color:C.white,fontWeight:700,lineHeight:1.3}}>Try some sample questions now →</div>
-              <div style={{fontSize:11,color:"rgba(248,250,252,.55)",marginTop:2}}>See how Ice-IQ teaches game sense.</div>
-            </div>
-            <span style={{color:C.gold,fontSize:18,flexShrink:0}}>→</span>
-          </button>
-        ) : (
-          <div style={{background:"rgba(6,12,22,0.82)",backdropFilter:"blur(20px)",WebkitBackdropFilter:"blur(20px)",border:`1px solid ${C.goldBorder}`,borderRadius:14,padding:"1rem",marginBottom:"1.25rem"}}>
-            <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:".6rem"}}>
-              <div style={{fontSize:10,letterSpacing:".14em",textTransform:"uppercase",color:C.gold,fontWeight:700}}>Sample scenario · U9</div>
-              <button onClick={() => { setRinkTeaserOpen(false); setTeaserAnswered(false); }} style={{background:"none",border:"none",color:C.dimmer,cursor:"pointer",fontSize:12,fontFamily:FONT.body,padding:0}}>Close</button>
-            </div>
-            <div style={{fontSize:13,color:C.white,fontWeight:600,margin:"0 0 .6rem"}}>The slot is the middle spot in front of the net. Tap it on the rink.</div>
-            <div style={{position:"relative",borderRadius:10,overflow:"hidden",border:`1px solid ${C.border}`}}>
-              <IceIQRink view="right" zone="slot" markers={[{type:"goalie",x:560,y:150}]} />
-              <svg viewBox="285 -15 330 330" preserveAspectRatio="none"
-                style={{position:"absolute",inset:0,width:"100%",height:"100%",pointerEvents:teaserAnswered?"none":"auto"}}>
-                <polygon points={LANDING_RINK_SLOT_POLYGON.map(p=>`${p.x},${p.y}`).join(" ")}
-                  fill={teaserAnswered?"rgba(34,197,94,0.3)":"transparent"} stroke={teaserAnswered?"#22c55e":"transparent"}
-                  strokeWidth="2" style={{cursor:teaserAnswered?"default":"pointer"}}
-                  onClick={() => !teaserAnswered && setTeaserAnswered("correct")} />
-                <polygon points={LANDING_RINK_HOMEPLATE_POLYGON.map(p=>`${p.x},${p.y}`).join(" ")}
-                  fill="transparent" stroke="transparent"
-                  style={{cursor:teaserAnswered?"default":"pointer"}}
-                  onClick={() => !teaserAnswered && setTeaserAnswered("partial")} />
-                <rect x="387" y="0" width="213" height="300" fill="transparent"
-                  style={{cursor:teaserAnswered?"default":"pointer"}}
-                  onClick={() => !teaserAnswered && setTeaserAnswered("wrong")} />
-              </svg>
-            </div>
-            {teaserAnswered && (
-              <div style={{marginTop:".85rem",padding:".85rem 1rem",
-                background:teaserAnswered==="correct"?"rgba(34,197,94,0.12)":teaserAnswered==="partial"?"rgba(234,179,8,0.12)":"rgba(252,76,2,0.1)",
-                border:`1px solid ${teaserAnswered==="correct"?C.greenBorder:teaserAnswered==="partial"?"rgba(234,179,8,0.3)":C.goldBorder}`,
-                borderRadius:10,fontSize:13,color:C.white,textAlign:"center",lineHeight:1.55}}>
-                {teaserAnswered==="correct" && "✓ That's the slot — the most dangerous shot on the ice. This is what Ice-IQ trains. Sign up below to unlock 100+ rink scenarios."}
-                {teaserAnswered==="partial" && "~ Close. The home-plate area includes the slot, but the slot itself is dead centre. Sign up below to dig into reads like this."}
-                {teaserAnswered==="wrong" && "Middle of the ice, right in front of the net. That's the slot. Sign up below to practice 100+ reads like this."}
-              </div>
-            )}
-          </div>
-        )}
 
         {/* Sample Game Sense radar — visual-only preview of what a player's
             profile looks like. No data persists pre-signup. */}
@@ -5477,7 +5412,13 @@ export default function App() {
       </div>
 
       {!["quiz","results","weekly","parents","coaches","players","associations"].includes(screen) && (
-        <BottomNav active={screen} onNav={setScreen} tier={tier}/>
+        <BottomNav active={screen} onNav={(next) => {
+          // In preview mode, tapping Home while already on home returns to
+          // the public landing — otherwise the button appears inert and
+          // users have no obvious way out of the preview.
+          if (profile?.__preview && next === "home" && screen === "home") { exitDemo(); return; }
+          setScreen(next);
+        }} tier={tier}/>
       )}
 
       {upgradePrompt && (
