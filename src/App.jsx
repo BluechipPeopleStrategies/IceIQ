@@ -18,6 +18,7 @@ import { calcTeamCompetencyAverages, GRADE_LEVEL_THRESHOLD } from "./utils/coach
 import { HockeyInsightWidget, BottomNav, TrainingLog, HomeStartHereCard } from "./widgets.jsx";
 import { HomeworkCard, CoachAssignmentsSection } from "./assignments.jsx";
 import { CoachTrainingSection } from "./trainingLogCoach.jsx";
+import { CoachTeamAnalyticsSection } from "./coachAnalytics.jsx";
 import { canSwitchAgeGroup, recordAgeGroupSwitch, getAgeGroupLock, setAgeGroupLock, checkSeasonReset } from "./utils/deviceLock";
 import { lsGetStr, lsSetStr, lsGetJSON, lsSetJSON } from "./utils/storage.js";
 import {
@@ -5335,7 +5336,16 @@ function CoachHome({ profile, onSignOut, onOpenPlayer, demoMode, subscriptionTie
     setExpandedTeam(teamId);
     if (!rosters[teamId]) {
       const r = await SB.getTeamRoster(teamId);
-      setRosters(p => ({...p, [teamId]: r}));
+      // Bulk-fetch quiz history for the roster so TeamFocusCard + the new
+      // analytics section can compute team-wide accuracy without N+1 round
+      // trips. RLS limits the rows to this coach's players.
+      const playerIds = (r || []).map(p => p?.id).filter(Boolean);
+      const byPlayer = await SB.getTeamQuizHistory(playerIds);
+      const withHistory = (r || []).map(p => ({
+        ...p,
+        quiz_history: byPlayer[p.id] || [],
+      }));
+      setRosters(prev => ({ ...prev, [teamId]: withHistory }));
     }
   }
 
@@ -5392,6 +5402,7 @@ function CoachHome({ profile, onSignOut, onOpenPlayer, demoMode, subscriptionTie
                     <RosterRow key={p.id} player={p} onRate={() => onOpenPlayer(p)}/>
                   ))}
                   <DepthChartSection teamId={t.id} roster={roster} onChange={onBumpQuestFlags}/>
+                  <CoachTeamAnalyticsSection roster={roster}/>
                   <CoachAssignmentsSection teamId={t.id} coachId={profile.id} roster={roster}/>
                   {canAccess("coachDashboard", subscriptionTier || "FREE").allowed && (
                     <CoachTrainingSection teamId={t.id} roster={roster}/>

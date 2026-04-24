@@ -174,6 +174,31 @@ export async function getPlayerSessions(playerId) {
   return data || [];
 }
 
+// Bulk-fetch quiz history for every player on a coach's roster. RLS policy
+// `coach reads team sessions` (schema.sql) permits this when auth.uid() is
+// the coach of a team the player is on. Returns a map of
+// { playerId: [{ results, score, date }] } suitable for attaching to roster
+// rows before calling calcTeamCompetencyAverages().
+export async function getTeamQuizHistory(playerIds) {
+  if (!supabase || !Array.isArray(playerIds) || !playerIds.length) return {};
+  const { data, error } = await supabase.from("quiz_sessions")
+    .select("player_id, results, score, completed_at")
+    .in("player_id", playerIds)
+    .order("completed_at", { ascending: true });
+  if (error) { warn("getTeamQuizHistory", error); return {}; }
+  const byPlayer = {};
+  for (const row of data || []) {
+    if (!byPlayer[row.player_id]) byPlayer[row.player_id] = [];
+    byPlayer[row.player_id].push({
+      results: row.results,
+      score: row.score,
+      date: (row.completed_at || "").slice(0, 10),
+      completed_at: row.completed_at,
+    });
+  }
+  return byPlayer;
+}
+
 // ─────────────────────────────────────────────
 // GOALS
 // ─────────────────────────────────────────────
