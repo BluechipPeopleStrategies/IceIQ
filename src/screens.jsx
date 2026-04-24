@@ -1876,8 +1876,8 @@ export function ParentsPage({ onNavigate, onContact, photoSrc }) {
         <div style={S.eyebrow}>For first-time parents</div>
         <h1 style={{...S.h1, fontFamily:"'Caveat', 'Kalam', cursive", fontWeight:700, fontSize:44, letterSpacing:0}}>Welcome to Ice-IQ.</h1>
         <p style={{...S.lead, fontFamily:"'Caveat', 'Kalam', cursive", fontWeight:500, fontSize:22, lineHeight:1.5}}>
-          Your kid already knows how to chase a puck. This is where they learn
-          to think the game.
+          Your kid may already know how to chase a puck. This is where they
+          learn to think the game.
         </p>
 
         {/* Table of contents */}
