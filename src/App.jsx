@@ -22,6 +22,7 @@ import { CoachTeamAnalyticsSection } from "./coachAnalytics.jsx";
 import { CoachChallengeSection, ChallengeCard, ChallengeRunScreen } from "./teamChallenges.jsx";
 import { ToastContainer, toast } from "./toast.jsx";
 import { QotDCard, QotDScreen } from "./questionOfDay.jsx";
+import { SpeedRoundCard, SpeedRoundScreen } from "./speedRound.jsx";
 import { canSwitchAgeGroup, recordAgeGroupSwitch, getAgeGroupLock, setAgeGroupLock, checkSeasonReset } from "./utils/deviceLock";
 import { lsGetStr, lsSetStr, lsGetJSON, lsSetJSON } from "./utils/storage.js";
 import {
@@ -1160,6 +1161,9 @@ function Home({ player, onNav, demoMode, subscriptionTier, questFlagsBump, onPro
 
         {/* Question of the Day — one shared question per age per day */}
         <QotDCard player={player} demoMode={demoMode} onOpen={(q) => onNav({ kind: "qotd", question: q })} />
+
+        {/* Speed Round — 15 T/F, 10 seconds each, pattern break */}
+        <SpeedRoundCard player={player} demoMode={demoMode} onStart={() => onNav({ kind: "speed" })} />
 
         {/* First-Five quest checklist — hidden once dismissed */}
         {!questDismissed && !firstLineSeen && (
@@ -6240,6 +6244,13 @@ export default function App() {
             question={screen.question}
             player={player}
             onBack={() => setScreen("home")}
+          />
+        )}
+        {typeof screen === "object" && screen.kind === "speed" && (
+          <SpeedRoundScreen
+            player={player}
+            onBack={() => setScreen("home")}
+            onDone={() => setScreen("home")}
           />
         )}
         {screen === "parent" && <Suspense fallback={<LazyFallback/>}><ParentAssessmentScreen player={player} demoMode={demoMode} onSignup={() => triggerSignup("parent_demo")} onBack={()=>setScreen("profile")} onSave={(ratings)=>{ setPlayer(p => ({...p, parentRatings: {...ratings, updated_at: new Date().toISOString().slice(0,10)}})); setScreen("profile"); }}/></Suspense>}
