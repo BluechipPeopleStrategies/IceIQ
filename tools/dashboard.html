@@ -574,17 +574,27 @@ function moveToAge(id, toLevel) {
 function toggleMultiAge(id, level) {
   const found = allRows().find(r => r.q.id === id);
   if (!found) return;
-  const cur = Array.isArray(found.q.levels) ? [...found.q.levels] : [found.level];
+  // Read current levels from the merged view (q + EDITS) so successive
+  // clicks accumulate. Reading found.q.levels alone was stale and caused
+  // each click to overwrite the previous one.
+  const editedLevels = EDITS[id] && Array.isArray(EDITS[id].levels) ? EDITS[id].levels : null;
+  const baseLevels = editedLevels
+    || (Array.isArray(found.q.levels) ? found.q.levels : null)
+    || [found.level];
+  const cur = [...baseLevels];
   const idx = cur.indexOf(level);
   if (idx >= 0) cur.splice(idx, 1);
   else cur.push(level);
-  // If only the primary level remains, remove the field.
-  if (cur.length === 0 || (cur.length === 1 && cur[0] === found.level)) {
-    editField(id, "levels", undefined);
-    delete EDITS[id].levels;
-    if (Object.keys(EDITS[id]).length === 0) delete EDITS[id];
-    saveLS(LS_EDITS, EDITS);
-    updateDirtyBadge();
+  // Always include the primary level — toggling it off doesn't make sense.
+  if (!cur.includes(found.level)) cur.push(found.level);
+  // If only the primary level remains, remove the field entirely.
+  if (cur.length === 1 && cur[0] === found.level) {
+    if (EDITS[id]) {
+      delete EDITS[id].levels;
+      if (Object.keys(EDITS[id]).length === 0) delete EDITS[id];
+      saveLS(LS_EDITS, EDITS);
+      updateDirtyBadge();
+    }
   } else {
     editField(id, "levels", cur);
   }
@@ -895,7 +905,11 @@ function detailHTML(q, primaryLevel) {
   const curWhy = getField(q, "why") || "";
   const curCat = getField(q, "cat") || "";
   const curD = (EDITS[id] && EDITS[id].d !== undefined) ? EDITS[id].d : (q.d || 1);
-  const activeLevels = new Set(Array.isArray(q.levels) && q.levels.length ? q.levels : [primaryLevel]);
+  // Pull the merged levels list (EDITS overrides q.levels) so the chip
+  // highlights stay in sync between successive clicks.
+  const editedLevels = EDITS[id] && Array.isArray(EDITS[id].levels) ? EDITS[id].levels : null;
+  const mergedLevels = editedLevels || (Array.isArray(q.levels) ? q.levels : null) || [primaryLevel];
+  const activeLevels = new Set(mergedLevels.length ? mergedLevels : [primaryLevel]);
   const catOptions = getAllCats();
   const ageOptions = AGE_ORDER;
   const merged = { ...q, ...(EDITS[id] || {}) };

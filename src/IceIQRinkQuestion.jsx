@@ -578,7 +578,21 @@ function DragPlace({ question, onAnswer, onReset }) {
           return (
             <span key={c.id}
               draggable={!isUsed && !checked}
-              onDragStart={() => { dragChipId.current = c.id; }}
+              onDragStart={(e) => {
+                dragChipId.current = c.id;
+                // Without an explicit drag image, browsers screenshot the
+                // <span> as a plain rectangle that drops the chip's pill
+                // shape + colors. Snapshot a styled clone instead.
+                const clone = e.currentTarget.cloneNode(true);
+                clone.style.position = "absolute";
+                clone.style.top = "-1000px";
+                clone.style.left = "-1000px";
+                clone.style.opacity = "0.95";
+                document.body.appendChild(clone);
+                const rect = e.currentTarget.getBoundingClientRect();
+                e.dataTransfer.setDragImage(clone, rect.width / 2, rect.height / 2);
+                setTimeout(() => clone.remove(), 0);
+              }}
               onClick={() => {
                 if (!isUsed || checked) return;
                 const slotId = Object.keys(placed).find(k => placed[k] === c.id);

@@ -3353,6 +3353,7 @@ function QuestionPreviewPage({ questionId }) {
   const [question, setQuestion] = useState(null);
   const [err, setErr] = useState(null);
   const [key, setKey] = useState(0); // forces a re-mount on Retry
+  const [verdict, setVerdict] = useState(null); // "ok" | "wrong" | null
   useEffect(() => {
     let cancelled = false;
     loadQB().then(qb => {
@@ -3395,10 +3396,26 @@ function QuestionPreviewPage({ questionId }) {
         </div>
         <button onClick={() => setKey(k => k + 1)} style={{background:C.bgElevated,border:`1px solid ${C.border}`,color:C.dimmer,borderRadius:8,padding:".3rem .75rem",cursor:"pointer",fontSize:12,fontFamily:FONT.body}}>↺ Reset</button>
       </div>
+      {verdict && (
+        <div style={{
+          marginBottom:".9rem",padding:".7rem .9rem",borderRadius:10,
+          background: verdict === "ok" ? "rgba(34,197,94,.12)" : "rgba(239,68,68,.12)",
+          border: `1px solid ${verdict === "ok" ? C.greenBorder : C.redBorder}`,
+          display:"flex",alignItems:"center",justifyContent:"space-between",gap:".75rem"
+        }}>
+          <div style={{fontSize:13,fontWeight:800,color: verdict === "ok" ? C.green : C.red,letterSpacing:".04em"}}>
+            {verdict === "ok" ? "✓ Correct" : "✗ Wrong"}
+          </div>
+          <button onClick={() => { setVerdict(null); setKey(k => k + 1); }}
+            style={{background:C.bgElevated,border:`1px solid ${C.border}`,color:C.dimmer,borderRadius:8,padding:".3rem .75rem",cursor:"pointer",fontSize:12,fontFamily:FONT.body}}>
+            ↺ Reset
+          </button>
+        </div>
+      )}
       {isRinkQ ? (
-        <IceIQRinkQuestion question={question} onAnswer={() => {}} />
+        <IceIQRinkQuestion question={question} onAnswer={(ok) => setVerdict(ok ? "ok" : "wrong")} />
       ) : (
-        <QuestionPreviewFallback question={question}/>
+        <QuestionPreviewFallback question={question} onAnswer={(ok) => setVerdict(ok ? "ok" : "wrong")}/>
       )}
     </div>
   );
@@ -3406,12 +3423,16 @@ function QuestionPreviewPage({ questionId }) {
 
 // Minimal MC / TF / Sequence fallback for non-rink types so the preview
 // URL works for any question id, not just interactive rink ones.
-function QuestionPreviewFallback({ question }) {
+function QuestionPreviewFallback({ question, onAnswer }) {
   const [sel, setSel] = useState(null);
   const q = question;
   const isTF = q.type === "tf";
   const answered = sel !== null;
-  const ok = isTF ? (sel === q.ok) : (sel === q.ok);
+  const correctIdx = typeof q.correct === "number" ? q.correct : (typeof q.ok === "number" ? q.ok : null);
+  const ok = isTF ? (sel === q.ok) : (correctIdx !== null && sel === correctIdx);
+  useEffect(() => {
+    if (answered && onAnswer) onAnswer(ok);
+  }, [answered]);
   return (
     <div>
       <div style={{background:C.purpleDim,border:`1px solid ${C.purpleBorder}`,borderRadius:12,padding:"1rem 1.1rem",marginBottom:"1.25rem"}}>
@@ -3436,8 +3457,8 @@ function QuestionPreviewFallback({ question }) {
         <div style={{marginBottom:"1rem"}}>
           {(q.choices || q.opts || []).map((choice, i) => {
             const isSel = sel === i;
-            const showRight = answered && i === q.ok;
-            const showWrong = answered && isSel && i !== q.ok;
+            const showRight = answered && i === correctIdx;
+            const showWrong = answered && isSel && i !== correctIdx;
             return (
               <button key={i} onClick={() => !answered && setSel(i)} disabled={answered}
                 style={{width:"100%",textAlign:"left",marginBottom:".5rem",background:showRight?"rgba(34,197,94,.12)":showWrong?"rgba(239,68,68,.12)":C.bgElevated,border:`1.5px solid ${showRight?C.green:showWrong?C.red:C.border}`,borderRadius:10,padding:".85rem 1rem",cursor:answered?"default":"pointer",color:showRight?C.green:showWrong?C.red:C.white,fontFamily:FONT.body,fontSize:14}}>
