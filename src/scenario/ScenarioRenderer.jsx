@@ -185,7 +185,12 @@ export default function ScenarioRenderer({ scenario, playerId, onAnswer }) {
         </Card>
       )}
 
-      <RinkStage stage={scenario.stage} actors={scenario.actors} scanWindow={scenario.scanWindow}>
+      <RinkStage
+        stage={scenario.stage}
+        actors={scenario.actors}
+        scanWindow={scenario.scanWindow}
+        highlightIds={result?.intercepterId ? [result.intercepterId] : []}
+      >
         {(svgPoint) => (
           <PrimComponent
             interaction={scenario.interaction}

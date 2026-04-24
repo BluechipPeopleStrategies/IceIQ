@@ -170,6 +170,8 @@
  * @property {PreviewWindow} [preview]// IntelliGym pattern-recognition lock
  */
 
+import { ZONES } from "./zones.js";
+
 // ─────────────────────────────────────────────────────────────────────────
 // Lightweight validator. Throws on hard schema errors; returns warnings
 // for soft issues (clipped coords, unknown zone ids, etc.).
@@ -178,6 +180,23 @@ const VALID_VIEWS = new Set(["full", "left", "right", "neutral"]);
 const VALID_ACTOR_KINDS = new Set(["player", "teammate", "defender", "goalie", "puck", "text", "number"]);
 const VALID_VERBS = new Set(["skate", "carry", "pass", "shoot", "screen", "check", "backcheck"]);
 const VALID_INTERACTION_KINDS = new Set(["point", "path", "selection", "sequence"]);
+
+// Mirror the path primitive's interception threshold so the validator
+// rejects scenarios the engine itself would call wrong.
+const VALIDATOR_INTERCEPT_RADIUS = 0.035;
+
+function lineHitsCircle(a, b, c, r) {
+  const dx = b.x - a.x, dy = b.y - a.y;
+  const len2 = dx * dx + dy * dy;
+  let t = 0;
+  if (len2 > 0) {
+    t = ((c.x - a.x) * dx + (c.y - a.y) * dy) / len2;
+    t = Math.max(0, Math.min(1, t));
+  }
+  const px = a.x + t * dx, py = a.y + t * dy;
+  const d = Math.sqrt((c.x - px) ** 2 + (c.y - py) ** 2);
+  return d < r;
+}
 
 export function validateScenario(s) {
   const errs = [];
@@ -212,6 +231,37 @@ export function validateScenario(s) {
   if (!s.feedback || typeof s.feedback.right !== "string" || typeof s.feedback.wrong !== "string") {
     errs.push("feedback.right and feedback.wrong are required strings");
   }
+
+  // Authoring sanity check: for path interactions, reject scenarios where
+  // the straight-line correct answer would be intercepted by a defender.
+  // The runtime scorer would mark the user wrong for that pass, so
+  // declaring it correct would be self-contradictory.
+  if (s.interaction?.kind === "path" && s.correct?.kind === "path" && Array.isArray(s.actors)) {
+    try {
+      const fromActor = s.actors.find(a => a && a.id === s.interaction.from);
+      const endTarget = s.correct.end;
+      if (fromActor && endTarget) {
+        // Resolve target inline (avoid circular import to zones.js).
+        let endXY = null;
+        if (typeof endTarget.x === "number" && typeof endTarget.y === "number") {
+          endXY = { x: endTarget.x, y: endTarget.y };
+        } else if (typeof endTarget.zoneId === "string" && ZONES[endTarget.zoneId]) {
+          const z = ZONES[endTarget.zoneId];
+          endXY = { x: z.x, y: z.y };
+        }
+        if (endXY) {
+          const defenders = s.actors.filter(a => a && a.kind === "defender");
+          for (const def of defenders) {
+            if (lineHitsCircle(fromActor, endXY, def, VALIDATOR_INTERCEPT_RADIUS)) {
+              errs.push(`correct path is intercepted by defender "${def.id}" — author the scene so the right answer has a clean lane`);
+              break;
+            }
+          }
+        }
+      }
+    } catch { /* best-effort — never crash the validator */ }
+  }
+
   return { ok: errs.length === 0, errs, warns };
 }
 

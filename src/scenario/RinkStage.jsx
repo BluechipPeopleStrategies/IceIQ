@@ -46,7 +46,29 @@ const ACTOR_COLORS = {
   puck:     { fill: "#0a0a0a", stroke: "#fff", text: "#fff" },
 };
 
-function ActorMarker({ actor }) {
+// Subtle drop shadow under every marker — same filter for everyone, gives
+// the actors a little lift off the ice without becoming a video-game mood.
+const SHADOW_FILTER_ID = "rinkstage-actor-shadow";
+const HIGHLIGHT_FILTER_ID = "rinkstage-actor-highlight";
+
+function StageDefs() {
+  return (
+    <defs>
+      <filter id={SHADOW_FILTER_ID} x="-30%" y="-30%" width="160%" height="160%">
+        <feGaussianBlur in="SourceAlpha" stdDeviation="1.2"/>
+        <feOffset dx="0" dy="1.2"/>
+        <feComponentTransfer><feFuncA type="linear" slope="0.55"/></feComponentTransfer>
+        <feMerge><feMergeNode/><feMergeNode in="SourceGraphic"/></feMerge>
+      </filter>
+      <filter id={HIGHLIGHT_FILTER_ID} x="-50%" y="-50%" width="200%" height="200%">
+        <feGaussianBlur stdDeviation="2.5"/>
+        <feMerge><feMergeNode/><feMergeNode/><feMergeNode in="SourceGraphic"/></feMerge>
+      </filter>
+    </defs>
+  );
+}
+
+function ActorMarker({ actor, highlight }) {
   const p = denorm(actor);
   const palette = ACTOR_COLORS[actor.kind] || ACTOR_COLORS.player;
   const labelStyle = {
@@ -90,15 +112,28 @@ function ActorMarker({ actor }) {
   }
 
   return (
-    <g transform={`translate(${p.x},${p.y})`}>
+    <g transform={`translate(${p.x},${p.y})`}
+      filter={`url(#${highlight ? HIGHLIGHT_FILTER_ID : SHADOW_FILTER_ID})`}>
+      {/* Highlight ring under the body — only when this actor is being
+          flagged (e.g. the defender who intercepted a pass). */}
+      {highlight && (
+        <circle cx="0" cy="0" r="20" fill="none"
+          stroke="#ef4444" strokeWidth="2.4" strokeDasharray="3 3" opacity="0.95">
+          <animate attributeName="r" values="18;22;18" dur="0.8s" repeatCount="indefinite"/>
+          <animate attributeName="opacity" values="0.95;0.45;0.95" dur="0.8s" repeatCount="indefinite"/>
+        </circle>
+      )}
       {stickLine}
-      {/* GOALIE — rounded square */}
+      {/* GOALIE — taller rounded rect (silhouette) with mask cutout */}
       {actor.kind === "goalie" && (
         <>
-          <rect x="-12" y="-12" width="24" height="24" rx="4"
+          <rect x="-10" y="-13" width="20" height="26" rx="4"
             fill={palette.fill} stroke={palette.stroke} strokeWidth="1.6"/>
-          <text x="0" y="4" textAnchor="middle" fill={palette.text}
-            fontSize="11" fontWeight="800" style={labelStyle}>G</text>
+          {/* Tiny "mask grill" strokes — non-essential but evokes goalie */}
+          <line x1="-4" y1="-7" x2="4" y2="-7" stroke="#fff" strokeWidth="0.6" opacity="0.55"/>
+          <line x1="-4" y1="-4" x2="4" y2="-4" stroke="#fff" strokeWidth="0.6" opacity="0.55"/>
+          <text x="0" y="6" textAnchor="middle" fill={palette.text}
+            fontSize="10" fontWeight="800" style={labelStyle}>G</text>
         </>
       )}
 
@@ -172,7 +207,8 @@ function ActorMarker({ actor }) {
  *        Render-prop: the primitive layer. Receives a helper that converts
  *        a DOM event to normalized 0..1 rink coords.
  */
-export default function RinkStage({ stage, actors, scanWindow, children }) {
+export default function RinkStage({ stage, actors, scanWindow, highlightIds, children }) {
+  const highlightSet = useMemo(() => new Set(Array.isArray(highlightIds) ? highlightIds : []), [highlightIds]);
   const svgRef = useRef(null);
   const viewBox = useMemo(() => computeViewBox(stage.view), [stage.view]);
 
@@ -217,9 +253,12 @@ export default function RinkStage({ stage, actors, scanWindow, children }) {
         viewBox={viewBox}
         preserveAspectRatio="none"
         style={{ position: "absolute", inset: 0, width: "100%", height: "100%" }}>
+        <StageDefs/>
         {/* Actors plotted underneath the primitive's interactive layer.
             Filtered by the scan-then-hide drill when active. */}
-        {visibleActors.map(a => <ActorMarker key={a.id} actor={a}/>)}
+        {visibleActors.map(a => (
+          <ActorMarker key={a.id} actor={a} highlight={highlightSet.has(a.id)}/>
+        ))}
         {scanElapsed && hideKinds && hideKinds.size > 0 && (
           <text x="50%" y="20" textAnchor="middle" fill="#eab308"
             fontSize="11" fontWeight="800" letterSpacing="0.06em"

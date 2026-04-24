@@ -87,11 +87,16 @@ export function scorePath(userPath, correct, opts = {}) {
   const endPoint = userPath[userPath.length - 1];
   const d = distance(endPoint, target);
   // Interception check (only when defenders are passed in — primitive is
-  // pure otherwise).
+  // pure otherwise). Defenders may be {x,y} or {id,x,y}; we surface the id
+  // when present so the renderer can pulse-highlight the offender.
   const defenders = Array.isArray(opts.defenders) ? opts.defenders : [];
   for (const def of defenders) {
     if (minDistanceToPath(def, userPath) < INTERCEPT_RADIUS) {
-      return { ok: false, reason: "intercepted", endPoint, target, intercepter: def };
+      return {
+        ok: false, reason: "intercepted",
+        endPoint, target,
+        intercepterId: def.id || null,
+      };
     }
   }
   return {
@@ -132,7 +137,7 @@ export function PathPrimitive({ interaction, correct, actors, svgPoint, onAnswer
   // Defenders fed to the scorer for interception detection. Primitive
   // remains pure on tests — defenders are sourced from the actor list.
   const defenders = useMemo(
-    () => actors.filter(a => a.kind === "defender").map(a => ({ x: a.x, y: a.y })),
+    () => actors.filter(a => a.kind === "defender").map(a => ({ id: a.id, x: a.x, y: a.y })),
     [actors],
   );
 
@@ -151,7 +156,12 @@ export function PathPrimitive({ interaction, correct, actors, svgPoint, onAnswer
         if (prev.length < 2) return prev;
         const result = scorePath(prev, correct, { defenders });
         setScore(result);
-        onAnswer?.({ ok: result.ok, reason: result.reason, userPath: prev });
+        onAnswer?.({
+          ok: result.ok,
+          reason: result.reason,
+          userPath: prev,
+          intercepterId: result.intercepterId || null,
+        });
         return prev;
       });
     };
