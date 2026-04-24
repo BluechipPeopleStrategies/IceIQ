@@ -2634,6 +2634,32 @@ function Report({ player, onBack, demoCoachData, tier, onUpgrade }) {
         </Card>
       )}
 
+      {/* Coach Feedback empty-state — PRO/TEAM have the feature unlocked but
+          no coach has rated yet. Nudge them to invite a coach. */}
+      {coachFeedbackAllowed && !loadingCoach && !coachRatings && (
+        <Card style={{marginBottom:"1rem",background:`linear-gradient(135deg,${C.bgCard},${C.bgElevated})`,border:`1px solid ${C.purpleBorder}`,padding:"1.25rem"}}>
+          <div style={{display:"flex",alignItems:"flex-start",gap:".75rem",marginBottom:".8rem"}}>
+            <div style={{fontSize:26,flexShrink:0}}>👨‍🏫</div>
+            <div style={{flex:1}}>
+              <Label>Coach Feedback</Label>
+              <div style={{fontSize:12,color:C.dim,lineHeight:1.55}}>Your coach hasn't rated you yet. Send them an invite — they can rate your skills and leave notes you'll see right here.</div>
+            </div>
+          </div>
+          <button onClick={() => {
+              const subject = encodeURIComponent("Can you rate my skills on Ice-IQ?");
+              const body = encodeURIComponent(
+                `Hi Coach,\n\nI'm using Ice-IQ to work on my game sense and skills. Could you rate me on the skills your coaching staff thinks matter most? ` +
+                `It takes a few minutes and I'll see your ratings + notes in the app so I can work on the right things.\n\n` +
+                `Here's the coach page: https://ice-iq.vercel.app/#coaches\n\nThanks!\n${player?.name || ""}`
+              );
+              try { window.location.href = `mailto:?subject=${subject}&body=${body}`; } catch {}
+            }}
+            style={{background:C.gold,color:C.bg,border:"none",borderRadius:8,padding:".6rem .9rem",cursor:"pointer",fontWeight:800,fontSize:13,fontFamily:FONT.body,width:"100%"}}>
+            📧 Invite your coach to rate you
+          </button>
+        </Card>
+      )}
+
       {/* Coach tab bar — shown when there are 2+ coaches */}
       {coachFeedbackAllowed && coachList.length > 1 && (
         <Card style={{marginBottom:"1rem"}}>
