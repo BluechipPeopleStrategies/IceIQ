@@ -1525,7 +1525,15 @@ function Quiz({ player, onFinish, onBack, tier, onUpgrade }) {
 
         {/* Explanation */}
         {answered && (() => {
-          const userCorrect = isRinkQ ? rinkQResult : qtype === "seq" ? seqCorrect : (sel === q.ok);
+          // T/F stores `sel` as the string "true"|"false"; coerce before comparing
+          // to q.ok (which is a real boolean) or we'd always mark T/F wrong.
+          const userCorrect = isRinkQ
+            ? rinkQResult
+            : qtype === "seq"
+            ? seqCorrect
+            : qtype === "tf"
+            ? (sel === "true") === q.ok
+            : (sel === q.ok);
           return (
           <div ref={el => { if (el) setTimeout(() => el.scrollIntoView({behavior:"smooth",block:"nearest"}), 150); }} style={{marginTop:"1rem"}}>
             <Card style={{
@@ -1569,8 +1577,13 @@ function Quiz({ player, onFinish, onBack, tier, onUpgrade }) {
                         <span style={{fontWeight:800,fontSize:12,color:C.white}}>{coach.name}</span>
                         <span style={{fontSize:10,color:C.dimmer,letterSpacing:".04em"}}>{coach.role}</span>
                       </div>
+                      {/* Coach feedback split into a short spoken line on top
+                          and the longer teaching/tip underneath, so the
+                          quip lands before the explanation unpacks it. */}
+                      <div style={{fontWeight:800,fontSize:13.5,color:userCorrect?C.green:C.yellow,lineHeight:1.35,marginBottom:".3rem"}}>
+                        {flavor}
+                      </div>
                       <div style={{fontSize:12,color:C.dim,lineHeight:1.55}}>
-                        <span style={{fontWeight:700,color:userCorrect?C.green:C.yellow,marginRight:".3rem"}}>{flavor}</span>
                         {q.tip || (userCorrect ? "Keep reading the ice like that." : "Re-read the play and reset — you'll get the next one.")}
                       </div>
                     </div>
