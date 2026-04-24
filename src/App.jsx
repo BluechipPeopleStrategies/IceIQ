@@ -3985,14 +3985,14 @@ function AuthScreen({ onAuthenticated, onDemo, onDevEnter, onPreview, prefill })
     : (hasSignedInBefore ? "Sign in to see your development report." : "Sign in or create a free account to get started.");
 
   return (
-    <div style={{minHeight:"100vh",position:"relative",background:"#03090f",display:"flex",flexDirection:"column",justifyContent:"center",padding:"2rem 1.25rem",fontFamily:FONT.body,color:C.white,overflow:"hidden"}}>
+    <div style={{minHeight:"100vh",position:"relative",background:C.bg,display:"flex",flexDirection:"column",justifyContent:"center",padding:"2rem 1.25rem",fontFamily:FONT.body,color:C.white,overflow:"hidden"}}>
 
-      {/* Dark night-rink SVG background */}
-      <RinkBackground dark={true}/>
+      {/* Hockey-player hero photo as landing background */}
+      <img src={imgSplash} alt="" style={{position:"absolute",inset:0,width:"100%",height:"100%",objectFit:"cover",opacity:0.55,pointerEvents:"none"}}/>
 
-      {/* Layered gradient overlays for depth */}
-      <div style={{position:"absolute",inset:0,background:"linear-gradient(180deg,rgba(3,9,15,0.55) 0%,rgba(3,9,15,0.35) 45%,rgba(3,9,15,0.82) 100%)",pointerEvents:"none"}}/>
-      <div style={{position:"absolute",inset:0,background:"radial-gradient(ellipse 80% 60% at 50% 40%,rgba(252,76,2,0.04) 0%,transparent 70%)",pointerEvents:"none"}}/>
+      {/* Layered overlays — navy fade for readability + warm Oilers-orange radial glow */}
+      <div style={{position:"absolute",inset:0,background:"linear-gradient(180deg,rgba(4,30,66,0.45) 0%,rgba(4,30,66,0.3) 45%,rgba(4,30,66,0.88) 100%)",pointerEvents:"none"}}/>
+      <div style={{position:"absolute",inset:0,background:"radial-gradient(ellipse 80% 60% at 50% 40%,rgba(252,76,2,0.08) 0%,transparent 70%)",pointerEvents:"none"}}/>
 
       {/* Subtle top-right door for returning members. Clicking flips the auth
           card to login mode AND scrolls to the auth section so the user
