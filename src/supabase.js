@@ -542,6 +542,59 @@ export async function getTrainingSessionsForPlayer(playerId) {
 }
 
 // ─────────────────────────────────────────────
+// QUESTION RESULTS (per-rep, source for the Hockey IQ score)
+// ─────────────────────────────────────────────
+import { computeHockeyIQ, WINDOW_DAYS } from "./utils/hockeyIQ.js";
+
+export async function recordQuestionResult(playerId, {
+  questionId, correct, timeTakenMs, difficulty, zone, skill, answeredAt,
+}) {
+  if (!supabase || !playerId) return null;
+  const row = {
+    player_id: playerId,
+    question_id: questionId,
+    correct: !!correct,
+    time_taken_ms: Number.isFinite(timeTakenMs) ? Math.round(timeTakenMs) : null,
+    difficulty: Number(difficulty) || 1,
+    zone: zone || null,
+    skill: skill || null,
+    ...(answeredAt ? { answered_at: answeredAt } : {}),
+  };
+  const { data, error } = await supabase.from("question_results").insert(row).select().single();
+  if (error) throw error;
+  return data;
+}
+
+export async function getQuestionResultsWindow(playerId, days = WINDOW_DAYS) {
+  if (!supabase || !playerId) return [];
+  const since = new Date(Date.now() - days * 86400000).toISOString();
+  const { data, error } = await supabase.from("question_results")
+    .select("correct, time_taken_ms, difficulty, zone, skill, answered_at")
+    .eq("player_id", playerId)
+    .gte("answered_at", since)
+    .order("answered_at", { ascending: true });
+  if (error) { warn("getQuestionResultsWindow", error); return []; }
+  return (data || []).map(r => ({
+    correct: r.correct,
+    time_taken_ms: r.time_taken_ms,
+    difficulty: r.difficulty,
+    zone: r.zone,
+    skill: r.skill,
+    answered_at: r.answered_at,
+  }));
+}
+
+// Returns { score, status, reps, ewma, trend, bestWindow }. See
+// utils/hockeyIQ.js for the shape and formula. Pulls a 60-day window
+// (2x WINDOW_DAYS) so the trend lookback can compute against fully
+// populated EWMAs at asOf - 30d.
+export async function calculateHockeyIQ(playerId) {
+  if (!playerId) return { score: null, status: "calibrating", reps: 0, ewma: null, trend: null, bestWindow: null };
+  const results = await getQuestionResultsWindow(playerId, WINDOW_DAYS * 2);
+  return computeHockeyIQ(results, new Date());
+}
+
+// ─────────────────────────────────────────────
 // QUESTION STATS (aggregate % correct across all users)
 // ─────────────────────────────────────────────
 // Telemetry — intentionally silent. Stats are best-effort and must never
