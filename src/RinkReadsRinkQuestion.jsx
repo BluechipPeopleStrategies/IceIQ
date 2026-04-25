@@ -1357,6 +1357,20 @@ function LaneSelect({ question, onAnswer, onReset }) {
             let stroke = "#5BA4E8", opacity = 0.28;
             if (done && isPicked) { stroke = ok ? "#22c55e" : "#ef4444"; opacity = 0.7; }
             else if (done && ok) { stroke = "#22c55e"; opacity = 0.45; }
+            // Lanes can curve via `waypoints: [{x,y}, ...]` so passes that
+            // physically can't go straight (e.g., a rim around your own net)
+            // render as polylines instead of straight lines.
+            const hasWaypoints = Array.isArray(l.waypoints) && l.waypoints.length > 0;
+            if (hasWaypoints) {
+              const points = [[x1, y1], ...l.waypoints.map(w => [w.x, w.y]), [x2, y2]];
+              const pathD = "M " + points.map(p => `${p[0]},${p[1]}`).join(" L ");
+              return (
+                <path key={i} d={pathD} fill="none"
+                  stroke={stroke} strokeWidth="18" strokeLinecap="round" strokeLinejoin="round" strokeOpacity={opacity}
+                  style={{ cursor: done ? "default" : "pointer" }}
+                  onClick={() => handle(l, i)} />
+              );
+            }
             return (
               <line key={i} x1={x1} y1={y1} x2={x2} y2={y2}
                 stroke={stroke} strokeWidth="18" strokeLinecap="round" strokeOpacity={opacity}

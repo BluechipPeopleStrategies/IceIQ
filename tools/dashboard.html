@@ -1097,11 +1097,21 @@ function markerSvg(m) {
 
   const fill = fills[m.type] || "#185FA5";
   const text = m.label || labels[m.type] || "";
-  const correctRing = m.correct === true ? `<circle cx="0" cy="0" r="9" fill="none" stroke="#22c55e" stroke-width="1.2" stroke-dasharray="3 2" opacity="0.85"/>` : "";
+  const isYou = m.label === "YOU" || m.label === "ME";
+  const playerRadius = isYou ? 7 : 6;
+  const isDefender = m.type === "defender";
+  const patternId = isDefender ? `def-stripes-${Math.round(m.x)}-${Math.round(m.y)}` : null;
+  const correctRing = m.correct === true ? `<circle cx="0" cy="0" r="${playerRadius + 3}" fill="none" stroke="#22c55e" stroke-width="1.2" stroke-dasharray="3 2" opacity="0.85"/>` : "";
   return `
     <g transform="translate(${m.x},${m.y})">
+      ${isDefender ? `<defs>
+        <pattern id="${patternId}" patternUnits="userSpaceOnUse" width="2" height="2">
+          <rect width="2" height="2" fill="${fill}"/>
+          <line x1="0" y1="0" x2="0" y2="2" stroke="#5a5a58" stroke-width="0.6"/>
+        </pattern>
+      </defs>` : ""}
       ${correctRing}
-      <circle cx="0" cy="0" r="6" fill="${fill}" stroke="#fff" stroke-width="0.7"/>
+      <circle cx="0" cy="0" r="${playerRadius}" fill="${isDefender ? `url(#${patternId})` : fill}" stroke="#fff" stroke-width="${isYou ? 1.0 : 0.7}"/>
       <text x="0" y="2" text-anchor="middle" fill="#fff" font-size="5.6" font-weight="700" font-family="ui-sans-serif,system-ui,sans-serif">${escHtml(text)}</text>
     </g>
   `;
@@ -1159,7 +1169,7 @@ function typeSpecificSvg(q) {
       }
     }
   }
-  // lane-select — lines between two points.
+  // lane-select — lines between two points (or polyline if waypoints).
   if (Array.isArray(q.lanes)) {
     for (const l of q.lanes) {
       const x1 = l.x1 ?? l.from?.x;
@@ -1169,10 +1179,16 @@ function typeSpecificSvg(q) {
       if (x1 == null) continue;
       const ok = l.clear || l.correct;
       const color = ok ? "#22c55e" : "#ef4444";
-      out.push(`<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}"
-        stroke="${color}" stroke-width="14" stroke-opacity="0.35" stroke-linecap="round"/>`);
-      out.push(`<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}"
-        stroke="${color}" stroke-width="2" stroke-dasharray="6 4"/>`);
+      const hasWaypoints = Array.isArray(l.waypoints) && l.waypoints.length > 0;
+      if (hasWaypoints) {
+        const points = [[x1, y1], ...l.waypoints.map(w => [w.x, w.y]), [x2, y2]];
+        const d = "M " + points.map(p => `${p[0]},${p[1]}`).join(" L ");
+        out.push(`<path d="${d}" fill="none" stroke="${color}" stroke-width="14" stroke-opacity="0.35" stroke-linecap="round" stroke-linejoin="round"/>`);
+        out.push(`<path d="${d}" fill="none" stroke="${color}" stroke-width="2" stroke-dasharray="6 4" stroke-linejoin="round"/>`);
+      } else {
+        out.push(`<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="${color}" stroke-width="14" stroke-opacity="0.35" stroke-linecap="round"/>`);
+        out.push(`<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="${color}" stroke-width="2" stroke-dasharray="6 4"/>`);
+      }
     }
   }
   // sequence-rink — numbered markers.

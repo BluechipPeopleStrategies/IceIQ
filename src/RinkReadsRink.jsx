@@ -275,6 +275,10 @@ function Marker({ marker }) {
   const labels = {
     attacker: "X", defender: "D", teammate: "T", player: "O", coach: "C",
   };
+  // YOU/ME render slightly larger so the player can pick out their own
+  // position at a glance — every other marker is r=6, YOU is r=7.
+  const isYou = marker.label === "YOU" || marker.label === "ME";
+  const playerRadius = isYou ? 7 : 6;
 
   if (marker.type === "puck") {
     // Standard display puck dimensions — matches dashboard.html and any
@@ -319,9 +323,24 @@ function Marker({ marker }) {
 
   const fill = fills[marker.type] || "#185FA5";
   const label = marker.label || labels[marker.type] || "";
+  // Defenders get vertical pinstripes so they read as "the other team" at
+  // a glance even on a black-and-white screen. Pattern is namespaced per
+  // marker so the SVG defs stay self-contained per render.
+  const isDefender = marker.type === "defender";
+  const patternId = isDefender ? `def-stripes-${marker.x}-${marker.y}` : null;
   return (
     <g transform={`translate(${marker.x}, ${marker.y})`}>
-      <circle cx={0} cy={0} r={6} fill={fill} stroke="#fff" strokeWidth="0.7" />
+      {isDefender && (
+        <defs>
+          <pattern id={patternId} patternUnits="userSpaceOnUse" width="2" height="2" patternTransform="rotate(0)">
+            <rect width="2" height="2" fill={fill}/>
+            <line x1="0" y1="0" x2="0" y2="2" stroke="#5a5a58" strokeWidth="0.6"/>
+          </pattern>
+        </defs>
+      )}
+      <circle cx={0} cy={0} r={playerRadius}
+        fill={isDefender ? `url(#${patternId})` : fill}
+        stroke="#fff" strokeWidth={isYou ? 1.0 : 0.7} />
       <text x={0} y={2} textAnchor="middle" fill="#fff"
         fontSize="5.6" fontWeight="700" fontFamily="system-ui">{label}</text>
       {marker.caption && (
