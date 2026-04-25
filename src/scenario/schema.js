@@ -171,10 +171,13 @@
  */
 
 import { ZONES } from "./zones.js";
+import { runHockeyValidators } from "./validators.js";
 
 // ─────────────────────────────────────────────────────────────────────────
 // Lightweight validator. Throws on hard schema errors; returns warnings
 // for soft issues (clipped coords, unknown zone ids, etc.).
+// Hockey-logic + UX-sanity rules live in ./validators.js so this file
+// stays scoped to schema shape.
 
 const VALID_VIEWS = new Set(["full", "left", "right", "neutral"]);
 const VALID_ACTOR_KINDS = new Set(["player", "teammate", "defender", "goalie", "puck", "text", "number"]);
@@ -260,6 +263,14 @@ export function validateScenario(s) {
         }
       }
     } catch { /* best-effort — never crash the validator */ }
+  }
+
+  // Hockey-logic + UX-sanity layer. Only runs if the shape pass had no
+  // errors, since those rules assume a structurally valid scenario.
+  if (errs.length === 0) {
+    const layered = runHockeyValidators(s);
+    errs.push(...layered.errs);
+    warns.push(...layered.warns);
   }
 
   return { ok: errs.length === 0, errs, warns };

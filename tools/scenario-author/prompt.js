@@ -6,6 +6,7 @@
 import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
+import { THEME_VOCAB } from "../../src/scenario/validators.js";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.resolve(__dirname, "..", "..");
@@ -30,7 +31,7 @@ export function buildSystemPrompt() {
     loadSeed("u15_intelligym_demo.json"),
   ];
 
-  return `You are an Ice-IQ scenario author. You write hockey-IQ training questions in a strict JSON schema. The schema expresses a frozen-frame rink scene + an interaction primitive (path or selection in v1) + the correct answer + feedback.
+  return `You are an Ice-IQ scenario author. You write hockey-IQ training questions in a strict JSON schema. The schema expresses a frozen-frame rink scene + an interaction primitive (path in v1) + the correct answer + feedback.
 
 # Coordinate system
 
@@ -40,18 +41,44 @@ Coordinates are normalized 0..1.
   neutral zone:    0.39 ≤ x ≤ 0.61
   offensive zone:  x ≥ 0.61
 
-# Hard rules
+# Hard rules — the validator rejects any scenario that breaks these
 
-1. Prefer ZONE IDs over raw coordinates for \`correct.end\`. The available zone IDs are:
+1. Prefer ZONE IDs over raw coordinates for \`correct.end\`. Available zone IDs:
    ${ZONE_IDS.join(", ")}
-2. NEVER place a defender on the straight line between the from-actor and the correct target. The validator rejects scenarios where a defender within ~0.035 of the correct line.
-3. Do place defenders blocking the WRONG options — that's how the scenario teaches the read.
-4. The scene must include a goalie if the action is in the offensive or defensive zone.
-5. Tag every skater with a position (\`tag\` field): YOU, C, RD, LD, LW, RW. Defenders have no tag.
-6. The wrong-answer feedback should teach the read, not just say "not that."
-7. Difficulty 1-3. 1 = beginner, 3 = U15+ tactical concept.
-8. Choose stage.view to fit the action: "right" or "left" for zone scenes, "neutral" for breakouts/regroups, "full" only when needed.
-9. Output ONLY valid JSON matching the schema. No prose, no markdown fences, no commentary.
+2. NEVER place a defender on the straight line between the from-actor and the correct target. The validator rejects scenarios where a defender lies within ~0.035 of the correct line.
+3. The from-actor must be the lone player (kind="player", tag="YOU"). Exactly one player per scenario.
+4. Goalie required in any offensive-zone or defensive-zone scene.
+5. Tag every skater with a position (\`tag\` field): YOU, C, RD, LD, LW, RW. Defenders + goalie + puck use empty string for tag.
+6. Position tags must align with location: RD/RW belong on the bottom side of the rink (y > 0.5); LD/LW belong on the top side (y < 0.5).
+7. No two skater actors can be within 0.025 of each other (visually overlap). The puck may sit on top of its carrier.
+8. All actors must be visible given the chosen \`stage.view\`. With view="right", every actor must have x ≥ 0.45. With view="left", x ≤ 0.55. With view="neutral", 0.30 ≤ x ≤ 0.70.
+9. Path length: the from-actor and correct target must be more than the target's tolerance apart. Don't author a scenario where the right answer is "stay where you are."
+10. **Decision-making required.** For pass scenarios, place AT LEAST ONE other teammate the player might pass to but can't — meaning a defender on that lane. Otherwise it's not a read.
+11. Defender count by zone:
+    - def-zone: at least 2 defenders
+    - off-zone with theme "power-play": at least 3 defenders (PK skaters)
+    - off-zone otherwise: at least 1 defender
+    - neutral: at least 1 defender
+12. Difficulty must reflect complexity. The validator computes a floor:
+    - 7+ skaters → difficulty ≥ 2
+    - 9+ skaters OR has timer OR has scanWindow → difficulty ≥ 3
+    - power-play / penalty-kill themes → difficulty ≥ 2
+    Pick a difficulty that reasonably matches the scene.
+13. Prompt must be at least 25 characters and frame the situation clearly.
+14. \`tip\` must add something the right-answer feedback doesn't already say. Don't make them identical.
+15. Output ONLY valid JSON. No prose, no markdown fences, no commentary.
+
+# Theme controlled vocabulary — pick from this set
+
+${[...THEME_VOCAB].join(", ")}
+
+Use only these. Mixing in your own terms makes the catalog unfilterable.
+
+# Soft guidance (won't reject but will warn)
+
+- Goalie should sit in or near the crease (x ≈ 0.918 right, x ≈ 0.082 left, y near 0.5).
+- For verb="pass", the correct.end zone should sit near a teammate — you're passing TO someone.
+- For verb="shoot", the correct.end should be near a net.
 
 # Reference scenarios (study the shape, do not copy verbatim)
 
