@@ -6,14 +6,15 @@
 import { validateScenario } from "../../src/scenario/schema.js";
 import { resolveTarget } from "../../src/scenario/zones.js";
 import { scorePath } from "../../src/scenario/primitives/path-scorer.js";
+import { scoreSelection } from "../../src/scenario/primitives/selection-scorer.js";
 
 export function lintScenario(scenario) {
   const v = validateScenario(scenario);
   if (!v.ok) return { ok: false, errs: v.errs, warns: v.warns };
 
-  // Self-test: simulate a "perfect" user answer and confirm the scorer
-  // agrees. Currently only the path primitive is implemented, so this
-  // only fires when interaction.kind === "path".
+  // Self-test per primitive: simulate the LLM's own "correct" answer as
+  // a user input and confirm the registered scorer grades it ok=true.
+  // If the scorer disagrees the scenario is internally inconsistent.
   if (scenario.interaction.kind === "path") {
     const fromActor = scenario.actors.find(a => a.id === scenario.interaction.from);
     if (!fromActor) {
@@ -32,6 +33,19 @@ export function lintScenario(scenario) {
       return {
         ok: false,
         errs: [`scorer self-test failed: reason=${result.reason} — the LLM-declared correct answer doesn't actually score as correct`],
+        warns: v.warns,
+      };
+    }
+  } else if (scenario.interaction.kind === "selection") {
+    const result = scoreSelection(
+      scenario.correct.ids,
+      scenario.correct.ids,
+      { ordered: scenario.interaction.order === "ordered" },
+    );
+    if (!result.ok) {
+      return {
+        ok: false,
+        errs: [`selection scorer self-test failed — correct.ids isn't a valid set match`],
         warns: v.warns,
       };
     }

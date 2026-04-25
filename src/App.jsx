@@ -3750,6 +3750,7 @@ function ScenarioParityTest() {
   const [errLegacy, setErrLegacy] = useState(null);
   const [scenarioJson, setScenarioJson] = useState(null);
   const [igymJson, setIgymJson] = useState(null);
+  const [selectionJson, setSelectionJson] = useState(null);
 
   useEffect(() => {
     let cancelled = false;
@@ -3769,19 +3770,22 @@ function ScenarioParityTest() {
     import("./scenario/seeds/u15_intelligym_demo.json").then(m => {
       if (!cancelled) setIgymJson(m.default);
     });
+    import("./scenario/seeds/u11_open_pass_v1.json").then(m => {
+      if (!cancelled) setSelectionJson(m.default);
+    });
     return () => { cancelled = true; };
   }, []);
 
   return (
     <div style={{minHeight:"100vh",background:C.bg,color:C.white,fontFamily:FONT.body,padding:"1rem 1rem 4rem"}}>
-      <div style={{maxWidth:1400,margin:"0 auto"}}>
+      <div style={{maxWidth:1600,margin:"0 auto"}}>
         <div style={{paddingBottom:".75rem",borderBottom:`1px solid ${C.border}`,marginBottom:"1rem"}}>
           <div style={{fontSize:10,letterSpacing:".14em",textTransform:"uppercase",color:C.gold,fontWeight:700}}>Scenario engine — parity test</div>
           <div style={{fontSize:13,color:C.dim,marginTop:4}}>
-            Three takes. Left: legacy bespoke <code>path-draw</code>. Middle: same scenario in the new unified engine. Right: IntelliGym mode (preview-lock + hard timer + scan-then-hide working memory).
+            Four takes. <b>Legacy</b>: bespoke path-draw. <b>Unified</b>: same scenario via the new engine. <b>IntelliGym</b>: same scene + preview-lock + hard timer + scan-then-hide. <b>Selection</b>: tap-the-open-teammate primitive.
           </div>
         </div>
-        <div style={{display:"grid",gridTemplateColumns:"1fr 1fr 1fr",gap:"1.25rem"}}>
+        <div style={{display:"grid",gridTemplateColumns:"1fr 1fr 1fr 1fr",gap:"1rem"}}>
           <div>
             <div style={{fontSize:11,color:C.dimmer,fontWeight:800,letterSpacing:".06em",marginBottom:".5rem"}}>LEGACY · u13q_rink07</div>
             {errLegacy && <div style={{color:C.red,fontSize:13}}>{errLegacy}</div>}
@@ -3792,8 +3796,12 @@ function ScenarioParityTest() {
             {scenarioJson && <ScenarioRenderer scenario={scenarioJson} onAnswer={() => {}}/>}
           </div>
           <div>
-            <div style={{fontSize:11,color:C.gold,fontWeight:800,letterSpacing:".06em",marginBottom:".5rem"}}>INTELLIGYM · u15_pp (preview · timer · memory)</div>
+            <div style={{fontSize:11,color:C.gold,fontWeight:800,letterSpacing:".06em",marginBottom:".5rem"}}>INTELLIGYM · u15_pp</div>
             {igymJson && <ScenarioRenderer scenario={igymJson} onAnswer={() => {}}/>}
+          </div>
+          <div>
+            <div style={{fontSize:11,color:C.green,fontWeight:800,letterSpacing:".06em",marginBottom:".5rem"}}>SELECTION · u11_open_pass</div>
+            {selectionJson && <ScenarioRenderer scenario={selectionJson} onAnswer={() => {}}/>}
           </div>
         </div>
       </div>

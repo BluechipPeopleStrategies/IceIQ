@@ -154,6 +154,52 @@ const rules = [
     return null;
   },
 
+  // ── SELECTION-SPECIFIC
+
+  function selectionHasMultipleCandidates(s) {
+    if (s.interaction?.kind !== "selection") return null;
+    const from = s.interaction.from;
+    if (!Array.isArray(from) || from.length < 2) {
+      return { kind: "err", msg: `selection scenarios need at least 2 candidates in interaction.from (got ${from?.length ?? 0}) — otherwise it's not a choice` };
+    }
+    return null;
+  },
+
+  function selectionCandidatesExist(s) {
+    if (s.interaction?.kind !== "selection") return null;
+    const from = s.interaction.from || [];
+    const ids = new Set((s.actors || []).map(a => a.id));
+    const missing = from.filter(id => !ids.has(id));
+    if (missing.length) {
+      return { kind: "err", msg: `selection.from references unknown actor ids: ${missing.join(", ")}` };
+    }
+    return null;
+  },
+
+  function selectionCorrectIsSubsetOfFrom(s) {
+    if (s.interaction?.kind !== "selection") return null;
+    const from = new Set(s.interaction.from || []);
+    const correct = s.correct?.ids || [];
+    if (!Array.isArray(correct) || correct.length === 0) {
+      return { kind: "err", msg: `selection.correct.ids must be a non-empty array of candidate ids` };
+    }
+    const stray = correct.filter(id => !from.has(id));
+    if (stray.length) {
+      return { kind: "err", msg: `correct.ids contains ids not in interaction.from: ${stray.join(", ")}` };
+    }
+    return null;
+  },
+
+  function selectionHasWrongAnswerOption(s) {
+    if (s.interaction?.kind !== "selection") return null;
+    const fromCount = (s.interaction.from || []).length;
+    const correctCount = (s.correct?.ids || []).length;
+    if (fromCount > 0 && fromCount === correctCount) {
+      return { kind: "err", msg: `every candidate is correct — there's no wrong answer to make this a real choice` };
+    }
+    return null;
+  },
+
   // ── DECISION-MAKING REQUIRED (path scenarios only)
   // The scenario must show at least one tempting-but-blocked alternative.
   // Without this, the LLM happily authors trivial questions where the

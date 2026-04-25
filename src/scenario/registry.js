@@ -4,9 +4,11 @@
 // scorer. No central switch statement.
 
 import { pathPrimitive } from "./primitives/path.jsx";
+import { selectionPrimitive } from "./primitives/selection.jsx";
 
 const REGISTRY = {
   [pathPrimitive.kind]: pathPrimitive,
+  [selectionPrimitive.kind]: selectionPrimitive,
 };
 
 export function getPrimitive(kind) {

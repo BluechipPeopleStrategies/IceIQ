@@ -1,0 +1,40 @@
+{
+  "id": "u11_open_pass_v1",
+  "type": "scenario",
+  "themes": ["puck-support", "decision-making", "vision"],
+  "cat": "Vision",
+  "difficulty": 2,
+  "stage": {
+    "view": "right",
+    "zone": "off-zone"
+  },
+  "actors": [
+    { "id": "you",    "kind": "player",   "x": 0.900, "y": 0.780, "tag": "YOU" },
+    { "id": "puck",   "kind": "puck",     "x": 0.882, "y": 0.762 },
+
+    { "id": "bumper", "kind": "teammate", "x": 0.780, "y": 0.500, "tag": "C"  },
+    { "id": "point",  "kind": "teammate", "x": 0.650, "y": 0.500, "tag": "RD" },
+    { "id": "wing",   "kind": "teammate", "x": 0.850, "y": 0.220, "tag": "LW" },
+
+    { "id": "pk1",    "kind": "defender", "x": 0.820, "y": 0.560 },
+    { "id": "pk2",    "kind": "defender", "x": 0.620, "y": 0.460 },
+
+    { "id": "g",      "kind": "goalie",   "x": 0.918, "y": 0.500 }
+  ],
+  "interaction": {
+    "kind": "selection",
+    "prompt": "You have the puck on the right wall. Tap the open teammate.",
+    "from": ["bumper", "point", "wing"],
+    "order": "any"
+  },
+  "correct": {
+    "kind": "selection",
+    "ids": ["wing"]
+  },
+  "feedback": {
+    "right": "Weak-side wing — cross-ice for the one-timer. The slot and the point are both shadowed.",
+    "wrong": "Look at the defenders. Bumper and point both have a stick on them; only the weak-side winger is alone."
+  },
+  "tip": "On the strong-side wall, scan WEAK-side first. The PK collapses strong, leaving the cross-ice option open.",
+  "why": "Vision drill: the right read is the one no one is covering. Don't pick by proximity, pick by who has space."
+}

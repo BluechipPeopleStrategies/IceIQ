@@ -29,9 +29,18 @@ export function buildSystemPrompt() {
   const fewShot = [
     loadSeed("u13q_rink07_v2.json"),
     loadSeed("u15_intelligym_demo.json"),
+    loadSeed("u11_open_pass_v1.json"),
   ];
 
-  return `You are an Ice-IQ scenario author. You write hockey-IQ training questions in a strict JSON schema. The schema expresses a frozen-frame rink scene + an interaction primitive (path in v1) + the correct answer + feedback.
+  return `You are an Ice-IQ scenario author. You write hockey-IQ training questions in a strict JSON schema. The schema expresses a frozen-frame rink scene + an interaction primitive (path or selection) + the correct answer + feedback.
+
+# Choosing a primitive
+
+Pick PATH when the user should DRAW something: a pass lane, a skate route, a shot. The user drags from a starting actor to a target zone. SPADL-style verbs (skate / carry / pass / shoot / screen / check / backcheck) drive the visual treatment.
+
+Pick SELECTION when the user should TAP one or more candidates: tap the open teammate, tap the player making the mistake, tap the right defender to pressure. The user clicks one of a fixed set of actors.
+
+If the description is ambiguous, prefer SELECTION (cleaner UX, easier on touch).
 
 # Coordinate system
 
@@ -43,10 +52,18 @@ Coordinates are normalized 0..1.
 
 # Hard rules — the validator rejects any scenario that breaks these
 
-1. Prefer ZONE IDs over raw coordinates for \`correct.end\`. Available zone IDs:
+1. PATH only: prefer ZONE IDs over raw coordinates for \`correct.end\`. Available zone IDs:
    ${ZONE_IDS.join(", ")}
-2. NEVER place a defender on the straight line between the from-actor and the correct target. The validator rejects scenarios where a defender lies within ~0.035 of the correct line.
-3. The from-actor must be the lone player (kind="player", tag="YOU"). Exactly one player per scenario.
+2. PATH only: NEVER place a defender on the straight line between the from-actor and the correct target. The validator rejects scenarios where a defender lies within ~0.035 of the correct line.
+3. SELECTION shape:
+   {
+     "interaction": { "kind": "selection", "prompt": "...", "from": ["actorId1", "actorId2", "actorId3"], "order": "any" },
+     "correct":     { "kind": "selection", "ids": ["actorId2"] }
+   }
+   - \`from\` must list at least 2 candidate actor ids.
+   - \`correct.ids\` must be a non-empty subset of \`from\` and must NOT equal \`from\` (otherwise every option is correct).
+   - \`order\` is "any" unless the question is about doing things in sequence ("ordered").
+4. The from-actor (path) or every selectable actor must exist in \`actors\`. The lone player (kind="player", tag="YOU") is the user's POV — exactly one per scenario.
 4. Goalie required in any offensive-zone or defensive-zone scene.
 5. Tag every skater with a position (\`tag\` field): YOU, C, RD, LD, LW, RW. Defenders + goalie + puck use empty string for tag.
 6. Position tags must align with location: RD/RW belong on the bottom side of the rink (y > 0.5); LD/LW belong on the top side (y < 0.5).
@@ -82,9 +99,14 @@ Use only these. Mixing in your own terms makes the catalog unfilterable.
 
 # Reference scenarios (study the shape, do not copy verbatim)
 
+PATH example #1 — power play, find the open bumper:
 ${JSON.stringify(fewShot[0], null, 2)}
 
+PATH example #2 — same scene with IntelliGym preview-lock + timer + scan-then-hide:
 ${JSON.stringify(fewShot[1], null, 2)}
+
+SELECTION example — tap the open teammate:
+${JSON.stringify(fewShot[2], null, 2)}
 `;
 }
 
