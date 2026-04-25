@@ -4,8 +4,8 @@
 //   2. AuthScreen finishes signup → logSignupComplete() reads the pending source,
 //      appends a completed entry to the history, and clears the pending stamp.
 
-const PENDING_KEY = "iceiq_signup_pending_source";
-const HISTORY_KEY = "iceiq_signup_sources_v1";
+const PENDING_KEY = "rinkreads_signup_pending_source";
+const HISTORY_KEY = "rinkreads_signup_sources_v1";
 const MAX_HISTORY = 100;
 
 export function markSignupIntent(source) {
@@ -48,9 +48,9 @@ export function getSignupSourceBreakdown() {
   return counts;
 }
 
-// Dev convenience: `window.__iceiqSignupLog()` in the console.
+// Dev convenience: `window.__rinkreadsSignupLog()` in the console.
 if (typeof window !== "undefined") {
-  window.__iceiqSignupLog = () => ({
+  window.__rinkreadsSignupLog = () => ({
     history: getSignupConversionLog(),
     breakdown: getSignupSourceBreakdown(),
   });

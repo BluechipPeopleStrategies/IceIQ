@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Ice-IQ Question Bank — Editor</title>
+<title>RinkReads Question Bank — Editor</title>
 <style>
   :root {
     --bg: #0b1220;
@@ -226,7 +226,7 @@
 
 <header>
   <div class="header-row">
-    <h1>🏒 Ice-IQ Bank — Editor</h1>
+    <h1>🏒 RinkReads Bank — Editor</h1>
     <span id="dirty-badge" class="badge" style="display:none;"></span>
     <div class="spacer"></div>
     <input type="file" id="file-input" accept=".json" style="display:none">
@@ -275,9 +275,9 @@
 // ─────────────────────────────────────────────
 // Constants
 // ─────────────────────────────────────────────
-const LS_STATUS = "iceiq_dash_status_v2";   // { [questionId]: "keep"|"flag"|"kill" }
-const LS_EDITS  = "iceiq_dash_edits_v2";    // { [questionId]: { q?, sit?, tip?, why?, cat?, d? } }
-const LS_ADDS   = "iceiq_dash_adds_v2";     // array of new questions added in this session
+const LS_STATUS = "rinkreads_dash_status_v2";   // { [questionId]: "keep"|"flag"|"kill" }
+const LS_EDITS  = "rinkreads_dash_edits_v2";    // { [questionId]: { q?, sit?, tip?, why?, cat?, d? } }
+const LS_ADDS   = "rinkreads_dash_adds_v2";     // array of new questions added in this session
 
 const PAGE_SIZE = 50;
 const AGE_ORDER = [
@@ -1031,10 +1031,10 @@ function detailHTML(q, primaryLevel) {
 
 // ─────────────────────────────────────────────
 // Inline rink preview — vanilla SVG re-implementation of the app's
-// IceIQRink + markers. Good enough for visual review of top-down scenes
+// RinkReadsRink + markers. Good enough for visual review of top-down scenes
 // (zone-click, multi-tap, hot-spots, lane-select, drag-target, path-draw,
 // sequence-rink, drag-place). POV questions show a badge placeholder
-// since they need IceIQPOVRink which we can't easily port.
+// since they need RinkReadsPOVRink which we can't easily port.
 // ─────────────────────────────────────────────
 const VIEW_BOX = {
   full:    "0 0 600 300",
@@ -1200,7 +1200,7 @@ function typeSpecificSvg(q) {
 }
 
 function livePreviewSvg(qid) {
-  const url = `https://ice-iq.vercel.app/#q=${encodeURIComponent(qid)}`;
+  const url = `https://rinkreads.com/#q=${encodeURIComponent(qid)}`;
   return `
     <div style="margin-bottom:.75rem;">
       <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:.3rem;">

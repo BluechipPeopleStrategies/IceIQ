@@ -21,11 +21,11 @@ const url = import.meta.env.VITE_SUPABASE_URL;
 const key = import.meta.env.VITE_SUPABASE_ANON_KEY;
 
 function warn(context, error) {
-  if (error) console.warn(`[IceIQ/supabase] ${context}:`, error.message || error);
+  if (error) console.warn(`[RinkReads/supabase] ${context}:`, error.message || error);
 }
 
 if (!url || !key) {
-  console.warn("[IceIQ] Supabase env vars missing — auth/sync disabled. Copy .env.example to .env and fill in your Supabase project URL and anon key.");
+  console.warn("[RinkReads] Supabase env vars missing — auth/sync disabled. Copy .env.example to .env and fill in your Supabase project URL and anon key.");
 }
 
 export const supabase = (url && key) ? createClient(url, key, {

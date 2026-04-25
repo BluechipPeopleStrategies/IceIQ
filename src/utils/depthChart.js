@@ -2,20 +2,20 @@
 // Supabase, never rendered for player accounts.
 //
 // Shape:
-//   localStorage["iceiq_depth_charts_v1"] =
+//   localStorage["rinkreads_depth_charts_v1"] =
 //     { [teamId]: { [playerId]: "1L" | "2L" | "3L" | "4L"
 //                              | "1D" | "2D" | "3D"
 //                              | "1G" | "2G" } }
 //
-// setAssignment also flips `iceiq_depth_chart_set_v1` to "1" so the
+// setAssignment also flips `rinkreads_depth_chart_set_v1` to "1" so the
 // depth1 quest (see QUESTS_COACH) can read a single flag without
 // scanning the chart. The flag is sticky — once the coach has tried
 // the feature, the quest stays completed.
 
 import { lsGetJSON, lsSetJSON, lsSetStr, lsRemove } from "./storage.js";
 
-const STORE_KEY = "iceiq_depth_charts_v1";
-const FLAG_KEY  = "iceiq_depth_chart_set_v1";
+const STORE_KEY = "rinkreads_depth_charts_v1";
+const FLAG_KEY  = "rinkreads_depth_chart_set_v1";
 
 // NHL-style lineup card: 3 forward lines × (LW, C, RW), 3 D pairs × (LD, RD),
 // starter + backup goalie. Each slot id is unique so `setAssignment` can pin

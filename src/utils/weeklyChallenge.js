@@ -3,7 +3,7 @@
 
 import { lsGetJSON, lsSetJSON } from "./storage.js";
 
-const STORAGE_KEY = "iceiq_weekly";
+const STORAGE_KEY = "rinkreads_weekly";
 
 // ISO week number: 1–52 (or 53). Changes every Monday.
 export function getISOWeek(date = new Date()) {
@@ -108,7 +108,7 @@ export function markWeeklyComplete(score) {
 }
 
 // ─── Free tier weekly quiz cap ────────────────────────────
-const CAP_KEY = "iceiq_free_cap";
+const CAP_KEY = "rinkreads_free_cap";
 export const FREE_WEEKLY_QUIZ_CAP = 3;
 
 function getCapState() {

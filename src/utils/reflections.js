@@ -4,8 +4,8 @@
 
 import { lsGetJSON, lsSetJSON, lsGetStr, lsSetStr } from "./storage.js";
 
-const LS_REFLECTIONS = "iceiq_reflections_v1";       // { [qid]: { reason, ts, qcat } }
-const LS_DISABLED    = "iceiq_reflections_off_v1";   // "1" or absent
+const LS_REFLECTIONS = "rinkreads_reflections_v1";       // { [qid]: { reason, ts, qcat } }
+const LS_DISABLED    = "rinkreads_reflections_off_v1";   // "1" or absent
 
 export const REASONS = [
   { id: "rule",       label: "Forgot the rule"     },

@@ -44,9 +44,9 @@ const admin = createClient(url, serviceKey, { auth: { persistSession: false } })
 const APPLY = process.argv.includes("--apply");
 
 const ACCOUNTS = {
-  free:  "demo-free@iceiq.demo",
-  pro:   "demo-pro@iceiq.demo",
-  coach: "demo-coach@iceiq.demo",
+  free:  "demo-free@rinkreads.demo",
+  pro:   "demo-pro@rinkreads.demo",
+  coach: "demo-coach@rinkreads.demo",
 };
 
 // ─────────────────────────────────────────────────────────────────────
@@ -196,7 +196,7 @@ async function seedCoachState(coachId, freePlayerId, proPlayerId) {
 // Main
 
 async function main() {
-  console.log(`Ice-IQ demo history → ${url}\n`);
+  console.log(`RinkReads demo history → ${url}\n`);
 
   const ids = {};
   for (const [k, email] of Object.entries(ACCOUNTS)) {

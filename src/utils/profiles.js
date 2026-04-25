@@ -9,8 +9,8 @@ import { TIERS } from "../config/pricing";
 import { lsGet, lsSet, lsGetJSON, lsRemove } from "./storage.js";
 
 const KEYS = {
-  profiles:       "iceiq_child_profiles",
-  activeProfile:  "iceiq_active_profile",
+  profiles:       "rinkreads_child_profiles",
+  activeProfile:  "rinkreads_active_profile",
 };
 
 function generateUUID() {

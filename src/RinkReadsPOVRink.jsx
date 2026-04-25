@@ -1,6 +1,6 @@
 import { useMemo, Component } from "react";
 
-// World coords share the IceIQRink convention: 600 × 300 SVG units = 60m × 30m,
+// World coords share the RinkReadsRink convention: 600 × 300 SVG units = 60m × 30m,
 // origin top-left, 1 unit = 0.1 m. Heights (z) use the same scale: a 1.7 m
 // skater is z=17. Camera sits at eye height; markers stand on the ice (z=0).
 
@@ -117,7 +117,7 @@ function Background() {
       <text x={SCREEN.w / 2} y={SCREEN.horizonY - 1.5}
         textAnchor="middle" fill={COLORS.sponsorText}
         fontFamily="system-ui" fontWeight="800" fontSize="6" letterSpacing="0.15em">
-        ICE-IQ · READ THE PLAY
+        RINKREADS · READ THE PLAY
       </text>
     </g>
   );
@@ -307,8 +307,8 @@ function StickFromMarker({ marker, bladeWorld, foot, scale }) {
   // Stick origin — approximate gloves at ~mid-torso height in front of the body.
   const handZ = 11; // 1.1 m
   const handsWorld = { x: marker.x + Math.sin(marker.facing) * 1.5, y: marker.y - Math.cos(marker.facing) * 1.5, z: handZ };
-  const hands = project(handsWorld, /* injected via closure-of-parent */ window.__iceiq_pov_camera__ || DEFAULT_CAMERA);
-  const blade = project({ ...bladeWorld, z: 0.5 }, window.__iceiq_pov_camera__ || DEFAULT_CAMERA);
+  const hands = project(handsWorld, /* injected via closure-of-parent */ window.__rinkreads_pov_camera__ || DEFAULT_CAMERA);
+  const blade = project({ ...bladeWorld, z: 0.5 }, window.__rinkreads_pov_camera__ || DEFAULT_CAMERA);
   if (!hands || !blade) return null;
   return (
     <g>
@@ -385,7 +385,7 @@ function GoaliePOVOverlay() {
 class POVErrorBoundary extends Component {
   constructor(props) { super(props); this.state = { hasError: false, error: null }; }
   static getDerivedStateFromError(error) { return { hasError: true, error }; }
-  componentDidCatch(error, info) { console.error("[IceIQPOVRink] Render error:", error, info); }
+  componentDidCatch(error, info) { console.error("[RinkReadsPOVRink] Render error:", error, info); }
   render() {
     if (this.state.hasError) {
       return (
@@ -400,7 +400,7 @@ class POVErrorBoundary extends Component {
   }
 }
 
-function IceIQPOVRinkInner({
+function RinkReadsPOVRinkInner({
   camera = DEFAULT_CAMERA,
   povRole = "skater",       // "skater" | "goalie" — which overlay anchor
   markers = [],
@@ -412,7 +412,7 @@ function IceIQPOVRinkInner({
 }) {
   const safeCam = sanitizeCamera(camera);
   // Stash camera so the StickFromMarker helper can read it without prop-drilling.
-  if (typeof window !== "undefined") window.__iceiq_pov_camera__ = safeCam;
+  if (typeof window !== "undefined") window.__rinkreads_pov_camera__ = safeCam;
 
   const safeMarkers = useMemo(() => {
     const arr = Array.isArray(markers) ? markers : [];
@@ -509,10 +509,10 @@ function IceIQPOVRinkInner({
   );
 }
 
-export default function IceIQPOVRink(props) {
+export default function RinkReadsPOVRink(props) {
   return (
     <POVErrorBoundary>
-      <IceIQPOVRinkInner {...props} />
+      <RinkReadsPOVRinkInner {...props} />
     </POVErrorBoundary>
   );
 }

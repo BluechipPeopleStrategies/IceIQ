@@ -1,5 +1,5 @@
 // Creates three shareable demo accounts in Supabase so people can log in
-// and try Ice-IQ at different tiers without signing up. Idempotent — re-
+// and try RinkReads at different tiers without signing up. Idempotent — re-
 // running the script repairs any missing profile fields without
 // duplicating users.
 //
@@ -51,14 +51,14 @@ const RESET = process.argv.includes("--reset");
 
 // ─────────────────────────────────────────────────────────────────────
 // The three accounts. Shared password so the user can copy one block
-// into a coach DM and have everything work. Emails use the @iceiq.demo
+// into a coach DM and have everything work. Emails use the @rinkreads.demo
 // domain so they read as obvious "this is a sample account."
 
-const SHARED_PASSWORD = "IceIQDemo2026!";
+const SHARED_PASSWORD = "RinkReadsDemo2026!";
 
 const ACCOUNTS = [
   {
-    email: "demo-free@iceiq.demo",
+    email: "demo-free@rinkreads.demo",
     profile: {
       role: "player",
       name: "Demo Player (Free)",
@@ -71,7 +71,7 @@ const ACCOUNTS = [
     description: "Free-tier player. Sees the FREE journey, the upgrade-to-Pro prompts, capped weekly quiz count. Perfect for showing parents what the on-ramp feels like.",
   },
   {
-    email: "demo-pro@iceiq.demo",
+    email: "demo-pro@rinkreads.demo",
     profile: {
       role: "player",
       name: "Demo Player (Pro)",
@@ -84,7 +84,7 @@ const ACCOUNTS = [
     description: "Pro-tier player. Unlimited quizzes, full Journey, Skills Map, mastery tracking, speed-bonus scoring, all interactive question types. The full player experience.",
   },
   {
-    email: "demo-coach@iceiq.demo",
+    email: "demo-coach@rinkreads.demo",
     profile: {
       role: "coach",
       name: "Demo Coach",
@@ -147,7 +147,7 @@ async function deleteAccount(email) {
 // Main
 
 async function main() {
-  console.log(`Ice-IQ demo accounts → ${url}\n`);
+  console.log(`RinkReads demo accounts → ${url}\n`);
 
   if (RESET) {
     if (!APPLY) {

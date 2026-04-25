@@ -3,12 +3,12 @@
 // - Category streak: longest active consecutive-correct run per quiz
 //   category, tracked across all quizzes.
 //
-// Daily streak lives separately in App.jsx (LS key iceiq_streak) — unchanged.
+// Daily streak lives separately in App.jsx (LS key rinkreads_streak) — unchanged.
 
 import { lsGetJSON, lsSetJSON } from "./storage.js";
 
-const LS_WEEKLY = "iceiq_weekly_streak_v1"; // per-player map: { [id]: { count, lastWeek } }
-const LS_CAT    = "iceiq_cat_streak_v1";    // per-player map: { [id]: { [cat]: count } }
+const LS_WEEKLY = "rinkreads_weekly_streak_v1"; // per-player map: { [id]: { count, lastWeek } }
+const LS_CAT    = "rinkreads_cat_streak_v1";    // per-player map: { [id]: { [cat]: count } }
 
 // ─────────────────────────────────────────────
 // Week key (ISO-ish: YYYY-Www, Sunday-anchored for hockey-season feel)

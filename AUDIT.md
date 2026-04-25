@@ -1,6 +1,6 @@
-# Ice-IQ Consistency Audit
+# RinkReads Consistency Audit
 
-Read-only audit of the Ice-IQ codebase (React + Vite, Supabase, Vercel).
+Read-only audit of the RinkReads codebase (React + Vite, Supabase, Vercel).
 Conducted against the conventions in [CLAUDE.md](CLAUDE.md) — inline styles
 and monolithic `src/App.jsx` are **intentional** and not flagged.
 
@@ -26,7 +26,7 @@ and monolithic `src/App.jsx` are **intentional** and not flagged.
 ### Three things to fix first (one-night punch list)
 
 1. **Remove `.env` from repo + rotate Supabase anon key** (HIGH, security).
-2. **Gate `iceiq_tier_override` behind `isDevBypassEnabled()`** so a production user can't flip themselves to TEAM tier via DevTools (HIGH).
+2. **Gate `rinkreads_tier_override` behind `isDevBypassEnabled()`** so a production user can't flip themselves to TEAM tier via DevTools (HIGH).
 3. **Delete or archive the 24 orphaned root files + move 5 stray scripts to `tools/`** (MED, but 15-minute cognitive-load win for the whole repo).
 
 ---
@@ -35,7 +35,7 @@ and monolithic `src/App.jsx` are **intentional** and not flagged.
 
 ### H-1 · `.env` committed to repository
 - **Category:** Config & Env · **Effort:** M
-- **File:** `/c/Users/mtsli/IceIQ/.env`
+- **File:** `/c/Users/mtsli/RinkReads/.env`
 - **Issue:** `.env` containing `VITE_SUPABASE_URL` + `VITE_SUPABASE_ANON_KEY` is checked into git. While `anon` keys are designed for client-side use and RLS is the real guardrail, committing any API credentials is a security smell — and anon keys still identify the project to attackers looking for RLS misconfigurations.
 - **Fix:** Add `.env` to `.gitignore`, run `git rm --cached .env`, rotate the anon key in Supabase, and commit a `.env.example` template. Rewrite history if the project is public-facing.
 - **Evidence:** `src/supabase.js:3-4` reads from `import.meta.env.VITE_SUPABASE_URL` + `VITE_SUPABASE_ANON_KEY`.
@@ -43,7 +43,7 @@ and monolithic `src/App.jsx` are **intentional** and not flagged.
 ### H-2 · Tier override bypassable from DevTools
 - **Category:** Auth & Permissions · **Effort:** S
 - **Files:** [src/App.jsx:37-45](src/App.jsx#L37)
-- **Issue:** `resolveTier()` reads `localStorage.iceiq_tier_override` unconditionally. Any user can open DevTools, run `localStorage.setItem("iceiq_tier_override","TEAM")`, refresh, and reach the coach dashboard. RLS will block backend writes, but UI state (SMART goals, weekly challenge, Pro features) renders as if upgraded.
+- **Issue:** `resolveTier()` reads `localStorage.rinkreads_tier_override` unconditionally. Any user can open DevTools, run `localStorage.setItem("rinkreads_tier_override","TEAM")`, refresh, and reach the coach dashboard. RLS will block backend writes, but UI state (SMART goals, weekly challenge, Pro features) renders as if upgraded.
 - **Fix:** Gate the override read on `isDevBypassEnabled()` from `src/utils/devBypass.js` so only dev-bypass sessions can use it.
 
 ### H-3 · Coach dashboard gated at render, not at role creation
@@ -149,7 +149,7 @@ and monolithic `src/App.jsx` are **intentional** and not flagged.
 ### M-14 · Mixed export styles in `shared.jsx`
 - **Category:** Component Patterns · **Effort:** S
 - **Files:** [src/shared.jsx](src/shared.jsx)
-- **Issue:** Some primitives are `export const Screen = (...) =>`, others are `export function IceIQLogo(...)`. Rest of codebase uses `export function`.
+- **Issue:** Some primitives are `export const Screen = (...) =>`, others are `export function RinkReadsLogo(...)`. Rest of codebase uses `export function`.
 - **Fix:** Standardize to `export function ComponentName(...)` in `shared.jsx`.
 
 ### M-15 · No shared data-shape definitions
@@ -164,7 +164,7 @@ and monolithic `src/App.jsx` are **intentional** and not flagged.
 
 ### L-1 · `console.log` left in production code
 - **Category:** Error Handling · **Effort:** S
-- **Files:** [src/App.jsx:1547-1549](src/App.jsx#L1547) ("Quiz useEffect running"), [src/App.jsx:5311](src/App.jsx#L5311) ("[Ice-IQ] Dev bypass active" — already gated by dev check, OK)
+- **Files:** [src/App.jsx:1547-1549](src/App.jsx#L1547) ("Quiz useEffect running"), [src/App.jsx:5311](src/App.jsx#L5311) ("[RinkReads] Dev bypass active" — already gated by dev check, OK)
 - **Fix:** Delete 1547–1549. Leave 5311.
 
 ### L-2 · Duplicate `getCoachRatingsForPlayer` call for same player

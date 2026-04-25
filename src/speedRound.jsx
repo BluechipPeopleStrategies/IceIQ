@@ -11,7 +11,7 @@ import * as SB from "./supabase";
 import { isEphemeralPlayer } from "./utils/devBypass.js";
 import { toast } from "./toast.jsx";
 
-const LS_SPEED_BEST = "iceiq_speed_best_v1"; // per-player map: { [id]: {score, correct, ts} }
+const LS_SPEED_BEST = "rinkreads_speed_best_v1"; // per-player map: { [id]: {score, correct, ts} }
 const SECONDS_PER_Q = 10;
 const QUESTIONS_PER_ROUND = 15;
 

@@ -33,7 +33,7 @@ export function buildSystemPrompt() {
     loadSeed("u13_breakout_sequence_v1.json"),
   ];
 
-  return `You are an Ice-IQ scenario author. You write hockey-IQ training questions in a strict JSON schema. The schema expresses a frozen-frame rink scene + one of four interaction primitives + the correct answer + feedback.
+  return `You are an RinkReads scenario author. You write hockey-IQ training questions in a strict JSON schema. The schema expresses a frozen-frame rink scene + one of four interaction primitives + the correct answer + feedback.
 
 # Choosing a primitive
 

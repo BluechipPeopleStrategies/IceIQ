@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect, useCallback, useMemo, Component } from "react";
-import IceIQRink from "./IceIQRink";
-import IceIQPOVRink from "./IceIQPOVRink";
+import RinkReadsRink from "./RinkReadsRink";
+import RinkReadsPOVRink from "./RinkReadsPOVRink";
 import { C, FONT } from "./shared.jsx";
 
 const M = 10;
@@ -46,7 +46,7 @@ function useSVGPoint(ref) {
       if (!ctm) return { x: 0, y: 0 };
       return pt.matrixTransform(ctm.inverse());
     } catch (err) {
-      console.warn("[IceIQRinkQuestion] svgPoint failed:", err);
+      console.warn("[RinkReadsRinkQuestion] svgPoint failed:", err);
       return { x: 0, y: 0 };
     }
   }, [ref]);
@@ -123,7 +123,7 @@ class QuestionErrorBoundary extends Component {
     return { hasError: true, error };
   }
   componentDidCatch(error, info) {
-    console.error("[IceIQRinkQuestion] Render error:", error, info);
+    console.error("[RinkReadsRinkQuestion] Render error:", error, info);
     if (this.props.onError) this.props.onError(error);
   }
   render() {
@@ -207,15 +207,15 @@ function validateQuestion(q) {
   return { errors, warnings, valid: errors.length === 0 };
 }
 
-export default function IceIQRinkQuestion({ question, onAnswer, onReset, onSkip }) {
+export default function RinkReadsRinkQuestion({ question, onAnswer, onReset, onSkip }) {
   const validation = validateQuestion(question);
 
   useEffect(() => {
     if (validation.warnings.length > 0) {
-      console.warn(`[IceIQRinkQuestion] "${question?.id}" warnings:`, validation.warnings);
+      console.warn(`[RinkReadsRinkQuestion] "${question?.id}" warnings:`, validation.warnings);
     }
     if (validation.errors.length > 0) {
-      console.error(`[IceIQRinkQuestion] "${question?.id}" errors:`, validation.errors);
+      console.error(`[RinkReadsRinkQuestion] "${question?.id}" errors:`, validation.errors);
     }
   }, [question?.id, validation.errors, validation.warnings]);
 
@@ -337,7 +337,7 @@ function MCWithRink({ question, onAnswer }) {
     <div>
       <p style={{ color: C.white, fontFamily: FONT.body, fontSize: 15, lineHeight: 1.5, margin: "0 0 0.9rem" }}>{question.q}</p>
       <div style={{ borderRadius: 10, overflow: "hidden", border: `1px solid ${C.border}`, background: C.bgCard, marginBottom: "0.9rem" }}>
-        <IceIQRink {...(question.rink || {})} />
+        <RinkReadsRink {...(question.rink || {})} />
       </div>
       <MCChoiceList question={question} onAnswer={onAnswer} />
     </div>
@@ -442,7 +442,7 @@ function DragTarget({ question, onAnswer, onReset }) {
       <p style={questionTextStyle}>{question.q}</p>
       <p style={hintTextStyle}>Drag the red puck to where it should go.</p>
       <div style={rinkFrameStyle}>
-        <IceIQRink {...(question.rink || {})} />
+        <RinkReadsRink {...(question.rink || {})} />
         <svg ref={svgRef} viewBox={getViewBox(question.rink?.view)} preserveAspectRatio="none"
           style={overlaySvgStyle(!verdict)}>
           {/* Target zones — fade dashed hints while dragging, highlight the
@@ -613,7 +613,7 @@ function DragPlace({ question, onAnswer, onReset }) {
       </div>
 
       <div style={rinkFrameStyle}>
-        <IceIQRink {...(question.rink || {})} />
+        <RinkReadsRink {...(question.rink || {})} />
         <svg ref={svgRef} viewBox={getViewBox(question.rink?.view)} preserveAspectRatio="none"
           style={overlaySvgStyle(true)}
           onDragOver={onDragOver} onDrop={onDrop}>
@@ -688,7 +688,7 @@ function ZoneClick({ question, onAnswer, onReset }) {
       <p style={{ color: C.white, fontFamily: FONT.body, fontSize: 15, lineHeight: 1.5, margin: "0 0 0.25rem" }}>{question.q}</p>
       <p style={{ color: C.dim, fontFamily: FONT.body, fontSize: 12, margin: "0 0 0.75rem" }}>Tap the correct area of the rink.</p>
       <div style={{ position: "relative", borderRadius: 10, overflow: "hidden", border: `1px solid ${C.border}`, background: C.bgCard, marginBottom: "0.75rem" }}>
-        <IceIQRink {...(question.rink || {})} />
+        <RinkReadsRink {...(question.rink || {})} />
         <svg viewBox={getViewBox(question.rink?.view)} preserveAspectRatio="none"
           style={{ position: "absolute", inset: 0, width: "100%", height: "100%", pointerEvents: done ? "none" : "auto" }}>
           {zones.map((z, i) => {
@@ -799,7 +799,7 @@ function MultiTap({ question, onAnswer, onReset }) {
       <p style={questionTextStyle}>{question.q}</p>
       <p style={hintTextStyle}>Tap every correct marker. More than one may be right.</p>
       <div style={rinkFrameStyle}>
-        <IceIQRink {...(question.rink || {})} />
+        <RinkReadsRink {...(question.rink || {})} />
         <svg viewBox={getViewBox(question.rink?.view)} preserveAspectRatio="none"
           style={overlaySvgStyle(!checked)}>
           {markers.map((m, i) => {
@@ -924,7 +924,7 @@ function Sequence({ question, onAnswer, onReset }) {
       <p style={questionTextStyle}>{question.q}</p>
       <p style={hintTextStyle}>Tap the markers in the correct order, 1 → {markers.length}.</p>
       <div style={rinkFrameStyle}>
-        <IceIQRink {...(question.rink || {})} />
+        <RinkReadsRink {...(question.rink || {})} />
         <svg viewBox={getViewBox(question.rink?.view)} preserveAspectRatio="none"
           style={overlaySvgStyle(!done)}>
           {/* Ideal-sequence path revealed after submission. */}
@@ -1230,7 +1230,7 @@ function PathDraw({ question, onAnswer, onReset }) {
       <p style={questionTextStyle}>{question.q}</p>
       <p style={hintTextStyle}>Click and drag from the starting player to the open ice.</p>
       <div style={rinkFrameStyle}>
-        <IceIQRink {...(question.rink || {})} />
+        <RinkReadsRink {...(question.rink || {})} />
         <svg ref={svgRef} viewBox={getViewBox(question.rink?.view)} preserveAspectRatio="none"
           style={{ ...overlaySvgStyle(!result), cursor: result ? "default" : "crosshair" }}
           onMouseDown={onDown} onTouchStart={onDown}>
@@ -1347,7 +1347,7 @@ function LaneSelect({ question, onAnswer, onReset }) {
       <p style={questionTextStyle}>{question.q}</p>
       <p style={hintTextStyle}>Tap the lane with no defender in it.</p>
       <div style={rinkFrameStyle}>
-        <IceIQRink {...(question.rink || {})} />
+        <RinkReadsRink {...(question.rink || {})} />
         <svg viewBox={getViewBox(question.rink?.view)} preserveAspectRatio="none"
           style={overlaySvgStyle(!done)}>
           {lanes.map((l, i) => {
@@ -1434,7 +1434,7 @@ function POVPick({ question, onAnswer, onReset }) {
       <p style={questionTextStyle}>{question.q}</p>
       <p style={hintTextStyle}>Tap what you see from the player's perspective.</p>
       <div style={{ ...rinkFrameStyle, marginBottom: "0.75rem" }}>
-        <IceIQPOVRink
+        <RinkReadsPOVRink
           camera={povProps.camera}
           povRole={povProps.povRole || "skater"}
           markers={povProps.markers}
@@ -1489,7 +1489,7 @@ function POVMC({ question, onAnswer }) {
     <div>
       <p style={{ ...questionTextStyle, marginBottom: "0.9rem" }}>{question.q}</p>
       <div style={{ ...rinkFrameStyle, marginBottom: "0.9rem" }}>
-        <IceIQPOVRink
+        <RinkReadsPOVRink
           camera={povProps.camera}
           povRole={povProps.povRole || "skater"}
           markers={povProps.markers}
@@ -1520,7 +1520,7 @@ function HotSpots({ question, onAnswer, onReset }) {
       <p style={questionTextStyle}>{question.q}</p>
       <p style={hintTextStyle}>Tap the best position.</p>
       <div style={rinkFrameStyle}>
-        <IceIQRink {...(question.rink || {})} />
+        <RinkReadsRink {...(question.rink || {})} />
         <svg viewBox={getViewBox(question.rink?.view)} preserveAspectRatio="none"
           style={overlaySvgStyle(!done)}>
           {spots.map((s, i) => {

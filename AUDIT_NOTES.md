@@ -10,8 +10,8 @@ during the read-only consistency audit. Companion to [AUDIT.md](AUDIT.md).
 ### Intentional patterns from CLAUDE.md
 - **Monolithic `src/App.jsx`** is intentional (CLAUDE.md line 8: "All logic/UI in `src/App.jsx`. NO `/components` or refactoring.") — not flagged as a finding.
 - **Inline CSS / style-block** is intentional (CLAUDE.md line 8: "CSS: inline/style-block.") — not flagged.
-- **localStorage keys prefixed `iceiq_`** is the convention; I assumed any `iceiq_`-prefixed key is in-family even without a central helper enforcing it.
-- **Two localStorage key styles** (`iceiq_free_cap` vs `iceiq_weekly`) are by design — different data categories. Not flagged.
+- **localStorage keys prefixed `rinkreads_`** is the convention; I assumed any `rinkreads_`-prefixed key is in-family even without a central helper enforcing it.
+- **Two localStorage key styles** (`rinkreads_free_cap` vs `rinkreads_weekly`) are by design — different data categories. Not flagged.
 - **Demo coach tier → TEAM, demo player → FREE** (CLAUDE.md lines 67–68) is the resolver rule. I did not flag `resolveTier` returning different tiers for the same session as an inconsistency because this is documented.
 
 ### Severity scoring
@@ -63,14 +63,14 @@ Not audited beyond the broadcast-overlay change. The 1400-line `src/Rink.jsx` ha
 ### Demo-ID taxonomy
 Six apparent ephemeral ID markers exist (`__demo__`, `__demo_coach__`, `__dev__`, `__dev_coach__`, `__preview__`, `__coach__`). Some are player-level, some are profile-level. `resolveTier` at [src/App.jsx:46](src/App.jsx#L46) and `isEphemeralPlayer` at [src/utils/devBypass.js:11](src/utils/devBypass.js#L11) handle different subsets. Is this intentional fragmentation or drift? A human should document which marker means what.
 
-### The `iceiq_tier_override` contract
+### The `rinkreads_tier_override` contract
 It's currently read on every render by `resolveTier`. The dev bypass panel's FREE/PRO/TEAM picker writes it. But so can any DevTools user. Is this an intentional "escape hatch" for support / testing, or did the override pre-date the dev-bypass gate and never get wired up? Gating it on `isDevBypassEnabled()` would close the production loophole but could break existing support workflows.
 
 ### "What is `_check.js` vs `_check2.cjs`?"
 Both at repo root, zero references, zero comments. Treating as dead. But the `.cjs` extension suggests they were needed when the module system was CommonJS — were they used as one-shot migrations? If so, mark that in a `legacy-scripts/` archive rather than delete outright.
 
 ### Export style in `shared.jsx`
-`export const Screen` (arrow) coexists with `export function IceIQLogo`. This may be a historical accident from a partial migration, or an explicit distinction (e.g. "const for pure-JSX passthrough components, function for components with logic"). I flagged as an inconsistency but a human should confirm intent before any sweep.
+`export const Screen` (arrow) coexists with `export function RinkReadsLogo`. This may be a historical accident from a partial migration, or an explicit distinction (e.g. "const for pure-JSX passthrough components, function for components with logic"). I flagged as an inconsistency but a human should confirm intent before any sweep.
 
 ### Is `REPORT_DESIGN.md` still load-bearing?
 File at repo root, unreferenced from any code, but clearly a design doc. CLAUDE.md doesn't mention it. Could be a planning artifact for the `AdminReports` screen or a stale brief. Not deleting — but worth a label ("archived design brief" vs "active spec").

@@ -15,16 +15,16 @@ function hasLS() {
 }
 
 // Dev-mode failure logging. Silent in production; logs in DevTools when
-// iceiq_dev_bypass is set. Keeps the common path quiet for real users
+// rinkreads_dev_bypass is set. Keeps the common path quiet for real users
 // (where an expected quota overflow shouldn't spam their console) while
 // giving developers visibility into why something didn't persist.
 function isDevMode() {
-  try { return window.localStorage.getItem("iceiq_dev_bypass") === "1"; }
+  try { return window.localStorage.getItem("rinkreads_dev_bypass") === "1"; }
   catch { return false; }
 }
 function warn(op, key, error) {
   if (isDevMode()) {
-    console.warn(`[IceIQ/storage] ${op}("${key}") failed:`, error?.message || error);
+    console.warn(`[RinkReads/storage] ${op}("${key}") failed:`, error?.message || error);
   }
 }
 

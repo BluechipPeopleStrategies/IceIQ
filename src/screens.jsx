@@ -369,7 +369,7 @@ const FEATURE_MATRIX = [
   { label:"SMART goal setting",          values:[true,      true,         true,         true] },
   { label:"Skills Map radar",            values:[false,     true,         true,         true] },
   { label:"Full skill rating (every category)", values:[false,true,       true,         true] },
-  { label:"Ice IQ Journey levels",       values:["64 (harder path)", "64", "64",        "64"] },
+  { label:"RinkReads Journey levels",       values:["64 (harder path)", "64", "64",        "64"] },
   { label:"Full session history",        values:["Last 5",  "Unlimited",  "Unlimited",  "Unlimited"] },
   { label:"Progress snapshots over time",values:[false,     true,         true,         true] },
 
@@ -395,11 +395,11 @@ function MatrixCell({ value, accent }) {
 }
 
 const PLAN_FAQ = [
-  { q:"Why is the season Sept → March?", a:"Ice-IQ is built around the Canadian/US minor hockey season. The Pro, Family, and Team passes give you the entire season in one payment — no monthly billing to chase between practices." },
+  { q:"Why is the season Sept → March?", a:"RinkReads is built around the Canadian/US minor hockey season. The Pro, Family, and Team passes give you the entire season in one payment — no monthly billing to chase between practices." },
   { q:"What happens on April 1?", a:"Paid passes enter a read-only offseason (you can review everything you did) and we'll prompt you to re-enroll starting August 15 for the next season. No surprise charges." },
-  { q:"What if I want to coach a team?", a:"Ice-IQ Team gives one coach a full roster dashboard for up to 20 players, plus per-player ratings, notes, and (coming soon) homework assignments you push to the whole team." },
+  { q:"What if I want to coach a team?", a:"RinkReads Team gives one coach a full roster dashboard for up to 20 players, plus per-player ratings, notes, and (coming soon) homework assignments you push to the whole team." },
   { q:"Can my kid use Free and I just upgrade later?", a:"Yes. Everything your kid does on Free — quizzes, goals, skill ratings — carries over when you upgrade. Free is capped at 3 quizzes/week and one age group, but nothing is lost." },
-  { q:"Is my payment data stored in Ice-IQ?", a:"No. Online payments route through Stripe. Ice-IQ stores only the tier flag and pass expiry. You can cancel reminder emails anytime from Profile → Notifications." },
+  { q:"Is my payment data stored in RinkReads?", a:"No. Online payments route through Stripe. RinkReads stores only the tier flag and pass expiry. You can cancel reminder emails anytime from Profile → Notifications." },
 ];
 
 export function PlansScreen({ onBack, tier }) {
@@ -419,7 +419,7 @@ export function PlansScreen({ onBack, tier }) {
         <div style={{textAlign:"center",marginBottom:"1.5rem"}}>
           <div style={{fontSize:10,letterSpacing:".16em",textTransform:"uppercase",color:C.gold,fontWeight:800,marginBottom:".35rem"}}>One price. One season.</div>
           <h1 style={{fontFamily:FONT.display,fontWeight:800,fontSize:"clamp(1.6rem,5vw,2rem)",margin:"0 0 .4rem",lineHeight:1.1}}>Pick the plan that fits your hockey year.</h1>
-          <p style={{fontSize:13,color:C.dim,lineHeight:1.55,maxWidth:480,margin:"0 auto"}}>Ice-IQ runs on the minor hockey calendar (September → March). Pay once, get the whole season. No monthly subscription chase.</p>
+          <p style={{fontSize:13,color:C.dim,lineHeight:1.55,maxWidth:480,margin:"0 auto"}}>RinkReads runs on the minor hockey calendar (September → March). Pay once, get the whole season. No monthly subscription chase.</p>
         </div>
 
         {/* Tier summary cards — top row */}
@@ -501,7 +501,7 @@ export function PlansScreen({ onBack, tier }) {
         <div style={{background:`linear-gradient(135deg,rgba(252,76,2,.1),rgba(207,69,32,.04))`,border:`1px solid ${C.goldBorder}`,borderRadius:14,padding:"1.25rem",textAlign:"center"}}>
           <div style={{fontSize:10,letterSpacing:".14em",textTransform:"uppercase",color:C.gold,fontWeight:800,marginBottom:".35rem"}}>Early access</div>
           <div style={{fontSize:14,fontWeight:700,color:C.white,marginBottom:".55rem",lineHeight:1.3}}>Online checkout is coming soon. In the meantime, reach out and we'll set you up directly.</div>
-          <a href="mailto:mtslifka@gmail.com?subject=Ice-IQ Pro Early Access" style={{display:"inline-block",background:C.gold,color:C.bg,border:"none",borderRadius:10,padding:".7rem 1.5rem",cursor:"pointer",fontWeight:800,fontSize:13,fontFamily:FONT.body,textDecoration:"none"}}>Contact us for early access →</a>
+          <a href="mailto:mtslifka@gmail.com?subject=RinkReads Pro Early Access" style={{display:"inline-block",background:C.gold,color:C.bg,border:"none",borderRadius:10,padding:".7rem 1.5rem",cursor:"pointer",fontWeight:800,fontSize:13,fontFamily:FONT.body,textDecoration:"none"}}>Contact us for early access →</a>
         </div>
       </div>
     </div>
@@ -1769,7 +1769,7 @@ export function InsightsScreen({ onBack, onInsightRead }) {
   const [insights, setInsights] = useState(null);
   const [openIds, setOpenIds] = useState(() => new Set());
   const [readSet, setReadSet] = useState(() => {
-    try { const raw = window.localStorage.getItem("iceiq_insights_read_v1"); return new Set(raw ? JSON.parse(raw) : []); }
+    try { const raw = window.localStorage.getItem("rinkreads_insights_read_v1"); return new Set(raw ? JSON.parse(raw) : []); }
     catch { return new Set(); }
   });
 
@@ -1780,11 +1780,11 @@ export function InsightsScreen({ onBack, onInsightRead }) {
   function markRead(stat) {
     if (!stat) return;
     try {
-      const raw = window.localStorage.getItem("iceiq_insights_read_v1");
+      const raw = window.localStorage.getItem("rinkreads_insights_read_v1");
       const arr = raw ? JSON.parse(raw) : [];
       if (!arr.includes(stat)) {
         arr.push(stat);
-        window.localStorage.setItem("iceiq_insights_read_v1", JSON.stringify(arr));
+        window.localStorage.setItem("rinkreads_insights_read_v1", JSON.stringify(arr));
         setReadSet(new Set(arr));
       }
     } catch {}
@@ -1844,20 +1844,20 @@ export function InsightsScreen({ onBack, onInsightRead }) {
 // PARENTS PAGE — first-time parents marketing/explainer surface.
 // Seven sections: why, not, use, progress, pricing, privacy, developer.
 // Reachable via hash #parents (pre- and post-auth).
-// Palette translated from the design spec's light-theme blues to Ice-IQ's
+// Palette translated from the design spec's light-theme blues to RinkReads's
 // dark-theme `C` tokens. Copy preserved verbatim from the spec.
 // ─────────────────────────────────────────────────────────
 export function ParentsPage({ onNavigate, onContact, photoSrc }) {
   useEffect(() => {
     try {
-      document.title = "For parents — Ice-IQ";
+      document.title = "For parents — RinkReads";
       let meta = document.querySelector('meta[name="description"]');
       if (!meta) {
         meta = document.createElement("meta");
         meta.name = "description";
         document.head.appendChild(meta);
       }
-      meta.content = "What Ice-IQ is, how to use it with your kid, and what to expect — written for first-time hockey parents.";
+      meta.content = "What RinkReads is, how to use it with your kid, and what to expect — written for first-time hockey parents.";
     } catch {}
   }, []);
 
@@ -1874,7 +1874,7 @@ export function ParentsPage({ onNavigate, onContact, photoSrc }) {
         {/* Hero — personal-note typography (Caveat) to signal this section
             is a direct address to the reader, not marketing copy. */}
         <div style={S.eyebrow}>For first-time parents</div>
-        <h1 style={{...S.h1, fontFamily:"'Caveat', 'Kalam', cursive", fontWeight:700, fontSize:44, letterSpacing:0}}>Welcome to Ice-IQ.</h1>
+        <h1 style={{...S.h1, fontFamily:"'Caveat', 'Kalam', cursive", fontWeight:700, fontSize:44, letterSpacing:0}}>Welcome to RinkReads.</h1>
         <p style={{...S.lead, fontFamily:"'Caveat', 'Kalam', cursive", fontWeight:500, fontSize:22, lineHeight:1.5}}>
           Your kid may already know how to chase a puck. This is where they
           learn to think the game.
@@ -1882,8 +1882,8 @@ export function ParentsPage({ onNavigate, onContact, photoSrc }) {
 
         {/* Table of contents */}
         <nav style={S.toc} aria-label="On this page">
-          <a href="#why" style={S.tocLink}>1. Why Ice-IQ exists</a>
-          <a href="#not" style={S.tocLink}>2. What Ice-IQ is <em>not</em></a>
+          <a href="#why" style={S.tocLink}>1. Why RinkReads exists</a>
+          <a href="#not" style={S.tocLink}>2. What RinkReads is <em>not</em></a>
           <a href="#use" style={S.tocLink}>3. How to use it</a>
           <a href="#progress" style={S.tocLink}>4. Reading progress</a>
           <a href="#yours" style={S.tocLink}>5. This is yours — help us build it</a>
@@ -1892,9 +1892,9 @@ export function ParentsPage({ onNavigate, onContact, photoSrc }) {
           <a href="#developer" style={S.tocLink}>8. About the developer</a>
         </nav>
 
-        {/* 01 — Why Ice-IQ exists */}
+        {/* 01 — Why RinkReads exists */}
         <section id="why" style={S.section}>
-          <div style={S.sectionEyebrow}>01 — Why Ice-IQ exists</div>
+          <div style={S.sectionEyebrow}>01 — Why RinkReads exists</div>
           <h2 style={S.h2}>Hockey sense isn't taught — it's assumed.</h2>
           <p style={S.body}>
             You spend thousands of dollars — on ice time, skates, sticks,
@@ -1905,15 +1905,15 @@ export function ParentsPage({ onNavigate, onContact, photoSrc }) {
             be — barely gets coached at all.
           </p>
           <p style={S.body}>
-            Ice-IQ is the off-ice reps your kid doesn't get anywhere else. Short
+            RinkReads is the off-ice reps your kid doesn't get anywhere else. Short
             scenarios. Real situations. Age-appropriate. Built so they can do
             it in 5 minutes before bed.
           </p>
         </section>
 
-        {/* 02 — What Ice-IQ is not */}
+        {/* 02 — What RinkReads is not */}
         <section id="not" style={S.section}>
-          <div style={S.sectionEyebrow}>02 — What Ice-IQ is not</div>
+          <div style={S.sectionEyebrow}>02 — What RinkReads is not</div>
           <h2 style={S.h2}>Three things to get clear before you start.</h2>
           <div style={S.cardGrid3}>
             <_NotCard
@@ -1937,7 +1937,7 @@ export function ParentsPage({ onNavigate, onContact, photoSrc }) {
           <h2 style={S.h2}>Short, consistent, theirs.</h2>
           <p style={S.body}>
             The strongest signal we see from families who stick with this is
-            simple: the kid owns it. Not the parent. Ice-IQ works when it's a
+            simple: the kid owns it. Not the parent. RinkReads works when it's a
             tool the player reaches for themselves — the way they'd reach for
             a stickhandling ball or a net in the driveway. Your job is to set
             them up and then get out of the way.
@@ -1987,7 +1987,7 @@ export function ParentsPage({ onNavigate, onContact, photoSrc }) {
           <div style={S.sectionEyebrow}>05 — This is yours — help us build it</div>
           <h2 style={S.h2}>Tell us what's missing. Often.</h2>
           <p style={S.body}>
-            Ice-IQ isn't a finished product shipped down from somewhere. It's
+            RinkReads isn't a finished product shipped down from somewhere. It's
             a living tool — and the parents using it are the ones shaping what
             it becomes next. Every question we add, every screen we redesign,
             every age-group gap we fill starts with a parent or a kid saying
@@ -2035,7 +2035,7 @@ export function ParentsPage({ onNavigate, onContact, photoSrc }) {
           <div style={S.sectionEyebrow}>07 — Privacy &amp; your kid's data</div>
           <h2 style={S.h2}>We collect as little as possible.</h2>
           <p style={S.body}>
-            Ice-IQ asks for a first name (or nickname) and an age group. That's
+            RinkReads asks for a first name (or nickname) and an age group. That's
             it. No email required for your kid's profile. No last name, no
             school, no team affiliation unless you're on the Team tier and a
             coach invites you.
@@ -2056,14 +2056,14 @@ export function ParentsPage({ onNavigate, onContact, photoSrc }) {
           <div style={S.devIntro}>
             <div style={S.photo}>
               {photoSrc ? (
-                <img src={photoSrc} alt="Thomas, Ice-IQ developer" style={S.photoImg}/>
+                <img src={photoSrc} alt="Thomas, RinkReads developer" style={S.photoImg}/>
               ) : (
                 <div style={S.photoPlaceholder}>Photo</div>
               )}
             </div>
             <div>
               <p style={S.body}>
-                Ice-IQ was built by Thomas, a hockey parent and provincial-level
+                RinkReads was built by Thomas, a hockey parent and provincial-level
                 coach born in the United States and based in Alberta. His own
                 kid plays — the gaps in how hockey sense gets taught showed up
                 at the kitchen table long before they showed up in a product.
@@ -2078,7 +2078,7 @@ export function ParentsPage({ onNavigate, onContact, photoSrc }) {
                 sectors.
               </p>
               <p style={S.body}>
-                The lens Ice-IQ is built through is high-pressure
+                The lens RinkReads is built through is high-pressure
                 decision-making — labour relations bargaining tables,
                 organizational crises, the kind of moments where the quality
                 of a decision matters more than knowing the right answer. The
@@ -2089,7 +2089,7 @@ export function ParentsPage({ onNavigate, onContact, photoSrc }) {
           </div>
 
           <div style={S.contactCallout}>
-            Questions, feedback, or want to pilot Ice-IQ with your team or
+            Questions, feedback, or want to pilot RinkReads with your team or
             association? Reach out directly —{" "}
             <a
               href="mailto:thomas@bluechip-people-strategies.com"
@@ -2121,14 +2121,14 @@ export function ParentsPage({ onNavigate, onContact, photoSrc }) {
 export function CoachesPage({ onNavigate, onContact }) {
   useEffect(() => {
     try {
-      document.title = "For coaches — Ice-IQ";
+      document.title = "For coaches — RinkReads";
       let meta = document.querySelector('meta[name="description"]');
       if (!meta) {
         meta = document.createElement("meta");
         meta.name = "description";
         document.head.appendChild(meta);
       }
-      meta.content = "What Ice-IQ gives a coach, how to run your team on it, and what to read off the dashboard — written for volunteer and association-level coaches.";
+      meta.content = "What RinkReads gives a coach, how to run your team on it, and what to read off the dashboard — written for volunteer and association-level coaches.";
     } catch {}
   }, []);
 
@@ -2150,14 +2150,14 @@ export function CoachesPage({ onNavigate, onContact }) {
           Coaching is hard. You give up weeknights, you eat cold dinners, you
           field parent emails you didn't ask for, and you carry a team's
           development on your shoulders for reasons most people will never
-          understand. We see it. Ice-IQ exists to give you a few minutes of
+          understand. We see it. RinkReads exists to give you a few minutes of
           your week back — and to put the <em>thinking</em> layer you don't
           have time to teach into your players' hands between practices.
         </p>
 
         <nav style={S.toc} aria-label="On this page">
-          <a href="#why-coach" style={S.tocLink}>1. What Ice-IQ does for you</a>
-          <a href="#not-coach" style={S.tocLink}>2. What Ice-IQ is <em>not</em></a>
+          <a href="#why-coach" style={S.tocLink}>1. What RinkReads does for you</a>
+          <a href="#not-coach" style={S.tocLink}>2. What RinkReads is <em>not</em></a>
           <a href="#setup" style={S.tocLink}>3. Setting up your team</a>
           <a href="#dashboard" style={S.tocLink}>4. Reading your dashboard</a>
           <a href="#notes" style={S.tocLink}>5. Player notes &amp; ratings</a>
@@ -2167,7 +2167,7 @@ export function CoachesPage({ onNavigate, onContact }) {
         </nav>
 
         <section id="why-coach" style={S.section}>
-          <div style={S.sectionEyebrow}>01 — What Ice-IQ does for you</div>
+          <div style={S.sectionEyebrow}>01 — What RinkReads does for you</div>
           <h2 style={S.h2}>The thinking layer you don't have time to teach.</h2>
           <p style={S.body}>
             If you're lucky, you get 60 minutes of ice — maybe twice a week,
@@ -2181,7 +2181,7 @@ export function CoachesPage({ onNavigate, onContact }) {
             quite teach it the way you would, or doesn't get taught at all.
           </p>
           <p style={S.body}>
-            Ice-IQ is that layer. Your players do the off-ice reps. You open
+            RinkReads is that layer. Your players do the off-ice reps. You open
             one screen and see — in plain English — the one concept your team
             is getting wrong right now, and how many of your kids are getting
             it wrong. Then you pick one drill that addresses it and run it at
@@ -2198,7 +2198,7 @@ export function CoachesPage({ onNavigate, onContact }) {
         </section>
 
         <section id="not-coach" style={S.section}>
-          <div style={S.sectionEyebrow}>02 — What Ice-IQ is not</div>
+          <div style={S.sectionEyebrow}>02 — What RinkReads is not</div>
           <h2 style={S.h2}>Three things to set straight.</h2>
           <div style={S.cardGrid3}>
             <_NotCard
@@ -2207,7 +2207,7 @@ export function CoachesPage({ onNavigate, onContact }) {
             />
             <_NotCard
               title="Not a replacement for practice"
-              body="Ice is where things get cemented. Ice-IQ is the reps between practices, so when they hit the ice they're already halfway there."
+              body="Ice is where things get cemented. RinkReads is the reps between practices, so when they hit the ice they're already halfway there."
             />
             <_NotCard
               title="Not a coaching manual"
@@ -2286,7 +2286,7 @@ export function CoachesPage({ onNavigate, onContact }) {
           <div style={S.sectionEyebrow}>06 — This is yours — help us build it</div>
           <h2 style={S.h2}>Tell us what's missing. Often.</h2>
           <p style={S.body}>
-            Ice-IQ for coaches is early. The feature set will look different
+            RinkReads for coaches is early. The feature set will look different
             in six months, and the thing driving that difference is coaches
             telling us what works, what doesn't, and what they actually
             need. We're not guessing — we're asking.
@@ -2319,10 +2319,10 @@ export function CoachesPage({ onNavigate, onContact }) {
             <button
               style={{...S.btn,background:C.goldDim,border:`1px solid ${C.goldBorder}`,color:C.gold,fontWeight:800}}
               onClick={() => {
-                const subject = encodeURIComponent("Ice-IQ for our association");
+                const subject = encodeURIComponent("RinkReads for our association");
                 const body = encodeURIComponent(
-                  "Hi — I coach a team in our association and I think Ice-IQ could be a good fit for us at a broader level.\n\n" +
-                  "Take a look: https://ice-iq.vercel.app/#coaches\n\n" +
+                  "Hi — I coach a team in our association and I think RinkReads could be a good fit for us at a broader level.\n\n" +
+                  "Take a look: https://rinkreads.com/#coaches\n\n" +
                   "Thanks,"
                 );
                 try { window.location.href = `mailto:?subject=${subject}&body=${body}`; } catch {}
@@ -2330,9 +2330,9 @@ export function CoachesPage({ onNavigate, onContact }) {
               ✉️ Forward to your association
             </button>
             <button style={S.btn} onClick={() => {
-              const url = "https://ice-iq.vercel.app/#coaches";
+              const url = "https://rinkreads.com/#coaches";
               if (navigator?.share) {
-                navigator.share({ title: "Ice-IQ for coaches", url }).catch(() => {});
+                navigator.share({ title: "RinkReads for coaches", url }).catch(() => {});
               } else if (navigator?.clipboard) {
                 navigator.clipboard.writeText(url).then(() => toast.success("Link copied — paste it wherever you need to share it.")).catch(() => {});
               }
@@ -2381,10 +2381,10 @@ export function CoachesPage({ onNavigate, onContact }) {
 export function PlayersPage({ onNavigate, onContact }) {
   useEffect(() => {
     try {
-      document.title = "For players — Ice-IQ";
+      document.title = "For players — RinkReads";
       let meta = document.querySelector('meta[name="description"]');
       if (!meta) { meta = document.createElement("meta"); meta.name = "description"; document.head.appendChild(meta); }
-      meta.content = "The player's guide to Ice-IQ — what it is, how to use it, and how to get the most out of the off-ice reps.";
+      meta.content = "The player's guide to RinkReads — what it is, how to use it, and how to get the most out of the off-ice reps.";
     } catch {}
   }, []);
   function handleNav(route) { if (typeof onNavigate === "function") onNavigate(route); }
@@ -2400,7 +2400,7 @@ export function PlayersPage({ onNavigate, onContact }) {
         <p style={{...S.lead, fontFamily:"'Caveat', 'Kalam', cursive", fontWeight:500, fontSize:22, lineHeight:1.5}}>
           Your parents signed you up, but this app isn't theirs. It's yours.
           Your profile. Your goals. Your streak. The kids who get the most out
-          of Ice-IQ are the ones who open it on their own, pick their own
+          of RinkReads are the ones who open it on their own, pick their own
           drills to watch, and chase their own score.
         </p>
 
@@ -2418,7 +2418,7 @@ export function PlayersPage({ onNavigate, onContact }) {
             The hardest part of hockey isn't the skating — it's the reading.
             Knowing where to be. Knowing when to pass, when to shoot, when to
             pinch, when to back off. Those reads get faster the more you see
-            them. Ice-IQ is where you see them, over and over, until they're
+            them. RinkReads is where you see them, over and over, until they're
             automatic when the puck drops.
           </p>
           <p style={S.body}>
@@ -2481,10 +2481,10 @@ export function PlayersPage({ onNavigate, onContact }) {
 export function AssociationsPage({ onNavigate, onContact }) {
   useEffect(() => {
     try {
-      document.title = "For associations — Ice-IQ";
+      document.title = "For associations — RinkReads";
       let meta = document.querySelector('meta[name="description"]');
       if (!meta) { meta = document.createElement("meta"); meta.name = "description"; document.head.appendChild(meta); }
-      meta.content = "How Ice-IQ fits inside a minor-hockey association: development standards, coach support, and player literacy at scale.";
+      meta.content = "How RinkReads fits inside a minor-hockey association: development standards, coach support, and player literacy at scale.";
     } catch {}
   }, []);
   function handleNav(route) { if (typeof onNavigate === "function") onNavigate(route); }
@@ -2500,7 +2500,7 @@ export function AssociationsPage({ onNavigate, onContact }) {
         <p style={{...S.lead, fontFamily:"'Caveat', 'Kalam', cursive", fontWeight:500, fontSize:22, lineHeight:1.5}}>
           Associations are the volunteers nobody claps for — the ones who
           keep ice booked, coaches trained, and kids on teams season after
-          season. We built Ice-IQ to give your coaches a tool they can
+          season. We built RinkReads to give your coaches a tool they can
           actually use on Tuesday night, and your players a standard of
           hockey sense they can carry from house league up to rep.
         </p>
@@ -2519,12 +2519,12 @@ export function AssociationsPage({ onNavigate, onContact }) {
             The hardest part of running minor hockey isn't ice; it's
             consistency. Every coach has their own philosophy, every team
             learns systems differently, every age group arrives with wildly
-            different readiness. Ice-IQ gives you a common language —
+            different readiness. RinkReads gives you a common language —
             age-appropriate, progressive, and opinion-free — that lives
             alongside whatever your coaches are already doing.
           </p>
           <p style={S.body}>
-            Players who use Ice-IQ through their U9, U11 and U13 seasons
+            Players who use RinkReads through their U9, U11 and U13 seasons
             show up to tryouts able to articulate their own reads. That's
             evaluators dream material, and it's the kind of development
             record that makes your association look exactly as serious as
@@ -2556,7 +2556,7 @@ export function AssociationsPage({ onNavigate, onContact }) {
           <div style={S.sectionEyebrow}>04 — This is yours — help us build it</div>
           <h2 style={S.h2}>Tell us what an association actually needs.</h2>
           <p style={S.body}>
-            Every association is different. We're building Ice-IQ by
+            Every association is different. We're building RinkReads by
             listening to the associations using it, not by guessing. What
             reporting would help your VP Hockey? What's the development
             conversation you wish you could have but don't have the tools
@@ -2574,7 +2574,7 @@ export function AssociationsPage({ onNavigate, onContact }) {
         <div style={S.footerCtas}>
           <button style={S.btn} onClick={handleContact}>Contact us →</button>
           <button style={S.btn} onClick={() => handleNav("coaches")}>See the coaches page</button>
-          <button style={S.btn} onClick={() => handleNav("home")}>Back to Ice-IQ</button>
+          <button style={S.btn} onClick={() => handleNav("home")}>Back to RinkReads</button>
         </div>
       </div>
     </div>
@@ -2627,14 +2627,14 @@ export function DeveloperBlurb({ photoSrc }) {
       <div style={S.devIntro}>
         <div style={S.photo}>
           {photoSrc ? (
-            <img src={photoSrc} alt="Thomas, Ice-IQ developer" style={S.photoImg}/>
+            <img src={photoSrc} alt="Thomas, RinkReads developer" style={S.photoImg}/>
           ) : (
             <div style={S.photoPlaceholder}>Photo</div>
           )}
         </div>
         <div>
           <p style={S.body}>
-            Ice-IQ is built by Thomas — a hockey parent and provincial-level
+            RinkReads is built by Thomas — a hockey parent and provincial-level
             coach, senior HR consultant, and founder of BlueChip People
             Strategies. Holds a Master's in coaching, has taught at multiple
             post-secondary institutions, and has significant experience
@@ -2642,7 +2642,7 @@ export function DeveloperBlurb({ photoSrc }) {
             post-secondary sectors.
           </p>
           <p style={S.body}>
-            The lens Ice-IQ is built through is high-pressure decision-making
+            The lens RinkReads is built through is high-pressure decision-making
             — bargaining tables, organizational crises, the moments where the
             quality of a decision matters more than knowing the right answer.
             That's why the scenarios are written for how kids actually

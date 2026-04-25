@@ -18,14 +18,14 @@
 | # | Commit | Finding | What changed |
 |---|---|---|---|
 | 1 | `1fab489` | H-5, M-5, M-6 | Janitor pass — deleted 6 root scripts (superseded by tools/quality-scan.mjs), deleted 24 orphan data-processing JSON/TXT files, removed broken `audit-u13` npm script, tightened `.gitignore` for future root-level artifact patterns. |
-| 2 | `5ea47eb` | H-2 | `resolveTier()` now only honors `iceiq_tier_override` inside a dev-bypass session (`isDevBypassEnabled()`). Production users can no longer flip their UI to TEAM via DevTools. |
+| 2 | `5ea47eb` | H-2 | `resolveTier()` now only honors `rinkreads_tier_override` inside a dev-bypass session (`isDevBypassEnabled()`). Production users can no longer flip their UI to TEAM via DevTools. |
 | 3 | `42cfc75` | H-4 | `CoachRatingScreenAuthed.save()` verifies `session.user.id === coach.id` before writing. Mismatch throws with a user-actionable message instead of cryptic Supabase RLS error. |
 | 4 | `a294b00` | L-1, L-3 | Dropped 3 leftover debug `console.log`s in Quiz useEffect. Renamed generic `data` → `reviewQuestions` in QuestionReviewScreen loader. |
 | 5 | `add5afc` | M-10, M-13 | Exported `C.gradientPrimary` in shared.jsx. Migrated all 4 inline `linear-gradient(135deg, ${C.gold}, #CF4520)` call sites to the token. `#CF4520` now lives only in shared.jsx. |
 | 6 | `bf438e6` | M-3 | Created `src/utils/storage.js` as the single source of truth for localStorage access (`lsGetStr`/`lsSetStr`/`lsGetJSON`/`lsSetJSON`/`lsRemove`). Migrated App.jsx + profiles.js + seasonPass.js + deviceLock.js + devBypass.js + trainingLog.js. |
 | 7 | `32dc01e` | M-4 | Routed rinkProgress / depthChart / weeklyChallenge raw `JSON.parse` + `localStorage.setItem` callers through storage.js helpers. Corrupted LS / quota overflow / privacy-mode failures now handled consistently. |
 | 8 | `af48770` | M-1, M-2 | Documented error-handling rule at top of supabase.js (writes throw, reads return shape + warn, telemetry silent). Added `warn()` helper with scoped context tags. Swept all reads that silently dropped errors. Return shapes kept stable to avoid call-site churn. |
-| 9 | `cb236a9` | M-9 | Added dev-mode `warn()` inside storage.js helpers (logs when `iceiq_dev_bypass=1`, silent otherwise). Collapsed 4 inline `try { LS.xxx } catch {}` sites in App.jsx to storage.js helper calls. |
+| 9 | `cb236a9` | M-9 | Added dev-mode `warn()` inside storage.js helpers (logs when `rinkreads_dev_bypass=1`, silent otherwise). Collapsed 4 inline `try { LS.xxx } catch {}` sites in App.jsx to storage.js helper calls. |
 | 10 | `ac716cf` | M-15 | Added `src/utils/types.js` with JSDoc `@typedef` blocks for Player / Coach / Team / QuizResult / QuizSession / Goal / ParentRatings / TrainingSession. Not enforced — IDE-surface only. |
 
 ---

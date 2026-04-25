@@ -1,11 +1,11 @@
-# IceIQ Rink System — Integration Guide (self-healing v2.1)
+# RinkReads Rink System — Integration Guide (self-healing v2.1)
 
-Drop into your IceIQ repo in 5 sequential Claude Code prompts.
+Drop into your RinkReads repo in 5 sequential Claude Code prompts.
 Each prompt is copy-paste ready.
 
 ## What's new in v2.1 — self-healing features
 
-Both `IceIQRink.jsx` and `IceIQRinkQuestion.jsx` now **validate, sanitize,
+Both `RinkReadsRink.jsx` and `RinkReadsRinkQuestion.jsx` now **validate, sanitize,
 and recover** instead of crashing when data is imperfect:
 
 ### Auto-fixes silently
@@ -29,7 +29,7 @@ and recover** instead of crashing when data is imperfect:
 
 ### Logs to console for debugging
 Everything the system auto-fixes gets logged as a `console.warn` with the
-prefix `[IceIQRink]` or `[IceIQRinkQuestion]` so you can find issues when
+prefix `[RinkReadsRink]` or `[RinkReadsRinkQuestion]` so you can find issues when
 testing — without the user ever seeing a broken question.
 
 **Net effect:** a question bank contributor can submit imperfect JSON and
@@ -38,11 +38,11 @@ never see a white screen of death.
 
 ---
 
-## Files to add to iceiq/src/
+## Files to add to rinkreads/src/
 
-Before starting, copy these three files into `iceiq/src/`:
-1. `IceIQRink.jsx` — Olympic-scale rink with validation + error boundary
-2. `IceIQRinkQuestion.jsx` — question renderer with validation + error boundary
+Before starting, copy these three files into `rinkreads/src/`:
+1. `RinkReadsRink.jsx` — Olympic-scale rink with validation + error boundary
+2. `RinkReadsRinkQuestion.jsx` — question renderer with validation + error boundary
 3. Keep your existing `App.jsx` unchanged for now
 
 ---
@@ -50,13 +50,13 @@ Before starting, copy these three files into `iceiq/src/`:
 ## PROMPT 1 — Install the rink component files
 
 ```
-I'm adding two new React components to the IceIQ app.
+I'm adding two new React components to the RinkReads app.
 
-1. Confirm IceIQRink.jsx and IceIQRinkQuestion.jsx are in src/ (I just
+1. Confirm RinkReadsRink.jsx and RinkReadsRinkQuestion.jsx are in src/ (I just
    placed them there). If they're somewhere else, move them to src/.
 
-2. Verify the imports resolve cleanly. IceIQRinkQuestion.jsx imports from
-   "./IceIQRink" — make sure that path works.
+2. Verify the imports resolve cleanly. RinkReadsRinkQuestion.jsx imports from
+   "./RinkReadsRink" — make sure that path works.
 
 3. Both files use React's class-based error boundaries (class Component),
    which is normal React and requires no extra dependencies. Confirm no
@@ -82,7 +82,7 @@ question has a `rink` field OR the type is one of these new interactive types:
   drag-target, drag-place, zone-click, multi-tap, sequence-rink, path-draw,
   lane-select, hot-spots
 
-...then render <IceIQRinkQuestion question={q} onAnswer={handleAnswer}
+...then render <RinkReadsRinkQuestion question={q} onAnswer={handleAnswer}
 onSkip={handleSkipQuestion} /> instead of the existing renderer.
 
 Important details:
@@ -96,7 +96,7 @@ Important details:
   info, but the primary boolean is all the existing flow needs.
 
 Add the import at the top of App.jsx:
-  import IceIQRinkQuestion from "./IceIQRinkQuestion";
+  import RinkReadsRinkQuestion from "./RinkReadsRinkQuestion";
 
 Show me the diff before applying.
 ```
@@ -176,7 +176,7 @@ Don't modify any existing questions. Just append these five.
 
 After adding, run npm run dev, navigate to each question in the app, and
 verify they render and respond correctly. Open the browser console and
-confirm no [IceIQRink] or [IceIQRinkQuestion] warnings appear — those
+confirm no [RinkReadsRink] or [RinkReadsRinkQuestion] warnings appear — those
 indicate data issues the system auto-fixed but should ideally be clean.
 ```
 
@@ -205,12 +205,12 @@ documents:
    - path-draw (start, target, avoid arrays)
    - lane-select (lanes array with clear flag)
    - hot-spots (spots array with correct flag)
-4. A reference to the component files: IceIQRink.jsx renders the rink,
-   IceIQRinkQuestion.jsx dispatches to the right interactive component per
+4. A reference to the component files: RinkReadsRink.jsx renders the rink,
+   RinkReadsRinkQuestion.jsx dispatches to the right interactive component per
    question type.
 5. Self-healing: both components validate and auto-fix bad data (coord
    clamping, unknown type fallbacks, null checks). Errors are logged to
-   console with [IceIQRink] or [IceIQRinkQuestion] prefixes for debugging.
+   console with [RinkReadsRink] or [RinkReadsRinkQuestion] prefixes for debugging.
    Unrecoverable questions show a skip card instead of crashing.
 6. Authoring workflow: use the standalone editor tool (Claude artifact) to
    build questions visually and paste JSON into the question bank array.
@@ -238,7 +238,7 @@ Run these checks in order, stop if any fail:
 Then commit the changes in one commit with message:
 "Add self-healing Olympic-scale rink component with 8 interactive question types (v2.1 schema)"
 
-Push to main. Vercel will auto-deploy to ice-iq.vercel.app.
+Push to main. Vercel will auto-deploy to rinkreads.com.
 
 Verify the deployment by loading the live URL and navigating to the new
 questions.
@@ -305,5 +305,5 @@ catches this but an edge case might slip through — the error boundary is
 the last line of defense.
 
 **Warnings flood the console:** Means multiple questions have data issues.
-Filter by ID in the console: `[IceIQRinkQuestion] "u11q042" warnings:`
+Filter by ID in the console: `[RinkReadsRinkQuestion] "u11q042" warnings:`
 shows you exactly which questions need cleanup. Fix those IDs in the bank.

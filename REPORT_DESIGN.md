@@ -1,4 +1,4 @@
-# Ice-IQ Game Sense Profile Report
+# RinkReads Game Sense Profile Report
 
 ## Overview
 Multi-dimensional breakdown of player's hockey game sense using a 6-competency radar chart, peer comparison, and monthly trend analysis.

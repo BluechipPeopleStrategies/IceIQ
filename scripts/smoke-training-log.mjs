@@ -44,10 +44,10 @@ const admin = createClient(url, serviceKey, { auth: { persistSession: false } })
 const created = { users: [], teams: [] };
 
 function ok(label) { console.log(`  ✓ ${label}`); }
-function gen(role) { return `smoke-${role}-${Date.now()}-${Math.floor(Math.random() * 10000)}@iceiq.test`; }
+function gen(role) { return `smoke-${role}-${Date.now()}-${Math.floor(Math.random() * 10000)}@rinkreads.test`; }
 
 async function main() {
-  console.log("Ice-IQ training-log smoke test → " + url);
+  console.log("RinkReads training-log smoke test → " + url);
   const pw = "smoke-" + Math.random().toString(36).slice(2, 12);
 
   // Create one team-owning coach + one unrelated coach + one player.

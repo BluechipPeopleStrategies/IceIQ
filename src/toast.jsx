@@ -79,7 +79,7 @@ export function ToastContainer() {
   if (!items.length) return null;
   return (
     <div style={{position:"fixed",top:16,right:12,left:12,zIndex:400,display:"flex",flexDirection:"column",alignItems:"center",gap:".5rem",pointerEvents:"none"}}>
-      <style>{`@keyframes iceiq-toast-in { from { opacity:0; transform: translateY(-8px); } to { opacity:1; transform: translateY(0); } }`}</style>
+      <style>{`@keyframes rinkreads-toast-in { from { opacity:0; transform: translateY(-8px); } to { opacity:1; transform: translateY(0); } }`}</style>
       {items.slice(-3).map(t => {
         const s = toastStyles(t.kind);
         const isBig = t.kind === "celebrate";
@@ -100,7 +100,7 @@ export function ToastContainer() {
               color: C.white,
               fontFamily: FONT.body,
               display: "flex", alignItems: isBig ? "center" : "flex-start", gap: ".7rem",
-              animation: "iceiq-toast-in .22s ease-out",
+              animation: "rinkreads-toast-in .22s ease-out",
             }}>
             <div style={{fontSize: isBig ? 34 : 18, lineHeight: 1, flexShrink: 0, color: s.color}}>
               {t.icon || s.icon}

@@ -6,10 +6,10 @@
 import { lsGet, lsSet } from "./storage.js";
 
 const KEYS = {
-  deviceId:         "iceiq_device_id",
-  ageGroupLock:     "iceiq_age_group_lock",
-  switchCount:      "iceiq_switch_count",
-  seasonResetYear:  "iceiq_season_reset_year",
+  deviceId:         "rinkreads_device_id",
+  ageGroupLock:     "rinkreads_age_group_lock",
+  switchCount:      "rinkreads_switch_count",
+  seasonResetYear:  "rinkreads_season_reset_year",
 };
 
 const FREE_SWITCH_ALLOWANCE = 1; // one free switch, then Pro prompt

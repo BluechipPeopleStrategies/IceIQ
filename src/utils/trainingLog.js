@@ -2,7 +2,7 @@ import { lsGetJSON, lsSetJSON } from "./storage.js";
 import { saveTrainingSessionRemote } from "../supabase.js";
 import { isEphemeralPlayer } from "./devBypass.js";
 
-const TRAINING_KEY = "iceiq_training_log";
+const TRAINING_KEY = "rinkreads_training_log";
 
 export function getTrainingLog(playerId) {
   const all = lsGetJSON(TRAINING_KEY, {});

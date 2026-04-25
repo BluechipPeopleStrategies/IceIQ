@@ -79,7 +79,7 @@ function sanitizeMarker(m, idx = 0) {
   if (!m || typeof m !== "object") return null;
   let type = typeof m.type === "string" ? m.type : "player";
   if (!VALID_MARKER_TYPES.includes(type)) {
-    console.warn(`[IceIQRink] Unknown marker type "${m.type}" at index ${idx}, defaulting to "player"`);
+    console.warn(`[RinkReadsRink] Unknown marker type "${m.type}" at index ${idx}, defaulting to "player"`);
     type = "player";
   }
   const x = clamp(toFiniteNumber(m.x, CX), -20, D.length + 20);
@@ -94,7 +94,7 @@ function sanitizeLine(l, idx = 0) {
   if (!l || typeof l !== "object") return null;
   let type = typeof l.type === "string" ? l.type : "skate";
   if (!VALID_LINE_TYPES.includes(type)) {
-    console.warn(`[IceIQRink] Unknown line type "${l.type}" at index ${idx}, defaulting to "skate"`);
+    console.warn(`[RinkReadsRink] Unknown line type "${l.type}" at index ${idx}, defaulting to "skate"`);
     type = "skate";
   }
   const x1 = clamp(toFiniteNumber(l.x1, 0), -20, D.length + 20);
@@ -197,13 +197,13 @@ function Zone({ zoneKey }) {
   if (!zoneKey || zoneKey === "none") return null;
   const preset = ZONE_PRESETS[zoneKey];
   if (!preset) {
-    console.warn(`[IceIQRink] Unknown zone "${zoneKey}". Valid zones: ${Object.keys(ZONE_PRESETS).join(", ")}`);
+    console.warn(`[RinkReadsRink] Unknown zone "${zoneKey}". Valid zones: ${Object.keys(ZONE_PRESETS).join(", ")}`);
     return null;
   }
   try {
     return preset();
   } catch (err) {
-    console.error(`[IceIQRink] Error rendering zone "${zoneKey}":`, err);
+    console.error(`[RinkReadsRink] Error rendering zone "${zoneKey}":`, err);
     return null;
   }
 }
@@ -328,10 +328,10 @@ function Marker({ marker }) {
 
 function Line({ line }) {
   const markerEnd = line.arrow === false ? undefined
-    : line.type === "shoot" ? "url(#iceiq-arrow-red)"
-    : line.color === "green" ? "url(#iceiq-arrow-green)"
-    : line.color === "red" ? "url(#iceiq-arrow-red)"
-    : "url(#iceiq-arrow-black)";
+    : line.type === "shoot" ? "url(#rinkreads-arrow-red)"
+    : line.color === "green" ? "url(#rinkreads-arrow-green)"
+    : line.color === "red" ? "url(#rinkreads-arrow-red)"
+    : "url(#rinkreads-arrow-black)";
 
   const stroke = line.type === "shoot" ? "#CC1F2B"
     : line.color === "green" ? "#1D9E75"
@@ -380,7 +380,7 @@ class RinkErrorBoundary extends Component {
     return { hasError: true, error };
   }
   componentDidCatch(error, info) {
-    console.error("[IceIQRink] Render error caught:", error, info);
+    console.error("[RinkReadsRink] Render error caught:", error, info);
   }
   render() {
     if (this.state.hasError) {
@@ -405,7 +405,7 @@ class RinkErrorBoundary extends Component {
   }
 }
 
-function IceIQRinkInner({
+function RinkReadsRinkInner({
   view = "full",
   zone = "none",
   overlays = [],
@@ -460,13 +460,13 @@ function IceIQRinkInner({
         <clipPath id={clipId}>
           <path d={outlinePath} />
         </clipPath>
-        <marker id="iceiq-arrow-black" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto">
+        <marker id="rinkreads-arrow-black" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto">
           <polygon points="0 0, 6 3, 0 6" fill="#2C2C2A" />
         </marker>
-        <marker id="iceiq-arrow-red" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto">
+        <marker id="rinkreads-arrow-red" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto">
           <polygon points="0 0, 6 3, 0 6" fill="#CC1F2B" />
         </marker>
-        <marker id="iceiq-arrow-green" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto">
+        <marker id="rinkreads-arrow-green" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto">
           <polygon points="0 0, 6 3, 0 6" fill="#1D9E75" />
         </marker>
       </defs>
@@ -555,10 +555,10 @@ function IceIQRinkInner({
   );
 }
 
-export default function IceIQRink(props) {
+export default function RinkReadsRink(props) {
   return (
     <RinkErrorBoundary>
-      <IceIQRinkInner {...props} />
+      <RinkReadsRinkInner {...props} />
     </RinkErrorBoundary>
   );
 }

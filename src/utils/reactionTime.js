@@ -5,7 +5,7 @@
 
 import { lsGetJSON, lsSetJSON } from "./storage.js";
 
-const LS_KEY = "iceiq_rt_log_v1";
+const LS_KEY = "rinkreads_rt_log_v1";
 
 // Shape: { [playerId]: [ { id, cat, ms, ok, reason, ts }, ... ] }
 

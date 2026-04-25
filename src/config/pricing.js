@@ -1,4 +1,4 @@
-// IceIQ pricing tiers
+// RinkReads pricing tiers
 // Single source of truth for what each tier includes.
 // Prices in CAD.
 
@@ -18,7 +18,7 @@ export const FREE = {
 };
 
 export const PRO = {
-  name: "Ice-IQ Pro",
+  name: "RinkReads Pro",
   // Hockey season (Sept–Mar): 7 months
   hockeySeasonCAD: 89.99,
   hockeySeasonMonths: "Sept–Mar",
@@ -35,7 +35,7 @@ export const PRO = {
 };
 
 export const FAMILY = {
-  name: "Ice-IQ Family",
+  name: "RinkReads Family",
   // Hockey season (Sept–Mar): 7 months
   hockeySeasonCAD: 139.99,
   hockeySeasonMonths: "Sept–Mar",
@@ -52,7 +52,7 @@ export const FAMILY = {
 };
 
 export const TEAM = {
-  name: "Ice-IQ Team",
+  name: "RinkReads Team",
   // Hockey season only (Sept–Mar): 7 months
   hockeySeasonCAD: 249.99,
   hockeySeasonMonths: "Sept–Mar",

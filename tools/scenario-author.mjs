@@ -72,7 +72,7 @@ function runClaude({ system, prompt, schema, model, budget }) {
     // System prompt + schema can both be large + contain shell-special
     // characters. Easiest portable path: write to temp files and pass
     // file paths via the --*-file flags claude supports.
-    const tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), "iceiq-author-"));
+    const tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), "rinkreads-author-"));
     const sysPath = path.join(tmpDir, "system.txt");
     fs.writeFileSync(sysPath, system, "utf8");
 
@@ -235,7 +235,7 @@ async function cmdShow({ positional }) {
 }
 
 function cmdHelp() {
-  console.log(`scenario-author — IceIQ scenario authoring CLI
+  console.log(`scenario-author — RinkReads scenario authoring CLI
 
 usage:
   node tools/scenario-author.mjs new "<natural-language description>" [--model sonnet|opus] [--budget 1] [--out <path>] [--no-save]

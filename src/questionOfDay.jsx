@@ -1,5 +1,5 @@
 // Question of the Day — one shared MC/TF question per age group per day.
-// Every U11 player in the world gets the same Ice-IQ question today; it
+// Every U11 player in the world gets the same RinkReads question today; it
 // resets at midnight local.
 //
 // Three pieces:
@@ -15,7 +15,7 @@ import { loadQB } from "./qbLoader.js";
 import { lsGetJSON, lsSetJSON } from "./utils/storage.js";
 import { toast } from "./toast.jsx";
 
-const LS_QOTD = "iceiq_qotd_done_v1";
+const LS_QOTD = "rinkreads_qotd_done_v1";
 
 // ─────────────────────────────────────────────
 // Picker
@@ -136,7 +136,7 @@ export function QotDScreen({ question, player, onBack }) {
     const s = getQotdState(player.id);
     const ymd = todayYmd();
     const emoji = s?.ok ? "🎯" : "❌";
-    const text = `Ice-IQ QotD ${ymd} ${emoji} ${player.level.split(" / ")[0]}\nhttps://ice-iq.vercel.app`;
+    const text = `RinkReads QotD ${ymd} ${emoji} ${player.level.split(" / ")[0]}\nhttps://rinkreads.com`;
     if (navigator?.share) {
       navigator.share({ text }).catch(() => {});
     } else if (navigator?.clipboard) {

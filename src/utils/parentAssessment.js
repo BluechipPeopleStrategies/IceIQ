@@ -74,7 +74,7 @@ export const PARENT_DIMENSIONS = [
   }},
 ];
 
-const KEY = "iceiq_parent_assessment";
+const KEY = "rinkreads_parent_assessment";
 
 export function getParentRatings(playerId) {
   if (!playerId) return null;

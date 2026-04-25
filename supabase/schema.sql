@@ -1,4 +1,4 @@
--- IceIQ database schema
+-- RinkReads database schema
 -- Paste this into Supabase Dashboard → SQL Editor → New query → Run
 
 -- ─────────────────────────────────────────────

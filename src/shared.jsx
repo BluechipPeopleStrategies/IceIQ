@@ -51,9 +51,9 @@ export const POSITIONS = ["Forward","Defense","Goalie","Multiple"];
 export const POSITIONS_U11UP = ["Forward","Defense","Goalie"];
 export const SEASONS = ["2025-26","2026 Spring/Summer","2026-27"];
 
-export function IceIQLogo({ size = 32, color = "#FC4C02" }) {
+export function RinkReadsLogo({ size = 32, color = "#FC4C02" }) {
   return (
-    <svg width={size} height={size} viewBox="0 0 40 40" aria-label="IceIQ logo" style={{display:"block",flexShrink:0}}>
+    <svg width={size} height={size} viewBox="0 0 40 40" aria-label="RinkReads logo" style={{display:"block",flexShrink:0}}>
       {/* Outer circle ring */}
       <circle cx="20" cy="20" r="18" fill="none" stroke={color} strokeWidth="1.5" opacity="0.4"/>
 

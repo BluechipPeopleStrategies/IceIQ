@@ -62,7 +62,7 @@ function resolveTargetCoords(target) {
   return null;
 }
 
-// View-clip ranges mirror IceIQRink's half-view crops.
+// View-clip ranges mirror RinkReadsRink's half-view crops.
 function actorOnStage(actor, view) {
   if (view === "right")   return actor.x >= 0.45;
   if (view === "left")    return actor.x <= 0.55;

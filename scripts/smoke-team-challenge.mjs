@@ -44,10 +44,10 @@ const admin = createClient(url, serviceKey, { auth: { persistSession: false } })
 const created = { users: [], teams: [] };
 
 function ok(label) { console.log(`  ✓ ${label}`); }
-function gen(role) { return `smoke-${role}-${Date.now()}-${Math.floor(Math.random() * 10000)}@iceiq.test`; }
+function gen(role) { return `smoke-${role}-${Date.now()}-${Math.floor(Math.random() * 10000)}@rinkreads.test`; }
 
 async function main() {
-  console.log("Ice-IQ team-challenge smoke test → " + url);
+  console.log("RinkReads team-challenge smoke test → " + url);
   const pw = "smoke-" + Math.random().toString(36).slice(2, 12);
 
   const { data: coachA } = await admin.auth.admin.createUser({ email: gen("coachA"), password: pw, email_confirm: true });

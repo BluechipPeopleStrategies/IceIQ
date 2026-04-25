@@ -1,4 +1,4 @@
-// Single source of truth for feature gating across Ice-IQ.
+// Single source of truth for feature gating across RinkReads.
 // Every feature check in the app should go through canAccess().
 
 import { TIERS } from "../config/pricing";
@@ -94,19 +94,19 @@ const UPGRADE_TARGET = {
 };
 
 const UPGRADE_MESSAGES = {
-  multipleAgeGroups:   "Access all age groups with Ice-IQ Pro",
-  allQuestionFormats:  "Unlock every question format with Ice-IQ Pro",
-  positionFilter:      "Filter questions by position with Ice-IQ Pro",
-  adaptiveEngine:      "Let Ice-IQ adapt to your level with Pro",
-  smartGoals:          "Set SMART development goals with Ice-IQ Pro",
-  progressSnapshots:   "See full progress snapshots with Ice-IQ Pro",
-  fullSessionHistory:  "Unlock full session history with Ice-IQ Pro",
+  multipleAgeGroups:   "Access all age groups with RinkReads Pro",
+  allQuestionFormats:  "Unlock every question format with RinkReads Pro",
+  positionFilter:      "Filter questions by position with RinkReads Pro",
+  adaptiveEngine:      "Let RinkReads adapt to your level with Pro",
+  smartGoals:          "Set SMART development goals with RinkReads Pro",
+  progressSnapshots:   "See full progress snapshots with RinkReads Pro",
+  fullSessionHistory:  "Unlock full session history with RinkReads Pro",
   additionalProfiles:  "Add up to 3 players with the Family plan",
-  coachDashboard:      "Track your full roster with Ice-IQ Team",
-  weeklyChallenge:     "Compete in weekly challenges with Ice-IQ Pro",
-  coachFeedback:       "See ratings and notes from every coach on your team with Ice-IQ Pro",
-  rinkQuestions:       "Unlock every rink scenario with Ice-IQ Pro",
-  fullSkillRating:     "Rate every skill in your development profile with Ice-IQ Pro",
+  coachDashboard:      "Track your full roster with RinkReads Team",
+  weeklyChallenge:     "Compete in weekly challenges with RinkReads Pro",
+  coachFeedback:       "See ratings and notes from every coach on your team with RinkReads Pro",
+  rinkQuestions:       "Unlock every rink scenario with RinkReads Pro",
+  fullSkillRating:     "Rate every skill in your development profile with RinkReads Pro",
 };
 
 // ─────────────────────────────────────────────────────────
@@ -198,7 +198,7 @@ export function canAccess(feature, currentTier) {
 
 /** Get the upgrade prompt message for a given feature. */
 export function getUpgradeTriggerMessage(feature) {
-  return UPGRADE_MESSAGES[feature] || "Upgrade Ice-IQ to unlock this feature";
+  return UPGRADE_MESSAGES[feature] || "Upgrade RinkReads to unlock this feature";
 }
 
 /** List of all gated feature keys (useful for admin/debug views). */

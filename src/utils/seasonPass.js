@@ -8,8 +8,8 @@
 import { lsGet, lsSet, lsGetJSON } from "./storage.js";
 
 const KEYS = {
-  seasonPass:            "iceiq_season_pass",
-  reenrollmentShown:     "iceiq_reenrollment_prompt_shown",
+  seasonPass:            "rinkreads_season_pass",
+  reenrollmentShown:     "rinkreads_reenrollment_prompt_shown",
 };
 
 function readPass() {

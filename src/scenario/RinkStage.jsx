@@ -1,4 +1,4 @@
-// Shared canvas for every scenario primitive. Wraps the existing IceIQRink
+// Shared canvas for every scenario primitive. Wraps the existing RinkReadsRink
 // (600×300 viewBox) with a normalized-coords overlay where actors are
 // plotted and primitives draw their interaction layers.
 //
@@ -6,20 +6,20 @@
 // coord-conversion helpers and a ref to the overlay <svg>.
 
 import { useEffect, useMemo, useRef, useState } from "react";
-import IceIQRink from "../IceIQRink.jsx";
+import RinkReadsRink from "../RinkReadsRink.jsx";
 import { RINK_W, RINK_H, denorm } from "./schema.js";
 import { C } from "../shared.jsx";
 
-// Mirror IceIQRink's internal viewBox math so the overlay coord system
+// Mirror RinkReadsRink's internal viewBox math so the overlay coord system
 // matches the rink's. Without this the overlay sits in a 0..600 / 0..300
 // window while the rink crops to a half-view, and actors appear shifted.
 function computeViewBox(view) {
-  const pad = 15; // IceIQRink uses 1.5 * M = 15
+  const pad = 15; // RinkReadsRink uses 1.5 * M = 15
   const w = RINK_W, h = RINK_H;
   if (view === "left")    return `${-pad} ${-pad} ${w / 2 + pad * 2} ${h + pad * 2}`;
   if (view === "right")   return `${w / 2 - pad} ${-pad} ${w / 2 + pad * 2} ${h + pad * 2}`;
   if (view === "neutral") {
-    // LEFT_BLUE_X = 213, RIGHT_BLUE_X = 387 from IceIQRink dimensions
+    // LEFT_BLUE_X = 213, RIGHT_BLUE_X = 387 from RinkReadsRink dimensions
     return `${213 - pad} ${-pad} ${(387 - 213) + pad * 2} ${h + pad * 2}`;
   }
   return `${-pad} ${-pad} ${w + pad * 2} ${h + pad * 2}`;
@@ -248,7 +248,7 @@ export default function RinkStage({ stage, actors, scanWindow, highlightIds, chi
       position: "relative", borderRadius: 10, overflow: "hidden",
       border: `1px solid ${C.border}`, background: C.bgCard, marginBottom: ".75rem",
     }}>
-      <IceIQRink view={stage.view} zone={stage.zone} markers={[]} />
+      <RinkReadsRink view={stage.view} zone={stage.zone} markers={[]} />
       <svg ref={svgRef}
         viewBox={viewBox}
         preserveAspectRatio="none"

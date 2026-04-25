@@ -10,7 +10,7 @@ import { markSignupIntent, logSignupComplete } from "./utils/signupTelemetry";
 // utils/demoTransfer removed — player demo was killed; signup now writes
 // to Supabase from the first interaction, no LS→cloud transfer needed.
 import { DEPTH_SLOTS, getDepthChart, setAssignment as setDepthAssignment, seedDemoDepthChart, clearDemoDepthChart } from "./utils/depthChart";
-import IceIQRinkQuestion from "./IceIQRinkQuestion.jsx";
+import RinkReadsRinkQuestion from "./RinkReadsRinkQuestion.jsx";
 import { COMPETENCIES, getJourneyV2, ACTIVITY_METRICS, GAME_SENSE_UNLOCK_SESSIONS, calcCompetencyScores, calcGameSenseScore } from "./utils/gameSense.js";
 import { getTrainingLog, seedDemoTrainingForRoster } from "./utils/trainingLog.js";
 import { buildU11ForwardPreview, PREVIEW_PLAYER_ID } from "./data/previewPlayer.js";
@@ -36,7 +36,7 @@ import {
 import { ScenarioRenderer } from "./scenario/index.js";
 import {
   C, FONT, LEVELS, POSITIONS, POSITIONS_U11UP, SEASONS,
-  IceIQLogo, Screen, Card, Pill, Label, PrimaryBtn, SecBtn, BackBtn, ProgressBar, StickyHeader,
+  RinkReadsLogo, Screen, Card, Pill, Label, PrimaryBtn, SecBtn, BackBtn, ProgressBar, StickyHeader,
 } from "./shared.jsx";
 const imgSplash = "/splash.jpg";
 import imgCoreApp from "./assets/images/Core-App.jpg";
@@ -46,7 +46,7 @@ import imgTactics from "./assets/images/Tactics-Playbook.jpg";
 import imgSuccess from "./assets/images/Success-Icon.jpg";
 
 // Resolve the user's tier for gating decisions.
-// Priority: dev override (localStorage iceiq_tier_override) → that tier
+// Priority: dev override (localStorage rinkreads_tier_override) → that tier
 //           demo mode → coach demo = TEAM
 //           profile.tier field (future Supabase subscriptions) → that tier
 //           default → FREE
@@ -60,16 +60,16 @@ function resolveTier({ profile, demoMode } = {}) {
     return "TEAM";
   }
   // The Pro-player preview flow (enterPlayerPreview) marks profile.__preview
-  // and writes iceiq_tier_override="PRO" so the preview renders with Pro
+  // and writes rinkreads_tier_override="PRO" so the preview renders with Pro
   // features unlocked. Dev-bypass sessions honor the override the same way
-  // — either via the iceiq_dev_bypass LS flag or by having __dev set on the
+  // — either via the rinkreads_dev_bypass LS flag or by having __dev set on the
   // profile (which the AuthScreen dev panel writes when entering via DEV
   // mode without the LS flag). Production users never hit any branch, so
   // they can't self-promote.
   const allowLsOverride = isDevBypassEnabled() || !!profile?.__preview || !!profile?.__dev;
   if (allowLsOverride) {
     try {
-      const override = typeof window !== "undefined" ? window.localStorage.getItem("iceiq_tier_override") : null;
+      const override = typeof window !== "undefined" ? window.localStorage.getItem("rinkreads_tier_override") : null;
       if (override && ["FREE","PRO","FAMILY","TEAM"].includes(override.toUpperCase())) {
         return override.toUpperCase();
       }
@@ -90,7 +90,7 @@ const VERSION = "0.9-beta";
 const RELEASE_DATE = "April 2026";
 const CHANGELOG = [
   { v:"0.9-beta", date:"April 2026", notes:[
-    {icon:"🏒", title:"Welcome — you're early", desc:"This is Ice-IQ's first public preview. You're one of the first players, parents, and coaches to use it. Nothing here is final — everything is shaped by what you tell us."},
+    {icon:"🏒", title:"Welcome — you're early", desc:"This is RinkReads's first public preview. You're one of the first players, parents, and coaches to use it. Nothing here is final — everything is shaped by what you tell us."},
     {icon:"🛠️", title:"Built with you, not for you", desc:"Every feature on this app came from a question a real coach, parent, or kid asked. Tap the report button whenever something feels off, confusing, or missing. We read every single one."},
     {icon:"📈", title:"Active development", desc:"Questions are being added weekly. Screens will change. Your feedback directly shapes what ships next — so be loud, be specific, and don't sugarcoat it."},
   ]},
@@ -191,18 +191,18 @@ const FLAVOR_CORRECT   = ["Good read.", "That's the one.", "Nice.", "Exactly rig
 const FLAVOR_INCORRECT = ["Not quite.", "Let's break this down.", "Close, but watch this.", "Let's dial it in.", "Common mistake — here's why."];
 
 // ── Quest-flag localStorage keys ──────────────────────────
-const LS_INSIGHTS_READ   = "iceiq_insights_read_v1";    // Array of insight "stat" strings.
-const LS_PROFILE_VIEWED  = "iceiq_profile_viewed_v1";   // "1" once viewed / ack'd.
-const LS_GATED_ACK       = "iceiq_gated_quests_ack_v1"; // Array of feature keys.
-const LS_COACH_RATED     = "iceiq_coach_rated_v1";      // "1" once coach rates a skill.
-const LS_COACH_NOTED     = "iceiq_coach_noted_v1";      // "1" once coach leaves a note.
-const LS_DEPTH_CHART_SET = "iceiq_depth_chart_set_v1";  // "1" once coach assigns any line. (Managed by utils/depthChart.js.)
-const LS_FIRST_LINE_SEEN = "iceiq_first_line_seen_v1";  // JSON: {[identity]: "1"}.
-const LS_QUEST_DISMISSED = "iceiq_quest_dismissed_v1";  // JSON: {[identity]: "1"}.
-const LS_WHATSNEW_DISMISSED = "iceiq_whatsnew_dismissed_v1"; // JSON: {[identity]: version}.
-const LS_UPGRADE_DISMISSED  = "iceiq_upgrade_dismissed_v1";  // JSON: {[identity]: "1"}.
-const LS_CLIPS_WATCHED      = "iceiq_clips_watched_v1";      // JSON: {[identity]: string[]}.
-const LS_HOMEWORK_DONE      = "iceiq_homework_done_v1";      // JSON: {[identity]: string[]}.
+const LS_INSIGHTS_READ   = "rinkreads_insights_read_v1";    // Array of insight "stat" strings.
+const LS_PROFILE_VIEWED  = "rinkreads_profile_viewed_v1";   // "1" once viewed / ack'd.
+const LS_GATED_ACK       = "rinkreads_gated_quests_ack_v1"; // Array of feature keys.
+const LS_COACH_RATED     = "rinkreads_coach_rated_v1";      // "1" once coach rates a skill.
+const LS_COACH_NOTED     = "rinkreads_coach_noted_v1";      // "1" once coach leaves a note.
+const LS_DEPTH_CHART_SET = "rinkreads_depth_chart_set_v1";  // "1" once coach assigns any line. (Managed by utils/depthChart.js.)
+const LS_FIRST_LINE_SEEN = "rinkreads_first_line_seen_v1";  // JSON: {[identity]: "1"}.
+const LS_QUEST_DISMISSED = "rinkreads_quest_dismissed_v1";  // JSON: {[identity]: "1"}.
+const LS_WHATSNEW_DISMISSED = "rinkreads_whatsnew_dismissed_v1"; // JSON: {[identity]: version}.
+const LS_UPGRADE_DISMISSED  = "rinkreads_upgrade_dismissed_v1";  // JSON: {[identity]: "1"}.
+const LS_CLIPS_WATCHED      = "rinkreads_clips_watched_v1";      // JSON: {[identity]: string[]}.
+const LS_HOMEWORK_DONE      = "rinkreads_homework_done_v1";      // JSON: {[identity]: string[]}.
 
 // lsGetStr / lsSetStr / lsGetJSON / lsSetJSON come from src/utils/storage.js
 // (imported at the top of this file). Keep call sites terse.
@@ -252,7 +252,7 @@ function computeQuestProgress(def, ctx) {
       progress = flags.insightsRead.size;
       break;
     case "focus1":
-      try { progress = window.localStorage.getItem("iceiq_coach_focus_seen_v1") === "1" ? 1 : 0; }
+      try { progress = window.localStorage.getItem("rinkreads_coach_focus_seen_v1") === "1" ? 1 : 0; }
       catch { progress = 0; }
       break;
     case "goal1":
@@ -265,7 +265,7 @@ function computeQuestProgress(def, ctx) {
       // Count localStorage training sessions for this player. Demo players
       // use the "__demo__" key; real players use their Supabase id.
       try {
-        const raw = window.localStorage.getItem("iceiq_training_log");
+        const raw = window.localStorage.getItem("rinkreads_training_log");
         const all = raw ? JSON.parse(raw) : {};
         const pid = player?.id || "__demo__";
         progress = (all[pid]?.sessions?.length) || 0;
@@ -447,7 +447,7 @@ function initSR(level) {
 function getTodayKey() { return new Date().toISOString().slice(0,10); }
 
 function getStreakData() {
-  try { return JSON.parse(localStorage.getItem("iceiq_streak") || "{}"); }
+  try { return JSON.parse(localStorage.getItem("rinkreads_streak") || "{}"); }
   catch { return {}; }
 }
 
@@ -1154,11 +1154,11 @@ function Home({ player, onNav, demoMode, subscriptionTier, questFlagsBump, onPro
         quizzes: totalSessions, training: 0, clipsWatched, insightsRead, goalsSet, skillsRated, coachRated: 0, assignmentsDone: 0,
       }, subscriptionTier);
       const world = state.worlds[state.currentWorldIdx];
-      const map = lsGetJSON("iceiq_last_world_seen_v1", {});
+      const map = lsGetJSON("rinkreads_last_world_seen_v1", {});
       const prev = map[pid];
       if (typeof prev !== "number") {
         map[pid] = state.currentWorldIdx;
-        lsSetJSON("iceiq_last_world_seen_v1", map);
+        lsSetJSON("rinkreads_last_world_seen_v1", map);
         return;
       }
       if (state.currentWorldIdx > prev) {
@@ -1169,7 +1169,7 @@ function Home({ player, onNav, demoMode, subscriptionTier, questFlagsBump, onPro
           icon: nextWorld.icon,
         });
         map[pid] = state.currentWorldIdx;
-        lsSetJSON("iceiq_last_world_seen_v1", map);
+        lsSetJSON("rinkreads_last_world_seen_v1", map);
       }
     } catch { /* LS blocked — silent */ }
     // Intentionally only re-runs when quiz count or tier changes so the
@@ -1255,8 +1255,8 @@ function Home({ player, onNav, demoMode, subscriptionTier, questFlagsBump, onPro
         <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start",marginBottom:"1.5rem"}}>
           <div>
             <div style={{display:"flex",alignItems:"center",gap:".45rem",marginBottom:".2rem"}}>
-              <IceIQLogo size={22}/>
-              <span style={{fontFamily:FONT.display,fontWeight:800,fontSize:"1.5rem",color:C.gold,letterSpacing:".06em"}}>Ice-IQ</span>
+              <RinkReadsLogo size={22}/>
+              <span style={{fontFamily:FONT.display,fontWeight:800,fontSize:"1.5rem",color:C.gold,letterSpacing:".06em"}}>RinkReads</span>
               <span style={{fontSize:10,color:C.dimmer,fontWeight:500,letterSpacing:".04em"}}>v{VERSION}</span>
               {streak > 0 && (
                 <div style={{background:"rgba(234,179,8,.12)",border:"1px solid rgba(234,179,8,.25)",borderRadius:20,padding:"2px 8px",fontSize:11,fontWeight:700,color:C.yellow,display:"flex",alignItems:"center",gap:".2rem"}} title={`${streak}-day streak`}>
@@ -1315,7 +1315,7 @@ function Home({ player, onNav, demoMode, subscriptionTier, questFlagsBump, onPro
           </div>
         )}
 
-        {/* Ice IQ Journey — laid out inline so it's the first thing on the
+        {/* RinkReads Journey — laid out inline so it's the first thing on the
             Home screen. The full-screen JourneyScreen is still reachable via
             the "View full →" link on the card header. */}
         <JourneyBody player={player} tier={subscriptionTier} demoMode={demoMode} onViewFull={() => onNav("journey")} onUpgrade={onPromptUpgrade} />
@@ -1403,7 +1403,7 @@ function Home({ player, onNav, demoMode, subscriptionTier, questFlagsBump, onPro
             <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:".5rem",paddingRight:"1.6rem"}}>
               <div style={{display:"flex",alignItems:"center",gap:".5rem"}}>
                 <span style={{fontSize:16}}>⭐</span>
-                <span style={{fontSize:10,letterSpacing:".14em",textTransform:"uppercase",color:C.gold,fontWeight:800}}>Upgrade to Ice-IQ Pro</span>
+                <span style={{fontSize:10,letterSpacing:".14em",textTransform:"uppercase",color:C.gold,fontWeight:800}}>Upgrade to RinkReads Pro</span>
               </div>
               <span style={{color:C.gold,fontSize:13}}>→</span>
             </div>
@@ -1510,7 +1510,7 @@ function Quiz({ player, onFinish, onBack, tier, onUpgrade }) {
     }
   }, [results, celebratedStreak]);
   const [showFlag, setShowFlag] = useState(false);
-  const [rinkQResult, setRinkQResult] = useState(null); // null | true (correct) | false (wrong) — for IceIQRinkQuestion dispatcher
+  const [rinkQResult, setRinkQResult] = useState(null); // null | true (correct) | false (wrong) — for RinkReadsRinkQuestion dispatcher
   // Speed bonus: when an interactive question is on screen, track when it
   // loaded so a correct answer can earn a time-based bonus. 15-second
   // window, max 50 bonus points per question, linear decay to 0. Wrong
@@ -1622,7 +1622,7 @@ function Quiz({ player, onFinish, onBack, tier, onUpgrade }) {
     setQuestionStartedAt(Date.now());
   }
 
-  // IceIQRinkQuestion dispatcher routes when q.rink is set OR the type is one
+  // RinkReadsRinkQuestion dispatcher routes when q.rink is set OR the type is one
   // of the new rink-native interactive types.
   const NEW_RINK_TYPES = ["drag-target","drag-place","multi-tap","sequence-rink","path-draw","lane-select","hot-spots","pov-pick","pov-mc","zone-click"];
   const isRinkQ = !!question?.rink || NEW_RINK_TYPES.includes(qtype);
@@ -1633,7 +1633,7 @@ function Quiz({ player, onFinish, onBack, tier, onUpgrade }) {
   const q = question;
   if (!q) return <Screen><div style={{color:C.dimmer,textAlign:"center",paddingTop:"4rem"}}>Loading…</div></Screen>;
 
-  // Records a result for a question dispatched to IceIQRinkQuestion. The child
+  // Records a result for a question dispatched to RinkReadsRinkQuestion. The child
   // component fires onAnswer(true|false); we dedupe via rinkQResult so a player
   // toggling/retrying inside the rink widget can't double-record.
   function handleRinkQAnswer(ok) {
@@ -1649,11 +1649,11 @@ function Quiz({ player, onFinish, onBack, tier, onUpgrade }) {
   }
 
   // Single dispatch site. New schema (q.rink or NEW_RINK_TYPES) goes through
-  // IceIQRinkQuestion which handles its own type-specific UI internally.
+  // RinkReadsRinkQuestion which handles its own type-specific UI internally.
   // Everything else falls through to the existing per-type renderers.
   function renderQuestionBody() {
     if (isRinkQ) {
-      return <IceIQRinkQuestion question={q} onAnswer={handleRinkQAnswer} onSkip={advance} />;
+      return <RinkReadsRinkQuestion question={q} onAnswer={handleRinkQAnswer} onSkip={advance} />;
     }
     switch (qtype) {
       case "mc":
@@ -1690,7 +1690,7 @@ function Quiz({ player, onFinish, onBack, tier, onUpgrade }) {
           <div style={{maxWidth:560,margin:"0 auto",display:"flex",alignItems:"center",gap:"1rem"}}>
             <button onClick={onBack} style={{background:"none",border:`1px solid ${C.border}`,color:C.dimmer,borderRadius:8,padding:".35rem .75rem",cursor:"pointer",fontSize:13,fontFamily:FONT.body}}>←</button>
             <div style={{flex:1}}>
-              <div style={{fontFamily:FONT.display,fontWeight:800,fontSize:"1rem",color:C.gold}}>Ice-IQ · {getLevelDisplay(player)}</div>
+              <div style={{fontFamily:FONT.display,fontWeight:800,fontSize:"1rem",color:C.gold}}>RinkReads · {getLevelDisplay(player)}</div>
               <div style={{fontSize:11,color:C.dimmer}}>Q{qNum+1}/{qLen} · {player.position}</div>
             </div>
           </div>
@@ -1701,7 +1701,7 @@ function Quiz({ player, onFinish, onBack, tier, onUpgrade }) {
           <div style={{fontSize:13,color:C.dim,lineHeight:1.7,marginBottom:"1.75rem",maxWidth:360}}>{FORMAT_PREVIEW_DESC[fmt]}</div>
           <div style={{background:C.bgElevated,border:`1px solid ${C.goldBorder}`,borderRadius:12,padding:"1.25rem",marginBottom:"1.5rem",width:"100%",textAlign:"left"}}>
             <div style={{fontSize:11,color:C.gold,fontWeight:700,marginBottom:".5rem"}}>🔒 PRO QUESTION TYPE</div>
-            <div style={{fontSize:12,color:C.dim,lineHeight:1.6}}>This question type is available on Ice-IQ Pro. Unlock all 5 question formats to challenge yourself in new ways.</div>
+            <div style={{fontSize:12,color:C.dim,lineHeight:1.6}}>This question type is available on RinkReads Pro. Unlock all 5 question formats to challenge yourself in new ways.</div>
           </div>
           <button onClick={() => onUpgrade("allQuestionFormats","pro")} style={{background:C.gold,color:C.bg,border:"none",borderRadius:10,padding:".85rem 1.75rem",cursor:"pointer",fontWeight:800,fontSize:15,fontFamily:FONT.body,marginBottom:".75rem",width:"100%"}}>Unlock All Question Types →</button>
           <button onClick={advance} style={{background:"none",border:`1px solid ${C.border}`,color:C.dimmer,borderRadius:10,padding:".7rem 1.5rem",cursor:"pointer",fontWeight:600,fontSize:13,fontFamily:FONT.body,width:"100%"}}>Skip for now</button>
@@ -1719,7 +1719,7 @@ function Quiz({ player, onFinish, onBack, tier, onUpgrade }) {
         <div style={{maxWidth:560,margin:"0 auto",display:"flex",alignItems:"center",gap:"1rem"}}>
           <button onClick={onBack} style={{background:"none",border:`1px solid ${C.border}`,color:C.dimmer,borderRadius:8,padding:".35rem .75rem",cursor:"pointer",fontSize:13,fontFamily:FONT.body}}>←</button>
           <div style={{flex:1}}>
-            <div style={{fontFamily:FONT.display,fontWeight:800,fontSize:"1rem",color:C.gold}}>Ice-IQ · {getLevelDisplay(player)}</div>
+            <div style={{fontFamily:FONT.display,fontWeight:800,fontSize:"1rem",color:C.gold}}>RinkReads · {getLevelDisplay(player)}</div>
             <div style={{fontSize:11,color:C.dimmer}}>Q{qNum+1}/{qLen} · {player.position} · {player.season||SEASONS[0]}</div>
           </div>
           {speedTotal > 0 && (
@@ -1990,10 +1990,10 @@ function Results({ results, player, prevScore, totalSessions, seqPerfect, mistak
     if (player.coachCode) saveTeamResult(player.coachCode, results, player.season||SEASONS[0]).then(() => setSaved(true));
     else setSaved(true);
     try {
-      localStorage.setItem("iceiq_score", JSON.stringify(score));
-      localStorage.setItem("iceiq_sessions", String(totalSessions));
+      localStorage.setItem("rinkreads_score", JSON.stringify(score));
+      localStorage.setItem("rinkreads_sessions", String(totalSessions));
       const sd = updateStreak(getStreakData());
-      localStorage.setItem("iceiq_streak", JSON.stringify(sd));
+      localStorage.setItem("rinkreads_streak", JSON.stringify(sd));
     } catch(e) {}
   }, []);
 
@@ -2373,9 +2373,9 @@ function GoalsScreen({ player, onSave, onBack }) {
   const SMART_EXAMPLES = {
     "Skating":      {S:"Improve my backward crossovers on both sides",M:"Coach rates me 'On Track' in skating within 4 weeks",A:"I can already do basic crossovers",R:"Better backward skating helps my gap control as a defender",T:"By end of October"},
     "Gap Control":  {S:"Maintain a 10-foot gap on all rush situations",M:"Reduce missed gap assignments to 0 per game",A:"I understand gap theory already",R:"Gap control is the #1 D skill in atom hockey",T:"Before Christmas break"},
-    "Rush Reads":   {S:"Make the correct 2-on-1 decision every time",M:"Score 80%+ on Rush Reads in Ice-IQ",A:"I get the concept, just need reps",R:"Rush reads are my weakest Ice-IQ category",T:"End of this month"},
+    "Rush Reads":   {S:"Make the correct 2-on-1 decision every time",M:"Score 80%+ on Rush Reads in RinkReads",A:"I get the concept, just need reps",R:"Rush reads are my weakest RinkReads category",T:"End of this month"},
     "Shooting":     {S:"Improve my quick-release wrist shot accuracy",M:"Hit top corners 3 out of 5 in practice drills",A:"I have good fundamentals already",R:"Quick release is what separates scorers at this level",T:"Within 6 weeks"},
-    "Game IQ":      {S:"Pre-read plays before the puck arrives",M:"Ice-IQ score improves from current to Hockey Sense tier",A:"I've started thinking about it more already",R:"Faster reads = better plays",T:"End of season"},
+    "Game IQ":      {S:"Pre-read plays before the puck arrives",M:"RinkReads score improves from current to Hockey Sense tier",A:"I've started thinking about it more already",R:"Faster reads = better plays",T:"End of season"},
   };
 
   function updateGoal(cat, field, value) {
@@ -2575,7 +2575,7 @@ function UpgradePrompt({ feature, onClose, onViewPlans, target }) {
       <div onClick={e=>e.stopPropagation()} style={{background:C.bgCard,border:`1px solid ${C.goldBorder}`,borderRadius:16,padding:"1.5rem",maxWidth:440,width:"100%",color:C.white}}>
         <div style={{fontSize:32,textAlign:"center",marginBottom:".5rem"}}>🔒</div>
         <div style={{fontFamily:FONT.display,fontWeight:800,fontSize:"1.5rem",textAlign:"center",marginBottom:".35rem",color:C.gold}}>{message}</div>
-        <div style={{fontSize:12,color:C.dimmer,textAlign:"center",marginBottom:"1.25rem"}}>Unlock this and more with Ice-IQ {tierName}</div>
+        <div style={{fontSize:12,color:C.dimmer,textAlign:"center",marginBottom:"1.25rem"}}>Unlock this and more with RinkReads {tierName}</div>
 
         <div style={{background:C.bgElevated,border:`1px solid ${C.border}`,borderRadius:10,padding:".85rem 1rem",marginBottom:"1rem"}}>
           <div style={{fontSize:10,letterSpacing:".14em",textTransform:"uppercase",color:C.gold,fontWeight:700,marginBottom:".6rem"}}>What you get with {tierName}</div>
@@ -2669,7 +2669,7 @@ function Skills({ player, tier, onSave, onBack, onUpgrade }) {
         {!hasFullAccess && (
           <Card style={{marginBottom:"1rem",background:C.goldDim,border:`1px solid ${C.goldBorder}`}}>
             <div style={{fontSize:10,letterSpacing:".12em",textTransform:"uppercase",color:C.gold,fontWeight:800,marginBottom:".35rem"}}>🔒 Preview mode</div>
-            <div style={{fontSize:12,color:C.white,lineHeight:1.55}}>You're rating one skill per category as a FREE taste. Ice-IQ Pro unlocks all {total + lockedCount} skills + full radar + coach side-by-side.</div>
+            <div style={{fontSize:12,color:C.white,lineHeight:1.55}}>You're rating one skill per category as a FREE taste. RinkReads Pro unlocks all {total + lockedCount} skills + full radar + coach side-by-side.</div>
           </Card>
         )}
         {cat?.isDM && <Card style={{marginBottom:"1rem",background:C.purpleDim,border:`1px solid ${C.purpleBorder}`}}><div style={{fontSize:12,color:C.purple,lineHeight:1.6}}>🧠 Rate honestly — this is for your development, not anyone else's judgment.</div></Card>}
@@ -3161,11 +3161,11 @@ function Report({ player, onBack, demoCoachData, tier, onUpgrade }) {
             </div>
           </div>
           <button onClick={() => {
-              const subject = encodeURIComponent("Can you rate my skills on Ice-IQ?");
+              const subject = encodeURIComponent("Can you rate my skills on RinkReads?");
               const body = encodeURIComponent(
-                `Hi Coach,\n\nI'm using Ice-IQ to work on my game sense and skills. Could you rate me on the skills your coaching staff thinks matter most? ` +
+                `Hi Coach,\n\nI'm using RinkReads to work on my game sense and skills. Could you rate me on the skills your coaching staff thinks matter most? ` +
                 `It takes a few minutes and I'll see your ratings + notes in the app so I can work on the right things.\n\n` +
-                `Here's the coach page: https://ice-iq.vercel.app/#coaches\n\nThanks!\n${player?.name || ""}`
+                `Here's the coach page: https://rinkreads.com/#coaches\n\nThanks!\n${player?.name || ""}`
               );
               try { window.location.href = `mailto:?subject=${subject}&body=${body}`; } catch {}
             }}
@@ -3399,16 +3399,16 @@ function Report({ player, onBack, demoCoachData, tier, onUpgrade }) {
           <div style={{display:"flex",flexDirection:"column",gap:".45rem"}}>
             <button onClick={()=>onUpgrade && onUpgrade("coachFeedback","pro")}
               style={{background:C.gold,color:C.bg,border:"none",borderRadius:8,padding:".55rem .9rem",cursor:"pointer",fontWeight:800,fontSize:12,fontFamily:FONT.body,width:"100%"}}>
-              Unlock with Ice-IQ Pro →
+              Unlock with RinkReads Pro →
             </button>
             <div style={{fontSize:10,letterSpacing:".08em",textTransform:"uppercase",color:C.dimmer,fontWeight:700,textAlign:"center",marginTop:".15rem"}}>or — at no cost to you</div>
             <button onClick={() => {
-                const subject = encodeURIComponent("Ice-IQ for our team");
+                const subject = encodeURIComponent("RinkReads for our team");
                 const body = encodeURIComponent(
-                  "Hi Coach,\n\nI started using an app called Ice-IQ to work on game sense off the ice. " +
+                  "Hi Coach,\n\nI started using an app called RinkReads to work on game sense off the ice. " +
                   "There's a Team tier that unlocks coach feedback — so you could rate me (and other players) and I'd see your notes in-app.\n\n" +
                   "Would you be open to setting up a Team account? Here's the page for coaches:\n" +
-                  "https://ice-iq.vercel.app/#coaches\n\nThanks!"
+                  "https://rinkreads.com/#coaches\n\nThanks!"
                 );
                 try { window.location.href = `mailto:?subject=${subject}&body=${body}`; } catch {}
               }}
@@ -3416,11 +3416,11 @@ function Report({ player, onBack, demoCoachData, tier, onUpgrade }) {
               🏒 Ask your coach to set up a Team account
             </button>
             <button onClick={() => {
-                const subject = encodeURIComponent("Ice-IQ for our association");
+                const subject = encodeURIComponent("RinkReads for our association");
                 const body = encodeURIComponent(
-                  "Hi,\n\nMy kid uses an app called Ice-IQ to train hockey sense off the ice. " +
+                  "Hi,\n\nMy kid uses an app called RinkReads to train hockey sense off the ice. " +
                   "They offer an Association tier that lets multiple teams run on it — coaches get a dashboard, players see coach feedback.\n\n" +
-                  "Would you take a look? Here's the association page:\nhttps://ice-iq.vercel.app/#associations\n\nThanks!"
+                  "Would you take a look? Here's the association page:\nhttps://rinkreads.com/#associations\n\nThanks!"
                 );
                 try { window.location.href = `mailto:?subject=${subject}&body=${body}`; } catch {}
               }}
@@ -3583,7 +3583,7 @@ function JourneyBody({ player, tier, demoMode, onViewFull, onUpgrade }) {
       {onViewFull && (
         <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:".55rem"}}>
           <div>
-            <Label style={{marginBottom:0}}>Ice IQ Journey</Label>
+            <Label style={{marginBottom:0}}>RinkReads Journey</Label>
             <div style={{fontSize:11,color:C.dimmer,marginTop:2}}>Level {currentIdx+1} of 64 · World {currentWorldIdx+1}: {worlds[currentWorldIdx].name}</div>
           </div>
           <button onClick={onViewFull} style={{background:"none",border:"none",color:C.gold,cursor:"pointer",fontSize:12,fontFamily:FONT.body,fontWeight:700,padding:0}}>View full →</button>
@@ -3741,7 +3741,7 @@ function JourneyBody({ player, tier, demoMode, onViewFull, onUpgrade }) {
 // Preview-only page. Lets tools/dashboard.html iframe a single question at
 // `#q=<id>` so an author can see EXACTLY what a player sees without any
 // surrounding UI. Loads the QB, finds the id, renders it through the
-// normal IceIQRinkQuestion dispatcher (for rink/POV types) or a
+// normal RinkReadsRinkQuestion dispatcher (for rink/POV types) or a
 // lightweight MC/TF fallback for non-rink types.
 // Side-by-side parity tester for the unified scenario engine. Loads the
 // legacy `u13q_rink07` (path-draw) and the ported `u13q_rink07_v2` and
@@ -3797,7 +3797,7 @@ function ScenarioParityTest() {
           {tile("LEGACY · u13q_rink07", C.dimmer,
             <>
               {errLegacy && <div style={{color:C.red,fontSize:13}}>{errLegacy}</div>}
-              {legacy && <IceIQRinkQuestion question={legacy} onAnswer={() => {}}/>}
+              {legacy && <RinkReadsRinkQuestion question={legacy} onAnswer={() => {}}/>}
             </>
           )}
           {tile("UNIFIED PATH · u13_pp_bumper", C.dimmer,
@@ -3887,7 +3887,7 @@ function QuestionPreviewPage({ questionId }) {
         </div>
       )}
       {isRinkQ ? (
-        <IceIQRinkQuestion question={question} onAnswer={(ok) => setVerdict(ok ? "ok" : "wrong")} />
+        <RinkReadsRinkQuestion question={question} onAnswer={(ok) => setVerdict(ok ? "ok" : "wrong")} />
       ) : question.type === "multi" ? (
         <MultiMCQuestion q={question} onAnswer={(ok) => setVerdict(ok ? "ok" : "wrong")}/>
       ) : (
@@ -3974,7 +3974,7 @@ function JourneyScreen({ player, tier, demoMode, onBack, onNav, onUpgrade }) {
         <div style={{maxWidth:560,margin:"0 auto",display:"flex",alignItems:"center",gap:"1rem"}}>
           <BackBtn onClick={onBack}/>
           <div style={{flex:1}}>
-            <div style={{fontFamily:FONT.display,fontWeight:800,fontSize:"1.1rem"}}>Ice IQ Journey</div>
+            <div style={{fontFamily:FONT.display,fontWeight:800,fontSize:"1.1rem"}}>RinkReads Journey</div>
             <div style={{fontSize:11,color:C.dimmer}}>Level {currentIdx+1}/64 · World {currentWorldIdx+1}: {worlds[currentWorldIdx].name} · {quizzes} quiz{quizzes===1?"":"zes"}{isFree?" · FREE path":""}</div>
           </div>
         </div>
@@ -4181,7 +4181,7 @@ function Profile({ player, onSave, onBack, onReset, demoMode, tier, onUpgrade, u
         <Card style={{marginBottom:"1rem"}}>
           <Label>About</Label>
           <div style={{fontSize:12,color:C.dimmer,lineHeight:1.9}}>
-            <div>Ice-IQ v{VERSION} · {RELEASE_DATE}</div>
+            <div>RinkReads v{VERSION} · {RELEASE_DATE}</div>
             <div>Built on modern player-development principles</div>
             <div style={{color:C.gold,marginTop:".25rem"}}>bluechip-people-strategies.com</div>
           </div>
@@ -5333,7 +5333,7 @@ function AuthScreen({ onAuthenticated, onDemo, onDevEnter, onPreview, prefill })
   const [devLevel, setDevLevel] = useState("U11 / Atom");
   const [devPosition, setDevPosition] = useState("Forward");
   const [devTier, setDevTier] = useState(() => {
-    try { return (window.localStorage.getItem("iceiq_tier_override") || "").toUpperCase() || null; }
+    try { return (window.localStorage.getItem("rinkreads_tier_override") || "").toUpperCase() || null; }
     catch { return null; }
   });
 
@@ -5357,7 +5357,7 @@ function AuthScreen({ onAuthenticated, onDemo, onDevEnter, onPreview, prefill })
         if (!email.trim() || !password || !name.trim()) throw new Error("All fields required");
         if (password.length < 6) throw new Error("Password must be at least 6 characters");
         await SB.signUp({ email: email.trim(), password, role, name: name.trim() });
-        lsSetStr("iceiq_has_signed_in_before", "1");
+        lsSetStr("rinkreads_has_signed_in_before", "1");
         logSignupComplete({ role, level: prefill?.level || null });
       } else if (mode === "forgot") {
         if (!email.trim()) throw new Error("Enter your email to reset your password");
@@ -5372,7 +5372,7 @@ function AuthScreen({ onAuthenticated, onDemo, onDevEnter, onPreview, prefill })
       } else {
         if (!email.trim() || !password) throw new Error("Email and password required");
         await SB.signIn({ email: email.trim(), password });
-        lsSetStr("iceiq_has_signed_in_before", "1");
+        lsSetStr("rinkreads_has_signed_in_before", "1");
       }
       onAuthenticated();
     } catch (e) {
@@ -5416,7 +5416,7 @@ function AuthScreen({ onAuthenticated, onDemo, onDevEnter, onPreview, prefill })
 
       <div style={{position:"relative",maxWidth:420,margin:"0 auto",width:"100%"}}>
 
-        {/* Dev bypass panel — gated by iceiq_dev_bypass LS flag; invisible
+        {/* Dev bypass panel — gated by rinkreads_dev_bypass LS flag; invisible
             to real users. Jump straight into any state without email/password. */}
         {devBypass && (
           <div style={{background:"rgba(147,51,234,0.12)",border:"1px solid rgba(168,85,247,0.4)",borderRadius:12,padding:"0.85rem 1rem",marginBottom:"1.25rem",color:C.white,fontFamily:FONT.body}}>
@@ -5424,7 +5424,7 @@ function AuthScreen({ onAuthenticated, onDemo, onDevEnter, onPreview, prefill })
               <span style={{fontSize:14}}>🧪</span>
               <span style={{fontSize:11,letterSpacing:".14em",textTransform:"uppercase",color:"#c4b5fd",fontWeight:700}}>Dev bypass</span>
               <span style={{flex:1}}/>
-              <button onClick={() => { try { window.localStorage.removeItem("iceiq_dev_bypass"); window.location.reload(); } catch {} }}
+              <button onClick={() => { try { window.localStorage.removeItem("rinkreads_dev_bypass"); window.location.reload(); } catch {} }}
                 style={{background:"none",border:"none",color:"rgba(196,181,253,.6)",cursor:"pointer",fontSize:11,fontFamily:FONT.body,padding:0,textDecoration:"underline"}}>disable</button>
             </div>
             <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:".4rem",marginBottom:".5rem"}}>
@@ -5445,7 +5445,7 @@ function AuthScreen({ onAuthenticated, onDemo, onDevEnter, onPreview, prefill })
                 </select>
               </div>
             )}
-            {/* Tier picker — writes iceiq_tier_override so resolveTier returns the chosen tier
+            {/* Tier picker — writes rinkreads_tier_override so resolveTier returns the chosen tier
                 for the next dev session. Tap again to clear. */}
             <div style={{fontSize:10,letterSpacing:".12em",textTransform:"uppercase",color:"#c4b5fd",fontWeight:700,marginBottom:".3rem",marginTop:".15rem"}}>View-as tier</div>
             <div style={{display:"grid",gridTemplateColumns:"1fr 1fr 1fr",gap:".35rem",marginBottom:".55rem"}}>
@@ -5454,8 +5454,8 @@ function AuthScreen({ onAuthenticated, onDemo, onDevEnter, onPreview, prefill })
                 return (
                   <button key={t} onClick={() => {
                     try {
-                      if (active) { window.localStorage.removeItem("iceiq_tier_override"); setDevTier(null); }
-                      else { window.localStorage.setItem("iceiq_tier_override", t); setDevTier(t); }
+                      if (active) { window.localStorage.removeItem("rinkreads_tier_override"); setDevTier(null); }
+                      else { window.localStorage.setItem("rinkreads_tier_override", t); setDevTier(t); }
                     } catch {}
                   }}
                     style={{background:active?"rgba(168,85,247,0.25)":"rgba(255,255,255,0.04)",border:`1px solid ${active?"rgba(168,85,247,0.6)":"rgba(255,255,255,0.1)"}`,borderRadius:8,padding:".4rem",cursor:"pointer",color:active?"#e9d5ff":"rgba(248,250,252,.7)",fontFamily:FONT.body,fontSize:11,fontWeight:active?700:500}}>
@@ -5477,11 +5477,11 @@ function AuthScreen({ onAuthenticated, onDemo, onDevEnter, onPreview, prefill })
         {/* Hero brand block */}
         <div style={{textAlign:"center",marginBottom:"1.5rem"}}>
           <div style={{display:"inline-flex",alignItems:"center",gap:".55rem",background:"rgba(3,9,15,0.6)",backdropFilter:"blur(12px)",WebkitBackdropFilter:"blur(12px)",border:`1px solid rgba(252,76,2,0.2)`,borderRadius:14,padding:".55rem 1.1rem",marginBottom:"1.1rem"}}>
-            <IceIQLogo size={26}/>
-            <span style={{fontFamily:FONT.display,fontWeight:800,fontSize:"1.6rem",color:C.gold,letterSpacing:".1em"}}>Ice-IQ</span>
+            <RinkReadsLogo size={26}/>
+            <span style={{fontFamily:FONT.display,fontWeight:800,fontSize:"1.6rem",color:C.gold,letterSpacing:".1em"}}>RinkReads</span>
           </div>
           <h1 style={{fontFamily:FONT.display,fontWeight:800,fontSize:"clamp(1.9rem,7.5vw,2.6rem)",lineHeight:1.05,margin:"0 0 .55rem",letterSpacing:"-.01em"}}>
-            Hockey is played<br/>between the ears.<br/><span style={{color:C.gold}}>Ice-IQ trains the other 80%.</span>
+            Hockey is played<br/>between the ears.<br/><span style={{color:C.gold}}>RinkReads trains the other 80%.</span>
           </h1>
           <p style={{fontSize:14,color:"rgba(248,250,252,.7)",lineHeight:1.65,margin:"0 auto 1.25rem",maxWidth:340}}>
             Game sense, systems reads, and decision-making for U7 to U18.
@@ -6133,8 +6133,8 @@ function CoachHome({ profile, onSignOut, onOpenPlayer, demoMode, subscriptionTie
         <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start",marginBottom:"1.5rem"}}>
           <div>
             <div style={{display:"flex",alignItems:"center",gap:".45rem",marginBottom:".25rem"}}>
-              <IceIQLogo size={22}/>
-              <span style={{fontFamily:FONT.display,fontWeight:800,fontSize:"1.5rem",color:C.gold,letterSpacing:".06em"}}>Ice-IQ</span>
+              <RinkReadsLogo size={22}/>
+              <span style={{fontFamily:FONT.display,fontWeight:800,fontSize:"1.5rem",color:C.gold,letterSpacing:".06em"}}>RinkReads</span>
               <span style={{fontSize:10,color:C.dimmer,fontWeight:500}}>v{VERSION}</span>
             </div>
             <div style={{fontSize:13,color:C.dimmer}}>{profile.name} · Coach</div>
@@ -6354,17 +6354,17 @@ export default function App() {
   // fresh install doesn't carry any stale fantasy-world data.
   useEffect(() => {
     try {
-      const tk = window.localStorage.getItem("iceiq_training_log");
+      const tk = window.localStorage.getItem("rinkreads_training_log");
       if (tk) {
         const all = JSON.parse(tk);
         let mutated = false;
         if (all && "__demo__" in all) { delete all["__demo__"]; mutated = true; }
         if (all && "__preview__" in all) { delete all["__preview__"]; mutated = true; }
-        if (mutated) window.localStorage.setItem("iceiq_training_log", JSON.stringify(all));
+        if (mutated) window.localStorage.setItem("rinkreads_training_log", JSON.stringify(all));
       }
-      window.localStorage.removeItem("iceiq_pending_transfer_v1");
-      window.localStorage.removeItem("iceiq_demo_snapshot_v1");
-      window.localStorage.removeItem("iceiq_demo_quiz_taken");
+      window.localStorage.removeItem("rinkreads_pending_transfer_v1");
+      window.localStorage.removeItem("rinkreads_demo_snapshot_v1");
+      window.localStorage.removeItem("rinkreads_demo_quiz_taken");
     } catch {}
   }, []);
 
@@ -6397,18 +6397,18 @@ export default function App() {
     try {
       // Insights-read: merge seed keys with whatever was there, stash the
       // original so exitDemo can restore it.
-      const priorInsights = window.localStorage.getItem("iceiq_insights_read_v1");
-      window.localStorage.setItem("iceiq_preview_snap_insights_v1", priorInsights || "");
+      const priorInsights = window.localStorage.getItem("rinkreads_insights_read_v1");
+      window.localStorage.setItem("rinkreads_preview_snap_insights_v1", priorInsights || "");
       const prior = priorInsights ? JSON.parse(priorInsights) : [];
       const merged = Array.from(new Set([...(Array.isArray(prior)?prior:[]), ...seed.insightsReadKeys]));
-      window.localStorage.setItem("iceiq_insights_read_v1", JSON.stringify(merged));
+      window.localStorage.setItem("rinkreads_insights_read_v1", JSON.stringify(merged));
       // Training log slot under the preview id.
-      const tk = window.localStorage.getItem("iceiq_training_log");
+      const tk = window.localStorage.getItem("rinkreads_training_log");
       const all = tk ? JSON.parse(tk) : {};
       all[PREVIEW_PLAYER_ID] = { sessions: seed.trainingSessions };
-      window.localStorage.setItem("iceiq_training_log", JSON.stringify(all));
+      window.localStorage.setItem("rinkreads_training_log", JSON.stringify(all));
       // Fake tier. resolveTier reads LS on every render → next render returns PRO.
-      window.localStorage.setItem("iceiq_tier_override", "PRO");
+      window.localStorage.setItem("rinkreads_tier_override", "PRO");
     } catch {}
     setDemoMode(true);
     setDemoCoachRatings(seed.coachRatings);
@@ -6422,25 +6422,25 @@ export default function App() {
 
   function exitDemo() {
     try {
-      window.localStorage.removeItem("iceiq_tier_override");
+      window.localStorage.removeItem("rinkreads_tier_override");
       // Restore insights-read snapshot (if one was stashed by enterPlayerPreview).
-      const snap = window.localStorage.getItem("iceiq_preview_snap_insights_v1");
+      const snap = window.localStorage.getItem("rinkreads_preview_snap_insights_v1");
       if (snap !== null) {
-        if (snap) window.localStorage.setItem("iceiq_insights_read_v1", snap);
-        else window.localStorage.removeItem("iceiq_insights_read_v1");
-        window.localStorage.removeItem("iceiq_preview_snap_insights_v1");
+        if (snap) window.localStorage.setItem("rinkreads_insights_read_v1", snap);
+        else window.localStorage.removeItem("rinkreads_insights_read_v1");
+        window.localStorage.removeItem("rinkreads_preview_snap_insights_v1");
       }
       // Drop preview training slot.
-      const tk = window.localStorage.getItem("iceiq_training_log");
+      const tk = window.localStorage.getItem("rinkreads_training_log");
       if (tk) {
         const all = JSON.parse(tk);
-        if (all && "__preview__" in all) { delete all["__preview__"]; window.localStorage.setItem("iceiq_training_log", JSON.stringify(all)); }
+        if (all && "__preview__" in all) { delete all["__preview__"]; window.localStorage.setItem("rinkreads_training_log", JSON.stringify(all)); }
       }
-      window.localStorage.removeItem("iceiq_demo_quiz_taken");
+      window.localStorage.removeItem("rinkreads_demo_quiz_taken");
       // Clear dev bypass so a one-time troubleshooting session doesn't keep
       // auto-entering on every subsequent reload.
       clearDevProfile();
-      window.localStorage.removeItem("iceiq_dev_bypass");
+      window.localStorage.removeItem("rinkreads_dev_bypass");
     } catch {}
     setDemoMode(false);
     setDemoCoachRatings(null);
@@ -6454,7 +6454,7 @@ export default function App() {
 
   // Dev bypass: same "skip Supabase" plumbing as demo mode, but with a real
   // empty player state (not seeded fantasy data) so the UI matches what a
-  // brand-new signup looks like. Only reachable when iceiq_dev_bypass === "1".
+  // brand-new signup looks like. Only reachable when rinkreads_dev_bypass === "1".
   function enterDevBypass(cfg) {
     window.scrollTo(0, 0);
     if (cfg.role === "coach") {
@@ -6498,21 +6498,21 @@ export default function App() {
     }
     window.__dev = {
       enterAs: (cfg) => enterDevBypass(cfg || {}),
-      setTier: (t) => { try { window.localStorage.setItem("iceiq_tier_override", String(t).toUpperCase()); window.location.reload(); } catch {} },
-      clearTier: () => { try { window.localStorage.removeItem("iceiq_tier_override"); window.location.reload(); } catch {} },
-      reset: () => { clearDevProfile(); try { window.localStorage.removeItem("iceiq_tier_override"); } catch {} window.location.reload(); },
-      exitBypass: () => { clearDevProfile(); try { window.localStorage.removeItem("iceiq_dev_bypass"); } catch {} window.location.reload(); },
+      setTier: (t) => { try { window.localStorage.setItem("rinkreads_tier_override", String(t).toUpperCase()); window.location.reload(); } catch {} },
+      clearTier: () => { try { window.localStorage.removeItem("rinkreads_tier_override"); window.location.reload(); } catch {} },
+      reset: () => { clearDevProfile(); try { window.localStorage.removeItem("rinkreads_tier_override"); } catch {} window.location.reload(); },
+      exitBypass: () => { clearDevProfile(); try { window.localStorage.removeItem("rinkreads_dev_bypass"); } catch {} window.location.reload(); },
       markFirstSixDone: () => {
         try {
           // Acknowledge every gated feature so locked quests count as done
-          window.localStorage.setItem("iceiq_gated_quests_ack_v1", JSON.stringify(["smartGoals","progressSnapshots"]));
-          window.localStorage.setItem("iceiq_profile_viewed_v1", "1");
-          window.localStorage.setItem("iceiq_insights_read_v1", JSON.stringify(["a","b","c"]));
+          window.localStorage.setItem("rinkreads_gated_quests_ack_v1", JSON.stringify(["smartGoals","progressSnapshots"]));
+          window.localStorage.setItem("rinkreads_profile_viewed_v1", "1");
+          window.localStorage.setItem("rinkreads_insights_read_v1", JSON.stringify(["a","b","c"]));
         } catch {}
         window.location.reload();
       },
     };
-    console.log("[Ice-IQ] Dev bypass active. Helpers: window.__dev", Object.keys(window.__dev));
+    console.log("[RinkReads] Dev bypass active. Helpers: window.__dev", Object.keys(window.__dev));
   }, []); // intentionally run once; no deps
 
   // Hydrate from Supabase on mount, subscribe to auth changes
@@ -6598,14 +6598,14 @@ export default function App() {
     if (tier === "FREE") incrementFreeQuizCount();
     // Only the acquisition-demo flow (sample preview, landing "Coach Dashboard")
     // should hit the cap. Dev-bypass testing sessions must not burn this flag.
-    if (demoMode && !profile?.__dev) { lsSetStr("iceiq_demo_quiz_taken", "1"); }
-    if (newTotal === 5 && tier === "FREE" && !localStorage.getItem("iceiq_milestone5_shown")) {
+    if (demoMode && !profile?.__dev) { lsSetStr("rinkreads_demo_quiz_taken", "1"); }
+    if (newTotal === 5 && tier === "FREE" && !localStorage.getItem("rinkreads_milestone5_shown")) {
       setShowMilestone5Banner(true);
-      localStorage.setItem("iceiq_milestone5_shown", "true");
+      localStorage.setItem("rinkreads_milestone5_shown", "true");
     }
     try {
       const sd = updateStreak(getStreakData());
-      localStorage.setItem("iceiq_streak", JSON.stringify(sd));
+      localStorage.setItem("rinkreads_streak", JSON.stringify(sd));
     } catch(e) {}
     // Bump the weekly + category streaks and fire celebrate toasts on
     // meaningful milestones. Best-effort — silent on LS failure.
@@ -6693,7 +6693,7 @@ export default function App() {
     return <ScenarioParityTest/>;
   }
 
-  // Pre-auth hash route: parents can share ice-iq.vercel.app/#parents without logging in.
+  // Pre-auth hash route: parents can share rinkreads.com/#parents without logging in.
   if (!profile && hashRoute === "parents") {
     return (
       <Suspense fallback={<LazyFallback/>}>
@@ -6766,7 +6766,7 @@ export default function App() {
               <div style={{fontSize:40,marginBottom:".75rem"}}>🔒</div>
               <div style={{fontFamily:FONT.display,fontWeight:800,fontSize:"1.6rem",color:C.gold,marginBottom:".5rem"}}>Coach Dashboard</div>
               <div style={{fontSize:13,color:C.dim,lineHeight:1.6,marginBottom:"1.5rem"}}>Full team management, player ratings, and coaching tools are available on the TEAM plan. Contact us to upgrade.</div>
-              <a href="mailto:mtslifka@gmail.com?subject=Ice-IQ TEAM Plan" style={{display:"inline-block",background:C.gold,color:C.bg,border:"none",borderRadius:10,padding:".8rem 1.5rem",cursor:"pointer",fontWeight:800,fontSize:14,fontFamily:FONT.body,textDecoration:"none"}}>Contact us for TEAM plan →</a>
+              <a href="mailto:mtslifka@gmail.com?subject=RinkReads TEAM Plan" style={{display:"inline-block",background:C.gold,color:C.bg,border:"none",borderRadius:10,padding:".8rem 1.5rem",cursor:"pointer",fontWeight:800,fontSize:14,fontFamily:FONT.body,textDecoration:"none"}}>Contact us for TEAM plan →</a>
             </Card>
           </div>
         </div>
@@ -6803,7 +6803,7 @@ export default function App() {
             setScreen({kind:"rate", player:p, playerLevel});
           }}
           onOpenDrills={(level, competencyKey) => {
-            lsSetStr("iceiq_coach_focus_seen_v1", "1");
+            lsSetStr("rinkreads_coach_focus_seen_v1", "1");
             bumpQuestFlags && bumpQuestFlags();
             setScreen({kind:"drills", level: level || "U11 / Atom", competencyKey});
           }}
@@ -6861,7 +6861,7 @@ export default function App() {
 
       <div style={{paddingBottom: screen==="quiz"||screen==="results" ? 0 : 80}}>
         {screen === "home"    && <Home player={tierLimitedPlayer(player, tier)} onNav={setScreen} demoMode={demoMode} subscriptionTier={tier} questFlagsBump={questFlagsBump} onPromptUpgrade={promptUpgrade} onBumpQuestFlags={bumpQuestFlags} onSaveProgress={() => triggerSignup("save_progress")} onFirstLine={() => setFirstLineToast(true)} onSignup={() => triggerSignup("quest_cta")}/>}
-        {screen === "quiz"    && (demoMode && !profile?.__dev && (()=>{ try { return localStorage.getItem("iceiq_demo_quiz_taken") === "1"; } catch { return false; } })()
+        {screen === "quiz"    && (demoMode && !profile?.__dev && (()=>{ try { return localStorage.getItem("rinkreads_demo_quiz_taken") === "1"; } catch { return false; } })()
           ? <DemoQuizCapScreen onBack={()=>setScreen("home")} onSignUp={exitDemo}/>
           : tier === "FREE" && !demoMode && isAtFreeQuizCap()
           ? <FreeQuizCapScreen onBack={()=>setScreen("home")} onUpgrade={()=>setScreen("plans")}/>
@@ -6974,7 +6974,7 @@ export default function App() {
             <div style={{fontSize:42,marginBottom:".3rem"}}>{BADGES.FIRST_LINE.icon}</div>
             <div style={{fontSize:10,letterSpacing:".16em",textTransform:"uppercase",color:C.gold,fontWeight:700,marginBottom:".5rem"}}>Badge unlocked</div>
             <div style={{fontFamily:FONT.display,fontWeight:800,fontSize:"1.6rem",lineHeight:1.15,marginBottom:".4rem"}}>{BADGES.FIRST_LINE.name}</div>
-            <div style={{fontSize:13,color:C.dim,lineHeight:1.5,marginBottom:"1.1rem"}}>{BADGES.FIRST_LINE.desc}. Welcome to Ice-IQ.</div>
+            <div style={{fontSize:13,color:C.dim,lineHeight:1.5,marginBottom:"1.1rem"}}>{BADGES.FIRST_LINE.desc}. Welcome to RinkReads.</div>
             <button onClick={()=>setFirstLineToast(false)} style={{width:"100%",background:C.gold,color:C.bg,border:"none",borderRadius:12,padding:".8rem",cursor:"pointer",fontWeight:800,fontSize:14,fontFamily:FONT.body}}>
               Keep going →
             </button>
@@ -7048,7 +7048,7 @@ function CoachRatingScreenAuthed({ coach, player, playerLevel, onDone }) {
   const rated = Object.values(ratings).filter(v=>v).length;
   const coachScale = getCoachScale(playerLevel);
   const coachScaleType = RATING_SCALES[playerLevel]?.coach?.type;
-  const LS_DEMO_NOTES = "iceiq_demo_coach_notes_v1";
+  const LS_DEMO_NOTES = "rinkreads_demo_coach_notes_v1";
   function loadDemoNote(pid) {
     try { const m = JSON.parse(window.localStorage.getItem(LS_DEMO_NOTES) || "{}"); return m[pid] || ""; }
     catch { return ""; }

@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 // Seed one bank question per new-schema rink type, so every renderer in
-// IceIQRinkQuestion has at least one live example to smoke-test through
+// RinkReadsRinkQuestion has at least one live example to smoke-test through
 // the quiz flow. Idempotent — skip if id already present.
 
 import fs from "node:fs";

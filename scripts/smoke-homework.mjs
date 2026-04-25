@@ -64,11 +64,11 @@ function fail(label, err) {
 }
 
 function genEmail(role) {
-  return `smoke-${role}-${Date.now()}-${Math.floor(Math.random() * 10000)}@iceiq.test`;
+  return `smoke-${role}-${Date.now()}-${Math.floor(Math.random() * 10000)}@rinkreads.test`;
 }
 
 async function main() {
-  console.log("Ice-IQ homework smoke test → " + url);
+  console.log("RinkReads homework smoke test → " + url);
 
   // ─────────────── 1. create coach + player auth users
   const coachEmail = genEmail("coach");

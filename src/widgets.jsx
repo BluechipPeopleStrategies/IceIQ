@@ -26,11 +26,11 @@ export function HockeyInsightWidget({ onInsightRead } = {}) {
     const key = insights[i]?.stat;
     if (!key) return;
     try {
-      const raw = window.localStorage.getItem("iceiq_insights_read_v1");
+      const raw = window.localStorage.getItem("rinkreads_insights_read_v1");
       const arr = raw ? JSON.parse(raw) : [];
       if (!arr.includes(key)) {
         arr.push(key);
-        window.localStorage.setItem("iceiq_insights_read_v1", JSON.stringify(arr));
+        window.localStorage.setItem("rinkreads_insights_read_v1", JSON.stringify(arr));
       }
     } catch {}
     if (onInsightRead) onInsightRead();
@@ -366,9 +366,9 @@ function TrainingLogRunning({ sessions, showAll, onToggle }) {
 // ─────────────────────────────────────────────────────────
 // HOME START-HERE CARD — Dismissible "For parents — start here" card.
 // Placed above QuestChecklist on the home screen. Once dismissed, doesn't
-// return unless localStorage key `iceiq_parents_card_dismissed` is cleared.
+// return unless localStorage key `rinkreads_parents_card_dismissed` is cleared.
 // ─────────────────────────────────────────────────────────
-const PARENTS_CARD_STORAGE_KEY = "iceiq_parents_card_dismissed";
+const PARENTS_CARD_STORAGE_KEY = "rinkreads_parents_card_dismissed";
 
 export function HomeStartHereCard({ onRead, subscriptionTier }) {
   // Start dismissed to avoid a flash before the LS read resolves.
@@ -413,7 +413,7 @@ export function HomeStartHereCard({ onRead, subscriptionTier }) {
     >
       <div style={{fontSize:12,color:C.dim,lineHeight:1.45,minWidth:0}}>
         <span style={{color:C.dimmer,fontSize:10,letterSpacing:".12em",textTransform:"uppercase",fontWeight:700,marginRight:".45rem"}}>Parents</span>
-        New to Ice-IQ? <button onClick={handleRead} style={{background:"none",border:"none",color:C.blue,cursor:"pointer",padding:0,fontSize:12,fontFamily:FONT.body,textDecoration:"underline",fontWeight:600}}>Start here</button>.
+        New to RinkReads? <button onClick={handleRead} style={{background:"none",border:"none",color:C.blue,cursor:"pointer",padding:0,fontSize:12,fontFamily:FONT.body,textDecoration:"underline",fontWeight:600}}>Start here</button>.
       </div>
       <button onClick={handleDismiss} aria-label="Dismiss" style={{
         fontSize:14,padding:"2px 6px",lineHeight:1,

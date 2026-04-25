@@ -21,9 +21,9 @@ export function loadQB() {
 
   // Bumped to v4 so banks cached before scenario merging get invalidated.
   try {
-    sessionStorage.removeItem("iceiq_qb_cache");
-    sessionStorage.removeItem("iceiq_qb_cache_v3");
-    const stored = sessionStorage.getItem("iceiq_qb_cache_v4");
+    sessionStorage.removeItem("rinkreads_qb_cache");
+    sessionStorage.removeItem("rinkreads_qb_cache_v3");
+    const stored = sessionStorage.getItem("rinkreads_qb_cache_v4");
     if (stored) {
       cached = JSON.parse(stored);
       return Promise.resolve(cached);
@@ -52,20 +52,27 @@ export function loadQB() {
           }
         }
         // Merge unified-engine scenarios. Each seed declares a `level`
-        // (single primary) or `levels[]` (multi-age). Skip silently if
-        // the level isn't a known bank key.
+        // (single primary) or `levels[]` (multi-age). Scenarios use
+        // `difficulty` for authoring readability but the live quiz
+        // buckets by `d` — alias here so they actually reach the queue.
         for (const s of collectScenarios()) {
           const targets = Array.isArray(s.levels) && s.levels.length
             ? s.levels
             : (s.level ? [s.level] : []);
+          // Shallow-copy + add `d` mirror so we don't mutate the imported
+          // module (Vite freezes them in dev).
+          const enriched = {
+            ...s,
+            d: typeof s.d === "number" ? s.d : (typeof s.difficulty === "number" ? s.difficulty : 2),
+          };
           for (const lvl of targets) {
             if (!qb[lvl]) continue;
             if (qb[lvl].some(x => x.id === s.id)) continue;
-            qb[lvl].push(s);
+            qb[lvl].push(enriched);
           }
         }
         cached = qb;
-        try { sessionStorage.setItem("iceiq_qb_cache_v4", JSON.stringify(cached)); } catch (e) {}
+        try { sessionStorage.setItem("rinkreads_qb_cache_v4", JSON.stringify(cached)); } catch (e) {}
         return cached;
       })
       .catch(e => {

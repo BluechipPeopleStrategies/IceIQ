@@ -1,5 +1,5 @@
 // Auto-generated from src/data/questions.json (U7 + U9 banks)
-// Transformed for IceIQ Review tool schema
+// Transformed for RinkReads Review tool schema
 window.QUESTIONS = [
   {
     "id": "u7q1",

@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-// Preflight checks for IceIQ. Catches issues that would render visibly broken
+// Preflight checks for RinkReads. Catches issues that would render visibly broken
 // in-app before we ship. Run manually: `npm run preflight`.
 //
 // Checks:

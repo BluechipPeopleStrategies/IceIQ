@@ -7,7 +7,7 @@
 // ─────────────────────────────────────────────────────────────────────────
 // COORDINATE SYSTEM
 // All actor x/y values are normalized 0–1 — x left-to-right across the rink,
-// y top-to-bottom. Renderers convert to the 600×300 IceIQRink coord space
+// y top-to-bottom. Renderers convert to the 600×300 RinkReadsRink coord space
 // at draw time. This decouples the schema from the rink's internal sizing
 // (per SPADL's normalization principle — see ENGINE_RESEARCH for sources).
 
@@ -286,7 +286,7 @@ export function validateScenario(s) {
   return { ok: errs.length === 0, errs, warns };
 }
 
-// Convert normalized 0..1 coords to the IceIQRink 600×300 viewBox.
+// Convert normalized 0..1 coords to the RinkReadsRink 600×300 viewBox.
 export const RINK_W = 600;
 export const RINK_H = 300;
 export function denorm(p) {

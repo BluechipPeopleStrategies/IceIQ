@@ -22,7 +22,7 @@ This doc is a roadmap — each phase is a self-contained ship. Phases are ordere
   - Rush: `2-on-1`, `3-on-2`
 - Each template has a default `scene.question` stubbed in (mode = choice or zone-click, empty prompt) so the author just fills in the situation.
 
-**Where to put it:** `tools/dashboard.html` has the Add modal at line ~2597 (`openAddModal`). Add a template picker right above the rink editor slot; selecting a template populates `row.scene` via `window.IceIQEmptyScene()` → custom populated object. Templates defined inline in the file as a `TEMPLATES` const.
+**Where to put it:** `tools/dashboard.html` has the Add modal at line ~2597 (`openAddModal`). Add a template picker right above the rink editor slot; selecting a template populates `row.scene` via `window.RinkReadsEmptyScene()` → custom populated object. Templates defined inline in the file as a `TEMPLATES` const.
 
 **Effort:** M (half day).
 

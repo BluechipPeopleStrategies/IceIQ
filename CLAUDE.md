@@ -1,4 +1,4 @@
-# Ice-IQ Context (v2026.4)
+# RinkReads Context (v2026.4)
 
 ## Core Specs
 - **Goal:** Youth hockey game sense development — 880+ adaptive questions, SMART goals, progress tracking U7–U18.
@@ -8,16 +8,16 @@
 - **Architecture:** All logic/UI in `src/App.jsx`. NO `/components` or refactoring. CSS: inline/style-block.
 
 ## Branding
-- App name: **Ice-IQ** (hyphenated everywhere in UI, including "Ice-IQ Pro", "Ice-IQ Team").
+- App name: **RinkReads** (hyphenated everywhere in UI, including "RinkReads Pro", "RinkReads Team").
 - Score metric: **Game Sense Score** (not "IQ Score", not "Hockey IQ"). Short form: **GS**.
-- Logo: `IceIQLogo` component in `shared.jsx` — modern stick + puck with motion lines + outer ring.
+- Logo: `RinkReadsLogo` component in `shared.jsx` — modern stick + puck with motion lines + outer ring.
 - Coach dashboard stat label: "Team Avg GS".
 
 ## Pricing & Gating (`src/utils/tierGate.js`, `src/config/pricing.js`)
 Seasonal pricing model (aligns with hockey season cycle Sept–Mar + summer off-season Apr–Aug).
 
 - **Free:** positionFilter ✓, multipleChoice + **3 rink scenarios per age group (teaser)**, 5 session history, 1 profile, 1 age group, **3 quizzes/week cap** (localStorage, resets Monday).
-  - Rink teaser counter lives in `src/utils/rinkProgress.js` — `RINK_FREE_PER_AGE = 3`, localStorage key `iceiq_rink_seen` (`{ u7: n, u9: n, ... }`). After the cap, `buildQueue` in `App.jsx` injects a `rinkLocked` sentinel that routes to the `rinkQuestions` upgrade prompt.
+  - Rink teaser counter lives in `src/utils/rinkProgress.js` — `RINK_FREE_PER_AGE = 3`, localStorage key `rinkreads_rink_seen` (`{ u7: n, u9: n, ... }`). After the cap, `buildQueue` in `App.jsx` injects a `rinkLocked` sentinel that routes to the `rinkQuestions` upgrade prompt.
 - **Pro:** All question formats (5 types), adaptive engine, SMART goals, progress snapshots/radar, full session history, weekly challenge.
   - Hockey Season (Sept–Mar): **$89.99 CAD** — primary competitive season
   - Summer Off-Season (Apr–Aug): **$44.99 CAD** — development & training focus, lower friction
@@ -48,25 +48,25 @@ Seasonal pricing model (aligns with hockey season cycle Sept–Mar + summer off-
 - `src/utils/weeklyChallenge.js` — `FREE_WEEKLY_QUIZ_CAP = 3`, `isAtFreeQuizCap()`, `incrementFreeQuizCount()`.
 - Incremented in `handleQuizFinish` when `tier === "FREE"`.
 - Gated at quiz screen routing: if FREE and at cap → `<FreeQuizCapScreen>` with countdown to Monday reset.
-- localStorage key: `iceiq_free_cap` — JSON keyed by week key (`2026_W16`).
+- localStorage key: `rinkreads_free_cap` — JSON keyed by week key (`2026_W16`).
 
 ## Storage Schema (localStorage)
-- `iceiq_device_id`: UUID.
-- `iceiq_age_group_lock`: Free-tier selection.
-- `iceiq_switch_count`: Track switches (limit: 1).
-- `iceiq_season_reset_year`: Current reset cycle.
-- `iceiq_child_profiles`: JSON array (max 3).
-- `iceiq_season_pass`: {purchaseDate, expiryDate}.
-- `iceiq_weekly`: Weekly challenge completion record (8-week pruning).
-- `iceiq_free_cap`: Free tier weekly quiz count keyed by week (4-week pruning).
-- `iceiq_rink_seen`: `{ seen: {u7:n,u9:n,...}, ids: {u7:[id,...],...} }` — FREE tier rink teaser counter, caps at `RINK_FREE_PER_AGE` (3) per age group.
-- `iceiq_milestone5_shown`: Flag — shown once when free user completes 5th quiz.
-- `iceiq_parents_card_dismissed`: "true" once user dismisses the Home "For parents — start here" card. Never returns unless cleared.
+- `rinkreads_device_id`: UUID.
+- `rinkreads_age_group_lock`: Free-tier selection.
+- `rinkreads_switch_count`: Track switches (limit: 1).
+- `rinkreads_season_reset_year`: Current reset cycle.
+- `rinkreads_child_profiles`: JSON array (max 3).
+- `rinkreads_season_pass`: {purchaseDate, expiryDate}.
+- `rinkreads_weekly`: Weekly challenge completion record (8-week pruning).
+- `rinkreads_free_cap`: Free tier weekly quiz count keyed by week (4-week pruning).
+- `rinkreads_rink_seen`: `{ seen: {u7:n,u9:n,...}, ids: {u7:[id,...],...} }` — FREE tier rink teaser counter, caps at `RINK_FREE_PER_AGE` (3) per age group.
+- `rinkreads_milestone5_shown`: Flag — shown once when free user completes 5th quiz.
+- `rinkreads_parents_card_dismissed`: "true" once user dismisses the Home "For parents — start here" card. Never returns unless cleared.
 
 ## Tier Resolution (`resolveTier`)
 - Demo coach → **TEAM** (sees full coach dashboard).
 - Demo player → **FREE** (sees free experience).
-- Override: `iceiq_tier_override` in localStorage.
+- Override: `rinkreads_tier_override` in localStorage.
 
 ## Coach Ratings Anti-Inflation
 - `src/data/constants.js` — `COMPETENCY_LADDER` `sub_coach` strings include normative % anchors (e.g., "~top 5%").
@@ -101,15 +101,15 @@ Demo coach roster: `DEMO_COACH_ROSTER` — 5 U11 players with `iq` field (displa
 ## Conversion UX Triggers
 - Goals tab: 🔒 gold pip badge on BottomNav for FREE users.
 - Goals screen: blurred sample goal preview behind gate card.
-- Session #5: milestone banner fires once (localStorage flag `iceiq_milestone5_shown`).
+- Session #5: milestone banner fires once (localStorage flag `rinkreads_milestone5_shown`).
 - Quiz format preview: 1 locked-format sentinel mid-quiz for FREE.
 - Weekly quiz cap: `FreeQuizCapScreen` with countdown + upgrade CTA.
 - Upgrade prompt surface: positionFilter, >1 age switch, session 6+, weekly cap hit, weekly challenge tap.
 
 ## First-Time Parents Surface
-- **Route:** `#parents` hash route, shareable as `ice-iq.vercel.app/#parents`, reachable pre- and post-auth.
+- **Route:** `#parents` hash route, shareable as `rinkreads.com/#parents`, reachable pre- and post-auth.
 - **Page:** `ParentsPage` in `screens.jsx` (lazy-loaded) — seven sections: why, not, use, progress, pricing, privacy, developer.
-- **Card:** `HomeStartHereCard` in `widgets.jsx` — dismissible home-screen card mounted above `QuestChecklist` in `Home`. Dismiss persists via `iceiq_parents_card_dismissed`.
+- **Card:** `HomeStartHereCard` in `widgets.jsx` — dismissible home-screen card mounted above `QuestChecklist` in `Home`. Dismiss persists via `rinkreads_parents_card_dismissed`.
 - **Entry points:** AuthScreen footer link, Home card, `#parents` direct URL.
 - **Follow-ups:** (1) `/privacy` route doesn't exist — Section 06 privacy-policy link omitted; (2) no public sample-scenario route — "See a sample scenario" button routes to home.
 
@@ -120,14 +120,14 @@ Demo coach roster: `DEMO_COACH_ROSTER` — 5 U11 players with `iq` field (displa
 
 ## Rink Visualization Schema (v2)
 
-Olympic IIHF rink renderer for top-down hockey questions. Components: `src/IceIQRink.jsx` (SVG rink + zones + markers + lines) and `src/IceIQRinkQuestion.jsx` (dispatches `q` to the right interactive component by type).
+Olympic IIHF rink renderer for top-down hockey questions. Components: `src/RinkReadsRink.jsx` (SVG rink + zones + markers + lines) and `src/RinkReadsRinkQuestion.jsx` (dispatches `q` to the right interactive component by type).
 
 ### Coordinate system
 - 1 SVG unit = 0.1 meter. Rink is **600 × 300** units (60m × 30m). Origin top-left.
 - Landmarks: left goal line `x=40`, left blue `x=213`, center red `x=300`, right blue `x=387`, right goal line `x=560`. Top boards `y=0`, center `y=150`, bottom boards `y=300`.
 - End-zone faceoff dots: `(100,80)`, `(100,220)`, `(500,80)`, `(500,220)`. NZ dots: `(228,80)`, `(228,220)`, `(372,80)`, `(372,220)`.
 
-### Question types (dispatcher in `IceIQRinkQuestion.jsx`)
+### Question types (dispatcher in `RinkReadsRinkQuestion.jsx`)
 - `mc` / `diagram` — optional `q.rink` field renders rink above choices.
 - `drag-target` — `targets[]` (`{x,y,radius,verdict,feedback}`); `puckStart{x,y}` optional.
 - `drag-place` — `slots[]` + `chips[]`. Match chip id to slot id.
@@ -141,9 +141,9 @@ Olympic IIHF rink renderer for top-down hockey questions. Components: `src/IceIQ
 Legacy `type:"rink"` (with `q.scene`) and legacy `type:"zone-click"` (no `q.rink`, with `q.zones` in old format) still dispatch to the original `Rink.jsx` / `ZoneClickQuestion` paths. New schema is detected by `q.rink` presence or by one of the new type names — see `NEW_RINK_TYPES` and `isRinkQ` in `App.jsx`.
 
 ### Self-healing
-Both components validate and auto-fix bad data: coord clamping, unknown marker/line/zone fallbacks, NaN → defaults, non-array fields → `[]`. Auto-fixes log `console.warn` with prefix `[IceIQRink]` / `[IceIQRinkQuestion]`. Unrecoverable questions (missing required arrays for the type) render an amber **Skip this question** card via the validator + error boundary — never crash the session.
+Both components validate and auto-fix bad data: coord clamping, unknown marker/line/zone fallbacks, NaN → defaults, non-array fields → `[]`. Auto-fixes log `console.warn` with prefix `[RinkReadsRink]` / `[RinkReadsRinkQuestion]`. Unrecoverable questions (missing required arrays for the type) render an amber **Skip this question** card via the validator + error boundary — never crash the session.
 
 ### Authoring workflow
 1. Use the standalone Rink Editor v2 artifact to build scenes visually.
 2. Copy JSON → paste into the right age-group array in `src/data/questions.json`.
-3. Verify in dev: open the question, watch the console for `[IceIQRink*]` warnings (clean = no auto-fixes needed).
+3. Verify in dev: open the question, watch the console for `[RinkReadsRink*]` warnings (clean = no auto-fixes needed).

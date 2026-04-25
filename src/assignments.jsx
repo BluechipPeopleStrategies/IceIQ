@@ -18,7 +18,7 @@ import { Card, Label, C, FONT } from "./shared.jsx";
 // LS key storing the ISO timestamp of the most-recent assignment created_at
 // the player has already seen. Used to flag new assignments with a pulse
 // badge on the Homework card.
-const LS_LAST_HW_SEEN = "iceiq_last_homework_seen_v1";
+const LS_LAST_HW_SEEN = "rinkreads_last_homework_seen_v1";
 
 function getLastHomeworkSeen(playerId) {
   try {
@@ -86,12 +86,12 @@ export function HomeworkCard({ playerId, demoMode }) {
         try {
           const today = new Date().toISOString().slice(0, 10);
           const yest = new Date(Date.now() - 86400000).toISOString().slice(0, 10);
-          const cur = JSON.parse(localStorage.getItem("iceiq_streak") || "{}");
+          const cur = JSON.parse(localStorage.getItem("rinkreads_streak") || "{}");
           if (cur.last !== today) {
             const next = cur.last === yest
               ? { ...cur, count: (cur.count || 0) + 1, last: today }
               : { count: 1, last: today };
-            localStorage.setItem("iceiq_streak", JSON.stringify(next));
+            localStorage.setItem("rinkreads_streak", JSON.stringify(next));
           }
         } catch { /* LS blocked — silent */ }
       }
@@ -129,7 +129,7 @@ export function HomeworkCard({ playerId, demoMode }) {
               fontSize:9,letterSpacing:".1em",textTransform:"uppercase",
               background:C.gold,color:C.bg,padding:"2px 7px",borderRadius:4,
               fontWeight:800,flexShrink:0,
-              animation:"iceiq-pulse 1.6s ease-in-out infinite",
+              animation:"rinkreads-pulse 1.6s ease-in-out infinite",
             }}>
               {newCount} new
             </span>
@@ -137,7 +137,7 @@ export function HomeworkCard({ playerId, demoMode }) {
         </div>
         <span style={{fontSize:11,color:C.dimmer,fontWeight:600,flexShrink:0}}>{open.length} open · {done.size} done</span>
       </div>
-      <style>{`@keyframes iceiq-pulse { 0%,100% { opacity:1 } 50% { opacity:.55 } }`}</style>
+      <style>{`@keyframes rinkreads-pulse { 0%,100% { opacity:1 } 50% { opacity:.55 } }`}</style>
       {recent.map(a => {
         const isDone = done.has(a.id);
         const overdue = a.due_date && new Date(a.due_date) < new Date() && !isDone;
@@ -206,7 +206,7 @@ const ASSIGNMENT_TEMPLATES = [
   {
     label: "📓 Review your weakest category",
     title: "Review your weakest quiz category",
-    description: "Open Ice-IQ → your Report → pick the category you scored lowest on. Read the tips. Take a quiz this weekend and try to bump that %.",
+    description: "Open RinkReads → your Report → pick the category you scored lowest on. Read the tips. Take a quiz this weekend and try to bump that %.",
     offsetDays: 7,
   },
   {
