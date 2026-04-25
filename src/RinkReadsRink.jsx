@@ -300,7 +300,7 @@ function Marker({ marker }) {
   if (marker.type === "number") {
     return (
       <g transform={`translate(${marker.x}, ${marker.y})`}>
-        <circle cx={0} cy={0} r={5.2} fill="#EEEDFE" stroke="#3C3489" strokeWidth="0.7" />
+        <circle cx={0} cy={0} r={6} fill="#EEEDFE" stroke="#3C3489" strokeWidth="0.7" />
         <text x={0} y={1.9} textAnchor="middle" fill="#3C3489"
           fontSize="5.6" fontWeight="700" fontFamily="system-ui">{marker.label || "1"}</text>
         {marker.caption && (

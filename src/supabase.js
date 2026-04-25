@@ -542,6 +542,26 @@ export async function getTrainingSessionsForPlayer(playerId) {
 }
 
 // ─────────────────────────────────────────────
+// QUIZ FEEDBACK (post-results "what would you like more of?" prompt)
+// ─────────────────────────────────────────────
+// Best-effort write — failures are swallowed so a Supabase hiccup never
+// breaks the post-quiz experience. The card is purely opt-in anyway.
+export async function recordQuizFeedback(playerId, { choice, note, score, level }) {
+  if (!supabase || !playerId || !choice) return null;
+  try {
+    const { data, error } = await supabase.from("quiz_feedback").insert({
+      player_id: playerId,
+      choice,
+      note: note ? note.trim().slice(0, 500) : null,
+      score: Number.isFinite(score) ? Math.round(score) : null,
+      level: level || null,
+    }).select().single();
+    if (error) { warn("recordQuizFeedback", error); return null; }
+    return data;
+  } catch (e) { warn("recordQuizFeedback", e); return null; }
+}
+
+// ─────────────────────────────────────────────
 // QUESTION RESULTS (per-rep, source for the Hockey IQ score)
 // ─────────────────────────────────────────────
 import { computeHockeyIQ, WINDOW_DAYS } from "./utils/hockeyIQ.js";

@@ -115,6 +115,13 @@ export function TrainingLog({ playerId }) {
   const [refreshTick, setRefreshTick] = useState(0);
   const log = useMemo(() => getTrainingLog(playerId), [playerId, refreshTick]);
   const today = new Date().toISOString().slice(0, 10);
+  // Floor: only allow logging sessions from the past month — keeps the log
+  // honest (no backdating ancient workouts) while still letting parents
+  // catch up on a few missed days. True calendar month, not 30d.
+  const oneMonthAgo = (() => {
+    const d = new Date(); d.setMonth(d.getMonth() - 1);
+    return d.toISOString().slice(0, 10);
+  })();
   const [puckCount, setPuckCount] = useState(0);
   const [shotType, setShotType] = useState(null); // "wrist" | "snap" | "slap" | "backhand" | null = mixed
   // Default every minute-based activity to 30 min so the +/- counter has
@@ -139,6 +146,10 @@ export function TrainingLog({ playerId }) {
 
   function logSession(type, value, unit, label = "") {
     if (!value || value <= 0) return;
+    // Defence-in-depth: also clamp the date here in case the input's
+    // min/max attributes get bypassed (some browsers' native date pickers
+    // accept typed values outside the range).
+    if (sessionDate < oneMonthAgo || sessionDate > today) return;
     // For pucks_shot, fold the chosen shot type into the label so the
     // running log can surface "Pucks Shot · wrist" without a schema change.
     const finalLabel = type === "pucks_shot" && shotType ? shotType : label;
@@ -194,8 +205,9 @@ export function TrainingLog({ playerId }) {
                 <div style={{ borderTop: `1px solid ${C.border}`, paddingTop: ".75rem" }}>
                   <div style={{ display: "flex", flexDirection: "column", gap: ".35rem", marginBottom: ".75rem" }}>
                     <label style={{ fontSize: 10, color: C.dimmer, letterSpacing: ".08em", textTransform: "uppercase", fontWeight: 700 }}>Date</label>
-                    <input type="date" value={sessionDate} max={today} onChange={e => setSessionDate(e.target.value)}
+                    <input type="date" value={sessionDate} min={oneMonthAgo} max={today} onChange={e => setSessionDate(e.target.value)}
                       style={{ background: C.bgGlass, border: `1px solid ${C.border}`, borderRadius: 8, padding: ".5rem .75rem", color: C.white, fontFamily: FONT.body, fontSize: 13, outline: "none", colorScheme: "dark" }} />
+                    <div style={{fontSize:10,color:C.dimmer,letterSpacing:".04em"}}>Log sessions from the past month only.</div>
                   </div>
                   <div style={{ display: "flex", gap: ".5rem", marginBottom: ".75rem" }}>
                     <div style={{ flex: 2, display: "flex", flexDirection: "column", gap: ".35rem" }}>

@@ -1282,6 +1282,12 @@ function Home({ player, onNav, demoMode, subscriptionTier, questFlagsBump, onPro
         {/* For-parents start-here card — dismissible, persists via LS */}
         <HomeStartHereCard onRead={() => onNav("parents")} subscriptionTier={subscriptionTier} />
 
+        {/* Training log at the top so parents can update sessions without
+            digging into Settings or the dedicated training screen.
+            Activity rows default collapsed; date input is capped to the
+            last month to keep entries honest. */}
+        <TrainingLog playerId={player.id || "__demo__"} />
+
         {/* Homework from coach — shows only when there's anything assigned */}
         <HomeworkCard playerId={player.id} demoMode={demoMode} />
 
@@ -1974,10 +1980,85 @@ function Quiz({ player, onFinish, onBack, tier, onUpgrade }) {
 // ─────────────────────────────────────────────────────────
 // RESULTS SCREEN
 // ─────────────────────────────────────────────────────────
-function Results({ results, player, prevScore, totalSessions, seqPerfect, mistakeStreak, onAgain, onHome, showMilestoneBanner, onViewPlans }) {
+// Optional post-quiz prompt: "What would you like to see more of?" Saves
+// to quiz_feedback (migration 0011). FREE-tier users see a "chance to win
+// a Pro membership" hook; paid tiers see a plain product-shaping framing.
+// Hidden for ephemeral player ids (demo/preview/dev) since they have no
+// auth.uid() and the RLS policy would reject the write.
+function QuizFeedbackCard({ player, score, tier }) {
+  const [choice, setChoice] = useState(null);
+  const [note, setNote] = useState("");
+  const [submitted, setSubmitted] = useState(false);
+  const [dismissed, setDismissed] = useState(false);
+
+  if (!player?.id || isEphemeralPlayer(player.id)) return null;
+  if (dismissed || submitted) return null;
+
+  const isFree = !tier || tier === "FREE";
+  const headline = isFree ? "Help shape what we build next" : "What would you like more of?";
+  const subhead = isFree
+    ? "Tell us what you'd like more of and you'll be entered to win a free Pro membership."
+    : "Your input shapes what we build next. Optional — skip if you'd rather not.";
+
+  const OPTIONS = [
+    { id: "rink_scenarios",  icon: "🎯", label: "Rink scenarios" },
+    { id: "game_situations", icon: "🧠", label: "Game situations" },
+    { id: "tougher",         icon: "💪", label: "Tougher questions" },
+    { id: "my_position",     icon: "🛡️", label: "My position" },
+    { id: "something_else",  icon: "💬", label: "Something else" },
+  ];
+
+  function submit() {
+    if (!choice) return;
+    SB.recordQuizFeedback(player.id, { choice, note, score, level: player.level });
+    setSubmitted(true);
+  }
+
+  return (
+    <Card style={{
+      marginBottom: "1rem",
+      background: isFree ? `linear-gradient(135deg,rgba(252,76,2,.1),rgba(252,76,2,.02))` : C.bgCard,
+      border: `1px solid ${isFree ? C.goldBorder : C.border}`,
+    }}>
+      <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start",gap:".5rem",marginBottom:".5rem"}}>
+        <div style={{flex:1,minWidth:0}}>
+          <div style={{fontFamily:FONT.display,fontWeight:800,fontSize:"1rem",color:C.white,marginBottom:".2rem"}}>{headline}</div>
+          <div style={{fontSize:12,color:isFree?C.gold:C.dim,lineHeight:1.5}}>{subhead}</div>
+        </div>
+        <button onClick={()=>setDismissed(true)} aria-label="Skip"
+          style={{background:"none",border:"none",color:C.dimmer,cursor:"pointer",fontSize:18,padding:"0 4px",lineHeight:1,flexShrink:0}}>×</button>
+      </div>
+      <div style={{display:"flex",flexWrap:"wrap",gap:".4rem",marginBottom:choice?".75rem":".25rem"}}>
+        {OPTIONS.map(o => {
+          const on = choice === o.id;
+          return (
+            <button key={o.id} onClick={()=>setChoice(on ? null : o.id)}
+              style={{background:on?C.goldDim:C.bgElevated,border:`1px solid ${on?C.gold:C.border}`,borderRadius:999,padding:".4rem .75rem",cursor:"pointer",color:on?C.gold:C.dim,fontFamily:FONT.body,fontSize:12,fontWeight:on?700:500}}>
+              <span style={{marginRight:".3rem"}}>{o.icon}</span>{o.label}
+            </button>
+          );
+        })}
+      </div>
+      {choice && (
+        <>
+          <textarea value={note} onChange={e=>setNote(e.target.value)}
+            placeholder={choice === "something_else" ? "Tell us more…" : "Anything specific? (optional)"}
+            rows={2} maxLength={500}
+            style={{background:C.bgGlass,border:`1px solid ${C.border}`,borderRadius:8,padding:".55rem .75rem",color:C.white,fontFamily:FONT.body,fontSize:13,outline:"none",width:"100%",resize:"vertical",boxSizing:"border-box",marginBottom:".55rem"}}/>
+          <button onClick={submit}
+            style={{width:"100%",background:C.gold,color:C.bg,border:"none",borderRadius:10,padding:".7rem",cursor:"pointer",fontWeight:800,fontSize:13,fontFamily:FONT.body}}>
+            Submit{isFree ? " & enter to win →" : " →"}
+          </button>
+        </>
+      )}
+    </Card>
+  );
+}
+
+function Results({ results, player, prevScore, totalSessions, seqPerfect, mistakeStreak, tier, onAgain, onHome, showMilestoneBanner, onViewPlans }) {
   const [saved, setSaved] = useState(false);
   const score = calcWeightedIQ(results);
-  const tier = getTier(score);
+  const scoreTier = getTier(score);
   const badges = calcBadges(results, prevScore, totalSessions, seqPerfect, mistakeStreak);
   const byD = {1:{ok:0,tot:0},2:{ok:0,tot:0},3:{ok:0,tot:0}};
   results.forEach(r => { byD[r.d||2].tot++; if(r.ok) byD[r.d||2].ok++; });
@@ -2006,9 +2087,9 @@ function Results({ results, player, prevScore, totalSessions, seqPerfect, mistak
       <div style={{textAlign:"center",marginBottom:"2rem",paddingTop:"1rem",position:"relative",overflow:"hidden"}}>
         <img src={imgSuccess} alt="" style={{position:"absolute",inset:0,width:"100%",height:"100%",objectFit:"cover",opacity:0.08,pointerEvents:"none",borderRadius:16}}/>
         <div style={{position:"relative"}}>
-        <div style={{fontSize:56,marginBottom:".5rem"}}>{tier.badge}</div>
-        <div style={{fontFamily:FONT.display,fontWeight:800,fontSize:"2rem",marginBottom:".15rem"}}>{tier.label}</div>
-        <div style={{fontFamily:FONT.display,fontWeight:800,fontSize:"5rem",color:tier.color,lineHeight:.9,letterSpacing:"-.02em"}}>{score}<span style={{fontSize:"2rem"}}>%</span></div>
+        <div style={{fontSize:56,marginBottom:".5rem"}}>{scoreTier.badge}</div>
+        <div style={{fontFamily:FONT.display,fontWeight:800,fontSize:"2rem",marginBottom:".15rem"}}>{scoreTier.label}</div>
+        <div style={{fontFamily:FONT.display,fontWeight:800,fontSize:"5rem",color:scoreTier.color,lineHeight:.9,letterSpacing:"-.02em"}}>{score}<span style={{fontSize:"2rem"}}>%</span></div>
         <div style={{fontSize:13,color:C.dimmer,margin:".5rem 0 .75rem"}}>{correct}/{results.length} correct</div>
         {saved && player.coachCode && (
           <div style={{fontSize:11,color:C.green,display:"flex",alignItems:"center",justifyContent:"center",gap:".3rem"}}>✓ Saved to team {player.coachCode}</div>
@@ -2091,6 +2172,8 @@ function Results({ results, player, prevScore, totalSessions, seqPerfect, mistak
           <button onClick={onViewPlans} style={{background:C.gold,color:C.bg,border:"none",borderRadius:8,padding:".55rem 1.1rem",cursor:"pointer",fontWeight:800,fontSize:13,fontFamily:FONT.body}}>See Pro Plans →</button>
         </Card>
       )}
+
+      <QuizFeedbackCard player={player} score={score} tier={tier}/>
 
       <PrimaryBtn onClick={onAgain} style={{marginBottom:".75rem"}}>Take Another Quiz →</PrimaryBtn>
       <SecBtn onClick={onHome}>← Home</SecBtn>
@@ -6886,7 +6969,7 @@ export default function App() {
           ? <FreeQuizCapScreen onBack={()=>setScreen("home")} onUpgrade={()=>setScreen("plans")}/>
           : <Quiz player={player} onFinish={handleQuizFinish} onBack={()=>setScreen("home")} tier={tier} onUpgrade={promptUpgrade}/>
         )}
-        {screen === "results" && <Results results={quizResults} player={player} prevScore={prevScore} totalSessions={totalSessions} seqPerfect={seqPerfect} mistakeStreak={mistakeStreak} onAgain={()=>setScreen("quiz")} onHome={()=>setScreen("home")} showMilestoneBanner={showMilestone5Banner} onViewPlans={()=>{setShowMilestone5Banner(false);setScreen("plans");}}/>}
+        {screen === "results" && <Results results={quizResults} player={player} prevScore={prevScore} totalSessions={totalSessions} seqPerfect={seqPerfect} mistakeStreak={mistakeStreak} tier={tier} onAgain={()=>setScreen("quiz")} onHome={()=>setScreen("home")} showMilestoneBanner={showMilestone5Banner} onViewPlans={()=>{setShowMilestone5Banner(false);setScreen("plans");}}/>}
         {screen === "skills"  && <Skills player={player} tier={tier} onUpgrade={promptUpgrade} onSave={handleSkillsSave} onBack={()=>setScreen("home")}/>}
         {screen === "skills-onboarding" && <Suspense fallback={<LazyFallback/>}><SkillsOnboarding player={player} tier={tier} onUpgrade={promptUpgrade} onSave={async (r)=>{ await handleSkillsSave(r); setScreen("home"); }} onBack={()=>setScreen("home")}/></Suspense>}
         {screen === "insights" && <Suspense fallback={<LazyFallback/>}><InsightsScreen onBack={()=>setScreen("home")} onInsightRead={bumpQuestFlags}/></Suspense>}
