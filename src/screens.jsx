@@ -188,27 +188,20 @@ export function CoachDashboard({ onBack }) {
 // ─────────────────────────────────────────────────────────
 // ProfileSetup
 // ─────────────────────────────────────────────────────────
-// Three-step welcome wizard. Step 1 asks whether the signup is the player
-// themselves or a parent/guardian filling in for a kid — that toggle drives
-// pronoun copy on the remaining steps. Step 2 captures age either by
-// division pick OR year-of-birth; if birth year is chosen, all downstream
-// UI reads "Born YYYY" instead of "U11 / Atom". Step 3 is position.
+// Two-step welcome wizard for parent/guardian-led signup. Step 1 captures
+// age (level pick OR year-of-birth → derive level); if birth year is
+// chosen, all downstream UI reads "Born YYYY" instead of "U11 / Atom".
+// Step 2 is position. Player-led signup was removed — every account is
+// parent/guardian-fronted (pronouns are hardcoded to "your child" / "their").
 export function ProfileSetup({ profile, onComplete }) {
-  // Step 1 — "Who's signing up?"
-  const [who, setWho] = useState(profile.signupMode || ""); // "self" | "parent"
-  // Step 2 — age capture
   const [ageMode, setAgeMode] = useState("level");           // "level" | "birthYear"
   const [level, setLevel] = useState(profile.level || "");
   const [birthYear, setBirthYear] = useState(profile.birthYear || null);
-  // Step 3 — position
   const [position, setPosition] = useState(profile.position || "");
   const [saving, setSaving] = useState(false);
 
-  // Pronouns flex based on the step-1 answer so we're not saying "you or your
-  // child" all the way through. Default to self-phrasing before step 1 picks.
-  const subject       = who === "parent" ? "your child" : "you";
-  const subjectCap    = who === "parent" ? "Your child" : "You";
-  const possessive    = who === "parent" ? "their" : "your";
+  const subject    = "your child";
+  const possessive = "their";
 
   // When the user enters a year of birth we need a level to slot them into
   // questions / SKILLS — derive it on the fly.
@@ -233,7 +226,7 @@ export function ProfileSetup({ profile, onComplete }) {
       }
       // Best-effort: birth_year + signup_mode require migration 0005.
       // Failures here are tolerable — they only affect display polish.
-      const optional = { signup_mode: who };
+      const optional = { signup_mode: "parent" };
       if (ageMode === "birthYear") optional.birth_year = birthYear;
       try {
         await SB.updateProfile(profile.id, optional);
@@ -244,7 +237,7 @@ export function ProfileSetup({ profile, onComplete }) {
         ...profile,
         level: effectiveLevel,
         position,
-        signupMode: who,
+        signupMode: "parent",
         ...(ageMode === "birthYear" ? { birthYear } : {}),
       });
     } finally {
@@ -252,37 +245,14 @@ export function ProfileSetup({ profile, onComplete }) {
     }
   }
 
-  // ── Step 1: Who's signing up? ─────────────────────────────────────────
-  if (!who) return (
-    <Screen>
-      <div style={{marginBottom:"2rem"}}>
-        <div style={{fontSize:10,letterSpacing:".18em",color:C.green,textTransform:"uppercase",fontWeight:700,marginBottom:".6rem"}}>✓ Account created · Step 1 of 3</div>
-        <h2 style={{fontFamily:FONT.display,fontWeight:800,fontSize:"2rem",margin:"0 0 .35rem"}}>Who's signing up?</h2>
-        <div style={{fontSize:13,color:C.dim,lineHeight:1.55}}>Three quick questions and we'll get you on the ice.</div>
-      </div>
-      <div style={{display:"flex",flexDirection:"column",gap:".6rem"}}>
-        <button onClick={()=>setWho("self")} style={{background:C.bgCard,border:`1px solid ${C.border}`,borderRadius:14,padding:"1.15rem 1.25rem",cursor:"pointer",color:C.white,fontFamily:FONT.body,textAlign:"left"}}>
-          <div style={{fontSize:26,marginBottom:".2rem"}}>🏒</div>
-          <div style={{fontSize:15,fontWeight:700,marginBottom:2}}>I'm the player</div>
-          <div style={{fontSize:12,color:C.dim,lineHeight:1.5}}>Track my own skills, quizzes, and goals.</div>
-        </button>
-        <button onClick={()=>setWho("parent")} style={{background:C.bgCard,border:`1px solid ${C.border}`,borderRadius:14,padding:"1.15rem 1.25rem",cursor:"pointer",color:C.white,fontFamily:FONT.body,textAlign:"left"}}>
-          <div style={{fontSize:26,marginBottom:".2rem"}}>👪</div>
-          <div style={{fontSize:15,fontWeight:700,marginBottom:2}}>I'm a parent or guardian</div>
-          <div style={{fontSize:12,color:C.dim,lineHeight:1.5}}>Will likely be a mix of both parent/guardian and player.</div>
-        </button>
-      </div>
-    </Screen>
-  );
-
-  // ── Step 2: Age (level picker OR birth year) ──────────────────────────
+  // ── Step 1: Age (level picker OR birth year) ──────────────────────────
   if (!ageDone) return (
     <Screen>
       <div style={{marginBottom:"1.5rem"}}>
-        <div style={{fontSize:10,letterSpacing:".18em",color:C.gold,textTransform:"uppercase",fontWeight:700,marginBottom:".6rem"}}>Step 2 of 3</div>
+        <div style={{fontSize:10,letterSpacing:".18em",color:C.green,textTransform:"uppercase",fontWeight:700,marginBottom:".6rem"}}>✓ Account created · Step 1 of 2</div>
         <h2 style={{fontFamily:FONT.display,fontWeight:800,fontSize:"2rem",margin:"0 0 .35rem"}}>
           {ageMode === "birthYear"
-            ? `What year ${who==="parent"?"was your child":"were you"} born?`
+            ? `What year was your child born?`
             : `What age group does ${subject} play?`}
         </h2>
         <div style={{fontSize:13,color:C.dim,lineHeight:1.55}}>
@@ -322,18 +292,15 @@ export function ProfileSetup({ profile, onComplete }) {
         </div>
       )}
 
-      <div style={{marginTop:"1rem"}}>
-        <button onClick={()=>setWho("")} style={{background:"none",border:`1px solid ${C.border}`,borderRadius:10,padding:".7rem 1rem",cursor:"pointer",color:C.dimmer,fontSize:13,fontFamily:FONT.body}}>← Back</button>
-      </div>
     </Screen>
   );
 
-  // ── Step 3: Position ──────────────────────────────────────────────────
+  // ── Step 2: Position ──────────────────────────────────────────────────
   const posOptions = [{p:"Forward",i:"⚡"},{p:"Defense",i:"🛡"},{p:"Goalie",i:"🧤"},{p:"Multiple",i:"🔀"}];
   return (
     <Screen>
       <div style={{marginBottom:"1.5rem"}}>
-        <div style={{fontSize:10,letterSpacing:".18em",color:C.gold,textTransform:"uppercase",fontWeight:700,marginBottom:".6rem"}}>Step 3 of 3</div>
+        <div style={{fontSize:10,letterSpacing:".18em",color:C.gold,textTransform:"uppercase",fontWeight:700,marginBottom:".6rem"}}>Step 2 of 2</div>
         <h2 style={{fontFamily:FONT.display,fontWeight:800,fontSize:"2rem",margin:"0 0 .35rem"}}>What position does {subject} play?</h2>
         <div style={{fontSize:12,color:C.dim,marginTop:".35rem"}}>
           {ageMode === "birthYear" ? `Born ${birthYear}` : effectiveLevel}

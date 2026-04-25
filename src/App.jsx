@@ -4183,7 +4183,7 @@ function Profile({ player, onSave, onBack, onReset, demoMode, tier, onUpgrade, u
           <div style={{fontSize:12,color:C.dimmer,lineHeight:1.9}}>
             <div>RinkReads v{VERSION} · {RELEASE_DATE}</div>
             <div>Built on modern player-development principles</div>
-            <div style={{color:C.gold,marginTop:".25rem"}}>bluechip-people-strategies.com</div>
+            <div style={{color:C.gold,marginTop:".25rem"}}>RinkReads.com</div>
           </div>
         </Card>
         {userEmail === ADMIN_EMAIL && onAdminReports && (
@@ -5909,7 +5909,13 @@ function RosterRow({ player, onRate }) {
   const trainingLog = useMemo(() => getTrainingLog(player?.id), [player?.id]);
   const recentSessions = (trainingLog?.sessions || []).slice().sort((a,b) => (a.date < b.date ? 1 : -1));
   const totalMin = recentSessions.reduce((n,s) => n + (Number(s.value) || 0), 0);
-  const TRAINING_ICONS = { ice_time:"🏒", practice:"🎯", off_ice:"💪", stick_handling:"🪵", video:"📺" };
+  const TRAINING_ICONS = {
+    // Player-side activity types from widgets.jsx ACTIVITIES
+    power_skating:"⛸️", skills_dev:"🏒", pucks_shot:"🎯",
+    mental_skills:"🧠", dryland:"💪", practice:"🥅", game:"🏆", other:"📝",
+    // Legacy / coach-demo seed types
+    ice_time:"🏒", off_ice:"💪", stick_handling:"🪵", video:"📺",
+  };
 
   // Mini radar geometry
   const cx = 70, cy = 70, radius = 54, n = compKeys.length;

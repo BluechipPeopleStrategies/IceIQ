@@ -94,6 +94,22 @@ export function BottomNav({ active, onNav, tier = "FREE" }) {
   );
 }
 
+// Off-ice + on-ice activities the player can log. `pucks_shot` and `other`
+// have specialised input UI; all other types fall through the standard
+// minutes-counter path. Adding a new type here is enough — initial minutes
+// state, icons/labels for the running log, and the coach roster digest all
+// derive from this list (or from TRAINING_TYPE_META below).
+const ACTIVITIES = [
+  { type: "power_skating", label: "Power Skating",      icon: "⛸️", unit: "min",   color: C.blue },
+  { type: "skills_dev",    label: "Skills Development", icon: "🏒",  unit: "min",   color: C.purple },
+  { type: "pucks_shot",    label: "Pucks Shot",         icon: "🎯",  unit: "pucks", color: C.gold },
+  { type: "mental_skills", label: "Mental Skills",      icon: "🧠",  unit: "min",   color: C.purple },
+  { type: "dryland",       label: "Dryland Training",   icon: "💪",  unit: "min",   color: C.green },
+  { type: "practice",      label: "Practice",           icon: "🥅",  unit: "min",   color: C.blue },
+  { type: "game",          label: "Game",               icon: "🏆",  unit: "min",   color: C.gold },
+  { type: "other",         label: "Create Your Own",    icon: "📝",  unit: "min",   color: C.green },
+];
+
 export function TrainingLog({ playerId }) {
   // Bump this whenever we save so the running log re-reads fresh LS.
   const [refreshTick, setRefreshTick] = useState(0);
@@ -101,7 +117,11 @@ export function TrainingLog({ playerId }) {
   const today = new Date().toISOString().slice(0, 10);
   const [puckCount, setPuckCount] = useState(0);
   const [shotType, setShotType] = useState(null); // "wrist" | "snap" | "slap" | "backhand" | null = mixed
-  const [minutes, setMinutes] = useState({ power_skating: 30, skills_dev: 30, other: 30 });
+  // Default every minute-based activity to 30 min so the +/- counter has
+  // something to render when the user opens it for the first time.
+  const [minutes, setMinutes] = useState(() =>
+    Object.fromEntries(ACTIVITIES.filter(a => a.unit === "min").map(a => [a.type, 30]))
+  );
   const [otherLabel, setOtherLabel] = useState("");
   const [sessionDate, setSessionDate] = useState(today);
   const [sessionNotes, setSessionNotes] = useState("");
@@ -136,16 +156,9 @@ export function TrainingLog({ playerId }) {
     if (type === "pucks_shot") { setPuckCount(0); setShotType(null); }
   }
 
-  const ACTIVITIES = [
-    { type: "power_skating", label: "Power Skating", icon: "⛸️", unit: "min", color: C.blue },
-    { type: "skills_dev", label: "Skills Development", icon: "🏒", unit: "min", color: C.purple },
-    { type: "pucks_shot", label: "Pucks Shot", icon: "🎯", unit: "pucks", color: C.gold },
-    { type: "other", label: "Other Training", icon: "💪", unit: "min", color: C.green },
-  ];
-
   return (
     <Card style={{ marginBottom: "1rem" }}>
-      <Label>Off-Ice Training Log</Label>
+      <Label>Training Log</Label>
       <div style={{ display: "flex", flexDirection: "column", gap: ".75rem" }}>
         {ACTIVITIES.map(act => {
           const summary = getTrainingSummary(log.sessions, act.type);
@@ -314,8 +327,8 @@ export function TrainingLog({ playerId }) {
 // Running log of past training sessions. Pure presentation — consumes the
 // full sessions array and windows to 10 (or all if expanded).
 function TrainingLogRunning({ sessions, showAll, onToggle }) {
-  const ICONS = { power_skating:"⛸️", skills_dev:"🏒", pucks_shot:"🎯", other:"💪" };
-  const LABELS = { power_skating:"Power Skating", skills_dev:"Skills Dev", pucks_shot:"Pucks Shot", other:"Training" };
+  const ICONS = Object.fromEntries(ACTIVITIES.map(a => [a.type, a.icon]));
+  const LABELS = Object.fromEntries(ACTIVITIES.map(a => [a.type, a.label === "Create Your Own" ? "Training" : a.label]));
   if (!sessions || sessions.length === 0) {
     return (
       <div style={{marginTop:"1rem",paddingTop:"1rem",borderTop:`1px solid ${C.border}`}}>
