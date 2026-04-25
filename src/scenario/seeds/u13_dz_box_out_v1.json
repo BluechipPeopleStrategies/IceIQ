@@ -1,0 +1,42 @@
+{
+  "id": "u13_dz_box_out_v1",
+  "type": "scenario",
+  "level": "U13 / Peewee",
+  "themes": ["defensive-zone-coverage", "net-front", "positioning"],
+  "cat": "Defensive Zone",
+  "difficulty": 2,
+  "stage": {
+    "view": "left",
+    "zone": "def-zone"
+  },
+  "actors": [
+    { "id": "you", "kind": "player",   "x": 0.130, "y": 0.480, "tag": "YOU" },
+
+    { "id": "ld",  "kind": "teammate", "x": 0.150, "y": 0.220, "tag": "LD" },
+    { "id": "c",   "kind": "teammate", "x": 0.230, "y": 0.500, "tag": "C"  },
+    { "id": "rw",  "kind": "teammate", "x": 0.150, "y": 0.780, "tag": "RW" },
+
+    { "id": "x_net",   "kind": "defender", "x": 0.150, "y": 0.560 },
+    { "id": "x_wall",  "kind": "defender", "x": 0.110, "y": 0.860 },
+    { "id": "x_point", "kind": "defender", "x": 0.310, "y": 0.220 },
+
+    { "id": "puck", "kind": "puck",   "x": 0.110, "y": 0.860 },
+    { "id": "g",    "kind": "goalie", "x": 0.082, "y": 0.500 }
+  ],
+  "interaction": {
+    "kind": "selection",
+    "prompt": "Defensive-zone coverage. Puck is on the strong-side wall. Tap the opposing forward you should box out.",
+    "from": ["x_net", "x_wall", "x_point"],
+    "order": "any"
+  },
+  "correct": {
+    "kind": "selection",
+    "ids": ["x_net"]
+  },
+  "feedback": {
+    "right": "Net-front. As the strong-side D, the player parked in front of your goalie is your problem — get a stick on him and box him out.",
+    "wrong": "The point is the LD's job. The wall is the C's job. Net-front is YOURS — that's the highest-danger area."
+  },
+  "tip": "Strong-side D in the D-zone owns the net-front. Don't get pulled to the wall — the C is there.",
+  "why": "DZ coverage assigns ice. Forwards have the perimeter; defenders own the dirty areas inside the dots. Stick with your assignment, don't poach."
+}

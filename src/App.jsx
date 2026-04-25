@@ -1079,12 +1079,13 @@ function NextQuestion({ q, sel, onPick }) {
 
 // Type badge for question header
 const Q_TYPE_LABELS = {
-  mc:      {label:"Multiple Choice", color:C.purple,   icon:"📝"},
-  multi:   {label:"Select All That Apply", color:C.gold, icon:"☑️"},
-  seq:     {label:"Put in Order",    color:C.gold,     icon:"🔢"},
-  mistake: {label:"Spot the Mistake",color:C.red,      icon:"🔍"},
-  next:    {label:"What Happens Next",color:C.yellow,  icon:"🔮"},
-  tf:      {label:"True or False",   color:C.blue,     icon:"⚡"},
+  mc:       {label:"Multiple Choice", color:C.purple,   icon:"📝"},
+  multi:    {label:"Select All That Apply", color:C.gold, icon:"☑️"},
+  seq:      {label:"Put in Order",    color:C.gold,     icon:"🔢"},
+  mistake:  {label:"Spot the Mistake",color:C.red,      icon:"🔍"},
+  next:     {label:"What Happens Next",color:C.yellow,  icon:"🔮"},
+  tf:       {label:"True or False",   color:C.blue,     icon:"⚡"},
+  scenario: {label:"Rink Scenario",   color:C.green,    icon:"🏒"},
 };
 
 // ─────────────────────────────────────────────────────────
@@ -1567,7 +1568,7 @@ function Quiz({ player, onFinish, onBack, tier, onUpgrade }) {
 
   // Speed-bonus window. Interactive (rink) questions get a timed bonus;
   // MC/TF/seq don't because reading-speed is mostly literacy, not hockey IQ.
-  const SPEED_TYPES = new Set(["drag-target","drag-place","multi-tap","sequence-rink","path-draw","lane-select","hot-spots","pov-pick","pov-mc","zone-click"]);
+  const SPEED_TYPES = new Set(["drag-target","drag-place","multi-tap","sequence-rink","path-draw","lane-select","hot-spots","pov-pick","pov-mc","zone-click","scenario"]);
   const SPEED_DURATION_MS = 15000;
   const SPEED_MAX_BONUS = 50;
 
@@ -1627,7 +1628,7 @@ function Quiz({ player, onFinish, onBack, tier, onUpgrade }) {
   const isRinkQ = !!question?.rink || NEW_RINK_TYPES.includes(qtype);
   const answered = isRinkQ
     ? rinkQResult !== null
-    : (qtype === "seq" || qtype === "multi") ? seqAnswered
+    : (qtype === "seq" || qtype === "multi" || qtype === "scenario") ? seqAnswered
     :                          sel !== null;
   const q = question;
   if (!q) return <Screen><div style={{color:C.dimmer,textAlign:"center",paddingTop:"4rem"}}>Loading…</div></Screen>;
@@ -1666,6 +1667,8 @@ function Quiz({ player, onFinish, onBack, tier, onUpgrade }) {
         return <SeqQuestion q={q} onAnswer={handleSeqAnswer} answered={seqAnswered}/>;
       case "multi":
         return <MultiMCQuestion q={q} onAnswer={handleSeqAnswer} answered={seqAnswered} colorblind={player.colorblind}/>;
+      case "scenario":
+        return <ScenarioRenderer scenario={q} playerId={player?.id} onAnswer={p => handleSeqAnswer(!!p.ok)} />;
       default:
         return null;
     }

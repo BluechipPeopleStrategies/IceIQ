@@ -1,0 +1,41 @@
+{
+  "id": "u15_cycle_support_v1",
+  "type": "scenario",
+  "level": "U15 / Bantam",
+  "themes": ["cycle", "offensive-zone", "puck-support"],
+  "cat": "Offensive Zone",
+  "difficulty": 3,
+  "stage": {
+    "view": "right",
+    "zone": "off-zone"
+  },
+  "actors": [
+    { "id": "you",  "kind": "player",   "x": 0.890, "y": 0.860, "tag": "YOU" },
+    { "id": "puck", "kind": "puck",     "x": 0.880, "y": 0.852 },
+
+    { "id": "f2",   "kind": "teammate", "x": 0.840, "y": 0.640, "tag": "F2" },
+    { "id": "f3",   "kind": "teammate", "x": 0.770, "y": 0.520, "tag": "F3" },
+    { "id": "rd",   "kind": "teammate", "x": 0.680, "y": 0.780, "tag": "RD" },
+
+    { "id": "x_corner", "kind": "defender", "x": 0.870, "y": 0.800 },
+    { "id": "x_slot",   "kind": "defender", "x": 0.860, "y": 0.500 },
+    { "id": "x_point",  "kind": "defender", "x": 0.700, "y": 0.480 },
+
+    { "id": "g", "kind": "goalie", "x": 0.918, "y": 0.500 }
+  ],
+  "interaction": {
+    "kind": "sequence",
+    "prompt": "OZ cycle. You won the corner battle and have the puck. Sequence the cycle: tap the players in the order the puck should move.",
+    "from": ["you", "f2", "f3", "rd"]
+  },
+  "correct": {
+    "kind": "sequence",
+    "ids": ["you", "f2", "rd"]
+  },
+  "feedback": {
+    "right": "Wall up to F2, then back to the point — point shoots, you crash. Classic strong-side cycle that bends the box and gets a Grade-A look.",
+    "wrong": "Cycles work because they MOVE the kill. Bumping into the slot from the wall is a turnover; reverse to the LD wastes a possession. Wall → mid-wall → point is the read."
+  },
+  "tip": "Cycle order: corner up the wall, mid-wall to the point, point shoots/passes. Each move pulls a defender, opening the next.",
+  "why": "Cycles teach cause-and-effect movement. Each pass is meant to drag a defender out of position so the NEXT pass has more room. The point shot is the payoff."
+}

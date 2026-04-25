@@ -1,0 +1,37 @@
+{
+  "id": "u13_neutral_regroup_v1",
+  "type": "scenario",
+  "level": "U13 / Peewee",
+  "themes": ["regroup", "neutral-zone", "transition", "positioning"],
+  "cat": "Transition",
+  "difficulty": 2,
+  "stage": {
+    "view": "neutral",
+    "zone": "neutral"
+  },
+  "actors": [
+    { "id": "you",  "kind": "player",   "x": 0.500, "y": 0.500, "tag": "YOU" },
+
+    { "id": "ld",   "kind": "teammate", "x": 0.380, "y": 0.300, "tag": "LD" },
+    { "id": "rd",   "kind": "teammate", "x": 0.380, "y": 0.700, "tag": "RD" },
+
+    { "id": "x_f1", "kind": "defender", "x": 0.580, "y": 0.500 },
+    { "id": "x_f2", "kind": "defender", "x": 0.610, "y": 0.380 },
+
+    { "id": "puck", "kind": "puck",     "x": 0.380, "y": 0.300 }
+  ],
+  "interaction": {
+    "kind": "point",
+    "prompt": "Regroup. Your LD has the puck and is looking for an option. Tap the spot YOU should be in to give him a clean middle-lane outlet."
+  },
+  "correct": {
+    "kind": "point",
+    "zoneId": "neutral-strong"
+  },
+  "feedback": {
+    "right": "Strong-side, just below the red line — gives the LD a short option, lets you turn up-ice with speed once you receive it.",
+    "wrong": "Don't crowd the puck-carrier and don't drift past the red line. Hold middle-lane support a stride below the red."
+  },
+  "tip": "Regroup support: middle-lane center, just below the red line. Close enough to be an outlet, far enough to attack with speed.",
+  "why": "Center's job on a regroup is to be the safety valve. Too close = no room to receive. Too high = offside risk + no time to turn. The pocket is just below the red."
+}

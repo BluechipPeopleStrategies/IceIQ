@@ -1,0 +1,43 @@
+{
+  "id": "u15_pk_pressure_v1",
+  "type": "scenario",
+  "level": "U15 / Bantam",
+  "themes": ["penalty-kill", "defensive-zone-coverage", "decision-making"],
+  "cat": "Penalty Kill",
+  "difficulty": 3,
+  "stage": {
+    "view": "left",
+    "zone": "def-zone"
+  },
+  "actors": [
+    { "id": "you",   "kind": "player",   "x": 0.260, "y": 0.500, "tag": "YOU" },
+
+    { "id": "f2",    "kind": "teammate", "x": 0.220, "y": 0.300, "tag": "F2" },
+    { "id": "ld",    "kind": "teammate", "x": 0.130, "y": 0.380, "tag": "LD" },
+    { "id": "rd",    "kind": "teammate", "x": 0.130, "y": 0.620, "tag": "RD" },
+
+    { "id": "carrier",  "kind": "defender", "x": 0.150, "y": 0.780 },
+    { "id": "bumper",   "kind": "defender", "x": 0.220, "y": 0.500 },
+    { "id": "weak",     "kind": "defender", "x": 0.150, "y": 0.220 },
+    { "id": "point",    "kind": "defender", "x": 0.350, "y": 0.500 },
+
+    { "id": "puck", "kind": "puck",   "x": 0.150, "y": 0.780 },
+    { "id": "g",    "kind": "goalie", "x": 0.082, "y": 0.500 }
+  ],
+  "interaction": {
+    "kind": "selection",
+    "prompt": "PK. They've gained the zone and the puck is on the strong-side wall. As F1, tap which opposing player you should pressure first.",
+    "from": ["carrier", "bumper", "weak", "point"],
+    "order": "any"
+  },
+  "correct": {
+    "kind": "selection",
+    "ids": ["carrier"]
+  },
+  "feedback": {
+    "right": "Pressure the puck-carrier. F2 stays in the slot to take away the bumper; the D's have the points and weak-side. Always close on the puck first.",
+    "wrong": "If F1 cheats off the carrier, the PP gets a free shot or pass. Always close on the PUCK first — the box rotates around your pressure."
+  },
+  "tip": "PK rule #1: F1 pressures the puck. F2 reads off you. The Ds hold the box. Don't overthink it.",
+  "why": "Penalty kill is about shrinking time and space. The puck-carrier is the most dangerous player by definition — get a stick + body on him so the rest of the kill can read off your pressure."
+}

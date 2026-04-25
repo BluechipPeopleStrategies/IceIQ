@@ -46,3 +46,12 @@ jobs:
           VITE_SUPABASE_URL:         ${{ secrets.VITE_SUPABASE_URL }}
           SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
         run: npm run demo-accounts -- --reset --apply
+
+      - name: Seed realistic history
+        env:
+          VITE_SUPABASE_URL:         ${{ secrets.VITE_SUPABASE_URL }}
+          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+        # Populates each account with quiz sessions, self-ratings, goals,
+        # and (for the coach) a team + roster + open assignment so a
+        # fresh login lands on a populated dashboard.
+        run: npm run demo-history -- --apply

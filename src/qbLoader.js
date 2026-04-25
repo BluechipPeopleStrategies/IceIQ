@@ -1,13 +1,29 @@
 let cached = null;
 let inflight = null;
 
+// Vite eagerly bundles every scenario seed at build time. Authors drop
+// a JSON in src/scenario/seeds/ and it shows up in the live bank under
+// its declared `level` (or `levels[]` for multi-age) — no manual edit
+// of questions.json needed.
+const SCENARIO_SEED_MODULES = import.meta.glob("./scenario/seeds/*.json", { eager: true });
+
+function collectScenarios() {
+  const out = [];
+  for (const mod of Object.values(SCENARIO_SEED_MODULES)) {
+    const s = mod && mod.default ? mod.default : mod;
+    if (s && s.type === "scenario") out.push(s);
+  }
+  return out;
+}
+
 export function loadQB() {
   if (cached) return Promise.resolve(cached);
 
-  // Try sessionStorage cache first (v2 to invalidate old cache without type field)
+  // Bumped to v4 so banks cached before scenario merging get invalidated.
   try {
     sessionStorage.removeItem("iceiq_qb_cache");
-    const stored = sessionStorage.getItem("iceiq_qb_cache_v3");
+    sessionStorage.removeItem("iceiq_qb_cache_v3");
+    const stored = sessionStorage.getItem("iceiq_qb_cache_v4");
     if (stored) {
       cached = JSON.parse(stored);
       return Promise.resolve(cached);
@@ -35,8 +51,21 @@ export function loadQB() {
             }
           }
         }
+        // Merge unified-engine scenarios. Each seed declares a `level`
+        // (single primary) or `levels[]` (multi-age). Skip silently if
+        // the level isn't a known bank key.
+        for (const s of collectScenarios()) {
+          const targets = Array.isArray(s.levels) && s.levels.length
+            ? s.levels
+            : (s.level ? [s.level] : []);
+          for (const lvl of targets) {
+            if (!qb[lvl]) continue;
+            if (qb[lvl].some(x => x.id === s.id)) continue;
+            qb[lvl].push(s);
+          }
+        }
         cached = qb;
-        try { sessionStorage.setItem("iceiq_qb_cache_v3", JSON.stringify(cached)); } catch (e) {}
+        try { sessionStorage.setItem("iceiq_qb_cache_v4", JSON.stringify(cached)); } catch (e) {}
         return cached;
       })
       .catch(e => {

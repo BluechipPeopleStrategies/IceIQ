@@ -1,0 +1,40 @@
+{
+  "id": "u11_forecheck_angle_v1",
+  "type": "scenario",
+  "level": "U11 / Atom",
+  "themes": ["forecheck", "angling", "offensive-zone"],
+  "cat": "Forechecking",
+  "difficulty": 2,
+  "stage": {
+    "view": "right",
+    "zone": "off-zone"
+  },
+  "actors": [
+    { "id": "you",  "kind": "player",   "x": 0.700, "y": 0.520, "tag": "YOU" },
+
+    { "id": "f2",   "kind": "teammate", "x": 0.640, "y": 0.620, "tag": "F2" },
+    { "id": "f3",   "kind": "teammate", "x": 0.580, "y": 0.500, "tag": "F3" },
+
+    { "id": "carrier", "kind": "defender", "x": 0.870, "y": 0.860 },
+    { "id": "support", "kind": "defender", "x": 0.870, "y": 0.300 },
+
+    { "id": "puck", "kind": "puck",     "x": 0.870, "y": 0.860 },
+    { "id": "g",    "kind": "goalie",   "x": 0.918, "y": 0.500 }
+  ],
+  "interaction": {
+    "kind": "path",
+    "verb": "skate",
+    "from": "you",
+    "prompt": "You're F1. The opposing D just retrieved the puck in the strong-side corner. Skate to the spot that forces him to the wall, not up the middle."
+  },
+  "correct": {
+    "kind": "path",
+    "end": { "zoneId": "oz-half-wall-strong" }
+  },
+  "feedback": {
+    "right": "Strong-side wall. You took away the inside lane and forced the carrier to the boards — F2 reads it and pinches.",
+    "wrong": "If you charge straight at him, he goes either way. Take an angle: cut off the middle, push him to the boards."
+  },
+  "tip": "F1 forces a side. Never skate straight at the puck — angle so the carrier's only option is the wall.",
+  "why": "Angling is the foundation of every forecheck. The mistake is going for the puck instead of the body line. Take the inside route away first; the wall does the rest of the work."
+}

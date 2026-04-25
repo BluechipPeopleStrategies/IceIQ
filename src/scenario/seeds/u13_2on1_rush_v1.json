@@ -1,0 +1,40 @@
+{
+  "id": "u13_2on1_rush_v1",
+  "type": "scenario",
+  "level": "U13 / Peewee",
+  "themes": ["odd-man-rush", "decision-making", "shot-selection"],
+  "cat": "Decision-Making",
+  "difficulty": 3,
+  "stage": {
+    "view": "right",
+    "zone": "off-zone"
+  },
+  "actors": [
+    { "id": "you",  "kind": "player",   "x": 0.620, "y": 0.560, "tag": "YOU" },
+    { "id": "puck", "kind": "puck",     "x": 0.622, "y": 0.555 },
+
+    { "id": "lw",   "kind": "teammate", "x": 0.690, "y": 0.250, "tag": "LW" },
+    { "id": "c",    "kind": "teammate", "x": 0.760, "y": 0.500, "tag": "C"  },
+
+    { "id": "d1",   "kind": "defender", "x": 0.720, "y": 0.500 },
+    { "id": "d2",   "kind": "defender", "x": 0.730, "y": 0.420 },
+
+    { "id": "g",    "kind": "goalie",   "x": 0.918, "y": 0.500 }
+  ],
+  "interaction": {
+    "kind": "path",
+    "verb": "pass",
+    "from": "you",
+    "prompt": "3-on-2 rush. The strong-side D squared up on you; his partner is reading the slot. Where's the right pass?"
+  },
+  "correct": {
+    "kind": "path",
+    "end": { "zoneId": "oz-point-weak" }
+  },
+  "feedback": {
+    "right": "LW high-weak side. Both defenders cheated to the strong side and the slot — your wing is alone for a clean shot.",
+    "wrong": "C in the slot is shadowed; the strong-side D is between you and there. The weak-side LW is the read."
+  },
+  "tip": "On rushes, scan WEAK-side. Defenders chase the puck; the cross-ice teammate is usually the open option.",
+  "why": "Odd-man rushes reward forcing the defender to commit, then moving the puck the OTHER way. The closer pass is almost always the wrong read — defenders close on the puck."
+}
