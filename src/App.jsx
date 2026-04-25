@@ -5399,20 +5399,21 @@ function AuthScreen({ onAuthenticated, onDemo, onDevEnter, onPreview, prefill })
       <div style={{position:"absolute",inset:0,background:"linear-gradient(180deg,rgba(4,30,66,0.78) 0%,rgba(4,30,66,0.6) 45%,rgba(4,30,66,0.94) 100%)",pointerEvents:"none"}}/>
       <div style={{position:"absolute",inset:0,background:"radial-gradient(ellipse 80% 60% at 50% 40%,rgba(252,76,2,0.08) 0%,transparent 70%)",pointerEvents:"none"}}/>
 
-      {/* Subtle top-right door for returning members. Clicking flips the auth
-          card to login mode AND scrolls to the auth section so the user
-          actually sees the form change. */}
-      <button type="button"
-         onClick={() => {
-           setMode("login");
-           // Give React a tick to render then scroll to the auth card.
-           setTimeout(() => {
-             try { document.getElementById("auth")?.scrollIntoView({ behavior: "smooth", block: "start" }); } catch {}
-           }, 30);
-         }}
-         style={{position:"absolute",top:16,right:18,fontSize:12,color:"rgba(248,250,252,.6)",textDecoration:"underline dotted",fontFamily:FONT.body,cursor:"pointer",zIndex:5,background:"none",border:"none",padding:0}}>
-        Already a member? Sign in
-      </button>
+      {/* Subtle top-right door — flips between modes and scrolls to the
+          auth card so the user actually sees the form change. Hidden on
+          forgot-password mode where neither label fits. */}
+      {mode !== "forgot" && (
+        <button type="button"
+           onClick={() => {
+             setMode(mode === "login" ? "signup" : "login");
+             setTimeout(() => {
+               try { document.getElementById("auth")?.scrollIntoView({ behavior: "smooth", block: "start" }); } catch {}
+             }, 30);
+           }}
+           style={{position:"absolute",top:16,right:18,fontSize:12,color:"rgba(248,250,252,.6)",textDecoration:"underline dotted",fontFamily:FONT.body,cursor:"pointer",zIndex:5,background:"none",border:"none",padding:0}}>
+          {mode === "login" ? "New here? Create account" : "Already a member? Sign in"}
+        </button>
+      )}
 
       <div style={{position:"relative",maxWidth:420,margin:"0 auto",width:"100%"}}>
 
@@ -5600,6 +5601,18 @@ function AuthScreen({ onAuthenticated, onDemo, onDevEnter, onPreview, prefill })
           <div style={{textAlign:"center",marginTop:".75rem"}}>
             <button onClick={()=>{setMode("forgot");setErr("");setResetSent(false);}} style={{background:"none",border:"none",color:C.dimmer,cursor:"pointer",fontSize:12,fontFamily:FONT.body,padding:0,textDecoration:"underline"}}>
               Forgot password?
+            </button>
+          </div>
+        )}
+
+        {/* Inline mode toggle — primary path for users who land on the
+            login form but actually need to create an account. */}
+        {mode !== "forgot" && (
+          <div style={{textAlign:"center",marginTop:"1rem",paddingTop:"1rem",borderTop:"1px solid rgba(255,255,255,0.06)",fontSize:13,color:"rgba(248,250,252,.55)",fontFamily:FONT.body}}>
+            {mode === "login" ? "Don't have an account? " : "Already have an account? "}
+            <button onClick={()=>{setMode(mode === "login" ? "signup" : "login");setErr("");setResetSent(false);}}
+              style={{background:"none",border:"none",color:C.gold,cursor:"pointer",fontSize:13,fontFamily:FONT.body,padding:0,fontWeight:700,textDecoration:"underline"}}>
+              {mode === "login" ? "Create one →" : "Sign in →"}
             </button>
           </div>
         )}
@@ -6699,7 +6712,7 @@ export default function App() {
       <Suspense fallback={<LazyFallback/>}>
         <ParentsPage
           onNavigate={() => clearParentsHash()}
-          onContact={() => { window.location.href = "mailto:thomas@bluechip-people-strategies.com"; }}
+          onContact={() => { window.location.href = "mailto:rinkreads@gmail.com"; }}
         />
       </Suspense>
     );
@@ -6709,7 +6722,7 @@ export default function App() {
       <Suspense fallback={<LazyFallback/>}>
         <CoachesPage
           onNavigate={() => clearParentsHash()}
-          onContact={() => { window.location.href = "mailto:thomas@bluechip-people-strategies.com"; }}
+          onContact={() => { window.location.href = "mailto:rinkreads@gmail.com"; }}
         />
       </Suspense>
     );
@@ -6717,14 +6730,14 @@ export default function App() {
   if (!profile && hashRoute === "players") {
     return (
       <Suspense fallback={<LazyFallback/>}>
-        <PlayersPage onNavigate={() => clearParentsHash()} onContact={() => { window.location.href = "mailto:thomas@bluechip-people-strategies.com"; }}/>
+        <PlayersPage onNavigate={() => clearParentsHash()} onContact={() => { window.location.href = "mailto:rinkreads@gmail.com"; }}/>
       </Suspense>
     );
   }
   if (!profile && hashRoute === "associations") {
     return (
       <Suspense fallback={<LazyFallback/>}>
-        <AssociationsPage onNavigate={() => clearParentsHash()} onContact={() => { window.location.href = "mailto:thomas@bluechip-people-strategies.com"; }}/>
+        <AssociationsPage onNavigate={() => clearParentsHash()} onContact={() => { window.location.href = "mailto:rinkreads@gmail.com"; }}/>
       </Suspense>
     );
   }
@@ -6766,7 +6779,7 @@ export default function App() {
               <div style={{fontSize:40,marginBottom:".75rem"}}>🔒</div>
               <div style={{fontFamily:FONT.display,fontWeight:800,fontSize:"1.6rem",color:C.gold,marginBottom:".5rem"}}>Coach Dashboard</div>
               <div style={{fontSize:13,color:C.dim,lineHeight:1.6,marginBottom:"1.5rem"}}>Full team management, player ratings, and coaching tools are available on the TEAM plan. Contact us to upgrade.</div>
-              <a href="mailto:mtslifka@gmail.com?subject=RinkReads TEAM Plan" style={{display:"inline-block",background:C.gold,color:C.bg,border:"none",borderRadius:10,padding:".8rem 1.5rem",cursor:"pointer",fontWeight:800,fontSize:14,fontFamily:FONT.body,textDecoration:"none"}}>Contact us for TEAM plan →</a>
+              <a href="mailto:rinkreads@gmail.com?subject=RinkReads TEAM Plan" style={{display:"inline-block",background:C.gold,color:C.bg,border:"none",borderRadius:10,padding:".8rem 1.5rem",cursor:"pointer",fontWeight:800,fontSize:14,fontFamily:FONT.body,textDecoration:"none"}}>Contact us for TEAM plan →</a>
             </Card>
           </div>
         </div>
@@ -6926,10 +6939,10 @@ export default function App() {
         {screen === "question-review" && <Suspense fallback={<LazyFallback/>}><QuestionReviewScreen onBack={()=>setScreen("profile")}/></Suspense>}
         {screen === "parents" && <Suspense fallback={<LazyFallback/>}><ParentsPage
           onNavigate={(route) => { clearParentsHash(); setScreen("home"); /* "sample" also routes home for now — no public sample route yet */ }}
-          onContact={() => { window.location.href = "mailto:thomas@bluechip-people-strategies.com"; }}
+          onContact={() => { window.location.href = "mailto:rinkreads@gmail.com"; }}
         /></Suspense>}
-        {screen === "players" && <Suspense fallback={<LazyFallback/>}><PlayersPage onNavigate={() => { clearParentsHash(); setScreen("home"); }} onContact={() => { window.location.href = "mailto:thomas@bluechip-people-strategies.com"; }}/></Suspense>}
-        {screen === "associations" && <Suspense fallback={<LazyFallback/>}><AssociationsPage onNavigate={(r)=>{ clearParentsHash(); if (r==="coaches") setScreen("coaches"); else setScreen("home"); }} onContact={() => { window.location.href = "mailto:thomas@bluechip-people-strategies.com"; }}/></Suspense>}
+        {screen === "players" && <Suspense fallback={<LazyFallback/>}><PlayersPage onNavigate={() => { clearParentsHash(); setScreen("home"); }} onContact={() => { window.location.href = "mailto:rinkreads@gmail.com"; }}/></Suspense>}
+        {screen === "associations" && <Suspense fallback={<LazyFallback/>}><AssociationsPage onNavigate={(r)=>{ clearParentsHash(); if (r==="coaches") setScreen("coaches"); else setScreen("home"); }} onContact={() => { window.location.href = "mailto:rinkreads@gmail.com"; }}/></Suspense>}
         {screen === "coaches" && <Suspense fallback={<LazyFallback/>}><CoachesPage
           onNavigate={(route) => {
             clearParentsHash();
@@ -6946,7 +6959,7 @@ export default function App() {
               setScreen("home");
             }
           }}
-          onContact={() => { window.location.href = "mailto:thomas@bluechip-people-strategies.com"; }}
+          onContact={() => { window.location.href = "mailto:rinkreads@gmail.com"; }}
         /></Suspense>}
       </div>
 

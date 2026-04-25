@@ -501,7 +501,7 @@ export function PlansScreen({ onBack, tier }) {
         <div style={{background:`linear-gradient(135deg,rgba(252,76,2,.1),rgba(207,69,32,.04))`,border:`1px solid ${C.goldBorder}`,borderRadius:14,padding:"1.25rem",textAlign:"center"}}>
           <div style={{fontSize:10,letterSpacing:".14em",textTransform:"uppercase",color:C.gold,fontWeight:800,marginBottom:".35rem"}}>Early access</div>
           <div style={{fontSize:14,fontWeight:700,color:C.white,marginBottom:".55rem",lineHeight:1.3}}>Online checkout is coming soon. In the meantime, reach out and we'll set you up directly.</div>
-          <a href="mailto:mtslifka@gmail.com?subject=RinkReads Pro Early Access" style={{display:"inline-block",background:C.gold,color:C.bg,border:"none",borderRadius:10,padding:".7rem 1.5rem",cursor:"pointer",fontWeight:800,fontSize:13,fontFamily:FONT.body,textDecoration:"none"}}>Contact us for early access →</a>
+          <a href="mailto:rinkreads@gmail.com?subject=RinkReads Pro Early Access" style={{display:"inline-block",background:C.gold,color:C.bg,border:"none",borderRadius:10,padding:".7rem 1.5rem",cursor:"pointer",fontWeight:800,fontSize:13,fontFamily:FONT.body,textDecoration:"none"}}>Contact us for early access →</a>
         </div>
       </div>
     </div>
@@ -1864,7 +1864,7 @@ export function ParentsPage({ onNavigate, onContact, photoSrc }) {
   function handleNav(route) { if (typeof onNavigate === "function") onNavigate(route); }
   function handleContact() {
     if (typeof onContact === "function") onContact();
-    else window.location.href = "mailto:thomas@bluechip-people-strategies.com";
+    else window.location.href = "mailto:rinkreads@gmail.com";
   }
 
   return (
@@ -2092,11 +2092,11 @@ export function ParentsPage({ onNavigate, onContact, photoSrc }) {
             Questions, feedback, or want to pilot RinkReads with your team or
             association? Reach out directly —{" "}
             <a
-              href="mailto:thomas@bluechip-people-strategies.com"
+              href="mailto:rinkreads@gmail.com"
               style={S.contactEmail}
               onClick={(e) => { if (onContact) { e.preventDefault(); handleContact(); } }}
             >
-              thomas@bluechip-people-strategies.com
+              rinkreads@gmail.com
             </a>
           </div>
         </section>
@@ -2135,7 +2135,7 @@ export function CoachesPage({ onNavigate, onContact }) {
   function handleNav(route) { if (typeof onNavigate === "function") onNavigate(route); }
   function handleContact() {
     if (typeof onContact === "function") onContact();
-    else window.location.href = "mailto:thomas@bluechip-people-strategies.com";
+    else window.location.href = "mailto:rinkreads@gmail.com";
   }
 
   return (
@@ -2390,7 +2390,7 @@ export function PlayersPage({ onNavigate, onContact }) {
   function handleNav(route) { if (typeof onNavigate === "function") onNavigate(route); }
   function handleContact() {
     if (typeof onContact === "function") onContact();
-    else window.location.href = "mailto:thomas@bluechip-people-strategies.com";
+    else window.location.href = "mailto:rinkreads@gmail.com";
   }
   return (
     <div style={{minHeight:"100vh",background:C.bg,padding:"2.5rem 1rem",fontFamily:FONT.body,color:C.white}}>
@@ -2490,7 +2490,7 @@ export function AssociationsPage({ onNavigate, onContact }) {
   function handleNav(route) { if (typeof onNavigate === "function") onNavigate(route); }
   function handleContact() {
     if (typeof onContact === "function") onContact();
-    else window.location.href = "mailto:thomas@bluechip-people-strategies.com";
+    else window.location.href = "mailto:rinkreads@gmail.com";
   }
   return (
     <div style={{minHeight:"100vh",background:C.bg,padding:"2.5rem 1rem",fontFamily:FONT.body,color:C.white}}>
