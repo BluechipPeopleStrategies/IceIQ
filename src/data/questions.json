@@ -10908,12 +10908,12 @@
         "D"
       ],
       "d": 2,
-      "type": "lane-select",
+      "type": "path-draw",
       "levels": [
         "U11 / Atom",
         "U13 / Peewee"
       ],
-      "q": "F1 closing on you behind the net. F2 has your strong-side winger sealed. What is the safe outlet?",
+      "q": "F1 closing on you behind the net. F2 has your strong-side winger sealed. Draw the puck's path to your LW.",
       "tip": "Forecheckers tell you what is blocked. The fastest play under pressure is rarely a direct pass — sometimes the boards are your best teammate.",
       "rink": {
         "view": "right",
@@ -10961,8 +10961,8 @@
           },
           {
             "type": "teammate",
-            "x": 505,
-            "y": 80,
+            "x": 478,
+            "y": 8,
             "label": "LW"
           },
           {
@@ -10970,63 +10970,36 @@
             "x": 560,
             "y": 150
           }
-        ],
-        "lines": [
-          {
-            "type": "skate",
-            "x1": 505,
-            "y1": 80,
-            "x2": 478,
-            "y2": 8,
-            "color": "green"
-          }
         ]
       },
-      "lanes": [
-        {
-          "x1": 580,
-          "y1": 175,
-          "x2": 490,
-          "y2": 235,
-          "clear": false,
-          "msg": "F2 has your winger pinned to the wall — even if the pass gets through, RW has nowhere to skate. The pass dies in coverage at the half-wall."
-        },
-        {
-          "x1": 580,
-          "y1": 175,
-          "x2": 470,
-          "y2": 175,
-          "clear": false,
-          "msg": "Pass through the middle = puck through traffic. The defender stick is right in the lane and a pick-six the other way is a near-certain breakaway against."
-        },
-        {
-          "x1": 580,
-          "y1": 175,
-          "waypoints": [
-            {
-              "x": 598,
-              "y": 178
-            },
-            {
-              "x": 598,
-              "y": 90
-            },
-            {
-              "x": 575,
-              "y": 25
-            },
-            {
-              "x": 520,
-              "y": 5
-            }
-          ],
-          "x2": 478,
-          "y2": 5,
-          "clear": true,
-          "msg": "✓ Rim it around your own net. The puck rides the boards through the corner — beats both forecheckers without ever leaving the wall. LW reads the rim, breaks to the boards, and picks it up in stride on the weak side."
-        }
+      "start": {
+        "x": 580,
+        "y": 175,
+        "radius": 22
+      },
+      "target": {
+        "x": 478,
+        "y": 8,
+        "radius": 26
+      },
+      "avoid": [
+        { "x": 560, "y": 195, "radius": 17 },
+        { "x": 530, "y": 210, "radius": 17 },
+        { "x": 490, "y": 175, "radius": 16 },
+        { "x": 560, "y": 150, "radius": 20 }
       ],
-      "_source": "Hockey Canada LTPD Stage 4 (U11) Breakouts module · USA Hockey ADM 11U Defenseman Module: read pressure, pass weak-side · Pat Quinn, Coaching Hockey for Dummies — Breakout Reads"
+      "idealPath": [
+        { "x": 580, "y": 175 },
+        { "x": 598, "y": 178 },
+        { "x": 598, "y": 130 },
+        { "x": 598, "y": 90 },
+        { "x": 593, "y": 60 },
+        { "x": 575, "y": 25 },
+        { "x": 545, "y": 10 },
+        { "x": 520, "y": 5 },
+        { "x": 478, "y": 8 }
+      ],
+      "_source": "Hockey Canada LTPD Stage 4 (U11) Breakouts module · USA Hockey ADM 11U Defenseman Module: read pressure, rim weak-side · Pat Quinn, Coaching Hockey for Dummies — Breakout Reads"
     }
   ],
   "U13 / Peewee": [
