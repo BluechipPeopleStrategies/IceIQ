@@ -1230,7 +1230,7 @@ function PathDraw({ question, onAnswer, onReset }) {
       <p style={questionTextStyle}>{question.q}</p>
       <p style={hintTextStyle}>Click and drag from the starting player to the open ice.</p>
       <div style={rinkFrameStyle}>
-        <RinkReadsRink {...(question.rink || {})} />
+        <RinkReadsRink {...(question.rink || {})} replayT={result ? replayT : null} />
         <svg ref={svgRef} viewBox={getViewBox(question.rink?.view)} preserveAspectRatio="none"
           style={{ ...overlaySvgStyle(!result), cursor: result ? "default" : "crosshair" }}
           onMouseDown={onDown} onTouchStart={onDown}>

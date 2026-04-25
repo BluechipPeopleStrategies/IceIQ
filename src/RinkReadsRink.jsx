@@ -87,7 +87,28 @@ function sanitizeMarker(m, idx = 0) {
   const sanitized = { type, x, y };
   if (m.label != null) sanitized.label = String(m.label).slice(0, 30);
   if (m.caption != null) sanitized.caption = String(m.caption).slice(0, 50);
+  // `motion` lets a marker animate during replay — array of {x,y} waypoints
+  // the marker travels through as replayT goes 0 → 1. Static render uses
+  // marker.x/y (which should be motion[0] for consistency).
+  if (Array.isArray(m.motion) && m.motion.length >= 2) {
+    sanitized.motion = m.motion
+      .filter(p => p && typeof p === "object")
+      .map(p => ({
+        x: clamp(toFiniteNumber(p.x, CX), -20, D.length + 20),
+        y: clamp(toFiniteNumber(p.y, CY), -20, D.width + 20),
+      }));
+  }
   return sanitized;
+}
+
+function pointAlongMotion(motion, t) {
+  const tt = Math.max(0, Math.min(1, t));
+  const segs = motion.length - 1;
+  const totalT = tt * segs;
+  const segIdx = Math.min(segs - 1, Math.floor(totalT));
+  const segT = totalT - segIdx;
+  const a = motion[segIdx], b = motion[segIdx + 1];
+  return { x: a.x + (b.x - a.x) * segT, y: a.y + (b.y - a.y) * segT };
 }
 
 function sanitizeLine(l, idx = 0) {
@@ -267,7 +288,7 @@ function Trapezoid({ side }) {
   );
 }
 
-function Marker({ marker }) {
+function Marker({ marker, replayT }) {
   const fills = {
     attacker: "#E24B4A", defender: "#2C2C2A", teammate: "#1D9E75",
     player: "#185FA5", coach: "#BA7517",
@@ -280,19 +301,26 @@ function Marker({ marker }) {
   const isYou = marker.label === "YOU" || marker.label === "ME";
   const playerRadius = isYou ? 7 : 6;
 
+  // During replay, markers with a `motion` waypoint list animate along it.
+  // Outside replay, render statically at marker.x/y.
+  const animated = (replayT != null && Array.isArray(marker.motion) && marker.motion.length >= 2)
+    ? pointAlongMotion(marker.motion, replayT) : null;
+  const mx = animated ? animated.x : marker.x;
+  const my = animated ? animated.y : marker.y;
+
   if (marker.type === "puck") {
     // Standard display puck dimensions — matches dashboard.html and any
     // other static-puck rendering. Drag-target uses a separate larger
     // red ellipse (rx=10, ry=3.5) for touch UX, NOT a representation puck.
     return (
-      <g transform={`translate(${marker.x}, ${marker.y})`}>
+      <g transform={`translate(${mx}, ${my})`}>
         <ellipse cx={0} cy={0.4} rx={4} ry={1.6} fill="#2C2C2A" stroke="#fff" strokeWidth="0.4" />
       </g>
     );
   }
   if (marker.type === "goalie") {
     return (
-      <g transform={`translate(${marker.x}, ${marker.y})`}>
+      <g transform={`translate(${mx}, ${my})`}>
         <ellipse cx={0} cy={0} rx={4.8} ry={6.2} fill="#444441" stroke="#fff" strokeWidth="0.7" />
         <text x={0} y={1.9} textAnchor="middle" fill="#fff"
           fontSize="5.6" fontWeight="700" fontFamily="system-ui">G</text>
@@ -301,7 +329,7 @@ function Marker({ marker }) {
   }
   if (marker.type === "text") {
     return (
-      <g transform={`translate(${marker.x}, ${marker.y})`}>
+      <g transform={`translate(${mx}, ${my})`}>
         <text x={0} y={1.8} textAnchor="middle" fill="#2C2C2A"
           fontSize="6.5" fontWeight="700" fontFamily="system-ui">{marker.label || "Text"}</text>
       </g>
@@ -309,7 +337,7 @@ function Marker({ marker }) {
   }
   if (marker.type === "number") {
     return (
-      <g transform={`translate(${marker.x}, ${marker.y})`}>
+      <g transform={`translate(${mx}, ${my})`}>
         <circle cx={0} cy={0} r={6} fill="#EEEDFE" stroke="#3C3489" strokeWidth="0.7" />
         <text x={0} y={1.9} textAnchor="middle" fill="#3C3489"
           fontSize="5.6" fontWeight="700" fontFamily="system-ui">{marker.label || "1"}</text>
@@ -439,6 +467,7 @@ function RinkReadsRinkInner({
   showLabels = false,
   showTrapezoid = false,
   showDimensions = false,
+  replayT = null,
   className = "",
   style = {},
 }) {
@@ -575,7 +604,7 @@ function RinkReadsRinkInner({
       )}
 
       {safeLines.map((line, i) => <Line key={`line-${i}`} line={line} />)}
-      {safeMarkers.map((marker, i) => <Marker key={`marker-${i}`} marker={marker} />)}
+      {safeMarkers.map((marker, i) => <Marker key={`marker-${i}`} marker={marker} replayT={replayT} />)}
     </svg>
   );
 }
