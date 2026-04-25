@@ -210,8 +210,11 @@ function Zone({ zoneKey }) {
 
 function FaceoffCircle({ cx, cy }) {
   const r = D.endFaceoffRadius;
+  // Faceoff markings are reference geometry — kids should see the players
+  // and the read, not the rink lines. Muted to ~35% so they read as
+  // background, not foreground.
   return (
-    <g>
+    <g opacity="0.35">
       <circle cx={cx} cy={cy} r={r} fill="none" stroke={COLORS.redLine} strokeWidth="0.15" />
       <circle cx={cx} cy={cy} r={0.3 * M} fill={COLORS.redLine} />
       <g stroke={COLORS.redLine} strokeWidth="0.15">
@@ -274,9 +277,12 @@ function Marker({ marker }) {
   };
 
   if (marker.type === "puck") {
+    // Standard display puck dimensions — matches dashboard.html and any
+    // other static-puck rendering. Drag-target uses a separate larger
+    // red ellipse (rx=10, ry=3.5) for touch UX, NOT a representation puck.
     return (
       <g transform={`translate(${marker.x}, ${marker.y})`}>
-        <ellipse cx={0} cy={0.4} rx={3} ry={1.2} fill="#2C2C2A" />
+        <ellipse cx={0} cy={0.4} rx={4} ry={1.6} fill="#2C2C2A" stroke="#fff" strokeWidth="0.4" />
       </g>
     );
   }
@@ -500,19 +506,19 @@ function RinkReadsRinkInner({
       </g>
 
       {showCenterCircle && (
-        <>
+        <g opacity="0.35">
           <circle cx={CX} cy={CY} r={D.centerFaceoffRadius}
             fill="none" stroke={COLORS.blueLine} strokeWidth="0.18" />
           <circle cx={CX} cy={CY} r={0.3 * M} fill={COLORS.blueLine} />
-        </>
+        </g>
       )}
 
       {showLeft && (
         <>
           <FaceoffCircle cx={END_FACEOFFS[0].x} cy={END_FACEOFFS[0].y} />
           <FaceoffCircle cx={END_FACEOFFS[1].x} cy={END_FACEOFFS[1].y} />
-          <circle cx={NZ_FACEOFFS[0].x} cy={NZ_FACEOFFS[0].y} r={0.35 * M} fill={COLORS.redLine} />
-          <circle cx={NZ_FACEOFFS[1].x} cy={NZ_FACEOFFS[1].y} r={0.35 * M} fill={COLORS.redLine} />
+          <circle cx={NZ_FACEOFFS[0].x} cy={NZ_FACEOFFS[0].y} r={0.35 * M} fill={COLORS.redLine} opacity="0.35" />
+          <circle cx={NZ_FACEOFFS[1].x} cy={NZ_FACEOFFS[1].y} r={0.35 * M} fill={COLORS.redLine} opacity="0.35" />
           <Crease side="left" />
           <Goal side="left" />
           {showTrapezoid && <Trapezoid side="left" />}
@@ -522,8 +528,8 @@ function RinkReadsRinkInner({
         <>
           <FaceoffCircle cx={END_FACEOFFS[2].x} cy={END_FACEOFFS[2].y} />
           <FaceoffCircle cx={END_FACEOFFS[3].x} cy={END_FACEOFFS[3].y} />
-          <circle cx={NZ_FACEOFFS[2].x} cy={NZ_FACEOFFS[2].y} r={0.35 * M} fill={COLORS.redLine} />
-          <circle cx={NZ_FACEOFFS[3].x} cy={NZ_FACEOFFS[3].y} r={0.35 * M} fill={COLORS.redLine} />
+          <circle cx={NZ_FACEOFFS[2].x} cy={NZ_FACEOFFS[2].y} r={0.35 * M} fill={COLORS.redLine} opacity="0.35" />
+          <circle cx={NZ_FACEOFFS[3].x} cy={NZ_FACEOFFS[3].y} r={0.35 * M} fill={COLORS.redLine} opacity="0.35" />
           <Crease side="right" />
           <Goal side="right" />
           {showTrapezoid && <Trapezoid side="right" />}

@@ -1070,8 +1070,9 @@ function markerSvg(m) {
   const labels = { attacker: "X", defender: "D", teammate: "T", player: "O", coach: "C" };
 
   if (m.type === "puck") {
+    // Standard display puck — matches RinkReadsRink.jsx (rx=4, ry=1.6).
     return `<g transform="translate(${m.x},${m.y})">
-      <ellipse cx="0" cy="0.4" rx="3" ry="1.2" fill="#2C2C2A"/>
+      <ellipse cx="0" cy="0.4" rx="4" ry="1.6" fill="#2C2C2A" stroke="#fff" stroke-width="0.4"/>
     </g>`;
   }
   if (m.type === "goalie") {
