@@ -219,12 +219,27 @@ export function ProfileSetup({ profile, onComplete }) {
   async function save() {
     setSaving(true);
     try {
-      const patch = { level: effectiveLevel, position, signup_mode: who };
-      if (ageMode === "birthYear") patch.birth_year = birthYear;
-      // updateProfile passes everything through; if birth_year column doesn't
-      // exist yet in Supabase, the save will error — caller logs and keeps
-      // going so the user isn't blocked.
-      try { await SB.updateProfile(profile.id, patch); } catch (e) { console.warn("[ProfileSetup] updateProfile:", e?.message || e); }
+      // Critical fields must persist for the app to route the user past the
+      // setup wizard — `level` and `position` are checked by the routing
+      // gate in App.jsx. If we batched optional columns (birth_year,
+      // signup_mode) into the same update and prod was missing those
+      // columns, the entire write would fail and the user would land back
+      // on the same screen with no visible error. Split it so the critical
+      // write isn't held hostage to migration drift.
+      try {
+        await SB.updateProfile(profile.id, { level: effectiveLevel, position });
+      } catch (e) {
+        console.warn("[ProfileSetup] critical updateProfile:", e?.message || e);
+      }
+      // Best-effort: birth_year + signup_mode require migration 0005.
+      // Failures here are tolerable — they only affect display polish.
+      const optional = { signup_mode: who };
+      if (ageMode === "birthYear") optional.birth_year = birthYear;
+      try {
+        await SB.updateProfile(profile.id, optional);
+      } catch (e) {
+        console.warn("[ProfileSetup] optional updateProfile (apply migration 0005):", e?.message || e);
+      }
       onComplete({
         ...profile,
         level: effectiveLevel,
@@ -241,7 +256,7 @@ export function ProfileSetup({ profile, onComplete }) {
   if (!who) return (
     <Screen>
       <div style={{marginBottom:"2rem"}}>
-        <div style={{fontSize:10,letterSpacing:".18em",color:C.gold,textTransform:"uppercase",fontWeight:700,marginBottom:".6rem"}}>Welcome · Step 1 of 3</div>
+        <div style={{fontSize:10,letterSpacing:".18em",color:C.green,textTransform:"uppercase",fontWeight:700,marginBottom:".6rem"}}>✓ Account created · Step 1 of 3</div>
         <h2 style={{fontFamily:FONT.display,fontWeight:800,fontSize:"2rem",margin:"0 0 .35rem"}}>Who's signing up?</h2>
         <div style={{fontSize:13,color:C.dim,lineHeight:1.55}}>Three quick questions and we'll get you on the ice.</div>
       </div>
@@ -254,7 +269,7 @@ export function ProfileSetup({ profile, onComplete }) {
         <button onClick={()=>setWho("parent")} style={{background:C.bgCard,border:`1px solid ${C.border}`,borderRadius:14,padding:"1.15rem 1.25rem",cursor:"pointer",color:C.white,fontFamily:FONT.body,textAlign:"left"}}>
           <div style={{fontSize:26,marginBottom:".2rem"}}>👪</div>
           <div style={{fontSize:15,fontWeight:700,marginBottom:2}}>I'm a parent or guardian</div>
-          <div style={{fontSize:12,color:C.dim,lineHeight:1.5}}>I'm tracking on behalf of my child.</div>
+          <div style={{fontSize:12,color:C.dim,lineHeight:1.5}}>Will likely be a mix of both parent/guardian and player.</div>
         </button>
       </div>
     </Screen>
