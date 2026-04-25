@@ -1515,7 +1515,161 @@ function POVMC({ question, onAnswer }) {
   );
 }
 
+// MediaCanvas — image-as-interaction-surface container. Used when a
+// question has `media: { type: "image", url, alt, aspect? }` instead of a
+// rink. Children (the hot-spot/lane overlay) render absolutely positioned
+// over the image. Spot/lane coords inside are 0–1 ratios of the image
+// dimensions so they scale across screen sizes.
+function MediaCanvas({ media, children }) {
+  const aspectStyle = media.aspect
+    ? { aspectRatio: media.aspect.replace(":", "/") }
+    : {};
+  return (
+    <div style={{
+      position: "relative", width: "100%",
+      borderRadius: 10, overflow: "hidden",
+      border: `1px solid ${C.border}`, background: "#000",
+      marginBottom: "0.75rem",
+      ...aspectStyle,
+    }}>
+      <img src={media.url} alt={media.alt || ""}
+        draggable={false}
+        style={{
+          width: "100%",
+          height: media.aspect ? "100%" : "auto",
+          objectFit: media.aspect ? "cover" : "contain",
+          display: "block",
+          userSelect: "none",
+        }} />
+      <div style={{ position: "absolute", inset: 0 }}>
+        {children}
+      </div>
+    </div>
+  );
+}
+
+// CSS keyframes for the image-mode pulse rings — injected once on mount.
+function useMediaSpotKeyframes() {
+  useEffect(() => {
+    const id = "rinkreads-media-spot-keyframes";
+    if (document.getElementById(id)) return;
+    const style = document.createElement("style");
+    style.id = id;
+    style.textContent = `
+      @keyframes rrPulseGreen { 0%,100% { transform:translate(-50%,-50%) scale(1); opacity:0.9 } 50% { transform:translate(-50%,-50%) scale(1.5); opacity:0 } }
+      @keyframes rrPulseAmber { 0%,100% { transform:translate(-50%,-50%) scale(1); opacity:1 } 50% { transform:translate(-50%,-50%) scale(1.35); opacity:0.35 } }
+    `;
+    document.head.appendChild(style);
+  }, []);
+}
+
+function HotSpotsImage({ question, onAnswer, onReset }) {
+  useMediaSpotKeyframes();
+  const spots = Array.isArray(question.spots) ? question.spots : [];
+  const [picked, setPicked] = useState(null);
+  const done = picked !== null;
+
+  const reset = () => { setPicked(null); onReset?.(); };
+  const handle = (spot, i) => {
+    if (done) return;
+    setPicked(i);
+    onAnswer?.(!!spot.correct);
+  };
+
+  const pickedSpot = picked !== null ? spots[picked] : null;
+
+  return (
+    <div>
+      <p style={questionTextStyle}>{question.q}</p>
+      <p style={hintTextStyle}>Tap where you'd go.</p>
+      <MediaCanvas media={question.media}>
+        {spots.map((s, i) => {
+          const isPicked = picked === i;
+          const isUnpickedCorrect = done && !isPicked && s.correct;
+          let borderColor = "#5BA4E8", bg = "transparent", dash = "dashed";
+          if (done && isPicked) {
+            borderColor = s.correct ? "#22c55e" : "#ef4444";
+            bg = s.correct ? "rgba(34,197,94,0.25)" : "rgba(239,68,68,0.25)";
+            dash = "solid";
+          } else if (isUnpickedCorrect) {
+            borderColor = "#eab308"; bg = "rgba(234,179,8,0.18)"; dash = "dashed";
+          }
+          const x = clamp(toFiniteNumber(s.x, 0.5), 0, 1);
+          const y = clamp(toFiniteNumber(s.y, 0.5), 0, 1);
+          return (
+            <div key={i} style={{
+              position: "absolute",
+              left: `${x * 100}%`, top: `${y * 100}%`,
+              transform: "translate(-50%, -50%)",
+              pointerEvents: done ? "none" : "auto",
+            }}>
+              {done && isPicked && s.correct && (
+                <div style={{
+                  position: "absolute", left: "50%", top: "50%",
+                  width: 80, height: 80, borderRadius: "50%",
+                  border: "2px solid #22c55e",
+                  animation: "rrPulseGreen 1.4s infinite ease-in-out",
+                }}/>
+              )}
+              {isUnpickedCorrect && (
+                <div style={{
+                  position: "absolute", left: "50%", top: "50%",
+                  width: 70, height: 70, borderRadius: "50%",
+                  border: "2px dashed #eab308",
+                  animation: "rrPulseAmber 1.2s infinite ease-in-out",
+                }}/>
+              )}
+              <button onClick={() => handle(s, i)}
+                disabled={done}
+                aria-label={`Option ${i + 1}`}
+                style={{
+                  width: 56, height: 56, borderRadius: "50%",
+                  background: bg,
+                  border: `2px ${dash} ${borderColor}`,
+                  cursor: done ? "default" : "pointer",
+                  padding: 0,
+                  display: "flex", alignItems: "center", justifyContent: "center",
+                }}>
+                <span style={{ width: 14, height: 14, borderRadius: "50%",
+                  background: isUnpickedCorrect ? "#eab308" : "#5BA4E8",
+                  opacity: 0.7,
+                }}/>
+              </button>
+              {isUnpickedCorrect && (
+                <div style={{
+                  position: "absolute",
+                  left: "50%", bottom: "100%",
+                  transform: "translate(-50%, -6px)",
+                  fontSize: 11, fontWeight: 800, color: "#eab308",
+                  textShadow: "0 1px 2px rgba(0,0,0,0.7)",
+                  whiteSpace: "nowrap", pointerEvents: "none",
+                }}>also here</div>
+              )}
+            </div>
+          );
+        })}
+      </MediaCanvas>
+      {done && pickedSpot && (
+        <>
+          <Feedback state={pickedSpot.correct ? "ok" : "no"} message={pickedSpot.msg || question.tip} />
+          <div style={actionRowStyle()}>
+            <button onClick={reset} style={secondaryBtnStyle}>Try again</button>
+          </div>
+        </>
+      )}
+    </div>
+  );
+}
+
 function HotSpots({ question, onAnswer, onReset }) {
+  // Pure dispatcher — picks rink-canvas vs image-canvas based on question
+  // shape. No hooks here so the children's hook order stays stable.
+  return question.media?.type === "image"
+    ? <HotSpotsImage question={question} onAnswer={onAnswer} onReset={onReset} />
+    : <HotSpotsRink question={question} onAnswer={onAnswer} onReset={onReset} />;
+}
+
+function HotSpotsRink({ question, onAnswer, onReset }) {
   const spots = Array.isArray(question.spots) ? question.spots : [];
   const [picked, setPicked] = useState(null);
   const done = picked !== null;
