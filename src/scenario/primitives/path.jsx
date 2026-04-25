@@ -14,6 +14,7 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { denorm, denormR } from "../schema.js";
 import { resolveTarget } from "../zones.js";
+import { scorePath } from "./path-scorer.js";
 
 const VERB_STYLE = {
   skate:    { color: "#185FA5", dash: "none",  hint: "Drag from yourself to where you should skate." },
@@ -59,52 +60,10 @@ function ptAt(points, t) {
   return { x: a.x + (b.x - a.x) * frac, y: a.y + (b.y - a.y) * frac };
 }
 
-// Path-segment vs point distance — for interception detection. Returns
-// the minimum distance from `pt` to any segment of `path` (normalized).
-function minDistanceToPath(pt, path) {
-  let best = Infinity;
-  for (let i = 1; i < path.length; i++) {
-    const a = path[i - 1], b = path[i];
-    const dx = b.x - a.x, dy = b.y - a.y;
-    const len2 = dx * dx + dy * dy;
-    let t = 0;
-    if (len2 > 0) {
-      t = ((pt.x - a.x) * dx + (pt.y - a.y) * dy) / len2;
-      t = Math.max(0, Math.min(1, t));
-    }
-    const px = a.x + t * dx, py = a.y + t * dy;
-    const d = Math.sqrt((pt.x - px) ** 2 + (pt.y - py) ** 2);
-    if (d < best) best = d;
-  }
-  return best;
-}
-
-const INTERCEPT_RADIUS = 0.035; // a defender within ~21px of the line "intercepts"
-
-export function scorePath(userPath, correct, opts = {}) {
-  if (!userPath || userPath.length < 2) return { ok: false, reason: "tooShort" };
-  const target = resolveTarget(correct.end);
-  const endPoint = userPath[userPath.length - 1];
-  const d = distance(endPoint, target);
-  // Interception check (only when defenders are passed in — primitive is
-  // pure otherwise). Defenders may be {x,y} or {id,x,y}; we surface the id
-  // when present so the renderer can pulse-highlight the offender.
-  const defenders = Array.isArray(opts.defenders) ? opts.defenders : [];
-  for (const def of defenders) {
-    if (minDistanceToPath(def, userPath) < INTERCEPT_RADIUS) {
-      return {
-        ok: false, reason: "intercepted",
-        endPoint, target,
-        intercepterId: def.id || null,
-      };
-    }
-  }
-  return {
-    ok: d <= target.tolerance,
-    reason: d <= target.tolerance ? "ok" : "offTarget",
-    distance: d, endPoint, target,
-  };
-}
+// Path scoring lives in path-scorer.js so Node-side tools (the authoring
+// CLI, validators) can import it without pulling in React.
+// Re-exported here so existing call sites don't need to change.
+export { scorePath } from "./path-scorer.js";
 
 const START_RING_NORM_RADIUS = 0.045; // ~27px on the 600-wide rink
 
