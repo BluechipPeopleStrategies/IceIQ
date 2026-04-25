@@ -1,0 +1,48 @@
+name: Reset demo accounts
+
+# Wipes + recreates the three shareable demo logins so anyone landing
+# on demo-free / demo-pro / demo-coach gets a clean slate. Schedule is
+# Monday 06:00 UTC = ~2am ET / 11pm PT Sunday — early enough that the
+# first coach pitch on Monday morning sees fresh state. Manual triggers
+# (workflow_dispatch) work any time from the Actions tab in GitHub.
+#
+# Required repo secrets (Settings → Secrets and variables → Actions):
+#   VITE_SUPABASE_URL          ← same value as in your local .env
+#   SUPABASE_SERVICE_ROLE_KEY  ← Supabase Dashboard → Project settings →
+#                                API → service_role key
+#
+# Without those secrets the script fails fast with a clear message.
+
+on:
+  schedule:
+    - cron: "0 6 * * 1"   # Mondays at 06:00 UTC
+  workflow_dispatch:       # one-click manual run from the Actions tab
+
+# Only one reset can run at a time — if a manual run overlaps the
+# scheduled one, the later one waits.
+concurrency:
+  group: reset-demo-accounts
+  cancel-in-progress: false
+
+jobs:
+  reset:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
+
+      - name: Install dependencies
+        run: npm ci --no-audit --no-fund
+
+      - name: Reset + recreate demo accounts
+        env:
+          VITE_SUPABASE_URL:         ${{ secrets.VITE_SUPABASE_URL }}
+          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+        run: npm run demo-accounts -- --reset --apply
