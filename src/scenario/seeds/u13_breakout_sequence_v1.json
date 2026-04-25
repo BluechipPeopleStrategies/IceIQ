@@ -1,0 +1,39 @@
+{
+  "id": "u13_breakout_sequence_v1",
+  "type": "scenario",
+  "themes": ["breakout", "transition", "defensive-zone-coverage"],
+  "cat": "Breakouts",
+  "difficulty": 2,
+  "stage": {
+    "view": "left",
+    "zone": "def-zone"
+  },
+  "actors": [
+    { "id": "you",  "kind": "player",   "x": 0.040, "y": 0.560, "tag": "YOU" },
+    { "id": "puck", "kind": "puck",     "x": 0.045, "y": 0.555 },
+
+    { "id": "ld",   "kind": "teammate", "x": 0.130, "y": 0.450, "tag": "LD" },
+    { "id": "rw",   "kind": "teammate", "x": 0.150, "y": 0.780, "tag": "RW" },
+    { "id": "c",    "kind": "teammate", "x": 0.250, "y": 0.500, "tag": "C"  },
+
+    { "id": "f1",   "kind": "defender", "x": 0.180, "y": 0.220 },
+    { "id": "f2",   "kind": "defender", "x": 0.300, "y": 0.350 },
+
+    { "id": "g",    "kind": "goalie",   "x": 0.082, "y": 0.500 }
+  ],
+  "interaction": {
+    "kind": "sequence",
+    "prompt": "You retrieved the puck. Build the breakout: tap the players in the order the puck should move.",
+    "from": ["you", "rw", "c", "ld"]
+  },
+  "correct": {
+    "kind": "sequence",
+    "ids": ["you", "rw", "c"]
+  },
+  "feedback": {
+    "right": "Strong-side wall, then up the middle to the C in the neutral zone — clean breakout against weak-side pressure.",
+    "wrong": "Read the forecheck. The middle is open and the strong-side winger is your closest support. Don't reverse to a covered LD."
+  },
+  "tip": "Breakout reads: closest support first, then up the middle once you've drawn pressure to the wall.",
+  "why": "Sequencing teaches cause-and-effect. Each pass should pull a defender out of position so the next pass has more room."
+}

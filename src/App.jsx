@@ -3748,9 +3748,11 @@ function JourneyBody({ player, tier, demoMode, onViewFull, onUpgrade }) {
 function ScenarioParityTest() {
   const [legacy, setLegacy] = useState(null);
   const [errLegacy, setErrLegacy] = useState(null);
-  const [scenarioJson, setScenarioJson] = useState(null);
+  const [pathJson, setPathJson] = useState(null);
   const [igymJson, setIgymJson] = useState(null);
   const [selectionJson, setSelectionJson] = useState(null);
+  const [pointJson, setPointJson] = useState(null);
+  const [sequenceJson, setSequenceJson] = useState(null);
 
   useEffect(() => {
     let cancelled = false;
@@ -3764,17 +3766,20 @@ function ScenarioParityTest() {
       if (!found) setErrLegacy("Legacy u13q_rink07 not found in bank.");
       else setLegacy(found);
     }).catch(e => { if (!cancelled) setErrLegacy(e.message); });
-    import("./scenario/seeds/u13q_rink07_v2.json").then(m => {
-      if (!cancelled) setScenarioJson(m.default);
-    });
-    import("./scenario/seeds/u15_intelligym_demo.json").then(m => {
-      if (!cancelled) setIgymJson(m.default);
-    });
-    import("./scenario/seeds/u11_open_pass_v1.json").then(m => {
-      if (!cancelled) setSelectionJson(m.default);
-    });
+    import("./scenario/seeds/u13q_rink07_v2.json").then(m => { if (!cancelled) setPathJson(m.default); });
+    import("./scenario/seeds/u15_intelligym_demo.json").then(m => { if (!cancelled) setIgymJson(m.default); });
+    import("./scenario/seeds/u11_open_pass_v1.json").then(m => { if (!cancelled) setSelectionJson(m.default); });
+    import("./scenario/seeds/u11_faceoff_point_v1.json").then(m => { if (!cancelled) setPointJson(m.default); });
+    import("./scenario/seeds/u13_breakout_sequence_v1.json").then(m => { if (!cancelled) setSequenceJson(m.default); });
     return () => { cancelled = true; };
   }, []);
+
+  const tile = (label, accent, content) => (
+    <div>
+      <div style={{fontSize:11,color:accent,fontWeight:800,letterSpacing:".06em",marginBottom:".5rem"}}>{label}</div>
+      {content}
+    </div>
+  );
 
   return (
     <div style={{minHeight:"100vh",background:C.bg,color:C.white,fontFamily:FONT.body,padding:"1rem 1rem 4rem"}}>
@@ -3782,27 +3787,33 @@ function ScenarioParityTest() {
         <div style={{paddingBottom:".75rem",borderBottom:`1px solid ${C.border}`,marginBottom:"1rem"}}>
           <div style={{fontSize:10,letterSpacing:".14em",textTransform:"uppercase",color:C.gold,fontWeight:700}}>Scenario engine — parity test</div>
           <div style={{fontSize:13,color:C.dim,marginTop:4}}>
-            Four takes. <b>Legacy</b>: bespoke path-draw. <b>Unified</b>: same scenario via the new engine. <b>IntelliGym</b>: same scene + preview-lock + hard timer + scan-then-hide. <b>Selection</b>: tap-the-open-teammate primitive.
+            Six tiles, four primitives. Top row: <b>Legacy</b> (bespoke path-draw) · <b>Unified PATH</b> (same scenario, new engine) · <b>IntelliGym</b> (path + preview-lock + timer + scan-then-hide). Bottom row: <b>SELECTION</b> · <b>POINT</b> · <b>SEQUENCE</b>.
           </div>
         </div>
-        <div style={{display:"grid",gridTemplateColumns:"1fr 1fr 1fr 1fr",gap:"1rem"}}>
-          <div>
-            <div style={{fontSize:11,color:C.dimmer,fontWeight:800,letterSpacing:".06em",marginBottom:".5rem"}}>LEGACY · u13q_rink07</div>
-            {errLegacy && <div style={{color:C.red,fontSize:13}}>{errLegacy}</div>}
-            {legacy && <IceIQRinkQuestion question={legacy} onAnswer={() => {}}/>}
-          </div>
-          <div>
-            <div style={{fontSize:11,color:C.dimmer,fontWeight:800,letterSpacing:".06em",marginBottom:".5rem"}}>UNIFIED · u13_pp_bumper</div>
-            {scenarioJson && <ScenarioRenderer scenario={scenarioJson} onAnswer={() => {}}/>}
-          </div>
-          <div>
-            <div style={{fontSize:11,color:C.gold,fontWeight:800,letterSpacing:".06em",marginBottom:".5rem"}}>INTELLIGYM · u15_pp</div>
-            {igymJson && <ScenarioRenderer scenario={igymJson} onAnswer={() => {}}/>}
-          </div>
-          <div>
-            <div style={{fontSize:11,color:C.green,fontWeight:800,letterSpacing:".06em",marginBottom:".5rem"}}>SELECTION · u11_open_pass</div>
-            {selectionJson && <ScenarioRenderer scenario={selectionJson} onAnswer={() => {}}/>}
-          </div>
+        <div style={{display:"grid",gridTemplateColumns:"1fr 1fr 1fr",gap:"1rem",marginBottom:"1.5rem"}}>
+          {tile("LEGACY · u13q_rink07", C.dimmer,
+            <>
+              {errLegacy && <div style={{color:C.red,fontSize:13}}>{errLegacy}</div>}
+              {legacy && <IceIQRinkQuestion question={legacy} onAnswer={() => {}}/>}
+            </>
+          )}
+          {tile("UNIFIED PATH · u13_pp_bumper", C.dimmer,
+            pathJson && <ScenarioRenderer scenario={pathJson} onAnswer={() => {}}/>
+          )}
+          {tile("INTELLIGYM · u15_pp", C.gold,
+            igymJson && <ScenarioRenderer scenario={igymJson} onAnswer={() => {}}/>
+          )}
+        </div>
+        <div style={{display:"grid",gridTemplateColumns:"1fr 1fr 1fr",gap:"1rem"}}>
+          {tile("SELECTION · u11_open_pass", C.green,
+            selectionJson && <ScenarioRenderer scenario={selectionJson} onAnswer={() => {}}/>
+          )}
+          {tile("POINT · u11_faceoff", C.blue,
+            pointJson && <ScenarioRenderer scenario={pointJson} onAnswer={() => {}}/>
+          )}
+          {tile("SEQUENCE · u13_breakout", C.purple,
+            sequenceJson && <ScenarioRenderer scenario={sequenceJson} onAnswer={() => {}}/>
+          )}
         </div>
       </div>
     </div>

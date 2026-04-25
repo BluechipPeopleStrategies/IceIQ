@@ -7,6 +7,8 @@ import { validateScenario } from "../../src/scenario/schema.js";
 import { resolveTarget } from "../../src/scenario/zones.js";
 import { scorePath } from "../../src/scenario/primitives/path-scorer.js";
 import { scoreSelection } from "../../src/scenario/primitives/selection-scorer.js";
+import { scorePoint } from "../../src/scenario/primitives/point-scorer.js";
+import { scoreSequence } from "../../src/scenario/primitives/sequence-scorer.js";
 
 export function lintScenario(scenario) {
   const v = validateScenario(scenario);
@@ -46,6 +48,26 @@ export function lintScenario(scenario) {
       return {
         ok: false,
         errs: [`selection scorer self-test failed — correct.ids isn't a valid set match`],
+        warns: v.warns,
+      };
+    }
+  } else if (scenario.interaction.kind === "point") {
+    // Use the resolved target as the user's "perfect" tap.
+    const target = resolveTarget(scenario.correct);
+    const result = scorePoint({ x: target.x, y: target.y }, scenario.correct);
+    if (!result.ok) {
+      return {
+        ok: false,
+        errs: [`point scorer self-test failed — perfect tap doesn't grade ok=true (reason=${result.reason})`],
+        warns: v.warns,
+      };
+    }
+  } else if (scenario.interaction.kind === "sequence") {
+    const result = scoreSequence(scenario.correct.ids, scenario.correct.ids);
+    if (!result.ok) {
+      return {
+        ok: false,
+        errs: [`sequence scorer self-test failed — correct.ids isn't a valid ordered match`],
         warns: v.warns,
       };
     }

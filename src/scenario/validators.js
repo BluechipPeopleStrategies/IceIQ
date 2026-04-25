@@ -200,6 +200,48 @@ const rules = [
     return null;
   },
 
+  // ── POINT-SPECIFIC
+
+  function pointTargetWellFormed(s) {
+    if (s.interaction?.kind !== "point") return null;
+    const c = s.correct;
+    if (!c || c.kind !== "point") return { kind: "err", msg: `correct.kind must be "point" for a point interaction` };
+    const hasNumeric = typeof c.x === "number" && typeof c.y === "number";
+    const hasZone = typeof c.zoneId === "string";
+    if (!hasNumeric && !hasZone) {
+      return { kind: "err", msg: `point answer requires either {x,y} or {zoneId}` };
+    }
+    if (hasZone && !ZONES[c.zoneId]) {
+      return { kind: "err", msg: `correct.zoneId="${c.zoneId}" is not a known zone` };
+    }
+    return null;
+  },
+
+  // ── SEQUENCE-SPECIFIC
+
+  function sequenceCandidatesMatch(s) {
+    if (s.interaction?.kind !== "sequence") return null;
+    const from = s.interaction.from || [];
+    if (!Array.isArray(from) || from.length < 2) {
+      return { kind: "err", msg: `sequence scenarios need at least 2 candidates in interaction.from (got ${from.length})` };
+    }
+    const ids = new Set((s.actors || []).map(a => a.id));
+    const missing = from.filter(id => !ids.has(id));
+    if (missing.length) {
+      return { kind: "err", msg: `sequence.from references unknown actor ids: ${missing.join(", ")}` };
+    }
+    const correct = s.correct?.ids || [];
+    if (!Array.isArray(correct) || correct.length < 2) {
+      return { kind: "err", msg: `sequence.correct.ids must be at least 2 ids (got ${correct.length}) — otherwise it's just a selection` };
+    }
+    const fromSet = new Set(from);
+    const stray = correct.filter(id => !fromSet.has(id));
+    if (stray.length) {
+      return { kind: "err", msg: `sequence.correct.ids contains ids not in interaction.from: ${stray.join(", ")}` };
+    }
+    return null;
+  },
+
   // ── DECISION-MAKING REQUIRED (path scenarios only)
   // The scenario must show at least one tempting-but-blocked alternative.
   // Without this, the LLM happily authors trivial questions where the

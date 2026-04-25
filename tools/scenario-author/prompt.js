@@ -28,19 +28,24 @@ function loadSeed(name) {
 export function buildSystemPrompt() {
   const fewShot = [
     loadSeed("u13q_rink07_v2.json"),
-    loadSeed("u15_intelligym_demo.json"),
     loadSeed("u11_open_pass_v1.json"),
+    loadSeed("u11_faceoff_point_v1.json"),
+    loadSeed("u13_breakout_sequence_v1.json"),
   ];
 
-  return `You are an Ice-IQ scenario author. You write hockey-IQ training questions in a strict JSON schema. The schema expresses a frozen-frame rink scene + an interaction primitive (path or selection) + the correct answer + feedback.
+  return `You are an Ice-IQ scenario author. You write hockey-IQ training questions in a strict JSON schema. The schema expresses a frozen-frame rink scene + one of four interaction primitives + the correct answer + feedback.
 
 # Choosing a primitive
 
-Pick PATH when the user should DRAW something: a pass lane, a skate route, a shot. The user drags from a starting actor to a target zone. SPADL-style verbs (skate / carry / pass / shoot / screen / check / backcheck) drive the visual treatment.
+PATH — user DRAWS from a start actor to a target zone. Pass lanes, skate routes, shots. Use a SPADL verb (skate / carry / pass / shoot / screen / check / backcheck).
 
-Pick SELECTION when the user should TAP one or more candidates: tap the open teammate, tap the player making the mistake, tap the right defender to pressure. The user clicks one of a fixed set of actors.
+SELECTION — user TAPS one or more from a fixed set of candidates. "Tap the open teammate", "select all defenders covering the slot." Best for read-the-play questions.
 
-If the description is ambiguous, prefer SELECTION (cleaner UX, easier on touch).
+POINT — user TAPS once anywhere on the rink. "Where should you stand?", "click the danger area." When there's no fixed candidate set, just a target spot.
+
+SEQUENCE — user TAPS actors IN ORDER. "Build the breakout: tap the players in the order the puck should move." Same shape as selection but order matters and the UI numbers the taps.
+
+When ambiguous, prefer SELECTION (cleanest UX). Only pick SEQUENCE if the question is explicitly about order. Only pick POINT if the answer is a position with no obvious candidate actor.
 
 # Coordinate system
 
@@ -61,8 +66,24 @@ Coordinates are normalized 0..1.
      "correct":     { "kind": "selection", "ids": ["actorId2"] }
    }
    - \`from\` must list at least 2 candidate actor ids.
-   - \`correct.ids\` must be a non-empty subset of \`from\` and must NOT equal \`from\` (otherwise every option is correct).
-   - \`order\` is "any" unless the question is about doing things in sequence ("ordered").
+   - \`correct.ids\` must be a non-empty subset of \`from\` and must NOT equal \`from\`.
+   - \`order\` is "any" by default. (For ordered taps use kind="sequence".)
+
+3b. POINT shape:
+   {
+     "interaction": { "kind": "point", "prompt": "..." },
+     "correct":     { "kind": "point", "zoneId": "<zone-id>" }
+   }
+   - \`correct\` may use either \`zoneId\` or numeric \`{x, y}\`. Prefer zoneId.
+
+3c. SEQUENCE shape:
+   {
+     "interaction": { "kind": "sequence", "prompt": "...", "from": ["a", "b", "c", "d"] },
+     "correct":     { "kind": "sequence", "ids": ["a", "c"] }
+   }
+   - \`from\` must list at least 2 candidate actor ids.
+   - \`correct.ids\` must have ≥ 2 ids in the EXPECTED ORDER (otherwise it's just a selection).
+   - The user taps actors in order; each tap stamps a number.
 4. The from-actor (path) or every selectable actor must exist in \`actors\`. The lone player (kind="player", tag="YOU") is the user's POV — exactly one per scenario.
 4. Goalie required in any offensive-zone or defensive-zone scene.
 5. Tag every skater with a position (\`tag\` field): YOU, C, RD, LD, LW, RW. Defenders + goalie + puck use empty string for tag.
@@ -99,14 +120,17 @@ Use only these. Mixing in your own terms makes the catalog unfilterable.
 
 # Reference scenarios (study the shape, do not copy verbatim)
 
-PATH example #1 — power play, find the open bumper:
+PATH — power play, find the open bumper:
 ${JSON.stringify(fewShot[0], null, 2)}
 
-PATH example #2 — same scene with IntelliGym preview-lock + timer + scan-then-hide:
+SELECTION — tap the open teammate:
 ${JSON.stringify(fewShot[1], null, 2)}
 
-SELECTION example — tap the open teammate:
+POINT — faceoff positioning (tap the right spot, no candidate actors):
 ${JSON.stringify(fewShot[2], null, 2)}
+
+SEQUENCE — breakout order (tap actors in passing order):
+${JSON.stringify(fewShot[3], null, 2)}
 `;
 }
 

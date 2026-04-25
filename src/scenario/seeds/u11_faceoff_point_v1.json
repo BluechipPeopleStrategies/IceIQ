@@ -1,0 +1,38 @@
+{
+  "id": "u11_faceoff_point_v1",
+  "type": "scenario",
+  "themes": ["face-off", "positioning", "defensive-zone-coverage"],
+  "cat": "Positioning",
+  "difficulty": 2,
+  "stage": {
+    "view": "right",
+    "zone": "off-zone"
+  },
+  "actors": [
+    { "id": "you",   "kind": "player",   "x": 0.760, "y": 0.420, "tag": "YOU" },
+    { "id": "puck",  "kind": "puck",     "x": 0.860, "y": 0.220 },
+
+    { "id": "c",     "kind": "teammate", "x": 0.860, "y": 0.220, "tag": "C"  },
+    { "id": "ld",    "kind": "teammate", "x": 0.700, "y": 0.220, "tag": "LD" },
+    { "id": "rd",    "kind": "teammate", "x": 0.700, "y": 0.780, "tag": "RD" },
+
+    { "id": "x1",    "kind": "defender", "x": 0.860, "y": 0.300 },
+    { "id": "x2",    "kind": "defender", "x": 0.700, "y": 0.300 },
+
+    { "id": "g",     "kind": "goalie",   "x": 0.918, "y": 0.500 }
+  ],
+  "interaction": {
+    "kind": "point",
+    "prompt": "Offensive-zone faceoff, weak side. You're the strong-side winger. Tap where you should set up before the draw."
+  },
+  "correct": {
+    "kind": "point",
+    "zoneId": "oz-half-wall-strong"
+  },
+  "feedback": {
+    "right": "Strong-side wall — you're the safety valve if the C wins it back, and you're high enough to support the breakout if the puck pops out.",
+    "wrong": "Don't crowd the dot. Strong-side wing's job is to hold the wall — high enough to support, low enough to win a battle."
+  },
+  "tip": "OZ-faceoff weak side: strong-side wing OWNS the strong-side wall. Don't drift inside; hold position.",
+  "why": "Faceoff positioning teaches role discipline. The wall is yours; the slot belongs to the other winger; the points are the D's. Don't poach."
+}

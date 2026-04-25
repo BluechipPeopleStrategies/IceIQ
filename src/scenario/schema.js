@@ -112,9 +112,19 @@
 
 /**
  * @typedef {Object} SequenceInteraction
+ * v1 sequences are ordered selections — user taps actors in order. Same
+ * shape as SelectionInteraction with `order` implicitly "ordered".
+ * Future v2 will support compositional sequences (pick → drag → tap).
+ *
  * @property {"sequence"} kind
  * @property {string} prompt
- * @property {Array<PathInteraction|PointInteraction|SelectionInteraction>} steps
+ * @property {string[]} from              // candidate actor ids
+ */
+
+/**
+ * @typedef {Object} SequenceAnswer
+ * @property {"sequence"} kind
+ * @property {string[]} ids               // expected order
  */
 
 /**
