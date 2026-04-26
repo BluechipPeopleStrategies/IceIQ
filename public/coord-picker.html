@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Rink Coord Picker</title>
+<style>
+  body { margin: 0; padding: 1.5rem; background: #0f1116; color: #fff;
+         font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+  h1 { font-size: 1.1rem; margin: 0 0 .35rem; color: #f4c430; }
+  p { font-size: .85rem; color: #aaa; margin: 0 0 1rem; }
+  .stage { position: relative; max-width: 100%; border: 1px solid #333;
+           border-radius: 10px; overflow: hidden; background: #000;
+           cursor: crosshair; -webkit-user-select: none; user-select: none; }
+  .stage img { display: block; width: 100%; height: auto; pointer-events: none; }
+  .dot { position: absolute; transform: translate(-50%, -50%);
+         width: 26px; height: 26px; border-radius: 50%;
+         background: rgba(91,164,232,0.35); border: 2px solid #5BA4E8;
+         pointer-events: none; }
+  .dot.last { background: rgba(244,196,48,0.45); border-color: #f4c430; }
+  .dot .lbl { position: absolute; left: 50%; top: -22px; transform: translateX(-50%);
+              font-size: 11px; color: #f4c430; white-space: nowrap;
+              text-shadow: 0 1px 3px #000; font-weight: 700; }
+  .panel { display: flex; gap: .5rem; align-items: center; margin: 1rem 0; flex-wrap: wrap; }
+  .panel button { padding: .5rem .9rem; font-size: 13px; font-weight: 700;
+                  background: #f4c430; color: #0f1116; border: none;
+                  border-radius: 8px; cursor: pointer; }
+  .panel button.secondary { background: transparent; color: #aaa;
+                            border: 1px solid #333; }
+  .last-coord { font-family: "Courier New", monospace; font-size: 1.1rem;
+                color: #5BA4E8; padding: .35rem .6rem;
+                background: rgba(91,164,232,0.12); border-radius: 6px; }
+  textarea { width: 100%; min-height: 160px; background: #1a1d24;
+             color: #fff; border: 1px solid #333; border-radius: 8px;
+             padding: .75rem; font-family: "Courier New", monospace;
+             font-size: 12px; line-height: 1.5; }
+  .help { font-size: .75rem; color: #777; margin-top: .5rem; }
+</style>
+</head>
+<body>
+
+<h1>🎯 Rink Coord Picker</h1>
+<p>Click anywhere on the image. The normalized x/y (0–1) is captured each click.
+   Copy the list at the bottom and paste into your seed questions.</p>
+
+<div class="stage" id="stage">
+  <img id="img"
+       alt="Diagram"
+       onerror="this.replaceWith(Object.assign(document.createElement('div'),{innerText:'Image not found at this path — save the file there first.', style:'padding:2rem; color:#ef4444; font-size:14px; text-align:center;'}))" />
+</div>
+
+<div class="panel">
+  <span class="last-coord" id="lastCoord">click anywhere on the image</span>
+  <button type="button" id="copyBtn">Copy all (JSON)</button>
+  <button type="button" id="undoBtn" class="secondary">Undo</button>
+  <button type="button" id="clearBtn" class="secondary">Clear</button>
+</div>
+
+<textarea id="output" readonly placeholder="Captured spots will appear here..."></textarea>
+<p class="help">Tip: name each spot as you click (you'll be prompted). Copy/paste the JSON into any
+   <code>spot</code> field in <code>src/data/questions.json</code>.</p>
+
+<script>
+// Read ?img= query param so this picker works for any diagram. Default
+// stays on the rink-anatomy diagram for backward compatibility.
+const params = new URLSearchParams(location.search);
+const imgName = params.get('img') || 'rink-anatomy-diagram.png';
+const stage  = document.getElementById('stage');
+const img    = document.getElementById('img');
+img.src = '/assets/images/' + imgName;
+document.querySelector('h1').innerText = '🎯 Coord Picker — ' + imgName;
+const last   = document.getElementById('lastCoord');
+const out    = document.getElementById('output');
+const spots  = [];
+
+function render() {
+  // Remove old dots (keep <img>)
+  [...stage.querySelectorAll('.dot')].forEach(d => d.remove());
+  spots.forEach((s, i) => {
+    const dot = document.createElement('div');
+    dot.className = 'dot' + (i === spots.length - 1 ? ' last' : '');
+    dot.style.left = (s.x * 100) + '%';
+    dot.style.top  = (s.y * 100) + '%';
+    const lbl = document.createElement('div');
+    lbl.className = 'lbl';
+    lbl.innerText = s.name || `#${i+1}`;
+    dot.appendChild(lbl);
+    stage.appendChild(dot);
+  });
+  out.value = spots.length === 0
+    ? ''
+    : spots.map(s => `// ${s.name || 'spot'}\n"spot": { "x": ${s.x.toFixed(3)}, "y": ${s.y.toFixed(3)} }`).join(',\n\n');
+}
+
+stage.addEventListener('click', (e) => {
+  if (e.target === img || e.target === stage) {
+    const rect = stage.getBoundingClientRect();
+    const x = (e.clientX - rect.left) / rect.width;
+    const y = (e.clientY - rect.top)  / rect.height;
+    const name = prompt('Name this spot (e.g. "blue line", or leave blank):', '') || '';
+    spots.push({ x, y, name: name.trim() });
+    last.innerText = `x: ${x.toFixed(3)}, y: ${y.toFixed(3)}`;
+    render();
+  }
+});
+
+document.getElementById('copyBtn').addEventListener('click', async () => {
+  if (!out.value) return;
+  await navigator.clipboard.writeText(out.value);
+  const btn = document.getElementById('copyBtn');
+  const old = btn.innerText;
+  btn.innerText = '✓ Copied';
+  setTimeout(() => btn.innerText = old, 1200);
+});
+document.getElementById('undoBtn').addEventListener('click', () => { spots.pop(); render(); });
+document.getElementById('clearBtn').addEventListener('click', () => {
+  if (spots.length && !confirm('Clear all spots?')) return;
+  spots.length = 0; render(); last.innerText = 'click anywhere on the image';
+});
+</script>
+
+</body>
+</html>

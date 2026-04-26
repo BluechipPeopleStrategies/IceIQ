@@ -19,12 +19,17 @@ function collectScenarios() {
 export function loadQB() {
   if (cached) return Promise.resolve(cached);
 
-  // Bumped to v5 so banks cached before pov-mc seeding get invalidated.
+  // Bumped to v6 so banks cached before rink-label authoring get invalidated.
   try {
     sessionStorage.removeItem("rinkreads_qb_cache");
     sessionStorage.removeItem("rinkreads_qb_cache_v3");
     sessionStorage.removeItem("rinkreads_qb_cache_v4");
-    const stored = sessionStorage.getItem("rinkreads_qb_cache_v5");
+    sessionStorage.removeItem("rinkreads_qb_cache_v5");
+    sessionStorage.removeItem("rinkreads_qb_cache_v6");
+    sessionStorage.removeItem("rinkreads_qb_cache_v7");
+    sessionStorage.removeItem("rinkreads_qb_cache_v8");
+    sessionStorage.removeItem("rinkreads_qb_cache_v9");
+    const stored = sessionStorage.getItem("rinkreads_qb_cache_v10");
     if (stored) {
       cached = JSON.parse(stored);
       return Promise.resolve(cached);
@@ -73,7 +78,7 @@ export function loadQB() {
           }
         }
         cached = qb;
-        try { sessionStorage.setItem("rinkreads_qb_cache_v5", JSON.stringify(cached)); } catch (e) {}
+        try { sessionStorage.setItem("rinkreads_qb_cache_v10", JSON.stringify(cached)); } catch (e) {}
         return cached;
       })
       .catch(e => {

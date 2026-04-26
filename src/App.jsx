@@ -508,6 +508,13 @@ function makePlayerKey(name, level) {
 function buildDemoQueue(qb, level, position) {
   const posCode = { Forward: "F", Defense: "D", Goalie: "G" }[position] || null;
   const posMatch = (q) => !q.pos || !posCode || q.pos.includes(posCode);
+  // Debug: ?only=<type[,type]> forces the demo queue to those qtypes.
+  const onlyParam = (typeof window !== "undefined" && new URLSearchParams(window.location.search).get("only")) || null;
+  const onlyTypes = onlyParam ? onlyParam.split(",").map(s => s.trim()).filter(Boolean) : null;
+  if (onlyTypes) {
+    const filtered = (qb[level] || []).filter(q => onlyTypes.includes(q.type) && posMatch(q));
+    return [...filtered].sort(() => Math.random() - 0.5);
+  }
   // Demo quiz: 7 questions — 3 pov-mc + 1 mc + 1 tf + 1 seq + 1 mistake
   // POV image questions are the headline new format and where the bank
   // has the most authored content; lean on them. Falls back to padding
@@ -559,13 +566,18 @@ const _queueCache = new Map();
 function buildQueue(qb, level, position, isReturning, tier) {
   const formatAllowed = canAccess("allQuestionFormats", tier).allowed;
   const positionAllowed = canAccess("positionFilter", tier).allowed;
-  const cacheKey = `${level}|${position}|${formatAllowed}|${positionAllowed}`;
+  // Debug: ?only=<type> (or comma-separated, e.g. ?only=rink-label,rink-drag)
+  // filters the queue. Bypasses cache so seed edits show up on reload.
+  const onlyParam = (typeof window !== "undefined" && new URLSearchParams(window.location.search).get("only")) || null;
+  const onlyTypes = onlyParam ? onlyParam.split(",").map(s => s.trim()).filter(Boolean) : null;
+  const cacheKey = `${level}|${position}|${formatAllowed}|${positionAllowed}|${onlyParam || ""}`;
 
   let pool;
-  if (_queueCache.has(cacheKey)) {
+  if (!onlyTypes && _queueCache.has(cacheKey)) {
     pool = _queueCache.get(cacheKey);
   } else {
-    const allQ = qb[level] || [];
+    let allQ = qb[level] || [];
+    if (onlyTypes) allQ = allQ.filter(q => onlyTypes.includes(q.type));
     let posFiltered;
     if (!positionAllowed) {
       posFiltered = allQ.filter(q => !q.pos || q.pos.includes("F") || q.pos.includes("D"));
@@ -579,7 +591,7 @@ function buildQueue(qb, level, position, isReturning, tier) {
         : allQ.filter(q => !q.pos || q.pos.includes("F") || q.pos.includes("D"));
     }
 
-    if (!formatAllowed) {
+    if (!formatAllowed && !onlyTypes) {
       // FREE: MC, TF, and POV-image-MC only. Other types (seq, mistake, next,
       // rink-native) are PRO surface — players see format-preview sentinels
       // instead. POV-MC stays free because it's the headline new format.
@@ -601,7 +613,7 @@ function buildQueue(qb, level, position, isReturning, tier) {
   };
 
   // For FREE users: inject one format-preview sentinel mid-queue to show locked formats exist
-  if (!formatAllowed) {
+  if (!formatAllowed && !onlyType) {
     const formats = ["seq","tf","mistake","next"];
     const previewFormat = formats[Math.floor(Math.random() * formats.length)];
     const sentinel = { id: "__format_preview__", type: "formatPreview", _format: previewFormat, d: 2 };
@@ -1084,14 +1096,16 @@ function NextQuestion({ q, sel, onPick }) {
 
 // Type badge for question header
 const Q_TYPE_LABELS = {
-  mc:       {label:"Multiple Choice", color:C.purple,   icon:"📝"},
-  "pov-mc": {label:"Read the Play",   color:C.gold,     icon:"👀"},
-  multi:    {label:"Select All That Apply", color:C.gold, icon:"☑️"},
-  seq:      {label:"Put in Order",    color:C.gold,     icon:"🔢"},
-  mistake:  {label:"Spot the Mistake",color:C.red,      icon:"🔍"},
-  next:     {label:"What Happens Next",color:C.yellow,  icon:"🔮"},
-  tf:       {label:"True or False",   color:C.blue,     icon:"⚡"},
-  scenario: {label:"Rink Scenario",   color:C.green,    icon:"🏒"},
+  mc:           {label:"Multiple Choice", color:C.purple,   icon:"📝"},
+  "pov-mc":     {label:"Read the Play",   color:C.gold,     icon:"👀"},
+  multi:        {label:"Select All That Apply", color:C.gold, icon:"☑️"},
+  seq:          {label:"Put in Order",    color:C.gold,     icon:"🔢"},
+  mistake:      {label:"Spot the Mistake",color:C.red,      icon:"🔍"},
+  next:         {label:"What Happens Next",color:C.yellow,  icon:"🔮"},
+  tf:           {label:"True or False",   color:C.blue,     icon:"⚡"},
+  scenario:     {label:"Rink Scenario",   color:C.green,    icon:"🏒"},
+  "rink-label": {label:"Label the Rink",  color:C.blue,     icon:"🏷️"},
+  "rink-drag":  {label:"Drag & Drop",      color:C.green,    icon:"✋"},
 };
 
 // ─────────────────────────────────────────────────────────
@@ -1620,7 +1634,7 @@ function Quiz({ player, onFinish, onBack, tier, onUpgrade }) {
 
   // Speed-bonus window. Interactive (rink) questions get a timed bonus;
   // MC/TF/seq don't because reading-speed is mostly literacy, not hockey IQ.
-  const SPEED_TYPES = new Set(["drag-target","drag-place","multi-tap","sequence-rink","path-draw","lane-select","hot-spots","zone-click","scenario"]);
+  const SPEED_TYPES = new Set(["drag-target","drag-place","multi-tap","sequence-rink","path-draw","lane-select","hot-spots","zone-click","rink-label","rink-drag","scenario"]);
   const SPEED_DURATION_MS = 15000;
   const SPEED_MAX_BONUS = 50;
 
@@ -1676,7 +1690,7 @@ function Quiz({ player, onFinish, onBack, tier, onUpgrade }) {
 
   // RinkReadsRinkQuestion dispatcher routes when q.rink is set OR the type is one
   // of the new rink-native interactive types.
-  const NEW_RINK_TYPES = ["drag-target","drag-place","multi-tap","sequence-rink","path-draw","lane-select","hot-spots","zone-click"];
+  const NEW_RINK_TYPES = ["drag-target","drag-place","multi-tap","sequence-rink","path-draw","lane-select","hot-spots","zone-click","rink-label","rink-drag"];
   const isRinkQ = !!question?.rink || NEW_RINK_TYPES.includes(qtype);
   const answered = isRinkQ
     ? rinkQResult !== null
@@ -1907,7 +1921,7 @@ function Quiz({ player, onFinish, onBack, tier, onUpgrade }) {
           for (let i = results.length - 1; i >= 0; i--) {
             if (results[i].ok) streak++; else break;
           }
-          const SINGLE_FLAVORS = ["✓ Correct", "✓ That's a read.", "✓ Locked in.", "✓ Clean."];
+          const SINGLE_FLAVORS = ["✓ Correct", "✓ Locked in.", "✓ Clean."];
           let verdict, verdictColor = userCorrect ? C.green : C.red;
           if (!userCorrect) {
             verdict = "✗ Incorrect";
@@ -4017,7 +4031,7 @@ function QuestionPreviewPage({ questionId }) {
   }
 
   const isRinkQ = !!question.rink ||
-    ["drag-target","drag-place","multi-tap","sequence-rink","path-draw","lane-select","hot-spots","zone-click"].includes(question.type);
+    ["drag-target","drag-place","multi-tap","sequence-rink","path-draw","lane-select","hot-spots","zone-click","rink-label","rink-drag"].includes(question.type);
 
   return (
     <div key={key} style={{minHeight:"100vh",background:C.bg,color:C.white,fontFamily:FONT.body,padding:"1rem 1rem 4rem",maxWidth:700,margin:"0 auto"}}>

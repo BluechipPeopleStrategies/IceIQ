@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect, useCallback, useMemo, Component } from "react";
 import RinkReadsRink from "./RinkReadsRink";
 import { C, FONT } from "./shared.jsx";
+import { RINK_FEATURES, getRinkFeatureName, getRinkFeatureAbbr } from "./data/rinkFeatures.js";
 
 const M = 10;
 const RINK_VIEWS = {
@@ -13,7 +14,7 @@ const RINK_VIEWS = {
 const VALID_QUESTION_TYPES = [
   "mc", "diagram", "rank", "two-step", "sequence", "fill", "multi", "true-false",
   "drag-target", "drag-place", "zone-click", "multi-tap",
-  "sequence-rink", "path-draw", "lane-select", "hot-spots",
+  "sequence-rink", "path-draw", "lane-select", "hot-spots", "rink-label", "rink-drag",
 ];
 
 function getViewBox(view) {
@@ -190,6 +191,32 @@ function validateQuestion(q) {
   if (q.type === "lane-select") {
     if (!Array.isArray(q.lanes) || q.lanes.length === 0) errors.push("lane-select requires lanes array");
   }
+  if (q.type === "rink-drag") {
+    if (!q.media || q.media.type !== "image" || !q.media.url) errors.push("rink-drag requires media.type='image' with url");
+    if (!Array.isArray(q.spots) || q.spots.length === 0) errors.push("rink-drag requires a spots[] array");
+    if (!Array.isArray(q.chips) || q.chips.length === 0) errors.push("rink-drag requires a chips[] array of vocab ids");
+    (q.spots || []).forEach((s, i) => {
+      if (typeof s?.x !== "number" || typeof s?.y !== "number") errors.push(`rink-drag spots[${i}] needs numeric x and y`);
+      if (!s?.correctChip || !RINK_FEATURES.some(f => f.id === s.correctChip)) errors.push(`rink-drag spots[${i}].correctChip must reference a known RINK_FEATURES id`);
+    });
+  }
+  if (q.type === "rink-label") {
+    if (!q.media || q.media.type !== "image" || !q.media.url) errors.push("rink-label requires media.type='image' with url");
+    // Accept either single-spot (q.spot + q.correctId) or multi-spot (q.spots[]).
+    const hasMulti = Array.isArray(q.spots) && q.spots.length > 0;
+    const hasSingle = q.spot && typeof q.spot.x === "number" && typeof q.spot.y === "number" && q.correctId;
+    if (!hasMulti && !hasSingle) {
+      errors.push("rink-label requires either { spot + correctId } or a spots[] array");
+    }
+    if (hasMulti) {
+      q.spots.forEach((s, i) => {
+        if (typeof s?.x !== "number" || typeof s?.y !== "number") errors.push(`rink-label spots[${i}] needs numeric x and y`);
+        if (!s?.correctId || !RINK_FEATURES.some(f => f.id === s.correctId)) errors.push(`rink-label spots[${i}].correctId must reference a known RINK_FEATURES id`);
+      });
+    } else if (q.correctId && !RINK_FEATURES.some(f => f.id === q.correctId)) {
+      errors.push(`rink-label correctId must reference a known RINK_FEATURES id`);
+    }
+  }
   if ((q.type === "mc" || q.type === "diagram") && !Array.isArray(q.choices)) {
     errors.push("mc/diagram requires choices array");
   }
@@ -251,6 +278,8 @@ export default function RinkReadsRinkQuestion({ question, onAnswer, onReset, onS
   else if (t === "path-draw") Renderer = PathDraw;
   else if (t === "lane-select") Renderer = LaneSelect;
   else if (t === "hot-spots") Renderer = HotSpots;
+  else if (t === "rink-label") Renderer = RinkLabelQuestion;
+  else if (t === "rink-drag") Renderer = RinkDragQuestion;
   else Renderer = question.choices ? MCFallback : null;
 
   if (!Renderer) {
@@ -1633,6 +1662,432 @@ function HotSpotsRink({ question, onAnswer, onReset }) {
             <button onClick={reset} style={secondaryBtnStyle}>Try again</button>
           </div>
         </>
+      )}
+    </div>
+  );
+}
+
+// "Label the Rink" — image with one or more hotspots; for each, the player
+// picks the right feature name from a chip grid (per-question options or
+// the full vocab as fallback). Multi-spot questions are scored all-or-nothing.
+function RinkLabelQuestion({ question, onAnswer, onReset }) {
+  useMediaSpotKeyframes();
+
+  // Normalize single- and multi-spot shapes into one spots[] internally.
+  const spots = useMemo(() => {
+    if (Array.isArray(question.spots) && question.spots.length > 0) return question.spots;
+    if (question.spot && question.correctId) {
+      return [{ x: question.spot.x, y: question.spot.y, correctId: question.correctId, options: question.options }];
+    }
+    return [];
+  }, [question]);
+
+  const [picks, setPicks] = useState(() => spots.map(() => null));
+  const activeIdx = picks.findIndex(p => p === null);
+  const allDone = activeIdx === -1;
+
+  // Reset picks if the question id changes (e.g. moving to next quiz item).
+  useEffect(() => { setPicks(spots.map(() => null)); }, [question?.id, spots.length]);
+
+  const allCorrect = allDone && picks.every((p, i) => p === spots[i]?.correctId);
+
+  const reset = () => { setPicks(spots.map(() => null)); onReset?.(); };
+  const handlePick = (id) => {
+    if (allDone) return;
+    const next = [...picks];
+    next[activeIdx] = id;
+    setPicks(next);
+    if (next.every(p => p !== null)) {
+      const ok = next.every((p, i) => p === spots[i]?.correctId);
+      onAnswer?.(ok);
+    }
+  };
+
+  // Active-spot chip options: explicit options[] from the question, else full vocab.
+  const activeSpot = spots[activeIdx] || null;
+  const sortedOptions = useMemo(() => {
+    if (!activeSpot) return [];
+    const optIds = Array.isArray(activeSpot.options) && activeSpot.options.length > 0
+      ? activeSpot.options
+      : RINK_FEATURES.map(f => f.id);
+    const opts = optIds.map(id => RINK_FEATURES.find(f => f.id === id)).filter(Boolean);
+    return [...opts].sort((a, b) => a.name.localeCompare(b.name));
+  }, [activeSpot]);
+
+  // Render every spot on the image, each with its own state.
+  function spotState(i) {
+    const pick = picks[i];
+    if (pick === null) {
+      return i === activeIdx ? "active" : "pending";
+    }
+    return pick === spots[i].correctId ? "correct" : "wrong";
+  }
+
+  return (
+    <div>
+      <p style={questionTextStyle}>
+        {question.q || (spots.length > 1 ? `Identify all ${spots.length} highlighted features.` : "What is the highlighted feature?")}
+      </p>
+      <p style={hintTextStyle}>
+        {allDone
+          ? (allCorrect ? "Nice — all correct." : "See the correct answers below.")
+          : spots.length > 1
+            ? `Spot ${activeIdx + 1} of ${spots.length} — tap the answer below.`
+            : "Tap the answer below."}
+      </p>
+      <MediaCanvas media={question.media}>
+        {spots.map((s, i) => {
+          const x = clamp(toFiniteNumber(s.x, 0.5), 0, 1);
+          const y = clamp(toFiniteNumber(s.y, 0.5), 0, 1);
+          const st = spotState(i);
+          let dotColor, dotBg, pulse = false;
+          if (st === "active")  { dotColor = "#5BA4E8"; dotBg = "rgba(91,164,232,0.25)"; pulse = true; }
+          else if (st === "pending") { dotColor = "rgba(255,255,255,0.45)"; dotBg = "rgba(255,255,255,0.12)"; }
+          else if (st === "correct") { dotColor = "#22c55e"; dotBg = "rgba(34,197,94,0.30)"; }
+          else                       { dotColor = "#ef4444"; dotBg = "rgba(239,68,68,0.30)"; }
+          return (
+            <div key={i} style={{
+              position: "absolute",
+              left: `${x * 100}%`, top: `${y * 100}%`,
+              transform: "translate(-50%, -50%)",
+              pointerEvents: "none",
+            }}>
+              {pulse && (
+                <div style={{
+                  position: "absolute", left: "50%", top: "50%",
+                  width: 70, height: 70, borderRadius: "50%",
+                  border: `2px solid ${dotColor}`,
+                  animation: "rrPulseGreen 1.4s infinite ease-in-out",
+                }}/>
+              )}
+              <div style={{
+                width: 36, height: 36, borderRadius: "50%",
+                background: dotBg,
+                border: `2px solid ${dotColor}`,
+                display: "flex", alignItems: "center", justifyContent: "center",
+                fontFamily: FONT.body, fontSize: 13, fontWeight: 800,
+                color: dotColor,
+              }}>
+                {spots.length > 1 ? (i + 1) : (
+                  <span style={{ width: 10, height: 10, borderRadius: "50%", background: dotColor, opacity: 0.95 }}/>
+                )}
+              </div>
+            </div>
+          );
+        })}
+      </MediaCanvas>
+
+      {!allDone && activeSpot && (
+        <div style={{
+          display: "grid",
+          gridTemplateColumns: "repeat(auto-fit, minmax(140px, 1fr))",
+          gap: "0.5rem",
+        }}>
+          {sortedOptions.map(f => (
+            <button
+              key={f.id}
+              onClick={() => handlePick(f.id)}
+              style={{
+                padding: "0.6rem 0.7rem", fontSize: 13, fontWeight: 600,
+                fontFamily: FONT.body, color: C.white,
+                background: C.bgCard, border: `1.5px solid ${C.border}`,
+                borderRadius: 10, cursor: "pointer",
+                textAlign: "center", lineHeight: 1.25,
+                transition: "background .12s ease, border-color .12s ease",
+              }}>
+              {f.name}
+            </button>
+          ))}
+        </div>
+      )}
+
+      {allDone && (
+        <>
+          {/* Per-spot recap so the player learns from each one. */}
+          <div style={{ display: "flex", flexDirection: "column", gap: ".4rem", marginTop: ".25rem" }}>
+            {spots.map((s, i) => {
+              const correctName = getRinkFeatureName(s.correctId);
+              const pick = picks[i];
+              const right = pick === s.correctId;
+              const pickName = right ? correctName : getRinkFeatureName(pick);
+              // Accessibility: color, icon, AND border-style all differ between
+              // right and wrong so red-green colorblind users can still tell.
+              return (
+                <div key={i} style={{
+                  display: "flex", gap: ".55rem", alignItems: "center",
+                  padding: ".5rem .65rem",
+                  background: right ? "rgba(34,197,94,0.10)" : "rgba(239,68,68,0.10)",
+                  border: `${right ? "1px solid" : "1px dashed"} ${right ? "rgba(34,197,94,0.55)" : "rgba(239,68,68,0.65)"}`,
+                  borderLeft: `4px ${right ? "solid" : "dashed"} ${right ? "#22c55e" : "#ef4444"}`,
+                  borderRadius: 8,
+                }}>
+                  <span aria-label={right ? "correct" : "wrong"} style={{
+                    minWidth: 22, height: 22, borderRadius: "50%",
+                    background: right ? "#22c55e" : "#ef4444",
+                    color: "#fff", fontSize: 14, fontWeight: 900,
+                    display: "flex", alignItems: "center", justifyContent: "center",
+                    fontFamily: "system-ui, sans-serif", lineHeight: 1,
+                  }}>{right ? "✓" : "✕"}</span>
+                  <span style={{ fontSize: 13, color: C.white, lineHeight: 1.4 }}>
+                    <span style={{ fontSize: 10, color: C.dimmer, fontWeight: 700, letterSpacing: ".05em", marginRight: ".4rem" }}>#{i + 1}</span>
+                    {right
+                      ? <><strong>{correctName}</strong></>
+                      : <>You picked <strong>{pickName || "—"}</strong>. It's the <strong>{correctName}</strong>.</>}
+                  </span>
+                </div>
+              );
+            })}
+          </div>
+          <div style={actionRowStyle()}>
+            <button onClick={reset} style={secondaryBtnStyle}>Try again</button>
+          </div>
+        </>
+      )}
+    </div>
+  );
+}
+
+// "Rink Drag" — drag/drop position chips onto players in an image. Each
+// player has a target spot with a correctChip id. Chips are reusable (a "C"
+// can be placed on multiple centers). Pointer events make it work on mouse
+// and touch.
+function RinkDragQuestion({ question, onAnswer, onReset }) {
+  useMediaSpotKeyframes();
+  const spots = useMemo(() => question.spots || [], [question.spots]);
+  const chipIds = useMemo(() => Array.isArray(question.chips) ? question.chips : [], [question.chips]);
+
+  const [placements, setPlacements] = useState(() => spots.map(() => null));
+  const [done, setDone] = useState(false);
+  const [drag, setDrag] = useState(null);
+
+  const allPlaced = placements.every(p => p !== null);
+  const correctCount = placements.filter((p, i) => p === spots[i]?.correctChip).length;
+  const ok = done && correctCount === spots.length;
+
+  // Reset on question change.
+  useEffect(() => { setPlacements(spots.map(() => null)); setDone(false); setDrag(null); }, [question?.id]);
+
+  const stageRef = useRef(null);
+
+  const findSpotAt = useCallback((nx, ny) => {
+    const HIT = 0.06;
+    for (let i = 0; i < spots.length; i++) {
+      const dx = nx - spots[i].x;
+      const dy = ny - spots[i].y;
+      if (dx*dx + dy*dy < HIT*HIT) return i;
+    }
+    return null;
+  }, [spots]);
+
+  const startDrag = (chipId, source, e) => {
+    if (done) return;
+    e.preventDefault();
+    setDrag({ chipId, source, x: e.clientX, y: e.clientY });
+  };
+
+  const onChipPointerDown = (chipId, e) => startDrag(chipId, "bank", e);
+  const onPlacedPointerDown = (spotIdx, e) => {
+    if (done) return;
+    const chipId = placements[spotIdx];
+    if (!chipId) return;
+    const next = [...placements];
+    next[spotIdx] = null;
+    setPlacements(next);
+    startDrag(chipId, { spotIdx }, e);
+  };
+
+  // Document-level pointer move/up while dragging.
+  useEffect(() => {
+    if (!drag) return;
+    const onMove = (e) => {
+      setDrag(d => d ? { ...d, x: e.clientX, y: e.clientY } : null);
+    };
+    const onUp = (e) => {
+      const stage = stageRef.current;
+      let hit = null;
+      if (stage) {
+        const r = stage.getBoundingClientRect();
+        const nx = (e.clientX - r.left) / r.width;
+        const ny = (e.clientY - r.top) / r.height;
+        if (nx >= 0 && nx <= 1 && ny >= 0 && ny <= 1) hit = findSpotAt(nx, ny);
+      }
+      if (hit !== null) {
+        setPlacements(prev => {
+          const next = [...prev];
+          next[hit] = drag.chipId;
+          return next;
+        });
+      }
+      setDrag(null);
+    };
+    document.addEventListener("pointermove", onMove);
+    document.addEventListener("pointerup", onUp);
+    document.addEventListener("pointercancel", onUp);
+    return () => {
+      document.removeEventListener("pointermove", onMove);
+      document.removeEventListener("pointerup", onUp);
+      document.removeEventListener("pointercancel", onUp);
+    };
+  }, [drag, findSpotAt]);
+
+  const submit = () => {
+    if (done || !allPlaced) return;
+    setDone(true);
+    onAnswer?.(correctCount === spots.length);
+  };
+  const reset = () => { setPlacements(spots.map(() => null)); setDone(false); onReset?.(); };
+
+  const chipStyle = (extra = {}) => ({
+    padding: "0.5rem 0.85rem", fontSize: 14, fontWeight: 800,
+    fontFamily: FONT.body, color: C.bg,
+    background: C.gold, borderRadius: 999,
+    cursor: done ? "default" : "grab",
+    userSelect: "none", touchAction: "none",
+    boxShadow: "0 2px 6px rgba(0,0,0,0.35)",
+    minWidth: 44, textAlign: "center",
+    ...extra,
+  });
+
+  return (
+    <div>
+      <p style={questionTextStyle}>{question.q || "Drag each label onto the correct player."}</p>
+      <p style={hintTextStyle}>
+        {done
+          ? (ok ? `Nice — all ${spots.length} correct.` : `Got ${correctCount} of ${spots.length}.`)
+          : `Drag a position from below onto a player. ${placements.filter(p => p !== null).length} of ${spots.length} placed.`}
+      </p>
+
+      <div ref={stageRef} style={{ position: "relative", touchAction: "none" }}>
+        <MediaCanvas media={question.media}>
+          {spots.map((s, i) => {
+            const x = clamp(toFiniteNumber(s.x, 0.5), 0, 1);
+            const y = clamp(toFiniteNumber(s.y, 0.5), 0, 1);
+            const placed = placements[i];
+            let isHover = false;
+            if (drag && stageRef.current) {
+              const r = stageRef.current.getBoundingClientRect();
+              const nx = (drag.x - r.left) / r.width;
+              const ny = (drag.y - r.top) / r.height;
+              if (nx >= 0 && nx <= 1 && ny >= 0 && ny <= 1) isHover = findSpotAt(nx, ny) === i;
+            }
+            let stroke = "rgba(255,255,255,0.55)", fill = "rgba(0,0,0,0.0)";
+            let labelBg = C.gold, labelColor = C.bg, labelBorder = C.gold;
+            if (isHover) { stroke = "#5BA4E8"; fill = "rgba(91,164,232,0.18)"; }
+            if (done && placed) {
+              const right = placed === s.correctChip;
+              stroke = right ? "#22c55e" : "#ef4444";
+              fill = right ? "rgba(34,197,94,0.18)" : "rgba(239,68,68,0.18)";
+              labelBg = right ? "rgba(34,197,94,0.22)" : "rgba(239,68,68,0.22)";
+              labelColor = right ? "#22c55e" : "#ef4444";
+              labelBorder = right ? "#22c55e" : "#ef4444";
+            }
+            return (
+              <div key={i}>
+                <div style={{
+                  position: "absolute",
+                  left: `${x * 100}%`, top: `${y * 100}%`,
+                  transform: "translate(-50%, -50%)",
+                  width: 56, height: 56, borderRadius: "50%",
+                  border: `2.5px dashed ${stroke}`,
+                  background: fill,
+                  pointerEvents: "none",
+                  transition: "border-color .12s ease, background .12s ease",
+                }}/>
+                {placed && (() => {
+                  // Push the label outward from the rink center so chips on
+                  // close-together players diverge instead of stacking. A
+                  // per-spot labelOffset {dx, dy} (in px) overrides this.
+                  const dxc = x - 0.5, dyc = y - 0.5;
+                  const len = Math.sqrt(dxc*dxc + dyc*dyc);
+                  const ax = len > 0.01 ? dxc / len : 0;
+                  const ay = len > 0.01 ? dyc / len : 1;
+                  const OFF = 42;
+                  const customDx = typeof s.labelOffset?.dx === "number" ? s.labelOffset.dx : ax * OFF;
+                  const customDy = typeof s.labelOffset?.dy === "number" ? s.labelOffset.dy : ay * OFF;
+                  // Accessibility: prefix the chip with ✓ or ✕ after answering
+                  // so red-green colorblind users get the result without color.
+                  const right = done && placed === s.correctChip;
+                  const wrong = done && placed !== s.correctChip;
+                  return (
+                    <div
+                      onPointerDown={(e) => onPlacedPointerDown(i, e)}
+                      style={{
+                        position: "absolute",
+                        left: `calc(${x * 100}% + ${customDx}px)`,
+                        top: `calc(${y * 100}% + ${customDy}px)`,
+                        transform: "translate(-50%, -50%)",
+                        padding: "0.2rem 0.5rem", fontSize: 12, fontWeight: 800,
+                        fontFamily: FONT.body, color: labelColor,
+                        background: labelBg,
+                        border: `${wrong ? "1.5px dashed" : "1.5px solid"} ${labelBorder}`,
+                        borderRadius: 999, whiteSpace: "nowrap",
+                        cursor: done ? "default" : "grab",
+                        userSelect: "none", touchAction: "none",
+                        boxShadow: "0 2px 4px rgba(0,0,0,0.35)",
+                      }}>
+                      {right && <span style={{ marginRight: 3, fontFamily: "system-ui, sans-serif" }}>✓</span>}
+                      {wrong && <span style={{ marginRight: 3, fontFamily: "system-ui, sans-serif" }}>✕</span>}
+                      {getRinkFeatureAbbr(placed)}
+                      {wrong && (
+                        <span style={{ marginLeft: 4, opacity: 0.85 }}>→ {getRinkFeatureAbbr(s.correctChip)}</span>
+                      )}
+                    </div>
+                  );
+                })()}
+              </div>
+            );
+          })}
+        </MediaCanvas>
+
+        {drag && (
+          <div style={{
+            position: "fixed",
+            left: drag.x, top: drag.y,
+            transform: "translate(-50%, -50%)",
+            pointerEvents: "none",
+            zIndex: 9999,
+          }}>
+            <div style={chipStyle({ background: C.gold, color: C.bg, opacity: 0.95 })}>
+              {getRinkFeatureAbbr(drag.chipId)}
+            </div>
+          </div>
+        )}
+      </div>
+
+      <div style={{ marginTop: ".75rem" }}>
+        <div style={{ fontSize: 11, color: C.dim, marginBottom: ".4rem", letterSpacing: ".06em", textTransform: "uppercase", fontWeight: 700 }}>
+          Positions
+        </div>
+        <div style={{ display: "flex", flexWrap: "wrap", gap: ".5rem" }}>
+          {chipIds.map((id, i) => (
+            <div
+              key={`${id}-${i}`}
+              onPointerDown={(e) => onChipPointerDown(id, e)}
+              title={getRinkFeatureName(id)}
+              style={chipStyle({ opacity: done ? 0.5 : 1 })}>
+              {getRinkFeatureAbbr(id)}
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {!done && allPlaced && (
+        <div style={actionRowStyle("space-between")}>
+          <button onClick={reset} style={secondaryBtnStyle}>Clear all</button>
+          <button onClick={submit} style={{
+            padding: "0.5rem 1.2rem", fontSize: 13, fontWeight: 800,
+            fontFamily: FONT.body, background: C.gold, color: C.bg,
+            border: "none", borderRadius: 8, cursor: "pointer",
+          }}>
+            Submit
+          </button>
+        </div>
+      )}
+
+      {done && (
+        <div style={actionRowStyle()}>
+          <button onClick={reset} style={secondaryBtnStyle}>Try again</button>
+        </div>
       )}
     </div>
   );
