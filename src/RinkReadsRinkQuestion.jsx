@@ -1995,12 +1995,21 @@ function RinkDragQuestion({ question, onAnswer, onReset }) {
                 }}/>
                 {placed && (() => {
                   // Push the label outward from the rink center so chips on
-                  // close-together players diverge instead of stacking. A
-                  // per-spot labelOffset {dx, dy} (in px) overrides this.
+                  // close-together players diverge instead of stacking, then
+                  // clamp inward for spots near any edge so labels don't
+                  // fall off the image. A per-spot labelOffset {dx, dy} (in
+                  // px) overrides everything.
                   const dxc = x - 0.5, dyc = y - 0.5;
                   const len = Math.sqrt(dxc*dxc + dyc*dyc);
-                  const ax = len > 0.01 ? dxc / len : 0;
-                  const ay = len > 0.01 ? dyc / len : 1;
+                  let ax = len > 0.01 ? dxc / len : 0;
+                  let ay = len > 0.01 ? dyc / len : 1;
+                  // Edge clamps: if a spot is in the top/bottom/left/right
+                  // 15% of the image, force the label to push away from that
+                  // edge instead of toward it.
+                  if (y < 0.15) ay = Math.max(ay, 0.7);
+                  if (y > 0.85) ay = Math.min(ay, -0.7);
+                  if (x < 0.12) ax = Math.max(ax, 0.7);
+                  if (x > 0.85) ax = Math.min(ax, -0.7);
                   const OFF = 42;
                   const customDx = typeof s.labelOffset?.dx === "number" ? s.labelOffset.dx : ax * OFF;
                   const customDy = typeof s.labelOffset?.dy === "number" ? s.labelOffset.dy : ay * OFF;
