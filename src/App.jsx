@@ -508,8 +508,11 @@ function makePlayerKey(name, level) {
 function buildDemoQueue(qb, level, position) {
   const posCode = { Forward: "F", Defense: "D", Goalie: "G" }[position] || null;
   const posMatch = (q) => !q.pos || !posCode || q.pos.includes(posCode);
-  // Demo quiz: 7 questions — 3 zone-click + 1 mc + 1 tf + 1 seq + 1 mistake
-  const targetCounts = { "zone-click": 3, mc: 1, tf: 1, seq: 1, mistake: 1 };
+  // Demo quiz: 7 questions — 3 pov-mc + 1 mc + 1 tf + 1 seq + 1 mistake
+  // POV image questions are the headline new format and where the bank
+  // has the most authored content; lean on them. Falls back to padding
+  // with extra MC if any type's pool is empty.
+  const targetCounts = { "pov-mc": 3, mc: 1, tf: 1, seq: 1, mistake: 1 };
   const result = [];
   const usedIds = new Set();
 
