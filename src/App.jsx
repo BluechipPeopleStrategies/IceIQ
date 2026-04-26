@@ -1561,16 +1561,49 @@ function Quiz({ player, onFinish, onBack, tier, onUpgrade }) {
     let cancelled = false;
     loadQB().then(qb => {
       if (cancelled) return;
+      let allQs;
       if (isDemo) {
         const demoQs = buildDemoQueue(qb, player.level, player.position);
+        // First-question text guarantee: while POV image fetches are still
+        // warming up, surface a text question first so the user has
+        // something to read while everything loads. Find the first
+        // non-pov-mc and swap it to index 0.
+        const ti = demoQs.findIndex(q => q.type !== "pov-mc");
+        if (ti > 0) [demoQs[0], demoQs[ti]] = [demoQs[ti], demoQs[0]];
         setQueue({ byD: {1: demoQs.slice(1), 2: [], 3: []}, currentD: 1, tier: "DEMO" });
         setQuestion(demoQs[0]);
+        allQs = demoQs;
       } else {
         const q = buildQueue(qb, player.level, player.position, isReturning, tier);
-        const { q: first, queue: q2 } = pullNext(q, []);
+        let { q: first, queue: q2 } = pullNext(q, []);
+        // Same text-first guarantee for adaptive queues — if pullNext
+        // happened to return a pov-mc, swap with the first non-pov-mc
+        // in any difficulty bucket.
+        if (first && first.type === "pov-mc") {
+          for (const d of [1, 2, 3]) {
+            const i = (q2.byD[d] || []).findIndex(x => x && x.type !== "pov-mc");
+            if (i >= 0) {
+              const swap = q2.byD[d][i];
+              q2.byD[d][i] = first;
+              first = swap;
+              break;
+            }
+          }
+        }
         setQueue(q2);
         setQuestion(first);
+        allQs = [first, ...Object.values(q2.byD).flat()];
       }
+      // Image preload — kick off fetches for every POV image in the queue so
+      // by the time the user clicks through to question N, its image is
+      // already in the browser cache. `new Image()` doesn't render, just
+      // primes the cache. Filter to unique URLs to avoid redundant requests.
+      const urls = new Set();
+      for (const q of allQs) {
+        const u = q?.media?.url;
+        if (u && !u.startsWith("/pov-placeholder")) urls.add(u);
+      }
+      for (const u of urls) { const img = new Image(); img.src = u; }
     }).catch(e => console.error("QB load error:", e));
     if (!isDemo) SB.getQuestionStats().then(setStatsMap).catch(() => {});
     return () => { cancelled = true; };
@@ -1781,6 +1814,7 @@ function Quiz({ player, onFinish, onBack, tier, onUpgrade }) {
           }}>
             <img src={q.media.url} alt={q.media.alt || ""}
               draggable={false}
+              loading="eager" decoding="async" fetchpriority="high"
               style={{width:"100%", height:"100%", objectFit:"cover", display:"block", userSelect:"none"}} />
           </div>
         )}
@@ -2394,6 +2428,7 @@ function WeeklyQuiz({ player, onBack, onFinish }) {
           }}>
             <img src={q.media.url} alt={q.media.alt || ""}
               draggable={false}
+              loading="eager" decoding="async" fetchpriority="high"
               style={{width:"100%", height:"100%", objectFit:"cover", display:"block", userSelect:"none"}} />
           </div>
         )}
