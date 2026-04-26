@@ -1,29 +1,29 @@
-// Seeds the POV image scenario bank from data/pov-export.json into
-// src/data/questions.json. Idempotent — skips ids that already exist.
+// Seed/refresh POV image scenarios from src/data/povQuestions.json (the
+// canonical Notion sync output) into src/data/questions.json. Idempotent
+// on inserts (existing question ids are skipped) and ALSO refreshes the
+// media.url on existing rows — the Notion S3 URLs are 1-hour presigned
+// links, so a stale bank row needs its URL re-pointed every time the
+// upstream sync runs.
 //
 //   node tools/seed-pov-to-bank.mjs
 //
-// Each question becomes a bank row with type "pov-mc" and a `media`
-// reference (image url + alt). Empty imageUrl falls back to the
-// placeholder SVG so the renderer always has something to show.
-//
-// Field mapping (Notion → bank):
+// Field mapping (Notion sync → bank legacy MC schema):
 //   questionText         → sit
 //   options[].text       → opts[]
 //   correctAnswer letter → ok (index)
 //   explanation          → why  (full)  + tip (short, first sentence)
 //   difficulty           → d (Beginner=1, Intermediate=2, Advanced=3, Elite=4)
-//   ageGroups[]          → levels[]   (primary = first age)
-//   position[]           → pos[]      ("Forward"→F, "Defense"→D, "Goalie"→G, "Any"→F+D)
-//   archetype            → cat        (mapped to existing bank category)
-//   linked image's id    → imageId    (back-reference, optional metadata)
+//   ageGroup             → levels[]   (single string from Notion → 1-element array)
+//   image.position[]     → pos[]      ("Forward"→F, "Defense"→D, "Goalie"→G, "Any"→F+D)
+//   image.archetype      → cat        (mapped to bank category)
+//   image.imageUrls[0]   → media.url  (placeholder SVG fallback when empty)
 
 import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 
 const here = path.dirname(fileURLToPath(import.meta.url));
-const exportPath = path.join(here, "..", "data", "pov-export.json");
+const sourcePath = path.join(here, "..", "src", "data", "povQuestions.json");
 const bankPath   = path.join(here, "..", "src", "data", "questions.json");
 const PLACEHOLDER_URL = "/pov-placeholder.svg";
 
@@ -46,13 +46,30 @@ const POSITION_MAP = {
 
 const DIFFICULTY_MAP = { Beginner: 1, Intermediate: 2, Advanced: 3, Elite: 4 };
 
+// Archetype → in-app category. Anything missing defaults to "Hockey Sense".
 const ARCHETYPE_TO_CAT = {
-  "Eyes Up":           "Hockey Sense",
-  "Athletic Stance":   "Skating",
-  "Stick on Ice":      "Skills",
-  "Puck Protection":   "Skills",
-  "Receiving a Pass":  "Skills",
-  "Skating Crossovers":"Skating",
+  // Game-state archetypes
+  "2-on-1 Rush":         "Hockey Sense",
+  "OZ Wall Battle":      "Hockey Sense",
+  "Breakaway":           "Scoring",
+  "OZ Cycle Support":    "Hockey Sense",
+  "NZ Regroup":          "Hockey Sense",
+  "OZ Entry":            "Hockey Sense",
+  "DZ Breakout":         "Hockey Sense",
+  "Forecheck Pressure":  "Hockey Sense",
+  "DZ Coverage":         "Defense",
+  "F3 Support":          "Hockey Sense",
+  "Backcheck":           "Defense",
+  "PK Clear":            "Defense",
+  "Open Ice Carry":      "Hockey Sense",
+  "NZ Wall Carry":       "Hockey Sense",
+  // Fundamentals archetypes
+  "Eyes Up":             "Hockey Sense",
+  "Athletic Stance":     "Skating",
+  "Stick on Ice":        "Skills",
+  "Puck Protection":     "Skills",
+  "Receiving a Pass":    "Skills",
+  "Skating Crossovers":  "Skating",
 };
 
 function letterToIndex(letter) {
@@ -75,15 +92,23 @@ function mapPositions(positionList) {
   return Array.from(out);
 }
 
-function mapLevels(ageGroups) {
-  if (!Array.isArray(ageGroups) || !ageGroups.length) return ["U9 / Novice"];
-  return ageGroups.map(a => AGE_TO_LEVEL[a]).filter(Boolean);
+function mapLevels(ageGroup) {
+  // Notion sync writes a single ageGroup per question (one row per age in the
+  // questions DB). Wrap in array; future multi-age support can extend here.
+  if (!ageGroup) return ["U9 / Novice"];
+  const lvl = AGE_TO_LEVEL[ageGroup];
+  return lvl ? [lvl] : ["U9 / Novice"];
+}
+
+function pickImageUrl(image) {
+  const urls = Array.isArray(image.imageUrls) ? image.imageUrls : [];
+  const first = urls.find(u => typeof u === "string" && u.trim());
+  return first || PLACEHOLDER_URL;
 }
 
 function buildRow(image, q) {
-  const levels = mapLevels(q.ageGroups);
+  const levels = mapLevels(q.ageGroup);
   const primaryLevel = levels[0];
-  const correctText = (q.options || []).find(o => o.label === q.correctAnswer)?.text;
   const opts = (q.options || []).map(o => o.text);
   return {
     primaryLevel,
@@ -101,43 +126,60 @@ function buildRow(image, q) {
       levels,
       media: {
         type: "image",
-        url: image.imageUrl && image.imageUrl.trim() ? image.imageUrl : PLACEHOLDER_URL,
-        alt: image.readTrigger || image.archetype,
+        url: pickImageUrl(image),
+        alt: image.readTrigger || image.archetype || "",
       },
       // Metadata — useful for the admin dashboard / future engine wiring
       imageId: image.id,
       archetype: image.archetype,
       cognitiveSkill: image.cognitiveSkill,
       concepts: q.concepts || [],
-      // Sanity check the seeder can re-validate against
-      _correctAnswerLetter: q.correctAnswer,
-      _correctAnswerText: correctText,
     },
   };
 }
 
-const exp = JSON.parse(fs.readFileSync(exportPath, "utf8"));
-const bank = JSON.parse(fs.readFileSync(bankPath, "utf8"));
+const src  = JSON.parse(fs.readFileSync(sourcePath, "utf8"));
+const bank = JSON.parse(fs.readFileSync(bankPath,   "utf8"));
 
-const allIds = new Set();
-for (const lvl of Object.keys(bank)) for (const q of bank[lvl]) allIds.add(q.id);
+// Index existing rows so we can refresh media.url without re-inserting.
+const idIndex = new Map(); // id -> { level, indexInLevel }
+for (const lvl of Object.keys(bank)) {
+  bank[lvl].forEach((q, i) => { if (q.id) idIndex.set(q.id, { lvl, i }); });
+}
 
 let added = 0;
-let skipped = 0;
-const skippedIds = [];
+let urlRefreshed = 0;
+let untouched = 0;
 
-for (const image of exp.images || []) {
+for (const image of src.images || []) {
+  const url = pickImageUrl(image);
   for (const q of image.questions || []) {
-    if (allIds.has(q.id)) { skipped++; skippedIds.push(q.id); continue; }
+    const existing = idIndex.get(q.id);
+    if (existing) {
+      const row = bank[existing.lvl][existing.i];
+      // Only POV rows carry media; leave other types alone if an id collides.
+      if (row.type === "pov-mc") {
+        const prev = row.media?.url;
+        if (prev !== url) {
+          row.media = { ...(row.media || {}), type: "image", url, alt: image.readTrigger || row.media?.alt || "" };
+          urlRefreshed++;
+        } else {
+          untouched++;
+        }
+      }
+      continue;
+    }
     const { primaryLevel, row } = buildRow(image, q);
     if (!bank[primaryLevel]) bank[primaryLevel] = [];
     bank[primaryLevel].push(row);
-    allIds.add(q.id);
+    idIndex.set(q.id, { lvl: primaryLevel, i: bank[primaryLevel].length - 1 });
     added++;
   }
 }
 
 fs.writeFileSync(bankPath, JSON.stringify(bank, null, 2) + "\n");
 
-console.log(`Seeded POV: ${added} added, ${skipped} skipped (already in bank).`);
-if (skippedIds.length) for (const id of skippedIds) console.log("  skip:", id);
+console.log(`Seeded POV from ${path.relative(process.cwd(), sourcePath)}`);
+console.log(`  Added:     ${added}`);
+console.log(`  URL fresh: ${urlRefreshed}`);
+console.log(`  Untouched: ${untouched}`);
