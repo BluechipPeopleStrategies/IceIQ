@@ -5459,7 +5459,14 @@ function PasswordResetScreen({ onDone }) {
             </button>
             {err && (
               <div style={{textAlign:"center",marginTop:".75rem"}}>
-                <button onClick={async () => { try { await SB.signOut(); } catch {} onDone?.(); }}
+                <button onClick={async () => {
+                  // Race signOut against a 2s timeout so a hung auth call can't
+                  // trap us here. Then hard-reload to root to fully reset
+                  // session state — the recovery flag, hash fragment, and any
+                  // in-flight auth requests all get cleaned up.
+                  try { await Promise.race([SB.signOut(), new Promise(r => setTimeout(r, 2000))]); } catch {}
+                  if (typeof window !== "undefined") window.location.href = "/";
+                }}
                   style={{background:"none",border:"none",color:C.dimmer,cursor:"pointer",fontSize:12,fontFamily:FONT.body,padding:0,textDecoration:"underline"}}>
                   ← Back to sign in
                 </button>
