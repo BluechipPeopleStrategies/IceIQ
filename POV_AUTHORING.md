@@ -53,12 +53,14 @@ Just paste a one-line idea anywhere — a quick text note, the bottom of the Hub
 
 ## What `npm run sync:pov` actually does
 
-Three steps in sequence, takes ~10 seconds total:
+Four steps in sequence, takes ~30 seconds total (longer if there are new
+images to upload to Storage — those are several MB each):
 
 ```
-1. node scripts/export-pov-from-notion.mjs   Notion -> src/data/povQuestions.json
-2. node tools/seed-pov-to-bank.mjs           JSON   -> src/data/questions.json (live bank)
-3. node scripts/migrate-pov-to-supabase.mjs  JSON   -> Supabase pov_images + questions
+1. node scripts/export-pov-from-notion.mjs        Notion -> src/data/povQuestions.json
+2. node scripts/migrate-pov-to-supabase.mjs       JSON   -> Supabase pov_images + questions
+3. node scripts/upload-pov-images-to-storage.mjs  Notion S3 -> Supabase Storage (permanent URLs)
+4. node tools/seed-pov-to-bank.mjs                JSON (with permanent URLs) -> bundled bank
 ```
 
 If any step fails it stops there — re-run after fixing whatever Notion thinks is wrong (usually a missing required field or an unknown select option).
@@ -86,12 +88,25 @@ Everything else is metadata that helps with later filtering / curation but isn't
 - **Localhost**: refresh the browser. The Vite dev server picks up `src/data/questions.json` instantly. The qbLoader cache (sessionStorage `rinkreads_qb_cache_v5`) auto-invalidates when the JSON content changes.
 - **Vercel**: commit + push the changed `src/data/questions.json` and `src/data/povQuestions.json` (and the Supabase row inserts went live during the sync command). Vercel deploys the new bank on the next build.
 
-## When images stop loading
+## URL durability
 
-The Notion S3 URLs are 1-hour presigned links. They expire. Two options:
+Notion's `Image File` URLs are 1-hour presigned S3 links — they expire fast.
+The sync chain handles this for you:
 
-1. **Re-run the sync** — `npm run sync:pov` re-fetches Notion and refreshes the URLs in the bundled bank. Good enough until launch.
-2. **Session 3 (admin Images tab)** — the permanent fix. Download from Notion once, upload to Supabase Storage, get permanent URLs. Not built yet.
+- `sync:pov` includes `upload-pov-images-to-storage.mjs`, which downloads
+  the bytes from the (still-fresh) Notion S3 URL and re-hosts them in the
+  Supabase Storage `pov-images` bucket with a permanent public URL like
+  `https://<project>.supabase.co/storage/v1/object/public/pov-images/IMG-…png`.
+- The permanent URL is written back to `pov_images.image_url` and mirrored
+  into `src/data/povQuestions.json` so the bundled bank ships permanent
+  URLs (not expiring ones).
+- Re-runs are idempotent: rows already on Storage are no-ops; only new
+  images get downloaded and uploaded.
+
+You don't need to do anything special — just attach images in Notion and
+run `npm run sync:pov`. The first time a new image gets synced, the chain
+both pulls it into Supabase metadata AND moves the bytes to permanent
+storage in the same command.
 
 ## Templates (suggested, not yet auto-created)
 

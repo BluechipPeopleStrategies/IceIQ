@@ -16,8 +16,9 @@
     "admin:grant": "node scripts/grant-admin.mjs",
     "admin:migrate-text": "node scripts/migrate-text-to-supabase.mjs",
     "admin:migrate-pov": "node scripts/migrate-pov-to-supabase.mjs",
+    "pov:upload-images": "node scripts/upload-pov-images-to-storage.mjs",
     "seed:pov": "node tools/seed-pov-to-bank.mjs",
-    "sync:pov": "node scripts/export-pov-from-notion.mjs && node tools/seed-pov-to-bank.mjs && node scripts/migrate-pov-to-supabase.mjs"
+    "sync:pov": "node scripts/export-pov-from-notion.mjs && node scripts/migrate-pov-to-supabase.mjs && node scripts/upload-pov-images-to-storage.mjs && node tools/seed-pov-to-bank.mjs"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.103.0",
