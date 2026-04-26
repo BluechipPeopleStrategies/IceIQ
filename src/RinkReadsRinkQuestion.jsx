@@ -1,6 +1,5 @@
 import { useState, useRef, useEffect, useCallback, useMemo, Component } from "react";
 import RinkReadsRink from "./RinkReadsRink";
-import RinkReadsPOVRink from "./RinkReadsPOVRink";
 import { C, FONT } from "./shared.jsx";
 
 const M = 10;
@@ -15,7 +14,6 @@ const VALID_QUESTION_TYPES = [
   "mc", "diagram", "rank", "two-step", "sequence", "fill", "multi", "true-false",
   "drag-target", "drag-place", "zone-click", "multi-tap",
   "sequence-rink", "path-draw", "lane-select", "hot-spots",
-  "pov-pick", "pov-mc",
 ];
 
 function getViewBox(view) {
@@ -195,15 +193,6 @@ function validateQuestion(q) {
   if ((q.type === "mc" || q.type === "diagram") && !Array.isArray(q.choices)) {
     errors.push("mc/diagram requires choices array");
   }
-  if (q.type === "pov-pick") {
-    if (!q.pov || typeof q.pov !== "object") errors.push("pov-pick requires a pov config (camera + povRole)");
-    if (!Array.isArray(q.targets) || q.targets.length === 0) errors.push("pov-pick requires a targets array");
-  }
-  if (q.type === "pov-mc") {
-    if (!q.pov || typeof q.pov !== "object") errors.push("pov-mc requires a pov config (camera + povRole)");
-    if (!Array.isArray(q.choices) || q.choices.length === 0) errors.push("pov-mc requires a choices array");
-  }
-
   return { errors, warnings, valid: errors.length === 0 };
 }
 
@@ -262,8 +251,6 @@ export default function RinkReadsRinkQuestion({ question, onAnswer, onReset, onS
   else if (t === "path-draw") Renderer = PathDraw;
   else if (t === "lane-select") Renderer = LaneSelect;
   else if (t === "hot-spots") Renderer = HotSpots;
-  else if (t === "pov-pick") Renderer = POVPick;
-  else if (t === "pov-mc") Renderer = POVMC;
   else Renderer = question.choices ? MCFallback : null;
 
   if (!Renderer) {
@@ -1418,99 +1405,6 @@ function LaneSelect({ question, onAnswer, onReset }) {
           </div>
         </>
       )}
-    </div>
-  );
-}
-
-// POV-pick: player sees a first-person scene and taps the correct target on
-// the ice (open lane, open net side, screened shooter, etc.). q.pov is the
-// camera/role config; q.targets[] are world-space hit zones. Each target has
-// `correct: bool` plus optional `msg`. The first tap locks the answer.
-function POVPick({ question, onAnswer, onReset }) {
-  const targets = Array.isArray(question.targets) ? question.targets : [];
-  const [picked, setPicked] = useState(null); // index
-  const done = picked !== null;
-
-  const reset = () => { setPicked(null); onReset?.(); };
-  const handle = (target, i) => {
-    if (done) return;
-    setPicked(i);
-    onAnswer?.(!!target.correct);
-  };
-
-  const pickedTarget = picked !== null ? targets[picked] : null;
-  const correctTarget = targets.find(t => t?.correct);
-  const povProps = question.pov && typeof question.pov === "object" ? question.pov : {};
-  const wrongAndHasCorrect = done && pickedTarget && !pickedTarget.correct && correctTarget;
-
-  return (
-    <div>
-      <p style={questionTextStyle}>{question.q}</p>
-      <p style={hintTextStyle}>Tap what you see from the player's perspective.</p>
-      <div style={{ ...rinkFrameStyle, marginBottom: "0.75rem" }}>
-        <RinkReadsPOVRink
-          camera={povProps.camera}
-          povRole={povProps.povRole || "skater"}
-          markers={povProps.markers}
-          targets={targets.map((t, i) => {
-            const id = t.id || `t${i}`;
-            const isCorrect = t.correct;
-            const isPicked = picked === i;
-            // Tint targets post-submission so the right answer is visible
-            // in the POV scene even if the renderer draws them as dots.
-            const tint = !done ? null
-              : isCorrect ? "#22c55e"
-              : isPicked ? "#ef4444"
-              : null;
-            return { ...t, id, ...(tint ? { tint, highlight: isCorrect && done } : {}) };
-          })}
-          showPrompt={povProps.prompt}
-          onTargetClick={done ? null : (t) => {
-            const idx = targets.findIndex(x => (x.id || `t${targets.indexOf(x)}`) === t.id);
-            if (idx >= 0) handle(targets[idx], idx);
-          }}
-        />
-      </div>
-      {done && pickedTarget && (
-        <>
-          <Feedback state={pickedTarget.correct ? "ok" : "no"} message={pickedTarget.msg || question.tip} />
-          {/* On a wrong pick, surface the correct target's msg (if any)
-              as a secondary "the right read was:" explanation. */}
-          {wrongAndHasCorrect && correctTarget.msg && correctTarget.msg !== pickedTarget.msg && (
-            <div style={{
-              marginTop: "0.6rem", padding: "0.7rem 0.9rem",
-              background: "rgba(34,197,94,0.08)", border: `1px solid rgba(34,197,94,0.3)`,
-              borderRadius: 10, fontSize: 12.5, color: "#86EFAC", fontFamily: FONT.body, lineHeight: 1.55,
-            }}>
-              <b style={{color:"#22c55e"}}>The right read:</b> {correctTarget.msg}
-            </div>
-          )}
-          <div style={actionRowStyle()}>
-            <button onClick={reset} style={secondaryBtnStyle}>Try again</button>
-          </div>
-        </>
-      )}
-    </div>
-  );
-}
-
-// POV-mc: first-person scene above multiple-choice options. Use when the
-// decision is verbal ("what should you do?") but the read is positional.
-function POVMC({ question, onAnswer }) {
-  const povProps = question.pov && typeof question.pov === "object" ? question.pov : {};
-
-  return (
-    <div>
-      <p style={{ ...questionTextStyle, marginBottom: "0.9rem" }}>{question.q}</p>
-      <div style={{ ...rinkFrameStyle, marginBottom: "0.9rem" }}>
-        <RinkReadsPOVRink
-          camera={povProps.camera}
-          povRole={povProps.povRole || "skater"}
-          markers={povProps.markers}
-          showPrompt={povProps.prompt}
-        />
-      </div>
-      <MCChoiceList question={question} onAnswer={onAnswer} />
     </div>
   );
 }

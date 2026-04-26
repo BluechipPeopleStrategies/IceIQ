@@ -577,9 +577,10 @@ function buildQueue(qb, level, position, isReturning, tier) {
     }
 
     if (!formatAllowed) {
-      // FREE: MC and TF only. Other types (seq, mistake, next, rink-native)
-      // are PRO surface — players see format-preview sentinels instead.
-      posFiltered = posFiltered.filter(q => !q.type || q.type === "mc");
+      // FREE: MC, TF, and POV-image-MC only. Other types (seq, mistake, next,
+      // rink-native) are PRO surface — players see format-preview sentinels
+      // instead. POV-MC stays free because it's the headline new format.
+      posFiltered = posFiltered.filter(q => !q.type || q.type === "mc" || q.type === "pov-mc");
     }
 
     pool = {
@@ -1081,6 +1082,7 @@ function NextQuestion({ q, sel, onPick }) {
 // Type badge for question header
 const Q_TYPE_LABELS = {
   mc:       {label:"Multiple Choice", color:C.purple,   icon:"📝"},
+  "pov-mc": {label:"Read the Play",   color:C.gold,     icon:"👀"},
   multi:    {label:"Select All That Apply", color:C.gold, icon:"☑️"},
   seq:      {label:"Put in Order",    color:C.gold,     icon:"🔢"},
   mistake:  {label:"Spot the Mistake",color:C.red,      icon:"🔍"},
@@ -1582,7 +1584,7 @@ function Quiz({ player, onFinish, onBack, tier, onUpgrade }) {
 
   // Speed-bonus window. Interactive (rink) questions get a timed bonus;
   // MC/TF/seq don't because reading-speed is mostly literacy, not hockey IQ.
-  const SPEED_TYPES = new Set(["drag-target","drag-place","multi-tap","sequence-rink","path-draw","lane-select","hot-spots","pov-pick","pov-mc","zone-click","scenario"]);
+  const SPEED_TYPES = new Set(["drag-target","drag-place","multi-tap","sequence-rink","path-draw","lane-select","hot-spots","zone-click","scenario"]);
   const SPEED_DURATION_MS = 15000;
   const SPEED_MAX_BONUS = 50;
 
@@ -1638,7 +1640,7 @@ function Quiz({ player, onFinish, onBack, tier, onUpgrade }) {
 
   // RinkReadsRinkQuestion dispatcher routes when q.rink is set OR the type is one
   // of the new rink-native interactive types.
-  const NEW_RINK_TYPES = ["drag-target","drag-place","multi-tap","sequence-rink","path-draw","lane-select","hot-spots","pov-pick","pov-mc","zone-click"];
+  const NEW_RINK_TYPES = ["drag-target","drag-place","multi-tap","sequence-rink","path-draw","lane-select","hot-spots","zone-click"];
   const isRinkQ = !!question?.rink || NEW_RINK_TYPES.includes(qtype);
   const answered = isRinkQ
     ? rinkQResult !== null
@@ -1671,6 +1673,7 @@ function Quiz({ player, onFinish, onBack, tier, onUpgrade }) {
     }
     switch (qtype) {
       case "mc":
+      case "pov-mc":
       case "mistake":
         return <MCQuestion q={q} sel={sel} onPick={handlePick} colorblind={player.colorblind}/>;
       case "next":
@@ -1766,10 +1769,25 @@ function Quiz({ player, onFinish, onBack, tier, onUpgrade }) {
           </div>
         )}
 
+        {/* POV image — first-person scenario photo above the situation card */}
+        {qtype === "pov-mc" && q.media?.url && (
+          <div style={{
+            marginBottom:"1rem", borderRadius:12, overflow:"hidden",
+            border:`1px solid ${C.border}`, background:"#000",
+            aspectRatio:"16/9",
+          }}>
+            <img src={q.media.url} alt={q.media.alt || ""}
+              draggable={false}
+              style={{width:"100%", height:"100%", objectFit:"cover", display:"block", userSelect:"none"}} />
+          </div>
+        )}
+
         {/* Situation / Prompt */}
-        {(qtype === "mc" || qtype === "seq" || qtype === "next") && (
+        {(qtype === "mc" || qtype === "pov-mc" || qtype === "seq" || qtype === "next") && (
           <Card style={{marginBottom:"1.25rem",background:C.purpleDim,border:`1px solid ${C.purpleBorder}`}}>
-            <div style={{fontSize:10,letterSpacing:".14em",textTransform:"uppercase",color:C.purple,marginBottom:".6rem",fontWeight:700}}>📋 Game Situation</div>
+            <div style={{fontSize:10,letterSpacing:".14em",textTransform:"uppercase",color:C.purple,marginBottom:".6rem",fontWeight:700}}>
+              {qtype === "pov-mc" ? "👀 Read the Play" : "📋 Game Situation"}
+            </div>
             <div style={{fontSize:15,lineHeight:1.8,color:C.white,fontWeight:500}}>{q.sit}</div>
           </Card>
         )}
@@ -2365,9 +2383,22 @@ function WeeklyQuiz({ player, onBack, onFinish }) {
           <Pill color={C.dimmer} bg={C.dimmest}>{q.cat}</Pill>
         </div>
 
-        {(qtype === "mc" || qtype === "next") && (
+        {qtype === "pov-mc" && q.media?.url && (
+          <div style={{
+            marginBottom:"1rem", borderRadius:12, overflow:"hidden",
+            border:`1px solid ${C.border}`, background:"#000",
+            aspectRatio:"16/9",
+          }}>
+            <img src={q.media.url} alt={q.media.alt || ""}
+              draggable={false}
+              style={{width:"100%", height:"100%", objectFit:"cover", display:"block", userSelect:"none"}} />
+          </div>
+        )}
+        {(qtype === "mc" || qtype === "pov-mc" || qtype === "next") && (
           <Card style={{marginBottom:"1.25rem",background:C.purpleDim,border:`1px solid ${C.purpleBorder}`}}>
-            <div style={{fontSize:10,letterSpacing:".14em",textTransform:"uppercase",color:C.purple,marginBottom:".6rem",fontWeight:700}}>📋 Game Situation</div>
+            <div style={{fontSize:10,letterSpacing:".14em",textTransform:"uppercase",color:C.purple,marginBottom:".6rem",fontWeight:700}}>
+              {qtype === "pov-mc" ? "👀 Read the Play" : "📋 Game Situation"}
+            </div>
             <div style={{fontSize:15,lineHeight:1.8,color:C.white,fontWeight:500}}>{q.sit}</div>
           </Card>
         )}
@@ -2398,6 +2429,7 @@ function WeeklyQuiz({ player, onBack, onFinish }) {
         )}
 
         {qtype === "mc" && <MCQuestion q={q} sel={sel} onPick={handlePick} colorblind={player.colorblind}/>}
+        {qtype === "pov-mc" && <MCQuestion q={q} sel={sel} onPick={handlePick} colorblind={player.colorblind}/>}
         {qtype === "next" && <MCQuestion q={q} sel={sel} onPick={handlePick} colorblind={player.colorblind}/>}
         {qtype === "mistake" && <MCQuestion q={q} sel={sel} onPick={handlePick} colorblind={player.colorblind}/>}
         {qtype === "multi" && <MultiMCQuestion q={q} answered={seqAnswered} onAnswer={handleSeqAnswer} colorblind={player.colorblind}/>}
@@ -3947,7 +3979,7 @@ function QuestionPreviewPage({ questionId }) {
   }
 
   const isRinkQ = !!question.rink ||
-    ["drag-target","drag-place","multi-tap","sequence-rink","path-draw","lane-select","hot-spots","pov-pick","pov-mc","zone-click"].includes(question.type);
+    ["drag-target","drag-place","multi-tap","sequence-rink","path-draw","lane-select","hot-spots","zone-click"].includes(question.type);
 
   return (
     <div key={key} style={{minHeight:"100vh",background:C.bg,color:C.white,fontFamily:FONT.body,padding:"1rem 1rem 4rem",maxWidth:700,margin:"0 auto"}}>
@@ -6503,6 +6535,26 @@ export default function App() {
     if (hashRoute === "associations" && screen !== "associations") setScreen("associations");
     if (hashRoute === "admin" && screen !== "admin-dashboard") setScreen("admin-dashboard");
   }, [hashRoute, screen]);
+  // Dev-bypass toggle from URL: visiting /#devbypass sets the LS flag so the
+  // dev panel appears on AuthScreen — useful in production deployments where
+  // import.meta.env.DEV is false. Visiting /#devbypass-off clears the flag.
+  // Hash is wiped after toggling so the URL is clean and the toggle doesn't
+  // re-fire on subsequent navigations.
+  useEffect(() => {
+    if (hashRoute !== "devbypass" && hashRoute !== "devbypass-off") return;
+    try {
+      if (hashRoute === "devbypass") {
+        window.localStorage.setItem("rinkreads_dev_bypass", "1");
+      } else {
+        window.localStorage.removeItem("rinkreads_dev_bypass");
+      }
+      history.replaceState(null, "", window.location.pathname + window.location.search);
+      setHashRoute("");
+      // Force AuthScreen to re-render with the dev panel visible. Reload is
+      // the most reliable cross-state way to flip the conditional gate.
+      window.location.reload();
+    } catch {}
+  }, [hashRoute]);
   function clearParentsHash() {
     try {
       const h = (window.location.hash || "").replace(/^#/, "");
@@ -6624,10 +6676,11 @@ export default function App() {
         if (all && "__preview__" in all) { delete all["__preview__"]; window.localStorage.setItem("rinkreads_training_log", JSON.stringify(all)); }
       }
       window.localStorage.removeItem("rinkreads_demo_quiz_taken");
-      // Clear dev bypass so a one-time troubleshooting session doesn't keep
-      // auto-entering on every subsequent reload.
+      // Clear the synthetic dev profile so we don't auto-re-enter on
+      // reload. Leave the `rinkreads_dev_bypass` flag itself alone — it's
+      // an intentional developer setting and only the dev should remove it
+      // (via `window.__dev.exitBypass()` or `#devbypass-off`).
       clearDevProfile();
-      window.localStorage.removeItem("rinkreads_dev_bypass");
     } catch {}
     setDemoMode(false);
     setDemoCoachRatings(null);

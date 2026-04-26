@@ -63,11 +63,12 @@ function checkTailwind() {
 // ---------- check 2 + 3: bank + rink scene
 const NEW_TYPES = new Set([
   "drag-target", "drag-place", "multi-tap", "sequence-rink",
-  "path-draw", "lane-select", "hot-spots", "pov-pick", "pov-mc",
+  "path-draw", "lane-select", "hot-spots",
 ]);
 const ALL_KNOWN_TYPES = new Set([
   undefined, "mc", "tf", "seq", "mistake", "zone-click", "rink", "next",
   "true-false", "diagram", "rank", "two-step", "sequence", "fill", "multi",
+  "pov-mc",
   ...NEW_TYPES,
 ]);
 const VALID_VIEWS = new Set(["full", "left", "right", "neutral"]);
@@ -182,11 +183,6 @@ function checkBank() {
         if ((t === "multi-tap" || t === "sequence-rink") && (!Array.isArray(q.markers) || !q.markers.length)) err(`[bank] ${loc} ${t} requires markers[]`);
         if (t === "hot-spots" && (!Array.isArray(q.spots) || !q.spots.length)) err(`[bank] ${loc} hot-spots requires spots[]`);
         if (t === "lane-select" && (!Array.isArray(q.lanes) || !q.lanes.length)) err(`[bank] ${loc} lane-select requires lanes[]`);
-        if (t === "pov-pick" || t === "pov-mc") {
-          if (!q.pov || typeof q.pov !== "object") err(`[bank] ${loc} ${t} requires pov config`);
-        }
-        if (t === "pov-pick" && (!Array.isArray(q.targets) || !q.targets.length)) err(`[bank] ${loc} pov-pick requires targets[]`);
-        if (t === "pov-mc" && (!Array.isArray(q.choices) || !q.choices.length)) err(`[bank] ${loc} pov-mc requires choices[]`);
       }
 
       if (isLegacy) {

@@ -838,3 +838,76 @@ export async function createReviewQuestion({ age, level, current, id }) {
   if (error) { warn("createReviewQuestion", error); return null; }
   return data;
 }
+
+// ─────────────────────────────────────────────
+// ADMIN DASHBOARD: questions + pov_images
+// ─────────────────────────────────────────────
+// New unified content store. See supabase/migration_0012_admin_schema.sql.
+// Reads/writes here require profiles.is_admin = true (RLS gate).
+
+export async function listAdminQuestions() {
+  if (!supabase) return [];
+  const { data, error } = await supabase
+    .from("questions")
+    .select("*")
+    .order("type",       { ascending: true })
+    .order("age_groups", { ascending: true })
+    .order("id",         { ascending: true });
+  if (error) { warn("listAdminQuestions", error); return []; }
+  return data || [];
+}
+
+export async function listAdminPovImages() {
+  if (!supabase) return [];
+  const { data, error } = await supabase
+    .from("pov_images")
+    .select("*")
+    .order("archetype", { ascending: true })
+    .order("variant",   { ascending: true });
+  if (error) { warn("listAdminPovImages", error); return []; }
+  return data || [];
+}
+
+const QUESTION_PATCH_COLUMNS = [
+  "age_groups", "format", "difficulty", "question_text", "options",
+  "correct_answer", "explanation", "concepts", "status", "is_auto_graded",
+  "hotspot_coords", "sequence_items", "linked_image_id", "flagged_reason",
+  "killed_at",
+];
+
+export async function updateAdminQuestion(id, patch) {
+  if (!supabase) return null;
+  const clean = {};
+  for (const k of QUESTION_PATCH_COLUMNS) if (k in patch) clean[k] = patch[k];
+  if (Object.keys(clean).length === 0) return null;
+  const { data, error } = await supabase
+    .from("questions")
+    .update(clean)
+    .eq("id", id)
+    .select()
+    .single();
+  if (error) { warn("updateAdminQuestion", error); return null; }
+  return data;
+}
+
+export async function bulkUpdateAdminQuestions(ids, patch) {
+  if (!supabase || !ids?.length) return [];
+  const clean = {};
+  for (const k of QUESTION_PATCH_COLUMNS) if (k in patch) clean[k] = patch[k];
+  if (Object.keys(clean).length === 0) return [];
+  const { data, error } = await supabase
+    .from("questions")
+    .update(clean)
+    .in("id", ids)
+    .select();
+  if (error) { warn("bulkUpdateAdminQuestions", error); return []; }
+  return data || [];
+}
+
+export async function killAdminQuestion(id) {
+  return updateAdminQuestion(id, { status: "Killed", killed_at: new Date().toISOString() });
+}
+
+export async function unkillAdminQuestion(id, restoreStatus = "Draft") {
+  return updateAdminQuestion(id, { status: restoreStatus, killed_at: null });
+}

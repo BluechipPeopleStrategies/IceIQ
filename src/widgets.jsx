@@ -99,14 +99,16 @@ export function BottomNav({ active, onNav, tier = "FREE" }) {
 // minutes-counter path. Adding a new type here is enough — initial minutes
 // state, icons/labels for the running log, and the coach roster digest all
 // derive from this list (or from TRAINING_TYPE_META below).
+// Order matters — Practice and Game lead because that's most of what
+// players actually log. Skills/skating/dryland/etc. follow.
 const ACTIVITIES = [
+  { type: "practice",      label: "Practice",           icon: "🥅",  unit: "min",   color: C.blue },
+  { type: "game",          label: "Game",               icon: "🏆",  unit: "min",   color: C.gold },
   { type: "power_skating", label: "Power Skating",      icon: "⛸️", unit: "min",   color: C.blue },
   { type: "skills_dev",    label: "Skills Development", icon: "🏒",  unit: "min",   color: C.purple },
   { type: "pucks_shot",    label: "Pucks Shot",         icon: "🎯",  unit: "pucks", color: C.gold },
   { type: "mental_skills", label: "Mental Skills",      icon: "🧠",  unit: "min",   color: C.purple },
   { type: "dryland",       label: "Dryland Training",   icon: "💪",  unit: "min",   color: C.green },
-  { type: "practice",      label: "Practice",           icon: "🥅",  unit: "min",   color: C.blue },
-  { type: "game",          label: "Game",               icon: "🏆",  unit: "min",   color: C.gold },
   { type: "other",         label: "Create Your Own",    icon: "📝",  unit: "min",   color: C.green },
 ];
 
@@ -137,6 +139,16 @@ export function TrainingLog({ playerId }) {
   const [activeType, setActiveType] = useState(null);
   const [saved, setSaved] = useState(null);
   const [showAllSessions, setShowAllSessions] = useState(false);
+  // Collapsed by default — header doubles as toggle. When the user clicks
+  // anywhere on the row OR taps the chevron it expands to show all 8
+  // activities. Click again (or the X chevron) to collapse.
+  const [expanded, setExpanded] = useState(false);
+  // Snapshot for the collapsed-state subhead: total sessions logged across
+  // all activity types, plus the most recent session's date if any.
+  const totalSessions = log.sessions.length;
+  const lastDate = totalSessions > 0
+    ? log.sessions.slice().sort((a, b) => (b.date || "").localeCompare(a.date || ""))[0]?.date
+    : null;
 
   function openActivity(type) {
     const isOpening = activeType !== type;
@@ -169,7 +181,35 @@ export function TrainingLog({ playerId }) {
 
   return (
     <Card style={{ marginBottom: "1rem" }}>
-      <Label>Training Log</Label>
+      {/* Click-to-toggle header. Acts as the visible affordance when the
+          log is collapsed, and as the collapse control when expanded. */}
+      <button
+        type="button"
+        onClick={() => { setExpanded(e => !e); if (expanded) setActiveType(null); }}
+        style={{
+          width: "100%", background: "transparent", border: "none",
+          padding: 0, cursor: "pointer", textAlign: "left",
+          display: "flex", alignItems: "center", justifyContent: "space-between",
+          gap: ".75rem", marginBottom: expanded ? ".5rem" : 0,
+        }}
+        aria-expanded={expanded}
+      >
+        <div style={{ display: "flex", flexDirection: "column", gap: 2 }}>
+          <Label>Training Log</Label>
+          <div style={{ fontSize: 11, color: C.dimmer, fontFamily: FONT.body }}>
+            {totalSessions === 0
+              ? (expanded ? "Pick an activity below to log your first session." : "Tap to log a session.")
+              : `${totalSessions} session${totalSessions === 1 ? "" : "s"} logged${lastDate ? ` · last: ${lastDate}` : ""}`}
+          </div>
+        </div>
+        <span style={{
+          color: C.dim, fontFamily: FONT.body, fontSize: 18, fontWeight: 700,
+          padding: "0 .25rem", lineHeight: 1, flexShrink: 0,
+          transform: expanded ? "rotate(180deg)" : "rotate(0deg)",
+          transition: "transform .15s",
+        }} aria-hidden>▾</span>
+      </button>
+      {!expanded ? null : (
       <div style={{ display: "flex", flexDirection: "column", gap: ".75rem" }}>
         {ACTIVITIES.map(act => {
           const summary = getTrainingSummary(log.sessions, act.type);
@@ -329,8 +369,11 @@ export function TrainingLog({ playerId }) {
           );
         })}
       </div>
+      )}
 
-      {/* Running log — past 10 sessions visible by default; expandable. */}
+      {/* Running log — past 10 sessions visible by default; expandable.
+          Always visible regardless of collapse state so a player can see
+          recent activity without expanding the activity picker. */}
       <TrainingLogRunning sessions={log.sessions || []} showAll={showAllSessions} onToggle={() => setShowAllSessions(v => !v)}/>
     </Card>
   );

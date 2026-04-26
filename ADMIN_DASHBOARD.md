@@ -1,7 +1,8 @@
 # RinkReads Admin Dashboard — Architecture
 
-Living doc for the unified admin dashboard. Session 1 (foundation) is in;
-Sessions 2–4 (UI, image library, engine integration) build on top of it.
+Living doc for the unified admin dashboard. Sessions 1 (foundation) and 2
+(Questions tab) are in; Sessions 3 (Images library) and 4 (Stats / Trash /
+engine wiring) still to come.
 
 > The full original specification is in [ADMIN_BUILD_BRIEF.md](ADMIN_BUILD_BRIEF.md).
 > This file documents what actually shipped and how to operate it.
@@ -195,9 +196,101 @@ Documented above under "Granting admin."
 | Recreate `profiles` table                   | `alter table profiles add column is_admin`                                 | Profiles table already exists in `schema.sql` — adding a column is non-destructive |
 | `questions` table per brief                 | + a `legacy_source jsonb` column                                           | ~67 rink-type legacy questions don't fit the `format` enum cleanly; preserving the source row makes session-4 rehydration trivial |
 
+## Session 2 — Questions tab
+
+Lives in [src/admin.jsx](src/admin.jsx). All UI is one file; format-specific
+editors are sibling components (no further file split until session 4 starts
+sharing them with the engine).
+
+### What it does
+
+- **Stat strip** — Total / Live / Approved / Draft / Flagged / Killed counts
+  plus Text/POV split, computed from the unfiltered set.
+- **Search** — case-insensitive substring match across `id`, `question_text`,
+  `explanation`, every option's `text`, and `concepts[]`.
+- **Filters** — chip rows for status, age (single-age filter, but rows store
+  `age_groups[]`), format, type. Plus a "Show killed" toggle (off by default;
+  killed rows are hidden so the live workspace stays clean).
+- **Grouping** — `flat` / `by image` / `by age`. Image grouping uses
+  `linked_image_id` and labels with `archetype · variant · id` from the
+  `pov_images` lookup; rows without a linked image bucket into "Text-only".
+- **Row** — collapsed: checkbox, id, status pill, type pill (POV/text), format,
+  age chips, difficulty, 2-line text preview. Click expands.
+- **Editor** — inline. Format-agnostic top: question text, age groups
+  (multi-select chips), difficulty, format dropdown. Format-specific body
+  dispatches off `row.format`:
+  - **Multiple Choice** — option list, click letter to mark correct, add/remove
+    rows; auto-relabels A/B/C…
+  - **Multi-Select** — same UI but the correct-letter button toggles into a
+    set; persisted as comma-joined `"A,C"`.
+  - **True/False** — two pill buttons writing `correct_answer = "True"|"False"`.
+  - **Hotspot** — three numeric fields (x, y, radius) writing
+    `hotspot_coords = {x,y,radius}` (% of image, 0–100).
+  - **Open Response** — free-form expected-answer textarea + an
+    `is_auto_graded` checkbox.
+  - **Sequence** — ordered list with up/down/remove + add. Items can be plain
+    strings or `{text}` shapes (legacy data may use objects); the editor
+    reads `item.text || item` and writes back as the typed shape.
+  - Below the body: explanation, concepts (comma-separated → `text[]`),
+    flag-reason (only shown when status is `Flagged`).
+- **Status workflow** — five buttons under the editor (Draft / Approved /
+  Live / Flagged / Kill). Active status outlined.
+- **Soft delete + undo** — clicking Kill (single or bulk) sets
+  `status='Killed'` + `killed_at = now()`. A toast pops at the bottom-center
+  with a 30-second countdown and an Undo button. Undo restores each affected
+  row's prior `status` + `killed_at` (per-row, since prior statuses can
+  differ in the bulk case).
+- **Bulk actions** — checkbox-select rows, sticky bar at top shows the
+  selection count and one-click status changes (including Kill, which routes
+  through the same undo flow).
+
+### Persistence
+
+All writes go through new helpers in [src/supabase.js](src/supabase.js):
+
+- `listAdminQuestions()` — full table, ordered for stable grouping.
+- `listAdminPovImages()` — full table, used for the image-group lookup.
+- `updateAdminQuestion(id, patch)` — debounced 600ms inside the editor; only
+  whitelisted columns (`QUESTION_PATCH_COLUMNS`) are forwarded so the editor
+  can hand it the whole row without leaking server-managed fields like
+  `created_at`/`legacy_source`.
+- `bulkUpdateAdminQuestions(ids, patch)` — single round-trip via `.in("id",ids)`.
+- `killAdminQuestion(id)` / `unkillAdminQuestion(id, restoreStatus)` — thin
+  wrappers around `updateAdminQuestion` with the `Killed` status + `killed_at`
+  semantics. Undo bypasses these and uses `updateAdminQuestion` directly so
+  it can restore each row's specific prior status.
+
+Reads/writes are all gated by the `questions_admin_all` RLS policy; service
+role is **not** used in the UI (the dashboard runs as the signed-in admin
+user via the anon-key client).
+
+### Things deliberately not in Session 2
+
+- **Hard delete + Trash recovery view** — that's Session 4. Killed rows are
+  hidden by default but visible via the toggle, so admins can still see
+  what's been killed if they want to.
+- **Image creation / upload** — Session 3. The Questions tab can read and
+  link to existing `pov_images` rows but can't author or upload images.
+- **Stats dashboard** — Session 4.
+- **Engine wiring** — the live RinkReads quiz engine still reads from the
+  bundled `questions.json` via `qbLoader.js`. Session 4 flips it to read
+  from `questions` (status='Live', killed_at IS NULL).
+- **Pagination beyond Load-more** — soft cap of 150 visible rows; click to
+  load the next 150. Adequate for the current ~700-row corpus.
+- **Optimistic-conflict resolution** — last-writer-wins. Two admins editing
+  the same row at the same time will clobber each other's changes; not a
+  problem at one-admin scale.
+
+### Files modified
+
+- [src/admin.jsx](src/admin.jsx) — added `QuestionsTab` and helpers; layout
+  shell now dispatches to it when `tab === "questions"`.
+- [src/supabase.js](src/supabase.js) — added `listAdminQuestions`,
+  `listAdminPovImages`, `updateAdminQuestion`, `bulkUpdateAdminQuestions`,
+  `killAdminQuestion`, `unkillAdminQuestion`.
+
 ## Coming in later sessions
 
-- **Session 2 — Questions tab:** unified list with filters, grouping (by image / by age / flat), inline editor for all 6 formats, bulk actions, soft-delete + 30s undo toast.
 - **Session 3 — Images tab:** library view, image editor with prompt history, read-clarity test, Supabase Storage upload.
 - **Session 4 — Stats + Trash + engine wiring:** stats dashboard, trash recovery, hard delete with confirmation, switching the live engine over from `questions.json` to the Supabase `questions` table (via the `Live + non-killed` RLS read policy).
 
