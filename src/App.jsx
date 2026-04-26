@@ -23,6 +23,7 @@ import { CoachChallengeSection, ChallengeCard, ChallengeRunScreen } from "./team
 import { ToastContainer, toast } from "./toast.jsx";
 import { QotDCard, QotDScreen } from "./questionOfDay.jsx";
 import { SpeedRoundCard, SpeedRoundScreen } from "./speedRound.jsx";
+import { AdminRoute, AdminLayout } from "./admin.jsx";
 import { getWeeklyStreak, bumpWeeklyStreak, topCategoryStreak, updateCategoryStreaks } from "./utils/streaks.js";
 import { canSwitchAgeGroup, recordAgeGroupSwitch, getAgeGroupLock, setAgeGroupLock, checkSeasonReset } from "./utils/deviceLock";
 import { lsGetStr, lsSetStr, lsGetJSON, lsSetJSON } from "./utils/storage.js";
@@ -1272,6 +1273,13 @@ function Home({ player, onNav, demoMode, subscriptionTier, questFlagsBump, onPro
                 <div style={{background:"rgba(34,197,94,.12)",border:"1px solid rgba(34,197,94,.3)",borderRadius:20,padding:"2px 8px",fontSize:11,fontWeight:700,color:C.green,display:"flex",alignItems:"center",gap:".2rem"}} title={`${topCatStreak[1]} correct in a row in ${topCatStreak[0]}`}>
                   📊{topCatStreak[1]}
                 </div>
+              )}
+              {player?.isAdmin && (
+                <button onClick={() => { window.location.hash = "admin"; }}
+                  title="Open admin dashboard"
+                  style={{background:"rgba(252,76,2,.12)",border:`1px solid ${C.goldBorder}`,borderRadius:20,padding:"2px 8px",fontSize:10,fontWeight:800,letterSpacing:".06em",color:C.gold,cursor:"pointer",display:"flex",alignItems:"center",gap:".25rem",fontFamily:FONT.body}}>
+                  ★ ADMIN
+                </button>
               )}
             </div>
             <div style={{fontSize:12,color:C.dimmer}}>{name} · {level} · {position}</div>
@@ -5399,6 +5407,67 @@ function LandingInsightsCard() {
   );
 }
 
+// Rendered when Supabase fires PASSWORD_RECOVERY (user clicked a reset email).
+// Without this screen the recovery link silently logs the user in with the
+// OLD password unchanged — a real-but-easy-to-miss auth bug.
+function PasswordResetScreen({ onDone }) {
+  const [pw1, setPw1] = useState("");
+  const [pw2, setPw2] = useState("");
+  const [err, setErr] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [done, setDone] = useState(false);
+
+  async function submit() {
+    setErr("");
+    if (!pw1 || pw1.length < 6) { setErr("Password must be at least 6 characters"); return; }
+    if (pw1 !== pw2) { setErr("Passwords don't match"); return; }
+    setLoading(true);
+    try {
+      await SB.updatePassword(pw1);
+      setDone(true);
+      setTimeout(() => onDone?.(), 1500);
+    } catch (e) {
+      setErr(e.message || "Couldn't update password");
+    }
+    setLoading(false);
+  }
+
+  return (
+    <div style={{minHeight:"100vh",background:C.bg,color:C.white,fontFamily:FONT.body,display:"flex",alignItems:"center",justifyContent:"center",padding:"1.5rem"}}>
+      <div style={{maxWidth:420,width:"100%",background:C.bgCard,border:`1px solid ${C.border}`,borderRadius:16,padding:"2rem 1.75rem",boxShadow:"0 24px 60px rgba(0,0,0,.45)"}}>
+        <div style={{fontFamily:FONT.display,fontWeight:800,fontSize:"1.5rem",marginBottom:".4rem"}}>Set a new password</div>
+        <div style={{fontSize:13,color:C.dim,marginBottom:"1.25rem",lineHeight:1.5}}>Enter a new password for your RinkReads account. You'll stay signed in.</div>
+        {!done ? (
+          <>
+            <div style={{background:C.bg,border:`1px solid ${C.border}`,borderRadius:10,padding:".6rem .85rem",marginBottom:".65rem"}}>
+              <div style={{fontSize:10,letterSpacing:".1em",textTransform:"uppercase",color:C.dimmer,fontWeight:700,marginBottom:2}}>New password</div>
+              <input type="password" value={pw1} onChange={e=>setPw1(e.target.value)} placeholder="6+ chars" autoComplete="new-password" autoFocus
+                onKeyDown={e=>{ if (e.key === "Enter") submit(); }}
+                style={{background:"none",border:"none",color:C.white,fontSize:14,fontFamily:FONT.body,width:"100%",outline:"none",padding:0}}/>
+            </div>
+            <div style={{background:C.bg,border:`1px solid ${C.border}`,borderRadius:10,padding:".6rem .85rem",marginBottom:".65rem"}}>
+              <div style={{fontSize:10,letterSpacing:".1em",textTransform:"uppercase",color:C.dimmer,fontWeight:700,marginBottom:2}}>Confirm</div>
+              <input type="password" value={pw2} onChange={e=>setPw2(e.target.value)} placeholder="Re-enter" autoComplete="new-password"
+                onKeyDown={e=>{ if (e.key === "Enter") submit(); }}
+                style={{background:"none",border:"none",color:C.white,fontSize:14,fontFamily:FONT.body,width:"100%",outline:"none",padding:0}}/>
+            </div>
+            {err && (
+              <div style={{fontSize:13,color:C.red,background:C.redDim,border:`1px solid ${C.redBorder}`,borderRadius:8,padding:".6rem .8rem",marginBottom:".75rem"}}>{err}</div>
+            )}
+            <button onClick={submit} disabled={loading} style={{width:"100%",background:C.gold,color:C.bg,border:"none",borderRadius:12,padding:"1rem",cursor:loading?"default":"pointer",fontWeight:800,fontSize:16,fontFamily:FONT.body,letterSpacing:".02em",boxShadow:`0 4px 16px ${C.gold}33`}}>
+              {loading ? "…" : "Update password →"}
+            </button>
+          </>
+        ) : (
+          <div style={{fontSize:14,color:C.green,background:"rgba(34,197,94,.08)",border:`1px solid ${C.greenBorder}`,borderRadius:8,padding:".85rem 1rem",textAlign:"center"}}>
+            ✓ Password updated. Taking you home…
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
+
 function AuthScreen({ onAuthenticated, onDemo, onDevEnter, onPreview, prefill }) {
   const [mode, setMode] = useState(prefill ? "signup" : "login"); // login | signup | forgot
   const [email, setEmail] = useState("");
@@ -6417,11 +6486,12 @@ export default function App() {
     if (hashRoute === "coaches" && screen !== "coaches") setScreen("coaches");
     if (hashRoute === "players" && screen !== "players") setScreen("players");
     if (hashRoute === "associations" && screen !== "associations") setScreen("associations");
+    if (hashRoute === "admin" && screen !== "admin-dashboard") setScreen("admin-dashboard");
   }, [hashRoute, screen]);
   function clearParentsHash() {
     try {
       const h = (window.location.hash || "").replace(/^#/, "");
-      if (["parents","coaches","players","associations","pricing"].includes(h)) {
+      if (["parents","coaches","players","associations","pricing","admin"].includes(h)) {
         history.replaceState(null, "", window.location.pathname + window.location.search);
         setHashRoute("");
       }
@@ -6649,6 +6719,18 @@ export default function App() {
     return () => { mounted = false; data?.subscription?.unsubscribe?.(); };
   }, [demoMode]);
 
+  // Password recovery: when a reset email link lands the user, Supabase
+  // creates a recovery session and fires PASSWORD_RECOVERY. Without routing
+  // to a "set new password" screen, the recovery completes silently with
+  // the OLD password unchanged — broken UX. Route them to PasswordResetScreen.
+  useEffect(() => {
+    if (!hasSupabase) return;
+    const { data } = SB.onPasswordRecovery(() => {
+      setScreen("password-reset");
+    });
+    return () => data?.subscription?.unsubscribe?.();
+  }, []);
+
   async function loadUser(userId) {
     const p = await SB.getProfile(userId);
     if (!p) return;
@@ -6678,6 +6760,7 @@ export default function App() {
         sessionLength: p.session_length || 10,
         colorblind: !!p.colorblind,
         coachCode: "",
+        isAdmin: !!p.is_admin,
       };
       setPlayer(enriched);
       const latest = quizHistory[quizHistory.length-1];
@@ -7025,6 +7108,14 @@ export default function App() {
         {screen === "parent" && <Suspense fallback={<LazyFallback/>}><ParentAssessmentScreen player={player} demoMode={demoMode} onSignup={() => triggerSignup("parent_demo")} onBack={()=>setScreen("profile")} onSave={(ratings)=>{ setPlayer(p => ({...p, parentRatings: {...ratings, updated_at: new Date().toISOString().slice(0,10)}})); setScreen("profile"); }}/></Suspense>}
         {screen === "profile" && <Profile player={player} onSave={handleProfileSave} onBack={()=>setScreen("home")} onReset={handleSignOut} demoMode={demoMode} tier={tier} onUpgrade={(f,t)=>promptUpgrade(f,t)} userEmail={userEmail} onAdminReports={()=>setScreen("admin")} onNav={setScreen}/>}
         {screen === "admin" && <Suspense fallback={<LazyFallback/>}><AdminReports onBack={()=>setScreen("profile")}/></Suspense>}
+        {screen === "password-reset" && <PasswordResetScreen onDone={() => setScreen("home")}/>}
+        {screen === "admin-dashboard" && (
+          <AdminRoute onDenied={() => { clearParentsHash(); setScreen("home"); }}>
+            {({ profile: adminProfile, email: adminEmail }) => (
+              <AdminLayout profile={adminProfile} email={adminEmail} />
+            )}
+          </AdminRoute>
+        )}
         {screen === "question-review" && <Suspense fallback={<LazyFallback/>}><QuestionReviewScreen onBack={()=>setScreen("profile")}/></Suspense>}
         {screen === "parents" && <Suspense fallback={<LazyFallback/>}><ParentsPage
           onNavigate={(route) => { clearParentsHash(); setScreen("home"); /* "sample" also routes home for now — no public sample route yet */ }}
@@ -7052,7 +7143,7 @@ export default function App() {
         /></Suspense>}
       </div>
 
-      {typeof screen === "string" && !["quiz","results","weekly","parents","coaches","players","associations"].includes(screen) && (
+      {typeof screen === "string" && !["quiz","results","weekly","parents","coaches","players","associations","admin-dashboard","password-reset"].includes(screen) && (
         <BottomNav active={screen} onNav={(next) => {
           // In preview mode, tapping Home while already on home returns to
           // the public landing — otherwise the button appears inert and

@@ -12,7 +12,10 @@
     "smoke:training": "node scripts/smoke-training-log.mjs",
     "smoke:challenge": "node scripts/smoke-team-challenge.mjs",
     "demo-accounts": "node scripts/create-demo-accounts.mjs",
-    "demo-history": "node scripts/seed-demo-history.mjs"
+    "demo-history": "node scripts/seed-demo-history.mjs",
+    "admin:grant": "node scripts/grant-admin.mjs",
+    "admin:migrate-text": "node scripts/migrate-text-to-supabase.mjs",
+    "admin:migrate-pov": "node scripts/migrate-pov-to-supabase.mjs"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.103.0",

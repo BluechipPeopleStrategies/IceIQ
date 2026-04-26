@@ -79,6 +79,55 @@ export function onAuthChange(callback) {
   return supabase.auth.onAuthStateChange((_event, session) => callback(session));
 }
 
+// Fires when the user lands via a password-reset email link. The app uses
+// this to route them to the "set new password" screen — without it, the
+// reset link just logs the user in with their old password unchanged.
+//
+// Race-condition note: detectSessionInUrl=true causes Supabase to process
+// the recovery hash during createClient init, firing PASSWORD_RECOVERY
+// before any React component can subscribe. Past events don't replay on
+// subscribe, so a naive useEffect listener misses the event entirely.
+//
+// We work around this by subscribing at module init (below) and storing
+// the recovery flag + session. Callers via onPasswordRecovery() get fired
+// immediately if the event already happened, or on next firing otherwise.
+let _recoveryFired = false;
+let _recoverySession = null;
+const _recoveryListeners = new Set();
+
+if (supabase) {
+  supabase.auth.onAuthStateChange((event, session) => {
+    if (event === "PASSWORD_RECOVERY") {
+      _recoveryFired = true;
+      _recoverySession = session;
+      for (const fn of _recoveryListeners) {
+        try { fn(session); } catch (e) { warn("onPasswordRecovery callback", e); }
+      }
+    }
+  });
+}
+
+export function onPasswordRecovery(callback) {
+  if (!supabase) return { subscription: { unsubscribe: () => {} } };
+  if (_recoveryFired) {
+    // Event already fired before this subscriber registered. Fire async so
+    // callers' state updates happen on the next tick rather than during render.
+    Promise.resolve().then(() => callback(_recoverySession));
+  }
+  _recoveryListeners.add(callback);
+  return {
+    subscription: {
+      unsubscribe: () => { _recoveryListeners.delete(callback); },
+    },
+  };
+}
+
+export async function updatePassword(newPassword) {
+  if (!supabase) throw new Error("Supabase not configured");
+  const { error } = await supabase.auth.updateUser({ password: newPassword });
+  if (error) throw error;
+}
+
 // ─────────────────────────────────────────────
 // PROFILE
 // ─────────────────────────────────────────────
