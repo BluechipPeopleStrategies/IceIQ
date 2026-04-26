@@ -21,7 +21,9 @@ import { createClient } from "@supabase/supabase-js";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const ROOT = join(__dirname, "..");
-const DEFAULT_PATH = join(ROOT, "data", "pov-export.json");
+// Default matches the path that scripts/export-pov-from-notion.mjs writes to.
+// Override with --file=<path> for a one-off run against a different export.
+const DEFAULT_PATH = join(ROOT, "src/data/povQuestions.json");
 
 function loadEnv() {
   const env = {};
@@ -135,6 +137,10 @@ for (const img of payload.images) {
     continue;
   }
 
+  // Notion exporter writes `imageUrls` (array of file URLs) — pick the first.
+  // Fields like fullPrompt / generationTool aren't in the exporter output yet;
+  // they'll be null in Supabase and editable from the admin dashboard later.
+  const imageUrl = nullish(img.imageUrl) || (Array.isArray(img.imageUrls) ? img.imageUrls[0] : null);
   imageRows.push({
     id: img.id,
     archetype: img.archetype,
@@ -151,7 +157,7 @@ for (const img of payload.images) {
     negative_prompt: nullish(img.negativePrompt),
     generation_tool: nullish(img.generationTool),
     tool_settings: nullish(img.toolSettings),
-    image_url: nullish(img.imageUrl),
+    image_url: imageUrl,
     variants_generated: Number.isFinite(img.variantsGenerated) ? img.variantsGenerated : 0,
     read_clarity: img.readClarity || "Untested",
     status: img.status || "Draft",
@@ -163,22 +169,35 @@ for (const img of payload.images) {
     if (!q.questionText) { skippedQuestions.push({ reason: "no questionText", id: q.id }); continue; }
     if (!q.format) { skippedQuestions.push({ reason: "no format", id: q.id }); continue; }
 
-    // ageGroups: prefer per-question array; fall back to image-level array.
-    const ages = asArray(q.ageGroups).length ? asArray(q.ageGroups) : asArray(img.ageGroups);
+    // Notion exporter writes `ageGroup` (single string) per question; the
+    // brief schema expects `age_groups` (array). Accept either.
+    const ages = asArray(q.ageGroups).length
+      ? asArray(q.ageGroups)
+      : (q.ageGroup ? [q.ageGroup] : asArray(img.ageGroups));
 
     questionRows.push({
       id: q.id,
       type: "pov_image",
       linked_image_id: img.id,
       age_groups: ages,
-      format: q.format,
+      format: q.format || q.rawFormat || "Multiple Choice",
       difficulty: nullish(q.difficulty),
       question_text: q.questionText,
       options: Array.isArray(q.options) ? q.options : [],
       correct_answer: nullish(q.correctAnswer),
       explanation: nullish(q.explanation),
       concepts: asArray(q.concepts),
-      status: q.status || "Draft",
+      // Notion's status enum doesn't match Supabase's exactly. Map the closest
+      // ones so the migration produces valid rows; admin can adjust later.
+      // Defaults to 'Draft' — keeps RLS read-Live policy from showing them
+      // in the live app until the admin promotes them.
+      status: ({
+        "Approved":     "Approved",
+        "Live in App":  "Live",
+        "Needs Revision": "Flagged",
+        "Rejected":     "Killed",
+        "Draft":        "Draft",
+      })[q.status] || "Draft",
       is_auto_graded: q.isAutoGraded !== false,
       hotspot_coords: q.hotspotCoords || null,
       sequence_items: q.sequenceItems || null,
