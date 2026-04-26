@@ -5457,6 +5457,14 @@ function PasswordResetScreen({ onDone }) {
             <button onClick={submit} disabled={loading} style={{width:"100%",background:C.gold,color:C.bg,border:"none",borderRadius:12,padding:"1rem",cursor:loading?"default":"pointer",fontWeight:800,fontSize:16,fontFamily:FONT.body,letterSpacing:".02em",boxShadow:`0 4px 16px ${C.gold}33`}}>
               {loading ? "…" : "Update password →"}
             </button>
+            {err && (
+              <div style={{textAlign:"center",marginTop:".75rem"}}>
+                <button onClick={async () => { try { await SB.signOut(); } catch {} onDone?.(); }}
+                  style={{background:"none",border:"none",color:C.dimmer,cursor:"pointer",fontSize:12,fontFamily:FONT.body,padding:0,textDecoration:"underline"}}>
+                  ← Back to sign in
+                </button>
+              </div>
+            )}
           </>
         ) : (
           <div style={{fontSize:14,color:C.green,background:"rgba(34,197,94,.08)",border:`1px solid ${C.greenBorder}`,borderRadius:8,padding:".85rem 1rem",textAlign:"center"}}>

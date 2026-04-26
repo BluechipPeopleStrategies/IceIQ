@@ -124,8 +124,19 @@ export function onPasswordRecovery(callback) {
 
 export async function updatePassword(newPassword) {
   if (!supabase) throw new Error("Supabase not configured");
-  const { error } = await supabase.auth.updateUser({ password: newPassword });
-  if (error) throw error;
+  // 15s timeout so a hung request can't trap the UI in an infinite spinner.
+  // Recovery sessions are short-lived and can fail silently if expired.
+  const update = supabase.auth.updateUser({ password: newPassword });
+  const timeout = new Promise((_, reject) =>
+    setTimeout(() => reject(new Error("Request timed out — your reset link may have expired. Request a new one from the sign-in page.")), 15000)
+  );
+  const { error } = await Promise.race([update, timeout]);
+  if (error) {
+    if (/session/i.test(error.message)) {
+      throw new Error("Your reset link expired. Request a new one from the sign-in page.");
+    }
+    throw error;
+  }
 }
 
 // ─────────────────────────────────────────────
