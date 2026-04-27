@@ -325,7 +325,7 @@ function renderPreview(q) {
     ${bodyHtml}
     ${tip}
     <div class="actions">
-      <button type="button" onclick="window.open('${APP_BASE}/?ids=${encodeURIComponent(q.id)}', '_blank')">▶ Play in app</button>
+      <button type="button" onclick="window.open('${APP_BASE}/?ids=${encodeURIComponent(q.id)}&demo=player', '_blank')">▶ Play in app</button>
       <button type="button" class="secondary" onclick="copyJson('${escapeHtml(q.id)}')">Copy JSON</button>
     </div>
   `;

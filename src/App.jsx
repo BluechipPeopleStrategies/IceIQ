@@ -6810,6 +6810,18 @@ export default function App() {
     setScreen("home");
   }
 
+  // Auto-enter player preview when `?demo=player` is in the URL and there's
+  // no existing profile. Used by the standalone questions-dashboard.html so
+  // its "Play in app" links don't bounce unauthed users to the login screen.
+  // Idempotent — only fires once when there's no profile yet.
+  useEffect(() => {
+    if (profile) return;
+    let want = false;
+    try { want = new URLSearchParams(window.location.search).get("demo") === "player"; } catch {}
+    if (want) enterPlayerPreview();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [profile]);
+
   // Restore dev bypass on reload + expose window.__dev helpers.
   // Auto-entry requires `?devbypass=1` in the URL so a stale LS flag from a
   // past troubleshooting session never hijacks the landing page.
