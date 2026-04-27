@@ -213,6 +213,7 @@ function cleanQuestion(page) {
 
   return {
     id:             readProp(p["Question ID"]),
+    notionPageId:   page.id,
     ageGroup:       ageGroups[0] || null,
     ageGroups,
     format,

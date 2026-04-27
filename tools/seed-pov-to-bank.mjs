@@ -138,6 +138,9 @@ function buildRow(image, q) {
       archetype: image.archetype,
       cognitiveSkill: image.cognitiveSkill,
       concepts: q.concepts || [],
+      // Notion page id for the quiz UI's "✎ Edit in Notion" deep link.
+      // Stripped of dashes when forming the URL: notion.so/<id>.
+      _notionPageId: q.notionPageId || null,
     },
   };
 }
@@ -163,6 +166,12 @@ for (const image of src.images || []) {
     const existing = idIndex.get(q.id);
     if (existing) {
       const row = bank[existing.lvl][existing.i];
+      // Backfill _notionPageId on any matching row (every type, not just
+      // pov-mc) — the "✎ Edit in Notion" button needs it on hot-spots and
+      // any future format too. No-op if it already matches.
+      if (q.notionPageId && row._notionPageId !== q.notionPageId) {
+        row._notionPageId = q.notionPageId;
+      }
       // Only POV rows carry media; leave other types alone if an id collides.
       if (row.type === "pov-mc") {
         const prev = row.media?.url;
