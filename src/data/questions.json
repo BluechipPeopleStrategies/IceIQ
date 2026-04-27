@@ -13984,7 +13984,424 @@
       ],
       "tip": "Same six positions for the other team — face the goalie and L/R flips relative to the screen view.",
       "levels": ["U11 / Atom", "U13 / Peewee"]
-    }
+    },
+
+    { "id": "Q-entry-001-A", "cat": "Reading the Play", "concept": "Decision Quality", "pos": ["F","D"], "d": 2, "type": "pov-mc",
+      "imageId": "IMG-entry-001", "archetype": "OZ Entry",
+      "media": { "type": "image", "url": "/assets/images/3on2-zone-entry.png", "aspect": "16:9" },
+      "sit": "You're the middle blue forward carrying the puck across the offensive blue line on a 3-on-2. Your two wingers are wide. The two red defenders are gapped at the top of their circles. What's the best read?",
+      "opts": [
+        "Drive wide and force a defender to commit",
+        "Dump it in deep and forecheck",
+        "Shoot from the high blue line",
+        "Drop it back to a non-existent trailer"
+      ],
+      "ok": 0,
+      "tip": "Forcing a defender to follow you opens the slot for a pass or your own drive.",
+      "levels": ["U11 / Atom", "U13 / Peewee"] },
+
+    { "id": "Q-entry-001-B", "cat": "Reading the Play", "concept": "Pattern Recognition", "pos": ["F","D"], "d": 2, "type": "pov-mc",
+      "imageId": "IMG-entry-001", "archetype": "OZ Entry",
+      "media": { "type": "image", "url": "/assets/images/3on2-zone-entry.png", "aspect": "16:9" },
+      "sit": "Same 3-on-2 entry. Defenders are shrinking the gap fast and you're losing space. When does dumping the puck in actually make sense?",
+      "opts": [
+        "When the defenders close the gap and have you fully contained",
+        "Every entry — dump-and-chase is the default",
+        "When you have a clear shooting lane",
+        "When a teammate is alone in front of the net"
+      ],
+      "ok": 0,
+      "tip": "Dump it only when carrying it costs you possession. Otherwise carry or pass.",
+      "levels": ["U11 / Atom", "U13 / Peewee"] },
+
+    { "id": "Q-entry-001-C", "cat": "Reading the Play", "concept": "Lane Support", "pos": ["F","D"], "d": 1, "type": "pov-mc",
+      "imageId": "IMG-entry-001", "archetype": "OZ Entry",
+      "media": { "type": "image", "url": "/assets/images/3on2-zone-entry.png", "aspect": "16:9" },
+      "sit": "Your right winger is wide open at the boards. The far defender hasn't committed. What's the safer first option for the puck carrier?",
+      "opts": [
+        "Pass to the wide winger to pull a defender",
+        "Try to beat both defenders 1-on-2 down the middle",
+        "Fire a shot from the top of the circle",
+        "Skate behind the net to slow the play down"
+      ],
+      "ok": 0,
+      "tip": "When a defender hasn't committed, move the puck to the open side and make them.",
+      "levels": ["U11 / Atom", "U13 / Peewee"] },
+
+    { "id": "Q-entry-001-D", "cat": "Reading the Play", "concept": "Decision Quality", "pos": ["F","D"], "d": 2, "type": "pov-mc",
+      "imageId": "IMG-entry-001", "archetype": "OZ Entry",
+      "media": { "type": "image", "url": "/assets/images/3on2-zone-entry.png", "aspect": "16:9" },
+      "sit": "What's the worst thing the puck carrier can do on this 3-on-2?",
+      "opts": [
+        "Stop their feet at the blue line",
+        "Drive wide",
+        "Keep their head up and read the defenders",
+        "Communicate with their wingers"
+      ],
+      "ok": 0,
+      "tip": "Speed beats defenders. Stopping your feet kills the rush every time.",
+      "levels": ["U11 / Atom", "U13 / Peewee"] },
+
+    { "id": "Q-entry-001-E", "cat": "Reading the Play", "concept": "Read the Defender", "pos": ["F","D"], "d": 2, "type": "pov-mc",
+      "imageId": "IMG-entry-001", "archetype": "OZ Entry",
+      "media": { "type": "image", "url": "/assets/images/3on2-zone-entry.png", "aspect": "16:9" },
+      "sit": "Why does drive-wide work so well against gapped defenders?",
+      "opts": [
+        "It forces a defender to follow you, leaving the slot wide open",
+        "It's just the fastest way to the net",
+        "It eliminates the need to pass",
+        "It puts the puck deeper in the zone for free"
+      ],
+      "ok": 0,
+      "tip": "The trade in your favor: you give up the puck-carrier lane to open the slot for a teammate.",
+      "levels": ["U11 / Atom", "U13 / Peewee"] },
+
+    { "id": "Q-entry-001-F", "cat": "Reading the Play", "concept": "Cross-Ice Read", "pos": ["F","D"], "d": 3, "type": "pov-mc",
+      "imageId": "IMG-entry-001", "archetype": "OZ Entry",
+      "media": { "type": "image", "url": "/assets/images/3on2-zone-entry.png", "aspect": "16:9" },
+      "sit": "The left red defender steps up aggressively to challenge you. Where's the best pass?",
+      "opts": [
+        "The right winger on the far side — defender just vacated that lane",
+        "The left winger on the near side",
+        "Back to the goalie",
+        "A drop pass behind you"
+      ],
+      "ok": 0,
+      "tip": "When a defender commits early, the cross-ice pass to the weak side is the highest-percentage play.",
+      "levels": ["U11 / Atom", "U13 / Peewee"] },
+
+    { "id": "Q-entry-001-G", "cat": "Reading the Play", "concept": "Decision Quality", "pos": ["F","D"], "d": 2, "type": "hot-spots",
+      "imageId": "IMG-entry-001", "archetype": "OZ Entry",
+      "media": { "type": "image", "url": "/assets/images/3on2-zone-entry.png", "aspect": "16:9" },
+      "q": "Tap the open ice you should drive into.",
+      "spots": [
+        { "x": 0.50, "y": 0.45, "correct": true, "msg": "✓ The slot is open with both defenders gapped wide." },
+        { "x": 0.20, "y": 0.55, "correct": false, "msg": "Too far wide — that's into the boards, not open ice." },
+        { "x": 0.50, "y": 0.18, "correct": false, "msg": "That's the goalie's space — you'd be running into him." },
+        { "x": 0.85, "y": 0.55, "correct": false, "msg": "Too far wide on the off side — you'd be a passenger." }
+      ],
+      "tip": "On a 3-on-2 with gapped defenders, the slot is the prize.",
+      "levels": ["U11 / Atom", "U13 / Peewee"] },
+
+    { "id": "Q-entry-001-H", "cat": "Reading the Play", "concept": "Read the Defender", "pos": ["F","D"], "d": 2, "type": "hot-spots",
+      "imageId": "IMG-entry-001", "archetype": "OZ Entry",
+      "media": { "type": "image", "url": "/assets/images/3on2-zone-entry.png", "aspect": "16:9" },
+      "q": "Tap the defender most likely to step up on you first.",
+      "spots": [
+        { "x": 0.36, "y": 0.36, "correct": true, "msg": "✓ The strong-side defender is the closer pressure point." },
+        { "x": 0.62, "y": 0.36, "correct": false, "msg": "The off-side defender will hold to cover the cross-ice option." },
+        { "x": 0.50, "y": 0.18, "correct": false, "msg": "That's the goalie — they don't step up." }
+      ],
+      "tip": "The defender on your side will challenge first; the far one stays home to cover the pass.",
+      "levels": ["U11 / Atom", "U13 / Peewee"] },
+
+    { "id": "Q-entry-001-I", "cat": "Reading the Play", "concept": "Cross-Ice Read", "pos": ["F","D"], "d": 1, "type": "hot-spots",
+      "imageId": "IMG-entry-001", "archetype": "OZ Entry",
+      "media": { "type": "image", "url": "/assets/images/3on2-zone-entry.png", "aspect": "16:9" },
+      "q": "Tap your best passing option if you commit to driving wide left.",
+      "spots": [
+        { "x": 0.85, "y": 0.65, "correct": true, "msg": "✓ Right winger on the off side — the cross-ice pass into open ice." },
+        { "x": 0.15, "y": 0.65, "correct": false, "msg": "That's behind you — same side you're already attacking." },
+        { "x": 0.50, "y": 0.18, "correct": false, "msg": "That's the goalie — not a teammate." }
+      ],
+      "tip": "Driving one side opens the cross-ice lane — that's where the goalie can't slide in time.",
+      "levels": ["U11 / Atom", "U13 / Peewee"] },
+
+    { "id": "Q-entry-001-J", "cat": "Reading the Play", "concept": "Read the Defender", "pos": ["F","D","G"], "d": 2, "type": "pov-mc",
+      "imageId": "IMG-entry-001", "archetype": "OZ Entry",
+      "media": { "type": "image", "url": "/assets/images/3on2-zone-entry.png", "aspect": "16:9" },
+      "sit": "Why does the goalie's depth matter on the entry?",
+      "opts": [
+        "A deep goalie tells you to drive wide; a high goalie tells you to shoot quick",
+        "It doesn't — the goalie is irrelevant on entries",
+        "You should always shoot at the goalie's chest",
+        "You should always pass — never shoot"
+      ],
+      "ok": 0,
+      "tip": "Read the goalie like you read the defenders — depth tells you whether to drive or shoot.",
+      "levels": ["U11 / Atom", "U13 / Peewee"] },
+
+    { "id": "Q-breakout-001-A", "cat": "Reading the Play", "concept": "Decision Quality", "pos": ["F","D"], "d": 1, "type": "pov-mc",
+      "imageId": "IMG-breakout-001", "archetype": "DZ Breakout",
+      "media": { "type": "image", "url": "/assets/images/dz-breakout-setup.png", "aspect": "4:3" },
+      "sit": "You just retrieved the puck on the right boards in your defensive zone. The forecheck is on you. What's the first read?",
+      "opts": [
+        "Look up the boards for your near-side winger",
+        "Curl back behind the net",
+        "Skate up the middle through traffic",
+        "Dump it off the glass for a change"
+      ],
+      "ok": 0,
+      "tip": "Wall pass to your near-side winger is the shortest, safest first option.",
+      "levels": ["U11 / Atom", "U13 / Peewee"] },
+
+    { "id": "Q-breakout-001-B", "cat": "Reading the Play", "concept": "Lane Support", "pos": ["F","D"], "d": 1, "type": "pov-mc",
+      "imageId": "IMG-breakout-001", "archetype": "DZ Breakout",
+      "media": { "type": "image", "url": "/assets/images/dz-breakout-setup.png", "aspect": "4:3" },
+      "sit": "Why is the wall pass to the same-side winger usually the safest first option on a breakout?",
+      "opts": [
+        "It's the shortest pass and the boards block most defender interference",
+        "It's the longest possible pass for the most distance",
+        "It always leads to a goal",
+        "It's the only option allowed"
+      ],
+      "ok": 0,
+      "tip": "Short passes win breakouts. Long ones get picked off in the neutral zone.",
+      "levels": ["U11 / Atom", "U13 / Peewee"] },
+
+    { "id": "Q-breakout-001-C", "cat": "Reading the Play", "concept": "Cross-Ice Read", "pos": ["F","D"], "d": 2, "type": "pov-mc",
+      "imageId": "IMG-breakout-001", "archetype": "DZ Breakout",
+      "media": { "type": "image", "url": "/assets/images/dz-breakout-setup.png", "aspect": "4:3" },
+      "sit": "The near-side wall pass is jammed up — your winger is checked. What's the next-best option?",
+      "opts": [
+        "D-to-D pass across the back",
+        "Throw a blind pass up the middle",
+        "Skate it through center yourself",
+        "Pass it to the goalie and quit on the play"
+      ],
+      "ok": 0,
+      "tip": "When near-side is taken, switch the puck across to your D partner and reset.",
+      "levels": ["U11 / Atom", "U13 / Peewee"] },
+
+    { "id": "Q-breakout-001-D", "cat": "Reading the Play", "concept": "Triangle Support", "pos": ["F","D"], "d": 2, "type": "pov-mc",
+      "imageId": "IMG-breakout-001", "archetype": "DZ Breakout",
+      "media": { "type": "image", "url": "/assets/images/dz-breakout-setup.png", "aspect": "4:3" },
+      "sit": "Where should the off-side defenseman be during a near-side breakout?",
+      "opts": [
+        "High in the middle of the defensive zone as a safety valve",
+        "Pinching deep in the offensive zone",
+        "Down in the corner with the puck carrier",
+        "Behind the goalie"
+      ],
+      "ok": 0,
+      "tip": "Your D partner is your insurance — high middle gives them a clear line of vision and a quick pass option.",
+      "levels": ["U11 / Atom", "U13 / Peewee"] },
+
+    { "id": "Q-breakout-001-E", "cat": "Reading the Play", "concept": "Decision Quality", "pos": ["F","D"], "d": 2, "type": "pov-mc",
+      "imageId": "IMG-breakout-001", "archetype": "DZ Breakout",
+      "media": { "type": "image", "url": "/assets/images/dz-breakout-setup.png", "aspect": "4:3" },
+      "sit": "What's the most common reason youth-hockey breakouts fall apart?",
+      "opts": [
+        "Off-puck players don't move to give the carrier a passing option",
+        "The goalie doesn't help",
+        "Too many players skate too fast",
+        "The boards get in the way"
+      ],
+      "ok": 0,
+      "tip": "Breakouts live or die on support. The carrier needs at least two outlets at all times.",
+      "levels": ["U11 / Atom", "U13 / Peewee"] },
+
+    { "id": "Q-breakout-001-F", "cat": "Reading the Play", "concept": "Pattern Recognition", "pos": ["F","D"], "d": 3, "type": "pov-mc",
+      "imageId": "IMG-breakout-001", "archetype": "DZ Breakout",
+      "media": { "type": "image", "url": "/assets/images/dz-breakout-setup.png", "aspect": "4:3" },
+      "sit": "Which forecheck makes a breakout hardest?",
+      "opts": [
+        "2-1-2 with two forecheckers pressuring deep at once",
+        "1-2-2 with one deep forechecker",
+        "A neutral-zone trap",
+        "No forecheck at all"
+      ],
+      "ok": 0,
+      "tip": "Two deep forecheckers double-team the carrier and force errors. Recognize it early and rim the puck around.",
+      "levels": ["U11 / Atom", "U13 / Peewee"] },
+
+    { "id": "Q-breakout-001-G", "cat": "Reading the Play", "concept": "Stretch Pass", "pos": ["F","D"], "d": 3, "type": "pov-mc",
+      "imageId": "IMG-breakout-001", "archetype": "DZ Breakout",
+      "media": { "type": "image", "url": "/assets/images/dz-breakout-setup.png", "aspect": "4:3" },
+      "sit": "What does a stretch pass to your high forward give you?",
+      "opts": [
+        "A direct outlet that beats every forechecker in one pass",
+        "Almost always a turnover — too risky to ever try",
+        "A guaranteed icing call",
+        "The same thing as a wall pass"
+      ],
+      "ok": 0,
+      "tip": "Stretch passes are high-risk, high-reward — call them when you see all three forecheckers below the puck.",
+      "levels": ["U11 / Atom", "U13 / Peewee"] },
+
+    { "id": "Q-breakout-001-H", "cat": "Reading the Play", "concept": "Lane Support", "pos": ["F","D"], "d": 1, "type": "hot-spots",
+      "imageId": "IMG-breakout-001", "archetype": "DZ Breakout",
+      "media": { "type": "image", "url": "/assets/images/dz-breakout-setup.png", "aspect": "4:3" },
+      "q": "Tap your best first pass option from the right boards.",
+      "spots": [
+        { "x": 0.55, "y": 0.55, "correct": true, "msg": "✓ Near-side winger — short, low-risk pass up the wall." },
+        { "x": 0.30, "y": 0.85, "correct": false, "msg": "That's behind the net — not a forward pass." },
+        { "x": 0.05, "y": 0.40, "correct": false, "msg": "Far boards — too long and across the grain of the play." }
+      ],
+      "tip": "Up the boards to your near winger is breakout 101.",
+      "levels": ["U11 / Atom", "U13 / Peewee"] },
+
+    { "id": "Q-breakout-001-I", "cat": "Reading the Play", "concept": "Pattern Recognition", "pos": ["F","D"], "d": 2, "type": "hot-spots",
+      "imageId": "IMG-breakout-001", "archetype": "DZ Breakout",
+      "media": { "type": "image", "url": "/assets/images/dz-breakout-setup.png", "aspect": "4:3" },
+      "q": "Tap the forechecker that's the biggest immediate threat.",
+      "spots": [
+        { "x": 0.55, "y": 0.55, "correct": true, "msg": "✓ The closer forechecker is closing the wall pass — your first read." },
+        { "x": 0.30, "y": 0.30, "correct": false, "msg": "The high forechecker matters second — they take away the stretch." },
+        { "x": 0.30, "y": 0.85, "correct": false, "msg": "The goalie isn't a threat to your breakout — they're support." }
+      ],
+      "tip": "Closer forechecker = first decision. Read them before the puck even arrives on your stick.",
+      "levels": ["U11 / Atom", "U13 / Peewee"] },
+
+    { "id": "Q-breakout-001-J", "cat": "Reading the Play", "concept": "Triangle Support", "pos": ["F","D"], "d": 2, "type": "hot-spots",
+      "imageId": "IMG-breakout-001", "archetype": "DZ Breakout",
+      "media": { "type": "image", "url": "/assets/images/dz-breakout-setup.png", "aspect": "4:3" },
+      "q": "Tap where the off-side defenseman should be positioned.",
+      "spots": [
+        { "x": 0.30, "y": 0.55, "correct": true, "msg": "✓ High slot / middle — safety valve and outlet." },
+        { "x": 0.30, "y": 0.85, "correct": false, "msg": "Too low — they'd be on top of the goalie." },
+        { "x": 0.85, "y": 0.45, "correct": false, "msg": "Too far over — they're not an outlet from there." }
+      ],
+      "tip": "High middle gives the carrier a 'panic button' outlet and supports the strong-side play.",
+      "levels": ["U11 / Atom", "U13 / Peewee"] },
+
+    { "id": "Q-breakout-001-K", "cat": "Reading the Play", "concept": "Decision Quality", "pos": ["F","D","G"], "d": 1, "type": "hot-spots",
+      "imageId": "IMG-breakout-001", "archetype": "DZ Breakout",
+      "media": { "type": "image", "url": "/assets/images/dz-breakout-setup.png", "aspect": "4:3" },
+      "q": "Tap your safety-valve target if every option breaks down.",
+      "spots": [
+        { "x": 0.35, "y": 0.85, "correct": true, "msg": "✓ Rim it around to the goalie or off the boards behind the net — reset." },
+        { "x": 0.50, "y": 0.50, "correct": false, "msg": "Center ice in your own zone is the one place you NEVER turn it over." },
+        { "x": 0.55, "y": 0.55, "correct": false, "msg": "Forcing a play into the forechecker is exactly what you're trying to avoid." }
+      ],
+      "tip": "When in doubt, rim it around to the goalie's stick and start over.",
+      "levels": ["U11 / Atom", "U13 / Peewee"] },
+
+    { "id": "Q-dz-001-A", "cat": "Spatial Awareness", "concept": "Stick on Puck", "pos": ["D","F"], "d": 1, "type": "pov-mc",
+      "imageId": "IMG-dz-001", "archetype": "DZ Coverage",
+      "media": { "type": "image", "url": "/assets/images/front-of-net-coverage.png", "aspect": "16:9" },
+      "sit": "You're a defender in your own zone, the opposition is cycling near your net. Where should your eyes be most of the time?",
+      "opts": [
+        "On the opposing player without the puck — they're trying to get open",
+        "Always on the puck",
+        "On the goalie",
+        "On the bench for a change"
+      ],
+      "ok": 0,
+      "tip": "The puck doesn't score goals — the unattended attacker scores goals.",
+      "levels": ["U11 / Atom", "U13 / Peewee"] },
+
+    { "id": "Q-dz-001-B", "cat": "Spatial Awareness", "concept": "Stick Position", "pos": ["D","F"], "d": 1, "type": "pov-mc",
+      "imageId": "IMG-dz-001", "archetype": "DZ Coverage",
+      "media": { "type": "image", "url": "/assets/images/front-of-net-coverage.png", "aspect": "16:9" },
+      "sit": "Where should your stick be when defending in front of the net?",
+      "opts": [
+        "On the ice between you and the puck — block the lane",
+        "Up high to block shots",
+        "Behind your back",
+        "It doesn't matter where the stick is"
+      ],
+      "ok": 0,
+      "tip": "Stick on ice and on the lane is the foundation of every defensive read.",
+      "levels": ["U11 / Atom", "U13 / Peewee"] },
+
+    { "id": "Q-dz-001-C", "cat": "Spatial Awareness", "concept": "Body Position", "pos": ["D","F"], "d": 2, "type": "pov-mc",
+      "imageId": "IMG-dz-001", "archetype": "DZ Coverage",
+      "media": { "type": "image", "url": "/assets/images/front-of-net-coverage.png", "aspect": "16:9" },
+      "sit": "Two attackers are net-front and you're defending alone in the slot. Who do you cover first?",
+      "opts": [
+        "Whichever attacker is closest to the goalie's slot — most dangerous spot",
+        "Whoever has the puck",
+        "Whoever is highest in the zone",
+        "Doesn't matter — pick one"
+      ],
+      "ok": 0,
+      "tip": "Closest to the net = most dangerous. Body on them, stick on the lane.",
+      "levels": ["U11 / Atom", "U13 / Peewee"] },
+
+    { "id": "Q-dz-001-D", "cat": "Spatial Awareness", "concept": "Body Position", "pos": ["D","F"], "d": 2, "type": "pov-mc",
+      "imageId": "IMG-dz-001", "archetype": "DZ Coverage",
+      "media": { "type": "image", "url": "/assets/images/front-of-net-coverage.png", "aspect": "16:9" },
+      "sit": "Why is body position more important than stick position in front of the net?",
+      "opts": [
+        "It physically prevents the attacker from establishing a screen or tip-in spot",
+        "It looks more aggressive to the ref",
+        "Stick position is never important",
+        "It isn't — stick is always more important"
+      ],
+      "ok": 0,
+      "tip": "Body wins position; stick takes the lane. Both matter, body first.",
+      "levels": ["U11 / Atom", "U13 / Peewee"] },
+
+    { "id": "Q-dz-001-E", "cat": "Spatial Awareness", "concept": "Read the Defender", "pos": ["D","F"], "d": 2, "type": "pov-mc",
+      "imageId": "IMG-dz-001", "archetype": "DZ Coverage",
+      "media": { "type": "image", "url": "/assets/images/front-of-net-coverage.png", "aspect": "16:9" },
+      "sit": "What's the biggest mistake net-front defenders make?",
+      "opts": [
+        "Watching the puck instead of their man",
+        "Crowding the goalie",
+        "Being too aggressive",
+        "Standing too tall"
+      ],
+      "ok": 0,
+      "tip": "Puck-watchers get scored on. Stay attached to your man.",
+      "levels": ["U11 / Atom", "U13 / Peewee"] },
+
+    { "id": "Q-dz-001-F", "cat": "Spatial Awareness", "concept": "Stick on Puck", "pos": ["D","F"], "d": 2, "type": "pov-mc",
+      "imageId": "IMG-dz-001", "archetype": "DZ Coverage",
+      "media": { "type": "image", "url": "/assets/images/front-of-net-coverage.png", "aspect": "16:9" },
+      "sit": "A shot from the point bounces off the goalie into the slot. What's your first responsibility?",
+      "opts": [
+        "Tie up your man's stick so they can't pounce on the rebound",
+        "Skate to the puck yourself",
+        "Yell at the goalie",
+        "Look at the bench"
+      ],
+      "ok": 0,
+      "tip": "Tie up sticks first, then look for the puck. Most rebounds are scored by uncovered men.",
+      "levels": ["U11 / Atom", "U13 / Peewee"] },
+
+    { "id": "Q-dz-001-G", "cat": "Spatial Awareness", "concept": "Decision Quality", "pos": ["D","F"], "d": 3, "type": "pov-mc",
+      "imageId": "IMG-dz-001", "archetype": "DZ Coverage",
+      "media": { "type": "image", "url": "/assets/images/front-of-net-coverage.png", "aspect": "16:9" },
+      "sit": "When should you leave your check to help a teammate?",
+      "opts": [
+        "Almost never — your assignment is your responsibility",
+        "Whenever the puck moves",
+        "When you're tired",
+        "Always — help over coverage"
+      ],
+      "ok": 0,
+      "tip": "Coverage is built on trust. Leaving your man without communicating creates the open scorer.",
+      "levels": ["U11 / Atom", "U13 / Peewee"] },
+
+    { "id": "Q-dz-001-H", "cat": "Spatial Awareness", "concept": "Stick Position", "pos": ["D","F"], "d": 1, "type": "hot-spots",
+      "imageId": "IMG-dz-001", "archetype": "DZ Coverage",
+      "media": { "type": "image", "url": "/assets/images/front-of-net-coverage.png", "aspect": "16:9" },
+      "q": "Tap where a defender's stick should be in this DZ-coverage situation.",
+      "spots": [
+        { "x": 0.50, "y": 0.55, "correct": true, "msg": "✓ Stick on the ice, in the passing lane between you and the puck." },
+        { "x": 0.50, "y": 0.20, "correct": false, "msg": "High in the air — can't intercept passes or block shots from there." },
+        { "x": 0.20, "y": 0.85, "correct": false, "msg": "Behind your own body — useless for taking lanes." }
+      ],
+      "tip": "Stick on ice, on the lane. Always.",
+      "levels": ["U11 / Atom", "U13 / Peewee"] },
+
+    { "id": "Q-dz-001-I", "cat": "Spatial Awareness", "concept": "Body Position", "pos": ["D","F"], "d": 2, "type": "hot-spots",
+      "imageId": "IMG-dz-001", "archetype": "DZ Coverage",
+      "media": { "type": "image", "url": "/assets/images/front-of-net-coverage.png", "aspect": "16:9" },
+      "q": "Tap the spot where a defender most needs to win body position.",
+      "spots": [
+        { "x": 0.50, "y": 0.35, "correct": true, "msg": "✓ High crease / front of net — tip-in and screen real estate." },
+        { "x": 0.50, "y": 0.85, "correct": false, "msg": "Behind the net is secondary — net-front matters more." },
+        { "x": 0.10, "y": 0.50, "correct": false, "msg": "Boards aren't where shots get tipped in from." }
+      ],
+      "tip": "The high crease is where 80% of NHL goals are scored from. Win that body battle first.",
+      "levels": ["U11 / Atom", "U13 / Peewee"] },
+
+    { "id": "Q-dz-001-J", "cat": "Spatial Awareness", "concept": "Decision Quality", "pos": ["D","F"], "d": 2, "type": "pov-mc",
+      "imageId": "IMG-dz-001", "archetype": "DZ Coverage",
+      "media": { "type": "image", "url": "/assets/images/front-of-net-coverage.png", "aspect": "16:9" },
+      "sit": "You tied up the attacker's stick, the goalie has the puck and the whistle is about to blow. What's the next thing the defender should do?",
+      "opts": [
+        "Look up and start scanning for the safest breakout pass",
+        "Skate to center ice",
+        "Crash the net",
+        "Yell at the ref"
+      ],
+      "ok": 0,
+      "tip": "Defense → offense transitions are won by the defender who's already thinking ahead during the freeze.",
+      "levels": ["U11 / Atom", "U13 / Peewee"] }
   ],
   "U13 / Peewee": [
     {

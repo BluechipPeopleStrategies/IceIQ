@@ -30,6 +30,7 @@ export function loadQB() {
     sessionStorage.removeItem("rinkreads_qb_cache_v8");
     sessionStorage.removeItem("rinkreads_qb_cache_v9");
     sessionStorage.removeItem("rinkreads_qb_cache_v10");
+    sessionStorage.removeItem("rinkreads_qb_cache_v11");
     const stored = sessionStorage.getItem("rinkreads_qb_cache_v11");
     if (stored) {
       cached = JSON.parse(stored);
