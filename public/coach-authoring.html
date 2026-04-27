@@ -3,11 +3,12 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>RinkReads Coach — Question Authoring</title>
+<title>RinkReads Coach — Question Authoring v2</title>
 <style>
   :root {
     --bg: #0f1116; --card: #1a1d24; --border: #2a2f3a;
     --gold: #f4c430; --blue: #5BA4E8; --green: #22c55e; --red: #ef4444;
+    --amber: #eab308;
     --dim: #aaa; --dimmer: #777; --white: #fff;
   }
   * { box-sizing: border-box; }
@@ -16,6 +17,7 @@
          max-width: 1200px; margin: 0 auto; }
   h1 { font-size: 1.3rem; margin: 0 0 .35rem; color: var(--gold); }
   h2 { font-size: 1rem; margin: 0 0 .5rem; color: var(--white); border-top: 1px solid var(--border); padding-top: 1rem; }
+  h2.first { border-top: none; padding-top: 0; }
   p.lead { font-size: .85rem; color: var(--dim); margin: 0 0 1.5rem; }
   label { display: block; font-size: 11px; color: var(--dim); margin-bottom: .25rem;
           letter-spacing: .06em; text-transform: uppercase; font-weight: 700; }
@@ -30,6 +32,7 @@
            border-radius: 6px; cursor: pointer; font-family: inherit; }
   button.secondary { background: transparent; color: var(--dim); border: 1px solid var(--border); }
   button.danger { background: transparent; color: var(--red); border: 1px solid var(--red); }
+  button.subtle { background: rgba(91,164,232,0.10); color: var(--blue); border: 1px solid rgba(91,164,232,0.40); }
   .row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: .9rem; }
   .row.three { grid-template-columns: 1fr 1fr 1fr; }
   .row.full { grid-template-columns: 1fr; }
@@ -47,16 +50,23 @@
          font-size: 13px; font-weight: 800; pointer-events: none;
          box-shadow: 0 1px 3px rgba(0,0,0,0.5); }
   .dot.last { background: rgba(244,196,48,0.45); border-color: var(--gold); color: var(--bg); }
+  .dot.correct { background: rgba(34,197,94,0.40); border-color: var(--green); color: var(--white); }
 
   .hotspots { display: flex; flex-direction: column; gap: .6rem; margin-top: .75rem; }
-  .hotspot { display: grid; grid-template-columns: 30px 1fr auto; gap: .5rem; align-items: center;
+  .hotspot { display: grid; grid-template-columns: 30px 1fr auto; gap: .5rem; align-items: start;
              padding: .5rem; background: var(--card); border: 1px solid var(--border);
              border-radius: 6px; }
   .hotspot .num { width: 26px; height: 26px; border-radius: 50%; background: var(--blue);
                   color: var(--white); display: flex; align-items: center; justify-content: center;
-                  font-size: 12px; font-weight: 800; }
-  .hotspot .info { font-size: 11px; color: var(--dim); }
-  .hotspot select { width: 100%; }
+                  font-size: 12px; font-weight: 800; margin-top: .15rem; }
+  .hotspot .info { font-size: 11px; color: var(--dim); margin-bottom: .25rem; }
+  .hotspot select, .hotspot input[type="text"] { width: 100%; }
+  .hotspot .row-inline { display: flex; gap: .5rem; align-items: center; margin-top: .35rem; }
+  .hotspot .row-inline label { display: flex; gap: .35rem; align-items: center;
+                                font-size: 11px; text-transform: none; letter-spacing: 0;
+                                color: var(--white); margin: 0; cursor: pointer; }
+  .hotspot .row-inline input[type="checkbox"] { width: auto; margin: 0; }
+
   .options-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
                   gap: .4rem; padding: .5rem; background: rgba(255,255,255,0.03);
                   border-radius: 6px; margin-top: .35rem; }
@@ -65,40 +75,81 @@
                         display: flex; align-items: center; gap: .35rem; margin: 0; }
   .options-grid input[type="checkbox"] { width: auto; margin: 0; }
 
+  /* MC option editor */
+  .mc-opts { display: flex; flex-direction: column; gap: .5rem; margin-top: .5rem; }
+  .mc-opt { display: grid; grid-template-columns: auto 1fr auto; gap: .5rem; align-items: center;
+            padding: .5rem; background: var(--card); border: 1px solid var(--border);
+            border-radius: 6px; }
+  .mc-opt input[type="radio"] { width: auto; margin: 0; }
+  .mc-opt .letter { font-size: 12px; font-weight: 800; color: var(--gold);
+                    width: 18px; text-align: center; }
+  .mc-opt input[type="text"] { width: 100%; }
+
   .output { width: 100%; min-height: 280px; }
   .panel { background: var(--card); border: 1px solid var(--border); border-radius: 10px;
            padding: 1rem; margin-bottom: 1rem; }
   .actions { display: flex; gap: .5rem; flex-wrap: wrap; margin: .5rem 0 1rem; }
   .help { font-size: 11px; color: var(--dimmer); margin-top: .35rem; }
+  .help.warn { color: var(--amber); }
   .pill { display: inline-block; padding: 2px 8px; border-radius: 999px;
           background: rgba(91,164,232,0.18); color: var(--blue);
           font-size: 10px; font-weight: 800; letter-spacing: .04em; text-transform: uppercase; }
-  .preview-link { font-size: 11px; color: var(--blue); text-decoration: none; }
-  .preview-link:hover { text-decoration: underline; }
+
+  /* Question tabs */
+  .qtabs { display: flex; gap: .35rem; flex-wrap: wrap; margin-bottom: .6rem; }
+  .qtab { padding: .4rem .65rem; font-size: 12px; font-weight: 700;
+          background: var(--card); border: 1px solid var(--border); color: var(--dim);
+          border-radius: 6px; cursor: pointer; display: flex; gap: .5rem; align-items: center; }
+  .qtab.active { border-color: var(--gold); color: var(--white); background: rgba(244,196,48,0.10); }
+  .qtab .x { color: var(--dimmer); font-weight: 600; padding: 0 4px; border-radius: 3px; }
+  .qtab .x:hover { background: rgba(239,68,68,0.18); color: var(--red); }
+  .qtab .badge { font-size: 10px; padding: 1px 5px; background: rgba(255,255,255,0.05);
+                 border-radius: 3px; color: var(--dim); letter-spacing: .04em; }
+  .qtab .badge.warn { background: rgba(234,179,8,0.18); color: var(--amber); }
+
+  /* Validation banner */
+  .validation { padding: .65rem .85rem; border-radius: 8px; margin-bottom: .75rem;
+                font-size: 12px; line-height: 1.5; }
+  .validation.ok { background: rgba(34,197,94,0.10); border: 1px solid rgba(34,197,94,0.35); color: var(--green); }
+  .validation.warn { background: rgba(234,179,8,0.12); border: 1px solid rgba(234,179,8,0.40); color: var(--amber); }
+  .validation ul { margin: .25rem 0 0; padding-left: 1.25rem; }
+  .validation li { margin: .15rem 0; }
+
+  /* Image picker notice */
+  .image-notice { padding: .55rem .75rem; border-radius: 6px; margin-top: .5rem;
+                  background: rgba(234,179,8,0.10); border: 1px solid rgba(234,179,8,0.35);
+                  color: var(--amber); font-size: 11px; line-height: 1.5; }
+  .image-notice code { background: rgba(0,0,0,0.4); padding: 1px 5px; border-radius: 3px; color: var(--white); }
+  .file-row { display: flex; gap: .5rem; align-items: center; }
+  .file-row input[type="file"] { display: none; }
+  .file-row .file-btn { background: var(--card); color: var(--white); border: 1px solid var(--border); }
+
+  details summary { font-size: 11px; color: var(--blue); cursor: pointer; }
 </style>
 </head>
 <body>
 
-<h1>🏒 RinkReads Coach — Question Authoring</h1>
-<p class="lead">Build a new rink-question without touching JSON. Click hotspots on the image,
-   pick the correct answer per spot, copy the JSON output into <code>src/data/questions.json</code>.
-   Auto-saves to your browser as you go.</p>
+<h1>🏒 RinkReads Coach — Question Authoring v2</h1>
+<p class="lead">Build photo-backed scenario questions without touching JSON. Pick an image, click hotspots,
+   build multiple questions off the same image, copy the JSON output into <code>src/data/questions.json</code>.
+   Auto-saves to your browser as you go. Double-click the title to reset.</p>
 
 <div class="layout">
 
-<!-- LEFT: Image + hotspots -->
+<!-- ── LEFT: image + hotspots/preview -->
 <div>
+  <!-- IMAGE -->
   <div class="panel">
-    <h2 style="border-top: none; padding-top: 0;">1 — Image</h2>
+    <h2 class="first">1 — Image</h2>
     <div class="row">
       <div>
-        <label>Image (filename in /public/assets/images/)</label>
-        <input type="text" id="imgPath" placeholder="players-positions.png" />
-        <div class="help">Or paste a full URL. Hit Tab to load.</div>
+        <label>Image filename (in /public/assets/images/)</label>
+        <input type="text" id="imgPath" placeholder="3on3-offensive-zone.png" />
+        <div class="help">Used in the exported JSON. Either a bare filename (resolves to <code>/assets/images/&lt;name&gt;</code>) or a full URL/path.</div>
       </div>
       <div>
         <label>Aspect ratio</label>
-        <select id="aspect">
+        <select id="aspect" title="Image aspect ratio for the question media frame">
           <option value="16:9">16:9</option>
           <option value="4:3">4:3</option>
           <option value="3:2">3:2</option>
@@ -107,68 +158,104 @@
         </select>
       </div>
     </div>
+    <div class="file-row">
+      <button type="button" class="file-btn" id="filePickBtn">Choose local file…</button>
+      <input type="file" id="filePicker" accept="image/*" title="Pick a local image file for preview" aria-label="Pick a local image file for preview" />
+      <span class="help" id="filePickInfo" style="margin: 0;">No local file selected. Type a filename above or pick a file for preview.</span>
+    </div>
+    <div class="image-notice" id="imageNotice" hidden></div>
   </div>
 
+  <!-- STAGE -->
   <div class="panel">
-    <h2 style="border-top: none; padding-top: 0;">2 — Click hotspots</h2>
-    <p class="help">Click anywhere on the image to add a hotspot. Each spot becomes a question target.</p>
+    <h2 class="first">2 — Click hotspots <span id="stageHelp" class="pill" style="margin-left:.5rem;">spots</span></h2>
+    <p class="help" id="stageHelpText">Click anywhere on the image to add a hotspot.</p>
     <div class="stage" id="stage">
       <img id="img" alt="Diagram"
            onerror="this.replaceWith(Object.assign(document.createElement('div'),{innerText:'Image not found at this path — check the filename.', style:'padding:2rem; color:#ef4444; font-size:14px; text-align:center;'}))" />
     </div>
     <div class="actions">
-      <button type="button" class="secondary" id="undoBtn">Undo last</button>
+      <button type="button" class="secondary" id="undoBtn">Undo last spot</button>
       <button type="button" class="danger" id="clearBtn">Clear all spots</button>
     </div>
   </div>
 
+  <!-- PER-QTYPE EDITOR -->
   <div class="panel">
-    <h2 style="border-top: none; padding-top: 0;">3 — Hotspots</h2>
-    <p class="help" id="hotspotHelp">Pick the correct answer for each numbered spot.</p>
-    <div class="hotspots" id="hotspotList"></div>
+    <h2 class="first">3 — Answer config <span id="editorBadge" class="pill" style="margin-left:.5rem;"></span></h2>
+    <div id="editorRoot"></div>
   </div>
 </div>
 
-<!-- RIGHT: Question metadata + JSON output -->
+<!-- ── RIGHT: question metadata + multi-question tabs + JSON -->
 <div>
+  <!-- TABS -->
   <div class="panel">
-    <h2 style="border-top: none; padding-top: 0;">Question type</h2>
-    <select id="qtype">
-      <option value="rink-label">Label the Rink (chip-tap, single or multi spot)</option>
-      <option value="rink-drag">Drag &amp; Drop (drag chips to players, reusable)</option>
-      <option value="rink-match">Match the Labels (pair labels to spots, single-use)</option>
+    <h2 class="first">Questions in this session</h2>
+    <div class="qtabs" id="qtabs"></div>
+    <div class="actions">
+      <button type="button" class="subtle" id="addQuestionBtn">+ Add another question</button>
+      <button type="button" class="secondary" id="dupQuestionBtn">Duplicate active</button>
+    </div>
+    <p class="help">Author multiple questions off the same image — they'll export as a JSON array you can paste in one go.</p>
+  </div>
+
+  <!-- QTYPE -->
+  <div class="panel">
+    <h2 class="first">Question type</h2>
+    <select id="qtype" title="Question type">
+      <optgroup label="Photo scenarios">
+        <option value="pov-mc">POV-MC — image + multiple choice</option>
+        <option value="hot-spots">Hot-spots — tap the right spot(s)</option>
+        <option value="path-draw" disabled>Path-draw — drag a line (coming soon)</option>
+      </optgroup>
+      <optgroup label="Diagrams (existing)">
+        <option value="rink-label">rink-label — chip-tap identification</option>
+        <option value="rink-drag">rink-drag — drag chips onto players</option>
+        <option value="rink-match">rink-match — pair labels to spots</option>
+      </optgroup>
     </select>
     <div class="help" id="qtypeHelp"></div>
   </div>
 
+  <!-- METADATA -->
   <div class="panel">
-    <h2 style="border-top: none; padding-top: 0;">Question metadata</h2>
+    <h2 class="first">Question metadata</h2>
     <div class="row full">
       <div>
         <label>id (snake_case, unique)</label>
-        <input type="text" id="qid" placeholder="u11_rink_label_blue_line_v2" />
+        <div class="file-row">
+          <input type="text" id="qid" placeholder="u11_pov_mc_3on3_v1" style="flex: 1;" />
+          <button type="button" class="subtle" id="suggestIdBtn" title="Auto-suggest from level + qtype + filename">↻</button>
+        </div>
+      </div>
+    </div>
+    <div class="row full" id="sitRow" hidden>
+      <div>
+        <label>Situation (sit) — text shown above the question prompt</label>
+        <textarea id="qsit" rows="2" placeholder="You're White #8 with the puck in the offensive zone. The defender (#2) is closing on you."></textarea>
       </div>
     </div>
     <div class="row full">
       <div>
         <label>Question prompt (q)</label>
-        <input type="text" id="qq" placeholder="What is the highlighted feature?" />
+        <input type="text" id="qq" placeholder="What's the best play?" />
       </div>
     </div>
     <div class="row full">
       <div>
         <label>Tip (shown after answering)</label>
-        <input type="text" id="qtip" placeholder="Blue lines split the rink into zones." />
+        <input type="text" id="qtip" placeholder="The open winger is the safer outlet — defender's stick is on the high side." />
       </div>
     </div>
     <div class="row three">
       <div>
         <label>Category</label>
-        <input type="text" id="qcat" placeholder="Rink Anatomy" value="Rink Anatomy" />
+        <input type="text" id="qcat" placeholder="Offensive Zone" value="Rink Anatomy" />
       </div>
       <div>
-        <label>Difficulty (1-3)</label>
-        <select id="qd">
+        <label>Difficulty</label>
+        <select id="qd" title="Difficulty level">
           <option value="1">1 — Easy</option>
           <option value="2" selected>2 — Medium</option>
           <option value="3">3 — Hard</option>
@@ -176,7 +263,7 @@
       </div>
       <div>
         <label>Positions</label>
-        <select id="qpos">
+        <select id="qpos" title="Position filter">
           <option value="F,D,G">All (F, D, G)</option>
           <option value="F">Forwards only</option>
           <option value="D">Defense only</option>
@@ -193,23 +280,24 @@
     </div>
   </div>
 
+  <!-- OUTPUT -->
   <div class="panel">
-    <h2 style="border-top: none; padding-top: 0;">JSON output</h2>
+    <h2 class="first">JSON output</h2>
+    <div id="validation"></div>
     <textarea id="output" class="output" readonly></textarea>
     <div class="actions">
       <button type="button" id="copyBtn">Copy JSON</button>
       <button type="button" class="secondary" id="exportBtn">Download .json</button>
     </div>
-    <p class="help">Paste the JSON object as a new entry inside one of the level arrays in
-       <code>src/data/questions.json</code> (e.g. <code>"U11 / Atom": [..., &lt;here&gt;]</code>).
-       Then bump the cache key in <code>src/qbLoader.js</code> and refresh.</p>
+    <p class="help">Paste the JSON into <code>src/data/questions.json</code> inside the matching level array.
+       Then bump the cache key in <code>src/qbLoader.js</code> and refresh the app.</p>
   </div>
 </div>
 </div>
 
 <script>
 // ─────────────────────────────────────────────────────────────────────────
-// Vocab — keep in sync with src/data/rinkFeatures.js
+// Vocab — KEEP IN SYNC with src/data/rinkFeatures.js
 // ─────────────────────────────────────────────────────────────────────────
 const RINK_FEATURES = [
   // Rink anatomy
@@ -244,37 +332,80 @@ const RINK_FEATURES = [
   { id: "referee",              name: "Referee" },
   { id: "linesman",             name: "Linesman" },
 ];
-const FEATURE_BY_ID = Object.fromEntries(RINK_FEATURES.map(f => [f.id, f]));
 
 // ─────────────────────────────────────────────────────────────────────────
-// State
+// State — multi-question session
 // ─────────────────────────────────────────────────────────────────────────
-const LS_KEY = "rinkreads_authoring_v1";
+const LS_KEY = "rinkreads_authoring_v2";
+
+function makeQuestion(qtype = "pov-mc") {
+  return {
+    qtype,
+    id: "",
+    q: "",
+    sit: "",
+    tip: "",
+    cat: "Rink Anatomy",
+    d: 2,
+    pos: ["F", "D", "G"],
+    levels: ["U11 / Atom", "U13 / Peewee"],
+    spots: [],   // rink-label, rink-drag, rink-match, hot-spots
+    opts: [      // pov-mc — array of {text, correct}
+      { text: "", correct: true },
+      { text: "", correct: false },
+      { text: "", correct: false },
+      { text: "", correct: false },
+    ],
+  };
+}
+
 const initialState = {
-  qtype: "rink-label",
-  id: "",
-  q: "",
-  tip: "",
-  cat: "Rink Anatomy",
-  d: 2,
-  pos: ["F", "D", "G"],
-  levels: ["U11 / Atom", "U13 / Peewee"],
-  imageUrl: "rink-anatomy-diagram.png",
+  imageUrl: "",
   aspect: "16:9",
-  spots: [],  // [{x, y, correctId|correctChip, options[]}]
+  questions: [makeQuestion("pov-mc")],
+  activeIdx: 0,
 };
+
 let state = loadState();
+let imageBlobUrl = null;  // in-memory only — not persisted (blob URLs die on reload)
 
 function loadState() {
   try {
     const stored = localStorage.getItem(LS_KEY);
-    if (stored) return Object.assign({}, initialState, JSON.parse(stored));
+    if (stored) {
+      const parsed = JSON.parse(stored);
+      // Migrate from v1 if needed (single-question shape)
+      if (!parsed.questions && parsed.qtype) {
+        return {
+          imageUrl: parsed.imageUrl || "",
+          aspect: parsed.aspect || "16:9",
+          questions: [{
+            qtype: parsed.qtype,
+            id: parsed.id || "",
+            q: parsed.q || "",
+            sit: "",
+            tip: parsed.tip || "",
+            cat: parsed.cat || "Rink Anatomy",
+            d: parsed.d || 2,
+            pos: parsed.pos || ["F","D","G"],
+            levels: parsed.levels || ["U11 / Atom", "U13 / Peewee"],
+            spots: parsed.spots || [],
+            opts: [{text:"",correct:true},{text:"",correct:false},{text:"",correct:false},{text:"",correct:false}],
+          }],
+          activeIdx: 0,
+        };
+      }
+      return Object.assign({}, initialState, parsed);
+    }
   } catch (e) {}
-  return Object.assign({}, initialState);
+  return JSON.parse(JSON.stringify(initialState));
 }
 function saveState() {
   try { localStorage.setItem(LS_KEY, JSON.stringify(state)); } catch (e) {}
 }
+
+// Active question accessors
+function active() { return state.questions[state.activeIdx]; }
 
 // ─────────────────────────────────────────────────────────────────────────
 // DOM refs
@@ -283,39 +414,129 @@ const $ = id => document.getElementById(id);
 const stage = $("stage");
 const img = $("img");
 const out = $("output");
-const hotspotList = $("hotspotList");
+const editorRoot = $("editorRoot");
 
 // ─────────────────────────────────────────────────────────────────────────
-// Render
+// Helpers
 // ─────────────────────────────────────────────────────────────────────────
-function syncFormFromState() {
-  $("qtype").value = state.qtype;
-  $("qid").value = state.id;
-  $("qq").value = state.q;
-  $("qtip").value = state.tip;
-  $("qcat").value = state.cat;
-  $("qd").value = state.d;
-  $("qpos").value = state.pos.join(",");
-  $("qlevels").value = state.levels.join(", ");
-  $("imgPath").value = state.imageUrl;
-  $("aspect").value = state.aspect;
-  loadImage();
-  updateQtypeHelp();
+const round = v => Math.round(v * 1000) / 1000;
+const escapeHtml = s => String(s).replace(/[&<>"']/g, c =>
+  ({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[c]));
+
+const QTYPE_LABEL = {
+  "pov-mc":     "POV-MC",
+  "hot-spots":  "Hot-spots",
+  "rink-label": "rink-label",
+  "rink-drag":  "rink-drag",
+  "rink-match": "rink-match",
+  "path-draw":  "path-draw",
+};
+
+const QTYPE_HELP = {
+  "pov-mc":     "Image + 4 text options. Player picks one. No spots needed — the photo IS the situation.",
+  "hot-spots":  "Player taps a spot on the image. Mark each spot 'correct' or not (multiple correct allowed). Optional per-spot feedback message.",
+  "rink-label": "Identify what's at each spot via chip grid. Per-spot options narrow the chip set. Single OR multi-spot.",
+  "rink-drag":  "Drag reusable chips onto players. Same chip (e.g. \"D\") can land on multiple players.",
+  "rink-match": "Tap a label, tap a spot — connector line draws. Single-use chips, auto-pool from spots.",
+  "path-draw":  "Coming soon — drag a line from start to target. Engine support pending.",
+};
+
+function imageSrc() {
+  if (imageBlobUrl) return imageBlobUrl;
+  if (!state.imageUrl) return "";
+  return state.imageUrl.includes("/") ? state.imageUrl : "/assets/images/" + state.imageUrl;
 }
 
 function loadImage() {
-  if (!state.imageUrl) { img.src = ""; return; }
-  // Allow either a bare filename (resolves to /assets/images/) or a full URL/path.
-  const src = state.imageUrl.includes("/") ? state.imageUrl : "/assets/images/" + state.imageUrl;
-  img.src = src;
+  const src = imageSrc();
+  if (src) img.src = src; else img.removeAttribute("src");
 }
 
+// ─────────────────────────────────────────────────────────────────────────
+// Render — top-level orchestrator
+// ─────────────────────────────────────────────────────────────────────────
+function renderAll() {
+  syncSharedFields();
+  renderQTabs();
+  syncQuestionFields();
+  renderDots();
+  renderEditor();
+  updateOutput();
+  updateImageNotice();
+}
+
+function syncSharedFields() {
+  $("imgPath").value = state.imageUrl;
+  $("aspect").value = state.aspect;
+  loadImage();
+}
+
+function syncQuestionFields() {
+  const q = active();
+  $("qtype").value = q.qtype;
+  $("qid").value = q.id;
+  $("qq").value = q.q;
+  $("qsit").value = q.sit || "";
+  $("qtip").value = q.tip;
+  $("qcat").value = q.cat;
+  $("qd").value = q.d;
+  $("qpos").value = q.pos.join(",");
+  $("qlevels").value = q.levels.join(", ");
+  $("qtypeHelp").innerText = QTYPE_HELP[q.qtype] || "";
+  $("editorBadge").innerText = QTYPE_LABEL[q.qtype] || q.qtype;
+  // sit only for pov-mc
+  $("sitRow").hidden = q.qtype !== "pov-mc";
+  // stage help text
+  $("stageHelpText").innerText = q.qtype === "pov-mc"
+    ? "POV-MC has no hotspots — the photo is the situation. Use the panel below to write text options."
+    : "Click anywhere on the image to add a hotspot.";
+  $("stageHelp").innerText = q.qtype === "pov-mc" ? "no spots" : "spots";
+}
+
+function renderQTabs() {
+  const wrap = $("qtabs");
+  wrap.innerHTML = "";
+  state.questions.forEach((q, i) => {
+    const tab = document.createElement("div");
+    tab.className = "qtab" + (i === state.activeIdx ? " active" : "");
+    const issues = validateQuestion(q).length;
+    tab.innerHTML = `
+      <span>#${i+1}</span>
+      <span class="badge">${escapeHtml(QTYPE_LABEL[q.qtype] || q.qtype)}</span>
+      ${issues ? `<span class="badge warn" title="${issues} issue${issues>1?"s":""}">⚠ ${issues}</span>` : ""}
+      ${state.questions.length > 1 ? `<span class="x" data-del="${i}" title="Remove this question">✕</span>` : ""}
+    `;
+    tab.addEventListener("click", e => {
+      if (e.target.dataset.del !== undefined) return;
+      state.activeIdx = i;
+      saveState(); renderAll();
+    });
+    wrap.appendChild(tab);
+  });
+  wrap.querySelectorAll("[data-del]").forEach(x => {
+    x.addEventListener("click", e => {
+      e.stopPropagation();
+      const i = +e.target.dataset.del;
+      if (state.questions.length <= 1) return;
+      if (!confirm(`Remove question #${i+1}?`)) return;
+      state.questions.splice(i, 1);
+      if (state.activeIdx >= state.questions.length) state.activeIdx = state.questions.length - 1;
+      saveState(); renderAll();
+    });
+  });
+}
+
+// ─────────────────────────────────────────────────────────────────────────
+// Stage / dots
+// ─────────────────────────────────────────────────────────────────────────
 function renderDots() {
-  // Remove old dots
   [...stage.querySelectorAll(".dot")].forEach(d => d.remove());
-  state.spots.forEach((s, i) => {
+  const q = active();
+  if (q.qtype === "pov-mc") return;
+  q.spots.forEach((s, i) => {
     const dot = document.createElement("div");
-    dot.className = "dot" + (i === state.spots.length - 1 ? " last" : "");
+    dot.className = "dot" + (i === q.spots.length - 1 ? " last" : "")
+      + (q.qtype === "hot-spots" && s.correct ? " correct" : "");
     dot.style.left = (s.x * 100) + "%";
     dot.style.top  = (s.y * 100) + "%";
     dot.innerText = i + 1;
@@ -323,197 +544,509 @@ function renderDots() {
   });
 }
 
-function renderHotspots() {
-  hotspotList.innerHTML = "";
-  if (state.spots.length === 0) {
-    hotspotList.innerHTML = '<div class="help">No hotspots yet. Click on the image to add one.</div>';
-    updateOutput();
+stage.addEventListener("click", e => {
+  if (e.target.classList.contains("dot")) return;
+  const q = active();
+  if (q.qtype === "pov-mc") return;
+  const rect = stage.getBoundingClientRect();
+  const x = (e.clientX - rect.left) / rect.width;
+  const y = (e.clientY - rect.top) / rect.height;
+  // hot-spots: default to correct=false; rink-* default to correctId/Chip empty
+  const spot = { x, y };
+  if (q.qtype === "hot-spots") spot.correct = false;
+  q.spots.push(spot);
+  saveState(); renderDots(); renderEditor(); updateOutput(); renderQTabs();
+});
+
+// ─────────────────────────────────────────────────────────────────────────
+// Per-qtype editors (rendered into editorRoot)
+// ─────────────────────────────────────────────────────────────────────────
+function renderEditor() {
+  const q = active();
+  editorRoot.innerHTML = "";
+  if (q.qtype === "pov-mc")          renderPovMcEditor();
+  else if (q.qtype === "hot-spots")  renderHotSpotsEditor();
+  else if (q.qtype === "rink-label") renderRinkLabelEditor();
+  else if (q.qtype === "rink-drag" || q.qtype === "rink-match") renderRinkDragMatchEditor();
+  else if (q.qtype === "path-draw")  editorRoot.innerHTML = '<div class="help warn">path-draw image-mode authoring is not built yet. Pick another type.</div>';
+}
+
+function renderPovMcEditor() {
+  const q = active();
+  const wrap = document.createElement("div");
+  const help = document.createElement("p");
+  help.className = "help";
+  help.innerText = "Add 2-5 answer choices. Pick the radio next to the correct one.";
+  wrap.appendChild(help);
+  const list = document.createElement("div");
+  list.className = "mc-opts";
+  q.opts.forEach((o, i) => {
+    const row = document.createElement("div");
+    row.className = "mc-opt";
+    row.innerHTML = `
+      <input type="radio" name="mc-correct" data-correct-i="${i}" ${o.correct ? "checked" : ""} />
+      <span class="letter">${String.fromCharCode(65 + i)}</span>
+      <input type="text" data-opt-i="${i}" placeholder="Option ${String.fromCharCode(65 + i)}" value="${escapeHtml(o.text || "")}" />
+      <button type="button" class="danger" data-del-opt="${i}">✕</button>
+    `;
+    list.appendChild(row);
+  });
+  wrap.appendChild(list);
+  const actions = document.createElement("div");
+  actions.className = "actions";
+  actions.innerHTML = `<button type="button" class="subtle" id="addOptBtn">+ Add option</button>`;
+  wrap.appendChild(actions);
+  editorRoot.appendChild(wrap);
+
+  // Wire
+  list.querySelectorAll("input[data-correct-i]").forEach(r => {
+    r.addEventListener("change", e => {
+      const i = +e.target.dataset.correctI;
+      q.opts.forEach((o, idx) => o.correct = idx === i);
+      saveState(); updateOutput(); renderQTabs();
+    });
+  });
+  list.querySelectorAll("input[data-opt-i]").forEach(input => {
+    input.addEventListener("input", e => {
+      const i = +e.target.dataset.optI;
+      q.opts[i].text = e.target.value;
+      saveState(); updateOutput(); renderQTabs();
+    });
+  });
+  list.querySelectorAll("[data-del-opt]").forEach(btn => {
+    btn.addEventListener("click", e => {
+      const i = +e.target.dataset.delOpt;
+      if (q.opts.length <= 2) { alert("Need at least 2 options."); return; }
+      const wasCorrect = q.opts[i].correct;
+      q.opts.splice(i, 1);
+      if (wasCorrect) q.opts[0].correct = true;
+      saveState(); renderEditor(); updateOutput(); renderQTabs();
+    });
+  });
+  $("addOptBtn").addEventListener("click", () => {
+    if (q.opts.length >= 5) { alert("Max 5 options."); return; }
+    q.opts.push({ text: "", correct: false });
+    saveState(); renderEditor(); updateOutput(); renderQTabs();
+  });
+}
+
+function renderHotSpotsEditor() {
+  const q = active();
+  const wrap = document.createElement("div");
+  if (q.spots.length === 0) {
+    wrap.innerHTML = '<div class="help">No hotspots yet. Click on the image to add one.</div>';
+    editorRoot.appendChild(wrap);
     return;
   }
-  state.spots.forEach((s, i) => {
-    const wrap = document.createElement("div");
-    wrap.className = "hotspot";
-    const correctField = state.qtype === "rink-label" ? "correctId" : "correctChip";
-    const currentVal = s[correctField] || "";
-    wrap.innerHTML = `
+  const help = document.createElement("p");
+  help.className = "help";
+  help.innerText = "Mark each spot as correct or not. Multiple correct spots are allowed. Optional per-spot feedback message.";
+  wrap.appendChild(help);
+  const list = document.createElement("div");
+  list.className = "hotspots";
+  q.spots.forEach((s, i) => {
+    const row = document.createElement("div");
+    row.className = "hotspot";
+    row.innerHTML = `
       <div class="num">${i + 1}</div>
       <div>
         <div class="info">x: ${s.x.toFixed(3)}, y: ${s.y.toFixed(3)}</div>
-        <select data-i="${i}" data-field="${correctField}">
+        <div class="row-inline">
+          <label><input type="checkbox" data-hs-correct="${i}" ${s.correct ? "checked" : ""} /> Correct spot</label>
+        </div>
+        <input type="text" data-hs-msg="${i}" placeholder="Optional per-spot feedback (e.g. 'Too low — winger is open above.')" value="${escapeHtml(s.msg || "")}" style="margin-top:.35rem;" />
+      </div>
+      <button type="button" class="danger" data-del-spot="${i}">Remove</button>
+    `;
+    list.appendChild(row);
+  });
+  wrap.appendChild(list);
+  editorRoot.appendChild(wrap);
+  // Wire
+  list.querySelectorAll("input[data-hs-correct]").forEach(cb => {
+    cb.addEventListener("change", e => {
+      const i = +e.target.dataset.hsCorrect;
+      q.spots[i].correct = e.target.checked;
+      saveState(); renderDots(); updateOutput(); renderQTabs();
+    });
+  });
+  list.querySelectorAll("input[data-hs-msg]").forEach(inp => {
+    inp.addEventListener("input", e => {
+      const i = +e.target.dataset.hsMsg;
+      q.spots[i].msg = e.target.value;
+      saveState(); updateOutput(); renderQTabs();
+    });
+  });
+  list.querySelectorAll("[data-del-spot]").forEach(btn => {
+    btn.addEventListener("click", e => {
+      const i = +e.target.dataset.delSpot;
+      q.spots.splice(i, 1);
+      saveState(); renderDots(); renderEditor(); updateOutput(); renderQTabs();
+    });
+  });
+}
+
+function renderRinkLabelEditor() {
+  const q = active();
+  const wrap = document.createElement("div");
+  if (q.spots.length === 0) {
+    wrap.innerHTML = '<div class="help">No spots yet. Click on the image to add one.</div>';
+    editorRoot.appendChild(wrap);
+    return;
+  }
+  const list = document.createElement("div");
+  list.className = "hotspots";
+  q.spots.forEach((s, i) => {
+    const opts = s.options || [];
+    const row = document.createElement("div");
+    row.className = "hotspot";
+    row.innerHTML = `
+      <div class="num">${i + 1}</div>
+      <div>
+        <div class="info">x: ${s.x.toFixed(3)}, y: ${s.y.toFixed(3)}</div>
+        <select data-rl-correct="${i}">
           <option value="">— pick correct answer —</option>
           ${RINK_FEATURES.map(f =>
-            `<option value="${f.id}" ${f.id === currentVal ? "selected" : ""}>${f.name}</option>`
+            `<option value="${f.id}" ${f.id === (s.correctId || "") ? "selected" : ""}>${escapeHtml(f.name)}</option>`
           ).join("")}
         </select>
-        ${state.qtype === "rink-label" ? renderOptionsBlock(i, s) : ""}
+        <details style="margin-top:.4rem;">
+          <summary>Distractor options (${opts.length} picked — recommend 4–6 incl. the correct answer)</summary>
+          <div class="options-grid">
+            ${RINK_FEATURES.map(f => `
+              <label>
+                <input type="checkbox" data-rl-opt-i="${i}" data-rl-opt-id="${f.id}" ${opts.includes(f.id) ? "checked" : ""} />
+                ${escapeHtml(f.name)}
+              </label>
+            `).join("")}
+          </div>
+        </details>
       </div>
-      <button type="button" class="danger" data-del="${i}">Remove</button>
+      <button type="button" class="danger" data-del-spot="${i}">Remove</button>
     `;
-    hotspotList.appendChild(wrap);
+    list.appendChild(row);
   });
-  // Wire up correct-answer dropdowns
-  hotspotList.querySelectorAll("select[data-i]").forEach(sel => {
+  wrap.appendChild(list);
+  editorRoot.appendChild(wrap);
+  // Wire
+  list.querySelectorAll("select[data-rl-correct]").forEach(sel => {
     sel.addEventListener("change", e => {
-      const i = +e.target.dataset.i;
-      const field = e.target.dataset.field;
-      state.spots[i][field] = e.target.value || undefined;
-      saveState(); updateOutput();
+      const i = +e.target.dataset.rlCorrect;
+      q.spots[i].correctId = e.target.value || undefined;
+      saveState(); updateOutput(); renderQTabs();
     });
   });
-  // Wire up delete buttons
-  hotspotList.querySelectorAll("button[data-del]").forEach(btn => {
-    btn.addEventListener("click", e => {
-      const i = +e.target.dataset.del;
-      state.spots.splice(i, 1);
-      saveState(); renderDots(); renderHotspots();
-    });
-  });
-  // Wire up options checkboxes (rink-label only)
-  hotspotList.querySelectorAll("input[data-opt-i]").forEach(cb => {
+  list.querySelectorAll("input[data-rl-opt-i]").forEach(cb => {
     cb.addEventListener("change", e => {
-      const i = +e.target.dataset.optI;
-      const id = e.target.dataset.optId;
-      state.spots[i].options = state.spots[i].options || [];
-      const arr = state.spots[i].options;
+      const i = +e.target.dataset.rlOptI;
+      const id = e.target.dataset.rlOptId;
+      q.spots[i].options = q.spots[i].options || [];
+      const arr = q.spots[i].options;
       if (e.target.checked && !arr.includes(id)) arr.push(id);
-      if (!e.target.checked) state.spots[i].options = arr.filter(x => x !== id);
-      saveState(); updateOutput();
+      if (!e.target.checked) q.spots[i].options = arr.filter(x => x !== id);
+      saveState(); updateOutput(); renderQTabs();
     });
   });
-  updateOutput();
+  list.querySelectorAll("[data-del-spot]").forEach(btn => {
+    btn.addEventListener("click", e => {
+      const i = +e.target.dataset.delSpot;
+      q.spots.splice(i, 1);
+      saveState(); renderDots(); renderEditor(); updateOutput(); renderQTabs();
+    });
+  });
 }
 
-function renderOptionsBlock(i, s) {
-  const opts = s.options || [];
-  return `
-    <details style="margin-top:.4rem;">
-      <summary style="font-size:11px;color:#5BA4E8;cursor:pointer;">
-        Distractor options (${opts.length} picked — recommend 4–6 incl. the correct answer)
-      </summary>
-      <div class="options-grid">
-        ${RINK_FEATURES.map(f => `
-          <label>
-            <input type="checkbox" data-opt-i="${i}" data-opt-id="${f.id}" ${opts.includes(f.id) ? "checked" : ""} />
-            ${f.name}
-          </label>
-        `).join("")}
+function renderRinkDragMatchEditor() {
+  const q = active();
+  const wrap = document.createElement("div");
+  if (q.spots.length === 0) {
+    wrap.innerHTML = '<div class="help">No spots yet. Click on the image to add one.</div>';
+    editorRoot.appendChild(wrap);
+    return;
+  }
+  const list = document.createElement("div");
+  list.className = "hotspots";
+  q.spots.forEach((s, i) => {
+    const row = document.createElement("div");
+    row.className = "hotspot";
+    row.innerHTML = `
+      <div class="num">${i + 1}</div>
+      <div>
+        <div class="info">x: ${s.x.toFixed(3)}, y: ${s.y.toFixed(3)}</div>
+        <select data-dm-correct="${i}">
+          <option value="">— pick correct chip —</option>
+          ${RINK_FEATURES.map(f =>
+            `<option value="${f.id}" ${f.id === (s.correctChip || "") ? "selected" : ""}>${escapeHtml(f.name)}</option>`
+          ).join("")}
+        </select>
       </div>
-    </details>
-  `;
+      <button type="button" class="danger" data-del-spot="${i}">Remove</button>
+    `;
+    list.appendChild(row);
+  });
+  wrap.appendChild(list);
+  editorRoot.appendChild(wrap);
+  list.querySelectorAll("select[data-dm-correct]").forEach(sel => {
+    sel.addEventListener("change", e => {
+      const i = +e.target.dataset.dmCorrect;
+      q.spots[i].correctChip = e.target.value || undefined;
+      saveState(); updateOutput(); renderQTabs();
+    });
+  });
+  list.querySelectorAll("[data-del-spot]").forEach(btn => {
+    btn.addEventListener("click", e => {
+      const i = +e.target.dataset.delSpot;
+      q.spots.splice(i, 1);
+      saveState(); renderDots(); renderEditor(); updateOutput(); renderQTabs();
+    });
+  });
 }
 
-function updateQtypeHelp() {
-  const help = {
-    "rink-label": "Tap chips to identify each spot. Per-spot options narrow the chip grid. Single-spot OR multi-spot (combo) — engine handles both.",
-    "rink-drag":  "Drag reusable chips from a bank onto players. The same chip (e.g. \"D\") can be placed on multiple players. Auto-includes a chip pool from the spots.",
-    "rink-match": "Tap a label, tap a spot — pairs them with a connector line. Each label is single-use; chip pool auto-derived from spots.",
-  };
-  $("qtypeHelp").innerText = help[state.qtype] || "";
+// ─────────────────────────────────────────────────────────────────────────
+// Validation
+// ─────────────────────────────────────────────────────────────────────────
+function validateQuestion(q) {
+  const errs = [];
+  if (!q.id) errs.push("missing id");
+  else if (!/^[a-z0-9_]+$/.test(q.id)) errs.push("id must be lowercase snake_case");
+  if (!state.imageUrl) errs.push("missing image filename");
+  if (!q.q) errs.push("missing question prompt (q)");
+
+  if (q.qtype === "pov-mc") {
+    const filled = q.opts.filter(o => (o.text || "").trim().length > 0);
+    if (filled.length < 2) errs.push("need at least 2 answer options with text");
+    if (!q.opts.some(o => o.correct && (o.text || "").trim())) errs.push("no correct option marked");
+  } else if (q.qtype === "hot-spots") {
+    if (q.spots.length === 0) errs.push("no hotspots yet");
+    else if (!q.spots.some(s => s.correct)) errs.push("at least one spot must be marked correct");
+  } else if (q.qtype === "rink-label") {
+    if (q.spots.length === 0) errs.push("no spots yet");
+    else if (q.spots.some(s => !s.correctId)) errs.push("every spot needs a correct answer picked");
+  } else if (q.qtype === "rink-drag" || q.qtype === "rink-match") {
+    if (q.spots.length === 0) errs.push("no spots yet");
+    else if (q.spots.some(s => !s.correctChip)) errs.push("every spot needs a correct chip picked");
+  } else if (q.qtype === "path-draw") {
+    errs.push("path-draw image-mode is not implemented yet");
+  }
+  return errs;
+}
+
+function renderValidation() {
+  const wrap = $("validation");
+  const allIssues = state.questions.map((q, i) => ({ idx: i, errs: validateQuestion(q) }));
+  const totalIssues = allIssues.reduce((a, b) => a + b.errs.length, 0);
+  if (totalIssues === 0) {
+    wrap.innerHTML = `<div class="validation ok">✓ All ${state.questions.length} question${state.questions.length>1?"s":""} look good — ready to copy.</div>`;
+  } else {
+    const items = allIssues
+      .filter(o => o.errs.length > 0)
+      .map(o => `<li><strong>#${o.idx+1}:</strong> ${o.errs.map(escapeHtml).join("; ")}</li>`)
+      .join("");
+    wrap.innerHTML = `
+      <div class="validation warn">
+        <strong>⚠ ${totalIssues} issue${totalIssues>1?"s":""}</strong> across ${allIssues.filter(o => o.errs.length).length} question${allIssues.filter(o => o.errs.length).length>1?"s":""}:
+        <ul>${items}</ul>
+      </div>`;
+  }
 }
 
 // ─────────────────────────────────────────────────────────────────────────
 // JSON output
 // ─────────────────────────────────────────────────────────────────────────
-function updateOutput() {
-  const obj = buildQuestion();
-  out.value = JSON.stringify(obj, null, 2);
+function buildAll() {
+  return state.questions.map(buildOne);
 }
 
-function buildQuestion() {
+function buildOne(q) {
   const base = {
-    id: state.id || "TODO_set_an_id",
-    cat: state.cat,
-    pos: state.pos,
-    d: +state.d,
-    type: state.qtype,
-    q: state.q,
+    id: q.id || "TODO_set_an_id",
+    cat: q.cat,
+    pos: q.pos,
+    d: +q.d,
+    type: q.qtype,
+    q: q.q,
     media: { type: "image", url: state.imageUrl.includes("/") ? state.imageUrl : "/assets/images/" + state.imageUrl },
   };
   if (state.aspect) base.media.aspect = state.aspect;
 
-  if (state.qtype === "rink-label") {
-    if (state.spots.length === 1) {
-      const s = state.spots[0];
+  if (q.qtype === "pov-mc") {
+    if (q.sit) base.sit = q.sit;
+    base.opts = q.opts.filter(o => (o.text || "").trim()).map(o => o.text);
+    const idx = q.opts.findIndex(o => o.correct && (o.text || "").trim());
+    base.ok = idx >= 0 ? idx : 0;
+  } else if (q.qtype === "hot-spots") {
+    base.spots = q.spots.map(s => {
+      const o = { x: round(s.x), y: round(s.y), correct: !!s.correct };
+      if (s.msg) o.msg = s.msg;
+      return o;
+    });
+  } else if (q.qtype === "rink-label") {
+    if (q.spots.length === 1) {
+      const s = q.spots[0];
       base.spot = { x: round(s.x), y: round(s.y) };
       base.correctId = s.correctId || "TODO";
       if (s.options && s.options.length) base.options = s.options;
     } else {
-      base.spots = state.spots.map(s => {
+      base.spots = q.spots.map(s => {
         const o = { x: round(s.x), y: round(s.y), correctId: s.correctId || "TODO" };
         if (s.options && s.options.length) o.options = s.options;
         return o;
       });
     }
-  } else if (state.qtype === "rink-drag") {
-    base.spots = state.spots.map(s => ({
+  } else if (q.qtype === "rink-drag") {
+    base.spots = q.spots.map(s => ({
       x: round(s.x), y: round(s.y), correctChip: s.correctChip || "TODO"
     }));
-    // Build chip pool from unique correctChip values, alphabetized.
-    const uniq = [...new Set(state.spots.map(s => s.correctChip).filter(Boolean))];
+    const uniq = [...new Set(q.spots.map(s => s.correctChip).filter(Boolean))];
     uniq.sort();
     base.chips = uniq;
-  } else if (state.qtype === "rink-match") {
-    base.spots = state.spots.map(s => ({
+  } else if (q.qtype === "rink-match") {
+    base.spots = q.spots.map(s => ({
       x: round(s.x), y: round(s.y), correctChip: s.correctChip || "TODO"
     }));
-    // Match: chip pool implicitly from spots, no chips[] needed.
   }
 
-  if (state.tip) base.tip = state.tip;
-  if (state.levels && state.levels.length) base.levels = state.levels;
+  if (q.tip) base.tip = q.tip;
+  if (q.levels && q.levels.length) base.levels = q.levels;
   return base;
 }
 
-function round(v) { return Math.round(v * 1000) / 1000; }
+function updateOutput() {
+  const all = buildAll();
+  out.value = state.questions.length === 1
+    ? JSON.stringify(all[0], null, 2)
+    : JSON.stringify(all, null, 2);
+  renderValidation();
+}
+
+// ─────────────────────────────────────────────────────────────────────────
+// Image picker
+// ─────────────────────────────────────────────────────────────────────────
+function updateImageNotice() {
+  const notice = $("imageNotice");
+  if (imageBlobUrl && state.imageUrl) {
+    notice.hidden = false;
+    notice.innerHTML = `
+      <strong>📁 Local file loaded for preview only.</strong> The exported JSON references
+      <code>${escapeHtml(state.imageUrl)}</code>. Save your file to:
+      <br/><code>c:\\Users\\mtsli\\IceIQ\\public\\assets\\images\\${escapeHtml(state.imageUrl)}</code>
+      <br/>before the question will work in the live app.`;
+  } else {
+    notice.hidden = true;
+  }
+}
+
+// ─────────────────────────────────────────────────────────────────────────
+// ID auto-suggest
+// ─────────────────────────────────────────────────────────────────────────
+function suggestId() {
+  const q = active();
+  const lvl = (q.levels[0] || "u11").toLowerCase().replace(/[^a-z0-9]+/g, "");
+  const lvlPrefix = lvl.match(/^u\d+/)?.[0] || "u11";
+  const qtypeSlug = q.qtype.replace(/-/g, "_");
+  const fileSlug = (state.imageUrl || "")
+    .replace(/^.*\//, "")
+    .replace(/\.[^.]+$/, "")
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "_")
+    .replace(/^_|_$/g, "");
+  const base = [lvlPrefix, qtypeSlug, fileSlug].filter(Boolean).join("_");
+  // Avoid collisions with other questions in this session
+  let candidate = base + "_v1";
+  let n = 1;
+  while (state.questions.some((x, i) => i !== state.activeIdx && x.id === candidate)) {
+    n++; candidate = base + "_v" + n;
+  }
+  q.id = candidate;
+  saveState(); $("qid").value = candidate; updateOutput(); renderQTabs();
+}
 
 // ─────────────────────────────────────────────────────────────────────────
 // Event wiring
 // ─────────────────────────────────────────────────────────────────────────
-stage.addEventListener("click", e => {
-  if (e.target.classList.contains("dot")) return;
-  const rect = stage.getBoundingClientRect();
-  const x = (e.clientX - rect.left) / rect.width;
-  const y = (e.clientY - rect.top) / rect.height;
-  state.spots.push({ x, y });
-  saveState(); renderDots(); renderHotspots();
+$("imgPath").addEventListener("input", e => {
+  state.imageUrl = e.target.value.trim();
+  // If the user types a filename, drop any blob preview (it'd shadow the path)
+  if (imageBlobUrl) { URL.revokeObjectURL(imageBlobUrl); imageBlobUrl = null; }
+  saveState(); loadImage(); updateOutput(); updateImageNotice();
+});
+$("aspect").addEventListener("change", e => {
+  state.aspect = e.target.value; saveState(); updateOutput();
+});
+
+$("filePickBtn").addEventListener("click", () => $("filePicker").click());
+$("filePicker").addEventListener("change", e => {
+  const file = e.target.files[0];
+  if (!file) return;
+  if (imageBlobUrl) URL.revokeObjectURL(imageBlobUrl);
+  imageBlobUrl = URL.createObjectURL(file);
+  // If the imageUrl input is empty, suggest the picked file's name
+  if (!state.imageUrl) {
+    state.imageUrl = file.name;
+    $("imgPath").value = file.name;
+  }
+  $("filePickInfo").innerText = `Loaded: ${file.name} (${(file.size/1024).toFixed(0)} KB)`;
+  saveState(); loadImage(); updateImageNotice();
 });
 
 $("qtype").addEventListener("change", e => {
-  state.qtype = e.target.value;
-  // Convert correctId <-> correctChip when switching qtypes so existing
-  // picks aren't lost.
-  state.spots.forEach(s => {
-    if (state.qtype === "rink-label") {
-      if (s.correctChip && !s.correctId) s.correctId = s.correctChip;
-    } else {
-      if (s.correctId && !s.correctChip) s.correctChip = s.correctId;
-    }
+  const q = active();
+  q.qtype = e.target.value;
+  // Cross-convert correctId <-> correctChip when switching among rink-* types
+  q.spots.forEach(s => {
+    if (q.qtype === "rink-label" && s.correctChip && !s.correctId) s.correctId = s.correctChip;
+    if ((q.qtype === "rink-drag" || q.qtype === "rink-match") && s.correctId && !s.correctChip) s.correctChip = s.correctId;
   });
-  saveState(); renderHotspots(); updateQtypeHelp();
+  saveState(); syncQuestionFields(); renderEditor(); renderDots(); updateOutput(); renderQTabs();
 });
 
-$("qid").addEventListener("input", e => { state.id = e.target.value.trim(); saveState(); updateOutput(); });
-$("qq").addEventListener("input", e => { state.q = e.target.value; saveState(); updateOutput(); });
-$("qtip").addEventListener("input", e => { state.tip = e.target.value; saveState(); updateOutput(); });
-$("qcat").addEventListener("input", e => { state.cat = e.target.value; saveState(); updateOutput(); });
-$("qd").addEventListener("change", e => { state.d = +e.target.value; saveState(); updateOutput(); });
-$("qpos").addEventListener("change", e => { state.pos = e.target.value.split(","); saveState(); updateOutput(); });
+$("qid").addEventListener("input", e => { active().id = e.target.value.trim(); saveState(); updateOutput(); renderQTabs(); });
+$("qq").addEventListener("input", e => { active().q = e.target.value; saveState(); updateOutput(); renderQTabs(); });
+$("qsit").addEventListener("input", e => { active().sit = e.target.value; saveState(); updateOutput(); renderQTabs(); });
+$("qtip").addEventListener("input", e => { active().tip = e.target.value; saveState(); updateOutput(); });
+$("qcat").addEventListener("input", e => { active().cat = e.target.value; saveState(); updateOutput(); });
+$("qd").addEventListener("change", e => { active().d = +e.target.value; saveState(); updateOutput(); });
+$("qpos").addEventListener("change", e => { active().pos = e.target.value.split(","); saveState(); updateOutput(); });
 $("qlevels").addEventListener("input", e => {
-  state.levels = e.target.value.split(",").map(s => s.trim()).filter(Boolean);
+  active().levels = e.target.value.split(",").map(s => s.trim()).filter(Boolean);
   saveState(); updateOutput();
 });
-$("imgPath").addEventListener("input", e => { state.imageUrl = e.target.value; saveState(); loadImage(); updateOutput(); });
-$("aspect").addEventListener("change", e => { state.aspect = e.target.value; saveState(); updateOutput(); });
+
+$("suggestIdBtn").addEventListener("click", suggestId);
 
 $("undoBtn").addEventListener("click", () => {
-  state.spots.pop();
-  saveState(); renderDots(); renderHotspots();
+  const q = active();
+  if (q.qtype === "pov-mc") return;
+  q.spots.pop();
+  saveState(); renderDots(); renderEditor(); updateOutput(); renderQTabs();
 });
 $("clearBtn").addEventListener("click", () => {
-  if (!state.spots.length) return;
-  if (!confirm(`Clear all ${state.spots.length} spot(s)?`)) return;
-  state.spots = [];
-  saveState(); renderDots(); renderHotspots();
+  const q = active();
+  if (q.qtype === "pov-mc") return;
+  if (!q.spots.length) return;
+  if (!confirm(`Clear all ${q.spots.length} spot(s) from question #${state.activeIdx+1}?`)) return;
+  q.spots = [];
+  saveState(); renderDots(); renderEditor(); updateOutput(); renderQTabs();
+});
+
+$("addQuestionBtn").addEventListener("click", () => {
+  // New question copies the active question's metadata defaults but starts blank otherwise
+  const cur = active();
+  const fresh = makeQuestion(cur.qtype);
+  fresh.cat = cur.cat;
+  fresh.pos = [...cur.pos];
+  fresh.levels = [...cur.levels];
+  fresh.d = cur.d;
+  state.questions.push(fresh);
+  state.activeIdx = state.questions.length - 1;
+  saveState(); renderAll();
+});
+$("dupQuestionBtn").addEventListener("click", () => {
+  const dup = JSON.parse(JSON.stringify(active()));
+  dup.id = "";
+  state.questions.push(dup);
+  state.activeIdx = state.questions.length - 1;
+  saveState(); renderAll();
 });
 
 $("copyBtn").addEventListener("click", async () => {
@@ -526,26 +1059,25 @@ $("exportBtn").addEventListener("click", () => {
   const blob = new Blob([out.value], { type: "application/json" });
   const url = URL.createObjectURL(blob);
   const a = document.createElement("a");
-  a.href = url; a.download = (state.id || "question") + ".json"; a.click();
+  const fname = state.questions.length > 1 ? "questions" : (active().id || "question");
+  a.href = url; a.download = fname + ".json"; a.click();
   URL.revokeObjectURL(url);
 });
 
-// Add a "Reset all" button via shortcut (Esc clears nothing dangerously, but
-// triple-click on the title clears state — discoverable enough for a dev tool).
+// Reset shortcut
 document.querySelector("h1").addEventListener("dblclick", () => {
-  if (confirm("Reset ALL authoring state (clears spots and metadata)?")) {
-    state = Object.assign({}, initialState);
-    saveState(); syncFormFromState(); renderDots(); renderHotspots();
+  if (confirm("Reset ALL authoring state (clears every question and metadata)?")) {
+    if (imageBlobUrl) URL.revokeObjectURL(imageBlobUrl);
+    imageBlobUrl = null;
+    state = JSON.parse(JSON.stringify(initialState));
+    saveState(); renderAll();
   }
 });
 
 // ─────────────────────────────────────────────────────────────────────────
 // Boot
 // ─────────────────────────────────────────────────────────────────────────
-syncFormFromState();
-renderDots();
-renderHotspots();
-updateOutput();
+renderAll();
 </script>
 
 </body>

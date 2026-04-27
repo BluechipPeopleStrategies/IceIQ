@@ -2,6 +2,11 @@
 // stable reference used in question.correctId; name is what the player sees
 // in the dropdown; aliases are accepted alternate spellings (reserved for
 // future free-text input — currently unused).
+//
+// KEEP IN SYNC: public/coach-authoring.html embeds an inline copy of
+// RINK_FEATURES so the standalone authoring tool can read the vocab
+// without an ES-module import. If you add/rename/remove an entry here,
+// mirror the change in coach-authoring.html.
 
 export const RINK_FEATURES = [
   // Rink anatomy
