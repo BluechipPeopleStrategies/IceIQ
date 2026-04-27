@@ -1106,6 +1106,7 @@ const Q_TYPE_LABELS = {
   scenario:     {label:"Rink Scenario",   color:C.green,    icon:"🏒"},
   "rink-label": {label:"Label the Rink",  color:C.blue,     icon:"🏷️"},
   "rink-drag":  {label:"Drag & Drop",      color:C.green,    icon:"✋"},
+  "rink-match": {label:"Match the Labels", color:C.purple,   icon:"🔗"},
 };
 
 // ─────────────────────────────────────────────────────────
@@ -1634,7 +1635,7 @@ function Quiz({ player, onFinish, onBack, tier, onUpgrade }) {
 
   // Speed-bonus window. Interactive (rink) questions get a timed bonus;
   // MC/TF/seq don't because reading-speed is mostly literacy, not hockey IQ.
-  const SPEED_TYPES = new Set(["drag-target","drag-place","multi-tap","sequence-rink","path-draw","lane-select","hot-spots","zone-click","rink-label","rink-drag","scenario"]);
+  const SPEED_TYPES = new Set(["drag-target","drag-place","multi-tap","sequence-rink","path-draw","lane-select","hot-spots","zone-click","rink-label","rink-drag","rink-match","scenario"]);
   const SPEED_DURATION_MS = 15000;
   const SPEED_MAX_BONUS = 50;
 
@@ -1690,7 +1691,7 @@ function Quiz({ player, onFinish, onBack, tier, onUpgrade }) {
 
   // RinkReadsRinkQuestion dispatcher routes when q.rink is set OR the type is one
   // of the new rink-native interactive types.
-  const NEW_RINK_TYPES = ["drag-target","drag-place","multi-tap","sequence-rink","path-draw","lane-select","hot-spots","zone-click","rink-label","rink-drag"];
+  const NEW_RINK_TYPES = ["drag-target","drag-place","multi-tap","sequence-rink","path-draw","lane-select","hot-spots","zone-click","rink-label","rink-drag","rink-match"];
   const isRinkQ = !!question?.rink || NEW_RINK_TYPES.includes(qtype);
   const answered = isRinkQ
     ? rinkQResult !== null
@@ -4031,7 +4032,7 @@ function QuestionPreviewPage({ questionId }) {
   }
 
   const isRinkQ = !!question.rink ||
-    ["drag-target","drag-place","multi-tap","sequence-rink","path-draw","lane-select","hot-spots","zone-click","rink-label","rink-drag"].includes(question.type);
+    ["drag-target","drag-place","multi-tap","sequence-rink","path-draw","lane-select","hot-spots","zone-click","rink-label","rink-drag","rink-match"].includes(question.type);
 
   return (
     <div key={key} style={{minHeight:"100vh",background:C.bg,color:C.white,fontFamily:FONT.body,padding:"1rem 1rem 4rem",maxWidth:700,margin:"0 auto"}}>

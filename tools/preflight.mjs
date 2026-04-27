@@ -63,7 +63,7 @@ function checkTailwind() {
 // ---------- check 2 + 3: bank + rink scene
 const NEW_TYPES = new Set([
   "drag-target", "drag-place", "multi-tap", "sequence-rink",
-  "path-draw", "lane-select", "hot-spots", "rink-label", "rink-drag",
+  "path-draw", "lane-select", "hot-spots", "rink-label", "rink-drag", "rink-match",
 ]);
 const ALL_KNOWN_TYPES = new Set([
   undefined, "mc", "tf", "seq", "mistake", "zone-click", "rink", "next",

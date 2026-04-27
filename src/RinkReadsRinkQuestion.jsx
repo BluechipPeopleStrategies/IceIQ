@@ -14,7 +14,7 @@ const RINK_VIEWS = {
 const VALID_QUESTION_TYPES = [
   "mc", "diagram", "rank", "two-step", "sequence", "fill", "multi", "true-false",
   "drag-target", "drag-place", "zone-click", "multi-tap",
-  "sequence-rink", "path-draw", "lane-select", "hot-spots", "rink-label", "rink-drag",
+  "sequence-rink", "path-draw", "lane-select", "hot-spots", "rink-label", "rink-drag", "rink-match",
 ];
 
 function getViewBox(view) {
@@ -191,6 +191,14 @@ function validateQuestion(q) {
   if (q.type === "lane-select") {
     if (!Array.isArray(q.lanes) || q.lanes.length === 0) errors.push("lane-select requires lanes array");
   }
+  if (q.type === "rink-match") {
+    if (!q.media || q.media.type !== "image" || !q.media.url) errors.push("rink-match requires media.type='image' with url");
+    if (!Array.isArray(q.spots) || q.spots.length === 0) errors.push("rink-match requires a spots[] array");
+    (q.spots || []).forEach((s, i) => {
+      if (typeof s?.x !== "number" || typeof s?.y !== "number") errors.push(`rink-match spots[${i}] needs numeric x and y`);
+      if (!s?.correctChip || !RINK_FEATURES.some(f => f.id === s.correctChip)) errors.push(`rink-match spots[${i}].correctChip must reference a known RINK_FEATURES id`);
+    });
+  }
   if (q.type === "rink-drag") {
     if (!q.media || q.media.type !== "image" || !q.media.url) errors.push("rink-drag requires media.type='image' with url");
     if (!Array.isArray(q.spots) || q.spots.length === 0) errors.push("rink-drag requires a spots[] array");
@@ -280,6 +288,7 @@ export default function RinkReadsRinkQuestion({ question, onAnswer, onReset, onS
   else if (t === "hot-spots") Renderer = HotSpots;
   else if (t === "rink-label") Renderer = RinkLabelQuestion;
   else if (t === "rink-drag") Renderer = RinkDragQuestion;
+  else if (t === "rink-match") Renderer = RinkMatchQuestion;
   else Renderer = question.choices ? MCFallback : null;
 
   if (!Renderer) {
@@ -2081,6 +2090,267 @@ function RinkDragQuestion({ question, onAnswer, onReset }) {
       </div>
 
       {!done && allPlaced && (
+        <div style={actionRowStyle("space-between")}>
+          <button onClick={reset} style={secondaryBtnStyle}>Clear all</button>
+          <button onClick={submit} style={{
+            padding: "0.5rem 1.2rem", fontSize: 13, fontWeight: 800,
+            fontFamily: FONT.body, background: C.gold, color: C.bg,
+            border: "none", borderRadius: 8, cursor: "pointer",
+          }}>
+            Submit
+          </button>
+        </div>
+      )}
+
+      {done && (
+        <div style={actionRowStyle()}>
+          <button onClick={reset} style={secondaryBtnStyle}>Try again</button>
+        </div>
+      )}
+    </div>
+  );
+}
+
+// "Rink Match" — tap-to-pair label chips with hotspots, with SVG connector
+// lines drawn from each spot to its matched label. Each chip in the bank
+// is single-use (matching is one-to-one between spots and chips). After
+// every spot has a chip, Submit reveals correctness via line color, label
+// color, and ✓/✕ icons (colorblind-safe).
+function RinkMatchQuestion({ question, onAnswer, onReset }) {
+  useMediaSpotKeyframes();
+  const spots = useMemo(() => question.spots || [], [question.spots]);
+  // Build the chip pool from spots[].correctChip — one chip per spot,
+  // shuffled so the order doesn't reveal the answer.
+  const chipPool = useMemo(() => {
+    const seed = (question.id || "").split("").reduce((a, c) => a + c.charCodeAt(0), 0);
+    const arr = spots.map((s, i) => ({ chipId: s.correctChip, instanceId: `${s.correctChip}-${i}` }));
+    // Deterministic shuffle by question id so the same player gets the
+    // same order each time but it's not just spot-index order.
+    return [...arr].sort((a, b) => {
+      const ah = (a.instanceId.charCodeAt(0) * 31 + seed) % 997;
+      const bh = (b.instanceId.charCodeAt(0) * 31 + seed) % 997;
+      return ah - bh;
+    });
+  }, [spots, question.id]);
+
+  // Per spot: which chip instanceId got matched (null = unmatched)
+  const [matches, setMatches] = useState(() => spots.map(() => null));
+  const [selectedChip, setSelectedChip] = useState(null);
+  const [done, setDone] = useState(false);
+
+  useEffect(() => {
+    setMatches(spots.map(() => null));
+    setSelectedChip(null);
+    setDone(false);
+  }, [question?.id]);
+
+  const usedInstanceIds = new Set(matches.filter(Boolean));
+  const allMatched = matches.every(m => m !== null);
+  const correctCount = matches.filter((inst, i) => {
+    if (!inst) return false;
+    const chip = chipPool.find(c => c.instanceId === inst);
+    return chip && chip.chipId === spots[i]?.correctChip;
+  }).length;
+  const allCorrect = done && correctCount === spots.length;
+
+  const pickChip = (instanceId) => {
+    if (done) return;
+    if (usedInstanceIds.has(instanceId)) return;
+    setSelectedChip(prev => prev === instanceId ? null : instanceId);
+  };
+
+  const tapSpot = (spotIdx) => {
+    if (done) return;
+    // If the spot has a match, tapping it unmatches (returns chip to bank).
+    if (matches[spotIdx] !== null) {
+      const next = [...matches];
+      next[spotIdx] = null;
+      setMatches(next);
+      return;
+    }
+    if (!selectedChip) return;
+    const next = [...matches];
+    next[spotIdx] = selectedChip;
+    setMatches(next);
+    setSelectedChip(null);
+  };
+
+  const submit = () => {
+    if (done || !allMatched) return;
+    setDone(true);
+    onAnswer?.(correctCount === spots.length);
+  };
+  const reset = () => {
+    setMatches(spots.map(() => null));
+    setSelectedChip(null);
+    setDone(false);
+    onReset?.();
+  };
+
+  // Label position in normalized 0–1 coords so SVG lines and HTML labels
+  // can share the same positioning math.
+  const labelPosNorm = (spot) => {
+    const dxc = spot.x - 0.5, dyc = spot.y - 0.5;
+    const len = Math.sqrt(dxc*dxc + dyc*dyc);
+    let ax = len > 0.01 ? dxc / len : 0;
+    let ay = len > 0.01 ? dyc / len : 1;
+    if (spot.y < 0.15) ay = Math.max(ay, 0.7);
+    if (spot.y > 0.85) ay = Math.min(ay, -0.7);
+    if (spot.x < 0.12) ax = Math.max(ax, 0.7);
+    if (spot.x > 0.85) ax = Math.min(ax, -0.7);
+    const RAD = 0.10;
+    return { x: clamp(spot.x + ax * RAD, 0.05, 0.95), y: clamp(spot.y + ay * RAD, 0.05, 0.95) };
+  };
+
+  const placedCount = matches.filter(m => m !== null).length;
+
+  return (
+    <div>
+      <p style={questionTextStyle}>{question.q || "Match each label to the correct spot."}</p>
+      <p style={hintTextStyle}>
+        {done
+          ? (allCorrect ? `All ${spots.length} matched correctly.` : `Got ${correctCount} of ${spots.length}.`)
+          : selectedChip
+            ? `Now tap a numbered spot to place the highlighted label. ${placedCount} of ${spots.length} matched.`
+            : `Tap a label below, then tap the matching spot. ${placedCount} of ${spots.length} matched.`}
+      </p>
+
+      <MediaCanvas media={question.media}>
+        {/* Connector lines drawn behind the dots/labels. Stretches with the
+            image since preserveAspectRatio="none". */}
+        <svg
+          style={{ position: "absolute", inset: 0, width: "100%", height: "100%", pointerEvents: "none" }}
+          viewBox="0 0 1 1"
+          preserveAspectRatio="none">
+          {spots.map((s, i) => {
+            if (matches[i] === null) return null;
+            const lp = labelPosNorm(s);
+            const matchedChip = chipPool.find(c => c.instanceId === matches[i]);
+            const right = done && matchedChip?.chipId === s.correctChip;
+            const wrong = done && matchedChip?.chipId !== s.correctChip;
+            const stroke = wrong ? "#ef4444" : right ? "#22c55e" : "#5BA4E8";
+            const dash = wrong ? "0.012 0.008" : "none";
+            return (
+              <line key={i}
+                x1={s.x} y1={s.y}
+                x2={lp.x} y2={lp.y}
+                stroke={stroke}
+                strokeWidth="2"
+                strokeDasharray={dash}
+                vectorEffect="non-scaling-stroke" />
+            );
+          })}
+        </svg>
+
+        {/* Numbered spots */}
+        {spots.map((s, i) => {
+          const x = clamp(toFiniteNumber(s.x, 0.5), 0, 1);
+          const y = clamp(toFiniteNumber(s.y, 0.5), 0, 1);
+          const matched = matches[i] !== null;
+          const isActiveTarget = !done && !matched && selectedChip;
+          const matchedChip = matched ? chipPool.find(c => c.instanceId === matches[i]) : null;
+          const right = done && matched && matchedChip?.chipId === s.correctChip;
+          const wrong = done && matched && matchedChip?.chipId !== s.correctChip;
+          let dotColor = "rgba(255,255,255,0.7)", dotBg = "rgba(0,0,0,0.45)";
+          if (matched && !done) { dotColor = "#5BA4E8"; dotBg = "rgba(91,164,232,0.40)"; }
+          if (right) { dotColor = "#22c55e"; dotBg = "rgba(34,197,94,0.40)"; }
+          if (wrong) { dotColor = "#ef4444"; dotBg = "rgba(239,68,68,0.40)"; }
+          return (
+            <div key={i}
+              onClick={() => tapSpot(i)}
+              style={{
+                position: "absolute",
+                left: `${x * 100}%`, top: `${y * 100}%`,
+                transform: "translate(-50%, -50%)",
+                width: 30, height: 30, borderRadius: "50%",
+                background: dotBg,
+                border: `2.5px solid ${dotColor}`,
+                color: dotColor,
+                display: "flex", alignItems: "center", justifyContent: "center",
+                fontFamily: FONT.body, fontSize: 13, fontWeight: 800,
+                cursor: done ? "default" : "pointer",
+                boxShadow: "0 1px 3px rgba(0,0,0,0.5)",
+                animation: isActiveTarget ? "rrPulseGreen 1.4s infinite ease-in-out" : "none",
+              }}>
+              {i + 1}
+            </div>
+          );
+        })}
+
+        {/* Matched labels (anchored at labelPosNorm) */}
+        {spots.map((s, i) => {
+          if (matches[i] === null) return null;
+          const lp = labelPosNorm(s);
+          const matchedChip = chipPool.find(c => c.instanceId === matches[i]);
+          if (!matchedChip) return null;
+          const right = done && matchedChip.chipId === s.correctChip;
+          const wrong = done && matchedChip.chipId !== s.correctChip;
+          let labelBg = C.bgCard, labelColor = C.white, labelBorder = C.gold;
+          if (!done) { labelBg = "rgba(244,196,48,0.18)"; labelColor = C.gold; labelBorder = C.gold; }
+          if (right) { labelBg = "rgba(34,197,94,0.20)"; labelColor = "#22c55e"; labelBorder = "#22c55e"; }
+          if (wrong) { labelBg = "rgba(239,68,68,0.20)"; labelColor = "#ef4444"; labelBorder = "#ef4444"; }
+          return (
+            <div key={i}
+              onClick={() => tapSpot(i)}
+              style={{
+                position: "absolute",
+                left: `${lp.x * 100}%`, top: `${lp.y * 100}%`,
+                transform: "translate(-50%, -50%)",
+                padding: "0.25rem 0.55rem", fontSize: 12, fontWeight: 800,
+                fontFamily: FONT.body, color: labelColor,
+                background: labelBg,
+                border: `${wrong ? "1.5px dashed" : "1.5px solid"} ${labelBorder}`,
+                borderRadius: 999, whiteSpace: "nowrap",
+                cursor: done ? "default" : "pointer",
+                boxShadow: "0 2px 4px rgba(0,0,0,0.5)",
+              }}>
+              {right && <span style={{ marginRight: 3, fontFamily: "system-ui, sans-serif" }}>✓</span>}
+              {wrong && <span style={{ marginRight: 3, fontFamily: "system-ui, sans-serif" }}>✕</span>}
+              {getRinkFeatureName(matchedChip.chipId)}
+              {wrong && (
+                <span style={{ marginLeft: 4, opacity: 0.85 }}>→ {getRinkFeatureName(s.correctChip)}</span>
+              )}
+            </div>
+          );
+        })}
+      </MediaCanvas>
+
+      {/* Chip bank — single-use chips, dim when matched, gold ring when selected */}
+      <div style={{ marginTop: ".75rem" }}>
+        <div style={{ fontSize: 11, color: C.dim, marginBottom: ".4rem", letterSpacing: ".06em", textTransform: "uppercase", fontWeight: 700 }}>
+          Labels
+        </div>
+        <div style={{ display: "flex", flexWrap: "wrap", gap: ".5rem" }}>
+          {chipPool.map(c => {
+            const isUsed = usedInstanceIds.has(c.instanceId);
+            const isSelected = selectedChip === c.instanceId;
+            return (
+              <button
+                key={c.instanceId}
+                type="button"
+                onClick={() => pickChip(c.instanceId)}
+                disabled={isUsed || done}
+                style={{
+                  padding: "0.5rem 0.85rem", fontSize: 13, fontWeight: 700,
+                  fontFamily: FONT.body,
+                  color: isUsed ? C.dimmer : (isSelected ? C.bg : C.white),
+                  background: isUsed ? "transparent" : (isSelected ? C.gold : C.bgCard),
+                  border: `2px solid ${isSelected ? C.gold : (isUsed ? C.dimmest : C.border)}`,
+                  borderRadius: 999,
+                  cursor: (isUsed || done) ? "default" : "pointer",
+                  opacity: isUsed ? 0.4 : 1,
+                  textDecoration: isUsed ? "line-through" : "none",
+                  boxShadow: isSelected ? `0 0 0 3px rgba(244,196,48,0.35)` : "none",
+                  transition: "background .12s ease, border-color .12s ease, box-shadow .12s ease",
+                }}>
+                {getRinkFeatureName(c.chipId)}
+              </button>
+            );
+          })}
+        </div>
+      </div>
+
+      {!done && allMatched && (
         <div style={actionRowStyle("space-between")}>
           <button onClick={reset} style={secondaryBtnStyle}>Clear all</button>
           <button onClick={submit} style={{
