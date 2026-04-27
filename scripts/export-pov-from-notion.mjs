@@ -205,12 +205,16 @@ function cleanQuestion(page) {
     explanation.includes("NOT AUTO-GRADED")
   );
 
-  // Age Group on questions is single-value-but-stored-as-multi (one row per age)
+  // Age Group on questions: now multi-select. Older POV rows had one age
+  // each; newer scenario rows tag multiple (U11 + U13). Keep both shapes
+  // exposed for backward compatibility — `ageGroup` is the first one (used
+  // by old consumers); `ageGroups` is the full array (used by sync-to-bank).
   const ageGroups = readProp(p["Age Group"]) || [];
 
   return {
     id:             readProp(p["Question ID"]),
     ageGroup:       ageGroups[0] || null,
+    ageGroups,
     format,
     rawFormat,
     difficulty:     readProp(p["Difficulty"]),

@@ -92,12 +92,16 @@ function mapPositions(positionList) {
   return Array.from(out);
 }
 
-function mapLevels(ageGroup) {
-  // Notion sync writes a single ageGroup per question (one row per age in the
-  // questions DB). Wrap in array; future multi-age support can extend here.
-  if (!ageGroup) return ["U9 / Novice"];
-  const lvl = AGE_TO_LEVEL[ageGroup];
-  return lvl ? [lvl] : ["U9 / Novice"];
+function mapLevels(q) {
+  // Newer scenario rows expose `ageGroups` (array, multi-age tagging).
+  // Older POV rows expose `ageGroup` (single). Support both: prefer the
+  // array if non-empty, otherwise fall back to the single value.
+  const arr = Array.isArray(q.ageGroups) && q.ageGroups.length > 0
+    ? q.ageGroups
+    : (q.ageGroup ? [q.ageGroup] : []);
+  if (arr.length === 0) return ["U9 / Novice"];
+  const mapped = arr.map(a => AGE_TO_LEVEL[a]).filter(Boolean);
+  return mapped.length > 0 ? mapped : ["U9 / Novice"];
 }
 
 function pickImageUrl(image) {
@@ -107,7 +111,7 @@ function pickImageUrl(image) {
 }
 
 function buildRow(image, q) {
-  const levels = mapLevels(q.ageGroup);
+  const levels = mapLevels(q);
   const primaryLevel = levels[0];
   const opts = (q.options || []).map(o => o.text);
   return {
@@ -150,6 +154,8 @@ for (const lvl of Object.keys(bank)) {
 let added = 0;
 let urlRefreshed = 0;
 let untouched = 0;
+let skippedHotspot = 0;
+let skippedNonMc = 0;
 
 for (const image of src.images || []) {
   const url = pickImageUrl(image);
@@ -169,6 +175,19 @@ for (const image of src.images || []) {
       }
       continue;
     }
+    // Hotspot questions need numeric x/y/correct/msg coords that don't
+    // live in the Notion schema today. Skip them with a warning so the
+    // author knows to hand-author the hot-spots JSON entry directly.
+    if (q.format === "Hotspot") {
+      skippedHotspot++;
+      continue;
+    }
+    // Multi-Select / True/False / Open Response / Sequence Prediction
+    // aren't yet wired through this seeder. Skip with a warning.
+    if (q.format && q.format !== "Multiple Choice") {
+      skippedNonMc++;
+      continue;
+    }
     const { primaryLevel, row } = buildRow(image, q);
     if (!bank[primaryLevel]) bank[primaryLevel] = [];
     bank[primaryLevel].push(row);
@@ -183,3 +202,5 @@ console.log(`Seeded POV from ${path.relative(process.cwd(), sourcePath)}`);
 console.log(`  Added:     ${added}`);
 console.log(`  URL fresh: ${urlRefreshed}`);
 console.log(`  Untouched: ${untouched}`);
+if (skippedHotspot > 0) console.log(`  Skipped hotspot: ${skippedHotspot} (need manual coords — author hot-spots JSON in questions.json directly)`);
+if (skippedNonMc > 0)   console.log(`  Skipped non-MC:  ${skippedNonMc} (Sequence/Open Response/etc. not yet auto-seeded)`);
