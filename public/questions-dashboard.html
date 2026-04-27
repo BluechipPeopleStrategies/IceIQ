@@ -265,7 +265,7 @@ function render() {
   body.querySelectorAll("[data-play]").forEach(btn => {
     btn.addEventListener("click", e => {
       e.stopPropagation();
-      window.open(`${APP_BASE}/?ids=${encodeURIComponent(e.target.dataset.play)}`, "_blank");
+      window.open(`${APP_BASE}/?ids=${encodeURIComponent(e.target.dataset.play)}&demo=player`, "_blank");
     });
   });
 }
@@ -390,7 +390,7 @@ $("play-set").addEventListener("click", () => {
   if (ids.length > 50) {
     if (!confirm(`Open the app with ${ids.length} questions queued? URL will be long.`)) return;
   }
-  window.open(`${APP_BASE}/?ids=${encodeURIComponent(ids.join(","))}`, "_blank");
+  window.open(`${APP_BASE}/?ids=${encodeURIComponent(ids.join(","))}&demo=player`, "_blank");
 });
 
 loadQuestions();
