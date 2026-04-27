@@ -1,0 +1,709 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>RinkReads — Scene Builder</title>
+<style>
+  :root {
+    --bg: #0f1116; --card: #1a1d24; --border: #2a2f3a;
+    --gold: #f4c430; --blue: #5BA4E8; --green: #22c55e; --red: #ef4444;
+    --amber: #eab308;
+    --dim: #aaa; --dimmer: #777; --white: #fff;
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; padding: 1.5rem; background: var(--bg); color: var(--white);
+         font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+         max-width: 1400px; margin: 0 auto; }
+  h1 { font-size: 1.3rem; margin: 0 0 .35rem; color: var(--gold); }
+  h2 { font-size: 1rem; margin: 0 0 .5rem; color: var(--white); }
+  p.lead { font-size: .85rem; color: var(--dim); margin: 0 0 1.25rem; }
+  label { display: block; font-size: 11px; color: var(--dim); margin-bottom: .25rem;
+          letter-spacing: .06em; text-transform: uppercase; font-weight: 700; }
+  input, select, textarea {
+    width: 100%; padding: .5rem .65rem; font-size: 13px;
+    background: var(--card); color: var(--white); border: 1px solid var(--border);
+    border-radius: 6px; font-family: inherit;
+  }
+  textarea { font-family: "Courier New", monospace; font-size: 12px; line-height: 1.5; }
+  button { padding: .5rem .9rem; font-size: 13px; font-weight: 700;
+           background: var(--gold); color: var(--bg); border: none;
+           border-radius: 6px; cursor: pointer; font-family: inherit; }
+  button.secondary { background: transparent; color: var(--dim); border: 1px solid var(--border); }
+  button.danger { background: transparent; color: var(--red); border: 1px solid var(--red); }
+
+  .layout { display: grid; grid-template-columns: 1.4fr 1fr; gap: 1rem; }
+  @media (max-width: 1100px) { .layout { grid-template-columns: 1fr; } }
+
+  .panel { background: var(--card); border: 1px solid var(--border); border-radius: 10px;
+           padding: 1rem; margin-bottom: 1rem; }
+  .row { display: grid; grid-template-columns: 1fr 1fr; gap: .75rem; margin-bottom: .75rem; }
+  .row.three { grid-template-columns: 1fr 1fr 1fr; }
+  .row.full { grid-template-columns: 1fr; }
+  .help { font-size: 11px; color: var(--dimmer); margin-top: .35rem; }
+
+  /* Rink stage */
+  .stage-wrap { background: var(--card); border: 1px solid var(--border); border-radius: 10px;
+                padding: .75rem; }
+  svg.rink { width: 100%; height: auto; background: #F4FAFF; border-radius: 6px;
+             touch-action: none; user-select: none; -webkit-user-select: none; }
+  .actor-token { cursor: grab; }
+  .actor-token:active { cursor: grabbing; }
+  .actor-selected { outline: 2px solid var(--gold); outline-offset: 1px; }
+
+  /* Palette */
+  .palette { display: flex; gap: .5rem; flex-wrap: wrap; margin-top: .75rem; padding-top: .75rem;
+             border-top: 1px solid var(--border); }
+  .palette-item { padding: .35rem .55rem; font-size: 12px; font-weight: 700;
+                  background: var(--card); border: 1.5px solid var(--border);
+                  border-radius: 999px; cursor: grab; user-select: none;
+                  display: inline-flex; align-items: center; gap: .35rem;
+                  touch-action: none; }
+  .palette-item:active { cursor: grabbing; }
+  .palette-item .swatch { width: 16px; height: 16px; border-radius: 50%;
+                           border: 2px solid #fff; flex-shrink: 0; }
+  .palette-item.you .swatch { background: #185FA5; }
+  .palette-item.teammate .swatch { background: #1D9E75; }
+  .palette-item.defender .swatch { background: #CC1F2B; }
+  .palette-item.goalie .swatch { background: #444441; border-radius: 35%/45%; height: 18px; }
+  .palette-item.puck .swatch { background: #2C2C2A; height: 6px; border-radius: 50%; align-self: center; }
+
+  /* Actor list */
+  .actors-list { margin-top: .75rem; max-height: 200px; overflow-y: auto;
+                 border-top: 1px solid var(--border); padding-top: .5rem; }
+  .actor-row { display: grid; grid-template-columns: 24px 90px 1fr 50px 50px auto;
+               gap: .35rem; align-items: center; padding: .35rem 0;
+               font-size: 11px; border-bottom: 1px solid rgba(255,255,255,.04); }
+  .actor-row .swatch { width: 14px; height: 14px; border-radius: 50%; border: 1.5px solid #fff; }
+  .actor-row .swatch.goalie { border-radius: 35%/45%; height: 16px; background: #444441; }
+  .actor-row .swatch.puck { background: #2C2C2A; height: 5px; }
+  .actor-row .swatch.you { background: #185FA5; }
+  .actor-row .swatch.teammate { background: #1D9E75; }
+  .actor-row .swatch.defender { background: #CC1F2B; }
+  .actor-row input { padding: .2rem .35rem; font-size: 11px; }
+  .actor-row button { padding: .2rem .45rem; font-size: 11px; }
+
+  /* Output */
+  textarea#output { width: 100%; min-height: 280px; }
+  .actions { display: flex; gap: .5rem; flex-wrap: wrap; margin: .5rem 0 1rem; }
+
+  /* MC option editor */
+  .mc-opts { display: flex; flex-direction: column; gap: .4rem; }
+  .mc-opt { display: grid; grid-template-columns: auto 14px 1fr auto; gap: .4rem;
+            align-items: center; padding: .35rem; background: rgba(255,255,255,.03);
+            border: 1px solid var(--border); border-radius: 6px; }
+  .mc-opt input[type="radio"] { width: auto; margin: 0; }
+  .mc-opt .letter { font-size: 11px; font-weight: 800; color: var(--gold); text-align: center; }
+  .mc-opt button { padding: .15rem .35rem; font-size: 11px; }
+
+  .nav-link { font-size: 12px; color: var(--blue); text-decoration: none; }
+  .nav-link:hover { text-decoration: underline; }
+
+  details summary { font-size: 11px; color: var(--blue); cursor: pointer;
+                    padding: .35rem 0; user-select: none; }
+</style>
+</head>
+<body>
+
+<h1>🏒 RinkReads — Scene Builder</h1>
+<p class="lead">Drag player tokens onto the rink. Drag placed tokens to move them. Click a token in the list to rename it.
+   The scene exports as a <code>scenario</code>-type question with <code>actors[]</code>; paste into
+   <code>src/data/questions.json</code> and the engine renders it on the same procedural rink.</p>
+<p class="lead">
+  <a class="nav-link" href="/questions-dashboard.html">← Back to Questions Dashboard</a> ·
+  <a class="nav-link" href="/coach-authoring.html">Photo-based authoring →</a>
+</p>
+
+<div class="layout">
+
+<!-- LEFT: Rink stage + palette + actor list -->
+<div>
+  <div class="stage-wrap">
+    <h2>Rink</h2>
+    <p class="help">Drag a chip from the palette below onto the ice. Then drag any placed token to reposition.</p>
+    <svg class="rink" id="rink" viewBox="0 0 600 300" xmlns="http://www.w3.org/2000/svg">
+      <!-- The ice + boards -->
+      <rect x="0" y="0" width="600" height="300" rx="85" ry="85" fill="#F4FAFF" stroke="#1a2638" stroke-width="3"/>
+      <!-- Goal lines (red) -->
+      <line x1="40" y1="20" x2="40" y2="280" stroke="#CC1F2B" stroke-width="1.5"/>
+      <line x1="560" y1="20" x2="560" y2="280" stroke="#CC1F2B" stroke-width="1.5"/>
+      <!-- Blue lines -->
+      <line x1="213" y1="2" x2="213" y2="298" stroke="#1F7ACC" stroke-width="3"/>
+      <line x1="387" y1="2" x2="387" y2="298" stroke="#1F7ACC" stroke-width="3"/>
+      <!-- Center red line -->
+      <line x1="300" y1="2" x2="300" y2="298" stroke="#CC1F2B" stroke-width="3" stroke-dasharray="3 3"/>
+      <!-- Center face-off circle -->
+      <circle cx="300" cy="150" r="45" stroke="#1F7ACC" stroke-width="1.5" fill="none"/>
+      <circle cx="300" cy="150" r="2.5" fill="#1F7ACC"/>
+      <!-- End-zone face-off circles + dots -->
+      <circle cx="100" cy="80" r="45" stroke="#CC1F2B" stroke-width="1.5" fill="none"/>
+      <circle cx="100" cy="80" r="2" fill="#CC1F2B"/>
+      <circle cx="100" cy="220" r="45" stroke="#CC1F2B" stroke-width="1.5" fill="none"/>
+      <circle cx="100" cy="220" r="2" fill="#CC1F2B"/>
+      <circle cx="500" cy="80" r="45" stroke="#CC1F2B" stroke-width="1.5" fill="none"/>
+      <circle cx="500" cy="80" r="2" fill="#CC1F2B"/>
+      <circle cx="500" cy="220" r="45" stroke="#CC1F2B" stroke-width="1.5" fill="none"/>
+      <circle cx="500" cy="220" r="2" fill="#CC1F2B"/>
+      <!-- NZ face-off dots -->
+      <circle cx="228" cy="80" r="2" fill="#CC1F2B"/>
+      <circle cx="228" cy="220" r="2" fill="#CC1F2B"/>
+      <circle cx="372" cy="80" r="2" fill="#CC1F2B"/>
+      <circle cx="372" cy="220" r="2" fill="#CC1F2B"/>
+      <!-- Goal creases -->
+      <path d="M 40 132 A 18 18 0 0 1 40 168 Z" fill="#CCE4F5" stroke="#1F7ACC" stroke-width="1"/>
+      <path d="M 560 132 A 18 18 0 0 0 560 168 Z" fill="#CCE4F5" stroke="#1F7ACC" stroke-width="1"/>
+      <!-- Nets -->
+      <rect x="29" y="141" width="11" height="18" fill="#FFE4E6" stroke="#CC1F2B" stroke-width="1"/>
+      <rect x="560" y="141" width="11" height="18" fill="#FFE4E6" stroke="#CC1F2B" stroke-width="1"/>
+
+      <!-- Defender pinstripe pattern (used when an actor.kind === "defender") -->
+      <defs>
+        <pattern id="defender-stripes" patternUnits="userSpaceOnUse" width="2" height="2">
+          <rect width="2" height="2" fill="#CC1F2B"/>
+          <line x1="0" y1="0" x2="0" y2="2" stroke="#5a5a58" stroke-width="0.6"/>
+        </pattern>
+      </defs>
+
+      <!-- Actors get rendered into this group -->
+      <g id="actors-group"></g>
+    </svg>
+
+    <div class="palette" id="palette">
+      <div class="palette-item you" draggable="true" data-kind="you">
+        <span class="swatch"></span><span>YOU (puck carrier)</span>
+      </div>
+      <div class="palette-item teammate" draggable="true" data-kind="teammate">
+        <span class="swatch"></span><span>Teammate</span>
+      </div>
+      <div class="palette-item defender" draggable="true" data-kind="defender">
+        <span class="swatch"></span><span>Defender</span>
+      </div>
+      <div class="palette-item goalie" draggable="true" data-kind="goalie">
+        <span class="swatch"></span><span>Goalie</span>
+      </div>
+      <div class="palette-item puck" draggable="true" data-kind="puck">
+        <span class="swatch"></span><span>Puck</span>
+      </div>
+    </div>
+
+    <div class="actors-list" id="actorsList"></div>
+  </div>
+</div>
+
+<!-- RIGHT: question metadata + JSON output -->
+<div>
+  <div class="panel">
+    <h2>Question metadata</h2>
+    <div class="row full">
+      <div>
+        <label>id (snake_case, unique)</label>
+        <input type="text" id="qid" placeholder="u11_scenario_oz_passing_lane_v1" />
+      </div>
+    </div>
+    <div class="row full">
+      <div>
+        <label>Prompt — what the player sees</label>
+        <input type="text" id="qprompt" placeholder="Tap the open teammate." />
+      </div>
+    </div>
+    <div class="row">
+      <div>
+        <label>Stage view</label>
+        <select id="qview" title="Camera/zoom">
+          <option value="full">Full rink</option>
+          <option value="left">Left half (DZ)</option>
+          <option value="right">Right half (OZ)</option>
+          <option value="neutral">Neutral zone</option>
+        </select>
+      </div>
+      <div>
+        <label>Zone tag</label>
+        <select id="qzone" title="Zone semantic">
+          <option value="">none</option>
+          <option value="def-zone">def-zone</option>
+          <option value="neutral">neutral</option>
+          <option value="off-zone">off-zone</option>
+        </select>
+      </div>
+    </div>
+    <div class="row three">
+      <div>
+        <label>Category</label>
+        <input type="text" id="qcat" value="Vision" />
+      </div>
+      <div>
+        <label>Difficulty</label>
+        <select id="qd" title="Difficulty">
+          <option value="1">1 — Easy</option>
+          <option value="2" selected>2 — Medium</option>
+          <option value="3">3 — Hard</option>
+        </select>
+      </div>
+      <div>
+        <label>Positions</label>
+        <select id="qpos" title="Position filter">
+          <option value="F,D,G">All</option>
+          <option value="F">Forwards</option>
+          <option value="D">Defense</option>
+          <option value="G">Goalies</option>
+          <option value="F,D">Skaters</option>
+        </select>
+      </div>
+    </div>
+    <div class="row full">
+      <div>
+        <label>Levels (comma-separated)</label>
+        <input type="text" id="qlevels" value="U11 / Atom, U13 / Peewee" />
+      </div>
+    </div>
+  </div>
+
+  <div class="panel">
+    <h2>Interaction (selection)</h2>
+    <p class="help">Pick which actor(s) the player should tap. Use the actor list on the left to assign correctness.
+       For other interaction kinds (path, sequence) edit the JSON manually.</p>
+    <div class="row full">
+      <div>
+        <label>Tip / "right" feedback</label>
+        <input type="text" id="qtipright" placeholder="Right read — that teammate has the lane." />
+      </div>
+    </div>
+    <div class="row full">
+      <div>
+        <label>"wrong" feedback</label>
+        <input type="text" id="qtipwrong" placeholder="That teammate is covered — look weak-side." />
+      </div>
+    </div>
+  </div>
+
+  <div class="panel">
+    <h2>JSON output</h2>
+    <textarea id="output" readonly></textarea>
+    <div class="actions">
+      <button type="button" id="copyBtn">Copy JSON</button>
+      <button type="button" class="secondary" id="exportBtn">Download .json</button>
+      <button type="button" class="danger" id="resetBtn">Reset scene</button>
+    </div>
+    <p class="help">Paste this object into one of the level arrays in <code>src/data/questions.json</code>.
+       Bump the cache key in <code>src/qbLoader.js</code> and refresh.</p>
+  </div>
+</div>
+</div>
+
+<script>
+// ─────────────────────────────────────────────────────────────────────────
+// State
+// ─────────────────────────────────────────────────────────────────────────
+const LS_KEY = "rinkreads_scene_builder_v1";
+const RINK_W = 600;
+const RINK_H = 300;
+let nextActorId = 1;
+
+const initialState = {
+  // metadata
+  id: "",
+  q: "",
+  view: "full",
+  zone: "",
+  cat: "Vision",
+  d: 2,
+  pos: "F,D,G",
+  levels: "U11 / Atom, U13 / Peewee",
+  tipRight: "",
+  tipWrong: "",
+  // scene
+  actors: [], // [{ id, kind, x, y, tag, target }]
+};
+
+let state = loadState();
+
+function loadState() {
+  try {
+    const raw = localStorage.getItem(LS_KEY);
+    if (raw) {
+      const parsed = JSON.parse(raw);
+      const merged = Object.assign({}, initialState, parsed);
+      // Normalize actor ids
+      if (Array.isArray(merged.actors)) {
+        merged.actors.forEach(a => {
+          if (typeof a.id !== "string" || !a.id) a.id = "a" + (nextActorId++);
+          else {
+            const m = a.id.match(/^a(\d+)$/);
+            if (m && +m[1] >= nextActorId) nextActorId = +m[1] + 1;
+          }
+        });
+      }
+      return merged;
+    }
+  } catch (e) {}
+  return JSON.parse(JSON.stringify(initialState));
+}
+function saveState() {
+  try { localStorage.setItem(LS_KEY, JSON.stringify(state)); } catch (e) {}
+}
+
+// ─────────────────────────────────────────────────────────────────────────
+// DOM refs
+// ─────────────────────────────────────────────────────────────────────────
+const $ = id => document.getElementById(id);
+const rink = $("rink");
+const actorsGroup = $("actors-group");
+const actorsList = $("actorsList");
+const out = $("output");
+
+// ─────────────────────────────────────────────────────────────────────────
+// Helpers
+// ─────────────────────────────────────────────────────────────────────────
+const escapeHtml = s => String(s == null ? "" : s).replace(/[&<>"']/g, c =>
+  ({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[c]));
+
+const round = v => Math.round(v * 1000) / 1000;
+const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
+
+// SVG point translation — convert client coords to viewBox coords
+function clientToSvg(clientX, clientY) {
+  const pt = rink.createSVGPoint();
+  pt.x = clientX; pt.y = clientY;
+  const ctm = rink.getScreenCTM();
+  if (!ctm) return { x: 0, y: 0 };
+  const p = pt.matrixTransform(ctm.inverse());
+  return { x: clamp(p.x, 5, RINK_W - 5), y: clamp(p.y, 5, RINK_H - 5) };
+}
+
+// ─────────────────────────────────────────────────────────────────────────
+// Render
+// ─────────────────────────────────────────────────────────────────────────
+function renderActors() {
+  actorsGroup.innerHTML = "";
+  state.actors.forEach(a => {
+    const g = document.createElementNS("http://www.w3.org/2000/svg", "g");
+    g.setAttribute("transform", `translate(${a.x}, ${a.y})`);
+    g.setAttribute("class", "actor-token");
+    g.dataset.id = a.id;
+
+    if (a.kind === "puck") {
+      const e = document.createElementNS("http://www.w3.org/2000/svg", "ellipse");
+      e.setAttribute("cx", 0); e.setAttribute("cy", 0.4);
+      e.setAttribute("rx", 4); e.setAttribute("ry", 1.6);
+      e.setAttribute("fill", "#2C2C2A");
+      e.setAttribute("stroke", "#fff");
+      e.setAttribute("stroke-width", "0.4");
+      g.appendChild(e);
+    } else if (a.kind === "goalie") {
+      const e = document.createElementNS("http://www.w3.org/2000/svg", "ellipse");
+      e.setAttribute("cx", 0); e.setAttribute("cy", 0);
+      e.setAttribute("rx", 4.8); e.setAttribute("ry", 6.2);
+      e.setAttribute("fill", "#444441");
+      e.setAttribute("stroke", "#fff");
+      e.setAttribute("stroke-width", "0.7");
+      g.appendChild(e);
+      const t = document.createElementNS("http://www.w3.org/2000/svg", "text");
+      t.setAttribute("x", 0); t.setAttribute("y", 1.9);
+      t.setAttribute("text-anchor", "middle");
+      t.setAttribute("fill", "#fff");
+      t.setAttribute("font-size", "5.6");
+      t.setAttribute("font-weight", "700");
+      t.setAttribute("font-family", "system-ui");
+      t.textContent = a.tag || "G";
+      g.appendChild(t);
+    } else {
+      const fill = a.kind === "defender" ? "url(#defender-stripes)"
+                  : a.kind === "teammate" ? "#1D9E75"
+                  : "#185FA5"; // you / fallback
+      const r = (a.kind === "you") ? 7 : 6;
+      const c = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+      c.setAttribute("cx", 0); c.setAttribute("cy", 0); c.setAttribute("r", r);
+      c.setAttribute("fill", fill);
+      c.setAttribute("stroke", "#fff");
+      c.setAttribute("stroke-width", a.kind === "you" ? "1.0" : "0.7");
+      g.appendChild(c);
+      const t = document.createElementNS("http://www.w3.org/2000/svg", "text");
+      t.setAttribute("x", 0); t.setAttribute("y", 2);
+      t.setAttribute("text-anchor", "middle");
+      t.setAttribute("fill", "#fff");
+      t.setAttribute("font-size", "5.6");
+      t.setAttribute("font-weight", "700");
+      t.setAttribute("font-family", "system-ui");
+      t.textContent = a.tag || (a.kind === "you" ? "YOU" : "");
+      g.appendChild(t);
+    }
+
+    g.addEventListener("pointerdown", onActorPointerDown);
+    actorsGroup.appendChild(g);
+  });
+}
+
+function renderActorsList() {
+  if (state.actors.length === 0) {
+    actorsList.innerHTML = '<div class="help" style="padding:.5rem .25rem;">No actors yet — drag a chip from the palette onto the rink.</div>';
+    return;
+  }
+  actorsList.innerHTML = state.actors.map((a, i) => `
+    <div class="actor-row" data-id="${a.id}">
+      <span class="swatch ${a.kind}"></span>
+      <span style="font-family:monospace;font-size:11px;color:#aaa;">${a.id}</span>
+      <input type="text" data-tag="${a.id}" value="${escapeHtml(a.tag || "")}" placeholder="${a.kind === "you" ? "YOU" : "tag"}" ${a.kind === "puck" ? "disabled" : ""} />
+      <label style="display:flex;align-items:center;gap:.25rem;font-size:10px;text-transform:none;letter-spacing:0;cursor:pointer;color:${a.target ? "var(--green)" : "var(--dim)"};margin:0;">
+        <input type="checkbox" data-target="${a.id}" ${a.target ? "checked" : ""} style="width:auto;margin:0;" /> tap target
+      </label>
+      <label style="display:flex;align-items:center;gap:.25rem;font-size:10px;text-transform:none;letter-spacing:0;cursor:pointer;color:${a.correct ? "var(--gold)" : "var(--dim)"};margin:0;">
+        <input type="checkbox" data-correct="${a.id}" ${a.correct ? "checked" : ""} style="width:auto;margin:0;" /> correct
+      </label>
+      <button type="button" class="danger" data-del="${a.id}">✕</button>
+    </div>
+  `).join("");
+
+  actorsList.querySelectorAll("[data-tag]").forEach(inp => {
+    inp.addEventListener("input", e => {
+      const a = state.actors.find(x => x.id === e.target.dataset.tag);
+      if (a) { a.tag = e.target.value; saveState(); renderActors(); updateOutput(); }
+    });
+  });
+  actorsList.querySelectorAll("[data-target]").forEach(cb => {
+    cb.addEventListener("change", e => {
+      const a = state.actors.find(x => x.id === e.target.dataset.target);
+      if (a) { a.target = e.target.checked; if (!a.target) a.correct = false; saveState(); renderActorsList(); updateOutput(); }
+    });
+  });
+  actorsList.querySelectorAll("[data-correct]").forEach(cb => {
+    cb.addEventListener("change", e => {
+      const a = state.actors.find(x => x.id === e.target.dataset.correct);
+      if (a) { a.correct = e.target.checked; if (a.correct) a.target = true; saveState(); renderActorsList(); updateOutput(); }
+    });
+  });
+  actorsList.querySelectorAll("[data-del]").forEach(btn => {
+    btn.addEventListener("click", e => {
+      state.actors = state.actors.filter(x => x.id !== e.target.dataset.del);
+      saveState(); renderActors(); renderActorsList(); updateOutput();
+    });
+  });
+}
+
+// ─────────────────────────────────────────────────────────────────────────
+// Drag from palette → rink
+// ─────────────────────────────────────────────────────────────────────────
+let palettePointerDrag = null;
+
+document.querySelectorAll(".palette-item").forEach(el => {
+  // Pointer-based (works on touch + mouse)
+  el.addEventListener("pointerdown", e => {
+    e.preventDefault();
+    palettePointerDrag = { kind: el.dataset.kind, started: false };
+  });
+});
+
+document.addEventListener("pointermove", e => {
+  if (!palettePointerDrag) return;
+  palettePointerDrag.started = true;
+});
+
+document.addEventListener("pointerup", e => {
+  if (!palettePointerDrag) return;
+  // Drop only if released over the rink
+  const rect = rink.getBoundingClientRect();
+  if (e.clientX >= rect.left && e.clientX <= rect.right &&
+      e.clientY >= rect.top && e.clientY <= rect.bottom) {
+    const p = clientToSvg(e.clientX, e.clientY);
+    addActor(palettePointerDrag.kind, p.x, p.y);
+  }
+  palettePointerDrag = null;
+});
+
+// HTML5 drag-and-drop for desktop drag affordance
+document.querySelectorAll(".palette-item").forEach(el => {
+  el.addEventListener("dragstart", e => {
+    e.dataTransfer.setData("text/plain", el.dataset.kind);
+    e.dataTransfer.effectAllowed = "copy";
+  });
+});
+rink.addEventListener("dragover", e => { e.preventDefault(); e.dataTransfer.dropEffect = "copy"; });
+rink.addEventListener("drop", e => {
+  e.preventDefault();
+  const kind = e.dataTransfer.getData("text/plain");
+  if (!kind) return;
+  const p = clientToSvg(e.clientX, e.clientY);
+  addActor(kind, p.x, p.y);
+});
+
+function addActor(kind, x, y) {
+  const a = {
+    id: "a" + (nextActorId++),
+    kind,
+    x: clamp(x, 5, RINK_W - 5),
+    y: clamp(y, 5, RINK_H - 5),
+    tag: kind === "you" ? "YOU" : "",
+    target: false,
+    correct: false,
+  };
+  state.actors.push(a);
+  saveState(); renderActors(); renderActorsList(); updateOutput();
+}
+
+// ─────────────────────────────────────────────────────────────────────────
+// Drag placed actors
+// ─────────────────────────────────────────────────────────────────────────
+let drag = null; // { id, offsetX, offsetY }
+
+function onActorPointerDown(e) {
+  e.preventDefault();
+  e.stopPropagation();
+  const id = e.currentTarget.dataset.id;
+  const a = state.actors.find(x => x.id === id);
+  if (!a) return;
+  const p = clientToSvg(e.clientX, e.clientY);
+  drag = { id, offsetX: p.x - a.x, offsetY: p.y - a.y };
+  try { e.currentTarget.setPointerCapture(e.pointerId); } catch {}
+}
+
+document.addEventListener("pointermove", e => {
+  if (!drag) return;
+  const a = state.actors.find(x => x.id === drag.id);
+  if (!a) { drag = null; return; }
+  const p = clientToSvg(e.clientX, e.clientY);
+  a.x = clamp(p.x - drag.offsetX, 5, RINK_W - 5);
+  a.y = clamp(p.y - drag.offsetY, 5, RINK_H - 5);
+  // Update in place (don't re-render whole tree to avoid jank)
+  const node = actorsGroup.querySelector(`[data-id="${drag.id}"]`);
+  if (node) node.setAttribute("transform", `translate(${a.x}, ${a.y})`);
+});
+
+document.addEventListener("pointerup", () => {
+  if (drag) {
+    saveState(); updateOutput();
+    drag = null;
+  }
+});
+
+// ─────────────────────────────────────────────────────────────────────────
+// Metadata form wiring
+// ─────────────────────────────────────────────────────────────────────────
+function syncForm() {
+  $("qid").value = state.id;
+  $("qprompt").value = state.q;
+  $("qview").value = state.view;
+  $("qzone").value = state.zone;
+  $("qcat").value = state.cat;
+  $("qd").value = state.d;
+  $("qpos").value = state.pos;
+  $("qlevels").value = state.levels;
+  $("qtipright").value = state.tipRight;
+  $("qtipwrong").value = state.tipWrong;
+}
+
+["qid","qprompt","qview","qzone","qcat","qd","qpos","qlevels","qtipright","qtipwrong"].forEach(k => {
+  $(k).addEventListener("input", e => {
+    const map = { qid: "id", qprompt: "q", qview: "view", qzone: "zone",
+                  qcat: "cat", qd: "d", qpos: "pos", qlevels: "levels",
+                  qtipright: "tipRight", qtipwrong: "tipWrong" };
+    state[map[k]] = e.target.value;
+    saveState(); updateOutput();
+  });
+});
+
+// ─────────────────────────────────────────────────────────────────────────
+// JSON output
+// ─────────────────────────────────────────────────────────────────────────
+function buildJson() {
+  // Convert actors to scenario format with normalized 0–1 coords
+  const actors = state.actors.map(a => {
+    const obj = {
+      id: a.id,
+      kind: a.kind === "you" ? "player"
+          : a.kind === "teammate" ? "teammate"
+          : a.kind === "defender" ? "defender"
+          : a.kind === "goalie" ? "goalie"
+          : a.kind === "puck" ? "puck"
+          : "player",
+      x: round(a.x / RINK_W),
+      y: round(a.y / RINK_H),
+    };
+    if (a.tag) obj.tag = a.tag;
+    return obj;
+  });
+
+  const fromIds = state.actors.filter(a => a.target).map(a => a.id);
+  const correctIds = state.actors.filter(a => a.correct).map(a => a.id);
+
+  const stage = { view: state.view };
+  if (state.zone) stage.zone = state.zone;
+
+  const obj = {
+    id: state.id || "TODO_set_an_id",
+    type: "scenario",
+    cat: state.cat || "Vision",
+    pos: (state.pos || "F,D,G").split(","),
+    d: +state.d || 2,
+    stage,
+    actors,
+  };
+
+  if (fromIds.length > 0) {
+    obj.interaction = {
+      kind: "selection",
+      prompt: state.q || "Tap the right player.",
+      from: fromIds,
+      order: "any",
+    };
+    obj.correct = { kind: "selection", ids: correctIds };
+  } else if (state.q) {
+    // Author has a prompt but no targets yet — leave a placeholder so the
+    // shape is still visible in the output.
+    obj.interaction = {
+      kind: "selection",
+      prompt: state.q,
+      from: [],
+      order: "any",
+    };
+  }
+
+  if (state.tipRight || state.tipWrong) {
+    obj.feedback = {};
+    if (state.tipRight) obj.feedback.right = state.tipRight;
+    if (state.tipWrong) obj.feedback.wrong = state.tipWrong;
+  }
+
+  const levels = (state.levels || "").split(",").map(s => s.trim()).filter(Boolean);
+  if (levels.length > 0) obj.levels = levels;
+
+  return obj;
+}
+
+function updateOutput() {
+  const obj = buildJson();
+  out.value = JSON.stringify(obj, null, 2);
+}
+
+// ─────────────────────────────────────────────────────────────────────────
+// Buttons
+// ─────────────────────────────────────────────────────────────────────────
+$("copyBtn").addEventListener("click", async () => {
+  if (!out.value) return;
+  await navigator.clipboard.writeText(out.value);
+  const btn = $("copyBtn"); const old = btn.innerText;
+  btn.innerText = "✓ Copied"; setTimeout(() => btn.innerText = old, 1200);
+});
+$("exportBtn").addEventListener("click", () => {
+  const blob = new Blob([out.value], { type: "application/json" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url; a.download = (state.id || "scene") + ".json"; a.click();
+  URL.revokeObjectURL(url);
+});
+$("resetBtn").addEventListener("click", () => {
+  if (!confirm("Reset the entire scene (clears all actors and metadata)?")) return;
+  state = JSON.parse(JSON.stringify(initialState));
+  nextActorId = 1;
+  saveState(); syncForm(); renderActors(); renderActorsList(); updateOutput();
+});
+
+// ─────────────────────────────────────────────────────────────────────────
+// Boot
+// ─────────────────────────────────────────────────────────────────────────
+syncForm();
+renderActors();
+renderActorsList();
+updateOutput();
+</script>
+
+</body>
+</html>
