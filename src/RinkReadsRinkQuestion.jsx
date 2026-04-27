@@ -2216,8 +2216,9 @@ function RinkMatchQuestion({ question, onAnswer, onReset }) {
       </p>
 
       <MediaCanvas media={question.media}>
-        {/* Connector lines drawn behind the dots/labels. Stretches with the
-            image since preserveAspectRatio="none". */}
+        {/* Connector lines drawn behind the dots/labels. Cleaner palette:
+            white/neutral while matching, blue accent for the active line
+            of the just-placed chip, green/red on reveal. */}
         <svg
           style={{ position: "absolute", inset: 0, width: "100%", height: "100%", pointerEvents: "none" }}
           viewBox="0 0 1 1"
@@ -2228,7 +2229,7 @@ function RinkMatchQuestion({ question, onAnswer, onReset }) {
             const matchedChip = chipPool.find(c => c.instanceId === matches[i]);
             const right = done && matchedChip?.chipId === s.correctChip;
             const wrong = done && matchedChip?.chipId !== s.correctChip;
-            const stroke = wrong ? "#ef4444" : right ? "#22c55e" : "#5BA4E8";
+            const stroke = wrong ? "#ef4444" : right ? "#22c55e" : "rgba(255,255,255,0.85)";
             const dash = wrong ? "0.012 0.008" : "none";
             return (
               <line key={i}
@@ -2251,8 +2252,8 @@ function RinkMatchQuestion({ question, onAnswer, onReset }) {
           const matchedChip = matched ? chipPool.find(c => c.instanceId === matches[i]) : null;
           const right = done && matched && matchedChip?.chipId === s.correctChip;
           const wrong = done && matched && matchedChip?.chipId !== s.correctChip;
-          let dotColor = "rgba(255,255,255,0.7)", dotBg = "rgba(0,0,0,0.45)";
-          if (matched && !done) { dotColor = "#5BA4E8"; dotBg = "rgba(91,164,232,0.40)"; }
+          let dotColor = "rgba(255,255,255,0.85)", dotBg = "rgba(0,0,0,0.55)";
+          if (matched && !done) { dotColor = "#fff"; dotBg = "rgba(255,255,255,0.18)"; }
           if (right) { dotColor = "#22c55e"; dotBg = "rgba(34,197,94,0.40)"; }
           if (wrong) { dotColor = "#ef4444"; dotBg = "rgba(239,68,68,0.40)"; }
           return (
@@ -2262,12 +2263,12 @@ function RinkMatchQuestion({ question, onAnswer, onReset }) {
                 position: "absolute",
                 left: `${x * 100}%`, top: `${y * 100}%`,
                 transform: "translate(-50%, -50%)",
-                width: 30, height: 30, borderRadius: "50%",
+                width: 28, height: 28, borderRadius: "50%",
                 background: dotBg,
-                border: `2.5px solid ${dotColor}`,
+                border: `2px solid ${dotColor}`,
                 color: dotColor,
                 display: "flex", alignItems: "center", justifyContent: "center",
-                fontFamily: FONT.body, fontSize: 13, fontWeight: 800,
+                fontFamily: FONT.body, fontSize: 12, fontWeight: 800,
                 cursor: done ? "default" : "pointer",
                 boxShadow: "0 1px 3px rgba(0,0,0,0.5)",
                 animation: isActiveTarget ? "rrPulseGreen 1.4s infinite ease-in-out" : "none",
@@ -2277,7 +2278,8 @@ function RinkMatchQuestion({ question, onAnswer, onReset }) {
           );
         })}
 
-        {/* Matched labels (anchored at labelPosNorm) */}
+        {/* Matched labels (anchored at labelPosNorm) — abbreviation only,
+            white/neutral while matching, green/red on reveal. */}
         {spots.map((s, i) => {
           if (matches[i] === null) return null;
           const lp = labelPosNorm(s);
@@ -2285,10 +2287,9 @@ function RinkMatchQuestion({ question, onAnswer, onReset }) {
           if (!matchedChip) return null;
           const right = done && matchedChip.chipId === s.correctChip;
           const wrong = done && matchedChip.chipId !== s.correctChip;
-          let labelBg = C.bgCard, labelColor = C.white, labelBorder = C.gold;
-          if (!done) { labelBg = "rgba(244,196,48,0.18)"; labelColor = C.gold; labelBorder = C.gold; }
-          if (right) { labelBg = "rgba(34,197,94,0.20)"; labelColor = "#22c55e"; labelBorder = "#22c55e"; }
-          if (wrong) { labelBg = "rgba(239,68,68,0.20)"; labelColor = "#ef4444"; labelBorder = "#ef4444"; }
+          let labelBg = "rgba(0,0,0,0.65)", labelColor = "#fff", labelBorder = "rgba(255,255,255,0.85)";
+          if (right) { labelBg = "rgba(34,197,94,0.25)"; labelColor = "#22c55e"; labelBorder = "#22c55e"; }
+          if (wrong) { labelBg = "rgba(239,68,68,0.25)"; labelColor = "#ef4444"; labelBorder = "#ef4444"; }
           return (
             <div key={i}
               onClick={() => tapSpot(i)}
@@ -2296,7 +2297,7 @@ function RinkMatchQuestion({ question, onAnswer, onReset }) {
                 position: "absolute",
                 left: `${lp.x * 100}%`, top: `${lp.y * 100}%`,
                 transform: "translate(-50%, -50%)",
-                padding: "0.25rem 0.55rem", fontSize: 12, fontWeight: 800,
+                padding: "0.2rem 0.5rem", fontSize: 12, fontWeight: 800,
                 fontFamily: FONT.body, color: labelColor,
                 background: labelBg,
                 border: `${wrong ? "1.5px dashed" : "1.5px solid"} ${labelBorder}`,
@@ -2306,19 +2307,19 @@ function RinkMatchQuestion({ question, onAnswer, onReset }) {
               }}>
               {right && <span style={{ marginRight: 3, fontFamily: "system-ui, sans-serif" }}>✓</span>}
               {wrong && <span style={{ marginRight: 3, fontFamily: "system-ui, sans-serif" }}>✕</span>}
-              {getRinkFeatureName(matchedChip.chipId)}
+              {getRinkFeatureAbbr(matchedChip.chipId)}
               {wrong && (
-                <span style={{ marginLeft: 4, opacity: 0.85 }}>→ {getRinkFeatureName(s.correctChip)}</span>
+                <span style={{ marginLeft: 4, opacity: 0.85 }}>→ {getRinkFeatureAbbr(s.correctChip)}</span>
               )}
             </div>
           );
         })}
       </MediaCanvas>
 
-      {/* Chip bank — single-use chips, dim when matched, gold ring when selected */}
+      {/* Chip bank — single-use chips. Abbreviations only, full name on hover. */}
       <div style={{ marginTop: ".75rem" }}>
         <div style={{ fontSize: 11, color: C.dim, marginBottom: ".4rem", letterSpacing: ".06em", textTransform: "uppercase", fontWeight: 700 }}>
-          Labels
+          Positions
         </div>
         <div style={{ display: "flex", flexWrap: "wrap", gap: ".5rem" }}>
           {chipPool.map(c => {
@@ -2330,20 +2331,22 @@ function RinkMatchQuestion({ question, onAnswer, onReset }) {
                 type="button"
                 onClick={() => pickChip(c.instanceId)}
                 disabled={isUsed || done}
+                title={getRinkFeatureName(c.chipId)}
                 style={{
-                  padding: "0.5rem 0.85rem", fontSize: 13, fontWeight: 700,
+                  padding: "0.5rem 0.85rem", fontSize: 14, fontWeight: 800,
                   fontFamily: FONT.body,
-                  color: isUsed ? C.dimmer : (isSelected ? C.bg : C.white),
-                  background: isUsed ? "transparent" : (isSelected ? C.gold : C.bgCard),
-                  border: `2px solid ${isSelected ? C.gold : (isUsed ? C.dimmest : C.border)}`,
+                  color: isUsed ? C.dimmer : (isSelected ? "#0f1116" : C.white),
+                  background: isUsed ? "transparent" : (isSelected ? "#fff" : C.bgCard),
+                  border: `2px solid ${isSelected ? "#fff" : (isUsed ? C.dimmest : C.border)}`,
                   borderRadius: 999,
+                  minWidth: 50, textAlign: "center",
                   cursor: (isUsed || done) ? "default" : "pointer",
-                  opacity: isUsed ? 0.4 : 1,
+                  opacity: isUsed ? 0.35 : 1,
                   textDecoration: isUsed ? "line-through" : "none",
-                  boxShadow: isSelected ? `0 0 0 3px rgba(244,196,48,0.35)` : "none",
+                  boxShadow: isSelected ? "0 0 0 3px rgba(255,255,255,0.30)" : "none",
                   transition: "background .12s ease, border-color .12s ease, box-shadow .12s ease",
                 }}>
-                {getRinkFeatureName(c.chipId)}
+                {getRinkFeatureAbbr(c.chipId)}
               </button>
             );
           })}
