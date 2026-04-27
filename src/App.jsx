@@ -1553,7 +1553,16 @@ function Quiz({ player, onFinish, onBack, tier, onUpgrade }) {
   // First-Six onboarding feels quick. Subsequent quizzes use the player's
   // configured sessionLength.
   const firstTime = !isReturning;
-  const qLen = isDemo ? 7 : (firstTime ? 5 : (player.sessionLength || 10));
+  // When ?ids= is on the URL (dashboard "Play this set"), play exactly
+  // that many questions — don't cap to the default demo / first-time
+  // length. Read once at mount so it doesn't change mid-quiz.
+  const idsLen = (() => {
+    try {
+      const p = new URLSearchParams(window.location.search).get("ids");
+      return p ? p.split(",").map(s => s.trim()).filter(Boolean).length : 0;
+    } catch { return 0; }
+  })();
+  const qLen = idsLen > 0 ? idsLen : (isDemo ? 7 : (firstTime ? 5 : (player.sessionLength || 10)));
   const [queue, setQueue] = useState(null);
   const [question, setQuestion] = useState(null);
   const { sel, setSel, seqAnswered, setSeqAnswered, seqCorrect, setSeqCorrect, results, setResults } = useQuizState();
