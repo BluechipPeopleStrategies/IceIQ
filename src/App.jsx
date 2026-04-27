@@ -6747,7 +6747,12 @@ export default function App() {
     const latest = seed.player.quizHistory[seed.player.quizHistory.length - 1];
     setPrevScore(latest ? latest.score : null);
     setTotalSessions(seed.player.quizHistory.length);
-    setScreen("home");
+    // If a question playlist (?ids=) is on the URL, the user came from the
+    // standalone questions-dashboard.html "Play" button — skip home and
+    // drop them straight into the quiz so the playlist actually plays.
+    let wantsQuiz = false;
+    try { wantsQuiz = !!new URLSearchParams(window.location.search).get("ids"); } catch {}
+    setScreen(wantsQuiz ? "quiz" : "home");
   }
 
   function exitDemo() {
