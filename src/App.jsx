@@ -508,9 +508,27 @@ function makePlayerKey(name, level) {
 function buildDemoQueue(qb, level, position) {
   const posCode = { Forward: "F", Defense: "D", Goalie: "G" }[position] || null;
   const posMatch = (q) => !q.pos || !posCode || q.pos.includes(posCode);
-  // Debug: ?only=<type[,type]> forces the demo queue to those qtypes.
-  const onlyParam = (typeof window !== "undefined" && new URLSearchParams(window.location.search).get("only")) || null;
+  // Debug: ?only=<type[,type]> forces the demo queue to those qtypes;
+  // ?ids=<id[,id]> forces it to a specific question playlist.
+  const sp = typeof window !== "undefined" ? new URLSearchParams(window.location.search) : null;
+  const onlyParam = sp?.get("only") || null;
   const onlyTypes = onlyParam ? onlyParam.split(",").map(s => s.trim()).filter(Boolean) : null;
+  const idsParam = sp?.get("ids") || sp?.get("id") || null;
+  const onlyIds = idsParam ? idsParam.split(",").map(s => s.trim()).filter(Boolean) : null;
+  if (onlyIds) {
+    // Pull from any level so the playlist works regardless of selected age.
+    const seen = new Set();
+    const matched = [];
+    for (const lvl of Object.keys(qb)) {
+      for (const q of (qb[lvl] || [])) {
+        if (q?.id && onlyIds.includes(q.id) && !seen.has(q.id) && posMatch(q)) {
+          seen.add(q.id);
+          matched.push(q);
+        }
+      }
+    }
+    return matched;
+  }
   if (onlyTypes) {
     const filtered = (qb[level] || []).filter(q => onlyTypes.includes(q.type) && posMatch(q));
     return [...filtered].sort(() => Math.random() - 0.5);
@@ -567,17 +585,37 @@ function buildQueue(qb, level, position, isReturning, tier) {
   const formatAllowed = canAccess("allQuestionFormats", tier).allowed;
   const positionAllowed = canAccess("positionFilter", tier).allowed;
   // Debug: ?only=<type> (or comma-separated, e.g. ?only=rink-label,rink-drag)
-  // filters the queue. Bypasses cache so seed edits show up on reload.
-  const onlyParam = (typeof window !== "undefined" && new URLSearchParams(window.location.search).get("only")) || null;
+  // OR ?ids=<id>[,<id>] to filter to specific question ids (used by the
+  // standalone questions-dashboard.html for click-to-play). Both bypass
+  // the queue cache so seed edits show up on reload.
+  const sp = typeof window !== "undefined" ? new URLSearchParams(window.location.search) : null;
+  const onlyParam = sp?.get("only") || null;
   const onlyTypes = onlyParam ? onlyParam.split(",").map(s => s.trim()).filter(Boolean) : null;
-  const cacheKey = `${level}|${position}|${formatAllowed}|${positionAllowed}|${onlyParam || ""}`;
+  const idsParam = sp?.get("ids") || sp?.get("id") || null;
+  const onlyIds = idsParam ? idsParam.split(",").map(s => s.trim()).filter(Boolean) : null;
+  const cacheKey = `${level}|${position}|${formatAllowed}|${positionAllowed}|${onlyParam || ""}|${idsParam || ""}`;
 
   let pool;
-  if (!onlyTypes && _queueCache.has(cacheKey)) {
+  if (!onlyTypes && !onlyIds && _queueCache.has(cacheKey)) {
     pool = _queueCache.get(cacheKey);
   } else {
     let allQ = qb[level] || [];
     if (onlyTypes) allQ = allQ.filter(q => onlyTypes.includes(q.type));
+    if (onlyIds) {
+      // ids[] also looks across every level (a single-question playlist
+      // shouldn't depend on which level the user has selected).
+      const seen = new Set();
+      const matched = [];
+      for (const lvl of Object.keys(qb)) {
+        for (const q of (qb[lvl] || [])) {
+          if (q?.id && onlyIds.includes(q.id) && !seen.has(q.id)) {
+            seen.add(q.id);
+            matched.push(q);
+          }
+        }
+      }
+      allQ = matched;
+    }
     let posFiltered;
     if (!positionAllowed) {
       posFiltered = allQ.filter(q => !q.pos || q.pos.includes("F") || q.pos.includes("D"));
@@ -591,7 +629,7 @@ function buildQueue(qb, level, position, isReturning, tier) {
         : allQ.filter(q => !q.pos || q.pos.includes("F") || q.pos.includes("D"));
     }
 
-    if (!formatAllowed && !onlyTypes) {
+    if (!formatAllowed && !onlyTypes && !onlyIds) {
       // FREE: MC, TF, and POV-image-MC only. Other types (seq, mistake, next,
       // rink-native) are PRO surface — players see format-preview sentinels
       // instead. POV-MC stays free because it's the headline new format.

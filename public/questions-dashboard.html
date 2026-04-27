@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>RinkReads — Questions Dashboard</title>
+<style>
+  :root {
+    --bg: #0f1116; --card: #1a1d24; --border: #2a2f3a;
+    --gold: #f4c430; --blue: #5BA4E8; --green: #22c55e; --red: #ef4444;
+    --purple: #a855f7; --amber: #eab308;
+    --dim: #aaa; --dimmer: #777; --white: #fff;
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; padding: 1.5rem; background: var(--bg); color: var(--white);
+         font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+         max-width: 1500px; margin: 0 auto; }
+  h1 { font-size: 1.3rem; margin: 0 0 .35rem; color: var(--gold); }
+  p.lead { font-size: .85rem; color: var(--dim); margin: 0 0 1.25rem; }
+  label { display: block; font-size: 11px; color: var(--dim); margin-bottom: .25rem;
+          letter-spacing: .06em; text-transform: uppercase; font-weight: 700; }
+  input, select, textarea {
+    padding: .45rem .6rem; font-size: 13px;
+    background: var(--card); color: var(--white); border: 1px solid var(--border);
+    border-radius: 6px; font-family: inherit;
+  }
+  button { padding: .45rem .85rem; font-size: 13px; font-weight: 700;
+           background: var(--gold); color: var(--bg); border: none;
+           border-radius: 6px; cursor: pointer; font-family: inherit; }
+  button.secondary { background: transparent; color: var(--dim); border: 1px solid var(--border); }
+  button.subtle { background: rgba(91,164,232,.10); color: var(--blue); border: 1px solid rgba(91,164,232,.40); }
+  button.compact { padding: .25rem .55rem; font-size: 11px; }
+
+  .filters { display: flex; gap: .75rem; flex-wrap: wrap; align-items: end;
+             padding: .75rem; background: var(--card); border: 1px solid var(--border);
+             border-radius: 8px; margin-bottom: .75rem; }
+  .filters .field { display: flex; flex-direction: column; gap: .15rem; min-width: 130px; }
+  .filters .stats { margin-left: auto; font-size: 12px; color: var(--dim); align-self: center; }
+
+  .layout { display: grid; grid-template-columns: 1.4fr 1fr; gap: 1rem; min-height: 70vh; }
+  @media (max-width: 1000px) { .layout { grid-template-columns: 1fr; } }
+
+  table { width: 100%; border-collapse: collapse; background: var(--card);
+          border: 1px solid var(--border); border-radius: 8px; overflow: hidden; }
+  thead th { background: rgba(255,255,255,.04); padding: .55rem .65rem; text-align: left;
+             font-size: 11px; color: var(--dim); letter-spacing: .06em;
+             text-transform: uppercase; font-weight: 800; border-bottom: 1px solid var(--border); }
+  tbody td { padding: .55rem .65rem; font-size: 12px; border-bottom: 1px solid rgba(255,255,255,.04);
+             vertical-align: top; }
+  tbody tr { cursor: pointer; transition: background .12s ease; }
+  tbody tr:hover { background: rgba(91,164,232,.07); }
+  tbody tr.selected { background: rgba(244,196,48,.10); border-left: 2px solid var(--gold); }
+  td.id { font-family: "Courier New", monospace; font-size: 11px; color: var(--blue); white-space: nowrap; }
+  td.prompt { max-width: 540px; }
+
+  .badge { display: inline-block; padding: 1px 6px; border-radius: 999px;
+           font-size: 10px; font-weight: 800; letter-spacing: .03em; text-transform: uppercase;
+           white-space: nowrap; }
+  .b-pov-mc { background: rgba(244,196,48,.18); color: var(--gold); }
+  .b-hot-spots { background: rgba(91,164,232,.18); color: var(--blue); }
+  .b-rink-label, .b-rink-drag, .b-rink-match { background: rgba(168,85,247,.18); color: var(--purple); }
+  .b-d1 { background: rgba(34,197,94,.18); color: var(--green); }
+  .b-d2 { background: rgba(234,179,8,.18); color: var(--amber); }
+  .b-d3 { background: rgba(239,68,68,.18); color: var(--red); }
+  .b-other { background: rgba(255,255,255,.06); color: var(--dim); }
+
+  .preview { background: var(--card); border: 1px solid var(--border); border-radius: 8px;
+             padding: 1rem; position: sticky; top: 1rem; max-height: calc(100vh - 2rem); overflow-y: auto; }
+  .preview h3 { font-size: 13px; margin: 0 0 .25rem; color: var(--gold);
+                font-family: "Courier New", monospace; }
+  .preview .meta { font-size: 11px; color: var(--dim); margin-bottom: .75rem;
+                   display: flex; gap: .35rem; flex-wrap: wrap; }
+  .preview img { max-width: 100%; height: auto; border-radius: 6px;
+                 border: 1px solid var(--border); margin-bottom: .65rem; display: block; background: #000; }
+  .preview .img-missing { padding: 1.25rem; background: rgba(234,179,8,.10); border: 1px dashed rgba(234,179,8,.45);
+                          color: var(--amber); border-radius: 6px; font-size: 12px; line-height: 1.5;
+                          margin-bottom: .65rem; text-align: center; }
+  .preview .sit { font-size: 13px; color: var(--white); line-height: 1.55; margin-bottom: .65rem; }
+  .preview .opts { display: flex; flex-direction: column; gap: .35rem; margin-bottom: .65rem; }
+  .preview .opt { padding: .35rem .55rem; background: rgba(255,255,255,.04);
+                  border: 1px solid var(--border); border-radius: 6px; font-size: 12px;
+                  color: var(--white); display: flex; gap: .5rem; align-items: center; }
+  .preview .opt.correct { background: rgba(34,197,94,.12); border-color: rgba(34,197,94,.40); }
+  .preview .opt .letter { font-weight: 800; color: var(--gold); width: 16px; }
+  .preview .tip { padding: .55rem .7rem; background: rgba(91,164,232,.10);
+                  border-left: 3px solid var(--blue); font-size: 12px; color: var(--white);
+                  border-radius: 4px; line-height: 1.5; margin-bottom: .75rem; }
+  .preview .actions { display: flex; gap: .5rem; flex-wrap: wrap; }
+  .preview .empty { color: var(--dim); font-size: 13px; padding: 2rem 1rem; text-align: center; }
+
+  .spotbox { position: relative; }
+  .spotbox .dot { position: absolute; width: 28px; height: 28px; border-radius: 50%;
+                  border: 2.5px solid; background: rgba(0,0,0,.55); color: var(--white);
+                  display: flex; align-items: center; justify-content: center;
+                  font-size: 12px; font-weight: 800; transform: translate(-50%, -50%);
+                  box-shadow: 0 1px 3px rgba(0,0,0,.5); pointer-events: none; }
+  .spotbox .dot.correct { border-color: var(--green); color: var(--green); }
+  .spotbox .dot.wrong { border-color: var(--red); color: var(--red); }
+</style>
+</head>
+<body>
+
+<h1>📋 RinkReads — Questions Dashboard</h1>
+<p class="lead">Browse every question in the bank. Filter by today's batch, by type, by image. Click a row to preview;
+   click <strong>Play in app</strong> to open it in the live quiz with a single-question playlist URL.</p>
+
+<div class="filters">
+  <div class="field">
+    <label>Filter</label>
+    <select id="filter-preset" title="Preset filter">
+      <option value="today" selected>Today's questions (31)</option>
+      <option value="all">All questions</option>
+      <option value="image">Image-backed only (pov-mc + hot-spots)</option>
+      <option value="rink">Rink-* only (label/drag/match)</option>
+    </select>
+  </div>
+  <div class="field">
+    <label>Search id / prompt</label>
+    <input type="text" id="filter-search" placeholder="e.g. Q-entry, drive wide..." style="width: 220px;" />
+  </div>
+  <div class="field">
+    <label>Type</label>
+    <select id="filter-type" title="Type filter">
+      <option value="">All types</option>
+      <option value="pov-mc">pov-mc</option>
+      <option value="hot-spots">hot-spots</option>
+      <option value="rink-label">rink-label</option>
+      <option value="rink-drag">rink-drag</option>
+      <option value="rink-match">rink-match</option>
+      <option value="mc">mc</option>
+      <option value="tf">tf</option>
+    </select>
+  </div>
+  <div class="field">
+    <label>Image</label>
+    <select id="filter-image" title="Image filter"><option value="">All images</option></select>
+  </div>
+  <div class="stats" id="stats">— questions</div>
+  <button type="button" class="subtle" id="play-set">▶ Play this set in app</button>
+</div>
+
+<div class="layout">
+  <div>
+    <table id="qtable">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Type</th>
+          <th>d</th>
+          <th>Image</th>
+          <th>Prompt</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody id="qbody"></tbody>
+    </table>
+  </div>
+  <aside>
+    <div class="preview" id="preview">
+      <div class="empty">Click a question on the left to preview it here.</div>
+    </div>
+  </aside>
+</div>
+
+<script>
+const APP_BASE = location.origin;
+let allQuestions = [];
+let activeId = null;
+const TODAY_PREFIXES = ["Q-entry-", "Q-breakout-", "Q-dz-"];
+
+const $ = id => document.getElementById(id);
+
+async function loadQuestions() {
+  // Vite serves /src/ in dev. Direct fetch works.
+  try {
+    const res = await fetch("/src/data/questions.json");
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    const bank = await res.json();
+    const seen = new Set();
+    const flat = [];
+    for (const lvl of Object.keys(bank)) {
+      for (const q of (bank[lvl] || [])) {
+        if (q?.id && !seen.has(q.id)) {
+          seen.add(q.id);
+          flat.push({ ...q, _level: lvl });
+        }
+      }
+    }
+    allQuestions = flat;
+  } catch (e) {
+    document.body.innerHTML = `<h1 style="color:#ef4444">Failed to load questions.json</h1>
+      <p>Make sure the dev server is running (<code>npm run dev</code>) and you're at
+         <code>${APP_BASE}/questions-dashboard.html</code>.</p>
+      <p style="font-size:12px;color:#777">${e.message}</p>`;
+    return;
+  }
+  populateImageFilter();
+  render();
+}
+
+function populateImageFilter() {
+  const sel = $("filter-image");
+  const urls = new Set();
+  for (const q of allQuestions) {
+    const u = q.media?.url;
+    if (u && typeof u === "string") urls.add(u);
+  }
+  for (const u of [...urls].sort()) {
+    const opt = document.createElement("option");
+    opt.value = u;
+    opt.textContent = u.split("/").pop();
+    sel.appendChild(opt);
+  }
+}
+
+function getFiltered() {
+  const preset = $("filter-preset").value;
+  const search = $("filter-search").value.trim().toLowerCase();
+  const type = $("filter-type").value;
+  const image = $("filter-image").value;
+  return allQuestions.filter(q => {
+    if (preset === "today" && !TODAY_PREFIXES.some(p => (q.id || "").startsWith(p))) return false;
+    if (preset === "image" && !["pov-mc", "hot-spots"].includes(q.type)) return false;
+    if (preset === "rink" && !["rink-label", "rink-drag", "rink-match"].includes(q.type)) return false;
+    if (type && q.type !== type) return false;
+    if (image && q.media?.url !== image) return false;
+    if (search) {
+      const blob = `${q.id || ""} ${q.q || ""} ${q.sit || ""} ${q.tip || ""} ${q.cat || ""}`.toLowerCase();
+      if (!blob.includes(search)) return false;
+    }
+    return true;
+  });
+}
+
+function render() {
+  const rows = getFiltered();
+  $("stats").textContent = `${rows.length} of ${allQuestions.length} questions`;
+  const body = $("qbody");
+  body.innerHTML = "";
+  if (rows.length === 0) {
+    body.innerHTML = '<tr><td colspan="6" style="text-align:center;color:#777;padding:1.5rem;">No questions match the current filters.</td></tr>';
+    return;
+  }
+  for (const q of rows) {
+    const tr = document.createElement("tr");
+    if (q.id === activeId) tr.classList.add("selected");
+    const prompt = (q.q || q.sit || "").slice(0, 110);
+    const imgName = (q.media?.url || "").split("/").pop() || "—";
+    tr.innerHTML = `
+      <td class="id">${escapeHtml(q.id || "")}</td>
+      <td><span class="badge b-${escapeHtml(q.type || "other")}">${escapeHtml(q.type || "?")}</span></td>
+      <td><span class="badge b-d${q.d || 1}">d${q.d || "?"}</span></td>
+      <td style="font-size:11px;color:#aaa;">${escapeHtml(imgName)}</td>
+      <td class="prompt">${escapeHtml(prompt)}${prompt.length === 110 ? "…" : ""}</td>
+      <td><button type="button" class="compact" data-play="${escapeHtml(q.id)}">▶ Play</button></td>
+    `;
+    tr.addEventListener("click", e => {
+      if (e.target.dataset.play) return;
+      activeId = q.id;
+      render();
+      renderPreview(q);
+    });
+    body.appendChild(tr);
+  }
+  body.querySelectorAll("[data-play]").forEach(btn => {
+    btn.addEventListener("click", e => {
+      e.stopPropagation();
+      window.open(`${APP_BASE}/?ids=${encodeURIComponent(e.target.dataset.play)}`, "_blank");
+    });
+  });
+}
+
+function renderPreview(q) {
+  const wrap = $("preview");
+  const url = q.media?.url || "";
+  const imgName = url.split("/").pop() || "(no image)";
+  const isImageQ = q.type === "pov-mc" || q.type === "hot-spots";
+  const concept = q.concept || (q.concepts && q.concepts[0]) || "";
+
+  let imgHtml = "";
+  if (isImageQ && url) {
+    // Try to load — if it fails, show "missing" notice
+    imgHtml = `
+      <div class="spotbox" id="spotbox">
+        <img id="prev-img" src="${escapeHtml(url)}" alt="" onerror="this.replaceWith(missingNotice('${escapeHtml(imgName)}'))" />
+      </div>`;
+  }
+
+  let bodyHtml = "";
+  if (q.type === "pov-mc") {
+    const sit = q.sit || q.q || "";
+    const opts = (q.opts || []).map((opt, i) => `
+      <div class="opt ${i === q.ok ? "correct" : ""}">
+        <span class="letter">${String.fromCharCode(65 + i)}</span>
+        <span>${escapeHtml(opt)}${i === q.ok ? " ✓" : ""}</span>
+      </div>`).join("");
+    bodyHtml = `<div class="sit">${escapeHtml(sit)}</div><div class="opts">${opts}</div>`;
+  } else if (q.type === "hot-spots") {
+    const prompt = q.q || q.sit || "";
+    bodyHtml = `<div class="sit">${escapeHtml(prompt)}</div>`;
+    bodyHtml += `<div style="font-size:11px;color:#aaa;margin-bottom:.55rem;">Spots: ${(q.spots || []).length}</div>`;
+    const list = (q.spots || []).map((s, i) =>
+      `<div class="opt ${s.correct ? "correct" : ""}">
+        <span class="letter">${i + 1}</span>
+        <span>${escapeHtml(s.msg || (s.correct ? "Correct spot" : "Wrong spot"))} <em style="color:#777">(${(s.x || 0).toFixed(2)}, ${(s.y || 0).toFixed(2)})</em></span>
+      </div>`).join("");
+    bodyHtml += `<div class="opts">${list}</div>`;
+  } else {
+    // Rink-* and others — minimal preview
+    bodyHtml = `<div class="sit">${escapeHtml(q.q || q.sit || "(no prompt)")}</div>`;
+    if (q.spots) bodyHtml += `<div style="font-size:11px;color:#aaa;">Spots: ${q.spots.length}</div>`;
+    if (q.opts) bodyHtml += `<div style="font-size:11px;color:#aaa;">Options: ${q.opts.length}</div>`;
+  }
+
+  const tip = q.tip ? `<div class="tip"><strong>Tip:</strong> ${escapeHtml(q.tip)}</div>` : "";
+
+  wrap.innerHTML = `
+    <h3>${escapeHtml(q.id || "?")}</h3>
+    <div class="meta">
+      <span class="badge b-${escapeHtml(q.type || "other")}">${escapeHtml(q.type || "?")}</span>
+      <span class="badge b-d${q.d || 1}">d${q.d || "?"}</span>
+      <span style="color:#777">${escapeHtml(q.cat || "")}${concept ? " · " + escapeHtml(concept) : ""}</span>
+    </div>
+    ${imgHtml}
+    ${bodyHtml}
+    ${tip}
+    <div class="actions">
+      <button type="button" onclick="window.open('${APP_BASE}/?ids=${encodeURIComponent(q.id)}', '_blank')">▶ Play in app</button>
+      <button type="button" class="secondary" onclick="copyJson('${escapeHtml(q.id)}')">Copy JSON</button>
+    </div>
+  `;
+
+  // After rendering, if it's a hot-spots question, overlay the dots on the image
+  if (q.type === "hot-spots" && url) {
+    setTimeout(() => {
+      const img = document.getElementById("prev-img");
+      const box = document.getElementById("spotbox");
+      if (img && box && img.complete) {
+        renderSpotsOverlay(box, q.spots || []);
+      } else if (img) {
+        img.addEventListener("load", () => renderSpotsOverlay(box, q.spots || []));
+      }
+    }, 0);
+  }
+}
+
+function renderSpotsOverlay(box, spots) {
+  // Remove any existing dots
+  box.querySelectorAll(".dot").forEach(d => d.remove());
+  spots.forEach((s, i) => {
+    const dot = document.createElement("div");
+    dot.className = "dot " + (s.correct ? "correct" : "wrong");
+    dot.style.left = ((s.x || 0) * 100) + "%";
+    dot.style.top = ((s.y || 0) * 100) + "%";
+    dot.textContent = (i + 1);
+    dot.title = s.msg || "";
+    box.appendChild(dot);
+  });
+}
+
+function missingNotice(filename) {
+  const div = document.createElement("div");
+  div.className = "img-missing";
+  div.innerHTML = `<strong>📁 Image not yet saved.</strong><br/>Save the file to:<br/>
+    <code style="font-size:11px;">public/assets/images/${escapeHtml(filename)}</code>`;
+  return div;
+}
+window.missingNotice = missingNotice;
+
+function copyJson(id) {
+  const q = allQuestions.find(x => x.id === id);
+  if (!q) return;
+  const { _level, ...clean } = q;
+  navigator.clipboard.writeText(JSON.stringify(clean, null, 2));
+}
+window.copyJson = copyJson;
+
+function escapeHtml(s) {
+  return String(s == null ? "" : s).replace(/[&<>"']/g, c =>
+    ({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[c]));
+}
+
+$("filter-preset").addEventListener("change", render);
+$("filter-search").addEventListener("input", render);
+$("filter-type").addEventListener("change", render);
+$("filter-image").addEventListener("change", render);
+$("play-set").addEventListener("click", () => {
+  const ids = getFiltered().map(q => q.id).filter(Boolean);
+  if (ids.length === 0) return;
+  if (ids.length > 50) {
+    if (!confirm(`Open the app with ${ids.length} questions queued? URL will be long.`)) return;
+  }
+  window.open(`${APP_BASE}/?ids=${encodeURIComponent(ids.join(","))}`, "_blank");
+});
+
+loadQuestions();
+</script>
+</body>
+</html>
