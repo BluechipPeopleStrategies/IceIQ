@@ -104,9 +104,21 @@ function mapLevels(q) {
   return mapped.length > 0 ? mapped : ["U9 / Novice"];
 }
 
+// Notion-uploaded files come back as 1-hour presigned S3 URLs whose query
+// string includes an AWS Temporary Access Key Id (`X-Amz-Credential=ASIA...`).
+// Persisting those URLs to questions.json triggers GitHub secret-scanning
+// alerts on every sync. The keys themselves expire in 60 minutes so there's
+// no real exposure, but the alerts are noisy. Reject any presigned URL here
+// — the affected Image Library pages must use a stable GitHub raw URL
+// (`raw.githubusercontent.com/...`) on their `Image File` property instead.
+function isPresignedNotionUrl(u) {
+  if (typeof u !== "string") return false;
+  return u.includes("prod-files-secure.s3") || /[?&]X-Amz-(Signature|Credential)=/.test(u);
+}
+
 function pickImageUrl(image) {
   const urls = Array.isArray(image.imageUrls) ? image.imageUrls : [];
-  const first = urls.find(u => typeof u === "string" && u.trim());
+  const first = urls.find(u => typeof u === "string" && u.trim() && !isPresignedNotionUrl(u));
   return first || PLACEHOLDER_URL;
 }
 

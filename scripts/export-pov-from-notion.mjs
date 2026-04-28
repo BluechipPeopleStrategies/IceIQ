@@ -154,6 +154,20 @@ const stripDashes = id => (id || "").replace(/-/g, "");
 // Transform
 // ---------------------------------------------------------------------------
 
+// Notion-uploaded files come back as 1-hour presigned S3 URLs whose query
+// string includes an AWS Temporary Access Key Id (`X-Amz-Credential=ASIA...`).
+// Strip those at export time so they never reach committed JSON — GitHub's
+// secret scanner flags the format even though the keys are short-lived.
+// Image Library pages must use a stable GitHub raw URL on `Image File`.
+function stripPresignedUrls(urls) {
+  if (!Array.isArray(urls)) return [];
+  return urls.filter(u =>
+    typeof u === "string" &&
+    !u.includes("prod-files-secure.s3") &&
+    !/[?&]X-Amz-(Signature|Credential)=/.test(u)
+  );
+}
+
 function cleanImage(page) {
   const p = page.properties;
   return {
@@ -170,7 +184,7 @@ function cleanImage(page) {
     distractors:    readProp(p["Distractors"]),
     readClarity:    readProp(p["Read Clarity Test"]),
     status:         readProp(p["Status"]),
-    imageUrls:      readProp(p["Image File"]) || [],
+    imageUrls:      stripPresignedUrls(readProp(p["Image File"])),
     questions:      [],
   };
 }
