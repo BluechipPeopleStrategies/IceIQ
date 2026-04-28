@@ -167,13 +167,17 @@ function avatarInitials(name) {
   return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
 }
 
-function AvatarDisc({ name, kind = "player", size = 48 }) {
+function AvatarDisc({ name, kind = "player", size = 48, imageUrl = null }) {
   const display = kind === "coach" ? String(name || "").replace(/^Coach\s+/i, "") : name;
   const initials = avatarInitials(display);
   const bg = kind === "coach"
     ? "linear-gradient(135deg, #475569 0%, #1e293b 100%)"
     : C.gradientPrimary;
   const fg = kind === "coach" ? "#f1f5f9" : "#0b1220";
+  // Track image-load failure so we can drop back to initials if the
+  // portrait file is missing (e.g. coach images haven't been saved yet).
+  const [imgFailed, setImgFailed] = useState(false);
+  const showImage = imageUrl && !imgFailed;
   return (
     <div style={{
       width: size, height: size, borderRadius: "50%",
@@ -183,8 +187,13 @@ function AvatarDisc({ name, kind = "player", size = 48 }) {
       border: "1px solid rgba(255,255,255,0.12)",
       boxShadow: "0 2px 8px rgba(0,0,0,0.25), inset 0 1px 0 rgba(255,255,255,0.1)",
       letterSpacing: ".02em", flexShrink: 0,
+      overflow: "hidden",
     }}>
-      {initials}
+      {showImage ? (
+        <img src={imageUrl} alt={name || ""} onError={() => setImgFailed(true)}
+          draggable={false} loading="lazy" decoding="async"
+          style={{ width: "100%", height: "100%", objectFit: "cover", display: "block", userSelect: "none" }}/>
+      ) : initials}
     </div>
   );
 }
@@ -2053,7 +2062,7 @@ function Quiz({ player, onFinish, onBack, tier, onUpgrade }) {
                 const explanation = q.why || q.explanation || q.tip || (userCorrect ? "Keep reading the ice like that." : "Re-read the play and reset — you'll get the next one.");
                 return (
                   <div style={{display:"flex",gap:".6rem",alignItems:"flex-start"}}>
-                    <AvatarDisc name={coach.name} kind="coach" size={40}/>
+                    <AvatarDisc name={coach.name} kind="coach" size={40} imageUrl={coach.imageUrl}/>
                     <div style={{flex:1,minWidth:0}}>
                       <div style={{display:"flex",alignItems:"baseline",gap:".4rem",flexWrap:"wrap",marginBottom:".25rem"}}>
                         <span style={{fontWeight:800,fontSize:12,color:C.white}}>{coach.name}</span>
@@ -2759,7 +2768,7 @@ function WeeklyQuiz({ player, onBack, onFinish }) {
               <div style={{fontSize:11,fontWeight:700,color:wasCorrect ? C.green : C.red,marginBottom:".5rem",letterSpacing:".06em"}}>{wasCorrect ? "✓ Correct" : "✗ Incorrect"}</div>
               {coach && (
                 <div style={{display:"flex",gap:".6rem",alignItems:"flex-start"}}>
-                  <AvatarDisc name={coach.name} kind="coach" size={40}/>
+                  <AvatarDisc name={coach.name} kind="coach" size={40} imageUrl={coach.imageUrl}/>
                   <div style={{flex:1,minWidth:0}}>
                     <div style={{display:"flex",alignItems:"baseline",gap:".4rem",flexWrap:"wrap",marginBottom:".25rem"}}>
                       <span style={{fontWeight:800,fontSize:12,color:C.white}}>{coach.name}</span>
@@ -4960,6 +4969,7 @@ const COACH_PERSONAS = [
     name: "Coach Kincaid",
     role: "Head Coach",
     archetype: "technical",
+    imageUrl: "/assets/coaches/kincaid.png",
     tilts: ["dm", "h"],
     summary: "Sees every detail on tape and loves a teaching moment — plays hard, coaches harder, brings the one-liners.",
     flavorCorrect: {
@@ -5081,6 +5091,7 @@ const COACH_PERSONAS = [
     name: "Coach Danno",
     role: "Skills Coach",
     archetype: "chill",
+    imageUrl: "/assets/coaches/danno.png",
     tilts: ["s", "p"],
     summary: "Low-key, high-reps, never loses the room. Gets guys to relax, skate through mistakes, and stack clean shifts.",
     flavorCorrect: {
@@ -5201,6 +5212,7 @@ const COACH_PERSONAS = [
     name: "Coach Marques",
     role: "Mental Performance Coach",
     archetype: "motivator",
+    imageUrl: "/assets/coaches/marques.png",
     tilts: ["c"],
     summary: "Belief factory. Keeps the tank full, turns missed shifts into fuel, and gets the most out of every player in the room.",
     flavorCorrect: {
@@ -5321,6 +5333,7 @@ const COACH_PERSONAS = [
     name: "Coach Kowalski",
     role: "Assistant Coach",
     archetype: "deadpan",
+    imageUrl: "/assets/coaches/kowalski.png",
     tilts: ["d"],
     summary: "Old-school, dry as chalk, speaks about six words per shift — but the ones that land, land hard. Has literally seen it all.",
     flavorCorrect: {
