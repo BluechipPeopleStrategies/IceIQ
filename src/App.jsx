@@ -1984,6 +1984,7 @@ function Quiz({ player, onFinish, onBack, tier, onUpgrade }) {
                 correct: Array.isArray(q.correct) ? [...q.correct] : [],
                 items: Array.isArray(q.items) ? [...q.items] : [],
                 correct_order: Array.isArray(q.correct_order) ? [...q.correct_order] : (Array.isArray(q.items) ? q.items.map((_,i)=>i) : []),
+                spots: Array.isArray(q.spots) ? q.spots.map(s => ({...s})) : [],
                 tip: q.tip || "",
                 why: q.why || q.explanation || "",
               });
@@ -2295,9 +2296,68 @@ function Quiz({ player, onFinish, onBack, tier, onUpgrade }) {
                 </div>
               )}
 
-              {isPhase2 && (
+              {qtype === "hot-spots" && (() => {
+                // Image-based hot-spots use x/y as 0–1 normalized; rink-based
+                // use absolute SVG coords. The form just shows what's there.
+                const isImageBased = !!q.media?.url;
+                const coordHint = isImageBased ? "0.0–1.0 (normalized)" : "SVG units";
+                const updateSpot = (i, key, val) => setEditDraft(d => {
+                  const spots = d.spots.map((s, idx) => idx === i ? {...s, [key]: val} : s);
+                  return {...d, spots};
+                });
+                const removeSpot = (i) => setEditDraft(d => ({...d, spots: d.spots.filter((_, idx) => idx !== i)}));
+                const addSpot = () => setEditDraft(d => ({
+                  ...d,
+                  spots: [...d.spots, { x: isImageBased ? 0.5 : 480, y: isImageBased ? 0.5 : 150, correct: false, msg: "" }],
+                }));
+                return (
+                  <div style={sectionGap}>
+                    <div style={labelStyle}>SPOTS ({editDraft.spots.length})</div>
+                    <div style={{fontSize:11,color:C.dimmer,marginBottom:".5rem",lineHeight:1.5}}>
+                      Coords are <strong>{coordHint}</strong>. Use{" "}
+                      <a href={`/coord-picker.html${isImageBased && q.media?.url ? `?img=${encodeURIComponent(q.media.url)}` : ""}`} target="_blank" rel="noopener" style={{color:C.gold,textDecoration:"underline"}}>coord picker</a>
+                      {" "}for new positions. Visual drag editor coming.
+                    </div>
+                    {editDraft.spots.map((s, i) => (
+                      <div key={i} style={{border:`1px solid ${s.correct ? C.greenBorder : C.border}`,borderRadius:8,padding:".55rem .65rem",marginBottom:".4rem",background:s.correct?"rgba(34,197,94,0.04)":"transparent"}}>
+                        <div style={{display:"flex",alignItems:"center",gap:".5rem",marginBottom:".4rem"}}>
+                          <button onClick={() => updateSpot(i, "correct", !s.correct)}
+                            style={{background:"none",border:"none",cursor:"pointer",padding:0,color:s.correct?C.green:C.dimmer,fontSize:14}}
+                            title="Toggle correct">
+                            {s.correct ? "☑" : "☐"} <span style={{fontSize:11,fontWeight:700}}>correct</span>
+                          </button>
+                          <span style={{fontSize:10,color:C.dimmer,marginLeft:"auto"}}>#{i+1}</span>
+                          <button onClick={() => removeSpot(i)}
+                            style={{background:"none",border:`1px solid ${C.border}`,borderRadius:4,padding:"2px 8px",cursor:"pointer",color:C.dimmer,fontSize:11}}>×</button>
+                        </div>
+                        <div style={{display:"flex",gap:".4rem",marginBottom:".4rem"}}>
+                          <label style={{flex:1,fontSize:10,color:C.dimmer}}>
+                            x
+                            <input type="number" step={isImageBased ? "0.001" : "1"} value={s.x ?? ""} onChange={e=>updateSpot(i,"x",parseFloat(e.target.value)||0)}
+                              style={{width:"100%",background:C.bgElevated,border:`1px solid ${C.border}`,borderRadius:6,padding:".35rem .5rem",color:C.white,fontSize:12,fontFamily:"ui-monospace, monospace"}}/>
+                          </label>
+                          <label style={{flex:1,fontSize:10,color:C.dimmer}}>
+                            y
+                            <input type="number" step={isImageBased ? "0.001" : "1"} value={s.y ?? ""} onChange={e=>updateSpot(i,"y",parseFloat(e.target.value)||0)}
+                              style={{width:"100%",background:C.bgElevated,border:`1px solid ${C.border}`,borderRadius:6,padding:".35rem .5rem",color:C.white,fontSize:12,fontFamily:"ui-monospace, monospace"}}/>
+                          </label>
+                        </div>
+                        <textarea value={s.msg || ""} onChange={e=>updateSpot(i,"msg",e.target.value)} rows={2}
+                          placeholder="Feedback message shown when this spot is tapped"
+                          style={{...textareaStyle,padding:".4rem .55rem",fontSize:12,lineHeight:1.4}}/>
+                      </div>
+                    ))}
+                    <button onClick={addSpot}
+                      style={{width:"100%",background:"none",border:`1px dashed ${C.border}`,borderRadius:8,padding:".5rem",cursor:"pointer",color:C.dimmer,fontSize:12,fontFamily:FONT.body}}>
+                      + Add spot
+                    </button>
+                  </div>
+                );
+              })()}
+
+              {isPhase2 && qtype !== "hot-spots" && (
                 <div style={{...sectionGap,padding:".7rem .85rem",background:"rgba(91,164,232,.06)",border:`1px solid rgba(91,164,232,.25)`,borderRadius:8,fontSize:12,color:C.dim,lineHeight:1.55}}>
-                  <span style={{color:C.blue,fontWeight:700}}>Phase 2 editor pending.</span> Geometry edits (spots, lanes, zones, markers, paths) come next. For now, prompt + explanation + tip are editable here — and the override JSON includes the original geometry so I can preserve it when pushing to Notion.
+                  <span style={{color:C.blue,fontWeight:700}}>Phase 2 editor pending.</span> Geometry edits (lanes, zones, markers, paths) come next. For now, prompt + explanation + tip are editable here — the override JSON includes the original geometry so I can preserve it when pushing to Notion.
                 </div>
               )}
 
@@ -2343,6 +2403,15 @@ function Quiz({ player, onFinish, onBack, tier, onUpgrade }) {
                     const origO = Array.isArray(orig.correct_order) ? orig.correct_order : [];
                     const sameO = origO.length === editDraft.correct_order.length && origO.every((x, i) => x === editDraft.correct_order[i]);
                     if (!sameO) patch.correct_order = editDraft.correct_order;
+                  }
+                  // hot-spots spots[] — deep compare on x/y/correct/msg
+                  if (qtype === "hot-spots") {
+                    const origS = Array.isArray(orig.spots) ? orig.spots : [];
+                    const sameS = origS.length === editDraft.spots.length && origS.every((o, i) => {
+                      const e = editDraft.spots[i];
+                      return o.x === e.x && o.y === e.y && !!o.correct === !!e.correct && (o.msg || "") === (e.msg || "");
+                    });
+                    if (!sameS) patch.spots = editDraft.spots;
                   }
                   setOverride(orig.id, patch);
                   setEditOpen(false);
