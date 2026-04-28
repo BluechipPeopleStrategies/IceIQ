@@ -28,6 +28,7 @@ import { getWeeklyStreak, bumpWeeklyStreak, topCategoryStreak, updateCategoryStr
 import { canSwitchAgeGroup, recordAgeGroupSwitch, getAgeGroupLock, setAgeGroupLock, checkSeasonReset } from "./utils/deviceLock";
 import { lsGetStr, lsSetStr, lsGetJSON, lsSetJSON } from "./utils/storage.js";
 import { computeCategoryMastery, rankCategories, nextThreshold } from "./utils/mastery.js";
+import { applyOverride, setOverride, clearOverride, getOverride } from "./utils/questionOverrides.js";
 import {
   REASONS as REFLECTION_REASONS,
   getReflectionFor, saveReflection,
@@ -1679,6 +1680,16 @@ function Quiz({ player, onFinish, onBack, tier, onUpgrade }) {
   const qNum = results.length;
   const isLast = qNum >= qLen - 1;
   const qtype = question?.type || "mc";
+  // Apply any in-browser local override on top of the bank question.
+  // Display + scoring both read from `q`, so edits apply without sync.
+  const q = applyOverride(question);
+  // Dev-only edit affordance — gated on ?dev=1 so kids can't see it.
+  const editAllowed = (() => {
+    try { return new URLSearchParams(window.location.search).get("dev") === "1"; }
+    catch { return false; }
+  })();
+  const [editOpen, setEditOpen] = useState(false);
+  const [editDraft, setEditDraft] = useState(null);
 
   // Speed-bonus window. Interactive (rink) questions get a timed bonus;
   // MC/TF/seq don't because reading-speed is mostly literacy, not hockey IQ.
@@ -1695,15 +1706,15 @@ function Quiz({ player, onFinish, onBack, tier, onUpgrade }) {
   }
 
   function handlePick(i) {
-    if (sel !== null || !question) return;
+    if (sel !== null || !q) return;
     setSel(i);
-    const ok = i === question.ok;
+    const ok = i === q.ok;
     const bonus = computeSpeedBonus(qtype, ok, questionStartedAt);
     setLastSpeedBonus(bonus);
     if (bonus) setSpeedTotal(t => t + bonus);
-    const newResult = { id:question.id, cat:question.cat, ok, d:question.d||2, type:qtype, speedBonus:bonus };
+    const newResult = { id:q.id, cat:q.cat, ok, d:q.d||2, type:qtype, speedBonus:bonus };
     const newResults = [...results, newResult];
-    if (question.type === "mistake" && ok) setMistakeStreak(s => s+1);
+    if (q.type === "mistake" && ok) setMistakeStreak(s => s+1);
     setResults(newResults);
     if (newResults.length >= qLen) setQuizDone(true);
   }
@@ -1715,7 +1726,7 @@ function Quiz({ player, onFinish, onBack, tier, onUpgrade }) {
     const bonus = computeSpeedBonus(qtype, ok, questionStartedAt);
     setLastSpeedBonus(bonus);
     if (bonus) setSpeedTotal(t => t + bonus);
-    const newResult = { id:question.id, cat:question.cat, ok, d:question.d||2, type:question.type || "seq", speedBonus:bonus };
+    const newResult = { id:q.id, cat:q.cat, ok, d:q.d||2, type:q.type || "seq", speedBonus:bonus };
     const newResults = [...results, newResult];
     setResults(newResults);
     if (newResults.length >= qLen) setQuizDone(true);
@@ -1744,7 +1755,6 @@ function Quiz({ player, onFinish, onBack, tier, onUpgrade }) {
     ? rinkQResult !== null
     : (qtype === "seq" || qtype === "multi" || qtype === "scenario") ? seqAnswered
     :                          sel !== null;
-  const q = question;
   if (!q) return <Screen><div style={{color:C.dimmer,textAlign:"center",paddingTop:"4rem"}}>Loading…</div></Screen>;
 
   // Records a result for a question dispatched to RinkReadsRinkQuestion. The child
@@ -1945,6 +1955,40 @@ function Quiz({ player, onFinish, onBack, tier, onUpgrade }) {
         {/* Question component — single dispatch in renderQuestionBody() */}
         {renderQuestionBody()}
 
+        {/* Local-edit indicator + dev edit affordance. The badge is visible to
+            anyone in dev mode so they can see when they're playing an edited
+            version. The Edit button itself is gated on ?dev=1. */}
+        {q._hasOverride && editAllowed && (
+          <div style={{display:"flex",alignItems:"center",gap:".4rem",marginTop:".65rem",padding:".35rem .6rem",background:"rgba(252,200,76,.08)",border:`1px solid ${C.goldBorder}`,borderRadius:6,fontSize:10,color:C.gold,fontWeight:700,letterSpacing:".06em"}}>
+            <span>✎ LOCAL OVERRIDE — not synced to Notion</span>
+          </div>
+        )}
+        {editAllowed && ["mc","pov-mc","tf","mistake"].includes(qtype) && (
+          <div style={{display:"flex",gap:".5rem",marginTop:".5rem"}}>
+            <button onClick={() => {
+              setEditDraft({
+                sit: q.sit || "",
+                question: q.question || "",
+                opts: Array.isArray(q.opts) ? [...q.opts] : ["","","",""],
+                ok: q.ok,
+                tip: q.tip || "",
+                why: q.why || q.explanation || "",
+              });
+              setEditOpen(true);
+            }} style={{flex:1,background:"none",border:`1px solid ${C.goldBorder}`,color:C.gold,fontSize:11,cursor:"pointer",fontFamily:FONT.body,padding:".4rem",borderRadius:6,fontWeight:700}}>
+              ✎ Edit this question
+            </button>
+            {q._hasOverride && (
+              <button onClick={() => {
+                clearOverride(question.id);
+                setQuestion({ ...question });
+              }} style={{background:"none",border:`1px solid ${C.border}`,color:C.dimmer,fontSize:11,cursor:"pointer",fontFamily:FONT.body,padding:".4rem .8rem",borderRadius:6}}>
+                Reset
+              </button>
+            )}
+          </div>
+        )}
+
         {/* Report flag — always visible, not gated on answered */}
         <button onClick={() => setShowFlag(true)} style={{background:"none",border:"none",color:C.dimmer,fontSize:11,marginTop:".65rem",cursor:"pointer",fontFamily:FONT.body,width:"100%",textAlign:"center",padding:".4rem",textDecoration:"underline"}}>
           🚩 Report this question
@@ -2093,6 +2137,85 @@ function Quiz({ player, onFinish, onBack, tier, onUpgrade }) {
                   <button onClick={submitFlag} disabled={!flagReason} style={{flex:2,background:C.gold,color:C.bg,border:"none",borderRadius:10,padding:".7rem",cursor:"pointer",fontWeight:800,fontSize:13,fontFamily:FONT.body}}>Send Report</button>
                 </div>
               </>)}
+            </div>
+          </div>
+        )}
+
+        {editOpen && editDraft && (
+          <div onClick={()=>setEditOpen(false)} style={{position:"fixed",inset:0,background:"rgba(0,0,0,.75)",zIndex:200,display:"flex",alignItems:"center",justifyContent:"center",padding:"1rem",overflowY:"auto"}}>
+            <div onClick={e=>e.stopPropagation()} style={{background:C.bgCard,border:`1px solid ${C.goldBorder}`,borderRadius:16,padding:"1.5rem",maxWidth:520,width:"100%",color:C.white,fontFamily:FONT.body,maxHeight:"90vh",overflowY:"auto"}}>
+              <div style={{fontSize:10,letterSpacing:".14em",textTransform:"uppercase",color:C.gold,fontWeight:700,marginBottom:".4rem"}}>✎ Edit question (local only)</div>
+              <div style={{fontSize:11,color:C.dimmer,marginBottom:"1rem"}}>Saved to this browser. Doesn't sync to Notion.</div>
+
+              <div style={{fontSize:11,color:C.dimmer,fontWeight:700,marginBottom:".25rem",letterSpacing:".05em"}}>SITUATION</div>
+              <textarea value={editDraft.sit} onChange={e=>setEditDraft(d=>({...d,sit:e.target.value}))} rows={3}
+                style={{width:"100%",background:C.bgElevated,border:`1px solid ${C.border}`,borderRadius:8,padding:".6rem .8rem",color:C.white,fontSize:13,fontFamily:FONT.body,outline:"none",lineHeight:1.5,marginBottom:".75rem",resize:"vertical"}}/>
+
+              {qtype === "mistake" && (
+                <>
+                  <div style={{fontSize:11,color:C.dimmer,fontWeight:700,marginBottom:".25rem",letterSpacing:".05em"}}>QUESTION PROMPT</div>
+                  <textarea value={editDraft.question} onChange={e=>setEditDraft(d=>({...d,question:e.target.value}))} rows={2}
+                    style={{width:"100%",background:C.bgElevated,border:`1px solid ${C.border}`,borderRadius:8,padding:".6rem .8rem",color:C.white,fontSize:13,fontFamily:FONT.body,outline:"none",lineHeight:1.5,marginBottom:".75rem",resize:"vertical"}}/>
+                </>
+              )}
+
+              {qtype === "tf" ? (
+                <>
+                  <div style={{fontSize:11,color:C.dimmer,fontWeight:700,marginBottom:".4rem",letterSpacing:".05em"}}>CORRECT ANSWER</div>
+                  <div style={{display:"flex",gap:".5rem",marginBottom:".75rem"}}>
+                    {[{v:true,l:"True"},{v:false,l:"False"}].map(o => (
+                      <button key={String(o.v)} onClick={()=>setEditDraft(d=>({...d,ok:o.v}))}
+                        style={{flex:1,background:editDraft.ok===o.v?C.goldDim:C.bgElevated,border:`1px solid ${editDraft.ok===o.v?C.gold:C.border}`,borderRadius:8,padding:".6rem",cursor:"pointer",color:editDraft.ok===o.v?C.gold:C.dim,fontSize:13,fontFamily:FONT.body,fontWeight:editDraft.ok===o.v?800:500}}>
+                        {o.l}
+                      </button>
+                    ))}
+                  </div>
+                </>
+              ) : (
+                <>
+                  <div style={{fontSize:11,color:C.dimmer,fontWeight:700,marginBottom:".25rem",letterSpacing:".05em"}}>OPTIONS (radio = correct)</div>
+                  {editDraft.opts.map((opt, i) => (
+                    <div key={i} style={{display:"flex",alignItems:"flex-start",gap:".5rem",marginBottom:".4rem"}}>
+                      <button onClick={()=>setEditDraft(d=>({...d,ok:i}))}
+                        style={{background:"none",border:"none",cursor:"pointer",padding:0,marginTop:".5rem",color:editDraft.ok===i?C.gold:C.dimmer,fontSize:14}}
+                        title="Mark as correct">
+                        {editDraft.ok===i ? "●" : "○"}
+                      </button>
+                      <span style={{fontSize:11,color:C.dimmer,fontWeight:800,marginTop:".55rem",minWidth:14}}>{String.fromCharCode(65+i)}</span>
+                      <textarea value={opt} onChange={e=>setEditDraft(d=>{const n=[...d.opts];n[i]=e.target.value;return {...d,opts:n};})} rows={2}
+                        style={{flex:1,background:C.bgElevated,border:`1px solid ${editDraft.ok===i?C.goldBorder:C.border}`,borderRadius:8,padding:".5rem .7rem",color:C.white,fontSize:13,fontFamily:FONT.body,outline:"none",lineHeight:1.45,resize:"vertical"}}/>
+                    </div>
+                  ))}
+                </>
+              )}
+
+              <div style={{fontSize:11,color:C.dimmer,fontWeight:700,marginBottom:".25rem",marginTop:".75rem",letterSpacing:".05em"}}>WHY (explanation)</div>
+              <textarea value={editDraft.why} onChange={e=>setEditDraft(d=>({...d,why:e.target.value}))} rows={3}
+                style={{width:"100%",background:C.bgElevated,border:`1px solid ${C.border}`,borderRadius:8,padding:".6rem .8rem",color:C.white,fontSize:13,fontFamily:FONT.body,outline:"none",lineHeight:1.5,marginBottom:".75rem",resize:"vertical"}}/>
+
+              <div style={{fontSize:11,color:C.dimmer,fontWeight:700,marginBottom:".25rem",letterSpacing:".05em"}}>COACH TIP</div>
+              <textarea value={editDraft.tip} onChange={e=>setEditDraft(d=>({...d,tip:e.target.value}))} rows={2}
+                style={{width:"100%",background:C.bgElevated,border:`1px solid ${C.border}`,borderRadius:8,padding:".6rem .8rem",color:C.white,fontSize:13,fontFamily:FONT.body,outline:"none",lineHeight:1.5,marginBottom:"1rem",resize:"vertical"}}/>
+
+              <div style={{display:"flex",gap:".5rem"}}>
+                <button onClick={()=>setEditOpen(false)} style={{flex:1,background:"none",border:`1px solid ${C.border}`,borderRadius:10,padding:".7rem",cursor:"pointer",color:C.dimmer,fontSize:13,fontFamily:FONT.body}}>Cancel</button>
+                <button onClick={() => {
+                  const orig = question;
+                  const patch = {};
+                  if (editDraft.sit !== (orig.sit || "")) patch.sit = editDraft.sit;
+                  if (editDraft.question !== (orig.question || "")) patch.question = editDraft.question;
+                  if (Array.isArray(orig.opts)) {
+                    const sameOpts = orig.opts.length === editDraft.opts.length && orig.opts.every((o, i) => o === editDraft.opts[i]);
+                    if (!sameOpts) patch.opts = editDraft.opts;
+                  }
+                  if (editDraft.ok !== orig.ok) patch.ok = editDraft.ok;
+                  if (editDraft.tip !== (orig.tip || "")) patch.tip = editDraft.tip;
+                  if (editDraft.why !== (orig.why || orig.explanation || "")) patch.why = editDraft.why;
+                  setOverride(orig.id, patch);
+                  setEditOpen(false);
+                  setQuestion({ ...question });
+                }} style={{flex:2,background:C.gold,color:C.bg,border:"none",borderRadius:10,padding:".7rem",cursor:"pointer",fontWeight:800,fontSize:13,fontFamily:FONT.body}}>Save override</button>
+              </div>
             </div>
           </div>
         )}
