@@ -2041,26 +2041,6 @@ function Quiz({ player, onFinish, onBack, tier, onUpgrade }) {
               <div style={{fontSize:userCorrect && streak >= 2 ? 12 : 10,letterSpacing:".12em",textTransform:"uppercase",fontWeight:800,marginBottom:".5rem",color:verdictColor}}>
                 {verdict}
               </div>
-              <div style={{fontSize:13,color:C.dim,lineHeight:1.75,marginBottom:".75rem"}}>{q.why || q.explanation}</div>
-              {(() => {
-                let pct = null, isSample = false;
-                if (isDemo) { pct = demoStatPct(q.id, q.d); isSample = true; }
-                else {
-                  const s = statsMap[q.id];
-                  if (s && s.attempts >= 10) pct = Math.round((s.correct / s.attempts) * 100);
-                }
-                if (pct === null) return null;
-                const displayPct = userCorrect ? pct : pct;
-                const msg = userCorrect
-                  ? `🎯 ${displayPct}% of players got this right`
-                  : (pct <= 40 ? `💪 Only ${pct}% got this right — tough one` : `📊 ${pct}% of players got this right`);
-                return (
-                  <div style={{fontSize:11,color:C.dimmer,marginBottom:".6rem",display:"flex",alignItems:"center",gap:".4rem"}}>
-                    <span>{msg}</span>
-                    {isSample && <span style={{background:C.dimmest,color:C.dimmer,padding:"1px 6px",borderRadius:4,fontSize:9,letterSpacing:".08em",fontWeight:700}}>SAMPLE</span>}
-                  </div>
-                );
-              })()}
               {(() => {
                 const coach = getCoachForQuestion(q, player.level, player.position);
                 if (!coach) return null;
@@ -2070,24 +2050,43 @@ function Quiz({ player, onFinish, onBack, tier, onUpgrade }) {
                   ? perCoachPool
                   : (userCorrect ? FLAVOR_CORRECT : FLAVOR_INCORRECT);
                 const flavor = flavorPool[(q.id?.length || 0) % flavorPool.length];
+                const explanation = q.why || q.explanation || q.tip || (userCorrect ? "Keep reading the ice like that." : "Re-read the play and reset — you'll get the next one.");
                 return (
-                  <div style={{display:"flex",gap:".6rem",alignItems:"flex-start",borderTop:`1px solid ${C.border}`,paddingTop:".7rem",marginTop:".2rem"}}>
+                  <div style={{display:"flex",gap:".6rem",alignItems:"flex-start"}}>
                     <AvatarDisc name={coach.name} kind="coach" size={40}/>
                     <div style={{flex:1,minWidth:0}}>
-                      <div style={{display:"flex",alignItems:"baseline",gap:".4rem",flexWrap:"wrap",marginBottom:".2rem"}}>
+                      <div style={{display:"flex",alignItems:"baseline",gap:".4rem",flexWrap:"wrap",marginBottom:".25rem"}}>
                         <span style={{fontWeight:800,fontSize:12,color:C.white}}>{coach.name}</span>
                         <span style={{fontSize:10,color:C.dimmer,letterSpacing:".04em"}}>{coach.role}</span>
                       </div>
-                      {/* Coach feedback split into a short spoken line on top
-                          and the longer teaching/tip underneath, so the
-                          quip lands before the explanation unpacks it. */}
-                      <div style={{fontWeight:800,fontSize:13.5,color:userCorrect?C.green:C.yellow,lineHeight:1.35,marginBottom:".3rem"}}>
+                      {/* Coach delivers feedback as a single voice: a short
+                          quip lands first, then the explanation unpacks the
+                          why behind the read. */}
+                      <div style={{fontWeight:800,fontSize:13.5,color:userCorrect?C.green:C.yellow,lineHeight:1.35,marginBottom:".4rem"}}>
                         {flavor}
                       </div>
-                      <div style={{fontSize:12,color:C.dim,lineHeight:1.55}}>
-                        {q.tip || (userCorrect ? "Keep reading the ice like that." : "Re-read the play and reset — you'll get the next one.")}
+                      <div style={{fontSize:13,color:C.dim,lineHeight:1.65}}>
+                        {explanation}
                       </div>
                     </div>
+                  </div>
+                );
+              })()}
+              {(() => {
+                let pct = null, isSample = false;
+                if (isDemo) { pct = demoStatPct(q.id, q.d); isSample = true; }
+                else {
+                  const s = statsMap[q.id];
+                  if (s && s.attempts >= 10) pct = Math.round((s.correct / s.attempts) * 100);
+                }
+                if (pct === null) return null;
+                const msg = userCorrect
+                  ? `🎯 ${pct}% of players got this right`
+                  : (pct <= 40 ? `💪 Only ${pct}% got this right — tough one` : `📊 ${pct}% of players got this right`);
+                return (
+                  <div style={{fontSize:11,color:C.dimmer,marginTop:".75rem",paddingTop:".6rem",borderTop:`1px solid ${C.border}`,display:"flex",alignItems:"center",gap:".4rem"}}>
+                    <span>{msg}</span>
+                    {isSample && <span style={{background:C.dimmest,color:C.dimmer,padding:"1px 6px",borderRadius:4,fontSize:9,letterSpacing:".08em",fontWeight:700}}>SAMPLE</span>}
                   </div>
                 );
               })()}
@@ -2747,10 +2746,34 @@ function WeeklyQuiz({ player, onBack, onFinish }) {
 
         {sel !== null && qtype !== "seq" && qtype !== "multi" && (() => {
           const wasCorrect = qtype === "tf" ? (sel === "true") === q.ok : sel === q.ok;
+          const coach = getCoachForQuestion(q, player.level, player.position);
+          const ageTier = getAgeTier(player.level);
+          const perCoachPool = coach && (wasCorrect ? coach.flavorCorrect : coach.flavorIncorrect)?.[ageTier];
+          const flavorPool = (perCoachPool && perCoachPool.length)
+            ? perCoachPool
+            : (wasCorrect ? FLAVOR_CORRECT : FLAVOR_INCORRECT);
+          const flavor = flavorPool[(q.id?.length || 0) % flavorPool.length];
+          const explanation = q.why || q.explanation || q.tip || (wasCorrect ? "Keep reading the ice like that." : "Re-read the play and reset — you'll get the next one.");
           return (
             <Card style={{marginTop:".5rem",background:wasCorrect ? "rgba(34,197,94,.08)" : "rgba(239,68,68,.08)",border:`1px solid ${wasCorrect ? "rgba(34,197,94,.3)" : "rgba(239,68,68,.3)"}`}}>
-              <div style={{fontSize:11,fontWeight:700,color:wasCorrect ? C.green : C.red,marginBottom:".4rem"}}>{wasCorrect ? "✓ Correct" : "✗ Incorrect"}</div>
-              <div style={{fontSize:13,color:C.dim,lineHeight:1.6}}>{q.why}</div>
+              <div style={{fontSize:11,fontWeight:700,color:wasCorrect ? C.green : C.red,marginBottom:".5rem",letterSpacing:".06em"}}>{wasCorrect ? "✓ Correct" : "✗ Incorrect"}</div>
+              {coach && (
+                <div style={{display:"flex",gap:".6rem",alignItems:"flex-start"}}>
+                  <AvatarDisc name={coach.name} kind="coach" size={40}/>
+                  <div style={{flex:1,minWidth:0}}>
+                    <div style={{display:"flex",alignItems:"baseline",gap:".4rem",flexWrap:"wrap",marginBottom:".25rem"}}>
+                      <span style={{fontWeight:800,fontSize:12,color:C.white}}>{coach.name}</span>
+                      <span style={{fontSize:10,color:C.dimmer,letterSpacing:".04em"}}>{coach.role}</span>
+                    </div>
+                    <div style={{fontWeight:800,fontSize:13.5,color:wasCorrect?C.green:C.yellow,lineHeight:1.35,marginBottom:".4rem"}}>
+                      {flavor}
+                    </div>
+                    <div style={{fontSize:13,color:C.dim,lineHeight:1.65}}>
+                      {explanation}
+                    </div>
+                  </div>
+                </div>
+              )}
             </Card>
           );
         })()}
