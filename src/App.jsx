@@ -2437,14 +2437,43 @@ function Results({ results, player, prevScore, totalSessions, seqPerfect, mistak
 // browser isn't viable). Hidden when ?dev!=1 or no overrides exist.
 function OverridesExportCard() {
   const [overrides, setOverrides] = useState(() => getAllOverrides());
+  const [bankIndex, setBankIndex] = useState(null); // {[id]: bankQuestion}
   const [copied, setCopied] = useState(false);
   const editAllowed = (() => {
     try { return new URLSearchParams(window.location.search).get("dev") === "1"; }
     catch { return false; }
   })();
+  // Build a flat id->question lookup so we can enrich each override with
+  // _notionPageId + archetype. Without these, pushing edits back to Notion
+  // requires me to re-resolve the page by question id every time.
+  useEffect(() => {
+    let cancelled = false;
+    loadQB().then(qb => {
+      if (cancelled) return;
+      const idx = {};
+      for (const lvl of Object.keys(qb)) {
+        for (const q of qb[lvl]) {
+          if (q && q.id && !idx[q.id]) idx[q.id] = q;
+        }
+      }
+      setBankIndex(idx);
+    }).catch(() => {});
+    return () => { cancelled = true; };
+  }, []);
   const ids = Object.keys(overrides);
   if (!editAllowed || ids.length === 0) return null;
-  const json = JSON.stringify(overrides, null, 2);
+  // Enrich each override with the bank question's Notion page id +
+  // archetype so the JSON is self-contained for the round-trip.
+  const enriched = {};
+  for (const id of ids) {
+    const bank = bankIndex && bankIndex[id];
+    enriched[id] = {
+      ...(bank?._notionPageId ? { _notionPageId: bank._notionPageId } : {}),
+      ...(bank?.archetype ? { _archetype: bank.archetype } : {}),
+      ...overrides[id],
+    };
+  }
+  const json = JSON.stringify(enriched, null, 2);
   const copy = async () => {
     try { await navigator.clipboard.writeText(json); setCopied(true); setTimeout(() => setCopied(false), 2000); }
     catch { /* clipboard blocked — user can select-all instead */ }
