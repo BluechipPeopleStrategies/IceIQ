@@ -1972,14 +1972,18 @@ function Quiz({ player, onFinish, onBack, tier, onUpgrade }) {
             <span>✎ LOCAL OVERRIDE — not synced to Notion</span>
           </div>
         )}
-        {editAllowed && ["mc","pov-mc","tf","mistake"].includes(qtype) && (
+        {editAllowed && (
           <div style={{display:"flex",gap:".5rem",marginTop:".5rem"}}>
             <button onClick={() => {
               setEditDraft({
                 sit: q.sit || "",
+                q: q.q || "",
                 question: q.question || "",
                 opts: Array.isArray(q.opts) ? [...q.opts] : ["","","",""],
                 ok: q.ok,
+                correct: Array.isArray(q.correct) ? [...q.correct] : [],
+                items: Array.isArray(q.items) ? [...q.items] : [],
+                correct_order: Array.isArray(q.correct_order) ? [...q.correct_order] : (Array.isArray(q.items) ? q.items.map((_,i)=>i) : []),
                 tip: q.tip || "",
                 why: q.why || q.explanation || "",
               });
@@ -2149,28 +2153,59 @@ function Quiz({ player, onFinish, onBack, tier, onUpgrade }) {
           </div>
         )}
 
-        {editOpen && editDraft && (
+        {editOpen && editDraft && (() => {
+          // Type classifier — used to branch which editor sections render.
+          const isMCShape = ["mc","pov-mc","mistake","next"].includes(qtype);
+          const isTF      = qtype === "tf";
+          const isMulti   = qtype === "multi";
+          const isSeq     = qtype === "seq";
+          // Geometry types where Phase 2 visual editors aren't built yet.
+          // Until then, the user can edit prompt/explanation/tip on these.
+          const isPhase2  = !isMCShape && !isTF && !isMulti && !isSeq;
+          // Which prompt fields exist on this type. Lookup-driven so each
+          // type only shows the fields it actually carries.
+          const showSit      = ["mc","pov-mc","tf","mistake","next","seq","multi","sequence-rink"].includes(qtype) || (q.sit !== undefined);
+          const showQPrompt  = ["multi","hot-spots","zone-click","lane-select","multi-tap","drag-target","drag-place","sequence-rink","rink-label","rink-drag","rink-match","path-draw","scenario"].includes(qtype) || (q.q !== undefined && !showSit);
+          const showQuestion = qtype === "mistake";
+
+          const labelStyle = {fontSize:11,color:C.dimmer,fontWeight:700,marginBottom:".25rem",letterSpacing:".05em"};
+          const textareaStyle = {width:"100%",background:C.bgElevated,border:`1px solid ${C.border}`,borderRadius:8,padding:".6rem .8rem",color:C.white,fontSize:13,fontFamily:FONT.body,outline:"none",lineHeight:1.5,resize:"vertical"};
+          const sectionGap = {marginBottom:".75rem"};
+
+          return (
           <div onClick={()=>setEditOpen(false)} style={{position:"fixed",inset:0,background:"rgba(0,0,0,.75)",zIndex:200,display:"flex",alignItems:"center",justifyContent:"center",padding:"1rem",overflowY:"auto"}}>
             <div onClick={e=>e.stopPropagation()} style={{background:C.bgCard,border:`1px solid ${C.goldBorder}`,borderRadius:16,padding:"1.5rem",maxWidth:520,width:"100%",color:C.white,fontFamily:FONT.body,maxHeight:"90vh",overflowY:"auto"}}>
-              <div style={{fontSize:10,letterSpacing:".14em",textTransform:"uppercase",color:C.gold,fontWeight:700,marginBottom:".4rem"}}>✎ Edit question (local only)</div>
-              <div style={{fontSize:11,color:C.dimmer,marginBottom:"1rem"}}>Saved to this browser. Doesn't sync to Notion.</div>
+              <div style={{display:"flex",alignItems:"baseline",justifyContent:"space-between",marginBottom:".4rem"}}>
+                <div style={{fontSize:10,letterSpacing:".14em",textTransform:"uppercase",color:C.gold,fontWeight:700}}>✎ Edit question (local only)</div>
+                <div style={{fontSize:9,letterSpacing:".08em",color:C.dimmer,fontWeight:700,background:C.dimmest,padding:"2px 6px",borderRadius:4}}>{qtype}</div>
+              </div>
+              <div style={{fontSize:11,color:C.dimmer,marginBottom:"1rem"}}>Saved to this browser. Doesn't sync to Notion until you copy + paste back.</div>
 
-              <div style={{fontSize:11,color:C.dimmer,fontWeight:700,marginBottom:".25rem",letterSpacing:".05em"}}>SITUATION</div>
-              <textarea value={editDraft.sit} onChange={e=>setEditDraft(d=>({...d,sit:e.target.value}))} rows={3}
-                style={{width:"100%",background:C.bgElevated,border:`1px solid ${C.border}`,borderRadius:8,padding:".6rem .8rem",color:C.white,fontSize:13,fontFamily:FONT.body,outline:"none",lineHeight:1.5,marginBottom:".75rem",resize:"vertical"}}/>
-
-              {qtype === "mistake" && (
-                <>
-                  <div style={{fontSize:11,color:C.dimmer,fontWeight:700,marginBottom:".25rem",letterSpacing:".05em"}}>QUESTION PROMPT</div>
-                  <textarea value={editDraft.question} onChange={e=>setEditDraft(d=>({...d,question:e.target.value}))} rows={2}
-                    style={{width:"100%",background:C.bgElevated,border:`1px solid ${C.border}`,borderRadius:8,padding:".6rem .8rem",color:C.white,fontSize:13,fontFamily:FONT.body,outline:"none",lineHeight:1.5,marginBottom:".75rem",resize:"vertical"}}/>
-                </>
+              {showSit && (
+                <div style={sectionGap}>
+                  <div style={labelStyle}>SITUATION</div>
+                  <textarea value={editDraft.sit} onChange={e=>setEditDraft(d=>({...d,sit:e.target.value}))} rows={3} style={textareaStyle}/>
+                </div>
               )}
 
-              {qtype === "tf" ? (
-                <>
-                  <div style={{fontSize:11,color:C.dimmer,fontWeight:700,marginBottom:".4rem",letterSpacing:".05em"}}>CORRECT ANSWER</div>
-                  <div style={{display:"flex",gap:".5rem",marginBottom:".75rem"}}>
+              {showQPrompt && (
+                <div style={sectionGap}>
+                  <div style={labelStyle}>QUESTION PROMPT</div>
+                  <textarea value={editDraft.q} onChange={e=>setEditDraft(d=>({...d,q:e.target.value}))} rows={2} style={textareaStyle}/>
+                </div>
+              )}
+
+              {showQuestion && (
+                <div style={sectionGap}>
+                  <div style={labelStyle}>QUESTION PROMPT</div>
+                  <textarea value={editDraft.question} onChange={e=>setEditDraft(d=>({...d,question:e.target.value}))} rows={2} style={textareaStyle}/>
+                </div>
+              )}
+
+              {isTF && (
+                <div style={sectionGap}>
+                  <div style={{...labelStyle,marginBottom:".4rem"}}>CORRECT ANSWER</div>
+                  <div style={{display:"flex",gap:".5rem"}}>
                     {[{v:true,l:"True"},{v:false,l:"False"}].map(o => (
                       <button key={String(o.v)} onClick={()=>setEditDraft(d=>({...d,ok:o.v}))}
                         style={{flex:1,background:editDraft.ok===o.v?C.goldDim:C.bgElevated,border:`1px solid ${editDraft.ok===o.v?C.gold:C.border}`,borderRadius:8,padding:".6rem",cursor:"pointer",color:editDraft.ok===o.v?C.gold:C.dim,fontSize:13,fontFamily:FONT.body,fontWeight:editDraft.ok===o.v?800:500}}>
@@ -2178,10 +2213,12 @@ function Quiz({ player, onFinish, onBack, tier, onUpgrade }) {
                       </button>
                     ))}
                   </div>
-                </>
-              ) : (
-                <>
-                  <div style={{fontSize:11,color:C.dimmer,fontWeight:700,marginBottom:".25rem",letterSpacing:".05em"}}>OPTIONS (radio = correct)</div>
+                </div>
+              )}
+
+              {isMCShape && (
+                <div style={sectionGap}>
+                  <div style={labelStyle}>OPTIONS (radio = correct)</div>
                   {editDraft.opts.map((opt, i) => (
                     <div key={i} style={{display:"flex",alignItems:"flex-start",gap:".5rem",marginBottom:".4rem"}}>
                       <button onClick={()=>setEditDraft(d=>({...d,ok:i}))}
@@ -2191,34 +2228,122 @@ function Quiz({ player, onFinish, onBack, tier, onUpgrade }) {
                       </button>
                       <span style={{fontSize:11,color:C.dimmer,fontWeight:800,marginTop:".55rem",minWidth:14}}>{String.fromCharCode(65+i)}</span>
                       <textarea value={opt} onChange={e=>setEditDraft(d=>{const n=[...d.opts];n[i]=e.target.value;return {...d,opts:n};})} rows={2}
-                        style={{flex:1,background:C.bgElevated,border:`1px solid ${editDraft.ok===i?C.goldBorder:C.border}`,borderRadius:8,padding:".5rem .7rem",color:C.white,fontSize:13,fontFamily:FONT.body,outline:"none",lineHeight:1.45,resize:"vertical"}}/>
+                        style={{...textareaStyle,flex:1,border:`1px solid ${editDraft.ok===i?C.goldBorder:C.border}`,padding:".5rem .7rem",lineHeight:1.45}}/>
                     </div>
                   ))}
-                </>
+                </div>
               )}
 
-              <div style={{fontSize:11,color:C.dimmer,fontWeight:700,marginBottom:".25rem",marginTop:".75rem",letterSpacing:".05em"}}>WHY (explanation)</div>
-              <textarea value={editDraft.why} onChange={e=>setEditDraft(d=>({...d,why:e.target.value}))} rows={3}
-                style={{width:"100%",background:C.bgElevated,border:`1px solid ${C.border}`,borderRadius:8,padding:".6rem .8rem",color:C.white,fontSize:13,fontFamily:FONT.body,outline:"none",lineHeight:1.5,marginBottom:".75rem",resize:"vertical"}}/>
+              {isMulti && (
+                <div style={sectionGap}>
+                  <div style={labelStyle}>OPTIONS (☑ = correct, multi-select)</div>
+                  {editDraft.opts.map((opt, i) => {
+                    const isCorrect = editDraft.correct.includes(i);
+                    return (
+                      <div key={i} style={{display:"flex",alignItems:"flex-start",gap:".5rem",marginBottom:".4rem"}}>
+                        <button onClick={()=>setEditDraft(d=>{
+                          const set = new Set(d.correct);
+                          if (set.has(i)) set.delete(i); else set.add(i);
+                          return {...d, correct:[...set].sort((a,b)=>a-b)};
+                        })} style={{background:"none",border:"none",cursor:"pointer",padding:0,marginTop:".5rem",color:isCorrect?C.gold:C.dimmer,fontSize:14}}
+                          title="Toggle correct">
+                          {isCorrect ? "☑" : "☐"}
+                        </button>
+                        <span style={{fontSize:11,color:C.dimmer,fontWeight:800,marginTop:".55rem",minWidth:14}}>{String.fromCharCode(65+i)}</span>
+                        <textarea value={opt} onChange={e=>setEditDraft(d=>{const n=[...d.opts];n[i]=e.target.value;return {...d,opts:n};})} rows={2}
+                          style={{...textareaStyle,flex:1,border:`1px solid ${isCorrect?C.goldBorder:C.border}`,padding:".5rem .7rem",lineHeight:1.45}}/>
+                      </div>
+                    );
+                  })}
+                </div>
+              )}
 
-              <div style={{fontSize:11,color:C.dimmer,fontWeight:700,marginBottom:".25rem",letterSpacing:".05em"}}>COACH TIP</div>
-              <textarea value={editDraft.tip} onChange={e=>setEditDraft(d=>({...d,tip:e.target.value}))} rows={2}
-                style={{width:"100%",background:C.bgElevated,border:`1px solid ${C.border}`,borderRadius:8,padding:".6rem .8rem",color:C.white,fontSize:13,fontFamily:FONT.body,outline:"none",lineHeight:1.5,marginBottom:"1rem",resize:"vertical"}}/>
+              {isSeq && (
+                <div style={sectionGap}>
+                  <div style={labelStyle}>STEPS — drag with ↑/↓ into the right order (top → bottom)</div>
+                  {editDraft.correct_order.map((origIdx, pos) => {
+                    const item = editDraft.items[origIdx] || "";
+                    const moveUp = () => setEditDraft(d => {
+                      if (pos === 0) return d;
+                      const o = [...d.correct_order];
+                      [o[pos-1], o[pos]] = [o[pos], o[pos-1]];
+                      return {...d, correct_order: o};
+                    });
+                    const moveDown = () => setEditDraft(d => {
+                      if (pos === d.correct_order.length - 1) return d;
+                      const o = [...d.correct_order];
+                      [o[pos+1], o[pos]] = [o[pos], o[pos+1]];
+                      return {...d, correct_order: o};
+                    });
+                    const editText = (val) => setEditDraft(d => {
+                      const items = [...d.items];
+                      items[origIdx] = val;
+                      return {...d, items};
+                    });
+                    return (
+                      <div key={origIdx} style={{display:"flex",alignItems:"flex-start",gap:".4rem",marginBottom:".35rem"}}>
+                        <span style={{fontSize:11,color:C.gold,fontWeight:800,marginTop:".55rem",minWidth:14}}>{pos+1}.</span>
+                        <textarea value={item} onChange={e=>editText(e.target.value)} rows={2}
+                          style={{...textareaStyle,flex:1,padding:".5rem .7rem",lineHeight:1.45}}/>
+                        <div style={{display:"flex",flexDirection:"column",gap:"2px"}}>
+                          <button onClick={moveUp} disabled={pos===0} style={{background:C.bgElevated,border:`1px solid ${C.border}`,borderRadius:6,padding:"2px 6px",cursor:pos===0?"default":"pointer",color:pos===0?C.dimmest:C.dimmer,fontSize:11,fontFamily:FONT.body,opacity:pos===0?0.4:1}}>↑</button>
+                          <button onClick={moveDown} disabled={pos===editDraft.correct_order.length-1} style={{background:C.bgElevated,border:`1px solid ${C.border}`,borderRadius:6,padding:"2px 6px",cursor:pos===editDraft.correct_order.length-1?"default":"pointer",color:pos===editDraft.correct_order.length-1?C.dimmest:C.dimmer,fontSize:11,fontFamily:FONT.body,opacity:pos===editDraft.correct_order.length-1?0.4:1}}>↓</button>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              )}
+
+              {isPhase2 && (
+                <div style={{...sectionGap,padding:".7rem .85rem",background:"rgba(91,164,232,.06)",border:`1px solid rgba(91,164,232,.25)`,borderRadius:8,fontSize:12,color:C.dim,lineHeight:1.55}}>
+                  <span style={{color:C.blue,fontWeight:700}}>Phase 2 editor pending.</span> Geometry edits (spots, lanes, zones, markers, paths) come next. For now, prompt + explanation + tip are editable here — and the override JSON includes the original geometry so I can preserve it when pushing to Notion.
+                </div>
+              )}
+
+              <div style={sectionGap}>
+                <div style={labelStyle}>WHY (explanation)</div>
+                <textarea value={editDraft.why} onChange={e=>setEditDraft(d=>({...d,why:e.target.value}))} rows={3} style={textareaStyle}/>
+              </div>
+
+              <div style={{...sectionGap,marginBottom:"1rem"}}>
+                <div style={labelStyle}>COACH TIP</div>
+                <textarea value={editDraft.tip} onChange={e=>setEditDraft(d=>({...d,tip:e.target.value}))} rows={2} style={textareaStyle}/>
+              </div>
 
               <div style={{display:"flex",gap:".5rem"}}>
                 <button onClick={()=>setEditOpen(false)} style={{flex:1,background:"none",border:`1px solid ${C.border}`,borderRadius:10,padding:".7rem",cursor:"pointer",color:C.dimmer,fontSize:13,fontFamily:FONT.body}}>Cancel</button>
                 <button onClick={() => {
                   const orig = question;
                   const patch = {};
-                  if (editDraft.sit !== (orig.sit || "")) patch.sit = editDraft.sit;
-                  if (editDraft.question !== (orig.question || "")) patch.question = editDraft.question;
-                  if (Array.isArray(orig.opts)) {
+                  // Text fields — present on all types but we only patch what changed.
+                  if (showSit && editDraft.sit !== (orig.sit || "")) patch.sit = editDraft.sit;
+                  if (showQPrompt && editDraft.q !== (orig.q || "")) patch.q = editDraft.q;
+                  if (showQuestion && editDraft.question !== (orig.question || "")) patch.question = editDraft.question;
+                  if (editDraft.tip !== (orig.tip || "")) patch.tip = editDraft.tip;
+                  if (editDraft.why !== (orig.why || orig.explanation || "")) patch.why = editDraft.why;
+                  // Options array (MC-shape, multi)
+                  if ((isMCShape || isMulti) && Array.isArray(orig.opts)) {
                     const sameOpts = orig.opts.length === editDraft.opts.length && orig.opts.every((o, i) => o === editDraft.opts[i]);
                     if (!sameOpts) patch.opts = editDraft.opts;
                   }
-                  if (editDraft.ok !== orig.ok) patch.ok = editDraft.ok;
-                  if (editDraft.tip !== (orig.tip || "")) patch.tip = editDraft.tip;
-                  if (editDraft.why !== (orig.why || orig.explanation || "")) patch.why = editDraft.why;
+                  // ok index (MC-shape) or boolean (TF)
+                  if ((isMCShape || isTF) && editDraft.ok !== orig.ok) patch.ok = editDraft.ok;
+                  // multi correct[]
+                  if (isMulti) {
+                    const origC = Array.isArray(orig.correct) ? orig.correct : [];
+                    const sameC = origC.length === editDraft.correct.length && origC.every((c, i) => c === editDraft.correct[i]);
+                    if (!sameC) patch.correct = [...editDraft.correct];
+                  }
+                  // seq items[] + correct_order[]
+                  if (isSeq) {
+                    const origI = Array.isArray(orig.items) ? orig.items : [];
+                    const sameI = origI.length === editDraft.items.length && origI.every((x, i) => x === editDraft.items[i]);
+                    if (!sameI) patch.items = editDraft.items;
+                    const origO = Array.isArray(orig.correct_order) ? orig.correct_order : [];
+                    const sameO = origO.length === editDraft.correct_order.length && origO.every((x, i) => x === editDraft.correct_order[i]);
+                    if (!sameO) patch.correct_order = editDraft.correct_order;
+                  }
                   setOverride(orig.id, patch);
                   setEditOpen(false);
                   setQuestion({ ...question });
@@ -2226,7 +2351,8 @@ function Quiz({ player, onFinish, onBack, tier, onUpgrade }) {
               </div>
             </div>
           </div>
-        )}
+          );
+        })()}
       </div>
     </div>
   );

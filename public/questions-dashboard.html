@@ -96,6 +96,17 @@
                   box-shadow: 0 1px 3px rgba(0,0,0,.5); pointer-events: none; }
   .spotbox .dot.correct { border-color: var(--green); color: var(--green); }
   .spotbox .dot.wrong { border-color: var(--red); color: var(--red); }
+
+  /* Editor-mode toggle in the filter bar — when ON, all play links append ?dev=1
+     so the in-quiz edit affordance shows up in launched questions. */
+  #editor-mode-label { display: inline-flex; align-items: center; gap: .35rem;
+    font-size: 12px; color: var(--dim); cursor: pointer;
+    -webkit-user-select: none; user-select: none;
+    padding: .25rem .5rem; border-radius: 6px; border: 1px solid transparent; }
+  #editor-mode-label:hover { color: var(--white); }
+  #editor-mode-label.active { color: var(--gold); border-color: rgba(252,200,76,.4);
+    background: rgba(252,200,76,.08); }
+  #editor-mode { accent-color: var(--gold); cursor: pointer; }
 </style>
 </head>
 <body>
@@ -143,6 +154,10 @@
     <select id="filter-image" title="Image filter"><option value="">All images</option></select>
   </div>
   <div class="stats" id="stats">— questions</div>
+  <label id="editor-mode-label" title="When on, every play link launches with the in-quiz Edit affordance enabled (?dev=1).">
+    <input type="checkbox" id="editor-mode"/>
+    🔧 Editor mode
+  </label>
   <button type="button" class="subtle" id="play-set">▶ Play this set in app</button>
 </div>
 
@@ -272,9 +287,22 @@ function render() {
   body.querySelectorAll("[data-play]").forEach(btn => {
     btn.addEventListener("click", e => {
       e.stopPropagation();
-      window.open(`${APP_BASE}/?ids=${encodeURIComponent(e.target.dataset.play)}&demo=player`, "_blank");
+      window.open(playUrl(e.target.dataset.play), "_blank");
     });
   });
+}
+
+// Build a launch URL for a single id or comma-joined ids. Editor mode (the
+// 🔧 toggle) appends ?dev=1 so the in-quiz Edit affordance shows up in the
+// launched quiz. Toggle state persists in localStorage so a review session
+// survives page refresh.
+const EDITOR_MODE_KEY = "rinkreads_dashboard_editor_mode";
+function isEditorMode() {
+  try { return localStorage.getItem(EDITOR_MODE_KEY) === "1"; } catch { return false; }
+}
+function playUrl(idsCsv) {
+  const dev = isEditorMode() ? "&dev=1" : "";
+  return `${APP_BASE}/?ids=${encodeURIComponent(idsCsv)}&demo=player${dev}`;
 }
 
 function renderPreview(q) {
@@ -332,7 +360,7 @@ function renderPreview(q) {
     ${bodyHtml}
     ${tip}
     <div class="actions">
-      <button type="button" onclick="window.open('${APP_BASE}/?ids=${encodeURIComponent(q.id)}&demo=player', '_blank')">▶ Play in app</button>
+      <button type="button" onclick="window.open(playUrl('${escapeHtml(q.id)}'), '_blank')">▶ Play in app</button>
       <button type="button" class="secondary" onclick="copyJson('${escapeHtml(q.id)}')">Copy JSON</button>
     </div>
   `;
@@ -397,8 +425,20 @@ $("play-set").addEventListener("click", () => {
   if (ids.length > 50) {
     if (!confirm(`Open the app with ${ids.length} questions queued? URL will be long.`)) return;
   }
-  window.open(`${APP_BASE}/?ids=${encodeURIComponent(ids.join(","))}&demo=player`, "_blank");
+  window.open(playUrl(ids.join(",")), "_blank");
 });
+
+// Editor-mode toggle wiring — restore from localStorage on load, persist on change.
+const editorToggle = $("editor-mode");
+const editorLabel = $("editor-mode-label");
+function syncEditorToggleUi() {
+  const on = editorToggle.checked;
+  editorLabel.classList.toggle("active", on);
+  try { localStorage.setItem(EDITOR_MODE_KEY, on ? "1" : "0"); } catch {}
+}
+editorToggle.checked = isEditorMode();
+syncEditorToggleUi();
+editorToggle.addEventListener("change", syncEditorToggleUi);
 
 loadQuestions();
 </script>
