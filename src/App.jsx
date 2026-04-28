@@ -2055,9 +2055,18 @@ function Quiz({ player, onFinish, onBack, tier, onUpgrade }) {
                 sit: question.sit || question.q || "",
               });
               setKillArmed(false);
-              setQuestion({ ...question });
+              toast.success("🗑 Question deleted — won't appear again. Push to Notion at quiz end.", { duration: 2400 });
+              // Drop this question from the current quiz too. If there's a
+              // next question queued, advance; otherwise finish.
+              setTimeout(() => {
+                if (results.length >= qLen - 1) {
+                  setQuizDone(true);
+                } else {
+                  advance();
+                }
+              }, 600);
             }}
-              title={killArmed ? "Tap again to confirm — removed from future quizzes" : "Delete this question from future quizzes (two-tap)"}
+              title={killArmed ? "Tap again to confirm — permanently deletes from quiz + queued for Notion delete" : "Delete this question permanently (two-tap)"}
               style={{background: killArmed ? C.redDim : "none", border:`1px solid ${killArmed ? C.red : C.border}`, color: killArmed ? C.red : C.dimmer, fontSize:11, cursor:"pointer", fontFamily:FONT.body, padding:".4rem .8rem", borderRadius:6, fontWeight: killArmed ? 800 : 500}}>
               {killArmed ? "🗑 Confirm?" : "🗑"}
             </button>
@@ -2881,7 +2890,7 @@ function OverridesExportCard() {
         ✎ Local changes ({ids.length} edit{ids.length===1?"":"s"}{killCount > 0 ? ` · 🗑 ${killCount} delete${killCount===1?"":"s"}` : ""})
       </div>
       <div style={{fontSize:12,color:C.dim,lineHeight:1.6,marginBottom:".75rem"}}>
-        Saved in your browser. Copy the JSON and paste it in chat — I'll push edits to Notion + mark deleted questions as Deprecated.
+        Saved in your browser. Copy the JSON and paste it in chat — I'll push edits to Notion + <strong style={{color:C.red}}>permanently delete</strong> the questions in your kill list (and any orphaned images they were the only reference for).
       </div>
       <pre style={{background:C.bgElevated,border:`1px solid ${C.border}`,borderRadius:8,padding:".6rem .8rem",color:C.dim,fontSize:11,fontFamily:"ui-monospace, SF Mono, Menlo, monospace",lineHeight:1.5,maxHeight:240,overflow:"auto",marginBottom:".75rem",whiteSpace:"pre"}}>{json}</pre>
       <div style={{display:"flex",gap:".5rem"}}>
