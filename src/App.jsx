@@ -28,7 +28,7 @@ import { getWeeklyStreak, bumpWeeklyStreak, topCategoryStreak, updateCategoryStr
 import { canSwitchAgeGroup, recordAgeGroupSwitch, getAgeGroupLock, setAgeGroupLock, checkSeasonReset } from "./utils/deviceLock";
 import { lsGetStr, lsSetStr, lsGetJSON, lsSetJSON } from "./utils/storage.js";
 import { computeCategoryMastery, rankCategories, nextThreshold } from "./utils/mastery.js";
-import { applyOverride, setOverride, clearOverride, getOverride } from "./utils/questionOverrides.js";
+import { applyOverride, setOverride, clearOverride, getOverride, getAllOverrides, clearAllOverrides } from "./utils/questionOverrides.js";
 import {
   REASONS as REFLECTION_REASONS,
   getReflectionFor, saveReflection,
@@ -2421,11 +2421,54 @@ function Results({ results, player, prevScore, totalSessions, seqPerfect, mistak
         </Card>
       )}
 
+      <OverridesExportCard/>
+
       <QuizFeedbackCard player={player} score={score} tier={tier}/>
 
       <PrimaryBtn onClick={onAgain} style={{marginBottom:".75rem"}}>Take Another Quiz →</PrimaryBtn>
       <SecBtn onClick={onHome}>← Home</SecBtn>
     </Screen>
+  );
+}
+
+// Surfaces any local question overrides at quiz-end so the user can copy
+// the JSON and paste it back to me — I push the edits to Notion via MCP
+// (the read-only NOTION_TOKEN can't write, so a one-click sync from the
+// browser isn't viable). Hidden when ?dev!=1 or no overrides exist.
+function OverridesExportCard() {
+  const [overrides, setOverrides] = useState(() => getAllOverrides());
+  const [copied, setCopied] = useState(false);
+  const editAllowed = (() => {
+    try { return new URLSearchParams(window.location.search).get("dev") === "1"; }
+    catch { return false; }
+  })();
+  const ids = Object.keys(overrides);
+  if (!editAllowed || ids.length === 0) return null;
+  const json = JSON.stringify(overrides, null, 2);
+  const copy = async () => {
+    try { await navigator.clipboard.writeText(json); setCopied(true); setTimeout(() => setCopied(false), 2000); }
+    catch { /* clipboard blocked — user can select-all instead */ }
+  };
+  return (
+    <Card style={{marginBottom:"1rem",background:"rgba(252,200,76,.06)",border:`1px solid ${C.goldBorder}`}}>
+      <div style={{fontSize:10,letterSpacing:".14em",textTransform:"uppercase",color:C.gold,fontWeight:700,marginBottom:".4rem"}}>✎ Local question edits ({ids.length})</div>
+      <div style={{fontSize:12,color:C.dim,lineHeight:1.6,marginBottom:".75rem"}}>
+        These are saved in your browser only. Copy the JSON and paste it back in chat — I'll push the edits to Notion so they sync everywhere.
+      </div>
+      <pre style={{background:C.bgElevated,border:`1px solid ${C.border}`,borderRadius:8,padding:".6rem .8rem",color:C.dim,fontSize:11,fontFamily:"ui-monospace, SF Mono, Menlo, monospace",lineHeight:1.5,maxHeight:200,overflow:"auto",marginBottom:".75rem",whiteSpace:"pre"}}>{json}</pre>
+      <div style={{display:"flex",gap:".5rem"}}>
+        <button onClick={copy} style={{flex:2,background:C.gold,color:C.bg,border:"none",borderRadius:8,padding:".55rem",cursor:"pointer",fontWeight:800,fontSize:12,fontFamily:FONT.body}}>
+          {copied ? "✓ Copied" : `📋 Copy ${ids.length} edit${ids.length===1?"":"s"}`}
+        </button>
+        <button onClick={() => {
+          if (!window.confirm(`Clear all ${ids.length} local override${ids.length===1?"":"s"}? This can't be undone.`)) return;
+          clearAllOverrides();
+          setOverrides({});
+        }} style={{flex:1,background:"none",border:`1px solid ${C.border}`,borderRadius:8,padding:".55rem",cursor:"pointer",color:C.dimmer,fontSize:12,fontFamily:FONT.body}}>
+          Clear all
+        </button>
+      </div>
+    </Card>
   );
 }
 
