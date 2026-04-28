@@ -28,7 +28,7 @@ import { getWeeklyStreak, bumpWeeklyStreak, topCategoryStreak, updateCategoryStr
 import { canSwitchAgeGroup, recordAgeGroupSwitch, getAgeGroupLock, setAgeGroupLock, checkSeasonReset } from "./utils/deviceLock";
 import { lsGetStr, lsSetStr, lsGetJSON, lsSetJSON } from "./utils/storage.js";
 import { computeCategoryMastery, rankCategories, nextThreshold } from "./utils/mastery.js";
-import { applyOverride, setOverride, clearOverride, getOverride, getAllOverrides, clearAllOverrides } from "./utils/questionOverrides.js";
+import { applyOverride, setOverride, clearOverride, getOverride, getAllOverrides, clearAllOverrides, isKilled, killQuestion, unkillQuestion, getKillList, clearKillList } from "./utils/questionOverrides.js";
 import {
   REASONS as REFLECTION_REASONS,
   getReflectionFor, saveReflection,
@@ -165,6 +165,28 @@ function avatarInitials(name) {
   if (!parts.length) return "?";
   if (parts.length === 1) return parts[0].slice(0, 2).toUpperCase();
   return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
+}
+
+// Client-side image resize for editor uploads. Caps the longest edge at
+// (maxW × maxH) preserving aspect ratio, then encodes as JPEG so a 4MB
+// PNG drop becomes a ~150-300KB upload. Avoids burning Storage on the
+// raw file we don't actually need at full resolution.
+async function resizeImageForUpload(file, maxW, maxH) {
+  const dataUrl = await new Promise((res, rej) => {
+    const r = new FileReader(); r.onload = () => res(r.result); r.onerror = rej; r.readAsDataURL(file);
+  });
+  const img = await new Promise((res, rej) => {
+    const i = new Image(); i.onload = () => res(i); i.onerror = rej; i.src = dataUrl;
+  });
+  const ratio = Math.min(maxW / img.width, maxH / img.height, 1);
+  const w = Math.round(img.width * ratio);
+  const h = Math.round(img.height * ratio);
+  const canvas = document.createElement("canvas");
+  canvas.width = w; canvas.height = h;
+  const ctx = canvas.getContext("2d");
+  ctx.fillStyle = "#000"; ctx.fillRect(0, 0, w, h);
+  ctx.drawImage(img, 0, 0, w, h);
+  return await new Promise((res) => canvas.toBlob(b => res(b), "image/jpeg", 0.85));
 }
 
 function AvatarDisc({ name, kind = "player", size = 48, imageUrl = null }) {
@@ -518,6 +540,9 @@ function makePlayerKey(name, level) {
 function buildDemoQueue(qb, level, position) {
   const posCode = { Forward: "F", Defense: "D", Goalie: "G" }[position] || null;
   const posMatch = (q) => !q.pos || !posCode || q.pos.includes(posCode);
+  // User-killed questions are filtered out of every queue. Even ?ids=
+  // playlists honor the kill list — a deleted q stays deleted everywhere.
+  const notKilled = (q) => !isKilled(q?.id);
   // Debug: ?only=<type[,type]> forces the demo queue to those qtypes;
   // ?ids=<id[,id]> forces it to a specific question playlist.
   const sp = typeof window !== "undefined" ? new URLSearchParams(window.location.search) : null;
@@ -531,7 +556,7 @@ function buildDemoQueue(qb, level, position) {
     const matched = [];
     for (const lvl of Object.keys(qb)) {
       for (const q of (qb[lvl] || [])) {
-        if (q?.id && onlyIds.includes(q.id) && !seen.has(q.id) && posMatch(q)) {
+        if (q?.id && onlyIds.includes(q.id) && !seen.has(q.id) && posMatch(q) && notKilled(q)) {
           seen.add(q.id);
           matched.push(q);
         }
@@ -540,7 +565,7 @@ function buildDemoQueue(qb, level, position) {
     return matched;
   }
   if (onlyTypes) {
-    const filtered = (qb[level] || []).filter(q => onlyTypes.includes(q.type) && posMatch(q));
+    const filtered = (qb[level] || []).filter(q => onlyTypes.includes(q.type) && posMatch(q) && notKilled(q));
     return [...filtered].sort(() => Math.random() - 0.5);
   }
   // Demo quiz: 7 questions — 3 pov-mc + 1 mc + 1 tf + 1 seq + 1 mistake
@@ -554,7 +579,7 @@ function buildDemoQueue(qb, level, position) {
   for (const [type, count] of Object.entries(targetCounts)) {
     // All types — including zone-click — live in the bank now; qbLoader
     // replicates multi-age questions into each applicable level array.
-    const pool = (qb[level] || []).filter(q => q.type === type);
+    const pool = (qb[level] || []).filter(q => q.type === type && notKilled(q));
     const levelMatch = pool.filter(posMatch);
     const fallback = pool.filter(posMatch);
     // If no position-matched question exists (e.g. goalie + tf), fall back to any question of the type
@@ -569,7 +594,7 @@ function buildDemoQueue(qb, level, position) {
 
   // Pad to 7 with MC (cap MC at 2 total)
   const mcInQueue = result.filter(q => q.type === "mc").length;
-  const mcPool = (qb[level] || []).filter(q => q.type === "mc" && !usedIds.has(q.id) && posMatch(q));
+  const mcPool = (qb[level] || []).filter(q => q.type === "mc" && !usedIds.has(q.id) && posMatch(q) && notKilled(q));
   const mcShuffled = [...mcPool].sort(() => Math.random() - 0.5);
   while (result.length < 7 && mcShuffled.length > 0 && result.filter(q => q.type === "mc").length < 2) {
     const q = mcShuffled.shift();
@@ -578,7 +603,7 @@ function buildDemoQueue(qb, level, position) {
   }
   // If still short (very unlikely), pad with any remaining questions
   const anyPool = (qb[level] || [])
-    .filter(q => !usedIds.has(q.id) && posMatch(q))
+    .filter(q => !usedIds.has(q.id) && posMatch(q) && notKilled(q))
     .sort(() => Math.random() - 0.5);
   while (result.length < 7 && anyPool.length > 0) {
     const q = anyPool.shift();
@@ -603,7 +628,10 @@ function buildQueue(qb, level, position, isReturning, tier) {
   const onlyTypes = onlyParam ? onlyParam.split(",").map(s => s.trim()).filter(Boolean) : null;
   const idsParam = sp?.get("ids") || sp?.get("id") || null;
   const onlyIds = idsParam ? idsParam.split(",").map(s => s.trim()).filter(Boolean) : null;
-  const cacheKey = `${level}|${position}|${formatAllowed}|${positionAllowed}|${onlyParam || ""}|${idsParam || ""}`;
+  // Kill-list signature ensures a freshly-killed question is filtered out
+  // on the very next queue build (cache invalidates when count changes).
+  const killSig = getKillList().length;
+  const cacheKey = `${level}|${position}|${formatAllowed}|${positionAllowed}|${onlyParam || ""}|${idsParam || ""}|k${killSig}`;
 
   let pool;
   if (!onlyTypes && !onlyIds && _queueCache.has(cacheKey)) {
@@ -626,6 +654,8 @@ function buildQueue(qb, level, position, isReturning, tier) {
       }
       allQ = matched;
     }
+    // User-killed questions get filtered upstream of every other rule.
+    allQ = allQ.filter(q => !isKilled(q?.id));
     let posFiltered;
     if (!positionAllowed) {
       posFiltered = allQ.filter(q => !q.pos || q.pos.includes("F") || q.pos.includes("D"));
@@ -1699,6 +1729,16 @@ function Quiz({ player, onFinish, onBack, tier, onUpgrade }) {
   })();
   const [editOpen, setEditOpen] = useState(false);
   const [editDraft, setEditDraft] = useState(null);
+  const [dupOpen, setDupOpen] = useState(false);
+  const [imgUploading, setImgUploading] = useState(false);
+  const [imgUploadErr, setImgUploadErr] = useState(null);
+  // Two-step delete: first tap arms the button, second confirms within 3s.
+  const [killArmed, setKillArmed] = useState(false);
+  useEffect(() => {
+    if (!killArmed) return;
+    const t = setTimeout(() => setKillArmed(false), 3000);
+    return () => clearTimeout(t);
+  }, [killArmed]);
 
   // Speed-bonus window. Interactive (rink) questions get a timed bonus;
   // MC/TF/seq don't because reading-speed is mostly literacy, not hockey IQ.
@@ -1985,12 +2025,41 @@ function Quiz({ player, onFinish, onBack, tier, onUpgrade }) {
                 items: Array.isArray(q.items) ? [...q.items] : [],
                 correct_order: Array.isArray(q.correct_order) ? [...q.correct_order] : (Array.isArray(q.items) ? q.items.map((_,i)=>i) : []),
                 spots: Array.isArray(q.spots) ? q.spots.map(s => ({...s})) : [],
+                media: q.media ? {...q.media} : null,
                 tip: q.tip || "",
                 why: q.why || q.explanation || "",
               });
+              setImgUploadErr(null);
               setEditOpen(true);
             }} style={{flex:1,background:"none",border:`1px solid ${C.goldBorder}`,color:C.gold,fontSize:11,cursor:"pointer",fontFamily:FONT.body,padding:".4rem",borderRadius:6,fontWeight:700}}>
               ✎ Edit this question
+            </button>
+            <button onClick={() => setDupOpen(true)}
+              title="Duplicate this question (copy its JSON to clipboard so you can paste back to me to create a Notion variant)"
+              style={{background:"none",border:`1px solid ${C.border}`,color:C.dimmer,fontSize:11,cursor:"pointer",fontFamily:FONT.body,padding:".4rem .8rem",borderRadius:6}}>
+              📋 Duplicate
+            </button>
+            {/* Two-step delete: first tap arms (turns red, "Confirm?" prompt),
+                second tap within 3s commits. Auto-disarms after 3s of idle.
+                Question stays playable in this quiz; future quizzes filter
+                it out + the kill list exports for Notion-push at quiz end. */}
+            <button onClick={() => {
+              if (!killArmed) {
+                setKillArmed(true);
+                return;
+              }
+              killQuestion(question.id, {
+                _notionPageId: question._notionPageId || null,
+                archetype: question.archetype || null,
+                type: question.type || null,
+                sit: question.sit || question.q || "",
+              });
+              setKillArmed(false);
+              setQuestion({ ...question });
+            }}
+              title={killArmed ? "Tap again to confirm — removed from future quizzes" : "Delete this question from future quizzes (two-tap)"}
+              style={{background: killArmed ? C.redDim : "none", border:`1px solid ${killArmed ? C.red : C.border}`, color: killArmed ? C.red : C.dimmer, fontSize:11, cursor:"pointer", fontFamily:FONT.body, padding:".4rem .8rem", borderRadius:6, fontWeight: killArmed ? 800 : 500}}>
+              {killArmed ? "🗑 Confirm?" : "🗑"}
             </button>
             {q._hasOverride && (
               <button onClick={() => {
@@ -2069,16 +2138,13 @@ function Quiz({ player, onFinish, onBack, tier, onUpgrade }) {
                   <div style={{display:"flex",gap:".6rem",alignItems:"flex-start"}}>
                     <AvatarDisc name={coach.name} kind="coach" size={40} imageUrl={coach.imageUrl}/>
                     <div style={{flex:1,minWidth:0}}>
-                      <div style={{display:"flex",alignItems:"baseline",gap:".4rem",flexWrap:"wrap",marginBottom:".25rem"}}>
+                      <div style={{display:"flex",alignItems:"baseline",gap:".4rem",flexWrap:"wrap",marginBottom:".3rem"}}>
                         <span style={{fontWeight:800,fontSize:12,color:C.white}}>{coach.name}</span>
                         <span style={{fontSize:10,color:C.dimmer,letterSpacing:".04em"}}>{coach.role}</span>
                       </div>
-                      {/* Coach delivers feedback as a single voice: a short
-                          quip lands first, then the explanation unpacks the
-                          why behind the read. */}
-                      <div style={{fontWeight:800,fontSize:13.5,color:userCorrect?C.green:C.yellow,lineHeight:1.35,marginBottom:".4rem"}}>
-                        {flavor}
-                      </div>
+                      {/* Personality lives in name + avatar + voice of the
+                          explanation. The bold colored "subtitle" quip was
+                          extra noise; explanation now leads directly. */}
                       <div style={{fontSize:13,color:C.dim,lineHeight:1.65}}>
                         {explanation}
                       </div>
@@ -2154,6 +2220,39 @@ function Quiz({ player, onFinish, onBack, tier, onUpgrade }) {
           </div>
         )}
 
+        {dupOpen && (() => {
+          // Build a clean JSON shape that mirrors the original question — same
+          // keys minus internal annotations (_notionPageId, _hasOverride). User
+          // copies this and pastes back to me; I create a Notion variant.
+          const STRIP = new Set(["_notionPageId","_hasOverride"]);
+          const cleaned = {};
+          for (const [k, v] of Object.entries(question || {})) {
+            if (STRIP.has(k)) continue;
+            cleaned[k] = v;
+          }
+          // Suggested new id: <orig>-copy
+          cleaned.id = `${question.id || "new"}-copy`;
+          const json = JSON.stringify(cleaned, null, 2);
+          return (
+            <div onClick={()=>setDupOpen(false)} style={{position:"fixed",inset:0,background:"rgba(0,0,0,.75)",zIndex:200,display:"flex",alignItems:"center",justifyContent:"center",padding:"1rem",overflowY:"auto"}}>
+              <div onClick={e=>e.stopPropagation()} style={{background:C.bgCard,border:`1px solid ${C.goldBorder}`,borderRadius:16,padding:"1.5rem",maxWidth:560,width:"100%",color:C.white,fontFamily:FONT.body,maxHeight:"90vh",overflowY:"auto"}}>
+                <div style={{fontSize:10,letterSpacing:".14em",textTransform:"uppercase",color:C.gold,fontWeight:700,marginBottom:".4rem"}}>📋 Duplicate question</div>
+                <div style={{fontSize:12,color:C.dim,lineHeight:1.5,marginBottom:".75rem"}}>
+                  Copy this JSON, paste it back to me in chat. I'll create a new Notion entry under the same image library entry. Edit the <code style={{background:C.bgElevated,padding:"1px 4px",borderRadius:3,fontSize:11}}>id</code> if you want a different name.
+                </div>
+                <pre style={{background:C.bgElevated,border:`1px solid ${C.border}`,borderRadius:8,padding:".7rem",color:C.dim,fontSize:11,fontFamily:"ui-monospace, SF Mono, Menlo, monospace",lineHeight:1.5,maxHeight:380,overflow:"auto",marginBottom:".75rem",whiteSpace:"pre"}}>{json}</pre>
+                <div style={{display:"flex",gap:".5rem"}}>
+                  <button onClick={() => setDupOpen(false)} style={{flex:1,background:"none",border:`1px solid ${C.border}`,borderRadius:10,padding:".7rem",cursor:"pointer",color:C.dimmer,fontSize:13,fontFamily:FONT.body}}>Close</button>
+                  <button onClick={async () => {
+                    try { await navigator.clipboard.writeText(json); setDupOpen(false); }
+                    catch { /* clipboard blocked — user can select-all */ }
+                  }} style={{flex:2,background:C.gold,color:C.bg,border:"none",borderRadius:10,padding:".7rem",cursor:"pointer",fontWeight:800,fontSize:13,fontFamily:FONT.body}}>📋 Copy JSON</button>
+                </div>
+              </div>
+            </div>
+          );
+        })()}
+
         {editOpen && editDraft && (() => {
           // Type classifier — used to branch which editor sections render.
           const isMCShape = ["mc","pov-mc","mistake","next"].includes(qtype);
@@ -2200,6 +2299,79 @@ function Quiz({ player, onFinish, onBack, tier, onUpgrade }) {
                 <div style={sectionGap}>
                   <div style={labelStyle}>QUESTION PROMPT</div>
                   <textarea value={editDraft.question} onChange={e=>setEditDraft(d=>({...d,question:e.target.value}))} rows={2} style={textareaStyle}/>
+                </div>
+              )}
+
+              {/* Image / media replace — for any type that already carries a
+                  media.url. Browser uploads to Supabase Storage `pov-images`
+                  bucket via the anon key; the returned public URL is what
+                  the override stores. Client-side resize keeps uploads
+                  fast and within reasonable file size. */}
+              {q.media?.url && (
+                <div style={sectionGap}>
+                  <div style={{...labelStyle,display:"flex",alignItems:"center",justifyContent:"space-between"}}>
+                    <span>IMAGE</span>
+                    <span style={{fontSize:9,color:C.dimmer,fontWeight:500,letterSpacing:0,textTransform:"none"}}>uploads to pov-images bucket</span>
+                  </div>
+                  {editDraft.media?.url && (
+                    <div style={{position:"relative",width:"100%",aspectRatio:"16/9",background:"#000",borderRadius:8,overflow:"hidden",border:`1px solid ${C.border}`,marginBottom:".4rem"}}>
+                      <img src={editDraft.media.url} alt="" style={{width:"100%",height:"100%",objectFit:"contain",display:"block"}}/>
+                    </div>
+                  )}
+                  <div style={{display:"flex",gap:".4rem",alignItems:"center"}}>
+                    <label style={{flex:1,display:"flex",alignItems:"center",justifyContent:"center",background:"none",border:`1px dashed ${C.border}`,borderRadius:8,padding:".5rem",cursor:imgUploading?"wait":"pointer",color:imgUploading?C.dimmest:C.dim,fontSize:12,fontFamily:FONT.body,opacity:imgUploading?0.6:1}}>
+                      {imgUploading ? "Uploading…" : "🖼️ Replace image…"}
+                      <input type="file" accept="image/png,image/jpeg,image/webp" disabled={imgUploading}
+                        onChange={async (e) => {
+                          const file = e.target.files?.[0];
+                          if (!file) return;
+                          e.target.value = ""; // allow re-pick of same file
+                          setImgUploadErr(null);
+                          setImgUploading(true);
+                          try {
+                            // Client-side resize to max 1280×720 + JPEG quality 0.85.
+                            // Keeps uploads under ~250KB, well below bandwidth/storage waste.
+                            const resized = await resizeImageForUpload(file, 1280, 720);
+                            const ext = "jpg";
+                            const baseName = (q.imageId || question.id || "img").replace(/[^a-zA-Z0-9_-]/g,"_");
+                            const path = `editor-uploads/${baseName}-${Date.now()}.${ext}`;
+                            if (!supabase) throw new Error("Supabase not configured");
+                            const { error: upErr } = await supabase.storage.from("pov-images").upload(path, resized, {
+                              contentType: "image/jpeg",
+                              upsert: true,
+                              cacheControl: "3600",
+                            });
+                            if (upErr) throw upErr;
+                            const { data: pub } = supabase.storage.from("pov-images").getPublicUrl(path);
+                            const url = pub?.publicUrl;
+                            if (!url) throw new Error("no public URL returned");
+                            setEditDraft(d => ({...d, media: {type:"image", url, alt: d.media?.alt || q.media?.alt || ""}}));
+                          } catch (err) {
+                            setImgUploadErr(err.message || String(err));
+                          } finally {
+                            setImgUploading(false);
+                          }
+                        }}
+                        style={{display:"none"}}/>
+                    </label>
+                    {editDraft.media?.url !== q.media?.url && (
+                      <button onClick={() => setEditDraft(d => ({...d, media: q.media ? {...q.media} : null}))}
+                        title="Revert to original image"
+                        style={{background:"none",border:`1px solid ${C.border}`,borderRadius:8,padding:".5rem .8rem",cursor:"pointer",color:C.dimmer,fontSize:12,fontFamily:FONT.body}}>
+                        ↺
+                      </button>
+                    )}
+                  </div>
+                  {imgUploadErr && (
+                    <div style={{marginTop:".4rem",fontSize:11,color:C.red,lineHeight:1.5}}>
+                      Upload failed: {imgUploadErr}
+                      {/permission|policy|RLS/i.test(imgUploadErr) && (
+                        <div style={{color:C.dimmer,marginTop:".25rem"}}>
+                          Bucket needs an anon-write RLS policy. Tell me and I'll add the migration.
+                        </div>
+                      )}
+                    </div>
+                  )}
                 </div>
               )}
 
@@ -2412,6 +2584,10 @@ function Quiz({ player, onFinish, onBack, tier, onUpgrade }) {
                       return o.x === e.x && o.y === e.y && !!o.correct === !!e.correct && (o.msg || "") === (e.msg || "");
                     });
                     if (!sameS) patch.spots = editDraft.spots;
+                  }
+                  // media (image replacement) — only patch if the URL actually changed
+                  if (editDraft.media?.url && editDraft.media.url !== (orig.media?.url || "")) {
+                    patch.media = editDraft.media;
                   }
                   setOverride(orig.id, patch);
                   setEditOpen(false);
@@ -2640,15 +2816,16 @@ function Results({ results, player, prevScore, totalSessions, seqPerfect, mistak
 // browser isn't viable). Hidden when ?dev!=1 or no overrides exist.
 function OverridesExportCard() {
   const [overrides, setOverrides] = useState(() => getAllOverrides());
+  const [killed, setKilled] = useState(() => getKillList());
   const [bankIndex, setBankIndex] = useState(null); // {[id]: bankQuestion}
   const [copied, setCopied] = useState(false);
   const editAllowed = (() => {
     try { return new URLSearchParams(window.location.search).get("dev") === "1"; }
     catch { return false; }
   })();
-  // Build a flat id->question lookup so we can enrich each override with
-  // _notionPageId + archetype. Without these, pushing edits back to Notion
-  // requires me to re-resolve the page by question id every time.
+  // Build a flat id->question lookup so we can enrich each override / kill
+  // entry with _notionPageId + archetype. Without these, pushing changes
+  // back to Notion requires me to re-resolve the page by question id.
   useEffect(() => {
     let cancelled = false;
     loadQB().then(qb => {
@@ -2664,38 +2841,59 @@ function OverridesExportCard() {
     return () => { cancelled = true; };
   }, []);
   const ids = Object.keys(overrides);
-  if (!editAllowed || ids.length === 0) return null;
-  // Enrich each override with the bank question's Notion page id +
-  // archetype so the JSON is self-contained for the round-trip.
-  const enriched = {};
+  const killCount = killed.length;
+  if (!editAllowed || (ids.length === 0 && killCount === 0)) return null;
+  // Build a single JSON envelope: edits + kills. Both carry _notionPageId
+  // and _archetype so I can fan out push operations on the round-trip.
+  const enrichedEdits = {};
   for (const id of ids) {
     const bank = bankIndex && bankIndex[id];
-    enriched[id] = {
+    enrichedEdits[id] = {
       ...(bank?._notionPageId ? { _notionPageId: bank._notionPageId } : {}),
       ...(bank?.archetype ? { _archetype: bank.archetype } : {}),
       ...overrides[id],
     };
   }
-  const json = JSON.stringify(enriched, null, 2);
+  const enrichedKills = killed.map(k => {
+    const bank = bankIndex && bankIndex[k.id];
+    return {
+      id: k.id,
+      _notionPageId: k._notionPageId || bank?._notionPageId || null,
+      _archetype: k.archetype || bank?.archetype || null,
+      type: k.type || bank?.type || null,
+      sit: k.sit || bank?.sit || bank?.q || "",
+      killedAt: k.killedAt,
+    };
+  });
+  const envelope = {
+    edits: enrichedEdits,
+    kills: enrichedKills,
+  };
+  const json = JSON.stringify(envelope, null, 2);
   const copy = async () => {
     try { await navigator.clipboard.writeText(json); setCopied(true); setTimeout(() => setCopied(false), 2000); }
     catch { /* clipboard blocked — user can select-all instead */ }
   };
+  const totalCount = ids.length + killCount;
   return (
     <Card style={{marginBottom:"1rem",background:"rgba(252,200,76,.06)",border:`1px solid ${C.goldBorder}`}}>
-      <div style={{fontSize:10,letterSpacing:".14em",textTransform:"uppercase",color:C.gold,fontWeight:700,marginBottom:".4rem"}}>✎ Local question edits ({ids.length})</div>
-      <div style={{fontSize:12,color:C.dim,lineHeight:1.6,marginBottom:".75rem"}}>
-        These are saved in your browser only. Copy the JSON and paste it back in chat — I'll push the edits to Notion so they sync everywhere.
+      <div style={{fontSize:10,letterSpacing:".14em",textTransform:"uppercase",color:C.gold,fontWeight:700,marginBottom:".4rem"}}>
+        ✎ Local changes ({ids.length} edit{ids.length===1?"":"s"}{killCount > 0 ? ` · 🗑 ${killCount} delete${killCount===1?"":"s"}` : ""})
       </div>
-      <pre style={{background:C.bgElevated,border:`1px solid ${C.border}`,borderRadius:8,padding:".6rem .8rem",color:C.dim,fontSize:11,fontFamily:"ui-monospace, SF Mono, Menlo, monospace",lineHeight:1.5,maxHeight:200,overflow:"auto",marginBottom:".75rem",whiteSpace:"pre"}}>{json}</pre>
+      <div style={{fontSize:12,color:C.dim,lineHeight:1.6,marginBottom:".75rem"}}>
+        Saved in your browser. Copy the JSON and paste it in chat — I'll push edits to Notion + mark deleted questions as Deprecated.
+      </div>
+      <pre style={{background:C.bgElevated,border:`1px solid ${C.border}`,borderRadius:8,padding:".6rem .8rem",color:C.dim,fontSize:11,fontFamily:"ui-monospace, SF Mono, Menlo, monospace",lineHeight:1.5,maxHeight:240,overflow:"auto",marginBottom:".75rem",whiteSpace:"pre"}}>{json}</pre>
       <div style={{display:"flex",gap:".5rem"}}>
         <button onClick={copy} style={{flex:2,background:C.gold,color:C.bg,border:"none",borderRadius:8,padding:".55rem",cursor:"pointer",fontWeight:800,fontSize:12,fontFamily:FONT.body}}>
-          {copied ? "✓ Copied" : `📋 Copy ${ids.length} edit${ids.length===1?"":"s"}`}
+          {copied ? "✓ Copied" : `📋 Copy ${totalCount} change${totalCount===1?"":"s"}`}
         </button>
         <button onClick={() => {
-          if (!window.confirm(`Clear all ${ids.length} local override${ids.length===1?"":"s"}? This can't be undone.`)) return;
+          if (!window.confirm(`Clear all ${totalCount} local change${totalCount===1?"":"s"}? This can't be undone.`)) return;
           clearAllOverrides();
+          clearKillList();
           setOverrides({});
+          setKilled([]);
         }} style={{flex:1,background:"none",border:`1px solid ${C.border}`,borderRadius:8,padding:".55rem",cursor:"pointer",color:C.dimmer,fontSize:12,fontFamily:FONT.body}}>
           Clear all
         </button>
@@ -2965,12 +3163,9 @@ function WeeklyQuiz({ player, onBack, onFinish }) {
                 <div style={{display:"flex",gap:".6rem",alignItems:"flex-start"}}>
                   <AvatarDisc name={coach.name} kind="coach" size={40} imageUrl={coach.imageUrl}/>
                   <div style={{flex:1,minWidth:0}}>
-                    <div style={{display:"flex",alignItems:"baseline",gap:".4rem",flexWrap:"wrap",marginBottom:".25rem"}}>
+                    <div style={{display:"flex",alignItems:"baseline",gap:".4rem",flexWrap:"wrap",marginBottom:".3rem"}}>
                       <span style={{fontWeight:800,fontSize:12,color:C.white}}>{coach.name}</span>
                       <span style={{fontSize:10,color:C.dimmer,letterSpacing:".04em"}}>{coach.role}</span>
-                    </div>
-                    <div style={{fontWeight:800,fontSize:13.5,color:wasCorrect?C.green:C.yellow,lineHeight:1.35,marginBottom:".4rem"}}>
-                      {flavor}
                     </div>
                     <div style={{fontSize:13,color:C.dim,lineHeight:1.65}}>
                       {explanation}
