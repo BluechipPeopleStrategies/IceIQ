@@ -1,0 +1,33 @@
+{
+  "id": "u11_backcheck_lane_v1",
+  "type": "scenario",
+  "level": "U11 / Atom",
+  "themes": ["backcheck", "transition", "defense"],
+  "cat": "Defense",
+  "difficulty": 2,
+  "stage": { "view": "neutral", "zone": "neutral" },
+  "actors": [
+    { "id": "you",  "kind": "player",   "x": 0.620, "y": 0.500, "tag": "YOU" },
+    { "id": "ld",   "kind": "teammate", "x": 0.380, "y": 0.420, "tag": "LD" },
+    { "id": "rd",   "kind": "teammate", "x": 0.380, "y": 0.580, "tag": "RD" },
+    { "id": "x1",   "kind": "defender", "x": 0.520, "y": 0.500 },
+    { "id": "x2",   "kind": "defender", "x": 0.620, "y": 0.330 },
+    { "id": "puck", "kind": "puck",     "x": 0.520, "y": 0.500 }
+  ],
+  "interaction": {
+    "kind": "path",
+    "verb": "backcheck",
+    "from": "you",
+    "prompt": "You lost the puck at the offensive blue line and the other team is breaking out. Skate to your backcheck spot."
+  },
+  "correct": {
+    "kind": "path",
+    "end": { "zoneId": "neutral-weak" }
+  },
+  "feedback": {
+    "right": "Weak-side middle lane on the way back. You take away the cross-ice option for their winger and arrive ahead of the puck.",
+    "wrong": "Don't chase the puck on a backcheck. Your job is to take away the OTHER side — middle lane to weak side."
+  },
+  "tip": "On a backcheck, take the LANE the puck-carrier wants to pass to. Don't chase the puck.",
+  "why": "Backchecking is a defensive read, not a footrace. The carrier already has the puck — your job is to remove their best option."
+}

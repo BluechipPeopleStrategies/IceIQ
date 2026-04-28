@@ -1,0 +1,34 @@
+{
+  "id": "u13_oz_entry_dump_v1",
+  "type": "scenario",
+  "level": "U13 / Peewee",
+  "themes": ["zone-entry", "forecheck", "decision-making"],
+  "cat": "Forechecking",
+  "difficulty": 2,
+  "stage": { "view": "right", "zone": "off-zone" },
+  "actors": [
+    { "id": "you",  "kind": "player",   "x": 0.610, "y": 0.500, "tag": "YOU" },
+    { "id": "puck", "kind": "puck",     "x": 0.612, "y": 0.498 },
+    { "id": "f2",   "kind": "teammate", "x": 0.610, "y": 0.780, "tag": "F2" },
+    { "id": "f3",   "kind": "teammate", "x": 0.580, "y": 0.220, "tag": "F3" },
+    { "id": "x1",   "kind": "defender", "x": 0.640, "y": 0.460 },
+    { "id": "x2",   "kind": "defender", "x": 0.650, "y": 0.350 },
+    { "id": "g",    "kind": "goalie",   "x": 0.918, "y": 0.500 }
+  ],
+  "interaction": {
+    "kind": "path",
+    "verb": "shoot",
+    "from": "you",
+    "prompt": "Two defenders at the line, no clear pass. Dump-and-chase: where should you put the puck?"
+  },
+  "correct": {
+    "kind": "path",
+    "end": { "zoneId": "oz-corner-strong" }
+  },
+  "feedback": {
+    "right": "Strong-side corner. F2 is on the strong wall and gets there first — chase the dump-in and recover possession.",
+    "wrong": "Dumps into open ice get retrieved by the goalie or D. Aim for the strong-side corner where your forechecker can win it."
+  },
+  "tip": "When you can't carry it in cleanly, dump TO the strong-side corner — your F2 wins the foot race.",
+  "why": "Smart dump-ins put pressure on retrieval. The strong-side corner is hardest for the goalie to reach and gives your forechecker the angle."
+}

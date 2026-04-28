@@ -1,0 +1,35 @@
+{
+  "id": "u18_late_lead_v1",
+  "type": "scenario",
+  "level": "U18 / Midget",
+  "themes": ["defensive-zone-coverage", "decision-making", "transition"],
+  "cat": "Defense",
+  "difficulty": 3,
+  "stage": { "view": "left", "zone": "def-zone" },
+  "actors": [
+    { "id": "you",  "kind": "player",   "x": 0.180, "y": 0.500, "tag": "YOU" },
+    { "id": "puck", "kind": "puck",     "x": 0.182, "y": 0.498 },
+    { "id": "rw",   "kind": "teammate", "x": 0.250, "y": 0.780, "tag": "RW" },
+    { "id": "c",    "kind": "teammate", "x": 0.350, "y": 0.500, "tag": "C"  },
+    { "id": "lw",   "kind": "teammate", "x": 0.250, "y": 0.220, "tag": "LW" },
+    { "id": "x1",   "kind": "defender", "x": 0.290, "y": 0.420 },
+    { "id": "x2",   "kind": "defender", "x": 0.220, "y": 0.300 },
+    { "id": "g",    "kind": "goalie",   "x": 0.082, "y": 0.500 }
+  ],
+  "interaction": {
+    "kind": "path",
+    "verb": "carry",
+    "from": "you",
+    "prompt": "Up by 1, 90 seconds left. You retrieved the puck behind your net under pressure. Where do you put it?"
+  },
+  "correct": {
+    "kind": "path",
+    "end": { "zoneId": "neutral-strong" }
+  },
+  "feedback": {
+    "right": "Off the glass, on the strong-side wall, deep into their zone. No icings, no neutral-zone risk, eats clock.",
+    "wrong": "Up 1 late: don't try to skate it through the middle, don't reverse, don't ice it. Glass-and-out, strong side, deep."
+  },
+  "tip": "Up 1 late: glass-and-out, strong side. Force them to recover the puck and rebuild — eat the clock.",
+  "why": "Late-game leads are about REMOVING risk, not creating offense. Stretch passes and skating through pressure are how 1-goal leads disappear."
+}

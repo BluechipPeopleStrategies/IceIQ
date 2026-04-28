@@ -1,0 +1,30 @@
+{
+  "id": "u9_chase_or_support_v1",
+  "type": "scenario",
+  "level": "U9 / Novice",
+  "themes": ["puck-support", "decision-making"],
+  "cat": "Hockey Sense",
+  "difficulty": 1,
+  "stage": { "view": "right", "zone": "off-zone" },
+  "actors": [
+    { "id": "you",  "kind": "player",   "x": 0.700, "y": 0.500, "tag": "YOU" },
+    { "id": "f2",   "kind": "teammate", "x": 0.860, "y": 0.620, "tag": "F2" },
+    { "id": "f3",   "kind": "teammate", "x": 0.640, "y": 0.380, "tag": "F3" },
+    { "id": "x1",   "kind": "defender", "x": 0.870, "y": 0.660 },
+    { "id": "puck", "kind": "puck",     "x": 0.860, "y": 0.620 },
+    { "id": "g",    "kind": "goalie",   "x": 0.918, "y": 0.500 }
+  ],
+  "interaction": {
+    "kind": "selection",
+    "prompt": "Your teammate F2 has the puck in the corner. A defender is closing in. What should you do?",
+    "from": ["f2", "f3"],
+    "order": "any"
+  },
+  "correct": { "kind": "selection", "ids": ["f3"] },
+  "feedback": {
+    "right": "Don't crowd the puck. Move to where F3 is — closer to the middle, ready for a pass back to space.",
+    "wrong": "Two players on the puck means nobody to pass to. Spread out and give your teammate an option."
+  },
+  "tip": "When a teammate has the puck, give them an OPTION. Don't run to the puck.",
+  "why": "Beginners want to chase the puck. The first hockey-sense lesson is the opposite — when your teammate has it, your job is to be available."
+}

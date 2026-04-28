@@ -1,0 +1,35 @@
+{
+  "id": "u13_dz_lost_battle_v1",
+  "type": "scenario",
+  "level": "U13 / Peewee",
+  "themes": ["defensive-zone-coverage", "positioning"],
+  "cat": "Defensive Zone",
+  "difficulty": 3,
+  "stage": { "view": "left", "zone": "def-zone" },
+  "actors": [
+    { "id": "you",  "kind": "player",   "x": 0.250, "y": 0.500, "tag": "YOU" },
+    { "id": "ld",   "kind": "teammate", "x": 0.130, "y": 0.220, "tag": "LD" },
+    { "id": "rd",   "kind": "teammate", "x": 0.130, "y": 0.620, "tag": "RD" },
+    { "id": "lw",   "kind": "teammate", "x": 0.220, "y": 0.300, "tag": "LW" },
+    { "id": "rw",   "kind": "teammate", "x": 0.150, "y": 0.780, "tag": "RW" },
+    { "id": "x1",   "kind": "defender", "x": 0.110, "y": 0.860 },
+    { "id": "x2",   "kind": "defender", "x": 0.150, "y": 0.500 },
+    { "id": "x3",   "kind": "defender", "x": 0.300, "y": 0.220 },
+    { "id": "puck", "kind": "puck",     "x": 0.110, "y": 0.860 },
+    { "id": "g",    "kind": "goalie",   "x": 0.082, "y": 0.500 }
+  ],
+  "interaction": {
+    "kind": "point",
+    "prompt": "DZ coverage. RW just lost the wall battle and the puck is at the strong-side corner with their forward. As C, tap your spot."
+  },
+  "correct": {
+    "kind": "point",
+    "zoneId": "dz-slot"
+  },
+  "feedback": {
+    "right": "Slot — center always owns the slot. That's where shots and rebounds come from; don't drift to help on the wall.",
+    "wrong": "Don't help on the wall — that's the wing's job. Center stays in the slot, stick on the dangerous shooter."
+  },
+  "tip": "DZ rule for centers: own the slot. The wall is the wings' job; the points are the D's job.",
+  "why": "Defensive-zone coverage breaks when players poach. Centers who help on the wall leave the most dangerous ice unguarded."
+}

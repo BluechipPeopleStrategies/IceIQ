@@ -1,0 +1,32 @@
+{
+  "id": "u15_dz_4on4_v1",
+  "type": "scenario",
+  "level": "U15 / Bantam",
+  "themes": ["defensive-zone-coverage", "even-strength", "decision-making"],
+  "cat": "Defensive Zone",
+  "difficulty": 3,
+  "stage": { "view": "left", "zone": "def-zone" },
+  "actors": [
+    { "id": "you",  "kind": "player",   "x": 0.250, "y": 0.500, "tag": "YOU" },
+    { "id": "ld",   "kind": "teammate", "x": 0.150, "y": 0.380, "tag": "LD" },
+    { "id": "rd",   "kind": "teammate", "x": 0.150, "y": 0.620, "tag": "RD" },
+    { "id": "x_carrier", "kind": "defender", "x": 0.130, "y": 0.780 },
+    { "id": "x_slot",    "kind": "defender", "x": 0.180, "y": 0.500 },
+    { "id": "x_point",   "kind": "defender", "x": 0.350, "y": 0.500 },
+    { "id": "puck", "kind": "puck",   "x": 0.130, "y": 0.780 },
+    { "id": "g",    "kind": "goalie", "x": 0.082, "y": 0.500 }
+  ],
+  "interaction": {
+    "kind": "selection",
+    "prompt": "4-on-4 OT. Their forward in the slot is the most dangerous. Who should YOU (the C) be assigned to?",
+    "from": ["x_carrier", "x_slot", "x_point"],
+    "order": "any"
+  },
+  "correct": { "kind": "selection", "ids": ["x_slot"] },
+  "feedback": {
+    "right": "Slot threat. C in 4-on-4 always picks up the most dangerous player; LD covers the wall, RD reads off you.",
+    "wrong": "On the wall is the LD's job; the point is too far. Center owns the slot — that's where goals come from."
+  },
+  "tip": "4-on-4 DZ: C picks up the highest-danger player (usually slot). Defenders cover the rest in support.",
+  "why": "Open-ice 4-on-4 can break a coverage if everyone runs to the puck. The C's job is to nail down the most dangerous attacker so the rest can read off."
+}

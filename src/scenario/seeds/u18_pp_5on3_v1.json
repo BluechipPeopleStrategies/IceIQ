@@ -1,0 +1,40 @@
+{
+  "id": "u18_pp_5on3_v1",
+  "type": "scenario",
+  "level": "U18 / Midget",
+  "themes": ["power-play", "decision-making", "shot-selection"],
+  "cat": "Power Play",
+  "difficulty": 3,
+  "stage": { "view": "right", "zone": "off-zone" },
+  "actors": [
+    { "id": "you",   "kind": "player",   "x": 0.700, "y": 0.500, "tag": "YOU" },
+    { "id": "puck",  "kind": "puck",     "x": 0.702, "y": 0.498 },
+
+    { "id": "rw",    "kind": "teammate", "x": 0.870, "y": 0.780, "tag": "RW" },
+    { "id": "lw",    "kind": "teammate", "x": 0.870, "y": 0.220, "tag": "LW" },
+    { "id": "rd",    "kind": "teammate", "x": 0.640, "y": 0.620, "tag": "RD" },
+    { "id": "ld",    "kind": "teammate", "x": 0.640, "y": 0.380, "tag": "LD" },
+
+    { "id": "x_high",    "kind": "defender", "x": 0.700, "y": 0.300 },
+    { "id": "x_strong",  "kind": "defender", "x": 0.820, "y": 0.620 },
+    { "id": "x_weak",    "kind": "defender", "x": 0.780, "y": 0.300 },
+
+    { "id": "g",     "kind": "goalie",   "x": 0.918, "y": 0.500 }
+  ],
+  "interaction": {
+    "kind": "path",
+    "verb": "pass",
+    "from": "you",
+    "prompt": "5-on-3 PP, no shots in 30 seconds. PK is collapsing tight to the slot. Move the puck — what's the right read?"
+  },
+  "correct": {
+    "kind": "path",
+    "end": { "zoneId": "oz-half-wall-weak" }
+  },
+  "feedback": {
+    "right": "Cross-ice to LW for the one-timer. The PK over-loaded strong side; the LW has clean ice for a release.",
+    "wrong": "Force-shooting from the bumper hits sticks. Move the kill — cross-ice opens the weak-side flank's release."
+  },
+  "tip": "5-on-3 fails when shots are forced. Move the puck side-to-side, make the PK ROTATE, then release on a clean look.",
+  "why": "PKs collapse on shooters. Cross-ice passes that beat a rotation are the highest-percentage 5-on-3 shot — the goalie is out of position before the puck arrives."
+}

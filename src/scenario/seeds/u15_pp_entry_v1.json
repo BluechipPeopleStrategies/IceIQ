@@ -1,0 +1,32 @@
+{
+  "id": "u15_pp_entry_v1",
+  "type": "scenario",
+  "level": "U15 / Bantam",
+  "themes": ["power-play", "zone-entry", "transition"],
+  "cat": "Power Play",
+  "difficulty": 3,
+  "stage": { "view": "neutral", "zone": "neutral" },
+  "actors": [
+    { "id": "you",  "kind": "player",   "x": 0.500, "y": 0.500, "tag": "YOU" },
+    { "id": "puck", "kind": "puck",     "x": 0.498, "y": 0.502 },
+    { "id": "rw",   "kind": "teammate", "x": 0.560, "y": 0.700, "tag": "RW" },
+    { "id": "lw",   "kind": "teammate", "x": 0.560, "y": 0.300, "tag": "LW" },
+    { "id": "rd",   "kind": "teammate", "x": 0.420, "y": 0.620, "tag": "RD" },
+    { "id": "x1",   "kind": "defender", "x": 0.620, "y": 0.500 },
+    { "id": "x2",   "kind": "defender", "x": 0.640, "y": 0.300 },
+    { "id": "x3",   "kind": "defender", "x": 0.640, "y": 0.700 }
+  ],
+  "interaction": {
+    "kind": "selection",
+    "prompt": "Power-play entry. Three PKers form a wall at the blue line. Tap which option you should use.",
+    "from": ["rw", "lw", "rd"],
+    "order": "any"
+  },
+  "correct": { "kind": "selection", "ids": ["rd"] },
+  "feedback": {
+    "right": "Drop pass back to the RD. PK is committed forward — pull them out, then enter behind their pressure with speed.",
+    "wrong": "Both wingers are flanked by PKers. The PK is OVER-aggressive — the answer is to use it against them: drop to the late D."
+  },
+  "tip": "Power-play entry vs aggressive PK: drop pass + late attack. Don't force through three defenders.",
+  "why": "1-3 PK alignments cheat forward. Drop passes and late-D entries beat them because the PK's structure stops on the blue line."
+}

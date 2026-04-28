@@ -1,0 +1,35 @@
+{
+  "id": "u13_zone_entry_v1",
+  "type": "scenario",
+  "level": "U13 / Peewee",
+  "themes": ["zone-entry", "transition", "decision-making"],
+  "cat": "Transition",
+  "difficulty": 2,
+  "stage": { "view": "right", "zone": "off-zone" },
+  "actors": [
+    { "id": "you",  "kind": "player",   "x": 0.560, "y": 0.500, "tag": "YOU" },
+    { "id": "puck", "kind": "puck",     "x": 0.562, "y": 0.498 },
+    { "id": "rw",   "kind": "teammate", "x": 0.850, "y": 0.780, "tag": "RW" },
+    { "id": "lw",   "kind": "teammate", "x": 0.560, "y": 0.220, "tag": "LW" },
+    { "id": "ld",   "kind": "teammate", "x": 0.450, "y": 0.380, "tag": "LD" },
+    { "id": "x1",   "kind": "defender", "x": 0.700, "y": 0.500 },
+    { "id": "x2",   "kind": "defender", "x": 0.560, "y": 0.380 },
+    { "id": "g",    "kind": "goalie",   "x": 0.918, "y": 0.500 }
+  ],
+  "interaction": {
+    "kind": "path",
+    "verb": "pass",
+    "from": "you",
+    "prompt": "Zone entry. Both defenders are stacked at the blue line. Where's the right entry pass?"
+  },
+  "correct": {
+    "kind": "path",
+    "end": { "zoneId": "oz-half-wall-strong" }
+  },
+  "feedback": {
+    "right": "Strong-side wall to RW. Defenders cheated middle and weak-side; the strong wall is wide open for a clean entry.",
+    "wrong": "The middle is clogged and weak-side is shadowed. Use the RW down the boards — that's the open lane."
+  },
+  "tip": "Stacked D at the blue line: pass DOWN the open side, don't carry through the middle.",
+  "why": "Zone entries are about reading the gap. When defenders pinch the middle, the boards open up. Force them to defend the wider area."
+}
