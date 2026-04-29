@@ -432,7 +432,7 @@ if (asJson) {
   out.push('## Summary');
   out.push('');
   out.push(`- **Total questions:** ${total}`);
-  out.push(`- **Classified:** ${total - unmapped.length} (${Math.round((total - unmapped.length) / total * 100)}%)`);
+  out.push(`- **Classified:** ${total - unmapped.length}${total ? ` (${Math.round((total - unmapped.length) / total * 100)}%)` : ''}`);
   out.push(`- **Unmapped (no concept match):** ${unmapped.length}`);
   out.push(`- **Anchor concept counts:** Reading-the-Play ${Object.values(counts['reading-the-play']).reduce((a,b) => a+b, 0)}, Decision-Making ${Object.values(counts['decision-making']).reduce((a,b) => a+b, 0)}`);
 
