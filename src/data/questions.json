@@ -933,41 +933,6 @@
       ]
     },
     {
-      "id": "u7r2",
-      "cat": "Roles",
-      "pos": [
-        "F",
-        "D"
-      ],
-      "d": 1,
-      "type": "mc",
-      "q": "Your goalie stands in the blue area in front of the net. What's that blue area called?",
-      "choices": [
-        "The crease.",
-        "The slot.",
-        "The bench.",
-        "Center ice."
-      ],
-      "correct": 0,
-      "tip": "The blue half-circle in front of the net is called the crease. Only the goalie belongs there.",
-      "rink": {
-        "view": "right",
-        "zone": "slot",
-        "markers": [
-          {
-            "type": "goalie",
-            "x": 560,
-            "y": 150,
-            "label": "G"
-          }
-        ]
-      },
-      "levels": [
-        "U7 / Initiation",
-        "U9 / Novice"
-      ]
-    },
-    {
       "id": "Q-eyesup-001-A1-U7",
       "type": "pov-mc",
       "cat": "Hockey Sense",
@@ -10132,116 +10097,6 @@
       ]
     },
     {
-      "id": "u11_rr_46",
-      "cat": "Forecheck",
-      "pos": [
-        "F"
-      ],
-      "d": 2,
-      "type": "hot-spots",
-      "levels": [
-        "U11 / Atom",
-        "U13 / Peewee"
-      ],
-      "q": "Pressure forced their D to rim it. Where does F3 get to?",
-      "tip": "F3 reads the rim. If it's coming up your strong side, swing high to seal it; if it's reversing, get back to the middle.",
-      "rink": {
-        "view": "right",
-        "zone": "off-zone",
-        "markers": [
-          {
-            "type": "defender",
-            "x": 580,
-            "y": 195,
-            "label": "X-D"
-          },
-          {
-            "type": "goalie",
-            "x": 560,
-            "y": 150
-          }
-        ]
-      },
-      "spots": [
-        {
-          "x": 470,
-          "y": 95,
-          "correct": true,
-          "msg": "✓ Strong-side high — you can seal the rim or transition back if it reverses."
-        },
-        {
-          "x": 540,
-          "y": 100,
-          "correct": false,
-          "msg": "Too low — you'll get caught skating against the rim instead of meeting it."
-        },
-        {
-          "x": 410,
-          "y": 195,
-          "correct": false,
-          "msg": "Way too high — you're closer to centre than the puck. Useless on the rim."
-        }
-      ]
-    },
-    {
-      "id": "u11_rr_48",
-      "cat": "Forecheck",
-      "pos": [
-        "F"
-      ],
-      "d": 2,
-      "type": "hot-spots",
-      "levels": [
-        "U11 / Atom",
-        "U13 / Peewee"
-      ],
-      "q": "F1 went deep into a battle. You're F2 — what do you do as the rotation kicks in?",
-      "tip": "F2 becomes F1 when F1 commits. Take F1's old job — pressure on the puck, replace the angle.",
-      "rink": {
-        "view": "right",
-        "zone": "off-zone",
-        "markers": [
-          {
-            "type": "teammate",
-            "x": 555,
-            "y": 220,
-            "label": "F1"
-          },
-          {
-            "type": "attacker",
-            "x": 540,
-            "y": 215,
-            "label": "X"
-          },
-          {
-            "type": "goalie",
-            "x": 560,
-            "y": 150
-          }
-        ]
-      },
-      "spots": [
-        {
-          "x": 510,
-          "y": 195,
-          "correct": true,
-          "msg": "✓ Step into F1's old role. Maintain pressure on the puck-side."
-        },
-        {
-          "x": 470,
-          "y": 95,
-          "correct": false,
-          "msg": "You stayed home. F1 is alone in the battle and any escape is uncovered."
-        },
-        {
-          "x": 555,
-          "y": 220,
-          "correct": false,
-          "msg": "Crashed into F1 in the corner. Now you're both committed and there's nothing high."
-        }
-      ]
-    },
-    {
       "id": "u11_rr_50",
       "cat": "Rush Reads",
       "pos": [
@@ -10314,74 +10169,6 @@
           "radius": 28,
           "verdict": "worst",
           "feedback": "You crashed the slot and now there's two attackers fighting for the same lane."
-        }
-      ]
-    },
-    {
-      "id": "u11_rr_52",
-      "cat": "Rush Reads",
-      "pos": [
-        "F"
-      ],
-      "d": 2,
-      "type": "hot-spots",
-      "levels": [
-        "U11 / Atom",
-        "U13 / Peewee"
-      ],
-      "q": "You're the late forward on a 3-on-3 rush. The lead F is carrying. Where do you trail to?",
-      "tip": "Late F is the trailer. High-slot, available for a drop or a back-pass — and first one back if it turns over.",
-      "rink": {
-        "view": "right",
-        "zone": "off-zone",
-        "markers": [
-          {
-            "type": "teammate",
-            "x": 490,
-            "y": 150,
-            "label": "F1"
-          },
-          {
-            "type": "teammate",
-            "x": 490,
-            "y": 100,
-            "label": "F2"
-          },
-          {
-            "type": "defender",
-            "x": 540,
-            "y": 145
-          },
-          {
-            "type": "defender",
-            "x": 540,
-            "y": 195
-          },
-          {
-            "type": "goalie",
-            "x": 560,
-            "y": 150
-          }
-        ]
-      },
-      "spots": [
-        {
-          "x": 425,
-          "y": 150,
-          "correct": true,
-          "msg": "✓ Trailer in the high slot. Drop pass option, back-pressure on transition."
-        },
-        {
-          "x": 540,
-          "y": 220,
-          "correct": false,
-          "msg": "Crashed the net front from behind. Useless — F1 won't pass back through traffic."
-        },
-        {
-          "x": 410,
-          "y": 95,
-          "correct": false,
-          "msg": "Off the strong side. You're not a trailer, you're a third option F1 can't see."
         }
       ]
     },
@@ -10464,63 +10251,6 @@
           "radius": 28,
           "verdict": "worst",
           "feedback": "Doubled up on the carrier with D1. X2 and X3 are both unmarked for the cross."
-        }
-      ]
-    },
-    {
-      "id": "u11_rr_55",
-      "cat": "Rush Reads",
-      "pos": [
-        "F"
-      ],
-      "d": 2,
-      "type": "hot-spots",
-      "levels": [
-        "U11 / Atom",
-        "U13 / Peewee"
-      ],
-      "q": "Wide entry — your linemate carrying the puck along the wall. Where does the weak-side support set up?",
-      "tip": "Weak-side winger drives to the back post. That's the back-door tap-in if the carrier feeds across.",
-      "rink": {
-        "view": "right",
-        "zone": "off-zone",
-        "markers": [
-          {
-            "type": "teammate",
-            "x": 490,
-            "y": 95,
-            "label": "F1"
-          },
-          {
-            "type": "defender",
-            "x": 485,
-            "y": 105
-          },
-          {
-            "type": "goalie",
-            "x": 560,
-            "y": 150
-          }
-        ]
-      },
-      "spots": [
-        {
-          "x": 545,
-          "y": 195,
-          "correct": true,
-          "msg": "✓ Back-post drive — back-door pass becomes a tap-in."
-        },
-        {
-          "x": 460,
-          "y": 150,
-          "correct": false,
-          "msg": "Slot looks like a scoring spot but on a wide entry there's nobody to feed you."
-        },
-        {
-          "x": 410,
-          "y": 195,
-          "correct": false,
-          "msg": "You stayed at the blue line — useless for a rush chance."
         }
       ]
     },
@@ -10636,71 +10366,6 @@
           "radius": 28,
           "verdict": "worst",
           "feedback": "Weak side. You'd have to reach across your body — the shot's a lob, not a one-timer."
-        }
-      ]
-    },
-    {
-      "id": "u11_rr_60",
-      "cat": "Defensive Zone",
-      "pos": [
-        "F",
-        "D"
-      ],
-      "d": 2,
-      "type": "hot-spots",
-      "levels": [
-        "U11 / Atom",
-        "U13 / Peewee"
-      ],
-      "q": "Defensive faceoff lost to the strong-side wing. Where's your first move as the strong-side D?",
-      "tip": "Lost faceoff = beat the puck to the wall. Get into the shot lane before they can release.",
-      "rink": {
-        "view": "right",
-        "zone": "def-zone",
-        "markers": [
-          {
-            "type": "teammate",
-            "x": 485,
-            "y": 215,
-            "label": "C"
-          },
-          {
-            "type": "attacker",
-            "x": 465,
-            "y": 205,
-            "label": "X-W"
-          },
-          {
-            "type": "attacker",
-            "x": 485,
-            "y": 130,
-            "label": "X-D"
-          },
-          {
-            "type": "goalie",
-            "x": 560,
-            "y": 150
-          }
-        ]
-      },
-      "spots": [
-        {
-          "x": 480,
-          "y": 190,
-          "correct": true,
-          "msg": "✓ Get into the shot lane between X-W and the slot. Block-first mentality."
-        },
-        {
-          "x": 555,
-          "y": 145,
-          "correct": false,
-          "msg": "Retreated to the goalie. There's a free shot from the wall before you get there."
-        },
-        {
-          "x": 480,
-          "y": 130,
-          "correct": false,
-          "msg": "C has the high D — that's not your man on a lost draw."
         }
       ]
     },
@@ -17985,63 +17650,6 @@
         "Pattern Recognition"
       ],
       "_notionPageId": "350c5405-e7f6-8127-8260-d3c46bc13f05"
-    },
-    {
-      "id": "u11_diagram_passing_lane",
-      "cat": "Passing",
-      "pos": [
-        "F"
-      ],
-      "d": 2,
-      "type": "mc",
-      "q": "You're at the half-wall in the offensive zone with the puck. The red defender is between you and the slot. Where's the open pass?",
-      "choices": [
-        "To the slot — your teammate is calling for it",
-        "Cross-ice to the far winger — clean lane",
-        "Behind the net to your D",
-        "Shoot from the wall"
-      ],
-      "correct": 1,
-      "why": "The defender's stick blocks the slot lane. Cross-ice is the open lane — your far winger has space and the goalie has to slide. Behind the net is also fine but doesn't generate offense.",
-      "tip": "Read the stick — the lane it doesn't cover is the pass.",
-      "levels": [
-        "U11 / Atom",
-        "U13 / Peewee"
-      ],
-      "rink": {
-        "view": "right",
-        "zone": "off-zone",
-        "markers": [
-          {
-            "type": "attacker",
-            "x": 470,
-            "y": 220,
-            "label": "YOU"
-          },
-          {
-            "type": "defender",
-            "x": 480,
-            "y": 165
-          },
-          {
-            "type": "teammate",
-            "x": 510,
-            "y": 145,
-            "label": "T1"
-          },
-          {
-            "type": "teammate",
-            "x": 510,
-            "y": 80,
-            "label": "T2"
-          },
-          {
-            "type": "goalie",
-            "x": 555,
-            "y": 150
-          }
-        ]
-      }
     }
   ],
   "U13 / Peewee": [
@@ -21660,65 +21268,6 @@
       "levels": [
         "U13 / Peewee",
         "U15 / Bantam"
-      ]
-    },
-    {
-      "id": "u13q_rink08",
-      "cat": "Positioning",
-      "diff": "M",
-      "type": "hot-spots",
-      "pos": [
-        "F"
-      ],
-      "q": "Your D is walking the puck at the point. Where should you (the weak-side winger) be?",
-      "tip": "Weak-side support is backdoor, mid-slot. Close enough to finish a feed, far enough to give the carrier options.",
-      "rink": {
-        "view": "right",
-        "zone": "off-zone",
-        "markers": [
-          {
-            "type": "teammate",
-            "x": 420,
-            "y": 200,
-            "label": "D"
-          },
-          {
-            "type": "defender",
-            "x": 450,
-            "y": 195
-          },
-          {
-            "type": "teammate",
-            "x": 540,
-            "y": 80,
-            "label": "SW"
-          },
-          {
-            "type": "goalie",
-            "x": 560,
-            "y": 150
-          }
-        ]
-      },
-      "spots": [
-        {
-          "x": 540,
-          "y": 170,
-          "correct": true,
-          "msg": "✓ Backdoor, mid-slot. That's the weak-side support spot on a point walk."
-        },
-        {
-          "x": 440,
-          "y": 80,
-          "correct": false,
-          "msg": "Too high and too strong-side. You won't get a backdoor feed from there."
-        },
-        {
-          "x": 560,
-          "y": 240,
-          "correct": false,
-          "msg": "Too deep. You're below the goal line and can't finish a cross-ice pass."
-        }
       ]
     },
     {
@@ -26487,63 +26036,6 @@
       ]
     },
     {
-      "id": "u15_rink_fill1",
-      "cat": "Positioning",
-      "pos": [
-        "F"
-      ],
-      "d": 2,
-      "type": "hot-spots",
-      "q": "Your D is carrying the puck up the strong-side wall in the offensive zone. You're the weak-side winger. Tap every good support spot.",
-      "tip": "Weak-side options: backdoor mid-slot (scoring) and high slot (outlet for the D). Corner is wrong — the D just left there.",
-      "rink": {
-        "view": "right",
-        "zone": "off-zone",
-        "markers": [
-          {
-            "type": "teammate",
-            "x": 500,
-            "y": 80,
-            "label": "D"
-          },
-          {
-            "type": "attacker",
-            "x": 470,
-            "y": 90
-          },
-          {
-            "type": "goalie",
-            "x": 560,
-            "y": 150
-          }
-        ]
-      },
-      "spots": [
-        {
-          "x": 530,
-          "y": 220,
-          "correct": true,
-          "msg": "✓ Backdoor — prime scoring area on a feed across."
-        },
-        {
-          "x": 460,
-          "y": 170,
-          "correct": true,
-          "msg": "✓ High slot — gives your D an outlet if they can't beat the pressure."
-        },
-        {
-          "x": 540,
-          "y": 80,
-          "correct": false,
-          "msg": "Corner — your D just left there. Going to the corner crowds the play."
-        }
-      ],
-      "levels": [
-        "U15 / Bantam",
-        "U18 / Midget"
-      ]
-    },
-    {
       "id": "u15_gm1",
       "cat": "Game Management",
       "pos": [
@@ -28443,54 +27935,6 @@
           "radius": 40,
           "verdict": "worst",
           "feedback": "Stayed flat-footed. The attacker's gone wide — you lost the gap."
-        }
-      ]
-    },
-    {
-      "id": "u18r3",
-      "cat": "Decision-Making",
-      "pos": [
-        "F"
-      ],
-      "d": 2,
-      "type": "hot-spots",
-      "q": "Power play, 5-on-4, set up in the offensive zone. Tap every spot where a one-timer becomes dangerous.",
-      "tip": "One-timer zones = the far-side dot and the bumper slot. Low walls only work if the defender strong-sides the puck.",
-      "rink": {
-        "view": "right",
-        "zone": "off-zone",
-        "markers": [
-          {
-            "type": "teammate",
-            "x": 430,
-            "y": 150,
-            "label": "QB"
-          },
-          {
-            "type": "goalie",
-            "x": 560,
-            "y": 150
-          }
-        ]
-      },
-      "spots": [
-        {
-          "x": 500,
-          "y": 220,
-          "correct": true,
-          "msg": "✓ Far-side dot — classic one-timer spot. Shot from the QB travels cross-ice to you."
-        },
-        {
-          "x": 510,
-          "y": 150,
-          "correct": true,
-          "msg": "✓ Bumper position (high slot) — live redirect or one-timer from a seam feed."
-        },
-        {
-          "x": 540,
-          "y": 90,
-          "correct": false,
-          "msg": "Near-side half-wall is a feed spot, not a shooter spot on this look."
         }
       ]
     },
