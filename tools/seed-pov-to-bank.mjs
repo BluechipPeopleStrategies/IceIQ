@@ -166,9 +166,21 @@ for (const lvl of Object.keys(bank)) {
   bank[lvl].forEach((q, i) => { if (q.id) idIndex.set(q.id, { lvl, i }); });
 }
 
+// Notion-sourced ids in the current export. Anything that previously had
+// a _notionPageId in the bank but is missing from this set must have been
+// soft-deleted upstream (Status=Rejected or page archived) — purge it from
+// the bank so the in-quiz Delete button completes the round-trip.
+const exportedIds = new Set();
+for (const image of src.images || []) {
+  for (const q of image.questions || []) {
+    if (q.id) exportedIds.add(q.id);
+  }
+}
+
 let added = 0;
 let urlRefreshed = 0;
 let untouched = 0;
+let removed = 0;
 let skippedHotspot = 0;
 let skippedNonMc = 0;
 
@@ -184,7 +196,25 @@ for (const image of src.images || []) {
       if (q.notionPageId && row._notionPageId !== q.notionPageId) {
         row._notionPageId = q.notionPageId;
       }
-      // Only POV rows carry media; leave other types alone if an id collides.
+      // Refresh authored text fields from Notion. Without this, edits the
+      // user makes in Notion (or in the in-quiz editor → Notion round-trip)
+      // never flow back to questions.json — only media.url did. Only applies
+      // to MC-shape rows since those are the ones the seeder authors.
+      if (row.type === "pov-mc" && q.format !== "Hotspot" && (!q.format || q.format === "Multiple Choice")) {
+        const newOpts = (q.options || []).map(o => o.text);
+        const newOk = letterToIndex(q.correctAnswer);
+        const newWhy = q.explanation || "";
+        const newTip = shortTip(q.explanation);
+        const newSit = q.questionText;
+        let textChanged = false;
+        if (newSit && row.sit !== newSit) { row.sit = newSit; textChanged = true; }
+        if (newOpts.length && JSON.stringify(row.opts) !== JSON.stringify(newOpts)) { row.opts = newOpts; textChanged = true; }
+        if (newOk !== row.ok && newOk !== undefined) { row.ok = newOk; textChanged = true; }
+        if (newWhy && row.why !== newWhy) { row.why = newWhy; textChanged = true; }
+        if (newTip && row.tip !== newTip) { row.tip = newTip; textChanged = true; }
+        if (textChanged) urlRefreshed++; // bucketed under "URL fresh" for now
+      }
+      // Media url refresh — only POV rows carry media.
       if (row.type === "pov-mc") {
         const prev = row.media?.url;
         if (prev !== url) {
@@ -217,11 +247,26 @@ for (const image of src.images || []) {
   }
 }
 
+// Purge Notion-sourced rows that disappeared from the export. Identified
+// by `_notionPageId` (so hand-authored rows are safe). Walks every level
+// in the bank — multi-age rows are replicated, so a soft-deleted question
+// might exist under U11 + U13 simultaneously.
+for (const lvl of Object.keys(bank)) {
+  const before = bank[lvl].length;
+  bank[lvl] = bank[lvl].filter(q => {
+    if (!q._notionPageId) return true;       // hand-authored, leave alone
+    if (exportedIds.has(q.id)) return true;  // still active in Notion
+    return false;                             // soft-deleted upstream
+  });
+  removed += (before - bank[lvl].length);
+}
+
 fs.writeFileSync(bankPath, JSON.stringify(bank, null, 2) + "\n");
 
 console.log(`Seeded POV from ${path.relative(process.cwd(), sourcePath)}`);
 console.log(`  Added:     ${added}`);
 console.log(`  URL fresh: ${urlRefreshed}`);
 console.log(`  Untouched: ${untouched}`);
+if (removed > 0) console.log(`  Removed:   ${removed} (Notion soft-deletes)`);
 if (skippedHotspot > 0) console.log(`  Skipped hotspot: ${skippedHotspot} (need manual coords — author hot-spots JSON in questions.json directly)`);
 if (skippedNonMc > 0)   console.log(`  Skipped non-MC:  ${skippedNonMc} (Sequence/Open Response/etc. not yet auto-seeded)`);

@@ -37,7 +37,10 @@ const IMAGE_QUESTIONS_DS_ID = "f5e1886f3e864625acd9dc4f90776245";
 // For the one-time admin-dashboard migration we accept every status so the
 // admin can curate inside Supabase rather than at the Notion boundary.
 const ALLOWED_IMAGE_STATUSES    = ["Generated", "Approved", "Testing", "Draft", "Rejected"];
-const ALLOWED_QUESTION_STATUSES = ["Generated", "Approved", "Live in App", "Draft", "Needs Revision", "Rejected"];
+// "Rejected" intentionally excluded — that's the user's hard-delete signal
+// from the in-quiz Delete button. Pages stay in Notion for audit/recovery
+// but never flow back into questions.json.
+const ALLOWED_QUESTION_STATUSES = ["Generated", "Approved", "Live in App", "Draft", "Needs Revision"];
 // Note: "Draft" is included because the initial bulk push set every question
 // to Draft. As you move through the approval workflow, tighten this to
 // ["Approved", "Live in App"] for production.
