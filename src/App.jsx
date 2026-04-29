@@ -1990,12 +1990,17 @@ function Quiz({ player, onFinish, onBack, tier, onUpgrade }) {
           </div>
         )}
 
-        {/* POV image — first-person scenario photo above the situation card */}
+        {/* POV image — first-person scenario photo above the situation card.
+            Sticky: stays pinned just below the StickyHeader as the player
+            scrolls through options + explanation, so the visual context is
+            always there when reading the read. */}
         {qtype === "pov-mc" && q.media?.url && (
           <div style={{
+            position:"sticky", top:62, zIndex:10,
             marginBottom:"1rem", borderRadius:12, overflow:"hidden",
             border:`1px solid ${C.border}`, background:"#000",
             aspectRatio:"16/9",
+            boxShadow: "0 8px 24px rgba(0,0,0,.5)",
           }}>
             <img src={q.media.url} alt={q.media.alt || ""}
               draggable={false}
@@ -2007,13 +2012,15 @@ function Quiz({ player, onFinish, onBack, tier, onUpgrade }) {
         {/* Mini-rink diagram — for any non-interactive MC-shape question
             that has a q.rink config. Renders the same procedural rink the
             interactive types use, just non-interactive (read-only diagram).
-            Skips when there's already a POV image to avoid double-context. */}
+            Skips when there's already a POV image to avoid double-context.
+            Same sticky treatment as the POV image. */}
         {NON_RINK_ANSWER_TYPES.has(qtype) && q.rink && !(qtype === "pov-mc" && q.media?.url) && (
           <div style={{
+            position:"sticky", top:62, zIndex:10,
             marginBottom:"1rem", borderRadius:12, overflow:"hidden",
             border:`1px solid ${C.border}`, background:"#0b1220",
             aspectRatio: "2 / 1",
-            position:"relative",
+            boxShadow: "0 8px 24px rgba(0,0,0,.5)",
           }}>
             <RinkReadsRink {...q.rink} />
             {/* Render any explicit markers (puck, attackers, defenders,
