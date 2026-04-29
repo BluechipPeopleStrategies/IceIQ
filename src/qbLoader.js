@@ -31,8 +31,8 @@ export function loadQB() {
     sessionStorage.removeItem("rinkreads_qb_cache_v9");
     sessionStorage.removeItem("rinkreads_qb_cache_v10");
     sessionStorage.removeItem("rinkreads_qb_cache_v11");
-    sessionStorage.removeItem("rinkreads_qb_cache_v12");
-    const stored = sessionStorage.getItem("rinkreads_qb_cache_v12");
+    sessionStorage.removeItem("rinkreads_qb_cache_v13");
+    const stored = sessionStorage.getItem("rinkreads_qb_cache_v13");
     if (stored) {
       cached = JSON.parse(stored);
       return Promise.resolve(cached);
@@ -81,7 +81,7 @@ export function loadQB() {
           }
         }
         cached = qb;
-        try { sessionStorage.setItem("rinkreads_qb_cache_v12", JSON.stringify(cached)); } catch (e) {}
+        try { sessionStorage.setItem("rinkreads_qb_cache_v13", JSON.stringify(cached)); } catch (e) {}
         return cached;
       })
       .catch(e => {

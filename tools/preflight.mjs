@@ -155,7 +155,9 @@ function checkBank() {
       }
 
       const isNew = q.q != null || q.choices != null || q.correct != null || NEW_TYPES.has(q.type) || q.rink != null;
-      const isLegacy = q.sit != null || q.opts != null || q.ok !== undefined || q.why != null;
+      // Note: `why` and `tip` are shared across both schemas — they don't
+      // signal which one is in use. Only structural fields (sit/opts/ok) do.
+      const isLegacy = q.sit != null || q.opts != null || q.ok !== undefined;
 
       if (isNew && isLegacy && q.type !== "multi") {
         // `multi` legitimately combines a setup line (sit) + prompt (q) +

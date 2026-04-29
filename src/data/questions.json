@@ -18573,6 +18573,63 @@
         "Pattern Recognition"
       ],
       "_notionPageId": "350c5405-e7f6-8127-8260-d3c46bc13f05"
+    },
+    {
+      "id": "u11_diagram_passing_lane",
+      "cat": "Passing",
+      "pos": [
+        "F"
+      ],
+      "d": 2,
+      "type": "mc",
+      "q": "You're at the half-wall in the offensive zone with the puck. The red defender is between you and the slot. Where's the open pass?",
+      "choices": [
+        "To the slot — your teammate is calling for it",
+        "Cross-ice to the far winger — clean lane",
+        "Behind the net to your D",
+        "Shoot from the wall"
+      ],
+      "correct": 1,
+      "why": "The defender's stick blocks the slot lane. Cross-ice is the open lane — your far winger has space and the goalie has to slide. Behind the net is also fine but doesn't generate offense.",
+      "tip": "Read the stick — the lane it doesn't cover is the pass.",
+      "levels": [
+        "U11 / Atom",
+        "U13 / Peewee"
+      ],
+      "rink": {
+        "view": "right",
+        "zone": "off-zone",
+        "markers": [
+          {
+            "type": "attacker",
+            "x": 470,
+            "y": 220,
+            "label": "YOU"
+          },
+          {
+            "type": "defender",
+            "x": 480,
+            "y": 165
+          },
+          {
+            "type": "teammate",
+            "x": 510,
+            "y": 145,
+            "label": "T1"
+          },
+          {
+            "type": "teammate",
+            "x": 510,
+            "y": 80,
+            "label": "T2"
+          },
+          {
+            "type": "goalie",
+            "x": 555,
+            "y": 150
+          }
+        ]
+      }
     }
   ],
   "U13 / Peewee": [
@@ -24915,6 +24972,63 @@
         "Soft Area"
       ],
       "_notionPageId": "34dc5405-e7f6-81ad-ae39-ef74026cd021"
+    },
+    {
+      "id": "u13_diagram_2on1_d",
+      "cat": "Defense",
+      "pos": [
+        "D"
+      ],
+      "d": 3,
+      "type": "mc",
+      "q": "2-on-1 coming at you, you're the lone D. Your goalie is set. What do you do?",
+      "choices": [
+        "Take the carrier — force them to pass through you",
+        "Take away the cross-ice pass — let the goalie handle the shot",
+        "Try to poke the puck",
+        "Back off and let your back-checker arrive"
+      ],
+      "correct": 1,
+      "why": "On a 2-on-1, the D's job is to TAKE THE PASS. The goalie owns the shooter — but only if you don't try to play both. Sliding to break up the cross-ice forces a tougher shot angle on the carrier.",
+      "tip": "2-on-1: take the pass. Goalie has the shot.",
+      "levels": [
+        "U13 / Peewee",
+        "U15 / Bantam"
+      ],
+      "rink": {
+        "view": "right",
+        "zone": "def-zone",
+        "markers": [
+          {
+            "type": "attacker",
+            "x": 460,
+            "y": 110,
+            "label": "X1"
+          },
+          {
+            "type": "puck",
+            "x": 462,
+            "y": 113
+          },
+          {
+            "type": "attacker",
+            "x": 460,
+            "y": 200,
+            "label": "X2"
+          },
+          {
+            "type": "defender",
+            "x": 510,
+            "y": 150,
+            "label": "YOU"
+          },
+          {
+            "type": "goalie",
+            "x": 555,
+            "y": 150
+          }
+        ]
+      }
     }
   ],
   "U15 / Bantam": [

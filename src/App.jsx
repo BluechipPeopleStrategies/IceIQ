@@ -11,6 +11,7 @@ import { markSignupIntent, logSignupComplete } from "./utils/signupTelemetry";
 // to Supabase from the first interaction, no LS→cloud transfer needed.
 import { DEPTH_SLOTS, getDepthChart, setAssignment as setDepthAssignment, seedDemoDepthChart, clearDemoDepthChart } from "./utils/depthChart";
 import RinkReadsRinkQuestion from "./RinkReadsRinkQuestion.jsx";
+import RinkReadsRink from "./RinkReadsRink";
 import { COMPETENCIES, getJourneyV2, ACTIVITY_METRICS, GAME_SENSE_UNLOCK_SESSIONS, calcCompetencyScores, calcGameSenseScore } from "./utils/gameSense.js";
 import { getTrainingLog, seedDemoTrainingForRoster } from "./utils/trainingLog.js";
 import { buildU11ForwardPreview, PREVIEW_PLAYER_ID } from "./data/previewPlayer.js";
@@ -1716,17 +1717,78 @@ function Quiz({ player, onFinish, onBack, tier, onUpgrade }) {
     if (question) setQuestionStartedAt(Date.now());
   }, [question?.id]);
 
+  // Time-pressure hard cutoff — when ?timed=1 is on, fire a timer at
+  // TIMED_DURATION_MS that records the question as wrong if the player
+  // hasn't answered yet. Mirrors handlePick / handleSeqAnswer / handleRinkQAnswer
+  // depending on the question type. Resets on every new question.
+  useEffect(() => {
+    if (!timedMode) return;
+    if (!question) return;
+    // If the player already answered this question, no timeout needed.
+    if (sel !== null || seqAnswered || rinkQResult !== null) return;
+    const t = setTimeout(() => {
+      // Re-check answered state at fire time — user might have answered
+      // between schedule and fire.
+      if (sel !== null || seqAnswered || rinkQResult !== null) return;
+      const newResult = { id:q.id, cat:q.cat, ok:false, d:q.d||2, type:qtype, speedBonus:0, timedOut:true };
+      // Mark answered so the explanation card renders. Sentinel values
+      // pick a "no option highlighted" rendering for each type.
+      if (qtype === "tf") {
+        setSel("__timeout__"); // not "true" / "false" → scores as wrong, no button highlighted
+      } else if (qtype === "seq" || qtype === "multi" || qtype === "scenario") {
+        setSeqAnswered(true);
+        setSeqCorrect(false);
+        setSeqPerfect(false);
+      } else if (["drag-target","drag-place","multi-tap","sequence-rink","path-draw","lane-select","hot-spots","zone-click","rink-label","rink-drag","rink-match"].includes(qtype)) {
+        setRinkQResult(false);
+      } else {
+        // mc / pov-mc / mistake / next — sel = -1 means picked nothing valid
+        setSel(-1);
+        if (qtype === "mistake") setMistakeStreak(0);
+      }
+      setLastSpeedBonus(0);
+      const newResults = [...results, newResult];
+      setResults(newResults);
+      toast.warning("⏱ Time's up!", { duration: 1800 });
+      if (newResults.length >= qLen) setQuizDone(true);
+    }, TIMED_DURATION_MS);
+    return () => clearTimeout(t);
+  }, [questionStartedAt, timedMode, question?.id, sel, seqAnswered, rinkQResult]);
+
   const qNum = results.length;
   const isLast = qNum >= qLen - 1;
   const qtype = question?.type || "mc";
   // Apply any in-browser local override on top of the bank question.
   // Display + scoring both read from `q`, so edits apply without sync.
-  const q = applyOverride(question);
+  // Schema coalescing: legacy MC questions used q.q/q.choices/q.correct
+  // instead of q.sit/q.opts/q.ok. Normalize so render + scoring see one
+  // consistent shape regardless of which schema the question was authored in.
+  const q = (() => {
+    const raw = applyOverride(question);
+    if (!raw) return raw;
+    const isMCShape = ["mc","pov-mc","mistake","next"].includes(raw.type);
+    if (!isMCShape) return raw;
+    return {
+      ...raw,
+      sit: raw.sit || raw.q || "",
+      opts: Array.isArray(raw.opts) ? raw.opts : (Array.isArray(raw.choices) ? raw.choices : []),
+      ok: raw.ok !== undefined ? raw.ok : (typeof raw.correct === "number" ? raw.correct : raw.ok),
+    };
+  })();
   // Dev-only edit affordance — gated on ?dev=1 so kids can't see it.
   const editAllowed = (() => {
     try { return new URLSearchParams(window.location.search).get("dev") === "1"; }
     catch { return false; }
   })();
+  // Time pressure mode (?timed=1): every answerable question gets a
+  // hard-cutoff timer. If the player doesn't answer in TIMED_DURATION_MS,
+  // the question records as wrong + shows the explanation. Mimics the
+  // urgency of a real shift where overthinking = turnover.
+  const timedMode = (() => {
+    try { return new URLSearchParams(window.location.search).get("timed") === "1"; }
+    catch { return false; }
+  })();
+  const TIMED_DURATION_MS = 12000;
   const [editOpen, setEditOpen] = useState(false);
   const [editDraft, setEditDraft] = useState(null);
   const [dupOpen, setDupOpen] = useState(false);
@@ -1801,10 +1863,14 @@ function Quiz({ player, onFinish, onBack, tier, onUpgrade }) {
     setQuestionStartedAt(Date.now());
   }
 
-  // RinkReadsRinkQuestion dispatcher routes when q.rink is set OR the type is one
-  // of the new rink-native interactive types.
+  // RinkReadsRinkQuestion dispatcher routes ONLY for rink-native interactive
+  // types. Plain MC/TF/multi/seq/mistake/next questions can ALSO carry a
+  // q.rink (diagram-MC pattern: small inline rink above the options) but
+  // they keep their normal MC-style answer flow — those don't get dispatched
+  // to the interactive widget.
   const NEW_RINK_TYPES = ["drag-target","drag-place","multi-tap","sequence-rink","path-draw","lane-select","hot-spots","zone-click","rink-label","rink-drag","rink-match"];
-  const isRinkQ = !!question?.rink || NEW_RINK_TYPES.includes(qtype);
+  const NON_RINK_ANSWER_TYPES = new Set(["mc","pov-mc","tf","multi","seq","mistake","next","scenario"]);
+  const isRinkQ = NEW_RINK_TYPES.includes(qtype) || (!!question?.rink && !NON_RINK_ANSWER_TYPES.has(qtype));
   const answered = isRinkQ
     ? rinkQResult !== null
     : (qtype === "seq" || qtype === "multi" || qtype === "scenario") ? seqAnswered
@@ -1945,6 +2011,45 @@ function Quiz({ player, onFinish, onBack, tier, onUpgrade }) {
           </div>
         )}
 
+        {/* Mini-rink diagram — for any non-interactive MC-shape question
+            that has a q.rink config. Renders the same procedural rink the
+            interactive types use, just non-interactive (read-only diagram).
+            Skips when there's already a POV image to avoid double-context. */}
+        {NON_RINK_ANSWER_TYPES.has(qtype) && q.rink && !(qtype === "pov-mc" && q.media?.url) && (
+          <div style={{
+            marginBottom:"1rem", borderRadius:12, overflow:"hidden",
+            border:`1px solid ${C.border}`, background:"#0b1220",
+            aspectRatio: "2 / 1",
+            position:"relative",
+          }}>
+            <RinkReadsRink {...q.rink} />
+            {/* Render any explicit markers (puck, attackers, defenders,
+                teammates, goalie) as a non-interactive overlay. Mirrors
+                what HotSpotsRink draws but without click handlers. */}
+            {Array.isArray(q.rink.markers) && q.rink.markers.length > 0 && (
+              <svg viewBox={q.rink.view === "left" ? "0 0 600 300" : "0 0 600 300"}
+                preserveAspectRatio="none"
+                style={{position:"absolute",inset:0,width:"100%",height:"100%",pointerEvents:"none"}}>
+                {q.rink.markers.map((m, i) => {
+                  const fill = m.type === "puck" ? "#000"
+                    : m.type === "goalie" ? "#5BA4E8"
+                    : m.type === "attacker" ? "#0b1220"
+                    : m.type === "defender" ? "#ef4444"
+                    : "#22c55e"; // teammate
+                  const stroke = m.type === "attacker" ? "#fff" : (m.type === "puck" ? "#fff" : "none");
+                  const r = m.type === "puck" ? 5 : 11;
+                  return (
+                    <g key={i} transform={`translate(${m.x},${m.y})`}>
+                      <circle cx="0" cy="0" r={r} fill={fill} stroke={stroke} strokeWidth={stroke==="none"?0:1.5}/>
+                      {m.label && <text x="0" y="3.5" textAnchor="middle" fontSize="9" fontWeight="800" fill="#fff" pointerEvents="none">{m.label}</text>}
+                    </g>
+                  );
+                })}
+              </svg>
+            )}
+          </div>
+        )}
+
         {/* Situation / Prompt */}
         {(qtype === "mc" || qtype === "pov-mc" || qtype === "seq" || qtype === "next") && (
           <Card style={{marginBottom:"1.25rem",background:C.purpleDim,border:`1px solid ${C.purpleBorder}`}}>
@@ -1994,9 +2099,10 @@ function Quiz({ player, onFinish, onBack, tier, onUpgrade }) {
           </Card>
         )}
 
-        {/* Speed-bonus timer — only for interactive types. Drains live; freezes
-            on answer with the awarded bonus. Wrong answers freeze at 0. */}
-        {SPEED_TYPES.has(qtype) && (
+        {/* Speed-bonus timer — only for interactive types when NOT in timed
+            mode. Drains live; freezes on answer with the awarded bonus.
+            Wrong answers freeze at 0. */}
+        {!timedMode && SPEED_TYPES.has(qtype) && (
           <SpeedTimerBar
             startedAt={questionStartedAt}
             durationMs={SPEED_DURATION_MS}
@@ -2004,6 +2110,15 @@ function Quiz({ player, onFinish, onBack, tier, onUpgrade }) {
             frozen={answered}
             achieved={lastSpeedBonus}
           />
+        )}
+
+        {/* Time-pressure hard-cutoff bar — when ?timed=1 is on, every
+            answerable type gets a 12-second countdown. Bar drains visibly;
+            on expire the timeout effect below auto-records as wrong. */}
+        {timedMode && (
+          <div style={{marginBottom:".75rem",padding:".5rem .75rem",background:C.bgCard,border:`1px solid ${C.redBorder}`,borderRadius:10}}>
+            <TimedCountdownBar startedAt={questionStartedAt} durationMs={TIMED_DURATION_MS} frozen={answered}/>
+          </div>
         )}
 
         {/* Question component — single dispatch in renderQuestionBody() */}
@@ -3831,6 +3946,44 @@ function SkillsRadar({ cats, selfRatings, coachRatings, selfScale, coachScale })
 // Live countdown bar above interactive questions — drains over the
 // SPEED_DURATION_MS window. Resets when `startedAt` changes (next question)
 // and freezes when `frozen` is true (after the player answers).
+// Time-pressure countdown — same drain behavior as SpeedTimerBar but the
+// label is urgent (no "you can earn N pts" framing) and the whole bar
+// pulses red in the last 3 seconds so the player feels the cliff.
+function TimedCountdownBar({ startedAt, durationMs, frozen }) {
+  const [tick, setTick] = useState(0);
+  useEffect(() => {
+    if (frozen) return;
+    const id = setInterval(() => setTick(t => t + 1), 100);
+    return () => clearInterval(id);
+  }, [frozen, startedAt]);
+  const elapsed = Date.now() - startedAt;
+  const remaining = Math.max(0, durationMs - elapsed);
+  const pct = Math.max(0, Math.min(100, (remaining / durationMs) * 100));
+  const seconds = (remaining / 1000).toFixed(1);
+  const isUrgent = remaining > 0 && remaining < 3000;
+  const color = frozen ? C.dimmer : (pct > 50 ? "#eab308" : isUrgent ? C.red : "#ef6b30");
+  return (
+    <>
+      <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:".35rem",fontSize:11,fontWeight:800,color,letterSpacing:".04em"}}>
+        <span>⏱ {frozen ? "Locked" : (remaining > 0 ? "Answer fast — hard cutoff" : "TIME!")}</span>
+        {!frozen && <span style={{color:isUrgent?C.red:C.dimmer,fontWeight:800}}>{seconds}s</span>}
+      </div>
+      <div style={{height:6,background:C.dimmest,borderRadius:3,overflow:"hidden"}}>
+        <div style={{
+          height:"100%",
+          width:`${pct}%`,
+          background:color,
+          borderRadius:3,
+          transition:"width .1s linear, background .2s",
+          animation: isUrgent && !frozen ? "rrTimerPulse 0.6s ease-in-out infinite" : "none",
+        }}/>
+      </div>
+      {/* Single shared keyframes — injected once per render but cheap */}
+      <style>{`@keyframes rrTimerPulse { 0%,100% { opacity: 1; } 50% { opacity: 0.55; } }`}</style>
+    </>
+  );
+}
+
 function SpeedTimerBar({ startedAt, durationMs, maxBonus, frozen, achieved }) {
   const [tick, setTick] = useState(0);
   useEffect(() => {
