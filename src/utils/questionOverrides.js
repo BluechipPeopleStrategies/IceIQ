@@ -121,3 +121,59 @@ export function getKillList() {
 export function clearKillList() {
   writeKillList([]);
 }
+
+// ─── Flag list ──────────────────────────────────────────────────────
+// Soft "come back to this" markers. Unlike kill list, flagging doesn't
+// remove the question from the queue — it just records that the user
+// wants to follow up on it later (usually to swap an image, reword a
+// prompt, or double-check a marked answer). Stored separately so the
+// intent stays distinct.
+
+const LS_FLAG_KEY = "rinkreads_question_flags_v1";
+
+function readFlagList() {
+  try {
+    const raw = localStorage.getItem(LS_FLAG_KEY);
+    if (!raw) return [];
+    const arr = JSON.parse(raw);
+    return Array.isArray(arr) ? arr : [];
+  } catch { return []; }
+}
+
+function writeFlagList(list) {
+  try { localStorage.setItem(LS_FLAG_KEY, JSON.stringify(list)); } catch {}
+}
+
+export function getFlag(id) {
+  if (!id) return null;
+  return readFlagList().find(f => f.id === id) || null;
+}
+
+export function setFlag(id, { reason = "other", note = "", ...meta } = {}) {
+  if (!id) return;
+  const list = readFlagList();
+  const idx = list.findIndex(f => f.id === id);
+  const entry = {
+    id,
+    reason,
+    note: note || "",
+    flaggedAt: new Date().toISOString(),
+    ...meta,
+  };
+  if (idx >= 0) list[idx] = entry;
+  else list.push(entry);
+  writeFlagList(list);
+}
+
+export function clearFlag(id) {
+  if (!id) return;
+  writeFlagList(readFlagList().filter(f => f.id !== id));
+}
+
+export function getFlagList() {
+  return readFlagList();
+}
+
+export function clearFlagList() {
+  writeFlagList([]);
+}

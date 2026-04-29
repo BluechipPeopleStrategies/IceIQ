@@ -28,7 +28,7 @@ import { getWeeklyStreak, bumpWeeklyStreak, topCategoryStreak, updateCategoryStr
 import { canSwitchAgeGroup, recordAgeGroupSwitch, getAgeGroupLock, setAgeGroupLock, checkSeasonReset } from "./utils/deviceLock";
 import { lsGetStr, lsSetStr, lsGetJSON, lsSetJSON } from "./utils/storage.js";
 import { computeCategoryMastery, rankCategories, nextThreshold } from "./utils/mastery.js";
-import { applyOverride, setOverride, clearOverride, getOverride, getAllOverrides, clearAllOverrides, isKilled, killQuestion, unkillQuestion, getKillList, clearKillList } from "./utils/questionOverrides.js";
+import { applyOverride, setOverride, clearOverride, getOverride, getAllOverrides, clearAllOverrides, isKilled, killQuestion, unkillQuestion, getKillList, clearKillList, getFlag, setFlag, clearFlag, getFlagList, clearFlagList } from "./utils/questionOverrides.js";
 import {
   REASONS as REFLECTION_REASONS,
   getReflectionFor, saveReflection,
@@ -1739,6 +1739,11 @@ function Quiz({ player, onFinish, onBack, tier, onUpgrade }) {
     const t = setTimeout(() => setKillArmed(false), 3000);
     return () => clearTimeout(t);
   }, [killArmed]);
+  // Flag system: 🚩 opens an inline reason picker. Picking a reason
+  // saves the flag immediately. No two-step — flagging is non-destructive.
+  const [flagPickerOpen, setFlagPickerOpen] = useState(false);
+  const [flagNoteDraft, setFlagNoteDraft] = useState("");
+  const currentFlag = question?.id ? getFlag(question.id) : null;
 
   // Speed-bonus window. Interactive (rink) questions get a timed bonus;
   // MC/TF/seq don't because reading-speed is mostly literacy, not hockey IQ.
@@ -2070,6 +2075,14 @@ function Quiz({ player, onFinish, onBack, tier, onUpgrade }) {
               style={{background: killArmed ? C.redDim : "none", border:`1px solid ${killArmed ? C.red : C.border}`, color: killArmed ? C.red : C.dimmer, fontSize:11, cursor:"pointer", fontFamily:FONT.body, padding:".4rem .8rem", borderRadius:6, fontWeight: killArmed ? 800 : 500}}>
               {killArmed ? "🗑 Confirm?" : "🗑"}
             </button>
+            {/* Flag for follow-up — single tap toggles. When flagged,
+                button shows the reason; tapping opens the picker again
+                to change reason / add note / unflag. */}
+            <button onClick={() => setFlagPickerOpen(o => !o)}
+              title={currentFlag ? `Flagged: ${currentFlag.reason}${currentFlag.note ? " — " + currentFlag.note : ""}` : "Flag this question to come back to it later"}
+              style={{background: currentFlag ? "rgba(252,200,76,.12)" : "none", border:`1px solid ${currentFlag ? C.gold : C.border}`, color: currentFlag ? C.gold : C.dimmer, fontSize:11, cursor:"pointer", fontFamily:FONT.body, padding:".4rem .8rem", borderRadius:6, fontWeight: currentFlag ? 800 : 500}}>
+              🚩{currentFlag ? ` ${currentFlag.reason}` : ""}
+            </button>
             {q._hasOverride && (
               <button onClick={() => {
                 clearOverride(question.id);
@@ -2078,6 +2091,64 @@ function Quiz({ player, onFinish, onBack, tier, onUpgrade }) {
                 Reset
               </button>
             )}
+          </div>
+        )}
+
+        {/* Flag reason picker — opens inline below the editor button row.
+            Preset chips for common reasons + optional freeform note. */}
+        {editAllowed && flagPickerOpen && (
+          <div style={{marginTop:".55rem",padding:".7rem .8rem",background:"rgba(252,200,76,.06)",border:`1px solid ${C.goldBorder}`,borderRadius:8}}>
+            <div style={{fontSize:10,letterSpacing:".12em",textTransform:"uppercase",color:C.gold,fontWeight:700,marginBottom:".5rem"}}>
+              {currentFlag ? "Flag — change reason or unflag" : "Flag for follow-up"}
+            </div>
+            <div style={{display:"flex",flexWrap:"wrap",gap:".35rem",marginBottom:".5rem"}}>
+              {[
+                { v: "Update image", show: !!q.media?.url || ["hot-spots","rink-label","rink-drag","rink-match"].includes(qtype) },
+                { v: "Reword", show: true },
+                { v: "Wrong answer", show: true },
+                { v: "Better example", show: true },
+                { v: "Other", show: true },
+              ].filter(o => o.show).map(o => (
+                <button key={o.v} onClick={() => {
+                  setFlag(question.id, {
+                    reason: o.v,
+                    note: flagNoteDraft.trim(),
+                    _notionPageId: question._notionPageId || null,
+                    archetype: question.archetype || null,
+                    type: question.type || null,
+                    sit: question.sit || question.q || "",
+                  });
+                  setFlagPickerOpen(false);
+                  setFlagNoteDraft("");
+                  setQuestion({ ...question });
+                }}
+                  style={{background: currentFlag?.reason===o.v ? C.goldDim : C.bgElevated, border:`1px solid ${currentFlag?.reason===o.v ? C.gold : C.border}`, color: currentFlag?.reason===o.v ? C.gold : C.dim, fontSize:11, cursor:"pointer", fontFamily:FONT.body, padding:".35rem .6rem", borderRadius:6, fontWeight: currentFlag?.reason===o.v ? 800 : 500}}>
+                  {o.v}
+                </button>
+              ))}
+            </div>
+            <textarea
+              value={currentFlag ? (flagNoteDraft || currentFlag.note || "") : flagNoteDraft}
+              onChange={e => setFlagNoteDraft(e.target.value)}
+              placeholder="Optional note (e.g. 'image too dark to read defenders')"
+              rows={2}
+              style={{width:"100%",background:C.bgElevated,border:`1px solid ${C.border}`,borderRadius:6,padding:".4rem .55rem",color:C.white,fontSize:12,fontFamily:FONT.body,outline:"none",lineHeight:1.4,resize:"vertical",marginBottom:".5rem"}}/>
+            <div style={{display:"flex",gap:".4rem"}}>
+              <button onClick={() => { setFlagPickerOpen(false); setFlagNoteDraft(""); }}
+                style={{flex:1,background:"none",border:`1px solid ${C.border}`,borderRadius:6,padding:".35rem",cursor:"pointer",color:C.dimmer,fontSize:11,fontFamily:FONT.body}}>
+                Cancel
+              </button>
+              {currentFlag && (
+                <button onClick={() => {
+                  clearFlag(question.id);
+                  setFlagPickerOpen(false);
+                  setFlagNoteDraft("");
+                  setQuestion({ ...question });
+                }} style={{flex:1,background:"none",border:`1px solid ${C.redBorder}`,borderRadius:6,padding:".35rem",cursor:"pointer",color:C.red,fontSize:11,fontFamily:FONT.body}}>
+                  Unflag
+                </button>
+              )}
+            </div>
           </div>
         )}
 
@@ -2826,6 +2897,7 @@ function Results({ results, player, prevScore, totalSessions, seqPerfect, mistak
 function OverridesExportCard() {
   const [overrides, setOverrides] = useState(() => getAllOverrides());
   const [killed, setKilled] = useState(() => getKillList());
+  const [flagged, setFlagged] = useState(() => getFlagList());
   const [bankIndex, setBankIndex] = useState(null); // {[id]: bankQuestion}
   const [copied, setCopied] = useState(false);
   const editAllowed = (() => {
@@ -2851,7 +2923,8 @@ function OverridesExportCard() {
   }, []);
   const ids = Object.keys(overrides);
   const killCount = killed.length;
-  if (!editAllowed || (ids.length === 0 && killCount === 0)) return null;
+  const flagCount = flagged.length;
+  if (!editAllowed || (ids.length === 0 && killCount === 0 && flagCount === 0)) return null;
   // Build a single JSON envelope: edits + kills. Both carry _notionPageId
   // and _archetype so I can fan out push operations on the round-trip.
   const enrichedEdits = {};
@@ -2874,24 +2947,67 @@ function OverridesExportCard() {
       killedAt: k.killedAt,
     };
   });
+  const enrichedFlags = flagged.map(f => {
+    const bank = bankIndex && bankIndex[f.id];
+    return {
+      id: f.id,
+      reason: f.reason,
+      note: f.note || "",
+      _notionPageId: f._notionPageId || bank?._notionPageId || null,
+      _archetype: f.archetype || bank?._archetype || bank?.archetype || null,
+      type: f.type || bank?.type || null,
+      sit: f.sit || bank?.sit || bank?.q || "",
+      flaggedAt: f.flaggedAt,
+    };
+  });
   const envelope = {
     edits: enrichedEdits,
     kills: enrichedKills,
+    flags: enrichedFlags,
   };
   const json = JSON.stringify(envelope, null, 2);
   const copy = async () => {
     try { await navigator.clipboard.writeText(json); setCopied(true); setTimeout(() => setCopied(false), 2000); }
     catch { /* clipboard blocked — user can select-all instead */ }
   };
-  const totalCount = ids.length + killCount;
+  const totalCount = ids.length + killCount + flagCount;
+  // Build APP_BASE for "open in dashboard" links — strips path/query off
+  // the current location so links work regardless of port or path.
+  const appBase = (typeof window !== "undefined") ? `${window.location.origin}` : "";
   return (
     <Card style={{marginBottom:"1rem",background:"rgba(252,200,76,.06)",border:`1px solid ${C.goldBorder}`}}>
       <div style={{fontSize:10,letterSpacing:".14em",textTransform:"uppercase",color:C.gold,fontWeight:700,marginBottom:".4rem"}}>
-        ✎ Local changes ({ids.length} edit{ids.length===1?"":"s"}{killCount > 0 ? ` · 🗑 ${killCount} delete${killCount===1?"":"s"}` : ""})
+        ✎ Local changes ({ids.length} edit{ids.length===1?"":"s"}{killCount > 0 ? ` · 🗑 ${killCount} delete${killCount===1?"":"s"}` : ""}{flagCount > 0 ? ` · 🚩 ${flagCount} flag${flagCount===1?"":"s"}` : ""})
       </div>
       <div style={{fontSize:12,color:C.dim,lineHeight:1.6,marginBottom:".75rem"}}>
-        Saved in your browser. Copy the JSON and paste it in chat — I'll push edits to Notion + <strong style={{color:C.red}}>permanently delete</strong> the questions in your kill list (and any orphaned images they were the only reference for).
+        Saved in your browser. Copy the JSON and paste it in chat — I'll push edits to Notion + <strong style={{color:C.red}}>permanently delete</strong> the questions in your kill list. 🚩 Flags stay in the JSON for context but I won't auto-act on them — they're your follow-up list.
       </div>
+      {flagCount > 0 && (
+        <div style={{marginBottom:".75rem",padding:".55rem .7rem",background:"rgba(252,200,76,.04)",border:`1px solid ${C.goldBorder}`,borderRadius:8}}>
+          <div style={{fontSize:10,letterSpacing:".1em",textTransform:"uppercase",color:C.gold,fontWeight:700,marginBottom:".4rem"}}>🚩 Follow-up list</div>
+          {flagged.map((f, i) => (
+            <div key={f.id} style={{display:"flex",alignItems:"flex-start",gap:".5rem",fontSize:11,color:C.dim,lineHeight:1.5,padding:".25rem 0",borderTop: i === 0 ? "none" : `1px solid ${C.border}`}}>
+              <div style={{flex:1,minWidth:0}}>
+                <div style={{fontWeight:700,color:C.gold,marginBottom:2}}>{f.reason}</div>
+                <div style={{fontSize:10,color:C.dimmer,fontFamily:"ui-monospace, monospace",marginBottom:2}}>{f.id}</div>
+                {f.note && <div style={{fontSize:11,color:C.dim,fontStyle:"italic",marginBottom:2}}>"{f.note}"</div>}
+                <div style={{fontSize:10,color:C.dimmer,whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis"}}>{f.sit || (bankIndex?.[f.id]?.sit || bankIndex?.[f.id]?.q || "")}</div>
+              </div>
+              <a href={`${appBase}/?ids=${encodeURIComponent(f.id)}&demo=player&dev=1`} target="_blank" rel="noopener"
+                style={{fontSize:10,color:C.gold,textDecoration:"underline",whiteSpace:"nowrap",marginTop:2}}>
+                Open ↗
+              </a>
+              <button onClick={() => {
+                clearFlag(f.id);
+                setFlagged(getFlagList());
+              }} title="Resolve / unflag"
+                style={{background:"none",border:"none",cursor:"pointer",color:C.dimmer,fontSize:14,padding:0,marginTop:2}}>
+                ✓
+              </button>
+            </div>
+          ))}
+        </div>
+      )}
       <pre style={{background:C.bgElevated,border:`1px solid ${C.border}`,borderRadius:8,padding:".6rem .8rem",color:C.dim,fontSize:11,fontFamily:"ui-monospace, SF Mono, Menlo, monospace",lineHeight:1.5,maxHeight:240,overflow:"auto",marginBottom:".75rem",whiteSpace:"pre"}}>{json}</pre>
       <div style={{display:"flex",gap:".5rem"}}>
         <button onClick={copy} style={{flex:2,background:C.gold,color:C.bg,border:"none",borderRadius:8,padding:".55rem",cursor:"pointer",fontWeight:800,fontSize:12,fontFamily:FONT.body}}>
@@ -2901,8 +3017,10 @@ function OverridesExportCard() {
           if (!window.confirm(`Clear all ${totalCount} local change${totalCount===1?"":"s"}? This can't be undone.`)) return;
           clearAllOverrides();
           clearKillList();
+          clearFlagList();
           setOverrides({});
           setKilled([]);
+          setFlagged([]);
         }} style={{flex:1,background:"none",border:`1px solid ${C.border}`,borderRadius:8,padding:".55rem",cursor:"pointer",color:C.dimmer,fontSize:12,fontFamily:FONT.body}}>
           Clear all
         </button>
