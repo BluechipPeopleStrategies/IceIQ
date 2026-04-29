@@ -130,6 +130,9 @@
       <option value="all">All questions</option>
       <option value="image">Image-backed only (pov-mc + hot-spots)</option>
       <option value="rink">Rink-* only (label/drag/match)</option>
+      <option value="needs-image">🖼️ Needs image (placeholder or missing)</option>
+      <option value="flagged-image">🚩 Flagged "Update image"</option>
+      <option value="flagged-any">🚩 All flagged questions</option>
     </select>
   </div>
   <div class="field">
@@ -235,15 +238,51 @@ function populateImageFilter() {
   }
 }
 
+// Image-bearing types — these are expected to render with an image. If
+// the URL is the placeholder or missing entirely, the question still
+// renders, but with a degraded UX. "Needs image" surfaces those.
+const IMAGE_TYPES = new Set(["pov-mc", "hot-spots", "rink-label", "rink-drag", "rink-match"]);
+function needsImage(q) {
+  if (!IMAGE_TYPES.has(q.type)) return false;
+  const url = q.media?.url || "";
+  if (!url) return true;
+  if (url.includes("pov-placeholder")) return true;
+  if (url.endsWith("/pov-placeholder.svg")) return true;
+  return false;
+}
+
+// Pull the kid's flag list from localStorage. Same key the in-quiz editor
+// writes to — both the app and dashboard run on the same origin so they
+// share storage. Returns map id -> flag entry.
+function readFlagMap() {
+  try {
+    const raw = localStorage.getItem("rinkreads_question_flags_v1");
+    if (!raw) return {};
+    const arr = JSON.parse(raw);
+    const map = {};
+    for (const f of (Array.isArray(arr) ? arr : [])) if (f?.id) map[f.id] = f;
+    return map;
+  } catch { return {}; }
+}
+
 function getFiltered() {
   const preset = $("filter-preset").value;
   const search = $("filter-search").value.trim().toLowerCase();
   const type = $("filter-type").value;
   const image = $("filter-image").value;
+  const flagMap = (preset === "flagged-image" || preset === "flagged-any") ? readFlagMap() : null;
   return allQuestions.filter(q => {
     if (preset === "today" && !TODAY_PREFIXES.some(p => (q.id || "").startsWith(p))) return false;
     if (preset === "image" && !["pov-mc", "hot-spots"].includes(q.type)) return false;
     if (preset === "rink" && !["rink-label", "rink-drag", "rink-match"].includes(q.type)) return false;
+    if (preset === "needs-image" && !needsImage(q)) return false;
+    if (preset === "flagged-image") {
+      const f = flagMap[q.id];
+      if (!f || f.reason !== "Update image") return false;
+    }
+    if (preset === "flagged-any") {
+      if (!flagMap[q.id]) return false;
+    }
     if (type && q.type !== type) return false;
     if (image && q.media?.url !== image) return false;
     if (search) {
