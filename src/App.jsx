@@ -3105,9 +3105,23 @@ function OverridesExportCard() {
     flags: enrichedFlags,
   };
   const json = JSON.stringify(envelope, null, 2);
-  const copy = async () => {
-    try { await navigator.clipboard.writeText(json); setCopied(true); setTimeout(() => setCopied(false), 2000); }
-    catch { /* clipboard blocked — user can select-all instead */ }
+  // Copy + finalize in one tap: copies JSON to clipboard then immediately
+  // clears the local edits/kills/flags lists. After pasting to chat, the
+  // user starts the next quiz with an empty slate — no risk of re-sending
+  // the same changes on the next round-trip. The JSON they just copied
+  // IS the source of truth, so even if something goes wrong locally, the
+  // round-trip data is already on its way.
+  const copyAndClear = async () => {
+    try { await navigator.clipboard.writeText(json); }
+    catch { /* clipboard blocked — JSON still visible in the <pre> below */ }
+    clearAllOverrides();
+    clearKillList();
+    clearFlagList();
+    setOverrides({});
+    setKilled([]);
+    setFlagged([]);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2400);
   };
   const totalCount = ids.length + killCount + flagCount;
   // Build APP_BASE for "open in dashboard" links — strips path/query off
@@ -3149,20 +3163,24 @@ function OverridesExportCard() {
       )}
       <pre style={{background:C.bgElevated,border:`1px solid ${C.border}`,borderRadius:8,padding:".6rem .8rem",color:C.dim,fontSize:11,fontFamily:"ui-monospace, SF Mono, Menlo, monospace",lineHeight:1.5,maxHeight:240,overflow:"auto",marginBottom:".75rem",whiteSpace:"pre"}}>{json}</pre>
       <div style={{display:"flex",gap:".5rem"}}>
-        <button onClick={copy} style={{flex:2,background:C.gold,color:C.bg,border:"none",borderRadius:8,padding:".55rem",cursor:"pointer",fontWeight:800,fontSize:12,fontFamily:FONT.body}}>
-          {copied ? "✓ Copied" : `📋 Copy ${totalCount} change${totalCount===1?"":"s"}`}
+        <button onClick={copyAndClear} style={{flex:3,background:C.gold,color:C.bg,border:"none",borderRadius:8,padding:".65rem",cursor:"pointer",fontWeight:800,fontSize:13,fontFamily:FONT.body}}>
+          {copied ? "✓ Copied & cleared — paste to chat" : `📋 Copy & finalize ${totalCount} change${totalCount===1?"":"s"}`}
         </button>
         <button onClick={() => {
-          if (!window.confirm(`Clear all ${totalCount} local change${totalCount===1?"":"s"}? This can't be undone.`)) return;
+          if (!window.confirm(`Discard all ${totalCount} local change${totalCount===1?"":"s"} WITHOUT copying? This can't be undone.`)) return;
           clearAllOverrides();
           clearKillList();
           clearFlagList();
           setOverrides({});
           setKilled([]);
           setFlagged([]);
-        }} style={{flex:1,background:"none",border:`1px solid ${C.border}`,borderRadius:8,padding:".55rem",cursor:"pointer",color:C.dimmer,fontSize:12,fontFamily:FONT.body}}>
-          Clear all
+        }} title="Throw away local changes without copying — only use if you decided not to push them"
+          style={{flex:1,background:"none",border:`1px solid ${C.border}`,borderRadius:8,padding:".55rem",cursor:"pointer",color:C.dimmer,fontSize:11,fontFamily:FONT.body}}>
+          Discard
         </button>
+      </div>
+      <div style={{fontSize:10,color:C.dimmer,marginTop:".5rem",textAlign:"center",lineHeight:1.5}}>
+        "Copy & finalize" copies the JSON above + clears the local list immediately. Paste it in chat — you don't need to track what's been sent.
       </div>
     </Card>
   );
