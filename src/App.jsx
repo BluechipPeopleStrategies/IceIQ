@@ -2083,6 +2083,20 @@ function Quiz({ player, onFinish, onBack, tier, onUpgrade }) {
               style={{background: currentFlag ? "rgba(252,200,76,.12)" : "none", border:`1px solid ${currentFlag ? C.gold : C.border}`, color: currentFlag ? C.gold : C.dimmer, fontSize:11, cursor:"pointer", fontFamily:FONT.body, padding:".4rem .8rem", borderRadius:6, fontWeight: currentFlag ? 800 : 500}}>
               🚩{currentFlag ? ` ${currentFlag.reason}` : ""}
             </button>
+            {/* Skip — moves on without recording an answer. Useful when you
+                just want to scan past a question during a review pass without
+                judging it. Doesn't flag, doesn't kill, doesn't score. */}
+            <button onClick={() => {
+              if (results.length >= qLen - 1) {
+                setQuizDone(true);
+              } else {
+                advance();
+              }
+            }}
+              title="Skip — move to next question, don't record an answer"
+              style={{background:"none",border:`1px solid ${C.border}`,color:C.dimmer,fontSize:11,cursor:"pointer",fontFamily:FONT.body,padding:".4rem .8rem",borderRadius:6}}>
+              ⏭ Skip
+            </button>
             {q._hasOverride && (
               <button onClick={() => {
                 clearOverride(question.id);
@@ -2120,7 +2134,17 @@ function Quiz({ player, onFinish, onBack, tier, onUpgrade }) {
                   });
                   setFlagPickerOpen(false);
                   setFlagNoteDraft("");
-                  setQuestion({ ...question });
+                  toast.success(`🚩 Flagged: ${o.v} — moving on`, { duration: 1800 });
+                  // Auto-advance so the user can keep moving through their
+                  // review pass without context-switching. Stays on the
+                  // question for 600ms so the toast registers.
+                  setTimeout(() => {
+                    if (results.length >= qLen - 1) {
+                      setQuizDone(true);
+                    } else {
+                      advance();
+                    }
+                  }, 600);
                 }}
                   style={{background: currentFlag?.reason===o.v ? C.goldDim : C.bgElevated, border:`1px solid ${currentFlag?.reason===o.v ? C.gold : C.border}`, color: currentFlag?.reason===o.v ? C.gold : C.dim, fontSize:11, cursor:"pointer", fontFamily:FONT.body, padding:".35rem .6rem", borderRadius:6, fontWeight: currentFlag?.reason===o.v ? 800 : 500}}>
                   {o.v}
