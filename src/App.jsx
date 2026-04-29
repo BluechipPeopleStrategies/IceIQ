@@ -1717,44 +1717,6 @@ function Quiz({ player, onFinish, onBack, tier, onUpgrade }) {
     if (question) setQuestionStartedAt(Date.now());
   }, [question?.id]);
 
-  // Time-pressure hard cutoff — when ?timed=1 is on, fire a timer at
-  // TIMED_DURATION_MS that records the question as wrong if the player
-  // hasn't answered yet. Mirrors handlePick / handleSeqAnswer / handleRinkQAnswer
-  // depending on the question type. Resets on every new question.
-  useEffect(() => {
-    if (!timedMode) return;
-    if (!question) return;
-    // If the player already answered this question, no timeout needed.
-    if (sel !== null || seqAnswered || rinkQResult !== null) return;
-    const t = setTimeout(() => {
-      // Re-check answered state at fire time — user might have answered
-      // between schedule and fire.
-      if (sel !== null || seqAnswered || rinkQResult !== null) return;
-      const newResult = { id:q.id, cat:q.cat, ok:false, d:q.d||2, type:qtype, speedBonus:0, timedOut:true };
-      // Mark answered so the explanation card renders. Sentinel values
-      // pick a "no option highlighted" rendering for each type.
-      if (qtype === "tf") {
-        setSel("__timeout__"); // not "true" / "false" → scores as wrong, no button highlighted
-      } else if (qtype === "seq" || qtype === "multi" || qtype === "scenario") {
-        setSeqAnswered(true);
-        setSeqCorrect(false);
-        setSeqPerfect(false);
-      } else if (["drag-target","drag-place","multi-tap","sequence-rink","path-draw","lane-select","hot-spots","zone-click","rink-label","rink-drag","rink-match"].includes(qtype)) {
-        setRinkQResult(false);
-      } else {
-        // mc / pov-mc / mistake / next — sel = -1 means picked nothing valid
-        setSel(-1);
-        if (qtype === "mistake") setMistakeStreak(0);
-      }
-      setLastSpeedBonus(0);
-      const newResults = [...results, newResult];
-      setResults(newResults);
-      toast.warning("⏱ Time's up!", { duration: 1800 });
-      if (newResults.length >= qLen) setQuizDone(true);
-    }, TIMED_DURATION_MS);
-    return () => clearTimeout(t);
-  }, [questionStartedAt, timedMode, question?.id, sel, seqAnswered, rinkQResult]);
-
   const qNum = results.length;
   const isLast = qNum >= qLen - 1;
   const qtype = question?.type || "mc";
@@ -1806,6 +1768,37 @@ function Quiz({ player, onFinish, onBack, tier, onUpgrade }) {
   const [flagPickerOpen, setFlagPickerOpen] = useState(false);
   const [flagNoteDraft, setFlagNoteDraft] = useState("");
   const currentFlag = question?.id ? getFlag(question.id) : null;
+  // Time-pressure hard cutoff — when ?timed=1 is on, fire a timer at
+  // TIMED_DURATION_MS that records the question as wrong if the player
+  // hasn't answered yet. Resets on every new question. Reads dynamic
+  // values inside the callback to avoid stale-closure issues.
+  useEffect(() => {
+    if (!timedMode || !question) return;
+    if (sel !== null || seqAnswered || rinkQResult !== null) return;
+    const t = setTimeout(() => {
+      if (sel !== null || seqAnswered || rinkQResult !== null) return;
+      const qt = question?.type || "mc";
+      const newResult = { id:question.id, cat:question.cat, ok:false, d:question.d||2, type:qt, speedBonus:0, timedOut:true };
+      if (qt === "tf") {
+        setSel("__timeout__");
+      } else if (qt === "seq" || qt === "multi" || qt === "scenario") {
+        setSeqAnswered(true);
+        setSeqCorrect(false);
+        setSeqPerfect(false);
+      } else if (["drag-target","drag-place","multi-tap","sequence-rink","path-draw","lane-select","hot-spots","zone-click","rink-label","rink-drag","rink-match"].includes(qt)) {
+        setRinkQResult(false);
+      } else {
+        setSel(-1);
+        if (qt === "mistake") setMistakeStreak(0);
+      }
+      setLastSpeedBonus(0);
+      const newResults = [...results, newResult];
+      setResults(newResults);
+      toast.warning("⏱ Time's up!", { duration: 1800 });
+      if (newResults.length >= qLen) setQuizDone(true);
+    }, TIMED_DURATION_MS);
+    return () => clearTimeout(t);
+  }, [questionStartedAt, timedMode, question?.id, sel, seqAnswered, rinkQResult]);
 
   // Speed-bonus window. Interactive (rink) questions get a timed bonus;
   // MC/TF/seq don't because reading-speed is mostly literacy, not hockey IQ.
