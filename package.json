@@ -21,7 +21,8 @@
     "sync:pov": "node scripts/export-pov-from-notion.mjs && node scripts/migrate-pov-to-supabase.mjs && node scripts/upload-pov-images-to-storage.mjs && node tools/seed-pov-to-bank.mjs",
     "sync:questions": "node scripts/export-pov-from-notion.mjs && node tools/seed-pov-to-bank.mjs && node tools/preflight.mjs",
     "audit:curriculum": "node tools/curriculum-audit.mjs",
-    "mine:legacy": "node tools/mine-legacy-bank.mjs"
+    "mine:legacy": "node tools/mine-legacy-bank.mjs",
+    "promote:legacy": "node tools/promote-legacy-candidates.mjs"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.103.0",
