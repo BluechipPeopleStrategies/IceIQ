@@ -569,18 +569,25 @@ function buildDemoQueue(qb, level, position) {
     const filtered = (qb[level] || []).filter(q => onlyTypes.includes(q.type) && posMatch(q) && notKilled(q));
     return [...filtered].sort(() => Math.random() - 0.5);
   }
-  // Demo quiz: 7 questions — 3 pov-mc + 1 mc + 1 tf + 1 seq + 1 mistake
-  // POV image questions are the headline new format and where the bank
-  // has the most authored content; lean on them. Falls back to padding
+  // Demo quiz: 7 questions — 3 image-backed MC + 1 plain MC + 1 tf + 1 seq + 1 mistake.
+  // Image-backed MC is the headline format and where the bank has the most
+  // authored content; lean on it. The image/no-image split is detected via
+  // q.media?.url since pov-mc has been merged into mc. Falls back to padding
   // with extra MC if any type's pool is empty.
-  const targetCounts = { "pov-mc": 3, mc: 1, tf: 1, seq: 1, mistake: 1 };
+  const targetCounts = { "mc-image": 3, "mc-text": 1, tf: 1, seq: 1, mistake: 1 };
   const result = [];
   const usedIds = new Set();
+
+  const matchType = (q, t) => {
+    if (t === "mc-image") return q.type === "mc" && !!q.media?.url;
+    if (t === "mc-text")  return q.type === "mc" && !q.media?.url;
+    return q.type === t;
+  };
 
   for (const [type, count] of Object.entries(targetCounts)) {
     // All types — including zone-click — live in the bank now; qbLoader
     // replicates multi-age questions into each applicable level array.
-    const pool = (qb[level] || []).filter(q => q.type === type && notKilled(q));
+    const pool = (qb[level] || []).filter(q => matchType(q, type) && notKilled(q));
     const levelMatch = pool.filter(posMatch);
     const fallback = pool.filter(posMatch);
     // If no position-matched question exists (e.g. goalie + tf), fall back to any question of the type
@@ -671,10 +678,10 @@ function buildQueue(qb, level, position, isReturning, tier) {
     }
 
     if (!formatAllowed && !onlyTypes && !onlyIds) {
-      // FREE: MC, TF, and POV-image-MC only. Other types (seq, mistake, next,
-      // rink-native) are PRO surface — players see format-preview sentinels
-      // instead. POV-MC stays free because it's the headline new format.
-      posFiltered = posFiltered.filter(q => !q.type || q.type === "mc" || q.type === "pov-mc");
+      // FREE: MC and TF only (mc covers both text-only and image-backed MC
+      // since pov-mc was merged in). Other types (seq, mistake, next,
+      // rink-native) are PRO surface — players see format-preview sentinels.
+      posFiltered = posFiltered.filter(q => !q.type || q.type === "mc" || q.type === "tf");
     }
 
     pool = {
@@ -1173,10 +1180,13 @@ function NextQuestion({ q, sel, onPick }) {
   );
 }
 
-// Type badge for question header
+// Type badge for question header. `pov-mc` was merged into `mc` (an MC
+// question with media is just an image-backed MC) — but the "Read the Play"
+// label was a useful cue, so we surface it dynamically when q.media?.url is
+// present via Q_TYPE_LABEL_FOR(q) below.
 const Q_TYPE_LABELS = {
   mc:           {label:"Multiple Choice", color:C.purple,   icon:"📝"},
-  "pov-mc":     {label:"Read the Play",   color:C.gold,     icon:"👀"},
+  "pov-mc":     {label:"Read the Play",   color:C.gold,     icon:"👀"}, // legacy — kept for any old refs
   multi:        {label:"Select All That Apply", color:C.gold, icon:"☑️"},
   seq:          {label:"Put in Order",    color:C.gold,     icon:"🔢"},
   mistake:      {label:"Spot the Mistake",color:C.red,      icon:"🔍"},
@@ -1186,6 +1196,13 @@ const Q_TYPE_LABELS = {
   "rink-label": {label:"Label the Rink",  color:C.blue,     icon:"🏷️"},
   "rink-drag":  {label:"Drag & Drop",      color:C.green,    icon:"✋"},
   "rink-match": {label:"Match the Labels", color:C.purple,   icon:"🔗"},
+};
+// Pick the right type-info card for a question. `mc` with media is treated as
+// "Read the Play" (image-backed MC); plain mc is "Multiple Choice".
+const Q_TYPE_INFO = (q) => {
+  const t = q?.type || "mc";
+  if (t === "mc" && q?.media?.url) return Q_TYPE_LABELS["pov-mc"];
+  return Q_TYPE_LABELS[t] || Q_TYPE_LABELS.mc;
 };
 
 // ─────────────────────────────────────────────────────────
@@ -1667,11 +1684,12 @@ function Quiz({ player, onFinish, onBack, tier, onUpgrade }) {
       let allQs;
       if (isDemo) {
         const demoQs = buildDemoQueue(qb, player.level, player.position);
-        // First-question text guarantee: while POV image fetches are still
+        // First-question text guarantee: while image fetches are still
         // warming up, surface a text question first so the user has
         // something to read while everything loads. Find the first
-        // non-pov-mc and swap it to index 0.
-        const ti = demoQs.findIndex(q => q.type !== "pov-mc");
+        // non-image MC and swap it to index 0.
+        const isImageMc = (q) => q && q.type === "mc" && !!q.media?.url;
+        const ti = demoQs.findIndex(q => !isImageMc(q));
         if (ti > 0) [demoQs[0], demoQs[ti]] = [demoQs[ti], demoQs[0]];
         setQueue({ byD: {1: demoQs.slice(1), 2: [], 3: []}, currentD: 1, tier: "DEMO" });
         setQuestion(demoQs[0]);
@@ -1680,11 +1698,12 @@ function Quiz({ player, onFinish, onBack, tier, onUpgrade }) {
         const q = buildQueue(qb, player.level, player.position, isReturning, tier);
         let { q: first, queue: q2 } = pullNext(q, []);
         // Same text-first guarantee for adaptive queues — if pullNext
-        // happened to return a pov-mc, swap with the first non-pov-mc
-        // in any difficulty bucket.
-        if (first && first.type === "pov-mc") {
+        // happened to return an image-backed MC, swap with the first
+        // non-image question in any difficulty bucket.
+        const isImageMc2 = (q) => q && q.type === "mc" && !!q.media?.url;
+        if (isImageMc2(first)) {
           for (const d of [1, 2, 3]) {
-            const i = (q2.byD[d] || []).findIndex(x => x && x.type !== "pov-mc");
+            const i = (q2.byD[d] || []).findIndex(x => x && !isImageMc2(x));
             if (i >= 0) {
               const swap = q2.byD[d][i];
               q2.byD[d][i] = first;
@@ -1728,7 +1747,7 @@ function Quiz({ player, onFinish, onBack, tier, onUpgrade }) {
   const q = (() => {
     const raw = applyOverride(question);
     if (!raw) return raw;
-    const isMCShape = ["mc","pov-mc","mistake","next"].includes(raw.type);
+    const isMCShape = ["mc","mistake","next"].includes(raw.type);
     if (!isMCShape) return raw;
     return {
       ...raw,
@@ -1862,7 +1881,7 @@ function Quiz({ player, onFinish, onBack, tier, onUpgrade }) {
   // they keep their normal MC-style answer flow — those don't get dispatched
   // to the interactive widget.
   const NEW_RINK_TYPES = ["drag-target","drag-place","multi-tap","sequence-rink","path-draw","lane-select","hot-spots","zone-click","rink-label","rink-drag","rink-match"];
-  const NON_RINK_ANSWER_TYPES = new Set(["mc","pov-mc","tf","multi","seq","mistake","next","scenario"]);
+  const NON_RINK_ANSWER_TYPES = new Set(["mc","tf","multi","seq","mistake","next","scenario"]);
   const isRinkQ = NEW_RINK_TYPES.includes(qtype) || (!!question?.rink && !NON_RINK_ANSWER_TYPES.has(qtype));
   const answered = isRinkQ
     ? rinkQResult !== null
@@ -1894,7 +1913,6 @@ function Quiz({ player, onFinish, onBack, tier, onUpgrade }) {
     }
     switch (qtype) {
       case "mc":
-      case "pov-mc":
       case "mistake":
         return <MCQuestion q={q} sel={sel} onPick={handlePick} colorblind={player.colorblind}/>;
       case "next":
@@ -1948,7 +1966,7 @@ function Quiz({ player, onFinish, onBack, tier, onUpgrade }) {
     );
   }
 
-  const typeInfo = Q_TYPE_LABELS[qtype] || Q_TYPE_LABELS.mc;
+  const typeInfo = Q_TYPE_INFO(q);
   const diagramType = DIAGRAMS[q.id];
 
   return (
@@ -1994,7 +2012,7 @@ function Quiz({ player, onFinish, onBack, tier, onUpgrade }) {
             Sticky: stays pinned just below the StickyHeader as the player
             scrolls through options + explanation, so the visual context is
             always there when reading the read. */}
-        {qtype === "pov-mc" && q.media?.url && (
+        {qtype === "mc" && q.media?.url && (
           <div style={{
             position:"sticky", top:62, zIndex:10,
             marginBottom:"1rem", borderRadius:12, overflow:"hidden",
@@ -2014,7 +2032,7 @@ function Quiz({ player, onFinish, onBack, tier, onUpgrade }) {
             interactive types use, just non-interactive (read-only diagram).
             Skips when there's already a POV image to avoid double-context.
             Same sticky treatment as the POV image. */}
-        {NON_RINK_ANSWER_TYPES.has(qtype) && q.rink && !(qtype === "pov-mc" && q.media?.url) && (
+        {NON_RINK_ANSWER_TYPES.has(qtype) && q.rink && !(qtype === "mc" && q.media?.url) && (
           <div style={{
             position:"sticky", top:62, zIndex:10,
             marginBottom:"1rem", borderRadius:12, overflow:"hidden",
@@ -2051,10 +2069,10 @@ function Quiz({ player, onFinish, onBack, tier, onUpgrade }) {
         )}
 
         {/* Situation / Prompt */}
-        {(qtype === "mc" || qtype === "pov-mc" || qtype === "seq" || qtype === "next") && (
+        {(qtype === "mc" || qtype === "seq" || qtype === "next") && (
           <Card style={{marginBottom:"1.25rem",background:C.purpleDim,border:`1px solid ${C.purpleBorder}`}}>
             <div style={{fontSize:10,letterSpacing:".14em",textTransform:"uppercase",color:C.purple,marginBottom:".6rem",fontWeight:700}}>
-              {qtype === "pov-mc" ? "👀 Read the Play" : "📋 Game Situation"}
+              {(qtype === "mc" && q.media?.url) ? "👀 Read the Play" : "📋 Game Situation"}
             </div>
             <div style={{fontSize:15,lineHeight:1.8,color:C.white,fontWeight:500}}>{q.sit}</div>
           </Card>
@@ -2474,7 +2492,7 @@ function Quiz({ player, onFinish, onBack, tier, onUpgrade }) {
 
         {editOpen && editDraft && (() => {
           // Type classifier — used to branch which editor sections render.
-          const isMCShape = ["mc","pov-mc","mistake","next"].includes(qtype);
+          const isMCShape = ["mc","mistake","next"].includes(qtype);
           const isTF      = qtype === "tf";
           const isMulti   = qtype === "multi";
           const isSeq     = qtype === "seq";
@@ -2483,7 +2501,7 @@ function Quiz({ player, onFinish, onBack, tier, onUpgrade }) {
           const isPhase2  = !isMCShape && !isTF && !isMulti && !isSeq;
           // Which prompt fields exist on this type. Lookup-driven so each
           // type only shows the fields it actually carries.
-          const showSit      = ["mc","pov-mc","tf","mistake","next","seq","multi","sequence-rink"].includes(qtype) || (q.sit !== undefined);
+          const showSit      = ["mc","tf","mistake","next","seq","multi","sequence-rink"].includes(qtype) || (q.sit !== undefined);
           const showQPrompt  = ["multi","hot-spots","zone-click","lane-select","multi-tap","drag-target","drag-place","sequence-rink","rink-label","rink-drag","rink-match","path-draw","scenario"].includes(qtype) || (q.q !== undefined && !showSit);
           const showQuestion = qtype === "mistake";
 
@@ -3304,7 +3322,7 @@ function WeeklyQuiz({ player, onBack, onFinish }) {
   const q = questions[current];
   const qtype = q?.type || "mc";
   const qLen = questions.length;
-  const typeInfo = Q_TYPE_LABELS[qtype] || Q_TYPE_LABELS.mc;
+  const typeInfo = Q_TYPE_INFO(q);
 
   function submitAnswer(ok, extra = {}) {
     const result = { id: q.id, cat: q.cat, type: qtype, d: q.d || 2, ok, ...extra };
@@ -3362,7 +3380,7 @@ function WeeklyQuiz({ player, onBack, onFinish }) {
           <Pill color={C.dimmer} bg={C.dimmest}>{q.cat}</Pill>
         </div>
 
-        {qtype === "pov-mc" && q.media?.url && (
+        {qtype === "mc" && q.media?.url && (
           <div style={{
             marginBottom:"1rem", borderRadius:12, overflow:"hidden",
             border:`1px solid ${C.border}`, background:"#000",
@@ -3374,10 +3392,10 @@ function WeeklyQuiz({ player, onBack, onFinish }) {
               style={{width:"100%", height:"100%", objectFit:"cover", display:"block", userSelect:"none"}} />
           </div>
         )}
-        {(qtype === "mc" || qtype === "pov-mc" || qtype === "next") && (
+        {(qtype === "mc" || qtype === "next") && (
           <Card style={{marginBottom:"1.25rem",background:C.purpleDim,border:`1px solid ${C.purpleBorder}`}}>
             <div style={{fontSize:10,letterSpacing:".14em",textTransform:"uppercase",color:C.purple,marginBottom:".6rem",fontWeight:700}}>
-              {qtype === "pov-mc" ? "👀 Read the Play" : "📋 Game Situation"}
+              {(qtype === "mc" && q.media?.url) ? "👀 Read the Play" : "📋 Game Situation"}
             </div>
             <div style={{fontSize:15,lineHeight:1.8,color:C.white,fontWeight:500}}>{q.sit}</div>
           </Card>
@@ -3409,7 +3427,6 @@ function WeeklyQuiz({ player, onBack, onFinish }) {
         )}
 
         {qtype === "mc" && <MCQuestion q={q} sel={sel} onPick={handlePick} colorblind={player.colorblind}/>}
-        {qtype === "pov-mc" && <MCQuestion q={q} sel={sel} onPick={handlePick} colorblind={player.colorblind}/>}
         {qtype === "next" && <MCQuestion q={q} sel={sel} onPick={handlePick} colorblind={player.colorblind}/>}
         {qtype === "mistake" && <MCQuestion q={q} sel={sel} onPick={handlePick} colorblind={player.colorblind}/>}
         {qtype === "multi" && <MultiMCQuestion q={q} answered={seqAnswered} onAnswer={handleSeqAnswer} colorblind={player.colorblind}/>}
