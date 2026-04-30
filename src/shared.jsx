@@ -51,27 +51,64 @@ export const POSITIONS = ["Forward","Defense","Goalie","Multiple"];
 export const POSITIONS_U11UP = ["Forward","Defense","Goalie"];
 export const SEASONS = ["2025-26","2026 Spring/Summer","2026-27"];
 
-export function RinkReadsLogo({ size = 32, color = "#FC4C02" }) {
-  return (
-    <svg width={size} height={size} viewBox="0 0 40 40" aria-label="RinkReads logo" style={{display:"block",flexShrink:0}}>
-      {/* Outer circle ring */}
-      <circle cx="20" cy="20" r="18" fill="none" stroke={color} strokeWidth="1.5" opacity="0.4"/>
+// Eye-Puck mark — a hockey puck head-on with a stylized eye + motion swoosh
+// (eyebrow). Plays on "reads" — anticipation, eyes-up. Pupil is offset
+// up-right to suggest forward gaze. The single-color `mono` mode is for
+// places where the gradient + multi-tone fill would be too busy (small
+// favicons, monochrome contexts). The `wordmark` prop renders the full
+// horizontal lockup with "RINK READS" set in the Anton display font.
+export function RinkReadsLogo({ size = 32, color, mono = false, wordmark = false }) {
+  // Unique gradient id per render so multiple logos on a page don't collide.
+  const gid = `rrIris-${Math.random().toString(36).slice(2, 8)}`;
+  const stroke = color || "#041E42";
+  const fillIris = mono ? (color || "#FC4C02") : `url(#${gid})`;
+  const fillPuckOuter = mono ? (color || "#041E42") : "#041E42";
+  const fillPuckInner = mono ? "#f8fafc" : "#f8fafc";
+  const fillPupil = mono ? (color || "#041E42") : "#041E42";
+  const fillEyebrow = mono ? (color || "#FC4C02") : `url(#${gid})`;
 
-      {/* Hockey stick — modern clean lines */}
-      <path d="M 20 8 L 20 24" stroke={color} strokeWidth="2.4" strokeLinecap="round" fill="none"/>
-      <path d="M 20 24 Q 28 24 32 28" stroke={color} strokeWidth="2.4" strokeLinecap="round" fill="none"/>
-
-      {/* Puck — filled circle with motion lines */}
-      <circle cx="20" cy="10" r="3.5" fill={color}/>
-
-      {/* Motion blur lines (indicate speed/growth) */}
-      <line x1="12" y1="10" x2="8" y2="10" stroke={color} strokeWidth="1.2" opacity="0.5" strokeLinecap="round"/>
-      <line x1="11" y1="6" x2="7" y2="4" stroke={color} strokeWidth="1" opacity="0.4" strokeLinecap="round"/>
-      <line x1="11" y1="14" x2="7" y2="16" stroke={color} strokeWidth="1" opacity="0.4" strokeLinecap="round"/>
-
-      {/* Ice accent — subtle triangles at base */}
-      <path d="M 18 32 L 20 28 L 22 32" fill="none" stroke={color} strokeWidth="1" opacity="0.6" strokeLinejoin="round"/>
+  const Icon = (
+    <svg width={size} height={size} viewBox="0 0 64 64" aria-label="RinkReads logo" style={{display:"block",flexShrink:0}}>
+      <defs>
+        <linearGradient id={gid} x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stopColor="#FC4C02"/>
+          <stop offset="100%" stopColor="#CF4520"/>
+        </linearGradient>
+      </defs>
+      <circle cx="32" cy="35" r="26" fill={fillPuckOuter}/>
+      <circle cx="32" cy="35" r="22" fill={fillPuckInner}/>
+      <circle cx="32" cy="35" r="13" fill={fillIris}/>
+      <circle cx="34" cy="33" r="5.5" fill={fillPupil}/>
+      <circle cx="35.4" cy="31.4" r="1.8" fill="#f8fafc" opacity="0.9"/>
+      <path d="M 12 14 Q 32 6 52 14" stroke={fillEyebrow} strokeWidth="3.5" fill="none" strokeLinecap="round"/>
     </svg>
+  );
+
+  if (!wordmark) return Icon;
+
+  // Horizontal lockup — icon + "RINK READS" in Anton uppercase. Sized so the
+  // wordmark cap-height matches roughly 50% of the icon height.
+  const wordSize = Math.round(size * 0.52);
+  return (
+    <span style={{display:"inline-flex",alignItems:"center",gap:Math.max(6, size*0.18),flexShrink:0}}>
+      {Icon}
+      <span style={{
+        fontFamily:"'Anton','Oswald','Barlow Condensed',Impact,sans-serif",
+        fontSize: wordSize,
+        lineHeight: 1,
+        letterSpacing: "0.03em",
+        textTransform: "uppercase",
+        color: stroke,
+        whiteSpace: "nowrap",
+      }}>
+        Rink <span style={{
+          background: mono ? undefined : "linear-gradient(135deg,#FC4C02,#CF4520)",
+          WebkitBackgroundClip: mono ? undefined : "text",
+          WebkitTextFillColor: mono ? undefined : "transparent",
+          color: mono ? (color || "#FC4C02") : undefined,
+        }}>Reads</span>
+      </span>
+    </span>
   );
 }
 
