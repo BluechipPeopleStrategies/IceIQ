@@ -263,12 +263,21 @@ const VISUAL_TARGETS = {
   'U18': { text: 0.30, visual: 0.20, spatial: 0.50 },
 };
 
-const TYPE_BUCKET = (type) => {
-  if (['mc', 'tf', 'seq', 'mistake', 'next', 'multi'].includes(type)) return 'text';
-  if (['pov-mc', 'scene-mc'].includes(type)) return 'visual';
+// Bucket questions by sensory/cognitive shape so the curriculum-mix audit
+// can flag age groups that lean too text-heavy or too spatial-heavy.
+//
+// IMPORTANT: pov-mc was merged into mc — image presence is now the
+// distinguisher. Pass the full question (not just type) so we can check
+// q.media?.url. Falls back to old type-only signature for compat.
+const TYPE_BUCKET = (q) => {
+  const type = (typeof q === 'string') ? q : (q?.type || 'mc');
+  const hasMedia = (typeof q === 'object') && !!q?.media?.url;
   if (['hot-spots', 'rink-label', 'rink-drag', 'rink-match',
        'drag-target', 'drag-place', 'path-draw', 'lane-select',
        'multi-tap', 'sequence-rink', 'zone-click'].includes(type)) return 'spatial';
+  if (['pov-mc', 'scene-mc'].includes(type)) return 'visual';
+  if (hasMedia) return 'visual';   // mc / tf / etc. with an image attached
+  if (['mc', 'tf', 'seq', 'mistake', 'next', 'multi'].includes(type)) return 'text';
   return 'unknown';
 };
 
