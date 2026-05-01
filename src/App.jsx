@@ -2381,9 +2381,22 @@ function Quiz({ player, onFinish, onBack, tier, onUpgrade }) {
                         <span style={{fontWeight:800,fontSize:12,color:C.white}}>{coach.name}</span>
                         <span style={{fontSize:10,color:C.dimmer,letterSpacing:".04em"}}>{coach.role}</span>
                       </div>
-                      {/* Personality lives in name + avatar + voice of the
-                          explanation. The bold colored "subtitle" quip was
-                          extra noise; explanation now leads directly. */}
+                      {/* Coach voice quip — rotates per question across the
+                          coach's age-tier-appropriate flavor pool. Renders as
+                          a handwritten italic line so it reads as the coach
+                          actually talking, not as the question's content. */}
+                      {flavor && (
+                        <div style={{
+                          fontFamily: "'Caveat', cursive, system-ui",
+                          fontSize: 17,
+                          fontWeight: 600,
+                          lineHeight: 1.3,
+                          color: verdictColor,
+                          marginBottom: ".4rem",
+                        }}>
+                          “{flavor}”
+                        </div>
+                      )}
                       <div style={{fontSize:13,color:C.dim,lineHeight:1.65}}>
                         {explanation}
                       </div>
@@ -3472,6 +3485,18 @@ function WeeklyQuiz({ player, onBack, onFinish }) {
                       <span style={{fontWeight:800,fontSize:12,color:C.white}}>{coach.name}</span>
                       <span style={{fontSize:10,color:C.dimmer,letterSpacing:".04em"}}>{coach.role}</span>
                     </div>
+                    {flavor && (
+                      <div style={{
+                        fontFamily: "'Caveat', cursive, system-ui",
+                        fontSize: 17,
+                        fontWeight: 600,
+                        lineHeight: 1.3,
+                        color: wasCorrect ? C.green : C.red,
+                        marginBottom: ".4rem",
+                      }}>
+                        “{flavor}”
+                      </div>
+                    )}
                     <div style={{fontSize:13,color:C.dim,lineHeight:1.65}}>
                       {explanation}
                     </div>
