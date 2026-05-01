@@ -9,23 +9,15 @@
         "G"
       ],
       "d": 1,
-      "sit": "Your teammate has the puck. What should you do?",
-      "opts": [
-        "Skate kind of close and be ready for a pass.",
-        "Skate away from them and go wave to your fans. ",
-        "Sit down and lick the ice. ",
-        "Try to take the puck from them."
-      ],
-      "ok": 0,
       "why": "Good teammates stay close and ready — that way the puck carrier has someone to pass to. You don't want to get too close though!",
-      "tip": "Stay with your teammate. Be ready.",
+      "tip": "Keeping possession of the puck is important.",
       "levels": [
         "U7 / Initiation",
         "U9 / Novice"
       ],
       "media": {
         "type": "image",
-        "url": "/assets/images/rink-mh-halfice-dz.png",
+        "url": "/assets/images/rink-faceoff-circle.png",
         "alt": ""
       },
       "imageId": "",
@@ -46,34 +38,57 @@
         },
         {
           "kind": "sprite",
-          "x": 0.47115384615384615,
-          "y": 0.6419753086419753,
+          "x": 0.5646367521367521,
+          "y": 0.630579297245964,
           "scale": 0.7999999999999998,
           "team": "yellow",
           "isGoalie": false,
-          "poseIdx": 7,
+          "poseIdx": 6,
           "flip": false,
           "id": "ov_momhvvdnzl"
         },
         {
           "id": "ov_momhw8oqbz",
           "kind": "puck",
-          "x": 0.5,
-          "y": 0.55,
+          "x": 0.37767094017094016,
+          "y": 0.3627730294396961,
           "scale": 0.4999999999999996
         },
         {
           "id": "ov_momhxputoz",
           "kind": "sprite",
-          "x": 0.5085470085470085,
-          "y": 0.4539411206077873,
-          "scale": 0.7499999999999998,
+          "x": 0.5048076923076923,
+          "y": 0.35327635327635326,
+          "scale": 0.5999999999999996,
           "team": "black",
           "isGoalie": false,
-          "poseIdx": 0,
+          "poseIdx": 6,
           "flip": false
         }
-      ]
+      ],
+      "type": "hot-spots",
+      "q": "You have the puck and the defender is coming to try and get it. What should you do?",
+      "spots": [
+        {
+          "x": 0.5335820895522388,
+          "y": 0.5619521440416962,
+          "correct": true,
+          "label": "",
+          "msg": "Pass it to your teammate-yes"
+        },
+        {
+          "x": 0.5005330490405118,
+          "y": 0.28903103529969204,
+          "correct": false,
+          "label": "Pass",
+          "msg": "You don't want to pass it to the other team!"
+        }
+      ],
+      "rink": {
+        "view": "right",
+        "zone": "def-zone",
+        "markers": []
+      }
     },
     {
       "id": "u7i3",
@@ -145,7 +160,7 @@
         "Eat it."
       ],
       "ok": 0,
-      "why": "Stop the puck first, then look up to see where your teammates are.",
+      "why": "Stop the puck first, then look up to see where your teammates are and to read the defense. ",
       "tip": "Stop it. Look up.",
       "levels": [
         "U7 / Initiation",
@@ -153,24 +168,13 @@
       ],
       "media": {
         "type": "image",
-        "url": "/assets/images/rink-faceoff-circle.png",
+        "url": "/assets/images/Eyes Up (2) (1).png",
         "alt": ""
       },
       "imageId": "",
       "archetype": "",
       "concepts": [],
       "overlays": [
-        {
-          "id": "ov_momj1toa50",
-          "kind": "sprite",
-          "x": 0.5817307692307693,
-          "y": 0.8205128205128205,
-          "scale": 1,
-          "team": "black",
-          "isGoalie": false,
-          "poseIdx": 6,
-          "flip": false
-        },
         {
           "id": "ov_mon4ld161j",
           "kind": "puck",
@@ -188,6 +192,13 @@
           "isGoalie": false,
           "poseIdx": 4,
           "flip": false
+        },
+        {
+          "id": "ov_monhqopked",
+          "kind": "puck",
+          "x": 0.6875,
+          "y": 0.9686609686609686,
+          "scale": 1
         }
       ]
     },
@@ -211,7 +222,7 @@
       ],
       "media": {
         "type": "image",
-        "url": "/assets/images/ChatGPT Image May 1, 2026, 10_32_12 AM.png",
+        "url": "/assets/images/On Ice (1).png",
         "alt": ""
       }
     },
