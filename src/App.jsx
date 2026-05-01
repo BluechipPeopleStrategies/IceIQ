@@ -41,6 +41,7 @@ import {
   C, FONT, LEVELS, POSITIONS, POSITIONS_U11UP, SEASONS,
   RinkReadsLogo, Screen, Card, Pill, Label, PrimaryBtn, SecBtn, BackBtn, ProgressBar, StickyHeader,
 } from "./shared.jsx";
+import { OverlayLayer } from "./OverlayLayer.jsx";
 const imgSplash = "/splash.jpg";
 import imgCoreApp from "./assets/images/Core-App.jpg";
 import imgDataPanel from "./assets/images/Data-Panel.jpg";
@@ -2024,6 +2025,7 @@ function Quiz({ player, onFinish, onBack, tier, onUpgrade }) {
               draggable={false}
               loading="eager" decoding="async" fetchpriority="high"
               style={{width:"100%", height:"100%", objectFit:"cover", display:"block", userSelect:"none"}} />
+            {Array.isArray(q.overlays) && <OverlayLayer overlays={q.overlays} />}
           </div>
         )}
 
@@ -3382,6 +3384,7 @@ function WeeklyQuiz({ player, onBack, onFinish }) {
 
         {q.media?.url && (
           <div style={{
+            position:"relative",
             marginBottom:"1rem", borderRadius:12, overflow:"hidden",
             border:`1px solid ${C.border}`, background:"#000",
             aspectRatio:"16/9",
@@ -3390,6 +3393,7 @@ function WeeklyQuiz({ player, onBack, onFinish }) {
               draggable={false}
               loading="eager" decoding="async" fetchpriority="high"
               style={{width:"100%", height:"100%", objectFit:"cover", display:"block", userSelect:"none"}} />
+            {Array.isArray(q.overlays) && <OverlayLayer overlays={q.overlays} />}
           </div>
         )}
         {(qtype === "mc" || qtype === "next") && (
