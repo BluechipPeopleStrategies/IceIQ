@@ -2012,7 +2012,7 @@ function Quiz({ player, onFinish, onBack, tier, onUpgrade }) {
             Sticky: stays pinned just below the StickyHeader as the player
             scrolls through options + explanation, so the visual context is
             always there when reading the read. */}
-        {qtype === "mc" && q.media?.url && (
+        {q.media?.url && (
           <div style={{
             position:"sticky", top:62, zIndex:10,
             marginBottom:"1rem", borderRadius:12, overflow:"hidden",
@@ -2032,7 +2032,7 @@ function Quiz({ player, onFinish, onBack, tier, onUpgrade }) {
             interactive types use, just non-interactive (read-only diagram).
             Skips when there's already a POV image to avoid double-context.
             Same sticky treatment as the POV image. */}
-        {NON_RINK_ANSWER_TYPES.has(qtype) && q.rink && !(qtype === "mc" && q.media?.url) && (
+        {NON_RINK_ANSWER_TYPES.has(qtype) && q.rink && !q.media?.url && (
           <div style={{
             position:"sticky", top:62, zIndex:10,
             marginBottom:"1rem", borderRadius:12, overflow:"hidden",
@@ -3380,7 +3380,7 @@ function WeeklyQuiz({ player, onBack, onFinish }) {
           <Pill color={C.dimmer} bg={C.dimmest}>{q.cat}</Pill>
         </div>
 
-        {qtype === "mc" && q.media?.url && (
+        {q.media?.url && (
           <div style={{
             marginBottom:"1rem", borderRadius:12, overflow:"hidden",
             border:`1px solid ${C.border}`, background:"#000",
