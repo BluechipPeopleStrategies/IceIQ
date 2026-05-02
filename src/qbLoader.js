@@ -36,9 +36,12 @@ export function loadQB() {
     sessionStorage.removeItem("rinkreads_qb_cache_v14");
     sessionStorage.removeItem("rinkreads_qb_cache_v15");
     sessionStorage.removeItem("rinkreads_qb_cache_v16");
-    // v17: 2026-05-02 — added Center (C) curriculum marker to all U7-U11 pos
-    // arrays; removed u7-breakout-001 from U7 (re-keyed under U9)
-    const stored = sessionStorage.getItem("rinkreads_qb_cache_v17");
+    sessionStorage.removeItem("rinkreads_qb_cache_v17");
+    // v18: 2026-05-02 — IMG-2v1 production polish (URLs repointed to
+    // /assets/images/IMG-2v1-00X.png, alt text rewritten per scene,
+    // U7 wording flipped to v2.6 yellow=opposing, multi-select MCs
+    // converted to single-best-answer)
+    const stored = sessionStorage.getItem("rinkreads_qb_cache_v18");
     if (stored) {
       cached = JSON.parse(stored);
       return Promise.resolve(cached);
@@ -87,7 +90,7 @@ export function loadQB() {
           }
         }
         cached = qb;
-        try { sessionStorage.setItem("rinkreads_qb_cache_v17", JSON.stringify(cached)); } catch (e) {}
+        try { sessionStorage.setItem("rinkreads_qb_cache_v18", JSON.stringify(cached)); } catch (e) {}
         return cached;
       })
       .catch(e => {
