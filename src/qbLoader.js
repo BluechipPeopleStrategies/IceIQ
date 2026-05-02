@@ -34,8 +34,9 @@ export function loadQB() {
     sessionStorage.removeItem("rinkreads_qb_cache_v13");
     // v14: bank archived 2026-04-29; legacy questions moved to questions.legacy.json
     sessionStorage.removeItem("rinkreads_qb_cache_v14");
-    // v15: 2026-04-30 — promoted 246 high-quality candidates back into questions.json
-    const stored = sessionStorage.getItem("rinkreads_qb_cache_v15");
+    sessionStorage.removeItem("rinkreads_qb_cache_v15");
+    // v16: 2026-05-02 — renamed 53 Q-{archetype}-... ids to u{age}_{arch}_... convention; stripped _notionPageId
+    const stored = sessionStorage.getItem("rinkreads_qb_cache_v16");
     if (stored) {
       cached = JSON.parse(stored);
       return Promise.resolve(cached);
@@ -84,7 +85,7 @@ export function loadQB() {
           }
         }
         cached = qb;
-        try { sessionStorage.setItem("rinkreads_qb_cache_v15", JSON.stringify(cached)); } catch (e) {}
+        try { sessionStorage.setItem("rinkreads_qb_cache_v16", JSON.stringify(cached)); } catch (e) {}
         return cached;
       })
       .catch(e => {

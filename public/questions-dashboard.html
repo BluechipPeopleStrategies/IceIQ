@@ -137,7 +137,7 @@
   </div>
   <div class="field">
     <label>Search id / prompt</label>
-    <input type="text" id="filter-search" placeholder="e.g. Q-entry, drive wide..." style="width: 220px;" />
+    <input type="text" id="filter-search" placeholder="e.g. u11_entry, drive wide..." style="width: 220px;" />
   </div>
   <div class="field">
     <label>Type</label>
@@ -191,7 +191,7 @@
 const APP_BASE = location.origin;
 let allQuestions = [];
 let activeId = null;
-const TODAY_PREFIXES = ["Q-entry-", "Q-breakout-", "Q-dz-"];
+const TODAY_PREFIXES = ["u11_entry_", "u13_entry_", "u11_breakout_", "u13_breakout_", "u11_dz_", "u13_dz_"];
 
 const $ = id => document.getElementById(id);
 

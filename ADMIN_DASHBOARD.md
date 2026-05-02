@@ -55,7 +55,7 @@ Single table for both legacy text questions and POV image questions.
 
 | Column            | Notes                                                         |
 |-------------------|---------------------------------------------------------------|
-| `id`              | Stable, human-readable. e.g. `u9-q-0042` or `Q-2v1-001-A1-U7` |
+| `id`              | Stable, human-readable. e.g. `u9q42` or `u11_2v1_001a1`       |
 | `type`            | `'text'` (legacy bank) or `'pov_image'` (Notion-sourced)      |
 | `linked_image_id` | FK to `pov_images.id` (set null on image delete)              |
 | `age_groups`      | `text[]` — multi-age supported (`['U7','U9']`)                |

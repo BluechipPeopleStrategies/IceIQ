@@ -97,7 +97,7 @@ This replaces the existing `review_questions` table for new content. The migrati
 
 ```sql
 create table questions (
-  id text primary key,                        -- e.g. 'Q-2v1-001-A1-U7' or 'u9-q-0042'
+  id text primary key,                        -- e.g. 'u11_2v1_001a1' or 'u9q42'
   type text not null default 'text',          -- 'text' | 'pov_image'
   linked_image_id text references pov_images(id) on delete set null,
   age_groups text[] not null default '{}',    -- ['U7','U9'] — array because multi-age supported
@@ -206,7 +206,7 @@ The 144 POV questions and 4 images are currently in Notion. Don't try to access 
       "ageGroups": ["U7","U9","U11","U13"],
       "questions": [
         {
-          "id": "Q-2v1-001-A1-U7",
+          "id": "u7_2v1_001a1",
           "ageGroup": "U7",
           "format": "Multiple Choice",
           "difficulty": "Beginner",

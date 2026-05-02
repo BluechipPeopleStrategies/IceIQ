@@ -95,7 +95,7 @@ Defender's stick should clearly extend across toward player #2 (the teammate). T
 **Read trigger:** defender stays vertical between the two yellows but his STICK is heavily extended into the passing lane. His body isn't taking away the shot.
 **Right read:** PASS. Defender is committed to the pass-block; shooting lane is open. (Actually — read carefully. In this scenario the right play is the OPPOSITE of -001. Confirm with the question text: in -002, defender's stick blocks pass → shoot. Or, wait. Let me re-read the questions.)
 
-*(Re-confirming play with question text: Q-2v1-002-A1-U11 says "The defender's stick is in the passing lane.")*
+*(Re-confirming play with question text: u11_2v1_002a1 says "The defender's stick is in the passing lane.")*
 
 ### Coach's whiteboard
 

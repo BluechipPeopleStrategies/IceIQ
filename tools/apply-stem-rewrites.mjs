@@ -39,7 +39,7 @@ const REWRITES = [
     sit: "Your team is under heavy forecheck. Your D has the puck and is looking to pass. You're a winger and you're covered. When should you break to the wall?" },
   { id: 'u9q75',
     sit: 'You win an o-zone faceoff. The other center had to tie the draw. The puck goes back to your D at the point. Before their center recovers, what do you do?' },
-  { id: 'Q-entry-001-A',
+  { id: 'u11_entry_001a',
     sit: "You're the middle forward on a 3-on-2 crossing the o-zone blue line. Wingers are wide. The two D are gapped at the top of their circles. What's the read?" },
   { id: 'u11q53',
     sit: 'You have the puck in the corner. Two defenders collapse on you. Your only open teammate is at the blue line — long pass blocked by both. What do you do?' },

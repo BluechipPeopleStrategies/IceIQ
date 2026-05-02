@@ -86,7 +86,7 @@ if (!existsSync(filePath)) {
         "notes": "...",
         "questions": [
           {
-            "id": "Q-2v1-001-A1-U7",
+            "id": "u7_2v1_001a1",
             "ageGroups": ["U7"],
             "format": "Multiple Choice",
             "difficulty": "Beginner",

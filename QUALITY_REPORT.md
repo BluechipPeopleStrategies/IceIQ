@@ -49,16 +49,16 @@ These pov-mc questions reference `/pov-placeholder.svg` instead of a real image.
 These are reference-quality. Author new questions in the same voice/structure.
 
 ```
-Q-eyesup-001-A1-U7    pov-mc  Eyes Up · U7
-Q-eyesup-002-A1-U9    pov-mc  Eyes Up · U9
-Q-2v1-001-A1-U11      pov-mc  2-on-1 Rush · U11
-Q-2v1-002-A1-U11      pov-mc  2-on-1 Rush · U11
-Q-entry-001-A         pov-mc  3-on-2 Entry · U11/U13
-Q-entry-001-C         pov-mc  3-on-2 Entry · U11/U13
-Q-2v1-001-A1-U13      pov-mc  2-on-1 Rush · U13
-Q-2v1-001-A5-U13      pov-mc  2-on-1 Rush · U13
-Q-2v1-002-A5-U13      pov-mc  2-on-1 Rush · U13
-Q-2v1-003-A9-U13      pov-mc  2-on-1 Rush · U13
+u7_eyesup_001a1     pov-mc  Eyes Up · U7
+u9_eyesup_002a1     pov-mc  Eyes Up · U9
+u11_2v1_001a1       pov-mc  2-on-1 Rush · U11
+u11_2v1_002a1       pov-mc  2-on-1 Rush · U11
+u11_entry_001a      pov-mc  3-on-2 Entry · U11/U13
+u11_entry_001c      pov-mc  3-on-2 Entry · U11/U13
+u13_2v1_001a1       pov-mc  2-on-1 Rush · U13
+u13_2v1_001a5       pov-mc  2-on-1 Rush · U13
+u13_2v1_002a5       pov-mc  2-on-1 Rush · U13
+u13_2v1_003a9       pov-mc  2-on-1 Rush · U13
 ```
 
 ## What "rate as high as possible" means in the current rubric
