@@ -6407,7 +6407,7 @@ function AuthScreen({ onAuthenticated, onDemo, onDevEnter, onPreview, prefill })
             <span style={{fontFamily:FONT.display,fontWeight:800,fontSize:"1.6rem",color:C.gold,letterSpacing:".1em"}}>RinkReads</span>
           </div>
           <h1 style={{fontFamily:FONT.display,fontWeight:800,fontSize:"clamp(1.9rem,7.5vw,2.6rem)",lineHeight:1.05,margin:"0 0 .55rem",letterSpacing:"-.01em"}}>
-            Hockey is played<br/>between the ears.<br/><span style={{color:C.gold}}>RinkReads trains the other 80%.</span>
+            Rec or AAA,<br/><span style={{color:C.gold}}>every kid plays smarter when they learn to read the game.</span>
           </h1>
           <p style={{fontSize:14,color:"rgba(248,250,252,.7)",lineHeight:1.65,margin:"0 auto 1.25rem",maxWidth:340}}>
             Game sense, systems reads, and decision-making for U7 to U18.
