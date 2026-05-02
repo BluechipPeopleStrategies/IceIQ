@@ -137,9 +137,11 @@ for (const [n, entries] of Object.entries(byLen).sort((a, b) => +b[0] - +a[0])) 
     let distractors = q.opts.filter((_, i) => i !== q.ok);
     if (SHUFFLE) {
       // Seeded shuffle keyed on the question id so the result is stable
-      // across runs. Distractor TEXT is unchanged — only their relative
-      // order. Re-running produces identical output → idempotent.
-      distractors = seededShuffle(distractors, q.id || `q-${e.age}-${e.idx}`);
+      // across runs. Canonicalize input order (lex sort) BEFORE shuffling so
+      // re-runs produce identical output regardless of where the correct
+      // answer last lived — without that, a slot move would change the
+      // distractor list and the next run would re-permute.
+      distractors = seededShuffle(distractors.slice().sort(), q.id || `q-${e.age}-${e.idx}`);
     }
     const slotChanged = bestSlot !== q.ok;
     const distractorsChanged = SHUFFLE; // we always rewrote, even if order matches by chance
