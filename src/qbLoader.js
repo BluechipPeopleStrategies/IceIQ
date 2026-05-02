@@ -35,8 +35,10 @@ export function loadQB() {
     // v14: bank archived 2026-04-29; legacy questions moved to questions.legacy.json
     sessionStorage.removeItem("rinkreads_qb_cache_v14");
     sessionStorage.removeItem("rinkreads_qb_cache_v15");
-    // v16: 2026-05-02 — renamed 53 Q-{archetype}-... ids to u{age}_{arch}_... convention; stripped _notionPageId
-    const stored = sessionStorage.getItem("rinkreads_qb_cache_v16");
+    sessionStorage.removeItem("rinkreads_qb_cache_v16");
+    // v17: 2026-05-02 — added Center (C) curriculum marker to all U7-U11 pos
+    // arrays; removed u7-breakout-001 from U7 (re-keyed under U9)
+    const stored = sessionStorage.getItem("rinkreads_qb_cache_v17");
     if (stored) {
       cached = JSON.parse(stored);
       return Promise.resolve(cached);
@@ -85,7 +87,7 @@ export function loadQB() {
           }
         }
         cached = qb;
-        try { sessionStorage.setItem("rinkreads_qb_cache_v16", JSON.stringify(cached)); } catch (e) {}
+        try { sessionStorage.setItem("rinkreads_qb_cache_v17", JSON.stringify(cached)); } catch (e) {}
         return cached;
       })
       .catch(e => {
