@@ -279,6 +279,403 @@
       "_notionPageId": "34ec5405-e7f6-81fe-8801-d93a494826a8"
     },
     {
+      "id": "u7-breakout-001",
+      "type": "mc",
+      "cat": "Breakout",
+      "concept": "breakout",
+      "pos": [
+        "F",
+        "D",
+        "G"
+      ],
+      "d": 1,
+      "sit": "Your D #7 has the puck behind the net, looking at you. You're #14. What do you do?",
+      "opts": [
+        "Skate behind the net to help her",
+        "Skate to open ice so she can pass to you",
+        "Skate to the bench for a line change",
+        "Stand still and wave your stick"
+      ],
+      "ok": 1,
+      "why": "Your D needs a target. Skate to open ice where she can see you and pass without other players in the way. If everyone crowds the puck, there is nowhere to pass.",
+      "tip": "Get open.",
+      "media": {
+        "type": "image",
+        "url": "/assets/scenes/rink-endzone.png",
+        "aspect": "16:9",
+        "alt": "Defensive-zone breakout — your D has puck behind the net, you (#14) in low slot, opposing forecheckers pressuring"
+      },
+      "overlays": [
+        {
+          "id": "your-d",
+          "kind": "sprite",
+          "team": "black",
+          "x": 0.5,
+          "y": 0.88,
+          "scale": 1,
+          "poseIdx": 0
+        },
+        {
+          "id": "you",
+          "kind": "sprite",
+          "team": "black",
+          "x": 0.45,
+          "y": 0.62,
+          "scale": 1,
+          "poseIdx": 0,
+          "isFocus": true
+        },
+        {
+          "id": "fc1",
+          "kind": "sprite",
+          "team": "white",
+          "x": 0.36,
+          "y": 0.78,
+          "scale": 1,
+          "poseIdx": 1
+        },
+        {
+          "id": "fc2",
+          "kind": "sprite",
+          "team": "white",
+          "x": 0.62,
+          "y": 0.8,
+          "scale": 1,
+          "poseIdx": 1
+        },
+        {
+          "id": "puck",
+          "kind": "puck",
+          "x": 0.5,
+          "y": 0.9,
+          "scale": 1
+        },
+        {
+          "id": "lbl",
+          "kind": "text",
+          "text": "YOU",
+          "x": 0.45,
+          "y": 0.55,
+          "size": 14,
+          "color": "#facc15"
+        }
+      ],
+      "levels": [
+        "U7 / Initiation",
+        "U9 / Novice"
+      ]
+    },
+    {
+      "id": "u7-decision-making-001",
+      "type": "mc",
+      "cat": "Hockey Sense",
+      "concept": "decision-making",
+      "pos": [
+        "F",
+        "D",
+        "G"
+      ],
+      "d": 1,
+      "sit": "Puck on the boards. Two opponents are closing. Your teammate is open in the middle, calling for it.",
+      "opts": [
+        "Try to stickhandle through both opponents",
+        "Shoot at the net from the boards",
+        "Pass to your open teammate",
+        "Stop skating and protect the puck forever"
+      ],
+      "ok": 2,
+      "why": "Two opponents on you means tight space. Your open teammate has time and a better shot. The pass beats two players at once.",
+      "tip": "Pass it.",
+      "media": {
+        "type": "image",
+        "url": "/assets/scenes/rink-endzone.png",
+        "aspect": "16:9"
+      },
+      "levels": [
+        "U7 / Initiation",
+        "U9 / Novice"
+      ]
+    },
+    {
+      "id": "u7-decision-making-002",
+      "type": "mc",
+      "cat": "Hockey Sense",
+      "concept": "decision-making",
+      "pos": [
+        "F",
+        "D",
+        "G"
+      ],
+      "d": 1,
+      "sit": "Puck in front of their net. The goalie is way out of position. What do you do?",
+      "opts": [
+        "Wait for the goalie to get back in position",
+        "Shoot at the empty side of the net",
+        "Skate around the net to celebrate",
+        "Pass it back to your defenseman"
+      ],
+      "ok": 1,
+      "why": "When the goalie is out of position, the net is open. SHOOT. Do not pass up an open-net chance — those do not happen often.",
+      "tip": "Shoot it.",
+      "media": {
+        "type": "image",
+        "url": "/assets/scenes/rink-endzone.png",
+        "aspect": "16:9"
+      },
+      "levels": [
+        "U7 / Initiation",
+        "U9 / Novice"
+      ]
+    },
+    {
+      "id": "u7-eyes-up-001",
+      "type": "mc",
+      "cat": "Hockey Sense",
+      "concept": "eyes-up",
+      "pos": [
+        "F",
+        "D",
+        "G"
+      ],
+      "d": 1,
+      "sit": "You just got the puck at center ice. Two teammates are skating ahead. Where should your eyes be?",
+      "opts": [
+        "Up the ice, looking at your teammates and the other team",
+        "On the scoreboard",
+        "On your skates so you do not fall",
+        "Down at the puck so you do not lose it"
+      ],
+      "ok": 0,
+      "why": "You can feel the puck on your stick — you do not need to look at it. Eyes UP lets you see your teammates, the other team, and where the open ice is.",
+      "tip": "Eyes up.",
+      "media": {
+        "type": "image",
+        "url": "/assets/scenes/rink-fullrink-defense.png",
+        "aspect": "16:9"
+      },
+      "levels": [
+        "U7 / Initiation",
+        "U9 / Novice"
+      ]
+    },
+    {
+      "id": "u7-oz-entry-001",
+      "type": "mc",
+      "cat": "Offense",
+      "concept": "oz-entry",
+      "pos": [
+        "F",
+        "D",
+        "G"
+      ],
+      "d": 1,
+      "sit": "Crossing the blue line with the puck. Two defenders right in front. No teammates with you yet.",
+      "opts": [
+        "Stop and wait at the blue line",
+        "Pass to the goalie",
+        "Dump the puck deep and chase it with your teammates",
+        "Skate straight into both defenders"
+      ],
+      "ok": 2,
+      "why": "When you are alone against two defenders, you will lose the puck. Dump it deep so your teammates can race to it. That gets your team in the zone TOGETHER.",
+      "tip": "Dump and chase.",
+      "media": {
+        "type": "image",
+        "url": "/assets/scenes/rink-arena-nz-oz.png",
+        "aspect": "16:9"
+      },
+      "levels": [
+        "U7 / Initiation",
+        "U9 / Novice"
+      ]
+    },
+    {
+      "id": "u7-passing-001",
+      "type": "mc",
+      "cat": "Skills",
+      "concept": "passing-receiving",
+      "pos": [
+        "F",
+        "D",
+        "G"
+      ],
+      "d": 1,
+      "sit": "You are about to make a pass to your teammate. Where should you pass the puck?",
+      "opts": [
+        "Right at their skates so they have to stop",
+        "Behind them so they have to turn around",
+        "High in the air so it is hard to handle",
+        "In front of where they are skating, so they can skate onto it"
+      ],
+      "ok": 3,
+      "why": "A good pass leads your teammate — pass to where they ARE GOING, not where they are right now. They skate onto it without slowing down.",
+      "tip": "Lead them.",
+      "media": {
+        "type": "image",
+        "url": "/assets/scenes/rink-fullrink.png",
+        "aspect": "16:9"
+      },
+      "levels": [
+        "U7 / Initiation",
+        "U9 / Novice"
+      ]
+    },
+    {
+      "id": "u7-puck-control-001",
+      "type": "mc",
+      "cat": "Skills",
+      "concept": "puck-control",
+      "pos": [
+        "F",
+        "D",
+        "G"
+      ],
+      "d": 1,
+      "sit": "You're skating up the ice with the puck, eyes looking straight down. What's the problem with that?",
+      "opts": [
+        "Nothing — staring at the puck keeps it on your stick",
+        "You will skate into someone or miss an open teammate",
+        "You will skate too fast",
+        "The puck will fall off your stick"
+      ],
+      "ok": 1,
+      "why": "When you stare at the puck, you cannot see your teammates, the other team, or the open ice. Hockey players feel the puck on their stick — eyes belong UP.",
+      "tip": "Feel it, don't watch it.",
+      "media": {
+        "type": "image",
+        "url": "/assets/scenes/rink-fullrink.png",
+        "aspect": "16:9"
+      },
+      "levels": [
+        "U7 / Initiation",
+        "U9 / Novice"
+      ]
+    },
+    {
+      "id": "u7-reading-play-001",
+      "type": "mc",
+      "cat": "Hockey Sense",
+      "concept": "reading-the-play",
+      "pos": [
+        "F",
+        "D",
+        "G"
+      ],
+      "d": 1,
+      "sit": "Your teammate has the puck and looked at you. You're standing in open ice. What's about to happen?",
+      "opts": [
+        "They are going to pass you the puck",
+        "They are going to skate the other way",
+        "Nothing — keep waiting",
+        "They are going to shoot at the goalie"
+      ],
+      "ok": 0,
+      "why": "When a teammate looks at you, they see you as a target. Be ready — a pass is coming. Get your stick on the ice and your eyes up.",
+      "tip": "Be ready.",
+      "media": {
+        "type": "image",
+        "url": "/assets/scenes/rink-fullrink-defense.png",
+        "aspect": "16:9"
+      },
+      "levels": [
+        "U7 / Initiation",
+        "U9 / Novice"
+      ]
+    },
+    {
+      "id": "u7-reading-play-002",
+      "type": "mc",
+      "cat": "Hockey Sense",
+      "concept": "reading-the-play",
+      "pos": [
+        "F",
+        "D",
+        "G"
+      ],
+      "d": 1,
+      "sit": "They're rushing into your zone. Your D is the only one back. What should YOU do?",
+      "opts": [
+        "Skate to the bench",
+        "Stop and watch what happens",
+        "Race back to help your defense",
+        "Keep skating the way you were going"
+      ],
+      "ok": 2,
+      "why": "When the other team has the puck and is coming at your net, EVERY player on your team becomes a defender. Race back so your D is not alone.",
+      "tip": "Backcheck.",
+      "media": {
+        "type": "image",
+        "url": "/assets/scenes/rink-fullrink-defense.png",
+        "aspect": "16:9"
+      },
+      "levels": [
+        "U7 / Initiation",
+        "U9 / Novice"
+      ]
+    },
+    {
+      "id": "u7-skating-posture-001",
+      "type": "mc",
+      "cat": "Skills",
+      "concept": "skating-posture",
+      "pos": [
+        "F",
+        "D",
+        "G"
+      ],
+      "d": 1,
+      "sit": "Your coach says \"athletic stance!\" before a faceoff. What does that look like?",
+      "opts": [
+        "Sit on the ice and wait",
+        "Stand straight up with your stick over your head",
+        "Lean way forward over your skates",
+        "Knees bent, butt down, stick on the ice, ready to move"
+      ],
+      "ok": 3,
+      "why": "Athletic stance = knees bent, butt down, stick on the ice. From there you can move in any direction the second the puck drops. Standing tall makes you slow.",
+      "tip": "Knees bent.",
+      "media": {
+        "type": "image",
+        "url": "/assets/scenes/rink-faceoff-circle.png",
+        "aspect": "16:9"
+      },
+      "levels": [
+        "U7 / Initiation",
+        "U9 / Novice"
+      ]
+    },
+    {
+      "id": "u7-stick-position-001",
+      "type": "mc",
+      "cat": "Defense",
+      "concept": "stick-position",
+      "pos": [
+        "F",
+        "D",
+        "G"
+      ],
+      "d": 1,
+      "sit": "You're playing D. They're skating at you with the puck. Where should your stick be?",
+      "opts": [
+        "Behind your back",
+        "Flat on the ice in the passing lane",
+        "Up in the air, ready to swing",
+        "Resting on top of your skates"
+      ],
+      "ok": 1,
+      "why": "Your stick on the ice blocks passes AND takes away easy options for the puck-carrier. Stick in the air does nothing — sticks on the ice make plays.",
+      "tip": "Stick on ice.",
+      "media": {
+        "type": "image",
+        "url": "/assets/scenes/rink-endzone.png",
+        "aspect": "16:9"
+      },
+      "levels": [
+        "U7 / Initiation",
+        "U9 / Novice"
+      ]
+    },
+    {
       "id": "u7g4",
       "cat": "Goaltending",
       "concept": "Rebounds",
@@ -582,6 +979,30 @@
       "tip": "Shot coming and you're in front? Try to tip it. Even a little touch helps."
     },
     {
+      "id": "u7q51",
+      "cat": "Scoring",
+      "pos": [
+        "F",
+        "D",
+        "G"
+      ],
+      "concept": "Shoot from a good spot",
+      "d": 3,
+      "sit": "You have the puck right in front of the net, 5 feet away. The goalie has stepped far out of the net to cut the angle. There's barely any net to shoot at. What do you do?",
+      "opts": [
+        "Shoot anyway — just blast it right at the goalie's chest.",
+        "Stop skating and pass it back to a teammate behind you.",
+        "Skate backward away from the net and try a better angle.",
+        "Try to go around the goalie since they've come so far out."
+      ],
+      "ok": 3,
+      "why": "When a goalie comes way out to cut the angle, going around them or pulling the puck wide and shooting on an open net is often better than trying to beat them on the shot.",
+      "tip": "Goalie way out cutting the angle?",
+      "levels": [
+        "U7 / Initiation"
+      ]
+    },
+    {
       "id": "u7q66",
       "cat": "Scoring",
       "pos": [
@@ -643,403 +1064,6 @@
       "ok": 3,
       "why": "A one-timer — shooting the puck on the first touch without stopping it — can catch a goalie before they're set. Even at a young age, learning to take the puck in stride is a skill worth practicing.",
       "tip": "Pass coming and goalie not ready? One-time it. Quick release before they can set."
-    },
-    {
-      "id": "u7-breakout-001",
-      "type": "mc",
-      "cat": "Breakout",
-      "concept": "breakout",
-      "pos": [
-        "F",
-        "D",
-        "G"
-      ],
-      "d": 1,
-      "sit": "Your D #7 has the puck behind the net, looking at you. You're #14. What do you do?",
-      "opts": [
-        "Skate behind the net to help her",
-        "Skate to open ice so she can pass to you",
-        "Skate to the bench for a line change",
-        "Stand still and wave your stick"
-      ],
-      "ok": 1,
-      "why": "Your D needs a target. Skate to open ice where she can see you and pass without other players in the way. If everyone crowds the puck, there is nowhere to pass.",
-      "tip": "Get open.",
-      "media": {
-        "type": "image",
-        "url": "/assets/scenes/rink-endzone.png",
-        "aspect": "16:9",
-        "alt": "Defensive-zone breakout — your D has puck behind the net, you (#14) in low slot, opposing forecheckers pressuring"
-      },
-      "overlays": [
-        {
-          "id": "your-d",
-          "kind": "sprite",
-          "team": "black",
-          "x": 0.5,
-          "y": 0.88,
-          "scale": 1,
-          "poseIdx": 0
-        },
-        {
-          "id": "you",
-          "kind": "sprite",
-          "team": "black",
-          "x": 0.45,
-          "y": 0.62,
-          "scale": 1,
-          "poseIdx": 0,
-          "isFocus": true
-        },
-        {
-          "id": "fc1",
-          "kind": "sprite",
-          "team": "white",
-          "x": 0.36,
-          "y": 0.78,
-          "scale": 1,
-          "poseIdx": 1
-        },
-        {
-          "id": "fc2",
-          "kind": "sprite",
-          "team": "white",
-          "x": 0.62,
-          "y": 0.8,
-          "scale": 1,
-          "poseIdx": 1
-        },
-        {
-          "id": "puck",
-          "kind": "puck",
-          "x": 0.5,
-          "y": 0.9,
-          "scale": 1
-        },
-        {
-          "id": "lbl",
-          "kind": "text",
-          "text": "YOU",
-          "x": 0.45,
-          "y": 0.55,
-          "size": 14,
-          "color": "#facc15"
-        }
-      ],
-      "levels": [
-        "U7 / Initiation",
-        "U9 / Novice"
-      ]
-    },
-    {
-      "id": "u7-eyes-up-001",
-      "type": "mc",
-      "cat": "Hockey Sense",
-      "concept": "eyes-up",
-      "pos": [
-        "F",
-        "D",
-        "G"
-      ],
-      "d": 1,
-      "sit": "You just got the puck at center ice. Two teammates are skating ahead. Where should your eyes be?",
-      "opts": [
-        "Up the ice, looking at your teammates and the other team",
-        "On the scoreboard",
-        "On your skates so you do not fall",
-        "Down at the puck so you do not lose it"
-      ],
-      "ok": 0,
-      "why": "You can feel the puck on your stick — you do not need to look at it. Eyes UP lets you see your teammates, the other team, and where the open ice is.",
-      "tip": "Eyes up.",
-      "media": {
-        "type": "image",
-        "url": "/assets/scenes/rink-fullrink-defense.png",
-        "aspect": "16:9"
-      },
-      "levels": [
-        "U7 / Initiation",
-        "U9 / Novice"
-      ]
-    },
-    {
-      "id": "u7-stick-position-001",
-      "type": "mc",
-      "cat": "Defense",
-      "concept": "stick-position",
-      "pos": [
-        "F",
-        "D",
-        "G"
-      ],
-      "d": 1,
-      "sit": "You're playing D. They're skating at you with the puck. Where should your stick be?",
-      "opts": [
-        "Behind your back",
-        "Flat on the ice in the passing lane",
-        "Up in the air, ready to swing",
-        "Resting on top of your skates"
-      ],
-      "ok": 1,
-      "why": "Your stick on the ice blocks passes AND takes away easy options for the puck-carrier. Stick in the air does nothing — sticks on the ice make plays.",
-      "tip": "Stick on ice.",
-      "media": {
-        "type": "image",
-        "url": "/assets/scenes/rink-endzone.png",
-        "aspect": "16:9"
-      },
-      "levels": [
-        "U7 / Initiation",
-        "U9 / Novice"
-      ]
-    },
-    {
-      "id": "u7-reading-play-001",
-      "type": "mc",
-      "cat": "Hockey Sense",
-      "concept": "reading-the-play",
-      "pos": [
-        "F",
-        "D",
-        "G"
-      ],
-      "d": 1,
-      "sit": "Your teammate has the puck and looked at you. You're standing in open ice. What's about to happen?",
-      "opts": [
-        "They are going to pass you the puck",
-        "They are going to skate the other way",
-        "Nothing — keep waiting",
-        "They are going to shoot at the goalie"
-      ],
-      "ok": 0,
-      "why": "When a teammate looks at you, they see you as a target. Be ready — a pass is coming. Get your stick on the ice and your eyes up.",
-      "tip": "Be ready.",
-      "media": {
-        "type": "image",
-        "url": "/assets/scenes/rink-fullrink-defense.png",
-        "aspect": "16:9"
-      },
-      "levels": [
-        "U7 / Initiation",
-        "U9 / Novice"
-      ]
-    },
-    {
-      "id": "u7-decision-making-001",
-      "type": "mc",
-      "cat": "Hockey Sense",
-      "concept": "decision-making",
-      "pos": [
-        "F",
-        "D",
-        "G"
-      ],
-      "d": 1,
-      "sit": "Puck on the boards. Two opponents are closing. Your teammate is open in the middle, calling for it.",
-      "opts": [
-        "Try to stickhandle through both opponents",
-        "Shoot at the net from the boards",
-        "Pass to your open teammate",
-        "Stop skating and protect the puck forever"
-      ],
-      "ok": 2,
-      "why": "Two opponents on you means tight space. Your open teammate has time and a better shot. The pass beats two players at once.",
-      "tip": "Pass it.",
-      "media": {
-        "type": "image",
-        "url": "/assets/scenes/rink-endzone.png",
-        "aspect": "16:9"
-      },
-      "levels": [
-        "U7 / Initiation",
-        "U9 / Novice"
-      ]
-    },
-    {
-      "id": "u7-puck-control-001",
-      "type": "mc",
-      "cat": "Skills",
-      "concept": "puck-control",
-      "pos": [
-        "F",
-        "D",
-        "G"
-      ],
-      "d": 1,
-      "sit": "You're skating up the ice with the puck, eyes looking straight down. What's the problem with that?",
-      "opts": [
-        "Nothing — staring at the puck keeps it on your stick",
-        "You will skate into someone or miss an open teammate",
-        "You will skate too fast",
-        "The puck will fall off your stick"
-      ],
-      "ok": 1,
-      "why": "When you stare at the puck, you cannot see your teammates, the other team, or the open ice. Hockey players feel the puck on their stick — eyes belong UP.",
-      "tip": "Feel it, don't watch it.",
-      "media": {
-        "type": "image",
-        "url": "/assets/scenes/rink-fullrink.png",
-        "aspect": "16:9"
-      },
-      "levels": [
-        "U7 / Initiation",
-        "U9 / Novice"
-      ]
-    },
-    {
-      "id": "u7-passing-001",
-      "type": "mc",
-      "cat": "Skills",
-      "concept": "passing-receiving",
-      "pos": [
-        "F",
-        "D",
-        "G"
-      ],
-      "d": 1,
-      "sit": "You are about to make a pass to your teammate. Where should you pass the puck?",
-      "opts": [
-        "Right at their skates so they have to stop",
-        "Behind them so they have to turn around",
-        "High in the air so it is hard to handle",
-        "In front of where they are skating, so they can skate onto it"
-      ],
-      "ok": 3,
-      "why": "A good pass leads your teammate — pass to where they ARE GOING, not where they are right now. They skate onto it without slowing down.",
-      "tip": "Lead them.",
-      "media": {
-        "type": "image",
-        "url": "/assets/scenes/rink-fullrink.png",
-        "aspect": "16:9"
-      },
-      "levels": [
-        "U7 / Initiation",
-        "U9 / Novice"
-      ]
-    },
-    {
-      "id": "u7-oz-entry-001",
-      "type": "mc",
-      "cat": "Offense",
-      "concept": "oz-entry",
-      "pos": [
-        "F",
-        "D",
-        "G"
-      ],
-      "d": 1,
-      "sit": "Crossing the blue line with the puck. Two defenders right in front. No teammates with you yet.",
-      "opts": [
-        "Stop and wait at the blue line",
-        "Pass to the goalie",
-        "Dump the puck deep and chase it with your teammates",
-        "Skate straight into both defenders"
-      ],
-      "ok": 2,
-      "why": "When you are alone against two defenders, you will lose the puck. Dump it deep so your teammates can race to it. That gets your team in the zone TOGETHER.",
-      "tip": "Dump and chase.",
-      "media": {
-        "type": "image",
-        "url": "/assets/scenes/rink-arena-nz-oz.png",
-        "aspect": "16:9"
-      },
-      "levels": [
-        "U7 / Initiation",
-        "U9 / Novice"
-      ]
-    },
-    {
-      "id": "u7-skating-posture-001",
-      "type": "mc",
-      "cat": "Skills",
-      "concept": "skating-posture",
-      "pos": [
-        "F",
-        "D",
-        "G"
-      ],
-      "d": 1,
-      "sit": "Your coach says \"athletic stance!\" before a faceoff. What does that look like?",
-      "opts": [
-        "Sit on the ice and wait",
-        "Stand straight up with your stick over your head",
-        "Lean way forward over your skates",
-        "Knees bent, butt down, stick on the ice, ready to move"
-      ],
-      "ok": 3,
-      "why": "Athletic stance = knees bent, butt down, stick on the ice. From there you can move in any direction the second the puck drops. Standing tall makes you slow.",
-      "tip": "Knees bent.",
-      "media": {
-        "type": "image",
-        "url": "/assets/scenes/rink-faceoff-circle.png",
-        "aspect": "16:9"
-      },
-      "levels": [
-        "U7 / Initiation",
-        "U9 / Novice"
-      ]
-    },
-    {
-      "id": "u7-reading-play-002",
-      "type": "mc",
-      "cat": "Hockey Sense",
-      "concept": "reading-the-play",
-      "pos": [
-        "F",
-        "D",
-        "G"
-      ],
-      "d": 1,
-      "sit": "They're rushing into your zone. Your D is the only one back. What should YOU do?",
-      "opts": [
-        "Skate to the bench",
-        "Stop and watch what happens",
-        "Race back to help your defense",
-        "Keep skating the way you were going"
-      ],
-      "ok": 2,
-      "why": "When the other team has the puck and is coming at your net, EVERY player on your team becomes a defender. Race back so your D is not alone.",
-      "tip": "Backcheck.",
-      "media": {
-        "type": "image",
-        "url": "/assets/scenes/rink-fullrink-defense.png",
-        "aspect": "16:9"
-      },
-      "levels": [
-        "U7 / Initiation",
-        "U9 / Novice"
-      ]
-    },
-    {
-      "id": "u7-decision-making-002",
-      "type": "mc",
-      "cat": "Hockey Sense",
-      "concept": "decision-making",
-      "pos": [
-        "F",
-        "D",
-        "G"
-      ],
-      "d": 1,
-      "sit": "Puck in front of their net. The goalie is way out of position. What do you do?",
-      "opts": [
-        "Wait for the goalie to get back in position",
-        "Shoot at the empty side of the net",
-        "Skate around the net to celebrate",
-        "Pass it back to your defenseman"
-      ],
-      "ok": 1,
-      "why": "When the goalie is out of position, the net is open. SHOOT. Do not pass up an open-net chance — those do not happen often.",
-      "tip": "Shoot it.",
-      "media": {
-        "type": "image",
-        "url": "/assets/scenes/rink-endzone.png",
-        "aspect": "16:9"
-      },
-      "levels": [
-        "U7 / Initiation",
-        "U9 / Novice"
-      ]
     }
   ],
   "U9 / Novice": [
@@ -1823,6 +1847,130 @@
       ]
     },
     {
+      "id": "u9-battle-level-001",
+      "type": "mc",
+      "cat": "Compete",
+      "concept": "battle-level",
+      "pos": [
+        "F",
+        "D",
+        "G"
+      ],
+      "d": 2,
+      "sit": "You fall down chasing a loose puck in the corner. Their forward picks it up. What do you do?",
+      "opts": [
+        "Skate to the bench for a line change",
+        "Yell at your teammates to get it",
+        "Stay on the ice and rest a second",
+        "Get up as fast as you can and battle to get the puck back"
+      ],
+      "ok": 3,
+      "why": "Falling happens. What separates good players: how fast they get up. Pop up and battle — your team needs you, not your excuses.",
+      "tip": "Get up, go.",
+      "media": {
+        "type": "image",
+        "url": "/assets/scenes/rink-endzone.png",
+        "aspect": "16:9"
+      },
+      "levels": [
+        "U9 / Novice",
+        "U11 / Atom"
+      ]
+    },
+    {
+      "id": "u9-dz-coverage-001",
+      "type": "mc",
+      "cat": "Defense",
+      "concept": "dz-coverage",
+      "pos": [
+        "F",
+        "D",
+        "G"
+      ],
+      "d": 2,
+      "sit": "Defending. Their forward has the puck in the corner. Another forward is parked in front of your net. Who do you cover?",
+      "opts": [
+        "Both at the same time",
+        "The forward in front of your net — keep them off the goalie",
+        "The goalie",
+        "The forward in the corner — go fight for the puck"
+      ],
+      "ok": 1,
+      "why": "When the puck is in the corner, somebody else attacks it. Your job is the player in front of YOUR net — they are the dangerous one if a pass comes out.",
+      "tip": "Cover the slot.",
+      "media": {
+        "type": "image",
+        "url": "/assets/scenes/rink-endzone.png",
+        "aspect": "16:9"
+      },
+      "levels": [
+        "U9 / Novice",
+        "U11 / Atom"
+      ]
+    },
+    {
+      "id": "u9-forecheck-001",
+      "type": "mc",
+      "cat": "Offense",
+      "concept": "forecheck",
+      "pos": [
+        "F",
+        "D",
+        "G"
+      ],
+      "d": 2,
+      "sit": "You are the first forward into the other team's zone. Their defenseman has the puck behind their net. What is your job?",
+      "opts": [
+        "Skate hard at the puck-carrier and force them to make a quick decision",
+        "Stand at the blue line and wait",
+        "Chase their other defenseman",
+        "Skate to the front of their net"
+      ],
+      "ok": 0,
+      "why": "F1 (the first forward in) hunts the puck-carrier. Skate at them with speed and angle them so they have less time and space to make a clean play.",
+      "tip": "Hunt the puck.",
+      "media": {
+        "type": "image",
+        "url": "/assets/scenes/rink-endzone.png",
+        "aspect": "16:9"
+      },
+      "levels": [
+        "U9 / Novice",
+        "U11 / Atom"
+      ]
+    },
+    {
+      "id": "u9-goalie-angle-001",
+      "type": "mc",
+      "cat": "Goalie",
+      "concept": "goalie-angle-depth",
+      "pos": [
+        "F",
+        "D",
+        "G"
+      ],
+      "d": 2,
+      "sit": "A shooter comes down the wing. The goalie is hiding deep in the net. Where should the goalie be?",
+      "opts": [
+        "Off to the side of the net",
+        "Way back in the net, near the goal line",
+        "Out a little, lined up with the puck",
+        "Skating up to challenge at the blue line"
+      ],
+      "ok": 2,
+      "why": "A goalie deep in the net leaves a huge open area on either side. Coming out a few feet — staying square to the puck — covers more of the net from the shooter's view.",
+      "tip": "Square up.",
+      "media": {
+        "type": "image",
+        "url": "/assets/scenes/rink-closeup-net.png",
+        "aspect": "16:9"
+      },
+      "levels": [
+        "U9 / Novice",
+        "U11 / Atom"
+      ]
+    },
+    {
       "id": "u9g14",
       "cat": "Goaltending",
       "concept": "Desperation save",
@@ -2036,130 +2184,6 @@
       "ok": 2,
       "why": "A PK clear that gets into the other team's zone is a chance for a shorthanded goal if you pursue aggressively. The other team is coming back for it — getting there first wins the race.",
       "tip": "PK clear going deep? Attack it. Speed wins the race and shorthanded goals are game-changers."
-    },
-    {
-      "id": "u9-dz-coverage-001",
-      "type": "mc",
-      "cat": "Defense",
-      "concept": "dz-coverage",
-      "pos": [
-        "F",
-        "D",
-        "G"
-      ],
-      "d": 2,
-      "sit": "Defending. Their forward has the puck in the corner. Another forward is parked in front of your net. Who do you cover?",
-      "opts": [
-        "Both at the same time",
-        "The forward in front of your net — keep them off the goalie",
-        "The goalie",
-        "The forward in the corner — go fight for the puck"
-      ],
-      "ok": 1,
-      "why": "When the puck is in the corner, somebody else attacks it. Your job is the player in front of YOUR net — they are the dangerous one if a pass comes out.",
-      "tip": "Cover the slot.",
-      "media": {
-        "type": "image",
-        "url": "/assets/scenes/rink-endzone.png",
-        "aspect": "16:9"
-      },
-      "levels": [
-        "U9 / Novice",
-        "U11 / Atom"
-      ]
-    },
-    {
-      "id": "u9-goalie-angle-001",
-      "type": "mc",
-      "cat": "Goalie",
-      "concept": "goalie-angle-depth",
-      "pos": [
-        "F",
-        "D",
-        "G"
-      ],
-      "d": 2,
-      "sit": "A shooter comes down the wing. The goalie is hiding deep in the net. Where should the goalie be?",
-      "opts": [
-        "Off to the side of the net",
-        "Way back in the net, near the goal line",
-        "Out a little, lined up with the puck",
-        "Skating up to challenge at the blue line"
-      ],
-      "ok": 2,
-      "why": "A goalie deep in the net leaves a huge open area on either side. Coming out a few feet — staying square to the puck — covers more of the net from the shooter's view.",
-      "tip": "Square up.",
-      "media": {
-        "type": "image",
-        "url": "/assets/scenes/rink-closeup-net.png",
-        "aspect": "16:9"
-      },
-      "levels": [
-        "U9 / Novice",
-        "U11 / Atom"
-      ]
-    },
-    {
-      "id": "u9-battle-level-001",
-      "type": "mc",
-      "cat": "Compete",
-      "concept": "battle-level",
-      "pos": [
-        "F",
-        "D",
-        "G"
-      ],
-      "d": 2,
-      "sit": "You fall down chasing a loose puck in the corner. Their forward picks it up. What do you do?",
-      "opts": [
-        "Skate to the bench for a line change",
-        "Yell at your teammates to get it",
-        "Stay on the ice and rest a second",
-        "Get up as fast as you can and battle to get the puck back"
-      ],
-      "ok": 3,
-      "why": "Falling happens. What separates good players: how fast they get up. Pop up and battle — your team needs you, not your excuses.",
-      "tip": "Get up, go.",
-      "media": {
-        "type": "image",
-        "url": "/assets/scenes/rink-endzone.png",
-        "aspect": "16:9"
-      },
-      "levels": [
-        "U9 / Novice",
-        "U11 / Atom"
-      ]
-    },
-    {
-      "id": "u9-forecheck-001",
-      "type": "mc",
-      "cat": "Offense",
-      "concept": "forecheck",
-      "pos": [
-        "F",
-        "D",
-        "G"
-      ],
-      "d": 2,
-      "sit": "You are the first forward into the other team's zone. Their defenseman has the puck behind their net. What is your job?",
-      "opts": [
-        "Skate hard at the puck-carrier and force them to make a quick decision",
-        "Stand at the blue line and wait",
-        "Chase their other defenseman",
-        "Skate to the front of their net"
-      ],
-      "ok": 0,
-      "why": "F1 (the first forward in) hunts the puck-carrier. Skate at them with speed and angle them so they have less time and space to make a clean play.",
-      "tip": "Hunt the puck.",
-      "media": {
-        "type": "image",
-        "url": "/assets/scenes/rink-endzone.png",
-        "aspect": "16:9"
-      },
-      "levels": [
-        "U9 / Novice",
-        "U11 / Atom"
-      ]
     }
   ],
   "U11 / Atom": [
@@ -2803,6 +2827,228 @@
       "_notionPageId": "34ec5405-e7f6-81ee-88a2-e129cd4a9e85"
     },
     {
+      "id": "u11_rink_label_green_C",
+      "type": "rink-label",
+      "cat": "Player Positions",
+      "concept": "spatial-awareness",
+      "pos": [
+        "F",
+        "D",
+        "G"
+      ],
+      "d": 1,
+      "q": "Which position is the highlighted green-team player?",
+      "media": {
+        "type": "image",
+        "url": "/assets/images/players-positions.png",
+        "aspect": "16:9"
+      },
+      "spot": {
+        "x": 0.422,
+        "y": 0.476
+      },
+      "correctId": "center",
+      "options": [
+        "center",
+        "left_wing",
+        "right_wing",
+        "left_defenseman",
+        "right_defenseman",
+        "goalie"
+      ],
+      "tip": "Center plays the middle — wings on the boards, D behind, G in net.",
+      "levels": [
+        "U11 / Atom",
+        "U7 / Initiation",
+        "U13 / Peewee"
+      ]
+    },
+    {
+      "id": "u11_rink_label_green_G",
+      "type": "rink-label",
+      "cat": "Player Positions",
+      "concept": "spatial-awareness",
+      "pos": [
+        "F",
+        "D",
+        "G"
+      ],
+      "d": 1,
+      "q": "Which position is the highlighted green-team player?",
+      "media": {
+        "type": "image",
+        "url": "/assets/images/players-positions.png",
+        "aspect": "16:9"
+      },
+      "spot": {
+        "x": 0.233,
+        "y": 0.578
+      },
+      "correctId": "goalie",
+      "options": [
+        "goalie",
+        "center",
+        "left_wing",
+        "right_wing",
+        "left_defenseman",
+        "right_defenseman"
+      ],
+      "tip": "Goalies stay in or near the crease — only player allowed there.",
+      "levels": [
+        "U11 / Atom",
+        "U7 / Initiation",
+        "U13 / Peewee"
+      ]
+    },
+    {
+      "id": "u11_rink_label_green_LD",
+      "type": "rink-label",
+      "cat": "Player Positions",
+      "concept": "spatial-awareness",
+      "pos": [
+        "F",
+        "D",
+        "G"
+      ],
+      "d": 1,
+      "q": "Which position is the highlighted green-team player?",
+      "media": {
+        "type": "image",
+        "url": "/assets/images/players-positions.png",
+        "aspect": "16:9"
+      },
+      "spot": {
+        "x": 0.18,
+        "y": 0.443
+      },
+      "correctId": "left_defenseman",
+      "options": [
+        "left_defenseman",
+        "center",
+        "left_wing",
+        "right_wing",
+        "right_defenseman",
+        "goalie"
+      ],
+      "tip": "Defense play behind the forwards. Facing your goalie, LD is on your left.",
+      "levels": [
+        "U11 / Atom",
+        "U7 / Initiation",
+        "U13 / Peewee"
+      ]
+    },
+    {
+      "id": "u11_rink_label_green_LW",
+      "type": "rink-label",
+      "cat": "Player Positions",
+      "concept": "spatial-awareness",
+      "pos": [
+        "F",
+        "D",
+        "G"
+      ],
+      "d": 1,
+      "q": "Which position is the highlighted green-team player?",
+      "media": {
+        "type": "image",
+        "url": "/assets/images/players-positions.png",
+        "aspect": "16:9"
+      },
+      "spot": {
+        "x": 0.319,
+        "y": 0.367
+      },
+      "correctId": "left_wing",
+      "options": [
+        "left_wing",
+        "center",
+        "right_wing",
+        "left_defenseman",
+        "right_defenseman",
+        "goalie"
+      ],
+      "tip": "Wings cover the boards on their side. Facing your goalie, LW is on your left.",
+      "levels": [
+        "U11 / Atom",
+        "U7 / Initiation",
+        "U13 / Peewee"
+      ]
+    },
+    {
+      "id": "u11_rink_label_green_RD",
+      "type": "rink-label",
+      "cat": "Player Positions",
+      "concept": "spatial-awareness",
+      "pos": [
+        "F",
+        "D",
+        "G"
+      ],
+      "d": 1,
+      "q": "Which position is the highlighted green-team player?",
+      "media": {
+        "type": "image",
+        "url": "/assets/images/players-positions.png",
+        "aspect": "16:9"
+      },
+      "spot": {
+        "x": 0.364,
+        "y": 0.712
+      },
+      "correctId": "right_defenseman",
+      "options": [
+        "right_defenseman",
+        "center",
+        "left_wing",
+        "right_wing",
+        "left_defenseman",
+        "goalie"
+      ],
+      "tip": "Defense play behind the forwards. Facing your goalie, RD is on your right.",
+      "levels": [
+        "U11 / Atom",
+        "U7 / Initiation",
+        "U13 / Peewee"
+      ]
+    },
+    {
+      "id": "u11_rink_label_green_RW",
+      "type": "rink-label",
+      "cat": "Player Positions",
+      "concept": "spatial-awareness",
+      "pos": [
+        "F",
+        "D",
+        "G"
+      ],
+      "d": 1,
+      "q": "Which position is the highlighted green-team player?",
+      "media": {
+        "type": "image",
+        "url": "/assets/images/players-positions.png",
+        "aspect": "16:9"
+      },
+      "spot": {
+        "x": 0.486,
+        "y": 0.609
+      },
+      "correctId": "right_wing",
+      "options": [
+        "right_wing",
+        "center",
+        "left_wing",
+        "left_defenseman",
+        "right_defenseman",
+        "goalie"
+      ],
+      "tip": "Wings cover the boards on their side. Facing your goalie, RW is on your right.",
+      "levels": [
+        "U11 / Atom",
+        "U7 / Initiation",
+        "U13 / Peewee"
+      ]
+    },
+    {
       "id": "u11g11",
       "cat": "Goaltending",
       "concept": "Desperation technique",
@@ -2822,6 +3068,30 @@
       "ok": 3,
       "why": "Out-of-position desperation is a real skill. Throwing your blocker hand, extending your toe, or reaching with your stick can deflect a puck that would have been a sure goal. Never give up on a play.",
       "tip": "Out of position? Reach with anything. A blocker or a toe can make a save."
+    },
+    {
+      "id": "u11g15",
+      "cat": "Goaltending",
+      "concept": "Freeze read — late game",
+      "d": 3,
+      "pos": [
+        "F",
+        "D",
+        "G"
+      ],
+      "sit": "Your team is winning by one goal with 90 seconds left. You make a save and the puck is loose at your feet. Your team has it covered nearby. Should you freeze it?",
+      "opts": [
+        "Freeze the puck immediately to kill the clock — any stoppage you can get late in a one-goal game is good because it burns time off the clock.",
+        "Kick the puck away from the front of your net — send it anywhere away from the danger area and let your team sort out possession after.",
+        "Throw the puck to the corner with your glove — get it out of the slot area and let your defensemen go retrieve it behind the goal line.",
+        "Leave it for your team — freezing it gives the other team a faceoff in your zone with 90 seconds left, which is dangerous."
+      ],
+      "ok": 3,
+      "why": "Late game freeze decisions matter. Freezing the puck in your own zone gives the other team a faceoff set play — potentially with their best players — in your zone. If your team has control, leaving it lets them clear and kill more clock.",
+      "tip": "Leading late? Don't automatically freeze. If your team has it, let them clear. Faceoffs in",
+      "levels": [
+        "U11 / Atom"
+      ]
     },
     {
       "id": "u11g4",
@@ -3703,228 +3973,6 @@
         "U11 / Atom",
         "U13 / Peewee",
         "U15 / Bantam"
-      ]
-    },
-    {
-      "id": "u11_rink_label_green_C",
-      "type": "rink-label",
-      "cat": "Player Positions",
-      "concept": "spatial-awareness",
-      "pos": [
-        "F",
-        "D",
-        "G"
-      ],
-      "d": 1,
-      "q": "Which position is the highlighted green-team player?",
-      "media": {
-        "type": "image",
-        "url": "/assets/images/players-positions.png",
-        "aspect": "16:9"
-      },
-      "spot": {
-        "x": 0.422,
-        "y": 0.476
-      },
-      "correctId": "center",
-      "options": [
-        "center",
-        "left_wing",
-        "right_wing",
-        "left_defenseman",
-        "right_defenseman",
-        "goalie"
-      ],
-      "tip": "Center plays the middle — wings on the boards, D behind, G in net.",
-      "levels": [
-        "U11 / Atom",
-        "U7 / Initiation",
-        "U13 / Peewee"
-      ]
-    },
-    {
-      "id": "u11_rink_label_green_LW",
-      "type": "rink-label",
-      "cat": "Player Positions",
-      "concept": "spatial-awareness",
-      "pos": [
-        "F",
-        "D",
-        "G"
-      ],
-      "d": 1,
-      "q": "Which position is the highlighted green-team player?",
-      "media": {
-        "type": "image",
-        "url": "/assets/images/players-positions.png",
-        "aspect": "16:9"
-      },
-      "spot": {
-        "x": 0.319,
-        "y": 0.367
-      },
-      "correctId": "left_wing",
-      "options": [
-        "left_wing",
-        "center",
-        "right_wing",
-        "left_defenseman",
-        "right_defenseman",
-        "goalie"
-      ],
-      "tip": "Wings cover the boards on their side. Facing your goalie, LW is on your left.",
-      "levels": [
-        "U11 / Atom",
-        "U7 / Initiation",
-        "U13 / Peewee"
-      ]
-    },
-    {
-      "id": "u11_rink_label_green_RW",
-      "type": "rink-label",
-      "cat": "Player Positions",
-      "concept": "spatial-awareness",
-      "pos": [
-        "F",
-        "D",
-        "G"
-      ],
-      "d": 1,
-      "q": "Which position is the highlighted green-team player?",
-      "media": {
-        "type": "image",
-        "url": "/assets/images/players-positions.png",
-        "aspect": "16:9"
-      },
-      "spot": {
-        "x": 0.486,
-        "y": 0.609
-      },
-      "correctId": "right_wing",
-      "options": [
-        "right_wing",
-        "center",
-        "left_wing",
-        "left_defenseman",
-        "right_defenseman",
-        "goalie"
-      ],
-      "tip": "Wings cover the boards on their side. Facing your goalie, RW is on your right.",
-      "levels": [
-        "U11 / Atom",
-        "U7 / Initiation",
-        "U13 / Peewee"
-      ]
-    },
-    {
-      "id": "u11_rink_label_green_LD",
-      "type": "rink-label",
-      "cat": "Player Positions",
-      "concept": "spatial-awareness",
-      "pos": [
-        "F",
-        "D",
-        "G"
-      ],
-      "d": 1,
-      "q": "Which position is the highlighted green-team player?",
-      "media": {
-        "type": "image",
-        "url": "/assets/images/players-positions.png",
-        "aspect": "16:9"
-      },
-      "spot": {
-        "x": 0.18,
-        "y": 0.443
-      },
-      "correctId": "left_defenseman",
-      "options": [
-        "left_defenseman",
-        "center",
-        "left_wing",
-        "right_wing",
-        "right_defenseman",
-        "goalie"
-      ],
-      "tip": "Defense play behind the forwards. Facing your goalie, LD is on your left.",
-      "levels": [
-        "U11 / Atom",
-        "U7 / Initiation",
-        "U13 / Peewee"
-      ]
-    },
-    {
-      "id": "u11_rink_label_green_RD",
-      "type": "rink-label",
-      "cat": "Player Positions",
-      "concept": "spatial-awareness",
-      "pos": [
-        "F",
-        "D",
-        "G"
-      ],
-      "d": 1,
-      "q": "Which position is the highlighted green-team player?",
-      "media": {
-        "type": "image",
-        "url": "/assets/images/players-positions.png",
-        "aspect": "16:9"
-      },
-      "spot": {
-        "x": 0.364,
-        "y": 0.712
-      },
-      "correctId": "right_defenseman",
-      "options": [
-        "right_defenseman",
-        "center",
-        "left_wing",
-        "right_wing",
-        "left_defenseman",
-        "goalie"
-      ],
-      "tip": "Defense play behind the forwards. Facing your goalie, RD is on your right.",
-      "levels": [
-        "U11 / Atom",
-        "U7 / Initiation",
-        "U13 / Peewee"
-      ]
-    },
-    {
-      "id": "u11_rink_label_green_G",
-      "type": "rink-label",
-      "cat": "Player Positions",
-      "concept": "spatial-awareness",
-      "pos": [
-        "F",
-        "D",
-        "G"
-      ],
-      "d": 1,
-      "q": "Which position is the highlighted green-team player?",
-      "media": {
-        "type": "image",
-        "url": "/assets/images/players-positions.png",
-        "aspect": "16:9"
-      },
-      "spot": {
-        "x": 0.233,
-        "y": 0.578
-      },
-      "correctId": "goalie",
-      "options": [
-        "goalie",
-        "center",
-        "left_wing",
-        "right_wing",
-        "left_defenseman",
-        "right_defenseman"
-      ],
-      "tip": "Goalies stay in or near the crease — only player allowed there.",
-      "levels": [
-        "U11 / Atom",
-        "U7 / Initiation",
-        "U13 / Peewee"
       ]
     }
   ],
@@ -5434,6 +5482,30 @@
       "ok": 2,
       "why": "A skilled stickhandler wants you to commit early — a premature poke check gives them exactly the step they need to blow past you. Stay patient and contained.",
       "tip": "Skilled forward 1-on-1? Don't commit early. Stay patient. Make them decide first.",
+      "levels": [
+        "U13 / Peewee",
+        "U15 / Bantam"
+      ]
+    },
+    {
+      "id": "u9q66",
+      "cat": "Decision-Making",
+      "pos": [
+        "F",
+        "D"
+      ],
+      "concept": "Neutral zone puck management",
+      "d": 3,
+      "sit": "Your team has the puck in the neutral zone. You're being pressured. The other team has a 2-on-1 developing in your end. You have the puck behind you. What do you do?",
+      "opts": [
+        "Recognize the 2-on-1 developing and get the puck to your D immediately so they can deal with the threat.",
+        "Keep skating toward the offensive zone and try to create your own chance before help arrives.",
+        "Dump the puck deep into the offensive zone right away and change lines for fresh legs to come.",
+        "Stop where you are and wait for your teammates to catch up before making your next decision."
+      ],
+      "ok": 0,
+      "why": "Reading the play behind you — a developing 2-on-1 — is an important defensive awareness skill. Getting the puck to your D before the 2-on-1 is established gives them a chance to deal with it.",
+      "tip": "2-on-1 developing in your end and you have the puck?",
       "levels": [
         "U13 / Peewee",
         "U15 / Bantam"
