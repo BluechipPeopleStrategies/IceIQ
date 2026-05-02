@@ -47,7 +47,7 @@ const drafts = [
     tip: 'Feel it, don\'t watch it.',
     media: FULLRINK_IMG,
     levels: ['U7 / Initiation', 'U9 / Novice'],
-    status: 'wip',
+    _status: 'wip',
   },
   {
     id: 'u7-passing-001',
@@ -68,7 +68,7 @@ const drafts = [
     tip: 'Lead them.',
     media: FULLRINK_IMG,
     levels: ['U7 / Initiation', 'U9 / Novice'],
-    status: 'wip',
+    _status: 'wip',
   },
   {
     id: 'u7-oz-entry-001',
@@ -89,7 +89,7 @@ const drafts = [
     tip: 'Dump and chase.',
     media: NZ_OZ_IMG,
     levels: ['U7 / Initiation', 'U9 / Novice'],
-    status: 'wip',
+    _status: 'wip',
   },
   {
     id: 'u7-skating-posture-001',
@@ -110,7 +110,7 @@ const drafts = [
     tip: 'Knees bent.',
     media: FACEOFF_IMG,
     levels: ['U7 / Initiation', 'U9 / Novice'],
-    status: 'wip',
+    _status: 'wip',
   },
   {
     id: 'u7-reading-play-002',
@@ -131,7 +131,7 @@ const drafts = [
     tip: 'Backcheck.',
     media: FULLRINK_DEF_IMG,
     levels: ['U7 / Initiation', 'U9 / Novice'],
-    status: 'wip',
+    _status: 'wip',
   },
   {
     id: 'u7-decision-making-002',
@@ -152,7 +152,7 @@ const drafts = [
     tip: 'Shoot it.',
     media: ENDZONE_IMG,
     levels: ['U7 / Initiation', 'U9 / Novice'],
-    status: 'wip',
+    _status: 'wip',
   },
   {
     id: 'u9-battle-level-001',
@@ -173,7 +173,7 @@ const drafts = [
     tip: 'Get up, go.',
     media: ENDZONE_IMG,
     levels: ['U9 / Novice', 'U11 / Atom'],
-    status: 'wip',
+    _status: 'wip',
   },
   {
     id: 'u9-forecheck-001',
@@ -194,7 +194,7 @@ const drafts = [
     tip: 'Hunt the puck.',
     media: ENDZONE_IMG,
     levels: ['U9 / Novice', 'U11 / Atom'],
-    status: 'wip',
+    _status: 'wip',
   },
 ];
 

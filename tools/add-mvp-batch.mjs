@@ -87,7 +87,7 @@ const breakoutQ = {
     { id: 'lbl',    kind: 'text',   text: 'YOU', x: 0.45, y: 0.55, size: 14, color: '#facc15' },
   ],
   levels: ['U7 / Initiation', 'U9 / Novice'],
-  status: 'wip',
+  _status: 'wip',
 };
 
 const mvpDrafts = [
@@ -110,7 +110,7 @@ const mvpDrafts = [
     tip: 'Eyes up.',
     media: FULLRINK_DEF_IMG,
     levels: ['U7 / Initiation', 'U9 / Novice'],
-    status: 'wip',
+    _status: 'wip',
   },
   {
     id: 'u7-stick-position-001',
@@ -131,7 +131,7 @@ const mvpDrafts = [
     tip: 'Stick on ice.',
     media: ENDZONE_IMG,
     levels: ['U7 / Initiation', 'U9 / Novice'],
-    status: 'wip',
+    _status: 'wip',
   },
   {
     id: 'u7-reading-play-001',
@@ -152,7 +152,7 @@ const mvpDrafts = [
     tip: 'Be ready.',
     media: FULLRINK_DEF_IMG,
     levels: ['U7 / Initiation', 'U9 / Novice'],
-    status: 'wip',
+    _status: 'wip',
   },
   {
     id: 'u7-decision-making-001',
@@ -173,7 +173,7 @@ const mvpDrafts = [
     tip: 'Pass it.',
     media: ENDZONE_IMG,
     levels: ['U7 / Initiation', 'U9 / Novice'],
-    status: 'wip',
+    _status: 'wip',
   },
   {
     id: 'u9-dz-coverage-001',
@@ -194,7 +194,7 @@ const mvpDrafts = [
     tip: 'Cover the slot.',
     media: ENDZONE_IMG,
     levels: ['U9 / Novice', 'U11 / Atom'],
-    status: 'wip',
+    _status: 'wip',
   },
   {
     id: 'u9-goalie-angle-001',
@@ -215,7 +215,7 @@ const mvpDrafts = [
     tip: 'Square up.',
     media: NET_CLOSEUP_IMG,
     levels: ['U9 / Novice', 'U11 / Atom'],
-    status: 'wip',
+    _status: 'wip',
   },
 ];
 
