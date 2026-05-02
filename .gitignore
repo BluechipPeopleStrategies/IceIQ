@@ -42,3 +42,8 @@ coverage/
 # safety nets, not source of truth
 src/data/*.bak
 src/data/povQuestions.json.*.bak
+
+# Stray ChatGPT/browser image downloads dropped into the assets folder.
+# Keep only intentionally-named scene PNGs (IMG-*, rink-*, etc.).
+public/assets/images/* (*).png
+public/assets/images/ChatGPT Image *.png
