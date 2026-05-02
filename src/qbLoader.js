@@ -38,10 +38,13 @@ export function loadQB() {
     sessionStorage.removeItem("rinkreads_qb_cache_v16");
     sessionStorage.removeItem("rinkreads_qb_cache_v17");
     sessionStorage.removeItem("rinkreads_qb_cache_v18");
-    // v19: 2026-05-02 — Batch A scenes wired up (IMG-eyesup-001 regenerated,
-    // IMG-eyesup-002 / IMG-pp-001 / IMG-stance-001 first-time PNGs, bank URLs
-    // repointed and 3 fundamentals questions assigned imageIds + alt text)
-    const stored = sessionStorage.getItem("rinkreads_qb_cache_v19");
+    sessionStorage.removeItem("rinkreads_qb_cache_v19");
+    // v20: 2026-05-02 — converted 28 mc questions whose opts were
+    // functionally True/False into proper type:"tf" so the engine renders
+    // them with the dedicated TF widget (big TRUE/FALSE buttons) instead
+    // of generic MC choice lines. Stripped redundant "True or False:"
+    // prefix from stems where present.
+    const stored = sessionStorage.getItem("rinkreads_qb_cache_v20");
     if (stored) {
       cached = JSON.parse(stored);
       return Promise.resolve(cached);
@@ -90,7 +93,7 @@ export function loadQB() {
           }
         }
         cached = qb;
-        try { sessionStorage.setItem("rinkreads_qb_cache_v19", JSON.stringify(cached)); } catch (e) {}
+        try { sessionStorage.setItem("rinkreads_qb_cache_v20", JSON.stringify(cached)); } catch (e) {}
         return cached;
       })
       .catch(e => {
