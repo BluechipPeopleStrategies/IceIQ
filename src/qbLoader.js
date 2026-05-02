@@ -37,11 +37,11 @@ export function loadQB() {
     sessionStorage.removeItem("rinkreads_qb_cache_v15");
     sessionStorage.removeItem("rinkreads_qb_cache_v16");
     sessionStorage.removeItem("rinkreads_qb_cache_v17");
-    // v18: 2026-05-02 — IMG-2v1 production polish (URLs repointed to
-    // /assets/images/IMG-2v1-00X.png, alt text rewritten per scene,
-    // U7 wording flipped to v2.6 yellow=opposing, multi-select MCs
-    // converted to single-best-answer)
-    const stored = sessionStorage.getItem("rinkreads_qb_cache_v18");
+    sessionStorage.removeItem("rinkreads_qb_cache_v18");
+    // v19: 2026-05-02 — Batch A scenes wired up (IMG-eyesup-001 regenerated,
+    // IMG-eyesup-002 / IMG-pp-001 / IMG-stance-001 first-time PNGs, bank URLs
+    // repointed and 3 fundamentals questions assigned imageIds + alt text)
+    const stored = sessionStorage.getItem("rinkreads_qb_cache_v19");
     if (stored) {
       cached = JSON.parse(stored);
       return Promise.resolve(cached);
@@ -90,7 +90,7 @@ export function loadQB() {
           }
         }
         cached = qb;
-        try { sessionStorage.setItem("rinkreads_qb_cache_v18", JSON.stringify(cached)); } catch (e) {}
+        try { sessionStorage.setItem("rinkreads_qb_cache_v19", JSON.stringify(cached)); } catch (e) {}
         return cached;
       })
       .catch(e => {
