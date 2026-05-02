@@ -9,19 +9,24 @@
 //   3. Build a target distribution of round(count/N) per position.
 //   4. Greedy reassignment: for each question, permute its opts array so
 //      the correct answer lands at the position currently most under-target.
-//      The relative order of distractors is preserved (the correct answer
-//      moves into a new slot; the others shift around it predictably).
+//   5. (Optional, --shuffle-distractors) Full-shuffle distractors with a
+//      seeded Fisher-Yates per question so authors who always write
+//      "obvious-wrong → plausible → silly" don't accidentally teach kids
+//      that ordering pattern. Seed = hash(question.id) so the result is
+//      DETERMINISTIC — re-running on the same input produces the same
+//      output, no diff churn.
 //
 // Per-question rewrite is mechanical — only the position of the correct
 // answer changes; the answer text itself is untouched. `_correctAnswerText`
 // (a sidecar field set by the legacy miner) is preserved for traceability.
 //
 // Usage:
-//   node tools/redistribute-mc-correct.mjs                # dry-run report
-//   node tools/redistribute-mc-correct.mjs --apply        # rewrite the file
-//   node tools/redistribute-mc-correct.mjs --target legacy  # default (questions.legacy.json)
-//   node tools/redistribute-mc-correct.mjs --target candidates  # questions.legacy-candidates.json
-//   node tools/redistribute-mc-correct.mjs --target live  # questions.json (the live bank)
+//   node tools/redistribute-mc-correct.mjs                          # dry-run report
+//   node tools/redistribute-mc-correct.mjs --apply                  # rewrite the file
+//   node tools/redistribute-mc-correct.mjs --apply --shuffle-distractors  # also scramble distractor order
+//   node tools/redistribute-mc-correct.mjs --target legacy          # default (questions.legacy.json)
+//   node tools/redistribute-mc-correct.mjs --target candidates      # questions.legacy-candidates.json
+//   node tools/redistribute-mc-correct.mjs --target live            # questions.json (the live bank)
 
 import { readFileSync, writeFileSync } from 'node:fs';
 import { resolve, dirname } from 'node:path';
@@ -36,7 +41,32 @@ const flag = (name, def) => {
   return i >= 0 ? args[i + 1] : def;
 };
 const APPLY = args.includes('--apply');
+const SHUFFLE = args.includes('--shuffle-distractors');
 const TARGET = flag('target', 'legacy');
+
+// FNV-1a 32-bit hash + mulberry32 PRNG. Seeding by question id makes the
+// distractor shuffle deterministic — same input → same output, so the
+// rewrite is reproducible and re-runs are no-ops.
+const hashStr = (s) => {
+  let h = 2166136261;
+  for (let i = 0; i < s.length; i++) h = Math.imul(h ^ s.charCodeAt(i), 16777619);
+  return h >>> 0;
+};
+const mulberry32 = (seed) => () => {
+  seed |= 0; seed = seed + 0x6D2B79F5 | 0;
+  let t = Math.imul(seed ^ seed >>> 15, 1 | seed);
+  t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t;
+  return ((t ^ t >>> 14) >>> 0) / 4294967296;
+};
+const seededShuffle = (arr, seedKey) => {
+  const rng = mulberry32(hashStr(seedKey));
+  const out = arr.slice();
+  for (let i = out.length - 1; i > 0; i--) {
+    const j = Math.floor(rng() * (i + 1));
+    [out[i], out[j]] = [out[j], out[i]];
+  }
+  return out;
+};
 
 const TARGETS = {
   legacy: 'src/data/questions.legacy.json',
@@ -104,10 +134,16 @@ for (const [n, entries] of Object.entries(byLen).sort((a, b) => +b[0] - +a[0])) 
         bestSlot = s;
       }
     }
-    if (bestSlot !== q.ok) {
-      // Move correct answer to bestSlot; keep distractors in their original
-      // relative order, just shifted around the gap.
-      const distractors = q.opts.filter((_, i) => i !== q.ok);
+    let distractors = q.opts.filter((_, i) => i !== q.ok);
+    if (SHUFFLE) {
+      // Seeded shuffle keyed on the question id so the result is stable
+      // across runs. Distractor TEXT is unchanged — only their relative
+      // order. Re-running produces identical output → idempotent.
+      distractors = seededShuffle(distractors, q.id || `q-${e.age}-${e.idx}`);
+    }
+    const slotChanged = bestSlot !== q.ok;
+    const distractorsChanged = SHUFFLE; // we always rewrote, even if order matches by chance
+    if (slotChanged || distractorsChanged) {
       const newOpts = [];
       let di = 0;
       for (let i = 0; i < N; i++) {

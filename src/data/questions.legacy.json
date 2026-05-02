@@ -1395,15 +1395,16 @@
         "False ❌"
       ],
       "ok": 1,
-      "why": "The black player's stick is in the way. Your friend is open! Pass to your friend.",
+      "why": "The black player is between you & the goalie. A shot from here won't be successful very often.  Your friend is open! Pass to your friend.",
       "tip": "The black player's stick is in the way.",
       "levels": [
-        "U7 / Initiation"
+        "U7 / Initiation",
+        "U9 / Novice"
       ],
       "media": {
         "type": "image",
-        "url": "/pov-placeholder.svg",
-        "alt": "The defender's stick blade is fully extended to his right (the puck-side passing lane), and his right skate is angled outward toward the puck side, indicating his weight has committed to the puck side. The right side of the ice between the defender and the teammate is visibly open, leaving the cross-ice pass as the correct read."
+        "url": "/assets/images/rink-mh-fullrink.png",
+        "alt": "The defender's stick blade is between the puck handler & the goalie. "
       },
       "imageId": "IMG-2v1-001",
       "archetype": "2-on-1 Rush",
@@ -1411,7 +1412,49 @@
       "concepts": [
         "Pass vs Shoot"
       ],
-      "_notionPageId": "34dc5405-e7f6-817a-9bbb-c2d3d903d4e0"
+      "_notionPageId": "34dc5405-e7f6-817a-9bbb-c2d3d903d4e0",
+      "overlays": [
+        {
+          "id": "ov_monpahv38a",
+          "kind": "sprite",
+          "x": 0.4519230769230769,
+          "y": 0.43304843304843305,
+          "scale": 0.5999999999999996,
+          "team": "black",
+          "isGoalie": false,
+          "poseIdx": 6,
+          "flip": false
+        },
+        {
+          "id": "ov_monpavuvzy",
+          "kind": "puck",
+          "x": 0.4252136752136752,
+          "y": 0.35327635327635326,
+          "scale": 0.6999999999999997
+        },
+        {
+          "id": "ov_monpb5d5by",
+          "kind": "sprite",
+          "x": 0.49038461538461536,
+          "y": 0.17473884140550808,
+          "scale": 0.6999999999999997,
+          "team": "yellow",
+          "isGoalie": true,
+          "poseIdx": 0,
+          "flip": false
+        },
+        {
+          "id": "ov_monpbhyqgq",
+          "kind": "sprite",
+          "x": 0.452991452991453,
+          "y": 0.26970560303893637,
+          "scale": 0.5499999999999996,
+          "team": "yellow",
+          "isGoalie": false,
+          "poseIdx": 0,
+          "flip": false
+        }
+      ]
     },
     {
       "id": "Q-2v1-002-A1-U7",
