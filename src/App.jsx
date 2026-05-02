@@ -2,7 +2,7 @@ import { useState, useEffect, useRef, useCallback, useMemo, lazy, Suspense } fro
 import * as SB from "./supabase";
 import { supabase, hasSupabase } from "./supabase";
 import { canAccess, getUpgradeTriggerMessage } from "./utils/tierGate";
-import { isDevBypassEnabled, getDevProfile, setDevProfile, clearDevProfile, buildDevPlayer, isEphemeralPlayer } from "./utils/devBypass";
+import { isDevBypassEnabled, getDevProfile, setDevProfile, clearDevProfile, buildDevPlayer, isEphemeralPlayer, enableDevBypass, DEV_BYPASS_SECRET } from "./utils/devBypass";
 import { getLevelDisplay } from "./utils/ageGroup";
 import { getParentRatings, saveParentRatings, hasParentRatings, daysSinceUpdated, PARENT_DIMENSIONS, PARENT_SCALE } from "./utils/parentAssessment";
 import { calcPlayerProfile, PROFILE_AXES } from "./utils/playerProfile";
@@ -6215,6 +6215,36 @@ function AuthScreen({ onAuthenticated, onDemo, onDevEnter, onPreview, prefill })
   // Show the dev-bypass panel whenever running `npm run dev` — the LS flag
   // is still honoured in production builds so it stays invisible to real users.
   const devBypass = isDevBypassEnabled() || (typeof import.meta !== "undefined" && import.meta.env && import.meta.env.DEV);
+
+  // Hidden tap-pattern unlock — 5 taps on the top-left invisible hotspot
+  // within 3 seconds enables dev bypass and reloads. Mirrors the URL-param
+  // unlock at App-level for owners reaching from a fresh browser without
+  // typing query params. Counter resets if 1.5s pass between taps.
+  const tapCountRef = useRef(0);
+  const tapResetTimerRef = useRef(null);
+  const tapWindowEndRef = useRef(0);
+  const TAPS_REQUIRED = 5;
+  const TAP_WINDOW_MS = 3000;
+  const TAP_GAP_MS    = 1500;
+  const handleHotspotTap = () => {
+    if (devBypass) return;
+    const now = Date.now();
+    if (now > tapWindowEndRef.current) {
+      tapCountRef.current = 1;
+      tapWindowEndRef.current = now + TAP_WINDOW_MS;
+    } else {
+      tapCountRef.current += 1;
+    }
+    clearTimeout(tapResetTimerRef.current);
+    tapResetTimerRef.current = setTimeout(() => { tapCountRef.current = 0; }, TAP_GAP_MS);
+    if (tapCountRef.current >= TAPS_REQUIRED) {
+      try {
+        enableDevBypass();
+        tapCountRef.current = 0;
+        window.location.reload();
+      } catch {}
+    }
+  };
   const [devRole, setDevRole] = useState("player");
   const [devLevel, setDevLevel] = useState("U11 / Atom");
   const [devPosition, setDevPosition] = useState("Forward");
@@ -6280,6 +6310,15 @@ function AuthScreen({ onAuthenticated, onDemo, onDevEnter, onPreview, prefill })
       {/* Hockey-player hero photo as landing background — heavily dimmed so
           copy reads crisply; the player is atmosphere, not foreground. */}
       <img src={imgSplash} alt="" style={{position:"absolute",inset:0,width:"100%",height:"100%",objectFit:"cover",opacity:0.22,filter:"saturate(0.7) contrast(0.9)",pointerEvents:"none"}}/>
+
+      {/* Hidden 60×60 tap hotspot in the top-left corner — 5 taps within
+          3s unlocks dev bypass and reloads. Invisible to normal users; the
+          owner uses it to reach the dev panel from any browser without
+          typing the `?devbypass=` URL or opening DevTools. Sits above the
+          background overlay so taps register; below the auth card content. */}
+      <button type="button" aria-hidden="true" tabIndex={-1}
+        onClick={handleHotspotTap}
+        style={{position:"absolute",top:0,left:0,width:60,height:60,background:"transparent",border:"none",cursor:"default",padding:0,zIndex:6,outline:"none"}}/>
 
       {/* Layered overlays — heavier navy fade + warm Oilers-orange radial glow */}
       <div style={{position:"absolute",inset:0,background:"linear-gradient(180deg,rgba(4,30,66,0.78) 0%,rgba(4,30,66,0.6) 45%,rgba(4,30,66,0.94) 100%)",pointerEvents:"none"}}/>
@@ -7274,6 +7313,26 @@ export default function App() {
 
   // Run season reset check on boot so free-tier switch counters refresh each September
   useEffect(() => { try { checkSeasonReset(); } catch {} }, []);
+
+  // URL-param unlock for dev bypass. Visit `?devbypass=<DEV_BYPASS_SECRET>`
+  // once → flag set, param scrubbed, page reloads with bypass active. Lets
+  // the owner reach the dev panel from any browser/account without DevTools.
+  // Runs SYNC on first mount so the reload happens before the auth screen
+  // paints with stale state.
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    try {
+      const params = new URLSearchParams(window.location.search);
+      const provided = params.get("devbypass");
+      if (provided && provided === DEV_BYPASS_SECRET && !isDevBypassEnabled()) {
+        enableDevBypass();
+        params.delete("devbypass");
+        const next = window.location.pathname + (params.toString() ? "?" + params.toString() : "") + window.location.hash;
+        window.history.replaceState({}, "", next);
+        window.location.reload();
+      }
+    } catch {}
+  }, []);
 
   // One-time cleanup: the player-demo scaffold used __demo__ LS slots in a few
   // tables. Now that player demo is gone, silently drop them on boot so a
