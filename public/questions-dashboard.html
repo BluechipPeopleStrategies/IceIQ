@@ -241,9 +241,16 @@ function populateImageFilter() {
 // Image-bearing types — these are expected to render with an image. If
 // the URL is the placeholder or missing entirely, the question still
 // renders, but with a degraded UX. "Needs image" surfaces those.
+// pov-mc was merged into mc — image-backed MC questions are recognized
+// by `q.type === 'mc' && q.media?.url`, mirroring App.jsx.
 const IMAGE_TYPES = new Set(["pov-mc", "hot-spots", "rink-label", "rink-drag", "rink-match"]);
+function isImageBacked(q) {
+  if (IMAGE_TYPES.has(q.type)) return true;
+  if (q.type === "mc" && !!q.media?.url) return true;
+  return false;
+}
 function needsImage(q) {
-  if (!IMAGE_TYPES.has(q.type)) return false;
+  if (!isImageBacked(q)) return false;
   const url = q.media?.url || "";
   if (!url) return true;
   if (url.includes("pov-placeholder")) return true;
@@ -273,7 +280,7 @@ function getFiltered() {
   const flagMap = (preset === "flagged-image" || preset === "flagged-any") ? readFlagMap() : null;
   return allQuestions.filter(q => {
     if (preset === "today" && !TODAY_PREFIXES.some(p => (q.id || "").startsWith(p))) return false;
-    if (preset === "image" && !["pov-mc", "hot-spots"].includes(q.type)) return false;
+    if (preset === "image" && !isImageBacked(q)) return false;
     if (preset === "rink" && !["rink-label", "rink-drag", "rink-match"].includes(q.type)) return false;
     if (preset === "needs-image" && !needsImage(q)) return false;
     if (preset === "flagged-image") {
@@ -348,7 +355,7 @@ function renderPreview(q) {
   const wrap = $("preview");
   const url = q.media?.url || "";
   const imgName = url.split("/").pop() || "(no image)";
-  const isImageQ = q.type === "pov-mc" || q.type === "hot-spots";
+  const isImageQ = isImageBacked(q);
   const concept = q.concept || (q.concepts && q.concepts[0]) || "";
 
   let imgHtml = "";
