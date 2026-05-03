@@ -39,12 +39,12 @@ export function loadQB() {
     sessionStorage.removeItem("rinkreads_qb_cache_v17");
     sessionStorage.removeItem("rinkreads_qb_cache_v18");
     sessionStorage.removeItem("rinkreads_qb_cache_v19");
-    // v20: 2026-05-02 — converted 28 mc questions whose opts were
-    // functionally True/False into proper type:"tf" so the engine renders
-    // them with the dedicated TF widget (big TRUE/FALSE buttons) instead
-    // of generic MC choice lines. Stripped redundant "True or False:"
-    // prefix from stems where present.
-    const stored = sessionStorage.getItem("rinkreads_qb_cache_v20");
+    sessionStorage.removeItem("rinkreads_qb_cache_v20");
+    // v21: 2026-05-02 — author-side renames + multi-cat tagging shipped
+    // (Q-var_xxxx renamed to Q-{archetype}-{nnn}-{tag}{N}-U{age}, primary
+    // age moves between bank arrays, cats[] alongside legacy cat). Bumped
+    // so Live Player + production sessions pick up the new ids/cats.
+    const stored = sessionStorage.getItem("rinkreads_qb_cache_v21");
     if (stored) {
       cached = JSON.parse(stored);
       return Promise.resolve(cached);
@@ -93,7 +93,7 @@ export function loadQB() {
           }
         }
         cached = qb;
-        try { sessionStorage.setItem("rinkreads_qb_cache_v20", JSON.stringify(cached)); } catch (e) {}
+        try { sessionStorage.setItem("rinkreads_qb_cache_v21", JSON.stringify(cached)); } catch (e) {}
         return cached;
       })
       .catch(e => {
