@@ -101,42 +101,6 @@
       "_notionPageId": "34dc5405-e7f6-81eb-b1c8-f505c7f641a2"
     },
     {
-      "id": "Q-2v1-003-A1-U7",
-      "type": "mc",
-      "cat": "Hockey Sense",
-      "pos": [
-        "F",
-        "C",
-        "D",
-        "G"
-      ],
-      "d": 1,
-      "sit": "Look at the picture. You have the puck and lots of room. What should you do?",
-      "opts": [
-        "🤝 Pass to my friend now",
-        "🥅 Shoot it now",
-        "💨 Skate with the puck"
-      ],
-      "ok": 2,
-      "why": "Look at all the open ice! The yellow player is far away. You have lots of time. Skate toward the net with the puck.",
-      "tip": "Look at all the open ice.",
-      "levels": [
-        "U7 / Initiation"
-      ],
-      "media": {
-        "type": "image",
-        "url": "/assets/images/IMG-2v1-003.png",
-        "alt": "The yellow defender is sitting deep near the hash marks, body squared, stick centered. There is wide-open ice on both sides — the defender hasn't committed yet, so the puck carrier has to attack the open ice and force a commit before reacting."
-      },
-      "imageId": "IMG-2v1-003",
-      "archetype": "2-on-1 Rush",
-      "cognitiveSkill": "Decision-Making",
-      "concepts": [
-        "Soft Area"
-      ],
-      "_notionPageId": "34dc5405-e7f6-81a0-ae03-c158d8a746cd"
-    },
-    {
       "id": "Q-2v1-003-A2-U7",
       "type": "tf",
       "cat": "Hockey Sense",
@@ -1137,7 +1101,7 @@
         "url": "/assets/images/ChatGPT Image Apr 29, 2026, 01_09_00 PM.png",
         "alt": "Black puck-carrier skating into the O-zone with his head UP, eyes scanning the ice ahead at his one black teammate. The carrier is looking at the play developing, not down at the puck on his stick."
       },
-      "sit": "Look at the picture. Your teammate is open in front of the net — way closer to the goalie. What's the best play?",
+      "sit": "Look at the picture. Your teammate is open— way closer to the goalie. What's the best play?",
       "opts": [
         "Pass the puck to my teammate",
         "Shoot at the net from where I am",
@@ -1198,6 +1162,42 @@
           "flip": false
         }
       ]
+    },
+    {
+      "id": "Q-2v1-003-A15-U7",
+      "type": "mc",
+      "cat": "Positioning",
+      "pos": [
+        "F",
+        "C",
+        "D"
+      ],
+      "d": 2,
+      "levels": [
+        "U9 / Novice",
+        "U11 / Atom",
+        "U13 / Peewee"
+      ],
+      "why": "When two players spread out wide, the yellow player can only chase ONE of them. The other is wide open. That's how you force him to pick — then you do the opposite of what he picks.",
+      "tip": "Spread out — the defender can only stop one of you.",
+      "concepts": [
+        "Soft Area"
+      ],
+      "archetype": "2-on-1 Rush",
+      "imageId": "IMG-2v1-003",
+      "media": {
+        "type": "image",
+        "url": "/assets/images/IMG-2v1-003.png",
+        "alt": "The yellow defender is sitting deep near the hash marks, body squared, stick centered. There is wide-open ice on both sides — the defender hasn't committed yet, so the puck carrier has to attack the open ice and force a commit before reacting."
+      },
+      "sit": "Look at #44 and #91. What should they do?",
+      "opts": [
+        "Spread out wide — they're too close",
+        "Stay close together so they can pass quickly",
+        "Skate faster but keep close to each other",
+        "One player should stop and wait for the other"
+      ],
+      "ok": 0
     }
   ],
   "U9 / Novice": [
@@ -2426,6 +2426,81 @@
       "levels": [
         "U9 / Novice"
       ]
+    },
+    {
+      "id": "Q-2v1-003-D1-U9",
+      "type": "mc",
+      "cat": "Hockey Sense, 2v1, gap control, defense",
+      "pos": [
+        "F",
+        "C",
+        "D",
+        "G"
+      ],
+      "d": 3,
+      "levels": [
+        "U9 / Novice",
+        "U11 / Atom",
+        "U13 / Peewee"
+      ],
+      "why": "When the defender sits way back, the attackers have time to pick the perfect play. This is called GAP CONTROL — good defenders close the distance fast so the attackers don't have time to think. Tight gap = forced decision.",
+      "tip": "Close the gap — take away their time to think.",
+      "concepts": [
+        "Soft Area"
+      ],
+      "archetype": "2-on-1 Rush",
+      "imageId": "IMG-2v1-003",
+      "media": {
+        "type": "image",
+        "url": "/assets/images/IMG-2v1-003.png",
+        "alt": "The yellow defender is sitting deep near the hash marks, body squared, stick centered. There is wide-open ice on both sides — the defender hasn't committed yet, so the puck carrier has to attack the open ice and force a commit before reacting."
+      },
+      "sit": "Look at the yellow defender. He's sitting way back. The attackers have all the time they want. What should he do?",
+      "opts": [
+        "Skate up to close the gap and take away time",
+        "Stay back and watch what the attackers do",
+        "Skate behind the net and try to surprise",
+        "Dive to block a shot or break up the pass"
+      ],
+      "ok": 0
+    },
+    {
+      "id": "Q-2v1-003-A1-U9",
+      "type": "mc",
+      "cat": "Hockey Sense, Spacing",
+      "pos": [
+        "F",
+        "C",
+        "D",
+        "G"
+      ],
+      "d": 1,
+      "sit": "Look at the picture. You have the puck and lots of room. What should you do?",
+      "opts": [
+        "🤝 Pass!",
+        "🥅 Shoot!",
+        "💨 Skate!"
+      ],
+      "ok": 2,
+      "why": "Look at all the open ice! The yellow player is far away. You have lots of time. Skate toward the net with the puck.",
+      "tip": "Look at all the open ice.",
+      "levels": [
+        "U9 / Novice",
+        "U11 / Atom",
+        "U7 / Initiation"
+      ],
+      "media": {
+        "type": "image",
+        "url": "/assets/images/IMG-2v1-003.png",
+        "alt": "The yellow defender is sitting deep near the hash marks, body squared, stick centered. There is wide-open ice on both sides — the defender hasn't committed yet, so the puck carrier has to attack the open ice and force a commit before reacting."
+      },
+      "imageId": "IMG-2v1-003",
+      "archetype": "2-on-1 Rush",
+      "cognitiveSkill": "Decision-Making",
+      "concepts": [
+        "Soft Area"
+      ],
+      "_notionPageId": "34dc5405-e7f6-81a0-ae03-c158d8a746cd"
     }
   ],
   "U11 / Atom": [
