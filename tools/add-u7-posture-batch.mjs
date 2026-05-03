@@ -57,7 +57,9 @@ function scaffoldHotSpotsBinary() {
 
 const QUESTIONS = [
   {
-    id: 'Q-posture-003-A1-U7',
+    // Bumped from -003 to -006: -003 already existed as an mc question
+    // ("coach says athletic stance!"). Sequence skipped to avoid collision.
+    id: 'Q-posture-006-A1-U7',
     type: 'multi-tap',
     q: 'The puck is about to drop. Tap each player who is in a strong, ready stance.',
     why: 'Knees bent, head up, stick on the ice = first to the puck off the draw. Standing tall or looking at your skates = a half-second late.',
