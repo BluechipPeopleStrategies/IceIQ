@@ -40,11 +40,11 @@ export function loadQB() {
     sessionStorage.removeItem("rinkreads_qb_cache_v18");
     sessionStorage.removeItem("rinkreads_qb_cache_v19");
     sessionStorage.removeItem("rinkreads_qb_cache_v20");
-    // v21: 2026-05-02 — author-side renames + multi-cat tagging shipped
-    // (Q-var_xxxx renamed to Q-{archetype}-{nnn}-{tag}{N}-U{age}, primary
-    // age moves between bank arrays, cats[] alongside legacy cat). Bumped
-    // so Live Player + production sessions pick up the new ids/cats.
-    const stored = sessionStorage.getItem("rinkreads_qb_cache_v21");
+    sessionStorage.removeItem("rinkreads_qb_cache_v21");
+    // v22: 2026-05-02 — added Batch A rink-anatomy questions (9 rink-label
+    // questions covering lines/zones/dots/circles/crease, primary U7,
+    // fanned out U9/U11/U13).
+    const stored = sessionStorage.getItem("rinkreads_qb_cache_v22");
     if (stored) {
       cached = JSON.parse(stored);
       return Promise.resolve(cached);
@@ -93,7 +93,7 @@ export function loadQB() {
           }
         }
         cached = qb;
-        try { sessionStorage.setItem("rinkreads_qb_cache_v21", JSON.stringify(cached)); } catch (e) {}
+        try { sessionStorage.setItem("rinkreads_qb_cache_v22", JSON.stringify(cached)); } catch (e) {}
         return cached;
       })
       .catch(e => {
