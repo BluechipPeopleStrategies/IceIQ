@@ -204,9 +204,44 @@ function checkBank() {
   }
 }
 
+// ---------- check 4: media URLs that can't resolve to a file under public/.
+// Catches the rink-bg picker / scene-composer leaving questions with a
+// literal URL like /assets/scenes/rink-endzone.png when the file isn't
+// actually shipped to public/assets/scenes/. Data URLs and external URLs
+// are skipped (only local /assets/* paths are checked).
+function checkMediaUrls() {
+  if (!fs.existsSync(BANK)) return; // checkBank already errored
+  const PUBLIC = path.join(ROOT, "public");
+  if (!fs.existsSync(PUBLIC)) {
+    warn(`[media] public/ not found — skipping media-url resolution check`);
+    return;
+  }
+  let bank;
+  try { bank = JSON.parse(fs.readFileSync(BANK, "utf8")); }
+  catch { return; } // checkBank already errored
+  const missing = new Map(); // url -> [ids]
+  for (const arr of Object.values(bank)) {
+    if (!Array.isArray(arr)) continue;
+    for (const q of arr) {
+      const u = q?.media?.url;
+      if (!u || typeof u !== "string") continue;
+      if (!u.startsWith("/assets/")) continue; // skip data: / http(s): / external
+      const fp = path.join(PUBLIC, u.replace(/^\//, ""));
+      if (!fs.existsSync(fp)) {
+        if (!missing.has(u)) missing.set(u, []);
+        missing.get(u).push(q.id || "(no id)");
+      }
+    }
+  }
+  for (const [u, ids] of missing) {
+    err(`[media] ${u} referenced by ${ids.length} question(s) but file is missing under public/ — first few: ${ids.slice(0, 3).join(", ")}`);
+  }
+}
+
 // ---------- run
 checkTailwind();
 checkBank();
+checkMediaUrls();
 
 if (warnings.length) {
   console.log(`\n⚠  ${warnings.length} warning(s):`);
