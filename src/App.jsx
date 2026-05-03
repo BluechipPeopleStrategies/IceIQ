@@ -2026,7 +2026,7 @@ function Quiz({ player, onFinish, onBack, tier, onUpgrade }) {
             <img src={q.media.url} alt={q.media.alt || ""}
               draggable={false}
               loading="eager" decoding="async" fetchpriority="high"
-              style={{width:"100%", height:"100%", objectFit:"cover", display:"block", userSelect:"none"}} />
+              style={{width:"100%", height:"100%", objectFit: q.media?.aspect ? "cover" : "contain", display:"block", userSelect:"none"}} />
             {Array.isArray(q.overlays) && <OverlayLayer overlays={q.overlays} />}
           </div>
         )}
@@ -3409,7 +3409,7 @@ function WeeklyQuiz({ player, onBack, onFinish }) {
             <img src={q.media.url} alt={q.media.alt || ""}
               draggable={false}
               loading="eager" decoding="async" fetchpriority="high"
-              style={{width:"100%", height:"100%", objectFit:"cover", display:"block", userSelect:"none"}} />
+              style={{width:"100%", height:"100%", objectFit: q.media?.aspect ? "cover" : "contain", display:"block", userSelect:"none"}} />
             {Array.isArray(q.overlays) && <OverlayLayer overlays={q.overlays} />}
           </div>
         )}
