@@ -1890,7 +1890,37 @@ function Quiz({ player, onFinish, onBack, tier, onUpgrade }) {
     ? rinkQResult !== null
     : (qtype === "seq" || qtype === "multi" || qtype === "scenario") ? seqAnswered
     :                          sel !== null;
-  if (!q) return <Screen><div style={{color:C.dimmer,textAlign:"center",paddingTop:"4rem"}}>Loading…</div></Screen>;
+  if (!q) {
+    // Distinguish "still loading the bank" (queue not built yet) from
+    // "queue is built but empty" (ids filter matched zero questions).
+    // The latter is what happens when the author tool renames a question
+    // in memory but hasn't shipped to disk — the iframe URL filters by
+    // an id that doesn't exist in questions.json yet.
+    const queueReadyButEmpty = Array.isArray(queue) && queue.length === 0;
+    if (queueReadyButEmpty && idsLen > 0) {
+      let askedIds = "";
+      try { askedIds = new URLSearchParams(window.location.search).get("ids") || ""; } catch {}
+      return (
+        <Screen>
+          <div style={{ maxWidth: 480, margin: "4rem auto", padding: "1rem 1.25rem", color: C.white, fontFamily: FONT.body }}>
+            <div style={{ fontSize: 16, fontWeight: 700, marginBottom: 8 }}>
+              Question not in this bank yet
+            </div>
+            <p style={{ color: C.dim, fontSize: 13, lineHeight: 1.55, marginBottom: 10 }}>
+              The id you asked for isn't in <code style={{ background: C.dimmest, padding: "1px 5px", borderRadius: 3, fontFamily: "monospace", fontSize: 12 }}>questions.json</code> on disk:
+            </p>
+            <code style={{ display: "block", padding: "8px 10px", background: C.dimmest, borderRadius: 6, fontFamily: "monospace", fontSize: 12, color: C.white, marginBottom: 10, wordBreak: "break-all" }}>
+              {askedIds || "(no ids)"}
+            </code>
+            <p style={{ color: C.dimmer, fontSize: 12, lineHeight: 1.55 }}>
+              If you renamed it in the author tool, run <strong>🚀 Save &amp; Ship</strong> in the author. The iframe auto-reloads after a successful ship.
+            </p>
+          </div>
+        </Screen>
+      );
+    }
+    return <Screen><div style={{color:C.dimmer,textAlign:"center",paddingTop:"4rem"}}>Loading…</div></Screen>;
+  }
 
   // Records a result for a question dispatched to RinkReadsRinkQuestion. The child
   // component fires onAnswer(true|false); we dedupe via rinkQResult so a player
