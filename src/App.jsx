@@ -2014,8 +2014,11 @@ function Quiz({ player, onFinish, onBack, tier, onUpgrade }) {
         {/* POV image — first-person scenario photo above the situation card.
             Sticky: stays pinned just below the StickyHeader as the player
             scrolls through options + explanation, so the visual context is
-            always there when reading the read. */}
-        {q.media?.url && (
+            always there when reading the read.
+            SKIPPED for interactive types whose renderer already draws the
+            image as its own clickable canvas (hot-spots, drag-target,
+            multi-tap, etc.) — otherwise the kid sees the picture twice. */}
+        {q.media?.url && !isRinkQ && (
           <div style={{
             position:"sticky", top:62, zIndex:10,
             marginBottom:"1rem", borderRadius:12, overflow:"hidden",

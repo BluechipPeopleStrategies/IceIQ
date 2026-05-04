@@ -231,7 +231,88 @@ function validateQuestion(q) {
   return { errors, warnings, valid: errors.length === 0 };
 }
 
-export default function RinkReadsRinkQuestion({ question, onAnswer, onReset, onSkip }) {
+// Scale normalized 0-1 coords (used by the rinkreads-author tool when
+// authoring image-backed interactive questions) up to the engine's 600x300
+// SVG coord space. Only kicks in when:
+//   1. The question is image-backed (has q.media.url), AND
+//   2. Every coord-bearing point is ≤1 — i.e. nothing is already in SVG
+//      units. Mixed-coord questions skip the scale to avoid corrupting
+//      half-authored data.
+// Procedural-rink questions (no media.url) already author in SVG coords,
+// so they pass through unchanged.
+function scaleNormalizedCoordsForRender(question) {
+  if (!question || typeof question !== "object" || !question.media?.url) return question;
+  const pairs = [];
+  const addPair = (obj) => {
+    if (obj && typeof obj === "object" && Number.isFinite(obj.x) && Number.isFinite(obj.y)) {
+      pairs.push(obj);
+    }
+  };
+  addPair(question.puckStart);
+  addPair(question.start);
+  addPair(question.target);
+  for (const k of ["targets", "spots", "markers", "avoid", "slots"]) {
+    if (Array.isArray(question[k])) for (const it of question[k]) addPair(it);
+  }
+  if (Array.isArray(question.idealPath)) for (const p of question.idealPath) addPair(p);
+  if (Array.isArray(question.zones)) {
+    for (const z of question.zones) {
+      if (z && typeof z === "object") {
+        addPair(z);
+        if (Array.isArray(z.points)) for (const p of z.points) addPair(p);
+      }
+    }
+  }
+  if (Array.isArray(question.lanes)) {
+    for (const l of question.lanes) {
+      if (l && typeof l === "object") {
+        if (Number.isFinite(l.x1) && Number.isFinite(l.y1)) pairs.push({ x: l.x1, y: l.y1 });
+        if (Number.isFinite(l.x2) && Number.isFinite(l.y2)) pairs.push({ x: l.x2, y: l.y2 });
+      }
+    }
+  }
+  if (pairs.length === 0) return question;
+  const allNormalized = pairs.every((p) => p.x <= 1.0001 && p.y <= 1.0001);
+  if (!allNormalized) return question;
+  const SX = 600, SY = 300, SR = 60;
+  const sp = (p) => p ? { ...p, x: (p.x ?? 0.5) * SX, y: (p.y ?? 0.5) * SY } : p;
+  const sr = (o) => {
+    if (!o || typeof o !== "object") return o;
+    const out = { ...o };
+    if (Number.isFinite(o.x)) out.x = o.x * SX;
+    if (Number.isFinite(o.y)) out.y = o.y * SY;
+    if (Number.isFinite(o.radius)) out.radius = o.radius * SR;
+    return out;
+  };
+  const out = { ...question };
+  if (question.puckStart) out.puckStart = sp(question.puckStart);
+  if (question.start) out.start = sr(question.start);
+  if (question.target) out.target = sr(question.target);
+  for (const k of ["targets", "spots", "markers", "avoid", "slots"]) {
+    if (Array.isArray(question[k])) out[k] = question[k].map(sr);
+  }
+  if (Array.isArray(question.idealPath)) out.idealPath = question.idealPath.map(sp);
+  if (Array.isArray(question.zones)) {
+    out.zones = question.zones.map((z) => {
+      if (!z || typeof z !== "object") return z;
+      const o = sr(z);
+      if (Array.isArray(z.points)) o.points = z.points.map(sp);
+      return o;
+    });
+  }
+  if (Array.isArray(question.lanes)) {
+    out.lanes = question.lanes.map((l) => {
+      if (!l || typeof l !== "object") return l;
+      return { ...l, x1: l.x1 * SX, y1: l.y1 * SY, x2: l.x2 * SX, y2: l.y2 * SY };
+    });
+  }
+  return out;
+}
+
+export default function RinkReadsRinkQuestion({ question: rawQuestion, onAnswer, onReset, onSkip }) {
+  // Auto-scale normalized author-tool coords to engine SVG units. Pure
+  // procedural-rink questions (no media.url) pass through unchanged.
+  const question = scaleNormalizedCoordsForRender(rawQuestion);
   const validation = validateQuestion(question);
 
   useEffect(() => {
