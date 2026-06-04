@@ -28,8 +28,8 @@ const OUT = resolve(__dirname, "../src/data/curriculum-ledger.json");
 const AGES = ["U7", "U9", "U11", "U13", "U15", "U18"];
 
 const meta = {
-  version: "3.1.0-draft",
-  locked: null,
+  version: "3.1.0",
+  locked: "2026-06-04",
   ageBands: AGES,
   depthLegend: {
     "-": "not yet introduced (no node emitted for this age)",
@@ -45,11 +45,18 @@ const meta = {
   // U7 = ages 5-6 (Fundamentals 1) → motor/fun only, NO cognitive reads (anchors
   // floor at U9 = ages 7-8, where LTPD introduces standard-situation decisions).
   notes:
-    "DRAFT v3.1.0 — revised after a 4-coach panel (skills/tactics/pedagogy/adversarial) and a " +
-    "lineage research pass. Lineage now: swedish (scanning) = PRIMARY-cited (2024 SHL/SDHL study); " +
-    "tarasov-soviet = SCHOLARLY-cited (Bespomoshchnov & Caron 2017 + Tarasov's own writings); " +
-    "finnish = SECONDARY-cited (FIHA 2009/2013 program); czech = REMOVED (no credible source for a " +
-    "distinct methodology). Pending Head Coach agent sign-off before meta.locked.",
+    "LOCKED 2026-06-04 as the working spine after a 4-coach panel + 2 research passes + Head Coach " +
+    "agent sign-off (APPROVE WITH NITS). Lineage: swedish (scanning) = PRIMARY-cited (2024 SHL/SDHL " +
+    "study); tarasov-soviet = SCHOLARLY (Bespomoshchnov & Caron 2017 + Tarasov's writings); finnish = " +
+    "SECONDARY (FIHA 2009/2013); czech = removed. The lock is a working spine — it evolves from real " +
+    "question data, not more upfront debate.",
+  // Non-blocking polish from the Head Coach sign-off, for a future revision:
+  openNits: [
+    "net-front-play: keep U11/U13 items recognition-only (where to be / when to tip), not contested net battles.",
+    "creativity-under-pressure reaches R at U15 while the anchors reach R at U18 — review the one-band-ahead ordering.",
+    "Populate load-bearing per-concept lineage `note` fields (e.g. swedish->scanning, tarasov->creativity/attacking-1v1).",
+    "stick-and-body-detail and forecheck-pressure are single-source (hockey-canada only) — thin but acceptable.",
+  ],
 };
 
 const sourceModels = [
