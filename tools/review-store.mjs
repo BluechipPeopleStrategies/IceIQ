@@ -26,6 +26,18 @@ export function loadQueue(paths) {
   return q;
 }
 
+// Append a review-queue item (e.g. from the gauntlet generator). Deduped by
+// question.id — re-enqueuing the same id is a no-op. Returns { ok, added }.
+export function enqueue(paths, item) {
+  const id = item?.question?.id;
+  if (!id) return { ok: false, error: "item.question.id required" };
+  const q = loadQueue(paths);
+  if (q.items.some((i) => i.question?.id === id)) return { ok: true, added: false };
+  q.items.push(item);
+  writeJSON(paths.queue, q);
+  return { ok: true, added: true };
+}
+
 // Levels a question should land in: explicit levels[] wins; else the nodeId age.
 function levelsFor(question) {
   if (Array.isArray(question.levels) && question.levels.length) return question.levels;
