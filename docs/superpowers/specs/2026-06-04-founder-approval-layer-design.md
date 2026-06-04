@@ -140,7 +140,9 @@ per-item review is the v1. Batch operations are deliberately deferred (§8).
 {
   "items": [
     {
-      "question": { /* full bank-schema question incl. nodeId, levels[], overlays[]… */ },
+      "question": { /* full bank-schema question. nodeId = PRIMARY (age,concept) tag;
+                       levels[] = every age band it appears in, primary first (secondary =
+                       levels[] minus primary). See curriculum-ledger spec §4. */ },
       "gateHistory": { "coachPanel": "pass", "notes": ["…"] },
       "proxyVerdict": {
         "decision": "forward",

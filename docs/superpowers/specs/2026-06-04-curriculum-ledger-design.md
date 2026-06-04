@@ -149,6 +149,18 @@ are born already carrying a `nodeId`. The constants worth keeping (`ANCHOR_CONCE
 each concept belongs to exactly one domain, `(age, concept)` uniquely determines the node and
 the domain is derived — this is the `(age, unit, concept)` triple G0 references.
 
+**Multi-age tagging (primary + secondary).** A question often works across adjacent age
+bands. Each question carries exactly one **primary** node via `nodeId` (the age it is
+predominantly for, e.g. `u9.reading-the-play`) and lists every age band it should appear in
+via the existing `levels[]` field, primary first — e.g.
+`levels: ["U9 / Novice", "U7 / Initiation", "U11 / Atom"]`. `qbLoader` already surfaces a
+question in every age in `levels[]`, so secondary ages need no new machinery; the secondary
+ages are `levels[]` minus the primary. **Coverage counting:** `curriculum-audit` counts a
+question only toward its **primary** node's target — secondary-age appearances add
+availability but do not tick the secondary nodes' targets, so the generator keeps producing
+age-tailored depth rather than leaning on overlap. (A little overlap between adjacent bands is
+expected and fine.)
+
 **Derived, not stored.** `domainId` lives on the concept, not repeated on every node.
 `targetCount` may be stored explicitly OR computed by the loader from `depth` + `anchor`; the
 loader is authoritative either way (see §5).
