@@ -1,6 +1,6 @@
 {
   "meta": {
-    "version": "3.0.1-draft",
+    "version": "3.1.0-draft",
     "locked": null,
     "ageBands": [
       "U7",
@@ -18,7 +18,7 @@
       "R": "refinement — at speed under random/opposed game conditions"
     },
     "anchorMultiplier": 2,
-    "notes": "DRAFT v3.0.1 — revised after a 4-coach panel (skills/tactics/pedagogy/adversarial). Hockey content still pending a real coaching authority's sign-off before meta.locked. Lineage tags for tarasov-soviet, czech, swedish, finnish are doctrine-level (secondary sources), not primary-cited; verify before lock."
+    "notes": "DRAFT v3.1.0 — revised after a 4-coach panel (skills/tactics/pedagogy/adversarial) and a lineage research pass. Lineage now: swedish (scanning) = PRIMARY-cited (2024 SHL/SDHL study); tarasov-soviet = SCHOLARLY-cited (Bespomoshchnov & Caron 2017 + Tarasov's own writings); finnish = SECONDARY-cited (FIHA 2009/2013 program); czech = REMOVED (no credible source for a distinct methodology). Pending Head Coach agent sign-off before meta.locked."
   },
   "sourceModels": [
     {
@@ -37,25 +37,19 @@
       "id": "tarasov-soviet",
       "name": "Tarasov / Soviet school",
       "tradition": "Soviet/Russian",
-      "contributes": "Skill density and creativity/improvisation under pressure via small-area and off-ice games. (Doctrine-level; not primary-cited in the research pass.)"
+      "contributes": "Creativity/improvisation ('hockey as art'), cross-sport transfer training, and year-round off-ice conditioning. SCHOLARLY: Bespomoshchnov & Caron (2017), Int. Sport Coaching Journal 4(3); + Tarasov, 'Road to Olympus' (primary)."
     },
     {
       "id": "swedish",
       "name": "Swedish development model",
       "tradition": "Swedish",
-      "contributes": "Scanning / visual exploratory behaviour and read-and-react in small space. (Joint IIHF Finnish-Swedish source; Swedish-specific attribution doctrine-level.)"
+      "contributes": "Scanning / visual exploratory behaviour as a trainable perceptual skill. PRIMARY: 2024 SHL/SDHL study (J. Sports Sci. 2024.2433899) with the Swedish Ice Hockey Federation — scanning before receiving raised success 70.1%->78.8% (n=2,545)."
     },
     {
       "id": "finnish",
       "name": "Finnish development model",
       "tradition": "Finnish",
-      "contributes": "Game-based 'play more, drill less'; small-area rep density (5-8x activity). (Joint IIHF Finnish-Swedish source.)"
-    },
-    {
-      "id": "czech",
-      "name": "Czech development model",
-      "tradition": "Czech",
-      "contributes": "Puck-skill creativity and 1v1 deception. (Doctrine-level; not primary-cited.)"
+      "contributes": "National individual-skill-development program: FIHA 2009 restructuring (Westerlund) + 2013 'Leijonapolku' path embedding skills coaches with ages 10-14; game-based methodology. (SECONDARY-sourced; small-area work is the joint Finnish-Swedish-IIHF artifact, not uniquely Finnish.)"
     },
     {
       "id": "pond-small-area",
@@ -196,11 +190,11 @@
       "readConnection": "Deception with the feet manipulates a defender's read; the decision of when to use it lives in attacking-1v1.",
       "lineage": [
         {
-          "sourceModel": "czech",
+          "sourceModel": "tarasov-soviet",
           "note": ""
         },
         {
-          "sourceModel": "tarasov-soviet",
+          "sourceModel": "hockey-canada",
           "note": ""
         }
       ]
@@ -225,7 +219,7 @@
           "note": ""
         },
         {
-          "sourceModel": "czech",
+          "sourceModel": "finnish",
           "note": ""
         }
       ]
@@ -326,11 +320,11 @@
       "readConnection": "Scanning is how information enters the decision — no scan, no read. (Anchor: the input gate.)",
       "lineage": [
         {
-          "sourceModel": "iihf",
+          "sourceModel": "swedish",
           "note": ""
         },
         {
-          "sourceModel": "swedish",
+          "sourceModel": "iihf",
           "note": ""
         },
         {
@@ -434,10 +428,6 @@
           "note": ""
         },
         {
-          "sourceModel": "czech",
-          "note": ""
-        },
-        {
           "sourceModel": "pond-small-area",
           "note": ""
         }
@@ -501,11 +491,11 @@
       "readConnection": "A read of the defender's gap and balance, then the decision to attack or move it.",
       "lineage": [
         {
-          "sourceModel": "czech",
+          "sourceModel": "tarasov-soviet",
           "note": ""
         },
         {
-          "sourceModel": "tarasov-soviet",
+          "sourceModel": "usa-adm",
           "note": ""
         }
       ]

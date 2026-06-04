@@ -28,7 +28,7 @@ const OUT = resolve(__dirname, "../src/data/curriculum-ledger.json");
 const AGES = ["U7", "U9", "U11", "U13", "U15", "U18"];
 
 const meta = {
-  version: "3.0.1-draft",
+  version: "3.1.0-draft",
   locked: null,
   ageBands: AGES,
   depthLegend: {
@@ -45,10 +45,11 @@ const meta = {
   // U7 = ages 5-6 (Fundamentals 1) → motor/fun only, NO cognitive reads (anchors
   // floor at U9 = ages 7-8, where LTPD introduces standard-situation decisions).
   notes:
-    "DRAFT v3.0.1 — revised after a 4-coach panel (skills/tactics/pedagogy/adversarial). " +
-    "Hockey content still pending a real coaching authority's sign-off before meta.locked. " +
-    "Lineage tags for tarasov-soviet, czech, swedish, finnish are doctrine-level (secondary " +
-    "sources), not primary-cited; verify before lock.",
+    "DRAFT v3.1.0 — revised after a 4-coach panel (skills/tactics/pedagogy/adversarial) and a " +
+    "lineage research pass. Lineage now: swedish (scanning) = PRIMARY-cited (2024 SHL/SDHL study); " +
+    "tarasov-soviet = SCHOLARLY-cited (Bespomoshchnov & Caron 2017 + Tarasov's own writings); " +
+    "finnish = SECONDARY-cited (FIHA 2009/2013 program); czech = REMOVED (no credible source for a " +
+    "distinct methodology). Pending Head Coach agent sign-off before meta.locked.",
 };
 
 const sourceModels = [
@@ -57,13 +58,11 @@ const sourceModels = [
   { id: "usa-adm",         name: "USA Hockey ADM",              tradition: "American",
     contributes: "Age-banded skill progressions; four game-situation roles introduced ~U11/12; small-area games for decision-making; practice-heavy young." },
   { id: "tarasov-soviet",  name: "Tarasov / Soviet school",     tradition: "Soviet/Russian",
-    contributes: "Skill density and creativity/improvisation under pressure via small-area and off-ice games. (Doctrine-level; not primary-cited in the research pass.)" },
+    contributes: "Creativity/improvisation ('hockey as art'), cross-sport transfer training, and year-round off-ice conditioning. SCHOLARLY: Bespomoshchnov & Caron (2017), Int. Sport Coaching Journal 4(3); + Tarasov, 'Road to Olympus' (primary)." },
   { id: "swedish",         name: "Swedish development model",   tradition: "Swedish",
-    contributes: "Scanning / visual exploratory behaviour and read-and-react in small space. (Joint IIHF Finnish-Swedish source; Swedish-specific attribution doctrine-level.)" },
+    contributes: "Scanning / visual exploratory behaviour as a trainable perceptual skill. PRIMARY: 2024 SHL/SDHL study (J. Sports Sci. 2024.2433899) with the Swedish Ice Hockey Federation — scanning before receiving raised success 70.1%->78.8% (n=2,545)." },
   { id: "finnish",         name: "Finnish development model",   tradition: "Finnish",
-    contributes: "Game-based 'play more, drill less'; small-area rep density (5-8x activity). (Joint IIHF Finnish-Swedish source.)" },
-  { id: "czech",           name: "Czech development model",     tradition: "Czech",
-    contributes: "Puck-skill creativity and 1v1 deception. (Doctrine-level; not primary-cited.)" },
+    contributes: "National individual-skill-development program: FIHA 2009 restructuring (Westerlund) + 2013 'Leijonapolku' path embedding skills coaches with ages 10-14; game-based methodology. (SECONDARY-sourced; small-area work is the joint Finnish-Swedish-IIHF artifact, not uniquely Finnish.)" },
   { id: "pond-small-area", name: "Pond / unsanctioned / SAG",   tradition: "informal",
     contributes: "Positionless read-and-react in 2v2/3v3; constant scanning and decision load; the shared cross-tradition engine for game sense." },
   { id: "iihf",            name: "IIHF small-area-games research", tradition: "international",
@@ -107,12 +106,12 @@ const CONCEPTS = [
   ["backward-transitions", "skating-movement", false, "-IDMRR", ["hockey-canada","usa-adm"],
     "Backward skating and forward-to-backward transitions (pivots, mohawks, open-ups).",
     "Transitional footwork keeps a read alive while you change direction, especially defending the rush."],
-  ["deception-with-feet", "skating-movement", false, "-IDDMR", ["czech","tarasov-soviet"],
+  ["deception-with-feet", "skating-movement", false, "-IDDMR", ["tarasov-soviet","hockey-canada"],
     "The skating move itself: changes of pace and footwork fakes that unbalance a defender (the tool, not the when-to-use-it).",
     "Deception with the feet manipulates a defender's read; the decision of when to use it lives in attacking-1v1."],
 
   // ---- Puck Skills ----
-  ["puck-control", "puck-skills", false, "IDMRRR", ["usa-adm","hockey-canada","czech"],
+  ["puck-control", "puck-skills", false, "IDMRRR", ["usa-adm","hockey-canada","finnish"],
     "Head-up stickhandling and carrying the puck under control.",
     "Carrying head-up is the precondition for reading the play while you have the puck."],
   ["puck-protection", "puck-skills", false, "-IDMRR", ["hockey-canada","usa-adm"],
@@ -129,7 +128,7 @@ const CONCEPTS = [
     "Choosing to shoot — and which shot — is a read of the goalie, lane, and support."],
 
   // ---- Hockey Sense (anchor domain) ----
-  ["scanning", "hockey-sense", true, "-IDMRR", ["iihf","swedish","hockey-canada"],
+  ["scanning", "hockey-sense", true, "-IDMRR", ["swedish","iihf","hockey-canada"],
     "Head on a swivel: shoulder checks and visual exploration before and after receiving.",
     "Scanning is how information enters the decision — no scan, no read. (Anchor: the input gate.)"],
   ["reading-the-play", "hockey-sense", true, "-IDDMR", ["usa-adm","iihf","pond-small-area","hockey-canada"],
@@ -141,7 +140,7 @@ const CONCEPTS = [
   ["time-and-space", "hockey-sense", true, "-IDDMR", ["iihf","pond-small-area","hockey-canada"],
     "Recognizing, creating, and exploiting time and space; when to slow down vs attack.",
     "The anchor variable every on-ice decision is solved against."],
-  ["creativity-under-pressure", "hockey-sense", false, "-IDMRR", ["tarasov-soviet","czech","pond-small-area"],
+  ["creativity-under-pressure", "hockey-sense", false, "-IDMRR", ["tarasov-soviet","pond-small-area"],
     "Finding the second or third option when the first is taken away — expanding the option set under pressure.",
     "Tests the next read when the obvious play is gone, rather than open-ended improvisation."],
 
@@ -152,7 +151,7 @@ const CONCEPTS = [
   ["off-puck-support-offense", "offensive-play", false, "-IDMRR", ["iihf","hockey-canada","pond-small-area"],
     "Off-puck support: getting open, give-and-go timing, support angles/triangles/distance, and driving the net to be the best option for the carrier.",
     "Reading where to go without the puck — and at what angle — to give the carrier a real option."],
-  ["attacking-1v1", "offensive-play", false, "-IDDMR", ["czech","tarasov-soviet"],
+  ["attacking-1v1", "offensive-play", false, "-IDDMR", ["tarasov-soviet","usa-adm"],
     "Beating a defender one-on-one: the decision of when to take them vs make a play.",
     "A read of the defender's gap and balance, then the decision to attack or move it."],
   ["cycle-and-possession", "offensive-play", false, "--IDMR", ["hockey-canada"],
