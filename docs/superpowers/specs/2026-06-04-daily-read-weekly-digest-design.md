@@ -164,6 +164,10 @@ click unsubscribe ──▶ /api/unsubscribe ──update status=unsubscribed─
 - Double opt-in (express consent).
 - Every email: sender identification + a contact/physical mailing line + a working one-click
   unsubscribe. Unsubscribe honored immediately (status flip, excluded from next send).
+- **Mailing address is a clearly-marked placeholder** in the email templates
+  (`{{CASL_MAILING_ADDRESS}}`) for now. A real address exists and is dropped in before the
+  first public send — it does not block building or testing the pipeline. The hard rule: no
+  real send to strangers until the placeholder is replaced.
 - Retain proof of consent (`created_at`, `confirmed_at`, source level).
 
 ## Dependency: content
@@ -198,7 +202,8 @@ newsletter publicly.
    seasonal drift.
 2. **Resend sending domain.** Requires a verified domain (`rinkreads.com`?) for good
    deliverability and a real `RESEND_FROM`. Confirm the domain to verify in Resend.
-3. **Physical mailing address for the CASL footer.** Required text — what address/contact line do
-   we use?
+3. **Physical mailing address for the CASL footer.** RESOLVED: ship as a marked placeholder
+   (`{{CASL_MAILING_ADDRESS}}`); a real address exists and is dropped in before the first
+   public send. Does not block the plan.
 4. **One level per email, or allow a parent to pick multiple levels** (siblings)? Default: one
    level per opt-in row; a parent can opt in twice for two kids.
