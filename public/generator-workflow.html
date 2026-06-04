@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RinkReads — Question Generator Workflow</title>
+<style>
+:root{
+  --navy:#0B1A33; --navy2:#13284a; --gold:#C9A24B; --ink:#1a2433; --muted:#6b7686; --line:#e3e7ee; --bg:#f4f6fa;
+  --code:#2b6fd6;    /* deterministic */
+  --agent:#7a4ed1;   /* single agent */
+  --panel:#C9A24B;   /* coach panel */
+  --head:#0B1A33;    /* head coach */
+  --ship:#0B6B3A;    /* queue / live */
+  --drop:#b4731f;    /* drop / learn */
+}
+*{box-sizing:border-box}
+body{margin:0;font-family:Inter,system-ui,Arial,sans-serif;color:var(--ink);background:var(--bg);line-height:1.45}
+header{background:var(--navy);color:#fff;padding:20px 26px}
+header h1{margin:0;font-size:21px;letter-spacing:.2px}
+header p{margin:7px 0 0;font-size:13px;color:#c7d0e0;max-width:880px}
+.legend{display:flex;gap:16px;flex-wrap:wrap;padding:14px 26px;font-size:12px;color:var(--muted);align-items:center;border-bottom:1px solid var(--line)}
+.tag{display:inline-block;font-size:10px;font-weight:800;letter-spacing:.4px;color:#fff;border-radius:5px;padding:2px 7px;margin-right:6px}
+.wrap{max-width:1080px;margin:0 auto;padding:22px 26px 70px;display:grid;grid-template-columns:1fr 300px;gap:26px}
+@media(max-width:880px){.wrap{grid-template-columns:1fr}}
+.flow{display:flex;flex-direction:column;align-items:stretch}
+.stage{background:#fff;border:1px solid var(--line);border-left:6px solid var(--code);border-radius:13px;padding:13px 15px;box-shadow:0 3px 10px rgba(11,26,51,.05);position:relative}
+.stage.agent{border-left-color:var(--agent)}
+.stage.panel{border-left-color:var(--panel)}
+.stage.head{border-left-color:var(--head)}
+.stage.ship{border-left-color:var(--ship)}
+.stage.input{border-left-color:#94a3b8;background:#fbfcfe}
+.shead{display:flex;align-items:center;gap:9px;flex-wrap:wrap}
+.gid{font-size:11px;font-weight:800;color:#fff;background:var(--navy);border-radius:6px;padding:2px 8px}
+.sname{font-size:15px;font-weight:800;color:var(--navy)}
+.who{font-size:10px;font-weight:800;letter-spacing:.4px;border-radius:10px;padding:2px 8px;margin-left:auto}
+.sdesc{font-size:12.5px;color:#3a4252;margin-top:6px}
+.sgate{font-size:11px;color:var(--drop);margin-top:7px}
+.arrow{align-self:center;color:#9fb0cc;font-size:18px;line-height:1;margin:4px 0}
+.panelbox{display:grid;grid-template-columns:1fr 1fr 1fr;gap:9px;margin-top:10px}
+.coach{border:1px solid var(--line);border-radius:9px;padding:8px 9px;background:#fbfaf5}
+.coach.perf{border:1.5px solid var(--gold);background:#fff8e9}
+.coach .ct{font-size:11px;font-weight:800;color:var(--navy)}
+.coach .cd{font-size:11px;color:#5a6473;margin-top:3px}
+.debate{margin-top:9px;font-size:11.5px;color:#5a4a10;background:#fff8e9;border:1px dashed var(--gold);border-radius:8px;padding:7px 9px}
+.side{display:flex;flex-direction:column;gap:16px}
+.card{background:#fff;border:1px solid var(--line);border-radius:13px;padding:14px;box-shadow:0 3px 10px rgba(11,26,51,.05)}
+.card h3{margin:0 0 8px;font-size:13px;color:var(--navy)}
+.loop{border-left:4px solid var(--drop)}
+.loop.rework{border-left-color:var(--agent)}
+.card p{margin:0 0 8px;font-size:12px;color:#4a5260}
+.card .mono{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:11px;background:#f1f4f9;border-radius:6px;padding:2px 6px;color:#33405a}
+.pill{display:inline-block;font-size:10px;font-weight:800;color:#fff;border-radius:10px;padding:2px 8px}
+.flowfeed{font-size:11px;color:var(--drop);margin:4px 0 0;font-weight:600}
+.foot{max-width:1080px;margin:0 auto;padding:0 26px 40px;font-size:11.5px;color:var(--muted)}
+.foot code{background:#eef2f7;border-radius:4px;padding:1px 5px}
+</style></head><body>
+
+<header>
+  <h1>RinkReads — Question Generator Gauntlet</h1>
+  <p>Every question is born from the locked curriculum ledger and must clear deterministic checks, a debating 3-coach panel (one a perfectionist), and a stricter Head Coach before it reaches the founder's review queue. Failures are dropped — and the workflow <b>learns</b> from each one.</p>
+</header>
+
+<div class="legend">
+  <span><span class="tag" style="background:var(--code)">CODE</span>deterministic gate</span>
+  <span><span class="tag" style="background:var(--agent)">AGENT</span>single LLM agent</span>
+  <span><span class="tag" style="background:var(--panel);color:#33270a">PANEL</span>3 coaches, debate to consensus</span>
+  <span><span class="tag" style="background:var(--head)">HEAD</span>Head Coach authority</span>
+  <span><span class="tag" style="background:var(--ship)">LIVE</span>founder queue → bank</span>
+</div>
+
+<div class="wrap">
+  <div class="flow">
+
+    <div class="stage input">
+      <div class="shead"><span class="sname">Curriculum Ledger (locked v3.1.0)</span><span class="who" style="background:#eef0f4;color:#5a6473">INPUT</span></div>
+      <div class="sdesc">Pick an <b>under-target node</b> = (age × concept × depth), e.g. <span style="font-family:monospace">u9.passing · DEVELOPING</span>. 152 nodes, ~860 target questions. Anchors first.</div>
+      <div class="flowfeed">+ Lessons memory injected ↓ (see right)</div>
+    </div>
+    <div class="arrow">↓</div>
+
+    <div class="stage agent">
+      <div class="shead"><span class="gid">G0</span><span class="sname">Creator</span><span class="who" style="background:var(--agent)">AGENT</span></div>
+      <div class="sdesc">Writes one text multiple-choice question for the node — brand + age rules + assessment-integrity, <b>with accumulated lessons baked into its prompt</b>.</div>
+    </div>
+    <div class="arrow">↓</div>
+
+    <div class="stage">
+      <div class="shead"><span class="gid">G1–G3</span><span class="sname">Deterministic validate</span><span class="who" style="background:var(--code)">CODE</span></div>
+      <div class="sdesc">Structure (3–4 distinct options, valid index), assessment-integrity (no length-outlier "tell"), answer position <b>shuffled</b>, and dedupe by structural hash. No solver — text MC.</div>
+      <div class="sgate">fail → rework</div>
+    </div>
+    <div class="arrow">↓</div>
+
+    <div class="stage agent">
+      <div class="shead"><span class="gid">G4</span><span class="sname">Curriculum confirmer</span><span class="who" style="background:var(--agent)">AGENT</span></div>
+      <div class="sdesc">Teaches exactly the node's one read, at the right cognitive load for the age, and follows from the concept. PASS / REVISE.</div>
+      <div class="sgate">REVISE → rework</div>
+    </div>
+    <div class="arrow">↓</div>
+
+    <div class="stage panel">
+      <div class="shead"><span class="gid">G7</span><span class="sname">Coach panel — debate to unanimous “perfect”</span><span class="who" style="background:var(--panel);color:#33270a">PANEL ×3</span></div>
+      <div class="panelbox">
+        <div class="coach"><div class="ct">Tactical</div><div class="cd">Hockey correct? Declared answer truly best? Distractors actually wrong?</div></div>
+        <div class="coach"><div class="ct">Pedagogy</div><div class="cd">Teaches the read cleanly at the right age load, in kid language.</div></div>
+        <div class="coach perf"><div class="ct">★ Perfectionist</div><div class="cd">Nitpicks everything — wording, distractor spread, any ambiguity or tell. <b>Truly excellent, or nothing.</b></div></div>
+      </div>
+      <div class="debate">Round 1 is blind. If not unanimous, coaches see each other's critiques and <b>debate</b> — the perfectionist holds the line on real flaws; others concede when the point is valid. Up to 2 rounds. <b>All three must agree it is perfect</b> to advance.</div>
+      <div class="sgate">not unanimous → rework</div>
+    </div>
+    <div class="arrow">↓</div>
+
+    <div class="stage head">
+      <div class="shead"><span class="gid">G8</span><span class="sname">Head Coach</span><span class="who" style="background:var(--head)">HEAD</span></div>
+      <div class="sdesc">Even stricter. Judges whole-product fit: brand &amp; voice, exact node fit, stands proudly beside sibling questions, and is genuinely worthy of reaching the founder's own review. <b>APPROVE / KICK&nbsp;BACK.</b></div>
+      <div class="sgate">KICK BACK → rework</div>
+    </div>
+    <div class="arrow">↓</div>
+
+    <div class="stage ship">
+      <div class="shead"><span class="gid">G9</span><span class="sname">Founder review queue → live bank</span><span class="who" style="background:var(--ship)">LIVE</span></div>
+      <div class="sdesc">Cleared the whole gauntlet → lands in the review queue. You open <span style="font-family:monospace">#review</span>, see it rendered exactly as a kid would, and <b>Approve → bank.json</b> (live). The proxy gate slots in here later.</div>
+    </div>
+
+  </div>
+
+  <div class="side">
+    <div class="card loop rework">
+      <h3><span class="pill" style="background:var(--agent)">REWORK LOOP</span></h3>
+      <p>Any gate that says REVISE / not-unanimous / KICK BACK sends the question <b>back to the Creator</b> with the specific critique, to regenerate. Capped at <span class="mono">--rounds 3</span>.</p>
+      <p style="color:var(--muted)">A miss isn't a discard — it's a revise-and-resubmit, like real coaching.</p>
+    </div>
+
+    <div class="card loop">
+      <h3><span class="pill" style="background:var(--drop)">DROP + LEARN</span></h3>
+      <p>If it still can't reach the bar after the cap, it is <b>dropped</b> (logged, never shipped). A lesson-extractor distills the failure into <b>1–2 general rules</b>.</p>
+      <p>Rules accumulate in <span class="mono">lessons.json</span> and are <b>injected into every future Creator prompt</b> → the generator stops repeating the same mistakes.</p>
+      <p style="color:var(--drop);font-weight:600;margin-bottom:0">↑ feeds back into G0 — the self-improving loop</p>
+    </div>
+
+    <div class="card">
+      <h3>Real example (live run)</h3>
+      <p>A U9 lead-pass question was <b>dropped</b>: the perfectionist found the stem pre-committed to “you decide to pass” while still offering a “shoot” option, and the other coaches conceded. Lessons learned:</p>
+      <p class="mono">Never let the stem pre-commit to a decision while offering options that contradict it.</p>
+      <p class="mono">Distractors must cover distinct error dimensions (lane AND timing), not the same mistake twice.</p>
+    </div>
+
+    <div class="card">
+      <h3>Run it</h3>
+      <p class="mono">npm run gauntlet -- --node u9.passing</p>
+      <p class="mono">npm run gauntlet -- --fill-gaps --max 10</p>
+      <p style="color:var(--muted)">Default = full panel + Head Coach. <span class="mono">--fast</span> = single coach. <span class="mono">--mock</span> = no-cost dry run.</p>
+    </div>
+  </div>
+</div>
+
+<div class="foot">
+  Pipeline: <code>tools/gauntlet-run.mjs</code> · prompts <code>tools/gauntlet/prompts.mjs</code> · lessons <code>tools/gauntlet/lessons.mjs</code> · ledger <code>src/data/curriculum-ledger.json</code> · queue → <code>#review</code> → <code>src/data/bank.json</code>. Free on Claude Max (shells to the claude CLI).
+</div>
+
+</body></html>
