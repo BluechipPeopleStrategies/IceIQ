@@ -1,0 +1,108 @@
+{
+  "items": [
+    {
+      "question": {
+        "id": "rev_u9_passing_seam",
+        "type": "mc",
+        "nodeId": "u9.passing",
+        "levels": ["U9 / Novice", "U7 / Initiation"],
+        "cat": "Puck Skills",
+        "d": 1,
+        "sit": "You have the puck and your teammate is skating up the middle with no one near them. A defender is reaching for you. What is the best play?",
+        "opts": [
+          "Pass it to your open teammate in the middle",
+          "Hold onto it and try to skate around the defender",
+          "Shoot it all the way down the ice",
+          "Stop and wait for help"
+        ],
+        "ok": 0,
+        "explain": "An open teammate with speed up the middle is the best option. A good pass beats a stickhandle when a defender is already on you."
+      },
+      "gateHistory": { "coachPanel": "pass", "notes": ["clear single read", "age-appropriate U9"] },
+      "proxyVerdict": {
+        "decision": "forward",
+        "scores": { "brand": 0.92, "learner": 0.9, "strategy": 0.85 },
+        "rationale": "On-brand 'what's the read' framing, one clean decision, friendly for U7-U9. Good teaser value."
+      },
+      "queuedAt": "2026-06-04"
+    },
+    {
+      "question": {
+        "id": "rev_u11_decision_2on1",
+        "type": "mc",
+        "nodeId": "u11.decision-making",
+        "levels": ["U11 / Atom"],
+        "cat": "Hockey Sense",
+        "d": 2,
+        "sit": "You carry the puck on a 2-on-1. The lone defender slides over and takes away the pass to your teammate. What is the highest-value decision?",
+        "opts": [
+          "Shoot — the defender committed to the pass, so the lane to the net is open",
+          "Force the pass through the defender anyway",
+          "Turn back to your own end and regroup",
+          "Dump the puck into the corner"
+        ],
+        "ok": 0,
+        "explain": "When the defender commits to taking away the pass, they have given you the shooting lane. Reading what the defender takes away tells you what is open."
+      },
+      "gateHistory": { "coachPanel": "pass", "notes": ["anchor concept", "read-the-defender logic"] },
+      "proxyVerdict": {
+        "decision": "forward",
+        "scores": { "brand": 0.95, "learner": 0.88, "strategy": 0.9 },
+        "rationale": "Anchor decision-making content, textbook 'read what the D gives you' — exactly the RinkReads core. Strong."
+      },
+      "queuedAt": "2026-06-04"
+    },
+    {
+      "question": {
+        "id": "rev_u11_oddman_drive",
+        "type": "mc",
+        "nodeId": "u11.odd-man-reads",
+        "levels": ["U11 / Atom", "U13 / Peewee"],
+        "cat": "Offensive Play",
+        "d": 2,
+        "sit": "3-on-2 rush. You are the middle driver without the puck. The puck carrier is wide on the right. What should you do?",
+        "opts": [
+          "Drive hard to the net for a pass or rebound",
+          "Curl back toward the blue line",
+          "Stop at the top of the circles and wait",
+          "Skate to the same side as the puck carrier"
+        ],
+        "ok": 0,
+        "explain": "On a 3-on-2 the middle lane drives the net — it forces the defence to honour you and opens a pass or a rebound. Spreading the attack stretches two defenders across three lanes."
+      },
+      "gateHistory": { "coachPanel": "pass", "notes": ["new odd-man concept", "off-puck read"] },
+      "proxyVerdict": {
+        "decision": "forward",
+        "scores": { "brand": 0.9, "learner": 0.86, "strategy": 0.88 },
+        "rationale": "Covers the odd-man gap the coaches flagged; off-puck 'where do I go' read. Multi-age (U11+U13) is good coverage value."
+      },
+      "queuedAt": "2026-06-04"
+    },
+    {
+      "question": {
+        "id": "rev_u13_gap_standup",
+        "type": "mc",
+        "nodeId": "u13.gap-control",
+        "levels": ["U13 / Peewee"],
+        "cat": "Defensive Play",
+        "d": 2,
+        "sit": "You are the lone defender on a 2-on-1. The puck carrier is winding up to shoot. What is your job?",
+        "opts": [
+          "Take away the pass and let your goalie have the shot",
+          "Slide to block the shot and leave the pass open",
+          "Skate at the puck carrier to try a poke check",
+          "Back all the way in to the net"
+        ],
+        "ok": 0,
+        "explain": "On a 2-on-1 the defender takes away the pass and trusts the goalie to handle the shot. A shooter the goalie can see is a better outcome than a back-door tap-in."
+      },
+      "gateHistory": { "coachPanel": "pass", "notes": ["mirrors odd-man read on defence", "trust-your-goalie principle"] },
+      "proxyVerdict": {
+        "decision": "forward",
+        "scores": { "brand": 0.91, "learner": 0.84, "strategy": 0.83 },
+        "rationale": "Defensive mirror of the 2-on-1 read; teaches the trust-the-goalie principle. Pairs well with the offensive odd-man item."
+      },
+      "queuedAt": "2026-06-04"
+    }
+  ]
+}
