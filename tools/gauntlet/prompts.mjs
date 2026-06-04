@@ -84,23 +84,6 @@ Judge it. If anything fails either lens, verdict REVISE with concrete notes. Oth
   return { system, prompt };
 }
 
-export function buildCoachPrompt({ question, node, concept }) {
-  const system =
-`You are a youth-hockey COACH acting as the ANSWER-KEY AUTHORITY for RinkReads (there is no automated solver for text questions — you decide correctness).
-Confirm BOTH: (a) the declared correct option is genuinely the best hockey read for the situation, and (b) every other option is plausible-but-wrong (a real player might choose it) and NOT also-correct.
-If a different option is actually best, or a distractor is also defensible, verdict REVISE.
-Return ONLY: {"verdict":"PASS"|"REVISE","correctIndex":<int>,"confidence":<0-1>,"notes":["..."]}`;
-  const correct = Array.isArray(question.opts) ? question.opts[question.ok] : undefined;
-  const prompt =
-`Age ${node.ageId}. Concept "${concept.name}" — the read: ${concept.readConnection}
-Situation: ${question.sit}
-Options: ${JSON.stringify(question.opts)}
-Declared correct (index ${question.ok}): ${JSON.stringify(correct)}
-
-Is the declared answer the best read, and are the distractors plausible-but-wrong? PASS or REVISE.`;
-  return { system, prompt };
-}
-
 // The three panel lenses. One is a perfectionist who drives the debate.
 export const PANEL_LENSES = [
   { key: "tactical", title: "Tactical / answer-key coach",

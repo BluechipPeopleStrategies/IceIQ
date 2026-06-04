@@ -32,7 +32,7 @@ const paths = {
 
 // ---------- args ----------
 function parseArgs(argv) {
-  const a = { count: 1, max: Infinity, model: "sonnet", rounds: 2, mock: false, dryRun: false, node: null, fillGaps: false, fast: false, debateRounds: 2, mockFail: false };
+  const a = { count: 1, max: Infinity, model: "sonnet", rounds: 3, mock: false, dryRun: false, node: null, fillGaps: false, fast: false, debateRounds: 2, mockFail: false };
   for (let i = 0; i < argv.length; i++) {
     const t = argv[i];
     if (t === "--node") a.node = argv[++i];
@@ -47,6 +47,10 @@ function parseArgs(argv) {
     else if (t === "--debate-rounds") a.debateRounds = parseInt(argv[++i], 10);
     else if (t === "--mock-fail") a.mockFail = true;
   }
+  // Both round counts must be >= 1 (a bad/zero/NaN flag would otherwise skip the
+  // loop and leave panel reviews null).
+  a.rounds = Math.max(1, Number.isFinite(a.rounds) ? a.rounds : 3);
+  a.debateRounds = Math.max(1, Number.isFinite(a.debateRounds) ? a.debateRounds : 2);
   return a;
 }
 
@@ -123,7 +127,7 @@ async function runPanel(q, node, concept, opts) {
     }
     if (reviews.every((r) => r.verdict === "PASS")) return { ok: true, critiques: [] };
   }
-  return { ok: false, critiques: reviews.filter((r) => r.verdict !== "PASS").flatMap((r) => r.critique) };
+  return { ok: false, critiques: (reviews || []).filter((r) => r.verdict !== "PASS").flatMap((r) => r.critique) };
 }
 
 // The Head Coach gate. Returns { ok, notes }.
@@ -137,7 +141,7 @@ async function runHeadCoach(q, node, concept, opts) {
 
 // Drop a failed question: log it and distill a lesson for next time.
 async function dropAndLearn(q, node, concept, critique, opts) {
-  try { appendFileSync(paths.log, JSON.stringify({ ts: new Date().toISOString(), by: "gauntlet", action: "drop", nodeId: node.id, critique }) + "\n"); } catch {}
+  try { appendFileSync(paths.log, JSON.stringify({ ts: new Date().toISOString(), by: "gauntlet", action: "drop", nodeId: node.id, rounds: opts.rounds, finalCritique: critique }) + "\n"); } catch {}
   let lessons = [];
   if (opts.mock) lessons = [`For ${node.ageId} ${node.conceptId}, avoid the issue: ${(critique[0] || "unclear").slice(0, 60)}`];
   else {
