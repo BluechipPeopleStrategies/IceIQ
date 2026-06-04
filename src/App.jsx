@@ -5055,9 +5055,6 @@ function QuestionPreviewPage({ questionId }) {
     return <div style={{minHeight:"100vh",background:C.bg,color:C.dimmer,display:"flex",alignItems:"center",justifyContent:"center",fontFamily:FONT.body,fontSize:13}}>Loading question…</div>;
   }
 
-  const isRinkQ = !!question.rink ||
-    ["drag-target","drag-place","multi-tap","sequence-rink","path-draw","lane-select","hot-spots","zone-click","rink-label","rink-drag","rink-match"].includes(question.type);
-
   return (
     <div key={key} style={{minHeight:"100vh",background:C.bg,color:C.white,fontFamily:FONT.body,padding:"1rem 1rem 4rem",maxWidth:700,margin:"0 auto"}}>
       <div style={{display:"flex",alignItems:"baseline",justifyContent:"space-between",gap:".5rem",marginBottom:".9rem",paddingBottom:".6rem",borderBottom:`1px solid ${C.border}`}}>
@@ -5086,15 +5083,183 @@ function QuestionPreviewPage({ questionId }) {
           </button>
         </div>
       )}
-      {isRinkQ ? (
-        <RinkReadsRinkQuestion question={question} onAnswer={(ok) => setVerdict(ok ? "ok" : "wrong")} />
-      ) : question.type === "multi" ? (
-        <MultiMCQuestion q={question} onAnswer={(ok) => setVerdict(ok ? "ok" : "wrong")}/>
-      ) : (
-        <QuestionPreviewFallback question={question} onAnswer={(ok) => setVerdict(ok ? "ok" : "wrong")}/>
-      )}
+      <QuestionPlayerView question={question} onAnswer={(ok) => setVerdict(ok ? "ok" : "wrong")} />
     </div>
   );
+}
+
+// Renders a single question OBJECT exactly as a player sees it — the shared
+// dispatch behind both the #q=<id> preview and the #review dashboard. Routes
+// rink-native types to RinkReadsRinkQuestion, `multi` to MultiMCQuestion, and
+// everything else (mc/tf + media/overlays) to QuestionPreviewFallback.
+function QuestionPlayerView({ question, onAnswer }) {
+  const isRinkQ = !!question?.rink ||
+    ["drag-target","drag-place","multi-tap","sequence-rink","path-draw","lane-select","hot-spots","zone-click","rink-label","rink-drag","rink-match"].includes(question?.type);
+  if (isRinkQ) return <RinkReadsRinkQuestion question={question} onAnswer={onAnswer} />;
+  if (question?.type === "multi") return <MultiMCQuestion q={question} onAnswer={onAnswer} />;
+  return <QuestionPreviewFallback question={question} onAnswer={onAnswer} />;
+}
+
+// Owner-only review dashboard (#review). The proxy-forwarded queue renders each
+// question exactly as a player sees it (QuestionPlayerView) with the proxy's
+// verdict beside it; Approve writes into bank.json (public), Send back / Reject
+// remove it, Edit adjusts the queued question. All actions hit the dev-only
+// /__review/* endpoints (tools/review-server-plugin.mjs) — so this works under
+// `npm run dev`, which is where an owner review tool runs.
+function ReviewDashboard() {
+  const [items, setItems] = useState(null);   // null = loading
+  const [err, setErr] = useState(null);
+  const [busyId, setBusyId] = useState(null);
+  const [flash, setFlash] = useState(null);   // {id, text}
+  const [editId, setEditId] = useState(null);
+  const [editText, setEditText] = useState("");
+
+  function load() {
+    fetch("/__review/queue")
+      .then(r => r.ok ? r.json() : Promise.reject(new Error("queue endpoint unavailable")))
+      .then(d => setItems(Array.isArray(d.items) ? d.items : []))
+      .catch(e => setErr(e.message || String(e)));
+  }
+  useEffect(() => { load(); }, []);
+
+  async function act(route, id, body) {
+    setBusyId(id);
+    try {
+      const r = await fetch(`/__review/${route}`, {
+        method: "POST", headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ id, ...body }),
+      });
+      const data = await r.json();
+      if (!data.ok) throw new Error(data.error || "action failed");
+      return data;
+    } finally { setBusyId(null); }
+  }
+
+  async function onApprove(id, levels) {
+    try { await act("approve", id); setItems(xs => xs.filter(i => i.question.id !== id));
+      setFlash({ id, text: `Approved → live in ${levels.join(", ")}` }); }
+    catch (e) { setFlash({ id, text: `Error: ${e.message}` }); }
+  }
+  async function onReject(id) {
+    const note = window.prompt("Reject — optional note (why it's out):") ?? "";
+    try { await act("reject", id, { note }); setItems(xs => xs.filter(i => i.question.id !== id)); }
+    catch (e) { setFlash({ id, text: `Error: ${e.message}` }); }
+  }
+  async function onSendBack(id) {
+    const note = window.prompt("Send back for rework — what should change?");
+    if (note == null) return;
+    try { await act("sendback", id, { note }); setItems(xs => xs.filter(i => i.question.id !== id)); }
+    catch (e) { setFlash({ id, text: `Error: ${e.message}` }); }
+  }
+  function startEdit(item) { setEditId(item.question.id); setEditText(JSON.stringify(item.question, null, 2)); }
+  async function saveEdit(id) {
+    let question;
+    try { question = JSON.parse(editText); }
+    catch { setFlash({ id, text: "Edit is not valid JSON" }); return; }
+    try {
+      await act("edit", id, { question });
+      setItems(xs => xs.map(i => i.question.id === id ? { ...i, question } : i));
+      setEditId(null); setFlash({ id, text: "Saved" });
+    } catch (e) { setFlash({ id, text: `Error: ${e.message}` }); }
+  }
+
+  const wrap = { minHeight:"100vh", background:C.bg, color:C.white, fontFamily:FONT.body, padding:"1.25rem 1rem 5rem" };
+  const inner = { maxWidth:760, margin:"0 auto" };
+
+  if (err) {
+    return (
+      <div style={wrap}><div style={inner}>
+        <div style={{fontSize:10,letterSpacing:".16em",textTransform:"uppercase",color:C.gold,fontWeight:700}}>Founder review</div>
+        <div style={{marginTop:"1rem",padding:"1rem",border:`1px solid ${C.border}`,borderRadius:12,background:C.bgElevated}}>
+          <div style={{fontWeight:700,marginBottom:6}}>Review tools are dev-only.</div>
+          <div style={{fontSize:13,color:C.dim,lineHeight:1.6}}>
+            The <code style={{background:C.bg,padding:"1px 5px",borderRadius:4}}>/__review</code> endpoints run inside the Vite dev server.
+            Start the app with <code style={{background:C.bg,padding:"1px 5px",borderRadius:4}}>npm run dev</code> and open <code style={{background:C.bg,padding:"1px 5px",borderRadius:4}}>#review</code>.
+          </div>
+        </div>
+      </div></div>
+    );
+  }
+  if (items === null) {
+    return <div style={{...wrap,display:"flex",alignItems:"center",justifyContent:"center",color:C.dimmer,fontSize:13}}>Loading review queue…</div>;
+  }
+
+  return (
+    <div style={wrap}><div style={inner}>
+      <div style={{display:"flex",alignItems:"baseline",justifyContent:"space-between",borderBottom:`1px solid ${C.border}`,paddingBottom:".7rem",marginBottom:"1.1rem"}}>
+        <div>
+          <div style={{fontSize:10,letterSpacing:".16em",textTransform:"uppercase",color:C.gold,fontWeight:700}}>Founder review</div>
+          <div style={{fontSize:13,color:C.dim,marginTop:3}}>Proxy-forwarded questions awaiting your call. Approve sends them live.</div>
+        </div>
+        <div style={{fontSize:13,color:C.dimmer,fontWeight:700}}>{items.length} in queue</div>
+      </div>
+
+      {items.length === 0 && (
+        <div style={{textAlign:"center",color:C.dimmer,padding:"3rem 1rem",fontSize:14}}>
+          Queue clear. Nothing waiting on you. 🏒
+        </div>
+      )}
+
+      {items.map(item => {
+        const q = item.question;
+        const v = item.proxyVerdict || {};
+        const s = v.scores || {};
+        const levels = Array.isArray(q.levels) && q.levels.length ? q.levels : [];
+        const editing = editId === q.id;
+        const busy = busyId === q.id;
+        return (
+          <div key={q.id} style={{border:`1px solid ${C.border}`,borderRadius:14,marginBottom:"1.4rem",overflow:"hidden",background:C.bgElevated}}>
+            {/* proxy verdict header */}
+            <div style={{padding:".8rem 1rem",borderBottom:`1px solid ${C.border}`,background:C.purpleDim}}>
+              <div style={{display:"flex",justifyContent:"space-between",gap:".75rem",alignItems:"baseline",flexWrap:"wrap"}}>
+                <div style={{fontSize:11,fontWeight:800,letterSpacing:".06em",color:C.purple,textTransform:"uppercase"}}>Proxy: forward</div>
+                <code style={{fontSize:11,color:C.dimmer}}>{q.nodeId || "(no nodeId)"}</code>
+              </div>
+              <div style={{fontSize:13,color:C.white,lineHeight:1.5,marginTop:5}}>{v.rationale || "—"}</div>
+              <div style={{fontSize:11,color:C.dim,marginTop:6}}>
+                brand {fmtScore(s.brand)} · learner {fmtScore(s.learner)} · strategy {fmtScore(s.strategy)}
+                {levels.length ? <span style={{marginLeft:".6rem"}}>· {levels.join(", ")}</span> : null}
+              </div>
+            </div>
+
+            {/* render-as-player */}
+            <div style={{padding:"1rem"}}>
+              {editing ? (
+                <textarea value={editText} onChange={e => setEditText(e.target.value)}
+                  spellCheck={false}
+                  style={{width:"100%",minHeight:280,background:C.bg,color:C.white,border:`1px solid ${C.border}`,borderRadius:10,padding:".75rem",fontFamily:"monospace",fontSize:12,lineHeight:1.5}}/>
+              ) : (
+                <QuestionPlayerView question={q} />
+              )}
+            </div>
+
+            {/* actions */}
+            <div style={{display:"flex",gap:".5rem",flexWrap:"wrap",padding:"0 1rem 1rem",alignItems:"center"}}>
+              {editing ? (
+                <>
+                  <button disabled={busy} onClick={() => saveEdit(q.id)} style={btn(C.gold, C.bg)}>Save edit</button>
+                  <button disabled={busy} onClick={() => setEditId(null)} style={btn(C.bgElevated, C.dim, C.border)}>Cancel</button>
+                </>
+              ) : (
+                <>
+                  <button disabled={busy} onClick={() => onApprove(q.id, levels.length ? levels : ["its age"])} style={btn(C.green, C.bg)}>✓ Approve → live</button>
+                  <button disabled={busy} onClick={() => onSendBack(q.id)} style={btn(C.bgElevated, C.white, C.border)}>↩ Send back</button>
+                  <button disabled={busy} onClick={() => startEdit(item)} style={btn(C.bgElevated, C.white, C.border)}>✎ Edit</button>
+                  <button disabled={busy} onClick={() => onReject(q.id)} style={btn(C.bgElevated, C.red, C.redBorder)}>✗ Reject</button>
+                </>
+              )}
+              {flash && flash.id === q.id && <span style={{fontSize:12,color:C.dim,marginLeft:".3rem"}}>{flash.text}</span>}
+            </div>
+          </div>
+        );
+      })}
+    </div></div>
+  );
+}
+function fmtScore(n) { return typeof n === "number" ? n.toFixed(2) : "—"; }
+function btn(bg, fg, border) {
+  return { background:bg, color:fg, border:`1px solid ${border || bg}`, borderRadius:9, padding:".5rem .9rem",
+    cursor:"pointer", fontSize:13, fontWeight:700, fontFamily:FONT.body };
 }
 
 // Minimal MC / TF / Sequence fallback for non-rink types so the preview
@@ -7698,6 +7863,11 @@ export default function App() {
   }
   if (hashRoute === "playtest") {
     return <RinkPlayTest/>;
+  }
+  // Owner-only review dashboard. Backed by the dev-only /__review/* endpoints
+  // (tools/review-server-plugin.mjs), so it only functions under `npm run dev`.
+  if (hashRoute === "review") {
+    return <ReviewDashboard/>;
   }
 
   // Pre-auth hash route: parents can share rinkreads.com/#parents without logging in.
