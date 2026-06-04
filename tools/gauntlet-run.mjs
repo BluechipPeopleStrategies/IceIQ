@@ -23,6 +23,8 @@ import { loadLessons, addLesson, renderLessons } from "./gauntlet/lessons.mjs";
 import { lintScenario } from "./scenario-author/validate.mjs";
 import { buildVisualCreatorPrompt } from "./gauntlet/visual-prompts.mjs";
 import { repairScenario, scenarioHash, mockScenario } from "./gauntlet/visual-scenario.mjs";
+import { asciiRink } from "./gauntlet/ascii-rink.mjs";
+import { VISUAL_LENSES, buildVisualHockeyCoachPrompt, buildVisualCoachPrompt, buildVisualHeadCoachPrompt, buildVisualLessonExtractorPrompt } from "./gauntlet/visual-prompts.mjs";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const root = resolve(__dirname, "..");
@@ -31,6 +33,7 @@ const paths = {
   bank: resolve(root, "src/data/bank.json"),
   log: resolve(root, "src/data/review-log.jsonl"),
   lessons: resolve(root, "tools/gauntlet/lessons.json"),
+  visualLessons: resolve(root, "tools/gauntlet/visual-lessons.json"),
 };
 
 // ---------- args ----------
@@ -222,13 +225,56 @@ async function generateOne(ledger, node, opts, seen) {
   return { ok: false, dropped: true, reason: `failed after ${opts.rounds} rounds: ${notes.join("; ")}`, learned };
 }
 
-// Stage 1 visual track: author a scenario, engine-validate, enqueue. (Coaches +
-// the 4-coach visual panel land in Stage 2; here we just produce + queue a drawn
-// question so it can be seen in #review.)
+// Generic debate-to-unanimous panel for scenarios. `lenses` + `makePrompt`
+// select the hockey panel (the read) or the visual panel (the geometry).
+async function runScenarioPanel(scenario, node, concept, opts, { lenses, makePrompt }) {
+  const ascii = asciiRink(scenario);
+  let reviews = null;
+  for (let round = 1; round <= opts.debateRounds; round++) {
+    const others = round === 1 ? null : reviews;
+    reviews = [];
+    for (const lens of lenses) {
+      if (opts.mock) {
+        const verdict = (opts.mockFail && lens.key === "perfectionist") ? "REVISE" : "PASS";
+        reviews.push({ key: lens.key, verdict, critique: verdict === "REVISE" ? ["[mock] not perfect"] : [] });
+      } else {
+        const peers = others ? others.filter((o) => o.key !== lens.key) : null;
+        let r;
+        try { r = await runAgent({ ...makePrompt({ scenario, ascii, node, concept, lens, others: peers }), model: opts.model }); }
+        catch (e) { r = { verdict: "REVISE", critique: [`${lens.key} error: ${e.message}`] }; }
+        reviews.push({ key: lens.key, verdict: r.verdict, critique: r.critique || [] });
+      }
+    }
+    if (reviews.every((r) => r.verdict === "PASS")) return { ok: true, critiques: [] };
+  }
+  return { ok: false, critiques: (reviews || []).filter((r) => r.verdict !== "PASS").flatMap((r) => r.critique) };
+}
+
+async function runVisualHeadCoach(scenario, node, concept, opts) {
+  if (opts.mock) return opts.mockFail ? { ok: false, notes: ["[mock] head coach kickback"] } : { ok: true, notes: [] };
+  let r;
+  try { r = await runAgent({ ...buildVisualHeadCoachPrompt({ scenario, node, concept }), model: opts.model }); }
+  catch (e) { return { ok: false, notes: [`head coach error: ${e.message}`] }; }
+  return { ok: r.verdict === "APPROVE", notes: r.notes || [] };
+}
+
+async function dropAndLearnVisual(scenario, node, concept, critique, opts) {
+  try { appendFileSync(paths.log, JSON.stringify({ ts: new Date().toISOString(), by: "gauntlet-visual", action: "drop", nodeId: node.id, rounds: opts.rounds, finalCritique: critique }) + "\n"); } catch {}
+  let lessons = [];
+  if (opts.mock) lessons = [`For ${node.ageId} ${node.conceptId}, fix the positioning issue: ${(critique[0] || "unclear").slice(0, 60)}`];
+  else {
+    try { const r = await runAgent({ ...buildVisualLessonExtractorPrompt({ scenario, node, critique }), model: opts.model }); lessons = Array.isArray(r.lessons) ? r.lessons : []; }
+    catch {}
+  }
+  for (const l of lessons) addLesson(paths.visualLessons, l);
+  return lessons;
+}
+
 async function generateVisualOne(ledger, node, opts, seen) {
   const concept = conceptById(ledger, node.conceptId);
   const domain = domainById(ledger, concept.domainId);
   const idSeed = `gvis_${node.id.replace(/\./g, "_")}_${rand()}`;
+  const lessons = renderLessons(loadLessons(paths.visualLessons));
   let notes = [];
 
   for (let round = 1; round <= opts.rounds; round++) {
@@ -236,8 +282,8 @@ async function generateVisualOne(ledger, node, opts, seen) {
     try {
       if (opts.mock) s = mockScenario(node, idSeed);
       else {
-        const { system, prompt } = buildVisualCreatorPrompt({ node, concept, domain, idSeed });
-        const extra = notes.length ? `\n\nThe previous attempt failed validation. Fix: ${notes.join("; ")}` : "";
+        const { system, prompt } = buildVisualCreatorPrompt({ node, concept, domain, idSeed, lessons });
+        const extra = notes.length ? `\n\nThe previous attempt was sent back. Fix: ${notes.join("; ")}` : "";
         s = await runAgent({ system, prompt: prompt + extra, model: opts.model });
       }
     } catch (e) { notes = [`creator error: ${e.message}`]; continue; }
@@ -249,15 +295,27 @@ async function generateVisualOne(ledger, node, opts, seen) {
     const h = scenarioHash(s);
     if (seen.has(h)) { notes = ["duplicate scenario"]; continue; }
 
+    // --fast keeps the Stage-1 behaviour (validate-only, no panels).
+    if (!opts.fast) {
+      const hockey = await runScenarioPanel(s, node, concept, opts, { lenses: PANEL_LENSES, makePrompt: buildVisualHockeyCoachPrompt });
+      if (!hockey.ok) { notes = hockey.critiques.length ? hockey.critiques : ["hockey panel not unanimous"]; continue; }
+      const visual = await runScenarioPanel(s, node, concept, opts, { lenses: VISUAL_LENSES, makePrompt: buildVisualCoachPrompt });
+      if (!visual.ok) { notes = visual.critiques.length ? visual.critiques : ["visual panel not unanimous"]; continue; }
+      const head = await runVisualHeadCoach(s, node, concept, opts);
+      if (!head.ok) { notes = head.notes.length ? head.notes : ["head coach kickback"]; continue; }
+    }
+
     const item = {
       question: s,
-      gateHistory: { creator: "pass", validate: "pass", stage: "1-validate-only" },
-      proxyVerdict: { decision: "forward", scores: {}, rationale: "Stage-1 visual question (engine-valid). Coach + visual panels are Stage 2. Review directly." },
+      gateHistory: { creator: "pass", validate: "pass", hockeyPanel: opts.fast ? "skipped" : "unanimous", visualPanel: opts.fast ? "skipped" : "unanimous", headCoach: opts.fast ? "skipped" : "approve", round },
+      proxyVerdict: { decision: "forward", scores: {}, rationale: "Drawn question cleared the gauntlet (validate + " + (opts.fast ? "fast/no-panels" : "hockey panel + 4-coach visual panel + Head Coach") + "). Founder-proxy gate (G9) not built yet — review directly." },
       queuedAt: new Date().toISOString().slice(0, 10),
     };
     return { ok: true, item, hash: h };
   }
-  return { ok: false, reason: `failed after ${opts.rounds} rounds: ${notes.join("; ")}` };
+
+  const learned = await dropAndLearnVisual({ id: idSeed, nodeId: node.id, actors: [] }, node, concept, notes, opts);
+  return { ok: false, dropped: true, reason: `failed after ${opts.rounds} rounds: ${notes.join("; ")}`, learned };
 }
 
 // ---------- main ----------
