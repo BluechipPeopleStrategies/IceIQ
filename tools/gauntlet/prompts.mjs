@@ -44,14 +44,14 @@ const MC_SCHEMA = `Output ONLY this JSON object, nothing else:
   "explain": "<1-2 sentences: why the correct read is best, in kid-friendly language>"
 }`;
 
-export function buildCreatorPrompt({ node, concept, domain, idSeed }) {
+export function buildCreatorPrompt({ node, concept, domain, idSeed, lessons = "" }) {
   const ageDisplay = AGE_LEVEL[node.ageId];
   const system =
 `You are an expert youth-hockey question writer for RinkReads, an app that develops on-ice decision-making.
 ${BRAND}
 
 You write ONE text multiple-choice question for a specific curriculum target.
-${MC_SCHEMA}`;
+${MC_SCHEMA}${lessons ? "\n\n" + lessons : ""}`;
   const prompt =
 `Write one question for this curriculum target.
 
@@ -84,19 +84,64 @@ Judge it. If anything fails either lens, verdict REVISE with concrete notes. Oth
   return { system, prompt };
 }
 
-export function buildCoachPrompt({ question, node, concept }) {
+// The three panel lenses. One is a perfectionist who drives the debate.
+export const PANEL_LENSES = [
+  { key: "tactical", title: "Tactical / answer-key coach",
+    focus: "Is the hockey correct and is the declared correct option genuinely the single best read? Are the distractors actually wrong (not also-correct)?" },
+  { key: "pedagogy", title: "Pedagogy / learner coach",
+    focus: "Does it teach this node's ONE read cleanly, at the right cognitive load for the age band, in language a kid that age understands?" },
+  { key: "perfectionist", title: "Perfectionist adversarial coach",
+    focus: "Nitpick everything: wording precision, distractor quality, any ambiguity or 'tell', edge cases. Decide whether this is TRULY EXCELLENT, not merely acceptable. Do not cave on real flaws." },
+];
+
+// A panel coach review. `others`, when present (debate rounds), carries peers' critiques.
+export function buildPanelCoachPrompt({ question, node, concept, lens, others }) {
   const system =
-`You are a youth-hockey COACH acting as the ANSWER-KEY AUTHORITY for RinkReads (there is no automated solver for text questions — you decide correctness).
-Confirm BOTH: (a) the declared correct option is genuinely the best hockey read for the situation, and (b) every other option is plausible-but-wrong (a real player might choose it) and NOT also-correct.
-If a different option is actually best, or a distractor is also defensible, verdict REVISE.
-Return ONLY: {"verdict":"PASS"|"REVISE","correctIndex":<int>,"confidence":<0-1>,"notes":["..."]}`;
-  const correct = Array.isArray(question.opts) ? question.opts[question.ok] : undefined;
+`You are the ${lens.title} on a RinkReads youth-hockey question panel reviewing one multiple-choice question.
+Your lens: ${lens.focus}
+The bar is PERFECT, not "good enough" — only PASS a question you would stake your name on shipping to kids.
+Return ONLY: {"verdict":"PASS"|"REVISE","critique":["specific, actionable points if REVISE (else empty)"]}`;
+  const peer = Array.isArray(others) && others.length
+    ? `\n\nThis is a debate round. The other coaches said:\n` +
+      others.map((o) => `- [${o.key}] ${(o.critique || []).join("; ") || "PASS"}`).join("\n") +
+      `\nHold your position if their points don't resolve a real flaw; concede if they do.`
+    : "";
   const prompt =
 `Age ${node.ageId}. Concept "${concept.name}" — the read: ${concept.readConnection}
-Situation: ${question.sit}
-Options: ${JSON.stringify(question.opts)}
-Declared correct (index ${question.ok}): ${JSON.stringify(correct)}
+Question:
+${JSON.stringify(question, null, 2)}
+Correct option index: ${question.ok}${peer}
 
-Is the declared answer the best read, and are the distractors plausible-but-wrong? PASS or REVISE.`;
+Judge against your lens at the PERFECT bar. PASS or REVISE.`;
+  return { system, prompt };
+}
+
+// The Head Coach — stricter than the panel, judges whole-product fit.
+export function buildHeadCoachPrompt({ question, node, concept }) {
+  const system =
+`You are the HEAD COACH for RinkReads, the final development authority. A panel of three coaches has already unanimously approved this question as perfect. Your bar is even higher.
+Judge whole-product fit: brand & voice (Game Sense, warm, colorblind-safe), exact fit to the curriculum node, that it stands proudly next to sibling questions, and that it is genuinely worthy of reaching the founder's own review. Anything less than excellent on ALL of these is a kick-back.
+Return ONLY: {"verdict":"APPROVE"|"KICK_BACK","notes":["specific reasons if KICK_BACK"]}`;
+  const prompt =
+`Node ${node.id} (age ${node.ageId}, concept "${concept.name}": ${concept.definition}).
+Question:
+${JSON.stringify(question, null, 2)}
+
+Approve only if this is excellent on every dimension. Otherwise KICK_BACK with reasons.`;
+  return { system, prompt };
+}
+
+// Distills a dropped question's failure into 1-2 reusable, node-agnostic rules.
+export function buildLessonExtractorPrompt({ question, node, critique }) {
+  const system =
+`You improve a youth-hockey question generator. A question was DROPPED after failing review. Turn the failure into 1-2 GENERAL, reusable rules a question writer should follow next time (not specific to this exact question). Keep each rule short and imperative.
+Return ONLY: {"lessons":["rule 1","rule 2"]}`;
+  const prompt =
+`Age ${node.ageId}, concept "${node.conceptId}".
+Question that failed:
+${JSON.stringify(question, null, 2)}
+Why it failed: ${(critique || []).join("; ")}
+
+Give 1-2 general rules to prevent this class of failure.`;
   return { system, prompt };
 }

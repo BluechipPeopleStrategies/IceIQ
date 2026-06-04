@@ -10,7 +10,7 @@
 //   node tools/gauntlet-run.mjs --fill-gaps [--max 10] [--count 1]
 //   node tools/gauntlet-run.mjs --node u9.passing --mock      # no claude calls
 // Flags: --model sonnet  --rounds 2  --mock  --dry-run
-import { readFileSync, readdirSync, existsSync } from "node:fs";
+import { readFileSync, readdirSync, existsSync, appendFileSync } from "node:fs";
 import { resolve, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 import { loadLedger, nodeById, conceptById, domainById } from "./lib/curriculum-ledger.mjs";
@@ -18,7 +18,8 @@ import { runAgent } from "./lib/claude-agent.mjs";
 import { validateMC, structuralHash } from "./gauntlet/validate-mc.mjs";
 import { selectTargets } from "./gauntlet/select-targets.mjs";
 import { enqueue, loadQueue } from "./review-store.mjs";
-import { buildCreatorPrompt, buildCurriculumPrompt, buildCoachPrompt, AGE_LEVEL } from "./gauntlet/prompts.mjs";
+import { buildCreatorPrompt, buildCurriculumPrompt, buildPanelCoachPrompt, buildHeadCoachPrompt, buildLessonExtractorPrompt, PANEL_LENSES, AGE_LEVEL } from "./gauntlet/prompts.mjs";
+import { loadLessons, addLesson, renderLessons } from "./gauntlet/lessons.mjs";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const root = resolve(__dirname, "..");
@@ -26,11 +27,12 @@ const paths = {
   queue: resolve(root, "src/data/review-queue.json"),
   bank: resolve(root, "src/data/bank.json"),
   log: resolve(root, "src/data/review-log.jsonl"),
+  lessons: resolve(root, "tools/gauntlet/lessons.json"),
 };
 
 // ---------- args ----------
 function parseArgs(argv) {
-  const a = { count: 1, max: Infinity, model: "sonnet", rounds: 2, mock: false, dryRun: false, node: null, fillGaps: false };
+  const a = { count: 1, max: Infinity, model: "sonnet", rounds: 3, mock: false, dryRun: false, node: null, fillGaps: false, fast: false, debateRounds: 2, mockFail: false };
   for (let i = 0; i < argv.length; i++) {
     const t = argv[i];
     if (t === "--node") a.node = argv[++i];
@@ -41,7 +43,14 @@ function parseArgs(argv) {
     else if (t === "--rounds") a.rounds = parseInt(argv[++i], 10);
     else if (t === "--mock") a.mock = true;
     else if (t === "--dry-run") a.dryRun = true;
+    else if (t === "--fast") a.fast = true;
+    else if (t === "--debate-rounds") a.debateRounds = parseInt(argv[++i], 10);
+    else if (t === "--mock-fail") a.mockFail = true;
   }
+  // Both round counts must be >= 1 (a bad/zero/NaN flag would otherwise skip the
+  // loop and leave panel reviews null).
+  a.rounds = Math.max(1, Number.isFinite(a.rounds) ? a.rounds : 3);
+  a.debateRounds = Math.max(1, Number.isFinite(a.debateRounds) ? a.debateRounds : 2);
   return a;
 }
 
@@ -97,20 +106,67 @@ function mockCreate(node, concept, domain, idSeed) {
   };
 }
 
+// Run the 3-coach panel, debating to unanimous PASS. Returns { ok, critiques }.
+async function runPanel(q, node, concept, opts) {
+  let reviews = null;
+  for (let round = 1; round <= opts.debateRounds; round++) {
+    const others = round === 1 ? null : reviews;
+    reviews = [];
+    for (const lens of PANEL_LENSES) {
+      if (opts.mock) {
+        // Perfectionist fails forever under --mock-fail to exercise drop+learn.
+        const verdict = (opts.mockFail && lens.key === "perfectionist") ? "REVISE" : "PASS";
+        reviews.push({ key: lens.key, verdict, critique: verdict === "REVISE" ? ["[mock] not perfect"] : [] });
+      } else {
+        const peers = others ? others.filter((o) => o.key !== lens.key) : null;
+        let r;
+        try { r = await runAgent({ ...buildPanelCoachPrompt({ question: q, node, concept, lens, others: peers }), model: opts.model }); }
+        catch (e) { r = { verdict: "REVISE", critique: [`${lens.key} error: ${e.message}`] }; }
+        reviews.push({ key: lens.key, verdict: r.verdict, critique: r.critique || [] });
+      }
+    }
+    if (reviews.every((r) => r.verdict === "PASS")) return { ok: true, critiques: [] };
+  }
+  return { ok: false, critiques: (reviews || []).filter((r) => r.verdict !== "PASS").flatMap((r) => r.critique) };
+}
+
+// The Head Coach gate. Returns { ok, notes }.
+async function runHeadCoach(q, node, concept, opts) {
+  if (opts.mock) return opts.mockFail ? { ok: false, notes: ["[mock] head coach kickback"] } : { ok: true, notes: [] };
+  let r;
+  try { r = await runAgent({ ...buildHeadCoachPrompt({ question: q, node, concept }), model: opts.model }); }
+  catch (e) { return { ok: false, notes: [`head coach error: ${e.message}`] }; }
+  return { ok: r.verdict === "APPROVE", notes: r.notes || [] };
+}
+
+// Drop a failed question: log it and distill a lesson for next time.
+async function dropAndLearn(q, node, concept, critique, opts) {
+  try { appendFileSync(paths.log, JSON.stringify({ ts: new Date().toISOString(), by: "gauntlet", action: "drop", nodeId: node.id, rounds: opts.rounds, finalCritique: critique }) + "\n"); } catch {}
+  let lessons = [];
+  if (opts.mock) lessons = [`For ${node.ageId} ${node.conceptId}, avoid the issue: ${(critique[0] || "unclear").slice(0, 60)}`];
+  else {
+    try { const r = await runAgent({ ...buildLessonExtractorPrompt({ question: q, node, critique }), model: opts.model }); lessons = Array.isArray(r.lessons) ? r.lessons : []; }
+    catch {}
+  }
+  for (const l of lessons) addLesson(paths.lessons, l);
+  return lessons;
+}
+
 // ---------- one node -> one question through the gates ----------
 async function generateOne(ledger, node, opts, seen) {
   const concept = conceptById(ledger, node.conceptId);
   const domain = domainById(ledger, concept.domainId);
   const idSeed = `gen_${node.id.replace(/\./g, "_")}_${rand()}`;
+  const lessons = renderLessons(loadLessons(paths.lessons));
   let notes = [];
 
   for (let round = 1; round <= opts.rounds; round++) {
-    // G0 create
+    // G0 create (with accumulated lessons + this run's rework notes)
     let q;
     try {
       if (opts.mock) q = mockCreate(node, concept, domain, idSeed);
       else {
-        const { system, prompt } = buildCreatorPrompt({ node, concept, domain, idSeed });
+        const { system, prompt } = buildCreatorPrompt({ node, concept, domain, idSeed, lessons });
         const extra = notes.length ? `\n\nThe previous attempt was sent back. Fix these: ${notes.join("; ")}` : "";
         q = await runAgent({ system, prompt: prompt + extra, model: opts.model });
       }
@@ -129,28 +185,37 @@ async function generateOne(ledger, node, opts, seen) {
     }
     if (cur.verdict !== "PASS") { notes = cur.notes || ["curriculum revise"]; continue; }
 
-    // G7 coach / answer-key
-    let coach = { verdict: "PASS", confidence: 1, notes: [] };
-    if (!opts.mock) {
-      try { coach = await runAgent({ ...buildCoachPrompt({ question: q, node, concept }), model: opts.model }); }
-      catch (e) { coach = { verdict: "REVISE", notes: [`coach error: ${e.message}`] }; }
+    // Coach gate: --fast = single tactical coach (v1); default = panel + head coach.
+    if (opts.fast) {
+      let coach = { verdict: "PASS", critique: [] };
+      if (!opts.mock) {
+        try { coach = await runAgent({ ...buildPanelCoachPrompt({ question: q, node, concept, lens: PANEL_LENSES[0], others: null }), model: opts.model }); }
+        catch (e) { coach = { verdict: "REVISE", critique: [`coach error: ${e.message}`] }; }
+      }
+      if (coach.verdict !== "PASS") { notes = coach.critique || coach.notes || ["coach revise"]; continue; }
+    } else {
+      const panel = await runPanel(q, node, concept, opts);
+      if (!panel.ok) { notes = panel.critiques.length ? panel.critiques : ["panel not unanimous"]; continue; }
+      const head = await runHeadCoach(q, node, concept, opts);
+      if (!head.ok) { notes = head.notes.length ? head.notes : ["head coach kickback"]; continue; }
     }
-    if (coach.verdict !== "PASS") { notes = coach.notes || ["coach revise"]; continue; }
 
-    // assemble queue item
+    // Passed everything → queue item
     const item = {
       question: q,
-      gateHistory: { creator: "pass", curriculum: "pass", coach: "pass", round, notes: [...(cur.notes || []), ...(coach.notes || [])] },
+      gateHistory: { creator: "pass", curriculum: "pass", panel: opts.fast ? "fast-single" : "unanimous", headCoach: opts.fast ? "skipped" : "approve", round },
       proxyVerdict: {
-        decision: "forward",
-        scores: typeof coach.confidence === "number" ? { coachConfidence: coach.confidence } : {},
-        rationale: "Auto-forwarded by the lean gauntlet (creator + curriculum + coach all passed). Founder-proxy gate (G9) not built yet — review directly.",
+        decision: "forward", scores: {},
+        rationale: "Cleared the gauntlet (creator + curriculum + " + (opts.fast ? "single coach" : "perfectionist panel + Head Coach") + "). Founder-proxy gate (G9) not built yet — review directly.",
       },
       queuedAt: new Date().toISOString().slice(0, 10),
     };
     return { ok: true, item, hash: structuralHash(q) };
   }
-  return { ok: false, reason: `failed after ${opts.rounds} rounds: ${notes.join("; ")}` };
+
+  // Rework cap reached → drop + learn
+  const learned = await dropAndLearn({ id: idSeed, nodeId: node.id }, node, concept, notes, opts);
+  return { ok: false, dropped: true, reason: `failed after ${opts.rounds} rounds: ${notes.join("; ")}`, learned };
 }
 
 // ---------- main ----------
@@ -179,7 +244,7 @@ async function main() {
     for (let i = 0; i < opts.count; i++) {
       process.stdout.write(`• ${node.id} (${i + 1}/${opts.count}) … `);
       const r = await generateOne(ledger, node, opts, seen);
-      if (!r.ok) { console.log(`skip (${r.reason})`); skipped++; continue; }
+      if (!r.ok) { console.log(`dropped (${r.reason})${r.learned?.length ? ` — learned: ${r.learned.join(" | ")}` : ""}`); skipped++; continue; }
       seen.add(r.hash);
       if (opts.dryRun) { console.log("ok (dry-run, not queued)"); continue; }
       const e = enqueue(paths, r.item);
