@@ -1,28 +1,1718 @@
 {
   "meta": {
-    "version": "3.0.0-skeleton",
+    "version": "3.0.1-draft",
     "locked": null,
-    "ageBands": ["U7", "U9", "U11", "U13", "U15", "U18"],
+    "ageBands": [
+      "U7",
+      "U9",
+      "U11",
+      "U13",
+      "U15",
+      "U18"
+    ],
     "depthLegend": {
-      "-": "not introduced (targets are 0)",
-      "I": "introduced",
-      "D": "developing",
-      "M": "mastery emphasis",
-      "R": "refinement"
+      "-": "not yet introduced (no node emitted for this age)",
+      "I": "introduced — first exposure, controlled/closed conditions",
+      "D": "developing — used in game-like reps with light pressure",
+      "M": "mastery emphasis — stable execution under semi-controlled conditions (for reads: correct recognition with more options but predictable tempo)",
+      "R": "refinement — at speed under random/opposed game conditions"
     },
-    "anchorMultiplier": 2
+    "anchorMultiplier": 2,
+    "notes": "DRAFT v3.0.1 — revised after a 4-coach panel (skills/tactics/pedagogy/adversarial). Hockey content still pending a real coaching authority's sign-off before meta.locked. Lineage tags for tarasov-soviet, czech, swedish, finnish are doctrine-level (secondary sources), not primary-cited; verify before lock."
   },
   "sourceModels": [
-    { "id": "hockey-canada",   "name": "Hockey Canada LTAD",       "tradition": "Canadian",       "contributes": "" },
-    { "id": "usa-adm",         "name": "USA Hockey ADM",           "tradition": "American",       "contributes": "" },
-    { "id": "tarasov-soviet",  "name": "Tarasov / Soviet school",  "tradition": "Soviet/Russian", "contributes": "" },
-    { "id": "swedish",         "name": "Swedish development model", "tradition": "Swedish",        "contributes": "" },
-    { "id": "finnish",         "name": "Finnish development model", "tradition": "Finnish",        "contributes": "" },
-    { "id": "czech",           "name": "Czech development model",   "tradition": "Czech",          "contributes": "" },
-    { "id": "pond-small-area", "name": "Pond / unsanctioned / SAG", "tradition": "informal",       "contributes": "" },
-    { "id": "iihf",            "name": "IIHF Coach Development",    "tradition": "international",   "contributes": "" }
+    {
+      "id": "hockey-canada",
+      "name": "Hockey Canada LTPD/LTAD",
+      "tradition": "Canadian",
+      "contributes": "Age bands + Introduce/Develop/Refine progression; technical→tactical shift (85%→35% technical, U7→U18); decision-making named the dominant Refine trait."
+    },
+    {
+      "id": "usa-adm",
+      "name": "USA Hockey ADM",
+      "tradition": "American",
+      "contributes": "Age-banded skill progressions; four game-situation roles introduced ~U11/12; small-area games for decision-making; practice-heavy young."
+    },
+    {
+      "id": "tarasov-soviet",
+      "name": "Tarasov / Soviet school",
+      "tradition": "Soviet/Russian",
+      "contributes": "Skill density and creativity/improvisation under pressure via small-area and off-ice games. (Doctrine-level; not primary-cited in the research pass.)"
+    },
+    {
+      "id": "swedish",
+      "name": "Swedish development model",
+      "tradition": "Swedish",
+      "contributes": "Scanning / visual exploratory behaviour and read-and-react in small space. (Joint IIHF Finnish-Swedish source; Swedish-specific attribution doctrine-level.)"
+    },
+    {
+      "id": "finnish",
+      "name": "Finnish development model",
+      "tradition": "Finnish",
+      "contributes": "Game-based 'play more, drill less'; small-area rep density (5-8x activity). (Joint IIHF Finnish-Swedish source.)"
+    },
+    {
+      "id": "czech",
+      "name": "Czech development model",
+      "tradition": "Czech",
+      "contributes": "Puck-skill creativity and 1v1 deception. (Doctrine-level; not primary-cited.)"
+    },
+    {
+      "id": "pond-small-area",
+      "name": "Pond / unsanctioned / SAG",
+      "tradition": "informal",
+      "contributes": "Positionless read-and-react in 2v2/3v3; constant scanning and decision load; the shared cross-tradition engine for game sense."
+    },
+    {
+      "id": "iihf",
+      "name": "IIHF small-area-games research",
+      "tradition": "international",
+      "contributes": "Finnish/Swedish SAG study: quantified rep density and decision load; codified read-react development across ages."
+    }
   ],
-  "domains": [],
-  "concepts": [],
-  "nodes": []
+  "domains": [
+    {
+      "id": "skating-movement",
+      "name": "Skating & Movement",
+      "positions": [
+        "skater"
+      ],
+      "definition": "Edges, agility, and footwork — the mobility that lets a player get to ice and execute reads in time."
+    },
+    {
+      "id": "puck-skills",
+      "name": "Puck Skills",
+      "positions": [
+        "skater"
+      ],
+      "definition": "Controlling, protecting, moving, and shooting the puck — judged as decisions (when/where/whether), not just mechanics."
+    },
+    {
+      "id": "hockey-sense",
+      "name": "Hockey Sense",
+      "positions": [
+        "skater"
+      ],
+      "definition": "The cognitive core: scanning, reading the play, and choosing the right option. RinkReads' anchor domain."
+    },
+    {
+      "id": "offensive-play",
+      "name": "Offensive Play",
+      "positions": [
+        "skater"
+      ],
+      "definition": "Creating and attacking with the puck and away from it — supporting, beating defenders, entering and extending offence."
+    },
+    {
+      "id": "defensive-play",
+      "name": "Defensive Play",
+      "positions": [
+        "skater"
+      ],
+      "definition": "Taking away time and space — gaps, angles, positioning, and coverage to deny the read and recover the puck."
+    },
+    {
+      "id": "transition-compete",
+      "name": "Transition & Compete",
+      "positions": [
+        "skater"
+      ],
+      "definition": "Switching between offence and defence and winning the puck — transition reads, breakouts, fore/backcheck, battles, talk."
+    }
+  ],
+  "concepts": [
+    {
+      "id": "edges-balance",
+      "name": "Edges Balance",
+      "domainId": "skating-movement",
+      "anchor": false,
+      "positions": [
+        "skater"
+      ],
+      "definition": "Athletic stance, edge control, and balance on both feet.",
+      "readConnection": "Being on balance and on your edges is what lets you act on a read instead of just seeing it.",
+      "lineage": [
+        {
+          "sourceModel": "hockey-canada",
+          "note": ""
+        },
+        {
+          "sourceModel": "usa-adm",
+          "note": ""
+        }
+      ]
+    },
+    {
+      "id": "agility-mobility",
+      "name": "Agility Mobility",
+      "domainId": "skating-movement",
+      "anchor": false,
+      "positions": [
+        "skater"
+      ],
+      "definition": "Crossovers, tight turns, pivots, and changing direction at speed.",
+      "readConnection": "Quick direction changes let you adjust to what the play gives you and arrive where the puck is going.",
+      "lineage": [
+        {
+          "sourceModel": "hockey-canada",
+          "note": ""
+        },
+        {
+          "sourceModel": "usa-adm",
+          "note": ""
+        }
+      ]
+    },
+    {
+      "id": "backward-transitions",
+      "name": "Backward Transitions",
+      "domainId": "skating-movement",
+      "anchor": false,
+      "positions": [
+        "skater"
+      ],
+      "definition": "Backward skating and forward-to-backward transitions (pivots, mohawks, open-ups).",
+      "readConnection": "Transitional footwork keeps a read alive while you change direction, especially defending the rush.",
+      "lineage": [
+        {
+          "sourceModel": "hockey-canada",
+          "note": ""
+        },
+        {
+          "sourceModel": "usa-adm",
+          "note": ""
+        }
+      ]
+    },
+    {
+      "id": "deception-with-feet",
+      "name": "Deception With Feet",
+      "domainId": "skating-movement",
+      "anchor": false,
+      "positions": [
+        "skater"
+      ],
+      "definition": "The skating move itself: changes of pace and footwork fakes that unbalance a defender (the tool, not the when-to-use-it).",
+      "readConnection": "Deception with the feet manipulates a defender's read; the decision of when to use it lives in attacking-1v1.",
+      "lineage": [
+        {
+          "sourceModel": "czech",
+          "note": ""
+        },
+        {
+          "sourceModel": "tarasov-soviet",
+          "note": ""
+        }
+      ]
+    },
+    {
+      "id": "puck-control",
+      "name": "Puck Control",
+      "domainId": "puck-skills",
+      "anchor": false,
+      "positions": [
+        "skater"
+      ],
+      "definition": "Head-up stickhandling and carrying the puck under control.",
+      "readConnection": "Carrying head-up is the precondition for reading the play while you have the puck.",
+      "lineage": [
+        {
+          "sourceModel": "usa-adm",
+          "note": ""
+        },
+        {
+          "sourceModel": "hockey-canada",
+          "note": ""
+        },
+        {
+          "sourceModel": "czech",
+          "note": ""
+        }
+      ]
+    },
+    {
+      "id": "puck-protection",
+      "name": "Puck Protection",
+      "domainId": "puck-skills",
+      "anchor": false,
+      "positions": [
+        "skater"
+      ],
+      "definition": "Using body position and angle to shield the puck from a defender.",
+      "readConnection": "Protecting the puck buys the extra beat needed to find the better option.",
+      "lineage": [
+        {
+          "sourceModel": "hockey-canada",
+          "note": ""
+        },
+        {
+          "sourceModel": "usa-adm",
+          "note": ""
+        }
+      ]
+    },
+    {
+      "id": "passing",
+      "name": "Passing",
+      "domainId": "puck-skills",
+      "anchor": false,
+      "positions": [
+        "skater"
+      ],
+      "definition": "Selecting a lane, timing, and weighting a pass; leading the receiver.",
+      "readConnection": "A pass is a decision about lane and timing — the most common 'what's the read' moment.",
+      "lineage": [
+        {
+          "sourceModel": "hockey-canada",
+          "note": ""
+        },
+        {
+          "sourceModel": "usa-adm",
+          "note": ""
+        }
+      ]
+    },
+    {
+      "id": "receiving",
+      "name": "Receiving",
+      "domainId": "puck-skills",
+      "anchor": false,
+      "positions": [
+        "skater"
+      ],
+      "definition": "Catching and settling pucks, on the move, with a plan before they arrive.",
+      "readConnection": "Receiving with a pre-scan turns a catch into the next decision already made.",
+      "lineage": [
+        {
+          "sourceModel": "hockey-canada",
+          "note": ""
+        },
+        {
+          "sourceModel": "usa-adm",
+          "note": ""
+        }
+      ]
+    },
+    {
+      "id": "shooting",
+      "name": "Shooting",
+      "domainId": "puck-skills",
+      "anchor": false,
+      "positions": [
+        "skater"
+      ],
+      "definition": "Shot mechanics and selection; release, shooting in traffic and off the rush.",
+      "readConnection": "Choosing to shoot — and which shot — is a read of the goalie, lane, and support.",
+      "lineage": [
+        {
+          "sourceModel": "hockey-canada",
+          "note": ""
+        },
+        {
+          "sourceModel": "usa-adm",
+          "note": ""
+        }
+      ]
+    },
+    {
+      "id": "scanning",
+      "name": "Scanning",
+      "domainId": "hockey-sense",
+      "anchor": true,
+      "positions": [
+        "skater"
+      ],
+      "definition": "Head on a swivel: shoulder checks and visual exploration before and after receiving.",
+      "readConnection": "Scanning is how information enters the decision — no scan, no read. (Anchor: the input gate.)",
+      "lineage": [
+        {
+          "sourceModel": "iihf",
+          "note": ""
+        },
+        {
+          "sourceModel": "swedish",
+          "note": ""
+        },
+        {
+          "sourceModel": "hockey-canada",
+          "note": ""
+        }
+      ]
+    },
+    {
+      "id": "reading-the-play",
+      "name": "Reading The Play",
+      "domainId": "hockey-sense",
+      "anchor": true,
+      "positions": [
+        "skater"
+      ],
+      "definition": "Anticipating what is about to happen from the cues on the ice.",
+      "readConnection": "The anchor: recognizing the developing pattern before it fully forms.",
+      "lineage": [
+        {
+          "sourceModel": "usa-adm",
+          "note": ""
+        },
+        {
+          "sourceModel": "iihf",
+          "note": ""
+        },
+        {
+          "sourceModel": "pond-small-area",
+          "note": ""
+        },
+        {
+          "sourceModel": "hockey-canada",
+          "note": ""
+        }
+      ]
+    },
+    {
+      "id": "decision-making",
+      "name": "Decision Making",
+      "domainId": "hockey-sense",
+      "anchor": true,
+      "positions": [
+        "skater"
+      ],
+      "definition": "Selecting the best option — pass, shoot, carry, delay — for the situation; risk vs reward.",
+      "readConnection": "The anchor: choosing the highest-value action from what the read affords.",
+      "lineage": [
+        {
+          "sourceModel": "hockey-canada",
+          "note": ""
+        },
+        {
+          "sourceModel": "usa-adm",
+          "note": ""
+        },
+        {
+          "sourceModel": "pond-small-area",
+          "note": ""
+        }
+      ]
+    },
+    {
+      "id": "time-and-space",
+      "name": "Time And Space",
+      "domainId": "hockey-sense",
+      "anchor": true,
+      "positions": [
+        "skater"
+      ],
+      "definition": "Recognizing, creating, and exploiting time and space; when to slow down vs attack.",
+      "readConnection": "The anchor variable every on-ice decision is solved against.",
+      "lineage": [
+        {
+          "sourceModel": "iihf",
+          "note": ""
+        },
+        {
+          "sourceModel": "pond-small-area",
+          "note": ""
+        },
+        {
+          "sourceModel": "hockey-canada",
+          "note": ""
+        }
+      ]
+    },
+    {
+      "id": "creativity-under-pressure",
+      "name": "Creativity Under Pressure",
+      "domainId": "hockey-sense",
+      "anchor": false,
+      "positions": [
+        "skater"
+      ],
+      "definition": "Finding the second or third option when the first is taken away — expanding the option set under pressure.",
+      "readConnection": "Tests the next read when the obvious play is gone, rather than open-ended improvisation.",
+      "lineage": [
+        {
+          "sourceModel": "tarasov-soviet",
+          "note": ""
+        },
+        {
+          "sourceModel": "czech",
+          "note": ""
+        },
+        {
+          "sourceModel": "pond-small-area",
+          "note": ""
+        }
+      ]
+    },
+    {
+      "id": "puck-carrier-options",
+      "name": "Puck Carrier Options",
+      "domainId": "offensive-play",
+      "anchor": false,
+      "positions": [
+        "skater"
+      ],
+      "definition": "Reading the 1v1/2v1 as the carrier: attack, delay, pass, or protect.",
+      "readConnection": "Directly the carrier's decision: what does the defender give me right now?",
+      "lineage": [
+        {
+          "sourceModel": "usa-adm",
+          "note": ""
+        },
+        {
+          "sourceModel": "pond-small-area",
+          "note": ""
+        }
+      ]
+    },
+    {
+      "id": "off-puck-support-offense",
+      "name": "Off Puck Support Offense",
+      "domainId": "offensive-play",
+      "anchor": false,
+      "positions": [
+        "skater"
+      ],
+      "definition": "Off-puck support: getting open, give-and-go timing, support angles/triangles/distance, and driving the net to be the best option for the carrier.",
+      "readConnection": "Reading where to go without the puck — and at what angle — to give the carrier a real option.",
+      "lineage": [
+        {
+          "sourceModel": "iihf",
+          "note": ""
+        },
+        {
+          "sourceModel": "hockey-canada",
+          "note": ""
+        },
+        {
+          "sourceModel": "pond-small-area",
+          "note": ""
+        }
+      ]
+    },
+    {
+      "id": "attacking-1v1",
+      "name": "Attacking 1v1",
+      "domainId": "offensive-play",
+      "anchor": false,
+      "positions": [
+        "skater"
+      ],
+      "definition": "Beating a defender one-on-one: the decision of when to take them vs make a play.",
+      "readConnection": "A read of the defender's gap and balance, then the decision to attack or move it.",
+      "lineage": [
+        {
+          "sourceModel": "czech",
+          "note": ""
+        },
+        {
+          "sourceModel": "tarasov-soviet",
+          "note": ""
+        }
+      ]
+    },
+    {
+      "id": "cycle-and-possession",
+      "name": "Cycle And Possession",
+      "domainId": "offensive-play",
+      "anchor": false,
+      "positions": [
+        "skater"
+      ],
+      "definition": "Low cycle, F1/F2/F3 support, and extending offensive-zone possession.",
+      "readConnection": "Reading support and pressure to keep the puck and wait for the higher-value look.",
+      "lineage": [
+        {
+          "sourceModel": "hockey-canada",
+          "note": ""
+        }
+      ]
+    },
+    {
+      "id": "zone-entry",
+      "name": "Zone Entry",
+      "domainId": "offensive-play",
+      "anchor": false,
+      "positions": [
+        "skater"
+      ],
+      "definition": "Controlled vs dump entries; wide drive, delay, or cross based on the gap.",
+      "readConnection": "Reading the defender's gap at the blue line and choosing how to enter.",
+      "lineage": [
+        {
+          "sourceModel": "usa-adm",
+          "note": ""
+        },
+        {
+          "sourceModel": "hockey-canada",
+          "note": ""
+        }
+      ]
+    },
+    {
+      "id": "odd-man-reads",
+      "name": "Odd Man Reads",
+      "domainId": "offensive-play",
+      "anchor": false,
+      "positions": [
+        "skater"
+      ],
+      "definition": "Reading odd-man situations as the attacker (2v1 / 3v2): pass, shoot, or drive based on the lone defender and the goalie.",
+      "readConnection": "The cleanest, highest-frequency scoring read in youth hockey.",
+      "lineage": [
+        {
+          "sourceModel": "usa-adm",
+          "note": ""
+        },
+        {
+          "sourceModel": "hockey-canada",
+          "note": ""
+        },
+        {
+          "sourceModel": "pond-small-area",
+          "note": ""
+        }
+      ]
+    },
+    {
+      "id": "net-front-play",
+      "name": "Net Front Play",
+      "domainId": "offensive-play",
+      "anchor": false,
+      "positions": [
+        "skater"
+      ],
+      "definition": "Scoring-area reads off the puck: screen, tip/deflection, rebound timing, and finding the back door.",
+      "readConnection": "Deciding how to score at the net — when to screen vs tip vs jump for the rebound.",
+      "lineage": [
+        {
+          "sourceModel": "hockey-canada",
+          "note": ""
+        },
+        {
+          "sourceModel": "usa-adm",
+          "note": ""
+        }
+      ]
+    },
+    {
+      "id": "gap-control",
+      "name": "Gap Control",
+      "domainId": "defensive-play",
+      "anchor": false,
+      "positions": [
+        "skater"
+      ],
+      "definition": "Closing time and space on the rush by managing the gap — including the lone defender's read on a 2v1 (take the pass vs force the shot).",
+      "readConnection": "Reading closing speed and the carrier's options to take the gap at the right moment.",
+      "lineage": [
+        {
+          "sourceModel": "hockey-canada",
+          "note": ""
+        },
+        {
+          "sourceModel": "usa-adm",
+          "note": ""
+        }
+      ]
+    },
+    {
+      "id": "angling-steering",
+      "name": "Angling Steering",
+      "domainId": "defensive-play",
+      "anchor": false,
+      "positions": [
+        "skater"
+      ],
+      "definition": "Steering the carrier to low-value ice with body angle and stick.",
+      "readConnection": "Deciding which way to force, turning a read into a predictable outcome.",
+      "lineage": [
+        {
+          "sourceModel": "hockey-canada",
+          "note": ""
+        },
+        {
+          "sourceModel": "usa-adm",
+          "note": ""
+        }
+      ]
+    },
+    {
+      "id": "defensive-side-positioning",
+      "name": "Defensive Side Positioning",
+      "domainId": "defensive-play",
+      "anchor": false,
+      "positions": [
+        "skater"
+      ],
+      "definition": "Individual net-side body position on one attacker: staying between your check and the net, body and stick on the inside.",
+      "readConnection": "Reading your one threat to hold position so the attacker's best decision is taken away.",
+      "lineage": [
+        {
+          "sourceModel": "hockey-canada",
+          "note": ""
+        },
+        {
+          "sourceModel": "usa-adm",
+          "note": ""
+        }
+      ]
+    },
+    {
+      "id": "coverage-reads",
+      "name": "Coverage Reads",
+      "domainId": "defensive-play",
+      "anchor": false,
+      "positions": [
+        "skater"
+      ],
+      "definition": "Team d-zone reads: which threat is yours, switching assignments, and weak-side awareness (the heavy switching content is U15+ refinement).",
+      "readConnection": "Reading the layered team picture and when to switch — introduced light, refined late.",
+      "lineage": [
+        {
+          "sourceModel": "hockey-canada",
+          "note": ""
+        },
+        {
+          "sourceModel": "usa-adm",
+          "note": ""
+        }
+      ]
+    },
+    {
+      "id": "stick-and-body-detail",
+      "name": "Stick And Body Detail",
+      "domainId": "defensive-play",
+      "anchor": false,
+      "positions": [
+        "skater"
+      ],
+      "definition": "Active stick in lanes, box-outs, and contain without over-committing.",
+      "readConnection": "Small reads — lane vs body — that decide whether a check kills the play.",
+      "lineage": [
+        {
+          "sourceModel": "hockey-canada",
+          "note": ""
+        }
+      ]
+    },
+    {
+      "id": "transition-reads",
+      "name": "Transition Reads",
+      "domainId": "transition-compete",
+      "anchor": false,
+      "positions": [
+        "skater"
+      ],
+      "definition": "The offence-to-defence switch and the first option after a change of possession.",
+      "readConnection": "The highest-leverage read: recognizing the turnover and choosing the first action.",
+      "lineage": [
+        {
+          "sourceModel": "iihf",
+          "note": ""
+        },
+        {
+          "sourceModel": "pond-small-area",
+          "note": ""
+        },
+        {
+          "sourceModel": "hockey-canada",
+          "note": ""
+        }
+      ]
+    },
+    {
+      "id": "breakout-and-regroup",
+      "name": "Breakout And Regroup",
+      "domainId": "transition-compete",
+      "anchor": false,
+      "positions": [
+        "skater"
+      ],
+      "definition": "Support layers and options under forecheck; neutral-zone regroups.",
+      "readConnection": "Reading the forecheck to pick the breakout option that beats the pressure.",
+      "lineage": [
+        {
+          "sourceModel": "hockey-canada",
+          "note": ""
+        },
+        {
+          "sourceModel": "usa-adm",
+          "note": ""
+        }
+      ]
+    },
+    {
+      "id": "forecheck-pressure",
+      "name": "Forecheck Pressure",
+      "domainId": "transition-compete",
+      "anchor": false,
+      "positions": [
+        "skater"
+      ],
+      "definition": "Angling and pressure to recover the puck; F1 reads.",
+      "readConnection": "Deciding when to pressure vs contain based on support and the carrier's options.",
+      "lineage": [
+        {
+          "sourceModel": "hockey-canada",
+          "note": ""
+        }
+      ]
+    },
+    {
+      "id": "backcheck-recovery",
+      "name": "Backcheck Recovery",
+      "domainId": "transition-compete",
+      "anchor": false,
+      "positions": [
+        "skater"
+      ],
+      "definition": "Picking up the right man and taking away the dangerous lane on the way back.",
+      "readConnection": "Reading the rush to recover the highest-threat option, not just chase the puck.",
+      "lineage": [
+        {
+          "sourceModel": "hockey-canada",
+          "note": ""
+        },
+        {
+          "sourceModel": "usa-adm",
+          "note": ""
+        }
+      ]
+    },
+    {
+      "id": "battles-and-compete",
+      "name": "Battles And Compete",
+      "domainId": "transition-compete",
+      "anchor": false,
+      "positions": [
+        "skater"
+      ],
+      "definition": "1v1 wall and net battles, loose-puck recovery, and resilience after a mistake.",
+      "readConnection": "Winning the puck creates the next decision; quick recovery keeps options alive.",
+      "lineage": [
+        {
+          "sourceModel": "hockey-canada",
+          "note": ""
+        },
+        {
+          "sourceModel": "pond-small-area",
+          "note": ""
+        }
+      ]
+    }
+  ],
+  "nodes": [
+    {
+      "id": "u7.edges-balance",
+      "ageId": "U7",
+      "conceptId": "edges-balance",
+      "depth": "I"
+    },
+    {
+      "id": "u9.edges-balance",
+      "ageId": "U9",
+      "conceptId": "edges-balance",
+      "depth": "D"
+    },
+    {
+      "id": "u11.edges-balance",
+      "ageId": "U11",
+      "conceptId": "edges-balance",
+      "depth": "D"
+    },
+    {
+      "id": "u13.edges-balance",
+      "ageId": "U13",
+      "conceptId": "edges-balance",
+      "depth": "M"
+    },
+    {
+      "id": "u15.edges-balance",
+      "ageId": "U15",
+      "conceptId": "edges-balance",
+      "depth": "R"
+    },
+    {
+      "id": "u18.edges-balance",
+      "ageId": "U18",
+      "conceptId": "edges-balance",
+      "depth": "R"
+    },
+    {
+      "id": "u7.agility-mobility",
+      "ageId": "U7",
+      "conceptId": "agility-mobility",
+      "depth": "I"
+    },
+    {
+      "id": "u9.agility-mobility",
+      "ageId": "U9",
+      "conceptId": "agility-mobility",
+      "depth": "D"
+    },
+    {
+      "id": "u11.agility-mobility",
+      "ageId": "U11",
+      "conceptId": "agility-mobility",
+      "depth": "D"
+    },
+    {
+      "id": "u13.agility-mobility",
+      "ageId": "U13",
+      "conceptId": "agility-mobility",
+      "depth": "M"
+    },
+    {
+      "id": "u15.agility-mobility",
+      "ageId": "U15",
+      "conceptId": "agility-mobility",
+      "depth": "R"
+    },
+    {
+      "id": "u18.agility-mobility",
+      "ageId": "U18",
+      "conceptId": "agility-mobility",
+      "depth": "R"
+    },
+    {
+      "id": "u9.backward-transitions",
+      "ageId": "U9",
+      "conceptId": "backward-transitions",
+      "depth": "I"
+    },
+    {
+      "id": "u11.backward-transitions",
+      "ageId": "U11",
+      "conceptId": "backward-transitions",
+      "depth": "D"
+    },
+    {
+      "id": "u13.backward-transitions",
+      "ageId": "U13",
+      "conceptId": "backward-transitions",
+      "depth": "M"
+    },
+    {
+      "id": "u15.backward-transitions",
+      "ageId": "U15",
+      "conceptId": "backward-transitions",
+      "depth": "R"
+    },
+    {
+      "id": "u18.backward-transitions",
+      "ageId": "U18",
+      "conceptId": "backward-transitions",
+      "depth": "R"
+    },
+    {
+      "id": "u9.deception-with-feet",
+      "ageId": "U9",
+      "conceptId": "deception-with-feet",
+      "depth": "I"
+    },
+    {
+      "id": "u11.deception-with-feet",
+      "ageId": "U11",
+      "conceptId": "deception-with-feet",
+      "depth": "D"
+    },
+    {
+      "id": "u13.deception-with-feet",
+      "ageId": "U13",
+      "conceptId": "deception-with-feet",
+      "depth": "D"
+    },
+    {
+      "id": "u15.deception-with-feet",
+      "ageId": "U15",
+      "conceptId": "deception-with-feet",
+      "depth": "M"
+    },
+    {
+      "id": "u18.deception-with-feet",
+      "ageId": "U18",
+      "conceptId": "deception-with-feet",
+      "depth": "R"
+    },
+    {
+      "id": "u7.puck-control",
+      "ageId": "U7",
+      "conceptId": "puck-control",
+      "depth": "I"
+    },
+    {
+      "id": "u9.puck-control",
+      "ageId": "U9",
+      "conceptId": "puck-control",
+      "depth": "D"
+    },
+    {
+      "id": "u11.puck-control",
+      "ageId": "U11",
+      "conceptId": "puck-control",
+      "depth": "M"
+    },
+    {
+      "id": "u13.puck-control",
+      "ageId": "U13",
+      "conceptId": "puck-control",
+      "depth": "R"
+    },
+    {
+      "id": "u15.puck-control",
+      "ageId": "U15",
+      "conceptId": "puck-control",
+      "depth": "R"
+    },
+    {
+      "id": "u18.puck-control",
+      "ageId": "U18",
+      "conceptId": "puck-control",
+      "depth": "R"
+    },
+    {
+      "id": "u9.puck-protection",
+      "ageId": "U9",
+      "conceptId": "puck-protection",
+      "depth": "I"
+    },
+    {
+      "id": "u11.puck-protection",
+      "ageId": "U11",
+      "conceptId": "puck-protection",
+      "depth": "D"
+    },
+    {
+      "id": "u13.puck-protection",
+      "ageId": "U13",
+      "conceptId": "puck-protection",
+      "depth": "M"
+    },
+    {
+      "id": "u15.puck-protection",
+      "ageId": "U15",
+      "conceptId": "puck-protection",
+      "depth": "R"
+    },
+    {
+      "id": "u18.puck-protection",
+      "ageId": "U18",
+      "conceptId": "puck-protection",
+      "depth": "R"
+    },
+    {
+      "id": "u7.passing",
+      "ageId": "U7",
+      "conceptId": "passing",
+      "depth": "I"
+    },
+    {
+      "id": "u9.passing",
+      "ageId": "U9",
+      "conceptId": "passing",
+      "depth": "D"
+    },
+    {
+      "id": "u11.passing",
+      "ageId": "U11",
+      "conceptId": "passing",
+      "depth": "M"
+    },
+    {
+      "id": "u13.passing",
+      "ageId": "U13",
+      "conceptId": "passing",
+      "depth": "R"
+    },
+    {
+      "id": "u15.passing",
+      "ageId": "U15",
+      "conceptId": "passing",
+      "depth": "R"
+    },
+    {
+      "id": "u18.passing",
+      "ageId": "U18",
+      "conceptId": "passing",
+      "depth": "R"
+    },
+    {
+      "id": "u7.receiving",
+      "ageId": "U7",
+      "conceptId": "receiving",
+      "depth": "I"
+    },
+    {
+      "id": "u9.receiving",
+      "ageId": "U9",
+      "conceptId": "receiving",
+      "depth": "D"
+    },
+    {
+      "id": "u11.receiving",
+      "ageId": "U11",
+      "conceptId": "receiving",
+      "depth": "M"
+    },
+    {
+      "id": "u13.receiving",
+      "ageId": "U13",
+      "conceptId": "receiving",
+      "depth": "R"
+    },
+    {
+      "id": "u15.receiving",
+      "ageId": "U15",
+      "conceptId": "receiving",
+      "depth": "R"
+    },
+    {
+      "id": "u18.receiving",
+      "ageId": "U18",
+      "conceptId": "receiving",
+      "depth": "R"
+    },
+    {
+      "id": "u7.shooting",
+      "ageId": "U7",
+      "conceptId": "shooting",
+      "depth": "I"
+    },
+    {
+      "id": "u9.shooting",
+      "ageId": "U9",
+      "conceptId": "shooting",
+      "depth": "D"
+    },
+    {
+      "id": "u11.shooting",
+      "ageId": "U11",
+      "conceptId": "shooting",
+      "depth": "M"
+    },
+    {
+      "id": "u13.shooting",
+      "ageId": "U13",
+      "conceptId": "shooting",
+      "depth": "R"
+    },
+    {
+      "id": "u15.shooting",
+      "ageId": "U15",
+      "conceptId": "shooting",
+      "depth": "R"
+    },
+    {
+      "id": "u18.shooting",
+      "ageId": "U18",
+      "conceptId": "shooting",
+      "depth": "R"
+    },
+    {
+      "id": "u9.scanning",
+      "ageId": "U9",
+      "conceptId": "scanning",
+      "depth": "I"
+    },
+    {
+      "id": "u11.scanning",
+      "ageId": "U11",
+      "conceptId": "scanning",
+      "depth": "D"
+    },
+    {
+      "id": "u13.scanning",
+      "ageId": "U13",
+      "conceptId": "scanning",
+      "depth": "M"
+    },
+    {
+      "id": "u15.scanning",
+      "ageId": "U15",
+      "conceptId": "scanning",
+      "depth": "R"
+    },
+    {
+      "id": "u18.scanning",
+      "ageId": "U18",
+      "conceptId": "scanning",
+      "depth": "R"
+    },
+    {
+      "id": "u9.reading-the-play",
+      "ageId": "U9",
+      "conceptId": "reading-the-play",
+      "depth": "I"
+    },
+    {
+      "id": "u11.reading-the-play",
+      "ageId": "U11",
+      "conceptId": "reading-the-play",
+      "depth": "D"
+    },
+    {
+      "id": "u13.reading-the-play",
+      "ageId": "U13",
+      "conceptId": "reading-the-play",
+      "depth": "D"
+    },
+    {
+      "id": "u15.reading-the-play",
+      "ageId": "U15",
+      "conceptId": "reading-the-play",
+      "depth": "M"
+    },
+    {
+      "id": "u18.reading-the-play",
+      "ageId": "U18",
+      "conceptId": "reading-the-play",
+      "depth": "R"
+    },
+    {
+      "id": "u9.decision-making",
+      "ageId": "U9",
+      "conceptId": "decision-making",
+      "depth": "I"
+    },
+    {
+      "id": "u11.decision-making",
+      "ageId": "U11",
+      "conceptId": "decision-making",
+      "depth": "D"
+    },
+    {
+      "id": "u13.decision-making",
+      "ageId": "U13",
+      "conceptId": "decision-making",
+      "depth": "D"
+    },
+    {
+      "id": "u15.decision-making",
+      "ageId": "U15",
+      "conceptId": "decision-making",
+      "depth": "M"
+    },
+    {
+      "id": "u18.decision-making",
+      "ageId": "U18",
+      "conceptId": "decision-making",
+      "depth": "R"
+    },
+    {
+      "id": "u9.time-and-space",
+      "ageId": "U9",
+      "conceptId": "time-and-space",
+      "depth": "I"
+    },
+    {
+      "id": "u11.time-and-space",
+      "ageId": "U11",
+      "conceptId": "time-and-space",
+      "depth": "D"
+    },
+    {
+      "id": "u13.time-and-space",
+      "ageId": "U13",
+      "conceptId": "time-and-space",
+      "depth": "D"
+    },
+    {
+      "id": "u15.time-and-space",
+      "ageId": "U15",
+      "conceptId": "time-and-space",
+      "depth": "M"
+    },
+    {
+      "id": "u18.time-and-space",
+      "ageId": "U18",
+      "conceptId": "time-and-space",
+      "depth": "R"
+    },
+    {
+      "id": "u9.creativity-under-pressure",
+      "ageId": "U9",
+      "conceptId": "creativity-under-pressure",
+      "depth": "I"
+    },
+    {
+      "id": "u11.creativity-under-pressure",
+      "ageId": "U11",
+      "conceptId": "creativity-under-pressure",
+      "depth": "D"
+    },
+    {
+      "id": "u13.creativity-under-pressure",
+      "ageId": "U13",
+      "conceptId": "creativity-under-pressure",
+      "depth": "M"
+    },
+    {
+      "id": "u15.creativity-under-pressure",
+      "ageId": "U15",
+      "conceptId": "creativity-under-pressure",
+      "depth": "R"
+    },
+    {
+      "id": "u18.creativity-under-pressure",
+      "ageId": "U18",
+      "conceptId": "creativity-under-pressure",
+      "depth": "R"
+    },
+    {
+      "id": "u9.puck-carrier-options",
+      "ageId": "U9",
+      "conceptId": "puck-carrier-options",
+      "depth": "I"
+    },
+    {
+      "id": "u11.puck-carrier-options",
+      "ageId": "U11",
+      "conceptId": "puck-carrier-options",
+      "depth": "D"
+    },
+    {
+      "id": "u13.puck-carrier-options",
+      "ageId": "U13",
+      "conceptId": "puck-carrier-options",
+      "depth": "D"
+    },
+    {
+      "id": "u15.puck-carrier-options",
+      "ageId": "U15",
+      "conceptId": "puck-carrier-options",
+      "depth": "M"
+    },
+    {
+      "id": "u18.puck-carrier-options",
+      "ageId": "U18",
+      "conceptId": "puck-carrier-options",
+      "depth": "R"
+    },
+    {
+      "id": "u9.off-puck-support-offense",
+      "ageId": "U9",
+      "conceptId": "off-puck-support-offense",
+      "depth": "I"
+    },
+    {
+      "id": "u11.off-puck-support-offense",
+      "ageId": "U11",
+      "conceptId": "off-puck-support-offense",
+      "depth": "D"
+    },
+    {
+      "id": "u13.off-puck-support-offense",
+      "ageId": "U13",
+      "conceptId": "off-puck-support-offense",
+      "depth": "M"
+    },
+    {
+      "id": "u15.off-puck-support-offense",
+      "ageId": "U15",
+      "conceptId": "off-puck-support-offense",
+      "depth": "R"
+    },
+    {
+      "id": "u18.off-puck-support-offense",
+      "ageId": "U18",
+      "conceptId": "off-puck-support-offense",
+      "depth": "R"
+    },
+    {
+      "id": "u9.attacking-1v1",
+      "ageId": "U9",
+      "conceptId": "attacking-1v1",
+      "depth": "I"
+    },
+    {
+      "id": "u11.attacking-1v1",
+      "ageId": "U11",
+      "conceptId": "attacking-1v1",
+      "depth": "D"
+    },
+    {
+      "id": "u13.attacking-1v1",
+      "ageId": "U13",
+      "conceptId": "attacking-1v1",
+      "depth": "D"
+    },
+    {
+      "id": "u15.attacking-1v1",
+      "ageId": "U15",
+      "conceptId": "attacking-1v1",
+      "depth": "M"
+    },
+    {
+      "id": "u18.attacking-1v1",
+      "ageId": "U18",
+      "conceptId": "attacking-1v1",
+      "depth": "R"
+    },
+    {
+      "id": "u11.cycle-and-possession",
+      "ageId": "U11",
+      "conceptId": "cycle-and-possession",
+      "depth": "I"
+    },
+    {
+      "id": "u13.cycle-and-possession",
+      "ageId": "U13",
+      "conceptId": "cycle-and-possession",
+      "depth": "D"
+    },
+    {
+      "id": "u15.cycle-and-possession",
+      "ageId": "U15",
+      "conceptId": "cycle-and-possession",
+      "depth": "M"
+    },
+    {
+      "id": "u18.cycle-and-possession",
+      "ageId": "U18",
+      "conceptId": "cycle-and-possession",
+      "depth": "R"
+    },
+    {
+      "id": "u11.zone-entry",
+      "ageId": "U11",
+      "conceptId": "zone-entry",
+      "depth": "I"
+    },
+    {
+      "id": "u13.zone-entry",
+      "ageId": "U13",
+      "conceptId": "zone-entry",
+      "depth": "D"
+    },
+    {
+      "id": "u15.zone-entry",
+      "ageId": "U15",
+      "conceptId": "zone-entry",
+      "depth": "M"
+    },
+    {
+      "id": "u18.zone-entry",
+      "ageId": "U18",
+      "conceptId": "zone-entry",
+      "depth": "R"
+    },
+    {
+      "id": "u11.odd-man-reads",
+      "ageId": "U11",
+      "conceptId": "odd-man-reads",
+      "depth": "I"
+    },
+    {
+      "id": "u13.odd-man-reads",
+      "ageId": "U13",
+      "conceptId": "odd-man-reads",
+      "depth": "D"
+    },
+    {
+      "id": "u15.odd-man-reads",
+      "ageId": "U15",
+      "conceptId": "odd-man-reads",
+      "depth": "M"
+    },
+    {
+      "id": "u18.odd-man-reads",
+      "ageId": "U18",
+      "conceptId": "odd-man-reads",
+      "depth": "R"
+    },
+    {
+      "id": "u11.net-front-play",
+      "ageId": "U11",
+      "conceptId": "net-front-play",
+      "depth": "I"
+    },
+    {
+      "id": "u13.net-front-play",
+      "ageId": "U13",
+      "conceptId": "net-front-play",
+      "depth": "D"
+    },
+    {
+      "id": "u15.net-front-play",
+      "ageId": "U15",
+      "conceptId": "net-front-play",
+      "depth": "M"
+    },
+    {
+      "id": "u18.net-front-play",
+      "ageId": "U18",
+      "conceptId": "net-front-play",
+      "depth": "R"
+    },
+    {
+      "id": "u11.gap-control",
+      "ageId": "U11",
+      "conceptId": "gap-control",
+      "depth": "I"
+    },
+    {
+      "id": "u13.gap-control",
+      "ageId": "U13",
+      "conceptId": "gap-control",
+      "depth": "D"
+    },
+    {
+      "id": "u15.gap-control",
+      "ageId": "U15",
+      "conceptId": "gap-control",
+      "depth": "M"
+    },
+    {
+      "id": "u18.gap-control",
+      "ageId": "U18",
+      "conceptId": "gap-control",
+      "depth": "R"
+    },
+    {
+      "id": "u9.angling-steering",
+      "ageId": "U9",
+      "conceptId": "angling-steering",
+      "depth": "I"
+    },
+    {
+      "id": "u11.angling-steering",
+      "ageId": "U11",
+      "conceptId": "angling-steering",
+      "depth": "D"
+    },
+    {
+      "id": "u13.angling-steering",
+      "ageId": "U13",
+      "conceptId": "angling-steering",
+      "depth": "D"
+    },
+    {
+      "id": "u15.angling-steering",
+      "ageId": "U15",
+      "conceptId": "angling-steering",
+      "depth": "M"
+    },
+    {
+      "id": "u18.angling-steering",
+      "ageId": "U18",
+      "conceptId": "angling-steering",
+      "depth": "R"
+    },
+    {
+      "id": "u9.defensive-side-positioning",
+      "ageId": "U9",
+      "conceptId": "defensive-side-positioning",
+      "depth": "I"
+    },
+    {
+      "id": "u11.defensive-side-positioning",
+      "ageId": "U11",
+      "conceptId": "defensive-side-positioning",
+      "depth": "D"
+    },
+    {
+      "id": "u13.defensive-side-positioning",
+      "ageId": "U13",
+      "conceptId": "defensive-side-positioning",
+      "depth": "M"
+    },
+    {
+      "id": "u15.defensive-side-positioning",
+      "ageId": "U15",
+      "conceptId": "defensive-side-positioning",
+      "depth": "R"
+    },
+    {
+      "id": "u18.defensive-side-positioning",
+      "ageId": "U18",
+      "conceptId": "defensive-side-positioning",
+      "depth": "R"
+    },
+    {
+      "id": "u11.coverage-reads",
+      "ageId": "U11",
+      "conceptId": "coverage-reads",
+      "depth": "I"
+    },
+    {
+      "id": "u13.coverage-reads",
+      "ageId": "U13",
+      "conceptId": "coverage-reads",
+      "depth": "D"
+    },
+    {
+      "id": "u15.coverage-reads",
+      "ageId": "U15",
+      "conceptId": "coverage-reads",
+      "depth": "M"
+    },
+    {
+      "id": "u18.coverage-reads",
+      "ageId": "U18",
+      "conceptId": "coverage-reads",
+      "depth": "R"
+    },
+    {
+      "id": "u9.stick-and-body-detail",
+      "ageId": "U9",
+      "conceptId": "stick-and-body-detail",
+      "depth": "I"
+    },
+    {
+      "id": "u11.stick-and-body-detail",
+      "ageId": "U11",
+      "conceptId": "stick-and-body-detail",
+      "depth": "D"
+    },
+    {
+      "id": "u13.stick-and-body-detail",
+      "ageId": "U13",
+      "conceptId": "stick-and-body-detail",
+      "depth": "M"
+    },
+    {
+      "id": "u15.stick-and-body-detail",
+      "ageId": "U15",
+      "conceptId": "stick-and-body-detail",
+      "depth": "R"
+    },
+    {
+      "id": "u18.stick-and-body-detail",
+      "ageId": "U18",
+      "conceptId": "stick-and-body-detail",
+      "depth": "R"
+    },
+    {
+      "id": "u11.transition-reads",
+      "ageId": "U11",
+      "conceptId": "transition-reads",
+      "depth": "I"
+    },
+    {
+      "id": "u13.transition-reads",
+      "ageId": "U13",
+      "conceptId": "transition-reads",
+      "depth": "D"
+    },
+    {
+      "id": "u15.transition-reads",
+      "ageId": "U15",
+      "conceptId": "transition-reads",
+      "depth": "M"
+    },
+    {
+      "id": "u18.transition-reads",
+      "ageId": "U18",
+      "conceptId": "transition-reads",
+      "depth": "R"
+    },
+    {
+      "id": "u11.breakout-and-regroup",
+      "ageId": "U11",
+      "conceptId": "breakout-and-regroup",
+      "depth": "I"
+    },
+    {
+      "id": "u13.breakout-and-regroup",
+      "ageId": "U13",
+      "conceptId": "breakout-and-regroup",
+      "depth": "D"
+    },
+    {
+      "id": "u15.breakout-and-regroup",
+      "ageId": "U15",
+      "conceptId": "breakout-and-regroup",
+      "depth": "M"
+    },
+    {
+      "id": "u18.breakout-and-regroup",
+      "ageId": "U18",
+      "conceptId": "breakout-and-regroup",
+      "depth": "R"
+    },
+    {
+      "id": "u11.forecheck-pressure",
+      "ageId": "U11",
+      "conceptId": "forecheck-pressure",
+      "depth": "I"
+    },
+    {
+      "id": "u13.forecheck-pressure",
+      "ageId": "U13",
+      "conceptId": "forecheck-pressure",
+      "depth": "D"
+    },
+    {
+      "id": "u15.forecheck-pressure",
+      "ageId": "U15",
+      "conceptId": "forecheck-pressure",
+      "depth": "M"
+    },
+    {
+      "id": "u18.forecheck-pressure",
+      "ageId": "U18",
+      "conceptId": "forecheck-pressure",
+      "depth": "R"
+    },
+    {
+      "id": "u11.backcheck-recovery",
+      "ageId": "U11",
+      "conceptId": "backcheck-recovery",
+      "depth": "I"
+    },
+    {
+      "id": "u13.backcheck-recovery",
+      "ageId": "U13",
+      "conceptId": "backcheck-recovery",
+      "depth": "D"
+    },
+    {
+      "id": "u15.backcheck-recovery",
+      "ageId": "U15",
+      "conceptId": "backcheck-recovery",
+      "depth": "M"
+    },
+    {
+      "id": "u18.backcheck-recovery",
+      "ageId": "U18",
+      "conceptId": "backcheck-recovery",
+      "depth": "R"
+    },
+    {
+      "id": "u7.battles-and-compete",
+      "ageId": "U7",
+      "conceptId": "battles-and-compete",
+      "depth": "I"
+    },
+    {
+      "id": "u9.battles-and-compete",
+      "ageId": "U9",
+      "conceptId": "battles-and-compete",
+      "depth": "D"
+    },
+    {
+      "id": "u11.battles-and-compete",
+      "ageId": "U11",
+      "conceptId": "battles-and-compete",
+      "depth": "M"
+    },
+    {
+      "id": "u13.battles-and-compete",
+      "ageId": "U13",
+      "conceptId": "battles-and-compete",
+      "depth": "R"
+    },
+    {
+      "id": "u15.battles-and-compete",
+      "ageId": "U15",
+      "conceptId": "battles-and-compete",
+      "depth": "R"
+    },
+    {
+      "id": "u18.battles-and-compete",
+      "ageId": "U18",
+      "conceptId": "battles-and-compete",
+      "depth": "R"
+    }
+  ]
 }
