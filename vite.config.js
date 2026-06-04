@@ -1,8 +1,9 @@
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
+import { reviewServerPlugin } from './tools/review-server-plugin.mjs'
 
 export default defineConfig({
-  plugins: [react()],
+  plugins: [react(), reviewServerPlugin()],
   build: {
     minify: 'terser',
     terserOptions: {
