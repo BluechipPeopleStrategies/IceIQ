@@ -185,19 +185,29 @@ Implementation: an `INTERACTION_PROFILES[ageBand]` config sets chrome/theme, **t
 
 Ordering principle: **deterministic + decisive gates first** (they're free and they decide correctness), then the expensive LLM/agent gates, cheap-before-costly. A question dies at the cheapest gate it fails — nothing wasted. Implemented in `src/playSolver.js` + the generator workflow.
 
-| # | Gate | Type | Pass condition | Fail → |
-|---|------|------|----------------|--------|
-| G0 | **Create** | agent | Creator authors a play (positions + motion + decision tree) from the curriculum spine + age band + the age's approved generator types | regen |
-| G1 | **Solver** (answer key) | deterministic | `solve()` computes a clear best read from geometry — **this IS is_correct, correct by construction** (LLM never decides it) | discard/regen if no clear read |
-| G2 | **Validation gate** | deterministic | `validateItem()`: exactly one top read (or declared tie) · distractors strictly lower by margin · targets in bounds · no overlapping players · structural-hash dedupe | discard/regen |
-| G3 | **Generator fit** | deterministic | the question's format is on the approved list for that age band (learning-design selection) | reformat/drop |
-| G4 | **Curriculum confirmers** (2 agents) | pedagogy gate | *both* approve: learning-design lens (one concept, follows from play, age cognitive load) **and** assessment-integrity lens (answer-position randomized, option-length balanced, answer-frequency balanced, sizes age-appropriate) | revise once or queue — **never reaches coaches** |
-| G5 | **Coach panel** (3 agents) | hockey gate | tactical / hockey-pedagogy / adversarial-views-the-render all confirm the hockey + that the render shows the read | revise or queue |
-| G6 | **Rationale** | LLM (prose only) | writes the explanation from the solver's `breakdown`; **never overrides the answer** | — |
-| G7 | **Render + snapshot** | deterministic | renders on the rink (figures/tokens/symbols per age, half/full/vertical, motion); snapshot reproducible | flag |
-| G8 | **Ship / queue** | — | cleared all → ship to bank (age-laddered family, tagged); any unresolved fail → **human-review queue, never silently dropped**; batch spot-check sampling | — |
+| # | Gate | Type | Pass condition | On fail |
+|---|------|------|----------------|---------|
+| G0 | **Create (3-agent consensus)** | agents | **Three** creator agents independently draw the rink diagram (positions + motion + decision tree) for the curriculum-ledger node (age, unit, concept) + age band. **All three must agree** the concept is sound and the diagram represents it before it advances. Carries the curriculum tag. | regen / drop concept |
+| G1 | **Solver** (answer key) | deterministic | `solve()` computes a clear best read from geometry. **This IS is_correct, correct by construction** (the LLM never decides it). | discard/regen if no clear read |
+| G2 | **Validation gate** | deterministic | `validateItem()`: exactly one top read (or a declared tie), distractors strictly lower by margin, in bounds, no overlapping players, structural-hash dedupe. | discard/regen |
+| G3 | **Generator fit** | deterministic | the format is on the approved list for that age band. | reformat/drop |
+| G4 | **Curriculum confirmers** (2 agents) | pedagogy gate | *both* approve: learning-design lens (one concept, follows from the play, age cognitive load) **and** assessment-integrity lens (answer-position randomized, option lengths balanced, answer-frequency balanced, sizes age-appropriate). | revise once or queue |
+| G5 | **Render** | deterministic | renders the play on the rink (figures/tokens/symbols per age, half/full/vertical, motion, overlays). | flag |
+| G6 | **Graphic designer** (1 agent) | visual gate | reviews the render and improves it BEFORE the coaches: composition, legibility, token and overlay spacing, age-appropriate visual style, brand (navy/gold), contrast and colorblind-safety. Returns fixes, re-render, then it must pass. | revise render |
+| G7 | **Coach panel** (3 agents) | hockey gate | tactical / hockey-pedagogy / adversarial all confirm the hockey AND that the improved render shows the read. | revise or queue |
+| G8 | **Rationale** | LLM (prose only) | writes the explanation from the solver `breakdown`. **Never overrides the answer.** | (none) |
+| G9 | **Ship / queue** | confidence policy | composite confidence above threshold AND curriculum tag present AND every gate green: **auto-post live**. Otherwise to the human-review queue. Batch spot-check sampling. | queue |
 
 **Meta-backstop — golden tests (CI, not per-item):** the solver's hand-labeled scenarios (`tools/solver-golden.mjs`) run in CI; if they regress, the gauntlet is paused because the answer-key engine itself is wrong. Currently **4/4 passing**.
 
-Why this order works: the solver (G1) decides correctness for free, so a question that can't be solved never costs an agent. The deterministic gates (G1–G3) are instant and kill most failures. The pedagogy confirmers (G4) are cheaper than the coaches and gate access to them. The LLM only ever writes prose (G6) — it can't introduce a wrong answer. This is what makes auto-generating thousands of items trustworthy.
+Why this order works: the solver (G1) decides correctness for free, so a question that can't be solved never costs an agent. The deterministic gates (G1–G3) are instant and kill most failures. The pedagogy confirmers (G4) are cheaper than the coaches and gate access to them. The LLM only ever writes prose (G8) — it can't introduce a wrong answer. This is what makes auto-generating thousands of items trustworthy.
+
+**Rework loop (not a dead end).** A gate failure is not a discard. The item is sent back with that gate's specific notes, reworked (the creators or a fixer apply the fixes), and re-enters the gate. If the coach panel (G7) shuts it down, it goes back for further work and then back up to the coaches, not out. This loops up to a cap (default 3 rounds per gate); only after the cap does it land in the human-review queue. It mirrors real coaching: you revise and resubmit, you are not thrown out on the first miss.
+
+## 16. Build decisions (locked 2026-06-03) + curriculum sources
+
+- **Build order:** the machine-readable curriculum ledger first (units x concepts x ages), then the generator reads from it and tags every question to it. That is what makes "connected to the curriculum" true by construction.
+- **Curriculum sources (global, not just North American).** Synthesize MULTIPLE development models. USA Hockey ADM and Hockey Canada, AND Soviet/Russian (Tarasov: small-area games, skill density, creativity), Swedish, Finnish, and Czech traditions, plus unsanctioned, pond, and small-area-game hockey. Glean the best ideas from wherever they exist; tag each concept with its source lineage so the curriculum is defensible and globally informed.
+- **Go-live policy:** approve-a-batch first (passing items collect in a "ready" tray; one-tap approve a batch), then flip to true auto-post once the queue is consistently clean and the live answer-disagreement rate is near zero.
+- **Front-of-gauntlet consensus:** G0 is three creator agents drawing the diagram independently; all three must agree before the concept advances.
 
