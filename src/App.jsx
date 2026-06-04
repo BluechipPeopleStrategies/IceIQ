@@ -1917,7 +1917,14 @@ function Quiz({ player, onFinish, onBack, tier, onUpgrade }) {
     // The latter is what happens when the author tool renames a question
     // in memory but hasn't shipped to disk — the iframe URL filters by
     // an id that doesn't exist in questions.json yet.
-    const queueReadyButEmpty = Array.isArray(queue) && queue.length === 0;
+    // `queue` is null while the bank is still loading, and an object
+    // { byD:{1,2,3}, currentD, tier } once built. "Ready but empty" = built
+    // (non-null) with every difficulty bucket empty — i.e. the bank had no
+    // questions for this player (blank-slate window) or an ids filter matched
+    // nothing. (The old `Array.isArray(queue)` check was always false — queue
+    // is never a bare array — so neither empty-state branch ever rendered.)
+    const queueReadyButEmpty = !!queue && !!queue.byD &&
+      [1, 2, 3].every(d => (queue.byD[d] || []).length === 0);
     if (queueReadyButEmpty && idsLen > 0) {
       let askedIds = "";
       try { askedIds = new URLSearchParams(window.location.search).get("ids") || ""; } catch {}
