@@ -22,16 +22,22 @@ export const ZONE_IDS = [
 
 function loadSeed(name) {
   const p = path.join(ROOT, "src", "scenario", "seeds", name);
-  return JSON.parse(fs.readFileSync(p, "utf8"));
+  // Few-shot examples are optional: the seeds were removed in the 2026-06-04
+  // blank-slate wipe, so tolerate their absence instead of throwing.
+  try { return JSON.parse(fs.readFileSync(p, "utf8")); } catch { return null; }
 }
 
 export function buildSystemPrompt() {
   const fewShot = [
-    loadSeed("u13q_rink07_v2.json"),
-    loadSeed("u11_open_pass_v1.json"),
-    loadSeed("u11_faceoff_point_v1.json"),
-    loadSeed("u13_breakout_sequence_v1.json"),
-  ];
+    ["PATH — power play, find the open bumper", loadSeed("u13q_rink07_v2.json")],
+    ["SELECTION — tap the open teammate", loadSeed("u11_open_pass_v1.json")],
+    ["POINT — faceoff positioning (tap the right spot, no candidate actors)", loadSeed("u11_faceoff_point_v1.json")],
+    ["SEQUENCE — breakout order (tap actors in passing order)", loadSeed("u13_breakout_sequence_v1.json")],
+  ].filter(([, s]) => s);
+  const refSection = fewShot.length
+    ? "# Reference scenarios (study the shape, do not copy verbatim)\n\n" +
+      fewShot.map(([label, s]) => `${label}:\n${JSON.stringify(s, null, 2)}`).join("\n\n")
+    : "";
 
   return `You are an RinkReads scenario author. You write hockey-IQ training questions in a strict JSON schema. The schema expresses a frozen-frame rink scene + one of four interaction primitives + the correct answer + feedback.
 
@@ -118,19 +124,7 @@ Use only these. Mixing in your own terms makes the catalog unfilterable.
 - For verb="pass", the correct.end zone should sit near a teammate — you're passing TO someone.
 - For verb="shoot", the correct.end should be near a net.
 
-# Reference scenarios (study the shape, do not copy verbatim)
-
-PATH — power play, find the open bumper:
-${JSON.stringify(fewShot[0], null, 2)}
-
-SELECTION — tap the open teammate:
-${JSON.stringify(fewShot[1], null, 2)}
-
-POINT — faceoff positioning (tap the right spot, no candidate actors):
-${JSON.stringify(fewShot[2], null, 2)}
-
-SEQUENCE — breakout order (tap actors in passing order):
-${JSON.stringify(fewShot[3], null, 2)}
+${refSection}
 `;
 }
 

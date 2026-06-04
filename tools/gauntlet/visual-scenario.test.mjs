@@ -33,5 +33,15 @@ const node = { id: "u9.passing", ageId: "U9", conceptId: "passing" };
   const moved = mockScenario(node, "id_c"); moved.actors[2].x = 0.1;
   ok("hash changes when a player moves", scenarioHash(moved) !== scenarioHash(a)); }
 
+// --- visual creator prompt ---
+import { buildVisualCreatorPrompt } from "./visual-prompts.mjs";
+{ const concept = { name: "Passing", definition: "Lane selection and timing.", readConnection: "Find the open lane." };
+  const domain = { name: "Puck Skills" };
+  const { system, prompt } = buildVisualCreatorPrompt({ node: { id: "u9.passing", ageId: "U9", conceptId: "passing" }, concept, domain, idSeed: "gen_u9_passing_z" });
+  ok("creator system non-empty", typeof system === "string" && system.length > 100);
+  ok("creator embeds nodeId", prompt.includes("u9.passing"));
+  ok("creator embeds the level", prompt.includes("U9 / Novice"));
+  ok("creator embeds the concept read", prompt.includes("Find the open lane.")); }
+
 console.log(`\n${pass} passed, ${fail} failed`);
 process.exit(fail ? 1 : 0);
