@@ -1,3 +1,5 @@
+import FACTORY_QUESTIONS from "./data/factoryQuestions.json";
+
 let cached = null;
 let inflight = null;
 
@@ -41,10 +43,14 @@ export function loadQB() {
     sessionStorage.removeItem("rinkreads_qb_cache_v19");
     sessionStorage.removeItem("rinkreads_qb_cache_v20");
     sessionStorage.removeItem("rinkreads_qb_cache_v21");
-    // v22: 2026-05-02 — added Batch A rink-anatomy questions (9 rink-label
-    // questions covering lines/zones/dots/circles/crease, primary U7,
-    // fanned out U9/U11/U13).
-    const stored = sessionStorage.getItem("rinkreads_qb_cache_v22");
+    sessionStorage.removeItem("rinkreads_qb_cache_v22");
+    sessionStorage.removeItem("rinkreads_qb_cache_v23");
+    sessionStorage.removeItem("rinkreads_qb_cache_v24");
+    sessionStorage.removeItem("rinkreads_qb_cache_v25");
+    // v22: 2026-05-02 — added Batch A rink-anatomy questions.
+    // v23-v26: 2026-06-03 — content-factory questions; v26 adds annotation
+    //          overlays (puck ring, read arrow, open-target ring) + portrait ratio.
+    const stored = sessionStorage.getItem("rinkreads_qb_cache_v26");
     if (stored) {
       cached = JSON.parse(stored);
       return Promise.resolve(cached);
@@ -92,8 +98,19 @@ export function loadQB() {
             qb[lvl].push(enriched);
           }
         }
+        // Merge content-factory questions (image-first factory output via
+        // tools/factory-to-bank.mjs). Each carries `levels[]` and a
+        // `media.url` POV image; push into every listed age bank.
+        for (const q of FACTORY_QUESTIONS) {
+          const targets = Array.isArray(q.levels) && q.levels.length ? q.levels : [];
+          for (const lvl of targets) {
+            if (!qb[lvl]) continue;
+            if (qb[lvl].some(x => x.id === q.id)) continue;
+            qb[lvl].push(q);
+          }
+        }
         cached = qb;
-        try { sessionStorage.setItem("rinkreads_qb_cache_v22", JSON.stringify(cached)); } catch (e) {}
+        try { sessionStorage.setItem("rinkreads_qb_cache_v26", JSON.stringify(cached)); } catch (e) {}
         return cached;
       })
       .catch(e => {

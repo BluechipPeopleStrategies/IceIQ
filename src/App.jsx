@@ -42,6 +42,7 @@ import {
   RinkReadsLogo, Screen, Card, Pill, Label, PrimaryBtn, SecBtn, BackBtn, ProgressBar, StickyHeader,
 } from "./shared.jsx";
 import { OverlayLayer } from "./OverlayLayer.jsx";
+import { RinkPlayTest } from "./RinkPlay.jsx";
 const imgSplash = "/splash.jpg";
 import imgCoreApp from "./assets/images/Core-App.jpg";
 import imgDataPanel from "./assets/images/Data-Panel.jpg";
@@ -2053,7 +2054,7 @@ function Quiz({ player, onFinish, onBack, tier, onUpgrade }) {
             position:"sticky", top:62, zIndex:10,
             marginBottom:"1rem", borderRadius:12, overflow:"hidden",
             border:`1px solid ${C.border}`, background:"#000",
-            aspectRatio:"16/9",
+            aspectRatio: q.media?.ratio || "16/9",
             boxShadow: "0 8px 24px rgba(0,0,0,.5)",
           }}>
             <img src={q.media.url} alt={q.media.alt || ""}
@@ -3437,7 +3438,7 @@ function WeeklyQuiz({ player, onBack, onFinish }) {
             position:"relative",
             marginBottom:"1rem", borderRadius:12, overflow:"hidden",
             border:`1px solid ${C.border}`, background:"#000",
-            aspectRatio:"16/9",
+            aspectRatio: q.media?.ratio || "16/9",
           }}>
             <img src={q.media.url} alt={q.media.alt || ""}
               draggable={false}
@@ -5157,6 +5158,13 @@ function QuestionPreviewFallback({ question, onAnswer }) {
   }, [answered]);
   return (
     <div>
+      {q.media?.url && (
+        <div style={{position:"relative",marginBottom:"1rem",borderRadius:12,overflow:"hidden",border:`1px solid ${C.border}`,background:"#000",aspectRatio:q.media?.ratio||"16/9",display:"flex",alignItems:"center",justifyContent:"center"}}>
+          <img src={q.media.url} alt={q.media.alt || ""} loading="eager" decoding="async"
+            style={{maxWidth:"100%",maxHeight:"100%",objectFit:q.media?.aspect?"cover":"contain",display:"block"}}/>
+          {Array.isArray(q.overlays) && <OverlayLayer overlays={q.overlays} />}
+        </div>
+      )}
       <div style={{background:C.purpleDim,border:`1px solid ${C.purpleBorder}`,borderRadius:12,padding:"1rem 1.1rem",marginBottom:"1.25rem"}}>
         <div style={{fontSize:10,letterSpacing:".14em",textTransform:"uppercase",color:C.purple,marginBottom:".5rem",fontWeight:700}}>{isTF ? "True or False?" : q.sit ? "Game Situation" : "Question"}</div>
         <div style={{fontSize:15,lineHeight:1.7,color:C.white,fontWeight:500}}>{q.sit || q.q}</div>
@@ -7740,6 +7748,9 @@ export default function App() {
   // question, so authors can verify parity before migrating the bank.
   if (hashRoute === "scenario-test") {
     return <ScenarioParityTest/>;
+  }
+  if (hashRoute === "playtest") {
+    return <RinkPlayTest/>;
   }
 
   // Pre-auth hash route: parents can share rinkreads.com/#parents without logging in.

@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RinkReads — Whiteboard scenario sample</title>
+<style>
+:root{--navy:#0B1A33;--gold:#C9A24B;--ink:#1a2433;--muted:#6b7686;--line:#e3e7ee;--ok:#0B6B3A}
+*{box-sizing:border-box}body{margin:0;font-family:Inter,system-ui,Arial,sans-serif;color:var(--ink);background:#f4f6fa}
+header{background:var(--navy);color:#fff;padding:18px 24px}header h1{margin:0;font-size:19px}header p{margin:6px 0 0;font-size:13px;color:#c7d0e0;max-width:880px}
+.wrap{display:grid;grid-template-columns:1.5fr 1fr;gap:20px;padding:24px;max-width:1200px}
+@media(max-width:860px){.wrap{grid-template-columns:1fr}}
+.card{background:#fff;border:1px solid var(--line);border-radius:16px;padding:16px;box-shadow:0 6px 20px rgba(11,26,51,.06)}
+.rinkcard{padding:12px}
+.qcard h3{margin:0 0 4px;font-size:16px;color:var(--navy)}
+.qcard .sub{font-size:11px;font-weight:800;letter-spacing:.5px;text-transform:uppercase;color:var(--gold)}
+.opt{font-size:13.5px;padding:9px 12px;border:1px solid var(--line);border-radius:10px;margin:7px 0;color:#3a4252}
+.opt.correct{border-left:4px solid var(--ok);font-weight:700;color:var(--ink);background:#f2faf5}
+.opt .b{display:inline-block;font-size:10px;font-weight:800;color:#fff;background:var(--ok);border-radius:4px;padding:1px 5px;margin-left:6px}
+.legend{font-size:12px;color:var(--muted);margin-top:12px;line-height:1.7}
+.dot{display:inline-block;width:10px;height:10px;border-radius:50%;vertical-align:middle;margin-right:4px}
+.note{font-size:12.5px;color:var(--muted);line-height:1.55;margin-top:14px;border-top:1px solid var(--line);padding-top:12px}
+</style></head><body>
+<header><h1>Whiteboard scenario — authored as data, rendered on a clean rink</h1>
+<p>No photoreal generation. The AI outputs player positions + the read; the engine draws it. This one's a U11 2-on-1. Same blank rink can hold a U7 give-and-go or a U13 D-zone coverage just by changing the numbers.</p></header>
+
+<div class="wrap">
+  <div class="card rinkcard">
+    <svg viewBox="0 0 200 85" style="width:100%;height:auto;display:block">
+      <defs>
+        <marker id="arr" markerWidth="6" markerHeight="6" refX="3" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#C9A24B"/></marker>
+        <filter id="sh" x="-30%" y="-30%" width="160%" height="160%"><feDropShadow dx="0" dy="0.6" stdDeviation="0.6" flood-color="#0b1a33" flood-opacity="0.35"/></filter>
+      </defs>
+      <!-- ice + boards -->
+      <rect x="2" y="2" width="196" height="81" rx="27" fill="#eef5fb" stroke="#0B1A33" stroke-width="1.4"/>
+      <!-- lines -->
+      <rect x="99.2" y="2" width="1.6" height="81" fill="#d23a3a"/>
+      <rect x="74" y="2" width="2" height="81" fill="#2b6fd6"/>
+      <rect x="124" y="2" width="2" height="81" fill="#2b6fd6"/>
+      <rect x="11" y="9" width="0.7" height="67" fill="#d23a3a"/>
+      <rect x="188.3" y="9" width="0.7" height="67" fill="#d23a3a"/>
+      <!-- faceoff: center -->
+      <circle cx="100" cy="42.5" r="13" fill="none" stroke="#d23a3a" stroke-width="0.6"/>
+      <circle cx="100" cy="42.5" r="1.1" fill="#2b6fd6"/>
+      <!-- end-zone circles + dots -->
+      <g fill="none" stroke="#d23a3a" stroke-width="0.6">
+        <circle cx="31" cy="22" r="13"/><circle cx="31" cy="63" r="13"/><circle cx="169" cy="22" r="13"/><circle cx="169" cy="63" r="13"/>
+      </g>
+      <g fill="#d23a3a"><circle cx="31" cy="22" r="1.1"/><circle cx="31" cy="63" r="1.1"/><circle cx="169" cy="22" r="1.1"/><circle cx="169" cy="63" r="1.1"/>
+        <circle cx="80" cy="30" r="1"/><circle cx="80" cy="55" r="1"/><circle cx="120" cy="30" r="1"/><circle cx="120" cy="55" r="1"/></g>
+      <!-- right crease + net (attacking right) -->
+      <path d="M188.3,38 A6,6 0 0 0 188.3,47 Z" fill="#bcdcff" stroke="#d23a3a" stroke-width="0.5"/>
+      <rect x="189" y="39" width="4" height="7" fill="none" stroke="#d23a3a" stroke-width="1"/>
+      <!-- left crease + net -->
+      <path d="M11.7,38 A6,6 0 0 1 11.7,47 Z" fill="#bcdcff" stroke="#d23a3a" stroke-width="0.5"/>
+      <rect x="7" y="39" width="4" height="7" fill="none" stroke="#d23a3a" stroke-width="1"/>
+
+      <!-- READ: cross-ice pass arrow (drawn under tokens) -->
+      <path d="M149,55 Q150,40 157,30" fill="none" stroke="#C9A24B" stroke-width="1.4" stroke-dasharray="3 2" marker-end="url(#arr)"/>
+      <!-- open-target ring on back-door teammate -->
+      <circle cx="158" cy="28" r="7.5" fill="none" stroke="#36d17a" stroke-width="1.2" stroke-dasharray="2.5 1.8"/>
+      <text x="158" y="18.5" font-size="3.4" fill="#1a7a45" font-weight="800" text-anchor="middle" font-family="Inter,Arial">OPEN</text>
+
+      <!-- players -->
+      <!-- goalie -->
+      <g filter="url(#sh)"><circle cx="184" cy="42.5" r="3.6" fill="#C9A24B" stroke="#0B1A33" stroke-width="0.4"/></g>
+      <text x="184" y="43.8" font-size="3" fill="#0B1A33" font-weight="800" text-anchor="middle" font-family="Inter,Arial">G</text>
+      <!-- lone defender (committed to the shot side) -->
+      <g filter="url(#sh)"><circle cx="170" cy="45" r="4.4" fill="#C9A24B" stroke="#0B1A33" stroke-width="0.4"/></g>
+      <text x="170" y="46.4" font-size="3.4" fill="#0B1A33" font-weight="800" text-anchor="middle" font-family="Inter,Arial">D</text>
+      <!-- back-door teammate -->
+      <g filter="url(#sh)"><circle cx="158" cy="28" r="4.4" fill="#1a1a1a" stroke="#fff" stroke-width="0.4"/></g>
+      <text x="158" y="29.4" font-size="3.4" fill="#fff" font-weight="800" text-anchor="middle" font-family="Inter,Arial">23</text>
+      <!-- puck carrier (you) -->
+      <g filter="url(#sh)"><circle cx="150" cy="56" r="4.4" fill="#1a1a1a" stroke="#fff" stroke-width="0.4"/></g>
+      <text x="150" y="57.4" font-size="3.4" fill="#fff" font-weight="800" text-anchor="middle" font-family="Inter,Arial">7</text>
+      <!-- puck + gold cue ring -->
+      <circle cx="145.5" cy="56" r="2.6" fill="none" stroke="#C9A24B" stroke-width="0.9"/>
+      <circle cx="145.5" cy="56" r="1.2" fill="#111"/>
+    </svg>
+  </div>
+
+  <div class="card qcard">
+    <div class="sub">U11 · 2-on-1 · Decision-making</div>
+    <h3>The defender stepped to you. What's the play?</h3>
+    <div class="opt">Shoot far side</div>
+    <div class="opt correct">Pass cross-ice to the open teammate (back door)<span class="b">✓</span></div>
+    <div class="opt">Deke the defender</div>
+    <div class="opt">Hold the puck and wait</div>
+    <p class="legend">
+      <span class="dot" style="background:#1a1a1a"></span>your team &nbsp;
+      <span class="dot" style="background:#C9A24B"></span>defenders / goalie<br>
+      <span style="color:#C9A24B">●</span> gold ring = puck &nbsp; <span style="color:#C9A24B">→</span> arrow = the read &nbsp; <span style="color:#36d17a">○</span> green ring = open option
+    </p>
+    <p class="note"><b>Why this is the engine, not a drawing:</b> every element here is a coordinate the AI can author and a coach-agent can verify. Change six numbers and it's a different play. Change the concept and it's a different age. One rink → unlimited age-appropriate scenarios, always legible, zero generation cost.</p>
+  </div>
+</div>
+</body></html>

@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RinkReads — Factory Run 01 Preview</title>
+<style>
+  :root { --navy:#0B1A33; --gold:#C9A24B; --ink:#1a2433; --muted:#6b7686; --line:#e3e7ee; --ok:#0B6B3A; }
+  * { box-sizing: border-box; }
+  body { margin:0; font-family: "Inter", system-ui, Arial, sans-serif; color:var(--ink); background:#f4f6fa; }
+  header { background:var(--navy); color:#fff; padding:18px 24px; position:sticky; top:0; z-index:5; }
+  header h1 { margin:0; font-size:18px; letter-spacing:.3px; }
+  header p { margin:4px 0 0; font-size:13px; color:#c7d0e0; }
+  .drop { margin:18px 24px; padding:22px; border:2px dashed var(--gold); border-radius:12px; background:#fffdf7;
+          text-align:center; cursor:pointer; font-size:14px; color:var(--ink); }
+  .drop.drag { background:#fff4d9; }
+  .drop b { color:var(--navy); }
+  .wrap { padding:0 24px 60px; }
+  .card { background:#fff; border:1px solid var(--line); border-radius:14px; margin:18px 0; overflow:hidden;
+          display:grid; grid-template-columns: 360px 1fr; }
+  @media (max-width: 820px){ .card { grid-template-columns: 1fr; } }
+  .imgcol { background:var(--navy); display:flex; align-items:center; justify-content:center; min-height:200px; padding:10px; }
+  .imgcol img { width:100%; height:auto; border-radius:8px; display:block; }
+  .imgcol .ph { color:#9fb0cc; font-size:13px; text-align:center; padding:30px 14px; }
+  .qcol { padding:16px 20px; }
+  .tag { display:inline-block; font-size:11px; font-weight:700; letter-spacing:.5px; text-transform:uppercase;
+         color:var(--navy); background:#f0e6cc; padding:3px 8px; border-radius:20px; }
+  .arch { font-size:16px; font-weight:700; margin:8px 0 2px; color:var(--navy); }
+  .tile { font-size:12px; color:var(--muted); margin-bottom:12px; }
+  .q { border-top:1px solid var(--line); padding:12px 0; }
+  .qhead { font-size:11px; font-weight:700; color:var(--gold); letter-spacing:.4px; text-transform:uppercase; }
+  .qprompt { font-size:14px; font-weight:600; margin:5px 0 8px; }
+  .opt { font-size:13px; padding:6px 10px; border:1px solid var(--line); border-radius:8px; margin:4px 0; color:#3a4252; }
+  .opt.correct { border-left:4px solid var(--ok); font-weight:700; color:var(--ink); background:#f2faf5; }
+  .opt .badge { display:inline-block; font-size:10px; font-weight:800; color:#fff; background:var(--ok);
+                border-radius:4px; padding:1px 5px; margin-left:6px; letter-spacing:.3px; }
+  .why { font-size:12.5px; color:var(--muted); margin-top:7px; line-height:1.45; }
+  .queued { opacity:.62; }
+  .queued .imgcol { filter:grayscale(.5); }
+  .qbadge { display:inline-block; font-size:11px; font-weight:700; color:#7a4b00; background:#ffe7b8;
+            padding:3px 8px; border-radius:20px; }
+  .summary { margin:18px 24px 0; font-size:13px; color:var(--muted); }
+  .summary b { color:var(--navy); }
+</style>
+</head>
+<body>
+<header>
+  <h1>RinkReads · Factory Run 01 — image + question preview</h1>
+  <p>9 shippable scenarios · 40 coach-passed questions · 6 queued. Correct answers marked with a ✓ Correct badge.</p>
+</header>
+
+<div class="drop" id="drop">
+  <b>Drag your contact-sheet image here</b> (or click to choose). It will be sliced into the 15 tiles in your browser — nothing is uploaded.
+  <input type="file" id="file" accept="image/*" style="display:none">
+</div>
+<div class="summary" id="summary"></div>
+<div class="wrap" id="wrap"></div>
+
+<script>
+const SURVIVORS = [12,14,16,17,18,19,20,22,24];
+const QUEUED = [10,11,13,15,21,23];
+
+const DATA = {
+  12: { arch:"Defender diving / committed", status:"shipped", q:[
+    {h:"U9 · Multiple choice", p:"Look at the lone defender in gold. What did the defender just do?", o:["Dove to the ice and left his feet trying to poke-check","Stayed standing in good defending position","Knocked the puck away with a successful poke-check","Skated back to help cover the goalie"], a:0, why:"He committed hard and dived, missed, and is now off his feet and out of the play."},
+    {h:"U9 · What happens next", p:"The defender is down on the ice. What is the puck carrier most likely to do next?", o:["Skate around the fallen defender and drive to the net to shoot on the goalie","Stop and wait for the defender to get up","Pass the puck backward out of the zone","Take a long shot from far away right now"], a:0, why:"With the defender down, the path around him opens — go in on the goalie. Highest-percentage play, not the only legal one."},
+    {h:"U11 · Multiple choice", p:"Why is the defender diving to poke-check a risky choice here?", o:["If he misses, he is on the ice and out of the play, leaving the lane open","It always works because the attacker can't react in time","It is the safest way to stop every rush","It forces the puck carrier to pass right away"], a:0, why:"A dive is all-or-nothing; once he misses he can't recover and the lane opens."},
+    {h:"U11 · True / False", p:"Diving to poke-check was the right play because it was the defender's only chance to stop the rush.", o:["True","False"], a:1, why:"Staying on his feet to keep a tight gap and steer the carrier outside was the better option."},
+    {h:"U13 · Spot the mistake", p:"The lone defender is the only player back. Spot the defender's mistake.", o:["He left his feet to poke-check, taking himself out of position","He committed to the carrier too early instead of forcing him outside first","He stayed too far back and gave up the blue line","He turned his back to the puck carrier"], a:0, why:"Committing early is the tempting wrong answer; the precise error is leaving his feet."},
+  ]},
+  14: { arch:"2-on-1, neutral defender", status:"shipped", q:[
+    {h:"U11 · Multiple choice", p:"It's a 2-on-1. The lone defender is square and hasn't committed. Best first move?", o:["Attack with speed to force the defender to commit, then take whatever he gives up","Pass right away before you even know what the defender will do","Stop and wait for the defender to make the first move","Throw the puck into the corner and chase it"], a:0, why:"Force a decision: if he steps to you the pass opens; if he protects the pass, you shoot."},
+    {h:"U11 · Tap the target", p:"Defender still square. Tap who you should be ready to pass to if he steps toward you.", o:["The open teammate on the other side of the defender","The spot right into the defender's stick","Your teammate only after he has skated in front of the net","The lone defender"], a:0, why:"Your read is the open man on the far side of the defender, the instant the lane appears."},
+    {h:"U15 · True / False", p:"Since the defender hasn't committed yet, the best play is to pass across right now.", o:["True","False"], a:1, why:"Passing early lets the neutral defender slide to the receiver. Force him to commit first."},
+    {h:"U15 · What happens next", p:"You drive at him and he steps across to challenge you. Best next play?", o:["The lane to the open teammate opens — slide a firm, flat pass across for a shot","Immediately turn back up the ice","The open teammate skates behind the net out of the play","The goalie now controls both attackers by himself"], a:0, why:"Once he commits to you he can't take the pass away — that's the whole point of forcing his hand."},
+  ]},
+  16: { arch:"1-on-1, closing defender", status:"shipped", q:[
+    {h:"U11 · Multiple choice", p:"You carry the puck up ice. A defender is to your right, skating into your path. What's happening to the space?", o:["The space is shrinking as the defender closes in","The space is growing because you are pulling away","The space stays the same because you are matching speed","There is open ice on every side of you"], a:0, why:"He's angling into your path; reading the shrinking gap tells you to act before he arrives."},
+    {h:"U11 · True / False", p:"Based on what you can see in this picture, you have an open teammate to pass to right now.", o:["True","False"], a:1, why:"No teammate is visible — the decision is yours, against the closing defender."},
+    {h:"U13 · Multiple choice", p:"A defender angles into your path and you see no one else around. Best read?", o:["It's 1-on-1 with no pass: protect the puck and change pace or angle to beat him","Pass the puck even though you do not see a teammate","Dump the puck into the corner and chase it","Stop skating and wait for the defender to take the puck"], a:0, why:"One defender, no support — keep the puck safe and beat him with pace/angle."},
+    {h:"U13 · Tap the target", p:"Tap the player who is forcing your decision by closing the gap.", o:["The gold defender pressuring you","The puck carrier (you)","The puck on your stick","Open ice ahead of you"], a:0, why:"Identifying who's pressuring you is the first step to attacking the 1-on-1."},
+    {h:"U13 · What happens next", p:"The gap nearly disappears. If you do nothing and keep skating straight, most likely result?", o:["The defender closes the gap and pressures you (challenges or angles you off)","The defender skates away and gives you open ice","You skate into the defender and lose the puck, or get angled wide with no room","The play is whistled dead automatically"], a:0, why:"Skating straight lets him challenge or angle you off — act before the gap closes."},
+  ]},
+  17: { arch:"Controlled 1-on-1", status:"shipped", q:[
+    {h:"U13 · Multiple choice", p:"Look at the lone defender facing the puck carrier. What is he doing well?", o:["Holding a tight gap, body in front, stick in the lane","Turned around and chasing from behind","Way too far back, giving up free space","Lunging and diving at the puck"], a:0, why:"Squared body, controlled gap, active stick — textbook 1-on-1 defending."},
+    {h:"U13 · Multiple choice", p:"1-on-1, no help nearby. What should the defender do to keep the controlled gap?", o:["Stay patient, keep the gap, and steer the carrier to the outside with the stick in the lane","Rush forward and try to poke the puck right away","Stop skating and let the carrier come all the way in","Turn and skate alongside the carrier toward the net"], a:0, why:"Keep the gap and steer him wide; lunging would open the lane."},
+    {h:"U15 · True / False", p:"The lone defender is out of position and has been beaten by the puck carrier.", o:["True","False"], a:1, why:"He's squared up with a controlled gap and active stick — not beaten."},
+    {h:"U15 · True / False", p:"No teammates visible — it's an even 1-on-1, and his controlled gap puts him in good position to force the carrier wide.", o:["True","False"], a:0, why:"True. Even 1-on-1; the carrier still dictates with speed and fakes, so the D stays patient."},
+  ]},
+  18: { arch:"Breakaway (1-on-0)", status:"shipped", q:[
+    {h:"U7 · Emoji", p:"The player has nobody in the way. It is just them and the goalie. How should they feel?", o:["😄 Happy - go score!","😟 Nervous - I have no teammates to help","😴 Sleepy - skate slowly","🤝 Wait for a friend before going in"], a:0, why:"It's a breakaway — being alone is a great chance to score."},
+    {h:"U9 · Multiple choice", p:"Open ice all the way to the goalie and no one chasing. What is this called?", o:["A breakaway","A power play","A faceoff","An icing"], a:0, why:"Alone on the goalie with no defenders between = a breakaway."},
+    {h:"U9 · True / False", p:"The goalie is still sitting deep in his net.", o:["True","False"], a:1, why:"He's squared and stepped out to cut the angle, making the net look smaller."},
+    {h:"U13 · What happens next", p:"Alone on a squared, slightly-out goalie, no chasers. Best next move?", o:["Attack with a deke or shot before any defender can catch up","Slow down to settle the puck and let the goalie reset","Turn back toward the blue line","Pass back to the point to set up a play"], a:0, why:"Use the open ice and attack now; slowing lets the goalie set."},
+  ]},
+  19: { arch:"Behind the net / wraparound", status:"shipped", q:[
+    {h:"U11 · Multiple choice", p:"Behind the net. Goalie hugs the near post, a defender is on the far post, a teammate is in the slot. Best play?", o:["Pass to the teammate in the slot","Jam the puck at the near post to squeeze it past the goalie","Stop behind the net and wait","Skate the puck back into the corner"], a:0, why:"Both posts covered; the slot is the only clear, high-value lane."},
+    {h:"U11 · True / False", p:"Jamming the puck in on the near side is the best chance to score here.", o:["True","False"], a:1, why:"The goalie is sealing the near post — that's the most-defended lane."},
+    {h:"U13 · Tap the target", p:"Tap the spot that gives your team the best scoring chance from behind the net.", o:["The teammate in the slot","The near post","The far post"], a:0, why:"Goalie owns the near post, defender owns the far post — the slot is open."},
+    {h:"U13 · What happens next", p:"He ignores the slot and tries a wraparound to the far post. Most likely result?", o:["The far-post defender breaks up the wraparound before it reaches the net","The wraparound walks in untouched for an easy goal","The goalie slides post-to-post and seals the far side before the puck arrives","The carrier beats the defender but has no angle and the puck slides across the crease unshot"], a:0, why:"The defender is already set on the far post, exactly where the wraparound is headed."},
+    {h:"U13 · Spot the mistake", p:"He forces a wraparound into the far-post defender instead of using the slot. The mistake?", o:["Forcing into covered ice instead of passing to the teammate in the slot","Telegraphing the pass so the defender can jump the slot lane","Waiting too long behind the net and letting the goalie reset","Shooting low to the near side"], a:0, why:"A teammate is open in the slot; forcing into the covered far post is the error."},
+  ]},
+  20: { arch:"Offensive-zone faceoff", status:"shipped", q:[
+    {h:"U11 · Multiple choice", p:"(You're gold, attacking.) The ref is about to drop the puck. Who takes the faceoff?", o:["The center squared up opposite the other center over the dot","The winger nearest the boards","The defenseman at the point near the blue line","The winger on the far side of the circle"], a:0, why:"The player set squarely over the dot facing the other center is the center."},
+    {h:"U11 · True / False", p:"As soon as the puck drops, the wingers should keep standing still and wait until the centers finish battling.", o:["True","False"], a:1, why:"Wingers must be ready to react to a loose puck and support the draw."},
+    {h:"U13 · Multiple choice", p:"You win the draw cleanly. One common option that opens an immediate shooting lane?", o:["Win the puck back to the point player at the blue line for a shot","Push it straight ahead into the opposing center","Send it out of the zone to reset","Hard around the wall behind the opposing net"], a:0, why:"Back to the point gives the defenseman up high a clear shooting lane."},
+    {h:"U13 · What happens next", p:"You lose the draw and they pull it back to their player. Best immediate reaction?", o:["Pressure the puck carrier to disrupt the opponent's breakout","Freeze on the dot and watch the play develop","Coast back slowly and let your teammates handle it","Stand and look toward the bench for the next shift"], a:0, why:"Draws aren't always won — react and pressure rather than freeze or quit."},
+    {h:"U13 · Spot the mistake", p:"One teammate does the wrong thing as the puck drops. Which?", o:["A winger turns and looks away from the dot as the puck is dropped","A winger steps slightly toward the boards to open a passing lane","The center keeps eyes on the puck during the draw","The point player holds position up high near the blue line"], a:0, why:"Looking away means he can't jump a loose puck or support the center."},
+  ]},
+  22: { arch:"Corner board battle", status:"shipped", q:[
+    {h:"U11 · Multiple choice", p:"Battling for a loose puck in the corner. What should you do FIRST to win it?", o:["Get body position between the opponent and the puck to protect it","Lunge for the puck with the stick before getting your body in","Tie up the opponent's stick first and worry about the puck after","Stay tall and try to muscle the opponent off with your shoulder"], a:0, why:"Win body position first so your body shields the puck."},
+    {h:"U11 · Multiple choice", p:"You win the puck on the boards and a teammate is open in support. Smartest next play?", o:["Protect the puck and make a controlled pass to the supporting teammate","Force the puck through the opponent's body toward the net","Curl back toward your own zone and give up the possession","Pass behind the net without checking where your support is"], a:0, why:"Keep shielding, then move it to support to keep possession."},
+    {h:"U13 · Multiple choice", p:"What body habit best lets you keep the puck while engaged?", o:["Stay low with a wide base and keep the body between opponent and puck","Stand tall and straight to look bigger","Turn your back square to the boards so you can no longer see the ice","Lift the back skate off the ice while leaning into the opponent"], a:0, why:"Leverage comes from a low, wide, balanced stance."},
+    {h:"U13 · Spot the mistake", p:"You won the puck, under pressure, with support available. The MISTAKE to avoid?", o:["Forcing the puck through the opponent's body instead of using support","Shielding the puck with the body while scanning for the support option","Sealing the opponent off with a wide base, then moving the puck to support","Taking one extra stride to open a passing lane before releasing the puck"], a:0, why:"Win the battle, then make the smart support play — don't force it."},
+  ]},
+  24: { arch:"Net drive / scoring chance", status:"shipped", q:[
+    {h:"U11 · Multiple choice", p:"Driving toward the net with a defender trying to angle you off. Best read?", o:["Drive the net hard and read the goalie to shoot or keep going","Pass back to a trailer at the top of the circle","Cut across the front of the net to beat the goalie post-to-post","Slow up and protect the puck until support arrives"], a:0, why:"Driving hard forces the goalie to commit, opening space or a closer chance."},
+    {h:"U11 · True / False", p:"With a defender closing, you should slow down and let him catch up before deciding.", o:["True","False"], a:1, why:"Slowing gives the defender time to close the lane and the goalie time to set."},
+    {h:"U13 · What happens next", p:"Driving the net, goalie giving up space. What if you read it well?", o:["Attack the space the goalie gives up — shoot into it or drive closer to finish","Fake the shot, freeze the goalie, then loop back to the blue line to reset","Throw it blindly off the goalie's pads and hope for a bounce","Stop at the top of the circle and wait for a teammate"], a:0, why:"Reading and attacking the opening is the whole point of the drive."},
+    {h:"U13 · Spot the mistake", p:"Same net drive, defender angling you off. Which would be the mistake?", o:["Veering wide to the boards away from the net","Driving hard to force the goalie to commit","Reading the goalie before deciding to shoot or keep driving","Protecting the puck from the angling defender while staying on the net"], a:0, why:"Bailing wide hands the defender the angle and kills the chance."},
+  ]},
+  10:{arch:"Isolated square 1-on-1",status:"queued",reason:"Square neutral defender, no teammate — no single clearly-best play."},
+  11:{arch:"Isolated square 1-on-1 (dup)",status:"queued",reason:"Near-duplicate of tile 10."},
+  13:{arch:"Cluttered 2-on-2",status:"queued",reason:"Puck and roles unreadable; multiple defensible reads."},
+  15:{arch:"Multi-player battle",status:"queued",reason:"Unclear puck possession; no clean single read."},
+  21:{arch:"1-on-1 (dup)",status:"queued",reason:"Near-duplicate of tile 17; redundant."},
+  23:{arch:"Net-front scramble",status:"queued",reason:"Too cluttered to support a clean, fair read."},
+};
+
+const ORDER = [12,14,16,17,18,19,20,22,24,10,11,13,15,21,23];
+const tileImages = {}; // tile -> dataURL
+
+function render(){
+  const wrap = document.getElementById('wrap');
+  wrap.innerHTML = '';
+  for(const t of ORDER){
+    const d = DATA[t];
+    const card = document.createElement('div');
+    card.className = 'card' + (d.status==='queued' ? ' queued':'');
+    const img = tileImages[t] ? `<img src="${tileImages[t]}" alt="tile ${t}">` : `<div class="ph">Tile ${t}<br>drop the contact sheet<br>to load this image</div>`;
+    let qhtml = '';
+    if(d.status==='shipped'){
+      qhtml = d.q.map(q=>{
+        const opts = q.o.map((o,i)=>`<div class="opt ${i===q.a?'correct':''}">${o}${i===q.a?'<span class="badge">✓ Correct</span>':''}</div>`).join('');
+        return `<div class="q"><div class="qhead">${q.h}</div><div class="qprompt">${q.p}</div>${opts}<div class="why">${q.why}</div></div>`;
+      }).join('');
+    } else {
+      qhtml = `<div class="q"><span class="qbadge">QUEUED — not shipped</span><div class="why">${d.reason}</div></div>`;
+    }
+    card.innerHTML = `<div class="imgcol">${img}</div><div class="qcol"><span class="tag">${d.status==='shipped'?'Shipped · Tile '+t:'Queued · Tile '+t}</span><div class="arch">${d.arch}</div><div class="tile">Image: contact-sheet tile ${t}</div>${qhtml}</div>`;
+    wrap.appendChild(card);
+  }
+  document.getElementById('summary').innerHTML = `<b>9 shippable</b> (40 questions) · <b>6 queued</b>. ${Object.keys(tileImages).length? 'Images loaded from your contact sheet.' : 'Drop your contact sheet above to see each image with its questions.'}`;
+}
+
+function sliceSheet(imgEl){
+  // contact sheet = 5 columns x 3 rows, tiles 10..24 left-to-right, top-to-bottom
+  const cols=5, rows=3;
+  const cw = imgEl.naturalWidth/cols, ch = imgEl.naturalHeight/rows;
+  for(let idx=0; idx<15; idx++){
+    const r = Math.floor(idx/cols), c = idx%cols;
+    const cv = document.createElement('canvas');
+    cv.width = cw; cv.height = ch;
+    cv.getContext('2d').drawImage(imgEl, c*cw, r*ch, cw, ch, 0, 0, cw, ch);
+    tileImages[10+idx] = cv.toDataURL('image/png');
+  }
+  render();
+}
+
+function handleFile(file){
+  const url = URL.createObjectURL(file);
+  const im = new Image();
+  im.onload = ()=> sliceSheet(im);
+  im.src = url;
+}
+
+const drop = document.getElementById('drop');
+const fileInput = document.getElementById('file');
+drop.addEventListener('click', ()=> fileInput.click());
+fileInput.addEventListener('change', e=>{ if(e.target.files[0]) handleFile(e.target.files[0]); });
+drop.addEventListener('dragover', e=>{ e.preventDefault(); drop.classList.add('drag'); });
+drop.addEventListener('dragleave', ()=> drop.classList.remove('drag'));
+drop.addEventListener('drop', e=>{ e.preventDefault(); drop.classList.remove('drag'); if(e.dataTransfer.files[0]) handleFile(e.dataTransfer.files[0]); });
+
+render();
+</script>
+</body>
+</html>

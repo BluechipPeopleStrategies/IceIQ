@@ -1,149 +1,124 @@
-# RinkReads Context (v2026.4)
+# RinkReads Context (v2026.6)
+
+> Maintenance note: this file is verified against code as of 2026-06-03. When a
+> section cites a file/identifier, grep to confirm it still exists before relying
+> on it — the codebase moves faster than this doc.
+
+## Direction (2026-06-03)
+**Starting fresh on the unified scenario engine** (`src/scenario/`). The legacy question bank is archived (`src/data/questions.legacy*.json`) then being **wiped — NOT migrated forward**. Don't invest in repairing/converting legacy questions. New content = engine scenario seeds (`src/scenario/seeds/`) + content-factory overlay questions. Treat the old MC bank as a frozen, read-only archive.
 
 ## Core Specs
-- **Goal:** Youth hockey game sense development — 880+ adaptive questions, SMART goals, progress tracking U7–U18.
-- **Stack:** React + Vite. Main files: `src/App.jsx`, `src/shared.jsx`, `src/screens.jsx`, `src/data/constants.js`, `src/utils/tierGate.js`, `src/utils/weeklyChallenge.js`, `src/config/pricing.js`.
-- **Platform:** Vercel (auto-deploy on `main`).
-- **Environment:** Claude Code (PS/Windows).
-- **Architecture:** All logic/UI in `src/App.jsx`. NO `/components` or refactoring. CSS: inline/style-block.
+- **Goal:** Youth hockey game-sense development — adaptive question bank, SMART goals, progress tracking U7–U18.
+- **Stack:** React + Vite, plain JS/JSX (no TypeScript). Vercel auto-deploy on `main`.
+- **Environment:** Claude Code on Windows / PowerShell.
+- **Entry:** `src/main.jsx` → `src/App.jsx`.
+
+## Architecture (modular — NOT a single file)
+`src/App.jsx` is the ~7,900-line core (routing, screens, quiz engine, tier gating), but the app is **modularized** — App.jsx imports ~25 sibling modules. Do not assume "everything lives in App.jsx," and feel free to add/extend modules where it fits the existing split:
+- **UI modules:** `shared.jsx` (primitives + `RinkReadsLogo`), `screens.jsx`, `widgets.jsx`, `assignments.jsx`, `coachAnalytics.jsx`, `teamChallenges.jsx`, `trainingLogCoach.jsx`, `questionOfDay.jsx`, `speedRound.jsx`, `admin.jsx`, `toast.jsx`, `OverlayLayer.jsx`, `RinkPlay.jsx`.
+- **Rink renderers:** `RinkReadsRink.jsx` + `RinkReadsRinkQuestion.jsx` (legacy v2 renderer, still live) and the newer unified engine in `src/scenario/` (see below).
+- **`src/utils/*`:** tier gating, gameSense, season pass, weekly challenge, storage, mastery, streaks, device lock, question overrides, reflections, etc.
+- **`src/data/*`:** question banks + constants + insights.
+- **`src/config/pricing.js`:** single source of truth for tier contents/prices.
+- CSS: inline / style-block (no CSS framework).
 
 ## Branding
-- App name: **RinkReads** (hyphenated everywhere in UI, including "RinkReads Pro", "RinkReads Team").
-- Score metric: **Game Sense Score** (not "IQ Score", not "Hockey IQ"). Short form: **GS**.
-- Logo: `RinkReadsLogo` component in `shared.jsx` — modern stick + puck with motion lines + outer ring.
+- App name: **RinkReads** (one word, hyphen-free brand; UI shows "RinkReads Pro", "RinkReads Family", "RinkReads Team"). Repo/folder/deploy name is **IceIQ** (`ice-iq.vercel.app`).
+- Score metric: **Game Sense Score** (not "IQ"/"Hockey IQ"). Short form: **GS**. Computed in `src/utils/gameSense.js` (`calcGameSenseScore`, `GAME_SENSE_UNLOCK_SESSIONS`).
+- Logo: `RinkReadsLogo` in `shared.jsx`.
 - Coach dashboard stat label: "Team Avg GS".
 
-## Pricing & Gating (`src/utils/tierGate.js`, `src/config/pricing.js`)
-Seasonal pricing model (aligns with hockey season cycle Sept–Mar + summer off-season Apr–Aug).
+## Pricing & Tiers (`src/config/pricing.js`, `src/utils/seasonPass.js`)
+**Current model is HOCKEY-SEASON-ONLY** (Sept–Mar). The older "seasonal" model with summer off-season and full-year bundles has been removed — do not reintroduce summer/full-year prices unless asked. Prices in CAD.
 
-- **Free:** positionFilter ✓, multipleChoice + **3 rink scenarios per age group (teaser)**, 5 session history, 1 profile, 1 age group, **3 quizzes/week cap** (localStorage, resets Monday).
-  - Rink teaser counter lives in `src/utils/rinkProgress.js` — `RINK_FREE_PER_AGE = 3`, localStorage key `rinkreads_rink_seen` (`{ u7: n, u9: n, ... }`). After the cap, `buildQueue` in `App.jsx` injects a `rinkLocked` sentinel that routes to the `rinkQuestions` upgrade prompt.
-- **Pro:** All question formats (5 types), adaptive engine, SMART goals, progress snapshots/radar, full session history, weekly challenge.
-  - Hockey Season (Sept–Mar): **$89.99 CAD** — primary competitive season
-  - Summer Off-Season (Apr–Aug): **$44.99 CAD** — development & training focus, lower friction
-  - Full Year (Sept–Aug): **$124.99 CAD** — continuous access, saves $10.98
-- **Family:** All Pro features + 3 profiles.
-  - Hockey Season (Sept–Mar): **$139.99 CAD**
-  - Summer Off-Season (Apr–Aug): **$69.99 CAD**
-  - Full Year (Sept–Aug): **$199.99 CAD** — saves $10.98
-- **Team:** All features + coach dashboard. Hockey season only (Sept–Mar, hard expiry Apr 1, read-only after).
-  - Hockey Season (Sept–Mar): **$249.99 CAD** — typically covers 15–20 players on a roster
+| Tier | Price (Sept–Mar) | Includes |
+|------|------------------|----------|
+| **Free** | $0 | 1 profile, 1 age group, MC format + core scenarios, 5-session history, position filter, **3 quizzes/week** cap. |
+| **Pro** | **$89.99** | 1 profile, all age groups, all 5 formats, adaptive engine, SMART goals, progress snapshots, weekly challenge. |
+| **Family** | **$139.99** | Pro features + **3 profiles**. |
+| **Team** | **$249.99** | All features + coach dashboard, up to **20 players**. |
 
-## Pricing Rationale (Seasonal Model)
-**Strategy:** Aggressive Summer Growth — lower friction for off-season learners.
+- **Season:** Sept 1 – Mar 31. **Hard expiry April 1** → paid tiers go read-only (historical data visible, no new focus areas/reports). **Re-enrollment nudge Aug 15** (once/year). Logic in `seasonPass.js` (`getSeasonPassStatus`, `activateSeasonPass`, `checkReenrollmentPrompt`, `isReadOnly`).
 
-| Metric | Rationale |
-|--------|-----------|
-| **Hockey Season ($89.99/$139.99/$249.99)** | Peak competitive season (Sept–Mar); game sense is most relevant; full-feature parity with historical pricing. |
-| **Summer Off-Season ($44.99/$69.99)** | ~49–50% discount vs hockey season; targets coaches/parents running summer camps & development programs; lower barrier to trial. |
-| **Full Year ($124.99/$199.99)** | ~$10.98 savings per tier; incentivizes annual commitment & continuous progress tracking Sept–Aug. |
-| **No Team Summer option** | Coaches rarely run team programs Apr–Aug; seasonal hard stop (Apr 1) reduces confusion. |
+## Free-Tier Limits & Gating (`src/utils/tierGate.js`)
+- FREE: 1 age group, **MC format only** + 1 `formatPreview` sentinel/session (teaser for locked formats), position filter, 5-session history.
+- **Free weekly quiz cap:** `src/utils/weeklyChallenge.js` — `FREE_WEEKLY_QUIZ_CAP = 3`, key `rinkreads_free_cap` (JSON keyed by ISO week, e.g. `2026_W16`). Gate routes to `FreeQuizCapScreen` with a countdown to Monday reset.
+- PRO+: all 5 formats (mc, tf, seq, mistake, next), adaptive difficulty (checked in `buildQueue`).
+- **Note:** the old per-age "3 rink scenarios" teaser counter (`src/utils/rinkProgress.js`, `RINK_FREE_PER_AGE`, `rinkreads_rink_seen`) **was removed** — that file and those keys no longer exist.
 
-**Expected outcomes:**
-- **Activation:** Summer discounts capture off-season learners (development camps, July clinics).
-- **Retention:** Full-year bundles extend LTV beyond single season; reduce churn at April 1 hard stop.
-- **Revenue:** $89.99 (hockey) + $44.99 (summer) = $134.98 (if both purchased separately) vs $124.99 full-year bundle = ~$10/user rebate for commitment. Annual revenue ~$90K per 500 Pro users (blended ~$180/user/year).
+## Question Bank & Loading (`src/qbLoader.js`)
+The live bank is **composed at runtime**, not a single static file. `loadQB()` merges three sources and caches the result in `sessionStorage` under `rinkreads_qb_cache_v26` (bump the version when bank shape changes):
+1. **`src/data/questions.json`** — base bank, keyed by age-group display name (`"U7 / Initiation"` … `"U18 / Midget"`). Questions without an explicit `type` default to `mc`. `levels: [...]` replicates one question across multiple age buckets.
+2. **`src/scenario/seeds/*.json`** — unified-engine scenarios, **auto-globbed at build time** (`import.meta.glob`). Drop a seed in that folder and it appears in the live bank under its `level`/`levels[]` — no edit to questions.json needed.
+3. **`src/data/factoryQuestions.json`** — content-factory output (image-first questions with `media.url` POV images), produced by `tools/factory-to-bank.mjs`.
 
-## Free Weekly Quiz Cap
-- `src/utils/weeklyChallenge.js` — `FREE_WEEKLY_QUIZ_CAP = 3`, `isAtFreeQuizCap()`, `incrementFreeQuizCount()`.
-- Incremented in `handleQuizFinish` when `tier === "FREE"`.
-- Gated at quiz screen routing: if FREE and at cap → `<FreeQuizCapScreen>` with countdown to Monday reset.
-- localStorage key: `rinkreads_free_cap` — JSON keyed by week key (`2026_W16`).
+Legacy bank was archived 2026-04-29 to `src/data/questions.legacy.json` (+ `questions.legacy-candidates.json`); those are NOT loaded at runtime. The active base bank is small (~95) — most volume now comes from scenarios + factory output.
 
-## Storage Schema (localStorage)
-- `rinkreads_device_id`: UUID.
-- `rinkreads_age_group_lock`: Free-tier selection.
-- `rinkreads_switch_count`: Track switches (limit: 1).
-- `rinkreads_season_reset_year`: Current reset cycle.
-- `rinkreads_child_profiles`: JSON array (max 3).
-- `rinkreads_season_pass`: {purchaseDate, expiryDate}.
-- `rinkreads_weekly`: Weekly challenge completion record (8-week pruning).
-- `rinkreads_free_cap`: Free tier weekly quiz count keyed by week (4-week pruning).
-- `rinkreads_rink_seen`: `{ seen: {u7:n,u9:n,...}, ids: {u7:[id,...],...} }` — FREE tier rink teaser counter, caps at `RINK_FREE_PER_AGE` (3) per age group.
-- `rinkreads_milestone5_shown`: Flag — shown once when free user completes 5th quiz.
-- `rinkreads_parents_card_dismissed`: "true" once user dismisses the Home "For parents — start here" card. Never returns unless cleared.
+## Unified Scenario Engine (`src/scenario/`)
+Newer interactive-question system (Perseus-widget pattern). Import only from `src/scenario/index.js`.
+- **Schema (`schema.js`):** one `Scenario` shape for every interactive type. **Coordinates are normalized 0–1** (renderers convert to the 600×300 rink at draw time). Actors have `id/kind/x/y/[tag]/[label]/[facing]`. Optional IntelliGym fields: `timer` (hard fail), `scanWindow` (hide defenders after `showMs` — working memory), `preview` (lock input for `lockMs` — pattern recognition).
+- **Four interaction primitives** (`registry.js` + `primitives/`): `point`, `path` (SPADL verbs: skate/carry/pass/shoot/screen/check/backcheck), `selection`, `sequence`. Adding a kind = one primitive folder + one registry entry (no central switch).
+- **Semantic zones (`zones.js`):** authors reference zone IDs (e.g. `oz-slot`, `dz-corner-strong`); resolved to coords at scoring time. Numeric coords win when supplied.
+- **Validation (`schema.js` `validateScenario` + `validators.js`):** schema-shape errors + hockey-logic rules (e.g. rejects a "correct" pass lane a defender would intercept). Returns `{ ok, errs, warns }`.
+- **Render:** `ScenarioRenderer` (from `index.js`), `RinkStage.jsx`.
 
-## Tier Resolution (`resolveTier`)
-- Demo coach → **TEAM** (sees full coach dashboard).
-- Demo player → **FREE** (sees free experience).
-- Override: `rinkreads_tier_override` in localStorage.
+## Overlay System (`src/OverlayLayer.jsx`)
+Renders `q.overlays[]` (normalized 0–1 coords) on top of an image — the house style for making "the read" unmistakable on factory/POV questions.
+- Kinds: `puck` (glow), `text` (bold cue label), sprite (player from sheet + optional focus ring). Planned extensions per the factory spec: `arrow` (gold = the correct lane/read), `ring` (green dashed = open target), `dim` (shade covered options).
+- Sprite sheets expected at `/assets/sprites/{player-yellow.png, player-black.png, goalie.png}`.
+- **Accessibility:** never color-alone (red/green colorblind rule) — pair with arrow/shape/label.
 
-## Coach Ratings Anti-Inflation
-- `src/data/constants.js` — `COMPETENCY_LADDER` `sub_coach` strings include normative % anchors (e.g., "~top 5%").
-- Anchor text rendered in `C.dimmest` colour after a `·` separator in `CoachRatingScreenAuthed`.
-- **Exceptional for Age Group** flag (⭐): stored as `ratings[skillId + "__star"]` boolean — planned but not yet implemented.
+## Content Factory (`docs/factory/`, `tools/factory-*.mjs`)
+Image-first pipeline that turns hockey images into coach-graded, age-laddered, multi-format question banks at scale (rink scenarios are a paid teaser → more/better content = conversion).
+- **Spec:** `docs/factory/SPEC.md` (current build-out: overlay annotation system, coverage ledger, stricter verdict bar). Proven runs: `factory-run-01.json` / `-02.json` + summaries.
+- **Pipeline:** curriculum spine → image (ChatGPT Team inbox, zero-API for now) → vision reads real file + normalized coords → author multi-age/format bank → auto-place overlays → 3-coach panel (tactical / pedagogy / adversarial + overlay-accuracy) → verdict → ship to `factoryQuestions.json` or queue.
+- **CLI tools:** `tools/factory-index.mjs`, `tools/factory-to-bank.mjs`, `tools/revision-to-run.mjs` (next to `tools/scenario-author.mjs`).
 
-## Splash / Auth Page (AuthScreen)
-- Dark SVG rink background (`RinkBackground dark={true}`) — night ice `#03090f`, glowing red/blue lines with SVG blur filters.
-- Hero: "Train smarter. Play sharper." + stat chips (880+, 6 age groups, 5 question types).
-- Demo player buttons: Name + #jersey (prominent), team name, position (subtle). No redundant age group label.
-- Demo coach button: mini roster preview showing first 3 players with position, name, GS score.
+## Rink Visualization (legacy v2 — `RinkReadsRink.jsx` / `RinkReadsRinkQuestion.jsx`)
+Olympic IIHF top-down renderer. Still live for `q.rink` questions; the unified engine above is the newer path.
 
-## Demo Profiles (`DEMO_PROFILES` in App.jsx)
-Each has: `name`, `position`, `jersey` (number), `team`. Levels: U7/U9/U11/U13/U15/U18.
-Demo coach roster: `DEMO_COACH_ROSTER` — 5 U11 players with `iq` field (displayed as `GS {n}`).
-
-## Question Gating
-- FREE: MC only + 1 `formatPreview` sentinel per session (teaser for other formats).
-- PRO+: All 5 formats (mc, tf, seq, mistake, next).
-- Position filter: FREE and up.
-- Adaptive difficulty: PRO+ only (checked in `buildQueue`).
-
-## Weekly Challenge
-- `src/utils/weeklyChallenge.js` — ISO week seed, Mulberry32 RNG, seeded shuffle.
-- Same 10 questions for every player at same level/position each week.
-- Gated: PRO/FAMILY/TEAM only. FREE sees teaser card on Home.
-
-## What's New Card (Home screen)
-- `CHANGELOG` in App.jsx uses `{icon, title, desc}` objects (not plain strings).
-- Renders as gradient card with gold "NEW" badge, icon tiles, title + description per item.
-
-## Conversion UX Triggers
-- Goals tab: 🔒 gold pip badge on BottomNav for FREE users.
-- Goals screen: blurred sample goal preview behind gate card.
-- Session #5: milestone banner fires once (localStorage flag `rinkreads_milestone5_shown`).
-- Quiz format preview: 1 locked-format sentinel mid-quiz for FREE.
-- Weekly quiz cap: `FreeQuizCapScreen` with countdown + upgrade CTA.
-- Upgrade prompt surface: positionFilter, >1 age switch, session 6+, weekly cap hit, weekly challenge tap.
-
-## First-Time Parents Surface
-- **Route:** `#parents` hash route, shareable as `rinkreads.com/#parents`, reachable pre- and post-auth.
-- **Page:** `ParentsPage` in `screens.jsx` (lazy-loaded) — seven sections: why, not, use, progress, pricing, privacy, developer.
-- **Card:** `HomeStartHereCard` in `widgets.jsx` — dismissible home-screen card mounted above `QuestChecklist` in `Home`. Dismiss persists via `rinkreads_parents_card_dismissed`.
-- **Entry points:** AuthScreen footer link, Home card, `#parents` direct URL.
-- **Follow-ups:** (1) `/privacy` route doesn't exist — Section 06 privacy-policy link omitted; (2) no public sample-scenario route — "See a sample scenario" button routes to home.
-
-## Token Optimization
-- `App.jsx` contains 880+ questions. Do NOT read large question bank sections unless editing content.
-- Provide modified snippets only. Use `// ... existing code` placeholders.
-- Run `/compact` after every UI/CSS tweak session.
-
-## Rink Visualization Schema (v2)
-
-Olympic IIHF rink renderer for top-down hockey questions. Components: `src/RinkReadsRink.jsx` (SVG rink + zones + markers + lines) and `src/RinkReadsRinkQuestion.jsx` (dispatches `q` to the right interactive component by type).
-
-### Coordinate system
-- 1 SVG unit = 0.1 meter. Rink is **600 × 300** units (60m × 30m). Origin top-left.
-- Landmarks: left goal line `x=40`, left blue `x=213`, center red `x=300`, right blue `x=387`, right goal line `x=560`. Top boards `y=0`, center `y=150`, bottom boards `y=300`.
+### Coordinate system (v2 renderer)
+- 1 SVG unit = 0.1 m. Rink **600 × 300** units (60 m × 30 m). Origin top-left.
+- Landmarks: left goal line `x=40`, left blue `x=213`, center red `x=300`, right blue `x=387`, right goal line `x=560`. Top boards `y=0`, center `y=150`, bottom `y=300`.
 - End-zone faceoff dots: `(100,80)`, `(100,220)`, `(500,80)`, `(500,220)`. NZ dots: `(228,80)`, `(228,220)`, `(372,80)`, `(372,220)`.
 
-### Question types (dispatcher in `RinkReadsRinkQuestion.jsx`)
-- `mc` / `diagram` — optional `q.rink` field renders rink above choices.
-- `drag-target` — `targets[]` (`{x,y,radius,verdict,feedback}`); `puckStart{x,y}` optional.
-- `drag-place` — `slots[]` + `chips[]`. Match chip id to slot id.
-- `zone-click` — `zones[]` (`{shape:"poly"|"circle", points|x/y/radius, correct, msg}`).
-- `multi-tap` — `markers[]` at the question level with `correct: true|false`.
-- `sequence-rink` — `markers[]` with `order: 1..N`; tap in order.
-- `path-draw` — `start{x,y,radius}`, `target{x,y,radius}`, `avoid[]`.
-- `lane-select` — `lanes[]` (`{x1,y1,x2,y2,clear,msg}`).
-- `hot-spots` — `spots[]` (`{x,y,correct,msg}`).
+### v2 question types (dispatcher in `RinkReadsRinkQuestion.jsx`)
+`mc`/`diagram` (optional `q.rink`), `drag-target`, `drag-place`, `zone-click`, `multi-tap`, `sequence-rink`, `path-draw`, `lane-select`, `hot-spots`. Legacy `type:"rink"` (`q.scene`) and old `zone-click` dispatch to original `Rink.jsx`/`ZoneClickQuestion`. New-schema detection via `q.rink` presence or `NEW_RINK_TYPES`/`isRinkQ` in `App.jsx`.
 
-Legacy `type:"rink"` (with `q.scene`) and legacy `type:"zone-click"` (no `q.rink`, with `q.zones` in old format) still dispatch to the original `Rink.jsx` / `ZoneClickQuestion` paths. New schema is detected by `q.rink` presence or by one of the new type names — see `NEW_RINK_TYPES` and `isRinkQ` in `App.jsx`.
+### Self-healing (both renderers)
+Validate + auto-fix bad data (coord clamping, unknown marker/line/zone fallbacks, NaN→defaults, non-array→`[]`). Auto-fixes `console.warn` with `[RinkReadsRink]` / `[RinkReadsRinkQuestion]`. Unrecoverable questions render an amber **Skip this question** card — never crash the session.
 
-### Self-healing
-Both components validate and auto-fix bad data: coord clamping, unknown marker/line/zone fallbacks, NaN → defaults, non-array fields → `[]`. Auto-fixes log `console.warn` with prefix `[RinkReadsRink]` / `[RinkReadsRinkQuestion]`. Unrecoverable questions (missing required arrays for the type) render an amber **Skip this question** card via the validator + error boundary — never crash the session.
+## Tier Resolution (`resolveTier` in `App.jsx`)
+Priority: dev/preview LS override (`rinkreads_tier_override`, only honored when dev-bypass/`__preview`/`__dev`) → coach in any non-prod session = **TEAM** → demo mode (coach=TEAM, player=FREE) → `profile.tier` → default **FREE**. Production users can't self-promote.
 
-### Authoring workflow
-1. Use the standalone Rink Editor v2 artifact to build scenes visually.
-2. Copy JSON → paste into the right age-group array in `src/data/questions.json`.
-3. Verify in dev: open the question, watch the console for `[RinkReadsRink*]` warnings (clean = no auto-fixes needed).
+## Storage Schema (localStorage / sessionStorage)
+Keys are namespaced `rinkreads_*`. Verified-current keys include:
+- `rinkreads_tier_override` — dev/preview tier override.
+- `rinkreads_free_cap` — FREE weekly quiz count keyed by week (in `weeklyChallenge.js`).
+- `rinkreads_season_pass` + `rinkreads_reenrollment_prompt_shown` — Team season pass (`seasonPass.js`).
+- `rinkreads_milestone5_shown` — fires once when a FREE user finishes their 5th quiz.
+- `rinkreads_parents_card_dismissed` — "For parents" home card dismissal (`widgets.jsx`).
+- `rinkreads_qb_cache_v26` — **sessionStorage** composed-bank cache (`qbLoader.js`).
+- `rinkreads_dev_bypass`, `rinkreads_has_signed_in_before`, `rinkreads_training_log`, `rinkreads_streak`, plus many onboarding/quest flags suffixed `_v1` (e.g. `rinkreads_quest_dismissed_v1`, `rinkreads_whatsnew_dismissed_v1`).
+
+When adding a key, follow the `rinkreads_<thing>[_vN]` convention and grep before reusing a name.
+
+## Coach Ratings Anti-Inflation
+- `src/data/constants.js` — `COMPETENCY_LADDER` `sub_coach` strings carry normative % anchors ("~top 5%"). Rendered in `C.dimmest` after a `·` separator in `CoachRatingScreenAuthed`.
+- **Exceptional for Age Group** flag (⭐): `ratings[skillId + "__star"]` boolean — planned, verify before relying on it.
+
+## Demo Profiles
+`DEMO_PROFILES` / `DEMO_COACH_ROSTER` in `App.jsx` — each has `name`, `position`, `jersey`, `team`; levels U7/U9/U11/U13/U15/U18. Coach roster: 5 U11 players with `iq` shown as `GS {n}`.
+
+## First-Time Parents Surface
+- Route `#parents` (`ParentsPage` in `screens.jsx`, lazy-loaded), reachable pre/post-auth.
+- `HomeStartHereCard` in `widgets.jsx` — dismissible home card (persists via `rinkreads_parents_card_dismissed`).
+- Entry points: AuthScreen footer, Home card, `#parents` URL.
+
+## Conversion UX Triggers
+Goals tab gold pip for FREE; blurred sample-goal preview behind gate; session-#5 milestone banner; mid-quiz locked-format sentinel; weekly-cap `FreeQuizCapScreen`. Upgrade surfaces: position filter, >1 age switch, session 6+, weekly cap, weekly-challenge tap.
+
+## Token Discipline (when working this repo)
+- `App.jsx` is huge and the JSON banks are large — **do not read them in full** unless editing that exact content. Read targeted ranges; grep first.
+- Show modified snippets with `// ... existing code` placeholders, not whole files.
+- Authoring workflow for v2 rink questions: build in the Rink Editor artifact → paste JSON into the right age array in `questions.json` → verify in dev (watch console for `[RinkReadsRink*]` warnings; clean = no auto-fixes). For unified-engine scenarios, drop a seed in `src/scenario/seeds/` (auto-merged).

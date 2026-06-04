@@ -57,6 +57,46 @@ export function OverlayLayer({ overlays }) {
             }}>{o.text || ""}</div>
           );
         }
+        if (o.kind === "ring") {
+          // Standalone highlight ring (open player / open net / puck cue).
+          // Not tied to a sprite, unlike isFocus. Pair colour with shape so it
+          // never relies on colour alone.
+          const d = (o.r ?? 0.05) * 2;
+          return (
+            <div key={o.id || i} style={{
+              position: "absolute",
+              left: `${(o.x ?? 0.5) * 100}%`,
+              top: `${(o.y ?? 0.5) * 100}%`,
+              transform: "translate(-50%, -50%)",
+              width: `${d * 100}%`,
+              aspectRatio: "1",
+              border: `3px ${o.dashed === false ? "solid" : "dashed"} ${o.color || "#36d17a"}`,
+              borderRadius: "50%",
+              boxShadow: "0 0 7px rgba(0,0,0,0.35)",
+            }} />
+          );
+        }
+        if (o.kind === "arrow") {
+          // Read/lane arrow from (x1,y1) to (x2,y2), gently curved. viewBox is
+          // stretched to the image box; non-scaling-stroke keeps the line crisp.
+          const x1 = (o.x1 ?? 0.4) * 100, y1 = (o.y1 ?? 0.7) * 100;
+          const x2 = (o.x2 ?? 0.6) * 100, y2 = (o.y2 ?? 0.4) * 100;
+          const cx = (x1 + x2) / 2, cy = Math.min(y1, y2) - 10;
+          const col = o.color || "#C9A24B";
+          return (
+            <svg key={o.id || i} viewBox="0 0 100 100" preserveAspectRatio="none"
+              style={{ position: "absolute", inset: 0, width: "100%", height: "100%", overflow: "visible" }}>
+              <defs>
+                <marker id={`fa-${i}`} markerWidth="5" markerHeight="5" refX="2.4" refY="2.5" orient="auto">
+                  <path d="M0,0 L5,2.5 L0,5 Z" fill={col} />
+                </marker>
+              </defs>
+              <path d={`M${x1},${y1} Q ${cx},${cy} ${x2},${y2}`} fill="none" stroke={col}
+                strokeWidth={o.width || 2.4} strokeDasharray="5 3" strokeLinecap="round"
+                markerEnd={`url(#fa-${i})`} vectorEffect="non-scaling-stroke" />
+            </svg>
+          );
+        }
         // sprite
         const cfg = o.isGoalie ? SPRITE_SHEETS.goalie : (SPRITE_SHEETS[o.team] || SPRITE_SHEETS.yellow);
         const idx = o.isGoalie ? goaliePoseIdx(o.team, o.poseIdx ?? 0) : (o.poseIdx ?? 0);
