@@ -71,12 +71,36 @@ distill into a separate visual-lessons store** fed back into the *visual creator
 |---|---|
 | **Perfectionist** | Every position exact; truly excellent or nothing. Spacing, alignment, the read drawn cleanly. |
 | **Antagonistic** | Actively tries to break it: ambiguity, a misleading angle, a player who "wouldn't be there," two plausible reads. |
-| **Spatial-realism** | Does each actor sit where they'd *actually* be for this exact play, relative to the puck and the net? (Catches teammate-behind / defender-to-the-side.) |
+| **Spatial-realism / proxemics** ★ | The geometry-AND-game coach (always present, never skipped). See expanded mandate below. |
 | **Kid-clarity** | Would a child of this age instantly understand the situation and *see* the read from the picture alone? Legible tokens, not crowded. |
 
 Each returns `{verdict:"PASS"|"REVISE","critique":[...]}`; unanimous PASS advances; debate rounds
 share peers' critiques (perfectionist/antagonistic hold the line). Identical control flow to
 `runPanel` in the text track.
+
+**The Spatial-realism / proxemics coach (built out).** This is the one mandatory member of the
+panel — it must *always* be one of the four and never dropped, because it is the coach that
+understands geometry *and* the game at once. It judges the **proxemics**: the spatial
+relationships, spacing, and angles *between* the players, not just each token in isolation. Two
+lenses it holds simultaneously:
+
+- **Geometric logic** — every actor sits at coordinates that are physically sensible for the play:
+  attackers ahead of or even with the puck (not behind it), the lone defender *between* the puck
+  and the net on a 2-on-1, the goalie centered on the puck line in/near the crease, support
+  teammates a real passing lane away (not stacked, not impossibly spread), no one in a spot the
+  rink geometry wouldn't allow. (This is exactly what the bad mockup failed: teammate behind the
+  carrier, defender off to the side of the net.)
+- **Coach's-eye realism** — beyond "is it geometrically possible," *would a coach put them there?*
+  Does each player occupy the position they'd actually take to play this read — defensible gap and
+  angle for the defender, a real support/attack position for teammates, the carrier attacking the
+  ice the situation gives? If a real coach watching this frame would say "no one stands there in
+  this situation," it fails.
+
+Its critiques are specific and positional ("the defender at (0.74, 0.41) is puck-side but not
+net-side — on a 2-on-1 they must sit between the carrier and the crease; move toward (0.80,
+0.50)"). A REVISE from this coach sends the scenario back for re-positioning. Over time its
+recurring critiques become the geometry lessons fed back into the visual creator, so the generator
+learns to place players correctly up front.
 
 ## Components / files
 
