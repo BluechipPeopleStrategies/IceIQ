@@ -4,7 +4,7 @@
 import { mkdtempSync, writeFileSync, readFileSync, rmSync, existsSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
-import { loadQueue, approve, reject, sendBack, editItem } from "./review-store.mjs";
+import { loadQueue, approve, reject, sendBack, editItem, enqueue } from "./review-store.mjs";
 
 let pass = 0, fail = 0;
 const ok = (name, cond) => { console.log(`${cond ? "PASS" : "FAIL"}  ${name}`); cond ? pass++ : fail++; };
@@ -99,6 +99,21 @@ const logLines = (p) => existsSync(p.log) ? readFileSync(p.log, "utf8").trim().s
   ok("edit replaces question fields", item.question.sit === "EDITED" && item.question.ok === 1);
   const log = logLines(paths);
   ok("edit logs", log[0].action === "edit" && log[0].id === "q2");
+  rmSync(dir, { recursive: true, force: true });
+}
+
+// --- enqueue: appends a new item, dedupes by question.id ---
+{
+  const { dir, paths } = fixture();
+  const before = loadQueue(paths).items.length;
+  const item = { question: { id: "gen1", type: "mc", levels: ["U11 / Atom"], sit: "?", opts: ["a","b"], ok: 0 },
+    gateHistory: { coachPanel: "pass" }, proxyVerdict: { decision: "forward" }, queuedAt: "2026-06-04" };
+  const r1 = enqueue(paths, item);
+  ok("enqueue adds", r1.ok && r1.added === true && loadQueue(paths).items.length === before + 1);
+  const r2 = enqueue(paths, item);
+  ok("enqueue dedupes by id", r2.ok && r2.added === false && loadQueue(paths).items.length === before + 1);
+  const r3 = enqueue(paths, { question: {} });
+  ok("enqueue without id fails", r3.ok === false);
   rmSync(dir, { recursive: true, force: true });
 }
 
