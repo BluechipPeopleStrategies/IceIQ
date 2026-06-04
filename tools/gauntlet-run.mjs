@@ -20,6 +20,9 @@ import { selectTargets } from "./gauntlet/select-targets.mjs";
 import { enqueue, loadQueue } from "./review-store.mjs";
 import { buildCreatorPrompt, buildCurriculumPrompt, buildPanelCoachPrompt, buildHeadCoachPrompt, buildLessonExtractorPrompt, PANEL_LENSES, AGE_LEVEL } from "./gauntlet/prompts.mjs";
 import { loadLessons, addLesson, renderLessons } from "./gauntlet/lessons.mjs";
+import { lintScenario } from "./scenario-author/validate.mjs";
+import { buildVisualCreatorPrompt } from "./gauntlet/visual-prompts.mjs";
+import { repairScenario, scenarioHash, mockScenario } from "./gauntlet/visual-scenario.mjs";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const root = resolve(__dirname, "..");
@@ -32,7 +35,7 @@ const paths = {
 
 // ---------- args ----------
 function parseArgs(argv) {
-  const a = { count: 1, max: Infinity, model: "sonnet", rounds: 3, mock: false, dryRun: false, node: null, fillGaps: false, fast: false, debateRounds: 2, mockFail: false };
+  const a = { count: 1, max: Infinity, model: "sonnet", rounds: 3, mock: false, dryRun: false, node: null, fillGaps: false, fast: false, debateRounds: 2, mockFail: false, visual: false };
   for (let i = 0; i < argv.length; i++) {
     const t = argv[i];
     if (t === "--node") a.node = argv[++i];
@@ -46,6 +49,7 @@ function parseArgs(argv) {
     else if (t === "--fast") a.fast = true;
     else if (t === "--debate-rounds") a.debateRounds = parseInt(argv[++i], 10);
     else if (t === "--mock-fail") a.mockFail = true;
+    else if (t === "--visual") a.visual = true;
   }
   // Both round counts must be >= 1 (a bad/zero/NaN flag would otherwise skip the
   // loop and leave panel reviews null).
@@ -218,6 +222,44 @@ async function generateOne(ledger, node, opts, seen) {
   return { ok: false, dropped: true, reason: `failed after ${opts.rounds} rounds: ${notes.join("; ")}`, learned };
 }
 
+// Stage 1 visual track: author a scenario, engine-validate, enqueue. (Coaches +
+// the 4-coach visual panel land in Stage 2; here we just produce + queue a drawn
+// question so it can be seen in #review.)
+async function generateVisualOne(ledger, node, opts, seen) {
+  const concept = conceptById(ledger, node.conceptId);
+  const domain = domainById(ledger, concept.domainId);
+  const idSeed = `gvis_${node.id.replace(/\./g, "_")}_${rand()}`;
+  let notes = [];
+
+  for (let round = 1; round <= opts.rounds; round++) {
+    let s;
+    try {
+      if (opts.mock) s = mockScenario(node, idSeed);
+      else {
+        const { system, prompt } = buildVisualCreatorPrompt({ node, concept, domain, idSeed });
+        const extra = notes.length ? `\n\nThe previous attempt failed validation. Fix: ${notes.join("; ")}` : "";
+        s = await runAgent({ system, prompt: prompt + extra, model: opts.model });
+      }
+    } catch (e) { notes = [`creator error: ${e.message}`]; continue; }
+    s = repairScenario(s, node, idSeed);
+
+    const v = lintScenario(s);
+    if (!v.ok) { notes = v.errs; continue; }
+
+    const h = scenarioHash(s);
+    if (seen.has(h)) { notes = ["duplicate scenario"]; continue; }
+
+    const item = {
+      question: s,
+      gateHistory: { creator: "pass", validate: "pass", stage: "1-validate-only" },
+      proxyVerdict: { decision: "forward", scores: {}, rationale: "Stage-1 visual question (engine-valid). Coach + visual panels are Stage 2. Review directly." },
+      queuedAt: new Date().toISOString().slice(0, 10),
+    };
+    return { ok: true, item, hash: h };
+  }
+  return { ok: false, reason: `failed after ${opts.rounds} rounds: ${notes.join("; ")}` };
+}
+
 // ---------- main ----------
 async function main() {
   const opts = parseArgs(process.argv.slice(2));
@@ -243,7 +285,9 @@ async function main() {
   for (const node of targets) {
     for (let i = 0; i < opts.count; i++) {
       process.stdout.write(`• ${node.id} (${i + 1}/${opts.count}) … `);
-      const r = await generateOne(ledger, node, opts, seen);
+      const r = opts.visual
+        ? await generateVisualOne(ledger, node, opts, seen)
+        : await generateOne(ledger, node, opts, seen);
       if (!r.ok) { console.log(`dropped (${r.reason})${r.learned?.length ? ` — learned: ${r.learned.join(" | ")}` : ""}`); skipped++; continue; }
       seen.add(r.hash);
       if (opts.dryRun) { console.log("ok (dry-run, not queued)"); continue; }

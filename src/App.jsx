@@ -5096,6 +5096,9 @@ function QuestionPlayerView({ question, onAnswer }) {
   const isRinkQ = !!question?.rink ||
     ["drag-target","drag-place","multi-tap","sequence-rink","path-draw","lane-select","hot-spots","zone-click","rink-label","rink-drag","rink-match"].includes(question?.type);
   if (isRinkQ) return <RinkReadsRinkQuestion question={question} onAnswer={onAnswer} />;
+  if (question?.type === "scenario") {
+    return <ScenarioRenderer scenario={question} onAnswer={(p) => onAnswer && onAnswer(!!(p && p.ok))} />;
+  }
   if (question?.type === "multi") return <MultiMCQuestion q={question} onAnswer={onAnswer} />;
   return <QuestionPreviewFallback question={question} onAnswer={onAnswer} />;
 }
