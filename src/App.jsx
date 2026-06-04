@@ -628,6 +628,26 @@ function buildDemoQueue(qb, level, position) {
 // Adaptive queue builder — with memoization of filtered pools
 const _queueCache = new Map();
 
+// Shown when the composed bank has zero questions for the player's age/position.
+// Expected during the 2026-06-04 blank-slate window: the old bank is wiped and
+// the gauntlet has not shipped ledger-tagged content yet. Friendly, not an error.
+function EmptyBankScreen() {
+  return (
+    <Screen>
+      <div style={{ maxWidth: 460, margin: "4rem auto", padding: "1.25rem 1.5rem", textAlign: "center", color: C.white, fontFamily: FONT.body }}>
+        <div style={{ fontSize: 40, marginBottom: 12 }} aria-hidden="true">🏒</div>
+        <div style={{ fontSize: 18, fontWeight: 800, marginBottom: 8, fontFamily: FONT.body }}>
+          New content is on the way
+        </div>
+        <p style={{ color: C.dim, fontSize: 14, lineHeight: 1.6 }}>
+          We're rebuilding the RinkReads question bank from the ground up. Fresh,
+          coach-reviewed scenarios are being added now — check back soon.
+        </p>
+      </div>
+    </Screen>
+  );
+}
+
 function buildQueue(qb, level, position, isReturning, tier) {
   const formatAllowed = canAccess("allQuestionFormats", tier).allowed;
   const positionAllowed = canAccess("positionFilter", tier).allowed;
@@ -1897,7 +1917,14 @@ function Quiz({ player, onFinish, onBack, tier, onUpgrade }) {
     // The latter is what happens when the author tool renames a question
     // in memory but hasn't shipped to disk — the iframe URL filters by
     // an id that doesn't exist in questions.json yet.
-    const queueReadyButEmpty = Array.isArray(queue) && queue.length === 0;
+    // `queue` is null while the bank is still loading, and an object
+    // { byD:{1,2,3}, currentD, tier } once built. "Ready but empty" = built
+    // (non-null) with every difficulty bucket empty — i.e. the bank had no
+    // questions for this player (blank-slate window) or an ids filter matched
+    // nothing. (The old `Array.isArray(queue)` check was always false — queue
+    // is never a bare array — so neither empty-state branch ever rendered.)
+    const queueReadyButEmpty = !!queue && !!queue.byD &&
+      [1, 2, 3].every(d => (queue.byD[d] || []).length === 0);
     if (queueReadyButEmpty && idsLen > 0) {
       let askedIds = "";
       try { askedIds = new URLSearchParams(window.location.search).get("ids") || ""; } catch {}
@@ -1919,6 +1946,12 @@ function Quiz({ player, onFinish, onBack, tier, onUpgrade }) {
           </div>
         </Screen>
       );
+    }
+    // Queue built but empty, and no specific ids were requested → the bank has
+    // no questions for this player (blank-slate window). Show the empty state
+    // rather than spinning on "Loading…" forever.
+    if (queueReadyButEmpty) {
+      return <EmptyBankScreen />;
     }
     return <Screen><div style={{color:C.dimmer,textAlign:"center",paddingTop:"4rem"}}>Loading…</div></Screen>;
   }
@@ -4990,86 +5023,6 @@ function JourneyBody({ player, tier, demoMode, onViewFull, onUpgrade }) {
 // surrounding UI. Loads the QB, finds the id, renders it through the
 // normal RinkReadsRinkQuestion dispatcher (for rink/POV types) or a
 // lightweight MC/TF fallback for non-rink types.
-// Side-by-side parity tester for the unified scenario engine. Loads the
-// legacy `u13q_rink07` (path-draw) and the ported `u13q_rink07_v2` and
-// renders both in the same viewport. Validates that the new engine
-// produces the same answer behavior as the bespoke component before any
-// bank migration ships.
-function ScenarioParityTest() {
-  const [legacy, setLegacy] = useState(null);
-  const [errLegacy, setErrLegacy] = useState(null);
-  const [pathJson, setPathJson] = useState(null);
-  const [igymJson, setIgymJson] = useState(null);
-  const [selectionJson, setSelectionJson] = useState(null);
-  const [pointJson, setPointJson] = useState(null);
-  const [sequenceJson, setSequenceJson] = useState(null);
-
-  useEffect(() => {
-    let cancelled = false;
-    loadQB().then(qb => {
-      if (cancelled) return;
-      let found = null;
-      for (const lvl of Object.keys(qb)) {
-        const hit = (qb[lvl] || []).find(q => q.id === "u13q_rink07");
-        if (hit) { found = hit; break; }
-      }
-      if (!found) setErrLegacy("Legacy u13q_rink07 not found in bank.");
-      else setLegacy(found);
-    }).catch(e => { if (!cancelled) setErrLegacy(e.message); });
-    import("./scenario/seeds/u13q_rink07_v2.json").then(m => { if (!cancelled) setPathJson(m.default); });
-    import("./scenario/seeds/u15_intelligym_demo.json").then(m => { if (!cancelled) setIgymJson(m.default); });
-    import("./scenario/seeds/u11_open_pass_v1.json").then(m => { if (!cancelled) setSelectionJson(m.default); });
-    import("./scenario/seeds/u11_faceoff_point_v1.json").then(m => { if (!cancelled) setPointJson(m.default); });
-    import("./scenario/seeds/u13_breakout_sequence_v1.json").then(m => { if (!cancelled) setSequenceJson(m.default); });
-    return () => { cancelled = true; };
-  }, []);
-
-  const tile = (label, accent, content) => (
-    <div>
-      <div style={{fontSize:11,color:accent,fontWeight:800,letterSpacing:".06em",marginBottom:".5rem"}}>{label}</div>
-      {content}
-    </div>
-  );
-
-  return (
-    <div style={{minHeight:"100vh",background:C.bg,color:C.white,fontFamily:FONT.body,padding:"1rem 1rem 4rem"}}>
-      <div style={{maxWidth:1600,margin:"0 auto"}}>
-        <div style={{paddingBottom:".75rem",borderBottom:`1px solid ${C.border}`,marginBottom:"1rem"}}>
-          <div style={{fontSize:10,letterSpacing:".14em",textTransform:"uppercase",color:C.gold,fontWeight:700}}>Scenario engine — parity test</div>
-          <div style={{fontSize:13,color:C.dim,marginTop:4}}>
-            Six tiles, four primitives. Top row: <b>Legacy</b> (bespoke path-draw) · <b>Unified PATH</b> (same scenario, new engine) · <b>IntelliGym</b> (path + preview-lock + timer + scan-then-hide). Bottom row: <b>SELECTION</b> · <b>POINT</b> · <b>SEQUENCE</b>.
-          </div>
-        </div>
-        <div style={{display:"grid",gridTemplateColumns:"1fr 1fr 1fr",gap:"1rem",marginBottom:"1.5rem"}}>
-          {tile("LEGACY · u13q_rink07", C.dimmer,
-            <>
-              {errLegacy && <div style={{color:C.red,fontSize:13}}>{errLegacy}</div>}
-              {legacy && <RinkReadsRinkQuestion question={legacy} onAnswer={() => {}}/>}
-            </>
-          )}
-          {tile("UNIFIED PATH · u13_pp_bumper", C.dimmer,
-            pathJson && <ScenarioRenderer scenario={pathJson} onAnswer={() => {}}/>
-          )}
-          {tile("INTELLIGYM · u15_pp", C.gold,
-            igymJson && <ScenarioRenderer scenario={igymJson} onAnswer={() => {}}/>
-          )}
-        </div>
-        <div style={{display:"grid",gridTemplateColumns:"1fr 1fr 1fr",gap:"1rem"}}>
-          {tile("SELECTION · u11_open_pass", C.green,
-            selectionJson && <ScenarioRenderer scenario={selectionJson} onAnswer={() => {}}/>
-          )}
-          {tile("POINT · u11_faceoff", C.blue,
-            pointJson && <ScenarioRenderer scenario={pointJson} onAnswer={() => {}}/>
-          )}
-          {tile("SEQUENCE · u13_breakout", C.purple,
-            sequenceJson && <ScenarioRenderer scenario={sequenceJson} onAnswer={() => {}}/>
-          )}
-        </div>
-      </div>
-    </div>
-  );
-}
-
 function QuestionPreviewPage({ questionId }) {
   const [question, setQuestion] = useState(null);
   const [err, setErr] = useState(null);
@@ -7742,12 +7695,6 @@ export default function App() {
   if (hashRoute.startsWith("q=")) {
     const qid = decodeURIComponent(hashRoute.slice(2));
     return <QuestionPreviewPage questionId={qid}/>;
-  }
-  // Scenario-engine POC route — `#scenario-test` renders the new unified
-  // engine side-by-side with the old bespoke component for the same
-  // question, so authors can verify parity before migrating the bank.
-  if (hashRoute === "scenario-test") {
-    return <ScenarioParityTest/>;
   }
   if (hashRoute === "playtest") {
     return <RinkPlayTest/>;

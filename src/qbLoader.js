@@ -1,13 +1,18 @@
-import FACTORY_QUESTIONS from "./data/factoryQuestions.json";
+import BANK from "./data/bank.json";
+import { LEVELS } from "./shared.jsx";
 
 let cached = null;
-let inflight = null;
 
-// Vite eagerly bundles every scenario seed at build time. Authors drop
-// a JSON in src/scenario/seeds/ and it shows up in the live bank under
-// its declared `level` (or `levels[]` for multi-age) — no manual edit
-// of questions.json needed.
+// The gauntlet drops ledger-tagged scenario seeds here; Vite eagerly bundles
+// them at build time. Empty after the 2026-06-04 wipe — populated as the
+// gauntlet ships content.
 const SCENARIO_SEED_MODULES = import.meta.glob("./scenario/seeds/*.json", { eager: true });
+
+function emptyByLevel() {
+  const qb = {};
+  for (const lvl of LEVELS) qb[lvl] = [];
+  return qb;
+}
 
 function collectScenarios() {
   const out = [];
@@ -18,107 +23,45 @@ function collectScenarios() {
   return out;
 }
 
+// Compose the live bank from src/data/bank.json (gauntlet output, keyed by age
+// level → question[]) plus any scenario seeds. Always returns an object keyed
+// by all 6 levels, even when empty. Bank version bumped to v27 (2026-06-04
+// blank-slate wipe) so any pre-wipe composed bank in sessionStorage is dropped.
 export function loadQB() {
   if (cached) return Promise.resolve(cached);
 
-  // Bumped to v6 so banks cached before rink-label authoring get invalidated.
+  const CACHE_KEY = "rinkreads_qb_cache_v27";
   try {
+    // Drop every prior cache version (pre-wipe banks must not be served).
+    for (let v = 3; v <= 26; v++) sessionStorage.removeItem(`rinkreads_qb_cache_v${v}`);
     sessionStorage.removeItem("rinkreads_qb_cache");
-    sessionStorage.removeItem("rinkreads_qb_cache_v3");
-    sessionStorage.removeItem("rinkreads_qb_cache_v4");
-    sessionStorage.removeItem("rinkreads_qb_cache_v5");
-    sessionStorage.removeItem("rinkreads_qb_cache_v6");
-    sessionStorage.removeItem("rinkreads_qb_cache_v7");
-    sessionStorage.removeItem("rinkreads_qb_cache_v8");
-    sessionStorage.removeItem("rinkreads_qb_cache_v9");
-    sessionStorage.removeItem("rinkreads_qb_cache_v10");
-    sessionStorage.removeItem("rinkreads_qb_cache_v11");
-    sessionStorage.removeItem("rinkreads_qb_cache_v13");
-    // v14: bank archived 2026-04-29; legacy questions moved to questions.legacy.json
-    sessionStorage.removeItem("rinkreads_qb_cache_v14");
-    sessionStorage.removeItem("rinkreads_qb_cache_v15");
-    sessionStorage.removeItem("rinkreads_qb_cache_v16");
-    sessionStorage.removeItem("rinkreads_qb_cache_v17");
-    sessionStorage.removeItem("rinkreads_qb_cache_v18");
-    sessionStorage.removeItem("rinkreads_qb_cache_v19");
-    sessionStorage.removeItem("rinkreads_qb_cache_v20");
-    sessionStorage.removeItem("rinkreads_qb_cache_v21");
-    sessionStorage.removeItem("rinkreads_qb_cache_v22");
-    sessionStorage.removeItem("rinkreads_qb_cache_v23");
-    sessionStorage.removeItem("rinkreads_qb_cache_v24");
-    sessionStorage.removeItem("rinkreads_qb_cache_v25");
-    // v22: 2026-05-02 — added Batch A rink-anatomy questions.
-    // v23-v26: 2026-06-03 — content-factory questions; v26 adds annotation
-    //          overlays (puck ring, read arrow, open-target ring) + portrait ratio.
-    const stored = sessionStorage.getItem("rinkreads_qb_cache_v26");
-    if (stored) {
-      cached = JSON.parse(stored);
-      return Promise.resolve(cached);
-    }
+    const stored = sessionStorage.getItem(CACHE_KEY);
+    if (stored) { cached = JSON.parse(stored); return Promise.resolve(cached); }
   } catch (e) {}
 
-  if (!inflight) {
-    inflight = import("./data/questions.json")
-      .then(m => {
-        const qb = m.default;
-        for (const level in qb) {
-          // Non-MC questions already carry an explicit `type`; default the rest to "mc".
-          qb[level] = qb[level].map(q => q.type ? q : { ...q, type: "mc" });
-        }
-        // Multi-age support: if a question has `levels: [...]`, replicate the
-        // reference into every listed level array so quiz builders see it
-        // under each age without having to duplicate rows in questions.json.
-        for (const primary of Object.keys(qb)) {
-          for (const q of qb[primary]) {
-            if (!Array.isArray(q.levels) || q.levels.length === 0) continue;
-            for (const lvl of q.levels) {
-              if (lvl === primary || !qb[lvl]) continue;
-              if (qb[lvl].some(x => x.id === q.id)) continue;
-              qb[lvl].push(q);
-            }
-          }
-        }
-        // Merge unified-engine scenarios. Each seed declares a `level`
-        // (single primary) or `levels[]` (multi-age). Scenarios use
-        // `difficulty` for authoring readability but the live quiz
-        // buckets by `d` — alias here so they actually reach the queue.
-        for (const s of collectScenarios()) {
-          const targets = Array.isArray(s.levels) && s.levels.length
-            ? s.levels
-            : (s.level ? [s.level] : []);
-          // Shallow-copy + add `d` mirror so we don't mutate the imported
-          // module (Vite freezes them in dev).
-          const enriched = {
-            ...s,
-            d: typeof s.d === "number" ? s.d : (typeof s.difficulty === "number" ? s.difficulty : 2),
-          };
-          for (const lvl of targets) {
-            if (!qb[lvl]) continue;
-            if (qb[lvl].some(x => x.id === s.id)) continue;
-            qb[lvl].push(enriched);
-          }
-        }
-        // Merge content-factory questions (image-first factory output via
-        // tools/factory-to-bank.mjs). Each carries `levels[]` and a
-        // `media.url` POV image; push into every listed age bank.
-        for (const q of FACTORY_QUESTIONS) {
-          const targets = Array.isArray(q.levels) && q.levels.length ? q.levels : [];
-          for (const lvl of targets) {
-            if (!qb[lvl]) continue;
-            if (qb[lvl].some(x => x.id === q.id)) continue;
-            qb[lvl].push(q);
-          }
-        }
-        cached = qb;
-        try { sessionStorage.setItem("rinkreads_qb_cache_v26", JSON.stringify(cached)); } catch (e) {}
-        return cached;
-      })
-      .catch(e => {
-        inflight = null;
-        throw e;
-      });
+  const qb = emptyByLevel();
+
+  // bank.json: { "U7 / Initiation": [ ...questions ], ... }. Tolerate missing
+  // levels and questions without an explicit type (default "mc").
+  for (const lvl of LEVELS) {
+    const rows = Array.isArray(BANK?.[lvl]) ? BANK[lvl] : [];
+    qb[lvl] = rows.map(q => (q.type ? q : { ...q, type: "mc" }));
   }
-  return inflight;
+
+  // Merge unified-engine scenarios by declared level/levels[].
+  for (const s of collectScenarios()) {
+    const targets = Array.isArray(s.levels) && s.levels.length ? s.levels : (s.level ? [s.level] : []);
+    const enriched = { ...s, d: typeof s.d === "number" ? s.d : (typeof s.difficulty === "number" ? s.difficulty : 2) };
+    for (const lvl of targets) {
+      if (!qb[lvl]) continue;
+      if (qb[lvl].some(x => x.id === s.id)) continue;
+      qb[lvl].push(enriched);
+    }
+  }
+
+  cached = qb;
+  try { sessionStorage.setItem(CACHE_KEY, JSON.stringify(cached)); } catch (e) {}
+  return Promise.resolve(cached);
 }
 
 export function preloadQB() { loadQB(); }

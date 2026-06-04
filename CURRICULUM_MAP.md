@@ -1,3 +1,10 @@
+> **SUPERSEDED (2026-06-04).** The source of truth for curriculum is now the
+> machine-readable ledger at `src/data/curriculum-ledger.json` (loader:
+> `tools/lib/curriculum-ledger.mjs`, design:
+> `docs/superpowers/specs/2026-06-04-curriculum-ledger-design.md`). The taxonomy
+> below is being rebuilt from scratch from global development models and is kept
+> only for historical reference. Do not treat it as current.
+
 # RinkReads Curriculum Map — v2
 
 **Status:** locked 2026-04-29. Source-of-truth for what RinkReads teaches, when, and how.

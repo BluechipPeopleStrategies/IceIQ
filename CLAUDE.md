@@ -47,12 +47,12 @@
 - **Note:** the old per-age "3 rink scenarios" teaser counter (`src/utils/rinkProgress.js`, `RINK_FREE_PER_AGE`, `rinkreads_rink_seen`) **was removed** — that file and those keys no longer exist.
 
 ## Question Bank & Loading (`src/qbLoader.js`)
-The live bank is **composed at runtime**, not a single static file. `loadQB()` merges three sources and caches the result in `sessionStorage` under `rinkreads_qb_cache_v26` (bump the version when bank shape changes):
-1. **`src/data/questions.json`** — base bank, keyed by age-group display name (`"U7 / Initiation"` … `"U18 / Midget"`). Questions without an explicit `type` default to `mc`. `levels: [...]` replicates one question across multiple age buckets.
-2. **`src/scenario/seeds/*.json`** — unified-engine scenarios, **auto-globbed at build time** (`import.meta.glob`). Drop a seed in that folder and it appears in the live bank under its `level`/`levels[]` — no edit to questions.json needed.
-3. **`src/data/factoryQuestions.json`** — content-factory output (image-first questions with `media.url` POV images), produced by `tools/factory-to-bank.mjs`.
+**BLANK SLATE as of 2026-06-04.** The entire old bank was deleted (legacy archives, `questions.json`, all `src/scenario/seeds/*`, `factoryQuestions.json`). New content comes ONLY from the gauntlet generator, tagged to the curriculum ledger (`src/data/curriculum-ledger.json`). The app currently ships an empty bank — `SessionScreen` renders `EmptyBankScreen` ("new content is on the way") until the gauntlet ships ledger-tagged questions.
 
-Legacy bank was archived 2026-04-29 to `src/data/questions.legacy.json` (+ `questions.legacy-candidates.json`); those are NOT loaded at runtime. The active base bank is small (~95) — most volume now comes from scenarios + factory output.
+The live bank is **composed at runtime** by `loadQB()`, caching the result in `sessionStorage` under `rinkreads_qb_cache_v27` (bump the version when bank shape changes). It always returns an object keyed by all 6 `LEVELS` (even when empty), merging:
+
+1. **`src/data/bank.json`** — the gauntlet's output bank, keyed by age-group display name (`"U7 / Initiation"` … `"U18 / Midget"`). Currently `{}`. Questions without an explicit `type` default to `mc`.
+2. **`src/scenario/seeds/*.json`** — unified-engine scenarios, **auto-globbed at build time** (`import.meta.glob`). The seeds dir is currently absent (glob resolves to empty); the gauntlet may drop seeds here, merged under their `level`/`levels[]`.
 
 ## Unified Scenario Engine (`src/scenario/`)
 Newer interactive-question system (Perseus-widget pattern). Import only from `src/scenario/index.js`.
@@ -98,7 +98,7 @@ Keys are namespaced `rinkreads_*`. Verified-current keys include:
 - `rinkreads_season_pass` + `rinkreads_reenrollment_prompt_shown` — Team season pass (`seasonPass.js`).
 - `rinkreads_milestone5_shown` — fires once when a FREE user finishes their 5th quiz.
 - `rinkreads_parents_card_dismissed` — "For parents" home card dismissal (`widgets.jsx`).
-- `rinkreads_qb_cache_v26` — **sessionStorage** composed-bank cache (`qbLoader.js`).
+- `rinkreads_qb_cache_v27` — **sessionStorage** composed-bank cache (`qbLoader.js`); bumped from v26 at the 2026-06-04 blank-slate wipe.
 - `rinkreads_dev_bypass`, `rinkreads_has_signed_in_before`, `rinkreads_training_log`, `rinkreads_streak`, plus many onboarding/quest flags suffixed `_v1` (e.g. `rinkreads_quest_dismissed_v1`, `rinkreads_whatsnew_dismissed_v1`).
 
 When adding a key, follow the `rinkreads_<thing>[_vN]` convention and grep before reusing a name.
