@@ -628,6 +628,26 @@ function buildDemoQueue(qb, level, position) {
 // Adaptive queue builder — with memoization of filtered pools
 const _queueCache = new Map();
 
+// Shown when the composed bank has zero questions for the player's age/position.
+// Expected during the 2026-06-04 blank-slate window: the old bank is wiped and
+// the gauntlet has not shipped ledger-tagged content yet. Friendly, not an error.
+function EmptyBankScreen() {
+  return (
+    <Screen>
+      <div style={{ maxWidth: 460, margin: "4rem auto", padding: "1.25rem 1.5rem", textAlign: "center", color: C.white, fontFamily: FONT.body }}>
+        <div style={{ fontSize: 40, marginBottom: 12 }} aria-hidden="true">🏒</div>
+        <div style={{ fontSize: 18, fontWeight: 800, marginBottom: 8, fontFamily: FONT.body }}>
+          New content is on the way
+        </div>
+        <p style={{ color: C.dim, fontSize: 14, lineHeight: 1.6 }}>
+          We're rebuilding the RinkReads question bank from the ground up. Fresh,
+          coach-reviewed scenarios are being added now — check back soon.
+        </p>
+      </div>
+    </Screen>
+  );
+}
+
 function buildQueue(qb, level, position, isReturning, tier) {
   const formatAllowed = canAccess("allQuestionFormats", tier).allowed;
   const positionAllowed = canAccess("positionFilter", tier).allowed;
@@ -1919,6 +1939,12 @@ function Quiz({ player, onFinish, onBack, tier, onUpgrade }) {
           </div>
         </Screen>
       );
+    }
+    // Queue built but empty, and no specific ids were requested → the bank has
+    // no questions for this player (blank-slate window). Show the empty state
+    // rather than spinning on "Loading…" forever.
+    if (queueReadyButEmpty) {
+      return <EmptyBankScreen />;
     }
     return <Screen><div style={{color:C.dimmer,textAlign:"center",paddingTop:"4rem"}}>Loading…</div></Screen>;
   }
