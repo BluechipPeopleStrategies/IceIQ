@@ -47,7 +47,10 @@ G1-3 Deterministic   — the engine's own validators: validateScenario (shape,
      coords in [0,1], no overlapping actors, defender-interception) +
      runHockeyValidators (40 hockey-logic rules) + scorer self-test + dedupe.
  ↓
-G4  Curriculum confirmer (1 agent) — one concept, age load, follows the node.
+G4  Curriculum fit — FOLDED into the panels for the visual track (the hockey
+     pedagogy lens judges one-concept/age-load and the kid-clarity lens judges
+     age-appropriate readability; the Head Coach confirms exact node fit). No
+     separate MC-shaped curriculum agent runs on a scenario.
  ↓
 G7  HOCKEY coach panel (3 agents, debate → unanimous) — is the READ correct
      given the positions? (reuses the text track's PANEL_LENSES, prompts fed the
