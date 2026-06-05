@@ -1,33 +1,37 @@
 {
-  "version": 1,
+  "version": 2,
   "principles": [
     {
       "id": "no-linguistic-tells",
-      "text": "No linguistic tells. Never reuse the stem's distinctive words, the concept/node label, or a qualifier only one option carries (timing, causal, or anticipatory language) in the correct choice. Rephrase every option to describe a tactical outcome so the answer cannot be found by word-matching."
+      "text": "No linguistic tells. Never reuse the stem's distinctive words, the concept/node label, or a qualifier only one option carries in the correct choice. Avoid concept-title keywords in options; rephrase every choice as a hockey action or outcome. Never give the correct answer narrative prominence in the setup, and never let a distractor repeat or echo a constraint already stated in the stem."
     },
     {
       "id": "read-not-recall",
-      "text": "Force a genuine read. The stem presents the cues but never names or describes the correct action. The player must diagnose why before choosing what; instinct, position-sense, or pattern-matching the most favorably described actor must not produce the answer."
+      "text": "Force a genuine read. The stem presents raw situational cues — it never names, pre-confirms, or pre-eliminates. Set the scene one beat before the key action; place cues at the earliest recognizable stage (body angle, first stride), not after the threat is obvious. Never pre-describe a scan result or hand the player pre-loaded data. When the concept is a process or habit, the stem must force the student to demonstrate that process — not execute results you've already supplied. Make the test axis explicit when asking for 'best approach.'"
     },
     {
       "id": "distractors-plausible-wrong",
-      "text": "Every distractor is a plausible mistake a real player that age would make, yet clearly inferior given the stated situation: never absurd, never a second defensible-correct answer. If a wrong option is a legitimate tactic, add a scenario detail that forecloses it. Include the age's reflexive first instinct (e.g. shoot at U11) as a distractor."
+      "text": "Every distractor is a plausible mistake a real player that age would make — never absurd, never a second defensible-correct answer. Each distractor must target a distinct failure mode (wrong timing, wrong location, wrong action) so no two are eliminable with the same inference; include the age's reflexive first instinct. When a distractor mirrors a real coaching principle, the setup must include a concrete timing or positioning detail that makes that principle fail visibly in this situation. Stress-test the correct answer against every distractor; if a well-coached player can defend a distractor with equal validity, add a scenario constraint that explicitly eliminates it, or replace the distractor."
     },
     {
       "id": "option-parity",
-      "text": "Balance all options structurally: same length (within ~2-3 words), same descriptive depth, same grammatical subject/referent. The correct answer must never be the longest, the only one with an explanatory clause, or otherwise stand out by form."
+      "text": "Balance all options structurally: same length (within ~2–3 words), same descriptive depth, same grammatical subject/referent. The correct answer must never be the longest or the only one with an explanatory clause. Each option must affirm exactly one decision — strip downstream outcomes and compound clauses."
     },
     {
       "id": "explain-the-read",
-      "text": "Write the explanation about the READ: name the specific situational reason the correct play is best and tie back the cues planted in the stem (give a concrete situational reason, never just 'that option is bad'). Refer to any choice by its action or content, NEVER by letter or position ('Option B', 'choice 2', '(A)') — options are shuffled before display, so positional labels break. You need not enumerate every distractor. The correct option must stand on its own; if the explain has to rescue its meaning, rewrite the option."
+      "text": "Write the explanation around the single decision-making principle being tested: name the specific situational reason the correct play is best and tie back the cues from the stem. Address the most tempting wrong answer explicitly, stating why it fails in this specific situation — if a distractor reflects a legitimate coached habit, say directly why it breaks down here. When the setup includes a body-language or gaze cue, resolve it by name (misdirect or dominant signal, and why). Every factual claim in the explanation must match the scenario setup; never introduce game states not established in the stem. Refer to choices by action or content, never by letter or position — options are shuffled before display."
     },
     {
       "id": "anchor-and-consistent",
-      "text": "Anchor the scenario to one explicit role and position before writing choices, and name every location and actor consistently across stem, options, and explain. Do not introduce roles, actors, or spots in the options that the stem never established."
+      "text": "Anchor the scenario to one explicit role and position; use position-based labels ('teammate at the back post'), not jersey-color references. Name every location and actor consistently across stem, options, and explanation; never introduce actors or spots in the options that the stem never established. Name open space explicitly in the setup — never make players infer a lane or zone is open. Every spatial reference must be unambiguous: name the side from the player's POV and confirm the action is physically possible from the described position. The setup alone must supply all facts a reader needs to evaluate every choice; never rely on the explanation to supply positional facts or rescue a stem's ambiguity. Anchor to exactly one concept; do not let distractors drift into a second skill."
+    },
+    {
+      "id": "scene-complexity",
+      "text": "Cap decision-driving cues to 2–3 per difficulty tier; reduce peripheral actors to a single static beat. Each element beyond the cap raises working-memory load without improving the question. Write distractors before writing the stem, then audit the stem to ensure it contains no language that explicitly rules out any distractor."
     },
     {
       "id": "valid-level",
-      "text": "Set the question's level and age fields to values valid for the target age band. Look them up from the schema or constants; never hardcode or guess a level string."
+      "text": "Set the question's level and age fields to values valid for the target age band; look them up from the schema or constants, never hardcode or guess a level string."
     }
   ]
 }
