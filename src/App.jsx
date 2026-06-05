@@ -5115,7 +5115,9 @@ function ReviewDashboard() {
   const [busyId, setBusyId] = useState(null);
   const [flash, setFlash] = useState(null);   // {id, text}
   const [editId, setEditId] = useState(null);
-  const [editText, setEditText] = useState("");
+  const [editText, setEditText] = useState("");   // raw-JSON mode buffer
+  const [draft, setDraft] = useState(null);        // friendly-edit working copy
+  const [rawMode, setRawMode] = useState(false);
 
   function load() {
     fetch("/__review/queue")
@@ -5154,15 +5156,47 @@ function ReviewDashboard() {
     try { await act("sendback", id, { note }); setItems(xs => xs.filter(i => i.question.id !== id)); }
     catch (e) { setFlash({ id, text: `Error: ${e.message}` }); }
   }
-  function startEdit(item) { setEditId(item.question.id); setEditText(JSON.stringify(item.question, null, 2)); }
+  function startEdit(item) {
+    const q = JSON.parse(JSON.stringify(item.question)); // deep clone so edits don't mutate the loaded item
+    setEditId(item.question.id);
+    setDraft(q);
+    setEditText(JSON.stringify(q, null, 2));
+    setRawMode(!isMcLike(q)); // non-MC (e.g. scenario) has no friendly form yet → raw JSON
+  }
+  function cancelEdit() { setEditId(null); setDraft(null); setRawMode(false); }
+  // friendly-field mutators (operate on the draft working copy)
+  const setField = (k, v) => setDraft(d => ({ ...d, [k]: v }));
+  const setOpt = (i, v) => setDraft(d => { const opts = [...(d.opts || [])]; opts[i] = v; return { ...d, opts }; });
+  const addOpt = () => setDraft(d => ({ ...d, opts: [...(d.opts || []), ""] }));
+  const removeOpt = (i) => setDraft(d => {
+    const opts = (d.opts || []).filter((_, j) => j !== i);
+    let ok = typeof d.ok === "number" ? d.ok : 0;
+    if (ok === i) ok = 0; else if (ok > i) ok -= 1;   // keep `ok` pointing at the same option
+    return { ...d, opts, ok };
+  });
+  // switch between friendly fields and raw JSON without losing in-progress edits
+  function toggleRaw() {
+    if (!rawMode) { setEditText(JSON.stringify(draft, null, 2)); setRawMode(true); }
+    else {
+      let parsed; try { parsed = JSON.parse(editText); }
+      catch { setFlash({ id: editId, text: "Raw JSON invalid — fix before switching back" }); return; }
+      setDraft(parsed); setRawMode(false);
+    }
+  }
   async function saveEdit(id) {
-    let question;
-    try { question = JSON.parse(editText); }
-    catch { setFlash({ id, text: "Edit is not valid JSON" }); return; }
+    let question = draft;
+    if (rawMode) { try { question = JSON.parse(editText); } catch { setFlash({ id, text: "Edit is not valid JSON" }); return; } }
+    if (!question || typeof question !== "object") { setFlash({ id, text: "Nothing to save" }); return; }
+    if (isMcLike(question)) {
+      const opts = question.opts || [];
+      if (opts.length < 3 || opts.length > 4) { setFlash({ id, text: "Need 3–4 options" }); return; }
+      if (opts.some(o => !String(o || "").trim())) { setFlash({ id, text: "Options can't be empty" }); return; }
+      if (!(question.ok >= 0 && question.ok < opts.length)) { setFlash({ id, text: "Pick the correct option" }); return; }
+    }
     try {
       await act("edit", id, { question });
       setItems(xs => xs.map(i => i.question.id === id ? { ...i, question } : i));
-      setEditId(null); setFlash({ id, text: "Saved" });
+      cancelEdit(); setFlash({ id, text: "Saved" });
     } catch (e) { setFlash({ id, text: `Error: ${e.message}` }); }
   }
 
@@ -5228,9 +5262,24 @@ function ReviewDashboard() {
             {/* render-as-player */}
             <div style={{padding:"1rem"}}>
               {editing ? (
-                <textarea value={editText} onChange={e => setEditText(e.target.value)}
-                  spellCheck={false}
-                  style={{width:"100%",minHeight:280,background:C.bg,color:C.white,border:`1px solid ${C.border}`,borderRadius:10,padding:".75rem",fontFamily:"monospace",fontSize:12,lineHeight:1.5}}/>
+                <div>
+                  <div style={{display:"flex",justifyContent:"space-between",alignItems:"baseline",marginBottom:".6rem"}}>
+                    <div style={{fontSize:10,letterSpacing:".14em",textTransform:"uppercase",color:C.gold,fontWeight:700}}>Editing</div>
+                    <button onClick={toggleRaw} style={{...btn(C.bgElevated,C.dim,C.border),padding:".25rem .6rem",fontSize:11}}>
+                      {rawMode ? "Friendly fields" : "Raw JSON"}
+                    </button>
+                  </div>
+                  {rawMode ? (
+                    <textarea value={editText} onChange={e => setEditText(e.target.value)} spellCheck={false}
+                      style={{width:"100%",minHeight:280,background:C.bg,color:C.white,border:`1px solid ${C.border}`,borderRadius:10,padding:".75rem",fontFamily:"monospace",fontSize:12,lineHeight:1.5}}/>
+                  ) : (
+                    <McFieldEditor draft={draft} setField={setField} setOpt={setOpt} addOpt={addOpt} removeOpt={removeOpt} />
+                  )}
+                  <div style={{fontSize:10,letterSpacing:".14em",textTransform:"uppercase",color:C.dimmer,fontWeight:700,margin:"1.1rem 0 .5rem"}}>Live preview — as a player sees it</div>
+                  <div key={rawMode ? "raw" : JSON.stringify(draft)} style={{border:`1px dashed ${C.border}`,borderRadius:10,padding:".9rem"}}>
+                    <QuestionPlayerView question={rawMode ? safeParse(editText, draft) : draft} />
+                  </div>
+                </div>
               ) : (
                 <QuestionPlayerView question={q} />
               )}
@@ -5241,7 +5290,7 @@ function ReviewDashboard() {
               {editing ? (
                 <>
                   <button disabled={busy} onClick={() => saveEdit(q.id)} style={btn(C.gold, C.bg)}>Save edit</button>
-                  <button disabled={busy} onClick={() => setEditId(null)} style={btn(C.bgElevated, C.dim, C.border)}>Cancel</button>
+                  <button disabled={busy} onClick={cancelEdit} style={btn(C.bgElevated, C.dim, C.border)}>Cancel</button>
                 </>
               ) : (
                 <>
@@ -5263,6 +5312,56 @@ function fmtScore(n) { return typeof n === "number" ? n.toFixed(2) : "—"; }
 function btn(bg, fg, border) {
   return { background:bg, color:fg, border:`1px solid ${border || bg}`, borderRadius:9, padding:".5rem .9rem",
     cursor:"pointer", fontSize:13, fontWeight:700, fontFamily:FONT.body };
+}
+function isMcLike(q) { return !!q && (q.type === "mc" || q.type === "tf" || Array.isArray(q.opts)); }
+function safeParse(s, fallback) { try { return JSON.parse(s); } catch { return fallback; } }
+
+// Friendly field-by-field editor for an MC question (the founder's "slight
+// changes" surface). Mutates a draft copy via the passed setters; the dashboard
+// renders a live <QuestionPlayerView> off the same draft beneath it.
+function McFieldEditor({ draft, setField, setOpt, addOpt, removeOpt }) {
+  if (!draft) return null;
+  const opts = draft.opts || [];
+  const lbl = { fontSize:10, letterSpacing:".12em", textTransform:"uppercase", color:C.dim, fontWeight:700, marginBottom:".35rem" };
+  const ta = { width:"100%", background:C.bg, color:C.white, border:`1px solid ${C.border}`, borderRadius:8, padding:".6rem", fontFamily:FONT.body, fontSize:14, lineHeight:1.5, resize:"vertical", boxSizing:"border-box" };
+  const inp = { flex:1, minWidth:0, background:C.bg, color:C.white, border:`1px solid ${C.border}`, borderRadius:8, padding:".5rem .6rem", fontFamily:FONT.body, fontSize:14, boxSizing:"border-box" };
+  return (
+    <div style={{display:"grid",gap:"1rem"}}>
+      <div>
+        <div style={lbl}>Situation</div>
+        <textarea value={draft.sit || ""} onChange={e=>setField("sit", e.target.value)} style={{...ta,minHeight:70}} />
+      </div>
+      <div>
+        <div style={lbl}>Options — select the correct one</div>
+        {opts.map((o,i)=>(
+          <div key={i} style={{display:"flex",gap:".55rem",alignItems:"center",marginBottom:".45rem"}}>
+            <input type="radio" name={`ok-${draft.id}`} checked={draft.ok===i} onChange={()=>setField("ok", i)} title="Mark correct" style={{accentColor:C.green}} />
+            <input value={o} onChange={e=>setOpt(i, e.target.value)} style={{...inp, borderColor: draft.ok===i ? C.green : C.border}} />
+            {opts.length>3 && <button onClick={()=>removeOpt(i)} title="Remove option" style={{background:"transparent",color:C.red,border:"none",cursor:"pointer",fontSize:15,padding:"0 .2rem"}}>✕</button>}
+          </div>
+        ))}
+        {opts.length<4 && <button onClick={addOpt} style={{...btn(C.bgElevated,C.dim,C.border),padding:".3rem .65rem",fontSize:12,marginTop:".15rem"}}>+ add option</button>}
+      </div>
+      <div>
+        <div style={lbl}>Explanation</div>
+        <textarea value={draft.explain || ""} onChange={e=>setField("explain", e.target.value)} style={{...ta,minHeight:60}} />
+      </div>
+      <div style={{display:"flex",gap:"1.2rem",alignItems:"center",flexWrap:"wrap"}}>
+        <div style={{display:"flex",alignItems:"center",gap:".5rem"}}>
+          <span style={{...lbl,margin:0}}>Difficulty</span>
+          {[1,2,3].map(n=>(
+            <label key={n} style={{display:"flex",alignItems:"center",gap:".25rem",fontSize:13,color:C.white,cursor:"pointer"}}>
+              <input type="radio" name={`d-${draft.id}`} checked={(draft.d||1)===n} onChange={()=>setField("d", n)} style={{accentColor:C.gold}} />{n}
+            </label>
+          ))}
+        </div>
+        <div style={{display:"flex",alignItems:"center",gap:".5rem",flex:1,minWidth:180}}>
+          <span style={{...lbl,margin:0}}>Category</span>
+          <input value={draft.cat || ""} onChange={e=>setField("cat", e.target.value)} style={{...inp,maxWidth:240}} />
+        </div>
+      </div>
+    </div>
+  );
 }
 
 // Minimal MC / TF / Sequence fallback for non-rink types so the preview
@@ -5324,7 +5423,7 @@ function QuestionPreviewFallback({ question, onAnswer }) {
           <div style={{fontSize:11,fontWeight:800,color:ok?C.green:C.red,marginBottom:".4rem",letterSpacing:".06em"}}>
             {ok ? "✓ Correct" : "✗ Incorrect"}
           </div>
-          {q.why && <div style={{fontSize:13,color:C.dim,lineHeight:1.65,marginBottom:q.tip?".5rem":0}}>{q.why}</div>}
+          {(q.explain || q.why) && <div style={{fontSize:13,color:C.dim,lineHeight:1.65,marginBottom:q.tip?".5rem":0}}>{q.explain || q.why}</div>}
           {q.tip && <div style={{fontSize:12,color:C.dimmer,lineHeight:1.55,fontStyle:"italic"}}>💡 {q.tip}</div>}
         </Card>
       )}
