@@ -46,6 +46,16 @@ const ledger = {
   ok("max=1 returns one", r.length === 1 && r[0].node.id === "u11.decision-making");
 }
 
+// ages filter restricts to the given age bands
+{
+  const r = selectTargets(ledger, {}, { ages: ["U9"] });
+  ok("ages filter keeps only U9", r.length === 1 && r.every((x) => x.node.ageId === "U9"));
+  const r2 = selectTargets(ledger, {}, { ages: ["U11"] });
+  ok("ages U11 keeps only U11 nodes", r2.length === 2 && r2.every((x) => x.node.ageId === "U11"));
+  const r3 = selectTargets(ledger, {}, { ages: [] });
+  ok("empty ages = no filter (all under-target)", r3.length === 3);
+}
+
 // partial coverage reduces gap
 {
   const r = selectTargets(ledger, { "u11.decision-making": 8 });

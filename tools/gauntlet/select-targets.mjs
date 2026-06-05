@@ -4,10 +4,13 @@
 // largest gap. Pure + unit-tested.
 import { targetFor, isAnchor } from "../lib/curriculum-ledger.mjs";
 
-// selectTargets(ledger, counts, { max }) -> [{ node, have, want, gap, anchor }]
+// selectTargets(ledger, counts, { max, ages }) -> [{ node, have, want, gap, anchor }]
 // `counts` is a map of nodeId -> number of questions already covering it.
-export function selectTargets(ledger, counts = {}, { max = Infinity } = {}) {
+// `ages` (optional) restricts to those age bands, e.g. ["U7","U9","U11"].
+export function selectTargets(ledger, counts = {}, { max = Infinity, ages = null } = {}) {
+  const ageSet = ages && ages.length ? new Set(ages) : null;
   const rows = ledger.nodes
+    .filter((node) => !ageSet || ageSet.has(node.ageId))
     .map((node) => {
       const have = counts[node.id] || 0;
       const want = targetFor(ledger, node);

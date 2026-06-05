@@ -39,13 +39,14 @@ const paths = {
 
 // ---------- args ----------
 function parseArgs(argv) {
-  const a = { count: 1, max: Infinity, model: "sonnet", rounds: 3, mock: false, dryRun: false, node: null, fillGaps: false, fast: false, debateRounds: 2, mockFail: false, visual: false, concurrency: 4 };
+  const a = { count: 1, max: Infinity, model: "sonnet", rounds: 3, mock: false, dryRun: false, node: null, fillGaps: false, fast: false, debateRounds: 2, mockFail: false, visual: false, concurrency: 4, ages: null };
   for (let i = 0; i < argv.length; i++) {
     const t = argv[i];
     if (t === "--node") a.node = argv[++i];
     else if (t === "--fill-gaps") a.fillGaps = true;
     else if (t === "--count") a.count = parseInt(argv[++i], 10);
     else if (t === "--max") a.max = parseInt(argv[++i], 10);
+    else if (t === "--ages") a.ages = argv[++i].split(",").map((s) => s.trim()).filter(Boolean);
     else if (t === "--model") a.model = argv[++i];
     else if (t === "--rounds") a.rounds = parseInt(argv[++i], 10);
     else if (t === "--mock") a.mock = true;
@@ -330,7 +331,7 @@ async function main() {
     if (!n) { console.error(`✗ node "${opts.node}" not in the ledger.`); process.exit(2); }
     targets = [n];
   } else if (opts.fillGaps) {
-    targets = selectTargets(ledger, loadCounts(), { max: opts.max }).map((r) => r.node);
+    targets = selectTargets(ledger, loadCounts(), { max: opts.max, ages: opts.ages }).map((r) => r.node);
     if (!targets.length) { console.log("Nothing under target — the ledger is fully covered (live + queued)."); return; }
   } else {
     console.error("Usage: --node <id> | --fill-gaps [--max N]   (+ --count, --model, --rounds, --mock, --dry-run)");
