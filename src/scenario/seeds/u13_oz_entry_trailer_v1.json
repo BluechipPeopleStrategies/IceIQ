@@ -1,0 +1,35 @@
+{
+  "id": "u13_oz_entry_trailer_v1",
+  "type": "scenario",
+  "level": "U13 / Peewee",
+  "levels": ["U13 / Peewee"],
+  "nodeId": "u13.reading-the-play",
+  "themes": ["zone-entry", "decision-making", "scan", "vision"],
+  "cat": "Transition",
+  "difficulty": 2,
+  "stage": { "view": "right", "zone": "off-zone" },
+  "actors": [
+    { "id": "you",     "kind": "player",   "x": 0.60, "y": 0.38, "tag": "YOU" },
+    { "id": "puck",    "kind": "puck",     "x": 0.602, "y": 0.378 },
+    { "id": "trailer", "kind": "teammate", "x": 0.52, "y": 0.52, "tag": "C" },
+    { "id": "rw",      "kind": "teammate", "x": 0.88, "y": 0.78, "tag": "RW" },
+    { "id": "d1",      "kind": "defender", "x": 0.74, "y": 0.58, "tag": "" },
+    { "id": "g",       "kind": "goalie",   "x": 0.918, "y": 0.50, "tag": "" }
+  ],
+  "interaction": {
+    "kind": "selection",
+    "prompt": "You carry the puck over the blue line and the defender closes your gap. Tap the teammate who is the open layer to attack with.",
+    "from": ["trailer", "rw"],
+    "order": "any"
+  },
+  "correct": {
+    "kind": "selection",
+    "ids": ["trailer"]
+  },
+  "feedback": {
+    "right": "Delay and drop to the trailing center coming in with speed. You pull the defender to you and hand the puck to the open high layer for a clean look.",
+    "wrong": "The far winger driving the back post looks like the big play, but the defenseman has closed the gap with an active stick in that cross-ice lane. The hero pass gets picked off."
+  },
+  "tip": "Scan high ice as you cross the blue line. If the seam is covered, use the trailer with speed.",
+  "why": "Recognizing the trailing layer turns a contested entry into a controlled attack instead of forcing a low-percentage cross-ice pass into a defender's stick."
+}

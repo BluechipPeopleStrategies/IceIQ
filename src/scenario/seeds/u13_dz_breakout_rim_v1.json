@@ -1,0 +1,36 @@
+{
+  "id": "u13_dz_breakout_rim_v1",
+  "type": "scenario",
+  "level": "U13 / Peewee",
+  "levels": ["U13 / Peewee"],
+  "nodeId": "u13.scanning",
+  "themes": ["breakout", "scan", "pass-selection", "decision-making"],
+  "cat": "Breakout",
+  "difficulty": 2,
+  "stage": { "view": "left", "zone": "def-zone" },
+  "actors": [
+    { "id": "you",  "kind": "player",   "x": 0.18, "y": 0.78, "tag": "YOU" },
+    { "id": "puck", "kind": "puck",     "x": 0.182, "y": 0.778 },
+    { "id": "lw",   "kind": "teammate", "x": 0.44, "y": 0.86, "tag": "RW" },
+    { "id": "c",    "kind": "teammate", "x": 0.31, "y": 0.48, "tag": "C" },
+    { "id": "f1",   "kind": "defender", "x": 0.27, "y": 0.55, "tag": "" },
+    { "id": "f2",   "kind": "defender", "x": 0.23, "y": 0.70, "tag": "" },
+    { "id": "g",    "kind": "goalie",   "x": 0.082, "y": 0.50, "tag": "" }
+  ],
+  "interaction": {
+    "kind": "selection",
+    "prompt": "You retrieve the puck behind your net under forecheck pressure. Your shoulder check is done. Tap the teammate you should move it to.",
+    "from": ["lw", "c"],
+    "order": "any"
+  },
+  "correct": {
+    "kind": "selection",
+    "ids": ["lw"]
+  },
+  "feedback": {
+    "right": "Rim it hard to the strong-side RW up the boards. That winger has open ice to skate onto it, and the puck goes away from the danger area in front of your net.",
+    "wrong": "The center looks like the easy short pass, but F1 is driving straight down the middle and takes that lane away. Turning back to the middle feeds the puck into pressure in your own slot."
+  },
+  "tip": "Take your picture early. If the middle is covered, rim it to space and let your winger skate onto the puck.",
+  "why": "Pre-touch scanning lets the defenseman identify both the forechecker's pressure and the open winger before the puck arrives, so the breakout goes to space instead of into the slot."
+}
