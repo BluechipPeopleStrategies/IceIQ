@@ -25,6 +25,7 @@ import { buildVisualCreatorPrompt } from "./gauntlet/visual-prompts.mjs";
 import { repairScenario, scenarioHash, mockScenario } from "./gauntlet/visual-scenario.mjs";
 import { asciiRink } from "./gauntlet/ascii-rink.mjs";
 import { VISUAL_LENSES, buildVisualHockeyCoachPrompt, buildVisualCoachPrompt, buildVisualHeadCoachPrompt, buildVisualLessonExtractorPrompt } from "./gauntlet/visual-prompts.mjs";
+import { runPool } from "./gauntlet/pool.mjs";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const root = resolve(__dirname, "..");
@@ -38,7 +39,7 @@ const paths = {
 
 // ---------- args ----------
 function parseArgs(argv) {
-  const a = { count: 1, max: Infinity, model: "sonnet", rounds: 3, mock: false, dryRun: false, node: null, fillGaps: false, fast: false, debateRounds: 2, mockFail: false, visual: false };
+  const a = { count: 1, max: Infinity, model: "sonnet", rounds: 3, mock: false, dryRun: false, node: null, fillGaps: false, fast: false, debateRounds: 2, mockFail: false, visual: false, concurrency: 4 };
   for (let i = 0; i < argv.length; i++) {
     const t = argv[i];
     if (t === "--node") a.node = argv[++i];
@@ -53,11 +54,13 @@ function parseArgs(argv) {
     else if (t === "--debate-rounds") a.debateRounds = parseInt(argv[++i], 10);
     else if (t === "--mock-fail") a.mockFail = true;
     else if (t === "--visual") a.visual = true;
+    else if (t === "--concurrency") a.concurrency = parseInt(argv[++i], 10);
   }
   // Both round counts must be >= 1 (a bad/zero/NaN flag would otherwise skip the
   // loop and leave panel reviews null).
   a.rounds = Math.max(1, Number.isFinite(a.rounds) ? a.rounds : 3);
   a.debateRounds = Math.max(1, Number.isFinite(a.debateRounds) ? a.debateRounds : 2);
+  a.concurrency = Math.max(1, Number.isFinite(a.concurrency) ? a.concurrency : 4);
   return a;
 }
 
@@ -335,22 +338,25 @@ async function main() {
   }
 
   const seen = seenHashes();
+  // Flatten to one work item per attempt, then run through a concurrency pool.
+  const work = [];
+  for (const node of targets) for (let i = 0; i < opts.count; i++) work.push(node);
   let enq = 0, skipped = 0;
-  for (const node of targets) {
-    for (let i = 0; i < opts.count; i++) {
-      process.stdout.write(`• ${node.id} (${i + 1}/${opts.count}) … `);
-      const r = opts.visual
-        ? await generateVisualOne(ledger, node, opts, seen)
-        : await generateOne(ledger, node, opts, seen);
-      if (!r.ok) { console.log(`dropped (${r.reason})${r.learned?.length ? ` — learned: ${r.learned.join(" | ")}` : ""}`); skipped++; continue; }
-      seen.add(r.hash);
-      if (opts.dryRun) { console.log("ok (dry-run, not queued)"); continue; }
-      const e = enqueue(paths, r.item);
-      console.log(e.added ? `queued ${r.item.question.id}` : "dup (already queued)");
-      if (e.added) enq++;
-    }
-  }
-  console.log(`\nDone. queued ${enq}, skipped ${skipped}. Review at #review (npm run dev).`);
+  console.log(`Generating ${work.length} question(s) across ${targets.length} node(s), concurrency ${opts.concurrency}${opts.visual ? " [visual]" : ""}…\n`);
+  await runPool(work, opts.concurrency, async (node) => {
+    const r = opts.visual
+      ? await generateVisualOne(ledger, node, opts, seen)
+      : await generateOne(ledger, node, opts, seen);
+    // All side-effects below are synchronous → atomic w.r.t. the event loop, so
+    // concurrent workers cannot corrupt the queue/lesson/log files (no lock needed).
+    if (!r.ok) { console.log(`dropped  ${node.id}  (${r.reason})${r.learned?.length ? ` — learned: ${r.learned.join(" | ")}` : ""}`); skipped++; return; }
+    seen.add(r.hash);
+    if (opts.dryRun) { console.log(`ok (dry-run)  ${node.id}`); return; }
+    const e = enqueue(paths, r.item);
+    console.log(e.added ? `queued   ${r.item.question.id}` : `dup      ${r.item.question.id}`);
+    if (e.added) enq++;
+  });
+  console.log(`\nDone. queued ${enq}, skipped ${skipped} (concurrency ${opts.concurrency}). Review at #review (npm run dev).`);
 }
 
 main().catch((e) => { console.error(e); process.exit(1); });
