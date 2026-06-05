@@ -22,7 +22,7 @@ import { buildCreatorPrompt, buildCurriculumPrompt, buildPanelCoachPrompt, build
 import { loadLessons, addLesson, renderLessons } from "./gauntlet/lessons.mjs";
 import { lintScenario } from "./scenario-author/validate.mjs";
 import { buildVisualCreatorPrompt } from "./gauntlet/visual-prompts.mjs";
-import { repairScenario, scenarioHash, mockScenario } from "./gauntlet/visual-scenario.mjs";
+import { repairScenario, scenarioHash, mockScenario, forcedLevels } from "./gauntlet/visual-scenario.mjs";
 import { asciiRink } from "./gauntlet/ascii-rink.mjs";
 import { VISUAL_LENSES, buildVisualHockeyCoachPrompt, buildVisualCoachPrompt, buildVisualHeadCoachPrompt, buildVisualLessonExtractorPrompt } from "./gauntlet/visual-prompts.mjs";
 import { runPool } from "./gauntlet/pool.mjs";
@@ -90,7 +90,7 @@ function rand() { return Math.random().toString(36).slice(2, 6); }
 function repair(q, node, domain, idSeed) {
   q = q && typeof q === "object" ? q : {};
   q.id = idSeed; q.type = "mc"; q.nodeId = node.id;
-  if (!Array.isArray(q.levels) || !q.levels.length) q.levels = [AGE_LEVEL[node.ageId]];
+  q.levels = forcedLevels(node, q.levels);
   q.cat = q.cat || domain.name;
   q.d = [1, 2, 3].includes(q.d) ? q.d : 2;
   return q;
