@@ -66,9 +66,22 @@ export function extractJSON(rawStdout) {
   return candidate;
 }
 
-// High-level: run a role and return parsed JSON. Throws on non-zero exit or
-// unparseable output (callers decide whether to retry).
-export async function runAgent({ system, prompt, model = "sonnet", budget = 1 }) {
-  const raw = await runClaudeRaw({ system, prompt, model, budget });
-  return extractJSON(raw);
+const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
+
+// High-level: run a role and return parsed JSON. Retries transient failures
+// (the `claude` CLI returning a non-zero exit under concurrency/rate pressure,
+// or an occasional unparseable envelope) with jittered backoff, so one flaky
+// subprocess doesn't burn a whole question. Throws only after `retries` exhaust.
+export async function runAgent({ system, prompt, model = "sonnet", budget = 1, retries = 3 }) {
+  let lastErr;
+  for (let attempt = 0; attempt <= retries; attempt++) {
+    try {
+      const raw = await runClaudeRaw({ system, prompt, model, budget });
+      return extractJSON(raw);
+    } catch (e) {
+      lastErr = e;
+      if (attempt < retries) await sleep(500 * (attempt + 1) + Math.floor(Math.random() * 500));
+    }
+  }
+  throw lastErr;
 }

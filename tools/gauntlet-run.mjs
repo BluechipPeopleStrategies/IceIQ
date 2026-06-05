@@ -41,7 +41,7 @@ const paths = {
 
 // ---------- args ----------
 function parseArgs(argv) {
-  const a = { count: 1, max: Infinity, model: "sonnet", rounds: 3, mock: false, dryRun: false, node: null, fillGaps: false, fast: false, debateRounds: 2, mockFail: false, visual: false, concurrency: 4, ages: null, consolidate: false };
+  const a = { count: 1, max: Infinity, model: "sonnet", rounds: 4, mock: false, dryRun: false, node: null, fillGaps: false, fast: false, debateRounds: 2, mockFail: false, visual: false, concurrency: 4, ages: null, consolidate: false };
   for (let i = 0; i < argv.length; i++) {
     const t = argv[i];
     if (t === "--node") a.node = argv[++i];
@@ -62,7 +62,7 @@ function parseArgs(argv) {
   }
   // Both round counts must be >= 1 (a bad/zero/NaN flag would otherwise skip the
   // loop and leave panel reviews null).
-  a.rounds = Math.max(1, Number.isFinite(a.rounds) ? a.rounds : 3);
+  a.rounds = Math.max(1, Number.isFinite(a.rounds) ? a.rounds : 4);
   a.debateRounds = Math.max(1, Number.isFinite(a.debateRounds) ? a.debateRounds : 2);
   a.concurrency = Math.max(1, Number.isFinite(a.concurrency) ? a.concurrency : 4);
   return a;
