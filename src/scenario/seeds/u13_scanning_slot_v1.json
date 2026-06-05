@@ -1,0 +1,32 @@
+{
+  "id": "u13_scanning_slot_v1",
+  "type": "scenario",
+  "nodeId": "u13.scanning",
+  "level": "U13 / Peewee",
+  "themes": ["scan", "memory", "cycle", "positioning", "offensive-zone"],
+  "cat": "Hockey Sense",
+  "difficulty": 3,
+  "stage": { "view": "right", "zone": "off-zone" },
+  "scanWindow": { "showMs": 1800, "hideKinds": ["defender"] },
+  "actors": [
+    { "id": "you",    "kind": "player",   "x": 0.680, "y": 0.240, "tag": "YOU" },
+    { "id": "tmlow",  "kind": "teammate", "x": 0.900, "y": 0.800, "tag": "RW" },
+    { "id": "puck",   "kind": "puck",     "x": 0.902, "y": 0.798 },
+    { "id": "tmwall", "kind": "teammate", "x": 0.900, "y": 0.240, "tag": "LW" },
+    { "id": "x1",     "kind": "defender", "x": 0.840, "y": 0.720 },
+    { "id": "x2",     "kind": "defender", "x": 0.820, "y": 0.520 },
+    { "id": "x3",     "kind": "defender", "x": 0.840, "y": 0.320 },
+    { "id": "g",      "kind": "goalie",   "x": 0.918, "y": 0.500 }
+  ],
+  "interaction": {
+    "kind": "point",
+    "prompt": "Your team is cycling the puck low. You are F3 up high. Read where the coverage went, then tap the open ice you should fill to give your teammate a scoring pass."
+  },
+  "correct": { "kind": "point", "zoneId": "oz-high-slot" },
+  "feedback": {
+    "right": "Yes. With all three defenders pulled below the puck, the high slot is wide open, and filling it turns a low cycle into a quick scoring chance.",
+    "wrong": "Dropping low or hugging the boards just adds another body where the defenders already are. The space your scan showed you was the high slot they vacated."
+  },
+  "tip": "When the defense collapses low, the high slot is the open ice, so fill it.",
+  "why": "Scanning before the puck comes free lets F3 find the soft spot the collapsing defenders leave behind instead of skating into traffic."
+}

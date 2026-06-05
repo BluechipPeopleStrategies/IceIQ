@@ -1,0 +1,92 @@
+{
+  "id": "u15_scanning_weakside_v1",
+  "type": "scenario",
+  "nodeId": "u15.scanning",
+  "level": "U15 / Bantam",
+  "themes": [
+    "scan",
+    "memory",
+    "puck-support",
+    "offensive-zone",
+    "positioning"
+  ],
+  "cat": "Hockey Sense",
+  "difficulty": 3,
+  "stage": {
+    "view": "right",
+    "zone": "off-zone"
+  },
+  "scanWindow": {
+    "showMs": 1400,
+    "hideKinds": [
+      "defender"
+    ]
+  },
+  "actors": [
+    {
+      "id": "you",
+      "kind": "player",
+      "x": 0.7,
+      "y": 0.78,
+      "tag": "YOU"
+    },
+    {
+      "id": "puck",
+      "kind": "puck",
+      "x": 0.932,
+      "y": 0.848
+    },
+    {
+      "id": "tmlow",
+      "kind": "teammate",
+      "x": 0.93,
+      "y": 0.85,
+      "tag": "RW"
+    },
+    {
+      "id": "tmwall",
+      "kind": "teammate",
+      "x": 0.9,
+      "y": 0.22,
+      "tag": "LW"
+    },
+    {
+      "id": "x1",
+      "kind": "defender",
+      "x": 0.82,
+      "y": 0.5
+    },
+    {
+      "id": "x2",
+      "kind": "defender",
+      "x": 0.9,
+      "y": 0.5
+    },
+    {
+      "id": "x3",
+      "kind": "defender",
+      "x": 0.93,
+      "y": 0.9199999999999999
+    },
+    {
+      "id": "g",
+      "kind": "goalie",
+      "x": 0.918,
+      "y": 0.5700000000000001
+    }
+  ],
+  "interaction": {
+    "kind": "point",
+    "prompt": "Your team has the puck low on the strong side. You are a high forward. The defense has shaded hard to the puck. Tap the weak-side ice you should relocate to so you are an open one-timer option."
+  },
+  "correct": {
+    "kind": "point",
+    "zoneId": "oz-half-wall-weak"
+  },
+  "feedback": {
+    "right": "Yes. Three defenders shaded to the strong-side puck, so the weak-side half wall is the open ice. Relocating there gives a clean cross-ice one-timer look.",
+    "wrong": "Staying strong-side or drifting to the net just crowds where the defense already is. The scan showed you the weak side was abandoned."
+  },
+  "tip": "When the defense overloads the puck side, the weak side is the open ice, so relocate to it.",
+  "why": "Scanning the far side before the puck moves lets you arrive in the soft seam the overload leaves behind."
+}
