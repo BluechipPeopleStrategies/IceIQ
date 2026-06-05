@@ -19,14 +19,15 @@ const q = { id: "x", type: "mc", nodeId: node.id, sit: "On a 2-on-1 what is the 
 { const { prompt } = buildCreatorPrompt({ node, concept, domain, idSeed: "gen_y", lessons: "" });
   ok("creator works without lessons", prompt.includes("u11.decision-making")); }
 
-// three panel lenses exist incl. a perfectionist
-{ ok("three lenses", Array.isArray(PANEL_LENSES) && PANEL_LENSES.length === 3);
-  ok("has perfectionist", PANEL_LENSES.some((l) => l.key === "perfectionist")); }
+// the read panel is tactical + pedagogy (perfectionist moved to the geometry panel)
+{ ok("two read lenses", Array.isArray(PANEL_LENSES) && PANEL_LENSES.length === 2);
+  ok("no perfectionist in read panel", !PANEL_LENSES.some((l) => l.key === "perfectionist"));
+  ok("has tactical + pedagogy", PANEL_LENSES.some((l) => l.key === "tactical") && PANEL_LENSES.some((l) => l.key === "pedagogy")); }
 
 // panel coach prompt carries the lens and peer critiques in debate rounds
-{ const lens = PANEL_LENSES.find((l) => l.key === "perfectionist");
+{ const lens = PANEL_LENSES.find((l) => l.key === "pedagogy");
   const { system, prompt } = buildPanelCoachPrompt({ question: q, node, concept, lens, others: [{ key: "tactical", critique: ["the pass lane is contested"] }] });
-  ok("panel system describes the lens", system.toLowerCase().includes("perfectionist"));
+  ok("panel system describes the lens", system.toLowerCase().includes("pedagogy"));
   ok("panel prompt includes peer critique in debate", prompt.includes("the pass lane is contested")); }
 
 // head coach + extractor build
