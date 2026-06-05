@@ -188,6 +188,7 @@ export default function ScenarioRenderer({ scenario, playerId, onAnswer }) {
       <RinkStage
         stage={scenario.stage}
         actors={scenario.actors}
+        levels={scenario.levels}
         scanWindow={scenario.scanWindow}
         highlightIds={result?.intercepterId ? [result.intercepterId] : []}
       >

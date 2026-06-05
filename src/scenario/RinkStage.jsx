@@ -42,7 +42,7 @@ const ACTOR_COLORS = {
   player:   { fill: "#0F4C8C", stroke: "#fff", text: "#fff" },
   teammate: { fill: "#0F4C8C", stroke: "#fff", text: "#fff" },
   defender: { fill: "#1a1a1a", stroke: "#fff", text: "#fff" },
-  goalie:   { fill: "#3a3a3a", stroke: "#fff", text: "#fff" },
+  goalie:   { fill: "#51607A", stroke: "#fff", text: "#fff" },
   puck:     { fill: "#0a0a0a", stroke: "#fff", text: "#fff" },
 };
 
@@ -68,8 +68,9 @@ function StageDefs() {
   );
 }
 
-function ActorMarker({ actor, highlight }) {
+function ActorMarker({ actor, highlight, hideTag, offset }) {
   const p = denorm(actor);
+  if (offset) { p.x += offset.x; p.y += offset.y; }   // nudge a carried puck to the carrier's edge
   const palette = ACTOR_COLORS[actor.kind] || ACTOR_COLORS.player;
   const labelStyle = {
     pointerEvents: "none",
@@ -84,7 +85,9 @@ function ActorMarker({ actor, highlight }) {
                  : actor.kind === "player" ? -22
                  : -16;
 
-  const positionTag = actor.tag || "";
+  // Position tags (LW/RW/D…) are hidden for the youngest bands (U7/U9), where
+  // play is half-ice and the markers are "just players".
+  const positionTag = hideTag ? "" : (actor.tag || "");
 
   // Optional stick line — small line from the marker toward `facing`.
   // Adds tactical realism without rewriting the marker. Only shown for
@@ -124,16 +127,18 @@ function ActorMarker({ actor, highlight }) {
         </circle>
       )}
       {stickLine}
-      {/* GOALIE — taller rounded rect (silhouette) with mask cutout */}
+      {/* GOALIE — friendly rounded "pad" block with little leg pads, clearly
+          distinct from skater circles and readable for the youngest ages. */}
       {actor.kind === "goalie" && (
         <>
-          <rect x="-10" y="-13" width="20" height="26" rx="4"
-            fill={palette.fill} stroke={palette.stroke} strokeWidth="1.6"/>
-          {/* Tiny "mask grill" strokes — non-essential but evokes goalie */}
-          <line x1="-4" y1="-7" x2="4" y2="-7" stroke="#fff" strokeWidth="0.6" opacity="0.55"/>
-          <line x1="-4" y1="-4" x2="4" y2="-4" stroke="#fff" strokeWidth="0.6" opacity="0.55"/>
-          <text x="0" y="6" textAnchor="middle" fill={palette.text}
-            fontSize="10" fontWeight="800" style={labelStyle}>G</text>
+          {/* leg pads peeking below the body */}
+          <rect x="-9" y="6" width="7" height="9" rx="3" fill={palette.fill} stroke={palette.stroke} strokeWidth="1.2"/>
+          <rect x="2" y="6" width="7" height="9" rx="3" fill={palette.fill} stroke={palette.stroke} strokeWidth="1.2"/>
+          {/* body */}
+          <rect x="-11" y="-13" width="22" height="24" rx="8"
+            fill={palette.fill} stroke={palette.stroke} strokeWidth="1.8"/>
+          <text x="0" y="3" textAnchor="middle" fill={palette.text}
+            fontSize="12" fontWeight="800" style={labelStyle}>G</text>
         </>
       )}
 
@@ -182,10 +187,13 @@ function ActorMarker({ actor, highlight }) {
         </>
       )}
 
-      {/* PUCK */}
+      {/* PUCK — a clean round disc (clearer for young ages than the thin
+          perspective ellipse, which read as a smudge at small size). */}
       {actor.kind === "puck" && (
-        <ellipse cx="0" cy="1" rx="9" ry="3.5"
-          fill={palette.fill} stroke={palette.stroke} strokeWidth="1.5"/>
+        <>
+          <circle cx="0" cy="0" r="6" fill={palette.fill} stroke={palette.stroke} strokeWidth="1.8"/>
+          <ellipse cx="0" cy="-2" rx="3" ry="1.4" fill="#fff" opacity="0.3"/>
+        </>
       )}
 
       {/* Caption above marker — author-driven (e.g. "YOU", "OPEN") */}
@@ -207,8 +215,34 @@ function ActorMarker({ actor, highlight }) {
  *        Render-prop: the primitive layer. Receives a helper that converts
  *        a DOM event to normalized 0..1 rink coords.
  */
-export default function RinkStage({ stage, actors, scanWindow, highlightIds, children }) {
+export default function RinkStage({ stage, actors, levels, scanWindow, highlightIds, children }) {
   const highlightSet = useMemo(() => new Set(Array.isArray(highlightIds) ? highlightIds : []), [highlightIds]);
+
+  // Youngest bands play half-ice; markers are "just players", no position tags.
+  const hideTags = useMemo(() => {
+    const ls = Array.isArray(levels) ? levels : [];
+    return ls.some(l => /^U7\b|^U9\b/.test(String(l)));
+  }, [levels]);
+
+  // When the puck sits on top of a skater (the carrier), nudge it to that
+  // skater's lower-right edge so it reads as "this player has the puck"
+  // instead of muddying the marker.
+  const puckOffsets = useMemo(() => {
+    const map = {};
+    const skaters = actors.filter(a => a.kind === "player" || a.kind === "teammate" || a.kind === "defender");
+    for (const pk of actors.filter(a => a.kind === "puck")) {
+      let best = null, bestD = Infinity;
+      for (const sk of skaters) {
+        const d = Math.hypot((pk.x - sk.x) * RINK_W, (pk.y - sk.y) * RINK_H);
+        if (d < bestD) { bestD = d; best = sk; }
+      }
+      if (best && bestD < 24) {
+        const off = (best.kind === "player" ? 17 : 11) + 6;
+        map[pk.id] = { x: off * 0.72, y: off * 0.69 };
+      }
+    }
+    return map;
+  }, [actors]);
   const svgRef = useRef(null);
   const viewBox = useMemo(() => computeViewBox(stage.view), [stage.view]);
 
@@ -257,7 +291,8 @@ export default function RinkStage({ stage, actors, scanWindow, highlightIds, chi
         {/* Actors plotted underneath the primitive's interactive layer.
             Filtered by the scan-then-hide drill when active. */}
         {visibleActors.map(a => (
-          <ActorMarker key={a.id} actor={a} highlight={highlightSet.has(a.id)}/>
+          <ActorMarker key={a.id} actor={a} highlight={highlightSet.has(a.id)}
+            hideTag={hideTags} offset={puckOffsets[a.id]}/>
         ))}
         {scanElapsed && hideKinds && hideKinds.size > 0 && (
           <text x="50%" y="20" textAnchor="middle" fill="#eab308"
@@ -323,10 +358,10 @@ function LegendGlyph({ kind }) {
         </>
       )}
       {kind === "square" && (
-        <rect x="-6.5" y="-6.5" width="13" height="13" rx="2.5" fill="#3a3a3a" stroke="#fff" strokeWidth="1.2"/>
+        <rect x="-6.5" y="-6.5" width="13" height="13" rx="4.5" fill="#51607A" stroke="#fff" strokeWidth="1.2"/>
       )}
       {kind === "puck" && (
-        <ellipse cx="0" cy="0.5" rx="6" ry="2.4" fill="#0a0a0a" stroke="#fff" strokeWidth="1.2"/>
+        <circle cx="0" cy="0" r="4" fill="#0a0a0a" stroke="#fff" strokeWidth="1.2"/>
       )}
     </svg>
   );
