@@ -133,6 +133,10 @@ if (prim === "point") {
 } else if (prim === "sequence") {
   interaction = { kind: "sequence", from: brief.from, prompt: brief.prompt };
   correct = { kind: "sequence", ids: brief.correct.ids };
+} else if (prim === "place") {
+  // brief.placements: [{ id, at:"<zoneId>" | x,y, tolerance? }]
+  interaction = { kind: "place", items: brief.items, prompt: brief.prompt, ...(brief.showTargets ? { showTargets: true } : {}) };
+  correct = { kind: "place", placements: (brief.placements || []).map((p) => ({ id: p.id, ...target(p), ...(p.tolerance != null ? { tolerance: p.tolerance } : {}) })) };
 } else {
   throw new Error(`unknown primitive "${prim}"`);
 }

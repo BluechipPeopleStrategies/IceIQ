@@ -247,6 +247,48 @@ const rules = [
   // Without this, the LLM happily authors trivial questions where the
   // only option is the right one.
 
+  // ── PLACE-SPECIFIC (drag actors onto target spots)
+
+  function placeHasItems(s) {
+    if (s.interaction?.kind !== "place") return null;
+    const items = s.interaction.items;
+    if (!Array.isArray(items) || items.length < 1) {
+      return { kind: "err", msg: `place scenarios need at least 1 actor id in interaction.items` };
+    }
+    const ids = new Set((s.actors || []).map(a => a.id));
+    const missing = items.filter(id => !ids.has(id));
+    if (missing.length) return { kind: "err", msg: `place.items references unknown actor ids: ${missing.join(", ")}` };
+    return null;
+  },
+
+  function placeCorrectCoversItems(s) {
+    if (s.interaction?.kind !== "place") return null;
+    const pl = s.correct?.placements;
+    if (!Array.isArray(pl) || pl.length < 1) {
+      return { kind: "err", msg: `place.correct.placements must be a non-empty array of {id, zoneId|x,y}` };
+    }
+    const placed = new Set(pl.map(p => p.id));
+    const missing = (s.interaction.items || []).filter(id => !placed.has(id));
+    if (missing.length) return { kind: "err", msg: `every placed actor needs a target — missing placements for: ${missing.join(", ")}` };
+    for (const p of pl) {
+      if (!resolveTargetCoords(p)) return { kind: "err", msg: `placement for "${p.id}" needs a valid zoneId or {x,y}` };
+    }
+    return null;
+  },
+
+  function placeNotTriviallyCorrect(s) {
+    if (s.interaction?.kind !== "place") return null;
+    const byId = Object.fromEntries((s.actors || []).map(a => [a.id, a]));
+    for (const p of (s.correct?.placements || [])) {
+      const a = byId[p.id], t = resolveTargetCoords(p);
+      if (!a || !t) continue;
+      if (distance(a, t) <= t.tolerance) {
+        return { kind: "err", msg: `placeable actor "${p.id}" already starts within tolerance of its target — there's no placement to make. Start it on a bench/neutral spot, not on the answer.` };
+      }
+    }
+    return null;
+  },
+
   function decisionMakingPresent(s) {
     if (s.interaction?.kind !== "path") return null;
     const verb = s.interaction.verb;
@@ -316,6 +358,9 @@ const rules = [
   function goalieInCrease(s) {
     const g = s.actors?.find(a => a.kind === "goalie");
     if (!g) return null;
+    // A placeable goalie starts on a bench/neutral spot by design — its
+    // crease position is the answer, not the start, so don't warn on it.
+    if (s.interaction?.kind === "place" && (s.interaction.items || []).includes(g.id)) return null;
     // Crease lives at x ≥ 0.91 (right) or x ≤ 0.09 (left); y around 0.5.
     const inRightCrease = g.x >= 0.88 && g.x <= 0.95 && Math.abs(g.y - 0.5) < 0.10;
     const inLeftCrease  = g.x >= 0.05 && g.x <= 0.12 && Math.abs(g.y - 0.5) < 0.10;

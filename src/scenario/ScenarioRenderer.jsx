@@ -116,9 +116,25 @@ export default function ScenarioRenderer({ scenario, playerId, onAnswer }) {
   }
 
   const PrimComponent = primitive.Component;
+  const kind = scenario.interaction.kind;
   const verb = scenario.interaction.verb || "skate";
-  const badge = VERB_BADGE[verb] || VERB_BADGE.skate;
-  const hint = VERB_HINT[verb] || "Drag from the highlighted player.";
+  const KIND_BADGE = {
+    place:     { icon: "✋", label: "PLACE",     color: "#7C3AED" },
+    point:     { icon: "📍", label: "PICK SPOT", color: "#1D9E75" },
+    selection: { icon: "👆", label: "PICK",      color: "#5BA4E8" },
+    sequence:  { icon: "🔢", label: "ORDER",     color: "#C9A24B" },
+  };
+  const badge = kind === "path" ? (VERB_BADGE[verb] || VERB_BADGE.skate) : (KIND_BADGE[kind] || VERB_BADGE.skate);
+  const KIND_HINT = {
+    place:     "Drag each highlighted player to where they belong, then tap Check.",
+    point:     "Tap the spot on the rink.",
+    selection: "Tap the player(s) you'd choose.",
+    sequence:  "Tap the players in the right order.",
+  };
+  const hint = kind === "path" ? (VERB_HINT[verb] || "Drag from the highlighted player.") : (KIND_HINT[kind] || "");
+  // Actors the primitive renders itself (place = draggable tokens) — hide
+  // them from the stage's static layer so they aren't drawn twice.
+  const interactiveIds = primitive.interactiveActorIds ? primitive.interactiveActorIds(scenario.interaction) : [];
   const timer = scenario.timer && typeof scenario.timer.duration === "number" ? scenario.timer : null;
 
   function handleAnswer(p) {
@@ -191,6 +207,7 @@ export default function ScenarioRenderer({ scenario, playerId, onAnswer }) {
         levels={scenario.levels}
         scanWindow={scenario.scanWindow}
         highlightIds={result?.intercepterId ? [result.intercepterId] : []}
+        hiddenIds={interactiveIds}
       >
         {(svgPoint) => (
           <PrimComponent

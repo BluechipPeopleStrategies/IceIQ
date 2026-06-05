@@ -192,7 +192,7 @@ import { runHockeyValidators } from "./validators.js";
 const VALID_VIEWS = new Set(["full", "left", "right", "neutral"]);
 const VALID_ACTOR_KINDS = new Set(["player", "teammate", "defender", "goalie", "puck", "text", "number"]);
 const VALID_VERBS = new Set(["skate", "carry", "pass", "shoot", "screen", "check", "backcheck"]);
-const VALID_INTERACTION_KINDS = new Set(["point", "path", "selection", "sequence"]);
+const VALID_INTERACTION_KINDS = new Set(["point", "path", "selection", "sequence", "place"]);
 
 // Mirror the path primitive's interception threshold so the validator
 // rejects scenarios the engine itself would call wrong.

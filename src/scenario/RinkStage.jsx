@@ -215,8 +215,11 @@ function ActorMarker({ actor, highlight, hideTag, offset }) {
  *        Render-prop: the primitive layer. Receives a helper that converts
  *        a DOM event to normalized 0..1 rink coords.
  */
-export default function RinkStage({ stage, actors, levels, scanWindow, highlightIds, children }) {
+export default function RinkStage({ stage, actors, levels, scanWindow, highlightIds, hiddenIds, children }) {
   const highlightSet = useMemo(() => new Set(Array.isArray(highlightIds) ? highlightIds : []), [highlightIds]);
+  // Actors a primitive renders itself (e.g. draggable place tokens) — skip
+  // them in the static layer so they aren't drawn twice.
+  const hiddenSet = useMemo(() => new Set(Array.isArray(hiddenIds) ? hiddenIds : []), [hiddenIds]);
 
   // Youngest bands play half-ice; markers are "just players", no position tags.
   const hideTags = useMemo(() => {
@@ -259,9 +262,10 @@ export default function RinkStage({ stage, actors, levels, scanWindow, highlight
   const hideKinds = scanWindow && Array.isArray(scanWindow.hideKinds)
     ? new Set(scanWindow.hideKinds) : null;
   const visibleActors = useMemo(() => {
-    if (!scanElapsed || !hideKinds) return actors;
-    return actors.filter(a => !hideKinds.has(a.kind));
-  }, [actors, scanElapsed, hideKinds]);
+    let list = hiddenSet.size ? actors.filter(a => !hiddenSet.has(a.id)) : actors;
+    if (scanElapsed && hideKinds) list = list.filter(a => !hideKinds.has(a.kind));
+    return list;
+  }, [actors, scanElapsed, hideKinds, hiddenSet]);
 
   // Convert a DOM event into normalized 0..1 rink coords. Primitives use
   // this for hit-testing and drag tracking — they never see pixel coords.

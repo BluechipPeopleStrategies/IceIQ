@@ -9,6 +9,7 @@ import { scorePath } from "../../src/scenario/primitives/path-scorer.js";
 import { scoreSelection } from "../../src/scenario/primitives/selection-scorer.js";
 import { scorePoint } from "../../src/scenario/primitives/point-scorer.js";
 import { scoreSequence } from "../../src/scenario/primitives/sequence-scorer.js";
+import { scorePlace } from "../../src/scenario/primitives/place-scorer.js";
 
 export function lintScenario(scenario) {
   const v = validateScenario(scenario);
@@ -85,6 +86,21 @@ export function lintScenario(scenario) {
       return {
         ok: false,
         errs: [`sequence scorer self-test failed — correct.ids isn't a valid ordered match`],
+        warns: v.warns,
+      };
+    }
+  } else if (scenario.interaction.kind === "place") {
+    // Drop each placeable actor exactly on its target — should grade ok.
+    const positions = {};
+    for (const t of (scenario.correct.placements || [])) {
+      const tgt = resolveTarget(t);
+      positions[t.id] = { x: tgt.x, y: tgt.y };
+    }
+    const result = scorePlace(positions, scenario.correct);
+    if (!result.ok) {
+      return {
+        ok: false,
+        errs: [`place scorer self-test failed (reason=${result.reason}) — placing actors on their targets doesn't grade ok=true`],
         warns: v.warns,
       };
     }
