@@ -118,20 +118,18 @@ async function runPanel(q, node, concept, opts) {
   let reviews = null;
   for (let round = 1; round <= opts.debateRounds; round++) {
     const others = round === 1 ? null : reviews;
-    reviews = [];
-    for (const lens of PANEL_LENSES) {
+    reviews = await Promise.all(PANEL_LENSES.map(async (lens) => {
       if (opts.mock) {
         // The first lens fails forever under --mock-fail to exercise drop+learn.
         const verdict = (opts.mockFail && lens.key === PANEL_LENSES[0].key) ? "REVISE" : "PASS";
-        reviews.push({ key: lens.key, verdict, critique: verdict === "REVISE" ? ["[mock] not perfect"] : [] });
-      } else {
-        const peers = others ? others.filter((o) => o.key !== lens.key) : null;
-        let r;
-        try { r = await runAgent({ ...buildPanelCoachPrompt({ question: q, node, concept, lens, others: peers }), model: opts.model }); }
-        catch (e) { r = { verdict: "REVISE", critique: [`${lens.key} error: ${e.message}`] }; }
-        reviews.push({ key: lens.key, verdict: r.verdict, critique: r.critique || [] });
+        return { key: lens.key, verdict, critique: verdict === "REVISE" ? ["[mock] not perfect"] : [] };
       }
-    }
+      const peers = others ? others.filter((o) => o.key !== lens.key) : null;
+      let r;
+      try { r = await runAgent({ ...buildPanelCoachPrompt({ question: q, node, concept, lens, others: peers }), model: opts.model }); }
+      catch (e) { r = { verdict: "REVISE", critique: [`${lens.key} error: ${e.message}`] }; }
+      return { key: lens.key, verdict: r.verdict, critique: r.critique || [] };
+    }));
     if (reviews.every((r) => r.verdict === "PASS")) return { ok: true, critiques: [] };
   }
   return { ok: false, critiques: (reviews || []).filter((r) => r.verdict !== "PASS").flatMap((r) => r.critique) };
@@ -232,19 +230,17 @@ async function runScenarioPanel(scenario, node, concept, opts, { lenses, makePro
   let reviews = null;
   for (let round = 1; round <= opts.debateRounds; round++) {
     const others = round === 1 ? null : reviews;
-    reviews = [];
-    for (const lens of lenses) {
+    reviews = await Promise.all(lenses.map(async (lens) => {
       if (opts.mock) {
         const verdict = (opts.mockFail && lens.key === lenses[0].key) ? "REVISE" : "PASS";
-        reviews.push({ key: lens.key, verdict, critique: verdict === "REVISE" ? ["[mock] not perfect"] : [] });
-      } else {
-        const peers = others ? others.filter((o) => o.key !== lens.key) : null;
-        let r;
-        try { r = await runAgent({ ...makePrompt({ scenario, ascii, node, concept, lens, others: peers }), model: opts.model }); }
-        catch (e) { r = { verdict: "REVISE", critique: [`${lens.key} error: ${e.message}`] }; }
-        reviews.push({ key: lens.key, verdict: r.verdict, critique: r.critique || [] });
+        return { key: lens.key, verdict, critique: verdict === "REVISE" ? ["[mock] not perfect"] : [] };
       }
-    }
+      const peers = others ? others.filter((o) => o.key !== lens.key) : null;
+      let r;
+      try { r = await runAgent({ ...makePrompt({ scenario, ascii, node, concept, lens, others: peers }), model: opts.model }); }
+      catch (e) { r = { verdict: "REVISE", critique: [`${lens.key} error: ${e.message}`] }; }
+      return { key: lens.key, verdict: r.verdict, critique: r.critique || [] };
+    }));
     if (reviews.every((r) => r.verdict === "PASS")) return { ok: true, critiques: [] };
   }
   return { ok: false, critiques: (reviews || []).filter((r) => r.verdict !== "PASS").flatMap((r) => r.critique) };
