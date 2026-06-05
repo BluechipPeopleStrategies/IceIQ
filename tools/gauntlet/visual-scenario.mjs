@@ -3,13 +3,25 @@
 import { createHash } from "node:crypto";
 import { AGE_LEVEL } from "./prompts.mjs";
 
+const VALID_LEVELS = new Set(Object.values(AGE_LEVEL));
+
+// Derive a question's levels from the NODE, never trusting the creator's level
+// string (creators sometimes hallucinate invalid ones like "U13 / Atom"). The
+// primary is always the node's age; valid creator-added secondary ages are kept,
+// invalid ones dropped.
+export function forcedLevels(node, rawLevels) {
+  const primary = AGE_LEVEL[node.ageId];
+  const extra = (Array.isArray(rawLevels) ? rawLevels : []).filter((l) => VALID_LEVELS.has(l) && l !== primary);
+  return [primary, ...extra];
+}
+
 // Force the node tags + engine type onto a generated scenario, keep the rest.
 export function repairScenario(s, node, idSeed) {
   s = s && typeof s === "object" ? s : {};
   s.id = idSeed;
   s.type = "scenario";
   s.nodeId = node.id;
-  s.levels = Array.isArray(s.levels) && s.levels.length ? s.levels : [AGE_LEVEL[node.ageId]];
+  s.levels = forcedLevels(node, s.levels);
   if (typeof s.difficulty !== "number") s.difficulty = 1;
   return s;
 }

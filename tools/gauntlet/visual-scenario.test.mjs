@@ -1,12 +1,18 @@
 #!/usr/bin/env node
 // Run: node tools/gauntlet/visual-scenario.test.mjs
-import { repairScenario, scenarioHash, mockScenario } from "./visual-scenario.mjs";
+import { repairScenario, scenarioHash, mockScenario, forcedLevels } from "./visual-scenario.mjs";
 import { lintScenario } from "../scenario-author/validate.mjs";
 
 let pass = 0, fail = 0;
 const ok = (n, c) => { console.log(`${c ? "PASS" : "FAIL"}  ${n}`); c ? pass++ : fail++; };
 
 const node = { id: "u9.passing", ageId: "U9", conceptId: "passing" };
+
+// forcedLevels derives levels from the node, dropping invalid creator strings
+{ ok("empty -> node primary", JSON.stringify(forcedLevels(node, [])) === JSON.stringify(["U9 / Novice"]));
+  ok("bad creator level dropped, primary forced", JSON.stringify(forcedLevels(node, ["U13 / Atom"])) === JSON.stringify(["U9 / Novice"]));
+  ok("valid extra kept as secondary", JSON.stringify(forcedLevels(node, ["U11 / Atom"])) === JSON.stringify(["U9 / Novice", "U11 / Atom"]));
+  ok("primary not duplicated if creator also lists it", JSON.stringify(forcedLevels(node, ["U9 / Novice", "U11 / Atom"])) === JSON.stringify(["U9 / Novice", "U11 / Atom"])); }
 
 // mockScenario is engine-valid and carries the node tags
 { const s = mockScenario(node, "gen_u9_passing_x1");
