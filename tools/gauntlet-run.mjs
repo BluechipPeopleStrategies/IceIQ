@@ -10,7 +10,7 @@
 //   node tools/gauntlet-run.mjs --fill-gaps [--max 10] [--count 1]
 //   node tools/gauntlet-run.mjs --node u9.passing --mock      # no claude calls
 // Flags: --model sonnet  --rounds 2  --mock  --dry-run
-import { readFileSync, readdirSync, existsSync, appendFileSync } from "node:fs";
+import { readFileSync, readdirSync, existsSync, appendFileSync, writeFileSync } from "node:fs";
 import { resolve, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 import { loadLedger, nodeById, conceptById, domainById } from "./lib/curriculum-ledger.mjs";
@@ -18,8 +18,9 @@ import { runAgent } from "./lib/claude-agent.mjs";
 import { validateMC, structuralHash } from "./gauntlet/validate-mc.mjs";
 import { selectTargets } from "./gauntlet/select-targets.mjs";
 import { enqueue, loadQueue } from "./review-store.mjs";
-import { buildCreatorPrompt, buildCurriculumPrompt, buildPanelCoachPrompt, buildHeadCoachPrompt, buildLessonExtractorPrompt, PANEL_LENSES, AGE_LEVEL } from "./gauntlet/prompts.mjs";
+import { buildCreatorPrompt, buildCurriculumPrompt, buildPanelCoachPrompt, buildHeadCoachPrompt, buildLessonExtractorPrompt, buildRubricConsolidationPrompt, PANEL_LENSES, AGE_LEVEL } from "./gauntlet/prompts.mjs";
 import { loadLessons, addLesson, renderLessons } from "./gauntlet/lessons.mjs";
+import { loadRubric, renderRubric, applyConsolidation, saveRubric } from "./gauntlet/rubric.mjs";
 import { lintScenario } from "./scenario-author/validate.mjs";
 import { buildVisualCreatorPrompt } from "./gauntlet/visual-prompts.mjs";
 import { repairScenario, scenarioHash, mockScenario, forcedLevels } from "./gauntlet/visual-scenario.mjs";
@@ -35,11 +36,12 @@ const paths = {
   log: resolve(root, "src/data/review-log.jsonl"),
   lessons: resolve(root, "tools/gauntlet/lessons.json"),
   visualLessons: resolve(root, "tools/gauntlet/visual-lessons.json"),
+  rubric: resolve(root, "tools/gauntlet/rubric.json"),
 };
 
 // ---------- args ----------
 function parseArgs(argv) {
-  const a = { count: 1, max: Infinity, model: "sonnet", rounds: 3, mock: false, dryRun: false, node: null, fillGaps: false, fast: false, debateRounds: 2, mockFail: false, visual: false, concurrency: 4, ages: null };
+  const a = { count: 1, max: Infinity, model: "sonnet", rounds: 3, mock: false, dryRun: false, node: null, fillGaps: false, fast: false, debateRounds: 2, mockFail: false, visual: false, concurrency: 4, ages: null, consolidate: false };
   for (let i = 0; i < argv.length; i++) {
     const t = argv[i];
     if (t === "--node") a.node = argv[++i];
@@ -56,6 +58,7 @@ function parseArgs(argv) {
     else if (t === "--mock-fail") a.mockFail = true;
     else if (t === "--visual") a.visual = true;
     else if (t === "--concurrency") a.concurrency = parseInt(argv[++i], 10);
+    else if (t === "--consolidate") a.consolidate = true;
   }
   // Both round counts must be >= 1 (a bad/zero/NaN flag would otherwise skip the
   // loop and leave panel reviews null).
@@ -166,16 +169,19 @@ async function generateOne(ledger, node, opts, seen) {
   const concept = conceptById(ledger, node.conceptId);
   const domain = domainById(ledger, concept.domainId);
   const idSeed = `gen_${node.id.replace(/\./g, "_")}_${rand()}`;
-  const lessons = renderLessons(loadLessons(paths.lessons));
+  // Guidance = the stable consolidated rubric, always, plus any pending raw
+  // lessons not yet folded into it (run --consolidate to fold them in + reset).
+  const guidance = [renderRubric(loadRubric(paths.rubric)), renderLessons(loadLessons(paths.lessons))]
+    .filter(Boolean).join("\n\n");
   let notes = [];
 
   for (let round = 1; round <= opts.rounds; round++) {
-    // G0 create (with accumulated lessons + this run's rework notes)
+    // G0 create (with the rubric + pending lessons + this run's rework notes)
     let q;
     try {
       if (opts.mock) q = mockCreate(node, concept, domain, idSeed);
       else {
-        const { system, prompt } = buildCreatorPrompt({ node, concept, domain, idSeed, lessons });
+        const { system, prompt } = buildCreatorPrompt({ node, concept, domain, idSeed, guidance });
         const extra = notes.length ? `\n\nThe previous attempt was sent back. Fix these: ${notes.join("; ")}` : "";
         q = await runAgent({ system, prompt: prompt + extra, model: opts.model });
       }
@@ -318,9 +324,34 @@ async function generateVisualOne(ledger, node, opts, seen) {
   return { ok: false, dropped: true, reason: `failed after ${opts.rounds} rounds: ${notes.join("; ")}`, learned };
 }
 
+// ---------- --consolidate: fold pending lessons into the rubric, reset the tail ----------
+async function consolidateLessons(opts) {
+  const rubric = loadRubric(paths.rubric);
+  const pending = loadLessons(paths.lessons).lessons;
+  console.log(`Rubric v${rubric.version}: ${rubric.principles.length} principle(s). Pending lessons: ${pending.length}.`);
+  if (!pending.length) { console.log("Nothing to consolidate — no pending lessons."); return; }
+
+  let principles;
+  if (opts.mock) {
+    // Deterministic mock: keep the rubric, append each pending lesson as its own
+    // principle (capped by applyConsolidation). Proves the wiring without a call.
+    principles = [...rubric.principles, ...pending.map((l) => ({ text: l.text }))];
+  } else {
+    const r = await runAgent({ ...buildRubricConsolidationPrompt({ rubric, lessons: pending }), model: opts.model });
+    principles = Array.isArray(r.principles) ? r.principles : null;
+    if (!principles) { console.error("✗ consolidator returned no principles; leaving rubric + lessons untouched."); process.exit(1); }
+  }
+
+  const next = applyConsolidation(rubric, principles);
+  saveRubric(paths.rubric, next);
+  writeFileSync(paths.lessons, JSON.stringify({ lessons: [] }, null, 2) + "\n");
+  console.log(`\nConsolidated ${pending.length} lesson(s) → rubric v${next.version} (${next.principles.length} principle(s)). Pending tail reset.`);
+}
+
 // ---------- main ----------
 async function main() {
   const opts = parseArgs(process.argv.slice(2));
+  if (opts.consolidate) { await consolidateLessons(opts); return; }
   const ledger = loadLedger();
   if (ledger.meta?.locked == null) console.warn("⚠ ledger is not locked; generating against a draft spine.");
 

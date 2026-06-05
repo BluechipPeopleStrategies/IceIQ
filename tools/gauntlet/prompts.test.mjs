@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 // Smoke tests: prompt builders embed the right fields. Run: node tools/gauntlet/prompts.test.mjs
-import { buildCreatorPrompt, buildPanelCoachPrompt, buildHeadCoachPrompt, buildLessonExtractorPrompt, PANEL_LENSES } from "./prompts.mjs";
+import { buildCreatorPrompt, buildPanelCoachPrompt, buildHeadCoachPrompt, buildLessonExtractorPrompt, buildRubricConsolidationPrompt, PANEL_LENSES } from "./prompts.mjs";
 
 let pass = 0, fail = 0;
 const ok = (n, c) => { console.log(`${c ? "PASS" : "FAIL"}  ${n}`); c ? pass++ : fail++; };
@@ -10,14 +10,22 @@ const concept = { name: "Decision Making", definition: "Selecting the best optio
 const domain = { name: "Hockey Sense" };
 const q = { id: "x", type: "mc", nodeId: node.id, sit: "On a 2-on-1 what is the best read?", opts: ["Shoot", "Pass", "Wait", "Skate back"], ok: 1, explain: "Read what the D gives you." };
 
-// creator embeds lessons when provided
-{ const { system, prompt } = buildCreatorPrompt({ node, concept, domain, idSeed: "gen_x", lessons: "Lessons learned:\n- Keep stems to one cue." });
+// creator embeds guidance (rubric + pending lessons) when provided
+{ const { system, prompt } = buildCreatorPrompt({ node, concept, domain, idSeed: "gen_x", guidance: "Question-quality rubric:\n1. Keep stems to one cue." });
   ok("creator system non-empty", typeof system === "string" && system.length > 50);
-  ok("creator embeds lessons", (system + prompt).includes("Keep stems to one cue.")); }
+  ok("creator embeds guidance", (system + prompt).includes("Keep stems to one cue.")); }
 
-// creator without lessons still works
-{ const { prompt } = buildCreatorPrompt({ node, concept, domain, idSeed: "gen_y", lessons: "" });
-  ok("creator works without lessons", prompt.includes("u11.decision-making")); }
+// creator without guidance still works
+{ const { prompt } = buildCreatorPrompt({ node, concept, domain, idSeed: "gen_y", guidance: "" });
+  ok("creator works without guidance", prompt.includes("u11.decision-making")); }
+
+// rubric consolidation prompt carries the current rubric + new lessons
+{ const { system, prompt } = buildRubricConsolidationPrompt({
+    rubric: { version: 1, principles: [{ id: "option-parity", text: "Balance option lengths." }] },
+    lessons: ["Never echo the stem wording in the correct answer.", { text: "Include the reflexive shoot option at U11." }] });
+  ok("consolidation system mentions rubric", system.toLowerCase().includes("rubric"));
+  ok("consolidation embeds current principle", prompt.includes("Balance option lengths."));
+  ok("consolidation embeds new lessons (string + obj)", prompt.includes("Never echo the stem wording") && prompt.includes("reflexive shoot option")); }
 
 // the read panel is tactical + pedagogy (perfectionist moved to the geometry panel)
 { ok("two read lenses", Array.isArray(PANEL_LENSES) && PANEL_LENSES.length === 2);

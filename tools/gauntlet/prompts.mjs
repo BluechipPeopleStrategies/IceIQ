@@ -44,14 +44,14 @@ const MC_SCHEMA = `Output ONLY this JSON object, nothing else:
   "explain": "<1-2 sentences: why the correct read is best, in kid-friendly language>"
 }`;
 
-export function buildCreatorPrompt({ node, concept, domain, idSeed, lessons = "" }) {
+export function buildCreatorPrompt({ node, concept, domain, idSeed, guidance = "" }) {
   const ageDisplay = AGE_LEVEL[node.ageId];
   const system =
 `You are an expert youth-hockey question writer for RinkReads, an app that develops on-ice decision-making.
 ${BRAND}
 
 You write ONE text multiple-choice question for a specific curriculum target.
-${MC_SCHEMA}${lessons ? "\n\n" + lessons : ""}`;
+${MC_SCHEMA}${guidance ? "\n\n" + guidance : ""}`;
   const prompt =
 `Write one question for this curriculum target.
 
@@ -146,5 +146,27 @@ ${JSON.stringify(question, null, 2)}
 Why it failed: ${(critique || []).join("; ")}
 
 Give 1-2 general rules to prevent this class of failure.`;
+  return { system, prompt };
+}
+
+// Folds the pending raw lessons into the standing rubric, keeping it TIGHT. The
+// agent returns the full, consolidated principle set (it may merge a new lesson
+// into an existing principle, sharpen one, or add a category only if genuinely
+// new). This is what keeps the creator prompt from re-bloating.
+export function buildRubricConsolidationPrompt({ rubric, lessons }) {
+  const system =
+`You maintain the question-quality RUBRIC for a youth-hockey question generator. The rubric is a SMALL set of general, imperative principles every generated question must satisfy. You will be given the current rubric and a list of new raw "lessons" accumulated from recently rejected questions. Fold the lessons into the rubric:
+- Merge each lesson into the existing principle it belongs to (sharpening that principle's wording if the lesson adds a real nuance), rather than adding a near-duplicate.
+- Only add a NEW principle if a lesson names a failure mode no existing principle covers.
+- Keep it tight: aim for ${rubric?.principles?.length || 7} principles, hard cap 12. Each principle stays short, general, and imperative (not specific to any one question).
+Return ONLY: {"principles":[{"id":"kebab-case-id","text":"the principle"}, ...]} — the COMPLETE new rubric, not just changes.`;
+  const prompt =
+`Current rubric:
+${JSON.stringify(rubric?.principles || [], null, 2)}
+
+New lessons to fold in:
+${(lessons || []).map((l, i) => `${i + 1}. ${typeof l === "string" ? l : l.text}`).join("\n") || "(none)"}
+
+Return the complete consolidated rubric as JSON.`;
   return { system, prompt };
 }
