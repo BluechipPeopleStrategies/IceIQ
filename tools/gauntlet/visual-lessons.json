@@ -1,3 +1,52 @@
 {
-  "lessons": []
+  "lessons": [
+    {
+      "text": "Label every actor with an explicit ID and role (e.g. 'lw', 'rw') and place them at coordinates that match standard top-down attacking orientation (left→right: left wing occupies lower half of rink, right wing upper half) — never let the answer key reference a role that isn't spatially verified against the diagram.",
+      "count": 1
+    },
+    {
+      "text": "Before finalizing the correct answer, confirm the named player has no defender within ~0.15 normalized units; if the nearest defender is closer than that, the player does not have time and space and must not be the answer.",
+      "count": 1
+    },
+    {
+      "text": "Always place every actor referenced in the question stem or answer choices on the diagram — if a player is mentioned or selectable, they must be visible.",
+      "count": 1
+    },
+    {
+      "text": "Assign each defender a clear role relative to a specific actor (pressuring the puck carrier, shadowing a teammate, patrolling a lane) so their positioning creates an unambiguous read.",
+      "count": 1
+    },
+    {
+      "text": "Assign a unique, meaningful id to every selectable actor before writing the answer key — the correct ids[] entries must exactly match actor id fields in the scene.",
+      "count": 1
+    },
+    {
+      "text": "Place actors so that exactly one occupies the geometrically distinct zone the question targets (e.g., blind-side, behind the receiver); if multiple actors qualify, the correct pick is arbitrary and the question is broken.",
+      "count": 1
+    },
+    {
+      "text": "Separate any two actors sharing a role (e.g., puck carrier vs. nearby teammate) by at least 0.12 normalized units on both axes so each actor reads as distinct on the rendered rink.",
+      "count": 1
+    },
+    {
+      "text": "Cap total actor count at five for U9 scenarios; if the concept requires a contrast, remove redundant actors and preserve the single clearest open-vs-covered pair.",
+      "count": 1
+    },
+    {
+      "text": "Assign every actor a unique, explicit ID that matches the IDs referenced in answers and scoring logic — never rely on kind alone to identify a target.",
+      "count": 1
+    },
+    {
+      "text": "If the question stem implies movement, include motion cues (facing, path, or vector) on every relevant actor; never pair 'moving' or 'developing' language with a static-positions-only snapshot.",
+      "count": 1
+    },
+    {
+      "text": "Place each defender on or within ~0.05 units of the direct puck-to-net line at a realistic closing distance (1–3 strides) — never float a defender off that line into open space unless their role is explicitly intercepting a pass lane, not the puck-carrier.",
+      "count": 1
+    },
+    {
+      "text": "Ensure every actor has meaningful separation from its nearest neighbor: no two actors should share both x and y within 0.08 units, and any 'available' passing target must have at least 0.10 units of clear space from the nearest defender to read as genuinely open.",
+      "count": 1
+    }
+  ]
 }

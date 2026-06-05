@@ -41,7 +41,7 @@ const paths = {
 
 // ---------- args ----------
 function parseArgs(argv) {
-  const a = { count: 1, max: Infinity, model: "sonnet", rounds: 4, mock: false, dryRun: false, node: null, fillGaps: false, fast: false, debateRounds: 2, mockFail: false, visual: false, concurrency: 4, ages: null, consolidate: false };
+  const a = { count: 1, max: Infinity, model: "sonnet", rounds: 4, mock: false, dryRun: false, node: null, fillGaps: false, fast: false, debateRounds: 2, mockFail: false, visual: false, concurrency: 4, ages: null, consolidate: false, lite: false };
   for (let i = 0; i < argv.length; i++) {
     const t = argv[i];
     if (t === "--node") a.node = argv[++i];
@@ -59,6 +59,7 @@ function parseArgs(argv) {
     else if (t === "--visual") a.visual = true;
     else if (t === "--concurrency") a.concurrency = parseInt(argv[++i], 10);
     else if (t === "--consolidate") a.consolidate = true;
+    else if (t === "--lite") a.lite = true;
   }
   // Both round counts must be >= 1 (a bad/zero/NaN flag would otherwise skip the
   // loop and leave panel reviews null).
@@ -301,20 +302,27 @@ async function generateVisualOne(ledger, node, opts, seen) {
     const h = scenarioHash(s);
     if (seen.has(h)) { notes = ["duplicate scenario"]; continue; }
 
-    // --fast keeps the Stage-1 behaviour (validate-only, no panels).
+    // Three bars: --fast = lint only (no panels). --lite = lint + hockey read
+    // panel + the single spatial/geometry coach, no head coach (faster, keeps
+    // correctness + core geometry). default = full (hockey + all 4 geometry
+    // coaches + Head Coach).
     if (!opts.fast) {
       const hockey = await runScenarioPanel(s, node, concept, opts, { lenses: PANEL_LENSES, makePrompt: buildVisualHockeyCoachPrompt });
       if (!hockey.ok) { notes = hockey.critiques.length ? hockey.critiques : ["hockey panel not unanimous"]; continue; }
-      const visual = await runScenarioPanel(s, node, concept, opts, { lenses: VISUAL_LENSES, makePrompt: buildVisualCoachPrompt });
+      const visualLenses = opts.lite ? VISUAL_LENSES.filter((l) => l.key === "spatial") : VISUAL_LENSES;
+      const visual = await runScenarioPanel(s, node, concept, opts, { lenses: visualLenses, makePrompt: buildVisualCoachPrompt });
       if (!visual.ok) { notes = visual.critiques.length ? visual.critiques : ["visual panel not unanimous"]; continue; }
-      const head = await runVisualHeadCoach(s, node, concept, opts);
-      if (!head.ok) { notes = head.notes.length ? head.notes : ["head coach kickback"]; continue; }
+      if (!opts.lite) {
+        const head = await runVisualHeadCoach(s, node, concept, opts);
+        if (!head.ok) { notes = head.notes.length ? head.notes : ["head coach kickback"]; continue; }
+      }
     }
 
+    const bar = opts.fast ? "fast/no-panels" : opts.lite ? "lite: hockey panel + spatial coach" : "hockey panel + 4-coach visual panel + Head Coach";
     const item = {
       question: s,
-      gateHistory: { creator: "pass", validate: "pass", hockeyPanel: opts.fast ? "skipped" : "unanimous", visualPanel: opts.fast ? "skipped" : "unanimous", headCoach: opts.fast ? "skipped" : "approve", round },
-      proxyVerdict: { decision: "forward", scores: {}, rationale: "Drawn question cleared the gauntlet (validate + " + (opts.fast ? "fast/no-panels" : "hockey panel + 4-coach visual panel + Head Coach") + "). Founder-proxy gate (G9) not built yet — review directly." },
+      gateHistory: { creator: "pass", validate: "pass", hockeyPanel: opts.fast ? "skipped" : "unanimous", visualPanel: opts.fast ? "skipped" : (opts.lite ? "spatial-only" : "unanimous"), headCoach: (opts.fast || opts.lite) ? "skipped" : "approve", round },
+      proxyVerdict: { decision: "forward", scores: {}, rationale: "Drawn question cleared the gauntlet (validate + " + bar + "). Founder-proxy gate (G9) not built yet — review directly." },
       queuedAt: new Date().toISOString().slice(0, 10),
     };
     return { ok: true, item, hash: h };
