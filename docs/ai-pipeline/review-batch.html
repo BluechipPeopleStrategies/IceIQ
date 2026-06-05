@@ -1,0 +1,294 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1"><title>RinkReads — Batch Review (16)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=DM+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#041E42;--card:#0a2850;--orange:#FC4C02;--green:#22c55e;--amber:#eab308;--white:#f8fafc;
+  --dim:rgba(248,250,252,.6);--dimmer:rgba(248,250,252,.35);--border:rgba(255,255,255,.08);--greenDim:rgba(34,197,94,.1);--greenBorder:rgba(34,197,94,.45)}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--white);font-family:'DM Sans',system-ui,sans-serif;padding:0 14px 80px}
+.bar{position:sticky;top:0;z-index:9;background:rgba(4,30,66,.94);backdrop-filter:blur(7px);border-bottom:1px solid var(--border);
+  max-width:480px;margin:0 auto;padding:12px 4px;display:flex;align-items:center;gap:10px}
+.bar .t{font-family:'Anton',sans-serif;font-size:17px}.bar .t .rr{color:var(--orange)}
+.bar .prog{font-size:11.5px;color:var(--dim);margin-left:auto;text-align:right;line-height:1.35}
+.bar .prog b{color:var(--white)}
+.btnrow{max-width:480px;margin:0 auto 16px;display:flex;gap:8px;padding-top:10px}
+.act{flex:1;border:1px solid var(--border);background:rgba(255,255,255,.05);color:var(--white);border-radius:10px;padding:9px;font-family:inherit;font-weight:700;font-size:12.5px;cursor:pointer}
+.act.primary{background:linear-gradient(135deg,#FC4C02,#CF4520);border:none;color:#fff}
+.card{max-width:480px;margin:0 auto 16px;background:var(--card);border:1px solid var(--border);border-radius:18px;padding:14px 15px 12px;box-shadow:0 8px 26px rgba(0,0,0,.34);transition:border-color .15s}
+.card.v-approve{border-color:var(--greenBorder)}.card.v-rework{border-color:rgba(234,179,8,.5)}
+.top{display:flex;align-items:center;gap:8px;margin-bottom:6px}
+.badge{font-size:11px;font-weight:800;border:1px solid;border-radius:999px;padding:3px 10px}
+.chip{font-size:10.5px;font-weight:800;color:#2a0f02;background:var(--orange);border-radius:8px;padding:3px 9px}
+.d{font-size:10.5px;color:var(--dimmer);font-weight:700;margin-left:auto}
+.sub{font-size:10.5px;color:var(--dimmer);margin-bottom:11px}.sub .id{font-family:ui-monospace,monospace}
+.stem{font-size:16px;font-weight:600;line-height:1.5;color:#fff;margin-bottom:13px}
+.qline{margin-top:7px;font-size:14px;font-weight:700;color:var(--orange)}
+.seqhint{font-size:11px;color:var(--dimmer);text-transform:uppercase;letter-spacing:.1em;margin-bottom:7px;font-weight:700}
+.opts{display:grid;gap:9px}.opts.tf{grid-template-columns:1fr 1fr}
+.opt{display:flex;align-items:center;gap:11px;background:rgba(248,250,252,.04);border:1.5px solid var(--border);border-radius:13px;padding:13px 15px;font-size:14.5px;color:var(--dim)}
+.opt .k{font-weight:800;color:var(--dimmer);font-size:12.5px;min-width:14px}
+.opt.correct{background:var(--greenDim);border-color:var(--greenBorder);border-left:4px solid var(--green);color:#eafff3;font-weight:600}
+.opt.correct .k{color:var(--green)}.opt.correct .ot{flex:1}.opt.correct::after{content:"✓";margin-left:auto;color:var(--green);font-weight:800;font-size:15px}
+.fb{margin-top:13px;background:var(--greenDim);border:1px solid var(--greenBorder);border-radius:13px;padding:11px 13px}
+.fb-why{font-size:13px;line-height:1.5;color:#dff7e7}.fb-why b{color:var(--green);margin-right:5px}.fb-tip{font-size:12.5px;color:var(--dim);margin-top:7px}
+.rev{margin-top:13px;border-top:1px solid var(--border);padding-top:11px;display:flex;flex-wrap:wrap;gap:8px;align-items:stretch}
+.rv{border:1.5px solid var(--border);background:transparent;color:var(--dim);border-radius:10px;padding:8px 13px;font-family:inherit;font-weight:700;font-size:12.5px;cursor:pointer}
+.rv-ok.on{background:var(--greenDim);border-color:var(--green);color:#eafff3}
+.rv-no.on{background:rgba(234,179,8,.12);border-color:var(--amber);color:#fff4cf}
+.note{flex:1 1 100%;background:rgba(255,255,255,.04);border:1px solid var(--border);border-radius:10px;color:var(--white);
+  font-family:inherit;font-size:12.5px;padding:9px 11px;resize:vertical;min-height:36px}
+.note.show{display:block}
+.toast{position:fixed;bottom:18px;left:50%;transform:translateX(-50%);background:var(--green);color:#06210f;font-weight:800;
+  font-size:13px;padding:10px 18px;border-radius:999px;opacity:0;transition:opacity .2s;pointer-events:none}
+.toast.show{opacity:1}
+</style></head><body>
+<div class="bar"><span class="t"><span class="rr">Rink</span>Reads Review</span>
+  <span class="prog" id="prog"></span></div>
+<div class="btnrow">
+  <button class="act" id="approveAll">Approve all undecided</button>
+  <button class="act primary" id="export">Export verdict JSON</button>
+</div>
+<div class="subhead" style="max-width:480px;margin:0 auto 14px;color:var(--dim);font-size:12px">16 questions (5 mc · 3 tf · 2 mistake · 4 next · 2 seq) · shown answered, ✓ = keyed answer · decisions auto-save in this browser</div>
+<div class="card" data-id="gen_u11_scanning_scn01">
+    <div class="top">
+      <span class="badge" style="color:#CF4520;background:#CF45201f;border-color:#CF452055">📝 Multiple Choice</span>
+      <span class="chip">U11 / Atom</span><span class="d">d2</span>
+    </div>
+    <div class="sub">u11.scanning · Hockey Sense · <span class="id">gen_u11_scanning_scn01</span></div>
+    <div class="stem">You are the first forward entering the offensive zone with the puck. The defenseman is backing up quickly. What should you scan for first?</div><div class="opts"><div class="opt"><span class="k">A</span><span class="ot">Whether a teammate behind you is calling for a drop pass</span></div><div class="opt correct"><span class="k">B</span><span class="ot">The space between you and the backing up defenseman to see if you have room to skate</span></div><div class="opt"><span class="k">C</span><span class="ot">Whether a late teammate is joining the rush for a pass after you cross the blue line</span></div><div class="opt"><span class="k">D</span><span class="ot">Whether the goalie is set before you reach the top of the circle</span></div></div><div class="fb"><div class="fb-why"><b>Why</b> The first read is the defender's gap. If the defenseman is backing up and leaving room, a U11 puck carrier can keep skating and attack the space. If the gap closes, then it is time to delay, pass, or chip to support.</div></div>
+    <div class="rev">
+      <button class="rv rv-ok" data-v="approve">✓ Approve</button>
+      <button class="rv rv-no" data-v="rework">✎ Needs work</button>
+      <textarea class="note" rows="1" placeholder="Notes for rework (sent back with this question)…"></textarea>
+    </div>
+  </div><div class="card" data-id="gen_u11_scanning_scn02">
+    <div class="top">
+      <span class="badge" style="color:#5BA4E8;background:#5BA4E81f;border-color:#5BA4E855">⚡ True or False</span>
+      <span class="chip">U11 / Atom</span><span class="d">d2</span>
+    </div>
+    <div class="sub">u11.scanning · Hockey Sense · <span class="id">gen_u11_scanning_scn02</span></div>
+    <div class="stem">When skating back to retrieve a puck in your defensive corner, you should wait until the puck is on your stick before looking around so you do not lose control of it.</div><div class="opts tf"><div class="opt"><span class="ot">TRUE</span></div><div class="opt correct"><span class="ot">FALSE</span></div></div><div class="fb"><div class="fb-why"><b>Why</b> A quick look before the touch helps you know where the forechecker is and where your support is. Then your first touch can protect the puck or move it to an open teammate.</div><div class="fb-tip">💡 Check your shoulder before the puck arrives.</div></div>
+    <div class="rev">
+      <button class="rv rv-ok" data-v="approve">✓ Approve</button>
+      <button class="rv rv-no" data-v="rework">✎ Needs work</button>
+      <textarea class="note" rows="1" placeholder="Notes for rework (sent back with this question)…"></textarea>
+    </div>
+  </div><div class="card" data-id="gen_u11_scanning_scn03">
+    <div class="top">
+      <span class="badge" style="color:#ef4444;background:#ef44441f;border-color:#ef444455">🔍 Spot the Mistake</span>
+      <span class="chip">U11 / Atom</span><span class="d">d2</span>
+    </div>
+    <div class="sub">u11.scanning · Hockey Sense · <span class="id">gen_u11_scanning_scn03</span></div>
+    <div class="stem">A winger is waiting on the boards for a breakout pass. They stare directly at the puck the entire time it slides toward them, catch it, and immediately get checked.<div class="qline">What is the player's mistake?</div></div><div class="opts"><div class="opt"><span class="k">A</span><span class="ot">They stayed too flat-footed instead of taking a step toward open ice</span></div><div class="opt correct"><span class="k">B</span><span class="ot">They failed to shoulder check into the middle of the ice to see the incoming pressure</span></div><div class="opt"><span class="k">C</span><span class="ot">They should have chipped the puck past the defender before trying to catch it</span></div><div class="opt"><span class="k">D</span><span class="ot">They caught the pass on the boards instead of moving closer to the hash marks</span></div></div><div class="fb"><div class="fb-why"><b>Why</b> The biggest mistake is not checking inside before the puck arrives. At U11, a winger on the boards should take a quick look so they know whether they have time to turn up ice, need to protect the puck, or should make a quick touch pass.</div></div>
+    <div class="rev">
+      <button class="rv rv-ok" data-v="approve">✓ Approve</button>
+      <button class="rv rv-no" data-v="rework">✎ Needs work</button>
+      <textarea class="note" rows="1" placeholder="Notes for rework (sent back with this question)…"></textarea>
+    </div>
+  </div><div class="card" data-id="gen_u11_scanning_scn04">
+    <div class="top">
+      <span class="badge" style="color:#eab308;background:#eab3081f;border-color:#eab30855">🔮 What Happens Next</span>
+      <span class="chip">U11 / Atom</span><span class="d">d2</span>
+    </div>
+    <div class="sub">u11.scanning · Hockey Sense · <span class="id">gen_u11_scanning_scn04</span></div>
+    <div class="stem">You are the center supporting your defenseman low in the zone. You see your winger is open on the far boards and you have a clear passing lane, but a forechecker is skating hard at you.</div><div class="opts"><div class="opt"><span class="k">A</span><span class="ot">Turn back below the goal line and try to beat the forechecker one-on-one</span></div><div class="opt correct"><span class="k">B</span><span class="ot">One-touch pass the puck quickly to the open winger on the far boards before the pressure hits</span></div><div class="opt"><span class="k">C</span><span class="ot">Hold the puck for an extra second to see if your defenseman gets open again</span></div><div class="opt"><span class="k">D</span><span class="ot">Rim the puck hard around the boards even though your winger is already open</span></div></div><div class="fb"><div class="fb-why"><b>Why</b> Because you already scanned and found the open winger, the smart play is to move the puck before the forechecker arrives. A quick pass away from pressure is safer than holding it in a low-danger area of your own zone.</div><div class="fb-tip">💡 Use your scan early so your pass can be quick.</div></div>
+    <div class="rev">
+      <button class="rv rv-ok" data-v="approve">✓ Approve</button>
+      <button class="rv rv-no" data-v="rework">✎ Needs work</button>
+      <textarea class="note" rows="1" placeholder="Notes for rework (sent back with this question)…"></textarea>
+    </div>
+  </div><div class="card" data-id="gen_u11_scanning_scn05">
+    <div class="top">
+      <span class="badge" style="color:#CF4520;background:#CF45201f;border-color:#CF452055">📝 Multiple Choice</span>
+      <span class="chip">U11 / Atom</span><span class="d">d2</span>
+    </div>
+    <div class="sub">u11.scanning · Hockey Sense · <span class="id">gen_u11_scanning_scn05</span></div>
+    <div class="stem">You are playing defense and catch a pass at the offensive blue line. Before you decide to shoot, what is the most important thing to scan the scoring area for?</div><div class="opts"><div class="opt"><span class="k">A</span><span class="ot">Whether a forward is calling for the puck near the corner</span></div><div class="opt correct"><span class="k">B</span><span class="ot">If there is a clear lane to the net and if you have a teammate screening the goalie</span></div><div class="opt"><span class="k">C</span><span class="ot">Whether your defense partner is open for a safety pass across the blue line</span></div><div class="opt"><span class="k">D</span><span class="ot">If the goalie is leaning before you have checked for blockers in the lane</span></div></div><div class="fb"><div class="fb-why"><b>Why</b> A point shot is useful when it can get through. At U11, the defender should look for a clear lane and friendly traffic first, because shooting into shin pads often turns into a rush the other way.</div></div>
+    <div class="rev">
+      <button class="rv rv-ok" data-v="approve">✓ Approve</button>
+      <button class="rv rv-no" data-v="rework">✎ Needs work</button>
+      <textarea class="note" rows="1" placeholder="Notes for rework (sent back with this question)…"></textarea>
+    </div>
+  </div><div class="card" data-id="gen_u11_scanning_scn06">
+    <div class="top">
+      <span class="badge" style="color:#FC4C02;background:#FC4C021f;border-color:#FC4C0255">🔢 Put in Order</span>
+      <span class="chip">U11 / Atom</span><span class="d">d2</span>
+    </div>
+    <div class="sub">u11.scanning · Hockey Sense · <span class="id">gen_u11_scanning_scn06</span></div>
+    <div class="stem">You are the first player back for a puck retrieval. Put these actions in the correct order to make a smart play.</div><div class="seqhint">correct order shown:</div><div class="opts"><div class="opt correct"><span class="k">1</span><span class="ot">Take a quick shoulder check to locate the forechecker</span></div><div class="opt correct"><span class="k">2</span><span class="ot">Collect the puck on your stick with your body ready to protect it</span></div><div class="opt correct"><span class="k">3</span><span class="ot">Use your skating edges to create separation from the pressure</span></div><div class="opt correct"><span class="k">4</span><span class="ot">Make a crisp pass to your supporting teammate</span></div></div><div class="fb"><div class="fb-why"><b>Why</b> The first look gives you a plan before you touch the puck. After that, collect it, create a little space from pressure, and move it to support with control.</div></div>
+    <div class="rev">
+      <button class="rv rv-ok" data-v="approve">✓ Approve</button>
+      <button class="rv rv-no" data-v="rework">✎ Needs work</button>
+      <textarea class="note" rows="1" placeholder="Notes for rework (sent back with this question)…"></textarea>
+    </div>
+  </div><div class="card" data-id="gen_u11_scanning_scn07">
+    <div class="top">
+      <span class="badge" style="color:#CF4520;background:#CF45201f;border-color:#CF452055">📝 Multiple Choice</span>
+      <span class="chip">U11 / Atom</span><span class="d">d2</span>
+    </div>
+    <div class="sub">u11.scanning · Hockey Sense · <span class="id">gen_u11_scanning_scn07</span></div>
+    <div class="stem">You are away from the puck in the offensive zone while your teammate is battling in the corner. How should you use your eyes?</div><div class="opts"><div class="opt"><span class="k">A</span><span class="ot">Watch only the puck battle so you can react the moment it comes free</span></div><div class="opt correct"><span class="k">B</span><span class="ot">Keep your head on a swivel to find an open pocket of space away from defenders</span></div><div class="opt"><span class="k">C</span><span class="ot">Drift closer to the corner so your teammate has a shorter pass</span></div><div class="opt"><span class="k">D</span><span class="ot">Look back toward the blue line first in case your defenseman wants the puck</span></div></div><div class="fb"><div class="fb-why"><b>Why</b> Scanning away from the puck helps you find soft spots in coverage. If your teammate wins the battle, you are already available instead of skating into the same crowded area.</div></div>
+    <div class="rev">
+      <button class="rv rv-ok" data-v="approve">✓ Approve</button>
+      <button class="rv rv-no" data-v="rework">✎ Needs work</button>
+      <textarea class="note" rows="1" placeholder="Notes for rework (sent back with this question)…"></textarea>
+    </div>
+  </div><div class="card" data-id="gen_u11_scanning_scn08">
+    <div class="top">
+      <span class="badge" style="color:#eab308;background:#eab3081f;border-color:#eab30855">🔮 What Happens Next</span>
+      <span class="chip">U11 / Atom</span><span class="d">d2</span>
+    </div>
+    <div class="sub">u11.scanning · Hockey Sense · <span class="id">gen_u11_scanning_scn08</span></div>
+    <div class="stem">You are regrouping in the neutral zone. You look up and see the opposing defensemen are standing still at their blue line with loose gaps. What is your next move?</div><div class="opts"><div class="opt"><span class="k">A</span><span class="ot">Chip the puck softly into the corner even though you have room to skate</span></div><div class="opt"><span class="k">B</span><span class="ot">Pass the puck backward right away to restart the regroup</span></div><div class="opt correct"><span class="k">C</span><span class="ot">Attack the space with speed to force them to pivot or back up</span></div><div class="opt"><span class="k">D</span><span class="ot">Slow down at the blue line and wait for them to choose a side</span></div></div><div class="fb"><div class="fb-why"><b>Why</b> Still defenders with loose gaps are vulnerable to speed. If you scan their feet and see they are flat, attack before they can match your pace.</div><div class="fb-tip">💡 Flat feet are a cue to attack with speed.</div></div>
+    <div class="rev">
+      <button class="rv rv-ok" data-v="approve">✓ Approve</button>
+      <button class="rv rv-no" data-v="rework">✎ Needs work</button>
+      <textarea class="note" rows="1" placeholder="Notes for rework (sent back with this question)…"></textarea>
+    </div>
+  </div><div class="card" data-id="gen_u13_scanning_scn01">
+    <div class="top">
+      <span class="badge" style="color:#CF4520;background:#CF45201f;border-color:#CF452055">📝 Multiple Choice</span>
+      <span class="chip">U13 / Peewee</span><span class="d">d2</span>
+    </div>
+    <div class="sub">u13.scanning · Hockey Sense · <span class="id">gen_u13_scanning_scn01</span></div>
+    <div class="stem">You are bringing the puck up the ice on a rush. You see the first layer of defense stepping up on you. Why is it critical to scan the second layer behind them?</div><div class="opts"><div class="opt correct"><span class="k">A</span><span class="ot">To know if you can chip the puck into space and retrieve it behind the first defender</span></div><div class="opt"><span class="k">B</span><span class="ot">To see if the far winger is open before you decide whether the chip is safe</span></div><div class="opt"><span class="k">C</span><span class="ot">To decide if you should slow down and wait for a trailer behind you</span></div><div class="opt"><span class="k">D</span><span class="ot">So you can immediately turn back and reset the breakout the moment you spot a second defender</span></div></div><div class="fb"><div class="fb-why"><b>Why</b> Scanning beyond the first defender tells you whether there is usable space behind pressure. If the second layer is too close, a chip can become a turnover. If there is space, an area play can let you keep speed.</div></div>
+    <div class="rev">
+      <button class="rv rv-ok" data-v="approve">✓ Approve</button>
+      <button class="rv rv-no" data-v="rework">✎ Needs work</button>
+      <textarea class="note" rows="1" placeholder="Notes for rework (sent back with this question)…"></textarea>
+    </div>
+  </div><div class="card" data-id="gen_u13_scanning_scn02">
+    <div class="top">
+      <span class="badge" style="color:#5BA4E8;background:#5BA4E81f;border-color:#5BA4E855">⚡ True or False</span>
+      <span class="chip">U13 / Peewee</span><span class="d">d2</span>
+    </div>
+    <div class="sub">u13.scanning · Hockey Sense · <span class="id">gen_u13_scanning_scn02</span></div>
+    <div class="stem">When playing weak-side wing in the defensive zone, it is best to stay locked onto the puck so you never lose track of the play.</div><div class="opts tf"><div class="opt"><span class="ot">TRUE</span></div><div class="opt correct"><span class="ot">FALSE</span></div></div><div class="fb"><div class="fb-why"><b>Why</b> If you stare only at the puck, you can lose the weak-side threat in the slot or at the point. A U13 winger should keep switching their eyes between the puck, open opponents, and their coverage job.</div><div class="fb-tip">💡 Scan between the puck and your check.</div></div>
+    <div class="rev">
+      <button class="rv rv-ok" data-v="approve">✓ Approve</button>
+      <button class="rv rv-no" data-v="rework">✎ Needs work</button>
+      <textarea class="note" rows="1" placeholder="Notes for rework (sent back with this question)…"></textarea>
+    </div>
+  </div><div class="card" data-id="gen_u13_scanning_scn03">
+    <div class="top">
+      <span class="badge" style="color:#ef4444;background:#ef44441f;border-color:#ef444455">🔍 Spot the Mistake</span>
+      <span class="chip">U13 / Peewee</span><span class="d">d2</span>
+    </div>
+    <div class="sub">u13.scanning · Hockey Sense · <span class="id">gen_u13_scanning_scn03</span></div>
+    <div class="stem">A defenseman receives a D-to-D pass in the neutral zone. They look down to catch it cleanly, hold onto it for three seconds while looking for a pass, and get pressured by the forechecker.<div class="qline">What is the player's mistake?</div></div><div class="opts"><div class="opt"><span class="k">A</span><span class="ot">They called for the pass while standing still instead of building speed</span></div><div class="opt correct"><span class="k">B</span><span class="ot">They failed to scan up the ice before the pass arrived, resulting in slow decision making</span></div><div class="opt"><span class="k">C</span><span class="ot">They should have reversed the puck back to their partner immediately</span></div><div class="opt"><span class="k">D</span><span class="ot">They held the puck in the middle lane instead of moving it toward the boards</span></div></div><div class="fb"><div class="fb-why"><b>Why</b> Pre-scanning lets the defenseman know the next option before the puck arrives. Without that early look, they spend too long processing after the catch and give the forechecker time to close.</div></div>
+    <div class="rev">
+      <button class="rv rv-ok" data-v="approve">✓ Approve</button>
+      <button class="rv rv-no" data-v="rework">✎ Needs work</button>
+      <textarea class="note" rows="1" placeholder="Notes for rework (sent back with this question)…"></textarea>
+    </div>
+  </div><div class="card" data-id="gen_u13_scanning_scn04">
+    <div class="top">
+      <span class="badge" style="color:#eab308;background:#eab3081f;border-color:#eab30855">🔮 What Happens Next</span>
+      <span class="chip">U13 / Peewee</span><span class="d">d2</span>
+    </div>
+    <div class="sub">u13.scanning · Hockey Sense · <span class="id">gen_u13_scanning_scn04</span></div>
+    <div class="stem">Your team is cycling the puck low in the offensive zone. You are the high forward (F3). You scan the slot and see it is open.</div><div class="opts"><div class="opt"><span class="k">A</span><span class="ot">Back all the way out toward the red line to protect against a turnover</span></div><div class="opt correct"><span class="k">B</span><span class="ot">Slide into the open high slot, show your stick, and stay ready to recover if possession changes</span></div><div class="opt"><span class="k">C</span><span class="ot">Skate down below the goal line to make it a three-player puck battle</span></div><div class="opt"><span class="k">D</span><span class="ot">Stay wide near the boards and wait for a rim or rebound</span></div></div><div class="fb"><div class="fb-why"><b>Why</b> F3 can become a scoring option when quiet ice opens, but they still need defensive awareness. Sliding into the high slot with a target gives the puck carrier an option without abandoning responsibility above the puck.</div><div class="fb-tip">💡 Find quiet ice without giving up your safety role.</div></div>
+    <div class="rev">
+      <button class="rv rv-ok" data-v="approve">✓ Approve</button>
+      <button class="rv rv-no" data-v="rework">✎ Needs work</button>
+      <textarea class="note" rows="1" placeholder="Notes for rework (sent back with this question)…"></textarea>
+    </div>
+  </div><div class="card" data-id="gen_u13_scanning_scn05">
+    <div class="top">
+      <span class="badge" style="color:#FC4C02;background:#FC4C021f;border-color:#FC4C0255">🔢 Put in Order</span>
+      <span class="chip">U13 / Peewee</span><span class="d">d2</span>
+    </div>
+    <div class="sub">u13.scanning · Hockey Sense · <span class="id">gen_u13_scanning_scn05</span></div>
+    <div class="stem">You are a winger slashing across the neutral zone to receive a breakout pass. Order the steps for a successful entry.</div><div class="seqhint">correct order shown:</div><div class="opts"><div class="opt correct"><span class="k">1</span><span class="ot">Scan the offensive blue line to locate the defensemen's gap</span></div><div class="opt correct"><span class="k">2</span><span class="ot">Present a clear target with your stick to your passing defenseman</span></div><div class="opt correct"><span class="k">3</span><span class="ot">Catch the puck in stride while maintaining your speed</span></div><div class="opt correct"><span class="k">4</span><span class="ot">Use the gap read to decide whether to carry, chip, or pass</span></div></div><div class="fb"><div class="fb-why"><b>Why</b> The winger should read the gap before asking for the puck. Catching in stride matters, and the earlier scan helps the player choose the entry before the defense can close.</div></div>
+    <div class="rev">
+      <button class="rv rv-ok" data-v="approve">✓ Approve</button>
+      <button class="rv rv-no" data-v="rework">✎ Needs work</button>
+      <textarea class="note" rows="1" placeholder="Notes for rework (sent back with this question)…"></textarea>
+    </div>
+  </div><div class="card" data-id="gen_u13_scanning_scn06">
+    <div class="top">
+      <span class="badge" style="color:#CF4520;background:#CF45201f;border-color:#CF452055">📝 Multiple Choice</span>
+      <span class="chip">U13 / Peewee</span><span class="d">d2</span>
+    </div>
+    <div class="sub">u13.scanning · Hockey Sense · <span class="id">gen_u13_scanning_scn06</span></div>
+    <div class="stem">You are a defenseman defending a 2-on-1 rush. What should your eyes be doing as the play crosses your blue line?</div><div class="opts"><div class="opt"><span class="k">A</span><span class="ot">Lock only on the puck carrier and angle hard toward them</span></div><div class="opt"><span class="k">B</span><span class="ot">Look mostly at the puck so you are ready to block the shot</span></div><div class="opt correct"><span class="k">C</span><span class="ot">Quickly shifting focus back and forth between the puck carrier and the dangerous pass option</span></div><div class="opt"><span class="k">D</span><span class="ot">Watch the puck carrier's skates so you can time a poke check</span></div></div><div class="fb"><div class="fb-why"><b>Why</b> On a 2-on-1, the defender must manage both threats. Scanning between the puck carrier and the passing option helps you protect the middle, take away the most dangerous pass, and avoid chasing one player too early.</div></div>
+    <div class="rev">
+      <button class="rv rv-ok" data-v="approve">✓ Approve</button>
+      <button class="rv rv-no" data-v="rework">✎ Needs work</button>
+      <textarea class="note" rows="1" placeholder="Notes for rework (sent back with this question)…"></textarea>
+    </div>
+  </div><div class="card" data-id="gen_u13_scanning_scn07">
+    <div class="top">
+      <span class="badge" style="color:#eab308;background:#eab3081f;border-color:#eab30855">🔮 What Happens Next</span>
+      <span class="chip">U13 / Peewee</span><span class="d">d2</span>
+    </div>
+    <div class="sub">u13.scanning · Hockey Sense · <span class="id">gen_u13_scanning_scn07</span></div>
+    <div class="stem">You pick up a loose puck in the high slot of your defensive zone. You feel pressure right on your back, but you have not scanned up the ice yet.</div><div class="opts"><div class="opt"><span class="k">A</span><span class="ot">Chip a backhand pass toward the middle and hope a teammate is there</span></div><div class="opt correct"><span class="k">B</span><span class="ot">Protect the puck with your body and skate toward the safer boards to buy time to look up</span></div><div class="opt"><span class="k">C</span><span class="ot">Turn back into the slot to keep possession in the middle of the ice</span></div><div class="opt"><span class="k">D</span><span class="ot">Rim the puck hard around the boards before checking where your winger is</span></div></div><div class="fb"><div class="fb-why"><b>Why</b> In the defensive high slot, a blind play through the middle is dangerous. If you have pressure and no scan, protect the puck first, move toward safer ice, and get your eyes up before choosing the next play.</div><div class="fb-tip">💡 Protect first, then scan and move the puck.</div></div>
+    <div class="rev">
+      <button class="rv rv-ok" data-v="approve">✓ Approve</button>
+      <button class="rv rv-no" data-v="rework">✎ Needs work</button>
+      <textarea class="note" rows="1" placeholder="Notes for rework (sent back with this question)…"></textarea>
+    </div>
+  </div><div class="card" data-id="gen_u13_scanning_scn08">
+    <div class="top">
+      <span class="badge" style="color:#5BA4E8;background:#5BA4E81f;border-color:#5BA4E855">⚡ True or False</span>
+      <span class="chip">U13 / Peewee</span><span class="d">d2</span>
+    </div>
+    <div class="sub">u13.scanning · Hockey Sense · <span class="id">gen_u13_scanning_scn08</span></div>
+    <div class="stem">A good habit for a center on a faceoff win in the offensive zone is to immediately look back at their own defenseman to make sure the puck was caught cleanly.</div><div class="opts tf"><div class="opt"><span class="ot">TRUE</span></div><div class="opt correct"><span class="ot">FALSE</span></div></div><div class="fb"><div class="fb-why"><b>Why</b> Once the puck is won back, the center should quickly find their check, tie up pressure when needed, and get to the net-front or slot area for a screen, tip, or loose puck instead of watching the defenseman.</div><div class="fb-tip">💡 After the win, scan opponents and get to your job.</div></div>
+    <div class="rev">
+      <button class="rv rv-ok" data-v="approve">✓ Approve</button>
+      <button class="rv rv-no" data-v="rework">✎ Needs work</button>
+      <textarea class="note" rows="1" placeholder="Notes for rework (sent back with this question)…"></textarea>
+    </div>
+  </div>
+<div class="toast" id="toast"></div>
+<script>
+const DATA = [{"id":"gen_u11_scanning_scn01","nodeId":"u11.scanning","type":"mc"},{"id":"gen_u11_scanning_scn02","nodeId":"u11.scanning","type":"tf"},{"id":"gen_u11_scanning_scn03","nodeId":"u11.scanning","type":"mistake"},{"id":"gen_u11_scanning_scn04","nodeId":"u11.scanning","type":"next"},{"id":"gen_u11_scanning_scn05","nodeId":"u11.scanning","type":"mc"},{"id":"gen_u11_scanning_scn06","nodeId":"u11.scanning","type":"seq"},{"id":"gen_u11_scanning_scn07","nodeId":"u11.scanning","type":"mc"},{"id":"gen_u11_scanning_scn08","nodeId":"u11.scanning","type":"next"},{"id":"gen_u13_scanning_scn01","nodeId":"u13.scanning","type":"mc"},{"id":"gen_u13_scanning_scn02","nodeId":"u13.scanning","type":"tf"},{"id":"gen_u13_scanning_scn03","nodeId":"u13.scanning","type":"mistake"},{"id":"gen_u13_scanning_scn04","nodeId":"u13.scanning","type":"next"},{"id":"gen_u13_scanning_scn05","nodeId":"u13.scanning","type":"seq"},{"id":"gen_u13_scanning_scn06","nodeId":"u13.scanning","type":"mc"},{"id":"gen_u13_scanning_scn07","nodeId":"u13.scanning","type":"next"},{"id":"gen_u13_scanning_scn08","nodeId":"u13.scanning","type":"tf"}];
+const SOURCE = "docs/ai-pipeline/reviewed-incoming.json";
+const KEY = "rr_review_" + SOURCE;
+let state = {};
+try { state = JSON.parse(localStorage.getItem(KEY) || "{}"); } catch(e) { state = {}; }
+function save(){ localStorage.setItem(KEY, JSON.stringify(state)); render(); }
+function render(){
+  let ok=0, no=0;
+  document.querySelectorAll(".card").forEach(c=>{
+    const id=c.dataset.id, s=state[id]||{};
+    c.classList.toggle("v-approve", s.verdict==="approve");
+    c.classList.toggle("v-rework", s.verdict==="rework");
+    c.querySelector(".rv-ok").classList.toggle("on", s.verdict==="approve");
+    c.querySelector(".rv-no").classList.toggle("on", s.verdict==="rework");
+    const ta=c.querySelector(".note"); ta.style.display = s.verdict==="rework" ? "block" : "none";
+    if(s.note!=null && ta.value!==s.note) ta.value=s.note;
+    if(s.verdict==="approve")ok++; if(s.verdict==="rework")no++;
+  });
+  const undec = DATA.length-ok-no;
+  document.getElementById("prog").innerHTML = "<b>"+ok+"</b> approved · <b>"+no+"</b> rework · "+undec+" left";
+}
+document.querySelectorAll(".card").forEach(c=>{
+  const id=c.dataset.id;
+  c.querySelectorAll(".rv").forEach(b=>b.onclick=()=>{
+    const v=b.dataset.v; state[id]=state[id]||{};
+    state[id].verdict = state[id].verdict===v ? null : v;
+    save();
+  });
+  c.querySelector(".note").oninput=e=>{ state[id]=state[id]||{}; state[id].note=e.target.value; localStorage.setItem(KEY,JSON.stringify(state)); };
+});
+document.getElementById("approveAll").onclick=()=>{ DATA.forEach(d=>{ if(!state[d.id]||!state[d.id].verdict){ state[d.id]={...(state[d.id]||{}),verdict:"approve"}; } }); save(); };
+function toast(m){ const t=document.getElementById("toast"); t.textContent=m; t.classList.add("show"); setTimeout(()=>t.classList.remove("show"),1600); }
+document.getElementById("export").onclick=()=>{
+  const decisions = DATA.map(d=>({ id:d.id, nodeId:d.nodeId, verdict:(state[d.id]&&state[d.id].verdict)||"undecided", note:(state[d.id]&&state[d.id].note)||"" }))
+    .filter(x=>x.verdict!=="undecided" || x.note);
+  const out = { source:SOURCE, reviewedAt:new Date().toISOString(),
+    summary:{ approve:decisions.filter(d=>d.verdict==="approve").length, rework:decisions.filter(d=>d.verdict==="rework").length, total:DATA.length },
+    decisions };
+  const txt = JSON.stringify(out,null,2);
+  const blob = new Blob([txt],{type:"application/json"});
+  const a=document.createElement("a"); a.href=URL.createObjectURL(blob); a.download="review-verdict.json"; a.click();
+  if(navigator.clipboard) navigator.clipboard.writeText(txt).then(()=>toast("Downloaded + copied to clipboard")).catch(()=>toast("Downloaded review-verdict.json"));
+  else toast("Downloaded review-verdict.json");
+};
+render();
+</script>
+</body></html>

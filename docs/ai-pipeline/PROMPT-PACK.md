@@ -1,53 +1,45 @@
 # RinkReads AI Content Pipeline — Prompt Pack
 
-> ## Color key (this is the whole point of this file)
+> ## Color key
 >
-> - 🟡 **YELLOW = READ ONLY.** Background and rules *for you*. **Never paste these anywhere.**
-> - 🟢 **GREEN = COPY INTO GEMINI.** The generator prompt + the line you type to drive it.
-> - 🔵 **BLUE = COPY INTO CHATGPT.** The reviewer prompt.
-> - 🟣 **PURPLE = SAY TO CLAUDE / run a command.** The compile + merge triggers.
+> **The body text itself is colored** so you can tell at a glance, mid-page, without scrolling back here:
 >
-> Rule of thumb: **if it's inside a 🟢 or 🔵 box, it's meant to be copied whole.** Everything
-> else is yellow — for your eyes only. The green/blue prompts are self-contained: copy the
-> *entire* box, nothing else needs to be assembled.
+> - <span style="color:#eab308">🟡 **YELLOW text = READ ONLY.** For you. Never paste it anywhere.</span>
+> - <span style="color:#22c55e">🟢 **GREEN text = COPY INTO GEMINI.**</span>
+> - <span style="color:#5BA4E8">🔵 **BLUE text = COPY INTO CHATGPT.**</span>
+> - <span style="color:#c084fc">🟣 **PURPLE text = SAY TO CLAUDE / run a command.**</span>
 >
-> If a prompt here ever disagrees with `START-HERE.md`, **START-HERE wins** (it's the runbook).
+> Each big ``` box ``` directly under a 🟢 or 🔵 line is the thing to copy — **copy the whole box.**
+> <span style="color:#eab308">If anything here disagrees with `START-HERE.md`, START-HERE wins.</span>
 
 ---
 
-## 🟡 How the pipeline works (read only)
+## <span style="color:#eab308">🟡 How the pipeline works (read only)</span>
 
-Three tools, three jobs. Two tracks.
+<span style="color:#eab308">Three tools, three jobs, two tracks.</span>
 
-| Tool | Job |
-|------|-----|
-| **Gemini** (Gem or chat) | **Generator** — writes the questions/briefs |
-| **ChatGPT** (Project or chat) | **Reviewer** — sharpens distractors, catches hockey errors |
-| **Claude Code** | **Compiler/merge** — only for geometry coords + loading the bank |
+- <span style="color:#eab308">**Gemini** = Generator (writes the questions/briefs).</span>
+- <span style="color:#eab308">**ChatGPT** = Reviewer (sharpens distractors, catches hockey errors).</span>
+- <span style="color:#eab308">**Claude Code** = Compiler/merge (geometry coords + loading the bank).</span>
 
-- **TRACK A — Text questions:** 90% of the work. Gemini → ChatGPT → queue file. **No Claude needed**
-  until a one-line merge.
-- **TRACK B — Geometry (rink) questions:** Gemini → ChatGPT → a script compiles the brief into a
-  validated rink scenario. Claude only steps in if the geometry fails to validate.
+<span style="color:#eab308">**TRACK A — Text questions:** 90% of the work. Gemini → ChatGPT → queue file. No Claude until a one-line merge. **TRACK B — Geometry (rink) questions:** Gemini → ChatGPT → a script compiles the brief. Claude only if the geometry fails to validate.</span>
 
-## 🟡 Where files live (read only)
+## <span style="color:#eab308">🟡 Where files live (read only)</span>
 
-**You only ever touch the `_queue-*` files.** Never hand-edit `bank.json` or `seeds/` — let the merge/validator gate them.
+<span style="color:#eab308">**You only ever touch the `_queue-*` files.** Never hand-edit `bank.json` or `seeds/` — let the merge/validator gate them.</span>
 
-| File | Path | Who writes it |
-|------|------|---------------|
-| Text-question queue | `docs/ai-pipeline/_queue-bank.json` | **you** (paste ChatGPT's corrected arrays) |
-| Live text bank | `src/data/bank.json` | Claude, on merge |
-| Geometry briefs | `docs/ai-pipeline/briefs/<id>.json` | **you** (paste reviewed briefs, one file each) |
-| Live geometry seeds | `src/scenario/seeds/<id>.json` | the compiler script |
+- <span style="color:#eab308">Text-question queue → `docs/ai-pipeline/_queue-bank.json` (you paste ChatGPT's corrected arrays here).</span>
+- <span style="color:#eab308">Live text bank → `src/data/bank.json` (Claude writes, on merge).</span>
+- <span style="color:#eab308">Geometry briefs → `docs/ai-pipeline/briefs/<id>.json` (you paste reviewed briefs, one file each).</span>
+- <span style="color:#eab308">Live geometry seeds → `src/scenario/seeds/<id>.json` (the compiler script writes).</span>
 
 ---
 
 # TRACK A — TEXT QUESTIONS (the main content engine)
 
-This is what you run to **add more content**. Two copies per batch: one into Gemini, one into ChatGPT.
+<span style="color:#eab308">🟡 This is what you run to **add more content**. Two copies per batch: one into Gemini, one into ChatGPT.</span>
 
-## 🟢 STEP 1 — copy this whole box into GEMINI
+## <span style="color:#22c55e">🟢 STEP 1 — copy the whole box below into GEMINI</span>
 
 ```text
 You are the RinkReads Question Generator. RinkReads is a youth-hockey (U7-U18) game-sense trainer. Produce COMPLETE, ready-to-ship questions as JSON in the five text formats below. No coordinates, no rink geometry. Output valid JSON only (no prose, no markdown fences).
@@ -85,13 +77,9 @@ cat = the concept's domain, EXACT string:
 OUTPUT: a single JSON array of the question objects. Nothing else.
 ```
 
-🟢 **Then type your driver line** (also into Gemini), e.g.:
+<span style="color:#22c55e">🟢 Then type your driver line into Gemini, e.g.</span> `Generate 10 questions for u11.scanning.`
 
-```text
-Generate 10 questions for u11.scanning.
-```
-
-## 🔵 STEP 2 — copy this whole box into CHATGPT, then paste Gemini's array under it
+## <span style="color:#5BA4E8">🔵 STEP 2 — copy the whole box below into CHATGPT, then paste Gemini's array under it</span>
 
 ```text
 You are the RinkReads Question Reviewer, a skeptical youth-hockey development coach. You receive a JSON array of RinkReads text-format questions (mc, tf, seq, mistake, next). Make each HARDER TO GUESS, catch hockey errors, and return corrected JSON.
@@ -105,69 +93,48 @@ For every question:
 OUTPUT: the corrected JSON array, edits applied. Valid JSON only, no prose, no fences. After the array, one line "FLAGS:" listing anything a human should double-check (or "FLAGS: none").
 ```
 
-🔵 **Then add** (under the pasted array): `Be ruthless on the distractors.`
+<span style="color:#5BA4E8">🔵 Then add under the pasted array:</span> `Be ruthless on the distractors.`
 
-## 🟡 STEP 3 — bank it (read only — no copying)
+## <span style="color:#eab308">🟡 STEP 3 — bank it (read only, no copying)</span>
 
-1. Paste ChatGPT's corrected array into `docs/ai-pipeline/_queue-bank.json` (inside the `[ ]`, comma-separated).
-2. Repeat across nodeIds. Build up a big queue while Claude is capped.
-3. 🟣 **When Claude is back, say:** `Merge _queue-bank.json into bank.json.`
+<span style="color:#eab308">1. Paste ChatGPT's corrected array into `docs/ai-pipeline/_queue-bank.json` (inside the `[ ]`, comma-separated).<br>2. Repeat across nodeIds. Build up a queue while Claude is capped.<br>3. When Claude is back,</span> <span style="color:#c084fc">🟣 say to Claude:</span> `Merge _queue-bank.json into bank.json.`
 
-> 🟡 Want to fill many nodeIds at once? There are bulk versions of both prompts in **START-HERE.md**
-> (PROMPT A-BULK / B-BULK) plus paste-ready driver lists for every empty age group in **COVERAGE-GAPS.md**.
+> <span style="color:#eab308">🟡 Filling many nodeIds at once? Bulk versions of both prompts are in **START-HERE.md** (PROMPT A-BULK / B-BULK), and paste-ready driver lists for every empty age group are in **COVERAGE-GAPS.md**.</span>
 
 ---
 
 # TRACK B — GEOMETRY QUESTIONS (interactive rink reads)
 
-## 🟡 How it works now (read only)
+## <span style="color:#eab308">🟡 How it works now (read only)</span>
 
-The brief is **JSON with named zones** (e.g. `"at": "oz-slot"`), never x/y coordinates. A script turns
-it into a validated rink scenario, so **Claude is only needed if the geometry fails to validate.**
+<span style="color:#eab308">The brief is **JSON with named zones** (e.g. `"at": "oz-slot"`), never x/y coordinates. A script turns it into a validated rink scenario, so **Claude is only needed if the geometry fails to validate.** The two geometry prompts live in **START-HERE.md** (they're long and tied to the compiler, so they have a single home there to avoid drift).</span>
 
-The two geometry prompts (🟢 PROMPT C for Gemini, 🔵 PROMPT B-SCENARIO for ChatGPT) live in
-**START-HERE.md** — they're long and tied to the compiler, so they have a single home there to avoid drift.
+## <span style="color:#22c55e">🟢</span>/<span style="color:#5BA4E8">🔵</span> <span style="color:#eab308">STEP 1 + 2 — generate, then review</span>
 
-## 🟢🔵 STEP 1 + 2 — generate + review
+- <span style="color:#22c55e">🟢 Copy **PROMPT C** from START-HERE.md into Gemini,</span> <span style="color:#eab308">then drive it:</span> `Write 5 scenario briefs for u15.gap-control.`
+- <span style="color:#5BA4E8">🔵 Copy **PROMPT B-SCENARIO** from START-HERE.md into ChatGPT,</span> <span style="color:#eab308">paste the briefs, send.</span>
 
-- 🟢 Copy **PROMPT C** from START-HERE.md into Gemini, then drive it: `Write 5 scenario briefs for u15.gap-control.`
-- 🔵 Copy **PROMPT B-SCENARIO** from START-HERE.md into ChatGPT, paste the briefs, send.
+## <span style="color:#c084fc">🟣 STEP 3 — compile (you run this, not a chat tool)</span>
 
-## 🟣 STEP 3 — compile (you run this, not a chat tool)
-
-Save each reviewed brief as `docs/ai-pipeline/briefs/<id>.json`, then run:
+<span style="color:#eab308">Save each reviewed brief as `docs/ai-pipeline/briefs/<id>.json`, then run:</span>
 
 ```text
 node scripts/brief-to-seed.mjs docs/ai-pipeline/briefs/<id>.json
 ```
 
-- Prints `OK` → the seed is live in `src/scenario/seeds/` and auto-merges into the bank. Done, zero Claude.
-- Prints `FAIL` → 🟣 say to Claude: `Fix the geometry on src/scenario/seeds/<id>.json.`
+- <span style="color:#eab308">Prints `OK` → the seed is live in `src/scenario/seeds/` and auto-merges. Done, zero Claude.</span>
+- <span style="color:#eab308">Prints `FAIL` →</span> <span style="color:#c084fc">🟣 say to Claude:</span> `Fix the geometry on src/scenario/seeds/<id>.json.`
 
 ---
 
-## 🟡 Reference — age ladder (read only; already baked into the prompts above)
+## <span style="color:#eab308">🟡 Reference — age ladder (read only; already baked into the prompts)</span>
 
-Age fit is a core rule, not a polish pass. The same concept gets harder as the player ages.
+<span style="color:#eab308">- **U7:** one visible cue, open ice, puck safety, short plain words, `d:1`.<br>- **U9:** one cue plus light pressure or a simple support choice, `d:1`.<br>- **U11:** one clear read with one believable wrong option, `d:2`.<br>- **U13:** two linked cues, timing, support, or pressure detail, `d:2`.<br>- **U15:** layered reads, switches, second threats, faster pace, `d:3`.<br>- **U18:** adult-speed decisions, disguise, secondary options, consequences, `d:3`.</span>
 
-- **U7:** one visible cue, open ice, puck safety, short plain words, `d:1`.
-- **U9:** one cue plus light pressure or a simple support choice, `d:1`.
-- **U11:** one clear read with one believable wrong option, `d:2`.
-- **U13:** two linked cues, timing, support, or pressure detail, `d:2`.
-- **U15:** layered reads, switches, second threats, faster pace, `d:3`.
-- **U18:** adult-speed decisions, disguise, secondary options, consequences, `d:3`.
+## <span style="color:#eab308">🟡 Reference — valid nodeIds (read only; use the exact string)</span>
 
-## 🟡 Reference — valid nodeIds (read only; use the exact string)
+<span style="color:#eab308">`nodeId` = `u<age>.<concept-id>`. Hockey Sense is the anchor domain — prioritize it.</span>
 
-`nodeId` = `u<age>.<concept-id>`. Hockey Sense is the anchor domain — prioritize it.
+<span style="color:#eab308">**Hockey Sense:** `scanning` `reading-the-play` `decision-making` `time-and-space` `creativity-under-pressure`<br>**Offensive Play:** `puck-carrier-options` `off-puck-support-offense` `attacking-1v1` `cycle-and-possession` `zone-entry` `odd-man-reads` `net-front-play`<br>**Defensive Play:** `gap-control` `angling-steering` `defensive-side-positioning` `coverage-reads` `stick-and-body-detail`<br>**Transition & Compete:** `transition-reads` `breakout-and-regroup` `forecheck-pressure` `backcheck-recovery` `battles-and-compete`<br>**Skating & Movement:** `edges-balance` `agility-mobility` `backward-transitions` `deception-with-feet`<br>**Puck Skills:** `puck-control` `puck-protection` `passing` `receiving` `shooting`</span>
 
-**Hockey Sense:** `scanning` `reading-the-play` `decision-making` `time-and-space` `creativity-under-pressure`
-**Offensive Play:** `puck-carrier-options` `off-puck-support-offense` `attacking-1v1` `cycle-and-possession` `zone-entry` `odd-man-reads` `net-front-play`
-**Defensive Play:** `gap-control` `angling-steering` `defensive-side-positioning` `coverage-reads` `stick-and-body-detail`
-**Transition & Compete:** `transition-reads` `breakout-and-regroup` `forecheck-pressure` `backcheck-recovery` `battles-and-compete`
-**Skating & Movement:** `edges-balance` `agility-mobility` `backward-transitions` `deception-with-feet`
-**Puck Skills:** `puck-control` `puck-protection` `passing` `receiving` `shooting`
-
-Combine with an age prefix → `u11.scanning`, `u15.gap-control`, etc. Not every concept exists at every age
-(U7 is skills + battles only). If unsure, leave it as `u<age>.<concept>` and Claude confirms against the
-ledger on merge. **The current empty-node list lives in `COVERAGE-GAPS.md`.**
+<span style="color:#eab308">Combine with an age prefix → `u11.scanning`, `u15.gap-control`. Not every concept exists at every age (U7 is skills + battles only). The current empty-node list lives in **COVERAGE-GAPS.md**.</span>
