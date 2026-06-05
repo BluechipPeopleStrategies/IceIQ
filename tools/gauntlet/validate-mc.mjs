@@ -56,6 +56,11 @@ export function validateMC(q, { seen } = {}) {
 
   const explain = typeof q.explain === "string" ? q.explain.trim() : "";
   if (explain.length < 15) errs.push("explain must be >= 15 chars");
+  // Options are shuffled after creation, so any positional reference in the
+  // explanation ("Option B", "choice 2", "(A)") points at the wrong option.
+  // Reject fast with an actionable note instead of burning rounds + the panel.
+  else if (/\b(option|choice)\s+(?:[a-d]|[1-4]|one|two|three|four)\b/i.test(explain) || /\(\s*[a-dA-D]\s*\)/.test(explain))
+    errs.push("explain references an option by letter/position (e.g. \"Option B\", \"(A)\"); options are shuffled — refer to each choice by its content, not its position");
 
   if (q.levels !== undefined) {
     if (!Array.isArray(q.levels) || q.levels.length === 0) errs.push("levels, if present, must be a non-empty array");

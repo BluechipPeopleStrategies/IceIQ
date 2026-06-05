@@ -31,6 +31,13 @@ ok("unknown level fails", bad({ levels: ["U10 / Nope"] }).ok === false);
 ok("empty levels fails", bad({ levels: [] }).ok === false);
 ok("missing levels is allowed", validateMC({ ...good, levels: undefined }).ok === true);
 
+// explain must not reference options by letter/position (options are shuffled)
+ok("explain 'Option B' fails", bad({ explain: "Option B is wrong because the lane is contested; the open teammate is better." }).ok === false);
+ok("explain 'choice 2' fails", bad({ explain: "The correct read beats choice 2, which gives the puck away under pressure here." }).ok === false);
+ok("explain '(A)' fails", bad({ explain: "Passing here is best; (A) leaves you flat-footed against the forecheck pressure." }).ok === false);
+ok("explain about content passes", validateMC(good).ok === true);
+ok("'no option at all' not a false positive", bad({ explain: "With a defender draped on you there is no safe option to carry, so move it quickly." }).ok === true);
+
 // length-outlier tell: correct option absurdly longer than distractors
 const outlier = bad({
   opts: ["Pass to the open teammate up the middle because the defender has committed and the lane is clearly open for a high-value scoring chance", "Shoot", "Wait", "Skate back"],
