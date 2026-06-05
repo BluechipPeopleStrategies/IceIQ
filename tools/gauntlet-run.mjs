@@ -121,8 +121,8 @@ async function runPanel(q, node, concept, opts) {
     reviews = [];
     for (const lens of PANEL_LENSES) {
       if (opts.mock) {
-        // Perfectionist fails forever under --mock-fail to exercise drop+learn.
-        const verdict = (opts.mockFail && lens.key === "perfectionist") ? "REVISE" : "PASS";
+        // The first lens fails forever under --mock-fail to exercise drop+learn.
+        const verdict = (opts.mockFail && lens.key === PANEL_LENSES[0].key) ? "REVISE" : "PASS";
         reviews.push({ key: lens.key, verdict, critique: verdict === "REVISE" ? ["[mock] not perfect"] : [] });
       } else {
         const peers = others ? others.filter((o) => o.key !== lens.key) : null;
@@ -235,7 +235,7 @@ async function runScenarioPanel(scenario, node, concept, opts, { lenses, makePro
     reviews = [];
     for (const lens of lenses) {
       if (opts.mock) {
-        const verdict = (opts.mockFail && lens.key === "perfectionist") ? "REVISE" : "PASS";
+        const verdict = (opts.mockFail && lens.key === lenses[0].key) ? "REVISE" : "PASS";
         reviews.push({ key: lens.key, verdict, critique: verdict === "REVISE" ? ["[mock] not perfect"] : [] });
       } else {
         const peers = others ? others.filter((o) => o.key !== lens.key) : null;

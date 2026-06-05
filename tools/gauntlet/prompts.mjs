@@ -85,13 +85,16 @@ Judge it. If anything fails either lens, verdict REVISE with concrete notes. Oth
 }
 
 // The three panel lenses. One is a perfectionist who drives the debate.
+// The READ panel (used for text MC and the visual hockey panel). The
+// perfectionist lens was removed 2026-06-04 — at the real drop rate it was a
+// near-zero-yield "truly excellent or nothing" gate on the read. The Tactical +
+// Pedagogy coaches plus the Head Coach are the read bar. The perfectionist now
+// lives ONLY in the geometry panel (VISUAL_LENSES), where precision matters.
 export const PANEL_LENSES = [
   { key: "tactical", title: "Tactical / answer-key coach",
     focus: "Is the hockey correct and is the declared correct option genuinely the single best read? Are the distractors actually wrong (not also-correct)?" },
   { key: "pedagogy", title: "Pedagogy / learner coach",
     focus: "Does it teach this node's ONE read cleanly, at the right cognitive load for the age band, in language a kid that age understands?" },
-  { key: "perfectionist", title: "Perfectionist adversarial coach",
-    focus: "Nitpick everything: wording precision, distractor quality, any ambiguity or 'tell', edge cases. Decide whether this is TRULY EXCELLENT, not merely acceptable. Do not cave on real flaws." },
 ];
 
 // A panel coach review. `others`, when present (debate rounds), carries peers' critiques.
