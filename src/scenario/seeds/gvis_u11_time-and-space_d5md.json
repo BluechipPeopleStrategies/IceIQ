@@ -1,0 +1,97 @@
+{
+  "id": "gvis_u11_time-and-space_d5md",
+  "type": "scenario",
+  "level": "U11 / Atom",
+  "levels": [
+    "U11 / Atom"
+  ],
+  "nodeId": "u11.time-and-space",
+  "themes": [
+    "decision-making",
+    "vision",
+    "pass-selection",
+    "offensive-zone"
+  ],
+  "cat": "Hockey Sense",
+  "difficulty": 2,
+  "stage": {
+    "view": "right",
+    "zone": "off-zone"
+  },
+  "actors": [
+    {
+      "id": "you",
+      "kind": "player",
+      "x": 0.65,
+      "y": 0.18,
+      "tag": "YOU"
+    },
+    {
+      "id": "puck",
+      "kind": "puck",
+      "x": 0.65,
+      "y": 0.18
+    },
+    {
+      "id": "lw",
+      "kind": "teammate",
+      "x": 0.82,
+      "y": 0.22,
+      "tag": "LW"
+    },
+    {
+      "id": "c",
+      "kind": "teammate",
+      "x": 0.76,
+      "y": 0.5,
+      "tag": "C"
+    },
+    {
+      "id": "rw",
+      "kind": "teammate",
+      "x": 0.82,
+      "y": 0.78,
+      "tag": "RW"
+    },
+    {
+      "id": "x1",
+      "kind": "defender",
+      "x": 0.74,
+      "y": 0.42
+    },
+    {
+      "id": "x2",
+      "kind": "defender",
+      "x": 0.81,
+      "y": 0.7
+    },
+    {
+      "id": "g",
+      "kind": "goalie",
+      "x": 0.918,
+      "y": 0.5
+    }
+  ],
+  "interaction": {
+    "kind": "selection",
+    "prompt": "You hold the puck at the blue line. The play is developing — nobody is rushing you yet. Tap the teammate who has the most time and space right now.",
+    "from": [
+      "lw",
+      "c",
+      "rw"
+    ],
+    "order": "any"
+  },
+  "correct": {
+    "kind": "selection",
+    "ids": [
+      "lw"
+    ]
+  },
+  "feedback": {
+    "right": "The LW on the weak-side wall has a huge gap — no defender within range. That open pocket is exactly where the puck should go.",
+    "wrong": "Check the defenders: one is tight on the C in the slot, and the other is glued to the RW down low. The LW on the far side has no one near them — that's the player with time and space."
+  },
+  "tip": "Before you pass, scan for the jersey with the biggest gap to the nearest opponent. The player with the most space has the most time — they are your best option.",
+  "why": "Both defenders collapsed toward the middle and strong side, leaving the weak-side LW completely unchecked with room to receive and make a quality play."
+}

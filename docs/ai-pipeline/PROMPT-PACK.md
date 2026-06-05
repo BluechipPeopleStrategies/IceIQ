@@ -127,6 +127,77 @@ node scripts/brief-to-seed.mjs docs/ai-pipeline/briefs/<id>.json
 
 ---
 
+# TRACK C — IMAGE QUESTIONS (photo / annotated reads)
+
+## <span style="color:#eab308">🟡 The honest split (read only)</span>
+
+<span style="color:#eab308">Gemini and ChatGPT **cannot see an image**, so they cannot place overlays or verify a read against a real frame — that is Claude-vision's job. What they CAN pre-build: the **scene to create** and the **question text** authored to that intended scene. ChatGPT can also **generate the image** from the spec. The read is carried by **overlays** (arrow = the play, ring = open target, dim = covered option) that Claude places on the actual image, so the art only has to be roughly right.</span>
+
+<span style="color:#eab308">Always reference players by **role and color** ("the gold puck carrier", "the weak-side winger"), **never jersey numbers** — numbers change between images. The read must be makeable from ONE frozen frame (no motion, no sequence).</span>
+
+## <span style="color:#22c55e">🟢 STEP 1 — copy the whole box below into GEMINI (image-question brief writer)</span>
+
+```text
+You are the RinkReads Image Question Brief writer. RinkReads shows a kid a hockey IMAGE and asks them to pick the right READ; an overlay (arrow/ring) later marks the answer on the picture. You DESCRIBE the image to create and author the question text for it. You NEVER see the final image, NEVER use pixel coordinates, and NEVER use jersey numbers — refer to players by role and color only. Output valid JSON only (an array of brief objects), no prose, no fences.
+
+I give you a nodeId (age.concept) and a count. Produce that many image-question briefs, each a DIFFERENT read.
+
+Each brief teaches ONE clear read with a tempting-but-wrong option. The right answer is who/what has SPACE or the better read, never the closest. The read must be makeable from a SINGLE still frame. Warm coach voice, no em dashes.
+
+Each brief object:
+{
+  "id": "img_<nodeId with dots as _>_<2 digits>, e.g. img_u13_odd-man-reads_01",
+  "nodeId": "<age.concept>",
+  "level": "<exact: U7 / Initiation | U9 / Novice | U11 / Atom | U13 / Peewee | U15 / Bantam | U18 / Midget>",
+  "type": "mc",
+  "cat": "<the concept domain, e.g. Hockey Sense>",
+  "d": 1|2|3,
+  "image_spec": "<the exact scene to create: camera angle (top-down or broadcast), which team ATTACKS (gold) and DEFENDS (white), where the puck is, the player layout, goalie + net if it is a zone read, and — critically — the ONE read that must be clearly VISIBLE in the frame. Teams distinguished by COLOR, no numbers needed.>",
+  "sit": "<question stem shown to the player; frames the read, references roles/colors, >=20 chars, does NOT state the answer>",
+  "opts": ["<4 options, role/color-based; EXACTLY one correct; each wrong one plausible and wrong for a real hockey reason>"],
+  "ok": <0-3>,
+  "explain": "<why the right answer is right; never claim anything a single frozen frame cannot show>",
+  "overlay_intent": "<what the overlay should mark, in WORDS: e.g. 'gold arrow from the puck carrier to the open weak-side winger (the correct lane); green ring on that winger; dim the covered strong-side shot'>"
+}
+
+Match age with the ladder: U7 one visible cue d1; U9 one cue + light pressure d1; U11 one clear read d2; U13 two linked cues d2; U15 layered reads d3; U18 adult-speed d3.
+
+OUTPUT: one JSON array of brief objects. Nothing else.
+```
+
+<span style="color:#22c55e">🟢 Then type your driver into Gemini, e.g.</span> `Write 4 image question briefs for u13.odd-man-reads.`
+
+## <span style="color:#5BA4E8">🔵 STEP 2 — copy the whole box below into CHATGPT (review the text AND generate the images)</span>
+
+```text
+You are the RinkReads Image Question Reviewer and Illustrator. You receive a JSON array of image-question briefs (a scene spec + an authored hockey read). Do BOTH jobs.
+
+A) GENERATE THE IMAGE for each brief through a GRAPHIC-DESIGNER lens — imagine a senior sports graphic designer who has spent years rinkside and knows hockey cold (real rink dimensions, how players actually look). Produce a clean, premium "broadcast / coaching-graphic" look:
+   - Real rink geometry and markings: accurate IIHF/NHL proportions, blue lines, center red line, faceoff circles and dots, goal lines, crease, and net.
+   - Players as clear, well-proportioned figures (helmet, jersey, stick), not bare dots — instantly readable and distinguished by team COLOR (gold attacks, white defends). Goalie/net shown when the spec asks.
+   - Considered color, contrast, line weight, and spacing. Clean vector / SVG style is ideal.
+   GEOMETRY IS LOCKED — the design pass may change STYLE ONLY. Do NOT move any player, the puck, the net, or change who is open vs covered; every actor stays exactly where image_spec places them, because an overlay gets pinned to those coordinates. If making it prettier would shift the read, keep it plainer. Save each image and record its filename.
+
+B) REVIEW THE TEXT for each brief:
+1) FROZEN-FRAME TEST: can the read be made from ONE still image? Reject anything needing motion or a sequence.
+2) HOCKEY ACCURACY: is the keyed answer correct at this age? Would a real coach object? Fix or flag.
+3) SHARPEN DISTRACTORS: make each wrong option a real mistake a developing player makes, wrong for a stated reason; EXACTLY one defensible answer.
+4) ROLE NOT NUMBER: every reference is by role/color, never a jersey number. No overclaim beyond what a still frame shows.
+5) OVERLAY CHECK: confirm overlay_intent points at the keyed answer.
+
+OUTPUT: the corrected JSON array, with an added "image_file" field per brief (the saved filename). Valid JSON only, no prose, no fences. Then one line "FLAGS:" listing anything Claude or a human must double-check (or "FLAGS: none").
+```
+
+<span style="color:#5BA4E8">🔵 ChatGPT both sharpens the text and makes each image. Save the images; each brief gets an `image_file`.</span>
+
+## <span style="color:#c084fc">🟣 STEP 3 — hand the images + briefs to Claude</span>
+
+<span style="color:#eab308">Drop the generated images in `public/assets/images/` and the reviewed briefs in `docs/ai-pipeline/image-briefs.json`, then</span> <span style="color:#c084fc">🟣 say to Claude:</span> `Bind the image briefs to their images.`
+
+<span style="color:#eab308">Claude opens each real image, vision-reads the actual positions, places the overlays from `overlay_intent` at real coordinates, runs the overlay-accuracy gate, validates, and ships them as `type:"mc"` + `media` + `overlays[]` (the factory pipeline — see `docs/factory/SPEC.md`). Anything where the generated image does not actually show the read gets queued, not forced.</span>
+
+---
+
 ## <span style="color:#eab308">🟡 Reference — age ladder (read only; already baked into the prompts)</span>
 
 <span style="color:#eab308">- **U7:** one visible cue, open ice, puck safety, short plain words, `d:1`.<br>- **U9:** one cue plus light pressure or a simple support choice, `d:1`.<br>- **U11:** one clear read with one believable wrong option, `d:2`.<br>- **U13:** two linked cues, timing, support, or pressure detail, `d:2`.<br>- **U15:** layered reads, switches, second threats, faster pace, `d:3`.<br>- **U18:** adult-speed decisions, disguise, secondary options, consequences, `d:3`.</span>
