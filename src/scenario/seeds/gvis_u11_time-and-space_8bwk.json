@@ -1,0 +1,36 @@
+{
+  "id": "gvis_u11_time-and-space_8bwk",
+  "type": "scenario",
+  "level": "U11 / Atom",
+  "levels": ["U11 / Atom"],
+  "nodeId": "u11.time-and-space",
+  "themes": ["decision-making", "vision", "pass-selection", "even-strength"],
+  "cat": "Hockey Sense",
+  "difficulty": 1,
+  "stage": { "view": "right", "zone": "off-zone" },
+  "actors": [
+    { "id": "you",  "kind": "player",   "x": 0.65, "y": 0.50, "tag": "YOU" },
+    { "id": "puck", "kind": "puck",     "x": 0.652, "y": 0.498 },
+    { "id": "lw",   "kind": "teammate", "x": 0.74, "y": 0.20, "tag": "LW" },
+    { "id": "rw",   "kind": "teammate", "x": 0.74, "y": 0.78, "tag": "RW" },
+    { "id": "x1",   "kind": "defender", "x": 0.72, "y": 0.70 },
+    { "id": "x2",   "kind": "defender", "x": 0.82, "y": 0.48 },
+    { "id": "g",    "kind": "goalie",   "x": 0.918, "y": 0.50 }
+  ],
+  "interaction": {
+    "kind": "selection",
+    "prompt": "You have the puck just inside the zone. Tap the teammate who has time and space to receive.",
+    "from": ["lw", "rw"],
+    "order": "any"
+  },
+  "correct": {
+    "kind": "selection",
+    "ids": ["lw"]
+  },
+  "feedback": {
+    "right": "The LW up top has open ice — no defender within reach. That's time and space: room to receive, control, and make the next decision.",
+    "wrong": "The RW looks available, but there's a defender right on their hip. Even if the pass gets there, the receiver has no time or space to do anything with it."
+  },
+  "tip": "Before you pass, scan both sides: who has a defender close by, and who has open ice? Pass to the player with space — not just the nearest teammate.",
+  "why": "Time and space means the receiver has both the moment to catch the puck AND room to decide what's next. A covered teammate has neither — the read collapses before it starts."
+}

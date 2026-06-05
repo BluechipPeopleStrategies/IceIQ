@@ -1,0 +1,37 @@
+{
+  "id": "gvis_u11_reading-the-play_b633",
+  "type": "scenario",
+  "level": "U11 / Atom",
+  "levels": ["U11 / Atom"],
+  "nodeId": "u11.reading-the-play",
+  "themes": ["defensive-zone-coverage", "anticipate", "scan", "vision"],
+  "cat": "Hockey Sense",
+  "difficulty": 2,
+  "stage": { "view": "left", "zone": "def-zone" },
+  "actors": [
+    { "id": "you",        "kind": "player",   "x": 0.38,  "y": 0.65, "tag": "YOU" },
+    { "id": "goalie",     "kind": "goalie",   "x": 0.082, "y": 0.50, "tag": ""    },
+    { "id": "tm_ld",      "kind": "teammate", "x": 0.30,  "y": 0.28, "tag": "LD"  },
+    { "id": "tm_c",       "kind": "teammate", "x": 0.35,  "y": 0.50, "tag": "C"   },
+    { "id": "opp_corner", "kind": "defender", "x": 0.10,  "y": 0.82, "tag": ""    },
+    { "id": "opp_slot",   "kind": "defender", "x": 0.17,  "y": 0.50, "tag": ""    },
+    { "id": "opp_point",  "kind": "defender", "x": 0.47,  "y": 0.22, "tag": ""    },
+    { "id": "puck",       "kind": "puck",     "x": 0.10,  "y": 0.82              }
+  ],
+  "interaction": {
+    "kind": "selection",
+    "prompt": "White has the puck in the corner. One opponent is already standing at the front of your net — tap them before the pass comes!",
+    "from": ["opp_corner", "opp_slot", "opp_point"],
+    "order": "any"
+  },
+  "correct": {
+    "kind": "selection",
+    "ids": ["opp_slot"]
+  },
+  "feedback": {
+    "right": "Yes! That white jersey is already in the slot — right in front of your goalie. Your teammate needs to push them out NOW, before the puck gets there.",
+    "wrong": "The puck carrier and the point player are easy to see, but neither has a clean shot yet. The white jersey standing in the slot, right in front of your goalie, is the immediate danger — that is where goals come from."
+  },
+  "tip": "When the puck goes to the corner, scan the front of your net first. A player already parked there is a bigger threat than the puck carrier who is stuck in the corner.",
+  "why": "U11 defenders fixate on the puck and lose track of the slot. This rep trains reading the net-front threat before the pass is made — the whole anticipation skill is seeing where the danger is BEFORE the puck arrives."
+}
