@@ -25,7 +25,7 @@ import { lintScenario } from "./scenario-author/validate.mjs";
 import { buildVisualCreatorPrompt } from "./gauntlet/visual-prompts.mjs";
 import { repairScenario, scenarioHash, mockScenario, forcedLevels } from "./gauntlet/visual-scenario.mjs";
 import { asciiRink } from "./gauntlet/ascii-rink.mjs";
-import { VISUAL_LENSES, buildVisualHockeyCoachPrompt, buildVisualCoachPrompt, buildVisualHeadCoachPrompt, buildVisualLessonExtractorPrompt } from "./gauntlet/visual-prompts.mjs";
+import { VISUAL_LENSES, buildVisualHockeyCoachPrompt, buildVisualCoachPrompt, buildVisualHeadCoachPrompt, buildVisualLessonExtractorPrompt, buildVisualRubricConsolidationPrompt } from "./gauntlet/visual-prompts.mjs";
 import { runPool } from "./gauntlet/pool.mjs";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
@@ -37,6 +37,7 @@ const paths = {
   lessons: resolve(root, "tools/gauntlet/lessons.json"),
   visualLessons: resolve(root, "tools/gauntlet/visual-lessons.json"),
   rubric: resolve(root, "tools/gauntlet/rubric.json"),
+  visualRubric: resolve(root, "tools/gauntlet/visual-rubric.json"),
 };
 
 // ---------- args ----------
@@ -281,7 +282,10 @@ async function generateVisualOne(ledger, node, opts, seen) {
   const concept = conceptById(ledger, node.conceptId);
   const domain = domainById(ledger, concept.domainId);
   const idSeed = `gvis_${node.id.replace(/\./g, "_")}_${rand()}`;
-  const lessons = renderLessons(loadLessons(paths.visualLessons));
+  // Visual guidance = the consolidated geometry rubric + any pending raw geometry
+  // lessons not yet folded in (run `--consolidate --visual` to fold + reset).
+  const guidance = [renderRubric(loadRubric(paths.visualRubric)), renderLessons(loadLessons(paths.visualLessons))]
+    .filter(Boolean).join("\n\n");
   let notes = [];
 
   for (let round = 1; round <= opts.rounds; round++) {
@@ -289,7 +293,7 @@ async function generateVisualOne(ledger, node, opts, seen) {
     try {
       if (opts.mock) s = mockScenario(node, idSeed);
       else {
-        const { system, prompt } = buildVisualCreatorPrompt({ node, concept, domain, idSeed, lessons });
+        const { system, prompt } = buildVisualCreatorPrompt({ node, concept, domain, idSeed, guidance });
         const extra = notes.length ? `\n\nThe previous attempt was sent back. Fix: ${notes.join("; ")}` : "";
         s = await runAgent({ system, prompt: prompt + extra, model: opts.model });
       }
@@ -333,10 +337,14 @@ async function generateVisualOne(ledger, node, opts, seen) {
 }
 
 // ---------- --consolidate: fold pending lessons into the rubric, reset the tail ----------
+// Handles both tracks: `--consolidate` (text) and `--consolidate --visual` (geometry).
 async function consolidateLessons(opts) {
-  const rubric = loadRubric(paths.rubric);
-  const pending = loadLessons(paths.lessons).lessons;
-  console.log(`Rubric v${rubric.version}: ${rubric.principles.length} principle(s). Pending lessons: ${pending.length}.`);
+  const track = opts.visual
+    ? { name: "geometry", rubricPath: paths.visualRubric, lessonsPath: paths.visualLessons, makePrompt: buildVisualRubricConsolidationPrompt }
+    : { name: "question-quality", rubricPath: paths.rubric, lessonsPath: paths.lessons, makePrompt: buildRubricConsolidationPrompt };
+  const rubric = loadRubric(track.rubricPath);
+  const pending = loadLessons(track.lessonsPath).lessons;
+  console.log(`[${track.name}] rubric v${rubric.version}: ${rubric.principles.length} principle(s). Pending lessons: ${pending.length}.`);
   if (!pending.length) { console.log("Nothing to consolidate — no pending lessons."); return; }
 
   let principles;
@@ -345,15 +353,15 @@ async function consolidateLessons(opts) {
     // principle (capped by applyConsolidation). Proves the wiring without a call.
     principles = [...rubric.principles, ...pending.map((l) => ({ text: l.text }))];
   } else {
-    const r = await runAgent({ ...buildRubricConsolidationPrompt({ rubric, lessons: pending }), model: opts.model });
+    const r = await runAgent({ ...track.makePrompt({ rubric, lessons: pending }), model: opts.model });
     principles = Array.isArray(r.principles) ? r.principles : null;
     if (!principles) { console.error("✗ consolidator returned no principles; leaving rubric + lessons untouched."); process.exit(1); }
   }
 
   const next = applyConsolidation(rubric, principles);
-  saveRubric(paths.rubric, next);
-  writeFileSync(paths.lessons, JSON.stringify({ lessons: [] }, null, 2) + "\n");
-  console.log(`\nConsolidated ${pending.length} lesson(s) → rubric v${next.version} (${next.principles.length} principle(s)). Pending tail reset.`);
+  saveRubric(track.rubricPath, next);
+  writeFileSync(track.lessonsPath, JSON.stringify({ lessons: [] }, null, 2) + "\n");
+  console.log(`\nConsolidated ${pending.length} ${track.name} lesson(s) → rubric v${next.version} (${next.principles.length} principle(s)). Pending tail reset.`);
 }
 
 // ---------- main ----------

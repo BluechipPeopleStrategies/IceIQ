@@ -39,6 +39,27 @@ const node = { id: "u9.passing", ageId: "U9", conceptId: "passing" };
   const moved = mockScenario(node, "id_c"); moved.actors[2].x = 0.1;
   ok("hash changes when a player moves", scenarioHash(moved) !== scenarioHash(a)); }
 
+// lint guards. Clean mock passes; phantom answer ids rejected (engine validator);
+// overlapping skaters rejected (the new guard); puck-on-carrier still allowed.
+{ const base = mockScenario(node, "lint_base");
+  ok("clean mock passes lint", lintScenario(base).ok === true);
+
+  const phantom = JSON.parse(JSON.stringify(base));
+  phantom.correct.ids = ["lw"];                 // no actor carries id "lw"
+  ok("phantom answer id rejected", lintScenario(phantom).ok === false);
+
+  const overlap = JSON.parse(JSON.stringify(base));
+  const you = overlap.actors.find(a => a.id === "you");
+  const mc = overlap.actors.find(a => a.id === "mate_cov");
+  mc.x = you.x + 0.01; mc.y = you.y + 0.02;     // stack a teammate on the player
+  const or = lintScenario(overlap);
+  ok("overlapping skaters fail lint", or.ok === false && /overlap/i.test(or.errs[0]));
+
+  const puckOnYou = JSON.parse(JSON.stringify(base));
+  const pk = puckOnYou.actors.find(a => a.id === "puck");
+  pk.x = you.x; pk.y = you.y;                    // puck on carrier is allowed
+  ok("puck on carrier still passes lint", lintScenario(puckOnYou).ok === true); }
+
 // --- visual creator prompt ---
 import { buildVisualCreatorPrompt } from "./visual-prompts.mjs";
 { const concept = { name: "Passing", definition: "Lane selection and timing.", readConnection: "Find the open lane." };

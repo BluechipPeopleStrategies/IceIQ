@@ -4,7 +4,7 @@
 import { buildSystemPrompt } from "../scenario-author/prompt.js";
 import { AGE_LEVEL } from "./prompts.mjs";
 
-export function buildVisualCreatorPrompt({ node, concept, domain, idSeed, lessons = "" }) {
+export function buildVisualCreatorPrompt({ node, concept, domain, idSeed, guidance = "" }) {
   const ageDisplay = AGE_LEVEL[node.ageId];
   const system = buildSystemPrompt() +
 `
@@ -12,7 +12,7 @@ export function buildVisualCreatorPrompt({ node, concept, domain, idSeed, lesson
 RinkReads brand: warm, kid-friendly, builds "Game Sense". Refer to players by jersey
 ("black"/"white") or "teammate"/"defender" — never red/green. The scene must depict ONE
 read for the target concept, with players positioned where they would really be for that
-play.${lessons ? "\n\n" + lessons : ""}`;
+play.${guidance ? "\n\n" + guidance : ""}`;
   const prompt =
 `Author one rink SCENARIO question for this curriculum target.
 
@@ -51,8 +51,18 @@ function peerBlock(others) {
     : "";
 }
 function actorLines(scenario) {
+  const correctIds = new Set(Array.isArray(scenario.correct?.ids) ? scenario.correct.ids : []);
+  const selectable = new Set(Array.isArray(scenario.interaction?.from) ? scenario.interaction.from : []);
   return (scenario.actors || [])
-    .map((a) => `  ${a.kind.padEnd(9)} (${(a.x ?? 0).toFixed(2)}, ${(a.y ?? 0).toFixed(2)})${a.label ? " " + a.label : ""}`)
+    .map((a) => {
+      const tag = a.tag ? ` "${a.tag}"` : "";
+      const lab = a.label ? ` label:${a.label}` : "";
+      // Show the id and flag the answer/tappable actors so the coach can connect
+      // correct.ids to a real, identifiable actor (otherwise it reports a phantom
+      // "ID mismatch" because it only ever saw anonymous kind+coords).
+      const role = correctIds.has(a.id) ? "  <-- CORRECT ANSWER" : selectable.has(a.id) ? "  (tappable option)" : "";
+      return `  ${a.kind.padEnd(9)} id=${String(a.id ?? "?").padEnd(10)} (${(a.x ?? 0).toFixed(2)}, ${(a.y ?? 0).toFixed(2)})${tag}${lab}${role}`;
+    })
     .join("\n");
 }
 
@@ -121,5 +131,26 @@ ${JSON.stringify(scenario, null, 2)}
 Why it failed (geometry): ${(critique || []).join("; ")}
 
 Give 1-2 general positioning rules to prevent this class of failure.`;
+  return { system, prompt };
+}
+
+// Folds the pending raw geometry lessons into the standing visual rubric,
+// keeping it tight. Mirrors the text track's consolidation. Returns the full,
+// consolidated principle set so the visual creator prompt never re-bloats.
+export function buildVisualRubricConsolidationPrompt({ rubric, lessons }) {
+  const system =
+`You maintain the GEOMETRY rubric for a drawn youth-hockey question generator. The rubric is a SMALL set of general, imperative rules about player POSITIONING / proxemics every drawn scene must satisfy. You will be given the current rubric and new raw "lessons" from recently rejected scenes. Fold the lessons in:
+- Merge each lesson into the existing principle it belongs to (sharpening wording if it adds a real nuance), rather than adding a near-duplicate.
+- Only add a NEW principle if a lesson names a positioning failure no existing principle covers.
+- Keep it tight: aim for ${rubric?.principles?.length || 8} principles, hard cap 12. Each stays short, general, imperative, and about the PICTURE (positions, spacing, lines, motion cues), not the hockey read.
+Return ONLY: {"principles":[{"id":"kebab-case-id","text":"the principle"}, ...]} — the COMPLETE new rubric, not just changes.`;
+  const prompt =
+`Current geometry rubric:
+${JSON.stringify(rubric?.principles || [], null, 2)}
+
+New positioning lessons to fold in:
+${(lessons || []).map((l, i) => `${i + 1}. ${typeof l === "string" ? l : l.text}`).join("\n") || "(none)"}
+
+Return the complete consolidated geometry rubric as JSON.`;
   return { system, prompt };
 }

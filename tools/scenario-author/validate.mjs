@@ -14,6 +14,23 @@ export function lintScenario(scenario) {
   const v = validateScenario(scenario);
   if (!v.ok) return { ok: false, errs: v.errs, warns: v.warns };
 
+  // Overlap guard: two skaters sharing essentially the same spot render on top
+  // of each other, so the kid can't tell who's who or which one to tap. (Pucks
+  // are exempt — a puck riding its carrier is intentional and the renderer
+  // nudges it to the carrier's edge.) Forces meaningful separation.
+  const skaters = (scenario.actors || []).filter(a => a.kind !== "puck");
+  for (let i = 0; i < skaters.length; i++) {
+    for (let j = i + 1; j < skaters.length; j++) {
+      const a = skaters[i], b = skaters[j];
+      if (Math.abs(a.x - b.x) < 0.05 && Math.abs(a.y - b.y) < 0.05) {
+        return { ok: false, warns: v.warns, errs: [
+          `actors "${a.id}" and "${b.id}" overlap (within 0.05 on both axes) and will render on top of each other. ` +
+          `Separate every pair of players by at least ~0.10 on one axis so each reads as distinct and tappable.`,
+        ] };
+      }
+    }
+  }
+
   // Self-test per primitive: simulate the LLM's own "correct" answer as
   // a user input and confirm the registered scorer grades it ok=true.
   // If the scorer disagrees the scenario is internally inconsistent.
