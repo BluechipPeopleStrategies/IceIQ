@@ -307,7 +307,7 @@
   {
     "id": "gen_u7_offense_sup01",
     "type": "mc",
-    "nodeId": "u7.offense",
+    "nodeId": "u7.time-and-space",
     "levels": [
       "U7 / Initiation"
     ],
@@ -326,7 +326,7 @@
   {
     "id": "gen_u7_hockey_sense_spc01",
     "type": "next",
-    "nodeId": "u7.hockey-sense",
+    "nodeId": "u7.time-and-space",
     "levels": [
       "U7 / Initiation"
     ],
@@ -346,7 +346,7 @@
   {
     "id": "gen_u7_transition_def01",
     "type": "mc",
-    "nodeId": "u7.transition",
+    "nodeId": "u7.decision-making",
     "levels": [
       "U7 / Initiation"
     ],
@@ -365,7 +365,7 @@
   {
     "id": "gen_u7_offense_net01",
     "type": "mc",
-    "nodeId": "u7.offense",
+    "nodeId": "u7.decision-making",
     "levels": [
       "U7 / Initiation"
     ],
@@ -384,7 +384,7 @@
   {
     "id": "gen_u7_transition_esc01",
     "type": "mistake",
-    "nodeId": "u7.transition",
+    "nodeId": "u7.decision-making",
     "levels": [
       "U7 / Initiation"
     ],
@@ -404,7 +404,7 @@
   {
     "id": "gen_u7_transition_cmp01",
     "type": "next",
-    "nodeId": "u7.transition",
+    "nodeId": "u7.decision-making",
     "levels": [
       "U7 / Initiation"
     ],
@@ -438,7 +438,7 @@
   {
     "id": "gen_u7_offense_sup02",
     "type": "mc",
-    "nodeId": "u7.offense",
+    "nodeId": "u7.decision-making",
     "levels": [
       "U7 / Initiation"
     ],
@@ -457,7 +457,7 @@
   {
     "id": "gen_u7_defense_pos01",
     "type": "mc",
-    "nodeId": "u7.defense",
+    "nodeId": "u7.reading-the-play",
     "levels": [
       "U7 / Initiation"
     ],
@@ -476,7 +476,7 @@
   {
     "id": "gen_u7_puck_skills_pas01",
     "type": "mc",
-    "nodeId": "u7.puck-skills",
+    "nodeId": "u7.time-and-space",
     "levels": [
       "U7 / Initiation"
     ],
@@ -495,7 +495,7 @@
   {
     "id": "gen_u7_hockey_sense_rul01",
     "type": "mc",
-    "nodeId": "u7.hockey-sense",
+    "nodeId": "u7.decision-making",
     "levels": [
       "U7 / Initiation"
     ],
@@ -514,7 +514,7 @@
   {
     "id": "gen_u7_hockey_sense_ovr01",
     "type": "next",
-    "nodeId": "u7.hockey-sense",
+    "nodeId": "u7.reading-the-play",
     "levels": [
       "U7 / Initiation"
     ],
@@ -534,7 +534,7 @@
   {
     "id": "gen_u7_transition_off01",
     "type": "mc",
-    "nodeId": "u7.transition",
+    "nodeId": "u7.decision-making",
     "levels": [
       "U7 / Initiation"
     ],
@@ -553,7 +553,7 @@
   {
     "id": "gen_u7_defense_gap01",
     "type": "mc",
-    "nodeId": "u7.defense",
+    "nodeId": "u7.decision-making",
     "levels": [
       "U7 / Initiation"
     ],
@@ -572,7 +572,7 @@
   {
     "id": "gen_u7_defense_stk01",
     "type": "tf",
-    "nodeId": "u7.defense",
+    "nodeId": "u7.decision-making",
     "levels": [
       "U7 / Initiation"
     ],
@@ -586,7 +586,7 @@
   {
     "id": "gen_u7_offense_atk01",
     "type": "mc",
-    "nodeId": "u7.offense",
+    "nodeId": "u7.decision-making",
     "levels": [
       "U7 / Initiation"
     ],
@@ -601,5 +601,2233 @@
     ],
     "ok": 3,
     "explain": "When you have open ice in front of you, keep skating. Moving your feet gets you closer to the net and gives you a better chance to score."
+  },
+  {
+    "id": "gen_u9_reading-the-play_rdp01",
+    "type": "mc",
+    "nodeId": "u9.reading-the-play",
+    "levels": [
+      "U9 / Novice"
+    ],
+    "cat": "Hockey Sense",
+    "d": 1,
+    "sit": "Your teammate shoots, and the puck bounces off the goalie's pads into the slot. The goalie is down, and a defender is starting toward the loose puck.",
+    "opts": [
+      "Take an extra stickhandle to settle the puck before shooting",
+      "Stop near the net and tap the loose puck quickly before the defender gets there",
+      "Peel away toward the boards to look for a pass",
+      "Wait for your teammate to skate in for their own rebound"
+    ],
+    "ok": 1,
+    "explain": "Reading the play means seeing that the puck is loose and time is short. With the goalie down and a defender coming, a quick rebound touch is better than waiting or taking a big wind-up."
+  },
+  {
+    "id": "gen_u9_reading-the-play_rdp02",
+    "type": "tf",
+    "nodeId": "u9.reading-the-play",
+    "levels": [
+      "U9 / Novice"
+    ],
+    "cat": "Hockey Sense",
+    "d": 1,
+    "sit": "When you are defending a 2-on-1 rush, you should always chase straight at the player with the puck and reach for it.",
+    "ok": false,
+    "tip": "Stay between both threats.",
+    "why": "If you chase only the puck carrier, they can pass to the open teammate. A U9 defender should protect the middle and try to take away the dangerous pass."
+  },
+  {
+    "id": "gen_u9_reading-the-play_rdp03",
+    "type": "mistake",
+    "nodeId": "u9.reading-the-play",
+    "levels": [
+      "U9 / Novice"
+    ],
+    "cat": "Hockey Sense",
+    "d": 1,
+    "sit": "A player is standing by the boards waiting for a pass. The puck is passed, but it hits a skate and bounces into open ice. The player stays on the boards and waits.",
+    "question": "What is the player's mistake?",
+    "opts": [
+      "They should have stayed on the boards and called louder for the same pass",
+      "They stood still instead of reading the bounce and skating to the open ice to get the puck",
+      "They should have backed up toward their own zone before going after the puck",
+      "They moved their stick blade on the ice too early"
+    ],
+    "ok": 1,
+    "explain": "Pucks do not always come straight to your stick. Reading the play means reacting when the puck changes direction and skating to the loose puck first."
+  },
+  {
+    "id": "gen_u9_reading-the-play_rdp04",
+    "type": "next",
+    "nodeId": "u9.reading-the-play",
+    "levels": [
+      "U9 / Novice"
+    ],
+    "cat": "Hockey Sense",
+    "d": 1,
+    "sit": "You are skating up the ice, and a teammate with the puck is skating right beside you. A defender steps up to block your teammate.",
+    "opts": [
+      "Slow down beside your teammate and wait for them to beat the defender",
+      "Skate directly behind your teammate and hope for a drop pass in the same traffic",
+      "Skate away from the defender into an open lane so your teammate has a clear pass",
+      "Cut in front of your teammate and skate toward the puck"
+    ],
+    "ok": 2,
+    "explain": "When the defender steps up to your teammate, open ice appears beside or behind that pressure. Moving into that lane gives your teammate a simple pass option.",
+    "tip": "Find the empty lane."
+  },
+  {
+    "id": "gen_u9_reading-the-play_rdp05",
+    "type": "mc",
+    "nodeId": "u9.reading-the-play",
+    "levels": [
+      "U9 / Novice"
+    ],
+    "cat": "Hockey Sense",
+    "d": 1,
+    "sit": "Your defenseman has the puck behind your net, looking to pass it up the ice to you. The other team's winger is standing right between you and your defenseman.",
+    "opts": [
+      "Stay exactly where you are and tap your stick on the ice",
+      "Skate to an open pocket of ice where the winger is not blocking the pass",
+      "Skate closer to the boards where the winger is already blocking the lane",
+      "Turn up ice without looking back for the puck"
+    ],
+    "ok": 1,
+    "explain": "If a defender is standing in the passing lane, your teammate cannot pass through them. Move your feet to make a clear lane and show your stick as a target."
+  },
+  {
+    "id": "gen_u9_decision-making_dec01",
+    "type": "mc",
+    "nodeId": "u9.decision-making",
+    "levels": [
+      "U9 / Novice"
+    ],
+    "cat": "Hockey Sense",
+    "d": 1,
+    "sit": "You are leading a 2-on-1 rush toward the net. The only defender slides over to block your pass, leaving you a clear path to the goalie.",
+    "opts": [
+      "Try to force a pass through the defender's skates to your teammate anyway",
+      "Slow down and wait for the defender to choose again",
+      "Skate toward the net and take a quick shot yourself",
+      "Dump the puck into the corner even though you have a shooting lane"
+    ],
+    "ok": 2,
+    "explain": "Good decision making means taking what the defender gives you. If the defender takes away the pass, use the open lane and shoot quickly."
+  },
+  {
+    "id": "gen_u9_decision-making_dec02",
+    "type": "tf",
+    "nodeId": "u9.decision-making",
+    "levels": [
+      "U9 / Novice"
+    ],
+    "cat": "Hockey Sense",
+    "d": 1,
+    "sit": "If the middle of the ice is clogged with three defenders, the best decision is to put your head down and try to stickhandle straight through them.",
+    "ok": false,
+    "tip": "Look for open ice.",
+    "why": "Skating into a crowd usually gives the puck away. A better U9 decision is to move the puck or skate toward open space away from the traffic."
+  },
+  {
+    "id": "gen_u9_decision-making_dec03",
+    "type": "mistake",
+    "nodeId": "u9.decision-making",
+    "levels": [
+      "U9 / Novice"
+    ],
+    "cat": "Hockey Sense",
+    "d": 1,
+    "sit": "A player receives a pass near the other team's net. The goalie is out of position, and no defender is between the player and the open net. The player passes the puck back to their defenseman at the blue line.",
+    "question": "What is the player's mistake?",
+    "opts": [
+      "They passed away from an open net instead of shooting quickly",
+      "They should have waited longer to see if a defender would arrive",
+      "They should have skated behind the net to keep the puck safe",
+      "They should have passed into the corner before looking at the net"
+    ],
+    "ok": 0,
+    "explain": "In this play, the best chance is already there. When you are close to the net, the goalie is out of position, and the lane is open, shoot before the chance disappears."
+  },
+  {
+    "id": "gen_u9_decision-making_dec04",
+    "type": "next",
+    "nodeId": "u9.decision-making",
+    "levels": [
+      "U9 / Novice"
+    ],
+    "cat": "Hockey Sense",
+    "d": 1,
+    "sit": "You pick up the puck in your defensive corner. You look up the boards and see a defender waiting there to pressure you.",
+    "opts": [
+      "Skate the puck right across the front of your own goalie",
+      "Stop, turn back, and skate behind your own net to use the open ice on the other side",
+      "Force the puck up the boards straight into the defender",
+      "Throw a blind pass through the middle of your zone"
+    ],
+    "ok": 1,
+    "explain": "If the boards are blocked, do not force the puck into pressure. Turning behind your net, when that side is open, keeps the puck away from the dangerous middle.",
+    "tip": "Use the open side of the ice."
+  },
+  {
+    "id": "gen_u9_decision-making_dec05",
+    "type": "mc",
+    "nodeId": "u9.decision-making",
+    "levels": [
+      "U9 / Novice"
+    ],
+    "cat": "Hockey Sense",
+    "d": 1,
+    "sit": "Your teammate is battling for the puck on the boards. You are open in the slot. The puck pops right to you.",
+    "opts": [
+      "Shoot the puck right away before the defenders can react",
+      "Pass the puck back into the pile of players on the boards",
+      "Stickhandle toward the boards to make a safer play",
+      "Stop and wait for the goalie to get set"
+    ],
+    "ok": 0,
+    "explain": "When the puck pops to you in the scoring area, make a quick decision. Shooting right away uses the surprise before defenders can close the space."
+  },
+  {
+    "id": "gen_u9_time-and-space_tas01",
+    "type": "mc",
+    "nodeId": "u9.time-and-space",
+    "levels": [
+      "U9 / Novice"
+    ],
+    "cat": "Hockey Sense",
+    "d": 1,
+    "sit": "You are carrying the puck up the ice and see three defenders waiting at their blue line. Your teammate is skating fast into open ice on the outside wing.",
+    "opts": [
+      "Try to stickhandle straight through all three defenders by yourself",
+      "Pass the puck to your teammate in the open space before you reach the defenders",
+      "Slow down at the blue line until a defender comes closer",
+      "Turn around and skate all the way back to your own net"
+    ],
+    "ok": 1,
+    "explain": "The middle is crowded, but the outside has space. Passing before the pressure reaches you helps your team keep speed and avoid the traffic."
+  },
+  {
+    "id": "gen_u9_time-and-space_tas02",
+    "type": "tf",
+    "nodeId": "u9.time-and-space",
+    "levels": [
+      "U9 / Novice"
+    ],
+    "cat": "Hockey Sense",
+    "d": 1,
+    "sit": "If a defender is chasing you in open ice, gliding with both feet still is the best way to keep your space.",
+    "ok": false,
+    "tip": "Keep your feet moving.",
+    "why": "Gliding lets the defender catch up. Keep your feet moving, or make a quick turn into open ice, so you protect the space you have."
+  },
+  {
+    "id": "gen_u9_time-and-space_tas03",
+    "type": "mistake",
+    "nodeId": "u9.time-and-space",
+    "levels": [
+      "U9 / Novice"
+    ],
+    "cat": "Hockey Sense",
+    "d": 1,
+    "sit": "A player has the puck and open ice in front of them. No defender is close, but they panic and slap the puck down the ice to no one.",
+    "question": "What is the player's mistake?",
+    "opts": [
+      "They did not wait for a defender before making a play",
+      "They gave the puck away instead of carrying it into the open space",
+      "They should have passed backward right away even with open ice ahead",
+      "They should have taken a big shot from far away"
+    ],
+    "ok": 1,
+    "explain": "When you have time and open ice, use it. Carrying the puck forward gives your team a better chance than throwing it away with no pressure on you."
+  },
+  {
+    "id": "gen_u9_time-and-space_tas04",
+    "type": "next",
+    "nodeId": "u9.time-and-space",
+    "levels": [
+      "U9 / Novice"
+    ],
+    "cat": "Hockey Sense",
+    "d": 1,
+    "sit": "You are on defense in your own zone. The puck comes to you, and you have plenty of time and space. No forechecker is near you.",
+    "opts": [
+      "Panic and ice the puck all the way down the rink",
+      "Keep your head up, skate forward into space, and make a good pass",
+      "Stand still with the puck until a forechecker arrives",
+      "Throw a blind pass through the middle of your zone"
+    ],
+    "ok": 1,
+    "explain": "If you have time and space, use it. Moving your feet with your head up helps you make a controlled play instead of giving the puck away.",
+    "tip": "Use the time you have."
+  },
+  {
+    "id": "gen_u9_time-and-space_tas05",
+    "type": "mc",
+    "nodeId": "u9.time-and-space",
+    "levels": [
+      "U9 / Novice"
+    ],
+    "cat": "Hockey Sense",
+    "d": 1,
+    "sit": "Your teammate wins a faceoff in the offensive zone. The puck slides to you at the blue line, and you have a clear lane to the net.",
+    "opts": [
+      "Hold the puck until a defender gets close",
+      "Take a quick step into the open lane and shoot before the space closes",
+      "Pass to a covered teammate along the boards",
+      "Skate all the way into the corner with the puck"
+    ],
+    "ok": 1,
+    "explain": "Open lanes can close quickly after a faceoff. A quick step and shot uses the space before defenders can block the puck."
+  },
+  {
+    "id": "gen_u9_creativity-under-pressure_cup01",
+    "type": "mc",
+    "nodeId": "u9.creativity-under-pressure",
+    "levels": [
+      "U9 / Novice"
+    ],
+    "cat": "Hockey Sense",
+    "d": 1,
+    "sit": "You get the puck behind the other team's net. A defender chases you around the right side and cuts off your path.",
+    "opts": [
+      "Keep skating the same way and hope you can outrun the defender along the boards",
+      "Stop quickly, protect the puck, and go back out the left side where the ice is open",
+      "Throw the puck to the front of the net without looking",
+      "Freeze behind the net and wait for the defender to take the puck"
+    ],
+    "ok": 1,
+    "explain": "When one side is blocked, change direction to the open side. A quick stop, puck protection, and turn can use the net as a shield."
+  },
+  {
+    "id": "gen_u9_creativity-under-pressure_cup02",
+    "type": "tf",
+    "nodeId": "u9.creativity-under-pressure",
+    "levels": [
+      "U9 / Novice"
+    ],
+    "cat": "Hockey Sense",
+    "d": 1,
+    "sit": "If a defender's stick blocks the direct pass and your teammate is near the boards, banking the puck softly off the boards can be a creative way to pass.",
+    "ok": true,
+    "tip": "Use the boards.",
+    "why": "The boards can help you move the puck around a defender's stick. At U9, a soft bank pass is a simple creative play when the direct lane is blocked."
+  },
+  {
+    "id": "gen_u9_creativity-under-pressure_cup03",
+    "type": "mistake",
+    "nodeId": "u9.creativity-under-pressure",
+    "levels": [
+      "U9 / Novice"
+    ],
+    "cat": "Hockey Sense",
+    "d": 1,
+    "sit": "A player is stuck in the corner with a defender reaching for the puck. Instead of turning their body to protect it, they face the defender directly and try to stickhandle.",
+    "question": "What is the player's mistake?",
+    "opts": [
+      "They exposed the puck to the defender instead of using their body as a shield",
+      "They should have passed blindly through the middle right away",
+      "They should have shot from the corner before protecting the puck",
+      "They should have stopped moving their feet completely"
+    ],
+    "ok": 0,
+    "explain": "Under pressure, your body can protect the puck. Turning sideways or away from the defender keeps the puck safer and gives you time to find help."
+  },
+  {
+    "id": "gen_u9_creativity-under-pressure_cup04",
+    "type": "next",
+    "nodeId": "u9.creativity-under-pressure",
+    "levels": [
+      "U9 / Novice"
+    ],
+    "cat": "Hockey Sense",
+    "d": 1,
+    "sit": "You are skating up the wing, and a defender steps up right in front of you. Your teammate is skating into open ice behind the defender.",
+    "opts": [
+      "Try to skate straight through the defender with the puck",
+      "Chip the puck softly off the boards into space for your teammate",
+      "Stop and wait for the defender to take the puck",
+      "Turn all the way back without looking for your teammate"
+    ],
+    "ok": 1,
+    "explain": "If a defender blocks your path, you can move the puck to open space behind them. A soft chip off the boards gives your teammate a chance to skate onto it.",
+    "tip": "Chip to open space."
+  },
+  {
+    "id": "gen_u9_creativity-under-pressure_cup05",
+    "type": "mc",
+    "nodeId": "u9.creativity-under-pressure",
+    "levels": [
+      "U9 / Novice"
+    ],
+    "cat": "Hockey Sense",
+    "d": 1,
+    "sit": "You have the puck in the slot, ready to shoot, but a defender drops down in front of you to block the lane.",
+    "opts": [
+      "Shoot it hard right into the defender's pads",
+      "Fake the shot, pull the puck to the side, and take a quick shot around the blocker",
+      "Skate backward out of the slot right away",
+      "Pass to a covered teammate behind you"
+    ],
+    "ok": 1,
+    "explain": "When the shooting lane is blocked, change the angle. A small fake and side move can open a safer lane for a quick shot."
+  },
+  {
+    "id": "gen_u7_reading-the-play_rdp01",
+    "type": "mc",
+    "nodeId": "u7.reading-the-play",
+    "levels": [
+      "U7 / Initiation"
+    ],
+    "cat": "Defensive Play",
+    "d": 1,
+    "sit": "Your goalie saves the puck to the corner. Two players from the other team skate toward it. You are the closest defender to your net.",
+    "opts": [
+      "Skate to the front of your net and keep your stick on the ice",
+      "Chase both attackers deep into the corner",
+      "Stand behind your own net and wait",
+      "Skate up to the blue line for a pass"
+    ],
+    "ok": 0,
+    "explain": "The puck is in the corner, but the dangerous place is in front of your goalie. At U7, the simple read is to protect the net first."
+  },
+  {
+    "id": "gen_u7_reading-the-play_rdp02",
+    "type": "tf",
+    "nodeId": "u7.reading-the-play",
+    "levels": [
+      "U7 / Initiation"
+    ],
+    "cat": "Defensive Play",
+    "d": 1,
+    "sit": "If a player on the other team has the puck behind your net, you should chase them around the back and leave the front of the net open.",
+    "ok": false,
+    "tip": "Protect the house.",
+    "why": "They cannot score from behind the net. Stay near the front so you can stop a pass or loose puck by your goalie."
+  },
+  {
+    "id": "gen_u7_reading-the-play_rdp03",
+    "type": "next",
+    "nodeId": "u7.reading-the-play",
+    "levels": [
+      "U7 / Initiation"
+    ],
+    "cat": "Offensive Play",
+    "d": 1,
+    "sit": "Your teammate is skating down the side and is about to shoot. You are skating down the middle.",
+    "opts": [
+      "Skate into the corner in case the puck misses",
+      "Stop near the side of the net with your stick on the ice for a rebound",
+      "Skate up to your teammate and crowd the puck",
+      "Stop high in the zone and watch"
+    ],
+    "ok": 1,
+    "explain": "Shots often bounce off the goalie. If you stop near the net with your stick ready, you can be first to the rebound.",
+    "tip": "Stop at the net."
+  },
+  {
+    "id": "gen_u7_reading-the-play_rdp04",
+    "type": "mistake",
+    "nodeId": "u7.reading-the-play",
+    "levels": [
+      "U7 / Initiation"
+    ],
+    "cat": "Transition & Compete",
+    "d": 1,
+    "sit": "The other team steals the puck and skates fast toward your net. A defender stops at the center red line and watches them go by.",
+    "question": "What is the player's mistake?",
+    "opts": [
+      "They stopped skating instead of coming back to help protect their net",
+      "They should have chased from behind with only their stick",
+      "They should have waited at the blue line for a pass",
+      "They should have stayed near the other team's net"
+    ],
+    "ok": 0,
+    "explain": "When the other team gets the puck, your job changes to defense. Skate back hard and help your goalie."
+  },
+  {
+    "id": "gen_u7_reading-the-play_rdp05",
+    "type": "mc",
+    "nodeId": "u7.reading-the-play",
+    "levels": [
+      "U7 / Initiation"
+    ],
+    "cat": "Puck Skills",
+    "d": 1,
+    "sit": "You are standing in front of the other team's net. Your teammate has the puck in the corner and looks at you.",
+    "opts": [
+      "Wave your hands while your stick is off the ice",
+      "Skate right up to your teammate and bring traffic with you",
+      "Keep your stick blade flat on the ice as a target",
+      "Turn your back and skate away from the net"
+    ],
+    "ok": 2,
+    "explain": "A good pass needs a clear target. Keeping your stick on the ice shows where the puck should go and gets you ready to shoot."
+  },
+  {
+    "id": "gen_u7_decision-making_dec01",
+    "type": "mc",
+    "nodeId": "u7.decision-making",
+    "levels": [
+      "U7 / Initiation"
+    ],
+    "cat": "Hockey Sense",
+    "d": 1,
+    "sit": "You are skating down the ice with the puck. A defender is standing still in front of you. The side of the ice is empty.",
+    "opts": [
+      "Put your head down and skate straight at the defender",
+      "Stop moving and wait for them to move away",
+      "Steer to the empty side and skate past them",
+      "Shoot the puck from far away before you get closer"
+    ],
+    "ok": 2,
+    "explain": "When someone blocks your path, look for open ice. Steering to the empty side is safer than skating into traffic."
+  },
+  {
+    "id": "gen_u7_decision-making_dec02",
+    "type": "tf",
+    "nodeId": "u7.decision-making",
+    "levels": [
+      "U7 / Initiation"
+    ],
+    "cat": "Hockey Sense",
+    "d": 1,
+    "sit": "When you hear the referee blow the whistle, you should keep playing just in case the puck goes in.",
+    "ok": false,
+    "tip": "Stop on the whistle.",
+    "why": "The whistle means the play is stopped. Good players stop right away and get ready for the next play."
+  },
+  {
+    "id": "gen_u7_decision-making_dec03",
+    "type": "next",
+    "nodeId": "u7.decision-making",
+    "levels": [
+      "U7 / Initiation"
+    ],
+    "cat": "Transition & Compete",
+    "d": 1,
+    "sit": "You dig the puck out of the corner beside your own goalie. A defender is standing in front of your net.",
+    "opts": [
+      "Skate the puck up the boards, keeping it close to the wall",
+      "Skate the puck right across the front of your own net",
+      "Leave the puck in the corner and skate away",
+      "Pass it backward toward your own goalie"
+    ],
+    "ok": 0,
+    "explain": "The front of your own net is dangerous. The boards are the safer path when you are leaving your zone.",
+    "tip": "Use the boards."
+  },
+  {
+    "id": "gen_u7_decision-making_dec04",
+    "type": "mistake",
+    "nodeId": "u7.decision-making",
+    "levels": [
+      "U7 / Initiation"
+    ],
+    "cat": "Offensive Play",
+    "d": 1,
+    "sit": "A player gets a pass in the middle of the ice. Only the goalie is between them and the net. They pass the puck backward right away.",
+    "question": "What is the player's mistake?",
+    "opts": [
+      "They should have shot from farther away",
+      "They passed instead of skating toward the net to shoot",
+      "They should have skated into the corner to be safe",
+      "They should have waited until a defender caught them"
+    ],
+    "ok": 1,
+    "explain": "When you have open ice and a chance to score, keep your feet moving toward the net and shoot."
+  },
+  {
+    "id": "gen_u7_decision-making_dec05",
+    "type": "mc",
+    "nodeId": "u7.decision-making",
+    "levels": [
+      "U7 / Initiation"
+    ],
+    "cat": "Offensive Play",
+    "d": 1,
+    "sit": "You are on a breakaway with only the goalie in front of you. A player from the other team is skating hard behind you.",
+    "opts": [
+      "Stop skating and let them catch up",
+      "Keep skating fast toward the net and shoot",
+      "Turn around and skate back toward the player chasing you",
+      "Shoot the puck into the corner and chase it"
+    ],
+    "ok": 1,
+    "explain": "On a breakaway, speed helps you stay ahead. Keep your feet moving and go to the net."
+  },
+  {
+    "id": "gen_u7_time-and-space_tas01",
+    "type": "mc",
+    "nodeId": "u7.time-and-space",
+    "levels": [
+      "U7 / Initiation"
+    ],
+    "cat": "Hockey Sense",
+    "d": 1,
+    "sit": "You get the puck near the boards. A player from the other team skates at you. The ice along the wall is open.",
+    "opts": [
+      "Keep your feet moving and skate up the boards into open ice",
+      "Stop skating and hide the puck between your skates",
+      "Pass across the front of your own net",
+      "Stand still and wait for help"
+    ],
+    "ok": 0,
+    "explain": "Open ice helps you escape. Keep moving into the space instead of stopping where pressure can catch you."
+  },
+  {
+    "id": "gen_u7_time-and-space_tas02",
+    "type": "tf",
+    "nodeId": "u7.time-and-space",
+    "levels": [
+      "U7 / Initiation"
+    ],
+    "cat": "Offensive Play",
+    "d": 1,
+    "sit": "If two of your teammates are already in the corner battling for the puck, you should skate into the same corner and stand beside them.",
+    "ok": false,
+    "tip": "Find open ice.",
+    "why": "If two teammates are already near the puck, they need someone open. Move to space so they have a pass."
+  },
+  {
+    "id": "gen_u7_time-and-space_tas03",
+    "type": "next",
+    "nodeId": "u7.time-and-space",
+    "levels": [
+      "U7 / Initiation"
+    ],
+    "cat": "Transition & Compete",
+    "d": 1,
+    "sit": "You are skating with the puck, but it slips off your stick. It is only a few feet away.",
+    "opts": [
+      "Keep skating in a big circle to come back for it",
+      "Give up and let the other team have it",
+      "Look at your stick before chasing the puck",
+      "Stop, turn, and get back on the puck"
+    ],
+    "ok": 3,
+    "explain": "Everyone loses the puck sometimes. Stop and turn right away so you can win it back.",
+    "tip": "Stop and turn."
+  },
+  {
+    "id": "gen_u7_time-and-space_tas04",
+    "type": "mistake",
+    "nodeId": "u7.time-and-space",
+    "levels": [
+      "U7 / Initiation"
+    ],
+    "cat": "Offensive Play",
+    "d": 1,
+    "sit": "Your teammate has the puck on the boards. Two defenders are poking at them. You skate right up next to your teammate and stand still.",
+    "question": "What is the player's mistake?",
+    "opts": [
+      "They joined the crowd instead of finding open ice",
+      "They should have poked the puck away from their teammate",
+      "They should have hidden behind the other team's net",
+      "They should have skated back to their own goalie"
+    ],
+    "ok": 0,
+    "explain": "If you stand in the same crowd, your teammate has no easy pass. Move to open ice and show your stick."
+  },
+  {
+    "id": "gen_u7_time-and-space_tas05",
+    "type": "mc",
+    "nodeId": "u7.time-and-space",
+    "levels": [
+      "U7 / Initiation"
+    ],
+    "cat": "Offensive Play",
+    "d": 1,
+    "sit": "You pick up a loose puck in the middle of the ice. Nobody is between you and the other team's goalie.",
+    "opts": [
+      "Pass to a teammate who is covered",
+      "Carry the puck toward the net as fast as you can",
+      "Skate backward with the puck",
+      "Shoot from center ice right away"
+    ],
+    "ok": 1,
+    "explain": "When you have open ice, use it. Carrying the puck closer gives you a better chance to score."
+  },
+  {
+    "id": "gen_u7_creativity-under-pressure_cup01",
+    "type": "mc",
+    "nodeId": "u7.creativity-under-pressure",
+    "levels": [
+      "U7 / Initiation"
+    ],
+    "cat": "Puck Skills",
+    "d": 1,
+    "sit": "You are in the corner with the puck. A defender's stick blocks the direct pass, and your teammate is open nearby.",
+    "opts": [
+      "Bank the puck softly off the boards to your teammate",
+      "Try to chop the puck through the defender's stick",
+      "Cover the puck with your hand",
+      "Shoot the puck high at the glass"
+    ],
+    "ok": 0,
+    "explain": "The boards can help you pass around a stick. A soft bank pass can reach your teammate when the straight pass is blocked."
+  },
+  {
+    "id": "gen_u7_creativity-under-pressure_cup02",
+    "type": "tf",
+    "nodeId": "u7.creativity-under-pressure",
+    "levels": [
+      "U7 / Initiation"
+    ],
+    "cat": "Hockey Sense",
+    "d": 1,
+    "sit": "When a defender follows you around the back of the net, stopping and going back the other way can help you find open ice.",
+    "ok": true,
+    "tip": "Use the net as a shield.",
+    "why": "The net can block the defender's path. A quick stop and turn can help you skate out the open side."
+  },
+  {
+    "id": "gen_u7_creativity-under-pressure_cup03",
+    "type": "next",
+    "nodeId": "u7.creativity-under-pressure",
+    "levels": [
+      "U7 / Initiation"
+    ],
+    "cat": "Transition & Compete",
+    "d": 1,
+    "sit": "You have the puck near your goal line. A forechecker is coming to trap you on the wall.",
+    "opts": [
+      "Force the puck straight up the wall into pressure",
+      "Throw the puck blindly to the front of your own net",
+      "Fake up the boards, turn back, and skate behind your net",
+      "Stop on the wall and wait"
+    ],
+    "ok": 2,
+    "explain": "A simple fake can make space. Show one way, then turn to the open ice behind your net.",
+    "tip": "Fake one way, go the other."
+  },
+  {
+    "id": "gen_u7_creativity-under-pressure_cup04",
+    "type": "mistake",
+    "nodeId": "u7.creativity-under-pressure",
+    "levels": [
+      "U7 / Initiation"
+    ],
+    "cat": "Transition & Compete",
+    "d": 1,
+    "sit": "A player picks up a loose puck in their defensive zone. A forechecker skates toward them, and the player smacks the puck into a crowded corner.",
+    "question": "What is the player's mistake?",
+    "opts": [
+      "They panicked and threw the puck away instead of skating to open ice",
+      "They should have passed through the forechecker's skates",
+      "They should have skated into their goalie",
+      "They should have shot from their own zone"
+    ],
+    "ok": 0,
+    "explain": "When pressure comes, do not throw the puck away. Use your feet to turn toward open ice and keep the puck safer."
+  },
+  {
+    "id": "gen_u7_creativity-under-pressure_cup05",
+    "type": "mc",
+    "nodeId": "u7.creativity-under-pressure",
+    "levels": [
+      "U7 / Initiation"
+    ],
+    "cat": "Offensive Play",
+    "d": 1,
+    "sit": "A defender slides on the ice in front of you to block your shot.",
+    "opts": [
+      "Shoot right into the defender's pads",
+      "Pull the puck around them and shoot through the open lane",
+      "Pass backward right away even though you can shoot",
+      "Leave the puck and skate away"
+    ],
+    "ok": 1,
+    "explain": "When a defender slides down, they cannot turn quickly. Pull the puck around them and use the open lane."
+  },
+  {
+    "id": "gen_u11_reading-the-play_rdp01",
+    "type": "mc",
+    "nodeId": "u11.reading-the-play",
+    "levels": [
+      "U11 / Atom"
+    ],
+    "cat": "Hockey Sense",
+    "d": 2,
+    "sit": "You are backchecking hard through the middle. The puck carrier is skating down the wing, and your defenseman has a good angle on them. Another opponent is driving straight toward your net.",
+    "opts": [
+      "Chase the puck carrier and leave the middle open",
+      "Pick up the player driving the net and take away their stick",
+      "Stop skating once you cross your blue line",
+      "Drift behind your own net and wait for the puck"
+    ],
+    "ok": 1,
+    "explain": "Read the biggest threat. If your defenseman has the puck carrier angled, the open player going to the net is more dangerous. Cover that player first."
+  },
+  {
+    "id": "gen_u11_reading-the-play_rdp02",
+    "type": "tf",
+    "nodeId": "u11.reading-the-play",
+    "levels": [
+      "U11 / Atom"
+    ],
+    "cat": "Hockey Sense",
+    "d": 2,
+    "sit": "When you are defending a 2-on-1, you should rush straight at the puck carrier and leave the pass option open.",
+    "ok": false,
+    "tip": "Take away the pass.",
+    "why": "On a 2-on-1, the goalie can handle the shot better if the defender protects the middle and takes away the dangerous pass."
+  },
+  {
+    "id": "gen_u11_reading-the-play_rdp03",
+    "type": "next",
+    "nodeId": "u11.reading-the-play",
+    "levels": [
+      "U11 / Atom"
+    ],
+    "cat": "Hockey Sense",
+    "d": 2,
+    "sit": "Your team is cycling the puck low in the corner. You are the high forward (F3). You see the defense has collapsed below the faceoff dots.",
+    "opts": [
+      "Join the crowded corner battle",
+      "Back all the way out to the red line",
+      "Slide into the open high slot, show your stick, and stay ready to recover",
+      "Stand beside the goalie and wait for a rebound"
+    ],
+    "ok": 2,
+    "explain": "F3 can use the space the defense gives up, but still has to stay responsible. The high slot is open, and you are still above the puck if possession changes.",
+    "tip": "Find quiet ice above the puck."
+  },
+  {
+    "id": "gen_u11_reading-the-play_rdp04",
+    "type": "mistake",
+    "nodeId": "u11.reading-the-play",
+    "levels": [
+      "U11 / Atom"
+    ],
+    "cat": "Hockey Sense",
+    "d": 2,
+    "sit": "A center takes a defensive-zone faceoff. They win the puck cleanly to their defenseman, but instead of tying up the opposing center, they skate away toward the blue line.",
+    "question": "What is the player's mistake?",
+    "opts": [
+      "They should have tried to shoot off the draw",
+      "They failed to tie up their check, giving the opposing center a free path to the net",
+      "They should have chased their own defenseman for the puck",
+      "They should have left the circle before the puck was dropped"
+    ],
+    "ok": 1,
+    "explain": "Winning the draw is only the first job. In the defensive zone, the center still has to stop their check from getting to the net."
+  },
+  {
+    "id": "gen_u11_reading-the-play_rdp05",
+    "type": "mc",
+    "nodeId": "u11.reading-the-play",
+    "levels": [
+      "U11 / Atom"
+    ],
+    "cat": "Hockey Sense",
+    "d": 2,
+    "sit": "Your defenseman shoots from the point. The goalie kicks a rebound into the low slot and is down away from the puck.",
+    "opts": [
+      "Take a big wind-up before shooting",
+      "Stop hard, keep your stick on the ice, and shoot quickly",
+      "Pass the puck back to the point to reset",
+      "Carry the puck behind the net for a wraparound"
+    ],
+    "ok": 1,
+    "explain": "A loose rebound near the net is a quick-play chance. When the goalie is down and away from the puck, shoot quickly before defenders recover."
+  },
+  {
+    "id": "gen_u11_decision-making_dec01",
+    "type": "mc",
+    "nodeId": "u11.decision-making",
+    "levels": [
+      "U11 / Atom"
+    ],
+    "cat": "Hockey Sense",
+    "d": 2,
+    "sit": "You are a defenseman at the offensive blue line. You catch a pass, but two defenders are blocking the lane to the net. Your center is open in the corner.",
+    "opts": [
+      "Shoot into the defenders' shin pads",
+      "Hold the puck at the blue line until pressure reaches you",
+      "Pass down to your open center to keep possession",
+      "Stickhandle into the crowded high slot"
+    ],
+    "ok": 2,
+    "explain": "A blocked point shot can turn into a rush against you. If the shooting lane is closed, move the puck to an open teammate and keep the play alive."
+  },
+  {
+    "id": "gen_u11_decision-making_dec02",
+    "type": "tf",
+    "nodeId": "u11.decision-making",
+    "levels": [
+      "U11 / Atom"
+    ],
+    "cat": "Hockey Sense",
+    "d": 2,
+    "sit": "When leading a 3-on-2 rush, the best decision is always to dump the puck into the corner.",
+    "ok": false,
+    "tip": "Use your numbers.",
+    "why": "A 3-on-2 gives your team an advantage. Carry or pass to make the defenders choose, instead of giving the puck away automatically."
+  },
+  {
+    "id": "gen_u11_decision-making_dec03",
+    "type": "next",
+    "nodeId": "u11.decision-making",
+    "levels": [
+      "U11 / Atom"
+    ],
+    "cat": "Hockey Sense",
+    "d": 2,
+    "sit": "You recover a loose puck below your own goal line. Two forecheckers are closing from one side, but your winger is open on the far boards with a clear lane.",
+    "opts": [
+      "Try to stickhandle through both forecheckers",
+      "Pass firmly to your open winger on the far boards",
+      "Rim the puck hard without checking the lane",
+      "Skate the puck across the front of your own net"
+    ],
+    "ok": 1,
+    "explain": "Pressure on one side usually opens space somewhere else. A firm pass to the open winger moves the puck away from danger and starts the breakout.",
+    "tip": "Pass away from pressure."
+  },
+  {
+    "id": "gen_u11_decision-making_dec04",
+    "type": "mistake",
+    "nodeId": "u11.decision-making",
+    "levels": [
+      "U11 / Atom"
+    ],
+    "cat": "Hockey Sense",
+    "d": 2,
+    "sit": "A player receives a pass in the offensive slot with a clear lane to the net. Instead of shooting, they force a backhand pass to a covered teammate back door.",
+    "question": "What is the player's mistake?",
+    "opts": [
+      "They should have held the puck longer to draw more defenders",
+      "They passed up a strong scoring chance to force a low-percentage pass",
+      "They should have dumped the puck into the corner",
+      "They should have skated away from the slot first"
+    ],
+    "ok": 1,
+    "explain": "In the slot, a clear shooting lane is a great chance. Forcing a pass to a covered teammate gives the defense time to recover."
+  },
+  {
+    "id": "gen_u11_decision-making_dec05",
+    "type": "mc",
+    "nodeId": "u11.decision-making",
+    "levels": [
+      "U11 / Atom"
+    ],
+    "cat": "Hockey Sense",
+    "d": 2,
+    "sit": "You are the last defender back. An opposing player skates at you 1-on-1 with speed and tries to push the puck wide.",
+    "opts": [
+      "Turn your hips, keep your body between them and the net, and steer them to the boards",
+      "Dive forward and hope your stick reaches the puck",
+      "Skate straight at them and guess which way they will go",
+      "Stop skating and reach with one hand"
+    ],
+    "ok": 0,
+    "explain": "The last defender protects the middle first. If you dive or guess, you can give up a clean chance. Angle the puck carrier toward the boards."
+  },
+  {
+    "id": "gen_u11_time-and-space_tas01",
+    "type": "mc",
+    "nodeId": "u11.time-and-space",
+    "levels": [
+      "U11 / Atom"
+    ],
+    "cat": "Hockey Sense",
+    "d": 2,
+    "sit": "You receive a breakout pass in the neutral zone. The opposing defenseman steps up quickly to close your space. Your teammate is skating past them along the boards.",
+    "opts": [
+      "Try to toe-drag through the defender's stick",
+      "Chip the puck softly into the space behind the defenseman for your teammate",
+      "Stop moving and let the pressure reach you",
+      "Shoot the puck high around the glass with no target"
+    ],
+    "ok": 1,
+    "explain": "When a defender steps up, they leave space behind them. A soft chip lets your teammate skate onto the puck with speed."
+  },
+  {
+    "id": "gen_u11_time-and-space_tas02",
+    "type": "tf",
+    "nodeId": "u11.time-and-space",
+    "levels": [
+      "U11 / Atom"
+    ],
+    "cat": "Hockey Sense",
+    "d": 2,
+    "sit": "When you have the puck in the offensive zone and the middle is open, skating into a crowded corner is the best way to create space.",
+    "ok": false,
+    "tip": "Use the open middle.",
+    "why": "Corners can protect the puck, but they are not the best choice when the middle is open. Moving or passing toward open ice creates more danger."
+  },
+  {
+    "id": "gen_u11_time-and-space_tas03",
+    "type": "next",
+    "nodeId": "u11.time-and-space",
+    "levels": [
+      "U11 / Atom"
+    ],
+    "cat": "Hockey Sense",
+    "d": 2,
+    "sit": "Your defenseman has the puck in your zone. The other team's wingers are covering the boards and taking away the easy wall pass.",
+    "opts": [
+      "Stand on the boards anyway and call for the puck",
+      "Skate down beside your own goal line and crowd your defenseman",
+      "Cut through the middle to give your defenseman a clear passing option",
+      "Skate into the offensive zone and wait for a long pass"
+    ],
+    "ok": 2,
+    "explain": "If the boards are covered, the middle may be open. Cutting through the middle gives your defenseman a useful passing option.",
+    "tip": "Cut through the middle."
+  },
+  {
+    "id": "gen_u11_time-and-space_tas04",
+    "type": "mistake",
+    "nodeId": "u11.time-and-space",
+    "levels": [
+      "U11 / Atom"
+    ],
+    "cat": "Hockey Sense",
+    "d": 2,
+    "sit": "A player carries the puck up the wing. A defender has a tight gap and matches their speed. Instead of passing, chipping, or delaying, the player tries to skate straight through the defender.",
+    "question": "What is the player's mistake?",
+    "opts": [
+      "They did not recognize that the defender had taken away their space",
+      "They should have shot from the red line",
+      "They should have skated backward into the neutral zone",
+      "They should have stopped and waited on the boards"
+    ],
+    "ok": 0,
+    "explain": "When a defender matches your speed and closes your space, forcing the puck through them is low percentage. Pass, chip, or delay for support."
+  },
+  {
+    "id": "gen_u11_time-and-space_tas05",
+    "type": "mc",
+    "nodeId": "u11.time-and-space",
+    "levels": [
+      "U11 / Atom"
+    ],
+    "cat": "Hockey Sense",
+    "d": 2,
+    "sit": "You are regrouping in the neutral zone with the puck. The other team is changing lines, giving you open ice in front of you.",
+    "opts": [
+      "Pass the puck backward right away to slow the game down",
+      "Dump the puck in even though the defenders are not set",
+      "Attack the open space with speed before they organize",
+      "Stop skating and wait for the new players to get on the ice"
+    ],
+    "ok": 2,
+    "explain": "A line change can create time and space. Attacking quickly forces the other team to defend before they are set."
+  },
+  {
+    "id": "gen_u11_creativity-under-pressure_cup01",
+    "type": "mc",
+    "nodeId": "u11.creativity-under-pressure",
+    "levels": [
+      "U11 / Atom"
+    ],
+    "cat": "Hockey Sense",
+    "d": 2,
+    "sit": "You pick up a loose puck in your own corner. A forechecker is coming fast from the goal line and trying to trap you on the boards.",
+    "opts": [
+      "Force the puck straight up the wall into the forechecker's stick",
+      "Throw the puck blindly to the front of your own net",
+      "Fake up the boards, pull the puck back, and skate behind your net",
+      "Stop on the wall and wait for pressure"
+    ],
+    "ok": 2,
+    "explain": "A simple fake can create your own space. Showing up the wall can freeze the forechecker long enough for you to escape behind the net."
+  },
+  {
+    "id": "gen_u11_creativity-under-pressure_cup02",
+    "type": "tf",
+    "nodeId": "u11.creativity-under-pressure",
+    "levels": [
+      "U11 / Atom"
+    ],
+    "cat": "Hockey Sense",
+    "d": 2,
+    "sit": "If a defender has you pinned on the boards, the best move is always to hack the puck forward into their skates.",
+    "ok": false,
+    "tip": "Use your support.",
+    "why": "Hacking forward usually gives the puck away. Under pressure, protect it and use a support option, like kicking or nudging it back to a teammate."
+  },
+  {
+    "id": "gen_u11_creativity-under-pressure_cup03",
+    "type": "next",
+    "nodeId": "u11.creativity-under-pressure",
+    "levels": [
+      "U11 / Atom"
+    ],
+    "cat": "Hockey Sense",
+    "d": 2,
+    "sit": "You enter the offensive zone 1-on-1. The defender has a tight gap and takes away your path to the net.",
+    "opts": [
+      "Shoot directly into the defender's pads",
+      "Slow up, protect the puck, and wait for a teammate to become a late option",
+      "Push the puck through the defender's skates",
+      "Turn all the way back to the center red line"
+    ],
+    "ok": 1,
+    "explain": "When the first option is gone, a delay can create a new one. Slowing up gives support time to arrive and keeps possession.",
+    "tip": "Delay for support."
+  },
+  {
+    "id": "gen_u11_creativity-under-pressure_cup04",
+    "type": "mistake",
+    "nodeId": "u11.creativity-under-pressure",
+    "levels": [
+      "U11 / Atom"
+    ],
+    "cat": "Hockey Sense",
+    "d": 2,
+    "sit": "A player receives a pass in the high slot but a defender drops down to block the lane. Instead of changing the angle, the player shoots directly into the defender.",
+    "question": "What is the player's mistake?",
+    "opts": [
+      "They did not pull the puck to the side to open a clear shooting lane",
+      "They used a wrist shot instead of a slapshot",
+      "They should have dumped the puck into the corner",
+      "They should have passed backward out of the zone"
+    ],
+    "ok": 0,
+    "explain": "When a defender goes down, they cannot adjust quickly. A small drag or side-step can open a cleaner lane to the net."
+  },
+  {
+    "id": "gen_u11_creativity-under-pressure_cup05",
+    "type": "mc",
+    "nodeId": "u11.creativity-under-pressure",
+    "levels": [
+      "U11 / Atom"
+    ],
+    "cat": "Hockey Sense",
+    "d": 2,
+    "sit": "You are pressured on the half-wall. You saw your center open in the slot, but the direct passing lane is blocked and you cannot turn for a forehand pass.",
+    "opts": [
+      "Hold the puck until the pressure takes it away",
+      "Throw a blind backhand pass through the defender",
+      "Bank the puck off the boards so it angles toward your open center",
+      "Spin into the pressure before making a pass"
+    ],
+    "ok": 2,
+    "explain": "A direct pass is blocked, but the boards can create a new lane. An indirect pass works when you know your teammate is open and can angle the puck to them."
+  },
+  {
+    "id": "img_u13_odd-man-reads_01",
+    "nodeId": "u13.odd-man-reads",
+    "level": "U13 / Peewee",
+    "levels": [
+      "U13 / Peewee"
+    ],
+    "type": "mc",
+    "cat": "Offensive Play",
+    "d": 2,
+    "image_spec": "Clean rink diagram. Gold team attacks right to left. Gold puck carrier is on the right wing. A gold teammate is driving the center lane. The white defender is positioned between the puck carrier and the center-lane teammate, clearly blocking the pass while leaving a clear shooting lane to the white goalie and net.",
+    "sit": "You are the gold puck carrier on this odd-man rush. The white defender has taken away the pass to your teammate in the middle. What is your best option?",
+    "opts": [
+      "Shoot the puck using the clear lane the defender gave you",
+      "Try to force a pass through the white defender to the middle teammate",
+      "Stop and wait for the white defender to move away",
+      "Carry toward the corner even though the shooting lane is open"
+    ],
+    "ok": 0,
+    "explain": "When the defender takes away the pass on an odd-man rush, the shot lane is open. Take the ice they give you and put the puck on net.",
+    "overlay_intent": "Gold arrow from the puck carrier to the net; dim the blocked passing lane and the middle gold teammate.",
+    "image_file": "img_u13_odd-man-reads_01.svg",
+    "media": {
+      "type": "image",
+      "url": "/assets/images/img_u13_odd-man-reads_01.svg",
+      "alt": "Gold puck carrier on a two-on-one with the white defender taking away the pass and the shot lane open.",
+      "ratio": "3/2"
+    },
+    "overlays": [
+      {
+        "kind": "puck",
+        "x": 0.639,
+        "y": 0.658,
+        "scale": 0.85,
+        "rotation": -8
+      },
+      {
+        "kind": "arrow",
+        "x1": 0.704,
+        "y1": 0.7,
+        "x2": 0.125,
+        "y2": 0.5,
+        "color": "#C9A24B",
+        "width": 2.8
+      },
+      {
+        "kind": "ring",
+        "x": 0.125,
+        "y": 0.5,
+        "r": 0.055,
+        "color": "#36D17A",
+        "dashed": false
+      }
+    ]
+  },
+  {
+    "id": "img_u13_odd-man-reads_02",
+    "nodeId": "u13.odd-man-reads",
+    "level": "U13 / Peewee",
+    "levels": [
+      "U13 / Peewee"
+    ],
+    "type": "mc",
+    "cat": "Offensive Play",
+    "d": 2,
+    "image_spec": "Clean top-down rink diagram. Gold attacks bottom to top. Gold puck carrier is near the left boards inside the blue line. A gold center drives to the net and pulls one white defender low. Another white defender steps toward the puck carrier. A trailing gold forward is open high in the slot.",
+    "sit": "You are the gold puck carrier entering the zone. The white defenders are reacting to you and the gold teammate driving the net. Where is the best open space?",
+    "opts": [
+      "The trailing gold forward open in the high slot",
+      "The gold center driving into tight coverage near the net",
+      "The narrow lane between the white defender and the boards",
+      "The far corner away from the scoring area"
+    ],
+    "ok": 0,
+    "explain": "The middle drive pulls coverage low, and pressure steps toward the puck carrier. That opens the high slot for the trailing gold forward.",
+    "overlay_intent": "Gold arrow from puck carrier to the trailing high forward; green ring on the trailing forward; dim the covered center drive.",
+    "image_file": "img_u13_odd-man-reads_02.svg",
+    "media": {
+      "type": "image",
+      "url": "/assets/images/img_u13_odd-man-reads_02.svg",
+      "alt": "Gold zone entry with the net drive pulling coverage low and a trailing gold forward open in the high slot.",
+      "ratio": "3/2"
+    },
+    "overlays": [
+      {
+        "kind": "puck",
+        "x": 0.258,
+        "y": 0.564,
+        "scale": 0.85,
+        "rotation": -10
+      },
+      {
+        "kind": "arrow",
+        "x1": 0.204,
+        "y1": 0.65,
+        "x2": 0.513,
+        "y2": 0.538,
+        "color": "#C9A24B",
+        "width": 2.8
+      },
+      {
+        "kind": "ring",
+        "x": 0.513,
+        "y": 0.538,
+        "r": 0.055,
+        "color": "#36D17A",
+        "dashed": false
+      }
+    ]
+  },
+  {
+    "id": "img_u13_odd-man-reads_03",
+    "nodeId": "u13.odd-man-reads",
+    "level": "U13 / Peewee",
+    "levels": [
+      "U13 / Peewee"
+    ],
+    "type": "mc",
+    "cat": "Offensive Play",
+    "d": 2,
+    "image_spec": "Clean rink diagram. Gold attacks left to right. Gold puck carrier enters on the right-side lane with the puck. A gold teammate is available on the opposite side. The white defender is backed deep into the slot, leaving a large cushion of open ice in front of the puck carrier.",
+    "sit": "You are the gold puck carrier on an odd-man rush. The white defender is backing in and giving you a lot of open ice. What should you do first?",
+    "opts": [
+      "Carry the puck into the open space to force the defender to make a choice",
+      "Shoot from far away before using the open ice",
+      "Throw a blind pass across before the defender commits",
+      "Turn toward the boards and shield the puck"
+    ],
+    "ok": 0,
+    "explain": "If the defender gives you space, use it. Carrying forward improves your shot and can force the defender to open a pass later.",
+    "overlay_intent": "Gold arrow showing the puck carrier moving into the open ice; dim the immediate cross-ice pass.",
+    "image_file": "img_u13_odd-man-reads_03.svg",
+    "media": {
+      "type": "image",
+      "url": "/assets/images/img_u13_odd-man-reads_03.svg",
+      "alt": "Gold puck carrier on an odd-man rush with the white defender backed in and open ice ahead.",
+      "ratio": "3/2"
+    },
+    "overlays": [
+      {
+        "kind": "puck",
+        "x": 0.356,
+        "y": 0.661,
+        "scale": 0.85,
+        "rotation": 8
+      },
+      {
+        "kind": "arrow",
+        "x1": 0.288,
+        "y1": 0.7,
+        "x2": 0.585,
+        "y2": 0.61,
+        "color": "#C9A24B",
+        "width": 2.8
+      },
+      {
+        "kind": "ring",
+        "x": 0.56,
+        "y": 0.62,
+        "r": 0.075,
+        "color": "#36D17A",
+        "dashed": false
+      }
+    ]
+  },
+  {
+    "id": "img_u13_odd-man-reads_04",
+    "nodeId": "u13.odd-man-reads",
+    "level": "U13 / Peewee",
+    "levels": [
+      "U13 / Peewee"
+    ],
+    "type": "mc",
+    "cat": "Offensive Play",
+    "d": 2,
+    "image_spec": "Clean top-down rink diagram. Gold attacks bottom to top. Gold puck carrier is in the middle of the ice. The white defender shades toward the gold teammate on the left side. The gold teammate on the right side is open with a clear lane toward the net.",
+    "sit": "You have the puck in the middle on an odd-man rush. The white defender shifts toward your gold teammate on the left. Who has the best open ice?",
+    "opts": [
+      "The gold teammate open on the right side",
+      "The gold teammate covered on the left side",
+      "The small space directly behind the white defender",
+      "The corner behind the white goalie"
+    ],
+    "ok": 0,
+    "explain": "The white defender cannot cover both sides. When they shade toward the left-side teammate, move the puck to the open gold teammate on the right.",
+    "overlay_intent": "Gold arrow from the puck carrier to the open right-side teammate; green ring on the right-side teammate; dim the left-side teammate and the defender.",
+    "image_file": "img_u13_odd-man-reads_04.svg",
+    "media": {
+      "type": "image",
+      "url": "/assets/images/img_u13_odd-man-reads_04.svg",
+      "alt": "Gold puck carrier in the middle with the white defender shading left and the right-side gold teammate open.",
+      "ratio": "3/2"
+    },
+    "overlays": [
+      {
+        "kind": "puck",
+        "x": 0.534,
+        "y": 0.538,
+        "scale": 0.85,
+        "rotation": 0
+      },
+      {
+        "kind": "arrow",
+        "x1": 0.5,
+        "y1": 0.638,
+        "x2": 0.688,
+        "y2": 0.438,
+        "color": "#C9A24B",
+        "width": 2.8
+      },
+      {
+        "kind": "ring",
+        "x": 0.688,
+        "y": 0.438,
+        "r": 0.055,
+        "color": "#36D17A",
+        "dashed": false
+      }
+    ]
+  },
+  {
+    "id": "img_u7_time-and-space_01",
+    "nodeId": "u7.time-and-space",
+    "level": "U7 / Initiation",
+    "levels": [
+      "U7 / Initiation"
+    ],
+    "concept": "Time and Space",
+    "type": "mistake",
+    "cat": "Hockey Sense",
+    "d": 1,
+    "image_spec": "Clean top-down rink diagram. Gold attacks bottom to top. The gold puck carrier is on the left boards under pressure from two white defenders. A second gold player is skating into the same crowded corner while the middle of the ice is open.",
+    "sit": "The gold puck carrier is stuck on the boards. Another gold player is skating into the same crowd.",
+    "question": "What is the gold player without the puck doing wrong?",
+    "opts": [
+      "They are skating into the crowd instead of staying in open ice",
+      "They are too far from the puck to touch it right away",
+      "They are looking at their teammate instead of the goalie",
+      "They are waiting in the middle instead of joining the pile"
+    ],
+    "ok": 0,
+    "tip": "Find open ice, not the pile.",
+    "explain": "At U7, the first read is simple: do not add another gold player to the pile. Staying in open ice gives the puck carrier a safer place to pass.",
+    "overlay_intent": "Green ring on open center ice; red X over the gold teammate skating into the crowd.",
+    "image_file": "img_u7_time-and-space_01.svg",
+    "reviewerNote": "Kept the U7 read to one visible cue, changed weak decoys into believable spacing mistakes, and removed body-contact assumptions.",
+    "media": {
+      "type": "image",
+      "url": "/assets/images/img_u7_time-and-space_01.svg",
+      "alt": "Clean top-down rink diagram. Gold attacks bottom to top. The gold puck carrier is on the left boards under pressure from two white defenders. A second gold player is skating into the same crowded corner while the middle of the ice is open.",
+      "ratio": "3/2"
+    },
+    "overlays": [
+      {
+        "kind": "ring",
+        "x": 0.5,
+        "y": 0.52,
+        "r": 0.075,
+        "color": "#36D17A",
+        "dashed": false
+      },
+      {
+        "kind": "text",
+        "x": 0.208,
+        "y": 0.794,
+        "text": "X",
+        "color": "#E5484D",
+        "size": 44,
+        "scale": 1.1
+      },
+      {
+        "kind": "puck",
+        "x": 0.192,
+        "y": 0.694,
+        "scale": 0.8
+      }
+    ]
+  },
+  {
+    "id": "img_u7_decision-making_01",
+    "nodeId": "u7.decision-making",
+    "level": "U7 / Initiation",
+    "levels": [
+      "U7 / Initiation"
+    ],
+    "concept": "Decision Making",
+    "type": "next",
+    "cat": "Hockey Sense",
+    "d": 1,
+    "image_spec": "Clean rink diagram. Gold attacks left to right. A gold puck carrier has a clear breakaway toward the white goalie. A white chaser is two stick lengths behind.",
+    "sit": "You are the gold player with the puck on a breakaway. A white player is chasing from behind.",
+    "opts": [
+      "Keep skating hard toward the net and get ready to shoot",
+      "Slow down so the white player can catch up beside you",
+      "Turn back toward the player chasing you",
+      "Shoot the puck into the corner before you reach the net"
+    ],
+    "ok": 0,
+    "tip": "Keep going to the net.",
+    "explain": "On a breakaway, speed protects your chance. Keep your feet moving toward the net so the chaser cannot catch you before you shoot.",
+    "overlay_intent": "Gold arrow from the puck carrier to the white net.",
+    "image_file": "img_u7_decision-making_01.svg",
+    "reviewerNote": "Made the correct next play direct and age-fit, and replaced giveaway options with realistic U7 slow-down or turn-back mistakes.",
+    "media": {
+      "type": "image",
+      "url": "/assets/images/img_u7_decision-making_01.svg",
+      "alt": "Clean rink diagram. Gold attacks left to right. A gold puck carrier has a clear breakaway toward the white goalie. A white chaser is two stick lengths behind.",
+      "ratio": "3/2"
+    },
+    "overlays": [
+      {
+        "kind": "puck",
+        "x": 0.379,
+        "y": 0.494,
+        "scale": 0.8
+      },
+      {
+        "kind": "arrow",
+        "x1": 0.365,
+        "y1": 0.5,
+        "x2": 0.84,
+        "y2": 0.5,
+        "color": "#C9A24B",
+        "width": 2.8
+      }
+    ]
+  },
+  {
+    "id": "img_u7_reading-the-play_01",
+    "nodeId": "u7.reading-the-play",
+    "level": "U7 / Initiation",
+    "levels": [
+      "U7 / Initiation"
+    ],
+    "concept": "Reading the Play",
+    "type": "tf",
+    "cat": "Hockey Sense",
+    "d": 1,
+    "image_spec": "Clean top-down rink diagram. Gold defends near its own net. A white puck carrier is behind the gold net. The gold defender has chased behind the net, leaving the slot in front of the gold goalie open.",
+    "sit": "True or False: The gold defender should chase behind the net and leave the front open.",
+    "ok": false,
+    "tip": "Protect the front.",
+    "why": "A player behind the net cannot shoot straight in. The dangerous space is in front of the goalie, so the gold defender should protect that area first.",
+    "overlay_intent": "Green ring in the empty slot in front of the gold net; red X over the chase behind the net.",
+    "image_file": "img_u7_reading-the-play_01.svg",
+    "reviewerNote": "Made the true-false statement less trivial by naming the tradeoff: chase behind the net or protect the front.",
+    "media": {
+      "type": "image",
+      "url": "/assets/images/img_u7_reading-the-play_01.svg",
+      "alt": "Clean top-down rink diagram. Gold defends near its own net. A white puck carrier is behind the gold net. The gold defender has chased behind the net, leaving the slot in front of the gold goalie open.",
+      "ratio": "3/2"
+    },
+    "overlays": [
+      {
+        "kind": "ring",
+        "x": 0.5,
+        "y": 0.735,
+        "r": 0.07,
+        "color": "#36D17A",
+        "dashed": false
+      },
+      {
+        "kind": "text",
+        "x": 0.421,
+        "y": 0.9,
+        "text": "X",
+        "color": "#E5484D",
+        "size": 42,
+        "scale": 1
+      },
+      {
+        "kind": "puck",
+        "x": 0.483,
+        "y": 0.913,
+        "scale": 0.8
+      }
+    ]
+  },
+  {
+    "id": "img_u7_creativity-under-pressure_01",
+    "nodeId": "u7.creativity-under-pressure",
+    "level": "U7 / Initiation",
+    "levels": [
+      "U7 / Initiation"
+    ],
+    "concept": "Creativity Under Pressure",
+    "type": "mistake",
+    "cat": "Hockey Sense",
+    "d": 1,
+    "image_spec": "Clean rink diagram. Gold is in its own zone. The gold puck carrier is near the left side under light pressure from one white forechecker. The middle is crowded, while the ice behind the gold net is open.",
+    "sit": "The gold puck carrier is under pressure in their own zone. The middle is crowded, but the ice behind the net is open.",
+    "question": "What is the gold player's mistake?",
+    "opts": [
+      "They are throwing the puck into the crowded middle instead of using open ice behind the net",
+      "They are turning away from pressure before the white player reaches them",
+      "They are keeping the puck on the boards instead of passing through the crowd",
+      "They are looking behind the net before moving the puck"
+    ],
+    "ok": 0,
+    "tip": "Use open ice to escape.",
+    "explain": "When the middle is crowded, do not toss the puck there. A simple turn toward open ice behind the net can keep the puck safer.",
+    "overlay_intent": "Green arrow behind the gold net to safe ice; red X over the crowded middle.",
+    "image_file": "img_u7_creativity-under-pressure_01.svg",
+    "reviewerNote": "Changed slapshot/random wording into a U7 puck-safety mistake and made the decoys plausible but clearly wrong.",
+    "media": {
+      "type": "image",
+      "url": "/assets/images/img_u7_creativity-under-pressure_01.svg",
+      "alt": "Clean rink diagram. Gold is in its own zone. The gold puck carrier is near the left side under light pressure from one white forechecker. The middle is crowded, while the ice behind the gold net is open.",
+      "ratio": "3/2"
+    },
+    "overlays": [
+      {
+        "kind": "puck",
+        "x": 0.263,
+        "y": 0.613,
+        "scale": 0.8
+      },
+      {
+        "kind": "arrow",
+        "x1": 0.24,
+        "y1": 0.63,
+        "x2": 0.18,
+        "y2": 0.78,
+        "color": "#C9A24B",
+        "width": 2.8
+      },
+      {
+        "kind": "text",
+        "x": 0.492,
+        "y": 0.513,
+        "text": "X",
+        "color": "#E5484D",
+        "size": 42,
+        "scale": 1
+      }
+    ]
+  },
+  {
+    "id": "img_u7_reading-the-play_02",
+    "nodeId": "u7.reading-the-play",
+    "level": "U7 / Initiation",
+    "levels": [
+      "U7 / Initiation"
+    ],
+    "concept": "Reading the Play",
+    "type": "next",
+    "cat": "Hockey Sense",
+    "d": 1,
+    "image_spec": "Clean top-down rink diagram. Gold attacks bottom to top. The white goalie has made a save and is down. The puck is loose beside the goalie's pads. An open gold player is in the slot looking at the puck.",
+    "sit": "The puck is loose beside the white goalie's pads. You are the open gold player nearby.",
+    "opts": [
+      "Stop near the side of the net with your stick on the ice for the rebound",
+      "Skate past the net into the corner before the puck moves",
+      "Glide in the middle and wait for the shooter to get it",
+      "Turn back toward center ice and watch"
+    ],
+    "ok": 0,
+    "tip": "Stick down at the net.",
+    "explain": "Loose pucks near the net are scoring chances. Stop at the net with your stick ready so you can tap in the rebound.",
+    "overlay_intent": "Gold arrow from the open player to the loose puck beside the goalie.",
+    "image_file": "img_u7_reading-the-play_02.svg",
+    "reviewerNote": "Kept the frozen-frame read to one visible loose puck and improved decoys into common U7 drifting mistakes.",
+    "media": {
+      "type": "image",
+      "url": "/assets/images/img_u7_reading-the-play_02.svg",
+      "alt": "Clean top-down rink diagram. Gold attacks bottom to top. The white goalie has made a save and is down. The puck is loose beside the goalie's pads. An open gold player is in the slot looking at the puck.",
+      "ratio": "3/2"
+    },
+    "overlays": [
+      {
+        "kind": "puck",
+        "x": 0.542,
+        "y": 0.269,
+        "scale": 0.8
+      },
+      {
+        "kind": "arrow",
+        "x1": 0.5,
+        "y1": 0.538,
+        "x2": 0.542,
+        "y2": 0.269,
+        "color": "#C9A24B",
+        "width": 2.8
+      },
+      {
+        "kind": "ring",
+        "x": 0.542,
+        "y": 0.269,
+        "r": 0.045,
+        "color": "#36D17A",
+        "dashed": false
+      }
+    ]
+  },
+  {
+    "id": "img_u7_time-and-space_02",
+    "nodeId": "u7.time-and-space",
+    "level": "U7 / Initiation",
+    "levels": [
+      "U7 / Initiation"
+    ],
+    "concept": "Time and Space",
+    "type": "tf",
+    "cat": "Hockey Sense",
+    "d": 1,
+    "image_spec": "Clean rink diagram. Gold attacks left to right. The gold puck carrier is stopped on the boards with open ice ahead along the wall. A white defender is skating toward them.",
+    "sit": "True or False: Stopping your feet is the best way to escape the white defender.",
+    "ok": false,
+    "tip": "Keep your feet moving.",
+    "why": "Open ice helps you escape. If you stop, the white defender can close the space, so keep skating into the open lane.",
+    "overlay_intent": "Gold arrow up the boards into open space; red X over the stopped puck carrier.",
+    "image_file": "img_u7_time-and-space_02.svg",
+    "reviewerNote": "Kept the U7 cue simple: open ice ahead versus stopped feet under pressure.",
+    "media": {
+      "type": "image",
+      "url": "/assets/images/img_u7_time-and-space_02.svg",
+      "alt": "Clean rink diagram. Gold attacks left to right. The gold puck carrier is stopped on the boards with open ice ahead along the wall. A white defender is skating toward them.",
+      "ratio": "3/2"
+    },
+    "overlays": [
+      {
+        "kind": "puck",
+        "x": 0.329,
+        "y": 0.76,
+        "scale": 0.8
+      },
+      {
+        "kind": "arrow",
+        "x1": 0.315,
+        "y1": 0.769,
+        "x2": 0.58,
+        "y2": 0.765,
+        "color": "#C9A24B",
+        "width": 2.8
+      },
+      {
+        "kind": "text",
+        "x": 0.308,
+        "y": 0.769,
+        "text": "X",
+        "color": "#E5484D",
+        "size": 38,
+        "scale": 1
+      }
+    ]
+  },
+  {
+    "id": "img_u7_decision-making_02",
+    "nodeId": "u7.decision-making",
+    "level": "U7 / Initiation",
+    "levels": [
+      "U7 / Initiation"
+    ],
+    "concept": "Decision Making",
+    "type": "mistake",
+    "cat": "Hockey Sense",
+    "d": 1,
+    "image_spec": "Clean top-down rink diagram. Gold attacks bottom to top. The gold puck carrier is in front of the white net with a clear shooting lane. A covered gold teammate is far behind near the blue line.",
+    "sit": "The gold puck carrier is close to the white net with a clear lane. A teammate behind them is covered.",
+    "question": "What is the puck carrier's mistake?",
+    "opts": [
+      "They are looking for a covered pass instead of shooting from the clear lane",
+      "They are too close to the net to try to score",
+      "They are keeping their stick on the ice near the puck",
+      "They are facing the white goalie before they shoot"
+    ],
+    "ok": 0,
+    "tip": "Shoot when the lane is clear.",
+    "explain": "When you are close to the net and the lane is clear, take the chance. Passing back to a covered teammate gives away the best scoring chance.",
+    "overlay_intent": "Green ring on the white net; red X over the backward passing lane.",
+    "image_file": "img_u7_decision-making_02.svg",
+    "reviewerNote": "Fixed the answer wording so the best U7 play is shoot from a clear close lane, not skate extra touches in front.",
+    "media": {
+      "type": "image",
+      "url": "/assets/images/img_u7_decision-making_02.svg",
+      "alt": "Clean top-down rink diagram. Gold attacks bottom to top. The gold puck carrier is in front of the white net with a clear shooting lane. A covered gold teammate is far behind near the blue line.",
+      "ratio": "3/2"
+    },
+    "overlays": [
+      {
+        "kind": "puck",
+        "x": 0.517,
+        "y": 0.288,
+        "scale": 0.8
+      },
+      {
+        "kind": "ring",
+        "x": 0.5,
+        "y": 0.15,
+        "r": 0.06,
+        "color": "#36D17A",
+        "dashed": false
+      },
+      {
+        "kind": "text",
+        "x": 0.458,
+        "y": 0.48,
+        "text": "X",
+        "color": "#E5484D",
+        "size": 42,
+        "scale": 1
+      }
+    ]
+  },
+  {
+    "id": "img_u7_time-and-space_03",
+    "nodeId": "u7.time-and-space",
+    "level": "U7 / Initiation",
+    "levels": [
+      "U7 / Initiation"
+    ],
+    "concept": "Time and Space",
+    "type": "next",
+    "cat": "Hockey Sense",
+    "d": 1,
+    "image_spec": "Clean rink diagram. Gold attacks left to right. The puck has slid a few feet off the gold player's stick. The gold player is starting a wide turn instead of stopping back toward the puck.",
+    "sit": "The puck slipped off your stick and is sitting a few feet away.",
+    "opts": [
+      "Stop, turn back, and get right to the puck",
+      "Keep skating in a big circle before coming back",
+      "Look down at your stick and stop playing",
+      "Skate away and hope a teammate gets it"
+    ],
+    "ok": 0,
+    "tip": "Stop and get it back.",
+    "explain": "A quick stop and turn saves time. Big loops give the other team a chance to win the loose puck.",
+    "overlay_intent": "Gold arrow showing a quick stop and direct path to the puck; red X over the wide turn.",
+    "image_file": "img_u7_time-and-space_03.svg",
+    "reviewerNote": "Simplified the recovery read for U7 and made the wrong choices common delay mistakes.",
+    "media": {
+      "type": "image",
+      "url": "/assets/images/img_u7_time-and-space_03.svg",
+      "alt": "Clean rink diagram. Gold attacks left to right. The puck has slid a few feet off the gold player's stick. The gold player is starting a wide turn instead of stopping back toward the puck.",
+      "ratio": "3/2"
+    },
+    "overlays": [
+      {
+        "kind": "puck",
+        "x": 0.45,
+        "y": 0.525,
+        "scale": 0.8
+      },
+      {
+        "kind": "arrow",
+        "x1": 0.4,
+        "y1": 0.675,
+        "x2": 0.45,
+        "y2": 0.525,
+        "color": "#C9A24B",
+        "width": 2.8
+      },
+      {
+        "kind": "text",
+        "x": 0.55,
+        "y": 0.675,
+        "text": "X",
+        "color": "#E5484D",
+        "size": 40,
+        "scale": 1
+      }
+    ]
+  },
+  {
+    "id": "img_u9_decision-making_01",
+    "nodeId": "u9.decision-making",
+    "level": "U9 / Novice",
+    "levels": [
+      "U9 / Novice"
+    ],
+    "concept": "Decision Making",
+    "type": "mistake",
+    "cat": "Hockey Sense",
+    "d": 1,
+    "image_spec": "Clean top-down rink diagram. Gold attacks bottom to top on a 2-on-1. The white defender is taking away the pass to the gold teammate. The gold puck carrier has an open lane to the net but is looking at the covered pass.",
+    "sit": "Gold has a 2-on-1. The white defender is blocking the pass across, and the puck carrier has space to shoot.",
+    "question": "What is the gold puck carrier's mistake?",
+    "opts": [
+      "They are forcing the covered pass instead of taking the open shot lane",
+      "They are skating too close to the middle before the defender moves",
+      "They are keeping the puck on their forehand near the net",
+      "They are looking at the goalie before deciding"
+    ],
+    "ok": 0,
+    "tip": "If the pass is covered, shoot.",
+    "explain": "On a 2-on-1, take what the defender gives you. If the defender takes away the pass, the shot lane is open.",
+    "overlay_intent": "Gold arrow to the net; red X over the covered pass lane.",
+    "image_file": "img_u9_decision-making_01.svg",
+    "reviewerNote": "Kept the U9 read to one pressure cue and sharpened decoys so only the covered-pass mistake survives.",
+    "media": {
+      "type": "image",
+      "url": "/assets/images/img_u9_decision-making_01.svg",
+      "alt": "Clean top-down rink diagram. Gold attacks bottom to top on a 2-on-1. The white defender is taking away the pass to the gold teammate. The gold puck carrier has an open lane to the net but is looking at the covered pass.",
+      "ratio": "3/2"
+    },
+    "overlays": [
+      {
+        "kind": "puck",
+        "x": 0.408,
+        "y": 0.65,
+        "scale": 0.8
+      },
+      {
+        "kind": "arrow",
+        "x1": 0.392,
+        "y1": 0.675,
+        "x2": 0.5,
+        "y2": 0.16,
+        "color": "#C9A24B",
+        "width": 2.8
+      },
+      {
+        "kind": "text",
+        "x": 0.5,
+        "y": 0.688,
+        "text": "X",
+        "color": "#E5484D",
+        "size": 42,
+        "scale": 1
+      }
+    ]
+  },
+  {
+    "id": "img_u9_reading-the-play_01",
+    "nodeId": "u9.reading-the-play",
+    "level": "U9 / Novice",
+    "levels": [
+      "U9 / Novice"
+    ],
+    "concept": "Reading the Play",
+    "type": "next",
+    "cat": "Hockey Sense",
+    "d": 1,
+    "image_spec": "Clean rink diagram. Gold defenseman has the puck behind the gold net. A gold winger on the boards is blocked by a white player in the passing lane. An open pocket is lower on the boards with a clear lane from the defenseman.",
+    "sit": "The white player is blocking the pass to you on the boards. There is an open pocket lower on the wall.",
+    "opts": [
+      "Move to the open pocket so the defenseman has a clear passing lane",
+      "Stay still on the boards and tap your stick harder",
+      "Skate behind the net into the defenseman's space",
+      "Drift toward center ice where the pass lane is longer"
+    ],
+    "ok": 0,
+    "tip": "Move to open the lane.",
+    "explain": "If the lane is blocked, staying still keeps it blocked. Move your feet to a nearby open pocket so your teammate can see and pass to you.",
+    "overlay_intent": "Gold arrow from the winger to the open pocket; green lane from the defenseman to that pocket.",
+    "image_file": "img_u9_reading-the-play_01.svg",
+    "reviewerNote": "Clarified the support read and made the wrong options realistic U9 habits: stick tapping, crowding the puck, or drifting too far.",
+    "media": {
+      "type": "image",
+      "url": "/assets/images/img_u9_reading-the-play_01.svg",
+      "alt": "Clean rink diagram. Gold defenseman has the puck behind the gold net. A gold winger on the boards is blocked by a white player in the passing lane. An open pocket is lower on the boards with a clear lane from the defenseman.",
+      "ratio": "3/2"
+    },
+    "overlays": [
+      {
+        "kind": "puck",
+        "x": 0.521,
+        "y": 0.819,
+        "scale": 0.8
+      },
+      {
+        "kind": "arrow",
+        "x1": 0.758,
+        "y1": 0.625,
+        "x2": 0.75,
+        "y2": 0.763,
+        "color": "#C9A24B",
+        "width": 2.8
+      },
+      {
+        "kind": "arrow",
+        "x1": 0.5,
+        "y1": 0.831,
+        "x2": 0.75,
+        "y2": 0.763,
+        "color": "#36D17A",
+        "width": 2.4
+      },
+      {
+        "kind": "ring",
+        "x": 0.75,
+        "y": 0.763,
+        "r": 0.055,
+        "color": "#36D17A",
+        "dashed": false
+      }
+    ]
+  },
+  {
+    "id": "img_u9_time-and-space_01",
+    "nodeId": "u9.time-and-space",
+    "level": "U9 / Novice",
+    "levels": [
+      "U9 / Novice"
+    ],
+    "concept": "Time and Space",
+    "type": "tf",
+    "cat": "Hockey Sense",
+    "d": 1,
+    "image_spec": "Clean top-down rink diagram. Gold attacks bottom to top. The gold puck carrier is at the blue line facing three white defenders in a wall. A gold winger is open on the outside.",
+    "sit": "True or False: The best play is to put your head down and stickhandle straight through the three white defenders.",
+    "ok": false,
+    "tip": "Do not skate into the wall.",
+    "why": "Three defenders together take away the middle. The open teammate outside is the safer play and keeps the attack moving.",
+    "overlay_intent": "Gold arrow to the open outside winger; red X over the wall of defenders.",
+    "image_file": "img_u9_time-and-space_01.svg",
+    "reviewerNote": "Kept the U9 read simple but not trivial by showing a wall plus one outside support option.",
+    "media": {
+      "type": "image",
+      "url": "/assets/images/img_u9_time-and-space_01.svg",
+      "alt": "Clean top-down rink diagram. Gold attacks bottom to top. The gold puck carrier is at the blue line facing three white defenders in a wall. A gold winger is open on the outside.",
+      "ratio": "3/2"
+    },
+    "overlays": [
+      {
+        "kind": "puck",
+        "x": 0.517,
+        "y": 0.681,
+        "scale": 0.8
+      },
+      {
+        "kind": "arrow",
+        "x1": 0.5,
+        "y1": 0.706,
+        "x2": 0.292,
+        "y2": 0.563,
+        "color": "#C9A24B",
+        "width": 2.8
+      },
+      {
+        "kind": "text",
+        "x": 0.5,
+        "y": 0.555,
+        "text": "X",
+        "color": "#E5484D",
+        "size": 44,
+        "scale": 1
+      }
+    ]
+  },
+  {
+    "id": "img_u9_creativity-under-pressure_01",
+    "nodeId": "u9.creativity-under-pressure",
+    "level": "U9 / Novice",
+    "levels": [
+      "U9 / Novice"
+    ],
+    "concept": "Creativity Under Pressure",
+    "type": "mistake",
+    "cat": "Hockey Sense",
+    "d": 1,
+    "image_spec": "Clean rink diagram. Gold is in its own corner. A white defender is applying pressure. The gold puck carrier is facing the middle with the puck exposed instead of turning their body between the defender and the puck.",
+    "sit": "The gold puck carrier is under pressure in the corner with the puck exposed to the white defender.",
+    "question": "What is the gold puck carrier's mistake?",
+    "opts": [
+      "They exposed the puck instead of putting their body between the defender and the puck",
+      "They turned their skates away from the middle before passing",
+      "They kept the puck too close to the boards while protecting it",
+      "They looked for support before the defender reached them"
+    ],
+    "ok": 0,
+    "tip": "Put your body between pressure and puck.",
+    "explain": "Under pressure, body position matters. Turning your body between the defender and the puck protects it and buys time for a teammate to get open.",
+    "overlay_intent": "Red X over the exposed puck; gold curved arrow showing the player should turn to shield.",
+    "image_file": "img_u9_creativity-under-pressure_01.svg",
+    "reviewerNote": "Removed non-age-appropriate contact language and focused the U9 read on puck protection body position.",
+    "media": {
+      "type": "image",
+      "url": "/assets/images/img_u9_creativity-under-pressure_01.svg",
+      "alt": "Clean rink diagram. Gold is in its own corner. A white defender is applying pressure. The gold puck carrier is facing the middle with the puck exposed instead of turning their body between the defender and the puck.",
+      "ratio": "3/2"
+    },
+    "overlays": [
+      {
+        "kind": "puck",
+        "x": 0.258,
+        "y": 0.75,
+        "scale": 0.8
+      },
+      {
+        "kind": "text",
+        "x": 0.258,
+        "y": 0.75,
+        "text": "X",
+        "color": "#E5484D",
+        "size": 38,
+        "scale": 1
+      },
+      {
+        "kind": "arrow",
+        "x1": 0.217,
+        "y1": 0.763,
+        "x2": 0.217,
+        "y2": 0.635,
+        "color": "#C9A24B",
+        "width": 2.6
+      }
+    ]
+  },
+  {
+    "id": "img_u9_decision-making_02",
+    "nodeId": "u9.decision-making",
+    "level": "U9 / Novice",
+    "levels": [
+      "U9 / Novice"
+    ],
+    "concept": "Decision Making",
+    "type": "next",
+    "cat": "Hockey Sense",
+    "d": 1,
+    "image_spec": "Clean top-down rink diagram. Gold is in its own right corner. A white forechecker is closing down the boards. The area behind the gold net and the far side are open.",
+    "sit": "You have the puck in your own corner. A white forechecker is closing the boards, and the far side is open.",
+    "opts": [
+      "Stop, turn back, and skate behind your net toward the open side",
+      "Carry straight up the boards into the white forechecker",
+      "Pass across the front of your own goalie through traffic",
+      "Freeze in the corner until the white player arrives"
+    ],
+    "ok": 0,
+    "tip": "Turn away from pressure.",
+    "explain": "If pressure closes one side, use the open ice behind the net. Reversing away from pressure is safer than forcing the puck into traffic in front.",
+    "overlay_intent": "Gold arrow behind the net to the open side; red X over the closed boards.",
+    "image_file": "img_u9_decision-making_02.svg",
+    "reviewerNote": "Changed body-contact wording to age-appropriate pressure and made the safe reverse the only defensible option.",
+    "media": {
+      "type": "image",
+      "url": "/assets/images/img_u9_decision-making_02.svg",
+      "alt": "Clean top-down rink diagram. Gold is in its own right corner. A white forechecker is closing down the boards. The area behind the gold net and the far side are open.",
+      "ratio": "3/2"
+    },
+    "overlays": [
+      {
+        "kind": "puck",
+        "x": 0.758,
+        "y": 0.763,
+        "scale": 0.8
+      },
+      {
+        "kind": "arrow",
+        "x1": 0.775,
+        "y1": 0.775,
+        "x2": 0.3,
+        "y2": 0.781,
+        "color": "#C9A24B",
+        "width": 2.8
+      },
+      {
+        "kind": "text",
+        "x": 0.775,
+        "y": 0.625,
+        "text": "X",
+        "color": "#E5484D",
+        "size": 40,
+        "scale": 1
+      }
+    ]
+  },
+  {
+    "id": "img_u9_reading-the-play_02",
+    "nodeId": "u9.reading-the-play",
+    "level": "U9 / Novice",
+    "levels": [
+      "U9 / Novice"
+    ],
+    "concept": "Reading the Play",
+    "type": "tf",
+    "cat": "Hockey Sense",
+    "d": 1,
+    "image_spec": "Clean rink diagram. White attacks left to right on a 2-on-1. The lone gold defender is skating straight at the white puck carrier, leaving the second white attacker open near the back post.",
+    "sit": "True or False: On this 2-on-1, the gold defender should skate straight at the white puck carrier and leave the other attacker open.",
+    "ok": false,
+    "tip": "Protect the pass lane.",
+    "why": "If the defender chases only the puck, the pass across is open. Staying between the two attackers helps block the dangerous pass.",
+    "overlay_intent": "Green ring in the middle pass lane; red X over the gold defender's chase path.",
+    "image_file": "img_u9_reading-the-play_02.svg",
+    "reviewerNote": "Rewrote the statement to avoid always/never guessing and tied the answer to the visible open back-post attacker.",
+    "media": {
+      "type": "image",
+      "url": "/assets/images/img_u9_reading-the-play_02.svg",
+      "alt": "Clean rink diagram. White attacks left to right on a 2-on-1. The lone gold defender is skating straight at the white puck carrier, leaving the second white attacker open near the back post.",
+      "ratio": "3/2"
+    },
+    "overlays": [
+      {
+        "kind": "puck",
+        "x": 0.408,
+        "y": 0.519,
+        "scale": 0.8
+      },
+      {
+        "kind": "ring",
+        "x": 0.57,
+        "y": 0.46,
+        "r": 0.07,
+        "color": "#36D17A",
+        "dashed": false
+      },
+      {
+        "kind": "text",
+        "x": 0.475,
+        "y": 0.494,
+        "text": "X",
+        "color": "#E5484D",
+        "size": 42,
+        "scale": 1
+      }
+    ]
+  },
+  {
+    "id": "img_u9_time-and-space_02",
+    "nodeId": "u9.time-and-space",
+    "level": "U9 / Novice",
+    "levels": [
+      "U9 / Novice"
+    ],
+    "concept": "Time and Space",
+    "type": "mistake",
+    "cat": "Hockey Sense",
+    "d": 1,
+    "image_spec": "Clean top-down rink diagram. Gold puck carrier is in the neutral zone with no white defenders nearby. Instead of carrying into the open ice, they are giving the puck away down the ice.",
+    "sit": "The gold puck carrier has lots of open ice and no white defender nearby.",
+    "question": "What is the gold player's mistake?",
+    "opts": [
+      "They are giving the puck away instead of carrying it into open ice",
+      "They are skating forward before a defender challenges them",
+      "They are keeping the puck close enough to control it",
+      "They are looking up before deciding what to do"
+    ],
+    "ok": 0,
+    "tip": "Open ice means carry it.",
+    "explain": "When no one is pressuring you, keep the puck and skate. Giving it away wastes open ice and ends your team's chance to make a play.",
+    "overlay_intent": "Gold arrow into open ice; red X over the giveaway path.",
+    "image_file": "img_u9_time-and-space_02.svg",
+    "reviewerNote": "Tightened the age fit by making the read about one simple cue: no pressure means carry the puck.",
+    "media": {
+      "type": "image",
+      "url": "/assets/images/img_u9_time-and-space_02.svg",
+      "alt": "Clean top-down rink diagram. Gold puck carrier is in the neutral zone with no white defenders nearby. Instead of carrying into the open ice, they are giving the puck away down the ice.",
+      "ratio": "3/2"
+    },
+    "overlays": [
+      {
+        "kind": "puck",
+        "x": 0.396,
+        "y": 0.494,
+        "scale": 0.8
+      },
+      {
+        "kind": "arrow",
+        "x1": 0.375,
+        "y1": 0.5,
+        "x2": 0.68,
+        "y2": 0.5,
+        "color": "#C9A24B",
+        "width": 2.8
+      },
+      {
+        "kind": "text",
+        "x": 0.625,
+        "y": 0.456,
+        "text": "X",
+        "color": "#E5484D",
+        "size": 42,
+        "scale": 1
+      }
+    ]
+  },
+  {
+    "id": "img_u9_creativity-under-pressure_02",
+    "nodeId": "u9.creativity-under-pressure",
+    "level": "U9 / Novice",
+    "levels": [
+      "U9 / Novice"
+    ],
+    "concept": "Creativity Under Pressure",
+    "type": "next",
+    "cat": "Hockey Sense",
+    "d": 1,
+    "image_spec": "Clean rink diagram. Gold attacks left to right. The gold puck carrier is behind the white net. A white defender has closed the route around the right post. The left side of the net is open.",
+    "sit": "You have the puck behind the white net. The white defender has closed the right side, and the left side is open.",
+    "opts": [
+      "Stop, protect the puck, and go back out the open left side",
+      "Keep skating into the closed right side and hope to squeeze through",
+      "Push the puck into the side of the net from behind",
+      "Throw a blind pass into the middle without looking"
+    ],
+    "ok": 0,
+    "tip": "When one side closes, use the other side.",
+    "explain": "When one side is closed, change direction. The net can help shield the puck while you escape to the open side.",
+    "overlay_intent": "Gold arrow showing a quick pivot and escape out the open left side; red X on the closed right side.",
+    "image_file": "img_u9_creativity-under-pressure_02.svg",
+    "reviewerNote": "Kept the U9 creativity read to a visible closed route and open route, with one clearly best next move.",
+    "media": {
+      "type": "image",
+      "url": "/assets/images/img_u9_creativity-under-pressure_02.svg",
+      "alt": "Clean rink diagram. Gold attacks left to right. The gold puck carrier is behind the white net. A white defender has closed the route around the right post. The left side of the net is open.",
+      "ratio": "3/2"
+    },
+    "overlays": [
+      {
+        "kind": "puck",
+        "x": 0.842,
+        "y": 0.569,
+        "scale": 0.8
+      },
+      {
+        "kind": "arrow",
+        "x1": 0.825,
+        "y1": 0.581,
+        "x2": 0.817,
+        "y2": 0.4,
+        "color": "#C9A24B",
+        "width": 2.8
+      },
+      {
+        "kind": "text",
+        "x": 0.892,
+        "y": 0.625,
+        "text": "X",
+        "color": "#E5484D",
+        "size": 40,
+        "scale": 1
+      }
+    ]
   }
 ]

@@ -135,7 +135,7 @@ node scripts/brief-to-seed.mjs docs/ai-pipeline/briefs/<id>.json
 
 <span style="color:#eab308">Always reference players by **role and color** ("the gold puck carrier", "the weak-side winger"), **never jersey numbers** — numbers change between images. The read must be makeable from ONE frozen frame (no motion, no sequence).</span>
 
-## <span style="color:#22c55e">🟢 STEP 1 — copy the whole box below into GEMINI (image-question brief writer)</span>
+## <span style="color:#22c55e">🟢 STEP 1 · PROMPT D — copy the whole box below into GEMINI (image-question brief writer)</span>
 
 ```text
 You are the RinkReads Image Question Brief writer. RinkReads shows a kid a hockey IMAGE and asks them to pick the right READ; an overlay (arrow/ring) later marks the answer on the picture. You DESCRIBE the image to create and author the question text for it. You NEVER see the final image, NEVER use pixel coordinates, and NEVER use jersey numbers — refer to players by role and color only. Output valid JSON only (an array of brief objects), no prose, no fences.
@@ -167,7 +167,7 @@ OUTPUT: one JSON array of brief objects. Nothing else.
 
 <span style="color:#22c55e">🟢 Then type your driver into Gemini, e.g.</span> `Write 4 image question briefs for u13.odd-man-reads.`
 
-## <span style="color:#5BA4E8">🔵 STEP 2 — copy the whole box below into CHATGPT (review the text AND generate the images)</span>
+## <span style="color:#5BA4E8">🔵 STEP 2 · PROMPT E — copy the whole box below into CHATGPT (review the text AND generate the images)</span>
 
 ```text
 You are the RinkReads Image Question Reviewer and Illustrator. You receive a JSON array of image-question briefs (a scene spec + an authored hockey read). Do BOTH jobs.
