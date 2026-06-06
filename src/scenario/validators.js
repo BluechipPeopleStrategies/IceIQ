@@ -239,6 +239,34 @@ const rules = [
     return null;
   },
 
+  // QA: "below the puck" / "above the puck" must match the geometry. "Below the
+  // puck" = deeper, between the puck and the net; "above" = higher, toward the
+  // blue line. Net reference = the goalie's x (works for any view/zone). If the
+  // copy claims the defense collapsed below the puck but the defenders are
+  // actually farther from the net than the puck, that's the contradiction.
+  // (From user feedback: defenders can't be "below" a puck sitting on the goal line.)
+  function copyMatchesDepth(s) {
+    const text = [s.interaction?.prompt, s.mc?.stem, s.feedback?.right, s.feedback?.wrong]
+      .filter(t => typeof t === "string").join(" ").toLowerCase();
+    const below = /(below the puck|collapsed below|sagged below|pulled below|sag below|sunk below)/.test(text);
+    const above = /(above the puck|collapsed above|stayed above|stay above)/.test(text);
+    if (!below && !above) return null;
+    const goalie = (s.actors || []).find(a => a.kind === "goalie");
+    const puck = (s.actors || []).find(a => a.kind === "puck");
+    const defs = (s.actors || []).filter(a => a.kind === "defender");
+    if (!goalie || !puck || !defs.length) return null;
+    const puckToNet = Math.abs(puck.x - goalie.x);             // smaller = deeper (closer to net)
+    const deeper = defs.filter(d => Math.abs(d.x - goalie.x) < puckToNet).length; // "below the puck"
+    const need = Math.ceil(defs.length / 2);
+    if (below && deeper < need) {
+      return { kind: "warn", msg: `copy says the defense is "below the puck" (deeper, between the puck and the net) but ${defs.length - deeper}/${defs.length} defenders are ABOVE it (farther from the net than the puck at x=${puck.x.toFixed(2)}). Move the puck higher (less deep) or collapse the defenders toward the net.` };
+    }
+    if (above && (defs.length - deeper) < need) {
+      return { kind: "warn", msg: `copy says the defense is "above the puck" but most defenders are below it (closer to the net than the puck at x=${puck.x.toFixed(2)}).` };
+    }
+    return null;
+  },
+
   // ── SELECTION-SPECIFIC
 
   function selectionHasMultipleCandidates(s) {

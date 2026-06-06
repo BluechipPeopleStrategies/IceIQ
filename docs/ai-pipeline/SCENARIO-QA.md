@@ -50,6 +50,7 @@ Severity: **ERR** = blocks the seed (won't ship); **WARN** = surfaces for a look
 | 12 | **Place targets distinct** | drop-target guides overlap into one ambiguous blob | **WARN** | `placeTargetsDontOverlap` |
 | 13 | **Copy color match** | text says "white/red/… jersey" but board draws blue (us) / black (them) | **WARN** | `copyMatchesColors` |
 | 14 | **Board matches copy (puck)** | prompt says "corner"/"net-front" but the puck isn't there | **WARN** | `puckLocationMatchesCopy` |
+| 14b | **Board matches copy (depth)** | copy says defense is "below/above the puck" but the defenders are on the wrong side of it (net ref = goalie x) | **WARN** | `copyMatchesDepth` |
 | 15 | Board matches copy (subtle) | "half-wall"/"slot"/"point" claims, who's covered, who's open | COACH | AI QA coach |
 | 16 | Read is hockey-true | the "right" answer is genuinely the best read at this age | COACH | AI QA coach |
 | 17 | Age fit | diagram complexity / wording matches the age band | COACH | AI QA coach |
@@ -107,6 +108,7 @@ a new automated check, then a `#` in the rubric table.
 | 2026-06-06 | "the Check mark came off the edge" | Render #20 button centered in crop |
 | 2026-06-06 | "call them opponents/black, not white players" | Rule #13 `copyMatchesColors` (WARN) |
 | 2026-06-06 | "the puck isn't on the half-wall — board must match the question" | Rule #14 `puckLocationMatchesCopy` (corner/net-front) + Coach #15 (half-wall/slot/point) |
+| 2026-06-06 | "'collapsed below the puck' — but the puck's on the goal line, so the D would be behind it" | Rule #14b `copyMatchesDepth` (WARN); fixed u13_oz_highslot_mc + u13_scanning_slot |
 
 ### How to add the next one
 1. Add a row to the feedback log with today's date and the gist.
