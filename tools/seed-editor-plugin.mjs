@@ -52,8 +52,10 @@ export function seedEditorPlugin() {
           if (route === "/__seed/save" && req.method === "POST") {
             const body = await readBody(req);
             const { id, scenario, force } = body;
-            if (!id || !/^[a-z0-9_]+$/i.test(id)) {
-              return send(res, 400, { ok: false, errs: ["invalid or missing id (use a-z, 0-9, _)"] });
+            // Allow hyphens too (seed ids embed nodeId slugs like
+            // "decision-making"). No dots/slashes → no path traversal.
+            if (!id || !/^[a-z0-9_-]+$/i.test(id)) {
+              return send(res, 400, { ok: false, errs: ["invalid or missing id (use a-z, 0-9, _, -)"] });
             }
             if (!scenario || typeof scenario !== "object") {
               return send(res, 400, { ok: false, errs: ["missing scenario body"] });
