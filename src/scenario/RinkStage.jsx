@@ -68,7 +68,7 @@ function StageDefs() {
   );
 }
 
-function ActorMarker({ actor, highlight, hideTag, offset }) {
+function ActorMarker({ actor, highlight, hideTag, offset, ageStyle = "playbook" }) {
   const p = denorm(actor);
   if (offset) { p.x += offset.x; p.y += offset.y; }   // nudge a carried puck to the carrier's edge
   const palette = ACTOR_COLORS[actor.kind] || ACTOR_COLORS.player;
@@ -127,19 +127,28 @@ function ActorMarker({ actor, highlight, hideTag, offset }) {
         </circle>
       )}
       {stickLine}
-      {/* GOALIE — friendly rounded "pad" block with little leg pads, clearly
-          distinct from skater circles and readable for the youngest ages. */}
+      {/* GOALIE — playbook: plain square; friendly: rounded "pad" block with
+          little leg pads, clearly distinct from skater circles. */}
       {actor.kind === "goalie" && (
-        <>
-          {/* leg pads peeking below the body */}
-          <rect x="-9" y="6" width="7" height="9" rx="3" fill={palette.fill} stroke={palette.stroke} strokeWidth="1.2"/>
-          <rect x="2" y="6" width="7" height="9" rx="3" fill={palette.fill} stroke={palette.stroke} strokeWidth="1.2"/>
-          {/* body */}
-          <rect x="-11" y="-13" width="22" height="24" rx="8"
-            fill={palette.fill} stroke={palette.stroke} strokeWidth="1.8"/>
-          <text x="0" y="3" textAnchor="middle" fill={palette.text}
-            fontSize="12" fontWeight="800" style={labelStyle}>G</text>
-        </>
+        ageStyle === "playbook" ? (
+          <>
+            <rect x="-11" y="-11" width="22" height="22" rx="3"
+              fill={palette.fill} stroke={palette.stroke} strokeWidth="1.6"/>
+            <text x="0" y="4" textAnchor="middle" fill={palette.text}
+              fontSize="11" fontWeight="800" style={labelStyle}>G</text>
+          </>
+        ) : (
+          <>
+            {/* leg pads peeking below the body */}
+            <rect x="-9" y="6" width="7" height="9" rx="3" fill={palette.fill} stroke={palette.stroke} strokeWidth="1.2"/>
+            <rect x="2" y="6" width="7" height="9" rx="3" fill={palette.fill} stroke={palette.stroke} strokeWidth="1.2"/>
+            {/* body */}
+            <rect x="-11" y="-13" width="22" height="24" rx="8"
+              fill={palette.fill} stroke={palette.stroke} strokeWidth="1.8"/>
+            <text x="0" y="3" textAnchor="middle" fill={palette.text}
+              fontSize="12" fontWeight="800" style={labelStyle}>G</text>
+          </>
+        )
       )}
 
       {/* DEFENDER — X-marked circle (playbook opponent symbol). Hollow
@@ -170,19 +179,19 @@ function ActorMarker({ actor, highlight, hideTag, offset }) {
         </>
       )}
 
-      {/* PLAYER (YOU) — DOUBLED-ring filled circle so the first-person is
+      {/* PLAYER (YOU) — playbook: smaller plain circle (r=12); friendly:
+          doubled-ring filled circle (r=14) so the first-person is
           unmistakable. Larger than other markers. Position tag inside. */}
       {actor.kind === "player" && (
         <>
-          <circle cx="0" cy="0" r="14" fill={palette.fill}
+          <circle cx="0" cy="0" r={ageStyle === "playbook" ? 12 : 14} fill={palette.fill}
             stroke="#fff" strokeWidth="1.6"/>
-          <circle cx="0" cy="0" r="17" fill="none"
-            stroke="#fff" strokeWidth="1.6"/>
+          {ageStyle !== "playbook" && (
+            <circle cx="0" cy="0" r="17" fill="none" stroke="#fff" strokeWidth="1.6"/>
+          )}
           {positionTag && (
             <text x="0" y="4" textAnchor="middle" fill={palette.text}
-              fontSize="11" fontWeight="800" style={labelStyle}>
-              {positionTag}
-            </text>
+              fontSize="11" fontWeight="800" style={labelStyle}>{positionTag}</text>
           )}
         </>
       )}
@@ -225,6 +234,14 @@ export default function RinkStage({ stage, actors, levels, scanWindow, highlight
   const hideTags = useMemo(() => {
     const ls = Array.isArray(levels) ? levels : [];
     return ls.some(l => /^U7\b|^U9\b/.test(String(l)));
+  }, [levels]);
+
+  // Diagram tone scales with age: U7/U9 keep the friendly markers; U11+ render
+  // austere "X's-and-O's" playbook (thinner strokes, plain goalie box, no
+  // decorative double-ring) so a 14-year-old gets a chalk-talk, not a cartoon.
+  const ageStyle = useMemo(() => {
+    const ls = Array.isArray(levels) ? levels : [];
+    return ls.some(l => /^U7\b|^U9\b/.test(String(l))) ? "friendly" : "playbook";
   }, [levels]);
 
   // When the puck sits on top of a skater (the carrier), nudge it to that
@@ -296,7 +313,7 @@ export default function RinkStage({ stage, actors, levels, scanWindow, highlight
             Filtered by the scan-then-hide drill when active. */}
         {visibleActors.map(a => (
           <ActorMarker key={a.id} actor={a} highlight={highlightSet.has(a.id)}
-            hideTag={hideTags} offset={puckOffsets[a.id]}/>
+            hideTag={hideTags} offset={puckOffsets[a.id]} ageStyle={ageStyle}/>
         ))}
         {scanElapsed && hideKinds && hideKinds.size > 0 && (
           <text x="50%" y="20" textAnchor="middle" fill="#eab308"
