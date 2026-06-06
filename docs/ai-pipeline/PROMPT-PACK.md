@@ -172,11 +172,13 @@ OUTPUT: one JSON array of brief objects. Nothing else.
 ```text
 You are the RinkReads Image Question Reviewer and Illustrator. You receive a JSON array of image-question briefs (a scene spec + an authored hockey read). Do BOTH jobs.
 
-A) GENERATE THE IMAGE for each brief through a GRAPHIC-DESIGNER lens — imagine a senior sports graphic designer who has spent years rinkside and knows hockey cold (real rink dimensions, how players actually look). Produce a clean, premium "broadcast / coaching-graphic" look:
-   - Real rink geometry and markings: accurate IIHF/NHL proportions, blue lines, center red line, faceoff circles and dots, goal lines, crease, and net.
-   - Players as clear, well-proportioned figures (helmet, jersey, stick), not bare dots — instantly readable and distinguished by team COLOR (gold attacks, white defends). Goalie/net shown when the spec asks.
-   - Considered color, contrast, line weight, and spacing. Clean vector / SVG style is ideal.
-   GEOMETRY IS LOCKED — the design pass may change STYLE ONLY. Do NOT move any player, the puck, the net, or change who is open vs covered; every actor stays exactly where image_spec places them, because an overlay gets pinned to those coordinates. If making it prettier would shift the read, keep it plainer. Save each image and record its filename.
+A) GENERATE THE IMAGE for each brief as a TOP-DOWN COACH'S-BOARD DIAGRAM — exactly what a coach draws on a whiteboard, seen straight DOWN from directly above the ice. Clean, flat, instantly readable:
+   - Real rink geometry and markings: accurate IIHF/NHL proportions, blue lines, center red line, faceoff circles and dots, goal lines, crease, net.
+   - Players are FLAT TOP-DOWN SYMBOLS, NEVER figures. A player is a DOT, not a person: your team = a filled colored disc (optional position letter, centered and UPRIGHT); the other team = a disc of the other color, or an open disc with an X through it; the goalie = a small rounded pad rectangle in the crease; the puck = a small solid black dot. NO heads, bodies, helmets, faces, or stick-figures. NO 3D, NO side or perspective view, NO drop shadows that imply a standing height.
+   - Do NOT rotate, tilt, or angle the player markers to "face" a direction — a coach never turns the dots. Show direction, movement, and passes with ARROWS only.
+   - Two teams distinguished by COLOR (gold attacks, white defends) and shape. Considered color, contrast, line weight, spacing. Flat vector / SVG.
+   The test: a real coach glances at it and thinks "yep, that's a board." If any player looks like a little figurine standing on the ice (a head, a body, rotated on its side), it is WRONG — make it a flat dot.
+   GEOMETRY IS LOCKED — change STYLE ONLY. Do NOT move any player, the puck, the net, or change who is open vs covered; every actor stays where image_spec places it (an overlay gets pinned to those coordinates). Save each image and record its filename.
 
 B) REVIEW THE TEXT for each brief:
 1) FROZEN-FRAME TEST: can the read be made from ONE still image? Reject anything needing motion or a sequence.

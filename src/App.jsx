@@ -419,6 +419,7 @@ import { COMPETENCY_LADDER, RATING_SCALES, SKILLS, FREE_SKILL_IDS, ladderFor, ge
 
 const AdminReports = lazy(() => import("./screens.jsx").then(m => ({ default: m.AdminReports })));
 const QuestionReviewScreen = lazy(() => import("./screens.jsx").then(m => ({ default: m.QuestionReviewScreen })));
+const ScenarioPlayground = lazy(() => import("./scenario/ScenarioPlayground.jsx").then(m => ({ default: m.ScenarioPlayground })));
 const ProfileSetup = lazy(() => import("./screens.jsx").then(m => ({ default: m.ProfileSetup })));
 const PlansScreen = lazy(() => import("./screens.jsx").then(m => ({ default: m.PlansScreen })));
 const GameSenseReportScreen = lazy(() => import("./screens.jsx").then(m => ({ default: m.GameSenseReportScreen })));
@@ -7965,6 +7966,11 @@ export default function App() {
   }
   if (hashRoute === "playtest") {
     return <RinkPlayTest/>;
+  }
+  // Scenario playground — flip through + play every seed in the real engine
+  // to feel the interaction before it ships. (`#scenarios`)
+  if (hashRoute === "scenarios") {
+    return <Suspense fallback={<LazyFallback/>}><ScenarioPlayground/></Suspense>;
   }
   // Owner-only review dashboard. Backed by the dev-only /__review/* endpoints
   // (tools/review-server-plugin.mjs), so it only functions under `npm run dev`.
