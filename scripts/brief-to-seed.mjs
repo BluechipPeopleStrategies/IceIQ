@@ -154,6 +154,7 @@ const seed = {
   ...(brief.scanWindow ? { scanWindow: brief.scanWindow } : {}),
   ...(brief.timer ? { timer: brief.timer } : {}),
   ...(brief.preview ? { preview: brief.preview } : {}),
+  ...(brief.mc ? { mc: brief.mc } : {}),
   actors: allActors,
   interaction,
   correct,
