@@ -2,19 +2,64 @@
   "id": "u11_dz_breakout_center_support_v1",
   "type": "scenario",
   "level": "U11 / Atom",
-  "levels": ["U11 / Atom"],
+  "levels": [
+    "U11 / Atom"
+  ],
   "nodeId": "u11.breakout-and-regroup",
-  "themes": ["breakout", "puck-support", "positioning", "scan"],
+  "themes": [
+    "breakout",
+    "puck-support",
+    "positioning",
+    "scan"
+  ],
   "cat": "Breakout",
   "difficulty": 2,
-  "stage": { "view": "left", "zone": "def-zone" },
+  "stage": {
+    "view": "left",
+    "zone": "def-zone"
+  },
   "actors": [
-    { "id": "you",   "kind": "player",   "x": 0.35, "y": 0.55, "tag": "YOU" },
-    { "id": "dmate", "kind": "teammate", "x": 0.18, "y": 0.75, "tag": "D" },
-    { "id": "puck",  "kind": "puck",     "x": 0.182, "y": 0.748 },
-    { "id": "f1",    "kind": "defender", "x": 0.25, "y": 0.68, "tag": "" },
-    { "id": "f2",    "kind": "defender", "x": 0.22, "y": 0.82, "tag": "" },
-    { "id": "g",     "kind": "goalie",   "x": 0.082, "y": 0.50, "tag": "" }
+    {
+      "id": "you",
+      "kind": "player",
+      "x": 0.35,
+      "y": 0.55,
+      "tag": "YOU"
+    },
+    {
+      "id": "dmate",
+      "kind": "teammate",
+      "x": 0.18,
+      "y": 0.75,
+      "tag": "D"
+    },
+    {
+      "id": "puck",
+      "kind": "puck",
+      "x": 0.182,
+      "y": 0.748
+    },
+    {
+      "id": "f1",
+      "kind": "defender",
+      "x": 0.24,
+      "y": 0.66,
+      "tag": ""
+    },
+    {
+      "id": "f2",
+      "kind": "defender",
+      "x": 0.15,
+      "y": 0.84,
+      "tag": ""
+    },
+    {
+      "id": "g",
+      "kind": "goalie",
+      "x": 0.082,
+      "y": 0.5,
+      "tag": ""
+    }
   ],
   "interaction": {
     "kind": "point",
@@ -23,7 +68,9 @@
   },
   "correct": {
     "kind": "point",
-    "zoneId": "dz-half-wall-strong"
+    "x": 0.3,
+    "y": 0.82,
+    "tolerance": 0.09
   },
   "feedback": {
     "right": "Curl low into the strong-side circle and stay underneath the puck. You give your D a short, safe ten-foot outlet they can actually make.",
