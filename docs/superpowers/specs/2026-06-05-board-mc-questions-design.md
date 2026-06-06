@@ -24,6 +24,16 @@ Multiple-choice questions **with a picture reference**, where the picture is a
 validated, clean rink board that **cannot contradict the answer** — because the
 picture, the validation, and the correct answer are all the same validated read.
 
+## Follow-on (separate specs, not this one)
+
+Two more question formats are queued and will each get their own design pass after
+this ships — kept out of this spec to keep it clean and independently shippable:
+
+- **Matching** — definition ↔ term, drag to pair. A vocabulary/concept type
+  alongside `mc`/`tf`/`seq`; its own renderer/scorer/validator, no rink.
+- **Why-scenarios** — reasoning-focused questions (options are *reasons*, or a
+  two-step "pick the play → pick why"). May ride on the board-MC engine.
+
 ## Non-goals
 
 - Machine-verifying that the correct option's *text* matches the geometry (stays a
