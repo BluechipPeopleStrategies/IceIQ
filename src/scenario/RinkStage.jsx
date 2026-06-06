@@ -68,10 +68,16 @@ function StageDefs() {
   );
 }
 
-function ActorMarker({ actor, highlight, hideTag, offset, ageStyle = "playbook" }) {
+function ActorMarker({ actor, highlight, hideTag, offset, ageStyle = "playbook", goalieFill }) {
   const p = denorm(actor);
   if (offset) { p.x += offset.x; p.y += offset.y; }   // nudge a carried puck to the carrier's edge
-  const palette = ACTOR_COLORS[actor.kind] || ACTOR_COLORS.player;
+  // Goalie color follows its team: OUR goalie (we're defending) reads as our
+  // blue, the OPPOSING goalie (we're attacking) reads as opponent black. The
+  // square silhouette still distinguishes it from skaters, so color is free
+  // to carry team identity.
+  const palette = (actor.kind === "goalie" && goalieFill)
+    ? { ...ACTOR_COLORS.goalie, fill: goalieFill }
+    : (ACTOR_COLORS[actor.kind] || ACTOR_COLORS.player);
   const labelStyle = {
     pointerEvents: "none",
     textShadow: "0 1px 2px rgba(0,0,0,.85), 0 0 4px rgba(0,0,0,.85)",
@@ -244,6 +250,26 @@ export default function RinkStage({ stage, actors, levels, scanWindow, highlight
     return ls.some(l => /^U7\b|^U9\b/.test(String(l))) ? "friendly" : "playbook";
   }, [levels]);
 
+  // Goalie team color by zone: def-zone = OUR net (our blue), off-zone =
+  // their net (opponent black). Neutral keeps the team-agnostic slate.
+  const goalieFill = stage.zone === "def-zone" ? "#0F4C8C"
+                   : stage.zone === "off-zone" ? "#1a1a1a"
+                   : "#51607A";
+
+  // Plain-language zone label so the player never misreads which end they're
+  // in. Tone scales with age (younger bands get the simplest words).
+  const zoneLabel = useMemo(() => {
+    const young = (Array.isArray(levels) ? levels : []).some(l => /^U7\b|^U9\b/.test(String(l)));
+    if (stage.zone === "def-zone") return young ? "OUR END" : "DEFENDING ZONE";
+    if (stage.zone === "off-zone") return young ? "ATTACK END" : "ATTACKING ZONE";
+    if (stage.zone === "neutral")  return young ? "MIDDLE" : "NEUTRAL ZONE";
+    return null;
+  }, [stage.zone, levels]);
+  // Blue for our end, amber for the attack end, slate for the middle.
+  const zoneAccent = stage.zone === "def-zone" ? "#3b82f6"
+                   : stage.zone === "off-zone" ? "#f59e0b"
+                   : "#94a3b8";
+
   // When the puck sits on top of a skater (the carrier), nudge it to that
   // skater's lower-right edge so it reads as "this player has the puck"
   // instead of muddying the marker.
@@ -304,6 +330,25 @@ export default function RinkStage({ stage, actors, levels, scanWindow, highlight
       border: `1px solid ${C.border}`, background: C.bgCard, marginBottom: ".75rem",
     }}>
       <RinkReadsRink view={stage.view} zone={stage.zone} markers={[]} />
+      {/* Zone badge — names the end of the ice on-screen so the read can't
+          start with a misread of which zone the player is in. */}
+      {zoneLabel && (
+        <div style={{
+          position: "absolute", top: 8, left: 8, zIndex: 2,
+          display: "flex", alignItems: "center", gap: ".35rem",
+          padding: ".2rem .5rem", borderRadius: 999,
+          background: "rgba(11,18,32,.78)", border: `1px solid ${zoneAccent}`,
+          fontSize: 10, fontWeight: 800, letterSpacing: ".07em",
+          color: "#e2e8f0", pointerEvents: "none",
+          boxShadow: "0 1px 4px rgba(0,0,0,.4)",
+        }}>
+          <span style={{
+            width: 7, height: 7, borderRadius: "50%",
+            background: zoneAccent, flexShrink: 0,
+          }}/>
+          {zoneLabel}
+        </div>
+      )}
       <svg ref={svgRef}
         viewBox={viewBox}
         preserveAspectRatio="none"
@@ -313,7 +358,8 @@ export default function RinkStage({ stage, actors, levels, scanWindow, highlight
             Filtered by the scan-then-hide drill when active. */}
         {visibleActors.map(a => (
           <ActorMarker key={a.id} actor={a} highlight={highlightSet.has(a.id)}
-            hideTag={hideTags} offset={puckOffsets[a.id]} ageStyle={ageStyle}/>
+            hideTag={hideTags} offset={puckOffsets[a.id]} ageStyle={ageStyle}
+            goalieFill={goalieFill}/>
         ))}
         {scanElapsed && hideKinds && hideKinds.size > 0 && (
           <text x="50%" y="20" textAnchor="middle" fill="#eab308"
@@ -325,20 +371,20 @@ export default function RinkStage({ stage, actors, levels, scanWindow, highlight
         {/* Primitive renders over the actors. */}
         {typeof children === "function" ? children(svgPoint) : children}
       </svg>
-      <RinkLegend actors={actors}/>
+      <RinkLegend actors={actors} goalieFill={goalieFill} zone={stage.zone}/>
     </div>
   );
 }
 
 // Tiny legend strip rendered under the rink — only includes glyphs that
 // actually appear in this scenario's actor list, so it stays compact.
-function RinkLegend({ actors }) {
+function RinkLegend({ actors, goalieFill, zone }) {
   const kinds = new Set(actors.map(a => a.kind));
   const items = [];
   if (kinds.has("player"))   items.push({ glyph: "double-circle", text: "you"      });
   if (kinds.has("teammate")) items.push({ glyph: "circle",        text: "your team"});
   if (kinds.has("defender")) items.push({ glyph: "x",             text: "opponents"});
-  if (kinds.has("goalie"))   items.push({ glyph: "square",        text: "goalie"   });
+  if (kinds.has("goalie"))   items.push({ glyph: "square",        text: zone === "off-zone" ? "their goalie" : "your goalie", fill: goalieFill });
   if (kinds.has("puck"))     items.push({ glyph: "puck",          text: "puck"     });
   return (
     <div style={{
@@ -350,7 +396,7 @@ function RinkLegend({ actors }) {
     }}>
       {items.map(it => (
         <span key={it.text} style={{ display: "flex", alignItems: "center", gap: ".4rem" }}>
-          <LegendGlyph kind={it.glyph}/>
+          <LegendGlyph kind={it.glyph} fill={it.fill}/>
           <span>{it.text}</span>
         </span>
       ))}
@@ -358,7 +404,7 @@ function RinkLegend({ actors }) {
   );
 }
 
-function LegendGlyph({ kind }) {
+function LegendGlyph({ kind, fill }) {
   const W = 18, H = 18;
   return (
     <svg width={W} height={H} viewBox="-10 -10 20 20" style={{ flexShrink: 0 }}>
@@ -379,7 +425,7 @@ function LegendGlyph({ kind }) {
         </>
       )}
       {kind === "square" && (
-        <rect x="-6.5" y="-6.5" width="13" height="13" rx="4.5" fill="#51607A" stroke="#fff" strokeWidth="1.2"/>
+        <rect x="-6.5" y="-6.5" width="13" height="13" rx="4.5" fill={fill || "#51607A"} stroke="#fff" strokeWidth="1.2"/>
       )}
       {kind === "puck" && (
         <circle cx="0" cy="0" r="4" fill="#0a0a0a" stroke="#fff" strokeWidth="1.2"/>
