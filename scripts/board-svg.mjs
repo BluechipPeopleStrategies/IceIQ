@@ -75,7 +75,7 @@ function arrow(a, i) {
   return `<path d="M ${x1} ${y1} Q ${mx} ${my} ${x2} ${y2}" fill="none" stroke="${col}" stroke-width="9" stroke-linecap="round" stroke-dasharray="2 0" marker-end="url(#ba${i})"/>`;
 }
 
-function render(spec) {
+export function renderBoard(spec) {
   const defs = (spec.arrows || []).map((a, i) =>
     `<marker id="ba${i}" markerWidth="6" markerHeight="6" refX="3" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="${a.color || GOLD}"/></marker>`).join("");
   const rings = (spec.rings || []).map(r =>
@@ -107,6 +107,9 @@ const demo = {
   ],
   arrows: [ { x1: 0.70, y1: 0.70, x2: 0.165, y2: 0.5 } ],
 };
-const spec = specPath ? JSON.parse(readFileSync(specPath, "utf8")) : demo;
-writeFileSync(outPath, render(spec), "utf8");
-console.log(`wrote clean top-down board → ${outPath}`);
+import { pathToFileURL } from "node:url";
+if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {
+  const spec = specPath ? JSON.parse(readFileSync(specPath, "utf8")) : demo;
+  writeFileSync(outPath, renderBoard(spec), "utf8");
+  console.log(`wrote clean top-down board → ${outPath}`);
+}

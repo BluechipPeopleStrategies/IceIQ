@@ -129,74 +129,79 @@ node scripts/brief-to-seed.mjs docs/ai-pipeline/briefs/<id>.json
 
 # TRACK C — IMAGE QUESTIONS (photo / annotated reads)
 
-## <span style="color:#eab308">🟡 The honest split (read only)</span>
+## <span style="color:#eab308">🟡 How it works now — DATA-DRIVEN, no LLM draws players (read only)</span>
 
-<span style="color:#eab308">Gemini and ChatGPT **cannot see an image**, so they cannot place overlays or verify a read against a real frame — that is Claude-vision's job. What they CAN pre-build: the **scene to create** and the **question text** authored to that intended scene. ChatGPT can also **generate the image** from the spec. The read is carried by **overlays** (arrow = the play, ring = open target, dim = covered option) that Claude places on the actual image, so the art only has to be roughly right.</span>
+<span style="color:#eab308">An LLM hand-drawing players makes rotated 3D figurines that no coach would put on a board. So **nothing draws the players anymore.** Gemini outputs the players' **positions** (by named zone) plus the read; a deterministic renderer (`scripts/board-svg.mjs`) makes a clean **top-down coach's-board** SVG every time — flat dots, a pad goalie, the read as a gold arrow. ChatGPT only reviews the **text**. Always legit, always consistent.</span>
 
-<span style="color:#eab308">Always reference players by **role and color** ("the gold puck carrier", "the weak-side winger"), **never jersey numbers** — numbers change between images. The read must be makeable from ONE frozen frame (no motion, no sequence).</span>
+<span style="color:#eab308">Always reference players by **role and color** (gold = your team, white = the other team), **never jersey numbers**. The read must be makeable from ONE still board.</span>
 
-## <span style="color:#22c55e">🟢 STEP 1 · PROMPT D — copy the whole box below into GEMINI (image-question brief writer)</span>
+## <span style="color:#22c55e">🟢 STEP 1 · PROMPT D — copy the whole box below into GEMINI (board-spec writer)</span>
 
 ```text
-You are the RinkReads Image Question Brief writer. RinkReads shows a kid a hockey IMAGE and asks them to pick the right READ; an overlay (arrow/ring) later marks the answer on the picture. You DESCRIBE the image to create and author the question text for it. You NEVER see the final image, NEVER use pixel coordinates, and NEVER use jersey numbers — refer to players by role and color only. Output valid JSON only (an array of brief objects), no prose, no fences.
+You are the RinkReads Image Question writer. RinkReads shows a kid a TOP-DOWN board diagram and asks them to pick the right READ; an arrow/ring marks the answer. You do NOT draw anything — you PLACE players by NAMED ZONE and a script renders a clean coach's board. Never use pixel coordinates or jersey numbers; refer to players by role and color. Output valid JSON only (an array of brief objects), no prose, no fences.
 
-I give you a nodeId (age.concept) and a count. Produce that many image-question briefs, each a DIFFERENT read.
+I give you a nodeId (age.concept) and a count. Produce that many briefs, each a DIFFERENT read makeable from one still board. The right answer is who/what has SPACE or the better read, never the closest. Warm coach voice, no em dashes.
 
-Each brief teaches ONE clear read with a tempting-but-wrong option. The right answer is who/what has SPACE or the better read, never the closest. The read must be makeable from a SINGLE still frame. Warm coach voice, no em dashes.
+ZONES (use these exact ids for every "at"):
+dz-corner-strong dz-corner-weak dz-net-front dz-slot dz-half-wall-strong dz-half-wall-weak dz-point-strong dz-point-weak neutral-strong neutral-weak neutral-center oz-corner-strong oz-corner-weak oz-net-front oz-slot oz-high-slot oz-half-wall-strong oz-half-wall-weak oz-point-strong oz-point-weak oz-bumper
 
 Each brief object:
 {
-  "id": "img_<nodeId with dots as _>_<2 digits>, e.g. img_u13_odd-man-reads_01",
+  "id": "img_<nodeId with dots as _>_<2 digits>",
   "nodeId": "<age.concept>",
   "level": "<exact: U7 / Initiation | U9 / Novice | U11 / Atom | U13 / Peewee | U15 / Bantam | U18 / Midget>",
-  "type": "mc",
   "cat": "<the concept domain, e.g. Hockey Sense>",
   "d": 1|2|3,
-  "image_spec": "<the exact scene to create: camera angle (top-down or broadcast), which team ATTACKS (gold) and DEFENDS (white), where the puck is, the player layout, goalie + net if it is a zone read, and — critically — the ONE read that must be clearly VISIBLE in the frame. Teams distinguished by COLOR, no numbers needed.>",
-  "sit": "<question stem shown to the player; frames the read, references roles/colors, >=20 chars, does NOT state the answer>",
-  "opts": ["<4 options, role/color-based; EXACTLY one correct; each wrong one plausible and wrong for a real hockey reason>"],
+  "board": {
+    "nets": ["left"],                       // or "right" — which end has the attacked net; lay the play out HORIZONTALLY
+    "actors": [
+      { "id": "you", "kind": "home", "at": "<zone>", "tag": "C", "hasPuck": true },
+      { "id": "rw",  "kind": "home", "at": "<zone>", "tag": "RW" },
+      { "id": "x1",  "kind": "opp",  "at": "<zone>" },
+      { "id": "g",   "kind": "goalie", "at": "<zone in the crease>" }
+    ],
+    "read": { "from": "you", "to": "<actorId or zoneId of the correct answer>", "ringOn": "<actorId, optional — an open teammate to ring>" }
+  },
+  "alt": "<one-line description of the board, for accessibility>",
+  "sit": "<question stem; frames the read, role/color, >=20 chars, does NOT state the answer>",
+  "opts": ["<4 options, role/color-based; EXACTLY one correct; each wrong for a real hockey reason>"],
   "ok": <0-3>,
-  "explain": "<why the right answer is right; never claim anything a single frozen frame cannot show>",
-  "overlay_intent": "<what the overlay should mark, in WORDS: e.g. 'gold arrow from the puck carrier to the open weak-side winger (the correct lane); green ring on that winger; dim the covered strong-side shot'>"
+  "explain": "<why the right answer is right>"
 }
 
-Match age with the ladder: U7 one visible cue d1; U9 one cue + light pressure d1; U11 one clear read d2; U13 two linked cues d2; U15 layered reads d3; U18 adult-speed d3.
+kind: "home" (your team), "opp" (other team), "goalie". Exactly one actor has hasPuck:true.
+"read" is the answer the overlay draws: an arrow from the carrier to the correct target, plus an optional ring on an open teammate. Make board.read.to match the keyed correct option.
+Age ladder: U7 one cue d1; U9 one cue + light pressure d1; U11 one clear read d2; U13 two cues d2; U15 layered d3; U18 adult-speed d3.
 
 OUTPUT: one JSON array of brief objects. Nothing else.
 ```
 
-<span style="color:#22c55e">🟢 Then type your driver into Gemini, e.g.</span> `Write 4 image question briefs for u13.odd-man-reads.`
+<span style="color:#22c55e">🟢 Then drive it, e.g.</span> `Write 4 board briefs for u13.odd-man-reads.`
 
-## <span style="color:#5BA4E8">🔵 STEP 2 · PROMPT E — copy the whole box below into CHATGPT (review the text AND generate the images)</span>
+## <span style="color:#5BA4E8">🔵 STEP 2 · PROMPT E — copy the whole box below into CHATGPT (review the TEXT only)</span>
 
 ```text
-You are the RinkReads Image Question Reviewer and Illustrator. You receive a JSON array of image-question briefs (a scene spec + an authored hockey read). Do BOTH jobs.
+You are the RinkReads Image Question Reviewer, a skeptical youth-hockey coach. You receive a JSON array of board briefs (each has a top-down board spec + MC text). A script renders the diagram from the board data — you do NOT draw anything. Review the text and the read, return corrected JSON.
 
-A) GENERATE THE IMAGE for each brief as a TOP-DOWN COACH'S-BOARD DIAGRAM — exactly what a coach draws on a whiteboard, seen straight DOWN from directly above the ice. Clean, flat, instantly readable:
-   - Real rink geometry and markings: accurate IIHF/NHL proportions, blue lines, center red line, faceoff circles and dots, goal lines, crease, net.
-   - Players are FLAT TOP-DOWN SYMBOLS, NEVER figures. A player is a DOT, not a person: your team = a filled colored disc (optional position letter, centered and UPRIGHT); the other team = a disc of the other color, or an open disc with an X through it; the goalie = a small rounded pad rectangle in the crease; the puck = a small solid black dot. NO heads, bodies, helmets, faces, or stick-figures. NO 3D, NO side or perspective view, NO drop shadows that imply a standing height.
-   - Do NOT rotate, tilt, or angle the player markers to "face" a direction — a coach never turns the dots. Show direction, movement, and passes with ARROWS only.
-   - Two teams distinguished by COLOR (gold attacks, white defends) and shape. Considered color, contrast, line weight, spacing. Flat vector / SVG.
-   The test: a real coach glances at it and thinks "yep, that's a board." If any player looks like a little figurine standing on the ice (a head, a body, rotated on its side), it is WRONG — make it a flat dot.
-   GEOMETRY IS LOCKED — change STYLE ONLY. Do NOT move any player, the puck, the net, or change who is open vs covered; every actor stays where image_spec places it (an overlay gets pinned to those coordinates). Save each image and record its filename.
+For each brief:
+1) FROZEN-FRAME TEST: can the read be made from one still board? Reject anything needing motion.
+2) HOCKEY ACCURACY: is the keyed answer correct at this age? Would a coach object? Fix or flag.
+3) SHARPEN DISTRACTORS: each wrong option is a real mistake a developing player makes, wrong for a stated reason; EXACTLY one defensible answer.
+4) ROLE NOT NUMBER: every reference is by role/color, never a number.
+5) READ POINTS AT THE ANSWER: confirm board.read.to is the keyed correct option (and ringOn, if present, marks an open target).
 
-B) REVIEW THE TEXT for each brief:
-1) FROZEN-FRAME TEST: can the read be made from ONE still image? Reject anything needing motion or a sequence.
-2) HOCKEY ACCURACY: is the keyed answer correct at this age? Would a real coach object? Fix or flag.
-3) SHARPEN DISTRACTORS: make each wrong option a real mistake a developing player makes, wrong for a stated reason; EXACTLY one defensible answer.
-4) ROLE NOT NUMBER: every reference is by role/color, never a jersey number. No overclaim beyond what a still frame shows.
-5) OVERLAY CHECK: confirm overlay_intent points at the keyed answer.
-
-OUTPUT: the corrected JSON array, with an added "image_file" field per brief (the saved filename). Valid JSON only, no prose, no fences. Then one line "FLAGS:" listing anything Claude or a human must double-check (or "FLAGS: none").
+OUTPUT: the corrected JSON array, edits applied. Valid JSON only, no prose, no fences. Then one line "FLAGS:" for anything to double-check (or "FLAGS: none").
 ```
 
-<span style="color:#5BA4E8">🔵 ChatGPT both sharpens the text and makes each image. Save the images; each brief gets an `image_file`.</span>
+## <span style="color:#c084fc">🟣 STEP 3 — render + ship (you run this; no LLM draws anything)</span>
 
-## <span style="color:#c084fc">🟣 STEP 3 — hand the images + briefs to Claude</span>
+<span style="color:#eab308">Save each reviewed brief as its own file (e.g. `docs/ai-pipeline/briefs/<id>.json`), then run:</span>
 
-<span style="color:#eab308">Drop the generated images in `public/assets/images/` and the reviewed briefs in `docs/ai-pipeline/image-briefs.json`, then</span> <span style="color:#c084fc">🟣 say to Claude:</span> `Bind the image briefs to their images.`
+```text
+node scripts/brief-to-image.mjs docs/ai-pipeline/briefs/<id>.json
+```
 
-<span style="color:#eab308">Claude opens each real image, vision-reads the actual positions, places the overlays from `overlay_intent` at real coordinates, runs the overlay-accuracy gate, validates, and ships them as `type:"mc"` + `media` + `overlays[]` (the factory pipeline — see `docs/factory/SPEC.md`). Anything where the generated image does not actually show the read gets queued, not forced.</span>
+<span style="color:#eab308">That renders a clean top-down board SVG into `public/assets/images/<id>.svg` AND writes the bank MC entry (`media` + the read overlays auto-placed on the players — no hand-reading coordinates). Then merge the entries into `bank.json` (or</span> <span style="color:#c084fc">🟣 say to Claude:</span> `merge the image entries into the bank`<span style="color:#eab308">). The board is deterministic, so it is coach-legit every time — open `public/assets/images/board-style-demo.svg` to see the house style.</span>
 
 ---
 
