@@ -169,6 +169,30 @@ const rules = [
     return null;
   },
 
+  // Place-drill drop targets must not overlap when their guides are shown —
+  // merged circles read as one ambiguous blob. Pixel-space check because the
+  // rink is 600×300 (a 0.05 tol is 30px wide but the same normalized gap is
+  // half as tall). Warn (not err): the scenario still scores, but it's a UX bug.
+  function placeTargetsDontOverlap(s) {
+    if (s.interaction?.kind !== "place" || !s.interaction.showTargets) return null;
+    const places = s.correct?.placements;
+    if (!Array.isArray(places) || places.length < 2) return null;
+    const circles = places
+      .map(p => { const t = resolveTargetCoords(p); return t ? { id: p.id, ...t } : null; })
+      .filter(Boolean);
+    for (let i = 0; i < circles.length; i++) {
+      for (let j = i + 1; j < circles.length; j++) {
+        const a = circles[i], b = circles[j];
+        const dpx = Math.sqrt(((a.x - b.x) * 600) ** 2 + ((a.y - b.y) * 300) ** 2);
+        const rsum = (a.tolerance + b.tolerance) * 600;
+        if (dpx < rsum) {
+          return { kind: "warn", msg: `place targets for "${a.id}" and "${b.id}" overlap (centers ${dpx.toFixed(0)}px apart, radii sum ${rsum.toFixed(0)}px) — the drop guides merge into one ambiguous blob. Space them out or shrink the tolerances.` };
+        }
+      }
+    }
+    return null;
+  },
+
   function promptLengthSane(s) {
     const p = s.interaction?.prompt;
     if (typeof p !== "string" || p.length < 25) {

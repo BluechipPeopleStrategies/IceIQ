@@ -10,12 +10,12 @@
   "stage": { "view": "left", "zone": "def-zone" },
   "scanWindow": null,
   "actors": [
-    { "id": "you",  "kind": "player",   "x": 0.42, "y": 0.30, "tag": "YOU" },
-    { "id": "g",    "kind": "goalie",   "x": 0.50, "y": 0.92 },
-    { "id": "d1",   "kind": "teammate", "x": 0.50, "y": 0.72, "tag": "D" },
-    { "id": "o1",   "kind": "defender", "x": 0.10, "y": 0.85 },
-    { "id": "o2",   "kind": "defender", "x": 0.22, "y": 0.42 },
-    { "id": "puck", "kind": "puck",     "x": 0.115, "y": 0.84 }
+    { "id": "you",  "kind": "player",   "x": 0.44, "y": 0.16, "tag": "YOU" },
+    { "id": "g",    "kind": "goalie",   "x": 0.43, "y": 0.45 },
+    { "id": "d1",   "kind": "teammate", "x": 0.43, "y": 0.72, "tag": "D" },
+    { "id": "o1",   "kind": "defender", "x": 0.10, "y": 0.82 },
+    { "id": "o2",   "kind": "defender", "x": 0.26, "y": 0.36 },
+    { "id": "puck", "kind": "puck",     "x": 0.115, "y": 0.81 }
   ],
   "interaction": {
     "kind": "place",
@@ -26,8 +26,8 @@
   "correct": {
     "kind": "place",
     "placements": [
-      { "id": "g",  "zoneId": "dz-net-front" },
-      { "id": "d1", "zoneId": "dz-slot" }
+      { "id": "g",  "x": 0.085, "y": 0.50, "tolerance": 0.05 },
+      { "id": "d1", "x": 0.22,  "y": 0.50, "tolerance": 0.05 }
     ]
   },
   "feedback": {
