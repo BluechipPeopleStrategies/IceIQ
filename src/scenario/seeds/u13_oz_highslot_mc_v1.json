@@ -1,0 +1,42 @@
+{
+  "id": "u13_oz_highslot_mc_v1",
+  "type": "scenario",
+  "nodeId": "u13.scanning",
+  "level": "U13 / Peewee",
+  "levels": ["U13 / Peewee"],
+  "themes": ["scan", "cycle", "positioning", "offensive-zone"],
+  "cat": "Hockey Sense",
+  "difficulty": 2,
+  "stage": { "view": "right", "zone": "off-zone" },
+  "actors": [
+    { "id": "you",   "kind": "player",   "x": 0.680, "y": 0.240, "tag": "YOU" },
+    { "id": "tmlow", "kind": "teammate", "x": 0.900, "y": 0.800, "tag": "RW" },
+    { "id": "puck",  "kind": "puck",     "x": 0.902, "y": 0.798 },
+    { "id": "tmwall","kind": "teammate", "x": 0.900, "y": 0.240, "tag": "LW" },
+    { "id": "x1",    "kind": "defender", "x": 0.840, "y": 0.720 },
+    { "id": "x2",    "kind": "defender", "x": 0.820, "y": 0.520 },
+    { "id": "x3",    "kind": "defender", "x": 0.840, "y": 0.320 },
+    { "id": "g",     "kind": "goalie",   "x": 0.918, "y": 0.500 }
+  ],
+  "interaction": {
+    "kind": "point",
+    "prompt": "Your team is cycling low and the defense collapsed below the puck. Where should you go as F3?"
+  },
+  "correct": { "kind": "point", "zoneId": "oz-high-slot" },
+  "mc": {
+    "stem": "Your team is cycling low and the defense has collapsed below the puck. As the high forward, what is the best play?",
+    "opts": [
+      "Fill the open high slot for a quick scoring pass",
+      "Drop low to make it a three-player battle in the corner",
+      "Hug the boards and wait for a rim around",
+      "Back out to the blue line to protect against a turnover"
+    ],
+    "ok": 0
+  },
+  "feedback": {
+    "right": "Yes. With the defense pulled below the puck, the high slot is wide open for a quick scoring chance.",
+    "wrong": "Crowding the corner or hugging the boards just adds a body where the defense already is. The vacated high slot is the open ice."
+  },
+  "tip": "When the defense collapses low, the high slot is the open ice, so fill it.",
+  "why": "Filling the soft spot the collapsing defenders leave behind turns a low cycle into a scoring chance."
+}
