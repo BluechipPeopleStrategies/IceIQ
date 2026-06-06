@@ -1,0 +1,69 @@
+{
+  "id": "u13_gap_steer_boards_mc_v1",
+  "type": "scenario",
+  "nodeId": "u13.gap-control",
+  "level": "U13 / Peewee",
+  "levels": [
+    "U13 / Peewee"
+  ],
+  "themes": [
+    "gap-control",
+    "angling",
+    "defensive-zone-coverage",
+    "1-on-1"
+  ],
+  "cat": "Defensive Play",
+  "difficulty": 2,
+  "stage": {
+    "view": "neutral",
+    "zone": "neutral"
+  },
+  "actors": [
+    {
+      "id": "you",
+      "kind": "player",
+      "x": 0.52,
+      "y": 0.34,
+      "tag": "D"
+    },
+    {
+      "id": "carrier",
+      "kind": "defender",
+      "x": 0.6,
+      "y": 0.24,
+      "tag": ""
+    },
+    {
+      "id": "puck",
+      "kind": "puck",
+      "x": 0.602,
+      "y": 0.238
+    }
+  ],
+  "interaction": {
+    "kind": "point",
+    "prompt": "You have a tight gap and inside position on the carrier near the dot. Tap the lane you should steer them into, away from the middle."
+  },
+  "correct": {
+    "kind": "point",
+    "x": 0.64,
+    "y": 0.14,
+    "tolerance": 0.09
+  },
+  "mc": {
+    "stem": "You are the defenseman with a tight gap and inside body position on the puck carrier near the faceoff dot. What is the correct read?",
+    "opts": [
+      "Keep your stick on the ice and steer the puck carrier down the boards",
+      "Back into the slot and give the puck carrier the middle of the ice",
+      "Dive at the puck and hope the carrier cannot step around you",
+      "Stop your feet and wait for the puck carrier to choose first"
+    ],
+    "ok": 0
+  },
+  "feedback": {
+    "right": "Yes. A tight gap at the dot is a chance to finish the angle. Keep skating, protect the middle, and steer them to the low-danger boards.",
+    "wrong": "Backing off or diving gives up the middle, the most dangerous ice. Keep your feet, protect the middle, and steer them down the boards."
+  },
+  "tip": "With a tight gap and inside position, keep your feet and steer the carrier to the boards, away from the middle.",
+  "why": "A tight gap at the dot is a chance to finish the angle. Keeping the feet moving and protecting the middle steers the carrier to lower-danger ice."
+}
