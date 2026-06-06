@@ -242,10 +242,12 @@ Each brief object:
   ,"prompt": "<frame the read, >=25 chars, do NOT name where the open space is>",
   "feedback": { "right": "<why this is right>", "wrong": "<why the tempting option fails>" },
   "tip": "<one transferable cue, different wording from feedback.right>",
-  "why": "<the lesson>"
+  "why": "<the lesson>",
+  "mc": { "stem": "<the multiple-choice question>", "opts": ["<4 options>"], "ok": <0-3> }   // OPTIONAL — makes this scene a board-MC (multiple choice over the validated board)
 }
 
 RULES THE COMPILER ENFORCES (author to them or the brief fails):
+- OPTIONAL board-MC: add an "mc" block to ask this scene as a multiple-choice question. EXACTLY 4 options; the correct one (mc.ok) must describe the SAME read as "correct", and the other 3 are real wrong reads (no obvious-dummy options). The validated board is the picture; the words are the answer. Free-tier format.
 - view right => every zone on the right half; left => left half; neutral => middle. Match "view" to "zone".
 - off-zone/def-zone needs a goalie (auto-added) and >=1 defender (def-zone >=2).
 - selection/sequence: at least 2 candidates in "from", and NOT every candidate is correct.
