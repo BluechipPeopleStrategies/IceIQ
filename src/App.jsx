@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef, useCallback, useMemo, lazy, Suspense } from "react";
 import * as SB from "./supabase";
 import { supabase, hasSupabase } from "./supabase";
-import { canAccess, getUpgradeTriggerMessage } from "./utils/tierGate";
+import { canAccess, getUpgradeTriggerMessage, isBoardMC } from "./utils/tierGate";
 import { isDevBypassEnabled, getDevProfile, setDevProfile, clearDevProfile, buildDevPlayer, isEphemeralPlayer, enableDevBypass, DEV_BYPASS_SECRET } from "./utils/devBypass";
 import { getLevelDisplay } from "./utils/ageGroup";
 import { getParentRatings, saveParentRatings, hasParentRatings, daysSinceUpdated, PARENT_DIMENSIONS, PARENT_SCALE } from "./utils/parentAssessment";
@@ -704,9 +704,11 @@ function buildQueue(qb, level, position, isReturning, tier) {
 
     if (!formatAllowed && !onlyTypes && !onlyIds) {
       // FREE: MC and TF only (mc covers both text-only and image-backed MC
-      // since pov-mc was merged in). Other types (seq, mistake, next,
-      // rink-native) are PRO surface — players see format-preview sentinels.
-      posFiltered = posFiltered.filter(q => !q.type || q.type === "mc" || q.type === "tf");
+      // since pov-mc was merged in). Board-MC scenarios (type "scenario" with
+      // an mc block) are also a FREE MC format. Other types (seq, mistake,
+      // next, rink-native, interactive scenarios) are PRO surface — players
+      // see format-preview sentinels.
+      posFiltered = posFiltered.filter(q => !q.type || q.type === "mc" || q.type === "tf" || isBoardMC(q));
     }
 
     pool = {
