@@ -29,10 +29,21 @@ picture, the validation, and the correct answer are all the same validated read.
 Two more question formats are queued and will each get their own design pass after
 this ships — kept out of this spec to keep it clean and independently shippable:
 
-- **Matching** — definition ↔ term, drag to pair. A vocabulary/concept type
-  alongside `mc`/`tf`/`seq`; its own renderer/scorer/validator, no rink.
-- **Why-scenarios** — reasoning-focused questions (options are *reasons*, or a
-  two-step "pick the play → pick why"). May ride on the board-MC engine.
+- **Matching** — e.g. 5 hockey terms on the left, 5 definitions on the right; drag
+  or click to connect them. The question object stores the correct pairings; scoring
+  checks the player's connections against them. A vocabulary/concept type alongside
+  `mc`/`tf`/`seq`; its own renderer (pair-connect UI) + scorer, no rink.
+- **Why-scenarios** — reasoning-focused: describe a game situation (text, optionally
+  with a board diagram via the engine), then ask the right *read/play* in a way that
+  forces understanding of spacing/positioning, not a lucky guess. ("You're the
+  center, the weak-side wing is pinched in — where's the play?") Options can be plays
+  *or* reasons; may be a two-step "pick the play → pick why." Rides on the board-MC
+  engine where a diagram helps. **The 'tests IQ, not luck' bar is the adversarial
+  gauntlet gate** this spec already defines — same discipline applies.
+
+> Already built, not a follow-on: **ordering/sequencing** ("put these steps in the
+> right order") ships today as the `seq` text type and the `sequence` scenario
+> primitive.
 
 ## Non-goals
 
