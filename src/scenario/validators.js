@@ -353,6 +353,40 @@ const rules = [
     return null;
   },
 
+  // ── BOARD-MC (optional multiple-choice over the validated board)
+
+  function mcShapeValid(s) {
+    if (!s.mc) return null;
+    const opts = s.mc.opts;
+    if (!Array.isArray(opts) || opts.length !== 4) {
+      return { kind: "err", msg: `mc.opts must be exactly 4 options (got ${Array.isArray(opts) ? opts.length : typeof opts})` };
+    }
+    if (opts.some(o => typeof o !== "string" || o.trim().length === 0)) {
+      return { kind: "err", msg: `every mc.opts entry must be a non-empty string` };
+    }
+    const seen = new Set(opts.map(o => o.trim().toLowerCase()));
+    if (seen.size !== opts.length) {
+      return { kind: "err", msg: `mc.opts has duplicate options — every option must be distinct` };
+    }
+    return null;
+  },
+
+  function mcOkInRange(s) {
+    if (!s.mc) return null;
+    if (!Number.isInteger(s.mc.ok) || s.mc.ok < 0 || s.mc.ok > 3) {
+      return { kind: "err", msg: `mc.ok must be an integer 0..3 (got ${JSON.stringify(s.mc.ok)})` };
+    }
+    return null;
+  },
+
+  function mcStemSane(s) {
+    if (!s.mc || s.mc.stem == null) return null;
+    if (typeof s.mc.stem !== "string" || s.mc.stem.trim().length < 10) {
+      return { kind: "warn", msg: `mc.stem is very short — give the question an actual prompt or omit it to reuse interaction.prompt` };
+    }
+    return null;
+  },
+
   // ── SOFT WARNINGS
 
   function goalieInCrease(s) {

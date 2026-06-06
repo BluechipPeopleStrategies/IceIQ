@@ -178,6 +178,7 @@
  * @property {TimerSpec} [timer]      // IntelliGym-style hard timer
  * @property {ScanWindow} [scanWindow]// IntelliGym working-memory drill
  * @property {PreviewWindow} [preview]// IntelliGym pattern-recognition lock
+ * @property {{stem?:string, opts:string[], ok:0|1|2|3}} [mc]  // board-MC: ask this scene as multiple choice
  */
 
 import { ZONES } from "./zones.js";
