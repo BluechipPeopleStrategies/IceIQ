@@ -2,29 +2,79 @@
   "id": "gvis_u11_scanning_zz7u",
   "type": "scenario",
   "level": "U11 / Atom",
-  "levels": ["U11 / Atom"],
+  "levels": [
+    "U11 / Atom"
+  ],
   "nodeId": "u11.scanning",
-  "themes": ["scan", "decision-making", "vision", "pass-selection"],
+  "themes": [
+    "scan",
+    "decision-making",
+    "vision",
+    "pass-selection"
+  ],
   "cat": "Hockey Sense",
   "difficulty": 2,
-  "stage": { "view": "right", "zone": "neutral" },
+  "stage": {
+    "view": "right",
+    "zone": "neutral"
+  },
   "actors": [
-    { "id": "you",  "kind": "player",   "x": 0.52, "y": 0.50, "tag": "YOU" },
-    { "id": "puck", "kind": "puck",     "x": 0.522, "y": 0.498 },
-    { "id": "t1",   "kind": "teammate", "x": 0.65, "y": 0.22,  "tag": "LW" },
-    { "id": "t2",   "kind": "teammate", "x": 0.72, "y": 0.78,  "tag": "RW" },
-    { "id": "d1",   "kind": "defender", "x": 0.60, "y": 0.32,  "tag": "" },
-    { "id": "d2",   "kind": "defender", "x": 0.58, "y": 0.44,  "tag": "" }
+    {
+      "id": "you",
+      "kind": "player",
+      "x": 0.5,
+      "y": 0.5,
+      "tag": "YOU"
+    },
+    {
+      "id": "puck",
+      "kind": "puck",
+      "x": 0.502,
+      "y": 0.498
+    },
+    {
+      "id": "t1",
+      "kind": "teammate",
+      "x": 0.58,
+      "y": 0.24,
+      "tag": "LW"
+    },
+    {
+      "id": "t2",
+      "kind": "teammate",
+      "x": 0.6,
+      "y": 0.76,
+      "tag": "RW"
+    },
+    {
+      "id": "d1",
+      "kind": "defender",
+      "x": 0.6,
+      "y": 0.34,
+      "tag": ""
+    },
+    {
+      "id": "d2",
+      "kind": "defender",
+      "x": 0.5,
+      "y": 0.34,
+      "tag": ""
+    }
   ],
   "interaction": {
     "kind": "selection",
     "prompt": "You just did a shoulder check coming through the neutral zone. Tap the teammate your scan revealed is open.",
-    "from": ["t1", "t2"],
+    "from": [
+      "t1",
+      "t2"
+    ],
     "order": "any"
   },
   "correct": {
     "kind": "selection",
-    "ids": ["t2"]
+    "ids": [
+      "t2"
+    ]
   },
   "feedback": {
     "right": "Your pre-receive scan paid off — the RW is completely unguarded on the far side. Hit them in stride for a clean zone entry.",

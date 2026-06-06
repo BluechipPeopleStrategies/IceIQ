@@ -146,6 +146,29 @@ const rules = [
     return null;
   },
 
+  // No offsides: on an attacking scene (off-zone or neutral, half-view), a
+  // teammate can't be PAST the offensive blue line while the puck is still
+  // behind it — that's offsides. Catches "pass to a winger already in the
+  // zone" and "carrier behind the line while teammates are deep". Skips
+  // def-zone (we're defending) and established in-zone plays (puck already in).
+  function noOffsides(s) {
+    const zone = s.stage?.zone;
+    if (zone !== "off-zone" && zone !== "neutral") return null;
+    const view = s.stage?.view;
+    // Offensive blue line by attack direction: right-view attacks right (0.645),
+    // left-view attacks left (0.355). A neutral VIEW crops out the OZ — skip.
+    const blue = view === "right" ? 0.645 : view === "left" ? 0.355 : null;
+    if (blue == null) return null;
+    const inOZ = (x) => (view === "right" ? x > blue : x < blue);
+    const puck = (s.actors || []).find(a => a.kind === "puck");
+    if (!puck || inOZ(puck.x)) return null; // no puck, or puck already in the zone → onside
+    const offside = (s.actors || []).filter(a => (a.kind === "player" || a.kind === "teammate") && inOZ(a.x));
+    if (offside.length) {
+      return { kind: "err", msg: `offsides — teammate(s) ${offside.map(a => a.id).join(", ")} ${offside.length > 1 ? "are" : "is"} past the offensive blue line but the puck is still behind it (x=${puck.x.toFixed(2)}). Carry the puck into the zone, or pull the teammate(s) back behind the line.` };
+    }
+    return null;
+  },
+
   function promptLengthSane(s) {
     const p = s.interaction?.prompt;
     if (typeof p !== "string" || p.length < 25) {
