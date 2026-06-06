@@ -1,0 +1,42 @@
+{
+  "id": "u13_oddman_pass_mc_v1",
+  "type": "scenario",
+  "nodeId": "u13.odd-man-reads",
+  "level": "U13 / Peewee",
+  "levels": ["U13 / Peewee"],
+  "themes": ["odd-man-rush", "3-on-2", "decision-making", "offensive-zone"],
+  "cat": "Offensive Play",
+  "difficulty": 2,
+  "stage": { "view": "right", "zone": "off-zone" },
+  "actors": [
+    { "id": "you", "kind": "player",   "x": 0.600, "y": 0.500, "tag": "YOU" },
+    { "id": "puck","kind": "puck",     "x": 0.602, "y": 0.498 },
+    { "id": "lw",  "kind": "teammate", "x": 0.800, "y": 0.260, "tag": "LW" },
+    { "id": "rw",  "kind": "teammate", "x": 0.820, "y": 0.760, "tag": "RW" },
+    { "id": "x1",  "kind": "defender", "x": 0.740, "y": 0.360 },
+    { "id": "g",   "kind": "goalie",   "x": 0.918, "y": 0.500 }
+  ],
+  "interaction": {
+    "kind": "selection",
+    "prompt": "You carry the puck up the middle on an odd-man rush. The lone defender shades to one side. Tap the teammate with the open ice.",
+    "from": ["lw", "rw"],
+    "order": "any"
+  },
+  "correct": { "kind": "selection", "ids": ["rw"] },
+  "mc": {
+    "stem": "You have the puck in the middle on a 3-on-1. The lone defender shades toward your left-side teammate. Who has the best open ice?",
+    "opts": [
+      "Your teammate open on the right side",
+      "Your teammate covered on the left side",
+      "The narrow gap right behind the defender",
+      "The corner behind the goalie"
+    ],
+    "ok": 0
+  },
+  "feedback": {
+    "right": "Yes. The lone defender cannot cover both sides — when they shade to your left teammate, the right-side teammate is wide open for the pass.",
+    "wrong": "The defender already took away the left side. Forcing it there, or squeezing behind the defender, plays into them. The open ice is the right-side teammate."
+  },
+  "tip": "On an odd-man rush, move the puck to the side the lone defender left open.",
+  "why": "One defender can only take one threat. Reading which side they commit to, and passing away from it, is the whole odd-man read."
+}
