@@ -135,6 +135,45 @@ ships that hasn't cleared all three. **This is how "send all image questions thr
 the gauntlet" actually happens** — by making them scenarios, they become eligible
 for the gauntlet that text already uses.
 
+### Self-correcting loop (continually improving)
+
+The three gates are not one-shot — they run as a **closed revise-until-pass loop**,
+because each gate emits *actionable* failures, not just a pass/fail:
+
+- The geometry validator already returns fixable messages ("correct path is
+  intercepted by defender X — author the scene so the right answer has a clean
+  lane", "difficulty too low for complexity", "actor off-stage for this view").
+- The coach panel returns a `FLAGS:` list (weak distractor, two defensible answers,
+  age mismatch, the keyed option doesn't match the read).
+
+**Per-question loop:**
+
+```
+generate board-MC
+repeat (max N rounds, e.g. 4):
+    run all 3 gates
+    if all pass -> SHIP
+    else -> feed the SPECIFIC failures back to the author as a targeted
+            revision instruction -> revise the brief/options -> continue
+if still failing after N rounds -> QUEUE for a human, with the outstanding
+    failures attached (never force a bad question through)
+```
+
+Each round is appended to `review-log.jsonl` (same log the text gauntlet uses), so
+every question carries its critique history.
+
+**System-level improvement (the part that compounds):** recurring failure patterns
+get promoted out of the per-question loop and into the *generator* — a distractor
+mistake the panel keeps catching becomes a rule in PROMPT A/PROMPT C; a geometry
+mistake the validator keeps rejecting becomes a generator constraint or a new
+validator rule. (This is the same move that fixed the text bank: the `seq`-order
+and single-answer bugs the gate caught were written back into PROMPT B so they stop
+recurring.) Over time the loop needs fewer rounds and the bar rises on its own.
+
+The loop is LLM-driven (the reviser is an LLM call), so it runs headless via the
+available `claude -p` CLI for batches, or interactively (paste the failures back to
+ChatGPT) when tokens are tight — same trade-off as the existing gauntlet.
+
 ### Migration
 
 The 4 live odd-man + 16 pulled image-MC questions have good **text**
