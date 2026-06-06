@@ -84,6 +84,28 @@ The same seed can still render **interactively** (tap/drag) where wanted — e.g
 `#scenarios` playground — via a `mode` prop. Mode default in the quiz: MC when
 `mc` is present.
 
+**Age-scaled board style — `src/scenario/RinkStage.jsx`.** The marker style keys off
+`scenario.level`, in two tiers:
+
+- **U7 / U9** — the friendly markers already in place (rounded, labeled, approachable,
+  position tags hidden, soft goalie/puck). Inviting for young kids.
+- **U11+ (and especially U13 / U15 / U18)** — austere **X's-and-O's playbook**:
+  filled dots for your team, X's for opponents, a plain goalie box, thin lines,
+  minimal ornamentation, no cartoon-character feel. The board a 14-year-old sees
+  reads like a coach's chalk-talk, not a kids' game.
+
+RinkStage already hides tags + softens markers for U7/U9; this promotes that into an
+explicit, deliberate two-tier style so the *diagram's tone matches the age* of the
+question.
+
+**Read-overlay coherence is structural.** The reveal arrow/ring is **derived from the
+validated `correct` read, never drawn freehand.** So a passing-lane arrow always
+terminates at the actual keyed receiver (which the validator already confirmed is
+reachable by a clean lane), and a shooting-lane arrow always runs to the net along a
+validated-clear path. An arrow pointing somewhere incoherent with the question is
+structurally impossible — and the coach-panel gate additionally confirms the drawn
+read matches the stem and the keyed option.
+
 ### Quiz integration — `src/App.jsx` (quiz engine) + `src/qbLoader.js`
 
 - Scenario seeds already auto-merge into the bank. A seed with an `mc` block
@@ -189,7 +211,8 @@ existing options. Geometry and art are fixed in one move. Then remove the old
 | `src/scenario/schema.js` | `mc` typedef + shape check in `validateScenario` |
 | `src/scenario/validators.js` | `mc`-shape rules (4 opts, ok range, no dup) |
 | `tools/scenario-author/validate.mjs` | trivial `mc` self-test |
-| `src/scenario/ScenarioRenderer.jsx` | MC render mode + static read-reveal |
+| `src/scenario/ScenarioRenderer.jsx` | MC render mode + static read-reveal (derived from `correct`) |
+| `src/scenario/RinkStage.jsx` | age-scaled board style: U7/U9 friendly vs U11+ X's-and-O's |
 | `src/App.jsx` | quiz routes scenario-with-`mc` to MC render; scoring |
 | `src/utils/tierGate.js` | board-MC = FREE MC format; interactive = paid |
 | `scripts/brief-to-seed.mjs` | pass `mc` block through |
@@ -204,3 +227,7 @@ existing options. Geometry and art are fixed in one move. Then remove the old
 - Render a board-MC in `#scenarios` → board + 4 options, pick one, the read reveals.
 - A FREE-tier player sees board-MC; an interactive-only scenario is gated.
 - One migrated question (e.g. an odd-man read) plays correctly end-to-end.
+- A U13 board renders in austere X's-and-O's style; a U7 board renders friendly —
+  same scene, age-appropriate tone.
+- The revealed read overlay matches the keyed option (arrow ends at the keyed
+  receiver / net), and cannot be authored to point elsewhere.
