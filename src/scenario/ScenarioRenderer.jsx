@@ -99,7 +99,8 @@ function RevealLayer({ scenario }) {
   if (c.kind === "point") {
     let t; try { t = resolveTarget(c); } catch { return null; }
     const p = denorm(t);
-    return <circle cx={p.x} cy={p.y} r={t.tolerance * 600} fill="rgba(34,197,94,.22)"
+    // Normalized-distance tolerance → ellipse (rx=tol·600, ry=tol·300), not a circle.
+    return <ellipse cx={p.x} cy={p.y} rx={t.tolerance * 600} ry={t.tolerance * 300} fill="rgba(34,197,94,.22)"
       stroke="#22c55e" strokeWidth="1.8"/>;
   }
   if (c.kind === "path") {

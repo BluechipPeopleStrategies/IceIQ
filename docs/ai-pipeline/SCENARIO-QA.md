@@ -109,6 +109,8 @@ a new automated check, then a `#` in the rubric table.
 | 2026-06-06 | "call them opponents/black, not white players" | Rule #13 `copyMatchesColors` (WARN) |
 | 2026-06-06 | "the puck isn't on the half-wall — board must match the question" | Rule #14 `puckLocationMatchesCopy` (corner/net-front) + Coach #15 (half-wall/slot/point) |
 | 2026-06-06 | "'collapsed below the puck' — but the puck's on the goal line, so the D would be behind it" | Rule #14b `copyMatchesDepth` (WARN); fixed u13_oz_highslot_mc + u13_scanning_slot |
+| 2026-06-06 | "I tapped inside the green target circle but it marked me wrong" | Render bug #20: scorer uses normalized distance, but point/place/reveal drew the tolerance as a circle (tol·600) — twice too tall. Now an ellipse (rx=tol·600, ry=tol·300) that matches the scorer exactly |
+| 2026-06-06 | "the bobbling defender is way out away from the boards" | Content: gap-pinch opponent moved onto the boards (y 0.22→0.11); board must match "on the boards" |
 
 ### How to add the next one
 1. Add a row to the feedback log with today's date and the gist.

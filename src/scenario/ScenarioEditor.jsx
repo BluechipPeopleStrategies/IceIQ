@@ -146,7 +146,7 @@ export function ScenarioEditor({ scenario, onClose }) {
                   style={{ cursor: "grab" }}
                   onPointerDown={(e) => { setDrag({ kind: "target" }); e.target.setPointerCapture?.(e.pointerId); }}
                 >
-                  <circle r={(targetObj.tolerance || 0.08) * RINK_W} fill="#22c55e" opacity="0.12" stroke="#22c55e" strokeDasharray="4 3" strokeWidth="1.5" />
+                  <ellipse rx={(targetObj.tolerance || 0.08) * RINK_W} ry={(targetObj.tolerance || 0.08) * RINK_H} fill="#22c55e" opacity="0.12" stroke="#22c55e" strokeDasharray="4 3" strokeWidth="1.5" />
                   <path d="M0,-9 L9,0 L0,9 L-9,0 Z" fill="#22c55e" stroke="#0b1220" strokeWidth="1.5" />
                   <text x="0" y="-13" textAnchor="middle" fontSize="9" fontWeight="800" fill="#22c55e" style={{ pointerEvents: "none" }}>TARGET</text>
                 </g>

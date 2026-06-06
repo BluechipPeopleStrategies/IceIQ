@@ -183,10 +183,11 @@ const rules = [
     for (let i = 0; i < circles.length; i++) {
       for (let j = i + 1; j < circles.length; j++) {
         const a = circles[i], b = circles[j];
-        const dpx = Math.sqrt(((a.x - b.x) * 600) ** 2 + ((a.y - b.y) * 300) ** 2);
-        const rsum = (a.tolerance + b.tolerance) * 600;
-        if (dpx < rsum) {
-          return { kind: "warn", msg: `place targets for "${a.id}" and "${b.id}" overlap (centers ${dpx.toFixed(0)}px apart, radii sum ${rsum.toFixed(0)}px) — the drop guides merge into one ambiguous blob. Space them out or shrink the tolerances.` };
+        // Tolerance regions are normalized circles (radius = tol); they overlap
+        // when the centers are closer than the sum of the tolerances.
+        const dist = Math.hypot(a.x - b.x, a.y - b.y);
+        if (dist < a.tolerance + b.tolerance) {
+          return { kind: "warn", msg: `place targets for "${a.id}" and "${b.id}" overlap (centers ${dist.toFixed(3)} apart, tolerances sum ${(a.tolerance + b.tolerance).toFixed(3)}) — the drop guides merge into one ambiguous blob. Space them out or shrink the tolerances.` };
         }
       }
     }
