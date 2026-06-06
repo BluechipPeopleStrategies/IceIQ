@@ -331,6 +331,7 @@ export default function ScenarioRenderer({ scenario, playerId, mode, onAnswer })
             correct={scenario.correct}
             actors={scenario.actors}
             svgPoint={svgPoint}
+            view={scenario.stage?.view}
             locked={!!result || previewLocked}
             onAnswer={handleAnswer}
           />
