@@ -38,7 +38,7 @@ import {
 } from "./utils/reflections.js";
 import { ScenarioRenderer } from "./scenario/index.js";
 import {
-  C, FONT, LEVELS, POSITIONS, POSITIONS_U11UP, SEASONS,
+  C, FONT, LEVELS, POSITIONS, POSITIONS_U11UP, SEASONS, ALL_AGES_MODE,
   RinkReadsLogo, Screen, Card, Pill, Label, PrimaryBtn, SecBtn, BackBtn, ProgressBar, StickyHeader,
 } from "./shared.jsx";
 import { OverlayLayer } from "./OverlayLayer.jsx";
@@ -55,7 +55,15 @@ import imgSuccess from "./assets/images/Success-Icon.jpg";
 //           demo mode → coach demo = TEAM
 //           profile.tier field (future Supabase subscriptions) → that tier
 //           default → FREE
-function resolveTier({ profile, demoMode } = {}) {
+function resolveTier(args = {}) {
+  const t = resolveTierRaw(args);
+  // ALL_AGES_MODE (temporary): floor FREE up to PRO so the single login is the
+  // full Pro experience — all formats, adaptive engine, no weekly quiz cap.
+  // Coach=TEAM and explicit PRO/FAMILY/TEAM are preserved. Flip the flag off
+  // to restore the FREE tier and its gating.
+  return ALL_AGES_MODE && t === "FREE" ? "PRO" : t;
+}
+function resolveTierRaw({ profile, demoMode } = {}) {
   // Coaches in any non-production session (demo / preview / dev-bypass)
   // always get TEAM tier, regardless of what the tier picker reads. There
   // is no real "coach on PRO" account — in production, coaches sign up on
@@ -650,7 +658,9 @@ function EmptyBankScreen() {
 }
 
 function buildQueue(qb, level, position, isReturning, tier) {
-  const formatAllowed = canAccess("allQuestionFormats", tier).allowed;
+  // ALL_AGES_MODE (temporary): one mixed-age Pro experience — ignore the
+  // player's level, serve every format. Flip the flag off to restore per-age.
+  const formatAllowed = ALL_AGES_MODE ? true : canAccess("allQuestionFormats", tier).allowed;
   const positionAllowed = canAccess("positionFilter", tier).allowed;
   // Debug: ?only=<type> (or comma-separated, e.g. ?only=rink-label,rink-drag)
   // OR ?ids=<id>[,<id>] to filter to specific question ids (used by the
@@ -664,13 +674,13 @@ function buildQueue(qb, level, position, isReturning, tier) {
   // Kill-list signature ensures a freshly-killed question is filtered out
   // on the very next queue build (cache invalidates when count changes).
   const killSig = getKillList().length;
-  const cacheKey = `${level}|${position}|${formatAllowed}|${positionAllowed}|${onlyParam || ""}|${idsParam || ""}|k${killSig}`;
+  const cacheKey = `${ALL_AGES_MODE ? "ALL" : level}|${position}|${formatAllowed}|${positionAllowed}|${onlyParam || ""}|${idsParam || ""}|k${killSig}`;
 
   let pool;
   if (!onlyTypes && !onlyIds && _queueCache.has(cacheKey)) {
     pool = _queueCache.get(cacheKey);
   } else {
-    let allQ = qb[level] || [];
+    let allQ = ALL_AGES_MODE ? LEVELS.flatMap(l => qb[l] || []) : (qb[level] || []);
     if (onlyTypes) allQ = allQ.filter(q => onlyTypes.includes(q.type));
     if (onlyIds) {
       // ids[] also looks across every level (a single-question playlist
@@ -1425,7 +1435,7 @@ function Home({ player, onNav, demoMode, subscriptionTier, questFlagsBump, onPro
                 </button>
               )}
             </div>
-            <div style={{fontSize:12,color:C.dimmer}}>{name} · {level} · {position}</div>
+            <div style={{fontSize:12,color:C.dimmer}}>{name}{ALL_AGES_MODE ? "" : ` · ${level}`} · {position}</div>
           </div>
           <button onClick={() => onNav("profile")} style={{background:C.bgCard,border:`1px solid ${C.border}`,borderRadius:10,width:38,height:38,cursor:"pointer",color:C.dimmer,fontSize:16,display:"flex",alignItems:"center",justifyContent:"center"}}>⚙</button>
         </div>
@@ -5549,6 +5559,9 @@ function Profile({ player, onSave, onBack, onReset, demoMode, tier, onUpgrade, u
             ))}
           </div>
         </Card>
+        {/* ALL_AGES_MODE (temporary): hide the age-group switcher — the quiz
+            serves every level mixed, so a per-age control would be a dead knob. */}
+        {!ALL_AGES_MODE && (
         <Card style={{marginBottom:"1rem"}}>
           <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:".25rem"}}>
             <Label style={{marginBottom:0}}>Level</Label>
@@ -5572,6 +5585,7 @@ function Profile({ player, onSave, onBack, onReset, demoMode, tier, onUpgrade, u
             })}
           </div>
         </Card>
+        )}
         <Card style={{marginBottom:"1rem"}}>
           <Label>Season</Label>
           <div style={{display:"flex",gap:".5rem",flexWrap:"wrap"}}>

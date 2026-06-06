@@ -4,7 +4,7 @@
 import { useState, useEffect, useRef } from "react";
 import * as SB from "./supabase";
 import {
-  C, FONT, LEVELS,
+  C, FONT, LEVELS, ALL_AGES_MODE, DEFAULT_MIX_LEVEL,
   Screen, Card, Pill, Label, PrimaryBtn, BackBtn, ProgressBar, StickyHeader,
   SEASONS,
 } from "./shared.jsx";
@@ -195,7 +195,9 @@ export function CoachDashboard({ onBack }) {
 // parent/guardian-fronted (pronouns are hardcoded to "your child" / "their").
 export function ProfileSetup({ profile, onComplete }) {
   const [ageMode, setAgeMode] = useState("level");           // "level" | "birthYear"
-  const [level, setLevel] = useState(profile.level || "");
+  // ALL_AGES_MODE (temporary): skip the age-group step entirely — slot new
+  // profiles into a placeholder level (the quiz ignores it and serves all ages).
+  const [level, setLevel] = useState(profile.level || (ALL_AGES_MODE ? DEFAULT_MIX_LEVEL : ""));
   const [birthYear, setBirthYear] = useState(profile.birthYear || null);
   const [position, setPosition] = useState(profile.position || "");
   const [saving, setSaving] = useState(false);
@@ -300,10 +302,10 @@ export function ProfileSetup({ profile, onComplete }) {
   return (
     <Screen>
       <div style={{marginBottom:"1.5rem"}}>
-        <div style={{fontSize:10,letterSpacing:".18em",color:C.gold,textTransform:"uppercase",fontWeight:700,marginBottom:".6rem"}}>Step 2 of 2</div>
+        <div style={{fontSize:10,letterSpacing:".18em",color:C.gold,textTransform:"uppercase",fontWeight:700,marginBottom:".6rem"}}>{ALL_AGES_MODE ? "✓ Account created · Last step" : "Step 2 of 2"}</div>
         <h2 style={{fontFamily:FONT.display,fontWeight:800,fontSize:"2rem",margin:"0 0 .35rem"}}>What position does {subject} play?</h2>
         <div style={{fontSize:12,color:C.dim,marginTop:".35rem"}}>
-          {ageMode === "birthYear" ? `Born ${birthYear}` : effectiveLevel}
+          {ALL_AGES_MODE ? "All age groups" : ageMode === "birthYear" ? `Born ${birthYear}` : effectiveLevel}
         </div>
       </div>
       <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:".75rem",marginBottom:"1.5rem"}}>
@@ -315,7 +317,9 @@ export function ProfileSetup({ profile, onComplete }) {
         ))}
       </div>
       <div style={{display:"flex",gap:".5rem"}}>
-        <button onClick={()=>{ setLevel(""); setBirthYear(null); }} style={{background:"none",border:`1px solid ${C.border}`,borderRadius:10,padding:".75rem 1rem",cursor:"pointer",color:C.dimmer,fontSize:13,fontFamily:FONT.body}}>← Back</button>
+        {!ALL_AGES_MODE && (
+          <button onClick={()=>{ setLevel(""); setBirthYear(null); }} style={{background:"none",border:`1px solid ${C.border}`,borderRadius:10,padding:".75rem 1rem",cursor:"pointer",color:C.dimmer,fontSize:13,fontFamily:FONT.body}}>← Back</button>
+        )}
         <PrimaryBtn onClick={save} disabled={!position||saving} style={{flex:1,margin:0}}>{saving?"Saving…":"Finish Setup →"}</PrimaryBtn>
       </div>
     </Screen>
