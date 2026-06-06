@@ -1,9 +1,10 @@
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 import { reviewServerPlugin } from './tools/review-server-plugin.mjs'
+import { seedEditorPlugin } from './tools/seed-editor-plugin.mjs'
 
 export default defineConfig({
-  plugins: [react(), reviewServerPlugin()],
+  plugins: [react(), reviewServerPlugin(), seedEditorPlugin()],
   build: {
     minify: 'terser',
     terserOptions: {

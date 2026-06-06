@@ -8,6 +8,7 @@
 
 import { useMemo, useState } from "react";
 import { ScenarioRenderer } from "./index.js";
+import { ScenarioEditor } from "./ScenarioEditor.jsx";
 import { C, FONT } from "../shared.jsx";
 
 const MODS = import.meta.glob("./seeds/*.json", { eager: true });
@@ -21,6 +22,7 @@ export function ScenarioPlayground() {
   const [kind, setKind] = useState("all");
   const [idx, setIdx] = useState(0);
   const [nonce, setNonce] = useState(0);
+  const [editing, setEditing] = useState(false);
 
   const list = useMemo(() => {
     const l = kind === "all" ? ALL : ALL.filter((s) => s.interaction?.kind === kind);
@@ -29,7 +31,7 @@ export function ScenarioPlayground() {
 
   const i = Math.min(idx, Math.max(0, list.length - 1));
   const s = list[i];
-  function go(d) { setIdx(() => (i + d + list.length) % list.length); setNonce(0); }
+  function go(d) { setIdx(() => (i + d + list.length) % list.length); setNonce(0); setEditing(false); }
 
   const wrap = { maxWidth: 560, margin: "0 auto", padding: "18px 14px 70px" };
   const chip = (active) => ({
@@ -74,11 +76,21 @@ export function ScenarioPlayground() {
               <button style={btn} onClick={() => go(1)}>Next ›</button>
             </div>
 
-            <ScenarioRenderer key={s.id + ":" + nonce} scenario={s} onAnswer={() => {}} />
-
-            <button style={{ ...btn, width: "100%", marginTop: 10 }} onClick={() => setNonce((n) => n + 1)}>
-              ↻ Replay this scenario
-            </button>
+            {editing ? (
+              <ScenarioEditor key={s.id + ":edit"} scenario={s} onClose={() => setEditing(false)} />
+            ) : (
+              <>
+                <ScenarioRenderer key={s.id + ":" + nonce} scenario={s} onAnswer={() => {}} />
+                <div style={{ display: "flex", gap: 8, marginTop: 10 }}>
+                  <button style={{ ...btn, flex: 1 }} onClick={() => setNonce((n) => n + 1)}>
+                    ↻ Replay
+                  </button>
+                  <button style={{ ...btn, flex: 1, borderColor: C.gold, color: C.gold }} onClick={() => setEditing(true)}>
+                    ✎ Edit this scenario
+                  </button>
+                </div>
+              </>
+            )}
           </>
         )}
       </div>
