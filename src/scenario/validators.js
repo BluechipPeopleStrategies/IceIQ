@@ -201,6 +201,44 @@ const rules = [
     return null;
   },
 
+  // QA: copy must name jersey colors the renderer actually draws. Our side is
+  // BLUE, opponents are BLACK (white X). Authors transcribing a source image
+  // wrote "white jersey/player" for opponents — which contradicts the board.
+  // Warn on any player-color word that isn't blue/black. (From user feedback.)
+  function copyMatchesColors(s) {
+    const text = [s.interaction?.prompt, s.feedback?.right, s.feedback?.wrong, s.tip]
+      .filter(t => typeof t === "string").join(" ");
+    const m = text.match(/\b(white|yellow|red|green|orange|purple)\s+(jersey|jerseys|sweater|sweaters|player|players|defender|defenders|teammate|teammates|skater|skaters)\b/i);
+    if (m) {
+      return { kind: "warn", msg: `copy says "${m[0]}" but the renderer draws our side BLUE and opponents BLACK — no ${m[1].toLowerCase()} jerseys exist on the board. Call them "opponent"/"teammate" or match the actual color.` };
+    }
+    return null;
+  },
+
+  // QA: the puck's position must match a location the prompt claims. If the
+  // prompt says the puck is in the "corner" or at the "net-front/crease",
+  // verify the puck is actually there. (From the c9qi "puck isn't on the
+  // half-wall" feedback — codifying the unambiguous cases; the AI QA coach
+  // handles subtler spots like half-wall/slot/point.)
+  function puckLocationMatchesCopy(s) {
+    const puck = (s.actors || []).find(a => a.kind === "puck");
+    if (!puck) return null;
+    const text = (s.interaction?.prompt || "").toLowerCase();
+    const zone = s.stage?.zone;
+    // "deep" (near a net) depends on which net the scene shows.
+    const netX = zone === "def-zone" ? 0.08 : zone === "off-zone" ? 0.92 : null;
+    if (netX == null) return null; // neutral: no net reference
+    const depth = Math.abs(puck.x - netX);     // 0 = on the net, larger = toward the blue line
+    const offBoards = Math.abs(puck.y - 0.5);  // 0 = center ice, ~0.5 = on the boards
+    if (/\bcorner\b/.test(text) && (depth > 0.35 || offBoards < 0.18)) {
+      return { kind: "warn", msg: `prompt says "corner" but the puck (x=${puck.x.toFixed(2)}, y=${puck.y.toFixed(2)}) isn't in one — a corner is deep near the goal line AND wide against the boards.` };
+    }
+    if (/(net[- ]front|front of the net|\bcrease\b)/.test(text) && (depth > 0.25 || offBoards > 0.32)) {
+      return { kind: "warn", msg: `prompt says net-front/crease but the puck (x=${puck.x.toFixed(2)}, y=${puck.y.toFixed(2)}) is depth ${depth.toFixed(2)} from the net — it's not at the net.` };
+    }
+    return null;
+  },
+
   // ── SELECTION-SPECIFIC
 
   function selectionHasMultipleCandidates(s) {
