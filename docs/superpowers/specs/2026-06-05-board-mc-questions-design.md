@@ -110,6 +110,31 @@ The same seed can still render **interactively** (tap/drag) where wanted — e.g
 - `image-gallery.mjs` stays (review); `board-svg.mjs` survives only as an optional
   static-export tool.
 
+### Quality — the same gauntlet text got
+
+The reason text questions are good and image questions weren't is the **adversarial
+review loop**, which board-MC now inherits in full. Every board-MC runs all three
+gates before it ships:
+
+1. **Geometry gate (automatic) — the engine validator.** The scene must pass every
+   scenario rule (read ends sanely, lanes clean, defender counts, on-stage, no
+   overlaps, difficulty floor, scorer self-test). This is the gate the image
+   pipeline never had — it is what rejects "shoot from the far blue line."
+2. **Coach-panel / distractor gate (review) — PROMPT B + PROMPT B-SCENARIO.** The MC
+   stem and 4 options go through the *same* reviewer that sharpened the text bank:
+   make it harder to guess, every distractor a real mistake wrong for a stated
+   reason, kill obvious-dummy options, confirm age-fit, confirm exactly one
+   defensible answer, and confirm the keyed option actually describes the geometric
+   read. The read itself goes through the tactical/pedagogy/adversarial coach lenses.
+3. **Engine gate (automatic) — `validate-seed.mjs`.** Final structural + self-test pass.
+
+Concretely the pipeline is: Gemini writes the board brief + `mc` options → ChatGPT
+runs PROMPT B over the options (adversarial sharpening) and PROMPT B-SCENARIO over
+the read → `brief-to-seed.mjs` + `validate-seed.mjs` enforce the geometry. Nothing
+ships that hasn't cleared all three. **This is how "send all image questions through
+the gauntlet" actually happens** — by making them scenarios, they become eligible
+for the gauntlet that text already uses.
+
 ### Migration
 
 The 4 live odd-man + 16 pulled image-MC questions have good **text**
