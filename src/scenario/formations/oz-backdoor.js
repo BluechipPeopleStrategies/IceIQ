@@ -1,14 +1,14 @@
-// Offensive-zone backdoor — a "pick the spot" read. You have the puck up high on
-// the strong side; the defender and goalie are committed to the strong side, so
-// the weak-side backdoor is the open scoring ice. Tap it.
+// Offensive-zone backdoor — find the open weak-side teammate. You have the puck
+// on the strong side. A strong-side teammate is the obvious option but the
+// defender is shading that lane; a teammate has slipped backdoor on the weak side
+// with a clear lane. The geometry forces the read: pass backdoor.
 //
-// `side` selects which side is the OPEN backdoor (the strong/puck side is the
-// other one). Interaction is `point` (tap the open ice), so there's no tempting
-// teammate to block — the question is spatial, not a pass choice.
+// `side` selects which side the OPEN backdoor teammate is on (the puck/strong
+// side is the other one). Selection read: from [backdoor, strongMate].
 
 export default {
   id: "oz-backdoor",
-  label: "Offensive-zone backdoor (pick the open ice)",
+  label: "Offensive-zone backdoor (find the weak-side teammate)",
   concepts: {
     nodeIds: ["u13.off-puck-support-offense", "u15.off-puck-support-offense", "u13.scanning"],
     ages: ["U13", "U15"],
@@ -17,26 +17,43 @@ export default {
   cat: "Offensive Play",
   stage: { view: "right", zone: "off-zone" },
   params: {
-    side: { values: ["left", "right"], doc: "which side is the OPEN backdoor" },
+    side: { values: ["left", "right"], doc: "which side the OPEN backdoor teammate is on" },
   },
   slots: [
     // carrier high on the STRONG side (opposite the open backdoor) with the puck
-    { role: "carrier", kind: "player", tag: "YOU", geometry: (p) => ({ x: 0.74, y: 0.5 + (p.other === "right" ? 0.10 : -0.10) }) },
+    { role: "carrier", kind: "player", tag: "YOU", geometry: (p) => ({ x: 0.70, y: 0.5 + (p.other === "right" ? 0.20 : -0.20) }) },
     { role: "puck", kind: "puck", with: "carrier" },
-    // defender committed net-front on the strong side
-    { role: "d1", kind: "defender", geometry: (p) => ({ x: 0.86, y: 0.5 + (p.other === "right" ? 0.10 : -0.10) }) },
+    // strong-side teammate — the tempting option, but its lane is covered.
+    // Set well apart from the carrier so the shading defender fits between them.
+    { role: "strongMate", kind: "teammate", geometry: (p) => ({ x: 0.86, y: 0.5 + (p.other === "right" ? 0.08 : -0.08) }) },
+    // defender shading the strong-side lane
+    { role: "d1", kind: "defender", geometry: (p) => p.onLane("carrier", "strongMate", { t: 0.5 }) },
+    // backdoor teammate — open, weak side, net-front
+    { role: "backdoor", kind: "teammate", geometry: (p) => ({ x: 0.87, y: 0.5 + (p.side === "right" ? 0.16 : -0.16) }) },
     { role: "g", kind: "goalie", geometry: (p) => p.crease() },
   ],
+  read: {
+    open: "backdoor",
+    blockedBy: { d1: ["carrier", "strongMate"] },
+  },
   interaction: {
-    kind: "point",
-    tolerance: 0.09,
-    prompt: "The defence is committed to the puck side. Tap the open backdoor ice where the weak-side scoring chance is.",
-    // open backdoor: weak side, near the net
-    correctGeometry: (p) => ({ x: 0.86, y: 0.5 + (p.side === "right" ? 0.16 : -0.16) }),
+    kind: "selection",
+    from: ["backdoor", "strongMate"],
+    correct: ["backdoor"],
+    prompt: "The defence is shading your strong-side teammate. Tap the open teammate for the scoring chance.",
+  },
+  mc: {
+    stem: "You have the puck on the strong side and the defender is shading your near teammate. Who has the open lane?",
+    opts: [
+      { text: "The backdoor teammate on the weak side — clear lane to the net", correct: true },
+      { text: "The strong-side teammate the defender is covering" },
+      { text: "Throw it blind to the point" },
+      { text: "Force it into the corner" },
+    ],
   },
   feedback: {
-    right: "Backdoor — the weak side is wide open while the defence watches the puck.",
-    wrong: "That's where the defence already is. The open chance is the weak-side backdoor.",
+    right: "Backdoor — the weak side is wide open while the defence watches the puck side.",
+    wrong: "That lane is covered. Scan weak-side: the backdoor teammate is open.",
   },
   tip: "When the defence collapses to the puck, the weak-side back door opens up.",
   why: "Scanning the weak side before you receive it is how backdoor goals happen.",

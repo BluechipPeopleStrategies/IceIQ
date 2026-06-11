@@ -29,8 +29,10 @@ export default {
     // THE READ: defender central but ON the carrier→closedWing lane (blocks it),
     // and goal-side of the puck. The carrier→openWing lane stays clear.
     { role: "d1", kind: "defender", geometry: (p) => p.onLane("carrier", "closedWing", { t: 0.42 }) },
-    // Optional 2nd defender: goal-side near the open wing, NOT in its lane.
-    { role: "d2", kind: "defender", when: (p) => p.dCount === 2, geometry: (p) => p.goalSide("openWing", { depth: 0.42 }) },
+    // Optional 2nd defender: plays the MIDDLE (goal-side of the carrier), not the
+    // open wing — two D back, one shades the closed wing, one holds the central
+    // lane, so the weak-side winger still reads as open.
+    { role: "d2", kind: "defender", when: (p) => p.dCount === 2, geometry: (p) => p.goalSide("carrier", { depth: 0.45 }) },
     { role: "g", kind: "goalie", geometry: (p) => p.crease() },
   ],
   read: {
