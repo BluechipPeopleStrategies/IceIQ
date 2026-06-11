@@ -64,7 +64,7 @@ export function AdminReports({ onBack }) {
       <BackBtn onClick={onBack} />
       <div style={{ fontFamily: FONT.display, fontWeight: 800, fontSize: "1.8rem", marginBottom: ".5rem" }}>Question Reports</div>
       <div style={{ fontSize: 13, color: C.dim, marginBottom: "1.25rem" }}>
-        {loading ? "Loading..." : `${unresolvedCount} unresolved report${unresolvedCount !== 1 ? "s" : ""}`}
+        {loading ? "Loading…" : `${unresolvedCount} unresolved report${unresolvedCount !== 1 ? "s" : ""}`}
       </div>
       {!loading && reports.length === 0 && (
         <Card><div style={{ color: C.dimmer, textAlign: "center", padding: "1.5rem 0" }}>No reports yet.</div></Card>
@@ -781,7 +781,7 @@ export function GameSenseReportScreen({ player, onBack, demoMode, demoCoachData,
         <Card style={{ marginBottom: "1rem" }}>
           <Label>Percentile Rank</Label>
           {loading ? (
-            <div style={{ fontSize: "12px", color: C.dimmer }}>Calculating...</div>
+            <div style={{ fontSize: "12px", color: C.dimmer }}>Calculating…</div>
           ) : (
             <div style={{ display: "flex", alignItems: "center", gap: "1rem" }}>
               <div style={{ flex: 1 }}>

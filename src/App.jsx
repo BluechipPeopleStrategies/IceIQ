@@ -3733,7 +3733,7 @@ function GoalsScreen({ player, onSave, onBack }) {
             <textarea
               value={currentGoal[step]||""}
               onChange={e => updateGoal(active,step,e.target.value)}
-              placeholder={example[step] ? `Write your answer here... e.g. "${example[step]}"` : "Write your answer here..."}
+              placeholder={example[step] ? `Write your answer here… e.g. "${example[step]}"` : "Write your answer here…"}
               rows={3}
               style={{background:C.bgElevated,border:`1px solid ${C.border}`,borderRadius:10,padding:".75rem 1rem",color:C.white,fontSize:13,fontFamily:FONT.body,width:"100%",outline:"none",resize:"none",lineHeight:1.6}}
             />
@@ -4764,7 +4764,7 @@ function CompetencyValidation() {
   }, []);
 
   if (!report) {
-    return <div style={{ padding: "1.5rem", color: C.dimmer }}>Loading analysis...</div>;
+    return <div style={{ padding: "1.5rem", color: C.dimmer }}>Loading analysis…</div>;
   }
 
   return (
@@ -5598,7 +5598,7 @@ function Profile({ player, onSave, onBack, onReset, demoMode, tier, onUpgrade, u
           <Label>Quiz Preferences</Label>
           <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:".85rem"}}>
             <span style={{fontSize:13,color:C.dim}}>Colorblind mode</span>
-            <button onClick={()=>upd("colorblind")(!s.colorblind)} style={{background:s.colorblind?C.purpleDim:"none",border:`1px solid ${s.colorblind?C.purpleBorder:C.border}`,borderRadius:20,padding:".3rem .9rem",cursor:"pointer",color:s.colorblind?C.purple:C.dimmer,fontSize:12,fontFamily:FONT.body,fontWeight:700}}>{s.colorblind?"ON":"OFF"}</button>
+            <button onClick={()=>upd("colorblind")(!s.colorblind)} style={{background:s.colorblind?C.purpleDim:"none",border:`1px solid ${s.colorblind?C.purpleBorder:C.border}`,borderRadius:20,padding:".55rem .9rem",cursor:"pointer",color:s.colorblind?C.purple:C.dimmer,fontSize:12,fontFamily:FONT.body,fontWeight:700}}>{s.colorblind?"ON":"OFF"}</button>
           </div>
           <div style={{display:"flex",justifyContent:"space-between",alignItems:"center"}}>
             <span style={{fontSize:13,color:C.dim}}>Session length</span>
@@ -6746,7 +6746,7 @@ function AuthScreen({ onAuthenticated, onDemo, onDevEnter, onPreview, prefill })
         {mode === "signup" && (
           <>
             <div style={{marginBottom:"1rem"}}>
-              <div style={{fontSize:10,letterSpacing:".14em",textTransform:"uppercase",color:C.dimmer,fontWeight:700,marginBottom:".5rem"}}>I am a...</div>
+              <div style={{fontSize:10,letterSpacing:".14em",textTransform:"uppercase",color:C.dimmer,fontWeight:700,marginBottom:".5rem"}}>I am a…</div>
               <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:".5rem"}}>
                 {[{v:"player",l:"Parent/Guardian (on behalf of player)",i:"👪"},{v:"coach",l:"Coach",i:"👨‍🏫"}].map(o => (
                   <button key={o.v} onClick={()=>setRole(o.v)} style={{background:role===o.v?C.goldDim:C.bgCard,border:`1px solid ${role===o.v?C.gold:C.border}`,borderRadius:10,padding:".75rem",cursor:"pointer",color:role===o.v?C.gold:C.dim,fontFamily:FONT.body,fontWeight:role===o.v?700:500,fontSize:13,display:"flex",alignItems:"center",justifyContent:"center",gap:".4rem"}}>
