@@ -43,15 +43,16 @@ const seedDir = process.argv[2] || "docs/ai-pipeline/_pending-seeds";
 const outPng = process.argv[3] || "C:/tmp/qc-grid.png";
 const files = readdirSync(seedDir).filter(f => f.endsWith(".json")).sort();
 
-const CW = 620, BH = 413, LH = 38, PH = 96;
+const CW = 620, BH = 413, LH = 58, PH = 96;
 const cells = [];
 for (const f of files) {
   const s = JSON.parse(readFileSync(join(seedDir, f), "utf8"));
   const label = f.replace(/\.json$/, "");
+  const curric = `${s.levels?.[0] || "?"}  ·  ${s.nodeId || "?"}  ·  difficulty ${s.difficulty}`;
   const board = await sharp(Buffer.from(renderBoard(seedToSpec(s)))).resize(CW, BH).toBuffer();
   const lines = wrap("Q: " + (s.interaction?.prompt || ""), 64);
   const tspans = lines.map((ln, i) => `<text x="12" y="${22 + i * 22}" font-family="Arial" font-size="17" fill="#0B1A33">${esc(ln)}</text>`).join("");
-  const labelSvg = Buffer.from(`<svg xmlns="http://www.w3.org/2000/svg" width="${CW}" height="${LH}"><rect width="${CW}" height="${LH}" fill="#0B1A33"/><text x="12" y="26" font-family="Arial" font-size="18" font-weight="700" fill="#C9A24B">${esc(label)}</text></svg>`);
+  const labelSvg = Buffer.from(`<svg xmlns="http://www.w3.org/2000/svg" width="${CW}" height="${LH}"><rect width="${CW}" height="${LH}" fill="#0B1A33"/><text x="12" y="24" font-family="Arial" font-size="18" font-weight="700" fill="#C9A24B">${esc(label)}</text><text x="12" y="48" font-family="Arial" font-size="14" fill="#9fb6cc">${esc(curric)}</text></svg>`);
   const promptSvg = Buffer.from(`<svg xmlns="http://www.w3.org/2000/svg" width="${CW}" height="${PH}"><rect width="${CW}" height="${PH}" fill="#eef2f6"/>${tspans}<text x="12" y="${PH - 10}" font-family="Arial" font-size="13" fill="#3a8">green ring = correct answer</text></svg>`);
   cells.push(await sharp({ create: { width: CW, height: LH + BH + PH, channels: 4, background: "#ffffff" } })
     .composite([{ input: labelSvg, top: 0, left: 0 }, { input: board, top: LH, left: 0 }, { input: promptSvg, top: LH + BH, left: 0 }]).png().toBuffer());

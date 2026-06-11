@@ -14,16 +14,11 @@ import { writeFileSync, mkdirSync, existsSync } from "node:fs";
 import { dirname, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { FORMATIONS } from "../src/scenario/formations/index.js";
+import { nodeInfo, nodeForAge } from "../src/scenario/curriculum.js";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const ROOT = resolve(__dirname, "..");
 const rel = (p) => p.replace(ROOT + "\\", "").replace(ROOT + "/", "");
-
-// Age prefix → bank level string (extend as formations cover more ages).
-const AGE_LEVEL = {
-  U7: "U7 / Initiation", U9: "U9 / Novice", U11: "U11 / Atom",
-  U13: "U13 / Peewee", U15: "U15 / Bantam", U18: "U18 / Midget",
-};
 
 function listFormations() {
   console.log("Formations:\n");
@@ -42,18 +37,20 @@ function listFormations() {
 
 function arg(args, name, dflt) { const i = args.indexOf(name); return i > -1 ? args[i + 1] : dflt; }
 
-function scaffoldOne(formation, { side, node, dCount }) {
-  const age = node ? node.split(".")[0].toUpperCase() : (formation.concepts?.ages?.[0] || "U13");
-  const level = AGE_LEVEL[age] || "U13 / Peewee";
-  const slug = `${age.toLowerCase()}_${formation.id.replace(/-/g, "")}_${side}_v1`;
+function scaffoldOne(formation, { side, age, dCount }) {
+  // The age picks the curriculum node; the compiler derives level + difficulty
+  // from it (curriculum.js), so the instance carries neither — alignment is
+  // automatic and can't drift.
+  const targetAge = age || formation.concepts?.ages?.[0] || "U13";
+  const node = nodeForAge(formation.concepts?.nodeIds, targetAge) || formation.concepts?.nodeIds?.[0];
+  const info = nodeInfo(node);
+  const slug = `${targetAge.toLowerCase()}_${formation.id.replace(/-/g, "")}_${side}_v1`;
   const instance = {
     id: slug,
     formation: formation.id,
     params: { side, ...(dCount ? { dCount: Number(dCount) } : {}) },
-    nodeId: node || formation.concepts?.nodeIds?.[0],
-    levels: [level],
-    difficulty: 2,
-    _note: "Optional overrides: prompt, mc:{stem,opts,ok}, feedback:{right,wrong}, tip, why. Omit to inherit the formation's defaults. Then: node scripts/formation-to-seed.mjs --dir <this dir>",
+    nodeId: node,
+    _note: `Aligned to ${node} (age ${info?.ageId}, depth ${info?.depth} → difficulty ${info?.difficulty}). Optional overrides: prompt, mc, feedback, tip, why. Then: node scripts/formation-to-seed.mjs --dir <this dir>`,
   };
   return { slug, instance };
 }
@@ -63,23 +60,22 @@ function scaffold(args) {
   const formation = FORMATIONS[id];
   if (!formation) { console.error(`unknown formation "${id}". Run with no args to list.`); process.exit(2); }
   const outDir = arg(args, "--out", join(ROOT, "docs", "ai-pipeline", "_instances"));
-  const node = arg(args, "--node");
   const dCount = arg(args, "--dCount");
-  const count = Number(arg(args, "--count", 1));
   const vary = arg(args, "--vary");
+  const allAges = args.includes("--allAges");
   if (!existsSync(outDir)) mkdirSync(outDir, { recursive: true });
 
-  let sides;
-  if (vary === "side") sides = formation.params.side.values.slice(0, count || 2);
-  else sides = [arg(args, "--side", formation.params?.side?.values?.[0] || "right")];
+  const sides = vary === "side" ? formation.params.side.values
+    : [arg(args, "--side", formation.params?.side?.values?.[0] || "right")];
+  const ages = allAges ? (formation.concepts?.ages || []) : [arg(args, "--age", formation.concepts?.ages?.[0])];
 
-  for (const side of sides) {
-    const { slug, instance } = scaffoldOne(formation, { side, node, dCount });
+  for (const age of ages) for (const side of sides) {
+    const { slug, instance } = scaffoldOne(formation, { side, age, dCount });
     const outPath = join(outDir, `${slug}.json`);
     writeFileSync(outPath, JSON.stringify(instance, null, 2) + "\n", "utf8");
     console.log(`scaffolded  ${slug}  → ${rel(outPath)}`);
   }
-  console.log(`\nFill any text overrides, then: node scripts/formation-to-seed.mjs --dir ${rel(outDir)}`);
+  console.log(`\nThen: node scripts/formation-to-seed.mjs --dir ${rel(outDir)}`);
 }
 
 const args = process.argv.slice(2);

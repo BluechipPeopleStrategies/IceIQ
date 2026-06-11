@@ -21,6 +21,7 @@ import { FORMATIONS } from "../src/scenario/formations/index.js";
 import { wideY, onLane, goalSide, CREASE_RIGHT, CREASE_LEFT } from "../src/scenario/formations/geometry.js";
 import { lineHitsCircle, PASS_INTERCEPT_RADIUS } from "../src/scenario/validators.js";
 import { lintScenario } from "../tools/scenario-author/validate.mjs";
+import { nodeInfo } from "../src/scenario/curriculum.js";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const ROOT = resolve(__dirname, "..");
@@ -116,16 +117,28 @@ function compileInstance(instance) {
     mc = { stem: instance.mc?.stem || formation.mc.stem, opts: opts.map((o) => o.text), ok: opts.findIndex((o) => o.correct) };
   }
 
-  // difficulty floor (mirror brief-to-seed)
+  // Curriculum alignment: the nodeId determines age (level) + difficulty so a
+  // question can't drift off its curriculum slot. Hand-set values that disagree
+  // are overridden and warned.
+  const info = instance.nodeId ? nodeInfo(instance.nodeId) : null;
+  if (instance.nodeId && !info) throw new Error(`nodeId "${instance.nodeId}" is not in the curriculum ledger`);
+  const alignWarns = [];
+  if (info && instance.levels && info.level && !instance.levels.includes(info.level))
+    alignWarns.push(`levels ${JSON.stringify(instance.levels)} don't match node age ${info.ageId} (${info.level}) — using the node's age`);
+  if (info && instance.difficulty && instance.difficulty !== info.difficulty)
+    alignWarns.push(`difficulty ${instance.difficulty} doesn't match curriculum depth ${info.depth} for ${instance.nodeId} (expected ${info.difficulty}) — using ${info.difficulty}`);
+  const levels = info ? [info.level] : instance.levels || (instance.level ? [instance.level] : undefined);
+
+  // difficulty: curriculum depth, raised to the complexity floor (mirror brief-to-seed)
   const skaters = actors.filter((a) => a.kind !== "puck").length;
   let floor = 0; if (skaters >= 9) floor = 3; else if (skaters >= 7) floor = 2;
-  const difficulty = Math.max(instance.difficulty || 1, floor || 1);
+  const difficulty = Math.max(info ? info.difficulty : (instance.difficulty || 1), floor || 1);
 
   const seed = {
     id: instance.id,
     type: "scenario",
     ...(instance.nodeId ? { nodeId: instance.nodeId } : {}),
-    ...(instance.levels ? { levels: instance.levels } : instance.level ? { level: instance.level } : {}),
+    ...(levels ? { levels } : {}),
     themes: formation.themes,
     cat: instance.cat || formation.cat,
     difficulty,
@@ -139,7 +152,9 @@ function compileInstance(instance) {
     ...(instance.why || formation.why ? { why: instance.why || formation.why } : {}),
   };
 
-  return { seed, lint: lintScenario(seed) };
+  const lint = lintScenario(seed);
+  lint.warns = [...alignWarns, ...(lint.warns || [])];
+  return { seed, lint };
 }
 
 function defaultParams(formation) {
