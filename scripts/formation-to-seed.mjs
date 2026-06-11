@@ -99,8 +99,8 @@ function compileInstance(instance) {
     correct = { kind: "selection", ids: fi.correct.slice() };
   } else if (fi.kind === "point") {
     interaction = { kind: "point", prompt };
-    const t = resolved[fi.target] || fi.correct;
-    correct = { kind: "point", x: r3(t.x), y: r3(t.y) };
+    const t = fi.correctGeometry ? fi.correctGeometry(p) : (resolved[fi.target] || fi.correct);
+    correct = { kind: "point", x: r3(t.x), y: r3(t.y), ...(fi.tolerance ? { tolerance: fi.tolerance } : {}) };
   } else {
     throw new Error(`formation interaction kind "${fi.kind}" not supported yet`);
   }

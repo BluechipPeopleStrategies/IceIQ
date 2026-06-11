@@ -4,7 +4,11 @@
 // it here.
 
 import oddManRush from "./odd-man-rush.js";
+import ozBackdoor from "./oz-backdoor.js";
+import nzGap1on1 from "./nz-gap-1on1.js";
 
 export const FORMATIONS = {
   [oddManRush.id]: oddManRush,
+  [ozBackdoor.id]: ozBackdoor,
+  [nzGap1on1.id]: nzGap1on1,
 };
