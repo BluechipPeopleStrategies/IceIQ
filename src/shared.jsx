@@ -234,7 +234,9 @@ export const Screen = ({children, pad=true}) => (
 );
 
 export const Card = ({children, style, onClick, glow}) => (
-  <div onClick={onClick} style={{
+  <div onClick={onClick}
+    {...(onClick ? { role:"button", tabIndex:0, onKeyDown:(e)=>{ if(e.key==="Enter"||e.key===" "){ e.preventDefault(); onClick(e); } } } : {})}
+    style={{
     background:"rgba(13, 21, 37, 0.45)",
     backdropFilter:"blur(12px)",
     WebkitBackdropFilter:"blur(12px)",

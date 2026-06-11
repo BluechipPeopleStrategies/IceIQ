@@ -148,12 +148,18 @@ export function QotDScreen({ question, player, onBack }) {
 
   const userOk = answered ? (isTF ? (sel === question.ok) : (sel === rightIdx)) : null;
   const q = question;
+  // Colorblind-safe reveal palette (blue=correct, orange=wrong), matching App.jsx.
+  const cb = !!player?.colorblind;
+  const cbOK = cb ? "#2563eb" : C.green;
+  const cbNo = cb ? "#ea580c" : C.red;
+  const cbOKbg = cb ? "rgba(37,99,235,.15)" : "rgba(34,197,94,.15)";
+  const cbNobg = cb ? "rgba(234,88,12,.15)" : "rgba(239,68,68,.15)";
 
   return (
     <div style={{minHeight:"100vh",background:C.bg,color:C.white,fontFamily:FONT.body,paddingBottom:60}}>
       <div style={{position:"sticky",top:0,background:"rgba(6,12,22,.95)",backdropFilter:"blur(8px)",borderBottom:`1px solid ${C.border}`,padding:".75rem 1rem",zIndex:20}}>
         <div style={{maxWidth:560,margin:"0 auto",display:"flex",alignItems:"center",gap:"1rem"}}>
-          <button onClick={onBack} style={{background:"none",border:`1px solid ${C.border}`,color:C.dimmer,borderRadius:8,padding:".3rem .7rem",cursor:"pointer",fontSize:13,fontFamily:FONT.body}}>←</button>
+          <button onClick={onBack} aria-label="Back" style={{background:"none",border:`1px solid ${C.border}`,color:C.dimmer,borderRadius:8,padding:".3rem .7rem",cursor:"pointer",fontSize:13,fontFamily:FONT.body}}>←</button>
           <div style={{flex:1,minWidth:0}}>
             <div style={{fontFamily:FONT.display,fontWeight:800,fontSize:14,color:C.gold}}>📆 Question of the Day</div>
             <div style={{fontSize:10,color:C.dimmer,marginTop:2}}>{player.level} · Same question for every player today</div>
@@ -176,10 +182,10 @@ export function QotDScreen({ question, player, onBack }) {
               return (
                 <button key={String(v)} onClick={() => choose(v)} disabled={answered}
                   style={{
-                    background: isRight ? "rgba(34,197,94,.15)" : isWrongSel ? "rgba(239,68,68,.15)" : C.bgElevated,
-                    border: `2px solid ${isRight ? C.green : isWrongSel ? C.red : C.border}`,
+                    background: isRight ? cbOKbg : isWrongSel ? cbNobg : C.bgElevated,
+                    border: `2px solid ${isRight ? cbOK : isWrongSel ? cbNo : C.border}`,
                     borderRadius: 12, padding: "1.25rem", cursor: answered ? "default" : "pointer",
-                    fontWeight: 700, fontSize: 16, color: isRight ? C.green : isWrongSel ? C.red : C.white, fontFamily: FONT.body,
+                    fontWeight: 700, fontSize: 16, color: isRight ? cbOK : isWrongSel ? cbNo : C.white, fontFamily: FONT.body,
                   }}>
                   {v ? "True" : "False"}
                 </button>
@@ -196,10 +202,10 @@ export function QotDScreen({ question, player, onBack }) {
                 <button key={i} onClick={() => choose(i)} disabled={answered}
                   style={{
                     width:"100%",textAlign:"left",marginBottom:".5rem",
-                    background: showRight ? "rgba(34,197,94,.12)" : showWrong ? "rgba(239,68,68,.12)" : C.bgElevated,
-                    border: `1.5px solid ${showRight ? C.green : showWrong ? C.red : C.border}`,
+                    background: showRight ? cbOKbg : showWrong ? cbNobg : C.bgElevated,
+                    border: `1.5px solid ${showRight ? cbOK : showWrong ? cbNo : C.border}`,
                     borderRadius: 10, padding: ".85rem 1rem", cursor: answered ? "default" : "pointer",
-                    color: showRight ? C.green : showWrong ? C.red : C.white, fontFamily: FONT.body, fontSize: 14,
+                    color: showRight ? cbOK : showWrong ? cbNo : C.white, fontFamily: FONT.body, fontSize: 14,
                   }}>
                   {choice}
                 </button>
@@ -210,8 +216,8 @@ export function QotDScreen({ question, player, onBack }) {
 
         {answered && (
           <>
-            <Card style={{background: userOk ? "rgba(34,197,94,.06)" : "rgba(239,68,68,.06)",border:`1px solid ${userOk ? C.greenBorder : C.redBorder}`,marginBottom:"1rem"}}>
-              <div style={{fontSize:11,fontWeight:800,color:userOk?C.green:C.red,marginBottom:".4rem",letterSpacing:".06em"}}>
+            <Card style={{background: userOk ? (cb?"rgba(37,99,235,.06)":"rgba(34,197,94,.06)") : (cb?"rgba(234,88,12,.06)":"rgba(239,68,68,.06)"),border:`1px solid ${userOk ? (cb?"rgba(37,99,235,.35)":C.greenBorder) : (cb?"rgba(234,88,12,.35)":C.redBorder)}`,marginBottom:"1rem"}}>
+              <div style={{fontSize:11,fontWeight:800,color:userOk?cbOK:cbNo,marginBottom:".4rem",letterSpacing:".06em"}}>
                 {userOk ? "✓ Correct" : "✗ Incorrect"}
               </div>
               {q.why && <div style={{fontSize:13,color:C.dim,lineHeight:1.65,marginBottom:q.tip?".5rem":0}}>{q.why}</div>}

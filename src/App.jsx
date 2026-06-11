@@ -3537,9 +3537,11 @@ function WeeklyQuiz({ player, onBack, onFinish }) {
               const isTrue = i === 0;
               const isSelected = sel === (isTrue ? "true" : "false");
               const isCorrect = isTrue === q.ok;
-              const revealColor = sel !== null ? (isCorrect ? C.green : C.red) : null;
+              const cbOK = player.colorblind ? "#2563eb" : C.green;
+              const cbNo = player.colorblind ? "#ea580c" : C.red;
+              const revealColor = sel !== null ? (isCorrect ? cbOK : cbNo) : null;
               return (
-                <button key={label} onClick={() => handleTF(isTrue)} disabled={sel !== null} style={{background:isSelected?(isCorrect?"rgba(34,197,94,.15)":"rgba(239,68,68,.15)"):C.bgElevated,border:`2px solid ${revealColor && isSelected ? revealColor : (revealColor && isCorrect && sel !== null ? revealColor : C.border)}`,borderRadius:12,padding:"1.25rem",cursor:sel!==null?"default":"pointer",fontWeight:700,fontSize:16,color:isSelected?(isCorrect?C.green:C.red):C.white,fontFamily:FONT.body}}>
+                <button key={label} onClick={() => handleTF(isTrue)} disabled={sel !== null} style={{background:isSelected?(isCorrect?(player.colorblind?"rgba(37,99,235,.15)":"rgba(34,197,94,.15)"):(player.colorblind?"rgba(234,88,12,.15)":"rgba(239,68,68,.15)")):C.bgElevated,border:`2px solid ${revealColor && isSelected ? revealColor : (revealColor && isCorrect && sel !== null ? revealColor : C.border)}`,borderRadius:12,padding:"1.25rem",cursor:sel!==null?"default":"pointer",fontWeight:700,fontSize:16,color:isSelected?(isCorrect?cbOK:cbNo):C.white,fontFamily:FONT.body}}>
                   {label}
                 </button>
               );
@@ -6766,12 +6768,12 @@ function AuthScreen({ onAuthenticated, onDemo, onDevEnter, onPreview, prefill })
           <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:".5rem",marginBottom:".65rem"}}>
             <div style={{background:C.bgCard,border:`1px solid ${C.border}`,borderRadius:10,padding:".6rem .85rem"}}>
               <div style={{fontSize:10,letterSpacing:".1em",textTransform:"uppercase",color:C.dimmer,fontWeight:700,marginBottom:2}}>Email</div>
-              <input type="email" value={email} onChange={e=>setEmail(e.target.value)} placeholder="you@example.com" autoComplete="email"
+              <input type="email" value={email} onChange={e=>setEmail(e.target.value)} onKeyDown={e=>{if(e.key==="Enter"&&!loading)submit();}} placeholder="you@example.com" autoComplete="email"
                 style={{background:"none",border:"none",color:C.white,fontSize:14,fontFamily:FONT.body,width:"100%",outline:"none",padding:0}}/>
             </div>
             <div style={{background:C.bgCard,border:`1px solid ${C.border}`,borderRadius:10,padding:".6rem .85rem"}}>
               <div style={{fontSize:10,letterSpacing:".1em",textTransform:"uppercase",color:C.dimmer,fontWeight:700,marginBottom:2}}>Password</div>
-              <input type="password" value={password} onChange={e=>setPassword(e.target.value)} placeholder={mode==="signup"?"6+ chars":"••••••"} autoComplete={mode==="signup"?"new-password":"current-password"}
+              <input type="password" value={password} onChange={e=>setPassword(e.target.value)} onKeyDown={e=>{if(e.key==="Enter"&&!loading)submit();}} placeholder={mode==="signup"?"6+ chars":"••••••"} autoComplete={mode==="signup"?"new-password":"current-password"}
                 style={{background:"none",border:"none",color:C.white,fontSize:14,fontFamily:FONT.body,width:"100%",outline:"none",padding:0}}/>
             </div>
           </div>
@@ -6796,7 +6798,7 @@ function AuthScreen({ onAuthenticated, onDemo, onDevEnter, onPreview, prefill })
 
         {/* Big primary button — bigger than the email/password fields */}
         <button onClick={submit} disabled={loading} style={{width:"100%",background:C.gold,color:C.bg,border:"none",borderRadius:12,padding:"1.1rem",cursor:loading?"default":"pointer",fontWeight:800,fontSize:17,fontFamily:FONT.body,letterSpacing:".02em",boxShadow:`0 4px 16px ${C.gold}33`}}>
-          {loading ? "…" : (mode === "signup" ? "Create Account →" : mode === "forgot" ? "Send Reset Link →" : "Sign In →")}
+          {loading ? (mode === "signup" ? "Creating account…" : mode === "forgot" ? "Sending…" : "Signing in…") : (mode === "signup" ? "Create Account →" : mode === "forgot" ? "Send Reset Link →" : "Sign In →")}
         </button>
 
         {/* Forgot password link — visible only on login mode */}
