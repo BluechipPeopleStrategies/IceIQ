@@ -9,7 +9,7 @@
 
 export default {
   id: "odd-man-rush",
-  label: "Odd-man rush (3-on-1 / 3-on-2)",
+  label: "Offensive-zone odd-man (3-on-1 / 3-on-2, established in zone)",
   concepts: {
     nodeIds: ["u13.odd-man-reads", "u11.decision-making", "u15.odd-man-reads"],
     ages: ["U11", "U13", "U15"],
@@ -22,10 +22,12 @@ export default {
     dCount: { values: [1, 2], default: 1, doc: "number of defenders (3-on-1 vs 3-on-2)" },
   },
   slots: [
-    { role: "carrier", kind: "player", tag: "YOU", geometry: () => ({ x: 0.70, y: 0.50 }) },
+    // Established well inside the zone (puck clear of the blue line) so the deep
+    // wingers are unambiguously onside — see offsidesOnEntry in validators.js.
+    { role: "carrier", kind: "player", tag: "YOU", geometry: () => ({ x: 0.74, y: 0.50 }) },
     { role: "puck", kind: "puck", with: "carrier" },
-    { role: "openWing", kind: "teammate", geometry: (p) => p.wide(p.side, { x: 0.80, spread: 0.22 }) },
-    { role: "closedWing", kind: "teammate", geometry: (p) => p.wide(p.other, { x: 0.78, spread: 0.20 }) },
+    { role: "openWing", kind: "teammate", geometry: (p) => p.wide(p.side, { x: 0.84, spread: 0.22 }) },
+    { role: "closedWing", kind: "teammate", geometry: (p) => p.wide(p.other, { x: 0.83, spread: 0.20 }) },
     // THE READ: defender central but ON the carrier→closedWing lane (blocks it),
     // and goal-side of the puck. The carrier→openWing lane stays clear.
     { role: "d1", kind: "defender", geometry: (p) => p.onLane("carrier", "closedWing", { t: 0.42 }) },
@@ -43,10 +45,10 @@ export default {
     kind: "selection",
     from: ["openWing", "closedWing"],
     correct: ["openWing"],
-    prompt: "You carry the puck up the middle on an odd-man rush. Tap the teammate with the open lane.",
+    prompt: "You have the puck in the offensive zone on an odd-man. The lone defender shades one side. Tap the teammate with the open lane.",
   },
   mc: {
-    stem: "You have the puck in the middle on an odd-man rush. The lone defender shades one side. Who has the open ice?",
+    stem: "You have the puck in the offensive zone on an odd-man. The lone defender shades one side. Who has the open ice?",
     opts: [
       { text: "Your teammate on the open side, with a clear passing lane", correct: true },
       { text: "Your teammate the defender is shading — the lane is covered" },

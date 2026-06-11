@@ -20,8 +20,9 @@ export default {
     side: { values: ["left", "right"], doc: "which side the OPEN backdoor teammate is on" },
   },
   slots: [
-    // carrier high on the STRONG side (opposite the open backdoor) with the puck
-    { role: "carrier", kind: "player", tag: "YOU", geometry: (p) => ({ x: 0.70, y: 0.5 + (p.other === "right" ? 0.20 : -0.20) }) },
+    // carrier high on the STRONG side (opposite the open backdoor) with the puck,
+    // established inside the zone (clear of the blue line — see offsidesOnEntry).
+    { role: "carrier", kind: "player", tag: "YOU", geometry: (p) => ({ x: 0.74, y: 0.5 + (p.other === "right" ? 0.20 : -0.20) }) },
     { role: "puck", kind: "puck", with: "carrier" },
     // strong-side teammate — the tempting option, but its lane is covered.
     // Set well apart from the carrier so the shading defender fits between them.

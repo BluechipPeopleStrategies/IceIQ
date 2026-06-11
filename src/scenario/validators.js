@@ -174,6 +174,28 @@ const rules = [
     return null;
   },
 
+  // Self-improving rule — LESSON 2026-06-11 (offsides-on-entry). A carry-puck
+  // offensive scenario drawn with the puck right at the blue line while teammates
+  // are already deeper reads as an ILLEGAL zone entry (offsides). Established
+  // in-zone plays must put the puck clearly inside the zone so deep teammates are
+  // unambiguously legal. Encoded once here so no future formation can repeat it.
+  function offsidesOnEntry(s) {
+    const zone = s.stage?.zone, view = s.stage?.view;
+    if (zone !== "off-zone") return null;
+    const blue = view === "left" ? 0.355 : 0.645;
+    const puck = (s.actors || []).find(a => a.kind === "puck");
+    if (!puck) return null;
+    const inOZ = view === "left" ? puck.x < blue : puck.x > blue;
+    const nearLine = inOZ && Math.abs(puck.x - blue) <= 0.06;
+    if (!nearLine) return null; // puck established deep in the zone → legal
+    const deeper = (a) => (view === "left" ? a.x < puck.x - 0.03 : a.x > puck.x + 0.03);
+    const ahead = (s.actors || []).filter(a => (a.kind === "player" || a.kind === "teammate") && deeper(a));
+    if (ahead.length) {
+      return { kind: "err", msg: `offsides-on-entry: the puck is right at the blue line but teammate(s) ${ahead.map(a => a.id).join(", ")} are already deeper in the zone — reads as an illegal entry. Carry the puck clearly inside the zone, or pull the teammates onside.` };
+    }
+    return null;
+  },
+
   // Place-drill drop targets must not overlap when their guides are shown —
   // merged circles read as one ambiguous blob. Pixel-space check because the
   // rink is 600×300 (a 0.05 tol is 30px wide but the same normalized gap is
