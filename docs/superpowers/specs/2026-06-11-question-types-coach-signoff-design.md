@@ -113,12 +113,17 @@ all provable rather than asserted.
   multi-modality emission from one instance.
 - **Ongoing:** concept → formation expansion (Pillar A).
 
-## Open decisions for the user
+## Decisions (locked 2026-06-11)
 
-1. **`match` semantics — which pairing matters most?** (a) attacker → covering
-   defender, (b) player → zone/role they should fill, (c) situation → correct
-   response. Pick the first one to build.
-2. **Sign-off weight:** lightweight (coach name + timestamp on the card) vs a
-   tracked sign-off ledger (audit trail, multiple reviewers, re-review on edits).
-3. **Cardinality default:** assert `expectCorrect: 1` by default (strict single
-   best answer) or allow authored multi-answer (e.g. "tap any 2 open teammates")?
+1. **`match` semantics — build all three, sequentially:** (1) attacker → covering
+   defender [first], (2) player → zone/role, (3) situation → correct response.
+2. **Sign-off weight — lightweight record + strong automated QC gates.** The
+   user's concern is quality control, so the QC lives in *computation*, not
+   bookkeeping: the value model + cardinality proof + validators are the real
+   gate; the coach sign-off is a lightweight confirmation (coach id + timestamp on
+   the card) of an already-proven claim. Upgrade to a tracked ledger only if QC
+   gaps appear.
+3. **Cardinality — author-declared count.** The instance declares `expectCorrect:
+   N` (default 1); the compiler computes the actual correct-set size from the
+   value model and FAILS unless it equals N. Supports "tap any 2 open teammates"
+   as an explicit `expectCorrect: 2`.
