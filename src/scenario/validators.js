@@ -32,12 +32,17 @@ export const THEME_VOCAB = new Set([
 // ───────────────────────────────────────────────────────────────────────
 // Geometry helpers (kept local to avoid a runtime dep on the React side).
 
-function distance(a, b) {
+export function distance(a, b) {
   const dx = a.x - b.x, dy = a.y - b.y;
   return Math.sqrt(dx * dx + dy * dy);
 }
 
-function lineHitsCircle(a, b, c, r) {
+// Exported so the formation constructors (src/scenario/formations/) can BUILD
+// geometry that satisfies these same checks by construction (e.g. place a
+// defender on a pass lane so lineHitsCircle is true) instead of re-deriving it.
+export const PASS_INTERCEPT_RADIUS = INTERCEPT_RADIUS;
+
+export function lineHitsCircle(a, b, c, r) {
   const dx = b.x - a.x, dy = b.y - a.y;
   const len2 = dx * dx + dy * dy;
   let t = 0;
@@ -310,6 +315,31 @@ const rules = [
     const correctCount = (s.correct?.ids || []).length;
     if (fromCount > 0 && fromCount === correctCount) {
       return { kind: "err", msg: `every candidate is correct — there's no wrong answer to make this a real choice` };
+    }
+    return null;
+  },
+
+  // "Geometry is the read" for selection seeds: the correct receiver should
+  // have a CLEAR lane from the carrier, and at least one wrong candidate should
+  // be BLOCKED by a defender (tempting-but-covered). The selection twin of
+  // decisionMakingPresent. Warn (not err) so existing hand seeds aren't broken.
+  function selectionOpenLaneClear(s) {
+    if (s.interaction?.kind !== "selection") return null;
+    const carrier = (s.actors || []).find(a => a.kind === "player");
+    const defs = (s.actors || []).filter(a => a.kind === "defender");
+    if (!carrier || !defs.length) return null;
+    const byId = Object.fromEntries((s.actors || []).map(a => [a.id, a]));
+    const correctIds = new Set(s.correct?.ids || []);
+    for (const id of correctIds) {
+      const t = byId[id];
+      if (!t) continue;
+      if (defs.some(d => lineHitsCircle(carrier, t, d, INTERCEPT_RADIUS))) {
+        return { kind: "warn", msg: `selection answer "${id}" has a defender in its lane from the carrier — the "open" read isn't actually open.` };
+      }
+    }
+    const wrong = (s.interaction.from || []).map(id => byId[id]).filter(a => a && !correctIds.has(a.id));
+    if (wrong.length && !wrong.some(a => defs.some(d => lineHitsCircle(carrier, a, d, INTERCEPT_RADIUS)))) {
+      return { kind: "warn", msg: `no wrong selection candidate is blocked by a defender — the geometry doesn't show why the other option(s) are covered.` };
     }
     return null;
   },
