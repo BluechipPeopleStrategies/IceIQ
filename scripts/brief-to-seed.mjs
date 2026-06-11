@@ -200,9 +200,15 @@ function runOne(briefPath, outDir, fixDir) {
 // ── CLI
 const args = process.argv.slice(2);
 const outIdx = args.indexOf("--out");
-const outDir = outIdx > -1 ? args[outIdx + 1] : join(ROOT, "src", "scenario", "seeds");
 const fixDir = join(ROOT, "docs", "ai-pipeline", "_needs-fixing");
 const dirIdx = args.indexOf("--dir");
+// Batch mode stages OK seeds in a PENDING dir (human review gate sits before the
+// bank); single-file mode writes straight to seeds/ for the manual path. An
+// explicit --out overrides either default.
+const defaultOut = dirIdx > -1
+  ? join(ROOT, "docs", "ai-pipeline", "_pending-seeds")
+  : join(ROOT, "src", "scenario", "seeds");
+const outDir = outIdx > -1 ? args[outIdx + 1] : defaultOut;
 
 if (dirIdx > -1) {
   // Batch mode: compile every *.json brief in a folder, print a pass/fail table.
