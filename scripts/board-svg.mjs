@@ -36,18 +36,21 @@ function rink(nets) {
     L.push(`<circle cx="${x(fx)}" cy="${y(fy)}" r="70" fill="none" stroke="#d8212a" stroke-width="4" opacity="0.32"/>`);
     L.push(`<circle cx="${x(fx)}" cy="${y(fy)}" r="6" fill="#d8212a" opacity="0.6"/>`);
   }
-  // goal lines + nets + creases
-  const ends = { left: 0.12, right: 0.88 };
+  // goal lines + nets + creases. Goal line sits near the boards; the crease
+  // bulges toward center; the goalie actor (x≈0.918/0.082) sits IN the crease.
+  const ends = { left: 0.06, right: 0.94 };
+  const creaseRx = 0.065 * W, creaseRy = 0.11 * H, netDepth = 30;
   for (const side of (nets || [])) {
-    if (side === "left" || side === "right") {
-      const gx = ends[side], dir = side === "left" ? 1 : -1;
-      L.push(`<line x1="${x(gx)}" y1="${y(0.20)}" x2="${x(gx)}" y2="${y(0.80)}" stroke="#d8212a" stroke-width="4"/>`);
-      // crease (half-circle facing ice)
-      L.push(`<path d="M ${x(gx)} ${y(0.4)} q ${dir * 70} 0 ${dir * 70} ${0} q 0 ${65} ${-dir * 70} ${65} z" transform="translate(0,${y(0.1) - 80})" fill="#cfe8fb" stroke="#65a9d9" stroke-width="3" opacity="0.85"/>`);
-      // net
-      const nx = side === "left" ? x(gx) - 42 : x(gx);
-      L.push(`<rect x="${side === "left" ? x(gx) - 42 : x(gx)}" y="${y(0.43)}" width="42" height="${(0.14 * H).toFixed(0)}" fill="none" stroke="#c92f2f" stroke-width="6"/>`);
-    }
+    if (side !== "left" && side !== "right") continue;
+    const gx = ends[side], gpx = x(gx);
+    // goal line
+    L.push(`<line x1="${gpx}" y1="${y(0.30)}" x2="${gpx}" y2="${y(0.70)}" stroke="#d8212a" stroke-width="4"/>`);
+    // crease — half-disc bulging toward center ice (sweep flips per side)
+    const sweep = side === "right" ? 0 : 1;
+    L.push(`<path d="M ${gpx} ${y(0.40)} A ${creaseRx} ${creaseRy} 0 0 ${sweep} ${gpx} ${y(0.60)} Z" fill="#cfe8fb" stroke="#65a9d9" stroke-width="3" opacity="0.85"/>`);
+    // net — small frame behind the goal line, toward the boards
+    const nx = side === "right" ? gpx : gpx - netDepth;
+    L.push(`<rect x="${nx}" y="${y(0.44)}" width="${netDepth}" height="${(0.12 * H).toFixed(0)}" fill="none" stroke="#c92f2f" stroke-width="6"/>`);
   }
   return L.join("\n  ");
 }
