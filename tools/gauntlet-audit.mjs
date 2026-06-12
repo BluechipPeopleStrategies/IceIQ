@@ -73,13 +73,14 @@ async function visualHeadCoachReconcile(scenario, node, concept, opts) {
 }
 
 function parseArgs(argv) {
-  const a = { mock: false, dryRun: false, limit: Infinity, band: null, coachModel: "sonnet" };
+  const a = { mock: false, dryRun: false, limit: Infinity, band: null, ids: null, coachModel: "sonnet" };
   for (let i = 0; i < argv.length; i++) {
     const t = argv[i];
     if (t === "--mock") a.mock = true;
     else if (t === "--dry-run") a.dryRun = true;
     else if (t === "--limit") a.limit = parseInt(argv[++i], 10);
     else if (t === "--band") a.band = argv[++i];
+    else if (t === "--ids") a.ids = argv[++i].split(",").map((s) => s.trim()).filter(Boolean);
     else if (t === "--coach-model") a.coachModel = argv[++i];
   }
   return a;
@@ -89,6 +90,7 @@ async function main() {
   const opts = parseArgs(process.argv.slice(2));
   const ledger = loadLedger();
   let seeds = loadSeeds();
+  if (opts.ids) seeds = seeds.filter((s) => opts.ids.includes(s.seed.id));
   if (opts.band) seeds = seeds.filter((s) => (s.seed.level || "").split(" ")[0] === opts.band);
   if (Number.isFinite(opts.limit)) seeds = seeds.slice(0, opts.limit);
   if (!seeds.length) { console.log("No seeds matched."); return; }
