@@ -2,6 +2,7 @@ import React from "react";
 import RinkStage from "../scenario/RinkStage.jsx";
 import { denorm } from "../scenario/schema.js";
 import { resolveTarget } from "../scenario/zones.js";
+import { stepToScenario } from "../scenario/multiStep.js";
 import { C, FONT } from "../shared.jsx";
 
 // Show every answer OPTION on the board: ring each candidate and mark the correct
@@ -59,12 +60,14 @@ class BoardBoundary extends React.Component {
   render() { return this.state.err ? this.props.fallback : this.props.children; }
 }
 
-export default function ReviewBoard({ scenario }) {
+// One static board (RinkStage + the answer overlay + prompt/opts/feedback).
+function OneBoard({ scenario, label }) {
   const prompt = scenario.interaction?.prompt || scenario.mc?.stem || "";
   const mc = scenario.mc;
   const fallback = <pre style={{ color: C.red, fontSize: ".7rem", overflow: "auto", background: C.bgCard, padding: ".5rem", borderRadius: 8 }}>{JSON.stringify(scenario, null, 2)}</pre>;
   return (
     <div>
+      {label && <div style={{ fontSize: 10, letterSpacing: ".12em", textTransform: "uppercase", color: C.gold, fontWeight: 800, marginBottom: ".3rem" }}>{label}</div>}
       <BoardBoundary fallback={fallback}>
         <RinkStage stage={scenario.stage} actors={scenario.actors} levels={scenario.levels}>
           {() => <OptionsOverlay scenario={scenario} />}
@@ -85,7 +88,22 @@ export default function ReviewBoard({ scenario }) {
         </div>
       )}
       {scenario.feedback?.right && <div style={{ marginTop: ".4rem", color: C.dim, fontSize: ".8rem" }}>Right: {scenario.feedback.right}</div>}
+      {scenario.outcome && <div style={{ marginTop: ".25rem", color: C.dimmer, fontSize: ".78rem" }}>▶ {scenario.outcome}</div>}
       {scenario.tip && <div style={{ marginTop: ".2rem", color: C.dimmer, fontSize: ".75rem" }}>tip: {scenario.tip}</div>}
     </div>
   );
+}
+
+export default function ReviewBoard({ scenario }) {
+  // Multi-step: show every frame stacked, each with its own answer overlay.
+  if (Array.isArray(scenario.steps) && scenario.steps.length) {
+    return (
+      <div style={{ display: "flex", flexDirection: "column", gap: ".9rem" }}>
+        {scenario.steps.map((_, i) => (
+          <OneBoard key={i} scenario={stepToScenario(scenario, i)} label={`Read ${i + 1} of ${scenario.steps.length}`} />
+        ))}
+      </div>
+    );
+  }
+  return <OneBoard scenario={scenario} />;
 }

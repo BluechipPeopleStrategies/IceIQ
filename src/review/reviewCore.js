@@ -2,9 +2,14 @@
 // (scripts/test-review.mjs, scripts/pull-reviews.mjs), so it must not import
 // anything that uses import.meta.glob or browser globals.
 
-// A scenario has a reviewable board if it's a scenario with placed actors + a stage.
+// A scenario has a reviewable board if it's a scenario with a stage and placed
+// actors — either flat, or in every step of a multi-step play.
 export function hasBoard(q) {
-  return !!q && q.type === "scenario" && Array.isArray(q.actors) && q.actors.length > 0 && !!q.stage;
+  if (!q || q.type !== "scenario" || !q.stage) return false;
+  if (Array.isArray(q.steps) && q.steps.length) {
+    return q.steps.every(s => Array.isArray(s?.actors) && s.actors.length > 0);
+  }
+  return Array.isArray(q.actors) && q.actors.length > 0;
 }
 
 // Flatten a qb ({ [level]: question[] }) to board scenarios, deduped by id,
@@ -41,12 +46,14 @@ function stableStringify(v) {
 
 // Stable 8-hex hash of the board-defining fields, to tie a review to a board version.
 export function boardHash(scenario) {
-  const subset = {
-    actors: scenario?.actors ?? null,
-    stage: scenario?.stage ?? null,
-    interaction: scenario?.interaction ?? null,
-    correct: scenario?.correct ?? null,
-  };
+  const subset = Array.isArray(scenario?.steps) && scenario.steps.length
+    ? { steps: scenario.steps, stage: scenario?.stage ?? null }
+    : {
+        actors: scenario?.actors ?? null,
+        stage: scenario?.stage ?? null,
+        interaction: scenario?.interaction ?? null,
+        correct: scenario?.correct ?? null,
+      };
   const str = stableStringify(subset);
   let h = 0x811c9dc5; // FNV-1a 32-bit
   for (let i = 0; i < str.length; i++) {

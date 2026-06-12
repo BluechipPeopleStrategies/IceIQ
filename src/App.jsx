@@ -15,6 +15,8 @@ import RinkReadsRink from "./RinkReadsRink";
 import { COMPETENCIES, getJourneyV2, ACTIVITY_METRICS, GAME_SENSE_UNLOCK_SESSIONS, calcCompetencyScores, calcGameSenseScore } from "./utils/gameSense.js";
 import { getTrainingLog, seedDemoTrainingForRoster } from "./utils/trainingLog.js";
 import { buildU11ForwardPreview, PREVIEW_PLAYER_ID } from "./data/previewPlayer.js";
+import { enqueueReview, getSavedReview, flushQueue } from "./review/reviewQueue.js";
+import { boardHash } from "./review/reviewCore.js";
 import { calcTeamCompetencyAverages, GRADE_LEVEL_THRESHOLD } from "./utils/coachStats.js";
 import { HockeyInsightWidget, BottomNav, TrainingLog, HomeStartHereCard } from "./widgets.jsx";
 import { HomeworkCard, CoachAssignmentsSection } from "./assignments.jsx";
@@ -5055,6 +5057,9 @@ function QuestionPreviewPage({ questionId }) {
   const [err, setErr] = useState(null);
   const [key, setKey] = useState(0); // forces a re-mount on Retry
   const [verdict, setVerdict] = useState(null); // "ok" | "wrong" | null
+  const [note, setNote] = useState("");
+  const [savedVerdict, setSavedVerdict] = useState(null); // "keep" | "revise" | "retire"
+  const [pending, setPending] = useState(0);
   useEffect(() => {
     let cancelled = false;
     loadQB().then(qb => {
@@ -5069,6 +5074,20 @@ function QuestionPreviewPage({ questionId }) {
     }).catch(e => { if (!cancelled) setErr(e.message || String(e)); });
     return () => { cancelled = true; };
   }, [questionId]);
+
+  // Seed the verdict + note from any review already saved for this question.
+  useEffect(() => {
+    if (!question?.id) return;
+    const saved = getSavedReview(question.id);
+    if (saved) { setSavedVerdict(saved.verdict); setNote(saved.note || ""); }
+  }, [question?.id]);
+
+  async function saveReview(v) {
+    if (!question) return;
+    enqueueReview({ scenario_id: question.id, verdict: v, note: note.trim(), board_hash: boardHash(question) });
+    setSavedVerdict(v);
+    setPending(await flushQueue());
+  }
 
   if (err) {
     return (
@@ -5111,6 +5130,25 @@ function QuestionPreviewPage({ questionId }) {
         </div>
       )}
       <QuestionPlayerView question={question} onAnswer={(ok) => setVerdict(ok ? "ok" : "wrong")} />
+
+      {/* Review controls — KEEP/REVISE/RETIRE + comment, saved to the same
+          scenario_reviews store as the #triage deck (npm run pull-reviews reads it). */}
+      <div style={{marginTop:"1.2rem",borderTop:`1px solid ${C.border}`,paddingTop:".9rem"}}>
+        <div style={{fontSize:10,letterSpacing:".14em",textTransform:"uppercase",color:C.dimmer,fontWeight:700,marginBottom:".5rem"}}>
+          Your review{savedVerdict ? ` · saved: ${savedVerdict.toUpperCase()}` : ""}{pending ? ` · ${pending} syncing` : ""}
+        </div>
+        <textarea value={note} onChange={e => setNote(e.target.value)}
+          placeholder="comments — what to revise, what's missing (your keyboard mic works)…"
+          style={{width:"100%",minHeight:64,padding:".6rem",borderRadius:8,border:`1px solid ${C.border}`,background:C.bgCard,color:C.white,fontFamily:FONT.body,fontSize:13,boxSizing:"border-box",resize:"vertical"}}/>
+        <div style={{display:"flex",gap:".5rem",marginTop:".6rem"}}>
+          {[["keep","KEEP",C.green,C.greenDim,C.greenBorder],["revise","REVISE",C.gold,C.goldDim,C.goldBorder],["retire","RETIRE",C.red,C.redDim,C.redBorder]].map(([v,label,col,dim,bd]) => (
+            <button key={v} onClick={() => saveReview(v)}
+              style={{flex:1,padding:".8rem 0",borderRadius:10,border:`1px solid ${savedVerdict===v?col:bd}`,background:dim,color:col,fontWeight:800,fontFamily:FONT.body,fontSize:".95rem",cursor:"pointer"}}>
+              {label}{savedVerdict===v?" ✓":""}
+            </button>
+          ))}
+        </div>
+      </div>
     </div>
   );
 }
