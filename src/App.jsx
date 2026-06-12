@@ -427,6 +427,7 @@ import { COMPETENCY_LADDER, RATING_SCALES, SKILLS, FREE_SKILL_IDS, ladderFor, ge
 
 const AdminReports = lazy(() => import("./screens.jsx").then(m => ({ default: m.AdminReports })));
 const QuestionReviewScreen = lazy(() => import("./screens.jsx").then(m => ({ default: m.QuestionReviewScreen })));
+const ReviewScreen = lazy(() => import("./review/ReviewScreen.jsx"));
 const ScenarioPlayground = lazy(() => import("./scenario/ScenarioPlayground.jsx").then(m => ({ default: m.ScenarioPlayground })));
 const ProfileSetup = lazy(() => import("./screens.jsx").then(m => ({ default: m.ProfileSetup })));
 const PlansScreen = lazy(() => import("./screens.jsx").then(m => ({ default: m.PlansScreen })));
@@ -7540,6 +7541,7 @@ export default function App() {
     if (hashRoute === "players" && screen !== "players") setScreen("players");
     if (hashRoute === "associations" && screen !== "associations") setScreen("associations");
     if (hashRoute === "admin" && screen !== "admin-dashboard") setScreen("admin-dashboard");
+    if (hashRoute === "review" && screen !== "review") setScreen("review");
   }, [hashRoute, screen]);
   // Dev-bypass toggle from URL: visiting /#devbypass sets the LS flag so the
   // dev panel appears on AuthScreen — useful in production deployments where
@@ -7990,10 +7992,9 @@ export default function App() {
   if (hashRoute === "scenarios") {
     return <Suspense fallback={<LazyFallback/>}><ScenarioPlayground/></Suspense>;
   }
-  // Owner-only review dashboard. Backed by the dev-only /__review/* endpoints
-  // (tools/review-server-plugin.mjs), so it only functions under `npm run dev`.
+  // Owner-only mobile triage deck. Auth-gated inside ReviewScreen.
   if (hashRoute === "review") {
-    return <ReviewDashboard/>;
+    return <Suspense fallback={<LazyFallback/>}><ReviewScreen onBack={() => { window.location.hash = ""; }}/></Suspense>;
   }
 
   // Pre-auth hash route: parents can share rinkreads.com/#parents without logging in.
@@ -8225,6 +8226,11 @@ export default function App() {
         )}
         {screen === "parent" && <Suspense fallback={<LazyFallback/>}><ParentAssessmentScreen player={player} demoMode={demoMode} onSignup={() => triggerSignup("parent_demo")} onBack={()=>setScreen("profile")} onSave={(ratings)=>{ setPlayer(p => ({...p, parentRatings: {...ratings, updated_at: new Date().toISOString().slice(0,10)}})); setScreen("profile"); }}/></Suspense>}
         {screen === "profile" && <Profile player={player} onSave={handleProfileSave} onBack={()=>setScreen("home")} onReset={handleSignOut} demoMode={demoMode} tier={tier} onUpgrade={(f,t)=>promptUpgrade(f,t)} userEmail={userEmail} onAdminReports={()=>setScreen("admin")} onNav={setScreen}/>}
+        {screen === "review" && (
+          <Suspense fallback={<LazyFallback />}>
+            <ReviewScreen onBack={() => setScreen("home")} />
+          </Suspense>
+        )}
         {screen === "admin" && <Suspense fallback={<LazyFallback/>}><AdminReports onBack={()=>setScreen("profile")}/></Suspense>}
         {screen === "password-reset" && <PasswordResetScreen onDone={() => setScreen("home")}/>}
         {screen === "admin-dashboard" && (
