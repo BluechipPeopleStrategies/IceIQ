@@ -4,25 +4,42 @@ import { denorm } from "../scenario/schema.js";
 import { resolveTarget } from "../scenario/zones.js";
 import { C, FONT } from "../shared.jsx";
 
-// Green ring / arrow / zone showing the declared correct answer, drawn over the board.
-function CorrectOverlay({ scenario }) {
+// Show every answer OPTION on the board: ring each candidate and mark the correct
+// one with a green ✓, the rest with a dim ✗ (icon + shape, never colour alone).
+function OptionsOverlay({ scenario }) {
   const c = scenario.correct;
-  if (!c) return null;
+  const inter = scenario.interaction;
   const byId = Object.fromEntries((scenario.actors || []).map(a => [a.id, a]));
-  if (c.kind === "selection") {
-    return <>{(c.ids || []).map(id => {
+
+  // selection / sequence — candidates are interaction.from; correct are correct.ids
+  if (inter && (inter.kind === "selection" || inter.kind === "sequence")) {
+    const correctIds = new Set(c?.ids || []);
+    return <>{(inter.from || []).map(id => {
       const a = byId[id]; if (!a) return null;
       const p = denorm(a);
-      return <circle key={id} cx={p.x} cy={p.y} r="20" fill="none" stroke={C.green} strokeWidth="2.6" strokeDasharray="4 3" />;
+      const ok = correctIds.has(id);
+      return (
+        <g key={id}>
+          <circle cx={p.x} cy={p.y} r="20" fill="none" stroke={ok ? C.green : C.dim}
+            strokeWidth="2.6" strokeDasharray={ok ? "4 3" : "1 4"} />
+          <text x={p.x} y={p.y - 25} textAnchor="middle" fontSize="15" fontWeight="800"
+            fill={ok ? C.green : C.dim} stroke={C.bg} strokeWidth="0.4" paintOrder="stroke">{ok ? "✓" : "✗"}</text>
+        </g>
+      );
     })}</>;
   }
-  if (c.kind === "point") {
+
+  // point — single correct target zone
+  if (c?.kind === "point") {
     let t; try { t = resolveTarget(c); } catch { return null; }
     const p = denorm(t);
-    return <ellipse cx={p.x} cy={p.y} rx={t.tolerance * 600} ry={t.tolerance * 300} fill="rgba(34,197,94,.22)" stroke={C.green} strokeWidth="1.8" />;
+    return <ellipse cx={p.x} cy={p.y} rx={t.tolerance * 600} ry={t.tolerance * 300}
+      fill="rgba(34,197,94,.22)" stroke={C.green} strokeWidth="1.8" />;
   }
-  if (c.kind === "path") {
-    const from = byId[scenario.interaction?.from];
+
+  // path — the correct route arrow
+  if (c?.kind === "path") {
+    const from = byId[inter?.from];
     let t; try { t = resolveTarget(c.end); } catch { return null; }
     if (!from) return null;
     const a = denorm(from), b = denorm(t);
@@ -44,16 +61,30 @@ class BoardBoundary extends React.Component {
 
 export default function ReviewBoard({ scenario }) {
   const prompt = scenario.interaction?.prompt || scenario.mc?.stem || "";
+  const mc = scenario.mc;
   const fallback = <pre style={{ color: C.red, fontSize: ".7rem", overflow: "auto", background: C.bgCard, padding: ".5rem", borderRadius: 8 }}>{JSON.stringify(scenario, null, 2)}</pre>;
   return (
     <div>
       <BoardBoundary fallback={fallback}>
         <RinkStage stage={scenario.stage} actors={scenario.actors} levels={scenario.levels}>
-          {() => <CorrectOverlay scenario={scenario} />}
+          {() => <OptionsOverlay scenario={scenario} />}
         </RinkStage>
       </BoardBoundary>
       <div style={{ marginTop: ".5rem", fontFamily: FONT.body, color: C.white, fontSize: ".9rem" }}>{prompt}</div>
-      {scenario.feedback?.right && <div style={{ marginTop: ".3rem", color: C.dim, fontSize: ".8rem" }}>✓ {scenario.feedback.right}</div>}
+      {Array.isArray(mc?.opts) && (
+        <div style={{ marginTop: ".45rem", display: "flex", flexDirection: "column", gap: ".25rem" }}>
+          {mc.opts.map((opt, idx) => {
+            const ok = idx === mc.ok;
+            return (
+              <div key={idx} style={{ fontSize: ".8rem", color: ok ? C.green : C.dim, display: "flex", gap: ".45rem", lineHeight: 1.3 }}>
+                <span style={{ fontWeight: 800 }}>{ok ? "✓" : "✗"}</span>
+                <span>{opt}</span>
+              </div>
+            );
+          })}
+        </div>
+      )}
+      {scenario.feedback?.right && <div style={{ marginTop: ".4rem", color: C.dim, fontSize: ".8rem" }}>Right: {scenario.feedback.right}</div>}
       {scenario.tip && <div style={{ marginTop: ".2rem", color: C.dimmer, fontSize: ".75rem" }}>tip: {scenario.tip}</div>}
     </div>
   );
