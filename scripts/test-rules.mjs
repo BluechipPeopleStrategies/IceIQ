@@ -6,6 +6,7 @@
 // Add a case here every time you encode a new lesson (see src/scenario/LESSONS.md).
 
 import { lintScenario } from "../tools/scenario-author/validate.mjs";
+import { rankByZone, correctSet } from "../src/scenario/value.js";
 
 // A known-good compiled scenario (off-zone odd-man selection). Clone per test.
 const GOOD = {
@@ -66,5 +67,19 @@ for (const c of cases) {
     console.log(`        ok=${r.ok}  errs=${JSON.stringify(r.errs)}`);
   }
 }
-console.log(`\n${cases.length - failed}/${cases.length} passed`);
+// ── value-model golden checks (Slice 3 gate)
+const ranked = rankByZone(clone());
+const cs = correctSet(ranked);
+const valueCases = [
+  { name: "value: open answer ranks highest", pass: ranked[0]?.id === "openWing" },
+  { name: "value: exactly 1 correct answer proven", pass: cs.length === 1 && cs[0] === "openWing" },
+  { name: "value: a sabotaged answer is NOT top-ranked", pass: ranked[0]?.id !== "closedWing" },
+];
+for (const c of valueCases) {
+  console.log(`${c.pass ? "PASS" : "FAIL"}  ${c.name}`);
+  if (!c.pass) failed++;
+}
+
+const total = cases.length + valueCases.length;
+console.log(`\n${total - failed}/${total} passed`);
 process.exit(failed ? 1 : 0);

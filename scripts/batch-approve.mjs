@@ -3,7 +3,7 @@
 //
 // Usage: node scripts/batch-approve.mjs [--list docs/ai-pipeline/approved.json]
 
-import { readFileSync, readdirSync, renameSync, existsSync, rmSync } from "node:fs";
+import { readFileSync, readdirSync, renameSync, existsSync, rmSync, appendFileSync } from "node:fs";
 import { join } from "node:path";
 
 const args = process.argv.slice(2);
@@ -16,10 +16,14 @@ if (!existsSync(LIST)) {
   console.error(`No approved list at ${LIST}. Download approved.json from the contact sheet into docs/ai-pipeline/ first.`);
   process.exit(1);
 }
-let ids;
-try { ids = JSON.parse(readFileSync(LIST, "utf8")); }
+let payload;
+try { payload = JSON.parse(readFileSync(LIST, "utf8")); }
 catch (e) { console.error(`Could not parse ${LIST}: ${e.message}`); process.exit(1); }
-if (!Array.isArray(ids)) { console.error(`${LIST} must be a JSON array of seed ids.`); process.exit(1); }
+// Accept the sign-off shape { coach, signedAt, approved:[ids] } or a legacy array.
+const ids = Array.isArray(payload) ? payload : payload.approved;
+const coach = Array.isArray(payload) ? "(unsigned)" : (payload.coach || "(unsigned)");
+const signedAt = Array.isArray(payload) ? new Date().toISOString().slice(0, 10) : (payload.signedAt || "");
+if (!Array.isArray(ids)) { console.error(`${LIST} must contain an "approved" array of seed ids.`); process.exit(1); }
 
 const pending = existsSync(PENDING) ? readdirSync(PENDING).filter(f => f.endsWith(".json")) : [];
 if (pending.length === 0) {
@@ -40,6 +44,14 @@ for (const id of ids) {
 const held = pending.length - moved - missing.length + (missing.length ? 0 : 0);
 const remaining = existsSync(PENDING) ? readdirSync(PENDING).filter(f => f.endsWith(".json")).length : 0;
 
+// Record the sign-off (who approved what, when) — a lightweight audit trail.
+if (moved > 0) {
+  const movedIds = ids.filter(id => !missing.includes(id));
+  appendFileSync(join(DEST, "..", "..", "docs", "ai-pipeline", "_signoff-log.jsonl"),
+    JSON.stringify({ coach, signedAt, approved: movedIds }) + "\n", "utf8");
+}
+
+console.log(`Signed off by ${coach}${signedAt ? ` (${signedAt})` : ""}`);
 console.log(`Approved + moved: ${moved} → ${DEST}/`);
 console.log(`Held back in ${PENDING}: ${remaining}`);
 if (missing.length) console.log(`Not found in pending (skipped): ${missing.join(", ")}`);

@@ -22,6 +22,7 @@ import { wideY, onLane, goalSide, CREASE_RIGHT, CREASE_LEFT } from "../src/scena
 import { lineHitsCircle, PASS_INTERCEPT_RADIUS } from "../src/scenario/validators.js";
 import { lintScenario } from "../tools/scenario-author/validate.mjs";
 import { nodeInfo } from "../src/scenario/curriculum.js";
+import { rankByZone, correctSet } from "../src/scenario/value.js";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const ROOT = resolve(__dirname, "..");
@@ -163,6 +164,23 @@ function compileInstance(instance) {
 
   const lint = lintScenario(seed);
   lint.warns = [...alignWarns, ...(lint.warns || [])];
+
+  // Slice 3 — value/cardinality gate (selection reads). Prove the declared answer
+  // is the highest-value option, and that the number of genuinely-correct answers
+  // equals expectCorrect (default 1). This is the "only X correct answers"
+  // guarantee a coach signs off on, made automatic.
+  if (seed.interaction?.kind === "selection") {
+    const expectN = instance.expectCorrect ?? formation.expectCorrect ?? 1;
+    const ranked = rankByZone(seed);
+    const labeled = new Set(seed.correct?.ids || []);
+    const cs = correctSet(ranked);
+    const valueErrs = [];
+    if (ranked.length && !labeled.has(ranked[0].id))
+      valueErrs.push(`labeled answer [${[...labeled].join(", ")}] is not the highest-value option — the value model ranks "${ranked[0].id}" top (${ranked[0].value}). The geometry doesn't make the declared answer the best play.`);
+    if (cs.length !== expectN)
+      valueErrs.push(`expected ${expectN} correct answer(s) but the value model finds ${cs.length} within margin: [${cs.join(", ")}]. Tighten the geometry or set expectCorrect: ${cs.length}.`);
+    if (valueErrs.length) { lint.ok = false; lint.errs = [...(lint.errs || []), ...valueErrs]; }
+  }
   return { seed, lint };
 }
 
