@@ -33,6 +33,11 @@ export const supabase = (url && key) ? createClient(url, key, {
     persistSession: true,
     autoRefreshToken: true,
     detectSessionInUrl: true,
+    // Bypass the navigator.locks auth-token lock: in dev (React StrictMode
+    // double-mounts the tree) it orphans and stalls every auth call ~5s,
+    // freezing screens that make several auth calls on load (e.g. the review
+    // deck). A no-op lock is fine for this single-user app.
+    lock: async (_name, _acquireTimeout, fn) => fn(),
   },
 }) : null;
 
@@ -933,15 +938,15 @@ export async function upsertScenarioReview({ scenario_id, verdict, note, board_h
 }
 
 export async function listMyReviews() {
-  if (!supabase) return [];
+  if (!supabase) return { ok: false, rows: [] };
   const session = await getSession();
   const email = session?.user?.email;
-  if (!email) return [];
+  if (!email) return { ok: false, rows: [] };
   const { data, error } = await supabase
     .from("scenario_reviews")
     .select("scenario_id,verdict,note,board_hash,updated_at")
     .eq("reviewer_email", email);
-  return error ? [] : (data || []);
+  return error ? { ok: false, rows: [] } : { ok: true, rows: data || [] };
 }
 
 export async function listCoachReviews() {

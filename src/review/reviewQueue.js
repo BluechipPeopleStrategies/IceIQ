@@ -37,16 +37,16 @@ export async function flushQueue() {
   return remaining.length;
 }
 
-// Merge this reviewer's server rows into the durable map (newest wins). Cross-device.
+// Rebuild the durable map from the server (authoritative) when the fetch succeeds:
+// a review that was resolved/wiped server-side disappears here too, so the deck
+// stops showing its note and the board is ready for a fresh pass. Locally-queued
+// (not-yet-synced) entries are preserved so offline work isn't lost. On a fetch
+// failure we leave the local cache untouched.
 export async function syncServerReviews() {
-  const rows = await listMyReviews();
-  if (!rows.length) return;
-  const reviews = read(REVIEWS_KEY, {});
-  for (const r of rows) {
-    const existing = reviews[r.scenario_id];
-    if (!existing || (r.updated_at || "") > (existing.updated_at || "")) {
-      reviews[r.scenario_id] = { verdict: r.verdict, note: r.note || "", updated_at: r.updated_at };
-    }
-  }
+  const { ok, rows } = await listMyReviews();
+  if (!ok) return;
+  const reviews = {};
+  for (const r of rows) reviews[r.scenario_id] = { verdict: r.verdict, note: r.note || "", updated_at: r.updated_at };
+  for (const e of read(QUEUE_KEY, [])) reviews[e.scenario_id] = { verdict: e.verdict, note: e.note || "", updated_at: e.updated_at };
   write(REVIEWS_KEY, reviews);
 }

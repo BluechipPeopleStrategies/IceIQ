@@ -31,18 +31,19 @@ export default function ReviewScreen({ onBack }) {
   useEffect(() => {
     let alive = true;
     (async () => {
-      const session = await getSession();
-      const email = session?.user?.email?.toLowerCase();
+      let email = null;
+      try { const session = await getSession(); email = session?.user?.email?.toLowerCase(); }
+      catch (e) { console.error("[review] getSession failed", e); }
       if (!email || (OWNERS.length && !OWNERS.includes(email))) { if (alive) setStatus("denied"); return; }
-      await syncServerReviews();
-      const [scenarios, coaches, logs] = await Promise.all([
-        loadReviewScenarios(getReviewedIds()), listCoachReviews(), listFeedbackLog(),
-      ]);
+      try { await syncServerReviews(); } catch (e) { console.error("[review] syncServerReviews failed", e); }
+      let scenarios = [];
+      try { scenarios = await loadReviewScenarios(getReviewedIds()); }
+      catch (e) { console.error("[review] loadReviewScenarios failed", e); }
+      try { const coaches = await listCoachReviews(); if (alive) setCoachById(Object.fromEntries(coaches.map(c => [c.scenario_id, c]))); }
+      catch (e) { console.error("[review] listCoachReviews failed", e); }
+      try { const logs = await listFeedbackLog(); const lg = {}; for (const r of logs) (lg[r.scenario_id] ||= []).push(r); if (alive) setLogById(lg); }
+      catch (e) { console.error("[review] listFeedbackLog failed", e); }
       if (!alive) return;
-      setCoachById(Object.fromEntries(coaches.map(c => [c.scenario_id, c])));
-      const lg = {};
-      for (const r of logs) (lg[r.scenario_id] ||= []).push(r);
-      setLogById(lg);
       setList(scenarios);
       setStatus(scenarios.length ? "ready" : "empty");
     })();
@@ -107,17 +108,6 @@ export default function ReviewScreen({ onBack }) {
       <div style={{ color: C.gold, fontSize: ".75rem", marginBottom: ".4rem", letterSpacing: ".04em" }}>{chips}</div>
       <ReviewBoard scenario={current} />
 
-      {coach && (
-        <div style={{ marginTop: ".5rem", padding: ".5rem .6rem", borderRadius: 8, background: C.bgCard, border: `1px solid ${C.border}` }}>
-          <div style={{ fontSize: ".78rem", color: C.dim }}>
-            🤖 Coaches: <b style={{ color: C.white }}>{VERDICT_LABEL[coach.verdict] || coach.verdict}</b>
-            {coach.confidence != null ? ` · ${Math.round(coach.confidence * 100)}%` : ""}{coach.convened ? " · room" : ""}
-            {coachStale ? " · ⚠ out of date" : ""}
-          </div>
-          {coach.notes && <div style={{ fontSize: ".78rem", color: C.dim, marginTop: ".2rem" }}>{coach.notes}</div>}
-        </div>
-      )}
-
       {logs.length > 0 && (
         <div style={{ marginTop: ".4rem", padding: ".5rem .6rem", borderRadius: 8, background: C.bgCard, border: `1px dashed ${C.border}` }}>
           <div style={{ fontSize: ".72rem", color: C.dimmer, marginBottom: ".2rem" }}>Previously incorporated</div>
@@ -138,6 +128,17 @@ export default function ReviewScreen({ onBack }) {
         <button onClick={() => move(-1)} disabled={i === 0} style={{ ...navBtn, opacity: i === 0 ? 0.4 : 1, cursor: i === 0 ? "default" : "pointer" }}>← Previous</button>
         <button onClick={() => move(1)} style={navBtn}>Next →</button>
       </div>
+
+      {coach && (
+        <div style={{ marginTop: "1.4rem", padding: ".5rem .6rem", borderRadius: 8, background: C.bgCard, border: `1px solid ${C.border}` }}>
+          <div style={{ fontSize: ".78rem", color: C.dim }}>
+            🤖 Coaches: <b style={{ color: C.white }}>{VERDICT_LABEL[coach.verdict] || coach.verdict}</b>
+            {coach.confidence != null ? ` · ${Math.round(coach.confidence * 100)}%` : ""}{coach.convened ? " · room" : ""}
+            {coachStale ? " · ⚠ out of date" : ""}
+          </div>
+          {coach.notes && <div style={{ fontSize: ".78rem", color: C.dim, marginTop: ".2rem" }}>{coach.notes}</div>}
+        </div>
+      )}
     </div>
   );
 }
