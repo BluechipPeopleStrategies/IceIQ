@@ -157,7 +157,7 @@ correct answer is effectively the ONLY viable option (only one open teammate, on
 spot, the other options obviously bad or impossible), that is a REVISE no matter how correct the
 answer is — a one-option question tests nothing.
 ${renderDecisionCalibration()}
-If the board shows a MACHINE GEOMETRY CHECKS block, treat those as verified deterministic facts (exact positions + passing lanes). Any geometry, positioning, off-screen, or "open option is actually blocked" issue listed there is grounds for REVISE.
+If the board shows a MACHINE GEOMETRY CHECKS block: items under ERRORS are hard, verified failures — REVISE. Items under WARNINGS are advisory facts about positions/lanes to weigh with your own judgment — a warning alone is NOT automatic grounds for REVISE.
 Then judge the rest:
 - KEEP: sound as-is, stands proudly beside its siblings.
 - REVISE: fixable — say exactly what (wording, a distractor, a wrong/absent label, age-fit, a
