@@ -212,7 +212,7 @@ async function generateOne(ledger, node, opts, seen) {
     if (opts.fast) {
       let coach = { verdict: "PASS", critique: [] };
       if (!opts.mock) {
-        try { coach = await runAgent({ ...buildPanelCoachPrompt({ question: q, node, concept, lens: PANEL_LENSES[0], others: null }), model: opts.model }); }
+        try { coach = await runAgent({ ...buildPanelCoachPrompt({ question: q, node, concept, lens: PANEL_LENSES[0], others: null }), model: opts.coachModel }); }
         catch (e) { coach = { verdict: "REVISE", critique: [`coach error: ${e.message}`] }; }
       }
       if (coach.verdict !== "PASS") { notes = coach.critique || coach.notes || ["coach revise"]; continue; }
@@ -347,7 +347,7 @@ async function generateVisualOne(ledger, node, opts, seen) {
     const bar = opts.fast ? "fast/no-panels" : opts.lite ? "lite: hockey panel + spatial coach" : "hockey panel + 4-coach visual panel + Head Coach";
     const item = {
       question: s,
-      gateHistory: { creator: "pass", validate: "pass", hockeyPanel: opts.fast ? "skipped" : "unanimous", visualPanel: opts.fast ? "skipped" : (opts.lite ? "spatial-only" : "unanimous"), headCoach: (opts.fast || opts.lite) ? "skipped" : "approve", round },
+      gateHistory: { creator: "pass", validate: "pass", hockeyPanel: opts.fast ? "skipped" : ((opts.fullPanel || opts.lite) ? "unanimous" : "head-coach-gated"), visualPanel: opts.fast ? "skipped" : ((opts.fullPanel || opts.lite) ? (opts.lite ? "spatial-only" : "unanimous") : "head-coach-gated"), headCoach: (opts.fast || opts.lite) ? "skipped" : "approve", round },
       proxyVerdict: { decision: "forward", scores: {}, rationale: "Drawn question cleared the gauntlet (validate + " + bar + "). Founder-proxy gate (G9) not built yet — review directly." },
       queuedAt: new Date().toISOString().slice(0, 10),
     };

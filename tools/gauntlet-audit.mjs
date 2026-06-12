@@ -89,7 +89,7 @@ async function main() {
   const opts = parseArgs(process.argv.slice(2));
   const ledger = loadLedger();
   let seeds = loadSeeds();
-  if (opts.band) seeds = seeds.filter((s) => (s.seed.level || "").includes(opts.band));
+  if (opts.band) seeds = seeds.filter((s) => (s.seed.level || "").split(" ")[0] === opts.band);
   if (Number.isFinite(opts.limit)) seeds = seeds.slice(0, opts.limit);
   if (!seeds.length) { console.log("No seeds matched."); return; }
 
