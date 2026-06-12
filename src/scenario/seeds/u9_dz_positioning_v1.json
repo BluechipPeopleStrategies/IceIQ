@@ -4,36 +4,35 @@
   "nodeId": "u9.defensive-side-positioning",
   "level": "U9 / Novice",
   "levels": ["U9 / Novice"],
-  "themes": ["defensive-zone-coverage", "positioning"],
+  "themes": ["defensive-side-positioning", "net-front", "positioning"],
   "cat": "Defensive Play",
   "difficulty": 1,
   "stage": { "view": "left", "zone": "def-zone" },
   "scanWindow": null,
   "actors": [
-    { "id": "you",  "kind": "player",   "x": 0.44, "y": 0.16, "tag": "YOU" },
-    { "id": "g",    "kind": "goalie",   "x": 0.14, "y": 0.42 },
-    { "id": "d1",   "kind": "teammate", "x": 0.43, "y": 0.72 },
-    { "id": "o1",   "kind": "defender", "x": 0.10, "y": 0.82 },
-    { "id": "o2",   "kind": "defender", "x": 0.26, "y": 0.36 },
-    { "id": "puck", "kind": "puck",     "x": 0.115, "y": 0.81 }
+    { "id": "you",     "kind": "player",   "x": 0.30, "y": 0.70, "tag": "YOU" },
+    { "id": "check",   "kind": "defender", "x": 0.27, "y": 0.44, "tag": "" },
+    { "id": "carrier", "kind": "defender", "x": 0.20, "y": 0.84, "tag": "" },
+    { "id": "puck",    "kind": "puck",     "x": 0.205, "y": 0.842 },
+    { "id": "tm",      "kind": "teammate", "x": 0.27, "y": 0.80, "tag": "" },
+    { "id": "g",       "kind": "goalie",   "x": 0.08, "y": 0.50, "tag": "" }
   ],
   "interaction": {
     "kind": "place",
-    "items": ["g", "d1"],
-    "showTargets": true,
-    "prompt": "An opponent has the puck in your corner. Drag your goalie and your defenseman to the spots that best protect your net."
+    "items": ["you"],
+    "showTargets": false,
+    "prompt": "The puck is in the corner and your teammate is on it. Your job is the forward parked in front of the net. Drag YOURSELF to the spot that keeps you between your check and the net."
   },
   "correct": {
     "kind": "place",
     "placements": [
-      { "id": "g",  "x": 0.085, "y": 0.50, "tolerance": 0.05 },
-      { "id": "d1", "x": 0.22,  "y": 0.50, "tolerance": 0.05 }
+      { "id": "you", "x": 0.19, "y": 0.47, "tolerance": 0.07 }
     ]
   },
   "feedback": {
-    "right": "Goalie square in the crease, defenseman in the slot. Now the most dangerous ice in front of the net is covered.",
-    "wrong": "The net front and the slot are where goals come from. Keep your goalie in the crease and your defenseman in the slot, not chasing the puck to the corner."
+    "right": "Net-side and inside. You're between your check and the goalie with your stick in the lane, so the dangerous pass to the slot is taken away before it happens.",
+    "wrong": "Drifting toward the puck leaves your check alone in front of the net. Stay on the defensive side, between your forward and the goalie, ready to defend the slot."
   },
-  "tip": "Protect the middle first. The slot and the crease are where most goals are scored.",
-  "why": "Young defenders chase the puck into the corner and leave the net open. Holding the slot and the crease takes away the highest-danger ice."
+  "tip": "Cover your own check first. Stay between them and the net, on the inside, even when the puck is somewhere else.",
+  "why": "Young defenders chase the puck and lose their man at the net. Holding net-side position on your check takes away the most dangerous pass into the slot."
 }
