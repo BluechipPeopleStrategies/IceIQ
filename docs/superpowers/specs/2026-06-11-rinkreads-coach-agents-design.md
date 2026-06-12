@@ -97,19 +97,48 @@ is the only one that proposes geometry changes.
 
 ## 4. How you run it: `/rink-review`
 
-A project skill `/rink-review` is the entry point (it can later be called by the factory at
-G6 through G7.5). Behavior:
+A project skill `/rink-review` is the entry point. It has two modes that share the exact same
+Head Coach panel; only the input source and the verb of the verdict differ.
+
+### 4.1 Gate mode (default) — new content
+
+For freshly generated seeds heading toward ship (the factory's G6 through G7.5). Behavior:
 
 1. Takes a batch of seed files (default 5 to 10 per sitting so context loads once).
 2. Hands each item packet to **head-coach**.
 3. Prints, per item: GO or SEND-BACK, the confidence, the reconciliation note, and whether
    the room was convened.
 4. Routes SEND-BACK items to the existing `review_questions` queue (`src/supabase.js`).
-5. Writes all verdicts to a dated run log under `docs/factory/coach-runs/` for an audit
-   trail.
+5. Writes all verdicts to a dated run log under `docs/factory/coach-runs/` for an audit trail.
 
-The command itself is thin: it loads the batch and invokes the Head Coach. All judgment and
-all escalation happen inside the agents.
+### 4.2 Audit mode (`--audit`) — retroactive pass over existing banks
+
+Points the same panel at the content already shipped, to assess it after the fact. Sources:
+
+- `src/data/bank.json` (text questions, keyed by age band: currently 148 across U7 to U18)
+- `src/scenario/seeds/*.json` (geometry scenarios: currently 23)
+- `src/data/povQuestions.json` (currently 4)
+
+An input adapter normalizes each existing item into the same item packet the coaches already
+take (text or geometry, age band, curriculum tag where present, and the solver answer for
+geometry items). The Head Coach's call uses an assessment verb rather than a ship verb:
+
+- **KEEP** — sound as is.
+- **REVISE** — fixable; the note says what (wording, distractor, missing or wrong diagram,
+  age-fit). For geometry items the diagram-coach may attach a seed patch.
+- **RETIRE** — not salvageable for this band.
+
+Output is a single assessment report (`docs/factory/coach-runs/audit-YYYY-MM-DD.md`) grouped
+by age band, plus REVISE and RETIRE items routed to the review queue. Solo-first escalation
+still applies, so a clean corpus is roughly one Fable-5 call per item. Default runs the whole
+corpus; `--band U13` or a count limit can scope it for a cheaper first pass.
+
+Text-only questions have no geometry for the solver to key and no board for the diagram-coach
+to redraw; for those, the diagram-coach is invoked only when an item would clearly be better
+as a diagram, and it flags that rather than patching geometry that is not there.
+
+The command itself is thin in both modes: it loads the batch and invokes the Head Coach. All
+judgment and all escalation happen inside the agents.
 
 ---
 
@@ -137,9 +166,11 @@ items clear, the expected cost is well under two calls per item on a cheap model
 - `IceIQ\.claude\agents\development-coach.md`
 - `IceIQ\.claude\agents\adversarial-coach.md`
 - `IceIQ\.claude\agents\diagram-coach.md`
-- `IceIQ\.claude\skills\rink-review\SKILL.md` (the batch entry point)
+- `IceIQ\.claude\skills\rink-review\SKILL.md` (the batch entry point; gate and `--audit` modes)
 - `IceIQ\docs\factory\coach-briefing.md` (shared context the agents read)
-- `IceIQ\docs\factory\coach-runs\` (run-log output directory)
+- `IceIQ\docs\factory\coach-runs\` (run-log and audit-report output directory)
+- An input adapter (in the skill or a small `tools/` helper) that normalizes existing
+  `bank.json` / seed / `povQuestions.json` items into the standard item packet for audit mode.
 - Reuses `src/supabase.js` `review_questions` routing; no schema changes.
 
 ---
@@ -177,3 +208,6 @@ items clear, the expected cost is well under two calls per item on a cheap model
 - **Diagram output:** seed-geometry patch with age-appropriate markers, not an image.
 - **Entry point:** a thin `/rink-review` batch command; verdicts logged, SEND-BACKs routed to
   the existing review queue.
+- **Two modes, one panel:** gate mode for new seeds (GO / SEND-BACK) and `--audit` mode for a
+  retroactive pass over the existing banks (KEEP / REVISE / RETIRE). Same agents, same
+  escalation; only the input source and the verdict verb differ.
