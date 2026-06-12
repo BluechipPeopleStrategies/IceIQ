@@ -27,6 +27,7 @@ import { repairScenario, scenarioHash, mockScenario, forcedLevels } from "./gaun
 import { asciiRink } from "./gauntlet/ascii-rink.mjs";
 import { VISUAL_LENSES, buildVisualHockeyCoachPrompt, buildVisualCoachPrompt, buildVisualHeadCoachPrompt, buildVisualLessonExtractorPrompt, buildVisualRubricConsolidationPrompt } from "./gauntlet/visual-prompts.mjs";
 import { runPool } from "./gauntlet/pool.mjs";
+import { coachGate, visualCoachGate } from "./gauntlet/coach-gate.mjs";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const root = resolve(__dirname, "..");
@@ -215,17 +216,22 @@ async function generateOne(ledger, node, opts, seen) {
         catch (e) { coach = { verdict: "REVISE", critique: [`coach error: ${e.message}`] }; }
       }
       if (coach.verdict !== "PASS") { notes = coach.critique || coach.notes || ["coach revise"]; continue; }
-    } else {
+    } else if (opts.fullPanel) {
+      // legacy always-panel path (kept for A/B), behind --full-panel
       const panel = await runPanel(q, node, concept, opts);
       if (!panel.ok) { notes = panel.critiques.length ? panel.critiques : ["panel not unanimous"]; continue; }
       const head = await runHeadCoach(q, node, concept, opts);
       if (!head.ok) { notes = head.notes.length ? head.notes : ["head coach kickback"]; continue; }
+    } else {
+      // default: Head Coach gates the room (solo-first, convene only on a judgment call)
+      const gate = await coachGate({ question: q, node, concept, opts, runPanel, runHeadCoach });
+      if (!gate.ok) { notes = gate.notes; continue; }
     }
 
     // Passed everything → queue item
     const item = {
       question: q,
-      gateHistory: { creator: "pass", curriculum: "pass", panel: opts.fast ? "fast-single" : "unanimous", headCoach: opts.fast ? "skipped" : "approve", round },
+      gateHistory: { creator: "pass", curriculum: "pass", panel: opts.fast ? "fast-single" : (opts.fullPanel ? "unanimous" : "head-coach-gated"), headCoach: opts.fast ? "skipped" : "approve", round },
       proxyVerdict: {
         decision: "forward", scores: {},
         rationale: "Cleared the gauntlet (creator + curriculum + " + (opts.fast ? "single coach" : "perfectionist panel + Head Coach") + "). Founder-proxy gate (G9) not built yet — review directly.",
@@ -316,14 +322,25 @@ async function generateVisualOne(ledger, node, opts, seen) {
     // correctness + core geometry). default = full (hockey + all 4 geometry
     // coaches + Head Coach).
     if (!opts.fast) {
-      const hockey = await runScenarioPanel(s, node, concept, opts, { lenses: PANEL_LENSES, makePrompt: buildVisualHockeyCoachPrompt });
-      if (!hockey.ok) { notes = hockey.critiques.length ? hockey.critiques : ["hockey panel not unanimous"]; continue; }
-      const visualLenses = opts.lite ? VISUAL_LENSES.filter((l) => l.key === "spatial") : VISUAL_LENSES;
-      const visual = await runScenarioPanel(s, node, concept, opts, { lenses: visualLenses, makePrompt: buildVisualCoachPrompt });
-      if (!visual.ok) { notes = visual.critiques.length ? visual.critiques : ["visual panel not unanimous"]; continue; }
-      if (!opts.lite) {
-        const head = await runVisualHeadCoach(s, node, concept, opts);
-        if (!head.ok) { notes = head.notes.length ? head.notes : ["head coach kickback"]; continue; }
+      if (opts.fullPanel || opts.lite) {
+        const hockey = await runScenarioPanel(s, node, concept, opts, { lenses: PANEL_LENSES, makePrompt: buildVisualHockeyCoachPrompt });
+        if (!hockey.ok) { notes = hockey.critiques.length ? hockey.critiques : ["hockey panel not unanimous"]; continue; }
+        const visualLenses = opts.lite ? VISUAL_LENSES.filter((l) => l.key === "spatial") : VISUAL_LENSES;
+        const visual = await runScenarioPanel(s, node, concept, opts, { lenses: visualLenses, makePrompt: buildVisualCoachPrompt });
+        if (!visual.ok) { notes = visual.critiques.length ? visual.critiques : ["visual panel not unanimous"]; continue; }
+        if (!opts.lite) {
+          const head = await runVisualHeadCoach(s, node, concept, opts);
+          if (!head.ok) { notes = head.notes.length ? head.notes : ["head coach kickback"]; continue; }
+        }
+      } else {
+        // default: Head Coach gates the room (solo-first)
+        const gate = await visualCoachGate({
+          scenario: s, ascii: asciiRink(s), node, concept, opts,
+          runHockeyPanel: (sc, n, c, o) => runScenarioPanel(sc, n, c, o, { lenses: PANEL_LENSES, makePrompt: buildVisualHockeyCoachPrompt }),
+          runVisualPanel: (sc, n, c, o) => runScenarioPanel(sc, n, c, o, { lenses: VISUAL_LENSES, makePrompt: buildVisualCoachPrompt }),
+          runVisualHeadCoach,
+        });
+        if (!gate.ok) { notes = gate.notes; continue; }
       }
     }
 

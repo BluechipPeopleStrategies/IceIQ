@@ -8,7 +8,9 @@ import { buildVisualHeadCoachSoloPrompt, buildAuditHeadCoachPrompt } from "./vis
 // Solo Head Coach (text). Returns { verdict, confidence, notes }.
 async function headCoachSolo({ question, node, concept, opts }) {
   if (opts.mock) {
-    const v = opts.mockSolo || "APPROVE";
+    // --mock-fail forces a kickback so the drop-and-learn loop is exercised on
+    // the default (solo-first) path, mirroring how it worked on the panel path.
+    const v = opts.mockFail ? "KICK_BACK" : (opts.mockSolo || "APPROVE");
     return { verdict: v, confidence: 1, notes: v === "KICK_BACK" ? ["[mock] solo kick"] : [] };
   }
   try {
@@ -34,7 +36,9 @@ export async function coachGate({ question, node, concept, opts, runPanel, runHe
 // Solo Head Coach (visual). Returns { verdict, confidence, notes }.
 async function visualHeadCoachSolo({ scenario, ascii, node, concept, opts }) {
   if (opts.mock) {
-    const v = opts.mockSolo || "APPROVE";
+    // --mock-fail forces a kickback so the drop-and-learn loop is exercised on
+    // the default (solo-first) path, mirroring how it worked on the panel path.
+    const v = opts.mockFail ? "KICK_BACK" : (opts.mockSolo || "APPROVE");
     return { verdict: v, confidence: 1, notes: v === "KICK_BACK" ? ["[mock] solo kick"] : [] };
   }
   try {
