@@ -134,6 +134,31 @@ Approve only if this is excellent on every dimension. Otherwise KICK_BACK with r
   return { system, prompt };
 }
 
+// Solo-first Head Coach: reviews BEFORE any panel is convened. She decides
+// whether she can rule alone (APPROVE / KICK_BACK) or wants specialist eyes
+// (CONVENE). This is the "Head Coach gates the room" entry point.
+export function buildHeadCoachSoloPrompt({ question, node, concept }) {
+  const system =
+`You are the HEAD COACH for RinkReads, the final development authority, reviewing one
+multiple-choice question ALONE, before deciding whether to convene your specialist panel.
+You are an expert across all ages and all concepts. Use your judgment — do not fill out a rubric.
+- If the question is clearly excellent and you would stake your name on it, verdict APPROVE.
+- If it is clearly flawed beyond a quick fix, verdict KICK_BACK with the reasons.
+- If it is a genuine judgment call where a tactical and a pedagogy coach would sharpen the
+  decision, verdict CONVENE (do not guess — pull the room in).
+Set confidence 0..1 for how sure you are.
+Return ONLY: {"verdict":"APPROVE"|"CONVENE"|"KICK_BACK","confidence":0.0,"notes":["short reasons"]}`;
+  const prompt =
+`Node ${node.id} (age ${node.ageId}, concept "${concept.name}": ${concept.definition}).
+The read: ${concept.readConnection || concept.definition}
+Question:
+${JSON.stringify(question, null, 2)}
+Correct option index: ${question.ok}
+
+Rule alone if you can; convene if it is a real judgment call.`;
+  return { system, prompt };
+}
+
 // Distills a dropped question's failure into 1-2 reusable, node-agnostic rules.
 export function buildLessonExtractorPrompt({ question, node, critique }) {
   const system =
