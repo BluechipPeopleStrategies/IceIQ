@@ -33,6 +33,23 @@ Two layers of memory work together:
 | 2026-06-11 | Every off-zone scene needs a defender goal-side (between puck and net) — else the rush has no one to beat. | `validators.js` `defenderGoalSide` | err |
 | 2026-06-11 | A selection answer's lane must be CLEAR from the carrier, and ≥1 wrong option BLOCKED — geometry is the read. | `validators.js` `selectionOpenLaneClear` | warn |
 | 2026-06-11 | Carry-puck off-zone board with the puck at the blue line + teammates deeper reads as an illegal entry (offsides). Establish the puck inside the zone. | `validators.js` `offsidesOnEntry` | err |
+| 2026-06-11 | A board must show exactly one puck — 0 or 2 is physically incoherent. | `validators.js` `exactlyOnePuck` | err |
+| 2026-06-11 | A literal `N-on-M` theme must match the skaters on the ice (the tag is the lesson). | `validators.js` `numbersThemeMatchesActors` | err |
+| 2026-06-11 | Odd-man-rush must show attackers > defenders; power-play/penalty-kill must show the man-advantage in frame. | `validators.js` `oddManRushIsActuallyOdd` | err / warn |
+| 2026-06-11 | A `shoot` must terminate at the attacking net, never your own (shooting the wrong way teaches a catastrophic habit). | `validators.js` `shootTargetsAttackingNet` | err |
+| 2026-06-11 | A `backcheck` path must travel back toward your own net, not up-ice toward the attack. | `validators.js` `backcheckHeadsToOwnNet` | err |
+| 2026-06-11 | Only the goalie belongs in the blue paint — a field defender in the crease reads as a second goalie. | `validators.js` `noDefenderInsideCrease` | warn |
+| 2026-06-11 | The goalie must sit on the puck-to-net shooting line, not parked off-angle. | `validators.js` `goalieOnPuckToNetAngle` | warn |
+| 2026-06-11 | A `net-front`-themed board needs a teammate planted at the net (the screen/tip premise). | `validators.js` `netFrontThemeNeedsNetFrontPresence` | warn |
+| 2026-06-11 | A receiver-pick board must leave at least one open receiver — never every lane blocked (unsolvable). | `validators.js` `selectionAllLanesBlocked` | err |
+| 2026-06-11 | Only one receiver should be cleanly open; two-plus open wrong candidates make the read ambiguous. | `validators.js` `selectionSingleClearLane` | warn |
+| 2026-06-11 | U7/U9 use generic players — only `YOU`, never position tags (RW/LW/C/LD/RD). | `validators.js` `noPositionTagsOnYoungBoards` | err |
+| 2026-06-11 | Cap skaters by age — U7 ≤ 5, U9 ≤ 6 — so young boards stay readable. | `validators.js` `skaterCountWithinAgeCap` | err |
+| 2026-06-11 | Structured systems (power-play, breakout, gap-control, cycle, …) are U11+; gate them off U7/U9. | `validators.js` `advancedThemesGatedByAge` | err |
+| 2026-06-11 | No IntelliGym pressure mechanics (timer / scan-window / preview) on U7/U9 boards. | `validators.js` `noPressureMechanicsOnYoungBoards` | err |
+| 2026-06-11 | Flat difficulty ceiling by age — U7 caps at 1, U9 at 2. | `validators.js` `difficultyCeilingByAge` | err |
+
+See `GOLDEN-RULES-2026-06-11.md` for the full spec, lens attribution, and deferred candidates.
 
 ## Formation-design lessons (not yet validator rules — candidates to encode)
 

@@ -53,6 +53,83 @@ const cases = [
     seed: (() => { const s = clone(); s.interaction.prompt = "Tap one."; return s; })(),
     expectErr: "too short",
   },
+
+  // ── 15 new lessons (2026-06-11 batch) — see src/scenario/LESSONS.md
+  {
+    name: "exactlyOnePuck: a second puck → err",
+    seed: (() => { const s = clone(); s.actors.push({ id: "puck2", kind: "puck", x: 0.5, y: 0.5 }); return s; })(),
+    expectErr: "exactly 1 puck",
+  },
+  {
+    name: "numbersThemeMatchesActors: 2-on-1 tag on a 3-vs-1 board → err",
+    seed: (() => { const s = clone(); s.themes = ["2-on-1", "decision-making"]; return s; })(),
+    expectErr: "match the label",
+  },
+  {
+    name: "oddManRushIsActuallyOdd: odd-man tag but 3-vs-3 → err",
+    seed: (() => { const s = clone(); s.actors.push({ id: "d2", kind: "defender", x: 0.66, y: 0.30 }, { id: "d3", kind: "defender", x: 0.60, y: 0.36 }); return s; })(),
+    expectErr: "no odd man",
+  },
+  {
+    name: "shootTargetsAttackingNet: shot at own net → err",
+    seed: (() => { const s = clone(); s.interaction = { kind: "path", verb: "shoot", from: "carrier", prompt: "Rip a shot on net before the defender closes the lane down." }; s.correct = { kind: "path", end: { x: 0.10, y: 0.5, tolerance: 0.06 } }; return s; })(),
+    expectErr: "wrong way",
+  },
+  {
+    name: "backcheckHeadsToOwnNet: backcheck toward the attacking net → err",
+    seed: (() => { const s = clone(); s.interaction = { kind: "path", verb: "backcheck", from: "carrier", prompt: "Backcheck hard through the middle and take away the trailer." }; s.correct = { kind: "path", end: { x: 0.90, y: 0.5, tolerance: 0.06 } }; return s; })(),
+    expectErr: "backchecking means",
+  },
+  {
+    name: "noDefenderInsideCrease: a defender in the blue paint → warn",
+    seed: (() => { const s = clone(); s.actors.push({ id: "d2", kind: "defender", x: 0.91, y: 0.56 }); return s; })(),
+    expectWarn: "blue paint",
+  },
+  {
+    name: "goalieOnPuckToNetAngle: goalie off the shooting line → warn",
+    seed: (() => { const s = clone(); s.actors.find(a => a.id === "g").y = 0.30; return s; })(),
+    expectWarn: "puck-to-net angle",
+  },
+  {
+    name: "netFrontThemeNeedsNetFrontPresence: net-front tag, nobody at the net → warn",
+    seed: (() => { const s = clone(); s.themes = ["net-front", "decision-making"]; return s; })(),
+    expectWarn: "net-front",
+  },
+  {
+    name: "selectionAllLanesBlocked: every receiver covered → err",
+    seed: (() => { const s = clone(); s.actors.push({ id: "d2", kind: "defender", x: 0.79, y: 0.62 }); return s; })(),
+    expectErr: "unsolvable",
+  },
+  {
+    name: "selectionSingleClearLane: two open wrong receivers → warn",
+    seed: (() => { const s = clone(); s.actors = s.actors.filter(a => a.id !== "closedWing"); s.actors.push({ id: "t3", kind: "teammate", x: 0.84, y: 0.62 }, { id: "t4", kind: "teammate", x: 0.66, y: 0.30 }); s.interaction.from = ["openWing", "t3", "t4"]; return s; })(),
+    expectWarn: "ambiguous",
+  },
+  {
+    name: "noPositionTagsOnYoungBoards: RW/LW tags on a U9 board → err",
+    seed: (() => { const s = clone(); s.levels = ["U9 / Novice"]; return s; })(),
+    expectErr: "generic players",
+  },
+  {
+    name: "skaterCountWithinAgeCap: U7 board with 6 skaters → err",
+    seed: (() => { const s = clone(); s.levels = ["U7 / Initiation"]; s.actors.push({ id: "d2", kind: "defender", x: 0.66, y: 0.30 }, { id: "d3", kind: "defender", x: 0.60, y: 0.36 }); return s; })(),
+    expectErr: "cap is",
+  },
+  {
+    name: "advancedThemesGatedByAge: power-play on a U9 board → err",
+    seed: (() => { const s = clone(); s.levels = ["U9 / Novice"]; s.themes = ["power-play", "decision-making"]; return s; })(),
+    expectErr: "U11+",
+  },
+  {
+    name: "noPressureMechanicsOnYoungBoards: timer on a U9 board → err",
+    seed: (() => { const s = clone(); s.levels = ["U9 / Novice"]; s.timer = { duration: 8000 }; return s; })(),
+    expectErr: "pressure mechanics",
+  },
+  {
+    name: "difficultyCeilingByAge: difficulty 3 on a U7 board → err",
+    seed: (() => { const s = clone(); s.levels = ["U7 / Initiation"]; s.difficulty = 3; return s; })(),
+    expectErr: "ceiling for this age",
+  },
 ];
 
 let failed = 0;
@@ -60,6 +137,7 @@ for (const c of cases) {
   const r = lintScenario(c.seed);
   let pass;
   if (c.expectOk) pass = r.ok === true;
+  else if (c.expectWarn) pass = (r.warns || []).some(w => w.includes(c.expectWarn));
   else pass = !r.ok && r.errs.some(e => e.includes(c.expectErr));
   console.log(`${pass ? "PASS" : "FAIL"}  ${c.name}`);
   if (!pass) {

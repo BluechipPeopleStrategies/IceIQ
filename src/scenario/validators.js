@@ -21,7 +21,7 @@ export const THEME_VOCAB = new Set([
   "offensive-zone", "defensive-zone-coverage", "neutral-zone",
   "zone-entry", "zone-exit", "face-off", "net-front", "cycle",
   // Numbers
-  "1-on-1", "2-on-1", "3-on-2", "odd-man-rush",
+  "1-on-1", "2-on-1", "3-on-1", "3-on-2", "odd-man-rush",
   // Skill / cognitive concepts
   "decision-making", "vision", "puck-support", "positioning",
   "pass-selection", "shot-selection", "gap-control", "angling",
@@ -73,6 +73,22 @@ function actorOnStage(actor, view) {
   if (view === "left")    return actor.x <= 0.55;
   if (view === "neutral") return actor.x >= 0.30 && actor.x <= 0.70;
   return true;
+}
+
+// Youngest U-number across s.levels (e.g. ["U9 / Novice","U11 / Atom"] → 9).
+// The youngest listed age governs age-appropriateness checks. Returns Infinity
+// when no level parses, so older/unlabeled boards are never age-gated.
+function youngestU(s) {
+  const nums = (s.levels || [])
+    .map(l => { const m = String(l).match(/U\s*(\d+)/i); return m ? +m[1] : null; })
+    .filter(n => n != null);
+  return nums.length ? Math.min(...nums) : Infinity;
+}
+
+// Attacking net center by view: right/full/neutral attack right (x≈0.92),
+// left-view attacks left (x≈0.08). Used by the net-direction + net-front rules.
+function attackingNetX(view) {
+  return view === "left" ? 0.08 : 0.92;
 }
 
 // ───────────────────────────────────────────────────────────────────────
@@ -642,6 +658,246 @@ const rules = [
     const offenders = s.themes.filter(t => !THEME_VOCAB.has(t));
     if (offenders.length) {
       return { kind: "warn", msg: `themes outside the controlled vocabulary: ${offenders.join(", ")} — use the canonical names so filtering keeps working` };
+    }
+    return null;
+  },
+
+  // ═══════════════════════════════════════════════════════════════════════
+  // NEW LESSONS — 2026-06-11 batch (see GOLDEN-RULES-2026-06-11.md).
+  // Authored across four coach lenses: hockey-IQ, spatial/proxemics,
+  // antagonistic (anti-ambiguity), and kid-clarity/age-curriculum.
+  // ═══════════════════════════════════════════════════════════════════════
+
+  // ── HOCKEY-IQ: legality & read sanity
+
+  // Every board trains "where is the puck" — 0 or 2 pucks is physically
+  // incoherent. No gate; runs on every board.
+  function exactlyOnePuck(s) {
+    const pucks = (s.actors || []).filter(a => a.kind === "puck");
+    if (pucks.length === 1) return null;
+    return { kind: "err", msg: `expected exactly 1 puck, found ${pucks.length} — every board needs one and only one puck` };
+  },
+
+  // A strict N-on-M theme is the lesson; the ice must match it. Attackers =
+  // player + teammates; defenders = defender kind (goalie excluded from the
+  // rush count). Only fires when a literal "N-on-M" theme is present.
+  function numbersThemeMatchesActors(s) {
+    const ratio = (s.themes || []).find(t => /^\d+-on-\d+$/.test(t));
+    if (!ratio) return null;
+    const [A, D] = ratio.split("-on-").map(Number);
+    const atk = (s.actors || []).filter(a => a.kind === "player" || a.kind === "teammate").length;
+    const def = (s.actors || []).filter(a => a.kind === "defender").length;
+    if (atk !== A || def !== D) {
+      return { kind: "err", msg: `theme "${ratio}" expects ${A} attacker(s) vs ${D} defender(s) but the board has ${atk} vs ${def} — match the label to the ice or change the tag` };
+    }
+    return null;
+  },
+
+  // Advantage themes must actually show the advantage. odd-man-rush is a hard
+  // err (the whole read depends on the extra man); power-play / penalty-kill
+  // warn, since a half-view can legitimately crop a teammate out of frame.
+  function oddManRushIsActuallyOdd(s) {
+    const T = new Set(s.themes || []);
+    const atk = (s.actors || []).filter(a => a.kind === "player" || a.kind === "teammate").length;
+    const def = (s.actors || []).filter(a => a.kind === "defender").length;
+    if (T.has("odd-man-rush") && !(atk > def)) {
+      return { kind: "err", msg: `themed "odd-man-rush" but attackers (${atk}) don't outnumber defenders (${def}) — there's no odd man on the ice` };
+    }
+    if (T.has("power-play") && !(atk > def)) {
+      return { kind: "warn", msg: `themed "power-play" but attackers (${atk}) don't outnumber defenders (${def}) in frame — show your man-advantage` };
+    }
+    if (T.has("penalty-kill") && !(def > atk)) {
+      return { kind: "warn", msg: `themed "penalty-kill" but defenders (${def}) don't outnumber your side (${atk}) in frame — show the kill being outnumbered` };
+    }
+    return null;
+  },
+
+  // A "shoot" must go at the ATTACKING net, never your own. Goes beyond
+  // verbMatchesContext (which accepts either net) by using the view's attack
+  // direction. Only the wrong-net case errs; "not near any net" stays with the
+  // existing warn.
+  function shootTargetsAttackingNet(s) {
+    if (s.interaction?.kind !== "path" || s.interaction.verb !== "shoot") return null;
+    const end = resolveTargetCoords(s.correct?.end);
+    if (!end) return null;
+    const view = s.stage?.view;
+    const attackX = attackingNetX(view);
+    const ownX = view === "left" ? 0.92 : 0.08;
+    if (Math.abs(end.x - ownX) < Math.abs(end.x - attackX)) {
+      return { kind: "err", msg: `verb="shoot" but correct.end (x=${end.x.toFixed(2)}) is closer to your OWN net (x≈${ownX}) than the attacking net (x≈${attackX}) — you're shooting the wrong way` };
+    }
+    return null;
+  },
+
+  // Backchecking is skating back to defend; a "backcheck" that travels toward
+  // the attacking net inverts the lesson. Own net is left (x→0) in right/full
+  // view, right (x→1) in left-view.
+  function backcheckHeadsToOwnNet(s) {
+    if (s.interaction?.kind !== "path" || s.interaction.verb !== "backcheck") return null;
+    const from = s.actors?.find(a => a.id === s.interaction.from);
+    const end = resolveTargetCoords(s.correct?.end);
+    if (!from || !end) return null;
+    const towardOwn = s.stage?.view === "left" ? (end.x - from.x) : (from.x - end.x);
+    if (towardOwn < -0.03) {
+      return { kind: "err", msg: `verb="backcheck" but the path moves toward the attacking net (Δ toward own net = ${towardOwn.toFixed(2)}) — backchecking means skating back to your own end` };
+    }
+    return null;
+  },
+
+  // ── SPATIAL / PROXEMICS
+
+  // Only the goalie belongs in the blue paint; a field defender drawn in the
+  // crease reads as a second goalie. Warn — a goal-line scramble is a rare but
+  // legitimate exception worth a human look.
+  function noDefenderInsideCrease(s) {
+    for (const d of (s.actors || []).filter(a => a.kind === "defender")) {
+      const inRight = d.x >= 0.88 && d.x <= 0.95 && Math.abs(d.y - 0.5) < 0.08;
+      const inLeft  = d.x >= 0.05 && d.x <= 0.12 && Math.abs(d.y - 0.5) < 0.08;
+      if (inRight || inLeft) {
+        return { kind: "warn", msg: `defender "${d.id}" at (${d.x.toFixed(2)},${d.y.toFixed(2)}) is inside the goalie's crease — only the goalie belongs in the blue paint; pull the defender out to the net-front` };
+      }
+    }
+    return null;
+  },
+
+  // The goalie must sit on the puck-to-net shooting line, not parked off-angle.
+  // Distinct from goalieInCrease (position-in-crease only). Skips a goalie that's
+  // out challenging, and a puck on the goal line (angle is degenerate there).
+  function goalieOnPuckToNetAngle(s) {
+    const goalie = (s.actors || []).find(a => a.kind === "goalie");
+    const puck = (s.actors || []).find(a => a.kind === "puck");
+    if (!goalie || !puck) return null;
+    const netX = goalie.x > 0.5 ? 0.92 : 0.08;
+    if (Math.abs(goalie.x - netX) > 0.10) return null;   // out challenging — skip
+    if (Math.abs(netX - puck.x) < 0.05) return null;     // puck on the goal line — degenerate
+    const expectedY = puck.y + (goalie.x - puck.x) * (0.5 - puck.y) / (netX - puck.x);
+    if (Math.abs(goalie.y - expectedY) > 0.12) {
+      return { kind: "warn", msg: `goalie "${goalie.id}" (y=${goalie.y.toFixed(2)}) is off the puck-to-net angle (expected y≈${expectedY.toFixed(2)} for a puck at y=${puck.y.toFixed(2)}) — center the goalie on the shooting line` };
+    }
+    return null;
+  },
+
+  // A board themed "net-front" must have a teammate planted at the net, or it
+  // contradicts its own premise (a body in front of the goalie to screen/tip).
+  function netFrontThemeNeedsNetFrontPresence(s) {
+    if (!(s.themes || []).includes("net-front")) return null;
+    const net = { x: attackingNetX(s.stage?.view), y: 0.5 };
+    const present = (s.actors || []).some(a => a.kind === "teammate" && distance(a, net) < 0.16);
+    if (!present) {
+      return { kind: "warn", msg: `themed "net-front" but no teammate is within 0.16 of the net — the screen/tip premise needs a body in front of the goalie` };
+    }
+    return null;
+  },
+
+  // ── ANTAGONISTIC: anti-ambiguity (receiver-pick boards)
+
+  // A receiver-pick board where EVERY selectable teammate's lane is blocked is
+  // unsolvable — the keyed answer is a forced loss. Complements
+  // selectionOpenLaneClear (which only checks the correct lane in isolation).
+  function selectionAllLanesBlocked(s) {
+    if (s.interaction?.kind !== "selection" && s.interaction?.kind !== "sequence") return null;
+    const player = (s.actors || []).find(a => a.kind === "player");
+    const defs = (s.actors || []).filter(a => a.kind === "defender");
+    if (!player || !defs.length) return null;
+    const byId = Object.fromEntries((s.actors || []).map(a => [a.id, a]));
+    const cands = (s.interaction.from || []).map(id => byId[id]).filter(Boolean);
+    if (cands.length < 2 || !cands.every(a => a.kind === "teammate")) return null; // receiver-pick only
+    const open = cands.filter(t => !defs.some(d => lineHitsCircle(player, t, d, INTERCEPT_RADIUS)));
+    if (open.length === 0) {
+      return { kind: "err", msg: `every selectable teammate's passing lane is blocked by a defender — the board is unsolvable, there's no open receiver to pick` };
+    }
+    return null;
+  },
+
+  // Exactly one receiver should be cleanly open. If two or more WRONG candidates
+  // also have clear lanes, the player can be marked wrong for an equally-valid
+  // pass — the read is ambiguous.
+  function selectionSingleClearLane(s) {
+    if (s.interaction?.kind !== "selection" && s.interaction?.kind !== "sequence") return null;
+    const player = (s.actors || []).find(a => a.kind === "player");
+    const defs = (s.actors || []).filter(a => a.kind === "defender");
+    if (!player || !defs.length) return null;
+    const byId = Object.fromEntries((s.actors || []).map(a => [a.id, a]));
+    const cands = (s.interaction.from || []).map(id => byId[id]).filter(Boolean);
+    if (cands.length < 2 || !cands.every(a => a.kind === "teammate")) return null;
+    const correctIds = new Set(s.correct?.ids || []);
+    const clearWrong = cands.filter(a => !correctIds.has(a.id) &&
+      !defs.some(d => lineHitsCircle(player, a, d, INTERCEPT_RADIUS)));
+    if (clearWrong.length >= 2) {
+      return { kind: "warn", msg: `${clearWrong.length} wrong candidates (${clearWrong.map(a => a.id).join(", ")}) also have clear passing lanes — the read is ambiguous; only one receiver should be cleanly open, block the decoys' lanes` };
+    }
+    return null;
+  },
+
+  // ── KID-CLARITY / AGE-CURRICULUM (gate on the youngest listed U-number)
+
+  // U7/U9 think in "me and the puck," not positions — only "YOU" may carry a
+  // tag. (Distinct from positionTagsAlignWithLocation, which is geometry.)
+  function noPositionTagsOnYoungBoards(s) {
+    const u = youngestU(s);
+    if (u > 10) return null;
+    for (const a of (s.actors || [])) {
+      if (!a.tag) continue;
+      const t = String(a.tag).trim().toUpperCase();
+      if (t && t !== "YOU") {
+        return { kind: "err", msg: `U${u} boards use generic players — remove position tag "${a.tag}" from "${a.id}" (only "YOU" is allowed at this age)` };
+      }
+    }
+    return null;
+  },
+
+  // Young brains overload past a handful of bodies; cap skaters by age.
+  // (Distinct from difficultyMatchesComplexity — that caps difficulty, not the
+  // actor count, and isn't age-indexed.)
+  function skaterCountWithinAgeCap(s) {
+    const u = youngestU(s);
+    const cap = u <= 7 ? 5 : u <= 10 ? 6 : null;
+    if (cap == null) return null;
+    const skaters = (s.actors || []).filter(a => a.kind === "player" || a.kind === "teammate" || a.kind === "defender").length;
+    if (skaters > cap) {
+      return { kind: "err", msg: `U${u} board has ${skaters} skaters — the cap is ${cap} to keep it readable at this age; simplify the board` };
+    }
+    return null;
+  },
+
+  // Structured systems aren't introduced until U11+; tagging them on a U7/U9
+  // board teaches the wrong mental model at the wrong time.
+  function advancedThemesGatedByAge(s) {
+    const u = youngestU(s);
+    if (u > 10) return null;
+    const GATED = new Set(["power-play", "penalty-kill", "gap-control", "cycle", "regroup", "neutral-zone-trap", "breakout", "backcheck"]);
+    const offender = (s.themes || [])
+      .map(t => String(t).toLowerCase().replace(/[\s_]+/g, "-"))
+      .find(t => GATED.has(t));
+    if (offender) {
+      return { kind: "err", msg: `theme "${offender}" isn't introduced until U11+ — not age-appropriate on a U${u} board` };
+    }
+    return null;
+  },
+
+  // IntelliGym pressure tools (timer / scan-window / preview-lock) are for
+  // older, game-ready players; they only frustrate U7/U9.
+  function noPressureMechanicsOnYoungBoards(s) {
+    const u = youngestU(s);
+    if (u > 10) return null;
+    const offenders = [];
+    if (s.timer) offenders.push("timer");
+    if (s.scanWindow) offenders.push("scanWindow");
+    if (s.preview) offenders.push("preview");
+    if (offenders.length) {
+      return { kind: "err", msg: `U${u} boards must not use pressure mechanics (${offenders.join(", ")}) — timers, scan-windows and preview-locks are for older, game-ready players` };
+    }
+    return null;
+  },
+
+  // A flat difficulty ceiling by age — a 3-star cognitive load exceeds what
+  // these ages can handle no matter how few actors are on the ice.
+  function difficultyCeilingByAge(s) {
+    const u = youngestU(s);
+    const ceil = u <= 7 ? 1 : u <= 10 ? 2 : null;
+    if (ceil == null) return null;
+    if (s.difficulty != null && s.difficulty > ceil) {
+      return { kind: "err", msg: `U${u} board is difficulty ${s.difficulty} — the ceiling for this age is ${ceil}` };
     }
     return null;
   },
