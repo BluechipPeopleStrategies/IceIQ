@@ -1,6 +1,7 @@
 // System + user prompts for the three lean-gauntlet roles (creator, curriculum
 // confirmer, coach/answer-key). Each builder returns { system, prompt }. The
 // orchestrator feeds these to runAgent() and parses the JSON each role returns.
+import { renderDecisionCalibration } from "./decision-calibration.mjs";
 
 export const AGE_LEVEL = {
   U7: "U7 / Initiation", U9: "U9 / Novice", U11: "U11 / Atom",
@@ -145,6 +146,7 @@ You are an expert across all ages and all concepts. Use your judgment — do not
 A question must present a GENUINE decision: at least two options a thoughtful player would weigh,
 with at least one tempting-but-wrong distractor. If the correct answer is effectively the only
 viable option (the distractors are obviously bad), that alone is a KICK_BACK.
+${renderDecisionCalibration()}
 - If the question is clearly excellent and you would stake your name on it, verdict APPROVE.
 - If it is clearly flawed beyond a quick fix, verdict KICK_BACK with the reasons.
 - If it is a genuine judgment call where a tactical and a pedagogy coach would sharpen the

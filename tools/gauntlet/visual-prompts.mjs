@@ -3,6 +3,7 @@
 // is engine-shaped), and adds the curriculum-node + brand context.
 import { buildSystemPrompt } from "../scenario-author/prompt.js";
 import { AGE_LEVEL } from "./prompts.mjs";
+import { renderDecisionCalibration } from "./decision-calibration.mjs";
 
 export function buildVisualCreatorPrompt({ node, concept, domain, idSeed, guidance = "" }) {
   const ageDisplay = AGE_LEVEL[node.ageId];
@@ -128,6 +129,7 @@ deciding whether to convene your hockey + visual panels. Judge with your own eye
 A question must present a GENUINE decision: at least two options a thoughtful player would weigh,
 with at least one tempting-but-wrong choice. If the correct answer is the only viable option
 (one open teammate, one sensible spot, others obviously bad), that alone is a KICK_BACK.
+${renderDecisionCalibration()}
 - Clearly excellent (real decision, read is right AND the picture shows it, age-appropriate): APPROVE.
 - Clearly flawed beyond a quick fix: KICK_BACK with reasons.
 - A genuine judgment call where the read panel or the geometry panel would sharpen it: CONVENE.
@@ -153,7 +155,9 @@ FIRST, judge DECISION-RICHNESS: does the player face a GENUINE decision — at l
 thoughtful player would actually weigh, with at least one tempting-but-wrong choice? If the
 correct answer is effectively the ONLY viable option (only one open teammate, only one sensible
 spot, the other options obviously bad or impossible), that is a REVISE no matter how correct the
-answer is — a one-option question tests nothing. Then judge the rest:
+answer is — a one-option question tests nothing.
+${renderDecisionCalibration()}
+Then judge the rest:
 - KEEP: sound as-is, stands proudly beside its siblings.
 - REVISE: fixable — say exactly what (wording, a distractor, a wrong/absent label, age-fit, a
   geometry/positioning problem).
