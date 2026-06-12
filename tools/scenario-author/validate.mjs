@@ -4,6 +4,7 @@
 // scenario is internally inconsistent and we reject it.
 
 import { validateScenario } from "../../src/scenario/schema.js";
+import { stepToScenario } from "../../src/scenario/multiStep.js";
 import { resolveTarget } from "../../src/scenario/zones.js";
 import { scorePath } from "../../src/scenario/primitives/path-scorer.js";
 import { scoreSelection } from "../../src/scenario/primitives/selection-scorer.js";
@@ -12,6 +13,18 @@ import { scoreSequence } from "../../src/scenario/primitives/sequence-scorer.js"
 import { scorePlace } from "../../src/scenario/primitives/place-scorer.js";
 
 export function lintScenario(scenario) {
+  if (Array.isArray(scenario.steps)) {
+    // Validate structure across all frames first.
+    const v0 = validateScenario(scenario);
+    if (!v0.ok) return { ok: false, errs: v0.errs, warns: v0.warns || [] };
+    // Then run the full hockey lint on each frame (synthetic flat scenario).
+    const errs = [];
+    scenario.steps.forEach((_, i) => {
+      const r = lintScenario(stepToScenario(scenario, i));
+      if (!r.ok) r.errs.forEach((e) => errs.push(`step[${i}]: ${e}`));
+    });
+    return { ok: errs.length === 0, errs, warns: [] };
+  }
   const v = validateScenario(scenario);
   if (!v.ok) return { ok: false, errs: v.errs, warns: v.warns };
 

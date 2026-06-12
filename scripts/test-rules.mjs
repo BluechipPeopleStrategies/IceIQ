@@ -34,6 +34,25 @@ const cases = [
     expectOk: true,
   },
   {
+    name: "multi-step: both clean frames pass",
+    seed: (() => {
+      const s = clone();
+      const frame = () => ({ actors: JSON.parse(JSON.stringify(s.actors)), interaction: s.interaction, correct: s.correct, feedback: s.feedback });
+      return { id: s.id, type: "scenario", nodeId: s.nodeId, levels: s.levels, themes: s.themes, cat: s.cat, difficulty: s.difficulty, stage: s.stage, steps: [ { ...frame(), outcome: "x" }, frame() ] };
+    })(),
+    expectOk: true,
+  },
+  {
+    name: "multi-step: an overlapping actor in step 2 fails with step index",
+    seed: (() => {
+      const s = clone();
+      const frame = () => ({ actors: JSON.parse(JSON.stringify(s.actors)), interaction: s.interaction, correct: s.correct, feedback: s.feedback });
+      const bad = frame(); bad.actors[2].x = bad.actors[0].x; bad.actors[2].y = bad.actors[0].y; // force overlap (actors[2]=openWing, actors[0]=carrier; both non-puck)
+      return { id: s.id, type: "scenario", nodeId: s.nodeId, levels: s.levels, themes: s.themes, cat: s.cat, difficulty: s.difficulty, stage: s.stage, steps: [ { ...frame(), outcome: "x" }, bad ] };
+    })(),
+    expectErr: "step[1]",
+  },
+  {
     name: "offsidesOnEntry: puck at blue line + teammates deeper → err",
     seed: (() => { const s = clone(); s.actors.find(a => a.id === "carrier").x = 0.66; s.actors.find(a => a.id === "puck").x = 0.662; return s; })(),
     expectErr: "offsides-on-entry",
