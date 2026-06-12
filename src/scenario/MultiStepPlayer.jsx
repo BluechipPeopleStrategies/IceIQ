@@ -4,7 +4,7 @@
 // a final per-step summary. All sequencing logic lives in multiStep.js.
 import { useState } from "react";
 import ScenarioRenderer from "./ScenarioRenderer.jsx";
-import { start, stepToScenario, currentStep, record, next, isComplete, summary } from "./multiStep.js";
+import { start, frameFor, currentStep, record, next, isComplete, summary } from "./multiStep.js";
 import { C, FONT, Card } from "../shared.jsx";
 
 export default function MultiStepPlayer({ scenario, playerId, onAnswer }) {
@@ -28,7 +28,7 @@ export default function MultiStepPlayer({ scenario, playerId, onAnswer }) {
     );
   }
 
-  const frame = stepToScenario(state, state.index);
+  const frame = frameFor(state);
   const step = currentStep(state);
   const total = state.steps.length;
 

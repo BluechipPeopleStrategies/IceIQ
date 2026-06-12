@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 // Run: node src/scenario/multiStep.test.mjs
-import { normalizeSteps, stepToScenario, start, record, next, currentStep, isComplete, summary } from "./multiStep.js";
+import { normalizeSteps, stepToScenario, frameFor, start, record, next, currentStep, isComplete, summary } from "./multiStep.js";
 
 let pass = 0, fail = 0;
 const ok = (n, c) => { console.log(`${c ? "PASS" : "FAIL"}  ${n}`); c ? pass++ : fail++; };
@@ -39,6 +39,12 @@ ok("complete after last step", isComplete(st) === true);
 const sm = summary(st);
 ok("summary counts steps", sm.total === 2 && sm.correct === 1);
 ok("summary keeps per-step results", sm.perStep[0] === false && sm.perStep[1] === true);
+
+// regression: frameFor must carry the top-level fields (id/type/stage) into the
+// frame, even though the state object itself doesn't have them at the top level.
+const f = frameFor(start(multi));
+ok("frameFor carries id/type/stage from scenario", f.id === "m" && f.type === "scenario" && f.stage.view === "right");
+ok("frameFor inlines the current step", f.interaction.prompt === "p1");
 
 console.log(`\n${pass} passed, ${fail} failed`);
 process.exit(fail ? 1 : 0);

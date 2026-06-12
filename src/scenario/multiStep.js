@@ -25,6 +25,10 @@ export function start(scenario) {
   return { scenario, steps: normalizeSteps(scenario), index: 0, results: [] };
 }
 export function currentStep(state) { return state.steps[state.index]; }
+// The synthetic flat scenario to render for the current step. Takes the state
+// (not the raw scenario) so callers can't accidentally pass the state object to
+// stepToScenario and drop the top-level id/type/stage fields.
+export function frameFor(state) { return stepToScenario(state.scenario, state.index); }
 export function record(state, result) {
   const results = state.results.slice();
   results[state.index] = result;
