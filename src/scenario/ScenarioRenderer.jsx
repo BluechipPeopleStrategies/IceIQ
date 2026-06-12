@@ -4,6 +4,7 @@
 // time per answer (Hockey IntelliGym-style cognitive training).
 
 import { useEffect, useRef, useState } from "react";
+import MultiStepPlayer from "./MultiStepPlayer.jsx";
 import { validateScenario } from "./schema.js";
 import RinkStage from "./RinkStage.jsx";
 import { getPrimitive } from "./registry.js";
@@ -186,6 +187,9 @@ function BoardMC({ scenario, playerId, onAnswer }) {
 }
 
 export default function ScenarioRenderer({ scenario, playerId, mode, onAnswer }) {
+  if (Array.isArray(scenario?.steps)) {
+    return <MultiStepPlayer scenario={scenario} playerId={playerId} onAnswer={onAnswer} />;
+  }
   const [result, setResult] = useState(null);
   const startedAtRef = useRef(Date.now());
   // IntelliGym preview-lock — interaction is disabled for this many ms
