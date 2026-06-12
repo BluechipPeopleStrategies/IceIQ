@@ -42,7 +42,7 @@ const paths = {
 
 // ---------- args ----------
 function parseArgs(argv) {
-  const a = { count: 1, max: Infinity, model: "sonnet", coachModel: "claude-fable-5", rounds: 4, mock: false, dryRun: false, node: null, fillGaps: false, fast: false, fullPanel: false, debateRounds: 2, mockFail: false, visual: false, concurrency: 4, ages: null, consolidate: false, lite: false };
+  const a = { count: 1, max: Infinity, model: "sonnet", coachModel: null, rounds: 4, mock: false, dryRun: false, node: null, fillGaps: false, fast: false, fullPanel: false, debateRounds: 2, mockFail: false, visual: false, concurrency: 4, ages: null, consolidate: false, lite: false };
   for (let i = 0; i < argv.length; i++) {
     const t = argv[i];
     if (t === "--node") a.node = argv[++i];
@@ -64,6 +64,9 @@ function parseArgs(argv) {
     else if (t === "--coach-model") a.coachModel = argv[++i];
     else if (t === "--full-panel") a.fullPanel = true;
   }
+  // Coaches inherit the run's model unless --coach-model overrides it. (No
+  // opinionated default model is pinned; pass --coach-model to split them off.)
+  if (!a.coachModel) a.coachModel = a.model;
   // Both round counts must be >= 1 (a bad/zero/NaN flag would otherwise skip the
   // loop and leave panel reviews null).
   a.rounds = Math.max(1, Number.isFinite(a.rounds) ? a.rounds : 4);
