@@ -1,213 +1,160 @@
-# RinkReads Coach Agents — Fable-5 Judgment Panel
+# RinkReads Coach Agents — Fable-5 Judgment Panel (gauntlet extension)
 
 **Status:** design, ready for review · **Date:** 2026-06-11
-**Extends:** `docs/factory/2026-06-04-gauntlet-v2-design.md` (G6, G7, G7.5, G1b) and `docs/factory/SPEC.md` §15.
-**Goal:** Turn the coach roles the gauntlet only described on paper into real, autonomous
-agents that run on `claude-fable-5`, lean hard into professional-coach judgment, and slot
-into the content workflow at low token cost with high payoff.
+**Extends:** the existing `tools/gauntlet/` coach harness and
+`docs/factory/2026-06-04-gauntlet-v2-design.md` (G7 panel, G7.5 Head Coach).
+**Goal:** Make the coaches that already live in `tools/gauntlet` (a) run on
+`claude-fable-5`, (b) escalate solo-first under a Head Coach who gates the room, and (c) gain
+a retroactive `audit` mode that assesses the recent post-wipe seeds. Low token, high payoff,
+non-deterministic judgment.
 
 ---
 
-## 1. Why this exists
+## 1. What already exists (and what we are NOT rebuilding)
 
-The gauntlet v2 design names a coach panel (G7), a Head Coach decider (G7.5), a graphic
-designer (G6), and an expert-keyer for non-geometric residue (G1b). None of them exist as
-actual agents yet. This spec builds that group.
+`tools/gauntlet/` already implements the coach group as prompt-driven lenses run through
+`tools/lib/claude-agent.mjs` (which shells to the `claude` CLI with a `--model` flag,
+defaulting to `"sonnet"`). Present and reused as-is:
 
-Two constraints shape every decision:
+- **3-coach panel** debating to unanimous PASS, plus a **Head Coach** APPROVE gate
+  (`gauntlet-run.mjs`, `runPanel` + the head-coach gate). Text track and visual track.
+- **`ascii-rink.mjs`** — how a coach "sees" the board (text, phone-safe).
+- **`pool.mjs`** — parallel coach calls.
+- **`lessons.mjs` / `lessons.json` / `visual-lessons.json`** — drop-and-learn loop.
+- **`rubric.json` / `visual-rubric.json`, `prompts.mjs`, `visual-prompts.mjs`,
+  `validate-mc.mjs`, `select-targets.mjs`.**
+
+We do NOT build a parallel `.claude/agents` system. We extend this harness.
+
+The gap between what exists and what was asked is exactly three things, which this spec adds:
+
+1. The panel runs **every time**; we want **Head Coach solo-first**, convening the room only
+   on genuine judgment calls.
+2. It defaults to **sonnet**; we want **Fable 5** for the cheap, high-volume judgment passes.
+3. There is **no retroactive audit** of already-shipped content; we add one.
+
+---
+
+## 2. Two constraints that shape everything
 
 1. **Non-deterministic judgment.** The coaches are professionals, not rubric-fillers. The
-   plumbing around them is fixed; what they decide is theirs. We never script their verdicts.
-2. **Low token, high payoff.** The group runs on Fable 5, sits downstream of the free
-   deterministic gates, and uses a solo-first escalation so most items cost roughly one call.
+   plumbing is fixed; the verdicts are theirs. We never script what they decide.
+2. **Low token, high payoff.** Fable 5 for every coach call; the panel sits downstream of the
+   free deterministic checks (lint / validate / solver); solo-first escalation so most items
+   cost roughly one call.
 
 ---
 
-## 2. Architecture
+## 3. The escalation model — "Head Coach gates the room"
 
-### 2.1 Position in the workflow
+This is a new orchestration path layered over the existing panel functions.
 
-The coach group sits **after** the deterministic gates G1 through G5 (solver, validation,
-format, diversity, render). Those gates are mechanical and free. Only an item that survives
-them, and that genuinely needs human-grade judgment, reaches a coach. This positioning is the
-primary token lever: no Fable-5 call is ever spent on something a free check already settled.
-
-```
-seed + solver answer
-   -> [free gates G1..G5]
-   -> head-coach (solo, 1 call)
-        decides: is this clear?
-          yes -> GO / SEND-BACK            (done, ~1 call)
-          no  -> convene room:
-                   tactical-coach
-                   development-coach
-                   adversarial-coach
-                   diagram-coach (only if the visual is in question)
-                 -> head-coach reconciles  -> final GO / SEND-BACK
+```text
+item packet (ascii-rink board + answer/breakdown + age + curriculum tag)
+  -> head-coach reviews SOLO (1 Fable-5 call)
+       her first judgment: do I need the room?
+         clear  -> her verdict stands           (done, ~1 call)
+         unsure -> convene the existing panel:
+                     reuse runPanel (text) / hockey + visual panels (geometry)
+                   -> head-coach reconciles      -> final verdict
 ```
 
-### 2.2 Escalation model — "Head Coach gates the room"
-
-The Head Coach reviews every item solo first. Her **first** judgment is "do I need the room
-for this one?" Clear items ship on her call alone. Genuine judgment calls convene the
-specialists. She convenes the room **herself**: the `head-coach` agent is granted the `Agent`
-tool and dispatches the named specialists when she decides it is warranted. This keeps the
-escalation decision non-deterministic (she chooses) and keeps orchestration on Fable 5 rather
-than on the Opus main loop.
-
-Fallback (not built in phase 1, noted for resilience): if nested subagent dispatch proves
-flaky, a thin `/rink-review` command performs the routing while the judgments stay entirely
-in the coaches.
+- The Head Coach decides whether to convene. That decision is itself a coaching judgment, so
+  the escalation stays non-deterministic.
+- When convened, we reuse the existing `runPanel` / visual-panel functions unchanged, so the
+  specialists, the ascii-rink view, and the parallel `pool` all come for free.
+- Reconciliation follows the existing Head Coach behavior: she weighs a lone nitpick against
+  passes rather than averaging.
 
 ---
 
-## 3. The agents
+## 4. Fable 5 wiring
 
-All agents live in `IceIQ\.claude\agents\` as markdown files with frontmatter pinning
-`model: claude-fable-5`. Each agent's body is its coach persona and contract. Every agent
-reads the shared `coach-briefing.md` (see §5) for curriculum and house-style context.
-
-| Agent | Tools | Job | Structured return |
-|---|---|---|---|
-| **head-coach** | Read, Agent | Decider and reconciler. Reviews solo, decides whether to convene, runs the room, sets the final call and confidence. | `{ decision: "go"\|"send-back", confidence: 0-1, note, convened: bool, sendBackTarget? }` |
-| **tactical-coach** | Read | Is this the correct read for the situation on the ice? | `{ verdict: "pass"\|"concern", why }` |
-| **development-coach** | Read | Age and stage fairness — is this teachable and fair for this band? | `{ verdict: "pass"\|"concern", why }` |
-| **adversarial-coach** | Read | Paid to break it: can a smart kid defend the "wrong" answer? | `{ verdict: "pass"\|"concern", hole? }` |
-| **diagram-coach** | Read | Age-appropriate board. Refines seed geometry and labels, not a freehand image. | `{ seedPatch, notes }` |
-
-### 3.1 Persona notes
-
-- **head-coach** is an expert across all ages and all concepts. She owns the G7-to-G8
-  handoff and is the accountable voice. She reconciles split panels rather than averaging
-  them (one adversarial nitpick does not automatically sink two passes).
-- **tactical-coach**, **development-coach**, **adversarial-coach** are the three G7 lenses.
-  Each returns a verdict plus a short reason. They do not see each other's answers.
-- **diagram-coach** is the G6 role. It works in the engine's geometry primitives
-  (point / path / selection / sequence) and applies the marker rules: U7/U9 generic players
-  with no position tags, U11+ labeled, friendlier puck and goalie for the youngest bands. It
-  returns a seed patch the engine renders, so there are no image tokens.
-
-### 3.2 Inputs each coach receives
-
-A compact item packet: the scenario seed JSON, the solver's computed answer and `breakdown`,
-the curriculum tag, and the age band. The render is described by the seed; the diagram-coach
-is the only one that proposes geometry changes.
+`claude-agent.mjs` already takes `model`. We thread a single configurable default so the coach
+calls use `claude-fable-5` (CLI alias confirmed at build time; fall back to the full id if the
+short alias is not accepted). A `--model` / env override stays available for A/B and for
+pinning the Head Coach higher than the specialists if ever wanted. No other call-site changes:
+the harness, retries, and JSON-unwrapping are untouched.
 
 ---
 
-## 4. How you run it: `/rink-review`
+## 5. Audit mode — retroactive pass over recent seeds
 
-A project skill `/rink-review` is the entry point. It has two modes that share the exact same
-Head Coach panel; only the input source and the verb of the verdict differ.
+A new entry `tools/gauntlet-audit.mjs` (`npm run gauntlet:audit`). It reuses the same coaches
+and the same Head-Coach-gates escalation; only the input source and the verdict verb differ.
 
-### 4.1 Gate mode (default) — new content
+**Scope (locked):** all post-wipe seeds in `src/scenario/seeds/*.json` (~23 as of
+2026-06-11). **Excluded:** the 148-question `bank.json` (the bulk old bank) and
+`povQuestions.json` (dated 2026-05-02). A `--since DATE` / `--band` / `--limit` flag can narrow
+a run.
 
-For freshly generated seeds heading toward ship (the factory's G6 through G7.5). Behavior:
+**Flow per seed:**
 
-1. Takes a batch of seed files (default 5 to 10 per sitting so context loads once).
-2. Hands each item packet to **head-coach**.
-3. Prints, per item: GO or SEND-BACK, the confidence, the reconciliation note, and whether
-   the room was convened.
-4. Routes SEND-BACK items to the existing `review_questions` queue (`src/supabase.js`).
-5. Writes all verdicts to a dated run log under `docs/factory/coach-runs/` for an audit trail.
+1. Load the seed; build the standard coach packet via `ascii-rink.mjs` (+ the solver answer /
+   `breakdown` where the seed is geometric).
+2. Run the Head-Coach-gates escalation (§3).
+3. Head Coach returns an assessment verb instead of a ship verb:
+   - **KEEP** — sound as is.
+   - **REVISE** — fixable; the note says what (wording, distractor, wrong/absent diagram,
+     age-fit). The visual panel may attach a concrete geometry fix.
+   - **RETIRE** — not salvageable for this band.
 
-### 4.2 Audit mode (`--audit`) — retroactive pass over existing banks
+**Outputs:**
 
-Points the same panel at the content already shipped, to assess it after the fact. Sources:
-
-- `src/data/bank.json` (text questions, keyed by age band: currently 148 across U7 to U18)
-- `src/scenario/seeds/*.json` (geometry scenarios: currently 23)
-- `src/data/povQuestions.json` (currently 4)
-
-An input adapter normalizes each existing item into the same item packet the coaches already
-take (text or geometry, age band, curriculum tag where present, and the solver answer for
-geometry items). The Head Coach's call uses an assessment verb rather than a ship verb:
-
-- **KEEP** — sound as is.
-- **REVISE** — fixable; the note says what (wording, distractor, missing or wrong diagram,
-  age-fit). For geometry items the diagram-coach may attach a seed patch.
-- **RETIRE** — not salvageable for this band.
-
-Output is a single assessment report (`docs/factory/coach-runs/audit-YYYY-MM-DD.md`) grouped
-by age band, plus REVISE and RETIRE items routed to the review queue. Solo-first escalation
-still applies, so a clean corpus is roughly one Fable-5 call per item. Default runs the whole
-corpus; `--band U13` or a count limit can scope it for a cheaper first pass.
-
-Text-only questions have no geometry for the solver to key and no board for the diagram-coach
-to redraw; for those, the diagram-coach is invoked only when an item would clearly be better
-as a diagram, and it flags that rather than patching geometry that is not there.
-
-The command itself is thin in both modes: it loads the batch and invokes the Head Coach. All
-judgment and all escalation happen inside the agents.
-
----
-
-## 5. Token controls
-
-- **Fable 5** for every coach call.
-- **Downstream of free gates** — judgment is spent only on items that survived G1 to G5.
-- **Solo-first escalation** — most items resolve in roughly one call; the four-extra-brain
-  panel is reserved for items that earn it.
-- **Batching** — 5 to 10 items per run amortizes context load.
-- **Shared `coach-briefing.md`** — one small file (curriculum-ledger excerpt, marker rules,
-  house style, the verdict schema) that every coach reads, so context is supplied once rather
-  than re-derived per call. Kept deliberately short.
-- **Small structured returns** — verdicts are compact JSON; reasoning stays terse.
-
-Rough budget: a clear item is about 1 Fable-5 call; a convened item is about 5. With most
-items clear, the expected cost is well under two calls per item on a cheap model.
+- One report `docs/factory/coach-runs/audit-YYYY-MM-DD.md`, grouped by age band: each seed's
+  verb, confidence, the reconciliation note, and whether the room was convened.
+- REVISE and RETIRE items routed to the existing founder review queue (the `#review`
+  store / `review-queue.json`), so fixes land where Thomas already triages.
+- Nothing is auto-edited or auto-deleted; the audit only assesses and queues.
 
 ---
 
 ## 6. Implementation surface
 
-- `IceIQ\.claude\agents\head-coach.md` (+ `Agent` tool, `claude-fable-5`)
-- `IceIQ\.claude\agents\tactical-coach.md`
-- `IceIQ\.claude\agents\development-coach.md`
-- `IceIQ\.claude\agents\adversarial-coach.md`
-- `IceIQ\.claude\agents\diagram-coach.md`
-- `IceIQ\.claude\skills\rink-review\SKILL.md` (the batch entry point; gate and `--audit` modes)
-- `IceIQ\docs\factory\coach-briefing.md` (shared context the agents read)
-- `IceIQ\docs\factory\coach-runs\` (run-log and audit-report output directory)
-- An input adapter (in the skill or a small `tools/` helper) that normalizes existing
-  `bank.json` / seed / `povQuestions.json` items into the standard item packet for audit mode.
-- Reuses `src/supabase.js` `review_questions` routing; no schema changes.
+- `tools/lib/claude-agent.mjs` — default model -> `claude-fable-5` (configurable; small change).
+- `tools/gauntlet-run.mjs` — add the Head-Coach-solo-first gate function and a flag to use it
+  (the existing always-panel path stays available).
+- `tools/gauntlet-audit.mjs` — NEW. Enumerates post-wipe seeds, builds packets, runs the
+  escalation, writes the report, routes REVISE/RETIRE to the review queue.
+- `package.json` — `gauntlet:audit` script.
+- `docs/factory/coach-runs/` — report output directory (new).
+- Reuses: `ascii-rink.mjs`, `pool.mjs`, `lessons.mjs`, `rubric.json`, `prompts.mjs`,
+  `visual-prompts.mjs`, the `#review` queue store. No schema changes.
 
 ---
 
 ## 7. Testing and validation
 
-- **Golden judgment cases:** a small set of hand-labeled seeds with a known correct GO or
-  SEND-BACK (including at least one clear pass, one clear fail, one genuine close call that
-  should convene the room). Run the panel and confirm the Head Coach's call is sane and that
-  she convened on the close call but not the clear ones.
-- **Persona smoke test:** confirm each specialist returns its structured shape and that the
-  adversarial-coach actually surfaces a hole when given a deliberately weak item.
-- **No change to existing solver-golden tests** (`tools/solver-golden.mjs`); the coaches sit
-  downstream of the solver and do not touch its keying.
+- **Escalation unit test:** a clear-pass seed resolves solo (no panel call); a deliberately
+  weak seed convenes the room. Assert the Head Coach convened only on the hard one (mock the
+  agent layer as the existing `*.test.mjs` files already do via `opts.mockFail`).
+- **Audit smoke run:** run `gauntlet:audit --limit 2` against two real seeds on Fable 5,
+  confirm a grouped report is written and REVISE/RETIRE items reach the queue.
+- **No change to existing tests:** the panel, ascii-rink, pool, lessons, and validator tests
+  stay green; the new gate is additive.
+- Keep the run cheap: Fable 5 + solo-first means ~23 seeds is roughly 23 calls plus a few
+  convened panels.
 
 ---
 
 ## 8. Out of scope (this spec)
 
-- The other gauntlet gates (misconception distractors, kinematic solver, diversity and
-  reading-level gates, telemetry loop G10). Those remain in the gauntlet v2 plan.
-- Learner-targeted generation (backlog, depends on G10).
-- True freehand sketch output via the Excalidraw MCP. The engine renders from geometry, so
-  it is unnecessary now; noted only as a future option.
+- The 148-question `bank.json` and `povQuestions.json` (the old content) — explicitly not
+  audited per Thomas (2026-06-11).
+- Other gauntlet gates not already built (misconception distractors, kinematic solver,
+  diversity / reading-level gates, telemetry loop G10).
+- Auto-applying fixes. The audit assesses and queues; a human (or a later pass) edits.
 
 ---
 
 ## 9. Decisions locked (2026-06-11)
 
-- **Run model:** autonomous Claude Code subagents, non-deterministic judgment, pinned to
-  `claude-fable-5`.
-- **Escalation:** Head Coach gates the room; she convenes the panel herself via the `Agent`
-  tool.
-- **Roster:** head-coach, tactical-coach, development-coach, adversarial-coach, diagram-coach.
-- **Diagram output:** seed-geometry patch with age-appropriate markers, not an image.
-- **Entry point:** a thin `/rink-review` batch command; verdicts logged, SEND-BACKs routed to
-  the existing review queue.
-- **Two modes, one panel:** gate mode for new seeds (GO / SEND-BACK) and `--audit` mode for a
-  retroactive pass over the existing banks (KEEP / REVISE / RETIRE). Same agents, same
-  escalation; only the input source and the verdict verb differ.
+- **Build approach:** extend the existing `tools/gauntlet` harness; do not build a parallel
+  `.claude/agents` panel.
+- **Model:** coaches run on `claude-fable-5` (configurable default in `claude-agent.mjs`).
+- **Escalation:** Head Coach gates the room — solo-first, convene the existing panel only on a
+  genuine judgment call, then reconcile.
+- **Audit scope:** all post-wipe seeds (~23) in `src/scenario/seeds/`; KEEP / REVISE / RETIRE;
+  report to `docs/factory/coach-runs/`, REVISE/RETIRE to the review queue. Old bank and
+  povQuestions excluded.
+- **Judgment:** non-deterministic; the harness is fixed, the verdicts are the coaches'.
