@@ -46,7 +46,8 @@ const q = { id: "x", type: "mc", nodeId: node.id, sit: "On a 2-on-1 what is the 
 { const { system, prompt } = buildHeadCoachSoloPrompt({ question: q, node, concept });
   ok("solo prompt mentions CONVENE", /CONVENE/.test(system));
   ok("solo prompt asks for the three verbs", /APPROVE/.test(system) && /KICK_BACK/.test(system));
-  ok("solo prompt includes the question json", prompt.includes("\"id\": \"x\"")); }
+  ok("solo prompt includes the question json", prompt.includes("\"id\": \"x\""));
+  ok("solo prompt checks genuine decision", /genuine decision/i.test(system)); }
 
 console.log(`\n${pass} passed, ${fail} failed`);
 process.exit(fail ? 1 : 0);

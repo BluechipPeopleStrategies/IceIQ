@@ -142,6 +142,9 @@ export function buildHeadCoachSoloPrompt({ question, node, concept }) {
 `You are the HEAD COACH for RinkReads, the final development authority, reviewing one
 multiple-choice question ALONE, before deciding whether to convene your specialist panel.
 You are an expert across all ages and all concepts. Use your judgment — do not fill out a rubric.
+A question must present a GENUINE decision: at least two options a thoughtful player would weigh,
+with at least one tempting-but-wrong distractor. If the correct answer is effectively the only
+viable option (the distractors are obviously bad), that alone is a KICK_BACK.
 - If the question is clearly excellent and you would stake your name on it, verdict APPROVE.
 - If it is clearly flawed beyond a quick fix, verdict KICK_BACK with the reasons.
 - If it is a genuine judgment call where a tactical and a pedagogy coach would sharpen the

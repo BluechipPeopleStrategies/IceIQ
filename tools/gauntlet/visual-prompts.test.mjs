@@ -43,7 +43,9 @@ ok("extractor embeds critique", buildVisualLessonExtractorPrompt({ scenario, nod
 
   const audit = buildAuditHeadCoachPrompt({ scenario: sc2, ascii, node: n2, concept: c2 });
   ok("audit verbs are KEEP/REVISE/RETIRE", /KEEP/.test(audit.system) && /REVISE/.test(audit.system) && /RETIRE/.test(audit.system));
-  ok("audit allows CONVENE", /CONVENE/.test(audit.system)); }
+  ok("audit allows CONVENE", /CONVENE/.test(audit.system));
+  ok("visual solo checks genuine decision", /genuine decision/i.test(solo.system));
+  ok("audit checks decision-richness", /DECISION-RICHNESS/i.test(audit.system)); }
 
 console.log(`\n${pass} passed, ${fail} failed`);
 process.exit(fail ? 1 : 0);
