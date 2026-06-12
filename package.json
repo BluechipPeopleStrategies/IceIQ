@@ -30,7 +30,8 @@
     "test:coach": "node scripts/test-coach.mjs",
     "pull-reviews": "node scripts/pull-reviews.mjs",
     "gauntlet": "node tools/gauntlet-run.mjs",
-    "gauntlet:audit": "node tools/gauntlet-audit.mjs"
+    "gauntlet:audit": "node tools/gauntlet-audit.mjs",
+    "coach-review": "node tools/gauntlet-audit.mjs --sink supabase"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.103.0",

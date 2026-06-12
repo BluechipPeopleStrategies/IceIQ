@@ -20,6 +20,8 @@ import { enqueue } from "./review-store.mjs";
 import { PANEL_LENSES } from "./gauntlet/prompts.mjs";
 import { VISUAL_LENSES, buildVisualHockeyCoachPrompt, buildVisualCoachPrompt, buildVisualHeadCoachPrompt } from "./gauntlet/visual-prompts.mjs";
 import { runAgent } from "./lib/claude-agent.mjs";
+import { createCoachSink } from "./lib/coach-sink.mjs";
+import { coachRow } from "./lib/coach-core.mjs";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const root = resolve(__dirname, "..");
@@ -73,7 +75,7 @@ async function visualHeadCoachReconcile(scenario, node, concept, opts) {
 }
 
 function parseArgs(argv) {
-  const a = { mock: false, dryRun: false, limit: Infinity, band: null, ids: null, coachModel: "sonnet" };
+  const a = { mock: false, dryRun: false, limit: Infinity, band: null, ids: null, coachModel: "sonnet", sink: null };
   for (let i = 0; i < argv.length; i++) {
     const t = argv[i];
     if (t === "--mock") a.mock = true;
@@ -82,6 +84,7 @@ function parseArgs(argv) {
     else if (t === "--band") a.band = argv[++i];
     else if (t === "--ids") a.ids = argv[++i].split(",").map((s) => s.trim()).filter(Boolean);
     else if (t === "--coach-model") a.coachModel = argv[++i];
+    else if (t === "--sink") a.sink = argv[++i];
   }
   return a;
 }
@@ -99,12 +102,18 @@ async function main() {
   const runVisualPanel = makeScenarioPanel(VISUAL_LENSES, buildVisualCoachPrompt);
   const rows = [];
   console.log(`Auditing ${seeds.length} seed(s) on ${opts.coachModel}${opts.mock ? " [mock]" : ""}…\n`);
+  const coachSink = opts.sink === "supabase" ? createCoachSink() : null;
+  if (coachSink) console.log("→ writing coach verdicts to Supabase coach_reviews");
   for (const { seed } of seeds) {
     const node = nodeById(ledger, seed.nodeId) || { id: seed.nodeId, ageId: (seed.nodeId || "").split(".")[0], conceptId: (seed.nodeId || "").split(".")[1] };
     const concept = (node && node.conceptId && conceptById(ledger, node.conceptId)) || { name: node.conceptId, definition: "" };
     const ascii = asciiRink(seed);
     const r = await auditScenario({ scenario: seed, ascii, node, concept, opts, runHockeyPanel, runVisualPanel, runVisualHeadCoach: visualHeadCoachReconcile });
     rows.push({ id: seed.id, level: seed.level || seed.levels?.[0], verdict: r.verdict, confidence: r.confidence, notes: r.notes, convened: r.convened });
+    if (coachSink) {
+      try { await coachSink.upsert(coachRow({ seed, result: r, model: opts.coachModel })); }
+      catch (e) { console.error(`coach_reviews upsert failed for ${seed.id}: ${e.message}`); }
+    }
     console.log(`${r.verdict.padEnd(7)} ${seed.id}${r.convened ? " (room)" : ""}`);
     if (!opts.dryRun && verdictToRoute(r.verdict)) {
       const item = { question: seed, audit: { verdict: r.verdict, confidence: r.confidence, notes: r.notes }, queuedAt: new Date().toISOString().slice(0, 10) };
