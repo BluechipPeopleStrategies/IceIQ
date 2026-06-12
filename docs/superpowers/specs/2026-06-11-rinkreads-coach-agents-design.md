@@ -157,7 +157,9 @@ a run.
 
 - **Build approach:** extend the existing `tools/gauntlet` harness; do not build a parallel
   `.claude/agents` panel.
-- **Model:** coaches run on `claude-fable-5` (configurable default in `claude-agent.mjs`).
+- **Model:** no model is pinned for the coaches. They inherit the run's model (the existing
+  `sonnet` default) unless `--coach-model` overrides it for a given run. (Earlier drafts pinned
+  `claude-fable-5`; dropped 2026-06-11 — keep it optional, not a hardcoded default.)
 - **Escalation:** Head Coach gates the room — solo-first, convene the existing panel only on a
   genuine judgment call, then reconcile. Wired into the live generation gauntlet
   (`gauntlet-run.mjs`) as the default coach path AND reused by the audit; old full-panel flow

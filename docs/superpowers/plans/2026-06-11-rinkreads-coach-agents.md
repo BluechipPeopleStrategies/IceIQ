@@ -705,7 +705,7 @@ async function visualHeadCoachReconcile(scenario, node, concept, opts) {
 }
 
 function parseArgs(argv) {
-  const a = { mock: false, dryRun: false, limit: Infinity, band: null, coachModel: "claude-fable-5" };
+  const a = { mock: false, dryRun: false, limit: Infinity, band: null, coachModel: "sonnet" };
   for (let i = 0; i < argv.length; i++) {
     const t = argv[i];
     if (t === "--mock") a.mock = true;
