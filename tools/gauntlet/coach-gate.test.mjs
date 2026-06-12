@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 // Run: node tools/gauntlet/coach-gate.test.mjs
-import { coachGate } from "./coach-gate.mjs";
+import { coachGate, visualCoachGate, auditScenario } from "./coach-gate.mjs";
 
 let pass = 0, fail = 0;
 const ok = (n, c) => { console.log(`${c ? "PASS" : "FAIL"}  ${n}`); c ? pass++ : fail++; };
@@ -37,6 +37,26 @@ await (async () => {
   // CONVENE + panel fails -> not ok
   const r4 = await coachGate({ question: q, node, concept, opts: { mock: true, mockSolo: "CONVENE" }, runPanel: mkPanel(false), runHeadCoach: mkHead(true) });
   ok("CONVENE + panel fail -> not ok", r4.ok === false);
+})();
+
+await (async () => {
+  const scenario = { id: "s1", type: "scenario", actors: [] };
+  const ascii = "RINK";
+  const mkP = (okv) => { let c = false; const fn = async () => { c = true; return { ok: okv, critiques: okv ? [] : ["x"] }; }; fn.was = () => c; return fn; };
+  const mkH = (okv) => async () => ({ ok: okv, notes: [] });
+
+  // visual APPROVE -> panels untouched
+  const hp = mkP(true), vp = mkP(true);
+  const rv = await visualCoachGate({ scenario, ascii, node, concept, opts: { mock: true, mockSolo: "APPROVE" }, runHockeyPanel: hp, runVisualPanel: vp, runVisualHeadCoach: mkH(true) });
+  ok("visual APPROVE -> ok", rv.ok === true);
+  ok("visual APPROVE -> hockey panel untouched", hp.was() === false);
+
+  // audit returns the verdict verb straight through (mock)
+  const a1 = await auditScenario({ scenario, ascii, node, concept, opts: { mock: true, mockAudit: "REVISE" }, runHockeyPanel: mkP(true), runVisualPanel: mkP(true), runVisualHeadCoach: mkH(true) });
+  ok("audit REVISE passthrough", a1.verdict === "REVISE");
+  // audit CONVENE in mock resolves to KEEP when panels pass
+  const a2 = await auditScenario({ scenario, ascii, node, concept, opts: { mock: true, mockAudit: "CONVENE" }, runHockeyPanel: mkP(true), runVisualPanel: mkP(true), runVisualHeadCoach: mkH(true) });
+  ok("audit CONVENE+pass -> KEEP", a2.verdict === "KEEP");
 })();
 
 console.log(`\n${pass} passed, ${fail} failed`);
