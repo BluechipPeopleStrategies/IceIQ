@@ -42,7 +42,7 @@ const paths = {
 
 // ---------- args ----------
 function parseArgs(argv) {
-  const a = { count: 1, max: Infinity, model: "sonnet", rounds: 4, mock: false, dryRun: false, node: null, fillGaps: false, fast: false, debateRounds: 2, mockFail: false, visual: false, concurrency: 4, ages: null, consolidate: false, lite: false };
+  const a = { count: 1, max: Infinity, model: "sonnet", coachModel: "claude-fable-5", rounds: 4, mock: false, dryRun: false, node: null, fillGaps: false, fast: false, fullPanel: false, debateRounds: 2, mockFail: false, visual: false, concurrency: 4, ages: null, consolidate: false, lite: false };
   for (let i = 0; i < argv.length; i++) {
     const t = argv[i];
     if (t === "--node") a.node = argv[++i];
@@ -61,6 +61,8 @@ function parseArgs(argv) {
     else if (t === "--concurrency") a.concurrency = parseInt(argv[++i], 10);
     else if (t === "--consolidate") a.consolidate = true;
     else if (t === "--lite") a.lite = true;
+    else if (t === "--coach-model") a.coachModel = argv[++i];
+    else if (t === "--full-panel") a.fullPanel = true;
   }
   // Both round counts must be >= 1 (a bad/zero/NaN flag would otherwise skip the
   // loop and leave panel reviews null).
@@ -135,7 +137,7 @@ async function runPanel(q, node, concept, opts) {
       }
       const peers = others ? others.filter((o) => o.key !== lens.key) : null;
       let r;
-      try { r = await runAgent({ ...buildPanelCoachPrompt({ question: q, node, concept, lens, others: peers }), model: opts.model }); }
+      try { r = await runAgent({ ...buildPanelCoachPrompt({ question: q, node, concept, lens, others: peers }), model: opts.coachModel }); }
       catch (e) { r = { verdict: "REVISE", critique: [`${lens.key} error: ${e.message}`] }; }
       return { key: lens.key, verdict: r.verdict, critique: r.critique || [] };
     }));
@@ -148,7 +150,7 @@ async function runPanel(q, node, concept, opts) {
 async function runHeadCoach(q, node, concept, opts) {
   if (opts.mock) return opts.mockFail ? { ok: false, notes: ["[mock] head coach kickback"] } : { ok: true, notes: [] };
   let r;
-  try { r = await runAgent({ ...buildHeadCoachPrompt({ question: q, node, concept }), model: opts.model }); }
+  try { r = await runAgent({ ...buildHeadCoachPrompt({ question: q, node, concept }), model: opts.coachModel }); }
   catch (e) { return { ok: false, notes: [`head coach error: ${e.message}`] }; }
   return { ok: r.verdict === "APPROVE", notes: r.notes || [] };
 }
@@ -249,7 +251,7 @@ async function runScenarioPanel(scenario, node, concept, opts, { lenses, makePro
       }
       const peers = others ? others.filter((o) => o.key !== lens.key) : null;
       let r;
-      try { r = await runAgent({ ...makePrompt({ scenario, ascii, node, concept, lens, others: peers }), model: opts.model }); }
+      try { r = await runAgent({ ...makePrompt({ scenario, ascii, node, concept, lens, others: peers }), model: opts.coachModel }); }
       catch (e) { r = { verdict: "REVISE", critique: [`${lens.key} error: ${e.message}`] }; }
       return { key: lens.key, verdict: r.verdict, critique: r.critique || [] };
     }));
@@ -261,7 +263,7 @@ async function runScenarioPanel(scenario, node, concept, opts, { lenses, makePro
 async function runVisualHeadCoach(scenario, node, concept, opts) {
   if (opts.mock) return opts.mockFail ? { ok: false, notes: ["[mock] head coach kickback"] } : { ok: true, notes: [] };
   let r;
-  try { r = await runAgent({ ...buildVisualHeadCoachPrompt({ scenario, node, concept }), model: opts.model }); }
+  try { r = await runAgent({ ...buildVisualHeadCoachPrompt({ scenario, node, concept }), model: opts.coachModel }); }
   catch (e) { return { ok: false, notes: [`head coach error: ${e.message}`] }; }
   return { ok: r.verdict === "APPROVE", notes: r.notes || [] };
 }
