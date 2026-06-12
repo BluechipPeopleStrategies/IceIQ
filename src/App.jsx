@@ -24,6 +24,7 @@ import { CoachChallengeSection, ChallengeCard, ChallengeRunScreen } from "./team
 import { ToastContainer, toast } from "./toast.jsx";
 import { QotDCard, QotDScreen } from "./questionOfDay.jsx";
 import { SpeedRoundCard, SpeedRoundScreen } from "./speedRound.jsx";
+import CognitiveGym from "./cognitive-gym/CognitiveGym";
 import { AdminRoute, AdminLayout } from "./admin.jsx";
 import { getWeeklyStreak, bumpWeeklyStreak, topCategoryStreak, updateCategoryStreaks } from "./utils/streaks.js";
 import { canSwitchAgeGroup, recordAgeGroupSwitch, getAgeGroupLock, setAgeGroupLock, checkSeasonReset } from "./utils/deviceLock";
@@ -1545,6 +1546,16 @@ function Home({ player, onNav, demoMode, subscriptionTier, questFlagsBump, onPro
                 <div style={{fontSize:10,letterSpacing:".14em",textTransform:"uppercase",color:C.purple,fontWeight:800}}>Game Sense Profile</div>
                 <div style={{fontSize:12,color:C.dim,marginTop:1}}>Spider chart · Competencies · Trend</div>
               </div>
+            </div>
+          </div>
+        </button>
+
+        <button onClick={() => onNav("cogym")} style={{width:"100%",display:"block",textAlign:"left",background:`linear-gradient(135deg,rgba(91,164,232,.14),rgba(91,164,232,.03))`,border:`1px solid rgba(91,164,232,.35)`,borderRadius:14,padding:"1rem 1.1rem",cursor:"pointer",color:C.white,fontFamily:FONT.body,marginBottom:"1rem",position:"relative",overflow:"hidden"}}>
+          <div style={{display:"flex",alignItems:"center",gap:".6rem"}}>
+            <span style={{fontSize:20}}>🧠</span>
+            <div>
+              <div style={{fontSize:10,letterSpacing:".14em",textTransform:"uppercase",color:"#5ba4e8",fontWeight:800}}>Cognitive Gym</div>
+              <div style={{fontSize:12,color:C.dim,marginTop:1}}>Anticipation · Awareness · Reaction</div>
             </div>
           </div>
         </button>
@@ -8193,6 +8204,7 @@ export default function App() {
         {screen === "report"  && <Report player={tierLimitedPlayer(player, tier)} onBack={()=>setScreen("home")} demoCoachData={demoMode?demoCoachRatings:null} tier={tier} onUpgrade={(f,t)=>promptUpgrade(f,t)}/>}
         {screen === "gamesense" && <Suspense fallback={<LazyFallback/>}><GameSenseReportScreen player={player} onBack={()=>setScreen("home")} demoMode={demoMode} demoCoachData={demoMode?demoCoachRatings:null} onNavigate={setScreen}/></Suspense>}
         {screen === "journey" && <JourneyScreen player={player} tier={tier} demoMode={demoMode} onBack={()=>setScreen("home")} onNav={setScreen} onUpgrade={promptUpgrade}/>}
+        {screen === "cogym" && <CognitiveGym playerId={player.id || "__demo__"} onBack={()=>setScreen("home")}/>}
         {screen === "training" && (
           <div style={{minHeight:"100vh",background:C.bg,color:C.white,fontFamily:FONT.body,paddingBottom:80}}>
             <StickyHeader>

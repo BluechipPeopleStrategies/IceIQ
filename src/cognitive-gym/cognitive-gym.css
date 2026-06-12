@@ -1,0 +1,307 @@
+/* Cognitive Gym styles. All colors live in the :root-scoped block below —
+   edit that one block to match the RinkReads brand. */
+
+.gym-root {
+  --gym-bg: #0b1b2b;
+  --gym-panel: #112b44;
+  --gym-text: #eaf2f8;
+  --gym-muted: #9db8c9;
+  --gym-blue: #1b6cb0;
+  --gym-red: #c8102e;
+  --gym-gold: #f2b705;
+  --gym-orange: #e8590c;
+  --gym-signal-blue: #2e9fe6;
+  --gym-radius: 14px;
+
+  background: var(--gym-bg);
+  color: var(--gym-text);
+  min-height: 100%;
+  padding: 20px 16px 40px;
+  box-sizing: border-box;
+}
+
+.gym-root *,
+.gym-root *:before,
+.gym-root *:after {
+  box-sizing: inherit;
+}
+
+/* Header */
+.gym-header h1 {
+  margin: 0 0 4px;
+  font-size: 1.7rem;
+  letter-spacing: 0.01em;
+}
+
+.gym-sub {
+  margin: 0 0 18px;
+  color: var(--gym-muted);
+  font-size: 0.95rem;
+  max-width: 46ch;
+}
+
+/* Stat row */
+.gym-stats {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 22px;
+}
+
+.gym-stat {
+  background: var(--gym-panel);
+  border: 1px solid #1e3f5f;
+  border-radius: var(--gym-radius);
+  padding: 10px 14px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: 84px;
+}
+
+.gym-stat-num {
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--gym-gold);
+  line-height: 1.1;
+}
+
+.gym-stat-label {
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--gym-muted);
+}
+
+/* Drill grid */
+.gym-grid {
+  display: grid;
+  gap: 12px;
+  grid-template-columns: 1fr;
+}
+
+@media (min-width: 700px) {
+  .gym-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+.gym-drill-card {
+  text-align: left;
+  background: var(--gym-panel);
+  border: 1px solid #1e3f5f;
+  border-radius: var(--gym-radius);
+  padding: 16px;
+  color: var(--gym-text);
+  cursor: pointer;
+  transition: transform 0.12s ease, border-color 0.12s ease;
+  font: inherit;
+}
+
+.gym-drill-card:hover,
+.gym-drill-card:focus-visible {
+  transform: translateY(-2px);
+  border-color: var(--gym-gold);
+  outline: none;
+}
+
+.gym-skill-tag {
+  display: inline-block;
+  font-size: 0.65rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--gym-bg);
+  background: var(--gym-gold);
+  border-radius: 999px;
+  padding: 3px 9px;
+  margin-bottom: 8px;
+  font-weight: 700;
+}
+
+.gym-drill-card h3 {
+  margin: 0 0 4px;
+  font-size: 1.1rem;
+}
+
+.gym-drill-card p {
+  margin: 0 0 12px;
+  color: var(--gym-muted);
+  font-size: 0.88rem;
+}
+
+.gym-card-meta {
+  display: flex;
+  gap: 12px;
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 0.78rem;
+  color: var(--gym-muted);
+}
+
+.gym-card-trains {
+  font-size: 0.78rem;
+  color: var(--gym-gold);
+  margin: -6px 0 12px !important;
+}
+
+/* Drill chrome */
+.gym-drill-bar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 14px;
+}
+
+.gym-chip {
+  background: var(--gym-panel);
+  border: 1px solid #1e3f5f;
+  border-radius: 999px;
+  padding: 5px 12px;
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 0.78rem;
+}
+
+/* Buttons */
+.gym-btn {
+  background: var(--gym-gold);
+  color: var(--gym-bg);
+  border: none;
+  border-radius: 10px;
+  padding: 11px 22px;
+  font-size: 0.95rem;
+  font-weight: 700;
+  cursor: pointer;
+  font-family: inherit;
+}
+
+.gym-btn:active {
+  transform: scale(0.98);
+}
+
+.gym-btn-ghost {
+  background: transparent;
+  color: var(--gym-muted);
+  border: 1px solid #1e3f5f;
+  font-weight: 600;
+}
+
+.gym-row {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+}
+
+/* Cards (intro / results) */
+.gym-card {
+  background: var(--gym-panel);
+  border: 1px solid #1e3f5f;
+  border-radius: var(--gym-radius);
+  padding: 24px 20px;
+  max-width: 440px;
+  margin: 24px auto;
+  text-align: center;
+}
+
+.gym-card h2 {
+  margin: 0 0 8px;
+}
+
+.gym-card p {
+  color: var(--gym-muted);
+  margin: 0 0 18px;
+  font-size: 0.95rem;
+}
+
+.gym-score {
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 3.4rem;
+  font-weight: 800;
+  color: var(--gym-gold);
+  line-height: 1;
+  margin-bottom: 8px;
+}
+
+.gym-hint {
+  text-align: center;
+  color: var(--gym-gold);
+  font-weight: 600;
+  margin: 0 0 10px;
+  min-height: 1.3em;
+}
+
+/* Canvas surface */
+.gym-canvas {
+  width: 100%;
+  border-radius: var(--gym-radius);
+  touch-action: none;
+  display: block;
+}
+
+/* Reaction-drill signal light */
+.gym-light {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  max-width: 440px;
+  height: 300px;
+  margin: 10px auto 0;
+  border: none;
+  border-radius: var(--gym-radius);
+  font-size: 1.9rem;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  cursor: pointer;
+  color: var(--gym-text);
+  background: var(--gym-panel);
+  touch-action: manipulation;
+  -webkit-user-select: none;
+  user-select: none;
+  font-family: inherit;
+}
+
+.gym-light.is-wait {
+  background: var(--gym-panel);
+  color: var(--gym-muted);
+}
+
+.gym-light.is-go {
+  background: var(--gym-signal-blue);
+  color: #06283d;
+}
+
+.gym-light.is-nogo {
+  background: var(--gym-orange);
+}
+
+.gym-light.is-good {
+  background: #0f4a7d;
+}
+
+.gym-light.is-bad {
+  background: #8a3a09;
+}
+
+/* "What this trains" callout */
+.gym-trains {
+  text-align: left;
+  background: #1b6cb01f;
+  border-left: 3px solid var(--gym-blue);
+  border-radius: 0 8px 8px 0;
+  padding: 10px 14px;
+  margin: 0 0 18px;
+}
+
+.gym-trains strong {
+  display: block;
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--gym-gold);
+  margin-bottom: 4px;
+}
+
+.gym-trains span {
+  color: var(--gym-text);
+  font-size: 0.88rem;
+  line-height: 1.45;
+}
