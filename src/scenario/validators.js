@@ -519,6 +519,12 @@ const rules = [
   // shading wide still counts; corner-parked defenders don't.
   function defenderGoalSide(s) {
     if (s.stage?.zone !== "off-zone") return null;
+    // Forecheck scenes invert this rule: the player pressures the puck CARRIER
+    // directly, so there is intentionally no opponent goal-side of the puck "to
+    // beat". Detected by the forecheck-pressure node / theme.
+    const isForecheck = /forecheck/i.test(s.nodeId || "") ||
+      (Array.isArray(s.themes) && s.themes.some(t => /forecheck/i.test(t)));
+    if (isForecheck) return null;
     const goalie = (s.actors || []).find(a => a.kind === "goalie");
     const puck = (s.actors || []).find(a => a.kind === "puck");
     const defs = (s.actors || []).filter(a => a.kind === "defender");
