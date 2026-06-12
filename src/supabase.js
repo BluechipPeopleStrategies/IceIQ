@@ -911,3 +911,35 @@ export async function killAdminQuestion(id) {
 export async function unkillAdminQuestion(id, restoreStatus = "Draft") {
   return updateAdminQuestion(id, { status: restoreStatus, killed_at: null });
 }
+
+// ── Scenario review (mobile /review deck) ───────────────────────────────
+export async function upsertScenarioReview({ scenario_id, verdict, note, board_hash }) {
+  if (!supabase) return { ok: false, offline: true };
+  const session = await getSession();
+  const email = session?.user?.email;
+  if (!email) return { ok: false, error: "not signed in" };
+  const { error } = await supabase.from("scenario_reviews").upsert(
+    {
+      scenario_id,
+      reviewer_email: email,
+      verdict,
+      note: note || null,
+      board_hash: board_hash || null,
+      updated_at: new Date().toISOString(),
+    },
+    { onConflict: "scenario_id,reviewer_email" },
+  );
+  return error ? { ok: false, error: error.message } : { ok: true };
+}
+
+export async function listMyReviews() {
+  if (!supabase) return [];
+  const session = await getSession();
+  const email = session?.user?.email;
+  if (!email) return [];
+  const { data, error } = await supabase
+    .from("scenario_reviews")
+    .select("scenario_id,verdict,note,board_hash,updated_at")
+    .eq("reviewer_email", email);
+  return error ? [] : (data || []);
+}
