@@ -47,7 +47,10 @@ The gap between what exists and what was asked is exactly three things, which th
 
 ## 3. The escalation model — "Head Coach gates the room"
 
-This is a new orchestration path layered over the existing panel functions.
+This is a new orchestration path layered over the existing panel functions. It is shared by
+**both** entry points: the live generation gauntlet (`gauntlet-run.mjs`, G7/G7.5) and the new
+audit (§5). The judgment coaches are wired into the gauntlet itself, not bolted on only for
+the audit.
 
 ```text
 item packet (ascii-rink board + answer/breakdown + age + curriculum tag)
@@ -112,8 +115,11 @@ a run.
 ## 6. Implementation surface
 
 - `tools/lib/claude-agent.mjs` — default model -> `claude-fable-5` (configurable; small change).
-- `tools/gauntlet-run.mjs` — add the Head-Coach-solo-first gate function and a flag to use it
-  (the existing always-panel path stays available).
+- `tools/gauntlet-run.mjs` — wire the Head-Coach-solo-first gate into the generation flow as
+  the G7/G7.5 path (it convenes the existing `runPanel` / visual panel when she judges it
+  needed). The current always-panel-debate-to-unanimous behavior is preserved behind a flag
+  (e.g. `--full-panel`) as a fallback / A-B, but the judgment escalation becomes the default
+  coach path for new content.
 - `tools/gauntlet-audit.mjs` — NEW. Enumerates post-wipe seeds, builds packets, runs the
   escalation, writes the report, routes REVISE/RETIRE to the review queue.
 - `package.json` — `gauntlet:audit` script.
@@ -153,7 +159,9 @@ a run.
   `.claude/agents` panel.
 - **Model:** coaches run on `claude-fable-5` (configurable default in `claude-agent.mjs`).
 - **Escalation:** Head Coach gates the room — solo-first, convene the existing panel only on a
-  genuine judgment call, then reconcile.
+  genuine judgment call, then reconcile. Wired into the live generation gauntlet
+  (`gauntlet-run.mjs`) as the default coach path AND reused by the audit; old full-panel flow
+  kept behind a `--full-panel` flag.
 - **Audit scope:** all post-wipe seeds (~23) in `src/scenario/seeds/`; KEEP / REVISE / RETIRE;
   report to `docs/factory/coach-runs/`, REVISE/RETIRE to the review queue. Old bank and
   povQuestions excluded.
