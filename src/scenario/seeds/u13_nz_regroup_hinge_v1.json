@@ -12,13 +12,13 @@
     { "id": "you",     "kind": "player",   "x": 0.46, "y": 0.55, "tag": "YOU" },
     { "id": "puck",    "kind": "puck",     "x": 0.462, "y": 0.548 },
     { "id": "partner", "kind": "teammate", "x": 0.40, "y": 0.34, "tag": "D" },
-    { "id": "rw",      "kind": "teammate", "x": 0.68, "y": 0.22, "tag": "LW" },
+    { "id": "lw",      "kind": "teammate", "x": 0.68, "y": 0.22, "tag": "LW" },
     { "id": "d1",      "kind": "defender", "x": 0.62, "y": 0.27, "tag": "" }
   ],
   "interaction": {
     "kind": "selection",
     "prompt": "You have the puck in the neutral zone on a regroup. Scan the full width and tap the teammate who keeps clean possession.",
-    "from": ["partner", "rw"],
+    "from": ["partner", "lw"],
     "order": "any"
   },
   "correct": {
@@ -30,5 +30,5 @@
     "wrong": "The far winger is calling for the stretch pass and looks like they are behind the defense, but they are tightly covered and the defender has gap and body position. That lane is not clean."
   },
   "tip": "A loud stick is not always an open stick. Scan the whole sheet before you commit the puck.",
-  "why": "Scanning full width lets the defenseman choose the safe hinge that keeps possession instead of throwing a hopeful stretch pass into coverage."
+  "why": "Scanning full width lets you identify your D-partner's safe hinge lane and keep possession instead of throwing a hopeful stretch pass into coverage."
 }
