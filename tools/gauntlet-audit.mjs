@@ -22,6 +22,7 @@ import { VISUAL_LENSES, buildVisualHockeyCoachPrompt, buildVisualCoachPrompt, bu
 import { runAgent } from "./lib/claude-agent.mjs";
 import { createCoachSink } from "./lib/coach-sink.mjs";
 import { coachRow } from "./lib/coach-core.mjs";
+import { runHockeyValidators } from "../src/scenario/validators.js";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const root = resolve(__dirname, "..");
@@ -108,7 +109,12 @@ async function main() {
     const node = nodeById(ledger, seed.nodeId) || { id: seed.nodeId, ageId: (seed.nodeId || "").split(".")[0], conceptId: (seed.nodeId || "").split(".")[1] };
     const concept = (node && node.conceptId && conceptById(ledger, node.conceptId)) || { name: node.conceptId, definition: "" };
     const ascii = asciiRink(seed);
-    const r = await auditScenario({ scenario: seed, ascii, node, concept, opts, runHockeyPanel, runVisualPanel, runVisualHeadCoach: visualHeadCoachReconcile });
+    const _v = runHockeyValidators(seed);
+    const _checks = [..._v.errs, ..._v.warns];
+    const asciiPlus = _checks.length
+      ? `${ascii}\n\nMACHINE GEOMETRY CHECKS (deterministic, treat as verified fact):\n${_checks.map((c) => `- ${c}`).join("\n")}`
+      : ascii;
+    const r = await auditScenario({ scenario: seed, ascii: asciiPlus, node, concept, opts, runHockeyPanel, runVisualPanel, runVisualHeadCoach: visualHeadCoachReconcile });
     rows.push({ id: seed.id, level: seed.level || seed.levels?.[0], verdict: r.verdict, confidence: r.confidence, notes: r.notes, convened: r.convened });
     if (coachSink) {
       try { await coachSink.upsert(coachRow({ seed, result: r, model: opts.coachModel })); }
