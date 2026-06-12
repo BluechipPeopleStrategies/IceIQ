@@ -943,3 +943,20 @@ export async function listMyReviews() {
     .eq("reviewer_email", email);
   return error ? [] : (data || []);
 }
+
+export async function listCoachReviews() {
+  if (!supabase) return [];
+  const { data, error } = await supabase
+    .from("coach_reviews")
+    .select("scenario_id,verdict,confidence,notes,convened,board_hash,reviewed_at");
+  return error ? [] : (data || []);
+}
+
+export async function listFeedbackLog() {
+  if (!supabase) return [];
+  const { data, error } = await supabase
+    .from("feedback_log")
+    .select("scenario_id,node,iteration,source,feedback,change,created_at")
+    .order("created_at", { ascending: true });
+  return error ? [] : (data || []);
+}
