@@ -497,6 +497,26 @@ const rules = [
     return null;
   },
 
+  // LESSON: an off-zone attack needs at least one defender GOAL-SIDE of the puck
+  // (between the puck and the net) — otherwise there's no one to beat and the
+  // read is meaningless. Measured along the attack axis (x-depth) so a defender
+  // shading wide still counts; corner-parked defenders don't.
+  function defenderGoalSide(s) {
+    if (s.stage?.zone !== "off-zone") return null;
+    const goalie = (s.actors || []).find(a => a.kind === "goalie");
+    const puck = (s.actors || []).find(a => a.kind === "puck");
+    const defs = (s.actors || []).filter(a => a.kind === "defender");
+    if (!goalie || !puck || !defs.length) return null;
+    const view = s.stage?.view;
+    // Puck at/behind the goal line (wrap, cycle below the net) — "goal-side" is
+    // degenerate there, so the rule doesn't apply.
+    if (view === "left" ? puck.x <= goalie.x + 0.04 : puck.x >= goalie.x - 0.04) return null;
+    const ahead = (d) => (view === "left" ? d.x < puck.x - 0.01 : d.x > puck.x + 0.01);
+    const notCorner = (d) => Math.abs(d.y - 0.5) < 0.38;
+    if (defs.some(d => ahead(d) && notCorner(d))) return null;
+    return { kind: "err", msg: `no defender is goal-side of the puck (between the puck at x=${puck.x.toFixed(2)} and the net) — the attack has no one to beat.` };
+  },
+
   // ── DIFFICULTY CAP BY COMPLEXITY
   // Rough complexity score; difficulty must be ≥ derived floor. Stops
   // U11/difficulty=1 questions from sneaking through with timers + 9
