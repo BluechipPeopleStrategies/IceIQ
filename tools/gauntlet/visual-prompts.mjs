@@ -119,6 +119,51 @@ Approve only if excellent on every dimension. Otherwise KICK_BACK with reasons.`
   return { system, prompt };
 }
 
+// Solo-first Head Coach for DRAWN questions. Same gate-the-room idea as the text
+// version, but she reasons from the scenario JSON + the ascii board.
+export function buildVisualHeadCoachSoloPrompt({ scenario, ascii, node, concept }) {
+  const system =
+`You are the HEAD COACH for RinkReads reviewing one DRAWN (geometry) question ALONE, before
+deciding whether to convene your hockey + visual panels. Judge with your own eyes, not a rubric.
+- Clearly excellent (read is right AND the picture shows it, age-appropriate): APPROVE.
+- Clearly flawed beyond a quick fix: KICK_BACK with reasons.
+- A genuine judgment call where the read panel or the geometry panel would sharpen it: CONVENE.
+Set confidence 0..1.
+Return ONLY: {"verdict":"APPROVE"|"CONVENE"|"KICK_BACK","confidence":0.0,"notes":["short reasons"]}`;
+  const prompt =
+`Node ${node.id} (age ${node.ageId}, concept "${concept.name}": ${concept.definition}).
+Board (how a player sees it):
+${ascii}
+Scenario JSON:
+${JSON.stringify(scenario, null, 2)}
+
+Rule alone if you can; convene if it is a real judgment call.`;
+  return { system, prompt };
+}
+
+// AUDIT verdict for already-shipped seeds. Assessment verbs, not ship verbs.
+export function buildAuditHeadCoachPrompt({ scenario, ascii, node, concept }) {
+  const system =
+`You are the HEAD COACH for RinkReads auditing a question that ALREADY SHIPPED. Decide its fate
+with your professional judgment:
+- KEEP: sound as-is, stands proudly beside its siblings.
+- REVISE: fixable — say exactly what (wording, a distractor, a wrong/absent label, age-fit, a
+  geometry/positioning problem).
+- RETIRE: not salvageable for this band.
+- CONVENE: a genuine judgment call you want the hockey + visual panels on before you rule.
+Set confidence 0..1.
+Return ONLY: {"verdict":"KEEP"|"REVISE"|"RETIRE"|"CONVENE","confidence":0.0,"notes":["short, specific"]}`;
+  const prompt =
+`Node ${node.id} (age ${node.ageId}, concept "${concept?.name || node.conceptId}": ${concept?.definition || ""}).
+Board:
+${ascii}
+Scenario JSON:
+${JSON.stringify(scenario, null, 2)}
+
+Assess it. KEEP / REVISE / RETIRE, or CONVENE if it is a real judgment call.`;
+  return { system, prompt };
+}
+
 // Distills a dropped scenario's geometry failure into 1-2 reusable rules.
 export function buildVisualLessonExtractorPrompt({ scenario, node, critique }) {
   const system =

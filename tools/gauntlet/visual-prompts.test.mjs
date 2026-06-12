@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 // Run: node tools/gauntlet/visual-prompts.test.mjs
-import { VISUAL_LENSES, buildVisualHockeyCoachPrompt, buildVisualCoachPrompt, buildVisualHeadCoachPrompt, buildVisualLessonExtractorPrompt } from "./visual-prompts.mjs";
+import { VISUAL_LENSES, buildVisualHockeyCoachPrompt, buildVisualCoachPrompt, buildVisualHeadCoachPrompt, buildVisualHeadCoachSoloPrompt, buildAuditHeadCoachPrompt, buildVisualLessonExtractorPrompt } from "./visual-prompts.mjs";
 
 let pass = 0, fail = 0;
 const ok = (n, c) => { console.log(`${c ? "PASS" : "FAIL"}  ${n}`); c ? pass++ : fail++; };
@@ -31,6 +31,19 @@ ok("spatial lens mentions positioning", VISUAL_LENSES.find((l) => l.key === "spa
 
 ok("visual head coach builds", typeof buildVisualHeadCoachPrompt({ scenario, node, concept }).system === "string");
 ok("extractor embeds critique", buildVisualLessonExtractorPrompt({ scenario, node, critique: ["defender off to the side"] }).prompt.includes("defender off to the side"));
+
+// solo-first + audit Head Coach (drawn questions)
+{ const n2 = { id: "u13.odd-man-reads", ageId: "u13" };
+  const c2 = { name: "Odd-Man Reads", definition: "attack the soft spot" };
+  const sc2 = { id: "s1", type: "scenario", actors: [] };
+  const ascii = "RINK\n...";
+  const solo = buildVisualHeadCoachSoloPrompt({ scenario: sc2, ascii, node: n2, concept: c2 });
+  ok("visual solo mentions CONVENE", /CONVENE/.test(solo.system));
+  ok("visual solo includes ascii board", solo.prompt.includes("RINK"));
+
+  const audit = buildAuditHeadCoachPrompt({ scenario: sc2, ascii, node: n2, concept: c2 });
+  ok("audit verbs are KEEP/REVISE/RETIRE", /KEEP/.test(audit.system) && /REVISE/.test(audit.system) && /RETIRE/.test(audit.system));
+  ok("audit allows CONVENE", /CONVENE/.test(audit.system)); }
 
 console.log(`\n${pass} passed, ${fail} failed`);
 process.exit(fail ? 1 : 0);
