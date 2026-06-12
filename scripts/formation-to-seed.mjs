@@ -32,16 +32,24 @@ function mulberry32(a) { return function () { a |= 0; a = a + 0x6D2B79F5 | 0; le
 const r3 = (n) => +n.toFixed(3);
 
 // Build the slot-resolution context the formation geometry functions receive.
-function makeContext(formation, params) {
+// Age scaling: younger/introduced concepts get WIDER, simpler spacing (easier to
+// read); older/refinement concepts tighten up. p.spread multiplies a formation's
+// spreads/gaps; p.deep flags whether to use the more crowded variant.
+const SPREAD_BY_DEPTH = { I: 1.22, D: 1.08, M: 1.0, R: 0.86 };
+
+function makeContext(formation, params, info) {
   const view = formation.stage.view;
   const net = view === "left" ? CREASE_LEFT : CREASE_RIGHT;
   const resolved = {};
+  const depth = info?.depth || "D";
   const p = {
     ...params,
     side: params.side,
     other: params.side === "right" ? "left" : params.side === "left" ? "right" : params.side,
     net,
     resolved,
+    depth,
+    spread: SPREAD_BY_DEPTH[depth] || 1.0,
     wide(side, { x, spread }) { return { x, y: wideY(side, spread) }; },
     onLane(fromRole, toRole, opts = {}) { return onLane(resolved[fromRole], resolved[toRole], { ...opts, netX: net.x }); },
     goalSide(role, opts = {}) { return goalSide(resolved[role], net, opts); },
@@ -64,7 +72,10 @@ function compileInstance(instance) {
     }
   }
 
-  const { p, resolved, view } = makeContext(formation, params);
+  // Curriculum node drives age + difficulty AND age-scaled geometry.
+  const info = instance.nodeId ? nodeInfo(instance.nodeId) : null;
+  if (instance.nodeId && !info) throw new Error(`nodeId "${instance.nodeId}" is not in the curriculum ledger`);
+  const { p, resolved, view } = makeContext(formation, params, info);
 
   // resolve slots in declaration order; puck rides its carrier
   const actors = [];
@@ -120,8 +131,6 @@ function compileInstance(instance) {
   // Curriculum alignment: the nodeId determines age (level) + difficulty so a
   // question can't drift off its curriculum slot. Hand-set values that disagree
   // are overridden and warned.
-  const info = instance.nodeId ? nodeInfo(instance.nodeId) : null;
-  if (instance.nodeId && !info) throw new Error(`nodeId "${instance.nodeId}" is not in the curriculum ledger`);
   const alignWarns = [];
   if (info && instance.levels && info.level && !instance.levels.includes(info.level))
     alignWarns.push(`levels ${JSON.stringify(instance.levels)} don't match node age ${info.ageId} (${info.level}) — using the node's age`);

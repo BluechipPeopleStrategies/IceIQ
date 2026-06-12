@@ -22,15 +22,15 @@ export default {
   slots: [
     // carrier high on the STRONG side (opposite the open backdoor) with the puck,
     // established inside the zone (clear of the blue line — see offsidesOnEntry).
-    { role: "carrier", kind: "player", tag: "YOU", geometry: (p) => ({ x: 0.74, y: 0.5 + (p.other === "right" ? 0.20 : -0.20) }) },
+    { role: "carrier", kind: "player", tag: "YOU", geometry: (p) => ({ x: 0.74, y: 0.5 + (p.other === "right" ? 0.20 : -0.20) * p.spread }) },
     { role: "puck", kind: "puck", with: "carrier" },
     // strong-side teammate — the tempting option, but its lane is covered.
     // Set well apart from the carrier so the shading defender fits between them.
     { role: "strongMate", kind: "teammate", geometry: (p) => ({ x: 0.86, y: 0.5 + (p.other === "right" ? 0.08 : -0.08) }) },
     // defender shading the strong-side lane
     { role: "d1", kind: "defender", geometry: (p) => p.onLane("carrier", "strongMate", { t: 0.5 }) },
-    // backdoor teammate — open, weak side, net-front
-    { role: "backdoor", kind: "teammate", geometry: (p) => ({ x: 0.87, y: 0.5 + (p.side === "right" ? 0.16 : -0.16) }) },
+    // backdoor teammate — open, weak side, net-front (wider apart for younger ages)
+    { role: "backdoor", kind: "teammate", geometry: (p) => ({ x: 0.87, y: 0.5 + (p.side === "right" ? 0.16 : -0.16) * p.spread }) },
     { role: "g", kind: "goalie", geometry: (p) => p.crease() },
   ],
   read: {

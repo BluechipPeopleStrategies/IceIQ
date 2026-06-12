@@ -26,8 +26,8 @@ export default {
     // wingers are unambiguously onside — see offsidesOnEntry in validators.js.
     { role: "carrier", kind: "player", tag: "YOU", geometry: () => ({ x: 0.74, y: 0.50 }) },
     { role: "puck", kind: "puck", with: "carrier" },
-    { role: "openWing", kind: "teammate", geometry: (p) => p.wide(p.side, { x: 0.84, spread: 0.22 }) },
-    { role: "closedWing", kind: "teammate", geometry: (p) => p.wide(p.other, { x: 0.83, spread: 0.20 }) },
+    { role: "openWing", kind: "teammate", geometry: (p) => p.wide(p.side, { x: 0.84, spread: 0.22 * p.spread }) },
+    { role: "closedWing", kind: "teammate", geometry: (p) => p.wide(p.other, { x: 0.83, spread: 0.20 * p.spread }) },
     // THE READ: defender central but ON the carrier→closedWing lane (blocks it),
     // and goal-side of the puck. The carrier→openWing lane stays clear.
     { role: "d1", kind: "defender", geometry: (p) => p.onLane("carrier", "closedWing", { t: 0.42 }) },

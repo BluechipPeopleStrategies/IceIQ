@@ -40,8 +40,13 @@ Two layers of memory work together:
   drift net-side of the open winger, or the "open" answer looks covered.
   (Fixed in `odd-man-rush.js`; could become a rule: no non-shading defender within
   the correct receiver's lane.)
-- **"Pick the spot" must have a referent** — tapping empty ice is meaningless; a
-  point/selection answer needs a teammate or a clearly-defined space.
-  (Fixed by rebuilding `oz-backdoor` with a real backdoor teammate.)
+- **"Pick the spot" must have a CONCRETE referent** *(recurred twice — strong
+  rule)* — a point answer must target a player or a self-relative position (e.g.
+  "where YOU step up to"), never abstract empty ice or "the lane." First hit:
+  `oz-backdoor` tapping empty ice (fixed with a real backdoor teammate). Second
+  hit: `nz-gap-1on1` "tap the lane to steer into" (fixed → "tap where you step up
+  to tighten the gap," a concrete spot between the D and the carrier, plus an MC
+  stating the read). When a point target isn't a player, it must be defined
+  relative to an actor.
 
 When a formation-design lesson recurs, promote it to a `validators.js` rule.
