@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from "react";
 import RinkStage from "../scenario/RinkStage.jsx";
 import { OptionsOverlay, BoardBoundary } from "./ReviewBoard.jsx";
 import { stepToScenario } from "../scenario/multiStep.js";
+import { toGraph, flattenNode } from "../scenario/branching.js";
 import { ageTierOf, flagOf } from "./browseCore.js";
 import { C, FONT } from "../shared.jsx";
 
@@ -32,7 +33,9 @@ export default function BrowseTile({ scenario, coach, myVerdict, revised, onOpen
   const caption = [ageTierOf(scenario), scenario.nodeId].filter(Boolean).join(" · ");
   // Multi-step boards have no top-level actors; thumbnail the first frame so
   // RinkStage never gets actors=undefined (which would throw and crash the grid).
-  const board = (Array.isArray(scenario.steps) && scenario.steps.length) ? stepToScenario(scenario, 0) : scenario;
+  const board = (scenario.nodes && scenario.entry)
+    ? flattenNode(scenario, toGraph(scenario).entry[0])
+    : (Array.isArray(scenario.steps) && scenario.steps.length) ? stepToScenario(scenario, 0) : scenario;
 
   return (
     <button ref={ref} onClick={() => onOpen(scenario)}

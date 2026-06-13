@@ -3,6 +3,7 @@ import RinkStage from "../scenario/RinkStage.jsx";
 import { denorm } from "../scenario/schema.js";
 import { resolveTarget } from "../scenario/zones.js";
 import { stepToScenario } from "../scenario/multiStep.js";
+import { toGraph, flattenNode } from "../scenario/branching.js";
 import { C, FONT } from "../shared.jsx";
 
 // Show every answer OPTION on the board: ring each candidate and mark the correct
@@ -95,6 +96,17 @@ function OneBoard({ scenario, label }) {
 }
 
 export default function ReviewBoard({ scenario }) {
+  // Branching: stack every node frame, each with its own answer overlay.
+  if (scenario.nodes && scenario.entry) {
+    const ids = Object.keys(toGraph(scenario).nodes);
+    return (
+      <div style={{ display: "flex", flexDirection: "column", gap: ".9rem" }}>
+        {ids.map((id) => (
+          <OneBoard key={id} scenario={flattenNode(scenario, id)} label={`Frame · ${id}`} />
+        ))}
+      </div>
+    );
+  }
   // Multi-step: show every frame stacked, each with its own answer overlay.
   if (Array.isArray(scenario.steps) && scenario.steps.length) {
     return (
