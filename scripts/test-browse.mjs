@@ -1,5 +1,5 @@
 // Golden tests for src/review/browseCore.js (pure logic). Run: npm run test:browse
-import { ageTierOf, ageTiers, flagOf, applyFilters, iterationHeadline } from "../src/review/browseCore.js";
+import { ageTierOf, ageTiers, flagOf, applyFilters, iterationHeadline, groupIterations } from "../src/review/browseCore.js";
 
 let failed = 0;
 const check = (name, cond) => { console.log(`${cond ? "PASS" : "FAIL"}  ${name}`); if (!cond) failed++; };
@@ -36,6 +36,33 @@ check("headline blank both -> placeholder", iterationHeadline({ change: "", feed
 check("headline whitespace -> placeholder", iterationHeadline({ change: "   ", feedback: "" }) === "(no detail)");
 check("headline trims", iterationHeadline({ change: "  trimmed  " }) === "trimmed");
 check("headline null-safe", iterationHeadline(null) === "(no detail)");
+
+// groupIterations: owner + coach rows of one resolve share an iteration + change → ONE group.
+const owner1 = { scenario_id: "s", iteration: 1, source: "owner", change: "Moved YOU deep", feedback: "not in corner", node: "dz", created_at: "2026-06-13T12:00:00Z" };
+const coach1 = { scenario_id: "s", iteration: 1, source: "coach", change: "Moved YOU deep", feedback: "single-option", node: "dz", created_at: "2026-06-13T12:00:00Z" };
+const owner2 = { scenario_id: "s", iteration: 2, source: "owner", change: "Added end labels", feedback: "which way?", node: "dz", created_at: "2026-06-13T14:00:00Z" };
+const g1 = groupIterations([owner1, coach1]);
+check("group: owner+coach same iter -> 1 group", g1.length === 1);
+check("group: change preserved", g1[0].change === "Moved YOU deep");
+check("group: both feedbacks kept", g1[0].sources.length === 2);
+check("group: sources carry source+feedback", g1[0].sources[0].source === "owner" && g1[0].sources[1].source === "coach");
+check("group: date from row", g1[0].created_at === "2026-06-13T12:00:00Z");
+
+const g2 = groupIterations([owner1, coach1, owner2]);
+check("group: two iterations -> 2 groups", g2.length === 2);
+check("group: newest iteration first", g2[0].iteration === 2 && g2[1].iteration === 1);
+
+// dedupe identical source+feedback within a group (e.g. accidental duplicate insert)
+const dupd = groupIterations([owner1, { ...owner1 }]);
+check("group: dedupe identical rows", dupd.length === 1 && dupd[0].sources.length === 1);
+
+// null iteration rows must not merge into one group
+const nullA = { scenario_id: "s", iteration: null, source: "owner", change: "A", feedback: "a", created_at: "2026-06-13T10:00:00Z" };
+const nullB = { scenario_id: "s", iteration: null, source: "owner", change: "B", feedback: "b", created_at: "2026-06-13T11:00:00Z" };
+check("group: null iterations don't merge", groupIterations([nullA, nullB]).length === 2);
+
+check("group: empty input -> []", JSON.stringify(groupIterations([])) === "[]");
+check("group: null input -> []", JSON.stringify(groupIterations(null)) === "[]");
 
 console.log(failed ? `\n${failed} FAILED` : "\nAll passed");
 process.exit(failed ? 1 : 0);

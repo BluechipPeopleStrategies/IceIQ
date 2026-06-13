@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import ReviewBoard from "./ReviewBoard.jsx";
 import { boardHash } from "./reviewCore.js";
-import { iterationHeadline } from "./browseCore.js";
+import { iterationHeadline, groupIterations } from "./browseCore.js";
 import { C, FONT } from "../shared.jsx";
 
 const VERDICT_LABEL = { keep: "KEEP", revise: "REVISE", retire: "RETIRE" };
@@ -15,28 +15,33 @@ function fmtLogDate(iso) {
   return d.toLocaleDateString("en-CA", { month: "short", day: "numeric", timeZone: "America/Edmonton" });
 }
 
-// One collapsed accordion row in "Previously incorporated": date + one-line headline;
-// click to reveal full feedback/change + a meta line. Caret glyph signals state
-// (not color — colorblind-safe).
-function IterationRow({ log }) {
+// One collapsed accordion row in "Previously incorporated" = one change event
+// (an iteration). Collapsed: date + one-line headline (the change). Click to reveal
+// the full change plus the feedback that drove it, per source (owner + coach), and a
+// meta line. Caret glyph signals state (not color — colorblind-safe).
+function IterationRow({ group }) {
   const [open, setOpen] = useState(false);
-  const date = fmtLogDate(log.created_at);
+  const date = fmtLogDate(group.created_at);
+  const headline = iterationHeadline({ change: group.change, feedback: group.sources[0]?.feedback });
   const meta = [
-    log.iteration != null ? `iter ${log.iteration}` : null,
-    log.node ? `node ${log.node}` : null,
-    log.source || null,
+    group.iteration != null ? `iter ${group.iteration}` : null,
+    group.node ? `node ${group.node}` : null,
   ].filter(Boolean).join(" · ");
   return (
     <div style={{ borderTop: `1px solid ${C.border}`, paddingTop: ".25rem", marginTop: ".25rem" }}>
       <div onClick={() => setOpen(o => !o)} style={{ display: "flex", gap: ".4rem", alignItems: "baseline", cursor: "pointer", fontSize: ".76rem", color: C.dim }}>
         <span style={{ color: C.dimmer }}>{open ? "▾" : "▸"}</span>
         {date && <span style={{ color: C.dimmer, flexShrink: 0 }}>{date}</span>}
-        <span style={{ flex: 1, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{iterationHeadline(log)}</span>
+        <span style={{ flex: 1, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{headline}</span>
       </div>
       {open && (
         <div style={{ fontSize: ".74rem", color: C.dim, margin: ".25rem 0 .35rem 1rem", lineHeight: 1.4 }}>
-          {log.feedback && <div><span style={{ color: C.dimmer }}>Feedback:</span> {log.feedback}</div>}
-          {log.change && <div><span style={{ color: C.dimmer }}>Change:</span> {log.change}</div>}
+          {group.change && <div><span style={{ color: C.dimmer }}>Change:</span> {group.change}</div>}
+          {group.sources.map((s, i) => (
+            <div key={i} style={{ marginTop: ".15rem" }}>
+              <span style={{ color: C.dimmer, textTransform: "capitalize" }}>{s.source || "note"}:</span> {s.feedback}
+            </div>
+          ))}
           {meta && <div style={{ color: C.dimmer, marginTop: ".15rem" }}>{meta}</div>}
         </div>
       )}
@@ -64,7 +69,7 @@ export default function BoardReviewPanel({ scenario, coach, logs = [], savedVerd
       {logs.length > 0 && (
         <div style={{ marginTop: ".4rem", padding: ".5rem .6rem", borderRadius: 8, background: C.bgCard, border: `1px dashed ${C.border}` }}>
           <div style={{ fontSize: ".72rem", color: C.dimmer, marginBottom: ".2rem" }}>Previously incorporated</div>
-          {[...logs].reverse().map((l, k) => <IterationRow key={k} log={l} />)}
+          {groupIterations(logs).map((g, k) => <IterationRow key={k} group={g} />)}
         </div>
       )}
 
