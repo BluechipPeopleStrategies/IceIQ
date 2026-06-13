@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import ReviewBoard from "./ReviewBoard.jsx";
+import BoardReviewPanel from "./BoardReviewPanel.jsx";
 import { loadReviewScenarios } from "./reviewData.js";
 import { boardHash } from "./reviewCore.js";
 import { enqueueReview, flushQueue, getReviewedIds, getSavedReview, syncServerReviews } from "./reviewQueue.js";
@@ -16,7 +16,6 @@ function Centered({ children }) {
 const btn = { padding: ".5rem 1rem", borderRadius: 8, border: `1px solid ${C.border}`, background: C.bgCard, color: C.white, cursor: "pointer" };
 const ghost = { padding: ".3rem .6rem", borderRadius: 6, border: "none", background: "transparent", color: C.dim, fontSize: ".8rem", cursor: "pointer" };
 const navBtn = { flex: 1, padding: ".55rem 0", borderRadius: 8, border: `1px solid ${C.border}`, background: C.bgCard, color: C.white, fontFamily: FONT.body, cursor: "pointer", fontSize: ".85rem" };
-const verdictBtn = { flex: 1, padding: ".9rem 0", borderRadius: 10, border: "1px solid", fontWeight: 700, fontFamily: FONT.body, cursor: "pointer", fontSize: ".95rem" };
 
 export default function ReviewScreen({ onBack }) {
   const [status, setStatus] = useState("loading"); // loading | denied | empty | ready
@@ -88,13 +87,6 @@ export default function ReviewScreen({ onBack }) {
   if (!current) return <Centered><div>{flaggedOnly ? "No coach-flagged boards 🎉" : "End of the deck."} {pending ? `${pending} syncing…` : ""}</div><button onClick={() => setI(0)} style={btn}>Back to start</button><button onClick={onBack} style={ghost}>Exit</button></Centered>;
 
   const chips = [current.levels?.[0] || current.level || "", current.nodeId].filter(Boolean).join(" · ");
-  const coachStale = coach && coach.board_hash && coach.board_hash !== boardHash(current);
-  const suggests = (v) => !savedVerdict && coach && coach.verdict === v;
-  const vStyle = (v, dim, border, color) => ({
-    ...verdictBtn, background: dim, color,
-    borderColor: savedVerdict === v ? color : (suggests(v) ? color : border),
-    borderStyle: suggests(v) ? "dashed" : "solid",
-  });
 
   return (
     <div style={{ minHeight: "100vh", background: C.bg, color: C.white, fontFamily: FONT.body, padding: "1rem", maxWidth: 480, margin: "0 auto" }}>
@@ -106,39 +98,20 @@ export default function ReviewScreen({ onBack }) {
         <button onClick={toggleFlagged} style={{ ...ghost, color: flaggedOnly ? C.gold : C.dim }}>{flaggedOnly ? "all" : "flagged"}</button>
       </div>
       <div style={{ color: C.gold, fontSize: ".75rem", marginBottom: ".4rem", letterSpacing: ".04em" }}>{chips}</div>
-      <ReviewBoard scenario={current} />
-
-      {logs.length > 0 && (
-        <div style={{ marginTop: ".4rem", padding: ".5rem .6rem", borderRadius: 8, background: C.bgCard, border: `1px dashed ${C.border}` }}>
-          <div style={{ fontSize: ".72rem", color: C.dimmer, marginBottom: ".2rem" }}>Previously incorporated</div>
-          {logs.map((l, k) => (
-            <div key={k} style={{ fontSize: ".76rem", color: C.dim }}>· (iter {l.iteration}) {l.feedback}{l.change ? ` → ${l.change}` : ""}</div>
-          ))}
+      <BoardReviewPanel
+        scenario={current}
+        coach={coach}
+        logs={logs}
+        savedVerdict={savedVerdict}
+        note={note}
+        onNote={setNote}
+        onVerdict={verdict}
+      >
+        <div style={{ display: "flex", gap: ".5rem" }}>
+          <button onClick={() => move(-1)} disabled={i === 0} style={{ ...navBtn, opacity: i === 0 ? 0.4 : 1, cursor: i === 0 ? "default" : "pointer" }}>← Previous</button>
+          <button onClick={() => move(1)} style={navBtn}>Next →</button>
         </div>
-      )}
-
-      <input value={note} onChange={e => setNote(e.target.value)} placeholder="note (use your keyboard 🎤 to speak)…"
-        style={{ width: "100%", margin: ".6rem 0", padding: ".6rem", borderRadius: 8, border: `1px solid ${C.border}`, background: C.bgCard, color: C.white, fontFamily: FONT.body, boxSizing: "border-box" }} />
-      <div style={{ display: "flex", gap: ".5rem", marginBottom: ".5rem" }}>
-        <button onClick={() => verdict("keep")} style={vStyle("keep", C.greenDim, C.greenBorder, C.green)}>KEEP{savedVerdict === "keep" ? " ✓" : suggests("keep") ? " ·sugg" : ""}</button>
-        <button onClick={() => verdict("revise")} style={vStyle("revise", C.goldDim, C.goldBorder, C.gold)}>REVISE{savedVerdict === "revise" ? " ✓" : suggests("revise") ? " ·sugg" : ""}</button>
-        <button onClick={() => verdict("retire")} style={vStyle("retire", C.redDim, C.redBorder, C.red)}>RETIRE{savedVerdict === "retire" ? " ✓" : suggests("retire") ? " ·sugg" : ""}</button>
-      </div>
-      <div style={{ display: "flex", gap: ".5rem" }}>
-        <button onClick={() => move(-1)} disabled={i === 0} style={{ ...navBtn, opacity: i === 0 ? 0.4 : 1, cursor: i === 0 ? "default" : "pointer" }}>← Previous</button>
-        <button onClick={() => move(1)} style={navBtn}>Next →</button>
-      </div>
-
-      {coach && (
-        <div style={{ marginTop: "1.4rem", padding: ".5rem .6rem", borderRadius: 8, background: C.bgCard, border: `1px solid ${C.border}` }}>
-          <div style={{ fontSize: ".78rem", color: C.dim }}>
-            🤖 Coaches: <b style={{ color: C.white }}>{VERDICT_LABEL[coach.verdict] || coach.verdict}</b>
-            {coach.confidence != null ? ` · ${Math.round(coach.confidence * 100)}%` : ""}{coach.convened ? " · room" : ""}
-            {coachStale ? " · ⚠ out of date" : ""}
-          </div>
-          {coach.notes && <div style={{ fontSize: ".78rem", color: C.dim, marginTop: ".2rem" }}>{coach.notes}</div>}
-        </div>
-      )}
+      </BoardReviewPanel>
     </div>
   );
 }
