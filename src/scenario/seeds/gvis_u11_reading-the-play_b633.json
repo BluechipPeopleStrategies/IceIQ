@@ -2,35 +2,98 @@
   "id": "gvis_u11_reading-the-play_b633",
   "type": "scenario",
   "level": "U11 / Atom",
-  "levels": ["U11 / Atom"],
+  "levels": [
+    "U11 / Atom"
+  ],
   "nodeId": "u11.reading-the-play",
-  "themes": ["defensive-zone-coverage", "anticipate", "scan", "vision"],
+  "themes": [
+    "defensive-zone-coverage",
+    "anticipate",
+    "scan",
+    "vision"
+  ],
   "cat": "Hockey Sense",
   "difficulty": 2,
-  "stage": { "view": "left", "zone": "def-zone" },
+  "stage": {
+    "view": "left",
+    "zone": "def-zone"
+  },
   "actors": [
-    { "id": "you",        "kind": "player",   "x": 0.38,  "y": 0.65, "tag": "YOU" },
-    { "id": "goalie",     "kind": "goalie",   "x": 0.082, "y": 0.50, "tag": ""    },
-    { "id": "tm_ld",      "kind": "teammate", "x": 0.30,  "y": 0.28, "tag": "LD"  },
-    { "id": "tm_c",       "kind": "teammate", "x": 0.35,  "y": 0.50, "tag": "C"   },
-    { "id": "opp_corner", "kind": "defender", "x": 0.10,  "y": 0.82, "tag": ""    },
-    { "id": "opp_slot",   "kind": "defender", "x": 0.17,  "y": 0.50, "tag": ""    },
-    { "id": "opp_point",  "kind": "defender", "x": 0.47,  "y": 0.22, "tag": ""    },
-    { "id": "puck",       "kind": "puck",     "x": 0.10,  "y": 0.82              }
+    {
+      "id": "you",
+      "kind": "player",
+      "x": 0.38,
+      "y": 0.65,
+      "tag": "YOU"
+    },
+    {
+      "id": "goalie",
+      "kind": "goalie",
+      "x": 0.082,
+      "y": 0.5,
+      "tag": ""
+    },
+    {
+      "id": "tm_ld",
+      "kind": "teammate",
+      "x": 0.3,
+      "y": 0.28,
+      "tag": "LD"
+    },
+    {
+      "id": "tm_c",
+      "kind": "teammate",
+      "x": 0.35,
+      "y": 0.5,
+      "tag": "C"
+    },
+    {
+      "id": "opp_corner",
+      "kind": "defender",
+      "x": 0.1,
+      "y": 0.82,
+      "tag": ""
+    },
+    {
+      "id": "opp_slot",
+      "kind": "defender",
+      "x": 0.2,
+      "y": 0.45,
+      "tag": ""
+    },
+    {
+      "id": "opp_point",
+      "kind": "defender",
+      "x": 0.34,
+      "y": 0.3,
+      "tag": ""
+    },
+    {
+      "id": "puck",
+      "kind": "puck",
+      "x": 0.1,
+      "y": 0.82
+    }
   ],
   "interaction": {
     "kind": "selection",
-    "prompt": "An opponent has the puck in the corner and is looking to pass. Tap the opponent your team needs to cover first, before that pass turns into a scoring chance.",
-    "from": ["opp_corner", "opp_slot", "opp_point"],
+    "prompt": "The puck is in the corner and two opponents are getting open near your net. Tap the one your team must cover FIRST — the bigger scoring threat right now.",
+    "from": [
+      "opp_corner",
+      "opp_slot",
+      "opp_point"
+    ],
     "order": "any"
   },
   "correct": {
     "kind": "selection",
-    "ids": ["opp_slot"]
+    "ids": [
+      "opp_slot"
+    ]
   },
   "feedback": {
-    "right": "Yes! That opponent is already in the slot — right in front of your goalie. Your teammate needs to push them out NOW, before the puck gets there.",
-    "wrong": "The puck carrier and the point player are easy to see, but neither has a clean shot yet. The opponent standing in the slot, right in front of your goalie, is the immediate danger — that is where goals come from."
+    "right": "Yes. That opponent is parked in the slot, right on the doorstep of your goalie. That is the highest-danger ice, so they get covered before the high-slot shooter.",
+    "wrong": "The high-slot opponent is a threat, but they are farther out. The opponent on the doorstep is the bigger danger — a pass there is a tap-in. Cover the slot first, then close on the shooter."
   },
   "tip": "When the puck goes to the corner, scan the front of your net first. A player already parked there is a bigger threat than the puck carrier who is stuck in the corner.",
   "why": "U11 defenders fixate on the puck and lose track of the slot. This rep trains reading the net-front threat before the pass is made — the whole anticipation skill is seeing where the danger is BEFORE the puck arrives."
