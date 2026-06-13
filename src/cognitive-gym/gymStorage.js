@@ -24,34 +24,46 @@ function writeAll(data) {
   }
 }
 
-const emptyDrill = () => ({ level: 1, best: 0, sessions: [] });
+const emptyDrill = () => ({ level: 1, streak: { ups: 0, downs: 0 }, best: 0, bestPoints: 0, sessions: [] });
 
-// Read one drill's record for a player (level, best, session history).
+// Read one drill's record, normalized so older records gain the new fields.
 export function getDrill(playerId, drillId) {
   const all = readAll();
-  return (all[playerId] && all[playerId][drillId]) || emptyDrill();
+  const stored = (all[playerId] && all[playerId][drillId]) || {};
+  return { ...emptyDrill(), ...stored, streak: { ...emptyDrill().streak, ...(stored.streak || {}) } };
 }
 
-// Append a completed session, update level + best, and persist.
+// Append a completed session, update level + streak + best + bestPoints, persist.
 // Session history is capped at the most recent 200 entries.
 export function saveSession(playerId, drillId, session) {
   const all = readAll();
   if (!all[playerId]) all[playerId] = {};
-  const drill = all[playerId][drillId] || emptyDrill();
+  const drill = { ...emptyDrill(), ...(all[playerId][drillId] || {}) };
   drill.level = session.level;
+  drill.streak = session.streak || { ups: 0, downs: 0 };
   drill.best = Math.max(drill.best, Math.round(session.score));
+  drill.bestPoints = Math.max(drill.bestPoints || 0, Math.round(session.points || 0));
   drill.sessions.push({
     date: new Date().toISOString(),
     score: Math.round(session.score),
+    points: Math.round(session.points || 0),
     level: session.level,
     meta: session.meta || null,
   });
-  if (drill.sessions.length > 200) {
-    drill.sessions = drill.sessions.slice(-200);
-  }
+  if (drill.sessions.length > 200) drill.sessions = drill.sessions.slice(-200);
   all[playerId][drillId] = drill;
   writeAll(all);
   return drill;
+}
+
+// Sum points across all sessions of all drills. Pure; legacy point-less
+// sessions count as 0. Exported for testing and reuse.
+export function careerPointsFromDrills(drills) {
+  let total = 0;
+  for (const d of Object.values(drills || {})) {
+    for (const s of d.sessions || []) total += s.points || 0;
+  }
+  return total;
 }
 
 // Aggregate stats across all drills for a player: total sessions, distinct
@@ -81,5 +93,10 @@ export function getStats(playerId) {
     }
   }
 
-  return { totalSessions, daysTrained: days.size, streak };
+  return {
+    totalSessions,
+    daysTrained: days.size,
+    streak,
+    careerPoints: careerPointsFromDrills(drills),
+  };
 }

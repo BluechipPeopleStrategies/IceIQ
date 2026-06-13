@@ -1,5 +1,6 @@
 import { gradedPoints, MAX_REP } from "../src/cognitive-gym/gymPoints.js";
 import { createAdaptiveLevel } from "../src/cognitive-gym/gymEngine.js";
+import { careerPointsFromDrills } from "../src/cognitive-gym/gymStorage.js";
 
 let failed = 0;
 const check = (name, cond) => { console.log(`${cond ? "PASS" : "FAIL"}  ${name}`); if (!cond) failed++; };
@@ -33,6 +34,13 @@ const floor = createAdaptiveLevel(1);
 check("cannot relegate below 1", floor.record(false) === 1 && floor.record(false) === 1);
 const ceil = createAdaptiveLevel(20);
 check("cannot promote above max", ceil.record(true) === 20 && ceil.record(true) === 20 && ceil.record(true) === 20);
+
+const drills = {
+  anticipation: { sessions: [{ points: 800 }, { points: 600 }] },
+  tracking: { sessions: [{ points: 400 }, {}] }, // legacy session, no points
+};
+check("career points sums and ignores missing", careerPointsFromDrills(drills) === 1800);
+check("career points empty is 0", careerPointsFromDrills({}) === 0);
 
 console.log(failed ? `\n${failed} FAILED` : "\nAll passed");
 process.exit(failed ? 1 : 0);
