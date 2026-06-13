@@ -5,6 +5,8 @@ import { tmpdir } from "node:os";
 import { join } from "node:path";
 import {
   parseImports, resolveImport, walkFiles, scanBrokenImports,
+  parseGlobSpecs, globToRegExp, buildReachable, findUnusedFiles,
+  packageNameOf, collectBareImports, scanStaleDeps, scanCruft, scanDeadCode,
 } from "./deadcode-scan.mjs";
 
 let pass = 0, fail = 0;
@@ -57,6 +59,69 @@ const ok = (name, cond) => { console.log(`${cond ? "PASS" : "FAIL"}  ${name}`); 
      !broken.some(b => b.spec === "some-pkg"));
   ok("scanBrokenImports skips .test files",
      !scanBrokenImports(root).some(b => b.file.includes("thing.test")));
+
+  rmSync(root, { recursive: true, force: true });
+}
+
+// --- glob helpers
+ok("globToRegExp matches single star within a segment",
+   globToRegExp("/a/*.json").test("/a/x.json") && !globToRegExp("/a/*.json").test("/a/b/x.json"));
+ok("globToRegExp matches double star across segments",
+   globToRegExp("/a/**/*.js").test("/a/b/c.js"));
+ok("parseGlobSpecs extracts import.meta.glob pattern",
+   parseGlobSpecs(`const m = import.meta.glob("./seeds/*.json", { eager: true });`)[0] === "./seeds/*.json");
+
+// --- unused files, deps, cruft, aggregate
+{
+  const root = mkdtempSync(join(tmpdir(), "dcs2-"));
+  mkdirSync(join(root, "src", "scenario", "seeds"), { recursive: true });
+  mkdirSync(join(root, "src", "data", "backups"), { recursive: true });
+  writeFileSync(join(root, "package.json"), JSON.stringify({
+    dependencies: { "used-pkg": "1.0.0", "dead-pkg": "1.0.0", "vite": "5.0.0" },
+    devDependencies: { "esbuild": "1.0.0" },
+  }));
+  writeFileSync(join(root, "src", "main.jsx"),
+    `import a from "./a.js"; import x from "used-pkg"; ` +
+    `const s = import.meta.glob("./scenario/seeds/*.json", { eager: true });`);
+  writeFileSync(join(root, "src", "a.js"), `export default 1;`);
+  writeFileSync(join(root, "src", "orphan.jsx"), `export const dead = 1;`);
+  writeFileSync(join(root, "src", "a.test.js"), `// test file, not dead`);
+  writeFileSync(join(root, "src", "scenario", "seeds", "s1.json"), `{ "id": "s1" }`);
+  writeFileSync(join(root, "src", "data", "x.bak"), `old`);
+  writeFileSync(join(root, "src", "data", "questions.json.ship.tmp"), `old`);
+  writeFileSync(join(root, "src", "data", "backups", "keep.bak"), `intentional`);
+
+  const reachable = buildReachable(root, "src/main.jsx");
+  ok("buildReachable includes entry and static import",
+     reachable.has(join(root, "src", "main.jsx")) && reachable.has(join(root, "src", "a.js")));
+  ok("buildReachable includes glob-matched seed",
+     reachable.has(join(root, "src", "scenario", "seeds", "s1.json")));
+
+  const unused = findUnusedFiles(root, "src/main.jsx");
+  ok("findUnusedFiles flags orphan", unused.includes(join("src", "orphan.jsx")));
+  ok("findUnusedFiles ignores test files", !unused.some(u => u.endsWith("a.test.js")));
+  ok("findUnusedFiles does not flag reachable files", !unused.includes(join("src", "a.js")));
+
+  ok("packageNameOf handles scoped pkg", packageNameOf("@scope/pkg/sub") === "@scope/pkg");
+  ok("packageNameOf handles plain pkg", packageNameOf("react/jsx-runtime") === "react");
+
+  const used = collectBareImports(root);
+  ok("collectBareImports finds used package", used.has("used-pkg"));
+
+  const stale = scanStaleDeps(root);
+  ok("scanStaleDeps flags unused dependency", stale.includes("dead-pkg"));
+  ok("scanStaleDeps ignores used dependency", !stale.includes("used-pkg"));
+  ok("scanStaleDeps ignores build-time dep on allowlist", !stale.includes("vite"));
+
+  const cruft = scanCruft(root);
+  ok("scanCruft flags .bak loose in data", cruft.includes(join("src", "data", "x.bak")));
+  ok("scanCruft flags .ship.tmp", cruft.includes(join("src", "data", "questions.json.ship.tmp")));
+  ok("scanCruft leaves backups/ dir alone", !cruft.some(c => c.includes("backups")));
+
+  const all = scanDeadCode({ root, entry: "src/main.jsx" });
+  ok("scanDeadCode aggregates all four buckets",
+     Array.isArray(all.brokenImports) && all.unusedFiles.includes(join("src", "orphan.jsx")) &&
+     all.staleDeps.includes("dead-pkg") && all.cruft.length >= 2);
 
   rmSync(root, { recursive: true, force: true });
 }
