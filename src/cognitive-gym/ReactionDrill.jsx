@@ -199,6 +199,7 @@ export default function ReactionDrill({ playerId = "default", onExit }) {
       {phase === "intro" && (
         <div className="gym-card">
           <h2>Shoot or Hold</h2>
+          <p className="gym-goal"><strong>Your goal:</strong> fire on blue, stay still on orange, and beat the clock every time.</p>
           <p>
             <strong>The game:</strong> after a random delay the light flashes.{" "}
             <strong>
@@ -209,11 +210,11 @@ export default function ReactionDrill({ playerId = "default", onExit }) {
             count against you. The window gets tighter as you level up.
           </p>
           <div className="gym-trains">
-            <strong>On the ice</strong>
+            <strong>Why it matters</strong>
             <span>
-              Trains reaction speed and the discipline to not commit: getting the
-              shot off faster, holding instead of forcing a pass into traffic,
-              and staying onside instead of jumping early.
+              A faster release gets the puck off before the window closes, and
+              the discipline to hold stops you from forcing a bad pass or jumping
+              offside.
             </span>
           </div>
           <button className="gym-btn" onClick={start}>

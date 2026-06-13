@@ -289,6 +289,45 @@ export default function TrackingDrill({ playerId = "default", onExit }) {
 
   useEffect(() => () => cancelAnimationFrame(rafRef.current), []);
 
+  // Keep the rink fitted to the window when it resizes mid-shift. Re-fit the
+  // canvas and rescale the skaters' positions/velocities/radius proportionally
+  // so resizing actually re-sizes the rink instead of doing nothing — and
+  // without resetting the shift or regenerating the field.
+  useEffect(() => {
+    if (phase !== "playing") return;
+    let raf = 0;
+    const onResize = () => {
+      cancelAnimationFrame(raf);
+      raf = requestAnimationFrame(() => {
+        const canvas = canvasRef.current;
+        const host = rootRef.current;
+        const sc = sceneRef.current;
+        if (!canvas || !host || !sc.ctx) return;
+        const oldW = sc.W || 1;
+        const oldH = sc.H || 1;
+        const { ctx, W, H } = setupCanvas(canvas, host);
+        const sx = W / oldW;
+        const sy = H / oldH;
+        const r = Math.max(13, Math.round(W * 0.028));
+        sc.dots.forEach((d) => {
+          d.x *= sx;
+          d.y *= sy;
+          d.vx *= sx;
+          d.vy *= sy;
+          d.r = r;
+        });
+        sc.ctx = ctx;
+        sc.W = W;
+        sc.H = H;
+      });
+    };
+    window.addEventListener("resize", onResize);
+    return () => {
+      window.removeEventListener("resize", onResize);
+      cancelAnimationFrame(raf);
+    };
+  }, [phase]);
+
   const hint = {
     watch: "Memorize the gold teammates",
     track: "Track them",
@@ -313,6 +352,7 @@ export default function TrackingDrill({ playerId = "default", onExit }) {
       {phase === "intro" && (
         <div className="gym-card">
           <h2>Head on a Swivel</h2>
+          <p className="gym-goal"><strong>Your goal:</strong> keep track of all three teammates at once, even while the play is moving.</p>
           <p>
             <strong>The game:</strong> three teammates flash gold, then every
             skater turns white and starts moving. Keep tabs on all three at once
@@ -320,12 +360,11 @@ export default function TrackingDrill({ playerId = "default", onExit }) {
             teammates. Blue check means right, orange cross means wrong.
           </p>
           <div className="gym-trains">
-            <strong>On the ice</strong>
+            <strong>Why it matters</strong>
             <span>
-              Trains divided attention and rink awareness: knowing where your
-              options and threats are without puck-watching. This is the skill
-              behind clean breakouts, finding the open man, and seeing the hit
-              coming before it arrives.
+              Knowing where your options are without staring at the puck is how
+              you find the open man, break out cleanly, and see the check before
+              it arrives.
             </span>
           </div>
           <button className="gym-btn" onClick={start}>

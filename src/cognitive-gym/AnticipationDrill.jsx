@@ -260,19 +260,19 @@ export default function AnticipationDrill({ playerId = "default", onExit }) {
       {phase === "intro" && (
         <div className="gym-card">
           <h2>Read the Pass</h2>
+          <p className="gym-goal"><strong>Your goal:</strong> call where the puck is going before it gets there.</p>
           <p>
             <strong>The game:</strong> a puck launches across the ice, then
             disappears partway. Track its angle and speed in your head, then tap
-            the spot on the gold line where it will cross. Watch the boards. It
-            banks. Blue marker means you read it, orange means you missed.
+            the gold bar where it will cross. It can come from any side. Blue
+            marker means you read it, orange means you missed.
           </p>
           <div className="gym-trains">
-            <strong>On the ice</strong>
+            <strong>Why it matters</strong>
             <span>
-              Trains anticipation: projecting where the puck and the play are
-              going, not where they are. This is reading passes, picking off
-              lanes, judging rims and bank passes off the boards, and arriving
-              where the puck will be.
+              Reading a pass early is how you pick off a lane, beat a player to
+              the spot, and arrive where the puck will be instead of chasing
+              where it was.
             </span>
           </div>
           <button className="gym-btn" onClick={start}>
