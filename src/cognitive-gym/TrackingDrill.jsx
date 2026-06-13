@@ -218,6 +218,16 @@ export default function TrackingDrill({ playerId = "default", onExit }) {
       ctx.fillText("🐻", W * 0.5 + H * 0.2, H * 0.5);
       ctx.restore();
 
+      // faint game title across the top of the rink
+      ctx.save();
+      ctx.globalAlpha = 0.18;
+      ctx.fillStyle = "#0b1b2b";
+      ctx.font = `800 ${Math.round(H * 0.11)}px system-ui, sans-serif`;
+      ctx.textAlign = "center";
+      ctx.textBaseline = "top";
+      ctx.fillText("Baylor's Pick", W * 0.5, 6);
+      ctx.restore();
+
       sc.dots.forEach((d, idx) => {
         const isTarget = sc.targetIdx.has(idx);
         const isPicked = sc.picks.has(idx);
@@ -310,9 +320,30 @@ export default function TrackingDrill({ playerId = "default", onExit }) {
     if (best === -1) return;
 
     if (sc.picks.has(best)) {
-      // second tap on one of your picks = call it the soccer ball (toggle)
-      sc.ballCall = sc.ballCall === best ? null : best;
-      setBallCall(sc.ballCall);
+      const now = performance.now();
+      if (sc.lastTapIdx === best && now - (sc.lastTapTime || 0) < 350) {
+        // double-tap → call this pick the soccer ball (cancel the pending deselect)
+        clearTimeout(sc.tapTimer);
+        sc.lastTapIdx = null;
+        sc.ballCall = best;
+        setBallCall(best);
+        return;
+      }
+      // single tap → deselect it (after a short wait in case a 2nd tap is coming)
+      sc.lastTapIdx = best;
+      sc.lastTapTime = now;
+      clearTimeout(sc.tapTimer);
+      const scene = sc;
+      sc.tapTimer = setTimeout(() => {
+        if (sceneRef.current !== scene) return; // shift moved on
+        scene.picks.delete(best);
+        if (scene.ballCall === best) {
+          scene.ballCall = null;
+          setBallCall(null);
+        }
+        scene.lastTapIdx = null;
+        setRemaining(TARGETS - scene.picks.size);
+      }, 350);
       return;
     }
     if (sc.picks.size >= TARGETS) return; // already tapped your three
@@ -324,6 +355,7 @@ export default function TrackingDrill({ playerId = "default", onExit }) {
   function lockIn() {
     const sc = sceneRef.current;
     if (phase !== "playing" || sc.stage !== "pick" || sc.picks.size !== TARGETS) return;
+    clearTimeout(sc.tapTimer); // don't let a pending deselect fire after locking in
     sc.stage = "feedback";
     setStage("feedback");
     const correctCount = [...sc.picks].filter((idx) => sc.targetIdx.has(idx)).length;
@@ -358,7 +390,13 @@ export default function TrackingDrill({ playerId = "default", onExit }) {
     }
   }, [phase, saved, correct, playerId]);
 
-  useEffect(() => () => cancelAnimationFrame(rafRef.current), []);
+  useEffect(
+    () => () => {
+      cancelAnimationFrame(rafRef.current);
+      clearTimeout(sceneRef.current && sceneRef.current.tapTimer);
+    },
+    []
+  );
 
   // Keep the rink fitted to the window when it resizes mid-shift. Re-fit the
   // canvas and rescale the skaters' positions/velocities/radius proportionally

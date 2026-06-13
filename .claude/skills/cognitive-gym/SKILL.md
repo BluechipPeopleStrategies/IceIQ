@@ -147,6 +147,15 @@ fits. Read this before touching any game.
   fastest reaction (ms). Add more as new games create new measurable things.
 - **Illustrated intros.** Every game intro opens with a small illustration
   (inline SVG, on-brand colors) above the text, so the start is not all words.
+- **Deselect a pick (Baylor's Pick).** Single-tap one of your picks to remove it
+  and pick again; double-tap it (within ~350ms) to call it the soccer ball. The
+  single-tap deselect is delayed briefly so a double-tap is not misread.
+- **Realistic rink.** `drawRink` renders a real-looking sheet: rounded boards
+  with a lighter glass line, two blue lines, red center line + circle, four
+  end-zone faceoff circles with dots, goal lines, and blue creases. All canvas
+  games share it.
+- **In-ice title watermark.** The game title also sits faintly across the top of
+  the rink itself (transparent), in addition to the heading above it.
 
 ## Common mistakes
 - Sizing a canvas to container width only (overflows on desktop). Use the
