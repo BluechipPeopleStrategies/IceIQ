@@ -230,35 +230,14 @@ function Zone({ zoneKey }) {
 }
 
 function FaceoffCircle({ cx, cy }) {
-  const r = D.endFaceoffRadius;
-  // Faceoff markings are reference geometry — kids should see the players
-  // and the read, not the rink lines. Muted to ~35% so they read as
-  // background, not foreground.
-  return (
-    <g opacity="0.35">
-      <circle cx={cx} cy={cy} r={r} fill="none" stroke={COLORS.redLine} strokeWidth="0.15" />
-      <circle cx={cx} cy={cy} r={0.3 * M} fill={COLORS.redLine} />
-      <g stroke={COLORS.redLine} strokeWidth="0.15">
-        <line x1={cx - 0.6 * M} y1={cy - r} x2={cx - 0.6 * M} y2={cy - r - 0.6 * M} />
-        <line x1={cx + 0.6 * M} y1={cy - r} x2={cx + 0.6 * M} y2={cy - r - 0.6 * M} />
-        <line x1={cx - 0.6 * M} y1={cy + r} x2={cx - 0.6 * M} y2={cy + r + 0.6 * M} />
-        <line x1={cx + 0.6 * M} y1={cy + r} x2={cx + 0.6 * M} y2={cy + r + 0.6 * M} />
-      </g>
-    </g>
-  );
+  // Faceoff DOT only — the circle ring + hash marks were removed so the read
+  // stays uncluttered. The dot stays as a reference point, at a readable opacity.
+  return <circle cx={cx} cy={cy} r={0.3 * M} fill={COLORS.redLine} opacity="0.6" />;
 }
 
-function Crease({ side }) {
-  const goalX = side === "left" ? LEFT_GOAL_X : RIGHT_GOAL_X;
-  const r = D.creaseRadius;
-  const sweep = side === "left" ? 1 : 0;
-  return (
-    <path
-      d={`M ${goalX} ${CY - r} A ${r} ${r} 0 0 ${sweep} ${goalX} ${CY + r} Z`}
-      fill={COLORS.creaseFill} fillOpacity="0.5"
-      stroke={COLORS.crease} strokeWidth="0.18"
-    />
-  );
+function Crease() {
+  // Crease half-circle removed at the coach's request — keeps the net area clean.
+  return null;
 }
 
 function Goal({ side }) {
@@ -532,7 +511,7 @@ function RinkReadsRinkInner({
         {safeOverlays.map((o, i) => <Zone key={`ov-${i}`} zoneKey={o} />)}
       </g>
 
-      <path d={outlinePath} fill="none" stroke={COLORS.boards} strokeWidth="0.4" />
+      <path d={outlinePath} fill="none" stroke={COLORS.boards} strokeWidth="0.6" />
 
       <g clipPath={`url(#${clipId})`}>
         {(showLeft || showCenter) && (
@@ -554,19 +533,15 @@ function RinkReadsRinkInner({
       </g>
 
       {showCenterCircle && (
-        <g opacity="0.35">
-          <circle cx={CX} cy={CY} r={D.centerFaceoffRadius}
-            fill="none" stroke={COLORS.blueLine} strokeWidth="0.18" />
-          <circle cx={CX} cy={CY} r={0.3 * M} fill={COLORS.blueLine} />
-        </g>
+        <circle cx={CX} cy={CY} r={0.3 * M} fill={COLORS.blueLine} opacity="0.6" />
       )}
 
       {showLeft && (
         <>
           <FaceoffCircle cx={END_FACEOFFS[0].x} cy={END_FACEOFFS[0].y} />
           <FaceoffCircle cx={END_FACEOFFS[1].x} cy={END_FACEOFFS[1].y} />
-          <circle cx={NZ_FACEOFFS[0].x} cy={NZ_FACEOFFS[0].y} r={0.35 * M} fill={COLORS.redLine} opacity="0.35" />
-          <circle cx={NZ_FACEOFFS[1].x} cy={NZ_FACEOFFS[1].y} r={0.35 * M} fill={COLORS.redLine} opacity="0.35" />
+          <circle cx={NZ_FACEOFFS[0].x} cy={NZ_FACEOFFS[0].y} r={0.35 * M} fill={COLORS.redLine} opacity="0.6" />
+          <circle cx={NZ_FACEOFFS[1].x} cy={NZ_FACEOFFS[1].y} r={0.35 * M} fill={COLORS.redLine} opacity="0.6" />
           <Crease side="left" />
           <Goal side="left" />
           {showTrapezoid && <Trapezoid side="left" />}
@@ -576,8 +551,8 @@ function RinkReadsRinkInner({
         <>
           <FaceoffCircle cx={END_FACEOFFS[2].x} cy={END_FACEOFFS[2].y} />
           <FaceoffCircle cx={END_FACEOFFS[3].x} cy={END_FACEOFFS[3].y} />
-          <circle cx={NZ_FACEOFFS[2].x} cy={NZ_FACEOFFS[2].y} r={0.35 * M} fill={COLORS.redLine} opacity="0.35" />
-          <circle cx={NZ_FACEOFFS[3].x} cy={NZ_FACEOFFS[3].y} r={0.35 * M} fill={COLORS.redLine} opacity="0.35" />
+          <circle cx={NZ_FACEOFFS[2].x} cy={NZ_FACEOFFS[2].y} r={0.35 * M} fill={COLORS.redLine} opacity="0.6" />
+          <circle cx={NZ_FACEOFFS[3].x} cy={NZ_FACEOFFS[3].y} r={0.35 * M} fill={COLORS.redLine} opacity="0.6" />
           <Crease side="right" />
           <Goal side="right" />
           {showTrapezoid && <Trapezoid side="right" />}
