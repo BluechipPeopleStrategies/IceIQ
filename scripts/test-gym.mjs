@@ -1,6 +1,7 @@
 import { gradedPoints, MAX_REP } from "../src/cognitive-gym/gymPoints.js";
 import { createAdaptiveLevel } from "../src/cognitive-gym/gymEngine.js";
 import { careerPointsFromDrills } from "../src/cognitive-gym/gymStorage.js";
+import { DIRECTIONS, guessAxis, scorePass } from "../src/cognitive-gym/anticipationCore.js";
 
 let failed = 0;
 const check = (name, cond) => { console.log(`${cond ? "PASS" : "FAIL"}  ${name}`); if (!cond) failed++; };
@@ -34,6 +35,20 @@ const floor = createAdaptiveLevel(1);
 check("cannot relegate below 1", floor.record(false) === 1 && floor.record(false) === 1);
 const ceil = createAdaptiveLevel(20);
 check("cannot promote above max", ceil.record(true) === 20 && ceil.record(true) === 20 && ceil.record(true) === 20);
+
+check("four directions", DIRECTIONS.length === 4 && DIRECTIONS.join() === "lr,rl,tb,bt");
+check("horizontal travel guesses in Y", guessAxis("lr") === "y" && guessAxis("rl") === "y");
+check("vertical travel guesses in X", guessAxis("tb") === "x" && guessAxis("bt") === "x");
+
+const bang = scorePass(100, 100, 300, 10);
+check("bang-on is success with max points", bang.success && bang.points === 1000);
+const inside = scorePass(108, 100, 300, 10);
+check("inside window but off scores less than bang-on", inside.success && inside.points < 1000);
+const outside = scorePass(140, 100, 300, 10);
+check("outside window fails", !outside.success);
+const near = scorePass(105, 100, 300, 10);
+const far = scorePass(118, 100, 300, 10);
+check("closer scores higher", near.points > far.points);
 
 const drills = {
   anticipation: { sessions: [{ points: 800 }, { points: 600 }] },
