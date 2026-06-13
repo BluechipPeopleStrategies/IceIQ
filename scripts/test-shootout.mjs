@@ -75,3 +75,32 @@ test("cellAtPoint maps a point to its cell, or null when outside", () => {
   assert.equal(cellAtPoint(rects, 150, 150), "fiveHole");
   assert.equal(cellAtPoint(rects, 999, 999), null);
 });
+
+import { makeShot, pickN } from "../src/cognitive-gym/shootoutCore.js";
+
+test("pickN returns n distinct items deterministically", () => {
+  const rng = globalThis.__mulberry32(7);
+  const got = pickN(["a", "b", "c", "d"], 2, rng);
+  assert.equal(got.length, 2);
+  assert.notEqual(got[0], got[1]);
+});
+
+test("makeShot: coverage and open counts match the level params", () => {
+  const shot = makeShot(1, { rng: globalThis.__mulberry32(1) });
+  assert.equal(shot.coveredAtStart.length, 1); // coveredAtStartCount(1)
+  assert.equal(shot.openAtStart.length, 5);
+  assert.equal(shot.closeSchedule.length, 0); // closesDuringShotCount(1) === 0
+});
+
+test("makeShot: at the top level at least one cell stays open all shot", () => {
+  const shot = makeShot(20, { rng: globalThis.__mulberry32(3) });
+  const closingIds = new Set(shot.closeSchedule.map((c) => c.cellId));
+  const alwaysOpen = shot.openAtStart.filter((id) => !closingIds.has(id));
+  assert.ok(alwaysOpen.length >= 1, "a scorable cell must always remain");
+});
+
+test("makeShot is deterministic for a given seed", () => {
+  const a = makeShot(15, { rng: globalThis.__mulberry32(42) });
+  const b = makeShot(15, { rng: globalThis.__mulberry32(42) });
+  assert.deepEqual(a, b);
+});

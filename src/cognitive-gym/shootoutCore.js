@@ -66,3 +66,33 @@ export function cellAtPoint(rects, px, py) {
   }
   return null;
 }
+
+// Deterministic pick of n distinct items from arr using rng.
+export function pickN(arr, n, rng = Math.random) {
+  const pool = arr.slice();
+  const out = [];
+  const k = Math.max(0, Math.min(n, pool.length));
+  for (let i = 0; i < k; i += 1) {
+    const idx = Math.floor(rng() * pool.length);
+    out.push(pool.splice(idx, 1)[0]);
+  }
+  return out;
+}
+
+// Build a shot for a level. `rng` is injectable so tests (and the head-to-head
+// challenge link) are deterministic. Returns:
+// { level, coveredAtStart:[id], openAtStart:[id], closeSchedule:[{cellId,atMs}], shotClockMs }
+// Invariant: at least one cell is never covered, so a goal is always possible.
+export function makeShot(level, { rng = Math.random } = {}) {
+  const covered = pickN(CELL_IDS, coveredAtStartCount(level), rng);
+  const open = CELL_IDS.filter((id) => !covered.includes(id));
+  const closesN = Math.min(closesDuringShotCount(level), Math.max(0, open.length - 1));
+  const closing = pickN(open, closesN, rng);
+  const clock = shotClockMs(level);
+  const hole = holeOpenMs(level);
+  const closeSchedule = closing.map((cellId, i) => ({
+    cellId,
+    atMs: Math.round(closesN <= 1 ? hole : lerp(hole, clock * 0.9, i / (closesN - 1))),
+  }));
+  return { level, coveredAtStart: covered, openAtStart: open, closeSchedule, shotClockMs: clock };
+}
