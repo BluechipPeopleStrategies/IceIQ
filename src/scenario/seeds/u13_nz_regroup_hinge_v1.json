@@ -2,32 +2,92 @@
   "id": "u13_nz_regroup_hinge_v1",
   "type": "scenario",
   "level": "U13 / Peewee",
-  "levels": ["U13 / Peewee"],
+  "levels": [
+    "U13 / Peewee"
+  ],
   "nodeId": "u13.breakout-and-regroup",
-  "themes": ["regroup", "neutral-zone", "scan", "pass-selection", "decision-making"],
+  "themes": [
+    "regroup",
+    "neutral-zone",
+    "scan",
+    "pass-selection",
+    "decision-making"
+  ],
   "cat": "Regroup",
   "difficulty": 2,
-  "stage": { "view": "neutral", "zone": "neutral" },
+  "stage": {
+    "view": "neutral",
+    "zone": "neutral"
+  },
   "actors": [
-    { "id": "you",     "kind": "player",   "x": 0.46, "y": 0.55, "tag": "YOU" },
-    { "id": "puck",    "kind": "puck",     "x": 0.462, "y": 0.548 },
-    { "id": "partner", "kind": "teammate", "x": 0.40, "y": 0.34, "tag": "D" },
-    { "id": "lw",      "kind": "teammate", "x": 0.68, "y": 0.22, "tag": "LW" },
-    { "id": "d1",      "kind": "defender", "x": 0.62, "y": 0.27, "tag": "" }
+    {
+      "id": "you",
+      "kind": "player",
+      "x": 0.46,
+      "y": 0.55,
+      "tag": "YOU"
+    },
+    {
+      "id": "puck",
+      "kind": "puck",
+      "x": 0.462,
+      "y": 0.548
+    },
+    {
+      "id": "partner",
+      "kind": "teammate",
+      "x": 0.4,
+      "y": 0.34,
+      "tag": "D"
+    },
+    {
+      "id": "lw",
+      "kind": "teammate",
+      "x": 0.68,
+      "y": 0.22,
+      "tag": "LW"
+    },
+    {
+      "id": "center",
+      "kind": "teammate",
+      "x": 0.57,
+      "y": 0.42,
+      "tag": "C"
+    },
+    {
+      "id": "d1",
+      "kind": "defender",
+      "x": 0.62,
+      "y": 0.27,
+      "tag": ""
+    },
+    {
+      "id": "d2",
+      "kind": "defender",
+      "x": 0.54,
+      "y": 0.36,
+      "tag": ""
+    }
   ],
   "interaction": {
     "kind": "selection",
-    "prompt": "You have the puck in the neutral zone on a regroup. Scan the full width and tap the teammate who keeps clean possession.",
-    "from": ["partner", "lw"],
+    "prompt": "You have the puck in the neutral zone on a regroup. Scan the full width and tap your best outlet.",
+    "from": [
+      "partner",
+      "lw",
+      "center"
+    ],
     "order": "any"
   },
   "correct": {
     "kind": "selection",
-    "ids": ["partner"]
+    "ids": [
+      "partner"
+    ]
   },
   "feedback": {
     "right": "Hinge it horizontally to your D-partner swinging low into open ice. You keep possession, reset the angle, and attack the next opening with speed.",
-    "wrong": "The far winger is calling for the stretch pass and looks like they are behind the defense, but they are tightly covered and the defender has gap and body position. That lane is not clean."
+    "wrong": "The center looks available in the mid-lane and the far winger is calling for the stretch, but both have defenders closing their lanes. Your D-partner swinging low is the one clean option — send it there and reset."
   },
   "tip": "A loud stick is not always an open stick. Scan the whole sheet before you commit the puck.",
   "why": "Scanning full width lets you identify your D-partner's safe hinge lane and keep possession instead of throwing a hopeful stretch pass into coverage."
