@@ -170,6 +170,7 @@ export function scanStaleDeps(root, allowlist = BUILD_DEPS) {
   let pkg;
   try { pkg = JSON.parse(fs.readFileSync(path.join(root, "package.json"), "utf8")); }
   catch { return []; }
+  // devDependencies are intentionally excluded: build-time tooling has no src/ import.
   const deps = Object.keys(pkg.dependencies || {});
   const used = collectBareImports(root);
   return deps.filter(d => !used.has(d) && !allowlist.has(d));

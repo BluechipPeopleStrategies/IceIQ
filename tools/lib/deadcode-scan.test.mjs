@@ -68,6 +68,8 @@ ok("globToRegExp matches single star within a segment",
    globToRegExp("/a/*.json").test("/a/x.json") && !globToRegExp("/a/*.json").test("/a/b/x.json"));
 ok("globToRegExp matches double star across segments",
    globToRegExp("/a/**/*.js").test("/a/b/c.js"));
+ok("globToRegExp matches leading double-star",
+   globToRegExp("**/*.json").test("a/b/c.json"));
 ok("parseGlobSpecs extracts import.meta.glob pattern",
    parseGlobSpecs(`const m = import.meta.glob("./seeds/*.json", { eager: true });`)[0] === "./seeds/*.json");
 
@@ -123,6 +125,18 @@ ok("parseGlobSpecs extracts import.meta.glob pattern",
      Array.isArray(all.brokenImports) && all.unusedFiles.includes(join("src", "orphan.jsx")) &&
      all.staleDeps.includes("dead-pkg") && all.cruft.length >= 2);
 
+  rmSync(root, { recursive: true, force: true });
+}
+
+// --- buildReachable with a missing entry returns an empty set
+{
+  const root = mkdtempSync(join(tmpdir(), "dcs3-"));
+  mkdirSync(join(root, "src"), { recursive: true });
+  writeFileSync(join(root, "src", "lonely.jsx"), `export const x = 1;`);
+  ok("buildReachable returns empty set when entry is missing",
+     buildReachable(root, "src/nonexistent-entry.jsx").size === 0);
+  ok("findUnusedFiles flags everything when entry is missing",
+     findUnusedFiles(root, "src/nonexistent-entry.jsx").includes(join("src", "lonely.jsx")));
   rmSync(root, { recursive: true, force: true });
 }
 
