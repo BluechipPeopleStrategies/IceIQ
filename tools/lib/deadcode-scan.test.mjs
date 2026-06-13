@@ -38,6 +38,7 @@ const ok = (name, cond) => { console.log(`${cond ? "PASS" : "FAIL"}  ${name}`); 
   writeFileSync(join(root, "src", "main.jsx"), `import a from "./a.js"; import miss from "./nope.js";`);
   writeFileSync(join(root, "src", "a.js"), `export default 1;`);
   writeFileSync(join(root, "src", "lib", "b.jsx"), `export const b = 2;`);
+  writeFileSync(join(root, "src", "thing.test.jsx"), `import x from "./does-not-exist.js";`);
 
   ok("resolveImport finds .js sibling",
      resolveImport(join(root, "src", "main.jsx"), "./a.js") === join(root, "src", "a.js"));
@@ -47,13 +48,15 @@ const ok = (name, cond) => { console.log(`${cond ? "PASS" : "FAIL"}  ${name}`); 
      resolveImport(join(root, "src", "main.jsx"), "./nope.js") === null);
 
   ok("walkFiles lists js/jsx under src",
-     walkFiles(join(root, "src"), [".js", ".jsx"]).length === 3);
+     walkFiles(join(root, "src"), [".js", ".jsx"]).length === 4);
 
   const broken = scanBrokenImports(root);
   ok("scanBrokenImports flags exactly the missing one",
      broken.length === 1 && broken[0].spec === "./nope.js" && broken[0].file === join("src", "main.jsx"));
   ok("scanBrokenImports ignores bare packages",
      !broken.some(b => b.spec === "some-pkg"));
+  ok("scanBrokenImports skips .test files",
+     !scanBrokenImports(root).some(b => b.file.includes("thing.test")));
 
   rmSync(root, { recursive: true, force: true });
 }

@@ -55,7 +55,9 @@ export function scanBrokenImports(root) {
   const srcDir = path.join(root, "src");
   const broken = [];
   for (const f of walkFiles(srcDir, [".js", ".jsx"])) {
-    const src = fs.readFileSync(f, "utf8");
+    if (/\.test\.(js|jsx)$/.test(f)) continue;
+    let src;
+    try { src = fs.readFileSync(f, "utf8"); } catch { continue; }
     for (const spec of parseImports(src)) {
       if (!spec.startsWith(".")) continue; // bare packages handled by stale-deps
       if (resolveImport(f, spec) === null) {
