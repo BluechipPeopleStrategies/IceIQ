@@ -9,53 +9,81 @@ import {
   pointerPos,
 } from "./gymEngine";
 import { getDrill, saveSession } from "./gymStorage";
+import { DIRECTIONS, guessAxis, scorePass } from "./anticipationCore";
 
 // "Read the Pass" — trajectory prediction.
-// A puck launches across the ice and disappears partway. The player taps the
-// gold line where they think it will cross. Trains anticipation: reading
-// passes, picking off lanes, judging rims and bank passes off the boards.
+// A puck launches across the ice from any side and disappears partway. The
+// player taps the gold bar where they think it will cross. Trains anticipation:
+// reading passes, picking off lanes, judging rims and bank passes off the boards.
 
 const ROUNDS = 8;
 const DT = 1 / 120; // physics timestep used to pre-sample the trajectory
+const BAR = 22; // gold bar thickness in px (was a 4px line) — bigger target
 
-// Pre-compute the full puck path for a round. Difficulty (level) raises speed
-// and shrinks both the visible window and the hit tolerance.
-function buildTrajectory(W, H, level) {
+function pickDirection() {
+  return DIRECTIONS[Math.floor(rand(0, DIRECTIONS.length))];
+}
+
+// Build the full puck path for a round in a random direction. `motion` is the
+// travel axis; the gold bar sits on the exit edge; the guess varies along the
+// other axis. Difficulty raises speed, hides earlier, and shrinks tolerance.
+function buildTrajectory(W, H, level, dir = pickDirection()) {
   const t = levelT(level);
-  const speed = W * lerp(0.35, 0.9, t);
+  const r = 8; // puck radius
+  const motion = dir === "lr" || dir === "rl" ? "x" : "y";
+  const motionSpan = motion === "x" ? W : H;
+  const crossSpan = motion === "x" ? H : W;
+  const speed = motionSpan * lerp(0.35, 0.9, t);
   const maxAngle = lerp(20, 50, t) * (Math.PI / 180);
   const angle = rand(-maxAngle, maxAngle);
-  const r = 8; // puck radius
-  const targetX = W - 36; // the gold crossing line
-  let x = 24;
-  let y = rand(H * 0.2, H * 0.8);
-  let vx = Math.cos(angle) * speed;
-  let vy = Math.sin(angle) * speed;
-  let time = 0;
-  const pts = [{ x, y, t: 0 }];
 
-  while (x < targetX && time < 20) {
-    x += vx * DT;
-    y += vy * DT;
-    time += DT;
-    // bounce off the top / bottom boards
-    if (y < r) {
-      y = 2 * r - y;
-      vy = -vy;
-    } else if (y > H - r) {
-      y = 2 * (H - r) - y;
-      vy = -vy;
-    }
+  // start/exit positions along the motion axis
+  const lo = 24;
+  const hi = motionSpan - 36;
+  const forward = dir === "lr" || dir === "tb";
+  let m = forward ? lo : hi; // motion coord
+  let c = rand(crossSpan * 0.2, crossSpan * 0.8); // cross coord
+  const exitM = forward ? hi : lo;
+  const vMotion = (forward ? 1 : -1) * Math.cos(angle) * speed;
+  let vCross = Math.sin(angle) * speed;
+
+  let time = 0;
+  const pts = [];
+  const push = () => {
+    // map (m, c) back to absolute (x, y)
+    const x = motion === "x" ? m : c;
+    const y = motion === "x" ? c : m;
     pts.push({ x, y, t: time });
+  };
+  push();
+  const done = () => (forward ? m >= exitM : m <= exitM);
+  while (!done() && time < 20) {
+    m += vMotion * DT;
+    c += vCross * DT;
+    time += DT;
+    // bounce off the boards parallel to travel
+    if (c < r) {
+      c = 2 * r - c;
+      vCross = -vCross;
+    } else if (c > crossSpan - r) {
+      c = 2 * (crossSpan - r) - c;
+      vCross = -vCross;
+    }
+    push();
   }
 
+  const hideFrac = lerp(0.55, 0.25, t); // fraction of the path still visible
   return {
     pts,
-    crossY: y,
+    motion, // "x" | "y"
+    axis: guessAxis(dir), // "y" | "x" — where the guess varies
+    exitM, // motion-axis coordinate of the gold bar
+    crossPos: c, // guess-axis coordinate of the true crossing
     crossT: time,
-    hideX: 24 + (targetX - 24) * lerp(0.55, 0.25, t), // puck vanishes here
-    tolerance: H * lerp(0.16, 0.06, t),
-    targetX,
+    hideM: forward ? lo + (hi - lo) * hideFrac : hi - (hi - lo) * hideFrac,
+    forward,
+    tolerance: crossSpan * lerp(0.075, 0.02, t), // MUCH smaller success window
+    crossSpan,
     r,
   };
 }
@@ -85,9 +113,11 @@ export default function AnticipationDrill({ playerId = "default", onExit }) {
       H,
       traj,
       startedAt: performance.now(),
-      guessY: null,
+      guessC: null,
       result: null,
+      repPoints: 0,
       revealStart: null,
+      settled: false,
       roundIndex,
     };
     loop();
@@ -129,13 +159,16 @@ export default function AnticipationDrill({ playerId = "default", onExit }) {
 
       drawRink(ctx, W, H);
 
-      // gold crossing line
-      ctx.strokeStyle = "#f2b705";
-      ctx.lineWidth = 4;
-      ctx.beginPath();
-      ctx.moveTo(traj.targetX, 0);
-      ctx.lineTo(traj.targetX, H);
-      ctx.stroke();
+      const horiz = traj.motion === "x";
+
+      // gold crossing BAR on the exit edge (thick, more target area)
+      ctx.fillStyle = "#f2b705";
+      if (horiz) ctx.fillRect(traj.exitM - BAR / 2, 0, BAR, H);
+      else ctx.fillRect(0, traj.exitM - BAR / 2, W, BAR);
+
+      // absolute coords of the true crossing on the bar
+      const trueX = horiz ? traj.exitM : traj.crossPos;
+      const trueY = horiz ? traj.crossPos : traj.exitM;
 
       const idx = Math.min(Math.floor(t / DT), traj.pts.length - 1);
       const pt = traj.pts[idx];
@@ -162,39 +195,71 @@ export default function AnticipationDrill({ playerId = "default", onExit }) {
         const head = traj.pts[revIdx];
         drawPuck(ctx, head.x, head.y, traj.r);
 
-        if (sc.guessY !== null) {
+        if (sc.guessC !== null) {
+          const gx = horiz ? traj.exitM : sc.guessC;
+          const gy = horiz ? sc.guessC : traj.exitM;
+          // faint guess-to-truth line — "how close was I"
+          ctx.save();
+          ctx.globalAlpha = 0.5;
+          ctx.setLineDash([3, 4]);
+          ctx.strokeStyle = "#0b1b2b";
+          ctx.lineWidth = 1.5;
+          ctx.beginPath();
+          ctx.moveTo(gx, gy);
+          ctx.lineTo(trueX, trueY);
+          ctx.stroke();
+          ctx.restore();
+
           ctx.fillStyle = sc.result === "hit" ? "#1b6cb0" : "#e8590c";
           ctx.beginPath();
-          ctx.arc(traj.targetX, sc.guessY, 10, 0, Math.PI * 2);
+          ctx.arc(gx, gy, 10, 0, Math.PI * 2);
           ctx.fill();
         }
 
         if (revIdx >= traj.pts.length - 1 && !sc.settled) {
           sc.settled = true;
-          // show the tolerance ring around the true crossing
+          // show the tolerance window around the true crossing, along the bar
           ctx.strokeStyle = "#0b1b2b";
           ctx.lineWidth = 2;
           ctx.beginPath();
-          ctx.arc(traj.targetX, traj.crossY, traj.tolerance, 0, Math.PI * 2);
+          if (horiz) {
+            ctx.moveTo(trueX, trueY - traj.tolerance);
+            ctx.lineTo(trueX, trueY + traj.tolerance);
+          } else {
+            ctx.moveTo(trueX - traj.tolerance, trueY);
+            ctx.lineTo(trueX + traj.tolerance, trueY);
+          }
           ctx.stroke();
           resolveRound(sc.result === "hit");
           return;
         }
       } else {
-        // live phase — puck visible until hideX, then masked
-        if (pt.x <= traj.hideX) {
+        // live phase — puck visible until hideM along motion, then masked
+        const m = horiz ? pt.x : pt.y;
+        const past = traj.forward ? m > traj.hideM : m < traj.hideM;
+        if (!past) {
           drawPuck(ctx, pt.x, pt.y, traj.r);
         } else {
+          // faint mask band over the hidden stretch, oriented by motion
           ctx.save();
           ctx.globalAlpha = 0.06;
           ctx.fillStyle = "#0b1b2b";
-          ctx.fillRect(traj.hideX, 0, traj.targetX - traj.hideX, H);
+          if (horiz) {
+            const x0 = traj.forward ? traj.hideM : traj.exitM;
+            const x1 = traj.forward ? traj.exitM : traj.hideM;
+            ctx.fillRect(Math.min(x0, x1), 0, Math.abs(x1 - x0), H);
+          } else {
+            const y0 = traj.forward ? traj.hideM : traj.exitM;
+            const y1 = traj.forward ? traj.exitM : traj.hideM;
+            ctx.fillRect(0, Math.min(y0, y1), W, Math.abs(y1 - y0));
+          }
           ctx.restore();
         }
         // no tap in time -> automatic miss
         if (t > traj.crossT + 1.2) {
-          sc.guessY = null;
+          sc.guessC = null;
           sc.result = "miss";
+          sc.repPoints = 0;
           sc.frozenIdx = idx;
           sc.revealStart = performance.now();
         }
@@ -210,13 +275,24 @@ export default function AnticipationDrill({ playerId = "default", onExit }) {
     if (phase !== "playing" || !sc.traj || sc.revealStart !== null) return;
     evt.preventDefault();
     const pos = pointerPos(evt, canvasRef.current);
+    const traj = sc.traj;
     const idx = Math.min(
       Math.floor((performance.now() - sc.startedAt) / 1000 / DT),
-      sc.traj.pts.length - 1
+      traj.pts.length - 1
     );
-    sc.guessY = Math.min(Math.max(pos.y, 0), sc.H);
-    sc.result =
-      Math.abs(sc.guessY - sc.traj.crossY) <= sc.traj.tolerance ? "hit" : "miss";
+    const guessC =
+      traj.axis === "y"
+        ? Math.min(Math.max(pos.y, 0), sc.H)
+        : Math.min(Math.max(pos.x, 0), sc.W);
+    const { success, points } = scorePass(
+      guessC,
+      traj.crossPos,
+      traj.crossSpan,
+      traj.tolerance
+    );
+    sc.guessC = guessC;
+    sc.result = success ? "hit" : "miss";
+    sc.repPoints = points;
     sc.frozenIdx = idx;
     sc.revealStart = performance.now();
   }
