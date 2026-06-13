@@ -8,9 +8,10 @@
   "cat": "Defensive Play",
   "difficulty": 2,
   "stage": { "view": "left", "zone": "def-zone" },
+  "read": { "cue": "two opponents are getting open at the net-front and slot while the puck is in the corner", "decoy": { "x": 0.18, "y": 0.8 } },
   "actors": [
-    { "id": "oppCarrier", "kind": "defender", "x": 0.11, "y": 0.83, "tag": "" },
-    { "id": "puck", "kind": "puck", "x": 0.112, "y": 0.832 },
+    { "id": "oppCarrier", "kind": "defender", "x": 0.18, "y": 0.8, "tag": "" },
+    { "id": "puck", "kind": "puck", "x": 0.182, "y": 0.802 },
     { "id": "oppNet", "kind": "defender", "x": 0.15, "y": 0.52, "tag": "" },
     { "id": "oppSlot", "kind": "defender", "x": 0.24, "y": 0.44, "tag": "" },
     { "id": "g", "kind": "goalie", "x": 0.06, "y": 0.5, "tag": "" },
@@ -22,7 +23,7 @@
     "kind": "place",
     "items": ["d1", "c", "f1"],
     "showTargets": false,
-    "prompt": "The other team has the puck in your corner. Drag each of your three players to where they belong: cover the net-front and the slot, and put pressure on the puck."
+    "prompt": "The other team has the puck in your corner and two of their players are getting open near your net. Drag your three players to lock down the most dangerous ice."
   },
   "correct": {
     "kind": "place",
@@ -33,9 +34,9 @@
     ]
   },
   "feedback": {
-    "right": "That's tight coverage: your D has the net-front, your centre protects the slot, and your winger pressures the puck. The dangerous ice is taken away.",
-    "wrong": "Goals come from the net-front and slot. Cover the house first — D to the net-front, centre in the slot — then pressure the puck on the wall."
+    "right": "That's tight coverage: your D takes the most dangerous man at the net, your centre protects the slot, and your winger pressures the puck. The middle is locked.",
+    "wrong": "All three chasing the puck leaves the net-front and slot wide open — that's where goals come from. Take away the dangerous men in the middle first, then pressure the puck."
   },
-  "tip": "In your own zone, cover the most dangerous ice first: net-front, then slot, then pressure the puck.",
-  "why": "Defensive-zone coverage protects the middle. Bodies at the net-front and slot take away the highest-percentage chances before you chase the puck."
+  "tip": "Cover the most dangerous ice first: net-front and slot. Only one player goes to the puck.",
+  "why": "The trap is to chase the puck with everyone. The dangerous opponents are the ones open in front of your net, so cover them before you pressure the puck."
 }

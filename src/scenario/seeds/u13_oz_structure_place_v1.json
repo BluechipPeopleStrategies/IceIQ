@@ -8,34 +8,35 @@
   "cat": "Offensive Play",
   "difficulty": 3,
   "stage": { "view": "right", "zone": "off-zone" },
+  "read": { "cue": "the defence has overloaded to the strong (puck) side, leaving the weak side and net-front open", "decoy": { "x": 0.88, "y": 0.7 } },
   "actors": [
-    { "id": "carrier", "kind": "teammate", "x": 0.9, "y": 0.78, "tag": "LW" },
+    { "id": "carrier", "kind": "teammate", "x": 0.9, "y": 0.78, "tag": "RW" },
     { "id": "puck", "kind": "puck", "x": 0.902, "y": 0.782 },
-    { "id": "d1", "kind": "defender", "x": 0.85, "y": 0.62, "tag": "" },
-    { "id": "d2", "kind": "defender", "x": 0.8, "y": 0.4, "tag": "" },
+    { "id": "x1", "kind": "defender", "x": 0.86, "y": 0.66, "tag": "" },
+    { "id": "x2", "kind": "defender", "x": 0.84, "y": 0.74, "tag": "" },
     { "id": "g", "kind": "goalie", "x": 0.918, "y": 0.5, "tag": "" },
-    { "id": "netf", "kind": "player", "x": 0.68, "y": 0.46, "tag": "C" },
-    { "id": "weak", "kind": "teammate", "x": 0.68, "y": 0.3, "tag": "RW" },
-    { "id": "point", "kind": "teammate", "x": 0.66, "y": 0.6, "tag": "D" }
+    { "id": "f1", "kind": "player", "x": 0.68, "y": 0.46, "tag": "C" },
+    { "id": "f2", "kind": "teammate", "x": 0.68, "y": 0.3, "tag": "LW" },
+    { "id": "dp", "kind": "teammate", "x": 0.66, "y": 0.6, "tag": "D" }
   ],
   "interaction": {
     "kind": "place",
-    "items": ["netf", "weak", "point"],
+    "items": ["f1", "f2", "dp"],
     "showTargets": false,
-    "prompt": "Your winger has the puck on the strong-side wall. Drag your three teammates into a scoring structure: a body at the net, a weak-side option, and a point to keep it in."
+    "prompt": "Your winger has the puck on the wall and the defence has collapsed to the puck side. Drag your three teammates into the open, dangerous ice."
   },
   "correct": {
     "kind": "place",
     "placements": [
-      { "id": "netf", "zoneId": "oz-net-front" },
-      { "id": "weak", "zoneId": "oz-half-wall-weak" },
-      { "id": "point", "zoneId": "oz-point-strong" }
+      { "id": "f1", "zoneId": "oz-net-front" },
+      { "id": "f2", "zoneId": "oz-half-wall-weak" },
+      { "id": "dp", "zoneId": "oz-point-strong" }
     ]
   },
   "feedback": {
-    "right": "That's a scoring triangle: a net-front presence for tips and rebounds, a weak-side option for the cross-ice play, and a point to keep pucks in and shoot.",
-    "wrong": "With no net-front and no weak-side option, the puck-carrier has nowhere dangerous to go. Fill the net-front, the weak side, and the point."
+    "right": "You read the overload: with the defence stacked strong-side, the net-front and the weak side are wide open, and your point keeps it in. That's where the danger is.",
+    "wrong": "Stacking the strong side just piles into where the defence already is. The defence overloaded the puck, so the open, dangerous ice is the net-front and the weak side."
   },
-  "tip": "In the offensive zone, get a body to the net, an option on the weak side, and a point to hold the line.",
-  "why": "Offensive-zone structure spreads the defence: a net-front screen, a weak-side threat, and a point shooter force the defenders to cover the whole zone."
+  "tip": "Read the defence. When they shade to the puck, the open ice is the net-front and the weak side — fill it.",
+  "why": "Good offensive players attack the space the defence leaves. An overload to the puck opens the net-front and weak side, so that is where the threats belong."
 }

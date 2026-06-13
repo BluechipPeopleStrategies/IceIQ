@@ -8,29 +8,31 @@
   "cat": "Hockey Sense",
   "difficulty": 1,
   "stage": { "view": "right", "zone": "off-zone" },
+  "read": { "cue": "a second defender is covering the middle lane", "decoy": { "x": 0.72, "y": 0.42 } },
   "actors": [
-    { "id": "tm", "kind": "teammate", "x": 0.76, "y": 0.7, "tag": "" },
-    { "id": "puck", "kind": "puck", "x": 0.762, "y": 0.702 },
-    { "id": "opp", "kind": "defender", "x": 0.82, "y": 0.58, "tag": "" },
+    { "id": "tm", "kind": "teammate", "x": 0.74, "y": 0.68, "tag": "" },
+    { "id": "puck", "kind": "puck", "x": 0.742, "y": 0.682 },
+    { "id": "opp1", "kind": "defender", "x": 0.8, "y": 0.62, "tag": "" },
+    { "id": "opp2", "kind": "defender", "x": 0.72, "y": 0.44, "tag": "" },
     { "id": "g", "kind": "goalie", "x": 0.918, "y": 0.5, "tag": "" },
-    { "id": "you", "kind": "player", "x": 0.66, "y": 0.52, "tag": "YOU" }
+    { "id": "you", "kind": "player", "x": 0.64, "y": 0.5, "tag": "YOU" }
   ],
   "interaction": {
     "kind": "place",
     "items": ["you"],
     "showTargets": false,
-    "prompt": "Your teammate has the puck but a defender is on them. Drag YOURSELF to open ice where they can pass to you."
+    "prompt": "Your teammate has the puck, but two defenders are nearby. Drag YOURSELF to the open ice where they can actually pass to you."
   },
   "correct": {
     "kind": "place",
     "placements": [
-      { "id": "you", "x": 0.8, "y": 0.28, "tolerance": 0.14 }
+      { "id": "you", "x": 0.82, "y": 0.26, "tolerance": 0.09 }
     ]
   },
   "feedback": {
-    "right": "Good support. You found open ice away from the defender, so your teammate has an easy pass and you have time with the puck.",
-    "wrong": "Standing behind the defender or right beside your teammate gives them no good pass. Find the open ice where nobody is covering you."
+    "right": "Good read. The middle was covered by the second defender, so you found the open ice on the far side — a clean passing lane your teammate can use.",
+    "wrong": "That spot is covered by a defender, so the pass can't get through. Look for the open ice that has no defender between you and the puck."
   },
-  "tip": "When a teammate has the puck, skate to open ice where they can see you and pass to you.",
-  "why": "Supporting the puck means giving your teammate an easy, open passing option instead of leaving them alone against a defender."
+  "tip": "Don't just skate to open space — make sure there's no defender in the passing lane between you and the puck.",
+  "why": "Real support means an open passing LANE, not just open ice. A defender in the middle takes that option away, so the open spot is the one with a clear line to the puck."
 }
