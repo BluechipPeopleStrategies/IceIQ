@@ -523,6 +523,18 @@ The loop from Task 4 is now proven. This task repeats it across the target table
 
 Excluded from v1 (judgment / Stream-2, per spec): `attacking-1v1`, `creativity-under-pressure`, `puck-carrier-options`, `cycle-and-possession`. If a read for an included concept cannot be made objective (more than one defensible answer), do NOT force it. Move that brief to `docs/ai-pipeline/_briefs-todo/_stream2/` and log it; it becomes input to the future judgment-panel spec.
 
+### Landing flow (matches the repo convention in `.gitignore`)
+
+New reads ride the existing 4-stage path; they do NOT go straight to the live bank.
+The per-read steps below stage seeds, and the batch is promoted at the end:
+
+1. **Brief** (scratch) in `docs/ai-pipeline/_briefs-todo/` (gitignored).
+2. **Stage:** compile with `--out docs/ai-pipeline/_pending-seeds` (gitignored holding pen). Failures park in `_needs-fixing/`.
+3. **Triage / spot-check:** review the staged batch (`node scripts/contact-sheet.mjs`, or the browse/mobile review surface). The owner's 20% sign-off is written to `docs/ai-pipeline/approved.json` as `{ "coach": "<name>", "signedAt": "YYYY-MM-DD", "approved": [ ...ids ] }`.
+4. **Promote:** `node scripts/batch-approve.mjs` moves approved seeds into `src/scenario/seeds/` (tracked, live via qbLoader) and appends `_signoff-log.jsonl`.
+
+The `verify-batch` gate runs on `_pending-seeds` (step 2 to 3), so it only ever sees the new batch, never the existing live seeds. Commit only the tracked artifacts: `docs/library/` notes as you write them, and `src/scenario/seeds/` after promotion (briefs and pending seeds are gitignored scratch).
+
 **Per-read loop (repeat for each row in the table):**
 
 - [ ] **Step A: Ensure a library note exists for the concept.** If `docs/library/<concept-id>.md` is missing, create it from `docs/library/_TEMPLATE.md`, filling Definition + lineage from `src/data/curriculum-ledger.json` (the concept's `definition`, `readConnection`, and `lineage`), and add a row to `docs/library/INDEX.md`.
