@@ -41,3 +41,37 @@ test("hole-open window shrinks, and faster at the top (pow curve)", () => {
   const dropHigh = holeOpenMs(10) - holeOpenMs(20);
   assert.ok(dropHigh > dropLow, "window should drop faster at high levels");
 });
+
+import {
+  CELL_IDS, CELL_LAYOUT, cellRects, cellAtPoint,
+} from "../src/cognitive-gym/shootoutCore.js";
+
+test("net has six named cells", () => {
+  assert.equal(CELL_IDS.length, 6);
+  assert.ok(CELL_IDS.includes("fiveHole"));
+  assert.ok(CELL_IDS.includes("gloveHi"));
+});
+
+test("cellRects tiles the net with six non-overlapping rects", () => {
+  const net = { x: 0, y: 0, w: 300, h: 200 };
+  const rects = cellRects(net);
+  assert.equal(rects.length, 6);
+  // top-left cell starts at the net origin
+  const tl = rects.find((r) => r.id === "gloveHi");
+  assert.equal(tl.x, 0);
+  assert.equal(tl.y, 0);
+  assert.equal(tl.w, 100);
+  assert.equal(tl.h, 100);
+  // bottom-right cell ends at the net's far corner
+  const br = rects.find((r) => r.id === "blkrLo");
+  assert.equal(br.x, 200);
+  assert.equal(br.y, 100);
+});
+
+test("cellAtPoint maps a point to its cell, or null when outside", () => {
+  const net = { x: 0, y: 0, w: 300, h: 200 };
+  const rects = cellRects(net);
+  assert.equal(cellAtPoint(rects, 50, 50), "gloveHi");
+  assert.equal(cellAtPoint(rects, 150, 150), "fiveHole");
+  assert.equal(cellAtPoint(rects, 999, 999), null);
+});

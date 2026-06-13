@@ -32,3 +32,37 @@ export function closesDuringShotCount(level) {
 export function holeOpenMs(level) {
   return Math.round(lerp(EASY_HOLE_MS, HARD_HOLE_MS, Math.pow(levelT(level), 1.5)));
 }
+
+// The net is a 3-column by 2-row grid of tap targets. Big, forgiving cells.
+export const CELL_LAYOUT = [
+  { id: "gloveHi", col: 0, row: 0 },
+  { id: "midHi",   col: 1, row: 0 },
+  { id: "blkrHi",  col: 2, row: 0 },
+  { id: "gloveLo", col: 0, row: 1 },
+  { id: "fiveHole", col: 1, row: 1 },
+  { id: "blkrLo",  col: 2, row: 1 },
+];
+export const CELL_IDS = CELL_LAYOUT.map((c) => c.id);
+const COLS = 3;
+const ROWS = 2;
+
+// Pixel rects for each cell given a net rectangle { x, y, w, h }.
+export function cellRects(net) {
+  const cw = net.w / COLS;
+  const ch = net.h / ROWS;
+  return CELL_LAYOUT.map((c) => ({
+    id: c.id,
+    x: net.x + c.col * cw,
+    y: net.y + c.row * ch,
+    w: cw,
+    h: ch,
+  }));
+}
+
+// Which cell id contains the point, or null if none.
+export function cellAtPoint(rects, px, py) {
+  for (const r of rects) {
+    if (px >= r.x && px <= r.x + r.w && py >= r.y && py <= r.y + r.h) return r.id;
+  }
+  return null;
+}
