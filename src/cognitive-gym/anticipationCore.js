@@ -41,10 +41,22 @@ export function scorePass(guessPx, crossPx, ftPerPx, toleranceFt) {
   return { success, errorFt, points };
 }
 
-// Human-readable miss distance in the player's chosen unit. Under half a foot
-// reads as a clean "bang on". unit: "ft" | "m".
+// Just the miss distance, in the player's chosen unit. The quality word comes
+// from rateMiss. unit: "ft" | "m".
 export function formatDistance(errorFt, unit = "ft") {
-  if (!(errorFt > 0.5)) return "bang on";
-  if (unit === "m") return `off by ${(errorFt * M_PER_FT).toFixed(1)} m`;
-  return `off by ${errorFt.toFixed(1)} ft`;
+  if (unit === "m") return `${(errorFt * M_PER_FT).toFixed(1)} m`;
+  return `${errorFt.toFixed(1)} ft`;
+}
+
+// "Perfect" is a tiny window on purpose so it stays genuinely hard to earn.
+export const PERFECT_FT = 0.5;
+
+// Quality tier for a rep by miss distance (feet). `toleranceFt` is the success
+// window (a leveling "hit"). Tiers: perfect (land on the spot) > great > on
+// target > missed. Lets the readout signal exactly how good a read was.
+export function rateMiss(errorFt, toleranceFt) {
+  if (errorFt <= PERFECT_FT) return { tier: "perfect", label: "Perfect" };
+  if (errorFt <= toleranceFt * 0.5) return { tier: "great", label: "Great read" };
+  if (errorFt <= toleranceFt) return { tier: "good", label: "On target" };
+  return { tier: "miss", label: "Missed" };
 }

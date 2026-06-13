@@ -9,7 +9,7 @@ import {
   pointerPos,
 } from "./gymEngine";
 import { getDrill, saveSession, getUnit, setUnit as saveUnit } from "./gymStorage";
-import { DIRECTIONS, guessAxis, scorePass, feetPerPixel, formatDistance } from "./anticipationCore";
+import { DIRECTIONS, guessAxis, scorePass, feetPerPixel, formatDistance, rateMiss } from "./anticipationCore";
 
 // "Read the Pass" — trajectory prediction.
 // A puck launches across the ice from any side and disappears partway. The
@@ -206,6 +206,15 @@ export default function AnticipationDrill({ playerId = "default", onExit }) {
         const head = traj.pts[revIdx];
         drawPuck(ctx, head.x, head.y, traj.r);
 
+        // the exact crossing — landing on this gold dot is a "Perfect" read
+        ctx.fillStyle = "#f2b705";
+        ctx.beginPath();
+        ctx.arc(trueX, trueY, 5, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.strokeStyle = "#0b1b2b";
+        ctx.lineWidth = 1.5;
+        ctx.stroke();
+
         if (sc.guessC !== null) {
           const gx = horiz ? traj.exitM : sc.guessC;
           const gy = horiz ? sc.guessC : traj.exitM;
@@ -226,13 +235,15 @@ export default function AnticipationDrill({ playerId = "default", onExit }) {
           ctx.arc(gx, gy, 10, 0, Math.PI * 2);
           ctx.fill();
 
-          // per-rep feedback near the guess marker: real distance + points
+          // per-rep feedback near the guess marker: quality + distance + points
+          const rate = rateMiss(sc.errorFt || 0, traj.toleranceFt);
           ctx.save();
-          ctx.fillStyle = sc.result === "hit" ? "#1b6cb0" : "#e8590c";
+          ctx.fillStyle =
+            rate.tier === "perfect" ? "#f2b705" : rate.tier === "miss" ? "#e8590c" : "#1b6cb0";
           ctx.font = "600 14px system-ui, sans-serif";
           ctx.textBaseline = "middle";
-          const label = `${formatDistance(sc.errorFt || 0, unitRef.current)}  +${sc.repPoints || 0}`;
-          const labelX = Math.min(gx + 14, W - 150);
+          const label = `${rate.label} · ${formatDistance(sc.errorFt || 0, unitRef.current)}  +${sc.repPoints || 0}`;
+          const labelX = Math.min(gx + 14, W - 200);
           ctx.fillText(label, labelX, gy);
           ctx.restore();
         }
@@ -386,8 +397,9 @@ export default function AnticipationDrill({ playerId = "default", onExit }) {
           <p>
             <strong>The game:</strong> a puck launches across the ice, then
             disappears partway. Track its angle and speed in your head, then tap
-            the gold bar where it will cross. It can come from any side. Blue
-            marker means you read it, orange means you missed.
+            the gold bar where it will cross. It can come from any side. After
+            you tap, the gold dot shows the exact crossing: land on it for a
+            Perfect read, inside the short window still counts, outside is a miss.
           </p>
           <div className="gym-trains">
             <strong>Why it matters</strong>

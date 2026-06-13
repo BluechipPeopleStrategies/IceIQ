@@ -105,6 +105,12 @@ fits. Read this before touching any game.
   not just "+872". Keep a points total too. (done, `formatDistance`)
 - **Let the player choose feet or meters.** Unit is a persisted gym-wide
   preference (`getUnit`/`setUnit`, default feet), toggleable in the game.
+- **Signal quality clearly; make "Perfect" hard.** Don't use vague praise like
+  "bang on". Show a quality tier (Perfect > Great read > On target > Missed) plus
+  the real distance, so the player always knows how good a read was. "Perfect"
+  is a tiny window (`PERFECT_FT`, ~half a foot) so it stays rare and earned, and
+  the exact crossing is drawn as a gold dot so what counts as perfect is visible.
+  (done, `rateMiss` + target dot)
 
 ## Common mistakes
 - Sizing a canvas to container width only (overflows on desktop). Use the

@@ -1,7 +1,7 @@
 import { gradedPoints, MAX_REP } from "../src/cognitive-gym/gymPoints.js";
 import { createAdaptiveLevel } from "../src/cognitive-gym/gymEngine.js";
 import { careerPointsFromDrills } from "../src/cognitive-gym/gymStorage.js";
-import { DIRECTIONS, guessAxis, scorePass, feetPerPixel, formatDistance, RINK_LENGTH_FT, RINK_WIDTH_FT } from "../src/cognitive-gym/anticipationCore.js";
+import { DIRECTIONS, guessAxis, scorePass, feetPerPixel, formatDistance, rateMiss, RINK_LENGTH_FT, RINK_WIDTH_FT } from "../src/cognitive-gym/anticipationCore.js";
 
 let failed = 0;
 const check = (name, cond) => { console.log(`${cond ? "PASS" : "FAIL"}  ${name}`); if (!cond) failed++; };
@@ -68,10 +68,15 @@ const hPass = scorePass(100, 100 + missPxY, ftY, 6);
 const vPass = scorePass(100, 100 + missPxX, ftX, 6);
 check("same feet miss scores identically across orientations", hPass.points === vPass.points && hPass.success === vPass.success && Math.abs(hPass.errorFt - 5) < 1e-9 && Math.abs(vPass.errorFt - 5) < 1e-9);
 
-// formatDistance
-check("formatDistance bang on under half a foot", formatDistance(0.3) === "bang on" && formatDistance(0) === "bang on");
-check("formatDistance feet", formatDistance(3.24) === "off by 3.2 ft");
-check("formatDistance meters converts", formatDistance(10, "m") === `off by ${(10 * 0.3048).toFixed(1)} m`);
+// formatDistance — always a number now; the quality word comes from rateMiss
+check("formatDistance feet", formatDistance(3.24) === "3.2 ft");
+check("formatDistance meters converts", formatDistance(10, "m") === `${(10 * 0.3048).toFixed(1)} m`);
+
+// rateMiss tiers — perfect is tight; great/good scale with the window
+check("rateMiss perfect only when very close", rateMiss(0.4, 6).tier === "perfect" && rateMiss(0.6, 6).tier !== "perfect");
+check("rateMiss great within half the window", rateMiss(2, 6).tier === "great");
+check("rateMiss on target within window", rateMiss(5, 6).tier === "good");
+check("rateMiss missed beyond window", rateMiss(7, 6).tier === "miss");
 
 const drills = {
   anticipation: { sessions: [{ points: 800 }, { points: 600 }] },
