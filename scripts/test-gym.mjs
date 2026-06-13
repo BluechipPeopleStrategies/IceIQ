@@ -2,6 +2,7 @@ import { gradedPoints, MAX_REP } from "../src/cognitive-gym/gymPoints.js";
 import { createAdaptiveLevel } from "../src/cognitive-gym/gymEngine.js";
 import { careerPointsFromDrills } from "../src/cognitive-gym/gymStorage.js";
 import { DIRECTIONS, guessAxis, scorePass, feetPerPixel, formatDistance, rateMiss, RINK_LENGTH_FT, RINK_WIDTH_FT } from "../src/cognitive-gym/anticipationCore.js";
+import { slotCount, flashMs, hitRadius, pickFlash, scoreTap, MIN_SLOTS, MAX_SLOTS } from "../src/cognitive-gym/eyesUpCore.js";
 
 let failed = 0;
 const check = (name, cond) => { console.log(`${cond ? "PASS" : "FAIL"}  ${name}`); if (!cond) failed++; };
@@ -84,6 +85,50 @@ const drills = {
 };
 check("career points sums and ignores missing", careerPointsFromDrills(drills) === 1800);
 check("career points empty is 0", careerPointsFromDrills({}) === 0);
+
+// Eyes Up (peripheral vision) — pure helpers ---------------------------------
+const EW = 600, EH = 372; // a sample canvas
+
+// difficulty climbs with level
+check("eyesup slots climb with level", slotCount(1) === MIN_SLOTS && slotCount(20) === MAX_SLOTS && slotCount(10) > slotCount(1));
+check("eyesup flash gets shorter with level", flashMs(1) > flashMs(10) && flashMs(10) > flashMs(20));
+check("eyesup hit window tightens with level", hitRadius(1, EW, EH) > hitRadius(20, EW, EH));
+
+// pickFlash is deterministic with an injected slot, stays inside the canvas,
+// and sits farther out (closer to the boards) at higher levels.
+const f1 = pickFlash(1, EW, EH, { slot: 0 });
+const f1b = pickFlash(1, EW, EH, { slot: 0 });
+check("eyesup pickFlash deterministic for a slot", f1.x === f1b.x && f1.y === f1b.y);
+check("eyesup flash stays inside the canvas", f1.x > 0 && f1.x < EW && f1.y > 0 && f1.y < EH);
+check("eyesup flash carries its slot + window", f1.slot === 0 && f1.hitR > 0 && f1.flashMs > 0);
+const fLowPeriph = pickFlash(1, EW, EH, { slot: 1 }).peripheryFrac;
+const fHighPeriph = pickFlash(20, EW, EH, { slot: 1 }).peripheryFrac;
+check("eyesup periphery pushes outward with level", fHighPeriph > fLowPeriph);
+// the flash is genuinely off-center (in the periphery), not at the middle
+const offCenter = Math.hypot(f1.x - EW / 2, f1.y - EH / 2);
+check("eyesup flash is off-center", offCenter > 40);
+
+// rng injection picks a slot from the available ring
+const fRng = pickFlash(1, EW, EH, { rng: () => 0.5 });
+check("eyesup rng picks a valid slot", fRng.slot >= 0 && fRng.slot < fRng.slots);
+
+// scoreTap: bang-on the flash spot = success + max points + 0 error
+const flash = { x: 200, y: 150, hitR: 50 };
+const euExact = scoreTap({ x: 200, y: 150 }, flash, EW, EH);
+check("eyesup exact tap is success, max points, 0 error", euExact.success && euExact.points === 1000 && euExact.normError === 0);
+// inside the window but off the spot: still a success, fewer points
+const euInside = scoreTap({ x: 230, y: 150 }, flash, EW, EH); // 30px < 50px window
+check("eyesup inside window scores less than exact", euInside.success && euInside.distPx === 30 && euInside.points < 1000);
+// outside the window: a miss
+const euOutside = scoreTap({ x: 200, y: 250 }, flash, EW, EH); // 100px > 50px window
+check("eyesup outside window fails", !euOutside.success && euOutside.distPx === 100);
+// closer tap scores higher than a farther one
+const euNear = scoreTap({ x: 210, y: 150 }, flash, EW, EH);
+const euFar = scoreTap({ x: 240, y: 150 }, flash, EW, EH);
+check("eyesup closer tap scores higher", euNear.points > euFar.points);
+// normError is normalized by the canvas diagonal
+const diag = Math.sqrt(EW * EW + EH * EH);
+check("eyesup normError is distance over diagonal", Math.abs(euInside.normError - 30 / diag) < 1e-9);
 
 console.log(failed ? `\n${failed} FAILED` : "\nAll passed");
 process.exit(failed ? 1 : 0);
