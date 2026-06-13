@@ -54,7 +54,7 @@ export function OptionsOverlay({ scenario }) {
 }
 
 // If the board throws while rendering, show the raw JSON so it's still triageable.
-class BoardBoundary extends React.Component {
+export class BoardBoundary extends React.Component {
   constructor(p) { super(p); this.state = { err: false }; }
   static getDerivedStateFromError() { return { err: true }; }
   render() { return this.state.err ? this.props.fallback : this.props.children; }

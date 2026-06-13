@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import RinkStage from "../scenario/RinkStage.jsx";
-import { OptionsOverlay } from "./ReviewBoard.jsx";
+import { OptionsOverlay, BoardBoundary } from "./ReviewBoard.jsx";
+import { stepToScenario } from "../scenario/multiStep.js";
 import { ageTierOf, flagOf } from "./browseCore.js";
 import { C, FONT } from "../shared.jsx";
 
@@ -29,6 +30,9 @@ export default function BrowseTile({ scenario, coach, myVerdict, revised, onOpen
   const reviewed = !!myVerdict?.verdict;           // I've given this board a verdict
   const noted = !!(myVerdict?.note && myVerdict.note.trim()); // ...and left a note
   const caption = [ageTierOf(scenario), scenario.nodeId].filter(Boolean).join(" · ");
+  // Multi-step boards have no top-level actors; thumbnail the first frame so
+  // RinkStage never gets actors=undefined (which would throw and crash the grid).
+  const board = (Array.isArray(scenario.steps) && scenario.steps.length) ? stepToScenario(scenario, 0) : scenario;
 
   return (
     <button ref={ref} onClick={() => onOpen(scenario)}
@@ -43,9 +47,11 @@ export default function BrowseTile({ scenario, coach, myVerdict, revised, onOpen
       </div>
       <div style={{ width: "100%", aspectRatio: "2 / 1", background: C.bg }}>
         {shown
-          ? <RinkStage stage={scenario.stage} actors={scenario.actors} levels={scenario.levels}>
-              {() => <OptionsOverlay scenario={scenario} />}
-            </RinkStage>
+          ? <BoardBoundary fallback={<div style={{ width: "100%", height: "100%", display: "flex", alignItems: "center", justifyContent: "center", color: C.dim, fontSize: ".7rem" }}>board ⚠</div>}>
+              <RinkStage stage={board.stage} actors={board.actors} levels={board.levels}>
+                {() => <OptionsOverlay scenario={board} />}
+              </RinkStage>
+            </BoardBoundary>
           : <div style={{ width: "100%", height: "100%" }} />}
       </div>
       <div style={{ padding: ".3rem .45rem", fontSize: ".68rem", letterSpacing: ".03em", color: C.gold, fontFamily: FONT.body }}>{caption}</div>
