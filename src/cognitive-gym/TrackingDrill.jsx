@@ -372,7 +372,7 @@ export default function TrackingDrill({ playerId = "default", onExit }) {
   }, [phase]);
 
   const hint = {
-    ready: "Take a breath, then tap Start shift",
+    ready: shift < 3 ? "Take a deep breath, then tap Start shift" : "",
     watch: "Memorize the gold teammates",
     track: "Track them",
     pick: `Tap your ${remaining} teammate${remaining === 1 ? "" : "s"}`,
