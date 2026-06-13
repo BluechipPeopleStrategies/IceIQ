@@ -1,5 +1,5 @@
 // Golden tests for src/review/browseCore.js (pure logic). Run: npm run test:browse
-import { ageTierOf, ageTiers, flagOf, applyFilters, iterationHeadline, groupIterations } from "../src/review/browseCore.js";
+import { ageTierOf, ageTiers, flagOf, applyFilters, iterationHeadline, groupIterations, questionTypeLabel, siblingsOf, groupByStem } from "../src/review/browseCore.js";
 
 let failed = 0;
 const check = (name, cond) => { console.log(`${cond ? "PASS" : "FAIL"}  ${name}`); if (!cond) failed++; };
@@ -55,6 +55,25 @@ check("group: newest iteration first", g2[0].iteration === 2 && g2[1].iteration 
 // dedupe identical source+feedback within a group (e.g. accidental duplicate insert)
 const dupd = groupIterations([owner1, { ...owner1 }]);
 check("group: dedupe identical rows", dupd.length === 1 && dupd[0].sources.length === 1);
+
+// questionTypeLabel — derived from shape
+check("type: branching", questionTypeLabel({ nodes: {}, entry: ["x"] }) === "Branching");
+check("type: multi-step", questionTypeLabel({ steps: [{}] }) === "Multi-step");
+check("type: true/false (2-opt mc)", questionTypeLabel({ mc: { opts: ["a", "b"] } }) === "True/False");
+check("type: multiple choice (4-opt)", questionTypeLabel({ mc: { opts: ["a", "b", "c", "d"] } }) === "Multiple choice");
+check("type: positioning (place)", questionTypeLabel({ interaction: { kind: "place" } }) === "Positioning");
+check("type: tap a spot (point)", questionTypeLabel({ interaction: { kind: "point" } }) === "Tap a spot");
+check("type: fallback", questionTypeLabel({}) === "Question");
+
+// stem grouping + siblings
+const stemA1 = { id: "a1", stemId: "sceneA", interaction: { kind: "point" } };
+const stemA2 = { id: "a2", stemId: "sceneA", mc: { opts: ["t", "f"] } };
+const lone = { id: "z1", interaction: { kind: "selection" } };
+check("siblingsOf finds same-stem others", siblingsOf(stemA1, [stemA1, stemA2, lone]).map(s => s.id).join() === "a2");
+check("siblingsOf empty when no stemId", siblingsOf(lone, [stemA1, stemA2, lone]).length === 0);
+const stems = groupByStem([stemA1, stemA2, lone]);
+check("groupByStem merges shared stemId", stems.find(g => g.stemId === "sceneA").questions.length === 2);
+check("groupByStem singleton for no stemId", stems.find(g => g.stemId === "z1").questions.length === 1);
 
 // null iteration rows must not merge into one group
 const nullA = { scenario_id: "s", iteration: null, source: "owner", change: "A", feedback: "a", created_at: "2026-06-13T10:00:00Z" };

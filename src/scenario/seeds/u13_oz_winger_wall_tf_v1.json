@@ -1,0 +1,34 @@
+{
+  "id": "u13_oz_winger_wall_tf_v1",
+  "stemId": "u13_oz_winger_wall",
+  "stemLabel": "OZ — winger has it on the wall, weak-side D dropped to the net",
+  "type": "scenario",
+  "nodeId": "u13.offensive-zone-play",
+  "level": "U13 / Peewee",
+  "levels": ["U13 / Peewee"],
+  "themes": ["offensive-zone", "vision"],
+  "cat": "Offensive Play",
+  "difficulty": 2,
+  "stage": { "view": "right", "zone": "off-zone" },
+  "actors": [
+    { "id": "carrier", "kind": "teammate", "x": 0.9, "y": 0.78, "tag": "RW" },
+    { "id": "puck", "kind": "puck", "x": 0.902, "y": 0.782 },
+    { "id": "strongD", "kind": "defender", "x": 0.86, "y": 0.7, "tag": "" },
+    { "id": "weakD", "kind": "defender", "x": 0.84, "y": 0.52, "tag": "" },
+    { "id": "g", "kind": "goalie", "x": 0.918, "y": 0.5, "tag": "" },
+    { "id": "you", "kind": "player", "x": 0.7, "y": 0.3, "tag": "LW" }
+  ],
+  "interaction": { "kind": "point", "prompt": "True or false: the net-front is the open ice to attack on this play." },
+  "correct": { "kind": "point", "x": 0.9, "y": 0.22, "tolerance": 0.12 },
+  "mc": {
+    "stem": "The weak-side defenceman has dropped to the net. True or false — the net-front is the open ice to attack here?",
+    "opts": ["True", "False"],
+    "ok": 1
+  },
+  "feedback": {
+    "right": "False — the defenceman is standing in the net-front, so it's covered. The open ice is the weak side they vacated.",
+    "wrong": "It's false. The weak-side D dropped to the net, so the net-front is exactly where the coverage is. Attack the space they left — the weak side."
+  },
+  "tip": "If a defender is at the net, the net isn't open. Read where they came FROM — that's the open ice.",
+  "why": "Reading the off-puck defender tells you which ice is actually open. A body at the net means attack the space it vacated, not the net itself."
+}

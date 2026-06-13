@@ -63,6 +63,36 @@ export function groupIterations(logs) {
   });
 }
 
+// A human label for a scenario's question TYPE (derived, never stored). True/False
+// falls out for free as a 2-option mc. Used by the "Questions on this scene" list.
+export function questionTypeLabel(s) {
+  if (s?.nodes && s?.entry) return "Branching";
+  if (Array.isArray(s?.steps) && s.steps.length) return "Multi-step";
+  if (s?.mc?.opts) return s.mc.opts.length === 2 ? "True/False" : "Multiple choice";
+  const k = s?.interaction?.kind;
+  return ({ place: "Positioning", point: "Tap a spot", selection: "Pick the player",
+            sequence: "Order them", path: "Draw the play" })[k] || "Question";
+}
+
+// Other questions built on the same scene (same stemId), excluding the scenario itself.
+// A scenario with no stemId has no siblings.
+export function siblingsOf(scenario, scenarios) {
+  if (!scenario?.stemId) return [];
+  return (scenarios || []).filter((s) => s.id !== scenario.id && s.stemId === scenario.stemId);
+}
+
+// Group scenarios into stems: [{ stemId, label, scene, questions[] }], input order.
+// A seed with no stemId becomes a singleton stem keyed by its own id.
+export function groupByStem(scenarios) {
+  const groups = new Map();
+  for (const s of scenarios || []) {
+    const key = s.stemId || s.id;
+    if (!groups.has(key)) groups.set(key, { stemId: key, label: s.stemLabel || "", scene: s, questions: [] });
+    groups.get(key).questions.push(s);
+  }
+  return [...groups.values()];
+}
+
 // Filter a scenario list by flag scope + age tier.
 //   flagScope: "all" | "coach" | "mine" | "unreviewed"
 //   ageTier:   "all" | "<tier>"

@@ -2,7 +2,7 @@ import React, { useEffect, useMemo, useState } from "react";
 import BrowseTile from "./BrowseTile.jsx";
 import BoardReviewPanel from "./BoardReviewPanel.jsx";
 import { loadReviewScenarios } from "./reviewData.js";
-import { ageTiers, applyFilters } from "./browseCore.js";
+import { ageTiers, applyFilters, siblingsOf, questionTypeLabel } from "./browseCore.js";
 import { boardHash } from "./reviewCore.js";
 import { enqueueReview, flushQueue, getSavedReview, syncServerReviews } from "./reviewQueue.js";
 import { getSession, listCoachReviews, listFeedbackLog } from "../supabase.js";
@@ -25,6 +25,42 @@ function Centered({ children }) {
 const btn = { padding: ".5rem 1rem", borderRadius: 8, border: `1px solid ${C.border}`, background: C.bgCard, color: C.white, cursor: "pointer" };
 const ghost = { padding: ".3rem .6rem", borderRadius: 6, border: "none", background: "transparent", color: C.dim, fontSize: ".8rem", cursor: "pointer" };
 const chip = (on) => ({ padding: ".3rem .6rem", borderRadius: 999, border: `1px solid ${on ? C.gold : C.border}`, background: on ? C.goldDim : "transparent", color: on ? C.gold : C.dim, fontSize: ".75rem", cursor: "pointer", fontFamily: FONT.body });
+
+// Expandable "Questions on this scene" — every question built on the same stem
+// (shared stemId), each its own type + prompt, click to open. Hidden when the
+// scene has only this one question.
+function SceneQuestions({ focused, list, onOpen }) {
+  const [open, setOpen] = useState(false);
+  const sibs = siblingsOf(focused, list);
+  if (sibs.length === 0) return null;
+  const all = [focused, ...sibs];
+  return (
+    <div style={{ marginTop: "1rem", padding: ".5rem .6rem", borderRadius: 8, background: C.bgCard, border: `1px solid ${C.border}` }}>
+      <div onClick={() => setOpen(o => !o)} style={{ display: "flex", gap: ".4rem", alignItems: "center", cursor: "pointer", fontSize: ".8rem", color: C.dim }}>
+        <span style={{ color: C.dimmer }}>{open ? "▾" : "▸"}</span>
+        <span>Questions on this scene ({all.length})</span>
+      </div>
+      {open && (
+        <div style={{ marginTop: ".4rem", display: "flex", flexDirection: "column", gap: ".3rem" }}>
+          {all.map(q => {
+            const isCurrent = q.id === focused.id;
+            const prompt = q.interaction?.prompt || q.mc?.stem || (q.nodes ? "branching play" : "");
+            return (
+              <div key={q.id} onClick={() => { if (!isCurrent) onOpen(q); }}
+                style={{ padding: ".4rem .5rem", borderRadius: 6, border: `1px solid ${isCurrent ? C.gold : C.border}`, background: isCurrent ? C.goldDim : "transparent", cursor: isCurrent ? "default" : "pointer" }}>
+                <div style={{ display: "flex", gap: ".4rem", alignItems: "baseline" }}>
+                  <span style={{ fontSize: ".66rem", fontWeight: 800, letterSpacing: ".04em", color: C.gold, flexShrink: 0 }}>{questionTypeLabel(q)}</span>
+                  {isCurrent && <span style={{ fontSize: ".62rem", color: C.dimmer }}>· viewing</span>}
+                </div>
+                {prompt && <div style={{ fontSize: ".72rem", color: C.dim, marginTop: ".15rem", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{prompt}</div>}
+              </div>
+            );
+          })}
+        </div>
+      )}
+    </div>
+  );
+}
 
 export default function BrowseScreen({ onBack }) {
   const [status, setStatus] = useState("loading"); // loading | denied | ready
@@ -98,6 +134,7 @@ export default function BrowseScreen({ onBack }) {
           scenario={focused} coach={coach} logs={logById[focused.id] || []} savedVerdict={savedVerdict}
           note={note} onNote={setNote} onVerdict={saveVerdict}
         />
+        <SceneQuestions focused={focused} list={list} onOpen={openBoard} />
       </div>
     );
   }

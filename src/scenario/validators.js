@@ -567,8 +567,8 @@ const rules = [
   function mcShapeValid(s) {
     if (!s.mc) return null;
     const opts = s.mc.opts;
-    if (!Array.isArray(opts) || opts.length !== 4) {
-      return { kind: "err", msg: `mc.opts must be exactly 4 options (got ${Array.isArray(opts) ? opts.length : typeof opts})` };
+    if (!Array.isArray(opts) || (opts.length !== 4 && opts.length !== 2)) {
+      return { kind: "err", msg: `mc.opts must be exactly 4 (multiple choice) or 2 (true/false) options (got ${Array.isArray(opts) ? opts.length : typeof opts})` };
     }
     if (opts.some(o => typeof o !== "string" || o.trim().length === 0)) {
       return { kind: "err", msg: `every mc.opts entry must be a non-empty string` };
