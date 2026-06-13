@@ -1,5 +1,6 @@
 // Golden tests for tools/lib/auto-revise-core.mjs (pure logic). Run: npm run test:auto-revise
 import { applyEdit, decideApply, buildReviseLogRow, reviseReport } from "../tools/lib/auto-revise-core.mjs";
+import { buildRevisePrompt } from "../tools/gauntlet/revise-prompt.mjs";
 
 let failed = 0;
 const check = (name, cond) => { console.log(`${cond ? "PASS" : "FAIL"}  ${name}`); if (!cond) failed++; };
@@ -40,6 +41,22 @@ check("report has heading", md.includes("# Coach Auto-Revise — 2026-06-13"));
 check("report lists each board", md.includes("## a") && md.includes("## b") && md.includes("## c") && md.includes("## d"));
 check("report marks warnings", md.includes("## b — applied-marked ⚠"));
 check("report shows tally", md.includes("applied 1") && md.includes("retired 1"));
+
+// buildRevisePrompt: returns { system, prompt } strings carrying the scenario + notes + JSON contract
+const bp = buildRevisePrompt({
+  scenario: { id: "u9_x", nodeId: "u9.support", interaction: { kind: "place", prompt: "Where?" } },
+  ascii: "[rink ascii]",
+  node: { id: "u9.support" },
+  concept: { name: "support", definition: "be an option" },
+  notes: "There is only one real option here.",
+  errs: ["needs a second candidate"],
+  warns: [],
+});
+check("prompt returns system + prompt strings", typeof bp.system === "string" && typeof bp.prompt === "string");
+check("prompt includes the scenario id", bp.prompt.includes("u9_x"));
+check("prompt includes the coach notes", bp.prompt.includes("only one real option"));
+check("prompt includes the validator errors", bp.prompt.includes("needs a second candidate"));
+check("prompt states the JSON contract", bp.prompt.includes('"edit"') && bp.prompt.includes('"change"'));
 
 console.log(failed ? `\n${failed} FAILED` : "\nAll passed");
 process.exit(failed ? 1 : 0);
