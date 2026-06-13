@@ -86,6 +86,15 @@ const rep = new Set(["b"]);
 check("applyFilters player scope", applyFilters(scn, { flagScope: "player", ageTier: "all" }, {}, {}, rep).map(s => s.id).join() === "b");
 check("applyFilters player empty when none", applyFilters(scn, { flagScope: "player", ageTier: "all" }, {}, {}, new Set()).length === 0);
 
+// overrides: deep-merge + patch building
+const { applyOverride, buildPatch } = await import("../src/review/overrides.js");
+const ovMerged = applyOverride({ mc: { stem: "a", ok: 0, opts: ["x"] } }, { mc: { stem: "b" } });
+check("applyOverride deep-merges (keeps ok, replaces stem)", ovMerged.mc.stem === "b" && ovMerged.mc.ok === 0);
+const bankPatch = buildPatch({ sit: "x", opts: ["a", "b"] }, { stem: "y", opts: ["c", "d"], ok: 1, right: "r" });
+check("buildPatch maps bank fields", bankPatch.sit === "y" && bankPatch.opts[0] === "c" && bankPatch.ok === 1 && bankPatch.why === "r");
+const mcPatch = buildPatch({ mc: { opts: [], ok: 0 }, feedback: {} }, { stem: "s", opts: ["1", "2", "3", "4"], ok: 3, right: "R", wrong: "W" });
+check("buildPatch maps mc + feedback", mcPatch.mc.stem === "s" && mcPatch.mc.ok === 3 && mcPatch.feedback.right === "R");
+
 // null iteration rows must not merge into one group
 const nullA = { scenario_id: "s", iteration: null, source: "owner", change: "A", feedback: "a", created_at: "2026-06-13T10:00:00Z" };
 const nullB = { scenario_id: "s", iteration: null, source: "owner", change: "B", feedback: "b", created_at: "2026-06-13T11:00:00Z" };

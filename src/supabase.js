@@ -979,6 +979,25 @@ export async function createQuestionRequest({ scenario_id, stem_id, preset, note
   return error ? { ok: false, error: error.message } : { ok: true };
 }
 
+// Dashboard edit-in-place: a JSON patch merged over the base question at runtime.
+export async function upsertQuestionOverride({ question_id, patch }) {
+  if (!supabase) return { ok: false, offline: true };
+  const session = await getSession();
+  const email = session?.user?.email;
+  if (!email) return { ok: false, error: "not signed in" };
+  const { error } = await supabase.from("question_overrides").upsert(
+    { question_id, patch, editor_email: email, updated_at: new Date().toISOString() },
+    { onConflict: "question_id" },
+  );
+  return error ? { ok: false, error: error.message } : { ok: true };
+}
+
+export async function listQuestionOverrides() {
+  if (!supabase) return [];
+  const { data, error } = await supabase.from("question_overrides").select("question_id,patch,updated_at");
+  return error ? [] : (data || []);
+}
+
 // Unresolved player flags from the app, for the dashboard. (Owner-read-all
 // requires the owner-email policy in migration 0017; until then this returns
 // whatever RLS allows — empty when there are no players.)

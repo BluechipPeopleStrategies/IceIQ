@@ -2,11 +2,13 @@ import React, { useEffect, useMemo, useState } from "react";
 import BrowseTile from "./BrowseTile.jsx";
 import BoardReviewPanel from "./BoardReviewPanel.jsx";
 import AddQuestions from "./AddQuestions.jsx";
+import EditQuestion from "./EditQuestion.jsx";
 import { loadAllQuestions } from "./questionsData.js";
 import { ageTiers, applyFilters, siblingsOf, questionTypeLabel } from "./browseCore.js";
+import { applyOverride, applyOverrides } from "./overrides.js";
 import { boardHash } from "./reviewCore.js";
 import { enqueueReview, flushQueue, getSavedReview, syncServerReviews } from "./reviewQueue.js";
-import { getSession, listCoachReviews, listFeedbackLog, listQuestionReports } from "../supabase.js";
+import { getSession, listCoachReviews, listFeedbackLog, listQuestionReports, listQuestionOverrides } from "../supabase.js";
 import { isDevBypassEnabled } from "../utils/devBypass.js";
 import { C, FONT } from "../shared.jsx";
 
@@ -79,6 +81,7 @@ export default function BrowseScreen({ onBack }) {
   const [signedIn, setSignedIn] = useState(true); // reviews only sync to the server when signed in
   const [reportedIds, setReportedIds] = useState(new Set());
   const [reportsById, setReportsById] = useState({});
+  const [editing, setEditing] = useState(false);
 
   useEffect(() => {
     let alive = true;
@@ -96,6 +99,9 @@ export default function BrowseScreen({ onBack }) {
       try { if (email) setPending(await flushQueue()); } catch (e) { console.error("[browse] flushQueue failed", e); }
       let scenarios = [];
       try { scenarios = await loadAllQuestions(); } catch (e) { console.error("[browse] loadAllQuestions failed", e); }
+      // Apply any dashboard edits (DB overrides) on top of the base questions.
+      try { const ovr = await listQuestionOverrides(); const byId = Object.fromEntries((ovr || []).map(o => [o.question_id, o.patch])); scenarios = applyOverrides(scenarios, byId); }
+      catch (e) { console.error("[browse] listQuestionOverrides failed", e); }
       try { const c = await listCoachReviews(); if (alive) setCoachById(Object.fromEntries(c.map(x => [x.scenario_id, x]))); }
       catch (e) { console.error("[browse] listCoachReviews failed", e); }
       try { const logs = await listFeedbackLog(); if (alive) { setRevisedIds(new Set(logs.map(l => l.scenario_id))); const lg = {}; for (const r of logs) (lg[r.scenario_id] ||= []).push(r); setLogById(lg); } }
@@ -115,8 +121,13 @@ export default function BrowseScreen({ onBack }) {
   const tiers = useMemo(() => ageTiers(list), [list]);
   const filtered = useMemo(() => applyFilters(list, { flagScope, ageTier }, coachById, myById, reportedIds), [list, flagScope, ageTier, coachById, myById, reportedIds]);
 
-  function openBoard(s) { setFocused(s); setNote(""); } // fresh comment box, never pre-filled
-  function closeBoard() { setFocused(null); }
+  function openBoard(s) { setFocused(s); setNote(""); setEditing(false); } // fresh comment box, never pre-filled
+  function closeBoard() { setFocused(null); setEditing(false); }
+  function onEdited(patch) {
+    setList(l => l.map(q => q.id === focused.id ? applyOverride(q, patch) : q));
+    setFocused(f => applyOverride(f, patch));
+    setEditing(false);
+  }
   // The board after `id` in the current filtered order (or null at the end).
   function nextAfter(id) { const i = filtered.findIndex(s => s.id === id); return i >= 0 ? filtered[i + 1] : null; }
   function goTo(delta) {
@@ -149,8 +160,9 @@ export default function BrowseScreen({ onBack }) {
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
           <button onClick={closeBoard} style={ghost}>← grid</button>
           <span style={{ color: C.dim, fontSize: ".78rem" }}>{pos >= 0 ? `${pos + 1} / ${filtered.length}` : ""}{pending ? ` · ${pending} syncing` : ""}</span>
-          <span style={{ width: 40 }} />
+          <button onClick={() => setEditing(e => !e)} style={{ ...ghost, color: editing ? C.gold : C.dim }}>{editing ? "✕ edit" : "✎ edit"}</button>
         </div>
+        {editing && <EditQuestion question={focused} onSaved={onEdited} onCancel={() => setEditing(false)} />}
         <div style={{ height: ".4rem" }} />
         {(reportsById[focused.id] || []).length > 0 && (
           <div style={{ marginBottom: ".5rem", padding: ".5rem .6rem", borderRadius: 8, background: "rgba(239,68,68,.10)", border: "1px solid rgba(239,68,68,.4)" }}>
