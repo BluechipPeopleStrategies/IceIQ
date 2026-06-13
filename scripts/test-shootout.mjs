@@ -14,7 +14,6 @@ function mulberry32(seed) {
     return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
   };
 }
-globalThis.__mulberry32 = mulberry32; // reused by later test blocks in this file
 
 test("shot clock shrinks with level", () => {
   assert.equal(shotClockMs(1), EASY_CLOCK_MS);
@@ -76,32 +75,39 @@ test("cellAtPoint maps a point to its cell, or null when outside", () => {
   assert.equal(cellAtPoint(rects, 999, 999), null);
 });
 
+test("cellAtPoint: tap exactly on vertical seam maps to left cell (no dead zone)", () => {
+  const net = { x: 0, y: 0, w: 300, h: 200 };
+  const rects = cellRects(net);
+  // seam between gloveHi (col 0, x 0-100) and midHi (col 1, x 100-200) is x=100
+  assert.equal(cellAtPoint(rects, 100, 50), "gloveHi");
+});
+
 import { makeShot, pickN } from "../src/cognitive-gym/shootoutCore.js";
 
 test("pickN returns n distinct items deterministically", () => {
-  const rng = globalThis.__mulberry32(7);
+  const rng = mulberry32(7);
   const got = pickN(["a", "b", "c", "d"], 2, rng);
   assert.equal(got.length, 2);
-  assert.notEqual(got[0], got[1]);
+  assert.equal(new Set(got).size, got.length);
 });
 
 test("makeShot: coverage and open counts match the level params", () => {
-  const shot = makeShot(1, { rng: globalThis.__mulberry32(1) });
+  const shot = makeShot(1, { rng: mulberry32(1) });
   assert.equal(shot.coveredAtStart.length, 1); // coveredAtStartCount(1)
   assert.equal(shot.openAtStart.length, 5);
   assert.equal(shot.closeSchedule.length, 0); // closesDuringShotCount(1) === 0
 });
 
 test("makeShot: at the top level at least one cell stays open all shot", () => {
-  const shot = makeShot(20, { rng: globalThis.__mulberry32(3) });
+  const shot = makeShot(20, { rng: mulberry32(3) });
   const closingIds = new Set(shot.closeSchedule.map((c) => c.cellId));
   const alwaysOpen = shot.openAtStart.filter((id) => !closingIds.has(id));
   assert.ok(alwaysOpen.length >= 1, "a scorable cell must always remain");
 });
 
 test("makeShot is deterministic for a given seed", () => {
-  const a = makeShot(15, { rng: globalThis.__mulberry32(42) });
-  const b = makeShot(15, { rng: globalThis.__mulberry32(42) });
+  const a = makeShot(15, { rng: mulberry32(42) });
+  const b = makeShot(15, { rng: mulberry32(42) });
   assert.deepEqual(a, b);
 });
 

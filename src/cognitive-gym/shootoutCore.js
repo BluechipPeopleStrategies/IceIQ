@@ -61,6 +61,8 @@ export function cellRects(net) {
 
 // Which cell id contains the point, or null if none.
 export function cellAtPoint(rects, px, py) {
+  // Inclusive edges: a point on a shared seam maps to the first matching
+  // cell in layout order. Deliberate, so there is no dead zone between cells.
   for (const r of rects) {
     if (px >= r.x && px <= r.x + r.w && py >= r.y && py <= r.y + r.h) return r.id;
   }
@@ -92,7 +94,7 @@ export function makeShot(level, { rng = Math.random } = {}) {
   const hole = holeOpenMs(level);
   const closeSchedule = closing.map((cellId, i) => ({
     cellId,
-    atMs: Math.round(closesN <= 1 ? hole : lerp(hole, clock * 0.9, i / (closesN - 1))),
+    atMs: Math.round(closesN <= 1 ? hole : lerp(hole, clock * 0.9, i / (closesN - 1))), // ternary avoids divide-by-zero when closesN <= 1
   }));
   return { level, coveredAtStart: covered, openAtStart: open, closeSchedule, shotClockMs: clock };
 }
@@ -114,7 +116,7 @@ export function isCellOpenAt(shot, cellId, tapMs) {
 export function scoreShot(cellId, tapMs, shot) {
   const clock = shot.shotClockMs || 1;
   const norm = Math.min(Math.max(tapMs / clock, 0), 1);
-  const inTime = tapMs <= shot.shotClockMs;
+  const inTime = tapMs <= clock;
   const success = cellId != null && inTime && isCellOpenAt(shot, cellId, tapMs);
   if (!success) return { success: false, points: 0, normElapsed: norm };
   return { success: true, points: gradedPoints(norm), normElapsed: norm };
