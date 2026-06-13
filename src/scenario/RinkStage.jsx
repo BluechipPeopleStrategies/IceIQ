@@ -93,7 +93,11 @@ function ActorMarker({ actor, highlight, hideTag, offset, ageStyle = "playbook",
 
   // Position tags (LW/RW/D…) are hidden for the youngest bands (U7/U9), where
   // play is half-ice and the markers are "just players".
-  const positionTag = hideTag ? "" : (actor.tag || "");
+  // A player's tag holds its ROLE (LD/RD/F3…), shown inside the marker; the
+  // first-person "YOU" is the caption above (see below), so a literal "YOU"
+  // tag isn't printed twice inside the circle.
+  const rawTag = actor.tag || "";
+  const positionTag = hideTag ? "" : (actor.kind === "player" && rawTag.toUpperCase() === "YOU" ? "" : rawTag);
 
   // Optional stick line — small line from the marker toward `facing`.
   // Adds tactical realism without rewriting the marker. Only shown for
@@ -211,11 +215,13 @@ function ActorMarker({ actor, highlight, hideTag, offset, ageStyle = "playbook",
         </>
       )}
 
-      {/* Caption above marker — author-driven (e.g. "YOU", "OPEN") */}
-      {actor.label && (
+      {/* Caption above marker — author label, or a default "YOU" so the
+          first-person marker is always identifiable even when its tag carries
+          a position role (LD/RD/F3…). */}
+      {(actor.label || actor.kind === "player") && (
         <text x="0" y={captionY} textAnchor="middle" fill="#fff"
           fontSize="10" fontWeight="800" style={labelStyle}>
-          {actor.label}
+          {actor.label || "YOU"}
         </text>
       )}
     </g>
