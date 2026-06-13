@@ -8,6 +8,7 @@ import { laneClear, pointSegmentDist, makeFormation as makeLaneFormation, scoreL
 import { OPTIONS, makeSituation, scoreChoice, clockMs as boClockMs, teammateCount, defenderCount as boDefenderCount, EASY_TEAMMATES, HARD_TEAMMATES, EASY_DEFENDERS as BO_EASY_DEF, HARD_DEFENDERS as BO_HARD_DEF } from "../src/cognitive-gym/bestOptionCore.js";
 import { digitsForLevel, travelMs, makeRound, scoreRead, CHOICES, MIN_DIGITS, MAX_DIGITS } from "../src/cognitive-gym/readNumbersCore.js";
 import { changeProb, changeDelay, clockMs as lrClockMs, makeTrial, scoreTrial, teammateCount as lrTeammateCount, defenderCount as lrDefenderCount, EASY_TEAMMATES as LR_EASY_MATE, HARD_TEAMMATES as LR_HARD_MATE } from "../src/cognitive-gym/lateReadCore.js";
+import { SHAPES, travelMs as ttTravelMs, crossWindowMs, cueWindowMs, shapeChoiceCount, makeRound as ttMakeRound, scorePrimary, scoreSecondary, combine, MIN_CHOICES, MAX_CHOICES } from "../src/cognitive-gym/twoThingsCore.js";
 
 let failed = 0;
 const check = (name, cond) => { console.log(`${cond ? "PASS" : "FAIL"}  ${name}`); if (!cond) failed++; };
@@ -462,6 +463,92 @@ check("lateread no tap (null) is a miss worth 0", scoreTrial(null, 2, 1100, 1000
 check("lateread expired clock is a miss even on the final index", scoreTrial(2, 2, 3100, 1000, 3000).success === false && scoreTrial(2, 2, 3100, 1000, 3000).points === 0);
 // a no-change rep settles at 0, so points reward speed from the start
 check("lateread no-change settle 0 still grades speed", scoreTrial(2, 2, 0, 0, 3000).points === MAX_REP && scoreTrial(2, 2, 2900, 0, 3000).points < scoreTrial(2, 2, 100, 0, 3000).points);
+
+// Two Things at Once (divided attention / dual task) — pure helpers ----------
+
+check("twothings SHAPES are circle/triangle/square", SHAPES.length === 3 && SHAPES.join() === "circle,triangle,square");
+
+// difficulty climbs with level: faster puck, tighter cross window, shorter cue
+// window, and more shape choices (2 -> 3).
+check("twothings puck travel gets shorter with level", ttTravelMs(1) > ttTravelMs(10) && ttTravelMs(10) > ttTravelMs(20));
+check("twothings cross window tightens with level", crossWindowMs(1) > crossWindowMs(10) && crossWindowMs(10) > crossWindowMs(20));
+check("twothings cue window shortens with level", cueWindowMs(1) > cueWindowMs(10) && cueWindowMs(10) > cueWindowMs(20));
+check("twothings shape choices grow 2 -> 3", shapeChoiceCount(1) === MIN_CHOICES && shapeChoiceCount(20) === MAX_CHOICES && shapeChoiceCount(20) > shapeChoiceCount(1));
+
+// makeRound: deterministic with an injected rng
+let ttSeed = 0;
+const ttRng = () => { ttSeed = (ttSeed * 9301 + 49297) % 233280; return ttSeed / 233280; };
+
+// across levels and seeds: the answer shape appears exactly once among distinct
+// choices, the answer sits at cueAnswerIndex, the cue fires within travel, and
+// the puck crosses within travel.
+let ttDistinct = true;
+let ttAnswerOnce = true;
+let ttAnswerIndexOk = true;
+let ttChoiceCountOk = true;
+let ttCueInTravel = true;
+let ttCrossInTravel = true;
+let ttShapesValid = true;
+for (const lvl of [1, 5, 10, 15, 20]) {
+  const expectChoices = shapeChoiceCount(lvl);
+  for (const seed of [1, 12345, 777, 90210, 31337, 8675309]) {
+    ttSeed = seed;
+    const r = ttMakeRound(lvl, { rng: ttRng });
+    if (r.cueChoices.length !== expectChoices) ttChoiceCountOk = false;
+    if (new Set(r.cueChoices).size !== r.cueChoices.length) ttDistinct = false;
+    if (r.cueChoices.filter((s) => s === r.cueShape).length !== 1) ttAnswerOnce = false;
+    if (r.cueChoices[r.cueAnswerIndex] !== r.cueShape) ttAnswerIndexOk = false;
+    if (!(r.cueAtMs > 0 && r.cueAtMs < r.travelMs)) ttCueInTravel = false;
+    if (!(r.crossAtMs > 0 && r.crossAtMs < r.travelMs)) ttCrossInTravel = false;
+    if (!r.cueChoices.every((s) => SHAPES.includes(s))) ttShapesValid = false;
+  }
+}
+check("twothings round has the level's distinct choice count", ttChoiceCountOk && ttDistinct);
+check("twothings answer shape appears exactly once among the choices", ttAnswerOnce);
+check("twothings cueAnswerIndex points at the matching shape", ttAnswerIndexOk);
+check("twothings all choices are valid shapes", ttShapesValid);
+check("twothings cue fires within the puck's travel", ttCueInTravel);
+check("twothings puck crosses center within its travel", ttCrossInTravel);
+
+// deterministic: same seed -> same round
+ttSeed = 4242;
+const ttA = ttMakeRound(8, { rng: ttRng });
+ttSeed = 4242;
+const ttB = ttMakeRound(8, { rng: ttRng });
+check("twothings makeRound deterministic for a seed", ttA.cueShape === ttB.cueShape && ttA.cueAnswerIndex === ttB.cueAnswerIndex && ttA.cueChoices.join() === ttB.cueChoices.join() && ttA.cueAtMs === ttB.cueAtMs);
+
+// scorePrimary: hit only inside the window (+/- half), closer to the crossing
+// scores more, edge scores less, exact is max-half, no tap / outside = miss.
+const pExact = scorePrimary(1000, 1000, 400);     // bang on
+const pNear = scorePrimary(1050, 1000, 400);      // 50ms off, inside 200ms half
+const pFar = scorePrimary(1180, 1000, 400);       // 180ms off, still inside
+const pEdge = scorePrimary(1200, 1000, 400);      // exactly at the half-window edge
+const pOut = scorePrimary(1260, 1000, 400);       // 260ms off, outside the window
+check("twothings primary hit only inside the window", pExact.hit && pNear.hit && pEdge.hit && !pOut.hit);
+check("twothings primary bang-on is worth half the max", pExact.points === Math.round(MAX_REP * 0.5));
+check("twothings primary closer to crossing scores more", pNear.points > pFar.points && pFar.points > pEdge.points);
+check("twothings primary outside window is a miss worth 0", pOut.points === 0);
+check("twothings primary no tap is a miss worth 0", scorePrimary(null, 1000, 400).hit === false && scorePrimary(null, 1000, 400).points === 0);
+
+// scoreSecondary: hit only on the answer index AND in time; faster = more; wrong
+// index, no pick, or past the window = miss worth 0.
+const sFast2 = scoreSecondary(1, 1, 100, 1000);   // right shape, fast
+const sSlow2 = scoreSecondary(1, 1, 900, 1000);   // right shape, slow
+check("twothings secondary hit only on the answer in time", sFast2.hit && scoreSecondary(0, 1, 100, 1000).hit === false);
+check("twothings secondary faster pick scores more", sFast2.points > sSlow2.points && sFast2.points > 0);
+check("twothings secondary instant correct pick is half the max", scoreSecondary(1, 1, 0, 1000).points === Math.round(MAX_REP * 0.5));
+check("twothings secondary wrong pick is a miss worth 0", scoreSecondary(0, 1, 100, 1000).hit === false && scoreSecondary(0, 1, 100, 1000).points === 0);
+check("twothings secondary no pick (-1/null) is a miss worth 0", scoreSecondary(-1, 1, 100, 1000).points === 0 && scoreSecondary(null, 1, 100, 1000).points === 0);
+check("twothings secondary past the cue window is a miss even on the answer", scoreSecondary(1, 1, 1100, 1000).hit === false && scoreSecondary(1, 1, 1100, 1000).points === 0);
+
+// combine: success only when BOTH hit; points always add so doing both beats one.
+const cBoth = combine({ hit: true, points: 400 }, { hit: true, points: 380 });
+const cPrimaryOnly = combine({ hit: true, points: 400 }, { hit: false, points: 0 });
+const cSecondaryOnly = combine({ hit: false, points: 0 }, { hit: true, points: 380 });
+const cNeither = combine({ hit: false, points: 0 }, { hit: false, points: 0 });
+check("twothings combine succeeds only when both sub-tasks hit", cBoth.success && !cPrimaryOnly.success && !cSecondaryOnly.success && !cNeither.success);
+check("twothings combine adds both sub-scores", cBoth.points === 780);
+check("twothings doing both beats doing one well", cBoth.points > cPrimaryOnly.points && cBoth.points > cSecondaryOnly.points);
 
 console.log(failed ? `\n${failed} FAILED` : "\nAll passed");
 process.exit(failed ? 1 : 0);
