@@ -178,20 +178,15 @@ marketing hook.
   consolidated from Notion + disk.
 - Enough volume to run a daily loop for two weeks at the wedge ages without repeats.
 
-## 10. Open decisions (please confirm or change at review)
+## 10. Confirmed decisions (locked 2026-06-13)
 
-These are my recommended calls; they shape the plan, so veto any before we build.
-
-1. **Age scope & volume:** U7 + U9 + U11, ~36 reads weighted to U11. (Alt: U9 + U11
-   only, deeper; or U11 only, prove it first.)
+1. **Age scope & volume:** U7 + U9 + U11, ~36 reads weighted to U11.
 2. **Library format & location:** `docs/library/` curated markdown notes + cited
-   `sources/`, routing INDEX. (Alt: raw PDF dump only; or Notion stays the home and
-   we mirror summaries to disk.)
+   `sources/`, routing INDEX.
 3. **Content engine path:** the lean grounded-fill + deterministic-gate path above,
-   reserving the full G0-G10 gauntlet for later/Stream-2. (Alt: route Stream-1
-   through the existing gauntlet now.)
+   reserving the full G0-G10 gauntlet for later/Stream-2.
 4. **Spot-check authority for v1:** the owner reviews a 20% sample now; a coach takes
-   over later. (Alt: a coach from day one; or no human sample, gate-only.)
+   over later.
 
 ## 11. What comes after this spec
 
