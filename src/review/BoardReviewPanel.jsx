@@ -55,11 +55,10 @@ function IterationRow({ group }) {
 // Prev/Next nav there).
 export default function BoardReviewPanel({ scenario, coach, logs = [], savedVerdict, note, onNote, onVerdict, children }) {
   const coachStale = coach && coach.board_hash && coach.board_hash !== boardHash(scenario);
-  const suggests = (v) => !savedVerdict && coach && coach.verdict === v;
   const vStyle = (v, dim, border, color) => ({
     ...verdictBtn, background: dim, color,
-    borderColor: savedVerdict === v ? color : (suggests(v) ? color : border),
-    borderStyle: suggests(v) ? "dashed" : "solid",
+    borderColor: savedVerdict === v ? color : border,
+    borderStyle: "solid",
   });
 
   return (
@@ -77,9 +76,9 @@ export default function BoardReviewPanel({ scenario, coach, logs = [], savedVerd
         style={{ width: "100%", margin: ".6rem 0", padding: ".6rem", borderRadius: 8, border: `1px solid ${C.border}`, background: C.bgCard, color: C.white, fontFamily: FONT.body, boxSizing: "border-box" }} />
 
       <div style={{ display: "flex", gap: ".5rem", marginBottom: ".5rem" }}>
-        <button onClick={() => onVerdict("keep")} style={vStyle("keep", C.greenDim, C.greenBorder, C.green)}>KEEP{savedVerdict === "keep" ? " ✓" : suggests("keep") ? " ·sugg" : ""}</button>
-        <button onClick={() => onVerdict("revise")} style={vStyle("revise", C.goldDim, C.goldBorder, C.gold)}>REVISE{savedVerdict === "revise" ? " ✓" : suggests("revise") ? " ·sugg" : ""}</button>
-        <button onClick={() => onVerdict("retire")} style={vStyle("retire", C.redDim, C.redBorder, C.red)}>RETIRE{savedVerdict === "retire" ? " ✓" : suggests("retire") ? " ·sugg" : ""}</button>
+        <button onClick={() => onVerdict("keep")} style={vStyle("keep", C.greenDim, C.greenBorder, C.green)}>KEEP{savedVerdict === "keep" ? " ✓" : ""}</button>
+        <button onClick={() => onVerdict("revise")} style={vStyle("revise", C.goldDim, C.goldBorder, C.gold)}>REVISE{savedVerdict === "revise" ? " ✓" : ""}</button>
+        <button onClick={() => onVerdict("retire")} style={vStyle("retire", C.redDim, C.redBorder, C.red)}>RETIRE{savedVerdict === "retire" ? " ✓" : ""}</button>
       </div>
 
       {children}
