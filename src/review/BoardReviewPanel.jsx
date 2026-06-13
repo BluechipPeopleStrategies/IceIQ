@@ -68,7 +68,7 @@ export default function BoardReviewPanel({ scenario, coach, logs = [], savedVerd
       {logs.length > 0 && (
         <div style={{ marginTop: ".4rem", padding: ".5rem .6rem", borderRadius: 8, background: C.bgCard, border: `1px dashed ${C.border}` }}>
           <div style={{ fontSize: ".72rem", color: C.dimmer, marginBottom: ".2rem" }}>Previously incorporated</div>
-          {groupIterations(logs).map((g, k) => <IterationRow key={k} group={g} />)}
+          {groupIterations(logs).map((g, k) => <IterationRow key={g.iteration ?? g.created_at ?? k} group={g} />)}
         </div>
       )}
 
