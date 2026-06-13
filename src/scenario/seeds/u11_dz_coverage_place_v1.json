@@ -4,18 +4,18 @@
   "nodeId": "u11.defensive-zone-coverage",
   "level": "U11 / Atom",
   "levels": ["U11 / Atom"],
-  "themes": ["defensive-zone-coverage", "positioning", "net-front"],
+  "themes": ["defensive-zone-coverage", "positioning"],
   "cat": "Defensive Play",
   "difficulty": 2,
   "stage": { "view": "left", "zone": "def-zone" },
-  "read": { "cue": "two opponents are open at once — one on the doorstep, one back at the weak-side point; the doorstep man is the bigger threat", "decoy": { "x": 0.3, "y": 0.24 } },
+  "read": { "cue": "a teammate is already locked onto the doorstep man, so the open threat is the weak-side point with a clear shooting lane", "decoy": { "x": 0.1, "y": 0.5 } },
   "actors": [
     { "id": "carrier", "kind": "defender", "x": 0.18, "y": 0.8, "tag": "" },
     { "id": "puck", "kind": "puck", "x": 0.182, "y": 0.802 },
     { "id": "oppNet", "kind": "defender", "x": 0.13, "y": 0.5, "tag": "" },
-    { "id": "oppPoint", "kind": "defender", "x": 0.3, "y": 0.25, "tag": "" },
+    { "id": "oppPoint", "kind": "defender", "x": 0.32, "y": 0.24, "tag": "" },
     { "id": "tmF", "kind": "teammate", "x": 0.2, "y": 0.72, "tag": "" },
-    { "id": "tmC", "kind": "teammate", "x": 0.24, "y": 0.45, "tag": "" },
+    { "id": "tmD", "kind": "teammate", "x": 0.16, "y": 0.52, "tag": "" },
     { "id": "g", "kind": "goalie", "x": 0.06, "y": 0.5, "tag": "" },
     { "id": "you", "kind": "player", "x": 0.36, "y": 0.42, "tag": "D" }
   ],
@@ -23,18 +23,18 @@
     "kind": "place",
     "items": ["you"],
     "showTargets": false,
-    "prompt": "The puck's in your corner. Read the ice and drag YOURSELF (the defence) to where you're needed most."
+    "prompt": "The puck's in your corner. Read who your teammates already have, then drag YOURSELF (the defence) to the open threat."
   },
   "correct": {
     "kind": "place",
     "placements": [
-      { "id": "you", "zoneId": "dz-net-front" }
+      { "id": "you", "zoneId": "dz-point-weak" }
     ]
   },
   "feedback": {
-    "right": "Yes. Two of their players are open, but the one on the doorstep is the lethal one — a tap-in waiting to happen. Take the net-front first; the point shot is the lesser danger.",
-    "wrong": "The weak-side point is open, but a point shot is far less dangerous than the man alone on the doorstep. Always take the highest-danger threat — the net-front — first."
+    "right": "Yes. Your teammate already has the doorstep man, so charging the net just double-covers him and leaves the point wide open for a clean shot. Take the open man — the weak-side point.",
+    "wrong": "Your instinct screams 'net-front,' but a teammate is already there. Doubling up leaves the point man alone with a clear lane. Cover the OPEN threat, not the one that's handled."
   },
-  "tip": "When two men are open, cover the most dangerous one first: the doorstep beats the point every time.",
-  "why": "Defensive-zone coverage is triage. With two threats open, the net-front man scores the easy goal, so he gets covered before the lower-danger point."
+  "tip": "Don't double-cover. Check who your teammates already have, then take the open man.",
+  "why": "Good defenders read the whole picture. Crashing the net your partner already owns leaves a different shooter free — coverage is about taking the UNcovered threat, not the scariest-looking one."
 }
