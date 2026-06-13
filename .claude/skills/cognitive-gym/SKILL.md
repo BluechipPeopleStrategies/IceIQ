@@ -21,6 +21,25 @@ This skill is the living source of truth for how the games behave. When Thomas
 gives a new rule, add it to "Rules from Thomas" below and apply it everywhere it
 fits. Read this before touching any game.
 
+## Current games (10)
+| id | name | skill tag | trains |
+|----|------|-----------|--------|
+| anticipation | Read the Pass | Anticipation | where the puck is going (4 directions, feet-graded) |
+| tracking | Baylor's Pick | Awareness | multi-object tracking + soccer-ball call |
+| reaction | Shoot or Hold | Reaction | go/no-go, space bar, 3x orange penalty |
+| eyesup | Eyes Up | Vision | peripheral vision (center fixation) |
+| snapshot | Snapshot | Memory | glance memory of a flashed formation |
+| findlane | Find the Lane | Vision | the one open passing lane before it closes |
+| bestoption | Best Option | Decisions | shoot / pass / carry under a clock |
+| readnumbers | Read the Numbers | Vision | reading a number on a fast-moving skater |
+| lateread | Late Read | Adapting | switching when a defender steps up late |
+| twothings | Two Things at Once | Focus | divided attention (puck crossing + shape cue) |
+
+Each is `src/cognitive-gym/<Name>Drill.jsx` with a pure `<name>Core.js` and golden
+tests in `scripts/test-gym.mjs`. The new-game pattern (ready gate, realistic
+rink, persistent leveling, graded points, illustrated intro, title + watermark,
+Restart, resize re-fit) is proven across all of these.
+
 ## Where things live
 - Games: `src/cognitive-gym/<Name>Drill.jsx` (one component per game).
 - Hub + registry: `src/cognitive-gym/CognitiveGym.jsx` (the `DRILLS` array).
