@@ -4,6 +4,7 @@ import AnticipationDrill from "./AnticipationDrill";
 import TrackingDrill from "./TrackingDrill";
 import ReactionDrill from "./ReactionDrill";
 import EyesUpDrill from "./EyesUpDrill";
+import SnapshotDrill from "./SnapshotDrill";
 import { getDrill, getStats } from "./gymStorage";
 
 // The drill registry. Add a drill by appending an entry here; the hub renders
@@ -52,6 +53,17 @@ const DRILLS = [
     trains: "Scanning, shoulder checks, seeing the back-door without puck-watching",
     build: "canvas",
     component: EyesUpDrill,
+  },
+  {
+    id: "snapshot",
+    name: "Snapshot",
+    skill: "Memory",
+    blurb: "Glance once, then tap where the open teammate was.",
+    goal: "Take one quick snapshot of the ice and remember where the open teammate was.",
+    why: "Good players read the ice in one heads-up look before the pass arrives, so they already know their options the moment they get the puck. Training that one-glance snapshot is how you make a quick play under pressure instead of stickhandling with your head down looking for help.",
+    trains: "Reading the ice in one glance, knowing your options before the puck arrives",
+    build: "canvas",
+    component: SnapshotDrill,
   },
 ];
 
