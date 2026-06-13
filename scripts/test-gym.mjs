@@ -7,6 +7,7 @@ import { makeFormation, scoreTap as snapScoreTap, flashMs as snapFlashMs, marker
 import { laneClear, pointSegmentDist, makeFormation as makeLaneFormation, scoreLane, receiverCount, defenderCount, laneMargin, closeMs as laneCloseMs, EASY_RECEIVERS, HARD_RECEIVERS, EASY_DEFENDERS, HARD_DEFENDERS } from "../src/cognitive-gym/findLaneCore.js";
 import { OPTIONS, makeSituation, scoreChoice, clockMs as boClockMs, teammateCount, defenderCount as boDefenderCount, EASY_TEAMMATES, HARD_TEAMMATES, EASY_DEFENDERS as BO_EASY_DEF, HARD_DEFENDERS as BO_HARD_DEF } from "../src/cognitive-gym/bestOptionCore.js";
 import { digitsForLevel, travelMs, makeRound, scoreRead, CHOICES, MIN_DIGITS, MAX_DIGITS } from "../src/cognitive-gym/readNumbersCore.js";
+import { changeProb, changeDelay, clockMs as lrClockMs, makeTrial, scoreTrial, teammateCount as lrTeammateCount, defenderCount as lrDefenderCount, EASY_TEAMMATES as LR_EASY_MATE, HARD_TEAMMATES as LR_HARD_MATE } from "../src/cognitive-gym/lateReadCore.js";
 
 let failed = 0;
 const check = (name, cond) => { console.log(`${cond ? "PASS" : "FAIL"}  ${name}`); if (!cond) failed++; };
@@ -388,6 +389,79 @@ check("readnumbers instant correct answer is max points", scoreRead(2, 2, 0, 200
 check("readnumbers wrong pick is a miss worth 0", scoreRead(0, 2, 100, 2000).success === false && scoreRead(0, 2, 100, 2000).points === 0);
 check("readnumbers no pick (-1) is a miss worth 0", scoreRead(-1, 2, 100, 2000).success === false && scoreRead(-1, 2, 100, 2000).points === 0);
 check("readnumbers no pick (null) is a miss worth 0", scoreRead(null, 2, 100, 2000).success === false && scoreRead(null, 2, 100, 2000).points === 0);
+
+// Late Read (cognitive flexibility / inhibition) — pure helpers --------------
+const RW = 600, RH = 372; // a sample canvas
+
+// difficulty climbs with level: more change reps, the switch fires LATER, the
+// clock is shorter, and more teammates.
+check("lateread change probability rises with level", changeProb(1) < changeProb(10) && changeProb(10) < changeProb(20));
+check("lateread clock gets shorter with level", lrClockMs(1) > lrClockMs(10) && lrClockMs(10) > lrClockMs(20));
+// the change fires later as a fraction of the clock (compare against a fixed clock)
+check("lateread change fires later with level", changeDelay(1, 3000) < changeDelay(10, 3000) && changeDelay(10, 3000) < changeDelay(20, 3000));
+check("lateread teammates grow with level", lrTeammateCount(1) === LR_EASY_MATE && lrTeammateCount(20) === LR_HARD_MATE && lrTeammateCount(20) > lrTeammateCount(1));
+check("lateread defenders are present and grow with level", lrDefenderCount(20) > lrDefenderCount(1));
+
+// makeTrial: deterministic with an injected rng; index invariants and in-bounds.
+let lrSeed = 0;
+const lrRng = () => { lrSeed = (lrSeed * 9301 + 49297) % 233280; return lrSeed / 233280; };
+
+let lrIndexOk = true;     // on no-change first===final; on change they differ
+let lrInBounds = true;
+let lrValidIdx = true;    // first/final are valid teammate indices
+let lrChangeAtOk = true;  // changeAtMs set iff a change rep, within (0, clock)
+let lrClockOk = true;
+let sawChange = false;
+let sawNoChange = false;
+for (const lvl of [1, 5, 10, 15, 20]) {
+  for (const seed of [1, 12345, 777, 90210, 31337, 8675309, 555, 42]) {
+    lrSeed = seed;
+    const tr = makeTrial(lvl, RW, RH, { rng: lrRng });
+    const n = tr.teammates.length;
+    if (tr.firstIndex < 0 || tr.firstIndex >= n) lrValidIdx = false;
+    if (tr.finalIndex < 0 || tr.finalIndex >= n) lrValidIdx = false;
+    if (tr.changes) {
+      sawChange = true;
+      if (tr.firstIndex === tr.finalIndex) lrIndexOk = false;
+      if (!(tr.changeAtMs > 0 && tr.changeAtMs < tr.clockMs)) lrChangeAtOk = false;
+    } else {
+      sawNoChange = true;
+      if (tr.firstIndex !== tr.finalIndex) lrIndexOk = false;
+      if (tr.changeAtMs !== null) lrChangeAtOk = false;
+    }
+    if (tr.clockMs !== lrClockMs(lvl)) lrClockOk = false;
+    const pts = [tr.you, ...tr.teammates, ...tr.defenders];
+    if (!pts.every((p) => p.x > 0 && p.x < RW && p.y > 0 && p.y < RH)) lrInBounds = false;
+  }
+}
+check("lateread no-change has first===final, change has first!==final", lrIndexOk);
+check("lateread first/final are valid teammate indices", lrValidIdx);
+check("lateread changeAtMs set only on change reps and within the clock", lrChangeAtOk);
+check("lateread carries the level's clock", lrClockOk);
+check("lateread positions stay in-bounds across levels/seeds", lrInBounds);
+check("lateread generates both change and no-change reps", sawChange && sawNoChange);
+
+// deterministic: same seed -> same trial
+lrSeed = 4242;
+const lrA = makeTrial(8, RW, RH, { rng: lrRng });
+lrSeed = 4242;
+const lrB = makeTrial(8, RW, RH, { rng: lrRng });
+check("lateread makeTrial deterministic for a seed", lrA.firstIndex === lrB.firstIndex && lrA.finalIndex === lrB.finalIndex && lrA.teammates[0].x === lrB.teammates[0].x && lrA.defenders.length === lrB.defenders.length);
+
+// scoreTrial: success only on the FINAL index in time; faster after settle =
+// more points; the pre-change index (and any wrong index / no tap / expiry) is a
+// miss worth 0.
+const lrFast = scoreTrial(2, 2, 1100, 1000, 3000); // tapped final, just after settle
+const lrSlow = scoreTrial(2, 2, 2800, 1000, 3000); // tapped final, late
+check("lateread success only on the final index", lrFast.success && scoreTrial(1, 2, 1100, 1000, 3000).success === false);
+check("lateread faster tap after settle scores more points", lrFast.points > lrSlow.points && lrFast.points > 0);
+check("lateread instant-after-settle tap is max points", scoreTrial(2, 2, 1000, 1000, 3000).points === MAX_REP);
+check("lateread tapping the pre-change teammate is a miss worth 0", scoreTrial(0, 2, 1100, 1000, 3000).success === false && scoreTrial(0, 2, 1100, 1000, 3000).points === 0);
+check("lateread no tap (-1) is a miss worth 0", scoreTrial(-1, 2, 1100, 1000, 3000).success === false && scoreTrial(-1, 2, 1100, 1000, 3000).points === 0);
+check("lateread no tap (null) is a miss worth 0", scoreTrial(null, 2, 1100, 1000, 3000).success === false && scoreTrial(null, 2, 1100, 1000, 3000).points === 0);
+check("lateread expired clock is a miss even on the final index", scoreTrial(2, 2, 3100, 1000, 3000).success === false && scoreTrial(2, 2, 3100, 1000, 3000).points === 0);
+// a no-change rep settles at 0, so points reward speed from the start
+check("lateread no-change settle 0 still grades speed", scoreTrial(2, 2, 0, 0, 3000).points === MAX_REP && scoreTrial(2, 2, 2900, 0, 3000).points < scoreTrial(2, 2, 100, 0, 3000).points);
 
 console.log(failed ? `\n${failed} FAILED` : "\nAll passed");
 process.exit(failed ? 1 : 0);
