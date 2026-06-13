@@ -206,7 +206,7 @@ function BoardMC({ scenario, playerId, onAnswer }) {
 }
 
 export default function ScenarioRenderer({ scenario, playerId, mode, onAnswer }) {
-  if (Array.isArray(scenario?.steps)) {
+  if ((Array.isArray(scenario?.steps) && scenario.steps.length) || (scenario?.nodes && scenario?.entry)) {
     return <MultiStepPlayer scenario={scenario} playerId={playerId} onAnswer={onAnswer} />;
   }
   const [result, setResult] = useState(null);

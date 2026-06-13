@@ -1,27 +1,26 @@
-// Plays a multi-step scenario: renders each frame with the existing
-// ScenarioRenderer (as a synthetic flat scenario), then a reveal beat
-// (the step's `outcome` + a Continue control), then the next frame, and
-// a final per-step summary. All sequencing logic lives in multiStep.js.
+// Plays a branching (or linear, or flat) scenario: renders each frame with
+// ScenarioRenderer (as a synthetic flat scenario), shows a reveal beat (the
+// route's outcome + Continue), follows the route to the next node, and ends with
+// a per-read summary. All graph logic lives in branching.js.
 import { useState } from "react";
 import ScenarioRenderer from "./ScenarioRenderer.jsx";
-import { start, frameFor, currentStep, record, next, isComplete, summary } from "./multiStep.js";
+import { start, frameFor, record, routeFor, advance, summary } from "./branching.js";
 import { C, FONT, Card } from "../shared.jsx";
 
 export default function MultiStepPlayer({ scenario, playerId, onAnswer }) {
   const [state, setState] = useState(() => start(scenario));
-  const [answered, setAnswered] = useState(false);
+  const [reveal, setReveal] = useState(null); // { route } after answering the current node (route may be null on a terminal)
+  const [finished, setFinished] = useState(false);
 
-  if (isComplete(state)) {
+  if (finished) {
     const s = summary(state);
     return (
       <Card style={{ background: C.dimmest, border: `1px solid ${C.border}` }}>
         <div style={{ fontWeight: 800, color: C.gold, marginBottom: ".4rem" }}>Play complete</div>
         <div style={{ fontSize: 14, color: C.white }}>You read {s.correct} of {s.total} correctly.</div>
-        <div style={{ display: "flex", gap: ".4rem", marginTop: ".5rem" }}>
-          {s.perStep.map((okStep, i) => (
-            <span key={i} style={{ fontSize: 12, fontWeight: 800, color: okStep ? C.green : C.red }}>
-              {okStep ? "✓" : "✗"} read {i + 1}
-            </span>
+        <div style={{ display: "flex", gap: ".4rem", marginTop: ".5rem", flexWrap: "wrap" }}>
+          {s.perRead.map((ok, i) => (
+            <span key={i} style={{ fontSize: 12, fontWeight: 800, color: ok ? C.green : C.red }}>{ok ? "✓" : "✗"} read {i + 1}</span>
           ))}
         </div>
       </Card>
@@ -29,33 +28,35 @@ export default function MultiStepPlayer({ scenario, playerId, onAnswer }) {
   }
 
   const frame = frameFor(state);
-  const step = currentStep(state);
-  const total = state.steps.length;
 
   function handleAnswer(result) {
-    if (answered) return;
-    setState((st) => record(st, result));
-    setAnswered(true);
-    onAnswer?.({ ...result, stepIndex: state.index });
+    if (reveal) return;
+    const st2 = record(state, result);
+    setState(st2);
+    setReveal({ route: routeFor(st2, result) });
+    onAnswer?.({ ...result, nodeId: state.nodeId });
   }
-  function advance() {
-    setAnswered(false);
-    setState((st) => next(st));
+  function advanceNext() {
+    if (!reveal) return;
+    if (reveal.route) { setState((st) => advance(st, reveal.route)); setReveal(null); }
+    else { setFinished(true); }
   }
 
   return (
     <div>
       <div style={{ fontSize: 11, color: C.dimmer, fontFamily: FONT.body, marginBottom: ".3rem" }}>
-        Read {state.index + 1} of {total}
+        Read {state.path.length}
       </div>
       <ScenarioRenderer scenario={frame} playerId={playerId} onAnswer={handleAnswer} />
-      {answered && (
+      {reveal && (
         <Card style={{ marginTop: ".6rem", background: C.purpleDim, border: `1px solid ${C.purpleBorder}` }}>
-          {step.outcome && <div style={{ fontSize: 13, color: C.white, marginBottom: ".5rem" }}>▶ {step.outcome}</div>}
-          <button onClick={advance}
+          {reveal.route && reveal.route.outcome && (
+            <div style={{ fontSize: 13, color: C.white, marginBottom: ".5rem" }}>▶ {reveal.route.outcome}</div>
+          )}
+          <button onClick={advanceNext}
             style={{ width: "100%", padding: ".7rem", borderRadius: 10, border: "none", background: C.gradientPrimary,
               color: C.bg, fontFamily: FONT.body, fontWeight: 800, cursor: "pointer" }}>
-            {state.index + 1 < total ? "Continue →" : "See result →"}
+            {reveal.route ? "Continue →" : "See result →"}
           </button>
         </Card>
       )}
