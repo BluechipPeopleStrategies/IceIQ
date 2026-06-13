@@ -130,6 +130,13 @@ fits. Read this before touching any game.
 - **Difficulty must climb meaningfully.** Higher levels get genuinely harder,
   not marginally. Head on a Swivel: 5 -> 16 skaters, faster movement, longer
   tracking, and a shorter look at the targets.
+- **Show the per-round result.** Tell the player how they did each round (Head
+  on a Swivel: "You got X of 3 right" during the result hold), not just the
+  session total.
+- **Soccer-ball bonus (Head on a Swivel).** One of the three teammates carries a
+  soccer ball (⚽), shown while memorizing and revealed at the end. Tag that
+  teammate for a bonus point. Bonus count shows in the result and the done
+  screen and is saved as the session's points.
 
 ## Common mistakes
 - Sizing a canvas to container width only (overflows on desktop). Use the

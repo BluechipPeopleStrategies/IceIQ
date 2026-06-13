@@ -44,6 +44,7 @@ function makeDots(W, H, level) {
   return {
     dots,
     targetIdx: new Set([0, 1, 2]),
+    ballIdx: Math.floor(rand(0, 3)), // which target (0..2) carries the soccer ball
     moveMs: lerp(4500, 10000, t),
     watchMs: lerp(2000, 800, t), // shorter look at higher levels
   };
@@ -65,6 +66,8 @@ export default function TrackingDrill({ playerId = "default", onExit }) {
   const [saved, setSaved] = useState(null);
   const [levelUpIn, setLevelUpIn] = useState(3); // clean shifts still needed to move up
   const [shiftResult, setShiftResult] = useState(null); // correct count for the shift just finished
+  const [bonus, setBonus] = useState(0); // soccer balls caught this session
+  const [gotBall, setGotBall] = useState(false); // got the soccer ball on the last shift
 
   const startShift = useCallback((roundIndex) => {
     const canvas = canvasRef.current;
@@ -86,6 +89,7 @@ export default function TrackingDrill({ playerId = "default", onExit }) {
     setStage("ready");
     setRemaining(TARGETS);
     setShiftResult(null);
+    setGotBall(false);
     loop();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -102,6 +106,9 @@ export default function TrackingDrill({ playerId = "default", onExit }) {
 
   const resolveShift = useCallback(
     (correctCount) => {
+      const got = sceneRef.current.picks.has(sceneRef.current.ballIdx);
+      setGotBall(got);
+      if (got) setBonus((b) => b + 1);
       setShiftResult(correctCount);
       setCorrect((c) => c + correctCount);
       const lvl = engineRef.current.record(correctCount === TARGETS);
@@ -250,6 +257,14 @@ export default function TrackingDrill({ playerId = "default", onExit }) {
           }
           ctx.stroke();
         }
+
+        // soccer ball on the ball-carrier — shown while memorizing and on reveal
+        if (idx === sc.ballIdx && (sc.stage === "watch" || sc.stage === "feedback")) {
+          ctx.font = `${Math.round(d.r * 1.6)}px serif`;
+          ctx.textAlign = "center";
+          ctx.textBaseline = "middle";
+          ctx.fillText("⚽", d.x, d.y);
+        }
       });
 
       rafRef.current = requestAnimationFrame(frame);
@@ -295,6 +310,7 @@ export default function TrackingDrill({ playerId = "default", onExit }) {
     });
     setCorrect(0);
     setShift(0);
+    setBonus(0);
     setLevelUpIn(engineRef.current.toPromote);
     setPhase("playing");
     requestAnimationFrame(() => startShift(0));
@@ -307,6 +323,7 @@ export default function TrackingDrill({ playerId = "default", onExit }) {
         saveSession(playerId, "tracking", {
           score,
           level: engineRef.current.level,
+          points: bonus,
           streak: { ups: engineRef.current.ups, downs: engineRef.current.downs },
         })
       );
@@ -359,7 +376,10 @@ export default function TrackingDrill({ playerId = "default", onExit }) {
     watch: "Memorize the gold teammates",
     track: "Track them",
     pick: `Tap your ${remaining} teammate${remaining === 1 ? "" : "s"}`,
-    feedback: shiftResult === null ? "" : `You got ${shiftResult} of ${TARGETS} right`,
+    feedback:
+      shiftResult === null
+        ? ""
+        : `You got ${shiftResult} of ${TARGETS} right${gotBall ? " · soccer ball +1 ⚽" : ""}`,
   }[stage];
 
   return (
@@ -373,6 +393,7 @@ export default function TrackingDrill({ playerId = "default", onExit }) {
             <li>3 clean shifts in a row moves you up a level.</li>
             <li>2 missed shifts in a row moves you down.</li>
             <li>Higher levels add more skaters, more speed, and a shorter look.</li>
+            <li>One teammate has a soccer ball ⚽. Tag them for a bonus point.</li>
           </ul>
           {phase === "playing" && (
             <p className="gym-guide-now">
@@ -450,6 +471,7 @@ export default function TrackingDrill({ playerId = "default", onExit }) {
               </div>
               <p>
                 {correct} of {SHIFTS * TARGETS} teammates tracked. Level {level}.
+                {bonus > 0 ? ` ${bonus} soccer ball${bonus === 1 ? "" : "s"} ⚽` : ""}
               </p>
               <div className="gym-row">
                 <button className="gym-btn" onClick={start}>
