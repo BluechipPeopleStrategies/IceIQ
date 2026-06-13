@@ -79,7 +79,7 @@ async function main() {
   if (!url || !key) { console.error("Missing VITE_SUPABASE_URL or SUPABASE_SERVICE_ROLE_KEY in .env"); process.exit(1); }
   const sb = createClient(url, key, { auth: { persistSession: false } });
 
-  const { data: reviewsRaw, error } = await sb.from("coach_reviews").select("scenario_id,verdict,notes").in("verdict", ["revise", "retire"]);
+  const { data: reviewsRaw, error } = await sb.from("coach_reviews").select("scenario_id,verdict,notes").in("verdict", ["revise", "retire"]).order("scenario_id", { ascending: true });
   if (error) { console.error(`coach_reviews read: ${error.message}`); process.exit(1); }
   let reviews = reviewsRaw || [];
   if (opts.ids) reviews = reviews.filter((r) => opts.ids.includes(r.scenario_id));
