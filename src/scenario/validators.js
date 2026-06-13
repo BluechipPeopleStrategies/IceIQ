@@ -908,6 +908,26 @@ const rules = [
     }
     return null;
   },
+
+  // THE DECISION TEST for positioning (see docs/decision-test-principle.md).
+  // A "place" board is only a real read if a tempting-but-wrong spot exists. The
+  // author declares it: read = { cue, decoy:{x,y} }. We warn (not err) so existing
+  // seeds aren't broken, but the warning feeds the coach gate as a single-option
+  // signal. The decoy must actually be CONTESTED (a defender within reach), or it
+  // isn't tempting — that's the geometric proof the read is real.
+  function positioningNeedsADecoy(s) {
+    if (s.interaction?.kind !== "place") return null;
+    const read = s.read;
+    if (!read || !read.cue || !read.decoy || typeof read.decoy.x !== "number" || typeof read.decoy.y !== "number") {
+      return { kind: "warn", msg: "single-option positioning risk: no declared read. Add read:{ cue, decoy:{x,y} } — the Decision Test needs a cue that flips the answer and a tempting wrong spot (decoy)" };
+    }
+    const defenders = (s.actors || []).filter(a => a.kind === "defender");
+    const contested = defenders.some(d => distance(d, read.decoy) <= 0.18);
+    if (!contested) {
+      return { kind: "warn", msg: `declared decoy at (${read.decoy.x}, ${read.decoy.y}) isn't covered by any defender — a decoy is only tempting if it's contested, so the read isn't real yet` };
+    }
+    return null;
+  },
 ];
 
 // ───────────────────────────────────────────────────────────────────────

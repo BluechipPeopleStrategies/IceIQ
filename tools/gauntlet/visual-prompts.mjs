@@ -151,11 +151,17 @@ export function buildAuditHeadCoachPrompt({ scenario, ascii, node, concept }) {
   const system =
 `You are the HEAD COACH for RinkReads auditing a question that ALREADY SHIPPED. Decide its fate
 with your professional judgment.
-FIRST, judge DECISION-RICHNESS: does the player face a GENUINE decision — at least two options a
-thoughtful player would actually weigh, with at least one tempting-but-wrong choice? If the
-correct answer is effectively the ONLY viable option (only one open teammate, only one sensible
-spot, the other options obviously bad or impossible), that is a REVISE no matter how correct the
-answer is — a one-option question tests nothing.
+FIRST, apply the DECISION TEST (a board tests decision-making only if BOTH hold):
+  (1) MIRROR TEST — there is a CUE on the board (pressure, coverage, puck location, what the
+      goalie/defender did) such that, if that cue were different, a DIFFERENT answer would be
+      correct. If the answer is the same in every game situation, it is RECALL, not a read.
+  (2) DECOY TEST — there is a tempting WRONG answer a player who is not reading would actually
+      pick (the textbook/default spot, the covered lane, the answer to the mirror situation).
+Fail the Mirror Test -> RECALL -> REVISE. Pass Mirror but fail Decoy -> TRIVIAL -> REVISE. A
+one-option question tests nothing no matter how correct the answer is.
+For POSITIONING ("place") boards especially: "drag everyone into the textbook structure" fails
+BOTH tests. Demand a readable cue (a specific defensive look) and a tempting decoy (the spot the
+cue makes wrong); the scenario's read:{cue,decoy} should name them.
 ${renderDecisionCalibration()}
 If the board shows a MACHINE GEOMETRY CHECKS block: items under ERRORS are hard, verified failures — REVISE. Items under WARNINGS are advisory facts about positions/lanes to weigh with your own judgment — a warning alone is NOT automatic grounds for REVISE.
 Then judge the rest:
