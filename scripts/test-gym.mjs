@@ -5,6 +5,7 @@ import { DIRECTIONS, guessAxis, scorePass, feetPerPixel, formatDistance, rateMis
 import { slotCount, flashMs, hitRadius, pickFlash, scoreTap, MIN_SLOTS, MAX_SLOTS } from "../src/cognitive-gym/eyesUpCore.js";
 import { makeFormation, scoreTap as snapScoreTap, flashMs as snapFlashMs, markerCount, hitRadius as snapHitRadius, EASY_MARKERS, HARD_MARKERS } from "../src/cognitive-gym/snapshotCore.js";
 import { laneClear, pointSegmentDist, makeFormation as makeLaneFormation, scoreLane, receiverCount, defenderCount, laneMargin, closeMs as laneCloseMs, EASY_RECEIVERS, HARD_RECEIVERS, EASY_DEFENDERS, HARD_DEFENDERS } from "../src/cognitive-gym/findLaneCore.js";
+import { OPTIONS, makeSituation, scoreChoice, clockMs as boClockMs, teammateCount, defenderCount as boDefenderCount, EASY_TEAMMATES, HARD_TEAMMATES, EASY_DEFENDERS as BO_EASY_DEF, HARD_DEFENDERS as BO_HARD_DEF } from "../src/cognitive-gym/bestOptionCore.js";
 
 let failed = 0;
 const check = (name, cond) => { console.log(`${cond ? "PASS" : "FAIL"}  ${name}`); if (!cond) failed++; };
@@ -258,6 +259,75 @@ check("findlane instant tap is near max points", scoreLane(2, 2, 0, 2000).points
 check("findlane wrong index is a miss worth 0", scoreLane(0, 2, 100, 2000).success === false && scoreLane(0, 2, 100, 2000).points === 0);
 check("findlane no tap (-1) is a miss worth 0", scoreLane(-1, 2, 100, 2000).success === false && scoreLane(-1, 2, 100, 2000).points === 0);
 check("findlane expired countdown is a miss even on the open index", scoreLane(2, 2, 2100, 2000).success === false && scoreLane(2, 2, 2100, 2000).points === 0);
+
+// Best Option (decision speed) — pure helpers --------------------------------
+const BW = 600, BH = 372; // a sample canvas
+
+check("bestoption OPTIONS are the three reads", OPTIONS.length === 3 && OPTIONS.join() === "shoot,pass,carry");
+
+// difficulty climbs with level: shorter clock, more teammates/defenders
+check("bestoption clock gets shorter with level", boClockMs(1) > boClockMs(10) && boClockMs(10) > boClockMs(20));
+check("bestoption teammates grow with level", teammateCount(1) === EASY_TEAMMATES && teammateCount(20) === HARD_TEAMMATES && teammateCount(20) > teammateCount(1));
+check("bestoption defenders grow with level", boDefenderCount(1) === BO_EASY_DEF && boDefenderCount(20) === BO_HARD_DEF && boDefenderCount(20) > boDefenderCount(1));
+
+// makeSituation: deterministic with an injected rng, valid best, in-bounds.
+let boSeed = 0;
+const boRng = () => { boSeed = (boSeed * 9301 + 49297) % 233280; return boSeed / 233280; };
+
+let boBestValid = true;
+let boInBounds = true;
+let boReasonOk = true;
+let boClockOk = true;
+const seenBest = new Set();
+for (const lvl of [1, 5, 10, 15, 20]) {
+  for (const seed of [1, 12345, 777, 90210, 31337, 8675309]) {
+    boSeed = seed;
+    const s = makeSituation(lvl, BW, BH, { rng: boRng });
+    if (!OPTIONS.includes(s.best)) boBestValid = false;
+    seenBest.add(s.best);
+    if (typeof s.reason !== "string" || s.reason.length === 0) boReasonOk = false;
+    if (s.clockMs !== boClockMs(lvl)) boClockOk = false;
+    const pts = [s.you, s.net, s.goalie, ...s.teammates, ...s.defenders];
+    if (!pts.every((p) => p.x > 0 && p.x < BW && p.y > 0 && p.y < BH)) boInBounds = false;
+  }
+}
+check("bestoption makeSituation returns a valid best in OPTIONS", boBestValid);
+check("bestoption generates all three reads across seeds", seenBest.size === 3);
+check("bestoption positions stay in-bounds across levels/seeds", boInBounds);
+check("bestoption carries a non-empty reason", boReasonOk);
+check("bestoption carries the level's clock", boClockOk);
+
+// when best is pass, exactly one teammate is flagged open; when shoot/carry,
+// none are flagged open (so passing is visibly not the call).
+let passHasOpen = true;
+let nonPassHasNoOpen = true;
+for (const seed of [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]) {
+  boSeed = seed;
+  const s = makeSituation(8, BW, BH, { rng: boRng });
+  const opens = s.teammates.filter((m) => m.open).length;
+  if (s.best === "pass" && opens !== 1) passHasOpen = false;
+  if (s.best !== "pass" && opens !== 0) nonPassHasNoOpen = false;
+}
+check("bestoption a pass scene has exactly one open teammate", passHasOpen);
+check("bestoption shoot/carry scenes have no open teammate", nonPassHasNoOpen);
+
+// deterministic: same seed -> same situation
+boSeed = 4242;
+const boA = makeSituation(7, BW, BH, { rng: boRng });
+boSeed = 4242;
+const boB = makeSituation(7, BW, BH, { rng: boRng });
+check("bestoption makeSituation deterministic for a seed", boA.best === boB.best && boA.you.x === boB.you.x && boA.you.y === boB.you.y && boA.defenders.length === boB.defenders.length);
+
+// scoreChoice: success only on the matching option in time; faster = more points;
+// wrong option or expired = miss worth 0.
+const boFast = scoreChoice("shoot", "shoot", 200, 2000);
+const boSlow = scoreChoice("shoot", "shoot", 1800, 2000);
+check("bestoption success only on the matching option", boFast.success && scoreChoice("pass", "shoot", 200, 2000).success === false);
+check("bestoption faster choice scores more points", boFast.points > boSlow.points && boFast.points > 0);
+check("bestoption instant correct choice is max points", scoreChoice("carry", "carry", 0, 2000).points === MAX_REP);
+check("bestoption wrong option is a miss worth 0", scoreChoice("pass", "carry", 100, 2000).success === false && scoreChoice("pass", "carry", 100, 2000).points === 0);
+check("bestoption no pick (null) is a miss worth 0", scoreChoice(null, "shoot", 100, 2000).success === false && scoreChoice(null, "shoot", 100, 2000).points === 0);
+check("bestoption expired clock is a miss even on the right option", scoreChoice("shoot", "shoot", 2100, 2000).success === false && scoreChoice("shoot", "shoot", 2100, 2000).points === 0);
 
 console.log(failed ? `\n${failed} FAILED` : "\nAll passed");
 process.exit(failed ? 1 : 0);

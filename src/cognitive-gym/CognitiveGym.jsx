@@ -6,6 +6,7 @@ import ReactionDrill from "./ReactionDrill";
 import EyesUpDrill from "./EyesUpDrill";
 import SnapshotDrill from "./SnapshotDrill";
 import FindLaneDrill from "./FindLaneDrill";
+import BestOptionDrill from "./BestOptionDrill";
 import { getDrill, getStats } from "./gymStorage";
 
 // The drill registry. Add a drill by appending an entry here; the hub renders
@@ -76,6 +77,17 @@ const DRILLS = [
     trains: "Seeing the open seam, threading a pass through traffic, deciding fast",
     build: "canvas",
     component: FindLaneDrill,
+  },
+  {
+    id: "bestoption",
+    name: "Best Option",
+    skill: "Decisions",
+    blurb: "The play freezes on your stick. Shoot, pass, or carry, pick the best read fast.",
+    goal: "Read the frozen play and pick the best option, shoot, pass, or carry, before the clock runs out.",
+    why: "When you get the puck in the offensive zone you have a heartbeat to decide: shoot it, move it, or take it. Good players make that read fast and make it right, so they get the shot off before the lane closes, find the open teammate before the defender slides over, or keep their feet moving when nothing is there yet. Training that shoot, pass, or carry decision is how you stop freezing with the puck and start making the play the ice is giving you.",
+    trains: "Reading shoot/pass/carry fast, deciding under pressure, not freezing with the puck",
+    build: "canvas",
+    component: BestOptionDrill,
   },
 ];
 
