@@ -93,6 +93,18 @@ fits. Read this before touching any game.
   canvas to the viewport (and a sane max width). Resizing the window must
   re-fit and rescale the play, never skip to the next rep. (done in
   `gymEngine.setupCanvas` + `TrackingDrill` resize handler)
+- **Score in real distance, the same in every direction.** Don't normalize a
+  miss by the on-screen pixel span of the guess axis — that made top/bottom
+  passes far more forgiving than left/right (different axis lengths). Convert
+  the pixel miss to REAL feet on a regulation rink (200 ft long x 85 ft wide)
+  using `feetPerPixel`, and base both the success window and the points on feet
+  so a 5 ft miss scores the same whichever way the puck came. (done in
+  `anticipationCore.js`)
+- **Distances must be a real measurement, not a bare number.** Tell the player
+  how close they were in feet (or meters), e.g. "off by 3.2 ft" / "bang on",
+  not just "+872". Keep a points total too. (done, `formatDistance`)
+- **Let the player choose feet or meters.** Unit is a persisted gym-wide
+  preference (`getUnit`/`setUnit`, default feet), toggleable in the game.
 
 ## Common mistakes
 - Sizing a canvas to container width only (overflows on desktop). Use the

@@ -8,8 +8,8 @@ import {
   drawRink,
   pointerPos,
 } from "./gymEngine";
-import { getDrill, saveSession } from "./gymStorage";
-import { DIRECTIONS, guessAxis, scorePass } from "./anticipationCore";
+import { getDrill, saveSession, getUnit, setUnit as saveUnit } from "./gymStorage";
+import { DIRECTIONS, guessAxis, scorePass, feetPerPixel, formatDistance } from "./anticipationCore";
 
 // "Read the Pass" — trajectory prediction.
 // A puck launches across the ice from any side and disappears partway. The
@@ -73,17 +73,21 @@ function buildTrajectory(W, H, level, dir = pickDirection()) {
   }
 
   const hideFrac = lerp(0.55, 0.25, t); // fraction of the path still visible
+  const axis = guessAxis(dir);
+  const ftPerPx = feetPerPixel(axis, W, H);
+  const toleranceFt = lerp(6, 1.5, t); // success window in REAL feet — same for every direction
   return {
     pts,
     motion, // "x" | "y"
-    axis: guessAxis(dir), // "y" | "x" — where the guess varies
+    axis, // "y" | "x" — where the guess varies
     exitM, // motion-axis coordinate of the gold bar
     crossPos: c, // guess-axis coordinate of the true crossing
     crossT: time,
     hideM: forward ? lo + (hi - lo) * hideFrac : hi - (hi - lo) * hideFrac,
     forward,
-    tolerance: crossSpan * lerp(0.075, 0.02, t), // MUCH smaller success window
-    crossSpan,
+    ftPerPx, // feet per pixel along the guess axis
+    toleranceFt, // success window in feet
+    tolerancePx: toleranceFt / ftPerPx, // same window, in px, for drawing
     r,
   };
 }
@@ -102,6 +106,9 @@ export default function AnticipationDrill({ playerId = "default", onExit }) {
   const [points, setPoints] = useState(0);
   const pointsRef = useRef(0);
   const [saved, setSaved] = useState(null);
+  const [unit, setUnit] = useState(() => getUnit());
+  const unitRef = useRef(unit);
+  useEffect(() => { unitRef.current = unit; }, [unit]);
 
   const startRound = useCallback((roundIndex) => {
     const canvas = canvasRef.current;
@@ -219,13 +226,14 @@ export default function AnticipationDrill({ playerId = "default", onExit }) {
           ctx.arc(gx, gy, 10, 0, Math.PI * 2);
           ctx.fill();
 
-          // per-rep points float near the guess marker
+          // per-rep feedback near the guess marker: real distance + points
           ctx.save();
           ctx.fillStyle = sc.result === "hit" ? "#1b6cb0" : "#e8590c";
           ctx.font = "600 14px system-ui, sans-serif";
           ctx.textBaseline = "middle";
-          const labelX = Math.min(gx + 16, W - 64);
-          ctx.fillText(`+${sc.repPoints || 0}`, labelX, gy);
+          const label = `${formatDistance(sc.errorFt || 0, unitRef.current)}  +${sc.repPoints || 0}`;
+          const labelX = Math.min(gx + 14, W - 150);
+          ctx.fillText(label, labelX, gy);
           ctx.restore();
         }
 
@@ -236,11 +244,11 @@ export default function AnticipationDrill({ playerId = "default", onExit }) {
           ctx.lineWidth = 2;
           ctx.beginPath();
           if (horiz) {
-            ctx.moveTo(trueX, trueY - traj.tolerance);
-            ctx.lineTo(trueX, trueY + traj.tolerance);
+            ctx.moveTo(trueX, trueY - traj.tolerancePx);
+            ctx.lineTo(trueX, trueY + traj.tolerancePx);
           } else {
-            ctx.moveTo(trueX - traj.tolerance, trueY);
-            ctx.lineTo(trueX + traj.tolerance, trueY);
+            ctx.moveTo(trueX - traj.tolerancePx, trueY);
+            ctx.lineTo(trueX + traj.tolerancePx, trueY);
           }
           ctx.stroke();
           resolveRound(sc.result === "hit");
@@ -297,14 +305,15 @@ export default function AnticipationDrill({ playerId = "default", onExit }) {
       traj.axis === "y"
         ? Math.min(Math.max(pos.y, 0), sc.H)
         : Math.min(Math.max(pos.x, 0), sc.W);
-    const { success, points } = scorePass(
+    const { success, errorFt, points } = scorePass(
       guessC,
       traj.crossPos,
-      traj.crossSpan,
-      traj.tolerance
+      traj.ftPerPx,
+      traj.toleranceFt
     );
     sc.guessC = guessC;
     sc.result = success ? "hit" : "miss";
+    sc.errorFt = errorFt;
     sc.repPoints = points;
     sc.frozenIdx = idx;
     sc.revealStart = performance.now();
@@ -358,6 +367,16 @@ export default function AnticipationDrill({ playerId = "default", onExit }) {
           </span>
         )}
         {phase === "playing" && <span className="gym-chip">{points} pts</span>}
+        {phase === "playing" && (
+          <button
+            className="gym-chip"
+            style={{ cursor: "pointer" }}
+            onClick={() => { const u = unit === "ft" ? "m" : "ft"; setUnit(u); saveUnit(u); }}
+            title="Toggle feet / meters"
+          >
+            {unit}
+          </button>
+        )}
       </div>
 
       {phase === "intro" && (

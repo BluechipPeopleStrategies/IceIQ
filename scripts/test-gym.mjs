@@ -1,7 +1,7 @@
 import { gradedPoints, MAX_REP } from "../src/cognitive-gym/gymPoints.js";
 import { createAdaptiveLevel } from "../src/cognitive-gym/gymEngine.js";
 import { careerPointsFromDrills } from "../src/cognitive-gym/gymStorage.js";
-import { DIRECTIONS, guessAxis, scorePass } from "../src/cognitive-gym/anticipationCore.js";
+import { DIRECTIONS, guessAxis, scorePass, feetPerPixel, formatDistance, RINK_LENGTH_FT, RINK_WIDTH_FT } from "../src/cognitive-gym/anticipationCore.js";
 
 let failed = 0;
 const check = (name, cond) => { console.log(`${cond ? "PASS" : "FAIL"}  ${name}`); if (!cond) failed++; };
@@ -40,15 +40,38 @@ check("four directions", DIRECTIONS.length === 4 && DIRECTIONS.join() === "lr,rl
 check("horizontal travel guesses in Y", guessAxis("lr") === "y" && guessAxis("rl") === "y");
 check("vertical travel guesses in X", guessAxis("tb") === "x" && guessAxis("bt") === "x");
 
-const bang = scorePass(100, 100, 300, 10);
-check("bang-on is success with max points", bang.success && bang.points === 1000);
-const inside = scorePass(108, 100, 300, 10);
-check("inside window but off scores less than bang-on", inside.success && inside.points < 1000);
-const outside = scorePass(140, 100, 300, 10);
-check("outside window fails", !outside.success);
-const near = scorePass(105, 100, 300, 10);
-const far = scorePass(118, 100, 300, 10);
+// feetPerPixel: Y axis measures rink width (85ft), X axis measures length (200ft)
+check("feetPerPixel Y = width/H", feetPerPixel("y", 600, 300) === RINK_WIDTH_FT / 300);
+check("feetPerPixel X = length/W", feetPerPixel("x", 600, 300) === RINK_LENGTH_FT / 600);
+
+// scorePass in feet: errorFt = pixel gap * ftPerPx; success within toleranceFt
+const ftpp = 0.5; // 0.5 ft per px for a clean test
+const bang = scorePass(100, 100, ftpp, 6);
+check("bang-on is success with max points and 0 ft", bang.success && bang.points === 1000 && bang.errorFt === 0);
+const inside = scorePass(108, 100, ftpp, 6); // 8px * 0.5 = 4 ft, inside 6 ft
+check("inside window but off scores less than bang-on", inside.success && inside.errorFt === 4 && inside.points < 1000);
+const outside = scorePass(130, 100, ftpp, 6); // 30px * 0.5 = 15 ft, outside 6 ft
+check("outside window fails", !outside.success && outside.errorFt === 15);
+const near = scorePass(104, 100, ftpp, 6);
+const far = scorePass(120, 100, ftpp, 6);
 check("closer scores higher", near.points > far.points);
+
+// THE BUG FIX: the same physical miss scores the same regardless of orientation.
+// Horizontal pass (guess in Y, narrow axis) vs vertical pass (guess in X, long
+// axis): a 5 ft miss must yield identical points and identical success.
+const W = 600, H = 372;
+const ftY = feetPerPixel("y", W, H); // horizontal travel
+const ftX = feetPerPixel("x", W, H); // vertical travel
+const missPxY = 5 / ftY; // pixels that equal 5 ft on the Y axis
+const missPxX = 5 / ftX; // pixels that equal 5 ft on the X axis
+const hPass = scorePass(100, 100 + missPxY, ftY, 6);
+const vPass = scorePass(100, 100 + missPxX, ftX, 6);
+check("same feet miss scores identically across orientations", hPass.points === vPass.points && hPass.success === vPass.success && Math.abs(hPass.errorFt - 5) < 1e-9 && Math.abs(vPass.errorFt - 5) < 1e-9);
+
+// formatDistance
+check("formatDistance bang on under half a foot", formatDistance(0.3) === "bang on" && formatDistance(0) === "bang on");
+check("formatDistance feet", formatDistance(3.24) === "off by 3.2 ft");
+check("formatDistance meters converts", formatDistance(10, "m") === `off by ${(10 * 0.3048).toFixed(1)} m`);
 
 const drills = {
   anticipation: { sessions: [{ points: 800 }, { points: 600 }] },

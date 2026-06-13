@@ -7,6 +7,15 @@
 // { [playerId]: { [drillId]: { level, best, sessions: [{date, score, level, meta}] } } }
 
 const STORAGE_KEY = "rinkreads_gym_v1";
+const UNIT_KEY = "rinkreads_gym_unit"; // "ft" | "m" — distance readout preference
+
+// Player's distance unit for readouts. Defaults to feet (hockey convention).
+export function getUnit() {
+  try { return localStorage.getItem(UNIT_KEY) === "m" ? "m" : "ft"; } catch { return "ft"; }
+}
+export function setUnit(unit) {
+  try { localStorage.setItem(UNIT_KEY, unit === "m" ? "m" : "ft"); } catch { /* unavailable */ }
+}
 
 function readAll() {
   try {
