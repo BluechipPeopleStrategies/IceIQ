@@ -9,6 +9,7 @@ import FindLaneDrill from "./FindLaneDrill";
 import BestOptionDrill from "./BestOptionDrill";
 import ReadNumbersDrill from "./ReadNumbersDrill";
 import LateReadDrill from "./LateReadDrill";
+import TwoThingsDrill from "./TwoThingsDrill";
 import { getDrill, getStats } from "./gymStorage";
 
 // The drill registry. Add a drill by appending an entry here; the hub renders
@@ -112,6 +113,17 @@ const DRILLS = [
     trains: "Reading a late change, inhibiting your first idea, switching when the ice changes",
     build: "canvas",
     component: LateReadDrill,
+  },
+  {
+    id: "twothings",
+    name: "Two Things at Once",
+    skill: "Focus",
+    blurb: "Tap the puck as it crosses center, and call the shape that flashes, both at once.",
+    goal: "Tap the puck right as it crosses the center line, and tap the shape that flashes up top, at the same time. Both count.",
+    why: "Hockey never asks you to do one thing at a time. You track the puck and the play while still reading where bodies and lanes are, all at once. Training your brain to hold two jobs at the same time, the puck in front of you and a cue off to the side, is how you keep your head up for two things at once instead of locking onto one and losing the other.",
+    trains: "Divided attention, tracking the play while reading a cue, keeping your head up for two things at once",
+    build: "canvas",
+    component: TwoThingsDrill,
   },
 ];
 
