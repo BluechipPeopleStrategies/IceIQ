@@ -118,6 +118,18 @@ When adding a key, follow the `rinkreads_<thing>[_vN]` convention and grep befor
 ## Conversion UX Triggers
 Goals tab gold pip for FREE; blurred sample-goal preview behind gate; session-#5 milestone banner; mid-quiz locked-format sentinel; weekly-cap `FreeQuizCapScreen`. Upgrade surfaces: position filter, >1 age switch, session 6+, weekly cap, weekly-challenge tap.
 
+## Git & Commits (auto-commit)
+- **AUTO-COMMIT:** after completing a code or content change in this repo, commit it
+  to git without asking — clear conventional-commit message + `Co-Authored-By` trailer.
+- **Scope to what changed:** stage only the files for the change at hand
+  (`git add <paths>`). Never `git add -A`/`.` to sweep unrelated WIP into the commit.
+  If unrelated edits are mixed into a file you're committing, surface that and confirm
+  before including them.
+- **Never auto-push.** Pushing still requires explicit confirmation.
+- **Never commit directly to `main`** — Vercel auto-deploys `main`, so a commit there
+  is a production publish. If HEAD is `main`, stop and ask (branch first). Auto-commit
+  only on feature branches.
+
 ## Token Discipline (when working this repo)
 - `App.jsx` is huge and the JSON banks are large — **do not read them in full** unless editing that exact content. Read targeted ranges; grep first.
 - Show modified snippets with `// ... existing code` placeholders, not whole files.
