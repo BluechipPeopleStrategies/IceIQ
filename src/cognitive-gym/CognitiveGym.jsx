@@ -3,6 +3,7 @@ import "./cognitive-gym.css";
 import AnticipationDrill from "./AnticipationDrill";
 import TrackingDrill from "./TrackingDrill";
 import ReactionDrill from "./ReactionDrill";
+import EyesUpDrill from "./EyesUpDrill";
 import { getDrill, getStats } from "./gymStorage";
 
 // The drill registry. Add a drill by appending an entry here; the hub renders
@@ -40,6 +41,17 @@ const DRILLS = [
     trains: "Quick release, shot/pass discipline, not jumping early",
     build: "canvas",
     component: ReactionDrill,
+  },
+  {
+    id: "eyesup",
+    name: "Eyes Up",
+    skill: "Vision",
+    blurb: "Keep your eyes centered and catch a flash in the corner.",
+    goal: "Keep your eyes on the center puck and catch where a teammate flashes out of the corner of your eye.",
+    why: "Hockey is played with your eyes up, not glued to the puck. Catching a teammate or a checker out of the corner of your eye is how you make the shoulder check, find the back-door option, and feel the play around you before you ever turn your head.",
+    trains: "Scanning, shoulder checks, seeing the back-door without puck-watching",
+    build: "canvas",
+    component: EyesUpDrill,
   },
 ];
 
