@@ -1,7 +1,7 @@
 import { useRef, useState, useCallback, useEffect } from "react";
 import { createAdaptiveLevel, setupCanvas, pointerPos } from "./gymEngine";
 import { getDrill, saveSession } from "./gymStorage";
-import { makeShot, scoreShot, cellRects, cellAtPoint } from "./shootoutCore";
+import { makeShot, scoreShot, isCellOpenAt, cellRects, cellAtPoint } from "./shootoutCore";
 
 // "Pick Your Spot" — read the open net and shoot it before the goalie covers it.
 // The net is a 3x2 grid of cells. The goalie covers some at the start (saves);
@@ -46,25 +46,30 @@ export default function ShootoutDrill({ playerId = "default", onExit }) {
     return { x: (W - w) / 2, y: H * 0.2, w, h };
   }
 
-  // Covered at the given elapsed time? (covered-at-start, or closed since).
-  function coveredNow(shot, id, elapsedMs) {
-    if (shot.coveredAtStart.includes(id)) return true;
+  // Each net cell maps to the goalie body part that covers it.
+  const CELL_PART = {
+    gloveHi: "glove",   // top-left: round trapper
+    midHi: "head",      // top-mid: head + shoulders up
+    blkrHi: "blocker",  // top-right: square blocker
+    gloveLo: "padL",    // bottom-left: left leg pad
+    fiveHole: "stick",  // bottom-mid: stick + closed pads
+    blkrLo: "padR",     // bottom-right: right leg pad
+  };
+
+  // How far the goalie has reached into a cell at the given time: 0 (open) to 1
+  // (fully covered). Start-covered cells are always 1. A closing cell stays open,
+  // then the limb sweeps in over the last REACH_MS before atMs and slams shut.
+  const REACH_MS = 420;
+  function cellReach(shot, id, elapsedMs) {
+    if (shot.coveredAtStart.includes(id)) return 1;
     const sc = shot.closeSchedule.find((c) => c.cellId === id);
-    return !!(sc && elapsedMs >= sc.atMs);
+    if (!sc) return 0;
+    const start = sc.atMs - REACH_MS;
+    if (elapsedMs <= start) return 0;
+    if (elapsedMs >= sc.atMs) return 1;
+    return (elapsedMs - start) / REACH_MS;
   }
 
-  // A covered cell: dark goalie pad with a "G" so it reads by shape + label.
-  function drawGoalieCell(ctx, r) {
-    ctx.save();
-    ctx.fillStyle = "#2b3a47";
-    ctx.fillRect(r.x + 3, r.y + 3, r.w - 6, r.h - 6);
-    ctx.fillStyle = "#f4f9fc";
-    ctx.font = `700 ${Math.round(Math.min(r.w, r.h) * 0.4)}px system-ui, sans-serif`;
-    ctx.textAlign = "center";
-    ctx.textBaseline = "middle";
-    ctx.fillText("G", r.x + r.w / 2, r.y + r.h / 2);
-    ctx.restore();
-  }
   // An open cell: a target ring so it reads by shape, not color alone.
   function drawOpenCell(ctx, r) {
     ctx.save();
@@ -73,6 +78,102 @@ export default function ShootoutDrill({ playerId = "default", onExit }) {
     ctx.beginPath();
     ctx.arc(r.x + r.w / 2, r.y + r.h / 2, Math.min(r.w, r.h) * 0.28, 0, Math.PI * 2);
     ctx.stroke();
+    ctx.restore();
+  }
+
+  // The goalie's core: chest + mask, anchored on the center of the net so it
+  // does not fill any single cell on its own.
+  function drawGoalieCore(ctx, cx, cy, u) {
+    ctx.save();
+    ctx.fillStyle = "#2b3a47";
+    // chest
+    ctx.beginPath();
+    ctx.ellipse(cx, cy + u * 0.15, u * 0.7, u * 0.85, 0, 0, Math.PI * 2);
+    ctx.fill();
+    // mask
+    ctx.beginPath();
+    ctx.arc(cx, cy - u * 0.55, u * 0.48, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.strokeStyle = "#f4f9fc";
+    ctx.lineWidth = 2;
+    ctx.stroke();
+    // cage lines so the mask reads as a goalie head
+    ctx.beginPath();
+    ctx.moveTo(cx - u * 0.3, cy - u * 0.55);
+    ctx.lineTo(cx + u * 0.3, cy - u * 0.55);
+    ctx.moveTo(cx, cy - u * 0.9);
+    ctx.lineTo(cx, cy - u * 0.2);
+    ctx.stroke();
+    ctx.restore();
+  }
+
+  // One save piece reaching from the core into a covered cell. `reach` (0..1)
+  // animates its position (core -> cell center) and size (small -> cell-filling).
+  function drawSavePiece(ctx, part, cell, core, reach, u) {
+    const tx = cell.x + cell.w / 2;
+    const ty = cell.y + cell.h / 2;
+    const x = core.x + (tx - core.x) * reach;
+    const y = core.y + (ty - core.y) * reach;
+    const s = Math.min(cell.w, cell.h) * (0.16 + 0.26 * reach);
+    ctx.save();
+    // arm / leg connector from the core to the piece
+    ctx.strokeStyle = "#2b3a47";
+    ctx.lineWidth = Math.max(3, u * 0.45);
+    ctx.lineCap = "round";
+    ctx.beginPath();
+    ctx.moveTo(core.x, core.y);
+    ctx.lineTo(x, y);
+    ctx.stroke();
+
+    ctx.fillStyle = "#2b3a47";
+    ctx.strokeStyle = "#f4f9fc";
+    ctx.lineWidth = 2;
+    if (part === "glove") {
+      ctx.beginPath();
+      ctx.arc(x, y, s, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.stroke();
+      ctx.beginPath();
+      ctx.arc(x, y, s * 0.5, 0, Math.PI * 2);
+      ctx.stroke();
+    } else if (part === "blocker") {
+      ctx.beginPath();
+      ctx.rect(x - s, y - s, s * 2, s * 2);
+      ctx.fill();
+      ctx.stroke();
+    } else if (part === "head") {
+      ctx.beginPath();
+      ctx.rect(x - s * 1.1, y - s * 0.85, s * 2.2, s * 1.7);
+      ctx.fill();
+      ctx.stroke();
+    } else if (part === "stick") {
+      ctx.beginPath();
+      ctx.rect(x - s * 1.2, y - s * 0.7, s * 2.4, s * 1.4);
+      ctx.fill();
+      ctx.stroke();
+    } else {
+      // leg pad (padL / padR): a tall rounded rectangle with straps
+      const pw = s * 1.3;
+      const ph = s * 2;
+      const rr = s * 0.4;
+      const px = x - pw / 2;
+      const py = y - ph / 2;
+      ctx.beginPath();
+      ctx.moveTo(px + rr, py);
+      ctx.arcTo(px + pw, py, px + pw, py + ph, rr);
+      ctx.arcTo(px + pw, py + ph, px, py + ph, rr);
+      ctx.arcTo(px, py + ph, px, py, rr);
+      ctx.arcTo(px, py, px + pw, py, rr);
+      ctx.closePath();
+      ctx.fill();
+      ctx.stroke();
+      ctx.beginPath();
+      ctx.moveTo(px, py + ph * 0.34);
+      ctx.lineTo(px + pw, py + ph * 0.34);
+      ctx.moveTo(px, py + ph * 0.67);
+      ctx.lineTo(px + pw, py + ph * 0.67);
+      ctx.stroke();
+    }
     ctx.restore();
   }
 
@@ -109,9 +210,18 @@ export default function ShootoutDrill({ playerId = "default", onExit }) {
         ? sc.frozenElapsed
         : 0;
 
+    // The goalie covers the net with body parts: each covered or closing cell is
+    // taken by its mapped piece reaching in from the core. Open cells keep a
+    // target ring. Draw rings first, the core, then the pieces over the rings.
+    const u = Math.min(net.w / 3, net.h / 2) * 0.36; // goalie unit size
+    const core = { x: net.x + net.w / 2, y: net.y + net.h / 2 };
     rects.forEach((r) => {
-      if (coveredNow(shot, r.id, elapsed)) drawGoalieCell(ctx, r);
-      else drawOpenCell(ctx, r);
+      if (isCellOpenAt(shot, r.id, elapsed)) drawOpenCell(ctx, r);
+    });
+    drawGoalieCore(ctx, core.x, core.y, u);
+    rects.forEach((r) => {
+      const reach = cellReach(shot, r.id, elapsed);
+      if (reach > 0.01) drawSavePiece(ctx, CELL_PART[r.id], r, core, reach, u);
     });
 
     // reveal: mark the tapped cell with a check (goal) or X (save)
