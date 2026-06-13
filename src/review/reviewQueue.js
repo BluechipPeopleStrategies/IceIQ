@@ -1,5 +1,5 @@
 import { mergeQueue } from "./reviewCore.js";
-import { upsertScenarioReview, listMyReviews } from "../supabase.js";
+import { upsertScenarioReview, listMyReviews, listFeedbackLog } from "../supabase.js";
 
 const QUEUE_KEY = "rr_review_queue_v1";   // entries pending sync to Supabase
 const REVIEWS_KEY = "rr_reviews_v1";      // durable map { [scenario_id]: { verdict, note, updated_at } }
@@ -43,6 +43,31 @@ export async function flushQueue() {
 // (not-yet-synced) entries are preserved so offline work isn't lost. On a fetch
 // failure we leave the local cache untouched.
 export async function syncServerReviews() {
+  // 1. Drop any local verdict/note for a board that's since been RESOLVED — its note
+  //    is captured in the pass-log (feedback_log), so the board comes back clean for a
+  //    fresh look. feedback_log is readable without a session, so this ALSO reconciles
+  //    dev-bypass / offline sessions that can't authoritatively pull per-user reviews.
+  //    Only clears entries saved BEFORE the resolution (a re-review afterward is kept).
+  try {
+    const log = await listFeedbackLog();
+    const resolvedAt = {};
+    for (const r of log || []) {
+      const t = r.created_at || "";
+      if (!resolvedAt[r.scenario_id] || t > resolvedAt[r.scenario_id]) resolvedAt[r.scenario_id] = t;
+    }
+    const local = read(REVIEWS_KEY, {});
+    let lc = false;
+    for (const id of Object.keys(local)) {
+      const ra = resolvedAt[id];
+      if (ra && (local[id].updated_at || "") < ra) { delete local[id]; lc = true; }
+    }
+    if (lc) write(REVIEWS_KEY, local);
+    const queue = read(QUEUE_KEY, []);
+    const kept = queue.filter((e) => { const ra = resolvedAt[e.scenario_id]; return !(ra && (e.updated_at || "") < ra); });
+    if (kept.length !== queue.length) write(QUEUE_KEY, kept);
+  } catch { /* ignore — keep local cache on any fetch error */ }
+
+  // 2. When signed in, rebuild the durable map authoritatively from the server.
   const { ok, rows } = await listMyReviews();
   if (!ok) return;
   const reviews = {};

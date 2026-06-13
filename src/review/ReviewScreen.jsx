@@ -66,20 +66,24 @@ export default function ReviewScreen({ onBack }) {
 
   useEffect(() => {
     if (!current) return;
-    setNotesById(m => (current.id in m ? m : { ...m, [current.id]: saved?.note || "" }));
+    // Start every note box EMPTY (a fresh comment), never pre-filled with the old
+    // note. The previous note is preserved server-side; empty-box saves keep it.
+    setNotesById(m => (current.id in m ? m : { ...m, [current.id]: "" }));
   }, [current?.id]);
 
   const setNote = (text) => { if (current) setNotesById(m => ({ ...m, [current.id]: text })); };
 
   async function verdict(v) {
     if (!current) return;
-    enqueueReview({ scenario_id: current.id, verdict: v, note: note.trim(), board_hash: boardHash(current) });
+    // Empty box = keep the existing note (don't wipe it); typed text replaces it.
+    const nextNote = note.trim() || (saved?.note || "");
+    enqueueReview({ scenario_id: current.id, verdict: v, note: nextNote, board_hash: boardHash(current) });
     setI(n => Math.min(n + 1, deck.length));
     setPending(await flushQueue());
   }
 
   async function move(delta) {
-    if (current && savedVerdict && note.trim() !== (saved?.note || "")) {
+    if (current && savedVerdict && note.trim() && note.trim() !== (saved?.note || "")) {
       enqueueReview({ scenario_id: current.id, verdict: savedVerdict, note: note.trim(), board_hash: boardHash(current) });
       setPending(await flushQueue());
     }

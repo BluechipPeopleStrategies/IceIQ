@@ -110,13 +110,15 @@ export default function BrowseScreen({ onBack }) {
   const tiers = useMemo(() => ageTiers(list), [list]);
   const filtered = useMemo(() => applyFilters(list, { flagScope, ageTier }, coachById, myById), [list, flagScope, ageTier, coachById, myById]);
 
-  function openBoard(s) { setFocused(s); setNote(getSavedReview(s.id)?.note || ""); }
+  function openBoard(s) { setFocused(s); setNote(""); } // fresh comment box, never pre-filled
   function closeBoard() { setFocused(null); }
 
   async function saveVerdict(v) {
     if (!focused) return;
-    enqueueReview({ scenario_id: focused.id, verdict: v, note: note.trim(), board_hash: boardHash(focused) });
-    setMyById(m => ({ ...m, [focused.id]: { verdict: v, note: note.trim() } }));
+    // Empty box = keep the existing note (don't wipe it); typed text replaces it.
+    const nextNote = note.trim() || (getSavedReview(focused.id)?.note || "");
+    enqueueReview({ scenario_id: focused.id, verdict: v, note: nextNote, board_hash: boardHash(focused) });
+    setMyById(m => ({ ...m, [focused.id]: { verdict: v, note: nextNote } }));
     setPending(await flushQueue());
     closeBoard();
   }

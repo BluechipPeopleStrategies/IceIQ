@@ -54,6 +54,7 @@ function IterationRow({ group }) {
 // renders between the verdict buttons and the coach panel (the deck slots its
 // Prev/Next nav there).
 export default function BoardReviewPanel({ scenario, coach, logs = [], savedVerdict, note, onNote, onVerdict, children }) {
+  const [coachOpen, setCoachOpen] = useState(false);
   const coachStale = coach && coach.board_hash && coach.board_hash !== boardHash(scenario);
   const vStyle = (v, dim, border, color) => ({
     ...verdictBtn, background: dim, color,
@@ -85,12 +86,14 @@ export default function BoardReviewPanel({ scenario, coach, logs = [], savedVerd
 
       {coach && (
         <div style={{ marginTop: "1.4rem", padding: ".5rem .6rem", borderRadius: 8, background: C.bgCard, border: `1px solid ${C.border}` }}>
-          <div style={{ fontSize: ".78rem", color: C.dim }}>
-            🤖 Coaches: <b style={{ color: C.white }}>{VERDICT_LABEL[coach.verdict] || coach.verdict}</b>
-            {coach.confidence != null ? ` · ${Math.round(coach.confidence * 100)}%` : ""}{coach.convened ? " · room" : ""}
-            {coachStale ? " · ⚠ out of date" : ""}
+          <div onClick={() => coach.notes && setCoachOpen(o => !o)}
+            style={{ fontSize: ".78rem", color: C.dim, cursor: coach.notes ? "pointer" : "default", display: "flex", alignItems: "baseline", gap: ".35rem" }}>
+            {coach.notes && <span style={{ color: C.dimmer, flexShrink: 0 }}>{coachOpen ? "▾" : "▸"}</span>}
+            <span>🤖 Coaches: <b style={{ color: C.white }}>{VERDICT_LABEL[coach.verdict] || coach.verdict}</b>
+              {coach.confidence != null ? ` · ${Math.round(coach.confidence * 100)}%` : ""}{coach.convened ? " · room" : ""}
+              {coachStale ? " · ⚠ out of date" : ""}{coach.notes && !coachOpen ? " · tap for notes" : ""}</span>
           </div>
-          {coach.notes && <div style={{ fontSize: ".78rem", color: C.dim, marginTop: ".2rem" }}>{coach.notes}</div>}
+          {coach.notes && coachOpen && <div style={{ fontSize: ".78rem", color: C.dim, marginTop: ".3rem" }}>{coach.notes}</div>}
         </div>
       )}
     </>
