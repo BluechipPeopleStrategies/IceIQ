@@ -123,7 +123,7 @@ regardless of the 24 hour gate, summarize the report, then offer to apply fixes.
 
 ## Data flow
 
-```
+```text
 SessionStart
   -> hook reads .doctor-state.json + checks activity/age
      -> (due) node tools/rinkreads-doctor.mjs
@@ -169,11 +169,31 @@ Changed:
 - `.gitignore` (ignore `.claude/.doctor-state.json`; decide whether to track or ignore
   `docs/checkups/latest.*`)
 
+## Source of truth (resolved 2026-06-13)
+
+The live question bank is `src/data/bank.json`. `src/qbLoader.js` imports it directly
+(`import BANK from "./data/bank.json"`), composes it by age level, and merges the
+unified-engine scenarios it globs from `src/scenario/seeds/*.json`. Those two paths,
+`src/data/bank.json` and `src/scenario/seeds/*.json`, are the source of truth the
+doctor validates.
+
+`src/data/questions.json` no longer exists. The gauntlet to `bank.json` pipeline
+superseded the old `questions.json` authoring path. The leftovers are dead artifacts:
+`questions.json.ship.tmp` (about 8.8 MB and tracked in git), two `.bak` files, and the
+legacy `povQuestions.json`. The doctor reports these as cleanup candidates.
+
+Consequence for the design: the doctor validates `bank.json` directly (via the
+existing gauntlet and audit scripts that already target it) rather than relying on
+`preflight` for bank integrity. `preflight.mjs` currently points its `[bank]` check at
+the missing `src/data/questions.json`, so that check is effectively a no-op. The
+doctor flags this mispointed check (and recommends repointing preflight to
+`bank.json`) as a finding, which is itself a worked example of the breakage this agent
+is meant to catch.
+
 ## Open implementation details (resolve during planning)
 
 - Exact allowlist contents for dynamic imports, JSON data files, and build time deps.
 - Whether `docs/checkups/latest.*` is committed or gitignored.
-- Whether the doctor should also lint `src/data/bank.json` directly or rely on
-  `preflight` (which targets `src/data/questions.json`); confirm which file is the live
-  bank vs a staging copy.
+- Whether to repoint `preflight.mjs` to `bank.json` as part of this work or leave that
+  as a flagged recommendation only.
 - npm script alias (for example `npm run doctor`) for manual runs.
