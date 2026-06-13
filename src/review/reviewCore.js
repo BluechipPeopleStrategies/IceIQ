@@ -6,6 +6,9 @@
 // actors — either flat, or in every step of a multi-step play.
 export function hasBoard(q) {
   if (!q || q.type !== "scenario" || !q.stage) return false;
+  if (q.nodes && q.entry) {
+    return Object.values(q.nodes).every(n => Array.isArray(n?.actors) && n.actors.length > 0);
+  }
   if (Array.isArray(q.steps) && q.steps.length) {
     return q.steps.every(s => Array.isArray(s?.actors) && s.actors.length > 0);
   }

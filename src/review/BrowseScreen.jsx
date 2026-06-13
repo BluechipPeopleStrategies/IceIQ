@@ -112,15 +112,23 @@ export default function BrowseScreen({ onBack }) {
 
   function openBoard(s) { setFocused(s); setNote(""); } // fresh comment box, never pre-filled
   function closeBoard() { setFocused(null); }
+  // The board after `id` in the current filtered order (or null at the end).
+  function nextAfter(id) { const i = filtered.findIndex(s => s.id === id); return i >= 0 ? filtered[i + 1] : null; }
+  function goTo(delta) {
+    const i = filtered.findIndex(s => s.id === focused?.id);
+    const t = i >= 0 ? filtered[i + delta] : null;
+    if (t) openBoard(t); else if (delta > 0) closeBoard();
+  }
 
   async function saveVerdict(v) {
     if (!focused) return;
+    const nextBoard = nextAfter(focused.id); // capture before state changes the filter
     // Empty box = keep the existing note (don't wipe it); typed text replaces it.
     const nextNote = note.trim() || (getSavedReview(focused.id)?.note || "");
     enqueueReview({ scenario_id: focused.id, verdict: v, note: nextNote, board_hash: boardHash(focused) });
     setMyById(m => ({ ...m, [focused.id]: { verdict: v, note: nextNote } }));
     setPending(await flushQueue());
-    closeBoard();
+    if (nextBoard) openBoard(nextBoard); else closeBoard(); // auto-advance, not back to the grid
   }
 
   if (status === "loading") return <Centered>Loading library…</Centered>;
@@ -129,14 +137,24 @@ export default function BrowseScreen({ onBack }) {
   if (focused) {
     const coach = coachById[focused.id] || null;
     const savedVerdict = getSavedReview(focused.id)?.verdict || myById[focused.id]?.verdict || null;
+    const pos = filtered.findIndex(s => s.id === focused.id);
+    const navBtn = { flex: 1, padding: ".55rem 0", borderRadius: 8, border: `1px solid ${C.border}`, background: C.bgCard, color: C.white, fontFamily: FONT.body, cursor: "pointer", fontSize: ".85rem" };
     return (
       <div style={{ minHeight: "100vh", background: C.bg, color: C.white, fontFamily: FONT.body, padding: "1rem", maxWidth: 480, margin: "0 auto" }}>
-        <button onClick={closeBoard} style={ghost}>← back to grid{pending ? ` · ${pending} syncing` : ""}</button>
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+          <button onClick={closeBoard} style={ghost}>← grid</button>
+          <span style={{ color: C.dim, fontSize: ".78rem" }}>{pos >= 0 ? `${pos + 1} / ${filtered.length}` : ""}{pending ? ` · ${pending} syncing` : ""}</span>
+          <span style={{ width: 40 }} />
+        </div>
         <div style={{ height: ".4rem" }} />
         <BoardReviewPanel
           scenario={focused} coach={coach} logs={logById[focused.id] || []} savedVerdict={savedVerdict}
           note={note} onNote={setNote} onVerdict={saveVerdict}
         >
+          <div style={{ display: "flex", gap: ".5rem" }}>
+            <button onClick={() => goTo(-1)} disabled={pos <= 0} style={{ ...navBtn, opacity: pos <= 0 ? 0.4 : 1, cursor: pos <= 0 ? "default" : "pointer" }}>← Previous</button>
+            <button onClick={() => goTo(1)} style={navBtn}>Next →</button>
+          </div>
           <SceneQuestions focused={focused} list={list} onOpen={openBoard} />
           <AddQuestions scenario={focused} />
         </BoardReviewPanel>
