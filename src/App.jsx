@@ -431,6 +431,7 @@ import { COMPETENCY_LADDER, RATING_SCALES, SKILLS, FREE_SKILL_IDS, ladderFor, ge
 const AdminReports = lazy(() => import("./screens.jsx").then(m => ({ default: m.AdminReports })));
 const QuestionReviewScreen = lazy(() => import("./screens.jsx").then(m => ({ default: m.QuestionReviewScreen })));
 const ReviewScreen = lazy(() => import("./review/ReviewScreen.jsx"));
+const BrowseScreen = lazy(() => import("./review/BrowseScreen.jsx"));
 const ScenarioPlayground = lazy(() => import("./scenario/ScenarioPlayground.jsx").then(m => ({ default: m.ScenarioPlayground })));
 const ProfileSetup = lazy(() => import("./screens.jsx").then(m => ({ default: m.ProfileSetup })));
 const PlansScreen = lazy(() => import("./screens.jsx").then(m => ({ default: m.PlansScreen })));
@@ -8048,6 +8049,10 @@ export default function App() {
   // Owner-only mobile triage deck (Supabase-backed, works in production). Auth-gated inside ReviewScreen. (`#triage`)
   if (hashRoute === "triage") {
     return <Suspense fallback={<LazyFallback/>}><ReviewScreen onBack={() => { window.location.hash = ""; }}/></Suspense>;
+  }
+  // Owner-only browse grid of all boards (Supabase-backed). (`#browse`)
+  if (hashRoute === "browse") {
+    return <Suspense fallback={<LazyFallback/>}><BrowseScreen onBack={() => { window.location.hash = ""; }}/></Suspense>;
   }
 
   // Pre-auth hash route: parents can share rinkreads.com/#parents without logging in.
