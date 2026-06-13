@@ -1,0 +1,41 @@
+{
+  "id": "u13_breakout_position_place_v1",
+  "type": "scenario",
+  "nodeId": "u13.breakout-and-regroup",
+  "level": "U13 / Peewee",
+  "levels": ["U13 / Peewee"],
+  "themes": ["breakout", "positioning", "puck-support"],
+  "cat": "Breakout",
+  "difficulty": 2,
+  "stage": { "view": "left", "zone": "def-zone" },
+  "actors": [
+    { "id": "dmate", "kind": "teammate", "x": 0.07, "y": 0.85, "tag": "D" },
+    { "id": "puck", "kind": "puck", "x": 0.072, "y": 0.852 },
+    { "id": "fc1", "kind": "defender", "x": 0.16, "y": 0.72, "tag": "" },
+    { "id": "fc2", "kind": "defender", "x": 0.28, "y": 0.46, "tag": "" },
+    { "id": "g", "kind": "goalie", "x": 0.06, "y": 0.5, "tag": "" },
+    { "id": "lw", "kind": "player", "x": 0.34, "y": 0.6, "tag": "LW" },
+    { "id": "rw", "kind": "teammate", "x": 0.36, "y": 0.34, "tag": "RW" },
+    { "id": "c", "kind": "teammate", "x": 0.4, "y": 0.5, "tag": "C" }
+  ],
+  "interaction": {
+    "kind": "place",
+    "items": ["lw", "rw", "c"],
+    "showTargets": false,
+    "prompt": "Your D has the puck under forecheck pressure. Drag your three forwards to where they belong for a clean breakout: wingers on the walls, centre in the middle to support."
+  },
+  "correct": {
+    "kind": "place",
+    "placements": [
+      { "id": "lw", "zoneId": "dz-half-wall-strong" },
+      { "id": "rw", "zoneId": "dz-half-wall-weak" },
+      { "id": "c", "x": 0.3, "y": 0.5, "tolerance": 0.09 }
+    ]
+  },
+  "feedback": {
+    "right": "Clean breakout shape: a winger on each wall and your centre in the middle giving a short, safe outlet. Now your D has three options.",
+    "wrong": "Bunching up or leaving a wall empty gives your D nowhere to go. Spread out: a winger on each wall, centre in the middle for support."
+  },
+  "tip": "On a breakout, give your D options: wingers stretch to the walls, centre supports in the middle lane.",
+  "why": "Spacing is the breakout. Wingers on the walls and a centre in the middle give the puck-carrier three safe outlets instead of a forced play."
+}

@@ -1,0 +1,41 @@
+{
+  "id": "u13_oz_structure_place_v1",
+  "type": "scenario",
+  "nodeId": "u13.offensive-zone-play",
+  "level": "U13 / Peewee",
+  "levels": ["U13 / Peewee"],
+  "themes": ["offensive-zone", "positioning", "net-front", "puck-support"],
+  "cat": "Offensive Play",
+  "difficulty": 3,
+  "stage": { "view": "right", "zone": "off-zone" },
+  "actors": [
+    { "id": "carrier", "kind": "teammate", "x": 0.9, "y": 0.78, "tag": "LW" },
+    { "id": "puck", "kind": "puck", "x": 0.902, "y": 0.782 },
+    { "id": "d1", "kind": "defender", "x": 0.85, "y": 0.62, "tag": "" },
+    { "id": "d2", "kind": "defender", "x": 0.8, "y": 0.4, "tag": "" },
+    { "id": "g", "kind": "goalie", "x": 0.918, "y": 0.5, "tag": "" },
+    { "id": "netf", "kind": "player", "x": 0.68, "y": 0.46, "tag": "C" },
+    { "id": "weak", "kind": "teammate", "x": 0.68, "y": 0.3, "tag": "RW" },
+    { "id": "point", "kind": "teammate", "x": 0.66, "y": 0.6, "tag": "D" }
+  ],
+  "interaction": {
+    "kind": "place",
+    "items": ["netf", "weak", "point"],
+    "showTargets": false,
+    "prompt": "Your winger has the puck on the strong-side wall. Drag your three teammates into a scoring structure: a body at the net, a weak-side option, and a point to keep it in."
+  },
+  "correct": {
+    "kind": "place",
+    "placements": [
+      { "id": "netf", "zoneId": "oz-net-front" },
+      { "id": "weak", "zoneId": "oz-half-wall-weak" },
+      { "id": "point", "zoneId": "oz-point-strong" }
+    ]
+  },
+  "feedback": {
+    "right": "That's a scoring triangle: a net-front presence for tips and rebounds, a weak-side option for the cross-ice play, and a point to keep pucks in and shoot.",
+    "wrong": "With no net-front and no weak-side option, the puck-carrier has nowhere dangerous to go. Fill the net-front, the weak side, and the point."
+  },
+  "tip": "In the offensive zone, get a body to the net, an option on the weak side, and a point to hold the line.",
+  "why": "Offensive-zone structure spreads the defence: a net-front screen, a weak-side threat, and a point shooter force the defenders to cover the whole zone."
+}
