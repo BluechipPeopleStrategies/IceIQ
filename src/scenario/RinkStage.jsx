@@ -270,6 +270,18 @@ export default function RinkStage({ stage, actors, levels, scanWindow, highlight
                    : stage.zone === "off-zone" ? "#f59e0b"
                    : "#94a3b8";
 
+  // Which end holds the net, so the board can point "this way to the net" and the
+  // reader never has to guess orientation (onside/offside, which D-zone, etc.).
+  // Derived — prefer the goalie's side, fall back to the view crop. Neutral with
+  // no goalie shows nothing (both nets are off-frame).
+  const netSide = useMemo(() => {
+    const g = (Array.isArray(actors) ? actors : []).find(a => a.kind === "goalie");
+    if (g && typeof g.x === "number") return g.x < 0.5 ? "left" : "right";
+    if (stage.view === "left") return "left";
+    if (stage.view === "right") return "right";
+    return null;
+  }, [actors, stage.view]);
+
   // When the puck sits on top of a skater (the carrier), nudge it to that
   // skater's lower-right edge so it reads as "this player has the puck"
   // instead of muddying the marker.
@@ -347,6 +359,22 @@ export default function RinkStage({ stage, actors, levels, scanWindow, highlight
             background: zoneAccent, flexShrink: 0,
           }}/>
           {zoneLabel}
+        </div>
+      )}
+      {/* Net-side cue — points to the end of the ice that holds the net so the
+          reader can orient (which way is up-ice, onside vs offside, which D-zone). */}
+      {netSide && (
+        <div style={{
+          position: "absolute", top: "50%", transform: "translateY(-50%)",
+          [netSide]: 6, zIndex: 2,
+          display: "flex", alignItems: "center", gap: ".2rem",
+          padding: ".12rem .4rem", borderRadius: 999,
+          background: "rgba(11,18,32,.78)", border: `1px solid ${zoneAccent}`,
+          fontSize: 9, fontWeight: 800, letterSpacing: ".05em",
+          color: "#e2e8f0", pointerEvents: "none",
+          boxShadow: "0 1px 4px rgba(0,0,0,.4)",
+        }}>
+          {netSide === "left" ? "◂ NET" : "NET ▸"}
         </div>
       )}
       <svg ref={svgRef}
