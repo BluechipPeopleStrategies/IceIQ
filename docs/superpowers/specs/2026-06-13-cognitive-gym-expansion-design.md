@@ -125,6 +125,33 @@ The adaptive level and the points are intentionally decoupled: the small
 success window keeps leveling honest (you must be genuinely accurate to climb),
 while graded points reward every bit of precision.
 
+## Leveling: unified promotion and relegation
+
+Every game must progress the same coherent way so the gym feels like one system,
+not five. One shared rule, applied through `createAdaptiveLevel`:
+
+- **Earn promotion.** `UP_STREAK` consecutive successes at the current level
+  promote you one level (default 3). A single failure resets the up-streak, so
+  you genuinely have to string clean reps together to climb.
+- **Relegation.** `DOWN_STREAK` consecutive failures relegate you one level
+  (default 2). Stop performing at a level and you drop back down.
+- **Persistent progress.** Current level already persists per game. In addition,
+  the in-progress streak persists across sessions (stored alongside the level),
+  so a session boundary does not wipe progress toward the next level. You resume
+  mid-climb instead of restarting the streak every session (the current
+  behaviour).
+- **Visible.** Every game's chrome shows progress toward the next level (e.g.
+  "2 clean reps to level up") and a relegation warning when one failure from
+  dropping. No silent jumps.
+- **Same thresholds everywhere.** All five new games and the existing three use
+  the same `UP_STREAK` / `DOWN_STREAK`, so "Level 7" means a comparable amount of
+  earned progress in any game.
+
+Decoupled from points: leveling runs off the binary success flag (inside the
+small success window); points are the graded precision reward. Persisting the
+streak is a small `gymStorage` addition (a `streak` field beside `level`) plus a
+`createAdaptiveLevel` option to seed the starting streak.
+
 ## Read the Pass rework
 
 File: `AnticipationDrill.jsx`. Three changes.
@@ -142,6 +169,16 @@ File: `AnticipationDrill.jsx`. Three changes.
    already draws the tolerance ring and the guess marker; add the points float
    and a faint line from the guess to the true crossing so "how close was I"
    reads visually, GeoGuessr-style.
+
+4. **All directions.** Today the puck always launches from the left and crosses
+   a vertical gold bar on the right. Generalize so each rep picks one of four
+   travel directions at random: left-to-right, right-to-left, top-to-bottom,
+   bottom-to-top. The gold bar sits on the exit edge (a vertical bar for
+   horizontal travel, a horizontal bar for vertical travel), the puck bounces
+   off the two boards parallel to travel, and the guess plus graded scoring run
+   along the exit-edge axis (x or y). Level scaling (speed, hide fraction,
+   tolerance) is unchanged, just applied to the chosen axis. `buildTrajectory`
+   is refactored to take a direction and emit points along that axis.
 
 Session score display switches from "X of 8 on target" to session points (with
 the hit count kept as a secondary line). Level still moves on the binary
@@ -283,6 +320,9 @@ Play-test after each step. Each step is independently shippable.
 - Rink games use the real `RinkStage` art, not the lighter `drawRink` canvas.
 - Points and leveling are decoupled: small success window for leveling, graded
   GeoGuessr-style points for precision.
+- Read the Pass supports all four travel directions, not just left-to-right.
+- Leveling is one unified, coherent promotion/relegation rule across all games,
+  with persistent streak progress and visible progress-to-next-level.
 
 ## Open questions
 
