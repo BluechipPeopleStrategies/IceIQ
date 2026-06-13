@@ -179,6 +179,7 @@
  * @property {ScanWindow} [scanWindow]// IntelliGym working-memory drill
  * @property {PreviewWindow} [preview]// IntelliGym pattern-recognition lock
  * @property {{stem?:string, opts:string[], ok:0|1|2|3}} [mc]  // board-MC: ask this scene as multiple choice
+ * @property {{note:string, cite:string, url?:string}} [sourceRef]  // citation: which library note + authority backs this read
  */
 
 import { ZONES } from "./zones.js";

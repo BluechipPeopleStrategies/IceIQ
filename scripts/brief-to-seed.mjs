@@ -148,6 +148,7 @@ const seed = {
   ...(brief.timer ? { timer: brief.timer } : {}),
   ...(brief.preview ? { preview: brief.preview } : {}),
   ...(brief.mc ? { mc: brief.mc } : {}),
+  ...(brief.sourceRef ? { sourceRef: brief.sourceRef } : {}),
   actors: allActors,
   interaction,
   correct,
