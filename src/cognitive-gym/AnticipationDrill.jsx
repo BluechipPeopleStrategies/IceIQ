@@ -99,6 +99,8 @@ export default function AnticipationDrill({ playerId = "default", onExit }) {
   const [round, setRound] = useState(0);
   const [hits, setHits] = useState(0);
   const [level, setLevel] = useState(() => getDrill(playerId, "anticipation").level);
+  const [points, setPoints] = useState(0);
+  const pointsRef = useRef(0);
   const [saved, setSaved] = useState(null);
 
   const startRound = useCallback((roundIndex) => {
@@ -126,6 +128,8 @@ export default function AnticipationDrill({ playerId = "default", onExit }) {
 
   const resolveRound = useCallback(
     (success) => {
+      pointsRef.current += sceneRef.current.repPoints || 0;
+      setPoints(pointsRef.current);
       const lvl = engineRef.current.record(success);
       setLevel(lvl);
       if (success) setHits((h) => h + 1);
@@ -214,6 +218,15 @@ export default function AnticipationDrill({ playerId = "default", onExit }) {
           ctx.beginPath();
           ctx.arc(gx, gy, 10, 0, Math.PI * 2);
           ctx.fill();
+
+          // per-rep points float near the guess marker
+          ctx.save();
+          ctx.fillStyle = sc.result === "hit" ? "#1b6cb0" : "#e8590c";
+          ctx.font = "600 14px system-ui, sans-serif";
+          ctx.textBaseline = "middle";
+          const labelX = Math.min(gx + 16, W - 64);
+          ctx.fillText(`+${sc.repPoints || 0}`, labelX, gy);
+          ctx.restore();
         }
 
         if (revIdx >= traj.pts.length - 1 && !sc.settled) {
@@ -298,10 +311,16 @@ export default function AnticipationDrill({ playerId = "default", onExit }) {
   }
 
   function start() {
-    engineRef.current = createAdaptiveLevel(getDrill(playerId, "anticipation").level);
+    const d = getDrill(playerId, "anticipation");
+    engineRef.current = createAdaptiveLevel(d.level, {
+      startUps: d.streak.ups,
+      startDowns: d.streak.downs,
+    });
     setHits(0);
     setRound(0);
     setSaved(null);
+    pointsRef.current = 0;
+    setPoints(0);
     setPhase("playing");
     requestAnimationFrame(() => startRound(0));
   }
@@ -311,7 +330,9 @@ export default function AnticipationDrill({ playerId = "default", onExit }) {
       const score = Math.round((hits / ROUNDS) * 100);
       const record = saveSession(playerId, "anticipation", {
         score,
+        points: pointsRef.current,
         level: engineRef.current.level,
+        streak: { ups: engineRef.current.ups, downs: engineRef.current.downs },
       });
       setSaved(record);
     }
@@ -331,6 +352,12 @@ export default function AnticipationDrill({ playerId = "default", onExit }) {
             Rep {Math.min(round + 1, ROUNDS)} / {ROUNDS}
           </span>
         )}
+        {phase === "playing" && (
+          <span className="gym-chip">
+            {engineRef.current ? `${engineRef.current.toPromote} to level up` : ""}
+          </span>
+        )}
+        {phase === "playing" && <span className="gym-chip">{points} pts</span>}
       </div>
 
       {phase === "intro" && (
@@ -368,10 +395,11 @@ export default function AnticipationDrill({ playerId = "default", onExit }) {
       {phase === "done" && (
         <div className="gym-card">
           <h2>Session complete</h2>
-          <div className="gym-score">{Math.round((hits / ROUNDS) * 100)}</div>
+          <div className="gym-score">{points}</div>
           <p>
-            {hits} of {ROUNDS} reads on target. Level {level}.
-            {saved && saved.best <= Math.round((hits / ROUNDS) * 100)
+            {points} points. {hits} of {ROUNDS} reads inside the window. Level{" "}
+            {level}.
+            {saved && (saved.bestPoints || 0) <= points && points > 0
               ? " New best."
               : ""}
           </p>
