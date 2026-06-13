@@ -9,6 +9,7 @@
 //   null                    — pass
 
 import { ZONES } from "./zones.js";
+import { framesOf } from "./branching.js";
 
 const INTERCEPT_RADIUS = 0.035;
 
@@ -912,7 +913,7 @@ const rules = [
 // ───────────────────────────────────────────────────────────────────────
 // Public entry — runs all rules, partitions errors vs warnings.
 
-export function runHockeyValidators(scenario) {
+function runFlat(scenario) {
   const errs = [];
   const warns = [];
   for (const rule of rules) {
@@ -924,4 +925,19 @@ export function runHockeyValidators(scenario) {
     else if (result.kind === "warn") warns.push(result.msg);
   }
   return { errs, warns };
+}
+
+// Multi-frame plays (steps[] or nodes{}) run the rules per frame; flat scenarios
+// run once. Frame issues are prefixed so the author knows which frame to fix.
+export function runHockeyValidators(scenario) {
+  if (scenario && (scenario.steps || scenario.nodes)) {
+    const errs = [], warns = [];
+    framesOf(scenario).forEach((f, i) => {
+      const r = runFlat(f);
+      r.errs.forEach((e) => errs.push(`frame[${i}]: ${e}`));
+      r.warns.forEach((w) => warns.push(`frame[${i}]: ${w}`));
+    });
+    return { errs, warns };
+  }
+  return runFlat(scenario);
 }
