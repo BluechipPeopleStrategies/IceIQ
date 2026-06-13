@@ -7,6 +7,7 @@ import EyesUpDrill from "./EyesUpDrill";
 import SnapshotDrill from "./SnapshotDrill";
 import FindLaneDrill from "./FindLaneDrill";
 import BestOptionDrill from "./BestOptionDrill";
+import ReadNumbersDrill from "./ReadNumbersDrill";
 import { getDrill, getStats } from "./gymStorage";
 
 // The drill registry. Add a drill by appending an entry here; the hub renders
@@ -88,6 +89,17 @@ const DRILLS = [
     trains: "Reading shoot/pass/carry fast, deciding under pressure, not freezing with the puck",
     build: "canvas",
     component: BestOptionDrill,
+  },
+  {
+    id: "readnumbers",
+    name: "Read the Numbers",
+    skill: "Vision",
+    blurb: "Read a number off a skater streaking across the ice, then pick it.",
+    goal: "Read the number on the jersey of a skater streaking across the ice, then pick it before it slips your mind.",
+    why: "On the ice the play never holds still. Picking a teammate's number off a jersey as they fly up the wing, or clocking a number on the rush, is how you find the open man and put the puck on the right tape instead of guessing. Training your eyes to lock onto a small, fast-moving target is the same skill that helps you track the puck and read bodies at full speed.",
+    trains: "Dynamic visual acuity, tracking a fast target, reading numbers on the move",
+    build: "canvas",
+    component: ReadNumbersDrill,
   },
 ];
 
