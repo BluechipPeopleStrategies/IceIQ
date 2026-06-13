@@ -41,6 +41,18 @@ shaded, where the puck is, what the goalie did, who is open.
 **Fail the Mirror Test → it's RECALL. Pass Mirror but fail Decoy → it's TRIVIAL. Only
 both → a real decision.**
 
+### Refinement: the decoy must be a competing read, not a blunder
+
+Passing the *formal* Mirror + Decoy tests is necessary but not sufficient. The decoy must
+be a genuinely **plausible** alternative — a spot that *looks* open, or a read a
+knowledgeable player might actually choose — not an obvious mistake (standing on a
+defender, a beginner's puck-chase). The strongest boards present **two competing reads**
+that even an experienced coach would weigh, resolved by a **secondary cue** (e.g., which
+way the off-puck defender shades). "Right answer vs. an obvious blunder" is trivial; "two
+plausible reads, one cue resolves the tie" is expert. For a positioning board, a real
+decoy *looks open but its passing/skating lane is blocked* — not a spot already occupied
+by a defender.
+
 ## Why this unifies every single-option flag we've hit
 
 - MC "only one option" → failed the **Decoy** Test (no plausible alternative).
