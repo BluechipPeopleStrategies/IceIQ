@@ -5,38 +5,39 @@
 // Adaptive level controller.
 // `upStreak` consecutive successes raise the level; `downStreak` consecutive
 // failures lower it. Levels are clamped to [1, maxLevel].
+// Pass `startUps`/`startDowns` to seed a mid-streak from stored state.
 export function createAdaptiveLevel(startLevel = 1, opts = {}) {
-  const { maxLevel = 20, upStreak = 3, downStreak = 2 } = opts;
+  const {
+    maxLevel = 20,
+    upStreak = 3,
+    downStreak = 2,
+    startUps = 0,
+    startDowns = 0,
+  } = opts;
   let level = Math.min(Math.max(startLevel, 1), maxLevel);
-  let ups = 0;
-  let downs = 0;
+  let ups = Math.min(Math.max(startUps, 0), upStreak - 1);
+  let downs = Math.min(Math.max(startDowns, 0), downStreak - 1);
   return {
-    get level() {
-      return level;
-    },
+    get level() { return level; },
+    get ups() { return ups; },
+    get downs() { return downs; },
+    // consecutive same-result reps still needed to promote / relegate
+    get toPromote() { return Math.max(1, upStreak - ups); },
+    get toRelegate() { return Math.max(1, downStreak - downs); },
     record(success) {
       if (success) {
         ups += 1;
         downs = 0;
-        if (ups >= upStreak && level < maxLevel) {
-          level += 1;
-          ups = 0;
-        }
+        if (ups >= upStreak && level < maxLevel) { level += 1; ups = 0; }
       } else {
         downs += 1;
         ups = 0;
-        if (downs >= downStreak && level > 1) {
-          level -= 1;
-          downs = 0;
-        }
+        if (downs >= downStreak && level > 1) { level -= 1; downs = 0; }
       }
       return level;
     },
-    reset(to = 1) {
-      level = Math.min(Math.max(to, 1), maxLevel);
-      ups = 0;
-      downs = 0;
-    },
+    snapshot() { return { level, ups, downs }; },
+    reset(to = 1) { level = Math.min(Math.max(to, 1), maxLevel); ups = 0; downs = 0; },
   };
 }
 
@@ -57,9 +58,18 @@ export function rand(min, max) {
 
 // Size a canvas for the device pixel ratio and return its 2d context plus the
 // CSS pixel dimensions (W, H). `aspect` is height / width.
+//
+// The width is capped so the WHOLE rink stays on screen: never wider than
+// MAX_W (so it doesn't balloon on a wide desktop) and never so tall that the
+// rink runs past ~72% of the viewport height (leaving room for the top bar and
+// hint). On phones the container width is the binding constraint, so behaviour
+// there is unchanged.
+const MAX_W = 760;
+const VH_FRACTION = 0.72;
 export function setupCanvas(canvas, host, aspect = 0.62) {
   const dpr = window.devicePixelRatio || 1;
-  const W = host.clientWidth;
+  const vh = (typeof window !== "undefined" ? window.innerHeight : 800) * VH_FRACTION;
+  const W = Math.max(0, Math.min(host.clientWidth, MAX_W, vh / aspect));
   const H = Math.round(W * aspect);
   canvas.width = Math.round(W * dpr);
   canvas.height = Math.round(H * dpr);
