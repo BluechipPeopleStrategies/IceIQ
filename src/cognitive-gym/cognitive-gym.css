@@ -228,9 +228,11 @@
   min-height: 1.3em;
 }
 
-/* Canvas surface */
+/* Canvas surface. setupCanvas sets an explicit pixel width (capped to fit the
+   viewport), so center it rather than stretch to the container. */
 .gym-canvas {
-  width: 100%;
+  max-width: 100%;
+  margin: 0 auto;
   border-radius: var(--gym-radius);
   touch-action: none;
   display: block;
@@ -280,6 +282,19 @@
 .gym-light.is-bad {
   background: #8a3a09;
 }
+
+/* Gym-wide intro block */
+.gym-about {
+  background: var(--gym-panel);
+  border: 1px solid #1e3f5f;
+  border-radius: var(--gym-radius);
+  padding: 14px 16px;
+  margin: 0 0 18px;
+  max-width: 640px;
+}
+.gym-about h2 { margin: 0 0 6px; font-size: 1.05rem; }
+.gym-about p { margin: 0 0 8px; color: var(--gym-muted); font-size: 0.9rem; line-height: 1.45; }
+.gym-about ul { margin: 0; padding-left: 18px; color: var(--gym-text); font-size: 0.85rem; line-height: 1.5; }
 
 /* "What this trains" callout */
 .gym-trains {

@@ -13,7 +13,10 @@ const DRILLS = [
     name: "Read the Pass",
     skill: "Anticipation",
     blurb: "Predict where a hidden puck crosses the line.",
+    goal: "Call where the puck is going before it gets there.",
+    why: "Reading a pass early is how you pick off a lane, beat a player to the spot, and arrive where the puck will be instead of chasing where it was.",
     trains: "Reading plays, picking off passes, judging bank passes",
+    build: "canvas",
     component: AnticipationDrill,
   },
   {
@@ -21,7 +24,10 @@ const DRILLS = [
     name: "Head on a Swivel",
     skill: "Awareness",
     blurb: "Track three teammates through traffic.",
+    goal: "Keep track of all three teammates at once, even while the play is moving.",
+    why: "Knowing where your options are without staring at the puck is how you find the open man, break out cleanly, and see the check before it arrives.",
     trains: "Rink awareness without puck-watching, seeing hits coming",
+    build: "canvas",
     component: TrackingDrill,
   },
   {
@@ -29,7 +35,10 @@ const DRILLS = [
     name: "Shoot or Hold",
     skill: "Reaction",
     blurb: "Tap on blue. Hold on orange. Beat the clock.",
+    goal: "Fire on blue, stay still on orange, and beat the clock every time.",
+    why: "A faster release gets the puck off before the window closes, and the discipline to hold stops you from forcing a bad pass or jumping offside.",
     trains: "Quick release, shot/pass discipline, not jumping early",
+    build: "canvas",
     component: ReactionDrill,
   },
 ];
@@ -90,8 +99,26 @@ export default function CognitiveGym({ playerId = "default", onBack }) {
             <span className="gym-stat-num">{stats.daysTrained}</span>
             <span className="gym-stat-label">days trained</span>
           </div>
+          <div className="gym-stat">
+            <span className="gym-stat-num">{stats.careerPoints ?? 0}</span>
+            <span className="gym-stat-label">points</span>
+          </div>
         </div>
       </header>
+
+      <section className="gym-about">
+        <h2>What this is</h2>
+        <p>
+          The Cognitive Gym trains the part of your game that happens between the
+          ears: anticipation, awareness, and fast, clean decisions. Short
+          sessions, a few times a week, and the level climbs as you do.
+        </p>
+        <ul>
+          <li>Keep sessions short. Two or three a week beats one long grind.</li>
+          <li>Each game adapts. String good reps together and you move up.</li>
+          <li>Slip and you drop back a level, so every rep counts.</li>
+        </ul>
+      </section>
 
       <div className="gym-grid">
         {DRILLS.map((d) => {
@@ -110,7 +137,7 @@ export default function CognitiveGym({ playerId = "default", onBack }) {
               <p className="gym-card-trains">Trains: {d.trains}</p>
               <div className="gym-card-meta">
                 <span>Lvl {rec.level}</span>
-                <span>Best {rec.best}</span>
+                <span>Best {rec.bestPoints || rec.best}</span>
                 <span>
                   {last
                     ? `Last ${new Date(last.date).toLocaleDateString(undefined, {
