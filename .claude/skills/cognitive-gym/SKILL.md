@@ -111,6 +111,14 @@ fits. Read this before touching any game.
   is a tiny window (`PERFECT_FT`, ~half a foot) so it stays rare and earned, and
   the exact crossing is drawn as a gold dot so what counts as perfect is visible.
   (done, `rateMiss` + target dot)
+- **Show the game name at the top.** During play and on the results screen, the
+  game's name sits at the top (`.gym-drill-title`), not just on the intro card.
+- **Hold the result long enough to learn from it.** After a rep, freeze the
+  marked-up result (where you guessed vs the true spot, who you missed) long
+  enough to study it before the next rep. Read the Pass ~2.4s, Head on a Swivel
+  ~2.8s (`REVEAL_HOLD_MS` / `FEEDBACK_HOLD_MS`). Reaction stays fast on purpose.
+- **Always offer Restart.** Every game has a Restart in the bar during play that
+  starts the session over with fresh reps (calls the drill's `start()`).
 
 ## Common mistakes
 - Sizing a canvas to container width only (overflows on desktop). Use the

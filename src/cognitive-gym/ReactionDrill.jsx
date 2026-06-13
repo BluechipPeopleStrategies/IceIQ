@@ -184,10 +184,16 @@ export default function ReactionDrill({ playerId = "default", onExit }) {
 
   return (
     <div className="gym-drill">
+      {phase !== "intro" && <h2 className="gym-drill-title">Shoot or Hold</h2>}
       <div className="gym-drill-bar">
         <button className="gym-btn gym-btn-ghost" onClick={onExit}>
           Back
         </button>
+        {phase === "playing" && (
+          <button className="gym-btn gym-btn-ghost" onClick={start}>
+            Restart
+          </button>
+        )}
         <span className="gym-chip">Level {level}</span>
         {phase === "playing" && (
           <span className="gym-chip">

@@ -18,6 +18,7 @@ import { getDrill, saveSession } from "./gymStorage";
 const SHIFTS = 6;
 const TARGETS = 3;
 const WATCH_MS = 1600; // how long the targets stay highlighted before moving
+const FEEDBACK_HOLD_MS = 2800; // hold the marked-up result so the player can see which they missed
 
 // Build a field of non-overlapping skaters with random velocities. Difficulty
 // raises both the skater count (6 -> 10) and their speed, and lengthens the
@@ -95,7 +96,7 @@ export default function TrackingDrill({ playerId = "default", onExit }) {
           setShift(next);
           startShift(next);
         }
-      }, 1400);
+      }, FEEDBACK_HOLD_MS);
     },
     [startShift]
   );
@@ -337,10 +338,16 @@ export default function TrackingDrill({ playerId = "default", onExit }) {
 
   return (
     <div className="gym-drill" ref={rootRef}>
+      {phase !== "intro" && <h2 className="gym-drill-title">Head on a Swivel</h2>}
       <div className="gym-drill-bar">
         <button className="gym-btn gym-btn-ghost" onClick={onExit}>
           Back
         </button>
+        {phase === "playing" && (
+          <button className="gym-btn gym-btn-ghost" onClick={start}>
+            Restart
+          </button>
+        )}
         <span className="gym-chip">Level {level}</span>
         {phase === "playing" && (
           <span className="gym-chip">

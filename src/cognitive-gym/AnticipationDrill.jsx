@@ -19,6 +19,7 @@ import { DIRECTIONS, guessAxis, scorePass, feetPerPixel, formatDistance, rateMis
 const ROUNDS = 8;
 const DT = 1 / 120; // physics timestep used to pre-sample the trajectory
 const BAR = 22; // gold bar thickness in px (was a 4px line) — bigger target
+const REVEAL_HOLD_MS = 2400; // hold the result on screen so the player can study the miss
 
 function pickDirection() {
   return DIRECTIONS[Math.floor(rand(0, DIRECTIONS.length))];
@@ -148,7 +149,7 @@ export default function AnticipationDrill({ playerId = "default", onExit }) {
           setRound(next);
           startRound(next);
         }
-      }, 900);
+      }, REVEAL_HOLD_MS);
     },
     [startRound]
   );
@@ -362,10 +363,16 @@ export default function AnticipationDrill({ playerId = "default", onExit }) {
 
   return (
     <div className="gym-drill" ref={rootRef}>
+      {phase !== "intro" && <h2 className="gym-drill-title">Read the Pass</h2>}
       <div className="gym-drill-bar">
         <button className="gym-btn gym-btn-ghost" onClick={onExit}>
           Back
         </button>
+        {phase === "playing" && (
+          <button className="gym-btn gym-btn-ghost" onClick={start}>
+            Restart
+          </button>
+        )}
         <span className="gym-chip">Level {level}</span>
         {phase === "playing" && (
           <span className="gym-chip">
