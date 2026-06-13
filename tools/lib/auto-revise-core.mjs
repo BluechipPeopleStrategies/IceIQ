@@ -18,10 +18,26 @@ export function applyEdit(scenario, edit) {
   return out;
 }
 
+// Warnings that mean the edit broke the answer key — the correct read is no longer
+// genuinely open/correct. These are answer-integrity failures, not cosmetics, so coach
+// auto-revise treats them as hard blockers: a board that trips one is left flagged for a
+// human, never auto-applied. Extend this list as new answer-breaking warnings appear.
+const BLOCKING_WARNING_PATTERNS = [
+  /isn't actually open/i,        // validators: correct receiver's lane is covered by a defender
+];
+
+// True if a validator warning is answer-integrity (must block an auto-apply).
+export function isBlockingWarning(w) {
+  const s = String(w || "");
+  return BLOCKING_WARNING_PATTERNS.some((re) => re.test(s));
+}
+
 // Gate decision from the hockey validators' output:
-//   any hard error -> "reject"; warnings only -> "apply-marked"; clean -> "apply".
+//   any hard error, or any answer-integrity (blocking) warning -> "reject";
+//   cosmetic warnings only -> "apply-marked"; clean -> "apply".
 export function decideApply({ errs = [], warns = [] } = {}) {
-  if ((errs || []).length) return "reject";
+  const blocking = (warns || []).filter(isBlockingWarning);
+  if ((errs || []).length || blocking.length) return "reject";
   if ((warns || []).length) return "apply-marked";
   return "apply";
 }

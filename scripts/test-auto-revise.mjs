@@ -1,5 +1,5 @@
 // Golden tests for tools/lib/auto-revise-core.mjs (pure logic). Run: npm run test:auto-revise
-import { applyEdit, decideApply, buildReviseLogRow, reviseReport } from "../tools/lib/auto-revise-core.mjs";
+import { applyEdit, decideApply, buildReviseLogRow, reviseReport, isBlockingWarning } from "../tools/lib/auto-revise-core.mjs";
 import { buildRevisePrompt } from "../tools/gauntlet/revise-prompt.mjs";
 
 let failed = 0;
@@ -57,6 +57,20 @@ check("prompt includes the scenario id", bp.prompt.includes("u9_x"));
 check("prompt includes the coach notes", bp.prompt.includes("only one real option"));
 check("prompt includes the validator errors", bp.prompt.includes("needs a second candidate"));
 check("prompt states the JSON contract", bp.prompt.includes('"edit"') && bp.prompt.includes('"change"'));
+check("prompt forbids blocking the correct lane", bp.prompt.toLowerCase().includes("lane of the correct answer"));
+check("prompt forbids redesign", bp.prompt.toLowerCase().includes("do not redesign"));
+
+// isBlockingWarning: answer-integrity warnings block; cosmetic ones don't
+const laneWarn = 'selection answer "slot_lw" has a defender in its lane from the carrier — the "open" read isn\'t actually open.';
+const puckWarn = "prompt says net-front but the puck is depth 0.25 from the net — it's not at the net.";
+check("blocking warn: open read not open", isBlockingWarning(laneWarn) === true);
+check("non-blocking warn: puck depth", isBlockingWarning(puckWarn) === false);
+check("blocking warn null-safe", isBlockingWarning(null) === false);
+
+// decideApply: an answer-integrity warning forces reject (left flagged), not apply-marked
+check("decideApply reject on answer-integrity warning", decideApply({ errs: [], warns: [laneWarn] }) === "reject");
+check("decideApply apply-marked on cosmetic warning only", decideApply({ errs: [], warns: [puckWarn] }) === "apply-marked");
+check("decideApply reject when mix of cosmetic + integrity", decideApply({ errs: [], warns: [puckWarn, laneWarn] }) === "reject");
 
 console.log(failed ? `\n${failed} FAILED` : "\nAll passed");
 process.exit(failed ? 1 : 0);
