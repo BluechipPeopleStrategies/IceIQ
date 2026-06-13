@@ -4,6 +4,7 @@ import { supabase, hasSupabase } from "./supabase";
 import { canAccess, getUpgradeTriggerMessage, isBoardMC } from "./utils/tierGate";
 import { isDevBypassEnabled, getDevProfile, setDevProfile, clearDevProfile, buildDevPlayer, isEphemeralPlayer, enableDevBypass, DEV_BYPASS_SECRET } from "./utils/devBypass";
 import { getLevelDisplay } from "./utils/ageGroup";
+import ReadAloudToggle from "./ReadAloudToggle.jsx";
 import { getParentRatings, saveParentRatings, hasParentRatings, daysSinceUpdated, PARENT_DIMENSIONS, PARENT_SCALE } from "./utils/parentAssessment";
 import { calcPlayerProfile, PROFILE_AXES } from "./utils/playerProfile";
 import { markSignupIntent, logSignupComplete } from "./utils/signupTelemetry";
@@ -5651,6 +5652,7 @@ function Profile({ player, onSave, onBack, onReset, demoMode, tier, onUpgrade, u
             <span style={{fontSize:13,color:C.dim}}>Colorblind mode</span>
             <button onClick={()=>upd("colorblind")(!s.colorblind)} style={{background:s.colorblind?C.purpleDim:"none",border:`1px solid ${s.colorblind?C.purpleBorder:C.border}`,borderRadius:20,padding:".55rem .9rem",cursor:"pointer",color:s.colorblind?C.purple:C.dimmer,fontSize:12,fontFamily:FONT.body,fontWeight:700}}>{s.colorblind?"ON":"OFF"}</button>
           </div>
+          <ReadAloudToggle/>
           <div style={{display:"flex",justifyContent:"space-between",alignItems:"center"}}>
             <span style={{fontSize:13,color:C.dim}}>Session length</span>
             <div style={{display:"flex",gap:".4rem"}}>

@@ -9,6 +9,7 @@ import { validateScenario } from "./schema.js";
 import RinkStage from "./RinkStage.jsx";
 import { getPrimitive } from "./registry.js";
 import { logReactionTime } from "../utils/reactionTime.js";
+import { ttsSupported, speakParts, stopSpeaking, getReadAloud } from "../speak.js";
 import { C, FONT, Card } from "../shared.jsx";
 import { resolveTarget } from "./zones.js";
 import { denorm } from "./schema.js";
@@ -129,6 +130,18 @@ function BoardMC({ scenario, playerId, onAnswer }) {
   const mc = scenario.mc;
   const stem = mc.stem || scenario.interaction?.prompt || "What is the best play?";
 
+  // Read the stem, then each lettered choice, aloud (browser TTS). Auto-fires
+  // on a new question when "read aloud" is on; the 🔊 button replays on demand.
+  function readNow() {
+    speakParts([stem, ...mc.opts.map((o, i) => `${"ABCD"[i]}. ${o}`)]);
+  }
+  useEffect(() => {
+    if (ttsSupported() && getReadAloud()) {
+      speakParts([stem, ...mc.opts.map((o, i) => `${"ABCD"[i]}. ${o}`)]);
+    }
+    return () => stopSpeaking();
+  }, [scenario.id]);
+
   function pick(i) {
     if (picked != null) return;
     setPicked(i);
@@ -141,8 +154,14 @@ function BoardMC({ scenario, playerId, onAnswer }) {
   return (
     <div>
       <Card style={{ marginBottom: ".75rem", background: C.purpleDim, border: `1px solid ${C.purpleBorder}` }}>
-        <div style={{ fontSize: 10, letterSpacing: ".14em", textTransform: "uppercase", color: "#5BA4E8", fontWeight: 800, marginBottom: ".5rem" }}>
-          📋 Read the play{scenario.cat ? ` · ${scenario.cat}` : ""}
+        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: ".5rem" }}>
+          <div style={{ fontSize: 10, letterSpacing: ".14em", textTransform: "uppercase", color: "#5BA4E8", fontWeight: 800 }}>
+            📋 Read the play{scenario.cat ? ` · ${scenario.cat}` : ""}
+          </div>
+          {ttsSupported() && getReadAloud() && (
+            <button onClick={readNow} title="Read the question aloud" aria-label="Read the question aloud"
+              style={{ background: "transparent", border: "none", color: "#5BA4E8", fontSize: 16, cursor: "pointer", lineHeight: 1, padding: 0 }}>🔊</button>
+          )}
         </div>
         <div style={{ fontSize: 15, lineHeight: 1.6, color: C.white, fontWeight: 500 }}>{stem}</div>
       </Card>
