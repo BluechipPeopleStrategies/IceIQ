@@ -10,6 +10,7 @@ import BestOptionDrill from "./BestOptionDrill";
 import ReadNumbersDrill from "./ReadNumbersDrill";
 import LateReadDrill from "./LateReadDrill";
 import TwoThingsDrill from "./TwoThingsDrill";
+import ShootoutDrill from "./ShootoutDrill";
 import { getDrill, getStats } from "./gymStorage";
 
 // The drill registry. Add a drill by appending an entry here; the hub renders
@@ -124,6 +125,17 @@ const DRILLS = [
     trains: "Divided attention, tracking the play while reading a cue, keeping your head up for two things at once",
     build: "canvas",
     component: TwoThingsDrill,
+  },
+  {
+    id: "shootout",
+    name: "Pick Your Spot",
+    skill: "Shot Read",
+    blurb: "Find the open net and shoot it before the goalie covers it.",
+    goal: "Read which part of the net is open and shoot there before the goalie takes it away.",
+    why: "Goal scorers do not just shoot hard, they shoot where the goalie is not. Training your eyes to find the open part of the net fast is how you beat a goalie who is set and get the shot off before the window closes.",
+    trains: "Reading the goalie, shot selection, shooting before the lane closes",
+    build: "canvas",
+    component: ShootoutDrill,
   },
 ];
 
