@@ -3,6 +3,7 @@ import { createAdaptiveLevel } from "../src/cognitive-gym/gymEngine.js";
 import { careerPointsFromDrills } from "../src/cognitive-gym/gymStorage.js";
 import { DIRECTIONS, guessAxis, scorePass, feetPerPixel, formatDistance, rateMiss, RINK_LENGTH_FT, RINK_WIDTH_FT } from "../src/cognitive-gym/anticipationCore.js";
 import { slotCount, flashMs, hitRadius, pickFlash, scoreTap, MIN_SLOTS, MAX_SLOTS } from "../src/cognitive-gym/eyesUpCore.js";
+import { makeFormation, scoreTap as snapScoreTap, flashMs as snapFlashMs, markerCount, hitRadius as snapHitRadius, EASY_MARKERS, HARD_MARKERS } from "../src/cognitive-gym/snapshotCore.js";
 
 let failed = 0;
 const check = (name, cond) => { console.log(`${cond ? "PASS" : "FAIL"}  ${name}`); if (!cond) failed++; };
@@ -129,6 +130,52 @@ check("eyesup closer tap scores higher", euNear.points > euFar.points);
 // normError is normalized by the canvas diagonal
 const diag = Math.sqrt(EW * EW + EH * EH);
 check("eyesup normError is distance over diagonal", Math.abs(euInside.normError - 30 / diag) < 1e-9);
+
+// Snapshot (glance memory / perception span) — pure helpers ------------------
+const SW = 600, SH = 372; // a sample canvas
+
+// difficulty climbs with level: shorter flash, more clutter, tighter window
+check("snapshot flash gets shorter with level", snapFlashMs(1) > snapFlashMs(10) && snapFlashMs(10) > snapFlashMs(20));
+check("snapshot markers grow with level", markerCount(1) === EASY_MARKERS && markerCount(20) === HARD_MARKERS && markerCount(10) > markerCount(1));
+check("snapshot hit window tightens with level", snapHitRadius(1, SW, SH) > snapHitRadius(20, SW, SH));
+
+// makeFormation: deterministic with an injected rng, in-bounds, non-overlapping,
+// exactly one open teammate.
+let snapSeed = 0;
+const snapRng = () => { snapSeed = (snapSeed * 9301 + 49297) % 233280; return snapSeed / 233280; };
+snapSeed = 12345;
+const form = makeFormation(10, SW, SH, { rng: snapRng });
+check("snapshot formation has the level's marker count", form.markers.length === markerCount(10));
+check("snapshot has exactly one open teammate", form.markers.filter((m) => m.kind === "open").length === 1);
+check("snapshot openIndex points at the open marker", form.markers[form.openIndex].kind === "open");
+check("snapshot markers stay in-bounds", form.markers.every((m) => m.x > 0 && m.x < SW && m.y > 0 && m.y < SH));
+check("snapshot markers do not overlap", form.markers.every((a, i) => form.markers.every((b, j) => i === j || Math.hypot(a.x - b.x, a.y - b.y) >= form.r * 2.4 - 1e-9)));
+check("snapshot carries its flash + window", form.flashMs > 0 && form.hitR > 0);
+
+// deterministic: same seed -> same formation
+snapSeed = 777;
+const formA = makeFormation(6, SW, SH, { rng: snapRng });
+snapSeed = 777;
+const formB = makeFormation(6, SW, SH, { rng: snapRng });
+check("snapshot makeFormation deterministic for a seed", formA.openIndex === formB.openIndex && formA.markers[0].x === formB.markers[0].x && formA.markers[0].y === formB.markers[0].y);
+
+// scoreTap: bang-on the open teammate = success + max points + 0 error
+const openPos = { x: 200, y: 150, hitR: 50 };
+const snExact = snapScoreTap({ x: 200, y: 150 }, openPos, SW, SH);
+check("snapshot exact tap is success, max points, 0 error", snExact.success && snExact.points === 1000 && snExact.normError === 0);
+// inside the window but off the spot: still a success, fewer points
+const snInside = snapScoreTap({ x: 230, y: 150 }, openPos, SW, SH); // 30px < 50px window
+check("snapshot inside window scores less than exact", snInside.success && snInside.distPx === 30 && snInside.points < 1000);
+// outside the window: a miss
+const snOutside = snapScoreTap({ x: 200, y: 250 }, openPos, SW, SH); // 100px > 50px window
+check("snapshot outside window fails", !snOutside.success && snOutside.distPx === 100);
+// closer tap scores higher than a farther one
+const snNear = snapScoreTap({ x: 210, y: 150 }, openPos, SW, SH);
+const snFar = snapScoreTap({ x: 240, y: 150 }, openPos, SW, SH);
+check("snapshot closer tap scores higher", snNear.points > snFar.points);
+// normError is normalized by the canvas diagonal
+const snDiag = Math.sqrt(SW * SW + SH * SH);
+check("snapshot normError is distance over diagonal", Math.abs(snInside.normError - 30 / snDiag) < 1e-9);
 
 console.log(failed ? `\n${failed} FAILED` : "\nAll passed");
 process.exit(failed ? 1 : 0);
