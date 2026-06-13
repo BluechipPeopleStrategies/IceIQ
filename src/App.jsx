@@ -5,6 +5,7 @@ import { canAccess, getUpgradeTriggerMessage, isBoardMC } from "./utils/tierGate
 import { isDevBypassEnabled, getDevProfile, setDevProfile, clearDevProfile, buildDevPlayer, isEphemeralPlayer, enableDevBypass, DEV_BYPASS_SECRET } from "./utils/devBypass";
 import { getLevelDisplay } from "./utils/ageGroup";
 import ReadAloudToggle from "./ReadAloudToggle.jsx";
+import { ttsSupported, getReadAloud, speakParts, stopSpeaking } from "./speak.js";
 import { getParentRatings, saveParentRatings, hasParentRatings, daysSinceUpdated, PARENT_DIMENSIONS, PARENT_SCALE } from "./utils/parentAssessment";
 import { calcPlayerProfile, PROFILE_AXES } from "./utils/playerProfile";
 import { markSignupIntent, logSignupComplete } from "./utils/signupTelemetry";
@@ -103,13 +104,13 @@ function resolveTierRaw({ profile, demoMode } = {}) {
 // ─────────────────────────────────────────────────────────
 // VERSION
 // ─────────────────────────────────────────────────────────
-const VERSION = "0.9-beta";
-const RELEASE_DATE = "April 2026";
+const VERSION = "0.1-beta";
+const RELEASE_DATE = "June 2026";
 const CHANGELOG = [
-  { v:"0.9-beta", date:"April 2026", notes:[
-    {icon:"🏒", title:"Welcome — you're early", desc:"This is RinkReads's first public preview. You're one of the first players, parents, and coaches to use it. Nothing here is final — everything is shaped by what you tell us."},
-    {icon:"🛠️", title:"Built with you, not for you", desc:"Every feature on this app came from a question a real coach, parent, or kid asked. Tap the report button whenever something feels off, confusing, or missing. We read every single one."},
-    {icon:"📈", title:"Active development", desc:"Questions are being added weekly. Screens will change. Your feedback directly shapes what ships next — so be loud, be specific, and don't sugarcoat it."},
+  { v:"0.1-beta", date:"June 2026", notes:[
+    {icon:"🧠", title:"The Cognitive Gym is open", desc:"A new set of quick brain games that train the stuff you can't drill on the ice: scanning, peripheral vision, reading a pass, and picking the best option under pressure. Short, fast, and a little addictive."},
+    {icon:"🏒", title:"Plays that unfold", desc:"Scenarios now branch. You read the play one decision at a time and watch how it develops from the choice you make, just like a real shift. Closer to hockey, less like a worksheet."},
+    {icon:"✨", title:"Sharper ice, clearer reads", desc:"The rink diagrams got a real makeover so positions and lanes are easier to see, questions can be read aloud, and we added fresh scenarios on breakouts, D-zone coverage, and support play."},
   ]},
 ];
 
@@ -971,6 +972,33 @@ const DIAGRAMS = {
 // ─────────────────────────────────────────────────────────
 // QUESTION FORMAT COMPONENTS
 // ─────────────────────────────────────────────────────────
+// Plain (non-scenario, non-rink) question types that support browser TTS
+// read-aloud from the quiz player. Scenario questions read themselves inside
+// ScenarioRenderer; rink-native interactive types have no simple text to read.
+const READ_ALOUD_TYPES = new Set(["mc", "mistake", "next", "multi", "tf", "seq"]);
+
+// Build the ordered text fragments to read aloud for a plain question: the
+// situation/prompt first, then each answer choice with its letter (or each
+// step for sequence-ordering). Mirrors how BoardMC reads scenario questions.
+function questionSpeechParts(q, qtype) {
+  if (!q) return [];
+  const parts = [];
+  if (q.sit) parts.push(q.sit);
+  if (qtype === "mistake" && q.question) parts.push(q.question);
+  if (qtype === "multi" && q.q) parts.push(q.q);
+  if (qtype === "tf") {
+    parts.push("True, or false?");
+  } else if (qtype === "seq") {
+    if (Array.isArray(q.items)) {
+      parts.push("Put these in the right order.");
+      q.items.forEach((it, i) => parts.push(`${i + 1}. ${it}`));
+    }
+  } else if (Array.isArray(q.opts)) {
+    q.opts.forEach((o, i) => parts.push(`${"ABCD"[i] || i + 1}. ${o}`));
+  }
+  return parts;
+}
+
 function MCQuestion({ q, sel, onPick, colorblind }) {
   const correctColor = colorblind ? "#2563eb" : C.green;
   const wrongColor = colorblind ? "#ea580c" : C.red;
@@ -1620,7 +1648,7 @@ function Home({ player, onNav, demoMode, subscriptionTier, questFlagsBump, onPro
               <span style={{fontFamily:FONT.display,fontWeight:800,fontSize:13,color:C.white,letterSpacing:".02em"}}>What's New</span>
             </div>
             <div style={{display:"flex",alignItems:"center",gap:".5rem"}}>
-              <span style={{fontSize:10,color:C.dimmer,fontWeight:600}}>v{VERSION} · {CHANGELOG[0].date}</span>
+              <span style={{fontSize:10,color:C.dimmer,fontWeight:600}}>Beta v{VERSION.replace(/-beta$/,"")} · {CHANGELOG[0].date}</span>
               <button onClick={dismissWhatsNew} aria-label="Dismiss" style={{background:"none",border:"none",color:C.dimmer,fontSize:14,cursor:"pointer",padding:"0 2px",lineHeight:1}}>✕</button>
             </div>
           </div>
@@ -1940,6 +1968,21 @@ function Quiz({ player, onFinish, onBack, tier, onUpgrade }) {
     ? rinkQResult !== null
     : (qtype === "seq" || qtype === "multi" || qtype === "scenario") ? seqAnswered
     :                          sel !== null;
+
+  // Read the question aloud (browser TTS) when "read aloud" is on, for the
+  // plain question types. Auto-fires on each new question; the 🔊 button in
+  // the header replays on demand. Scenario questions read themselves inside
+  // ScenarioRenderer, so they're excluded here to avoid double-reads. Cancels
+  // on question change/unmount so reads don't pile up when advancing.
+  useEffect(() => {
+    if (!q || isRinkQ || !READ_ALOUD_TYPES.has(qtype)) return;
+    if (ttsSupported() && getReadAloud()) {
+      speakParts(questionSpeechParts(q, qtype));
+    }
+    return () => stopSpeaking();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [q?.id, qtype]);
+
   if (!q) {
     // Distinguish "still loading the bank" (queue not built yet) from
     // "queue is built but empty" (ids filter matched zero questions).
@@ -2094,6 +2137,11 @@ function Quiz({ player, onFinish, onBack, tier, onUpgrade }) {
           <Pill color={typeInfo.color}>{typeInfo.icon} {typeInfo.label}</Pill>
           <Pill color={C.dimmer} bg={C.dimmest}>{q.cat}</Pill>
           {q.concept && <Pill color={C.dimmer} bg={C.dimmest}>{q.concept}</Pill>}
+          {ttsSupported() && getReadAloud() && !isRinkQ && READ_ALOUD_TYPES.has(qtype) && (
+            <button onClick={() => speakParts(questionSpeechParts(q, qtype))}
+              title="Read the question aloud" aria-label="Read the question aloud"
+              style={{marginLeft:"auto",background:"transparent",border:"none",color:C.purple,fontSize:18,cursor:"pointer",lineHeight:1,padding:0}}>🔊</button>
+          )}
         </div>
 
         {/* Diagram */}
