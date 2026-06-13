@@ -1,0 +1,46 @@
+import React, { useEffect, useRef, useState } from "react";
+import RinkStage from "../scenario/RinkStage.jsx";
+import { OptionsOverlay } from "./ReviewBoard.jsx";
+import { ageTierOf, flagOf } from "./browseCore.js";
+import { C, FONT } from "../shared.jsx";
+
+// One grid cell: a lazy-mounted mini board + a flag badge + an "age · node" caption.
+// The SVG only mounts when the tile scrolls near the viewport (IntersectionObserver),
+// so a 148-board grid doesn't render 148 SVGs at once.
+const BADGE = { coach: "🚩", mine: "⚠", clean: "", unreviewed: "" };
+
+export default function BrowseTile({ scenario, coach, myVerdict, revised, onOpen }) {
+  const ref = useRef(null);
+  const [shown, setShown] = useState(false);
+
+  useEffect(() => {
+    if (shown || !ref.current || typeof IntersectionObserver === "undefined") { if (!shown) setShown(true); return; }
+    const io = new IntersectionObserver((entries) => {
+      if (entries.some(e => e.isIntersecting)) { setShown(true); io.disconnect(); }
+    }, { rootMargin: "300px" });
+    io.observe(ref.current);
+    return () => io.disconnect();
+  }, [shown]);
+
+  const flag = flagOf(scenario, coach, myVerdict);
+  const badge = BADGE[flag];
+  const kept = myVerdict?.verdict === "keep";
+  const caption = [ageTierOf(scenario), scenario.nodeId].filter(Boolean).join(" · ");
+
+  return (
+    <button ref={ref} onClick={() => onOpen(scenario)}
+      style={{ position: "relative", padding: 0, border: `1px solid ${C.border}`, borderRadius: 10, background: C.bgCard, cursor: "pointer", overflow: "hidden", textAlign: "left" }}>
+      <div style={{ position: "absolute", top: 4, right: 6, zIndex: 2, fontSize: ".9rem" }}>
+        {badge}{kept ? " ✓" : ""}{revised ? " ◍" : ""}
+      </div>
+      <div style={{ width: "100%", aspectRatio: "2 / 1", background: C.bg }}>
+        {shown
+          ? <RinkStage stage={scenario.stage} actors={scenario.actors} levels={scenario.levels}>
+              {() => <OptionsOverlay scenario={scenario} />}
+            </RinkStage>
+          : <div style={{ width: "100%", height: "100%" }} />}
+      </div>
+      <div style={{ padding: ".3rem .45rem", fontSize: ".68rem", letterSpacing: ".03em", color: C.gold, fontFamily: FONT.body }}>{caption}</div>
+    </button>
+  );
+}

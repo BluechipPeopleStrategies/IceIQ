@@ -7,7 +7,7 @@ import { C, FONT } from "../shared.jsx";
 
 // Show every answer OPTION on the board: ring each candidate and mark the correct
 // one with a green ✓, the rest with a dim ✗ (icon + shape, never colour alone).
-function OptionsOverlay({ scenario }) {
+export function OptionsOverlay({ scenario }) {
   const c = scenario.correct;
   const inter = scenario.interaction;
   const byId = Object.fromEntries((scenario.actors || []).map(a => [a.id, a]));
