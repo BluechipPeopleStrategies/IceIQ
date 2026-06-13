@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import BoardReviewPanel from "./BoardReviewPanel.jsx";
+import AddQuestions from "./AddQuestions.jsx";
 import { loadReviewScenarios } from "./reviewData.js";
 import { boardHash } from "./reviewCore.js";
 import { enqueueReview, flushQueue, getReviewedIds, getSavedReview, syncServerReviews } from "./reviewQueue.js";
@@ -118,6 +119,7 @@ export default function ReviewScreen({ onBack }) {
           <button onClick={() => move(1)} style={navBtn}>Next →</button>
         </div>
       </BoardReviewPanel>
+      <AddQuestions scenario={current} />
     </div>
   );
 }

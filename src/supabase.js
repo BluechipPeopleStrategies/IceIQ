@@ -965,3 +965,28 @@ export async function listFeedbackLog() {
     .order("created_at", { ascending: true });
   return error ? [] : (data || []);
 }
+
+// Owner queues a request for more questions on a scene; generation is batched
+// offline (Decision-Test-constrained + coach-vetted). Needs a signed-in owner.
+export async function createQuestionRequest({ scenario_id, stem_id, preset, note }) {
+  if (!supabase) return { ok: false, offline: true };
+  const session = await getSession();
+  const email = session?.user?.email;
+  if (!email) return { ok: false, error: "not signed in" };
+  const { error } = await supabase.from("question_requests").insert({
+    scenario_id, stem_id: stem_id || scenario_id, preset, note: note || null, requester_email: email,
+  });
+  return error ? { ok: false, error: error.message } : { ok: true };
+}
+
+export async function listQuestionRequests() {
+  if (!supabase) return [];
+  const session = await getSession();
+  const email = session?.user?.email;
+  if (!email) return [];
+  const { data, error } = await supabase
+    .from("question_requests")
+    .select("id,scenario_id,stem_id,preset,note,status,created_at")
+    .eq("status", "open").order("created_at", { ascending: true });
+  return error ? [] : (data || []);
+}

@@ -1,6 +1,7 @@
 import React, { useEffect, useMemo, useState } from "react";
 import BrowseTile from "./BrowseTile.jsx";
 import BoardReviewPanel from "./BoardReviewPanel.jsx";
+import AddQuestions from "./AddQuestions.jsx";
 import { loadReviewScenarios } from "./reviewData.js";
 import { ageTiers, applyFilters, siblingsOf, questionTypeLabel } from "./browseCore.js";
 import { boardHash } from "./reviewCore.js";
@@ -135,6 +136,7 @@ export default function BrowseScreen({ onBack }) {
           note={note} onNote={setNote} onVerdict={saveVerdict}
         />
         <SceneQuestions focused={focused} list={list} onOpen={openBoard} />
+        <AddQuestions scenario={focused} />
       </div>
     );
   }
