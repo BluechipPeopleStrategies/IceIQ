@@ -134,9 +134,10 @@ export default function BrowseScreen({ onBack }) {
         <BoardReviewPanel
           scenario={focused} coach={coach} logs={logById[focused.id] || []} savedVerdict={savedVerdict}
           note={note} onNote={setNote} onVerdict={saveVerdict}
-        />
-        <SceneQuestions focused={focused} list={list} onOpen={openBoard} />
-        <AddQuestions scenario={focused} />
+        >
+          <SceneQuestions focused={focused} list={list} onOpen={openBoard} />
+          <AddQuestions scenario={focused} />
+        </BoardReviewPanel>
       </div>
     );
   }

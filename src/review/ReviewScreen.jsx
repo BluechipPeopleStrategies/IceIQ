@@ -118,8 +118,8 @@ export default function ReviewScreen({ onBack }) {
           <button onClick={() => move(-1)} disabled={i === 0} style={{ ...navBtn, opacity: i === 0 ? 0.4 : 1, cursor: i === 0 ? "default" : "pointer" }}>← Previous</button>
           <button onClick={() => move(1)} style={navBtn}>Next →</button>
         </div>
+        <AddQuestions scenario={current} />
       </BoardReviewPanel>
-      <AddQuestions scenario={current} />
     </div>
   );
 }
