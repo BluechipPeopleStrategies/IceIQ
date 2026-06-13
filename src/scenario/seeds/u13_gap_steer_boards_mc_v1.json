@@ -22,48 +22,48 @@
     {
       "id": "you",
       "kind": "player",
-      "x": 0.52,
-      "y": 0.34,
+      "x": 0.47,
+      "y": 0.36,
       "tag": "D"
     },
     {
       "id": "carrier",
       "kind": "defender",
-      "x": 0.6,
-      "y": 0.24,
+      "x": 0.5,
+      "y": 0.28,
       "tag": "F"
     },
     {
       "id": "puck",
       "kind": "puck",
-      "x": 0.602,
-      "y": 0.238
+      "x": 0.502,
+      "y": 0.278
     }
   ],
   "interaction": {
     "kind": "point",
-    "prompt": "You have a tight gap and inside position on the carrier near the dot. Tap the lane you should steer them into, away from the middle."
+    "prompt": "Your gap is tight — close enough to reach the carrier with your stick — and you have inside position. Tap the lane you should steer them into, away from the middle."
   },
   "correct": {
     "kind": "point",
-    "x": 0.64,
-    "y": 0.14,
-    "tolerance": 0.09
+    "x": 0.55,
+    "y": 0.12,
+    "tolerance": 0.1
   },
   "mc": {
-    "stem": "You are the defenseman with a tight gap and inside body position on the puck carrier near the faceoff dot. What is the correct read?",
+    "stem": "Your gap is tight — within a stick length — and you have inside body position on the carrier. What is the correct read?",
     "opts": [
-      "Keep your stick on the ice and steer the puck carrier down the boards",
-      "Back into the slot and give the puck carrier the middle of the ice",
-      "Dive at the puck and hope the carrier cannot step around you",
-      "Stop your feet and wait for the puck carrier to choose first"
+      "Keep your feet moving and steer the carrier down the boards, away from the middle",
+      "Back off to widen the gap so you do not get beaten wide",
+      "Stand the carrier up at the line with a big hit",
+      "Open your hips to the middle and shadow the carrier into the slot"
     ],
     "ok": 0
   },
   "feedback": {
-    "right": "Yes. A tight gap at the dot is a chance to finish the angle. Keep skating, protect the middle, and steer them to the low-danger boards.",
-    "wrong": "Backing off or diving gives up the middle, the most dangerous ice. Keep your feet, protect the middle, and steer them down the boards."
+    "right": "Yes. A tight gap with inside position is your chance to finish the angle. Keep skating, protect the middle, and steer them to the low-danger boards.",
+    "wrong": "Backing off, lunging for a hit, or opening to the middle all give up the most dangerous ice. With a tight gap and inside position, keep your feet and steer the carrier to the boards."
   },
-  "tip": "With a tight gap and inside position, keep your feet and steer the carrier to the boards, away from the middle.",
-  "why": "A tight gap at the dot is a chance to finish the angle. Keeping the feet moving and protecting the middle steers the carrier to lower-danger ice."
+  "tip": "A tight gap means you can reach the carrier with your stick. Keep your feet, hold inside position, and steer them to the boards — never give up the middle.",
+  "why": "A tight gap with inside position lets you dictate the carrier's path. Keeping the feet moving and protecting the middle forces the play to the boards, the lowest-danger ice."
 }
