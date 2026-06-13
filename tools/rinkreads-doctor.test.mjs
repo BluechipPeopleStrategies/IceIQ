@@ -3,7 +3,7 @@
 import { mkdtempSync, mkdirSync, writeFileSync, rmSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
-import { bankSanity, checkPreflightGhost, summarize, renderMarkdown } from "./rinkreads-doctor.mjs";
+import { bankSanity, checkPreflightGhost, summarize, renderMarkdown, validateSeeds } from "./rinkreads-doctor.mjs";
 
 let pass = 0, fail = 0;
 const ok = (name, cond) => { console.log(`${cond ? "PASS" : "FAIL"}  ${name}`); cond ? pass++ : fail++; };
@@ -71,6 +71,22 @@ const ok = (name, cond) => { console.log(`${cond ? "PASS" : "FAIL"}  ${name}`); 
   ok("markdown shows stale dep", md.includes("dead-pkg"));
   ok("markdown shows bank issue", md.includes("row 1 missing id"));
   ok("markdown shows ghost finding", md.includes("questions.json"));
+}
+
+// --- validateSeeds
+{
+  const root = mkdtempSync(join(tmpdir(), "doc3-"));
+  // missing seeds dir -> []
+  ok("validateSeeds returns [] when seeds dir is absent", validateSeeds(root).length === 0);
+
+  // a malformed-JSON seed -> a parse-error entry (no dependency on lintScenario schema)
+  mkdirSync(join(root, "src", "scenario", "seeds"), { recursive: true });
+  writeFileSync(join(root, "src", "scenario", "seeds", "broken.json"), "{ not json");
+  const res = validateSeeds(root);
+  ok("validateSeeds reports a parse error for malformed seed JSON",
+     res.some(r => r.id === "broken.json" && r.errs.some(e => /parse error/i.test(e))));
+
+  rmSync(root, { recursive: true, force: true });
 }
 
 console.log(`\n${pass} passed, ${fail} failed`);

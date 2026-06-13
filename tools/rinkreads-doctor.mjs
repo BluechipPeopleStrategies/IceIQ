@@ -75,7 +75,8 @@ export function runExternalChecks(root) {
         { cwd: root, encoding: "utf8", stdio: "pipe", timeout: 120000 });
       return { id: c.id, status: "pass", tail: tail(out) };
     } catch (e) {
-      const status = (typeof e.status === "number") ? "fail" : "errored";
+      const missingScript = e.status === 1 && /Cannot find module/.test(e.stderr || "");
+      const status = missingScript ? "errored" : (typeof e.status === "number") ? "fail" : "errored";
       return { id: c.id, status, tail: tail(`${e.stdout || ""}\n${e.stderr || ""}`) };
     }
   });
