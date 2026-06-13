@@ -64,6 +64,7 @@ export default function TrackingDrill({ playerId = "default", onExit }) {
   const [stage, setStage] = useState("ready"); // ready | watch | track | pick | feedback
   const [saved, setSaved] = useState(null);
   const [levelUpIn, setLevelUpIn] = useState(3); // clean shifts still needed to move up
+  const [shiftResult, setShiftResult] = useState(null); // correct count for the shift just finished
 
   const startShift = useCallback((roundIndex) => {
     const canvas = canvasRef.current;
@@ -84,6 +85,7 @@ export default function TrackingDrill({ playerId = "default", onExit }) {
     };
     setStage("ready");
     setRemaining(TARGETS);
+    setShiftResult(null);
     loop();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -100,6 +102,7 @@ export default function TrackingDrill({ playerId = "default", onExit }) {
 
   const resolveShift = useCallback(
     (correctCount) => {
+      setShiftResult(correctCount);
       setCorrect((c) => c + correctCount);
       const lvl = engineRef.current.record(correctCount === TARGETS);
       setLevel(lvl);
@@ -356,7 +359,7 @@ export default function TrackingDrill({ playerId = "default", onExit }) {
     watch: "Memorize the gold teammates",
     track: "Track them",
     pick: `Tap your ${remaining} teammate${remaining === 1 ? "" : "s"}`,
-    feedback: "",
+    feedback: shiftResult === null ? "" : `You got ${shiftResult} of ${TARGETS} right`,
   }[stage];
 
   return (
