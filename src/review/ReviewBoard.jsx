@@ -4,7 +4,39 @@ import { denorm } from "../scenario/schema.js";
 import { resolveTarget } from "../scenario/zones.js";
 import { stepToScenario } from "../scenario/multiStep.js";
 import { toGraph, flattenNode } from "../scenario/branching.js";
+import { hasBoard } from "./reviewCore.js";
 import { C, FONT } from "../shared.jsx";
+
+// A text-only question (the bank, or any scenario without a rink board): render
+// the stem + options + feedback. Handles both schemas (sit/opts/ok vs
+// interaction.prompt / mc.stem / mc.opts / mc.ok).
+function TextQuestion({ q }) {
+  const stem = q.interaction?.prompt || q.mc?.stem || q.sit || q.q || "";
+  const opts = q.mc?.opts || q.opts || [];
+  const ok = q.mc?.ok != null ? q.mc.ok : (q.ok != null ? q.ok : null);
+  const right = q.feedback?.right || q.why || "";
+  const tip = q.tip || "";
+  return (
+    <div>
+      <div style={{ fontFamily: FONT.body, color: C.white, fontSize: ".95rem", lineHeight: 1.45 }}>{stem}</div>
+      {Array.isArray(opts) && opts.length > 0 && (
+        <div style={{ marginTop: ".5rem", display: "flex", flexDirection: "column", gap: ".25rem" }}>
+          {opts.map((opt, idx) => {
+            const isOk = idx === ok;
+            return (
+              <div key={idx} style={{ fontSize: ".8rem", color: isOk ? C.green : C.dim, display: "flex", gap: ".45rem", lineHeight: 1.3 }}>
+                <span style={{ fontWeight: 800 }}>{isOk ? "✓" : "✗"}</span>
+                <span>{opt}</span>
+              </div>
+            );
+          })}
+        </div>
+      )}
+      {right && <div style={{ marginTop: ".4rem", color: C.dim, fontSize: ".8rem" }}>Right: {right}</div>}
+      {tip && <div style={{ marginTop: ".2rem", color: C.dimmer, fontSize: ".75rem" }}>tip: {tip}</div>}
+    </div>
+  );
+}
 
 // Show every answer OPTION on the board: ring each candidate and mark the correct
 // one with a green ✓, the rest with a dim ✗ (icon + shape, never colour alone).
@@ -96,6 +128,8 @@ function OneBoard({ scenario, label }) {
 }
 
 export default function ReviewBoard({ scenario }) {
+  // Text-only question (the bank, or any board-less scenario): render the text.
+  if (!hasBoard(scenario)) return <TextQuestion q={scenario} />;
   // Branching: stack every node frame, each with its own answer overlay.
   if (scenario.nodes && scenario.entry) {
     const ids = Object.keys(toGraph(scenario).nodes);

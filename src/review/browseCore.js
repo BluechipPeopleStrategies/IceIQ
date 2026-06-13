@@ -11,12 +11,14 @@ export function ageTiers(scenarios) {
   return [...new Set((scenarios || []).map(ageTierOf).filter(Boolean))].sort();
 }
 
-// One scenario's flag state, given its coach row and my-verdict row (either null):
+// One question's flag state (highest priority wins):
+//   player     — a player flagged it in the app (an unresolved question_report)
 //   coach      — coach reviewed it and did NOT keep (action needed)
 //   mine       — I marked it revise or retire
-//   unreviewed — no coach row and no verdict from me
-//   clean      — reviewed and not flagged by either
-export function flagOf(scenario, coach, myVerdict) {
+//   unreviewed — nothing on it
+//   clean      — reviewed and not flagged by anyone
+export function flagOf(scenario, coach, myVerdict, reported) {
+  if (reported) return "player";
   if (coach && coach.verdict && coach.verdict !== "keep") return "coach";
   const mv = myVerdict?.verdict;
   if (mv === "revise" || mv === "retire") return "mine";
@@ -68,7 +70,8 @@ export function groupIterations(logs) {
 export function questionTypeLabel(s) {
   if (s?.nodes && s?.entry) return "Branching";
   if (Array.isArray(s?.steps) && s.steps.length) return "Multi-step";
-  if (s?.mc?.opts) return s.mc.opts.length === 2 ? "True/False" : "Multiple choice";
+  const opts = s?.mc?.opts || s?.opts; // scenarios use mc.opts; the text bank uses opts
+  if (Array.isArray(opts) && opts.length) return opts.length === 2 ? "True/False" : "Multiple choice";
   const k = s?.interaction?.kind;
   return ({ place: "Positioning", point: "Tap a spot", selection: "Pick the player",
             sequence: "Order them", path: "Draw the play" })[k] || "Question";
@@ -93,13 +96,15 @@ export function groupByStem(scenarios) {
   return [...groups.values()];
 }
 
-// Filter a scenario list by flag scope + age tier.
-//   flagScope: "all" | "coach" | "mine" | "unreviewed"
+// Filter a question list by flag scope + age tier.
+//   flagScope: "all" | "player" | "coach" | "mine" | "unreviewed"
 //   ageTier:   "all" | "<tier>"
-export function applyFilters(scenarios, { flagScope, ageTier }, coachById = {}, myVerdictById = {}) {
+//   reportedIds: optional Set of question ids players have flagged (unresolved).
+export function applyFilters(scenarios, { flagScope, ageTier }, coachById = {}, myVerdictById = {}, reportedIds = null) {
   return (scenarios || []).filter((s) => {
     if (ageTier && ageTier !== "all" && ageTierOf(s) !== ageTier) return false;
     if (!flagScope || flagScope === "all") return true;
-    return flagOf(s, coachById[s.id] || null, myVerdictById[s.id] || null) === flagScope;
+    const reported = reportedIds ? reportedIds.has(s.id) : false;
+    return flagOf(s, coachById[s.id] || null, myVerdictById[s.id] || null, reported) === flagScope;
   });
 }

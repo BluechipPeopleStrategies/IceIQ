@@ -2,11 +2,11 @@ import React, { useEffect, useMemo, useState } from "react";
 import BrowseTile from "./BrowseTile.jsx";
 import BoardReviewPanel from "./BoardReviewPanel.jsx";
 import AddQuestions from "./AddQuestions.jsx";
-import { loadReviewScenarios } from "./reviewData.js";
+import { loadAllQuestions } from "./questionsData.js";
 import { ageTiers, applyFilters, siblingsOf, questionTypeLabel } from "./browseCore.js";
 import { boardHash } from "./reviewCore.js";
 import { enqueueReview, flushQueue, getSavedReview, syncServerReviews } from "./reviewQueue.js";
-import { getSession, listCoachReviews, listFeedbackLog } from "../supabase.js";
+import { getSession, listCoachReviews, listFeedbackLog, listQuestionReports } from "../supabase.js";
 import { isDevBypassEnabled } from "../utils/devBypass.js";
 import { C, FONT } from "../shared.jsx";
 
@@ -15,7 +15,8 @@ const OWNERS = (import.meta.env.VITE_REVIEW_OWNERS || "")
 
 const FLAG_SCOPES = [
   { key: "all", label: "All" },
-  { key: "coach", label: "🚩 Coach" },
+  { key: "player", label: "🚩 Player" },
+  { key: "coach", label: "🤖 Coach" },
   { key: "mine", label: "⚠ Mine" },
   { key: "unreviewed", label: "Unreviewed" },
 ];
@@ -76,6 +77,8 @@ export default function BrowseScreen({ onBack }) {
   const [note, setNote] = useState("");
   const [pending, setPending] = useState(0);
   const [signedIn, setSignedIn] = useState(true); // reviews only sync to the server when signed in
+  const [reportedIds, setReportedIds] = useState(new Set());
+  const [reportsById, setReportsById] = useState({});
 
   useEffect(() => {
     let alive = true;
@@ -92,11 +95,13 @@ export default function BrowseScreen({ onBack }) {
       // dev-bypass with no session) so it finally reaches the server.
       try { if (email) setPending(await flushQueue()); } catch (e) { console.error("[browse] flushQueue failed", e); }
       let scenarios = [];
-      try { scenarios = await loadReviewScenarios(new Set()); } catch (e) { console.error("[browse] loadReviewScenarios failed", e); }
+      try { scenarios = await loadAllQuestions(); } catch (e) { console.error("[browse] loadAllQuestions failed", e); }
       try { const c = await listCoachReviews(); if (alive) setCoachById(Object.fromEntries(c.map(x => [x.scenario_id, x]))); }
       catch (e) { console.error("[browse] listCoachReviews failed", e); }
       try { const logs = await listFeedbackLog(); if (alive) { setRevisedIds(new Set(logs.map(l => l.scenario_id))); const lg = {}; for (const r of logs) (lg[r.scenario_id] ||= []).push(r); setLogById(lg); } }
       catch (e) { console.error("[browse] listFeedbackLog failed", e); }
+      try { const reports = await listQuestionReports(); if (alive) { setReportedIds(new Set(reports.map(r => r.question_id))); const rb = {}; for (const r of reports) (rb[r.question_id] ||= []).push(r); setReportsById(rb); } }
+      catch (e) { console.error("[browse] listQuestionReports failed", e); }
       if (!alive) return;
       const mine = {};
       for (const s of scenarios) { const sv = getSavedReview(s.id); if (sv) mine[s.id] = sv; }
@@ -108,7 +113,7 @@ export default function BrowseScreen({ onBack }) {
   }, []);
 
   const tiers = useMemo(() => ageTiers(list), [list]);
-  const filtered = useMemo(() => applyFilters(list, { flagScope, ageTier }, coachById, myById), [list, flagScope, ageTier, coachById, myById]);
+  const filtered = useMemo(() => applyFilters(list, { flagScope, ageTier }, coachById, myById, reportedIds), [list, flagScope, ageTier, coachById, myById, reportedIds]);
 
   function openBoard(s) { setFocused(s); setNote(""); } // fresh comment box, never pre-filled
   function closeBoard() { setFocused(null); }
@@ -147,6 +152,14 @@ export default function BrowseScreen({ onBack }) {
           <span style={{ width: 40 }} />
         </div>
         <div style={{ height: ".4rem" }} />
+        {(reportsById[focused.id] || []).length > 0 && (
+          <div style={{ marginBottom: ".5rem", padding: ".5rem .6rem", borderRadius: 8, background: "rgba(239,68,68,.10)", border: "1px solid rgba(239,68,68,.4)" }}>
+            <div style={{ fontSize: ".72rem", fontWeight: 800, color: C.red, marginBottom: ".2rem" }}>🚩 Player-flagged ({(reportsById[focused.id] || []).length})</div>
+            {(reportsById[focused.id] || []).map((r, k) => (
+              <div key={k} style={{ fontSize: ".76rem", color: C.dim }}>· {r.reason}{r.detail ? ` — ${r.detail}` : ""}</div>
+            ))}
+          </div>
+        )}
         <BoardReviewPanel
           scenario={focused} coach={coach} logs={logById[focused.id] || []} savedVerdict={savedVerdict}
           note={note} onNote={setNote} onVerdict={saveVerdict}
@@ -188,7 +201,7 @@ export default function BrowseScreen({ onBack }) {
         ? <div style={{ color: C.dim, textAlign: "center", padding: "2rem 0" }}>No boards match. <button onClick={() => { setFlagScope("all"); setAgeTier("all"); }} style={ghost}>clear filters</button></div>
         : <div style={{ display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gap: ".6rem" }}>
             {filtered.map(s => (
-              <BrowseTile key={s.id} scenario={s} coach={coachById[s.id] || null} myVerdict={myById[s.id] || null} revised={revisedIds.has(s.id)} onOpen={openBoard} />
+              <BrowseTile key={s.id} scenario={s} coach={coachById[s.id] || null} myVerdict={myById[s.id] || null} revised={revisedIds.has(s.id)} reported={reportedIds.has(s.id)} onOpen={openBoard} />
             ))}
           </div>}
     </div>

@@ -979,6 +979,19 @@ export async function createQuestionRequest({ scenario_id, stem_id, preset, note
   return error ? { ok: false, error: error.message } : { ok: true };
 }
 
+// Unresolved player flags from the app, for the dashboard. (Owner-read-all
+// requires the owner-email policy in migration 0017; until then this returns
+// whatever RLS allows — empty when there are no players.)
+export async function listQuestionReports() {
+  if (!supabase) return [];
+  const { data, error } = await supabase
+    .from("question_reports")
+    .select("question_id,reason,detail,created_at")
+    .eq("resolved", false)
+    .order("created_at", { ascending: false });
+  return error ? [] : (data || []);
+}
+
 export async function listQuestionRequests() {
   if (!supabase) return [];
   const session = await getSession();

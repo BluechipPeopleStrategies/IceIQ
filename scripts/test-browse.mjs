@@ -75,6 +75,17 @@ const stems = groupByStem([stemA1, stemA2, lone]);
 check("groupByStem merges shared stemId", stems.find(g => g.stemId === "sceneA").questions.length === 2);
 check("groupByStem singleton for no stemId", stems.find(g => g.stemId === "z1").questions.length === 1);
 
+// bank text-MC type labels (bank uses opts, not mc.opts)
+check("type: bank multiple choice", questionTypeLabel({ sit: "x", opts: ["a", "b", "c", "d"] }) === "Multiple choice");
+check("type: bank true/false", questionTypeLabel({ opts: ["True", "False"] }) === "True/False");
+
+// player flag (highest priority) + applyFilters reportedIds
+check("flagOf player wins over coach+mine", flagOf(mk("a", "U7"), { verdict: "revise" }, { verdict: "retire" }, true) === "player");
+check("flagOf no report falls through to coach", flagOf(mk("a", "U7"), { verdict: "revise" }, null, false) === "coach");
+const rep = new Set(["b"]);
+check("applyFilters player scope", applyFilters(scn, { flagScope: "player", ageTier: "all" }, {}, {}, rep).map(s => s.id).join() === "b");
+check("applyFilters player empty when none", applyFilters(scn, { flagScope: "player", ageTier: "all" }, {}, {}, new Set()).length === 0);
+
 // null iteration rows must not merge into one group
 const nullA = { scenario_id: "s", iteration: null, source: "owner", change: "A", feedback: "a", created_at: "2026-06-13T10:00:00Z" };
 const nullB = { scenario_id: "s", iteration: null, source: "owner", change: "B", feedback: "b", created_at: "2026-06-13T11:00:00Z" };
