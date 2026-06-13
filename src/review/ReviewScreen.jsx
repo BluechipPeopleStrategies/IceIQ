@@ -4,6 +4,7 @@ import { loadReviewScenarios } from "./reviewData.js";
 import { boardHash } from "./reviewCore.js";
 import { enqueueReview, flushQueue, getReviewedIds, getSavedReview, syncServerReviews } from "./reviewQueue.js";
 import { getSession, listCoachReviews, listFeedbackLog } from "../supabase.js";
+import { isDevBypassEnabled } from "../utils/devBypass.js";
 import { C, FONT } from "../shared.jsx";
 
 const OWNERS = (import.meta.env.VITE_REVIEW_OWNERS || "")
@@ -33,7 +34,12 @@ export default function ReviewScreen({ onBack }) {
       let email = null;
       try { const session = await getSession(); email = session?.user?.email?.toLowerCase(); }
       catch (e) { console.error("[review] getSession failed", e); }
-      if (!email || (OWNERS.length && !OWNERS.includes(email))) { if (alive) setStatus("denied"); return; }
+      // Owners gate by email in production; a dev-bypass session (or any local
+      // `npm run dev`) gets in without a Supabase login so boards are viewable
+      // offline. Server-backed overlays (coach/feedback/sync) just come back
+      // empty without a session — the local bank + saved reviews still render.
+      const devOK = isDevBypassEnabled() || !!(import.meta.env && import.meta.env.DEV);
+      if (!devOK && (!email || (OWNERS.length && !OWNERS.includes(email)))) { if (alive) setStatus("denied"); return; }
       try { await syncServerReviews(); } catch (e) { console.error("[review] syncServerReviews failed", e); }
       let scenarios = [];
       try { scenarios = await loadReviewScenarios(getReviewedIds()); }

@@ -6,6 +6,7 @@ import { ageTiers, applyFilters } from "./browseCore.js";
 import { boardHash } from "./reviewCore.js";
 import { enqueueReview, flushQueue, getSavedReview, syncServerReviews } from "./reviewQueue.js";
 import { getSession, listCoachReviews, listFeedbackLog } from "../supabase.js";
+import { isDevBypassEnabled } from "../utils/devBypass.js";
 import { C, FONT } from "../shared.jsx";
 
 const OWNERS = (import.meta.env.VITE_REVIEW_OWNERS || "")
@@ -44,7 +45,9 @@ export default function BrowseScreen({ onBack }) {
       let email = null;
       try { const s = await getSession(); email = s?.user?.email?.toLowerCase(); }
       catch (e) { console.error("[browse] getSession failed", e); }
-      if (!email || (OWNERS.length && !OWNERS.includes(email))) { if (alive) setStatus("denied"); return; }
+      // See ReviewScreen: dev-bypass / local dev can browse boards without a login.
+      const devOK = isDevBypassEnabled() || !!(import.meta.env && import.meta.env.DEV);
+      if (!devOK && (!email || (OWNERS.length && !OWNERS.includes(email)))) { if (alive) setStatus("denied"); return; }
       try { await syncServerReviews(); } catch (e) { console.error("[browse] syncServerReviews failed", e); }
       let scenarios = [];
       try { scenarios = await loadReviewScenarios(new Set()); } catch (e) { console.error("[browse] loadReviewScenarios failed", e); }

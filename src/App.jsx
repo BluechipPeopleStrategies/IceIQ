@@ -6725,6 +6725,12 @@ function AuthScreen({ onAuthenticated, onDemo, onDevEnter, onPreview, prefill })
               style={{width:"100%",background:"linear-gradient(135deg,#a855f7,#7c3aed)",color:"#fff",border:"none",borderRadius:10,padding:".6rem",cursor:"pointer",fontFamily:FONT.body,fontWeight:700,fontSize:13}}>
               Enter as dev →
             </button>
+            {/* Owner review tools — jump straight to the board grid / triage deck
+                without logging in (the screens' auth gate honours dev bypass). */}
+            <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:".4rem",marginTop:".4rem"}}>
+              <a href="#browse" style={{textAlign:"center",background:"rgba(255,255,255,0.04)",border:"1px solid rgba(168,85,247,0.4)",borderRadius:8,padding:".45rem",cursor:"pointer",color:"#e9d5ff",fontFamily:FONT.body,fontSize:12,fontWeight:600,textDecoration:"none"}}>🗂 Browse grid</a>
+              <a href="#triage" style={{textAlign:"center",background:"rgba(255,255,255,0.04)",border:"1px solid rgba(168,85,247,0.4)",borderRadius:8,padding:".45rem",cursor:"pointer",color:"#e9d5ff",fontFamily:FONT.body,fontSize:12,fontWeight:600,textDecoration:"none"}}>🃏 Triage deck</a>
+            </div>
             <div style={{fontSize:10,color:"rgba(196,181,253,.55)",marginTop:".5rem",lineHeight:1.5}}>
               Console: <code style={{color:"#e9d5ff"}}>window.__dev</code> — <code style={{color:"#e9d5ff"}}>setTier</code>, <code style={{color:"#e9d5ff"}}>markFirstSixDone</code>, <code style={{color:"#e9d5ff"}}>reset</code>, <code style={{color:"#e9d5ff"}}>exitBypass</code>
             </div>

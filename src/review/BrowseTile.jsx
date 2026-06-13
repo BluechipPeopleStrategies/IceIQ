@@ -8,6 +8,7 @@ import { C, FONT } from "../shared.jsx";
 // The SVG only mounts when the tile scrolls near the viewport (IntersectionObserver),
 // so a 148-board grid doesn't render 148 SVGs at once.
 const BADGE = { coach: "🚩", mine: "⚠", clean: "", unreviewed: "" };
+const VLABEL = { keep: "KEEP", revise: "REVISE", retire: "RETIRE" };
 
 export default function BrowseTile({ scenario, coach, myVerdict, revised, onOpen }) {
   const ref = useRef(null);
@@ -25,11 +26,18 @@ export default function BrowseTile({ scenario, coach, myVerdict, revised, onOpen
   const flag = flagOf(scenario, coach, myVerdict);
   const badge = BADGE[flag];
   const kept = myVerdict?.verdict === "keep";
+  const reviewed = !!myVerdict?.verdict;           // I've given this board a verdict
+  const noted = !!(myVerdict?.note && myVerdict.note.trim()); // ...and left a note
   const caption = [ageTierOf(scenario), scenario.nodeId].filter(Boolean).join(" · ");
 
   return (
     <button ref={ref} onClick={() => onOpen(scenario)}
-      style={{ position: "relative", padding: 0, border: `1px solid ${C.border}`, borderRadius: 10, background: C.bgCard, cursor: "pointer", overflow: "hidden", textAlign: "left" }}>
+      style={{ position: "relative", padding: 0, border: `1px solid ${reviewed ? C.gold : C.border}`, borderRadius: 10, background: C.bgCard, cursor: "pointer", overflow: "hidden", textAlign: "left", opacity: reviewed ? 1 : 0.82 }}>
+      {reviewed && (
+        <div style={{ position: "absolute", top: 4, left: 6, zIndex: 2, display: "flex", alignItems: "center", gap: 3, fontSize: ".58rem", fontWeight: 700, letterSpacing: ".05em", padding: "1px 6px", borderRadius: 999, background: C.goldDim, color: C.gold }}>
+          {VLABEL[myVerdict.verdict]}{noted ? " 📝" : ""}
+        </div>
+      )}
       <div style={{ position: "absolute", top: 4, right: 6, zIndex: 2, fontSize: ".9rem" }}>
         {badge}{kept ? " ✓" : ""}{revised ? " ◍" : ""}
       </div>
