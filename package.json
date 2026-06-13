@@ -41,7 +41,9 @@
     "coach-review": "node tools/gauntlet-audit.mjs --sink supabase",
     "coach-revise": "node scripts/coach-revise.mjs",
     "resolve-feedback": "node scripts/resolve-feedback.mjs",
-    "render-pass-log": "node scripts/render-pass-log.mjs"
+    "render-pass-log": "node scripts/render-pass-log.mjs",
+    "verify-batch": "node scripts/verify-batch.mjs",
+    "test:verify-batch": "node --test scripts/test-verify-batch.mjs"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.103.0",
