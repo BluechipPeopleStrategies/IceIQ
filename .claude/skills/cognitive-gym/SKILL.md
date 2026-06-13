@@ -72,11 +72,11 @@ fits. Read this before touching any game.
 ### 2026-06-13
 - **Read the Pass travels all four directions.** Left-to-right, right-to-left,
   top-to-bottom, bottom-to-top. Not just horizontal. The gold bar sits on the
-  exit edge; the guess runs along that edge. (planned in current build)
+  exit edge; the guess runs along that edge. (done)
 - **Bigger gold bar.** The crossing target is a thick gold band, not a thin
-  line, so there is more area to aim at. (planned)
+  line, so there is more area to aim at. (done, `BAR` constant)
 - **Much smaller success window.** The tolerance for a "hit" (which drives
-  leveling) is tight. Precision matters. (planned)
+  leveling) is tight. Precision matters. (done, `tolerance` shrunk)
 - **GeoGuessr-style graded points.** Closer to the exact spot is worth more.
   Bang-on beats barely-right even when both are inside the success circle.
   Exact = max points, smooth exponential decay with distance. (`gymPoints.js`)
