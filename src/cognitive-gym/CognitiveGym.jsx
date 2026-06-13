@@ -8,6 +8,7 @@ import SnapshotDrill from "./SnapshotDrill";
 import FindLaneDrill from "./FindLaneDrill";
 import BestOptionDrill from "./BestOptionDrill";
 import ReadNumbersDrill from "./ReadNumbersDrill";
+import LateReadDrill from "./LateReadDrill";
 import { getDrill, getStats } from "./gymStorage";
 
 // The drill registry. Add a drill by appending an entry here; the hub renders
@@ -100,6 +101,17 @@ const DRILLS = [
     trains: "Dynamic visual acuity, tracking a fast target, reading numbers on the move",
     build: "canvas",
     component: ReadNumbersDrill,
+  },
+  {
+    id: "lateread",
+    name: "Late Read",
+    skill: "Adapting",
+    blurb: "Pass to the cued teammate, but switch if a defender steps up late.",
+    goal: "Hit the teammate the play is going to right now, and switch if a defender steps up and the read changes late.",
+    why: "The play you saw a second ago is not always the play that is there now. A defender steps up, a lane closes, and the right pass becomes the wrong one. Good players do not force their first idea once the ice changes. They keep their head up, read the defender stepping into the lane, and switch to the teammate who is open now. Training that, not committing too early and adjusting when the picture changes, is how you stop throwing pucks into trouble and start making the play the ice is actually giving you.",
+    trains: "Reading a late change, inhibiting your first idea, switching when the ice changes",
+    build: "canvas",
+    component: LateReadDrill,
   },
 ];
 
