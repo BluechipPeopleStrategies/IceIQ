@@ -4,6 +4,7 @@ import { careerPointsFromDrills } from "../src/cognitive-gym/gymStorage.js";
 import { DIRECTIONS, guessAxis, scorePass, feetPerPixel, formatDistance, rateMiss, RINK_LENGTH_FT, RINK_WIDTH_FT } from "../src/cognitive-gym/anticipationCore.js";
 import { slotCount, flashMs, hitRadius, pickFlash, scoreTap, MIN_SLOTS, MAX_SLOTS } from "../src/cognitive-gym/eyesUpCore.js";
 import { makeFormation, scoreTap as snapScoreTap, flashMs as snapFlashMs, markerCount, hitRadius as snapHitRadius, EASY_MARKERS, HARD_MARKERS } from "../src/cognitive-gym/snapshotCore.js";
+import { laneClear, pointSegmentDist, makeFormation as makeLaneFormation, scoreLane, receiverCount, defenderCount, laneMargin, closeMs as laneCloseMs, EASY_RECEIVERS, HARD_RECEIVERS, EASY_DEFENDERS, HARD_DEFENDERS } from "../src/cognitive-gym/findLaneCore.js";
 
 let failed = 0;
 const check = (name, cond) => { console.log(`${cond ? "PASS" : "FAIL"}  ${name}`); if (!cond) failed++; };
@@ -176,6 +177,87 @@ check("snapshot closer tap scores higher", snNear.points > snFar.points);
 // normError is normalized by the canvas diagonal
 const snDiag = Math.sqrt(SW * SW + SH * SH);
 check("snapshot normError is distance over diagonal", Math.abs(snInside.normError - 30 / snDiag) < 1e-9);
+
+// Find the Lane (spatial pattern recognition) — pure helpers ------------------
+const LW = 600, LH = 372; // a sample canvas
+
+// difficulty climbs with level: more receivers, more defenders, faster close,
+// tighter open margin.
+check("findlane receivers grow with level", receiverCount(1) === EASY_RECEIVERS && receiverCount(20) === HARD_RECEIVERS && receiverCount(10) > receiverCount(1));
+check("findlane defenders grow with level", defenderCount(1) === EASY_DEFENDERS && defenderCount(20) === HARD_DEFENDERS && defenderCount(10) > defenderCount(1));
+check("findlane close gets faster with level", laneCloseMs(1) > laneCloseMs(10) && laneCloseMs(10) > laneCloseMs(20));
+check("findlane open margin tightens with level", laneMargin(1, LW, LH) > laneMargin(20, LW, LH));
+
+// pointSegmentDist: point on the segment is 0; perpendicular distance off it.
+check("findlane point on segment has 0 distance", pointSegmentDist({ x: 50, y: 0 }, { x: 0, y: 0 }, { x: 100, y: 0 }) === 0);
+check("findlane perpendicular distance off segment", Math.abs(pointSegmentDist({ x: 50, y: 10 }, { x: 0, y: 0 }, { x: 100, y: 0 }) - 10) < 1e-9);
+// clamps to the nearest endpoint when the projection falls outside the segment
+check("findlane clamps past the segment end", Math.abs(pointSegmentDist({ x: 130, y: 0 }, { x: 0, y: 0 }, { x: 100, y: 0 }) - 30) < 1e-9);
+
+// laneClear: true when no defender sits near the segment, false when one is on it.
+const you = { x: 0, y: 0 };
+const recv = { x: 100, y: 0 };
+check("findlane lane clear when defenders are far", laneClear(you, recv, [{ x: 50, y: 40 }, { x: 20, y: -50 }], 20) === true);
+check("findlane lane blocked when a defender sits on it", laneClear(you, recv, [{ x: 50, y: 5 }], 20) === false);
+check("findlane defender just outside the margin keeps the lane clear", laneClear(you, recv, [{ x: 50, y: 21 }], 20) === true);
+
+// makeFormation: deterministic with an injected rng, in-bounds, non-overlapping,
+// EXACTLY one open lane, and that lane is the openIndex.
+let laneSeed = 0;
+const laneRng = () => { laneSeed = (laneSeed * 9301 + 49297) % 233280; return laneSeed / 233280; };
+
+function openLaneCount(form) {
+  return form.receivers.filter((rc) => laneClear(form.you, rc, form.defenders, form.margin)).length;
+}
+
+// run several seeds and levels to be confident the invariant holds
+let allExactlyOne = true;
+let allInBounds = true;
+let allNonOverlap = true;
+let openIsOpen = true;
+for (const lvl of [1, 5, 10, 15, 20]) {
+  for (const seed of [1, 12345, 777, 90210, 31337]) {
+    laneSeed = seed;
+    const form = makeLaneFormation(lvl, LW, LH, { rng: laneRng });
+    if (openLaneCount(form) !== 1) allExactlyOne = false;
+    if (!laneClear(form.you, form.receivers[form.openIndex], form.defenders, form.margin)) openIsOpen = false;
+    const all = [...form.receivers, ...form.defenders];
+    if (!all.every((m) => m.x > 0 && m.x < LW && m.y > 0 && m.y < LH)) allInBounds = false;
+    // receivers do not overlap each other; defenders are placed to block lanes so
+    // they may sit on a lane near a receiver, but should not stack on receivers.
+    if (!form.receivers.every((a, i) => form.receivers.every((b, j) => i === j || Math.hypot(a.x - b.x, a.y - b.y) >= form.r * 2.6 - 1e-9))) allNonOverlap = false;
+  }
+}
+check("findlane formation has exactly one open lane across levels/seeds", allExactlyOne);
+check("findlane the openIndex lane is the clear one", openIsOpen);
+check("findlane markers stay in-bounds across levels/seeds", allInBounds);
+check("findlane receivers do not overlap each other", allNonOverlap);
+
+// formation carries the level's counts + timing
+laneSeed = 42;
+const lform = makeLaneFormation(10, LW, LH, { rng: laneRng });
+check("findlane formation has the level's receiver count", lform.receivers.length === receiverCount(10));
+check("findlane formation has the level's defender count is at least the level count", lform.defenders.length >= defenderCount(10));
+check("findlane formation carries close + margin", lform.closeMs > 0 && lform.margin > 0);
+check("findlane openIndex is a valid receiver index", lform.openIndex >= 0 && lform.openIndex < lform.receivers.length);
+
+// deterministic: same seed -> same formation
+laneSeed = 555;
+const laneA = makeLaneFormation(8, LW, LH, { rng: laneRng });
+laneSeed = 555;
+const laneB = makeLaneFormation(8, LW, LH, { rng: laneRng });
+check("findlane makeFormation deterministic for a seed", laneA.openIndex === laneB.openIndex && laneA.receivers[0].x === laneB.receivers[0].x && laneA.defenders.length === laneB.defenders.length);
+
+// scoreLane: success only on the open index in time; faster = more points;
+// wrong index or expired = miss worth 0.
+const sFast = scoreLane(2, 2, 200, 2000); // tapped open, very fast
+const sSlow = scoreLane(2, 2, 1800, 2000); // tapped open, barely in time
+check("findlane success only on the open index", sFast.success && scoreLane(1, 2, 200, 2000).success === false);
+check("findlane faster tap scores more points", sFast.points > sSlow.points && sFast.points > 0);
+check("findlane instant tap is near max points", scoreLane(2, 2, 0, 2000).points === MAX_REP);
+check("findlane wrong index is a miss worth 0", scoreLane(0, 2, 100, 2000).success === false && scoreLane(0, 2, 100, 2000).points === 0);
+check("findlane no tap (-1) is a miss worth 0", scoreLane(-1, 2, 100, 2000).success === false && scoreLane(-1, 2, 100, 2000).points === 0);
+check("findlane expired countdown is a miss even on the open index", scoreLane(2, 2, 2100, 2000).success === false && scoreLane(2, 2, 2100, 2000).points === 0);
 
 console.log(failed ? `\n${failed} FAILED` : "\nAll passed");
 process.exit(failed ? 1 : 0);
