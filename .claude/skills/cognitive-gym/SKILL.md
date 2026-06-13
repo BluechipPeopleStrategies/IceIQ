@@ -139,8 +139,14 @@ fits. Read this before touching any game.
   turns gold to flag the second tap. Picks no longer auto-resolve; tap your
   three then Lock in. Bonus only if your double-tapped call is the real carrier.
 - **Naming / mascots.** The tracking game is "Baylor's Pick" (the player picks
-  the tracked teammates). A bunny 🐰 and bear 🐻 sit faintly at center ice as
-  mascots. Keep the storage id "tracking" so saved progress is preserved.
+  the tracked teammates). A bunny 🐰 and bear 🐻 are prominent mascots at center
+  ice (bigger/brighter but drawn BEHIND the skaters so they never block play).
+  Keep the storage id "tracking" so saved progress is preserved.
+- **Rich hub stats.** The hub shows a wrapping stat board: day streak, best
+  streak, sessions, days trained, career points, best session, top level,
+  fastest reaction (ms). Add more as new games create new measurable things.
+- **Illustrated intros.** Every game intro opens with a small illustration
+  (inline SVG, on-brand colors) above the text, so the start is not all words.
 
 ## Common mistakes
 - Sizing a canvas to container width only (overflows on desktop). Use the

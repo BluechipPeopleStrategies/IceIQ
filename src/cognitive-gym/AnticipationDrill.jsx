@@ -400,6 +400,13 @@ export default function AnticipationDrill({ playerId = "default", onExit }) {
       {phase === "intro" && (
         <div className="gym-card">
           <h2>Read the Pass</h2>
+          <svg viewBox="0 0 280 110" width="100%" style={{ maxWidth: 280, display: "block", margin: "0 auto 14px", borderRadius: 10 }} aria-hidden="true">
+            <rect width="280" height="110" rx="8" fill="#eaf4fb" />
+            <line x1="244" y1="8" x2="244" y2="102" stroke="#f2b705" strokeWidth="10" strokeLinecap="round" />
+            <path d="M24 72 L150 38" stroke="#1b6cb0" strokeWidth="3" strokeDasharray="5 6" fill="none" />
+            <circle cx="24" cy="72" r="7" fill="#0b1b2b" />
+            <circle cx="244" cy="28" r="6" fill="#f2b705" stroke="#0b1b2b" strokeWidth="1.5" />
+          </svg>
           <p className="gym-goal"><strong>Your goal:</strong> call where the puck is going before it gets there.</p>
           <p>
             <strong>The game:</strong> a puck launches across the ice, then

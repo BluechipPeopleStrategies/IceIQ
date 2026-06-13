@@ -232,6 +232,13 @@ export default function ReactionDrill({ playerId = "default", onExit }) {
       {phase === "intro" && (
         <div className="gym-card">
           <h2>Shoot or Hold</h2>
+          <svg viewBox="0 0 280 110" width="100%" style={{ maxWidth: 280, display: "block", margin: "0 auto 14px", borderRadius: 10 }} aria-hidden="true">
+            <rect width="280" height="110" rx="8" fill="#eaf4fb" />
+            <circle cx="90" cy="55" r="34" fill="#2e9fe6" />
+            <text x="90" y="60" fontSize="13" fontWeight="700" textAnchor="middle" fill="#06283d">SHOOT</text>
+            <circle cx="200" cy="55" r="34" fill="#e8590c" />
+            <text x="200" y="60" fontSize="14" fontWeight="700" textAnchor="middle" fill="#ffffff">HOLD</text>
+          </svg>
           <p className="gym-goal"><strong>Your goal:</strong> fire on blue, stay still on orange, and beat the clock every time.</p>
           <p>
             <strong>The game:</strong> after a random delay the light flashes.{" "}

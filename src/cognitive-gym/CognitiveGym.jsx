@@ -92,6 +92,10 @@ export default function CognitiveGym({ playerId = "default", onBack }) {
             <span className="gym-stat-label">day streak</span>
           </div>
           <div className="gym-stat">
+            <span className="gym-stat-num">{stats.longestStreak ?? 0}</span>
+            <span className="gym-stat-label">best streak</span>
+          </div>
+          <div className="gym-stat">
             <span className="gym-stat-num">{stats.totalSessions}</span>
             <span className="gym-stat-label">sessions</span>
           </div>
@@ -102,6 +106,18 @@ export default function CognitiveGym({ playerId = "default", onBack }) {
           <div className="gym-stat">
             <span className="gym-stat-num">{stats.careerPoints ?? 0}</span>
             <span className="gym-stat-label">points</span>
+          </div>
+          <div className="gym-stat">
+            <span className="gym-stat-num">{stats.bestSessionPoints ?? 0}</span>
+            <span className="gym-stat-label">best session</span>
+          </div>
+          <div className="gym-stat">
+            <span className="gym-stat-num">{stats.topLevel ?? 1}</span>
+            <span className="gym-stat-label">top level</span>
+          </div>
+          <div className="gym-stat">
+            <span className="gym-stat-num">{stats.fastestRt ? stats.fastestRt : "-"}</span>
+            <span className="gym-stat-label">fastest ms</span>
           </div>
         </div>
       </header>

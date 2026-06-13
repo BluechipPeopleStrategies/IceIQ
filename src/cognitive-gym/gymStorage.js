@@ -80,32 +80,59 @@ export function careerPointsFromDrills(drills) {
 export function getStats(playerId) {
   const drills = readAll()[playerId] || {};
   let totalSessions = 0;
+  let bestSessionPoints = 0;
+  let topLevel = 1;
+  let fastestRt = null;
   const days = new Set();
   Object.values(drills).forEach((drill) => {
-    totalSessions += drill.sessions.length;
-    drill.sessions.forEach((s) => days.add(s.date.slice(0, 10)));
+    totalSessions += (drill.sessions || []).length;
+    topLevel = Math.max(topLevel, drill.level || 1);
+    (drill.sessions || []).forEach((s) => {
+      days.add(s.date.slice(0, 10));
+      bestSessionPoints = Math.max(bestSessionPoints, s.points || 0);
+      const rt = s.meta && s.meta.avgRt;
+      if (rt && (fastestRt === null || rt < fastestRt)) fastestRt = rt;
+    });
   });
 
+  // current streak ending today (today not-yet-trained doesn't break it)
   let streak = 0;
   const today = new Date();
   for (let back = 0; back < 365; back += 1) {
     const d = new Date(today);
     d.setDate(today.getDate() - back);
     const key = d.toISOString().slice(0, 10);
-    if (days.has(key)) {
-      streak += 1;
-    } else if (back === 0) {
-      // today not yet trained — don't break the streak
-      continue;
+    if (days.has(key)) streak += 1;
+    else if (back === 0) continue;
+    else break;
+  }
+
+  // longest consecutive-day run ever
+  const sorted = [...days].sort();
+  let longestStreak = 0;
+  let run = 0;
+  let prev = null;
+  for (const key of sorted) {
+    if (prev) {
+      const diff = Math.round(
+        (new Date(key + "T00:00:00") - new Date(prev + "T00:00:00")) / 86400000
+      );
+      run = diff === 1 ? run + 1 : 1;
     } else {
-      break;
+      run = 1;
     }
+    if (run > longestStreak) longestStreak = run;
+    prev = key;
   }
 
   return {
     totalSessions,
     daysTrained: days.size,
     streak,
+    longestStreak,
     careerPoints: careerPointsFromDrills(drills),
+    bestSessionPoints,
+    topLevel,
+    fastestRt,
   };
 }

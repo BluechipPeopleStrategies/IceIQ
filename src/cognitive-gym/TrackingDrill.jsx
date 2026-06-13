@@ -210,12 +210,12 @@ export default function TrackingDrill({ playerId = "default", onExit }) {
 
       // mascots in the middle — Baylor's bunny and bear cheer the play on
       ctx.save();
-      ctx.globalAlpha = 0.4;
-      ctx.font = `${Math.round(H * 0.16)}px serif`;
+      ctx.globalAlpha = 0.7;
+      ctx.font = `${Math.round(H * 0.26)}px serif`;
       ctx.textAlign = "center";
       ctx.textBaseline = "middle";
-      ctx.fillText("🐰", W * 0.5 - H * 0.13, H * 0.5);
-      ctx.fillText("🐻", W * 0.5 + H * 0.13, H * 0.5);
+      ctx.fillText("🐰", W * 0.5 - H * 0.2, H * 0.5);
+      ctx.fillText("🐻", W * 0.5 + H * 0.2, H * 0.5);
       ctx.restore();
 
       sc.dots.forEach((d, idx) => {
@@ -454,6 +454,15 @@ export default function TrackingDrill({ playerId = "default", onExit }) {
           {phase === "intro" && (
             <div className="gym-card">
               <h2>Baylor's Pick</h2>
+              <svg viewBox="0 0 280 110" width="100%" style={{ maxWidth: 280, display: "block", margin: "0 auto 14px", borderRadius: 10 }} aria-hidden="true">
+                <rect width="280" height="110" rx="8" fill="#eaf4fb" />
+                <circle cx="60" cy="40" r="14" fill="#f2b705" stroke="#9a7400" strokeWidth="2" />
+                <circle cx="150" cy="70" r="14" fill="#f2b705" stroke="#9a7400" strokeWidth="2" />
+                <circle cx="210" cy="35" r="14" fill="#f2b705" stroke="#9a7400" strokeWidth="2" />
+                <circle cx="105" cy="82" r="14" fill="#ffffff" stroke="#5b7587" strokeWidth="2" />
+                <circle cx="240" cy="82" r="14" fill="#ffffff" stroke="#5b7587" strokeWidth="2" />
+                <text x="150" y="77" fontSize="18" textAnchor="middle">⚽</text>
+              </svg>
               <p className="gym-goal"><strong>Your goal:</strong> keep track of all three teammates at once, even while the play is moving.</p>
               <p>
                 <strong>The game:</strong> three teammates flash gold, then every
