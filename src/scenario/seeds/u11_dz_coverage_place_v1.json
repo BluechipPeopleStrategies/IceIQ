@@ -1,0 +1,41 @@
+{
+  "id": "u11_dz_coverage_place_v1",
+  "type": "scenario",
+  "nodeId": "u11.defensive-zone-coverage",
+  "level": "U11 / Atom",
+  "levels": ["U11 / Atom"],
+  "themes": ["defensive-zone-coverage", "positioning", "net-front", "puck-support"],
+  "cat": "Defensive Play",
+  "difficulty": 2,
+  "stage": { "view": "left", "zone": "def-zone" },
+  "actors": [
+    { "id": "oppCarrier", "kind": "defender", "x": 0.11, "y": 0.83, "tag": "" },
+    { "id": "puck", "kind": "puck", "x": 0.112, "y": 0.832 },
+    { "id": "oppNet", "kind": "defender", "x": 0.15, "y": 0.52, "tag": "" },
+    { "id": "oppSlot", "kind": "defender", "x": 0.24, "y": 0.44, "tag": "" },
+    { "id": "g", "kind": "goalie", "x": 0.06, "y": 0.5, "tag": "" },
+    { "id": "d1", "kind": "teammate", "x": 0.34, "y": 0.4, "tag": "D" },
+    { "id": "c", "kind": "teammate", "x": 0.36, "y": 0.52, "tag": "C" },
+    { "id": "f1", "kind": "player", "x": 0.34, "y": 0.64, "tag": "LW" }
+  ],
+  "interaction": {
+    "kind": "place",
+    "items": ["d1", "c", "f1"],
+    "showTargets": false,
+    "prompt": "The other team has the puck in your corner. Drag each of your three players to where they belong: cover the net-front and the slot, and put pressure on the puck."
+  },
+  "correct": {
+    "kind": "place",
+    "placements": [
+      { "id": "d1", "zoneId": "dz-net-front" },
+      { "id": "c", "zoneId": "dz-slot" },
+      { "id": "f1", "zoneId": "dz-half-wall-strong" }
+    ]
+  },
+  "feedback": {
+    "right": "That's tight coverage: your D has the net-front, your centre protects the slot, and your winger pressures the puck. The dangerous ice is taken away.",
+    "wrong": "Goals come from the net-front and slot. Cover the house first — D to the net-front, centre in the slot — then pressure the puck on the wall."
+  },
+  "tip": "In your own zone, cover the most dangerous ice first: net-front, then slot, then pressure the puck.",
+  "why": "Defensive-zone coverage protects the middle. Bodies at the net-front and slot take away the highest-percentage chances before you chase the puck."
+}
