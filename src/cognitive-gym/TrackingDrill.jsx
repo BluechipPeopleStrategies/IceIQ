@@ -17,24 +17,23 @@ import { getDrill, saveSession } from "./gymStorage";
 
 const SHIFTS = 6;
 const TARGETS = 3;
-const WATCH_MS = 1600; // how long the targets stay highlighted before moving
 const FEEDBACK_HOLD_MS = 2800; // hold the marked-up result so the player can see which they missed
 
 // Build a field of non-overlapping skaters with random velocities. Difficulty
-// raises both the skater count (6 -> 10) and their speed, and lengthens the
-// tracking phase.
+// ramps hard with level: more skaters (5 -> 16), faster movement, a longer
+// tracking phase, and a shorter look at the gold teammates.
 function makeDots(W, H, level) {
   const t = levelT(level);
-  const count = 6 + Math.round(lerp(0, 4, t));
-  const speed = W * lerp(0.18, 0.5, t);
-  const r = Math.max(13, Math.round(W * 0.028));
+  const count = 5 + Math.round(lerp(0, 11, t)); // 5 .. 16 skaters
+  const speed = W * lerp(0.16, 0.78, t);
+  const r = Math.max(11, Math.round(W * 0.024));
   const dots = [];
   let guard = 0;
 
-  while (dots.length < count && guard < 500) {
+  while (dots.length < count && guard < 1500) {
     guard += 1;
     const dot = { x: rand(r + 6, W - r - 6), y: rand(r + 6, H - r - 6), r };
-    if (dots.every((o) => Math.hypot(o.x - dot.x, o.y - dot.y) > r * 2.4)) {
+    if (dots.every((o) => Math.hypot(o.x - dot.x, o.y - dot.y) > r * 2.3)) {
       const ang = rand(0, Math.PI * 2);
       dot.vx = Math.cos(ang) * speed;
       dot.vy = Math.sin(ang) * speed;
@@ -42,7 +41,12 @@ function makeDots(W, H, level) {
     }
   }
 
-  return { dots, targetIdx: new Set([0, 1, 2]), moveMs: lerp(5000, 9000, t) };
+  return {
+    dots,
+    targetIdx: new Set([0, 1, 2]),
+    moveMs: lerp(4500, 10000, t),
+    watchMs: lerp(2000, 800, t), // shorter look at higher levels
+  };
 }
 
 export default function TrackingDrill({ playerId = "default", onExit }) {
@@ -57,8 +61,9 @@ export default function TrackingDrill({ playerId = "default", onExit }) {
   const [correct, setCorrect] = useState(0);
   const [level, setLevel] = useState(() => getDrill(playerId, "tracking").level);
   const [remaining, setRemaining] = useState(TARGETS);
-  const [stage, setStage] = useState("watch"); // watch | track | pick | feedback
+  const [stage, setStage] = useState("ready"); // ready | watch | track | pick | feedback
   const [saved, setSaved] = useState(null);
+  const [levelUpIn, setLevelUpIn] = useState(3); // clean shifts still needed to move up
 
   const startShift = useCallback((roundIndex) => {
     const canvas = canvasRef.current;
@@ -71,23 +76,34 @@ export default function TrackingDrill({ playerId = "default", onExit }) {
       W,
       H,
       ...scene,
-      stage: "watch",
+      stage: "ready",
       stageStart: performance.now(),
       lastFrame: performance.now(),
       picks: new Set(),
       roundIndex,
     };
-    setStage("watch");
+    setStage("ready");
     setRemaining(TARGETS);
     loop();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  // A shift waits in "ready" until the player taps Start shift; only then does
+  // the gold flash (watch) begin. Nothing auto-runs.
+  function beginWatch() {
+    const sc = sceneRef.current;
+    if (!sc || sc.stage !== "ready") return;
+    sc.stage = "watch";
+    sc.stageStart = performance.now();
+    setStage("watch");
+  }
 
   const resolveShift = useCallback(
     (correctCount) => {
       setCorrect((c) => c + correctCount);
       const lvl = engineRef.current.record(correctCount === TARGETS);
       setLevel(lvl);
+      setLevelUpIn(engineRef.current.toPromote);
       const next = sceneRef.current.roundIndex + 1;
       setTimeout(() => {
         if (next >= SHIFTS) {
@@ -112,7 +128,7 @@ export default function TrackingDrill({ playerId = "default", onExit }) {
       const { ctx, W, H } = sc;
 
       // stage transitions
-      if (sc.stage === "watch" && now - sc.stageStart > WATCH_MS) {
+      if (sc.stage === "watch" && now - sc.stageStart > sc.watchMs) {
         sc.stage = "track";
         sc.stageStart = now;
         setStage("track");
@@ -269,9 +285,14 @@ export default function TrackingDrill({ playerId = "default", onExit }) {
   }
 
   function start() {
-    engineRef.current = createAdaptiveLevel(getDrill(playerId, "tracking").level);
+    const d = getDrill(playerId, "tracking");
+    engineRef.current = createAdaptiveLevel(d.level, {
+      startUps: d.streak.ups,
+      startDowns: d.streak.downs,
+    });
     setCorrect(0);
     setShift(0);
+    setLevelUpIn(engineRef.current.toPromote);
     setPhase("playing");
     requestAnimationFrame(() => startShift(0));
   }
@@ -283,6 +304,7 @@ export default function TrackingDrill({ playerId = "default", onExit }) {
         saveSession(playerId, "tracking", {
           score,
           level: engineRef.current.level,
+          streak: { ups: engineRef.current.ups, downs: engineRef.current.downs },
         })
       );
     }
@@ -309,7 +331,7 @@ export default function TrackingDrill({ playerId = "default", onExit }) {
         const { ctx, W, H } = setupCanvas(canvas, host);
         const sx = W / oldW;
         const sy = H / oldH;
-        const r = Math.max(13, Math.round(W * 0.028));
+        const r = Math.max(11, Math.round(W * 0.024));
         sc.dots.forEach((d) => {
           d.x *= sx;
           d.y *= sy;
@@ -330,6 +352,7 @@ export default function TrackingDrill({ playerId = "default", onExit }) {
   }, [phase]);
 
   const hint = {
+    ready: "Take a breath, then tap Start shift",
     watch: "Memorize the gold teammates",
     track: "Track them",
     pick: `Tap your ${remaining} teammate${remaining === 1 ? "" : "s"}`,
@@ -337,78 +360,106 @@ export default function TrackingDrill({ playerId = "default", onExit }) {
   }[stage];
 
   return (
-    <div className="gym-drill" ref={rootRef}>
+    <div className="gym-drill">
       {phase !== "intro" && <h2 className="gym-drill-title">Head on a Swivel</h2>}
-      <div className="gym-drill-bar">
-        <button className="gym-btn gym-btn-ghost" onClick={onExit}>
-          Back
-        </button>
-        {phase === "playing" && (
-          <button className="gym-btn gym-btn-ghost" onClick={start}>
-            Restart
-          </button>
-        )}
-        <span className="gym-chip">Level {level}</span>
-        {phase === "playing" && (
-          <span className="gym-chip">
-            Shift {Math.min(shift + 1, SHIFTS)} / {SHIFTS}
-          </span>
-        )}
-      </div>
+      <div className="gym-track-layout">
+        <aside className="gym-guide">
+          <h3>How you level up</h3>
+          <ul>
+            <li>Tag all 3 teammates to bank a clean shift.</li>
+            <li>3 clean shifts in a row moves you up a level.</li>
+            <li>2 missed shifts in a row moves you down.</li>
+            <li>Higher levels add more skaters, more speed, and a shorter look.</li>
+          </ul>
+          {phase === "playing" && (
+            <p className="gym-guide-now">
+              Level {level} · {levelUpIn} clean shift{levelUpIn === 1 ? "" : "s"} to move up
+            </p>
+          )}
+        </aside>
 
-      {phase === "intro" && (
-        <div className="gym-card">
-          <h2>Head on a Swivel</h2>
-          <p className="gym-goal"><strong>Your goal:</strong> keep track of all three teammates at once, even while the play is moving.</p>
-          <p>
-            <strong>The game:</strong> three teammates flash gold, then every
-            skater turns white and starts moving. Keep tabs on all three at once
-            without staring at any one of them. When play stops, tap your three
-            teammates. Blue check means right, orange cross means wrong.
-          </p>
-          <div className="gym-trains">
-            <strong>Why it matters</strong>
-            <span>
-              Knowing where your options are without staring at the puck is how
-              you find the open man, break out cleanly, and see the check before
-              it arrives.
-            </span>
-          </div>
-          <button className="gym-btn" onClick={start}>
-            Start
-          </button>
-        </div>
-      )}
-
-      {phase === "playing" && <p className="gym-hint">{hint}</p>}
-
-      <canvas
-        ref={canvasRef}
-        className="gym-canvas"
-        style={{ display: phase === "playing" ? "block" : "none" }}
-        onMouseDown={handlePick}
-        onTouchStart={handlePick}
-      />
-
-      {phase === "done" && (
-        <div className="gym-card">
-          <h2>Session complete</h2>
-          <div className="gym-score">
-            {Math.round((correct / (SHIFTS * TARGETS)) * 100)}
-          </div>
-          <p>
-            {correct} of {SHIFTS * TARGETS} teammates tracked. Level {level}.
-          </p>
-          <div className="gym-row">
-            <button className="gym-btn" onClick={start}>
-              Go again
-            </button>
+        <div className="gym-track-main" ref={rootRef}>
+          <div className="gym-drill-bar">
             <button className="gym-btn gym-btn-ghost" onClick={onExit}>
-              Done
+              Back
             </button>
+            {phase === "playing" && (
+              <button className="gym-btn gym-btn-ghost" onClick={start}>
+                Restart
+              </button>
+            )}
+            <span className="gym-chip">Level {level}</span>
+            {phase === "playing" && (
+              <span className="gym-chip">
+                Shift {Math.min(shift + 1, SHIFTS)} / {SHIFTS}
+              </span>
+            )}
           </div>
+
+          {phase === "intro" && (
+            <div className="gym-card">
+              <h2>Head on a Swivel</h2>
+              <p className="gym-goal"><strong>Your goal:</strong> keep track of all three teammates at once, even while the play is moving.</p>
+              <p>
+                <strong>The game:</strong> three teammates flash gold, then every
+                skater turns white and starts moving. Keep tabs on all three at once
+                without staring at any one of them. When play stops, tap your three
+                teammates. You start each shift when you are ready. Blue check means
+                right, orange cross means wrong.
+              </p>
+              <div className="gym-trains">
+                <strong>Why it matters</strong>
+                <span>
+                  Knowing where your options are without staring at the puck is how
+                  you find the open man, break out cleanly, and see the check before
+                  it arrives.
+                </span>
+              </div>
+              <button className="gym-btn" onClick={start}>
+                Start
+              </button>
+            </div>
+          )}
+
+          {phase === "playing" && <p className="gym-hint">{hint}</p>}
+
+          {phase === "playing" && stage === "ready" && (
+            <div className="gym-row" style={{ marginBottom: 10 }}>
+              <button className="gym-btn" onClick={beginWatch}>
+                Start shift
+              </button>
+            </div>
+          )}
+
+          <canvas
+            ref={canvasRef}
+            className="gym-canvas"
+            style={{ display: phase === "playing" ? "block" : "none" }}
+            onMouseDown={handlePick}
+            onTouchStart={handlePick}
+          />
+
+          {phase === "done" && (
+            <div className="gym-card">
+              <h2>Session complete</h2>
+              <div className="gym-score">
+                {Math.round((correct / (SHIFTS * TARGETS)) * 100)}
+              </div>
+              <p>
+                {correct} of {SHIFTS * TARGETS} teammates tracked. Level {level}.
+              </p>
+              <div className="gym-row">
+                <button className="gym-btn" onClick={start}>
+                  Go again
+                </button>
+                <button className="gym-btn gym-btn-ghost" onClick={onExit}>
+                  Done
+                </button>
+              </div>
+            </div>
+          )}
         </div>
-      )}
+      </div>
     </div>
   );
 }

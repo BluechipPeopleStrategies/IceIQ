@@ -308,6 +308,48 @@
   color: var(--gym-gold);
 }
 
+/* Head on a Swivel: left guide + main column */
+.gym-track-layout {
+  display: flex;
+  gap: 16px;
+  align-items: flex-start;
+}
+.gym-track-main {
+  flex: 1;
+  min-width: 0;
+}
+.gym-guide {
+  width: 210px;
+  flex-shrink: 0;
+  background: var(--gym-panel);
+  border: 1px solid #1e3f5f;
+  border-radius: var(--gym-radius);
+  padding: 14px 16px;
+}
+.gym-guide h3 {
+  margin: 0 0 8px;
+  font-size: 0.95rem;
+  color: var(--gym-gold);
+}
+.gym-guide ul {
+  margin: 0;
+  padding-left: 18px;
+  font-size: 0.82rem;
+  line-height: 1.5;
+  color: var(--gym-text);
+}
+.gym-guide-now {
+  margin: 10px 0 0;
+  padding-top: 8px;
+  border-top: 1px solid #1e3f5f;
+  font-size: 0.8rem;
+  color: var(--gym-muted);
+}
+@media (max-width: 720px) {
+  .gym-track-layout { flex-direction: column; }
+  .gym-guide { width: 100%; }
+}
+
 /* "What this trains" callout */
 .gym-trains {
   text-align: left;

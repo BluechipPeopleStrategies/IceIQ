@@ -119,6 +119,17 @@ fits. Read this before touching any game.
   ~2.8s (`REVEAL_HOLD_MS` / `FEEDBACK_HOLD_MS`). Reaction stays fast on purpose.
 - **Always offer Restart.** Every game has a Restart in the bar during play that
   starts the session over with fresh reps (calls the drill's `start()`).
+- **Don't auto-run; start when ready.** A round must not begin on a timer the
+  moment the screen loads. The player triggers each round (Head on a Swivel has
+  a "ready" stage with a Start shift button before the gold flash). Nothing
+  flashes until they say go.
+- **Explain the level logic in-game.** Show a guide (Head on a Swivel: a left
+  aside) that spells out how leveling works: all targets right = a success, 3
+  successes in a row = level up, 2 misses = level down, higher levels add more
+  difficulty. Leveling is success-based and the streak persists across sessions.
+- **Difficulty must climb meaningfully.** Higher levels get genuinely harder,
+  not marginally. Head on a Swivel: 5 -> 16 skaters, faster movement, longer
+  tracking, and a shorter look at the targets.
 
 ## Common mistakes
 - Sizing a canvas to container width only (overflows on desktop). Use the
