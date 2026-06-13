@@ -1,0 +1,77 @@
+{
+  "id": "u13_oz_entry_trailer_branch",
+  "type": "scenario",
+  "nodeId": "u13.reading-the-play",
+  "level": "U13 / Peewee",
+  "levels": ["U13 / Peewee"],
+  "themes": ["zone-entry", "decision-making"],
+  "cat": "Transition",
+  "stage": { "view": "right", "zone": "off-zone" },
+  "tip": "On a 2-on-1, read the lone defenceman. If they take you, the pass is open; if they sag to the pass, take it yourself.",
+  "why": "The lone defender can only take one threat. Reading which one they commit to tells you whether to shoot or pass.",
+  "entry": ["start"],
+  "nodes": {
+    "start": {
+      "themes": ["zone-entry", "decision-making", "2-on-1"],
+      "actors": [
+        { "id": "you", "kind": "player", "x": 0.7, "y": 0.32, "tag": "RW" },
+        { "id": "puck", "kind": "puck", "x": 0.706, "y": 0.336 },
+        { "id": "trailer", "kind": "teammate", "x": 0.72, "y": 0.66, "tag": "C" },
+        { "id": "dman", "kind": "defender", "x": 0.8, "y": 0.38 },
+        { "id": "g", "kind": "goalie", "x": 0.918, "y": 0.5 }
+      ],
+      "interaction": { "kind": "point", "prompt": "2-on-1, you're carrying wide and the lone D steps across to take YOU. Best play?" },
+      "correct": { "kind": "point", "x": 0.72, "y": 0.66, "tolerance": 0.14 },
+      "mc": {
+        "stem": "2-on-1 off the rush. The lone defenceman steps across to take you, the puck carrier. What's your best read?",
+        "opts": ["Slide it across to the trailing centre", "Shoot far pad right now", "Drive harder into the D", "Chip it in deep and chase"],
+        "ok": 0
+      },
+      "feedback": {
+        "right": "Yes. The D committed to you, so the back door is wide open. Move it across.",
+        "wrong": "The D already took you, so forcing a shot or driving into them lets the one defender win. The trailer is the open man."
+      },
+      "routes": [
+        { "on": "correct", "outcome": "The D stayed on you — the centre is alone at the back door.", "next": "trailer" },
+        { "on": "else", "outcome": "You forced it into the lone D, who broke up the play.", "next": "forced" }
+      ]
+    },
+    "trailer": {
+      "actors": [
+        { "id": "trailer", "kind": "player", "x": 0.78, "y": 0.62, "tag": "C" },
+        { "id": "puck", "kind": "puck", "x": 0.786, "y": 0.636 },
+        { "id": "dman", "kind": "defender", "x": 0.86, "y": 0.6 },
+        { "id": "g", "kind": "goalie", "x": 0.9, "y": 0.56 }
+      ],
+      "interaction": { "kind": "point", "prompt": "The pass is on your tape at the back door and the goalie is sliding across. Tap where you shoot." },
+      "correct": { "kind": "point", "x": 0.92, "y": 0.42, "tolerance": 0.1 },
+      "feedback": {
+        "right": "Yes — shoot into the open far side before the goalie recovers.",
+        "wrong": "The goalie is sliding across to cover the near side; the open net is the far side, away from where they're moving."
+      },
+      "routes": []
+    },
+    "forced": {
+      "themes": ["zone-entry", "decision-making", "2-on-1"],
+      "actors": [
+        { "id": "you", "kind": "player", "x": 0.78, "y": 0.42, "tag": "RW" },
+        { "id": "puck", "kind": "puck", "x": 0.79, "y": 0.45 },
+        { "id": "trailer", "kind": "teammate", "x": 0.74, "y": 0.66, "tag": "C" },
+        { "id": "dman", "kind": "defender", "x": 0.85, "y": 0.46 },
+        { "id": "g", "kind": "goalie", "x": 0.918, "y": 0.5 }
+      ],
+      "interaction": { "kind": "point", "prompt": "The D broke it up. On a 2-on-1 where the D takes the carrier, what should you have done?" },
+      "correct": { "kind": "point", "x": 0.74, "y": 0.66, "tolerance": 0.14 },
+      "mc": {
+        "stem": "The D took you and broke up the play. On a 2-on-1 when the lone D commits to the puck carrier, the right read is:",
+        "opts": ["Pass to the open trailer", "Shoot into the defender", "Skate it into the corner", "Dump it in and change"],
+        "ok": 0
+      },
+      "feedback": {
+        "right": "Right — when the D takes you, the trailer is the open man.",
+        "wrong": "When the D commits to you, forcing your own shot plays into the one defender. The trailer is open."
+      },
+      "routes": []
+    }
+  }
+}
