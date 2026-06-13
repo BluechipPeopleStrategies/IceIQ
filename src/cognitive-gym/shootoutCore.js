@@ -96,3 +96,26 @@ export function makeShot(level, { rng = Math.random } = {}) {
   }));
   return { level, coveredAtStart: covered, openAtStart: open, closeSchedule, shotClockMs: clock };
 }
+
+// Is the cell open (scorable) at tapMs? Covered-at-start cells are never open;
+// a closing cell is open only before its atMs.
+export function isCellOpenAt(shot, cellId, tapMs) {
+  if (!CELL_IDS.includes(cellId)) return false;
+  if (shot.coveredAtStart.includes(cellId)) return false;
+  const sched = shot.closeSchedule.find((c) => c.cellId === cellId);
+  if (sched && tapMs >= sched.atMs) return false;
+  return true;
+}
+
+// Score a tap. Goal only when an open cell is tapped in time. Points reward
+// speed: feed gradedPoints a normalized value tapMs/shotClockMs (0 = instant ->
+// max). A covered/closed cell, a miss, or an expired clock is 0.
+// Returns { success, points, normElapsed }.
+export function scoreShot(cellId, tapMs, shot) {
+  const clock = shot.shotClockMs || 1;
+  const norm = Math.min(Math.max(tapMs / clock, 0), 1);
+  const inTime = tapMs <= shot.shotClockMs;
+  const success = cellId != null && inTime && isCellOpenAt(shot, cellId, tapMs);
+  if (!success) return { success: false, points: 0, normElapsed: norm };
+  return { success: true, points: gradedPoints(norm), normElapsed: norm };
+}

@@ -104,3 +104,46 @@ test("makeShot is deterministic for a given seed", () => {
   const b = makeShot(15, { rng: globalThis.__mulberry32(42) });
   assert.deepEqual(a, b);
 });
+
+import { isCellOpenAt, scoreShot } from "../src/cognitive-gym/shootoutCore.js";
+
+// A hand-built shot so the assertions do not depend on the generator's RNG.
+const SHOT = {
+  level: 10,
+  coveredAtStart: ["midHi"],
+  openAtStart: ["gloveHi", "blkrHi", "gloveLo", "fiveHole", "blkrLo"],
+  closeSchedule: [{ cellId: "blkrLo", atMs: 600 }],
+  shotClockMs: 1500,
+};
+
+test("isCellOpenAt: covered cell is never open", () => {
+  assert.equal(isCellOpenAt(SHOT, "midHi", 0), false);
+});
+test("isCellOpenAt: a closing cell is open before atMs, closed after", () => {
+  assert.equal(isCellOpenAt(SHOT, "blkrLo", 500), true);
+  assert.equal(isCellOpenAt(SHOT, "blkrLo", 600), false);
+});
+test("isCellOpenAt: a plain open cell stays open", () => {
+  assert.equal(isCellOpenAt(SHOT, "gloveHi", 1400), true);
+});
+
+test("scoreShot: open cell in time is a goal worth points", () => {
+  const r = scoreShot("gloveHi", 200, SHOT);
+  assert.equal(r.success, true);
+  assert.ok(r.points > 0);
+});
+test("scoreShot: covered cell is a save worth zero", () => {
+  assert.deepEqual(scoreShot("midHi", 200, SHOT), { success: false, points: 0, normElapsed: 200 / 1500 });
+});
+test("scoreShot: tapping a hole after it closed is a save", () => {
+  assert.equal(scoreShot("blkrLo", 700, SHOT).success, false);
+});
+test("scoreShot: a tap after the clock expired is a save", () => {
+  assert.equal(scoreShot("gloveHi", 1600, SHOT).success, false);
+});
+test("scoreShot: null (no tap) is a save", () => {
+  assert.equal(scoreShot(null, 1600, SHOT).success, false);
+});
+test("scoreShot: a faster goal scores more than a slower one", () => {
+  assert.ok(scoreShot("gloveHi", 100, SHOT).points > scoreShot("gloveHi", 1400, SHOT).points);
+});
