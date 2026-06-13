@@ -25,6 +25,10 @@
   - `src/scenario/zones.js` — `ZONES` registry (zone ids -> coords). OZ zones have x>=0.70, neutral x=0.50, DZ x<=0.30. For `view:"right"` keep every actor x>=0.45.
   - `src/data/curriculum-ledger.json` — the locked concept/node spine with sourced `lineage` (the citations the library notes draw from).
   - `docs/ai-pipeline/_briefs-todo/` — the pre-filled brief skeletons by age x concept.
+- **Validator gotchas (verified against the real compiler 2026-06-13):**
+  - **No offside on entry:** keep the puck carrier clearly INSIDE the zone (x>=0.78 for a right-view off-zone), not on the blue line, when teammates are deeper. Otherwise lint errors `offsides-on-entry`.
+  - **A defender must be goal-side of the puck** in an attacking scene (between the puck and the net). An attack with no one to beat is rejected.
+  - **U7/U9 use generic players:** only the `YOU` actor may carry a `tag`. Remove position tags ("C", "RW", "LD") from teammates/defenders at U7 and U9. (U11+ may label.)
 
 ---
 
@@ -81,21 +85,21 @@ test("brief-to-seed carries sourceRef into the compiled seed", () => {
     zone: "off-zone",
     sourceRef: { note: "off-puck-support-offense", cite: "Hockey Canada LTPD" },
     actors: [
-      { id: "you", kind: "player", x: 0.70, y: 0.40, tag: "YOU" },
+      { id: "you", kind: "player", x: 0.80, y: 0.50, tag: "YOU" },
       { id: "puck", kind: "puck", with: "you" },
-      { id: "near", kind: "teammate", x: 0.78, y: 0.50, tag: "C" },
-      { id: "wide", kind: "teammate", x: 0.90, y: 0.78, tag: "RW" },
-      { id: "x1", kind: "defender", x: 0.80, y: 0.62 }
+      { id: "t1", kind: "teammate", x: 0.90, y: 0.30 },
+      { id: "t2", kind: "teammate", x: 0.90, y: 0.74 },
+      { id: "x1", kind: "defender", x: 0.86, y: 0.64 }
     ],
-    from: ["near", "wide"],
-    correct: { ids: ["wide"] },
-    prompt: "You just gained the puck in the offensive zone. Tap the open teammate who can support you.",
+    from: ["t1", "t2"],
+    correct: { ids: ["t1"] },
+    prompt: "You have the puck in the offensive zone. Tap the open teammate who is in a good spot to support you.",
     feedback: {
-      right: "The wide RW has clear ice and an open passing lane.",
-      wrong: "The center is close, but a defender sits in that lane. Closest is not the same as open."
+      right: "The teammate up the open side has clear ice and a clean passing lane. That is real support.",
+      wrong: "That teammate is covered. A defender sits in the lane, so closest is not the same as open."
     },
-    tip: "Support means open ice and a clean lane, not the nearest jersey.",
-    why: "Good support gives the carrier an option the defense cannot take away."
+    tip: "Support means open ice and a clean lane, not just the nearest jersey.",
+    why: "Good off-puck support gives the carrier a passing option the defense cannot take away."
   };
   const briefPath = join(dir, "brief.json");
   writeFileSync(briefPath, JSON.stringify(brief));
@@ -176,16 +180,16 @@ function baseSeed(id) {
     themes: ["puck-support"], cat: "Offensive Play", difficulty: 1,
     stage: { view: "right", zone: "off-zone" },
     actors: [
-      { id: "you", kind: "player", x: 0.70, y: 0.40, tag: "YOU" },
-      { id: "puck", kind: "puck", x: 0.702, y: 0.398 },
-      { id: "near", kind: "teammate", x: 0.78, y: 0.50, tag: "C" },
-      { id: "wide", kind: "teammate", x: 0.90, y: 0.78, tag: "RW" },
-      { id: "x1", kind: "defender", x: 0.80, y: 0.62 },
+      { id: "you", kind: "player", x: 0.80, y: 0.50, tag: "YOU" },
+      { id: "puck", kind: "puck", x: 0.802, y: 0.498 },
+      { id: "t1", kind: "teammate", x: 0.90, y: 0.30 },
+      { id: "t2", kind: "teammate", x: 0.90, y: 0.74 },
+      { id: "x1", kind: "defender", x: 0.86, y: 0.64 },
       { id: "g", kind: "goalie", x: 0.918, y: 0.50 }
     ],
-    interaction: { kind: "selection", from: ["near", "wide"], order: "any", prompt: "Tap the open teammate who can support the puck carrier here." },
-    correct: { kind: "selection", ids: ["wide"] },
-    feedback: { right: "The wide RW has a clean lane.", wrong: "The center lane is covered by a defender." },
+    interaction: { kind: "selection", from: ["t1", "t2"], order: "any", prompt: "You have the puck in the offensive zone. Tap the open teammate who can support you." },
+    correct: { kind: "selection", ids: ["t1"] },
+    feedback: { right: "The open-side teammate has a clean lane.", wrong: "That teammate is covered by a defender in the lane." },
     tip: "Support is open ice and a clean lane.",
     why: "Support gives the carrier an option the defense cannot take away."
   };
@@ -463,18 +467,18 @@ Create `docs/ai-pipeline/_briefs-todo/u9_off-puck-support-offense_select_v1.json
   "zone": "off-zone",
   "sourceRef": { "note": "off-puck-support-offense", "cite": "Hockey Canada LTPD; IIHF SAG" },
   "actors": [
-    { "id": "you",  "kind": "player",   "x": 0.70, "y": 0.40, "tag": "YOU" },
-    { "id": "puck", "kind": "puck",     "with": "you" },
-    { "id": "near", "kind": "teammate", "x": 0.78, "y": 0.50, "tag": "C" },
-    { "id": "wide", "kind": "teammate", "x": 0.90, "y": 0.78, "tag": "RW" },
-    { "id": "x1",   "kind": "defender", "x": 0.80, "y": 0.62 }
+    { "id": "you", "kind": "player",   "x": 0.80, "y": 0.50, "tag": "YOU" },
+    { "id": "puck", "kind": "puck",    "with": "you" },
+    { "id": "t1",  "kind": "teammate", "x": 0.90, "y": 0.30 },
+    { "id": "t2",  "kind": "teammate", "x": 0.90, "y": 0.74 },
+    { "id": "x1",  "kind": "defender", "x": 0.86, "y": 0.64 }
   ],
-  "from": ["near", "wide"],
-  "correct": { "ids": ["wide"] },
-  "prompt": "You just gained the puck in the offensive zone. Tap the teammate who is open and in a good spot to support you.",
+  "from": ["t1", "t2"],
+  "correct": { "ids": ["t1"] },
+  "prompt": "You have the puck in the offensive zone. Tap the teammate who is open and in a good spot to support you.",
   "feedback": {
-    "right": "The wide RW down the boards has clear ice and an open passing lane. That is real support.",
-    "wrong": "The center looks close, but a defender is right on top of that lane. Closest is not the same as open."
+    "right": "The teammate up the open side has clear ice and a clean passing lane. That is real support.",
+    "wrong": "That teammate is covered. A defender is right on top of that lane, so closest is not the same as open."
   },
   "tip": "Support means open ice and a clean lane, not just the nearest jersey.",
   "why": "Good off-puck support gives the carrier a passing option the defense cannot take away."
