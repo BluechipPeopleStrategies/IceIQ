@@ -1,10 +1,48 @@
-import React from "react";
+import React, { useState } from "react";
 import ReviewBoard from "./ReviewBoard.jsx";
 import { boardHash } from "./reviewCore.js";
+import { iterationHeadline } from "./browseCore.js";
 import { C, FONT } from "../shared.jsx";
 
 const VERDICT_LABEL = { keep: "KEEP", revise: "REVISE", retire: "RETIRE" };
 const verdictBtn = { flex: 1, padding: ".9rem 0", borderRadius: 10, border: "1px solid", fontWeight: 700, fontFamily: FONT.body, cursor: "pointer", fontSize: ".95rem" };
+
+// Compact Mountain-Time date for a log row, e.g. "Jun 11". Empty on missing/invalid.
+function fmtLogDate(iso) {
+  if (!iso) return "";
+  const d = new Date(iso);
+  if (isNaN(d.getTime())) return "";
+  return d.toLocaleDateString("en-CA", { month: "short", day: "numeric", timeZone: "America/Edmonton" });
+}
+
+// One collapsed accordion row in "Previously incorporated": date + one-line headline;
+// click to reveal full feedback/change + a meta line. Caret glyph signals state
+// (not color — colorblind-safe).
+function IterationRow({ log }) {
+  const [open, setOpen] = useState(false);
+  const date = fmtLogDate(log.created_at);
+  const meta = [
+    log.iteration != null ? `iter ${log.iteration}` : null,
+    log.node ? `node ${log.node}` : null,
+    log.source || null,
+  ].filter(Boolean).join(" · ");
+  return (
+    <div style={{ borderTop: `1px solid ${C.border}`, paddingTop: ".25rem", marginTop: ".25rem" }}>
+      <div onClick={() => setOpen(o => !o)} style={{ display: "flex", gap: ".4rem", alignItems: "baseline", cursor: "pointer", fontSize: ".76rem", color: C.dim }}>
+        <span style={{ color: C.dimmer }}>{open ? "▾" : "▸"}</span>
+        {date && <span style={{ color: C.dimmer, flexShrink: 0 }}>{date}</span>}
+        <span style={{ flex: 1, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{iterationHeadline(log)}</span>
+      </div>
+      {open && (
+        <div style={{ fontSize: ".74rem", color: C.dim, margin: ".25rem 0 .35rem 1rem", lineHeight: 1.4 }}>
+          {log.feedback && <div><span style={{ color: C.dimmer }}>Feedback:</span> {log.feedback}</div>}
+          {log.change && <div><span style={{ color: C.dimmer }}>Change:</span> {log.change}</div>}
+          {meta && <div style={{ color: C.dimmer, marginTop: ".15rem" }}>{meta}</div>}
+        </div>
+      )}
+    </div>
+  );
+}
 
 // Shared single-board editor used by BOTH the #triage deck and the #browse grid.
 // Presentation + callbacks only — it does not own the review queue. `children`
@@ -26,9 +64,7 @@ export default function BoardReviewPanel({ scenario, coach, logs = [], savedVerd
       {logs.length > 0 && (
         <div style={{ marginTop: ".4rem", padding: ".5rem .6rem", borderRadius: 8, background: C.bgCard, border: `1px dashed ${C.border}` }}>
           <div style={{ fontSize: ".72rem", color: C.dimmer, marginBottom: ".2rem" }}>Previously incorporated</div>
-          {logs.map((l, k) => (
-            <div key={k} style={{ fontSize: ".76rem", color: C.dim }}>· (iter {l.iteration}) {l.feedback}{l.change ? ` → ${l.change}` : ""}</div>
-          ))}
+          {[...logs].reverse().map((l, k) => <IterationRow key={k} log={l} />)}
         </div>
       )}
 
