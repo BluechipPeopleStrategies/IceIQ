@@ -21,7 +21,7 @@ const DRILLS = [
   },
   {
     id: "tracking",
-    name: "Head on a Swivel",
+    name: "Baylor's Pick",
     skill: "Awareness",
     blurb: "Track three teammates through traffic.",
     goal: "Keep track of all three teammates at once, even while the play is moving.",

@@ -68,6 +68,7 @@ export default function TrackingDrill({ playerId = "default", onExit }) {
   const [shiftResult, setShiftResult] = useState(null); // correct count for the shift just finished
   const [bonus, setBonus] = useState(0); // soccer balls caught this session
   const [gotBall, setGotBall] = useState(false); // got the soccer ball on the last shift
+  const [ballCall, setBallCall] = useState(null); // which pick you double-tapped as the ⚽
 
   const startShift = useCallback((roundIndex) => {
     const canvas = canvasRef.current;
@@ -84,12 +85,14 @@ export default function TrackingDrill({ playerId = "default", onExit }) {
       stageStart: performance.now(),
       lastFrame: performance.now(),
       picks: new Set(),
+      ballCall: null,
       roundIndex,
     };
     setStage("ready");
     setRemaining(TARGETS);
     setShiftResult(null);
     setGotBall(false);
+    setBallCall(null);
     loop();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -106,7 +109,9 @@ export default function TrackingDrill({ playerId = "default", onExit }) {
 
   const resolveShift = useCallback(
     (correctCount) => {
-      const got = sceneRef.current.picks.has(sceneRef.current.ballIdx);
+      const got =
+        sceneRef.current.ballCall != null &&
+        sceneRef.current.ballCall === sceneRef.current.ballIdx;
       setGotBall(got);
       if (got) setBonus((b) => b + 1);
       setShiftResult(correctCount);
@@ -202,6 +207,17 @@ export default function TrackingDrill({ playerId = "default", onExit }) {
       }
 
       drawRink(ctx, W, H);
+
+      // mascots in the middle — Baylor's bunny and bear cheer the play on
+      ctx.save();
+      ctx.globalAlpha = 0.4;
+      ctx.font = `${Math.round(H * 0.16)}px serif`;
+      ctx.textAlign = "center";
+      ctx.textBaseline = "middle";
+      ctx.fillText("🐰", W * 0.5 - H * 0.13, H * 0.5);
+      ctx.fillText("🐻", W * 0.5 + H * 0.13, H * 0.5);
+      ctx.restore();
+
       sc.dots.forEach((d, idx) => {
         const isTarget = sc.targetIdx.has(idx);
         const isPicked = sc.picks.has(idx);
@@ -225,6 +241,10 @@ export default function TrackingDrill({ playerId = "default", onExit }) {
             stroke = "#8a3a09";
             mark = "cross";
           }
+        } else if (sc.ballCall === idx) {
+          // your soccer-ball call (the second tap) — gold so the double-tap reads
+          fill = "#f2b705";
+          stroke = "#9a7400";
         } else if (isPicked) {
           fill = "#1b6cb0";
           stroke = "#0f4a7d";
@@ -277,10 +297,10 @@ export default function TrackingDrill({ playerId = "default", onExit }) {
     if (phase !== "playing" || sc.stage !== "pick") return;
     evt.preventDefault();
     const pos = pointerPos(evt, canvasRef.current);
+    // nearest dot under the tap, whether or not it is already picked
     let best = -1;
     let bestDist = Infinity;
     sc.dots.forEach((d, idx) => {
-      if (sc.picks.has(idx)) return;
       const dist = Math.hypot(d.x - pos.x, d.y - pos.y);
       if (dist <= d.r + 8 && dist < bestDist) {
         bestDist = dist;
@@ -289,17 +309,25 @@ export default function TrackingDrill({ playerId = "default", onExit }) {
     });
     if (best === -1) return;
 
-    sc.picks.add(best);
-    const left = TARGETS - sc.picks.size;
-    setRemaining(left);
-    if (left === 0) {
-      sc.stage = "feedback";
-      setStage("feedback");
-      const correctCount = [...sc.picks].filter((idx) =>
-        sc.targetIdx.has(idx)
-      ).length;
-      resolveShift(correctCount);
+    if (sc.picks.has(best)) {
+      // second tap on one of your picks = call it the soccer ball (toggle)
+      sc.ballCall = sc.ballCall === best ? null : best;
+      setBallCall(sc.ballCall);
+      return;
     }
+    if (sc.picks.size >= TARGETS) return; // already tapped your three
+    sc.picks.add(best);
+    setRemaining(TARGETS - sc.picks.size);
+  }
+
+  // Lock in the three picks (and any soccer-ball call) and grade the shift.
+  function lockIn() {
+    const sc = sceneRef.current;
+    if (phase !== "playing" || sc.stage !== "pick" || sc.picks.size !== TARGETS) return;
+    sc.stage = "feedback";
+    setStage("feedback");
+    const correctCount = [...sc.picks].filter((idx) => sc.targetIdx.has(idx)).length;
+    resolveShift(correctCount);
   }
 
   function start() {
@@ -375,7 +403,10 @@ export default function TrackingDrill({ playerId = "default", onExit }) {
     ready: shift < 3 ? "Take a deep breath, then tap Start shift" : "",
     watch: "Memorize the gold teammates",
     track: "Track them",
-    pick: `Tap your ${remaining} teammate${remaining === 1 ? "" : "s"}`,
+    pick:
+      remaining > 0
+        ? `Tap your ${remaining} teammate${remaining === 1 ? "" : "s"} (double-tap the ⚽ one)`
+        : "Double-tap your soccer-ball guess, then Lock in",
     feedback:
       shiftResult === null
         ? ""
@@ -384,7 +415,7 @@ export default function TrackingDrill({ playerId = "default", onExit }) {
 
   return (
     <div className="gym-drill">
-      {phase !== "intro" && <h2 className="gym-drill-title">Head on a Swivel</h2>}
+      {phase !== "intro" && <h2 className="gym-drill-title">Baylor's Pick</h2>}
       <div className="gym-track-layout">
         <aside className="gym-guide">
           <h3>How you level up</h3>
@@ -422,7 +453,7 @@ export default function TrackingDrill({ playerId = "default", onExit }) {
 
           {phase === "intro" && (
             <div className="gym-card">
-              <h2>Head on a Swivel</h2>
+              <h2>Baylor's Pick</h2>
               <p className="gym-goal"><strong>Your goal:</strong> keep track of all three teammates at once, even while the play is moving.</p>
               <p>
                 <strong>The game:</strong> three teammates flash gold, then every
@@ -451,6 +482,14 @@ export default function TrackingDrill({ playerId = "default", onExit }) {
             <div className="gym-row" style={{ marginBottom: 10 }}>
               <button className="gym-btn" onClick={beginWatch}>
                 Start shift
+              </button>
+            </div>
+          )}
+
+          {phase === "playing" && stage === "pick" && remaining === 0 && (
+            <div className="gym-row" style={{ marginBottom: 10 }}>
+              <button className="gym-btn" onClick={lockIn}>
+                Lock in
               </button>
             </div>
           )}

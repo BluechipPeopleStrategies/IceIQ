@@ -133,10 +133,14 @@ fits. Read this before touching any game.
 - **Show the per-round result.** Tell the player how they did each round (Head
   on a Swivel: "You got X of 3 right" during the result hold), not just the
   session total.
-- **Soccer-ball bonus (Head on a Swivel).** One of the three teammates carries a
-  soccer ball (⚽), shown while memorizing and revealed at the end. Tag that
-  teammate for a bonus point. Bonus count shows in the result and the done
-  screen and is saved as the session's points.
+- **Soccer-ball bonus (Baylor's Pick).** One of the three teammates carries a
+  soccer ball (⚽), shown only while memorizing (hidden once they move), so you
+  must track that specific teammate. To CALL it, double-tap that pick: the dot
+  turns gold to flag the second tap. Picks no longer auto-resolve; tap your
+  three then Lock in. Bonus only if your double-tapped call is the real carrier.
+- **Naming / mascots.** The tracking game is "Baylor's Pick" (the player picks
+  the tracked teammates). A bunny 🐰 and bear 🐻 sit faintly at center ice as
+  mascots. Keep the storage id "tracking" so saved progress is preserved.
 
 ## Common mistakes
 - Sizing a canvas to container width only (overflows on desktop). Use the
