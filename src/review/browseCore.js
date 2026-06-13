@@ -24,6 +24,13 @@ export function flagOf(scenario, coach, myVerdict) {
   return "clean";
 }
 
+// Headline for a feedback_log row in the "Previously incorporated" accordion:
+// the change made, else the feedback, else a placeholder. Trimmed.
+export function iterationHeadline(log) {
+  const t = (log?.change || log?.feedback || "").trim();
+  return t || "(no detail)";
+}
+
 // Filter a scenario list by flag scope + age tier.
 //   flagScope: "all" | "coach" | "mine" | "unreviewed"
 //   ageTier:   "all" | "<tier>"

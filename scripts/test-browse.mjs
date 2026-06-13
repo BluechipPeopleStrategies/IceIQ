@@ -1,5 +1,5 @@
 // Golden tests for src/review/browseCore.js (pure logic). Run: npm run test:browse
-import { ageTierOf, ageTiers, flagOf, applyFilters } from "../src/review/browseCore.js";
+import { ageTierOf, ageTiers, flagOf, applyFilters, iterationHeadline } from "../src/review/browseCore.js";
 
 let failed = 0;
 const check = (name, cond) => { console.log(`${cond ? "PASS" : "FAIL"}  ${name}`); if (!cond) failed++; };
@@ -28,6 +28,14 @@ check("applyFilters mine scope", applyFilters(scn, { flagScope: "mine", ageTier:
 check("applyFilters unreviewed scope", applyFilters(scn, { flagScope: "unreviewed", ageTier: "all" }, coachById, myById).map(s=>s.id).sort().join() === "a,c");
 check("applyFilters age tier", applyFilters(scn, { flagScope: "all", ageTier: "U11" }, coachById, myById).map(s=>s.id).sort().join() === "b,c");
 check("applyFilters flag + age combined", applyFilters(scn, { flagScope: "coach", ageTier: "U11" }, coachById, myById).map(s=>s.id).join() === "b");
+
+// iterationHeadline: change wins; falls back to feedback; else "(no detail)"
+check("headline uses change when present", iterationHeadline({ change: "added a 2nd read", feedback: "only one option" }) === "added a 2nd read");
+check("headline falls back to feedback", iterationHeadline({ change: "", feedback: "only one option" }) === "only one option");
+check("headline blank both -> placeholder", iterationHeadline({ change: "", feedback: "" }) === "(no detail)");
+check("headline whitespace -> placeholder", iterationHeadline({ change: "   ", feedback: "" }) === "(no detail)");
+check("headline trims", iterationHeadline({ change: "  trimmed  " }) === "trimmed");
+check("headline null-safe", iterationHeadline(null) === "(no detail)");
 
 console.log(failed ? `\n${failed} FAILED` : "\nAll passed");
 process.exit(failed ? 1 : 0);
