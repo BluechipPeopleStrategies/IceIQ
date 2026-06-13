@@ -159,6 +159,12 @@ FIRST, apply the DECISION TEST (a board tests decision-making only if BOTH hold)
       pick (the textbook/default spot, the covered lane, the answer to the mirror situation).
 Fail the Mirror Test -> RECALL -> REVISE. Pass Mirror but fail Decoy -> TRIVIAL -> REVISE. A
 one-option question tests nothing no matter how correct the answer is.
+CALIBRATE THE DECOY TO THE TARGET AGE, not to an expert. Judge whether the wrong answer is
+tempting to a player AT THIS BOARD'S age band. A U7/U9 read only needs to be a genuine choice for
+a 7-9 year old (a covered lane, a puck-chase trap, a "skate to the nearest open space" instinct) —
+it does NOT need to stump an experienced coach. Raise the bar with age: by U13+ the competing
+option should be one even a knowledgeable player would weigh. Do NOT REVISE a young-age board
+solely because the read is "obvious to an expert" — that is the wrong yardstick for U7/U9/U11.
 For POSITIONING ("place") boards especially: "drag everyone into the textbook structure" fails
 BOTH tests. Demand a readable cue (a specific defensive look) and a tempting decoy (the spot the
 cue makes wrong); the scenario's read:{cue,decoy} should name them.
