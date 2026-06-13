@@ -38,6 +38,7 @@ export default function BrowseScreen({ onBack }) {
   const [focused, setFocused] = useState(null); // scenario or null
   const [note, setNote] = useState("");
   const [pending, setPending] = useState(0);
+  const [signedIn, setSignedIn] = useState(true); // reviews only sync to the server when signed in
 
   useEffect(() => {
     let alive = true;
@@ -45,10 +46,14 @@ export default function BrowseScreen({ onBack }) {
       let email = null;
       try { const s = await getSession(); email = s?.user?.email?.toLowerCase(); }
       catch (e) { console.error("[browse] getSession failed", e); }
+      if (alive) setSignedIn(!!email);
       // See ReviewScreen: dev-bypass / local dev can browse boards without a login.
       const devOK = isDevBypassEnabled() || !!(import.meta.env && import.meta.env.DEV);
       if (!devOK && (!email || (OWNERS.length && !OWNERS.includes(email)))) { if (alive) setStatus("denied"); return; }
       try { await syncServerReviews(); } catch (e) { console.error("[browse] syncServerReviews failed", e); }
+      // Once a session exists, push anything queued offline (e.g. saved earlier under
+      // dev-bypass with no session) so it finally reaches the server.
+      try { if (email) setPending(await flushQueue()); } catch (e) { console.error("[browse] flushQueue failed", e); }
       let scenarios = [];
       try { scenarios = await loadReviewScenarios(new Set()); } catch (e) { console.error("[browse] loadReviewScenarios failed", e); }
       try { const c = await listCoachReviews(); if (alive) setCoachById(Object.fromEntries(c.map(x => [x.scenario_id, x]))); }
@@ -104,6 +109,12 @@ export default function BrowseScreen({ onBack }) {
         <span style={{ color: C.dim, fontSize: ".8rem" }}>{filtered.length} board{filtered.length === 1 ? "" : "s"}{pending ? ` · ${pending} pending` : ""}</span>
         <span style={{ width: 40 }} />
       </div>
+
+      {!signedIn && (
+        <div style={{ marginBottom: ".6rem", padding: ".5rem .6rem", borderRadius: 8, background: "rgba(201,162,75,.12)", border: `1px solid ${C.gold}`, color: C.gold, fontSize: ".75rem", lineHeight: 1.35 }}>
+          ⚠ Not signed in — your verdicts save on <b>this device only</b> and won't sync to the server. Open the app home, sign in, then return here to push them up.
+        </div>
+      )}
 
       <div style={{ display: "flex", flexWrap: "wrap", gap: ".35rem", marginBottom: ".4rem" }}>
         {FLAG_SCOPES.map(f => <button key={f.key} onClick={() => setFlagScope(f.key)} style={chip(flagScope === f.key)}>{f.label}</button>)}
