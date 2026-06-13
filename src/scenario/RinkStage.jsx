@@ -276,17 +276,15 @@ export default function RinkStage({ stage, actors, levels, scanWindow, highlight
                    : stage.zone === "off-zone" ? "#f59e0b"
                    : "#94a3b8";
 
-  // Which end holds the net, so the board can point "this way to the net" and the
-  // reader never has to guess orientation (onside/offside, which D-zone, etc.).
-  // Derived — prefer the goalie's side, fall back to the view crop. Neutral with
-  // no goalie shows nothing (both nets are off-frame).
-  const netSide = useMemo(() => {
-    const g = (Array.isArray(actors) ? actors : []).find(a => a.kind === "goalie");
-    if (g && typeof g.x === "number") return g.x < 0.5 ? "left" : "right";
-    if (stage.view === "left") return "left";
-    if (stage.view === "right") return "right";
-    return null;
-  }, [actors, stage.view]);
+  // Orientation cue is only meaningful in the NEUTRAL zone: O/D-zone boards
+  // already render the goalie (the net), so a "net this way" sign is redundant
+  // there. In neutral, neither net is on-frame, so the reader can't tell up-ice
+  // (which way attacks, which end is the defending zone). Direction comes from
+  // stage.attackDir ("left"|"right"); without it, no cue.
+  const attackDir = useMemo(() => {
+    if (stage.zone !== "neutral") return null;
+    return stage.attackDir === "left" || stage.attackDir === "right" ? stage.attackDir : null;
+  }, [stage.zone, stage.attackDir]);
 
   // When the puck sits on top of a skater (the carrier), nudge it to that
   // skater's lower-right edge so it reads as "this player has the puck"
@@ -367,22 +365,22 @@ export default function RinkStage({ stage, actors, levels, scanWindow, highlight
           {zoneLabel}
         </div>
       )}
-      {/* Net-side cue — points to the end of the ice that holds the net so the
-          reader can orient (which way is up-ice, onside vs offside, which D-zone). */}
-      {netSide && (
-        <div style={{
-          position: "absolute", top: "50%", transform: "translateY(-50%)",
-          [netSide]: 6, zIndex: 2,
-          display: "flex", alignItems: "center", gap: ".2rem",
-          padding: ".12rem .4rem", borderRadius: 999,
-          background: "rgba(11,18,32,.78)", border: `1px solid ${zoneAccent}`,
-          fontSize: 9, fontWeight: 800, letterSpacing: ".05em",
-          color: "#e2e8f0", pointerEvents: "none",
-          boxShadow: "0 1px 4px rgba(0,0,0,.4)",
-        }}>
-          {netSide === "left" ? "◂ NET" : "NET ▸"}
-        </div>
-      )}
+      {/* Neutral-zone orientation: label each end so the reader knows which way
+          is up-ice. The attack end (amber) and the defending end (blue) are set
+          per board via stage.attackDir; text carries the meaning (colorblind-safe). */}
+      {attackDir && (() => {
+        const end = { position: "absolute", top: "50%", transform: "translateY(-50%)", zIndex: 2,
+          padding: ".12rem .4rem", borderRadius: 999, background: "rgba(11,18,32,.82)", border: "1px solid",
+          fontSize: 9, fontWeight: 800, letterSpacing: ".05em", pointerEvents: "none", boxShadow: "0 1px 4px rgba(0,0,0,.4)" };
+        const att = { borderColor: "#f59e0b", color: "#fbbf24" };
+        const def = { borderColor: "#3b82f6", color: "#93c5fd" };
+        return (
+          <>
+            <div style={{ ...end, left: 6, ...(attackDir === "left" ? att : def) }}>{attackDir === "left" ? "◂ ATTACK" : "◂ DEFEND"}</div>
+            <div style={{ ...end, right: 6, ...(attackDir === "right" ? att : def) }}>{attackDir === "right" ? "ATTACK ▸" : "DEFEND ▸"}</div>
+          </>
+        );
+      })()}
       <svg ref={svgRef}
         viewBox={viewBox}
         preserveAspectRatio="none"
