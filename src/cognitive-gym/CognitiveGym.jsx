@@ -5,6 +5,7 @@ import TrackingDrill from "./TrackingDrill";
 import ReactionDrill from "./ReactionDrill";
 import EyesUpDrill from "./EyesUpDrill";
 import SnapshotDrill from "./SnapshotDrill";
+import FindLaneDrill from "./FindLaneDrill";
 import { getDrill, getStats } from "./gymStorage";
 
 // The drill registry. Add a drill by appending an entry here; the hub renders
@@ -64,6 +65,17 @@ const DRILLS = [
     trains: "Reading the ice in one glance, knowing your options before the puck arrives",
     build: "canvas",
     component: SnapshotDrill,
+  },
+  {
+    id: "findlane",
+    name: "Find the Lane",
+    skill: "Vision",
+    blurb: "Spot the one teammate with a clean lane and hit them before it closes.",
+    goal: "Spot the one teammate with a clean passing lane and hit them before it closes.",
+    why: "The puck is only yours for a second, and the open seam does not stay open. Learning to see the one clear lane through traffic, and to thread the pass before a defender slides over to take it away, is how you turn a scramble into a clean play and put the puck on a teammate's tape instead of into a shin pad.",
+    trains: "Seeing the open seam, threading a pass through traffic, deciding fast",
+    build: "canvas",
+    component: FindLaneDrill,
   },
 ];
 
