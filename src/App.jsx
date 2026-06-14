@@ -29,6 +29,7 @@ import { ToastContainer, toast } from "./toast.jsx";
 import { QotDCard, QotDScreen } from "./questionOfDay.jsx";
 import { SpeedRoundCard, SpeedRoundScreen } from "./speedRound.jsx";
 import CognitiveGym from "./cognitive-gym/CognitiveGym";
+import FeedbackWidget from "./devtools/FeedbackWidget";
 import { AdminRoute, AdminLayout } from "./admin.jsx";
 import { getWeeklyStreak, bumpWeeklyStreak, topCategoryStreak, updateCategoryStreaks } from "./utils/streaks.js";
 import { canSwitchAgeGroup, recordAgeGroupSwitch, getAgeGroupLock, setAgeGroupLock, checkSeasonReset } from "./utils/deviceLock";
@@ -8304,6 +8305,7 @@ export default function App() {
         {screen === "gamesense" && <Suspense fallback={<LazyFallback/>}><GameSenseReportScreen player={player} onBack={()=>setScreen("home")} demoMode={demoMode} demoCoachData={demoMode?demoCoachRatings:null} onNavigate={setScreen}/></Suspense>}
         {screen === "journey" && <JourneyScreen player={player} tier={tier} demoMode={demoMode} onBack={()=>setScreen("home")} onNav={setScreen} onUpgrade={promptUpgrade}/>}
         {screen === "cogym" && <CognitiveGym playerId={player.id || "__demo__"} onBack={()=>setScreen("home")}/>}
+        <FeedbackWidget screen={screen} version={VERSION} />
         {screen === "training" && (
           <div style={{minHeight:"100vh",background:C.bg,color:C.white,fontFamily:FONT.body,paddingBottom:80}}>
             <StickyHeader>
