@@ -8304,7 +8304,7 @@ export default function App() {
         {screen === "report"  && <Report player={tierLimitedPlayer(player, tier)} onBack={()=>setScreen("home")} demoCoachData={demoMode?demoCoachRatings:null} tier={tier} onUpgrade={(f,t)=>promptUpgrade(f,t)}/>}
         {screen === "gamesense" && <Suspense fallback={<LazyFallback/>}><GameSenseReportScreen player={player} onBack={()=>setScreen("home")} demoMode={demoMode} demoCoachData={demoMode?demoCoachRatings:null} onNavigate={setScreen}/></Suspense>}
         {screen === "journey" && <JourneyScreen player={player} tier={tier} demoMode={demoMode} onBack={()=>setScreen("home")} onNav={setScreen} onUpgrade={promptUpgrade}/>}
-        {screen === "cogym" && <CognitiveGym playerId={player.id || "__demo__"} onBack={()=>setScreen("home")}/>}
+        {screen === "cogym" && <CognitiveGym playerId={player.id || "__demo__"} ageBand={player?.level || null} onBack={()=>setScreen("home")}/>}
         <FeedbackWidget screen={screen} version={VERSION} />
         {screen === "training" && (
           <div style={{minHeight:"100vh",background:C.bg,color:C.white,fontFamily:FONT.body,paddingBottom:80}}>

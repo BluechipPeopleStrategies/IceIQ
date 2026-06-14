@@ -1,4 +1,4 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import "./cognitive-gym.css";
 import AnticipationDrill from "./AnticipationDrill";
 import TrackingDrill from "./TrackingDrill";
@@ -11,7 +11,7 @@ import ReadNumbersDrill from "./ReadNumbersDrill";
 import LateReadDrill from "./LateReadDrill";
 import TwoThingsDrill from "./TwoThingsDrill";
 import ShootoutDrill from "./ShootoutDrill";
-import { getDrill, getStats } from "./gymStorage";
+import { getDrill, getStats, calibrateDrill } from "./gymStorage";
 
 // The drill registry. Add a drill by appending an entry here; the hub renders
 // the card and routes into the component automatically.
@@ -139,7 +139,7 @@ const DRILLS = [
   },
 ];
 
-export default function CognitiveGym({ playerId = "default", onBack }) {
+export default function CognitiveGym({ playerId = "default", onBack, ageBand = null }) {
   const [activeId, setActiveId] = useState(null);
   const [refresh, setRefresh] = useState(0);
 
@@ -149,6 +149,15 @@ export default function CognitiveGym({ playerId = "default", onBack }) {
       Object.fromEntries(DRILLS.map((d) => [d.id, getDrill(playerId, d.id)])),
     [playerId, refresh]
   );
+
+  // Smarter start: when the gym opens, seed every untouched drill to the age band.
+  useEffect(() => {
+    if (!ageBand) return;
+    try {
+      DRILLS.forEach((d) => calibrateDrill(playerId, d.id, ageBand));
+      setRefresh((r) => r + 1); // re-read seeded levels
+    } catch { /* storage unavailable */ }
+  }, [playerId, ageBand]);
 
   if (activeId) {
     const Drill = DRILLS.find((d) => d.id === activeId).component;
