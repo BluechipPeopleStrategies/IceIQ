@@ -196,3 +196,22 @@ export function pointerPos(evt, canvas) {
   const p = evt.touches && evt.touches.length ? evt.touches[0] : evt;
   return { x: p.clientX - rect.left, y: p.clientY - rect.top };
 }
+
+// Age-seeded starting level for a drill, so a kid begins near their real level
+// instead of level 1. Unknown / older bands return 1 (no seed). U13-U18 paused.
+export function calibratedStartLevel(ageBand) {
+  const b = String(ageBand || "").toUpperCase();
+  if (b === "U7") return 2;
+  if (b === "U9") return 4;
+  if (b === "U11") return 6;
+  return 1;
+}
+
+// The level a drill should start at given its stored record and the age band.
+// Only seeds an untouched drill (no sessions yet); never lowers an existing level.
+export function seededLevel(record, ageBand) {
+  const cur = (record && record.level) || 1;
+  const played = record && Array.isArray(record.sessions) && record.sessions.length > 0;
+  if (played) return cur;
+  return Math.max(cur, calibratedStartLevel(ageBand));
+}
