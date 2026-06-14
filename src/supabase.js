@@ -627,6 +627,37 @@ export async function recordQuizFeedback(playerId, { choice, note, score, level 
 }
 
 // ─────────────────────────────────────────────
+// PLAYTEST FEEDBACK (dev-bypass in-app feedback; owner-only via RLS)
+// ─────────────────────────────────────────────
+// A real write (not fire-and-forget): returns { ok, data } or { ok:false, error }
+// so the widget can confirm the upload to the owner. RLS restricts inserts to the
+// owner emails, so a non-owner / signed-out session gets an error here.
+export async function savePlaytestFeedback({
+  screen, drill, category, note, context, screenshot, appVersion,
+} = {}) {
+  if (!supabase) return { ok: false, error: "offline" };
+  try {
+    const { data: userData } = await supabase.auth.getUser();
+    const authorId = userData && userData.user ? userData.user.id : null;
+    const { data, error } = await supabase.from("playtest_feedback").insert({
+      author_id: authorId,
+      screen: screen || null,
+      drill: drill || null,
+      category: category || null,
+      note: note || null,
+      context: context || null,
+      screenshot: screenshot || null,
+      app_version: appVersion || null,
+    }).select().single();
+    if (error) { warn("savePlaytestFeedback", error); return { ok: false, error: error.message }; }
+    return { ok: true, data };
+  } catch (e) {
+    warn("savePlaytestFeedback", e);
+    return { ok: false, error: e.message || String(e) };
+  }
+}
+
+// ─────────────────────────────────────────────
 // QUESTION RESULTS (per-rep, source for the Hockey IQ score)
 // ─────────────────────────────────────────────
 import { computeHockeyIQ, WINDOW_DAYS } from "./utils/hockeyIQ.js";
