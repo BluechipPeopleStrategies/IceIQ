@@ -12,6 +12,7 @@ import LateReadDrill from "./LateReadDrill";
 import TwoThingsDrill from "./TwoThingsDrill";
 import ShootoutDrill from "./ShootoutDrill";
 import { getDrill, getStats, calibrateDrill } from "./gymStorage";
+import { starTier, xpFromPoints, rankForXp, dailyDrillsDone, earnedBadges } from "./gymProgressCore";
 
 // The drill registry. Add a drill by appending an entry here; the hub renders
 // the card and routes into the component automatically.
@@ -159,6 +160,13 @@ export default function CognitiveGym({ playerId = "default", onBack, ageBand = n
     } catch { /* storage unavailable */ }
   }, [playerId, ageBand]);
 
+  const DAILY_GOAL = 2;
+  const todayYmd = new Date().toISOString().slice(0, 10);
+  const totalXp = xpFromPoints(stats.careerPoints || 0);
+  const rank = rankForXp(totalXp);
+  const goalDone = dailyDrillsDone(records, todayYmd);
+  const badges = earnedBadges(stats, records);
+
   if (activeId) {
     const Drill = DRILLS.find((d) => d.id === activeId).component;
     return (
@@ -192,6 +200,14 @@ export default function CognitiveGym({ playerId = "default", onBack, ageBand = n
           short sessions a week.
         </p>
         <div className="gym-stats">
+          <div className="gym-stat">
+            <span className="gym-stat-num">{rank.name}</span>
+            <span className="gym-stat-label">rank ({totalXp} XP)</span>
+          </div>
+          <div className="gym-stat">
+            <span className="gym-stat-num">{goalDone}/{DAILY_GOAL}</span>
+            <span className="gym-stat-label">today's goal</span>
+          </div>
           <div className="gym-stat">
             <span className="gym-stat-num">{stats.streak}</span>
             <span className="gym-stat-label">day streak</span>
@@ -227,6 +243,18 @@ export default function CognitiveGym({ playerId = "default", onBack, ageBand = n
         </div>
       </header>
 
+      <section className="gym-badges" aria-label="Badges">
+        {badges.map((b) => (
+          <span
+            key={b.id}
+            className={"gym-badge" + (b.earned ? " gym-badge-on" : "")}
+            title={b.earned ? "Earned" : "Locked"}
+          >
+            {b.earned ? "★" : "☆"} {b.label}
+          </span>
+        ))}
+      </section>
+
       <section className="gym-about">
         <h2>What this is</h2>
         <p>
@@ -256,6 +284,14 @@ export default function CognitiveGym({ playerId = "default", onBack, ageBand = n
               <h3>{d.name}</h3>
               <p>{d.blurb}</p>
               <p className="gym-card-trains">Trains: {d.trains}</p>
+              <div className="gym-card-stars" aria-label={`Mastery ${starTier(rec.level)} of 3`}>
+                {[0, 1, 2].map((i) => (
+                  <span key={i} className={i < starTier(rec.level) ? "gym-star on" : "gym-star"}>
+                    {i < starTier(rec.level) ? "★" : "☆"}
+                  </span>
+                ))}
+                <span className="gym-star-tier">{["", "Bronze", "Silver", "Gold"][starTier(rec.level)]}</span>
+              </div>
               <div className="gym-card-meta">
                 <span>Lvl {rec.level}</span>
                 <span>Best {rec.bestPoints || rec.best}</span>
