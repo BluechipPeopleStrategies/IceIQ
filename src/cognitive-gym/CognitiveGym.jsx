@@ -11,6 +11,7 @@ import ReadNumbersDrill from "./ReadNumbersDrill";
 import LateReadDrill from "./LateReadDrill";
 import TwoThingsDrill from "./TwoThingsDrill";
 import ShootoutDrill from "./ShootoutDrill";
+import DrillIcon from "./DrillIcon";
 import { getDrill, getStats, calibrateDrill } from "./gymStorage";
 import { starTier, xpFromPoints, rankForXp, dailyDrillsDone, earnedBadges } from "./gymProgressCore";
 
@@ -280,6 +281,7 @@ export default function CognitiveGym({ playerId = "default", onBack, ageBand = n
               className="gym-drill-card"
               onClick={() => setActiveId(d.id)}
             >
+              <DrillIcon id={d.id} />
               <span className="gym-skill-tag">{d.skill}</span>
               <h3>{d.name}</h3>
               <p>{d.blurb}</p>
