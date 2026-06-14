@@ -6,6 +6,8 @@
 // Stored shape:
 // { [playerId]: { [drillId]: { level, best, sessions: [{date, score, level, meta}] } } }
 
+import { seededLevel } from "./gymEngine.js";
+
 const STORAGE_KEY = "rinkreads_gym_v1";
 const UNIT_KEY = "rinkreads_gym_unit"; // "ft" | "m" — distance readout preference
 
@@ -40,6 +42,21 @@ export function getDrill(playerId, drillId) {
   const all = readAll();
   const stored = (all[playerId] && all[playerId][drillId]) || {};
   return { ...emptyDrill(), ...stored, streak: { ...emptyDrill().streak, ...(stored.streak || {}) } };
+}
+
+// Seed an untouched drill's level from the age band (smarter start). Idempotent:
+// only seeds a drill with no sessions and never lowers a level. Persists + returns.
+export function calibrateDrill(playerId, drillId, ageBand) {
+  const all = readAll();
+  if (!all[playerId]) all[playerId] = {};
+  const drill = { ...emptyDrill(), ...(all[playerId][drillId] || {}) };
+  const target = seededLevel(drill, ageBand);
+  if (target !== drill.level) {
+    drill.level = target;
+    all[playerId][drillId] = drill;
+    writeAll(all);
+  }
+  return drill;
 }
 
 // Append a completed session, update level + streak + best + bestPoints, persist.
