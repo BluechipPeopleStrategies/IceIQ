@@ -98,17 +98,17 @@ create index if not exists idx_playtest_feedback_created
 alter table public.playtest_feedback enable row level security;
 
 -- Owner emails allowed to write and read. Keep BOTH lists in sync.
--- Replace the BlueChip placeholder below with the real address before running.
+-- lower() guards against case (Supabase stores emails lowercased).
 drop policy if exists "owner inserts playtest feedback" on public.playtest_feedback;
 create policy "owner inserts playtest feedback" on public.playtest_feedback
   for insert with check (
-    auth.jwt() ->> 'email' in ('mtslifka@gmail.com', 'thomas@bluechip.example')
+    lower(auth.jwt() ->> 'email') in ('mtslifka@gmail.com', 'thomas@bluechip-people-strategies.com')
   );
 
 drop policy if exists "owner reads playtest feedback" on public.playtest_feedback;
 create policy "owner reads playtest feedback" on public.playtest_feedback
   for select using (
-    auth.jwt() ->> 'email' in ('mtslifka@gmail.com', 'thomas@bluechip.example')
+    lower(auth.jwt() ->> 'email') in ('mtslifka@gmail.com', 'thomas@bluechip-people-strategies.com')
   );
 ```
 
@@ -187,8 +187,6 @@ confirm the row (with screenshot and context) appears in the dashboard.
 
 ## Open items
 
-- Fill the real BlueChip owner email into migration 0019 (both policies) in place of the
-  `thomas@bluechip.example` placeholder before running it.
 - Later, feed `pull-feedback` output into the RinkReads Doctor `/checkup` loop so playtest notes
   surface automatically in the health pass.
 - Whether to add a tiny in-app "feedback log" viewer later (owner-read RLS already allows it).
