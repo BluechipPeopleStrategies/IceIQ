@@ -563,12 +563,24 @@ function makePlayerKey(name, level) {
 }
 
 // Demo queue builder — guarantees one of each question type
-function buildDemoQueue(qb, level, position) {
+function buildDemoQueue(qb, level, position, focus = null) {
   const posCode = { Forward: "F", Defense: "D", Goalie: "G" }[position] || null;
   const posMatch = (q) => !q.pos || !posCode || q.pos.includes(posCode);
   // User-killed questions are filtered out of every queue. Even ?ids=
   // playlists honor the kill list — a deleted q stays deleted everywhere.
   const notKilled = (q) => !isKilled(q?.id);
+  // Skill Path focus: demo/preview lessons launched from a path node scope
+  // to that node's concept, same contract as buildQueue. Falls back to the
+  // full pool when nothing in the bank matches the concept yet.
+  if (focus?.conceptId) {
+    const hit = (qb[level] || []).filter(q => notKilled(q) && posMatch(q) && (
+      q?.conceptId === focus.conceptId ||
+      q?.ledger?.conceptId === focus.conceptId ||
+      (Array.isArray(q?.concepts) && q.concepts.includes(focus.conceptId)) ||
+      q?.nodeId === focus.id
+    ));
+    if (hit.length) return [...hit].sort(() => Math.random() - 0.5);
+  }
   // Debug: ?only=<type[,type]> forces the demo queue to those qtypes;
   // ?ids=<id[,id]> forces it to a specific question playlist.
   const sp = typeof window !== "undefined" ? new URLSearchParams(window.location.search) : null;
@@ -1808,7 +1820,7 @@ function Quiz({ player, onFinish, onBack, tier, onUpgrade, focus = null }) {
       if (cancelled) return;
       let allQs;
       if (isDemo) {
-        const demoQs = buildDemoQueue(qb, player.level, player.position);
+        const demoQs = buildDemoQueue(qb, player.level, player.position, focus);
         // First-question text guarantee: while image fetches are still
         // warming up, surface a text question first so the user has
         // something to read while everything loads. Find the first
