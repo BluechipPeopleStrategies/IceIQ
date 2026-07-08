@@ -6826,7 +6826,7 @@ function AuthScreen({ onAuthenticated, onDemo, onDevEnter, onPreview, prefill })
 
         {/* Dev bypass panel — gated by rinkreads_dev_bypass LS flag; invisible
             to real users. Jump straight into any state without email/password. */}
-        {devBypass && (
+        {(import.meta.env.VITE_ENABLE_DEV_BYPASS === "1" && devBypass) && (
           <div style={{background:"rgba(147,51,234,0.12)",border:"1px solid rgba(168,85,247,0.4)",borderRadius:12,padding:"0.85rem 1rem",marginBottom:"1.25rem",color:C.white,fontFamily:FONT.body}}>
             <div style={{display:"flex",alignItems:"center",gap:".5rem",marginBottom:".65rem"}}>
               <span style={{fontSize:14}}>🧪</span>
@@ -8800,4 +8800,5 @@ function CoachRatingScreenAuthed({ coach, player, playerLevel, onDone }) {
     </div>
   );
 }
+
 
