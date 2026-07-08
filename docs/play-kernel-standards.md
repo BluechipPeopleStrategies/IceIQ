@@ -248,3 +248,21 @@ For U7 through U13, telemetry snapshots should not contain F1, F2, D1, A1, A2, o
 Run:
 - `npm run test:prototype-telemetry`
 - `npm run report:prototype-telemetry`
+
+
+## Scenario Family Rule
+
+Animated plays should belong to a scenario family.
+
+A scenario family defines:
+- the decision pattern being trained
+- the meaningful cue changes
+- the progression from base read to advanced variant
+- the common mistake patterns
+- the planned target number of variants
+
+New plays should not be random one-offs. They should either strengthen an existing family or intentionally start a new family.
+
+Run:
+- `npm run test:scenario-families`
+- `npm run report:scenario-families`

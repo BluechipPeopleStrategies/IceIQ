@@ -1,4 +1,4 @@
-const SHORTHAND_RE = /\\b(?:A|D|F|BC)\\d+\\b/i;
+const SHORTHAND_RE = /\b(?:A|D|F|BC)\d+\b/i;
 
 export function ageTelemetryGroup(ageBand = "") {
   const age = String(ageBand).toUpperCase();
@@ -18,25 +18,25 @@ export function playerFacingTelemetryText(value, ageBand = "") {
 
   if (group === "young") {
     return raw
-      .replace(/\\bF2\\b/g, "Helper")
-      .replace(/\\bF1\\b/g, "your teammate")
-      .replace(/\\bD1\\b/g, "checker")
-      .replace(/\\bA1\\b/g, "puck carrier")
-      .replace(/\\bA2\\b/g, "open player")
-      .replace(/\\bBC1\\b/g, "checker coming back")
-      .replace(/\\bbackchecker\\b/gi, "checker coming back")
-      .replace(/\\bdefender\\b/gi, "checker")
-      .replace(/\\bsupport option\\b/gi, "Helper");
+      .replace(/\bF2\b/g, "Helper")
+      .replace(/\bF1\b/g, "your teammate")
+      .replace(/\bD1\b/g, "checker")
+      .replace(/\bA1\b/g, "puck carrier")
+      .replace(/\bA2\b/g, "open player")
+      .replace(/\bBC1\b/g, "checker coming back")
+      .replace(/\bbackchecker\b/gi, "checker coming back")
+      .replace(/\bdefender\b/gi, "checker")
+      .replace(/\bsupport option\b/gi, "Helper");
   }
 
   return raw
-    .replace(/\\bF2\\b/g, "support teammate")
-    .replace(/\\bF1\\b/g, "teammate with the puck")
-    .replace(/\\bD1\\b/g, "defender")
-    .replace(/\\bA1\\b/g, "puck carrier")
-    .replace(/\\bA2\\b/g, "open player")
-    .replace(/\\bBC1\\b/g, "backchecker")
-    .replace(/\\bsupport option\\b/gi, "support teammate");
+    .replace(/\bF2\b/g, "support teammate")
+    .replace(/\bF1\b/g, "teammate with the puck")
+    .replace(/\bD1\b/g, "defender")
+    .replace(/\bA1\b/g, "puck carrier")
+    .replace(/\bA2\b/g, "open player")
+    .replace(/\bBC1\b/g, "backchecker")
+    .replace(/\bsupport option\b/gi, "support teammate");
 }
 
 export function telemetryQuestionText(node, ageBand = "") {

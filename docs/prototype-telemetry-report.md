@@ -19,18 +19,18 @@ _No telemetry language warnings._
 
 ### Backcheck recovery: Choose your lane / recovery / U7 - Playground
 
-- **Signature:** 3dbffc3f
+- **Signature:** 7465a067
 - **Question:** You are backchecking into the rush. Which lane should you take?
 - **Options:**
   - ✅ Cut inside
   - ○ Go to the wall — Recovering wide leaves the dangerous inside lane available.
-  - ○ Follow behind — Chasing from directly behind does not take away the support option.
+  - ○ Follow behind — Chasing from directly behind does not take away the Helper.
   - ○ Go outside — Recovering outside looks active, but it does not remove the middle threat.
 
 ### Backcheck recovery: Choose your lane / coveredMiddle / U7 - Playground
 
-- **Signature:** 770d290c
-- **Question:** Good recovery. You got inside and removed the most dangerous support option.
+- **Signature:** ef7f30a0
+- **Question:** Good recovery. You got inside and removed the most dangerous Helper.
 
 ### Backcheck recovery: Choose your lane / wallRecovery / U7 - Playground
 
@@ -39,8 +39,8 @@ _No telemetry language warnings._
 
 ### Backcheck recovery: Choose your lane / behindRecovery / U7 - Playground
 
-- **Signature:** 1ca65452
-- **Question:** Recovering right behind the puck carrier feels safe, but it does not take away the support option.
+- **Signature:** 602411ba
+- **Question:** Recovering right behind the puck carrier feels safe, but it does not take away the Helper.
 
 ### Backcheck recovery: Choose your lane / outsideRecovery / U7 - Playground
 
@@ -49,18 +49,18 @@ _No telemetry language warnings._
 
 ### Backcheck recovery: Choose your lane / recovery / U9 - Explorer
 
-- **Signature:** 2a146fc7
+- **Signature:** 318d5b9f
 - **Question:** You are backchecking into the rush. Which lane should you take?
 - **Options:**
   - ✅ Cut inside
   - ○ Go to the wall — Recovering wide leaves the dangerous inside lane available.
-  - ○ Follow behind — Chasing from directly behind does not take away the support option.
+  - ○ Follow behind — Chasing from directly behind does not take away the Helper.
   - ○ Go outside — Recovering outside looks active, but it does not remove the middle threat.
 
 ### Backcheck recovery: Choose your lane / coveredMiddle / U9 - Explorer
 
-- **Signature:** 882bcc98
-- **Question:** Good recovery. You got inside and removed the most dangerous support option.
+- **Signature:** 2d6c6f5c
+- **Question:** Good recovery. You got inside and removed the most dangerous Helper.
 
 ### Backcheck recovery: Choose your lane / wallRecovery / U9 - Explorer
 
@@ -69,8 +69,8 @@ _No telemetry language warnings._
 
 ### Backcheck recovery: Choose your lane / behindRecovery / U9 - Explorer
 
-- **Signature:** e4a8c7e6
-- **Question:** Recovering right behind the puck carrier feels safe, but it does not take away the support option.
+- **Signature:** 3d65062e
+- **Question:** Recovering right behind the puck carrier feels safe, but it does not take away the Helper.
 
 ### Backcheck recovery: Choose your lane / outsideRecovery / U9 - Explorer
 
@@ -79,16 +79,16 @@ _No telemetry language warnings._
 
 ### Backcheck recovery: Choose your lane / recovery / U11 - The Trainer
 
-- **Signature:** 9527618a
+- **Signature:** d4e1e097
 - **Question:** You are backchecking into the rush. Which lane should you take?
 - **Options:**
   - ✅ Recover through the inside lane
   - ○ Recover wide toward the wall — Recovering wide leaves the dangerous inside lane available.
-  - ○ Recover directly behind the puck carrier — Chasing from directly behind does not take away the support option.
+  - ○ Recover directly behind the puck carrier — Chasing from directly behind does not take away the support teammate.
   - ○ Recover to the outside lane — Recovering outside looks active, but it does not remove the middle threat.
 
 ### Backcheck recovery: Choose your lane / coveredMiddle / U11 - The Trainer
 
-- **Signature:** c815ed43
-- **Question:** Good recovery. You got inside and removed the most dangerous support option.
+- **Signature:** e1c83684
+- **Question:** Good recovery. You got inside and removed the most dangerous support teammate.
 
