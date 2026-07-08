@@ -14,3 +14,7 @@ export { FORECHECK_PRESSURE_PLAY } from "./plays/forecheckPressure.js";
 export { BACKCHECK_RECOVERY_PLAY } from "./plays/backcheckRecovery.js";
 
 export { twoOnOnePassLaneRemoved } from "./plays/twoOnOnePassLaneRemoved.js";
+
+export { twoOnOneSupportTooFlat } from "./plays/twoOnOneSupportTooFlat.js";
+export { twoOnOneGoalieLateAfterPass } from "./plays/twoOnOneGoalieLateAfterPass.js";
+export { backcheckRecoveryDefenderGetsBeat } from "./plays/backcheckRecoveryDefenderGetsBeat.js";

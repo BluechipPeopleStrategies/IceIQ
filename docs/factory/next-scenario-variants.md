@@ -6,38 +6,26 @@ This queue turns scenario families into buildable play variants.
 
 ## 2-on-1 Reads
 
-- **Implemented:** 6/6
+- **Implemented:** 8/6
 - **Current status:** complete
 
-### Next Recommended Variant
-
-- **Title:** 2-on-1: Support too flat
-- **Cue:** Support teammate is too flat and not dangerous.
-- **Decision:** Do not force the pass just because it is a 2-on-1.
-- **Common mistake:** Passing to a teammate who is not in a scoring lane.
-- **Format:** single question + reveal
-
-### Remaining Backlog
-
-- 2. **2-on-1: Support too flat** — Support teammate is too flat and not dangerous.
-- 3. **2-on-1: Goalie late after pass** — Goalie is late sliding after puck movement.
+_No queued variant needed right now._
 
 ## Backcheck Recovery
 
-- **Implemented:** 1/4
+- **Implemented:** 2/4
 - **Current status:** needs variants
 
 ### Next Recommended Variant
 
-- **Title:** Backcheck recovery: Defender gets beat
-- **Cue:** Teammate loses the puck carrier.
-- **Decision:** Become the next defender and protect inside.
-- **Common mistake:** Continuing to cover support while puck carrier is loose.
+- **Title:** Backcheck recovery: Late support
+- **Cue:** You are behind the play and cannot catch the puck carrier.
+- **Decision:** Protect the next dangerous lane.
+- **Common mistake:** Chasing from behind with no angle.
 - **Format:** route choice
 
 ### Remaining Backlog
 
-- 1. **Backcheck recovery: Defender gets beat** — Teammate loses the puck carrier.
 - 2. **Backcheck recovery: Late support** — You are behind the play and cannot catch the puck carrier.
 
 ## Forecheck Pressure
@@ -110,7 +98,7 @@ This queue turns scenario families into buildable play variants.
 
 ## Build Recommendation
 
-Build next: **2-on-1: Support too flat** in **2-on-1 Reads**.
+Build next: **Backcheck recovery: Late support** in **Backcheck Recovery**.
 
 Why this one first:
 

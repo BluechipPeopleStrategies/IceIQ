@@ -123,3 +123,9 @@ Read:
 Reveal:
 
 - a 2-on-1 does not always mean pass; the defender's choice creates the next best option
+
+
+## Implemented in Bulk Batch 001
+
+- 2-on-1: Support too flat
+- 2-on-1: Goalie late after pass
