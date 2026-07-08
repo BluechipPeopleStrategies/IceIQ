@@ -36,10 +36,39 @@ function actorDisplayLabel(actor, isDecisionActor, profile) {
 
 function questionTextForAge(node, profile) {
   if (profile?.token === "figure") {
-    return node?.youngQ || node?.ask?.youngQ || node?.ask?.q || node?.q || "";
+    return playerFacingTextForAge(node?.youngQ || node?.ask?.youngQ || node?.ask?.q || node?.q || "", profile);
   }
 
   return node?.ask?.q || node?.q || "";
+}
+
+function isFilmRoomProfile(profile) {
+  const label = JSON.stringify(profile || {}).toLowerCase();
+  return label.includes("u15") || label.includes("u18") || label.includes("film");
+}
+
+function playerFacingTextForAge(value, profile) {
+  const raw = String(value || "");
+
+  // U15/U18 can keep film-room shorthand, but younger groups should not.
+  if (isFilmRoomProfile(profile)) return raw;
+
+  return raw
+    .replace(/\bF2\b/g, "support teammate")
+    .replace(/\bF1\b/g, "teammate with the puck")
+    .replace(/\bD1\b/g, "defender")
+    .replace(/\bA1\b/g, "puck carrier")
+    .replace(/\bA2\b/g, "open player")
+    .replace(/\bBC1\b/g, "backchecker")
+    .replace(/\bbackchecker\b/gi, "backchecker")
+    .replace(/\bsupport option\b/gi, "support teammate");
+}
+
+function optionTextForAge(opt, actorMap, profile) {
+  if (!opt) return "";
+
+  const raw = profile?.token === "figure" && opt.youngT ? opt.youngT : opt.t;
+  return playerFacingTextForAge(raw, profile);
 }
 
 function RinkBackdrop() {
@@ -321,9 +350,9 @@ export default function AnimatedPlay({ play, ageBand = "U11", onEvent }) {
                     <span>{opt.youngT || opt.t}{showOk ? " - nice read!" : ""}</span>
                   </span>
                 ) : (
-                  <>{opt.t}{showOk ? " - right read" : ""}</>
+                  <>{optionTextForAge(opt, actorMap, profile)}{showOk ? " - right read" : ""}</>
                 )}
-                {showBad && opt.no && <div style={{ fontSize: 12, marginTop: 5, color: "#7A2A1C", fontWeight: 500 }}>{opt.no}</div>}
+                {showBad && opt.no && <div style={{ fontSize: 12, marginTop: 5, color: "#7A2A1C", fontWeight: 500 }}>{playerFacingTextForAge(opt.no, profile)}</div>}
               </button>
             );
           })

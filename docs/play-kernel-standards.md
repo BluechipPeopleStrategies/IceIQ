@@ -136,3 +136,18 @@ For U7/U9:
 
 For older groups:
 - More tactical language is acceptable, but answer text and rink labels must still match.
+
+
+## Internal ID Safety Rule
+
+Do not globally replace internal actor IDs such as F1, F2, D1, A1, A2, or BC1 inside play data.
+
+Those IDs are used by coordinates, motion paths, puck ownership, and decision logic.
+
+Young-player wording should be handled through:
+- youngT
+- youngQ
+- player-facing display helpers
+- renderer-level translation
+
+Internal IDs must remain stable.
