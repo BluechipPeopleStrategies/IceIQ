@@ -1,0 +1,310 @@
+﻿import React, { useEffect, useMemo, useRef, useState } from "react";
+import { AGE_BANDS, profileForAge } from "./interactionProfiles.js";
+import { motionStyle } from "./motionVocabulary.js";
+import { tokenSpec } from "./tokenSystem.js";
+import { TWO_ON_ONE_READ_PLAY } from "./plays/twoOnOneRead.js";
+import { logAnimatedPlayEvent, summarizeAnimatedPlayEvents } from "./telemetry.js";
+
+const TEAM_FILL = {
+  home: "#0F4C8C",
+  away: "#1A1A1A",
+};
+
+const VIEWS = {
+  full: "0 0 200 85",
+  "half-right": "104 0 96 85",
+  "half-left": "0 0 96 85",
+};
+
+function RinkBackdrop() {
+  return (
+    <g>
+      <rect x="2" y="2" width="196" height="81" rx="27" fill="#EEF5FB" stroke="#0B1A33" strokeWidth="1.4" />
+      <rect x="99.2" y="2" width="1.6" height="81" fill="#D23A3A" />
+      <rect x="74" y="2" width="2" height="81" fill="#2B6FD6" />
+      <rect x="124" y="2" width="2" height="81" fill="#2B6FD6" />
+      <rect x="11" y="9" width="0.7" height="67" fill="#D23A3A" />
+      <rect x="188.3" y="9" width="0.7" height="67" fill="#D23A3A" />
+      <circle cx="100" cy="42.5" r="13" fill="none" stroke="#D23A3A" strokeWidth="0.6" />
+      <g fill="none" stroke="#D23A3A" strokeWidth="0.6">
+        <circle cx="169" cy="22" r="13" />
+        <circle cx="169" cy="63" r="13" />
+        <circle cx="31" cy="22" r="13" />
+        <circle cx="31" cy="63" r="13" />
+      </g>
+      <path d="M188.3,38 A6,6 0 0 0 188.3,47 Z" fill="#BCDcff" stroke="#D23A3A" strokeWidth="0.5" />
+      <rect x="189" y="39" width="4" height="7" fill="none" stroke="#D23A3A" strokeWidth="1" />
+      <path d="M11.7,38 A6,6 0 0 1 11.7,47 Z" fill="#BCDcff" stroke="#D23A3A" strokeWidth="0.5" />
+      <rect x="7" y="39" width="4" height="7" fill="none" stroke="#D23A3A" strokeWidth="1" />
+    </g>
+  );
+}
+
+function RoutePath({ motion, index }) {
+  const style = motionStyle(motion.kind);
+  const [x1, y1] = motion.from;
+  const [x2, y2] = motion.to;
+  const mx = (x1 + x2) / 2;
+  const my = Math.min(y1, y2) - 7;
+  const marker = style.marker === "arrow" ? `url(#ap-arrow-${motion.kind})` : undefined;
+  return (
+    <g>
+      <path
+        d={`M${x1},${y1} Q ${mx},${my} ${x2},${y2}`}
+        fill="none"
+        stroke={style.stroke}
+        strokeWidth={style.width}
+        strokeDasharray={style.dash}
+        markerEnd={marker}
+        opacity={motion.kind === "blocked" ? 0.7 : 0.95}
+      />
+      {motion.label && (
+        <text x={mx} y={my - 2 - index} textAnchor="middle" fontSize="3.1" fill="#0B1A33" fontWeight="800">
+          {motion.label}
+        </text>
+      )}
+    </g>
+  );
+}
+
+function ActorToken({ actor, ageBand, isDecisionActor }) {
+  const spec = tokenSpec({ actor, ageBand, isDecisionActor });
+  const fill = TEAM_FILL[spec.team] || TEAM_FILL.home;
+  const labelFill = spec.team === "home" ? "#FFFFFF" : "#FFFFFF";
+
+  if (spec.role === "goalie") {
+    return (
+      <g>
+        <rect x="-4.5" y="-5" width="9" height="10" rx="2.3" fill={fill} stroke="#FFFFFF" strokeWidth="0.8" />
+        <text y="1.5" fontSize="3.4" fill={labelFill} fontWeight="900" textAnchor="middle">G</text>
+      </g>
+    );
+  }
+
+  if (spec.representation === "symbol") {
+    if (spec.role === "defender") {
+      return (
+        <g stroke="#0B1A33" strokeWidth="1.2" strokeLinecap="round">
+          <line x1="-3.4" y1="-3.4" x2="3.4" y2="3.4" />
+          <line x1="-3.4" y1="3.4" x2="3.4" y2="-3.4" />
+        </g>
+      );
+    }
+    return <circle r={spec.role === "puckCarrier" ? 4.2 : 3.5} fill="none" stroke="#0B1A33" strokeWidth="1.2" />;
+  }
+
+  if (spec.representation === "figure") {
+    return (
+      <g>
+        <ellipse rx="4.4" ry="5.4" fill={fill} stroke="#FFFFFF" strokeWidth="0.8" />
+        <circle cy="-3.1" r="2.8" fill="#26344D" stroke="#FFFFFF" strokeWidth="0.55" />
+        {isDecisionActor && <circle r="6.5" fill="none" stroke="#C9A24B" strokeWidth="0.9" strokeDasharray="2 1.5" />}
+        <text y="2.7" fontSize="2.9" fill={labelFill} fontWeight="900" textAnchor="middle">{spec.interiorLabel}</text>
+      </g>
+    );
+  }
+
+  return (
+    <g>
+      <circle r={isDecisionActor ? 5.2 : 4.5} fill={fill} stroke="#FFFFFF" strokeWidth="0.75" />
+      {isDecisionActor && <circle r="6.8" fill="none" stroke="#C9A24B" strokeWidth="0.9" strokeDasharray="2 1.5" />}
+      {spec.role === "defender" && (
+        <g stroke="#FFFFFF" strokeWidth="1.2" strokeLinecap="round">
+          <line x1="-2.7" y1="-2.7" x2="2.7" y2="2.7" />
+          <line x1="-2.7" y1="2.7" x2="2.7" y2="-2.7" />
+        </g>
+      )}
+      {spec.role !== "defender" && (
+        <text y="1.4" fontSize="3.1" fill={labelFill} fontWeight="900" textAnchor="middle">{spec.interiorLabel}</text>
+      )}
+    </g>
+  );
+}
+
+function NodeSummary({ node, profile, pickedOption, onReplay }) {
+  if (!node.terminal) return null;
+  return (
+    <div>
+      {profile.celebrate && pickedOption?.ok && <div style={{ fontSize: 24, marginBottom: 6 }}>Goal!</div>}
+      <button onClick={onReplay} style={{ background: "#0B1A33", color: "#FFFFFF", border: "none", borderRadius: 9, padding: "8px 14px", fontSize: 13, cursor: "pointer", fontWeight: 800 }}>
+        Replay
+      </button>
+    </div>
+  );
+}
+
+export default function AnimatedPlay({ play, ageBand = "U11", onEvent }) {
+  const profile = profileForAge(ageBand);
+  const [nodeId, setNodeId] = useState(play.start);
+  const [picked, setPicked] = useState(null);
+  const [pickedOption, setPickedOption] = useState(null);
+  const [entered, setEntered] = useState(false);
+  const [showMotion, setShowMotion] = useState(false);
+  const startedAtRef = useRef(Date.now());
+
+  const actorMap = useMemo(() => Object.fromEntries(play.actors.map((a) => [a.id, a])), [play.actors]);
+  const node = play.nodes[nodeId];
+
+  useEffect(() => {
+    setEntered(false);
+    setShowMotion(false);
+    startedAtRef.current = Date.now();
+    const enterTimer = setTimeout(() => setEntered(true), 120);
+    const motionTimer = setTimeout(() => setShowMotion(true), 680);
+    return () => {
+      clearTimeout(enterTimer);
+      clearTimeout(motionTimer);
+    };
+  }, [nodeId, play.id, ageBand]);
+
+  function choose(opt, index) {
+    if (picked !== null || node.terminal) return;
+    const ms = Date.now() - startedAtRef.current;
+    setPicked(index);
+    setPickedOption(opt);
+    onEvent?.({ playId: play.id, nodeId, event: "answer", answerId: opt.id, ok: !!opt.ok, ms });
+    setTimeout(() => {
+      setNodeId(opt.next);
+      setPicked(null);
+    }, opt.ok ? 750 : 1050);
+  }
+
+  function replay() {
+    setNodeId(play.start);
+    setPicked(null);
+    setPickedOption(null);
+    onEvent?.({ playId: play.id, nodeId: play.start, event: "replay", ms: 0 });
+  }
+
+  const positions = (!entered && node.enter) ? node.enter : node.pos;
+  const puck = node.puck;
+
+  return (
+    <div style={{ background: profile.bg, borderRadius: 12, padding: 12, border: "1px solid #E3E7EE" }}>
+      <svg viewBox={VIEWS[play.view] || VIEWS.full} style={{ width: "100%", height: "auto", display: "block" }}>
+        <defs>
+          {["skate", "pass", "shot"].map((kind) => (
+            <marker key={kind} id={`ap-arrow-${kind}`} markerWidth="6" markerHeight="6" refX="3" refY="3" orient="auto">
+              <path d="M0,0 L6,3 L0,6 Z" fill="#0B1A33" />
+            </marker>
+          ))}
+          <filter id="ap-shadow" x="-40%" y="-40%" width="180%" height="180%">
+            <feDropShadow dx="0" dy="0.7" stdDeviation="0.7" floodColor="#0B1A33" floodOpacity="0.35" />
+          </filter>
+        </defs>
+        <RinkBackdrop />
+        {showMotion && (node.motions || []).map((motion, index) => <RoutePath key={`${motion.kind}-${index}`} motion={motion} index={index} />)}
+        {(node.overlays || []).map((overlay, index) => {
+          if (overlay.kind === "freeze") {
+            return (
+              <g key={`freeze-${index}`}>
+                <circle cx={overlay.x} cy={overlay.y} r="6" fill="none" stroke="#C9A24B" strokeWidth="1.1" strokeDasharray="2 1.5" />
+                <text x={overlay.x} y={overlay.y + 1.5} textAnchor="middle" fontSize="3.8" fill="#0B1A33" fontWeight="900">{overlay.label}</text>
+              </g>
+            );
+          }
+          if (overlay.kind === "target") {
+            return <circle key={`target-${index}`} cx={overlay.x} cy={overlay.y} r={overlay.r || 5} fill="none" stroke="#C9A24B" strokeWidth="1.1" strokeDasharray="2 1.5" />;
+          }
+          return null;
+        })}
+        {play.actors.map((actor) => {
+          const p = positions[actor.id];
+          if (!p) return null;
+          const isDecisionActor = node.decisionActor === actor.id;
+          return (
+            <g key={actor.id} transform={`translate(${p[0]},${p[1]})`} style={{ transition: "transform .65s cubic-bezier(.4,0,.2,1)" }} filter="url(#ap-shadow)">
+              <ActorToken actor={actorMap[actor.id]} ageBand={ageBand} isDecisionActor={isDecisionActor} />
+              {(isDecisionActor || ageBand === "U7" || ageBand === "U9") && (
+                <text y="-8.5" textAnchor="middle" fontSize="3.2" fill="#0B1A33" fontWeight="900">{isDecisionActor ? "YOU" : actor.label}</text>
+              )}
+            </g>
+          );
+        })}
+        {puck && (
+          <g transform={`translate(${puck[0]},${puck[1]})`} style={{ transition: "transform .65s cubic-bezier(.4,0,.2,1)" }}>
+            <circle r="2.4" fill="none" stroke="#C9A24B" strokeWidth="0.9" />
+            <circle r="1.1" fill="#111111" />
+          </g>
+        )}
+      </svg>
+
+      <div style={{ padding: "8px 4px 2px" }}>
+        <div style={{ fontSize: 11, fontWeight: 900, letterSpacing: ".5px", textTransform: "uppercase", color: profile.accent }}>
+          {profile.label}{node.decisionActor ? ` - ${node.decisionActor === "F1" ? "you have the puck" : "support read"}` : ""}
+        </div>
+        <div style={{ fontSize: profile.big ? 19 : 15, fontWeight: 800, color: "#0B1A33", margin: "5px 0 10px", lineHeight: 1.35 }}>
+          {node.q}
+        </div>
+        {node.terminal ? (
+          <NodeSummary node={node} profile={profile} pickedOption={pickedOption} onReplay={replay} />
+        ) : (
+          node.ask.opts.map((opt, index) => {
+            const isPicked = picked === index;
+            const showOk = isPicked && opt.ok;
+            const showBad = isPicked && !opt.ok;
+            return (
+              <button key={opt.id} onClick={() => choose(opt, index)} disabled={picked !== null}
+                style={{
+                  display: "block",
+                  width: "100%",
+                  textAlign: "left",
+                  fontFamily: "inherit",
+                  fontSize: profile.big ? 16 : 13.5,
+                  padding: profile.big ? "13px 14px" : "10px 12px",
+                  margin: "7px 0",
+                  borderRadius: profile.big ? 14 : 10,
+                  cursor: picked !== null ? "default" : "pointer",
+                  border: `${showOk ? 2 : 1}px solid ${showOk ? "#0B6B3A" : showBad ? "#A32D2D" : "#CDD5E0"}`,
+                  background: showOk ? "#F2FAF5" : showBad ? "#FDF3F1" : "#FFFFFF",
+                  color: showOk ? "#155F38" : showBad ? "#7A2A1C" : "#2F3747",
+                  fontWeight: showOk ? 800 : 600,
+                }}>
+                {opt.t}{showOk ? " - right read" : ""}
+                {showBad && opt.no && <div style={{ fontSize: 12, marginTop: 5, color: "#7A2A1C", fontWeight: 500 }}>{opt.no}</div>}
+              </button>
+            );
+          })
+        )}
+        <button onClick={() => onEvent?.({ playId: play.id, nodeId, event: "unclear", ms: Date.now() - startedAtRef.current })}
+          style={{ marginTop: 8, background: "transparent", border: "1px dashed #8792A5", borderRadius: 8, color: "#4B5563", padding: "6px 8px", fontSize: 12, cursor: "pointer" }}>
+          Mark this read unclear
+        </button>
+      </div>
+    </div>
+  );
+}
+
+export function AnimatedPlayTest() {
+  const [age, setAge] = useState("U11");
+  const [events, setEvents] = useState([]);
+  return (
+    <div style={{ minHeight: "100vh", background: "#F4F6FA", fontFamily: "Inter, system-ui, Arial, sans-serif", padding: "20px 16px 60px" }}>
+      <div style={{ maxWidth: 600, margin: "0 auto" }}>
+        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 12, marginBottom: 14 }}>
+          <div>
+            <div style={{ fontSize: 11, letterSpacing: ".14em", textTransform: "uppercase", color: "#C9A24B", fontWeight: 900 }}>Animated read kernel</div>
+            <div style={{ fontSize: 19, fontWeight: 900, color: "#0B1A33" }}>{TWO_ON_ONE_READ_PLAY.title}</div>
+          </div>
+          <select value={age} onChange={(e) => setAge(e.target.value)} style={{ fontFamily: "inherit", fontSize: 14, padding: "8px 10px", borderRadius: 9, border: "1px solid #CDD5E0" }}>
+            {AGE_BANDS.map((a) => <option key={a} value={a}>{profileForAge(a).label}</option>)}
+          </select>
+        </div>
+        <AnimatedPlay play={TWO_ON_ONE_READ_PLAY} ageBand={age} onEvent={(event) => {
+          const logged = logAnimatedPlayEvent(event);
+          setEvents((prev) => [...prev.slice(-5), logged || event]);
+        }} />
+        <div style={{ marginTop: 14, fontSize: 12, color: "#5B6575", lineHeight: 1.5 }}>
+          One original RinkReads play object. The same coordinates render as friendly figures for U7/U9, trainer tokens for U11/U13, and playbook symbols for U15/U18.
+        </div>
+        <div style={{ marginTop: 12, background: "#FFFFFF", border: "1px solid #DDE3EC", borderRadius: 10, padding: 10, fontSize: 12, color: "#243044" }}>
+          <strong>Prototype telemetry:</strong> {JSON.stringify(summarizeAnimatedPlayEvents(TWO_ON_ONE_READ_PLAY.id))}
+        </div>
+        <pre style={{ marginTop: 12, background: "#0B1A33", color: "#E5E7EB", borderRadius: 10, padding: 10, fontSize: 11, overflowX: "auto" }}>
+          {JSON.stringify(events, null, 2)}
+        </pre>
+      </div>
+    </div>
+  );
+}
+

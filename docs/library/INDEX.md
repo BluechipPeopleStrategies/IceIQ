@@ -10,3 +10,5 @@ Concept notes that ground and cite RinkReads reads. Each shipped read's
 
 > Add a row per concept as the v1 batch introduces it. Raw sources live in [sources/](sources/).
 > Template for new notes: [_TEMPLATE.md](_TEMPLATE.md).
+
+| odd-man-reads | `odd-man-reads.md` | 2-on-1 / numbers-advantage read; defender commitment opens or closes pass and shot lanes. |
