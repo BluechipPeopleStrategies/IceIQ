@@ -18,14 +18,24 @@ console.log("====================\n");
 for (const step of steps) {
   console.log("\n>>> npm run " + step);
 
-  const result = spawnSync("npm", ["run", step], {
-    stdio: "inherit",
-    shell: true
-  });
+  const result = process.platform === "win32"
+    ? spawnSync("cmd.exe", ["/d", "/s", "/c", "npm", "run", step], {
+        stdio: "inherit",
+        shell: false
+      })
+    : spawnSync("npm", ["run", step], {
+        stdio: "inherit",
+        shell: false
+      });
+
+  if (result.error) {
+    console.error("\nBulk gate could not start: " + result.error.message);
+    process.exit(1);
+  }
 
   if (result.status !== 0) {
     console.error("\nBulk gate failed at: npm run " + step);
-    process.exit(result.status || 1);
+    process.exit(result.status ?? 1);
   }
 }
 
