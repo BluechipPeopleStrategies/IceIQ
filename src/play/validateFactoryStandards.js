@@ -5,6 +5,7 @@ export function validateFactoryStandards(play) {
   const youngAges = new Set(["U7", "U9"]);
   const tacticalShorthand = /\b(?:A|D|F|BC)\d+\b/;
   const youngPlay = (play.ageBands || []).some((age) => youngAges.has(age));
+  const startNodeId = play.start || Object.keys(play.nodes || {})[0];
 
   if (!play?.id) errs.push({ playId: play?.id || "unknown", nodeId: "", message: "play missing id" });
   if (!play?.sourceRef?.note || !play?.sourceRef?.cite) {
@@ -12,12 +13,43 @@ export function validateFactoryStandards(play) {
   }
 
   for (const [nodeId, node] of Object.entries(play.nodes || {})) {
+    // Second Question Must Show New Read Rule:
+    // A follow-up question after the first read must show a new cue and explicitly opt into re-read logic.
+    // Otherwise, it should be an outcome/reveal node instead of another quiz question.
     if (node.terminal) continue;
 
     const opts = node.ask?.opts || [];
     if (!node.ask) errs.push({ playId: play.id, nodeId, message: "non-terminal node missing ask" });
     if (opts.filter((opt) => opt.ok).length !== 1) {
       errs.push({ playId: play.id, nodeId, message: "non-terminal node must have exactly one correct answer" });
+    }
+
+    if (
+      nodeId !== startNodeId &&
+      node.ask &&
+      !node.terminal &&
+      !node.reRead
+    ) {
+      warns.push({
+        playId: play.id,
+        nodeId,
+        message: "follow-up question must include reRead: true or become a terminal reveal node"
+      });
+    }
+
+    if (
+      nodeId !== startNodeId &&
+      node.ask &&
+      !node.terminal &&
+      node.reRead &&
+      !node.cue &&
+      !node.showCueOnQuestion
+    ) {
+      errs.push({
+        playId: play.id,
+        nodeId,
+        message: "follow-up reRead question must show a new visible cue"
+      });
     }
 
     if (node.ask?.choiceMode === "lane-pick") {

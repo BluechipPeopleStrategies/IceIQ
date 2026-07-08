@@ -71,6 +71,49 @@ function optionTextForAge(opt, actorMap, profile) {
   return playerFacingTextForAge(raw, profile);
 }
 
+function feedbackTextForAge(opt, profile) {
+  if (!opt) return "";
+
+  const raw =
+    profile?.token === "figure"
+      ? opt.youngWhy || opt.why || opt.no || opt.outcome || ""
+      : opt.why || opt.no || opt.outcome || "";
+
+  return playerFacingTextForAge(raw, profile);
+}
+
+function answerToneForAge(opt, profile) {
+  if (!opt) return "";
+
+  if (opt.ok) {
+    return profile?.token === "figure" ? "Nice read" : "Correct read";
+  }
+
+  return profile?.token === "figure" ? "Try again" : "Not quite";
+}
+
+function resultCardTitleForAge(opt, profile) {
+  if (!opt) return "";
+
+  const action = optionTextForAge(opt, {}, profile);
+  const tone = answerToneForAge(opt, profile);
+
+  return action ? tone + ": " + action : tone;
+}
+
+function cueLabelForAge(cue, profile) {
+  if (!cue) return "";
+
+  const profileText = JSON.stringify(profile || {}).toLowerCase();
+  const isFilmRoom = profileText.includes("u15") || profileText.includes("u18") || profileText.includes("film");
+
+  if (!isFilmRoom) {
+    return cue.youngLabel || cue.shortLabel || cue.label || "";
+  }
+
+  return cue.label || "";
+}
+
 function RinkBackdrop() {
   return (
     <g>
@@ -264,6 +307,32 @@ export default function AnimatedPlay({ play, ageBand = "U11", onEvent }) {
           </filter>
         </defs>
         <RinkBackdrop />
+        {node.cue && cueLabelForAge(node.cue, profile) && (
+          <g data-testid="rink-cue-marker">
+            <rect
+              x={(node.cue.x || 150) - 10}
+              y={(node.cue.y || 32) - 5}
+              width="20"
+              height="9"
+              rx="4.5"
+              fill="#FFFFFF"
+              stroke="#C9A24B"
+              strokeWidth="0.9"
+              opacity="0.96"
+            />
+            <text
+              x={node.cue.x || 150}
+              y={(node.cue.y || 32) + 1.1}
+              textAnchor="middle"
+              fontSize="3.15"
+              fill="#0B1A33"
+              fontWeight="900"
+            >
+              {cueLabelForAge(node.cue, profile)}
+            </text>
+          </g>
+        )}
+
         {showMotion && visibleMotions.map((motion, index) => <RoutePath key={`${motion.kind}-${index}`} motion={motion} index={index} />)}
         {(node.overlays || []).map((overlay, index) => {
           if (overlay.kind === "freeze") {
@@ -289,7 +358,7 @@ export default function AnimatedPlay({ play, ageBand = "U11", onEvent }) {
               opacity={picked !== null ? 0.45 : 0.9}
             >
               <circle cx={zx} cy={zy} r={zr} fill="#FFFFFF" stroke="#C9A24B" strokeWidth="1.2" strokeDasharray="2 1.5" />
-              <text x={zx} y={zy + 1.8} textAnchor="middle" fontSize="4.2" fill="#0B1A33" fontWeight="900">{index + 1}</text>
+              <text x={zx} y={zy + 1.8} textAnchor="middle" fontSize="3.15" fill="#0B1A33" fontWeight="900">{index + 1}</text>
             </g>
           );
         })}

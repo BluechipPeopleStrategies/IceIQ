@@ -4,9 +4,15 @@ import { TWO_ON_ONE_DEFENDER_HOLDS_PLAY } from "./plays/defenderHoldsMiddle.js";
 import { OFF_PUCK_SUPPORT_PLAY } from "./plays/offPuckSupport.js";
 import { DEFENSIVE_ANGLING_PLAY } from "./plays/defensiveAngling.js";
 import { TWO_ON_ONE_READ_VARIANTS } from "./plays/twoOnOneReadVariants.js";
+import { GAP_CONTROL_HOLD_PLAY } from "./plays/gapControlHold.js";
+import { FORECHECK_PRESSURE_PLAY } from "./plays/forecheckPressure.js";
+import { BACKCHECK_RECOVERY_PLAY } from "./plays/backcheckRecovery.js";
 
 export const CORE_ANIMATED_PLAYS = [
-  TWO_ON_ONE_READ_PLAY,
+        BACKCHECK_RECOVERY_PLAY,
+FORECHECK_PRESSURE_PLAY,
+GAP_CONTROL_HOLD_PLAY,
+TWO_ON_ONE_READ_PLAY,
   TWO_ON_ONE_DEFENDER_HOLDS_PLAY,
   OFF_PUCK_SUPPORT_PLAY,
   DEFENSIVE_ANGLING_PLAY,

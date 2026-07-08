@@ -21,16 +21,27 @@ export const TWO_ON_ONE_READ_VARIANTS = [
         pos: { F1: [146, 60], F2: [162, 24], D1: [160, 50], G: [186, 42], BC1: [137, 63] },
         ask: {
           opts: [
-            { id: "shoot_far", t: "Shoot through the defender", youngT: "Shoot through the checker", no: "The defender has stepped into the shooting lane.", outcome: "The shot is blocked and the rush slows down.", next: "blockedShot" },
-            { id: "pass_backdoor", t: "Pass across to F2 before the backchecker arrives", youngT: "Pass to your teammate before the checker gets back", ok: true, next: "catch" },
-            { id: "deke_middle", t: "Deke into the defender", youngT: "Try to beat the checker", no: "That lets the defender and backchecker squeeze the puck.", outcome: "The 2-on-1 disappears.", next: "turnover" },
-            { id: "delay_wait", t: "Wait for everyone to catch up", youngT: "Wait longer", no: "The backchecker is exactly why waiting is dangerous.", outcome: "The passing lane closes.", next: "turnover" },
+            { id: "shoot_far", t: "Shoot through the defender", youngWhy: "Shoot only if the checker is not in your way.", why: "This only works if the shot lane is actually open.", youngT: "Shoot through the checker", no: "The defender has stepped into the shooting lane.", outcome: "The shot is blocked and the rush slows down.", next: "blockedShot" },
+            { id: "pass_backdoor", t: "Pass across to F2 before the backchecker arrives", youngWhy: "Pass before the checker gets back.", why: "Move the puck before the backchecker can close the passing lane.", youngT: "Pass to your teammate before the checker gets back", ok: true, next: "catch" },
+            { id: "deke_middle", t: "Deke into the defender", youngWhy: "That takes you into the checker.", why: "Driving into the defender helps the defender do their job.", youngT: "Try to beat the checker", no: "That lets the defender and backchecker squeeze the puck.", outcome: "The 2-on-1 disappears.", next: "turnover" },
+            { id: "delay_wait", t: "Wait for everyone to catch up", youngWhy: "Waiting lets the checkers catch you.", why: "Waiting gives the defense time to recover.", youngT: "Wait longer", no: "The backchecker is exactly why waiting is dangerous.", outcome: "The passing lane closes.", next: "turnover" },
           ],
         },
       },
       catch: {
-        pos: { F1: [162, 54], F2: [162, 24], D1: [170, 40], G: [187, 36], BC1: [154, 59] },
-      },
+      id: "catch",
+      terminal: true,
+      q: "Good pass. The support teammate is open for a quick shot.",
+      youngQ: "Nice pass. Helper is open.",
+      pos: { F1: [146, 60], F2: [162, 25], D1: [151, 55], G: [181, 39] },
+      puck: [162, 25],
+      cue: {
+        label: "Open shot",
+        youngLabel: "Open",
+        x: 137,
+        y: 20
+      }
+    },
       finish: {
         pos: { F1: [162, 54], F2: [158, 27], D1: [170, 40], G: [181, 30], BC1: [158, 59] },
       },
@@ -63,23 +74,27 @@ export const TWO_ON_ONE_READ_VARIANTS = [
         ],
         ask: {
           opts: [
-            { id: "shoot_far", t: "Shoot through the defender", no: "The defender has stepped into the shooting lane.", outcome: "The shot is blocked.", next: "blockedShot" },
-            { id: "pass_backdoor", t: "Move it across to F2 now", youngT: "Pass to your teammate now", ok: true, next: "catch" },
-            { id: "deke_middle", t: "Deke into the defender", no: "That lets the lone defender play your body and the puck.", outcome: "The 2-on-1 disappears.", next: "turnover" },
-            { id: "delay_wait", t: "Wait for a cleaner angle", youngT: "Wait for a better pass", no: "Waiting lets the defender and goalie recover.", outcome: "The lane closes.", next: "turnover" },
+            { id: "shoot_far", t: "Shoot through the defender", youngWhy: "Shoot only if the checker is not in your way.", why: "This only works if the shot lane is actually open.", no: "The defender has stepped into the shooting lane.", outcome: "The shot is blocked.", next: "blockedShot" },
+            { id: "pass_backdoor", t: "Move it across to F2 now", youngWhy: "Helper is open now. Do not wait.", why: "The support teammate is open now. Waiting lets the gap close.", youngT: "Pass to your teammate now", ok: true, next: "catch" },
+            { id: "deke_middle", t: "Deke into the defender", youngWhy: "That takes you into the checker.", why: "Driving into the defender helps the defender do their job.", no: "That lets the lone defender play your body and the puck.", outcome: "The 2-on-1 disappears.", next: "turnover" },
+            { id: "delay_wait", t: "Wait for a cleaner angle", youngWhy: "The open play is there now.", why: "Waiting can close the lane that is open right now.", youngT: "Wait for a better pass", no: "Waiting lets the defender and goalie recover.", outcome: "The lane closes.", next: "turnover" },
           ],
         },
       },
       catch: {
-        enter: { F1: [146, 60], F2: [163, 33], D1: [160, 50], G: [186, 42] },
-        pos: { F1: [162, 54], F2: [164, 33], D1: [170, 40], G: [187, 38] },
-        puck: [164, 33],
-        freeze: { x: 164, y: 33, label: "2" },
-        motions: [
-          { kind: "pass", from: [146, 60], to: [164, 33], label: "flat pass" },
-          { kind: "shot", from: [164, 33], to: [187, 45], label: "quick finish" },
-        ],
-      },
+      id: "catch",
+      terminal: true,
+      q: "Good pass. The support teammate is open for a quick shot.",
+      youngQ: "Nice pass. Helper is open.",
+      pos: { F1: [146, 60], F2: [162, 25], D1: [151, 55], G: [181, 39] },
+      puck: [162, 25],
+      cue: {
+        label: "Open shot",
+        youngLabel: "Open",
+        x: 137,
+        y: 20
+      }
+    },
     },
   }),
 
@@ -94,17 +109,19 @@ export const TWO_ON_ONE_READ_VARIANTS = [
     },
     nodes: {
       catch: {
-        q: "F2 catches it and the goalie is late sliding across. What is the next read?",
-        pos: { F1: [162, 54], F2: [162, 24], D1: [170, 40], G: [184, 39] },
-        ask: {
-          opts: [
-            { id: "quick_shot", t: "Shoot before the goalie gets square", youngT: "Shoot quick", ok: true, next: "finish" },
-            { id: "hold_puck", t: "Hold until the goalie moves first", no: "The goalie is already recovering. Holding gives the goalie time.", outcome: "The goalie gets square.", next: "turnover" },
-            { id: "skate_corner", t: "Carry it below the goal line", no: "That takes the puck away from the scoring window.", outcome: "The chance disappears.", next: "turnover" },
-            { id: "pass_back", t: "Pass back into traffic", youngT: "Pass back into traffic", no: "The defender is recovering through the middle.", outcome: "The defender disrupts the play.", next: "turnover" },
-          ],
-        },
-      },
+      id: "catch",
+      terminal: true,
+      q: "Good pass. The support teammate is open for a quick shot.",
+      youngQ: "Nice pass. Helper is open.",
+      pos: { F1: [146, 60], F2: [162, 25], D1: [151, 55], G: [181, 39] },
+      puck: [162, 25],
+      cue: {
+        label: "Open shot",
+        youngLabel: "Open",
+        x: 137,
+        y: 20
+      }
+    },
     },
   }),
 ];

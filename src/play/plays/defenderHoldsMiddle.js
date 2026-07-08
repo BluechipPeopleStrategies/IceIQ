@@ -40,8 +40,8 @@ export const TWO_ON_ONE_DEFENDER_HOLDS_PLAY = {
         actor: "F1",
         q: "The lone defender holds the middle and takes away the pass. What is the best read?",
         opts: [
-          { id: "force_pass", t: "Force the pass through D1", youngT: "Force a pass through the checker", no: "The defender is sitting in the pass lane.", outcome: "D1 breaks up the pass.", next: "forcedPass" },
-          { id: "shoot_lane", t: "Attack the open shot lane", youngT: "Use the open shooting path", ok: true, next: "finish" },
+          { id: "force_pass", t: "Force the pass through D1", youngWhy: "Do not pass through the checker.", why: "Forcing a pass through coverage creates a turnover risk.", youngT: "Force a pass through the checker", no: "The defender is sitting in the pass lane.", outcome: "D1 breaks up the pass.", next: "forcedPass" },
+          { id: "shoot_lane", t: "Attack the open shot lane", youngWhy: "The pass is covered, so use the open space.", why: "When the middle pass is covered, use the open shooting lane.", youngT: "Use the open shooting path", ok: true, next: "finish" },
           { id: "wait", t: "Wait for the perfect pass", youngT: "Wait for a better pass", no: "Waiting gives the defender and goalie time to reset.", outcome: "The numbers advantage disappears.", next: "turnover" },
           { id: "skate_corner", t: "Skate away into the corner", youngT: "Skate away to the corner", no: "That gives up the middle-lane advantage.", outcome: "The scoring chance fades.", next: "turnover" },
         ],
