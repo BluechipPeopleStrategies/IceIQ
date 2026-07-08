@@ -4,6 +4,7 @@ import { motionStyle } from "./motionVocabulary.js";
 import { tokenSpec } from "./tokenSystem.js";
 import { TWO_ON_ONE_READ_PLAY } from "./plays/twoOnOneRead.js";
 import { logAnimatedPlayEvent, summarizeAnimatedPlayEvents } from "./telemetry.js";
+import { ALL_ANIMATED_PLAYS } from "./playCatalog.js";
 
 const TEAM_FILL = {
   home: "#0F4C8C",
@@ -216,7 +217,6 @@ export default function AnimatedPlay({ play, ageBand = "U11", onEvent }) {
             return (
               <g key={`freeze-${index}`}>
                 <circle cx={overlay.x} cy={overlay.y} r="6" fill="none" stroke="#C9A24B" strokeWidth="1.1" strokeDasharray="2 1.5" />
-                <text x={overlay.x} y={overlay.y + 1.5} textAnchor="middle" fontSize="3.8" fill="#0B1A33" fontWeight="900">{overlay.label}</text>
               </g>
             );
           }
@@ -232,7 +232,7 @@ export default function AnimatedPlay({ play, ageBand = "U11", onEvent }) {
           return (
             <g key={actor.id} transform={`translate(${p[0]},${p[1]})`} style={{ transition: "transform 1.4s cubic-bezier(.4,0,.2,1)" }} filter="url(#ap-shadow)">
               <ActorToken actor={actorMap[actor.id]} ageBand={ageBand} isDecisionActor={isDecisionActor} />
-              {(profile.token === "figure" || (profile.token === "symbol" && actor.role !== "goalie")) && (
+              {(profile.token === "figure" || (isDecisionActor && actor.role === "defender") || (profile.token === "symbol" && actor.role !== "goalie")) && (
                 <text y="-8.5" textAnchor="middle" fontSize="3.2" fill="#0B1A33" fontWeight="900">{isDecisionActor ? "YOU" : actor.label}</text>
               )}
             </g>
@@ -293,29 +293,67 @@ export default function AnimatedPlay({ play, ageBand = "U11", onEvent }) {
 
 export function AnimatedPlayTest() {
   const [age, setAge] = useState("U11");
+  const [playId, setPlayId] = useState(TWO_ON_ONE_READ_PLAY.id);
   const [events, setEvents] = useState([]);
+
+  const activePlay = useMemo(
+    () => ALL_ANIMATED_PLAYS.find((play) => play.id === playId) || TWO_ON_ONE_READ_PLAY,
+    [playId]
+  );
+
   return (
     <div style={{ minHeight: "100vh", background: "#F4F6FA", fontFamily: "Inter, system-ui, Arial, sans-serif", padding: "20px 16px 60px" }}>
-      <div style={{ maxWidth: 600, margin: "0 auto" }}>
-        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 12, marginBottom: 14 }}>
+      <div style={{ maxWidth: 660, margin: "0 auto" }}>
+        <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", gap: 12, marginBottom: 14 }}>
           <div>
             <div style={{ fontSize: 11, letterSpacing: ".14em", textTransform: "uppercase", color: "#C9A24B", fontWeight: 900 }}>Animated read kernel</div>
-            <div style={{ fontSize: 19, fontWeight: 900, color: "#0B1A33" }}>{TWO_ON_ONE_READ_PLAY.title}</div>
+            <div style={{ fontSize: 19, fontWeight: 900, color: "#0B1A33" }}>{activePlay.title}</div>
+            {activePlay.variantOf && (
+              <div style={{ marginTop: 3, fontSize: 12, color: "#5B6575", fontWeight: 700 }}>
+                Variant: {activePlay.variantLabel || activePlay.difficulty}
+              </div>
+            )}
           </div>
-          <select value={age} onChange={(e) => setAge(e.target.value)} style={{ fontFamily: "inherit", fontSize: 14, padding: "8px 10px", borderRadius: 9, border: "1px solid #CDD5E0" }}>
-            {AGE_BANDS.map((a) => <option key={a} value={a}>{profileForAge(a).label}</option>)}
-          </select>
         </div>
-        <AnimatedPlay play={TWO_ON_ONE_READ_PLAY} ageBand={age} onEvent={(event) => {
-          const logged = logAnimatedPlayEvent(event);
-          setEvents((prev) => [...prev.slice(-5), logged || event]);
-        }} />
+
+        <div style={{ display: "grid", gridTemplateColumns: "1fr 220px", gap: 10, marginBottom: 14 }}>
+          <label style={{ display: "block", fontSize: 12, color: "#4B5563", fontWeight: 800 }}>
+            Scenario
+            <select value={playId} onChange={(event) => { setPlayId(event.target.value); setEvents([]); }} style={{ display: "block", width: "100%", marginTop: 5, fontFamily: "inherit", fontSize: 14, padding: "8px 10px", borderRadius: 9, border: "1px solid #CDD5E0" }}>
+              {ALL_ANIMATED_PLAYS.map((play) => (
+                <option key={play.id} value={play.id}>
+                  {play.variantOf ? "Variant - " : ""}{play.title}
+                </option>
+              ))}
+            </select>
+          </label>
+
+          <label style={{ display: "block", fontSize: 12, color: "#4B5563", fontWeight: 800 }}>
+            Age band
+            <select value={age} onChange={(event) => setAge(event.target.value)} style={{ display: "block", width: "100%", marginTop: 5, fontFamily: "inherit", fontSize: 14, padding: "8px 10px", borderRadius: 9, border: "1px solid #CDD5E0" }}>
+              {AGE_BANDS.map((band) => <option key={band} value={band}>{profileForAge(band).label}</option>)}
+            </select>
+          </label>
+        </div>
+
+        <AnimatedPlay
+          key={activePlay.id + "-" + age}
+          play={activePlay}
+          ageBand={age}
+          onEvent={(event) => {
+            const logged = logAnimatedPlayEvent(event);
+            setEvents((prev) => [...prev.slice(-5), logged || event]);
+          }}
+        />
+
         <div style={{ marginTop: 14, fontSize: 12, color: "#5B6575", lineHeight: 1.5 }}>
-          One original RinkReads play object. The same coordinates render as friendly figures for U7/U9, trainer tokens for U11/U13, and playbook symbols for U15/U18.
+          Use the selector to test core scenarios and slight variations. Variants change pressure, spacing, or timing without changing the underlying renderer.
         </div>
+
         <div style={{ marginTop: 12, background: "#FFFFFF", border: "1px solid #DDE3EC", borderRadius: 10, padding: 10, fontSize: 12, color: "#243044" }}>
-          <strong>Prototype telemetry:</strong> {JSON.stringify(summarizeAnimatedPlayEvents(TWO_ON_ONE_READ_PLAY.id))}
+          <strong>Prototype telemetry:</strong> {JSON.stringify(summarizeAnimatedPlayEvents(activePlay.id))}
         </div>
+
         <pre style={{ marginTop: 12, background: "#0B1A33", color: "#E5E7EB", borderRadius: 10, padding: 10, fontSize: 11, overflowX: "auto" }}>
           {JSON.stringify(events, null, 2)}
         </pre>
