@@ -49,6 +49,11 @@ import {
 } from "./shared.jsx";
 import { OverlayLayer } from "./OverlayLayer.jsx";
 import { RinkPlayTest } from "./RinkPlay.jsx";
+import { PathScreen } from "./path/PathScreen.jsx";
+import { ChallengesHub } from "./path/ChallengesHub.jsx";
+import { levelToBand } from "./path/pathData.js";
+import { recordNodeResult, getPathState } from "./path/pathProgress.js";
+import { getPath } from "./path/pathData.js";
 const imgSplash = "/splash.jpg";
 import imgCoreApp from "./assets/images/Core-App.jpg";
 import imgDataPanel from "./assets/images/Data-Panel.jpg";
@@ -380,7 +385,7 @@ function QuestChecklist({ role, quests, results, onTap, onDismiss, onAllComplete
       {/* Prescriptive hero CTA — brand-new users tap one big button instead
           of scanning the whole list. Hidden when collapsed or when all done. */}
       {!collapsed && nextQuest && !allDone && (
-        <button onClick={() => onTap(nextQuest)} style={{display:"block",width:"100%",background:C.gradientPrimary,color:C.bg,border:"none",borderRadius:12,padding:".85rem 1rem",cursor:"pointer",fontFamily:FONT.body,fontWeight:800,fontSize:14,letterSpacing:".02em",marginBottom:".85rem",boxShadow:`0 4px 14px ${C.gold}33, inset 0 1px 0 rgba(255,255,255,.25)`,textAlign:"left",display:"flex",alignItems:"center",justifyContent:"space-between",gap:".5rem"}}>
+        <button onClick={() => onTap(nextQuest)} style={{width:"100%",background:C.gradientPrimary,color:C.bg,border:"none",borderRadius:12,padding:".85rem 1rem",cursor:"pointer",fontFamily:FONT.body,fontWeight:800,fontSize:14,letterSpacing:".02em",marginBottom:".85rem",boxShadow:`0 4px 14px ${C.gold}33, inset 0 1px 0 rgba(255,255,255,.25)`,textAlign:"left",display:"flex",alignItems:"center",justifyContent:"space-between",gap:".5rem"}}>
           <span>Start: {nextQuest.label}</span>
           <span style={{fontSize:16}}>→</span>
         </button>
@@ -559,12 +564,27 @@ function makePlayerKey(name, level) {
 }
 
 // Demo queue builder — guarantees one of each question type
-function buildDemoQueue(qb, level, position) {
+function buildDemoQueue(qb, level, position, focus = null) {
   const posCode = { Forward: "F", Defense: "D", Goalie: "G" }[position] || null;
   const posMatch = (q) => !q.pos || !posCode || q.pos.includes(posCode);
   // User-killed questions are filtered out of every queue. Even ?ids=
   // playlists honor the kill list — a deleted q stays deleted everywhere.
   const notKilled = (q) => !isKilled(q?.id);
+  // Skill Path focus: demo/preview lessons launched from a path node scope
+  // to that node's concept, same contract as buildQueue. Falls back to the
+  // full pool when nothing in the bank matches the concept yet.
+  if (focus?.conceptId) {
+    const hit = (qb[level] || []).filter(q => notKilled(q) && posMatch(q) && (
+      q?.conceptId === focus.conceptId ||
+      q?.ledger?.conceptId === focus.conceptId ||
+      (Array.isArray(q?.concepts) && q.concepts.includes(focus.conceptId)) ||
+      q?.nodeId === focus.id
+    ));
+    if (hit.length) return [...hit].sort(() => Math.random() - 0.5);
+  } else if (focus?.cat) {
+    const hit = (qb[level] || []).filter(q => notKilled(q) && posMatch(q) && q?.cat === focus.cat);
+    if (hit.length) return [...hit].sort(() => Math.random() - 0.5);
+  }
   // Debug: ?only=<type[,type]> forces the demo queue to those qtypes;
   // ?ids=<id[,id]> forces it to a specific question playlist.
   const sp = typeof window !== "undefined" ? new URLSearchParams(window.location.search) : null;
@@ -665,7 +685,7 @@ function EmptyBankScreen() {
   );
 }
 
-function buildQueue(qb, level, position, isReturning, tier) {
+function buildQueue(qb, level, position, isReturning, tier, focus = null) {
   // ALL_AGES_MODE (temporary): one mixed-age Pro experience — ignore the
   // player's level, serve every format. Flip the flag off to restore per-age.
   const formatAllowed = ALL_AGES_MODE ? true : canAccess("allQuestionFormats", tier).allowed;
@@ -682,7 +702,7 @@ function buildQueue(qb, level, position, isReturning, tier) {
   // Kill-list signature ensures a freshly-killed question is filtered out
   // on the very next queue build (cache invalidates when count changes).
   const killSig = getKillList().length;
-  const cacheKey = `${ALL_AGES_MODE ? "ALL" : level}|${position}|${formatAllowed}|${positionAllowed}|${onlyParam || ""}|${idsParam || ""}|k${killSig}`;
+  const cacheKey = `${ALL_AGES_MODE ? "ALL" : level}|${position}|${formatAllowed}|${positionAllowed}|${onlyParam || ""}|${idsParam || ""}|k${killSig}|f${focus?.conceptId || ""}|c${focus?.cat || ""}`;
 
   let pool;
   if (!onlyTypes && !onlyIds && _queueCache.has(cacheKey)) {
@@ -707,6 +727,24 @@ function buildQueue(qb, level, position, isReturning, tier) {
     }
     // User-killed questions get filtered upstream of every other rule.
     allQ = allQ.filter(q => !isKilled(q?.id));
+    // Skill Path focus: scope the session to one ledger concept. The
+    // gauntlet tags questions with conceptId / ledger.conceptId /
+    // concepts[] / nodeId — match any. If nothing in the bank matches
+    // (bank empty or untagged), fall back to the full pool so a path
+    // lesson still runs rather than dead-ending.
+    if (focus?.conceptId) {
+      const hit = allQ.filter(q =>
+        q?.conceptId === focus.conceptId ||
+        q?.ledger?.conceptId === focus.conceptId ||
+        (Array.isArray(q?.concepts) && q.concepts.includes(focus.conceptId)) ||
+        q?.nodeId === focus.id
+      );
+      if (hit.length) allQ = hit;
+    } else if (focus?.cat) {
+      // Leak Finder focus: scope the session to one mastery category.
+      const hit = allQ.filter(q => q?.cat === focus.cat);
+      if (hit.length) allQ = hit;
+    }
     let posFiltered;
     if (!positionAllowed) {
       posFiltered = allQ.filter(q => !q.pos || q.pos.includes("F") || q.pos.includes("D"));
@@ -1526,6 +1564,68 @@ function Home({ player, onNav, demoMode, subscriptionTier, questFlagsBump, onPro
             drops further down the page (see below). */}
         {iqUnlocked && iqHero}
 
+        {/* Skill Path hero — the Duolingo-style curriculum path. Shows the
+            next node on the player's age-band path so Home always has a
+            single obvious "continue" action. */}
+        {(() => {
+          try {
+            const band = levelToBand(level);
+            const p = getPath(band);
+            const st = getPathState(player?.id || "__demo__", band, p);
+            const next = st.activeNode;
+            const era = next ? p.units[next.unitIdx]?.name : null;
+            const pct = st.totalCount ? Math.round((st.clearedCount / st.totalCount) * 100) : 0;
+
+            // Leak Finder: weakest category with a real sample (6+ reads,
+            // under 75%, not yet mastered). GAME_DESIGN_SPEC.md B3.
+            let leak = null;
+            try {
+              const m = computeCategoryMastery(player?.quizHistory);
+              const cands = Object.entries(m).filter(([, v]) => v.attempts >= 6 && v.accuracy < 0.75 && v.stars < 3);
+              if (cands.length) {
+                cands.sort((a, b) => a[1].accuracy - b[1].accuracy);
+                leak = { cat: cands[0][0], pct: Math.round(cands[0][1].accuracy * 100), n: cands[0][1].attempts };
+              }
+            } catch {}
+
+            return (<>
+              <button onClick={() => onNav("path")} style={{width:"100%",background:C.gradientPrimary,border:"none",borderRadius:16,padding:"1.05rem 1.15rem",cursor:"pointer",textAlign:"left",color:"#fff",fontFamily:FONT.body,marginBottom:".85rem",boxShadow:"inset 0 -5px 0 rgba(0,0,0,.22), 0 8px 22px rgba(252,76,2,.28)",position:"relative",overflow:"hidden"}}>
+                <div style={{fontSize:10.5,fontWeight:800,letterSpacing:".16em",textTransform:"uppercase",opacity:.9,marginBottom:3}}>
+                  Skill Path · {band}{era ? ` · ${era} Era` : ""} · {st.clearedCount}/{st.totalCount}
+                </div>
+                <div style={{fontFamily:FONT.display,fontSize:"1.35rem",letterSpacing:".02em",marginBottom:2}}>
+                  {next ? `Next up: ${next.name}` : st.totalCount ? "Path complete — push for 3 stars" : "Walk the path"}
+                </div>
+                <div style={{fontSize:12,opacity:.9,marginBottom:".6rem"}}>{next?.readConnection ? next.readConnection : "One skill at a time, in the order the game teaches it."}</div>
+                <div style={{height:6,background:"rgba(0,0,0,.28)",borderRadius:4,overflow:"hidden"}}>
+                  <div style={{width:`${pct}%`,height:"100%",background:"#fff",borderRadius:4,transition:"width .3s"}}/>
+                </div>
+              </button>
+
+              {leak && (
+                <button onClick={() => onNav({ __leak: leak.cat })} style={{width:"100%",background:C.bgCard,border:`1px solid ${C.border}`,borderLeft:`4px solid #CC1F2B`,borderRadius:14,padding:".85rem 1rem",cursor:"pointer",textAlign:"left",color:C.white,fontFamily:FONT.body,marginBottom:".85rem",display:"flex",alignItems:"center",gap:".8rem"}}>
+                  <span style={{fontSize:24}}>🔧</span>
+                  <span style={{flex:1}}>
+                    <span style={{display:"block",fontSize:10.5,fontWeight:800,letterSpacing:".14em",textTransform:"uppercase",color:"#e05563"}}>Leak Finder</span>
+                    <span style={{display:"block",fontFamily:FONT.display,fontSize:"1.05rem"}}>{leak.cat} · {leak.pct}% over {leak.n} reads</span>
+                    <span style={{display:"block",fontSize:11.5,color:C.dim}}>Patch it with a focused session</span>
+                  </span>
+                  <span style={{fontSize:18,color:C.dim}}>→</span>
+                </button>
+              )}
+
+              <button onClick={() => onNav("challenges")} style={{width:"100%",background:C.bgCard,border:`1px solid ${C.border}`,borderRadius:14,padding:".85rem 1rem",cursor:"pointer",textAlign:"left",color:C.white,fontFamily:FONT.body,marginBottom:"1rem",display:"flex",alignItems:"center",gap:".8rem"}}>
+                <span style={{fontSize:24}}>🗺️</span>
+                <span style={{flex:1}}>
+                  <span style={{display:"block",fontFamily:FONT.display,fontSize:"1.05rem"}}>Challenges</span>
+                  <span style={{display:"block",fontSize:11.5,color:C.dim}}>Daily Drill · Speed Round · Weekly — clear the path to unlock more</span>
+                </span>
+                <span style={{fontSize:18,color:C.dim}}>→</span>
+              </button>
+            </>);
+          } catch { return null; }
+        })()}
+
         {/* Quick action grid */}
         <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:".75rem",marginBottom:"1rem"}}>
           <button onClick={() => onNav("quiz")} style={{background:`linear-gradient(135deg,rgba(207,69,32,.15),rgba(207,69,32,.05))`,border:`1px solid ${C.purpleBorder}`,borderRadius:14,padding:"1.1rem",cursor:"pointer",textAlign:"left",color:C.white,fontFamily:FONT.body,position:"relative",overflow:"hidden"}}>
@@ -1686,7 +1786,7 @@ function useQuizState() {
 // ─────────────────────────────────────────────────────────
 // QUIZ SCREEN
 // ─────────────────────────────────────────────────────────
-function Quiz({ player, onFinish, onBack, tier, onUpgrade }) {
+function Quiz({ player, onFinish, onBack, tier, onUpgrade, focus = null }) {
   const isReturning = player.quizHistory.length > 0;
   const isDemo = !player.id || isEphemeralPlayer(player.id);
   // First-time quizzes (no session history yet) are capped at 5 so the
@@ -1765,7 +1865,7 @@ function Quiz({ player, onFinish, onBack, tier, onUpgrade }) {
       if (cancelled) return;
       let allQs;
       if (isDemo) {
-        const demoQs = buildDemoQueue(qb, player.level, player.position);
+        const demoQs = buildDemoQueue(qb, player.level, player.position, focus);
         // First-question text guarantee: while image fetches are still
         // warming up, surface a text question first so the user has
         // something to read while everything loads. Find the first
@@ -1777,7 +1877,7 @@ function Quiz({ player, onFinish, onBack, tier, onUpgrade }) {
         setQuestion(demoQs[0]);
         allQs = demoQs;
       } else {
-        const q = buildQueue(qb, player.level, player.position, isReturning, tier);
+        const q = buildQueue(qb, player.level, player.position, isReturning, tier, focus);
         let { q: first, queue: q2 } = pullNext(q, []);
         // Same text-first guarantee for adaptive queues — if pullNext
         // happened to return an image-backed MC, swap with the first
@@ -1811,7 +1911,7 @@ function Quiz({ player, onFinish, onBack, tier, onUpgrade }) {
     }).catch(e => console.error("QB load error:", e));
     if (!isDemo) SB.getQuestionStats().then(setStatsMap).catch(() => {});
     return () => { cancelled = true; };
-  }, []);
+  }, [focus?.conceptId, focus?.cat]); // eslint-disable-line react-hooks/exhaustive-deps
 
   // Reset the speed-bonus timer whenever the displayed question changes.
   useEffect(() => {
@@ -7614,6 +7714,9 @@ export default function App() {
   demoModeRef.current = demoMode;
   const [demoCoachRatings, setDemoCoachRatings] = useState(null);
   const [screen, setScreen] = useState("home");
+  // Skill Path lesson focus — when set, the next quiz session is scoped
+  // to this ledger node's concept and its result clears/stars the node.
+  const [pathFocus, setPathFocus] = useState(null); // pathNode | null
   const [prevScore, setPrevScore] = useState(null);
   const [totalSessions, setTotalSessions] = useState(0);
   const [quizResults, setQuizResults] = useState([]);
@@ -7883,7 +7986,7 @@ export default function App() {
         if (saved.role === "coach") {
           enterDevBypass({ role: "coach", name: saved.name });
         } else {
-          enterDevBypass({ role: "player", level: saved.level, position: saved.position, name: saved.name });
+          enterDevBypass({ role: "player", level: saved.level, position: saved.position, name: saved.name, quizHistory: saved.quizHistory });
         }
       }
     }
@@ -8011,6 +8114,19 @@ export default function App() {
       const sd = updateStreak(getStreakData());
       localStorage.setItem("rinkreads_streak", JSON.stringify(sd));
     } catch(e) {}
+    // Skill Path: a lesson launched from a path node clears/stars that
+    // node. Reward-only — a rough lesson just leaves the node active.
+    if (pathFocus?.conceptId) {
+      try {
+        const correct = results.filter(r => r.ok).length;
+        const out = recordNodeResult(player?.id || "__demo__", pathFocus.band, pathFocus, { correct, total: results.length });
+        if (out.firstClear) {
+          toast.celebrate({ title: `${pathFocus.name} cleared!`, body: `+${out.xpEarned} XP · ${"★".repeat(out.stars)} — the path rolls on.`, icon: "🏒" });
+        } else if (out.cleared && out.xpEarned > 0) {
+          toast.celebrate({ title: `+${out.xpEarned} XP`, body: `${pathFocus.name} · best ${"★".repeat(out.stars)}`, icon: "⚡" });
+        }
+      } catch {}
+    }
     // Bump the weekly + category streaks and fire celebrate toasts on
     // meaningful milestones. Best-effort — silent on LS failure.
     if (player?.id && !isEphemeralPlayer(player.id)) {
@@ -8279,14 +8395,16 @@ export default function App() {
       )}
 
       <div style={{paddingBottom: screen==="quiz"||screen==="results" ? 0 : 80}}>
-        {screen === "home"    && <Home player={tierLimitedPlayer(player, tier)} onNav={setScreen} demoMode={demoMode} subscriptionTier={tier} questFlagsBump={questFlagsBump} onPromptUpgrade={promptUpgrade} onBumpQuestFlags={bumpQuestFlags} onSaveProgress={() => triggerSignup("save_progress")} onFirstLine={() => setFirstLineToast(true)} onSignup={() => triggerSignup("quest_cta")}/>}
+        {screen === "home"    && <Home player={tierLimitedPlayer(player, tier)} onNav={(s)=>{ if (s && typeof s === "object" && s.__leak) { setPathFocus({ cat: s.__leak }); setScreen("quiz"); } else setScreen(s); }} demoMode={demoMode} subscriptionTier={tier} questFlagsBump={questFlagsBump} onPromptUpgrade={promptUpgrade} onBumpQuestFlags={bumpQuestFlags} onSaveProgress={() => triggerSignup("save_progress")} onFirstLine={() => setFirstLineToast(true)} onSignup={() => triggerSignup("quest_cta")}/>}
         {screen === "quiz"    && (demoMode && !profile?.__dev && (()=>{ try { return localStorage.getItem("rinkreads_demo_quiz_taken") === "1"; } catch { return false; } })()
           ? <DemoQuizCapScreen onBack={()=>setScreen("home")} onSignUp={exitDemo}/>
           : tier === "FREE" && !demoMode && isAtFreeQuizCap()
           ? <FreeQuizCapScreen onBack={()=>setScreen("home")} onUpgrade={()=>setScreen("plans")}/>
-          : <Quiz player={player} onFinish={handleQuizFinish} onBack={()=>setScreen("home")} tier={tier} onUpgrade={promptUpgrade}/>
+          : <Quiz key={pathFocus?.id || "free"} player={player} focus={pathFocus} onFinish={handleQuizFinish} onBack={()=>{ const wasPath = !!pathFocus?.nodeId; setPathFocus(null); setScreen(wasPath ? "path" : "home"); }} tier={tier} onUpgrade={promptUpgrade}/>
         )}
-        {screen === "results" && <Results results={quizResults} player={player} prevScore={prevScore} totalSessions={totalSessions} seqPerfect={seqPerfect} mistakeStreak={mistakeStreak} tier={tier} onAgain={()=>setScreen("quiz")} onHome={()=>setScreen("home")} showMilestoneBanner={showMilestone5Banner} onViewPlans={()=>{setShowMilestone5Banner(false);setScreen("plans");}}/>}
+        {screen === "results" && <Results results={quizResults} player={player} prevScore={prevScore} totalSessions={totalSessions} seqPerfect={seqPerfect} mistakeStreak={mistakeStreak} tier={tier} onAgain={()=>setScreen("quiz")} onHome={()=>{ const wasPath = !!pathFocus?.nodeId; setPathFocus(null); setScreen(wasPath ? "path" : "home"); }} showMilestoneBanner={showMilestone5Banner} onViewPlans={()=>{setShowMilestone5Banner(false);setScreen("plans");}}/>}
+        {screen === "path" && <PathScreen player={player} onBack={()=>setScreen("home")} onStartLesson={(node)=>{ setPathFocus(node); setScreen("quiz"); }}/>}
+        {screen === "challenges" && <ChallengesHub player={player} onBack={()=>setScreen("home")} onNav={setScreen}/>}
         {screen === "skills"  && <Skills player={player} tier={tier} onUpgrade={promptUpgrade} onSave={handleSkillsSave} onBack={()=>setScreen("home")}/>}
         {screen === "skills-onboarding" && <Suspense fallback={<LazyFallback/>}><SkillsOnboarding player={player} tier={tier} onUpgrade={promptUpgrade} onSave={async (r)=>{ await handleSkillsSave(r); setScreen("home"); }} onBack={()=>setScreen("home")}/></Suspense>}
         {screen === "insights" && <Suspense fallback={<LazyFallback/>}><InsightsScreen onBack={()=>setScreen("home")} onInsightRead={bumpQuestFlags}/></Suspense>}
