@@ -49,6 +49,10 @@ import {
 } from "./shared.jsx";
 import { OverlayLayer } from "./OverlayLayer.jsx";
 import { RinkPlayTest } from "./RinkPlay.jsx";
+import { PathScreen } from "./path/PathScreen.jsx";
+import { levelToBand } from "./path/pathData.js";
+import { recordNodeResult, getPathState } from "./path/pathProgress.js";
+import { getPath } from "./path/pathData.js";
 const imgSplash = "/splash.jpg";
 import imgCoreApp from "./assets/images/Core-App.jpg";
 import imgDataPanel from "./assets/images/Data-Panel.jpg";
@@ -665,7 +669,7 @@ function EmptyBankScreen() {
   );
 }
 
-function buildQueue(qb, level, position, isReturning, tier) {
+function buildQueue(qb, level, position, isReturning, tier, focus = null) {
   // ALL_AGES_MODE (temporary): one mixed-age Pro experience — ignore the
   // player's level, serve every format. Flip the flag off to restore per-age.
   const formatAllowed = ALL_AGES_MODE ? true : canAccess("allQuestionFormats", tier).allowed;
@@ -682,7 +686,7 @@ function buildQueue(qb, level, position, isReturning, tier) {
   // Kill-list signature ensures a freshly-killed question is filtered out
   // on the very next queue build (cache invalidates when count changes).
   const killSig = getKillList().length;
-  const cacheKey = `${ALL_AGES_MODE ? "ALL" : level}|${position}|${formatAllowed}|${positionAllowed}|${onlyParam || ""}|${idsParam || ""}|k${killSig}`;
+  const cacheKey = `${ALL_AGES_MODE ? "ALL" : level}|${position}|${formatAllowed}|${positionAllowed}|${onlyParam || ""}|${idsParam || ""}|k${killSig}|f${focus?.conceptId || ""}`;
 
   let pool;
   if (!onlyTypes && !onlyIds && _queueCache.has(cacheKey)) {
@@ -707,6 +711,20 @@ function buildQueue(qb, level, position, isReturning, tier) {
     }
     // User-killed questions get filtered upstream of every other rule.
     allQ = allQ.filter(q => !isKilled(q?.id));
+    // Skill Path focus: scope the session to one ledger concept. The
+    // gauntlet tags questions with conceptId / ledger.conceptId /
+    // concepts[] / nodeId — match any. If nothing in the bank matches
+    // (bank empty or untagged), fall back to the full pool so a path
+    // lesson still runs rather than dead-ending.
+    if (focus?.conceptId) {
+      const hit = allQ.filter(q =>
+        q?.conceptId === focus.conceptId ||
+        q?.ledger?.conceptId === focus.conceptId ||
+        (Array.isArray(q?.concepts) && q.concepts.includes(focus.conceptId)) ||
+        q?.nodeId === focus.id
+      );
+      if (hit.length) allQ = hit;
+    }
     let posFiltered;
     if (!positionAllowed) {
       posFiltered = allQ.filter(q => !q.pos || q.pos.includes("F") || q.pos.includes("D"));
@@ -1526,6 +1544,31 @@ function Home({ player, onNav, demoMode, subscriptionTier, questFlagsBump, onPro
             drops further down the page (see below). */}
         {iqUnlocked && iqHero}
 
+        {/* Skill Path hero — the Duolingo-style curriculum path. Shows the
+            next node on the player's age-band path so Home always has a
+            single obvious "continue" action. */}
+        {(() => {
+          try {
+            const band = levelToBand(level);
+            const p = getPath(band);
+            const st = getPathState(player?.id || "__demo__", band, p);
+            const next = st.activeNode;
+            const pct = st.totalCount ? Math.round((st.clearedCount / st.totalCount) * 100) : 0;
+            return (
+              <button onClick={() => onNav("path")} style={{width:"100%",background:C.gradientPrimary,border:"none",borderRadius:16,padding:"1.05rem 1.15rem",cursor:"pointer",textAlign:"left",color:"#fff",fontFamily:FONT.body,marginBottom:"1rem",boxShadow:"inset 0 -5px 0 rgba(0,0,0,.22), 0 8px 22px rgba(252,76,2,.28)",position:"relative",overflow:"hidden"}}>
+                <div style={{fontSize:10.5,fontWeight:800,letterSpacing:".16em",textTransform:"uppercase",opacity:.9,marginBottom:3}}>Skill Path · {band} · {st.clearedCount}/{st.totalCount} cleared</div>
+                <div style={{fontFamily:FONT.display,fontSize:"1.35rem",letterSpacing:".02em",marginBottom:2}}>
+                  {next ? `Next up: ${next.name}` : st.totalCount ? "Path complete — push for 3 stars" : "Walk the path"}
+                </div>
+                <div style={{fontSize:12,opacity:.9,marginBottom:".6rem"}}>{next?.readConnection ? next.readConnection : "One skill at a time, in the order the game teaches it."}</div>
+                <div style={{height:6,background:"rgba(0,0,0,.28)",borderRadius:4,overflow:"hidden"}}>
+                  <div style={{width:`${pct}%`,height:"100%",background:"#fff",borderRadius:4,transition:"width .3s"}}/>
+                </div>
+              </button>
+            );
+          } catch { return null; }
+        })()}
+
         {/* Quick action grid */}
         <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:".75rem",marginBottom:"1rem"}}>
           <button onClick={() => onNav("quiz")} style={{background:`linear-gradient(135deg,rgba(207,69,32,.15),rgba(207,69,32,.05))`,border:`1px solid ${C.purpleBorder}`,borderRadius:14,padding:"1.1rem",cursor:"pointer",textAlign:"left",color:C.white,fontFamily:FONT.body,position:"relative",overflow:"hidden"}}>
@@ -1686,7 +1729,7 @@ function useQuizState() {
 // ─────────────────────────────────────────────────────────
 // QUIZ SCREEN
 // ─────────────────────────────────────────────────────────
-function Quiz({ player, onFinish, onBack, tier, onUpgrade }) {
+function Quiz({ player, onFinish, onBack, tier, onUpgrade, focus = null }) {
   const isReturning = player.quizHistory.length > 0;
   const isDemo = !player.id || isEphemeralPlayer(player.id);
   // First-time quizzes (no session history yet) are capped at 5 so the
@@ -1777,7 +1820,7 @@ function Quiz({ player, onFinish, onBack, tier, onUpgrade }) {
         setQuestion(demoQs[0]);
         allQs = demoQs;
       } else {
-        const q = buildQueue(qb, player.level, player.position, isReturning, tier);
+        const q = buildQueue(qb, player.level, player.position, isReturning, tier, focus);
         let { q: first, queue: q2 } = pullNext(q, []);
         // Same text-first guarantee for adaptive queues — if pullNext
         // happened to return an image-backed MC, swap with the first
@@ -1811,7 +1854,7 @@ function Quiz({ player, onFinish, onBack, tier, onUpgrade }) {
     }).catch(e => console.error("QB load error:", e));
     if (!isDemo) SB.getQuestionStats().then(setStatsMap).catch(() => {});
     return () => { cancelled = true; };
-  }, []);
+  }, [focus?.conceptId]); // eslint-disable-line react-hooks/exhaustive-deps
 
   // Reset the speed-bonus timer whenever the displayed question changes.
   useEffect(() => {
@@ -7614,6 +7657,9 @@ export default function App() {
   demoModeRef.current = demoMode;
   const [demoCoachRatings, setDemoCoachRatings] = useState(null);
   const [screen, setScreen] = useState("home");
+  // Skill Path lesson focus — when set, the next quiz session is scoped
+  // to this ledger node's concept and its result clears/stars the node.
+  const [pathFocus, setPathFocus] = useState(null); // pathNode | null
   const [prevScore, setPrevScore] = useState(null);
   const [totalSessions, setTotalSessions] = useState(0);
   const [quizResults, setQuizResults] = useState([]);
@@ -8011,6 +8057,19 @@ export default function App() {
       const sd = updateStreak(getStreakData());
       localStorage.setItem("rinkreads_streak", JSON.stringify(sd));
     } catch(e) {}
+    // Skill Path: a lesson launched from a path node clears/stars that
+    // node. Reward-only — a rough lesson just leaves the node active.
+    if (pathFocus) {
+      try {
+        const correct = results.filter(r => r.ok).length;
+        const out = recordNodeResult(player?.id || "__demo__", pathFocus.band, pathFocus, { correct, total: results.length });
+        if (out.firstClear) {
+          toast.celebrate({ title: `${pathFocus.name} cleared!`, body: `+${out.xpEarned} XP · ${"★".repeat(out.stars)} — the path rolls on.`, icon: "🏒" });
+        } else if (out.cleared && out.xpEarned > 0) {
+          toast.celebrate({ title: `+${out.xpEarned} XP`, body: `${pathFocus.name} · best ${"★".repeat(out.stars)}`, icon: "⚡" });
+        }
+      } catch {}
+    }
     // Bump the weekly + category streaks and fire celebrate toasts on
     // meaningful milestones. Best-effort — silent on LS failure.
     if (player?.id && !isEphemeralPlayer(player.id)) {
@@ -8284,9 +8343,10 @@ export default function App() {
           ? <DemoQuizCapScreen onBack={()=>setScreen("home")} onSignUp={exitDemo}/>
           : tier === "FREE" && !demoMode && isAtFreeQuizCap()
           ? <FreeQuizCapScreen onBack={()=>setScreen("home")} onUpgrade={()=>setScreen("plans")}/>
-          : <Quiz player={player} onFinish={handleQuizFinish} onBack={()=>setScreen("home")} tier={tier} onUpgrade={promptUpgrade}/>
+          : <Quiz key={pathFocus?.id || "free"} player={player} focus={pathFocus} onFinish={handleQuizFinish} onBack={()=>{ const wasPath = !!pathFocus; setPathFocus(null); setScreen(wasPath ? "path" : "home"); }} tier={tier} onUpgrade={promptUpgrade}/>
         )}
-        {screen === "results" && <Results results={quizResults} player={player} prevScore={prevScore} totalSessions={totalSessions} seqPerfect={seqPerfect} mistakeStreak={mistakeStreak} tier={tier} onAgain={()=>setScreen("quiz")} onHome={()=>setScreen("home")} showMilestoneBanner={showMilestone5Banner} onViewPlans={()=>{setShowMilestone5Banner(false);setScreen("plans");}}/>}
+        {screen === "results" && <Results results={quizResults} player={player} prevScore={prevScore} totalSessions={totalSessions} seqPerfect={seqPerfect} mistakeStreak={mistakeStreak} tier={tier} onAgain={()=>setScreen("quiz")} onHome={()=>{ const wasPath = !!pathFocus; setPathFocus(null); setScreen(wasPath ? "path" : "home"); }} showMilestoneBanner={showMilestone5Banner} onViewPlans={()=>{setShowMilestone5Banner(false);setScreen("plans");}}/>}
+        {screen === "path" && <PathScreen player={player} onBack={()=>setScreen("home")} onStartLesson={(node)=>{ setPathFocus(node); setScreen("quiz"); }}/>}
         {screen === "skills"  && <Skills player={player} tier={tier} onUpgrade={promptUpgrade} onSave={handleSkillsSave} onBack={()=>setScreen("home")}/>}
         {screen === "skills-onboarding" && <Suspense fallback={<LazyFallback/>}><SkillsOnboarding player={player} tier={tier} onUpgrade={promptUpgrade} onSave={async (r)=>{ await handleSkillsSave(r); setScreen("home"); }} onBack={()=>setScreen("home")}/></Suspense>}
         {screen === "insights" && <Suspense fallback={<LazyFallback/>}><InsightsScreen onBack={()=>setScreen("home")} onInsightRead={bumpQuestFlags}/></Suspense>}
