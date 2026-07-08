@@ -2390,6 +2390,16 @@ export function PlayersPage({ onNavigate, onContact }) {
           drills to watch, and chase their own score.
         </p>
 
+        <div style={{background:"rgba(252,76,2,.08)",border:`1px solid ${C.goldBorder}`,borderRadius:16,padding:"1rem",margin:"1.1rem 0 1.2rem"}}>
+          <div style={{fontSize:13,color:C.dim,lineHeight:1.55,marginBottom:".8rem"}}>
+            Ready to train your hockey brain? Create an account or sign in first, then you can take quizzes, build your profile, and track your progress.
+          </div>
+          <div style={{display:"grid",gap:".6rem"}}>
+            <button style={S.btn} onClick={() => handleNav("home")}>Create account or sign in ?</button>
+            <button style={{...S.btn,background:"transparent",color:C.gold,border:`1px solid ${C.goldBorder}`}} onClick={() => handleNav("parents")}>Show my parents first</button>
+          </div>
+        </div>
+
         <nav style={S.toc} aria-label="On this page">
           <a href="#why-player" style={S.tocLink}>1. Why it matters</a>
           <a href="#how-player" style={S.tocLink}>2. How to use it</a>
@@ -2455,7 +2465,7 @@ export function PlayersPage({ onNavigate, onContact }) {
         <DeveloperBlurb />
 
         <div style={S.footerCtas}>
-          <button style={S.btn} onClick={() => handleNav("home")}>Take a quiz →</button>
+          <button style={S.btn} onClick={() => handleNav("home")}>Create account or sign in ?</button>
           <button style={S.btn} onClick={() => handleNav("parents")}>For my parents</button>
           <button style={S.btn} onClick={handleContact}>Questions? Get in touch</button>
         </div>
