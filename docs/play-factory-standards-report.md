@@ -1,6 +1,6 @@
 # RinkReads Play Factory Standards Report
 
-- **Plays checked:** 10
+- **Plays checked:** 11
 - **Hard errors:** 0
 - **Warnings:** 0
 - **Pass:** Yes

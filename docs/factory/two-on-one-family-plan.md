@@ -108,3 +108,18 @@ Each variant should ask one main question, then reveal the consequence.
 Do not add a second question unless a new visible cue changes the decision.
 
 Telemetry must capture the player-facing question, answer options, reveal text, and cue text for each age band.
+
+
+### 6. Pass lane removed
+
+Cue:
+
+- defender fully removes the pass lane
+
+Read:
+
+- puck carrier attacks the open shot lane instead of forcing the pass
+
+Reveal:
+
+- a 2-on-1 does not always mean pass; the defender's choice creates the next best option

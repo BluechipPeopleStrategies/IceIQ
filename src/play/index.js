@@ -12,3 +12,5 @@ export { DEFENSIVE_ANGLING_PLAY } from "./plays/defensiveAngling.js";
 export { GAP_CONTROL_HOLD_PLAY } from "./plays/gapControlHold.js";
 export { FORECHECK_PRESSURE_PLAY } from "./plays/forecheckPressure.js";
 export { BACKCHECK_RECOVERY_PLAY } from "./plays/backcheckRecovery.js";
+
+export { twoOnOnePassLaneRemoved } from "./plays/twoOnOnePassLaneRemoved.js";

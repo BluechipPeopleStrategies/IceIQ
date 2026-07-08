@@ -7,6 +7,7 @@ import { TWO_ON_ONE_READ_VARIANTS } from "./plays/twoOnOneReadVariants.js";
 import { GAP_CONTROL_HOLD_PLAY } from "./plays/gapControlHold.js";
 import { FORECHECK_PRESSURE_PLAY } from "./plays/forecheckPressure.js";
 import { BACKCHECK_RECOVERY_PLAY } from "./plays/backcheckRecovery.js";
+import { twoOnOnePassLaneRemoved } from "./plays/twoOnOnePassLaneRemoved.js";
 
 export const CORE_ANIMATED_PLAYS = [
         BACKCHECK_RECOVERY_PLAY,
@@ -25,6 +26,8 @@ export const VARIANT_ANIMATED_PLAYS = [
 export const ALL_ANIMATED_PLAYS = [
   ...CORE_ANIMATED_PLAYS,
   ...VARIANT_ANIMATED_PLAYS,
+
+  twoOnOnePassLaneRemoved,
 ];
 
 export function playById(id) {
