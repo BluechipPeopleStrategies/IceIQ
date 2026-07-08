@@ -17,6 +17,31 @@ const VIEWS = {
   "half-left": "0 0 96 85",
 };
 
+function actorDisplayLabel(actor, isDecisionActor, profile) {
+  if (isDecisionActor) return "YOU";
+
+  if (profile.token === "figure") {
+    if (actor.role === "goalie") return "Goalie";
+    if (actor.role === "puckCarrier") return "Puck";
+    if (actor.role === "support" && actor.team === "home") return "Helper";
+    if (actor.role === "support" && actor.team !== "home") return "Open";
+
+    // U7/U9 screens should not label every checker.
+    // The black token already communicates pressure; repeated labels create clutter.
+    return "";
+  }
+
+  return actor.label;
+}
+
+function questionTextForAge(node, profile) {
+  if (profile?.token === "figure") {
+    return node?.youngQ || node?.ask?.youngQ || node?.ask?.q || node?.q || "";
+  }
+
+  return node?.ask?.q || node?.q || "";
+}
+
 function RinkBackdrop() {
   return (
     <g>
@@ -97,10 +122,9 @@ function ActorToken({ actor, ageBand, isDecisionActor }) {
   if (spec.representation === "figure") {
     return (
       <g>
-        <ellipse rx="4.4" ry="5.4" fill={fill} stroke="#FFFFFF" strokeWidth="0.8" />
-        <circle cy="-3.1" r="2.8" fill="#26344D" stroke="#FFFFFF" strokeWidth="0.55" />
-        {isDecisionActor && <circle r="6.5" fill="none" stroke="#C9A24B" strokeWidth="0.9" strokeDasharray="2 1.5" />}
-        {showInteriorLabel && <text y="2.7" fontSize="2.9" fill={labelFill} fontWeight="900" textAnchor="middle">{spec.interiorLabel}</text>}
+        <circle r={isDecisionActor ? 5.5 : 5} fill={fill} stroke="#FFFFFF" strokeWidth="0.9" />
+        <path d="M-3.2,-1.6 C-1.2,-3 1.2,-3 3.2,-1.6" fill="none" stroke="#FFFFFF" strokeWidth="1.05" strokeLinecap="round" opacity="0.95" />
+        {isDecisionActor && <circle r="7" fill="none" stroke="#C9A24B" strokeWidth="1" strokeDasharray="2 1.5" />}
       </g>
     );
   }
@@ -225,6 +249,21 @@ export default function AnimatedPlay({ play, ageBand = "U11", onEvent }) {
           }
           return null;
         })}
+        {profile.token === "figure" && !node.terminal && node.ask?.choiceMode === "lane-pick" && (node.ask.opts || []).map((opt, index) => {
+          if (!opt.zone) return null;
+          const [zx, zy, zr = 6] = opt.zone;
+          return (
+            <g
+              key={`choice-zone-${opt.id}`}
+              onClick={() => choose(opt, index)}
+              style={{ cursor: picked !== null ? "default" : "pointer" }}
+              opacity={picked !== null ? 0.45 : 0.9}
+            >
+              <circle cx={zx} cy={zy} r={zr} fill="#FFFFFF" stroke="#C9A24B" strokeWidth="1.2" strokeDasharray="2 1.5" />
+              <text x={zx} y={zy + 1.8} textAnchor="middle" fontSize="4.2" fill="#0B1A33" fontWeight="900">{index + 1}</text>
+            </g>
+          );
+        })}
         {play.actors.map((actor) => {
           const p = positions[actor.id];
           if (!p) return null;
@@ -233,7 +272,7 @@ export default function AnimatedPlay({ play, ageBand = "U11", onEvent }) {
             <g key={actor.id} transform={`translate(${p[0]},${p[1]})`} style={{ transition: "transform 1.4s cubic-bezier(.4,0,.2,1)" }} filter="url(#ap-shadow)">
               <ActorToken actor={actorMap[actor.id]} ageBand={ageBand} isDecisionActor={isDecisionActor} />
               {(profile.token === "figure" || (isDecisionActor && actor.role === "defender") || (profile.token === "symbol" && actor.role !== "goalie")) && (
-                <text y="-8.5" textAnchor="middle" fontSize="3.2" fill="#0B1A33" fontWeight="900">{isDecisionActor ? "YOU" : actor.label}</text>
+                <text y="-8.5" textAnchor="middle" fontSize="3.2" fill="#0B1A33" fontWeight="900">{actorDisplayLabel(actor, isDecisionActor, profile)}</text>
               )}
             </g>
           );
@@ -250,7 +289,7 @@ export default function AnimatedPlay({ play, ageBand = "U11", onEvent }) {
           {profile.label}{node.decisionActor ? ` - ${node.decisionActor === "F1" ? "you have the puck" : "support read"}` : ""}
         </div>
         <div style={{ fontSize: profile.big ? 19 : 15, fontWeight: 800, color: "#0B1A33", margin: "5px 0 10px", lineHeight: 1.35 }}>
-          {node.q}
+          {questionTextForAge(node, profile)}
         </div>
         {node.terminal ? (
           <NodeSummary node={node} profile={profile} pickedOption={pickedOption} onReplay={replay} />
@@ -276,7 +315,14 @@ export default function AnimatedPlay({ play, ageBand = "U11", onEvent }) {
                   color: showOk ? "#155F38" : showBad ? "#7A2A1C" : "#2F3747",
                   fontWeight: showOk ? 800 : 600,
                 }}>
-                {opt.t}{showOk ? " - right read" : ""}
+                {profile.token === "figure" && opt.icon ? (
+                  <span style={{ display: "flex", alignItems: "center", gap: 10 }}>
+                    <span aria-hidden="true" style={{ fontSize: 23, width: 30, textAlign: "center" }}>{opt.icon}</span>
+                    <span>{opt.youngT || opt.t}{showOk ? " - nice read!" : ""}</span>
+                  </span>
+                ) : (
+                  <>{opt.t}{showOk ? " - right read" : ""}</>
+                )}
                 {showBad && opt.no && <div style={{ fontSize: 12, marginTop: 5, color: "#7A2A1C", fontWeight: 500 }}>{opt.no}</div>}
               </button>
             );

@@ -16,7 +16,7 @@ export const TWO_ON_ONE_READ_VARIANTS = [
     },
     nodes: {
       rush: {
-        q: "The defender steps up and a backchecker is closing. What is the best read now?",
+        q: "The defender steps up and a backchecker is closing. What is the best read now?", youngQ: "What should YOU do now?",
         enter: { F1: [132, 61], F2: [154, 24], D1: [178, 43], G: [187, 42], BC1: [116, 66] },
         pos: { F1: [146, 60], F2: [162, 24], D1: [160, 50], G: [186, 42], BC1: [137, 63] },
         ask: {

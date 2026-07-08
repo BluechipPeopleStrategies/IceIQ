@@ -23,7 +23,7 @@ export const OFF_PUCK_SUPPORT_PLAY = {
   nodes: {
     supportRead: {
       id: "supportRead",
-      q: "Your teammate has the puck under pressure. Where should you go to help?",
+      q: "Your teammate has the puck under pressure. Where should you go to help?", youngQ: "Where should YOU go?",
       decisionActor: "F2",
       enter: { F1: [145, 58], F2: [155, 35], D1: [149, 55], D2: [157, 37], G: [187, 42] },
       pos: { F1: [151, 58], F2: [164, 29], D1: [153, 55], D2: [158, 38], G: [187, 42] },
@@ -38,7 +38,7 @@ export const OFF_PUCK_SUPPORT_PLAY = {
       ],
       ask: {
         actor: "F2",
-        q: "Your teammate has the puck under pressure. Where should you go to help?",
+        q: "Your teammate has the puck under pressure. Where should you go to help?", youngQ: "Where should YOU go?",
         opts: [
           { id: "slide_window", t: "Slide into the open passing window", ok: true, next: "catchWindow" },
           { id: "stand_still", t: "Stand still and wait", no: "Standing still keeps you covered.", outcome: "The passing lane stays closed.", next: "covered" },

@@ -120,3 +120,19 @@ Use child-readable labels:
 - goalie = Goalie
 
 Older age bands can keep film-room shorthand when appropriate.
+
+
+## Light Question Screen Rule
+
+Young-player screens should reduce cognitive load before the answer.
+
+For U7/U9:
+- Use one short question.
+- Use player-facing labels like YOU, Puck, Helper, Open, and Goalie.
+- Do not label every checker if the rink becomes crowded.
+- Answer choices should match what appears on screen.
+- Coaching explanation should come after the player chooses.
+- The rink should show the problem, not reveal the solution.
+
+For older groups:
+- More tactical language is acceptable, but answer text and rink labels must still match.
