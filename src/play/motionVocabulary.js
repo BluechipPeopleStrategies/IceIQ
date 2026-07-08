@@ -1,10 +1,10 @@
-﻿export const MOTION_STYLES = {
+export const MOTION_STYLES = {
   skate: {
     label: "Skate route",
     stroke: "#0B1A33",
-    width: 1.6,
+    width: 1.05,
     dash: "",
-    marker: "arrow",
+    marker: "none",
     pattern: "solid",
   },
   pass: {
@@ -18,7 +18,7 @@
   shot: {
     label: "Shot lane",
     stroke: "#0B1A33",
-    width: 2.8,
+    width: 2.4,
     dash: "",
     marker: "arrow",
     pattern: "thick",
@@ -26,8 +26,8 @@
   blocked: {
     label: "Covered lane",
     stroke: "#6B7280",
-    width: 2,
-    dash: "2 2",
+    width: 1.7,
+    dash: "2 3",
     marker: "none",
     pattern: "striped",
   },
@@ -52,4 +52,3 @@
 export function motionStyle(kind = "skate") {
   return MOTION_STYLES[kind] || MOTION_STYLES.skate;
 }
-

@@ -1,4 +1,4 @@
-﻿import React, { useEffect, useMemo, useRef, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import { AGE_BANDS, profileForAge } from "./interactionProfiles.js";
 import { motionStyle } from "./motionVocabulary.js";
 import { tokenSpec } from "./tokenSystem.js";
@@ -46,29 +46,29 @@ function RoutePath({ motion, index }) {
   const [x2, y2] = motion.to;
   const mx = (x1 + x2) / 2;
   const my = Math.min(y1, y2) - 7;
-  const marker = style.marker === "arrow" ? `url(#ap-arrow-${motion.kind})` : undefined;
+  const pathD = motion.kind === "skate" || motion.kind === "blocked"
+    ? `M${x1},${y1} L${x2},${y2}`
+    : `M${x1},${y1} Q ${mx},${my} ${x2},${y2}`;
+  const marker = motion.kind === "pass" || motion.kind === "shot" ? `url(#ap-arrow-${motion.kind})` : undefined;
   return (
     <g>
       <path
-        d={`M${x1},${y1} Q ${mx},${my} ${x2},${y2}`}
+        d={pathD}
         fill="none"
         stroke={style.stroke}
-        strokeWidth={style.width}
+        strokeWidth={motion.kind === "skate" ? 1.05 : motion.kind === "blocked" ? 1.7 : style.width}
         strokeDasharray={style.dash}
         markerEnd={marker}
-        opacity={motion.kind === "blocked" ? 0.7 : 0.95}
+        opacity={motion.kind === "skate" ? 0.55 : motion.kind === "blocked" ? 0.6 : 0.95}
       />
-      {motion.label && (
-        <text x={mx} y={my - 2 - index} textAnchor="middle" fontSize="3.1" fill="#0B1A33" fontWeight="800">
-          {motion.label}
-        </text>
-      )}
     </g>
   );
 }
 
 function ActorToken({ actor, ageBand, isDecisionActor }) {
   const spec = tokenSpec({ actor, ageBand, isDecisionActor });
+  const profile = profileForAge(ageBand);
+  const showInteriorLabel = profile.token === "token" || (profile.token === "symbol" && spec.role === "goalie");
   const fill = TEAM_FILL[spec.team] || TEAM_FILL.home;
   const labelFill = spec.team === "home" ? "#FFFFFF" : "#FFFFFF";
 
@@ -76,7 +76,7 @@ function ActorToken({ actor, ageBand, isDecisionActor }) {
     return (
       <g>
         <rect x="-4.5" y="-5" width="9" height="10" rx="2.3" fill={fill} stroke="#FFFFFF" strokeWidth="0.8" />
-        <text y="1.5" fontSize="3.4" fill={labelFill} fontWeight="900" textAnchor="middle">G</text>
+        {showInteriorLabel && <text y="1.5" fontSize="3.4" fill={labelFill} fontWeight="900" textAnchor="middle">G</text>}
       </g>
     );
   }
@@ -99,7 +99,7 @@ function ActorToken({ actor, ageBand, isDecisionActor }) {
         <ellipse rx="4.4" ry="5.4" fill={fill} stroke="#FFFFFF" strokeWidth="0.8" />
         <circle cy="-3.1" r="2.8" fill="#26344D" stroke="#FFFFFF" strokeWidth="0.55" />
         {isDecisionActor && <circle r="6.5" fill="none" stroke="#C9A24B" strokeWidth="0.9" strokeDasharray="2 1.5" />}
-        <text y="2.7" fontSize="2.9" fill={labelFill} fontWeight="900" textAnchor="middle">{spec.interiorLabel}</text>
+        {showInteriorLabel && <text y="2.7" fontSize="2.9" fill={labelFill} fontWeight="900" textAnchor="middle">{spec.interiorLabel}</text>}
       </g>
     );
   }
@@ -114,7 +114,7 @@ function ActorToken({ actor, ageBand, isDecisionActor }) {
           <line x1="-2.7" y1="2.7" x2="2.7" y2="-2.7" />
         </g>
       )}
-      {spec.role !== "defender" && (
+      {showInteriorLabel && spec.role !== "defender" && (
         <text y="1.4" fontSize="3.1" fill={labelFill} fontWeight="900" textAnchor="middle">{spec.interiorLabel}</text>
       )}
     </g>
@@ -146,16 +146,30 @@ export default function AnimatedPlay({ play, ageBand = "U11", onEvent }) {
   const node = play.nodes[nodeId];
 
   useEffect(() => {
-    setEntered(false);
-    setShowMotion(false);
+    let enterTimer;
+    let motionTimer;
+    let loopTimer;
+
+    function runCycle() {
+      setEntered(false);
+      setShowMotion(false);
+      motionTimer = setTimeout(() => setShowMotion(true), 500);
+      enterTimer = setTimeout(() => setEntered(true), 950);
+    }
+
     startedAtRef.current = Date.now();
-    const enterTimer = setTimeout(() => setEntered(true), 120);
-    const motionTimer = setTimeout(() => setShowMotion(true), 680);
+    runCycle();
+
+    if (!node.terminal) {
+      loopTimer = setInterval(runCycle, 4200);
+    }
+
     return () => {
       clearTimeout(enterTimer);
       clearTimeout(motionTimer);
+      clearInterval(loopTimer);
     };
-  }, [nodeId, play.id, ageBand]);
+  }, [nodeId, play.id, ageBand, node.terminal]);
 
   function choose(opt, index) {
     if (picked !== null || node.terminal) return;
@@ -178,14 +192,17 @@ export default function AnimatedPlay({ play, ageBand = "U11", onEvent }) {
 
   const positions = (!entered && node.enter) ? node.enter : node.pos;
   const puck = node.puck;
+  const visibleMotions = node.terminal
+    ? (node.motions || []).filter((motion) => motion.kind !== "skate")
+    : (node.motions || []).filter((motion) => motion.kind !== "skate" && motion.kind !== "shot");
 
   return (
     <div style={{ background: profile.bg, borderRadius: 12, padding: 12, border: "1px solid #E3E7EE" }}>
       <svg viewBox={VIEWS[play.view] || VIEWS.full} style={{ width: "100%", height: "auto", display: "block" }}>
         <defs>
           {["skate", "pass", "shot"].map((kind) => (
-            <marker key={kind} id={`ap-arrow-${kind}`} markerWidth="6" markerHeight="6" refX="3" refY="3" orient="auto">
-              <path d="M0,0 L6,3 L0,6 Z" fill="#0B1A33" />
+            <marker key={kind} id={`ap-arrow-${kind}`} markerWidth="4" markerHeight="4" refX="3.6" refY="2" orient="auto" markerUnits="userSpaceOnUse">
+              <path d="M0,0 L4,2 L0,4 Z" fill="#0B1A33" />
             </marker>
           ))}
           <filter id="ap-shadow" x="-40%" y="-40%" width="180%" height="180%">
@@ -193,7 +210,7 @@ export default function AnimatedPlay({ play, ageBand = "U11", onEvent }) {
           </filter>
         </defs>
         <RinkBackdrop />
-        {showMotion && (node.motions || []).map((motion, index) => <RoutePath key={`${motion.kind}-${index}`} motion={motion} index={index} />)}
+        {showMotion && visibleMotions.map((motion, index) => <RoutePath key={`${motion.kind}-${index}`} motion={motion} index={index} />)}
         {(node.overlays || []).map((overlay, index) => {
           if (overlay.kind === "freeze") {
             return (
@@ -213,18 +230,17 @@ export default function AnimatedPlay({ play, ageBand = "U11", onEvent }) {
           if (!p) return null;
           const isDecisionActor = node.decisionActor === actor.id;
           return (
-            <g key={actor.id} transform={`translate(${p[0]},${p[1]})`} style={{ transition: "transform .65s cubic-bezier(.4,0,.2,1)" }} filter="url(#ap-shadow)">
+            <g key={actor.id} transform={`translate(${p[0]},${p[1]})`} style={{ transition: "transform 1.4s cubic-bezier(.4,0,.2,1)" }} filter="url(#ap-shadow)">
               <ActorToken actor={actorMap[actor.id]} ageBand={ageBand} isDecisionActor={isDecisionActor} />
-              {(isDecisionActor || ageBand === "U7" || ageBand === "U9") && (
+              {(profile.token === "figure" || (profile.token === "symbol" && actor.role !== "goalie")) && (
                 <text y="-8.5" textAnchor="middle" fontSize="3.2" fill="#0B1A33" fontWeight="900">{isDecisionActor ? "YOU" : actor.label}</text>
               )}
             </g>
           );
         })}
         {puck && (
-          <g transform={`translate(${puck[0]},${puck[1]})`} style={{ transition: "transform .65s cubic-bezier(.4,0,.2,1)" }}>
-            <circle r="2.4" fill="none" stroke="#C9A24B" strokeWidth="0.9" />
-            <circle r="1.1" fill="#111111" />
+          <g transform={`translate(${puck[0]},${puck[1]})`} style={{ transition: "transform 1.4s cubic-bezier(.4,0,.2,1)" }}>
+            <circle r="1.35" fill="#111111" stroke="#FFFFFF" strokeWidth="0.35" />
           </g>
         )}
       </svg>
