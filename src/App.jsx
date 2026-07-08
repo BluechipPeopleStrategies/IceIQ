@@ -385,7 +385,7 @@ function QuestChecklist({ role, quests, results, onTap, onDismiss, onAllComplete
       {/* Prescriptive hero CTA — brand-new users tap one big button instead
           of scanning the whole list. Hidden when collapsed or when all done. */}
       {!collapsed && nextQuest && !allDone && (
-        <button onClick={() => onTap(nextQuest)} style={{display:"block",width:"100%",background:C.gradientPrimary,color:C.bg,border:"none",borderRadius:12,padding:".85rem 1rem",cursor:"pointer",fontFamily:FONT.body,fontWeight:800,fontSize:14,letterSpacing:".02em",marginBottom:".85rem",boxShadow:`0 4px 14px ${C.gold}33, inset 0 1px 0 rgba(255,255,255,.25)`,textAlign:"left",display:"flex",alignItems:"center",justifyContent:"space-between",gap:".5rem"}}>
+        <button onClick={() => onTap(nextQuest)} style={{width:"100%",background:C.gradientPrimary,color:C.bg,border:"none",borderRadius:12,padding:".85rem 1rem",cursor:"pointer",fontFamily:FONT.body,fontWeight:800,fontSize:14,letterSpacing:".02em",marginBottom:".85rem",boxShadow:`0 4px 14px ${C.gold}33, inset 0 1px 0 rgba(255,255,255,.25)`,textAlign:"left",display:"flex",alignItems:"center",justifyContent:"space-between",gap:".5rem"}}>
           <span>Start: {nextQuest.label}</span>
           <span style={{fontSize:16}}>→</span>
         </button>
