@@ -1,4 +1,4 @@
-﻿export const TWO_ON_ONE_READ_PLAY = {
+export const TWO_ON_ONE_READ_PLAY = {
   id: "play_2v1_backdoor_read_u11_v1",
   type: "animated-play",
   title: "2-on-1: Defender steps up",
@@ -39,10 +39,10 @@
         actor: "F1",
         q: "The lone defender steps up to you. What is the best read?",
         opts: [
-          { id: "shoot_far", t: "Shoot through the defender", no: "The defender has stepped into the shooting lane.", outcome: "The shot is blocked and the rush slows down.", next: "blockedShot" },
-          { id: "pass_backdoor", t: "Pass across to F2", ok: true, next: "catch" },
-          { id: "deke_middle", t: "Deke into the defender", no: "That lets the lone defender play your body and the puck.", outcome: "The defender closes the gap and the 2-on-1 disappears.", next: "turnover" },
-          { id: "delay_wait", t: "Wait for everyone to catch up", no: "Waiting gives the defender and goalie time to reset.", outcome: "The passing lane closes.", next: "turnover" },
+          { id: "shoot_far", t: "Shoot through the defender", youngT: "Shoot through the checker", no: "The defender has stepped into the shooting lane.", outcome: "The shot is blocked and the rush slows down.", next: "blockedShot" },
+          { id: "pass_backdoor", t: "Pass across to F2", youngT: "Pass to your teammate", ok: true, next: "catch" },
+          { id: "deke_middle", t: "Deke into the defender", youngT: "Try to beat the checker", no: "That lets the lone defender play your body and the puck.", outcome: "The defender closes the gap and the 2-on-1 disappears.", next: "turnover" },
+          { id: "delay_wait", t: "Wait for everyone to catch up", youngT: "Wait longer", no: "Waiting gives the defender and goalie time to reset.", outcome: "The passing lane closes.", next: "turnover" },
         ],
       },
     },
@@ -65,10 +65,10 @@
         actor: "F2",
         q: "You catch it at the back door. What is the play?",
         opts: [
-          { id: "quick_shot", t: "Shoot quickly before the goalie gets square", ok: true, next: "finish" },
+          { id: "quick_shot", t: "Shoot quickly before the goalie gets square", youngT: "Shoot quick", ok: true, next: "finish" },
           { id: "hold_puck", t: "Hold the puck", no: "Holding lets the goalie recover across the crease.", outcome: "The goalie gets square.", next: "turnover" },
           { id: "skate_corner", t: "Skate into the corner", no: "That takes the puck away from the open net.", outcome: "The scoring chance disappears.", next: "turnover" },
-          { id: "pass_back", t: "Pass back to F1", no: "F1 is no longer the open option.", outcome: "The defender recovers to the middle.", next: "turnover" },
+          { id: "pass_back", t: "Pass back to F1", youngT: "Pass back to your teammate", no: "F1 is no longer the open option.", outcome: "The defender recovers to the middle.", next: "turnover" },
         ],
       },
     },

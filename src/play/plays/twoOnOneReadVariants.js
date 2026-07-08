@@ -21,10 +21,10 @@ export const TWO_ON_ONE_READ_VARIANTS = [
         pos: { F1: [146, 60], F2: [162, 24], D1: [160, 50], G: [186, 42], BC1: [137, 63] },
         ask: {
           opts: [
-            { id: "shoot_far", t: "Shoot through the defender", no: "The defender has stepped into the shooting lane.", outcome: "The shot is blocked and the rush slows down.", next: "blockedShot" },
-            { id: "pass_backdoor", t: "Pass across to F2 before the backchecker arrives", ok: true, next: "catch" },
-            { id: "deke_middle", t: "Deke into the defender", no: "That lets the defender and backchecker squeeze the puck.", outcome: "The 2-on-1 disappears.", next: "turnover" },
-            { id: "delay_wait", t: "Wait for everyone to catch up", no: "The backchecker is exactly why waiting is dangerous.", outcome: "The passing lane closes.", next: "turnover" },
+            { id: "shoot_far", t: "Shoot through the defender", youngT: "Shoot through the checker", no: "The defender has stepped into the shooting lane.", outcome: "The shot is blocked and the rush slows down.", next: "blockedShot" },
+            { id: "pass_backdoor", t: "Pass across to F2 before the backchecker arrives", youngT: "Pass to your teammate before the checker gets back", ok: true, next: "catch" },
+            { id: "deke_middle", t: "Deke into the defender", youngT: "Try to beat the checker", no: "That lets the defender and backchecker squeeze the puck.", outcome: "The 2-on-1 disappears.", next: "turnover" },
+            { id: "delay_wait", t: "Wait for everyone to catch up", youngT: "Wait longer", no: "The backchecker is exactly why waiting is dangerous.", outcome: "The passing lane closes.", next: "turnover" },
           ],
         },
       },
@@ -64,9 +64,9 @@ export const TWO_ON_ONE_READ_VARIANTS = [
         ask: {
           opts: [
             { id: "shoot_far", t: "Shoot through the defender", no: "The defender has stepped into the shooting lane.", outcome: "The shot is blocked.", next: "blockedShot" },
-            { id: "pass_backdoor", t: "Move it across to F2 now", ok: true, next: "catch" },
+            { id: "pass_backdoor", t: "Move it across to F2 now", youngT: "Pass to your teammate now", ok: true, next: "catch" },
             { id: "deke_middle", t: "Deke into the defender", no: "That lets the lone defender play your body and the puck.", outcome: "The 2-on-1 disappears.", next: "turnover" },
-            { id: "delay_wait", t: "Wait for a cleaner angle", no: "Waiting lets the defender and goalie recover.", outcome: "The lane closes.", next: "turnover" },
+            { id: "delay_wait", t: "Wait for a cleaner angle", youngT: "Wait for a better pass", no: "Waiting lets the defender and goalie recover.", outcome: "The lane closes.", next: "turnover" },
           ],
         },
       },
@@ -98,10 +98,10 @@ export const TWO_ON_ONE_READ_VARIANTS = [
         pos: { F1: [162, 54], F2: [162, 24], D1: [170, 40], G: [184, 39] },
         ask: {
           opts: [
-            { id: "quick_shot", t: "Shoot before the goalie gets square", ok: true, next: "finish" },
+            { id: "quick_shot", t: "Shoot before the goalie gets square", youngT: "Shoot quick", ok: true, next: "finish" },
             { id: "hold_puck", t: "Hold until the goalie moves first", no: "The goalie is already recovering. Holding gives the goalie time.", outcome: "The goalie gets square.", next: "turnover" },
             { id: "skate_corner", t: "Carry it below the goal line", no: "That takes the puck away from the scoring window.", outcome: "The chance disappears.", next: "turnover" },
-            { id: "pass_back", t: "Pass back into traffic", no: "The defender is recovering through the middle.", outcome: "The defender disrupts the play.", next: "turnover" },
+            { id: "pass_back", t: "Pass back into traffic", youngT: "Pass back into traffic", no: "The defender is recovering through the middle.", outcome: "The defender disrupts the play.", next: "turnover" },
           ],
         },
       },
