@@ -151,3 +151,100 @@ Young-player wording should be handled through:
 - renderer-level translation
 
 Internal IDs must remain stable.
+
+
+## Answer Reveal Rule
+
+After a player chooses an answer, the teaching moment should be short and visual.
+
+Reveal cards should:
+- Name the selected action in player-facing language.
+- Show a short Why / Coaching point.
+- Avoid F1, F2, D1, A1, A2, and BC1 language for U7 through U13.
+- Explain wrong answers without overwhelming the screen.
+- Use the rink animation as the main teacher and the text as support.
+
+Correct answers should include `why` or `youngWhy`.
+Wrong answers should include `no`, `why`, `youngWhy`, or `outcome`.
+
+
+## Secondary Question Cue Rule
+
+A second question must show a new visual cue before asking for a new decision.
+
+Bad pattern:
+- Player passes to a teammate.
+- App immediately asks the teammate what to do.
+- Nothing visibly changes.
+
+Good pattern:
+- Player passes to a teammate.
+- Defender remains committed or removed from the lane.
+- Goalie is shown late, sliding, or not square.
+- A simple cue such as "Shot lane open" or "Open net" appears.
+- Then the app asks the second question.
+
+The second question should never feel like a disconnected quiz. It should feel like the next visible read.
+
+
+## Second Question Must Show New Read Rule
+
+A follow-up question should only exist when a new visible cue changes the decision.
+
+Do not ask a second quiz question just because possession changed.
+
+Bad pattern:
+- Player passes to teammate.
+- Teammate now has puck.
+- App asks another question.
+- No visible defender, goalie, lane, timing, or pressure cue changes.
+
+Good pattern:
+- First question asks for the main read.
+- Correct answer reveals the consequence.
+- If there is no new cue, the next node is terminal.
+- If there is a second question, the node must include:
+  - `reRead: true`
+  - a visible `cue` or `showCueOnQuestion`
+  - a clear change in pressure, lane, goalie position, support, or timing
+
+A second question should feel like the next visible hockey read, not a disconnected quiz.
+
+
+## Cue Label Size Rule
+
+Cue labels should support the read without covering the play.
+
+For U7 through U13:
+- Use short labels like "Open", "Lane", "Middle", "Wall", or "Help".
+- Avoid long cue labels like "Quick shot lane" on the rink.
+- The cue marker should not cover the puck carrier, support player, goalie, or defender.
+- The cue should point attention to the read, not become the main visual.
+
+For U15/U18:
+- Slightly more tactical cue language is acceptable, but it should still stay compact.
+
+
+## Prototype Telemetry Rule
+
+Prototype telemetry must capture the actual player-facing experience, not only the raw play data.
+
+Telemetry snapshots should include:
+- play id
+- node id
+- age band
+- displayed question text
+- displayed answer option text
+- displayed reveal / coaching text
+- displayed cue label
+- correct option id
+- terminal state
+- question signature
+
+The question signature must change when player-facing question, answer, reveal, or cue text changes.
+
+For U7 through U13, telemetry snapshots should not contain F1, F2, D1, A1, A2, or BC1 shorthand unless that shorthand is intentionally displayed and taught on the screen.
+
+Run:
+- `npm run test:prototype-telemetry`
+- `npm run report:prototype-telemetry`
