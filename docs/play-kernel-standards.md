@@ -266,3 +266,45 @@ New plays should not be random one-offs. They should either strengthen an existi
 Run:
 - `npm run test:scenario-families`
 - `npm run report:scenario-families`
+
+
+## Next Variant Queue Rule
+
+The factory should recommend the next scenario variant before generating more plays.
+
+The next variant should:
+- belong to a scenario family
+- change one meaningful hockey cue
+- identify the correct read
+- identify the common mistake
+- define whether it is a single question, route choice, or re-read
+- avoid disconnected follow-up questions
+
+Run:
+- `npm run report:next-variants`
+
+
+## Bulk-Assisted Creation Rule
+
+Bulk-assisted scenario creation must be controlled.
+
+Current batch size limit: **3 plays**.
+
+Before generating a batch, create or reference a batch plan using:
+
+- `docs/factory/bulk-batch-template.md`
+
+Before committing a batch, run:
+
+- `npm run check:bulk`
+
+A batch should not be committed unless:
+- play catalog tests pass
+- factory standards pass
+- prototype telemetry passes
+- scenario family tests pass
+- reports regenerate
+- production build passes
+- manual playtest review is completed for U7/U9, U11/U13, and U15/U18
+
+Do not increase batch size until two consecutive 3-play batches pass cleanly.

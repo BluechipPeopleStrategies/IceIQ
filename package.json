@@ -60,7 +60,9 @@
     "test:prototype-telemetry": "node --test scripts/test-prototype-telemetry.mjs",
     "report:prototype-telemetry": "node scripts/report-prototype-telemetry.mjs",
     "test:scenario-families": "node --test scripts/test-scenario-families.mjs",
-    "report:scenario-families": "node scripts/report-scenario-families.mjs"
+    "report:scenario-families": "node scripts/report-scenario-families.mjs",
+    "report:next-variants": "node scripts/report-next-scenario-variants.mjs",
+    "check:bulk": "node scripts/check-bulk-gate.mjs"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.103.0",
