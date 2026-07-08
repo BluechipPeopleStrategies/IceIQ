@@ -54,7 +54,7 @@ export function clearDevProfile() {
 // Build a minimal dev player object — no seeded history, matches what a real
 // new signup actually looks like. Downstream code must not assume training
 // sessions, quiz history, self-ratings etc. exist.
-export function buildDevPlayer({ level, position, name }) {
+export function buildDevPlayer({ level, position, name, quizHistory }) {
   return {
     id: "__dev__",
     name: name || "Dev User",
@@ -64,7 +64,7 @@ export function buildDevPlayer({ level, position, name }) {
     sessionLength: 10,
     colorblind: false,
     coachCode: "",
-    quizHistory: [],
+    quizHistory: Array.isArray(quizHistory) ? quizHistory : [],
     selfRatings: {},
     goals: {},
     parentRatings: null,
