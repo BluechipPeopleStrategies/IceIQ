@@ -2,6 +2,8 @@
 // Adaptive difficulty, level->parameter helpers, and canvas/rink utilities.
 // No drill-specific logic lives here.
 
+import { resolveBand } from "./gymBand.js";
+
 // Adaptive level controller.
 // `upStreak` consecutive successes raise the level; `downStreak` consecutive
 // failures lower it. Levels are clamped to [1, maxLevel].
@@ -198,13 +200,11 @@ export function pointerPos(evt, canvas) {
 }
 
 // Age-seeded starting level for a drill, so a kid begins near their real level
-// instead of level 1. Unknown / older bands return 1 (no seed). U13-U18 paused.
+// instead of level 1. Accepts full division strings ("U11 / Atom") — resolution
+// happens in gymBand.js. Unknown bands return 1 (no seed).
+const BAND_SEED = { U7: 2, U9: 4, U11: 6, U13: 7, U15: 8, U18: 8 };
 export function calibratedStartLevel(ageBand) {
-  const b = String(ageBand || "").toUpperCase();
-  if (b === "U7") return 2;
-  if (b === "U9") return 4;
-  if (b === "U11") return 6;
-  return 1;
+  return BAND_SEED[resolveBand(ageBand)] || 1;
 }
 
 // The level a drill should start at given its stored record and the age band.

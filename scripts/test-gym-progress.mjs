@@ -6,7 +6,7 @@ test("calibratedStartLevel seeds by age band, defaults to 1", () => {
   assert.equal(calibratedStartLevel("U7"), 2);
   assert.equal(calibratedStartLevel("u9"), 4);
   assert.equal(calibratedStartLevel("U11"), 6);
-  assert.equal(calibratedStartLevel("U15"), 1);
+  assert.equal(calibratedStartLevel("U15"), 8);
   assert.equal(calibratedStartLevel(null), 1);
 });
 
@@ -17,8 +17,8 @@ test("seededLevel seeds an untouched drill, never lowers, leaves played drills",
   assert.equal(seededLevel({ level: 9, sessions: [] }, "U7"), 9);
   // a played drill is left alone
   assert.equal(seededLevel({ level: 3, sessions: [{ date: "2026-06-14" }] }, "U11"), 3);
-  // unknown band on untouched -> stays 1
-  assert.equal(seededLevel({ level: 1, sessions: [] }, "U15"), 1);
+  // U15 now seeds too (Phase 1 extended the seed table)
+  assert.equal(seededLevel({ level: 1, sessions: [] }, "U15"), 8);
 });
 
 import {
