@@ -8206,7 +8206,13 @@ export default function App() {
     const qid = decodeURIComponent(hashRoute.slice(2));
     return <QuestionPreviewPage questionId={qid}/>;
   }
-  if (hashRoute === "playtest") {
+  // Owner-only raw play test harness. Gated the same way the dev-bypass panel
+  // is (VITE_ENABLE_DEV_BYPASS + LS flag, or `npm run dev`), so it can't be
+  // reached pre-auth on the production beta build. (`#playtest`)
+  if (
+    hashRoute === "playtest" &&
+    (isDevBypassEnabled() || (typeof import.meta !== "undefined" && import.meta.env && import.meta.env.DEV))
+  ) {
     return <RinkPlayTest/>;
   }
   // Scenario playground — flip through + play every seed in the real engine
