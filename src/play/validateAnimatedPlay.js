@@ -1,4 +1,6 @@
-﻿const REQUIRED_NODE_FIELDS = ["id", "q", "pos"];
+﻿import { QUESTION_KINDS, resolveKind } from "./questionKinds.js";
+
+const REQUIRED_NODE_FIELDS = ["id", "q", "pos"];
 
 function isPoint(p) {
   return Array.isArray(p) && p.length === 2 && p.every((n) => typeof n === "number" && Number.isFinite(n));
@@ -34,6 +36,8 @@ export function validateAnimatedPlay(play) {
     if (node.puck && !isPoint(node.puck)) errs.push(`node ${nodeId} puck must be [x,y]`);
     if (node.decisionActor && !actorIds.has(node.decisionActor)) errs.push(`node ${nodeId} decisionActor ${node.decisionActor} is not an actor`);
     if (!node.terminal) {
+      const kind = resolveKind(node);
+      if (!QUESTION_KINDS[kind]) errs.push(`node ${nodeId} has unknown question kind ${JSON.stringify(kind)}`);
       const opts = node.ask?.opts || [];
       if (!node.ask || !Array.isArray(opts) || opts.length < 2) errs.push(`node ${nodeId} must have at least two answer options`);
       if (opts.filter((o) => o.ok).length !== 1) errs.push(`node ${nodeId} must have exactly one correct option`);

@@ -1,3 +1,5 @@
+import { resolveKind } from "./questionKinds.js";
+
 const SHORTHAND_RE = /\b(?:A|D|F|BC)\d+\b/i;
 
 export function ageTelemetryGroup(ageBand = "") {
@@ -122,6 +124,7 @@ export function createQuestionTelemetrySnapshot({ play, nodeId, node, ageBand })
     nodeId,
     ageBand,
     ageGroup: ageTelemetryGroup(ageBand),
+    kind: node?.terminal ? null : resolveKind(node),
     displayedQuestion: telemetryQuestionText(node, ageBand),
     displayedCue: telemetryCueText(node, ageBand),
     options,
