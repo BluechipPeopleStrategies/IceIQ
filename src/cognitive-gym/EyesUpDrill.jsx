@@ -9,6 +9,9 @@ import {
   pointerPos,
 } from "./gymEngine";
 import { getDrill, saveSession } from "./gymStorage";
+import { cue, gymCueHooks } from "./gymAudio";
+import { ScoreCount, ConfettiBurst } from "./gymFx";
+import { sessionRankLabel } from "./gymProgressCore";
 import { pickFlash, scoreTap, flashMs } from "./eyesUpCore";
 
 // "Eyes Up" — peripheral vision.
@@ -244,6 +247,7 @@ export default function EyesUpDrill({ playerId = "default", onExit }) {
     engineRef.current = createAdaptiveLevel(d.level, {
       startUps: d.streak.ups,
       startDowns: d.streak.downs,
+      ...gymCueHooks(),
     });
     setHits(0);
     setTrial(0);
@@ -265,6 +269,7 @@ export default function EyesUpDrill({ playerId = "default", onExit }) {
         streak: { ups: engineRef.current.ups, downs: engineRef.current.downs },
       });
       setSaved(record);
+      cue("fanfare");
     }
   }, [phase, saved, hits, playerId]);
 
@@ -296,6 +301,8 @@ export default function EyesUpDrill({ playerId = "default", onExit }) {
   useEffect(() => () => { clearTimers(); cancelAnimationFrame(rafRef.current); }, []);
 
   const lastFlashMs = engineRef.current ? flashMs(engineRef.current.level) : null;
+
+  const bestLabel = phase === "done" && saved ? sessionRankLabel(saved.sessions, Math.round(points)) : null;
 
   return (
     <div className="gym-drill" ref={rootRef}>
@@ -380,7 +387,9 @@ export default function EyesUpDrill({ playerId = "default", onExit }) {
       {phase === "done" && (
         <div className="gym-card">
           <h2>Session complete</h2>
-          <div className="gym-score">{points}</div>
+          <ScoreCount value={points} />
+          <ConfettiBurst fire={!!bestLabel} />
+          {bestLabel && <p className="gym-best">{bestLabel}</p>}
           <p>
             {points} points. {hits} of {TRIALS} flashes caught in the right region.
             Level {level}.

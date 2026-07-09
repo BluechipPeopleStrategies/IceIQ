@@ -6,6 +6,9 @@ import {
   pointerPos,
 } from "./gymEngine";
 import { getDrill, saveSession } from "./gymStorage";
+import { cue, gymCueHooks } from "./gymAudio";
+import { ScoreCount, ConfettiBurst } from "./gymFx";
+import { sessionRankLabel } from "./gymProgressCore";
 import {
   makeRound,
   scorePrimary,
@@ -376,6 +379,7 @@ export default function TwoThingsDrill({ playerId = "default", onExit }) {
     engineRef.current = createAdaptiveLevel(d.level, {
       startUps: d.streak.ups,
       startDowns: d.streak.downs,
+      ...gymCueHooks(),
     });
     setHits(0);
     setRep(0);
@@ -397,6 +401,7 @@ export default function TwoThingsDrill({ playerId = "default", onExit }) {
         streak: { ups: engineRef.current.ups, downs: engineRef.current.downs },
       });
       setSaved(record);
+      cue("fanfare");
     }
   }, [phase, saved, hits, playerId]);
 
@@ -467,6 +472,8 @@ export default function TwoThingsDrill({ playerId = "default", onExit }) {
   }[stage];
 
   const shapeWord = { circle: "circle", triangle: "triangle", square: "square" };
+
+  const bestLabel = phase === "done" && saved ? sessionRankLabel(saved.sessions, Math.round(points)) : null;
 
   return (
     <div className="gym-drill" ref={rootRef}>
@@ -593,7 +600,9 @@ export default function TwoThingsDrill({ playerId = "default", onExit }) {
       {phase === "done" && (
         <div className="gym-card">
           <h2>Session complete</h2>
-          <div className="gym-score">{points}</div>
+          <ScoreCount value={points} />
+          <ConfettiBurst fire={!!bestLabel} />
+          {bestLabel && <p className="gym-best">{bestLabel}</p>}
           <p>
             {points} points. {hits} of {REPS} rounds with both the crossing and the
             shape. Level {level}.

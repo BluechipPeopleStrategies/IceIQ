@@ -5,6 +5,9 @@ import {
   drawRink,
 } from "./gymEngine";
 import { getDrill, saveSession } from "./gymStorage";
+import { cue, gymCueHooks } from "./gymAudio";
+import { ScoreCount, ConfettiBurst } from "./gymFx";
+import { sessionRankLabel } from "./gymProgressCore";
 import { makeSituation, scoreChoice, OPTIONS } from "./bestOptionCore";
 
 // "Best Option" — decision speed.
@@ -356,6 +359,7 @@ export default function BestOptionDrill({ playerId = "default", onExit }) {
     engineRef.current = createAdaptiveLevel(d.level, {
       startUps: d.streak.ups,
       startDowns: d.streak.downs,
+      ...gymCueHooks(),
     });
     setHits(0);
     setRep(0);
@@ -377,6 +381,7 @@ export default function BestOptionDrill({ playerId = "default", onExit }) {
         streak: { ups: engineRef.current.ups, downs: engineRef.current.downs },
       });
       setSaved(record);
+      cue("fanfare");
     }
   }, [phase, saved, hits, playerId]);
 
@@ -430,6 +435,8 @@ export default function BestOptionDrill({ playerId = "default", onExit }) {
         : `Not the best read here. The right call was ${optionLabel[last.best]}. ${last.reason}`
       : "",
   }[stage];
+
+  const bestLabel = phase === "done" && saved ? sessionRankLabel(saved.sessions, Math.round(points)) : null;
 
   return (
     <div className="gym-drill" ref={rootRef}>
@@ -550,7 +557,9 @@ export default function BestOptionDrill({ playerId = "default", onExit }) {
       {phase === "done" && (
         <div className="gym-card">
           <h2>Session complete</h2>
-          <div className="gym-score">{points}</div>
+          <ScoreCount value={points} />
+          <ConfettiBurst fire={!!bestLabel} />
+          {bestLabel && <p className="gym-best">{bestLabel}</p>}
           <p>
             {points} points. {hits} of {REPS} reads right. Level {level}.
             {saved && (saved.bestPoints || 0) <= points && points > 0

@@ -1,6 +1,9 @@
 import { useRef, useState, useCallback, useEffect } from "react";
 import { createAdaptiveLevel, levelT, lerp, rand } from "./gymEngine";
 import { getDrill, saveSession } from "./gymStorage";
+import { cue, gymCueHooks } from "./gymAudio";
+import { ScoreCount, ConfettiBurst } from "./gymFx";
+import { sessionRankLabel } from "./gymProgressCore";
 import { reactionPoints } from "./reactionCore";
 
 // "Shoot or Hold" — go / no-go reaction time + inhibition.
@@ -55,6 +58,7 @@ export default function ReactionDrill({ playerId = "default", onExit }) {
     schedule(() => {
       trialRef.current.shownAt = performance.now();
       setLight(isGo ? "go" : "nogo");
+      if (isGo) cue("go");
       schedule(() => {
         const tr = trialRef.current;
         if (!tr.resolved) {
@@ -154,7 +158,7 @@ export default function ReactionDrill({ playerId = "default", onExit }) {
   }, [phase]);
 
   function start() {
-    engineRef.current = createAdaptiveLevel(getDrill(playerId, "reaction").level);
+    engineRef.current = createAdaptiveLevel(getDrill(playerId, "reaction").level, { ...gymCueHooks() });
     setCorrect(0);
     setRts([]);
     setTrialIndex(0);
@@ -178,6 +182,7 @@ export default function ReactionDrill({ playerId = "default", onExit }) {
           meta: { avgRt },
         })
       );
+      cue("fanfare");
     }
   }, [phase, saved, correct, rts, points, playerId]);
 
@@ -208,6 +213,8 @@ export default function ReactionDrill({ playerId = "default", onExit }) {
   const avgRt = rts.length
     ? Math.round(rts.reduce((a, b) => a + b, 0) / rts.length)
     : null;
+
+  const bestLabel = phase === "done" && saved ? sessionRankLabel(saved.sessions, Math.round(points)) : null;
 
   return (
     <div className="gym-drill">
@@ -281,7 +288,9 @@ export default function ReactionDrill({ playerId = "default", onExit }) {
       {phase === "done" && (
         <div className="gym-card">
           <h2>Session complete</h2>
-          <div className="gym-score">{Math.round((correct / TRIALS) * 100)}</div>
+          <ScoreCount value={points} />
+          <ConfettiBurst fire={!!bestLabel} />
+          {bestLabel && <p className="gym-best">{bestLabel}</p>}
           <p>
             {correct} of {TRIALS} correct calls. {points} points.
             {avgRt ? ` Average reaction ${avgRt} ms.` : ""} Level {level}.

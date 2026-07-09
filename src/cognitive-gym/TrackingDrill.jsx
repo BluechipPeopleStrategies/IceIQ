@@ -9,6 +9,9 @@ import {
   pointerPos,
 } from "./gymEngine";
 import { getDrill, saveSession } from "./gymStorage";
+import { cue, gymCueHooks } from "./gymAudio";
+import { ScoreCount, ConfettiBurst } from "./gymFx";
+import { sessionRankLabel } from "./gymProgressCore";
 import { shiftPoints } from "./trackingCore";
 
 // "Head on a Swivel" — multi-object tracking (divided attention / awareness).
@@ -370,6 +373,7 @@ export default function TrackingDrill({ playerId = "default", onExit }) {
     engineRef.current = createAdaptiveLevel(d.level, {
       startUps: d.streak.ups,
       startDowns: d.streak.downs,
+      ...gymCueHooks(),
     });
     setCorrect(0);
     setShift(0);
@@ -392,6 +396,7 @@ export default function TrackingDrill({ playerId = "default", onExit }) {
           streak: { ups: engineRef.current.ups, downs: engineRef.current.downs },
         })
       );
+      cue("fanfare");
     }
   }, [phase, saved, correct, points, playerId]);
 
@@ -455,6 +460,8 @@ export default function TrackingDrill({ playerId = "default", onExit }) {
         ? ""
         : `You got ${shiftResult} of ${TARGETS} right${gotBall ? " · soccer ball +1 ⚽" : ""}`,
   }[stage];
+
+  const bestLabel = phase === "done" && saved ? sessionRankLabel(saved.sessions, Math.round(points)) : null;
 
   return (
     <div className="gym-drill">
@@ -558,7 +565,9 @@ export default function TrackingDrill({ playerId = "default", onExit }) {
           {phase === "done" && (
             <div className="gym-card">
               <h2>Session complete</h2>
-              <div className="gym-score">{points}</div>
+              <ScoreCount value={points} />
+              <ConfettiBurst fire={!!bestLabel} />
+              {bestLabel && <p className="gym-best">{bestLabel}</p>}
               <p>
                 {points} points. {correct} of {SHIFTS * TARGETS} teammates tracked.
                 Level {level}.

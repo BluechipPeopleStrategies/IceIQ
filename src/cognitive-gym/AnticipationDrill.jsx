@@ -9,6 +9,9 @@ import {
   pointerPos,
 } from "./gymEngine";
 import { getDrill, saveSession, getUnit, setUnit as saveUnit } from "./gymStorage";
+import { cue, gymCueHooks } from "./gymAudio";
+import { ScoreCount, ConfettiBurst } from "./gymFx";
+import { sessionRankLabel } from "./gymProgressCore";
 import { DIRECTIONS, guessAxis, scorePass, feetPerPixel, formatDistance, rateMiss } from "./anticipationCore";
 
 // "Read the Pass" — trajectory prediction.
@@ -336,6 +339,7 @@ export default function AnticipationDrill({ playerId = "default", onExit }) {
     engineRef.current = createAdaptiveLevel(d.level, {
       startUps: d.streak.ups,
       startDowns: d.streak.downs,
+      ...gymCueHooks(),
     });
     setHits(0);
     setRound(0);
@@ -356,10 +360,13 @@ export default function AnticipationDrill({ playerId = "default", onExit }) {
         streak: { ups: engineRef.current.ups, downs: engineRef.current.downs },
       });
       setSaved(record);
+      cue("fanfare");
     }
   }, [phase, saved, hits, playerId]);
 
   useEffect(() => () => cancelAnimationFrame(rafRef.current), []);
+
+  const bestLabel = phase === "done" && saved ? sessionRankLabel(saved.sessions, Math.round(points)) : null;
 
   return (
     <div className="gym-drill" ref={rootRef}>
@@ -440,7 +447,9 @@ export default function AnticipationDrill({ playerId = "default", onExit }) {
       {phase === "done" && (
         <div className="gym-card">
           <h2>Session complete</h2>
-          <div className="gym-score">{points}</div>
+          <ScoreCount value={points} />
+          <ConfettiBurst fire={!!bestLabel} />
+          {bestLabel && <p className="gym-best">{bestLabel}</p>}
           <p>
             {points} points. {hits} of {ROUNDS} reads inside the window. Level{" "}
             {level}.
