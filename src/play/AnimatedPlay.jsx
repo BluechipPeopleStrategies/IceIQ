@@ -239,6 +239,7 @@ export default function AnimatedPlay({ play, ageBand = "U11", onEvent }) {
   const [entered, setEntered] = useState(false);
   const [showMotion, setShowMotion] = useState(false);
   const startedAtRef = useRef(Date.now());
+  const watchedChainsRef = useRef(new Set());
 
   const actorMap = useMemo(() => Object.fromEntries(play.actors.map((a) => [a.id, a])), [play.actors]);
   const node = play.nodes[nodeId];
@@ -247,6 +248,7 @@ export default function AnimatedPlay({ play, ageBand = "U11", onEvent }) {
   useEffect(() => {
     let enterTimer;
     let motionTimer;
+    let advanceTimer;
     let loopTimer;
 
     function runCycle() {
@@ -259,13 +261,20 @@ export default function AnimatedPlay({ play, ageBand = "U11", onEvent }) {
     startedAtRef.current = Date.now();
     runCycle();
 
-    if (!node.terminal) {
+    if (!node.terminal && node.autoNext) {
+      advanceTimer = setTimeout(() => {
+        const nextNode = play.nodes[node.autoNext.next];
+        if (!nextNode?.autoNext) watchedChainsRef.current.add(`${play.id}:${nodeId}`);
+        setNodeId(node.autoNext.next);
+      }, node.autoNext.ms ?? 2600);
+    } else if (!node.terminal) {
       loopTimer = setInterval(runCycle, 4200);
     }
 
     return () => {
       clearTimeout(enterTimer);
       clearTimeout(motionTimer);
+      clearTimeout(advanceTimer);
       clearInterval(loopTimer);
     };
   }, [nodeId, play.id, ageBand, node.terminal]);
@@ -396,6 +405,22 @@ export default function AnimatedPlay({ play, ageBand = "U11", onEvent }) {
         </div>
         {node.terminal ? (
           <NodeSummary node={node} profile={profile} pickedOption={pickedOption} onReplay={replay} />
+        ) : node.autoNext ? (
+          <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+            <div style={{ fontSize: 12, color: "#5B6575", fontWeight: 700 }}>Watch the play…</div>
+            {["U13", "U15", "U18"].includes(ageBand) && [...watchedChainsRef.current].some((k) => k.startsWith(`${play.id}:`)) && (
+              <button
+                onClick={() => {
+                  onEvent?.({ playId: play.id, nodeId, event: "watch_skip", ms: Date.now() - startedAtRef.current });
+                  let cursor = nodeId;
+                  while (play.nodes[cursor]?.autoNext && !play.nodes[cursor].terminal) cursor = play.nodes[cursor].autoNext.next;
+                  setNodeId(cursor);
+                }}
+                style={{ background: "transparent", border: "1px solid #CDD5E0", borderRadius: 8, color: "#4B5563", padding: "5px 10px", fontSize: 12, cursor: "pointer" }}>
+                Skip to the question
+              </button>
+            )}
+          </div>
         ) : (
           node.ask.opts.map((opt, index) => {
             const isPicked = picked === index;

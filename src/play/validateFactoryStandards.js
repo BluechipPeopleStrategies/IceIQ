@@ -17,6 +17,7 @@ export function validateFactoryStandards(play) {
     // A follow-up question after the first read must show a new cue and explicitly opt into re-read logic.
     // Otherwise, it should be an outcome/reveal node instead of another quiz question.
     if (node.terminal) continue;
+    if (node.autoNext) continue; // watch nodes carry no question; chain shape is validated in validateAnimatedPlay
 
     const opts = node.ask?.opts || [];
     if (!node.ask) errs.push({ playId: play.id, nodeId, message: "non-terminal node missing ask" });

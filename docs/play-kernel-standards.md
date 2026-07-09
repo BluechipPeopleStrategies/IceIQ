@@ -308,3 +308,14 @@ A batch should not be committed unless:
 - manual playtest review is completed for U7/U9, U11/U13, and U15/U18
 
 Do not increase batch size until two consecutive 3-play batches pass cleanly.
+
+## Watch Chain Rule
+
+A watch node (`autoNext`) plays a segment with no question, then advances.
+
+- Watch chains are 1-3 nodes and must end at a question or a terminal node.
+- A watch node must not carry `ask`.
+- U11 always watches a chain through once. U13 and older get a
+  "Skip to the question" affordance on replays only.
+- Watch chains exist to set up verdict and spot-mistake reads. They are not
+  decoration; every watch node must show something the question needs.

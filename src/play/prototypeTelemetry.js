@@ -141,7 +141,7 @@ export function createQuestionTelemetrySnapshot({ play, nodeId, node, ageBand })
 
 export function collectPlayTelemetrySnapshots(play, ageBand) {
   return Object.entries(play?.nodes || {})
-    .filter(([, node]) => node.ask || node.terminal)
+    .filter(([, node]) => node.ask || node.terminal || node.autoNext)
     .map(([nodeId, node]) => createQuestionTelemetrySnapshot({ play, nodeId, node, ageBand }));
 }
 

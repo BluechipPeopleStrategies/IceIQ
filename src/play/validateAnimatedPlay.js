@@ -1,4 +1,4 @@
-﻿import { QUESTION_KINDS, resolveKind } from "./questionKinds.js";
+﻿import { QUESTION_KINDS, resolveKind, watchChainInfo } from "./questionKinds.js";
 
 const REQUIRED_NODE_FIELDS = ["id", "q", "pos"];
 
@@ -36,18 +36,31 @@ export function validateAnimatedPlay(play) {
     if (node.puck && !isPoint(node.puck)) errs.push(`node ${nodeId} puck must be [x,y]`);
     if (node.decisionActor && !actorIds.has(node.decisionActor)) errs.push(`node ${nodeId} decisionActor ${node.decisionActor} is not an actor`);
     if (!node.terminal) {
-      const kind = resolveKind(node);
-      if (!QUESTION_KINDS[kind]) errs.push(`node ${nodeId} has unknown question kind ${JSON.stringify(kind)}`);
-      const opts = node.ask?.opts || [];
-      if (!node.ask || !Array.isArray(opts) || opts.length < 2) errs.push(`node ${nodeId} must have at least two answer options`);
-      if (opts.filter((o) => o.ok).length !== 1) errs.push(`node ${nodeId} must have exactly one correct option`);
-      for (const opt of opts) {
-        if (!opt.id) errs.push(`node ${nodeId} has option with no id`);
-        if (!opt.t) errs.push(`node ${nodeId} option ${opt.id || "unknown"} has no text`);
-        if (opt.next && !nodeIds.has(opt.next)) errs.push(`node ${nodeId} option ${opt.id || "unknown"} routes to missing node ${opt.next}`);
-        if (!opt.ok && !opt.no) warns.push(`node ${nodeId} wrong option ${opt.id || "unknown"} has no teaching note`);
+      if (node.autoNext) {
+        if (node.ask) errs.push(`node ${nodeId} is a watch node and must not have ask`);
+        if (!node.autoNext.next) errs.push(`node ${nodeId} autoNext missing next`);
+        else if (!nodeIds.has(node.autoNext.next)) errs.push(`node ${nodeId} autoNext routes to missing node ${node.autoNext.next}`);
+      } else {
+        const kind = resolveKind(node);
+        if (!QUESTION_KINDS[kind]) errs.push(`node ${nodeId} has unknown question kind ${JSON.stringify(kind)}`);
+        const opts = node.ask?.opts || [];
+        if (!node.ask || !Array.isArray(opts) || opts.length < 2) errs.push(`node ${nodeId} must have at least two answer options`);
+        if (opts.filter((o) => o.ok).length !== 1) errs.push(`node ${nodeId} must have exactly one correct option`);
+        for (const opt of opts) {
+          if (!opt.id) errs.push(`node ${nodeId} has option with no id`);
+          if (!opt.t) errs.push(`node ${nodeId} option ${opt.id || "unknown"} has no text`);
+          if (opt.next && !nodeIds.has(opt.next)) errs.push(`node ${nodeId} option ${opt.id || "unknown"} routes to missing node ${opt.next}`);
+          if (!opt.ok && !opt.no) warns.push(`node ${nodeId} wrong option ${opt.id || "unknown"} has no teaching note`);
+        }
       }
     }
+  }
+
+  for (const [nodeId, node] of Object.entries(play.nodes || {})) {
+    if (!node.autoNext || node.terminal) continue;
+    const info = watchChainInfo(play, nodeId);
+    if (info.cyclic) errs.push(`node ${nodeId} starts a cyclic watch chain`);
+    else if (info.length > 3) errs.push(`node ${nodeId} starts a watch chain longer than 3`);
   }
 
   if (terminalCount === 0) errs.push("play must include at least one terminal node");

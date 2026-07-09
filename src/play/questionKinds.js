@@ -19,3 +19,20 @@ export function resolveKind(node) {
 export function kindSpec(kind) {
   return QUESTION_KINDS[kind] || null;
 }
+
+export function isWatchNode(node) {
+  return Boolean(node && !node.terminal && node.autoNext);
+}
+
+export function watchChainInfo(play, startNodeId) {
+  let length = 0;
+  let nodeId = startNodeId;
+  const seen = new Set();
+  while (isWatchNode(play?.nodes?.[nodeId])) {
+    if (seen.has(nodeId)) return { length, endNodeId: nodeId, cyclic: true };
+    seen.add(nodeId);
+    length += 1;
+    nodeId = play.nodes[nodeId].autoNext.next;
+  }
+  return { length, endNodeId: nodeId, cyclic: false };
+}
