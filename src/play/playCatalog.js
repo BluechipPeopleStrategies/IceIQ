@@ -7,6 +7,7 @@ import { TWO_ON_ONE_READ_VARIANTS } from "./plays/twoOnOneReadVariants.js";
 import { GAP_CONTROL_HOLD_PLAY } from "./plays/gapControlHold.js";
 import { GAP_CONTROL_PIVOT_MATCH_PLAY } from "./plays/gapControlPivotMatch.js";
 import { FORECHECK_PRESSURE_PLAY } from "./plays/forecheckPressure.js";
+import { FORECHECK_TAKE_AWAY_REVERSE_PLAY } from "./plays/forecheckTakeAwayReverse.js";
 import { BACKCHECK_RECOVERY_PLAY } from "./plays/backcheckRecovery.js";
 import { twoOnOnePassLaneRemoved } from "./plays/twoOnOnePassLaneRemoved.js";
 import { twoOnOneSupportTooFlat } from "./plays/twoOnOneSupportTooFlat.js";
@@ -19,6 +20,7 @@ import { SPOT_MISTAKE_FLAT_SUPPORT } from "./plays/spotMistakeFlatSupport.js";
 export const CORE_ANIMATED_PLAYS = [
         BACKCHECK_RECOVERY_PLAY,
 FORECHECK_PRESSURE_PLAY,
+  FORECHECK_TAKE_AWAY_REVERSE_PLAY,
 GAP_CONTROL_HOLD_PLAY,
   GAP_CONTROL_PIVOT_MATCH_PLAY,
 TWO_ON_ONE_READ_PLAY,

@@ -31,7 +31,7 @@ _No queued variant needed right now._
 
 ## Forecheck Pressure
 
-- **Implemented:** 2/4
+- **Implemented:** 3/4
 - **Current status:** needs variants
 
 ### Next Recommended Variant
