@@ -85,3 +85,22 @@ test("gymCueHooks returns engine-shaped callbacks", () => {
   hooks.onResult(true);
   hooks.onChange(5, 1);
 });
+
+import { sessionRankLabel } from "../src/cognitive-gym/gymProgressCore.js";
+
+test("sessionRankLabel ranks the just-saved session against history", () => {
+  // sessions INCLUDE the just-saved one (gymStorage.saveSession appends first)
+  assert.equal(sessionRankLabel([{ points: 500 }], 500), "First session!");
+  assert.equal(
+    sessionRankLabel([{ points: 300 }, { points: 500 }], 500),
+    "Personal best!"
+  );
+  // ties with an old best still celebrate
+  assert.equal(
+    sessionRankLabel([{ points: 500 }, { points: 500 }], 500),
+    "Personal best!"
+  );
+  const history = [900, 800, 700, 600, 500, 400].map((p) => ({ points: p }));
+  assert.equal(sessionRankLabel([...history, { points: 650 }], 650), "Top 5 session");
+  assert.equal(sessionRankLabel([...history, { points: 100 }], 100), null);
+});

@@ -403,3 +403,31 @@
 .gym-star-tier { margin-left: 6px; font-size: 11px; color: #8aa0b8; }
 
 .gym-mute { float: right; font-size: 0.85rem; }
+
+/* Phase 1 juice: results-card celebration */
+@keyframes gym-pop {
+  0% { transform: scale(0.6); opacity: 0; }
+  70% { transform: scale(1.08); opacity: 1; }
+  100% { transform: scale(1); opacity: 1; }
+}
+.gym-score-pop { animation: gym-pop 0.45s ease-out; }
+
+.gym-confetti { position: relative; height: 0; }
+@keyframes gym-fleck-fall {
+  0% { transform: translateY(-8px) rotate(0deg); opacity: 1; }
+  100% { transform: translateY(74px) rotate(260deg); opacity: 0; }
+}
+.gym-fleck {
+  position: absolute;
+  top: -6px;
+  width: 7px;
+  height: 11px;
+  border-radius: 2px;
+  animation: gym-fleck-fall 0.9s ease-in forwards;
+}
+
+.gym-best {
+  color: var(--gym-gold, #f2b705);
+  font-weight: 700;
+  margin: 4px 0 0;
+}

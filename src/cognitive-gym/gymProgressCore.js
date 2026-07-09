@@ -59,3 +59,17 @@ export function earnedBadges(stats, records) {
     { id: "goalieBeater", label: "Goalie Beater", earned: shootoutSessions >= 10 },
   ];
 }
+
+// Label for the just-finished session vs the drill's history. `sessions` is
+// the drill's session list INCLUDING the one just saved (saveSession appends
+// before the results card renders). Returns null when there is nothing to brag
+// about — the card shows no tag rather than a hollow one.
+export function sessionRankLabel(sessions, points) {
+  const all = sessions || [];
+  const prior = all.slice(0, -1).map((s) => s.points || 0);
+  if (prior.length === 0) return "First session!";
+  if (points >= Math.max(...prior)) return "Personal best!";
+  const top = [...prior].sort((a, b) => b - a).slice(0, 4);
+  if (points >= (top[top.length - 1] ?? 0)) return "Top 5 session";
+  return null;
+}
