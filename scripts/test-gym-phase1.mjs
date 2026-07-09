@@ -36,3 +36,21 @@ test("createAdaptiveLevel fires onResult every rep and onChange on promote/releg
   assert.deepEqual(results, [true, true, true, false, false]);
   assert.deepEqual(changes, [[3, 1], [2, -1]]);
 });
+
+import { reactionPoints, RT_FLOOR_MS, HOLD_POINTS } from "../src/cognitive-gym/reactionCore.js";
+
+test("reactionPoints: graded hits, flat holds, zero for errors", () => {
+  // instant tap = max points; floor keeps humanly-fast taps near the top
+  assert.equal(reactionPoints({ kind: "hit", rt: RT_FLOOR_MS, windowMs: 900 }), 1000);
+  const mid = reactionPoints({ kind: "hit", rt: 500, windowMs: 900 });
+  assert.ok(mid > 0 && mid < 1000);
+  // slower rt earns less
+  assert.ok(
+    reactionPoints({ kind: "hit", rt: 700, windowMs: 900 }) <
+    reactionPoints({ kind: "hit", rt: 400, windowMs: 900 })
+  );
+  assert.equal(reactionPoints({ kind: "hold" }), HOLD_POINTS);
+  for (const kind of ["early", "slow", "falseAlarm", "missedGo"]) {
+    assert.equal(reactionPoints({ kind }), 0);
+  }
+});

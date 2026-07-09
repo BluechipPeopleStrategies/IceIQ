@@ -1,6 +1,7 @@
 import { useRef, useState, useCallback, useEffect } from "react";
 import { createAdaptiveLevel, levelT, lerp, rand } from "./gymEngine";
 import { getDrill, saveSession } from "./gymStorage";
+import { reactionPoints } from "./reactionCore";
 
 // "Shoot or Hold" — go / no-go reaction time + inhibition.
 // After a random delay the light flashes: blue = SHOOT (tap fast), orange =
@@ -24,7 +25,7 @@ export default function ReactionDrill({ playerId = "default", onExit }) {
   const [rts, setRts] = useState([]); // reaction times of successful "go" taps
   const [level, setLevel] = useState(() => getDrill(playerId, "reaction").level);
   const [light, setLight] = useState("wait");
-  const [points, setPoints] = useState(0); // +1 correct, -3 for tapping orange, -1 other misses
+  const [points, setPoints] = useState(0); // graded 0-1000 per trial (reactionCore)
   const [saved, setSaved] = useState(null);
 
   function clearTimers() {
@@ -61,13 +62,13 @@ export default function ReactionDrill({ playerId = "default", onExit }) {
           if (tr.isGo) {
             // shown SHOOT but never tapped
             setLight("miss");
-            setPoints((p) => p - 1);
+            setPoints((p) => p + reactionPoints({ kind: "missedGo" }));
             resolve(false);
           } else {
             // held through HOLD — correct
             setLight("held");
             setCorrect((c) => c + 1);
-            setPoints((p) => p + 1);
+            setPoints((p) => p + reactionPoints({ kind: "hold" }));
             resolve(true);
           }
         }
@@ -103,7 +104,7 @@ export default function ReactionDrill({ playerId = "default", onExit }) {
       tr.resolved = true;
       clearTimers();
       setLight("early");
-      setPoints((p) => p - 1);
+      setPoints((p) => p + reactionPoints({ kind: "early" }));
       resolve(false);
       return;
     }
@@ -117,20 +118,20 @@ export default function ReactionDrill({ playerId = "default", onExit }) {
       if (rt <= tr.windowMs) {
         setRts((k) => [...k, rt]);
         setCorrect((k) => k + 1);
-        setPoints((p) => p + 1);
+        setPoints((p) => p + reactionPoints({ kind: "hit", rt, windowMs: tr.windowMs }));
         setLight("hit");
         resolve(true);
       } else {
         setLight("miss");
-        setPoints((p) => p - 1);
+        setPoints((p) => p + reactionPoints({ kind: "slow" }));
         resolve(false);
       }
     } else {
-      // tapped on HOLD (orange) — a turnover, punished 3x a correct rep
+      // tapped on HOLD (orange) — a turnover; earns nothing
       tr.resolved = true;
       clearTimers();
       setLight("falseAlarm");
-      setPoints((p) => p - 3);
+      setPoints((p) => p + reactionPoints({ kind: "falseAlarm" }));
       resolve(false);
     }
   }
@@ -186,11 +187,11 @@ export default function ReactionDrill({ playerId = "default", onExit }) {
     wait: "Ready...",
     go: "SHOOT",
     nogo: "HOLD",
-    early: "Too early (-1)",
-    hit: rts.length ? `${rts[rts.length - 1]} ms (+1)` : "Hit (+1)",
-    miss: "Too slow (-1)",
-    held: "Good hold (+1)",
-    falseAlarm: "Tapped orange (-3)",
+    early: "Jumped early",
+    hit: rts.length ? `${rts[rts.length - 1]} ms — shot away!` : "Shot away!",
+    miss: "Too slow, window closed",
+    held: "Good hold",
+    falseAlarm: "Turnover! That was a HOLD",
   }[light];
 
   const lightClass = {
@@ -246,9 +247,8 @@ export default function ReactionDrill({ playerId = "default", onExit }) {
               Blue says SHOOT, hit the space bar or tap as fast as you can.
               Orange says HOLD, don't touch.
             </strong>{" "}
-            Tapping on orange is a turnover and costs triple. Tapping before the
-            light or too slow also counts against you. The window gets tighter as
-            you level up.
+            Tapping on orange is a turnover and earns nothing. Fast, clean shots
+            earn the big points. The window gets tighter as you level up.
           </p>
           <div className="gym-trains">
             <strong>Why it matters</strong>
