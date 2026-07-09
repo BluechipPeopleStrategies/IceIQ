@@ -6,6 +6,8 @@
 
 **Branch:** `feature/shareable-beta`
 
+**Notion mirror (view-only):** [open in Notion](https://app.notion.com/p/398c5405e7f68172b891e7b7a5aac5ea) · this file is the source of truth; the mirror is a one-way copy, re-synced from here.
+
 ---
 
 ## 🔵 NOW — active front (max 3)
