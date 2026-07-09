@@ -1,5 +1,6 @@
 ﻿import { QUESTION_KINDS, resolveKind, watchChainInfo } from "./questionKinds.js";
 import { kindsForAge } from "./interactionProfiles.js";
+import { MOTION_STYLES } from "./motionVocabulary.js";
 
 const REQUIRED_NODE_FIELDS = ["id", "q", "pos"];
 
@@ -35,6 +36,16 @@ export function validateAnimatedPlay(play) {
       if (!isPoint(point)) errs.push(`node ${nodeId} position for ${actorId} must be [x,y]`);
     }
     if (node.puck && !isPoint(node.puck)) errs.push(`node ${nodeId} puck must be [x,y]`);
+    for (const [i, motion] of (node.motions || []).entries()) {
+      const tag = `node ${nodeId} motion ${i}`;
+      if (!isPoint(motion.from) || !isPoint(motion.to)) errs.push(`${tag} needs from/to as [x,y]`);
+      if (motion.via !== undefined && (!Array.isArray(motion.via) || motion.via.length === 0 || !motion.via.every(isPoint))) {
+        errs.push(`${tag} via must be a non-empty array of [x,y] points`);
+      }
+      if (motion.seq !== undefined && (typeof motion.seq !== "number" || motion.seq < 0)) errs.push(`${tag} seq must be a non-negative number`);
+      if (motion.delayMs !== undefined && typeof motion.delayMs !== "number") errs.push(`${tag} delayMs must be a number`);
+      if (!MOTION_STYLES[motion.kind]) warns.push(`${tag} has unknown kind ${JSON.stringify(motion.kind)} (falls back to skate style)`);
+    }
     if (node.decisionActor && !actorIds.has(node.decisionActor)) errs.push(`node ${nodeId} decisionActor ${node.decisionActor} is not an actor`);
     if (!node.terminal) {
       if (node.autoNext) {

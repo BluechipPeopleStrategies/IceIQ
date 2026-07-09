@@ -1,5 +1,7 @@
 export { AGE_BANDS, INTERACTION_PROFILES, profileForAge } from "./interactionProfiles.js";
 export { MOTION_STYLES, motionStyle } from "./motionVocabulary.js";
+export { motionPathD, motionPoints, motionTimings, visibleMotions } from "./motionGeometry.js";
+export { ANCHORS, ANCHOR_NAMES, RINK, at, mirrorX } from "./rinkAnchors.js";
 export { tokenSpec, validateTokenSystem } from "./tokenSystem.js";
 export { validateAnimatedPlay } from "./validateAnimatedPlay.js";
 export { TWO_ON_ONE_READ_PLAY } from "./plays/twoOnOneRead.js";
