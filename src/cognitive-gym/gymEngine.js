@@ -15,6 +15,8 @@ export function createAdaptiveLevel(startLevel = 1, opts = {}) {
     downStreak = 2,
     startUps = 0,
     startDowns = 0,
+    onResult = null,
+    onChange = null,
   } = opts;
   let level = Math.min(Math.max(startLevel, 1), maxLevel);
   let ups = Math.min(Math.max(startUps, 0), upStreak - 1);
@@ -27,14 +29,21 @@ export function createAdaptiveLevel(startLevel = 1, opts = {}) {
     get toPromote() { return Math.max(1, upStreak - ups); },
     get toRelegate() { return Math.max(1, downStreak - downs); },
     record(success) {
+      if (onResult) { try { onResult(success); } catch { /* cue failure never breaks a rep */ } }
       if (success) {
         ups += 1;
         downs = 0;
-        if (ups >= upStreak && level < maxLevel) { level += 1; ups = 0; }
+        if (ups >= upStreak && level < maxLevel) {
+          level += 1; ups = 0;
+          if (onChange) { try { onChange(level, 1); } catch { /* ignore */ } }
+        }
       } else {
         downs += 1;
         ups = 0;
-        if (downs >= downStreak && level > 1) { level -= 1; downs = 0; }
+        if (downs >= downStreak && level > 1) {
+          level -= 1; downs = 0;
+          if (onChange) { try { onChange(level, -1); } catch { /* ignore */ } }
+        }
       }
       return level;
     },
