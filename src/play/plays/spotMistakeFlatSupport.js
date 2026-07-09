@@ -40,14 +40,14 @@ export const SPOT_MISTAKE_FLAT_SUPPORT = {
       id: "spot",
       q: "One skater made the wrong read. Tap that skater.",
       pos: { F1: [146, 58], F2: [148, 30], D1: [156, 42], G: [186, 42] },
-      puck: [156, 42],
+      puck: [154, 43],
       ask: {
         kind: "spot-mistake",
         q: "One skater made the wrong read. Tap that skater.",
         mistakeActor: "F2",
         opts: [
           { id: "pick_f2", actorId: "F2", t: "The support skater", ok: true, why: "F2 skated even with the puck carrier. Flat support means the pass has no angle, so one defender can take both players.", next: "rewind" },
-          { id: "pick_f1", actorId: "F1", t: "The puck carrier", no: "The pass was a fair idea. It only failed because the support angle was gone.", next: "rewind" },
+          { id: "pick_f1", actorId: "F1", t: "The puck carrier", no: "The pass is the last domino here. It only broke down because the support angle was already gone, so the first wrong read belongs to the support skater.", next: "rewind" },
           { id: "pick_d1", actorId: "D1", t: "The defender", no: "The defender made the right read: with support flat, sitting in the middle takes away the pass.", next: "rewind" },
         ],
       },

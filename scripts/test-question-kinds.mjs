@@ -230,6 +230,13 @@ describe("spot-mistake kind", () => {
     assert.ok(catalog.some((p) => p.id === SPOT_MISTAKE_FLAT_SUPPORT.id));
   });
 
+  it("spot-mistake tap zones paint above actors and puck (hit-test order)", () => {
+    const src = readFileSync(new URL("../src/play/AnimatedPlay.jsx", import.meta.url), "utf8");
+    const zoneIdx = src.indexOf("spot-zone-");
+    assert.ok(zoneIdx > src.indexOf("play.actors.map"), "zones must render after actor tokens");
+    assert.ok(zoneIdx > src.indexOf('circle r="1.35"'), "zones must render after the puck");
+  });
+
   it("enforces one defensible mistake", async () => {
     const { SPOT_MISTAKE_FLAT_SUPPORT } = await import("../src/play/plays/spotMistakeFlatSupport.js");
 
