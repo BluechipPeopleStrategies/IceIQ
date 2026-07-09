@@ -330,3 +330,17 @@ Verdict questions judge the read, never the player.
   `u13Only: true` (for example "Right idea, wrong timing").
 - Every verdict includes a justify step whose options each carry an
   `evidence` field naming a visible actor. No abstract justifications.
+
+## Prediction Reveal Rule
+
+Predict-next questions treat a wrong prediction as information, never a fault.
+
+- The freeze (occlusion point) must show the problem, not the solution, and
+  the correct continuation must be objective from visible cues.
+- All options route to the same `truthNext` node; the truth plays regardless
+  of the prediction.
+- The reveal frame is "You predicted X. Watch what actually happens." No red
+  flash, no "wrong" framing. The option's `why`/`no` copy explains the cue
+  that signaled the true outcome.
+- Predict-next is available at U13 first. U11 rollout waits for a telemetry
+  review of U13 sessions.

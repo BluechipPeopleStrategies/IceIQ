@@ -12,6 +12,7 @@ import { twoOnOneSupportTooFlat } from "./plays/twoOnOneSupportTooFlat.js";
 import { twoOnOneGoalieLateAfterPass } from "./plays/twoOnOneGoalieLateAfterPass.js";
 import { backcheckRecoveryDefenderGetsBeat } from "./plays/backcheckRecoveryDefenderGetsBeat.js";
 import { VERDICT_TWO_ON_ONE_FORCED_SHOT } from "./plays/verdictTwoOnOneForcedShot.js";
+import { PREDICT_TWO_ON_ONE_DEFENDER_STEP } from "./plays/predictTwoOnOneDefenderStep.js";
 
 export const CORE_ANIMATED_PLAYS = [
         BACKCHECK_RECOVERY_PLAY,
@@ -40,6 +41,8 @@ export const ALL_ANIMATED_PLAYS = [
   backcheckRecoveryDefenderGetsBeat,
 
   VERDICT_TWO_ON_ONE_FORCED_SHOT,
+
+  PREDICT_TWO_ON_ONE_DEFENDER_STEP,
 ];
 
 export function playById(id) {

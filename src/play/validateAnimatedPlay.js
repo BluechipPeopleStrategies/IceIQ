@@ -65,6 +65,14 @@ export function validateAnimatedPlay(play) {
             }
           }
         }
+        if (kind === "predict-next") {
+          const truthNext = node.ask?.truthNext;
+          if (!truthNext) errs.push(`node ${nodeId} predict-next requires ask.truthNext`);
+          else if (!nodeIds.has(truthNext)) errs.push(`node ${nodeId} truthNext routes to missing node ${truthNext}`);
+          for (const opt of node.ask?.opts || []) {
+            if (truthNext && opt.next !== truthNext) errs.push(`node ${nodeId} predict-next option ${opt.id || "unknown"} must route to truthNext`);
+          }
+        }
       }
     }
   }

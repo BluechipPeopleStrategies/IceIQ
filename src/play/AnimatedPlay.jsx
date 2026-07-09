@@ -237,6 +237,7 @@ export default function AnimatedPlay({ play, ageBand = "U11", onEvent }) {
   const [picked, setPicked] = useState(null);
   const [pickedOption, setPickedOption] = useState(null);
   const [judgePick, setJudgePick] = useState(null);
+  const [lastKind, setLastKind] = useState(null);
   const [entered, setEntered] = useState(false);
   const [showMotion, setShowMotion] = useState(false);
   const startedAtRef = useRef(Date.now());
@@ -304,6 +305,7 @@ export default function AnimatedPlay({ play, ageBand = "U11", onEvent }) {
     }
 
     onEvent?.({ playId: play.id, nodeId, event: "answer", kind, answerId: opt.id, ok: !!opt.ok, ms });
+    setLastKind(kind);
     setTimeout(() => {
       setNodeId(opt.next);
       setPicked(null);
@@ -315,6 +317,7 @@ export default function AnimatedPlay({ play, ageBand = "U11", onEvent }) {
     setPicked(null);
     setPickedOption(null);
     setJudgePick(null);
+    setLastKind(null);
     onEvent?.({ playId: play.id, nodeId: play.start, event: "replay", ms: 0 });
   }
 
@@ -420,6 +423,11 @@ export default function AnimatedPlay({ play, ageBand = "U11", onEvent }) {
         <div style={{ fontSize: 11, fontWeight: 900, letterSpacing: ".5px", textTransform: "uppercase", color: profile.accent }}>
           {profile.label}{node.decisionActor ? ` - ${node.decisionActor === "F1" ? "you have the puck" : "support read"}` : ""}
         </div>
+        {node.terminal && lastKind === "predict-next" && pickedOption && (
+          <div style={{ fontSize: 12.5, fontWeight: 700, color: "#5B6575", margin: "4px 0 2px" }}>
+            You predicted: {optionTextForAge(pickedOption, actorMap, profile)}. Watch what actually happens.
+          </div>
+        )}
         <div style={{ fontSize: profile.big ? 19 : 15, fontWeight: 800, color: "#0B1A33", margin: "5px 0 10px", lineHeight: 1.35 }}>
           {kind === "verdict" && judgePick ? node.ask.justify.q : questionTextForAge(node, profile)}
         </div>

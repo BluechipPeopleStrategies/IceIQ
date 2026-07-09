@@ -180,3 +180,26 @@ describe("verdict kind", () => {
       "combined ok must gate on judge AND justify picks");
   });
 });
+
+describe("predict-next kind", () => {
+  it("proof play is valid, U13-only, and registered", async () => {
+    const { PREDICT_TWO_ON_ONE_DEFENDER_STEP } = await import("../src/play/plays/predictTwoOnOneDefenderStep.js");
+    assert.deepEqual(validateAnimatedPlay(PREDICT_TWO_ON_ONE_DEFENDER_STEP).errs, []);
+    assert.deepEqual(PREDICT_TWO_ON_ONE_DEFENDER_STEP.ageBands, ["U13"]);
+    const { ALL_ANIMATED_PLAYS: catalog } = await import("../src/play/playCatalog.js");
+    assert.ok(catalog.some((p) => p.id === PREDICT_TWO_ON_ONE_DEFENDER_STEP.id));
+  });
+
+  it("requires truthNext and all options routing to it", async () => {
+    const { PREDICT_TWO_ON_ONE_DEFENDER_STEP } = await import("../src/play/plays/predictTwoOnOneDefenderStep.js");
+    const noTruth = structuredClone(PREDICT_TWO_ON_ONE_DEFENDER_STEP);
+    const ask = Object.values(noTruth.nodes).find((n) => n.ask?.kind === "predict-next").ask;
+    delete ask.truthNext;
+    assert.ok(validateAnimatedPlay(noTruth).errs.some((e) => e.includes("truthNext")));
+
+    const forked = structuredClone(PREDICT_TWO_ON_ONE_DEFENDER_STEP);
+    const ask2 = Object.values(forked.nodes).find((n) => n.ask?.kind === "predict-next").ask;
+    ask2.opts[1].next = Object.keys(forked.nodes)[0];
+    assert.ok(validateAnimatedPlay(forked).errs.some((e) => e.includes("must route to truthNext")));
+  });
+});
