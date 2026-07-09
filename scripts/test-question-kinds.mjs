@@ -3,6 +3,7 @@ import { describe, it } from "node:test";
 import { readFileSync } from "node:fs";
 import { QUESTION_KINDS, resolveKind, kindSpec } from "../src/play/questionKinds.js";
 import { validateAnimatedPlay } from "../src/play/validateAnimatedPlay.js";
+import { validateFactoryStandards } from "../src/play/validateFactoryStandards.js";
 import { TWO_ON_ONE_READ_PLAY } from "../src/play/plays/twoOnOneRead.js";
 import { BACKCHECK_RECOVERY_PLAY } from "../src/play/plays/backcheckRecovery.js";
 import { ALL_ANIMATED_PLAYS } from "../src/play/playCatalog.js";
@@ -307,5 +308,14 @@ describe("factory kind coverage", () => {
     }));
     const full = buildScenarioFamilyReport(fakeFamilyPlays);
     assert.ok(full.warnings.some((w) => w.familyId === "two_on_one" && w.message.includes("only 1 question kind")));
+  });
+
+  it("watch-chain plays' first question is not a follow-up (no reRead warnings)", () => {
+    const verdictResult = validateFactoryStandards(VERDICT_TWO_ON_ONE_FORCED_SHOT);
+    const spotResult = validateFactoryStandards(SPOT_MISTAKE_FLAT_SUPPORT);
+    for (const result of [verdictResult, spotResult]) {
+      assert.ok(!result.warns.some((w) => w.message.includes("reRead")), JSON.stringify(result.warns));
+      assert.ok(!result.errs.some((e) => e.message.includes("reRead")), JSON.stringify(result.errs));
+    }
   });
 });

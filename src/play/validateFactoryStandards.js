@@ -1,3 +1,5 @@
+import { watchChainInfo } from "./questionKinds.js";
+
 export function validateFactoryStandards(play) {
   const errs = [];
   const warns = [];
@@ -6,6 +8,10 @@ export function validateFactoryStandards(play) {
   const tacticalShorthand = /\b(?:A|D|F|BC)\d+\b/;
   const youngPlay = (play.ageBands || []).some((age) => youngAges.has(age));
   const startNodeId = play.start || Object.keys(play.nodes || {})[0];
+
+  // A play may open with a watch chain; the chain's landing node is the
+  // effective first question, not a follow-up (Watch Chain Rule).
+  const firstQuestionNodeId = watchChainInfo(play, startNodeId).endNodeId;
 
   if (!play?.id) errs.push({ playId: play?.id || "unknown", nodeId: "", message: "play missing id" });
   if (!play?.sourceRef?.note || !play?.sourceRef?.cite) {
@@ -26,7 +32,7 @@ export function validateFactoryStandards(play) {
     }
 
     if (
-      nodeId !== startNodeId &&
+      nodeId !== firstQuestionNodeId &&
       node.ask &&
       !node.terminal &&
       !node.reRead
@@ -39,7 +45,7 @@ export function validateFactoryStandards(play) {
     }
 
     if (
-      nodeId !== startNodeId &&
+      nodeId !== firstQuestionNodeId &&
       node.ask &&
       !node.terminal &&
       node.reRead &&
