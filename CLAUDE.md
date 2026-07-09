@@ -4,6 +4,12 @@
 > section cites a file/identifier, grep to confirm it still exists before relying
 > on it — the codebase moves faster than this doc.
 
+## Current priorities (canonical)
+
+`docs/roadmap/TASKS.md` is the single living task list — priority + sequencing,
+scope = app build + content factory. Treat it as the source of truth; the dated
+roadmap snapshots are archived under `docs/roadmap/archive/`.
+
 ## Direction (2026-06-03)
 **Starting fresh on the unified scenario engine** (`src/scenario/`). The legacy question bank is archived (`src/data/questions.legacy*.json`) then being **wiped — NOT migrated forward**. Don't invest in repairing/converting legacy questions. New content = engine scenario seeds (`src/scenario/seeds/`) + content-factory overlay questions. Treat the old MC bank as a frozen, read-only archive.
 
