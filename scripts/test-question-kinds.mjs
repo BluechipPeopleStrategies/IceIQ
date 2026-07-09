@@ -202,4 +202,22 @@ describe("predict-next kind", () => {
     ask2.opts[1].next = Object.keys(forked.nodes)[0];
     assert.ok(validateAnimatedPlay(forked).errs.some((e) => e.includes("must route to truthNext")));
   });
+
+  it("rejects a predict option that omits next", async () => {
+    const { PREDICT_TWO_ON_ONE_DEFENDER_STEP } = await import("../src/play/plays/predictTwoOnOneDefenderStep.js");
+    const omitted = structuredClone(PREDICT_TWO_ON_ONE_DEFENDER_STEP);
+    const ask = Object.values(omitted.nodes).find((n) => n.ask?.kind === "predict-next").ask;
+    delete ask.opts[0].next;
+    assert.ok(validateAnimatedPlay(omitted).errs.some((e) => e.includes("must route to truthNext")));
+  });
+
+  it("every answered question updates lastKind (no stale prediction banner)", () => {
+    const src = readFileSync(new URL("../src/play/AnimatedPlay.jsx", import.meta.url), "utf8");
+    const guardIdx = src.indexOf("if (picked !== null || node.terminal) return;");
+    const setIdx = src.indexOf("setLastKind(kind);");
+    assert.ok(guardIdx > -1 && setIdx > guardIdx && setIdx - guardIdx < 200,
+      "setLastKind must run at the top of choose(), before any branch");
+    assert.equal(src.indexOf("setLastKind(kind);", setIdx + 1), -1,
+      "setLastKind(kind) should appear exactly once");
+  });
 });

@@ -285,6 +285,7 @@ export default function AnimatedPlay({ play, ageBand = "U11", onEvent }) {
   function choose(opt, index) {
     if (picked !== null || node.terminal) return;
     const ms = Date.now() - startedAtRef.current;
+    setLastKind(kind);
 
     if (kind === "verdict" && node.ask.justify && !judgePick) {
       setJudgePick(opt);
@@ -305,7 +306,6 @@ export default function AnimatedPlay({ play, ageBand = "U11", onEvent }) {
     }
 
     onEvent?.({ playId: play.id, nodeId, event: "answer", kind, answerId: opt.id, ok: !!opt.ok, ms });
-    setLastKind(kind);
     setTimeout(() => {
       setNodeId(opt.next);
       setPicked(null);
