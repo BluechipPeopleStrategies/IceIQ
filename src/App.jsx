@@ -8207,10 +8207,12 @@ export default function App() {
     return <QuestionPreviewPage questionId={qid}/>;
   }
   // Owner-only raw play test harness. Gated the same way the dev-bypass panel
-  // is (VITE_ENABLE_DEV_BYPASS + LS flag, or `npm run dev`), so it can't be
-  // reached pre-auth on the production beta build. (`#playtest`)
+  // is (App.jsx ~6829): VITE_ENABLE_DEV_BYPASS=1 AND (LS flag or `npm run dev`).
+  // So it can't be reached pre-auth on the production beta build, or on a
+  // bare local `npm run dev` without the env flag set. (`#playtest`)
   if (
     hashRoute === "playtest" &&
+    import.meta.env.VITE_ENABLE_DEV_BYPASS === "1" &&
     (isDevBypassEnabled() || (typeof import.meta !== "undefined" && import.meta.env && import.meta.env.DEV))
   ) {
     return <RinkPlayTest/>;
