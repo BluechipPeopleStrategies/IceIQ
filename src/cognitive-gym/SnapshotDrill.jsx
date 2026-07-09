@@ -37,7 +37,7 @@ export default function SnapshotDrill({ playerId = "default", onExit }) {
   const [points, setPoints] = useState(0);
   const pointsRef = useRef(0);
   const [stage, setStage] = useState("ready"); // ready | flash | recall | reveal
-  const [last, setLast] = useState(null); // { success, distPx, repPoints }
+  const [last, setLast] = useState(null); // { success, distFt, repPoints }
   const [saved, setSaved] = useState(null);
 
   function clearTimers() {
@@ -273,7 +273,7 @@ export default function SnapshotDrill({ playerId = "default", onExit }) {
     sc.repPoints = result.points;
     setStage("reveal");
     clearTimers();
-    setLast({ success: result.success, distPx: Math.round(result.distPx), repPoints: result.points });
+    setLast({ success: result.success, distFt: Math.round(result.distFt), repPoints: result.points });
     render();
     resolveRep(result.success);
   }
@@ -346,8 +346,8 @@ export default function SnapshotDrill({ playerId = "default", onExit }) {
     recall: "Now tap where the open teammate was.",
     reveal: last
       ? last.success
-        ? `Good read, you found the open man. +${last.repPoints} (off by ${last.distPx} px)`
-        : `Not quite, off by ${last.distPx} px. The gold ring shows where the open man was.`
+        ? `Found the open man! +${last.repPoints} (${last.distFt} ft off)`
+        : `Not quite, ${last.distFt} ft away. The gold ring shows where he was.`
       : "",
   }[stage];
 

@@ -4,6 +4,7 @@
 // so it is unit-testable in plain Node.
 import { levelT, lerp } from "./gymEngine.js";
 import { gradedPoints } from "./gymPoints.js";
+import { RINK_LENGTH_FT, RINK_WIDTH_FT } from "./anticipationCore.js";
 
 // Possible flash positions live on a ring of evenly spaced angles around the
 // center. Higher levels add more angles (more spots to be unsure about) and push
@@ -83,7 +84,7 @@ export function pickFlash(level, W, H, { slot, rng = Math.random } = {}) {
 // Success when the tap is within the success window (same region as the flash).
 // normError is the straight-line miss normalized by the canvas diagonal (0 =
 // exact), so points reward landing right on the spot, not just inside the ring.
-// Returns { success, normError, distPx, points }.
+// Returns { success, normError, distPx, distFt, points }.
 export function scoreTap(tap, flash, W, H) {
   const dx = tap.x - flash.x;
   const dy = tap.y - flash.y;
@@ -91,6 +92,10 @@ export function scoreTap(tap, flash, W, H) {
   const success = distPx <= flash.hitR;
   const diag = Math.sqrt(W * W + H * H) || 1;
   const normError = distPx / diag;
+  const distFt = Math.sqrt(
+    Math.pow(dx * (RINK_LENGTH_FT / (W || 1)), 2) +
+    Math.pow(dy * (RINK_WIDTH_FT / (H || 1)), 2)
+  );
   const points = gradedPoints(normError);
-  return { success, normError, distPx, points };
+  return { success, normError, distPx, distFt, points };
 }

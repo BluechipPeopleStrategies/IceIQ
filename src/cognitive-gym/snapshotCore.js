@@ -4,6 +4,7 @@
 // open teammate. No DOM, no canvas, so it is unit-testable in plain Node.
 import { levelT, lerp } from "./gymEngine.js";
 import { gradedPoints } from "./gymPoints.js";
+import { RINK_LENGTH_FT, RINK_WIDTH_FT } from "./anticipationCore.js";
 
 // How long the whole formation is shown, in ms, before it hides. Shorter is
 // harder: the player gets a quicker glance to take their mental snapshot.
@@ -83,7 +84,7 @@ export function makeFormation(level, W, H, { rng = Math.random } = {}) {
 // Success when the tap is within the success window (same spot as the open
 // teammate). normError is the straight-line miss normalized by the canvas
 // diagonal (0 = exact), so points reward landing dead-on, not just inside the
-// ring. Returns { success, normError, distPx, points }.
+// ring. Returns { success, normError, distPx, distFt, points }.
 export function scoreTap(tap, openPos, W, H) {
   const dx = tap.x - openPos.x;
   const dy = tap.y - openPos.y;
@@ -91,6 +92,10 @@ export function scoreTap(tap, openPos, W, H) {
   const success = distPx <= openPos.hitR;
   const diag = Math.sqrt(W * W + H * H) || 1;
   const normError = distPx / diag;
+  const distFt = Math.sqrt(
+    Math.pow(dx * (RINK_LENGTH_FT / (W || 1)), 2) +
+    Math.pow(dy * (RINK_WIDTH_FT / (H || 1)), 2)
+  );
   const points = gradedPoints(normError);
-  return { success, normError, distPx, points };
+  return { success, normError, distPx, distFt, points };
 }

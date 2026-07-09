@@ -39,7 +39,7 @@ export default function EyesUpDrill({ playerId = "default", onExit }) {
   const [level, setLevel] = useState(() => getDrill(playerId, "eyesup").level);
   const [points, setPoints] = useState(0);
   const pointsRef = useRef(0);
-  const [last, setLast] = useState(null); // { success, distPx, repPoints }
+  const [last, setLast] = useState(null); // { success, distFt, repPoints }
   const [saved, setSaved] = useState(null);
 
   function clearTimers() {
@@ -237,7 +237,7 @@ export default function EyesUpDrill({ playerId = "default", onExit }) {
     sc.result = result;
     sc.repPoints = result.points;
     clearTimers();
-    setLast({ success: result.success, distPx: Math.round(result.distPx), repPoints: result.points });
+    setLast({ success: result.success, distFt: Math.round(result.distFt), repPoints: result.points });
     render();
     resolveTrial(result.success);
   }
@@ -378,8 +378,8 @@ export default function EyesUpDrill({ playerId = "default", onExit }) {
         <p className="gym-hint" aria-live="polite">
           {last
             ? last.success
-              ? `Eyes up, you caught it. +${last.repPoints} (off by ${last.distPx} px)`
-              : `Missed that one, off by ${last.distPx} px. Keep your eyes on the center puck.`
+              ? `Eyes up, you caught it! +${last.repPoints} (${last.distFt} ft off the spot)`
+              : `Just missed, ${last.distFt} ft away. Eyes on the center puck.`
             : "Eyes on the center puck. Tap where the teammate flashes."}
         </p>
       )}

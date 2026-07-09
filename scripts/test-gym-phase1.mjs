@@ -104,3 +104,15 @@ test("sessionRankLabel ranks the just-saved session against history", () => {
   assert.equal(sessionRankLabel([...history, { points: 650 }], 650), "Top 5 session");
   assert.equal(sessionRankLabel([...history, { points: 100 }], 100), null);
 });
+
+import { scoreTap as eyesUpScoreTap } from "../src/cognitive-gym/eyesUpCore.js";
+import { scoreTap as snapshotScoreTap } from "../src/cognitive-gym/snapshotCore.js";
+
+test("scoreTap returns real-feet miss distance (200ft x 85ft rink)", () => {
+  // canvas 800x496; tap 80px right of the flash = 80 * (200/800) = 20 ft
+  const r1 = eyesUpScoreTap({ x: 480, y: 100 }, { x: 400, y: 100, hitR: 30 }, 800, 496);
+  assert.equal(Math.round(r1.distFt), 20);
+  // 62px below = 62 * (85/496) ≈ 10.6 ft
+  const r2 = snapshotScoreTap({ x: 400, y: 162 }, { x: 400, y: 100, hitR: 30 }, 800, 496);
+  assert.equal(Math.round(r2.distFt), 11);
+});

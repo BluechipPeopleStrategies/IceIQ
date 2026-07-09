@@ -193,7 +193,7 @@ export default function ReactionDrill({ playerId = "default", onExit }) {
     go: "SHOOT",
     nogo: "HOLD",
     early: "Jumped early",
-    hit: rts.length ? `${rts[rts.length - 1]} ms — shot away!` : "Shot away!",
+    hit: rts.length ? `${rts[rts.length - 1]} ms, shot away!` : "Shot away!",
     miss: "Too slow, window closed",
     held: "Good hold",
     falseAlarm: "Turnover! That was a HOLD",
