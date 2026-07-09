@@ -2,6 +2,7 @@ import React, { useEffect, useMemo, useRef, useState } from "react";
 import { AGE_BANDS, profileForAge } from "./interactionProfiles.js";
 import { motionStyle } from "./motionVocabulary.js";
 import { tokenSpec } from "./tokenSystem.js";
+import { resolveKind } from "./questionKinds.js";
 import { TWO_ON_ONE_READ_PLAY } from "./plays/twoOnOneRead.js";
 import { logAnimatedPlayEvent, summarizeAnimatedPlayEvents } from "./telemetry.js";
 import { ALL_ANIMATED_PLAYS } from "./playCatalog.js";
@@ -241,6 +242,7 @@ export default function AnimatedPlay({ play, ageBand = "U11", onEvent }) {
 
   const actorMap = useMemo(() => Object.fromEntries(play.actors.map((a) => [a.id, a])), [play.actors]);
   const node = play.nodes[nodeId];
+  const kind = resolveKind(node);
 
   useEffect(() => {
     let enterTimer;
@@ -347,9 +349,10 @@ export default function AnimatedPlay({ play, ageBand = "U11", onEvent }) {
           }
           return null;
         })}
-        {profile.token === "figure" && !node.terminal && node.ask?.choiceMode === "lane-pick" && (node.ask.opts || []).map((opt, index) => {
+        {!node.terminal && kind === "lane-pick" && (node.ask.opts || []).map((opt, index) => {
           if (!opt.zone) return null;
-          const [zx, zy, zr = 6] = opt.zone;
+          const [zx, zy, zr] = opt.zone;
+          const zoneR = zr ?? (profile.token === "figure" ? 6 : 4.5);
           return (
             <g
               key={`choice-zone-${opt.id}`}
@@ -357,7 +360,7 @@ export default function AnimatedPlay({ play, ageBand = "U11", onEvent }) {
               style={{ cursor: picked !== null ? "default" : "pointer" }}
               opacity={picked !== null ? 0.45 : 0.9}
             >
-              <circle cx={zx} cy={zy} r={zr} fill="#FFFFFF" stroke="#C9A24B" strokeWidth="1.2" strokeDasharray="2 1.5" />
+              <circle cx={zx} cy={zy} r={zoneR} fill="#FFFFFF" stroke="#C9A24B" strokeWidth="1.2" strokeDasharray="2 1.5" />
               <text x={zx} y={zy + 1.8} textAnchor="middle" fontSize="3.15" fill="#0B1A33" fontWeight="900">{index + 1}</text>
             </g>
           );

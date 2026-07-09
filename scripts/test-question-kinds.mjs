@@ -1,5 +1,6 @@
 import assert from "node:assert/strict";
 import { describe, it } from "node:test";
+import { readFileSync } from "node:fs";
 import { QUESTION_KINDS, resolveKind, kindSpec } from "../src/play/questionKinds.js";
 import { validateAnimatedPlay } from "../src/play/validateAnimatedPlay.js";
 import { TWO_ON_ONE_READ_PLAY } from "../src/play/plays/twoOnOneRead.js";
@@ -49,5 +50,15 @@ describe("question kind registry", () => {
     const reveal = snaps.find((s) => s.terminal);
     assert.equal(question.kind, "read-mc");
     assert.equal(reveal.kind, null);
+  });
+});
+
+describe("spatial answers at U11/U13", () => {
+  it("zone rendering is gated by kind, not by the figure profile", () => {
+    const src = readFileSync(new URL("../src/play/AnimatedPlay.jsx", import.meta.url), "utf8");
+    assert.ok(!src.includes('profile.token === "figure" && !node.terminal && node.ask?.choiceMode'),
+      "figure-profile gate on zones should be removed");
+    assert.ok(src.includes('kind === "lane-pick"') || src.includes("effectiveKind === \"lane-pick\""),
+      "zone render should branch on resolved kind");
   });
 });
