@@ -65,3 +65,23 @@ test("shiftPoints: linear base, perfect bonus, ball bonus, max 1000", () => {
   assert.equal(shiftPoints(3, 3, true), 1000);        // + 250 ball
   assert.equal(shiftPoints(1, 3, true), 450);         // ball counts even when imperfect
 });
+
+import { CUES, gymCueHooks } from "../src/cognitive-gym/gymAudio.js";
+
+test("CUES: every cue is a non-empty list of {freq, dur, at} notes", () => {
+  for (const name of ["tap", "go", "hit", "perfect", "miss", "levelUp", "fanfare"]) {
+    assert.ok(Array.isArray(CUES[name]) && CUES[name].length > 0, name);
+    for (const n of CUES[name]) {
+      assert.ok(n.freq > 0 && n.dur > 0 && n.at >= 0);
+    }
+  }
+});
+
+test("gymCueHooks returns engine-shaped callbacks", () => {
+  const hooks = gymCueHooks();
+  assert.equal(typeof hooks.onResult, "function");
+  assert.equal(typeof hooks.onChange, "function");
+  // callable without an AudioContext (node) — must not throw
+  hooks.onResult(true);
+  hooks.onChange(5, 1);
+});

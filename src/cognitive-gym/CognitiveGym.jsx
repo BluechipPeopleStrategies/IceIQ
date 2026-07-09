@@ -13,6 +13,7 @@ import TwoThingsDrill from "./TwoThingsDrill";
 import ShootoutDrill from "./ShootoutDrill";
 import DrillIcon from "./DrillIcon";
 import { getDrill, getStats, calibrateDrill } from "./gymStorage";
+import { isMuted, setMuted } from "./gymAudio";
 import { starTier, xpFromPoints, rankForXp, dailyDrillsDone, earnedBadges } from "./gymProgressCore";
 
 // The drill registry. Add a drill by appending an entry here; the hub renders
@@ -144,6 +145,7 @@ const DRILLS = [
 export default function CognitiveGym({ playerId = "default", onBack, ageBand = null }) {
   const [activeId, setActiveId] = useState(null);
   const [refresh, setRefresh] = useState(0);
+  const [muted, setMutedState] = useState(() => isMuted());
 
   const stats = useMemo(() => getStats(playerId), [playerId, refresh]);
   const records = useMemo(
@@ -196,6 +198,14 @@ export default function CognitiveGym({ playerId = "default", onBack, ageBand = n
       )}
       <header className="gym-header">
         <h1>Cognitive Gym</h1>
+        <button
+          type="button"
+          className="gym-btn gym-btn-ghost gym-mute"
+          aria-pressed={muted}
+          onClick={() => { setMuted(!muted); setMutedState(!muted); }}
+        >
+          {muted ? "🔇 Sound off" : "🔊 Sound on"}
+        </button>
         <p className="gym-sub">
           Train the part of your game that happens between the ears. Two or three
           short sessions a week.
