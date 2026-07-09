@@ -6,7 +6,7 @@ This queue turns scenario families into buildable play variants.
 
 ## 2-on-1 Reads
 
-- **Implemented:** 8/6
+- **Implemented:** 11/6
 - **Current status:** complete
 
 _No queued variant needed right now._
@@ -23,6 +23,7 @@ _No queued variant needed right now._
 - **Decision:** Protect the next dangerous lane.
 - **Common mistake:** Chasing from behind with no angle.
 - **Format:** route choice
+- **Recommended kind:** verdict
 
 ### Remaining Backlog
 
@@ -40,6 +41,7 @@ _No queued variant needed right now._
 - **Decision:** Recover inside instead of chasing behind.
 - **Common mistake:** Chasing the back shoulder.
 - **Format:** route choice
+- **Recommended kind:** verdict
 
 ### Remaining Backlog
 
@@ -57,6 +59,7 @@ _No queued variant needed right now._
 - **Decision:** Close space earlier while protecting middle.
 - **Common mistake:** Backing into the goalie.
 - **Format:** single question + reveal
+- **Recommended kind:** verdict
 
 ### Remaining Backlog
 
@@ -74,6 +77,7 @@ _No queued variant needed right now._
 - **Decision:** Move into the passing window.
 - **Common mistake:** Standing still where the puck carrier cannot use you.
 - **Format:** route choice
+- **Recommended kind:** verdict
 
 ### Remaining Backlog
 
@@ -91,6 +95,7 @@ _No queued variant needed right now._
 - **Decision:** Angle to steer wide instead of reaching.
 - **Common mistake:** Reaching from behind.
 - **Format:** route choice
+- **Recommended kind:** verdict
 
 ### Remaining Backlog
 

@@ -1,4 +1,5 @@
 import { ALL_ANIMATED_PLAYS } from "./playCatalog.js";
+import { resolveKind, isWatchNode } from "./questionKinds.js";
 
 export const SCENARIO_FAMILIES = [
   {
@@ -104,6 +105,18 @@ export function classifyPlayFamily(play) {
   ) || null;
 }
 
+export function playKinds(play) {
+  const kinds = new Set();
+  for (const node of Object.values(play?.nodes || {})) {
+    // Watch-chain nodes (autoNext, no ask) only display the setup; they are
+    // not a question, so they must not inflate coverage as "read-mc".
+    if (isWatchNode(node)) continue;
+    const kind = resolveKind(node);
+    if (kind) kinds.add(kind);
+  }
+  return [...kinds].sort();
+}
+
 export function buildScenarioFamilyReport(plays = ALL_ANIMATED_PLAYS) {
   const familyRows = SCENARIO_FAMILIES.map((family) => {
     const matchedPlays = plays.filter((play) => classifyPlayFamily(play)?.id === family.id);
@@ -112,6 +125,10 @@ export function buildScenarioFamilyReport(plays = ALL_ANIMATED_PLAYS) {
       ...family,
       count: matchedPlays.length,
       progressRatio: family.targetVariants ? matchedPlays.length / family.targetVariants : 0,
+      kindCounts: matchedPlays.reduce((acc, play) => {
+        for (const kind of playKinds(play)) acc[kind] = (acc[kind] || 0) + 1;
+        return acc;
+      }, {}),
       plays: matchedPlays.map((play) => ({
         id: play.id,
         title: play.title,
@@ -143,6 +160,14 @@ export function buildScenarioFamilyReport(plays = ALL_ANIMATED_PLAYS) {
       warnings.push({
         familyId: row.id,
         message: `family has ${row.count}/${row.targetVariants} target variants`,
+      });
+    }
+
+    const kindCount = Object.keys(row.kindCounts || {}).length;
+    if (row.targetVariants && row.count >= row.targetVariants && kindCount < 2) {
+      warnings.push({
+        familyId: row.id,
+        message: `family has ${row.count}/${row.targetVariants} target variants but only ${kindCount} question kind`,
       });
     }
   }

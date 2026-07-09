@@ -12,6 +12,7 @@ import { VERDICT_TWO_ON_ONE_FORCED_SHOT } from "../src/play/plays/verdictTwoOnOn
 import { SPOT_MISTAKE_FLAT_SUPPORT } from "../src/play/plays/spotMistakeFlatSupport.js";
 import { PREDICT_TWO_ON_ONE_DEFENDER_STEP } from "../src/play/plays/predictTwoOnOneDefenderStep.js";
 import { kindsForAge } from "../src/play/interactionProfiles.js";
+import { buildScenarioFamilyReport, playKinds } from "../src/play/playFamilies.js";
 
 describe("question kind registry", () => {
   it("defines the five kinds with full contracts", () => {
@@ -279,5 +280,32 @@ describe("age gating", () => {
     const result = validateAnimatedPlay(fallback);
     assert.deepEqual(result.errs, []);
     assert.ok(result.warns.some((w) => w.includes("falls back to read-mc")));
+  });
+});
+
+describe("factory kind coverage", () => {
+  it("reports kinds per play and per family", () => {
+    assert.deepEqual(playKinds(TWO_ON_ONE_READ_PLAY), ["read-mc"]);
+    assert.deepEqual(playKinds(VERDICT_TWO_ON_ONE_FORCED_SHOT), ["verdict"]);
+
+    const report = buildScenarioFamilyReport();
+    const twoOnOne = report.families.find((f) => f.id === "two_on_one");
+    assert.ok(twoOnOne.kindCounts["read-mc"] >= 1);
+    assert.ok(twoOnOne.kindCounts["verdict"] >= 1);
+    assert.ok(twoOnOne.kindCounts["predict-next"] >= 1);
+    assert.ok(twoOnOne.kindCounts["spot-mistake"] >= 1);
+  });
+
+  it("warns when a complete family is single-kind", () => {
+    const report = buildScenarioFamilyReport([
+      structuredClone(TWO_ON_ONE_READ_PLAY),
+    ].map((p, i) => ({ ...p, id: `${p.id}_${i}` })));
+    // gap_control etc. will warn for zero plays; the single-kind warning needs a full family:
+    const fakeFamilyPlays = Array.from({ length: 6 }, (_, i) => ({
+      ...structuredClone(TWO_ON_ONE_READ_PLAY),
+      id: `fake_2v1_${i}`,
+    }));
+    const full = buildScenarioFamilyReport(fakeFamilyPlays);
+    assert.ok(full.warnings.some((w) => w.familyId === "two_on_one" && w.message.includes("only 1 question kind")));
   });
 });

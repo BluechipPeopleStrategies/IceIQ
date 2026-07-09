@@ -32,6 +32,7 @@ Example:
 
 - Title:
 - Scenario family:
+- Kind:
 - Cue:
 - Correct decision:
 - Common mistake:
@@ -52,6 +53,7 @@ Example:
 
 - Title:
 - Scenario family:
+- Kind:
 - Cue:
 - Correct decision:
 - Common mistake:
@@ -69,6 +71,7 @@ Example:
 
 - Title:
 - Scenario family:
+- Kind:
 - Cue:
 - Correct decision:
 - Common mistake:
@@ -89,6 +92,9 @@ Before committing the batch, run:
 ```powershell
 npm run check:bulk
 ```
+
+- [ ] Per-kind playtest items reviewed: occlusion point objective (predict), exactly one defensible mistake (spot-mistake), justify evidence visible on the rink (verdict)
+- [ ] spot-mistake plays: factory gate still locked unless two clean manual playtests are on file (One Defensible Mistake Rule)
 
 ## Commit Rule
 

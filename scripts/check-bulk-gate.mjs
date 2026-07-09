@@ -5,6 +5,7 @@ const steps = [
   "test:play-factory",
   "test:prototype-telemetry",
   "test:scenario-families",
+  "test:question-kinds",
   "report:play-factory",
   "report:prototype-telemetry",
   "report:scenario-families",

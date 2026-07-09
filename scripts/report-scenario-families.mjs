@@ -25,11 +25,16 @@ for (const family of report.families) {
 md += "\n## Families\n\n";
 
 for (const family of report.families) {
+  const kindLine = Object.entries(family.kindCounts || {})
+    .map(([kind, n]) => `${kind}: ${n}`)
+    .join(", ");
+
   md += `### ${family.title}\n\n`;
   md += `${family.description}\n\n`;
   md += `- **Family ID:** \`${family.id}\`\n`;
   md += `- **Implemented:** ${family.count}\n`;
-  md += `- **Target variants:** ${family.targetVariants}\n\n`;
+  md += `- **Target variants:** ${family.targetVariants}\n`;
+  md += `- **Kinds:** ${kindLine || "none"}\n\n`;
 
   md += "**Teaching arc**\n\n";
   for (const step of family.teachingArc) {
