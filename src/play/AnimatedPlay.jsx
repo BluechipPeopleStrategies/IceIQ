@@ -2,7 +2,7 @@ import React, { useEffect, useMemo, useRef, useState } from "react";
 import { AGE_BANDS, profileForAge } from "./interactionProfiles.js";
 import { motionStyle } from "./motionVocabulary.js";
 import { tokenSpec } from "./tokenSystem.js";
-import { resolveKind } from "./questionKinds.js";
+import { resolveKind, watchChainInfo } from "./questionKinds.js";
 import { TWO_ON_ONE_READ_PLAY } from "./plays/twoOnOneRead.js";
 import { logAnimatedPlayEvent, summarizeAnimatedPlayEvents } from "./telemetry.js";
 import { ALL_ANIMATED_PLAYS } from "./playCatalog.js";
@@ -264,7 +264,7 @@ export default function AnimatedPlay({ play, ageBand = "U11", onEvent }) {
     if (!node.terminal && node.autoNext) {
       advanceTimer = setTimeout(() => {
         const nextNode = play.nodes[node.autoNext.next];
-        if (!nextNode?.autoNext) watchedChainsRef.current.add(`${play.id}:${nodeId}`);
+        if (!nextNode?.autoNext) watchedChainsRef.current.add(`${play.id}:${node.autoNext.next}`);
         setNodeId(node.autoNext.next);
       }, node.autoNext.ms ?? 2600);
     } else if (!node.terminal) {
@@ -408,13 +408,11 @@ export default function AnimatedPlay({ play, ageBand = "U11", onEvent }) {
         ) : node.autoNext ? (
           <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
             <div style={{ fontSize: 12, color: "#5B6575", fontWeight: 700 }}>Watch the play…</div>
-            {["U13", "U15", "U18"].includes(ageBand) && [...watchedChainsRef.current].some((k) => k.startsWith(`${play.id}:`)) && (
+            {["U13", "U15", "U18"].includes(ageBand) && watchedChainsRef.current.has(`${play.id}:${watchChainInfo(play, nodeId).endNodeId}`) && (
               <button
                 onClick={() => {
                   onEvent?.({ playId: play.id, nodeId, event: "watch_skip", ms: Date.now() - startedAtRef.current });
-                  let cursor = nodeId;
-                  while (play.nodes[cursor]?.autoNext && !play.nodes[cursor].terminal) cursor = play.nodes[cursor].autoNext.next;
-                  setNodeId(cursor);
+                  setNodeId(watchChainInfo(play, nodeId).endNodeId);
                 }}
                 style={{ background: "transparent", border: "1px solid #CDD5E0", borderRadius: 8, color: "#4B5563", padding: "5px 10px", fontSize: 12, cursor: "pointer" }}>
                 Skip to the question

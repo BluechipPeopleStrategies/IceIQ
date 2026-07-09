@@ -116,6 +116,14 @@ describe("watch-chain primitive", () => {
     const snaps = collectPlayTelemetrySnapshots(watchFixture(), "U11");
     assert.ok(snaps.some((s) => s.nodeId === "watch"));
   });
+
+  it("renderer keys skip state per chain via watchChainInfo", () => {
+    const src = readFileSync(new URL("../src/play/AnimatedPlay.jsx", import.meta.url), "utf8");
+    assert.ok(src.includes("watchChainInfo(play, nodeId).endNodeId"),
+      "skip gate and jump should use the chain end node id");
+    assert.ok(!src.includes("k.startsWith(`${play.id}:`)"),
+      "per-play skip key check should be gone");
+  });
 });
 
 describe("spatial answers at U11/U13", () => {
