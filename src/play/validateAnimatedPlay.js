@@ -1,4 +1,5 @@
 ﻿import { QUESTION_KINDS, resolveKind, watchChainInfo } from "./questionKinds.js";
+import { kindsForAge } from "./interactionProfiles.js";
 
 const REQUIRED_NODE_FIELDS = ["id", "q", "pos"];
 
@@ -83,6 +84,14 @@ export function validateAnimatedPlay(play) {
             if (opt.ok && mistakeActor && opt.actorId !== mistakeActor) {
               errs.push(`node ${nodeId} correct spot-mistake option must match mistakeActor`);
             }
+          }
+        }
+        for (const band of play.ageBands || []) {
+          const available = kindsForAge(band).includes(kind);
+          if (!available && ["U7", "U9"].includes(band)) {
+            errs.push(`node ${nodeId} kind ${kind} is not available at ${band}`);
+          } else if (!available) {
+            warns.push(`node ${nodeId} kind ${kind} falls back to read-mc at ${band}`);
           }
         }
       }

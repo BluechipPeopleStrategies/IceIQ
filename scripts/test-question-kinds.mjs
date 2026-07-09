@@ -9,6 +9,9 @@ import { ALL_ANIMATED_PLAYS } from "../src/play/playCatalog.js";
 import { collectPlayTelemetrySnapshots } from "../src/play/prototypeTelemetry.js";
 import { watchChainInfo } from "../src/play/questionKinds.js";
 import { VERDICT_TWO_ON_ONE_FORCED_SHOT } from "../src/play/plays/verdictTwoOnOneForcedShot.js";
+import { SPOT_MISTAKE_FLAT_SUPPORT } from "../src/play/plays/spotMistakeFlatSupport.js";
+import { PREDICT_TWO_ON_ONE_DEFENDER_STEP } from "../src/play/plays/predictTwoOnOneDefenderStep.js";
+import { kindsForAge } from "../src/play/interactionProfiles.js";
 
 describe("question kind registry", () => {
   it("defines the five kinds with full contracts", () => {
@@ -254,5 +257,27 @@ describe("spot-mistake kind", () => {
     const ask3 = Object.values(noActorId.nodes).find((n) => n.ask?.kind === "spot-mistake").ask;
     delete ask3.opts[0].actorId;
     assert.ok(validateAnimatedPlay(noActorId).errs.some((e) => e.includes("actorId")));
+  });
+});
+
+describe("age gating", () => {
+  it("bands expose their kind lists", () => {
+    assert.deepEqual(kindsForAge("U7"), ["read-mc", "lane-pick"]);
+    assert.deepEqual(kindsForAge("U9"), ["read-mc", "lane-pick"]);
+    assert.deepEqual(kindsForAge("U11"), ["read-mc", "lane-pick", "verdict", "spot-mistake"]);
+    assert.deepEqual(kindsForAge("U13"), ["read-mc", "lane-pick", "verdict", "spot-mistake", "predict-next"]);
+    assert.deepEqual(kindsForAge("U18"), ["read-mc", "lane-pick", "verdict", "spot-mistake", "predict-next"]);
+  });
+
+  it("errors when a new kind targets U7/U9 and warns on fallback bands", () => {
+    const young = structuredClone(SPOT_MISTAKE_FLAT_SUPPORT);
+    young.ageBands = ["U9", "U11"];
+    assert.ok(validateAnimatedPlay(young).errs.some((e) => e.includes("not available at U9")));
+
+    const fallback = structuredClone(PREDICT_TWO_ON_ONE_DEFENDER_STEP);
+    fallback.ageBands = ["U11", "U13"]; // U11 cannot natively render predict-next yet
+    const result = validateAnimatedPlay(fallback);
+    assert.deepEqual(result.errs, []);
+    assert.ok(result.warns.some((w) => w.includes("falls back to read-mc")));
   });
 });

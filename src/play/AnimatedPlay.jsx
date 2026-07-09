@@ -245,7 +245,8 @@ export default function AnimatedPlay({ play, ageBand = "U11", onEvent }) {
 
   const actorMap = useMemo(() => Object.fromEntries(play.actors.map((a) => [a.id, a])), [play.actors]);
   const node = play.nodes[nodeId];
-  const kind = resolveKind(node);
+  const rawKind = resolveKind(node);
+  const kind = rawKind && profile.kinds?.includes(rawKind) ? rawKind : rawKind ? "read-mc" : null;
 
   useEffect(() => {
     let enterTimer;
