@@ -48,17 +48,43 @@ export const hasSupabase = !!supabase;
 // ─────────────────────────────────────────────
 export async function signUp({ email, password, role, name }) {
   if (!supabase) throw new Error("Supabase not configured");
-  const { data, error } = await supabase.auth.signUp({ email, password });
-  if (error) throw error;
-  if (data.user) {
-    // Create profile row
-    const { error: pErr } = await supabase.from("profiles").insert({
-      id: data.user.id,
-      role, name,
-    });
-    if (pErr) throw pErr;
+  const signupTimeoutMs = 12000;
+  const signupPromise = supabase.auth.signUp({ email, password });
+  const timeoutPromise = new Promise((_, reject) => {
+    setTimeout(() => reject(new Error(`RinkReads signup timed out after ${signupTimeoutMs}ms`)), signupTimeoutMs);
+  });
+
+  const { data, error } = await Promise.race([signupPromise, timeoutPromise]);  if (error) throw error;
+
+  let authData = data;
+
+  // In some environments signUp creates the user but does not leave the
+  // browser with an active session. Fall back to sign-in so the UI can
+  // continue instead of returning to the create-account screen.
+  if (!authData?.session && email && password) {
+    const { data: signInData, error: signInErr } = await supabase.auth.signInWithPassword({ email, password });
+    if (signInErr) {
+      warn("sign-in after signup", signInErr);
+    } else if (signInData?.user) {
+      authData = signInData;
+    }
   }
-  return data;
+
+  const user = authData?.user || data?.user;
+
+  if (user) {
+    // Profile creation should not make a successful auth signup look failed.
+    // Use upsert so repeat attempts do not explode on duplicate profile rows.
+    const { error: pErr } = await supabase.from("profiles").upsert({
+      id: user.id,
+      role,
+      name,
+    }, { onConflict: "id" });
+
+    if (pErr) warn("profile upsert after signup", pErr);
+  }
+
+  return authData;
 }
 
 export async function signIn({ email, password }) {
@@ -1053,3 +1079,4 @@ export async function listQuestionRequests() {
     .eq("status", "open").order("created_at", { ascending: true });
   return error ? [] : (data || []);
 }
+
