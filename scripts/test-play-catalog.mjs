@@ -29,7 +29,9 @@ describe("animated play catalog", () => {
   it("keeps each non-terminal question to exactly one correct answer", () => {
     for (const play of ALL_ANIMATED_PLAYS) {
       for (const node of Object.values(play.nodes)) {
-        if (!node.terminal) {
+        // Watch-chain nodes (autoNext, no ask) only display the setup; they
+        // ask nothing, so they are exempt from the one-correct-answer rule.
+        if (!node.terminal && node.ask) {
           assert.equal(node.ask.opts.filter((opt) => opt.ok).length, 1, play.id + " / " + node.id);
         }
       }
