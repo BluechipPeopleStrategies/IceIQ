@@ -7,6 +7,29 @@ Inputs: full code audit of `src/cognitive-gym/` (11 drills), competitor teardown
 NeuroTracker, MentalUP), youth game-design + perceptual-cognitive training
 research, BlueChip advisory panel verdict (consensus, Option C phased).
 
+## Lineage and connections
+
+- **Supersedes (future-work sections of):**
+  `docs/superpowers/specs/2026-06-13-gym-progression-incentives-design.md` —
+  its Plan 1 shipped (calibration + incentives, via
+  `docs/superpowers/plans/2026-06-14-gym-progression-plan1.md`); this spec
+  fixes the age-seed wiring bug that plan introduced and takes over the
+  progression roadmap. Its Plan 2 (server-validated leaderboards, rides with
+  pricing Phase 2) stays deferred and is unchanged here.
+- **Builds on:** `docs/superpowers/specs/2026-06-13-cognitive-gym-expansion-design.md`
+  (graded points, 5 drills) and `2026-06-13-shootout-drill-design.md`.
+- **Roadmap:** `docs/roadmap/2026-07-09-next-7.md` — Phase 1 slots after item
+  2 (playtest gate) and never blocks item 1 (share the beta). Phase 2 rides
+  with item 6 (Daily Faceoff owns the calendar streak; Today's Practice
+  credits it, no second streak). Phase 3 rides with item 7 (Rink Map feeds the
+  parent/coach card). Phase 1 absorbs the gym half of the on-deck
+  "mascot + sound pass"; mascots are Phase 3.
+- **MVP:** per `docs/factory/MVP-VIABILITY.md`, the gym is retention
+  mechanic #7 (post-MVP). Only Phase 1 (beta hygiene) sits near the MVP window.
+- **Implementation plans:** Phase 1:
+  `docs/superpowers/plans/2026-07-09-cognitive-gym-phase1-fix-and-juice.md`.
+  Phases 2–3: planned when their turn comes, same folder.
+
 ## Owner decisions (locked)
 
 - Every game hockey-themed. Panel picked how: hockey-native mechanics under an
