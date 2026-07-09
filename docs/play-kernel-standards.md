@@ -319,3 +319,14 @@ A watch node (`autoNext`) plays a segment with no question, then advances.
   "Skip to the question" affordance on replays only.
 - Watch chains exist to set up verdict and spot-mistake reads. They are not
   decoration; every watch node must show something the question needs.
+
+## Verdict Voice Rule
+
+Verdict questions judge the read, never the player.
+
+- Copy says "the read", "the play", "the shot" - never "you were wrong".
+- The watched skater is a neutral third player (F1), not YOU.
+- U11 verdicts use two options. U13 may add a third option flagged
+  `u13Only: true` (for example "Right idea, wrong timing").
+- Every verdict includes a justify step whose options each carry an
+  `evidence` field naming a visible actor. No abstract justifications.

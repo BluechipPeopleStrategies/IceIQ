@@ -8,6 +8,7 @@ import { BACKCHECK_RECOVERY_PLAY } from "../src/play/plays/backcheckRecovery.js"
 import { ALL_ANIMATED_PLAYS } from "../src/play/playCatalog.js";
 import { collectPlayTelemetrySnapshots } from "../src/play/prototypeTelemetry.js";
 import { watchChainInfo } from "../src/play/questionKinds.js";
+import { VERDICT_TWO_ON_ONE_FORCED_SHOT } from "../src/play/plays/verdictTwoOnOneForcedShot.js";
 
 describe("question kind registry", () => {
   it("defines the five kinds with full contracts", () => {
@@ -135,5 +136,36 @@ describe("spatial answers at U11/U13", () => {
       "zone render should branch on resolved kind");
     assert.ok(src.includes('profile.token === "figure" ? (zr ?? 6) : 4.5'),
       "token profiles should always use the tighter trainer zone radius");
+  });
+});
+
+describe("verdict kind", () => {
+  it("proof play is valid and registered", async () => {
+    assert.deepEqual(validateAnimatedPlay(VERDICT_TWO_ON_ONE_FORCED_SHOT).errs, []);
+    const { ALL_ANIMATED_PLAYS: catalog } = await import("../src/play/playCatalog.js");
+    assert.ok(catalog.some((p) => p.id === VERDICT_TWO_ON_ONE_FORCED_SHOT.id));
+    assert.deepEqual(VERDICT_TWO_ON_ONE_FORCED_SHOT.ageBands, ["U11", "U13"]);
+  });
+
+  it("verdict nodes require an anchored justify block", () => {
+    const play = structuredClone(VERDICT_TWO_ON_ONE_FORCED_SHOT);
+    const judge = Object.values(play.nodes).find((n) => n.ask?.kind === "verdict");
+    delete judge.ask.justify;
+    assert.ok(validateAnimatedPlay(play).errs.some((e) => e.includes("justify")));
+
+    const play2 = structuredClone(VERDICT_TWO_ON_ONE_FORCED_SHOT);
+    const judge2 = Object.values(play2.nodes).find((n) => n.ask?.kind === "verdict");
+    delete judge2.ask.justify.opts[0].evidence;
+    assert.ok(validateAnimatedPlay(play2).errs.some((e) => e.includes("evidence")));
+  });
+
+  it("justify has exactly one correct option", () => {
+    const judge = Object.values(VERDICT_TWO_ON_ONE_FORCED_SHOT.nodes).find((n) => n.ask?.kind === "verdict");
+    assert.equal(judge.ask.justify.opts.filter((o) => o.ok).length, 1);
+  });
+
+  it("verdict copy judges the read, never the player", () => {
+    const text = JSON.stringify(VERDICT_TWO_ON_ONE_FORCED_SHOT);
+    assert.ok(!/you were wrong|you failed|bad choice/i.test(text));
   });
 });

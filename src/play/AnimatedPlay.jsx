@@ -236,6 +236,7 @@ export default function AnimatedPlay({ play, ageBand = "U11", onEvent }) {
   const [nodeId, setNodeId] = useState(play.start);
   const [picked, setPicked] = useState(null);
   const [pickedOption, setPickedOption] = useState(null);
+  const [judgePick, setJudgePick] = useState(null);
   const [entered, setEntered] = useState(false);
   const [showMotion, setShowMotion] = useState(false);
   const startedAtRef = useRef(Date.now());
@@ -259,6 +260,7 @@ export default function AnimatedPlay({ play, ageBand = "U11", onEvent }) {
     }
 
     startedAtRef.current = Date.now();
+    setJudgePick(null);
     runCycle();
 
     if (!node.terminal && node.autoNext) {
@@ -282,9 +284,26 @@ export default function AnimatedPlay({ play, ageBand = "U11", onEvent }) {
   function choose(opt, index) {
     if (picked !== null || node.terminal) return;
     const ms = Date.now() - startedAtRef.current;
+
+    if (kind === "verdict" && node.ask.justify && !judgePick) {
+      setJudgePick(opt);
+      onEvent?.({ playId: play.id, nodeId, event: "judge", kind, answerId: opt.id, ok: !!opt.ok, ms });
+      return;
+    }
+
     setPicked(index);
     setPickedOption(opt);
-    onEvent?.({ playId: play.id, nodeId, event: "answer", answerId: opt.id, ok: !!opt.ok, ms });
+    if (kind === "verdict" && judgePick) {
+      onEvent?.({ playId: play.id, nodeId, event: "answer", kind, answerId: judgePick.id, justifyId: opt.id, ok: !!judgePick.ok, ms });
+      setTimeout(() => {
+        setNodeId(judgePick.next);
+        setPicked(null);
+        setJudgePick(null);
+      }, judgePick.ok && opt.ok ? 750 : 1050);
+      return;
+    }
+
+    onEvent?.({ playId: play.id, nodeId, event: "answer", kind, answerId: opt.id, ok: !!opt.ok, ms });
     setTimeout(() => {
       setNodeId(opt.next);
       setPicked(null);
@@ -295,6 +314,7 @@ export default function AnimatedPlay({ play, ageBand = "U11", onEvent }) {
     setNodeId(play.start);
     setPicked(null);
     setPickedOption(null);
+    setJudgePick(null);
     onEvent?.({ playId: play.id, nodeId: play.start, event: "replay", ms: 0 });
   }
 
@@ -401,7 +421,7 @@ export default function AnimatedPlay({ play, ageBand = "U11", onEvent }) {
           {profile.label}{node.decisionActor ? ` - ${node.decisionActor === "F1" ? "you have the puck" : "support read"}` : ""}
         </div>
         <div style={{ fontSize: profile.big ? 19 : 15, fontWeight: 800, color: "#0B1A33", margin: "5px 0 10px", lineHeight: 1.35 }}>
-          {questionTextForAge(node, profile)}
+          {kind === "verdict" && judgePick ? node.ask.justify.q : questionTextForAge(node, profile)}
         </div>
         {node.terminal ? (
           <NodeSummary node={node} profile={profile} pickedOption={pickedOption} onReplay={replay} />
@@ -420,7 +440,9 @@ export default function AnimatedPlay({ play, ageBand = "U11", onEvent }) {
             )}
           </div>
         ) : (
-          node.ask.opts.map((opt, index) => {
+          (kind === "verdict" && judgePick ? node.ask.justify.opts : node.ask.opts)
+            .filter((opt) => !opt.u13Only || ["U13", "U15", "U18"].includes(ageBand))
+            .map((opt, index) => {
             const isPicked = picked === index;
             const showOk = isPicked && opt.ok;
             const showBad = isPicked && !opt.ok;

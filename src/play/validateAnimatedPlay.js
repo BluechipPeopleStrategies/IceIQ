@@ -52,6 +52,19 @@ export function validateAnimatedPlay(play) {
           if (opt.next && !nodeIds.has(opt.next)) errs.push(`node ${nodeId} option ${opt.id || "unknown"} routes to missing node ${opt.next}`);
           if (!opt.ok && !opt.no) warns.push(`node ${nodeId} wrong option ${opt.id || "unknown"} has no teaching note`);
         }
+        if (kind === "verdict") {
+          const justify = node.ask?.justify;
+          if (!justify || !Array.isArray(justify.opts) || justify.opts.length < 2) {
+            errs.push(`node ${nodeId} verdict requires a justify block with at least two options`);
+          } else {
+            if (justify.opts.filter((o) => o.ok).length !== 1) errs.push(`node ${nodeId} justify must have exactly one correct option`);
+            for (const jopt of justify.opts) {
+              if (!jopt.id || !jopt.t) errs.push(`node ${nodeId} justify option missing id or text`);
+              if (!jopt.evidence) errs.push(`node ${nodeId} justify option ${jopt.id || "unknown"} missing evidence (must name a visible actor or motion)`);
+              else if (!actorIds.has(jopt.evidence)) errs.push(`node ${nodeId} justify evidence ${jopt.evidence} is not an actor`);
+            }
+          }
+        }
       }
     }
   }
