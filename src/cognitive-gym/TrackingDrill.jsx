@@ -9,6 +9,7 @@ import {
   pointerPos,
 } from "./gymEngine";
 import { getDrill, saveSession } from "./gymStorage";
+import { shiftPoints } from "./trackingCore";
 
 // "Head on a Swivel" — multi-object tracking (divided attention / awareness).
 // Three teammates flash gold, then every skater turns white and starts moving.
@@ -67,6 +68,7 @@ export default function TrackingDrill({ playerId = "default", onExit }) {
   const [levelUpIn, setLevelUpIn] = useState(3); // clean shifts still needed to move up
   const [shiftResult, setShiftResult] = useState(null); // correct count for the shift just finished
   const [bonus, setBonus] = useState(0); // soccer balls caught this session
+  const [points, setPoints] = useState(0); // graded 0-1000 per shift (trackingCore)
   const [gotBall, setGotBall] = useState(false); // got the soccer ball on the last shift
   const [ballCall, setBallCall] = useState(null); // which pick you double-tapped as the ⚽
 
@@ -114,6 +116,7 @@ export default function TrackingDrill({ playerId = "default", onExit }) {
         sceneRef.current.ballCall === sceneRef.current.ballIdx;
       setGotBall(got);
       if (got) setBonus((b) => b + 1);
+      setPoints((p) => p + shiftPoints(correctCount, TARGETS, got));
       setShiftResult(correctCount);
       setCorrect((c) => c + correctCount);
       const lvl = engineRef.current.record(correctCount === TARGETS);
@@ -371,6 +374,7 @@ export default function TrackingDrill({ playerId = "default", onExit }) {
     setCorrect(0);
     setShift(0);
     setBonus(0);
+    setPoints(0);
     setLevelUpIn(engineRef.current.toPromote);
     setPhase("playing");
     requestAnimationFrame(() => startShift(0));
@@ -383,12 +387,13 @@ export default function TrackingDrill({ playerId = "default", onExit }) {
         saveSession(playerId, "tracking", {
           score,
           level: engineRef.current.level,
-          points: bonus,
+          points,
+          meta: { ballPickups: bonus },
           streak: { ups: engineRef.current.ups, downs: engineRef.current.downs },
         })
       );
     }
-  }, [phase, saved, correct, playerId]);
+  }, [phase, saved, correct, points, playerId]);
 
   useEffect(
     () => () => {
@@ -487,6 +492,7 @@ export default function TrackingDrill({ playerId = "default", onExit }) {
                 Shift {Math.min(shift + 1, SHIFTS)} / {SHIFTS}
               </span>
             )}
+            {phase === "playing" && <span className="gym-chip">{points} pts</span>}
           </div>
 
           {phase === "intro" && (
@@ -552,11 +558,10 @@ export default function TrackingDrill({ playerId = "default", onExit }) {
           {phase === "done" && (
             <div className="gym-card">
               <h2>Session complete</h2>
-              <div className="gym-score">
-                {Math.round((correct / (SHIFTS * TARGETS)) * 100)}
-              </div>
+              <div className="gym-score">{points}</div>
               <p>
-                {correct} of {SHIFTS * TARGETS} teammates tracked. Level {level}.
+                {points} points. {correct} of {SHIFTS * TARGETS} teammates tracked.
+                Level {level}.
                 {bonus > 0 ? ` ${bonus} soccer ball${bonus === 1 ? "" : "s"} ⚽` : ""}
               </p>
               <div className="gym-row">

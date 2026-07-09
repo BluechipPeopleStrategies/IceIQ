@@ -54,3 +54,14 @@ test("reactionPoints: graded hits, flat holds, zero for errors", () => {
     assert.equal(reactionPoints({ kind }), 0);
   }
 });
+
+import { shiftPoints } from "../src/cognitive-gym/trackingCore.js";
+
+test("shiftPoints: linear base, perfect bonus, ball bonus, max 1000", () => {
+  assert.equal(shiftPoints(0, 3, false), 0);
+  assert.equal(shiftPoints(1, 3, false), 200);
+  assert.equal(shiftPoints(2, 3, false), 400);
+  assert.equal(shiftPoints(3, 3, false), 750);        // 600 base + 150 perfect
+  assert.equal(shiftPoints(3, 3, true), 1000);        // + 250 ball
+  assert.equal(shiftPoints(1, 3, true), 450);         // ball counts even when imperfect
+});
