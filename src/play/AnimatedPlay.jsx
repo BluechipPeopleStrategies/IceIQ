@@ -1,6 +1,7 @@
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import { AGE_BANDS, profileForAge } from "./interactionProfiles.js";
 import { motionStyle } from "./motionVocabulary.js";
+import { motionPathD, motionTimings, visibleMotions as visibleMotionsFor } from "./motionGeometry.js";
 import { tokenSpec } from "./tokenSystem.js";
 import { resolveKind, watchChainInfo } from "./questionKinds.js";
 import { TWO_ON_ONE_READ_PLAY } from "./plays/twoOnOneRead.js";
@@ -139,26 +140,25 @@ function RinkBackdrop() {
   );
 }
 
-function RoutePath({ motion, index }) {
+function RoutePath({ motion, trail, delayMs }) {
   const style = motionStyle(motion.kind);
-  const [x1, y1] = motion.from;
-  const [x2, y2] = motion.to;
-  const mx = (x1 + x2) / 2;
-  const my = Math.min(y1, y2) - 7;
-  const pathD = motion.kind === "skate" || motion.kind === "blocked"
-    ? `M${x1},${y1} L${x2},${y2}`
-    : `M${x1},${y1} Q ${mx},${my} ${x2},${y2}`;
-  const marker = motion.kind === "pass" || motion.kind === "shot" ? `url(#ap-arrow-${motion.kind})` : undefined;
+  const pathD = motionPathD(motion);
+  // Ghost trails (skate routes on terminal nodes) get a faded, dashed,
+  // arrow-tipped treatment so the route that produced the outcome is
+  // visible without competing with pass/shot/blocked lanes.
+  const marker = trail
+    ? "url(#ap-arrow-skate)"
+    : motion.kind === "pass" || motion.kind === "shot" ? `url(#ap-arrow-${motion.kind})` : undefined;
   return (
-    <g>
+    <g className="ap-motion-in" style={{ opacity: 0, animation: "ap-motion-in .5s ease forwards", animationDelay: `${delayMs || 0}ms` }}>
       <path
         d={pathD}
         fill="none"
         stroke={style.stroke}
-        strokeWidth={motion.kind === "skate" ? 1.05 : motion.kind === "blocked" ? 1.7 : style.width}
-        strokeDasharray={style.dash}
+        strokeWidth={trail ? 0.9 : motion.kind === "skate" ? 1.05 : motion.kind === "blocked" ? 1.7 : style.width}
+        strokeDasharray={trail ? "1.2 2.2" : style.dash}
         markerEnd={marker}
-        opacity={motion.kind === "skate" ? 0.55 : motion.kind === "blocked" ? 0.6 : 0.95}
+        opacity={trail ? 0.38 : motion.kind === "skate" ? 0.55 : motion.kind === "blocked" ? 0.6 : 0.95}
       />
     </g>
   );
@@ -324,12 +324,17 @@ export default function AnimatedPlay({ play, ageBand = "U11", onEvent }) {
 
   const positions = (!entered && node.enter) ? node.enter : node.pos;
   const puck = node.puck;
-  const visibleMotions = node.terminal
-    ? (node.motions || []).filter((motion) => motion.kind !== "skate")
-    : (node.motions || []).filter((motion) => motion.kind !== "skate" && motion.kind !== "shot");
+  const shownMotions = visibleMotionsFor(node);
+  const timings = motionTimings(shownMotions.map((entry) => entry.motion));
 
   return (
     <div style={{ background: profile.bg, borderRadius: 12, padding: 12, border: "1px solid #E3E7EE" }}>
+      <style>{`
+        @keyframes ap-motion-in { to { opacity: 1; } }
+        @media (prefers-reduced-motion: reduce) {
+          .ap-motion-in { animation: none !important; opacity: 1 !important; }
+        }
+      `}</style>
       <svg viewBox={VIEWS[play.view] || VIEWS.full} style={{ width: "100%", height: "auto", display: "block" }}>
         <defs>
           {["skate", "pass", "shot"].map((motionKind) => (
@@ -368,7 +373,9 @@ export default function AnimatedPlay({ play, ageBand = "U11", onEvent }) {
           </g>
         )}
 
-        {showMotion && visibleMotions.map((motion, index) => <RoutePath key={`${motion.kind}-${index}`} motion={motion} index={index} />)}
+        {showMotion && shownMotions.map(({ motion, trail }, index) => (
+          <RoutePath key={`${motion.kind}-${index}`} motion={motion} trail={trail} delayMs={timings[index].delayMs} />
+        ))}
         {(node.overlays || []).map((overlay, index) => {
           if (overlay.kind === "freeze") {
             return (
