@@ -60,5 +60,7 @@ describe("spatial answers at U11/U13", () => {
       "figure-profile gate on zones should be removed");
     assert.ok(src.includes('kind === "lane-pick"') || src.includes("effectiveKind === \"lane-pick\""),
       "zone render should branch on resolved kind");
+    assert.ok(src.includes('profile.token === "figure" ? (zr ?? 6) : 4.5'),
+      "token profiles should always use the tighter trainer zone radius");
   });
 });

@@ -299,8 +299,8 @@ export default function AnimatedPlay({ play, ageBand = "U11", onEvent }) {
     <div style={{ background: profile.bg, borderRadius: 12, padding: 12, border: "1px solid #E3E7EE" }}>
       <svg viewBox={VIEWS[play.view] || VIEWS.full} style={{ width: "100%", height: "auto", display: "block" }}>
         <defs>
-          {["skate", "pass", "shot"].map((kind) => (
-            <marker key={kind} id={`ap-arrow-${kind}`} markerWidth="4" markerHeight="4" refX="3.6" refY="2" orient="auto" markerUnits="userSpaceOnUse">
+          {["skate", "pass", "shot"].map((motionKind) => (
+            <marker key={motionKind} id={`ap-arrow-${motionKind}`} markerWidth="4" markerHeight="4" refX="3.6" refY="2" orient="auto" markerUnits="userSpaceOnUse">
               <path d="M0,0 L4,2 L0,4 Z" fill="#0B1A33" />
             </marker>
           ))}
@@ -352,7 +352,9 @@ export default function AnimatedPlay({ play, ageBand = "U11", onEvent }) {
         {!node.terminal && kind === "lane-pick" && (node.ask.opts || []).map((opt, index) => {
           if (!opt.zone) return null;
           const [zx, zy, zr] = opt.zone;
-          const zoneR = zr ?? (profile.token === "figure" ? 6 : 4.5);
+          // Zone radii in play data are authored for the U7/U9 playground look.
+          // Trainer bands always use the tighter ring regardless of data radius.
+          const zoneR = profile.token === "figure" ? (zr ?? 6) : 4.5;
           return (
             <g
               key={`choice-zone-${opt.id}`}
