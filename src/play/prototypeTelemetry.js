@@ -1,4 +1,4 @@
-import { resolveKind } from "./questionKinds.js";
+import { resolveKind, isWatchNode } from "./questionKinds.js";
 
 const SHORTHAND_RE = /\b(?:A|D|F|BC)\d+\b/i;
 
@@ -116,15 +116,21 @@ export function createQuestionTelemetrySnapshot({ play, nodeId, node, ageBand })
     next: opt.next || null,
   }));
 
+  const watch = isWatchNode(node);
+
   const snapshot = {
-    eventType: node?.terminal ? "prototype_reveal_viewed" : "prototype_question_viewed",
+    eventType: node?.terminal
+      ? "prototype_reveal_viewed"
+      : watch
+        ? "prototype_watch_viewed"
+        : "prototype_question_viewed",
     playId: play?.id || "",
     playTitle: play?.title || "",
     playConcept: play?.concept || "",
     nodeId,
     ageBand,
     ageGroup: ageTelemetryGroup(ageBand),
-    kind: node?.terminal ? null : resolveKind(node),
+    kind: node?.terminal ? null : watch ? "watch" : resolveKind(node),
     displayedQuestion: telemetryQuestionText(node, ageBand),
     displayedCue: telemetryCueText(node, ageBand),
     options,

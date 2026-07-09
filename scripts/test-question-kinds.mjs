@@ -14,6 +14,7 @@ import { SPOT_MISTAKE_FLAT_SUPPORT } from "../src/play/plays/spotMistakeFlatSupp
 import { PREDICT_TWO_ON_ONE_DEFENDER_STEP } from "../src/play/plays/predictTwoOnOneDefenderStep.js";
 import { kindsForAge } from "../src/play/interactionProfiles.js";
 import { buildScenarioFamilyReport, playKinds } from "../src/play/playFamilies.js";
+import { logAnimatedPlayEvent, summarizeAnimatedPlayEvents } from "../src/play/telemetry.js";
 
 describe("question kind registry", () => {
   it("defines the five kinds with full contracts", () => {
@@ -35,6 +36,10 @@ describe("question kind registry", () => {
     assert.equal(resolveKind({ terminal: true }), null);
     assert.equal(kindSpec("read-mc").answer, "buttons");
     assert.equal(kindSpec("nope"), null);
+  });
+
+  it("round-trips an explicit verdict kind", () => {
+    assert.equal(resolveKind({ ask: { kind: "verdict", opts: [] } }), "verdict");
   });
 
   it("rejects unknown kinds in validation", () => {
@@ -123,6 +128,18 @@ describe("watch-chain primitive", () => {
     assert.ok(snaps.some((s) => s.nodeId === "watch"));
   });
 
+  it("watch nodes snapshot as watch, not read-mc questions", () => {
+    const snaps = collectPlayTelemetrySnapshots(VERDICT_TWO_ON_ONE_FORCED_SHOT, "U11");
+    const watchSnap = snaps.find((s) => s.nodeId === "watch");
+    assert.equal(watchSnap.kind, "watch");
+    assert.equal(watchSnap.eventType, "prototype_watch_viewed");
+  });
+
+  it("verdict wrong-justify attributes the wrong answer to the justify option", () => {
+    const src = readFileSync(new URL("../src/play/telemetry.js", import.meta.url), "utf8");
+    assert.ok(src.includes("justifyId"), "stored events must carry justifyId");
+  });
+
   it("renderer keys skip state per chain via watchChainInfo", () => {
     const src = readFileSync(new URL("../src/play/AnimatedPlay.jsx", import.meta.url), "utf8");
     assert.ok(src.includes("watchChainInfo(play, nodeId).endNodeId"),
@@ -183,6 +200,29 @@ describe("verdict kind", () => {
     const src = readFileSync(new URL("../src/play/AnimatedPlay.jsx", import.meta.url), "utf8");
     assert.ok(src.includes("ok: !!(judgePick.ok && opt.ok)"),
       "combined ok must gate on judge AND justify picks");
+  });
+
+  it("summarize attributes a wrong-justify verdict to the justify option, not the correct judge pick", () => {
+    const map = new Map();
+    const storage = {
+      getItem: (key) => (map.has(key) ? map.get(key) : null),
+      setItem: (key, value) => map.set(key, String(value)),
+      removeItem: (key) => map.delete(key),
+    };
+    logAnimatedPlayEvent({
+      playId: "t",
+      nodeId: "judge",
+      event: "answer",
+      kind: "verdict",
+      answerId: "better_option",
+      justifyId: "goalie_deep",
+      ok: false,
+      judgeOk: true,
+      justifyOk: false,
+      ms: 100,
+    }, storage);
+    const summary = summarizeAnimatedPlayEvents("t", storage);
+    assert.equal(summary.mostCommonWrongAnswer, "goalie_deep");
   });
 });
 

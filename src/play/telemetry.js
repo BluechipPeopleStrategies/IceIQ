@@ -32,6 +32,10 @@ export function logAnimatedPlayEvent(event, storage = globalThis.localStorage) {
     ok: typeof event.ok === "boolean" ? event.ok : null,
     ms: typeof event.ms === "number" ? Math.max(0, Math.round(event.ms)) : null,
   };
+  if (event.kind !== undefined) next.kind = event.kind;
+  if (event.justifyId !== undefined) next.justifyId = event.justifyId;
+  if (typeof event.judgeOk === "boolean") next.judgeOk = event.judgeOk;
+  if (typeof event.justifyOk === "boolean") next.justifyOk = event.justifyOk;
   const events = readAnimatedPlayEvents(storage);
   const bounded = [...events, next].slice(-MAX_EVENTS);
   storage.setItem(ANIMATED_PLAY_EVENT_KEY, JSON.stringify(bounded));
@@ -43,8 +47,13 @@ export function summarizeAnimatedPlayEvents(playId, storage = globalThis.localSt
   const answerEvents = events.filter((event) => event.event === "answer");
   const wrongCounts = new Map();
   for (const event of answerEvents) {
-    if (event.ok === false && event.answerId) {
-      wrongCounts.set(event.answerId, (wrongCounts.get(event.answerId) || 0) + 1);
+    if (event.ok !== false) continue;
+    const wrongId =
+      event.kind === "verdict" && event.judgeOk === true && event.justifyOk === false
+        ? event.justifyId
+        : event.answerId;
+    if (wrongId) {
+      wrongCounts.set(wrongId, (wrongCounts.get(wrongId) || 0) + 1);
     }
   }
   const mostCommonWrongAnswer = [...wrongCounts.entries()].sort((a, b) => b[1] - a[1])[0]?.[0] || "";
