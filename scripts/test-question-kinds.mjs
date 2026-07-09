@@ -168,4 +168,15 @@ describe("verdict kind", () => {
     const text = JSON.stringify(VERDICT_TWO_ON_ONE_FORCED_SHOT);
     assert.ok(!/you were wrong|you failed|bad choice/i.test(text));
   });
+
+  it("judge node does not frame the learner as the skater (no decisionActor)", () => {
+    const judge = Object.values(VERDICT_TWO_ON_ONE_FORCED_SHOT.nodes).find((n) => n.ask?.kind === "verdict");
+    assert.equal(judge.decisionActor, undefined);
+  });
+
+  it("verdict answer telemetry requires both phases correct", () => {
+    const src = readFileSync(new URL("../src/play/AnimatedPlay.jsx", import.meta.url), "utf8");
+    assert.ok(src.includes("ok: !!(judgePick.ok && opt.ok)"),
+      "combined ok must gate on judge AND justify picks");
+  });
 });

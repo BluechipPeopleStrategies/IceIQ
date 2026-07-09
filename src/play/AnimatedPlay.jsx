@@ -294,7 +294,7 @@ export default function AnimatedPlay({ play, ageBand = "U11", onEvent }) {
     setPicked(index);
     setPickedOption(opt);
     if (kind === "verdict" && judgePick) {
-      onEvent?.({ playId: play.id, nodeId, event: "answer", kind, answerId: judgePick.id, justifyId: opt.id, ok: !!judgePick.ok, ms });
+      onEvent?.({ playId: play.id, nodeId, event: "answer", kind, answerId: judgePick.id, justifyId: opt.id, ok: !!(judgePick.ok && opt.ok), judgeOk: !!judgePick.ok, justifyOk: !!opt.ok, ms });
       setTimeout(() => {
         setNodeId(judgePick.next);
         setPicked(null);

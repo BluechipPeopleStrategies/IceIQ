@@ -37,7 +37,6 @@ export const VERDICT_TWO_ON_ONE_FORCED_SHOT = {
     judge: {
       id: "judge",
       q: "The shot went into the defender. Was that the right read?",
-      decisionActor: "F1",
       pos: { F1: [148, 60], F2: [162, 24], D1: [156, 53], G: [186, 42] },
       puck: [156, 53],
       ask: {
