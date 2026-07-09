@@ -89,6 +89,16 @@ Decision point:
 - If they feel distinct, keep both.
 - If they feel too similar, revise one before building more.
 
+Verdict (2026-07-09): Distinct — keep both. Hold the middle teaches a
+positional read (protect the middle lane, do not overcommit or chase);
+Match the rush speed teaches a skating/timing read (pivot early against
+speed instead of getting caught flat-footed). QC fix applied: `youngT`
+translations added to the hold play's options to match its sibling.
+Flagged for manual visual review: the hold play and the force-the-wall
+forecheck play both draw a labeled covered lane ("middle protected" /
+"middle outlet denied") during the question node, which may hint the
+answer; the newer plays avoid this pattern.
+
 ### Phase 2 — Resolve Source Docs
 
 Commit or correct the referenced library notes before more play expansion.
@@ -99,12 +109,19 @@ Priority docs:
 2. docs/library/backcheck-recovery.md
 3. docs/library/forecheck-pressure.md
 
+Resolved (2026-07-09): all three committed, including a second-read section
+(the reverse) added to forecheck-pressure.md.
+
 ### Phase 3 — Next Native Plays
 
 Recommended order:
 
 1. Forecheck Pressure — F1 angle decides the play
+   (DONE before this plan was written: already covered by the committed play
+   `play_forecheck_pressure_force_wall_u13_v1`, "Force the wall" — same read:
+   angle inside-out, deny the middle, force the wall. Do not duplicate.)
 2. Forecheck Pressure — Take away the reverse
+   (BUILT 2026-07-09 as `play_forecheck_pressure_take_away_reverse_u13_v1`.)
 3. Gap Control — Step up when attackers are flat-footed
 4. Backcheck Recovery — Sort the weak-side trailer
 5. Off-Puck Support — Be available, not nearby
@@ -114,7 +131,15 @@ Recommended order:
 
 ## Next Build Candidate
 
-### Forecheck Pressure — F1 angle decides the play
+Update 2026-07-09: the F1-angle candidate below turned out to already exist
+as the committed "Force the wall" play, so the reverse read was built
+instead (`play_forecheck_pressure_take_away_reverse_u13_v1`). The next open
+candidate is Gap Control — Step up when attackers are flat-footed: the
+aggressive counterpart to the two existing gap plays (when the attacker has
+NO speed, closing the gap early is the correct read). QC it against both
+siblings for distinctness before building.
+
+### Forecheck Pressure — F1 angle decides the play (superseded)
 
 Core read:
 
