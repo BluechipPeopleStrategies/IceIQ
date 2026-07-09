@@ -344,3 +344,17 @@ Predict-next questions treat a wrong prediction as information, never a fault.
   that signaled the true outcome.
 - Predict-next is available at U13 first. U11 rollout waits for a telemetry
   review of U13 sessions.
+
+## One Defensible Mistake Rule
+
+A spot-mistake play must contain exactly one wrong read that a coach would
+flag. Every other actor's behavior must be defensibly correct, and each wrong
+option's teaching note must say WHY that actor's read was fine.
+
+- Data shape: `ask.mistakeActor` names the actor; exactly one option is
+  correct and must point at that actor.
+- The validator enforces the data shape. The judgment call - is the mistake
+  truly the only flaggable read? - is a manual playtest item and must be
+  reviewed before this kind's factory gate opens.
+- Spot-mistake stays factory-locked (no bulk production) until two manual
+  playtest reviews pass cleanly.

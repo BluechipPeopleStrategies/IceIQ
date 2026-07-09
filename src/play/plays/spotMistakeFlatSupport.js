@@ -1,0 +1,64 @@
+// Spot-mistake proof play. Exactly one wrong read on screen (One Defensible
+// Mistake Rule): the support skater stays flat beside the carrier, so the
+// cross-ice pass has no angle and the defender picks it off. F1's pass and
+// D1's read are both defensible.
+export const SPOT_MISTAKE_FLAT_SUPPORT = {
+  id: "spotmistake_2v1_flat_support_u11_v1",
+  type: "animated-play",
+  title: "2-on-1: Spot the wrong read",
+  concept: "odd-man-reads",
+  ageBands: ["U11", "U13"],
+  view: "half-right",
+  start: "watch",
+  space: { units: "rink-200x85" },
+  sourceRef: {
+    note: "docs/library/two-on-one-support-too-flat.md",
+    cite: "On a 2-on-1 the support skater stays slightly behind the puck line; flat support removes the passing angle and lets one defender take both options.",
+    url: "https://www.usahockey.com/smallareagames",
+  },
+  actors: [
+    { id: "F1", team: "home", role: "puckCarrier", label: "F1" },
+    { id: "F2", team: "home", role: "support", label: "F2" },
+    { id: "D1", team: "away", role: "defender", label: "D1" },
+    { id: "G", team: "away", role: "goalie", label: "G" },
+  ],
+  nodes: {
+    watch: {
+      id: "watch",
+      q: "Watch the 2-on-1. The pass gets picked off.",
+      enter: { F1: [130, 58], F2: [132, 30], D1: [168, 44], G: [187, 42] },
+      pos: { F1: [146, 58], F2: [148, 30], D1: [158, 44], G: [186, 42] },
+      puck: [141, 58],
+      motions: [
+        { kind: "skate", from: [130, 58], to: [146, 58], actor: "F1" },
+        { kind: "skate", from: [132, 30], to: [148, 30], actor: "F2" },
+        { kind: "blocked", from: [146, 58], to: [148, 30], label: "picked off" },
+      ],
+      autoNext: { next: "spot", ms: 2600 },
+    },
+    spot: {
+      id: "spot",
+      q: "One skater made the wrong read. Tap that skater.",
+      pos: { F1: [146, 58], F2: [148, 30], D1: [156, 42], G: [186, 42] },
+      puck: [156, 42],
+      ask: {
+        kind: "spot-mistake",
+        q: "One skater made the wrong read. Tap that skater.",
+        mistakeActor: "F2",
+        opts: [
+          { id: "pick_f2", actorId: "F2", t: "The support skater", ok: true, why: "F2 skated even with the puck carrier. Flat support means the pass has no angle, so one defender can take both players.", next: "rewind" },
+          { id: "pick_f1", actorId: "F1", t: "The puck carrier", no: "The pass was a fair idea. It only failed because the support angle was gone.", next: "rewind" },
+          { id: "pick_d1", actorId: "D1", t: "The defender", no: "The defender made the right read: with support flat, sitting in the middle takes away the pass.", next: "rewind" },
+        ],
+      },
+    },
+    rewind: {
+      id: "rewind",
+      terminal: true,
+      q: "Rewind to the read: the support skater was even with the puck. Support wins by staying just behind the puck line, so the pass has an angle the defender cannot cut.",
+      pos: { F1: [146, 58], F2: [148, 30], D1: [158, 44], G: [186, 42] },
+      puck: [141, 58],
+      cue: { label: "Flat", shortLabel: "Flat", x: 148, y: 23 },
+    },
+  },
+};

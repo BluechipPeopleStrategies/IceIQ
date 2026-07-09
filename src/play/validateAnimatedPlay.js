@@ -73,6 +73,18 @@ export function validateAnimatedPlay(play) {
             if (truthNext && opt.next !== truthNext) errs.push(`node ${nodeId} predict-next option ${opt.id || "unknown"} must route to truthNext`);
           }
         }
+        if (kind === "spot-mistake") {
+          const mistakeActor = node.ask?.mistakeActor;
+          if (!mistakeActor) errs.push(`node ${nodeId} spot-mistake requires ask.mistakeActor`);
+          else if (!actorIds.has(mistakeActor)) errs.push(`node ${nodeId} mistakeActor ${mistakeActor} is not an actor`);
+          for (const opt of node.ask?.opts || []) {
+            if (!opt.actorId) errs.push(`node ${nodeId} spot-mistake option ${opt.id || "unknown"} missing actorId`);
+            else if (!actorIds.has(opt.actorId)) errs.push(`node ${nodeId} spot-mistake option ${opt.id || "unknown"} actorId ${opt.actorId} is not an actor`);
+            if (opt.ok && mistakeActor && opt.actorId !== mistakeActor) {
+              errs.push(`node ${nodeId} correct spot-mistake option must match mistakeActor`);
+            }
+          }
+        }
       }
     }
   }

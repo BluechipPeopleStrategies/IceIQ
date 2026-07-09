@@ -221,3 +221,31 @@ describe("predict-next kind", () => {
       "setLastKind(kind) should appear exactly once");
   });
 });
+
+describe("spot-mistake kind", () => {
+  it("proof play is valid and registered", async () => {
+    const { SPOT_MISTAKE_FLAT_SUPPORT } = await import("../src/play/plays/spotMistakeFlatSupport.js");
+    assert.deepEqual(validateAnimatedPlay(SPOT_MISTAKE_FLAT_SUPPORT).errs, []);
+    const { ALL_ANIMATED_PLAYS: catalog } = await import("../src/play/playCatalog.js");
+    assert.ok(catalog.some((p) => p.id === SPOT_MISTAKE_FLAT_SUPPORT.id));
+  });
+
+  it("enforces one defensible mistake", async () => {
+    const { SPOT_MISTAKE_FLAT_SUPPORT } = await import("../src/play/plays/spotMistakeFlatSupport.js");
+
+    const noActor = structuredClone(SPOT_MISTAKE_FLAT_SUPPORT);
+    const ask = Object.values(noActor.nodes).find((n) => n.ask?.kind === "spot-mistake").ask;
+    delete ask.mistakeActor;
+    assert.ok(validateAnimatedPlay(noActor).errs.some((e) => e.includes("mistakeActor")));
+
+    const mismatch = structuredClone(SPOT_MISTAKE_FLAT_SUPPORT);
+    const ask2 = Object.values(mismatch.nodes).find((n) => n.ask?.kind === "spot-mistake").ask;
+    ask2.mistakeActor = "D1"; // correct option still points at F2
+    assert.ok(validateAnimatedPlay(mismatch).errs.some((e) => e.includes("must match mistakeActor")));
+
+    const noActorId = structuredClone(SPOT_MISTAKE_FLAT_SUPPORT);
+    const ask3 = Object.values(noActorId.nodes).find((n) => n.ask?.kind === "spot-mistake").ask;
+    delete ask3.opts[0].actorId;
+    assert.ok(validateAnimatedPlay(noActorId).errs.some((e) => e.includes("actorId")));
+  });
+});

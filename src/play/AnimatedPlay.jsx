@@ -399,6 +399,20 @@ export default function AnimatedPlay({ play, ageBand = "U11", onEvent }) {
             </g>
           );
         })}
+        {!node.terminal && kind === "spot-mistake" && (node.ask.opts || []).map((opt, index) => {
+          const p = positions[opt.actorId];
+          if (!p) return null;
+          return (
+            <g
+              key={`spot-zone-${opt.id}`}
+              onClick={() => choose(opt, index)}
+              style={{ cursor: picked !== null ? "default" : "pointer" }}
+              opacity={picked !== null ? 0.45 : 0.9}
+            >
+              <circle cx={p[0]} cy={p[1]} r="7.5" fill="transparent" stroke="#C9A24B" strokeWidth="1.1" strokeDasharray="2 1.5" />
+            </g>
+          );
+        })}
         {play.actors.map((actor) => {
           const p = positions[actor.id];
           if (!p) return null;
