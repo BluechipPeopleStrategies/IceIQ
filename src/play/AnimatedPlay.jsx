@@ -467,8 +467,9 @@ export default function AnimatedPlay({ play, ageBand = "U11", onEvent }) {
             .filter((opt) => !opt.u13Only || ["U13", "U15", "U18"].includes(ageBand))
             .map((opt, index) => {
             const isPicked = picked === index;
-            const showOk = isPicked && opt.ok;
-            const showBad = isPicked && !opt.ok;
+            const suppressImmediateFeedback = kind === "predict-next";
+            const showOk = isPicked && opt.ok && !suppressImmediateFeedback;
+            const showBad = isPicked && !opt.ok && !suppressImmediateFeedback;
             return (
               <button key={opt.id} onClick={() => choose(opt, index)} disabled={picked !== null}
                 style={{
@@ -494,7 +495,7 @@ export default function AnimatedPlay({ play, ageBand = "U11", onEvent }) {
                 ) : (
                   <>{optionTextForAge(opt, actorMap, profile)}{showOk ? " - right read" : ""}</>
                 )}
-                {showBad && opt.no && <div style={{ fontSize: 12, marginTop: 5, color: "#7A2A1C", fontWeight: 500 }}>{playerFacingTextForAge(opt.no, profile)}</div>}
+                {showBad && opt.no && !suppressImmediateFeedback && <div style={{ fontSize: 12, marginTop: 5, color: "#7A2A1C", fontWeight: 500 }}>{playerFacingTextForAge(opt.no, profile)}</div>}
               </button>
             );
           })
@@ -578,4 +579,3 @@ export function AnimatedPlayTest() {
     </div>
   );
 }
-

@@ -265,6 +265,18 @@ describe("predict-next kind", () => {
     assert.equal(src.indexOf("setLastKind(kind);", setIdx + 1), -1,
       "setLastKind(kind) should appear exactly once");
   });
+
+  it("keeps predict-next selections neutral until the truth reveal", () => {
+    const src = readFileSync(new URL("../src/play/AnimatedPlay.jsx", import.meta.url), "utf8");
+    assert.ok(src.includes('const suppressImmediateFeedback = kind === "predict-next";'),
+      "predict-next picks should define a neutral pre-reveal feedback gate");
+    assert.ok(src.includes("const showOk = isPicked && opt.ok && !suppressImmediateFeedback;"),
+      "predict-next correct picks should not flash green before the truth node");
+    assert.ok(src.includes("const showBad = isPicked && !opt.ok && !suppressImmediateFeedback;"),
+      "predict-next wrong picks should not flash red before the truth node");
+    assert.ok(src.includes("showBad && opt.no && !suppressImmediateFeedback"),
+      "predict-next wrong-copy should wait for the truth node");
+  });
 });
 
 describe("spot-mistake kind", () => {
