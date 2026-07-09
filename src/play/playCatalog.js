@@ -5,6 +5,7 @@ import { OFF_PUCK_SUPPORT_PLAY } from "./plays/offPuckSupport.js";
 import { DEFENSIVE_ANGLING_PLAY } from "./plays/defensiveAngling.js";
 import { TWO_ON_ONE_READ_VARIANTS } from "./plays/twoOnOneReadVariants.js";
 import { GAP_CONTROL_HOLD_PLAY } from "./plays/gapControlHold.js";
+import { GAP_CONTROL_PIVOT_MATCH_PLAY } from "./plays/gapControlPivotMatch.js";
 import { FORECHECK_PRESSURE_PLAY } from "./plays/forecheckPressure.js";
 import { BACKCHECK_RECOVERY_PLAY } from "./plays/backcheckRecovery.js";
 import { twoOnOnePassLaneRemoved } from "./plays/twoOnOnePassLaneRemoved.js";
@@ -19,6 +20,7 @@ export const CORE_ANIMATED_PLAYS = [
         BACKCHECK_RECOVERY_PLAY,
 FORECHECK_PRESSURE_PLAY,
 GAP_CONTROL_HOLD_PLAY,
+  GAP_CONTROL_PIVOT_MATCH_PLAY,
 TWO_ON_ONE_READ_PLAY,
   TWO_ON_ONE_DEFENDER_HOLDS_PLAY,
   OFF_PUCK_SUPPORT_PLAY,
@@ -55,3 +57,4 @@ export function playById(id) {
 export function playsForAge(ageBand) {
   return ALL_ANIMATED_PLAYS.filter((play) => !play.ageBands || play.ageBands.includes(ageBand));
 }
+

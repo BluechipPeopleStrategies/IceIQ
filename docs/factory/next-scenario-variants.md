@@ -49,7 +49,7 @@ _No queued variant needed right now._
 
 ## Gap Control
 
-- **Implemented:** 1/4
+- **Implemented:** 2/4
 - **Current status:** needs variants
 
 ### Next Recommended Variant

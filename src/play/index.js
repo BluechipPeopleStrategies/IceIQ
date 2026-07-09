@@ -10,6 +10,7 @@ export { TWO_ON_ONE_DEFENDER_HOLDS_PLAY } from "./plays/defenderHoldsMiddle.js";
 export { OFF_PUCK_SUPPORT_PLAY } from "./plays/offPuckSupport.js";
 export { DEFENSIVE_ANGLING_PLAY } from "./plays/defensiveAngling.js";
 export { GAP_CONTROL_HOLD_PLAY } from "./plays/gapControlHold.js";
+export { GAP_CONTROL_PIVOT_MATCH_PLAY } from "./plays/gapControlPivotMatch.js";
 export { FORECHECK_PRESSURE_PLAY } from "./plays/forecheckPressure.js";
 export { BACKCHECK_RECOVERY_PLAY } from "./plays/backcheckRecovery.js";
 
@@ -18,3 +19,4 @@ export { twoOnOnePassLaneRemoved } from "./plays/twoOnOnePassLaneRemoved.js";
 export { twoOnOneSupportTooFlat } from "./plays/twoOnOneSupportTooFlat.js";
 export { twoOnOneGoalieLateAfterPass } from "./plays/twoOnOneGoalieLateAfterPass.js";
 export { backcheckRecoveryDefenderGetsBeat } from "./plays/backcheckRecoveryDefenderGetsBeat.js";
+
