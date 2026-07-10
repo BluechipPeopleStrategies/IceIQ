@@ -344,6 +344,21 @@ describe("spot-mistake kind", () => {
     assert.ok(src.includes("pickedOption.ok ? pickedOption.why : pickedOption.no"));
   });
 
+  it("puts the defender and stolen puck directly in the failed pass lane", () => {
+    const { spot, rewind } = SPOT_MISTAKE_FLAT_SUPPORT.nodes;
+    assert.deepEqual(spot.pos.D1, [147, 44]);
+    assert.deepEqual(spot.puck, [144.5, 45]);
+    assert.deepEqual(rewind.pos.D1, [147, 44]);
+    assert.deepEqual(rewind.puck, [144.5, 45]);
+
+    for (const node of [spot, rewind]) {
+      const blocked = node.motions.find((motion) => motion.kind === "blocked");
+      assert.deepEqual(blocked.from, [146, 58]);
+      assert.deepEqual(blocked.to, [147, 44]);
+      assert.equal(blocked.label, "picked off");
+    }
+  });
+
   it("enforces one defensible mistake", async () => {
     const { SPOT_MISTAKE_FLAT_SUPPORT } = await import("../src/play/plays/spotMistakeFlatSupport.js");
 
