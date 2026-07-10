@@ -1,4 +1,4 @@
-import { resolveKind, isWatchNode } from "./questionKinds.js";
+import { resolveKindForAge, isWatchNode } from "./questionKinds.js";
 
 const SHORTHAND_RE = /\b(?:A|D|F|BC)\d+\b/i;
 
@@ -130,7 +130,7 @@ export function createQuestionTelemetrySnapshot({ play, nodeId, node, ageBand })
     nodeId,
     ageBand,
     ageGroup: ageTelemetryGroup(ageBand),
-    kind: node?.terminal ? null : watch ? "watch" : resolveKind(node),
+    kind: node?.terminal ? null : watch ? "watch" : resolveKindForAge(node, ageBand),
     displayedQuestion: telemetryQuestionText(node, ageBand),
     displayedCue: telemetryCueText(node, ageBand),
     options,

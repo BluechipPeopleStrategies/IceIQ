@@ -1,5 +1,7 @@
 // Single source of truth for question kinds. A kind can only be born here;
 // validators reject anything not in this registry (Kind Registry Rule).
+import { kindsForAge } from "./interactionProfiles.js";
+
 export const QUESTION_KINDS = {
   "read-mc":      { playback: "freeze",     answer: "buttons",     reveal: "consequence" },
   "lane-pick":    { playback: "freeze",     answer: "rink-zones",  reveal: "consequence" },
@@ -18,6 +20,16 @@ export function resolveKind(node) {
 
 export function kindSpec(kind) {
   return QUESTION_KINDS[kind] || null;
+}
+
+const DIRECT_ANSWER_MODES = new Set(["rink-actors", "rink-zones"]);
+
+export function resolveKindForAge(node, ageBand) {
+  const authoredKind = resolveKind(node);
+  if (!authoredKind) return null;
+  if (kindsForAge(ageBand).includes(authoredKind)) return authoredKind;
+  if (DIRECT_ANSWER_MODES.has(kindSpec(authoredKind)?.answer)) return authoredKind;
+  return "read-mc";
 }
 
 export function isWatchNode(node) {

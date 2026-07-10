@@ -3,7 +3,7 @@ import { AGE_BANDS, profileForAge } from "./interactionProfiles.js";
 import { motionStyle } from "./motionVocabulary.js";
 import { motionPathD, motionTimings, visibleMotions as visibleMotionsFor } from "./motionGeometry.js";
 import { tokenSpec } from "./tokenSystem.js";
-import { resolveKind, watchChainInfo } from "./questionKinds.js";
+import { resolveKindForAge, watchChainInfo } from "./questionKinds.js";
 import { TWO_ON_ONE_READ_PLAY } from "./plays/twoOnOneRead.js";
 import { logAnimatedPlayEvent, summarizeAnimatedPlayEvents } from "./telemetry.js";
 import { ALL_ANIMATED_PLAYS } from "./playCatalog.js";
@@ -245,8 +245,7 @@ export default function AnimatedPlay({ play, ageBand = "U11", onEvent }) {
 
   const actorMap = useMemo(() => Object.fromEntries(play.actors.map((a) => [a.id, a])), [play.actors]);
   const node = play.nodes[nodeId];
-  const rawKind = resolveKind(node);
-  const kind = rawKind && profile.kinds?.includes(rawKind) ? rawKind : rawKind ? "read-mc" : null;
+  const kind = resolveKindForAge(node, ageBand);
 
   useEffect(() => {
     let enterTimer;

@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import { describe, it } from "node:test";
 import { readFileSync } from "node:fs";
-import { QUESTION_KINDS, resolveKind, kindSpec } from "../src/play/questionKinds.js";
+import { QUESTION_KINDS, resolveKind, resolveKindForAge, kindSpec } from "../src/play/questionKinds.js";
 import { validateAnimatedPlay } from "../src/play/validateAnimatedPlay.js";
 import { validateFactoryStandards } from "../src/play/validateFactoryStandards.js";
 import { TWO_ON_ONE_READ_PLAY } from "../src/play/plays/twoOnOneRead.js";
@@ -40,6 +40,16 @@ describe("question kind registry", () => {
 
   it("round-trips an explicit verdict kind", () => {
     assert.equal(resolveKind({ ask: { kind: "verdict", opts: [] } }), "verdict");
+  });
+
+  it("never degrades direct manipulation to buttons", () => {
+    const spotNode = Object.values(SPOT_MISTAKE_FLAT_SUPPORT.nodes)
+      .find((node) => node.ask?.kind === "spot-mistake");
+    assert.equal(resolveKindForAge(spotNode, "U7"), "spot-mistake");
+
+    const predictNode = Object.values(PREDICT_TWO_ON_ONE_DEFENDER_STEP.nodes)
+      .find((node) => node.ask?.kind === "predict-next");
+    assert.equal(resolveKindForAge(predictNode, "U11"), "read-mc");
   });
 
   it("rejects unknown kinds in validation", () => {
