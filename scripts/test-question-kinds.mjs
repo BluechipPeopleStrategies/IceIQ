@@ -373,6 +373,14 @@ describe("spot-mistake kind", () => {
     assert.deepEqual(nodes.rewind.pos.D1, nodes.rewind.possessionChange.counterTo);
   });
 
+  it("assigns the visible forced-pass turnover to the puck carrier", () => {
+    const ask = SPOT_MISTAKE_FLAT_SUPPORT.nodes.spot.ask;
+    assert.equal(ask.mistakeActor, "F1");
+    assert.deepEqual(ask.opts.filter((option) => option.ok).map((option) => option.actorId), ["F1"]);
+    assert.match(ask.opts.find((option) => option.actorId === "F1").why, /covered pass|defender.*lane/i);
+    assert.match(ask.opts.find((option) => option.actorId === "F2").no, /puck carrier.*decision|cannot force/i);
+  });
+
   it("enforces one defensible mistake", async () => {
     const { SPOT_MISTAKE_FLAT_SUPPORT } = await import("../src/play/plays/spotMistakeFlatSupport.js");
 

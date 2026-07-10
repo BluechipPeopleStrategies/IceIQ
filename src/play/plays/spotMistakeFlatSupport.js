@@ -5,7 +5,7 @@
 export const SPOT_MISTAKE_FLAT_SUPPORT = {
   id: "spotmistake_2v1_flat_support_u11_v1",
   type: "animated-play",
-  title: "2-on-1: Spot the wrong read",
+  title: "2-on-1: Spot the forced pass",
   concept: "odd-man-reads",
   ageBands: ["U11", "U13"],
   view: "half-right",
@@ -62,7 +62,7 @@ export const SPOT_MISTAKE_FLAT_SUPPORT = {
     },
     spot: {
       id: "spot",
-      q: "One skater made the wrong read. Tap that skater.",
+      q: "The passing lane was covered. Tap the skater who forced the play.",
       pos: { F1: [146, 58], F2: [148, 30], D1: [136, 43], G: [186, 42] },
       puck: [133.5, 44],
       motions: [
@@ -70,11 +70,11 @@ export const SPOT_MISTAKE_FLAT_SUPPORT = {
       ],
       ask: {
         kind: "spot-mistake",
-        q: "One skater made the wrong read. Tap that skater.",
-        mistakeActor: "F2",
+        q: "The passing lane was covered. Tap the skater who forced the play.",
+        mistakeActor: "F1",
         opts: [
-          { id: "pick_f2", actorId: "F2", t: "The support skater", ok: true, why: "F2 skated even with the puck carrier. Flat support means the pass has no angle, so one defender can take both players.", next: "replayRead" },
-          { id: "pick_f1", actorId: "F1", t: "The puck carrier", no: "The pass is the last domino here. It only broke down because the support angle was already gone, so the first wrong read belongs to the support skater.", next: "replayRead" },
+          { id: "pick_f2", actorId: "F2", t: "The support skater", no: "F2 could create a better angle, but the puck carrier still owns the decision and cannot force a covered pass.", next: "replayRead" },
+          { id: "pick_f1", actorId: "F1", t: "The puck carrier", ok: true, why: "F1 forced a covered pass after the defender had taken away the lane. The puck carrier must hold, shoot, or attack open ice instead.", next: "replayRead" },
           { id: "pick_d1", actorId: "D1", t: "The defender", no: "The defender made the right read: with support flat, sitting in the middle takes away the pass.", next: "replayRead" },
         ],
       },
@@ -106,7 +106,7 @@ export const SPOT_MISTAKE_FLAT_SUPPORT = {
     rewind: {
       id: "rewind",
       terminal: true,
-      q: "Rewind to the read: the support skater was even with the puck. Support wins by staying just behind the puck line, so the pass has an angle the defender cannot cut.",
+      q: "Rewind to the decision: the defender was already in the lane before F1 released the pass. Do not force a covered play.",
       enter: { F1: [146, 58], F2: [148, 30], D1: [147, 44], G: [186, 42] },
       pos: { F1: [146, 58], F2: [148, 30], D1: [136, 43], G: [186, 42] },
       enterPuck: [144.5, 45],
@@ -115,7 +115,7 @@ export const SPOT_MISTAKE_FLAT_SUPPORT = {
         { kind: "blocked", from: [146, 58], to: [147, 44], label: "picked off" },
       ],
       possessionChange: { kind: "interception", fromTeam: "home", toActor: "D1", counterTo: [136, 43] },
-      cue: { label: "Flat", shortLabel: "Flat", x: 148, y: 23 },
+      cue: { label: "Covered", shortLabel: "Covered", x: 146, y: 64 },
     },
   },
 };
