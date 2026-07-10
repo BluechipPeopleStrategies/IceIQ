@@ -98,8 +98,14 @@ export const twoOnOneSupportTooFlat = {
       terminal: true,
       q: "The forced pass lets the defender recover and kill the rush.",
       youngQ: "That pass was not open.",
-      pos: { F1: [146, 57], F2: [154, 68], D1: [159, 44], G: [187, 42] },
-      puck: [159, 44],
+      enter: { F1: [146, 57], F2: [154, 68], D1: [159, 44], G: [187, 42] },
+      pos: { F1: [146, 57], F2: [154, 68], D1: [149, 44], G: [187, 42] },
+      enterPuck: [159, 44],
+      puck: [146.5, 45],
+      motions: [
+        { kind: "blocked", from: [146, 57], to: [159, 44], label: "picked off" },
+      ],
+      possessionChange: { kind: "interception", fromTeam: "home", toActor: "D1", counterTo: [149, 44] },
       cue: {
         label: "Low-value pass",
         youngLabel: "Blocked",

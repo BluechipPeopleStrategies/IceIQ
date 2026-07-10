@@ -98,8 +98,14 @@ export const twoOnOnePassLaneRemoved = {
       terminal: true,
       q: "The forced pass gives the defender time to kill the play.",
       youngQ: "The checker was waiting for that pass.",
-      pos: { F1: [146, 57], F2: [162, 25], D1: [158, 39], G: [187, 42] },
-      puck: [158, 39],
+      enter: { F1: [146, 57], F2: [162, 25], D1: [158, 39], G: [187, 42] },
+      pos: { F1: [146, 57], F2: [162, 25], D1: [148, 40], G: [187, 42] },
+      enterPuck: [158, 39],
+      puck: [145.5, 41],
+      motions: [
+        { kind: "blocked", from: [146, 57], to: [158, 39], label: "picked off" },
+      ],
+      possessionChange: { kind: "interception", fromTeam: "home", toActor: "D1", counterTo: [148, 40] },
       cue: {
         label: "Covered lane",
         youngLabel: "Blocked",

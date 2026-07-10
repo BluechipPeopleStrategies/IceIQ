@@ -23,7 +23,16 @@ export function validatePossessionChange(node, actorIds) {
 }
 
 export function explicitInterceptionNodes(play) {
+  function chainHasPossessionChange(node) {
+    let current = node;
+    for (let step = 0; step < 3 && current?.autoNext?.next; step += 1) {
+      current = play.nodes?.[current.autoNext.next];
+      if (current?.possessionChange) return true;
+    }
+    return false;
+  }
   return Object.entries(play?.nodes || {})
-    .filter(([, node]) => INTERCEPTION_COPY.test(`${node.q || ""} ${node.youngQ || ""}`) && !node.possessionChange)
+    .filter(([, node]) => INTERCEPTION_COPY.test(`${node.q || ""} ${node.youngQ || ""}`)
+      && !node.possessionChange && !chainHasPossessionChange(node))
     .map(([nodeId]) => ({ playId: play.id, nodeId }));
 }

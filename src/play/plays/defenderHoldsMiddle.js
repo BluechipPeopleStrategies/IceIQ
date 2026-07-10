@@ -61,11 +61,14 @@ export const TWO_ON_ONE_DEFENDER_HOLDS_PLAY = {
       id: "forcedPass",
       terminal: true,
       q: "The defender breaks up the pass. When D1 sits in the lane, forcing the puck through the middle is the low-percentage play.",
-      pos: { F1: [150, 56], F2: [162, 25], D1: [160, 39], G: [186, 42] },
-      puck: [160, 39],
+      enter: { F1: [150, 56], F2: [162, 25], D1: [160, 39], G: [186, 42] },
+      pos: { F1: [150, 56], F2: [162, 25], D1: [150, 40], G: [186, 42] },
+      enterPuck: [160, 39],
+      puck: [147.5, 41],
       motions: [
         { kind: "blocked", from: [150, 56], to: [160, 39], label: "pass blocked" },
       ],
+      possessionChange: { kind: "interception", fromTeam: "home", toActor: "D1", counterTo: [150, 40] },
     },
     turnover: {
       id: "turnover",

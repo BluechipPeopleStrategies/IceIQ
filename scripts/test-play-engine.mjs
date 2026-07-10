@@ -144,6 +144,12 @@ describe("motion validation", () => {
       pos: {},
     }, actorIds).some((error) => error.includes("unknown actor")));
   });
+
+  it("choreographs every explicit pass interception in the catalog", async () => {
+    const { explicitInterceptionNodes } = await import("../src/play/possessionChange.js");
+    const missing = ALL_ANIMATED_PLAYS.flatMap(explicitInterceptionNodes);
+    assert.deepEqual(missing, []);
+  });
 });
 
 describe("rink anchors", () => {
