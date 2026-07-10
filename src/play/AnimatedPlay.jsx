@@ -220,11 +220,36 @@ function ActorToken({ actor, ageBand, isDecisionActor }) {
   );
 }
 
-function NodeSummary({ node, profile, pickedOption, onReplay }) {
+function NodeSummary({ node, profile, pickedOption, lastKind, onReplay }) {
   if (!node.terminal) return null;
+  const spotMistakeFeedback = lastKind === "spot-mistake" && pickedOption
+    ? (pickedOption.ok ? pickedOption.why : pickedOption.no)
+    : null;
   return (
     <div>
       {profile.celebrate && pickedOption?.ok && <div style={{ fontSize: 24, marginBottom: 6 }}>Goal!</div>}
+      {lastKind === "spot-mistake" && pickedOption && (
+        <div
+          role="status"
+          style={{
+            background: pickedOption.ok ? "#E8F7EE" : "#FFF2E5",
+            border: `1px solid ${pickedOption.ok ? "#2E8B57" : "#C26A1B"}`,
+            borderRadius: 9,
+            color: "#0B1A33",
+            marginBottom: 10,
+            padding: "9px 11px",
+          }}
+        >
+          <div style={{ fontSize: 14, fontWeight: 900 }}>
+            {pickedOption.ok ? "Correct" : "Not quite"}
+          </div>
+          {spotMistakeFeedback && (
+            <div style={{ fontSize: 12.5, fontWeight: 650, lineHeight: 1.45, marginTop: 3 }}>
+              {pickedOption.ok ? pickedOption.why : pickedOption.no}
+            </div>
+          )}
+        </div>
+      )}
       <button onClick={onReplay} style={{ background: "#0B1A33", color: "#FFFFFF", border: "none", borderRadius: 9, padding: "8px 14px", fontSize: 13, cursor: "pointer", fontWeight: 800 }}>
         Replay
       </button>
@@ -449,7 +474,7 @@ export default function AnimatedPlay({ play, ageBand = "U11", onEvent }) {
           {kind === "verdict" && judgePick ? node.ask.justify.q : questionTextForAge(node, profile)}
         </div>
         {node.terminal ? (
-          <NodeSummary node={node} profile={profile} pickedOption={pickedOption} onReplay={replay} />
+          <NodeSummary node={node} profile={profile} pickedOption={pickedOption} lastKind={lastKind} onReplay={replay} />
         ) : node.autoNext ? (
           <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
             <div style={{ fontSize: 12, color: "#5B6575", fontWeight: 700 }}>Watch the play…</div>

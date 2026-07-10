@@ -338,6 +338,12 @@ describe("spot-mistake kind", () => {
     assert.ok(src.includes('key === "Enter" || key === " "'));
   });
 
+  it("states whether an actor tap was correct before the rewind summary", () => {
+    const src = readFileSync(new URL("../src/play/AnimatedPlay.jsx", import.meta.url), "utf8");
+    assert.ok(src.includes('pickedOption.ok ? "Correct" : "Not quite"'));
+    assert.ok(src.includes("pickedOption.ok ? pickedOption.why : pickedOption.no"));
+  });
+
   it("enforces one defensible mistake", async () => {
     const { SPOT_MISTAKE_FLAT_SUPPORT } = await import("../src/play/plays/spotMistakeFlatSupport.js");
 
