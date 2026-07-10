@@ -436,6 +436,9 @@ describe("support-angle actor read", () => {
     assert.match(renderer, /!node\.terminal && \(/);
     assert.match(coachCard, /\{headline\}/);
     assert.doesNotMatch(coachCard, /\{reaction\}/);
+    assert.match(coachCard, /data-testid="coach-attribution"/);
+    assert.ok(coachCard.indexOf("{headline}") < coachCard.indexOf('data-testid="coach-attribution"'));
+    assert.ok(coachCard.indexOf("{explanation") < coachCard.indexOf('data-testid="coach-attribution"'));
   });
 });
 
