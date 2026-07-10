@@ -1,5 +1,6 @@
 ﻿import { QUESTION_KINDS, resolveKind, watchChainInfo } from "./questionKinds.js";
 import { kindsForAge } from "./interactionProfiles.js";
+import { validatePromptAnswerContract } from "./questionKinds.js";
 import { MOTION_STYLES } from "./motionVocabulary.js";
 
 const REQUIRED_NODE_FIELDS = ["id", "q", "pos"];
@@ -54,6 +55,8 @@ export function validateAnimatedPlay(play) {
         else if (!nodeIds.has(node.autoNext.next)) errs.push(`node ${nodeId} autoNext routes to missing node ${node.autoNext.next}`);
       } else {
         const kind = resolveKind(node);
+        const contractError = validatePromptAnswerContract(node.ask?.q || node.q, kind);
+        if (contractError) errs.push(`node ${nodeId} ${contractError}`);
         if (!QUESTION_KINDS[kind]) errs.push(`node ${nodeId} has unknown question kind ${JSON.stringify(kind)}`);
         const opts = node.ask?.opts || [];
         if (!node.ask || !Array.isArray(opts) || opts.length < 2) errs.push(`node ${nodeId} must have at least two answer options`);

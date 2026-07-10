@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import { describe, it } from "node:test";
 import { readFileSync } from "node:fs";
-import { QUESTION_KINDS, resolveKind, resolveKindForAge, kindSpec } from "../src/play/questionKinds.js";
+import { QUESTION_KINDS, resolveKind, resolveKindForAge, kindSpec, validatePromptAnswerContract } from "../src/play/questionKinds.js";
 import { validateAnimatedPlay } from "../src/play/validateAnimatedPlay.js";
 import { validateFactoryStandards } from "../src/play/validateFactoryStandards.js";
 import { TWO_ON_ONE_READ_PLAY } from "../src/play/plays/twoOnOneRead.js";
@@ -50,6 +50,30 @@ describe("question kind registry", () => {
     const predictNode = Object.values(PREDICT_TWO_ON_ONE_DEFENDER_STEP.nodes)
       .find((node) => node.ask?.kind === "predict-next");
     assert.equal(resolveKindForAge(predictNode, "U11"), "read-mc");
+  });
+
+  it("rejects direct-manipulation wording for button answers", () => {
+    assert.match(
+      validatePromptAnswerContract("Tap the skater who made the wrong read.", "read-mc"),
+      /requires a direct rink interaction/
+    );
+    assert.match(
+      validatePromptAnswerContract("Move the skater into support.", "read-mc"),
+      /requires a direct rink interaction/
+    );
+    assert.equal(
+      validatePromptAnswerContract("Which skater made the wrong read?", "read-mc"),
+      null
+    );
+    assert.equal(
+      validatePromptAnswerContract("Tap the skater who made the wrong read.", "spot-mistake"),
+      null
+    );
+
+    const mismatched = structuredClone(TWO_ON_ONE_READ_PLAY);
+    mismatched.nodes.rush.ask.q = "Tap the best answer.";
+    const result = validateAnimatedPlay(mismatched);
+    assert.ok(result.errs.some((error) => error.includes("node rush") && error.includes("direct rink interaction")));
   });
 
   it("rejects unknown kinds in validation", () => {

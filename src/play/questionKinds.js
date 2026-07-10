@@ -23,6 +23,7 @@ export function kindSpec(kind) {
 }
 
 const DIRECT_ANSWER_MODES = new Set(["rink-actors", "rink-zones"]);
+const DIRECT_PROMPT = /(?:^|[.!?]\s+)(?:please\s+)?(?:tap|click|drag|move|skate|draw|trace|pass|shoot)\b/i;
 
 export function resolveKindForAge(node, ageBand) {
   const authoredKind = resolveKind(node);
@@ -30,6 +31,12 @@ export function resolveKindForAge(node, ageBand) {
   if (kindsForAge(ageBand).includes(authoredKind)) return authoredKind;
   if (DIRECT_ANSWER_MODES.has(kindSpec(authoredKind)?.answer)) return authoredKind;
   return "read-mc";
+}
+
+export function validatePromptAnswerContract(prompt, kind) {
+  if (!DIRECT_PROMPT.test(String(prompt || ""))) return null;
+  if (DIRECT_ANSWER_MODES.has(kindSpec(kind)?.answer)) return null;
+  return `prompt requires a direct rink interaction but ${kind || "unknown"} renders ${kindSpec(kind)?.answer || "no answer mode"}`;
 }
 
 export function isWatchNode(node) {
