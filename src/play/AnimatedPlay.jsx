@@ -8,6 +8,9 @@ import { TWO_ON_ONE_READ_PLAY } from "./plays/twoOnOneRead.js";
 import { logAnimatedPlayEvent, summarizeAnimatedPlayEvents } from "./telemetry.js";
 import { ALL_ANIMATED_PLAYS } from "./playCatalog.js";
 import { ActorTapTargets } from "./ActorTapTargets.jsx";
+import { CoachFeedback } from "./CoachFeedback.jsx";
+import { applyCoachAnswer, loadCoachReinforcement, saveCoachReinforcement } from "./coachReinforcement.js";
+import { coachReaction, getCoachForQuestion } from "../coachPersonas.js";
 
 const TEAM_FILL = {
   home: "#0F4C8C",
@@ -220,7 +223,7 @@ function ActorToken({ actor, ageBand, isDecisionActor }) {
   );
 }
 
-function NodeSummary({ node, profile, pickedOption, lastKind, onReplay }) {
+function NodeSummary({ node, profile, pickedOption, lastKind, coachFeedback, onReplay }) {
   if (!node.terminal) return null;
   const spotMistakeFeedback = lastKind === "spot-mistake" && pickedOption
     ? (pickedOption.ok ? pickedOption.why : pickedOption.no)
@@ -228,7 +231,15 @@ function NodeSummary({ node, profile, pickedOption, lastKind, onReplay }) {
   return (
     <div>
       {profile.celebrate && pickedOption?.ok && <div style={{ fontSize: 24, marginBottom: 6 }}>Goal!</div>}
-      {lastKind === "spot-mistake" && pickedOption && (
+      {coachFeedback?.showCoach && (
+        <CoachFeedback
+          coach={coachFeedback.coach}
+          reaction={coachFeedback.reaction}
+          correct={!!pickedOption?.ok}
+          explanation={spotMistakeFeedback}
+        />
+      )}
+      {lastKind === "spot-mistake" && pickedOption && !coachFeedback?.showCoach && (
         <div
           role="status"
           style={{
@@ -264,6 +275,7 @@ export default function AnimatedPlay({ play, ageBand = "U11", onEvent }) {
   const [pickedOption, setPickedOption] = useState(null);
   const [judgePick, setJudgePick] = useState(null);
   const [lastKind, setLastKind] = useState(null);
+  const [coachFeedback, setCoachFeedback] = useState(null);
   const [entered, setEntered] = useState(false);
   const [showMotion, setShowMotion] = useState(false);
   const startedAtRef = useRef(Date.now());
@@ -321,6 +333,18 @@ export default function AnimatedPlay({ play, ageBand = "U11", onEvent }) {
 
     setPicked(index);
     setPickedOption(opt);
+    const coach = getCoachForQuestion({ id: `${play.id}:${nodeId}`, cat: play.coachCategory });
+    const reinforcement = loadCoachReinforcement();
+    const reinforcementResult = applyCoachAnswer(reinforcement, {
+      id: `${play.id}:${nodeId}:${opt.id}`,
+      correct: !!opt.ok,
+    });
+    saveCoachReinforcement(globalThis.sessionStorage, reinforcementResult.state);
+    setCoachFeedback({
+      showCoach: reinforcementResult.showCoach,
+      coach,
+      reaction: coachReaction(coach, !!opt.ok, ageBand, reinforcementResult.state.spotlightCount),
+    });
     if (kind === "verdict" && judgePick) {
       onEvent?.({ playId: play.id, nodeId, event: "answer", kind, answerId: judgePick.id, justifyId: opt.id, ok: !!(judgePick.ok && opt.ok), judgeOk: !!judgePick.ok, justifyOk: !!opt.ok, ms });
       setTimeout(() => {
@@ -344,6 +368,7 @@ export default function AnimatedPlay({ play, ageBand = "U11", onEvent }) {
     setPickedOption(null);
     setJudgePick(null);
     setLastKind(null);
+    setCoachFeedback(null);
     onEvent?.({ playId: play.id, nodeId: play.start, event: "replay", ms: 0 });
   }
 
@@ -474,7 +499,7 @@ export default function AnimatedPlay({ play, ageBand = "U11", onEvent }) {
           {kind === "verdict" && judgePick ? node.ask.justify.q : questionTextForAge(node, profile)}
         </div>
         {node.terminal ? (
-          <NodeSummary node={node} profile={profile} pickedOption={pickedOption} lastKind={lastKind} onReplay={replay} />
+          <NodeSummary node={node} profile={profile} pickedOption={pickedOption} lastKind={lastKind} coachFeedback={coachFeedback} onReplay={replay} />
         ) : node.autoNext ? (
           <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
             <div style={{ fontSize: 12, color: "#5B6575", fontWeight: 700 }}>Watch the play…</div>
