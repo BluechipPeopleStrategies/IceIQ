@@ -322,7 +322,7 @@ export default function AnimatedPlay({ play, ageBand = "U11", onEvent }) {
       clearTimeout(advanceTimer);
       clearInterval(loopTimer);
     };
-  }, [nodeId, play.id, ageBand, node.terminal]);
+  }, [nodeId, play.id, ageBand, node.terminal, node.autoNext?.next, node.autoNext?.ms]);
 
   function choose(opt, index) {
     if (picked !== null || node.terminal) return;

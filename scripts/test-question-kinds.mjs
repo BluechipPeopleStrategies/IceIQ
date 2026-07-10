@@ -446,6 +446,11 @@ describe("support-angle actor read", () => {
     assert.ok(coachCard.indexOf("{headline}") < coachCard.indexOf('data-testid="coach-attribution"'));
     assert.ok(coachCard.indexOf("{explanation") < coachCard.indexOf('data-testid="coach-attribution"'));
   });
+
+  it("restarts watch timers when hot-reloaded choreography changes", () => {
+    const renderer = readFileSync(new URL("../src/play/AnimatedPlay.jsx", import.meta.url), "utf8");
+    assert.match(renderer, /node\.autoNext\?\.next, node\.autoNext\?\.ms/);
+  });
 });
 
 describe("age gating", () => {
