@@ -11,6 +11,7 @@ import { collectPlayTelemetrySnapshots } from "../src/play/prototypeTelemetry.js
 import { watchChainInfo } from "../src/play/questionKinds.js";
 import { VERDICT_TWO_ON_ONE_FORCED_SHOT } from "../src/play/plays/verdictTwoOnOneForcedShot.js";
 import { SPOT_MISTAKE_FLAT_SUPPORT } from "../src/play/plays/spotMistakeFlatSupport.js";
+import { SUPPORT_ANGLE_FLAT } from "../src/play/plays/supportAngleFlat.js";
 import { PREDICT_TWO_ON_ONE_DEFENDER_STEP } from "../src/play/plays/predictTwoOnOneDefenderStep.js";
 import { kindsForAge } from "../src/play/interactionProfiles.js";
 import { buildScenarioFamilyReport, playKinds } from "../src/play/playFamilies.js";
@@ -369,8 +370,38 @@ describe("spot-mistake kind", () => {
     assert.equal(nodes.replayIntercept.autoNext.next, "rewind");
     assert.ok(nodes.replayRead.autoNext.ms > nodes.watch.autoNext.ms);
     assert.ok(nodes.replayIntercept.autoNext.ms > nodes.intercept.autoNext.ms);
+    assert.ok(nodes.intercept.autoNext.ms >= 1500);
+    assert.notDeepEqual(nodes.intercept.enter.F1, nodes.intercept.pos.F1);
+    assert.notDeepEqual(nodes.intercept.enter.F2, nodes.intercept.pos.F2);
+    assert.notDeepEqual(nodes.intercept.enter.D1, nodes.intercept.pos.D1);
+    assert.notDeepEqual(nodes.replayIntercept.enter.F1, nodes.replayIntercept.pos.F1);
+    assert.notDeepEqual(nodes.replayIntercept.enter.F2, nodes.replayIntercept.pos.F2);
     assert.deepEqual(nodes.counter.pos.D1, nodes.counter.possessionChange.counterTo);
     assert.deepEqual(nodes.rewind.pos.D1, nodes.rewind.possessionChange.counterTo);
+  });
+
+  it("turns the visible defender step into a simple player decision", () => {
+    const entry = PREDICT_TWO_ON_ONE_DEFENDER_STEP.nodes.entry;
+    assert.doesNotMatch(entry.ask.q, /what does the defender do next/i);
+    assert.equal(entry.ask.q, "The defender steps toward YOU. Which play is now open?");
+    assert.equal(entry.ask.opts.find((option) => option.ok).t, "Pass to F2");
+    assert.equal(
+      PREDICT_TWO_ON_ONE_DEFENDER_STEP.nodes.truth.q,
+      "Correct. The defender steps toward YOU, so they cannot also cover F2. Make the pass."
+    );
+
+    const hiddenIntent = structuredClone(PREDICT_TWO_ON_ONE_DEFENDER_STEP);
+    hiddenIntent.nodes.entry.ask.q = "What does the defender do next?";
+    assert.ok(validateAnimatedPlay(hiddenIntent).errs.some((error) => error.includes("hidden opponent intent")));
+  });
+
+  it("assigns the visible forced-pass turnover to the puck carrier", () => {
+    const ask = SPOT_MISTAKE_FLAT_SUPPORT.nodes.spot.ask;
+    assert.equal(ask.mistakeActor, "F1");
+    assert.deepEqual(ask.opts.filter((option) => option.ok).map((option) => option.actorId), ["F1"]);
+    assert.match(ask.opts.find((option) => option.actorId === "F1").why, /covered pass|defender.*lane/i);
+    assert.match(ask.opts.find((option) => option.actorId === "F2").no, /puck carrier.*decision|cannot force/i);
+    assert.match(SPOT_MISTAKE_FLAT_SUPPORT.nodes.rewind.q, /If the lane is taken, hold, shoot, or attack the open ice\./);
   });
 
   it("enforces one defensible mistake", async () => {
@@ -390,6 +421,35 @@ describe("spot-mistake kind", () => {
     const ask3 = Object.values(noActorId.nodes).find((n) => n.ask?.kind === "spot-mistake").ask;
     delete ask3.opts[0].actorId;
     assert.ok(validateAnimatedPlay(noActorId).errs.some((e) => e.includes("actorId")));
+  });
+});
+
+describe("support-angle actor read", () => {
+  it("separates support availability from turnover blame", () => {
+    assert.deepEqual(validateAnimatedPlay(SUPPORT_ANGLE_FLAT).errs, []);
+    assert.ok(ALL_ANIMATED_PLAYS.some((play) => play.id === SUPPORT_ANGLE_FLAT.id));
+    const ask = SUPPORT_ANGLE_FLAT.nodes.read.ask;
+    assert.match(ask.q, /create a better passing angle/i);
+    assert.equal(ask.mistakeActor, "F2");
+    assert.deepEqual(ask.opts.filter((option) => option.ok).map((option) => option.actorId), ["F2"]);
+    assert.doesNotMatch(JSON.stringify(SUPPORT_ANGLE_FLAT), /turnover|blame|guilty|forced pass/i);
+  });
+
+  it("puts terminal tactical feedback inside the coach card", () => {
+    const renderer = readFileSync(new URL("../src/play/AnimatedPlay.jsx", import.meta.url), "utf8");
+    const coachCard = readFileSync(new URL("../src/play/CoachFeedback.jsx", import.meta.url), "utf8");
+    assert.match(renderer, /explanation=\{coachExplanation\}/);
+    assert.match(renderer, /!node\.terminal && \(/);
+    assert.match(coachCard, /\{headline\}/);
+    assert.doesNotMatch(coachCard, /\{reaction\}/);
+    assert.match(coachCard, /data-testid="coach-attribution"/);
+    assert.ok(coachCard.indexOf("{headline}") < coachCard.indexOf('data-testid="coach-attribution"'));
+    assert.ok(coachCard.indexOf("{explanation") < coachCard.indexOf('data-testid="coach-attribution"'));
+  });
+
+  it("restarts watch timers when hot-reloaded choreography changes", () => {
+    const renderer = readFileSync(new URL("../src/play/AnimatedPlay.jsx", import.meta.url), "utf8");
+    assert.match(renderer, /node\.autoNext\?\.next, node\.autoNext\?\.ms/);
   });
 });
 

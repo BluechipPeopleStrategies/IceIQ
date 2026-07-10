@@ -9,8 +9,9 @@ import { logAnimatedPlayEvent, summarizeAnimatedPlayEvents } from "./telemetry.j
 import { ALL_ANIMATED_PLAYS } from "./playCatalog.js";
 import { ActorTapTargets } from "./ActorTapTargets.jsx";
 import { CoachFeedback } from "./CoachFeedback.jsx";
+import { coachFeedbackHeadline } from "./coachFeedbackTone.js";
 import { applyCoachAnswer, loadCoachReinforcement, saveCoachReinforcement } from "./coachReinforcement.js";
-import { coachReaction, getCoachForQuestion } from "../coachPersonas.js";
+import { getCoachForQuestion } from "../coachPersonas.js";
 
 const TEAM_FILL = {
   home: "#0F4C8C",
@@ -228,15 +229,18 @@ function NodeSummary({ node, profile, pickedOption, lastKind, coachFeedback, onR
   const spotMistakeFeedback = lastKind === "spot-mistake" && pickedOption
     ? (pickedOption.ok ? pickedOption.why : pickedOption.no)
     : null;
+  const coachExplanation = [spotMistakeFeedback, questionTextForAge(node, profile)]
+    .filter(Boolean)
+    .join(" ");
   return (
     <div>
       {profile.celebrate && pickedOption?.ok && <div style={{ fontSize: 24, marginBottom: 6 }}>Goal!</div>}
       {coachFeedback?.showCoach && (
         <CoachFeedback
           coach={coachFeedback.coach}
-          reaction={coachFeedback.reaction}
+          headline={coachFeedback.headline}
           correct={!!pickedOption?.ok}
-          explanation={spotMistakeFeedback}
+          explanation={coachExplanation}
         />
       )}
       {lastKind === "spot-mistake" && pickedOption && !coachFeedback?.showCoach && (
@@ -318,7 +322,7 @@ export default function AnimatedPlay({ play, ageBand = "U11", onEvent }) {
       clearTimeout(advanceTimer);
       clearInterval(loopTimer);
     };
-  }, [nodeId, play.id, ageBand, node.terminal]);
+  }, [nodeId, play.id, ageBand, node.terminal, node.autoNext?.next, node.autoNext?.ms]);
 
   function choose(opt, index) {
     if (picked !== null || node.terminal) return;
@@ -343,7 +347,7 @@ export default function AnimatedPlay({ play, ageBand = "U11", onEvent }) {
     setCoachFeedback({
       showCoach: reinforcementResult.showCoach,
       coach,
-      reaction: coachReaction(coach, !!opt.ok, ageBand, reinforcementResult.state.spotlightCount),
+      headline: coachFeedbackHeadline({ id: `${play.id}:${nodeId}:${opt.id}`, correct: !!opt.ok }),
     });
     if (kind === "verdict" && judgePick) {
       onEvent?.({ playId: play.id, nodeId, event: "answer", kind, answerId: judgePick.id, justifyId: opt.id, ok: !!(judgePick.ok && opt.ok), judgeOk: !!judgePick.ok, justifyOk: !!opt.ok, ms });
@@ -495,9 +499,11 @@ export default function AnimatedPlay({ play, ageBand = "U11", onEvent }) {
             You predicted: {optionTextForAge(pickedOption, actorMap, profile)}. Watch what actually happens.
           </div>
         )}
-        <div style={{ fontSize: profile.big ? 19 : 15, fontWeight: 800, color: "#0B1A33", margin: "5px 0 10px", lineHeight: 1.35 }}>
-          {kind === "verdict" && judgePick ? node.ask.justify.q : questionTextForAge(node, profile)}
-        </div>
+        {!node.terminal && (
+          <div style={{ fontSize: profile.big ? 19 : 15, fontWeight: 800, color: "#0B1A33", margin: "5px 0 10px", lineHeight: 1.35 }}>
+            {kind === "verdict" && judgePick ? node.ask.justify.q : questionTextForAge(node, profile)}
+          </div>
+        )}
         {node.terminal ? (
           <NodeSummary node={node} profile={profile} pickedOption={pickedOption} lastKind={lastKind} coachFeedback={coachFeedback} onReplay={replay} />
         ) : node.autoNext ? (

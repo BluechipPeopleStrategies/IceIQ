@@ -86,6 +86,9 @@ export function validateAnimatedPlay(play) {
           }
         }
         if (kind === "predict-next") {
+          if (/what does (?:the )?\w+ do next/i.test(node.ask?.q || node.q || "")) {
+            errs.push(`node ${nodeId} predict-next asks for hidden opponent intent; show a visible commitment and ask for its consequence`);
+          }
           const truthNext = node.ask?.truthNext;
           if (!truthNext) errs.push(`node ${nodeId} predict-next requires ask.truthNext`);
           else if (!nodeIds.has(truthNext)) errs.push(`node ${nodeId} truthNext routes to missing node ${truthNext}`);

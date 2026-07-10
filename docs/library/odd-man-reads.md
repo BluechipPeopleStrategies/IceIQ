@@ -33,6 +33,13 @@ The wrong answers are objective in this scene:
 - The correct answer must stay clean if the scene is mirrored.
 - If both shot and pass are defensible, the scene is not a single-answer Stream-1 read.
 
+### Question framing contract
+
+- **Decision questions:** put the learner in the decision-maker's POV, label that actor `YOU`, and ask what the player **should** do or where the player **should** go next. Feedback must explain why using visible hockey evidence.
+- **Prediction questions:** show a committed movement or other visible constraint before the freeze, then ask what lane, space, or option changes next.
+- Do not ask what an opponent **will** do when the answer depends on unknown intent, intelligence, or coaching rather than visible evidence.
+- A useful scenario family may branch the same board into separate D1, F1, and F2 POV questions, but each question owns one clear decision and one defensible answer.
+
 ## Citations
 
 - USA Hockey Small-Area Games: https://www.usahockey.com/smallareagames
