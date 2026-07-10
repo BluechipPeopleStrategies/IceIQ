@@ -16,6 +16,7 @@ import { backcheckRecoveryDefenderGetsBeat } from "./plays/backcheckRecoveryDefe
 import { VERDICT_TWO_ON_ONE_FORCED_SHOT } from "./plays/verdictTwoOnOneForcedShot.js";
 import { PREDICT_TWO_ON_ONE_DEFENDER_STEP } from "./plays/predictTwoOnOneDefenderStep.js";
 import { SPOT_MISTAKE_FLAT_SUPPORT } from "./plays/spotMistakeFlatSupport.js";
+import { SUPPORT_ANGLE_FLAT } from "./plays/supportAngleFlat.js";
 
 export const CORE_ANIMATED_PLAYS = [
         BACKCHECK_RECOVERY_PLAY,
@@ -50,6 +51,8 @@ export const ALL_ANIMATED_PLAYS = [
   PREDICT_TWO_ON_ONE_DEFENDER_STEP,
 
   SPOT_MISTAKE_FLAT_SUPPORT,
+
+  SUPPORT_ANGLE_FLAT,
 ];
 
 export function playById(id) {

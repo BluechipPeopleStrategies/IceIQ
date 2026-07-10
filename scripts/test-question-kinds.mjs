@@ -11,6 +11,7 @@ import { collectPlayTelemetrySnapshots } from "../src/play/prototypeTelemetry.js
 import { watchChainInfo } from "../src/play/questionKinds.js";
 import { VERDICT_TWO_ON_ONE_FORCED_SHOT } from "../src/play/plays/verdictTwoOnOneForcedShot.js";
 import { SPOT_MISTAKE_FLAT_SUPPORT } from "../src/play/plays/spotMistakeFlatSupport.js";
+import { SUPPORT_ANGLE_FLAT } from "../src/play/plays/supportAngleFlat.js";
 import { PREDICT_TWO_ON_ONE_DEFENDER_STEP } from "../src/play/plays/predictTwoOnOneDefenderStep.js";
 import { kindsForAge } from "../src/play/interactionProfiles.js";
 import { buildScenarioFamilyReport, playKinds } from "../src/play/playFamilies.js";
@@ -398,6 +399,18 @@ describe("spot-mistake kind", () => {
     const ask3 = Object.values(noActorId.nodes).find((n) => n.ask?.kind === "spot-mistake").ask;
     delete ask3.opts[0].actorId;
     assert.ok(validateAnimatedPlay(noActorId).errs.some((e) => e.includes("actorId")));
+  });
+});
+
+describe("support-angle actor read", () => {
+  it("separates support availability from turnover blame", () => {
+    assert.deepEqual(validateAnimatedPlay(SUPPORT_ANGLE_FLAT).errs, []);
+    assert.ok(ALL_ANIMATED_PLAYS.some((play) => play.id === SUPPORT_ANGLE_FLAT.id));
+    const ask = SUPPORT_ANGLE_FLAT.nodes.read.ask;
+    assert.match(ask.q, /create a better passing angle/i);
+    assert.equal(ask.mistakeActor, "F2");
+    assert.deepEqual(ask.opts.filter((option) => option.ok).map((option) => option.actorId), ["F2"]);
+    assert.doesNotMatch(JSON.stringify(SUPPORT_ANGLE_FLAT), /turnover|blame|guilty|forced pass/i);
   });
 });
 
