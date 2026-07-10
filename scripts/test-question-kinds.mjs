@@ -299,9 +299,19 @@ describe("spot-mistake kind", () => {
 
   it("spot-mistake tap zones paint above actors and puck (hit-test order)", () => {
     const src = readFileSync(new URL("../src/play/AnimatedPlay.jsx", import.meta.url), "utf8");
-    const zoneIdx = src.indexOf("spot-zone-");
+    const zoneIdx = src.indexOf("<ActorTapTargets");
     assert.ok(zoneIdx > src.indexOf("play.actors.map"), "zones must render after actor tokens");
     assert.ok(zoneIdx > src.indexOf('circle r="1.35"'), "zones must render after the puck");
+  });
+
+  it("renders generous accessible actor tap targets", () => {
+    const src = readFileSync(new URL("../src/play/ActorTapTargets.jsx", import.meta.url), "utf8");
+    assert.match(src, /HIT_RADIUS\s*=\s*8/);
+    assert.ok(src.includes('role="button"'));
+    assert.ok(src.includes('tabIndex={disabled ? -1 : 0}'));
+    assert.ok(src.includes('aria-label={option.t}'));
+    assert.ok(src.includes('data-actor-id={option.actorId}'));
+    assert.ok(src.includes('key === "Enter" || key === " "'));
   });
 
   it("enforces one defensible mistake", async () => {

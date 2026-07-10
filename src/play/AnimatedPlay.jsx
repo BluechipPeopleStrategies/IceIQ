@@ -7,6 +7,7 @@ import { resolveKindForAge, watchChainInfo } from "./questionKinds.js";
 import { TWO_ON_ONE_READ_PLAY } from "./plays/twoOnOneRead.js";
 import { logAnimatedPlayEvent, summarizeAnimatedPlayEvents } from "./telemetry.js";
 import { ALL_ANIMATED_PLAYS } from "./playCatalog.js";
+import { ActorTapTargets } from "./ActorTapTargets.jsx";
 
 const TEAM_FILL = {
   home: "#0F4C8C",
@@ -424,20 +425,15 @@ export default function AnimatedPlay({ play, ageBand = "U11", onEvent }) {
             <circle r="1.35" fill="#111111" stroke="#FFFFFF" strokeWidth="0.35" />
           </g>
         )}
-        {!node.terminal && kind === "spot-mistake" && (node.ask.opts || []).map((opt, index) => {
-          const p = positions[opt.actorId];
-          if (!p) return null;
-          return (
-            <g
-              key={`spot-zone-${opt.id}`}
-              onClick={() => choose(opt, index)}
-              style={{ cursor: picked !== null ? "default" : "pointer" }}
-              opacity={picked !== null ? 0.45 : 0.9}
-            >
-              <circle cx={p[0]} cy={p[1]} r="7.5" fill="transparent" stroke="#C9A24B" strokeWidth="1.1" strokeDasharray="2 1.5" />
-            </g>
-          );
-        })}
+        {!node.terminal && kind === "spot-mistake" && (
+          <ActorTapTargets
+            options={node.ask.opts}
+            positions={positions}
+            picked={picked}
+            disabled={picked !== null}
+            onChoose={choose}
+          />
+        )}
       </svg>
 
       <div style={{ padding: "8px 4px 2px" }}>
@@ -468,7 +464,7 @@ export default function AnimatedPlay({ play, ageBand = "U11", onEvent }) {
               </button>
             )}
           </div>
-        ) : (
+        ) : ["lane-pick", "spot-mistake"].includes(kind) ? null : (
           (kind === "verdict" && judgePick ? node.ask.justify.opts : node.ask.opts)
             .filter((opt) => !opt.u13Only || ["U13", "U15", "U18"].includes(ageBand))
             .map((opt, index) => {
