@@ -228,6 +228,9 @@ function NodeSummary({ node, profile, pickedOption, lastKind, coachFeedback, onR
   const spotMistakeFeedback = lastKind === "spot-mistake" && pickedOption
     ? (pickedOption.ok ? pickedOption.why : pickedOption.no)
     : null;
+  const coachExplanation = [spotMistakeFeedback, questionTextForAge(node, profile)]
+    .filter(Boolean)
+    .join(" ");
   return (
     <div>
       {profile.celebrate && pickedOption?.ok && <div style={{ fontSize: 24, marginBottom: 6 }}>Goal!</div>}
@@ -236,7 +239,7 @@ function NodeSummary({ node, profile, pickedOption, lastKind, coachFeedback, onR
           coach={coachFeedback.coach}
           reaction={coachFeedback.reaction}
           correct={!!pickedOption?.ok}
-          explanation={spotMistakeFeedback}
+          explanation={coachExplanation}
         />
       )}
       {lastKind === "spot-mistake" && pickedOption && !coachFeedback?.showCoach && (
@@ -495,9 +498,11 @@ export default function AnimatedPlay({ play, ageBand = "U11", onEvent }) {
             You predicted: {optionTextForAge(pickedOption, actorMap, profile)}. Watch what actually happens.
           </div>
         )}
-        <div style={{ fontSize: profile.big ? 19 : 15, fontWeight: 800, color: "#0B1A33", margin: "5px 0 10px", lineHeight: 1.35 }}>
-          {kind === "verdict" && judgePick ? node.ask.justify.q : questionTextForAge(node, profile)}
-        </div>
+        {!node.terminal && (
+          <div style={{ fontSize: profile.big ? 19 : 15, fontWeight: 800, color: "#0B1A33", margin: "5px 0 10px", lineHeight: 1.35 }}>
+            {kind === "verdict" && judgePick ? node.ask.justify.q : questionTextForAge(node, profile)}
+          </div>
+        )}
         {node.terminal ? (
           <NodeSummary node={node} profile={profile} pickedOption={pickedOption} lastKind={lastKind} coachFeedback={coachFeedback} onReplay={replay} />
         ) : node.autoNext ? (

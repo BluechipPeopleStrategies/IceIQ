@@ -428,6 +428,12 @@ describe("support-angle actor read", () => {
     assert.deepEqual(ask.opts.filter((option) => option.ok).map((option) => option.actorId), ["F2"]);
     assert.doesNotMatch(JSON.stringify(SUPPORT_ANGLE_FLAT), /turnover|blame|guilty|forced pass/i);
   });
+
+  it("puts terminal tactical feedback inside the coach card", () => {
+    const renderer = readFileSync(new URL("../src/play/AnimatedPlay.jsx", import.meta.url), "utf8");
+    assert.match(renderer, /explanation=\{coachExplanation\}/);
+    assert.match(renderer, /!node\.terminal && \(/);
+  });
 });
 
 describe("age gating", () => {

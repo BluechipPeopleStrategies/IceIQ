@@ -2,20 +2,17 @@ import assert from "node:assert/strict";
 import { test } from "node:test";
 import { applyCoachAnswer, initialCoachReinforcement, loadCoachReinforcement, saveCoachReinforcement } from "../src/play/coachReinforcement.js";
 
-test("bounded coach reinforcement is stable and never exceeds four correct answers", () => {
+test("coach feedback appears after every answer", () => {
   let state = initialCoachReinforcement("session-a");
-  let result = applyCoachAnswer(state, { id: "first", correct: true });
-  assert.equal(result.showCoach, true);
-  state = result.state;
-  const duplicate = applyCoachAnswer(state, { id: "first", correct: true });
-  assert.equal(duplicate.state.correctSinceCoach, state.correctSinceCoach);
-  assert.equal(applyCoachAnswer(state, { id: "wrong", correct: false }).showCoach, true);
-  let gap = 0;
-  for (let index = 0; index < 30; index += 1) {
-    result = applyCoachAnswer(state, { id: `c${index}`, correct: true });
+  for (const answer of [
+    { id: "first", correct: true },
+    { id: "second", correct: true },
+    { id: "wrong", correct: false },
+    { id: "first", correct: true },
+  ]) {
+    const result = applyCoachAnswer(state, answer);
+    assert.equal(result.showCoach, true);
     state = result.state;
-    gap += 1;
-    if (result.showCoach) { assert.ok(gap >= 2 && gap <= 4); gap = 0; }
   }
 });
 
