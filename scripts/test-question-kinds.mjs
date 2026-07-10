@@ -374,6 +374,18 @@ describe("spot-mistake kind", () => {
     assert.deepEqual(nodes.rewind.pos.D1, nodes.rewind.possessionChange.counterTo);
   });
 
+  it("predicts a visible geometric consequence instead of hidden opponent intent", () => {
+    const entry = PREDICT_TWO_ON_ONE_DEFENDER_STEP.nodes.entry;
+    assert.doesNotMatch(entry.ask.q, /what does the defender do next/i);
+    assert.match(entry.ask.q, /stepping toward you/i);
+    assert.match(entry.ask.q, /passing lane/i);
+    assert.match(entry.ask.opts.find((option) => option.ok).t, /opens/i);
+
+    const hiddenIntent = structuredClone(PREDICT_TWO_ON_ONE_DEFENDER_STEP);
+    hiddenIntent.nodes.entry.ask.q = "What does the defender do next?";
+    assert.ok(validateAnimatedPlay(hiddenIntent).errs.some((error) => error.includes("hidden opponent intent")));
+  });
+
   it("assigns the visible forced-pass turnover to the puck carrier", () => {
     const ask = SPOT_MISTAKE_FLAT_SUPPORT.nodes.spot.ask;
     assert.equal(ask.mistakeActor, "F1");

@@ -4,7 +4,7 @@
 export const PREDICT_TWO_ON_ONE_DEFENDER_STEP = {
   id: "predict_2v1_defender_step_u13_v1",
   type: "animated-play",
-  title: "2-on-1: Predict the defender",
+  title: "2-on-1: Predict the opening lane",
   concept: "odd-man-reads",
   ageBands: ["U13"],
   view: "half-right",
@@ -24,10 +24,10 @@ export const PREDICT_TWO_ON_ONE_DEFENDER_STEP = {
   nodes: {
     entry: {
       id: "entry",
-      q: "Freeze. You carry the puck into a 2-on-1. What does the defender do next?",
+      q: "The defender has stopped backing in and is stepping toward you. What happens to the passing lane next?",
       decisionActor: "F1",
       enter: { F1: [126, 60], F2: [150, 24], D1: [172, 45], G: [187, 42] },
-      pos: { F1: [138, 60], F2: [158, 24], D1: [166, 47], G: [186, 42] },
+      pos: { F1: [138, 60], F2: [158, 24], D1: [162, 49], G: [186, 42] },
       puck: [133, 60],
       motions: [
         { kind: "skate", from: [126, 60], to: [138, 60], actor: "F1" },
@@ -35,23 +35,23 @@ export const PREDICT_TWO_ON_ONE_DEFENDER_STEP = {
       ],
       ask: {
         kind: "predict-next",
-        q: "Freeze. You carry the puck into a 2-on-1. What does the defender do next?",
+        q: "The defender has stopped backing in and is stepping toward you. What happens to the passing lane next?",
         truthNext: "truth",
         opts: [
-          { id: "steps_up", t: "The defender steps up to the puck", ok: true, why: "The gap was already tight. When the defender's feet turn to the puck carrier, the pass behind is the next read.", next: "truth" },
-          { id: "sags_pass", t: "The defender sags to take away the pass", no: "Watch the defender's gap. It was closing on the puck side, not sliding to the pass lane.", next: "truth" },
-          { id: "backs_in", t: "The defender keeps backing in with the rush", no: "Backing in gives up the shot. This defender had already stopped giving ground.", next: "truth" },
+          { id: "lane_opens", t: "The lane behind the defender opens", ok: true, why: "The defender's step commits body and stick toward the puck carrier, opening space behind the step for F2.", next: "truth" },
+          { id: "both_closed", t: "The defender closes both the shot and pass", no: "One defender cannot step to the puck and cover the support lane at the same time.", next: "truth" },
+          { id: "lane_disappears", t: "The support lane disappears", no: "The visible step moves the defender away from the support lane, so that space opens rather than disappears.", next: "truth" },
         ],
       },
     },
     truth: {
       id: "truth",
       terminal: true,
-      q: "The defender steps up to the puck. That is the trigger: the support pass behind the step is now the read.",
+      q: "The defender's step opens the support lane behind them. That visible commitment makes the pass to F2 the next read.",
       pos: { F1: [146, 60], F2: [162, 24], D1: [158, 51], G: [186, 42] },
       puck: [141, 60],
       motions: [
-        { kind: "skate", from: [166, 47], to: [158, 51], actor: "D1" },
+        { kind: "skate", from: [162, 49], to: [158, 51], actor: "D1" },
       ],
       cue: { label: "Step", shortLabel: "Step", x: 158, y: 44 },
     },
