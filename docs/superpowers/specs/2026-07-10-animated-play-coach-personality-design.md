@@ -19,7 +19,8 @@ duplicated.
 
 Coach personality appears only after the learner answers. Before the answer,
 the rink and question remain neutral so the coach cannot hint at the correct
-read.
+read. The full coach spotlight uses bounded variable reinforcement; correctness
+and hockey teaching feedback never become intermittent.
 
 ## Feedback Card
 
@@ -34,6 +35,29 @@ For answered animated questions, show:
 
 The coach reaction is flavor, not instruction. Hockey teaching content remains
 owned by the question option and consequence node.
+
+## Reinforcement Schedule
+
+Every answer shows explicit `Correct` or `Not quite` status and the selected
+option's teaching explanation.
+
+The personality-rich coach spotlight follows this schedule:
+
+- Incorrect answers always show the coach because corrective teaching is never
+  withheld.
+- The first correct answer in a session shows the coach.
+- Later correct answers show the coach after a variable gap of two to four
+  additional correct answers, averaging approximately every third correct
+  answer.
+- A learner never goes more than four correct answers without a coach moment.
+- Milestones such as a personal best or scenario-family completion may force a
+  coach moment.
+- The schedule is generated once per session and persisted in session storage;
+  re-rendering or replaying does not reroll it.
+
+The scheduler is bounded and learning-first. It does not use infinite rewards,
+loss framing, purchasable rerolls, streak loss, or escalating audiovisual
+effects.
 
 ## Assignment
 
@@ -62,6 +86,17 @@ Owns `COACH_PERSONAS`, `getAgeTier`, roster resolution,
 `getCoachForQuestion`, and deterministic reaction selection. The extracted
 exports are pure and have no React or DOM dependency.
 
+### `coachReinforcement.js`
+
+Owns a pure bounded scheduler and the session-storage adapter. State records
+correct answers since the last spotlight, the next target gap, whether the
+first correct spotlight has occurred, and handled answer event IDs so repeated
+renders cannot advance the schedule twice.
+
+The next gap is deterministically selected from `2`, `3`, or `4` using a
+session seed plus spotlight count. Tests inject the seed directly; production
+creates it once per session.
+
 ### Main quiz
 
 `App.jsx` imports the extracted data and helpers. Existing coach-card behavior
@@ -70,9 +105,10 @@ and wording must remain unchanged.
 ### Animated play
 
 `AnimatedPlay` resolves the coach when the current question is answered and
-passes it to the terminal feedback card. A small presentational component may
-own the portrait/name/reaction layout. Missing or failed portraits fall back to
-initials without blocking feedback.
+asks the reinforcement scheduler whether to show the spotlight. It passes the
+coach to the terminal feedback card only when scheduled or forced. A small
+presentational component may own the portrait/name/reaction layout. Missing or
+failed portraits fall back to initials without blocking feedback.
 
 ## Accessibility
 
@@ -99,6 +135,11 @@ a browser.
 - Different play/node IDs distribute across more than one coach.
 - Correct answers use `flavorCorrect`; incorrect answers use
   `flavorIncorrect`.
+- First correct and every incorrect answer show a coach spotlight.
+- Later correct spotlights occur only after gaps of two to four correct answers.
+- No correct-answer gap exceeds four.
+- Reprocessing the same answer event does not advance or reroll the schedule.
+- Session reload restores the existing schedule.
 - Animated feedback includes portrait, name, role, explicit status, reaction,
   and teaching explanation.
 - Pre-answer frames contain no coach feedback.
