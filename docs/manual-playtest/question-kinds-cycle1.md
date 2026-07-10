@@ -1,8 +1,7 @@
 # Manual Playtest Gate — Question Kinds Cycle 1
 
-Status: PASS FOR ITEM 2 (Codex, 2026-07-09). Verdict and predict-next passed
-for v1. Spot-mistake passed playtest 1 of 2; its factory gate remains locked
-until the second clean playtest.
+Status: PASS (owner-approved, 2026-07-10). Verdict, predict-next, and
+spot-mistake passed. All five question kinds are eligible for factory use.
 
 How to run: `npm run dev`, open the Animated read kernel harness (`#playtest`),
 select each play below at each band listed.
@@ -44,7 +43,7 @@ select each play below at each band listed.
       `src/play/AnimatedPlay.jsx` and rerun with Playwright MCP: wrong
       predictions now stay neutral and route to truth.
 
-### spotmistake_2v1_flat_support_u11_v1 — U11 and U13 (playtest 1 of 2)
+### spotmistake_2v1_flat_support_u11_v1 — U11 and U13 (playtest 2 of 2)
 - [x] Watch chain shows the pick-off clearly
 - [x] Tap zones: tapping the actor glyph itself registers (not just the ring)
 - [x] Exactly one defensible mistake: check against the sibling play
@@ -98,3 +97,15 @@ select each play below at each band listed.
   reinforcement schedule was removed from the shared renderer.
 - Remaining gate: run the revised forced-pass play at U11 and U13, confirming
   F1 responsibility and the interception/counter choreography.
+
+2026-07-10 final owner gate:
+
+- Revised forced-pass play passed at U11 and U13.
+- F1 owns the forced-pass decision; F2's flat support remains a separate
+  support-angle teaching read rather than shared turnover blame.
+- The pass and interception overlap the live rush, then D1 gains possession
+  and counters. Hot-reload timer changes restart cleanly.
+- Every animated answer receives named coach feedback with bounded,
+  proportionate language. Tactical feedback leads the card; coach identity is
+  a smaller attribution row beneath it.
+- Spot-mistake playtest 2 of 2 passed. Its factory gate is open.
