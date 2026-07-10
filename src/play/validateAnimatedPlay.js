@@ -2,6 +2,7 @@
 import { kindsForAge } from "./interactionProfiles.js";
 import { validatePromptAnswerContract } from "./questionKinds.js";
 import { MOTION_STYLES } from "./motionVocabulary.js";
+import { validatePossessionChange } from "./possessionChange.js";
 
 const REQUIRED_NODE_FIELDS = ["id", "q", "pos"];
 
@@ -38,6 +39,9 @@ export function validateAnimatedPlay(play) {
     }
     if (node.puck && !isPoint(node.puck)) errs.push(`node ${nodeId} puck must be [x,y]`);
     if (node.enterPuck && !isPoint(node.enterPuck)) errs.push(`node ${nodeId} enterPuck must be [x,y]`);
+    for (const error of validatePossessionChange(node, actorIds)) {
+      errs.push(`node ${nodeId} possessionChange ${error}`);
+    }
     for (const [i, motion] of (node.motions || []).entries()) {
       const tag = `node ${nodeId} motion ${i}`;
       if (!isPoint(motion.from) || !isPoint(motion.to)) errs.push(`${tag} needs from/to as [x,y]`);

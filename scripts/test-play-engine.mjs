@@ -126,6 +126,24 @@ describe("motion validation", () => {
     const src = readFileSync(new URL("../src/play/AnimatedPlay.jsx", import.meta.url), "utf8");
     assert.ok(src.includes("const displayedPuck = (!entered && node.enterPuck) ? node.enterPuck : node.puck;"));
   });
+
+  it("requires explicit possession-change geometry", async () => {
+    const { validatePossessionChange } = await import("../src/play/possessionChange.js");
+    const actorIds = new Set(["D1"]);
+    assert.deepEqual(validatePossessionChange({
+      possessionChange: { kind: "interception", fromTeam: "home", toActor: "D1", counterTo: [136, 43] },
+      enter: { D1: [147, 44] },
+      pos: { D1: [136, 43] },
+      enterPuck: [144.5, 45],
+      puck: [133.5, 44],
+      motions: [{ kind: "blocked", from: [146, 58], to: [147, 44] }],
+    }, actorIds), []);
+
+    assert.ok(validatePossessionChange({
+      possessionChange: { kind: "interception", toActor: "missing", counterTo: [136, 43] },
+      pos: {},
+    }, actorIds).some((error) => error.includes("unknown actor")));
+  });
 });
 
 describe("rink anchors", () => {
