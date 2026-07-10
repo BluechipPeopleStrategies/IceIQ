@@ -87,3 +87,14 @@ select each play below at each band listed.
 - Playwright MCP on `#playtest`: wrong "defender sags" prediction stayed
   neutral (`rgb(205, 213, 224)` border, white background), then reached the
   truth node.
+
+2026-07-10 owner review:
+
+- Predict U13 passed after the prompt was simplified to a direct visible read:
+  "The defender steps toward YOU. Which play is now open?"
+- The correct response is now the concrete action "Pass to F2," and the
+  explanation appears inside a named coach card rather than as anonymous copy.
+- Coach feedback now appears after every animated-play answer. The variable
+  reinforcement schedule was removed from the shared renderer.
+- Remaining gate: run the revised forced-pass play at U11 and U13, confirming
+  F1 responsibility and the interception/counter choreography.
