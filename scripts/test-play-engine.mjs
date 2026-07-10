@@ -1,5 +1,6 @@
 import assert from "node:assert/strict";
 import { describe, it } from "node:test";
+import { readFileSync } from "node:fs";
 import { motionPathD, motionPoints, motionTimings, visibleMotions } from "../src/play/motionGeometry.js";
 import { ANCHORS, ANCHOR_NAMES, RINK, at, mirrorX } from "../src/play/rinkAnchors.js";
 import { validateAnimatedPlay } from "../src/play/validateAnimatedPlay.js";
@@ -115,6 +116,15 @@ describe("motion validation", () => {
     for (const play of ALL_ANIMATED_PLAYS) {
       assert.deepEqual(validateAnimatedPlay(play).errs, [], play.id);
     }
+  });
+
+  it("validates and renders puck entry positions", () => {
+    const bad = withStartMotions([]);
+    bad.nodes[bad.start].enterPuck = [12];
+    assert.ok(validateAnimatedPlay(bad).errs.some((error) => error.includes("enterPuck")));
+
+    const src = readFileSync(new URL("../src/play/AnimatedPlay.jsx", import.meta.url), "utf8");
+    assert.ok(src.includes("const displayedPuck = (!entered && node.enterPuck) ? node.enterPuck : node.puck;"));
   });
 });
 

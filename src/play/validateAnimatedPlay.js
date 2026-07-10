@@ -37,6 +37,7 @@ export function validateAnimatedPlay(play) {
       if (!isPoint(point)) errs.push(`node ${nodeId} position for ${actorId} must be [x,y]`);
     }
     if (node.puck && !isPoint(node.puck)) errs.push(`node ${nodeId} puck must be [x,y]`);
+    if (node.enterPuck && !isPoint(node.enterPuck)) errs.push(`node ${nodeId} enterPuck must be [x,y]`);
     for (const [i, motion] of (node.motions || []).entries()) {
       const tag = `node ${nodeId} motion ${i}`;
       if (!isPoint(motion.from) || !isPoint(motion.to)) errs.push(`${tag} needs from/to as [x,y]`);

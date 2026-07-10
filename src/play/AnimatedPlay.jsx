@@ -348,7 +348,7 @@ export default function AnimatedPlay({ play, ageBand = "U11", onEvent }) {
   }
 
   const positions = (!entered && node.enter) ? node.enter : node.pos;
-  const puck = node.puck;
+  const displayedPuck = (!entered && node.enterPuck) ? node.enterPuck : node.puck;
   const shownMotions = visibleMotionsFor(node);
   const timings = motionTimings(shownMotions.map((entry) => entry.motion));
 
@@ -445,8 +445,8 @@ export default function AnimatedPlay({ play, ageBand = "U11", onEvent }) {
             </g>
           );
         })}
-        {puck && (
-          <g transform={`translate(${puck[0]},${puck[1]})`} style={{ transition: "transform 1.4s cubic-bezier(.4,0,.2,1)" }}>
+        {displayedPuck && (
+          <g transform={`translate(${displayedPuck[0]},${displayedPuck[1]})`} style={{ transition: "transform 1.4s cubic-bezier(.4,0,.2,1)" }}>
             <circle r="1.35" fill="#111111" stroke="#FFFFFF" strokeWidth="0.35" />
           </g>
         )}
