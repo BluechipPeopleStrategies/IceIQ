@@ -15,6 +15,11 @@ Reusable rule:
 - Visible commitment: ask what space, lane, or option changes next.
 - Never ask what an opponent "does next" when multiple choices depend on
   unknown intent rather than visible evidence.
+- Decision variants should label the decision-maker `YOU`, ask what that player
+  should do or where that player should go next, and explain why from visible
+  hockey evidence.
+- The same board may branch into D1, F1, and F2 POV variants when each branch
+  contains one clear decision and one defensible answer.
 
 Future variants may show a visible sag into the pass lane or continued retreat,
 then ask the same consequence-based question.
