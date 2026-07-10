@@ -345,18 +345,32 @@ describe("spot-mistake kind", () => {
   });
 
   it("puts the defender and stolen puck directly in the failed pass lane", () => {
-    const { spot, rewind } = SPOT_MISTAKE_FLAT_SUPPORT.nodes;
-    assert.deepEqual(spot.pos.D1, [147, 44]);
-    assert.deepEqual(spot.puck, [144.5, 45]);
-    assert.deepEqual(rewind.pos.D1, [147, 44]);
-    assert.deepEqual(rewind.puck, [144.5, 45]);
+    const { intercept, replayIntercept } = SPOT_MISTAKE_FLAT_SUPPORT.nodes;
+    assert.deepEqual(intercept.pos.D1, [147, 44]);
+    assert.deepEqual(intercept.puck, [144.5, 45]);
+    assert.deepEqual(replayIntercept.pos.D1, [147, 44]);
+    assert.deepEqual(replayIntercept.puck, [144.5, 45]);
 
-    for (const node of [spot, rewind]) {
+    for (const node of [intercept, replayIntercept]) {
       const blocked = node.motions.find((motion) => motion.kind === "blocked");
       assert.deepEqual(blocked.from, [146, 58]);
       assert.deepEqual(blocked.to, [147, 44]);
       assert.equal(blocked.label, "picked off");
     }
+  });
+
+  it("stages the interception and counter before the question and in slow replay", () => {
+    const nodes = SPOT_MISTAKE_FLAT_SUPPORT.nodes;
+    assert.equal(nodes.watch.autoNext.next, "intercept");
+    assert.equal(nodes.intercept.autoNext.next, "counter");
+    assert.equal(nodes.counter.autoNext.next, "spot");
+    assert.equal(nodes.spot.ask.opts.every((option) => option.next === "replayRead"), true);
+    assert.equal(nodes.replayRead.autoNext.next, "replayIntercept");
+    assert.equal(nodes.replayIntercept.autoNext.next, "rewind");
+    assert.ok(nodes.replayRead.autoNext.ms > nodes.watch.autoNext.ms);
+    assert.ok(nodes.replayIntercept.autoNext.ms > nodes.intercept.autoNext.ms);
+    assert.deepEqual(nodes.counter.pos.D1, nodes.counter.possessionChange.counterTo);
+    assert.deepEqual(nodes.rewind.pos.D1, nodes.rewind.possessionChange.counterTo);
   });
 
   it("enforces one defensible mistake", async () => {
