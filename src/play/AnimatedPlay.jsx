@@ -9,6 +9,7 @@ import { logAnimatedPlayEvent, summarizeAnimatedPlayEvents } from "./telemetry.j
 import { ALL_ANIMATED_PLAYS } from "./playCatalog.js";
 import { ActorTapTargets } from "./ActorTapTargets.jsx";
 import { CoachFeedback } from "./CoachFeedback.jsx";
+import { coachFeedbackHeadline } from "./coachFeedbackTone.js";
 import { applyCoachAnswer, loadCoachReinforcement, saveCoachReinforcement } from "./coachReinforcement.js";
 import { getCoachForQuestion } from "../coachPersonas.js";
 
@@ -237,6 +238,7 @@ function NodeSummary({ node, profile, pickedOption, lastKind, coachFeedback, onR
       {coachFeedback?.showCoach && (
         <CoachFeedback
           coach={coachFeedback.coach}
+          headline={coachFeedback.headline}
           correct={!!pickedOption?.ok}
           explanation={coachExplanation}
         />
@@ -345,6 +347,7 @@ export default function AnimatedPlay({ play, ageBand = "U11", onEvent }) {
     setCoachFeedback({
       showCoach: reinforcementResult.showCoach,
       coach,
+      headline: coachFeedbackHeadline({ id: `${play.id}:${nodeId}:${opt.id}`, correct: !!opt.ok }),
     });
     if (kind === "verdict" && judgePick) {
       onEvent?.({ playId: play.id, nodeId, event: "answer", kind, answerId: judgePick.id, justifyId: opt.id, ok: !!(judgePick.ok && opt.ok), judgeOk: !!judgePick.ok, justifyOk: !!opt.ok, ms });

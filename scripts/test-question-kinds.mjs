@@ -434,7 +434,7 @@ describe("support-angle actor read", () => {
     const coachCard = readFileSync(new URL("../src/play/CoachFeedback.jsx", import.meta.url), "utf8");
     assert.match(renderer, /explanation=\{coachExplanation\}/);
     assert.match(renderer, /!node\.terminal && \(/);
-    assert.match(coachCard, /correct \? "Correct read" : "Not quite"/);
+    assert.match(coachCard, /\{headline\}/);
     assert.doesNotMatch(coachCard, /\{reaction\}/);
   });
 });
