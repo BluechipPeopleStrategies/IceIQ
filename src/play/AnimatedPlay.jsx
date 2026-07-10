@@ -10,7 +10,7 @@ import { ALL_ANIMATED_PLAYS } from "./playCatalog.js";
 import { ActorTapTargets } from "./ActorTapTargets.jsx";
 import { CoachFeedback } from "./CoachFeedback.jsx";
 import { applyCoachAnswer, loadCoachReinforcement, saveCoachReinforcement } from "./coachReinforcement.js";
-import { coachReaction, getCoachForQuestion } from "../coachPersonas.js";
+import { getCoachForQuestion } from "../coachPersonas.js";
 
 const TEAM_FILL = {
   home: "#0F4C8C",
@@ -237,7 +237,6 @@ function NodeSummary({ node, profile, pickedOption, lastKind, coachFeedback, onR
       {coachFeedback?.showCoach && (
         <CoachFeedback
           coach={coachFeedback.coach}
-          reaction={coachFeedback.reaction}
           correct={!!pickedOption?.ok}
           explanation={coachExplanation}
         />
@@ -346,7 +345,6 @@ export default function AnimatedPlay({ play, ageBand = "U11", onEvent }) {
     setCoachFeedback({
       showCoach: reinforcementResult.showCoach,
       coach,
-      reaction: coachReaction(coach, !!opt.ok, ageBand, reinforcementResult.state.spotlightCount),
     });
     if (kind === "verdict" && judgePick) {
       onEvent?.({ playId: play.id, nodeId, event: "answer", kind, answerId: judgePick.id, justifyId: opt.id, ok: !!(judgePick.ok && opt.ok), judgeOk: !!judgePick.ok, justifyOk: !!opt.ok, ms });

@@ -431,8 +431,11 @@ describe("support-angle actor read", () => {
 
   it("puts terminal tactical feedback inside the coach card", () => {
     const renderer = readFileSync(new URL("../src/play/AnimatedPlay.jsx", import.meta.url), "utf8");
+    const coachCard = readFileSync(new URL("../src/play/CoachFeedback.jsx", import.meta.url), "utf8");
     assert.match(renderer, /explanation=\{coachExplanation\}/);
     assert.match(renderer, /!node\.terminal && \(/);
+    assert.match(coachCard, /correct \? "Correct read" : "Not quite"/);
+    assert.doesNotMatch(coachCard, /\{reaction\}/);
   });
 });
 
