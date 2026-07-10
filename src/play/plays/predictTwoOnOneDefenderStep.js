@@ -4,7 +4,7 @@
 export const PREDICT_TWO_ON_ONE_DEFENDER_STEP = {
   id: "predict_2v1_defender_step_u13_v1",
   type: "animated-play",
-  title: "2-on-1: Predict the opening lane",
+  title: "2-on-1: Read the defender's step",
   concept: "odd-man-reads",
   ageBands: ["U13"],
   view: "half-right",
@@ -24,7 +24,7 @@ export const PREDICT_TWO_ON_ONE_DEFENDER_STEP = {
   nodes: {
     entry: {
       id: "entry",
-      q: "The defender has stopped backing in and is stepping toward you. What happens to the passing lane next?",
+      q: "The defender steps toward YOU. Which play is now open?",
       decisionActor: "F1",
       enter: { F1: [126, 60], F2: [150, 24], D1: [172, 45], G: [187, 42] },
       pos: { F1: [138, 60], F2: [158, 24], D1: [162, 49], G: [186, 42] },
@@ -35,19 +35,19 @@ export const PREDICT_TWO_ON_ONE_DEFENDER_STEP = {
       ],
       ask: {
         kind: "predict-next",
-        q: "The defender has stopped backing in and is stepping toward you. What happens to the passing lane next?",
+        q: "The defender steps toward YOU. Which play is now open?",
         truthNext: "truth",
         opts: [
-          { id: "lane_opens", t: "The lane behind the defender opens", ok: true, why: "The defender's step commits body and stick toward the puck carrier, opening space behind the step for F2.", next: "truth" },
-          { id: "both_closed", t: "The defender closes both the shot and pass", no: "One defender cannot step to the puck and cover the support lane at the same time.", next: "truth" },
-          { id: "lane_disappears", t: "The support lane disappears", no: "The visible step moves the defender away from the support lane, so that space opens rather than disappears.", next: "truth" },
+          { id: "lane_opens", t: "Pass to F2", ok: true, why: "The defender steps toward you and leaves F2 open.", next: "truth" },
+          { id: "both_closed", t: "Shoot through the defender", no: "The defender has stepped into your shooting lane.", next: "truth" },
+          { id: "lane_disappears", t: "Hold the puck", no: "F2 is open now. Move the puck before the defender can recover.", next: "truth" },
         ],
       },
     },
     truth: {
       id: "truth",
       terminal: true,
-      q: "The defender's step opens the support lane behind them. That visible commitment makes the pass to F2 the next read.",
+      q: "Correct. The defender steps toward YOU, so they cannot also cover F2. Make the pass.",
       pos: { F1: [146, 60], F2: [162, 24], D1: [158, 51], G: [186, 42] },
       puck: [141, 60],
       motions: [

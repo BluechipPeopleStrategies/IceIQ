@@ -374,12 +374,15 @@ describe("spot-mistake kind", () => {
     assert.deepEqual(nodes.rewind.pos.D1, nodes.rewind.possessionChange.counterTo);
   });
 
-  it("predicts a visible geometric consequence instead of hidden opponent intent", () => {
+  it("turns the visible defender step into a simple player decision", () => {
     const entry = PREDICT_TWO_ON_ONE_DEFENDER_STEP.nodes.entry;
     assert.doesNotMatch(entry.ask.q, /what does the defender do next/i);
-    assert.match(entry.ask.q, /stepping toward you/i);
-    assert.match(entry.ask.q, /passing lane/i);
-    assert.match(entry.ask.opts.find((option) => option.ok).t, /opens/i);
+    assert.equal(entry.ask.q, "The defender steps toward YOU. Which play is now open?");
+    assert.equal(entry.ask.opts.find((option) => option.ok).t, "Pass to F2");
+    assert.equal(
+      PREDICT_TWO_ON_ONE_DEFENDER_STEP.nodes.truth.q,
+      "Correct. The defender steps toward YOU, so they cannot also cover F2. Make the pass."
+    );
 
     const hiddenIntent = structuredClone(PREDICT_TWO_ON_ONE_DEFENDER_STEP);
     hiddenIntent.nodes.entry.ask.q = "What does the defender do next?";
