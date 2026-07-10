@@ -370,6 +370,12 @@ describe("spot-mistake kind", () => {
     assert.equal(nodes.replayIntercept.autoNext.next, "rewind");
     assert.ok(nodes.replayRead.autoNext.ms > nodes.watch.autoNext.ms);
     assert.ok(nodes.replayIntercept.autoNext.ms > nodes.intercept.autoNext.ms);
+    assert.ok(nodes.intercept.autoNext.ms >= 1500);
+    assert.notDeepEqual(nodes.intercept.enter.F1, nodes.intercept.pos.F1);
+    assert.notDeepEqual(nodes.intercept.enter.F2, nodes.intercept.pos.F2);
+    assert.notDeepEqual(nodes.intercept.enter.D1, nodes.intercept.pos.D1);
+    assert.notDeepEqual(nodes.replayIntercept.enter.F1, nodes.replayIntercept.pos.F1);
+    assert.notDeepEqual(nodes.replayIntercept.enter.F2, nodes.replayIntercept.pos.F2);
     assert.deepEqual(nodes.counter.pos.D1, nodes.counter.possessionChange.counterTo);
     assert.deepEqual(nodes.rewind.pos.D1, nodes.rewind.possessionChange.counterTo);
   });

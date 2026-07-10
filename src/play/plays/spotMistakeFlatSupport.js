@@ -39,19 +39,19 @@ export const SPOT_MISTAKE_FLAT_SUPPORT = {
       id: "intercept",
       q: "The defender steps into the passing lane.",
       enter: { F1: [146, 58], F2: [148, 30], D1: [149, 44], G: [186, 42] },
-      pos: { F1: [146, 58], F2: [148, 30], D1: [147, 44], G: [186, 42] },
+      pos: { F1: [150, 56], F2: [152, 29], D1: [147, 44], G: [186, 42] },
       enterPuck: [146, 58],
       puck: [144.5, 45],
       motions: [
         { kind: "blocked", from: [146, 58], to: [147, 44], label: "picked off" },
       ],
-      autoNext: { next: "counter", ms: 650 },
+      autoNext: { next: "counter", ms: 1650 },
     },
     counter: {
       id: "counter",
       q: "The defender takes the puck the other way.",
-      enter: { F1: [146, 58], F2: [148, 30], D1: [147, 44], G: [186, 42] },
-      pos: { F1: [146, 58], F2: [148, 30], D1: [136, 43], G: [186, 42] },
+      enter: { F1: [150, 56], F2: [152, 29], D1: [147, 44], G: [186, 42] },
+      pos: { F1: [150, 56], F2: [152, 29], D1: [136, 43], G: [186, 42] },
       enterPuck: [144.5, 45],
       puck: [133.5, 44],
       motions: [
@@ -63,7 +63,7 @@ export const SPOT_MISTAKE_FLAT_SUPPORT = {
     spot: {
       id: "spot",
       q: "The passing lane was covered. Tap the skater who forced the play.",
-      pos: { F1: [146, 58], F2: [148, 30], D1: [136, 43], G: [186, 42] },
+      pos: { F1: [150, 56], F2: [152, 29], D1: [136, 43], G: [186, 42] },
       puck: [133.5, 44],
       motions: [
         { kind: "blocked", from: [146, 58], to: [147, 44], label: "picked off" },
@@ -95,20 +95,20 @@ export const SPOT_MISTAKE_FLAT_SUPPORT = {
       id: "replayIntercept",
       q: "The defender reads the flat lane and steps through it.",
       enter: { F1: [146, 58], F2: [148, 30], D1: [149, 44], G: [186, 42] },
-      pos: { F1: [146, 58], F2: [148, 30], D1: [147, 44], G: [186, 42] },
+      pos: { F1: [150, 56], F2: [152, 29], D1: [147, 44], G: [186, 42] },
       enterPuck: [146, 58],
       puck: [144.5, 45],
       motions: [
         { kind: "blocked", from: [146, 58], to: [147, 44], label: "picked off" },
       ],
-      autoNext: { next: "rewind", ms: 1100 },
+      autoNext: { next: "rewind", ms: 2300 },
     },
     rewind: {
       id: "rewind",
       terminal: true,
       q: "Rewind to the decision: the defender was already in the lane before F1 released the pass. Don't force a covered pass. If the lane is taken, hold, shoot, or attack the open ice.",
-      enter: { F1: [146, 58], F2: [148, 30], D1: [147, 44], G: [186, 42] },
-      pos: { F1: [146, 58], F2: [148, 30], D1: [136, 43], G: [186, 42] },
+      enter: { F1: [150, 56], F2: [152, 29], D1: [147, 44], G: [186, 42] },
+      pos: { F1: [150, 56], F2: [152, 29], D1: [136, 43], G: [186, 42] },
       enterPuck: [144.5, 45],
       puck: [133.5, 44],
       motions: [
