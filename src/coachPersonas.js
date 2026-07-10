@@ -95,11 +95,11 @@ export const COACH_PERSONAS = [
   {
     id: "marques",
     name: "Coach Marques",
-    role: "Mental Performance Coach",
-    archetype: "motivator",
+    role: "Development Coach",
+    archetype: "generalist",
     imageUrl: "/assets/coaches/marques.png",
-    tilts: ["c"],
-    summary: "Belief factory. Keeps the tank full, turns missed shifts into fuel, and gets the most out of every player in the room.",
+    tilts: [],
+    summary: "Positive, practical, and comfortable coaching the whole game. Connects tactical reads to the next playable adjustment.",
     flavorCorrect: {
       young: ["YES!", "BOOM!", "LET'S GO!", "BIG read!", "MONEY!", "FIRE!", "Locked in!", "SUPERSTAR.", "On FIRE!", "Champion."],
       mid:   ["YESSIR.", "BIG TIME.", "ELITE.", "Locked.", "MONEY.", "Championship.", "Built for this.", "BIG read.", "Sending it."],

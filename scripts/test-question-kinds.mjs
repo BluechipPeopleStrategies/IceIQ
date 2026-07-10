@@ -392,6 +392,7 @@ describe("spot-mistake kind", () => {
     assert.deepEqual(ask.opts.filter((option) => option.ok).map((option) => option.actorId), ["F1"]);
     assert.match(ask.opts.find((option) => option.actorId === "F1").why, /covered pass|defender.*lane/i);
     assert.match(ask.opts.find((option) => option.actorId === "F2").no, /puck carrier.*decision|cannot force/i);
+    assert.match(SPOT_MISTAKE_FLAT_SUPPORT.nodes.rewind.q, /If the lane is taken, hold, shoot, or attack the open ice\./);
   });
 
   it("enforces one defensible mistake", async () => {

@@ -14,4 +14,8 @@ test("coach personalities are stable and distributed", () => {
   const app = readFileSync(new URL("../src/App.jsx", import.meta.url), "utf8");
   assert.ok(app.includes('from "./coachPersonas.js"'));
   assert.equal(app.includes("const COACH_PERSONAS = ["), false);
+  const marques = COACH_PERSONAS.find((coach) => coach.id === "marques");
+  assert.equal(marques.role, "Development Coach");
+  assert.deepEqual(marques.tilts, []);
+  assert.doesNotMatch(`${marques.role} ${marques.summary}`, /mental performance|belief factory/i);
 });

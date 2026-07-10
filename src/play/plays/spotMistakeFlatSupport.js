@@ -106,7 +106,7 @@ export const SPOT_MISTAKE_FLAT_SUPPORT = {
     rewind: {
       id: "rewind",
       terminal: true,
-      q: "Rewind to the decision: the defender was already in the lane before F1 released the pass. Do not force a covered play.",
+      q: "Rewind to the decision: the defender was already in the lane before F1 released the pass. Don't force a covered pass. If the lane is taken, hold, shoot, or attack the open ice.",
       enter: { F1: [146, 58], F2: [148, 30], D1: [147, 44], G: [186, 42] },
       pos: { F1: [146, 58], F2: [148, 30], D1: [136, 43], G: [186, 42] },
       enterPuck: [144.5, 45],
