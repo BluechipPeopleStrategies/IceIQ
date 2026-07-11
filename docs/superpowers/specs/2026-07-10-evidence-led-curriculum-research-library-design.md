@@ -70,6 +70,21 @@ RinkReads will use source material to understand hockey principles and inspire o
 - Rewrite teaching language, scenarios, diagrams, and questions as original RinkReads material.
 - Record trademarked program names only as source metadata, not as RinkReads curriculum labels.
 
+### Authenticated coach-site acquisition
+
+Thomas may provide access to a coaches' website through an authenticated Playwright browser session. Treat that site as an authorized research source, not as an unrestricted public corpus.
+
+- Thomas completes any login, multi-factor authentication, subscription acceptance, or account recovery himself in the browser.
+- Collection remains read-only: browse, search, inventory, and extract permitted research notes without posting, editing, messaging, purchasing, or changing account settings.
+- Review the site's terms, visible copyright notices, robots guidance where applicable, and download controls before bulk collection.
+- Prefer a structured inventory of canonical page URLs, titles, authors, dates, topic tags, and original evidence notes over full-page copying.
+- Download files only when the site's interface and Thomas's access clearly permit downloading and local retention.
+- Do not bypass paywalls, access controls, rate limits, anti-automation controls, or disabled download/copy functions.
+- Use paced, resumable browsing with a collection log so a failed session does not cause repeated requests or duplicate capture.
+- Keep credentials, cookies, tokens, and browser-session data out of the repository, logs, screenshots, and research records.
+- Mark each registry record as public, authenticated, paid, or restricted, along with its permitted retention mode.
+- Treat coach-site material as Tier 2 or Tier 3 unless its authorship and evidence justify a stronger classification.
+
 ## Research Library Structure
 
 The proposed durable structure is:
@@ -191,7 +206,7 @@ Research proceeds in repeatable waves.
 
 ### 1. Discover
 
-Search governing bodies, national development programs, academic databases, university repositories, coaching associations, reputable clinics, books, and legally accessible paid resources.
+Search governing bodies, national development programs, academic databases, university repositories, coaching associations, reputable clinics, books, legally accessible paid resources, and the authenticated coaches' site supplied by Thomas.
 
 ### 2. Triage
 
@@ -200,6 +215,8 @@ Score candidates for authority, relevance, developmental value, tactical detail,
 ### 3. Capture
 
 Record canonical metadata, retrieve legally retainable documents, and hash local files to detect duplicates.
+
+For authenticated sites, capture through the user-authorized browser session. Maintain a crawl manifest containing the starting URL, included sections, exclusions, visit status, canonical URL, retention permission, and extraction status. Resume from the manifest rather than recrawling completed pages.
 
 ### 4. Extract
 
@@ -322,6 +339,8 @@ Use Fable to expand this brief around the following planning questions:
 8. Which first-wave deliverables require automation, and which should remain human-reviewed?
 9. What copyright and retention checklist should be completed before a source file is archived?
 10. What decision gate moves the project from curriculum discovery into content production?
+11. What sections of the authenticated coaches' site are in scope, and what crawl rate, stopping rules, and retention permissions apply?
+12. What browser-session handoff lets Thomas authenticate while ensuring credentials and session artifacts never enter the repository?
 
 ## Decisions Already Made
 
@@ -335,3 +354,4 @@ Use Fable to expand this brief around the following planning questions:
 - Require documentary support plus coach review for curriculum admission.
 - Use player testing to validate teaching and assessment delivery.
 - Start players by age, then adapt by concept-specific competency.
+- Include the authenticated coaches' site as a read-only, permission-aware acquisition channel through a Thomas-authenticated Playwright session.
