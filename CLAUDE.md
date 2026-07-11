@@ -130,6 +130,19 @@ When adding a key, follow the `rinkreads_<thing>[_vN]` convention and grep befor
 ## Conversion UX Triggers
 Goals tab gold pip for FREE; blurred sample-goal preview behind gate; session-#5 milestone banner; mid-quiz locked-format sentinel; weekly-cap `FreeQuizCapScreen`. Upgrade surfaces: position filter, >1 age switch, session 6+, weekly cap, weekly-challenge tap.
 
+## Repo Reference vs. Second Brain
+
+Operational material Claude Code needs to consult automatically mid-task —
+build standards, skill pairings, frameworks tied to a specific deliverable
+type (e.g. `docs/reference/chart-chooser.md`) — lives in-repo under `docs/`.
+Test: would a future session need this read without being asked? If yes, repo.
+Human-facing strategy, roadmap synthesis, and decisions Thomas reviews outside
+a coding session live in Second Brain (`Command Center/Projects/RinkReads/`).
+Don't duplicate content across the two — link from Second Brain to the repo
+file if a hub doc needs it. Repo commits already sync into the RinkReads
+Commit Log automatically, so a repo-only change needs no separate Second
+Brain write. (Standing rule, Thomas, 2026-07-11.)
+
 ## Git & Commits (auto-commit)
 - **AUTO-COMMIT:** after completing a code or content change in this repo, commit it
   to git without asking — clear conventional-commit message + `Co-Authored-By` trailer.
