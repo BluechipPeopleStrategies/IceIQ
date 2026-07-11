@@ -113,6 +113,93 @@ IceIQ repository:
 
 The exact Obsidian note organization may evolve with the vault, but the ownership boundary does not: Obsidian owns human-readable research knowledge, Drive owns original documents, and IceIQ owns product-executable truth.
 
+### Obsidian working environment
+
+The Obsidian layer should be a navigable research workspace, not a duplicate of this technical specification. Build the following components before large-scale source collection:
+
+#### Research Library hub
+
+Create one RinkReads Research Library hub linked from the existing RinkReads Project Hub. It should provide:
+
+- the purpose and current research priorities;
+- links to source, evidence, concept, crosswalk, and gap views;
+- the current acquisition wave and progress;
+- unresolved research and coach-review decisions;
+- links to the authoritative IceIQ specification, roadmap, curriculum data, and relevant commits;
+- links to the Google Drive source-document folders.
+
+#### Source-record template
+
+Extend the existing Obsidian source-record pattern for RinkReads research. Properties should include:
+
+- project and source type;
+- title, author, organization, and publication date;
+- canonical URL and Drive file link or ID;
+- public, authenticated, paid, or restricted access;
+- source tier and confidence;
+- copyright and retention status;
+- topics, age bands, systems, and curriculum concepts;
+- acquisition, review, and supersession status;
+- retrieval and last-reviewed dates.
+
+The note body should explain why the source matters, summarize it in original language, identify useful pages or sections, and link related evidence notes and concepts.
+
+#### Evidence-note template
+
+Use one note per distinct claim, principle, progression, or meaningful disagreement rather than one oversized summary per document. Each evidence note should record:
+
+- the claim in original RinkReads language;
+- precise source and page or section references;
+- whether it is research-supported, strong coaching consensus, or coaching preference;
+- applicable ages, competencies, and systems;
+- observable perception, decision, and action cues;
+- supporting and contradicting evidence;
+- confidence and review status;
+- possible scenario inspiration without copying source expression.
+
+#### Curriculum-concept template
+
+Each emerging concept note should synthesize multiple evidence notes and define:
+
+- player-facing concept name and parent-facing explanation;
+- transferable principle and legitimate system variations;
+- suggested entry age and prerequisites;
+- six competency stages from Notice through Anticipate;
+- observable mastery and common misconceptions;
+- scenario opportunities and interaction kinds;
+- documentary-support and coach-review status;
+- links to existing RinkReads nodes, plays, and questions.
+
+#### Existing-content crosswalk template
+
+Crosswalk notes should connect an existing ledger node, scenario, question family, or playtest decision to the evidence library. They should carry one status: Supported, Supported with refinement, System-dependent, Unverified, Superseded, or Original product convention. Preserve repository IDs, file links, and commit references.
+
+#### Research-gap and review notes
+
+Track missing evidence, source disagreements, thin age bands, system questions, and items awaiting coach review as linked notes rather than burying them in source summaries.
+
+#### Obsidian Bases views
+
+Create filterable views for:
+
+- all sources by tier, topic, age band, access, and review state;
+- evidence awaiting corroboration;
+- concepts awaiting coach review;
+- concepts by competency stage and age-entry point;
+- universal versus system-dependent concepts;
+- existing RinkReads content needing refinement or evidence;
+- current acquisition-wave progress;
+- broken links, stale reviews, and superseded sources.
+
+#### Linking and duplication rules
+
+- Obsidian links to the authoritative IceIQ specification rather than copying it wholesale.
+- IceIQ links back to the relevant Obsidian hub or durable decision when useful, without requiring the app to parse prose notes.
+- Google Drive file links connect source records to retained originals.
+- A fact is written once in its authoritative home and referenced elsewhere.
+- Validated curriculum fields may be exported from Obsidian into IceIQ through a reviewed, deterministic process; free-form research notes remain in Obsidian.
+- Credentials, cookies, tokens, and authenticated browser artifacts never enter Obsidian properties or attachments.
+
 ### 1. Source registry
 
 One record per source:
@@ -314,6 +401,7 @@ These areas align with current RinkReads content gaps but should also test and i
 
 ### First-wave outputs
 
+- operational Obsidian Research Library hub, templates, and Bases views;
 - populated Obsidian source registry and legally retained Drive archive;
 - evidence notes for retained sources;
 - preliminary evidence-derived curriculum outline;
@@ -354,6 +442,8 @@ Use Fable to expand this brief around the following planning questions:
 12. What browser-session handoff lets Thomas authenticate while ensuring credentials and session artifacts never enter the repository?
 13. What Obsidian properties, links, and Bases views make the source registry, evidence map, and curriculum crosswalk easy to navigate?
 14. Which validated fields must export from Obsidian into IceIQ, and which research notes should never be duplicated into the repository?
+15. What migration or seed process should create the initial Obsidian crosswalk from the existing curriculum ledger, animated catalog, source references, and playtest decisions?
+16. What naming and folder conventions will remain stable as the library grows to hundreds of source and evidence notes?
 
 ## Decisions Already Made
 
@@ -369,3 +459,4 @@ Use Fable to expand this brief around the following planning questions:
 - Start players by age, then adapt by concept-specific competency.
 - Include the authenticated coaches' site as a read-only, permission-aware acquisition channel through a Thomas-authenticated Playwright session.
 - Use Obsidian as the primary home for research knowledge and curriculum thinking, Google Drive for retained original documents, and IceIQ for product-executable data and technical automation.
+- Build the Obsidian hub, templates, linked crosswalk, research-gap notes, and Bases views before large-scale acquisition; do not copy the full technical specification into the vault.
