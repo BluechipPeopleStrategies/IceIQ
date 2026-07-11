@@ -74,6 +74,12 @@ Renders `q.overlays[]` (normalized 0–1 coords) on top of an image — the hous
 - Sprite sheets expected at `/assets/sprites/{player-yellow.png, player-black.png, goalie.png}`.
 - **Accessibility:** never color-alone (red/green colorblind rule) — pair with arrow/shape/label.
 
+## Chart Chooser (dataviz form-selection)
+
+Before adding/changing any chart (coach analytics, progress trends, GS score
+history), read `docs/reference/chart-chooser.md` to pick the form, then run the
+`dataviz` skill for color/marks/accessibility.
+
 ## Content Factory (`docs/factory/`, `tools/factory-*.mjs`)
 Image-first pipeline that turns hockey images into coach-graded, age-laddered, multi-format question banks at scale (rink scenarios are a paid teaser → more/better content = conversion).
 - **Spec:** `docs/factory/SPEC.md` (current build-out: overlay annotation system, coverage ledger, stricter verdict bar). Proven runs: `factory-run-01.json` / `-02.json` + summaries.
