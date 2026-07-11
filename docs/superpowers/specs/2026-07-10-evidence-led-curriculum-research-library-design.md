@@ -87,20 +87,31 @@ Thomas may provide access to a coaches' website through an authenticated Playwri
 
 ## Research Library Structure
 
-The proposed durable structure is:
+Obsidian is the primary home for the research library and curriculum thinking. Google Drive holds retained original documents and shareable source files. The IceIQ repository holds only the technical structures and artifacts needed by the product and its automation.
 
 ```text
-docs/research/
-  registry.json
-  acquisition-log.md
-  sources/
-    governing-bodies/
-    academic/
-    coaching-programs/
-  notes/
-  concept-map/
-  crosswalk/
+Obsidian: SecondBrain/Command Center/Projects/RinkReads/
+  RinkReads - Research Library.md
+  Research/
+    Sources/
+    Evidence Notes/
+    Concepts/
+    Crosswalk/
+    Acquisition Log.md
+
+Google Drive: RinkReads Research Library/
+  Governing Bodies/
+  Academic/
+  Coaching Programs/
+  Restricted or Paid Sources/
+
+IceIQ repository:
+  machine-readable schemas and validated exports
+  source-ingestion and crosswalk automation
+  technical reports and curriculum data consumed by the app
 ```
+
+The exact Obsidian note organization may evolve with the vault, but the ownership boundary does not: Obsidian owns human-readable research knowledge, Drive owns original documents, and IceIQ owns product-executable truth.
 
 ### 1. Source registry
 
@@ -115,15 +126,15 @@ One record per source:
 - source quality and confidence;
 - duplicate or superseding relationships.
 
-The registry is the master index even when a local file is retained.
+The Obsidian registry is the human-facing master index even when a source file is retained in Drive. A validated machine-readable export may be generated into IceIQ when the app or factory needs structured source or curriculum data.
 
-### 2. Local source archive
+### 2. Original source archive
 
-Store legally retainable PDFs and other documents by source class. Preserve original filenames where practical and use registry metadata rather than altering source files.
+Store legally retainable PDFs and other original documents in Google Drive by source class. Preserve original filenames where practical and link them from their Obsidian source records. Do not use the Git repository as a document archive.
 
 ### 3. Evidence notes
 
-Write concise notes in original language with page- or section-level references. Separate:
+Write concise Obsidian notes in original language with page- or section-level references. Separate:
 
 - supported principles;
 - author or coach preferences;
@@ -134,7 +145,7 @@ Write concise notes in original language with page- or section-level references.
 
 ### 4. Concept map
 
-Combine evidence across sources into curriculum candidates. Each candidate records:
+Combine evidence across sources into Obsidian curriculum-candidate notes. Each candidate records:
 
 - what the player should perceive;
 - what decision the player should make;
@@ -148,7 +159,7 @@ Combine evidence across sources into curriculum candidates. Each candidate recor
 
 ### 5. Existing-work crosswalk
 
-Inventory and connect the work already completed in RinkReads:
+Inventory and connect the work already completed in RinkReads. Keep the reasoning and review state in Obsidian while linking to authoritative repo files and commits:
 
 - curriculum domains, concepts, and ledger nodes;
 - animated plays and scenario seeds;
@@ -214,7 +225,7 @@ Score candidates for authority, relevance, developmental value, tactical detail,
 
 ### 3. Capture
 
-Record canonical metadata, retrieve legally retainable documents, and hash local files to detect duplicates.
+Create or update the Obsidian source record, retrieve legally retainable original documents into Google Drive, and record stable links between them. Use Drive file identity or hashes where available to detect duplicates. Generate repo data only when a downstream RinkReads tool requires it.
 
 For authenticated sites, capture through the user-authorized browser session. Maintain a crawl manifest containing the starting URL, included sections, exclusions, visit status, canonical URL, retention permission, and extraction status. Resume from the manifest rather than recrawling completed pages.
 
@@ -303,7 +314,7 @@ These areas align with current RinkReads content gaps but should also test and i
 
 ### First-wave outputs
 
-- populated source registry and legal local archive;
+- populated Obsidian source registry and legally retained Drive archive;
 - evidence notes for retained sources;
 - preliminary evidence-derived curriculum outline;
 - crosswalk of existing RinkReads work;
@@ -341,6 +352,8 @@ Use Fable to expand this brief around the following planning questions:
 10. What decision gate moves the project from curriculum discovery into content production?
 11. What sections of the authenticated coaches' site are in scope, and what crawl rate, stopping rules, and retention permissions apply?
 12. What browser-session handoff lets Thomas authenticate while ensuring credentials and session artifacts never enter the repository?
+13. What Obsidian properties, links, and Bases views make the source registry, evidence map, and curriculum crosswalk easy to navigate?
+14. Which validated fields must export from Obsidian into IceIQ, and which research notes should never be duplicated into the repository?
 
 ## Decisions Already Made
 
@@ -355,3 +368,4 @@ Use Fable to expand this brief around the following planning questions:
 - Use player testing to validate teaching and assessment delivery.
 - Start players by age, then adapt by concept-specific competency.
 - Include the authenticated coaches' site as a read-only, permission-aware acquisition channel through a Thomas-authenticated Playwright session.
+- Use Obsidian as the primary home for research knowledge and curriculum thinking, Google Drive for retained original documents, and IceIQ for product-executable data and technical automation.
