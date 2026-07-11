@@ -9,8 +9,8 @@ export const GAP_CONTROL_PIVOT_MATCH_PLAY = {
   space: { units: "rink-200x85" },
   sourceRef: {
     note: "docs/library/gap-control.md",
-    cite: "Gap control read: when an attacker builds speed, the defender should pivot early, match speed, keep the play in front, and protect the middle lane.",
-    url: "https://www.usahockey.com/practiceplans",
+    cite: "A defensive gap must be held from a ready, moving stance to be adjustable; a flat-footed defender cannot close or widen the gap as the carrier's speed changes (Sacilotto, '7 Rules of Defensive Hockey,' Rule 1 — agility skating / gap definition). Age placement independently corroborated by USA Hockey (2019) and Hockey Canada U11/U13 Player Pathways.",
+    url: "https://cdn1.sportngin.com/attachments/document/0066/4690/Skill_Progression_Manual_19_FINAL.pdf",
   },
   actors: [
     { id: "A1", team: "away", role: "puckCarrier", label: "A1" },

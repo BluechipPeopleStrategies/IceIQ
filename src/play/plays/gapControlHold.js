@@ -10,8 +10,8 @@ export const GAP_CONTROL_HOLD_PLAY = {
   space: { units: "rink-200x85" },
   sourceRef: {
     note: "docs/library/gap-control.md",
-    cite: "Gap control read: when the attacker has speed, the defender should manage space while protecting the middle lane.",
-    url: "https://www.usahockey.com/practiceplans",
+    cite: "USA Hockey's Skill Progression Manual (2019) lists 'protect center of the ice' as a 10U/12U defensive team-play concept, alongside gap control; Hockey Canada's U11/U13 Player Pathways independently place gap control in the same age band's Individual Defensive Tactics matrix.",
+    url: "https://cdn1.sportngin.com/attachments/document/0066/4690/Skill_Progression_Manual_19_FINAL.pdf",
   },
   actors: [
     { id: "A1", team: "away", role: "puckCarrier", label: "A1" },

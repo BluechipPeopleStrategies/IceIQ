@@ -4,6 +4,15 @@
 **Status:** Planning brief for further development in Fable  
 **Scope:** Research acquisition, curriculum discovery, existing-content crosswalk, and validation
 
+**Amendment (2026-07-11, Thomas):** the coach-review requirement below is
+removed. Curriculum admission now requires documentary support alone —
+traceable evidence from independent corroborating sources (the same bar
+already used to promote a concept's crosswalk status to `supported`). A human
+coach may still review later, but it no longer gates a concept from moving
+into the curriculum. See "Validation Model" below, which reflects this
+change; the "coach review" language elsewhere in this document is historical
+and superseded by this note.
+
 ## Purpose
 
 Build a durable hockey research library that helps RinkReads create original, defensible learning content. The evidence should help shape the curriculum rather than merely justify a curriculum designed in advance.
@@ -334,16 +343,18 @@ Turn reviewed concepts into original scenario briefs. The evidence establishes t
 
 ### 8. Validate
 
-Use documentary support and coach review to admit a concept into the curriculum. Use player testing to validate whether particular teaching and assessment experiences work.
+Use documentary support to admit a concept into the curriculum. Use player testing to validate whether particular teaching and assessment experiences work.
 
 ## Validation Model
 
 ### Curriculum admission
 
-A concept becomes curriculum-ready when it has:
+**(Amended 2026-07-11 — see note at top of document.)**
 
-- traceable documentary support; and
-- coach review confirming hockey validity, scope, and system dependence.
+A concept becomes curriculum-ready when it has traceable documentary support
+from independent corroborating sources — the same evidentiary bar already
+used to promote a concept's crosswalk status to `supported`. Coach review is
+no longer required for admission.
 
 Strong Tier 1 evidence is preferred. Corroborated professional consensus is acceptable where formal research is limited.
 
@@ -371,7 +382,7 @@ A practical test sequence is:
 
 Readiness labels:
 
-- **Curriculum-ready:** documentary support plus coach review.
+- **Curriculum-ready:** traceable documentary support from independent corroborating sources (amended 2026-07-11 — coach review no longer required).
 - **Player-validated:** a small player group understands and transfers the concept.
 - **Scaled evidence:** aggregate use suggests the content measures development rather than confusion.
 

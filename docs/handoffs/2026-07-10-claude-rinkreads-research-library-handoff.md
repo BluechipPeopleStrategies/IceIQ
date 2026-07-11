@@ -9,6 +9,13 @@
 **Status:** Approved direction, ready for detailed planning and implementation
 **Authoritative design:** `C:\Users\mtsli\IceIQ\docs\superpowers\specs\2026-07-10-evidence-led-curriculum-research-library-design.md`
 
+**Amendment (2026-07-11, Thomas):** the coach-review requirement referenced
+below is removed. Curriculum admission now requires documentary support alone
+from independent corroborating sources — the same bar used to promote a
+concept's crosswalk status to `supported`. See the amendment note in the
+authoritative design spec; "coach review" language elsewhere in this document
+is historical and superseded.
+
 ## Your Assignment
 
 Plan and build an evidence-led hockey curriculum research system for RinkReads. The working research library must live primarily in Thomas's Obsidian vault. Original source documents belong in Google Drive when they can legally be retained. The IceIQ repository should hold only the technical automation, validated machine-readable curriculum data, and reports required by the product.
@@ -312,13 +319,15 @@ Run repeatable research waves:
 5. **Synthesize:** cluster evidence into concepts and progressions; record agreement, disagreement, and system variation.
 6. **Crosswalk:** compare the evidence map with existing RinkReads work.
 7. **Convert:** turn reviewed concepts into original scenario briefs.
-8. **Validate:** require documentary support plus coach review for curriculum admission; use player testing to validate teaching effectiveness.
+8. **Validate:** require documentary support for curriculum admission; use player testing to validate teaching effectiveness.
 
 ## Validation
 
 ### Curriculum-ready
 
-Requires documentary support plus coach review confirming hockey validity, scope, and system dependence.
+**(Amended 2026-07-11 — see note at top of document.)** Requires traceable
+documentary support from independent corroborating sources. Coach review is
+no longer required for admission.
 
 ### Player-validated
 
