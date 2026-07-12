@@ -44,7 +44,7 @@ These are the big pieces players and coaches actually use. Mostly in `src/` dire
 | `speedRound.jsx` | **Speed Round** game mode. |
 | `teamChallenges.jsx` | **Team Challenges.** |
 | `assignments.jsx` | **Assignments** — coaches assigning work to players. |
-| `cognitive-gym/` | **The Cognitive Gym** — reaction/vision drills (Anticipation, Eyes Up, Find Lane, Reaction, Snapshot, Shootout, etc. — one file each). |
+| `cognitive-gym/` | **The Brain Gym** — reaction/vision drills (Anticipation, Eyes Up, Find Lane, Reaction, Snapshot, Shootout, etc. — one file each). |
 | `play/` | The **animated play system** — play catalog, families, variants, motion. `play/plays/` = individual plays (forecheck, backcheck, gap control, 2-on-1…). |
 | `scenario/` | The **scenario engine** — multi-step animated teaching scenarios, plus an editor and playground. |
 | `path/` | The **learning path** — progression screen + challenges hub. |

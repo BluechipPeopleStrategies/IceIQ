@@ -115,7 +115,7 @@ const VERSION = "0.1-beta";
 const RELEASE_DATE = "June 2026";
 const CHANGELOG = [
   { v:"0.1-beta", date:"June 2026", notes:[
-    {icon:"🧠", title:"The Cognitive Gym is open", desc:"A new set of quick brain games that train the stuff you can't drill on the ice: scanning, peripheral vision, reading a pass, and picking the best option under pressure. Short, fast, and a little addictive."},
+    {icon:"🧠", title:"The Brain Gym is open", desc:"A new set of quick brain games that train the stuff you can't drill on the ice: scanning, peripheral vision, reading a pass, and picking the best option under pressure. Short, fast, and a little addictive."},
     {icon:"🏒", title:"Plays that unfold", desc:"Scenarios now branch. You read the play one decision at a time and watch how it develops from the choice you make, just like a real shift. Closer to hockey, less like a worksheet."},
     {icon:"✨", title:"Sharper ice, clearer reads", desc:"The rink diagrams got a real makeover so positions and lanes are easier to see, questions can be read aloud, and we added fresh scenarios on breakouts, D-zone coverage, and support play."},
   ]},
@@ -1688,7 +1688,7 @@ function Home({ player, onNav, demoMode, subscriptionTier, questFlagsBump, onPro
           <div style={{display:"flex",alignItems:"center",gap:".6rem"}}>
             <span style={{fontSize:20}}>🧠</span>
             <div>
-              <div style={{fontSize:10,letterSpacing:".14em",textTransform:"uppercase",color:"#5ba4e8",fontWeight:800}}>Cognitive Gym</div>
+              <div style={{fontSize:10,letterSpacing:".14em",textTransform:"uppercase",color:"#5ba4e8",fontWeight:800}}>Brain Gym</div>
               <div style={{fontSize:12,color:C.dim,marginTop:1}}>Anticipation · Awareness · Reaction</div>
             </div>
           </div>

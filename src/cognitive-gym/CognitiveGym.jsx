@@ -188,7 +188,7 @@ export default function CognitiveGym({ playerId = "default", onBack, ageBand = n
         </button>
       )}
       <header className="gym-header">
-        <h1>Cognitive Gym</h1>
+        <h1>Brain Gym</h1>
         <button
           type="button"
           className="gym-btn gym-btn-ghost gym-mute"
@@ -260,7 +260,7 @@ export default function CognitiveGym({ playerId = "default", onBack, ageBand = n
       <section className="gym-about">
         <h2>What this is</h2>
         <p>
-          The Cognitive Gym trains the part of your game that happens between the
+          The Brain Gym trains the part of your game that happens between the
           ears: anticipation, awareness, and fast, clean decisions. Short
           sessions, a few times a week, and the level climbs as you do.
         </p>

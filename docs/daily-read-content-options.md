@@ -30,7 +30,7 @@ scenarios. Build notes point at engine pieces that already exist.
 5. **Find the Pressure.** Tap where the check or the next threat is coming from. The defensive
    mirror of Spot the Open Player.
 6. **Scan Snapshot.** Flash the ice for a second, hide it, then ask where the open teammate was.
-   Reuses the Cognitive Gym Snapshot mechanic. Trains the one-glance read.
+   Reuses the Brain Gym Snapshot mechanic. Trains the one-glance read.
 7. **Freeze Frame: Shoot, Pass, or Carry.** The play stops on your stick; pick the best of three
    under a shrinking clock. Reuses the Gym Best Option drill.
 8. **Count the Rush.** Odd-man read: 2-on-1, 3-on-2, back-check coverage. "Take the pass or the

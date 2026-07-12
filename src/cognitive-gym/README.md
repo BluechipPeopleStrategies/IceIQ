@@ -1,4 +1,4 @@
-# RinkReads Cognitive Gym
+# RinkReads Brain Gym
 
 Eleven procedurally generated, hockey-native brain-training drills inspired by
 the Hockey IntelliGym approach. Zero content maintenance. Every rep is
