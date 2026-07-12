@@ -93,8 +93,8 @@ ok("the backup holds the PRE-edit content", backupContent === FIXTURE);
 const missingRes = await fetch(`${base}/nope`);
 ok("an unknown route returns 404", missingRes.status === 404);
 
-server.close();
+await new Promise((resolveClose) => server.close(resolveClose));
 rmSync(tmpRoot, { recursive: true, force: true });
 
 console.log(`\n${pass} passed, ${fail} failed`);
-process.exit(fail ? 1 : 0);
+process.exitCode = fail ? 1 : 0;
