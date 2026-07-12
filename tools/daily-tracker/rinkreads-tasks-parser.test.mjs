@@ -80,5 +80,76 @@ const renumbered = { ...parsed, next: [parsed.next[1]] }; // drop item 1, keep o
 const renumberedOut = serializeTasks(renumbered);
 ok("serializeTasks renumbers NEXT from scratch", renumberedOut.includes("1. **D.** fourth") && !renumberedOut.includes("2. **D.** fourth"));
 
+// Empty-section fixture: NOW has zero items. serializeTasks must not pad
+// the gap before the next heading with extra blank lines (regression for
+// the "three blank lines before NEXT" bug when a section is emptied out).
+const emptyNowFixture = [
+  "# Title",
+  "",
+  "**Scope:** test",
+  "",
+  "---",
+  "",
+  "## 🔵 NOW — active front (max 3)",
+  "",
+  "## 🟢 NEXT — sequenced, in order",
+  "",
+  "1. **C.** third",
+  "2. **D.** fourth",
+  "",
+  "## ⚪ LATER — in scope, not yet sequenced",
+  "",
+  "- **E.** fifth",
+  "",
+  "## 🅿️ PARKING LOT — out of current scope (captured, not sequenced)",
+  "",
+  "- **F.** sixth",
+  "",
+  "## Changelog",
+  "",
+  "- **2026-01-01** — done one",
+  "",
+].join("\n");
+
+const emptyNowParsed = parseTasks(emptyNowFixture);
+ok("empty NOW fixture: now has 0 items", emptyNowParsed.now.length === 0);
+ok(
+  "empty NOW fixture: round-trips byte-for-byte (no triple blank line)",
+  serializeTasks(emptyNowParsed) === emptyNowFixture
+);
+
+// Unrecognized heading: parseTasks must fail loudly rather than silently
+// dropping the section's body content.
+const unrecognizedHeadingFixture = [
+  "# Title",
+  "",
+  "**Scope:** test",
+  "",
+  "---",
+  "",
+  "## 🔵 NOW — active front (max 3)",
+  "",
+  "- **A.** first",
+  "",
+  "## Some Extra Heading",
+  "",
+  "- something that would otherwise vanish",
+  "",
+].join("\n");
+
+let threwForUnrecognizedHeading = false;
+let unrecognizedHeadingErrorMessage = "";
+try {
+  parseTasks(unrecognizedHeadingFixture);
+} catch (err) {
+  threwForUnrecognizedHeading = true;
+  unrecognizedHeadingErrorMessage = err.message;
+}
+ok("unrecognized heading: parseTasks throws", threwForUnrecognizedHeading);
+ok(
+  "unrecognized heading: error message names the offending heading",
+  unrecognizedHeadingErrorMessage.includes("Some Extra Heading")
+);
+
 console.log(`\n${pass} passed, ${fail} failed`);
 process.exit(fail ? 1 : 0);

@@ -78,6 +78,11 @@ export function parseTasks(rawInput) {
     if (HEADING_LINE_RE.test(line)) {
       flush();
       currentKey = sectionKeyForHeading(line);
+      if (currentKey === null) {
+        throw new Error(
+          `Unrecognized TASKS.md section heading: "${line}" — the tracker doesn't know how to preserve this. Extend SECTION_MATCHERS before parsing this file.`
+        );
+      }
     } else {
       bodyLines.push(line);
     }
@@ -103,7 +108,7 @@ export function serializeTasks(data) {
   for (const { key, heading, marker } of SECTION_ORDER) {
     const items = data[key] || [];
     const bulleted = items.map((it, i) => (marker === "num" ? `${i + 1}. ${it}` : `- ${it}`));
-    parts.push(`${heading}\n\n${bulleted.join("\n")}`);
+    parts.push(bulleted.length ? `${heading}\n\n${bulleted.join("\n")}` : heading);
   }
   let out = parts.join("\n\n") + "\n";
   if (data.crlf) out = out.replace(/\n/g, "\r\n");
