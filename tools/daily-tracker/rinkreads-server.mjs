@@ -33,6 +33,29 @@ function readBody(req) {
   });
 }
 
+function isStringArray(value) {
+  return Array.isArray(value) && value.every((item) => typeof item === "string");
+}
+
+// Validate a POST body's shape before it ever reaches serializeTasks(). A
+// malformed or partial payload (empty object, client bug, stray curl call)
+// must never reach the write path — returns an error string, or null if the
+// shape is valid.
+function validateTasksPayload(data) {
+  if (!data || typeof data !== "object" || Array.isArray(data)) {
+    return "request body must be a JSON object";
+  }
+  if (typeof data.headerRaw !== "string" || data.headerRaw.length === 0) {
+    return "headerRaw must be a non-empty string";
+  }
+  for (const key of ["now", "next", "later", "parking", "changelog"]) {
+    if (!isStringArray(data[key])) {
+      return `${key} must be an array of strings`;
+    }
+  }
+  return null;
+}
+
 // Factory so tests can point the server at a temp file instead of the real
 // TASKS.md. Returns a plain node:http server (not yet listening).
 export function createTrackerServer({
@@ -55,8 +78,19 @@ export function createTrackerServer({
       if (req.method === "POST" && req.url === "/api/tasks") {
         const body = await readBody(req);
         const data = JSON.parse(body);
+        const validationError = validateTasksPayload(data);
+        if (validationError) {
+          return sendJSON(res, 400, { error: validationError });
+        }
+        // changelog is read-only: no matter what the client sends, always
+        // write back whatever is actually on disk right now. The ops
+        // module's assertEditable() enforces this client-side too, but this
+        // is the one place that controls the real write, so it must not
+        // trust the client.
+        const current = parseTasks(readFileSync(tasksPath, "utf8"));
+        const toWrite = { ...data, changelog: current.changelog };
         backupTasksFile();
-        writeFileSync(tasksPath, serializeTasks(data), "utf8");
+        writeFileSync(tasksPath, serializeTasks(toWrite), "utf8");
         const fresh = parseTasks(readFileSync(tasksPath, "utf8"));
         return sendJSON(res, 200, fresh);
       }

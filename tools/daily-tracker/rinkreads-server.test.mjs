@@ -4,6 +4,7 @@ import { mkdtempSync, writeFileSync, readFileSync, readdirSync, rmSync } from "n
 import { tmpdir } from "node:os";
 import { resolve, join } from "node:path";
 import { createTrackerServer } from "./rinkreads-server.mjs";
+import { parseTasks, serializeTasks } from "./rinkreads-tasks-parser.mjs";
 
 let pass = 0, fail = 0;
 const ok = (n, c) => { console.log(`${c ? "PASS" : "FAIL"}  ${n}`); c ? pass++ : fail++; };
@@ -89,12 +90,85 @@ ok("a backup file was created before the write", backups.length === 1 && backups
 const backupContent = readFileSync(resolve(backupDir, backups[0]), "utf8");
 ok("the backup holds the PRE-edit content", backupContent === FIXTURE);
 
+// POST /api/tasks with an invalid payload (now missing entirely): expect
+// 400, and confirm nothing was written — no on-disk change, no new backup.
+const beforeInvalidOnDisk = readFileSync(tasksPath, "utf8");
+const backupsBeforeInvalid = readdirSync(backupDir).length;
+const { now: _droppedNow, ...missingNowPayload } = postBody;
+const invalidRes = await fetch(`${base}/api/tasks`, {
+  method: "POST",
+  headers: { "Content-Type": "application/json" },
+  body: JSON.stringify(missingNowPayload),
+});
+ok("POST with now missing entirely returns 400", invalidRes.status === 400);
+const invalidBody = await invalidRes.json();
+ok("400 response includes an error message", typeof invalidBody.error === "string" && invalidBody.error.length > 0);
+ok("invalid POST does not modify the file on disk", readFileSync(tasksPath, "utf8") === beforeInvalidOnDisk);
+ok("invalid POST does not create a backup", readdirSync(backupDir).length === backupsBeforeInvalid);
+
+// changelog is enforced read-only server-side: even if a client sends a
+// different changelog, the server must ignore it and keep whatever is
+// actually on disk.
+const diskBeforeChangelogTest = parseTasks(readFileSync(tasksPath, "utf8"));
+const tamperedPayload = { ...postBody, changelog: ["**9999-99-99** — tampered entry that should never be written"] };
+const tamperedRes = await fetch(`${base}/api/tasks`, {
+  method: "POST",
+  headers: { "Content-Type": "application/json" },
+  body: JSON.stringify(tamperedPayload),
+});
+ok("POST with a tampered changelog still returns 200", tamperedRes.status === 200);
+const afterTamperedOnDisk = parseTasks(readFileSync(tasksPath, "utf8"));
+ok(
+  "server ignores the client-sent changelog and keeps what was on disk before the POST",
+  JSON.stringify(afterTamperedOnDisk.changelog) === JSON.stringify(diskBeforeChangelogTest.changelog)
+);
+ok("the tampered changelog entry was not written to disk", !readFileSync(tasksPath, "utf8").includes("tampered entry"));
+
 // 404 for an unknown route
 const missingRes = await fetch(`${base}/nope`);
 ok("an unknown route returns 404", missingRes.status === 404);
 
 await new Promise((resolveClose) => server.close(resolveClose));
 rmSync(tmpRoot, { recursive: true, force: true });
+
+// A second server instance, backed by a CRLF fixture, proves a POST with
+// crlf: true actually writes \r\n line endings to disk end-to-end — not
+// just that the parser's own CRLF unit test round-trips in isolation. The
+// real docs/roadmap/TASKS.md uses CRLF, so this is the guarantee that
+// actually matters.
+const crlfFixture = FIXTURE.replace(/\n/g, "\r\n");
+const tmpRoot2 = mkdtempSync(join(tmpdir(), "rinkreads-tracker-test-crlf-"));
+const tasksPath2 = resolve(tmpRoot2, "TASKS.md");
+const backupDir2 = resolve(tmpRoot2, ".tracker-backups");
+const htmlPath2 = resolve(tmpRoot2, "index.html");
+writeFileSync(tasksPath2, crlfFixture, "utf8");
+writeFileSync(htmlPath2, "<html>tracker</html>", "utf8");
+writeFileSync(resolve(tmpRoot2, "rinkreads-tasks-ops.mjs"), "export const marker = 'ops-module';", "utf8");
+
+const server2 = createTrackerServer({ tasksPath: tasksPath2, backupDir: backupDir2, htmlPath: htmlPath2 });
+await new Promise((resolveP) => server2.listen(0, "127.0.0.1", resolveP));
+const port2 = server2.address().port;
+const base2 = `http://127.0.0.1:${port2}`;
+
+const getRes2 = await fetch(`${base2}/api/tasks`);
+const getBody2 = await getRes2.json();
+ok("CRLF fixture: GET /api/tasks detects crlf true", getBody2.crlf === true);
+
+const edited2 = { ...getBody2, now: [] };
+const postRes2 = await fetch(`${base2}/api/tasks`, {
+  method: "POST",
+  headers: { "Content-Type": "application/json" },
+  body: JSON.stringify(edited2),
+});
+ok("CRLF fixture: POST /api/tasks returns 200", postRes2.status === 200);
+
+const expectedOnDisk2 = serializeTasks({ ...parseTasks(crlfFixture), now: [] });
+const onDisk2 = readFileSync(tasksPath2, "utf8");
+ok("CRLF fixture: written file uses \\r\\n line endings, not bare \\n", onDisk2.includes("\r\n") && !/[^\r]\n/.test(onDisk2));
+ok("CRLF fixture: written file matches expected content byte-for-byte", onDisk2 === expectedOnDisk2);
+
+await new Promise((resolveClose) => server2.close(resolveClose));
+rmSync(tmpRoot2, { recursive: true, force: true });
 
 console.log(`\n${pass} passed, ${fail} failed`);
 process.exitCode = fail ? 1 : 0;
