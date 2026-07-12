@@ -55,7 +55,11 @@ function parseItems(body) {
 }
 
 // Parse the full raw text of TASKS.md into
-// { headerRaw, now, next, later, parking, changelog, crlf }.
+// { headerRaw, now, next, later, parking, changelog, crlf, headings }.
+// `headings` maps each section key to its ACTUAL heading line text as found
+// in the source, so a hand-edit to a heading (reworded text, a bumped
+// number, a changed emoji) round-trips verbatim instead of being silently
+// reverted to serializeTasks()'s hardcoded default on the next save.
 export function parseTasks(rawInput) {
   const crlf = rawInput.includes("\r\n");
   const raw = crlf ? rawInput.replace(/\r\n/g, "\n") : rawInput;
@@ -64,7 +68,7 @@ export function parseTasks(rawInput) {
   const headerRaw = firstHeadingIdx === -1 ? raw : raw.slice(0, firstHeadingIdx).replace(/\n+$/, "");
   const rest = firstHeadingIdx === -1 ? "" : raw.slice(firstHeadingIdx);
 
-  const result = { headerRaw, now: [], next: [], later: [], parking: [], changelog: [], crlf };
+  const result = { headerRaw, now: [], next: [], later: [], parking: [], changelog: [], crlf, headings: {} };
   if (!rest) return result;
 
   const lines = rest.split("\n");
@@ -83,6 +87,7 @@ export function parseTasks(rawInput) {
           `Unrecognized TASKS.md section heading: "${line}" — the tracker doesn't know how to preserve this. Extend SECTION_MATCHERS before parsing this file.`
         );
       }
+      result.headings[currentKey] = line;
     } else {
       bodyLines.push(line);
     }
@@ -100,15 +105,20 @@ const SECTION_ORDER = [
 ];
 
 // Serialize the structure back into the full TASKS.md text. Regenerates
-// every heading and marker fresh (so NEXT is always a clean 1..N sequence);
-// every item's own text is written back exactly as stored. Restores CRLF
-// line endings if the source used them.
+// every marker fresh (so NEXT is always a clean 1..N sequence); every item's
+// own text is written back exactly as stored. Each heading is written back
+// using data.headings[key] (the actual text captured at parse time) so a
+// hand-edited heading survives; only when data.headings is missing a key
+// (e.g. a partial structure built by code that predates the `headings`
+// field) does it fall back to the hardcoded SECTION_ORDER default. Restores
+// CRLF line endings if the source used them.
 export function serializeTasks(data) {
   const parts = [data.headerRaw];
   for (const { key, heading, marker } of SECTION_ORDER) {
     const items = data[key] || [];
+    const headingText = (data.headings && data.headings[key]) || heading;
     const bulleted = items.map((it, i) => (marker === "num" ? `${i + 1}. ${it}` : `- ${it}`));
-    parts.push(bulleted.length ? `${heading}\n\n${bulleted.join("\n")}` : heading);
+    parts.push(bulleted.length ? `${headingText}\n\n${bulleted.join("\n")}` : headingText);
   }
   let out = parts.join("\n\n") + "\n";
   if (data.crlf) out = out.replace(/\n/g, "\r\n");

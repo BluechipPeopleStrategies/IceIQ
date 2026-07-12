@@ -151,5 +151,32 @@ ok(
   unrecognizedHeadingErrorMessage.includes("Some Extra Heading")
 );
 
+// Section headings must be preserved verbatim, not regenerated from the
+// hardcoded SECTION_ORDER default — a hand-edited heading (e.g. "max 3"
+// bumped to "max 4") must survive a Save unchanged rather than being
+// silently reverted.
+const rewordedHeadingFixture = fixture.replace(
+  "## 🔵 NOW — active front (max 3)",
+  "## 🔵 NOW — active front (max 4)"
+);
+const rewordedParsed = parseTasks(rewordedHeadingFixture);
+ok(
+  "reworded heading: headings.now captures the exact reworded text",
+  rewordedParsed.headings.now === "## 🔵 NOW — active front (max 4)"
+);
+ok(
+  "reworded heading: serializeTasks preserves the reworded heading byte-for-byte, not reverted to the hardcoded default",
+  serializeTasks(rewordedParsed) === rewordedHeadingFixture
+);
+
+// Backward compatibility: code that constructs a partial structure without
+// a `headings` field (e.g. code written before this field existed) must
+// still serialize using the hardcoded SECTION_ORDER defaults, not throw.
+const { headings: _droppedHeadings, ...noHeadingsData } = parsed;
+ok(
+  "no headings field: serializeTasks falls back to the hardcoded default heading",
+  serializeTasks(noHeadingsData).includes("## 🔵 NOW — active front (max 3)")
+);
+
 console.log(`\n${pass} passed, ${fail} failed`);
 process.exit(fail ? 1 : 0);
