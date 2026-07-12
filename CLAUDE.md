@@ -155,6 +155,24 @@ Brain write. (Standing rule, Thomas, 2026-07-11.)
   is a production publish. If HEAD is `main`, stop and ask (branch first). Auto-commit
   only on feature branches.
 
+## Standing "go" authorization (Thomas, 2026-07-12)
+
+When Thomas says "go" (or an equivalent clear go-ahead) to a proposed action,
+that stands as authorization to **run** it without asking again each time —
+scripts, tools, tests, and other reversible/local actions, including ones
+that spend tokens or call paid APIs (e.g. `source-triage`). This does **not**
+extend to merging to `main` or any production deploy — that stays gated by
+the "Never commit directly to `main`... stop and ask" rule above, and pushing
+still needs its own explicit confirmation per the AUTO-COMMIT rule above,
+regardless of a prior "go." Different bars: running things is cheap and
+reversible; publishing to real users is not.
+
+**Pause and explain instead of proceeding, even under a standing "go", when:**
+
+- Any test fails, or a review returns a Critical/Important finding.
+- The change touches auth, payments, pricing, or user data.
+- The diff has grown unusually large or broad relative to the stated task.
+
 ## Token Discipline (when working this repo)
 - `App.jsx` is huge and the JSON banks are large — **do not read them in full** unless editing that exact content. Read targeted ranges; grep first.
 - Show modified snippets with `// ... existing code` placeholders, not whole files.
