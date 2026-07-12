@@ -102,11 +102,16 @@ async function main() {
       console.log(`SKIP    ${t.channel}/${t.title} (pre-filtered: ${pf.reason})`);
       return { channel: t.channel, title: t.title, verdict: "SKIP", tier: null, notes: [`pre-filtered: ${pf.reason}`], escalated: false };
     }
-    const raw = readFileSync(t.path, "utf8");
-    const lines = parseVtt(raw);
-    const r = await triageTranscript({ title: t.title, channel: t.channel, date: t.date, lines, opts });
-    console.log(`${r.verdict.padEnd(6)}  ${t.channel}/${t.title}${r.escalated ? " (full read)" : ""}`);
-    return { channel: t.channel, title: t.title, verdict: r.verdict, tier: r.tier, notes: r.notes, escalated: r.escalated };
+    try {
+      const raw = readFileSync(t.path, "utf8");
+      const lines = parseVtt(raw);
+      const r = await triageTranscript({ title: t.title, channel: t.channel, date: t.date, lines, opts });
+      console.log(`${r.verdict.padEnd(6)}  ${t.channel}/${t.title}${r.escalated ? " (full read)" : ""}`);
+      return { channel: t.channel, title: t.title, verdict: r.verdict, tier: r.tier, notes: r.notes, escalated: r.escalated };
+    } catch (e) {
+      console.error(`ERROR   ${t.channel}/${t.title}: ${e.message}`);
+      return { channel: t.channel, title: t.title, verdict: "SKIP", tier: null, notes: [`error: ${e.message}`], escalated: false };
+    }
   });
 
   const date = new Date().toISOString().slice(0, 10);

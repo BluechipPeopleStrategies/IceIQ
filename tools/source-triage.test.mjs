@@ -38,12 +38,16 @@ const rows = [
   { channel: "hockey-canada", title: "A", verdict: "PURSUE", tier: 2, notes: ["good"], escalated: false },
   { channel: "hockey-canada", title: "B", verdict: "SKIP", tier: null, notes: ["off-topic"], escalated: false },
   { channel: "coaches-site-glass-and-out", title: "C", verdict: "PURSUE", tier: 3, notes: ["interesting"], escalated: true },
+  { channel: "coaches-site-glass-and-out", title: "D", verdict: "SKIP", tier: null, notes: ["off-topic"], escalated: false },
 ];
 const md = renderReport(rows, "2026-07-11");
 ok("report groups by channel", md.includes("hockey-canada") && md.includes("coaches-site-glass-and-out"));
 ok("report shows verdicts", md.includes("PURSUE") && md.includes("SKIP"));
 ok("report tallies verdict counts", /PURSUE\s+2/.test(md) || md.includes("PURSUE 2"));
-ok("report flags a coaches-site-glass-and-out PURSUE for re-acquisition", /re-acquir/i.test(md));
+ok(
+  "report flags ONLY the coaches-site-glass-and-out PURSUE row for re-acquisition, not the same-channel SKIP row",
+  (md.match(/re-acquir/gi) || []).length === 1
+);
 
 console.log(`\n${pass} passed, ${fail} failed`);
 process.exit(fail ? 1 : 0);
