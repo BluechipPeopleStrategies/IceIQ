@@ -11,6 +11,7 @@
   --gym-gold: #f2b705;
   --gym-orange: #e8590c;
   --gym-signal-blue: #2e9fe6;
+  --gym-decoy: #7048e8;
   --gym-radius: 14px;
 
   background: var(--gym-bg);
@@ -295,12 +296,31 @@
   background: var(--gym-orange);
 }
 
+.gym-light.is-decoy {
+  background: var(--gym-decoy);
+}
+
 .gym-light.is-good {
   background: #0f4a7d;
 }
 
 .gym-light.is-bad {
   background: #8a3a09;
+}
+
+.gym-key-hint {
+  text-align: center;
+  color: var(--gym-muted);
+  font-size: 0.85rem;
+  margin: 8px 0 0;
+}
+
+/* Advance button after a reveal — sits right under the canvas in normal
+   document flow (not fixed) so it is never hidden or unreachable. */
+.gym-fab {
+  display: block;
+  margin: 12px auto 0;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.3);
 }
 
 /* Gym-wide intro block */

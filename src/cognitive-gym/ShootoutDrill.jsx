@@ -6,14 +6,18 @@ import { ScoreCount, ConfettiBurst } from "./gymFx";
 import { sessionRankLabel } from "./gymProgressCore";
 import { makeShot, scoreShot, isCellOpenAt, cellRects, cellAtPoint } from "./shootoutCore";
 
-// "Pick Your Spot" — read the open net and shoot it before the goalie covers it.
-// The net is a 3x2 grid of cells. The goalie covers some at the start (saves);
-// open cells show a target ring. Tap Go, then tap an open cell before the shot
-// clock runs out. Higher levels cover more cells, close more holes mid-shot, and
-// shrink the clock, so the open window gets smaller fast.
+// "Pick Your Spot" — read the open net and shoot it before the goalie covers
+// it, then watch the shot happen. The net is a 3x2 grid of cells; the goalie
+// covers some at the start (saves) and closes more mid-read. Open cells show
+// a target ring. Tap Go, then tap an open cell before the shot clock runs
+// out. Once you commit, the shooter releases, the puck travels, and the
+// goalie dives toward your spot: it's a goal if the puck beats the pad, a
+// save if the goalie gets there first. Higher levels cover more cells, close
+// more holes mid-read, and shrink the clock, so the open window gets smaller
+// fast.
 
 const REPS = 10;
-const REVEAL_HOLD_MS = 1400;
+const SHOOT_ANIM_MS = 480; // puck-release-to-outcome animation length
 
 export default function ShootoutDrill({ playerId = "default", onExit }) {
   const rootRef = useRef(null);
@@ -29,7 +33,7 @@ export default function ShootoutDrill({ playerId = "default", onExit }) {
   const [hits, setHits] = useState(0);
   const [level, setLevel] = useState(() => getDrill(playerId, "shootout").level);
   const [points, setPoints] = useState(0);
-  const [stage, setStage] = useState("ready"); // ready | live | reveal
+  const [stage, setStage] = useState("ready"); // ready | live | shooting | reveal
   const [last, setLast] = useState(null);
   const [saved, setSaved] = useState(null);
 
@@ -45,8 +49,8 @@ export default function ShootoutDrill({ playerId = "default", onExit }) {
 
   function computeNet(W, H) {
     const w = W * 0.74;
-    const h = H * 0.5;
-    return { x: (W - w) / 2, y: H * 0.2, w, h };
+    const h = H * 0.46;
+    return { x: (W - w) / 2, y: H * 0.14, w, h };
   }
 
   // Each net cell maps to the goalie body part that covers it.
@@ -84,8 +88,8 @@ export default function ShootoutDrill({ playerId = "default", onExit }) {
     ctx.restore();
   }
 
-  // The goalie's core: chest + mask, anchored on the center of the net so it
-  // does not fill any single cell on its own.
+  // The goalie's core: chest + mask. Takes a `core` center so a dive toward a
+  // cell can slide the whole body, not just reach a limb.
   function drawGoalieCore(ctx, cx, cy, u) {
     ctx.save();
     ctx.fillStyle = "#2b3a47";
@@ -180,6 +184,51 @@ export default function ShootoutDrill({ playerId = "default", onExit }) {
     ctx.restore();
   }
 
+  // The shooter (YOU), waiting below the net with the puck at your feet. A
+  // brief stick kick-back sells the release when the shot goes.
+  function drawShooter(ctx, p, r, { windUp }) {
+    ctx.save();
+    ctx.fillStyle = "#f2b705";
+    ctx.beginPath();
+    ctx.arc(p.x, p.y, r, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.strokeStyle = "#0b1b2b";
+    ctx.lineWidth = 3;
+    ctx.beginPath();
+    ctx.arc(p.x, p.y, r, 0, Math.PI * 2);
+    ctx.stroke();
+    ctx.fillStyle = "#0b1b2b";
+    ctx.font = `700 ${Math.round(r * 0.75)}px system-ui, sans-serif`;
+    ctx.textAlign = "center";
+    ctx.textBaseline = "middle";
+    ctx.fillText("YOU", p.x, p.y);
+    ctx.textBaseline = "alphabetic";
+    const kick = windUp ? -0.35 : 0;
+    ctx.strokeStyle = "#5b3a1e";
+    ctx.lineWidth = Math.max(2, r * 0.22);
+    ctx.lineCap = "round";
+    ctx.beginPath();
+    ctx.moveTo(p.x + r * 0.7, p.y + r * 0.2);
+    ctx.lineTo(p.x + r * (1.6 + kick), p.y - r * (1.1 - kick));
+    ctx.stroke();
+    ctx.restore();
+  }
+
+  // The puck: a dark dot with a white ring, distinct by shape, not color.
+  function drawPuck(ctx, x, y, r) {
+    ctx.save();
+    ctx.fillStyle = "#0b1b2b";
+    ctx.beginPath();
+    ctx.arc(x, y, r, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.strokeStyle = "#ffffff";
+    ctx.lineWidth = Math.max(1.5, r * 0.35);
+    ctx.beginPath();
+    ctx.arc(x, y, r, 0, Math.PI * 2);
+    ctx.stroke();
+    ctx.restore();
+  }
+
   const render = useCallback(() => {
     const sc = sceneRef.current;
     if (!sc.ctx) return;
@@ -206,6 +255,9 @@ export default function ShootoutDrill({ playerId = "default", onExit }) {
     ctx.stroke();
 
     if (!shot) return;
+
+    const isAnimating = sc.stage === "shooting";
+    const isReveal = sc.stage === "reveal";
     const elapsed =
       sc.stage === "live" && sc.startTs != null
         ? Math.min(performance.now() - sc.startTs, shot.shotClockMs)
@@ -213,22 +265,66 @@ export default function ShootoutDrill({ playerId = "default", onExit }) {
         ? sc.frozenElapsed
         : 0;
 
-    // The goalie covers the net with body parts: each covered or closing cell is
-    // taken by its mapped piece reaching in from the core. Open cells keep a
-    // target ring. Draw rings first, the core, then the pieces over the rings.
+    // shot animation progress (0..1), held at its final value through reveal
+    let animFrac = 0;
+    if (isAnimating && sc.shotAnimStart != null) {
+      animFrac = Math.min(1, (performance.now() - sc.shotAnimStart) / SHOOT_ANIM_MS);
+    } else if (isReveal && sc.shotAnimTarget) {
+      animFrac = 1;
+    }
+    const eased = 1 - Math.pow(1 - animFrac, 2);
+    const isSave = !!(sc.result && !sc.result.success && sc.shotAnimTarget);
+    const diveCap = sc.shotAnimTarget ? (isSave ? 1 : 0.55) : 0;
+    const diveFrac = eased * diveCap;
+
     const u = Math.min(net.w / 3, net.h / 2) * 0.36; // goalie unit size
-    const core = { x: net.x + net.w / 2, y: net.y + net.h / 2 };
+    const coreBase = { x: net.x + net.w / 2, y: net.y + net.h / 2 };
+    let core = coreBase;
+    if (sc.shotAnimTarget) {
+      const t = sc.shotAnimTarget;
+      const tCenter = { x: t.x + t.w / 2, y: t.y + t.h / 2 };
+      core = {
+        x: coreBase.x + (tCenter.x - coreBase.x) * diveFrac * 0.7,
+        y: coreBase.y + (tCenter.y - coreBase.y) * diveFrac * 0.4,
+      };
+    }
+
+    // open-cell rings (skip the target cell once the dive is underway)
     rects.forEach((r) => {
+      if (sc.shotAnimTarget && r.id === sc.shotAnimTarget.id) return;
       if (isCellOpenAt(shot, r.id, elapsed)) drawOpenCell(ctx, r);
     });
-    drawGoalieCore(ctx, core.x, core.y, u);
-    rects.forEach((r) => {
-      const reach = cellReach(shot, r.id, elapsed);
-      if (reach > 0.01) drawSavePiece(ctx, CELL_PART[r.id], r, core, reach, u);
-    });
 
-    // reveal: mark the tapped cell with a check (goal) or X (save)
-    if (sc.stage === "reveal" && sc.tappedId) {
+    drawGoalieCore(ctx, core.x, core.y, u);
+
+    rects.forEach((r) => {
+      if (sc.shotAnimTarget && r.id === sc.shotAnimTarget.id) return;
+      const reach = cellReach(shot, r.id, elapsed);
+      if (reach > 0.01) drawSavePiece(ctx, CELL_PART[r.id], r, coreBase, reach, u);
+    });
+    if (sc.shotAnimTarget && diveFrac > 0.01) {
+      drawSavePiece(ctx, CELL_PART[sc.shotAnimTarget.id], sc.shotAnimTarget, core, diveFrac, u);
+    }
+
+    // the shooter, waiting below the net
+    drawShooter(ctx, sc.shooterPos, sc.shooterR, { windUp: isAnimating && animFrac < 0.18 });
+
+    // the puck: at the shooter's feet before the shot, travelling toward the
+    // net during "shooting", resting at its outcome spot on reveal
+    if (sc.shotAnimTarget) {
+      const t = sc.shotAnimTarget;
+      const tCenter = { x: t.x + t.w / 2, y: t.y + t.h / 2 };
+      const puckCap = isSave ? 0.82 : 1;
+      const puckFrac = Math.min(eased, puckCap);
+      const px = sc.shooterPos.x + (tCenter.x - sc.shooterPos.x) * puckFrac;
+      const py = sc.shooterPos.y + (tCenter.y - sc.shooterPos.y) * puckFrac;
+      drawPuck(ctx, px, py, Math.max(5, u * 0.22));
+    } else if (sc.stage === "ready" || sc.stage === "live") {
+      drawPuck(ctx, sc.shooterPos.x, sc.shooterPos.y - sc.shooterR * 0.9, Math.max(5, u * 0.22));
+    }
+
+    // reveal: a GOAL / SAVED banner, plus a check/X on the target cell
+    if (isReveal && sc.tappedId) {
       const r = rects.find((x) => x.id === sc.tappedId);
       if (r) {
         ctx.save();
@@ -252,6 +348,12 @@ export default function ShootoutDrill({ playerId = "default", onExit }) {
         }
         ctx.restore();
       }
+      ctx.save();
+      ctx.fillStyle = sc.result && sc.result.success ? "#1f9d55" : "#c8102e";
+      ctx.font = "800 26px system-ui, sans-serif";
+      ctx.textAlign = "center";
+      ctx.fillText(sc.result && sc.result.success ? "GOAL!" : "SAVED", W / 2, Math.max(24, net.y - 14));
+      ctx.restore();
     }
 
     // live: a shrinking countdown bar under the net
@@ -266,13 +368,22 @@ export default function ShootoutDrill({ playerId = "default", onExit }) {
 
   const tick = useCallback(() => {
     const sc = sceneRef.current;
-    if (sc.stage !== "live" || sc.resolved) return;
-    render();
-    if (performance.now() - sc.startTs >= sc.shot.shotClockMs) {
-      resolveShot(null); // clock expired, no tap
-      return;
+    if (sc.stage === "live") {
+      render();
+      if (performance.now() - sc.startTs >= sc.shot.shotClockMs) {
+        resolveShot(null); // clock expired, no tap
+        return;
+      }
+      rafRef.current = requestAnimationFrame(tick);
+    } else if (sc.stage === "shooting") {
+      render();
+      const frac = sc.shotAnimStart != null ? (performance.now() - sc.shotAnimStart) / SHOOT_ANIM_MS : 1;
+      if (frac >= 1) {
+        finishShotAnim();
+        return;
+      }
+      rafRef.current = requestAnimationFrame(tick);
     }
-    rafRef.current = requestAnimationFrame(tick);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [render]);
 
@@ -284,6 +395,11 @@ export default function ShootoutDrill({ playerId = "default", onExit }) {
     const { ctx, W, H } = setupCanvas(canvas, host);
     const net = computeNet(W, H);
     const shot = makeShot(engineRef.current.level);
+    const shooterR = Math.max(11, Math.round(W * 0.032));
+    const shooterPos = {
+      x: net.x + net.w / 2,
+      y: Math.min(H - shooterR - 6, net.y + net.h + Math.max(48, H * 0.16)),
+    };
     sceneRef.current = {
       ctx, W, H, net,
       rects: cellRects(net),
@@ -294,6 +410,10 @@ export default function ShootoutDrill({ playerId = "default", onExit }) {
       tappedId: null,
       result: null,
       frozenElapsed: 0,
+      shotAnimStart: null,
+      shotAnimTarget: null,
+      shooterPos,
+      shooterR,
       repIndex,
     };
     setStage("ready");
@@ -310,24 +430,25 @@ export default function ShootoutDrill({ playerId = "default", onExit }) {
     rafRef.current = requestAnimationFrame(tick);
   }
 
-  const resolveRep = useCallback(
-    (success) => {
-      pointsRef.current += sceneRef.current.result ? sceneRef.current.result.points : 0;
-      setPoints(pointsRef.current);
-      const lvl = engineRef.current.record(success);
-      setLevel(lvl);
-      if (success) setHits((h) => h + 1);
-      const next = sceneRef.current.repIndex + 1;
-      schedule(() => {
-        if (next >= REPS) setPhase("done");
-        else {
-          setRep(next);
-          startRep(next);
-        }
-      }, REVEAL_HOLD_MS);
-    },
-    [startRep]
-  );
+  const resolveRep = useCallback((success) => {
+    pointsRef.current += sceneRef.current.result ? sceneRef.current.result.points : 0;
+    setPoints(pointsRef.current);
+    const lvl = engineRef.current.record(success);
+    setLevel(lvl);
+    if (success) setHits((h) => h + 1);
+  }, []);
+
+  // Reveal stays on screen (goal or save) until the player taps Next shot —
+  // nothing auto-advances, so the outcome can actually be studied.
+  function advanceRep() {
+    const next = sceneRef.current.repIndex + 1;
+    if (next >= REPS) {
+      setPhase("done");
+    } else {
+      setRep(next);
+      startRep(next);
+    }
+  }
 
   const resolveShot = useCallback(
     (cellId) => {
@@ -336,19 +457,39 @@ export default function ShootoutDrill({ playerId = "default", onExit }) {
       const elapsed = sc.startTs != null ? performance.now() - sc.startTs : sc.shot.shotClockMs + 1;
       const result = scoreShot(cellId, elapsed, sc.shot);
       sc.resolved = true;
-      sc.stage = "reveal";
       sc.tappedId = cellId;
       sc.result = result;
       sc.frozenElapsed = Math.min(elapsed, sc.shot.shotClockMs);
       clearTimers();
-      setStage("reveal");
-      setLast({ success: result.success, repPoints: result.points, expired: cellId == null });
-      render();
-      resolveRep(result.success);
+
+      if (cellId == null) {
+        // no shot got off: nothing to animate, straight to the reveal
+        sc.stage = "reveal";
+        setStage("reveal");
+        setLast({ success: false, repPoints: 0, expired: true });
+        render();
+        resolveRep(false);
+        return;
+      }
+
+      sc.shotAnimTarget = sc.rects.find((r) => r.id === cellId) || null;
+      sc.shotAnimStart = performance.now();
+      sc.stage = "shooting";
+      setStage("shooting");
+      rafRef.current = requestAnimationFrame(tick);
       // eslint-disable-next-line react-hooks/exhaustive-deps
     },
     [render, resolveRep]
   );
+
+  function finishShotAnim() {
+    const sc = sceneRef.current;
+    sc.stage = "reveal";
+    setStage("reveal");
+    setLast({ success: sc.result.success, repPoints: sc.result.points, expired: false });
+    render();
+    resolveRep(sc.result.success);
+  }
 
   function onCanvasTap(evt) {
     const sc = sceneRef.current;
@@ -404,6 +545,12 @@ export default function ShootoutDrill({ playerId = "default", onExit }) {
       sc.H = H;
       sc.net = net;
       sc.rects = cellRects(net);
+      sc.shooterR = Math.max(11, Math.round(W * 0.032));
+      sc.shooterPos = {
+        x: net.x + net.w / 2,
+        y: Math.min(H - sc.shooterR - 6, net.y + net.h + Math.max(48, H * 0.16)),
+      };
+      if (sc.tappedId) sc.shotAnimTarget = sc.rects.find((r) => r.id === sc.tappedId) || null;
       render();
     };
     window.addEventListener("resize", onResize);
@@ -415,12 +562,13 @@ export default function ShootoutDrill({ playerId = "default", onExit }) {
   const hint = {
     ready: "Tap Go, then tap an open spot (a target ring) before the goalie covers it.",
     live: "Shoot an open spot. The goalie covers the blocked ones and closes more.",
+    shooting: "",
     reveal: last
       ? last.success
         ? `Goal! +${last.repPoints}`
         : last.expired
-        ? "Too slow, the goalie covered it."
-        : "Saved. That spot was covered. Read the open net."
+        ? "Too slow, never got the shot off."
+        : "Saved. The goalie got there first. Read the open net."
       : "",
   }[stage];
 
@@ -457,28 +605,35 @@ export default function ShootoutDrill({ playerId = "default", onExit }) {
           <h2>Pick Your Spot</h2>
           <svg viewBox="0 0 280 150" width="100%" style={{ maxWidth: 280, display: "block", margin: "0 auto 14px", borderRadius: 10 }} aria-hidden="true">
             <rect width="280" height="150" rx="8" fill="#eaf4fb" />
-            <rect x="60" y="30" width="160" height="90" fill="none" stroke="#c8102e" strokeWidth="3" />
-            <line x1="113" y1="30" x2="113" y2="120" stroke="#0b1b2b" strokeOpacity="0.15" />
-            <line x1="166" y1="30" x2="166" y2="120" stroke="#0b1b2b" strokeOpacity="0.15" />
-            <line x1="60" y1="75" x2="220" y2="75" stroke="#0b1b2b" strokeOpacity="0.15" />
-            <rect x="63" y="33" width="47" height="39" fill="#2b3a47" />
-            <circle cx="193" cy="52" r="13" fill="none" stroke="#1f9d55" strokeWidth="3" />
-            <circle cx="140" cy="97" r="13" fill="none" stroke="#1f9d55" strokeWidth="3" />
+            <rect x="60" y="20" width="160" height="80" fill="none" stroke="#c8102e" strokeWidth="3" />
+            <line x1="113" y1="20" x2="113" y2="100" stroke="#0b1b2b" strokeOpacity="0.15" />
+            <line x1="166" y1="20" x2="166" y2="100" stroke="#0b1b2b" strokeOpacity="0.15" />
+            <line x1="60" y1="60" x2="220" y2="60" stroke="#0b1b2b" strokeOpacity="0.15" />
+            <rect x="63" y="23" width="47" height="37" fill="#2b3a47" />
+            <circle cx="193" cy="40" r="12" fill="none" stroke="#1f9d55" strokeWidth="3" />
+            <circle cx="140" cy="80" r="12" fill="none" stroke="#1f9d55" strokeWidth="3" />
+            {/* the shooter below the net, puck en route */}
+            <circle cx="140" cy="132" r="14" fill="#f2b705" stroke="#0b1b2b" strokeWidth="3" />
+            <circle cx="140" cy="102" r="6" fill="#0b1b2b" stroke="#ffffff" strokeWidth="2" />
           </svg>
-          <p className="gym-goal"><strong>Your goal:</strong> shoot where the goalie is not. Tap an open part of the net before he covers it.</p>
+          <p className="gym-goal"><strong>Your goal:</strong> shoot where the goalie is not, then watch it happen.</p>
           <p>
-            <strong>The game:</strong> the net is split into spots. The goalie covers some of them
-            (the dark pads), and the open spots have a target ring. Tap Go, then tap an open spot
-            before the clock runs out. The higher your level, the more the goalie covers, the
-            faster the open spots close, and the shorter the clock. Read the open net and pick your
-            spot fast.
+            <strong>The game:</strong> the net is split into spots. The goalie
+            covers some of them (the dark pads), and the open spots have a
+            target ring. Tap Go, then tap an open spot before the clock runs
+            out. The shooter releases, the puck travels, and the goalie dives
+            toward your spot: beat the pad and it's a goal, get there after
+            the goalie and it's a save. The higher your level, the more the
+            goalie covers, the faster the open spots close, and the shorter
+            the clock. Read the open net and pick your spot fast.
           </p>
           <div className="gym-trains">
             <strong>Why it matters</strong>
             <span>
-              Goal scorers do not just shoot hard, they shoot where the goalie is not. Training
-              your eyes to find the open part of the net fast is how you beat a goalie who is set,
-              and how you get a shot off before the window closes.
+              Goal scorers do not just shoot hard, they shoot where the goalie
+              is not. Training your eyes to find the open part of the net
+              fast is how you beat a goalie who is set, and how you get a
+              shot off before the window closes.
             </span>
           </div>
           <button className="gym-btn" onClick={start}>
@@ -506,6 +661,12 @@ export default function ShootoutDrill({ playerId = "default", onExit }) {
         <p className="gym-hint" aria-live="polite">
           {hint}
         </p>
+      )}
+
+      {phase === "playing" && stage === "reveal" && (
+        <button className="gym-btn gym-fab" onClick={advanceRep}>
+          Next shot
+        </button>
       )}
 
       {phase === "done" && (

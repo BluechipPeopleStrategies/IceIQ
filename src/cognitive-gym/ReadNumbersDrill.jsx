@@ -1,39 +1,20 @@
 import { useRef, useState, useCallback, useEffect } from "react";
-import {
-  createAdaptiveLevel,
-  levelT,
-  lerp,
-  setupCanvas,
-  drawRink,
-} from "./gymEngine";
+import { createAdaptiveLevel, setupCanvas, drawRink, pointerPos } from "./gymEngine";
 import { getDrill, saveSession } from "./gymStorage";
 import { cue, gymCueHooks } from "./gymAudio";
 import { ScoreCount, ConfettiBurst } from "./gymFx";
 import { sessionRankLabel } from "./gymProgressCore";
-import { makeRound, scoreRead } from "./readNumbersCore";
+import { makeFormation, scoreRead } from "./readNumbersCore";
 
-// "Read the Numbers" — dynamic visual acuity.
-// A skater wearing a jersey NUMBER streaks across the rink and disappears. The
-// player reads the number, then picks it from four choice buttons (the true
-// number plus plausible look-alike decoys). Per rep: a ready stage (rink shown,
-// a Go button), then on tap the numbered skater slides quickly across the sheet
-// (entering one side, exiting the other) and is only legible for a short window,
-// then on exit four number buttons turn on. Tap your read, we reveal the right
-// number, mark it right or wrong, and hold so the player can learn it. Points
-// reward reading it right AND answering fast. Higher levels travel faster (a
-// shorter look), add digits (1 -> 2 -> 3), use closer decoys, and shrink the
-// jersey a touch. Trains reading a number on a fast-moving player and finding
-// the open man on the rush. You start each rep when you are ready.
+// "Read the Numbers" — visual memory + selective recall.
+// A formation of skaters, each wearing a distinct jersey NUMBER, flashes on
+// the ice together. The numbers hide, one is called out ("Which one was
+// #83?"), and the player taps where that skater was standing. Higher levels
+// add skaters, shorten the look, and grow the numbers from one digit to two
+// to three. You start each rep when you are ready.
 
 const REPS = 10;
-const REVEAL_HOLD_MS = 1600; // hold the reveal so the player can learn the read
-const ANSWER_WINDOW_MS = 2600; // speed window: answer within this for full credit
-
-// Jersey marker radius for a level (a touch smaller at high levels so the number
-// is harder to read on a fast, smaller target).
-function jerseyR(level, W) {
-  return Math.max(13, Math.round(W * lerp(0.05, 0.038, levelT(level))));
-}
+const ANSWER_WINDOW_MS = 3200; // speed window: answer within this for full credit
 
 export default function ReadNumbersDrill({ playerId = "default", onExit }) {
   const rootRef = useRef(null);
@@ -49,8 +30,9 @@ export default function ReadNumbersDrill({ playerId = "default", onExit }) {
   const [level, setLevel] = useState(() => getDrill(playerId, "readnumbers").level);
   const [points, setPoints] = useState(0);
   const pointsRef = useRef(0);
-  const [stage, setStage] = useState("ready"); // ready | live | choose | reveal
-  const [last, setLast] = useState(null); // { success, repPoints, number, picked }
+  const [stage, setStage] = useState("ready"); // ready | watch | pick | feedback
+  const [target, setTarget] = useState(null); // the number the player must find
+  const [last, setLast] = useState(null); // { success, repPoints, target, pickedNumber }
   const [saved, setSaved] = useState(null);
 
   function clearTimers() {
@@ -63,35 +45,56 @@ export default function ReadNumbersDrill({ playerId = "default", onExit }) {
     timersRef.current.push(setTimeout(fn, ms));
   }
 
-  // Draw a numbered skater: a jersey-coloured rounded marker with the number
-  // centered on it in bold. Distinct by shape (a ringed pill) plus the number
-  // itself, so it never reads by color alone.
-  function drawSkater(ctx, x, y, r, number) {
+  // Draw a numbered skater: a jersey-coloured rounded marker. During "watch"
+  // the number shows; during "pick" it goes blank so the player must recall
+  // it from position alone. On "feedback" every number is shown again, with
+  // the target ringed and the player's pick marked right/wrong by shape.
+  function drawSkater(ctx, s, r, { showNumber, mark }) {
     ctx.save();
-    // jersey body (navy, gold ring), drawn as a rounded marker
     ctx.fillStyle = "#0b1b2b";
     ctx.beginPath();
-    ctx.arc(x, y, r, 0, Math.PI * 2);
+    ctx.arc(s.x, s.y, r, 0, Math.PI * 2);
     ctx.fill();
     ctx.strokeStyle = "#f2b705";
     ctx.lineWidth = 3;
     ctx.beginPath();
-    ctx.arc(x, y, r, 0, Math.PI * 2);
+    ctx.arc(s.x, s.y, r, 0, Math.PI * 2);
     ctx.stroke();
-    // the number, bold and centered
-    ctx.fillStyle = "#f4f9fc";
-    const fs = Math.round(r * (String(number).length >= 3 ? 0.82 : 1.02));
-    ctx.font = `800 ${fs}px system-ui, sans-serif`;
-    ctx.textAlign = "center";
-    ctx.textBaseline = "middle";
-    ctx.fillText(String(number), x, y);
-    ctx.textBaseline = "alphabetic";
+    if (showNumber) {
+      ctx.fillStyle = "#f4f9fc";
+      const fs = Math.round(r * (String(s.number).length >= 3 ? 0.8 : 1.0));
+      ctx.font = `800 ${fs}px system-ui, sans-serif`;
+      ctx.textAlign = "center";
+      ctx.textBaseline = "middle";
+      ctx.fillText(String(s.number), s.x, s.y);
+      ctx.textBaseline = "alphabetic";
+    }
     ctx.restore();
+
+    if (mark === "target") {
+      ctx.save();
+      ctx.strokeStyle = "#1f9d55";
+      ctx.lineWidth = 3;
+      ctx.beginPath();
+      ctx.arc(s.x, s.y, r + 6, 0, Math.PI * 2);
+      ctx.stroke();
+      ctx.restore();
+    } else if (mark === "wrongPick") {
+      ctx.save();
+      ctx.strokeStyle = "#e8590c";
+      ctx.lineCap = "round";
+      ctx.lineWidth = 3;
+      const sSize = r * 0.6;
+      ctx.beginPath();
+      ctx.moveTo(s.x - sSize, s.y - r - 14);
+      ctx.lineTo(s.x + sSize, s.y - r - 14 + sSize * 2);
+      ctx.moveTo(s.x + sSize, s.y - r - 14);
+      ctx.lineTo(s.x - sSize, s.y - r - 14 + sSize * 2);
+      ctx.stroke();
+      ctx.restore();
+    }
   }
 
-  // Render the scene. In "ready" we show the rink and watermark. In "live" we
-  // draw the skater at its current position. In "reveal" (during choose/reveal)
-  // the ice is clear so the player must rely on the read, not a frozen picture.
   const render = useCallback(() => {
     const sc = sceneRef.current;
     if (!sc.ctx) return;
@@ -102,47 +105,26 @@ export default function ReadNumbersDrill({ playerId = "default", onExit }) {
     ctx.save();
     ctx.globalAlpha = 0.06;
     ctx.fillStyle = "#0b1b2b";
-    ctx.font = "700 28px system-ui, sans-serif";
+    ctx.font = "700 26px system-ui, sans-serif";
     ctx.textAlign = "center";
-    ctx.fillText("Read the Numbers", W / 2, H * 0.16);
+    ctx.fillText("Read the Numbers", W / 2, H * 0.12);
     ctx.restore();
 
-    if (!sc.round) return;
-
-    // live: the numbered skater is somewhere along its path and legible.
-    if (sc.stage === "live" && sc.pos) {
-      drawSkater(ctx, sc.pos.x, sc.pos.y, sc.r, sc.round.number);
-    }
+    if (!sc.skaters) return;
+    sc.skaters.forEach((s, i) => {
+      const showNumber = sc.stage === "watch" || sc.stage === "feedback";
+      let mark = null;
+      if (sc.stage === "feedback") {
+        if (i === sc.targetIndex) mark = "target";
+        else if (i === sc.pickedIndex) mark = "wrongPick";
+      }
+      drawSkater(ctx, s, sc.r, { showNumber, mark });
+    });
   }, []);
 
-  // The live travel loop: move the skater along a straight line across the sheet
-  // at the level's speed. Once it exits the far side, switch to the choose stage
-  // (buttons turn on). startTs anchors the clock so a resize never restarts it.
-  const tick = useCallback(() => {
-    const sc = sceneRef.current;
-    if (sc.stage !== "live" || sc.resolved) return;
-    const elapsed = performance.now() - sc.startTs;
-    const frac = elapsed / sc.travelMs; // 0 -> 1 across the sheet
-    if (frac >= 1) {
-      // skater has exited: open the choices and start the answer clock.
-      sc.stage = "choose";
-      sc.chooseTs = performance.now();
-      render();
-      setStage("choose");
-      return;
-    }
-    sc.pos = {
-      x: sc.from.x + (sc.to.x - sc.from.x) * frac,
-      y: sc.from.y + (sc.to.y - sc.from.y) * frac,
-    };
-    render();
-    rafRef.current = requestAnimationFrame(tick);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [render]);
-
-  // Set up one rep: size the canvas, build the round, pick a straight path that
-  // enters one side and exits the other. Wait in "ready" until the player taps
-  // Go. Nothing moves until then.
+  // Set up one rep: size the canvas, build the formation, scatter skaters on
+  // the ice. Wait in "ready" until the player taps Watch. Nothing shows until
+  // then.
   const startRep = useCallback((repIndex) => {
     const canvas = canvasRef.current;
     const host = rootRef.current;
@@ -150,94 +132,125 @@ export default function ReadNumbersDrill({ playerId = "default", onExit }) {
     clearTimers();
     const { ctx, W, H } = setupCanvas(canvas, host);
     const lvl = engineRef.current.level;
-    const round = makeRound(lvl, {});
-    const r = jerseyR(lvl, W);
+    const formation = makeFormation(lvl, {});
+    const r = Math.max(13, Math.round(W * 0.045));
+    const pad = r + 12;
+    const minGap = r * 2.4;
 
-    // Pick a travel path across the sheet. Horizontal lanes read most naturally
-    // (a skater streaking across), entering off one side and exiting the other,
-    // with the lane y chosen in the middle band so the number stays clear of the
-    // boards. Direction (L->R or R->L) alternates with rep for variety.
-    const laneY = lerp(H * 0.3, H * 0.7, Math.random());
-    const leftToRight = repIndex % 2 === 0;
-    const from = { x: leftToRight ? -r * 1.4 : W + r * 1.4, y: laneY };
-    const to = { x: leftToRight ? W + r * 1.4 : -r * 1.4, y: laneY };
+    // scatter non-overlapping spots for every skater across the ice
+    const spots = [];
+    let guard = 0;
+    while (spots.length < formation.numbers.length && guard < 4000) {
+      guard += 1;
+      const x = pad + Math.random() * (W - 2 * pad);
+      const y = pad + Math.random() * (H - 2 * pad);
+      if (spots.every((p) => Math.hypot(p.x - x, p.y - y) >= minGap)) spots.push({ x, y });
+    }
+    while (spots.length < formation.numbers.length) {
+      const i = spots.length;
+      spots.push({
+        x: pad + ((i + 1) / (formation.numbers.length + 1)) * (W - 2 * pad),
+        y: H * (i % 2 === 0 ? 0.35 : 0.65),
+      });
+    }
+
+    const skaters = formation.numbers.map((number, i) => ({ ...spots[i], number }));
 
     sceneRef.current = {
       ctx,
       W,
       H,
-      round,
+      skaters,
+      targetIndex: formation.targetIndex,
+      watchMs: formation.watchMs,
       r,
-      from,
-      to,
-      pos: null,
       stage: "ready",
-      startTs: null,
-      chooseTs: null,
-      travelMs: round.travelMs,
+      pickTs: null,
+      pickedIndex: null,
       resolved: false,
       repIndex,
     };
     setStage("ready");
+    setTarget(null);
     render();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [render]);
 
-  // Player tapped Go: send the skater across.
-  function go() {
+  // Player tapped Watch: show the numbers, then hide them and open picking.
+  function beginWatch() {
     const sc = sceneRef.current;
     if (!sc.ctx || sc.resolved || sc.stage !== "ready") return;
-    sc.stage = "live";
-    sc.startTs = performance.now();
-    setStage("live");
-    rafRef.current = requestAnimationFrame(tick);
+    sc.stage = "watch";
+    setStage("watch");
+    render();
+    schedule(() => {
+      sc.stage = "pick";
+      sc.pickTs = performance.now();
+      setStage("pick");
+      setTarget(sc.skaters[sc.targetIndex].number);
+      render();
+    }, sc.watchMs);
   }
 
-  const resolveRep = useCallback(
-    (success) => {
-      pointsRef.current += sceneRef.current.repPoints || 0;
-      setPoints(pointsRef.current);
-      const lvl = engineRef.current.record(success);
-      setLevel(lvl);
-      if (success) setHits((h) => h + 1);
-      const next = sceneRef.current.repIndex + 1;
-      schedule(() => {
-        if (next >= REPS) {
-          setPhase("done");
-        } else {
-          setRep(next);
-          startRep(next);
-        }
-      }, REVEAL_HOLD_MS);
-    },
-    [startRep]
-  );
+  const resolveRep = useCallback((success) => {
+    pointsRef.current += sceneRef.current.repPoints || 0;
+    setPoints(pointsRef.current);
+    const lvl = engineRef.current.record(success);
+    setLevel(lvl);
+    if (success) setHits((h) => h + 1);
+  }, []);
 
-  // Resolve a rep from a tapped choice index.
-  const resolveChoice = useCallback(
-    (choiceIndex) => {
-      const sc = sceneRef.current;
-      if (sc.resolved || sc.stage !== "choose") return;
-      const answerMs = sc.chooseTs != null ? performance.now() - sc.chooseTs : ANSWER_WINDOW_MS;
-      const result = scoreRead(choiceIndex, sc.round.answerIndex, answerMs, ANSWER_WINDOW_MS);
-      sc.resolved = true;
-      sc.stage = "reveal";
-      sc.picked = choiceIndex;
-      sc.repPoints = result.points;
-      clearTimers();
-      setStage("reveal");
-      setLast({
-        success: result.success,
-        repPoints: result.points,
-        number: sc.round.number,
-        picked: sc.round.choices[choiceIndex],
-      });
-      render();
-      resolveRep(result.success);
-      // eslint-disable-next-line react-hooks/exhaustive-deps
-    },
-    [render, resolveRep]
-  );
+  // Feedback stays on screen until the player taps Next rep — nothing
+  // auto-advances, so a miss can actually be studied.
+  function advanceRep() {
+    const next = sceneRef.current.repIndex + 1;
+    if (next >= REPS) {
+      setPhase("done");
+    } else {
+      setRep(next);
+      startRep(next);
+    }
+  }
+
+  // Which skater (if any) did the tap land on? Returns its index or -1.
+  function hitSkater(tap) {
+    const sc = sceneRef.current;
+    let best = -1;
+    let bestD = Infinity;
+    sc.skaters.forEach((s, i) => {
+      const d = Math.hypot(s.x - tap.x, s.y - tap.y);
+      if (d <= sc.r * 1.4 && d < bestD) {
+        best = i;
+        bestD = d;
+      }
+    });
+    return best;
+  }
+
+  function handleTap(evt) {
+    const sc = sceneRef.current;
+    if (phase !== "playing" || sc.resolved || sc.stage !== "pick") return;
+    evt.preventDefault();
+    const tap = pointerPos(evt, canvasRef.current);
+    const idx = hitSkater(tap);
+    if (idx < 0) return; // tapped empty ice; ignore, keep waiting
+    const answerMs = sc.pickTs != null ? performance.now() - sc.pickTs : ANSWER_WINDOW_MS;
+    const result = scoreRead(idx, sc.targetIndex, answerMs, ANSWER_WINDOW_MS);
+    sc.resolved = true;
+    sc.stage = "feedback";
+    sc.pickedIndex = idx;
+    sc.repPoints = result.points;
+    clearTimers();
+    setStage("feedback");
+    setLast({
+      success: result.success,
+      repPoints: result.points,
+      target: sc.skaters[sc.targetIndex].number,
+      pickedNumber: sc.skaters[idx].number,
+    });
+    render();
+    resolveRep(result.success);
+  }
 
   function start() {
     const d = getDrill(playerId, "readnumbers");
@@ -270,16 +283,15 @@ export default function ReadNumbersDrill({ playerId = "default", onExit }) {
     }
   }, [phase, saved, hits, playerId]);
 
-  // Re-fit and redraw on resize without skipping the rep. Rescale the path and
-  // current position so a live skater keeps its lane; the travel clock (startTs)
-  // keeps running so resizing never restarts the streak.
+  // Re-fit and redraw on resize without skipping the rep. Rescale skater spots
+  // so the formation/result stays put.
   useEffect(() => {
     if (phase !== "playing") return;
     const onResize = () => {
       const canvas = canvasRef.current;
       const host = rootRef.current;
       const sc = sceneRef.current;
-      if (!canvas || !host || !sc.round) return;
+      if (!canvas || !host || !sc.skaters) return;
       const prevW = sc.W || 1;
       const prevH = sc.H || 1;
       const { ctx, W, H } = setupCanvas(canvas, host);
@@ -288,11 +300,8 @@ export default function ReadNumbersDrill({ playerId = "default", onExit }) {
       sc.ctx = ctx;
       sc.W = W;
       sc.H = H;
-      sc.r = jerseyR(engineRef.current.level, W);
-      const scaleP = (p) => (p ? { x: p.x * kx, y: p.y * ky } : p);
-      sc.from = scaleP(sc.from);
-      sc.to = scaleP(sc.to);
-      sc.pos = scaleP(sc.pos);
+      sc.r = Math.max(13, Math.round(W * 0.045));
+      sc.skaters = sc.skaters.map((s) => ({ ...s, x: s.x * kx, y: s.y * ky }));
       render();
     };
     window.addEventListener("resize", onResize);
@@ -301,16 +310,14 @@ export default function ReadNumbersDrill({ playerId = "default", onExit }) {
 
   useEffect(() => () => clearTimers(), []);
 
-  const choices = sceneRef.current.round ? sceneRef.current.round.choices : [];
-
   const hint = {
-    ready: "Tap Go, watch the skater streak across, and read the number on the jersey.",
-    live: "Read the number on the jersey before the skater leaves the ice.",
-    choose: "Which number was it? Tap your read. The faster you call it, the more points.",
-    reveal: last
+    ready: "Tap Watch, memorize the numbers, then find the one you're asked about.",
+    watch: "Memorize the numbers.",
+    pick: target != null ? `Which one was #${target}? Tap it.` : "",
+    feedback: last
       ? last.success
-        ? `Nice read, it was ${last.number}. +${last.repPoints}`
-        : `That one was ${last.number}, you read ${last.picked}. Keep your eyes on the jersey.`
+        ? `Nice memory, that was #${last.target}. +${last.repPoints}`
+        : `That was #${last.target}, you tapped #${last.pickedNumber}. Keep scanning the whole ice.`
       : "",
   }[stage];
 
@@ -347,34 +354,34 @@ export default function ReadNumbersDrill({ playerId = "default", onExit }) {
           <h2>Read the Numbers</h2>
           <svg viewBox="0 0 280 130" width="100%" style={{ maxWidth: 280, display: "block", margin: "0 auto 14px", borderRadius: 10 }} aria-hidden="true">
             <rect width="280" height="130" rx="8" fill="#eaf4fb" />
-            {/* motion lines trailing the skater */}
-            <line x1="70" y1="58" x2="120" y2="58" stroke="#9fc3df" strokeWidth="4" strokeLinecap="round" />
-            <line x1="74" y1="74" x2="118" y2="74" stroke="#9fc3df" strokeWidth="4" strokeLinecap="round" />
-            <line x1="80" y1="90" x2="116" y2="90" stroke="#9fc3df" strokeWidth="4" strokeLinecap="round" />
-            {/* the numbered jersey marker */}
-            <circle cx="165" cy="72" r="26" fill="#0b1b2b" stroke="#f2b705" strokeWidth="4" />
-            <text x="165" y="72" fill="#f4f9fc" fontSize="26" fontWeight="800" textAnchor="middle" dominantBaseline="central" fontFamily="system-ui, sans-serif">17</text>
+            <circle cx="60" cy="40" r="22" fill="#0b1b2b" stroke="#f2b705" strokeWidth="3" />
+            <text x="60" y="41" fill="#f4f9fc" fontSize="18" fontWeight="800" textAnchor="middle" dominantBaseline="central" fontFamily="system-ui, sans-serif">4</text>
+            <circle cx="150" cy="70" r="22" fill="#0b1b2b" stroke="#f2b705" strokeWidth="3" />
+            <text x="150" y="71" fill="#f4f9fc" fontSize="18" fontWeight="800" textAnchor="middle" dominantBaseline="central" fontFamily="system-ui, sans-serif">83</text>
+            <circle cx="220" cy="35" r="22" fill="#0b1b2b" stroke="#f2b705" strokeWidth="3" />
+            <text x="220" y="36" fill="#f4f9fc" fontSize="18" fontWeight="800" textAnchor="middle" dominantBaseline="central" fontFamily="system-ui, sans-serif">17</text>
+            <circle cx="105" cy="100" r="22" fill="#0b1b2b" stroke="#f2b705" strokeWidth="3" />
+            <text x="105" y="101" fill="#f4f9fc" fontSize="18" fontWeight="800" textAnchor="middle" dominantBaseline="central" fontFamily="system-ui, sans-serif">9</text>
           </svg>
-          <p className="gym-goal"><strong>Your goal:</strong> read the number on the jersey of a skater streaking across the ice, then pick it before it slips your mind.</p>
+          <p className="gym-goal"><strong>Your goal:</strong> memorize which teammate wore which number, then find the one you're asked about.</p>
           <p>
-            <strong>The game:</strong> tap Go and a skater wearing a jersey number
-            streaks across the rink, on one side and off the other, and you only
-            get a quick look. Once they leave the ice, four numbers light up: the
-            real one and three look-alikes. Tap the number you read. The faster you
-            call it right, the more points you earn. As you level up the skater
-            travels faster (a shorter look), the number grows from one digit to two
-            to three, and the wrong choices start to look more like the answer. You
-            start each rep when you are ready.
+            <strong>The game:</strong> tap Watch and a handful of skaters, each
+            wearing a jersey number, appear together on the ice. Memorize who
+            is who, then the numbers hide. We call out a number, "which one was
+            #83?", and you tap where that skater was standing. The faster you
+            find them, the more points you earn. As you level up there are more
+            skaters to hold in memory, less time to look, and the numbers grow
+            from one digit to two to three. You start each rep when you are
+            ready.
           </p>
           <div className="gym-trains">
             <strong>Why it matters</strong>
             <span>
-              On the ice the play never holds still. Picking a teammate's number off
-              a jersey as they fly up the wing, or clocking a number on the rush, is
-              how you find the open man and put the puck on the right tape instead of
-              guessing. Training your eyes to lock onto a small, fast-moving target
-              is the same skill that helps you track the puck and read bodies at full
-              speed.
+              A quick glance at the bench or the rush has to stick, who is
+              open, who just came on, who you are covering. Training your eyes
+              to lock a number to a spot on the ice, and hold it after the
+              picture changes, is how you find the right teammate without
+              having to look twice.
             </span>
           </div>
           <button className="gym-btn" onClick={start}>
@@ -387,39 +394,15 @@ export default function ReadNumbersDrill({ playerId = "default", onExit }) {
         ref={canvasRef}
         className="gym-canvas"
         style={{ display: phase === "playing" ? "block" : "none" }}
+        onMouseDown={handleTap}
+        onTouchStart={handleTap}
       />
 
       {phase === "playing" && stage === "ready" && (
         <div className="gym-row" style={{ marginBottom: 10 }}>
-          <button className="gym-btn" onClick={go}>
-            Go
+          <button className="gym-btn" onClick={beginWatch}>
+            Watch
           </button>
-        </div>
-      )}
-
-      {phase === "playing" && (stage === "choose" || stage === "reveal") && (
-        <div className="gym-row" style={{ marginBottom: 10 }}>
-          {choices.map((num, i) => {
-            const isAnswer = sceneRef.current.round && i === sceneRef.current.round.answerIndex;
-            const isPicked = last && sceneRef.current.picked === i;
-            // On reveal, mark the answer (check) and a wrong pick (cross) by
-            // label so feedback never rides on color alone.
-            let suffix = "";
-            if (stage === "reveal") {
-              if (isAnswer) suffix = " ✓"; // check on the correct number
-              else if (isPicked) suffix = " ✗"; // cross on a wrong pick
-            }
-            return (
-              <button
-                key={i}
-                className="gym-btn"
-                disabled={stage !== "choose"}
-                onClick={() => resolveChoice(i)}
-              >
-                {num}{suffix}
-              </button>
-            );
-          })}
         </div>
       )}
 
@@ -429,6 +412,12 @@ export default function ReadNumbersDrill({ playerId = "default", onExit }) {
         </p>
       )}
 
+      {phase === "playing" && stage === "feedback" && (
+        <button className="gym-btn gym-fab" onClick={advanceRep}>
+          Next rep
+        </button>
+      )}
+
       {phase === "done" && (
         <div className="gym-card">
           <h2>Session complete</h2>
@@ -436,7 +425,7 @@ export default function ReadNumbersDrill({ playerId = "default", onExit }) {
           <ConfettiBurst fire={!!bestLabel} />
           {bestLabel && <p className="gym-best">{bestLabel}</p>}
           <p>
-            {points} points. {hits} of {REPS} numbers read right. Level {level}.
+            {points} points. {hits} of {REPS} numbers found. Level {level}.
             {saved && (saved.bestPoints || 0) <= points && points > 0
               ? " New best."
               : ""}

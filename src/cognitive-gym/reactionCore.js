@@ -7,6 +7,7 @@ import { gradedPoints } from "./gymPoints.js";
 
 export const RT_FLOOR_MS = 180; // ~human floor; taps at/below it score max
 export const HOLD_POINTS = 350;
+export const DECOY_HOLD_POINTS = 400; // ignoring the fake-out is a harder call than a plain hold
 
 export function reactionPoints({ kind, rt = 0, windowMs = 900 }) {
   if (kind === "hit") {
@@ -14,5 +15,6 @@ export function reactionPoints({ kind, rt = 0, windowMs = 900 }) {
     return gradedPoints(e);
   }
   if (kind === "hold") return HOLD_POINTS;
+  if (kind === "decoyHold") return DECOY_HOLD_POINTS;
   return 0;
 }

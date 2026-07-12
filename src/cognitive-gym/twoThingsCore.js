@@ -21,8 +21,9 @@ export const HARD_TRAVEL_MS = 1300;
 // The tap window around the center crossing, in ms. A tap counts as catching the
 // crossing only if it lands within +/- half this window of the exact crossing
 // time. Tightens hard with level so timing the puck gets genuinely harder.
-export const EASY_CROSS_WINDOW_MS = 520;
-export const HARD_CROSS_WINDOW_MS = 200;
+// Widened from 520/200 so the timing call stays winnable even at the top level.
+export const EASY_CROSS_WINDOW_MS = 650;
+export const HARD_CROSS_WINDOW_MS = 320;
 
 // How long the shape cue is shown / answerable, in ms. Shorter = harder: a
 // shorter look at the shape and less time to pick it.

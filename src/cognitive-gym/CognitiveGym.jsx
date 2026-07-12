@@ -10,7 +10,6 @@ import BestOptionDrill from "./BestOptionDrill";
 import ReadNumbersDrill from "./ReadNumbersDrill";
 import LateReadDrill from "./LateReadDrill";
 import TwoThingsDrill from "./TwoThingsDrill";
-import ShootoutDrill from "./ShootoutDrill";
 import DrillIcon from "./DrillIcon";
 import { getDrill, getStats, calibrateDrill } from "./gymStorage";
 import { isMuted, setMuted } from "./gymAudio";
@@ -129,17 +128,9 @@ const DRILLS = [
     build: "canvas",
     component: TwoThingsDrill,
   },
-  {
-    id: "shootout",
-    name: "Pick Your Spot",
-    skill: "Shot Read",
-    blurb: "Find the open net and shoot it before the goalie covers it.",
-    goal: "Read which part of the net is open and shoot there before the goalie takes it away.",
-    why: "Goal scorers do not just shoot hard, they shoot where the goalie is not. Training your eyes to find the open part of the net fast is how you beat a goalie who is set and get the shot off before the window closes.",
-    trains: "Reading the goalie, shot selection, shooting before the lane closes",
-    build: "canvas",
-    component: ShootoutDrill,
-  },
+  // "shootout" (Pick Your Spot) pulled from the active lineup while it gets
+  // rebuilt as a first-person shootout. ShootoutDrill.jsx is untouched on
+  // disk; re-add its entry here to bring it back.
 ];
 
 export default function CognitiveGym({ playerId = "default", onBack, ageBand = null }) {

@@ -6,7 +6,7 @@ import { slotCount, flashMs, hitRadius, pickFlash, scoreTap, MIN_SLOTS, MAX_SLOT
 import { makeFormation, scoreTap as snapScoreTap, flashMs as snapFlashMs, markerCount, hitRadius as snapHitRadius, EASY_MARKERS, HARD_MARKERS } from "../src/cognitive-gym/snapshotCore.js";
 import { laneClear, pointSegmentDist, makeFormation as makeLaneFormation, scoreLane, receiverCount, defenderCount, laneMargin, closeMs as laneCloseMs, EASY_RECEIVERS, HARD_RECEIVERS, EASY_DEFENDERS, HARD_DEFENDERS } from "../src/cognitive-gym/findLaneCore.js";
 import { OPTIONS, makeSituation, scoreChoice, clockMs as boClockMs, teammateCount, defenderCount as boDefenderCount, EASY_TEAMMATES, HARD_TEAMMATES, EASY_DEFENDERS as BO_EASY_DEF, HARD_DEFENDERS as BO_HARD_DEF } from "../src/cognitive-gym/bestOptionCore.js";
-import { digitsForLevel, travelMs, makeRound, scoreRead, CHOICES, MIN_DIGITS, MAX_DIGITS } from "../src/cognitive-gym/readNumbersCore.js";
+import { digitsForLevel, watchMs, skaterCount, makeFormation as rnMakeFormation, scoreRead, MIN_DIGITS, MAX_DIGITS, EASY_SKATERS, HARD_SKATERS } from "../src/cognitive-gym/readNumbersCore.js";
 import { changeProb, changeDelay, clockMs as lrClockMs, makeTrial, scoreTrial, teammateCount as lrTeammateCount, defenderCount as lrDefenderCount, EASY_TEAMMATES as LR_EASY_MATE, HARD_TEAMMATES as LR_HARD_MATE } from "../src/cognitive-gym/lateReadCore.js";
 import { SHAPES, travelMs as ttTravelMs, crossWindowMs, cueWindowMs, shapeChoiceCount, makeRound as ttMakeRound, scorePrimary, scoreSecondary, combine, MIN_CHOICES, MAX_CHOICES } from "../src/cognitive-gym/twoThingsCore.js";
 
@@ -332,59 +332,60 @@ check("bestoption wrong option is a miss worth 0", scoreChoice("pass", "carry", 
 check("bestoption no pick (null) is a miss worth 0", scoreChoice(null, "shoot", 100, 2000).success === false && scoreChoice(null, "shoot", 100, 2000).points === 0);
 check("bestoption expired clock is a miss even on the right option", scoreChoice("shoot", "shoot", 2100, 2000).success === false && scoreChoice("shoot", "shoot", 2100, 2000).points === 0);
 
-// Read the Numbers (dynamic visual acuity) — pure helpers -------------------
+// Read the Numbers (visual memory + selective recall) — pure helpers --------
 
 // digit count climbs with level: 1 digit early, then 2, then 3 at the top.
 check("readnumbers digits start at the minimum", digitsForLevel(1) === MIN_DIGITS);
 check("readnumbers digits reach the maximum", digitsForLevel(20) === MAX_DIGITS);
 check("readnumbers digits climb with level", digitsForLevel(20) > digitsForLevel(1) && digitsForLevel(10) >= digitsForLevel(1) && digitsForLevel(10) <= digitsForLevel(20));
 
-// travel time shrinks with level (faster skater = shorter look)
-check("readnumbers travel gets shorter with level", travelMs(1) > travelMs(10) && travelMs(10) > travelMs(20));
+// watch time shrinks with level (less time to lock the numbers in)
+check("readnumbers watch time gets shorter with level", watchMs(1) > watchMs(10) && watchMs(10) > watchMs(20));
 
-// makeRound: deterministic with an injected rng
+// skater count climbs with level (more to hold in memory)
+check("readnumbers skater count starts at the minimum", skaterCount(1) === EASY_SKATERS);
+check("readnumbers skater count reaches the maximum", skaterCount(20) === HARD_SKATERS);
+check("readnumbers skater count climbs with level", skaterCount(20) > skaterCount(1));
+
+// makeFormation: deterministic with an injected rng
 let rnSeed = 0;
 const rnRng = () => { rnSeed = (rnSeed * 9301 + 49297) % 233280; return rnSeed / 233280; };
 
-// across levels and seeds: exactly one answer among CHOICES distinct choices,
-// the answer sits at answerIndex, the number has the right digit count, and the
-// travel time matches the level.
+// across levels and seeds: every number is distinct, targetIndex points at a
+// real roster entry, every number has the right digit count, and the watch
+// time matches the level.
 let rnDistinct = true;
-let rnAnswerOnce = true;
-let rnAnswerIndexOk = true;
+let rnTargetOk = true;
 let rnDigitsOk = true;
-let rnTravelOk = true;
+let rnWatchOk = true;
 for (const lvl of [1, 5, 10, 15, 20]) {
   const expectDigits = digitsForLevel(lvl);
   for (const seed of [1, 12345, 777, 90210, 31337, 8675309]) {
     rnSeed = seed;
-    const r = makeRound(lvl, { rng: rnRng });
-    if (r.choices.length !== CHOICES) rnDistinct = false;
-    if (new Set(r.choices).size !== CHOICES) rnDistinct = false;
-    if (r.choices.filter((c) => c === r.number).length !== 1) rnAnswerOnce = false;
-    if (r.choices[r.answerIndex] !== r.number) rnAnswerIndexOk = false;
-    if (String(r.number).length !== expectDigits) rnDigitsOk = false;
-    if (r.travelMs !== travelMs(lvl)) rnTravelOk = false;
+    const r = rnMakeFormation(lvl, { rng: rnRng });
+    if (new Set(r.numbers).size !== r.numbers.length) rnDistinct = false;
+    if (r.targetIndex < 0 || r.targetIndex >= r.numbers.length) rnTargetOk = false;
+    if (r.numbers.some((num) => String(num).length !== expectDigits)) rnDigitsOk = false;
+    if (r.watchMs !== watchMs(lvl)) rnWatchOk = false;
   }
 }
-check("readnumbers round has CHOICES distinct choices", rnDistinct);
-check("readnumbers answer appears exactly once among the choices", rnAnswerOnce);
-check("readnumbers answerIndex points at the true number", rnAnswerIndexOk);
-check("readnumbers number has the level's digit count", rnDigitsOk);
-check("readnumbers round carries the level's travel time", rnTravelOk);
+check("readnumbers formation has all distinct numbers", rnDistinct);
+check("readnumbers targetIndex points at a real skater", rnTargetOk);
+check("readnumbers numbers have the level's digit count", rnDigitsOk);
+check("readnumbers formation carries the level's watch time", rnWatchOk);
 
-// deterministic: same seed -> same round
+// deterministic: same seed -> same formation
 rnSeed = 4242;
-const rnA = makeRound(8, { rng: rnRng });
+const rnA = rnMakeFormation(8, { rng: rnRng });
 rnSeed = 4242;
-const rnB = makeRound(8, { rng: rnRng });
-check("readnumbers makeRound deterministic for a seed", rnA.number === rnB.number && rnA.answerIndex === rnB.answerIndex && rnA.choices.join() === rnB.choices.join());
+const rnB = rnMakeFormation(8, { rng: rnRng });
+check("readnumbers makeFormation deterministic for a seed", rnA.targetIndex === rnB.targetIndex && rnA.numbers.join() === rnB.numbers.join());
 
-// scoreRead: success only on the answer index; faster answer = more points;
+// scoreRead: success only on the target index; faster answer = more points;
 // wrong pick or no pick = miss worth 0.
 const rnFast = scoreRead(2, 2, 200, 2000);
 const rnSlow = scoreRead(2, 2, 1800, 2000);
-check("readnumbers success only on the answer index", rnFast.success && scoreRead(1, 2, 200, 2000).success === false);
+check("readnumbers success only on the target index", rnFast.success && scoreRead(1, 2, 200, 2000).success === false);
 check("readnumbers faster answer scores more points", rnFast.points > rnSlow.points && rnFast.points > 0);
 check("readnumbers instant correct answer is max points", scoreRead(2, 2, 0, 2000).points === MAX_REP);
 check("readnumbers wrong pick is a miss worth 0", scoreRead(0, 2, 100, 2000).success === false && scoreRead(0, 2, 100, 2000).points === 0);

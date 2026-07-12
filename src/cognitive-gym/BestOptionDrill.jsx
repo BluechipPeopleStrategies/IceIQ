@@ -23,7 +23,6 @@ import { makeSituation, scoreChoice, OPTIONS } from "./bestOptionCore";
 // under pressure.
 
 const REPS = 8;
-const REVEAL_HOLD_MS = 2000; // freeze the marked-up result so the player can study the read
 
 export default function BestOptionDrill({ playerId = "default", onExit }) {
   const rootRef = useRef(null);
@@ -312,18 +311,21 @@ export default function BestOptionDrill({ playerId = "default", onExit }) {
       const lvl = engineRef.current.record(success);
       setLevel(lvl);
       if (success) setHits((h) => h + 1);
-      const next = sceneRef.current.repIndex + 1;
-      schedule(() => {
-        if (next >= REPS) {
-          setPhase("done");
-        } else {
-          setRep(next);
-          startRep(next);
-        }
-      }, REVEAL_HOLD_MS);
     },
-    [startRep]
+    []
   );
+
+  // Reveal stays on screen (right or wrong) until the player taps Next rep —
+  // nothing auto-advances, so a miss can actually be studied.
+  function advanceRep() {
+    const next = sceneRef.current.repIndex + 1;
+    if (next >= REPS) {
+      setPhase("done");
+    } else {
+      setRep(next);
+      startRep(next);
+    }
+  }
 
   // Resolve a rep from a chosen option (or null for clock expiry / no pick).
   const resolveChoice = useCallback(
@@ -552,6 +554,12 @@ export default function BestOptionDrill({ playerId = "default", onExit }) {
         <p className="gym-hint" aria-live="polite">
           {hint}
         </p>
+      )}
+
+      {phase === "playing" && stage === "reveal" && (
+        <button className="gym-btn gym-fab" onClick={advanceRep}>
+          Next rep
+        </button>
       )}
 
       {phase === "done" && (

@@ -9,7 +9,10 @@ import { reactionPoints } from "./reactionCore";
 // "Shoot or Hold" — go / no-go reaction time + inhibition.
 // After a random delay the light flashes: blue = SHOOT (tap fast), orange =
 // HOLD (don't touch). Tapping early, tapping on orange, or tapping too slow all
-// count against you. The response window tightens as the level rises.
+// count against you. The response window tightens as the level rises, and
+// higher levels ease in a violet "FAKE" decoy light — a third signal that
+// must also be held, so the player has to read color, not just react to any
+// flash.
 //
 // Note: the README refers to this drill as "Green Light"; the shipped version
 // uses blue/orange instead of green/red so the signal is not red/green alone.
@@ -45,10 +48,12 @@ export default function ReactionDrill({ playerId = "default", onExit }) {
     const t = levelT(engineRef.current.level);
     const windowMs = lerp(900, 450, t);
     const noGoProb = lerp(0.25, 0.4, t);
-    const isGo = Math.random() > noGoProb;
+    const decoyProb = lerp(0, 0.22, t); // fake-out eases in as the level climbs
+    const roll = Math.random();
+    const kind = roll < decoyProb ? "decoy" : roll < decoyProb + noGoProb ? "hold" : "go";
     trialRef.current = {
       trialIndex: index,
-      isGo,
+      kind,
       windowMs,
       shownAt: null,
       resolved: false,
@@ -57,17 +62,23 @@ export default function ReactionDrill({ playerId = "default", onExit }) {
 
     schedule(() => {
       trialRef.current.shownAt = performance.now();
-      setLight(isGo ? "go" : "nogo");
-      if (isGo) cue("go");
+      setLight(kind === "go" ? "go" : kind === "decoy" ? "decoy" : "nogo");
+      if (kind === "go") cue("go");
       schedule(() => {
         const tr = trialRef.current;
         if (!tr.resolved) {
           tr.resolved = true;
-          if (tr.isGo) {
+          if (tr.kind === "go") {
             // shown SHOOT but never tapped
             setLight("miss");
             setPoints((p) => p + reactionPoints({ kind: "missedGo" }));
             resolve(false);
+          } else if (tr.kind === "decoy") {
+            // held through the fake-out — correct, and worth more than a plain hold
+            setLight("heldDecoy");
+            setCorrect((c) => c + 1);
+            setPoints((p) => p + reactionPoints({ kind: "decoyHold" }));
+            resolve(true);
           } else {
             // held through HOLD — correct
             setLight("held");
@@ -115,7 +126,7 @@ export default function ReactionDrill({ playerId = "default", onExit }) {
 
     if (tr.resolved) return;
 
-    if (tr.isGo) {
+    if (tr.kind === "go") {
       tr.resolved = true;
       clearTimers();
       const rt = Math.round(performance.now() - tr.shownAt);
@@ -131,10 +142,10 @@ export default function ReactionDrill({ playerId = "default", onExit }) {
         resolve(false);
       }
     } else {
-      // tapped on HOLD (orange) — a turnover; earns nothing
+      // tapped on HOLD (orange) or the FAKE decoy (violet) — a turnover; earns nothing
       tr.resolved = true;
       clearTimers();
-      setLight("falseAlarm");
+      setLight(tr.kind === "decoy" ? "fakedOut" : "falseAlarm");
       setPoints((p) => p + reactionPoints({ kind: "falseAlarm" }));
       resolve(false);
     }
@@ -192,22 +203,28 @@ export default function ReactionDrill({ playerId = "default", onExit }) {
     wait: "Ready...",
     go: "SHOOT",
     nogo: "HOLD",
+    decoy: "FAKE",
     early: "Jumped early",
     hit: rts.length ? `${rts[rts.length - 1]} ms, shot away!` : "Shot away!",
     miss: "Too slow, window closed",
     held: "Good hold",
+    heldDecoy: "Nice eyes — that was a fake",
     falseAlarm: "Turnover! That was a HOLD",
+    fakedOut: "Turnover! That was a fake, not a shot",
   }[light];
 
   const lightClass = {
     wait: "is-wait",
     go: "is-go",
     nogo: "is-nogo",
+    decoy: "is-decoy",
     early: "is-bad",
     hit: "is-good",
     miss: "is-bad",
     held: "is-good",
+    heldDecoy: "is-good",
     falseAlarm: "is-bad",
+    fakedOut: "is-bad",
   }[light];
 
   const avgRt = rts.length
@@ -255,7 +272,10 @@ export default function ReactionDrill({ playerId = "default", onExit }) {
               Orange says HOLD, don't touch.
             </strong>{" "}
             Tapping on orange is a turnover and earns nothing. Fast, clean shots
-            earn the big points. The window gets tighter as you level up.
+            earn the big points. The window gets tighter as you level up, and at
+            higher levels a violet <strong>FAKE</strong> light starts showing up too
+            — hold on that one just like orange, but reading it right is worth
+            more.
           </p>
           <div className="gym-trains">
             <strong>Why it matters</strong>
@@ -272,17 +292,20 @@ export default function ReactionDrill({ playerId = "default", onExit }) {
       )}
 
       {phase === "playing" && (
-        <button
-          type="button"
-          className={`gym-light ${lightClass}`}
-          onMouseDown={handleTap}
-          onTouchStart={(e) => {
-            e.preventDefault();
-            handleTap();
-          }}
-        >
-          {label}
-        </button>
+        <>
+          <button
+            type="button"
+            className={`gym-light ${lightClass}`}
+            onMouseDown={handleTap}
+            onTouchStart={(e) => {
+              e.preventDefault();
+              handleTap();
+            }}
+          >
+            {label}
+          </button>
+          <p className="gym-key-hint">Press SPACE (or tap) to shoot. Do nothing to hold.</p>
+        </>
       )}
 
       {phase === "done" && (

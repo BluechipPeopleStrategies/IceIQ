@@ -21,7 +21,6 @@ import { shiftPoints } from "./trackingCore";
 
 const SHIFTS = 6;
 const TARGETS = 3;
-const FEEDBACK_HOLD_MS = 2800; // hold the marked-up result so the player can see which they missed
 
 // Build a field of non-overlapping skaters with random velocities. Difficulty
 // ramps hard with level: more skaters (5 -> 16), faster movement, a longer
@@ -125,18 +124,21 @@ export default function TrackingDrill({ playerId = "default", onExit }) {
       const lvl = engineRef.current.record(correctCount === TARGETS);
       setLevel(lvl);
       setLevelUpIn(engineRef.current.toPromote);
-      const next = sceneRef.current.roundIndex + 1;
-      setTimeout(() => {
-        if (next >= SHIFTS) {
-          setPhase("done");
-        } else {
-          setShift(next);
-          startShift(next);
-        }
-      }, FEEDBACK_HOLD_MS);
     },
-    [startShift]
+    []
   );
+
+  // Feedback stays on screen until the player taps Next shift — nothing
+  // auto-advances, so they can actually look at what they missed.
+  function advanceShift() {
+    const next = sceneRef.current.roundIndex + 1;
+    if (next >= SHIFTS) {
+      setPhase("done");
+    } else {
+      setShift(next);
+      startShift(next);
+    }
+  }
 
   function loop() {
     cancelAnimationFrame(rafRef.current);
@@ -253,8 +255,8 @@ export default function TrackingDrill({ playerId = "default", onExit }) {
             fill = "#f2b705";
             stroke = "#9a7400";
           } else if (isPicked) {
-            fill = "#e8590c";
-            stroke = "#8a3a09";
+            fill = "#d6336c";
+            stroke = "#a61e4d";
             mark = "cross";
           }
         } else if (sc.ballCall === idx) {
@@ -550,6 +552,14 @@ export default function TrackingDrill({ playerId = "default", onExit }) {
             <div className="gym-row" style={{ marginBottom: 10 }}>
               <button className="gym-btn" onClick={lockIn}>
                 Lock in
+              </button>
+            </div>
+          )}
+
+          {phase === "playing" && stage === "feedback" && (
+            <div className="gym-row" style={{ marginBottom: 10 }}>
+              <button className="gym-btn" onClick={advanceShift}>
+                Next shift
               </button>
             </div>
           )}
