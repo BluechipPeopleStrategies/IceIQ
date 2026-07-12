@@ -16,7 +16,7 @@ const SKIP_PATTERNS = [
   },
   {
     reason: "entertainment or challenge content",
-    re: /\b(surprise\s+.*challenge|\bvs\.?\s|i tried\s|blind hockey)\b/i,
+    re: /\b(surprise\s+.*challenge|blind hockey)\b/i,
   },
 ];
 

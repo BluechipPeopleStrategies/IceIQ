@@ -24,6 +24,8 @@ const keepCases = [
   "SHORT SHIFTS - QUICKSAND",
   "FRIDAY FACEOFF - MENTAL HEALTH IN HOCKEY",
   "HOW TO MICHIGAN (But it gets progressively harder...)",
+  "Skate Push vs. Stride Length: Technique Breakdown",
+  "I tried this stickhandling drill for 30 days, here's what changed",
 ];
 for (const title of keepCases) {
   const r = preFilter({ title });
