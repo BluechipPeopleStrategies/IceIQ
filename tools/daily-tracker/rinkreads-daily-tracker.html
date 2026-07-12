@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RinkReads Daily Tracker</title>
+<style>
+  :root { --bg:#0b1b2b; --panel:#112b44; --text:#eaf2f8; --muted:#9db8c9; --gold:#f2b705; --line:#1e3f5f; }
+  * { box-sizing: border-box; }
+  body { margin:0; background:var(--bg); color:var(--text); font-family:system-ui,sans-serif; padding:20px; }
+  h1 { font-size:1.4rem; margin:0 0 4px; }
+  .sub { color:var(--muted); font-size:.85rem; margin:0 0 18px; }
+  .warning { background:#3a2a0c; border:1px solid var(--gold); color:var(--gold); padding:8px 12px; border-radius:8px; margin-bottom:14px; font-size:.85rem; display:none; }
+  .board { display:grid; gap:14px; grid-template-columns:1fr; }
+  @media(min-width:900px) { .board { grid-template-columns:repeat(3,1fr); } }
+  .section { background:var(--panel); border:1px solid var(--line); border-radius:10px; padding:14px; }
+  .section h2 { font-size:.95rem; text-transform:uppercase; letter-spacing:.06em; margin:0 0 10px; color:var(--gold); }
+  .item { background:var(--bg); border:1px solid var(--line); border-radius:8px; padding:8px 10px; margin-bottom:8px; font-size:.85rem; }
+  .item-row { display:flex; justify-content:space-between; gap:8px; align-items:flex-start; }
+  .item-actions { display:flex; gap:6px; flex-shrink:0; }
+  .item-actions button, .item-actions select { font-size:.7rem; padding:2px 6px; }
+  .add-row { display:flex; gap:6px; margin-top:8px; }
+  .add-row input { flex:1; background:var(--bg); border:1px solid var(--line); color:var(--text); border-radius:6px; padding:6px 8px; font-size:.8rem; }
+  button { background:var(--gold); color:var(--bg); border:none; border-radius:6px; padding:6px 10px; font-weight:700; cursor:pointer; font-size:.8rem; }
+  button.ghost { background:transparent; border:1px solid var(--line); color:var(--muted); }
+  .save-bar { position:sticky; bottom:0; background:var(--bg); padding:14px 0; margin-top:14px; display:flex; align-items:center; gap:12px; }
+  .status { color:var(--muted); font-size:.8rem; }
+  .readonly .item { opacity:.75; }
+</style>
+</head>
+<body>
+  <h1>RinkReads Daily Tracker</h1>
+  <p class="sub">Reads and writes <code>docs/roadmap/TASKS.md</code> directly. Nothing saves until you click Save.</p>
+  <div class="warning" id="now-warning"></div>
+  <div class="board" id="board"></div>
+  <div class="save-bar">
+    <button id="save-btn">Save</button>
+    <button class="ghost" id="reload-btn">Reload</button>
+    <span class="status" id="status"></span>
+  </div>
+
+<script type="module">
+import { removeItem, addItem, moveItem, nowWarning } from "/rinkreads-tasks-ops.mjs";
+
+const SECTIONS = [
+  { key: "now", title: "Today", editable: true },
+  { key: "next", title: "This Week", editable: true },
+  { key: "later", title: "Later", editable: true },
+  { key: "parking", title: "Waiting", editable: true },
+  { key: "changelog", title: "Done", editable: false },
+];
+
+let state = null; // the last-loaded/saved structure from the server
+
+function setStatus(msg) {
+  document.getElementById("status").textContent = msg;
+}
+
+async function loadTasks() {
+  setStatus("Loading…");
+  const res = await fetch("/api/tasks");
+  state = await res.json();
+  render();
+  setStatus("Loaded.");
+}
+
+// removeItem/addItem/moveItem are the SAME functions Task 2 unit-tests —
+// imported, not reimplemented, so the tested logic is what actually runs.
+function removeAt(section, index) {
+  state = removeItem(state, section, index);
+  render();
+}
+
+function addTo(section, text) {
+  try {
+    state = addItem(state, section, text);
+  } catch {
+    return; // empty/whitespace-only input — addItem throws, just ignore it
+  }
+  render();
+}
+
+function moveTo(fromSection, index, toSection) {
+  if (fromSection === toSection) return;
+  state = moveItem(state, fromSection, index, toSection);
+  render();
+}
+
+function render() {
+  const board = document.getElementById("board");
+  board.innerHTML = "";
+  for (const { key, title, editable } of SECTIONS) {
+    const section = document.createElement("div");
+    section.className = "section" + (editable ? "" : " readonly");
+    const h2 = document.createElement("h2");
+    h2.textContent = `${title} (${state[key].length})`;
+    section.appendChild(h2);
+
+    state[key].forEach((item, index) => {
+      const div = document.createElement("div");
+      div.className = "item";
+      const row = document.createElement("div");
+      row.className = "item-row";
+      const text = document.createElement("span");
+      text.textContent = item;
+      row.appendChild(text);
+      if (editable) {
+        const actions = document.createElement("div");
+        actions.className = "item-actions";
+        const rm = document.createElement("button");
+        rm.className = "ghost";
+        rm.textContent = "Remove";
+        rm.onclick = () => removeAt(key, index);
+        actions.appendChild(rm);
+        const moveSel = document.createElement("select");
+        const placeholder = document.createElement("option");
+        placeholder.textContent = "Move to…";
+        placeholder.value = "";
+        moveSel.appendChild(placeholder);
+        for (const s of SECTIONS) {
+          if (!s.editable || s.key === key) continue;
+          const opt = document.createElement("option");
+          opt.value = s.key;
+          opt.textContent = s.title;
+          moveSel.appendChild(opt);
+        }
+        moveSel.onchange = () => {
+          if (moveSel.value) moveTo(key, index, moveSel.value);
+        };
+        actions.appendChild(moveSel);
+        row.appendChild(actions);
+      }
+      div.appendChild(row);
+      section.appendChild(div);
+    });
+
+    if (editable) {
+      const addRow = document.createElement("div");
+      addRow.className = "add-row";
+      const input = document.createElement("input");
+      input.placeholder = "Add an item…";
+      input.onkeydown = (e) => {
+        if (e.key === "Enter") {
+          addTo(key, input.value);
+          input.value = "";
+        }
+      };
+      const addBtn = document.createElement("button");
+      addBtn.textContent = "Add";
+      addBtn.onclick = () => {
+        addTo(key, input.value);
+        input.value = "";
+      };
+      addRow.appendChild(input);
+      addRow.appendChild(addBtn);
+      section.appendChild(addRow);
+    }
+
+    board.appendChild(section);
+  }
+
+  const warnEl = document.getElementById("now-warning");
+  const warning = nowWarning(state);
+  if (warning) {
+    warnEl.style.display = "block";
+    warnEl.textContent = warning;
+  } else {
+    warnEl.style.display = "none";
+  }
+}
+
+async function save() {
+  setStatus("Saving…");
+  const res = await fetch("/api/tasks", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(state),
+  });
+  if (!res.ok) {
+    setStatus("Save failed — see console.");
+    console.error(await res.text());
+    return;
+  }
+  state = await res.json();
+  render();
+  setStatus("Saved.");
+}
+
+document.getElementById("save-btn").onclick = save;
+document.getElementById("reload-btn").onclick = loadTasks;
+
+loadTasks();
+</script>
+</body>
+</html>
