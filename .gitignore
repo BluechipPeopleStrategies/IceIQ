@@ -72,6 +72,9 @@ docs/ai-pipeline/_resolutions.json
 .claude/.doctor-state.json
 docs/checkups/
 
+# Second Brain sync hook (machine-local commit-log cursor)
+.claude/.second-brain-sync-state.json
+
 # Generated playtest feedback artifacts (pulled from Supabase, may hold screenshots)
 docs/playtest-feedback-worklist.md
 docs/feedback-shots/
@@ -81,3 +84,9 @@ docs/feedback-shots/
 
 # Local isolated feature workspaces
 .worktrees/
+
+# Scraper working files: raw third-party transcripts stay off git (retained
+# in Google Drive per the evidence-library plan, not committed here); the
+# Python cache is a pure build artifact.
+tools/tcs-scraper/__pycache__/
+tools/tcs-scraper/transcripts/*/raw/
