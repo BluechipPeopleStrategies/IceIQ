@@ -3,7 +3,7 @@
 import { mkdtempSync, mkdirSync, writeFileSync, rmSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { resolve, join } from "node:path";
-import { parseFilename, loadTranscripts, renderReport } from "./source-triage.mjs";
+import { parseFilename, loadTranscripts, renderReport, triageOne } from "./source-triage.mjs";
 
 let pass = 0, fail = 0;
 const ok = (n, c) => { console.log(`${c ? "PASS" : "FAIL"}  ${n}`); c ? pass++ : fail++; };
@@ -48,6 +48,37 @@ ok(
   "report flags ONLY the coaches-site-glass-and-out PURSUE row for re-acquisition, not the same-channel SKIP row",
   (md.match(/re-acquir/gi) || []).length === 1
 );
+
+// A title containing "|" would otherwise break the markdown table's column
+// alignment, the same way an unescaped note would.
+const pipeRows = [{ channel: "hockey-canada", title: "Gap Control | Advanced", verdict: "SKIP", tier: null, notes: [], escalated: false }];
+const pipeMd = renderReport(pipeRows, "2026-07-11");
+ok("report escapes a pipe character in the title", pipeMd.includes("Gap Control / Advanced") && !pipeMd.includes("Gap Control | Advanced"));
+
+// --- triageOne: CLI worker chain, end-to-end (Important finding 2) ---------
+const workerFixtureRoot = mkdtempSync(join(tmpdir(), "source-triage-worker-fixture-"));
+const workerDir = resolve(workerFixtureRoot, "chan-a", "raw");
+mkdirSync(workerDir, { recursive: true });
+const realFile = resolve(workerDir, "20260101__Gap Control Fundamentals__vid001.en.vtt");
+writeFileSync(realFile, "WEBVTT\n\n00:00:00.000 --> 00:00:01.000\nhello world about gap control\n");
+
+// (a) pre-filter trip: SKIP with a pre-filtered reason, no file read attempted.
+const prefilterTranscript = { channel: "chan-a", file: "x", title: "Team A falls to Team B 5-3", date: "20260101", videoId: "vidX", path: resolve(workerDir, "does-not-exist-either.en.vtt") };
+const preRow = await triageOne({ transcript: prefilterTranscript, opts: { mock: true } });
+ok("triageOne: pre-filtered title resolves to SKIP without reading the file", preRow.verdict === "SKIP" && preRow.notes.some((n) => n.includes("pre-filtered:")));
+ok("triageOne: pre-filtered row carries no read/parse error", !preRow.notes.some((n) => n.includes("error:")));
+
+// (b) reaches the mock triage gate: verdict flows through correctly.
+const realTranscript = { channel: "chan-a", file: "20260101__Gap Control Fundamentals__vid001.en.vtt", title: "Gap Control Fundamentals", date: "20260101", videoId: "vid001", path: realFile };
+const okRow = await triageOne({ transcript: realTranscript, opts: { mock: true, mockExcerpt: { verdict: "PURSUE", tier: 2, notes: ["on-topic"] } } });
+ok("triageOne: a transcript that reaches the mock gate returns the mocked verdict", okRow.verdict === "PURSUE" && okRow.tier === 2);
+
+// (c) a transcript whose path doesn't exist: caught by the try/catch, not thrown.
+const missingTranscript = { channel: "chan-a", file: "missing.en.vtt", title: "A Totally Normal Title", date: "20260101", videoId: "vid002", path: resolve(workerDir, "missing.en.vtt") };
+const errRow = await triageOne({ transcript: missingTranscript, opts: { mock: true } });
+ok("triageOne: a missing file produces an error-SKIP row instead of throwing", errRow.verdict === "SKIP" && errRow.notes.some((n) => n.includes("error:")));
+
+rmSync(workerFixtureRoot, { recursive: true, force: true });
 
 console.log(`\n${pass} passed, ${fail} failed`);
 process.exit(fail ? 1 : 0);

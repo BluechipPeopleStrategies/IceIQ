@@ -68,7 +68,8 @@ export function renderReport(rows, date) {
       const flag = channel === "coaches-site-glass-and-out" && r.verdict === "PURSUE"
         ? " **[re-acquire via the authenticated TCS manifest before citing — this copy was not acquired through that process]**"
         : "";
-      md += `| ${r.title} | ${r.verdict} | ${r.tier ?? "—"} | ${r.escalated ? "yes" : "no"} | ${(r.notes || []).join("; ").replace(/\|/g, "/")}${flag} |\n`;
+      const title = String(r.title || "").replace(/\|/g, "/");
+      md += `| ${title} | ${r.verdict} | ${r.tier ?? "—"} | ${r.escalated ? "yes" : "no"} | ${(r.notes || []).join("; ").replace(/\|/g, "/")}${flag} |\n`;
     }
   }
   return md;
@@ -88,6 +89,31 @@ function parseArgs(argv) {
   return a;
 }
 
+// One transcript through the pre-filter -> read -> parse -> triage chain.
+// `transcript` is one entry shaped like loadTranscripts()'s output
+// ({channel, file, title, date, videoId, path}). Extracted out of main()'s
+// runPool worker so the pre-filter short-circuit, the read/parse/triage
+// happy path, and the error-isolation try/catch (a batch-crash-isolation
+// fix) are all directly testable instead of only exercised during a real
+// paid run. Returns the row shape pushed into the report.
+export async function triageOne({ transcript: t, opts }) {
+  const pf = preFilter({ title: t.title });
+  if (pf.skip) {
+    console.log(`SKIP    ${t.channel}/${t.title} (pre-filtered: ${pf.reason})`);
+    return { channel: t.channel, title: t.title, verdict: "SKIP", tier: null, notes: [`pre-filtered: ${pf.reason}`], escalated: false };
+  }
+  try {
+    const raw = readFileSync(t.path, "utf8");
+    const lines = parseVtt(raw);
+    const r = await triageTranscript({ title: t.title, channel: t.channel, date: t.date, lines, opts });
+    console.log(`${r.verdict.padEnd(6)}  ${t.channel}/${t.title}${r.escalated ? " (full read)" : ""}`);
+    return { channel: t.channel, title: t.title, verdict: r.verdict, tier: r.tier, notes: r.notes, escalated: r.escalated };
+  } catch (e) {
+    console.error(`ERROR   ${t.channel}/${t.title}: ${e.message}`);
+    return { channel: t.channel, title: t.title, verdict: "SKIP", tier: null, notes: [`error: ${e.message}`], escalated: false };
+  }
+}
+
 async function main() {
   const opts = parseArgs(process.argv.slice(2));
   let transcripts = loadTranscripts({ root: defaultTranscriptRoot });
@@ -96,23 +122,7 @@ async function main() {
   if (!transcripts.length) { console.log("No transcripts found."); return; }
 
   console.log(`Triaging ${transcripts.length} transcript(s) on ${opts.coachModel}${opts.mock ? " [mock]" : ""}…\n`);
-  const rows = await runPool(transcripts, opts.concurrency, async (t) => {
-    const pf = preFilter({ title: t.title });
-    if (pf.skip) {
-      console.log(`SKIP    ${t.channel}/${t.title} (pre-filtered: ${pf.reason})`);
-      return { channel: t.channel, title: t.title, verdict: "SKIP", tier: null, notes: [`pre-filtered: ${pf.reason}`], escalated: false };
-    }
-    try {
-      const raw = readFileSync(t.path, "utf8");
-      const lines = parseVtt(raw);
-      const r = await triageTranscript({ title: t.title, channel: t.channel, date: t.date, lines, opts });
-      console.log(`${r.verdict.padEnd(6)}  ${t.channel}/${t.title}${r.escalated ? " (full read)" : ""}`);
-      return { channel: t.channel, title: t.title, verdict: r.verdict, tier: r.tier, notes: r.notes, escalated: r.escalated };
-    } catch (e) {
-      console.error(`ERROR   ${t.channel}/${t.title}: ${e.message}`);
-      return { channel: t.channel, title: t.title, verdict: "SKIP", tier: null, notes: [`error: ${e.message}`], escalated: false };
-    }
-  });
+  const rows = await runPool(transcripts, opts.concurrency, (t) => triageOne({ transcript: t, opts }));
 
   const date = new Date().toISOString().slice(0, 10);
   const outDir = resolve(root, "docs/factory/coach-runs");
