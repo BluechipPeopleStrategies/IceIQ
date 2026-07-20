@@ -442,6 +442,7 @@ const QuestionReviewScreen = lazy(() => import("./screens.jsx").then(m => ({ def
 const ReviewScreen = lazy(() => import("./review/ReviewScreen.jsx"));
 const BrowseScreen = lazy(() => import("./review/BrowseScreen.jsx"));
 const ScenarioPlayground = lazy(() => import("./scenario/ScenarioPlayground.jsx").then(m => ({ default: m.ScenarioPlayground })));
+const ReadThePlay = lazy(() => import("./play/ReadThePlay.jsx"));
 const ProfileSetup = lazy(() => import("./screens.jsx").then(m => ({ default: m.ProfileSetup })));
 const PlansScreen = lazy(() => import("./screens.jsx").then(m => ({ default: m.PlansScreen })));
 const GameSenseReportScreen = lazy(() => import("./screens.jsx").then(m => ({ default: m.GameSenseReportScreen })));
@@ -1693,6 +1694,18 @@ function Home({ player, onNav, demoMode, subscriptionTier, questFlagsBump, onPro
             </div>
           </div>
         </button>
+
+        {["U11","U13"].includes(String(player?.level||"").trim().split(/[\s/]/)[0]) && (
+        <button onClick={() => onNav("readplay")} style={{width:"100%",display:"block",textAlign:"left",background:`linear-gradient(135deg,rgba(122,215,143,.14),rgba(122,215,143,.03))`,border:`1px solid rgba(122,215,143,.35)`,borderRadius:14,padding:"1rem 1.1rem",cursor:"pointer",color:C.white,fontFamily:FONT.body,marginBottom:"1rem",position:"relative",overflow:"hidden"}}>
+          <div style={{display:"flex",alignItems:"center",gap:".6rem"}}>
+            <span style={{fontSize:20}}>🏒</span>
+            <div>
+              <div style={{fontSize:10,letterSpacing:".14em",textTransform:"uppercase",color:"#7ad78f",fontWeight:800}}>Read the Play</div>
+              <div style={{fontSize:12,color:C.dim,marginTop:1}}>Watch it develop · Make the read</div>
+            </div>
+          </div>
+        </button>
+        )}
 
         {/* Locked Game Sense hero drops here so early-game players see
             action tiles first and the progress gauge as follow-up context. */}
@@ -8265,6 +8278,7 @@ export default function App() {
         {screen === "gamesense" && <Suspense fallback={<LazyFallback/>}><GameSenseReportScreen player={player} onBack={()=>setScreen("home")} demoMode={demoMode} demoCoachData={demoMode?demoCoachRatings:null} onNavigate={setScreen}/></Suspense>}
         {screen === "journey" && <JourneyScreen player={player} tier={tier} demoMode={demoMode} onBack={()=>setScreen("home")} onNav={setScreen} onUpgrade={promptUpgrade}/>}
         {screen === "cogym" && <CognitiveGym playerId={player.id || "__demo__"} ageBand={player?.level || null} onBack={()=>setScreen("home")}/>}
+        {screen === "readplay" && <Suspense fallback={<LazyFallback/>}><ReadThePlay player={player} onBack={()=>setScreen("home")}/></Suspense>}
         <FeedbackWidget screen={screen} version={VERSION} />
         {screen === "training" && (
           <div style={{minHeight:"100vh",background:C.bg,color:C.white,fontFamily:FONT.body,paddingBottom:80}}>
