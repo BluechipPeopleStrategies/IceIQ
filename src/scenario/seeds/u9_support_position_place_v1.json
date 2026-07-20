@@ -1,0 +1,38 @@
+{
+  "id": "u9_support_position_place_v1",
+  "type": "scenario",
+  "nodeId": "u9.support-the-puck",
+  "level": "U9 / Novice",
+  "levels": ["U9 / Novice"],
+  "themes": ["puck-support", "positioning"],
+  "cat": "Hockey Sense",
+  "difficulty": 1,
+  "stage": { "view": "right", "zone": "off-zone" },
+  "read": { "cue": "a defender is sitting in the passing lane to the open-looking middle ice", "decoy": { "x": 0.7, "y": 0.42 } },
+  "actors": [
+    { "id": "tm", "kind": "teammate", "x": 0.74, "y": 0.68, "tag": "" },
+    { "id": "puck", "kind": "puck", "x": 0.742, "y": 0.682 },
+    { "id": "opp1", "kind": "defender", "x": 0.84, "y": 0.68, "tag": "" },
+    { "id": "opp2", "kind": "defender", "x": 0.72, "y": 0.5, "tag": "" },
+    { "id": "g", "kind": "goalie", "x": 0.918, "y": 0.5, "tag": "" },
+    { "id": "you", "kind": "player", "x": 0.64, "y": 0.5, "tag": "YOU" }
+  ],
+  "interaction": {
+    "kind": "place",
+    "items": ["you"],
+    "showTargets": false,
+    "prompt": "Your teammate has the puck, but two defenders are nearby. Drag YOURSELF to the open ice where they can actually pass to you."
+  },
+  "correct": {
+    "kind": "place",
+    "placements": [
+      { "id": "you", "x": 0.86, "y": 0.24, "tolerance": 0.1 }
+    ]
+  },
+  "feedback": {
+    "right": "Good read. The middle was covered by the second defender, so you found the open ice on the far side — a clean passing lane your teammate can use.",
+    "wrong": "That spot is covered by a defender, so the pass can't get through. Look for the open ice that has no defender between you and the puck."
+  },
+  "tip": "Don't just skate to open space — make sure there's no defender in the passing lane between you and the puck.",
+  "why": "Real support means an open passing LANE, not just open ice. A defender in the middle takes that option away, so the open spot is the one with a clear line to the puck."
+}

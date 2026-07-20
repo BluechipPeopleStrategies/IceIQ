@@ -1,0 +1,163 @@
+{
+  "id": "u13_oz_entry_trailer_v2",
+  "type": "scenario",
+  "nodeId": "u13.reading-the-play",
+  "level": "U13 / Peewee",
+  "levels": [
+    "U13 / Peewee"
+  ],
+  "themes": [
+    "zone-entry",
+    "decision-making",
+    "support"
+  ],
+  "cat": "Transition",
+  "difficulty": 2,
+  "stage": {
+    "view": "right",
+    "zone": "off-zone"
+  },
+  "steps": [
+    {
+      "actors": [
+        {
+          "id": "you",
+          "kind": "player",
+          "x": 0.72,
+          "y": 0.45,
+          "tag": "YOU"
+        },
+        {
+          "id": "puck",
+          "kind": "puck",
+          "x": 0.722,
+          "y": 0.448
+        },
+        {
+          "id": "c",
+          "kind": "teammate",
+          "x": 0.6,
+          "y": 0.52,
+          "tag": "C"
+        },
+        {
+          "id": "rw",
+          "kind": "teammate",
+          "x": 0.84,
+          "y": 0.74,
+          "tag": "RW"
+        },
+        {
+          "id": "ld",
+          "kind": "teammate",
+          "x": 0.66,
+          "y": 0.22,
+          "tag": "LD"
+        },
+        {
+          "id": "d1",
+          "kind": "defender",
+          "x": 0.8,
+          "y": 0.5,
+          "tag": ""
+        },
+        {
+          "id": "d2",
+          "kind": "defender",
+          "x": 0.78,
+          "y": 0.62,
+          "tag": ""
+        },
+        {
+          "id": "g",
+          "kind": "goalie",
+          "x": 0.918,
+          "y": 0.5,
+          "tag": ""
+        }
+      ],
+      "interaction": {
+        "kind": "selection",
+        "prompt": "You carry in and the D steps up to challenge. Tap the option that makes the D commit so you can attack the space behind.",
+        "from": [
+          "c",
+          "rw",
+          "ld"
+        ],
+        "order": "any"
+      },
+      "correct": {
+        "kind": "selection",
+        "ids": [
+          "c"
+        ]
+      },
+      "feedback": {
+        "right": "Delay to the trailing center. Holding the puck a beat draws the D to you and opens the ice the trailer is skating into.",
+        "wrong": "The RW is covered wide and the point is a passive bail-out. Make the D respect you first — drop to the center coming late with speed."
+      },
+      "outcome": "The D committed to you, and the center broke into the high slot with speed."
+    },
+    {
+      "actors": [
+        {
+          "id": "you",
+          "kind": "player",
+          "x": 0.74,
+          "y": 0.46,
+          "tag": "YOU"
+        },
+        {
+          "id": "puck",
+          "kind": "puck",
+          "x": 0.742,
+          "y": 0.458
+        },
+        {
+          "id": "c",
+          "kind": "teammate",
+          "x": 0.72,
+          "y": 0.3,
+          "tag": "C"
+        },
+        {
+          "id": "rw",
+          "kind": "teammate",
+          "x": 0.86,
+          "y": 0.74,
+          "tag": "RW"
+        },
+        {
+          "id": "d1",
+          "kind": "defender",
+          "x": 0.8,
+          "y": 0.55,
+          "tag": ""
+        },
+        {
+          "id": "g",
+          "kind": "goalie",
+          "x": 0.918,
+          "y": 0.5,
+          "tag": ""
+        }
+      ],
+      "interaction": {
+        "kind": "point",
+        "prompt": "The D bit. Hit the trailing center in stride — tap where to put the puck."
+      },
+      "correct": {
+        "kind": "point",
+        "x": 0.7,
+        "y": 0.26,
+        "tolerance": 0.08
+      },
+      "feedback": {
+        "right": "Lead the center into the high slot. The puck arrives where they're skating, not where they are, for a clean shot.",
+        "wrong": "Passing behind the trailer kills their speed. Lead them into the space the D just vacated."
+      }
+    }
+  ],
+  "tip": "Make the defender commit, then attack the ice they leave behind.",
+  "why": "A delay-and-drop turns a contested entry into a clean look: the first read draws the defender, the second hits the trailer in the space that opens."
+}

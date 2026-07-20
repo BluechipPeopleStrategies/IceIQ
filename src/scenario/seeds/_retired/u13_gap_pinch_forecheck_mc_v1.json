@@ -1,0 +1,75 @@
+{
+  "id": "u13_gap_pinch_forecheck_mc_v1",
+  "type": "scenario",
+  "nodeId": "u13.forecheck-pressure",
+  "level": "U13 / Peewee",
+  "levels": [
+    "U13 / Peewee"
+  ],
+  "themes": [
+    "gap-control",
+    "forecheck",
+    "angling",
+    "offensive-zone"
+  ],
+  "cat": "Offensive Play",
+  "difficulty": 2,
+  "stage": {
+    "view": "right",
+    "zone": "off-zone"
+  },
+  "actors": [
+    {
+      "id": "you",
+      "kind": "player",
+      "x": 0.72,
+      "y": 0.14,
+      "tag": "LW"
+    },
+    {
+      "id": "od",
+      "kind": "defender",
+      "x": 0.85,
+      "y": 0.11,
+      "tag": ""
+    },
+    {
+      "id": "puck",
+      "kind": "puck",
+      "x": 0.852,
+      "y": 0.108
+    },
+    {
+      "id": "g",
+      "kind": "goalie",
+      "x": 0.918,
+      "y": 0.5
+    }
+  ],
+  "interaction": {
+    "kind": "point",
+    "prompt": "After a dump-in their defender is bobbling the puck on the boards with their head down. Tap where you should pinch down to close on them under control."
+  },
+  "correct": {
+    "kind": "point",
+    "x": 0.80,
+    "y": 0.14,
+    "tolerance": 0.05
+  },
+  "mc": {
+    "stem": "You are the forechecking winger. Their defender is bobbling the puck on the boards with their head down. What should you do?",
+    "opts": [
+      "Pinch down under control along the boards to close the gap and trap them",
+      "Back out to the neutral zone and give them time to settle the puck",
+      "Drift to the middle of the blue line and tap your stick for a pass",
+      "Leave the strong side and skate all the way to the far boards"
+    ],
+    "ok": 0
+  },
+  "feedback": {
+    "right": "Yes. Gap control is not only for defensemen. When an opponent bobbles the puck, close quickly and under control before they recover.",
+    "wrong": "Backing off or drifting hands a bobbling opponent the time they need to recover. Pinch down the boards under control and close the gap."
+  },
+  "tip": "When an opponent fumbles the puck, close the gap fast and under control before they recover.",
+  "why": "Gap control applies to forwards too. Closing on a bobbling opponent before they recover takes away their time and space."
+}

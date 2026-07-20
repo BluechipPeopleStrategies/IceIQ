@@ -9,7 +9,7 @@
 // here as draggable tokens starting at their authored (bench/neutral) coords.
 
 import { useEffect, useMemo, useState } from "react";
-import { denorm, denormR } from "../schema.js";
+import { denorm, RINK_W, RINK_H } from "../schema.js";
 import { resolveTarget } from "../zones.js";
 import { scorePlace } from "./place-scorer.js";
 
@@ -18,7 +18,7 @@ const KIND_FILL = {
 };
 const clamp01 = (v) => Math.max(0.02, Math.min(0.98, v));
 
-export function PlacePrimitive({ interaction, correct, actors, svgPoint, locked, onAnswer }) {
+export function PlacePrimitive({ interaction, correct, actors, svgPoint, view, locked, onAnswer }) {
   const items = useMemo(() => interaction.items || [], [interaction]);
   const actorById = useMemo(() => Object.fromEntries((actors || []).map(a => [a.id, a])), [actors]);
 
@@ -79,7 +79,11 @@ export function PlacePrimitive({ interaction, correct, actors, svgPoint, locked,
     try { return resolveTarget(t); } catch { return null; }
   }
 
-  const btn = denorm({ x: 0.5, y: 0.93 });
+  // Center the Check button in the VISIBLE crop, not at normalized x=0.5.
+  // A half-view crops to one end of the ice, so x=0.5 lands at the cropped
+  // edge and a 92px-wide button spills off-screen (the bug on left/right views).
+  const CROP_CENTER_X = { left: 0.25, right: 0.75, neutral: 0.475 };
+  const btn = denorm({ x: CROP_CENTER_X[view] ?? 0.5, y: 0.93 });
 
   return (
     <g style={{ touchAction: "none" }}>
@@ -90,10 +94,12 @@ export function PlacePrimitive({ interaction, correct, actors, svgPoint, locked,
         const r = resultById[id];
         const reveal = !!score;
         if (!showGuides && !reveal) return null;
-        const px = denorm(t), pr = denormR(t.tolerance);
+        // Scorer uses normalized distance → the tolerance region is an ellipse
+        // (rx = tol·600, ry = tol·300) in the viewBox, not a circle.
+        const px = denorm(t);
         const col = reveal ? (r?.ok ? "#22c55e" : "#ef4444") : "#86EFAC";
         return (
-          <circle key={"t" + id} cx={px.x} cy={px.y} r={pr} fill="none"
+          <ellipse key={"t" + id} cx={px.x} cy={px.y} rx={t.tolerance * RINK_W} ry={t.tolerance * RINK_H} fill="none"
             stroke={col} strokeWidth="1.6" strokeDasharray="4 2.5" opacity={reveal ? 0.9 : 0.45}
             style={{ pointerEvents: "none" }}/>
         );

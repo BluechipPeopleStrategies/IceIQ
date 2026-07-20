@@ -5,5 +5,19 @@
       "Bash(npm run build:dashboard)",
       "Bash(npm run dev)"
     ]
+  },
+  "hooks": {
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "shell": "bash",
+            "command": "python \"$CLAUDE_PROJECT_DIR/tools/doctor-hook.py\"",
+            "statusMessage": "RinkReads Doctor: checkup gate"
+          }
+        ]
+      }
+    ]
   }
 }

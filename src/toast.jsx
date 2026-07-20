@@ -78,7 +78,7 @@ export function ToastContainer() {
   }, []);
   if (!items.length) return null;
   return (
-    <div style={{position:"fixed",top:16,right:12,left:12,zIndex:400,display:"flex",flexDirection:"column",alignItems:"center",gap:".5rem",pointerEvents:"none"}}>
+    <div role="status" aria-live="polite" aria-atomic="false" style={{position:"fixed",top:16,right:12,left:12,zIndex:400,display:"flex",flexDirection:"column",alignItems:"center",gap:".5rem",pointerEvents:"none"}}>
       <style>{`@keyframes rinkreads-toast-in { from { opacity:0; transform: translateY(-8px); } to { opacity:1; transform: translateY(0); } }`}</style>
       {items.slice(-3).map(t => {
         const s = toastStyles(t.kind);
@@ -86,6 +86,8 @@ export function ToastContainer() {
         return (
           <div key={t.id}
             onClick={() => dismiss(t.id)}
+            role="button" tabIndex={0} aria-label="Dismiss notification"
+            onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); dismiss(t.id); } }}
             style={{
               pointerEvents: "auto", cursor: "pointer",
               maxWidth: isBig ? 440 : 380,

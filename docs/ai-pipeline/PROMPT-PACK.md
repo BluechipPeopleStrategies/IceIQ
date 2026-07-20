@@ -129,6 +129,10 @@ node scripts/brief-to-seed.mjs docs/ai-pipeline/briefs/<id>.json
 
 # TRACK C — IMAGE QUESTIONS (photo / annotated reads)
 
+> ## <span style="color:#eab308">⚠ DEPRECATED — use board-MC scenarios instead</span>
+>
+> <span style="color:#eab308">Image questions are now **board-MC scenarios**: a geometry brief (PROMPT C in START-HERE.md) with an `mc` block. The picture is the engine's validated, clean board — no SVGs to generate, no figurine art, and the scene is geometry-validated so the answer can't contradict the picture. Author them like any scenario: PROMPT C (add the `mc` block) → `brief-to-seed.mjs` → `validate-seed.mjs` → auto-merges. Coach-review the read + options with PROMPT B-SCENARIO. The freehand flow below (`brief-to-image.mjs`, hand-drawn SVGs) is retired — kept only for reference.</span>
+
 ## <span style="color:#eab308">🟡 How it works now — DATA-DRIVEN, no LLM draws players (read only)</span>
 
 <span style="color:#eab308">An LLM hand-drawing players makes rotated 3D figurines that no coach would put on a board. So **nothing draws the players anymore.** Gemini outputs the players' **positions** (by named zone) plus the read; a deterministic renderer (`scripts/board-svg.mjs`) makes a clean **top-down coach's-board** SVG every time — flat dots, a pad goalie, the read as a gold arrow. ChatGPT only reviews the **text**. Always legit, always consistent.</span>

@@ -203,3 +203,12 @@ export function getUpgradeTriggerMessage(feature) {
 
 /** List of all gated feature keys (useful for admin/debug views). */
 export const GATED_FEATURES = [...FEATURE_KEYS];
+
+/**
+ * A scenario presented as multiple choice (has an `mc` block) is a FREE
+ * multiple-choice format — a richer free experience than text MC. An
+ * interactive scenario (no `mc`) is the paid upsell.
+ */
+export function isBoardMC(q) {
+  return !!(q && q.type === "scenario" && q.mc && Array.isArray(q.mc.opts));
+}

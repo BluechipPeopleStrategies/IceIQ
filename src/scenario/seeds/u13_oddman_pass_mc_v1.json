@@ -1,0 +1,93 @@
+{
+  "id": "u13_oddman_pass_mc_v1",
+  "type": "scenario",
+  "nodeId": "u13.odd-man-reads",
+  "level": "U13 / Peewee",
+  "levels": [
+    "U13 / Peewee"
+  ],
+  "themes": [
+    "odd-man-rush",
+    "3-on-1",
+    "decision-making",
+    "offensive-zone"
+  ],
+  "cat": "Offensive Play",
+  "difficulty": 2,
+  "stage": {
+    "view": "right",
+    "zone": "off-zone"
+  },
+  "actors": [
+    {
+      "id": "you",
+      "kind": "player",
+      "x": 0.718,
+      "y": 0.5,
+      "tag": "YOU"
+    },
+    {
+      "id": "puck",
+      "kind": "puck",
+      "x": 0.72,
+      "y": 0.498
+    },
+    {
+      "id": "lw",
+      "kind": "teammate",
+      "x": 0.78,
+      "y": 0.3,
+      "tag": "LW"
+    },
+    {
+      "id": "rw",
+      "kind": "teammate",
+      "x": 0.8,
+      "y": 0.72,
+      "tag": "RW"
+    },
+    {
+      "id": "x1",
+      "kind": "defender",
+      "x": 0.8,
+      "y": 0.47
+    },
+    {
+      "id": "g",
+      "kind": "goalie",
+      "x": 0.918,
+      "y": 0.5
+    }
+  ],
+  "interaction": {
+    "kind": "selection",
+    "prompt": "You carry the puck up the middle on a 3-on-1 rush. Read the defender's position and tap the teammate with the open ice.",
+    "from": [
+      "lw",
+      "rw"
+    ],
+    "order": "any"
+  },
+  "correct": {
+    "kind": "selection",
+    "ids": [
+      "rw"
+    ]
+  },
+  "mc": {
+    "stem": "You carry the puck up the middle on a 3-on-1. The lone defender has stepped toward the LW side of the zone. What's the best play?",
+    "opts": [
+      "Pass to the RW on the far side",
+      "Pass to the LW — they look to have a step at the top",
+      "Shoot — quick release before the goalie can set",
+      "Drive through the near side of the defender"
+    ],
+    "ok": 0
+  },
+  "feedback": {
+    "right": "Yes. The lone defender cannot cover both sides — when they shade to your left teammate, the right-side teammate is wide open for the pass.",
+    "wrong": "The defender's position closes the LW lane. Shooting from traffic or driving into the defender wastes your 3-on-1 advantage — the RW has clear ice for a clean pass."
+  },
+  "tip": "On an odd-man rush, move the puck to the side the lone defender left open.",
+  "why": "One defender can only take one threat. Reading which side they commit to, and passing away from it, is the whole odd-man read."
+}

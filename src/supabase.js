@@ -33,6 +33,11 @@ export const supabase = (url && key) ? createClient(url, key, {
     persistSession: true,
     autoRefreshToken: true,
     detectSessionInUrl: true,
+    // Bypass the navigator.locks auth-token lock: in dev (React StrictMode
+    // double-mounts the tree) it orphans and stalls every auth call ~5s,
+    // freezing screens that make several auth calls on load (e.g. the review
+    // deck). A no-op lock is fine for this single-user app.
+    lock: async (_name, _acquireTimeout, fn) => fn(),
   },
 }) : null;
 
@@ -43,17 +48,43 @@ export const hasSupabase = !!supabase;
 // ─────────────────────────────────────────────
 export async function signUp({ email, password, role, name }) {
   if (!supabase) throw new Error("Supabase not configured");
-  const { data, error } = await supabase.auth.signUp({ email, password });
-  if (error) throw error;
-  if (data.user) {
-    // Create profile row
-    const { error: pErr } = await supabase.from("profiles").insert({
-      id: data.user.id,
-      role, name,
-    });
-    if (pErr) throw pErr;
+  const signupTimeoutMs = 12000;
+  const signupPromise = supabase.auth.signUp({ email, password });
+  const timeoutPromise = new Promise((_, reject) => {
+    setTimeout(() => reject(new Error(`RinkReads signup timed out after ${signupTimeoutMs}ms`)), signupTimeoutMs);
+  });
+
+  const { data, error } = await Promise.race([signupPromise, timeoutPromise]);  if (error) throw error;
+
+  let authData = data;
+
+  // In some environments signUp creates the user but does not leave the
+  // browser with an active session. Fall back to sign-in so the UI can
+  // continue instead of returning to the create-account screen.
+  if (!authData?.session && email && password) {
+    const { data: signInData, error: signInErr } = await supabase.auth.signInWithPassword({ email, password });
+    if (signInErr) {
+      warn("sign-in after signup", signInErr);
+    } else if (signInData?.user) {
+      authData = signInData;
+    }
   }
-  return data;
+
+  const user = authData?.user || data?.user;
+
+  if (user) {
+    // Profile creation should not make a successful auth signup look failed.
+    // Use upsert so repeat attempts do not explode on duplicate profile rows.
+    const { error: pErr } = await supabase.from("profiles").upsert({
+      id: user.id,
+      role,
+      name,
+    }, { onConflict: "id" });
+
+    if (pErr) warn("profile upsert after signup", pErr);
+  }
+
+  return authData;
 }
 
 export async function signIn({ email, password }) {
@@ -622,6 +653,37 @@ export async function recordQuizFeedback(playerId, { choice, note, score, level 
 }
 
 // ─────────────────────────────────────────────
+// PLAYTEST FEEDBACK (dev-bypass in-app feedback; owner-only via RLS)
+// ─────────────────────────────────────────────
+// A real write (not fire-and-forget): returns { ok, data } or { ok:false, error }
+// so the widget can confirm the upload to the owner. RLS restricts inserts to the
+// owner emails, so a non-owner / signed-out session gets an error here.
+export async function savePlaytestFeedback({
+  screen, drill, category, note, context, screenshot, appVersion,
+} = {}) {
+  if (!supabase) return { ok: false, error: "offline" };
+  try {
+    const { data: userData } = await supabase.auth.getUser();
+    const authorId = userData && userData.user ? userData.user.id : null;
+    const { data, error } = await supabase.from("playtest_feedback").insert({
+      author_id: authorId,
+      screen: screen || null,
+      drill: drill || null,
+      category: category || null,
+      note: note || null,
+      context: context || null,
+      screenshot: screenshot || null,
+      app_version: appVersion || null,
+    }).select().single();
+    if (error) { warn("savePlaytestFeedback", error); return { ok: false, error: error.message }; }
+    return { ok: true, data };
+  } catch (e) {
+    warn("savePlaytestFeedback", e);
+    return { ok: false, error: e.message || String(e) };
+  }
+}
+
+// ─────────────────────────────────────────────
 // QUESTION RESULTS (per-rep, source for the Hockey IQ score)
 // ─────────────────────────────────────────────
 import { computeHockeyIQ, WINDOW_DAYS } from "./utils/hockeyIQ.js";
@@ -911,3 +973,110 @@ export async function killAdminQuestion(id) {
 export async function unkillAdminQuestion(id, restoreStatus = "Draft") {
   return updateAdminQuestion(id, { status: restoreStatus, killed_at: null });
 }
+
+// ── Scenario review (mobile /review deck) ───────────────────────────────
+export async function upsertScenarioReview({ scenario_id, verdict, note, board_hash }) {
+  if (!supabase) return { ok: false, offline: true };
+  const session = await getSession();
+  const email = session?.user?.email;
+  if (!email) return { ok: false, error: "not signed in" };
+  const { error } = await supabase.from("scenario_reviews").upsert(
+    {
+      scenario_id,
+      reviewer_email: email,
+      verdict,
+      note: note || null,
+      board_hash: board_hash || null,
+      updated_at: new Date().toISOString(),
+    },
+    { onConflict: "scenario_id,reviewer_email" },
+  );
+  return error ? { ok: false, error: error.message } : { ok: true };
+}
+
+export async function listMyReviews() {
+  if (!supabase) return { ok: false, rows: [] };
+  const session = await getSession();
+  const email = session?.user?.email;
+  if (!email) return { ok: false, rows: [] };
+  const { data, error } = await supabase
+    .from("scenario_reviews")
+    .select("scenario_id,verdict,note,board_hash,updated_at")
+    .eq("reviewer_email", email);
+  return error ? { ok: false, rows: [] } : { ok: true, rows: data || [] };
+}
+
+export async function listCoachReviews() {
+  if (!supabase) return [];
+  const { data, error } = await supabase
+    .from("coach_reviews")
+    .select("scenario_id,verdict,confidence,notes,convened,board_hash,reviewed_at");
+  return error ? [] : (data || []);
+}
+
+export async function listFeedbackLog() {
+  if (!supabase) return [];
+  const { data, error } = await supabase
+    .from("feedback_log")
+    .select("scenario_id,node,iteration,source,feedback,change,created_at")
+    .order("created_at", { ascending: true });
+  return error ? [] : (data || []);
+}
+
+// Owner queues a request for more questions on a scene; generation is batched
+// offline (Decision-Test-constrained + coach-vetted). Needs a signed-in owner.
+export async function createQuestionRequest({ scenario_id, stem_id, preset, note }) {
+  if (!supabase) return { ok: false, offline: true };
+  const session = await getSession();
+  const email = session?.user?.email;
+  if (!email) return { ok: false, error: "not signed in" };
+  const { error } = await supabase.from("question_requests").insert({
+    scenario_id, stem_id: stem_id || scenario_id, preset, note: note || null, requester_email: email,
+  });
+  return error ? { ok: false, error: error.message } : { ok: true };
+}
+
+// Dashboard edit-in-place: a JSON patch merged over the base question at runtime.
+export async function upsertQuestionOverride({ question_id, patch }) {
+  if (!supabase) return { ok: false, offline: true };
+  const session = await getSession();
+  const email = session?.user?.email;
+  if (!email) return { ok: false, error: "not signed in" };
+  const { error } = await supabase.from("question_overrides").upsert(
+    { question_id, patch, editor_email: email, updated_at: new Date().toISOString() },
+    { onConflict: "question_id" },
+  );
+  return error ? { ok: false, error: error.message } : { ok: true };
+}
+
+export async function listQuestionOverrides() {
+  if (!supabase) return [];
+  const { data, error } = await supabase.from("question_overrides").select("question_id,patch,updated_at");
+  return error ? [] : (data || []);
+}
+
+// Unresolved player flags from the app, for the dashboard. (Owner-read-all
+// requires the owner-email policy in migration 0017; until then this returns
+// whatever RLS allows — empty when there are no players.)
+export async function listQuestionReports() {
+  if (!supabase) return [];
+  const { data, error } = await supabase
+    .from("question_reports")
+    .select("question_id,reason,detail,created_at")
+    .eq("resolved", false)
+    .order("created_at", { ascending: false });
+  return error ? [] : (data || []);
+}
+
+export async function listQuestionRequests() {
+  if (!supabase) return [];
+  const session = await getSession();
+  const email = session?.user?.email;
+  if (!email) return [];
+  const { data, error } = await supabase
+    .from("question_requests")
+    .select("id,scenario_id,stem_id,preset,note,status,created_at")
+    .eq("status", "open").order("created_at", { ascending: true });
+  return error ? [] : (data || []);
+}
+

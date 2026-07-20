@@ -2,33 +2,89 @@
   "id": "gvis_u11_time-and-space_4we8",
   "type": "scenario",
   "level": "U11 / Atom",
-  "levels": ["U11 / Atom"],
+  "levels": [
+    "U11 / Atom"
+  ],
   "nodeId": "u11.time-and-space",
-  "themes": ["decision-making", "vision", "pass-selection", "offensive-zone"],
+  "themes": [
+    "decision-making",
+    "vision",
+    "pass-selection",
+    "offensive-zone"
+  ],
   "cat": "Hockey Sense",
   "difficulty": 1,
-  "stage": { "view": "right", "zone": "off-zone" },
+  "stage": {
+    "view": "right",
+    "zone": "off-zone"
+  },
   "actors": [
-    { "id": "you",  "kind": "player",   "x": 0.65, "y": 0.28, "tag": "YOU" },
-    { "id": "puck", "kind": "puck",     "x": 0.652, "y": 0.278 },
-    { "id": "t1",   "kind": "teammate", "x": 0.82, "y": 0.18, "tag": "LW" },
-    { "id": "t2",   "kind": "teammate", "x": 0.88, "y": 0.72, "tag": "RW" },
-    { "id": "d1",   "kind": "defender", "x": 0.86, "y": 0.65, "tag": "" },
-    { "id": "d2",   "kind": "defender", "x": 0.73, "y": 0.52, "tag": "" },
-    { "id": "g",    "kind": "goalie",   "x": 0.918, "y": 0.50, "tag": "" }
+    {
+      "id": "you",
+      "kind": "player",
+      "x": 0.8,
+      "y": 0.28,
+      "tag": "YOU"
+    },
+    {
+      "id": "puck",
+      "kind": "puck",
+      "x": 0.802,
+      "y": 0.278
+    },
+    {
+      "id": "t1",
+      "kind": "teammate",
+      "x": 0.66,
+      "y": 0.16,
+      "tag": "LW"
+    },
+    {
+      "id": "t2",
+      "kind": "teammate",
+      "x": 0.86,
+      "y": 0.74,
+      "tag": "RW"
+    },
+    {
+      "id": "d1",
+      "kind": "defender",
+      "x": 0.84,
+      "y": 0.66,
+      "tag": ""
+    },
+    {
+      "id": "d2",
+      "kind": "defender",
+      "x": 0.74,
+      "y": 0.42,
+      "tag": ""
+    },
+    {
+      "id": "g",
+      "kind": "goalie",
+      "x": 0.918,
+      "y": 0.5,
+      "tag": ""
+    }
   ],
   "interaction": {
     "kind": "selection",
-    "prompt": "You have the puck on the half-wall. One teammate has open ice; the other is covered by a defender. Tap the teammate with the most time and space.",
-    "from": ["t1", "t2"],
+    "prompt": "You have the puck up high in the zone. One teammate has open ice; the other is covered by a defender. Tap the teammate with the most time and space.",
+    "from": [
+      "t1",
+      "t2"
+    ],
     "order": "any"
   },
   "correct": {
     "kind": "selection",
-    "ids": ["t1"]
+    "ids": [
+      "t1"
+    ]
   },
   "feedback": {
-    "right": "Your LW has clean ice — no white jersey nearby. That means time to catch, turn, and make the next play without pressure.",
+    "right": "Your LW has clean ice — no opponent nearby. That means time to catch, turn, and make the next play without pressure.",
     "wrong": "A defender is right on your RW. Passing there means your teammate has no time and no space — the puck gets tied up or picked off immediately."
   },
   "tip": "Before you pass, find the player with no defender close by. That open gap is exactly what 'time and space' looks like on ice.",

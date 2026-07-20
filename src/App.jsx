@@ -1,9 +1,12 @@
 import { useState, useEffect, useRef, useCallback, useMemo, lazy, Suspense } from "react";
+import { COACH_PERSONAS, getAgeTier, getCoachForQuestion } from "./coachPersonas.js";
 import * as SB from "./supabase";
 import { supabase, hasSupabase } from "./supabase";
-import { canAccess, getUpgradeTriggerMessage } from "./utils/tierGate";
+import { canAccess, getUpgradeTriggerMessage, isBoardMC } from "./utils/tierGate";
 import { isDevBypassEnabled, getDevProfile, setDevProfile, clearDevProfile, buildDevPlayer, isEphemeralPlayer, enableDevBypass, DEV_BYPASS_SECRET } from "./utils/devBypass";
 import { getLevelDisplay } from "./utils/ageGroup";
+import ReadAloudToggle from "./ReadAloudToggle.jsx";
+import { ttsSupported, getReadAloud, speakParts, stopSpeaking } from "./speak.js";
 import { getParentRatings, saveParentRatings, hasParentRatings, daysSinceUpdated, PARENT_DIMENSIONS, PARENT_SCALE } from "./utils/parentAssessment";
 import { calcPlayerProfile, PROFILE_AXES } from "./utils/playerProfile";
 import { markSignupIntent, logSignupComplete } from "./utils/signupTelemetry";
@@ -15,6 +18,8 @@ import RinkReadsRink from "./RinkReadsRink";
 import { COMPETENCIES, getJourneyV2, ACTIVITY_METRICS, GAME_SENSE_UNLOCK_SESSIONS, calcCompetencyScores, calcGameSenseScore } from "./utils/gameSense.js";
 import { getTrainingLog, seedDemoTrainingForRoster } from "./utils/trainingLog.js";
 import { buildU11ForwardPreview, PREVIEW_PLAYER_ID } from "./data/previewPlayer.js";
+import { enqueueReview, getSavedReview, flushQueue } from "./review/reviewQueue.js";
+import { boardHash } from "./review/reviewCore.js";
 import { calcTeamCompetencyAverages, GRADE_LEVEL_THRESHOLD } from "./utils/coachStats.js";
 import { HockeyInsightWidget, BottomNav, TrainingLog, HomeStartHereCard } from "./widgets.jsx";
 import { HomeworkCard, CoachAssignmentsSection } from "./assignments.jsx";
@@ -24,6 +29,8 @@ import { CoachChallengeSection, ChallengeCard, ChallengeRunScreen } from "./team
 import { ToastContainer, toast } from "./toast.jsx";
 import { QotDCard, QotDScreen } from "./questionOfDay.jsx";
 import { SpeedRoundCard, SpeedRoundScreen } from "./speedRound.jsx";
+import CognitiveGym from "./cognitive-gym/CognitiveGym";
+import FeedbackWidget from "./devtools/FeedbackWidget";
 import { AdminRoute, AdminLayout } from "./admin.jsx";
 import { getWeeklyStreak, bumpWeeklyStreak, topCategoryStreak, updateCategoryStreaks } from "./utils/streaks.js";
 import { canSwitchAgeGroup, recordAgeGroupSwitch, getAgeGroupLock, setAgeGroupLock, checkSeasonReset } from "./utils/deviceLock";
@@ -38,11 +45,16 @@ import {
 } from "./utils/reflections.js";
 import { ScenarioRenderer } from "./scenario/index.js";
 import {
-  C, FONT, LEVELS, POSITIONS, POSITIONS_U11UP, SEASONS,
+  C, FONT, LEVELS, POSITIONS, POSITIONS_U11UP, SEASONS, ALL_AGES_MODE,
   RinkReadsLogo, Screen, Card, Pill, Label, PrimaryBtn, SecBtn, BackBtn, ProgressBar, StickyHeader,
 } from "./shared.jsx";
 import { OverlayLayer } from "./OverlayLayer.jsx";
 import { RinkPlayTest } from "./RinkPlay.jsx";
+import { PathScreen } from "./path/PathScreen.jsx";
+import { ChallengesHub } from "./path/ChallengesHub.jsx";
+import { levelToBand } from "./path/pathData.js";
+import { recordNodeResult, getPathState } from "./path/pathProgress.js";
+import { getPath } from "./path/pathData.js";
 const imgSplash = "/splash.jpg";
 import imgCoreApp from "./assets/images/Core-App.jpg";
 import imgDataPanel from "./assets/images/Data-Panel.jpg";
@@ -55,7 +67,15 @@ import imgSuccess from "./assets/images/Success-Icon.jpg";
 //           demo mode → coach demo = TEAM
 //           profile.tier field (future Supabase subscriptions) → that tier
 //           default → FREE
-function resolveTier({ profile, demoMode } = {}) {
+function resolveTier(args = {}) {
+  const t = resolveTierRaw(args);
+  // ALL_AGES_MODE (temporary): floor FREE up to PRO so the single login is the
+  // full Pro experience — all formats, adaptive engine, no weekly quiz cap.
+  // Coach=TEAM and explicit PRO/FAMILY/TEAM are preserved. Flip the flag off
+  // to restore the FREE tier and its gating.
+  return ALL_AGES_MODE && t === "FREE" ? "PRO" : t;
+}
+function resolveTierRaw({ profile, demoMode } = {}) {
   // Coaches in any non-production session (demo / preview / dev-bypass)
   // always get TEAM tier, regardless of what the tier picker reads. There
   // is no real "coach on PRO" account — in production, coaches sign up on
@@ -91,13 +111,13 @@ function resolveTier({ profile, demoMode } = {}) {
 // ─────────────────────────────────────────────────────────
 // VERSION
 // ─────────────────────────────────────────────────────────
-const VERSION = "0.9-beta";
-const RELEASE_DATE = "April 2026";
+const VERSION = "0.1-beta";
+const RELEASE_DATE = "June 2026";
 const CHANGELOG = [
-  { v:"0.9-beta", date:"April 2026", notes:[
-    {icon:"🏒", title:"Welcome — you're early", desc:"This is RinkReads's first public preview. You're one of the first players, parents, and coaches to use it. Nothing here is final — everything is shaped by what you tell us."},
-    {icon:"🛠️", title:"Built with you, not for you", desc:"Every feature on this app came from a question a real coach, parent, or kid asked. Tap the report button whenever something feels off, confusing, or missing. We read every single one."},
-    {icon:"📈", title:"Active development", desc:"Questions are being added weekly. Screens will change. Your feedback directly shapes what ships next — so be loud, be specific, and don't sugarcoat it."},
+  { v:"0.1-beta", date:"June 2026", notes:[
+    {icon:"🧠", title:"The Brain Gym is open", desc:"A new set of quick brain games that train the stuff you can't drill on the ice: scanning, peripheral vision, reading a pass, and picking the best option under pressure. Short, fast, and a little addictive."},
+    {icon:"🏒", title:"Plays that unfold", desc:"Scenarios now branch. You read the play one decision at a time and watch how it develops from the choice you make, just like a real shift. Closer to hockey, less like a worksheet."},
+    {icon:"✨", title:"Sharper ice, clearer reads", desc:"The rink diagrams got a real makeover so positions and lanes are easier to see, questions can be read aloud, and we added fresh scenarios on breakouts, D-zone coverage, and support play."},
   ]},
 ];
 
@@ -366,7 +386,7 @@ function QuestChecklist({ role, quests, results, onTap, onDismiss, onAllComplete
       {/* Prescriptive hero CTA — brand-new users tap one big button instead
           of scanning the whole list. Hidden when collapsed or when all done. */}
       {!collapsed && nextQuest && !allDone && (
-        <button onClick={() => onTap(nextQuest)} style={{display:"block",width:"100%",background:C.gradientPrimary,color:C.bg,border:"none",borderRadius:12,padding:".85rem 1rem",cursor:"pointer",fontFamily:FONT.body,fontWeight:800,fontSize:14,letterSpacing:".02em",marginBottom:".85rem",boxShadow:`0 4px 14px ${C.gold}33, inset 0 1px 0 rgba(255,255,255,.25)`,textAlign:"left",display:"flex",alignItems:"center",justifyContent:"space-between",gap:".5rem"}}>
+        <button onClick={() => onTap(nextQuest)} style={{width:"100%",background:C.gradientPrimary,color:C.bg,border:"none",borderRadius:12,padding:".85rem 1rem",cursor:"pointer",fontFamily:FONT.body,fontWeight:800,fontSize:14,letterSpacing:".02em",marginBottom:".85rem",boxShadow:`0 4px 14px ${C.gold}33, inset 0 1px 0 rgba(255,255,255,.25)`,textAlign:"left",display:"flex",alignItems:"center",justifyContent:"space-between",gap:".5rem"}}>
           <span>Start: {nextQuest.label}</span>
           <span style={{fontSize:16}}>→</span>
         </button>
@@ -419,6 +439,8 @@ import { COMPETENCY_LADDER, RATING_SCALES, SKILLS, FREE_SKILL_IDS, ladderFor, ge
 
 const AdminReports = lazy(() => import("./screens.jsx").then(m => ({ default: m.AdminReports })));
 const QuestionReviewScreen = lazy(() => import("./screens.jsx").then(m => ({ default: m.QuestionReviewScreen })));
+const ReviewScreen = lazy(() => import("./review/ReviewScreen.jsx"));
+const BrowseScreen = lazy(() => import("./review/BrowseScreen.jsx"));
 const ScenarioPlayground = lazy(() => import("./scenario/ScenarioPlayground.jsx").then(m => ({ default: m.ScenarioPlayground })));
 const ProfileSetup = lazy(() => import("./screens.jsx").then(m => ({ default: m.ProfileSetup })));
 const PlansScreen = lazy(() => import("./screens.jsx").then(m => ({ default: m.PlansScreen })));
@@ -543,12 +565,27 @@ function makePlayerKey(name, level) {
 }
 
 // Demo queue builder — guarantees one of each question type
-function buildDemoQueue(qb, level, position) {
+function buildDemoQueue(qb, level, position, focus = null) {
   const posCode = { Forward: "F", Defense: "D", Goalie: "G" }[position] || null;
   const posMatch = (q) => !q.pos || !posCode || q.pos.includes(posCode);
   // User-killed questions are filtered out of every queue. Even ?ids=
   // playlists honor the kill list — a deleted q stays deleted everywhere.
   const notKilled = (q) => !isKilled(q?.id);
+  // Skill Path focus: demo/preview lessons launched from a path node scope
+  // to that node's concept, same contract as buildQueue. Falls back to the
+  // full pool when nothing in the bank matches the concept yet.
+  if (focus?.conceptId) {
+    const hit = (qb[level] || []).filter(q => notKilled(q) && posMatch(q) && (
+      q?.conceptId === focus.conceptId ||
+      q?.ledger?.conceptId === focus.conceptId ||
+      (Array.isArray(q?.concepts) && q.concepts.includes(focus.conceptId)) ||
+      q?.nodeId === focus.id
+    ));
+    if (hit.length) return [...hit].sort(() => Math.random() - 0.5);
+  } else if (focus?.cat) {
+    const hit = (qb[level] || []).filter(q => notKilled(q) && posMatch(q) && q?.cat === focus.cat);
+    if (hit.length) return [...hit].sort(() => Math.random() - 0.5);
+  }
   // Debug: ?only=<type[,type]> forces the demo queue to those qtypes;
   // ?ids=<id[,id]> forces it to a specific question playlist.
   const sp = typeof window !== "undefined" ? new URLSearchParams(window.location.search) : null;
@@ -649,8 +686,10 @@ function EmptyBankScreen() {
   );
 }
 
-function buildQueue(qb, level, position, isReturning, tier) {
-  const formatAllowed = canAccess("allQuestionFormats", tier).allowed;
+function buildQueue(qb, level, position, isReturning, tier, focus = null) {
+  // ALL_AGES_MODE (temporary): one mixed-age Pro experience — ignore the
+  // player's level, serve every format. Flip the flag off to restore per-age.
+  const formatAllowed = ALL_AGES_MODE ? true : canAccess("allQuestionFormats", tier).allowed;
   const positionAllowed = canAccess("positionFilter", tier).allowed;
   // Debug: ?only=<type> (or comma-separated, e.g. ?only=rink-label,rink-drag)
   // OR ?ids=<id>[,<id>] to filter to specific question ids (used by the
@@ -664,13 +703,13 @@ function buildQueue(qb, level, position, isReturning, tier) {
   // Kill-list signature ensures a freshly-killed question is filtered out
   // on the very next queue build (cache invalidates when count changes).
   const killSig = getKillList().length;
-  const cacheKey = `${level}|${position}|${formatAllowed}|${positionAllowed}|${onlyParam || ""}|${idsParam || ""}|k${killSig}`;
+  const cacheKey = `${ALL_AGES_MODE ? "ALL" : level}|${position}|${formatAllowed}|${positionAllowed}|${onlyParam || ""}|${idsParam || ""}|k${killSig}|f${focus?.conceptId || ""}|c${focus?.cat || ""}`;
 
   let pool;
   if (!onlyTypes && !onlyIds && _queueCache.has(cacheKey)) {
     pool = _queueCache.get(cacheKey);
   } else {
-    let allQ = qb[level] || [];
+    let allQ = ALL_AGES_MODE ? LEVELS.flatMap(l => qb[l] || []) : (qb[level] || []);
     if (onlyTypes) allQ = allQ.filter(q => onlyTypes.includes(q.type));
     if (onlyIds) {
       // ids[] also looks across every level (a single-question playlist
@@ -689,6 +728,24 @@ function buildQueue(qb, level, position, isReturning, tier) {
     }
     // User-killed questions get filtered upstream of every other rule.
     allQ = allQ.filter(q => !isKilled(q?.id));
+    // Skill Path focus: scope the session to one ledger concept. The
+    // gauntlet tags questions with conceptId / ledger.conceptId /
+    // concepts[] / nodeId — match any. If nothing in the bank matches
+    // (bank empty or untagged), fall back to the full pool so a path
+    // lesson still runs rather than dead-ending.
+    if (focus?.conceptId) {
+      const hit = allQ.filter(q =>
+        q?.conceptId === focus.conceptId ||
+        q?.ledger?.conceptId === focus.conceptId ||
+        (Array.isArray(q?.concepts) && q.concepts.includes(focus.conceptId)) ||
+        q?.nodeId === focus.id
+      );
+      if (hit.length) allQ = hit;
+    } else if (focus?.cat) {
+      // Leak Finder focus: scope the session to one mastery category.
+      const hit = allQ.filter(q => q?.cat === focus.cat);
+      if (hit.length) allQ = hit;
+    }
     let posFiltered;
     if (!positionAllowed) {
       posFiltered = allQ.filter(q => !q.pos || q.pos.includes("F") || q.pos.includes("D"));
@@ -704,9 +761,11 @@ function buildQueue(qb, level, position, isReturning, tier) {
 
     if (!formatAllowed && !onlyTypes && !onlyIds) {
       // FREE: MC and TF only (mc covers both text-only and image-backed MC
-      // since pov-mc was merged in). Other types (seq, mistake, next,
-      // rink-native) are PRO surface — players see format-preview sentinels.
-      posFiltered = posFiltered.filter(q => !q.type || q.type === "mc" || q.type === "tf");
+      // since pov-mc was merged in). Board-MC scenarios (type "scenario" with
+      // an mc block) are also a FREE MC format. Other types (seq, mistake,
+      // next, rink-native, interactive scenarios) are PRO surface — players
+      // see format-preview sentinels.
+      posFiltered = posFiltered.filter(q => !q.type || q.type === "mc" || q.type === "tf" || isBoardMC(q));
     }
 
     pool = {
@@ -953,6 +1012,33 @@ const DIAGRAMS = {
 // ─────────────────────────────────────────────────────────
 // QUESTION FORMAT COMPONENTS
 // ─────────────────────────────────────────────────────────
+// Plain (non-scenario, non-rink) question types that support browser TTS
+// read-aloud from the quiz player. Scenario questions read themselves inside
+// ScenarioRenderer; rink-native interactive types have no simple text to read.
+const READ_ALOUD_TYPES = new Set(["mc", "mistake", "next", "multi", "tf", "seq"]);
+
+// Build the ordered text fragments to read aloud for a plain question: the
+// situation/prompt first, then each answer choice with its letter (or each
+// step for sequence-ordering). Mirrors how BoardMC reads scenario questions.
+function questionSpeechParts(q, qtype) {
+  if (!q) return [];
+  const parts = [];
+  if (q.sit) parts.push(q.sit);
+  if (qtype === "mistake" && q.question) parts.push(q.question);
+  if (qtype === "multi" && q.q) parts.push(q.q);
+  if (qtype === "tf") {
+    parts.push("True, or false?");
+  } else if (qtype === "seq") {
+    if (Array.isArray(q.items)) {
+      parts.push("Put these in the right order.");
+      q.items.forEach((it, i) => parts.push(`${i + 1}. ${it}`));
+    }
+  } else if (Array.isArray(q.opts)) {
+    q.opts.forEach((o, i) => parts.push(`${"ABCD"[i] || i + 1}. ${o}`));
+  }
+  return parts;
+}
+
 function MCQuestion({ q, sel, onPick, colorblind }) {
   const correctColor = colorblind ? "#2563eb" : C.green;
   const wrongColor = colorblind ? "#ea580c" : C.red;
@@ -1423,7 +1509,7 @@ function Home({ player, onNav, demoMode, subscriptionTier, questFlagsBump, onPro
                 </button>
               )}
             </div>
-            <div style={{fontSize:12,color:C.dimmer}}>{name} · {level} · {position}</div>
+            <div style={{fontSize:12,color:C.dimmer}}>{name}{ALL_AGES_MODE ? "" : ` · ${level}`} · {position}</div>
           </div>
           <button onClick={() => onNav("profile")} style={{background:C.bgCard,border:`1px solid ${C.border}`,borderRadius:10,width:38,height:38,cursor:"pointer",color:C.dimmer,fontSize:16,display:"flex",alignItems:"center",justifyContent:"center"}}>⚙</button>
         </div>
@@ -1479,6 +1565,68 @@ function Home({ player, onNav, demoMode, subscriptionTier, questFlagsBump, onPro
             drops further down the page (see below). */}
         {iqUnlocked && iqHero}
 
+        {/* Skill Path hero — the Duolingo-style curriculum path. Shows the
+            next node on the player's age-band path so Home always has a
+            single obvious "continue" action. */}
+        {(() => {
+          try {
+            const band = levelToBand(level);
+            const p = getPath(band);
+            const st = getPathState(player?.id || "__demo__", band, p);
+            const next = st.activeNode;
+            const era = next ? p.units[next.unitIdx]?.name : null;
+            const pct = st.totalCount ? Math.round((st.clearedCount / st.totalCount) * 100) : 0;
+
+            // Leak Finder: weakest category with a real sample (6+ reads,
+            // under 75%, not yet mastered). GAME_DESIGN_SPEC.md B3.
+            let leak = null;
+            try {
+              const m = computeCategoryMastery(player?.quizHistory);
+              const cands = Object.entries(m).filter(([, v]) => v.attempts >= 6 && v.accuracy < 0.75 && v.stars < 3);
+              if (cands.length) {
+                cands.sort((a, b) => a[1].accuracy - b[1].accuracy);
+                leak = { cat: cands[0][0], pct: Math.round(cands[0][1].accuracy * 100), n: cands[0][1].attempts };
+              }
+            } catch {}
+
+            return (<>
+              <button onClick={() => onNav("path")} style={{width:"100%",background:C.gradientPrimary,border:"none",borderRadius:16,padding:"1.05rem 1.15rem",cursor:"pointer",textAlign:"left",color:"#fff",fontFamily:FONT.body,marginBottom:".85rem",boxShadow:"inset 0 -5px 0 rgba(0,0,0,.22), 0 8px 22px rgba(252,76,2,.28)",position:"relative",overflow:"hidden"}}>
+                <div style={{fontSize:10.5,fontWeight:800,letterSpacing:".16em",textTransform:"uppercase",opacity:.9,marginBottom:3}}>
+                  Skill Path · {band}{era ? ` · ${era} Era` : ""} · {st.clearedCount}/{st.totalCount}
+                </div>
+                <div style={{fontFamily:FONT.display,fontSize:"1.35rem",letterSpacing:".02em",marginBottom:2}}>
+                  {next ? `Next up: ${next.name}` : st.totalCount ? "Path complete — push for 3 stars" : "Walk the path"}
+                </div>
+                <div style={{fontSize:12,opacity:.9,marginBottom:".6rem"}}>{next?.readConnection ? next.readConnection : "One skill at a time, in the order the game teaches it."}</div>
+                <div style={{height:6,background:"rgba(0,0,0,.28)",borderRadius:4,overflow:"hidden"}}>
+                  <div style={{width:`${pct}%`,height:"100%",background:"#fff",borderRadius:4,transition:"width .3s"}}/>
+                </div>
+              </button>
+
+              {leak && (
+                <button onClick={() => onNav({ __leak: leak.cat })} style={{width:"100%",background:C.bgCard,border:`1px solid ${C.border}`,borderLeft:`4px solid #CC1F2B`,borderRadius:14,padding:".85rem 1rem",cursor:"pointer",textAlign:"left",color:C.white,fontFamily:FONT.body,marginBottom:".85rem",display:"flex",alignItems:"center",gap:".8rem"}}>
+                  <span style={{fontSize:24}}>🔧</span>
+                  <span style={{flex:1}}>
+                    <span style={{display:"block",fontSize:10.5,fontWeight:800,letterSpacing:".14em",textTransform:"uppercase",color:"#e05563"}}>Leak Finder</span>
+                    <span style={{display:"block",fontFamily:FONT.display,fontSize:"1.05rem"}}>{leak.cat} · {leak.pct}% over {leak.n} reads</span>
+                    <span style={{display:"block",fontSize:11.5,color:C.dim}}>Patch it with a focused session</span>
+                  </span>
+                  <span style={{fontSize:18,color:C.dim}}>→</span>
+                </button>
+              )}
+
+              <button onClick={() => onNav("challenges")} style={{width:"100%",background:C.bgCard,border:`1px solid ${C.border}`,borderRadius:14,padding:".85rem 1rem",cursor:"pointer",textAlign:"left",color:C.white,fontFamily:FONT.body,marginBottom:"1rem",display:"flex",alignItems:"center",gap:".8rem"}}>
+                <span style={{fontSize:24}}>🗺️</span>
+                <span style={{flex:1}}>
+                  <span style={{display:"block",fontFamily:FONT.display,fontSize:"1.05rem"}}>Challenges</span>
+                  <span style={{display:"block",fontSize:11.5,color:C.dim}}>Daily Drill · Speed Round · Weekly — clear the path to unlock more</span>
+                </span>
+                <span style={{fontSize:18,color:C.dim}}>→</span>
+              </button>
+            </>);
+          } catch { return null; }
+        })()}
+
         {/* Quick action grid */}
         <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:".75rem",marginBottom:"1rem"}}>
           <button onClick={() => onNav("quiz")} style={{background:`linear-gradient(135deg,rgba(207,69,32,.15),rgba(207,69,32,.05))`,border:`1px solid ${C.purpleBorder}`,borderRadius:14,padding:"1.1rem",cursor:"pointer",textAlign:"left",color:C.white,fontFamily:FONT.body,position:"relative",overflow:"hidden"}}>
@@ -1532,6 +1680,16 @@ function Home({ player, onNav, demoMode, subscriptionTier, questFlagsBump, onPro
                 <div style={{fontSize:10,letterSpacing:".14em",textTransform:"uppercase",color:C.purple,fontWeight:800}}>Game Sense Profile</div>
                 <div style={{fontSize:12,color:C.dim,marginTop:1}}>Spider chart · Competencies · Trend</div>
               </div>
+            </div>
+          </div>
+        </button>
+
+        <button onClick={() => onNav("cogym")} style={{width:"100%",display:"block",textAlign:"left",background:`linear-gradient(135deg,rgba(91,164,232,.14),rgba(91,164,232,.03))`,border:`1px solid rgba(91,164,232,.35)`,borderRadius:14,padding:"1rem 1.1rem",cursor:"pointer",color:C.white,fontFamily:FONT.body,marginBottom:"1rem",position:"relative",overflow:"hidden"}}>
+          <div style={{display:"flex",alignItems:"center",gap:".6rem"}}>
+            <span style={{fontSize:20}}>🧠</span>
+            <div>
+              <div style={{fontSize:10,letterSpacing:".14em",textTransform:"uppercase",color:"#5ba4e8",fontWeight:800}}>Brain Gym</div>
+              <div style={{fontSize:12,color:C.dim,marginTop:1}}>Anticipation · Awareness · Reaction</div>
             </div>
           </div>
         </button>
@@ -1592,7 +1750,7 @@ function Home({ player, onNav, demoMode, subscriptionTier, questFlagsBump, onPro
               <span style={{fontFamily:FONT.display,fontWeight:800,fontSize:13,color:C.white,letterSpacing:".02em"}}>What's New</span>
             </div>
             <div style={{display:"flex",alignItems:"center",gap:".5rem"}}>
-              <span style={{fontSize:10,color:C.dimmer,fontWeight:600}}>v{VERSION} · {CHANGELOG[0].date}</span>
+              <span style={{fontSize:10,color:C.dimmer,fontWeight:600}}>Beta v{VERSION.replace(/-beta$/,"")} · {CHANGELOG[0].date}</span>
               <button onClick={dismissWhatsNew} aria-label="Dismiss" style={{background:"none",border:"none",color:C.dimmer,fontSize:14,cursor:"pointer",padding:"0 2px",lineHeight:1}}>✕</button>
             </div>
           </div>
@@ -1629,7 +1787,7 @@ function useQuizState() {
 // ─────────────────────────────────────────────────────────
 // QUIZ SCREEN
 // ─────────────────────────────────────────────────────────
-function Quiz({ player, onFinish, onBack, tier, onUpgrade }) {
+function Quiz({ player, onFinish, onBack, tier, onUpgrade, focus = null }) {
   const isReturning = player.quizHistory.length > 0;
   const isDemo = !player.id || isEphemeralPlayer(player.id);
   // First-time quizzes (no session history yet) are capped at 5 so the
@@ -1708,7 +1866,7 @@ function Quiz({ player, onFinish, onBack, tier, onUpgrade }) {
       if (cancelled) return;
       let allQs;
       if (isDemo) {
-        const demoQs = buildDemoQueue(qb, player.level, player.position);
+        const demoQs = buildDemoQueue(qb, player.level, player.position, focus);
         // First-question text guarantee: while image fetches are still
         // warming up, surface a text question first so the user has
         // something to read while everything loads. Find the first
@@ -1720,7 +1878,7 @@ function Quiz({ player, onFinish, onBack, tier, onUpgrade }) {
         setQuestion(demoQs[0]);
         allQs = demoQs;
       } else {
-        const q = buildQueue(qb, player.level, player.position, isReturning, tier);
+        const q = buildQueue(qb, player.level, player.position, isReturning, tier, focus);
         let { q: first, queue: q2 } = pullNext(q, []);
         // Same text-first guarantee for adaptive queues — if pullNext
         // happened to return an image-backed MC, swap with the first
@@ -1754,7 +1912,7 @@ function Quiz({ player, onFinish, onBack, tier, onUpgrade }) {
     }).catch(e => console.error("QB load error:", e));
     if (!isDemo) SB.getQuestionStats().then(setStatsMap).catch(() => {});
     return () => { cancelled = true; };
-  }, []);
+  }, [focus?.conceptId, focus?.cat]); // eslint-disable-line react-hooks/exhaustive-deps
 
   // Reset the speed-bonus timer whenever the displayed question changes.
   useEffect(() => {
@@ -1912,6 +2070,21 @@ function Quiz({ player, onFinish, onBack, tier, onUpgrade }) {
     ? rinkQResult !== null
     : (qtype === "seq" || qtype === "multi" || qtype === "scenario") ? seqAnswered
     :                          sel !== null;
+
+  // Read the question aloud (browser TTS) when "read aloud" is on, for the
+  // plain question types. Auto-fires on each new question; the 🔊 button in
+  // the header replays on demand. Scenario questions read themselves inside
+  // ScenarioRenderer, so they're excluded here to avoid double-reads. Cancels
+  // on question change/unmount so reads don't pile up when advancing.
+  useEffect(() => {
+    if (!q || isRinkQ || !READ_ALOUD_TYPES.has(qtype)) return;
+    if (ttsSupported() && getReadAloud()) {
+      speakParts(questionSpeechParts(q, qtype));
+    }
+    return () => stopSpeaking();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [q?.id, qtype]);
+
   if (!q) {
     // Distinguish "still loading the bank" (queue not built yet) from
     // "queue is built but empty" (ids filter matched zero questions).
@@ -2066,6 +2239,11 @@ function Quiz({ player, onFinish, onBack, tier, onUpgrade }) {
           <Pill color={typeInfo.color}>{typeInfo.icon} {typeInfo.label}</Pill>
           <Pill color={C.dimmer} bg={C.dimmest}>{q.cat}</Pill>
           {q.concept && <Pill color={C.dimmer} bg={C.dimmest}>{q.concept}</Pill>}
+          {ttsSupported() && getReadAloud() && !isRinkQ && READ_ALOUD_TYPES.has(qtype) && (
+            <button onClick={() => speakParts(questionSpeechParts(q, qtype))}
+              title="Read the question aloud" aria-label="Read the question aloud"
+              style={{marginLeft:"auto",background:"transparent",border:"none",color:C.purple,fontSize:18,cursor:"pointer",lineHeight:1,padding:0}}>🔊</button>
+          )}
         </div>
 
         {/* Diagram */}
@@ -3525,9 +3703,11 @@ function WeeklyQuiz({ player, onBack, onFinish }) {
               const isTrue = i === 0;
               const isSelected = sel === (isTrue ? "true" : "false");
               const isCorrect = isTrue === q.ok;
-              const revealColor = sel !== null ? (isCorrect ? C.green : C.red) : null;
+              const cbOK = player.colorblind ? "#2563eb" : C.green;
+              const cbNo = player.colorblind ? "#ea580c" : C.red;
+              const revealColor = sel !== null ? (isCorrect ? cbOK : cbNo) : null;
               return (
-                <button key={label} onClick={() => handleTF(isTrue)} disabled={sel !== null} style={{background:isSelected?(isCorrect?"rgba(34,197,94,.15)":"rgba(239,68,68,.15)"):C.bgElevated,border:`2px solid ${revealColor && isSelected ? revealColor : (revealColor && isCorrect && sel !== null ? revealColor : C.border)}`,borderRadius:12,padding:"1.25rem",cursor:sel!==null?"default":"pointer",fontWeight:700,fontSize:16,color:isSelected?(isCorrect?C.green:C.red):C.white,fontFamily:FONT.body}}>
+                <button key={label} onClick={() => handleTF(isTrue)} disabled={sel !== null} style={{background:isSelected?(isCorrect?(player.colorblind?"rgba(37,99,235,.15)":"rgba(34,197,94,.15)"):(player.colorblind?"rgba(234,88,12,.15)":"rgba(239,68,68,.15)")):C.bgElevated,border:`2px solid ${revealColor && isSelected ? revealColor : (revealColor && isCorrect && sel !== null ? revealColor : C.border)}`,borderRadius:12,padding:"1.25rem",cursor:sel!==null?"default":"pointer",fontWeight:700,fontSize:16,color:isSelected?(isCorrect?cbOK:cbNo):C.white,fontFamily:FONT.body}}>
                   {label}
                 </button>
               );
@@ -3719,7 +3899,7 @@ function GoalsScreen({ player, onSave, onBack }) {
             <textarea
               value={currentGoal[step]||""}
               onChange={e => updateGoal(active,step,e.target.value)}
-              placeholder={example[step] ? `Write your answer here... e.g. "${example[step]}"` : "Write your answer here..."}
+              placeholder={example[step] ? `Write your answer here… e.g. "${example[step]}"` : "Write your answer here…"}
               rows={3}
               style={{background:C.bgElevated,border:`1px solid ${C.border}`,borderRadius:10,padding:".75rem 1rem",color:C.white,fontSize:13,fontFamily:FONT.body,width:"100%",outline:"none",resize:"none",lineHeight:1.6}}
             />
@@ -4750,7 +4930,7 @@ function CompetencyValidation() {
   }, []);
 
   if (!report) {
-    return <div style={{ padding: "1.5rem", color: C.dimmer }}>Loading analysis...</div>;
+    return <div style={{ padding: "1.5rem", color: C.dimmer }}>Loading analysis…</div>;
   }
 
   return (
@@ -5029,6 +5209,9 @@ function QuestionPreviewPage({ questionId }) {
   const [err, setErr] = useState(null);
   const [key, setKey] = useState(0); // forces a re-mount on Retry
   const [verdict, setVerdict] = useState(null); // "ok" | "wrong" | null
+  const [note, setNote] = useState("");
+  const [savedVerdict, setSavedVerdict] = useState(null); // "keep" | "revise" | "retire"
+  const [pending, setPending] = useState(0);
   useEffect(() => {
     let cancelled = false;
     loadQB().then(qb => {
@@ -5043,6 +5226,20 @@ function QuestionPreviewPage({ questionId }) {
     }).catch(e => { if (!cancelled) setErr(e.message || String(e)); });
     return () => { cancelled = true; };
   }, [questionId]);
+
+  // Seed the verdict + note from any review already saved for this question.
+  useEffect(() => {
+    if (!question?.id) return;
+    const saved = getSavedReview(question.id);
+    if (saved) { setSavedVerdict(saved.verdict); setNote(saved.note || ""); }
+  }, [question?.id]);
+
+  async function saveReview(v) {
+    if (!question) return;
+    enqueueReview({ scenario_id: question.id, verdict: v, note: note.trim(), board_hash: boardHash(question) });
+    setSavedVerdict(v);
+    setPending(await flushQueue());
+  }
 
   if (err) {
     return (
@@ -5085,6 +5282,25 @@ function QuestionPreviewPage({ questionId }) {
         </div>
       )}
       <QuestionPlayerView question={question} onAnswer={(ok) => setVerdict(ok ? "ok" : "wrong")} />
+
+      {/* Review controls — KEEP/REVISE/RETIRE + comment, saved to the same
+          scenario_reviews store as the #triage deck (npm run pull-reviews reads it). */}
+      <div style={{marginTop:"1.2rem",borderTop:`1px solid ${C.border}`,paddingTop:".9rem"}}>
+        <div style={{fontSize:10,letterSpacing:".14em",textTransform:"uppercase",color:C.dimmer,fontWeight:700,marginBottom:".5rem"}}>
+          Your review{savedVerdict ? ` · saved: ${savedVerdict.toUpperCase()}` : ""}{pending ? ` · ${pending} syncing` : ""}
+        </div>
+        <textarea value={note} onChange={e => setNote(e.target.value)}
+          placeholder="comments — what to revise, what's missing (your keyboard mic works)…"
+          style={{width:"100%",minHeight:64,padding:".6rem",borderRadius:8,border:`1px solid ${C.border}`,background:C.bgCard,color:C.white,fontFamily:FONT.body,fontSize:13,boxSizing:"border-box",resize:"vertical"}}/>
+        <div style={{display:"flex",gap:".5rem",marginTop:".6rem"}}>
+          {[["keep","KEEP",C.green,C.greenDim,C.greenBorder],["revise","REVISE",C.gold,C.goldDim,C.goldBorder],["retire","RETIRE",C.red,C.redDim,C.redBorder]].map(([v,label,col,dim,bd]) => (
+            <button key={v} onClick={() => saveReview(v)}
+              style={{flex:1,padding:".8rem 0",borderRadius:10,border:`1px solid ${savedVerdict===v?col:bd}`,background:dim,color:col,fontWeight:800,fontFamily:FONT.body,fontSize:".95rem",cursor:"pointer"}}>
+              {label}{savedVerdict===v?" ✓":""}
+            </button>
+          ))}
+        </div>
+      </div>
     </div>
   );
 }
@@ -5547,6 +5763,9 @@ function Profile({ player, onSave, onBack, onReset, demoMode, tier, onUpgrade, u
             ))}
           </div>
         </Card>
+        {/* ALL_AGES_MODE (temporary): hide the age-group switcher — the quiz
+            serves every level mixed, so a per-age control would be a dead knob. */}
+        {!ALL_AGES_MODE && (
         <Card style={{marginBottom:"1rem"}}>
           <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:".25rem"}}>
             <Label style={{marginBottom:0}}>Level</Label>
@@ -5570,6 +5789,7 @@ function Profile({ player, onSave, onBack, onReset, demoMode, tier, onUpgrade, u
             })}
           </div>
         </Card>
+        )}
         <Card style={{marginBottom:"1rem"}}>
           <Label>Season</Label>
           <div style={{display:"flex",gap:".5rem",flexWrap:"wrap"}}>
@@ -5580,8 +5800,9 @@ function Profile({ player, onSave, onBack, onReset, demoMode, tier, onUpgrade, u
           <Label>Quiz Preferences</Label>
           <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:".85rem"}}>
             <span style={{fontSize:13,color:C.dim}}>Colorblind mode</span>
-            <button onClick={()=>upd("colorblind")(!s.colorblind)} style={{background:s.colorblind?C.purpleDim:"none",border:`1px solid ${s.colorblind?C.purpleBorder:C.border}`,borderRadius:20,padding:".3rem .9rem",cursor:"pointer",color:s.colorblind?C.purple:C.dimmer,fontSize:12,fontFamily:FONT.body,fontWeight:700}}>{s.colorblind?"ON":"OFF"}</button>
+            <button onClick={()=>upd("colorblind")(!s.colorblind)} style={{background:s.colorblind?C.purpleDim:"none",border:`1px solid ${s.colorblind?C.purpleBorder:C.border}`,borderRadius:20,padding:".55rem .9rem",cursor:"pointer",color:s.colorblind?C.purple:C.dimmer,fontSize:12,fontFamily:FONT.body,fontWeight:700}}>{s.colorblind?"ON":"OFF"}</button>
           </div>
+          <ReadAloudToggle/>
           <div style={{display:"flex",justifyContent:"space-between",alignItems:"center"}}>
             <span style={{fontSize:13,color:C.dim}}>Session length</span>
             <div style={{display:"flex",gap:".4rem"}}>
@@ -5935,173 +6156,6 @@ function StudyScreen({ player, onBack, onNav, focusCompetency }) {
 // ─────────────────────────────────────────────────────────
 // DEMO MODE — coach preview only. Player demo was removed; players sign up.
 // question.cat → coach tilt code (see COACH_PERSONAS.tilts). null → head-coach fallback.
-const CAT_TO_TILT = {
-  "Orientation":    "h",
-  "Compete":        "p",
-  "Game Awareness": "h",
-  "Teamwork":       null,
-  "Scoring":        "s",
-  "Defense":        "d",
-  "Positioning":    "dm",
-  "Coachability":   "c",
-  // Level-specific + canonical categories. Post-2026-04-24 consolidation
-  // merged several variants (Decision Making/Decision Timing → Decision-Making,
-  // Breakout/Breakout Execution/Exiting the Zone → Breakouts, Goalie →
-  // Goaltending, Transition Game → Transition, Support → Puck Support).
-  "Decision-Making":   "dm",
-  "Breakouts":         "h",
-  "Rush Reads":        "h",
-  "Zone Entry":        "h",
-  "Special Teams":     null,
-  "Shot Selection":    "s",
-  "Defensive Zone":    "d",
-  "Coverage":          "d",
-  "Puck Protection":   "p",
-  "Puck Support":      "dm",
-  "Blue Line Decisions":"dm",
-  "Blue Line Reads":   "h",
-  "Systems Play":      null,
-  "Transition":        "h",
-  "Gap Control":       "d",
-  "Physical Play":     "p",
-  "Leadership":        "c",
-  "Game Management":   "h",
-  "Advanced Tactics":  "dm",
-  "Neutral Zone Play": "h",
-  "Goaltending":       "d",
-  "Finishing":         "s",
-  "Vision":            "h",
-  "Zone Awareness":    "h",
-};
-
-// Age-tier key used to pick how silly / how dry the coach's voice gets.
-//   young = U7/U9 (silly, wholesome, parent-winks)
-//   mid   = U11/U13 (dry one-liners kids + parents both catch)
-//   older = U15/U18 (sports-talk-radio sarcasm; still PG)
-function getAgeTier(level) {
-  if (!level) return "mid";
-  if (/U(5|7|9)/.test(level) || /Initiation|Timbits|Novice/i.test(level)) return "young";
-  if (/U(15|18)/.test(level) || /Bantam|Midget/i.test(level)) return "older";
-  return "mid";
-}
-
-// Coach personas. Three voices, sprinkled across every age group. Each
-// coach carries its own age-tiered flavor pools so the short zinger above
-// the teaching tip matches the player's age without losing the persona.
-const COACH_PERSONAS = [
-  {
-    id: "kincaid",
-    name: "Coach Kincaid",
-    role: "Head Coach",
-    archetype: "technical",
-    imageUrl: "/assets/coaches/kincaid.png",
-    tilts: ["dm", "h"],
-    summary: "Sees every detail on tape and loves a teaching moment — plays hard, coaches harder, brings the one-liners.",
-    // Tight 1–2 word lines per coach. The teaching content is the question's
-    // q.tip, not the flavor; flavor is just the coach's reaction.
-    flavorCorrect: {
-      young: ["Yes.", "Right.", "Smart.", "Sharp.", "Good.", "Yep.", "Locked in.", "Hockey brain.", "There it is.", "Acceptable.", "Fine — I'll allow it."],
-      mid:   ["Yes.", "Right.", "Smart.", "Sharp.", "Clinic.", "Locked in.", "Crisp.", "Acceptable.", "Hockey brain.", "There it is.", "Fine — I noticed."],
-      older: ["Correct.", "Sharp.", "Crisp.", "Clinic.", "Locked in.", "Surgical.", "Scout-report stuff.", "No notes.", "Acceptable."],
-    },
-    flavorIncorrect: {
-      young: ["No.", "Reset.", "Read it.", "Try again.", "Slow it down.", "Look up.", "Brain back on.", "Whiteboard."],
-      mid:   ["No.", "Reset.", "Read it.", "Try again.", "Tighten up.", "Watch the tape.", "Wrong call.", "Slow it down."],
-      older: ["No.", "Reset.", "Tighten up.", "Watch the tape.", "Wrong call.", "Read it.", "Whiteboard."],
-    },
-  },
-  {
-    id: "danno",
-    name: "Coach Danno",
-    role: "Skills Coach",
-    archetype: "chill",
-    imageUrl: "/assets/coaches/danno.png",
-    tilts: ["s", "p"],
-    summary: "Low-key, high-reps, never loses the room. Gets guys to relax, skate through mistakes, and stack clean shifts.",
-    flavorCorrect: {
-      young: ["Nice, bud.", "Yes!", "Beauty.", "Love it.", "Smooth.", "There it is.", "Yeah, bud.", "Easy.", "Sweet.", "Heck yeah.", "Money.", "Slick.", "Big read.", "Locked in."],
-      mid:   ["Nice read.", "Beauty.", "Love it.", "Smooth.", "There it is.", "Locked in.", "Big read.", "Easy.", "Slick.", "Pro habit."],
-      older: ["Beauty.", "Smooth.", "Love it.", "Locked in.", "Pro habit.", "Veteran move.", "Honest hockey.", "Quiet confidence.", "Nothing flashy."],
-    },
-    flavorIncorrect: {
-      young: ["All good, bud.", "Shake it.", "Next one.", "Reset.", "Close.", "Almost.", "No worries.", "Easy fix.", "Keep skating."],
-      mid:   ["Shake it.", "Reset.", "Close.", "Next shift.", "Easy adjust.", "Small fix.", "Keep going."],
-      older: ["Reset.", "Shake it.", "Wash it.", "Next shift.", "Small miss.", "Easy fix."],
-    },
-  },
-  {
-    id: "marques",
-    name: "Coach Marques",
-    role: "Mental Performance Coach",
-    archetype: "motivator",
-    imageUrl: "/assets/coaches/marques.png",
-    tilts: ["c"],
-    summary: "Belief factory. Keeps the tank full, turns missed shifts into fuel, and gets the most out of every player in the room.",
-    flavorCorrect: {
-      young: ["YES!", "BOOM!", "LET'S GO!", "BIG read!", "MONEY!", "FIRE!", "Locked in!", "SUPERSTAR.", "On FIRE!", "Champion."],
-      mid:   ["YESSIR.", "BIG TIME.", "ELITE.", "Locked.", "MONEY.", "Championship.", "Built for this.", "BIG read.", "Sending it."],
-      older: ["Elite.", "Pro-level.", "Locked in.", "Championship.", "World-class.", "BIG moment.", "Scouting-reel.", "Quietly elite."],
-    },
-    flavorIncorrect: {
-      young: ["Reset.", "Next one.", "Believe.", "Champion.", "Shake it.", "Growth.", "I believe.", "Try again.", "You got this."],
-      mid:   ["Reset.", "Next rep.", "Growth moment.", "Trust it.", "Believe.", "Shake it.", "Long game."],
-      older: ["Reset.", "Move.", "Own it.", "Short memory.", "Decide.", "Metabolize.", "Use it."],
-    },
-  },
-  {
-    id: "kowalski",
-    name: "Coach Kowalski",
-    role: "Assistant Coach",
-    archetype: "deadpan",
-    imageUrl: "/assets/coaches/kowalski.png",
-    tilts: ["d"],
-    summary: "Old-school, dry as chalk, speaks about six words per shift — but the ones that land, land hard. Has literally seen it all.",
-    flavorCorrect: {
-      young: ["Mm.", "Sure.", "Yep.", "Acceptable.", "Allowed.", "Decent.", "Correct.", "Fine.", "Hm.", "Solid."],
-      mid:   ["Mm.", "Sure.", "Correct.", "Acceptable.", "Solid.", "Functional.", "Serviceable.", "Hm."],
-      older: ["Mm.", "Quietly good.", "Solid.", "Veteran.", "Correct.", "No notes.", "Textbook."],
-    },
-    flavorIncorrect: {
-      young: ["No.", "Hm.", "Reset.", "Try again.", "Mm-mm.", "Not it.", "Move on.", "Whatever."],
-      mid:   ["No.", "Hm.", "Reset.", "Wrong.", "Try again.", "Filed."],
-      older: ["No.", "Hm.", "Reset.", "Filed.", "Move on.", "Noted.", "Delete."],
-    },
-  },
-];
-
-// All three personas show up at every age group — user wants them sprinkled
-// everywhere, not siloed by level. `goalie` overrides kept so goalies at
-// older ages see a specialized coach assignment in the roster view.
-const DEMO_ROSTERS = {
-  "U7 / Initiation": { all: ["kincaid", "danno", "marques", "kowalski"] },
-  "U9 / Novice":     { all: ["kincaid", "danno", "marques", "kowalski"] },
-  "U11 / Atom":      { all: ["kincaid", "danno", "marques", "kowalski"] },
-  "U13 / Peewee":    { all: ["kincaid", "danno", "marques", "kowalski"] },
-  "U15 / Bantam":    { all: ["kincaid", "danno", "marques", "kowalski"] },
-  "U18 / Midget":    { all: ["kincaid", "danno", "marques", "kowalski"] },
-};
-function getDemoCoachRoster(level, position) {
-  const r = DEMO_ROSTERS[level] || DEMO_ROSTERS["U9 / Novice"];
-  const ids = (position === "Goalie" && r.goalie) ? r.goalie : r.all;
-  return ids.map(id => COACH_PERSONAS.find(p => p.id === id)).filter(Boolean);
-}
-
-function getCoachForQuestion(question, playerLevel, playerPosition) {
-  const tilt = question?.cat ? CAT_TO_TILT[question.cat] : null;
-  const roster = getDemoCoachRoster(playerLevel, playerPosition) || COACH_PERSONAS;
-  if (tilt) {
-    const match = roster.find(c => c.tilts?.includes(tilt));
-    if (match) return match;
-  }
-  // No category tilt → rotate across the full 3-persona roster so every
-  // coach gets air time. Deterministic by question id so the same question
-  // always gets the same voice.
-  if (roster.length) {
-    const seed = (question?.id || "").split("").reduce((a, c) => a + c.charCodeAt(0), 0);
-    return roster[seed % roster.length];
-  }
-  return COACH_PERSONAS[0];
-}
 
 // Skill IDs look like "u11s2" (skating-2), "u13dm4" (decision-making-4). Extract the domain prefix.
 function skillDomain(skillId) {
@@ -6606,7 +6660,7 @@ function AuthScreen({ onAuthenticated, onDemo, onDevEnter, onPreview, prefill })
 
         {/* Dev bypass panel — gated by rinkreads_dev_bypass LS flag; invisible
             to real users. Jump straight into any state without email/password. */}
-        {devBypass && (
+        {(import.meta.env.VITE_ENABLE_DEV_BYPASS === "1" && devBypass) && (
           <div style={{background:"rgba(147,51,234,0.12)",border:"1px solid rgba(168,85,247,0.4)",borderRadius:12,padding:"0.85rem 1rem",marginBottom:"1.25rem",color:C.white,fontFamily:FONT.body}}>
             <div style={{display:"flex",alignItems:"center",gap:".5rem",marginBottom:".65rem"}}>
               <span style={{fontSize:14}}>🧪</span>
@@ -6656,6 +6710,12 @@ function AuthScreen({ onAuthenticated, onDemo, onDevEnter, onPreview, prefill })
               style={{width:"100%",background:"linear-gradient(135deg,#a855f7,#7c3aed)",color:"#fff",border:"none",borderRadius:10,padding:".6rem",cursor:"pointer",fontFamily:FONT.body,fontWeight:700,fontSize:13}}>
               Enter as dev →
             </button>
+            {/* Owner review tools — jump straight to the board grid / triage deck
+                without logging in (the screens' auth gate honours dev bypass). */}
+            <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:".4rem",marginTop:".4rem"}}>
+              <a href="#browse" style={{textAlign:"center",background:"rgba(255,255,255,0.04)",border:"1px solid rgba(168,85,247,0.4)",borderRadius:8,padding:".45rem",cursor:"pointer",color:"#e9d5ff",fontFamily:FONT.body,fontSize:12,fontWeight:600,textDecoration:"none"}}>🗂 Browse grid</a>
+              <a href="#triage" style={{textAlign:"center",background:"rgba(255,255,255,0.04)",border:"1px solid rgba(168,85,247,0.4)",borderRadius:8,padding:".45rem",cursor:"pointer",color:"#e9d5ff",fontFamily:FONT.body,fontSize:12,fontWeight:600,textDecoration:"none"}}>🃏 Triage deck</a>
+            </div>
             <div style={{fontSize:10,color:"rgba(196,181,253,.55)",marginTop:".5rem",lineHeight:1.5}}>
               Console: <code style={{color:"#e9d5ff"}}>window.__dev</code> — <code style={{color:"#e9d5ff"}}>setTier</code>, <code style={{color:"#e9d5ff"}}>markFirstSixDone</code>, <code style={{color:"#e9d5ff"}}>reset</code>, <code style={{color:"#e9d5ff"}}>exitBypass</code>
             </div>
@@ -6728,7 +6788,7 @@ function AuthScreen({ onAuthenticated, onDemo, onDevEnter, onPreview, prefill })
         {mode === "signup" && (
           <>
             <div style={{marginBottom:"1rem"}}>
-              <div style={{fontSize:10,letterSpacing:".14em",textTransform:"uppercase",color:C.dimmer,fontWeight:700,marginBottom:".5rem"}}>I am a...</div>
+              <div style={{fontSize:10,letterSpacing:".14em",textTransform:"uppercase",color:C.dimmer,fontWeight:700,marginBottom:".5rem"}}>I am a…</div>
               <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:".5rem"}}>
                 {[{v:"player",l:"Parent/Guardian (on behalf of player)",i:"👪"},{v:"coach",l:"Coach",i:"👨‍🏫"}].map(o => (
                   <button key={o.v} onClick={()=>setRole(o.v)} style={{background:role===o.v?C.goldDim:C.bgCard,border:`1px solid ${role===o.v?C.gold:C.border}`,borderRadius:10,padding:".75rem",cursor:"pointer",color:role===o.v?C.gold:C.dim,fontFamily:FONT.body,fontWeight:role===o.v?700:500,fontSize:13,display:"flex",alignItems:"center",justifyContent:"center",gap:".4rem"}}>
@@ -6750,12 +6810,12 @@ function AuthScreen({ onAuthenticated, onDemo, onDevEnter, onPreview, prefill })
           <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:".5rem",marginBottom:".65rem"}}>
             <div style={{background:C.bgCard,border:`1px solid ${C.border}`,borderRadius:10,padding:".6rem .85rem"}}>
               <div style={{fontSize:10,letterSpacing:".1em",textTransform:"uppercase",color:C.dimmer,fontWeight:700,marginBottom:2}}>Email</div>
-              <input type="email" value={email} onChange={e=>setEmail(e.target.value)} placeholder="you@example.com" autoComplete="email"
+              <input type="email" value={email} onChange={e=>setEmail(e.target.value)} onKeyDown={e=>{if(e.key==="Enter"&&!loading)submit();}} placeholder="you@example.com" autoComplete="email"
                 style={{background:"none",border:"none",color:C.white,fontSize:14,fontFamily:FONT.body,width:"100%",outline:"none",padding:0}}/>
             </div>
             <div style={{background:C.bgCard,border:`1px solid ${C.border}`,borderRadius:10,padding:".6rem .85rem"}}>
               <div style={{fontSize:10,letterSpacing:".1em",textTransform:"uppercase",color:C.dimmer,fontWeight:700,marginBottom:2}}>Password</div>
-              <input type="password" value={password} onChange={e=>setPassword(e.target.value)} placeholder={mode==="signup"?"6+ chars":"••••••"} autoComplete={mode==="signup"?"new-password":"current-password"}
+              <input type="password" value={password} onChange={e=>setPassword(e.target.value)} onKeyDown={e=>{if(e.key==="Enter"&&!loading)submit();}} placeholder={mode==="signup"?"6+ chars":"••••••"} autoComplete={mode==="signup"?"new-password":"current-password"}
                 style={{background:"none",border:"none",color:C.white,fontSize:14,fontFamily:FONT.body,width:"100%",outline:"none",padding:0}}/>
             </div>
           </div>
@@ -6780,7 +6840,7 @@ function AuthScreen({ onAuthenticated, onDemo, onDevEnter, onPreview, prefill })
 
         {/* Big primary button — bigger than the email/password fields */}
         <button onClick={submit} disabled={loading} style={{width:"100%",background:C.gold,color:C.bg,border:"none",borderRadius:12,padding:"1.1rem",cursor:loading?"default":"pointer",fontWeight:800,fontSize:17,fontFamily:FONT.body,letterSpacing:".02em",boxShadow:`0 4px 16px ${C.gold}33`}}>
-          {loading ? "…" : (mode === "signup" ? "Create Account →" : mode === "forgot" ? "Send Reset Link →" : "Sign In →")}
+          {loading ? (mode === "signup" ? "Creating account…" : mode === "forgot" ? "Sending…" : "Signing in…") : (mode === "signup" ? "Create Account →" : mode === "forgot" ? "Send Reset Link →" : "Sign In →")}
         </button>
 
         {/* Forgot password link — visible only on login mode */}
@@ -7488,6 +7548,9 @@ export default function App() {
   demoModeRef.current = demoMode;
   const [demoCoachRatings, setDemoCoachRatings] = useState(null);
   const [screen, setScreen] = useState("home");
+  // Skill Path lesson focus — when set, the next quiz session is scoped
+  // to this ledger node's concept and its result clears/stars the node.
+  const [pathFocus, setPathFocus] = useState(null); // pathNode | null
   const [prevScore, setPrevScore] = useState(null);
   const [totalSessions, setTotalSessions] = useState(0);
   const [quizResults, setQuizResults] = useState([]);
@@ -7757,7 +7820,7 @@ export default function App() {
         if (saved.role === "coach") {
           enterDevBypass({ role: "coach", name: saved.name });
         } else {
-          enterDevBypass({ role: "player", level: saved.level, position: saved.position, name: saved.name });
+          enterDevBypass({ role: "player", level: saved.level, position: saved.position, name: saved.name, quizHistory: saved.quizHistory });
         }
       }
     }
@@ -7885,6 +7948,19 @@ export default function App() {
       const sd = updateStreak(getStreakData());
       localStorage.setItem("rinkreads_streak", JSON.stringify(sd));
     } catch(e) {}
+    // Skill Path: a lesson launched from a path node clears/stars that
+    // node. Reward-only — a rough lesson just leaves the node active.
+    if (pathFocus?.conceptId) {
+      try {
+        const correct = results.filter(r => r.ok).length;
+        const out = recordNodeResult(player?.id || "__demo__", pathFocus.band, pathFocus, { correct, total: results.length });
+        if (out.firstClear) {
+          toast.celebrate({ title: `${pathFocus.name} cleared!`, body: `+${out.xpEarned} XP · ${"★".repeat(out.stars)} — the path rolls on.`, icon: "🏒" });
+        } else if (out.cleared && out.xpEarned > 0) {
+          toast.celebrate({ title: `+${out.xpEarned} XP`, body: `${pathFocus.name} · best ${"★".repeat(out.stars)}`, icon: "⚡" });
+        }
+      } catch {}
+    }
     // Bump the weekly + category streaks and fire celebrate toasts on
     // meaningful milestones. Best-effort — silent on LS failure.
     if (player?.id && !isEphemeralPlayer(player.id)) {
@@ -7964,7 +8040,15 @@ export default function App() {
     const qid = decodeURIComponent(hashRoute.slice(2));
     return <QuestionPreviewPage questionId={qid}/>;
   }
-  if (hashRoute === "playtest") {
+  // Owner-only raw play test harness. Gated the same way the dev-bypass panel
+  // is (App.jsx ~6829): VITE_ENABLE_DEV_BYPASS=1 AND (LS flag or `npm run dev`).
+  // So it can't be reached pre-auth on the production beta build, or on a
+  // bare local `npm run dev` without the env flag set. (`#playtest`)
+  if (
+    hashRoute === "playtest" &&
+    import.meta.env.VITE_ENABLE_DEV_BYPASS === "1" &&
+    (isDevBypassEnabled() || (typeof import.meta !== "undefined" && import.meta.env && import.meta.env.DEV))
+  ) {
     return <RinkPlayTest/>;
   }
   // Scenario playground — flip through + play every seed in the real engine
@@ -7976,6 +8060,14 @@ export default function App() {
   // (tools/review-server-plugin.mjs), so it only functions under `npm run dev`.
   if (hashRoute === "review") {
     return <ReviewDashboard/>;
+  }
+  // Owner-only mobile triage deck (Supabase-backed, works in production). Auth-gated inside ReviewScreen. (`#triage`)
+  if (hashRoute === "triage") {
+    return <Suspense fallback={<LazyFallback/>}><ReviewScreen onBack={() => { window.location.hash = ""; }}/></Suspense>;
+  }
+  // Owner-only browse grid of all boards (Supabase-backed). (`#browse`)
+  if (hashRoute === "browse") {
+    return <Suspense fallback={<LazyFallback/>}><BrowseScreen onBack={() => { window.location.hash = ""; }}/></Suspense>;
   }
 
   // Pre-auth hash route: parents can share rinkreads.com/#parents without logging in.
@@ -8145,14 +8237,16 @@ export default function App() {
       )}
 
       <div style={{paddingBottom: screen==="quiz"||screen==="results" ? 0 : 80}}>
-        {screen === "home"    && <Home player={tierLimitedPlayer(player, tier)} onNav={setScreen} demoMode={demoMode} subscriptionTier={tier} questFlagsBump={questFlagsBump} onPromptUpgrade={promptUpgrade} onBumpQuestFlags={bumpQuestFlags} onSaveProgress={() => triggerSignup("save_progress")} onFirstLine={() => setFirstLineToast(true)} onSignup={() => triggerSignup("quest_cta")}/>}
+        {screen === "home"    && <Home player={tierLimitedPlayer(player, tier)} onNav={(s)=>{ if (s && typeof s === "object" && s.__leak) { setPathFocus({ cat: s.__leak }); setScreen("quiz"); } else setScreen(s); }} demoMode={demoMode} subscriptionTier={tier} questFlagsBump={questFlagsBump} onPromptUpgrade={promptUpgrade} onBumpQuestFlags={bumpQuestFlags} onSaveProgress={() => triggerSignup("save_progress")} onFirstLine={() => setFirstLineToast(true)} onSignup={() => triggerSignup("quest_cta")}/>}
         {screen === "quiz"    && (demoMode && !profile?.__dev && (()=>{ try { return localStorage.getItem("rinkreads_demo_quiz_taken") === "1"; } catch { return false; } })()
           ? <DemoQuizCapScreen onBack={()=>setScreen("home")} onSignUp={exitDemo}/>
           : tier === "FREE" && !demoMode && isAtFreeQuizCap()
           ? <FreeQuizCapScreen onBack={()=>setScreen("home")} onUpgrade={()=>setScreen("plans")}/>
-          : <Quiz player={player} onFinish={handleQuizFinish} onBack={()=>setScreen("home")} tier={tier} onUpgrade={promptUpgrade}/>
+          : <Quiz key={pathFocus?.id || "free"} player={player} focus={pathFocus} onFinish={handleQuizFinish} onBack={()=>{ const wasPath = !!pathFocus?.nodeId; setPathFocus(null); setScreen(wasPath ? "path" : "home"); }} tier={tier} onUpgrade={promptUpgrade}/>
         )}
-        {screen === "results" && <Results results={quizResults} player={player} prevScore={prevScore} totalSessions={totalSessions} seqPerfect={seqPerfect} mistakeStreak={mistakeStreak} tier={tier} onAgain={()=>setScreen("quiz")} onHome={()=>setScreen("home")} showMilestoneBanner={showMilestone5Banner} onViewPlans={()=>{setShowMilestone5Banner(false);setScreen("plans");}}/>}
+        {screen === "results" && <Results results={quizResults} player={player} prevScore={prevScore} totalSessions={totalSessions} seqPerfect={seqPerfect} mistakeStreak={mistakeStreak} tier={tier} onAgain={()=>setScreen("quiz")} onHome={()=>{ const wasPath = !!pathFocus?.nodeId; setPathFocus(null); setScreen(wasPath ? "path" : "home"); }} showMilestoneBanner={showMilestone5Banner} onViewPlans={()=>{setShowMilestone5Banner(false);setScreen("plans");}}/>}
+        {screen === "path" && <PathScreen player={player} onBack={()=>setScreen("home")} onStartLesson={(node)=>{ setPathFocus(node); setScreen("quiz"); }}/>}
+        {screen === "challenges" && <ChallengesHub player={player} onBack={()=>setScreen("home")} onNav={setScreen}/>}
         {screen === "skills"  && <Skills player={player} tier={tier} onUpgrade={promptUpgrade} onSave={handleSkillsSave} onBack={()=>setScreen("home")}/>}
         {screen === "skills-onboarding" && <Suspense fallback={<LazyFallback/>}><SkillsOnboarding player={player} tier={tier} onUpgrade={promptUpgrade} onSave={async (r)=>{ await handleSkillsSave(r); setScreen("home"); }} onBack={()=>setScreen("home")}/></Suspense>}
         {screen === "insights" && <Suspense fallback={<LazyFallback/>}><InsightsScreen onBack={()=>setScreen("home")} onInsightRead={bumpQuestFlags}/></Suspense>}
@@ -8170,6 +8264,8 @@ export default function App() {
         {screen === "report"  && <Report player={tierLimitedPlayer(player, tier)} onBack={()=>setScreen("home")} demoCoachData={demoMode?demoCoachRatings:null} tier={tier} onUpgrade={(f,t)=>promptUpgrade(f,t)}/>}
         {screen === "gamesense" && <Suspense fallback={<LazyFallback/>}><GameSenseReportScreen player={player} onBack={()=>setScreen("home")} demoMode={demoMode} demoCoachData={demoMode?demoCoachRatings:null} onNavigate={setScreen}/></Suspense>}
         {screen === "journey" && <JourneyScreen player={player} tier={tier} demoMode={demoMode} onBack={()=>setScreen("home")} onNav={setScreen} onUpgrade={promptUpgrade}/>}
+        {screen === "cogym" && <CognitiveGym playerId={player.id || "__demo__"} ageBand={player?.level || null} onBack={()=>setScreen("home")}/>}
+        <FeedbackWidget screen={screen} version={VERSION} />
         {screen === "training" && (
           <div style={{minHeight:"100vh",background:C.bg,color:C.white,fontFamily:FONT.body,paddingBottom:80}}>
             <StickyHeader>
@@ -8546,4 +8642,5 @@ function CoachRatingScreenAuthed({ coach, player, playerLevel, onDone }) {
     </div>
   );
 }
+
 

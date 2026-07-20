@@ -1,0 +1,453 @@
+/* Cognitive Gym styles. All colors live in the :root-scoped block below —
+   edit that one block to match the RinkReads brand. */
+
+.gym-root {
+  --gym-bg: #0b1b2b;
+  --gym-panel: #112b44;
+  --gym-text: #eaf2f8;
+  --gym-muted: #9db8c9;
+  --gym-blue: #1b6cb0;
+  --gym-red: #c8102e;
+  --gym-gold: #f2b705;
+  --gym-orange: #e8590c;
+  --gym-signal-blue: #2e9fe6;
+  --gym-decoy: #7048e8;
+  --gym-radius: 14px;
+
+  background: var(--gym-bg);
+  color: var(--gym-text);
+  min-height: 100%;
+  padding: 20px 16px 40px;
+  box-sizing: border-box;
+}
+
+.gym-root *,
+.gym-root *:before,
+.gym-root *:after {
+  box-sizing: inherit;
+}
+
+/* Header */
+.gym-header h1 {
+  margin: 0 0 4px;
+  font-size: 1.7rem;
+  letter-spacing: 0.01em;
+}
+
+.gym-sub {
+  margin: 0 0 18px;
+  color: var(--gym-muted);
+  font-size: 0.95rem;
+  max-width: 46ch;
+}
+
+/* Stat row */
+.gym-stats {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 22px;
+}
+
+.gym-stat {
+  background: var(--gym-panel);
+  border: 1px solid #1e3f5f;
+  border-radius: var(--gym-radius);
+  padding: 10px 14px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: 84px;
+}
+
+.gym-stat-num {
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--gym-gold);
+  line-height: 1.1;
+}
+
+.gym-stat-label {
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--gym-muted);
+}
+
+/* Drill grid */
+.gym-grid {
+  display: grid;
+  gap: 12px;
+  grid-template-columns: 1fr;
+}
+
+@media (min-width: 700px) {
+  .gym-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+.gym-drill-card {
+  position: relative;
+  text-align: left;
+  background: var(--gym-panel);
+  border: 1px solid #1e3f5f;
+  border-radius: var(--gym-radius);
+  padding: 16px 80px 16px 16px; /* reserve room on the right for the icon */
+  color: var(--gym-text);
+  cursor: pointer;
+  transition: transform 0.12s ease, border-color 0.12s ease;
+  font: inherit;
+}
+
+/* Per-drill icon, vertically centered on the right (equidistant from top and
+   bottom borders, fixed margin from the right edge). */
+.gym-drill-icon {
+  position: absolute;
+  right: 16px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 54px;
+  height: 54px;
+  opacity: 0.92;
+  pointer-events: none;
+}
+.gym-drill-icon svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.gym-drill-card:hover,
+.gym-drill-card:focus-visible {
+  transform: translateY(-2px);
+  border-color: var(--gym-gold);
+  outline: none;
+}
+
+.gym-skill-tag {
+  display: inline-block;
+  font-size: 0.65rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--gym-bg);
+  background: var(--gym-gold);
+  border-radius: 999px;
+  padding: 3px 9px;
+  margin-bottom: 8px;
+  font-weight: 700;
+}
+
+.gym-drill-card h3 {
+  margin: 0 0 4px;
+  font-size: 1.1rem;
+}
+
+.gym-drill-card p {
+  margin: 0 0 12px;
+  color: var(--gym-muted);
+  font-size: 0.88rem;
+}
+
+.gym-card-meta {
+  display: flex;
+  gap: 12px;
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 0.78rem;
+  color: var(--gym-muted);
+}
+
+.gym-card-trains {
+  font-size: 0.78rem;
+  color: var(--gym-gold);
+  margin: -6px 0 12px !important;
+}
+
+/* Drill chrome */
+.gym-drill-bar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 14px;
+}
+
+.gym-chip {
+  background: var(--gym-panel);
+  border: 1px solid #1e3f5f;
+  border-radius: 999px;
+  padding: 5px 12px;
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 0.78rem;
+}
+
+/* Buttons */
+.gym-btn {
+  background: var(--gym-gold);
+  color: var(--gym-bg);
+  border: none;
+  border-radius: 10px;
+  padding: 11px 22px;
+  font-size: 0.95rem;
+  font-weight: 700;
+  cursor: pointer;
+  font-family: inherit;
+}
+
+.gym-btn:active {
+  transform: scale(0.98);
+}
+
+.gym-btn-ghost {
+  background: transparent;
+  color: var(--gym-muted);
+  border: 1px solid #1e3f5f;
+  font-weight: 600;
+}
+
+.gym-row {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+}
+
+/* Cards (intro / results) */
+.gym-card {
+  background: var(--gym-panel);
+  border: 1px solid #1e3f5f;
+  border-radius: var(--gym-radius);
+  padding: 24px 20px;
+  max-width: 440px;
+  margin: 24px auto;
+  text-align: center;
+}
+
+.gym-card h2 {
+  margin: 0 0 8px;
+}
+
+.gym-card p {
+  color: var(--gym-muted);
+  margin: 0 0 18px;
+  font-size: 0.95rem;
+}
+
+.gym-score {
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 3.4rem;
+  font-weight: 800;
+  color: var(--gym-gold);
+  line-height: 1;
+  margin-bottom: 8px;
+}
+
+.gym-hint {
+  text-align: center;
+  color: var(--gym-gold);
+  font-weight: 600;
+  margin: 0 0 10px;
+  min-height: 1.3em;
+}
+
+/* Canvas surface. setupCanvas sets an explicit pixel width (capped to fit the
+   viewport), so center it rather than stretch to the container. */
+.gym-canvas {
+  max-width: 100%;
+  margin: 0 auto;
+  border-radius: var(--gym-radius);
+  touch-action: none;
+  display: block;
+}
+
+/* Reaction-drill signal light */
+.gym-light {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  max-width: 440px;
+  height: 300px;
+  margin: 10px auto 0;
+  border: none;
+  border-radius: var(--gym-radius);
+  font-size: 1.9rem;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  cursor: pointer;
+  color: var(--gym-text);
+  background: var(--gym-panel);
+  touch-action: manipulation;
+  -webkit-user-select: none;
+  user-select: none;
+  font-family: inherit;
+}
+
+.gym-light.is-wait {
+  background: var(--gym-panel);
+  color: var(--gym-muted);
+}
+
+.gym-light.is-go {
+  background: var(--gym-signal-blue);
+  color: #06283d;
+}
+
+.gym-light.is-nogo {
+  background: var(--gym-orange);
+}
+
+.gym-light.is-decoy {
+  background: var(--gym-decoy);
+}
+
+.gym-light.is-good {
+  background: #0f4a7d;
+}
+
+.gym-light.is-bad {
+  background: #8a3a09;
+}
+
+.gym-key-hint {
+  text-align: center;
+  color: var(--gym-muted);
+  font-size: 0.85rem;
+  margin: 8px 0 0;
+}
+
+/* Advance button after a reveal — sits right under the canvas in normal
+   document flow (not fixed) so it is never hidden or unreachable. */
+.gym-fab {
+  display: block;
+  margin: 12px auto 0;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.3);
+}
+
+/* Gym-wide intro block */
+.gym-about {
+  background: var(--gym-panel);
+  border: 1px solid #1e3f5f;
+  border-radius: var(--gym-radius);
+  padding: 14px 16px;
+  margin: 0 0 18px;
+  max-width: 640px;
+}
+.gym-about h2 { margin: 0 0 6px; font-size: 1.05rem; }
+.gym-about p { margin: 0 0 8px; color: var(--gym-muted); font-size: 0.9rem; line-height: 1.45; }
+.gym-about ul { margin: 0; padding-left: 18px; color: var(--gym-text); font-size: 0.85rem; line-height: 1.5; }
+
+/* Goal line on intro cards */
+.gym-goal { color: var(--gym-gold); font-weight: 600; margin: 0 0 10px; }
+
+/* Game name shown at the top during play / results */
+.gym-drill-title {
+  margin: 0 0 10px;
+  font-size: 1.2rem;
+  text-align: center;
+  letter-spacing: 0.01em;
+  color: var(--gym-gold);
+}
+
+/* Head on a Swivel: left guide + main column */
+.gym-track-layout {
+  display: flex;
+  gap: 16px;
+  align-items: flex-start;
+}
+.gym-track-main {
+  flex: 1;
+  min-width: 0;
+}
+.gym-guide {
+  width: 210px;
+  flex-shrink: 0;
+  background: var(--gym-panel);
+  border: 1px solid #1e3f5f;
+  border-radius: var(--gym-radius);
+  padding: 14px 16px;
+}
+.gym-guide h3 {
+  margin: 0 0 8px;
+  font-size: 0.95rem;
+  color: var(--gym-gold);
+}
+.gym-guide ul {
+  margin: 0;
+  padding-left: 18px;
+  font-size: 0.82rem;
+  line-height: 1.5;
+  color: var(--gym-text);
+}
+.gym-guide-now {
+  margin: 10px 0 0;
+  padding-top: 8px;
+  border-top: 1px solid #1e3f5f;
+  font-size: 0.8rem;
+  color: var(--gym-muted);
+}
+@media (max-width: 720px) {
+  .gym-track-layout { flex-direction: column; }
+  .gym-guide { width: 100%; }
+}
+
+/* "What this trains" callout */
+.gym-trains {
+  text-align: left;
+  background: #1b6cb01f;
+  border-left: 3px solid var(--gym-blue);
+  border-radius: 0 8px 8px 0;
+  padding: 10px 14px;
+  margin: 0 0 18px;
+}
+
+.gym-trains strong {
+  display: block;
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--gym-gold);
+  margin-bottom: 4px;
+}
+
+.gym-trains span {
+  color: var(--gym-text);
+  font-size: 0.88rem;
+  line-height: 1.45;
+}
+
+.gym-badges { display: flex; flex-wrap: wrap; gap: 8px; margin: 6px 0 14px; }
+.gym-badge { font-size: 12px; padding: 3px 9px; border-radius: 999px; border: 1px solid #2a466b; color: #8aa0b8; }
+.gym-badge-on { color: #14243c; background: #c9a24b; border-color: #c9a24b; font-weight: 700; }
+.gym-card-stars { display: flex; align-items: center; gap: 3px; margin: 4px 0; font-size: 14px; color: #6b8294; }
+.gym-card-stars .gym-star.on { color: #c9a24b; }
+.gym-star-tier { margin-left: 6px; font-size: 11px; color: #8aa0b8; }
+
+.gym-mute { float: right; font-size: 0.85rem; }
+
+/* Phase 1 juice: results-card celebration */
+@keyframes gym-pop {
+  0% { transform: scale(0.6); opacity: 0; }
+  70% { transform: scale(1.08); opacity: 1; }
+  100% { transform: scale(1); opacity: 1; }
+}
+.gym-score-pop { animation: gym-pop 0.45s ease-out; }
+
+.gym-confetti { position: relative; height: 0; }
+@keyframes gym-fleck-fall {
+  0% { transform: translateY(-8px) rotate(0deg); opacity: 1; }
+  100% { transform: translateY(74px) rotate(260deg); opacity: 0; }
+}
+.gym-fleck {
+  position: absolute;
+  top: -6px;
+  width: 7px;
+  height: 11px;
+  border-radius: 2px;
+  animation: gym-fleck-fall 0.9s ease-in forwards;
+}
+
+.gym-best {
+  color: var(--gym-gold, #f2b705);
+  font-weight: 700;
+  margin: 4px 0 0;
+}

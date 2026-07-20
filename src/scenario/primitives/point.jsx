@@ -6,7 +6,7 @@
 // flexible than selection (no fixed candidate set).
 
 import { useEffect, useState } from "react";
-import { denorm, denormR } from "../schema.js";
+import { denorm, RINK_W, RINK_H } from "../schema.js";
 import { resolveTarget } from "../zones.js";
 import { scorePoint } from "./point-scorer.js";
 
@@ -31,7 +31,12 @@ export function PointPrimitive({ interaction, correct, svgPoint, locked, onAnswe
   }
 
   const targetPx = target ? denorm(target) : null;
-  const targetR = target ? denormR(target.tolerance) : 0;
+  // The scorer uses NORMALIZED distance (a circle of radius `tolerance` in 0..1
+  // space). In the 600×300 viewBox that maps to an ELLIPSE — rx = tol·600,
+  // ry = tol·300 — NOT a circle. Drawing a circle made the reveal twice as tall
+  // as the real scoring region, so taps near the top/bottom read as misses.
+  const targetRx = target ? target.tolerance * RINK_W : 0;
+  const targetRy = target ? target.tolerance * RINK_H : 0;
   const pickPx = pick ? denorm(pick) : null;
 
   return (
@@ -45,7 +50,7 @@ export function PointPrimitive({ interaction, correct, svgPoint, locked, onAnswe
       {/* Target zone — faint while idle, fills in on reveal. */}
       {targetPx && (
         <g opacity={score?.ok ? 0.95 : 0.5} style={{ pointerEvents: "none" }}>
-          <circle cx={targetPx.x} cy={targetPx.y} r={targetR}
+          <ellipse cx={targetPx.x} cy={targetPx.y} rx={targetRx} ry={targetRy}
             fill={score?.ok ? "rgba(34,197,94,.22)" : "rgba(34,197,94,.08)"}
             stroke="#22c55e" strokeWidth="1.6"
             strokeDasharray={score?.ok ? "none" : "4 2.5"}/>

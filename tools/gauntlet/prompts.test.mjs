@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 // Smoke tests: prompt builders embed the right fields. Run: node tools/gauntlet/prompts.test.mjs
-import { buildCreatorPrompt, buildPanelCoachPrompt, buildHeadCoachPrompt, buildLessonExtractorPrompt, buildRubricConsolidationPrompt, PANEL_LENSES } from "./prompts.mjs";
+import { buildCreatorPrompt, buildPanelCoachPrompt, buildHeadCoachPrompt, buildHeadCoachSoloPrompt, buildLessonExtractorPrompt, buildRubricConsolidationPrompt, PANEL_LENSES } from "./prompts.mjs";
 
 let pass = 0, fail = 0;
 const ok = (n, c) => { console.log(`${c ? "PASS" : "FAIL"}  ${n}`); c ? pass++ : fail++; };
@@ -41,6 +41,13 @@ const q = { id: "x", type: "mc", nodeId: node.id, sit: "On a 2-on-1 what is the 
 // head coach + extractor build
 { ok("head coach builds", typeof buildHeadCoachPrompt({ question: q, node, concept }).system === "string");
   ok("extractor includes node + critique", buildLessonExtractorPrompt({ question: q, node, critique: ["ambiguous stem"] }).prompt.includes("ambiguous stem")); }
+
+// solo-first Head Coach (gates the room)
+{ const { system, prompt } = buildHeadCoachSoloPrompt({ question: q, node, concept });
+  ok("solo prompt mentions CONVENE", /CONVENE/.test(system));
+  ok("solo prompt asks for the three verbs", /APPROVE/.test(system) && /KICK_BACK/.test(system));
+  ok("solo prompt includes the question json", prompt.includes("\"id\": \"x\""));
+  ok("solo prompt checks genuine decision", /genuine decision/i.test(system)); }
 
 console.log(`\n${pass} passed, ${fail} failed`);
 process.exit(fail ? 1 : 0);

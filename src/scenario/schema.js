@@ -178,10 +178,14 @@
  * @property {TimerSpec} [timer]      // IntelliGym-style hard timer
  * @property {ScanWindow} [scanWindow]// IntelliGym working-memory drill
  * @property {PreviewWindow} [preview]// IntelliGym pattern-recognition lock
+ * @property {{stem?:string, opts:string[], ok:0|1|2|3}} [mc]  // board-MC: ask this scene as multiple choice
+ * @property {{note:string, cite:string, url?:string}} [sourceRef]  // citation: which library note + authority backs this read
  */
 
 import { ZONES } from "./zones.js";
 import { runHockeyValidators } from "./validators.js";
+import { stepToScenario } from "./multiStep.js";
+import { flattenNode } from "./branching.js";
 
 // ─────────────────────────────────────────────────────────────────────────
 // Lightweight validator. Throws on hard schema errors; returns warnings
@@ -211,12 +215,47 @@ function lineHitsCircle(a, b, c, r) {
   return d < r;
 }
 
-export function validateScenario(s) {
+export function validateScenario(s, { _shapeOnly = false } = {}) {
   const errs = [];
   const warns = [];
   if (!s || typeof s !== "object") return { ok: false, errs: ["scenario is not an object"], warns };
   if (s.type !== "scenario") errs.push(`type must be "scenario", got ${JSON.stringify(s.type)}`);
   if (!s.id) errs.push("missing id");
+  if (Array.isArray(s.steps)) {
+    if (s.interaction || s.actors || s.correct || s.nodes || s.entry) {
+      errs.push("a scenario has EITHER flat interaction fields OR steps[] OR nodes{}, not a mix");
+    }
+    if (!s.steps.length) errs.push("steps[] must not be empty");
+    s.steps.forEach((_, i) => {
+      const r = validateScenario(stepToScenario(s, i), { _shapeOnly: true });
+      if (!r.ok) r.errs.forEach((e) => errs.push(`step[${i}]: ${e}`));
+    });
+    return { ok: errs.length === 0, errs, warns };
+  }
+  if (s.nodes || s.entry) {
+    if (s.steps || s.interaction || s.actors || s.correct) {
+      errs.push("a scenario has EITHER flat fields OR steps[] OR nodes{}, not a mix");
+    }
+    if (!s.nodes || typeof s.nodes !== "object") errs.push("nodes must be an object");
+    if (!Array.isArray(s.entry) || !s.entry.length) errs.push("entry must be a non-empty array of node ids");
+    const ids = new Set(Object.keys(s.nodes || {}));
+    for (const e of (Array.isArray(s.entry) ? s.entry : [])) {
+      if (!ids.has(e)) errs.push(`entry "${e}" is not a node`);
+    }
+    let terminals = 0;
+    for (const [id, node] of Object.entries(s.nodes || {})) {
+      const routes = Array.isArray(node.routes) ? node.routes : [];
+      if (routes.length === 0) terminals++;
+      for (const r of routes) {
+        if (!r || !r.next) { errs.push(`node "${id}" has a route with no next`); continue; }
+        if (!ids.has(r.next)) errs.push(`node "${id}" routes to missing node "${r.next}"`);
+      }
+      const fr = validateScenario(flattenNode(s, id), { _shapeOnly: true });
+      if (!fr.ok) fr.errs.forEach((e) => errs.push(`node "${id}": ${e}`));
+    }
+    if (terminals === 0) errs.push("graph has no terminal node (every node routes onward)");
+    return { ok: errs.length === 0, errs, warns };
+  }
   if (!s.stage || !VALID_VIEWS.has(s.stage.view)) errs.push(`stage.view must be one of ${[...VALID_VIEWS].join("|")}`);
   if (!Array.isArray(s.actors)) errs.push("actors must be an array");
   else {
@@ -277,7 +316,8 @@ export function validateScenario(s) {
 
   // Hockey-logic + UX-sanity layer. Only runs if the shape pass had no
   // errors, since those rules assume a structurally valid scenario.
-  if (errs.length === 0) {
+  // Skipped when called as a synthetic step-frame check (_shapeOnly).
+  if (errs.length === 0 && !_shapeOnly) {
     const layered = runHockeyValidators(s);
     errs.push(...layered.errs);
     warns.push(...layered.warns);

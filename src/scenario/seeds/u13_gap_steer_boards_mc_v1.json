@@ -1,0 +1,70 @@
+{
+  "id": "u13_gap_steer_boards_mc_v1",
+  "type": "scenario",
+  "nodeId": "u13.gap-control",
+  "level": "U13 / Peewee",
+  "levels": [
+    "U13 / Peewee"
+  ],
+  "themes": [
+    "gap-control",
+    "angling",
+    "defensive-zone-coverage",
+    "1-on-1"
+  ],
+  "cat": "Defensive Play",
+  "difficulty": 2,
+  "stage": {
+    "view": "neutral",
+    "zone": "neutral",
+    "attackDir": "right"
+  },
+  "actors": [
+    {
+      "id": "you",
+      "kind": "player",
+      "x": 0.47,
+      "y": 0.36,
+      "tag": "D"
+    },
+    {
+      "id": "carrier",
+      "kind": "defender",
+      "x": 0.5,
+      "y": 0.28,
+      "tag": "F"
+    },
+    {
+      "id": "puck",
+      "kind": "puck",
+      "x": 0.502,
+      "y": 0.278
+    }
+  ],
+  "interaction": {
+    "kind": "point",
+    "prompt": "Your gap is tight — close enough to reach the carrier with your stick — and you have inside position. Tap the lane you should steer them into, away from the middle."
+  },
+  "correct": {
+    "kind": "point",
+    "x": 0.55,
+    "y": 0.12,
+    "tolerance": 0.1
+  },
+  "mc": {
+    "stem": "Your gap is tight — within a stick length — and you have inside body position on the carrier. What is the correct read?",
+    "opts": [
+      "Keep your feet moving and steer the carrier down the boards, away from the middle",
+      "Back off to widen the gap so you do not get beaten wide",
+      "Stand the carrier up at the line with a big hit",
+      "Open your hips to the middle and shadow the carrier into the slot"
+    ],
+    "ok": 0
+  },
+  "feedback": {
+    "right": "Yes. A tight gap with inside position is your chance to finish the angle. Keep skating, protect the middle, and steer them to the low-danger boards.",
+    "wrong": "Backing off, lunging for a hit, or opening to the middle all give up the most dangerous ice. With a tight gap and inside position, keep your feet and steer the carrier to the boards."
+  },
+  "tip": "A tight gap means you can reach the carrier with your stick. Keep your feet, hold inside position, and steer them to the boards — never give up the middle.",
+  "why": "A tight gap with inside position lets you dictate the carrier's path. Keeping the feet moving and protecting the middle forces the play to the boards, the lowest-danger ice."
+}

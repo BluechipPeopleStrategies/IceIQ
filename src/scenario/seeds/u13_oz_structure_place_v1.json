@@ -1,0 +1,95 @@
+{
+  "id": "u13_oz_structure_place_v1",
+  "stemId": "u13_oz_winger_wall",
+  "stemLabel": "OZ — winger has it on the wall, weak-side D stepping toward the net",
+  "type": "scenario",
+  "nodeId": "u13.offensive-zone-play",
+  "level": "U13 / Peewee",
+  "levels": [
+    "U13 / Peewee"
+  ],
+  "themes": [
+    "offensive-zone",
+    "positioning",
+    "vision"
+  ],
+  "cat": "Offensive Play",
+  "difficulty": 3,
+  "stage": {
+    "view": "right",
+    "zone": "off-zone"
+  },
+  "read": {
+    "cue": "the weak-side defenceman is beginning to step toward the net — they haven't arrived yet, but they're on their way",
+    "decoy": {
+      "x": 0.9,
+      "y": 0.5
+    }
+  },
+  "actors": [
+    {
+      "id": "carrier",
+      "kind": "teammate",
+      "x": 0.9,
+      "y": 0.78,
+      "tag": "RW"
+    },
+    {
+      "id": "puck",
+      "kind": "puck",
+      "x": 0.902,
+      "y": 0.782
+    },
+    {
+      "id": "strongD",
+      "kind": "defender",
+      "x": 0.86,
+      "y": 0.7,
+      "tag": ""
+    },
+    {
+      "id": "weakD",
+      "kind": "defender",
+      "x": 0.79,
+      "y": 0.52,
+      "tag": ""
+    },
+    {
+      "id": "g",
+      "kind": "goalie",
+      "x": 0.918,
+      "y": 0.5,
+      "tag": ""
+    },
+    {
+      "id": "you",
+      "kind": "player",
+      "x": 0.66,
+      "y": 0.42,
+      "tag": "LW"
+    }
+  ],
+  "interaction": {
+    "kind": "place",
+    "items": [
+      "you"
+    ],
+    "showTargets": false,
+    "prompt": "Your winger has the puck on the wall and the weak-side defenceman is beginning to step toward the net. Drag YOURSELF to the best spot to receive."
+  },
+  "correct": {
+    "kind": "place",
+    "placements": [
+      {
+        "id": "you",
+        "zoneId": "oz-half-wall-weak"
+      }
+    ]
+  },
+  "feedback": {
+    "right": "Good read. You saw the D stepping toward the net and got to the weak-side wall before they could lock it down — now your winger has the cross-ice look.",
+    "wrong": "Watch the D's feet. They're moving toward the net, which means they're about to cover net-front. The ice they're vacating — the weak-side wall — is where you want to be."
+  },
+  "tip": "Attack the space the defence leaves. When a defender drops to the net, the ice they vacated is the open one.",
+  "why": "Reading the off-puck defender is the difference between skating into coverage and finding open ice. The D's choice tells you where to go."
+}

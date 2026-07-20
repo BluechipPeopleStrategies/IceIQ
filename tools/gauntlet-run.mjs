@@ -27,6 +27,7 @@ import { repairScenario, scenarioHash, mockScenario, forcedLevels } from "./gaun
 import { asciiRink } from "./gauntlet/ascii-rink.mjs";
 import { VISUAL_LENSES, buildVisualHockeyCoachPrompt, buildVisualCoachPrompt, buildVisualHeadCoachPrompt, buildVisualLessonExtractorPrompt, buildVisualRubricConsolidationPrompt } from "./gauntlet/visual-prompts.mjs";
 import { runPool } from "./gauntlet/pool.mjs";
+import { coachGate, visualCoachGate } from "./gauntlet/coach-gate.mjs";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const root = resolve(__dirname, "..");
@@ -42,7 +43,7 @@ const paths = {
 
 // ---------- args ----------
 function parseArgs(argv) {
-  const a = { count: 1, max: Infinity, model: "sonnet", rounds: 4, mock: false, dryRun: false, node: null, fillGaps: false, fast: false, debateRounds: 2, mockFail: false, visual: false, concurrency: 4, ages: null, consolidate: false, lite: false };
+  const a = { count: 1, max: Infinity, model: "sonnet", coachModel: null, rounds: 4, mock: false, dryRun: false, node: null, fillGaps: false, fast: false, fullPanel: false, debateRounds: 2, mockFail: false, visual: false, concurrency: 4, ages: null, consolidate: false, lite: false };
   for (let i = 0; i < argv.length; i++) {
     const t = argv[i];
     if (t === "--node") a.node = argv[++i];
@@ -61,7 +62,12 @@ function parseArgs(argv) {
     else if (t === "--concurrency") a.concurrency = parseInt(argv[++i], 10);
     else if (t === "--consolidate") a.consolidate = true;
     else if (t === "--lite") a.lite = true;
+    else if (t === "--coach-model") a.coachModel = argv[++i];
+    else if (t === "--full-panel") a.fullPanel = true;
   }
+  // Coaches inherit the run's model unless --coach-model overrides it. (No
+  // opinionated default model is pinned; pass --coach-model to split them off.)
+  if (!a.coachModel) a.coachModel = a.model;
   // Both round counts must be >= 1 (a bad/zero/NaN flag would otherwise skip the
   // loop and leave panel reviews null).
   a.rounds = Math.max(1, Number.isFinite(a.rounds) ? a.rounds : 4);
@@ -135,7 +141,7 @@ async function runPanel(q, node, concept, opts) {
       }
       const peers = others ? others.filter((o) => o.key !== lens.key) : null;
       let r;
-      try { r = await runAgent({ ...buildPanelCoachPrompt({ question: q, node, concept, lens, others: peers }), model: opts.model }); }
+      try { r = await runAgent({ ...buildPanelCoachPrompt({ question: q, node, concept, lens, others: peers }), model: opts.coachModel }); }
       catch (e) { r = { verdict: "REVISE", critique: [`${lens.key} error: ${e.message}`] }; }
       return { key: lens.key, verdict: r.verdict, critique: r.critique || [] };
     }));
@@ -148,7 +154,7 @@ async function runPanel(q, node, concept, opts) {
 async function runHeadCoach(q, node, concept, opts) {
   if (opts.mock) return opts.mockFail ? { ok: false, notes: ["[mock] head coach kickback"] } : { ok: true, notes: [] };
   let r;
-  try { r = await runAgent({ ...buildHeadCoachPrompt({ question: q, node, concept }), model: opts.model }); }
+  try { r = await runAgent({ ...buildHeadCoachPrompt({ question: q, node, concept }), model: opts.coachModel }); }
   catch (e) { return { ok: false, notes: [`head coach error: ${e.message}`] }; }
   return { ok: r.verdict === "APPROVE", notes: r.notes || [] };
 }
@@ -206,21 +212,26 @@ async function generateOne(ledger, node, opts, seen) {
     if (opts.fast) {
       let coach = { verdict: "PASS", critique: [] };
       if (!opts.mock) {
-        try { coach = await runAgent({ ...buildPanelCoachPrompt({ question: q, node, concept, lens: PANEL_LENSES[0], others: null }), model: opts.model }); }
+        try { coach = await runAgent({ ...buildPanelCoachPrompt({ question: q, node, concept, lens: PANEL_LENSES[0], others: null }), model: opts.coachModel }); }
         catch (e) { coach = { verdict: "REVISE", critique: [`coach error: ${e.message}`] }; }
       }
       if (coach.verdict !== "PASS") { notes = coach.critique || coach.notes || ["coach revise"]; continue; }
-    } else {
+    } else if (opts.fullPanel) {
+      // legacy always-panel path (kept for A/B), behind --full-panel
       const panel = await runPanel(q, node, concept, opts);
       if (!panel.ok) { notes = panel.critiques.length ? panel.critiques : ["panel not unanimous"]; continue; }
       const head = await runHeadCoach(q, node, concept, opts);
       if (!head.ok) { notes = head.notes.length ? head.notes : ["head coach kickback"]; continue; }
+    } else {
+      // default: Head Coach gates the room (solo-first, convene only on a judgment call)
+      const gate = await coachGate({ question: q, node, concept, opts, runPanel, runHeadCoach });
+      if (!gate.ok) { notes = gate.notes; continue; }
     }
 
     // Passed everything → queue item
     const item = {
       question: q,
-      gateHistory: { creator: "pass", curriculum: "pass", panel: opts.fast ? "fast-single" : "unanimous", headCoach: opts.fast ? "skipped" : "approve", round },
+      gateHistory: { creator: "pass", curriculum: "pass", panel: opts.fast ? "fast-single" : (opts.fullPanel ? "unanimous" : "head-coach-gated"), headCoach: opts.fast ? "skipped" : "approve", round },
       proxyVerdict: {
         decision: "forward", scores: {},
         rationale: "Cleared the gauntlet (creator + curriculum + " + (opts.fast ? "single coach" : "perfectionist panel + Head Coach") + "). Founder-proxy gate (G9) not built yet — review directly.",
@@ -249,7 +260,7 @@ async function runScenarioPanel(scenario, node, concept, opts, { lenses, makePro
       }
       const peers = others ? others.filter((o) => o.key !== lens.key) : null;
       let r;
-      try { r = await runAgent({ ...makePrompt({ scenario, ascii, node, concept, lens, others: peers }), model: opts.model }); }
+      try { r = await runAgent({ ...makePrompt({ scenario, ascii, node, concept, lens, others: peers }), model: opts.coachModel }); }
       catch (e) { r = { verdict: "REVISE", critique: [`${lens.key} error: ${e.message}`] }; }
       return { key: lens.key, verdict: r.verdict, critique: r.critique || [] };
     }));
@@ -261,7 +272,7 @@ async function runScenarioPanel(scenario, node, concept, opts, { lenses, makePro
 async function runVisualHeadCoach(scenario, node, concept, opts) {
   if (opts.mock) return opts.mockFail ? { ok: false, notes: ["[mock] head coach kickback"] } : { ok: true, notes: [] };
   let r;
-  try { r = await runAgent({ ...buildVisualHeadCoachPrompt({ scenario, node, concept }), model: opts.model }); }
+  try { r = await runAgent({ ...buildVisualHeadCoachPrompt({ scenario, node, concept }), model: opts.coachModel }); }
   catch (e) { return { ok: false, notes: [`head coach error: ${e.message}`] }; }
   return { ok: r.verdict === "APPROVE", notes: r.notes || [] };
 }
@@ -311,21 +322,32 @@ async function generateVisualOne(ledger, node, opts, seen) {
     // correctness + core geometry). default = full (hockey + all 4 geometry
     // coaches + Head Coach).
     if (!opts.fast) {
-      const hockey = await runScenarioPanel(s, node, concept, opts, { lenses: PANEL_LENSES, makePrompt: buildVisualHockeyCoachPrompt });
-      if (!hockey.ok) { notes = hockey.critiques.length ? hockey.critiques : ["hockey panel not unanimous"]; continue; }
-      const visualLenses = opts.lite ? VISUAL_LENSES.filter((l) => l.key === "spatial") : VISUAL_LENSES;
-      const visual = await runScenarioPanel(s, node, concept, opts, { lenses: visualLenses, makePrompt: buildVisualCoachPrompt });
-      if (!visual.ok) { notes = visual.critiques.length ? visual.critiques : ["visual panel not unanimous"]; continue; }
-      if (!opts.lite) {
-        const head = await runVisualHeadCoach(s, node, concept, opts);
-        if (!head.ok) { notes = head.notes.length ? head.notes : ["head coach kickback"]; continue; }
+      if (opts.fullPanel || opts.lite) {
+        const hockey = await runScenarioPanel(s, node, concept, opts, { lenses: PANEL_LENSES, makePrompt: buildVisualHockeyCoachPrompt });
+        if (!hockey.ok) { notes = hockey.critiques.length ? hockey.critiques : ["hockey panel not unanimous"]; continue; }
+        const visualLenses = opts.lite ? VISUAL_LENSES.filter((l) => l.key === "spatial") : VISUAL_LENSES;
+        const visual = await runScenarioPanel(s, node, concept, opts, { lenses: visualLenses, makePrompt: buildVisualCoachPrompt });
+        if (!visual.ok) { notes = visual.critiques.length ? visual.critiques : ["visual panel not unanimous"]; continue; }
+        if (!opts.lite) {
+          const head = await runVisualHeadCoach(s, node, concept, opts);
+          if (!head.ok) { notes = head.notes.length ? head.notes : ["head coach kickback"]; continue; }
+        }
+      } else {
+        // default: Head Coach gates the room (solo-first)
+        const gate = await visualCoachGate({
+          scenario: s, ascii: asciiRink(s), node, concept, opts,
+          runHockeyPanel: (sc, n, c, o) => runScenarioPanel(sc, n, c, o, { lenses: PANEL_LENSES, makePrompt: buildVisualHockeyCoachPrompt }),
+          runVisualPanel: (sc, n, c, o) => runScenarioPanel(sc, n, c, o, { lenses: VISUAL_LENSES, makePrompt: buildVisualCoachPrompt }),
+          runVisualHeadCoach,
+        });
+        if (!gate.ok) { notes = gate.notes; continue; }
       }
     }
 
     const bar = opts.fast ? "fast/no-panels" : opts.lite ? "lite: hockey panel + spatial coach" : "hockey panel + 4-coach visual panel + Head Coach";
     const item = {
       question: s,
-      gateHistory: { creator: "pass", validate: "pass", hockeyPanel: opts.fast ? "skipped" : "unanimous", visualPanel: opts.fast ? "skipped" : (opts.lite ? "spatial-only" : "unanimous"), headCoach: (opts.fast || opts.lite) ? "skipped" : "approve", round },
+      gateHistory: { creator: "pass", validate: "pass", hockeyPanel: opts.fast ? "skipped" : ((opts.fullPanel || opts.lite) ? "unanimous" : "head-coach-gated"), visualPanel: opts.fast ? "skipped" : ((opts.fullPanel || opts.lite) ? (opts.lite ? "spatial-only" : "unanimous") : "head-coach-gated"), headCoach: (opts.fast || opts.lite) ? "skipped" : "approve", round },
       proxyVerdict: { decision: "forward", scores: {}, rationale: "Drawn question cleared the gauntlet (validate + " + bar + "). Founder-proxy gate (G9) not built yet — review directly." },
       queuedAt: new Date().toISOString().slice(0, 10),
     };

@@ -1,0 +1,40 @@
+{
+  "id": "u11_oz_corner_lw_crash_v1",
+  "type": "scenario",
+  "level": "U11 / Atom",
+  "themes": ["positioning", "net-front", "decision-making", "puck-support", "cycle"],
+  "cat": "Offensive Zone",
+  "difficulty": 2,
+  "stage": { "view": "right", "zone": "off-zone" },
+  "actors": [
+    { "id": "you",     "kind": "player",   "tag": "YOU", "x": 0.930, "y": 0.700 },
+    { "id": "puck",    "kind": "puck",                   "x": 0.932, "y": 0.698 },
+    { "id": "slot_lw", "kind": "teammate", "tag": "LW",  "x": 0.800, "y": 0.400 },
+    { "id": "wall_rw", "kind": "teammate", "tag": "RW",  "x": 0.880, "y": 0.270 },
+    { "id": "ld",      "kind": "teammate", "tag": "LD",  "x": 0.650, "y": 0.220 },
+    { "id": "x1",      "kind": "defender",               "x": 0.750, "y": 0.350 },
+    { "id": "x2",      "kind": "defender",               "x": 0.650, "y": 0.280 },
+    { "id": "g",       "kind": "goalie",                  "x": 0.918, "y": 0.500 }
+  ],
+  "interaction": {
+    "kind": "place",
+    "prompt": "You have the puck in the strong-side corner. X1 has stepped up to cover the slot. Drag your LW to the highest-value position.",
+    "items": ["slot_lw"]
+  },
+  "correct": {
+    "kind": "place",
+    "placements": [
+      { "id": "slot_lw", "zoneId": "oz-net-front" }
+    ]
+  },
+  "read": {
+    "cue": "X1 has stepped up to contest the slot — the net-front directly behind X1 is now unguarded.",
+    "decoy": { "x": 0.78, "y": 0.48 }
+  },
+  "feedback": {
+    "right": "X1 stepped up to cover the slot, which opened the net-front behind them. Crashing there gives you a tip or rebound chance and forces the goalie to see through traffic.",
+    "wrong": "Staying in the slot looks natural, but X1 has already stepped up and owns that spot. The space X1 vacated — right in front of the net — is where the scoring chance lives."
+  },
+  "tip": "When a defender steps up to the slot, check for the hole they left behind at the net-front — a defender can't be in both places.",
+  "why": "X1 stepping up creates an inverse opening: the slot is now covered but the net-front is free. Reading that swap and filling the net-front is the core U11 positioning skill in a cycle."
+}

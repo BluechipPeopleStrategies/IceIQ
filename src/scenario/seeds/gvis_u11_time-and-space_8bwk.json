@@ -2,30 +2,83 @@
   "id": "gvis_u11_time-and-space_8bwk",
   "type": "scenario",
   "level": "U11 / Atom",
-  "levels": ["U11 / Atom"],
+  "levels": [
+    "U11 / Atom"
+  ],
   "nodeId": "u11.time-and-space",
-  "themes": ["decision-making", "vision", "pass-selection", "even-strength"],
+  "themes": [
+    "decision-making",
+    "vision",
+    "pass-selection",
+    "even-strength"
+  ],
   "cat": "Hockey Sense",
   "difficulty": 1,
-  "stage": { "view": "right", "zone": "off-zone" },
+  "stage": {
+    "view": "right",
+    "zone": "off-zone"
+  },
   "actors": [
-    { "id": "you",  "kind": "player",   "x": 0.65, "y": 0.50, "tag": "YOU" },
-    { "id": "puck", "kind": "puck",     "x": 0.652, "y": 0.498 },
-    { "id": "lw",   "kind": "teammate", "x": 0.74, "y": 0.20, "tag": "LW" },
-    { "id": "rw",   "kind": "teammate", "x": 0.74, "y": 0.78, "tag": "RW" },
-    { "id": "x1",   "kind": "defender", "x": 0.72, "y": 0.70 },
-    { "id": "x2",   "kind": "defender", "x": 0.82, "y": 0.48 },
-    { "id": "g",    "kind": "goalie",   "x": 0.918, "y": 0.50 }
+    {
+      "id": "you",
+      "kind": "player",
+      "x": 0.67,
+      "y": 0.5,
+      "tag": "YOU"
+    },
+    {
+      "id": "puck",
+      "kind": "puck",
+      "x": 0.672,
+      "y": 0.498
+    },
+    {
+      "id": "lw",
+      "kind": "teammate",
+      "x": 0.7,
+      "y": 0.22,
+      "tag": "LW"
+    },
+    {
+      "id": "rw",
+      "kind": "teammate",
+      "x": 0.7,
+      "y": 0.78,
+      "tag": "RW"
+    },
+    {
+      "id": "x1",
+      "kind": "defender",
+      "x": 0.7,
+      "y": 0.64
+    },
+    {
+      "id": "x2",
+      "kind": "defender",
+      "x": 0.74,
+      "y": 0.5
+    },
+    {
+      "id": "g",
+      "kind": "goalie",
+      "x": 0.918,
+      "y": 0.5
+    }
   ],
   "interaction": {
     "kind": "selection",
     "prompt": "You have the puck just inside the zone. Tap the teammate who has time and space to receive.",
-    "from": ["lw", "rw"],
+    "from": [
+      "lw",
+      "rw"
+    ],
     "order": "any"
   },
   "correct": {
     "kind": "selection",
-    "ids": ["lw"]
+    "ids": [
+      "lw"
+    ]
   },
   "feedback": {
     "right": "The LW up top has open ice — no defender within reach. That's time and space: room to receive, control, and make the next decision.",

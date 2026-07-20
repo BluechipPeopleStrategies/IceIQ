@@ -47,6 +47,14 @@ export const FONT = {
 };
 
 export const LEVELS = ["U7 / Initiation","U9 / Novice","U11 / Atom","U13 / Peewee","U15 / Bantam","U18 / Midget"];
+
+// TEMPORARY (2026-06): single mixed-age "Pro" experience while the bank is
+// small. When true: onboarding skips the age-group picker, the quiz pulls
+// questions from ALL levels mixed (a kid may get a U7 then a U15 question),
+// and all formats are unlocked. The LEVELS / tier system is untouched —
+// flip this back to false to restore per-age selection once the bank is large.
+export const ALL_AGES_MODE = true;
+export const DEFAULT_MIX_LEVEL = "U11 / Atom"; // placeholder level stored on new profiles while ALL_AGES_MODE is on
 export const POSITIONS = ["Forward","Defense","Goalie","Multiple"];
 export const POSITIONS_U11UP = ["Forward","Defense","Goalie"];
 export const SEASONS = ["2025-26","2026 Spring/Summer","2026-27"];
@@ -226,7 +234,9 @@ export const Screen = ({children, pad=true}) => (
 );
 
 export const Card = ({children, style, onClick, glow}) => (
-  <div onClick={onClick} style={{
+  <div onClick={onClick}
+    {...(onClick ? { role:"button", tabIndex:0, onKeyDown:(e)=>{ if(e.key==="Enter"||e.key===" "){ e.preventDefault(); onClick(e); } } } : {})}
+    style={{
     background:"rgba(13, 21, 37, 0.45)",
     backdropFilter:"blur(12px)",
     WebkitBackdropFilter:"blur(12px)",

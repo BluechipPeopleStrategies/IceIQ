@@ -2,19 +2,64 @@
   "id": "u11_dz_breakout_center_support_v1",
   "type": "scenario",
   "level": "U11 / Atom",
-  "levels": ["U11 / Atom"],
+  "levels": [
+    "U11 / Atom"
+  ],
   "nodeId": "u11.breakout-and-regroup",
-  "themes": ["breakout", "puck-support", "positioning", "scan"],
+  "themes": [
+    "breakout",
+    "puck-support",
+    "positioning",
+    "scan"
+  ],
   "cat": "Breakout",
   "difficulty": 2,
-  "stage": { "view": "left", "zone": "def-zone" },
+  "stage": {
+    "view": "left",
+    "zone": "def-zone"
+  },
   "actors": [
-    { "id": "you",   "kind": "player",   "x": 0.35, "y": 0.55, "tag": "YOU" },
-    { "id": "dmate", "kind": "teammate", "x": 0.18, "y": 0.75, "tag": "D" },
-    { "id": "puck",  "kind": "puck",     "x": 0.182, "y": 0.748 },
-    { "id": "f1",    "kind": "defender", "x": 0.25, "y": 0.68, "tag": "" },
-    { "id": "f2",    "kind": "defender", "x": 0.22, "y": 0.82, "tag": "" },
-    { "id": "g",     "kind": "goalie",   "x": 0.082, "y": 0.50, "tag": "" }
+    {
+      "id": "you",
+      "kind": "player",
+      "x": 0.35,
+      "y": 0.55,
+      "tag": "YOU"
+    },
+    {
+      "id": "dmate",
+      "kind": "teammate",
+      "x": 0.18,
+      "y": 0.75,
+      "tag": "D"
+    },
+    {
+      "id": "puck",
+      "kind": "puck",
+      "x": 0.182,
+      "y": 0.748
+    },
+    {
+      "id": "f1",
+      "kind": "defender",
+      "x": 0.24,
+      "y": 0.66,
+      "tag": ""
+    },
+    {
+      "id": "f2",
+      "kind": "defender",
+      "x": 0.15,
+      "y": 0.84,
+      "tag": ""
+    },
+    {
+      "id": "g",
+      "kind": "goalie",
+      "x": 0.082,
+      "y": 0.5,
+      "tag": ""
+    }
   ],
   "interaction": {
     "kind": "point",
@@ -23,12 +68,24 @@
   },
   "correct": {
     "kind": "point",
-    "zoneId": "dz-half-wall-strong"
+    "x": 0.3,
+    "y": 0.82,
+    "tolerance": 0.09
   },
   "feedback": {
-    "right": "Curl low into the strong-side circle and stay underneath the puck. You give your D a short, safe ten-foot outlet they can actually make.",
-    "wrong": "Flying the zone early to the far blue line looks like a quick counterattack, but your D is squeezed by two forecheckers with no clean long lane. Leaving the support layer hangs them out to dry."
+    "right": "Drop low to the strong side, just up the wall from your D, and give them a short, safe outlet they can actually make.",
+    "wrong": "Flying the zone or drifting away leaves your D with no short outlet under pressure. Come low to the strong-side wall and show your blade for a pass they can actually make."
   },
   "tip": "Read your D before you take off. If they are getting squeezed, come low and show your blade.",
-  "why": "Reading the defenseman's pressure before bolting up ice keeps a short outlet available, so the breakout starts with a completion instead of a forced long pass."
+  "why": "Reading the defenseman's pressure before bolting up ice keeps a short outlet available, so the breakout starts with a completion instead of a forced long pass.",
+  "mc": {
+    "stem": "You are the center and your D is retrieving the puck under heavy forecheck pressure. Where do you go to give them a safe outlet?",
+    "opts": [
+      "Drop low to the strong-side wall, just up from your D, for a short, safe outlet",
+      "Fly the zone to the far blue line and ask for a stretch pass",
+      "Swing to the weak side and circle back high",
+      "Go to the front of your own net and wait"
+    ],
+    "ok": 0
+  }
 }

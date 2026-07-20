@@ -191,12 +191,15 @@ export function SpeedRoundScreen({ player, onBack, onDone }) {
 
   const isTimeout = picked === "timeout";
   const verdictColor = picked === null ? (timeFrac < 0.3 ? C.red : timeFrac < 0.6 ? C.gold : C.green) : null;
+  // Colorblind-safe reveal palette (blue=correct, orange=wrong), matching App.jsx.
+  const cbOK = player?.colorblind ? "#2563eb" : C.green;
+  const cbNo = player?.colorblind ? "#ea580c" : C.red;
 
   return (
     <div style={{minHeight:"100vh",background:C.bg,color:C.white,fontFamily:FONT.body,paddingBottom:40}}>
       <div style={{position:"sticky",top:0,background:"rgba(6,12,22,.95)",backdropFilter:"blur(8px)",borderBottom:`1px solid ${C.border}`,padding:".75rem 1rem",zIndex:20}}>
         <div style={{maxWidth:560,margin:"0 auto",display:"flex",alignItems:"center",gap:"1rem"}}>
-          <button onClick={onBack} style={{background:"none",border:`1px solid ${C.border}`,color:C.dimmer,borderRadius:8,padding:".3rem .7rem",cursor:"pointer",fontSize:13,fontFamily:FONT.body}}>←</button>
+          <button onClick={onBack} aria-label="Back" style={{background:"none",border:`1px solid ${C.border}`,color:C.dimmer,borderRadius:8,padding:".3rem .7rem",cursor:"pointer",fontSize:13,fontFamily:FONT.body}}>←</button>
           <div style={{flex:1,minWidth:0}}>
             <div style={{fontFamily:FONT.display,fontWeight:800,fontSize:14,color:C.red}}>⚡ Speed Round</div>
             <div style={{fontSize:10,color:C.dimmer,marginTop:2}}>Question {idx+1} of {total} · {correct} correct</div>
@@ -232,10 +235,10 @@ export function SpeedRoundScreen({ player, onBack, onDone }) {
             return (
               <button key={String(v)} onClick={() => lockIn(v)} disabled={picked !== null}
                 style={{
-                  background: isRight ? "rgba(34,197,94,.2)" : isWrongSel ? "rgba(239,68,68,.2)" : C.bgElevated,
-                  border: `2px solid ${isRight ? C.green : isWrongSel ? C.red : C.border}`,
+                  background: isRight ? (player?.colorblind?"rgba(37,99,235,.2)":"rgba(34,197,94,.2)") : isWrongSel ? (player?.colorblind?"rgba(234,88,12,.2)":"rgba(239,68,68,.2)") : C.bgElevated,
+                  border: `2px solid ${isRight ? cbOK : isWrongSel ? cbNo : C.border}`,
                   borderRadius: 14, padding: "1.35rem", cursor: picked !== null ? "default" : "pointer",
-                  fontWeight: 800, fontSize: 20, color: isRight ? C.green : isWrongSel ? C.red : C.white, fontFamily: FONT.body,
+                  fontWeight: 800, fontSize: 20, color: isRight ? cbOK : isWrongSel ? cbNo : C.white, fontFamily: FONT.body,
                   transition: "background .15s, border-color .15s",
                 }}>
                 {v ? "TRUE" : "FALSE"}
@@ -245,7 +248,7 @@ export function SpeedRoundScreen({ player, onBack, onDone }) {
         </div>
 
         {picked !== null && (
-          <div style={{textAlign:"center",fontSize:13,color:isTimeout ? C.red : (answers[answers.length-1]?.ok ? C.green : C.red),fontWeight:700,padding:"8px 0"}}>
+          <div style={{textAlign:"center",fontSize:13,color:isTimeout ? cbNo : (answers[answers.length-1]?.ok ? cbOK : cbNo),fontWeight:700,padding:"8px 0"}}>
             {isTimeout ? "⏱ Timed out" : answers[answers.length-1]?.ok ? "✓ Correct" : "✗ Wrong"}
           </div>
         )}

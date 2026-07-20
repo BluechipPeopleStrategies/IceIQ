@@ -4,7 +4,7 @@
 //
 // Checks:
 //  [tailwind-missing]  src/ uses Tailwind classNames but no Tailwind config.
-//  [bank]              questions.json structural + schema errors per type.
+//  [bank]              bank.json structural + schema errors per type.
 //  [rink]              q.rink scene bounds, valid view/zone/marker types.
 //
 // Exit code 1 on any error. Warnings are informational.
@@ -14,7 +14,7 @@ import path from "node:path";
 
 const ROOT = process.cwd();
 const SRC = path.join(ROOT, "src");
-const BANK = path.join(SRC, "data", "questions.json");
+const BANK = path.join(SRC, "data", "bank.json");
 const errors = [];
 const warnings = [];
 const err = (m) => errors.push(m);
@@ -133,7 +133,7 @@ function checkBank() {
   const raw = fs.readFileSync(BANK, "utf8");
   let bank;
   try { bank = JSON.parse(raw); }
-  catch (e) { err(`[bank] questions.json is not valid JSON: ${e.message}`); return; }
+  catch (e) { err(`[bank] bank.json is not valid JSON: ${e.message}`); return; }
 
   const seenIds = new Map(); // id -> level
   for (const level of Object.keys(bank)) {
@@ -253,3 +253,5 @@ if (errors.length) {
   process.exit(1);
 }
 console.log(`\n✓ preflight clean${warnings.length ? ` (${warnings.length} warning(s))` : ""}`);
+
+

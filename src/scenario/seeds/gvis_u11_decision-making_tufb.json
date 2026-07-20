@@ -2,9 +2,16 @@
   "id": "gvis_u11_decision-making_tufb",
   "type": "scenario",
   "level": "U11 / Atom",
-  "levels": ["U11 / Atom"],
+  "levels": [
+    "U11 / Atom"
+  ],
   "nodeId": "u11.decision-making",
-  "themes": ["decision-making", "pass-selection", "offensive-zone", "vision"],
+  "themes": [
+    "decision-making",
+    "pass-selection",
+    "offensive-zone",
+    "vision"
+  ],
   "cat": "Hockey Sense",
   "difficulty": 2,
   "stage": {
@@ -12,28 +19,78 @@
     "zone": "off-zone"
   },
   "actors": [
-    { "id": "you",     "kind": "player",   "tag": "YOU", "x": 0.93,  "y": 0.70  },
-    { "id": "puck",    "kind": "puck",                   "x": 0.932, "y": 0.698 },
-    { "id": "slot_lw", "kind": "teammate", "tag": "LW",  "x": 0.80,  "y": 0.40  },
-    { "id": "wall_rw", "kind": "teammate", "tag": "RW",  "x": 0.87,  "y": 0.82  },
-    { "id": "ld",      "kind": "teammate", "tag": "LD",  "x": 0.65,  "y": 0.22  },
-    { "id": "x1",      "kind": "defender",               "x": 0.90,  "y": 0.76  },
-    { "id": "x2",      "kind": "defender",               "x": 0.65,  "y": 0.28  },
-    { "id": "g",       "kind": "goalie",                 "x": 0.918, "y": 0.50  }
+    {
+      "id": "you",
+      "kind": "player",
+      "tag": "YOU",
+      "x": 0.93,
+      "y": 0.7
+    },
+    {
+      "id": "puck",
+      "kind": "puck",
+      "x": 0.932,
+      "y": 0.698
+    },
+    {
+      "id": "slot_lw",
+      "kind": "teammate",
+      "tag": "LW",
+      "x": 0.8,
+      "y": 0.4
+    },
+    {
+      "id": "wall_rw",
+      "kind": "teammate",
+      "tag": "RW",
+      "x": 0.88,
+      "y": 0.27
+    },
+    {
+      "id": "ld",
+      "kind": "teammate",
+      "tag": "LD",
+      "x": 0.65,
+      "y": 0.22
+    },
+    {
+      "id": "x1",
+      "kind": "defender",
+      "x": 0.87,
+      "y": 0.33
+    },
+    {
+      "id": "x2",
+      "kind": "defender",
+      "x": 0.65,
+      "y": 0.28
+    },
+    {
+      "id": "g",
+      "kind": "goalie",
+      "x": 0.918,
+      "y": 0.5
+    }
   ],
   "interaction": {
     "kind": "selection",
     "prompt": "You're in the corner with the puck. Tap the teammate who gives your team the best chance to score.",
-    "from": ["slot_lw", "wall_rw", "ld"],
+    "from": [
+      "slot_lw",
+      "wall_rw",
+      "ld"
+    ],
     "order": "any"
   },
   "correct": {
     "kind": "selection",
-    "ids": ["slot_lw"]
+    "ids": [
+      "slot_lw"
+    ]
   },
   "feedback": {
     "right": "The LW is open in the slot — right in front of the net where goals happen. That pass puts your team in the best position to score.",
-    "wrong": "Scan the slot first when you're in the corner. The RW has a defender right beside them on the boards, and the LD has a white jersey glued to them at the point. The LW is open in the high-danger slot — that's where the puck needs to go."
+    "wrong": "The RW crashing the back door is a real threat, but the defender is right on their heels — that pass is a gamble. The LD is covered at the point. The LW has a clear lane in the slot with nobody between you and them. Take the cleaner high-danger look."
   },
   "tip": "In the offensive zone, always look to the slot before the wall or point — the closer to the net, the higher the scoring chance.",
   "why": "Decision making means choosing the highest-value option, not just the safest pass. The open slot player gives the team the best shot at scoring even if the corner-to-slot pass is harder than a chip to the wall."

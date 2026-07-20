@@ -4,7 +4,7 @@
 import { useState, useEffect, useRef } from "react";
 import * as SB from "./supabase";
 import {
-  C, FONT, LEVELS,
+  C, FONT, LEVELS, ALL_AGES_MODE, DEFAULT_MIX_LEVEL,
   Screen, Card, Pill, Label, PrimaryBtn, BackBtn, ProgressBar, StickyHeader,
   SEASONS,
 } from "./shared.jsx";
@@ -64,7 +64,7 @@ export function AdminReports({ onBack }) {
       <BackBtn onClick={onBack} />
       <div style={{ fontFamily: FONT.display, fontWeight: 800, fontSize: "1.8rem", marginBottom: ".5rem" }}>Question Reports</div>
       <div style={{ fontSize: 13, color: C.dim, marginBottom: "1.25rem" }}>
-        {loading ? "Loading..." : `${unresolvedCount} unresolved report${unresolvedCount !== 1 ? "s" : ""}`}
+        {loading ? "Loading…" : `${unresolvedCount} unresolved report${unresolvedCount !== 1 ? "s" : ""}`}
       </div>
       {!loading && reports.length === 0 && (
         <Card><div style={{ color: C.dimmer, textAlign: "center", padding: "1.5rem 0" }}>No reports yet.</div></Card>
@@ -195,7 +195,9 @@ export function CoachDashboard({ onBack }) {
 // parent/guardian-fronted (pronouns are hardcoded to "your child" / "their").
 export function ProfileSetup({ profile, onComplete }) {
   const [ageMode, setAgeMode] = useState("level");           // "level" | "birthYear"
-  const [level, setLevel] = useState(profile.level || "");
+  // ALL_AGES_MODE (temporary): skip the age-group step entirely — slot new
+  // profiles into a placeholder level (the quiz ignores it and serves all ages).
+  const [level, setLevel] = useState(profile.level || (ALL_AGES_MODE ? DEFAULT_MIX_LEVEL : ""));
   const [birthYear, setBirthYear] = useState(profile.birthYear || null);
   const [position, setPosition] = useState(profile.position || "");
   const [saving, setSaving] = useState(false);
@@ -300,10 +302,10 @@ export function ProfileSetup({ profile, onComplete }) {
   return (
     <Screen>
       <div style={{marginBottom:"1.5rem"}}>
-        <div style={{fontSize:10,letterSpacing:".18em",color:C.gold,textTransform:"uppercase",fontWeight:700,marginBottom:".6rem"}}>Step 2 of 2</div>
+        <div style={{fontSize:10,letterSpacing:".18em",color:C.gold,textTransform:"uppercase",fontWeight:700,marginBottom:".6rem"}}>{ALL_AGES_MODE ? "✓ Account created · Last step" : "Step 2 of 2"}</div>
         <h2 style={{fontFamily:FONT.display,fontWeight:800,fontSize:"2rem",margin:"0 0 .35rem"}}>What position does {subject} play?</h2>
         <div style={{fontSize:12,color:C.dim,marginTop:".35rem"}}>
-          {ageMode === "birthYear" ? `Born ${birthYear}` : effectiveLevel}
+          {ALL_AGES_MODE ? "All age groups" : ageMode === "birthYear" ? `Born ${birthYear}` : effectiveLevel}
         </div>
       </div>
       <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:".75rem",marginBottom:"1.5rem"}}>
@@ -315,7 +317,9 @@ export function ProfileSetup({ profile, onComplete }) {
         ))}
       </div>
       <div style={{display:"flex",gap:".5rem"}}>
-        <button onClick={()=>{ setLevel(""); setBirthYear(null); }} style={{background:"none",border:`1px solid ${C.border}`,borderRadius:10,padding:".75rem 1rem",cursor:"pointer",color:C.dimmer,fontSize:13,fontFamily:FONT.body}}>← Back</button>
+        {!ALL_AGES_MODE && (
+          <button onClick={()=>{ setLevel(""); setBirthYear(null); }} style={{background:"none",border:`1px solid ${C.border}`,borderRadius:10,padding:".75rem 1rem",cursor:"pointer",color:C.dimmer,fontSize:13,fontFamily:FONT.body}}>← Back</button>
+        )}
         <PrimaryBtn onClick={save} disabled={!position||saving} style={{flex:1,margin:0}}>{saving?"Saving…":"Finish Setup →"}</PrimaryBtn>
       </div>
     </Screen>
@@ -777,7 +781,7 @@ export function GameSenseReportScreen({ player, onBack, demoMode, demoCoachData,
         <Card style={{ marginBottom: "1rem" }}>
           <Label>Percentile Rank</Label>
           {loading ? (
-            <div style={{ fontSize: "12px", color: C.dimmer }}>Calculating...</div>
+            <div style={{ fontSize: "12px", color: C.dimmer }}>Calculating…</div>
           ) : (
             <div style={{ display: "flex", alignItems: "center", gap: "1rem" }}>
               <div style={{ flex: 1 }}>
@@ -2386,6 +2390,16 @@ export function PlayersPage({ onNavigate, onContact }) {
           drills to watch, and chase their own score.
         </p>
 
+        <div style={{background:"rgba(252,76,2,.08)",border:`1px solid ${C.goldBorder}`,borderRadius:16,padding:"1rem",margin:"1.1rem 0 1.2rem"}}>
+          <div style={{fontSize:13,color:C.dim,lineHeight:1.55,marginBottom:".8rem"}}>
+            Ready to train your hockey brain? Create an account or sign in first, then you can take quizzes, build your profile, and track your progress.
+          </div>
+          <div style={{display:"grid",gap:".6rem"}}>
+            <button style={S.btn} onClick={() => handleNav("home")}>Create account or sign in ?</button>
+            <button style={{...S.btn,background:"transparent",color:C.gold,border:`1px solid ${C.goldBorder}`}} onClick={() => handleNav("parents")}>Show my parents first</button>
+          </div>
+        </div>
+
         <nav style={S.toc} aria-label="On this page">
           <a href="#why-player" style={S.tocLink}>1. Why it matters</a>
           <a href="#how-player" style={S.tocLink}>2. How to use it</a>
@@ -2451,7 +2465,7 @@ export function PlayersPage({ onNavigate, onContact }) {
         <DeveloperBlurb />
 
         <div style={S.footerCtas}>
-          <button style={S.btn} onClick={() => handleNav("home")}>Take a quiz →</button>
+          <button style={S.btn} onClick={() => handleNav("home")}>Create account or sign in ?</button>
           <button style={S.btn} onClick={() => handleNav("parents")}>For my parents</button>
           <button style={S.btn} onClick={handleContact}>Questions? Get in touch</button>
         </div>

@@ -4,6 +4,7 @@
 // scenario is internally inconsistent and we reject it.
 
 import { validateScenario } from "../../src/scenario/schema.js";
+import { stepToScenario } from "../../src/scenario/multiStep.js";
 import { resolveTarget } from "../../src/scenario/zones.js";
 import { scorePath } from "../../src/scenario/primitives/path-scorer.js";
 import { scoreSelection } from "../../src/scenario/primitives/selection-scorer.js";
@@ -12,6 +13,52 @@ import { scoreSequence } from "../../src/scenario/primitives/sequence-scorer.js"
 import { scorePlace } from "../../src/scenario/primitives/place-scorer.js";
 
 export function lintScenario(scenario) {
+  if (Array.isArray(scenario.steps)) {
+    // Validate structure across all frames first.
+    const v0 = validateScenario(scenario);
+    if (!v0.ok) return { ok: false, errs: v0.errs, warns: v0.warns || [] };
+    // Then run the full hockey lint on each frame (synthetic flat scenario).
+    const errs = [];
+    scenario.steps.forEach((_, i) => {
+      const r = lintScenario(stepToScenario(scenario, i));
+      if (!r.ok) r.errs.forEach((e) => errs.push(`step[${i}]: ${e}`));
+    });
+    return { ok: errs.length === 0, errs, warns: [] };
+  }
+  // Branching nodes{} scenarios validate as a graph, then lint each node as
+  // a synthetic flat scenario so the scorer checks still run per frame.
+  if (scenario.nodes || scenario.entry) {
+    const v0 = validateScenario(scenario);
+    if (!v0.ok) return { ok: false, errs: v0.errs, warns: v0.warns || [] };
+
+    const errs = [];
+    const warns = [];
+    const { nodes, entry, ...base } = scenario;
+
+    for (const [nodeKey, node] of Object.entries(nodes || {})) {
+      const flat = {
+        ...base,
+        ...node,
+        id: `${scenario.id}:${nodeKey}`,
+        type: scenario.type || "scenario",
+        nodeId: node.nodeId || scenario.nodeId,
+        stage: node.stage || scenario.stage,
+        level: node.level || scenario.level,
+        levels: node.levels || scenario.levels,
+        themes: node.themes || scenario.themes,
+        tip: node.tip || scenario.tip,
+        why: node.why || scenario.why,
+      };
+
+      delete flat.routes;
+
+      const r = lintScenario(flat);
+      if (!r.ok) r.errs.forEach((e) => errs.push(`node[${nodeKey}]: ${e}`));
+      if (Array.isArray(r.warns)) r.warns.forEach((w) => warns.push(`node[${nodeKey}]: ${w}`));
+    }
+
+    return { ok: errs.length === 0, errs, warns };
+  }
   const v = validateScenario(scenario);
   if (!v.ok) return { ok: false, errs: v.errs, warns: v.warns };
 
@@ -108,3 +155,4 @@ export function lintScenario(scenario) {
 
   return { ok: true, errs: [], warns: v.warns };
 }
+

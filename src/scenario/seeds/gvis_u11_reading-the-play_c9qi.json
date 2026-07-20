@@ -2,36 +2,101 @@
   "id": "gvis_u11_reading-the-play_c9qi",
   "type": "scenario",
   "level": "U11 / Atom",
-  "levels": ["U11 / Atom"],
+  "levels": [
+    "U11 / Atom"
+  ],
   "nodeId": "u11.reading-the-play",
-  "themes": ["defensive-zone-coverage", "anticipate", "vision", "decision-making", "net-front"],
+  "themes": [
+    "defensive-zone-coverage",
+    "anticipate",
+    "vision",
+    "decision-making",
+    "net-front"
+  ],
   "cat": "Hockey Sense",
   "difficulty": 2,
-  "stage": { "view": "left", "zone": "def-zone" },
+  "stage": {
+    "view": "left",
+    "zone": "def-zone"
+  },
   "actors": [
-    { "id": "you",       "kind": "player",   "x": 0.26, "y": 0.30, "tag": "LD" },
-    { "id": "puck",      "kind": "puck",     "x": 0.32, "y": 0.10, "tag": "" },
-    { "id": "oCarrier",  "kind": "defender", "x": 0.32, "y": 0.10, "tag": "" },
-    { "id": "oNetFront", "kind": "defender", "x": 0.20, "y": 0.50, "tag": "" },
-    { "id": "oSlot",     "kind": "defender", "x": 0.26, "y": 0.38, "tag": "" },
-    { "id": "oPoint",    "kind": "defender", "x": 0.48, "y": 0.12, "tag": "" },
-    { "id": "tmRD",      "kind": "teammate", "x": 0.26, "y": 0.70, "tag": "RD" },
-    { "id": "goalie",    "kind": "goalie",   "x": 0.082, "y": 0.50, "tag": "" }
+    {
+      "id": "you",
+      "kind": "player",
+      "x": 0.26,
+      "y": 0.3,
+      "tag": "LD"
+    },
+    {
+      "id": "puck",
+      "kind": "puck",
+      "x": 0.21,
+      "y": 0.13,
+      "tag": ""
+    },
+    {
+      "id": "oCarrier",
+      "kind": "defender",
+      "x": 0.21,
+      "y": 0.13,
+      "tag": ""
+    },
+    {
+      "id": "oNetFront",
+      "kind": "defender",
+      "x": 0.15,
+      "y": 0.5,
+      "tag": ""
+    },
+    {
+      "id": "oSlot",
+      "kind": "defender",
+      "x": 0.3,
+      "y": 0.36,
+      "tag": ""
+    },
+    {
+      "id": "oPoint",
+      "kind": "defender",
+      "x": 0.34,
+      "y": 0.14,
+      "tag": ""
+    },
+    {
+      "id": "tmRD",
+      "kind": "teammate",
+      "x": 0.26,
+      "y": 0.7,
+      "tag": "RD"
+    },
+    {
+      "id": "goalie",
+      "kind": "goalie",
+      "x": 0.082,
+      "y": 0.5,
+      "tag": ""
+    }
   ],
   "interaction": {
     "kind": "selection",
-    "prompt": "White has the puck on the half-wall and is about to pass. Which white player do you move to cover RIGHT NOW before the puck gets there?",
-    "from": ["oNetFront", "oSlot", "oPoint"],
+    "prompt": "An opponent has the puck on the half-wall and is about to pass. Which opponent do you move to cover RIGHT NOW before the puck gets there?",
+    "from": [
+      "oNetFront",
+      "oSlot",
+      "oPoint"
+    ],
     "order": "any"
   },
   "correct": {
     "kind": "selection",
-    "ids": ["oNetFront"]
+    "ids": [
+      "oNetFront"
+    ]
   },
   "feedback": {
-    "right": "Good read! The white player at the front of the net can tip or redirect any pass. Cover them before the puck arrives — not after.",
-    "wrong": "Find the white player closest to your goalie. They are standing right at the net — ready to tip a pass into a goal. That is the most dangerous spot in the zone."
+    "right": "Good read! The opponent at the front of the net can tip or redirect any pass. Cover them before the puck arrives, not after.",
+    "wrong": "Find the opponent closest to your goalie. They are standing right at the net, ready to tip a pass into a goal. That is the most dangerous spot in the zone."
   },
-  "tip": "Every time the puck is on the half-wall, scan the front of YOUR net first. A white jersey near the crease can turn any pass into a goal before you can react.",
+  "tip": "Every time the puck is on the half-wall, scan the front of YOUR net first. An opponent near the crease can turn any pass into a goal before you can react.",
   "why": "Anticipating the net-front pass is the anchor read in defensive zone coverage. U11 players tend to watch the puck carrier on the half-wall instead of scanning the crease — this scenario trains the habit of finding the net-front threat before the pass is made."
 }

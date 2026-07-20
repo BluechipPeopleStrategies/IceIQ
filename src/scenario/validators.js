@@ -9,6 +9,7 @@
 //   null                    — pass
 
 import { ZONES } from "./zones.js";
+import { framesOf } from "./branching.js";
 
 const INTERCEPT_RADIUS = 0.035;
 
@@ -21,7 +22,7 @@ export const THEME_VOCAB = new Set([
   "offensive-zone", "defensive-zone-coverage", "neutral-zone",
   "zone-entry", "zone-exit", "face-off", "net-front", "cycle",
   // Numbers
-  "1-on-1", "2-on-1", "3-on-2", "odd-man-rush",
+  "1-on-1", "2-on-1", "3-on-1", "3-on-2", "odd-man-rush",
   // Skill / cognitive concepts
   "decision-making", "vision", "puck-support", "positioning",
   "pass-selection", "shot-selection", "gap-control", "angling",
@@ -32,12 +33,17 @@ export const THEME_VOCAB = new Set([
 // ───────────────────────────────────────────────────────────────────────
 // Geometry helpers (kept local to avoid a runtime dep on the React side).
 
-function distance(a, b) {
+export function distance(a, b) {
   const dx = a.x - b.x, dy = a.y - b.y;
   return Math.sqrt(dx * dx + dy * dy);
 }
 
-function lineHitsCircle(a, b, c, r) {
+// Exported so the formation constructors (src/scenario/formations/) can BUILD
+// geometry that satisfies these same checks by construction (e.g. place a
+// defender on a pass lane so lineHitsCircle is true) instead of re-deriving it.
+export const PASS_INTERCEPT_RADIUS = INTERCEPT_RADIUS;
+
+export function lineHitsCircle(a, b, c, r) {
   const dx = b.x - a.x, dy = b.y - a.y;
   const len2 = dx * dx + dy * dy;
   let t = 0;
@@ -68,6 +74,22 @@ function actorOnStage(actor, view) {
   if (view === "left")    return actor.x <= 0.55;
   if (view === "neutral") return actor.x >= 0.30 && actor.x <= 0.70;
   return true;
+}
+
+// Youngest U-number across s.levels (e.g. ["U9 / Novice","U11 / Atom"] → 9).
+// The youngest listed age governs age-appropriateness checks. Returns Infinity
+// when no level parses, so older/unlabeled boards are never age-gated.
+function youngestU(s) {
+  const nums = (s.levels || [])
+    .map(l => { const m = String(l).match(/U\s*(\d+)/i); return m ? +m[1] : null; })
+    .filter(n => n != null);
+  return nums.length ? Math.min(...nums) : Infinity;
+}
+
+// Attacking net center by view: right/full/neutral attack right (x≈0.92),
+// left-view attacks left (x≈0.08). Used by the net-direction + net-front rules.
+function attackingNetX(view) {
+  return view === "left" ? 0.08 : 0.92;
 }
 
 // ───────────────────────────────────────────────────────────────────────
@@ -146,10 +168,146 @@ const rules = [
     return null;
   },
 
+  // No offsides: on an attacking scene (off-zone or neutral, half-view), a
+  // teammate can't be PAST the offensive blue line while the puck is still
+  // behind it — that's offsides. Catches "pass to a winger already in the
+  // zone" and "carrier behind the line while teammates are deep". Skips
+  // def-zone (we're defending) and established in-zone plays (puck already in).
+  function noOffsides(s) {
+    const zone = s.stage?.zone;
+    if (zone !== "off-zone" && zone !== "neutral") return null;
+    const view = s.stage?.view;
+    // Offensive blue line by attack direction: right-view attacks right (0.645),
+    // left-view attacks left (0.355). A neutral VIEW crops out the OZ — skip.
+    const blue = view === "right" ? 0.645 : view === "left" ? 0.355 : null;
+    if (blue == null) return null;
+    const inOZ = (x) => (view === "right" ? x > blue : x < blue);
+    const puck = (s.actors || []).find(a => a.kind === "puck");
+    if (!puck || inOZ(puck.x)) return null; // no puck, or puck already in the zone → onside
+    const offside = (s.actors || []).filter(a => (a.kind === "player" || a.kind === "teammate") && inOZ(a.x));
+    if (offside.length) {
+      return { kind: "err", msg: `offsides — teammate(s) ${offside.map(a => a.id).join(", ")} ${offside.length > 1 ? "are" : "is"} past the offensive blue line but the puck is still behind it (x=${puck.x.toFixed(2)}). Carry the puck into the zone, or pull the teammate(s) back behind the line.` };
+    }
+    return null;
+  },
+
+  // Self-improving rule — LESSON 2026-06-11 (offsides-on-entry). A carry-puck
+  // offensive scenario drawn with the puck right at the blue line while teammates
+  // are already deeper reads as an ILLEGAL zone entry (offsides). Established
+  // in-zone plays must put the puck clearly inside the zone so deep teammates are
+  // unambiguously legal. Encoded once here so no future formation can repeat it.
+  function offsidesOnEntry(s) {
+    const zone = s.stage?.zone, view = s.stage?.view;
+    if (zone !== "off-zone") return null;
+    const blue = view === "left" ? 0.355 : 0.645;
+    const puck = (s.actors || []).find(a => a.kind === "puck");
+    if (!puck) return null;
+    const inOZ = view === "left" ? puck.x < blue : puck.x > blue;
+    const nearLine = inOZ && Math.abs(puck.x - blue) <= 0.06;
+    if (!nearLine) return null; // puck established deep in the zone → legal
+    const deeper = (a) => (view === "left" ? a.x < puck.x - 0.03 : a.x > puck.x + 0.03);
+    const ahead = (s.actors || []).filter(a => (a.kind === "player" || a.kind === "teammate") && deeper(a));
+    if (ahead.length) {
+      return { kind: "err", msg: `offsides-on-entry: the puck is right at the blue line but teammate(s) ${ahead.map(a => a.id).join(", ")} are already deeper in the zone — reads as an illegal entry. Carry the puck clearly inside the zone, or pull the teammates onside.` };
+    }
+    return null;
+  },
+
+  // Place-drill drop targets must not overlap when their guides are shown —
+  // merged circles read as one ambiguous blob. Pixel-space check because the
+  // rink is 600×300 (a 0.05 tol is 30px wide but the same normalized gap is
+  // half as tall). Warn (not err): the scenario still scores, but it's a UX bug.
+  function placeTargetsDontOverlap(s) {
+    if (s.interaction?.kind !== "place" || !s.interaction.showTargets) return null;
+    const places = s.correct?.placements;
+    if (!Array.isArray(places) || places.length < 2) return null;
+    const circles = places
+      .map(p => { const t = resolveTargetCoords(p); return t ? { id: p.id, ...t } : null; })
+      .filter(Boolean);
+    for (let i = 0; i < circles.length; i++) {
+      for (let j = i + 1; j < circles.length; j++) {
+        const a = circles[i], b = circles[j];
+        // Tolerance regions are normalized circles (radius = tol); they overlap
+        // when the centers are closer than the sum of the tolerances.
+        const dist = Math.hypot(a.x - b.x, a.y - b.y);
+        if (dist < a.tolerance + b.tolerance) {
+          return { kind: "warn", msg: `place targets for "${a.id}" and "${b.id}" overlap (centers ${dist.toFixed(3)} apart, tolerances sum ${(a.tolerance + b.tolerance).toFixed(3)}) — the drop guides merge into one ambiguous blob. Space them out or shrink the tolerances.` };
+        }
+      }
+    }
+    return null;
+  },
+
   function promptLengthSane(s) {
     const p = s.interaction?.prompt;
     if (typeof p !== "string" || p.length < 25) {
       return { kind: "err", msg: `interaction.prompt is too short (${p?.length ?? 0} chars) — minimum 25 to actually frame the read` };
+    }
+    return null;
+  },
+
+  // QA: copy must name jersey colors the renderer actually draws. Our side is
+  // BLUE, opponents are BLACK (white X). Authors transcribing a source image
+  // wrote "white jersey/player" for opponents — which contradicts the board.
+  // Warn on any player-color word that isn't blue/black. (From user feedback.)
+  function copyMatchesColors(s) {
+    const text = [s.interaction?.prompt, s.feedback?.right, s.feedback?.wrong, s.tip]
+      .filter(t => typeof t === "string").join(" ");
+    const m = text.match(/\b(white|yellow|red|green|orange|purple)\s+(jersey|jerseys|sweater|sweaters|player|players|defender|defenders|teammate|teammates|skater|skaters)\b/i);
+    if (m) {
+      return { kind: "warn", msg: `copy says "${m[0]}" but the renderer draws our side BLUE and opponents BLACK — no ${m[1].toLowerCase()} jerseys exist on the board. Call them "opponent"/"teammate" or match the actual color.` };
+    }
+    return null;
+  },
+
+  // QA: the puck's position must match a location the prompt claims. If the
+  // prompt says the puck is in the "corner" or at the "net-front/crease",
+  // verify the puck is actually there. (From the c9qi "puck isn't on the
+  // half-wall" feedback — codifying the unambiguous cases; the AI QA coach
+  // handles subtler spots like half-wall/slot/point.)
+  function puckLocationMatchesCopy(s) {
+    const puck = (s.actors || []).find(a => a.kind === "puck");
+    if (!puck) return null;
+    const text = (s.interaction?.prompt || "").toLowerCase();
+    const zone = s.stage?.zone;
+    // "deep" (near a net) depends on which net the scene shows.
+    const netX = zone === "def-zone" ? 0.08 : zone === "off-zone" ? 0.92 : null;
+    if (netX == null) return null; // neutral: no net reference
+    const depth = Math.abs(puck.x - netX);     // 0 = on the net, larger = toward the blue line
+    const offBoards = Math.abs(puck.y - 0.5);  // 0 = center ice, ~0.5 = on the boards
+    if (/\bcorner\b/.test(text) && (depth > 0.35 || offBoards < 0.18)) {
+      return { kind: "warn", msg: `prompt says "corner" but the puck (x=${puck.x.toFixed(2)}, y=${puck.y.toFixed(2)}) isn't in one — a corner is deep near the goal line AND wide against the boards.` };
+    }
+    if (/(net[- ]front|front of the net|\bcrease\b)/.test(text) && (depth > 0.25 || offBoards > 0.32)) {
+      return { kind: "warn", msg: `prompt says net-front/crease but the puck (x=${puck.x.toFixed(2)}, y=${puck.y.toFixed(2)}) is depth ${depth.toFixed(2)} from the net — it's not at the net.` };
+    }
+    return null;
+  },
+
+  // QA: "below the puck" / "above the puck" must match the geometry. "Below the
+  // puck" = deeper, between the puck and the net; "above" = higher, toward the
+  // blue line. Net reference = the goalie's x (works for any view/zone). If the
+  // copy claims the defense collapsed below the puck but the defenders are
+  // actually farther from the net than the puck, that's the contradiction.
+  // (From user feedback: defenders can't be "below" a puck sitting on the goal line.)
+  function copyMatchesDepth(s) {
+    const text = [s.interaction?.prompt, s.mc?.stem, s.feedback?.right, s.feedback?.wrong]
+      .filter(t => typeof t === "string").join(" ").toLowerCase();
+    const below = /(below the puck|collapsed below|sagged below|pulled below|sag below|sunk below)/.test(text);
+    const above = /(above the puck|collapsed above|stayed above|stay above)/.test(text);
+    if (!below && !above) return null;
+    const goalie = (s.actors || []).find(a => a.kind === "goalie");
+    const puck = (s.actors || []).find(a => a.kind === "puck");
+    const defs = (s.actors || []).filter(a => a.kind === "defender");
+    if (!goalie || !puck || !defs.length) return null;
+    const puckToNet = Math.abs(puck.x - goalie.x);             // smaller = deeper (closer to net)
+    const deeper = defs.filter(d => Math.abs(d.x - goalie.x) < puckToNet).length; // "below the puck"
+    const need = Math.ceil(defs.length / 2);
+    if (below && deeper < need) {
+      return { kind: "warn", msg: `copy says the defense is "below the puck" (deeper, between the puck and the net) but ${defs.length - deeper}/${defs.length} defenders are ABOVE it (farther from the net than the puck at x=${puck.x.toFixed(2)}). Move the puck higher (less deep) or collapse the defenders toward the net.` };
+    }
+    if (above && (defs.length - deeper) < need) {
+      return { kind: "warn", msg: `copy says the defense is "above the puck" but most defenders are below it (closer to the net than the puck at x=${puck.x.toFixed(2)}).` };
     }
     return null;
   },
@@ -196,6 +354,31 @@ const rules = [
     const correctCount = (s.correct?.ids || []).length;
     if (fromCount > 0 && fromCount === correctCount) {
       return { kind: "err", msg: `every candidate is correct — there's no wrong answer to make this a real choice` };
+    }
+    return null;
+  },
+
+  // "Geometry is the read" for selection seeds: the correct receiver should
+  // have a CLEAR lane from the carrier, and at least one wrong candidate should
+  // be BLOCKED by a defender (tempting-but-covered). The selection twin of
+  // decisionMakingPresent. Warn (not err) so existing hand seeds aren't broken.
+  function selectionOpenLaneClear(s) {
+    if (s.interaction?.kind !== "selection") return null;
+    const carrier = (s.actors || []).find(a => a.kind === "player");
+    const defs = (s.actors || []).filter(a => a.kind === "defender");
+    if (!carrier || !defs.length) return null;
+    const byId = Object.fromEntries((s.actors || []).map(a => [a.id, a]));
+    const correctIds = new Set(s.correct?.ids || []);
+    for (const id of correctIds) {
+      const t = byId[id];
+      if (!t) continue;
+      if (defs.some(d => lineHitsCircle(carrier, t, d, INTERCEPT_RADIUS))) {
+        return { kind: "warn", msg: `selection answer "${id}" has a defender in its lane from the carrier — the "open" read isn't actually open.` };
+      }
+    }
+    const wrong = (s.interaction.from || []).map(id => byId[id]).filter(a => a && !correctIds.has(a.id));
+    if (wrong.length && !wrong.some(a => defs.some(d => lineHitsCircle(carrier, a, d, INTERCEPT_RADIUS)))) {
+      return { kind: "warn", msg: `no wrong selection candidate is blocked by a defender — the geometry doesn't show why the other option(s) are covered.` };
     }
     return null;
   },
@@ -331,6 +514,32 @@ const rules = [
     return null;
   },
 
+  // LESSON: an off-zone attack needs at least one defender GOAL-SIDE of the puck
+  // (between the puck and the net) — otherwise there's no one to beat and the
+  // read is meaningless. Measured along the attack axis (x-depth) so a defender
+  // shading wide still counts; corner-parked defenders don't.
+  function defenderGoalSide(s) {
+    if (s.stage?.zone !== "off-zone") return null;
+    // Forecheck scenes invert this rule: the player pressures the puck CARRIER
+    // directly, so there is intentionally no opponent goal-side of the puck "to
+    // beat". Detected by the forecheck-pressure node / theme.
+    const isForecheck = /forecheck/i.test(s.nodeId || "") ||
+      (Array.isArray(s.themes) && s.themes.some(t => /forecheck/i.test(t)));
+    if (isForecheck) return null;
+    const goalie = (s.actors || []).find(a => a.kind === "goalie");
+    const puck = (s.actors || []).find(a => a.kind === "puck");
+    const defs = (s.actors || []).filter(a => a.kind === "defender");
+    if (!goalie || !puck || !defs.length) return null;
+    const view = s.stage?.view;
+    // Puck at/behind the goal line (wrap, cycle below the net) — "goal-side" is
+    // degenerate there, so the rule doesn't apply.
+    if (view === "left" ? puck.x <= goalie.x + 0.04 : puck.x >= goalie.x - 0.04) return null;
+    const ahead = (d) => (view === "left" ? d.x < puck.x - 0.01 : d.x > puck.x + 0.01);
+    const notCorner = (d) => Math.abs(d.y - 0.5) < 0.38;
+    if (defs.some(d => ahead(d) && notCorner(d))) return null;
+    return { kind: "err", msg: `no defender is goal-side of the puck (between the puck at x=${puck.x.toFixed(2)} and the net) — the attack has no one to beat.` };
+  },
+
   // ── DIFFICULTY CAP BY COMPLEXITY
   // Rough complexity score; difficulty must be ≥ derived floor. Stops
   // U11/difficulty=1 questions from sneaking through with timers + 9
@@ -349,6 +558,40 @@ const rules = [
     }
     if (complexity > 0 && (s.difficulty || 1) < complexity) {
       return { kind: "err", msg: `difficulty=${s.difficulty} is too low for this scenario (complexity floor=${complexity}: ${skaterCount} skaters${s.timer ? " + timer" : ""}${s.scanWindow ? " + scan-window" : ""}${s.preview ? " + preview-lock" : ""})` };
+    }
+    return null;
+  },
+
+  // ── BOARD-MC (optional multiple-choice over the validated board)
+
+  function mcShapeValid(s) {
+    if (!s.mc) return null;
+    const opts = s.mc.opts;
+    if (!Array.isArray(opts) || (opts.length !== 4 && opts.length !== 2)) {
+      return { kind: "err", msg: `mc.opts must be exactly 4 (multiple choice) or 2 (true/false) options (got ${Array.isArray(opts) ? opts.length : typeof opts})` };
+    }
+    if (opts.some(o => typeof o !== "string" || o.trim().length === 0)) {
+      return { kind: "err", msg: `every mc.opts entry must be a non-empty string` };
+    }
+    const seen = new Set(opts.map(o => o.trim().toLowerCase()));
+    if (seen.size !== opts.length) {
+      return { kind: "err", msg: `mc.opts has duplicate options — every option must be distinct` };
+    }
+    return null;
+  },
+
+  function mcOkInRange(s) {
+    if (!s.mc) return null;
+    if (!Number.isInteger(s.mc.ok) || s.mc.ok < 0 || s.mc.ok > 3) {
+      return { kind: "err", msg: `mc.ok must be an integer 0..3 (got ${JSON.stringify(s.mc.ok)})` };
+    }
+    return null;
+  },
+
+  function mcStemSane(s) {
+    if (!s.mc || s.mc.stem == null) return null;
+    if (typeof s.mc.stem !== "string" || s.mc.stem.trim().length < 10) {
+      return { kind: "warn", msg: `mc.stem is very short — give the question an actual prompt or omit it to reuse interaction.prompt` };
     }
     return null;
   },
@@ -425,12 +668,272 @@ const rules = [
     }
     return null;
   },
+
+  // ═══════════════════════════════════════════════════════════════════════
+  // NEW LESSONS — 2026-06-11 batch (see GOLDEN-RULES-2026-06-11.md).
+  // Authored across four coach lenses: hockey-IQ, spatial/proxemics,
+  // antagonistic (anti-ambiguity), and kid-clarity/age-curriculum.
+  // ═══════════════════════════════════════════════════════════════════════
+
+  // ── HOCKEY-IQ: legality & read sanity
+
+  // Every board trains "where is the puck" — 0 or 2 pucks is physically
+  // incoherent. No gate; runs on every board.
+  function exactlyOnePuck(s) {
+    const pucks = (s.actors || []).filter(a => a.kind === "puck");
+    if (pucks.length === 1) return null;
+    return { kind: "err", msg: `expected exactly 1 puck, found ${pucks.length} — every board needs one and only one puck` };
+  },
+
+  // A strict N-on-M theme is the lesson; the ice must match it. Attackers =
+  // player + teammates; defenders = defender kind (goalie excluded from the
+  // rush count). Only fires when a literal "N-on-M" theme is present.
+  function numbersThemeMatchesActors(s) {
+    const ratio = (s.themes || []).find(t => /^\d+-on-\d+$/.test(t));
+    if (!ratio) return null;
+    const [A, D] = ratio.split("-on-").map(Number);
+    const atk = (s.actors || []).filter(a => a.kind === "player" || a.kind === "teammate").length;
+    const def = (s.actors || []).filter(a => a.kind === "defender").length;
+    if (atk !== A || def !== D) {
+      return { kind: "err", msg: `theme "${ratio}" expects ${A} attacker(s) vs ${D} defender(s) but the board has ${atk} vs ${def} — match the label to the ice or change the tag` };
+    }
+    return null;
+  },
+
+  // Advantage themes must actually show the advantage. odd-man-rush is a hard
+  // err (the whole read depends on the extra man); power-play / penalty-kill
+  // warn, since a half-view can legitimately crop a teammate out of frame.
+  function oddManRushIsActuallyOdd(s) {
+    const T = new Set(s.themes || []);
+    const atk = (s.actors || []).filter(a => a.kind === "player" || a.kind === "teammate").length;
+    const def = (s.actors || []).filter(a => a.kind === "defender").length;
+    if (T.has("odd-man-rush") && !(atk > def)) {
+      return { kind: "err", msg: `themed "odd-man-rush" but attackers (${atk}) don't outnumber defenders (${def}) — there's no odd man on the ice` };
+    }
+    if (T.has("power-play") && !(atk > def)) {
+      return { kind: "warn", msg: `themed "power-play" but attackers (${atk}) don't outnumber defenders (${def}) in frame — show your man-advantage` };
+    }
+    if (T.has("penalty-kill") && !(def > atk)) {
+      return { kind: "warn", msg: `themed "penalty-kill" but defenders (${def}) don't outnumber your side (${atk}) in frame — show the kill being outnumbered` };
+    }
+    return null;
+  },
+
+  // A "shoot" must go at the ATTACKING net, never your own. Goes beyond
+  // verbMatchesContext (which accepts either net) by using the view's attack
+  // direction. Only the wrong-net case errs; "not near any net" stays with the
+  // existing warn.
+  function shootTargetsAttackingNet(s) {
+    if (s.interaction?.kind !== "path" || s.interaction.verb !== "shoot") return null;
+    const end = resolveTargetCoords(s.correct?.end);
+    if (!end) return null;
+    const view = s.stage?.view;
+    const attackX = attackingNetX(view);
+    const ownX = view === "left" ? 0.92 : 0.08;
+    if (Math.abs(end.x - ownX) < Math.abs(end.x - attackX)) {
+      return { kind: "err", msg: `verb="shoot" but correct.end (x=${end.x.toFixed(2)}) is closer to your OWN net (x≈${ownX}) than the attacking net (x≈${attackX}) — you're shooting the wrong way` };
+    }
+    return null;
+  },
+
+  // Backchecking is skating back to defend; a "backcheck" that travels toward
+  // the attacking net inverts the lesson. Own net is left (x→0) in right/full
+  // view, right (x→1) in left-view.
+  function backcheckHeadsToOwnNet(s) {
+    if (s.interaction?.kind !== "path" || s.interaction.verb !== "backcheck") return null;
+    const from = s.actors?.find(a => a.id === s.interaction.from);
+    const end = resolveTargetCoords(s.correct?.end);
+    if (!from || !end) return null;
+    const towardOwn = s.stage?.view === "left" ? (end.x - from.x) : (from.x - end.x);
+    if (towardOwn < -0.03) {
+      return { kind: "err", msg: `verb="backcheck" but the path moves toward the attacking net (Δ toward own net = ${towardOwn.toFixed(2)}) — backchecking means skating back to your own end` };
+    }
+    return null;
+  },
+
+  // ── SPATIAL / PROXEMICS
+
+  // Only the goalie belongs in the blue paint; a field defender drawn in the
+  // crease reads as a second goalie. Warn — a goal-line scramble is a rare but
+  // legitimate exception worth a human look.
+  function noDefenderInsideCrease(s) {
+    for (const d of (s.actors || []).filter(a => a.kind === "defender")) {
+      const inRight = d.x >= 0.88 && d.x <= 0.95 && Math.abs(d.y - 0.5) < 0.08;
+      const inLeft  = d.x >= 0.05 && d.x <= 0.12 && Math.abs(d.y - 0.5) < 0.08;
+      if (inRight || inLeft) {
+        return { kind: "warn", msg: `defender "${d.id}" at (${d.x.toFixed(2)},${d.y.toFixed(2)}) is inside the goalie's crease — only the goalie belongs in the blue paint; pull the defender out to the net-front` };
+      }
+    }
+    return null;
+  },
+
+  // The goalie must sit on the puck-to-net shooting line, not parked off-angle.
+  // Distinct from goalieInCrease (position-in-crease only). Skips a goalie that's
+  // out challenging, and a puck on the goal line (angle is degenerate there).
+  function goalieOnPuckToNetAngle(s) {
+    const goalie = (s.actors || []).find(a => a.kind === "goalie");
+    const puck = (s.actors || []).find(a => a.kind === "puck");
+    if (!goalie || !puck) return null;
+    const netX = goalie.x > 0.5 ? 0.92 : 0.08;
+    if (Math.abs(goalie.x - netX) > 0.10) return null;   // out challenging — skip
+    if (Math.abs(netX - puck.x) < 0.05) return null;     // puck on the goal line — degenerate
+    const expectedY = puck.y + (goalie.x - puck.x) * (0.5 - puck.y) / (netX - puck.x);
+    if (Math.abs(goalie.y - expectedY) > 0.12) {
+      return { kind: "warn", msg: `goalie "${goalie.id}" (y=${goalie.y.toFixed(2)}) is off the puck-to-net angle (expected y≈${expectedY.toFixed(2)} for a puck at y=${puck.y.toFixed(2)}) — center the goalie on the shooting line` };
+    }
+    return null;
+  },
+
+  // A board themed "net-front" must have a teammate planted at the net, or it
+  // contradicts its own premise (a body in front of the goalie to screen/tip).
+  function netFrontThemeNeedsNetFrontPresence(s) {
+    if (!(s.themes || []).includes("net-front")) return null;
+    const net = { x: attackingNetX(s.stage?.view), y: 0.5 };
+    const present = (s.actors || []).some(a => a.kind === "teammate" && distance(a, net) < 0.16);
+    if (!present) {
+      return { kind: "warn", msg: `themed "net-front" but no teammate is within 0.16 of the net — the screen/tip premise needs a body in front of the goalie` };
+    }
+    return null;
+  },
+
+  // ── ANTAGONISTIC: anti-ambiguity (receiver-pick boards)
+
+  // A receiver-pick board where EVERY selectable teammate's lane is blocked is
+  // unsolvable — the keyed answer is a forced loss. Complements
+  // selectionOpenLaneClear (which only checks the correct lane in isolation).
+  function selectionAllLanesBlocked(s) {
+    if (s.interaction?.kind !== "selection" && s.interaction?.kind !== "sequence") return null;
+    const player = (s.actors || []).find(a => a.kind === "player");
+    const defs = (s.actors || []).filter(a => a.kind === "defender");
+    if (!player || !defs.length) return null;
+    const byId = Object.fromEntries((s.actors || []).map(a => [a.id, a]));
+    const cands = (s.interaction.from || []).map(id => byId[id]).filter(Boolean);
+    if (cands.length < 2 || !cands.every(a => a.kind === "teammate")) return null; // receiver-pick only
+    const open = cands.filter(t => !defs.some(d => lineHitsCircle(player, t, d, INTERCEPT_RADIUS)));
+    if (open.length === 0) {
+      return { kind: "err", msg: `every selectable teammate's passing lane is blocked by a defender — the board is unsolvable, there's no open receiver to pick` };
+    }
+    return null;
+  },
+
+  // Exactly one receiver should be cleanly open. If two or more WRONG candidates
+  // also have clear lanes, the player can be marked wrong for an equally-valid
+  // pass — the read is ambiguous.
+  function selectionSingleClearLane(s) {
+    if (s.interaction?.kind !== "selection" && s.interaction?.kind !== "sequence") return null;
+    const player = (s.actors || []).find(a => a.kind === "player");
+    const defs = (s.actors || []).filter(a => a.kind === "defender");
+    if (!player || !defs.length) return null;
+    const byId = Object.fromEntries((s.actors || []).map(a => [a.id, a]));
+    const cands = (s.interaction.from || []).map(id => byId[id]).filter(Boolean);
+    if (cands.length < 2 || !cands.every(a => a.kind === "teammate")) return null;
+    const correctIds = new Set(s.correct?.ids || []);
+    const clearWrong = cands.filter(a => !correctIds.has(a.id) &&
+      !defs.some(d => lineHitsCircle(player, a, d, INTERCEPT_RADIUS)));
+    if (clearWrong.length >= 2) {
+      return { kind: "warn", msg: `${clearWrong.length} wrong candidates (${clearWrong.map(a => a.id).join(", ")}) also have clear passing lanes — the read is ambiguous; only one receiver should be cleanly open, block the decoys' lanes` };
+    }
+    return null;
+  },
+
+  // ── KID-CLARITY / AGE-CURRICULUM (gate on the youngest listed U-number)
+
+  // U7/U9 think in "me and the puck," not positions — only "YOU" may carry a
+  // tag. (Distinct from positionTagsAlignWithLocation, which is geometry.)
+  function noPositionTagsOnYoungBoards(s) {
+    const u = youngestU(s);
+    if (u > 10) return null;
+    for (const a of (s.actors || [])) {
+      if (!a.tag) continue;
+      const t = String(a.tag).trim().toUpperCase();
+      if (t && t !== "YOU") {
+        return { kind: "err", msg: `U${u} boards use generic players — remove position tag "${a.tag}" from "${a.id}" (only "YOU" is allowed at this age)` };
+      }
+    }
+    return null;
+  },
+
+  // Young brains overload past a handful of bodies; cap skaters by age.
+  // (Distinct from difficultyMatchesComplexity — that caps difficulty, not the
+  // actor count, and isn't age-indexed.)
+  function skaterCountWithinAgeCap(s) {
+    const u = youngestU(s);
+    const cap = u <= 7 ? 5 : u <= 10 ? 6 : null;
+    if (cap == null) return null;
+    const skaters = (s.actors || []).filter(a => a.kind === "player" || a.kind === "teammate" || a.kind === "defender").length;
+    if (skaters > cap) {
+      return { kind: "err", msg: `U${u} board has ${skaters} skaters — the cap is ${cap} to keep it readable at this age; simplify the board` };
+    }
+    return null;
+  },
+
+  // Structured systems aren't introduced until U11+; tagging them on a U7/U9
+  // board teaches the wrong mental model at the wrong time.
+  function advancedThemesGatedByAge(s) {
+    const u = youngestU(s);
+    if (u > 10) return null;
+    const GATED = new Set(["power-play", "penalty-kill", "gap-control", "cycle", "regroup", "neutral-zone-trap", "breakout", "backcheck"]);
+    const offender = (s.themes || [])
+      .map(t => String(t).toLowerCase().replace(/[\s_]+/g, "-"))
+      .find(t => GATED.has(t));
+    if (offender) {
+      return { kind: "err", msg: `theme "${offender}" isn't introduced until U11+ — not age-appropriate on a U${u} board` };
+    }
+    return null;
+  },
+
+  // IntelliGym pressure tools (timer / scan-window / preview-lock) are for
+  // older, game-ready players; they only frustrate U7/U9.
+  function noPressureMechanicsOnYoungBoards(s) {
+    const u = youngestU(s);
+    if (u > 10) return null;
+    const offenders = [];
+    if (s.timer) offenders.push("timer");
+    if (s.scanWindow) offenders.push("scanWindow");
+    if (s.preview) offenders.push("preview");
+    if (offenders.length) {
+      return { kind: "err", msg: `U${u} boards must not use pressure mechanics (${offenders.join(", ")}) — timers, scan-windows and preview-locks are for older, game-ready players` };
+    }
+    return null;
+  },
+
+  // A flat difficulty ceiling by age — a 3-star cognitive load exceeds what
+  // these ages can handle no matter how few actors are on the ice.
+  function difficultyCeilingByAge(s) {
+    const u = youngestU(s);
+    const ceil = u <= 7 ? 1 : u <= 10 ? 2 : null;
+    if (ceil == null) return null;
+    if (s.difficulty != null && s.difficulty > ceil) {
+      return { kind: "err", msg: `U${u} board is difficulty ${s.difficulty} — the ceiling for this age is ${ceil}` };
+    }
+    return null;
+  },
+
+  // THE DECISION TEST for positioning (see docs/decision-test-principle.md).
+  // A "place" board is only a real read if a tempting-but-wrong spot exists. The
+  // author declares it: read = { cue, decoy:{x,y} }. We warn (not err) so existing
+  // seeds aren't broken, but the warning feeds the coach gate as a single-option
+  // signal. The decoy must actually be CONTESTED (a defender within reach), or it
+  // isn't tempting — that's the geometric proof the read is real.
+  function positioningNeedsADecoy(s) {
+    if (s.interaction?.kind !== "place") return null;
+    const read = s.read;
+    if (!read || !read.cue || !read.decoy || typeof read.decoy.x !== "number" || typeof read.decoy.y !== "number") {
+      return { kind: "warn", msg: "single-option positioning risk: no declared read. Add read:{ cue, decoy:{x,y} } — the Decision Test needs a cue that flips the answer and a tempting wrong spot (decoy)" };
+    }
+    const defenders = (s.actors || []).filter(a => a.kind === "defender");
+    const contested = defenders.some(d => distance(d, read.decoy) <= 0.18);
+    if (!contested) {
+      return { kind: "warn", msg: `declared decoy at (${read.decoy.x}, ${read.decoy.y}) isn't covered by any defender — a decoy is only tempting if it's contested, so the read isn't real yet` };
+    }
+    return null;
+  },
 ];
 
 // ───────────────────────────────────────────────────────────────────────
 // Public entry — runs all rules, partitions errors vs warnings.
 
-export function runHockeyValidators(scenario) {
+function runFlat(scenario) {
   const errs = [];
   const warns = [];
   for (const rule of rules) {
@@ -442,4 +945,19 @@ export function runHockeyValidators(scenario) {
     else if (result.kind === "warn") warns.push(result.msg);
   }
   return { errs, warns };
+}
+
+// Multi-frame plays (steps[] or nodes{}) run the rules per frame; flat scenarios
+// run once. Frame issues are prefixed so the author knows which frame to fix.
+export function runHockeyValidators(scenario) {
+  if (scenario && (scenario.steps || scenario.nodes)) {
+    const errs = [], warns = [];
+    framesOf(scenario).forEach((f, i) => {
+      const r = runFlat(f);
+      r.errs.forEach((e) => errs.push(`frame[${i}]: ${e}`));
+      r.warns.forEach((w) => warns.push(`frame[${i}]: ${w}`));
+    });
+    return { errs, warns };
+  }
+  return runFlat(scenario);
 }

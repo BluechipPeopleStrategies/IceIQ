@@ -4,6 +4,12 @@
 > section cites a file/identifier, grep to confirm it still exists before relying
 > on it — the codebase moves faster than this doc.
 
+## Current priorities (canonical)
+
+`docs/roadmap/TASKS.md` is the single living task list — priority + sequencing,
+scope = app build + content factory. Treat it as the source of truth; the dated
+roadmap snapshots are archived under `docs/roadmap/archive/`.
+
 ## Direction (2026-06-03)
 **Starting fresh on the unified scenario engine** (`src/scenario/`). The legacy question bank is archived (`src/data/questions.legacy*.json`) then being **wiped — NOT migrated forward**. Don't invest in repairing/converting legacy questions. New content = engine scenario seeds (`src/scenario/seeds/`) + content-factory overlay questions. Treat the old MC bank as a frozen, read-only archive.
 
@@ -68,6 +74,12 @@ Renders `q.overlays[]` (normalized 0–1 coords) on top of an image — the hous
 - Sprite sheets expected at `/assets/sprites/{player-yellow.png, player-black.png, goalie.png}`.
 - **Accessibility:** never color-alone (red/green colorblind rule) — pair with arrow/shape/label.
 
+## Chart Chooser (dataviz form-selection)
+
+Before adding/changing any chart (coach analytics, progress trends, GS score
+history), read `docs/reference/chart-chooser.md` to pick the form, then run the
+`dataviz` skill for color/marks/accessibility.
+
 ## Content Factory (`docs/factory/`, `tools/factory-*.mjs`)
 Image-first pipeline that turns hockey images into coach-graded, age-laddered, multi-format question banks at scale (rink scenarios are a paid teaser → more/better content = conversion).
 - **Spec:** `docs/factory/SPEC.md` (current build-out: overlay annotation system, coverage ledger, stricter verdict bar). Proven runs: `factory-run-01.json` / `-02.json` + summaries.
@@ -117,6 +129,49 @@ When adding a key, follow the `rinkreads_<thing>[_vN]` convention and grep befor
 
 ## Conversion UX Triggers
 Goals tab gold pip for FREE; blurred sample-goal preview behind gate; session-#5 milestone banner; mid-quiz locked-format sentinel; weekly-cap `FreeQuizCapScreen`. Upgrade surfaces: position filter, >1 age switch, session 6+, weekly cap, weekly-challenge tap.
+
+## Repo Reference vs. Second Brain
+
+Operational material Claude Code needs to consult automatically mid-task —
+build standards, skill pairings, frameworks tied to a specific deliverable
+type (e.g. `docs/reference/chart-chooser.md`) — lives in-repo under `docs/`.
+Test: would a future session need this read without being asked? If yes, repo.
+Human-facing strategy, roadmap synthesis, and decisions Thomas reviews outside
+a coding session live in Second Brain (`Command Center/Projects/RinkReads/`).
+Don't duplicate content across the two — link from Second Brain to the repo
+file if a hub doc needs it. Repo commits already sync into the RinkReads
+Commit Log automatically, so a repo-only change needs no separate Second
+Brain write. (Standing rule, Thomas, 2026-07-11.)
+
+## Git & Commits (auto-commit)
+- **AUTO-COMMIT:** after completing a code or content change in this repo, commit it
+  to git without asking — clear conventional-commit message + `Co-Authored-By` trailer.
+- **Scope to what changed:** stage only the files for the change at hand
+  (`git add <paths>`). Never `git add -A`/`.` to sweep unrelated WIP into the commit.
+  If unrelated edits are mixed into a file you're committing, surface that and confirm
+  before including them.
+- **Never auto-push.** Pushing still requires explicit confirmation.
+- **Never commit directly to `main`** — Vercel auto-deploys `main`, so a commit there
+  is a production publish. If HEAD is `main`, stop and ask (branch first). Auto-commit
+  only on feature branches.
+
+## Standing "go" authorization (Thomas, 2026-07-12)
+
+When Thomas says "go" (or an equivalent clear go-ahead) to a proposed action,
+that stands as authorization to **run** it without asking again each time —
+scripts, tools, tests, and other reversible/local actions, including ones
+that spend tokens or call paid APIs (e.g. `source-triage`). This does **not**
+extend to merging to `main` or any production deploy — that stays gated by
+the "Never commit directly to `main`... stop and ask" rule above, and pushing
+still needs its own explicit confirmation per the AUTO-COMMIT rule above,
+regardless of a prior "go." Different bars: running things is cheap and
+reversible; publishing to real users is not.
+
+**Pause and explain instead of proceeding, even under a standing "go", when:**
+
+- Any test fails, or a review returns a Critical/Important finding.
+- The change touches auth, payments, pricing, or user data.
+- The diff has grown unusually large or broad relative to the stated task.
 
 ## Token Discipline (when working this repo)
 - `App.jsx` is huge and the JSON banks are large — **do not read them in full** unless editing that exact content. Read targeted ranges; grep first.

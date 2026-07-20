@@ -1,0 +1,42 @@
+{
+  "id": "u13_breakout_position_place_v1",
+  "type": "scenario",
+  "nodeId": "u13.breakout-and-regroup",
+  "level": "U13 / Peewee",
+  "levels": ["U13 / Peewee"],
+  "themes": ["breakout", "positioning", "puck-support"],
+  "cat": "Breakout",
+  "difficulty": 3,
+  "stage": { "view": "left", "zone": "def-zone" },
+  "read": { "cue": "a forechecker has sealed the strong-side wall, taking away the usual winger outlet", "decoy": { "x": 0.1, "y": 0.78 } },
+  "actors": [
+    { "id": "dmate", "kind": "teammate", "x": 0.07, "y": 0.85, "tag": "D" },
+    { "id": "puck", "kind": "puck", "x": 0.072, "y": 0.852 },
+    { "id": "fc1", "kind": "defender", "x": 0.13, "y": 0.74, "tag": "" },
+    { "id": "fc2", "kind": "defender", "x": 0.22, "y": 0.55, "tag": "" },
+    { "id": "g", "kind": "goalie", "x": 0.06, "y": 0.5, "tag": "" },
+    { "id": "sw", "kind": "player", "x": 0.34, "y": 0.62, "tag": "RW" },
+    { "id": "c", "kind": "teammate", "x": 0.38, "y": 0.5, "tag": "C" },
+    { "id": "ww", "kind": "teammate", "x": 0.34, "y": 0.34, "tag": "LW" }
+  ],
+  "interaction": {
+    "kind": "place",
+    "items": ["sw", "c", "ww"],
+    "showTargets": false,
+    "prompt": "A forechecker has sealed your strong-side wall. Drag your three forwards to the outlets that beat this pressure."
+  },
+  "correct": {
+    "kind": "place",
+    "placements": [
+      { "id": "ww", "zoneId": "dz-half-wall-weak" },
+      { "id": "c", "x": 0.28, "y": 0.5, "tolerance": 0.09 },
+      { "id": "sw", "x": 0.11, "y": 0.63, "tolerance": 0.08 }
+    ]
+  },
+  "feedback": {
+    "right": "You beat the pressure: the strong wall is sealed, so the weak-side winger is the open outlet, the centre supports the middle for a reverse, and the strong winger drops low to give your D a short, safe out.",
+    "wrong": "Putting a winger on the sealed strong-side wall plays right into the forecheck — that lane is gone. Beat the pressure: open the weak side and give your D a short outlet under it."
+  },
+  "tip": "When the forecheck takes away a wall, don't force it there. Use the open weak side and a short low outlet to escape.",
+  "why": "A breakout is a read, not a drill. The forecheck dictates where the ice is — sealing the strong wall means the weak side and a short under-outlet are how you beat it."
+}

@@ -3,6 +3,7 @@
 // is engine-shaped), and adds the curriculum-node + brand context.
 import { buildSystemPrompt } from "../scenario-author/prompt.js";
 import { AGE_LEVEL } from "./prompts.mjs";
+import { renderDecisionCalibration } from "./decision-calibration.mjs";
 
 export function buildVisualCreatorPrompt({ node, concept, domain, idSeed, guidance = "" }) {
   const ageDisplay = AGE_LEVEL[node.ageId];
@@ -116,6 +117,75 @@ Scenario:
 ${JSON.stringify(scenario, null, 2)}
 
 Approve only if excellent on every dimension. Otherwise KICK_BACK with reasons.`;
+  return { system, prompt };
+}
+
+// Solo-first Head Coach for DRAWN questions. Same gate-the-room idea as the text
+// version, but she reasons from the scenario JSON + the ascii board.
+export function buildVisualHeadCoachSoloPrompt({ scenario, ascii, node, concept }) {
+  const system =
+`You are the HEAD COACH for RinkReads reviewing one DRAWN (geometry) question ALONE, before
+deciding whether to convene your hockey + visual panels. Judge with your own eyes, not a rubric.
+A question must present a GENUINE decision: at least two options a thoughtful player would weigh,
+with at least one tempting-but-wrong choice. If the correct answer is the only viable option
+(one open teammate, one sensible spot, others obviously bad), that alone is a KICK_BACK.
+${renderDecisionCalibration()}
+- Clearly excellent (real decision, read is right AND the picture shows it, age-appropriate): APPROVE.
+- Clearly flawed beyond a quick fix: KICK_BACK with reasons.
+- A genuine judgment call where the read panel or the geometry panel would sharpen it: CONVENE.
+Set confidence 0..1.
+Return ONLY: {"verdict":"APPROVE"|"CONVENE"|"KICK_BACK","confidence":0.0,"notes":["short reasons"]}`;
+  const prompt =
+`Node ${node.id} (age ${node.ageId}, concept "${concept.name}": ${concept.definition}).
+Board (how a player sees it):
+${ascii}
+Scenario JSON:
+${JSON.stringify(scenario, null, 2)}
+
+Rule alone if you can; convene if it is a real judgment call.`;
+  return { system, prompt };
+}
+
+// AUDIT verdict for already-shipped seeds. Assessment verbs, not ship verbs.
+export function buildAuditHeadCoachPrompt({ scenario, ascii, node, concept }) {
+  const system =
+`You are the HEAD COACH for RinkReads auditing a question that ALREADY SHIPPED. Decide its fate
+with your professional judgment.
+FIRST, apply the DECISION TEST (a board tests decision-making only if BOTH hold):
+  (1) MIRROR TEST — there is a CUE on the board (pressure, coverage, puck location, what the
+      goalie/defender did) such that, if that cue were different, a DIFFERENT answer would be
+      correct. If the answer is the same in every game situation, it is RECALL, not a read.
+  (2) DECOY TEST — there is a tempting WRONG answer a player who is not reading would actually
+      pick (the textbook/default spot, the covered lane, the answer to the mirror situation).
+Fail the Mirror Test -> RECALL -> REVISE. Pass Mirror but fail Decoy -> TRIVIAL -> REVISE. A
+one-option question tests nothing no matter how correct the answer is.
+CALIBRATE THE DECOY TO THE TARGET AGE, not to an expert. Judge whether the wrong answer is
+tempting to a player AT THIS BOARD'S age band. A U7/U9 read only needs to be a genuine choice for
+a 7-9 year old (a covered lane, a puck-chase trap, a "skate to the nearest open space" instinct) —
+it does NOT need to stump an experienced coach. Raise the bar with age: by U13+ the competing
+option should be one even a knowledgeable player would weigh. Do NOT REVISE a young-age board
+solely because the read is "obvious to an expert" — that is the wrong yardstick for U7/U9/U11.
+For POSITIONING ("place") boards especially: "drag everyone into the textbook structure" fails
+BOTH tests. Demand a readable cue (a specific defensive look) and a tempting decoy (the spot the
+cue makes wrong); the scenario's read:{cue,decoy} should name them.
+${renderDecisionCalibration()}
+If the board shows a MACHINE GEOMETRY CHECKS block: items under ERRORS are hard, verified failures — REVISE. Items under WARNINGS are advisory facts about positions/lanes to weigh with your own judgment — a warning alone is NOT automatic grounds for REVISE.
+Then judge the rest:
+- KEEP: sound as-is, stands proudly beside its siblings.
+- REVISE: fixable — say exactly what (wording, a distractor, a wrong/absent label, age-fit, a
+  geometry/positioning problem).
+- RETIRE: not salvageable for this band.
+- CONVENE: a genuine judgment call you want the hockey + visual panels on before you rule.
+Set confidence 0..1.
+Return ONLY: {"verdict":"KEEP"|"REVISE"|"RETIRE"|"CONVENE","confidence":0.0,"notes":["short, specific"]}`;
+  const prompt =
+`Node ${node.id} (age ${node.ageId}, concept "${concept?.name || node.conceptId}": ${concept?.definition || ""}).
+Board:
+${ascii}
+Scenario JSON:
+${JSON.stringify(scenario, null, 2)}
+
+Assess it. KEEP / REVISE / RETIRE, or CONVENE if it is a real judgment call.`;
   return { system, prompt };
 }
 
