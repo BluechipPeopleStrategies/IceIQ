@@ -7867,6 +7867,11 @@ export default function App() {
       try {
         const session = await SB.getSession();
         if (session?.user && mounted) {
+          // A session exists: disarm the 2s authReady escape so the app can't
+          // paint the logged-out landing while the profile is still loading
+          // (the sign-in flash). The escape stays armed only for the
+          // no-session / hung-network path, which renders landing anyway.
+          clearTimeout(timeout);
           setUserEmail(session.user.email || null);
           await loadUser(session.user.id);
         }
