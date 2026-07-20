@@ -14,6 +14,7 @@ import { twoOnOneSupportTooFlat } from "./plays/twoOnOneSupportTooFlat.js";
 import { twoOnOneGoalieLateAfterPass } from "./plays/twoOnOneGoalieLateAfterPass.js";
 import { backcheckRecoveryDefenderGetsBeat } from "./plays/backcheckRecoveryDefenderGetsBeat.js";
 import { VERDICT_TWO_ON_ONE_FORCED_SHOT } from "./plays/verdictTwoOnOneForcedShot.js";
+import { VERDICT_GAP_CONTROL_BACKING_IN } from "./plays/verdictGapControlBackingIn.js";
 import { PREDICT_TWO_ON_ONE_DEFENDER_STEP } from "./plays/predictTwoOnOneDefenderStep.js";
 import { SPOT_MISTAKE_FLAT_SUPPORT } from "./plays/spotMistakeFlatSupport.js";
 import { SUPPORT_ANGLE_FLAT } from "./plays/supportAngleFlat.js";
@@ -47,6 +48,8 @@ export const ALL_ANIMATED_PLAYS = [
   backcheckRecoveryDefenderGetsBeat,
 
   VERDICT_TWO_ON_ONE_FORCED_SHOT,
+
+  VERDICT_GAP_CONTROL_BACKING_IN,
 
   PREDICT_TWO_ON_ONE_DEFENDER_STEP,
 

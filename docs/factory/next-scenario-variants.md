@@ -6,7 +6,7 @@ This queue turns scenario families into buildable play variants.
 
 ## 2-on-1 Reads
 
-- **Implemented:** 11/6
+- **Implemented:** 12/6
 - **Current status:** complete
 
 _No queued variant needed right now._
@@ -49,7 +49,7 @@ _No queued variant needed right now._
 
 ## Gap Control
 
-- **Implemented:** 2/4
+- **Implemented:** 3/4
 - **Current status:** needs variants
 
 ### Next Recommended Variant
@@ -59,7 +59,7 @@ _No queued variant needed right now._
 - **Decision:** Close space earlier while protecting middle.
 - **Common mistake:** Backing into the goalie.
 - **Format:** single question + reveal
-- **Recommended kind:** verdict
+- **Recommended kind:** predict-next
 
 ### Remaining Backlog
 
