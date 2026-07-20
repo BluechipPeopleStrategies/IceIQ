@@ -12,6 +12,9 @@ export const QUESTION_KINDS = {
 
 export function resolveKind(node) {
   if (!node || node.terminal) return null;
+  // Watch nodes (autoNext, no ask) display the setup only — they are not a
+  // question and must not default to "read-mc".
+  if (node.autoNext) return null;
   if (node.ask?.kind) return node.ask.kind;
   // Back-compat: choiceMode predates the registry and keeps working.
   if (node.ask?.choiceMode === "lane-pick") return "lane-pick";

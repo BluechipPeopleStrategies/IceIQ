@@ -558,6 +558,15 @@ export default function AnimatedPlay({ play, ageBand = "U11", onEvent }) {
             );
           })
         )}
+        {/* Judge-why surfacing: once the justify answer lands, show the coaching
+            copy authored on the judge pick (why/no) — it never had a display
+            path, and showing it earlier would leak the justify answer. */}
+        {kind === "verdict" && judgePick && picked !== null && (judgePick.why || judgePick.no) && (
+          <div style={{ fontSize: 12.5, marginTop: 8, padding: "8px 10px", borderRadius: 8, background: judgePick.ok ? "#F2FAF5" : "#FFF7EF", border: `1px solid ${judgePick.ok ? "#9CCFB2" : "#E0B98A"}`, color: judgePick.ok ? "#155F38" : "#7A4A1C", lineHeight: 1.45 }}>
+            <span style={{ fontWeight: 800 }}>Your call: {optionTextForAge(judgePick, actorMap, profile)}.</span>{" "}
+            {playerFacingTextForAge(judgePick.why || judgePick.no, profile)}
+          </div>
+        )}
         <button onClick={() => onEvent?.({ playId: play.id, nodeId, event: "unclear", ms: Date.now() - startedAtRef.current })}
           style={{ marginTop: 8, background: "transparent", border: "1px dashed #8792A5", borderRadius: 8, color: "#4B5563", padding: "6px 8px", fontSize: 12, cursor: "pointer" }}>
           Mark this read unclear

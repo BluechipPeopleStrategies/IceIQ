@@ -39,6 +39,25 @@ describe("question kind registry", () => {
     assert.equal(kindSpec("nope"), null);
   });
 
+  it("resolves watch nodes (autoNext) to null, not read-mc", () => {
+    assert.equal(resolveKind({ autoNext: { next: "q1", ms: 2000 } }), null);
+    assert.equal(resolveKindForAge({ autoNext: { next: "q1" } }, "U11"), null);
+  });
+
+  it("lints justify copy to the same standards as the primary ask", () => {
+    const play = structuredClone(VERDICT_TWO_ON_ONE_FORCED_SHOT);
+    const node = Object.values(play.nodes).find((n) => n.ask?.justify);
+    assert.ok(node, "fixture should contain a justify node");
+    // The shipped fixture passes as-is.
+    assert.ok(validateFactoryStandards(play).errs.every((e) => !e.message.includes("justify")));
+    // Break it: two correct justify answers + a missing text.
+    node.ask.justify.opts.forEach((o) => { o.ok = true; });
+    delete node.ask.justify.opts[0].t;
+    const broken = validateFactoryStandards(play);
+    assert.ok(broken.errs.some((e) => e.message === "justify must have exactly one correct answer"));
+    assert.ok(broken.errs.some((e) => e.message === "justify option missing text"));
+  });
+
   it("round-trips an explicit verdict kind", () => {
     assert.equal(resolveKind({ ask: { kind: "verdict", opts: [] } }), "verdict");
   });
