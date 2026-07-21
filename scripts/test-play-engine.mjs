@@ -176,3 +176,43 @@ describe("rink anchors", () => {
     assert.equal(RINK.length, 200);
   });
 });
+
+import { mirrorPlayY } from "../src/play/playVariants.js";
+import { TWO_ON_ONE_READ_PLAY } from "../src/play/plays/twoOnOneRead.js";
+
+describe("mirrorPlayY (far-side variant transform)", () => {
+  const mirrored = mirrorPlayY(TWO_ON_ONE_READ_PLAY, { id: "mirror_test_play" });
+
+  it("flips every y and preserves every x in pos/enter/puck/motions", () => {
+    const base = TWO_ON_ONE_READ_PLAY.nodes.rush;
+    const flip = mirrored.nodes.rush;
+    for (const actor of Object.keys(base.pos)) {
+      assert.equal(flip.pos[actor][0], base.pos[actor][0]);
+      assert.equal(flip.pos[actor][1], Math.round((RINK.width - base.pos[actor][1]) * 10) / 10);
+    }
+    assert.equal(flip.puck[0], base.puck[0]);
+    assert.equal(flip.puck[1], RINK.width - base.puck[1]);
+    assert.equal(flip.motions[0].to[1], RINK.width - base.motions[0].to[1]);
+    assert.equal(flip.freeze.y, RINK.width - base.freeze.y);
+    assert.equal(flip.overlays[0].y, RINK.width - base.overlays[0].y);
+  });
+
+  it("is its own inverse (mirror twice returns the base geometry)", () => {
+    const twice = mirrorPlayY(mirrored, { id: TWO_ON_ONE_READ_PLAY.id });
+    assert.deepEqual(twice.nodes.rush.pos, TWO_ON_ONE_READ_PLAY.nodes.rush.pos);
+    assert.deepEqual(twice.nodes.finish.motions, TWO_ON_ONE_READ_PLAY.nodes.finish.motions);
+  });
+
+  it("keeps prose, options, and structure identical; marks lineage", () => {
+    assert.equal(mirrored.variantOf, TWO_ON_ONE_READ_PLAY.id);
+    assert.deepEqual(
+      mirrored.nodes.rush.ask.opts.map((o) => o.id),
+      TWO_ON_ONE_READ_PLAY.nodes.rush.ask.opts.map((o) => o.id)
+    );
+  });
+
+  it("produces a play that passes the animated-play validator", () => {
+    const result = validateAnimatedPlay(mirrored);
+    assert.deepEqual(result.errors || [], []);
+  });
+});
