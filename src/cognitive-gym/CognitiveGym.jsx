@@ -11,6 +11,7 @@ import ReadNumbersDrill from "./ReadNumbersDrill";
 import LateReadDrill from "./LateReadDrill";
 import TwoThingsDrill from "./TwoThingsDrill";
 import ShootoutDrill from "./ShootoutDrill";
+import RunThePlayDrill from "./RunThePlayDrill";
 import DrillIcon from "./DrillIcon";
 import { getDrill, getStats, calibrateDrill } from "./gymStorage";
 import { isMuted, setMuted } from "./gymAudio";
@@ -139,6 +140,17 @@ const DRILLS = [
     trains: "Reading the goalie, shot selection under pressure, using a scouting report",
     build: "canvas",
     component: ShootoutDrill,
+  },
+  {
+    id: "runtheplay",
+    name: "Run the Play",
+    skill: "Memory",
+    blurb: "Watch the coach's passing play, then run it back tap by tap.",
+    goal: "Hold the whole passing sequence in your head and run it back in order.",
+    why: "Coaches draw a play once and expect you to run it. Holding the sequence — who touches the puck, in what order — is the same memory you use for breakouts, set faceoff plays, and power-play rotations. Players who hold the play run it at full speed without hesitating; players who don't are a step behind waiting to be told again.",
+    trains: "Sequence memory, running set plays, holding the coach's plan under speed",
+    build: "canvas",
+    component: RunThePlayDrill,
   },
 ];
 

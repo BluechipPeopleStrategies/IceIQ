@@ -126,6 +126,18 @@ const ICONS = {
       <circle cx="33" cy="18" r="4" fill={G} stroke="none" />
     </svg>
   ),
+  // Run the Play: three skaters chained by dashed passes, numbered order.
+  runtheplay: (
+    <svg {...SVG}>
+      <path d="M10 36 L24 14" stroke={B} strokeDasharray="3 4" />
+      <path d="M24 14 L38 32" stroke={B} strokeDasharray="3 4" />
+      <circle cx="10" cy="36" r="5" fill={G} stroke="none" />
+      <circle cx="24" cy="14" r="5" />
+      <circle cx="38" cy="32" r="5" fill={G} stroke="none" />
+      <text x="17" y="22" fontSize="9" fontWeight="800" fill={B} stroke="none" fontFamily="system-ui, sans-serif">1</text>
+      <text x="34" y="19" fontSize="9" fontWeight="800" fill={B} stroke="none" fontFamily="system-ui, sans-serif">2</text>
+    </svg>
+  ),
 };
 
 // A drill's icon, sized by its container. Returns null for an unknown id.

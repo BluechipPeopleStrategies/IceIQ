@@ -20,6 +20,15 @@ export const CUES = {
     { freq: 1047, dur: 0.14, at: 0.14 },
   ],
   miss: [{ freq: 233, dur: 0.12, at: 0 }],
+  // Simon-style per-skater tones for Run the Play (pentatonic, one per
+  // possible skater): playback sounds the note, the player's tap echoes it.
+  note0: [{ freq: 523, dur: 0.16, at: 0 }],
+  note1: [{ freq: 587, dur: 0.16, at: 0 }],
+  note2: [{ freq: 659, dur: 0.16, at: 0 }],
+  note3: [{ freq: 784, dur: 0.16, at: 0 }],
+  note4: [{ freq: 880, dur: 0.16, at: 0 }],
+  note5: [{ freq: 1047, dur: 0.16, at: 0 }],
+  note6: [{ freq: 1175, dur: 0.16, at: 0 }],
   levelUp: [
     { freq: 523, dur: 0.1, at: 0 },
     { freq: 659, dur: 0.1, at: 0.09 },
