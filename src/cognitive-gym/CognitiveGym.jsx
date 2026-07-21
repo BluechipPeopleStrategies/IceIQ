@@ -10,6 +10,7 @@ import BestOptionDrill from "./BestOptionDrill";
 import ReadNumbersDrill from "./ReadNumbersDrill";
 import LateReadDrill from "./LateReadDrill";
 import TwoThingsDrill from "./TwoThingsDrill";
+import ShootoutDrill from "./ShootoutDrill";
 import DrillIcon from "./DrillIcon";
 import { getDrill, getStats, calibrateDrill } from "./gymStorage";
 import { isMuted, setMuted } from "./gymAudio";
@@ -128,9 +129,17 @@ const DRILLS = [
     build: "canvas",
     component: TwoThingsDrill,
   },
-  // "shootout" (Pick Your Spot) pulled from the active lineup while it gets
-  // rebuilt as a first-person shootout. ShootoutDrill.jsx is untouched on
-  // disk; re-add its entry here to bring it back.
+  {
+    id: "shootout",
+    name: "Shootout",
+    skill: "Shot Read",
+    blurb: "Skate in alone, read the goalie, pick your spot before you run out of ice.",
+    goal: "Win the shootout: read which part of the net is open on the way in and shoot it before the goalie takes it away.",
+    why: "Breakaway scorers don't guess. They read the goalie on the way in and shoot where he isn't. Every goalie has a tell, and the scouting report only helps if you use it. Training that read at speed, with the window closing, is how you stay calm in alone instead of shooting into a pad.",
+    trains: "Reading the goalie, shot selection under pressure, using a scouting report",
+    build: "canvas",
+    component: ShootoutDrill,
+  },
 ];
 
 export default function CognitiveGym({ playerId = "default", onBack, ageBand = null }) {

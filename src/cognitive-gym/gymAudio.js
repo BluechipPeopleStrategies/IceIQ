@@ -11,6 +11,9 @@ export const CUES = {
   tap: [{ freq: 660, dur: 0.05, at: 0 }],
   go: [{ freq: 880, dur: 0.09, at: 0 }],
   hit: [{ freq: 523, dur: 0.08, at: 0 }, { freq: 784, dur: 0.1, at: 0.07 }],
+  // Hot-streak escalations of `hit` (Peggle-style): same motif, higher pitch.
+  hit2: [{ freq: 659, dur: 0.08, at: 0 }, { freq: 988, dur: 0.1, at: 0.07 }],
+  hit3: [{ freq: 784, dur: 0.08, at: 0 }, { freq: 1175, dur: 0.12, at: 0.07 }],
   perfect: [
     { freq: 659, dur: 0.08, at: 0 },
     { freq: 880, dur: 0.08, at: 0.07 },
@@ -48,7 +51,7 @@ function audioCtx() {
 }
 
 // Reward haptic on mobile: a short buzz for the win moments only.
-const HAPTIC_CUES = { hit: 15, perfect: 25, levelUp: [20, 40, 20], fanfare: [20, 40, 40] };
+const HAPTIC_CUES = { hit: 15, hit2: 15, hit3: 25, perfect: 25, levelUp: [20, 40, 20], fanfare: [20, 40, 40] };
 function buzz(name) {
   try {
     const pattern = HAPTIC_CUES[name];
@@ -83,9 +86,14 @@ export function cue(name) {
 }
 
 // Ready-made hooks for createAdaptiveLevel: rep feedback + level-up jingle.
+// The hit cue escalates with the engine's combo streak (3+ and 6+), so every
+// drill gets hot-streak audio without any per-drill changes.
 export function gymCueHooks() {
   return {
-    onResult: (success) => cue(success ? "hit" : "miss"),
+    onResult: (success, combo = 0) => {
+      if (!success) return cue("miss");
+      cue(combo >= 6 ? "hit3" : combo >= 3 ? "hit2" : "hit");
+    },
     onChange: (_level, delta) => { if (delta > 0) cue("levelUp"); },
   };
 }

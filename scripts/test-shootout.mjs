@@ -153,3 +153,79 @@ test("scoreShot: null (no tap) is a save", () => {
 test("scoreShot: a faster goal scores more than a slower one", () => {
   assert.ok(scoreShot("gloveHi", 100, SHOT).points > scoreShot("gloveHi", 1400, SHOT).points);
 });
+
+import {
+  weightedPickN, makeGoalieProfile, GOALIE_PROFILES, nearestCellWithin,
+} from "../src/cognitive-gym/shootoutCore.js";
+
+test("weightedPickN: null weights matches pickN exactly (uniform default)", () => {
+  const items = ["a", "b", "c", "d"];
+  assert.deepEqual(weightedPickN(items, 2, null, mulberry32(9)), pickN(items, 2, mulberry32(9)));
+});
+
+test("weightedPickN: returns n distinct items", () => {
+  const got = weightedPickN(["a", "b", "c", "d"], 3, { a: 5 }, mulberry32(11));
+  assert.equal(got.length, 3);
+  assert.equal(new Set(got).size, 3);
+});
+
+test("weightedPickN: heavy cells get picked far more often", () => {
+  const rng = mulberry32(21);
+  const weights = { a: 9, b: 1, c: 1, d: 1 };
+  let aCount = 0;
+  for (let i = 0; i < 500; i += 1) {
+    if (weightedPickN(["a", "b", "c", "d"], 1, weights, rng)[0] === "a") aCount += 1;
+  }
+  // expectation is 9/12 = 75%; require well above the uniform 25%
+  assert.ok(aCount > 300, `heavy item picked ${aCount}/500, expected > 300`);
+});
+
+test("makeGoalieProfile is deterministic per seed and honest (weights exist)", () => {
+  const a = makeGoalieProfile(mulberry32(5));
+  const b = makeGoalieProfile(mulberry32(5));
+  assert.equal(a.id, b.id);
+  assert.ok(GOALIE_PROFILES.includes(a));
+  for (const p of GOALIE_PROFILES) {
+    assert.ok(p.report.length > 0);
+    const heavy = Object.values(p.weights).filter((w) => w > 1);
+    assert.ok(heavy.length >= 2, `${p.id} must genuinely bias coverage`);
+  }
+});
+
+test("makeShot honors goalie weights (biased coverage over many shots)", () => {
+  const rng = mulberry32(31);
+  const weights = { gloveHi: 3, gloveLo: 3, midHi: 1, fiveHole: 1, blkrHi: 1, blkrLo: 1 };
+  let gloveCovered = 0;
+  const N = 400;
+  for (let i = 0; i < N; i += 1) {
+    const shot = makeShot(5, { rng, weights }); // level 5 covers ~2 cells
+    if (shot.coveredAtStart.includes("gloveHi") || shot.coveredAtStart.includes("gloveLo")) {
+      gloveCovered += 1;
+    }
+  }
+  const uniformRng = mulberry32(31);
+  let gloveUniform = 0;
+  for (let i = 0; i < N; i += 1) {
+    const shot = makeShot(5, { rng: uniformRng });
+    if (shot.coveredAtStart.includes("gloveHi") || shot.coveredAtStart.includes("gloveLo")) {
+      gloveUniform += 1;
+    }
+  }
+  assert.ok(gloveCovered > gloveUniform, `weighted ${gloveCovered} should exceed uniform ${gloveUniform}`);
+});
+
+test("nearestCellWithin: inside a cell returns that cell", () => {
+  const rects = cellRects({ x: 0, y: 0, w: 300, h: 200 });
+  assert.equal(nearestCellWithin(rects, 50, 50), "gloveHi");
+});
+
+test("nearestCellWithin: a near-miss outside the net snaps to the nearest cell", () => {
+  const rects = cellRects({ x: 100, y: 100, w: 300, h: 200 });
+  // 20px left of the net edge, level with gloveHi — inside the 0.6-cell slack
+  assert.equal(nearestCellWithin(rects, 80, 150), "gloveHi");
+});
+
+test("nearestCellWithin: a far miss returns null", () => {
+  const rects = cellRects({ x: 100, y: 100, w: 300, h: 200 });
+  assert.equal(nearestCellWithin(rects, 0, 0), null);
+});

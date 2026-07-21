@@ -43,6 +43,19 @@ check("cannot relegate below 1", floor.record(false) === 1 && floor.record(false
 const ceil = createAdaptiveLevel(20);
 check("cannot promote above max", ceil.record(true) === 20 && ceil.record(true) === 20 && ceil.record(true) === 20);
 
+// combo: consecutive successes, reset only by a miss, survives level-ups
+const cb = createAdaptiveLevel(5);
+cb.record(true); cb.record(true); cb.record(true); cb.record(true);
+check("combo counts successes across a level-up", cb.combo === 4 && cb.level === 6);
+cb.record(false);
+check("a miss resets combo but keeps bestCombo", cb.combo === 0 && cb.bestCombo === 4);
+cb.record(true);
+check("combo restarts after a miss", cb.combo === 1 && cb.bestCombo === 4);
+const cbHook = [];
+const cbEngine = createAdaptiveLevel(5, { onResult: (ok, combo) => cbHook.push(combo) });
+cbEngine.record(true); cbEngine.record(true); cbEngine.record(false);
+check("onResult receives the running combo", cbHook.join() === "1,2,0");
+
 check("four directions", DIRECTIONS.length === 4 && DIRECTIONS.join() === "lr,rl,tb,bt");
 check("horizontal travel guesses in Y", guessAxis("lr") === "y" && guessAxis("rl") === "y");
 check("vertical travel guesses in X", guessAxis("tb") === "x" && guessAxis("bt") === "x");
