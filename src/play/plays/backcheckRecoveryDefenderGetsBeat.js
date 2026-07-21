@@ -88,8 +88,8 @@ export const backcheckRecoveryDefenderGetsBeat = {
         label: "Inside protected",
         youngLabel: "Help inside",
         shortLabel: "Inside",
-        x: 154,
-        y: 45
+        x: 153,
+        y: 54
       },
       motions: [
         { actor: "YOU", kind: "skate", from: [137, 58], to: [153, 46] }
@@ -106,8 +106,8 @@ export const backcheckRecoveryDefenderGetsBeat = {
         label: "Middle open",
         youngLabel: "Open middle",
         shortLabel: "Middle",
-        x: 161,
-        y: 43
+        x: 158,
+        y: 33
       }
     }
   }

@@ -8,6 +8,7 @@ import { expandTwoOnOneFamily } from "../src/play/kernels/twoOnOneKernel.js";
 import { validateAnimatedPlay } from "../src/play/validateAnimatedPlay.js";
 import { validateFactoryStandards } from "../src/play/validateFactoryStandards.js";
 import { filterNovel, answerSignature } from "../src/play/noveltyGate.js";
+import { artLint } from "../src/play/artLint.js";
 import { ALL_ANIMATED_PLAYS } from "../src/play/playCatalog.js";
 
 const KERNELS = [{ name: "twoOnOne", expand: expandTwoOnOneFamily }];
@@ -27,7 +28,12 @@ for (const kernel of KERNELS) {
   for (const play of candidates) {
     const a = validateAnimatedPlay(play);
     const f = validateFactoryStandards(play);
-    const errs = [...(a.errors || []), ...(f.errs || [])];
+    const art = artLint(play);
+    const errs = [
+      ...(a.errors || []),
+      ...(f.errs || []),
+      ...art.blocks.map((b) => `artLint ${b.rule}: ${b.detail}`),
+    ];
     if (errs.length) validatorFail.push({ play, errs });
     else validatorPass.push(play);
   }
@@ -36,7 +42,7 @@ for (const kernel of KERNELS) {
   lines.push(`## Kernel: ${kernel.name}`);
   lines.push("");
   lines.push(`- Candidates expanded: **${candidates.length}**`);
-  lines.push(`- Validator-clean (animated-play + factory standards): **${validatorPass.length}**`);
+  lines.push(`- Validator-clean (animated-play + factory standards + art lint): **${validatorPass.length}**`);
   lines.push(`- Survived the novelty gate vs the live catalog: **${kept.length}**`);
   lines.push(`- Pruned as clones / over cap: ${rejected.length} (logged below, never silent)`);
   lines.push("");

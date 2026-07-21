@@ -7,7 +7,7 @@ playtest) per `docs/play-kernel-standards.md`.
 ## Kernel: twoOnOne
 
 - Candidates expanded: **48**
-- Validator-clean (animated-play + factory standards): **48**
+- Validator-clean (animated-play + factory standards + art lint): **48**
 - Survived the novelty gate vs the live catalog: **4**
 - Pruned as clones / over cap: 44 (logged below, never silent)
 

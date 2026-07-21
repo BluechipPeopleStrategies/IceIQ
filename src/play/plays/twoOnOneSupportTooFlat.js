@@ -33,8 +33,8 @@ export const twoOnOneSupportTooFlat = {
         label: "Support too flat",
         youngLabel: "Bad pass",
         shortLabel: "Flat",
-        x: 152,
-        y: 66
+        x: 160,
+        y: 74
       },
       motions: [
         { actor: "F1", kind: "skate", from: [128, 58], to: [146, 57] },
