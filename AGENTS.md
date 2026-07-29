@@ -1,10 +1,11 @@
 # RinkReads / IceIQ — Codex context
 
-This repo's full context lives in `CLAUDE.md` (architecture, pricing, tiers,
-question bank, scenario engine) and `ROUTING.md` (single source of truth for
-every asset: bank, images, Supabase, symlinks). Read both before making
-non-trivial changes — the same conventions apply regardless of which agent
-(Claude Code or Codex) is doing the work.
+This repo's broad context lives in `CLAUDE.md`; the short current path map lives
+in `ROUTING.md`. Read both before non-trivial changes. For scenario-engine work,
+read `docs/factory/SCENARIO-ENGINE-DECISIONS.md` and
+`docs/superpowers/specs/2026-07-29-scenario-engine-design.md` before acting.
+The same conventions apply regardless of which agent (Claude Code or Codex) is
+doing the work.
 
 ## Canonical task list
 

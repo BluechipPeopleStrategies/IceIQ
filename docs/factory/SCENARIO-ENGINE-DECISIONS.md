@@ -48,7 +48,11 @@ knowledge base — never by Ollama.
 **Consequence to design around honestly:** generation happens when a session runs, not
 24/7 unattended. So "hundreds per day" means a batch run must be able to produce hundreds
 in one sitting. Design for high-yield batch throughput, and build the runner so a
-scheduled nightly session can execute it. Do not fake unattended operation.
+scheduled nightly session can execute it. The runner must require a supported Claude
+session handshake and fail closed when judgment is unavailable. It may never substitute
+Ollama for hockey judgment. Keep scheduled execution disabled until the preflight,
+single-run, resume, and safety gates are explicitly approved. Do not fake unattended
+operation.
 
 ## Decision 2 — Coach video MVP: COACHES BUILD THEIR OWN PLAY
 
@@ -66,6 +70,15 @@ MVP scope is genuinely minimal: place players, draw a route or two, mark the rea
 the options, preview, export. Polish is not the goal tonight; a working end-to-end path
 from a coach's drawing to a playable/exportable artifact is.
 
+The coach's marked answer is declared intent, not automatic truth. The compiler must
+derive the physically and tactically supported read independently and surface any
+disagreement before export.
+
+Unapproved work stays private and visibly marked as a draft. Hard physics or tactical
+failures block normal export and sharing. An optional diagnostic export must carry an
+unavoidable "DRAFT - NOT VALIDATED" mark and the failed checks. Unwatermarked or public
+sharing requires the designated validation tier.
+
 `COACHES_WHITEBOARD.md` is a legacy static-image brief collection. It can supply visual
 recipes, but it is not the coach-authoring product specification.
 
@@ -79,7 +92,9 @@ The deterministic gates and calibrated Claude judgment decide the tier:
   which gate was borderline, which tactical claim the engine could not fully justify.
 
 New kernel and template classes remain manual until calibration earns a stricter
-instance-level auto-promotion path.
+instance-level auto-promotion path. Two clean small batches are necessary but not
+sufficient; the versioned promotion policy also requires boundary coverage, adversarial
+fixtures, a held-out Thomas-reviewed set, and zero wrong-answer false approvals.
 
 Thomas reviews the interesting ones, not all of them. The engine's job is to make the
 queue high-yield, not to bypass it.
@@ -115,9 +130,11 @@ The scenario factory, coach-authoring surface, and future arcade hockey game sha
 hockey domain model, tactical knowledge, physics contracts, and replay format. They do
 not share one product runtime.
 
-The coach MVP compiles a private authored draft into the current animated-play target.
-The coach can see that private draft immediately; team distribution and catalog
-promotion still pass the safety gates.
+The coach MVP compiles a private authored draft into the shared validated playback
+contract and the animated-play renderer. The current fixed-duration v1 renderer is
+lossy; it must gain timing-faithful keyframes/durations or consume the validated trace
+directly before preview/export parity can be claimed. The coach can see the private
+draft immediately; team distribution and catalog promotion still pass the safety gates.
 
 The future physics-based arcade hockey game is separate from existing RinkReads arcade
 training shells and from the React animated-play timeline. It requires its own design
@@ -138,7 +155,6 @@ before implementation.
 
 ## Open implementation choices
 
-- Which tactical families to seed the knowledge base with first. Default without further
-  input: the thinnest families named in `docs/roadmap/TASKS.md` — `gap_control` (1/4),
-  `backcheck_recovery` (2/4), `forecheck_pressure` (2/4) — plus the `2-on-1` family that
-  already has a working kernel to build the pattern from.
+- Which tactical families to seed after the breakout calibration fixture. Regenerate the
+  current family-coverage report before choosing; do not rely on the July 21 counts.
+  The existing `2-on-1` kernel remains the reference implementation pattern.

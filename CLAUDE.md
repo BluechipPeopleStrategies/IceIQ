@@ -8,7 +8,9 @@
 ## Current priorities (canonical)
 
 `docs/roadmap/TASKS.md` is the single living task list — priority + sequencing,
-scope = app build + content factory. Treat it as the source of truth; the dated
+scope = app build + content factory. Treat it as the sequencing source of
+truth; owner decisions and approved architecture still govern what a task may
+do. The dated
 roadmap snapshots are archived under `docs/roadmap/archive/`.
 
 Scenario-engine owner authority:
@@ -181,6 +183,10 @@ the "Never commit directly to `main`... stop and ask" rule above, and pushing
 still needs its own explicit confirmation per the AUTO-COMMIT rule above,
 regardless of a prior "go." Different bars: running things is cheap and
 reversible; publishing to real users is not.
+
+Scenario-engine exception: the July 29 owner decision explicitly forbids paid
+model APIs for generation or hockey judgment. A standing "go" does not override
+that project-specific rule.
 
 **Pause and explain instead of proceeding, even under a standing "go", when:**
 
