@@ -48,6 +48,14 @@
 
 ## Changelog
 
+- **2026-07-29** - Completed a current-framework fit audit of the scenario-engine
+  foundation and saved a Claude handoff at
+  `docs/handoffs/2026-07-29-codex-scenario-engine-foundation-handoff.md`.
+  Confirmed the shared-core approach fits, identified direct-write, timing,
+  authorization, promotion, runner, and manual-gate conflicts, verified the
+  scheduled runner remains disabled, and left the nine owner choices pending
+  Thomas's explicit approval.
+
 - **2026-07-29** — Reconciled the Claude handoff and existing Markdown into one approved scenario-engine foundation: machine-readable tactical claims, deterministic hockey physics, timing-faithful playback, immutable run/judgment/recall records, free-only Claude/Ollama roles, honest throughput benchmark, protected coach author/export MVP, and a separate future arcade runtime. Archived the May 2 routing map, corrected live-bank routing, moved foundation + coach MVP ahead of bulk generation, and left the overnight task disabled pending reviewed spec/plan and safety gates.
 
 - **2026-07-20 (overnight)** — Autonomous LATER-item sweep, three closed + triage filed. (1) `feat/board-mc-questions` verified fully merged into main (0 unique commits) — LATER item removed; branch safe to delete when Thomas confirms. (2) Review fast-follows shipped: `resolveKind` returns null for watch nodes (regression test added), factory standards now lint justify copy to the primary-ask bar (full catalog passes), verdict two-step surfaces the judge pick's authored why/no after the justify answer (was dead copy). 48/48 question-kinds, 21/21 play-engine. (3) Sign-in flash root-caused and fixed: the 2s authReady escape timer could fire mid-profile-load and paint the logged-out landing; escape now disarmed the moment a session is known. Code-verified only (needs a real slow-network session to observe). (4) The 8 PURSUE transcripts registered in the Obsidian wave-1 Acquisition Log with next-step (TCS-manifest re-acquisition; Martel CLA priority).
