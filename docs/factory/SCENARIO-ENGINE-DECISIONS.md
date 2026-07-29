@@ -2,8 +2,8 @@
 
 **Status:** AUTHORITATIVE. Where this file and
 `docs/superpowers/specs/2026-07-29-scenario-engine-design.md` disagree, **this file wins**.
-The spec was drafted by an audit before these decisions were made; it must be reconciled
-to them, not the other way round.
+The companion specification records the reconciled architecture and must remain aligned
+to these owner decisions, not the other way round.
 
 Decided by Thomas, 2026-07-29, ahead of the overnight autonomous build.
 
@@ -66,15 +66,20 @@ MVP scope is genuinely minimal: place players, draw a route or two, mark the rea
 the options, preview, export. Polish is not the goal tonight; a working end-to-end path
 from a coach's drawing to a playable/exportable artifact is.
 
-See `COACHES_WHITEBOARD.md` for prior thinking before designing this from scratch.
+`COACHES_WHITEBOARD.md` is a legacy static-image brief collection. It can supply visual
+recipes, but it is not the coach-authoring product specification.
 
 ## Decision 3 — Review posture: TIERED AUTO-APPROVE
 
-The engine's own self-judgment decides the tier:
+The deterministic gates and calibrated Claude judgment decide the tier:
 
-- **High confidence, clears every gate** → auto-promote into the app.
+- **High confidence, calibrated template, clears every gate** → auto-promote
+  locally into the app.
 - **Anything less than certain** → Thomas's review queue, **with the reason stated** —
   which gate was borderline, which tactical claim the engine could not fully justify.
+
+New kernel and template classes remain manual until calibration earns a stricter
+instance-level auto-promotion path.
 
 Thomas reviews the interesting ones, not all of them. The engine's job is to make the
 queue high-yield, not to bypass it.
@@ -87,6 +92,36 @@ against Thomas's actual accept/reject decisions.
 
 Auto-promoted items must remain individually reversible: record which engine version,
 knowledge-base version, and judgment promoted each item, so a bad tier can be recalled.
+
+## Decision 4 — Physics is a first-class truth layer
+
+Every generated or coach-authored play must make sense in time and space, not only as a
+static diagram. The shared foundation must validate skating paths, acceleration, turning,
+stopping, reaction windows, puck travel, possession, reach, lane interception, legal
+bounds, and chronological causality against a sourced rink and age/skill profile.
+
+Hard physics failures cannot be overruled by Claude or by confidence scoring. Physics can
+prove that a play is impossible, but it does not decide which physically possible hockey
+read is tactically best. Tactical correctness still comes from an approved claim or
+kernel plus Claude judgment.
+
+Start with a fast deterministic kinematics layer for factory and coach-authoring work.
+A later real-time arcade game may add higher-fidelity dynamics while sharing the same
+units, profiles, physical constants, and replay contract.
+
+## Decision 5 — Shared core, separate product runtimes
+
+The scenario factory, coach-authoring surface, and future arcade hockey game share the
+hockey domain model, tactical knowledge, physics contracts, and replay format. They do
+not share one product runtime.
+
+The coach MVP compiles a private authored draft into the current animated-play target.
+The coach can see that private draft immediately; team distribution and catalog
+promotion still pass the safety gates.
+
+The future physics-based arcade hockey game is separate from existing RinkReads arcade
+training shells and from the React animated-play timeline. It requires its own design
+before implementation.
 
 ---
 
@@ -101,11 +136,9 @@ knowledge-base version, and judgment promoted each item, so a bad tier can be re
   base or from kernel geometry.
 - Work on `feature/shareable-beta` or a local branch off it.
 
-## Open at time of writing
+## Open implementation choices
 
 - Which tactical families to seed the knowledge base with first. Default without further
   input: the thinnest families named in `docs/roadmap/TASKS.md` — `gap_control` (1/4),
   `backcheck_recovery` (2/4), `forecheck_pressure` (2/4) — plus the `2-on-1` family that
   already has a working kernel to build the pattern from.
-- Whether authored coach plays share the same review tiering as generated ones. Default:
-  yes, but a coach's own play is visible to that coach immediately regardless of tier.

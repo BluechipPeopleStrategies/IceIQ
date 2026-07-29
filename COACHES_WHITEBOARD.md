@@ -1,5 +1,10 @@
 # Coach's Whiteboard — Image Briefs
 
+> **Legacy static-image reference.** This is a production cookbook for the old
+> Scene Composer and PNG workflow. It is not the coach-created animated-play or
+> video MVP specification. Current direction:
+> `docs/superpowers/specs/2026-07-29-scenario-engine-design.md`.
+
 **Purpose:** for every imageId that needs a real image, this doc describes the
 play to depict and gives a Scene Composer sprite recipe so you can produce the
 image without re-deriving the play each time.

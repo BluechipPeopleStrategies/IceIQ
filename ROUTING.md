@@ -1,15 +1,26 @@
-# Routing & Storage Map
+# Legacy Routing & Storage Map (2026-05-02 snapshot)
 
-A definitive map of where every piece of data lives — local disk, browser
-storage, GitHub, Supabase, Notion. Audit completed 2026-05-02.
+> **Historical reference only.** This file documents the May 2 author-tool and
+> storage audit. It is not the current scenario-engine route.
+>
+> Current live question loading is `src/data/bank.json` plus
+> `src/scenario/seeds/*.json`, composed by `src/qbLoader.js`. Current scenario
+> decisions and architecture are in
+> `docs/factory/SCENARIO-ENGINE-DECISIONS.md` and
+> `docs/superpowers/specs/2026-07-29-scenario-engine-design.md`.
+>
+> Do not bind new generation or promotion work to the removed
+> `src/data/questions.json` path. The remaining instructions below are retained
+> only to explain the earlier author-tool workflow.
 
-## TL;DR
+## Historical TL;DR
 
-There is exactly **one source of truth for each thing**:
+At the time of the May 2 audit, the map was:
 
 | Asset                | Lives at (single source of truth)                                |
 |----------------------|------------------------------------------------------------------|
-| Live question bank   | `IceIQ/src/data/questions.json`                                  |
+| Current live bank    | `IceIQ/src/data/bank.json` plus `IceIQ/src/scenario/seeds/*.json` |
+| Former author bank   | `IceIQ/src/data/questions.json` (removed; do not target)          |
 | Legacy archive       | `IceIQ/src/data/questions.legacy.json` (read-only)               |
 | Mining candidates    | `IceIQ/src/data/questions.legacy-candidates.json`                |
 | Question images      | `IceIQ/public/assets/images/`                                    |

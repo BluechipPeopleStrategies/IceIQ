@@ -1,6 +1,15 @@
 # RinkReads Content Factory — Build-Out Spec
 
-**Status:** design, ready for review · **Date:** 2026-06-03
+> **Status correction (2026-07-29):** Foundational history, not the active
+> end-to-end architecture. Current owner decisions live in
+> `docs/factory/SCENARIO-ENGINE-DECISIONS.md`; the reconciled tactical,
+> physics, judgment, staging, coach-authoring, and arcade boundaries live in
+> `docs/superpowers/specs/2026-07-29-scenario-engine-design.md`. Where this
+> older image-first design conflicts with either document, the newer authority
+> wins. Do not restore `factoryQuestions.json` or direct-to-bank promotion from
+> this document.
+
+**Original status:** design, ready for review · **Date:** 2026-06-03
 **Goal:** a mostly-automated pipeline that turns hockey images into large volumes of coach-graded, age-laddered, multi-format questions with **annotation overlays** that make every read unmistakable — across U7–U18.
 
 ---
@@ -210,4 +219,3 @@ Why this order works: the solver (G1) decides correctness for free, so a questio
 - **Curriculum sources (global, not just North American).** Synthesize MULTIPLE development models. USA Hockey ADM and Hockey Canada, AND Soviet/Russian (Tarasov: small-area games, skill density, creativity), Swedish, Finnish, and Czech traditions, plus unsanctioned, pond, and small-area-game hockey. Glean the best ideas from wherever they exist; tag each concept with its source lineage so the curriculum is defensible and globally informed.
 - **Go-live policy:** approve-a-batch first (passing items collect in a "ready" tray; one-tap approve a batch), then flip to true auto-post once the queue is consistently clean and the live answer-disagreement rate is near zero.
 - **Front-of-gauntlet consensus:** G0 is three creator agents drawing the diagram independently; all three must agree before the concept advances.
-

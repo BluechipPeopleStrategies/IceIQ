@@ -1,6 +1,7 @@
-# RinkReads Context (v2026.6)
+# RinkReads Context (v2026.7)
 
-> Maintenance note: this file is verified against code as of 2026-06-03. When a
+> Maintenance note: core routing and bank-loading sections were reconciled
+> against code on 2026-07-29. When a
 > section cites a file/identifier, grep to confirm it still exists before relying
 > on it — the codebase moves faster than this doc.
 
@@ -10,8 +11,16 @@
 scope = app build + content factory. Treat it as the source of truth; the dated
 roadmap snapshots are archived under `docs/roadmap/archive/`.
 
-## Direction (2026-06-03)
-**Starting fresh on the unified scenario engine** (`src/scenario/`). The legacy question bank is archived (`src/data/questions.legacy*.json`) then being **wiped — NOT migrated forward**. Don't invest in repairing/converting legacy questions. New content = engine scenario seeds (`src/scenario/seeds/`) + content-factory overlay questions. Treat the old MC bank as a frozen, read-only archive.
+Scenario-engine owner authority:
+`docs/factory/SCENARIO-ENGINE-DECISIONS.md`. Canonical architecture:
+`docs/superpowers/specs/2026-07-29-scenario-engine-design.md`.
+
+## Direction (2026-07-29)
+Build the scenario factory around approved tactical claims, correct-by-construction
+kernels, a deterministic physics layer, Claude judgment, conservative staged
+promotion, and complete provenance. Preserve current bank and scenario content.
+Do not revive the removed `src/data/questions.json` route or write generated
+content directly into the live bank.
 
 ## Core Specs
 - **Goal:** Youth hockey game-sense development — adaptive question bank, SMART goals, progress tracking U7–U18.
@@ -53,12 +62,14 @@ roadmap snapshots are archived under `docs/roadmap/archive/`.
 - **Note:** the old per-age "3 rink scenarios" teaser counter (`src/utils/rinkProgress.js`, `RINK_FREE_PER_AGE`, `rinkreads_rink_seen`) **was removed** — that file and those keys no longer exist.
 
 ## Question Bank & Loading (`src/qbLoader.js`)
-**BLANK SLATE as of 2026-06-04.** The entire old bank was deleted (legacy archives, `questions.json`, all `src/scenario/seeds/*`, `factoryQuestions.json`). New content comes ONLY from the gauntlet generator, tagged to the curriculum ledger (`src/data/curriculum-ledger.json`). The app currently ships an empty bank — `SessionScreen` renders `EmptyBankScreen` ("new content is on the way") until the gauntlet ships ledger-tagged questions.
+The removed `src/data/questions.json` path is not live. The app currently has
+content in both `src/data/bank.json` and `src/scenario/seeds/`; verify exact
+counts from the worktree instead of relying on an old snapshot.
 
 The live bank is **composed at runtime** by `loadQB()`, caching the result in `sessionStorage` under `rinkreads_qb_cache_v27` (bump the version when bank shape changes). It always returns an object keyed by all 6 `LEVELS` (even when empty), merging:
 
-1. **`src/data/bank.json`** — the gauntlet's output bank, keyed by age-group display name (`"U7 / Initiation"` … `"U18 / Midget"`). Currently `{}`. Questions without an explicit `type` default to `mc`.
-2. **`src/scenario/seeds/*.json`** — unified-engine scenarios, **auto-globbed at build time** (`import.meta.glob`). The seeds dir is currently absent (glob resolves to empty); the gauntlet may drop seeds here, merged under their `level`/`levels[]`.
+1. **`src/data/bank.json`** — keyed by age-group display name (`"U7 / Initiation"` … `"U18 / Midget"`). Questions without an explicit `type` default to `mc`.
+2. **`src/scenario/seeds/*.json`** — unified-engine scenarios, **auto-globbed at build time** (`import.meta.glob`) and merged under their `level`/`levels[]`.
 
 ## Unified Scenario Engine (`src/scenario/`)
 Newer interactive-question system (Perseus-widget pattern). Import only from `src/scenario/index.js`.
@@ -67,6 +78,9 @@ Newer interactive-question system (Perseus-widget pattern). Import only from `sr
 - **Semantic zones (`zones.js`):** authors reference zone IDs (e.g. `oz-slot`, `dz-corner-strong`); resolved to coords at scoring time. Numeric coords win when supplied.
 - **Validation (`schema.js` `validateScenario` + `validators.js`):** schema-shape errors + hockey-logic rules (e.g. rejects a "correct" pass lane a defender would intercept). Returns `{ ok, errs, warns }`.
 - **Render:** `ScenarioRenderer` (from `index.js`), `RinkStage.jsx`.
+- **Physics boundary:** current validators are primarily static geometry and
+  hockey-logic checks. They are not the time-based physics authority described
+  in the July 29 scenario-engine design.
 
 ## Overlay System (`src/OverlayLayer.jsx`)
 Renders `q.overlays[]` (normalized 0–1 coords) on top of an image — the house style for making "the read" unmistakable on factory/POV questions.
@@ -81,10 +95,11 @@ history), read `docs/reference/chart-chooser.md` to pick the form, then run the
 `dataviz` skill for color/marks/accessibility.
 
 ## Content Factory (`docs/factory/`, `tools/factory-*.mjs`)
-Image-first pipeline that turns hockey images into coach-graded, age-laddered, multi-format question banks at scale (rink scenarios are a paid teaser → more/better content = conversion).
-- **Spec:** `docs/factory/SPEC.md` (current build-out: overlay annotation system, coverage ledger, stricter verdict bar). Proven runs: `factory-run-01.json` / `-02.json` + summaries.
-- **Pipeline:** curriculum spine → image (ChatGPT Team inbox, zero-API for now) → vision reads real file + normalized coords → author multi-age/format bank → auto-place overlays → 3-coach panel (tactical / pedagogy / adversarial + overlay-accuracy) → verdict → ship to `factoryQuestions.json` or queue.
-- **CLI tools:** `tools/factory-index.mjs`, `tools/factory-to-bank.mjs`, `tools/revision-to-run.mjs` (next to `tools/scenario-author.mjs`).
+The June image-first factory remains useful implementation history and supplies
+several tools and lessons. It is no longer the active end-to-end architecture.
+Use the July 29 owner decisions and canonical scenario-engine design for
+tactical knowledge, physics, judgment, staged promotion, coach authoring, and
+throughput claims. Never restore `factoryQuestions.json` as a live destination.
 
 ## Rink Visualization (legacy v2 — `RinkReadsRink.jsx` / `RinkReadsRinkQuestion.jsx`)
 Olympic IIHF top-down renderer. Still live for `q.rink` questions; the unified engine above is the newer path.
@@ -176,4 +191,7 @@ reversible; publishing to real users is not.
 ## Token Discipline (when working this repo)
 - `App.jsx` is huge and the JSON banks are large — **do not read them in full** unless editing that exact content. Read targeted ranges; grep first.
 - Show modified snippets with `// ... existing code` placeholders, not whole files.
-- Authoring workflow for v2 rink questions: build in the Rink Editor artifact → paste JSON into the right age array in `questions.json` → verify in dev (watch console for `[RinkReadsRink*]` warnings; clean = no auto-fixes). For unified-engine scenarios, drop a seed in `src/scenario/seeds/` (auto-merged).
+- The former Rink Editor → `questions.json` paste flow is retired. New v2,
+  unified-scenario, and animated-play content must use the applicable staging,
+  validation, and promotion gate before it reaches `bank.json`, scenario seeds,
+  or the play catalog.
