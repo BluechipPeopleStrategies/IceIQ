@@ -158,3 +158,97 @@ before implementation.
 - Which tactical families to seed after the breakout calibration fixture. Regenerate the
   current family-coverage report before choosing; do not rely on the July 21 counts.
   The existing `2-on-1` kernel remains the reference implementation pattern.
+
+---
+
+## Framework-fit decisions (2026-07-29, approved ahead of the implementation plan)
+
+Codex ran a read-only fit audit of the design above against the existing codebase
+(`docs/handoffs/2026-07-29-codex-scenario-engine-foundation-handoff.md`) and surfaced nine
+concrete conflicts needing an owner call before a plan could be written. Thomas approved
+all nine as recommended, verbatim "Approve 1-9," 2026-07-29. These are now binding on the
+implementation plan, same authority tier as Decisions 1-5 above.
+
+1. **Canonical playback** — `CompiledTeachingPlay` is the one authoritative source for
+   timing. Player, coach preview, and video export all read the same deterministic clock.
+   The current v1 `AnimatedPlay.jsx` (fixed 1.4s CSS transitions) stays as-is; only a thin
+   adapter bridges old to new. No rewrite of the live renderer.
+2. **Promoted catalog format** — new content-addressed promoted-artifact JSON plus an
+   append-only run/event ledger on the filesystem. `playCatalog.js` and `bank.json` are
+   never hand-edited again; promotion becomes a scripted, idempotent step.
+3. **Tactical knowledge location** — approved tactical claims live in a factory-only store
+   outside `src/`. Only approved claim IDs get compiled into the shipped app; unapproved
+   claims never reach product code.
+4. **Coach MVP product surface** — "Create a play" ships inside the existing TEAM coach
+   dashboard, not a new standalone surface, gated to an allowlist of coaches initially.
+5. **Coach authorization and ownership** — server-owned active TEAM entitlement check +
+   coach role + team ownership + dedicated RLS policies, closing the current gap where
+   `profile.tier` is client-writable and `question_overrides` accepts writes from any
+   authenticated user. One owning coach and one team per draft for MVP; assistant-coach
+   collaboration is deferred.
+6. **Coach editor and storage** — top-down schematic editor (place actors/puck, draw
+   routes, set timing/freeze/declared-read) storing drafts in Supabase with optimistic
+   hash/revision checks; saved versions are immutable once finalized.
+7. **Video export** — isolated Remotion/Node worker consuming the compiled artifact.
+   First output is a private 1080p 16:9 MP4 behind signed team-only links. No anonymous
+   public export in the MVP.
+8. **Claude scheduling** — Claude's hockey-judgment step runs only from an active,
+   supported Claude session (present/attended), never headless/unattended, until a
+   supported headless subscription-session handshake is explicitly proven safe.
+   Deterministic physics and Ollama mechanical variation may still run on a schedule.
+9. **Manual graduation and legacy freeze** — the July 10 question-kind approval certifies
+   the UI only, not the engine; the existing three-play/all-band manual graduation
+   standard still applies to new kernels/templates. All direct-write legacy tools are
+   frozen effective now: `ScenarioEditor`'s force-save path, `tools/seed-editor-plugin.mjs`
+   `force` flag, `tools/review-store.mjs` direct `bank.json` writes, `tools/scenario-author.mjs`
+   default live-seed writes, `scripts/generate-questions.mjs`, `scripts/batch-approve.mjs`,
+   and the current `tools/scenario-engine-overnight.ps1` runner (uses
+   `--dangerously-skip-permissions`, no single-instance lock). None of these write live
+   product data again until the new pipeline replaces them.
+
+**Known bugs to fix regardless of the plan's scope** (independent of the nine decisions):
+
+- `report-kernel-expansion.mjs` and `test-play-kernels.mjs` read a validator result
+  property as `.errors`; the validator actually returns `.errs`. This is a silent
+  false-positive in existing gate reporting — fix the property name and add a
+  deliberately-invalid fixture that proves the gate actually fails when it should.
+- The uncommitted defensive-zone breakout fixture must be hashed and its source state
+  recorded *before* any adaptation toward the new pipeline — it is the one proof case the
+  whole foundation's "does this work end-to-end" claim depends on.
+
+**Windows task `RinkReads-ScenarioEngine-Overnight`:** confirmed still `Disabled`
+(`Enabled: False`) as of this audit. Nothing was changed. Do not enable or patch it; a
+compliant replacement runner is part of the implementation plan.
+
+---
+
+## Curriculum/teaching-progression decision (2026-07-29, approved)
+
+Chris Oliver's Basketball Decision Training methodology (constraints-led coaching,
+Blocked→Random practice progression — sourced from public Basketball Immersion
+material, not assumed from name recognition) is now the governing philosophy for how
+scenario families sequence their teaching arc. Full grounding, the four translated
+principles, the five-question rubric, and a worked-example audit of `two_on_one`'s
+real arc:
+`docs/superpowers/specs/2026-07-29-decision-training-curriculum-philosophy-design.md`.
+
+Incorporated into `docs/scenario-family-standards.md` (2026-07-29 edit): a new
+"Decision-Training Principles" section governs; "Family Completion" and "Recommended
+Development Order" updated so a family's final variant must be genuinely more open
+(multiple viable reads requiring live discrimination) rather than merely another cue
+variant at the same openness level. "Variant Rules" is unchanged — it remains valid
+cue-hygiene and is still the section quoted verbatim into the scenario-family
+templating FINAL design's semantic-novelty rubric prompt, so that technical design is
+unaffected by this edit.
+
+**Where this decision and any earlier family-design guidance conflict, this decision
+takes precedence** — Thomas's explicit direction: "incorporate this into the existing
+framework, with this new approach taking precedence."
+
+**What this does not do:** it does not change any existing family's actual content
+(teachingArc arrays, implemented plays) — it changes the standard new or audited
+families are measured against. The worked-example audit found `two_on_one`'s current
+six-entry arc reads as "one decision tested six ways" (two parallel forced reads, then
+four robustness wrinkles) rather than a real constrain→open ladder — that finding is
+recorded, but retrofitting `two_on_one` or any other existing family is a separate,
+not-yet-authorized follow-on task, not something this decision does on its own.
