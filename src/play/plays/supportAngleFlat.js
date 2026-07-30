@@ -2,7 +2,7 @@ export const SUPPORT_ANGLE_FLAT = {
   id: "supportangle_2v1_flat_support_u11_v1",
   type: "animated-play",
   title: "2-on-1: Create the passing angle",
-  concept: "off-puck-support",
+  concept: "2-on-1-support-flat",
   ageBands: ["U11", "U13"],
   view: "half-right",
   start: "read",

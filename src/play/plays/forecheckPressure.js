@@ -50,6 +50,10 @@ export const FORECHECK_PRESSURE_PLAY = {
     forcedWall: {
       id: "forcedWall",
       terminal: true,
+      // A1's position is directional ("forced a predictable wall play"), not
+      // a fixed structural landmark — checked against the boards segment,
+      // not a single point. docs/superpowers/specs/2026-07-30-wall-anchor-investigation.md
+      intendedAnchor: { A1: "wallSegmentRightBottom" },
       q: "Good pressure. You removed the middle and forced a predictable wall play.",
       pos: { P1: [158, 55], A1: [168, 63], A2: [172, 28], D1: [160, 34], G: [187, 42] },
       puck: [168, 63],

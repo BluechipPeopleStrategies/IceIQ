@@ -22,6 +22,10 @@ export const FORECHECK_TAKE_AWAY_REVERSE_PLAY = {
   nodes: {
     pressure: {
       id: "pressure",
+      // A1 (the carrier) is mid-transit "up the wall" — directional, not a
+      // fixed structural landmark — checked against the boards segment, not
+      // a single point. docs/superpowers/specs/2026-07-30-wall-anchor-investigation.md
+      intendedAnchor: { A1: "wallSegmentRightBottom" },
       q: "You are first on the forecheck. The carrier starts up the wall with a teammate trailing behind. How do you finish the pressure?",
       decisionActor: "P1",
       enter: { P1: [138, 44], A1: [182, 60], A2: [186, 50], D1: [128, 60], G: [187, 42] },
@@ -77,6 +81,12 @@ export const FORECHECK_TAKE_AWAY_REVERSE_PLAY = {
     sealed: {
       id: "sealed",
       terminal: true,
+      // A1 is being funneled "up the wall" toward D1, the named pinching
+      // defender — directional, checked against the boards segment. Do NOT
+      // "fix" this toward the point anchor: that would pull A1 farther from
+      // D1 (16.0 -> 23.4 units), contradicting the node's own stated
+      // relationship. docs/superpowers/specs/2026-07-30-wall-anchor-investigation.md
+      intendedAnchor: { A1: "wallSegmentRightBottom" },
       q: "Good angle. You are skating in the reverse lane, so the carrier has to keep going up the wall into your pinching defender.",
       pos: { P1: [170, 61], A1: [162, 64], A2: [181, 57], D1: [146, 63], G: [187, 42] },
       puck: [162, 64],
