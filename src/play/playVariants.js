@@ -90,6 +90,10 @@ function mirrorNodeY(node) {
     }
   }
   if (Array.isArray(n.puck)) n.puck = flipPoint(n.puck);
+  if (Array.isArray(n.enterPuck)) n.enterPuck = flipPoint(n.enterPuck);
+  if (isPlainObject(n.possessionChange) && Array.isArray(n.possessionChange.counterTo)) {
+    n.possessionChange.counterTo = flipPoint(n.possessionChange.counterTo);
+  }
   if (isPlainObject(n.freeze) && typeof n.freeze.y === "number") n.freeze.y = flipY(n.freeze.y);
   if (Array.isArray(n.motions)) {
     n.motions = n.motions.map((m) => {

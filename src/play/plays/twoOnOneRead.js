@@ -42,7 +42,7 @@ export const TWO_ON_ONE_READ_PLAY = {
           { id: "shoot_far", t: "Shoot through the defender", youngWhy: "Shoot only if the checker is not in your way.", why: "This only works if the shot lane is actually open.", youngT: "Shoot through the checker", no: "The defender has stepped into the shooting lane.", outcome: "The shot is blocked and the rush slows down.", next: "blockedShot" },
           { id: "pass_backdoor", t: "Pass across to F2", youngWhy: "The checker comes to YOU, so Helper is open.", why: "The defender steps toward you, so the support teammate is open.", youngT: "Pass to your teammate", ok: true, next: "catch" },
           { id: "deke_middle", t: "Deke into the defender", youngWhy: "That takes you into the checker.", why: "Driving into the defender helps the defender do their job.", youngT: "Try to beat the checker", no: "That lets the lone defender play your body and the puck.", outcome: "The defender closes the gap and the 2-on-1 disappears.", next: "turnover" },
-          { id: "delay_wait", t: "Wait for everyone to catch up", youngWhy: "Waiting lets the checkers catch you.", why: "Waiting gives the defense time to recover.", youngT: "Wait longer", no: "Waiting gives the defender and goalie time to reset.", outcome: "The passing lane closes.", next: "turnover" },
+          { id: "delay_wait", t: "Wait for everyone to catch up", youngWhy: "Waiting lets the checker catch you.", why: "Waiting gives the defense time to recover.", youngT: "Wait longer", no: "Waiting gives the defender and goalie time to reset.", outcome: "The passing lane closes.", next: "turnover" },
         ],
       },
     },
@@ -56,8 +56,8 @@ export const TWO_ON_ONE_READ_PLAY = {
       cue: {
         label: "Open shot",
         youngLabel: "Open",
-        x: 137,
-        y: 20
+        x: 162,
+        y: 18
       }
     },
     finish: {

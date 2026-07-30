@@ -203,6 +203,37 @@ describe("mirrorPlayY (far-side variant transform)", () => {
     assert.deepEqual(twice.nodes.finish.motions, TWO_ON_ONE_READ_PLAY.nodes.finish.motions);
   });
 
+  it("flips enterPuck and possessionChange.counterTo too (2026-07-30 gate-8 review finding)", () => {
+    // Neither field exists on any currently-mirrored base play, so this bug
+    // was real but silent -- confirmed by direct source inspection, not
+    // hypothetical. Synthetic fixture since no live play exercises it yet.
+    const fixture = {
+      id: "possession_mirror_fixture",
+      type: "animated-play",
+      nodes: {
+        turn: {
+          id: "turn",
+          terminal: true,
+          q: "test",
+          pos: { D1: [140, 50] },
+          enter: { D1: [150, 55] },
+          enterPuck: [147, 42.2],
+          puck: [132.5, 40.8],
+          possessionChange: { kind: "interception", fromTeam: "home", toActor: "D1", counterTo: [135, 43.2] },
+        },
+      },
+    };
+    const flipped = mirrorPlayY(fixture, { id: "possession_mirror_fixture_mirror" }).nodes.turn;
+    assert.equal(flipped.enterPuck[0], 147);
+    assert.equal(flipped.enterPuck[1], RINK.width - 42.2);
+    assert.equal(flipped.possessionChange.counterTo[0], 135);
+    assert.equal(flipped.possessionChange.counterTo[1], RINK.width - 43.2);
+    // Round-trips: counterTo must land back on D1's own charted position
+    // after mirroring, same invariant the live bug violated.
+    const twiceFlipped = mirrorPlayY({ ...fixture, nodes: { turn: flipped } }, { id: "x" }).nodes.turn;
+    assert.deepEqual(twiceFlipped.possessionChange.counterTo, fixture.nodes.turn.possessionChange.counterTo);
+  });
+
   it("keeps prose, options, and structure identical; marks lineage", () => {
     assert.equal(mirrored.variantOf, TWO_ON_ONE_READ_PLAY.id);
     assert.deepEqual(

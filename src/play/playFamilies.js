@@ -7,7 +7,7 @@ export const SCENARIO_FAMILIES = [
     title: "2-on-1 Reads",
     description: "Odd-man rush reads where the puck carrier or support player reacts to defender, goalie, and recovery pressure.",
     targetVariants: 6,
-    matchTerms: ["2v1", "2-on-1", "backdoor", "defender holds middle", "goalie late", "support flat"],
+    matchTerms: ["2v1", "2-on-1", "backdoor", "defender holds middle", "goalie late", "support flat", "odd-man-reads"],
     teachingArc: [
       "Defender steps up → pass to support",
       "Defender holds middle → attack open shot lane",
@@ -22,7 +22,7 @@ export const SCENARIO_FAMILIES = [
     title: "Backcheck Recovery",
     description: "Recovery reads where the player decides whether to take puck, protect middle, or cover the next most dangerous threat.",
     targetVariants: 4,
-    matchTerms: ["backcheck recovery", "backcheck_recovery", "pick up middle", "no one has puck"],
+    matchTerms: ["backcheck recovery", "backcheck_recovery", "backcheck-recovery", "pick up middle", "no one has puck"],
     teachingArc: [
       "Teammate takes puck → cover support lane",
       "No one has puck → stay with puck lane",
@@ -48,7 +48,7 @@ export const SCENARIO_FAMILIES = [
     title: "Gap Control",
     description: "Defensive spacing reads that teach when to hold middle, close space, or avoid backing in too far.",
     targetVariants: 4,
-    matchTerms: ["gap control", "gap_control", "hold middle"],
+    matchTerms: ["gap control", "gap_control", "gap-control", "hold middle"],
     teachingArc: [
       "Hold middle",
       "Close space before blue line",

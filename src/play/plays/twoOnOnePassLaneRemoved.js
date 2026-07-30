@@ -67,7 +67,7 @@ export const twoOnOnePassLaneRemoved = {
             t: "Wait for F2 to get more open",
             youngT: "Wait longer",
             no: "Waiting lets the defender and goalie reset.",
-            youngWhy: "Waiting gives the checkers time.",
+            youngWhy: "Waiting gives the checker time.",
             next: "turnover",
             zone: [140, 50, 8]
           }

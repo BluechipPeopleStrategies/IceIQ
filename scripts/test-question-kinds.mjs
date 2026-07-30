@@ -201,6 +201,59 @@ describe("watch-chain primitive", () => {
     assert.ok(!src.includes("k.startsWith(`${play.id}:`)"),
       "per-play skip key check should be gone");
   });
+
+  it("button-answer order is shuffled at render, not authored order (2026-07-30 catalog audit)", () => {
+    const src = readFileSync(new URL("../src/play/AnimatedPlay.jsx", import.meta.url), "utf8");
+    assert.ok(/function shuffledOptions\(opts\)/.test(src),
+      "a display-order shuffle helper should exist");
+    assert.ok(src.includes("const displayOpts = useMemo(() => shuffledOptions(activeOpts), [activeOpts])"),
+      "shuffle should be memoized per node/judge-step, not re-rolled every render");
+    assert.ok(/displayOpts\s*\n\s*\.filter\(\(opt\) => !opt\.u13Only/.test(src),
+      "the button-list render should map over the shuffled array, not node.ask.opts directly");
+    assert.ok(!src.includes('(kind === "verdict" && judgePick ? node.ask.justify.opts : node.ask.opts)\n            .filter'),
+      "the old unshuffled inline ternary should be gone from the render path");
+    // Safety invariant the shuffle relies on: choose() must key off the
+    // option object, never re-look-up node.ask.opts[index] by position --
+    // otherwise shuffled display order and real answer data would desync.
+    assert.ok(!/node\.ask(\.justify)?\.opts\[(index|picked)\]/.test(src),
+      "answer logic must never index back into the authored array by position");
+  });
+});
+
+describe("button-answer shuffle", () => {
+  // Same Fisher-Yates as AnimatedPlay.jsx's shuffledOptions -- can't import
+  // the .jsx module directly under plain node --test (no JSX transform in
+  // this runner, hence every other AnimatedPlay.jsx test above reads it as
+  // source text), so the algorithm's correctness is verified here in
+  // isolation and its presence in the real file is asserted above.
+  function shuffledOptions(opts) {
+    const a = (opts || []).slice();
+    for (let i = a.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [a[i], a[j]] = [a[j], a[i]];
+    }
+    return a;
+  }
+
+  it("returns a permutation: same elements, same length, input untouched", () => {
+    const opts = [{ id: "a" }, { id: "b" }, { id: "c" }, { id: "d" }];
+    const out = shuffledOptions(opts);
+    assert.equal(out.length, opts.length);
+    assert.deepEqual([...out].sort((x, y) => x.id.localeCompare(y.id)), opts);
+    assert.deepEqual(opts.map((o) => o.id), ["a", "b", "c", "d"], "must not mutate the source array");
+  });
+
+  it("actually varies position across calls (not a no-op)", () => {
+    const opts = [{ id: "a" }, { id: "b" }, { id: "c" }, { id: "d" }, { id: "e" }];
+    const seenFirst = new Set();
+    for (let i = 0; i < 200; i++) seenFirst.add(shuffledOptions(opts)[0].id);
+    assert.ok(seenFirst.size > 1, "correct-answer-fixed-position exploit requires this to vary");
+  });
+
+  it("handles empty/undefined without throwing", () => {
+    assert.deepEqual(shuffledOptions(undefined), []);
+    assert.deepEqual(shuffledOptions([]), []);
+  });
 });
 
 describe("spatial answers at U11/U13", () => {
