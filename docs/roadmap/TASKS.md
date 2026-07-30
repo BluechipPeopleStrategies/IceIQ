@@ -1,6 +1,6 @@
 # RinkReads — Task List
 
-**Last updated:** 2026-07-29 · Scenario-engine foundation design approved: machine-readable tactics, deterministic hockey physics, free-only Claude/Ollama split, staged promotion, coach-authoring boundary, and separate future arcade runtime. Canonical design: `docs/superpowers/specs/2026-07-29-scenario-engine-design.md`.
+**Last updated:** 2026-07-30 · Gate-8 Claude-judgment mechanism and conservative promotion proven live within the already-approved scope; catalog-wide answer-position exploit and a mirror-transform corruption bug found and fixed; two research-backed UI fixes shipped. 11-phase implementation plan is written but still needs Thomas's approval before any phase starts. See changelog.
 
 **Scope:** RinkReads **app build + content factory**. Launch/distribution (sending the beta, marketing) and the separate BlueChip business are **out of scope** — parked at the bottom. Priority = position in this list. A new idea that isn't here goes to the **Parking Lot** first, then gets promoted on purpose — that's the scope-creep guard.
 
@@ -14,7 +14,7 @@
 
 - **Brain Gym live playtest on main.** PR #3 merged 2026-07-19 (Thomas chose merge-now); the July 12 drill fixes are on `main`/production but still have never been visually confirmed. Thomas: 10 minutes through the six fixed drills on ice-iq.vercel.app; file anything broken back here. (Read the Play got its live pass at build time; the gym drills still need theirs.)
 - **Act on the source-triage report.** Full run done 2026-07-19: 114 transcripts assessed, **8 PURSUE** — headline: Ken Martel constraints-led approach (Tier 1, USA Hockey ADM), Pavel Barber puck protection, Kim Weiss wall-play scanning, Gulutzan D at the blue line, off-puck "availability" podcast. Report: `docs/factory/coach-runs/source-triage-2026-07-20.md`. Every PURSUE is flagged **re-acquire via the authenticated TCS manifest before citing** — feeds the LATER research-library workstream's manifest+auth step. Next: pull the 8 into the Obsidian acquisition log (wave 1) and start extraction.
-- **Scenario-engine foundation and breakout calibration.** Thomas approved the July 29 design, including the added physics layer. Current gate: review the written canonical spec, then write the implementation plan. Preserve the uncommitted defensive-zone breakout as the first manual calibration fixture. The overnight task remains disabled; do not scale or auto-promote before the spec, plan, isolation, physics, and app-playtest gates.
+- **Scenario-engine foundation and breakout calibration.** Thomas approved the July 29 design, including the added physics layer. The 11-phase implementation plan is now written (`docs/superpowers/plans/2026-07-29-scenario-engine-foundation-plan.md`) but still explicitly unreviewed/unapproved — that plan does not authorize its own implementation. **Current gate: Thomas reviews and approves the plan before any of its phases start.** Overnight autonomous scaling stays disabled. What's already proven within the currently-approved scope, ahead of that gate (2026-07-30): breakout fixture isolated/hashed and calibrated (11.5-unit position-drift bug found and fixed); the gate-8 "Claude judgment" mechanism this plan calls for is built and live-proven (blind two-pass agreement, modeled on double-reading mammography — never promotes on agreement alone); "conservative promotion" demonstrated for real, not just designed — a 3-play kernel batch was reviewed through gate 8 and correctly held back when both passes rejected it (`docs/factory/2026-07-30-kernel-batch-001-gate8-review.md`), and that same review surfaced a catalog-wide answer-position exploit (fixed at the render layer) and a mirror-transform data-corruption bug (fixed) that predate this plan entirely. Still not started: the trace/playback bundle + timing-faithful renderer contract, sourced physics profiles + kinematic validation, schema-validated tactical claims, the immutable run/event/dependency model, recall, and scheduled-runner safety — all real 11-phase-plan territory, blocked on the approval gate above.
 
 ## 🟢 NEXT — sequenced, in order
 
@@ -47,6 +47,42 @@
 - *(New ideas land here first, then get promoted into NEXT/LATER on purpose.)*
 
 ## Changelog
+
+- **2026-07-30** — Wrote the 11-phase scenario-engine implementation plan (still
+  unapproved — planning only). Within already-approved scope: fixed a real
+  11.5-unit position-drift bug on the breakout fixture and built
+  `validateAnchorFidelity` (point + wall-segment landmarks) so it can't
+  recur silently; built and live-proved the gate-8 blind second-pass
+  judgment mechanism (`src/scenario-engine/gate8*.js`). Used gate 8 for
+  real on a 3-play kernel batch — both independent passes rejected all
+  three, demonstrating conservative promotion rather than just designing
+  it, and that review surfaced two defects reaching into the *live*
+  catalog: the correct answer sat at a fixed button position across most
+  of the catalog (2-on-1 family: index 2 of 4, zero variance; 62% of all
+  question nodes: index 1) — fixed by shuffling display order per
+  question at the render layer, not per-play, so it protects the whole
+  catalog and everything added to it later; and `mirrorPlayY()` silently
+  skipped two coordinate fields, harmless today but a live corruption risk
+  the moment a mirrored play uses them — fixed. Also fixed the breakout's
+  remaining icon-proximity guessability gap with a justification-step
+  follow-up (four rounds of blind adversarial review, three of which each
+  caught something real before it landed clean), a family-classification
+  gap (13 of 25 plays were correctly categorized by accident, not by
+  design), and 4 live copy bugs. Full detail:
+  `docs/factory/2026-07-30-kernel-batch-001-gate8-review.md`.
+  Separately, live-inspected the running app and researched how
+  comparable platforms (chess.com, Duolingo, Khan Academy) solve the same
+  problems before shipping two UI fixes: raw internal category slugs
+  ("off-puck-support-offense") replaced with real family names on both the
+  Read the Play list and the quiz screen, and an explicit "tap the ice"
+  instruction added to tap-zone scenarios, which previously had no
+  on-screen answer affordance at all. Full detail:
+  `docs/factory/2026-07-30-ui-improvement-pass.md`. Also flagged, not
+  fixed: two Supabase RLS gaps found while reading the plan doc (`tier`
+  column user-writable; `question_overrides` writable by any signed-in
+  user, not owner/coach-gated) — backend/security, outside this session's
+  scope, needs Thomas's call. 154 tests green throughout, pushed to
+  `feature/shareable-beta` (`ed763b8..42b0555`).
 
 - **2026-07-29** - Completed a current-framework fit audit of the scenario-engine
   foundation and saved a Claude handoff at
