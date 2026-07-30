@@ -75,7 +75,8 @@
     "report:kernel-expansion": "node scripts/report-kernel-expansion.mjs",
     "test:art-lint": "node --test scripts/test-art-lint.mjs",
     "test:play-anchors": "node --test scripts/test-play-anchors.mjs",
-    "test:quiz-concept-label": "node --test scripts/test-quiz-concept-label.mjs"
+    "test:quiz-concept-label": "node --test scripts/test-quiz-concept-label.mjs",
+    "test:scenario-engine": "node src/scenario-engine/rinkFrame.test.mjs && node src/scenario-engine/canonicalHash.test.mjs && node src/scenario-engine/frameAdapters.test.mjs && node src/scenario-engine/scenarioDefinition.test.mjs && node src/scenario-engine/gate8BlindSecondPass.test.mjs"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.103.0",
