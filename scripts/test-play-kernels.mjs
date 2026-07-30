@@ -33,8 +33,19 @@ describe("twoOnOne kernel: correct by construction", () => {
   it("every candidate passes the animated-play validator", () => {
     for (const play of family) {
       const result = validateAnimatedPlay(play);
-      assert.deepEqual(result.errors || [], [], play.id);
+      assert.deepEqual(result.errs || [], [], play.id);
     }
+  });
+
+  it("the validator gate actually catches a broken play (proves .errs is read, not swallowed)", () => {
+    const good = makeTwoOnOnePlay({ commit: "stepsUp", depth: 0, shape: "backPost", seed: 1 });
+    const broken = { ...good, actors: [good.actors[0], good.actors[0]] };
+    const result = validateAnimatedPlay(broken);
+    assert.ok(result.errs.length > 0, "a play with duplicate actor ids must report a validator error");
+    assert.ok(
+      result.errs.some((e) => e.includes("unique")),
+      "the reported error should flag the duplicate actor id"
+    );
   });
 
   it("every candidate passes factory standards", () => {

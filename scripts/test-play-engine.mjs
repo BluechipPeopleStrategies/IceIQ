@@ -213,6 +213,6 @@ describe("mirrorPlayY (far-side variant transform)", () => {
 
   it("produces a play that passes the animated-play validator", () => {
     const result = validateAnimatedPlay(mirrored);
-    assert.deepEqual(result.errors || [], []);
+    assert.deepEqual(result.errs || [], []);
   });
 });

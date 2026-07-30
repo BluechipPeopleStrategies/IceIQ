@@ -30,7 +30,7 @@ for (const kernel of KERNELS) {
     const f = validateFactoryStandards(play);
     const art = artLint(play);
     const errs = [
-      ...(a.errors || []),
+      ...(a.errs || []),
       ...(f.errs || []),
       ...art.blocks.map((b) => `artLint ${b.rule}: ${b.detail}`),
     ];
