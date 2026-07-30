@@ -1316,6 +1316,20 @@ const Q_TYPE_INFO = (q) => {
   if (t === "mc" && q?.media?.url) return Q_TYPE_LABELS["pov-mc"];
   return Q_TYPE_LABELS[t] || Q_TYPE_LABELS.mc;
 };
+// q.concept is an internal taxonomy slug (e.g. "puck-control", "oz-entry",
+// "dz-coverage"), shown to players as a pill with zero formatting. There's
+// no curated title registry for this taxonomy the way the animated-play
+// catalog has SCENARIO_FAMILIES, so this is a mechanical de-slugify
+// (hyphens/underscores -> spaces, title case) rather than a rename -- same
+// bug class fixed in ReadThePlay.jsx (2026-07-30), same principle (never
+// show a raw internal slug as user-facing copy), narrower fix since there's
+// nothing to curate into yet. Already-clean values (e.g. "Decision Quality")
+// pass through unchanged.
+function conceptLabel(concept) {
+  const s = String(concept || "").trim();
+  if (!s) return "";
+  return s.replace(/[_-]+/g, " ").replace(/\b\w/g, (c) => c.toUpperCase());
+}
 
 // ─────────────────────────────────────────────────────────
 // HOME SCREEN
@@ -2251,7 +2265,7 @@ function Quiz({ player, onFinish, onBack, tier, onUpgrade, focus = null }) {
         <div style={{display:"flex",gap:".5rem",marginBottom:"1rem",flexWrap:"wrap",alignItems:"center"}}>
           <Pill color={typeInfo.color}>{typeInfo.icon} {typeInfo.label}</Pill>
           <Pill color={C.dimmer} bg={C.dimmest}>{q.cat}</Pill>
-          {q.concept && <Pill color={C.dimmer} bg={C.dimmest}>{q.concept}</Pill>}
+          {q.concept && <Pill color={C.dimmer} bg={C.dimmest}>{conceptLabel(q.concept)}</Pill>}
           {ttsSupported() && getReadAloud() && !isRinkQ && READ_ALOUD_TYPES.has(qtype) && (
             <button onClick={() => speakParts(questionSpeechParts(q, qtype))}
               title="Read the question aloud" aria-label="Read the question aloud"
