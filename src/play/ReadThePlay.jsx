@@ -7,6 +7,17 @@ import { C, FONT, StickyHeader, BackBtn } from "../shared.jsx";
 import { playsForAge } from "./playCatalog.js";
 import AnimatedPlay from "./AnimatedPlay.jsx";
 import { logAnimatedPlayEvent, summarizeAnimatedPlayEvents } from "./telemetry.js";
+import { classifyPlayFamily } from "./playFamilies.js";
+
+// Player-facing family name for a play's concept tag. Never show the raw
+// concept string (e.g. "off-puck-support-offense", "backcheck-recovery") --
+// it's an internal slug, not copy. Falls back to a hyphen/underscore-cleaned
+// version only for the handful of plays with no family match.
+function familyLabel(play) {
+  const family = classifyPlayFamily(play);
+  if (family?.title) return family.title;
+  return play?.concept ? String(play.concept).replace(/[_-]/g, " ") : "";
+}
 
 // player.level is a division string like "U11 / Atom"; the catalog wants "U11".
 export function bandFromLevel(level) {
@@ -73,9 +84,9 @@ export default function ReadThePlay({ player, onBack }) {
                   <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: ".6rem" }}>
                     <div>
                       <div style={{ fontSize: 14, fontWeight: 800 }}>{p.title}</div>
-                      {p.concept && (
+                      {familyLabel(p) && (
                         <div style={{ fontSize: 11, color: C.dim, marginTop: 2, textTransform: "capitalize" }}>
-                          {String(p.concept).replace(/_/g, " ")}
+                          {familyLabel(p)}
                         </div>
                       )}
                     </div>

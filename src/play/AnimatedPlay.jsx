@@ -546,7 +546,28 @@ export default function AnimatedPlay({ play, ageBand = "U11", onEvent }) {
               </button>
             )}
           </div>
-        ) : ["lane-pick", "spot-mistake"].includes(kind) ? null : (
+        ) : kind === "lane-pick" ? (
+          // lane-pick has no button list -- the rink itself is the only
+          // control, so nothing previously told a first-time player HOW to
+          // answer beyond the small numbered dashed circles. This both
+          // states the interaction and gives the screen real content to
+          // fill the space a button list would otherwise occupy.
+          <div style={{
+            display: "flex", alignItems: "center", gap: 10,
+            padding: profile.big ? "14px 16px" : "11px 14px",
+            borderRadius: profile.big ? 14 : 10,
+            border: "1px dashed #C9A24B",
+            background: "#FBF6EA",
+            marginTop: 2,
+          }}>
+            <span aria-hidden="true" style={{ fontSize: profile.big ? 26 : 20, lineHeight: 1 }}>👆</span>
+            <span style={{ fontSize: profile.big ? 15 : 13, fontWeight: 700, color: "#7A5A17", lineHeight: 1.35 }}>
+              {profile.token === "figure"
+                ? "Tap a spot on the ice to pick."
+                : "Tap a numbered spot on the ice to make your read."}
+            </span>
+          </div>
+        ) : kind === "spot-mistake" ? null : (
           displayOpts
             .filter((opt) => !opt.u13Only || ["U13", "U15", "U18"].includes(ageBand))
             .map((opt, index) => {

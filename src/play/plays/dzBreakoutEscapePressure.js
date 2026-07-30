@@ -130,7 +130,12 @@ export const DZ_BREAKOUT_ESCAPE_PRESSURE = {
       // not on either forechecker. A cue naming an actor+side here would just
       // be the answer key rendered on the ice (caught by adversarial review,
       // 2026-07-30 — the first version did exactly that).
-      cue: { label: "Read the ice again", shortLabel: "Look again", x: 192.5, y: 46 },
+      // x:175,y:52 (not on D1/puck) fixes a real render bug: the cue pill is
+      // 20 units wide centered on cue.x, and the half-right viewBox only
+      // runs to x=200 -- the old x:192.5 pushed the pill 2.5 units past the
+      // edge, clipping it, and overlapped the D1/G tokens besides (caught
+      // via live Playwright screenshot, 2026-07-30, not just data review).
+      cue: { label: "Read the ice again", shortLabel: "Look again", x: 175, y: 52 },
       // Full 2x2 (which forechecker x which side) so neither attribute has a
       // majority across options — a 3-option single-attribute-swap set let a
       // player solve this by word-frequency counting alone, with zero
