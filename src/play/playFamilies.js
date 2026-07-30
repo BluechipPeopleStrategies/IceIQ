@@ -70,6 +70,19 @@ export const SCENARIO_FAMILIES = [
     ]
   },
   {
+    id: "dz_breakout",
+    title: "D-Zone Breakout",
+    description: "Retrieval and breakout reads where the player escapes pressure and moves the puck out of the defensive zone on purpose.",
+    targetVariants: 4,
+    matchTerms: ["dz-breakout", "dz_breakout", "breakout", "retrieval"],
+    teachingArc: [
+      "Escape away from the forechecker's committed side",
+      "Pressure-side outlet is a red herring → still escape first",
+      "Escape lane taken away → reverse or rim",
+      "Outlet covered → middle support or glass-and-out"
+    ]
+  },
+  {
     id: "defensive_angling",
     title: "Defensive Angling",
     description: "Defensive route reads that teach players to steer attackers away from dangerous ice.",
@@ -98,6 +111,18 @@ function haystackForPlay(play) {
 }
 
 export function classifyPlayFamily(play) {
+  // Concept is the authored intent — match it first, so a play whose prose
+  // happens to mention another family's terms (a breakout play describing the
+  // "forechecker", say) still files where its author put it. The haystack scan
+  // stays as the fallback for plays without a matching concept.
+  const concept = String(play?.concept || "").toLowerCase();
+  if (concept) {
+    const byConcept = SCENARIO_FAMILIES.find((family) =>
+      family.matchTerms.some((term) => concept.includes(term.toLowerCase()))
+    );
+    if (byConcept) return byConcept;
+  }
+
   const haystack = haystackForPlay(play);
 
   return SCENARIO_FAMILIES.find((family) =>

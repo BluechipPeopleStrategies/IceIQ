@@ -18,6 +18,7 @@ import { VERDICT_GAP_CONTROL_BACKING_IN } from "./plays/verdictGapControlBacking
 import { PREDICT_TWO_ON_ONE_DEFENDER_STEP } from "./plays/predictTwoOnOneDefenderStep.js";
 import { SPOT_MISTAKE_FLAT_SUPPORT } from "./plays/spotMistakeFlatSupport.js";
 import { SUPPORT_ANGLE_FLAT } from "./plays/supportAngleFlat.js";
+import { DZ_BREAKOUT_ESCAPE_PRESSURE } from "./plays/dzBreakoutEscapePressure.js";
 import { mirrorPlayY } from "./playVariants.js";
 
 export const CORE_ANIMATED_PLAYS = [
@@ -77,6 +78,8 @@ export const ALL_ANIMATED_PLAYS = [
   SPOT_MISTAKE_FLAT_SUPPORT,
 
   SUPPORT_ANGLE_FLAT,
+
+  DZ_BREAKOUT_ESCAPE_PRESSURE,
 ];
 
 export function playById(id) {
