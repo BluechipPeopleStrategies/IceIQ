@@ -1,0 +1,137 @@
+// CoachPlayAuthoringSection: inside expanded team on CoachHome. Coach places
+// players/puck, draws routes, sets the decision freeze, and declares a read --
+// producing a ScenarioDefinition (proofMode: "coach-declared") saved to
+// coach_play_drafts. See docs/superpowers/specs/2026-07-31-coach-authoring-
+// video-export-design.md for the full design.
+//
+// Structural analog: assignments.jsx's CoachAssignmentsSection (fetch-on-mount
+// + optimistic local list state + window.confirm before delete).
+import { useEffect, useState } from "react";
+import { Card, Label, C, FONT } from "./shared.jsx";
+import {
+  createCoachPlayDraft, getCoachPlayDraftsForTeam, deleteCoachPlayDraft,
+} from "./supabase.js";
+import { NHL_200X85_PROFILE, RINK_FRAME_VERSION } from "./scenario-engine/rinkFrame.js";
+import { SCENARIO_DEFINITION_SCHEMA_VERSION } from "./scenario-engine/scenarioDefinition.js";
+import { PlayEditorCanvas } from "./coachPlayEditorCanvas.jsx";
+
+// crypto.randomUUID() isn't guaranteed everywhere (older browsers, some
+// non-secure-context embeds) -- same fallback pattern already used by
+// src/utils/profiles.js and src/utils/deviceLock.js.
+function generateUUID() {
+  if (typeof crypto !== "undefined" && crypto.randomUUID) return crypto.randomUUID();
+  return "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g, (c) => {
+    const r = (Math.random() * 16) | 0;
+    return (c === "x" ? r : (r & 0x3) | 0x8).toString(16);
+  });
+}
+
+export function CoachPlayAuthoringSection({ teamId, coachId, roster }) {
+  const [drafts, setDrafts] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [activeDraftId, setActiveDraftId] = useState(null);
+
+  useEffect(() => {
+    let cancelled = false;
+    getCoachPlayDraftsForTeam(teamId)
+      .then((rows) => { if (!cancelled) setDrafts(rows); })
+      .catch((e) => { if (!cancelled) setError(e.message); })
+      .finally(() => { if (!cancelled) setLoading(false); });
+    return () => { cancelled = true; };
+  }, [teamId]);
+
+  async function handleCreate() {
+    try {
+      const row = await createCoachPlayDraft(coachId, teamId, blankScenarioDefinition());
+      setDrafts((d) => [row, ...d]);
+      setActiveDraftId(row.id);
+    } catch (e) {
+      setError(e.message);
+    }
+  }
+
+  async function handleDelete(draftId) {
+    if (!window.confirm("Delete this draft? This cannot be undone.")) return;
+    try {
+      await deleteCoachPlayDraft(draftId);
+      setDrafts((d) => d.filter((x) => x.id !== draftId));
+      if (activeDraftId === draftId) setActiveDraftId(null);
+    } catch (e) {
+      setError(e.message);
+    }
+  }
+
+  if (activeDraftId) {
+    return (
+      <PlayEditorCanvas
+        draftId={activeDraftId}
+        teamId={teamId}
+        coachId={coachId}
+        onClose={() => setActiveDraftId(null)}
+        onSaved={(row) => setDrafts((d) => d.map((x) => (x.id === row.id ? row : x)))}
+      />
+    );
+  }
+
+  return (
+    <Card>
+      <Label>🎬 Plays</Label>
+      {error && <div style={{ color: C.red, fontSize: 12 }}>{error}</div>}
+      {loading ? (
+        <div style={{ color: C.dim, fontSize: 13, fontFamily: FONT.body }}>Loading drafts...</div>
+      ) : (
+        <>
+          <button onClick={handleCreate} style={{ marginBottom: ".75rem" }}>+ New play</button>
+          <ul style={{ listStyle: "none", padding: 0, margin: 0 }}>
+            {drafts.map((d) => (
+              <li key={d.id} style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: ".5rem", padding: ".5rem 0", borderBottom: `1px solid ${C.border}` }}>
+                <span style={{ fontSize: 13, fontFamily: FONT.body, color: C.white }}>
+                  {d.status === "finalized" ? "✅" : "✏️"} {d.scenario_definition?.declaredRead?.description || "Untitled play"}
+                </span>
+                <span style={{ display: "flex", gap: ".4rem", flexShrink: 0 }}>
+                  <button onClick={() => setActiveDraftId(d.id)}>Open</button>
+                  {d.status === "draft" && <button onClick={() => handleDelete(d.id)}>Delete</button>}
+                </span>
+              </li>
+            ))}
+          </ul>
+          {drafts.length === 0 && (
+            <div style={{ color: C.dimmer, fontSize: 13, fontFamily: FONT.body }}>No plays yet -- start one above.</div>
+          )}
+        </>
+      )}
+    </Card>
+  );
+}
+
+// A blank, structurally-valid-shaped ScenarioDefinition (per
+// scenario-engine/scenarioDefinition.js's validateScenarioDefinition and the
+// real shape used by scenario-engine/coachDeclaredFixture.js). Deliberately
+// incomplete where the editor hasn't been used yet (no actors/puck/declared
+// read placed) -- coach_play_drafts stores drafts unvalidated; validation is
+// enforced later, at finalize/compile time (a later task), not at draft-save
+// time. Every FIELD NAME here still matches the real schema exactly so a
+// draft is a genuine (if incomplete) ScenarioDefinition throughout, not a
+// look-alike shape that only becomes correct after some later translation.
+function blankScenarioDefinition() {
+  return {
+    schemaVersion: SCENARIO_DEFINITION_SCHEMA_VERSION,
+    id: generateUUID(),
+    version: 1,
+    contentHash: null,
+    family: "coach-authored",
+    tacticalClaimVersion: null,
+    proofMode: "coach-declared",
+    ageSkillProfile: "unspecified",
+    sources: [{ note: "coach-authored", cite: "Authored in-app by the coach via the play editor." }],
+    rinkFrame: { profileId: NHL_200X85_PROFILE.id, units: "metres", attackingDirection: "+x" },
+    initialState: { actors: [], puck: null },
+    intendedActions: [],
+    decisionFreeze: { time: 0, observableCues: [] },
+    declaredRead: null,
+    questionKindVariants: [],
+    generationParams: null,
+    dependencyVersions: { rinkFrame: RINK_FRAME_VERSION },
+  };
+}
