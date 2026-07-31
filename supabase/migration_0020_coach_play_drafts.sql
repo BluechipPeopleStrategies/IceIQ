@@ -76,9 +76,31 @@ create policy "coach manages own team drafts" on public.coach_play_drafts
     and exists (select 1 from public.coach_play_drafts_allowlist a where a.coach_id = auth.uid())
   );
 
--- Allowlist itself is owner-managed only; no self-service. No policy is
--- created here that lets a coach add themselves -- rows are inserted
--- out-of-band (Supabase SQL editor) by Thomas during MVP rollout.
+-- Allowlist itself is owner-managed only; no self-service write path. A
+-- narrow read policy (own row only) IS required: Postgres subjects a
+-- cross-table subquery to the target table's own RLS for the querying role,
+-- so the `exists (select ... from coach_play_drafts_allowlist ...)` check
+-- inside the drafts policy above would otherwise see zero rows for every
+-- role -- including an allowlisted coach -- making the drafts table
+-- permanently inert. Fixed 2026-07-31 per code review finding.
 drop policy if exists "no client access to allowlist" on public.coach_play_drafts_allowlist;
-create policy "no client access to allowlist" on public.coach_play_drafts_allowlist
-  for all using (false) with check (false);
+drop policy if exists "coach reads own allowlist row" on public.coach_play_drafts_allowlist;
+create policy "coach reads own allowlist row" on public.coach_play_drafts_allowlist
+  for select using (auth.uid() = coach_id);
+
+-- Writes stay fully client-locked: rows are inserted out-of-band (Supabase
+-- SQL editor, service-role context, which bypasses RLS) by Thomas during
+-- MVP rollout. Split into per-command policies (rather than one `for all`)
+-- so the deny is unambiguous and never accidentally OR'd with the select
+-- policy above.
+drop policy if exists "no client insert to allowlist" on public.coach_play_drafts_allowlist;
+create policy "no client insert to allowlist" on public.coach_play_drafts_allowlist
+  for insert with check (false);
+
+drop policy if exists "no client update to allowlist" on public.coach_play_drafts_allowlist;
+create policy "no client update to allowlist" on public.coach_play_drafts_allowlist
+  for update using (false) with check (false);
+
+drop policy if exists "no client delete to allowlist" on public.coach_play_drafts_allowlist;
+create policy "no client delete to allowlist" on public.coach_play_drafts_allowlist
+  for delete using (false);
