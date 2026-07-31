@@ -138,6 +138,18 @@ export function validateScenarioDefinition(def) {
       if (action?.endTime !== undefined && (!Number.isFinite(action.endTime) || action.endTime < action.startTime)) {
         errs.push(`intendedActions[${i}].endTime must be >= startTime if present`);
       }
+      // Optional: the position this action's actor (or the puck, for a
+      // pass/shot) should reach by endTime. Not required by this schema --
+      // a definition can describe an action without a physically-checkable
+      // claim (e.g. a hold/wait) -- but the Phase 2 simulator requires it
+      // for movement kinds ("skate"/"pass"/"shot") to compute required
+      // speed/acceleration, and will itself flag a missing one as
+      // UNSUPPORTED_MODEL rather than silently skipping the check.
+      if (action?.toPosition !== undefined && !isFiniteXY(action.toPosition)) {
+        errs.push(`intendedActions[${i}].toPosition must be [x,y] metres if present`);
+      } else if (action?.toPosition && profile && !isWithinBounds(action.toPosition, profile)) {
+        errs.push(`intendedActions[${i}].toPosition is outside the rink profile's playable bounds`);
+      }
     });
   }
 

@@ -1,0 +1,56 @@
+{
+  "schemaVersion": "physics-profile-v1",
+  "id": "physics-u11-v1",
+  "ageBand": "U11",
+  "skillTier": null,
+  "rinkFrameProfileId": "nhl-200x85-v1",
+  "player": {
+    "topSpeedMPS": {
+      "value": 7.60,
+      "stdDev": 0.32,
+      "source": "cited",
+      "citation": "Frontiers in Sports & Active Living, 2024, ages 9-11 on-ice combine test, n=11 male: 15.2m sprint peak speed 7.60+/-0.32 m/s. https://pmc.ncbi.nlm.nih.gov/articles/PMC11358090/"
+    },
+    "accel0to10mS": {
+      "value": 1.96,
+      "source": "derived-from-citation",
+      "citation": "PMC11358090 reports a 6.1m acceleration split of 1.53+/-0.19s, not a 10m split. Scaled to 10m via sqrt(distance) ratio: 1.53 * sqrt(10/6.1) = 1.959s. A kinematic scaling of real data, not an independent estimate."
+    },
+    "avgAccelMPS2": {
+      "value": 5.21,
+      "source": "derived-from-citation",
+      "citation": "Computed from accel0to10mS via kinematics (d = 0.5*a*t^2, d=10m)."
+    },
+    "turningRadiusM": {
+      "value": 18.48,
+      "source": "engineering-estimate-pending-source",
+      "citation": "No published turning-radius figure exists at any age, including this one despite real speed/accel data. Estimated as v^2 / (0.6 * avgAccelMPS2) -- see docs/scenario-engine/physics-sourcing.md for the assumption."
+    },
+    "stoppingDistanceM": {
+      "value": 5.54,
+      "source": "engineering-estimate-pending-source",
+      "citation": "No published stopping-distance figure exists at any age. Estimated as v^2 / (2 * avgAccelMPS2), assuming braking capability comparable to acceleration capability."
+    },
+    "reactionDelayS": {
+      "value": 0.3,
+      "source": "engineering-estimate-pending-source-general-athlete-proxy",
+      "citation": "No ice-hockey or youth-hockey reaction-time study exists at any age. 250-350ms range built from adult non-hockey athlete proxy data (PMC11207928) per docs/scenario-engine/physics-sourcing.md, applied flat across all bands since no age-hockey curve exists in the literature."
+    }
+  },
+  "puck": {
+    "passSpeedMPS": {
+      "value": 13.26,
+      "source": "engineering-estimate-pending-source",
+      "citation": "No youth ice-hockey pass-velocity study exists. Scaled from the U18 pass-speed reference (18 m/s, itself well below the cited adult 70mph+ shot lower bound) by this band's real topSpeedMPS ratio to U18's, as an athletic-development proxy."
+    },
+    "iceDecelerationMPS2": {
+      "value": 0.981,
+      "source": "cited",
+      "citation": "mu*g using Alain Hache's puck-on-ice sliding friction coefficient (~0.1, https://physicsworld.com/a/physics-on-ice/) and standard gravity (9.81 m/s^2). Real, age-independent physical constant."
+    }
+  },
+  "dependencyVersions": {
+    "rinkFrame": "rink-frame-v1",
+    "physicsSourcing": "docs/scenario-engine/physics-sourcing.md@2026-07-30"
+  }
+}

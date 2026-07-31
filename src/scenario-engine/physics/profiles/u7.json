@@ -1,0 +1,55 @@
+{
+  "schemaVersion": "physics-profile-v1",
+  "id": "physics-u7-v1",
+  "ageBand": "U7",
+  "skillTier": null,
+  "rinkFrameProfileId": "nhl-200x85-v1",
+  "player": {
+    "topSpeedMPS": {
+      "value": 5.65,
+      "source": "engineering-estimate-pending-source",
+      "citation": "Zero published on-ice youth data exists below age 9 (docs/scenario-engine/physics-sourcing.md). Linear extrapolation from the U11 real anchor (7.60 m/s, PMC11358090) using the 0.4865 m/s-per-year growth rate averaged across the four real U11-U18 data points (docs/scenario-engine/physics-sourcing.md), projected down to age 6."
+    },
+    "accel0to10mS": {
+      "value": 2.12,
+      "source": "engineering-estimate-pending-source",
+      "citation": "Same extrapolation method as topSpeedMPS, applied to the U11 anchor's 10m acceleration time (derived from PMC11358090's 6.1m split), age 6."
+    },
+    "avgAccelMPS2": {
+      "value": 4.45,
+      "source": "derived-from-estimate",
+      "citation": "Computed from THIS profile's own displayed accel0to10mS (2.12s) via kinematics (a = 2d/t^2, d=10m): 20/2.12^2 = 4.45. Tagged derived-from-estimate, not derived-from-citation, because accel0to10mS itself is an engineering estimate for this band, not a citation -- the derivation is real arithmetic, but what it's derived FROM isn't measured data. (Corrected 2026-07-30: an earlier version stored 4.43, computed from an unrounded intermediate value rather than the number actually shown in this file, so it didn't reproduce from the displayed inputs -- caught by adversarial review.)"
+    },
+    "turningRadiusM": {
+      "value": 11.97,
+      "source": "engineering-estimate-pending-source",
+      "citation": "No published turning-radius figure exists at any age. Estimated as v^2 / (0.6 * avgAccelMPS2) = 5.654^2 / (0.6*4.45) -- the 0.6 factor assumes lateral/edge turning acceleration is roughly 60% of straight-line push acceleration, a documented simplifying assumption, not measured."
+    },
+    "stoppingDistanceM": {
+      "value": 3.59,
+      "source": "engineering-estimate-pending-source",
+      "citation": "No published stopping-distance figure exists at any age. Estimated as v^2 / (2 * avgAccelMPS2) = 5.654^2 / (2*4.45), assuming braking capability comparable to acceleration capability -- no direct braking data exists."
+    },
+    "reactionDelayS": {
+      "value": 0.3,
+      "source": "engineering-estimate-pending-source-general-athlete-proxy",
+      "citation": "No ice-hockey or youth-hockey reaction-time study exists at any age. 250-350ms range built from adult non-hockey athlete proxy data (PMC11207928, decomposed perceptual-motor + choice-task components) per docs/scenario-engine/physics-sourcing.md. Applied flat across all age bands rather than inventing an age curve the research doesn't support -- Der & Deary 2006 found under-18s sit at or slightly above young-adult baseline, not faster, so no downward scaling for younger bands is applied."
+    }
+  },
+  "puck": {
+    "passSpeedMPS": {
+      "value": 9.86,
+      "source": "engineering-estimate-pending-source",
+      "citation": "No youth ice-hockey pass-velocity study exists (the one youth shot-speed study found, MDPI Biomechanics 2023, is rink hockey -- a different sport -- and is excluded). Estimated as a fraction of the U18 reference (18 m/s, itself well below the cited adult 70mph+ shot lower bound since passes are gentler than shots), scaled by this band's topSpeedMPS ratio to U18's as an athletic-development proxy."
+    },
+    "iceDecelerationMPS2": {
+      "value": 0.981,
+      "source": "cited",
+      "citation": "mu*g using Alain Hache's puck-on-ice sliding friction coefficient (~0.1, Physics World: https://physicsworld.com/a/physics-on-ice/) and standard gravity (9.81 m/s^2). Real, age-independent physical constant -- the puck doesn't know how old the players are."
+    }
+  },
+  "dependencyVersions": {
+    "rinkFrame": "rink-frame-v1",
+    "physicsSourcing": "docs/scenario-engine/physics-sourcing.md@2026-07-30"
+  }
+}
