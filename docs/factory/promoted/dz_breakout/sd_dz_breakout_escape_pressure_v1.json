@@ -1,0 +1,264 @@
+{
+  "schemaVersion": "promoted-artifact-v1",
+  "family": "dz_breakout",
+  "artifactId": "sd_dz_breakout_escape_pressure_v1",
+  "artifactVersion": 1,
+  "compiledPlay": {
+    "schemaVersion": "compiled-teaching-play-v1",
+    "id": "sd_dz_breakout_escape_pressure_v1",
+    "version": 1,
+    "compiledHash": "ad8bbaa21b71909dec21d789738f7e577b20441b52c9211ed517435843f6e12a",
+    "dependencyHashes": {
+      "definitionId": "sd_dz_breakout_escape_pressure_v1",
+      "definitionVersion": 1,
+      "definitionContentHash": "950eb6ac2d803d234b8c3dcc24c54a3cd005ceb2156e694ec9aab7680f046eba",
+      "traceHash": "e68353608b89c18fd48caf5a0cb0fbb8710d5da0feaad6bd2894934255041150",
+      "physicsProfileId": "physics-u13-v1"
+    },
+    "samples": [
+      {
+        "t": 0,
+        "pos": [
+          28.194,
+          0
+        ],
+        "actorId": "D1",
+        "actionKind": "skate"
+      },
+      {
+        "t": 0.5,
+        "pos": [
+          27.8638,
+          -0.8382
+        ],
+        "actorId": "D1",
+        "actionKind": "skate"
+      },
+      {
+        "t": 1,
+        "pos": [
+          27.5336,
+          -1.6764
+        ],
+        "actorId": "D1",
+        "actionKind": "skate"
+      },
+      {
+        "t": 1.5,
+        "pos": [
+          27.2034,
+          -2.5146
+        ],
+        "actorId": "D1",
+        "actionKind": "skate"
+      },
+      {
+        "t": 2,
+        "pos": [
+          26.8732,
+          -3.3528
+        ],
+        "actorId": "D1",
+        "actionKind": "skate"
+      },
+      {
+        "t": 2.5,
+        "pos": [
+          26.543,
+          -4.191
+        ],
+        "actorId": "D1",
+        "actionKind": "skate"
+      },
+      {
+        "t": 3,
+        "pos": [
+          26.2128,
+          -5.0292
+        ],
+        "actorId": "D1",
+        "actionKind": "skate"
+      },
+      {
+        "t": 0,
+        "pos": [
+          28.194,
+          0
+        ],
+        "actorId": "puck",
+        "actionKind": "skate"
+      },
+      {
+        "t": 0.5,
+        "pos": [
+          27.8638,
+          -0.8382
+        ],
+        "actorId": "puck",
+        "actionKind": "skate"
+      },
+      {
+        "t": 1,
+        "pos": [
+          27.5336,
+          -1.6764
+        ],
+        "actorId": "puck",
+        "actionKind": "skate"
+      },
+      {
+        "t": 1.5,
+        "pos": [
+          27.2034,
+          -2.5146
+        ],
+        "actorId": "puck",
+        "actionKind": "skate"
+      },
+      {
+        "t": 2,
+        "pos": [
+          26.8732,
+          -3.3528
+        ],
+        "actorId": "puck",
+        "actionKind": "skate"
+      },
+      {
+        "t": 2.5,
+        "pos": [
+          26.543,
+          -4.191
+        ],
+        "actorId": "puck",
+        "actionKind": "skate"
+      },
+      {
+        "t": 3,
+        "pos": [
+          26.2128,
+          -5.0292
+        ],
+        "actorId": "puck",
+        "actionKind": "skate"
+      },
+      {
+        "t": 3,
+        "pos": [
+          26.2128,
+          -5.0292
+        ],
+        "actorId": "puck",
+        "actionKind": "pass"
+      },
+      {
+        "t": 3.5,
+        "pos": [
+          21.4884,
+          -5.9436
+        ],
+        "actorId": "puck",
+        "actionKind": "pass"
+      },
+      {
+        "t": 4,
+        "pos": [
+          16.764,
+          -6.858
+        ],
+        "actorId": "puck",
+        "actionKind": "pass"
+      }
+    ],
+    "eventTimes": [
+      0,
+      3,
+      4,
+      6
+    ],
+    "questionFreezeTime": 6,
+    "observableCues": [
+      "F1 (the low-side forechecker) has closed to full speed, committed to the low side of the net",
+      "F2 (the far-side forechecker) is still approaching, not yet committed to a side",
+      "the net sits between D1 and F1's angle of approach"
+    ],
+    "declaredRead": {
+      "actorId": "D1",
+      "description": "Take it back around the net to the side the forechecker has turned away from"
+    },
+    "answerProof": {
+      "derivedRead": "escape_open_side",
+      "proofChain": [
+        {
+          "candidateId": "escape_open_side",
+          "physicsClean": true,
+          "hardFailures": []
+        }
+      ],
+      "comparison": {
+        "agreement": "agree",
+        "declaredCandidateId": "escape_open_side",
+        "derivedRead": "escape_open_side",
+        "explanation": "Declared read (escape_open_side) matches the physically-derived read.",
+        "mismatchPreserved": false
+      }
+    },
+    "questionKindVariants": [
+      {
+        "kind": "lane-pick",
+        "ageBands": [
+          "U11",
+          "U13",
+          "U15",
+          "U18"
+        ],
+        "copy": {
+          "q": "You have the puck behind your net and the first forechecker is charging down one side. Tap the ice where you take the puck."
+        }
+      }
+    ]
+  },
+  "judgmentRecord": {
+    "schemaVersion": "judgment-record-v1",
+    "artifactId": "sd_dz_breakout_escape_pressure_v1",
+    "artifactHash": "950eb6ac2d803d234b8c3dcc24c54a3cd005ceb2156e694ec9aab7680f046eba",
+    "gateId": "gate8-hockey-judgment",
+    "provider": "anthropic-claude-code-attended-session",
+    "sessionId": "c0f4bd72-8eb8-4d9e-88a4-d42cbbd38696",
+    "model": "claude-sonnet-5",
+    "reasoningConfig": null,
+    "calibrationCorpusVersion": null,
+    "rubricHash": "940d8b589bbb8f8c49b260464ddf944467abcd43c544bb53b0d95698fd475c86",
+    "promptContextManifestHash": "9bb5ccc7114eeaf16d616334d2af81b13ad21e9936d573c01678eb409fab463f",
+    "toolManifestHash": "fc933a42bb60f8db88d52451bbe08e89570a193aa53f2780578508f97cb6d9df",
+    "engineCommit": "c2d9b1e52127c2b43f13c90fb01556cfe2779dbe",
+    "verdict": "approve",
+    "rationale": "1) Sourced: USA Hockey ADM breakout/retrieval principles, cited with URL in both the tactical claim and the live catalog play. 2) Wrong answers are objectively wrong given the visible cue (forechecker committed to one side, second forechecker still approaching): into_pressure skates into a faster defender in the worst spot on the ice to lose a battle; through_the_slot is the source doc's own named 'cardinal error' -- the most dangerous ice on the sheet; hold_behind_net ignores the second forechecker already closing. None is merely weaker than the correct read -- each is a distinct, nameable mistake. 3) Age-gated U11+ only, correctly excluding U7/U9 per advancedThemesGatedByAge (a forechecker-commitment read is exactly the kind of structured-system cue that rule exists to keep off young boards). 4) Physics-clean and reproducible across two independent Phase 5 runs, zero hard failures. 5) Teaches 'escape away from committed pressure using the net as protection' -- a sound, generalizable principle, not a habit that generalizes badly. The underlying content also already passed four rounds of independent adversarial review in production (commit 70b6b5e) before this factory pipeline touched it at all.",
+    "confidence": "high",
+    "metadataComplete": false,
+    "autoPromotionEligible": false
+  },
+  "dependencyRecord": {
+    "artifactId": "sd_dz_breakout_escape_pressure_v1",
+    "artifactVersion": 1,
+    "tacticalClaim": "claim_dz_breakout_retrieval_escape_pressure_v1@v1",
+    "physicsProfile": "physics-u13-v1",
+    "kernelOrTemplate": "hand-authored",
+    "rendererVersion": "compiled-teaching-play-v1",
+    "judgeStack": {
+      "provider": "anthropic-claude-code-attended-session",
+      "model": "claude-sonnet-5",
+      "gateId": "gate8-hockey-judgment"
+    },
+    "promotionPolicyVersion": 1,
+    "calibrationCorpusVersion": null,
+    "sourceVersions": {
+      "rinkFrame": "rink-frame-v1",
+      "physicsProfile": "physics-u13-v1",
+      "tacticalClaim": "claim_dz_breakout_retrieval_escape_pressure_v1@v1"
+    }
+  },
+  "manualPromotionReason": "MANUAL OVERRIDE (Task 8, explicit, this attended session): judgment is clean (APPROVE/high), gap is calibration volume alone for the first template class -- exactly the documented manual-promotion condition, not an auto-promotion bypass",
+  "promotedAt": "2026-07-31T18:22:30.074Z",
+  "recordHash": "22651c3e312274673022443cacaf3c3702e3363e3d2ce75d10f738d27b266c54"
+}
