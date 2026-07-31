@@ -1080,3 +1080,84 @@ export async function listQuestionRequests() {
   return error ? [] : (data || []);
 }
 
+// ─────────────────────────────────────────────
+// COACH PLAY DRAFTS (coach-authored scenario exercises)
+// ─────────────────────────────────────────────
+
+export class RevisionConflictError extends Error {
+  constructor(draftId) {
+    super(`coach_play_drafts: revision conflict on draft ${draftId} -- reload before retrying`);
+    this.name = "RevisionConflictError";
+    this.draftId = draftId;
+  }
+}
+
+export async function createCoachPlayDraft(coachId, teamId, scenarioDefinition) {
+  const { data, error } = await supabase
+    .from("coach_play_drafts")
+    .insert({ coach_id: coachId, team_id: teamId, scenario_definition: scenarioDefinition })
+    .select()
+    .single();
+  if (error) throw error;
+  return data;
+}
+
+export async function getCoachPlayDraftsForTeam(teamId) {
+  const { data, error } = await supabase
+    .from("coach_play_drafts")
+    .select("*")
+    .eq("team_id", teamId)
+    .order("updated_at", { ascending: false });
+  if (error) throw error;
+  return data;
+}
+
+export async function getCoachPlayDraft(draftId) {
+  const { data, error } = await supabase
+    .from("coach_play_drafts")
+    .select("*")
+    .eq("id", draftId)
+    .maybeSingle();
+  if (error) throw error;
+  return data;
+}
+
+export async function updateCoachPlayDraft(draftId, expectedRevision, scenarioDefinition) {
+  const { data, error } = await supabase
+    .from("coach_play_drafts")
+    .update({
+      scenario_definition: scenarioDefinition,
+      revision: expectedRevision + 1,
+      updated_at: new Date().toISOString(),
+    })
+    .eq("id", draftId)
+    .eq("revision", expectedRevision)
+    .select()
+    .maybeSingle();
+  if (error) throw error;
+  if (!data) throw new RevisionConflictError(draftId);
+  return data;
+}
+
+export async function finalizeCoachPlayDraft(draftId, compiledArtifact) {
+  const { data, error } = await supabase
+    .from("coach_play_drafts")
+    .update({
+      status: "finalized",
+      compiled_artifact: compiledArtifact,
+      finalized_at: new Date().toISOString(),
+    })
+    .eq("id", draftId)
+    .eq("status", "draft")
+    .select()
+    .maybeSingle();
+  if (error) throw error;
+  if (!data) throw new Error(`finalizeCoachPlayDraft: draft ${draftId} was not in 'draft' status`);
+  return data;
+}
+
+export async function deleteCoachPlayDraft(draftId) {
+  const { error } = await supabase.from("coach_play_drafts").delete().eq("id", draftId);
+  if (error) throw error;
+}
+
