@@ -12,6 +12,17 @@ import { useEffect, useState } from "react";
 import { Card, Label, C, FONT } from "./shared.jsx";
 import { getCoachPlayDraft, updateCoachPlayDraft, RevisionConflictError } from "./supabase.js";
 import { NHL_200X85_PROFILE, isWithinBounds } from "./scenario-engine/rinkFrame.js";
+import { simulate } from "./scenario-engine/physics/simulator.js";
+import { evaluateDecision } from "./scenario-engine/decisionEvaluation.js";
+import { buildDraftTeachingPlay } from "./scenario-engine/draftTeachingPlay.js";
+import { frameAt, eventTimes as clockEventTimes } from "./scenario-engine/playbackClock.js";
+// The preview needs a real PhysicsProfile (topSpeed/accel/etc bounds), not a
+// RinkFrameProfile (NHL_200X85_PROFILE, already imported above for bounds
+// checking) -- those are two different schemas (physicsProfileSchema.js vs
+// rinkFrame.js) and simulate() validates against the former. U13 is the same
+// band the seeded dz-breakout fixture uses (coachDeclaredFixture.js); MVP
+// preview has no age-band picker yet, so this is pinned rather than exposed.
+import U13_PHYSICS_PROFILE from "./scenario-engine/physics/profiles/u13.json";
 
 const RINK_SVG_SCALE = 8; // px per rink-frame metre, arbitrary MVP constant
 
@@ -41,6 +52,10 @@ export function PlayEditorCanvas({ draftId, teamId, coachId, onClose, onSaved })
   const [error, setError] = useState(null);
   const [saving, setSaving] = useState(false);
   const [loadError, setLoadError] = useState(null);
+  const [draftPlay, setDraftPlay] = useState(null);
+  const [previewT, setPreviewT] = useState(0);
+  const [previewError, setPreviewError] = useState(null);
+  const [previewing, setPreviewing] = useState(false);
 
   useEffect(() => {
     let cancelled = false;
@@ -148,6 +163,42 @@ export function PlayEditorCanvas({ draftId, teamId, coachId, onClose, onSaved })
       }
     } finally {
       setSaving(false);
+    }
+  }
+
+  // Runs the current in-progress def through the same physics/decision
+  // pipeline a finalized play uses, and builds a DraftTeachingPlay so it can
+  // be scrubbed via the shared playbackClock -- WITHOUT requiring the draft
+  // to be physics-clean or declared/derived-agreeing first (that's the whole
+  // point of DraftTeachingPlay vs CompiledTeachingPlay). On-demand only
+  // (explicit button), never on every keystroke -- simulate() is async and
+  // there's no reason to re-run physics on every mouse click while drawing a
+  // route.
+  //
+  // MVP scope (design doc §2, "genuinely minimal"): only ONE candidate is
+  // ever evaluated -- the coach's own declared actor's intended action.
+  // Building a real multi-candidate generator from a single-declared-read
+  // editor state is a genuine follow-on, not solved here.
+  async function handlePreview() {
+    setPreviewError(null);
+    const declaredActorId = def.declaredRead?.actorId;
+    if (!declaredActorId) {
+      setPreviewError("Select an actor and set a declared read before previewing.");
+      return;
+    }
+    setPreviewing(true);
+    try {
+      const trace = await simulate(def, U13_PHYSICS_PROFILE);
+      const candidate = { id: declaredActorId, declaredRead: def.declaredRead, trace };
+      const evaluation = evaluateDecision([candidate]);
+      const draft = buildDraftTeachingPlay(def, trace, evaluation, candidate.id);
+      setDraftPlay(draft);
+      setPreviewT(0);
+    } catch (e) {
+      setDraftPlay(null);
+      setPreviewError(e.message);
+    } finally {
+      setPreviewing(false);
     }
   }
 
@@ -303,6 +354,37 @@ export function PlayEditorCanvas({ draftId, teamId, coachId, onClose, onSaved })
       </div>
 
       <button onClick={handleSave} disabled={saving} style={{ marginTop: "1rem" }}>{saving ? "Saving..." : "Save draft"}</button>
+
+      <div style={{ marginTop: "1rem" }}>
+        <button onClick={handlePreview} disabled={previewing}>{previewing ? "Previewing..." : "Preview"}</button>
+        {previewError && <div style={{ color: C.red, fontSize: 12, marginTop: ".4rem" }}>{previewError}</div>}
+        {draftPlay && (
+          <div style={{ marginTop: ".5rem", fontSize: 13, color: C.white, fontFamily: FONT.body }}>
+            <div>Physics clean: {draftPlay.physicsClean ? "yes" : "no"}</div>
+            <div>Declared/derived agreement: {draftPlay.comparison.agreement}</div>
+            {draftPlay.failedChecks.length > 0 && (
+              <ul style={{ margin: ".25rem 0", paddingLeft: "1.2rem" }}>
+                {draftPlay.failedChecks.map((c, i) => <li key={i} style={{ color: "orange" }}>{c}</li>)}
+              </ul>
+            )}
+            <label style={{ display: "block", marginTop: ".5rem", fontSize: 12, color: C.dim }}>
+              Scrub preview ({previewT.toFixed(2)}s):{" "}
+              <input
+                type="range"
+                min={0}
+                max={Math.max(...clockEventTimes(draftPlay))}
+                step={0.05}
+                value={previewT}
+                onChange={(e) => setPreviewT(Number(e.target.value))}
+                style={{ verticalAlign: "middle" }}
+              />
+            </label>
+            <div style={{ marginTop: ".25rem", fontSize: 11, color: C.dim, wordBreak: "break-all" }}>
+              {JSON.stringify(frameAt(draftPlay, previewT))}
+            </div>
+          </div>
+        )}
+      </div>
     </Card>
   );
 }
