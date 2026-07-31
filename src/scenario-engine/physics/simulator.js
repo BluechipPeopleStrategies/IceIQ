@@ -15,7 +15,7 @@ import {
   detectUnreachablePass, detectIllegalBounds, detectOverlappingActorActions,
   detectInconsistentPossession, detectPossibleInterception,
 } from "./hardFailureDetectors.js";
-import { isUnsupportedModel, SEVERITY } from "./findings.js";
+import { isUnsupportedModel, hardFailuresOf, SEVERITY } from "./findings.js";
 import { rinkProfile } from "../rinkFrame.js";
 
 // v2 (2026-07-31): output-changing fixes found by Phase 3's adversarial
@@ -188,7 +188,7 @@ export async function simulate(def, physicsProfile) {
   findings.push(...detectOverlappingActorActions(def.intendedActions));
   findings.push(...detectInconsistentPossession(def.intendedActions));
 
-  const hardFailures = findings.filter((f) => !isUnsupportedModel(f) && f.severity === SEVERITY.HARD_FAILURE);
+  const hardFailures = hardFailuresOf(findings);
   const unsupportedModelCount = findings.filter(isUnsupportedModel).length;
 
   const traceId = await versionedContentHash("simulation-trace", SIMULATOR_VERSION, {

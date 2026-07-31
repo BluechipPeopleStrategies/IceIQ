@@ -15,6 +15,16 @@ import { versionedContentHash } from "./canonicalHash.js";
 
 export const COMPILED_TEACHING_PLAY_SCHEMA_VERSION = "compiled-teaching-play-v1";
 
+export function deriveEventTimes(definition) {
+  const eventTimesSet = new Set([0]);
+  for (const action of definition.intendedActions) {
+    eventTimesSet.add(action.startTime);
+    if (action.endTime !== undefined) eventTimesSet.add(action.endTime);
+  }
+  if (Number.isFinite(definition.decisionFreeze?.time)) eventTimesSet.add(definition.decisionFreeze.time);
+  return [...eventTimesSet].sort((a, b) => a - b);
+}
+
 export async function compileTeachingPlay(definition, trace, evaluation, declaredCandidateId) {
   // The trace argument must actually have been simulated FROM this
   // definition -- otherwise a caller can pair an unrelated (but physically
@@ -45,13 +55,7 @@ export async function compileTeachingPlay(definition, trace, evaluation, declare
     throw new Error("compileTeachingPlay: refusing to compile a trace that is not physicsClean");
   }
 
-  const eventTimesSet = new Set([0]);
-  for (const action of definition.intendedActions) {
-    eventTimesSet.add(action.startTime);
-    if (action.endTime !== undefined) eventTimesSet.add(action.endTime);
-  }
-  if (Number.isFinite(definition.decisionFreeze?.time)) eventTimesSet.add(definition.decisionFreeze.time);
-  const eventTimes = [...eventTimesSet].sort((a, b) => a - b);
+  const eventTimes = deriveEventTimes(definition);
 
   const dependencyHashes = {
     definitionId: definition.id,

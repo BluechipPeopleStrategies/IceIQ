@@ -98,3 +98,7 @@ export function buildUnsupportedModel({ validatorCode, validatorVersion, actorId
 export function isUnsupportedModel(finding) {
   return finding?.kind === "UNSUPPORTED_MODEL";
 }
+
+export function hardFailuresOf(findings) {
+  return findings.filter((f) => !isUnsupportedModel(f) && f.severity === SEVERITY.HARD_FAILURE);
+}

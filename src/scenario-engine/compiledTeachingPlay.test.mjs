@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 // Run: node src/scenario-engine/compiledTeachingPlay.test.mjs
 import { readFileSync } from "node:fs";
-import { compileTeachingPlay, COMPILED_TEACHING_PLAY_SCHEMA_VERSION } from "./compiledTeachingPlay.js";
+import { compileTeachingPlay, deriveEventTimes, COMPILED_TEACHING_PLAY_SCHEMA_VERSION } from "./compiledTeachingPlay.js";
 import { evaluateDecision, compareDeclaredToDerived } from "./decisionEvaluation.js";
 import { simulate } from "./physics/simulator.js";
 import { sampleAt, frameAt } from "./playbackClock.js";
@@ -151,6 +151,25 @@ function coachPreviewConsumer(play, times) {
 }
 const coachOutput = coachPreviewConsumer(compiledPlay, queryTimes);
 ok("a third consumer querying in reverse order still agrees exactly", JSON.stringify(coachOutput) === JSON.stringify(playerOutput));
+
+// ---- deriveEventTimes helper tests -----------------------------------------
+{
+  const def = {
+    intendedActions: [{ startTime: 0.5, endTime: 1.2 }, { startTime: 1.2, endTime: 2 }],
+    decisionFreeze: { time: 0.8 },
+  };
+  const times = deriveEventTimes(def);
+  ok("deriveEventTimes includes 0", times.includes(0));
+  ok("deriveEventTimes includes every action start/end", [0.5, 1.2, 2].every((t) => times.includes(t)));
+  ok("deriveEventTimes includes decisionFreeze.time", times.includes(0.8));
+  ok("deriveEventTimes is sorted ascending", times.every((t, i) => i === 0 || times[i - 1] <= t));
+  ok("deriveEventTimes de-duplicates repeated times", times.filter((t) => t === 1.2).length === 1);
+}
+{
+  const def = { intendedActions: [], decisionFreeze: {} };
+  const times = deriveEventTimes(def);
+  ok("deriveEventTimes with no decisionFreeze.time still returns [0]", times.length === 1 && times[0] === 0);
+}
 
 console.log(`\n${pass} passed, ${fail} failed`);
 process.exit(fail ? 1 : 0);

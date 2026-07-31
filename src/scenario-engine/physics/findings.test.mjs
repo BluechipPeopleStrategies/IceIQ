@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 // Run: node src/scenario-engine/physics/findings.test.mjs
-import { buildFinding, buildUnsupportedModel, isUnsupportedModel, SEVERITY, ANSWER_IMPACT } from "./findings.js";
+import { buildFinding, buildUnsupportedModel, isUnsupportedModel, hardFailuresOf, SEVERITY, ANSWER_IMPACT } from "./findings.js";
 
 let pass = 0, fail = 0;
 const ok = (n, c) => { console.log(`${c ? "PASS" : "FAIL"}  ${n}`); c ? pass++ : fail++; };
@@ -38,6 +38,31 @@ ok("isUnsupportedModel rejects a real finding", !isUnsupportedModel(finding));
 ok("isUnsupportedModel rejects null/undefined safely", !isUnsupportedModel(null) && !isUnsupportedModel(undefined));
 ok("buildUnsupportedModel rejects a missing reason", throws(() => buildUnsupportedModel({ validatorCode: "x", eventTime: 1 })));
 ok("an UNSUPPORTED_MODEL record has no severity (structurally distinct from pass/fail)", unsupported.severity === undefined);
+
+// ---- hardFailuresOf helper tests -----------------------------------------------
+{
+  const hardFail = buildFinding({
+    validatorCode: "test.hard", validatorVersion: "v1", eventTime: 1,
+    measuredValue: 10, threshold: 5, units: "m/s", profileId: "p", profileVersion: "v1",
+    solverVersion: "v1", severity: SEVERITY.HARD_FAILURE, answerImpact: ANSWER_IMPACT.CHANGES_ANSWER,
+    explanation: "too fast",
+  });
+  const warning = buildFinding({
+    validatorCode: "test.warn", validatorVersion: "v1", eventTime: 1,
+    measuredValue: 6, threshold: 5, units: "m/s", profileId: "p", profileVersion: "v1",
+    solverVersion: "v1", severity: SEVERITY.WARNING, answerImpact: ANSWER_IMPACT.NONE,
+    explanation: "borderline",
+  });
+  const unsupported = buildUnsupportedModel({
+    validatorCode: "test.unsupported", validatorVersion: "v1", eventTime: 1, reason: "not modeled",
+  });
+
+  const result = hardFailuresOf([hardFail, warning, unsupported]);
+  ok("returns only the hard-failure finding", result.length === 1 && result[0] === hardFail);
+  ok("excludes warnings", !result.includes(warning));
+  ok("excludes unsupported-model entries", !result.includes(unsupported));
+  ok("empty input returns empty array", hardFailuresOf([]).length === 0);
+}
 
 console.log(`\n${pass} passed, ${fail} failed`);
 process.exit(fail ? 1 : 0);
