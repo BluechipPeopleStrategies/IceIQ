@@ -77,8 +77,19 @@ export function PlayEditorCanvas({ draftId, teamId, coachId, onClose, onSaved })
   function addRoutePointFor(actorId, x, y) {
     if (!isWithinBounds([x, y], NHL_200X85_PROFILE)) return;
     setDef((d) => {
-      const existing = d.intendedActions.filter((a) => a.actorId === actorId);
-      const startTime = existing.length ? existing[existing.length - 1].endTime : 0;
+      // startTime must be computed from the END of the whole shared
+      // intendedActions array, not just this actor's own prior actions --
+      // validateScenarioDefinition() requires the array to be globally
+      // time-ordered (a single lastStart tracked across every actor), so a
+      // per-actor-only startTime can produce an out-of-order array the
+      // moment a second actor's route is drawn (its first waypoint would
+      // compute startTime: 0 but land after an earlier actor's later
+      // action). Using the max endTime seen anywhere in the array keeps
+      // every new action >= everything already there, for any sequence of
+      // actor selections and clicks.
+      const startTime = d.intendedActions.length
+        ? Math.max(0, ...d.intendedActions.map((a) => a.endTime ?? a.startTime))
+        : 0;
       const newAction = { actorId, kind: "skate", startTime, endTime: startTime + 1, toPosition: [x, y] };
       return { ...d, intendedActions: [...d.intendedActions, newAction] };
     });
