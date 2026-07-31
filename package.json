@@ -76,8 +76,9 @@
     "test:art-lint": "node --test scripts/test-art-lint.mjs",
     "test:play-anchors": "node --test scripts/test-play-anchors.mjs",
     "test:quiz-concept-label": "node --test scripts/test-quiz-concept-label.mjs",
-    "test:scenario-engine": "node src/scenario-engine/rinkFrame.test.mjs && node src/scenario-engine/canonicalHash.test.mjs && node src/scenario-engine/frameAdapters.test.mjs && node src/scenario-engine/scenarioDefinition.test.mjs && node src/scenario-engine/gate8BlindSecondPass.test.mjs && node src/scenario-engine/physics/physicsProfileSchema.test.mjs && node src/scenario-engine/physics/findings.test.mjs && node src/scenario-engine/physics/simulator.test.mjs && node src/scenario-engine/playbackClock.test.mjs && node src/scenario-engine/decisionEvaluation.test.mjs && node src/scenario-engine/compiledTeachingPlay.test.mjs && node src/play/animatedPlayV2Adapter.test.mjs && node src/scenario-engine/tactics/claimSchema.test.mjs",
-    "test:tactics": "node --test scripts/test-tactics.mjs"
+    "test:scenario-engine": "node src/scenario-engine/rinkFrame.test.mjs && node src/scenario-engine/canonicalHash.test.mjs && node src/scenario-engine/frameAdapters.test.mjs && node src/scenario-engine/scenarioDefinition.test.mjs && node src/scenario-engine/gate8BlindSecondPass.test.mjs && node src/scenario-engine/physics/physicsProfileSchema.test.mjs && node src/scenario-engine/physics/findings.test.mjs && node src/scenario-engine/physics/simulator.test.mjs && node src/scenario-engine/playbackClock.test.mjs && node src/scenario-engine/decisionEvaluation.test.mjs && node src/scenario-engine/compiledTeachingPlay.test.mjs && node src/play/animatedPlayV2Adapter.test.mjs && node src/scenario-engine/tactics/claimSchema.test.mjs && node src/scenario-engine/factoryRun.test.mjs && node src/scenario-engine/factoryPipeline.test.mjs && node src/scenario-engine/breakout/dzBreakoutScenario.test.mjs && node src/scenario-engine/breakout/dzBreakoutImpossibleVariants.test.mjs && node src/scenario-engine/coachDeclaredFixture.test.mjs",
+    "test:tactics": "node --test scripts/test-tactics.mjs",
+    "factory:breakout-demo": "node scripts/run-breakout-factory-demo.mjs"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.103.0",

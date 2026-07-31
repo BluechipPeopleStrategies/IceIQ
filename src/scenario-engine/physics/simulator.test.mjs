@@ -165,6 +165,52 @@ ok("solver contract is versioned", typeof SOLVER_CONTRACT.version === "string");
   ok("just-inside turning boundary: a shallow turn into a long segment is physically clean", insideTrace.physicsClean);
 }
 
+// ---- Impossible turning does NOT apply across a pass/shot leg ----------------
+// A pass/shot's direction is set by release mechanics, not the skater's own
+// turning radius -- the same sharp-angle transition that correctly hard-fails
+// between two skate actions (above) must NOT hard-fail when either leg is a
+// pass/shot. Caught adapting the real dz-breakout play into a
+// ScenarioDefinition (Phase 5 Task 4, 2026-07-31): its real skate-then-
+// outlet-pass sequence turns ~58 degrees in under 10m, which the turning
+// detector -- before this fix -- flagged as an impossible turn.
+{
+  const turningInitialState = {
+    actors: [
+      { id: "D1", team: "home", role: "puckCarrier", position: [0, 0] },
+      { id: "W1", team: "home", role: "support", position: W1_POS },
+      { id: "F1", team: "away", role: "defender", position: [25, -10] },
+      { id: "F2", team: "away", role: "defender", position: [-25, 10] },
+    ],
+    puck: { position: [0, 0] },
+  };
+  // Same geometry as the "just-outside" skate/skate case above (a 90-degree
+  // turn into a too-short 5m segment) but the second leg is a PASS, not a
+  // skate -- would have hard-failed as impossible-turning before this fix.
+  const def = baseDefinition({
+    initialState: turningInitialState,
+    decisionFreeze: { time: 100, observableCues: ["test"] },
+    intendedActions: [
+      { actorId: "D1", kind: "skate", startTime: 0, endTime: 2.5, toPosition: [10, 0] },
+      { actorId: "D1", kind: "pass", startTime: 2.5, endTime: 3, toPosition: [10, 5] },
+    ],
+  });
+  const trace = await simulate(def, u13Profile);
+  ok("a sharp turn is NOT a hard failure when the second leg is a pass", trace.findings.filter((f) => f.severity === SEVERITY.HARD_FAILURE && f.validatorCode === "impossible-turning").length === 0);
+  ok("the turning check instead reports UNSUPPORTED_MODEL for a skate-then-pass transition", trace.findings.some((f) => f.validatorCode === "impossible-turning" && isUnsupportedModel(f)));
+
+  // And the reverse order: a sharp-angled PASS followed by a skate.
+  const reverseDef = baseDefinition({
+    initialState: turningInitialState,
+    decisionFreeze: { time: 100, observableCues: ["test"] },
+    intendedActions: [
+      { actorId: "D1", kind: "pass", startTime: 0, endTime: 0.7, toPosition: [10, 0] },
+      { actorId: "D1", kind: "skate", startTime: 0.7, endTime: 3.2, toPosition: [10, 5] },
+    ],
+  });
+  const reverseTrace = await simulate(reverseDef, u13Profile);
+  ok("a sharp turn is NOT a hard failure when the FIRST leg is a pass", reverseTrace.findings.filter((f) => f.severity === SEVERITY.HARD_FAILURE && f.validatorCode === "impossible-turning").length === 0);
+}
+
 // ---- Possible interception (implemented in Phase 2, now actually tested) ----
 {
   // F1/F2 start close to the pass line between D1 and W1's real breakout

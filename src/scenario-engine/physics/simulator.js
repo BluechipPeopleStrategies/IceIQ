@@ -26,7 +26,12 @@ import { rinkProfile } from "../rinkFrame.js";
 // action.kind instead of a lossy pass/shot boolean. Both change simulate()'s
 // output for existing definitions, so per this module's own solver-contract
 // convention (see candidateIdDerivation below), the version bumps.
-export const SIMULATOR_VERSION = "level1-simulator-v2";
+// v3 (2026-07-31): hardFailureDetectors.js's detectImpossibleTurning now
+// skips pass/shot legs (its own v2 changelog) -- a real, previously
+// hard-failing skate-then-outlet-pass sequence is now correctly
+// UNSUPPORTED_MODEL instead. Detector behavior feeds directly into this
+// module's own findings/physicsClean output, so the version bumps here too.
+export const SIMULATOR_VERSION = "level1-simulator-v3";
 
 // Pinned solver contract -- declared and versioned explicitly, per the
 // spec's requirement, even for the fields Level 1 doesn't currently need.

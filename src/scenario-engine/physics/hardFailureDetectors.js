@@ -13,7 +13,11 @@
 import { isWithinBounds } from "../rinkFrame.js";
 import { buildFinding, buildUnsupportedModel, SEVERITY, ANSWER_IMPACT } from "./findings.js";
 
-export const DETECTORS_VERSION = "hard-failure-detectors-v1";
+// v2 (2026-07-31): detectImpossibleTurning now skips pass/shot legs (see
+// its own comment) -- output-changing, so the version bumps per this
+// module's own convention (every caller reads DETECTORS_VERSION as the
+// validatorVersion stamped onto each finding).
+export const DETECTORS_VERSION = "hard-failure-detectors-v2";
 
 function distance(a, b) {
   return Math.hypot(b[0] - a[0], b[1] - a[1]);
@@ -157,6 +161,28 @@ export function detectImpossibleStopping(action, actionIndex, fromPos, profile, 
 const TURN_MIN_SEGMENT_M = 0.5; // segments shorter than this can't establish a direction at all -- skip, don't guess
 
 export function detectImpossibleTurning(prevAction, curAction, prevFromPos, curFromPos, profile) {
+  // Actor-only, same rule as every other per-actor detector in this file
+  // (detectTeleportation, detectImpossibleAcceleration,
+  // detectImpossibleStopping all skip pass/shot at their own top) -- a
+  // turning-RADIUS constraint is a SKATER-BODY limit. A pass or shot's
+  // direction is set by stick/wrist release mechanics, not by how sharply
+  // the skater's own body can carve an arc -- a puck can be redirected
+  // through a wide angle with no equivalent skating turn at all. This
+  // detector was the one exception missing that guard: comparing a skate's
+  // heading against a FOLLOWING pass's launch direction (or a pass's
+  // direction against a FOLLOWING skate's heading) using the skater's own
+  // turningRadiusM produced a false "impossible turn" hard-failure on a
+  // real, tactically-normal skate-then-outlet-pass sequence -- caught while
+  // adapting the actual dz-breakout play into a ScenarioDefinition for
+  // Phase 5 Task 4, 2026-07-31 (the first fixture this session to chain a
+  // sharply-angled real pass right after a real skate).
+  if (["pass", "shot"].includes(prevAction.kind) || ["pass", "shot"].includes(curAction.kind)) {
+    return buildUnsupportedModel({
+      validatorCode: "impossible-turning", validatorVersion: DETECTORS_VERSION,
+      actorId: curAction.actorId, eventTime: curAction.startTime,
+      reason: "a pass/shot's direction is set by release mechanics, not the skater's own turning radius -- not modeled by this detector",
+    });
+  }
   if (!prevAction.toPosition || !curAction.toPosition) {
     return buildUnsupportedModel({
       validatorCode: "impossible-turning", validatorVersion: DETECTORS_VERSION,
