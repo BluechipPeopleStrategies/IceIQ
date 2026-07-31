@@ -294,15 +294,25 @@ export function PlayEditorCanvas({ draftId, teamId, coachId, onClose, onSaved })
       <svg
         width={svgW}
         height={svgH}
+        viewBox={`0 0 ${svgW} ${svgH}`}
         onClick={(e) => {
           const rect = e.currentTarget.getBoundingClientRect();
-          const x = (e.clientX - rect.left) / RINK_SVG_SCALE - NHL_200X85_PROFILE.lengthM / 2;
-          const y = (e.clientY - rect.top) / RINK_SVG_SCALE - NHL_200X85_PROFILE.widthM / 2;
+          // rect.width/height are the CSS-rendered box, which can differ from
+          // the SVG's native svgW/svgH once maxWidth:"100%" scales it down
+          // (e.g. narrow/phone viewports). Scale the click offset by the
+          // ratio between native and rendered size BEFORE applying
+          // RINK_SVG_SCALE (which only accounts for the metre-to-pixel
+          // conversion, not any CSS scaling) -- otherwise clicks land on the
+          // wrong rink-frame coordinate whenever the box is scaled.
+          const scaleX = svgW / rect.width;
+          const scaleY = svgH / rect.height;
+          const x = ((e.clientX - rect.left) * scaleX) / RINK_SVG_SCALE - NHL_200X85_PROFILE.lengthM / 2;
+          const y = ((e.clientY - rect.top) * scaleY) / RINK_SVG_SCALE - NHL_200X85_PROFILE.widthM / 2;
           if (selectedActorId) addRoutePointFor(selectedActorId, x, y);
           else if (placeMode === "puck") setPuckAt(x, y);
           else addActorAt(x, y);
         }}
-        style={{ border: "1px solid #333", background: "#eef", display: "block", maxWidth: "100%" }}
+        style={{ border: "1px solid #333", background: "#eef", display: "block", maxWidth: "100%", height: "auto" }}
       >
         {def.initialState.actors.map((a) => {
           const routeActions = def.intendedActions.filter((ac) => ac.actorId === a.id);

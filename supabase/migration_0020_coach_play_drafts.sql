@@ -37,14 +37,26 @@ create index if not exists idx_coach_play_drafts_coach on public.coach_play_draf
 -- updates once a specific column value is reached," so a trigger backs it up.
 -- search_path pinned per migration_0018's hardening pattern (clears the
 -- Supabase Security Advisor "function search_path mutable" finding).
+--
+-- Only the proof/status/revision fields are frozen once finalized. export_url,
+-- export_expires_at, and updated_at stay writable after finalization on
+-- purpose: setDraftExportInfo() (src/supabase.js) legitimately updates those
+-- columns on an already-finalized row once the export render completes --
+-- that's the whole point of exporting a finalized draft. A blanket freeze
+-- here made that path permanently unreachable (fixed 2026-07-31 per code
+-- review finding).
 create or replace function public.reject_update_of_finalized_draft()
 returns trigger
 language plpgsql
 set search_path = ''
 as $$
 begin
-  if old.status = 'finalized' then
-    raise exception 'coach_play_drafts: row % is finalized and immutable', old.id;
+  if old.status = 'finalized'
+     and (new.scenario_definition is distinct from old.scenario_definition
+       or new.compiled_artifact  is distinct from old.compiled_artifact
+       or new.status             is distinct from old.status
+       or new.revision           is distinct from old.revision) then
+    raise exception 'coach_play_drafts: row % is finalized -- the proof/status/revision fields are immutable', old.id;
   end if;
   return new;
 end;

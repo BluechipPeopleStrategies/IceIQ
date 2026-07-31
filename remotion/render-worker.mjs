@@ -18,14 +18,36 @@ import { createClient } from "@supabase/supabase-js";
 const SIGNED_URL_TTL_SECONDS = 60 * 60 * 24 * 30; // 30 days, per design §5 retention
 const STORAGE_BUCKET = "coach-play-exports";
 
+// Only these schemaVersion values are understood. An unrecognized one fails
+// closed (refuses to render) rather than silently rendering it as if it were
+// clean -- an unknown format could be an unvalidated draft shape we don't
+// recognize yet.
+const KNOWN_SCHEMA_VERSIONS = ["draft-teaching-play-v1", "compiled-teaching-play-v1"];
+
 async function main() {
   const [, , artifactPath, outputPath, flag] = process.argv;
   if (!artifactPath || !outputPath) {
     console.error("Usage: node render-worker.mjs <artifact.json> <output.mp4> [--watermark]");
     process.exit(1);
   }
-  const watermark = flag === "--watermark";
   const compiledPlay = JSON.parse(readFileSync(artifactPath, "utf8"));
+
+  if (!KNOWN_SCHEMA_VERSIONS.includes(compiledPlay.schemaVersion)) {
+    console.error(
+      `Unrecognized artifact schemaVersion: ${compiledPlay.schemaVersion} -- refusing to render (could be an unvalidated format).`
+    );
+    process.exit(1);
+  }
+
+  // The watermark decision is derived from the artifact's own type, not just
+  // the CLI flag -- a DraftTeachingPlay (unvalidated: physics-failed or
+  // disagreeing) is ALWAYS watermarked, regardless of whether the caller
+  // remembered to pass --watermark. The flag can only ADD a watermark to a
+  // compiled artifact, never remove one a draft artifact requires. This
+  // closes the gap where forgetting the flag produced a clean, unwatermarked
+  // MP4 of unvalidated content (fixed 2026-07-31 per code review finding).
+  const isDraftArtifact = compiledPlay.schemaVersion === "draft-teaching-play-v1";
+  const watermark = isDraftArtifact || flag === "--watermark";
 
   // fileURLToPath (not `.pathname`) so this resolves correctly on Windows too
   // -- a raw URL pathname is POSIX-shaped (`/C:/Users/...`), which Node's
