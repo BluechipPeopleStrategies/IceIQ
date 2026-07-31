@@ -1139,10 +1139,24 @@ export async function updateCoachPlayDraft(draftId, expectedRevision, scenarioDe
   return data;
 }
 
-export async function finalizeCoachPlayDraft(draftId, compiledArtifact) {
+// scenarioDefinition here must be the SAME definition (with its accurate,
+// freshly recomputed contentHash) that was actually fed into
+// compileTeachingPlay() to produce compiledArtifact -- persisting it
+// alongside compiled_artifact in this one update is what guarantees the
+// stored scenario_definition and compiled_artifact.dependencyHashes.
+// definitionContentHash can never describe different content. This is the
+// ONLY point in the row's lifecycle scenario_definition can still change
+// after this call: migration_0020's immutability trigger freezes
+// scenario_definition/compiled_artifact/status/revision once
+// old.status = 'finalized', but this update is the draft -> finalized
+// transition itself, so it's exempt by the trigger's own `old.status`
+// check. See docs/superpowers/plans/2026-07-31-coach-authoring-followon-fixes.md's
+// final-review fix for the full story.
+export async function finalizeCoachPlayDraft(draftId, scenarioDefinition, compiledArtifact) {
   const { data, error } = await supabase
     .from("coach_play_drafts")
     .update({
+      scenario_definition: scenarioDefinition,
       status: "finalized",
       compiled_artifact: compiledArtifact,
       finalized_at: new Date().toISOString(),

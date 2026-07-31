@@ -347,7 +347,12 @@ ok("solver contract is versioned", typeof SOLVER_CONTRACT.version === "string");
   });
   const trace = await simulate(def, u13Profile);
   const puckSamples = trace.samples.filter((s) => s.actorId === "puck");
-  ok("a support player's own skate action does not produce puck samples (they don't have the puck)", puckSamples.length === 0);
+  // W1's skate action itself still produces zero puck samples (they don't
+  // have the puck) -- but the puck's own routeless fallback (added to fix
+  // the final-review finding: a puck with no pass/shot action and no moving
+  // carrier was previously invisible to every consumer) now gives it exactly
+  // one static sample at its initial position, same as the F2 case below.
+  ok("a support player's own skate action does not itself move the puck -- only the routeless fallback sample remains", puckSamples.length === 1 && puckSamples[0].t === 0);
 }
 
 // ---- After a pass/shot, possession is unknown -- later skating doesn't drag the puck --
@@ -384,6 +389,21 @@ ok("solver contract is versioned", typeof SOLVER_CONTRACT.version === "string");
   ok("F2's sample is at t=0", f2Samples[0].t === 0);
   const d1Samples = trace.samples.filter((s) => s.actorId === "D1");
   ok("D1 (who has a real action) is unaffected -- still has action-derived samples", d1Samples.length >= 1);
+}
+
+// ---- Routeless, never-carried puck still gets a sample --------------------
+// Same failure mode as the actor fallback above, but for the puck: no
+// pass/shot action ever moves it, and its carrier (D1) never skates either,
+// so before this fix it produced ZERO samples and was invisible to
+// playbackClock.js/CoachPlayComposition, which both derive "which entities
+// exist" from trace.samples.
+{
+  const def = baseDefinition({ intendedActions: [] });
+  const trace = await simulate(def, u13Profile);
+  const puckSamples = trace.samples.filter((s) => s.actorId === "puck");
+  ok("routeless, never-passed puck gets at least one sample", puckSamples.length >= 1);
+  ok("the puck's fallback sample sits at its initial position", puckSamples[0].pos[0] === D1_START[0] && puckSamples[0].pos[1] === D1_START[1]);
+  ok("the puck's fallback sample is at t=0", puckSamples[0].t === 0);
 }
 
 console.log(`\n${pass} passed, ${fail} failed`);

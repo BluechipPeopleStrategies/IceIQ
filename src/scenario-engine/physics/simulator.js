@@ -201,6 +201,17 @@ export async function simulate(def, physicsProfile) {
     }
   }
 
+  // Same fallback, for the one non-actor entity every consumer also derives
+  // from trace.samples: a puck that's never passed/shot AND whose carrier
+  // (if any) never skates produces zero puck samples otherwise -- invisible
+  // in playbackClock.js/CoachPlayComposition despite being placed on the
+  // rink. def.initialState.puck can be null on a brand-new, not-yet-authored
+  // draft, so guard on it rather than assuming it's always present.
+  const hasPuckSample = samples.some((s) => s.actorId === "puck");
+  if (!hasPuckSample && def.initialState.puck) {
+    samples.push({ t: 0, pos: [round6(def.initialState.puck.position[0]), round6(def.initialState.puck.position[1])], actorId: "puck" });
+  }
+
   findings.push(...detectOverlappingActorActions(def.intendedActions));
   findings.push(...detectInconsistentPossession(def.intendedActions));
 

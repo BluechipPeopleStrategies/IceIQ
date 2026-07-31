@@ -30,6 +30,35 @@ import { TELEPORT_MIN_DURATION_S } from "./scenario-engine/physics/hardFailureDe
 
 const RINK_SVG_SCALE = 8; // px per rink-frame metre, arbitrary MVP constant
 
+// Recomputes a definition's contentHash from its own current content fields
+// (contentHash/version themselves excluded -- hashing contentHash would be
+// circular, and version increments independently of content, same
+// convention as promotedArtifact.js's promotedAt exclusion). version only
+// bumps when the content actually changed from the last SAVED hash -- a
+// resave/refinalize of identical content is a genuine no-op, matching that
+// same idempotency precedent.
+//
+// Edge case: a brand-new draft's def.contentHash starts as null
+// (blankScenarioDefinition() hasn't been saved yet, so there is no real
+// prior content to diff against). Treat that as "no real save yet" rather
+// than "different from every real hash" -- the first real save/finalize
+// lands as version 1 (the first real content state), not version 2. Only a
+// hash that differs from a PRIOR REAL hash bumps version.
+//
+// Shared by handleSave and handleFinalize (originally only handleSave
+// recomputed this; handleFinalize could compile+persist a stale/null hash
+// if the coach edited the draft without clicking Save first -- see
+// docs/superpowers/plans/2026-07-31-coach-authoring-followon-fixes.md's
+// final-review fix for the full story) so there is exactly one
+// implementation of this logic, not two that can drift.
+async function withRecomputedHash(def) {
+  const { contentHash: _omitHash, version: _omitVersion, ...hashableFields } = def;
+  const contentHash = await versionedContentHash("scenario-definition", SCENARIO_DEFINITION_SCHEMA_VERSION, hashableFields);
+  const hadPriorRealHash = def.contentHash !== null && def.contentHash !== undefined;
+  const contentChanged = hadPriorRealHash && contentHash !== def.contentHash;
+  return { ...def, contentHash, version: (def.version ?? 1) + (contentChanged ? 1 : 0) };
+}
+
 const ROLE_OPTIONS = [
   { value: "puckCarrier", label: "Puck carrier" },
   { value: "support", label: "Support" },
@@ -173,24 +202,9 @@ export function PlayEditorCanvas({ draftId, teamId, coachId, onClose, onSaved })
     setError(null);
     try {
       // Recompute the provenance hash from the def's own content fields on
-      // every save (contentHash/version themselves excluded -- hashing
-      // contentHash would be circular, and version increments independently
-      // of content, same convention as promotedArtifact.js's promotedAt
-      // exclusion). version only bumps when the content actually changed
-      // from the last SAVED hash -- a resave of identical content is a
-      // genuine no-op, matching that same idempotency precedent.
-      //
-      // Edge case: a brand-new draft's def.contentHash starts as null
-      // (blankScenarioDefinition() hasn't been saved yet, so there is no
-      // real prior content to diff against). Treat that as "no real save
-      // yet" rather than "different from every real hash" -- the first real
-      // save lands as version 1 (the first real content state), not version
-      // 2. Only a hash that differs from a PRIOR REAL hash bumps version.
-      const { contentHash: _omitHash, version: _omitVersion, ...hashableFields } = def;
-      const contentHash = await versionedContentHash("scenario-definition", SCENARIO_DEFINITION_SCHEMA_VERSION, hashableFields);
-      const hadPriorRealHash = def.contentHash !== null && def.contentHash !== undefined;
-      const contentChanged = hadPriorRealHash && contentHash !== def.contentHash;
-      const nextDef = { ...def, contentHash, version: (def.version ?? 1) + (contentChanged ? 1 : 0) };
+      // every save -- see withRecomputedHash's own doc comment for the full
+      // reasoning (first-save/no-op edge cases etc).
+      const nextDef = await withRecomputedHash(def);
       const row = await updateCoachPlayDraft(draftId, revision, nextDef);
       setDef(row.scenario_definition);
       setRevision(row.revision);
@@ -270,11 +284,21 @@ export function PlayEditorCanvas({ draftId, teamId, coachId, onClose, onSaved })
     }
     setFinalizing(true);
     try {
-      const trace = await simulate(def, U13_PHYSICS_PROFILE);
-      const candidate = { id: declaredActorId, declaredRead: def.declaredRead, trace };
+      // Recompute the hash against the CURRENT in-memory def before
+      // compiling -- a coach who edits the draft (e.g. adds a route point)
+      // and clicks Finalize WITHOUT Save first would otherwise compile
+      // against whatever contentHash was last saved (or null), baking a
+      // stale/incorrect definitionContentHash into compiled_artifact. Once
+      // finalized, migration 0020/0021 make the row both immutable and
+      // undeletable, so there is no client-side remedy for a bad-provenance
+      // row -- this must be correct going in.
+      const finalizeDef = await withRecomputedHash(def);
+      const trace = await simulate(finalizeDef, U13_PHYSICS_PROFILE);
+      const candidate = { id: declaredActorId, declaredRead: finalizeDef.declaredRead, trace };
       const evaluation = evaluateDecision([candidate]);
-      const compiled = await compileTeachingPlay(def, trace, evaluation, candidate.id);
-      const row = await finalizeCoachPlayDraft(draftId, compiled);
+      const compiled = await compileTeachingPlay(finalizeDef, trace, evaluation, candidate.id);
+      const row = await finalizeCoachPlayDraft(draftId, finalizeDef, compiled);
+      setDef(row.scenario_definition);
       setRevision(row.revision);
       setFinalized(true);
       onSaved(row);
