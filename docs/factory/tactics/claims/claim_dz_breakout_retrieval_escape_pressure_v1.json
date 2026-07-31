@@ -1,0 +1,80 @@
+{
+  "schemaVersion": "tactical-claim-v1",
+  "id": "claim_dz_breakout_retrieval_escape_pressure_v1",
+  "version": 1,
+  "contentHash": "0e8bcc8e56aa3916b1398a1de78ea781485d5d275b0de5da98b5eca20b74f451",
+  "status": "review-required",
+  "proofMode": "kernel-derived",
+  "family": "dz_breakout",
+  "phaseOfPlay": "defensive-zone-retrieval",
+  "ageSkillApplicability": {
+    "ageBands": [
+      "U11",
+      "U13",
+      "U15",
+      "U18"
+    ],
+    "excludedBands": [
+      "U7",
+      "U9"
+    ],
+    "excludedReason": "Structured breakout/pressure concepts are gated U11+ (src/scenario/GOLDEN-RULES-2026-06-11.md, advancedThemesGatedByAge) -- this claim's cue (forechecker commitment) is exactly the kind of structured-system read that rule exists to keep off U7/U9 boards."
+  },
+  "observableCues": [
+    {
+      "id": "forechecker_committed_side",
+      "description": "The first forechecker has closed to the puck carrier at full speed, committed to one side of the net -- as opposed to the second forechecker, who is still approaching/reading and has not yet committed."
+    }
+  ],
+  "conditions": [
+    "The puck carrier is retrieving the puck behind their own net.",
+    "Exactly one forechecker has committed to a side at full speed at the moment of decision.",
+    "The net is physically available to the puck carrier as protection (not already cut off)."
+  ],
+  "preferredRead": {
+    "id": "escape_open_side",
+    "description": "Take the puck away from the side the forechecker committed to, using the net as protection.",
+    "reasoning": "The moment a forechecker commits to one side to arrive with speed, they can no longer defend the other side -- the net itself is in their way and their hips are turned. The retrieving defender should already be scanning for this before the puck is on their stick."
+  },
+  "invalidatedReads": [
+    {
+      "id": "into_pressure",
+      "description": "Continue out the same side the forechecker committed to, into the pressure.",
+      "reasoning": "This skates into a player arriving with more speed than the retriever has. Behind your own net is the worst place on the ice to lose a puck battle."
+    },
+    {
+      "id": "through_the_slot",
+      "description": "Step straight out in front of your own net, through the slot.",
+      "reasoning": "The slot is the most dangerous ice on the sheet. A retrieval that goes through your own slot turns a routine breakout into a scoring chance against -- the cardinal error for this read, worth naming plainly."
+    },
+    {
+      "id": "hold_behind_net",
+      "description": "Hold the puck behind the net and wait for help.",
+      "reasoning": "The second forechecker is already arriving. Waiting turns one problem into two, and the outlet that was open when the puck was retrieved will not still be there."
+    }
+  ],
+  "exceptions": [
+    "This claim's cue set assumes exactly one forechecker has committed. If both forecheckers have already committed to the same side, or neither has committed yet, the observable cue this claim keys on does not apply -- treat as out of scope for this claim, not as evidence against the preferred read."
+  ],
+  "sources": [
+    {
+      "note": "docs/library/dz-breakout-retrieval-under-pressure.md",
+      "cite": "USA Hockey ADM breakout and puck-retrieval principles: the retrieving defender uses the net as protection and moves the puck away from pressure rather than through it.",
+      "url": "https://www.usahockey.com/practiceplans",
+      "evidenceConfidence": "principle-level-cited"
+    }
+  ],
+  "linkedKernelIds": [
+    "play_dz_breakout_escape_pressure_u13_v1"
+  ],
+  "linkedValidatorIds": [
+    "detectPossibleInterception"
+  ],
+  "approval": {
+    "approvedBy": null,
+    "approvedDate": null,
+    "reviewNotes": "Authored from docs/library/dz-breakout-retrieval-under-pressure.md, cross-checked against the age gating in src/scenario/GOLDEN-RULES-2026-06-11.md, and aligned to the option ids already field-tested in the live src/play/plays/dzBreakoutEscapePressure.js catalog play (same four reads, same reasoning). Not self-approved -- this plan never pre-approves a claim on Thomas's behalf. Awaiting Thomas or a named reviewer."
+  },
+  "supersedes": null,
+  "dependencyKey": "dz_breakout::defensive-zone-retrieval"
+}
