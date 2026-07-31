@@ -93,7 +93,7 @@ New Supabase table, `coach_play_drafts`:
 create table public.coach_play_drafts (
   id uuid primary key default gen_random_uuid(),
   team_id uuid not null references public.teams(id) on delete cascade,
-  coach_id uuid not null references auth.users(id),
+  coach_id uuid not null references public.profiles(id) on delete cascade,
   scenario_definition jsonb not null,      -- the ScenarioDefinition, proofMode always
                                             -- "coach-declared" for rows written here
   revision integer not null default 1,     -- optimistic concurrency: client sends the
@@ -240,13 +240,19 @@ export function buildDraftTeachingPlay(definition, trace, evaluation, declaredCa
     declaredRead: definition.declaredRead,
     physicsClean: trace.physicsClean,
     comparison,                 // may be any AGREEMENT value, not just AGREE
+    // trace has no physicsFailures field (verified against physics/simulator.js) --
+    // hard failures live in trace.findings, filtered the same way the simulator
+    // itself derives physicsClean (simulator.js:191).
     failedChecks: [
-      ...(trace.physicsClean ? [] : trace.physicsFailures),
+      ...trace.findings.filter((f) => !isUnsupportedModel(f) && f.severity === SEVERITY.HARD_FAILURE)
+        .map((f) => f.explanation ?? f.validatorCode),
       ...(comparison.agreement === AGREEMENT.AGREE ? [] : [comparison.explanation]),
     ],
   });
 }
 ```
+
+(`isUnsupportedModel`, `SEVERITY` imported from `physics/findings.js` — confirmed exports, `simulator.js:18/191`. Phase 8 should factor the hard-failure filter itself into a small exported helper, e.g. `hardFailuresOf(trace)` on `findings.js`, so `draftTeachingPlay.js` and `simulator.js` share one implementation instead of duplicating the filter predicate.)
 
 Rules, matching decision 2 verbatim:
 
@@ -256,8 +262,10 @@ Rules, matching decision 2 verbatim:
   call only happens at finalize-time (see below). Preview consumes
   `DraftTeachingPlay` through the same shared `playbackClock.js` that
   `CompiledTeachingPlay` uses (framework-fit decision 1: one clock, all consumers) —
-  `playbackClock.js` is written against the fields both artifact types share
-  (`samples`, `eventTimes`, `questionFreezeTime`, `observableCues`), so it does not
+  `playbackClock.js` only reads `samples`, `eventTimes`, and `questionFreezeTime`
+  (confirmed against `playbackClock.js:19-63`; it does not touch `observableCues` at
+  all, that field is UI-level, read directly by the editor/player components), and
+  both artifact types carry those three fields identically, so the clock does not
   need to know which artifact type it's walking.
 - **Finalize**: attempts `compileTeachingPlay()`. Success → row's `scenario_definition`
   is locked (`status = 'finalized'`), and a real `CompiledTeachingPlay` is produced and
