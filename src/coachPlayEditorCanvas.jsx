@@ -24,6 +24,7 @@ import { frameAt, eventTimes as clockEventTimes } from "./scenario-engine/playba
 // band the seeded dz-breakout fixture uses (coachDeclaredFixture.js); MVP
 // preview has no age-band picker yet, so this is pinned rather than exposed.
 import U13_PHYSICS_PROFILE from "./scenario-engine/physics/profiles/u13.json";
+import { TELEPORT_MIN_DURATION_S } from "./scenario-engine/physics/hardFailureDetectors.js";
 
 const RINK_SVG_SCALE = 8; // px per rink-frame metre, arbitrary MVP constant
 
@@ -96,21 +97,34 @@ export function PlayEditorCanvas({ draftId, teamId, coachId, onClose, onSaved })
   function addRoutePointFor(actorId, x, y) {
     if (!isWithinBounds([x, y], NHL_200X85_PROFILE)) return;
     setDef((d) => {
-      // startTime must be computed from the END of the whole shared
-      // intendedActions array, not just this actor's own prior actions --
-      // validateScenarioDefinition() requires the array to be globally
-      // time-ordered (a single lastStart tracked across every actor), so a
-      // per-actor-only startTime can produce an out-of-order array the
-      // moment a second actor's route is drawn (its first waypoint would
-      // compute startTime: 0 but land after an earlier actor's later
-      // action). Using the max endTime seen anywhere in the array keeps
-      // every new action >= everything already there, for any sequence of
-      // actor selections and clicks.
-      const startTime = d.intendedActions.length
-        ? Math.max(0, ...d.intendedActions.map((a) => a.endTime ?? a.startTime))
+      const actorsOwnActions = d.intendedActions.filter((a) => a.actorId === actorId);
+      const actor = d.initialState.actors.find((a) => a.id === actorId);
+      const fromPos = actorsOwnActions.length
+        ? actorsOwnActions[actorsOwnActions.length - 1].toPosition
+        : actor.position;
+      // This actor's own waypoints still chain sequentially off their own
+      // prior endTime -- but a NEWLY selected actor's first waypoint starts
+      // at t=0, not after whatever an earlier-drawn actor's route reached,
+      // per design doc §2 (actors move concurrently by default). This means
+      // intendedActions is no longer necessarily appended in ascending
+      // startTime order -- it's sorted below, at return time, so the saved
+      // array always satisfies validateScenarioDefinition's global
+      // non-decreasing-startTime requirement regardless of click order.
+      const startTime = actorsOwnActions.length
+        ? actorsOwnActions[actorsOwnActions.length - 1].endTime
         : 0;
-      const newAction = { actorId, kind: "skate", startTime, endTime: startTime + 1, toPosition: [x, y] };
-      return { ...d, intendedActions: [...d.intendedActions, newAction] };
+      // Duration derived from the acceleration-from-rest model
+      // detectImpossibleAcceleration actually checks (requiredAccel =
+      // 2*distance/duration^2, capped at avgAccelMPS2): solving for duration
+      // at exactly the cap gives the shortest physically-clean duration for
+      // this distance. See design doc §1 for the full derivation.
+      const dist = Math.hypot(x - fromPos[0], y - fromPos[1]);
+      const accelCap = U13_PHYSICS_PROFILE.player.avgAccelMPS2.value;
+      const duration = Math.max(TELEPORT_MIN_DURATION_S, Math.sqrt((2 * dist) / accelCap));
+      const endTime = startTime + duration;
+      const newAction = { actorId, kind: "skate", startTime, endTime, toPosition: [x, y] };
+      const intendedActions = [...d.intendedActions, newAction].sort((a, b) => a.startTime - b.startTime);
+      return { ...d, intendedActions };
     });
   }
 

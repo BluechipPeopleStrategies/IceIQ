@@ -29,7 +29,7 @@ function actorPosition(def, actorId) {
 
 // --- 1. Teleportation -------------------------------------------------------
 // Non-trivial distance covered in near-zero time.
-const TELEPORT_MIN_DURATION_S = 0.05;
+export const TELEPORT_MIN_DURATION_S = 0.05;
 const TELEPORT_MIN_DISTANCE_M = 0.5; // roughly one body envelope
 
 export function detectTeleportation(action, actionIndex, fromPos) {
