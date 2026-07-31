@@ -154,17 +154,15 @@ create policy "coach manages own team drafts" on public.coach_play_drafts
 
 **Server-owned TEAM entitlement**, closing the client-writable-`tier` gap for this
 surface specifically: the write path (draft save, finalize, export-request) is not
-"any authenticated user with `profile.tier = 'TEAM'` client-side" — it re-checks
-entitlement server-side. Because there is no Edge Function layer for this yet, the
-cheapest correct mechanism for MVP is a Postgres function invoked via RLS `using`
-clause that checks a **server-controlled** entitlement signal, not the client-writable
-`profiles.tier` column directly. Concretely: `teams` rows already carry
-`coach_id` set at team-creation time by existing (already-trusted) server logic — this
-design reuses that trust boundary (team ownership) as the entitlement gate, rather than
-re-deriving entitlement from `profiles.tier` at all. A coach who owns a `TEAM`-created
-team can author drafts for it; a coach whose team's TEAM subscription lapses is out of
-scope for this design (existing `seasonIsReadOnly()` / `canAccess()` read-only-season
-handling in `tierGate.js` is the model to extend later, not solved here).
+"any authenticated user with `profile.tier = 'TEAM'` client-side" — it never reads
+`profiles.tier` at all. The RLS policy above *is* the server-owned entitlement check:
+`teams.coach_id` is set at team-creation time by existing, already-trusted server
+logic (not client-writable the way `profiles.tier` is), so team ownership stands in
+as the entitlement signal directly — no separate Postgres function or Edge Function
+needed for MVP. A coach who owns a `TEAM`-created team can author drafts for it; a
+coach whose team's TEAM subscription lapses is out of scope for this design (existing
+`seasonIsReadOnly()` / `canAccess()` read-only-season handling in `tierGate.js` is the
+model to extend later, not solved here).
 
 "Coach role" itself: there is no separate role table today: team ownership
 (`teams.coach_id = auth.uid()`) *is* the coach-role signal everywhere else in the
@@ -232,7 +230,11 @@ export function buildDraftTeachingPlay(definition, trace, evaluation, declaredCa
     id: definition.id,
     version: definition.version,
     samples: trace.samples,
-    eventTimes: /* same derivation as compileTeachingPlay */,
+    // Same derivation compileTeachingPlay uses (compiledTeachingPlay.js:48-54):
+    // union of 0, every intendedAction start/end time, and decisionFreeze.time,
+    // sorted ascending. Factor it into a shared helper both modules call rather
+    // than duplicating the loop.
+    eventTimes: deriveEventTimes(definition),
     questionFreezeTime: definition.decisionFreeze.time,
     observableCues: definition.decisionFreeze.observableCues,
     declaredRead: definition.declaredRead,
@@ -284,6 +286,9 @@ Rules, matching decision 2 verbatim:
 
 - `src/coachPlayAuthoring.jsx` (create) — editor UI, mounted per §1.
 - `src/scenario-engine/draftTeachingPlay.js` (create) — per §6.
+- `src/scenario-engine/compiledTeachingPlay.js` (modify) — extract the existing
+  inline `eventTimes` derivation (lines 48-54) into an exported `deriveEventTimes()`
+  helper so `draftTeachingPlay.js` doesn't duplicate it.
 - `supabase/migration_00XX_coach_play_drafts.sql` (create) — table + RLS + allowlist
   table + immutability trigger, per §3-4.
 - `remotion/src/` (create) — composition source; `remotion/package.json` unchanged.
