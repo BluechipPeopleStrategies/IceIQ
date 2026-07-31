@@ -18,7 +18,15 @@ import {
 import { isUnsupportedModel, SEVERITY } from "./findings.js";
 import { rinkProfile } from "../rinkFrame.js";
 
-export const SIMULATOR_VERSION = "level1-simulator-v1";
+// v2 (2026-07-31): output-changing fixes found by Phase 3's adversarial
+// review -- (a) a puck-carrying actor's own skate/carry actions now mirror
+// into the puck's own track (previously the puck had ZERO samples unless
+// an explicit pass/shot action existed, even though it was riding along
+// with its carrier the whole time); (b) samples now carry the real
+// action.kind instead of a lossy pass/shot boolean. Both change simulate()'s
+// output for existing definitions, so per this module's own solver-contract
+// convention (see candidateIdDerivation below), the version bumps.
+export const SIMULATOR_VERSION = "level1-simulator-v2";
 
 // Pinned solver contract -- declared and versioned explicitly, per the
 // spec's requirement, even for the fields Level 1 doesn't currently need.
@@ -88,18 +96,48 @@ export async function simulate(def, physicsProfile) {
 
   const findings = [];
   const samples = [];
-  // Track each actor's running position across actions -- an action's
-  // "from" is the actor's position after their own previous action (or
-  // their initial position, if this is their first).
+  // Track each actor's own BODY position across their skate actions -- an
+  // action's "from" is the actor's position after their own previous
+  // action (or their initial position, if this is their first). A pass/
+  // shot does NOT move the initiating actor's body, so it must never
+  // update this map for that actor -- only the puck moved.
   const lastPosition = new Map(def.initialState.actors.map((a) => [a.id, a.position]));
+  // The puck's own running position, tracked independently of any single
+  // actor -- it moves during pass/shot actions regardless of which actor
+  // initiated them. A puck-carrying actor's OWN body position and the
+  // puck's position happen to coincide while they're carrying it, but they
+  // are not the same tracked quantity (conflating them was a real bug,
+  // caught while wiring Phase 3's playback consumers -- see the sample
+  // tagging below).
+  let lastPuckPosition = def.initialState.puck.position;
+  // The actor currently in control of the puck, so THEIR OWN skate/carry
+  // actions can mirror into the puck's track too -- a carried puck moves
+  // 1:1 with its carrier in this Level-1 model, so it must not sit frozen
+  // (or have zero samples at all) while its carrier is visibly skating with
+  // it. Starts at whichever actor the definition names puckCarrier.
+  // ScenarioDefinition has no "who receives this pass" field, so Level-1
+  // genuinely doesn't know who's holding the puck after a pass/shot --
+  // possession goes to null (unknown/in-transit) rather than guessing; a
+  // null carrier just means later skate actions don't move the puck
+  // sample, so it correctly holds at its last known landing spot instead of
+  // silently teleporting with whoever skates next. (Caught by both of Phase
+  // 3's independent adversarial reviews, 2026-07-31 -- a puck-carrying
+  // actor's plain skate action previously produced ZERO puck samples for
+  // the entire action, the flagship dz-breakout-carry scenario shape.)
+  let puckCarrierId = def.initialState.actors.find((a) => a.role === "puckCarrier")?.id ?? null;
   // Track each actor's previous action + the fromPos it used, so
   // detectImpossibleTurning can compare consecutive headings.
   const lastActionByActor = new Map();
 
   def.intendedActions.forEach((action, actionIndex) => {
-    const fromPos = action.kind === "pass" || action.kind === "shot"
-      ? (lastPosition.get(action.actorId) ?? actorPosition(def, action.actorId))
+    const isPuckAction = ["pass", "shot"].includes(action.kind);
+    const fromPos = isPuckAction
+      ? lastPuckPosition
       : (lastPosition.get(action.actorId) ?? actorPosition(def, action.actorId));
+    // True when this actor already had the puck going into this action, so
+    // their movement carries it along -- computed from the carrier as of
+    // BEFORE this action runs, not after.
+    const carriesPuck = !isPuckAction && action.actorId === puckCarrierId;
 
     const checks = [
       detectTeleportation(action, actionIndex, fromPos),
@@ -117,8 +155,27 @@ export async function simulate(def, physicsProfile) {
     for (const c of checks) if (c) findings.push(c);
 
     if (action.toPosition) {
-      lastPosition.set(action.actorId, action.toPosition);
-      samples.push(...sampleAction(action, fromPos).map((s) => ({ ...s, actorId: action.actorId, puck: ["pass", "shot"].includes(action.kind) })));
+      // Puck samples get their OWN track (actorId "puck"), not the
+      // initiating actor's, and update the puck's OWN running position, not
+      // the actor's -- a pass/shot moves the puck from A to B; the passer's
+      // body stays put. Conflating the two was a real bug (both the sample
+      // tagging and this position update), caught during Phase 3 while
+      // wiring playbackClock.js/animatedPlayV2Adapter.js, which both
+      // correctly assume a dedicated "puck" track exists.
+      if (isPuckAction) {
+        lastPuckPosition = action.toPosition;
+        puckCarrierId = null; // in transit -- Level-1 doesn't model who receives it
+      } else {
+        lastPosition.set(action.actorId, action.toPosition);
+        if (carriesPuck) lastPuckPosition = action.toPosition;
+      }
+      const actionSamples = sampleAction(action, fromPos).map((s) => ({ ...s, actorId: isPuckAction ? "puck" : action.actorId, actionKind: action.kind }));
+      samples.push(...actionSamples);
+      // A carried puck moves with its carrier -- mirror the same samples
+      // onto the puck's own track too, so consumers always have a real
+      // puck position while it's being skated with, not only during an
+      // explicit pass/shot.
+      if (carriesPuck) samples.push(...actionSamples.map((s) => ({ ...s, actorId: "puck" })));
     }
     lastActionByActor.set(action.actorId, { action, fromPos });
   });

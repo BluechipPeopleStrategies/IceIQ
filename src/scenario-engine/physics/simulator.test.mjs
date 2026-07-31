@@ -278,5 +278,48 @@ ok("solver contract is versioned", typeof SOLVER_CONTRACT.version === "string");
   ok("a clean trace has zero hard-failure findings", trace.findings.filter((f) => !isUnsupportedModel(f) && f.severity === SEVERITY.HARD_FAILURE).length === 0);
 }
 
+// ---- The puck moves WITH its carrier during a plain skate/carry action -------
+// Both of Phase 3's independent adversarial reviews caught this: a puck
+// carrier's own skate action previously produced ZERO puck samples at all
+// (only an explicit pass/shot ever touched the puck's track), silently
+// leaving the puck missing for the entire flagship dz-breakout-carry shape.
+{
+  const def = baseDefinition({
+    intendedActions: [{ actorId: "D1", kind: "skate", startTime: 0, endTime: 3, toPosition: D1_ESCAPE }],
+  });
+  const trace = await simulate(def, u13Profile);
+  const puckSamples = trace.samples.filter((s) => s.actorId === "puck");
+  ok("D1's own skate action produces real puck samples (D1 is the declared puckCarrier)", puckSamples.length > 0);
+  ok("the mirrored puck samples match D1's own carried trajectory", JSON.stringify(puckSamples.map((s) => s.pos)) === JSON.stringify(trace.samples.filter((s) => s.actorId === "D1").map((s) => s.pos)));
+  ok("puck samples are tagged with the real action kind, not a lossy boolean", puckSamples.every((s) => s.actionKind === "skate"));
+}
+
+// ---- A non-carrier's own skate action does NOT move the puck -----------------
+{
+  const def = baseDefinition({
+    intendedActions: [{ actorId: "W1", kind: "skate", startTime: 0, endTime: 2, toPosition: F1_POS }],
+  });
+  const trace = await simulate(def, u13Profile);
+  const puckSamples = trace.samples.filter((s) => s.actorId === "puck");
+  ok("a support player's own skate action does not produce puck samples (they don't have the puck)", puckSamples.length === 0);
+}
+
+// ---- After a pass/shot, possession is unknown -- later skating doesn't drag the puck --
+{
+  const def = baseDefinition({
+    intendedActions: [
+      { actorId: "D1", kind: "pass", startTime: 0, endTime: 0.5, toPosition: W1_POS },
+      { actorId: "D1", kind: "skate", startTime: 0.5, endTime: 2.5, toPosition: D1_ESCAPE },
+    ],
+  });
+  const trace = await simulate(def, u13Profile);
+  const puckSamples = trace.samples.filter((s) => s.actorId === "puck");
+  const finalPuckSample = puckSamples[puckSamples.length - 1];
+  const EPS = 1e-5;
+  const near = (a, b) => Math.abs(a[0] - b[0]) < EPS && Math.abs(a[1] - b[1]) < EPS;
+  ok("the puck's last sample lands where the pass actually ended, not dragged along by D1's later skate", finalPuckSample && near(finalPuckSample.pos, W1_POS) && !near(finalPuckSample.pos, D1_ESCAPE));
+  ok("D1 skating again after passing does not re-attach the puck (Level-1 doesn't know who caught it)", puckSamples.every((s) => s.t <= 0.5));
+}
+
 console.log(`\n${pass} passed, ${fail} failed`);
 process.exit(fail ? 1 : 0);
