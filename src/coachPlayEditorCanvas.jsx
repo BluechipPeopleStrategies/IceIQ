@@ -10,11 +10,12 @@
 // real fixture this shape is drawn from.
 import { useEffect, useState } from "react";
 import { Card, Label, C, FONT } from "./shared.jsx";
-import { getCoachPlayDraft, updateCoachPlayDraft, RevisionConflictError } from "./supabase.js";
+import { getCoachPlayDraft, updateCoachPlayDraft, finalizeCoachPlayDraft, RevisionConflictError } from "./supabase.js";
 import { NHL_200X85_PROFILE, isWithinBounds } from "./scenario-engine/rinkFrame.js";
 import { simulate } from "./scenario-engine/physics/simulator.js";
 import { evaluateDecision } from "./scenario-engine/decisionEvaluation.js";
 import { buildDraftTeachingPlay } from "./scenario-engine/draftTeachingPlay.js";
+import { compileTeachingPlay } from "./scenario-engine/compiledTeachingPlay.js";
 import { frameAt, eventTimes as clockEventTimes } from "./scenario-engine/playbackClock.js";
 // The preview needs a real PhysicsProfile (topSpeed/accel/etc bounds), not a
 // RinkFrameProfile (NHL_200X85_PROFILE, already imported above for bounds
@@ -56,6 +57,9 @@ export function PlayEditorCanvas({ draftId, teamId, coachId, onClose, onSaved })
   const [previewT, setPreviewT] = useState(0);
   const [previewError, setPreviewError] = useState(null);
   const [previewing, setPreviewing] = useState(false);
+  const [finalizeError, setFinalizeError] = useState(null);
+  const [finalizing, setFinalizing] = useState(false);
+  const [finalized, setFinalized] = useState(false);
 
   useEffect(() => {
     let cancelled = false;
@@ -199,6 +203,43 @@ export function PlayEditorCanvas({ draftId, teamId, coachId, onClose, onSaved })
       setPreviewError(e.message);
     } finally {
       setPreviewing(false);
+    }
+  }
+
+  // Attempts the real compile -- the same physics/evaluation pipeline as
+  // Preview, but through compileTeachingPlay() (not buildDraftTeachingPlay),
+  // which is the actual finalize gate: it throws unless the declared/derived
+  // comparison is a clean AGREE and the trace is physicsClean. That throw is
+  // never caught-and-forced past here; on failure the draft just stays
+  // editable so the coach can fix the route/read and try again. On success,
+  // the compiled artifact is handed to finalizeCoachPlayDraft (Task 4), which
+  // itself only updates rows still in `status: 'draft'` -- a second finalize
+  // attempt on an already-finalized draft is rejected server-side even if
+  // this component's own `finalized` guard were somehow bypassed.
+  async function handleFinalize() {
+    if (finalizing || finalized) return;
+    setFinalizeError(null);
+    const declaredActorId = def.declaredRead?.actorId;
+    if (!declaredActorId) {
+      setFinalizeError("Select an actor and set a declared read before finalizing.");
+      return;
+    }
+    setFinalizing(true);
+    try {
+      const trace = await simulate(def, U13_PHYSICS_PROFILE);
+      const candidate = { id: declaredActorId, declaredRead: def.declaredRead, trace };
+      const evaluation = evaluateDecision([candidate]);
+      const compiled = await compileTeachingPlay(def, trace, evaluation, candidate.id);
+      const row = await finalizeCoachPlayDraft(draftId, compiled);
+      setRevision(row.revision);
+      setFinalized(true);
+      onSaved(row);
+    } catch (e) {
+      setFinalizeError(
+        `Cannot finalize: ${e.message} -- the draft stays editable, fix the issue above and try again.`
+      );
+    } finally {
+      setFinalizing(false);
     }
   }
 
@@ -384,6 +425,14 @@ export function PlayEditorCanvas({ draftId, teamId, coachId, onClose, onSaved })
             </div>
           </div>
         )}
+      </div>
+
+      <div style={{ marginTop: "1rem" }}>
+        {!finalized && (
+          <button onClick={handleFinalize} disabled={finalizing}>{finalizing ? "Finalizing..." : "Finalize"}</button>
+        )}
+        {finalizeError && <div style={{ color: C.red, fontSize: 12, marginTop: ".4rem" }}>{finalizeError}</div>}
+        {finalized && <div style={{ color: "green", fontSize: 13, marginTop: ".4rem" }}>Finalized -- ready to export.</div>}
       </div>
     </Card>
   );
