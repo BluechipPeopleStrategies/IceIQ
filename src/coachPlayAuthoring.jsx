@@ -85,14 +85,39 @@ export function CoachPlayAuthoringSection({ teamId, coachId, roster }) {
           <button onClick={handleCreate} style={{ marginBottom: ".75rem" }}>+ New play</button>
           <ul style={{ listStyle: "none", padding: 0, margin: 0 }}>
             {drafts.map((d) => (
-              <li key={d.id} style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: ".5rem", padding: ".5rem 0", borderBottom: `1px solid ${C.border}` }}>
-                <span style={{ fontSize: 13, fontFamily: FONT.body, color: C.white }}>
-                  {d.status === "finalized" ? "✅" : "✏️"} {d.scenario_definition?.declaredRead?.description || "Untitled play"}
-                </span>
-                <span style={{ display: "flex", gap: ".4rem", flexShrink: 0 }}>
-                  <button onClick={() => setActiveDraftId(d.id)}>Open</button>
-                  {d.status === "draft" && <button onClick={() => handleDelete(d.id)}>Delete</button>}
-                </span>
+              <li key={d.id} style={{ padding: ".5rem 0", borderBottom: `1px solid ${C.border}` }}>
+                <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: ".5rem" }}>
+                  <span style={{ fontSize: 13, fontFamily: FONT.body, color: C.white }}>
+                    {d.status === "finalized" ? "✅" : "✏️"} {d.scenario_definition?.declaredRead?.description || "Untitled play"}
+                  </span>
+                  <span style={{ display: "flex", gap: ".4rem", flexShrink: 0 }}>
+                    <button onClick={() => setActiveDraftId(d.id)}>Open</button>
+                    {d.status === "draft" && <button onClick={() => handleDelete(d.id)}>Delete</button>}
+                  </span>
+                </div>
+                {/* Export handoff: Task 8's render-worker.mjs is a standalone
+                    CLI (no queue/worker infra, design §5 -- out of scope), so
+                    the browser can't trigger it directly. Once a draft is
+                    finalized, show the coach/admin the manual command to run
+                    out-of-band; once someone has recorded the resulting
+                    signed URL via setDraftExportInfo, show the video link
+                    instead. */}
+                {d.status === "finalized" && !d.export_url && (
+                  <div style={{ marginTop: ".4rem", fontSize: 11.5, fontFamily: FONT.body, color: C.dim }}>
+                    <p style={{ margin: "0 0 .25rem" }}>Export not yet generated. Run:</p>
+                    <code style={{ display: "block", background: C.bgElevated, border: `1px solid ${C.border}`, borderRadius: 6, padding: ".4rem .5rem", fontSize: 11, wordBreak: "break-all" }}>
+                      node remotion/render-worker.mjs {d.id}-compiled.json {d.id}.mp4
+                    </code>
+                    <p style={{ margin: ".25rem 0 0", color: C.dimmer }}>
+                      (Export the compiled_artifact column for this row to that filename first, or automate this handoff in a later phase -- explicitly out of scope here, design §5.)
+                    </p>
+                  </div>
+                )}
+                {d.status === "finalized" && d.export_url && (
+                  <div style={{ marginTop: ".4rem" }}>
+                    <a href={d.export_url} target="_blank" rel="noreferrer" style={{ fontSize: 12, color: C.gold }}>View exported video</a>
+                  </div>
+                )}
               </li>
             ))}
           </ul>

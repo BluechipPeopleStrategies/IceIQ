@@ -26,6 +26,7 @@ import { HomeworkCard, CoachAssignmentsSection } from "./assignments.jsx";
 import { CoachTrainingSection } from "./trainingLogCoach.jsx";
 import { CoachTeamAnalyticsSection } from "./coachAnalytics.jsx";
 import { CoachChallengeSection, ChallengeCard, ChallengeRunScreen } from "./teamChallenges.jsx";
+import { CoachPlayAuthoringSection } from "./coachPlayAuthoring.jsx";
 import { ToastContainer, toast } from "./toast.jsx";
 import { QotDCard, QotDScreen } from "./questionOfDay.jsx";
 import { SpeedRoundCard, SpeedRoundScreen } from "./speedRound.jsx";
@@ -7472,6 +7473,7 @@ function CoachHome({ profile, onSignOut, onOpenPlayer, demoMode, subscriptionTie
                     {icon:"📋",label:"Homework"},
                     {icon:"🏆",label:"Challenges"},
                     {icon:"📊",label:"Analytics"},
+                    {icon:"🎬",label:"Plays"},
                   ].map((chip, i) => (
                     <span key={i} onClick={(e)=>{e.stopPropagation();toggleRoster(t.id);}}
                       style={{background:C.bgElevated,border:`1px solid ${C.border}`,borderRadius:999,padding:".2rem .55rem",fontSize:10.5,color:C.dim,fontFamily:FONT.body,fontWeight:600,cursor:"pointer",display:"inline-flex",alignItems:"center",gap:".25rem"}}>
@@ -7494,6 +7496,9 @@ function CoachHome({ profile, onSignOut, onOpenPlayer, demoMode, subscriptionTie
                   <CoachTeamAnalyticsSection roster={roster}/>
                   <CoachAssignmentsSection teamId={t.id} coachId={profile.id} roster={roster}/>
                   <CoachChallengeSection teamId={t.id} coachId={profile.id} teamLevel={t.level} roster={roster}/>
+                  {canAccess("coachDashboard", subscriptionTier || "FREE").allowed && (
+                    <CoachPlayAuthoringSection teamId={t.id} coachId={profile.id} roster={roster}/>
+                  )}
                   {canAccess("coachDashboard", subscriptionTier || "FREE").allowed && (
                     <CoachTrainingSection teamId={t.id} roster={roster}/>
                   )}

@@ -1161,3 +1161,19 @@ export async function deleteCoachPlayDraft(draftId) {
   if (error) throw error;
 }
 
+// Records the signed URL (+ expiry) produced by an out-of-band run of
+// remotion/render-worker.mjs (Task 8's manual CLI export -- see
+// coachPlayAuthoring.jsx's export-handoff UI). Called manually (Supabase
+// dashboard / scratch script) for MVP; not wired to any in-app trigger since
+// there is no export queue/worker yet (design §5, explicitly out of scope).
+export async function setDraftExportInfo(draftId, exportUrl, expiresAt) {
+  const { data, error } = await supabase
+    .from("coach_play_drafts")
+    .update({ export_url: exportUrl, export_expires_at: expiresAt })
+    .eq("id", draftId)
+    .select()
+    .maybeSingle();
+  if (error) throw error;
+  return data;
+}
+
