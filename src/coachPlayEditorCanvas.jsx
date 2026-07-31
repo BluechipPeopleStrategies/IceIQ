@@ -17,6 +17,8 @@ import { evaluateDecision } from "./scenario-engine/decisionEvaluation.js";
 import { buildDraftTeachingPlay } from "./scenario-engine/draftTeachingPlay.js";
 import { compileTeachingPlay } from "./scenario-engine/compiledTeachingPlay.js";
 import { frameAt, eventTimes as clockEventTimes } from "./scenario-engine/playbackClock.js";
+import { versionedContentHash } from "./scenario-engine/canonicalHash.js";
+import { SCENARIO_DEFINITION_SCHEMA_VERSION } from "./scenario-engine/scenarioDefinition.js";
 // The preview needs a real PhysicsProfile (topSpeed/accel/etc bounds), not a
 // RinkFrameProfile (NHL_200X85_PROFILE, already imported above for bounds
 // checking) -- those are two different schemas (physicsProfileSchema.js vs
@@ -170,7 +172,27 @@ export function PlayEditorCanvas({ draftId, teamId, coachId, onClose, onSaved })
     setSaving(true);
     setError(null);
     try {
-      const row = await updateCoachPlayDraft(draftId, revision, def);
+      // Recompute the provenance hash from the def's own content fields on
+      // every save (contentHash/version themselves excluded -- hashing
+      // contentHash would be circular, and version increments independently
+      // of content, same convention as promotedArtifact.js's promotedAt
+      // exclusion). version only bumps when the content actually changed
+      // from the last SAVED hash -- a resave of identical content is a
+      // genuine no-op, matching that same idempotency precedent.
+      //
+      // Edge case: a brand-new draft's def.contentHash starts as null
+      // (blankScenarioDefinition() hasn't been saved yet, so there is no
+      // real prior content to diff against). Treat that as "no real save
+      // yet" rather than "different from every real hash" -- the first real
+      // save lands as version 1 (the first real content state), not version
+      // 2. Only a hash that differs from a PRIOR REAL hash bumps version.
+      const { contentHash: _omitHash, version: _omitVersion, ...hashableFields } = def;
+      const contentHash = await versionedContentHash("scenario-definition", SCENARIO_DEFINITION_SCHEMA_VERSION, hashableFields);
+      const hadPriorRealHash = def.contentHash !== null && def.contentHash !== undefined;
+      const contentChanged = hadPriorRealHash && contentHash !== def.contentHash;
+      const nextDef = { ...def, contentHash, version: (def.version ?? 1) + (contentChanged ? 1 : 0) };
+      const row = await updateCoachPlayDraft(draftId, revision, nextDef);
+      setDef(row.scenario_definition);
       setRevision(row.revision);
       onSaved(row);
     } catch (e) {
