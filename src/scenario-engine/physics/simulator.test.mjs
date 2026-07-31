@@ -367,5 +367,24 @@ ok("solver contract is versioned", typeof SOLVER_CONTRACT.version === "string");
   ok("D1 skating again after passing does not re-attach the puck (Level-1 doesn't know who caught it)", puckSamples.every((s) => s.t <= 0.5));
 }
 
+// ---- Stationary (routeless) actors still get a sample --------------------
+// F2 never gets an intendedAction in ANY case in this file (including the
+// base fixture's default []) -- it's the existing routeless-actor case,
+// which every prior test in this file passed without checking. Confirms
+// the new fallback sample fires for a real fixture actor, not a
+// hand-invented one.
+{
+  const def = baseDefinition({
+    intendedActions: [{ actorId: "D1", kind: "skate", startTime: 0, endTime: 2, toPosition: D1_ESCAPE }],
+  });
+  const trace = await simulate(def, u13Profile);
+  const f2Samples = trace.samples.filter((s) => s.actorId === "F2");
+  ok("routeless actor F2 gets at least one sample", f2Samples.length >= 1);
+  ok("F2's sample sits at their initial position", f2Samples[0].pos[0] === F2_POS[0] && f2Samples[0].pos[1] === F2_POS[1]);
+  ok("F2's sample is at t=0", f2Samples[0].t === 0);
+  const d1Samples = trace.samples.filter((s) => s.actorId === "D1");
+  ok("D1 (who has a real action) is unaffected -- still has action-derived samples", d1Samples.length >= 1);
+}
+
 console.log(`\n${pass} passed, ${fail} failed`);
 process.exit(fail ? 1 : 0);

@@ -185,6 +185,22 @@ export async function simulate(def, physicsProfile) {
     lastActionByActor.set(action.actorId, { action, fromPos });
   });
 
+  // An actor with no intendedActions produces zero action-derived samples
+  // and would otherwise be invisible to every consumer that derives "which
+  // actors exist" from trace.samples (playbackClock.js's frameAt, the
+  // Remotion export composition) -- a placed-but-routeless actor (a
+  // stationary goalie, an off-puck defender who's part of the read) must
+  // still render. One static sample at their initial position, held for the
+  // whole play via playbackClock's own clamp-to-nearest-sample behavior.
+  // Never interacts with any hard-failure detector -- those walk
+  // def.intendedActions directly, never trace.samples.
+  for (const actor of def.initialState.actors) {
+    const hasSample = samples.some((s) => s.actorId === actor.id);
+    if (!hasSample) {
+      samples.push({ t: 0, pos: [round6(actor.position[0]), round6(actor.position[1])], actorId: actor.id });
+    }
+  }
+
   findings.push(...detectOverlappingActorActions(def.intendedActions));
   findings.push(...detectInconsistentPossession(def.intendedActions));
 
