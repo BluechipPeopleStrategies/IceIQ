@@ -1146,6 +1146,7 @@ export async function finalizeCoachPlayDraft(draftId, compiledArtifact) {
       status: "finalized",
       compiled_artifact: compiledArtifact,
       finalized_at: new Date().toISOString(),
+      updated_at: new Date().toISOString(),
     })
     .eq("id", draftId)
     .eq("status", "draft")

@@ -7,7 +7,7 @@
 // Structural analog: assignments.jsx's CoachAssignmentsSection (fetch-on-mount
 // + optimistic local list state + window.confirm before delete).
 import { useEffect, useState } from "react";
-import { Card, Label, C, FONT } from "./shared.jsx";
+import { Card, Label, C, FONT, PrimaryBtn, SecBtn } from "./shared.jsx";
 import {
   createCoachPlayDraft, getCoachPlayDraftsForTeam, deleteCoachPlayDraft,
 } from "./supabase.js";
@@ -82,7 +82,7 @@ export function CoachPlayAuthoringSection({ teamId, coachId, roster }) {
         <div style={{ color: C.dim, fontSize: 13, fontFamily: FONT.body }}>Loading drafts...</div>
       ) : (
         <>
-          <button onClick={handleCreate} style={{ marginBottom: ".75rem" }}>+ New play</button>
+          <PrimaryBtn onClick={handleCreate} style={{ width: "auto", marginBottom: ".75rem" }}>+ New play</PrimaryBtn>
           <ul style={{ listStyle: "none", padding: 0, margin: 0 }}>
             {drafts.map((d) => (
               <li key={d.id} style={{ padding: ".5rem 0", borderBottom: `1px solid ${C.border}` }}>
@@ -91,8 +91,8 @@ export function CoachPlayAuthoringSection({ teamId, coachId, roster }) {
                     {d.status === "finalized" ? "✅" : "✏️"} {d.scenario_definition?.declaredRead?.description || "Untitled play"}
                   </span>
                   <span style={{ display: "flex", gap: ".4rem", flexShrink: 0 }}>
-                    <button onClick={() => setActiveDraftId(d.id)}>Open</button>
-                    {d.status === "draft" && <button onClick={() => handleDelete(d.id)}>Delete</button>}
+                    <SecBtn onClick={() => setActiveDraftId(d.id)} style={{ width: "auto" }}>Open</SecBtn>
+                    {d.status === "draft" && <SecBtn onClick={() => handleDelete(d.id)} style={{ width: "auto" }}>Delete</SecBtn>}
                   </span>
                 </div>
                 {/* Export handoff: Task 8's render-worker.mjs is a standalone

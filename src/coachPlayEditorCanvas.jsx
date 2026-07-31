@@ -9,7 +9,7 @@
 // validateScenarioDefinition exactly -- see coachDeclaredFixture.js for the
 // real fixture this shape is drawn from.
 import { useEffect, useState } from "react";
-import { Card, Label, C, FONT } from "./shared.jsx";
+import { Card, Label, C, FONT, PrimaryBtn, SecBtn } from "./shared.jsx";
 import { getCoachPlayDraft, updateCoachPlayDraft, finalizeCoachPlayDraft, RevisionConflictError } from "./supabase.js";
 import { NHL_200X85_PROFILE, isWithinBounds } from "./scenario-engine/rinkFrame.js";
 import { simulate } from "./scenario-engine/physics/simulator.js";
@@ -226,6 +226,10 @@ export function PlayEditorCanvas({ draftId, teamId, coachId, onClose, onSaved })
       setPreviewError("Select an actor and set a declared read before previewing.");
       return;
     }
+    if (!def.initialState.puck) {
+      setPreviewError("Place the puck before previewing.");
+      return;
+    }
     setPreviewing(true);
     try {
       const trace = await simulate(def, U13_PHYSICS_PROFILE);
@@ -260,6 +264,10 @@ export function PlayEditorCanvas({ draftId, teamId, coachId, onClose, onSaved })
       setFinalizeError("Select an actor and set a declared read before finalizing.");
       return;
     }
+    if (!def.initialState.puck) {
+      setFinalizeError("Place the puck before finalizing.");
+      return;
+    }
     setFinalizing(true);
     try {
       const trace = await simulate(def, U13_PHYSICS_PROFILE);
@@ -283,7 +291,7 @@ export function PlayEditorCanvas({ draftId, teamId, coachId, onClose, onSaved })
     return (
       <Card>
         <div style={{ color: C.red, fontSize: 13, fontFamily: FONT.body, marginBottom: ".75rem" }}>{loadError}</div>
-        <button onClick={onClose}>← Back to plays</button>
+        <SecBtn onClick={onClose} style={{ width: "auto" }}>← Back to plays</SecBtn>
       </Card>
     );
   }
@@ -294,13 +302,13 @@ export function PlayEditorCanvas({ draftId, teamId, coachId, onClose, onSaved })
 
   return (
     <Card>
-      <button onClick={onClose} style={{ marginBottom: ".75rem" }}>← Back to plays</button>
+      <SecBtn onClick={onClose} style={{ width: "auto", marginBottom: ".75rem" }}>← Back to plays</SecBtn>
       {error && <div style={{ color: C.red, fontSize: 12, marginBottom: ".5rem" }}>{error}</div>}
 
       <Label>Place</Label>
       <div style={{ display: "flex", gap: ".5rem", alignItems: "center", flexWrap: "wrap", marginBottom: ".75rem" }}>
-        <button onClick={() => setPlaceMode("actor")} disabled={placeMode === "actor" && !selectedActorId} style={{ fontWeight: placeMode === "actor" ? 800 : 400 }}>Place actor</button>
-        <button onClick={() => setPlaceMode("puck")} disabled={placeMode === "puck" && !selectedActorId} style={{ fontWeight: placeMode === "puck" ? 800 : 400 }}>Place puck</button>
+        <PrimaryBtn onClick={() => setPlaceMode("actor")} disabled={placeMode === "actor" && !selectedActorId} style={{ width: "auto", fontWeight: placeMode === "actor" ? 800 : 400 }}>Place actor</PrimaryBtn>
+        <PrimaryBtn onClick={() => setPlaceMode("puck")} disabled={placeMode === "puck" && !selectedActorId} style={{ width: "auto", fontWeight: placeMode === "puck" ? 800 : 400 }}>Place puck</PrimaryBtn>
         {placeMode === "actor" && (
           <>
             <label style={{ fontSize: 12, color: C.dim, fontFamily: FONT.body }}>
@@ -323,7 +331,7 @@ export function PlayEditorCanvas({ draftId, teamId, coachId, onClose, onSaved })
       {selectedActorId && (
         <div style={{ fontSize: 12, color: C.gold, fontFamily: FONT.body, marginBottom: ".5rem" }}>
           Drawing route for <strong>{selectedActorId}</strong> -- click the rink to add a waypoint. Click the actor again to stop.{" "}
-          <button onClick={() => removeActor(selectedActorId)}>Remove this actor</button>
+          <SecBtn onClick={() => removeActor(selectedActorId)} style={{ width: "auto" }}>Remove this actor</SecBtn>
         </div>
       )}
 
@@ -402,7 +410,7 @@ export function PlayEditorCanvas({ draftId, teamId, coachId, onClose, onSaved })
         <ul style={{ margin: 0, padding: 0, listStyle: "none" }}>
           {def.decisionFreeze.observableCues.map((cue, i) => (
             <li key={i} style={{ fontSize: 13, color: C.white, fontFamily: FONT.body, marginBottom: ".25rem" }}>
-              {cue} <button onClick={() => removeObservableCue(i)}>Remove</button>
+              {cue} <SecBtn onClick={() => removeObservableCue(i)} style={{ width: "auto" }}>Remove</SecBtn>
             </li>
           ))}
         </ul>
@@ -413,7 +421,7 @@ export function PlayEditorCanvas({ draftId, teamId, coachId, onClose, onSaved })
           placeholder="What's visible at the freeze..."
           style={{ marginRight: ".4rem" }}
         />
-        <button onClick={() => { addObservableCue(newCue); setNewCue(""); }}>Add cue</button>
+        <SecBtn onClick={() => { addObservableCue(newCue); setNewCue(""); }} style={{ width: "auto" }}>Add cue</SecBtn>
       </div>
 
       <div style={{ marginTop: ".75rem" }}>
@@ -440,10 +448,10 @@ export function PlayEditorCanvas({ draftId, teamId, coachId, onClose, onSaved })
         </label>
       </div>
 
-      <button onClick={handleSave} disabled={saving} style={{ marginTop: "1rem" }}>{saving ? "Saving..." : "Save draft"}</button>
+      <PrimaryBtn onClick={handleSave} disabled={saving} style={{ width: "auto", marginTop: "1rem" }}>{saving ? "Saving..." : "Save draft"}</PrimaryBtn>
 
       <div style={{ marginTop: "1rem" }}>
-        <button onClick={handlePreview} disabled={previewing}>{previewing ? "Previewing..." : "Preview"}</button>
+        <PrimaryBtn onClick={handlePreview} disabled={previewing} style={{ width: "auto" }}>{previewing ? "Previewing..." : "Preview"}</PrimaryBtn>
         {previewError && <div style={{ color: C.red, fontSize: 12, marginTop: ".4rem" }}>{previewError}</div>}
         {draftPlay && (
           <div style={{ marginTop: ".5rem", fontSize: 13, color: C.white, fontFamily: FONT.body }}>
@@ -475,7 +483,7 @@ export function PlayEditorCanvas({ draftId, teamId, coachId, onClose, onSaved })
 
       <div style={{ marginTop: "1rem" }}>
         {!finalized && (
-          <button onClick={handleFinalize} disabled={finalizing}>{finalizing ? "Finalizing..." : "Finalize"}</button>
+          <PrimaryBtn onClick={handleFinalize} disabled={finalizing} style={{ width: "auto" }}>{finalizing ? "Finalizing..." : "Finalize"}</PrimaryBtn>
         )}
         {finalizeError && <div style={{ color: C.red, fontSize: 12, marginTop: ".4rem" }}>{finalizeError}</div>}
         {finalized && <div style={{ color: "green", fontSize: 13, marginTop: ".4rem" }}>Finalized -- ready to export.</div>}

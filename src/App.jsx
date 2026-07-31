@@ -7497,10 +7497,10 @@ function CoachHome({ profile, onSignOut, onOpenPlayer, demoMode, subscriptionTie
                   <CoachAssignmentsSection teamId={t.id} coachId={profile.id} roster={roster}/>
                   <CoachChallengeSection teamId={t.id} coachId={profile.id} teamLevel={t.level} roster={roster}/>
                   {canAccess("coachDashboard", subscriptionTier || "FREE").allowed && (
-                    <CoachPlayAuthoringSection teamId={t.id} coachId={profile.id} roster={roster}/>
-                  )}
-                  {canAccess("coachDashboard", subscriptionTier || "FREE").allowed && (
-                    <CoachTrainingSection teamId={t.id} roster={roster}/>
+                    <>
+                      <CoachPlayAuthoringSection teamId={t.id} coachId={profile.id} roster={roster}/>
+                      <CoachTrainingSection teamId={t.id} roster={roster}/>
+                    </>
                   )}
                 </div>
               )}
