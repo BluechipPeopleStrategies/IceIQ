@@ -100,6 +100,77 @@ export function detectImpossibleAcceleration(action, actionIndex, fromPos, profi
   return null;
 }
 
+// --- 2b. Impossible acceleration, measured on the EMITTED SAMPLES -----------
+// Every detector above reasons from an action's declared start/end positions
+// and its duration. Nothing has ever measured the samples the simulator
+// actually emits, so the motion the physics gate certifies and the motion that
+// plays back are free to be different curves -- and they are: detector 2 above
+// assumes "starts from rest" and solves d = 0.5*a*t^2, while sampleAction
+// interpolates linearly, producing constant velocity from a standing start.
+//
+// This detector closes that gap structurally rather than patching the specific
+// mismatch: whatever motion model the simulator adopts later, this measures
+// the samples it emitted, so the certified curve and the played curve cannot
+// silently diverge again.
+//
+// Level-1 consistency: an actor is treated as starting from rest at their
+// first sample, the same assumption detector 2 makes and the same one the
+// module header documents (no continuous velocity is carried across actions
+// yet). Velocity over each inter-sample interval is its own straight-line
+// distance over its own elapsed time; the implied acceleration is the change
+// in that velocity across the interval in which it changed.
+//
+// actorId is the caller's choice deliberately -- pass a skater's id, not
+// "puck", since the cap compared against is the SKATER's avgAccelMPS2.
+export function detectImpossibleSampledAcceleration(samples, actorId, profile) {
+  const track = (samples || [])
+    .filter((s) => s.actorId === actorId)
+    .sort((a, b) => a.t - b.t);
+  // Fewer than two samples is no motion claim at all -- nothing to measure.
+  // Not UNSUPPORTED_MODEL: a stationary actor is a complete, checkable claim
+  // that simply cannot violate an acceleration cap.
+  if (track.length < 2) return null;
+
+  const cap = profile.player.avgAccelMPS2.value * ACCEL_SAFETY_FACTOR;
+  let worst = null;
+  let prevSpeed = 0; // at rest at the first sample
+
+  for (let i = 1; i < track.length; i++) {
+    const dt = track[i].t - track[i - 1].t;
+    if (dt <= 0) continue; // duplicate/again-at-same-instant samples carry no claim
+    const speed = distance(track[i - 1].pos, track[i].pos) / dt;
+    const accel = Math.abs(speed - prevSpeed) / dt;
+    if (worst === null || accel > worst.accel) {
+      worst = { accel, speed, prevSpeed, dt, at: track[i - 1].t };
+    }
+    prevSpeed = speed;
+  }
+
+  if (!worst || worst.accel <= cap) return null;
+
+  return buildFinding({
+    validatorCode: "impossible-sampled-acceleration",
+    validatorVersion: DETECTORS_VERSION,
+    actorId,
+    eventTime: worst.at,
+    eventIntervalS: worst.dt,
+    measuredValue: worst.accel,
+    threshold: cap,
+    units: "m/s^2",
+    profileId: profile.id,
+    profileVersion: profile.schemaVersion,
+    assumptions: [
+      "starts from rest at the actor's first sample",
+      "speed measured per inter-sample interval, straight-line",
+      `${((ACCEL_SAFETY_FACTOR - 1) * 100).toFixed(0)}% headroom over the profile mean`,
+    ],
+    solverVersion: DETECTORS_VERSION,
+    severity: SEVERITY.HARD_FAILURE,
+    answerImpact: ANSWER_IMPACT.CHANGES_ANSWER,
+    explanation: `Actor ${actorId} (${profile.ageBand}) goes from ${worst.prevSpeed.toFixed(2)} to ${worst.speed.toFixed(2)} m/s across a ${worst.dt.toFixed(2)}s sample interval at t=${worst.at.toFixed(2)}s -- ${worst.accel.toFixed(2)} m/s^2 in the emitted trace, exceeding this age band's capability (${profile.player.avgAccelMPS2.value} m/s^2, +${((ACCEL_SAFETY_FACTOR - 1) * 100).toFixed(0)}% headroom). The endpoint check passed, so the motion that was certified is not the motion that plays.`,
+  });
+}
+
 // --- 3. Impossible stopping --------------------------------------------------
 // If an actor's action ends and the decision freeze follows shortly after
 // with no further action for that actor, check whether the speed reached

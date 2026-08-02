@@ -3,6 +3,7 @@
 import { readFileSync } from "node:fs";
 import { simulate, SOLVER_CONTRACT } from "./simulator.js";
 import { isUnsupportedModel, SEVERITY } from "./findings.js";
+import { detectImpossibleSampledAcceleration } from "./hardFailureDetectors.js";
 import { playSpaceToRinkFrame } from "../frameAdapters.js";
 import { SCENARIO_DEFINITION_SCHEMA_VERSION } from "../scenarioDefinition.js";
 import { rinkProfile } from "../rinkFrame.js";
@@ -365,6 +366,65 @@ ok("solver contract is versioned", typeof SOLVER_CONTRACT.version === "string");
   const near = (a, b) => Math.abs(a[0] - b[0]) < EPS && Math.abs(a[1] - b[1]) < EPS;
   ok("the puck's last sample lands where the pass actually ended, not dragged along by D1's later skate", finalPuckSample && near(finalPuckSample.pos, W1_POS) && !near(finalPuckSample.pos, D1_ESCAPE));
   ok("D1 skating again after passing does not re-attach the puck (Level-1 doesn't know who caught it)", puckSamples.every((s) => s.t <= 0.5));
+}
+
+// ---- The emitted samples must obey the cap the endpoints were judged by ----
+// The acceleration check reads only an action's start/end positions and its
+// duration (d = 0.5*a*t^2, "starts from rest"), but sampleAction interpolates
+// LINEARLY, so the trace it emits is constant-velocity. Nothing has ever
+// measured the samples themselves, so the certified motion and the motion that
+// actually plays are free to be different curves -- and they are.
+//
+// The fixture below is deliberately the SAME "just-inside" case the boundary
+// test above calls physically clean: 5m in 1.5s, endpoint-required accel 4.44
+// against a 4.7495 cap. Its samples reach 3.33 m/s within the first 0.5s step
+// from a standing start, which is 6.67 m/s^2 -- over the same cap the endpoints
+// were judged by. A trace cannot be both.
+{
+  const dir = [D1_ESCAPE[0] - D1_START[0], D1_ESCAPE[1] - D1_START[1]];
+  const len = Math.hypot(...dir);
+  const unit = [dir[0] / len, dir[1] / len];
+  const to5m = [D1_START[0] + unit[0] * 5, D1_START[1] + unit[1] * 5];
+
+  const def = baseDefinition({
+    intendedActions: [{ actorId: "D1", kind: "skate", startTime: 0, endTime: 1.5, toPosition: to5m }],
+  });
+  const trace = await simulate(def, u13Profile);
+
+  // The property that matters: the acceleration implied by the emitted samples
+  // is the SAME acceleration the endpoint check certified (2d/T^2 = 4.444 for
+  // 5m in 1.5s). If those two numbers differ, the gate is certifying a curve
+  // nobody ever plays.
+  const track = trace.samples.filter((s) => s.actorId === "D1").sort((a, b) => a.t - b.t);
+  let prevSpeed = 0, worstSampled = 0;
+  for (let i = 1; i < track.length; i++) {
+    const dt = track[i].t - track[i - 1].t;
+    if (dt <= 0) continue;
+    const speed = Math.hypot(track[i].pos[0] - track[i - 1].pos[0], track[i].pos[1] - track[i - 1].pos[1]) / dt;
+    worstSampled = Math.max(worstSampled, Math.abs(speed - prevSpeed) / dt);
+    prevSpeed = speed;
+  }
+  const certified = (2 * 5) / (1.5 * 1.5);
+  ok(
+    "the acceleration implied by the emitted samples matches the acceleration the endpoint check certified",
+    Math.abs(worstSampled - certified) < 0.01,
+  );
+  ok("a route certified at the endpoints is still clean once its own samples are measured", trace.physicsClean);
+}
+
+// ---- The sampled detector catches a genuinely impossible trace -------------
+// Guards the detector independently of whatever the sampler happens to emit:
+// hand-built samples that jump from rest to 8 m/s inside 0.5s must be caught.
+{
+  const jumpy = [
+    { t: 0, pos: [0, 0], actorId: "D1", actionKind: "skate" },
+    { t: 0.5, pos: [4, 0], actorId: "D1", actionKind: "skate" },
+    { t: 1.0, pos: [8, 0], actorId: "D1", actionKind: "skate" },
+  ];
+  const finding = detectImpossibleSampledAcceleration(jumpy, "D1", u13Profile);
+  ok("sampled-acceleration detector flags a hand-built impossible trace", finding !== null && finding.severity === SEVERITY.HARD_FAILURE);
+  ok("its measured value is the acceleration actually implied by those samples", finding !== null && Math.abs(finding.measuredValue - 16) < 0.01);
+  ok("a stationary actor makes no motion claim and is not flagged", detectImpossibleSampledAcceleration([{ t: 0, pos: [0, 0], actorId: "D1" }], "D1", u13Profile) === null);
 }
 
 console.log(`\n${pass} passed, ${fail} failed`);

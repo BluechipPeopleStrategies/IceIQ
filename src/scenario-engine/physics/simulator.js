@@ -14,6 +14,7 @@ import {
   detectImpossibleTurning, detectPossibleBoardContact,
   detectUnreachablePass, detectIllegalBounds, detectOverlappingActorActions,
   detectInconsistentPossession, detectPossibleInterception,
+  detectImpossibleSampledAcceleration,
 } from "./hardFailureDetectors.js";
 import { isUnsupportedModel, SEVERITY } from "./findings.js";
 import { rinkProfile } from "../rinkFrame.js";
@@ -64,20 +65,42 @@ function actorPosition(def, actorId) {
   return def.initialState.actors.find((a) => a.id === actorId)?.position ?? null;
 }
 
-// Fixed-step linear-interpolation samples between an action's declared
-// start and end. Level-1 simplification, documented: real skating paths
-// curve and accelerate non-uniformly; this produces a deterministic,
-// reproducible approximation sufficient for kinematic bounds-checking and
-// downstream playback, not a physically simulated trajectory.
+// Fixed-step samples between an action's declared start and end. Level-1
+// simplification, documented: real skating paths curve and accelerate
+// non-uniformly; this produces a deterministic, reproducible approximation
+// sufficient for kinematic bounds-checking and downstream playback, not a
+// physically simulated trajectory.
 const SAMPLE_STEP_S = 0.5;
+
+// The sampled motion profile must be the SAME model the hard-failure
+// detectors certify, or the gate approves a curve that never plays (found
+// 2026-08-01: these samples were linear while detectImpossibleAcceleration
+// solved d = 0.5*a*t^2 "from rest", so every trace implied a jump from rest to
+// full speed inside the first sample step -- unbounded acceleration, and
+// invisible because nothing measured the samples).
+//
+// A skater accelerates from rest, so distance grows with the SQUARE of
+// elapsed time: d(tau) = 0.5*a*tau^2 with a = 2*d/T^2, which is exactly the
+// acceleration detectImpossibleAcceleration checks against the profile cap.
+// Sampling that curve makes the certified acceleration and the played
+// acceleration the same number by construction, and makes it independent of
+// SAMPLE_STEP_S rather than an artifact of sampling resolution.
+//
+// A pass or shot is NOT from rest -- the puck leaves the stick at speed and
+// holds it (Level 1 models no drag), so those stay linear. That split matches
+// the detectors, which already skip pass/shot legs for the skater-body checks
+// and judge puck flight separately in detectUnreachablePass.
+const FROM_REST_KINDS_EXCLUDED = ["pass", "shot"];
 
 function sampleAction(action, fromPos) {
   if (!action.toPosition || action.endTime === undefined) return [];
   const duration = action.endTime - action.startTime;
   if (duration <= 0) return [{ t: action.startTime, pos: fromPos }];
+  const acceleratesFromRest = !FROM_REST_KINDS_EXCLUDED.includes(action.kind);
   const samples = [];
   for (let t = action.startTime; t < action.endTime; t += SAMPLE_STEP_S) {
-    const frac = (t - action.startTime) / duration;
+    const elapsedFraction = (t - action.startTime) / duration;
+    const frac = acceleratesFromRest ? elapsedFraction * elapsedFraction : elapsedFraction;
     samples.push({
       t: round6(t),
       pos: [round6(fromPos[0] + (action.toPosition[0] - fromPos[0]) * frac), round6(fromPos[1] + (action.toPosition[1] - fromPos[1]) * frac)],
@@ -176,6 +199,23 @@ export async function simulate(def, physicsProfile) {
       }
       const actionSamples = sampleAction(action, fromPos).map((s) => ({ ...s, actorId: isPuckAction ? "puck" : action.actorId, actionKind: action.kind }));
       samples.push(...actionSamples);
+
+      // Measure the samples this action actually emitted against the same cap
+      // its endpoints were judged by. Scoped to ONE action deliberately: Level
+      // 1 treats every action as starting from rest and carries no velocity
+      // across action boundaries (see this module's header and
+      // detectImpossibleAcceleration's "starts from rest" assumption), so an
+      // actor legitimately ends one leg at speed and begins the next at zero.
+      // Measuring across that seam would report a 12.7 m/s^2 "deceleration"
+      // that is an artifact of the Level-1 model, not a claim the content
+      // makes. KNOWN LIMITATION, not a fix: a real skater cannot shed 7 m/s
+      // instantly either -- cross-action continuity is genuinely unchecked
+      // here, and belongs to Level 2 (detectImpossibleStopping covers only the
+      // specific case of decelerating before the decision freeze).
+      if (!isPuckAction) {
+        const sampledAccel = detectImpossibleSampledAcceleration(actionSamples, action.actorId, physicsProfile);
+        if (sampledAccel) findings.push(sampledAccel);
+      }
       // A carried puck moves with its carrier -- mirror the same samples
       // onto the puck's own track too, so consumers always have a real
       // puck position while it's being skated with, not only during an
