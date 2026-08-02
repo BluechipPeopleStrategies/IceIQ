@@ -220,13 +220,36 @@ export async function getPlayerTeams(playerId) {
   return (data || []).map(r => r.teams).filter(Boolean);
 }
 
+// HOTFIX 2026-08-02: joining goes through the join_team_by_code() RPC.
+//
+// Migration 0022 is already applied to production. It removed the blanket
+// "authenticated can lookup team by code" policy on teams (which despite its
+// name checked no code at all and let any signed-in user read every team row
+// including its join code) and the direct self-insert path on team_members.
+//
+// The old implementation below did select-then-insert from the client, so with
+// 0022 live a player who is not already a coach or member of that team reads
+// ZERO rows and gets "Team not found" for a perfectly valid code. This restores
+// joining.
+//
+// The RPC is SECURITY DEFINER, so it can look the code up without that blanket
+// read policy existing, and it derives the player from auth.uid() rather than
+// trusting a caller-supplied id.
+//
+// playerId is kept in the signature for call-site compatibility and is
+// verified against the session rather than sent; the RPC ignores it.
 export async function joinTeamByCode(playerId, code) {
   if (!supabase) throw new Error("Supabase not configured");
-  const { data: team, error: tErr } = await supabase.from("teams").select("*").eq("code", code.toUpperCase()).single();
-  if (tErr || !team) throw new Error("Team not found");
-  const { error } = await supabase.from("team_members").insert({ team_id: team.id, player_id: playerId });
-  if (error && error.code !== "23505") throw error; // ignore duplicate
-  return team;
+  const { data: { session } } = await supabase.auth.getSession();
+  if (!session) throw new Error("Sign in to join a team");
+  if (playerId && session.user.id !== playerId) {
+    throw new Error("Signed-in player does not match the join request");
+  }
+  const { data, error } = await supabase.rpc("join_team_by_code", { p_code: code });
+  // The RPC raises 'Team not found' for a bad code; surface it as-is so the
+  // existing UI copy keeps working.
+  if (error) throw new Error(error.message.includes("Team not found") ? "Team not found" : error.message);
+  return data;
 }
 
 export async function getTeamRoster(teamId) {
