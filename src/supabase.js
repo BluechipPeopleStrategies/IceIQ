@@ -220,13 +220,29 @@ export async function getPlayerTeams(playerId) {
   return (data || []).map(r => r.teams).filter(Boolean);
 }
 
+// Joining goes through the join_team_by_code() RPC (migration 0022), not a
+// select-then-insert from the client. The old two-step needed every signed-in
+// user to be able to read every team row (to find one by code) and to insert
+// their own team_members row for any team_id at all -- which together let any
+// account join any team without knowing its code and then read minors' roster
+// profiles. The RPC is SECURITY DEFINER, so it can look the code up without
+// that blanket read policy existing, and it derives the player from auth.uid()
+// rather than trusting a caller-supplied id.
+//
+// playerId is kept in the signature for call-site compatibility and is
+// verified against the session rather than sent: the RPC ignores it entirely.
 export async function joinTeamByCode(playerId, code) {
   if (!supabase) throw new Error("Supabase not configured");
-  const { data: team, error: tErr } = await supabase.from("teams").select("*").eq("code", code.toUpperCase()).single();
-  if (tErr || !team) throw new Error("Team not found");
-  const { error } = await supabase.from("team_members").insert({ team_id: team.id, player_id: playerId });
-  if (error && error.code !== "23505") throw error; // ignore duplicate
-  return team;
+  const { data: { session } } = await supabase.auth.getSession();
+  if (!session) throw new Error("Sign in to join a team");
+  if (playerId && session.user.id !== playerId) {
+    throw new Error("Signed-in player does not match the join request");
+  }
+  const { data, error } = await supabase.rpc("join_team_by_code", { p_code: code });
+  // The RPC raises 'Team not found' for a bad code; surface it as-is so the
+  // existing UI copy keeps working.
+  if (error) throw new Error(error.message.includes("Team not found") ? "Team not found" : error.message);
+  return data;
 }
 
 export async function getTeamRoster(teamId) {
