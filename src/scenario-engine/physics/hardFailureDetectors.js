@@ -17,7 +17,11 @@ import { buildFinding, buildUnsupportedModel, SEVERITY, ANSWER_IMPACT } from "./
 // its own comment) -- output-changing, so the version bumps per this
 // module's own convention (every caller reads DETECTORS_VERSION as the
 // validatorVersion stamped onto each finding).
-export const DETECTORS_VERSION = "hard-failure-detectors-v2";
+// v3 (2026-08-01): adds detectImpossibleSampledAcceleration, which measures
+// the emitted trace rather than the declared endpoints -- new findings can now
+// appear on definitions that previously passed, so this is output-changing and
+// the version bumps per the convention above.
+export const DETECTORS_VERSION = "hard-failure-detectors-v3";
 
 function distance(a, b) {
   return Math.hypot(b[0] - a[0], b[1] - a[1]);

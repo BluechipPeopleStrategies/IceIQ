@@ -32,7 +32,13 @@ import { rinkProfile } from "../rinkFrame.js";
 // hard-failing skate-then-outlet-pass sequence is now correctly
 // UNSUPPORTED_MODEL instead. Detector behavior feeds directly into this
 // module's own findings/physicsClean output, so the version bumps here too.
-export const SIMULATOR_VERSION = "level1-simulator-v3";
+// v4 (2026-08-01): sampleAction now samples the constant-acceleration-from-rest
+// curve the detectors certify instead of interpolating linearly, so the emitted
+// positions themselves change for every skate action. canonicalTraceHash uses
+// this string as its version namespace and does NOT hash the samples, so
+// failing to bump here would let a materially different trace keep an identical
+// hash -- the bump is what makes the provenance record honest.
+export const SIMULATOR_VERSION = "level1-simulator-v4";
 
 // Pinned solver contract -- declared and versioned explicitly, per the
 // spec's requirement, even for the fields Level 1 doesn't currently need.
