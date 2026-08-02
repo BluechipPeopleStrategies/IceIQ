@@ -1,13 +1,52 @@
 # Surface-fit validator and the surface model — design
 
 **Date:** 2026-08-02
-**Status:** design, awaiting Thomas's review
+**Status:** CORRECTED 2026-08-02 — the premise below was measured and found
+false. See "Correction" before reading anything else. The surface *model* still
+stands; the urgency and the claimed live defects do not.
 **Origin:** external feedback (`docs/research/2026-08-02-external-feedback-distillation.md`)
 suggested validating scenarios against the governing body's rulebook. Scoping
 that against the codebase found a real gap, and Thomas's correction about
 unsanctioned hockey reshaped it into something better.
 
-## Problem
+## Correction (2026-08-02, before any implementation)
+
+The spec below was written from a metadata field rather than from the geometry.
+Measuring the catalog afterwards showed the premise is false.
+
+**The largest footprint in the entire 25-play catalog is 55ft x 44ft.** Every
+play fits inside a U9 half-ice surface (100x85) and inside a U7 cross-ice area.
+`space: { units: "rink-200x85" }` is the coordinate frame the positions are
+expressed in — it is not a claim that the play consumes the full sheet.
+
+What that invalidates:
+
+- "9 plays put full-sheet geometry in front of U9" — they use at most 55ft of it.
+- "2 hard failures on day one" (`play_off_puck_support_window_u11_v1` and its
+  mirror) — both have a 36ft footprint and fit cross-ice comfortably. There are
+  **no live findings**, so the U7 hard-fail rule would fire on nothing.
+- "kids shown 200-foot backchecks" — nothing in the catalog spans even 60ft.
+
+**The catalog is already surface-portable.** That is a good outcome, and it was
+true before this spec was written.
+
+What survives the correction:
+
+- The surface *model* (plays declare a surface, players declare theirs, serving
+  filters on the match) is still a coherent personalization feature.
+- The remaining real question is **conceptual, not geometric**: does a read
+  *depend on* full-ice structure — a blue line to gain, a long backcheck — even
+  when its footprint is small? `play_backcheck_recovery_defender_gets_beat_u13_v1`
+  (`zone: neutral-to-defensive`, 50ft span) is the test case. That is a coaching
+  judgment and cannot be derived from coordinates.
+- Geometry can therefore *propose* a surface, but only a coach can confirm it.
+
+What this changes about priority: the feature no longer fixes a live
+age-appropriateness defect, because there isn't one. It is a personalization
+improvement competing on merit with everything else in NEXT, and it should be
+re-ranked accordingly rather than treated as urgent.
+
+## Problem (as originally written — premise now known false)
 
 Every validator we own — `validateAnimatedPlay`, `validateFactoryStandards`,
 `validateAnchorFidelity`, `artLint`, `noveltyGate`, the tactical-claim schema,
