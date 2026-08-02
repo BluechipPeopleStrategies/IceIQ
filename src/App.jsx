@@ -2058,6 +2058,16 @@ function Quiz({ player, onFinish, onBack, tier, onUpgrade, focus = null }) {
   }
 
   function handleSeqAnswer(ok) {
+    // Dedupe, matching handleRinkQAnswer's `if (rinkQResult !== null) return`.
+    // This handler serves seq, multi AND scenario questions, and a multi-step
+    // scenario fires onAnswer once PER STEP -- so without this guard each step
+    // appended another row to `results`. That inflated the counter ("Question
+    // 6 of 5" on a 5-question session, reported 2026-08-02), pushed the
+    // progress bar past 100%, and inflated the denominator that
+    // calcWeightedIQ() and the "N/M correct" results screen both divide by.
+    // seqAnswered is reset per question alongside rinkQResult, so first answer
+    // wins and later steps of the same question no longer double-record.
+    if (seqAnswered) return;
     setSeqAnswered(true);
     setSeqCorrect(ok);
     if (!ok) setSeqPerfect(false);
