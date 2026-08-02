@@ -159,15 +159,41 @@ grant  execute on function public.join_team_by_code(text) to authenticated;
 -- Teams are readable by their coach and their own members. Lookup-by-code now
 -- happens inside join_team_by_code(), which runs as definer and is not
 -- constrained by this policy.
+--
+-- The membership test MUST go through a SECURITY DEFINER helper rather than a
+-- direct subquery on team_members. Found the hard way on 2026-08-02: a first
+-- version of this policy inlined `exists (select 1 from public.team_members
+-- ...)`, which recurses forever against schema.sql's existing "coach views team
+-- roster" policy on team_members, whose own USING clause selects from teams.
+-- Postgres reports `infinite recursion detected in policy for relation
+-- "team_members"`, and because PostgREST re-reads a row after UPDATE, it broke
+-- every profile write in production, not just team reads.
+--
+-- The old policy did not recurse only because it never referenced team_members
+-- (`auth.role() = 'authenticated'` matched everything, which was the bug).
+-- A SECURITY DEFINER function is not subject to RLS, so it breaks the cycle at
+-- one end, which is enough. STABLE so the planner can cache it per statement.
+create or replace function public.is_team_member(p_team_id uuid)
+returns boolean
+language sql
+security definer
+stable
+set search_path = ''
+as $$
+  select exists (
+    select 1 from public.team_members tm
+    where tm.team_id = p_team_id and tm.player_id = auth.uid()
+  );
+$$;
+
+revoke all    on function public.is_team_member(uuid) from public, anon;
+grant  execute on function public.is_team_member(uuid) to authenticated;
+
 drop policy if exists "authenticated can lookup team by code" on public.teams;
 drop policy if exists "coach or member reads team" on public.teams;
 create policy "coach or member reads team" on public.teams
   for select using (
-    auth.uid() = coach_id
-    or exists (
-      select 1 from public.team_members tm
-      where tm.team_id = teams.id and tm.player_id = auth.uid()
-    )
+    auth.uid() = coach_id or public.is_team_member(teams.id)
   );
 
 -- Membership: you may see and leave your own; you may no longer insert
