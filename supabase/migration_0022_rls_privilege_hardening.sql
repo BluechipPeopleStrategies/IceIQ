@@ -218,7 +218,27 @@ create policy feedback_log_read_admin on public.feedback_log
 -- migration_0002's insert policy checks only that the caller is signed in, so
 -- user_id could be set to somebody else's id, planting reports under another
 -- user's name. Pin it to the caller.
-drop policy if exists "authenticated can report" on public.question_reports;
-create policy "authenticated can report" on public.question_reports
-  for insert to authenticated
-  with check (auth.uid() = user_id);
+--
+-- GUARDED, and this matters (found 2026-08-02 when the first apply attempt
+-- failed on it): `public.question_reports` does not exist in the live database
+-- even though migration_0002 creates it. The migration files record intent, not
+-- what was actually applied -- the two have drifted. Verified live on
+-- 2026-08-02, these five tables from the migration history are absent:
+-- question_reports, question_results, team_challenges, training_sessions,
+-- quiz_feedback. (The first two also explain the 404s the app logs on load.)
+--
+-- Every other table this migration touches was verified present: profiles,
+-- question_overrides, teams, team_members, coach_reviews, feedback_log.
+--
+-- Because Postgres runs a multi-statement batch in an implicit transaction, an
+-- unguarded reference to a missing table rolls back the ENTIRE migration --
+-- including the critical section 1. Guarding keeps the security fixes
+-- applyable, and makes this section self-healing if the table is created later.
+do $$
+begin
+  if to_regclass('public.question_reports') is not null then
+    execute 'drop policy if exists "authenticated can report" on public.question_reports';
+    execute 'create policy "authenticated can report" on public.question_reports for insert to authenticated with check (auth.uid() = user_id)';
+  end if;
+end
+$$;
