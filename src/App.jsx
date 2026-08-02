@@ -3716,7 +3716,15 @@ function WeeklyQuiz({ player, onBack, onFinish }) {
         )}
         {qtype === "seq" && <SeqQuestion q={q} answered={seqAnswered} onAnswer={handleSeqAnswer}/>}
 
-        {sel !== null && qtype !== "seq" && qtype !== "multi" && (() => {
+        {/* `scenario` questions are excluded for the same reason as seq/multi:
+            ScenarioRenderer already renders its own verdict and coach tip from
+            the interaction's real result. This card computes correctness as
+            `sel === q.ok`, which is meaningless for a tap/selection answer
+            (`sel` is the tapped target, `q.ok` is not), so it rendered
+            "✗ INCORRECT" underneath ScenarioRenderer's "✓ Right read" for the
+            same answer, with the tip duplicated in both. Reported 2026-08-02.
+            Display-only -- scoring reads the interaction result, not this. */}
+        {sel !== null && qtype !== "seq" && qtype !== "multi" && qtype !== "scenario" && (() => {
           const wasCorrect = qtype === "tf" ? (sel === "true") === q.ok : sel === q.ok;
           const coach = getCoachForQuestion(q, player.level, player.position);
           const ageTier = getAgeTier(player.level);
