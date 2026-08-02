@@ -7908,9 +7908,25 @@ export default function App() {
     return () => data?.subscription?.unsubscribe?.();
   }, []);
 
-  async function loadUser(userId) {
+  async function loadUser(userId, attempt = 0) {
     const p = await SB.getProfile(userId);
-    if (!p) return;
+    if (!p) {
+      // A brand-new account has no profile row yet: SB.signUp() writes it
+      // AFTER supabase.auth.signUp() resolves, so the SIGNED_IN subscriber can
+      // query profiles before the row exists. Returning silently here leaves
+      // `profile` null, and the render gate below (`if (!profile)`) then shows
+      // the auth screen again -- which is exactly the "click Create Account,
+      // wait ~2s, land back on Create Account" report from 2026-08-02. The
+      // account was created every time; only the UI disagreed.
+      //
+      // Retry briefly instead of giving up. Bounded so a genuinely
+      // profile-less auth user (three exist in production) still settles on
+      // the auth screen rather than looping forever.
+      if (attempt < 5) {
+        setTimeout(() => { loadUser(userId, attempt + 1).catch(() => {}); }, 200 * (attempt + 1));
+      }
+      return;
+    }
     setProfile(p);
     if (p.role === "player" && p.level) {
       // Build enriched player object from Supabase data
