@@ -3,6 +3,7 @@
 
 import { useState, useEffect, useRef } from "react";
 import * as SB from "./supabase";
+import { canSelfRate } from "./data/selfRating.js";
 import {
   C, FONT, LEVELS, ALL_AGES_MODE, DEFAULT_MIX_LEVEL,
   Screen, Card, Pill, Label, PrimaryBtn, BackBtn, ProgressBar, StickyHeader,
@@ -1666,6 +1667,23 @@ function getSelfPromptLocal(level, skill) {
 
 export function SkillsOnboarding({ player, tier, onSave, onBack, onUpgrade }) {
   const scale = getSelfScale(player.level);
+  // Belt and braces: the quest that routes here is already hidden for U7/U9, but
+  // the screen is reachable by other paths and getSelfScale() returns [] for a
+  // band with no self scale -- which rendered an empty ladder with nothing to
+  // tap. Say why instead of showing nothing.
+  if (!canSelfRate(player.level) || !scale.length) {
+    return (
+      <div style={{minHeight:"100vh",background:C.bg,color:C.white,fontFamily:FONT.body,padding:"2rem 1.25rem"}}>
+        <div style={{maxWidth:520,margin:"0 auto"}}>
+          <BackBtn onClick={onBack}/>
+          <div style={{fontFamily:FONT.display,fontWeight:800,fontSize:"1.5rem",margin:"1rem 0 .5rem"}}>Not for this age group yet.</div>
+          <div style={{fontSize:14,color:C.dim,lineHeight:1.6}}>
+            Rating your own skills starts at U11. At this age the game is about touches and having fun, not scoring yourself out of five. Your coach can still leave you feedback.
+          </div>
+        </div>
+      </div>
+    );
+  }
   const hasFullAccess = canAccess("fullSkillRating", tier).allowed;
   const allSkills = (SKILLS[player.level] || []).flatMap(c => c.skills.map(s => ({...s, catName: c.cat, catIcon: c.icon})));
   const pool = hasFullAccess ? allSkills : allSkills.filter(s => FREE_SKILL_IDS.has(s.id));

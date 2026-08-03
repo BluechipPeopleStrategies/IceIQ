@@ -19,6 +19,7 @@ import { COMPETENCIES, getJourneyV2, ACTIVITY_METRICS, GAME_SENSE_UNLOCK_SESSION
 import { getTrainingLog, seedDemoTrainingForRoster } from "./utils/trainingLog.js";
 import { upsertResult, skipResult, isSkipped, answeredCount } from "./utils/quizResults.js";
 import { preAppScreen } from "./utils/authRouting.js";
+import { canSelfRate } from "./data/selfRating.js";
 import { isChunkLoadError, shouldReloadForChunkError } from "./utils/chunkReload.js";
 import { buildU11ForwardPreview, PREVIEW_PLAYER_ID } from "./data/previewPlayer.js";
 import { enqueueReview, getSavedReview, flushQueue } from "./review/reviewQueue.js";
@@ -1366,7 +1367,10 @@ function Home({ player, onNav, demoMode, subscriptionTier, questFlagsBump, onPro
   // Quest checklist state
   const flags = useQuestFlags(questFlagsBump);
   const identity = demoMode ? "__demo__" : (player?.id || "__anon__");
-  const questResults = QUESTS_PLAYER.map(q => computeQuestProgress(q, { player, flags, tier: subscriptionTier }));
+  // U7 and U9 do not self-rate, so the quest that sends them there is not
+  // offered. Without this they would be pointed at an empty ladder.
+  const questsForPlayer = QUESTS_PLAYER.filter(q => q.id !== "rate6" || canSelfRate(player?.level));
+  const questResults = questsForPlayer.map(q => computeQuestProgress(q, { player, flags, tier: subscriptionTier }));
   const questDismissed = lsGetJSON(LS_QUEST_DISMISSED, {})[identity] === "1";
   const firstLineSeen = lsGetJSON(LS_FIRST_LINE_SEEN, {})[identity] === "1";
   const [dismissTick, setDismissTick] = useState(0); // eslint-disable-line no-unused-vars
@@ -1576,7 +1580,7 @@ function Home({ player, onNav, demoMode, subscriptionTier, questFlagsBump, onPro
         {!questDismissed && !firstLineSeen && (
           <QuestChecklist
             role="player"
-            quests={QUESTS_PLAYER}
+            quests={questsForPlayer}
             results={questResults}
             onTap={handleQuestTap}
             onDismiss={handleDismissQuest}

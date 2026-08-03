@@ -20,7 +20,9 @@ export function ladderFor(n, forSelf) {
 }
 
 export const RATING_SCALES = {
-  "U9 / Novice":     { self:{type:"ladder", options:ladderFor(4,true)},  coach:{type:"ladder", options:ladderFor(4,false)} },
+  // U9 has no `self` scale on purpose: U7 and U9 do not self-rate (Thomas,
+  // 2026-08-03). Coach rating of a U9 player is unaffected.
+  "U9 / Novice":     { coach:{type:"ladder", options:ladderFor(4,false)} },
   "U11 / Atom":      { self:{type:"ladder", options:ladderFor(5,true)},  coach:{type:"ladder", options:ladderFor(5,false)} },
   "U13 / Peewee":    { self:{type:"ladder", options:ladderFor(5,true)},  coach:{type:"ladder", options:ladderFor(5,false)} },
   "U15 / Bantam":    { self:{type:"ladder", options:ladderFor(5,true)},  coach:{type:"ladder", options:ladderFor(5,false)} },
