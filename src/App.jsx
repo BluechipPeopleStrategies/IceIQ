@@ -1063,9 +1063,30 @@ function questionSpeechParts(q, qtype) {
   return parts;
 }
 
+// Correct/wrong colours for every answer renderer.
+//
+// Green-vs-red is the single worst pairing for the most common form of colour
+// blindness, which is why the colorblind setting exists. It was previously
+// re-derived inline in MCQuestion and MultiMCQuestion and simply MISSING from
+// TFQuestion, NextQuestion and SeqQuestion — so a player who turned the setting
+// on still got green/red on true-false, what-happens-next and ordering
+// questions, silently, with no way to tell it wasn't working. One shared helper
+// so the next renderer cannot forget it. Blue/orange is the standard
+// deuteranopia-safe substitution.
+export function verdictColors(colorblind) {
+  return {
+    correct: colorblind ? "#2563eb" : C.green,
+    wrong:   colorblind ? "#ea580c" : C.red,
+    correctBorder: colorblind ? "rgba(37,99,235,.3)"  : C.greenBorder,
+    wrongBorder:   colorblind ? "rgba(234,88,12,.3)"  : C.redBorder,
+    correctBg:     colorblind ? "rgba(37,99,235,.10)" : "rgba(34,197,94,.10)",
+    wrongBg:       colorblind ? "rgba(234,88,12,.08)" : "rgba(239,68,68,.08)",
+  };
+}
+
 function MCQuestion({ q, sel, onPick, colorblind }) {
-  const correctColor = colorblind ? "#2563eb" : C.green;
-  const wrongColor = colorblind ? "#ea580c" : C.red;
+  const V = verdictColors(colorblind);
+  const { correct: correctColor, wrong: wrongColor } = V;
   return (
     <div style={{display:"flex",flexDirection:"column",gap:".55rem"}}>
       {q.opts.map((opt, i) => {
@@ -1074,8 +1095,8 @@ function MCQuestion({ q, sel, onPick, colorblind }) {
         const isWrong = picked && i === sel && !isCorrect;
         let bg=C.dimmest, bdr=C.border, col=C.dim, leftBdr="transparent";
         if (picked) {
-          if (isCorrect) { bg=colorblind?"rgba(37,99,235,.1)":"rgba(34,197,94,.1)"; bdr=colorblind?"rgba(37,99,235,.35)":"rgba(34,197,94,.3)"; col=C.white; leftBdr=correctColor; }
-          else if (isWrong) { bg=colorblind?"rgba(234,88,12,.08)":C.redDim; bdr=colorblind?"rgba(234,88,12,.3)":C.redBorder; col=C.dimmer; leftBdr=wrongColor; }
+          if (isCorrect) { bg=V.correctBg; bdr=V.correctBorder; col=C.white; leftBdr=correctColor; }
+          else if (isWrong) { bg=V.wrongBg; bdr=V.wrongBorder; col=C.dimmer; leftBdr=wrongColor; }
         } else if (sel === i) { bg=C.purpleDim; bdr=C.purpleBorder; col=C.white; }
         return (
           <button key={i} onClick={() => onPick(i)} disabled={sel !== null}
@@ -1140,8 +1161,8 @@ function MultiMCQuestion({ q, onAnswer, answered, colorblind }) {
     onAnswer?.(isCorrect);
   }
 
-  const correctColor = colorblind ? "#2563eb" : C.green;
-  const wrongColor = colorblind ? "#ea580c" : C.red;
+  const V = verdictColors(colorblind);
+  const { correct: correctColor, wrong: wrongColor } = V;
 
   return (
     <div>
@@ -1152,9 +1173,12 @@ function MultiMCQuestion({ q, onAnswer, answered, colorblind }) {
           let bg=C.dimmest, bdr=C.border, col=C.dim, leftBdr="transparent";
           if (locked) {
             // Reveal: green for correct picks (matched or missed), red for wrong picks.
-            if (isRight && isPicked) { bg="rgba(34,197,94,.12)"; bdr="rgba(34,197,94,.35)"; col=C.white; leftBdr=correctColor; }
-            else if (isRight && !isPicked) { bg="rgba(34,197,94,.05)"; bdr="rgba(34,197,94,.2)"; col=C.white; leftBdr=correctColor; }
-            else if (!isRight && isPicked) { bg=C.redDim; bdr=C.redBorder; col=C.dimmer; leftBdr=wrongColor; }
+            // Tint AND border follow the colorblind palette, not just the left
+            // rule. Previously only leftBdr switched, so a colorblind player
+            // still saw a green wash behind a blue marker.
+            if (isRight && isPicked) { bg=V.correctBg; bdr=V.correctBorder; col=C.white; leftBdr=correctColor; }
+            else if (isRight && !isPicked) { bg=V.correctBg; bdr=V.correctBorder; col=C.white; leftBdr=correctColor; }
+            else if (!isRight && isPicked) { bg=V.wrongBg; bdr=V.wrongBorder; col=C.dimmer; leftBdr=wrongColor; }
           } else if (isPicked) { bg=C.purpleDim; bdr=C.purpleBorder; col=C.white; }
           const mark = locked
             ? (isRight ? "✓" : isPicked ? "✗" : "")
@@ -1203,7 +1227,8 @@ function MultiMCQuestion({ q, onAnswer, answered, colorblind }) {
   );
 }
 
-function SeqQuestion({ q, onAnswer, answered }) {
+function SeqQuestion({ q, onAnswer, answered, colorblind }) {
+  const V = verdictColors(colorblind);
   const [order, setOrder] = useState(() => [...Array(q.items.length).keys()]);
   const [submitted, setSubmitted] = useState(false);
   const [correct, setCorrect] = useState(false);
@@ -1228,9 +1253,9 @@ function SeqQuestion({ q, onAnswer, answered }) {
           return (
             <div key={itemIdx} style={{
               display:"flex", alignItems:"center", gap:".6rem",
-              background:submitted ? (isRight ? "rgba(34,197,94,.08)" : "rgba(239,68,68,.06)") : C.bgElevated,
-              border:`1px solid ${submitted ? (isRight ? C.greenBorder : C.redBorder) : C.border}`,
-              borderLeft:`3px solid ${submitted ? (isRight ? C.green : C.red) : C.purple}`,
+              background:submitted ? (isRight ? V.correctBg : V.wrongBg) : C.bgElevated,
+              border:`1px solid ${submitted ? (isRight ? V.correctBorder : V.wrongBorder) : C.border}`,
+              borderLeft:`3px solid ${submitted ? (isRight ? V.correct : V.wrong) : C.purple}`,
               borderRadius:12, padding:".8rem 1rem",
               transition:"all .2s",
             }}>
@@ -1256,17 +1281,20 @@ function SeqQuestion({ q, onAnswer, answered }) {
   );
 }
 
-function TFQuestion({ q, sel, onPick }) {
+function TFQuestion({ q, sel, onPick, colorblind }) {
+  const V = verdictColors(colorblind);
   return (
     <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:"1rem"}}>
-      {[{label:"TRUE",val:1,color:C.green},{label:"FALSE",val:0,color:C.red}].map(({label,val,color}) => {
+      {[{label:"TRUE",val:1},{label:"FALSE",val:0}].map(({label,val}) => {
         const picked = sel !== null;
         const isCorrect = val === (q.ok ? 1 : 0);
         const isSelected = sel === val;
         let bg=C.bgElevated, bdr=C.border, textColor=C.dim;
         if (picked) {
-          if (isCorrect) { bg=val===1?"rgba(34,197,94,.1)":"rgba(239,68,68,.08)"; bdr=color+"50"; textColor=color; }
-          else if (isSelected) { bg=C.redDim; bdr=C.redBorder; textColor=C.red; }
+          // The reveal colours the CORRECT answer, whichever it is — so the
+          // tint follows correctness, never which button says TRUE.
+          if (isCorrect) { bg=V.correctBg; bdr=V.correctBorder; textColor=V.correct; }
+          else if (isSelected) { bg=V.wrongBg; bdr=V.wrongBorder; textColor=V.wrong; }
         } else if (isSelected) { bg=C.purpleDim; bdr=C.purpleBorder; textColor=C.purple; }
         return (
           <button key={label} onClick={() => onPick(val)} disabled={sel !== null}
@@ -1281,7 +1309,7 @@ function TFQuestion({ q, sel, onPick }) {
             }}>
             {label}
             {picked && isCorrect && <div style={{fontSize:11,fontFamily:FONT.body,marginTop:6,fontWeight:600}}>✓ Correct</div>}
-            {picked && isSelected && !isCorrect && <div style={{fontSize:11,fontFamily:FONT.body,marginTop:6,color:C.red,fontWeight:600}}>✗ Wrong</div>}
+            {picked && isSelected && !isCorrect && <div style={{fontSize:11,fontFamily:FONT.body,marginTop:6,color:V.wrong,fontWeight:600}}>✗ Wrong</div>}
           </button>
         );
       })}
@@ -1289,7 +1317,8 @@ function TFQuestion({ q, sel, onPick }) {
   );
 }
 
-function NextQuestion({ q, sel, onPick }) {
+function NextQuestion({ q, sel, onPick, colorblind }) {
+  const V = verdictColors(colorblind);
   return (
     <div style={{display:"flex",flexDirection:"column",gap:".55rem"}}>
       {q.opts.map((opt, i) => {
@@ -1298,13 +1327,13 @@ function NextQuestion({ q, sel, onPick }) {
         const isWrong = picked && i === sel && !isCorrect;
         let bg=C.dimmest, bdr=C.border, col=C.dim, leftBdr="transparent";
         if (picked) {
-          if (isCorrect) { bg="rgba(34,197,94,.1)"; bdr=C.greenBorder; col=C.white; leftBdr=C.green; }
-          else if (isWrong) { bg=C.redDim; bdr=C.redBorder; col=C.dimmer; leftBdr=C.red; }
+          if (isCorrect) { bg=V.correctBg; bdr=V.correctBorder; col=C.white; leftBdr=V.correct; }
+          else if (isWrong) { bg=V.wrongBg; bdr=V.wrongBorder; col=C.dimmer; leftBdr=V.wrong; }
         } else if (sel === i) { bg=C.purpleDim; bdr=C.purpleBorder; col=C.white; }
         return (
           <button key={i} onClick={() => onPick(i)} disabled={sel !== null}
             style={{background:bg,border:`1px solid ${bdr}`,borderLeft:`3px solid ${leftBdr}`,borderRadius:12,padding:".95rem 1.1rem",cursor:sel!==null?"default":"pointer",textAlign:"left",color:col,fontFamily:FONT.body,fontSize:14,lineHeight:1.55,display:"flex",alignItems:"flex-start",gap:".75rem",transition:"all .15s",width:"100%"}}>
-            <span style={{fontSize:11,fontWeight:800,minWidth:22,marginTop:1,flexShrink:0,color:picked?(isCorrect?C.green:isWrong?C.red:C.dimmest):C.dimmer,fontFamily:FONT.display}}>
+            <span style={{fontSize:11,fontWeight:800,minWidth:22,marginTop:1,flexShrink:0,color:picked?(isCorrect?V.correct:isWrong?V.wrong:C.dimmest):C.dimmer,fontFamily:FONT.display}}>
               {picked?(isCorrect?"✓":isWrong?"✗":String.fromCharCode(65+i)):String.fromCharCode(65+i)}
             </span>
             <span style={{wordBreak:"break-word",whiteSpace:"normal",flex:1,fontSize:opt.length>100?13:14}}>{opt}</span>
@@ -2292,11 +2321,11 @@ function Quiz({ player, onFinish, onBack, tier, onUpgrade, focus = null }) {
       case "mistake":
         return <MCQuestion q={q} sel={sel} onPick={handlePick} colorblind={player.colorblind}/>;
       case "next":
-        return <NextQuestion q={q} sel={sel} onPick={handlePick}/>;
+        return <NextQuestion q={q} sel={sel} onPick={handlePick} colorblind={player.colorblind}/>;
       case "tf":
-        return <TFQuestion q={q} sel={sel} onPick={i => handlePick(i)}/>;
+        return <TFQuestion q={q} sel={sel} onPick={i => handlePick(i)} colorblind={player.colorblind}/>;
       case "seq":
-        return <SeqQuestion q={q} onAnswer={handleSeqAnswer} answered={seqAnswered}/>;
+        return <SeqQuestion q={q} onAnswer={handleSeqAnswer} answered={seqAnswered} colorblind={player.colorblind}/>;
       case "multi":
         return <MultiMCQuestion q={q} onAnswer={handleSeqAnswer} answered={seqAnswered} colorblind={player.colorblind}/>;
       case "scenario":
@@ -3873,7 +3902,7 @@ function WeeklyQuiz({ player, onBack, onFinish }) {
             })}
           </div>
         )}
-        {qtype === "seq" && <SeqQuestion q={q} answered={seqAnswered} onAnswer={handleSeqAnswer}/>}
+        {qtype === "seq" && <SeqQuestion q={q} answered={seqAnswered} onAnswer={handleSeqAnswer} colorblind={player.colorblind}/>}
 
         {/* `scenario` questions are excluded for the same reason as seq/multi:
             ScenarioRenderer already renders its own verdict and coach tip from
