@@ -1,8 +1,8 @@
 import { useRef, useState, useCallback, useEffect } from "react";
-import { createAdaptiveLevel, setupCanvas, pointerPos, lerp } from "./gymEngine";
+import { createAdaptiveLevel, setupCanvas, pointerPos, lerp, REPS_PER_SESSION } from "./gymEngine";
 import { getDrill, saveSession } from "./gymStorage";
 import { cue, gymCueHooks } from "./gymAudio";
-import { ScoreCount, ConfettiBurst } from "./gymFx";
+import { ScoreCount, ConfettiBurst, LevelProgress, PointsDelta } from "./gymFx";
 import { sessionRankLabel } from "./gymProgressCore";
 import {
   makeShot,
@@ -19,11 +19,12 @@ import {
 // clock). The goalie covers some spots and commits to more as you close in,
 // biased by a per-session tendency announced in a scouting report. Tap an
 // open spot to release before you run out of ice; the puck flies, the goalie
-// dives, GOAL or SAVE. Ten shots, you vs the goalie on the scoreboard.
+// dives, GOAL or SAVE. Five shots, you vs the goalie on the scoreboard.
 // Cell coverage / close-schedule / scoring logic is shootoutCore, unchanged.
 
-const REPS = 10;
+const REPS = REPS_PER_SESSION;
 const SHOOT_ANIM_MS = 460; // release-to-outcome animation length
+const POKE_ANIM_MS = 520; // goalie stick sweep + puck skid when the clock runs out
 const NEAR_SCALE = 1.0; // net scale at the hash marks (release point)
 const FAR_SCALE = 0.42; // net scale at center ice
 
@@ -96,13 +97,37 @@ export default function ShootoutDrill({ playerId = "default", onExit }) {
     return (elapsedMs - start) / REACH_MS;
   }
 
-  function drawOpenCell(ctx, r) {
+  // Every cell draws the SAME rounded plate at the same size, in every state.
+  // Open cells used to be green circles while covered cells took the shape of
+  // whichever body part covered them — so a blocker-side save rendered one dark
+  // square among five green circles, and the odd one out meant nothing about the
+  // read (S2-21, "the shapes aren't really consistent"). State is carried by
+  // fill and outline only; gold is the gym's "this is the one you want" colour
+  // everywhere else, so open is gold. The goalie limb still draws on top of a
+  // covered plate rather than replacing it.
+  function drawCellPlate(ctx, r, state) {
+    const pad = Math.min(r.w, r.h) * 0.14;
+    const x = r.x + pad;
+    const y = r.y + pad;
+    const w = r.w - pad * 2;
+    const h = r.h - pad * 2;
+    const rr = Math.min(w, h) * 0.18;
     ctx.save();
-    ctx.strokeStyle = "#1f9d55";
-    ctx.lineWidth = Math.max(2, r.w * 0.045);
     ctx.beginPath();
-    ctx.arc(r.x + r.w / 2, r.y + r.h / 2, Math.min(r.w, r.h) * 0.28, 0, Math.PI * 2);
-    ctx.stroke();
+    ctx.moveTo(x + rr, y);
+    ctx.arcTo(x + w, y, x + w, y + h, rr);
+    ctx.arcTo(x + w, y + h, x, y + h, rr);
+    ctx.arcTo(x, y + h, x, y, rr);
+    ctx.arcTo(x, y, x + w, y, rr);
+    ctx.closePath();
+    if (state === "open") {
+      ctx.strokeStyle = "#f2b705";
+      ctx.lineWidth = Math.max(2.5, r.w * 0.05);
+      ctx.stroke();
+    } else {
+      ctx.fillStyle = "rgba(43,58,71,0.30)";
+      ctx.fill();
+    }
     ctx.restore();
   }
 
@@ -344,10 +369,10 @@ export default function ShootoutDrill({ playerId = "default", onExit }) {
       };
     }
 
-    // open-cell rings (skip the target once the dive is underway)
+    // every cell always draws, so the grid never gains or loses members
     rects.forEach((r) => {
       if (target && r.id === target.id) return;
-      if (isCellOpenAt(shot, r.id, elapsed)) drawOpenCell(ctx, r);
+      drawCellPlate(ctx, r, isCellOpenAt(shot, r.id, elapsed) ? "open" : "covered");
     });
 
     drawGoalieCore(ctx, core.x, core.y, u);
@@ -361,13 +386,55 @@ export default function ShootoutDrill({ playerId = "default", onExit }) {
       drawSavePiece(ctx, CELL_PART[target.id], target, core, diveFrac, u);
     }
 
-    // first-person stick + puck
+    // The poke check. When the clock ran out the puck simply vanished and a
+    // "POKE CHECK" banner printed — nothing poked anything (S2-21, "the poke
+    // check should actually poke the puck away"). Two eased phases: the goalie's
+    // stick reaches out of the crease down to the puck on your blade
+    // (0 -> 0.45), then knocks it away (0.45 -> 1).
+    const isPoking = sc.stage === "poking";
+    let pokeF = 0;
+    if (isPoking && sc.pokeAnimStart != null) {
+      pokeF = Math.min(1, (performance.now() - sc.pokeAnimStart) / POKE_ANIM_MS);
+    } else if (isReveal && sc.expired) {
+      pokeF = 1;
+    }
+
+    // first-person stick + puck. The puck stays on the blade right up to the
+    // moment it is poked, and is drawn separately (skidding) after — it never
+    // just disappears.
     const sway = isLive ? Math.sin(elapsed / 170) * W * 0.012 : 0;
     drawPov(ctx, W, H, {
       sway,
       windUp: isAnimating && animFrac < 0.2,
-      puckVisible: !target && !sc.expired,
+      puckVisible: !target && pokeF === 0,
     });
+
+    if (pokeF > 0) {
+      const reach = Math.min(pokeF / 0.45, 1);
+      const knock = Math.max(0, (pokeF - 0.45) / 0.55);
+      const puckHome = { x: W * 0.49, y: H * 0.955 };
+      const tipX = coreBase.x + (puckHome.x - coreBase.x) * reach;
+      const tipY = coreBase.y + (puckHome.y - coreBase.y) * reach;
+      ctx.save();
+      ctx.strokeStyle = "#2b3a47";
+      ctx.lineWidth = Math.max(4, u * 0.34);
+      ctx.lineCap = "round";
+      ctx.beginPath();
+      ctx.moveTo(coreBase.x, coreBase.y);
+      ctx.lineTo(tipX, tipY);
+      ctx.stroke();
+      // the blade
+      ctx.lineWidth = Math.max(6, u * 0.5);
+      ctx.beginPath();
+      ctx.moveTo(tipX - u * 0.5, tipY);
+      ctx.lineTo(tipX + u * 0.5, tipY - u * 0.12);
+      ctx.stroke();
+      ctx.restore();
+      // the puck, knocked off the blade and skidding away to the shooter's left
+      const skidX = puckHome.x - W * 0.34 * knock * knock;
+      const skidY = puckHome.y - H * 0.06 * knock;
+      drawPuck(ctx, skidX, skidY, Math.max(5, W * 0.016 * (1 - 0.25 * knock)));
+    }
 
     // the released puck flying to the chosen spot (shrinks with distance)
     if (target) {
@@ -417,14 +484,8 @@ export default function ShootoutDrill({ playerId = "default", onExit }) {
       ctx.restore();
     }
 
-    // live: remaining-ice bar along the bottom
-    if (isLive && sc.startTs != null) {
-      const frac = 1 - elapsed / shot.shotClockMs;
-      ctx.fillStyle = "rgba(11,27,43,0.12)";
-      ctx.fillRect(W * 0.08, H - 8, W * 0.84, 6);
-      ctx.fillStyle = frac > 0.33 ? "#1b6cb0" : "#e8590c";
-      ctx.fillRect(W * 0.08, H - 8, W * 0.84 * Math.max(0, frac), 6);
-    }
+    // The remaining-ice bar moved OUT of the canvas and into the Action Rail,
+    // so the control area is never empty mid-shot (S2-21, "only a back button").
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -442,6 +503,13 @@ export default function ShootoutDrill({ playerId = "default", onExit }) {
       const frac = sc.shotAnimStart != null ? (performance.now() - sc.shotAnimStart) / SHOOT_ANIM_MS : 1;
       if (frac >= 1) {
         finishShotAnim();
+        return;
+      }
+      rafRef.current = requestAnimationFrame(tick);
+    } else if (sc.stage === "poking") {
+      render();
+      if (performance.now() - sc.pokeAnimStart >= POKE_ANIM_MS) {
+        finishPokeAnim();
         return;
       }
       rafRef.current = requestAnimationFrame(tick);
@@ -468,6 +536,7 @@ export default function ShootoutDrill({ playerId = "default", onExit }) {
       expired: false,
       frozenElapsed: 0,
       shotAnimStart: null,
+      pokeAnimStart: null,
       repIndex,
     };
     setStage("ready");
@@ -520,13 +589,13 @@ export default function ShootoutDrill({ playerId = "default", onExit }) {
       clearTimers();
 
       if (cellId == null) {
-        // never released: the goalie pokes it away, straight to the reveal
+        // never released: animate the goalie poking it off your blade rather
+        // than teleporting to the banner
         sc.expired = true;
-        sc.stage = "reveal";
-        setStage("reveal");
-        setLast({ success: false, repPoints: 0, expired: true });
-        render();
-        resolveRep(false);
+        sc.pokeAnimStart = performance.now();
+        sc.stage = "poking";
+        setStage("poking");
+        rafRef.current = requestAnimationFrame(tick);
         return;
       }
 
@@ -538,6 +607,15 @@ export default function ShootoutDrill({ playerId = "default", onExit }) {
     },
     [render, resolveRep]
   );
+
+  function finishPokeAnim() {
+    const sc = sceneRef.current;
+    sc.stage = "reveal";
+    setStage("reveal");
+    setLast({ success: false, repPoints: 0, expired: true });
+    render();
+    resolveRep(false);
+  }
 
   function finishShotAnim() {
     const sc = sceneRef.current;
@@ -557,8 +635,12 @@ export default function ShootoutDrill({ playerId = "default", onExit }) {
     resolveShot(id);
   }
 
+  // The level the player came in at, for the results card (S2-27).
+  const startLevelRef = useRef(1);
+
   function start() {
     const d = getDrill(playerId, "shootout");
+    startLevelRef.current = d.level;
     engineRef.current = createAdaptiveLevel(d.level, {
       startUps: d.streak.ups,
       startDowns: d.streak.downs,
@@ -616,6 +698,24 @@ export default function ShootoutDrill({ playerId = "default", onExit }) {
 
   useEffect(() => () => clearTimers(), []);
 
+  // Action Rail rule 7: Space fires the primary rail action.
+  useEffect(() => {
+    if (phase !== "playing") return undefined;
+    const onKey = (e) => {
+      if (e.code !== "Space" && e.key !== " ") return;
+      if (stage === "ready") {
+        e.preventDefault();
+        go();
+      } else if (stage === "reveal") {
+        e.preventDefault();
+        advanceRep();
+      }
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [phase, stage]);
+
   const saves = pips.filter((p) => p === "save").length;
   const goals = pips.filter((p) => p === "goal").length;
 
@@ -624,8 +724,9 @@ export default function ShootoutDrill({ playerId = "default", onExit }) {
       sceneRef.current.repIndex === 0
         ? "Ref's whistle. Tap Go, skate in, and pick your spot."
         : "Tap Go for your next attempt.",
-    live: "Shoot! Tap an open ring before you run out of ice.",
+    live: "Shoot! Tap a gold-outlined spot before you run out of ice.",
     shooting: "",
+    poking: "",
     reveal: last
       ? last.success
         ? `Goal! +${last.repPoints}${combo >= 2 ? ` — ${combo} in a row` : ""}`
@@ -708,21 +809,22 @@ export default function ShootoutDrill({ playerId = "default", onExit }) {
             <ellipse cx="140" cy="80" rx="13" ry="16" fill="#2b3a47" />
             <circle cx="140" cy="62" r="8" fill="#2b3a47" stroke="#f4f9fc" strokeWidth="1.5" />
             <rect x="94" y="54" width="29" height="23" fill="#2b3a47" opacity="0.9" />
-            <circle cx="172" cy="65" r="9" fill="none" stroke="#1f9d55" strokeWidth="3" />
-            <circle cx="172" cy="92" r="9" fill="none" stroke="#1f9d55" strokeWidth="3" />
+            {/* open spots: the same gold-outlined plate the drill now draws */}
+            <rect x="160" y="55" width="24" height="20" rx="4" fill="none" stroke="#f2b705" strokeWidth="3" />
+            <rect x="160" y="82" width="24" height="20" rx="4" fill="none" stroke="#f2b705" strokeWidth="3" />
             {/* your stick + puck, first person */}
             <line x1="235" y1="176" x2="150" y2="152" stroke="#5b3a1e" strokeWidth="7" strokeLinecap="round" />
             <line x1="158" y1="153" x2="128" y2="156" stroke="#3d2813" strokeWidth="9" strokeLinecap="round" />
             <circle cx="136" cy="148" r="7" fill="#0b1b2b" stroke="#ffffff" strokeWidth="2" />
           </svg>
-          <p className="gym-goal"><strong>Your goal:</strong> win the shootout. Ten attempts, you against the goalie.</p>
+          <p className="gym-goal"><strong>Your goal:</strong> win the shootout. {REPS} attempts, you against the goalie.</p>
           <p>
             <strong>The game:</strong> you're in alone. Tap Go and you skate
             in — the net gets bigger the closer you get, but the goalie keeps
-            taking spots away. Open spots show a target ring. Tap one to
+            taking spots away. Open spots are outlined in gold. Tap one to
             shoot before you run out of ice. Every goalie has a tell: read
-            the scouting report and use it. Goals beat saves after ten shots
-            and you win the shootout.
+            the scouting report and use it. More goals than saves and you win
+            the shootout.
           </p>
           <div className="gym-trains">
             <strong>Why it matters</strong>
@@ -739,45 +841,70 @@ export default function ShootoutDrill({ playerId = "default", onExit }) {
         </div>
       )}
 
-      <canvas
-        ref={canvasRef}
-        className="gym-canvas"
-        onPointerDown={onCanvasTap}
-        style={{ display: phase === "playing" ? "block" : "none" }}
-      />
-
-      {phase === "playing" && stage === "ready" && (
-        <div className="gym-row" style={{ marginBottom: 10 }}>
-          <button className="gym-btn" onClick={go}>
-            Go
-          </button>
-        </div>
-      )}
-
+      {/* Action Rail rule 6: hint above the play surface, rail last. */}
       {phase === "playing" && (
         <p className="gym-hint" aria-live="polite">
           {hint}
         </p>
       )}
 
-      {phase === "playing" && stage === "reveal" && (
-        <button className="gym-btn gym-fab" onClick={advanceRep}>
-          {rep + 1 >= REPS ? "See the result" : "Next shot"}
-        </button>
-      )}
+      <div className="gym-stage" style={{ display: phase === "playing" ? "block" : "none" }}>
+        <canvas ref={canvasRef} className="gym-canvas" onPointerDown={onCanvasTap} />
+
+        {phase === "playing" && stage === "ready" && (
+          <div className="gym-rail">
+            <button className="gym-btn" onClick={go}>
+              Go
+              <kbd className="gym-key">space</kbd>
+            </button>
+          </div>
+        )}
+
+        {/* Mid-shot the only control on screen used to be Back (S2-21). The
+            remaining-ice bar now lives here instead of at the bottom of the
+            canvas, so the rail is never empty while the drill is running. It is
+            CSS-animated off the shot clock rather than re-rendered per frame,
+            and never eats a shot tap. */}
+        {phase === "playing" && stage === "live" && sceneRef.current.shot && (
+          <div className="gym-rail">
+            <div className="gym-ice-bar" aria-label="Ice remaining">
+              <span style={{ animationDuration: `${sceneRef.current.shot.shotClockMs}ms` }} />
+            </div>
+          </div>
+        )}
+
+        {phase === "playing" && stage === "reveal" && (
+          <div className="gym-rail">
+            <button className="gym-btn" onClick={advanceRep}>
+              {rep + 1 >= REPS ? "See the result" : "Next shot"}
+              <kbd className="gym-key">space</kbd>
+            </button>
+          </div>
+        )}
+      </div>
 
       {phase === "done" && (
         <div className="gym-card">
-          <h2>{won ? "You win the shootout!" : tied ? "Shootout tied" : "The goalie takes this one"}</h2>
+          {/* Every drill's end card is headed "Session complete"; the shootout
+              flavour drops to a subhead (S2-27). */}
+          <h2>Session complete</h2>
+          <p className="gym-best" style={{ marginTop: 0 }}>
+            {won ? "You win the shootout!" : tied ? "Shootout tied" : "The goalie takes this one"}
+          </p>
           <ScoreCount value={points} />
           <ConfettiBurst fire={!!bestLabel || won} />
           {bestLabel && <p className="gym-best">{bestLabel}</p>}
+          <LevelProgress
+            from={startLevelRef.current}
+            to={level}
+            toPromote={engineRef.current ? engineRef.current.toPromote : 3}
+          />
+          {saved && <PointsDelta points={points} sessions={saved.sessions} />}
           <p>
-            Final: you {hits}, goalie {REPS - hits}. {points} points. Level {level}.
+            Final: you {hits}, goalie {REPS - hits}. {points} points.
             {engineRef.current && engineRef.current.bestCombo >= 3
               ? ` Best run: ${engineRef.current.bestCombo} straight.`
               : ""}
-            {saved && (saved.bestPoints || 0) <= points && points > 0 ? " New best." : ""}
           </p>
           <div className="gym-row">
             <button className="gym-btn" onClick={start}>

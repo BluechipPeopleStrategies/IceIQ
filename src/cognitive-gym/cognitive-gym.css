@@ -14,6 +14,13 @@
   --gym-decoy: #7048e8;
   --gym-radius: 14px;
 
+  /* Action Rail (control-placement standard). One centred band INSIDE the play
+     surface holding every control the player needs to progress. The anchor is a
+     single custom property so top-vs-bottom is one edit, not twelve. */
+  --gym-rail-anchor: bottom; /* "bottom" | "top" */
+  --gym-rail-inset: 3.5%;    /* distance from that edge of the play surface */
+  --gym-rail-band: 14%;      /* reserved, target-free fraction (GYM_RAIL_BAND) */
+
   background: var(--gym-bg);
   color: var(--gym-text);
   min-height: 100%;
@@ -316,11 +323,91 @@
 }
 
 /* Advance button after a reveal — sits right under the canvas in normal
-   document flow (not fixed) so it is never hidden or unreachable. */
+   document flow (not fixed) so it is never hidden or unreachable.
+   Superseded by .gym-rail; kept as an alias for the reaction drill, which has
+   no play surface to put a rail inside. */
 .gym-fab {
   display: block;
   margin: 12px auto 0;
   box-shadow: 0 4px 14px rgba(0, 0, 0, 0.3);
+}
+
+/* --- Action Rail ------------------------------------------------------------
+   setupCanvas sizes the canvas in explicit CSS pixels and .gym-canvas centres
+   it with `margin: 0 auto`, so the rail needs a positioned wrapper that is
+   exactly the canvas's box. */
+.gym-stage {
+  position: relative;
+  width: fit-content;
+  margin: 0 auto;
+}
+
+.gym-rail {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  bottom: var(--gym-rail-inset);
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  flex-wrap: wrap;
+  max-width: 94%;
+  z-index: 2;
+}
+
+/* Flip the whole gym to a top rail by setting --gym-rail-anchor: top on
+   .gym-root (open decision D2 — build bottom, let Thomas flip it). */
+.gym-root[style*="--gym-rail-anchor: top"] .gym-rail,
+.gym-rail.is-top {
+  bottom: auto;
+  top: var(--gym-rail-inset);
+}
+
+/* Rail buttons carry a shadow so they read as floating over the ice. */
+.gym-rail .gym-btn {
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.34);
+}
+
+/* Shootout: remaining-ice bar, shown in the rail while the shot clock runs.
+   CSS-animated off the shot clock so it costs no per-frame React renders, and
+   never intercepts a shot tap. */
+.gym-ice-bar {
+  width: 40vw;
+  max-width: 260px;
+  height: 8px;
+  border-radius: 999px;
+  background: rgba(11, 27, 43, 0.18);
+  overflow: hidden;
+  pointer-events: none;
+}
+.gym-ice-bar span {
+  display: block;
+  height: 100%;
+  width: 100%;
+  border-radius: 999px;
+  background: var(--gym-blue);
+  transform-origin: left center;
+  animation-name: gym-ice-drain;
+  animation-timing-function: linear;
+  animation-fill-mode: forwards;
+}
+@keyframes gym-ice-drain {
+  0% { transform: scaleX(1); background: #1b6cb0; }
+  66% { background: #1b6cb0; }
+  67% { background: #e8590c; }
+  100% { transform: scaleX(0); background: #e8590c; }
+}
+
+/* Keyboard hint cap on a rail control. */
+.gym-key {
+  display: inline-block;
+  margin-left: 8px;
+  padding: 1px 6px;
+  border-radius: 5px;
+  border: 1px solid rgba(11, 27, 43, 0.35);
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 0.72em;
+  opacity: 0.75;
 }
 
 /* Gym-wide intro block */
@@ -451,3 +538,38 @@
   font-weight: 700;
   margin: 4px 0 0;
 }
+
+/* Session progression on the results card. "Level 9. New best." never told the
+   player what level they STARTED at, which was the whole of the question in
+   S2-27 ("does that mean I've gone to level nine now? What was I before?"). */
+.gym-progress { margin: 6px 0 14px; }
+.gym-progress-levels {
+  display: flex;
+  align-items: baseline;
+  justify-content: center;
+  gap: 8px;
+  font-weight: 700;
+}
+.gym-progress-from.was {
+  color: var(--gym-muted);
+  text-decoration: line-through;
+  text-decoration-thickness: 1px;
+}
+.gym-progress-to { color: var(--gym-gold); font-size: 1.15em; }
+.gym-progress-arrow { color: var(--gym-muted); }
+.gym-progress-bar { display: flex; gap: 6px; justify-content: center; margin: 8px 0 4px; }
+.gym-pip { width: 26px; height: 6px; border-radius: 999px; background: #1e3f5f; }
+.gym-pip.on { background: var(--gym-gold); }
+.gym-progress-note { color: var(--gym-muted); font-size: 0.85rem; margin: 0; }
+
+/* Numbered how-to-play steps on an intro card. Prose does not survive contact
+   with a drill that gives you 600 ms to act (S2-25). */
+.gym-steps {
+  text-align: left;
+  margin: 0 0 18px;
+  padding-left: 20px;
+  color: var(--gym-text);
+  font-size: 0.92rem;
+  line-height: 1.5;
+}
+.gym-steps li { margin-bottom: 6px; }

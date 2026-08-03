@@ -1,8 +1,15 @@
 import { useRef, useState, useCallback, useEffect } from "react";
-import { createAdaptiveLevel, setupCanvas, drawRink, pointerPos } from "./gymEngine";
+import {
+  createAdaptiveLevel,
+  setupCanvas,
+  drawRink,
+  pointerPos,
+  targetMaxY,
+  REPS_PER_SESSION,
+} from "./gymEngine";
 import { getDrill, saveSession } from "./gymStorage";
 import { cue, gymCueHooks } from "./gymAudio";
-import { ScoreCount, ConfettiBurst } from "./gymFx";
+import { ScoreCount, ConfettiBurst, LevelProgress, PointsDelta } from "./gymFx";
 import { sessionRankLabel } from "./gymProgressCore";
 import { makeFormation, scoreRead } from "./readNumbersCore";
 
@@ -13,7 +20,7 @@ import { makeFormation, scoreRead } from "./readNumbersCore";
 // add skaters, shorten the look, and grow the numbers from one digit to two
 // to three. You start each rep when you are ready.
 
-const REPS = 10;
+const REPS = REPS_PER_SESSION;
 const ANSWER_WINDOW_MS = 3200; // speed window: answer within this for full credit
 
 export default function ReadNumbersDrill({ playerId = "default", onExit }) {
@@ -136,6 +143,9 @@ export default function ReadNumbersDrill({ playerId = "default", onExit }) {
     const r = Math.max(13, Math.round(W * 0.045));
     const pad = r + 12;
     const minGap = r * 2.4;
+    // Action Rail: nothing you have to tap may sit under the Watch / Next rep
+    // button, so skaters stop short of the rail band.
+    const yMax = targetMaxY(H) - pad;
 
     // scatter non-overlapping spots for every skater across the ice
     const spots = [];
@@ -143,14 +153,14 @@ export default function ReadNumbersDrill({ playerId = "default", onExit }) {
     while (spots.length < formation.numbers.length && guard < 4000) {
       guard += 1;
       const x = pad + Math.random() * (W - 2 * pad);
-      const y = pad + Math.random() * (H - 2 * pad);
+      const y = pad + Math.random() * (yMax - pad);
       if (spots.every((p) => Math.hypot(p.x - x, p.y - y) >= minGap)) spots.push({ x, y });
     }
     while (spots.length < formation.numbers.length) {
       const i = spots.length;
       spots.push({
         x: pad + ((i + 1) / (formation.numbers.length + 1)) * (W - 2 * pad),
-        y: H * (i % 2 === 0 ? 0.35 : 0.65),
+        y: H * (i % 2 === 0 ? 0.3 : 0.6),
       });
     }
 
@@ -252,8 +262,13 @@ export default function ReadNumbersDrill({ playerId = "default", onExit }) {
     resolveRep(result.success);
   }
 
+  // The level the player came in at, so the results card can show the move
+  // rather than just the destination (S2-27).
+  const startLevelRef = useRef(1);
+
   function start() {
     const d = getDrill(playerId, "readnumbers");
+    startLevelRef.current = d.level;
     engineRef.current = createAdaptiveLevel(d.level, {
       startUps: d.streak.ups,
       startDowns: d.streak.downs,
@@ -309,6 +324,25 @@ export default function ReadNumbersDrill({ playerId = "default", onExit }) {
   }, [phase, render]);
 
   useEffect(() => () => clearTimers(), []);
+
+  // Action Rail rule 7: Space fires the one primary rail action, everywhere in
+  // the gym. Nothing here is reachable only by pointer.
+  useEffect(() => {
+    if (phase !== "playing") return undefined;
+    const onKey = (e) => {
+      if (e.code !== "Space" && e.key !== " ") return;
+      if (stage === "ready") {
+        e.preventDefault();
+        beginWatch();
+      } else if (stage === "feedback") {
+        e.preventDefault();
+        advanceRep();
+      }
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [phase, stage]);
 
   const hint = {
     ready: "Tap Watch, memorize the numbers, then find the one you're asked about.",
@@ -390,33 +424,40 @@ export default function ReadNumbersDrill({ playerId = "default", onExit }) {
         </div>
       )}
 
-      <canvas
-        ref={canvasRef}
-        className="gym-canvas"
-        style={{ display: phase === "playing" ? "block" : "none" }}
-        onMouseDown={handleTap}
-        onTouchStart={handleTap}
-      />
-
-      {phase === "playing" && stage === "ready" && (
-        <div className="gym-row" style={{ marginBottom: 10 }}>
-          <button className="gym-btn" onClick={beginWatch}>
-            Watch
-          </button>
-        </div>
-      )}
-
+      {/* Action Rail rule 6: the hint sits ABOVE the play surface so the rail is
+          the last thing on screen and no control is ever below the fold. */}
       {phase === "playing" && (
         <p className="gym-hint" aria-live="polite">
           {hint}
         </p>
       )}
 
-      {phase === "playing" && stage === "feedback" && (
-        <button className="gym-btn gym-fab" onClick={advanceRep}>
-          Next rep
-        </button>
-      )}
+      <div className="gym-stage" style={{ display: phase === "playing" ? "block" : "none" }}>
+        <canvas
+          ref={canvasRef}
+          className="gym-canvas"
+          onMouseDown={handleTap}
+          onTouchStart={handleTap}
+        />
+
+        {/* Rule 1: exactly one primary action, in the same place every stage. */}
+        {phase === "playing" && stage === "ready" && (
+          <div className="gym-rail">
+            <button className="gym-btn" onClick={beginWatch}>
+              Watch
+              <kbd className="gym-key">space</kbd>
+            </button>
+          </div>
+        )}
+        {phase === "playing" && stage === "feedback" && (
+          <div className="gym-rail">
+            <button className="gym-btn" onClick={advanceRep}>
+              {rep + 1 >= REPS ? "See the result" : "Next rep"}
+              <kbd className="gym-key">space</kbd>
+            </button>
+          </div>
+        )}
+      </div>
 
       {phase === "done" && (
         <div className="gym-card">
@@ -424,11 +465,17 @@ export default function ReadNumbersDrill({ playerId = "default", onExit }) {
           <ScoreCount value={points} />
           <ConfettiBurst fire={!!bestLabel} />
           {bestLabel && <p className="gym-best">{bestLabel}</p>}
+          {/* sessionRankLabel above already says "Personal best!", so the old
+              trailing " New best." was a duplicate — and its `<=` printed it on
+              a TIE. */}
+          <LevelProgress
+            from={startLevelRef.current}
+            to={level}
+            toPromote={engineRef.current ? engineRef.current.toPromote : 3}
+          />
+          {saved && <PointsDelta points={points} sessions={saved.sessions} />}
           <p>
-            {points} points. {hits} of {REPS} numbers found. Level {level}.
-            {saved && (saved.bestPoints || 0) <= points && points > 0
-              ? " New best."
-              : ""}
+            {points} points. {hits} of {REPS} numbers found.
           </p>
           <div className="gym-row">
             <button className="gym-btn" onClick={start}>

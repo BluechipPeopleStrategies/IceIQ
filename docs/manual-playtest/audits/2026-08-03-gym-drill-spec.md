@@ -2239,3 +2239,62 @@ comes straight back.
 | **D5** | Two Things: is a half-success a miss for levelling? | §G.3 |
 | **D6** | Rotate the play, or rotate the rink? | §J.2 |
 | **D7** | Shoot or Hold: 5 trials, keep 12, or 5×3? | §B.4 |
+
+---
+
+## Implementation status — 2026-08-03 (PARTIAL)
+
+The implementing agent was terminated mid-run by an expired auth session, while
+working on the Two Things drill. It never wrote its own implementation log, so this
+section was reconstructed by inspecting the working tree. Treat it as the source of
+truth over anything above.
+
+**State: coherent but incomplete.** Build clean; `test:gym` all passed,
+`test:gym-progress` 7/7, `test:gym-phase1` 9/9, `test:best-option-offside` 17/17.
+
+### Done — 5 drills
+
+`ReadNumbersDrill` · `ShootoutDrill` · `SnapshotDrill` · `TrackingDrill` ·
+`TwoThingsDrill`, plus the shared `gymEngine.js`, `gymPoints.js`, `gymFx.jsx`,
+`cognitive-gym.css`, `readNumbersCore.js`, `snapshotCore.js`, `twoThingsCore.js`.
+
+- `REPS_PER_SESSION = 5` in `gymEngine.js`, consumed by all five.
+- The Action Rail: `GYM_RAIL_BAND` / `GYM_TARGET_MAX_Y = 0.86`, consumed by all five
+  plus the stylesheet, so no tap target can sit under the control band.
+- `open man` → `open player` — gone from all gym source (the one remaining hit is in
+  `cognitive-gym-demo.html`, a built artifact, not source).
+- **The Read the Numbers points curve, which was the concrete defect.** `gradedPoints`
+  now takes per-call `decay` and `floor`, and the drill uses `ANSWER_DECAY = 0.62` with
+  `ANSWER_FLOOR = 150` because its "error" is a reaction time, not a spatial miss. The
+  spatial drills are unchanged (`floor` defaults to 0). Verified by running it:
+
+  | Correct answer in | Was | Now |
+  |---|---|---|
+  | 0.50s | 272 | 777 |
+  | 1.00s | 74 | 604 |
+  | 1.50s | 20 | 470 |
+  | 2.40s | **2** | 298 |
+  | 2.92s+ | **0** | ~210 |
+
+  A correct answer now always scores, and a bang-on read is still worth ~4.5× a
+  last-instant one. The `+2` Thomas saw is gone.
+
+### Not done
+
+- **7 drills untouched:** `AnticipationDrill`, `BestOptionDrill`, `EyesUpDrill`,
+  `FindLaneDrill`, `LateReadDrill`, `ReactionDrill`, `RunThePlayDrill`. They still run
+  their old rep counts and have no Action Rail, so rep count is currently inconsistent
+  across the gym — 5 drills at five reps, 7 at their originals.
+- **The Late Read / Run the Play offside fix was never started.** This is the one with
+  real teaching consequences: both drills sample positions uniformly over the canvas
+  while `gymEngine` draws blue lines at 0.33W/0.67W, and Late Read plays on a vertical
+  axis over a horizontally drawn rink — roughly 96% of Late Read trials contain an
+  offside receiver.
+- No test was added for the new points curve. `answerPoints()` was deliberately split
+  out of `scoreRead` to make it unit-testable; the test itself is still owed.
+
+### Next
+
+1. The offside fix for Late Read and Run the Play — highest value of what remains.
+2. A unit test pinning the points curve.
+3. Extend reps + rail to the other 7 drills so the gym is consistent.

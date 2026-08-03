@@ -4,10 +4,12 @@ import {
   setupCanvas,
   drawRink,
   pointerPos,
+  GYM_TARGET_MAX_Y,
+  REPS_PER_SESSION,
 } from "./gymEngine";
 import { getDrill, saveSession } from "./gymStorage";
 import { cue, gymCueHooks } from "./gymAudio";
-import { ScoreCount, ConfettiBurst } from "./gymFx";
+import { ScoreCount, ConfettiBurst, LevelProgress, PointsDelta } from "./gymFx";
 import { sessionRankLabel } from "./gymProgressCore";
 import {
   makeRound,
@@ -30,7 +32,7 @@ import {
 // crossing (more interference), and add a third shape choice. You start each rep
 // when you are ready.
 
-const REPS = 9;
+const REPS = REPS_PER_SESSION;
 const REVEAL_HOLD_MS = 1800; // hold both results so the player can learn from them
 
 export default function TwoThingsDrill({ playerId = "default", onExit }) {
@@ -140,7 +142,12 @@ export default function TwoThingsDrill({ playerId = "default", onExit }) {
 
     // the shape cue, flashed near the top while showing
     if (sc.stage === "live" && sc.cueShowing) {
-      const cueY = H * 0.2;
+      // The cue flashes directly above the shape buttons instead of at the far
+      // end of the rink from them. It used to sit at H*0.2 while the buttons sat
+      // below the canvas — roughly 500px apart on a phone, in a drill that gives
+      // you 600ms to use both. That was a motor-travel problem wearing a
+      // cognitive-load costume (S2-25).
+      const cueY = H * (GYM_TARGET_MAX_Y - 0.08);
       drawShape(ctx, sc.round.cueShape, cx, cueY, Math.max(16, H * 0.07), {
         fill: "rgba(242,183,5,0.22)",
         stroke: "#0b1b2b",
@@ -374,9 +381,18 @@ export default function TwoThingsDrill({ playerId = "default", onExit }) {
     }, REVEAL_HOLD_MS);
   }
 
+  // The level the player came in at, for the results card (S2-27).
+  const startLevelRef = useRef(1);
+
   function start() {
     const d = getDrill(playerId, "twothings");
+    startLevelRef.current = d.level;
     engineRef.current = createAdaptiveLevel(d.level, {
+      // Dual-task load saturates well before the generic 20-level ceiling, and
+      // two bad reps in a row is a harsh relegation on a drill this demanding —
+      // that is the spiral that put a U13 player at level 4 (S2-25).
+      maxLevel: 12,
+      downStreak: 3,
       startUps: d.streak.ups,
       startDowns: d.streak.downs,
       ...gymCueHooks(),

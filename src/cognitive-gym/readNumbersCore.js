@@ -24,6 +24,23 @@ export const HARD_WATCH_MS = 1000;
 export const MIN_DIGITS = 1;
 export const MAX_DIGITS = 3;
 
+// --- Scoring curve ----------------------------------------------------------
+// The "error" this drill feeds gradedPoints is a REACTION TIME (answerMs over
+// the 3200 ms answer window), not a spatial miss. On the gym-wide DECAY of 0.12
+// that made a correct read at a normal 1.5 s reaction worth 20 points, at 2.4 s
+// worth 2, and from ~2.9 s on worth exactly 0 — a right answer that pays
+// nothing, and a "+2" that collides with the jersey numbers on screen (S2-24).
+// A gentler decay plus a floor keeps the reward for speed (a bang-on read is
+// still worth 5x a last-instant one) while a correct answer always scores.
+export const ANSWER_DECAY = 0.62;
+export const ANSWER_FLOOR = 150;
+
+// Points for a CORRECT read taken `norm` of the way through the answer window.
+// Split out from scoreRead so the curve itself is unit-testable.
+export function answerPoints(norm) {
+  return gradedPoints(norm, { decay: ANSWER_DECAY, floor: ANSWER_FLOOR });
+}
+
 // Number of skaters on the ice for a level.
 export function skaterCount(level) {
   return Math.round(lerp(EASY_SKATERS, HARD_SKATERS, levelT(level)));
@@ -81,12 +98,12 @@ export function makeFormation(level, { rng = Math.random } = {}) {
 //   answerMs    : ms from the numbers hiding to the tap
 //   windowMs    : the window over which speed is rewarded (instant -> max)
 // Success only when the tap lands on the asked-about skater. Points reward a
-// quick answer: feed gradedPoints a normalized value = answerMs/windowMs (0 =
-// instant -> max). A wrong pick or no pick is a miss worth 0.
+// quick answer via answerPoints (see the scoring-curve note above): instant ->
+// max, at the buzzer -> the floor. A wrong pick or no pick is a miss worth 0.
 // Returns { success, points, norm }.
 export function scoreRead(pickedIndex, targetIndex, answerMs, windowMs) {
   const norm = Math.min(Math.max(answerMs / (windowMs || 1), 0), 1);
   const success = pickedIndex === targetIndex && pickedIndex != null && pickedIndex >= 0;
   if (!success) return { success: false, points: 0, norm };
-  return { success: true, points: gradedPoints(norm), norm };
+  return { success: true, points: answerPoints(norm), norm };
 }

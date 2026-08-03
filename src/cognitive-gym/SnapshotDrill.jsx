@@ -4,12 +4,13 @@ import {
   setupCanvas,
   drawRink,
   pointerPos,
+  REPS_PER_SESSION,
 } from "./gymEngine";
 import { getDrill, saveSession } from "./gymStorage";
 import { cue, gymCueHooks } from "./gymAudio";
-import { ScoreCount, ConfettiBurst } from "./gymFx";
+import { ScoreCount, ConfettiBurst, LevelProgress, PointsDelta } from "./gymFx";
 import { sessionRankLabel } from "./gymProgressCore";
-import { makeFormation, scoreTap } from "./snapshotCore";
+import { makeFormation, scoreTap, pxPerFoot } from "./snapshotCore";
 
 // "Snapshot" — glance memory / perception span.
 // A formation of skaters flashes on the rink for a short window, then everything
@@ -20,8 +21,10 @@ import { makeFormation, scoreTap } from "./snapshotCore";
 // leveling. Higher levels flash shorter, add more clutter, and tighten the
 // window. Trains reading the ice in one heads-up look before the puck arrives.
 
-const REPS = 8;
-const REVEAL_HOLD_MS = 2400; // freeze the result so the player can study where the open man was
+const REPS = REPS_PER_SESSION;
+// No auto-advance: the reveal holds until the player taps Next look. 2.4 s was
+// never enough to check a twelve-skater formation against your own miss, and
+// this was the last drill in the gym that moved on by itself (S2-26).
 
 export default function SnapshotDrill({ playerId = "default", onExit }) {
   const rootRef = useRef(null);
@@ -136,22 +139,41 @@ export default function SnapshotDrill({ playerId = "default", onExit }) {
       sc.markers.forEach((mk) => drawMarker(ctx, mk, sc.r));
     }
 
-    // the reveal: where the open teammate really was, the player's tap, the
-    // success window, and a line showing how close they came.
+    // the reveal: the WHOLE formation ghosted back in, where the open teammate
+    // really was, the player's tap, the success window, and a line showing how
+    // close they came.
     if (sc.result && sc.open) {
       const o = sc.open;
-      // success window around the true spot
+
+      // Every skater who was on the ice, replayed at low opacity. Without this
+      // a miss showed one gold dot and your own X, with no way to check your
+      // answer against the picture you were actually reading (S2-26).
+      if (sc.markers) {
+        ctx.save();
+        ctx.globalAlpha = 0.5;
+        sc.markers.forEach((mk, i) => {
+          if (i === sc.openIndex) return; // drawn at full opacity below
+          drawMarker(ctx, mk, sc.r);
+        });
+        ctx.restore();
+      }
+
+      // Success window around the true spot. The window is a real distance in
+      // FEET, and one pixel is a different number of feet on each axis, so the
+      // honest drawing of it is an ellipse — it becomes a circle again the day
+      // the canvas gets the real rink aspect.
+      const s = pxPerFoot(W, H);
       ctx.save();
       ctx.globalAlpha = 0.55;
       ctx.setLineDash([4, 5]);
       ctx.strokeStyle = "#1b6cb0";
       ctx.lineWidth = 1.5;
       ctx.beginPath();
-      ctx.arc(o.x, o.y, o.hitR, 0, Math.PI * 2);
+      ctx.ellipse(o.x, o.y, o.hitFt * s.x, o.hitFt * s.y, 0, 0, Math.PI * 2);
       ctx.stroke();
       ctx.restore();
 
-      // the true open teammate (gold double ring)
+      // the true open teammate (gold double ring), full opacity, on top
       drawMarker(ctx, { x: o.x, y: o.y, kind: "open" }, sc.r);
 
       if (sc.tap) {
@@ -199,13 +221,14 @@ export default function SnapshotDrill({ playerId = "default", onExit }) {
     const open = {
       x: form.markers[form.openIndex].x,
       y: form.markers[form.openIndex].y,
-      hitR: form.hitR,
+      hitFt: form.hitFt,
     };
     sceneRef.current = {
       ctx,
       W,
       H,
       markers: form.markers,
+      openIndex: form.openIndex, // needed to skip the open marker in the ghost pass
       open,
       r: form.r,
       flashMs: form.flashMs,
@@ -239,25 +262,25 @@ export default function SnapshotDrill({ playerId = "default", onExit }) {
     }, sc.flashMs);
   }
 
-  const resolveRep = useCallback(
-    (success) => {
-      pointsRef.current += sceneRef.current.repPoints || 0;
-      setPoints(pointsRef.current);
-      const lvl = engineRef.current.record(success);
-      setLevel(lvl);
-      if (success) setHits((h) => h + 1);
-      const next = sceneRef.current.repIndex + 1;
-      schedule(() => {
-        if (next >= REPS) {
-          setPhase("done");
-        } else {
-          setRep(next);
-          startRep(next);
-        }
-      }, REVEAL_HOLD_MS);
-    },
-    [startRep]
-  );
+  const resolveRep = useCallback((success) => {
+    pointsRef.current += sceneRef.current.repPoints || 0;
+    setPoints(pointsRef.current);
+    const lvl = engineRef.current.record(success);
+    setLevel(lvl);
+    if (success) setHits((h) => h + 1);
+  }, []);
+
+  // The reveal stays on screen until the player taps Next look, matching Read
+  // the Numbers / Best Option / Shootout / Run the Play.
+  function advanceRep() {
+    const next = sceneRef.current.repIndex + 1;
+    if (next >= REPS) {
+      setPhase("done");
+    } else {
+      setRep(next);
+      startRep(next);
+    }
+  }
 
   function handleTap(evt) {
     const sc = sceneRef.current;
@@ -278,8 +301,12 @@ export default function SnapshotDrill({ playerId = "default", onExit }) {
     resolveRep(result.success);
   }
 
+  // The level the player came in at, for the results card (S2-27).
+  const startLevelRef = useRef(1);
+
   function start() {
     const d = getDrill(playerId, "snapshot");
+    startLevelRef.current = d.level;
     engineRef.current = createAdaptiveLevel(d.level, {
       startUps: d.streak.ups,
       startDowns: d.streak.downs,
@@ -323,13 +350,14 @@ export default function SnapshotDrill({ playerId = "default", onExit }) {
       const { ctx, W, H } = setupCanvas(canvas, host);
       const kx = W / prevW;
       const ky = H / prevH;
-      const k = Math.min(kx, ky);
       sc.ctx = ctx;
       sc.W = W;
       sc.H = H;
       sc.r = Math.max(11, Math.round(W * 0.026));
       sc.markers = sc.markers.map((m) => ({ ...m, x: m.x * kx, y: m.y * ky }));
-      sc.open = { x: sc.open.x * kx, y: sc.open.y * ky, hitR: sc.open.hitR * k };
+      // hitFt is a distance on the ice, so a resize never rescales it — that is
+      // the point of expressing the window in feet.
+      sc.open = { x: sc.open.x * kx, y: sc.open.y * ky, hitFt: sc.open.hitFt };
       if (sc.puck) sc.puck = { x: sc.puck.x * kx, y: sc.puck.y * ky };
       if (sc.tap) sc.tap = { x: sc.tap.x * kx, y: sc.tap.y * ky };
       render();
@@ -340,14 +368,32 @@ export default function SnapshotDrill({ playerId = "default", onExit }) {
 
   useEffect(() => () => clearTimers(), []);
 
+  // Action Rail rule 7: Space fires the primary rail action.
+  useEffect(() => {
+    if (phase !== "playing") return undefined;
+    const onKey = (e) => {
+      if (e.code !== "Space" && e.key !== " ") return;
+      if (stage === "ready") {
+        e.preventDefault();
+        showFormation();
+      } else if (stage === "reveal") {
+        e.preventDefault();
+        advanceRep();
+      }
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [phase, stage]);
+
   const hint = {
     ready: "Tap Show me, then take one quick snapshot of the ice.",
     flash: "Snapshot. Find the open teammate (gold).",
     recall: "Now tap where the open teammate was.",
     reveal: last
       ? last.success
-        ? `Found the open man! +${last.repPoints} (${last.distFt} ft off)`
-        : `Not quite, ${last.distFt} ft away. The gold ring shows where he was.`
+        ? `Found the open player! +${last.repPoints} (${last.distFt} ft off)`
+        : `Not quite, ${last.distFt} ft away. The gold ring shows where they were.`
       : "",
   }[stage];
 
@@ -423,27 +469,38 @@ export default function SnapshotDrill({ playerId = "default", onExit }) {
         </div>
       )}
 
-      <canvas
-        ref={canvasRef}
-        className="gym-canvas"
-        style={{ display: phase === "playing" ? "block" : "none" }}
-        onMouseDown={handleTap}
-        onTouchStart={handleTap}
-      />
-
-      {phase === "playing" && stage === "ready" && (
-        <div className="gym-row" style={{ marginBottom: 10 }}>
-          <button className="gym-btn" onClick={showFormation}>
-            Show me
-          </button>
-        </div>
-      )}
-
+      {/* Action Rail rule 6: hint above the play surface, rail last. */}
       {phase === "playing" && (
         <p className="gym-hint" aria-live="polite">
           {hint}
         </p>
       )}
+
+      <div className="gym-stage" style={{ display: phase === "playing" ? "block" : "none" }}>
+        <canvas
+          ref={canvasRef}
+          className="gym-canvas"
+          onMouseDown={handleTap}
+          onTouchStart={handleTap}
+        />
+
+        {phase === "playing" && stage === "ready" && (
+          <div className="gym-rail">
+            <button className="gym-btn" onClick={showFormation}>
+              Show me
+              <kbd className="gym-key">space</kbd>
+            </button>
+          </div>
+        )}
+        {phase === "playing" && stage === "reveal" && (
+          <div className="gym-rail">
+            <button className="gym-btn" onClick={advanceRep}>
+              {rep + 1 >= REPS ? "See the result" : "Next look"}
+              <kbd className="gym-key">space</kbd>
+            </button>
+          </div>
+        )}
+      </div>
 
       {phase === "done" && (
         <div className="gym-card">
@@ -451,11 +508,14 @@ export default function SnapshotDrill({ playerId = "default", onExit }) {
           <ScoreCount value={points} />
           <ConfettiBurst fire={!!bestLabel} />
           {bestLabel && <p className="gym-best">{bestLabel}</p>}
+          <LevelProgress
+            from={startLevelRef.current}
+            to={level}
+            toPromote={engineRef.current ? engineRef.current.toPromote : 3}
+          />
+          {saved && <PointsDelta points={points} sessions={saved.sessions} />}
           <p>
-            {points} points. {hits} of {REPS} open teammates found. Level {level}.
-            {saved && (saved.bestPoints || 0) <= points && points > 0
-              ? " New best."
-              : ""}
+            {points} points. {hits} of {REPS} open teammates found.
           </p>
           <div className="gym-row">
             <button className="gym-btn" onClick={start}>

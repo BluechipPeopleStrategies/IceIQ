@@ -7,10 +7,12 @@ import {
   setupCanvas,
   drawRink,
   pointerPos,
+  targetMaxY,
+  REPS_PER_SESSION,
 } from "./gymEngine";
 import { getDrill, saveSession } from "./gymStorage";
 import { cue, gymCueHooks } from "./gymAudio";
-import { ScoreCount, ConfettiBurst } from "./gymFx";
+import { ScoreCount, ConfettiBurst, LevelProgress, PointsDelta } from "./gymFx";
 import { sessionRankLabel } from "./gymProgressCore";
 import { shiftPoints } from "./trackingCore";
 
@@ -19,8 +21,17 @@ import { shiftPoints } from "./trackingCore";
 // When play stops, the player taps the three they were tracking. Trains rink
 // awareness without puck-watching.
 
-const SHIFTS = 6;
+const SHIFTS = REPS_PER_SESSION;
 const TARGETS = 3;
+
+// Reading order for the keyboard bindings: left-to-right, then top-to-bottom,
+// with dots on roughly the same row treated as one row.
+function readingOrder(dots) {
+  const rowTol = (dots[0] ? dots[0].r : 12) * 2;
+  return dots
+    .map((d, i) => ({ i, x: d.x, y: d.y }))
+    .sort((a, b) => (Math.abs(a.y - b.y) > rowTol ? a.y - b.y : a.x - b.x));
+}
 
 // Build a field of non-overlapping skaters with random velocities. Difficulty
 // ramps hard with level: more skaters (5 -> 16), faster movement, a longer
@@ -35,7 +46,9 @@ function makeDots(W, H, level) {
 
   while (dots.length < count && guard < 1500) {
     guard += 1;
-    const dot = { x: rand(r + 6, W - r - 6), y: rand(r + 6, H - r - 6), r };
+    // Action Rail: keep every skater out of the rail band so the Lock in pill
+    // never sits on top of a dot you have to tap (S2-28).
+    const dot = { x: rand(r + 6, W - r - 6), y: rand(r + 6, targetMaxY(H) - r - 6), r };
     if (dots.every((o) => Math.hypot(o.x - dot.x, o.y - dot.y) > r * 2.3)) {
       const ang = rand(0, Math.PI * 2);
       dot.vx = Math.cos(ang) * speed;
@@ -178,8 +191,11 @@ export default function TrackingDrill({ playerId = "default", onExit }) {
             d.y = d.r;
             d.vy = -d.vy;
           }
-          if (d.y > H - d.r) {
-            d.y = H - d.r;
+          // skaters bounce off the rail band, not the canvas edge — otherwise a
+          // dot drifts under the Lock in pill mid-shift
+          const yFloor = targetMaxY(H) - d.r;
+          if (d.y > yFloor) {
+            d.y = yFloor;
             d.vy = -d.vy;
           }
         });
@@ -235,6 +251,15 @@ export default function TrackingDrill({ playerId = "default", onExit }) {
       ctx.textBaseline = "top";
       ctx.fillText("Baylor's Pick", W * 0.5, 6);
       ctx.restore();
+
+      // Keyboard index labels. Computed once a frame and drawn ONLY at "pick",
+      // i.e. after the skaters have stopped, so a number can never help you
+      // follow a dot during the tracking phase (S2-28).
+      let keyRank = null;
+      if (sc.stage === "pick") {
+        keyRank = new Map();
+        readingOrder(sc.dots).forEach((o, n) => keyRank.set(o.i, n + 1));
+      }
 
       sc.dots.forEach((d, idx) => {
         const isTarget = sc.targetIdx.has(idx);
@@ -294,6 +319,15 @@ export default function TrackingDrill({ playerId = "default", onExit }) {
             ctx.lineTo(d.x - s, d.y + s);
           }
           ctx.stroke();
+        }
+
+        // the digit that selects this skater from the keyboard
+        if (keyRank && keyRank.has(idx) && keyRank.get(idx) <= 9) {
+          ctx.fillStyle = isPicked ? "#f4f9fc" : "#0b1b2b";
+          ctx.font = `700 ${Math.round(d.r * 0.9)}px system-ui, sans-serif`;
+          ctx.textAlign = "center";
+          ctx.textBaseline = "middle";
+          ctx.fillText(String(keyRank.get(idx)), d.x, d.y);
         }
 
         // soccer ball on the ball-carrier — shown while memorizing and on reveal
@@ -370,8 +404,12 @@ export default function TrackingDrill({ playerId = "default", onExit }) {
     resolveShift(correctCount);
   }
 
+  // The level the player came in at, for the results card (S2-27).
+  const startLevelRef = useRef(1);
+
   function start() {
     const d = getDrill(playerId, "tracking");
+    startLevelRef.current = d.level;
     engineRef.current = createAdaptiveLevel(d.level, {
       startUps: d.streak.ups,
       startDowns: d.streak.downs,
@@ -449,14 +487,75 @@ export default function TrackingDrill({ playerId = "default", onExit }) {
     };
   }, [phase]);
 
+  // Keyboard control (S2-28, "if there's a way we can have a keyboard piece in
+  // here that would be ideal"). Digits index the skaters in reading order, which
+  // is stable within a shift because the dots have stopped by the "pick" stage.
+  useEffect(() => {
+    if (phase !== "playing") return undefined;
+    const onKey = (e) => {
+      const sc = sceneRef.current;
+      if (!sc || !sc.dots) return;
+
+      if (e.code === "Space" || e.key === " ") {
+        if (stage === "ready") {
+          e.preventDefault();
+          beginWatch();
+        } else if (stage === "feedback") {
+          e.preventDefault();
+          advanceShift();
+        }
+        return;
+      }
+      if (stage !== "pick") return;
+
+      if (e.key === "Enter") {
+        e.preventDefault();
+        lockIn();
+        return;
+      }
+      if (e.key === "Backspace") {
+        e.preventDefault();
+        const last = [...sc.picks].pop();
+        if (last == null) return;
+        sc.picks.delete(last);
+        if (sc.ballCall === last) {
+          sc.ballCall = null;
+          setBallCall(null);
+        }
+        setRemaining(TARGETS - sc.picks.size);
+        return;
+      }
+
+      const n = parseInt(e.key, 10);
+      if (!Number.isInteger(n) || n < 1) return;
+      const target = readingOrder(sc.dots)[n - 1];
+      if (!target) return;
+      e.preventDefault();
+      const idx = target.i;
+      if (sc.picks.has(idx)) {
+        // pressing the same digit again is the soccer-ball call, mirroring the
+        // double-tap the pointer already has
+        sc.ballCall = idx;
+        setBallCall(idx);
+        return;
+      }
+      if (sc.picks.size >= TARGETS) return;
+      sc.picks.add(idx);
+      setRemaining(TARGETS - sc.picks.size);
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [phase, stage]);
+
   const hint = {
     ready: shift < 3 ? "Take a deep breath, then tap Start shift" : "",
     watch: "Memorize the gold teammates",
     track: "Track them",
     pick:
       remaining > 0
-        ? `Tap your ${remaining} teammate${remaining === 1 ? "" : "s"} (double-tap the ⚽ one)`
-        : "Double-tap your soccer-ball guess, then Lock in",
+        ? `Tap your ${remaining} teammate${remaining === 1 ? "" : "s"} (double-tap the ⚽ one, or press its number twice)`
+        : "Double-tap your soccer-ball guess, then Lock in (Enter)",
     feedback:
       shiftResult === null
         ? ""
@@ -528,7 +627,7 @@ export default function TrackingDrill({ playerId = "default", onExit }) {
                 <strong>Why it matters</strong>
                 <span>
                   Knowing where your options are without staring at the puck is how
-                  you find the open man, break out cleanly, and see the check before
+                  you find the open player, break out cleanly, and see the check before
                   it arrives.
                 </span>
               </div>
@@ -540,37 +639,46 @@ export default function TrackingDrill({ playerId = "default", onExit }) {
 
           {phase === "playing" && <p className="gym-hint">{hint}</p>}
 
-          {phase === "playing" && stage === "ready" && (
-            <div className="gym-row" style={{ marginBottom: 10 }}>
-              <button className="gym-btn" onClick={beginWatch}>
-                Start shift
-              </button>
-            </div>
-          )}
+          {/* Action Rail. This drill used to render its controls BEFORE the
+              canvas, so after tapping three dots on the ice the hand travelled
+              up and out of the play surface — the longest control travel in the
+              gym (S2-28). Now every control floats inside the rink, in the band
+              the skaters are kept out of. */}
+          <div className="gym-stage" style={{ display: phase === "playing" ? "block" : "none" }}>
+            <canvas
+              ref={canvasRef}
+              className="gym-canvas"
+              onMouseDown={handlePick}
+              onTouchStart={handlePick}
+            />
 
-          {phase === "playing" && stage === "pick" && remaining === 0 && (
-            <div className="gym-row" style={{ marginBottom: 10 }}>
-              <button className="gym-btn" onClick={lockIn}>
-                Lock in
-              </button>
-            </div>
-          )}
+            {phase === "playing" && stage === "ready" && (
+              <div className="gym-rail">
+                <button className="gym-btn" onClick={beginWatch}>
+                  Start shift
+                  <kbd className="gym-key">space</kbd>
+                </button>
+              </div>
+            )}
 
-          {phase === "playing" && stage === "feedback" && (
-            <div className="gym-row" style={{ marginBottom: 10 }}>
-              <button className="gym-btn" onClick={advanceShift}>
-                Next shift
-              </button>
-            </div>
-          )}
+            {phase === "playing" && stage === "pick" && remaining === 0 && (
+              <div className="gym-rail">
+                <button className="gym-btn" onClick={lockIn}>
+                  Lock in
+                  <kbd className="gym-key">enter</kbd>
+                </button>
+              </div>
+            )}
 
-          <canvas
-            ref={canvasRef}
-            className="gym-canvas"
-            style={{ display: phase === "playing" ? "block" : "none" }}
-            onMouseDown={handlePick}
-            onTouchStart={handlePick}
-          />
+            {phase === "playing" && stage === "feedback" && (
+              <div className="gym-rail">
+                <button className="gym-btn" onClick={advanceShift}>
+                  {shift + 1 >= SHIFTS ? "See the result" : "Next shift"}
+                  <kbd className="gym-key">space</kbd>
+                </button>
+              </div>
+            )}
+          </div>
 
           {phase === "done" && (
             <div className="gym-card">
@@ -578,9 +686,14 @@ export default function TrackingDrill({ playerId = "default", onExit }) {
               <ScoreCount value={points} />
               <ConfettiBurst fire={!!bestLabel} />
               {bestLabel && <p className="gym-best">{bestLabel}</p>}
+              <LevelProgress
+                from={startLevelRef.current}
+                to={level}
+                toPromote={engineRef.current ? engineRef.current.toPromote : 3}
+              />
+              {saved && <PointsDelta points={points} sessions={saved.sessions} />}
               <p>
                 {points} points. {correct} of {SHIFTS * TARGETS} teammates tracked.
-                Level {level}.
                 {bonus > 0 ? ` ${bonus} soccer ball${bonus === 1 ? "" : "s"} ⚽` : ""}
               </p>
               <div className="gym-row">

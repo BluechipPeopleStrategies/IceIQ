@@ -60,6 +60,30 @@ export function createAdaptiveLevel(startLevel = 1, opts = {}) {
   };
 }
 
+// --- Session length ---------------------------------------------------------
+// Reps in one gym session. Deliberately short: a session should be finishable
+// in a couple of minutes so it gets played often, not once. Thomas, 2026-08-03:
+// "why don't we do five reps on all of these games, for now, ten is a lot."
+// Every drill imports this rather than carrying its own number, so the session
+// length is one edit rather than twelve.
+export const REPS_PER_SESSION = 5;
+
+// --- Action Rail ------------------------------------------------------------
+// Every drill puts the controls the player needs to progress in ONE fixed,
+// centred band INSIDE the play surface, in the same place in every drill. The
+// band is reserved: no drill may place a tap target in it, and moving targets
+// bounce off this boundary rather than the canvas edge. Otherwise a control
+// lands on top of something you have to tap, which is exactly the complaint
+// behind S2-23 / S2-24 / S2-25 / S2-28. Keep in sync with --gym-rail-band in
+// cognitive-gym.css.
+export const GYM_RAIL_BAND = 0.14;
+export const GYM_TARGET_MAX_Y = 1 - GYM_RAIL_BAND; // 0.86
+
+// Largest y a tap target may occupy on a canvas of height H.
+export function targetMaxY(H) {
+  return H * GYM_TARGET_MAX_Y;
+}
+
 // Map a level (1..maxLevel) onto a 0..1 difficulty fraction.
 export function levelT(level, maxLevel = 20) {
   return (Math.min(level, maxLevel) - 1) / (maxLevel - 1);
@@ -121,9 +145,19 @@ function faceoffDot(ctx, x, y) {
 // Draw a hockey-rink backdrop that reads like a real sheet: rounded boards with
 // a glass line, two blue lines, the red center line + circle, four end-zone
 // faceoff circles + dots, goal lines, and blue creases.
+// Board geometry, exported so generators can agree with what drawRink actually
+// draws. A generator that samples the full rectangle will happily place a
+// target — or an answer — in a corner that is outside the boards (S2-29).
+export const BOARD_MARGIN = 2;
+export const BOARD_CORNER_FRAC = 0.22;
+
+export function boardCornerRadius(W, H) {
+  return Math.min(W, H) * BOARD_CORNER_FRAC;
+}
+
 export function drawRink(ctx, W, H) {
-  const R = Math.min(W, H) * 0.22; // board corner radius
-  const m = 2;
+  const R = boardCornerRadius(W, H); // board corner radius
+  const m = BOARD_MARGIN;
 
   // ice
   roundRectPath(ctx, m, m, W - 2 * m, H - 2 * m, R);

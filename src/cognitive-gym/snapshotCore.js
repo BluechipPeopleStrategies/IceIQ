@@ -2,7 +2,7 @@
 // Pure helpers for Snapshot (glance memory / perception span): build a formation
 // of skaters that flashes for a moment, then grade where the player taps for the
 // open teammate. No DOM, no canvas, so it is unit-testable in plain Node.
-import { levelT, lerp } from "./gymEngine.js";
+import { levelT, lerp, targetMaxY } from "./gymEngine.js";
 import { gradedPoints } from "./gymPoints.js";
 import { RINK_LENGTH_FT, RINK_WIDTH_FT } from "./anticipationCore.js";
 
@@ -16,11 +16,30 @@ export const HARD_FLASH_MS = 280;
 export const EASY_MARKERS = 4;
 export const HARD_MARKERS = 12;
 
-// Success-window radius as a fraction of min(W, H). A tap within this distance of
-// the open teammate's true spot counts as a hit (drives leveling). Tightens with
-// level so a higher level is genuinely harder.
+// Success-window radius as a fraction of min(W, H). Legacy: the window was a
+// pixel circle, but a pixel is a different number of feet on each axis (the
+// canvas is not rink-proportioned), so a horizontal miss was ~1.5x harder than
+// an identical-looking vertical one and the reported footage disagreed with the
+// pass/fail. Kept only for callers that still pass a pixel window.
 export const EASY_HIT_FRAC = 0.16;
 export const HARD_HIT_FRAC = 0.06;
+
+// The window as a REAL DISTANCE ON THE ICE, which means the same thing whatever
+// shape the canvas is (S2-26: "have the answers be consistent with the rink
+// dimensions ... make sure that we are capturing the distance").
+export const EASY_HIT_FT = 18; // "same spot" for a U7 — about a faceoff circle
+export const HARD_HIT_FT = 6;  // "same spot" for a U18 — a stick length
+export const REFERENCE_FT = 40; // matches anticipationCore: ONE distance scale
+
+export function hitRadiusFt(level) {
+  return lerp(EASY_HIT_FT, HARD_HIT_FT, levelT(level));
+}
+
+// Pixels per foot on each axis. Exported so the renderer can draw the window as
+// the ELLIPSE it really is while the canvas is not rink-proportioned.
+export function pxPerFoot(W, H) {
+  return { x: (W || 1) / RINK_LENGTH_FT, y: (H || 1) / RINK_WIDTH_FT };
+}
 
 // How long the formation flashes, in ms, for a level.
 export function flashMs(level) {
@@ -50,11 +69,14 @@ export function makeFormation(level, W, H, { rng = Math.random } = {}) {
   const minGap = r * 2.4; // center-to-center spacing so none overlap
   const markers = [];
   let guard = 0;
+  // Action Rail: the open teammate must never be under the Show me / Next look
+  // button, so no marker is placed in the rail band.
+  const yMax = targetMaxY(H) - pad;
 
   while (markers.length < count && guard < 4000) {
     guard += 1;
     const x = pad + rng() * (W - 2 * pad);
-    const y = pad + rng() * (H - 2 * pad);
+    const y = pad + rng() * (yMax - pad);
     if (markers.every((o) => Math.hypot(o.x - x, o.y - y) >= minGap)) {
       markers.push({ x, y, kind: "teammate" });
     }
@@ -72,30 +94,33 @@ export function makeFormation(level, W, H, { rng = Math.random } = {}) {
     markers,
     openIndex,
     flashMs: flashMs(level),
-    hitR: hitRadius(level, W, H),
+    hitFt: hitRadiusFt(level),
+    hitR: hitRadius(level, W, H), // legacy pixel window, kept for drawing fallbacks
     r,
   };
 }
 
 // Grade a tap against the open teammate's true position.
 //   tap     : { x, y } where the player tapped
-//   openPos : { x, y, hitR } the true open-teammate spot (hitR = window in px)
-//   W, H    : canvas size, used to normalize the error for points
-// Success when the tap is within the success window (same spot as the open
-// teammate). normError is the straight-line miss normalized by the canvas
-// diagonal (0 = exact), so points reward landing dead-on, not just inside the
-// ring. Returns { success, normError, distPx, distFt, points }.
+//   openPos : { x, y, hitFt } the true spot (hitFt = success window in FEET)
+//   W, H    : canvas size, used to convert pixels to feet
+// Both the pass/fail and the points are measured in real feet, so a miss of a
+// given distance on the ice scores the same in every direction. The old pixel
+// window was a circle on screen but an ellipse on the ice.
+//
+// `openPos.hitR` (a pixel window) is still honoured when no hitFt is supplied,
+// so older callers keep working. Returns { success, normError, distPx, distFt,
+// points }.
 export function scoreTap(tap, openPos, W, H) {
   const dx = tap.x - openPos.x;
   const dy = tap.y - openPos.y;
   const distPx = Math.sqrt(dx * dx + dy * dy);
-  const success = distPx <= openPos.hitR;
+  const s = pxPerFoot(W, H);
+  const distFt = Math.hypot(dx / s.x, dy / s.y);
+  const feetMode = openPos.hitFt != null;
+  const success = feetMode ? distFt <= openPos.hitFt : distPx <= openPos.hitR;
   const diag = Math.sqrt(W * W + H * H) || 1;
-  const normError = distPx / diag;
-  const distFt = Math.sqrt(
-    Math.pow(dx * (RINK_LENGTH_FT / (W || 1)), 2) +
-    Math.pow(dy * (RINK_WIDTH_FT / (H || 1)), 2)
-  );
+  const normError = feetMode ? Math.min(1, distFt / REFERENCE_FT) : distPx / diag;
   const points = gradedPoints(normError);
   return { success, normError, distPx, distFt, points };
 }

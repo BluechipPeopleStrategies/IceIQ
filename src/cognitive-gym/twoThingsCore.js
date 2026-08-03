@@ -15,44 +15,56 @@ export const SHAPES = ["circle", "triangle", "square"];
 
 // How long the puck takes to slide all the way across the sheet, in ms. Shrinks
 // hard with level so the whole rep happens faster and the two tasks crowd closer.
-export const EASY_TRAVEL_MS = 2600;
-export const HARD_TRAVEL_MS = 1300;
+// Widened 2600/1300 -> 3200/1700 as part of the level-4 nerf (S2-25, "this game
+// is way too hard at level four").
+export const EASY_TRAVEL_MS = 3200;
+export const HARD_TRAVEL_MS = 1700;
 
 // The tap window around the center crossing, in ms. A tap counts as catching the
 // crossing only if it lands within +/- half this window of the exact crossing
 // time. Tightens hard with level so timing the puck gets genuinely harder.
-// Widened from 520/200 so the timing call stays winnable even at the top level.
-export const EASY_CROSS_WINDOW_MS = 650;
-export const HARD_CROSS_WINDOW_MS = 320;
+// Widened from 520/200, then again from 650/320 (S2-25).
+export const EASY_CROSS_WINDOW_MS = 900;
+export const HARD_CROSS_WINDOW_MS = 420;
 
 // How long the shape cue is shown / answerable, in ms. Shorter = harder: a
 // shorter look at the shape and less time to pick it.
-export const EASY_CUE_WINDOW_MS = 1500;
-export const HARD_CUE_WINDOW_MS = 650;
+export const EASY_CUE_WINDOW_MS = 2200;
+export const HARD_CUE_WINDOW_MS = 900;
 
 // How many shape buttons are offered (the answer plus decoys). Climbs 2 -> 3 so
 // there is a real choice to make at higher levels.
 export const MIN_CHOICES = 2;
 export const MAX_CHOICES = 3;
 
+// A ramp exponent instead of a straight lerp. On the linear ramp level 4 already
+// sat 16% of the way to the hardest setting, which is how a player ended up
+// stuck there (S2-25). The exponent holds the low levels near the easy end and
+// puts the real squeeze in the top third, where it has been earned. Same trick
+// shootoutCore.holeOpenMs already uses.
+export const RAMP_EXP = 1.6;
+function ramp(level) {
+  return Math.pow(levelT(level), RAMP_EXP);
+}
+
 // Puck travel time at a level (shorter = harder).
 export function travelMs(level) {
-  return Math.round(lerp(EASY_TRAVEL_MS, HARD_TRAVEL_MS, levelT(level)));
+  return Math.round(lerp(EASY_TRAVEL_MS, HARD_TRAVEL_MS, ramp(level)));
 }
 
 // Center-crossing tap window at a level (tighter = harder).
 export function crossWindowMs(level) {
-  return Math.round(lerp(EASY_CROSS_WINDOW_MS, HARD_CROSS_WINDOW_MS, levelT(level)));
+  return Math.round(lerp(EASY_CROSS_WINDOW_MS, HARD_CROSS_WINDOW_MS, ramp(level)));
 }
 
 // Shape-cue window at a level (shorter = harder).
 export function cueWindowMs(level) {
-  return Math.round(lerp(EASY_CUE_WINDOW_MS, HARD_CUE_WINDOW_MS, levelT(level)));
+  return Math.round(lerp(EASY_CUE_WINDOW_MS, HARD_CUE_WINDOW_MS, ramp(level)));
 }
 
 // How many shape choices to offer at a level: 2 early, 3 at the top.
 export function shapeChoiceCount(level) {
-  const t = levelT(level);
+  const t = ramp(level);
   const c = Math.floor(lerp(MIN_CHOICES, MAX_CHOICES + 0.999, t));
   return Math.min(MAX_CHOICES, Math.max(MIN_CHOICES, c));
 }
@@ -63,8 +75,13 @@ export function shapeChoiceCount(level) {
 // the shape and time the puck at nearly the same instant). The puck crosses
 // center at the midpoint of its travel (frac 0.5), so easy cues fire early
 // (~0.2 of travel) and hard cues fire right at the crossing (~0.48).
-export const EASY_CUE_FRAC = 0.2;
-export const HARD_CUE_FRAC = 0.48;
+// At HARD_CUE_FRAC 0.48 the cue fired essentially ON the crossing (which is at
+// frac 0.5), so the two jobs were physically impossible to do in sequence — you
+// had to read a shape, find a button, and time a moving puck inside the same
+// few hundred ms. 0.34 keeps real interference while leaving the cue readable
+// before the crossing window opens (S2-25).
+export const EASY_CUE_FRAC = 0.14;
+export const HARD_CUE_FRAC = 0.34;
 
 // Build one round for a level. Returns:
 //   { travelMs, crossWindowMs, crossAtMs, cueShape, cueChoices, cueAnswerIndex,
@@ -86,7 +103,7 @@ export function makeRound(level, { rng = Math.random } = {}) {
   // The shape cue fires at a fraction of travel that creeps toward the crossing
   // as the level climbs (more interference). Clamp into (0, travel) so the cue
   // always appears while the puck is still on the ice.
-  const cueFrac = lerp(EASY_CUE_FRAC, HARD_CUE_FRAC, levelT(level));
+  const cueFrac = lerp(EASY_CUE_FRAC, HARD_CUE_FRAC, ramp(level));
   let cueAtMs = Math.round(travel * cueFrac);
   cueAtMs = Math.min(travel - 1, Math.max(1, cueAtMs));
 
