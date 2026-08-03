@@ -3,6 +3,7 @@
 
 import { useState, useEffect, useRef } from "react";
 import * as SB from "./supabase";
+import { canSelfRate } from "./data/selfRating.js";
 import {
   C, FONT, LEVELS, ALL_AGES_MODE, DEFAULT_MIX_LEVEL,
   Screen, Card, Pill, Label, PrimaryBtn, BackBtn, ProgressBar, StickyHeader,
@@ -1666,6 +1667,23 @@ function getSelfPromptLocal(level, skill) {
 
 export function SkillsOnboarding({ player, tier, onSave, onBack, onUpgrade }) {
   const scale = getSelfScale(player.level);
+  // Belt and braces: the quest that routes here is already hidden for U7/U9, but
+  // the screen is reachable by other paths and getSelfScale() returns [] for a
+  // band with no self scale -- which rendered an empty ladder with nothing to
+  // tap. Say why instead of showing nothing.
+  if (!canSelfRate(player.level) || !scale.length) {
+    return (
+      <div style={{minHeight:"100vh",background:C.bg,color:C.white,fontFamily:FONT.body,padding:"2rem 1.25rem"}}>
+        <div style={{maxWidth:520,margin:"0 auto"}}>
+          <BackBtn onClick={onBack}/>
+          <div style={{fontFamily:FONT.display,fontWeight:800,fontSize:"1.5rem",margin:"1rem 0 .5rem"}}>Not for this age group yet.</div>
+          <div style={{fontSize:14,color:C.dim,lineHeight:1.6}}>
+            Rating your own skills starts at U11. At this age the game is about touches and having fun, not scoring yourself out of five. Your coach can still leave you feedback.
+          </div>
+        </div>
+      </div>
+    );
+  }
   const hasFullAccess = canAccess("fullSkillRating", tier).allowed;
   const allSkills = (SKILLS[player.level] || []).flatMap(c => c.skills.map(s => ({...s, catName: c.cat, catIcon: c.icon})));
   const pool = hasFullAccess ? allSkills : allSkills.filter(s => FREE_SKILL_IDS.has(s.id));
@@ -1723,7 +1741,7 @@ export function SkillsOnboarding({ player, tier, onSave, onBack, onUpgrade }) {
               <button key={opt.value} onClick={() => advance(opt.value)}
                 style={{background:C.bgElevated,border:`1px solid ${getScaleColor(scale, opt.value)}40`,borderLeft:`3px solid ${getScaleColor(scale, opt.value)}`,borderRadius:10,padding:".8rem 1rem",cursor:"pointer",color:C.white,fontFamily:FONT.body,fontSize:14,fontWeight:600,textAlign:"left"}}>
                 <div>{opt.label}</div>
-                {opt.desc && <div style={{fontSize:11,color:C.dim,marginTop:2,fontWeight:400}}>{opt.desc}</div>}
+                {(opt.sub || opt.desc) && <div style={{fontSize:11,color:C.dim,marginTop:2,fontWeight:400}}>{opt.sub || opt.desc}</div>}
               </button>
             ))}
           </div>
@@ -1731,10 +1749,6 @@ export function SkillsOnboarding({ player, tier, onSave, onBack, onUpgrade }) {
         <div style={{display:"flex",gap:".5rem",flexWrap:"wrap"}}>
           <button onClick={() => setIdx(Math.max(0, idx - 1))} disabled={idx === 0}
             style={{background:"none",border:`1px solid ${C.border}`,borderRadius:10,padding:".7rem 1rem",cursor:idx===0?"default":"pointer",color:idx===0?C.dimmest:C.dimmer,fontSize:13,fontFamily:FONT.body,opacity:idx===0?0.5:1}}>← Back</button>
-          <button onClick={() => advance("n/a")} disabled={saving}
-            style={{flex:"1 1 40%",background:"none",border:`1px solid ${C.border}`,borderRadius:10,padding:".7rem 1rem",cursor:"pointer",color:C.dimmer,fontSize:13,fontFamily:FONT.body}}>
-            Not applicable
-          </button>
           <button onClick={() => advance(null)} disabled={saving}
             style={{flex:"1 1 40%",background:"none",border:`1px solid ${C.border}`,borderRadius:10,padding:".7rem 1rem",cursor:"pointer",color:C.dimmer,fontSize:13,fontFamily:FONT.body}}>
             {idx + 1 === total ? (saving ? "Saving…" : "Skip & finish") : "Skip →"}

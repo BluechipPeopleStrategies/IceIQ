@@ -19,6 +19,8 @@ import { COMPETENCIES, getJourneyV2, ACTIVITY_METRICS, GAME_SENSE_UNLOCK_SESSION
 import { getTrainingLog, seedDemoTrainingForRoster } from "./utils/trainingLog.js";
 import { upsertResult, skipResult, isSkipped, answeredCount } from "./utils/quizResults.js";
 import { preAppScreen } from "./utils/authRouting.js";
+import { canSelfRate } from "./data/selfRating.js";
+import { isChunkLoadError, shouldReloadForChunkError } from "./utils/chunkReload.js";
 import { buildU11ForwardPreview, PREVIEW_PLAYER_ID } from "./data/previewPlayer.js";
 import { enqueueReview, getSavedReview, flushQueue } from "./review/reviewQueue.js";
 import { boardHash } from "./review/reviewCore.js";
@@ -439,22 +441,41 @@ import { loadQB, preloadQB } from "./qbLoader.js";
 import { getWeekKey, getThisWeekRecord, markWeeklyComplete, seededShuffle, weekSeed, formatCountdown, msUntilNextWeek, getNextUnlockDate, formatUnlockMoment, getFreeQuizCount, isAtFreeQuizCap, incrementFreeQuizCount, FREE_WEEKLY_QUIZ_CAP } from "./utils/weeklyChallenge.js";
 import { COMPETENCY_LADDER, RATING_SCALES, SKILLS, FREE_SKILL_IDS, ladderFor, getSelfScale, getCoachScale, getScaleColor, getScaleLabel, normalizeRating, getDiscussionPrompt, migrateRatings, PERCENTILE_RATINGS, PR_COLOR, PR_LABEL } from "./data/constants.js";
 
-const AdminReports = lazy(() => import("./screens.jsx").then(m => ({ default: m.AdminReports })));
-const QuestionReviewScreen = lazy(() => import("./screens.jsx").then(m => ({ default: m.QuestionReviewScreen })));
-const ReviewScreen = lazy(() => import("./review/ReviewScreen.jsx"));
-const BrowseScreen = lazy(() => import("./review/BrowseScreen.jsx"));
-const ScenarioPlayground = lazy(() => import("./scenario/ScenarioPlayground.jsx").then(m => ({ default: m.ScenarioPlayground })));
-const ReadThePlay = lazy(() => import("./play/ReadThePlay.jsx"));
-const ProfileSetup = lazy(() => import("./screens.jsx").then(m => ({ default: m.ProfileSetup })));
-const PlansScreen = lazy(() => import("./screens.jsx").then(m => ({ default: m.PlansScreen })));
-const GameSenseReportScreen = lazy(() => import("./screens.jsx").then(m => ({ default: m.GameSenseReportScreen })));
-const SkillsOnboarding = lazy(() => import("./screens.jsx").then(m => ({ default: m.SkillsOnboarding })));
-const InsightsScreen = lazy(() => import("./screens.jsx").then(m => ({ default: m.InsightsScreen })));
-const ParentAssessmentScreen = lazy(() => import("./screens.jsx").then(m => ({ default: m.ParentAssessmentScreen })));
-const ParentsPage = lazy(() => import("./screens.jsx").then(m => ({ default: m.ParentsPage })));
-const CoachesPage = lazy(() => import("./screens.jsx").then(m => ({ default: m.CoachesPage })));
-const PlayersPage = lazy(() => import("./screens.jsx").then(m => ({ default: m.PlayersPage })));
-const AssociationsPage = lazy(() => import("./screens.jsx").then(m => ({ default: m.AssociationsPage })));
+
+// Wraps a lazy() factory so a chunk 404 after a deploy reloads the page once
+// instead of surfacing as "Something went wrong". See utils/chunkReload.js for
+// why this happens at all.
+function lazyWithReload(factory) {
+  return lazy(() => factory().catch((err) => {
+    if (!isChunkLoadError(err)) throw err;
+    const KEY = "rinkreads_chunk_reload_at";
+    let lastReloadAt = null;
+    try { lastReloadAt = Number(sessionStorage.getItem(KEY)); } catch {}
+    if (shouldReloadForChunkError({ now: Date.now(), lastReloadAt })) {
+      try { sessionStorage.setItem(KEY, String(Date.now())); } catch {}
+      window.location.reload();
+      return new Promise(() => {}); // never settles; the page is on its way out
+    }
+    throw err; // already tried: let the boundary show rather than loop
+  }));
+}
+
+const AdminReports = lazyWithReload(() => import("./screens.jsx").then(m => ({ default: m.AdminReports })));
+const QuestionReviewScreen = lazyWithReload(() => import("./screens.jsx").then(m => ({ default: m.QuestionReviewScreen })));
+const ReviewScreen = lazyWithReload(() => import("./review/ReviewScreen.jsx"));
+const BrowseScreen = lazyWithReload(() => import("./review/BrowseScreen.jsx"));
+const ScenarioPlayground = lazyWithReload(() => import("./scenario/ScenarioPlayground.jsx").then(m => ({ default: m.ScenarioPlayground })));
+const ReadThePlay = lazyWithReload(() => import("./play/ReadThePlay.jsx"));
+const ProfileSetup = lazyWithReload(() => import("./screens.jsx").then(m => ({ default: m.ProfileSetup })));
+const PlansScreen = lazyWithReload(() => import("./screens.jsx").then(m => ({ default: m.PlansScreen })));
+const GameSenseReportScreen = lazyWithReload(() => import("./screens.jsx").then(m => ({ default: m.GameSenseReportScreen })));
+const SkillsOnboarding = lazyWithReload(() => import("./screens.jsx").then(m => ({ default: m.SkillsOnboarding })));
+const InsightsScreen = lazyWithReload(() => import("./screens.jsx").then(m => ({ default: m.InsightsScreen })));
+const ParentAssessmentScreen = lazyWithReload(() => import("./screens.jsx").then(m => ({ default: m.ParentAssessmentScreen })));
+const ParentsPage = lazyWithReload(() => import("./screens.jsx").then(m => ({ default: m.ParentsPage })));
+const CoachesPage = lazyWithReload(() => import("./screens.jsx").then(m => ({ default: m.CoachesPage })));
+const PlayersPage = lazyWithReload(() => import("./screens.jsx").then(m => ({ default: m.PlayersPage })));
+const AssociationsPage = lazyWithReload(() => import("./screens.jsx").then(m => ({ default: m.AssociationsPage })));
 const LazyFallback = () => <div style={{minHeight:"100vh",background:C.bg,color:C.dimmer,display:"flex",alignItems:"center",justifyContent:"center",fontFamily:FONT.body}}>Loading…</div>;
 
 const COMP={
@@ -1346,7 +1367,10 @@ function Home({ player, onNav, demoMode, subscriptionTier, questFlagsBump, onPro
   // Quest checklist state
   const flags = useQuestFlags(questFlagsBump);
   const identity = demoMode ? "__demo__" : (player?.id || "__anon__");
-  const questResults = QUESTS_PLAYER.map(q => computeQuestProgress(q, { player, flags, tier: subscriptionTier }));
+  // U7 and U9 do not self-rate, so the quest that sends them there is not
+  // offered. Without this they would be pointed at an empty ladder.
+  const questsForPlayer = QUESTS_PLAYER.filter(q => q.id !== "rate6" || canSelfRate(player?.level));
+  const questResults = questsForPlayer.map(q => computeQuestProgress(q, { player, flags, tier: subscriptionTier }));
   const questDismissed = lsGetJSON(LS_QUEST_DISMISSED, {})[identity] === "1";
   const firstLineSeen = lsGetJSON(LS_FIRST_LINE_SEEN, {})[identity] === "1";
   const [dismissTick, setDismissTick] = useState(0); // eslint-disable-line no-unused-vars
@@ -1556,7 +1580,7 @@ function Home({ player, onNav, demoMode, subscriptionTier, questFlagsBump, onPro
         {!questDismissed && !firstLineSeen && (
           <QuestChecklist
             role="player"
-            quests={QUESTS_PLAYER}
+            quests={questsForPlayer}
             results={questResults}
             onTap={handleQuestTap}
             onDismiss={handleDismissQuest}
