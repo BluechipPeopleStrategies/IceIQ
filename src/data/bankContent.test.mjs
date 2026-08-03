@@ -37,10 +37,10 @@ const hasImage = q => !!(q.media && q.media.url);
 // language instead: "your own end", "the end you are attacking", "the middle of
 // the ice", "the front of the net".
 //
-// `blue line` is NOT in this list yet — six questions still use it and are held
-// pending a decision, because there the phrase names a RULE (offside) rather
-// than a place, so removing it changes what the question teaches. Add it here
-// once those six are resolved.
+// Line and rule names live in GUARD 5 rather than here. They failed for a
+// different reason — naming a RULE the child's game does not have, not a place
+// on the sheet — and keeping them separate keeps each failure message honest
+// about what it caught.
 // ─────────────────────────────────────────────────────────────────────────────
 {
   const BANNED = /\b(neutral zone|defensive zone|offensive zone|attacking zone|own zone|your zone|their zone|d-zone|o-zone|the slot)\b/i;
@@ -126,6 +126,45 @@ const hasImage = q => !!(q.media && q.media.url);
   }
   ok(`every tf question has a boolean answer key${bad.length ? ` — ${bad.join(", ")}` : ""}`,
     bad.length === 0);
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// GUARD 5 — no full-sheet line or line-rule at U7/U9.
+//
+// Thomas, 2026-08-03: "I'm okay with rewriting around an idea, but then we
+// should be showing only cross-ice clips for U7 and U9."
+//
+// This is the sibling of GUARD 1 and it caught more than the six questions that
+// prompted it. U7 plays cross-ice and U9 half-ice, so there is no blue line, no
+// centre red line, and no centre ice in the game these children play — and with
+// no blue line there is no offside and no icing either. Nine questions named one
+// of them, in a distractor or a scenario, and every one was rewritten around the
+// idea underneath: "stop at the blue line so you do not get too close" became
+// "stop partway"; "called for offside" became "lose the puck on their own".
+//
+// The rule survives, the line does not. Adding a term here is cheap; a child
+// being taught a rule that does not exist in their game is not.
+// ─────────────────────────────────────────────────────────────────────────────
+{
+  const BANNED = /\b(blue ?line|red ?line|cent(?:er|re) ?ice|cent(?:er|re) ?line|off-?side|icing)\b/i;
+  const YOUNG = ["U7 / Initiation", "U9 / Novice"];
+  const bad = [];
+  for (const band of YOUNG) {
+    for (const q of bank[band] || []) {
+      const m = prose(q).match(BANNED);
+      if (m) bad.push(`${band} · ${q.id} · "${m[0]}"`);
+    }
+  }
+  ok(`no full-sheet line or line-rule at U7/U9${bad.length ? ` — found ${bad.length}` : ""}`,
+    bad.length === 0);
+  bad.slice(0, 10).forEach(b => console.log(`        ${b}`));
+
+  // Self-check: the guard must actually be able to fail. A regex that matches
+  // nothing passes every band silently, which is exactly how a vacuous guard
+  // gets shipped and trusted.
+  const canFail = ["stop at the blue line", "called for offside", "shoot from center ice"]
+    .every(s => BANNED.test(s));
+  ok("the line guard still matches the phrasings it was written for", canFail);
 }
 
 const total = Object.values(bank).reduce((n, a) => n + a.length, 0);
