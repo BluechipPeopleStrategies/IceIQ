@@ -214,6 +214,15 @@ const ZONE_PRESETS = {
   ),
 };
 
+// Presets whose geometry is DEFINED BY the blue line: the three zone tints
+// (whose dashed edge lands exactly on the line, i.e. a second blue line drawn
+// on top of the first), plus the point boxes and half-wall box, which are both
+// measured off RIGHT_BLUE_X. `hideZoneLines` drops these wholesale — on a board
+// with no blue line they would draw a boundary to nothing.
+const BLUE_LINE_ANCHORED_ZONES = new Set([
+  "def-zone", "neutral-zone", "off-zone", "points-off", "half-wall-off",
+]);
+
 function Zone({ zoneKey }) {
   if (!zoneKey || zoneKey === "none") return null;
   const preset = ZONE_PRESETS[zoneKey];
@@ -447,6 +456,13 @@ function RinkReadsRinkInner({
   showTrapezoid = false,
   showDimensions = false,
   replayT = null,
+  // Suppress every marking that exists only because the sheet is divided into
+  // zones: both blue lines, the centre red line, the centre dot, the
+  // neutral-zone faceoff dots, and any blue-line-anchored zone tint. Set for
+  // U7/U9, who play cross-ice / half-ice and have none of these on their ice
+  // (see src/scenario/youngRink.js). Everything real in their game — boards,
+  // goal line, net, crease, end-zone faceoff dots — is untouched.
+  hideZoneLines = false,
   className = "",
   style = {},
 }) {
@@ -461,8 +477,10 @@ function RinkReadsRinkInner({
   }, [lines]);
   const safeOverlays = useMemo(() => {
     const arr = Array.isArray(overlays) ? overlays : [];
-    return arr.filter(o => typeof o === "string" && ZONE_PRESETS[o]);
-  }, [overlays]);
+    return arr.filter(o => typeof o === "string" && ZONE_PRESETS[o]
+      && !(hideZoneLines && BLUE_LINE_ANCHORED_ZONES.has(o)));
+  }, [overlays, hideZoneLines]);
+  const safeZone = (hideZoneLines && BLUE_LINE_ANCHORED_ZONES.has(zone)) ? "none" : zone;
 
   const viewBox = useMemo(() => {
     const pad = 1.5 * M;
@@ -488,7 +506,9 @@ function RinkReadsRinkInner({
     <svg viewBox={viewBox} xmlns="http://www.w3.org/2000/svg"
       className={className} style={{ display: "block", width: "100%", ...style }}
       role="img">
-      <title>Olympic IIHF hockey rink ({safeView} view)</title>
+      {/* Single-expression child: the accessible name must not promise a full
+          IIHF sheet on a half-ice board (and React warns on a multi-child title). */}
+      <title>{`${hideZoneLines ? "Half-ice" : "Olympic IIHF"} hockey rink (${safeView} view)`}</title>
       <defs>
         <clipPath id={clipId}>
           <path d={outlinePath} />
@@ -507,23 +527,29 @@ function RinkReadsRinkInner({
       <path d={outlinePath} fill={COLORS.ice} />
 
       <g clipPath={`url(#${clipId})`}>
-        <Zone zoneKey={zone} />
+        <Zone zoneKey={safeZone} />
         {safeOverlays.map((o, i) => <Zone key={`ov-${i}`} zoneKey={o} />)}
       </g>
 
       <path d={outlinePath} fill="none" stroke={COLORS.boards} strokeWidth="0.6" />
 
       <g clipPath={`url(#${clipId})`}>
-        {(showLeft || showCenter) && (
+        {/* A half-view does NOT crop the blue line out: the "right" viewBox runs
+            x 285..615 and the right blue line sits at x=387, dead centre of the
+            frame. The centre red line at x=300 clips to a visible sliver at the
+            left edge too. Both have to be suppressed explicitly. */}
+        {!hideZoneLines && (showLeft || showCenter) && (
           <rect x={LEFT_BLUE_X - D.lineWidthBlue / 2} y={0}
             width={D.lineWidthBlue} height={D.width} fill={COLORS.blueLine} />
         )}
-        {(showRight || showCenter) && (
+        {!hideZoneLines && (showRight || showCenter) && (
           <rect x={RIGHT_BLUE_X - D.lineWidthBlue / 2} y={0}
             width={D.lineWidthBlue} height={D.width} fill={COLORS.blueLine} />
         )}
-        <rect x={CX - D.lineWidthRed / 2} y={0}
-          width={D.lineWidthRed} height={D.width} fill={COLORS.redLine} />
+        {!hideZoneLines && (
+          <rect x={CX - D.lineWidthRed / 2} y={0}
+            width={D.lineWidthRed} height={D.width} fill={COLORS.redLine} />
+        )}
         {showLeft && (
           <rect x={LEFT_GOAL_X - 0.3} y={0} width={0.6} height={D.width} fill={COLORS.redLine} />
         )}
@@ -532,7 +558,7 @@ function RinkReadsRinkInner({
         )}
       </g>
 
-      {showCenterCircle && (
+      {showCenterCircle && !hideZoneLines && (
         <circle cx={CX} cy={CY} r={0.3 * M} fill={COLORS.blueLine} opacity="0.6" />
       )}
 
@@ -540,8 +566,11 @@ function RinkReadsRinkInner({
         <>
           <FaceoffCircle cx={END_FACEOFFS[0].x} cy={END_FACEOFFS[0].y} />
           <FaceoffCircle cx={END_FACEOFFS[1].x} cy={END_FACEOFFS[1].y} />
-          <circle cx={NZ_FACEOFFS[0].x} cy={NZ_FACEOFFS[0].y} r={0.35 * M} fill={COLORS.redLine} opacity="0.6" />
-          <circle cx={NZ_FACEOFFS[1].x} cy={NZ_FACEOFFS[1].y} r={0.35 * M} fill={COLORS.redLine} opacity="0.6" />
+          {/* NZ dots are measured off the blue line (nzFaceoffFromBlue) and sit
+              in the neutral zone — they go with it. End-zone dots stay: those
+              are real on a half-ice sheet. */}
+          {!hideZoneLines && <circle cx={NZ_FACEOFFS[0].x} cy={NZ_FACEOFFS[0].y} r={0.35 * M} fill={COLORS.redLine} opacity="0.6" />}
+          {!hideZoneLines && <circle cx={NZ_FACEOFFS[1].x} cy={NZ_FACEOFFS[1].y} r={0.35 * M} fill={COLORS.redLine} opacity="0.6" />}
           <Crease side="left" />
           <Goal side="left" />
           {showTrapezoid && <Trapezoid side="left" />}
@@ -551,8 +580,8 @@ function RinkReadsRinkInner({
         <>
           <FaceoffCircle cx={END_FACEOFFS[2].x} cy={END_FACEOFFS[2].y} />
           <FaceoffCircle cx={END_FACEOFFS[3].x} cy={END_FACEOFFS[3].y} />
-          <circle cx={NZ_FACEOFFS[2].x} cy={NZ_FACEOFFS[2].y} r={0.35 * M} fill={COLORS.redLine} opacity="0.6" />
-          <circle cx={NZ_FACEOFFS[3].x} cy={NZ_FACEOFFS[3].y} r={0.35 * M} fill={COLORS.redLine} opacity="0.6" />
+          {!hideZoneLines && <circle cx={NZ_FACEOFFS[2].x} cy={NZ_FACEOFFS[2].y} r={0.35 * M} fill={COLORS.redLine} opacity="0.6" />}
+          {!hideZoneLines && <circle cx={NZ_FACEOFFS[3].x} cy={NZ_FACEOFFS[3].y} r={0.35 * M} fill={COLORS.redLine} opacity="0.6" />}
           <Crease side="right" />
           <Goal side="right" />
           {showTrapezoid && <Trapezoid side="right" />}

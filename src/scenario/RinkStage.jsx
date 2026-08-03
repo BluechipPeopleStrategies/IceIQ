@@ -8,6 +8,7 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import RinkReadsRink from "../RinkReadsRink.jsx";
 import { RINK_W, RINK_H, denorm } from "./schema.js";
+import { rinkRenderFor } from "./youngRink.js";
 import { C } from "../shared.jsx";
 
 // Mirror RinkReadsRink's internal viewBox math so the overlay coord system
@@ -242,19 +243,24 @@ export default function RinkStage({ stage, actors, levels, scanWindow, highlight
   // them in the static layer so they aren't drawn twice.
   const hiddenSet = useMemo(() => new Set(Array.isArray(hiddenIds) ? hiddenIds : []), [hiddenIds]);
 
+  // ONE age gate for the whole board. `young` (U7/U9) drives the marker style,
+  // the tag suppression, the zone wording AND the geometry — the view is forced
+  // half-ice and every blue-line marking is suppressed, because Hockey Canada
+  // plays those bands cross-ice/half-ice and they have no blue line to show.
+  // Derived from the levels prop, never from the seed's own stage.view, so a new
+  // U7/U9 seed gets it right whether or not its author remembered.
+  // See src/scenario/youngRink.js and decision 2 of
+  // docs/manual-playtest/2026-08-03-decisions-round3.md.
+  const { young, view, hideZoneLines } = useMemo(
+    () => rinkRenderFor(stage, levels), [stage, levels]);
+
   // Youngest bands play half-ice; markers are "just players", no position tags.
-  const hideTags = useMemo(() => {
-    const ls = Array.isArray(levels) ? levels : [];
-    return ls.some(l => /^U7\b|^U9\b/.test(String(l)));
-  }, [levels]);
+  const hideTags = young;
 
   // Diagram tone scales with age: U7/U9 keep the friendly markers; U11+ render
   // austere "X's-and-O's" playbook (thinner strokes, plain goalie box, no
   // decorative double-ring) so a 14-year-old gets a chalk-talk, not a cartoon.
-  const ageStyle = useMemo(() => {
-    const ls = Array.isArray(levels) ? levels : [];
-    return ls.some(l => /^U7\b|^U9\b/.test(String(l))) ? "friendly" : "playbook";
-  }, [levels]);
+  const ageStyle = young ? "friendly" : "playbook";
 
   // Goalie team color by zone: def-zone = OUR net (our blue), off-zone =
   // their net (opponent black). Neutral keeps the team-agnostic slate.
@@ -265,12 +271,11 @@ export default function RinkStage({ stage, actors, levels, scanWindow, highlight
   // Plain-language zone label so the player never misreads which end they're
   // in. Tone scales with age (younger bands get the simplest words).
   const zoneLabel = useMemo(() => {
-    const young = (Array.isArray(levels) ? levels : []).some(l => /^U7\b|^U9\b/.test(String(l)));
     if (stage.zone === "def-zone") return young ? "OUR END" : "DEFENDING ZONE";
     if (stage.zone === "off-zone") return young ? "ATTACK END" : "ATTACKING ZONE";
     if (stage.zone === "neutral")  return young ? "MIDDLE" : "NEUTRAL ZONE";
     return null;
-  }, [stage.zone, levels]);
+  }, [stage.zone, young]);
   // Blue for our end, amber for the attack end, slate for the middle.
   const zoneAccent = stage.zone === "def-zone" ? "#3b82f6"
                    : stage.zone === "off-zone" ? "#f59e0b"
@@ -306,7 +311,9 @@ export default function RinkStage({ stage, actors, levels, scanWindow, highlight
     return map;
   }, [actors]);
   const svgRef = useRef(null);
-  const viewBox = useMemo(() => computeViewBox(stage.view), [stage.view]);
+  // The overlay crop must follow the SAME view the rink is drawn with (the
+  // forced half-ice one for young bands), or the actors sit shifted off it.
+  const viewBox = useMemo(() => computeViewBox(view), [view]);
 
   // IntelliGym scan-then-hide drill. Show the full scene for showMs;
   // after that, drop actors whose kind appears in hideKinds. Player must
@@ -345,7 +352,7 @@ export default function RinkStage({ stage, actors, levels, scanWindow, highlight
       position: "relative", borderRadius: 10, overflow: "hidden",
       border: `1px solid ${C.border}`, background: C.bgCard, marginBottom: ".75rem",
     }}>
-      <RinkReadsRink view={stage.view} zone={stage.zone} markers={[]} />
+      <RinkReadsRink view={view} zone={stage.zone} markers={[]} hideZoneLines={hideZoneLines} />
       {/* Zone badge — names the end of the ice on-screen so the read can't
           start with a misread of which zone the player is in. */}
       {zoneLabel && (

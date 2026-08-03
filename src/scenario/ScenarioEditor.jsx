@@ -12,6 +12,7 @@ import RinkStage from "./RinkStage.jsx";
 import { validateScenario, denorm, RINK_W, RINK_H } from "./schema.js";
 import { runHockeyValidators } from "./validators.js";
 import { ZONES } from "./zones.js";
+import { levelsOf } from "./youngRink.js";
 import { C, FONT } from "../shared.jsx";
 
 const ACTOR_KINDS = ["player", "teammate", "defender", "goalie", "puck"];
@@ -131,7 +132,9 @@ export function ScenarioEditor({ scenario, onClose }) {
       </div>
 
       {/* Editable board: drag the actors / target right on the real rink. */}
-      <RinkStage stage={draft.stage} actors={draft.actors} levels={draft.levels || (draft.level ? [draft.level] : [])}>
+      {/* levelsOf reads BOTH `level` and `levels` — the editor must show the
+          author exactly the board a U7/U9 player will see, half-ice included. */}
+      <RinkStage stage={draft.stage} actors={draft.actors} levels={levelsOf(draft)}>
         {(svgPoint) => (
           <g
             onPointerMove={(e) => onMove(svgPoint, e)}

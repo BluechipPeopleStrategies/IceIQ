@@ -5,6 +5,7 @@ import { resolveTarget } from "../scenario/zones.js";
 import { stepToScenario } from "../scenario/multiStep.js";
 import { toGraph, flattenNode } from "../scenario/branching.js";
 import { hasBoard } from "./reviewCore.js";
+import { levelsOf } from "../scenario/youngRink.js";
 import { C, FONT } from "../shared.jsx";
 
 // A text-only question (the bank, or any scenario without a rink board): render
@@ -102,7 +103,7 @@ function OneBoard({ scenario, label }) {
     <div>
       {label && <div style={{ fontSize: 10, letterSpacing: ".12em", textTransform: "uppercase", color: C.gold, fontWeight: 800, marginBottom: ".3rem" }}>{label}</div>}
       <BoardBoundary fallback={fallback}>
-        <RinkStage stage={scenario.stage} actors={scenario.actors} levels={scenario.levels}>
+        <RinkStage stage={scenario.stage} actors={scenario.actors} levels={levelsOf(scenario)}>
           {() => <OptionsOverlay scenario={scenario} />}
         </RinkStage>
       </BoardBoundary>

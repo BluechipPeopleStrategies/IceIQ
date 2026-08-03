@@ -13,6 +13,7 @@ import { ttsSupported, speakParts, stopSpeaking, getReadAloud } from "../speak.j
 import { C, FONT, Card } from "../shared.jsx";
 import { resolveTarget } from "./zones.js";
 import { denorm } from "./schema.js";
+import { levelsOf, rinkRenderFor } from "./youngRink.js";
 
 const VERB_HINT = {
   skate:    "Drag from yourself to where you should skate.",
@@ -166,7 +167,9 @@ function BoardMC({ scenario, playerId, onAnswer }) {
         <div style={{ fontSize: 15, lineHeight: 1.6, color: C.white, fontWeight: 500 }}>{stem}</div>
       </Card>
 
-      <RinkStage stage={scenario.stage} actors={scenario.actors} levels={scenario.levels}>
+      {/* levelsOf, not scenario.levels: seeds carry `level`, `levels`, or both,
+          and reading only one lets a U7/U9 board slip past every age rule. */}
+      <RinkStage stage={scenario.stage} actors={scenario.actors} levels={levelsOf(scenario)}>
         {() => (picked != null ? <RevealLayer scenario={scenario}/> : null)}
       </RinkStage>
 
@@ -276,6 +279,10 @@ export default function ScenarioRenderer({ scenario, playerId, mode, onAnswer })
   // them from the stage's static layer so they aren't drawn twice.
   const interactiveIds = primitive.interactiveActorIds ? primitive.interactiveActorIds(scenario.interaction) : [];
   const timer = scenario.timer && typeof scenario.timer.duration === "number" ? scenario.timer : null;
+  // The view the stage ACTUALLY draws — U7/U9 are forced half-ice regardless of
+  // what the seed asked for, so the primitive has to be handed the same one or
+  // its net-direction geometry silently disagrees with the picture.
+  const renderedView = rinkRenderFor(scenario.stage, levelsOf(scenario)).view;
 
   function handleAnswer(p) {
     if (result) return; // dedupe — timer + answer can race
@@ -344,7 +351,7 @@ export default function ScenarioRenderer({ scenario, playerId, mode, onAnswer })
       <RinkStage
         stage={scenario.stage}
         actors={scenario.actors}
-        levels={scenario.levels}
+        levels={levelsOf(scenario)}
         scanWindow={scenario.scanWindow}
         highlightIds={result?.intercepterId ? [result.intercepterId] : []}
         hiddenIds={interactiveIds}
@@ -355,7 +362,7 @@ export default function ScenarioRenderer({ scenario, playerId, mode, onAnswer })
             correct={scenario.correct}
             actors={scenario.actors}
             svgPoint={svgPoint}
-            view={scenario.stage?.view}
+            view={renderedView}
             locked={!!result || previewLocked}
             onAnswer={handleAnswer}
           />

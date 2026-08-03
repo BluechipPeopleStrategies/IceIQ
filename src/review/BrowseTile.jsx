@@ -5,6 +5,7 @@ import { stepToScenario } from "../scenario/multiStep.js";
 import { toGraph, flattenNode } from "../scenario/branching.js";
 import { ageTierOf, flagOf, questionTypeLabel } from "./browseCore.js";
 import { hasBoard } from "./reviewCore.js";
+import { levelsOf } from "../scenario/youngRink.js";
 import { C, FONT } from "../shared.jsx";
 
 // One grid cell: a lazy-mounted mini board (or a text card for board-less
@@ -59,7 +60,7 @@ export default function BrowseTile({ scenario, coach, myVerdict, revised, report
             </div>
           : shown
           ? <BoardBoundary fallback={<div style={{ width: "100%", height: "100%", display: "flex", alignItems: "center", justifyContent: "center", color: C.dim, fontSize: ".7rem" }}>board ⚠</div>}>
-              <RinkStage stage={board.stage} actors={board.actors} levels={board.levels}>
+              <RinkStage stage={board.stage} actors={board.actors} levels={levelsOf(board)}>
                 {() => <OptionsOverlay scenario={board} />}
               </RinkStage>
             </BoardBoundary>
