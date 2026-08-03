@@ -1696,15 +1696,27 @@ export function SkillsOnboarding({ player, tier, onSave, onBack, onUpgrade }) {
   const current = picked[idx];
 
   function advance(val) {
-    const next = val != null ? { ...ratings, [current.id]: val } : ratings;
+    // A skip is an answer ("doesn't apply"), not a hole. Recording it keeps the
+    // 6-of-6 quest reachable: on FREE the U11 pool is exactly six skills, so one
+    // silent skip previously made "Rate yourself on 6 skills" permanently
+    // unsatisfiable — the player could never clear a quest the app kept showing.
+    const next = { ...ratings, [current.id]: val != null ? val : "n/a" };
     setRatings(next);
+    const merged = { ...(player.selfRatings || {}), ...next };
     if (idx + 1 < total) {
       setIdx(idx + 1);
+      // Persist every answer. onSave merges, so quitting at skill 3 keeps three
+      // ratings instead of none. Fire-and-forget — never block the next card.
+      Promise.resolve(onSave(merged, { final: false })).catch(() => {});
     } else {
-      // Finalize — merge into existing selfRatings and save
       setSaving(true);
-      const merged = { ...(player.selfRatings || {}), ...next };
-      Promise.resolve(onSave(merged)).finally(() => setSaving(false));
+      // Hard ceiling. The old code cleared `saving` only in .finally(), which
+      // never runs for a promise that never settles — that is exactly how this
+      // screen sat on "Saving…" forever on the last skill, with no way out.
+      const bail = setTimeout(() => setSaving(false), 8000);
+      Promise.resolve(onSave(merged, { final: true }))
+        .catch(() => {})
+        .finally(() => { clearTimeout(bail); setSaving(false); });
     }
   }
 

@@ -21,6 +21,8 @@ import { upsertResult, skipResult, isSkipped, answeredCount, sessionQuestionCoun
 import { preAppScreen } from "./utils/authRouting.js";
 import { canSelfRate } from "./data/selfRating.js";
 import { isChunkLoadError, shouldReloadForChunkError } from "./utils/chunkReload.js";
+import { cachePlayer, mergeCachedPlayer, clearCachedPlayer } from "./utils/playerCache.js";
+import { withTimeout, WRITE_TIMEOUT_MS } from "./utils/withTimeout.js";
 import { buildU11ForwardPreview, PREVIEW_PLAYER_ID } from "./data/previewPlayer.js";
 import { enqueueReview, getSavedReview, flushQueue } from "./review/reviewQueue.js";
 import { boardHash } from "./review/reviewCore.js";
@@ -8169,7 +8171,7 @@ export default function App() {
       } catch(e) { console.error("Session check failed:", e); }
       if (mounted) { clearTimeout(timeout); setAuthReady(true); }
     })();
-    const { data } = SB.onAuthChange((session) => {
+    const { data } = SB.onAuthChange((session, event) => {
       // Demo / dev-bypass sessions must be immune to Supabase auth events:
       // there is no real Supabase session in those modes, so an async
       // INITIAL_SESSION / SIGNED_OUT firing after dev-bypass entry would
@@ -8190,6 +8192,13 @@ export default function App() {
       // signed-out path still clears state immediately.
       if (session?.user) {
         setUserEmail(session.user.email || null);
+        // Only reload the profile on events that actually change WHO is signed
+        // in. TOKEN_REFRESHED fires on a timer for a session that has not
+        // changed, and loadUser replaces `player` wholesale — so a refresh
+        // landing mid-session used to silently discard anything not yet synced
+        // to Supabase. USER_UPDATED likewise carries no new profile.
+        const RELOADS_PROFILE = ["INITIAL_SESSION", "SIGNED_IN", "PASSWORD_RECOVERY"];
+        if (event && !RELOADS_PROFILE.includes(event)) return;
         setTimeout(() => {
           if (!mounted || demoModeRef.current) return;
           loadUser(session.user.id).catch((e) => console.error("loadUser after auth change failed:", e));
@@ -8259,10 +8268,16 @@ export default function App() {
         coachCode: "",
         isAdmin: !!p.is_admin,
       };
-      setPlayer(enriched);
-      const latest = quizHistory[quizHistory.length-1];
+      // Local cache wins over the server copy. It was written synchronously at
+      // the moment of the user's action; the server copy may be missing a write
+      // that failed, timed out, or is still in flight. Preferring the server
+      // here would re-introduce the exact loss the cache exists to stop.
+      const merged = mergeCachedPlayer(enriched);
+      setPlayer(merged);
+      const mergedHistory = merged.quizHistory || quizHistory;
+      const latest = mergedHistory[mergedHistory.length-1];
       setPrevScore(latest ? latest.score : null);
-      setTotalSessions(quizHistory.length);
+      setTotalSessions(mergedHistory.length);
     }
   }
 
@@ -8271,7 +8286,7 @@ export default function App() {
     const newTotal = totalSessions + 1;
     const newHistory = [...(player.quizHistory||[]), {results, score, date:new Date().toISOString()}];
     const updatedPlayer = {...player, quizHistory: newHistory};
-    setPlayer(updatedPlayer);
+    commitPlayer(updatedPlayer);
     setQuizResults(results);
     setSeqPerfect(sq);
     setMistakeStreak(ms);
@@ -8324,46 +8339,81 @@ export default function App() {
     setScreen("results");
   }
 
-  async function handleSkillsSave(ratings) {
-    setPlayer({...player, selfRatings: ratings});
-    if (!demoMode) {
-      try { await SB.saveSelfRatings(player.id, ratings); } catch(e) { console.error(e); }
-    }
-    setScreen("home");
+  // Durable-first. localStorage is written synchronously, BEFORE any network
+  // call and before any navigation, so Supabase is a sync target rather than
+  // the system of record. Same shape as utils/trainingLog.js — the only
+  // First-Five write that has never lost data.
+  function commitPlayer(next) {
+    cachePlayer(next);
+    setPlayer(next);
+    return next;
   }
 
-  async function handleGoalsSave(goals) {
-    setPlayer({...player, goals});
-    if (!demoMode) {
-      try {
-        for (const [cat, g] of Object.entries(goals)) {
-          if (g?.goal) await SB.saveGoal(player.id, cat, g);
-        }
-      } catch(e) { console.error(e); }
-    }
-    setScreen("home");
+  // A failed sync is not a failed save. Say so honestly rather than silently
+  // succeeding (the old handlers swallowed the error and navigated home as if
+  // nothing had happened) or alarming a kid about data they still have.
+  function warnSyncFailed(body) {
+    toast.warning(body, { duration: 4000 });
   }
 
-  async function handleProfileSave(settings) {
-    const updated = {...player, ...settings};
-    setPlayer(updated);
-    if (!demoMode) {
-      try {
-        await SB.updateProfile(player.id, {
-          name: settings.name,
-          level: settings.level,
-          position: settings.position,
-          season: settings.season,
-          session_length: settings.sessionLength,
-          colorblind: settings.colorblind,
-        });
-      } catch(e) { console.error(e); }
+  async function handleSkillsSave(ratings, { navigate = true } = {}) {
+    // 1. Durable + visible first. Nothing below can undo this.
+    commitPlayer({ ...player, selfRatings: ratings });
+    if (navigate) setScreen("home");
+    if (demoMode) return;
+    // 2. Sync. Bounded, and its failure is reported, never swallowed.
+    try {
+      await withTimeout(SB.saveSelfRatings(player.id, ratings), WRITE_TIMEOUT_MS, "saveSelfRatings");
+    } catch (e) {
+      console.error(e);
+      warnSyncFailed("Saved on this device — we'll sync your ratings next time you open the app.");
     }
-    setScreen("home");
+  }
+
+  async function handleGoalsSave(goals, { navigate = true } = {}) {
+    commitPlayer({ ...player, goals });
+    if (navigate) setScreen("home");
+    if (demoMode) return;
+    // Per-category try/catch: one bad category must not abandon the rest. The
+    // old loop wrapped the whole for-loop in one try, so the first throw
+    // silently dropped every goal after it.
+    const failed = [];
+    for (const [cat, g] of Object.entries(goals)) {
+      if (!g?.goal) continue;
+      try { await withTimeout(SB.saveGoal(player.id, cat, g), WRITE_TIMEOUT_MS, `saveGoal(${cat})`); }
+      catch (e) { console.error(e); failed.push(cat); }
+    }
+    if (failed.length) warnSyncFailed(`Saved on this device — ${failed.join(", ")} will sync next time you open the app.`);
+  }
+
+  async function handleProfileSave(settings, { navigate = true } = {}) {
+    // Whitelist rather than spread. `settings` is a snapshot taken when the
+    // Profile screen mounted and still carries the selfRatings/goals/history it
+    // saw then — spreading it reverts anything saved while Profile was open.
+    const PATCHABLE = ["name", "level", "position", "season", "sessionLength", "colorblind"];
+    const patch = {};
+    for (const f of PATCHABLE) if (settings[f] !== undefined) patch[f] = settings[f];
+    commitPlayer({ ...player, ...patch });
+    if (navigate) setScreen("home");
+    if (demoMode) return;
+    try {
+      await withTimeout(SB.updateProfile(player.id, {
+        name: patch.name,
+        level: patch.level,
+        position: patch.position,
+        season: patch.season,
+        session_length: patch.sessionLength,
+        colorblind: patch.colorblind,
+      }), WRITE_TIMEOUT_MS, "updateProfile");
+    } catch (e) {
+      console.error(e);
+      warnSyncFailed("Saved on this device — your settings will sync shortly.");
+    }
   }
 
   async function handleSignOut() {
     if (demoMode) { exitDemo(); return; }
+    clearCachedPlayer(player?.id);
     await SB.signOut();
     setProfile(null); setPlayer(null);
     setScreen("home");
@@ -8601,7 +8651,7 @@ export default function App() {
         {screen === "path" && <PathScreen player={player} onBack={()=>setScreen("home")} onStartLesson={(node)=>{ setPathFocus(node); setScreen("quiz"); }}/>}
         {screen === "challenges" && <ChallengesHub player={player} onBack={()=>setScreen("home")} onNav={setScreen}/>}
         {screen === "skills"  && <Skills player={player} tier={tier} onUpgrade={promptUpgrade} onSave={handleSkillsSave} onBack={()=>setScreen("home")}/>}
-        {screen === "skills-onboarding" && <Suspense fallback={<LazyFallback/>}><SkillsOnboarding player={player} tier={tier} onUpgrade={promptUpgrade} onSave={async (r)=>{ await handleSkillsSave(r); setScreen("home"); }} onBack={()=>setScreen("home")}/></Suspense>}
+        {screen === "skills-onboarding" && <Suspense fallback={<LazyFallback/>}><SkillsOnboarding player={player} tier={tier} onUpgrade={promptUpgrade} onSave={(r, opts) => handleSkillsSave(r, { navigate: opts?.final !== false })} onBack={()=>setScreen("home")}/></Suspense>}
         {screen === "insights" && <Suspense fallback={<LazyFallback/>}><InsightsScreen onBack={()=>setScreen("home")} onInsightRead={bumpQuestFlags}/></Suspense>}
         {screen === "study"   && <StudyScreen player={player} onBack={()=>setScreen("home")} onNav={setScreen}/>}
         {screen === "goals"   && (canAccess("smartGoals", tier).allowed

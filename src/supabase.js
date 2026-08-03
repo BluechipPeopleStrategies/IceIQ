@@ -107,7 +107,10 @@ export async function getSession() {
 
 export function onAuthChange(callback) {
   if (!supabase) return { subscription: { unsubscribe: () => {} } };
-  return supabase.auth.onAuthStateChange((_event, session) => callback(session));
+  // Pass the event name through. Callers need to distinguish a real sign-in
+  // from a routine TOKEN_REFRESHED, which fires on a timer and previously
+  // triggered a full profile reload that replaced `player` wholesale.
+  return supabase.auth.onAuthStateChange((event, session) => callback(session, event));
 }
 
 // Fires when the user lands via a password-reset email link. The app uses
