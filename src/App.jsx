@@ -7527,6 +7527,52 @@ function TeamFocusCard({ team, roster, onOpenDrills }) {
   );
 }
 
+
+// Where the team plays, in the coach's own words -- "Edmonton", "Zone 5",
+// "NAIT district". Free text on purpose: the coach frames it however their
+// hockey world actually works, which is more honest than us imposing a
+// denominator we cannot verify (Thomas, 2026-08-03).
+//
+// It is substituted into the top rungs of the self-rating scale. Leaving it
+// blank is a supported state, not an incomplete one: renderAnchor() drops the
+// whole clause, so "Among the best in my age group in Edmonton." becomes
+// "Among the best in my age group." Most teams will never set it.
+function TeamRegionSection({ team }) {
+  const [value, setValue] = useState(team?.region || "");
+  const [saving, setSaving] = useState(false);
+  const [saved, setSaved] = useState(false);
+  const [err, setErr] = useState("");
+
+  async function save() {
+    setSaving(true); setErr(""); setSaved(false);
+    try {
+      await SB.updateTeamRegion(team.id, value);
+      setSaved(true);
+      setTimeout(() => setSaved(false), 2500);
+    } catch (e) {
+      setErr(e.message || "Could not save the region.");
+    }
+    setSaving(false);
+  }
+
+  return (
+    <Card>
+      <Label>📍 Region</Label>
+      <div style={{fontSize:12,color:C.dimmer,lineHeight:1.5,marginBottom:".6rem"}}>
+        Used when players rate themselves, so the top of the scale means something real: "Among the best in my age group in {value.trim() || "your region"}." Optional.
+      </div>
+      <div style={{display:"flex",gap:".4rem",flexWrap:"wrap"}}>
+        <input value={value} onChange={(e) => setValue(e.target.value)} placeholder="Edmonton"
+          style={{flex:"1 1 60%",padding:".6rem .7rem",borderRadius:10,background:C.bgElevated,border:`1px solid ${C.border}`,color:C.white,fontFamily:FONT.body,fontSize:14}}/>
+        <SecBtn onClick={save} disabled={saving} style={{width:"auto"}}>
+          {saving ? "Saving…" : saved ? "✓ Saved" : "Save"}
+        </SecBtn>
+      </div>
+      {err && <div style={{color:C.red,fontSize:12,marginTop:".4rem"}}>{err}</div>}
+    </Card>
+  );
+}
+
 function CoachHome({ profile, onSignOut, onOpenPlayer, demoMode, subscriptionTier, questFlagsBump, onPromptUpgrade, onBumpQuestFlags, onSaveProgress, onFirstLine, onSignup, onOpenDrills }) {
   const isDemo = demoMode || profile.id === "__demo_coach__";
   const [teams, setTeams] = useState(isDemo ? DEMO_COACH_TEAMS : []);
@@ -7671,6 +7717,7 @@ function CoachHome({ profile, onSignOut, onOpenPlayer, demoMode, subscriptionTie
                   ) : roster.map(p => (
                     <RosterRow key={p.id} player={p} onRate={() => onOpenPlayer(p)}/>
                   ))}
+                  <TeamRegionSection team={t} />
                   <DepthChartSection teamId={t.id} roster={roster} onChange={onBumpQuestFlags}/>
                   <CoachTeamAnalyticsSection roster={roster}/>
                   <CoachAssignmentsSection teamId={t.id} coachId={profile.id} roster={roster}/>

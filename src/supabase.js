@@ -229,6 +229,22 @@ export async function getCoachTeams(coachId) {
   return data || [];
 }
 
+// The free-text region a coach sets on a team. Substituted into the top rungs of
+// the self-rating scale ("Among the best in my age group in Edmonton"). Nullable
+// and normally absent -- renderAnchor() drops the clause when it is missing, so
+// leaving this unset is a supported state, not a broken one.
+export async function updateTeamRegion(teamId, region) {
+  if (!supabase) throw new Error("Supabase not configured");
+  const value = String(region || "").trim();
+  const { data, error } = await supabase.from("teams")
+    .update({ region: value || null })
+    .eq("id", teamId)
+    .select()
+    .single();
+  if (error) throw error;
+  return data;
+}
+
 export async function getPlayerTeams(playerId) {
   if (!supabase) return [];
   const { data, error } = await supabase.from("team_members")
