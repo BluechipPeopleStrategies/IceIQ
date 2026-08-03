@@ -167,6 +167,56 @@ const hasImage = q => !!(q.media && q.media.url);
   ok("the line guard still matches the phrasings it was written for", canFail);
 }
 
+// ─────────────────────────────────────────────────────────────────────────────
+// GUARD 6 — Canadian spelling, and no gendered position names, in player prose.
+//
+// Thomas's call, 2026-08-03: "lean Canadian." The product is Edmonton minor
+// hockey, so `centre` and `defence` are the words the rink uses. The bank was
+// 95% American, which is why this is a one-time correction plus a guard — it
+// only gets more expensive as the bank grows.
+//
+// `defenseman` was 70% of the gendered batch on its own, and the app had
+// already effectively chosen `defender` (596 uses to 58) without anyone
+// deciding to. `odd-man rush` stays: Thomas kept it, it is the name of the
+// situation, and no child reads it as being about men.
+//
+// PROSE ONLY, and the scoping is the whole difficulty. `center` appears 515
+// times in src/ and only 61 are words a player reads — the rest are
+// `textAlign: "center"`, `centerIce`, `center_ice_dot`. This guard reads the
+// named prose fields off each question and never sees an id, a sceneId, or an
+// asset path, so it cannot tempt anyone into a global replace that would take
+// the layout down with it.
+// ─────────────────────────────────────────────────────────────────────────────
+{
+  const AMERICAN = /\b(center(ed|s)?|defense|offense|favorite|colors?|behavior|neighbors?)\b/i;
+  const GENDERED = /\b(defense?m[ae]n|linesman|open man|the man\b)\b/i;
+  const badSpell = [], badGender = [];
+  for (const [band, arr] of Object.entries(bank)) {
+    for (const q of arr) {
+      // media.alt is player-facing too — a screen reader speaks it aloud.
+      const text = prose(q) + " " + (q.media?.alt || "");
+      const s = text.match(AMERICAN);
+      if (s) badSpell.push(`${band} · ${q.id} · "${s[0]}"`);
+      const g = text.match(GENDERED);
+      if (g) badGender.push(`${band} · ${q.id} · "${g[0]}"`);
+    }
+  }
+  ok(`Canadian spelling in player prose${badSpell.length ? ` — found ${badSpell.length}` : ""}`,
+    badSpell.length === 0);
+  badSpell.slice(0, 8).forEach(b => console.log(`        ${b}`));
+  ok(`no gendered position names in player prose${badGender.length ? ` — found ${badGender.length}` : ""}`,
+    badGender.length === 0);
+  badGender.slice(0, 8).forEach(b => console.log(`        ${b}`));
+
+  // Both regexes must still bite, and must still leave the words we kept alone.
+  const bites = AMERICAN.test("center ice") && AMERICAN.test("the defense is set")
+    && GENDERED.test("the opposing defenseman");
+  const spares = !AMERICAN.test("centre ice") && !AMERICAN.test("defensive zone")
+    && !GENDERED.test("an odd-man rush") && !GENDERED.test("women's hockey");
+  ok("the spelling and gender guards still bite, and still spare what we kept",
+    bites && spares);
+}
+
 const total = Object.values(bank).reduce((n, a) => n + a.length, 0);
 console.log(`\nchecked ${total} questions across ${Object.keys(bank).length} bands`);
 console.log(`${pass} passed, ${fail} failed`);
