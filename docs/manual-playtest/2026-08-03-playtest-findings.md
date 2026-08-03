@@ -46,7 +46,15 @@ did is the SMART Goals screen at 12:03. If you narrated anything between 11:54 a
 
 ## Shell defects (code)
 
-### SHELL-1 — session length changes underneath you mid-session (root cause of three symptoms)
+> **Status:** SHELL-1 and SHELL-2 are fixed in `f8deb14`, with the two formulas
+> extracted into `src/utils/quizResults.js` as pure functions and 19 new
+> assertions covering them. Both are unit-verified and build-clean but have NOT
+> been walked end-to-end in a browser — the dev bypass is gated behind
+> `VITE_ENABLE_DEV_BYPASS` and demo entry routes through signup. A five-question
+> first session is still worth playing by hand before trusting it.
+> SHELL-3 through SHELL-10 are open.
+
+### SHELL-1 — session length changes underneath you mid-session (root cause of three symptoms) — FIXED `f8deb14`
 
 This one bug produces "Question 6 of 5", "Question 6 of 10", and the results page
 that never arrives.
@@ -84,7 +92,7 @@ The 11:57:18 screenshot (Q5 of 10) confirms it kept going.
 **Fix:** snapshot `qLen` into state when the session starts. It must not be a
 derived value that reads `player`.
 
-### SHELL-2 — counter reads one past the end
+### SHELL-2 — counter reads one past the end — FIXED `f8deb14`
 
 [`src/App.jsx:2355`](../../src/App.jsx#L2355) renders `Question {qNum+1} of {qLen}`
 where [`src/App.jsx:1983`](../../src/App.jsx#L1983) is
