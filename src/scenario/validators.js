@@ -92,6 +92,15 @@ function attackingNetX(view) {
   return view === "left" ? 0.08 : 0.92;
 }
 
+// True goal-line positions in normalized x, derived from RINK_DIMENSIONS
+// (60 m long, goal line 4 m off each end board) rather than the eyeballed
+// 0.92/0.08 net centers the soft rules use. The hard goalie rule keys off
+// these because "behind its own goal line" is a real, measurable place.
+const GOAL_LINE_X_RIGHT = (60 - 4) / 60;   // 0.9333
+const GOAL_LINE_X_LEFT  = 4 / 60;          // 0.0667
+const M_PER_X = 60;                        // 1.0 normalized x = 60 m
+const M_PER_Y = 30;                        // 1.0 normalized y = 30 m
+
 // ───────────────────────────────────────────────────────────────────────
 // Individual rules — small, focused, composable.
 
@@ -592,6 +601,34 @@ const rules = [
     if (!s.mc || s.mc.stem == null) return null;
     if (typeof s.mc.stem !== "string" || s.mc.stem.trim().length < 10) {
       return { kind: "warn", msg: `mc.stem is very short — give the question an actual prompt or omit it to reuse interaction.prompt` };
+    }
+    return null;
+  },
+
+  // A goalie parked behind its own goal line, or way off the net's center
+  // line, is a drawing mistake rather than a coaching choice — no goalie
+  // plays there. This is deliberately narrower than goalieInCrease (which
+  // stays a warning, because leaving the crease to challenge is legitimate):
+  // it only fires on positions that are never right, so it can be an error.
+  // Threshold: >0.7 m behind the goal line, or >3 m off net center.
+  function goalieAnchoredToOwnNet(s) {
+    const g = s.actors?.find(a => a.kind === "goalie");
+    if (!g) return null;
+    // A placeable goalie starts off-position by design — its net position is
+    // the answer, not the start. Same carve-out goalieInCrease makes.
+    if (s.interaction?.kind === "place" && (s.interaction.items || []).includes(g.id)) return null;
+    if (typeof g.x !== "number" || typeof g.y !== "number") return null;
+
+    const onRight = g.x > 0.5;
+    const goalLineX = onRight ? GOAL_LINE_X_RIGHT : GOAL_LINE_X_LEFT;
+    // "Behind" = further toward the end boards than the goal line.
+    const behindM = (onRight ? g.x - goalLineX : goalLineX - g.x) * M_PER_X;
+    if (behindM > 0.7) {
+      return { kind: "err", msg: `goalie "${g.id}" at x=${g.x.toFixed(3)} is ${behindM.toFixed(1)} m behind its own goal line (x=${goalLineX.toFixed(3)}) — no goalie plays behind the net` };
+    }
+    const offCenterM = Math.abs(g.y - 0.5) * M_PER_Y;
+    if (offCenterM > 3) {
+      return { kind: "err", msg: `goalie "${g.id}" at y=${g.y.toFixed(3)} is ${offCenterM.toFixed(1)} m off the net's center line (y=0.5) — the net is only 1.8 m wide; this goalie is not covering it` };
     }
     return null;
   },
