@@ -31,7 +31,16 @@ The defect tracks question TYPE, not age band, which makes it far more tractable
 | **A2** — `mc` questions missing an ask | 26 | Genuinely incomplete. Each needs its own question added. | 26 reviews |
 | **A3** — `seq` | 2 | Same as A2. | 2 reviews |
 
-### A1 is a fork in the road, and it is the highest-leverage decision here
+### A1 — DECIDED and SHIPPED: render the badge
+
+Thomas's call, 2026-08-03. Implemented in both render paths. The 17 `next` questions
+now show a `🔮 What Happens Next?` badge in gold, the way `tf`, `mistake` and `seq`
+already showed theirs. No stem was edited, so nothing needed content review.
+
+**Group A1 is closed. 17 of the 45 incomplete stems are fixed.** The remaining backlog
+is A2 + A3 = 28.
+
+The original reasoning, kept for the record:
 
 Two ways to fix 17 questions:
 
@@ -192,9 +201,15 @@ only batch where the fix is a design decision rather than a correction.
 
 Four decisions, and none of them need research:
 
-1. **A1:** render a "What Happens Next" badge (recommended), or edit 17 stems?
-2. ~~**B2:** Canadian or American spelling?~~ — **DECIDED: Canadian**, 2026-08-03.
-3. **B3:** age-banded player identification (recommended), or one global convention?
-4. **B1:** rename the `Iron Man` badge to `Workhorse`?
+All four are now decided (2026-08-03):
 
-Everything else in this plan I can carry without asking.
+1. ~~**A1:** badge or 17 stem edits?~~ — **DECIDED: render the badge.** Shipped. All 17
+   fixed by one UI change, in both the Quiz and WeeklyQuiz render paths, with no content
+   touched.
+2. ~~**B2:** Canadian or American spelling?~~ — **DECIDED: Canadian.**
+3. ~~**B3:** age-banded or global player identification?~~ — **DECIDED: age-banded.**
+   U7/U9 `YOU` only; U11/U13 position names + tags with a legend; U15/U18 `F1/F2/F3`,
+   `D1/D2`.
+4. ~~**B1:** rename `Iron Man`?~~ — **DECIDED: rename to `Workhorse`.**
+
+Everything else in this plan I carry without asking.

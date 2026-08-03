@@ -2492,9 +2492,21 @@ function Quiz({ player, onFinish, onBack, tier, onUpgrade, focus = null }) {
 
         {/* Situation / Prompt */}
         {(qtype === "mc" || qtype === "seq" || qtype === "next") && (
-          <Card style={{marginBottom:"1.25rem",background:C.purpleDim,border:`1px solid ${C.purpleBorder}`}}>
-            <div style={{fontSize:10,letterSpacing:".14em",textTransform:"uppercase",color:C.purple,marginBottom:".6rem",fontWeight:700}}>
-              {(qtype === "mc" && q.media?.url) ? "👀 Read the Play" : "📋 Game Situation"}
+          <Card style={{marginBottom:"1.25rem",background:qtype === "next" ? C.goldDim : C.purpleDim,border:`1px solid ${qtype === "next" ? C.goldBorder : C.purpleBorder}`}}>
+            {/* `next` questions are authored DECLARATIVELY — the stem sets up a
+                situation and the badge is the ask. That is deliberate and
+                bank-wide: 0 of 17 `next` stems contain a question mark, exactly
+                like `mistake`, while all 156 U11 `mc` stems do. But `next` was
+                the only type whose badge never got rendered — it fell through
+                to "📋 Game Situation", identical to `mc`, so a player saw a
+                statement and four options with no question anywhere on screen.
+                That is all 17 of the `next` entries in the incomplete-stems
+                audit, and rendering the badge fixes every one of them plus
+                every future `next` without touching a word of content. */}
+            <div style={{fontSize:10,letterSpacing:".14em",textTransform:"uppercase",color:qtype === "next" ? C.gold : C.purple,marginBottom:".6rem",fontWeight:700}}>
+              {qtype === "next" ? "🔮 What Happens Next?"
+                : (qtype === "mc" && q.media?.url) ? "👀 Read the Play"
+                : "📋 Game Situation"}
             </div>
             <div style={{fontSize:15,lineHeight:1.8,color:C.white,fontWeight:500}}>{q.sit}</div>
           </Card>
@@ -3844,9 +3856,15 @@ function WeeklyQuiz({ player, onBack, onFinish }) {
           </div>
         )}
         {(qtype === "mc" || qtype === "next") && (
-          <Card style={{marginBottom:"1.25rem",background:C.purpleDim,border:`1px solid ${C.purpleBorder}`}}>
-            <div style={{fontSize:10,letterSpacing:".14em",textTransform:"uppercase",color:C.purple,marginBottom:".6rem",fontWeight:700}}>
-              {(qtype === "mc" && q.media?.url) ? "👀 Read the Play" : "📋 Game Situation"}
+          <Card style={{marginBottom:"1.25rem",background:qtype === "next" ? C.goldDim : C.purpleDim,border:`1px solid ${qtype === "next" ? C.goldBorder : C.purpleBorder}`}}>
+            {/* Same badge as the main Quiz render — the ask for a `next`
+                question lives in the badge, not the stem. WeeklyQuiz diverging
+                here is how the `mistake` ask went missing too (fixed 2f08ec5);
+                the two render paths must stay in step. */}
+            <div style={{fontSize:10,letterSpacing:".14em",textTransform:"uppercase",color:qtype === "next" ? C.gold : C.purple,marginBottom:".6rem",fontWeight:700}}>
+              {qtype === "next" ? "🔮 What Happens Next?"
+                : (qtype === "mc" && q.media?.url) ? "👀 Read the Play"
+                : "📋 Game Situation"}
             </div>
             <div style={{fontSize:15,lineHeight:1.8,color:C.white,fontWeight:500}}>{q.sit}</div>
           </Card>
