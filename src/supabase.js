@@ -180,6 +180,24 @@ export async function getProfile(userId) {
   return data;
 }
 
+// Create the caller's own profile row. Used by the finish-setup recovery screen
+// when an authenticated user has no profiles row -- signup can leave that state
+// behind if the profile write never ran (the 2026-08-02 signup deadlock did
+// exactly that, and three production accounts are still stranded by it).
+//
+// Upsert rather than insert so a retry is harmless. RLS allows this: schema.sql's
+// "insert own profile" policy is `with check (auth.uid() = id)`, so a signed-in
+// user may write their own row and no one else's.
+export async function ensureOwnProfile({ id, role, name }) {
+  if (!supabase) throw new Error("Supabase not configured");
+  const { data, error } = await supabase.from("profiles")
+    .upsert({ id, role, name }, { onConflict: "id" })
+    .select()
+    .single();
+  if (error) throw error;
+  return data;
+}
+
 export async function updateProfile(userId, patch) {
   if (!supabase) return null;
   const { data, error } = await supabase.from("profiles")

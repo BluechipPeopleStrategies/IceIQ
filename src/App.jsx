@@ -18,6 +18,7 @@ import RinkReadsRink from "./RinkReadsRink";
 import { COMPETENCIES, getJourneyV2, ACTIVITY_METRICS, GAME_SENSE_UNLOCK_SESSIONS, calcCompetencyScores, calcGameSenseScore } from "./utils/gameSense.js";
 import { getTrainingLog, seedDemoTrainingForRoster } from "./utils/trainingLog.js";
 import { upsertResult, skipResult, isSkipped, answeredCount } from "./utils/quizResults.js";
+import { preAppScreen } from "./utils/authRouting.js";
 import { buildU11ForwardPreview, PREVIEW_PLAYER_ID } from "./data/previewPlayer.js";
 import { enqueueReview, getSavedReview, flushQueue } from "./review/reviewQueue.js";
 import { boardHash } from "./review/reviewCore.js";
@@ -6640,6 +6641,67 @@ function PasswordResetScreen({ onDone }) {
   );
 }
 
+
+// Recovery for an authenticated user with no `profiles` row. Collects only the
+// two fields the table actually requires (role, name) and writes it, so the
+// account stops dead-ending on the auth screen. Sign out is always offered so
+// nobody is trapped here either.
+function FinishSetupScreen({ email, onDone, onSignOut }) {
+  const [role, setRole] = useState("player");
+  const [name, setName] = useState("");
+  const [busy, setBusy] = useState(false);
+  const [err, setErr] = useState("");
+
+  async function save() {
+    if (!name.trim()) { setErr("Enter a name so we know what to call you."); return; }
+    setBusy(true); setErr("");
+    try {
+      const { data } = await supabase.auth.getSession();
+      const uid = data?.session?.user?.id;
+      if (!uid) throw new Error("Your session expired. Sign in again.");
+      const row = await SB.ensureOwnProfile({ id: uid, role, name: name.trim() });
+      await onDone(row);
+    } catch (e) {
+      setErr(e.message || "Could not finish setting up your account.");
+    }
+    setBusy(false);
+  }
+
+  return (
+    <div style={{minHeight:"100vh",background:C.bg,color:C.white,fontFamily:FONT.body,display:"flex",alignItems:"center",justifyContent:"center",padding:"2rem 1.25rem"}}>
+      <div style={{width:"100%",maxWidth:420}}>
+        <div style={{fontFamily:FONT.display,fontWeight:800,fontSize:"1.6rem",marginBottom:".4rem"}}>Finish setting up.</div>
+        <div style={{fontSize:13,color:C.dimmer,marginBottom:"1.25rem",lineHeight:1.6}}>
+          You are signed in as {email || "this account"}, but your profile was never finished. Two quick questions and you are in.
+        </div>
+        <div style={{fontSize:11,color:C.dimmer,fontWeight:700,letterSpacing:".06em",marginBottom:".5rem"}}>I AM A…</div>
+        <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:".6rem",marginBottom:"1rem"}}>
+          {[["player","🏒 Player / Parent"],["coach","🎯 Coach"]].map(([v,label]) => (
+            <button key={v} onClick={() => setRole(v)}
+              style={{padding:"1rem .75rem",borderRadius:12,cursor:"pointer",fontFamily:FONT.body,fontWeight:700,fontSize:13,
+                background:role===v?"rgba(234,88,12,.15)":C.bgElevated,
+                border:`2px solid ${role===v?C.orange:C.border}`,color:role===v?C.orange:C.white}}>
+              {label}
+            </button>
+          ))}
+        </div>
+        <div style={{fontSize:11,color:C.dimmer,fontWeight:700,letterSpacing:".06em",marginBottom:".4rem"}}>NAME</div>
+        <input value={name} onChange={(e) => setName(e.target.value)} placeholder="Your name"
+          style={{width:"100%",padding:".85rem",borderRadius:12,background:C.bgElevated,border:`1px solid ${C.border}`,color:C.white,fontFamily:FONT.body,fontSize:15,marginBottom:".85rem"}}/>
+        {err && <div style={{color:C.red,fontSize:12,marginBottom:".75rem"}}>{err}</div>}
+        <button onClick={save} disabled={busy}
+          style={{width:"100%",padding:".95rem",borderRadius:12,border:"none",background:C.gradientPrimary,color:C.bg,fontFamily:FONT.body,fontWeight:800,fontSize:15,cursor:busy?"default":"pointer",opacity:busy?.6:1}}>
+          {busy ? "Saving…" : "Finish setup →"}
+        </button>
+        <button onClick={onSignOut}
+          style={{width:"100%",marginTop:".75rem",background:"none",border:"none",color:C.dimmer,fontSize:12,cursor:"pointer",fontFamily:FONT.body,textDecoration:"underline"}}>
+          Sign out and use a different account
+        </button>
+      </div>
+    </div>
+  );
+}
+
 function AuthScreen({ onAuthenticated, onDemo, onDevEnter, onPreview, prefill }) {
   const [mode, setMode] = useState(prefill ? "signup" : "login"); // login | signup | forgot
   const [email, setEmail] = useState("");
@@ -8281,6 +8343,18 @@ export default function App() {
           <div style={{fontSize:13,color:C.dimmer,lineHeight:1.6}}>Create a <code style={{color:C.gold}}>.env</code> file with<br/><code>VITE_SUPABASE_URL</code> and <code>VITE_SUPABASE_ANON_KEY</code>.</div>
         </div>
       </div>;
+    }
+    // A SESSION with no profile row is recoverable, not a dead end. Sending
+    // these users to the signup form trapped them: the session persisted, so
+    // every reload returned here, creating another account did not help because
+    // the old session still loaded, and signing up with the same address was
+    // refused as "already registered". Reproduced on production 2026-08-03.
+    if (preAppScreen({ hasSupabase, hasSession: !!userEmail, hasProfile: false }) === "finish-setup") {
+      return <FinishSetupScreen
+        email={userEmail}
+        onDone={async (row) => { setProfile(row); await loadUser(row.id); }}
+        onSignOut={handleSignOut}
+      />;
     }
     return <AuthScreen onAuthenticated={()=>{}} onDemo={enterDemo} onDevEnter={enterDevBypass} onPreview={enterPlayerPreview} prefill={signupPrefill}/>;
   }
