@@ -81,15 +81,88 @@ export function pickN(arr, n, rng = Math.random) {
   return out;
 }
 
+// Weighted pick of n distinct items. `weights` maps item -> relative weight
+// (missing = 1). Heavier items are chosen more often. Falls back to uniform
+// when weights is null so callers can pass a profile's weights or nothing.
+export function weightedPickN(arr, n, weights, rng = Math.random) {
+  if (!weights) return pickN(arr, n, rng);
+  const pool = arr.slice();
+  const out = [];
+  const k = Math.max(0, Math.min(n, pool.length));
+  for (let i = 0; i < k; i += 1) {
+    let total = 0;
+    for (const item of pool) total += weights[item] > 0 ? weights[item] : 1;
+    let roll = rng() * total;
+    let idx = pool.length - 1;
+    for (let j = 0; j < pool.length; j += 1) {
+      roll -= weights[pool[j]] > 0 ? weights[pool[j]] : 1;
+      if (roll < 0) { idx = j; break; }
+    }
+    out.push(pool.splice(idx, 1)[0]);
+  }
+  return out;
+}
+
+// Session goalie tendencies (Punch-Out-style pattern reads). The report line
+// is honest: the weights genuinely bias which cells the goalie covers, so a
+// player who uses the scouting report scores more. Weight 3 vs 1 makes the
+// named cells roughly 3x as likely to be covered.
+export const GOALIE_PROFILES = [
+  {
+    id: "gloveHugger",
+    report: "Hugs the glove side. The blocker side opens up.",
+    weights: { gloveHi: 3, gloveLo: 3, midHi: 1, fiveHole: 1, blkrHi: 1, blkrLo: 1 },
+  },
+  {
+    id: "blockerWall",
+    report: "Leans on the blocker. Look glove side.",
+    weights: { blkrHi: 3, blkrLo: 3, midHi: 1, fiveHole: 1, gloveHi: 1, gloveLo: 1 },
+  },
+  {
+    id: "earlyButterfly",
+    report: "Drops into the butterfly early. Shoot high.",
+    weights: { gloveLo: 3, fiveHole: 3, blkrLo: 3, gloveHi: 1, midHi: 1, blkrHi: 1 },
+  },
+  {
+    id: "standTall",
+    report: "Stays tall and covers up top. Keep it low.",
+    weights: { gloveHi: 3, midHi: 3, blkrHi: 3, gloveLo: 1, fiveHole: 1, blkrLo: 1 },
+  },
+];
+
+// Pick this session's goalie. Deterministic given rng.
+export function makeGoalieProfile(rng = Math.random) {
+  return GOALIE_PROFILES[Math.floor(rng() * GOALIE_PROFILES.length)];
+}
+
+// Forgiving aim: the cell whose rect is nearest the point, if the point is
+// within `slackFrac` of a cell dimension from that rect (young thumbs, small
+// far-away net). A point inside a rect is distance 0, so this is a strict
+// superset of cellAtPoint.
+export function nearestCellWithin(rects, px, py, slackFrac = 0.6) {
+  let best = null;
+  let bestDist = Infinity;
+  for (const r of rects) {
+    const dx = Math.max(r.x - px, 0, px - (r.x + r.w));
+    const dy = Math.max(r.y - py, 0, py - (r.y + r.h));
+    const d = Math.hypot(dx, dy);
+    if (d < bestDist) { bestDist = d; best = r; }
+  }
+  if (!best) return null;
+  const slack = slackFrac * Math.min(best.w, best.h);
+  return bestDist <= slack ? best.id : null;
+}
+
 // Build a shot for a level. `rng` is injectable so tests (and the head-to-head
-// challenge link) are deterministic. Returns:
+// challenge link) are deterministic. `weights` (optional, from a goalie
+// profile) biases which cells the goalie covers; omitted = uniform. Returns:
 // { level, coveredAtStart:[id], openAtStart:[id], closeSchedule:[{cellId,atMs}], shotClockMs }
 // Invariant: at least one cell is never covered, so a goal is always possible.
-export function makeShot(level, { rng = Math.random } = {}) {
-  const covered = pickN(CELL_IDS, coveredAtStartCount(level), rng);
+export function makeShot(level, { rng = Math.random, weights = null } = {}) {
+  const covered = weightedPickN(CELL_IDS, coveredAtStartCount(level), weights, rng);
   const open = CELL_IDS.filter((id) => !covered.includes(id));
   const closesN = Math.min(closesDuringShotCount(level), Math.max(0, open.length - 1));
-  const closing = pickN(open, closesN, rng);
+  const closing = weightedPickN(open, closesN, weights, rng);
   const clock = shotClockMs(level);
   const hole = holeOpenMs(level);
   const closeSchedule = closing.map((cellId, i) => ({

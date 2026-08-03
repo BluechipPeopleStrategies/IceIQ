@@ -7,7 +7,7 @@ export const SCENARIO_FAMILIES = [
     title: "2-on-1 Reads",
     description: "Odd-man rush reads where the puck carrier or support player reacts to defender, goalie, and recovery pressure.",
     targetVariants: 6,
-    matchTerms: ["2v1", "2-on-1", "backdoor", "defender holds middle", "goalie late", "support flat"],
+    matchTerms: ["2v1", "2-on-1", "backdoor", "defender holds middle", "goalie late", "support flat", "odd-man-reads"],
     teachingArc: [
       "Defender steps up → pass to support",
       "Defender holds middle → attack open shot lane",
@@ -22,7 +22,7 @@ export const SCENARIO_FAMILIES = [
     title: "Backcheck Recovery",
     description: "Recovery reads where the player decides whether to take puck, protect middle, or cover the next most dangerous threat.",
     targetVariants: 4,
-    matchTerms: ["backcheck recovery", "backcheck_recovery", "pick up middle", "no one has puck"],
+    matchTerms: ["backcheck recovery", "backcheck_recovery", "backcheck-recovery", "pick up middle", "no one has puck"],
     teachingArc: [
       "Teammate takes puck → cover support lane",
       "No one has puck → stay with puck lane",
@@ -48,7 +48,7 @@ export const SCENARIO_FAMILIES = [
     title: "Gap Control",
     description: "Defensive spacing reads that teach when to hold middle, close space, or avoid backing in too far.",
     targetVariants: 4,
-    matchTerms: ["gap control", "gap_control", "hold middle"],
+    matchTerms: ["gap control", "gap_control", "gap-control", "hold middle"],
     teachingArc: [
       "Hold middle",
       "Close space before blue line",
@@ -67,6 +67,19 @@ export const SCENARIO_FAMILIES = [
       "Do not stand behind coverage",
       "Move as pressure changes",
       "Give puck carrier a safe option"
+    ]
+  },
+  {
+    id: "dz_breakout",
+    title: "D-Zone Breakout",
+    description: "Retrieval and breakout reads where the player escapes pressure and moves the puck out of the defensive zone on purpose.",
+    targetVariants: 4,
+    matchTerms: ["dz-breakout", "dz_breakout", "breakout", "retrieval"],
+    teachingArc: [
+      "Escape away from the forechecker's committed side",
+      "Pressure-side outlet is a red herring → still escape first",
+      "Escape lane taken away → reverse or rim",
+      "Outlet covered → middle support or glass-and-out"
     ]
   },
   {
@@ -98,6 +111,18 @@ function haystackForPlay(play) {
 }
 
 export function classifyPlayFamily(play) {
+  // Concept is the authored intent — match it first, so a play whose prose
+  // happens to mention another family's terms (a breakout play describing the
+  // "forechecker", say) still files where its author put it. The haystack scan
+  // stays as the fallback for plays without a matching concept.
+  const concept = String(play?.concept || "").toLowerCase();
+  if (concept) {
+    const byConcept = SCENARIO_FAMILIES.find((family) =>
+      family.matchTerms.some((term) => concept.includes(term.toLowerCase()))
+    );
+    if (byConcept) return byConcept;
+  }
+
   const haystack = haystackForPlay(play);
 
   return SCENARIO_FAMILIES.find((family) =>

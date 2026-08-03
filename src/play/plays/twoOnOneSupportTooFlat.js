@@ -33,8 +33,8 @@ export const twoOnOneSupportTooFlat = {
         label: "Support too flat",
         youngLabel: "Bad pass",
         shortLabel: "Flat",
-        x: 152,
-        y: 66
+        x: 160,
+        y: 74
       },
       motions: [
         { actor: "F1", kind: "skate", from: [128, 58], to: [146, 57] },
@@ -67,7 +67,7 @@ export const twoOnOneSupportTooFlat = {
             t: "Wait for F2 to get more open",
             youngT: "Wait longer",
             no: "Waiting gives the defender and goalie time to reset.",
-            youngWhy: "Waiting gives the checkers time.",
+            youngWhy: "Waiting gives the checker time.",
             next: "turnover",
             zone: [141, 56, 8]
           }

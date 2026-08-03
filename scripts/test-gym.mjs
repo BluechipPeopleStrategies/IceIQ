@@ -43,6 +43,51 @@ check("cannot relegate below 1", floor.record(false) === 1 && floor.record(false
 const ceil = createAdaptiveLevel(20);
 check("cannot promote above max", ceil.record(true) === 20 && ceil.record(true) === 20 && ceil.record(true) === 20);
 
+// combo: consecutive successes, reset only by a miss, survives level-ups
+const cb = createAdaptiveLevel(5);
+cb.record(true); cb.record(true); cb.record(true); cb.record(true);
+check("combo counts successes across a level-up", cb.combo === 4 && cb.level === 6);
+cb.record(false);
+check("a miss resets combo but keeps bestCombo", cb.combo === 0 && cb.bestCombo === 4);
+cb.record(true);
+check("combo restarts after a miss", cb.combo === 1 && cb.bestCombo === 4);
+const cbHook = [];
+const cbEngine = createAdaptiveLevel(5, { onResult: (ok, combo) => cbHook.push(combo) });
+cbEngine.record(true); cbEngine.record(true); cbEngine.record(false);
+check("onResult receives the running combo", cbHook.join() === "1,2,0");
+
+// Run the Play (sequence memory)
+import {
+  seqLen, skaterCount as rtpSkaterCount, stepMs, makeSkaters, makeSequence, skaterAtPoint, scoreRun,
+  EASY_SEQ, HARD_SEQ, EASY_SKATERS as RTP_EASY_SKATERS, HARD_SKATERS as RTP_HARD_SKATERS, EASY_STEP_MS, HARD_STEP_MS,
+} from "../src/cognitive-gym/runThePlayCore.js";
+
+check("rtp: sequence grows with level", seqLen(1) === EASY_SEQ && seqLen(20) === HARD_SEQ && seqLen(10) >= seqLen(1));
+check("rtp: skaters grow with level", rtpSkaterCount(1) === RTP_EASY_SKATERS && rtpSkaterCount(20) === RTP_HARD_SKATERS);
+check("rtp: playback speeds up with level", stepMs(1) === EASY_STEP_MS && stepMs(20) === HARD_STEP_MS && stepMs(1) > stepMs(20));
+
+const rtpSeeded = (seed) => { let t = seed; return () => { t = (t * 9301 + 49297) % 233280; return t / 233280; }; };
+const rtpSkaters = makeSkaters(6, 600, 370, { rng: rtpSeeded(4) });
+check("rtp: formation places all skaters", rtpSkaters.length === 6);
+check(
+  "rtp: skaters do not overlap",
+  rtpSkaters.every((a, i) => rtpSkaters.every((b, j) => i === j || Math.hypot(a.x - b.x, a.y - b.y) >= a.r * 2))
+);
+
+const rtpSeq = makeSequence(5, 8, rtpSeeded(7));
+check("rtp: sequence has the asked length and valid indices", rtpSeq.length === 8 && rtpSeq.every((i) => i >= 0 && i < 5));
+check("rtp: no pass goes back to the same skater", rtpSeq.every((v, i) => i === 0 || v !== rtpSeq[i - 1]));
+check("rtp: sequence deterministic per seed", makeSequence(5, 8, rtpSeeded(7)).join() === rtpSeq.join());
+
+check("rtp: tap on a skater resolves, empty ice misses", skaterAtPoint(rtpSkaters, rtpSkaters[2].x + 2, rtpSkaters[2].y - 2) === 2 && skaterAtPoint(rtpSkaters, -50, -50) === -1);
+
+const rtpFull = scoreRun([1, 2, 1], [1, 2, 1]);
+check("rtp: full run is a success worth max", rtpFull.success && rtpFull.points === 1000);
+const rtpPart = scoreRun([1, 2, 0], [1, 2, 1]);
+check("rtp: run dies at first wrong tap but partial pays", !rtpPart.success && rtpPart.correctPrefix === 2 && rtpPart.points > 0 && rtpPart.points < 1000);
+check("rtp: wrong first tap is worth zero prefix", scoreRun([0], [1, 2, 1]).correctPrefix === 0);
+check("rtp: longer held prefix pays more", scoreRun([1, 2, 0], [1, 2, 1, 0]).points > scoreRun([1, 0], [1, 2, 1, 0]).points);
+
 check("four directions", DIRECTIONS.length === 4 && DIRECTIONS.join() === "lr,rl,tb,bt");
 check("horizontal travel guesses in Y", guessAxis("lr") === "y" && guessAxis("rl") === "y");
 check("vertical travel guesses in X", guessAxis("tb") === "x" && guessAxis("bt") === "x");

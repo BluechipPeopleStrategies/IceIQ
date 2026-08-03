@@ -1,0 +1,149 @@
+{
+  "kind": "simulation-trace",
+  "version": "simulation-trace-v1",
+  "value": {
+    "schemaVersion": "simulation-trace-v1",
+    "solverContract": {
+      "version": "level1-simulator-v3",
+      "rngAlgorithm": "none",
+      "rngVersion": null,
+      "seedConsumptionOrder": null,
+      "tieBreaking": "array-index-order",
+      "floatPolicy": "round6",
+      "coordinatePrecision": "rink-frame-native-metres",
+      "candidateIdDerivation": "versionedContentHash(kind='simulation-trace', version=SIMULATOR_VERSION, value={definitionId, definitionVersion, definitionContentHash})"
+    },
+    "definitionId": "sd_dz_breakout_variant_bad_skating_speed",
+    "definitionVersion": 1,
+    "physicsProfileId": "physics-u13-v1",
+    "physicsClean": false,
+    "findings": [
+      {
+        "schemaVersion": "structured-finding-v1",
+        "validatorCode": "impossible-acceleration",
+        "validatorVersion": "hard-failure-detectors-v2",
+        "actorId": "D1",
+        "puck": false,
+        "actionIndex": 0,
+        "eventTime": 0,
+        "eventIntervalS": 0.3,
+        "measuredValue": 120.1192947772246,
+        "threshold": 4.749499999999999,
+        "margin": 115.369795,
+        "units": "m/s^2",
+        "profileId": "physics-u13-v1",
+        "profileVersion": "physics-profile-v1",
+        "assumptions": [
+          "starts from rest",
+          "15% headroom over the profile mean"
+        ],
+        "solverVersion": "hard-failure-detectors-v2",
+        "severity": "hard-failure",
+        "answerImpact": "changes-answer",
+        "explanation": "Actor D1 (U13) needs 120.12 m/s^2 to cover 5.41m in 0.30s, exceeding this age band's cited/estimated capability (4.13 m/s^2, +15% headroom)."
+      },
+      {
+        "schemaVersion": "structured-finding-v1",
+        "validatorCode": "possible-interception",
+        "validatorVersion": "hard-failure-detectors-v2",
+        "actorId": "W1",
+        "puck": true,
+        "actionIndex": 1,
+        "eventTime": 4,
+        "eventIntervalS": null,
+        "measuredValue": 0,
+        "threshold": 1,
+        "margin": -1,
+        "units": "seconds",
+        "profileId": "physics-u13-v1",
+        "profileVersion": "physics-profile-v1",
+        "assumptions": [
+          "straight-line reachability from current position only, not full defensive positioning/reaction",
+          "this is a WARNING, not a hard failure -- a simplification, not a proof the lane is closed"
+        ],
+        "solverVersion": "hard-failure-detectors-v2",
+        "severity": "warning",
+        "answerImpact": "possible",
+        "explanation": "W1 could reach the nearest point on D1's pass path (0.00m away) in 0.00s, at or before the puck arrives there (~1.00s) -- worth a human/tactical-claim check, not treated as disproof on its own."
+      },
+      {
+        "schemaVersion": "structured-finding-v1",
+        "kind": "UNSUPPORTED_MODEL",
+        "validatorCode": "impossible-turning",
+        "validatorVersion": "hard-failure-detectors-v2",
+        "actorId": "D1",
+        "puck": false,
+        "actionIndex": null,
+        "eventTime": 3,
+        "reason": "a pass/shot's direction is set by release mechanics, not the skater's own turning radius -- not modeled by this detector"
+      }
+    ],
+    "unsupportedModelCount": 1,
+    "samples": [
+      {
+        "t": 0,
+        "pos": [
+          28.194,
+          0
+        ],
+        "actorId": "D1",
+        "actionKind": "skate"
+      },
+      {
+        "t": 0.3,
+        "pos": [
+          26.2128,
+          -5.0292
+        ],
+        "actorId": "D1",
+        "actionKind": "skate"
+      },
+      {
+        "t": 0,
+        "pos": [
+          28.194,
+          0
+        ],
+        "actorId": "puck",
+        "actionKind": "skate"
+      },
+      {
+        "t": 0.3,
+        "pos": [
+          26.2128,
+          -5.0292
+        ],
+        "actorId": "puck",
+        "actionKind": "skate"
+      },
+      {
+        "t": 3,
+        "pos": [
+          26.2128,
+          -5.0292
+        ],
+        "actorId": "puck",
+        "actionKind": "pass"
+      },
+      {
+        "t": 3.5,
+        "pos": [
+          21.4884,
+          -5.9436
+        ],
+        "actorId": "puck",
+        "actionKind": "pass"
+      },
+      {
+        "t": 4,
+        "pos": [
+          16.764,
+          -6.858
+        ],
+        "actorId": "puck",
+        "actionKind": "pass"
+      }
+    ],
+    "canonicalTraceHash": "e1fd7ed8497460eefed9445552e2953f0b6c22f7b0da560d36ecbd57895bb6cb"
+  }
+}

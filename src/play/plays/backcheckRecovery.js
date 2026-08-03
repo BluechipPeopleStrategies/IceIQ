@@ -113,6 +113,13 @@ export const BACKCHECK_RECOVERY_PLAY = {
     wallRecovery: {
       id: "wallRecovery",
       terminal: true,
+      // Deliberately NOT tagged with intendedAnchor: BC1's correct position
+      // is defined by the triggering `go_wall` option's own zone:[158,68,6]
+      // in the `recovery` node (BC1 lands exactly on that zone's center),
+      // not by proximity to any rink anchor — it's 10.44 units from the
+      // nearest wall-segment point, which would be a false positive under
+      // today's validator. Add a lane-pick-aware check before tagging this
+      // node. docs/superpowers/specs/2026-07-30-wall-anchor-investigation.md
       q: "Recovering wide leaves the middle available. Backchecking is about removing the dangerous lane first.",
       pos: {
         A1: [166, 58],

@@ -1,0 +1,34 @@
+{
+  "schemaVersion": "scenario-promotion-policy-v1",
+  "location": {
+    "path": "docs/factory/scenario-promotion-policy.json",
+    "note": "Factory-only location, per Judgment Call 2 (resolved by Thomas, 2026-07-31): the spec's own provisional config/scenario-promotion-policy.json path was relocated here since no config/ directory exists in this repo and this is factory-internal policy, never shipped app config -- same reasoning and same choice as docs/factory/tactics/ from Phase 4."
+  },
+  "calibrationBar": {
+    "note": "Exactly the Conservative Promotion bar named in docs/superpowers/specs/2026-07-29-scenario-engine-design.md, extended per Phase 6 Task 11 to cover BOTH real Claude judgment calls this project has designed (gate 5's Semantic Sibling Review novelty classification and gate 8's hockey/pedagogy correctness judgment) -- not just gate 8 alone.",
+    "minReviewedDecisionsOverall": 50,
+    "minReviewedDecisionsPerTemplateClass": 20,
+    "minHoldoutFraction": 0.2,
+    "minHoldoutDecisionsPerTemplateClass": 10,
+    "maxWrongAnswerFalseApprovals": 0
+  },
+  "gatesRequiringCalibration": [
+    {
+      "gateId": "gate5-novelty",
+      "note": "Semantic Sibling Review admit/reject/needsHuman classification. Not yet built (deferred, Phase 5) -- listed here so the calibration bar already covers it the moment it exists, per the FINAL viable design doc's own task list."
+    },
+    {
+      "gateId": "gate8-hockey-judgment",
+      "note": "Hockey/pedagogy correctness verdict, attended-session-only per framework-fit decision 8. Phase 6 Task 7 is the first real call against this gate."
+    }
+  ],
+  "autoPromotionRules": {
+    "requiresCompleteJudgmentMetadata": true,
+    "requiresCalibrationBarMetForArtifactsTemplateClass": true,
+    "newTemplateClassesRequireManualPromotion": true,
+    "note": "requiresCompleteJudgmentMetadata mirrors judgmentRecord.js's own mechanically-enforced invariant (autoPromotionEligible is forced false whenever model/reasoningConfig/calibrationCorpusVersion is null) -- this policy document and that code must never disagree, which is why the invariant lives in code, not just here. newTemplateClassesRequireManualPromotion is why Phase 6 Task 8 manually promotes the breakout item even though no automated check currently blocks it -- the breakout family (dz_breakout) has zero calibrated decisions yet, so the calibration bar alone already makes it ineligible; this rule makes the same conclusion explicit and permanent for any future first-of-a-class item, not just implied by an empty calibration corpus."
+  },
+  "version": 1,
+  "createdAt": "2026-07-31",
+  "createdDuring": "Phase 6 Task 3"
+}

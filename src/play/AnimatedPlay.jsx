@@ -24,6 +24,26 @@ const VIEWS = {
   "half-left": "0 0 96 85",
 };
 
+// Display-order shuffle for button-rendered answer options (read-mc, verdict,
+// predict-next). A catalog-wide audit (2026-07-30) found the correct answer
+// sitting at a fixed array position across most of the catalog -- literally
+// every 2-on-1/odd-man-reads play at index 1 of 4, most others at index 0 --
+// letting a player pass every one of these items by always tapping the same
+// button slot, with zero hockey reading. Never applied to lane-pick or
+// spot-mistake: those answer via rink position, not list order, so there is
+// no position to leak. `next`/`ok`/`id` all live on the option object itself,
+// never looked up by array index, so shuffling display order is safe -- see
+// AnimatedPlay.jsx's own choose(opt, index): index is pure UI highlight
+// state, opt carries every real semantic.
+function shuffledOptions(opts) {
+  const a = (opts || []).slice();
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
 function actorDisplayLabel(actor, isDecisionActor, profile) {
   if (isDecisionActor) return "YOU";
 
@@ -288,6 +308,12 @@ export default function AnimatedPlay({ play, ageBand = "U11", onEvent }) {
   const actorMap = useMemo(() => Object.fromEntries(play.actors.map((a) => [a.id, a])), [play.actors]);
   const node = play.nodes[nodeId];
   const kind = resolveKindForAge(node, ageBand);
+  const activeOpts = kind === "verdict" && judgePick ? node.ask?.justify?.opts : node.ask?.opts;
+  // Re-shuffles on every new node/judge step (new `activeOpts` identity), not
+  // on every re-render -- so a button doesn't jump under the player's finger
+  // mid-decision, but a fresh question (or a replay of the same one) gets an
+  // independent order each time.
+  const displayOpts = useMemo(() => shuffledOptions(activeOpts), [activeOpts]);
 
   useEffect(() => {
     let enterTimer;
@@ -520,8 +546,29 @@ export default function AnimatedPlay({ play, ageBand = "U11", onEvent }) {
               </button>
             )}
           </div>
-        ) : ["lane-pick", "spot-mistake"].includes(kind) ? null : (
-          (kind === "verdict" && judgePick ? node.ask.justify.opts : node.ask.opts)
+        ) : kind === "lane-pick" ? (
+          // lane-pick has no button list -- the rink itself is the only
+          // control, so nothing previously told a first-time player HOW to
+          // answer beyond the small numbered dashed circles. This both
+          // states the interaction and gives the screen real content to
+          // fill the space a button list would otherwise occupy.
+          <div style={{
+            display: "flex", alignItems: "center", gap: 10,
+            padding: profile.big ? "14px 16px" : "11px 14px",
+            borderRadius: profile.big ? 14 : 10,
+            border: "1px dashed #C9A24B",
+            background: "#FBF6EA",
+            marginTop: 2,
+          }}>
+            <span aria-hidden="true" style={{ fontSize: profile.big ? 26 : 20, lineHeight: 1 }}>👆</span>
+            <span style={{ fontSize: profile.big ? 15 : 13, fontWeight: 700, color: "#7A5A17", lineHeight: 1.35 }}>
+              {profile.token === "figure"
+                ? "Tap a spot on the ice to pick."
+                : "Tap a numbered spot on the ice to make your read."}
+            </span>
+          </div>
+        ) : kind === "spot-mistake" ? null : (
+          displayOpts
             .filter((opt) => !opt.u13Only || ["U13", "U15", "U18"].includes(ageBand))
             .map((opt, index) => {
             const isPicked = picked === index;
@@ -557,6 +604,15 @@ export default function AnimatedPlay({ play, ageBand = "U11", onEvent }) {
               </button>
             );
           })
+        )}
+        {/* Judge-why surfacing: once the justify answer lands, show the coaching
+            copy authored on the judge pick (why/no) — it never had a display
+            path, and showing it earlier would leak the justify answer. */}
+        {kind === "verdict" && judgePick && picked !== null && (judgePick.why || judgePick.no) && (
+          <div style={{ fontSize: 12.5, marginTop: 8, padding: "8px 10px", borderRadius: 8, background: judgePick.ok ? "#F2FAF5" : "#FFF7EF", border: `1px solid ${judgePick.ok ? "#9CCFB2" : "#E0B98A"}`, color: judgePick.ok ? "#155F38" : "#7A4A1C", lineHeight: 1.45 }}>
+            <span style={{ fontWeight: 800 }}>Your call: {optionTextForAge(judgePick, actorMap, profile)}.</span>{" "}
+            {playerFacingTextForAge(judgePick.why || judgePick.no, profile)}
+          </div>
         )}
         <button onClick={() => onEvent?.({ playId: play.id, nodeId, event: "unclear", ms: Date.now() - startedAtRef.current })}
           style={{ marginTop: 8, background: "transparent", border: "1px dashed #8792A5", borderRadius: 8, color: "#4B5563", padding: "6px 8px", fontSize: 12, cursor: "pointer" }}>

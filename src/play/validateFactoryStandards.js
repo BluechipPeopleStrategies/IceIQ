@@ -86,6 +86,27 @@ export function validateFactoryStandards(play) {
         warns.push({ playId: play.id, nodeId, message: "wrong answer should include teaching note" });
       }
     }
+
+    // Justify-copy lint: the verdict second step carries its own question and
+    // options; hold that copy to the same standards as the primary ask.
+    if (node.ask?.justify) {
+      const justify = node.ask.justify;
+      const jOpts = justify.opts || [];
+      if (!justify.q) errs.push({ playId: play.id, nodeId, message: "justify missing question text" });
+      if (jOpts.filter((opt) => opt.ok).length !== 1) {
+        errs.push({ playId: play.id, nodeId, message: "justify must have exactly one correct answer" });
+      }
+      for (const opt of jOpts) {
+        if (!opt.id) errs.push({ playId: play.id, nodeId, message: "justify option missing id" });
+        if (!opt.t) errs.push({ playId: play.id, nodeId, message: "justify option missing text" });
+        if (youngPlay && tacticalShorthand.test(opt.t || "") && !opt.youngT) {
+          errs.push({ playId: play.id, nodeId, message: "young-player justify option uses tactical shorthand without youngT" });
+        }
+        if (!opt.ok && !opt.no) {
+          warns.push({ playId: play.id, nodeId, message: "wrong justify answer should include teaching note" });
+        }
+      }
+    }
   }
 
   return { ok: errs.length === 0, errs, warns };

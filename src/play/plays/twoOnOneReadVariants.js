@@ -38,8 +38,8 @@ export const TWO_ON_ONE_READ_VARIANTS = [
       cue: {
         label: "Open shot",
         youngLabel: "Open",
-        x: 137,
-        y: 20
+        x: 162,
+        y: 18
       }
     },
       finish: {
@@ -91,8 +91,8 @@ export const TWO_ON_ONE_READ_VARIANTS = [
       cue: {
         label: "Open shot",
         youngLabel: "Open",
-        x: 137,
-        y: 20
+        x: 162,
+        y: 18
       }
     },
     },
@@ -118,8 +118,8 @@ export const TWO_ON_ONE_READ_VARIANTS = [
       cue: {
         label: "Open shot",
         youngLabel: "Open",
-        x: 137,
-        y: 20
+        x: 162,
+        y: 18
       }
     },
     },

@@ -37,7 +37,25 @@ shown, which is bad enough — being told you were right and wrong at once.
 Fixed by excluding `scenario` from that card, for the same reason `seq` and
 `multi` already are.
 
-## 2. OPEN — question counter reads "Question 6 of 5"
+## 2. FIXED — question counter reads "Question 6 of 5" (and it WAS a scoring bug)
+
+**Traced and fixed.** My first read called this possibly-cosmetic; it was not.
+`handleSeqAnswer` serves seq, multi *and* scenario questions and had no dedupe,
+while `handleRinkQAnswer` immediately below it already guards the identical case
+("so a player toggling/retrying inside the rink widget can't double-record").
+A multi-step scenario fires `onAnswer` once per step, so every step appended
+another row to `results`.
+
+That array is shared by the counter, the progress bar, the "N/M correct" line,
+**and `calcWeightedIQ()`** — so a player's score was being divided by an
+inflated denominator, depressed by every multi-step question they encountered.
+Guarded on `seqAnswered`, which resets per question alongside `rinkQResult`.
+
+Open design question, not decided: for a genuine two-step question (judge then
+justify) only the first answer now counts. Whether the second step should
+influence correctness is a content call.
+
+### Original analysis (kept for the record)
 
 `qNum = results.length` (App.jsx:1949) and `qLen` is 5 for a first-time
 session, so the header renders `qNum + 1` = 6.

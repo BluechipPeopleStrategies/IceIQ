@@ -1,0 +1,111 @@
+{
+  "kind": "simulation-trace",
+  "version": "simulation-trace-v1",
+  "value": {
+    "schemaVersion": "simulation-trace-v1",
+    "solverContract": {
+      "version": "level1-simulator-v3",
+      "rngAlgorithm": "none",
+      "rngVersion": null,
+      "seedConsumptionOrder": null,
+      "tieBreaking": "array-index-order",
+      "floatPolicy": "round6",
+      "coordinatePrecision": "rink-frame-native-metres",
+      "candidateIdDerivation": "versionedContentHash(kind='simulation-trace', version=SIMULATOR_VERSION, value={definitionId, definitionVersion, definitionContentHash})"
+    },
+    "definitionId": "sd_two_on_one_backdoor_read_v1",
+    "definitionVersion": 1,
+    "physicsProfileId": "physics-u11-v1",
+    "physicsClean": true,
+    "findings": [
+      {
+        "schemaVersion": "structured-finding-v1",
+        "validatorCode": "possible-interception",
+        "validatorVersion": "hard-failure-detectors-v2",
+        "actorId": "F2",
+        "puck": true,
+        "actionIndex": 0,
+        "eventTime": 1.2,
+        "eventIntervalS": null,
+        "measuredValue": 0.04010526315789476,
+        "threshold": 1.2,
+        "margin": -1.159895,
+        "units": "seconds",
+        "profileId": "physics-u11-v1",
+        "profileVersion": "physics-profile-v1",
+        "assumptions": [
+          "straight-line reachability from current position only, not full defensive positioning/reaction",
+          "this is a WARNING, not a hard failure -- a simplification, not a proof the lane is closed"
+        ],
+        "solverVersion": "hard-failure-detectors-v2",
+        "severity": "warning",
+        "answerImpact": "possible",
+        "explanation": "F2 could reach the nearest point on F1's pass path (0.30m away) in 0.04s, at or before the puck arrives there (~1.20s) -- worth a human/tactical-claim check, not treated as disproof on its own."
+      },
+      {
+        "schemaVersion": "structured-finding-v1",
+        "validatorCode": "possible-interception",
+        "validatorVersion": "hard-failure-detectors-v2",
+        "actorId": "D1",
+        "puck": true,
+        "actionIndex": 0,
+        "eventTime": 0.4650911546252532,
+        "eventIntervalS": null,
+        "measuredValue": 0.3439044385425645,
+        "threshold": 0.4650911546252532,
+        "margin": -0.121187,
+        "units": "seconds",
+        "profileId": "physics-u11-v1",
+        "profileVersion": "physics-profile-v1",
+        "assumptions": [
+          "straight-line reachability from current position only, not full defensive positioning/reaction",
+          "this is a WARNING, not a hard failure -- a simplification, not a proof the lane is closed"
+        ],
+        "solverVersion": "hard-failure-detectors-v2",
+        "severity": "warning",
+        "answerImpact": "possible",
+        "explanation": "D1 could reach the nearest point on F1's pass path (2.61m away) in 0.34s, at or before the puck arrives there (~0.47s) -- worth a human/tactical-claim check, not treated as disproof on its own."
+      }
+    ],
+    "unsupportedModelCount": 0,
+    "samples": [
+      {
+        "t": 0,
+        "pos": [
+          14.0208,
+          5.334
+        ],
+        "actorId": "puck",
+        "actionKind": "pass"
+      },
+      {
+        "t": 0.5,
+        "pos": [
+          16.0528,
+          0.889
+        ],
+        "actorId": "puck",
+        "actionKind": "pass"
+      },
+      {
+        "t": 1,
+        "pos": [
+          18.0848,
+          -3.556
+        ],
+        "actorId": "puck",
+        "actionKind": "pass"
+      },
+      {
+        "t": 1.2,
+        "pos": [
+          18.8976,
+          -5.334
+        ],
+        "actorId": "puck",
+        "actionKind": "pass"
+      }
+    ],
+    "canonicalTraceHash": "b712d7b7f5a6910b55ae7782facf2a7b009c4b6d4a7ce169027c200ac6d5d49b"
+  }
+}

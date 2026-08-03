@@ -21,15 +21,23 @@ export function createAdaptiveLevel(startLevel = 1, opts = {}) {
   let level = Math.min(Math.max(startLevel, 1), maxLevel);
   let ups = Math.min(Math.max(startUps, 0), upStreak - 1);
   let downs = Math.min(Math.max(startDowns, 0), downStreak - 1);
+  // In-session combo: consecutive successes, reset only by a miss (a level-up
+  // does NOT reset it, unlike `ups`). Arcade-style; display + audio only.
+  let combo = 0;
+  let bestCombo = 0;
   return {
     get level() { return level; },
     get ups() { return ups; },
     get downs() { return downs; },
+    get combo() { return combo; },
+    get bestCombo() { return bestCombo; },
     // consecutive same-result reps still needed to promote / relegate
     get toPromote() { return Math.max(1, upStreak - ups); },
     get toRelegate() { return Math.max(1, downStreak - downs); },
     record(success) {
-      if (onResult) { try { onResult(success); } catch { /* cue failure never breaks a rep */ } }
+      if (success) { combo += 1; if (combo > bestCombo) bestCombo = combo; }
+      else combo = 0;
+      if (onResult) { try { onResult(success, combo); } catch { /* cue failure never breaks a rep */ } }
       if (success) {
         ups += 1;
         downs = 0;

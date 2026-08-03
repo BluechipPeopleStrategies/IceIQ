@@ -17,6 +17,7 @@ import RinkReadsRinkQuestion from "./RinkReadsRinkQuestion.jsx";
 import RinkReadsRink from "./RinkReadsRink";
 import { COMPETENCIES, getJourneyV2, ACTIVITY_METRICS, GAME_SENSE_UNLOCK_SESSIONS, calcCompetencyScores, calcGameSenseScore } from "./utils/gameSense.js";
 import { getTrainingLog, seedDemoTrainingForRoster } from "./utils/trainingLog.js";
+import { upsertResult, skipResult, isSkipped, answeredCount } from "./utils/quizResults.js";
 import { buildU11ForwardPreview, PREVIEW_PLAYER_ID } from "./data/previewPlayer.js";
 import { enqueueReview, getSavedReview, flushQueue } from "./review/reviewQueue.js";
 import { boardHash } from "./review/reviewCore.js";
@@ -442,6 +443,7 @@ const QuestionReviewScreen = lazy(() => import("./screens.jsx").then(m => ({ def
 const ReviewScreen = lazy(() => import("./review/ReviewScreen.jsx"));
 const BrowseScreen = lazy(() => import("./review/BrowseScreen.jsx"));
 const ScenarioPlayground = lazy(() => import("./scenario/ScenarioPlayground.jsx").then(m => ({ default: m.ScenarioPlayground })));
+const ReadThePlay = lazy(() => import("./play/ReadThePlay.jsx"));
 const ProfileSetup = lazy(() => import("./screens.jsx").then(m => ({ default: m.ProfileSetup })));
 const PlansScreen = lazy(() => import("./screens.jsx").then(m => ({ default: m.PlansScreen })));
 const GameSenseReportScreen = lazy(() => import("./screens.jsx").then(m => ({ default: m.GameSenseReportScreen })));
@@ -1315,13 +1317,15 @@ const Q_TYPE_INFO = (q) => {
   if (t === "mc" && q?.media?.url) return Q_TYPE_LABELS["pov-mc"];
   return Q_TYPE_LABELS[t] || Q_TYPE_LABELS.mc;
 };
-
 // q.concept is an internal taxonomy slug (e.g. "puck-control", "oz-entry",
-// "dz-coverage"), shown to players as a pill with zero formatting. There's no
-// curated title registry for this taxonomy the way the animated-play catalog
-// has SCENARIO_FAMILIES, so this is a mechanical de-slugify (hyphens/underscores
-// -> spaces, title case) rather than a rename. Already-clean values (e.g.
-// "Decision Quality") pass through unchanged.
+// "dz-coverage"), shown to players as a pill with zero formatting. There's
+// no curated title registry for this taxonomy the way the animated-play
+// catalog has SCENARIO_FAMILIES, so this is a mechanical de-slugify
+// (hyphens/underscores -> spaces, title case) rather than a rename -- same
+// bug class fixed in ReadThePlay.jsx (2026-07-30), same principle (never
+// show a raw internal slug as user-facing copy), narrower fix since there's
+// nothing to curate into yet. Already-clean values (e.g. "Decision Quality")
+// pass through unchanged.
 function conceptLabel(concept) {
   const s = String(concept || "").trim();
   if (!s) return "";
@@ -1706,6 +1710,18 @@ function Home({ player, onNav, demoMode, subscriptionTier, questFlagsBump, onPro
           </div>
         </button>
 
+        {["U11","U13"].includes(String(player?.level||"").trim().split(/[\s/]/)[0]) && (
+        <button onClick={() => onNav("readplay")} style={{width:"100%",display:"block",textAlign:"left",background:`linear-gradient(135deg,rgba(122,215,143,.14),rgba(122,215,143,.03))`,border:`1px solid rgba(122,215,143,.35)`,borderRadius:14,padding:"1rem 1.1rem",cursor:"pointer",color:C.white,fontFamily:FONT.body,marginBottom:"1rem",position:"relative",overflow:"hidden"}}>
+          <div style={{display:"flex",alignItems:"center",gap:".6rem"}}>
+            <span style={{fontSize:20}}>🏒</span>
+            <div>
+              <div style={{fontSize:10,letterSpacing:".14em",textTransform:"uppercase",color:"#7ad78f",fontWeight:800}}>Read the Play</div>
+              <div style={{fontSize:12,color:C.dim,marginTop:1}}>Watch it develop · Make the read</div>
+            </div>
+          </div>
+        </button>
+        )}
+
         {/* Locked Game Sense hero drops here so early-game players see
             action tiles first and the progress gauge as follow-up context. */}
         {!iqUnlocked && iqHero}
@@ -1845,6 +1861,9 @@ function Quiz({ player, onFinish, onBack, tier, onUpgrade, focus = null }) {
   }, [results, celebratedStreak]);
   const [showFlag, setShowFlag] = useState(false);
   const [rinkQResult, setRinkQResult] = useState(null); // null | true (correct) | false (wrong) — for RinkReadsRinkQuestion dispatcher
+  // Questions the player skipped, held so they can be served again before the
+  // session ends. The provisional wrong row already sits in `results`.
+  const [skippedQs, setSkippedQs] = useState([]);
   // Speed bonus: when an interactive question is on screen, track when it
   // loaded so a correct answer can earn a time-based bonus. 15-second
   // window, max 50 bonus points per question, linear decay to 0. Wrong
@@ -1931,7 +1950,12 @@ function Quiz({ player, onFinish, onBack, tier, onUpgrade, focus = null }) {
     if (question) setQuestionStartedAt(Date.now());
   }, [question?.id]);
 
-  const qNum = results.length;
+  // Position in the session = questions ANSWERED, not rows in `results`.
+  // A skipped question occupies a row while still being owed to the player, and
+  // it is re-served after the quota is met -- so counting rows would push the
+  // header past qLen again ("Question 8 of 7"), which is the overrun fixed on
+  // 2026-08-02. Clamped so the catch-up phase reads "7 of 7" rather than beyond.
+  const qNum = Math.min(answeredCount(results), qLen);
   const isLast = qNum >= qLen - 1;
   const qtype = question?.type || "mc";
   // Apply any in-browser local override on top of the bank question.
@@ -2006,10 +2030,10 @@ function Quiz({ player, onFinish, onBack, tier, onUpgrade, focus = null }) {
         if (qt === "mistake") setMistakeStreak(0);
       }
       setLastSpeedBonus(0);
-      const newResults = [...results, newResult];
+      const newResults = upsertResult(results, newResult);
       setResults(newResults);
       toast.warning("⏱ Time's up!", { duration: 1800 });
-      if (newResults.length >= qLen) setQuizDone(true);
+      if (answeredCount(newResults) >= qLen && !skippedQs.length) setQuizDone(true);
     }, TIMED_DURATION_MS);
     return () => clearTimeout(t);
   }, [questionStartedAt, timedMode, question?.id, sel, seqAnswered, rinkQResult]);
@@ -2036,10 +2060,10 @@ function Quiz({ player, onFinish, onBack, tier, onUpgrade, focus = null }) {
     setLastSpeedBonus(bonus);
     if (bonus) setSpeedTotal(t => t + bonus);
     const newResult = { id:q.id, cat:q.cat, ok, d:q.d||2, type:qtype, speedBonus:bonus };
-    const newResults = [...results, newResult];
+    const newResults = upsertResult(results, newResult);
     if (q.type === "mistake" && ok) setMistakeStreak(s => s+1);
     setResults(newResults);
-    if (newResults.length >= qLen) setQuizDone(true);
+    if (answeredCount(newResults) >= qLen && !skippedQs.length) setQuizDone(true);
   }
 
   function handleSeqAnswer(ok) {
@@ -2060,16 +2084,66 @@ function Quiz({ player, onFinish, onBack, tier, onUpgrade, focus = null }) {
     setLastSpeedBonus(bonus);
     if (bonus) setSpeedTotal(t => t + bonus);
     const newResult = { id:q.id, cat:q.cat, ok, d:q.d||2, type:q.type || "seq", speedBonus:bonus };
-    const newResults = [...results, newResult];
+    const newResults = upsertResult(results, newResult);
     setResults(newResults);
-    if (newResults.length >= qLen) setQuizDone(true);
+    if (answeredCount(newResults) >= qLen && !skippedQs.length) setQuizDone(true);
+  }
+
+  // Skip: record it WRONG immediately (Thomas, 2026-08-03 -- otherwise a player
+  // farms a perfect score by skipping anything hard) but hold the question so
+  // it comes back. Answering it later goes through upsertResult, which REPLACES
+  // this row rather than appending a second one.
+  function handleSkip() {
+    if (!question) return;
+    setResults(prev => upsertResult(prev, skipResult(question)));
+    setSkippedQs(prev => (prev.some(x => x.id === question.id) ? prev : [...prev, question]));
+    advance({ from: "skip" });
   }
 
   function advance() {
     if (!question) return;
-    if (results.length >= qLen) { setQuizDone(true); return; }
+    // Count ANSWERED questions, not rows: a skipped question occupies a row but
+    // is still owed to the player, so the session must not end on its account.
+    const answered = answeredCount(results);
+    const outstanding = skippedQs.filter(sq => {
+      const r = results.find(x => x && x.id === sq.id);
+      return isSkipped(r);
+    });
+    if (answered >= qLen) {
+      // Quota met. Serve anything still skipped before finishing.
+      if (outstanding.length) {
+        const [nextSkipped, ...rest] = outstanding;
+        setSkippedQs(rest);
+        setQuestion(nextSkipped);
+        setSel(null);
+        setSeqAnswered(false);
+        setSeqCorrect(false);
+        setRinkQResult(null);
+        setLastSpeedBonus(0);
+        setQuestionStartedAt(Date.now());
+        return;
+      }
+      setQuizDone(true);
+      return;
+    }
     const { q: nextQ, queue: nextQueue } = pullNext(queue, results);
-    if (!nextQ) { setQuizDone(true); return; }
+    if (!nextQ) {
+      // Bank exhausted early — still owe the player their skipped questions.
+      if (outstanding.length) {
+        const [nextSkipped, ...rest] = outstanding;
+        setSkippedQs(rest);
+        setQuestion(nextSkipped);
+        setSel(null);
+        setSeqAnswered(false);
+        setSeqCorrect(false);
+        setRinkQResult(null);
+        setLastSpeedBonus(0);
+        setQuestionStartedAt(Date.now());
+        return;
+      }
+      setQuizDone(true);
+      return;
+    }
     setQueue(nextQueue);
     setQuestion(nextQ);
     setSel(null);
@@ -2162,9 +2236,9 @@ function Quiz({ player, onFinish, onBack, tier, onUpgrade, focus = null }) {
     const bonus = computeSpeedBonus(qtype, okBool, questionStartedAt);
     setLastSpeedBonus(bonus);
     if (bonus) setSpeedTotal(t => t + bonus);
-    const nextResults = [...results, { id:q.id, cat:q.cat, ok:okBool, d:q.d||2, type:qtype, speedBonus:bonus }];
+    const nextResults = upsertResult(results, { id:q.id, cat:q.cat, ok:okBool, d:q.d||2, type:qtype, speedBonus:bonus });
     setResults(nextResults);
-    if (nextResults.length >= qLen) setQuizDone(true);
+    if (answeredCount(nextResults) >= qLen && !skippedQs.length) setQuizDone(true);
   }
 
   // Single dispatch site. New schema (q.rink or NEW_RINK_TYPES) goes through
@@ -2585,6 +2659,18 @@ function Quiz({ player, onFinish, onBack, tier, onUpgrade, focus = null }) {
               )}
             </div>
           </div>
+        )}
+
+        {/* Skip — only before answering. A defective or confusing question used
+            to trap the player with no way past it, which made the whole session
+            unfinishable (reported 2026-08-03). Counts wrong immediately so it
+            is never a free pass, and the question is re-served before the
+            session ends so it can still be earned back. */}
+        {!answered && (
+          <button onClick={handleSkip}
+            style={{background:"none",border:`1px solid ${C.border}`,borderRadius:10,color:C.dim,fontSize:12,marginTop:".65rem",cursor:"pointer",fontFamily:FONT.body,width:"100%",textAlign:"center",padding:".55rem",fontWeight:700}}>
+            Skip for now — comes back later, counts wrong until you answer it
+          </button>
         )}
 
         {/* Report flag — always visible, not gated on answered */}
@@ -8338,6 +8424,7 @@ export default function App() {
         {screen === "gamesense" && <Suspense fallback={<LazyFallback/>}><GameSenseReportScreen player={player} onBack={()=>setScreen("home")} demoMode={demoMode} demoCoachData={demoMode?demoCoachRatings:null} onNavigate={setScreen}/></Suspense>}
         {screen === "journey" && <JourneyScreen player={player} tier={tier} demoMode={demoMode} onBack={()=>setScreen("home")} onNav={setScreen} onUpgrade={promptUpgrade}/>}
         {screen === "cogym" && <CognitiveGym playerId={player.id || "__demo__"} ageBand={player?.level || null} onBack={()=>setScreen("home")}/>}
+        {screen === "readplay" && <Suspense fallback={<LazyFallback/>}><ReadThePlay player={player} onBack={()=>setScreen("home")}/></Suspense>}
         <FeedbackWidget screen={screen} version={VERSION} />
         {screen === "training" && (
           <div style={{minHeight:"100vh",background:C.bg,color:C.white,fontFamily:FONT.body,paddingBottom:80}}>

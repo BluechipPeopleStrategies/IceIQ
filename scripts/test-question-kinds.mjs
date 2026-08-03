@@ -39,6 +39,25 @@ describe("question kind registry", () => {
     assert.equal(kindSpec("nope"), null);
   });
 
+  it("resolves watch nodes (autoNext) to null, not read-mc", () => {
+    assert.equal(resolveKind({ autoNext: { next: "q1", ms: 2000 } }), null);
+    assert.equal(resolveKindForAge({ autoNext: { next: "q1" } }, "U11"), null);
+  });
+
+  it("lints justify copy to the same standards as the primary ask", () => {
+    const play = structuredClone(VERDICT_TWO_ON_ONE_FORCED_SHOT);
+    const node = Object.values(play.nodes).find((n) => n.ask?.justify);
+    assert.ok(node, "fixture should contain a justify node");
+    // The shipped fixture passes as-is.
+    assert.ok(validateFactoryStandards(play).errs.every((e) => !e.message.includes("justify")));
+    // Break it: two correct justify answers + a missing text.
+    node.ask.justify.opts.forEach((o) => { o.ok = true; });
+    delete node.ask.justify.opts[0].t;
+    const broken = validateFactoryStandards(play);
+    assert.ok(broken.errs.some((e) => e.message === "justify must have exactly one correct answer"));
+    assert.ok(broken.errs.some((e) => e.message === "justify option missing text"));
+  });
+
   it("round-trips an explicit verdict kind", () => {
     assert.equal(resolveKind({ ask: { kind: "verdict", opts: [] } }), "verdict");
   });
@@ -181,6 +200,59 @@ describe("watch-chain primitive", () => {
       "skip gate and jump should use the chain end node id");
     assert.ok(!src.includes("k.startsWith(`${play.id}:`)"),
       "per-play skip key check should be gone");
+  });
+
+  it("button-answer order is shuffled at render, not authored order (2026-07-30 catalog audit)", () => {
+    const src = readFileSync(new URL("../src/play/AnimatedPlay.jsx", import.meta.url), "utf8");
+    assert.ok(/function shuffledOptions\(opts\)/.test(src),
+      "a display-order shuffle helper should exist");
+    assert.ok(src.includes("const displayOpts = useMemo(() => shuffledOptions(activeOpts), [activeOpts])"),
+      "shuffle should be memoized per node/judge-step, not re-rolled every render");
+    assert.ok(/displayOpts\s*\n\s*\.filter\(\(opt\) => !opt\.u13Only/.test(src),
+      "the button-list render should map over the shuffled array, not node.ask.opts directly");
+    assert.ok(!src.includes('(kind === "verdict" && judgePick ? node.ask.justify.opts : node.ask.opts)\n            .filter'),
+      "the old unshuffled inline ternary should be gone from the render path");
+    // Safety invariant the shuffle relies on: choose() must key off the
+    // option object, never re-look-up node.ask.opts[index] by position --
+    // otherwise shuffled display order and real answer data would desync.
+    assert.ok(!/node\.ask(\.justify)?\.opts\[(index|picked)\]/.test(src),
+      "answer logic must never index back into the authored array by position");
+  });
+});
+
+describe("button-answer shuffle", () => {
+  // Same Fisher-Yates as AnimatedPlay.jsx's shuffledOptions -- can't import
+  // the .jsx module directly under plain node --test (no JSX transform in
+  // this runner, hence every other AnimatedPlay.jsx test above reads it as
+  // source text), so the algorithm's correctness is verified here in
+  // isolation and its presence in the real file is asserted above.
+  function shuffledOptions(opts) {
+    const a = (opts || []).slice();
+    for (let i = a.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [a[i], a[j]] = [a[j], a[i]];
+    }
+    return a;
+  }
+
+  it("returns a permutation: same elements, same length, input untouched", () => {
+    const opts = [{ id: "a" }, { id: "b" }, { id: "c" }, { id: "d" }];
+    const out = shuffledOptions(opts);
+    assert.equal(out.length, opts.length);
+    assert.deepEqual([...out].sort((x, y) => x.id.localeCompare(y.id)), opts);
+    assert.deepEqual(opts.map((o) => o.id), ["a", "b", "c", "d"], "must not mutate the source array");
+  });
+
+  it("actually varies position across calls (not a no-op)", () => {
+    const opts = [{ id: "a" }, { id: "b" }, { id: "c" }, { id: "d" }, { id: "e" }];
+    const seenFirst = new Set();
+    for (let i = 0; i < 200; i++) seenFirst.add(shuffledOptions(opts)[0].id);
+    assert.ok(seenFirst.size > 1, "correct-answer-fixed-position exploit requires this to vary");
+  });
+
+  it("handles empty/undefined without throwing", () => {
+    assert.deepEqual(shuffledOptions(undefined), []);
+    assert.deepEqual(shuffledOptions([]), []);
   });
 });
 

@@ -1,0 +1,55 @@
+{
+  "schemaVersion": "physics-profile-v1",
+  "id": "physics-u9-v1",
+  "ageBand": "U9",
+  "skillTier": null,
+  "rinkFrameProfileId": "nhl-200x85-v1",
+  "player": {
+    "topSpeedMPS": {
+      "value": 6.63,
+      "source": "engineering-estimate-pending-source",
+      "citation": "Zero published on-ice youth data exists below age 9 (the nearest real sample, PMC11358090, is ages 9-11 pooled). Linear extrapolation from the U11 real anchor (7.60 m/s) using the 0.4865 m/s-per-year growth rate averaged across the four real U11-U18 data points (docs/scenario-engine/physics-sourcing.md), projected down to age 8."
+    },
+    "accel0to10mS": {
+      "value": 2.04,
+      "source": "engineering-estimate-pending-source",
+      "citation": "Same extrapolation method as topSpeedMPS, applied to the U11 anchor's 10m acceleration time, age 8."
+    },
+    "avgAccelMPS2": {
+      "value": 4.81,
+      "source": "derived-from-estimate",
+      "citation": "Computed from THIS profile's own displayed accel0to10mS (2.04s) via kinematics (a = 2d/t^2, d=10m): 20/2.04^2 = 4.81. Tagged derived-from-estimate, not derived-from-citation -- see u7.json for why. (Corrected 2026-07-30: an earlier version stored 4.80, computed from an unrounded intermediate value that didn't reproduce from the displayed inputs -- caught by adversarial review.)"
+    },
+    "turningRadiusM": {
+      "value": 15.22,
+      "source": "engineering-estimate-pending-source",
+      "citation": "No published turning-radius figure exists at any age. Estimated as v^2 / (0.6 * avgAccelMPS2) = 6.627^2 / (0.6*4.81) -- see u7.json for the assumption this rests on."
+    },
+    "stoppingDistanceM": {
+      "value": 4.57,
+      "source": "engineering-estimate-pending-source",
+      "citation": "No published stopping-distance figure exists at any age. Estimated as v^2 / (2 * avgAccelMPS2) = 6.627^2 / (2*4.81)."
+    },
+    "reactionDelayS": {
+      "value": 0.3,
+      "source": "engineering-estimate-pending-source-general-athlete-proxy",
+      "citation": "See u7.json -- same flat 300ms applied across all bands; no age-hockey reaction-time curve exists in the literature to scale by."
+    }
+  },
+  "puck": {
+    "passSpeedMPS": {
+      "value": 11.56,
+      "source": "engineering-estimate-pending-source",
+      "citation": "Scaled from the U18 pass-speed reference (18 m/s) by this band's topSpeedMPS ratio to U18's -- see u7.json for the full method and its limits."
+    },
+    "iceDecelerationMPS2": {
+      "value": 0.981,
+      "source": "cited",
+      "citation": "mu*g, Hache's puck-on-ice friction coefficient (~0.1) x standard gravity. Real, age-independent physical constant."
+    }
+  },
+  "dependencyVersions": {
+    "rinkFrame": "rink-frame-v1",
+    "physicsSourcing": "docs/scenario-engine/physics-sourcing.md@2026-07-30"
+  }
+}
