@@ -116,14 +116,14 @@ already have earned it. Everything else here I would just do.
 Nine competing names for three zones, plus eight orthographic splits (`net front` vs
 `net-front`, `blue line` vs `blueline`, `faceoff` vs `face-off`).
 
-**Your decision — spelling.** The bank is 95% American today (`center` 61 / `centre` 3,
-`defense` 61 / `defence` 6). The audit recommends **Canadian** on audience grounds:
-this is a Canadian youth hockey product and the parents reading it write "centre". Cost
-is 67 strings. Standardising on the American forms already dominant costs 9.
+**DECIDED 2026-08-03 — Canadian spelling.** Thomas's call. `centre`, `defence`, and the
+Canadian forms throughout player-facing prose. Cost is 67 strings; the bank is 95%
+American today (`center` 61 / `centre` 3, `defense` 61 / `defence` 6), so this is a
+one-time correction on a product whose whole voice is Edmonton minor hockey, and it only
+gets more expensive as the bank grows.
 
-I lean **Canadian** — it is a one-time cost on a product whose whole voice is Edmonton
-minor hockey, and it gets more expensive the longer the bank grows. But it is a brand
-call, not a technical one.
+Scope of the decision: **player-facing prose only.** It does not touch code identifiers,
+CSS values, ids, asset paths, or `scene-manifest.json` keys — see the traps below.
 
 **The trap, and it is a real one:** `center` appears 515 times in `src/` and **only 61
 are prose**. The rest are CSS values (`textAlign: "center"`, `justifyContent`) and
@@ -193,7 +193,7 @@ only batch where the fix is a design decision rather than a correction.
 Four decisions, and none of them need research:
 
 1. **A1:** render a "What Happens Next" badge (recommended), or edit 17 stems?
-2. **B2:** Canadian or American spelling? (I lean Canadian.)
+2. ~~**B2:** Canadian or American spelling?~~ — **DECIDED: Canadian**, 2026-08-03.
 3. **B3:** age-banded player identification (recommended), or one global convention?
 4. **B1:** rename the `Iron Man` badge to `Workhorse`?
 
