@@ -4,12 +4,12 @@
 // so the cue switches to a DIFFERENT open teammate. The player must read the
 // change and hit the teammate that is correct RIGHT NOW, not the one they first
 // locked onto. No DOM, no canvas, so it is unit-testable in plain Node.
-import { levelT, lerp } from "./gymEngine.js";
+import { levelT, lerp, targetMaxY } from "./gymEngine.js";
 import { gradedPoints } from "./gymPoints.js";
 
 // The attacking blue line, as a fraction of canvas HEIGHT.
 //
-// This drill plays bottom-to-top: YOU carry the puck at y = H * 0.86 and the
+// This drill plays bottom-to-top: YOU carry the puck low on the sheet and the
 // receivers are above. drawRink is now called with orientation "portrait" for
 // this drill, which puts the blue lines horizontally at 0.33H and 0.67H — so
 // the line the attack crosses is the one at 0.33H, and anything seeded above it
@@ -85,10 +85,16 @@ export function makeTrial(level, W, H, { rng = Math.random } = {}) {
   const minGap = r * 2.6; // center-to-center spacing so markers do not overlap
   const clamp = (v, lo, hi) => Math.max(lo, Math.min(hi, v));
   const cx = (v) => clamp(v, pad, W - pad);
-  const cy = (v) => clamp(v, pad, H - pad);
+  // Action Rail: the bottom band of the surface belongs to the controls, so no
+  // body is placed in it. Clutter defenders used to scatter over the whole
+  // sheet and could end up under the Read it / Next rep button.
+  const cy = (v) => clamp(v, pad, targetMaxY(H) - pad);
 
   // 1. YOU: lower middle, the puck carrier.
-  const you = { x: W / 2, y: H * 0.86 };
+  //    0.86H is exactly the rail-band edge, so the countdown ring drawn around
+  //    YOU would sit half-under the button. YOU moves up to 0.80H — still well
+  //    behind the attacking blue line, which is what the offside guard needs.
+  const you = { x: W / 2, y: H * 0.8 };
 
   // helper: a random in-bounds point not overlapping existing points or YOU.
   function freeSpot(existing, yMin, yMax, guardMax = 600) {
@@ -108,7 +114,7 @@ export function makeTrial(level, W, H, { rng = Math.random } = {}) {
   //    cue arrows from YOU run up the ice.
   //
   //    ONSIDE CONSTRAINT. The play runs bottom-to-top and the puck is on YOU's
-  //    stick at y = H * 0.86, so the attacking blue line is the horizontal one
+  //    stick at y = H * 0.80, so the attacking blue line is the horizontal one
   //    at y = H * ATTACKING_BLUE_LINE. A receiver seeded ABOVE that line while
   //    the puck is still below it is offside — the pass this drill is training
   //    you to make could not legally be made. Every receiver therefore seeds

@@ -3,6 +3,7 @@ import {
   createAdaptiveLevel,
   setupCanvas,
   drawRink,
+  REPS_PER_SESSION,
 } from "./gymEngine";
 import { getDrill, saveSession } from "./gymStorage";
 import { cue, gymCueHooks } from "./gymAudio";
@@ -22,7 +23,7 @@ import { makeSituation, scoreChoice, OPTIONS } from "./bestOptionCore";
 // second-best option gets more tempting. Trains reading shoot/pass/carry fast
 // under pressure.
 
-const REPS = 8;
+const REPS = REPS_PER_SESSION;
 
 export default function BestOptionDrill({ playerId = "default", onExit }) {
   const rootRef = useRef(null);
@@ -424,7 +425,39 @@ export default function BestOptionDrill({ playerId = "default", onExit }) {
 
   useEffect(() => () => clearTimers(), []);
 
+  // Action Rail rule 7: Space fires the one primary rail action, everywhere in
+  // the gym; while the clock runs the primary action is the read itself, so
+  // S / P / C pick it. Nothing here is reachable only by pointer.
+  useEffect(() => {
+    if (phase !== "playing") return undefined;
+    const onKey = (e) => {
+      if (e.code === "Space" || e.key === " ") {
+        if (stage === "ready") {
+          e.preventDefault();
+          readIt();
+        } else if (stage === "reveal") {
+          e.preventDefault();
+          advanceRep();
+        }
+        return;
+      }
+      if (stage !== "live") return;
+      const k = e.key.toLowerCase();
+      const opt = OPTIONS.find((o) => o[0] === k);
+      if (!opt) return;
+      e.preventDefault();
+      resolveChoice(opt);
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [phase, stage]);
+
   const optionLabel = { shoot: "SHOOT", pass: "PASS", carry: "CARRY" };
+  // Rule 7: every rail control has a keyboard binding, shown as a key cap. The
+  // three reads take their own initial rather than 1/2/3 so the key means
+  // something under time pressure.
+  const optionKey = { shoot: "s", pass: "p", carry: "c" };
 
   const hint = {
     ready: "Tap Read it, then pick the best read (shoot, pass, or carry) before the clock runs out.",
@@ -521,46 +554,48 @@ export default function BestOptionDrill({ playerId = "default", onExit }) {
         </div>
       )}
 
-      <canvas
-        ref={canvasRef}
-        className="gym-canvas"
-        style={{ display: phase === "playing" ? "block" : "none" }}
-      />
-
-      {phase === "playing" && stage === "ready" && (
-        <div className="gym-row" style={{ marginBottom: 10 }}>
-          <button className="gym-btn" onClick={readIt}>
-            Read it
-          </button>
-        </div>
-      )}
-
-      {phase === "playing" && stage !== "ready" && (
-        <div className="gym-row" style={{ marginBottom: 10 }}>
-          {OPTIONS.map((opt) => (
-            <button
-              key={opt}
-              className="gym-btn"
-              disabled={stage !== "live"}
-              onClick={() => resolveChoice(opt)}
-            >
-              {optionLabel[opt]}
-            </button>
-          ))}
-        </div>
-      )}
-
+      {/* Action Rail rule 6: the hint sits ABOVE the play surface so the rail is
+          the last thing on screen and no control is ever below the fold. */}
       {phase === "playing" && (
         <p className="gym-hint" aria-live="polite">
           {hint}
         </p>
       )}
 
-      {phase === "playing" && stage === "reveal" && (
-        <button className="gym-btn gym-fab" onClick={advanceRep}>
-          Next rep
-        </button>
-      )}
+      <div className="gym-stage" style={{ display: phase === "playing" ? "block" : "none" }}>
+        <canvas ref={canvasRef} className="gym-canvas" />
+
+        {/* Rule 1: exactly one primary action, in the same place every stage.
+            Rule 4: the three reads are that action while the clock runs — they
+            belong IN the rail, not in a row under the canvas, because the eye
+            is on the frozen play and the clock is one to three seconds. */}
+        {phase === "playing" && stage === "ready" && (
+          <div className="gym-rail">
+            <button className="gym-btn" onClick={readIt}>
+              Read it
+              <kbd className="gym-key">space</kbd>
+            </button>
+          </div>
+        )}
+        {phase === "playing" && stage === "live" && (
+          <div className="gym-rail">
+            {OPTIONS.map((opt) => (
+              <button key={opt} className="gym-btn" onClick={() => resolveChoice(opt)}>
+                {optionLabel[opt]}
+                <kbd className="gym-key">{optionKey[opt]}</kbd>
+              </button>
+            ))}
+          </div>
+        )}
+        {phase === "playing" && stage === "reveal" && (
+          <div className="gym-rail">
+            <button className="gym-btn" onClick={advanceRep}>
+              {rep + 1 >= REPS ? "See the result" : "Next rep"}
+              <kbd className="gym-key">space</kbd>
+            </button>
+          </div>
+        )}
+      </div>
 
       {phase === "done" && (
         <div className="gym-card">

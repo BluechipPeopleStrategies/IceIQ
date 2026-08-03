@@ -94,7 +94,11 @@ export function makeFormation(level, W, H, { rng = Math.random } = {}) {
   const minGap = r * 2.6; // center-to-center spacing so markers do not overlap
 
   // 1. YOU: lower middle, the puck carrier.
-  const you = { x: W / 2, y: H * 0.86 };
+  //    Action Rail: 0.86H is exactly the rail-band edge (GYM_TARGET_MAX_Y), so
+  //    the countdown ring drawn around YOU — the only clock in the drill — would
+  //    sit half-under the Read it / Next rep button. YOU moves up to 0.80H.
+  //    Receivers already seed above 0.6H, so nothing you tap is in the band.
+  const you = { x: W / 2, y: H * 0.8 };
 
   // helper: a random in-bounds point that does not overlap existing points or YOU
   function freeSpot(existing, yMin, yMax, guardMax = 600) {
@@ -177,6 +181,40 @@ export function makeFormation(level, W, H, { rng = Math.random } = {}) {
         defenders.push(p);
         blocked[i] = true;
         placed = true;
+      }
+    }
+    if (!placed) {
+      // Nothing ON the lane clears the target lane, so step off it sideways at
+      // the receiver's end, AWAY from the target lane. Anything within `margin`
+      // of the segment still blocks this receiver, and moving perpendicular is
+      // the only direction that gains distance from the target lane.
+      //
+      // This matters because the old fallback below dropped a body a fixed
+      // `r` above the receiver with no check at all, and when two receivers sat
+      // nearly in line from YOU that body covered the target lane too — leaving
+      // the rep with NO open receiver, which breaks the drill's one invariant.
+      // It went unnoticed because the geometry only lines up on some seeds; it
+      // surfaced when YOU moved up out of the Action Rail band.
+      const dx = rc.x - you.x;
+      const dy = rc.y - you.y;
+      const len = Math.hypot(dx, dy) || 1;
+      let nx = -dy / len;
+      let ny = dx / len;
+      // point the normal at whichever side is farther from the target lane
+      const a = pointSegmentDist({ x: rc.x + nx, y: rc.y + ny }, you, target);
+      const b = pointSegmentDist({ x: rc.x - nx, y: rc.y - ny }, you, target);
+      if (b > a) {
+        nx = -nx;
+        ny = -ny;
+      }
+      for (const off of [margin * 0.5, margin * 0.75, margin * 0.95]) {
+        const p = { x: rc.x + nx * off, y: rc.y + ny * off };
+        if (pointSegmentDist(p, you, target) > margin) {
+          defenders.push(p);
+          blocked[i] = true;
+          placed = true;
+          break;
+        }
       }
     }
     if (!placed) {

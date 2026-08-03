@@ -3,8 +3,9 @@
 //
 // Late Read taught an illegal pass.
 //
-// The drill plays bottom-to-top — YOU carry the puck at y = 0.86H and the
-// receivers seed above — but drawRink drew the blue lines VERTICALLY, as a
+// The drill plays bottom-to-top — YOU carry the puck low on the sheet (0.80H,
+// clear of the Action Rail band) and the receivers seed above — but drawRink
+// drew the blue lines VERTICALLY, as a
 // landscape sheet. The zones ran perpendicular to the direction of play, so
 // "up ice" crossed no line the rink actually drew, and receivers were seeded
 // from the top of the canvas down. On a portrait sheet, where the attacking

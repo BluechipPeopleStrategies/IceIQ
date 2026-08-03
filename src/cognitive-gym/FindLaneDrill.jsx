@@ -4,6 +4,7 @@ import {
   setupCanvas,
   drawRink,
   pointerPos,
+  REPS_PER_SESSION,
 } from "./gymEngine";
 import { getDrill, saveSession } from "./gymStorage";
 import { cue, gymCueHooks } from "./gymAudio";
@@ -20,8 +21,7 @@ import { makeFormation, scoreLane } from "./findLaneCore";
 // levels add receivers and defenders, tighten the open seam, and close faster.
 // Trains seeing the open seam and threading the pass before it disappears.
 
-const REPS = 8;
-const REVEAL_HOLD_MS = 2000; // freeze the marked-up result so the player can study the read
+const REPS = REPS_PER_SESSION;
 
 export default function FindLaneDrill({ playerId = "default", onExit }) {
   const rootRef = useRef(null);
@@ -309,25 +309,27 @@ export default function FindLaneDrill({ playerId = "default", onExit }) {
     rafRef.current = requestAnimationFrame(tick);
   }
 
-  const resolveRep = useCallback(
-    (success) => {
-      pointsRef.current += sceneRef.current.repPoints || 0;
-      setPoints(pointsRef.current);
-      const lvl = engineRef.current.record(success);
-      setLevel(lvl);
-      if (success) setHits((h) => h + 1);
-      const next = sceneRef.current.repIndex + 1;
-      schedule(() => {
-        if (next >= REPS) {
-          setPhase("done");
-        } else {
-          setRep(next);
-          startRep(next);
-        }
-      }, REVEAL_HOLD_MS);
-    },
-    [startRep]
-  );
+  const resolveRep = useCallback((success) => {
+    pointsRef.current += sceneRef.current.repPoints || 0;
+    setPoints(pointsRef.current);
+    const lvl = engineRef.current.record(success);
+    setLevel(lvl);
+    if (success) setHits((h) => h + 1);
+  }, []);
+
+  // The reveal holds until the player taps Next rep. It used to clear itself
+  // after a fixed 2 s, which is not long enough to actually study a blocked
+  // lane, and it meant the rail was empty exactly when the player wanted a
+  // control (Action Rail rule 1).
+  function advanceRep() {
+    const next = sceneRef.current.repIndex + 1;
+    if (next >= REPS) {
+      setPhase("done");
+    } else {
+      setRep(next);
+      startRep(next);
+    }
+  }
 
   // Resolve a rep from a tapped receiver index (or -1 for timeout / off-target).
   const resolveTap = useCallback(
@@ -444,6 +446,25 @@ export default function FindLaneDrill({ playerId = "default", onExit }) {
 
   useEffect(() => () => clearTimers(), []);
 
+  // Action Rail rule 7: Space fires the one primary rail action, everywhere in
+  // the gym. Nothing here is reachable only by pointer.
+  useEffect(() => {
+    if (phase !== "playing") return undefined;
+    const onKey = (e) => {
+      if (e.code !== "Space" && e.key !== " ") return;
+      if (stage === "ready") {
+        e.preventDefault();
+        readIt();
+      } else if (stage === "reveal") {
+        e.preventDefault();
+        advanceRep();
+      }
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [phase, stage]);
+
   const hint = {
     ready: "Tap Read it, then find the teammate with a clean lane before it closes.",
     live: "One teammate has an open lane. Tap them before the ring runs out.",
@@ -533,27 +554,40 @@ export default function FindLaneDrill({ playerId = "default", onExit }) {
         </div>
       )}
 
-      <canvas
-        ref={canvasRef}
-        className="gym-canvas"
-        style={{ display: phase === "playing" ? "block" : "none" }}
-        onMouseDown={handleTap}
-        onTouchStart={handleTap}
-      />
-
-      {phase === "playing" && stage === "ready" && (
-        <div className="gym-row" style={{ marginBottom: 10 }}>
-          <button className="gym-btn" onClick={readIt}>
-            Read it
-          </button>
-        </div>
-      )}
-
+      {/* Action Rail rule 6: the hint sits ABOVE the play surface so the rail is
+          the last thing on screen and no control is ever below the fold. */}
       {phase === "playing" && (
         <p className="gym-hint" aria-live="polite">
           {hint}
         </p>
       )}
+
+      <div className="gym-stage" style={{ display: phase === "playing" ? "block" : "none" }}>
+        <canvas
+          ref={canvasRef}
+          className="gym-canvas"
+          onMouseDown={handleTap}
+          onTouchStart={handleTap}
+        />
+
+        {/* Rule 1: exactly one primary action, in the same place every stage. */}
+        {phase === "playing" && stage === "ready" && (
+          <div className="gym-rail">
+            <button className="gym-btn" onClick={readIt}>
+              Read it
+              <kbd className="gym-key">space</kbd>
+            </button>
+          </div>
+        )}
+        {phase === "playing" && stage === "reveal" && (
+          <div className="gym-rail">
+            <button className="gym-btn" onClick={advanceRep}>
+              {rep + 1 >= REPS ? "See the result" : "Next rep"}
+              <kbd className="gym-key">space</kbd>
+            </button>
+          </div>
+        )}
+      </div>
 
       {phase === "done" && (
         <div className="gym-card">

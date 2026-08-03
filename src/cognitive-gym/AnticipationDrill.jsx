@@ -7,6 +7,8 @@ import {
   setupCanvas,
   drawRink,
   pointerPos,
+  targetMaxY,
+  REPS_PER_SESSION,
 } from "./gymEngine";
 import { getDrill, saveSession, getUnit, setUnit as saveUnit } from "./gymStorage";
 import { cue, gymCueHooks } from "./gymAudio";
@@ -19,10 +21,9 @@ import { DIRECTIONS, guessAxis, scorePass, feetPerPixel, formatDistance, rateMis
 // player taps the gold bar where they think it will cross. Trains anticipation:
 // reading passes, picking off lanes, judging rims and bank passes off the boards.
 
-const ROUNDS = 8;
+const ROUNDS = REPS_PER_SESSION;
 const DT = 1 / 120; // physics timestep used to pre-sample the trajectory
 const BAR = 22; // gold bar thickness in px (was a 4px line) — bigger target
-const REVEAL_HOLD_MS = 2400; // hold the result on screen so the player can study the miss
 
 function pickDirection() {
   return DIRECTIONS[Math.floor(rand(0, DIRECTIONS.length))];
@@ -35,8 +36,14 @@ function buildTrajectory(W, H, level, dir = pickDirection()) {
   const t = levelT(level);
   const r = 8; // puck radius
   const motion = dir === "lr" || dir === "rl" ? "x" : "y";
-  const motionSpan = motion === "x" ? W : H;
-  const crossSpan = motion === "x" ? H : W;
+  // Action Rail: the gold answer bar IS the tap target and it runs the full
+  // span of one axis, so on a top-to-bottom pass it would land squarely under
+  // the rail. The whole play — path, bounces, and bar — therefore treats
+  // targetMaxY(H) as the height of the sheet, and the rink's bottom band is
+  // left to the controls.
+  const playH = targetMaxY(H);
+  const motionSpan = motion === "x" ? W : playH;
+  const crossSpan = motion === "x" ? playH : W;
   const speed = motionSpan * lerp(0.35, 0.9, t);
   const maxAngle = lerp(20, 50, t) * (Math.PI / 180);
   const angle = rand(-maxAngle, maxAngle);
@@ -78,10 +85,13 @@ function buildTrajectory(W, H, level, dir = pickDirection()) {
 
   const hideFrac = lerp(0.55, 0.25, t); // fraction of the path still visible
   const axis = guessAxis(dir);
-  const ftPerPx = feetPerPixel(axis, W, H);
+  // The guess axis measures the rink WIDTH across the playable height, not the
+  // canvas height, so a pixel miss still converts to the right number of feet.
+  const ftPerPx = feetPerPixel(axis, W, playH);
   const toleranceFt = lerp(6, 1.5, t); // success window in REAL feet — same for every direction
   return {
     pts,
+    playH, // usable height: everything below this belongs to the Action Rail
     motion, // "x" | "y"
     axis, // "y" | "x" — where the guess varies
     exitM, // motion-axis coordinate of the gold bar
@@ -104,6 +114,7 @@ export default function AnticipationDrill({ playerId = "default", onExit }) {
   const rafRef = useRef(0);
 
   const [phase, setPhase] = useState("intro"); // intro | playing | done
+  const [stage, setStage] = useState("live"); // live | reveal (drives the rail)
   const [round, setRound] = useState(0);
   const [hits, setHits] = useState(0);
   const [level, setLevel] = useState(() => getDrill(playerId, "anticipation").level);
@@ -133,29 +144,31 @@ export default function AnticipationDrill({ playerId = "default", onExit }) {
       settled: false,
       roundIndex,
     };
+    setStage("live");
     loop();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const resolveRound = useCallback(
-    (success) => {
-      pointsRef.current += sceneRef.current.repPoints || 0;
-      setPoints(pointsRef.current);
-      const lvl = engineRef.current.record(success);
-      setLevel(lvl);
-      if (success) setHits((h) => h + 1);
-      const next = sceneRef.current.roundIndex + 1;
-      setTimeout(() => {
-        if (next >= ROUNDS) {
-          setPhase("done");
-        } else {
-          setRound(next);
-          startRound(next);
-        }
-      }, REVEAL_HOLD_MS);
-    },
-    [startRound]
-  );
+  const resolveRound = useCallback((success) => {
+    pointsRef.current += sceneRef.current.repPoints || 0;
+    setPoints(pointsRef.current);
+    const lvl = engineRef.current.record(success);
+    setLevel(lvl);
+    if (success) setHits((h) => h + 1);
+  }, []);
+
+  // The replayed path and the tolerance window hold until the player taps Next
+  // rep. This drill's whole teaching moment is the dashed line showing where
+  // the puck actually went, and a fixed 2.4 s took it away mid-look.
+  function advanceRound() {
+    const next = sceneRef.current.roundIndex + 1;
+    if (next >= ROUNDS) {
+      setPhase("done");
+    } else {
+      setRound(next);
+      startRound(next);
+    }
+  }
 
   function drawPuck(ctx, x, y, r) {
     ctx.fillStyle = "#0b1b2b";
@@ -176,9 +189,10 @@ export default function AnticipationDrill({ playerId = "default", onExit }) {
 
       const horiz = traj.motion === "x";
 
-      // gold crossing BAR on the exit edge (thick, more target area)
+      // gold crossing BAR on the exit edge (thick, more target area). It stops
+      // at traj.playH so no part of the answer sits under the rail.
       ctx.fillStyle = "#f2b705";
-      if (horiz) ctx.fillRect(traj.exitM - BAR / 2, 0, BAR, H);
+      if (horiz) ctx.fillRect(traj.exitM - BAR / 2, 0, BAR, traj.playH);
       else ctx.fillRect(0, traj.exitM - BAR / 2, W, BAR);
 
       // absolute coords of the true crossing on the bar
@@ -254,6 +268,7 @@ export default function AnticipationDrill({ playerId = "default", onExit }) {
 
         if (revIdx >= traj.pts.length - 1 && !sc.settled) {
           sc.settled = true;
+          setStage("reveal"); // the rail swaps to Next rep once the replay lands
           // show the tolerance window around the true crossing, along the bar
           ctx.strokeStyle = "#0b1b2b";
           ctx.lineWidth = 2;
@@ -283,7 +298,7 @@ export default function AnticipationDrill({ playerId = "default", onExit }) {
           if (horiz) {
             const x0 = traj.forward ? traj.hideM : traj.exitM;
             const x1 = traj.forward ? traj.exitM : traj.hideM;
-            ctx.fillRect(Math.min(x0, x1), 0, Math.abs(x1 - x0), H);
+            ctx.fillRect(Math.min(x0, x1), 0, Math.abs(x1 - x0), traj.playH);
           } else {
             const y0 = traj.forward ? traj.hideM : traj.exitM;
             const y1 = traj.forward ? traj.exitM : traj.hideM;
@@ -316,9 +331,12 @@ export default function AnticipationDrill({ playerId = "default", onExit }) {
       Math.floor((performance.now() - sc.startedAt) / 1000 / DT),
       traj.pts.length - 1
     );
+    // Clamp the guess into the playable sheet: on the y axis that is the rail
+    // boundary, not the canvas bottom, so a tap can never resolve to a point
+    // the puck could not have crossed.
     const guessC =
       traj.axis === "y"
-        ? Math.min(Math.max(pos.y, 0), sc.H)
+        ? Math.min(Math.max(pos.y, 0), traj.playH)
         : Math.min(Math.max(pos.x, 0), sc.W);
     const { success, errorFt, points } = scorePass(
       guessC,
@@ -365,6 +383,21 @@ export default function AnticipationDrill({ playerId = "default", onExit }) {
   }, [phase, saved, hits, playerId]);
 
   useEffect(() => () => cancelAnimationFrame(rafRef.current), []);
+
+  // Action Rail rule 7: Space fires the one primary rail action, everywhere in
+  // the gym. Nothing here is reachable only by pointer.
+  useEffect(() => {
+    if (phase !== "playing") return undefined;
+    const onKey = (e) => {
+      if (e.code !== "Space" && e.key !== " ") return;
+      if (stage !== "reveal") return;
+      e.preventDefault();
+      advanceRound();
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [phase, stage]);
 
   const bestLabel = phase === "done" && saved ? sessionRankLabel(saved.sessions, Math.round(points)) : null;
 
@@ -436,13 +469,26 @@ export default function AnticipationDrill({ playerId = "default", onExit }) {
         </div>
       )}
 
-      <canvas
-        ref={canvasRef}
-        className="gym-canvas"
-        style={{ display: phase === "playing" ? "block" : "none" }}
-        onMouseDown={handleGuess}
-        onTouchStart={handleGuess}
-      />
+      <div className="gym-stage" style={{ display: phase === "playing" ? "block" : "none" }}>
+        <canvas
+          ref={canvasRef}
+          className="gym-canvas"
+          onMouseDown={handleGuess}
+          onTouchStart={handleGuess}
+        />
+
+        {/* Action Rail rule 1: one primary action, in the same place every
+            stage. This drill is tap-only while the puck is live, so the rail is
+            empty then and carries Next rep on the reveal. */}
+        {phase === "playing" && stage === "reveal" && (
+          <div className="gym-rail">
+            <button className="gym-btn" onClick={advanceRound}>
+              {round + 1 >= ROUNDS ? "See the result" : "Next rep"}
+              <kbd className="gym-key">space</kbd>
+            </button>
+          </div>
+        )}
+      </div>
 
       {phase === "done" && (
         <div className="gym-card">

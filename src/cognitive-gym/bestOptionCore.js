@@ -4,7 +4,7 @@
 // carry) is the best call, made visually defensible by where the net, goalie,
 // teammate, and defenders sit. Then grade the choice for speed.
 // No DOM, no canvas, so it is unit-testable in plain Node.
-import { levelT, lerp } from "./gymEngine.js";
+import { levelT, lerp, targetMaxY } from "./gymEngine.js";
 import { gradedPoints } from "./gymPoints.js";
 
 // The three reads the player chooses between. Exactly one is best per scene.
@@ -120,7 +120,11 @@ export function makeSituation(level, W, H, { rng = Math.random } = {}) {
   const pad = r + 12; // keep markers off the boards
   const clamp = (v, lo, hi) => Math.max(lo, Math.min(hi, v));
   const cx = (v) => clamp(v, pad, W - pad);
-  const cy = (v) => clamp(v, pad, H - pad);
+  // Action Rail: the bottom band of the surface belongs to the SHOOT / PASS /
+  // CARRY row, so no body is generated inside it. Without this a teammate or a
+  // pressuring defender lands under the buttons and the read is unreadable at
+  // exactly the moment it has to be made.
+  const cy = (v) => clamp(v, pad, targetMaxY(H) - pad);
   // small jitter so repeated scenes are not pixel-identical; deterministic via rng
   const jitter = (span) => (rng() - 0.5) * span;
 

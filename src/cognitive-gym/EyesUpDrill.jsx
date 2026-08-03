@@ -7,6 +7,7 @@ import {
   setupCanvas,
   drawRink,
   pointerPos,
+  REPS_PER_SESSION,
 } from "./gymEngine";
 import { getDrill, saveSession } from "./gymStorage";
 import { cue, gymCueHooks } from "./gymAudio";
@@ -22,8 +23,7 @@ import { pickFlash, scoreTap, flashMs } from "./eyesUpCore";
 // levels flash shorter, push farther into the periphery, and add more possible
 // spots. Trains scanning and seeing the back-door without puck-watching.
 
-const TRIALS = 12;
-const FEEDBACK_HOLD_MS = 1400; // freeze the result so the player can study the miss
+const TRIALS = REPS_PER_SESSION;
 
 export default function EyesUpDrill({ playerId = "default", onExit }) {
   const rootRef = useRef(null);
@@ -34,6 +34,7 @@ export default function EyesUpDrill({ playerId = "default", onExit }) {
   const rafRef = useRef(0);
 
   const [phase, setPhase] = useState("intro"); // intro | ready | playing | done
+  const [stage, setStage] = useState("ready"); // ready | look | feedback
   const [trial, setTrial] = useState(0);
   const [hits, setHits] = useState(0);
   const [level, setLevel] = useState(() => getDrill(playerId, "eyesup").level);
@@ -163,8 +164,11 @@ export default function EyesUpDrill({ playerId = "default", onExit }) {
     ctx.stroke();
   }
 
-  // Begin one trial: size the canvas, pick the flash spot, then wait a random
-  // delay before flashing it for the level's flash duration.
+  // Set up one look: size the canvas, pick the flash spot, and wait in "ready"
+  // until the player taps Go. The wait before the flash has to be a surprise,
+  // but the START of the look does not — every other drill in the gym lets the
+  // player begin when they are set, and staring at the fixation puck is exactly
+  // the thing you want them ready for.
   const startTrial = useCallback((trialIndex) => {
     const canvas = canvasRef.current;
     const host = rootRef.current;
@@ -184,44 +188,52 @@ export default function EyesUpDrill({ playerId = "default", onExit }) {
       armed: false, // becomes true once the flash has been shown (accepts taps)
       trialIndex,
     };
+    setStage("ready");
     render();
-
-    // random wait, then flash, then hide
-    schedule(() => {
-      const sc = sceneRef.current;
-      if (sc.resolved) return;
-      sc.showFlash = true;
-      sc.armed = true;
-      render();
-      schedule(() => {
-        const s = sceneRef.current;
-        if (s.resolved) return;
-        s.showFlash = false;
-        render();
-      }, flash.flashMs);
-    }, rand(800, 1900));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [render]);
 
-  const resolveTrial = useCallback(
-    (success) => {
-      pointsRef.current += sceneRef.current.repPoints || 0;
-      setPoints(pointsRef.current);
-      const lvl = engineRef.current.record(success);
-      setLevel(lvl);
-      if (success) setHits((h) => h + 1);
-      const next = sceneRef.current.trialIndex + 1;
+  // Player tapped Go: random wait, then flash, then hide.
+  function beginLook() {
+    const sc = sceneRef.current;
+    if (!sc.ctx || sc.resolved || sc.stage === "look") return;
+    sc.stage = "look";
+    setStage("look");
+    schedule(() => {
+      const s = sceneRef.current;
+      if (s.resolved) return;
+      s.showFlash = true;
+      s.armed = true;
+      render();
       schedule(() => {
-        if (next >= TRIALS) {
-          setPhase("done");
-        } else {
-          setTrial(next);
-          startTrial(next);
-        }
-      }, FEEDBACK_HOLD_MS);
-    },
-    [startTrial]
-  );
+        const s2 = sceneRef.current;
+        if (s2.resolved) return;
+        s2.showFlash = false;
+        render();
+      }, s.flash.flashMs);
+    }, rand(800, 1900));
+  }
+
+  const resolveTrial = useCallback((success) => {
+    pointsRef.current += sceneRef.current.repPoints || 0;
+    setPoints(pointsRef.current);
+    const lvl = engineRef.current.record(success);
+    setLevel(lvl);
+    if (success) setHits((h) => h + 1);
+  }, []);
+
+  // The marked-up result holds until the player taps Next look. It used to
+  // clear itself after 1.4 s, which is not long enough to compare where you
+  // tapped against where the teammate actually was.
+  function advanceTrial() {
+    const next = sceneRef.current.trialIndex + 1;
+    if (next >= TRIALS) {
+      setPhase("done");
+    } else {
+      setTrial(next);
+      startTrial(next);
+    }
+  }
 
   function handleTap(evt) {
     const sc = sceneRef.current;
@@ -236,7 +248,9 @@ export default function EyesUpDrill({ playerId = "default", onExit }) {
     sc.tap = tap;
     sc.result = result;
     sc.repPoints = result.points;
+    sc.stage = "feedback";
     clearTimers();
+    setStage("feedback");
     setLast({ success: result.success, distFt: Math.round(result.distFt), repPoints: result.points });
     render();
     resolveTrial(result.success);
@@ -300,7 +314,36 @@ export default function EyesUpDrill({ playerId = "default", onExit }) {
 
   useEffect(() => () => { clearTimers(); cancelAnimationFrame(rafRef.current); }, []);
 
+  // Action Rail rule 7: Space fires the one primary rail action, everywhere in
+  // the gym. Nothing here is reachable only by pointer.
+  useEffect(() => {
+    if (phase !== "playing") return undefined;
+    const onKey = (e) => {
+      if (e.code !== "Space" && e.key !== " ") return;
+      if (stage === "ready") {
+        e.preventDefault();
+        beginLook();
+      } else if (stage === "feedback") {
+        e.preventDefault();
+        advanceTrial();
+      }
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [phase, stage]);
+
   const lastFlashMs = engineRef.current ? flashMs(engineRef.current.level) : null;
+
+  const hint = {
+    ready: "Tap Go, then keep your eyes on the center puck.",
+    look: "Eyes on the center puck. Tap where the teammate flashes.",
+    feedback: last
+      ? last.success
+        ? `Eyes up, you caught it! +${last.repPoints} (${last.distFt} ft off the spot)`
+        : `Just missed, ${last.distFt} ft away. Eyes on the center puck.`
+      : "",
+  }[stage];
 
   const bestLabel = phase === "done" && saved ? sessionRankLabel(saved.sessions, Math.round(points)) : null;
 
@@ -344,12 +387,13 @@ export default function EyesUpDrill({ playerId = "default", onExit }) {
           </svg>
           <p className="gym-goal"><strong>Your goal:</strong> keep your eyes on the center puck and catch where a teammate flashes out of the corner of your eye.</p>
           <p>
-            <strong>The game:</strong> keep your eyes on the center puck the whole
-            time. After a short wait a teammate flashes for a split second out near
-            the boards, then disappears. Tap the spot where it appeared. Landing in
-            the same region counts, and the closer you are to the exact spot the
-            more points you earn. As you level up the flash gets shorter, lands
-            farther out toward the boards, and shows up in more places.
+            <strong>The game:</strong> tap Go, then keep your eyes on the center
+            puck the whole time. After a short wait a teammate flashes for a split
+            second out near the boards, then disappears. Tap the spot where it
+            appeared. Landing in the same region counts, and the closer you are to
+            the exact spot the more points you earn. As you level up the flash gets
+            shorter, lands farther out toward the boards, and shows up in more
+            places. You start each look when you are ready.
           </p>
           <div className="gym-trains">
             <strong>Why it matters</strong>
@@ -366,23 +410,40 @@ export default function EyesUpDrill({ playerId = "default", onExit }) {
         </div>
       )}
 
-      <canvas
-        ref={canvasRef}
-        className="gym-canvas"
-        style={{ display: phase === "playing" ? "block" : "none" }}
-        onMouseDown={handleTap}
-        onTouchStart={handleTap}
-      />
-
+      {/* Action Rail rule 6: the hint sits ABOVE the play surface so the rail is
+          the last thing on screen and no control is ever below the fold. */}
       {phase === "playing" && (
         <p className="gym-hint" aria-live="polite">
-          {last
-            ? last.success
-              ? `Eyes up, you caught it! +${last.repPoints} (${last.distFt} ft off the spot)`
-              : `Just missed, ${last.distFt} ft away. Eyes on the center puck.`
-            : "Eyes on the center puck. Tap where the teammate flashes."}
+          {hint}
         </p>
       )}
+
+      <div className="gym-stage" style={{ display: phase === "playing" ? "block" : "none" }}>
+        <canvas
+          ref={canvasRef}
+          className="gym-canvas"
+          onMouseDown={handleTap}
+          onTouchStart={handleTap}
+        />
+
+        {/* Rule 1: exactly one primary action, in the same place every stage. */}
+        {phase === "playing" && stage === "ready" && (
+          <div className="gym-rail">
+            <button className="gym-btn" onClick={beginLook}>
+              Go
+              <kbd className="gym-key">space</kbd>
+            </button>
+          </div>
+        )}
+        {phase === "playing" && stage === "feedback" && (
+          <div className="gym-rail">
+            <button className="gym-btn" onClick={advanceTrial}>
+              {trial + 1 >= TRIALS ? "See the result" : "Next look"}
+              <kbd className="gym-key">space</kbd>
+            </button>
+          </div>
+        )}
+      </div>
 
       {phase === "done" && (
         <div className="gym-card">

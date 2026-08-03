@@ -1,5 +1,5 @@
 import { useRef, useState, useCallback, useEffect } from "react";
-import { createAdaptiveLevel, levelT, lerp, rand } from "./gymEngine";
+import { createAdaptiveLevel, levelT, lerp, rand, REPS_PER_SESSION } from "./gymEngine";
 import { getDrill, saveSession } from "./gymStorage";
 import { cue, gymCueHooks } from "./gymAudio";
 import { ScoreCount, ConfettiBurst } from "./gymFx";
@@ -17,7 +17,18 @@ import { reactionPoints } from "./reactionCore";
 // Note: the README refers to this drill as "Green Light"; the shipped version
 // uses blue/orange instead of green/red so the signal is not red/green alone.
 
-const TRIALS = 16;
+// Five trials like the rest of the gym, so a session is the same length
+// everywhere. The cost is honest and worth naming: `meta.avgRt` is now the mean
+// of at most five samples, so the hub's "fastest ms" gets noisy — one flinch
+// moves it a lot. The structurally better answer is five ROUNDS of three
+// flashes (five reps on the scoreboard, fifteen samples in the statistics), but
+// that reshapes the trial loop and is Thomas's call (D7 in the drill spec).
+const TRIALS = REPS_PER_SESSION;
+
+// The Action Rail deliberately does not apply here. This is the one drill with
+// no play surface: the light IS the control, it fills the space a rail would
+// occupy, and there are no tap targets to keep out of a band. Documented as an
+// exemption in the spec (§A.6) rather than left as an oversight.
 
 export default function ReactionDrill({ playerId = "default", onExit }) {
   const engineRef = useRef(null);

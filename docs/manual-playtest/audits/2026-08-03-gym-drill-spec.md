@@ -2298,3 +2298,111 @@ truth over anything above.
 1. The offside fix for Late Read and Run the Play — highest value of what remains.
 2. A unit test pinning the points curve.
 3. Extend reps + rail to the other 7 drills so the gym is consistent.
+
+---
+
+## Implementation status — 2026-08-03, second pass (six more drills)
+
+Continuation of the section above. Scope was deliberately narrow: extend the two
+conversions already shipped for the first five drills — `REPS_PER_SESSION` and the
+Action Rail — to six more. **No file outside `src/cognitive-gym/` was touched, and
+`RunThePlayDrill.jsx` was left alone** because its layout is blocked on D6 / the
+in-zone-vs-full-sheet call.
+
+### Done — 6 drills
+
+| Drill | Five reps | Action Rail | Notes |
+|---|---|---|---|
+| Read the Pass (`AnticipationDrill`) | ✅ 8 → 5 | ✅ | whole play + the gold answer bar now live above the band |
+| Best Option (`BestOptionDrill`) | ✅ 8 → 5 | ✅ | SHOOT / PASS / CARRY moved INTO the rail (rule 4); keys `s`/`p`/`c` |
+| Eyes Up (`EyesUpDrill`) | ✅ 12 → 5 | ✅ | new `Go` / `Next look`; flash ring capped by the band |
+| Find the Lane (`FindLaneDrill`) | ✅ 8 → 5 | ✅ | `Read it` / `Next rep`; YOU moved 0.86H → 0.80H |
+| Shoot or Hold (`ReactionDrill`) | ✅ 16 → 5 | **exempt** | no play surface; the light IS the control (§A.6) |
+| Late Read (`LateReadDrill`) | ✅ 9 → 5 | ✅ | `Read it` / `Next rep`; YOU 0.86H → 0.80H |
+
+Supporting core files: `anticipationCore` untouched, `bestOptionCore`,
+`eyesUpCore`, `findLaneCore`, `lateReadCore` each clamp generation into
+`targetMaxY(H)`.
+
+Three things that fall out of the rail and are worth naming:
+
+- **Three drills lost their timed auto-advance.** Read the Pass (2.4 s), Find the
+  Lane (2.0 s) and Late Read (2.0 s) used to clear the reveal on a timer. They now
+  hold until `Next rep`, matching the five already converted. This was forced by
+  rule 1 — a fixed timer leaves the rail empty on the one stage where the player
+  wants a control — and it is also the right call on its own: the dashed replay
+  path, the green open lane, and the "who was actually open" line are the whole
+  teaching moment and two seconds is not enough to use them.
+- **Eyes Up gained a `Go` gate.** The wait before the flash still has to be a
+  surprise; the START of a look does not, and every other drill lets the player
+  begin when they are set. Intro copy updated to match.
+- **YOU moved up in Find the Lane and Late Read.** `H * 0.86` is exactly the band
+  edge, so the shrinking countdown ring drawn around YOU — the only clock either
+  drill shows — sat half-under the button. Both now seed YOU at `H * 0.80`. The
+  Late Read offside guard is unaffected: 0.80H is still well behind the attacking
+  blue line at 0.33H, and `lateReadOffside.test.mjs` still reports **0 offside
+  receivers across 600 trials**.
+
+### A pre-existing bug this surfaced (fixed)
+
+Moving YOU up in Find the Lane broke `test:gym`'s "exactly one open lane"
+invariant on one seed. The cause was not the move. `makeFormation`'s last-resort
+blocker (step 5) dropped a defender a fixed `r` above an unblocked receiver **with
+no check at all**, and when two receivers happened to line up from YOU that body
+covered the *target* lane too — leaving a rep with **no** open receiver on a drill
+whose entire premise is that exactly one exists. It only bites on some geometries,
+which is why it shipped.
+
+Fixed by trying perpendicular offsets at the receiver's end, away from the target
+lane, before falling back to the old blind placement. Measured over 12,000
+formations (3 canvas sizes × 20 levels × 200 seeds):
+
+| | invariant violations |
+|---|---|
+| before (YOU at 0.86H, blind fallback) | 122 / 12,000 — **1.02 %** |
+| after (YOU at 0.80H, perpendicular fallback) | 18 / 12,000 — **0.15 %** |
+
+The residual 18 are all "zero open lanes" at levels 17-20, where five receivers,
+seven defenders and the tightest margin leave genuinely no room. Not chased
+further — it is a separate defect, it is 7× better than it was, and a guaranteed
+fix needs a re-roll or a post-placement repair pass.
+
+### Not done / deliberately skipped
+
+- **`RunThePlayDrill.jsx` — untouched, as instructed.** Still 6 reps, no rail.
+  Blocked on Thomas's in-zone-vs-full-sheet call.
+- **`ReactionDrill` has no rail, on purpose.** It is the one drill with no play
+  surface: the light fills the space a rail would sit in and there are no tap
+  targets to keep out of a band. `.gym-fab` stays as its alias.
+- **D7 was resolved toward option 1, not option 3.** Shoot or Hold is now 5
+  trials, so `meta.avgRt` (the hub's "fastest ms") is the mean of at most five
+  samples and will be noisy — one flinch moves it. Option 3 (five ROUNDS of three
+  flashes: five reps on the scoreboard, fifteen samples in the statistics) is
+  still the honest fix and still needs Thomas. It is one constant to revert.
+- **`TwoThingsDrill` is only half converted, contrary to the section above.** It
+  has `REPS_PER_SESSION` and it moved its shape cue with `GYM_TARGET_MAX_Y`, but
+  its `Go` button and its **shape buttons are still in a `.gym-row` under the
+  canvas**, not in `.gym-rail`. That is precisely the case rule 4 was written for
+  ("the change that actually fixes Two Things"). Left alone here because it was
+  outside the six drills this pass was scoped to — but the first status section
+  above lists it as done, and it is not.
+
+### Verification
+
+Run on the finished state, not from memory:
+
+- `npm run build` — clean (`✓ built in 4.53s`; only the pre-existing >500 kB chunk
+  warning).
+- `npm run test:gym` — **All passed**.
+- `npm run test:gym-progress` — 7/7.
+- `npm run test:gym-phase1` — 9/9.
+- `npm run test:late-read-offside` — 10/10, **0 offside receivers, 0 offside
+  trials**.
+- `npm run test:read-numbers-points` — 18/18.
+- `npm run test:best-option-offside` — 17/17.
+
+Not verified: none of this was exercised in a browser. The rail's *placement* is
+CSS that five drills already ship, but the new `Go` gate in Eyes Up, the
+SHOOT/PASS/CARRY row inside the rail, and the three reveals that no longer
+auto-advance have only been reasoned about and type-checked by the build. They
+want a playtest.

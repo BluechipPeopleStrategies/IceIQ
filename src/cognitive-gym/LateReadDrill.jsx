@@ -4,6 +4,7 @@ import {
   setupCanvas,
   drawRink,
   pointerPos,
+  REPS_PER_SESSION,
 } from "./gymEngine";
 import { getDrill, saveSession } from "./gymStorage";
 import { cue, gymCueHooks } from "./gymAudio";
@@ -23,8 +24,7 @@ import { makeTrial, scoreTrial } from "./lateReadCore";
 // time), shorten the clock, and add bodies. Trains not committing too early and
 // switching when the ice changes.
 
-const REPS = 9;
-const REVEAL_HOLD_MS = 2000; // freeze the marked-up result so the player can study the read
+const REPS = REPS_PER_SESSION;
 
 export default function LateReadDrill({ playerId = "default", onExit }) {
   const rootRef = useRef(null);
@@ -327,25 +327,27 @@ export default function LateReadDrill({ playerId = "default", onExit }) {
     rafRef.current = requestAnimationFrame(tick);
   }
 
-  const resolveRep = useCallback(
-    (success) => {
-      pointsRef.current += sceneRef.current.repPoints || 0;
-      setPoints(pointsRef.current);
-      const lvl = engineRef.current.record(success);
-      setLevel(lvl);
-      if (success) setHits((h) => h + 1);
-      const next = sceneRef.current.repIndex + 1;
-      schedule(() => {
-        if (next >= REPS) {
-          setPhase("done");
-        } else {
-          setRep(next);
-          startRep(next);
-        }
-      }, REVEAL_HOLD_MS);
-    },
-    [startRep]
-  );
+  const resolveRep = useCallback((success) => {
+    pointsRef.current += sceneRef.current.repPoints || 0;
+    setPoints(pointsRef.current);
+    const lvl = engineRef.current.record(success);
+    setLevel(lvl);
+    if (success) setHits((h) => h + 1);
+  }, []);
+
+  // The reveal holds until the player taps Next rep. A late read is the hardest
+  // thing in the gym to see after the fact, and the old fixed 2 s hold cleared
+  // the green line before it could be studied — it also left the rail empty on
+  // the one stage where a control is wanted (Action Rail rule 1).
+  function advanceRep() {
+    const next = sceneRef.current.repIndex + 1;
+    if (next >= REPS) {
+      setPhase("done");
+    } else {
+      setRep(next);
+      startRep(next);
+    }
+  }
 
   // Resolve a rep from a tapped teammate index (or -1 for timeout / off-target).
   const resolveTap = useCallback(
@@ -470,6 +472,25 @@ export default function LateReadDrill({ playerId = "default", onExit }) {
 
   useEffect(() => () => clearTimers(), []);
 
+  // Action Rail rule 7: Space fires the one primary rail action, everywhere in
+  // the gym. Nothing here is reachable only by pointer.
+  useEffect(() => {
+    if (phase !== "playing") return undefined;
+    const onKey = (e) => {
+      if (e.code !== "Space" && e.key !== " ") return;
+      if (stage === "ready") {
+        e.preventDefault();
+        readIt();
+      } else if (stage === "reveal") {
+        e.preventDefault();
+        advanceRep();
+      }
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [phase, stage]);
+
   const hint = {
     ready: "Tap Read it, then hit the teammate the gold arrow points to. Watch for a late change.",
     live: "Pass to the teammate the gold arrow points to. If a defender steps up and the cue jumps, hit the new open teammate instead.",
@@ -570,27 +591,42 @@ export default function LateReadDrill({ playerId = "default", onExit }) {
         </div>
       )}
 
-      <canvas
-        ref={canvasRef}
-        className="gym-canvas"
-        style={{ display: phase === "playing" ? "block" : "none" }}
-        onMouseDown={handleTap}
-        onTouchStart={handleTap}
-      />
-
-      {phase === "playing" && stage === "ready" && (
-        <div className="gym-row" style={{ marginBottom: 10 }}>
-          <button className="gym-btn" onClick={readIt}>
-            Read it
-          </button>
-        </div>
-      )}
-
+      {/* Action Rail rule 6: the hint sits ABOVE the play surface so the rail is
+          the last thing on screen and no control is ever below the fold. */}
       {phase === "playing" && (
         <p className="gym-hint" aria-live="polite">
           {hint}
         </p>
       )}
+
+      <div className="gym-stage" style={{ display: phase === "playing" ? "block" : "none" }}>
+        <canvas
+          ref={canvasRef}
+          className="gym-canvas"
+          onMouseDown={handleTap}
+          onTouchStart={handleTap}
+        />
+
+        {/* Rule 1: exactly one primary action, in the same place every stage.
+            "Read it" was the control S2-23 asked to move into the middle of the
+            page; the rail is where it lives now. */}
+        {phase === "playing" && stage === "ready" && (
+          <div className="gym-rail">
+            <button className="gym-btn" onClick={readIt}>
+              Read it
+              <kbd className="gym-key">space</kbd>
+            </button>
+          </div>
+        )}
+        {phase === "playing" && stage === "reveal" && (
+          <div className="gym-rail">
+            <button className="gym-btn" onClick={advanceRep}>
+              {rep + 1 >= REPS ? "See the result" : "Next rep"}
+              <kbd className="gym-key">space</kbd>
+            </button>
+          </div>
+        )}
+      </div>
 
       {phase === "done" && (
         <div className="gym-card">

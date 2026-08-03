@@ -2,7 +2,7 @@
 // Pure helpers for Eyes Up (peripheral vision): pick where a teammate flashes in
 // the periphery, and grade a tap against the true flash spot. No DOM, no canvas,
 // so it is unit-testable in plain Node.
-import { levelT, lerp } from "./gymEngine.js";
+import { levelT, lerp, targetMaxY } from "./gymEngine.js";
 import { gradedPoints } from "./gymPoints.js";
 import { RINK_LENGTH_FT, RINK_WIDTH_FT } from "./anticipationCore.js";
 
@@ -44,11 +44,26 @@ export function hitRadius(level, W, H) {
   return Math.min(W, H) * lerp(EASY_HIT_FRAC, HARD_HIT_FRAC, levelT(level));
 }
 
+// Room to leave below the lowest flash so the marker's outer ring clears the
+// Action Rail band rather than tucking under the Go / Next look button.
+const RAIL_CLEARANCE = 16;
+
 // The usable half-extents from center to just inside the boards. We inset so the
 // flash never lands on the boards themselves.
+//
+// The vertical half-extent is additionally capped by the rail band. The
+// fixation puck cannot move — it is the thing the player must stare at, and it
+// belongs at centre ice — so the ring gives up height SYMMETRICALLY instead of
+// sliding upward. That costs a little periphery top and bottom, which makes the
+// vertical read marginally easier; the alternative (clamping only the low
+// slots) bunches several spots onto the same y, which is worse.
 function extents(W, H) {
   const inset = 0.08; // keep the flash off the very edge
-  return { ex: (W / 2) * (1 - inset), ey: (H / 2) * (1 - inset) };
+  const railRoom = targetMaxY(H) - H / 2 - RAIL_CLEARANCE;
+  return {
+    ex: (W / 2) * (1 - inset),
+    ey: Math.min((H / 2) * (1 - inset), Math.max(0, railRoom)),
+  };
 }
 
 // Pick a flash position for a level. `slot` (0..slots-1) and `rng` are injectable
