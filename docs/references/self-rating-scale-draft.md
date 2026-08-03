@@ -77,7 +77,7 @@ most current signups are not.
 
 | Rung | Player / Parent | Coach |
 |---|---|---|
-| Introduced | I'm learning what this is. | Introduced. Needs consistent support. |
+| Introduced | I'm learning what this is. | Introduced. |
 | Developing | I can do it sometimes, with reminders. | Progress with prompting or in practice. |
 | Consistent | I do it reliably in practice. | Reliable in practice, inconsistent in games. |
 | Proficient | I do it in games without thinking. | Performs reliably in games. Above average for {ageGroup}. |
@@ -93,11 +93,11 @@ worry is that kids under-rate themselves out of modesty when asked to rank.
 
 | Rung | Player / Parent | Coach |
 |---|---|---|
-| Introduced | New to this. Still working out what it means. | Introduced. Requires structured teaching. |
+| Introduced | New to this. Still working out what it means. | Introduced. |
 | Developing | Inconsistent. I need reminders. | Developing. Inconsistent under pressure. |
 | Consistent | I execute it in practice reliably. | Executes in practice, breaks down under game speed. |
 | Proficient | I execute it in games under pressure. | Reliable under game pressure. Top third of {ageGroup} in {region}. |
-| Advanced | Among the best in my age group in {region}. | Elite for {ageGroup} in {region}. Drives standards around him. |
+| Advanced | Among the best in my age group in {region}. | Elite for {ageGroup} in {region}. Raises the standard around them. |
 
 Older players can handle direct comparison, so the athlete column takes the
 anchor here where it does not at U11.
