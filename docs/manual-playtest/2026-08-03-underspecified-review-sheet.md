@@ -1,5 +1,12 @@
 # Under-specified questions — review sheet
 
+> **STATUS 2026-08-03: all six APPLIED** on Thomas's standing default ("take the
+> recommended option on reversible steps and keep going"). Class A and all five
+> Class B clauses are in. Verified: only the `sit` field changed on each, no answer
+> key moved, no option text changed, and the U7/U9 zone guard still passes because
+> B1 uses net-relative language ("down in your own end") rather than a zone name.
+> Reversible — say the word on any of the six and I will revert it.
+
 The 25 from CONTENT-2, triaged. **Six need a decision. Nineteen do not.**
 
 Triage test: **does the missing detail change the answer?** Only that class can mark a
