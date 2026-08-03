@@ -87,12 +87,48 @@ that made this worth doing.
 
 ## Capture settings
 
+Recording resolution matters far less than you'd think, and higher is not
+better. `/watch` extracts frames at **512px wide by default** (`frames.py`
+`--resolution`, bumpable to 1024 at ~4x the token cost) and never upscales. A 4K
+recording and a 720p recording both arrive as 512px-wide frames.
+
+What actually decides whether I can read the screen is **how large the app is
+relative to the frame** — so:
+
+- **Fill the frame with the app.** Record the browser window alone, not a 4K
+  desktop with the app in one corner. A maximized app at 1280x720 beats a
+  quarter-screen app at 4K by a wide margin.
+- **Browser zoom 125-150%.** Free legibility, costs nothing.
+- 1080p or 720p capture is plenty. Don't bother with 4K; it gets thrown away.
+
+The harder limit is the **frame budget: 100 frames for the whole video**
+(`auto_fps`). A 15-minute recording samples roughly one frame every 9 seconds.
+Frames are a garnish. The transcript is the record — which is the real reason
+rule #1 (read it aloud) carries the protocol.
+
 - Win+G (Game Bar) or OBS. Either is fine.
-- **1080p or better** — frame sampling downscales, so start high.
 - **Mic hot.** A recording with no narration is worth less than a screenshot; the
   narration is the whole point.
 - 10-15 minutes is a good session. Longer is fine, but findings cluster early.
 - Drop the file anywhere (`Downloads` is fine) and say it's a playtest video.
+
+## Screenshots — how to hand them over
+
+No tagging, no renaming. Two things:
+
+1. **Say "screenshot" out loud** as you take it, ideally with a couple of words
+   of what's on screen ("screenshot — the time-and-space one"). That's the
+   alignment key.
+2. **Leave the default filenames** and keep them in one folder. Windows names
+   them with a timestamp, so they sort chronologically and match the order you
+   called them out in the audio.
+
+Order plus your spoken cue is enough to match every screenshot to its moment. If
+you want zero ambiguity on a long session, count them aloud — "screenshot one",
+"screenshot two" — but it's rarely needed.
+
+Screenshots are full resolution, so they're the *only* place fine detail
+survives. That's why the geometry complaints go here and not in the video.
 
 ## What happens on my end
 
