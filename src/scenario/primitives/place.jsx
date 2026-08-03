@@ -87,6 +87,23 @@ export function PlacePrimitive({ interaction, correct, actors, svgPoint, view, l
 
   return (
     <g style={{ touchAction: "none" }}>
+      {/* Drag capture surface. Only present WHILE dragging, so it never eats
+          clicks meant for the tokens themselves.
+
+          Without it, pointermove/pointerup are bound solely to the token <g>,
+          which means the drag depends entirely on setPointerCapture() working
+          on an SVG group. Where that is unsupported or silently no-ops (it is
+          called with optional chaining, so a miss is invisible), the pointer
+          leaves the ~15px circle after a few pixels of travel and the token
+          stops following -- indistinguishable from "I can't drag the players",
+          reported from live playtest 2026-08-03. Catching the events on a
+          full-bleed rect makes the drag independent of pointer capture. */}
+      {dragging != null && (
+        <rect x="-50" y="-50" width="700" height="400" fill="transparent"
+          pointerEvents="all" onPointerMove={onMove} onPointerUp={endDrag}
+          onPointerLeave={endDrag}/>
+      )}
+
       {/* Target guides (faint before, revealed after Check). */}
       {items.map(id => {
         const t = targetFor(id);
