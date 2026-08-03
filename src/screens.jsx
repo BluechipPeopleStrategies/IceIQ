@@ -1723,7 +1723,7 @@ export function SkillsOnboarding({ player, tier, onSave, onBack, onUpgrade }) {
               <button key={opt.value} onClick={() => advance(opt.value)}
                 style={{background:C.bgElevated,border:`1px solid ${getScaleColor(scale, opt.value)}40`,borderLeft:`3px solid ${getScaleColor(scale, opt.value)}`,borderRadius:10,padding:".8rem 1rem",cursor:"pointer",color:C.white,fontFamily:FONT.body,fontSize:14,fontWeight:600,textAlign:"left"}}>
                 <div>{opt.label}</div>
-                {opt.desc && <div style={{fontSize:11,color:C.dim,marginTop:2,fontWeight:400}}>{opt.desc}</div>}
+                {(opt.sub || opt.desc) && <div style={{fontSize:11,color:C.dim,marginTop:2,fontWeight:400}}>{opt.sub || opt.desc}</div>}
               </button>
             ))}
           </div>
@@ -1731,10 +1731,6 @@ export function SkillsOnboarding({ player, tier, onSave, onBack, onUpgrade }) {
         <div style={{display:"flex",gap:".5rem",flexWrap:"wrap"}}>
           <button onClick={() => setIdx(Math.max(0, idx - 1))} disabled={idx === 0}
             style={{background:"none",border:`1px solid ${C.border}`,borderRadius:10,padding:".7rem 1rem",cursor:idx===0?"default":"pointer",color:idx===0?C.dimmest:C.dimmer,fontSize:13,fontFamily:FONT.body,opacity:idx===0?0.5:1}}>← Back</button>
-          <button onClick={() => advance("n/a")} disabled={saving}
-            style={{flex:"1 1 40%",background:"none",border:`1px solid ${C.border}`,borderRadius:10,padding:".7rem 1rem",cursor:"pointer",color:C.dimmer,fontSize:13,fontFamily:FONT.body}}>
-            Not applicable
-          </button>
           <button onClick={() => advance(null)} disabled={saving}
             style={{flex:"1 1 40%",background:"none",border:`1px solid ${C.border}`,borderRadius:10,padding:".7rem 1rem",cursor:"pointer",color:C.dimmer,fontSize:13,fontFamily:FONT.body}}>
             {idx + 1 === total ? (saving ? "Saving…" : "Skip & finish") : "Skip →"}
