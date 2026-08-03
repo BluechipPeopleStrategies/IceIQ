@@ -7987,15 +7987,31 @@ export default function App() {
       } catch(e) { console.error("Session check failed:", e); }
       if (mounted) { clearTimeout(timeout); setAuthReady(true); }
     })();
-    const { data } = SB.onAuthChange(async (session) => {
+    const { data } = SB.onAuthChange((session) => {
       // Demo / dev-bypass sessions must be immune to Supabase auth events:
       // there is no real Supabase session in those modes, so an async
       // INITIAL_SESSION / SIGNED_OUT firing after dev-bypass entry would
       // otherwise wipe the synthetic profile and bounce the user to landing.
       if (!mounted || demoModeRef.current) return;
+
+      // This callback MUST NOT await Supabase calls. supabase-js awaits every
+      // onAuthStateChange subscriber before resolving the auth call that fired
+      // it, so calling back into Supabase here makes signUp()/signIn() wait on
+      // a callback that is itself waiting on Supabase -- a deadlock. The HTTP
+      // request completes fine (observed: POST /auth/v1/signup returned 200 in
+      // 211ms) but the promise never settles, so signUp() hit its own 12s
+      // timeout and the user saw "RinkReads signup timed out after 12000ms"
+      // for an account that had in fact been created. Reproduced 2026-08-02.
+      //
+      // Deferring to a macrotask lets the auth call settle first, then the
+      // profile load runs normally. The synchronous setters stay inline so the
+      // signed-out path still clears state immediately.
       if (session?.user) {
         setUserEmail(session.user.email || null);
-        await loadUser(session.user.id);
+        setTimeout(() => {
+          if (!mounted || demoModeRef.current) return;
+          loadUser(session.user.id).catch((e) => console.error("loadUser after auth change failed:", e));
+        }, 0);
       }
       else { setProfile(null); setPlayer(null); setUserEmail(null); }
     });
@@ -8014,9 +8030,25 @@ export default function App() {
     return () => data?.subscription?.unsubscribe?.();
   }, []);
 
-  async function loadUser(userId) {
+  async function loadUser(userId, attempt = 0) {
     const p = await SB.getProfile(userId);
-    if (!p) return;
+    if (!p) {
+      // A brand-new account has no profile row yet: SB.signUp() writes it
+      // AFTER supabase.auth.signUp() resolves, so the SIGNED_IN subscriber can
+      // query profiles before the row exists. Returning silently here leaves
+      // `profile` null, and the render gate below (`if (!profile)`) then shows
+      // the auth screen again -- which is exactly the "click Create Account,
+      // wait ~2s, land back on Create Account" report from 2026-08-02. The
+      // account was created every time; only the UI disagreed.
+      //
+      // Retry briefly instead of giving up. Bounded so a genuinely
+      // profile-less auth user (three exist in production) still settles on
+      // the auth screen rather than looping forever.
+      if (attempt < 5) {
+        setTimeout(() => { loadUser(userId, attempt + 1).catch(() => {}); }, 200 * (attempt + 1));
+      }
+      return;
+    }
     setProfile(p);
     if (p.role === "player" && p.level) {
       // Build enriched player object from Supabase data

@@ -220,17 +220,24 @@ export async function getPlayerTeams(playerId) {
   return (data || []).map(r => r.teams).filter(Boolean);
 }
 
-// Joining goes through the join_team_by_code() RPC (migration 0022), not a
-// select-then-insert from the client. The old two-step needed every signed-in
-// user to be able to read every team row (to find one by code) and to insert
-// their own team_members row for any team_id at all -- which together let any
-// account join any team without knowing its code and then read minors' roster
-// profiles. The RPC is SECURITY DEFINER, so it can look the code up without
-// that blanket read policy existing, and it derives the player from auth.uid()
-// rather than trusting a caller-supplied id.
+// HOTFIX 2026-08-02: joining goes through the join_team_by_code() RPC.
+//
+// Migration 0022 is already applied to production. It removed the blanket
+// "authenticated can lookup team by code" policy on teams (which despite its
+// name checked no code at all and let any signed-in user read every team row
+// including its join code) and the direct self-insert path on team_members.
+//
+// The old implementation below did select-then-insert from the client, so with
+// 0022 live a player who is not already a coach or member of that team reads
+// ZERO rows and gets "Team not found" for a perfectly valid code. This restores
+// joining.
+//
+// The RPC is SECURITY DEFINER, so it can look the code up without that blanket
+// read policy existing, and it derives the player from auth.uid() rather than
+// trusting a caller-supplied id.
 //
 // playerId is kept in the signature for call-site compatibility and is
-// verified against the session rather than sent: the RPC ignores it entirely.
+// verified against the session rather than sent; the RPC ignores it.
 export async function joinTeamByCode(playerId, code) {
   if (!supabase) throw new Error("Supabase not configured");
   const { data: { session } } = await supabase.auth.getSession();
