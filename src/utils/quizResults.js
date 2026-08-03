@@ -67,3 +67,39 @@ export function isSkipped(result) {
 export function answeredCount(results) {
   return (Array.isArray(results) ? results : []).filter((r) => r && !isSkipped(r)).length;
 }
+
+/**
+ * How many questions this session is.
+ *
+ * Must be SNAPSHOT at session start, never re-derived per render. `firstTime`
+ * reads player.quizHistory.length, and handleQuizComplete writes that history
+ * BEFORE setScreen("results") resolves (it sits behind an awaited Supabase
+ * write). Derived live, the first session therefore recomputes 5 -> 10 the
+ * instant the player finishes it: `isLast` goes false, the quiz keeps serving
+ * questions, and "Finish & See Results" silently becomes question 6 of 10.
+ * That is the 2026-08-03 playtest defect (SHELL-1).
+ *
+ * `idsLen` wins outright — the dashboard's "Play this set" plays exactly the
+ * set it was handed, uncapped by the demo or first-time lengths.
+ */
+export function sessionQuestionCount({ idsLen = 0, isDemo = false, firstTime = false, sessionLength = 0 } = {}) {
+  if (idsLen > 0) return idsLen;
+  if (isDemo) return 7;
+  if (firstTime) return 5;
+  return sessionLength || 10;
+}
+
+/**
+ * The 1-based question number to display, e.g. the 5 in "Question 5 of 5".
+ *
+ * `answeredCount` is already clamped to the session length, so adding one to it
+ * for display renders "Question 6 of 5" on every completed session. The
+ * 2026-08-02 fix put the clamp inside the count and left the +1 outside it,
+ * which is why the overrun came back on 2026-08-03 (SHELL-2). Clamping here
+ * keeps both halves in one place.
+ */
+export function displayQuestionNumber(answered, qLen) {
+  const total = Number(qLen) > 0 ? Number(qLen) : 1;
+  const n = Number(answered) > 0 ? Number(answered) : 0;
+  return Math.min(n + 1, total);
+}

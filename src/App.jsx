@@ -17,7 +17,7 @@ import RinkReadsRinkQuestion from "./RinkReadsRinkQuestion.jsx";
 import RinkReadsRink from "./RinkReadsRink";
 import { COMPETENCIES, getJourneyV2, ACTIVITY_METRICS, GAME_SENSE_UNLOCK_SESSIONS, calcCompetencyScores, calcGameSenseScore } from "./utils/gameSense.js";
 import { getTrainingLog, seedDemoTrainingForRoster } from "./utils/trainingLog.js";
-import { upsertResult, skipResult, isSkipped, answeredCount } from "./utils/quizResults.js";
+import { upsertResult, skipResult, isSkipped, answeredCount, sessionQuestionCount, displayQuestionNumber } from "./utils/quizResults.js";
 import { preAppScreen } from "./utils/authRouting.js";
 import { canSelfRate } from "./data/selfRating.js";
 import { isChunkLoadError, shouldReloadForChunkError } from "./utils/chunkReload.js";
@@ -1841,11 +1841,19 @@ function useQuizState() {
 // QUIZ SCREEN
 // ─────────────────────────────────────────────────────────
 function Quiz({ player, onFinish, onBack, tier, onUpgrade, focus = null }) {
-  const isReturning = player.quizHistory.length > 0;
   const isDemo = !player.id || isEphemeralPlayer(player.id);
   // First-time quizzes (no session history yet) are capped at 5 so the
   // First-Six onboarding feels quick. Subsequent quizzes use the player's
   // configured sessionLength.
+  //
+  // SNAPSHOT at mount, both of them. handleQuizComplete appends to
+  // quizHistory before setScreen("results") resolves, so a live-derived
+  // `isReturning` flips true while this component is still mounted and
+  // re-lengthens the session underneath the player — 5 questions silently
+  // became 10 on the 2026-08-03 playtest, and the results screen never
+  // arrived because `isLast` went false. The component unmounts between
+  // sessions, so the next quiz re-reads both correctly.
+  const [isReturning] = useState(() => player.quizHistory.length > 0);
   const firstTime = !isReturning;
   // When ?ids= is on the URL (dashboard "Play this set"), play exactly
   // that many questions — don't cap to the default demo / first-time
@@ -1856,7 +1864,9 @@ function Quiz({ player, onFinish, onBack, tier, onUpgrade, focus = null }) {
       return p ? p.split(",").map(s => s.trim()).filter(Boolean).length : 0;
     } catch { return 0; }
   })();
-  const qLen = idsLen > 0 ? idsLen : (isDemo ? 7 : (firstTime ? 5 : (player.sessionLength || 10)));
+  const [qLen] = useState(() => sessionQuestionCount({
+    idsLen, isDemo, firstTime, sessionLength: player.sessionLength,
+  }));
   const [queue, setQueue] = useState(null);
   const [question, setQuestion] = useState(null);
   const { sel, setSel, seqAnswered, setSeqAnswered, seqCorrect, setSeqCorrect, results, setResults } = useQuizState();
@@ -1981,6 +1991,10 @@ function Quiz({ player, onFinish, onBack, tier, onUpgrade, focus = null }) {
   // header past qLen again ("Question 8 of 7"), which is the overrun fixed on
   // 2026-08-02. Clamped so the catch-up phase reads "7 of 7" rather than beyond.
   const qNum = Math.min(answeredCount(results), qLen);
+  // 1-based number for the header. `qNum` is already clamped, so a bare
+  // `qNum + 1` reads "Question 6 of 5" on the last question of every session
+  // — the 2026-08-02 clamp went inside Math.min and left the +1 outside it.
+  const qDisplayNum = displayQuestionNumber(qNum, qLen);
   const isLast = qNum >= qLen - 1;
   const qtype = question?.type || "mc";
   // Apply any in-browser local override on top of the bank question.
@@ -2315,7 +2329,7 @@ function Quiz({ player, onFinish, onBack, tier, onUpgrade, focus = null }) {
             <button onClick={onBack} style={{background:"none",border:`1px solid ${C.border}`,color:C.dimmer,borderRadius:8,padding:".35rem .75rem",cursor:"pointer",fontSize:13,fontFamily:FONT.body}}>←</button>
             <div style={{flex:1}}>
               <div style={{fontFamily:FONT.display,fontWeight:800,fontSize:"1rem",color:C.gold}}>RinkReads · {getLevelDisplay(player)}</div>
-              <div style={{fontSize:11,color:C.dimmer}}>Q{qNum+1}/{qLen} · {player.position}</div>
+              <div style={{fontSize:11,color:C.dimmer}}>Q{qDisplayNum}/{qLen} · {player.position}</div>
             </div>
           </div>
         </StickyHeader>
@@ -2344,7 +2358,7 @@ function Quiz({ player, onFinish, onBack, tier, onUpgrade, focus = null }) {
           <button onClick={onBack} style={{background:"none",border:`1px solid ${C.border}`,color:C.dimmer,borderRadius:8,padding:".35rem .75rem",cursor:"pointer",fontSize:13,fontFamily:FONT.body}}>←</button>
           <div style={{flex:1}}>
             <div style={{fontFamily:FONT.display,fontWeight:800,fontSize:"1rem",color:C.gold}}>RinkReads · {getLevelDisplay(player)}</div>
-            <div style={{fontSize:11,color:C.dimmer}}>Q{qNum+1}/{qLen} · {player.position} · {player.season||SEASONS[0]}</div>
+            <div style={{fontSize:11,color:C.dimmer}}>Q{qDisplayNum}/{qLen} · {player.position} · {player.season||SEASONS[0]}</div>
           </div>
           {speedTotal > 0 && (
             <div style={{display:"flex",alignItems:"center",gap:".25rem",padding:".15rem .5rem",background:C.goldDim,border:`1px solid ${C.goldBorder}`,borderRadius:999,fontSize:11,fontWeight:800,color:C.gold}}>
@@ -2352,7 +2366,7 @@ function Quiz({ player, onFinish, onBack, tier, onUpgrade, focus = null }) {
             </div>
           )}
           <div style={{display:"flex",flexDirection:"column",alignItems:"flex-end",gap:3}}>
-            <div style={{fontSize:10,color:C.dimmer,fontWeight:700,letterSpacing:".04em"}}>Question {qNum+1} of {qLen}</div>
+            <div style={{fontSize:10,color:C.dimmer,fontWeight:700,letterSpacing:".04em"}}>Question {qDisplayNum} of {qLen}</div>
             <div style={{width:100,height:4,background:C.dimmest,borderRadius:2,overflow:"hidden"}}>
               <div style={{height:"100%",width:`${(qNum/qLen)*100}%`,background:C.purple,borderRadius:2,transition:"width .35s ease"}}/>
             </div>
