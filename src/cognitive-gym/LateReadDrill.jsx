@@ -168,7 +168,7 @@ export default function LateReadDrill({ playerId = "default", onExit }) {
     const sc = sceneRef.current;
     if (!sc.ctx) return;
     const { ctx, W, H } = sc;
-    drawRink(ctx, W, H);
+    drawRink(ctx, W, H, { orientation: "portrait" });
 
     // faint in-ice title watermark across the top
     ctx.save();

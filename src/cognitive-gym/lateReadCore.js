@@ -7,6 +7,15 @@
 import { levelT, lerp } from "./gymEngine.js";
 import { gradedPoints } from "./gymPoints.js";
 
+// The attacking blue line, as a fraction of canvas HEIGHT.
+//
+// This drill plays bottom-to-top: YOU carry the puck at y = H * 0.86 and the
+// receivers are above. drawRink is now called with orientation "portrait" for
+// this drill, which puts the blue lines horizontally at 0.33H and 0.67H — so
+// the line the attack crosses is the one at 0.33H, and anything seeded above it
+// while the puck is below is offside.
+export const ATTACKING_BLUE_LINE = 0.33;
+
 // How often a rep is a CHANGE rep (the late switch fires). Rises with level so
 // the better you get, the more often you have to inhibit your first read and
 // adapt. A fraction in [0, 1].
@@ -97,17 +106,27 @@ export function makeTrial(level, W, H, { rng = Math.random } = {}) {
 
   // 2. Teammates spread across the upper / offensive part of the sheet so the
   //    cue arrows from YOU run up the ice.
+  //
+  //    ONSIDE CONSTRAINT. The play runs bottom-to-top and the puck is on YOU's
+  //    stick at y = H * 0.86, so the attacking blue line is the horizontal one
+  //    at y = H * ATTACKING_BLUE_LINE. A receiver seeded ABOVE that line while
+  //    the puck is still below it is offside — the pass this drill is training
+  //    you to make could not legally be made. Every receiver therefore seeds
+  //    onside, at or below the line. Before this the seeding ran from `pad`,
+  //    the top of the sheet, so nearly every rep put a receiver over the line.
   const teammates = [];
   let tGuard = 0;
+  const onsideTop = H * ATTACKING_BLUE_LINE;
   while (teammates.length < nMate && tGuard < 4000) {
     tGuard += 1;
-    const spot = freeSpot(teammates, pad, H * 0.62);
+    const spot = freeSpot(teammates, onsideTop, H * 0.62);
     if (spot) teammates.push(spot);
   }
   // Fallback if scattering ran out (very small canvas): spread evenly.
   while (teammates.length < nMate) {
     const i = teammates.length;
-    teammates.push({ x: cx(pad + ((i + 1) / (nMate + 1)) * (W - 2 * pad)), y: cy(H * 0.3) });
+    // Onside, same as the scattered path above — 0.3H would sit over the line.
+    teammates.push({ x: cx(pad + ((i + 1) / (nMate + 1)) * (W - 2 * pad)), y: cy(H * 0.5) });
   }
 
   // 3. The first cued teammate (the one you lock onto).

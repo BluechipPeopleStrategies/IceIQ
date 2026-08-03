@@ -155,7 +155,7 @@ export function boardCornerRadius(W, H) {
   return Math.min(W, H) * BOARD_CORNER_FRAC;
 }
 
-export function drawRink(ctx, W, H) {
+export function drawRink(ctx, W, H, { orientation = "landscape" } = {}) {
   const R = boardCornerRadius(W, H); // board corner radius
   const m = BOARD_MARGIN;
 
@@ -169,14 +169,33 @@ export function drawRink(ctx, W, H) {
   roundRectPath(ctx, m, m, W - 2 * m, H - 2 * m, R);
   ctx.clip();
 
-  // blue lines + red center line
+  // blue lines + red centre line.
+  //
+  // ORIENTATION MATTERS AND IT WAS WRONG. These were always drawn vertically —
+  // a landscape sheet, attacking left-to-right. But Late Read and Run the Play
+  // lay their plays out along Y: YOU sits at the bottom and the receivers are
+  // seeded above. So the zones ran PERPENDICULAR to the direction of play, and
+  // "up ice" in the drill crossed no line the rink actually drew. That is why
+  // nearly every Late Read trial rendered a receiver in a position that would
+  // be offside if the lines meant anything.
+  //
+  // `orientation` lets a vertical-play drill draw a vertical sheet, so the
+  // lines and the play finally agree. Landscape stays the default; the seven
+  // drills that were already correct are untouched.
   ctx.save();
   ctx.globalAlpha = 0.8;
   ctx.fillStyle = "#1b6cb0";
-  ctx.fillRect(W * 0.33 - 2.5, 0, 5, H);
-  ctx.fillRect(W * 0.67 - 2.5, 0, 5, H);
-  ctx.fillStyle = "#c8102e";
-  ctx.fillRect(W * 0.5 - 2, 0, 4, H);
+  if (orientation === "portrait") {
+    ctx.fillRect(0, H * 0.33 - 2.5, W, 5);
+    ctx.fillRect(0, H * 0.67 - 2.5, W, 5);
+    ctx.fillStyle = "#c8102e";
+    ctx.fillRect(0, H * 0.5 - 2, W, 4);
+  } else {
+    ctx.fillRect(W * 0.33 - 2.5, 0, 5, H);
+    ctx.fillRect(W * 0.67 - 2.5, 0, 5, H);
+    ctx.fillStyle = "#c8102e";
+    ctx.fillRect(W * 0.5 - 2, 0, 4, H);
+  }
   ctx.restore();
 
   // goal lines (thin red) near each end
@@ -184,10 +203,10 @@ export function drawRink(ctx, W, H) {
   ctx.globalAlpha = 0.55;
   ctx.strokeStyle = "#c8102e";
   ctx.lineWidth = 1.5;
-  [0.08, 0.92].forEach((gx) => {
+  [0.08, 0.92].forEach((g) => {
     ctx.beginPath();
-    ctx.moveTo(W * gx, 0);
-    ctx.lineTo(W * gx, H);
+    if (orientation === "portrait") { ctx.moveTo(0, H * g); ctx.lineTo(W, H * g); }
+    else { ctx.moveTo(W * g, 0); ctx.lineTo(W * g, H); }
     ctx.stroke();
   });
   ctx.restore();
