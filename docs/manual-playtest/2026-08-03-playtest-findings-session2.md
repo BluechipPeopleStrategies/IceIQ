@@ -232,7 +232,12 @@ does that mean I've gone to level nine now? What was I before? Maybe we show som
 sort of sliding improvement from where they were before to the next level, just to
 see progression. I want to find a way to capture progression in these games."
 
-### S2-28 — Baller's Pick
+### S2-28 — Baylor's Pick (`TrackingDrill.jsx`)
+
+*Transcribed as "Baller's Pick" — the drill is **Baylor's Pick**
+([`CognitiveGym.jsx:36`](../../src/cognitive-gym/CognitiveGym.jsx#L36)), which is
+`TrackingDrill.jsx`, not BestOptionDrill. Confirmed by his own words at [19:05]
+matching that drill's `why` copy verbatim, plus the three-tap and lock-in mechanics.*
 
 - [19:05] **"open man" → "open player"** — "let's not have it gendered unless we
   absolutely have to." Worth a bank-wide sweep for gendered language, not just this
@@ -248,7 +253,35 @@ the wall, it would never cross that line. I want us to be mindful of the physics
 the corners, as something might not just bounce off of the corner, it might actually
 ride the corner."
 
-### S2-30 — the point scheme (cut off mid-sentence)
+### S2-30 — the point scheme (cut off mid-sentence) — the `+2` is a real defect
+
+[20:21] "And again the point scheme, I want it to be, I want the point scheme to make
+sense—" and the recording ends.
+
+**But the `+2` half of this doesn't need his missing sentence.** Verified against
+[`gymPoints.js`](../../src/cognitive-gym/gymPoints.js) and
+[`readNumbersCore.js`](../../src/cognitive-gym/readNumbersCore.js): points are
+`round(1000 × exp(−(answerMs / 3200) / 0.12))`. That decay is far too steep for the
+3.2-second window it runs over:
+
+| Correct answer in | Points |
+|---|---|
+| 0.20s | 594 |
+| 0.50s | 272 |
+| 1.00s | 74 |
+| 1.50s | 20 |
+| 2.40s | **2** |
+| 2.92s and later | **0** |
+
+A **correct** answer at a normal 1.5-second reaction time scores 20 out of a nominal
+1000, and from 2.92s onward a correct answer scores literally zero. The 2.4s case is
+exactly the `+2` he saw — and on a drill about jersey numbers, "which one was #2?"
+answered correctly can print "+2", which is where the amateurish reading comes from.
+
+This is the decay constant, not the display. Fixable now, independent of whatever he
+was about to say.
+
+### S2-30b — the rest of the point scheme (unknown)
 
 [20:21] "And again the point scheme, I want it to be, I want the point scheme to make
 sense—" and the recording ends. Combined with [15:13] on the amateurish `+2`, the ask
