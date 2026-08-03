@@ -2027,6 +2027,23 @@ function Quiz({ player, onFinish, onBack, tier, onUpgrade, focus = null }) {
   // — the 2026-08-02 clamp went inside Math.min and left the +1 outside it.
   const qDisplayNum = displayQuestionNumber(qNum, qLen);
   const isLast = qNum >= qLen - 1;
+  // Leaving mid-quiz used to discard the whole session silently — Thomas hit
+  // this on 2026-08-03: "I clicked the back button when it was five of five and
+  // it auto took me back to the main page. Now it started over the questions."
+  // Four answered questions vanished with no warning and no way back. Confirm
+  // only when there is something to lose, so an immediate change of mind on
+  // question one is still one tap.
+  function confirmExitQuiz() {
+    const answered = answeredCount(results);
+    if (answered > 0 && !quizDone) {
+      const ok = window.confirm(
+        `You've answered ${answered} of ${qLen} question${qLen === 1 ? "" : "s"}.\n\n` +
+        `Leaving now loses this session and starts over next time. Leave anyway?`
+      );
+      if (!ok) return;
+    }
+    onBack();
+  }
   const qtype = question?.type || "mc";
   // Apply any in-browser local override on top of the bank question.
   // Display + scoring both read from `q`, so edits apply without sync.
@@ -2357,7 +2374,7 @@ function Quiz({ player, onFinish, onBack, tier, onUpgrade, focus = null }) {
       <div style={{minHeight:"100vh",background:C.bg,color:C.white,fontFamily:FONT.body}}>
         <StickyHeader>
           <div style={{maxWidth:560,margin:"0 auto",display:"flex",alignItems:"center",gap:"1rem"}}>
-            <button onClick={onBack} style={{background:"none",border:`1px solid ${C.border}`,color:C.dimmer,borderRadius:8,padding:".35rem .75rem",cursor:"pointer",fontSize:13,fontFamily:FONT.body}}>←</button>
+            <button onClick={confirmExitQuiz} style={{background:"none",border:`1px solid ${C.border}`,color:C.dimmer,borderRadius:8,padding:".35rem .75rem",cursor:"pointer",fontSize:13,fontFamily:FONT.body}}>←</button>
             <div style={{flex:1}}>
               <div style={{fontFamily:FONT.display,fontWeight:800,fontSize:"1rem",color:C.gold}}>RinkReads · {getLevelDisplay(player)}</div>
               <div style={{fontSize:11,color:C.dimmer}}>Q{qDisplayNum}/{qLen} · {player.position}</div>
@@ -2386,7 +2403,7 @@ function Quiz({ player, onFinish, onBack, tier, onUpgrade, focus = null }) {
     <div style={{minHeight:"100vh",background:C.bg,color:C.white,fontFamily:FONT.body}}>
       <StickyHeader>
         <div style={{maxWidth:560,margin:"0 auto",display:"flex",alignItems:"center",gap:"1rem"}}>
-          <button onClick={onBack} style={{background:"none",border:`1px solid ${C.border}`,color:C.dimmer,borderRadius:8,padding:".35rem .75rem",cursor:"pointer",fontSize:13,fontFamily:FONT.body}}>←</button>
+          <button onClick={confirmExitQuiz} style={{background:"none",border:`1px solid ${C.border}`,color:C.dimmer,borderRadius:8,padding:".35rem .75rem",cursor:"pointer",fontSize:13,fontFamily:FONT.body}}>←</button>
           <div style={{flex:1}}>
             <div style={{fontFamily:FONT.display,fontWeight:800,fontSize:"1rem",color:C.gold}}>RinkReads · {getLevelDisplay(player)}</div>
             <div style={{fontSize:11,color:C.dimmer}}>Q{qDisplayNum}/{qLen} · {player.position} · {player.season||SEASONS[0]}</div>
@@ -8351,9 +8368,26 @@ export default function App() {
         if (weekly.milestone) {
           toast.celebrate({ title: `${weekly.milestone}-week streak!`, body: "Showing up is half of getting better.", icon: "🗓️" });
         }
+        // ONE toast, however many milestones fired.
+        //
+        // This used to emit a separate celebrate per category, stacked on top of
+        // the weekly-streak and path-clear toasts. Finishing a good session
+        // could therefore throw four or five overlapping cards across the
+        // screen at once — "5 straight in Puck Skills", "10 straight in Hockey
+        // Sense", "20 straight in Offensive Play" — which covered the results
+        // underneath and read as the app freezing rather than as a reward.
+        // Collapsing them keeps the celebration and returns the screen.
         const catMilestones = updateCategoryStreaks(player.id, results);
-        for (const m of catMilestones) {
+        if (catMilestones.length === 1) {
+          const m = catMilestones[0];
           toast.celebrate({ title: `${m.count} straight in ${m.cat}!`, body: "Pattern-matching locked in.", icon: "📊" });
+        } else if (catMilestones.length > 1) {
+          const best = catMilestones.reduce((a, b) => (b.count > a.count ? b : a));
+          toast.celebrate({
+            title: `${best.count} straight in ${best.cat}!`,
+            body: `Plus streaks in ${catMilestones.length - 1} more categor${catMilestones.length - 1 === 1 ? "y" : "ies"}. Pattern-matching locked in.`,
+            icon: "📊",
+          });
         }
       } catch {}
     }
