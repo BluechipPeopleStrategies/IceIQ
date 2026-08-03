@@ -167,10 +167,28 @@ Brain write. (Standing rule, Thomas, 2026-07-11.)
   (`git add <paths>`). Never `git add -A`/`.` to sweep unrelated WIP into the commit.
   If unrelated edits are mixed into a file you're committing, surface that and confirm
   before including them.
-- **Never auto-push.** Pushing still requires explicit confirmation.
-- **Never commit directly to `main`** — Vercel auto-deploys `main`, so a commit there
-  is a production publish. If HEAD is `main`, stop and ask (branch first). Auto-commit
-  only on feature branches.
+- **Work directly on `main`, and push. (Thomas, 2026-08-03 - this REPLACES the
+  previous "never commit directly to main / never auto-push" rules.)** Vercel
+  auto-deploys `main`, and that is now the intent: ship straight to production.
+
+  Why it changed: the branch-and-PR flow drifted 69 commits from `main` in a
+  fortnight. Cherry-picking fixes back conflicted, an auto-merge silently
+  duplicated a function and broke the build, and worst, real user-facing fixes
+  sat unshipped for days while production stayed broken. The gate cost more than
+  it caught.
+
+  **What still holds, and is not optional:**
+  - `npm run build` and the relevant test suites pass BEFORE every push. This is
+    the only gate left, so it does the work the PR review used to.
+  - Stage only what changed (see above). `git add -A` swept unrelated BlueChip
+    drafts into this public repo on 2026-08-03.
+  - Anything genuinely irreversible (force-push, history rewrite, branch
+    deletion, destructive data changes) still stops and asks.
+  - **Rollback is Vercel > Deployments > Instant Rollback.** That safety net is
+    what makes this posture reasonable.
+
+  **To restore gated releases later:** branch for the work, open a PR, Thomas
+  merges. Nothing else needs to change.
 
 ## Standing "go" authorization (Thomas, 2026-07-12)
 
@@ -178,11 +196,10 @@ When Thomas says "go" (or an equivalent clear go-ahead) to a proposed action,
 that stands as authorization to **run** it without asking again each time —
 scripts, tools, tests, and other reversible/local actions, including ones
 that spend tokens or call paid APIs (e.g. `source-triage`). This does **not**
-extend to merging to `main` or any production deploy — that stays gated by
-the "Never commit directly to `main`... stop and ask" rule above, and pushing
-still needs its own explicit confirmation per the AUTO-COMMIT rule above,
-regardless of a prior "go." Different bars: running things is cheap and
-reversible; publishing to real users is not.
+now also covers committing and pushing to `main`, per the 2026-08-03 change
+above; that deploy gate was removed deliberately. It still does NOT extend
+to irreversible operations: force-push, history rewrite, branch deletion, or
+destructive data changes each need their own confirmation.
 
 Scenario-engine exception: the July 29 owner decision explicitly forbids paid
 model APIs for generation or hockey judgment. A standing "go" does not override
