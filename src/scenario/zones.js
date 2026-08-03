@@ -14,8 +14,18 @@ export const ZONES = {
   "dz-corner-weak":        { x: 0.07, y: 0.15, tol: 0.07 },
   "dz-net-front":          { x: 0.10, y: 0.50, tol: 0.05 },
   "dz-slot":               { x: 0.18, y: 0.50, tol: 0.07 },
-  "dz-half-wall-strong":   { x: 0.10, y: 0.78, tol: 0.06 },
-  "dz-half-wall-weak":     { x: 0.10, y: 0.22, tol: 0.06 },
+  // Half-wall depth comes from ANCHORS.wallTopRight/wallBottomRight = 168 ft on
+  // a 200 ft sheet -> 0.84 in the offensive end, mirrored to 32 ft -> 0.16 here.
+  // These were 0.10 / 0.90, IDENTICAL to net-front depth. A half-wall at
+  // net-front depth is not a half-wall, and it was not cosmetic: it put every
+  // weak-side relocation target directly across the front of the crease, so the
+  // keyed "correct" pass crossed within 1.0 m of the goalie — inside the
+  // engine's own 0.035 intercept radius. Four boards taught that, including one
+  // that had a U13 passing across the front of their OWN net. See
+  // docs/references/rink-area-vocabulary.md open question 4 (settled 2026-08-03,
+  // ANCHORS adopted) and docs/manual-playtest/audits/2026-08-03-prompt-vs-coordinates.md.
+  "dz-half-wall-strong":   { x: 0.16, y: 0.78, tol: 0.06 },
+  "dz-half-wall-weak":     { x: 0.16, y: 0.22, tol: 0.06 },
   "dz-point-strong":       { x: 0.30, y: 0.78, tol: 0.06 },
   "dz-point-weak":         { x: 0.30, y: 0.22, tol: 0.06 },
 
@@ -30,8 +40,8 @@ export const ZONES = {
   "oz-net-front":          { x: 0.90, y: 0.50, tol: 0.05 },
   "oz-slot":               { x: 0.82, y: 0.50, tol: 0.07 },
   "oz-high-slot":          { x: 0.75, y: 0.50, tol: 0.07 },
-  "oz-half-wall-strong":   { x: 0.90, y: 0.78, tol: 0.06 },
-  "oz-half-wall-weak":     { x: 0.90, y: 0.22, tol: 0.06 },
+  "oz-half-wall-strong":   { x: 0.84, y: 0.78, tol: 0.06 }, // 168 ft — see dz note above
+  "oz-half-wall-weak":     { x: 0.84, y: 0.22, tol: 0.06 },
   "oz-point-strong":       { x: 0.70, y: 0.78, tol: 0.06 },
   "oz-point-weak":         { x: 0.70, y: 0.22, tol: 0.06 },
   "oz-bumper":             { x: 0.78, y: 0.50, tol: 0.05 }, // 1-3-1 power-play spot
