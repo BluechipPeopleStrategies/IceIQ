@@ -3830,6 +3830,12 @@ function WeeklyQuiz({ player, onBack, onFinish }) {
           <Card style={{marginBottom:"1.25rem",background:C.redDim,border:`1px solid ${C.redBorder}`}}>
             <div style={{fontSize:10,letterSpacing:".14em",textTransform:"uppercase",color:C.red,marginBottom:".6rem",fontWeight:700}}>🔍 Spot the Mistake</div>
             <div style={{fontSize:14,color:C.dim,lineHeight:1.7,marginBottom:".75rem"}}>{q.sit}</div>
+            {/* The ask lives in q.question ("What is the player's mistake?"), not
+                in q.sit, which is only the scenario. Omitting it here served all
+                16 mistake questions in a weekly quiz as a statement plus four
+                options and no question — the same defect as CONTENT-3. The main
+                Quiz render has always included it (see the mistake branch above). */}
+            <div style={{fontSize:15,fontWeight:700,color:C.white}}>{q.question}</div>
           </Card>
         )}
         {qtype === "seq" && (
