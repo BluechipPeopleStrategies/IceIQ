@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 // Run: node src/scenario/multiStep.test.mjs
-import { normalizeSteps, stepToScenario, frameFor, start, record, next, currentStep, isComplete, summary } from "./multiStep.js";
+import { normalizeSteps, stepToScenario, frameFor, start, record, next, currentStep, isComplete, summary, combinedResult } from "./multiStep.js";
 
 let pass = 0, fail = 0;
 const ok = (n, c) => { console.log(`${c ? "PASS" : "FAIL"}  ${n}`); c ? pass++ : fail++; };
@@ -45,6 +45,29 @@ ok("summary keeps per-step results", sm.perStep[0] === false && sm.perStep[1] ==
 const f = frameFor(start(multi));
 ok("frameFor carries id/type/stage from scenario", f.id === "m" && f.type === "scenario" && f.stage.view === "right");
 ok("frameFor inlines the current step", f.interaction.prompt === "p1");
+
+// ---- combinedResult: one question, one result -------------------------------
+// A two-step question (judge, then justify) must record ONE result, correct
+// only if BOTH steps were. Recording per-step inflates `results`, which the
+// counter, the progress bar and calcWeightedIQ() all divide by (the "Question
+// 6 of 5" defect, 2026-08-02). Counting only the first step would make the
+// justify step consequence-free, which defeats its purpose.
+ok("both steps right -> one correct result", (() => {
+  const r = combinedResult({ total: 2, correct: 2, perRead: [true, true] });
+  return r.ok === true && r.complete === true && r.steps === 2 && r.correct === 2;
+})());
+ok("judge right, justify wrong -> one WRONG result", (() => {
+  const r = combinedResult({ total: 2, correct: 1, perRead: [true, false] });
+  return r.ok === false && r.complete === true;
+})());
+ok("judge wrong, justify right -> still wrong", combinedResult({ total: 2, correct: 1, perRead: [false, true] }).ok === false);
+ok("a single-step scenario is unaffected", combinedResult({ total: 1, correct: 1, perRead: [true] }).ok === true);
+ok("a single wrong step is wrong", combinedResult({ total: 1, correct: 0, perRead: [false] }).ok === false);
+ok("no steps answered is not a correct result", combinedResult({ total: 0, correct: 0, perRead: [] }).ok === false);
+ok("carries the step counts through for telemetry", (() => {
+  const r = combinedResult({ total: 3, correct: 2, perRead: [true, false, true] });
+  return r.steps === 3 && r.correct === 2;
+})());
 
 console.log(`\n${pass} passed, ${fail} failed`);
 process.exit(fail ? 1 : 0);

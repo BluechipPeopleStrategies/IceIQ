@@ -1316,6 +1316,18 @@ const Q_TYPE_INFO = (q) => {
   return Q_TYPE_LABELS[t] || Q_TYPE_LABELS.mc;
 };
 
+// q.concept is an internal taxonomy slug (e.g. "puck-control", "oz-entry",
+// "dz-coverage"), shown to players as a pill with zero formatting. There's no
+// curated title registry for this taxonomy the way the animated-play catalog
+// has SCENARIO_FAMILIES, so this is a mechanical de-slugify (hyphens/underscores
+// -> spaces, title case) rather than a rename. Already-clean values (e.g.
+// "Decision Quality") pass through unchanged.
+function conceptLabel(concept) {
+  const s = String(concept || "").trim();
+  if (!s) return "";
+  return s.replace(/[_-]+/g, " ").replace(/\b\w/g, (c) => c.toUpperCase());
+}
+
 // ─────────────────────────────────────────────────────────
 // HOME SCREEN
 // ─────────────────────────────────────────────────────────
@@ -2175,7 +2187,13 @@ function Quiz({ player, onFinish, onBack, tier, onUpgrade, focus = null }) {
       case "multi":
         return <MultiMCQuestion q={q} onAnswer={handleSeqAnswer} answered={seqAnswered} colorblind={player.colorblind}/>;
       case "scenario":
-        return <ScenarioRenderer scenario={q} playerId={player?.id} onAnswer={p => handleSeqAnswer(!!p.ok)} />;
+        // A multi-step scenario emits one payload PER STEP with complete:false,
+        // then a single combined result when the whole play finishes. Only the
+        // combined one is recorded, so a two-step question stays one row in
+        // `results` -- the array the counter, the progress bar and
+        // calcWeightedIQ() all divide by. Flat scenarios emit no `complete`
+        // field at all, so `!== false` records them immediately as before.
+        return <ScenarioRenderer scenario={q} playerId={player?.id} onAnswer={p => { if (p?.complete === false) return; handleSeqAnswer(!!p.ok); }} />;
       default:
         return null;
     }
@@ -2248,7 +2266,7 @@ function Quiz({ player, onFinish, onBack, tier, onUpgrade, focus = null }) {
         <div style={{display:"flex",gap:".5rem",marginBottom:"1rem",flexWrap:"wrap",alignItems:"center"}}>
           <Pill color={typeInfo.color}>{typeInfo.icon} {typeInfo.label}</Pill>
           <Pill color={C.dimmer} bg={C.dimmest}>{q.cat}</Pill>
-          {q.concept && <Pill color={C.dimmer} bg={C.dimmest}>{q.concept}</Pill>}
+          {q.concept && <Pill color={C.dimmer} bg={C.dimmest}>{conceptLabel(q.concept)}</Pill>}
           {ttsSupported() && getReadAloud() && !isRinkQ && READ_ALOUD_TYPES.has(qtype) && (
             <button onClick={() => speakParts(questionSpeechParts(q, qtype))}
               title="Read the question aloud" aria-label="Read the question aloud"
