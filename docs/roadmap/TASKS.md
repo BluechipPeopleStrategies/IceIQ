@@ -1,6 +1,6 @@
 # RinkReads — Task List
 
-**Last updated:** 2026-08-01 · Parked coach-created animated play/video MVP (was NEXT #2) and the just-approved Team Communication Portal MVP — focus is back on NEXT #1, the core play-diagram/quiz review experience. See changelog.
+**Last updated:** 2026-08-03 · Two hotfixes shipped to production (#5, #6): account creation, team joining, quiz scoring, contradictory verdicts, a question that drew its own answer, and drag. Migration 0022 applied and the privilege-escalation chain verified closed by running the exploit. Built since: skip-and-return, Tier 1 positional-language validator, and Best Option now learns both blue lines and teaches offside. **PR #7 is open for the whole branch (69+ commits) — read its body before merging; the Brain Gym playtest and the skills-onboarding crash should come first.** See changelog.
 
 **Scope:** RinkReads **app build + content factory**. Launch/distribution (sending the beta, marketing) and the separate BlueChip business are **out of scope** — parked at the bottom. Priority = position in this list. A new idea that isn't here goes to the **Parking Lot** first, then gets promoted on purpose — that's the scope-creep guard.
 
