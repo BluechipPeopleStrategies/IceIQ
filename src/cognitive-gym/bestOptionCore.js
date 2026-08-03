@@ -39,6 +39,37 @@ export function defenderCount(level) {
   return Math.round(lerp(EASY_DEFENDERS, HARD_DEFENDERS, levelT(level)));
 }
 
+
+// ── Zones and offside ────────────────────────────────────────────────────────
+// The drill attacks LEFT (the net sits at W*0.08), so LOWER x is closer to the
+// attacking net. On a 200ft sheet the blue lines sit 75ft from each end, which
+// is 0.375 and 0.625 of the length. Both are modelled, not just the attacking
+// one: the carrier can be anywhere including his own end, and a rule that only
+// knows one line cannot tell which zone anyone is in.
+export const BLUE_LINE_ATTACKING = 0.375;
+export const BLUE_LINE_DEFENDING = 0.625;
+
+export function zoneLines(W) {
+  return {
+    attackingBlue: W * BLUE_LINE_ATTACKING,
+    defendingBlue: W * BLUE_LINE_DEFENDING,
+  };
+}
+
+// A pass is offside when the receiver is already inside the attacking zone
+// (past the attacking blue line, toward the net) while the puck is not yet in
+// there. You cannot precede the puck into the zone.
+//
+// A player ON the line is onside: the blue line belongs to the zone edge, and
+// in the real game a skate on the line keeps you legal.
+export function isOffsidePass(carrier, receiver, W) {
+  if (!carrier || !receiver) return false;
+  const { attackingBlue } = zoneLines(W);
+  const receiverInZone = receiver.x < attackingBlue;
+  const puckInZone = carrier.x < attackingBlue;
+  return receiverInZone && !puckInZone;
+}
+
 // One-line reasons shown on reveal, keyed by the best read. Kept short, warm,
 // kid-friendly, and free of em dashes.
 export const REASONS = {
@@ -46,6 +77,12 @@ export const REASONS = {
   pass: "A teammate is wide open in a better spot. Slide it over for the tap-in.",
   carry: "No shot and no open teammate, but open ice ahead. Carry and make a play.",
 };
+
+// Shown when the lesson IS the rule: a teammate is genuinely open, but taking
+// the pass would be offside because they are already over the blue line.
+// Carrying it in yourself is the read, and the reason has to say why.
+export const OFFSIDE_REASON =
+  "Your teammate is open but already over the blue line, so that pass is offside. Carry it in yourself and they can follow you.";
 
 // Shortest distance from a point p to the line SEGMENT a-b. Standard
 // point-to-segment projection clamped to the segment ends.
@@ -93,6 +130,11 @@ export function makeSituation(level, W, H, { rng = Math.random } = {}) {
 
   // Pick the best read. Even split, deterministic given rng.
   const best = OPTIONS[Math.floor(rng() * OPTIONS.length)];
+  // Roughly a third of CARRY scenes teach the rule instead of just being
+  // 'nobody open': a teammate IS open, but over the blue line, so the pass is
+  // illegal and carrying it in is the read. Decided here so placement below can
+  // honour it. (Thomas, 2026-08-03: teach offside rather than avoid it.)
+  const offsideTeach = best === "carry" && rng() < 0.34;
 
   const teammates = [];
   const defenders = [];
@@ -223,6 +265,19 @@ export function makeSituation(level, W, H, { rng = Math.random } = {}) {
         open: false,
       });
     }
+    // The offside lesson: put ONE teammate genuinely open, but already inside
+    // the attacking zone while YOU still have the puck outside it. The pass
+    // looks available and is illegal, so carrying is the read.
+    if (offsideTeach && teammates.length) {
+      const { attackingBlue } = zoneLines(W);
+      teammates[0] = {
+        x: cx(attackingBlue - W * (0.05 + rng() * 0.06)),
+        y: cy(H * (rng() < 0.5 ? 0.3 : 0.7) + jitter(H * 0.05)),
+        open: true,
+      };
+      // YOU must be OUTSIDE the zone for it to be offside at all.
+      you = { x: cx(Math.max(you.x, attackingBlue + W * 0.06)), y: you.y };
+    }
     // Defenders kept FAR from YOU (nearest is far) and out of the lane ahead, so
     // there is genuinely open ice in front. Park them deep / behind.
     let guard = 0;
@@ -241,6 +296,17 @@ export function makeSituation(level, W, H, { rng = Math.random } = {}) {
     }
   }
 
+  // Never present an ILLEGAL pass as the best read. If a pass scene happened to
+  // place its open teammate over the blue line while the puck was still outside
+  // the zone, pull them back onside -- otherwise the drill marks a player wrong
+  // for declining a play the rules forbid.
+  if (best === "pass") {
+    const { attackingBlue } = zoneLines(W);
+    for (const m of teammates) {
+      if (m.open && isOffsidePass(you, m, W)) m.x = cx(attackingBlue + Math.max(r * 1.5, W * 0.03));
+    }
+  }
+
   // Final in-bounds safety pass on the marquee actors.
   you = { x: cx(you.x), y: cy(you.y) };
   goalie = { x: cx(goalie.x), y: cy(goalie.y) };
@@ -252,7 +318,8 @@ export function makeSituation(level, W, H, { rng = Math.random } = {}) {
     goalie,
     teammates: teammates.map((m) => ({ x: cx(m.x), y: cy(m.y), open: !!m.open })),
     defenders: defenders.map((d) => ({ x: cx(d.x), y: cy(d.y) })),
-    reason: REASONS[best],
+    offsideTeach,
+    reason: offsideTeach ? OFFSIDE_REASON : REASONS[best],
     clockMs: clockMs(level),
   };
 }
