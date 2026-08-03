@@ -349,6 +349,37 @@ reading will emit false failures. Rated **C** above.
    incompatible definitions inside one repo. **Do not validate "half-wall" until this is
    settled.**
 
+   > **ESCALATED 2026-08-03 — this is no longer only a naming problem, and it now
+   > needs a decision rather than a deferral.**
+   >
+   > The seed audit
+   > ([`audits/2026-08-03-prompt-vs-coordinates.md`](../manual-playtest/audits/2026-08-03-prompt-vs-coordinates.md))
+   > found that because `oz-/dz-half-wall-*` sit at **net-front depth**, four boards
+   > key a "correct" answer that routes the puck **through the goalie** — the pass
+   > line passes within 1.0 m of the keeper, inside the engine's own 0.035 intercept
+   > radius:
+   >
+   > - `u15_scanning_weakside_v1` (the instance Thomas reported at [16:21])
+   > - `u13_oz_structure_place_v1`
+   > - `u13_oz_winger_wall_tf_v1`
+   > - `u13_breakout_position_place_v1` — **worst case: it teaches a U13 to pass
+   >   across the front of their own crease**
+   >
+   > Only the first was ever reported. The other three are the same defect, unreported.
+   > That makes this the project's own worst-defect category — a wrong "correct answer"
+   > reaching a child — not a vocabulary tidy-up.
+   >
+   > **NOT fixed unilaterally, deliberately.** Moving a zone coordinate changes the
+   > keyed answer of every scenario referencing it, which is a hockey judgment call and
+   > is explicitly outside the standing proactive-fix license. It needs Thomas's call.
+   >
+   > **Recommendation:** adopt the `ANCHORS` set, which §"anchor comparison" below
+   > already argues is the better-grounded vocabulary for slot and high slot. For the
+   > half-wall that puts it near the faceoff-dot depth against the boards — roughly
+   > `x 0.82 / 0.18` rather than `0.90 / 0.10`, keeping `y 0.78 / 0.22`. One edit to
+   > four `zones.js` entries corrects all four boards at once. Every scenario
+   > referencing those zones must then be re-verified, since their keyed answers move.
+
 5. **Where the corner starts.** Some coaches count everything below the goal line;
    others count from the bottom of the circles. This repo's `cornerTopRight` sits 4 ft
    *above* the goal line, i.e. the looser reading.
