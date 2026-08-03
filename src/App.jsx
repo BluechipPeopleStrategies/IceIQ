@@ -1356,7 +1356,7 @@ const Q_TYPE_LABELS = {
   multi:        {label:"Select All That Apply", color:C.gold, icon:"☑️"},
   seq:          {label:"Put in Order",    color:C.gold,     icon:"🔢"},
   mistake:      {label:"Spot the Mistake",color:C.red,      icon:"🔍"},
-  next:         {label:"What Happens Next",color:C.yellow,  icon:"🔮"},
+  next:         {label:"What's Your Next Move",color:C.yellow,  icon:"🔮"},
   tf:           {label:"True or False",   color:C.blue,     icon:"⚡"},
   scenario:     {label:"Rink Scenario",   color:C.green,    icon:"🏒"},
   "rink-label": {label:"Label the Rink",  color:C.blue,     icon:"🏷️"},
@@ -2343,7 +2343,7 @@ function Quiz({ player, onFinish, onBack, tier, onUpgrade, focus = null }) {
     }
   }
 
-  const FORMAT_PREVIEW_LABELS = { seq:"Sequence Ordering", tf:"True or False", mistake:"Spot the Mistake", next:"What Happens Next" };
+  const FORMAT_PREVIEW_LABELS = { seq:"Sequence Ordering", tf:"True or False", mistake:"Spot the Mistake", next:"What's Your Next Move" };
   const FORMAT_PREVIEW_ICONS = { seq:"🔢", tf:"⚡", mistake:"🔍", next:"⏭️" };
   const FORMAT_PREVIEW_DESC = {
     seq: "Put the steps of a play in the correct order — tests whether you understand decision sequences, not just outcomes.",
@@ -2502,9 +2502,17 @@ function Quiz({ player, onFinish, onBack, tier, onUpgrade, focus = null }) {
                 statement and four options with no question anywhere on screen.
                 That is all 17 of the `next` entries in the incomplete-stems
                 audit, and rendering the badge fixes every one of them plus
-                every future `next` without touching a word of content. */}
+                every future `next` without touching a word of content.
+
+                The badge says "What's Your Next Move?", NOT "What Happens
+                Next?". Verified against the bank before wording it: all 17
+                keyed answers are actions the player takes ("Skate away into an
+                open lane", "Chip the puck off the boards", "Change pace with a
+                hesitation") — not one is a prediction of what will occur. A
+                prediction badge over an action question lets a child read it
+                correctly and still be marked wrong. */}
             <div style={{fontSize:10,letterSpacing:".14em",textTransform:"uppercase",color:qtype === "next" ? C.gold : C.purple,marginBottom:".6rem",fontWeight:700}}>
-              {qtype === "next" ? "🔮 What Happens Next?"
+              {qtype === "next" ? "🔮 What's Your Next Move?"
                 : (qtype === "mc" && q.media?.url) ? "👀 Read the Play"
                 : "📋 Game Situation"}
             </div>
@@ -3862,7 +3870,7 @@ function WeeklyQuiz({ player, onBack, onFinish }) {
                 here is how the `mistake` ask went missing too (fixed 2f08ec5);
                 the two render paths must stay in step. */}
             <div style={{fontSize:10,letterSpacing:".14em",textTransform:"uppercase",color:qtype === "next" ? C.gold : C.purple,marginBottom:".6rem",fontWeight:700}}>
-              {qtype === "next" ? "🔮 What Happens Next?"
+              {qtype === "next" ? "🔮 What's Your Next Move?"
                 : (qtype === "mc" && q.media?.url) ? "👀 Read the Play"
                 : "📋 Game Situation"}
             </div>
