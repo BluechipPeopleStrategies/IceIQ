@@ -1,5 +1,5 @@
 import { useRef, useState, useCallback, useEffect } from "react";
-import { createAdaptiveLevel, setupCanvas, pointerPos, drawRink } from "./gymEngine";
+import { createAdaptiveLevel, setupCanvas, pointerPos, drawRink, REPS_PER_SESSION } from "./gymEngine";
 import { getDrill, saveSession } from "./gymStorage";
 import { cue, gymCueHooks } from "./gymAudio";
 import { ScoreCount, ConfettiBurst } from "./gymFx";
@@ -19,8 +19,15 @@ import {
 // Then it's your turn: run the play back by tapping the skaters in the same
 // order. One wrong tap ends the rep (Simon rules); partial recall still pays
 // points. Higher levels: longer plays, more skaters, faster playback.
+//
+// The play happens inside ONE end zone, attacking up the screen. It used to be
+// laid out across a full 200-foot sheet, so the puck could travel the length of
+// the rink and skaters sat on both sides of both blue lines with no puck
+// established — every sequence was offside on paper, and the markers were tiny.
+// Decision 1, docs/manual-playtest/2026-08-03-decisions-round3.md.
 
-const REPS = 6;
+const REPS = REPS_PER_SESSION;
+const ZONE_ASPECT = 21.3 / 30; // height / width of one end zone
 const HOLD_AFTER_WATCH_MS = 350;
 
 // Fixed jersey numbers by skater index, so the same skater keeps its number
@@ -101,7 +108,7 @@ export default function RunThePlayDrill({ playerId = "default", onExit }) {
     if (!sc.ctx) return;
     const { ctx, W, H, skaters, seq } = sc;
     ctx.clearRect(0, 0, W, H);
-    drawRink(ctx, W, H);
+    drawRink(ctx, W, H, { orientation: "portrait", zone: "end" });
     if (!skaters) return;
 
     if (sc.stage === "watch") {
@@ -190,7 +197,10 @@ export default function RunThePlayDrill({ playerId = "default", onExit }) {
     const host = rootRef.current;
     if (!canvas || !host) return;
     clearTimers();
-    const { ctx, W, H } = setupCanvas(canvas, host);
+    // A zone is 21.3 m deep by 30 m wide, so the canvas takes that aspect
+    // rather than the gym's default 0.62 — otherwise the ice is drawn to scale
+    // on a surface that is not, and the crease comes out oval.
+    const { ctx, W, H } = setupCanvas(canvas, host, ZONE_ASPECT);
     const lvl = engineRef.current.level;
     const skaters = makeSkaters(skaterCount(lvl), W, H);
     const seq = makeSequence(skaters.length, seqLen(lvl));
@@ -304,6 +314,25 @@ export default function RunThePlayDrill({ playerId = "default", onExit }) {
 
   useEffect(() => () => clearTimers(), []);
 
+  // Action Rail rule 7: Space fires the one primary rail action, everywhere in
+  // the gym. Nothing here is reachable only by pointer.
+  useEffect(() => {
+    if (phase !== "playing") return undefined;
+    const onKey = (e) => {
+      if (e.code !== "Space" && e.key !== " ") return;
+      if (stage === "ready") {
+        e.preventDefault();
+        go();
+      } else if (stage === "reveal") {
+        e.preventDefault();
+        advanceRep();
+      }
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [phase, stage]);
+
   const sc = sceneRef.current;
   const hint = {
     ready: "Tap Go and watch the coach's play. Every pass has its own sound.",
@@ -382,31 +411,38 @@ export default function RunThePlayDrill({ playerId = "default", onExit }) {
         </div>
       )}
 
-      <canvas
-        ref={canvasRef}
-        className="gym-canvas"
-        onPointerDown={onCanvasTap}
-        style={{ display: phase === "playing" ? "block" : "none" }}
-      />
+      <div className="gym-stage" style={{ display: phase === "playing" ? "block" : "none" }}>
+        <canvas
+          ref={canvasRef}
+          className="gym-canvas"
+          onPointerDown={onCanvasTap}
+        />
 
-      {phase === "playing" && stage === "ready" && (
-        <div className="gym-row" style={{ marginBottom: 10 }}>
-          <button className="gym-btn" onClick={go}>
-            Go
-          </button>
-        </div>
-      )}
+        {/* Action Rail: exactly one primary action, in the same place every
+            stage, inside the play surface. makeSkaters keeps skaters out of
+            this band so a control never lands on a tap target. */}
+        {phase === "playing" && stage === "ready" && (
+          <div className="gym-rail">
+            <button className="gym-btn" onClick={go}>
+              Go
+              <kbd className="gym-key">space</kbd>
+            </button>
+          </div>
+        )}
+        {phase === "playing" && stage === "reveal" && (
+          <div className="gym-rail">
+            <button className="gym-btn" onClick={advanceRep}>
+              {rep + 1 >= REPS ? "See the result" : "Next play"}
+              <kbd className="gym-key">space</kbd>
+            </button>
+          </div>
+        )}
+      </div>
 
       {phase === "playing" && (
         <p className="gym-hint" aria-live="polite">
           {hint}
         </p>
-      )}
-
-      {phase === "playing" && stage === "reveal" && (
-        <button className="gym-btn gym-fab" onClick={advanceRep}>
-          {rep + 1 >= REPS ? "See the result" : "Next play"}
-        </button>
       )}
 
       {phase === "done" && (

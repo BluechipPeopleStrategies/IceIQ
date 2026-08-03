@@ -3,7 +3,7 @@
 // coach's passing play light up skater by skater, then run it back by tapping
 // the skaters in the same order. No DOM, no canvas, so it is unit-testable in
 // plain Node (mirrors snapshotCore.js).
-import { levelT, lerp } from "./gymEngine.js";
+import { levelT, lerp, targetMaxY, endZoneNet } from "./gymEngine.js";
 import { gradedPoints } from "./gymPoints.js";
 
 // Passes in the play. The classic Simon curve: short and readable early,
@@ -30,16 +30,26 @@ export function stepMs(level) {
 // Non-overlapping, in-bounds skater spots for the canvas. Same rejection
 // sampling as snapshotCore.makeFormation, but every marker is a teammate
 // (they are the Simon buttons).
+//
+// The whole canvas is ONE end zone (decision 1,
+// docs/manual-playtest/2026-08-03-decisions-round3.md), so "in bounds" now also
+// means: not standing in the crease, and not under the Action Rail. Before
+// this, skaters were sampled across a full 200-foot sheet, which is what made
+// every sequence read as an illegal, rink-length play.
 export function makeSkaters(count, W, H, { rng = Math.random } = {}) {
   const r = Math.max(13, Math.round(W * 0.032));
   const pad = r + 8;
   const minGap = r * 2.8;
+  const yMax = targetMaxY(H) - pad;      // controls own the bottom band
+  const net = endZoneNet(W, H, "portrait");
+  const netKeepOut = net.keepOut + r;    // no one stands in the paint or on the net
   const skaters = [];
   let guard = 0;
   while (skaters.length < count && guard < 4000) {
     guard += 1;
     const x = pad + rng() * (W - 2 * pad);
-    const y = pad + rng() * (H - 2 * pad);
+    const y = pad + rng() * (yMax - pad);
+    if (Math.hypot(net.x - x, net.y - y) < netKeepOut) continue;
     if (skaters.every((o) => Math.hypot(o.x - x, o.y - y) >= minGap)) {
       skaters.push({ x, y, r });
     }

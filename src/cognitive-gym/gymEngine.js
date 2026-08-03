@@ -155,19 +155,74 @@ export function boardCornerRadius(W, H) {
   return Math.min(W, H) * BOARD_CORNER_FRAC;
 }
 
-export function drawRink(ctx, W, H, { orientation = "landscape" } = {}) {
+// Where the net sits when the whole canvas is ONE end zone, plus how much room
+// around it a generator has to leave alone. Exported for the same reason
+// BOARD_MARGIN is: a generator that samples the full rectangle will otherwise
+// drop a skater — or an answer — inside the crease.
+// The zone is 21.3 m deep (4 m behind the goal line + 17.3 m out to the blue
+// line) by 30 m wide, per RINK_DIMENSIONS. Everything below is that geometry
+// divided through, so the crease, net and faceoff dots are to scale instead of
+// eyeballed: at 600x372 the depth axis lands within a couple of percent of the
+// width axis in pixels per metre.
+const ZONE_DEPTH_M = 21.3;
+const ZONE_WIDTH_M = 30;
+export const END_ZONE_GOAL_LINE_FRAC = 4 / ZONE_DEPTH_M;        // 0.188
+const CREASE_R_FRAC = 1.8 / ZONE_WIDTH_M;                        // 1.8 m radius
+const NET_MOUTH_FRAC = 1.83 / ZONE_WIDTH_M;
+const NET_DEPTH_FRAC = 1.12 / ZONE_DEPTH_M;
+const FACEOFF_R_FRAC = 4.5 / ZONE_WIDTH_M;
+const FACEOFF_FROM_GOAL_LINE = (4 + 6) / ZONE_DEPTH_M;           // 0.469
+const FACEOFF_FROM_CENTER = 7 / ZONE_WIDTH_M;                    // 0.233
+
+export function endZoneNet(W, H, orientation = "portrait") {
+  const portrait = orientation !== "landscape";
+  const across = portrait ? W : H;
+  const deep = portrait ? H : W;
+  const r = across * CREASE_R_FRAC;
+  // A skater standing on the net looks as wrong as one standing in the paint,
+  // so the generator's keep-out covers the net's depth behind the goal line too.
+  const keepOut = r + deep * NET_DEPTH_FRAC;
+  return portrait
+    ? { x: W * 0.5, y: H * END_ZONE_GOAL_LINE_FRAC, r, keepOut }
+    : { x: W * END_ZONE_GOAL_LINE_FRAC, y: H * 0.5, r, keepOut };
+}
+
+// `zone: "end"` draws ONE end zone filling the canvas instead of the whole
+// 200-foot sheet. Decision 1, docs/manual-playtest/2026-08-03-decisions-round3.md:
+// Run the Play was scattering skaters across a full sheet, so a pass could span
+// the rink and skaters sat on both sides of both blue lines with no puck
+// established — every sequence was offside on paper, and the markers were tiny.
+//
+// There is deliberately NO blue line in this view. Its own boundary is the
+// canvas edge, so no skater can be on the wrong side of one; and decision 2 of
+// the same session bans showing a blue line to U7/U9 at all, who play cross-ice
+// and half-ice. Omitting it satisfies both.
+export function drawRink(ctx, W, H, { orientation = "landscape", zone = "full" } = {}) {
   const R = boardCornerRadius(W, H); // board corner radius
   const m = BOARD_MARGIN;
+  const endZone = zone === "end";
 
-  // ice
-  roundRectPath(ctx, m, m, W - 2 * m, H - 2 * m, R);
+  // ice — rounded on all four sides for a whole sheet, on three for a zone
+  // (the fourth side is the blue line, where the ice keeps going).
+  const icePath = endZone
+    ? () => zonePath(ctx, W, H, R, m, orientation)
+    : () => roundRectPath(ctx, m, m, W - 2 * m, H - 2 * m, R);
+
+  icePath();
   ctx.fillStyle = "#f4f9fc";
   ctx.fill();
 
-  // everything inside stays within the rounded boards
+  // everything inside stays within the boards
   ctx.save();
-  roundRectPath(ctx, m, m, W - 2 * m, H - 2 * m, R);
+  icePath();
   ctx.clip();
+
+  if (endZone) {
+    drawEndZoneMarkings(ctx, W, H, orientation);
+    ctx.restore(); // unclip
+    drawZoneBoards(ctx, W, H, R, m, orientation);
+    return;
+  }
 
   // blue lines + red centre line.
   //
@@ -250,8 +305,11 @@ export function drawRink(ctx, W, H, { orientation = "landscape" } = {}) {
   ctx.stroke();
 
   ctx.restore(); // unclip
+  drawBoards(ctx, W, H, R, m);
+}
 
-  // boards + a lighter glass line just inside them
+// boards + a lighter glass line just inside them
+function drawBoards(ctx, W, H, R, m) {
   roundRectPath(ctx, m, m, W - 2 * m, H - 2 * m, R);
   ctx.strokeStyle = "#6b8294";
   ctx.lineWidth = 3;
@@ -260,6 +318,102 @@ export function drawRink(ctx, W, H, { orientation = "landscape" } = {}) {
   ctx.strokeStyle = "rgba(173,216,230,0.55)";
   ctx.lineWidth = 1.5;
   ctx.stroke();
+}
+
+// A zone has boards on THREE sides. The fourth is the blue line — open ice,
+// the rest of the rink continues past it — so it gets no boards and no rounded
+// corners. Drawing a rounded board there (the first cut did) says the rink ends
+// at centre ice, which is a different lie from the one this view came to fix.
+function zonePath(ctx, W, H, R, m, orientation) {
+  ctx.beginPath();
+  if (orientation === "portrait") {      // open along the bottom
+    ctx.moveTo(m, H);
+    ctx.lineTo(m, m + R);
+    ctx.arcTo(m, m, m + R, m, R);
+    ctx.lineTo(W - m - R, m);
+    ctx.arcTo(W - m, m, W - m, m + R, R);
+    ctx.lineTo(W - m, H);
+  } else {                               // open along the right
+    ctx.moveTo(W, m);
+    ctx.lineTo(m + R, m);
+    ctx.arcTo(m, m, m, m + R, R);
+    ctx.lineTo(m, H - m - R);
+    ctx.arcTo(m, H - m, m + R, H - m, R);
+    ctx.lineTo(W, H - m);
+  }
+}
+
+function drawZoneBoards(ctx, W, H, R, m, orientation) {
+  ctx.save();
+  ctx.lineCap = "butt";
+  zonePath(ctx, W, H, R, m, orientation);
+  ctx.strokeStyle = "#6b8294";
+  ctx.lineWidth = 3;
+  ctx.stroke();
+  ctx.restore();
+}
+
+// One end zone, filling the canvas: goal line, crease + net, and the two
+// end-zone faceoff circles. No blue line, no centre line, no centre circle, no
+// second net — see the note on drawRink for why the blue line is absent on
+// purpose rather than forgotten.
+//
+// Portrait attacks UP the screen (the puck enters from the bottom, which is
+// where the zone's open edge is). Landscape attacks LEFT.
+function drawEndZoneMarkings(ctx, W, H, orientation) {
+  const portrait = orientation === "portrait";
+  const g = END_ZONE_GOAL_LINE_FRAC;
+  const net = endZoneNet(W, H, portrait ? "portrait" : "landscape");
+
+  // goal line, running the full width of the zone
+  ctx.save();
+  ctx.globalAlpha = 0.55;
+  ctx.strokeStyle = "#c8102e";
+  ctx.lineWidth = 1.5;
+  ctx.beginPath();
+  if (portrait) { ctx.moveTo(0, H * g); ctx.lineTo(W, H * g); }
+  else { ctx.moveTo(W * g, 0); ctx.lineTo(W * g, H); }
+  ctx.stroke();
+  ctx.restore();
+
+  // crease, opening away from the end boards
+  ctx.fillStyle = "rgba(27,108,176,0.22)";
+  ctx.strokeStyle = "#1b6cb0";
+  ctx.lineWidth = 1.5;
+  ctx.beginPath();
+  if (portrait) ctx.arc(net.x, net.y, net.r, 0, Math.PI);
+  else ctx.arc(net.x, net.y, net.r, -Math.PI / 2, Math.PI / 2);
+  ctx.fill();
+  ctx.stroke();
+
+  // the net itself, sitting on the goal line
+  ctx.save();
+  ctx.strokeStyle = "#c8102e";
+  ctx.lineWidth = 2;
+  ctx.fillStyle = "rgba(255,255,255,0.85)";
+  const nw = (portrait ? W : H) * NET_MOUTH_FRAC;   // mouth, across the zone
+  const nd = (portrait ? H : W) * NET_DEPTH_FRAC;   // depth, behind the goal line
+  ctx.beginPath();
+  if (portrait) ctx.rect(net.x - nw / 2, net.y - nd, nw, nd);
+  else ctx.rect(net.x - nd, net.y - nw / 2, nd, nw);
+  ctx.fill();
+  ctx.stroke();
+  ctx.restore();
+
+  // the zone's two faceoff circles, 6 m out from the goal line and 7 m off centre
+  const circ = (portrait ? W : H) * FACEOFF_R_FRAC;
+  const near = 0.5 - FACEOFF_FROM_CENTER, far = 0.5 + FACEOFF_FROM_CENTER;
+  const spots = portrait
+    ? [[near, FACEOFF_FROM_GOAL_LINE], [far, FACEOFF_FROM_GOAL_LINE]]
+    : [[FACEOFF_FROM_GOAL_LINE, near], [FACEOFF_FROM_GOAL_LINE, far]];
+  spots.forEach(([fx, fy]) => {
+    ctx.strokeStyle = "#c8102e";
+    ctx.lineWidth = 1.5;
+    ctx.beginPath();
+    ctx.arc(W * fx, H * fy, circ, 0, Math.PI * 2);
+    ctx.stroke();
+    faceoffDot(ctx, W * fx, H * fy);
+  });
 }
 
 // Pointer position relative to a canvas, handling both mouse and touch events.
