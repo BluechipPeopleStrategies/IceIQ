@@ -5,6 +5,7 @@
 import { useState } from "react";
 import ScenarioRenderer from "./ScenarioRenderer.jsx";
 import { start, frameFor, record, routeFor, advance, summary } from "./branching.js";
+import { combinedResult } from "./multiStep.js";
 import { C, FONT, Card } from "../shared.jsx";
 
 export default function MultiStepPlayer({ scenario, playerId, onAnswer }) {
@@ -34,12 +35,21 @@ export default function MultiStepPlayer({ scenario, playerId, onAnswer }) {
     const st2 = record(state, result);
     setState(st2);
     setReveal({ route: routeFor(st2, result) });
-    onAnswer?.({ ...result, nodeId: state.nodeId });
+    // Per-step, flagged incomplete. The quiz shell records ONE result per
+    // question, emitted below when the whole play finishes -- recording each
+    // step inflated `results`, which the counter, the progress bar and
+    // calcWeightedIQ() all divide by ("Question 6 of 5", 2026-08-02).
+    // Still emitted so per-step telemetry and previews keep working.
+    onAnswer?.({ ...result, nodeId: state.nodeId, complete: false });
   }
   function advanceNext() {
     if (!reveal) return;
     if (reveal.route) { setState((st) => advance(st, reveal.route)); setReveal(null); }
-    else { setFinished(true); }
+    else {
+      setFinished(true);
+      // The question's real result: correct only if every read was.
+      onAnswer?.(combinedResult(summary(state)));
+    }
   }
 
   return (

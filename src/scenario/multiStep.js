@@ -40,3 +40,29 @@ export function summary(state) {
   const perStep = state.steps.map((_, i) => !!(state.results[i] && state.results[i].ok));
   return { total: state.steps.length, correct: perStep.filter(Boolean).length, perStep };
 }
+
+// Collapse a finished multi-step question into the ONE result the quiz shell
+// records. Correct only if every step was.
+//
+// Why one result: `results` is shared by the question counter, the progress bar,
+// the "N/M correct" line and calcWeightedIQ(). Recording per-step inflates all
+// four -- that was the "Question 6 of 5" defect, where a player's score was
+// divided by a denominator padded by every multi-step question they met.
+//
+// Why ALL steps rather than just the first: the justify step exists to make the
+// player defend the read. If only the judge step counted, guessing right and
+// explaining wrong would score as a win, and the second step would carry no
+// consequence at all. (Thomas's call, 2026-08-02.)
+//
+// Takes a summary shape — { total, correct } — so it serves both this module
+// and branching.js, whose summary() returns the same two fields.
+export function combinedResult(sum) {
+  const total = sum?.total ?? 0;
+  const correct = sum?.correct ?? 0;
+  return {
+    ok: total > 0 && correct === total,
+    complete: true,
+    steps: total,
+    correct,
+  };
+}

@@ -2202,7 +2202,13 @@ function Quiz({ player, onFinish, onBack, tier, onUpgrade, focus = null }) {
       case "multi":
         return <MultiMCQuestion q={q} onAnswer={handleSeqAnswer} answered={seqAnswered} colorblind={player.colorblind}/>;
       case "scenario":
-        return <ScenarioRenderer scenario={q} playerId={player?.id} onAnswer={p => handleSeqAnswer(!!p.ok)} />;
+        // A multi-step scenario emits one payload PER STEP with complete:false,
+        // then a single combined result when the whole play finishes. Only the
+        // combined one is recorded, so a two-step question stays one row in
+        // `results` -- the array the counter, the progress bar and
+        // calcWeightedIQ() all divide by. Flat scenarios emit no `complete`
+        // field at all, so `!== false` records them immediately as before.
+        return <ScenarioRenderer scenario={q} playerId={player?.id} onAnswer={p => { if (p?.complete === false) return; handleSeqAnswer(!!p.ok); }} />;
       default:
         return null;
     }

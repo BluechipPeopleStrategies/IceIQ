@@ -21,12 +21,22 @@ ok("d exceeds 1 behind the net", zoneDepth(0.96, "right") > 1);
 ok("the left end mirrors the right", near(zoneDepth(1 - 0.645, "left"), 0));
 ok("a mid-zone actor lands mid-band", near(zoneDepth(0.8, "right"), 0.538, 0.01));
 
-// ---- the live defect --------------------------------------------------------
-// gvis_u11_time-and-space_4we8 claims "You have the puck up high in the zone"
-// while YOU sits at x=0.80 -> d=0.538. "High" requires d <= 0.30 (grey to
-// 0.38), so this is 0.16 of zone depth outside the grey band.
+// ---- the original defect, as a fixture --------------------------------------
+// gvis_u11_time-and-space_4we8 shipped claiming "You have the puck up high in
+// the zone" while YOU sits at x=0.80 -> d=0.538. "High" requires d <= 0.30
+// (grey to 0.38), so it was 0.16 of zone depth outside the grey band.
+//
+// The copy has since been corrected, so this asserts against the ORIGINAL text
+// re-applied to the real geometry rather than reading the live file. A
+// regression test that only passes while the content is still broken stops
+// testing anything the moment someone fixes it.
 {
-  const findings = validatePositionalLanguage(LIVE_SEED);
+  const asShipped = structuredClone(LIVE_SEED);
+  asShipped.interaction = {
+    ...asShipped.interaction,
+    prompt: "You have the puck up high in the zone. One teammate has open ice; the other is covered by a defender. Tap the teammate with the most time and space.",
+  };
+  const findings = validatePositionalLanguage(asShipped);
   const depth = findings.find((f) => f.code === "positional-depth-mismatch");
   ok("flags the live 'up high in the zone' seed", !!depth);
   ok("names the actor the claim is about", depth?.actorId === "you");
@@ -34,6 +44,9 @@ ok("a mid-zone actor lands mid-band", near(zoneDepth(0.8, "right"), 0.538, 0.01)
   ok("reports the band the copy claimed", depth?.claimed === "high");
   ok("explanation quotes the offending phrase", /high in the zone/i.test(depth?.explanation || ""));
 }
+
+// The live seed, as authored today, must be clean.
+ok("the corrected live seed passes", validatePositionalLanguage(LIVE_SEED).length === 0);
 
 // ---- a compliant seed passes ------------------------------------------------
 {
