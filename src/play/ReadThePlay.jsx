@@ -37,11 +37,23 @@ export default function ReadThePlay({ player, onBack }) {
     return m;
   }, [plays, statsBump]);
 
+  // The play after the one being run, so a finished read has somewhere to go.
+  // Falling off the end returns to the list rather than dead-ending.
+  const activeIndex = active ? plays.findIndex((p) => p.id === active.id) : -1;
+  const nextPlay = activeIndex >= 0 ? plays[activeIndex + 1] : null;
+
+  function leaveActivePlay(destination) {
+    // The run that just ended has written its events; refresh the per-play
+    // summaries so the list reflects it the moment we come back.
+    setStatsBump((b) => b + 1);
+    setActive(destination || null);
+  }
+
   return (
     <div style={{ minHeight: "100vh", background: C.bg, color: C.white, fontFamily: FONT.body, paddingBottom: 80 }}>
       <StickyHeader>
         <div style={{ maxWidth: 560, margin: "0 auto", display: "flex", alignItems: "center", gap: "1rem" }}>
-          <BackBtn onClick={() => (active ? (setActive(null), setStatsBump(b => b + 1)) : onBack())} />
+          <BackBtn onClick={() => (active ? leaveActivePlay(null) : onBack())} />
           <div style={{ flex: 1, fontFamily: FONT.display, fontWeight: 800, fontSize: "1.1rem" }}>
             🏒 Read the Play
           </div>
@@ -56,6 +68,8 @@ export default function ReadThePlay({ player, onBack }) {
             play={active}
             ageBand={band}
             onEvent={(e) => logAnimatedPlayEvent(e)}
+            onNext={() => leaveActivePlay(nextPlay)}
+            nextLabel={nextPlay ? "Next play →" : "Done — back to all plays"}
           />
         ) : plays.length === 0 ? (
           <div style={{ color: C.dim, fontSize: 14, lineHeight: 1.5 }}>
@@ -69,6 +83,18 @@ export default function ReadThePlay({ player, onBack }) {
             {plays.map((p) => {
               const s = stats[p.id];
               const done = s && s.answers > 0;
+              // A play with one read used to report "1/1 reads", which counts
+              // the attempt instead of saying how it went — and reads as
+              // progress through a set that does not exist. Say whether the
+              // read was made correctly; only use a tally once there is
+              // actually more than one read to tally.
+              const allCorrect = done && s.correct === s.answers;
+              const statusText = !done
+                ? "New"
+                : s.answers === 1
+                ? (allCorrect ? "Read it ✓" : "Missed it")
+                : `${s.correct} of ${s.answers} correct`;
+              const statusColor = !done ? C.dim : allCorrect ? "#7ad78f" : "#E0B98A";
               return (
                 <button
                   key={p.id}
@@ -90,8 +116,8 @@ export default function ReadThePlay({ player, onBack }) {
                         </div>
                       )}
                     </div>
-                    <div style={{ fontSize: 11, color: done ? "#7ad78f" : C.dim, fontWeight: 700, whiteSpace: "nowrap" }}>
-                      {done ? `${s.correct}/${s.answers} reads` : "New"}
+                    <div style={{ fontSize: 11, color: statusColor, fontWeight: 700, whiteSpace: "nowrap" }}>
+                      {statusText}
                     </div>
                   </div>
                 </button>

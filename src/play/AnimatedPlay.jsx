@@ -134,8 +134,12 @@ function cueLabelForAge(cue, profile) {
   const profileText = JSON.stringify(profile || {}).toLowerCase();
   const isFilmRoom = profileText.includes("u15") || profileText.includes("u18") || profileText.includes("film");
 
+  // shortLabel used to win here, which is how a lone "Angle" pill ended up
+  // floating over the ice with nothing to explain it. The short form is a
+  // truncation, not a plainer phrasing — youngLabel is the plainer phrasing.
+  // Fall back to the full label so the marker always says what it marks.
   if (!isFilmRoom) {
-    return cue.youngLabel || cue.shortLabel || cue.label || "";
+    return cue.youngLabel || cue.label || cue.shortLabel || "";
   }
 
   return cue.label || "";
@@ -244,7 +248,7 @@ function ActorToken({ actor, ageBand, isDecisionActor }) {
   );
 }
 
-function NodeSummary({ node, profile, pickedOption, lastKind, coachFeedback, onReplay }) {
+function NodeSummary({ node, profile, pickedOption, lastKind, coachFeedback, onReplay, onNext, nextLabel }) {
   if (!node.terminal) return null;
   const spotMistakeFeedback = lastKind === "spot-mistake" && pickedOption
     ? (pickedOption.ok ? pickedOption.why : pickedOption.no)
@@ -285,14 +289,35 @@ function NodeSummary({ node, profile, pickedOption, lastKind, coachFeedback, onR
           )}
         </div>
       )}
-      <button onClick={onReplay} style={{ background: "#0B1A33", color: "#FFFFFF", border: "none", borderRadius: 9, padding: "8px 14px", fontSize: 13, cursor: "pointer", fontWeight: 800 }}>
-        Replay
-      </button>
+      {/* A finished read used to dead-end here on Replay alone: the only way
+          onward was the browser-style back arrow in the header. Forward is the
+          primary action and reads as the primary action; Replay steps back to
+          secondary so the two are not competing for the same weight. */}
+      <div style={{ display: "flex", alignItems: "center", gap: 8, flexWrap: "wrap" }}>
+        {onNext && (
+          <button
+            onClick={onNext}
+            style={{ background: "#C9A24B", color: "#0B1A33", border: "none", borderRadius: 9, padding: "9px 16px", fontSize: 13.5, cursor: "pointer", fontWeight: 900 }}
+          >
+            {nextLabel || "Next play →"}
+          </button>
+        )}
+        <button
+          onClick={onReplay}
+          style={
+            onNext
+              ? { background: "transparent", color: "#0B1A33", border: "1px solid #CDD5E0", borderRadius: 9, padding: "8px 14px", fontSize: 13, cursor: "pointer", fontWeight: 700 }
+              : { background: "#0B1A33", color: "#FFFFFF", border: "none", borderRadius: 9, padding: "8px 14px", fontSize: 13, cursor: "pointer", fontWeight: 800 }
+          }
+        >
+          Replay
+        </button>
+      </div>
     </div>
   );
 }
 
-export default function AnimatedPlay({ play, ageBand = "U11", onEvent }) {
+export default function AnimatedPlay({ play, ageBand = "U11", onEvent, onNext, nextLabel }) {
   const profile = profileForAge(ageBand);
   const [nodeId, setNodeId] = useState(play.start);
   const [picked, setPicked] = useState(null);
@@ -300,6 +325,9 @@ export default function AnimatedPlay({ play, ageBand = "U11", onEvent }) {
   const [judgePick, setJudgePick] = useState(null);
   const [lastKind, setLastKind] = useState(null);
   const [coachFeedback, setCoachFeedback] = useState(null);
+  // Per node: the flag is about one read, so it clears when the play moves on
+  // and the acknowledgement doesn't linger over the next question.
+  const [unclearFlagged, setUnclearFlagged] = useState(false);
   const [entered, setEntered] = useState(false);
   const [showMotion, setShowMotion] = useState(false);
   const startedAtRef = useRef(Date.now());
@@ -330,6 +358,7 @@ export default function AnimatedPlay({ play, ageBand = "U11", onEvent }) {
 
     startedAtRef.current = Date.now();
     setJudgePick(null);
+    setUnclearFlagged(false);
     runCycle();
 
     if (!node.terminal && node.autoNext) {
@@ -406,6 +435,11 @@ export default function AnimatedPlay({ play, ageBand = "U11", onEvent }) {
   const displayedPuck = (!entered && node.enterPuck) ? node.enterPuck : node.puck;
   const shownMotions = visibleMotionsFor(node);
   const timings = motionTimings(shownMotions.map((entry) => entry.motion));
+  const cueLabel = node.cue ? cueLabelForAge(node.cue, profile) : "";
+  // The plate was a fixed 20-unit rect sized for one short word. Now that it
+  // carries the full cue label, the plate has to follow the text or the copy
+  // spills off the white background.
+  const cueWidth = Math.max(20, cueLabel.length * 1.85 + 6);
 
   return (
     <div style={{ background: profile.bg, borderRadius: 12, padding: 12, border: "1px solid #E3E7EE" }}>
@@ -427,12 +461,12 @@ export default function AnimatedPlay({ play, ageBand = "U11", onEvent }) {
           </filter>
         </defs>
         <RinkBackdrop />
-        {node.cue && cueLabelForAge(node.cue, profile) && (
+        {node.cue && cueLabel && (
           <g data-testid="rink-cue-marker">
             <rect
-              x={(node.cue.x || 150) - 10}
+              x={(node.cue.x || 150) - cueWidth / 2}
               y={(node.cue.y || 32) - 5}
-              width="20"
+              width={cueWidth}
               height="9"
               rx="4.5"
               fill="#FFFFFF"
@@ -448,7 +482,7 @@ export default function AnimatedPlay({ play, ageBand = "U11", onEvent }) {
               fill="#0B1A33"
               fontWeight="900"
             >
-              {cueLabelForAge(node.cue, profile)}
+              {cueLabel}
             </text>
           </g>
         )}
@@ -531,7 +565,7 @@ export default function AnimatedPlay({ play, ageBand = "U11", onEvent }) {
           </div>
         )}
         {node.terminal ? (
-          <NodeSummary node={node} profile={profile} pickedOption={pickedOption} lastKind={lastKind} coachFeedback={coachFeedback} onReplay={replay} />
+          <NodeSummary node={node} profile={profile} pickedOption={pickedOption} lastKind={lastKind} coachFeedback={coachFeedback} onReplay={replay} onNext={onNext} nextLabel={nextLabel} />
         ) : node.autoNext ? (
           <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
             <div style={{ fontSize: 12, color: "#5B6575", fontWeight: 700 }}>Watch the play…</div>
@@ -614,10 +648,27 @@ export default function AnimatedPlay({ play, ageBand = "U11", onEvent }) {
             {playerFacingTextForAge(judgePick.why || judgePick.no, profile)}
           </div>
         )}
-        <button onClick={() => onEvent?.({ playId: play.id, nodeId, event: "unclear", ms: Date.now() - startedAtRef.current })}
-          style={{ marginTop: 8, background: "transparent", border: "1px dashed #8792A5", borderRadius: 8, color: "#4B5563", padding: "6px 8px", fontSize: 12, cursor: "pointer" }}>
-          Mark this read unclear
-        </button>
+        {/* This was a bordered button carrying more visual weight than Replay,
+            for the least useful thing on the screen: a binary flag that tells
+            us a read was confusing but never why. Demoted to a quiet text
+            link — it still logs the signal so the confusing plays surface in
+            telemetry — and it hands off to the Feedback widget, which is where
+            the detail that actually fixes a play gets written. */}
+        {unclearFlagged ? (
+          <div style={{ marginTop: 10, fontSize: 11.5, color: "#6B7280", lineHeight: 1.45 }}>
+            Thanks — flagged. Tap <strong>Feedback</strong> (bottom right) to tell us what was confusing.
+          </div>
+        ) : (
+          <button
+            onClick={() => {
+              setUnclearFlagged(true);
+              onEvent?.({ playId: play.id, nodeId, event: "unclear", ms: Date.now() - startedAtRef.current });
+            }}
+            style={{ marginTop: 10, background: "none", border: "none", padding: 0, color: "#8792A5", fontSize: 11.5, textDecoration: "underline", cursor: "pointer", fontFamily: "inherit" }}
+          >
+            This read wasn't clear
+          </button>
+        )}
       </div>
     </div>
   );

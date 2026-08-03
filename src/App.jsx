@@ -4046,6 +4046,12 @@ function GoalsScreen({ player, onSave, onBack }) {
     setGoals(g => ({...g, [cat]: {...(g[cat]||{}), [field]: value}}));
   }
 
+  // Whether this player already had a saved goal when the screen opened. Read
+  // once into a ref so the "first goal" celebration fires on the save that
+  // crosses zero-to-one and never again — re-saving the same goal, or setting a
+  // second category in the same visit, is not a first.
+  const hadGoalAtMount = useRef(Object.values(player?.goals || {}).some(g => g?.goal?.trim()));
+
   const currentGoal = goals[active] || {};
   const completedSteps = SMART_STEPS.filter(s => currentGoal[s]?.trim());
   // The top "Your Goal" field is conceptually a summary; the 5 SMART fields
@@ -4058,13 +4064,30 @@ function GoalsScreen({ player, onSave, onBack }) {
     const g = goals[active] || {};
     // Fallback: if the top goal field is empty, backfill it from S so the
     // downstream save (SB.saveGoal) doesn't silently drop the entry.
-    if (!g.goal?.trim() && g.S?.trim()) {
-      const patched = { ...goals, [active]: { ...g, goal: g.S.trim() } };
-      setGoals(patched);
-      onSave(patched);
-    } else {
-      onSave(goals);
+    const patched = (!g.goal?.trim() && g.S?.trim())
+      ? { ...goals, [active]: { ...g, goal: g.S.trim() } }
+      : goals;
+    if (patched !== goals) setGoals(patched);
+
+    // Setting a first goal is the moment the player commits to something, and
+    // until now it landed with no acknowledgement at all — they just got
+    // dropped back on Home. Celebrate it before onSave navigates away; the
+    // toast outlives the screen change.
+    // Name the category that actually carries the goal, not whichever tab
+    // happened to be open — a player can fill Skating and save from Shooting.
+    const firstSet = patched[active]?.goal?.trim()
+      ? active
+      : Object.keys(patched).find(k => patched[k]?.goal?.trim());
+    if (!hadGoalAtMount.current && firstSet) {
+      hadGoalAtMount.current = true;
+      toast.celebrate({
+        title: "First goal set!",
+        body: `${firstSet}: ${patched[firstSet].goal.trim()} — now go chase it.`,
+        icon: "🎯",
+      });
     }
+
+    onSave(patched);
   }
 
   return (
@@ -4076,7 +4099,10 @@ function GoalsScreen({ player, onSave, onBack }) {
             <div style={{fontFamily:FONT.display,fontWeight:800,fontSize:"1.1rem"}}>SMART Goals</div>
             <div style={{fontSize:11,color:C.dimmer}}>{getLevelDisplay(player)} · {Object.keys(goals).filter(k=>goals[k]?.goal).length}/{cats.length} set</div>
           </div>
-          <button onClick={handleSaveGoal} style={{background:C.gold,color:C.bg,border:"none",borderRadius:8,padding:".4rem 1rem",cursor:"pointer",fontWeight:800,fontSize:13,fontFamily:FONT.body}}>Save</button>
+          {/* No save button here on purpose. This screen used to offer three
+              separate saves (header, in-card, bottom) doing the identical
+              thing, which read as three different actions. One save lives at
+              the bottom of the flow, where the goal is actually finished. */}
         </div>
       </StickyHeader>
 
@@ -4151,10 +4177,12 @@ function GoalsScreen({ player, onSave, onBack }) {
                   Next →
                 </button>
               )}
+              {/* Finishing the last step points at the one save below rather
+                  than duplicating it here — a second identical button beside
+                  the step counter made the screen look like it wanted two
+                  different saves. */}
               {step === "T" && isComplete && (
-                <button onClick={handleSaveGoal} style={{background:C.gold,color:C.bg,border:"none",borderRadius:8,padding:".4rem 1rem",cursor:"pointer",fontSize:12,fontWeight:800,fontFamily:FONT.body}}>
-                  Save Goal ✓
-                </button>
+                <div style={{fontSize:11,color:C.green,fontWeight:700}}>All five set — save below ↓</div>
               )}
             </div>
           </Card>
@@ -4173,12 +4201,17 @@ function GoalsScreen({ player, onSave, onBack }) {
           </Card>
         )}
 
-        {/* Always-visible bottom Save button — users naturally look down
-            for save; the StickyHeader save is easy to miss on long pages. */}
+        {/* The one and only save on this screen. It sits at the end of the
+            flow, where the user already is once the last SMART field is
+            filled, and it saves either way: a finished goal or partial work in
+            progress. Saving returns to Home (see handleGoalsSave). */}
         <button onClick={handleSaveGoal}
                 style={{width:"100%",background:isComplete?C.gold:C.goldDim,color:isComplete?C.bg:C.dim,border:`1px solid ${C.goldBorder}`,borderRadius:12,padding:"1rem",cursor:"pointer",fontWeight:800,fontSize:15,fontFamily:FONT.body,letterSpacing:".02em",marginTop:"1rem"}}>
           {isComplete ? "Save Goal ✓" : "Save Progress"}
         </button>
+        <div style={{fontSize:11,color:C.dimmer,textAlign:"center",marginTop:".5rem"}}>
+          Saving takes you back Home. Your other categories stay as they are.
+        </div>
       </div>
     </div>
   );
