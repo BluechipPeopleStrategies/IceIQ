@@ -1,3 +1,5 @@
+import { bandCopyFor, ageGroupOf, renderAnchor } from "./ratingCopy.js";
+
 export const COMPETENCY_LADDER = [
   {value:"introduced", label:"Introduced",  sub_self:"I'm learning what this is",               sub_coach:"Has been introduced — needs consistent support · ~bottom 35%",   color:"#f87171"},
   {value:"developing", label:"Developing",  sub_self:"I can do it sometimes, needs reminders",  sub_coach:"Shows progress with reminders / in practice · ~35–60%",       color:"#facc15"},
@@ -29,8 +31,27 @@ export const RATING_SCALES = {
   "U18 / Midget":    { self:{type:"ladder", options:ladderFor(5,true)},  coach:{type:"ladder", options:ladderFor(5,false)} },
 };
 
-export function getSelfScale(level) { return RATING_SCALES[level]?.self?.options || []; }
-export function getCoachScale(level) { return RATING_SCALES[level]?.coach?.options || []; }
+// The `sub` line on each rung comes from data/ratingCopy.js when the band has
+// approved copy (U11+), with {ageGroup} and {region} substituted. `region` is
+// free text a coach sets on the team; MOST PLAYERS HAVE NO TEAM, so the missing
+// case is the common path and renderAnchor drops the whole clause rather than
+// leaving a dangling "in ." Bands without approved copy keep what they had.
+function withApprovedCopy(options, level, region, audience) {
+  const band = bandCopyFor(level);
+  if (!band) return options;
+  const ageGroup = ageGroupOf(level);
+  return options.map((o) => {
+    const template = band[o.value] && band[o.value][audience];
+    return template ? { ...o, sub: renderAnchor(template, { ageGroup, region }) } : o;
+  });
+}
+
+export function getSelfScale(level, region) {
+  return withApprovedCopy(RATING_SCALES[level]?.self?.options || [], level, region, "self");
+}
+export function getCoachScale(level, region) {
+  return withApprovedCopy(RATING_SCALES[level]?.coach?.options || [], level, region, "coach");
+}
 export function getScaleColor(scale, value) { const o = scale.find(s => s.value === value); return o ? o.color : "#999"; }
 export function getScaleLabel(scale, value) { const o = scale.find(s => s.value === value); return o ? o.label : "Not rated"; }
 export function normalizeRating(scale, value) {
