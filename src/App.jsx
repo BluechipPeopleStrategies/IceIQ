@@ -17,6 +17,7 @@ import RinkReadsRinkQuestion from "./RinkReadsRinkQuestion.jsx";
 import RinkReadsRink from "./RinkReadsRink";
 import { COMPETENCIES, getJourneyV2, ACTIVITY_METRICS, GAME_SENSE_UNLOCK_SESSIONS, calcCompetencyScores, calcGameSenseScore } from "./utils/gameSense.js";
 import { getTrainingLog, seedDemoTrainingForRoster } from "./utils/trainingLog.js";
+import { upsertResult, skipResult, isSkipped, answeredCount } from "./utils/quizResults.js";
 import { buildU11ForwardPreview, PREVIEW_PLAYER_ID } from "./data/previewPlayer.js";
 import { enqueueReview, getSavedReview, flushQueue } from "./review/reviewQueue.js";
 import { boardHash } from "./review/reviewCore.js";
@@ -1860,6 +1861,9 @@ function Quiz({ player, onFinish, onBack, tier, onUpgrade, focus = null }) {
   }, [results, celebratedStreak]);
   const [showFlag, setShowFlag] = useState(false);
   const [rinkQResult, setRinkQResult] = useState(null); // null | true (correct) | false (wrong) — for RinkReadsRinkQuestion dispatcher
+  // Questions the player skipped, held so they can be served again before the
+  // session ends. The provisional wrong row already sits in `results`.
+  const [skippedQs, setSkippedQs] = useState([]);
   // Speed bonus: when an interactive question is on screen, track when it
   // loaded so a correct answer can earn a time-based bonus. 15-second
   // window, max 50 bonus points per question, linear decay to 0. Wrong
@@ -1946,7 +1950,12 @@ function Quiz({ player, onFinish, onBack, tier, onUpgrade, focus = null }) {
     if (question) setQuestionStartedAt(Date.now());
   }, [question?.id]);
 
-  const qNum = results.length;
+  // Position in the session = questions ANSWERED, not rows in `results`.
+  // A skipped question occupies a row while still being owed to the player, and
+  // it is re-served after the quota is met -- so counting rows would push the
+  // header past qLen again ("Question 8 of 7"), which is the overrun fixed on
+  // 2026-08-02. Clamped so the catch-up phase reads "7 of 7" rather than beyond.
+  const qNum = Math.min(answeredCount(results), qLen);
   const isLast = qNum >= qLen - 1;
   const qtype = question?.type || "mc";
   // Apply any in-browser local override on top of the bank question.
@@ -2021,10 +2030,10 @@ function Quiz({ player, onFinish, onBack, tier, onUpgrade, focus = null }) {
         if (qt === "mistake") setMistakeStreak(0);
       }
       setLastSpeedBonus(0);
-      const newResults = [...results, newResult];
+      const newResults = upsertResult(results, newResult);
       setResults(newResults);
       toast.warning("⏱ Time's up!", { duration: 1800 });
-      if (newResults.length >= qLen) setQuizDone(true);
+      if (answeredCount(newResults) >= qLen && !skippedQs.length) setQuizDone(true);
     }, TIMED_DURATION_MS);
     return () => clearTimeout(t);
   }, [questionStartedAt, timedMode, question?.id, sel, seqAnswered, rinkQResult]);
@@ -2051,10 +2060,10 @@ function Quiz({ player, onFinish, onBack, tier, onUpgrade, focus = null }) {
     setLastSpeedBonus(bonus);
     if (bonus) setSpeedTotal(t => t + bonus);
     const newResult = { id:q.id, cat:q.cat, ok, d:q.d||2, type:qtype, speedBonus:bonus };
-    const newResults = [...results, newResult];
+    const newResults = upsertResult(results, newResult);
     if (q.type === "mistake" && ok) setMistakeStreak(s => s+1);
     setResults(newResults);
-    if (newResults.length >= qLen) setQuizDone(true);
+    if (answeredCount(newResults) >= qLen && !skippedQs.length) setQuizDone(true);
   }
 
   function handleSeqAnswer(ok) {
@@ -2075,16 +2084,66 @@ function Quiz({ player, onFinish, onBack, tier, onUpgrade, focus = null }) {
     setLastSpeedBonus(bonus);
     if (bonus) setSpeedTotal(t => t + bonus);
     const newResult = { id:q.id, cat:q.cat, ok, d:q.d||2, type:q.type || "seq", speedBonus:bonus };
-    const newResults = [...results, newResult];
+    const newResults = upsertResult(results, newResult);
     setResults(newResults);
-    if (newResults.length >= qLen) setQuizDone(true);
+    if (answeredCount(newResults) >= qLen && !skippedQs.length) setQuizDone(true);
+  }
+
+  // Skip: record it WRONG immediately (Thomas, 2026-08-03 -- otherwise a player
+  // farms a perfect score by skipping anything hard) but hold the question so
+  // it comes back. Answering it later goes through upsertResult, which REPLACES
+  // this row rather than appending a second one.
+  function handleSkip() {
+    if (!question) return;
+    setResults(prev => upsertResult(prev, skipResult(question)));
+    setSkippedQs(prev => (prev.some(x => x.id === question.id) ? prev : [...prev, question]));
+    advance({ from: "skip" });
   }
 
   function advance() {
     if (!question) return;
-    if (results.length >= qLen) { setQuizDone(true); return; }
+    // Count ANSWERED questions, not rows: a skipped question occupies a row but
+    // is still owed to the player, so the session must not end on its account.
+    const answered = answeredCount(results);
+    const outstanding = skippedQs.filter(sq => {
+      const r = results.find(x => x && x.id === sq.id);
+      return isSkipped(r);
+    });
+    if (answered >= qLen) {
+      // Quota met. Serve anything still skipped before finishing.
+      if (outstanding.length) {
+        const [nextSkipped, ...rest] = outstanding;
+        setSkippedQs(rest);
+        setQuestion(nextSkipped);
+        setSel(null);
+        setSeqAnswered(false);
+        setSeqCorrect(false);
+        setRinkQResult(null);
+        setLastSpeedBonus(0);
+        setQuestionStartedAt(Date.now());
+        return;
+      }
+      setQuizDone(true);
+      return;
+    }
     const { q: nextQ, queue: nextQueue } = pullNext(queue, results);
-    if (!nextQ) { setQuizDone(true); return; }
+    if (!nextQ) {
+      // Bank exhausted early — still owe the player their skipped questions.
+      if (outstanding.length) {
+        const [nextSkipped, ...rest] = outstanding;
+        setSkippedQs(rest);
+        setQuestion(nextSkipped);
+        setSel(null);
+        setSeqAnswered(false);
+        setSeqCorrect(false);
+        setRinkQResult(null);
+        setLastSpeedBonus(0);
+        setQuestionStartedAt(Date.now());
+        return;
+      }
+      setQuizDone(true);
+      return;
+    }
     setQueue(nextQueue);
     setQuestion(nextQ);
     setSel(null);
@@ -2177,9 +2236,9 @@ function Quiz({ player, onFinish, onBack, tier, onUpgrade, focus = null }) {
     const bonus = computeSpeedBonus(qtype, okBool, questionStartedAt);
     setLastSpeedBonus(bonus);
     if (bonus) setSpeedTotal(t => t + bonus);
-    const nextResults = [...results, { id:q.id, cat:q.cat, ok:okBool, d:q.d||2, type:qtype, speedBonus:bonus }];
+    const nextResults = upsertResult(results, { id:q.id, cat:q.cat, ok:okBool, d:q.d||2, type:qtype, speedBonus:bonus });
     setResults(nextResults);
-    if (nextResults.length >= qLen) setQuizDone(true);
+    if (answeredCount(nextResults) >= qLen && !skippedQs.length) setQuizDone(true);
   }
 
   // Single dispatch site. New schema (q.rink or NEW_RINK_TYPES) goes through
@@ -2600,6 +2659,18 @@ function Quiz({ player, onFinish, onBack, tier, onUpgrade, focus = null }) {
               )}
             </div>
           </div>
+        )}
+
+        {/* Skip — only before answering. A defective or confusing question used
+            to trap the player with no way past it, which made the whole session
+            unfinishable (reported 2026-08-03). Counts wrong immediately so it
+            is never a free pass, and the question is re-served before the
+            session ends so it can still be earned back. */}
+        {!answered && (
+          <button onClick={handleSkip}
+            style={{background:"none",border:`1px solid ${C.border}`,borderRadius:10,color:C.dim,fontSize:12,marginTop:".65rem",cursor:"pointer",fontFamily:FONT.body,width:"100%",textAlign:"center",padding:".55rem",fontWeight:700}}>
+            Skip for now — comes back later, counts wrong until you answer it
+          </button>
         )}
 
         {/* Report flag — always visible, not gated on answered */}
