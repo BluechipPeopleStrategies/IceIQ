@@ -104,10 +104,61 @@ export function QotDCard({ player, demoMode, onOpen }) {
 // Run screen
 // ─────────────────────────────────────────────
 
-export function QotDScreen({ question, player, onBack }) {
+// `question` is OPTIONAL, and that is the fix for a hard crash.
+//
+// ChallengesHub's Daily Drill card navigated with `onNav({ kind: "qotd" })` and
+// no question, because QotDCard on Home had always resolved it first. This
+// component then read `question.type` as its third statement and threw, which
+// the root error boundary rendered as "Something went wrong" — destroying the
+// whole app state and, on reload, dumping the player to the landing page.
+//
+// It survived because QotDCard returns null in demo/dev mode, so in a preview
+// session the Home card was invisible and Challenges was the ONLY route to the
+// feature — the broken one.
+//
+// Resolving here rather than in the caller also covers the second latent case:
+// todaysQuestion() returns null when a level's pool has no plain mc/tf
+// question, which would have crashed the Home path too.
+export function QotDScreen({ question: questionProp, player, onBack }) {
+  const [resolved, setResolved] = useState(questionProp || null);
+  const [loadFailed, setLoadFailed] = useState(false);
+  useEffect(() => {
+    if (questionProp) { setResolved(questionProp); return; }
+    if (!player?.level) return;
+    let alive = true;
+    loadQB()
+      .then(qb => { if (alive) setResolved(todaysQuestion(qb, player.level) || null); })
+      .catch(() => { if (alive) setLoadFailed(true); });
+    return () => { alive = false; };
+  }, [questionProp, player?.level]);
+
+  const question = resolved;
   const [sel, setSel] = useState(null);
   const [answered, setAnswered] = useState(false);
   const [stats, setStats] = useState(null); // % community correct
+
+  // Every hook above this line runs unconditionally, so the early return below
+  // cannot change hook order between renders.
+  if (!question) {
+    const msg = loadFailed
+      ? "Could not load today's question. Check your connection and try again."
+      : !player?.level
+        ? "Set your age group in your profile to get a daily question."
+        : "No question for your age group today — check back tomorrow.";
+    return (
+      <div style={{padding:"1rem",fontFamily:FONT.body}}>
+        <Card style={{textAlign:"center",padding:"2rem 1rem"}}>
+          <div style={{fontSize:32,marginBottom:".6rem"}}>📆</div>
+          <div style={{color:C.dim,fontSize:14,lineHeight:1.5}}>{msg}</div>
+          <button onClick={onBack}
+            style={{marginTop:"1.2rem",background:"transparent",border:`1px solid ${C.border}`,color:C.white,borderRadius:8,padding:".55rem 1.1rem",cursor:"pointer",fontSize:13,fontFamily:FONT.body}}>
+            Back
+          </button>
+        </Card>
+      </div>
+    );
+  }
+
   const isTF = question.type === "tf";
   const rightIdx = typeof question.correct === "number" ? question.correct : question.ok;
 
