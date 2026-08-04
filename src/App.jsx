@@ -7923,6 +7923,11 @@ function CoachHome({ profile, onSignOut, onOpenPlayer, demoMode, subscriptionTie
 export default function App() {
   const [authReady, setAuthReady] = useState(false);
   const [profile, setProfile] = useState(null);
+  // "pending" until loadUser has actually finished looking for the profiles row;
+  // "missing" once its retry budget is spent. Separates a signup still in flight
+  // from a genuinely stranded account -- both of which look like "session, no
+  // profile" and were previously treated as the latter. See preAppScreen.
+  const [profileProbe, setProfileProbe] = useState("pending");
   const [player, setPlayer] = useState(null); // enriched player object (profile + synced data)
   const [demoMode, setDemoMode] = useState(false);
   // Tracked-fresh ref so async Supabase auth callbacks see the latest demoMode
@@ -8284,7 +8289,10 @@ export default function App() {
           loadUser(session.user.id).catch((e) => console.error("loadUser after auth change failed:", e));
         }, 0);
       }
-      else { setProfile(null); setPlayer(null); setUserEmail(null); }
+      // Reset the probe too, or the next sign-in inherits the last account's
+      // verdict -- a "missing" left over from a stranded account would show the
+      // recovery form instantly to whoever signs in next, before we have looked.
+      else { setProfile(null); setPlayer(null); setUserEmail(null); setProfileProbe("pending"); }
     });
     return () => { mounted = false; data?.subscription?.unsubscribe?.(); };
   }, [demoMode]);
@@ -8316,10 +8324,18 @@ export default function App() {
       // profile-less auth user (three exist in production) still settles on
       // the auth screen rather than looping forever.
       if (attempt < 5) {
+        setProfileProbe("pending");
         setTimeout(() => { loadUser(userId, attempt + 1).catch(() => {}); }, 200 * (attempt + 1));
+      } else {
+        // Budget spent. The row is genuinely absent, not slow -- this is the
+        // stranded-account case FinishSetupScreen exists for. Recording it as
+        // state instead of returning silently is what lets the render gate tell
+        // the two cases apart.
+        setProfileProbe("missing");
       }
       return;
     }
+    setProfileProbe("loaded");
     setProfile(p);
     if (p.role === "player" && p.level) {
       // Build enriched player object from Supabase data
@@ -8616,7 +8632,20 @@ export default function App() {
     // every reload returned here, creating another account did not help because
     // the old session still loaded, and signing up with the same address was
     // refused as "already registered". Reproduced on production 2026-08-03.
-    if (preAppScreen({ hasSupabase, hasSession: !!userEmail, hasProfile: false }) === "finish-setup") {
+    const preApp = preAppScreen({
+      hasSupabase,
+      hasSession: !!userEmail,
+      hasProfile: false,
+      probe: profileProbe,
+    });
+    // Still looking. Every brand-new signup passes through here, because
+    // SIGNED_IN fires before signUp() has written the profiles row -- showing
+    // the recovery form during that window told a new user their account was
+    // broken, and let a coach who filled it in be saved as a player.
+    if (preApp === "loading") {
+      return <div style={{minHeight:"100vh",background:C.bg,color:C.dimmer,display:"flex",alignItems:"center",justifyContent:"center",fontFamily:FONT.body}}>Loading…</div>;
+    }
+    if (preApp === "finish-setup") {
       return <FinishSetupScreen
         email={userEmail}
         onDone={async (row) => { setProfile(row); await loadUser(row.id); }}

@@ -36,5 +36,42 @@ ok("missing/undefined flags default to the auth screen, not a crash",
 
 ok("an empty argument is safe", preAppScreen() === "unconfigured");
 
+// ── the probe: telling a brand-new signup apart from a stranded account ──────
+//
+// Both look like "session, no profile", and treating them the same shipped a
+// regression: SIGNED_IN fires DURING supabase.auth.signUp(), before signUp() has
+// started the profiles write, so the first render after creating an account had
+// a session and no row and was shown "Finish setting up your account."
+//
+// That was not only a confusing flash. FinishSetupScreen defaults role to
+// "player", and ensureOwnProfile upserted -- so a COACH who completed the form
+// during that window had their role overwritten. Silent data corruption on the
+// happy path.
+
+ok("a signup still in flight -> loading, NOT the finish-setup form",
+  preAppScreen({ hasSupabase: true, hasSession: true, hasProfile: false, probe: "pending" }) === "loading");
+
+ok("the retry budget is spent and the row is really gone -> finish setup",
+  preAppScreen({ hasSupabase: true, hasSession: true, hasProfile: false, probe: "missing" }) === "finish-setup");
+
+ok("probe never overrides a loaded profile -- that is still just the app",
+  preAppScreen({ hasSupabase: true, hasSession: true, hasProfile: true, probe: "pending" }) === null);
+
+ok("probe never invents a session -- pending with no session is still auth",
+  preAppScreen({ hasSupabase: true, hasSession: false, hasProfile: false, probe: "pending" }) === "auth");
+
+ok("probe never overrides missing config",
+  preAppScreen({ hasSupabase: false, hasSession: true, hasProfile: false, probe: "pending" }) === "unconfigured");
+
+// Back-compat: every caller that predates the probe keeps its old behaviour,
+// which is why the default is "missing" and not "pending". A caller that does
+// not know must still reach the recovery screen rather than the dead end.
+ok("an omitted probe still routes a profile-less session to finish-setup",
+  preAppScreen({ hasSupabase: true, hasSession: true, hasProfile: false }) === "finish-setup");
+
+ok("no probe value ever routes a session to auth -- the dead end stays closed",
+  ["pending", "missing", undefined, null, "nonsense"].every(probe =>
+    preAppScreen({ hasSupabase: true, hasSession: true, hasProfile: false, probe }) !== "auth"));
+
 console.log(`\n${pass} passed, ${fail} failed`);
 process.exit(fail ? 1 : 0);

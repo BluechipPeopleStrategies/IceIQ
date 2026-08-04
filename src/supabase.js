@@ -191,14 +191,33 @@ export async function getProfile(userId) {
 // Upsert rather than insert so a retry is harmless. RLS allows this: schema.sql's
 // "insert own profile" policy is `with check (auth.uid() = id)`, so a signed-in
 // user may write their own row and no one else's.
+// INSERT, not upsert, and the difference is a data-corruption bug.
+//
+// This is called by the finish-setup recovery screen, whose role selector
+// defaults to "player". An upsert makes that default authoritative: if a row
+// already exists -- or appears while the form is open, which is exactly what
+// happens when a brand-new signup races the profiles write -- ON CONFLICT DO
+// UPDATE overwrites the real role and name with the form's. A coach who
+// completed that form was silently downgraded to a player, and nothing logged
+// it.
+//
+// Insert-then-adopt keeps the property the upsert was reaching for (a retry is
+// harmless) without ever overwriting a row this screen did not create: on a
+// duplicate-key collision the existing row wins and is returned as-is.
 export async function ensureOwnProfile({ id, role, name }) {
   if (!supabase) throw new Error("Supabase not configured");
   const { data, error } = await supabase.from("profiles")
-    .upsert({ id, role, name }, { onConflict: "id" })
+    .insert({ id, role, name })
     .select()
     .single();
-  if (error) throw error;
-  return data;
+  if (!error) return data;
+  // 23505 = unique_violation. The row appeared between our check and our write,
+  // so somebody else's write is the truth. Adopt it rather than clobber it.
+  if (error.code === "23505") {
+    const existing = await getProfile(id);
+    if (existing) return existing;
+  }
+  throw error;
 }
 
 export async function updateProfile(userId, patch) {
