@@ -396,6 +396,56 @@ const hasImage = q => !!(q.media && q.media.url);
   giveaways.slice(0, 8).forEach(g => console.log(`        ${g}`));
 }
 
+// ─────────────────────────────────────────────────────────────────────────────
+// GUARD 9 — an image's declared aspect must match the file on disk.
+//
+// App.jsx renders `aspectRatio: q.media?.ratio || "16/9"` with objectFit
+// contain. 129 of the 133 image questions carried NO ratio, so every one fell
+// back to 16/9 — and the bank uses two different crops: a half-ice 1086x972
+// (1.12) on 88 questions and a full-sheet 1248x648 (1.93) on 41. In one 16/9
+// box the wide ones nearly fill it while the tall ones pillarbox to about 58%
+// of the width. Same question flow, rink drawn at two visibly different sizes,
+// which is CONTENT-9's "scenario layouts inconsistent between question types".
+//
+// Ratios are now the exact pixel dimensions, so this guard is a real
+// file-versus-data check rather than a format check: re-crop an asset without
+// updating the bank and it fails here instead of silently pillarboxing again.
+// ─────────────────────────────────────────────────────────────────────────────
+{
+  const wrong = [], missing = [], noFile = [];
+  for (const [band, arr] of Object.entries(bank)) {
+    for (const q of arr) {
+      const url = q.media?.url;
+      if (!url) continue;
+      if (!q.media.ratio) { missing.push(`${band} · ${q.id}`); continue; }
+      if (!/\.png$/i.test(url)) continue;   // SVGs declare their own viewBox
+      const file = join(HERE, "..", "..", "public", url);
+      let buf;
+      try { buf = readFileSync(file); } catch { noFile.push(`${band} · ${q.id} · ${url}`); continue; }
+      // PNG IHDR: width and height are big-endian uint32 at bytes 16 and 20.
+      const w = buf.readUInt32BE(16), h = buf.readUInt32BE(20);
+      const declared = String(q.media.ratio).split("/").map(s => Number(s.trim()));
+      if (declared.length !== 2 || !declared.every(Number.isFinite)) {
+        wrong.push(`${band} · ${q.id} · unparseable ratio "${q.media.ratio}"`);
+        continue;
+      }
+      const off = Math.abs(declared[0] / declared[1] - w / h);
+      if (off > 0.01) {
+        wrong.push(`${band} · ${q.id} · declares ${q.media.ratio} but the file is ${w}x${h}`);
+      }
+    }
+  }
+  ok(`every image question declares a ratio${missing.length ? ` — ${missing.length} missing` : ""}`,
+    missing.length === 0);
+  missing.slice(0, 6).forEach(m => console.log(`        ${m}`));
+  ok(`every declared ratio matches its file${wrong.length ? ` — ${wrong.length} wrong` : ""}`,
+    wrong.length === 0);
+  wrong.slice(0, 6).forEach(w => console.log(`        ${w}`));
+  ok(`every referenced image exists on disk${noFile.length ? ` — ${noFile.length} missing` : ""}`,
+    noFile.length === 0);
+  noFile.slice(0, 6).forEach(n => console.log(`        ${n}`));
+}
+
 const total = Object.values(bank).reduce((n, a) => n + a.length, 0);
 console.log(`\nchecked ${total} questions across ${Object.keys(bank).length} bands`);
 console.log(`${pass} passed, ${fail} failed`);
