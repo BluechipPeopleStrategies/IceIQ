@@ -119,7 +119,7 @@ export const SKILLS={
     {cat:"Puck Skills",icon:"🏒",skills:[{id:"u11p1",name:"Backhand Stickhandling",desc:"Controls puck on backhand side comfortably"},{id:"u11p2",name:"Backhand Pass",desc:"Delivers an accurate backhand pass"},{id:"u11p3",name:"Shooting off the Catch",desc:"Quick release without extra stickhandling"},{id:"u11p4",name:"Puck Protection",desc:"Uses body and stick to shield puck"}]},
     {cat:"Hockey Sense",icon:"👁",skills:[{id:"u11h1",name:"Offensive Zone Positioning",desc:"Understands basic offensive zone positions"},{id:"u11h2",name:"Backchecking Awareness",desc:"Recognizes when to transition back"},{id:"u11h3",name:"Reading the Play",desc:"Anticipates where the puck is going"}]},
     {cat:"Defensive Skills",icon:"🛡",skills:[{id:"u11d1",name:"Gap Control",desc:"Maintains appropriate gap on the rush"},{id:"u11d2",name:"Angling",desc:"Uses body position to angle opponent to boards"}]},
-    {cat:"Compete & Attitude",icon:"🔥",skills:[{id:"u11c1",name:"Compete Level",desc:"Consistently battles hard in all situations"},{id:"u11c2",name:"Coachability",desc:"Implements feedback between shifts"},{id:"u11c3",name:"Team-Centred Play",desc:"Makes team decisions — passes when a teammate is open, supports on defense, accepts role",selfQ:"Do you make the team-first play even when it's not the flashy one?"}]},
+    {cat:"Compete & Attitude",icon:"🔥",skills:[{id:"u11c1",name:"Compete Level",desc:"Consistently battles hard in all situations"},{id:"u11c2",name:"Coachability",desc:"Implements feedback between shifts"},{id:"u11c3",name:"Team-Centred Play",desc:"Makes team decisions — passes when a teammate is open, supports on defence, accepts role",selfQ:"Do you make the team-first play even when it's not the flashy one?"}]},
     {cat:"Game Decision-Making",icon:"🧠",isDM:true,skills:[
       {id:"u11dm1",name:"Rush Read: 2-on-1",desc:"Puck carrier reads defender and makes correct decision",selfQ:"Can you read a 2-on-1 and make the right play?"},
       {id:"u11dm2",name:"Defensive Zone Assignment",desc:"Finds their man without being told every play",selfQ:"Do you find your check automatically in your own zone?"},
@@ -135,7 +135,7 @@ export const SKILLS={
     {cat:"Defensive Skills",icon:"🛡",skills:[{id:"u13df1",name:"Body Contact",desc:"Uses body legally and effectively in battles"},{id:"u13df2",name:"Shot Blocking",desc:"Willing and positioned to block shots"},{id:"u13df3",name:"Defensive-Zone Breakout",desc:"Executes breakout patterns correctly"}]},
     {cat:"Compete & Attitude",icon:"🔥",skills:[{id:"u13c1",name:"Compete Level",desc:"Battles hard every shift, every practice"},{id:"u13c2",name:"Coachability",desc:"Seeks feedback and self-corrects between reps"},{id:"u13c3",name:"Leadership",desc:"Positive leadership on bench and in the room"},{id:"u13c4",name:"Team-Centred Mindset",desc:"Prioritizes team success over personal stats, elevates teammates, makes the right play over the selfish play",selfQ:"Do you consistently choose the team play — and make teammates better around you?"}]},
     {cat:"Game Decision-Making",icon:"🧠",isDM:true,skills:[
-      {id:"u13dm1",name:"Zone Entry Decision",desc:"Reads the defensive setup and chooses correct entry",selfQ:"Can you read the defense and pick the right zone entry?"},
+      {id:"u13dm1",name:"Zone Entry Decision",desc:"Reads the defensive setup and chooses correct entry",selfQ:"Can you read the defence and pick the right zone entry?"},
       {id:"u13dm2",name:"3-on-2 Rush Read",desc:"Middle player reads defender positioning correctly",selfQ:"On a 3-on-2, do you read whether to shoot or pass?"},
       {id:"u13dm3",name:"Corner Retrieval vs. Position",desc:"Reads whether to retrieve a puck or hold position",selfQ:"Do you know when to go get the puck vs. hold your spot?"},
       {id:"u13dm4",name:"Trap Recognition",desc:"Recognizes a 1-2-2 trap and adjusts",selfQ:"Can you recognize when the other team is running a trap?"},
@@ -153,7 +153,7 @@ export const SKILLS={
     {cat:"Game Decision-Making",icon:"🧠",isDM:true,skills:[
       {id:"u15dm1",name:"Forecheck Read",desc:"Reads forecheck pressure and makes the right breakout decision",selfQ:"Can you read the forecheck and adjust your breakout in real time?"},
       {id:"u15dm2",name:"PP/PK Reads",desc:"Reads special teams situations and adjusts positioning",selfQ:"Do you recognize PP/PK patterns and know your role?"},
-      {id:"u15dm3",name:"Gap and Angle Control",desc:"Maintains proper gap and angle on rush defense",selfQ:"Can you control gap and angle without giving up the middle?"},
+      {id:"u15dm3",name:"Gap and Angle Control",desc:"Maintains proper gap and angle on rush defence",selfQ:"Can you control gap and angle without giving up the middle?"},
       {id:"u15dm4",name:"Cycle Support Reads",desc:"Knows when to support the cycle vs hold position",selfQ:"Do you read when to jump into the cycle vs hold your spot?"},
       {id:"u15dm5",name:"Physical Play Decisions",desc:"Uses contact at the right time and place",selfQ:"Do you choose when to finish checks vs when to play the puck?"},
       {id:"u15dm6",name:"Transition Recognition",desc:"Reads puck possession changes and reacts immediately",selfQ:"Do you recognize transitions and switch immediately?"},

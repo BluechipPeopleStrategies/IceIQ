@@ -80,7 +80,7 @@ export const COACH_PERSONAS = [
     archetype: "chill",
     imageUrl: "/assets/coaches/danno.png",
     tilts: ["s", "p"],
-    summary: "Low-key, high-reps, never loses the room. Gets guys to relax, skate through mistakes, and stack clean shifts.",
+    summary: "Low-key, high-reps, never loses the room. Gets players to relax, skate through mistakes, and stack clean shifts.",
     flavorCorrect: {
       young: ["Nice, bud.", "Yes!", "Beauty.", "Love it.", "Smooth.", "There it is.", "Yeah, bud.", "Easy.", "Sweet.", "Heck yeah.", "Money.", "Slick.", "Big read.", "Locked in."],
       mid:   ["Nice read.", "Beauty.", "Love it.", "Smooth.", "There it is.", "Locked in.", "Big read.", "Easy.", "Slick.", "Pro habit."],

@@ -150,7 +150,11 @@ const BADGES = {
   HARD_HAT:   {icon:"💎", name:"Hard Hat",     desc:"5 Advanced correct"},
   SNIPER:     {icon:"🎯", name:"Sniper",       desc:"100% on a category"},
   LEVEL_UP:   {icon:"📈", name:"Level Up",     desc:"Beat your last score"},
-  IRON_MAN:   {icon:"🏒", name:"Iron Man",     desc:"5 sessions completed"},
+  // Display name only — the IRON_MAN key is what calcBadges awards, and badges
+  // are recomputed from session stats on every load rather than persisted by
+  // key, so nobody loses a badge they earned. Decision #9, 2026-08-03:
+  // "Workhorse" is what a coach actually calls that player.
+  IRON_MAN:   {icon:"🏒", name:"Workhorse",    desc:"5 sessions completed"},
   TACTICIAN:  {icon:"🧩", name:"Tactician",    desc:"Sequence question perfect"},
   DETECTIVE:  {icon:"🔍", name:"Detective",    desc:"Spot 3 mistakes correctly"},
   FIRST_LINE: {icon:"🏒", name:"First Line",   desc:"Completed your First-Five"},

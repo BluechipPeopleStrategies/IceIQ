@@ -13,7 +13,7 @@ export const STUDY_CONTENT = {
   },
   "U11 / Atom": {
     watchTips: [
-      "Watch an NHL game and pick one defenseman to follow. Track their gap control on the rush — do they close early or back up?",
+      "Watch an NHL game and pick one defenceman to follow. Track their gap control on the rush — do they close early or back up?",
       "Watch a power play and pause when it scores. Count how many passes happened before the shot.",
       "Find a 2-on-1 in any game — pause when the defender commits. Notice what the puck carrier does.",
     ],
@@ -53,13 +53,13 @@ export const STUDY_CONTENT = {
   "U15 / Bantam": {
     watchTips: [
       "Watch a full period and diagram every forecheck your team or an NHL team uses — label it 1-2-2, 2-1-2, or 1-3-1",
-      "Follow one defenseman for a full game — track every gap decision, pinch, and transition",
+      "Follow one defenceman for a full game — track every gap decision, pinch, and transition",
       "Watch an NHL power play and pause after every entry — identify the formation and the open lane",
       "Find a penalty kill sequence on video — count how many shot blocks and lane closures happen in 30 seconds",
     ],
     focusAreas: [
       {skill:"Forecheck execution", drill:"5-on-5 scrimmage — coach calls the forecheck system before each shift. Execute it for the full shift."},
-      {skill:"Transition speed", drill:"Neutral zone regroup drill — on the whistle, transition from offense to defense in under 2 seconds"},
+      {skill:"Transition speed", drill:"Neutral zone regroup drill — on the whistle, transition from offence to defence in under 2 seconds"},
       {skill:"Gap control under speed", drill:"1-on-1 rush drill — defender must maintain one stick length gap from blue line to the circles"},
       {skill:"Special teams roles", drill:"Walk through PP and PK formations on a whiteboard, then execute 5 reps of each on ice"},
       {skill:"Physical play decisions", drill:"Board battle drill with legal contact — win the puck cleanly without a penalty 8 out of 10 times"},
@@ -88,7 +88,7 @@ export const STUDY_CONTENT = {
     games: [
       "Watch Connor McDavid's full-game decision-making — not just highlights, but his off-puck reads",
       "Study Sidney Crosby's board play and cycle game — the best below-the-dots player ever",
-      "Watch Aleksander Barkov's two-way game — elite offense AND defense from the same player",
+      "Watch Aleksander Barkov's two-way game — elite offence AND defence from the same player",
       "Study any NHL Game 7 — decision-making under maximum pressure is the ultimate IQ test",
     ],
   },

@@ -11,9 +11,9 @@
 export const RINK_FEATURES = [
   // Rink anatomy
   { id: "blue_line",            name: "Blue Line" },
-  { id: "red_line",             name: "Center Red Line" },
+  { id: "red_line",             name: "Centre Red Line" },
   { id: "goal_line",            name: "Goal Line" },
-  { id: "center_ice_dot",       name: "Center Ice Dot" },
+  { id: "center_ice_dot",       name: "Centre Ice Dot" },
   { id: "faceoff_circle",       name: "Face-off Circle" },
   { id: "neutral_faceoff_dot",  name: "Neutral Zone Face-off Dot" },
   { id: "endzone_faceoff_dot",  name: "End Zone Face-off Dot" },
@@ -31,15 +31,15 @@ export const RINK_FEATURES = [
   { id: "defensive_zone",       name: "Defensive Zone" },
   // Player positions & on-ice officials (abbr is the standard hockey stat code)
   { id: "goalie",               name: "Goalie",            abbr: "G" },
-  { id: "defenseman",           name: "Defenseman",        abbr: "D" },
-  { id: "left_defenseman",      name: "Left Defenseman",   abbr: "LD" },
-  { id: "right_defenseman",     name: "Right Defenseman",  abbr: "RD" },
-  { id: "center",               name: "Center",            abbr: "C" },
+  { id: "defenseman",           name: "Defenceman",        abbr: "D" },
+  { id: "left_defenseman",      name: "Left Defenceman",   abbr: "LD" },
+  { id: "right_defenseman",     name: "Right Defenceman",  abbr: "RD" },
+  { id: "center",               name: "Centre",            abbr: "C" },
   { id: "left_wing",            name: "Left Wing",         abbr: "LW" },
   { id: "right_wing",           name: "Right Wing",        abbr: "RW" },
   { id: "forward",              name: "Forward",           abbr: "F" },
   { id: "referee",              name: "Referee",           abbr: "REF" },
-  { id: "linesman",             name: "Linesman",          abbr: "LM" },
+  { id: "linesman",             name: "Linesperson",       abbr: "LM" },
 ];
 
 export const RINK_FEATURES_BY_ID = Object.fromEntries(
