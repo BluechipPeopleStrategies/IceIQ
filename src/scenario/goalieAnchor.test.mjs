@@ -15,7 +15,7 @@
 //   4b. qa-sweep records its accepted warnings in scripts/qa-warn-baseline.json
 //       and exits non-zero on anything above it.
 
-import { readFileSync, writeFileSync } from "node:fs";
+import { readFileSync, writeFileSync, rmSync } from "node:fs";
 import { execFileSync } from "node:child_process";
 import { fileURLToPath } from "node:url";
 import { runHockeyValidators } from "./validators.js";
@@ -81,7 +81,14 @@ ok("a goalie 0.5 m behind the goal line is clean — the threshold is 0.7 m",
 
 const baseline = JSON.parse(readFileSync(new URL("../../scripts/qa-warn-baseline.json", import.meta.url), "utf8"));
 
-ok("the warning baseline is recorded, not empty", Object.keys(baseline).length > 0);
+// The baseline started at 8 accepted warnings and is now EMPTY, because all
+// eight were resolved — five by fixing the seed and three by fixing validator
+// rules that were firing on boards they did not apply to. An empty baseline is
+// the goal state, not a broken file. This assertion used to require a non-empty
+// baseline and failed the moment the work succeeded, which is the wrong shape
+// for a ratchet: it should permit zero and forbid growth.
+ok("the warning baseline is a valid record (empty is the goal, not a failure)",
+  baseline && typeof baseline === "object" && !Array.isArray(baseline));
 
 ok("every baselined signature has its numbers normalized out, so a nudged coordinate is not a new warning",
   Object.values(baseline).flat().every(s => !/\d/.test(s.replace(/#/g, ""))));
@@ -94,22 +101,38 @@ ok("every baselined signature has its numbers normalized out, so a nudged coordi
       return 0;
     } catch (e) { return e.status ?? 1; }
   };
-  ok("qa-sweep exits 0 while every warning is baselined", run(["--quiet"]) === 0);
+  ok("qa-sweep exits 0 on a clean catalog with an empty baseline", run(["--quiet"]) === 0);
 
-  // The real proof: drop one seed from the baseline on disk and confirm the
-  // sweep now FAILS. Restored in finally, so a crash here can't leave the
-  // repo's baseline short an entry.
-  const path = new URL("../../scripts/qa-warn-baseline.json", import.meta.url);
-  const original = readFileSync(path, "utf8");
+  // Proving the gate bites can no longer be done by deleting a baseline entry —
+  // there are none left to delete. So plant a seed that genuinely warns, and
+  // confirm the sweep fails on it. Removed in `finally`, so a crash here cannot
+  // leave a junk seed in the catalog.
+  const planted = fileURLToPath(new URL("./seeds/__gate_probe_tmp.json", import.meta.url));
+  const probe = {
+    id: "__gate_probe_tmp",
+    type: "scenario",
+    level: "U13 / Peewee",
+    levels: ["U13 / Peewee"],
+    // Outside THEME_VOCAB on purpose: a small, unambiguous warning that does not
+    // depend on geometry, so this proves the GATE rather than re-testing a rule.
+    themes: ["not-a-real-theme"],
+    cat: "Breakout",
+    difficulty: 3,
+    stage: { view: "left", zone: "def-zone" },
+    actors: [
+      { id: "you", kind: "player", x: 0.30, y: 0.50, tag: "" },
+      { id: "g", kind: "goalie", x: 0.079, y: 0.50, tag: "" },
+      { id: "puck", kind: "puck", x: 0.30, y: 0.50 },
+    ],
+    interaction: { kind: "point", prompt: "Probe seed — deleted by the test that wrote it." },
+  };
   try {
-    const trimmed = JSON.parse(original);
-    delete trimmed[Object.keys(trimmed)[0]];
-    writeFileSync(path, JSON.stringify(trimmed, null, 2) + "\n");
+    writeFileSync(planted, JSON.stringify(probe, null, 2) + "\n");
     ok("qa-sweep exits non-zero when a warning appears above the baseline", run(["--quiet"]) === 1);
   } finally {
-    writeFileSync(path, original);
+    rmSync(planted, { force: true });
   }
-  ok("the baseline file is restored exactly", readFileSync(path, "utf8") === original);
+  ok("the planted probe seed is gone and the catalog is clean again", run(["--quiet"]) === 0);
 }
 
 console.log(`\n${pass} passed, ${fail} failed`);

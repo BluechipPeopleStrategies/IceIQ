@@ -377,22 +377,40 @@ const rules = [
   // have a CLEAR lane from the carrier, and at least one wrong candidate should
   // be BLOCKED by a defender (tempting-but-covered). The selection twin of
   // decisionMakingPresent. Warn (not err) so existing hand seeds aren't broken.
+  //
+  // RECEIVER-PICK ONLY, and the gate is load-bearing rather than defensive.
+  // Both halves of this rule assume the candidates are pass targets. On a
+  // "tap the opponent you must cover" board the candidates are opponents, and
+  // then neither half means anything: an open lane to a player you are covering
+  // is not the read, and a wrong candidate being "blocked" is not why it is
+  // wrong. Two live boards warned on both halves forever with no seed-side fix
+  // possible, because the answer being a defender IS the board. Its sibling
+  // selectionAllLanesBlocked already gates exactly this way.
   function selectionOpenLaneClear(s) {
     if (s.interaction?.kind !== "selection") return null;
     const carrier = (s.actors || []).find(a => a.kind === "player");
     const defs = (s.actors || []).filter(a => a.kind === "defender");
     if (!carrier || !defs.length) return null;
     const byId = Object.fromEntries((s.actors || []).map(a => [a.id, a]));
+    const cands = (s.interaction.from || []).map(id => byId[id]).filter(Boolean);
+    if (!cands.length || !cands.every(a => a.kind === "teammate")) return null;
     const correctIds = new Set(s.correct?.ids || []);
+    // A candidate can never be its own blocker. On a "tap the opponent you must
+    // cover" board the keyed answer IS a defender, so `defs` contains the target
+    // and distanceToSegment(t, carrier, t) is 0 — under any radius. Every such
+    // board warned forever, and no seed edit could fix it because the answer
+    // being a defender is the whole board. Same defect class, and the same fix,
+    // as placementOutletsAreOpen further down this file.
+    const blocks = (a, d) => d.id !== a.id && lineHitsCircle(carrier, a, d, INTERCEPT_RADIUS);
     for (const id of correctIds) {
       const t = byId[id];
       if (!t) continue;
-      if (defs.some(d => lineHitsCircle(carrier, t, d, INTERCEPT_RADIUS))) {
+      if (defs.some(d => blocks(t, d))) {
         return { kind: "warn", msg: `selection answer "${id}" has a defender in its lane from the carrier — the "open" read isn't actually open.` };
       }
     }
     const wrong = (s.interaction.from || []).map(id => byId[id]).filter(a => a && !correctIds.has(a.id));
-    if (wrong.length && !wrong.some(a => defs.some(d => lineHitsCircle(carrier, a, d, INTERCEPT_RADIUS)))) {
+    if (wrong.length && !wrong.some(a => defs.some(d => blocks(a, d)))) {
       return { kind: "warn", msg: `no wrong selection candidate is blocked by a defender — the geometry doesn't show why the other option(s) are covered.` };
     }
     return null;
@@ -885,12 +903,30 @@ const rules = [
 
   // A board themed "net-front" must have a teammate planted at the net, or it
   // contradicts its own premise (a body in front of the goalie to screen/tip).
+  // Which body belongs at the net depends on which end of the ice you are at,
+  // and the rule used to assume you were always attacking. On an OFFENSIVE board
+  // "net-front" is our screen/tip premise, so it needs a TEAMMATE. On a
+  // DEFENSIVE-zone board the net-front body is the opponent parked in our blue
+  // paint — that is the threat the board teaches, not a missing screen. Asking
+  // for a teammate there was asking the board to cover the very player it wants
+  // you to notice, and the only way to satisfy it was to move a defender close
+  // enough to break the keyed answer.
   function netFrontThemeNeedsNetFrontPresence(s) {
     if (!(s.themes || []).includes("net-front")) return null;
-    const net = { x: attackingNetX(s.stage?.view), y: 0.5 };
-    const present = (s.actors || []).some(a => a.kind === "teammate" && distance(a, net) < 0.16);
+    const defensive = s.stage?.zone === "def-zone";
+    // Anchor on the goalie when there is one — it marks the net more reliably
+    // than a view-derived constant, and on a def-zone board the net in question
+    // is the one being defended.
+    const goalie = (s.actors || []).find(a => a.kind === "goalie");
+    const net = defensive && goalie
+      ? { x: goalie.x, y: goalie.y }
+      : { x: attackingNetX(s.stage?.view), y: 0.5 };
+    const wantKind = defensive ? "defender" : "teammate";
+    const present = (s.actors || []).some(a => a.kind === wantKind && distance(a, net) < 0.16);
     if (!present) {
-      return { kind: "warn", msg: `themed "net-front" but no teammate is within 0.16 of the net — the screen/tip premise needs a body in front of the goalie` };
+      return defensive
+        ? { kind: "warn", msg: `themed "net-front" but no opponent is within 0.16 of the net being defended — a defensive net-front board needs the body it is teaching you to cover` }
+        : { kind: "warn", msg: `themed "net-front" but no teammate is within 0.16 of the net — the screen/tip premise needs a body in front of the goalie` };
     }
     return null;
   },
