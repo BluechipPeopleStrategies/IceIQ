@@ -454,6 +454,23 @@ export default function TwoThingsDrill({ playerId = "default", onExit }) {
 
   useEffect(() => () => clearTimers(), []);
 
+  // Action Rail rule 7: Space fires the one primary rail action. This drill
+  // auto-advances after the reveal hold, so `Go` at the ready stage is the only
+  // primary action there is — the shape buttons are the answer, not progression,
+  // and binding a key to them would hand a keyboard player a faster input than
+  // the tap the drill is actually timing.
+  useEffect(() => {
+    if (phase !== "playing" || stage !== "ready") return undefined;
+    const onKey = (e) => {
+      if (e.code !== "Space" && e.key !== " ") return;
+      e.preventDefault();
+      go();
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [phase, stage]);
+
   const choices = sceneRef.current.round ? sceneRef.current.round.cueChoices : [];
   const answerIndex = sceneRef.current.round ? sceneRef.current.round.cueAnswerIndex : -1;
   const pickedIndex = sceneRef.current.secondaryChoice;
@@ -562,50 +579,58 @@ export default function TwoThingsDrill({ playerId = "default", onExit }) {
         </div>
       )}
 
-      <canvas
-        ref={canvasRef}
-        className="gym-canvas"
-        style={{ display: phase === "playing" ? "block" : "none" }}
-        onMouseDown={handleCanvasTap}
-        onTouchStart={handleCanvasTap}
-      />
+      <div className="gym-stage" style={{ display: phase === "playing" ? "block" : "none" }}>
+        <canvas
+          ref={canvasRef}
+          className="gym-canvas"
+          onMouseDown={handleCanvasTap}
+          onTouchStart={handleCanvasTap}
+        />
 
-      {phase === "playing" && stage === "ready" && (
-        <div className="gym-row" style={{ marginBottom: 10 }}>
-          <button className="gym-btn" onClick={go}>
-            Go
-          </button>
-        </div>
-      )}
+        {/* Action Rail. Rule 4 — multi-choice controls use the same rail, and
+            this drill is the reason that rule exists: the shape cue flashed at
+            the top of the rink while the shape buttons sat below the canvas,
+            roughly 500px apart on a phone, in a drill that gives you 600ms to
+            use both. The cue already moved to just above the rail; this puts
+            the buttons there too, so the cue and its answer are adjacent. */}
+        {phase === "playing" && stage === "ready" && (
+          <div className="gym-rail">
+            <button className="gym-btn" onClick={go}>
+              Go
+              <kbd className="gym-key">space</kbd>
+            </button>
+          </div>
+        )}
 
-      {phase === "playing" && (stage === "live" || stage === "reveal") && (
-        <div className="gym-row" style={{ marginBottom: 10 }}>
-          {choices.map((shape, i) => {
-            const isAnswer = i === answerIndex;
-            const isPicked = pickedIndex === i;
-            // On reveal, mark the matching shape (check) and a wrong pick (cross)
-            // by label so feedback never rides on color alone.
-            let suffix = "";
-            if (stage === "reveal") {
-              if (isAnswer) suffix = " ✓";
-              else if (isPicked) suffix = " ✗";
-            }
-            return (
-              <button
-                key={i}
-                className="gym-btn"
-                style={{ display: "inline-flex", alignItems: "center", gap: 6 }}
-                disabled={stage === "reveal" || !cueActive || pickedIndex != null}
-                onClick={() => pickShape(i)}
-                aria-label={shapeWord[shape]}
-              >
-                <ShapeGlyph shape={shape} />
-                <span>{shapeWord[shape]}{suffix}</span>
-              </button>
-            );
-          })}
-        </div>
-      )}
+        {phase === "playing" && (stage === "live" || stage === "reveal") && (
+          <div className="gym-rail">
+            {choices.map((shape, i) => {
+              const isAnswer = i === answerIndex;
+              const isPicked = pickedIndex === i;
+              // On reveal, mark the matching shape (check) and a wrong pick (cross)
+              // by label so feedback never rides on color alone.
+              let suffix = "";
+              if (stage === "reveal") {
+                if (isAnswer) suffix = " ✓";
+                else if (isPicked) suffix = " ✗";
+              }
+              return (
+                <button
+                  key={i}
+                  className="gym-btn"
+                  style={{ display: "inline-flex", alignItems: "center", gap: 6 }}
+                  disabled={stage === "reveal" || !cueActive || pickedIndex != null}
+                  onClick={() => pickShape(i)}
+                  aria-label={shapeWord[shape]}
+                >
+                  <ShapeGlyph shape={shape} />
+                  <span>{shapeWord[shape]}{suffix}</span>
+                </button>
+              );
+            })}
+          </div>
+        )}
+      </div>
 
       {phase === "playing" && (
         <p className="gym-hint" aria-live="polite">
