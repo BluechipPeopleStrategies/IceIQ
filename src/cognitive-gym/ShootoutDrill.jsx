@@ -131,6 +131,85 @@ export default function ShootoutDrill({ playerId = "default", onExit }) {
     ctx.restore();
   }
 
+  // The net used to be strokeRect + two vertical lines + one horizontal, which
+  // is why it read as a target grid rather than a goal (fault 3). A goal is
+  // recognisable from four things and it had none of them: posts with real
+  // thickness, a crossbar, mesh, and depth behind the mouth.
+  //
+  // Depth is faked toward the scene's own vanishing point rather than straight
+  // back, so the one object the player aims at finally obeys the perspective
+  // drawArena establishes (fault 4, as far as a 2D renderer can take it).
+  const NET_DEPTH_FRAC = 0.34;   // of the mouth height, receding up-screen
+  function netDepth(net) {
+    return { dx: net.w * 0.10, dy: -net.h * NET_DEPTH_FRAC };
+  }
+
+  function drawNetStructure(ctx, net) {
+    const { x, y, w, h } = net;
+    const { dx, dy } = netDepth(net);
+    const post = Math.max(3, w * 0.022);
+
+    ctx.save();
+
+    // --- the box behind the mouth: two side panels and the back ---
+    const back = { x: x + dx, y: y + dy, w: w - dx * 2, h };
+    ctx.fillStyle = "rgba(11,27,43,0.10)";
+    ctx.beginPath();                                   // left side panel
+    ctx.moveTo(x, y); ctx.lineTo(back.x, back.y);
+    ctx.lineTo(back.x, back.y + h); ctx.lineTo(x, y + h);
+    ctx.closePath(); ctx.fill();
+    ctx.beginPath();                                   // right side panel
+    ctx.moveTo(x + w, y); ctx.lineTo(back.x + back.w, back.y);
+    ctx.lineTo(back.x + back.w, back.y + h); ctx.lineTo(x + w, y + h);
+    ctx.closePath(); ctx.fill();
+    ctx.fillStyle = "rgba(244,249,252,0.55)";          // the back of the net
+    ctx.fillRect(back.x, back.y, back.w, back.h);
+
+    // --- mesh, drawn INSIDE the box so it reads as netting, not as a grid
+    // over the ice. Spacing is a fraction of the mouth, so it stays believable
+    // at every approach scale instead of getting denser as the net grows.
+    ctx.save();
+    ctx.beginPath();
+    ctx.rect(back.x, back.y, back.w, back.h);
+    ctx.clip();
+    ctx.strokeStyle = "rgba(11,27,43,0.22)";
+    ctx.lineWidth = 1;
+    const mesh = Math.max(6, w * 0.045);
+    for (let mx = back.x; mx <= back.x + back.w; mx += mesh) {
+      ctx.beginPath(); ctx.moveTo(mx, back.y); ctx.lineTo(mx, back.y + back.h); ctx.stroke();
+    }
+    for (let my = back.y; my <= back.y + back.h; my += mesh) {
+      ctx.beginPath(); ctx.moveTo(back.x, my); ctx.lineTo(back.x + back.w, my); ctx.stroke();
+    }
+    ctx.restore();
+
+    // --- the frame: two posts and a crossbar, with real thickness ---
+    ctx.fillStyle = "#c8102e";
+    ctx.fillRect(x - post / 2, y, post, h);                    // left post
+    ctx.fillRect(x + w - post / 2, y, post, h);                // right post
+    ctx.fillRect(x - post / 2, y - post / 2, w + post, post);  // crossbar
+    // a lighter top edge so the crossbar reads as round rather than flat
+    ctx.fillStyle = "rgba(255,255,255,0.35)";
+    ctx.fillRect(x - post / 2, y - post / 2, w + post, Math.max(1, post * 0.3));
+
+    ctx.restore();
+  }
+
+  // The crease belongs to the net's depth: it starts at the goal line (the
+  // mouth) and sweeps out toward the shooter, rather than being an ellipse
+  // floating under a rectangle.
+  function drawCrease(ctx, net) {
+    ctx.save();
+    ctx.fillStyle = "rgba(27,108,176,0.18)";
+    ctx.strokeStyle = "rgba(27,108,176,0.55)";
+    ctx.lineWidth = Math.max(1.5, net.w * 0.006);
+    ctx.beginPath();
+    ctx.ellipse(net.x + net.w / 2, net.y + net.h, net.w * 0.62, net.h * 0.26, 0, 0, Math.PI);
+    ctx.fill();
+    ctx.stroke();
+    ctx.restore();
+  }
+
   function drawGoalieCore(ctx, cx, cy, u) {
     ctx.save();
     ctx.fillStyle = "#2b3a47";
@@ -322,28 +401,12 @@ export default function ShootoutDrill({ playerId = "default", onExit }) {
     const rects = cellRects(net);
     sc.rects = rects; // taps map against what is on screen right now
 
-    // net frame + grid
-    ctx.strokeStyle = "#c8102e";
-    ctx.lineWidth = Math.max(3, net.w * 0.014);
-    ctx.strokeRect(net.x, net.y, net.w, net.h);
-    ctx.strokeStyle = "rgba(11,27,43,0.12)";
-    ctx.lineWidth = 1;
-    for (let c = 1; c < 3; c += 1) {
-      ctx.beginPath();
-      ctx.moveTo(net.x + (net.w / 3) * c, net.y);
-      ctx.lineTo(net.x + (net.w / 3) * c, net.y + net.h);
-      ctx.stroke();
-    }
-    ctx.beginPath();
-    ctx.moveTo(net.x, net.y + net.h / 2);
-    ctx.lineTo(net.x + net.w, net.y + net.h / 2);
-    ctx.stroke();
-
-    // goal crease under the net
-    ctx.fillStyle = "rgba(27,108,176,0.16)";
-    ctx.beginPath();
-    ctx.ellipse(net.x + net.w / 2, net.y + net.h + net.h * 0.06, net.w * 0.42, net.h * 0.12, 0, 0, Math.PI * 2);
-    ctx.fill();
+    // the crease first, so the net sits ON it rather than floating above an
+    // ellipse that belonged to nothing (fault 5). Its depth is the net's own
+    // depth, so the two agree about where the ice is.
+    drawCrease(ctx, net);
+    // then the net itself: back-of-net depth, mesh, posts and crossbar
+    drawNetStructure(ctx, net);
 
     // shot animation progress (0..1), held at its final value through reveal
     let animFrac = 0;
@@ -358,7 +421,19 @@ export default function ShootoutDrill({ playerId = "default", onExit }) {
     const diveCap = target ? (isSave ? 1 : 0.55) : 0;
     const diveFrac = eased * diveCap;
 
-    const u = Math.min(net.w / 3, net.h / 2) * 0.36;
+    // Goalie scale. `u` was Math.min(net.w/3, net.h/2) * 0.36 — about 0.36 of a
+    // cell — which made the drawn silhouette (body 0.85u tall, head r=0.48u,
+    // total ~2.3u) roughly 0.83 of one cell inside a net two cells tall. So the
+    // goalie filled ~35% of the net's height and read as a small dark blob in a
+    // rectangle (fault 2). A real goalie fills 65-75%.
+    //
+    // Solved from the silhouette rather than re-guessed: total height is ~2.3u,
+    // so for a target fraction f of net.h, u = f * net.h / 2.3. Kept under a
+    // width bound too, so a wide-and-short net at the far end of the approach
+    // can't produce a goalie broader than the net itself.
+    const GOALIE_NET_FRACTION = 0.72;
+    const GOALIE_SILHOUETTE_U = 2.3;
+    const u = Math.min((GOALIE_NET_FRACTION * net.h) / GOALIE_SILHOUETTE_U, net.w * 0.19);
     const coreBase = { x: net.x + net.w / 2, y: net.y + net.h / 2 };
     let core = coreBase;
     if (target) {
