@@ -20,6 +20,7 @@ import { getTrainingLog, seedDemoTrainingForRoster } from "./utils/trainingLog.j
 import { upsertResult, skipResult, isSkipped, answeredCount, sessionQuestionCount, displayQuestionNumber, computeSpeedBonus, SPEED_TYPES, SPEED_DURATION_MS, SPEED_MAX_BONUS, SPEED_GRACE_MS } from "./utils/quizResults.js";
 import { preAppScreen } from "./utils/authRouting.js";
 import { canSelfRate } from "./data/selfRating.js";
+import { exampleFor } from "./data/goalStarters.js";
 import { isChunkLoadError, shouldReloadForChunkError } from "./utils/chunkReload.js";
 import { cachePlayer, mergeCachedPlayer, clearCachedPlayer } from "./utils/playerCache.js";
 import { withTimeout, WRITE_TIMEOUT_MS } from "./utils/withTimeout.js";
@@ -4083,7 +4084,17 @@ function GoalsScreen({ player, onSave, onBack }) {
   // carry the real content. If the user filled all 5 but left the goal field
   // blank, treat the Specific (S) field as the goal so the save button appears.
   const isComplete = completedSteps.length === 5 && (currentGoal.goal?.trim() || currentGoal.S?.trim());
-  const example = SMART_EXAMPLES[active] || {};
+  // Band-aware, and that is a live fix rather than a tidy-up. SMART_EXAMPLES is
+  // keyed by CATEGORY NAME only, so the moment U7 gained a "Skating" category
+  // (earlier today), a five-year-old's Skating tab started showing "Better
+  // backward skating helps my gap control as a defender" — plus a retired
+  // rating value ("On Track") and a hardcoded "By end of October". The same
+  // mechanism served the atom-hockey line to U15 players.
+  //
+  // goalStarters keys on (level, category), so every band gets copy written for
+  // it. Falls back to the old table for any pair it does not cover yet, so this
+  // can only improve on the current state.
+  const example = exampleFor(player.level, active) || SMART_EXAMPLES[active] || {};
 
   function handleSaveGoal() {
     // No active category means there is nothing to save against, and saving
