@@ -366,26 +366,15 @@ export function ChallengeRunScreen({ challenge, playerId, onBack, onDone }) {
           <div style={{fontSize:48,marginBottom:".25rem"}}>🏆</div>
           <div style={{fontSize:10,letterSpacing:".14em",textTransform:"uppercase",color:C.gold,fontWeight:700,marginBottom:".3rem"}}>Challenge complete</div>
           <div style={{fontFamily:FONT.display,fontWeight:800,fontSize:"2.4rem",color:C.gold,lineHeight:1}}>{leaderboard.score}%</div>
-          {myRank > 0 && <div style={{fontSize:12,color:C.dim,marginTop:".35rem"}}>#{myRank} of {leaderboard.board.length} teammates so far</div>}
+          <div style={{fontSize:12,color:C.dim,marginTop:".35rem"}}>Sent to your coach</div>
           {leaderboard.error && <div style={{fontSize:11,color:C.red,marginTop:".5rem"}}>{leaderboard.error}</div>}
         </div>
-        {leaderboard.board.length > 0 && (
-          <Card style={{marginBottom:"1rem"}}>
-            <Label>Leaderboard</Label>
-            {leaderboard.board.slice(0, 10).map((r, i) => {
-              const isMe = r.player_id === playerId;
-              return (
-                <div key={r.player_id} style={{display:"flex",alignItems:"center",justifyContent:"space-between",fontSize:12,padding:"4px 0",color:isMe?C.white:C.dim,fontWeight:isMe?700:500}}>
-                  <span style={{display:"flex",alignItems:"center",gap:".5rem"}}>
-                    <span style={{color:i===0?C.gold:isMe?C.white:C.dimmer,fontWeight:800,width:18}}>{i+1}.</span>
-                    <span>{r.name}{isMe ? " (you)" : ""}</span>
-                  </span>
-                  <span style={{color:r.score >= 80 ? C.green : r.score >= 60 ? C.gold : C.red,fontWeight:800}}>{r.score}%</span>
-                </div>
-              );
-            })}
-          </Card>
-        )}
+        {/* No player-facing leaderboard. Thomas, 2026-08-04: only the coach
+            sees results. The teammate-read RLS policy is dropped, so this
+            query now returns only the player's own row — rendering that as a
+            "leaderboard" would show a board of one and read as broken rather
+            than private. Rank is gone for the same reason: "#1 of 1" is a
+            worse thing to tell a child than nothing at all. */}
         <button onClick={onDone} style={{width:"100%",background:C.gold,color:C.bg,border:"none",borderRadius:10,padding:".9rem",cursor:"pointer",fontWeight:800,fontSize:14,fontFamily:FONT.body}}>
           Back to home
         </button>

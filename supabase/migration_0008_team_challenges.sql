@@ -58,8 +58,14 @@ create policy "challenge_results player crud"
   with check (auth.uid() = player_id);
 
 -- Coach who authored the challenge reads every team member's result
--- (powers the leaderboard). Team-mates can also read each other so the
--- leaderboard UI on the player side can show ranks.
+-- (powers the leaderboard). COACH ONLY.
+--
+-- A "challenge_results teammate read" policy used to live here as well, so the
+-- player-side UI could show ranks. Removed 2026-08-04 (Thomas: "only coach sees
+-- results"). It let every child on a team read every other child's score, which
+-- is a real disclosure for a leaderboard nobody asked for, and the player-facing
+-- board in teamChallenges.jsx was removed in the same change rather than left to
+-- render a board of one.
 drop policy if exists "challenge_results coach read" on public.challenge_results;
 create policy "challenge_results coach read"
   on public.challenge_results for select
@@ -71,15 +77,6 @@ create policy "challenge_results coach read"
     )
   );
 
+-- Explicitly removed, and kept as a drop so re-running this file on a database
+-- that already has it takes the policy away rather than leaving it behind.
 drop policy if exists "challenge_results teammate read" on public.challenge_results;
-create policy "challenge_results teammate read"
-  on public.challenge_results for select
-  using (
-    exists (
-      select 1
-      from public.team_challenges tc
-      join public.team_members tm on tm.team_id = tc.team_id
-      where tc.id = challenge_results.challenge_id
-        and tm.player_id = auth.uid()
-    )
-  );
