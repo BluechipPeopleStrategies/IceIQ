@@ -1,92 +1,103 @@
-# Migration drift — repo-side audit, 2026-08-03
+# Migration drift — repo vs production, 2026-08-03
 
-**What this is, and what it is not.** This compares the tables the app actually
-reads and writes against the migrations checked into `supabase/`. It is a
-*repo-side* audit run with no database access, so it does **not** tell you what
-exists in production. It tells you something narrower and still important: what
-could not be recreated from this repository.
-
-The open-work ledger said "`migration_0022` records five migrated tables absent"
-and called for a full reconciliation rather than just the one table. This is the
-half of that reconciliation that can be done without credentials.
+> **This document was rewritten after its first version got the main claim
+> wrong.** The first pass concluded that eight tables "have no migration in the
+> repo and cannot be recreated from it." That was false, and the correction is
+> recorded here rather than quietly swapped, because the mistake is instructive:
+> the scan globbed `supabase/migration_*.sql` and never looked at
+> `supabase/schema.sql`, which is where the base schema actually lives. A second
+> claimed-missing table, `pov`, was a regex artifact — the pattern matched the
+> prefix of `pov_images`. **Nothing was missing. The scan was.**
 
 ---
 
-## Every table the app touches, against the migrations we have
+## What is actually true
 
-26 tables are referenced via `.from("…")` across `src/`. Eighteen have a
-migration. **Eight do not.**
+**Every table the app touches is defined in this repo.** 25 real tables are
+referenced via `.from("…")` across `src/`. All of them resolve:
 
-| Table | Migration in repo | Notes |
+- **`supabase/schema.sql`** — the base schema, headed *"Paste this into Supabase
+  Dashboard → SQL Editor → New query → Run"*. Defines `profiles`, `teams`,
+  `team_members`, `quiz_sessions`, `goals`, `self_ratings`, `coach_ratings`.
+- **`supabase/migration_0002`…`0023`** — everything since, one table or change
+  per file.
+
+So the repo *can* rebuild the database. The base schema is version-controlled;
+it just isn't numbered, which is why a scan looking only for `migration_*`
+missed it.
+
+## The real drift, and it is the other direction
+
+The problem is not repo → database. It is **database ← repo**: migration files
+record *intent*, not what was actually applied. This is already documented, in
+the repo, inside `migration_0022_rls_privilege_hardening.sql` (lines 246-256),
+written when its first apply attempt failed:
+
+> `public.question_reports` does not exist in the live database even though
+> migration_0002 creates it. The migration files record intent, not what was
+> actually applied — the two have drifted. Verified live on 2026-08-02, these
+> five tables from the migration history are absent:
+
+| Table | Created by | Live on 2026-08-02 |
 |---|---|---|
-| `assignment_completions` | 0006 | |
-| `assignments` | 0006 | |
-| `challenge_results` | 0008 | |
-| `coach_reviews` | 0014 | |
-| `feedback_log` | 0015 | |
-| `playtest_feedback` | 0019 | |
-| `pov_images` | 0012 | |
-| `question_overrides` | 0017 | |
-| `question_reports` | 0002 | |
-| `question_requests` | 0016 | |
-| `question_results` | 0010 | |
-| `question_stats` | 0003 | |
-| `questions` | 0012 | |
-| `quiz_feedback` | 0011 | |
-| `review_questions` | 0004 | |
-| `scenario_reviews` | 0013 | |
-| `team_challenges` | 0008 | |
-| `training_sessions` | 0007 | **exists in repo, never applied** — the known one |
-| **`coach_ratings`** | — | none |
-| **`goals`** | — | none |
-| **`pov`** | — | none |
-| **`profiles`** | — | none |
-| **`quiz_sessions`** | — | none |
-| **`self_ratings`** | — | none |
-| **`team_members`** | — | none |
-| **`teams`** | — | none |
+| `question_reports` | 0002 | **absent** — and this explains 404s the app logs on load |
+| `question_results` | 0010 | **absent** — same |
+| `team_challenges` | 0008 | **absent** |
+| `training_sessions` | 0007 | **absent** — the known one |
+| `quiz_feedback` | 0011 | **absent** |
 
-## What the eight actually mean — two different problems
+Verified **present** in the same check: `profiles`, `question_overrides`,
+`teams`, `team_members`, `coach_reviews`, `feedback_log`.
 
-**1. The base schema was never version-controlled.** Migration numbering starts
-at **0002**. There is no `migration_0001`. `profiles`, `teams`, `team_members`,
-`quiz_sessions` and `pov` are the core tables the app has used since the
-beginning, and they were almost certainly created by hand in the Supabase
-dashboard before migrations existed. They work in production; they simply cannot
-be rebuilt from this repo. A fresh environment — a staging project, a new
-developer, a restore — starts broken and the failure looks like an app bug.
+That is the answer to "migrations and production have drifted": **five
+migrations were never applied**, not one. `training_sessions` was simply the one
+someone noticed.
 
-**2. Later tables added the same way.** `goals`, `self_ratings` and
-`coach_ratings` are newer features whose tables never got a migration either. So
-the practice that produced problem 1 did not stop; it just got quieter.
+## What is still genuinely unknown
 
-`goals` is worth calling out: **that is where SMART Goals saves.** It is the same
-shape of risk as `training_sessions` — a feature writing to a table whose
-existence nothing in this repo guarantees. `training_sessions` survived only
-because that screen writes localStorage first and the failure was silent.
+**`goals` — where SMART Goals saves — is on neither list.** It is defined in
+`schema.sql`, but the 2026-08-02 check neither confirmed nor denied it in
+production. Its status is unknown.
 
-## What this does NOT say
+The consequence if it is missing is milder than `training_sessions`, and worth
+knowing: `SB.saveGoal` throws, the per-category `catch` in `handleGoalsSave`
+collects the failure, and the player is told "Saved on this device — will sync
+next time." The goal survives in localStorage. `saveTrainingSessionRemote`, by
+contrast, silently no-ops. So a missing `goals` degrades honestly rather than
+lying — bad, not catastrophic.
 
-- It does **not** say these eight are missing from production. Most are certainly
-  there — the app works. The claim is only that the repo cannot recreate them.
-- It does **not** cover columns. A table can exist and still be missing a column
-  a later feature expects. `step_index` on the telemetry table is a known example
-  already on the task list.
-- Migrations **0020** and **0021** are absent from this branch by design: they
-  belong to the parked `feature/coach-authoring-video-export` branch.
+A read-only `to_regclass` check settles it in seconds. The SQL is already
+written out in `docs/manual-playtest/audits/2026-08-03-save-path-trace.md`
+(lines 220-227).
 
-## Recommended order, cheapest first
+## Recommended order
 
-1. **Apply `migration_0007`.** Already written, already reviewed, creates
-   `training_sessions`. Thomas's to run. Unblocks the training-log dual-write
-   that has been failing silently since it was written.
-2. **Dump the live schema and check in the result as `migration_0001_baseline.sql`.**
-   `supabase db dump --schema public` against production, committed as-is. This
-   is the single highest-value item here: it turns eight unrepeatable tables into
-   a file, and it is a read-only operation against the database.
-3. **Write migrations for `goals`, `self_ratings`, `coach_ratings`** from that
-   dump, so the three newer features are as reproducible as the older ones.
-4. **Then reconcile columns**, which needs the dump from step 2 to be meaningful.
+1. **Apply `migration_0007`** — creates `training_sessions`. Already written and
+   reviewed. Thomas's to run. Unblocks the training-log dual-write that has been
+   failing silently since it was written.
+2. **Apply the other four** — `0002`, `0008`, `0010`, `0011`. Two of them
+   (`question_reports`, `question_results`) are causing 404s on every app load
+   today, which is a live symptom nobody is currently chasing.
+3. **Run the `to_regclass` check across all 25 tables**, not just the eleven that
+   the 0022 note happened to cover, and commit the result next to that note. That
+   turns "verified live on 2026-08-02" into something reproducible instead of a
+   comment that ages.
+4. **Then reconcile columns**, which the table check has to precede. `step_index`
+   on the telemetry table is a known example already on the task list.
 
-Steps 2-4 need database credentials and are Thomas's call; step 1 is already
-queued for him.
+Steps 1-3 need database credentials and are Thomas's call.
+
+## The process finding
+
+`migration_0022` guards every reference to a possibly-missing table in a
+`do $$ … if to_regclass(…) is not null`, because *"Postgres runs a
+multi-statement batch in an implicit transaction, an unguarded reference to a
+missing table rolls back the ENTIRE migration."* That is a good defensive habit
+and it is why the security fixes in that file applied at all.
+
+But it also means **a migration can now half-apply and report success.** The
+guard makes the file survive drift; it does not fix the drift, and nothing warns
+that a section was skipped. If step 3 produces a checked-in table inventory, the
+natural follow-on is a script that diffs the inventory against what the migration
+files claim to create — the same shape as the warning baseline that
+`scripts/qa-sweep.mjs` now uses for seeds.
