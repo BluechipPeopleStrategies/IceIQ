@@ -9,7 +9,7 @@ import {
 } from "./gymEngine";
 import { getDrill, saveSession } from "./gymStorage";
 import { cue, gymCueHooks } from "./gymAudio";
-import { ScoreCount, ConfettiBurst, LevelProgress, PointsDelta } from "./gymFx";
+import { ScoreCount, ConfettiBurst, SessionSummary } from "./gymFx";
 import { sessionRankLabel } from "./gymProgressCore";
 import { makeFormation, scoreRead } from "./readNumbersCore";
 
@@ -468,12 +468,13 @@ export default function ReadNumbersDrill({ playerId = "default", onExit }) {
           {/* sessionRankLabel above already says "Personal best!", so the old
               trailing " New best." was a duplicate — and its `<=` printed it on
               a TIE. */}
-          <LevelProgress
+          <SessionSummary
             from={startLevelRef.current}
             to={level}
-            toPromote={engineRef.current ? engineRef.current.toPromote : 3}
+            engine={engineRef.current}
+            points={points}
+            saved={saved}
           />
-          {saved && <PointsDelta points={points} sessions={saved.sessions} />}
           <p>
             {points} points. {hits} of {REPS} numbers found.
           </p>

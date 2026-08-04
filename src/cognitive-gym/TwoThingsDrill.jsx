@@ -9,7 +9,7 @@ import {
 } from "./gymEngine";
 import { getDrill, saveSession } from "./gymStorage";
 import { cue, gymCueHooks } from "./gymAudio";
-import { ScoreCount, ConfettiBurst, LevelProgress, PointsDelta } from "./gymFx";
+import { ScoreCount, ConfettiBurst, SessionSummary } from "./gymFx";
 import { sessionRankLabel } from "./gymProgressCore";
 import {
   makeRound,
@@ -644,12 +644,19 @@ export default function TwoThingsDrill({ playerId = "default", onExit }) {
           <ScoreCount value={points} />
           <ConfettiBurst fire={!!bestLabel} />
           {bestLabel && <p className="gym-best">{bestLabel}</p>}
+          {/* sessionRankLabel above already says "Personal best!", so the old
+              trailing " New best." said it twice — and its `<=` printed it on a
+              TIE. The level now lives in SessionSummary. */}
+          <SessionSummary
+            from={startLevelRef.current}
+            to={level}
+            engine={engineRef.current}
+            points={points}
+            saved={saved}
+          />
           <p>
             {points} points. {hits} of {REPS} rounds with both the crossing and the
-            shape. Level {level}.
-            {saved && (saved.bestPoints || 0) <= points && points > 0
-              ? " New best."
-              : ""}
+            shape.
           </p>
           <div className="gym-row">
             <button className="gym-btn" onClick={start}>

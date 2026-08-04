@@ -12,7 +12,7 @@ import {
 } from "./gymEngine";
 import { getDrill, saveSession } from "./gymStorage";
 import { cue, gymCueHooks } from "./gymAudio";
-import { ScoreCount, ConfettiBurst, LevelProgress, PointsDelta } from "./gymFx";
+import { ScoreCount, ConfettiBurst, SessionSummary } from "./gymFx";
 import { sessionRankLabel } from "./gymProgressCore";
 import { shiftPoints } from "./trackingCore";
 
@@ -686,12 +686,13 @@ export default function TrackingDrill({ playerId = "default", onExit }) {
               <ScoreCount value={points} />
               <ConfettiBurst fire={!!bestLabel} />
               {bestLabel && <p className="gym-best">{bestLabel}</p>}
-              <LevelProgress
+              <SessionSummary
                 from={startLevelRef.current}
                 to={level}
-                toPromote={engineRef.current ? engineRef.current.toPromote : 3}
+                engine={engineRef.current}
+                points={points}
+                saved={saved}
               />
-              {saved && <PointsDelta points={points} sessions={saved.sessions} />}
               <p>
                 {points} points. {correct} of {SHIFTS * TARGETS} teammates tracked.
                 {bonus > 0 ? ` ${bonus} soccer ball${bonus === 1 ? "" : "s"} ⚽` : ""}

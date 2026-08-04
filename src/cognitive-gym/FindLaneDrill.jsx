@@ -8,7 +8,7 @@ import {
 } from "./gymEngine";
 import { getDrill, saveSession } from "./gymStorage";
 import { cue, gymCueHooks } from "./gymAudio";
-import { ScoreCount, ConfettiBurst } from "./gymFx";
+import { ScoreCount, ConfettiBurst, SessionSummary } from "./gymFx";
 import { sessionRankLabel } from "./gymProgressCore";
 import { makeFormation, scoreLane } from "./findLaneCore";
 
@@ -383,8 +383,13 @@ export default function FindLaneDrill({ playerId = "default", onExit }) {
     resolveTap(idx);
   }
 
+  // The level the player came in at, so the results card can show the move
+  // rather than just the destination (S2-27).
+  const startLevelRef = useRef(1);
+
   function start() {
     const d = getDrill(playerId, "findlane");
+    startLevelRef.current = d.level;
     engineRef.current = createAdaptiveLevel(d.level, {
       startUps: d.streak.ups,
       startDowns: d.streak.downs,
@@ -595,11 +600,18 @@ export default function FindLaneDrill({ playerId = "default", onExit }) {
           <ScoreCount value={points} />
           <ConfettiBurst fire={!!bestLabel} />
           {bestLabel && <p className="gym-best">{bestLabel}</p>}
+          {/* sessionRankLabel above already says "Personal best!", so the old
+              trailing " New best." said it twice — and its `<=` printed it on a
+              TIE. The level now lives in SessionSummary. */}
+          <SessionSummary
+            from={startLevelRef.current}
+            to={level}
+            engine={engineRef.current}
+            points={points}
+            saved={saved}
+          />
           <p>
-            {points} points. {hits} of {REPS} lanes found. Level {level}.
-            {saved && (saved.bestPoints || 0) <= points && points > 0
-              ? " New best."
-              : ""}
+            {points} points. {hits} of {REPS} lanes found.
           </p>
           <div className="gym-row">
             <button className="gym-btn" onClick={start}>

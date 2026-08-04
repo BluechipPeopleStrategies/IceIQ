@@ -81,6 +81,21 @@ export function PointsDelta({ points, sessions }) {
   );
 }
 
+// The whole progression block on a drill's end card: the level you came in at,
+// the level you left with, how close the next one is, and how the points
+// compare to last time. All twelve drills render this one component, so a
+// change to how progress reads is one edit here rather than twelve edits out in
+// the drills. `engine` is the drill's live adaptive-level controller; it is only
+// read from, never advanced.
+export function SessionSummary({ from, to, engine, points, saved }) {
+  return (
+    <>
+      <LevelProgress from={from} to={to} toPromote={engine ? engine.toPromote : 3} />
+      {saved && <PointsDelta points={points} sessions={saved.sessions} />}
+    </>
+  );
+}
+
 // A one-shot burst of 14 CSS-animated flecks in the brand gold/blue.
 const FLECKS = Array.from({ length: 14 }, (_, i) => i);
 export function ConfettiBurst({ fire }) {

@@ -2,7 +2,7 @@ import { useRef, useState, useCallback, useEffect } from "react";
 import { createAdaptiveLevel, setupCanvas, pointerPos, lerp, REPS_PER_SESSION } from "./gymEngine";
 import { getDrill, saveSession } from "./gymStorage";
 import { cue, gymCueHooks } from "./gymAudio";
-import { ScoreCount, ConfettiBurst, LevelProgress, PointsDelta } from "./gymFx";
+import { ScoreCount, ConfettiBurst, SessionSummary } from "./gymFx";
 import { sessionRankLabel } from "./gymProgressCore";
 import {
   makeShot,
@@ -969,12 +969,13 @@ export default function ShootoutDrill({ playerId = "default", onExit }) {
           <ScoreCount value={points} />
           <ConfettiBurst fire={!!bestLabel || won} />
           {bestLabel && <p className="gym-best">{bestLabel}</p>}
-          <LevelProgress
+          <SessionSummary
             from={startLevelRef.current}
             to={level}
-            toPromote={engineRef.current ? engineRef.current.toPromote : 3}
+            engine={engineRef.current}
+            points={points}
+            saved={saved}
           />
-          {saved && <PointsDelta points={points} sessions={saved.sessions} />}
           <p>
             Final: you {hits}, goalie {REPS - hits}. {points} points.
             {engineRef.current && engineRef.current.bestCombo >= 3

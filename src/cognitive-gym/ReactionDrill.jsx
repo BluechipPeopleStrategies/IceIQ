@@ -2,7 +2,7 @@ import { useRef, useState, useCallback, useEffect } from "react";
 import { createAdaptiveLevel, levelT, lerp, rand, REPS_PER_SESSION } from "./gymEngine";
 import { getDrill, saveSession } from "./gymStorage";
 import { cue, gymCueHooks } from "./gymAudio";
-import { ScoreCount, ConfettiBurst } from "./gymFx";
+import { ScoreCount, ConfettiBurst, SessionSummary } from "./gymFx";
 import { sessionRankLabel } from "./gymProgressCore";
 import { reactionPoints } from "./reactionCore";
 
@@ -179,8 +179,14 @@ export default function ReactionDrill({ playerId = "default", onExit }) {
     return () => window.removeEventListener("keydown", onKey);
   }, [phase]);
 
+  // The level the player came in at, so the results card can show the move
+  // rather than just the destination (S2-27).
+  const startLevelRef = useRef(1);
+
   function start() {
-    engineRef.current = createAdaptiveLevel(getDrill(playerId, "reaction").level, { ...gymCueHooks() });
+    const d = getDrill(playerId, "reaction");
+    startLevelRef.current = d.level;
+    engineRef.current = createAdaptiveLevel(d.level, { ...gymCueHooks() });
     setCorrect(0);
     setRts([]);
     setTrialIndex(0);
@@ -325,9 +331,16 @@ export default function ReactionDrill({ playerId = "default", onExit }) {
           <ScoreCount value={points} />
           <ConfettiBurst fire={!!bestLabel} />
           {bestLabel && <p className="gym-best">{bestLabel}</p>}
+          <SessionSummary
+            from={startLevelRef.current}
+            to={level}
+            engine={engineRef.current}
+            points={points}
+            saved={saved}
+          />
           <p>
             {correct} of {TRIALS} correct calls. {points} points.
-            {avgRt ? ` Average reaction ${avgRt} ms.` : ""} Level {level}.
+            {avgRt ? ` Average reaction ${avgRt} ms.` : ""}
           </p>
           <div className="gym-row">
             <button className="gym-btn" onClick={start}>
