@@ -8936,7 +8936,7 @@ export default function App() {
           // users have no obvious way out of the preview.
           if (profile?.__preview && next === "home" && screen === "home") { exitDemo(); return; }
           setScreen(next);
-        }} tier={tier}/>
+        }} tier={tier} level={player?.level}/>
       )}
 
       {upgradePrompt && (

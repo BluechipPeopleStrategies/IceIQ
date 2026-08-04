@@ -4,6 +4,8 @@
 import { useState, useEffect, useMemo, useId } from "react";
 import { C, FONT, Card, Label } from "./shared.jsx";
 import { getTrainingLog, saveTrainingSession, getTrainingSummary } from "./utils/trainingLog.js";
+import { canSelfRate } from "./data/selfRating.js";
+import { canSetGoals } from "./data/goalBands.js";
 
 // ─────────────────────────────────────────────────────────
 // PRO HOCKEY INTEL WIDGET — small, unobtrusive, rotating stat card
@@ -72,12 +74,23 @@ export function HockeyInsightWidget({ onInsightRead } = {}) {
   );
 }
 
-export function BottomNav({ active, onNav, tier = "FREE" }) {
+export function BottomNav({ active, onNav, tier = "FREE", level = "" }) {
+  // Band gating, not just tier gating. Two tabs lead somewhere a young player
+  // should not be, and both failed quietly rather than loudly:
+  //
+  //   Skills  — SKILLS has no U7 key, so `SKILLS[player.level] || []` renders an
+  //             empty ladder with nothing to tap. That is the exact defect
+  //             selfRating.js says it removed for the rate-yourself flow; the
+  //             flow was closed but the tab that reaches it was not.
+  //   Goals   — U7 does not set SMART goals (see data/goalBands.js). The route
+  //             is gated, but leaving the tab up just walks them into the wall.
+  //
+  // Hiding the tab is the honest version of a decision already made twice.
   const tabs = [
     {id:"home",   icon:"🏠", label:"Home"},
     {id:"quiz",   icon:"🧠", label:"Quiz"},
-    {id:"skills", icon:"📊", label:"Skills"},
-    {id:"goals",  icon:"🎯", label:"Goals", gated: tier === "FREE"},
+    ...(canSelfRate(level) ? [{id:"skills", icon:"📊", label:"Skills"}] : []),
+    ...(canSetGoals(level) ? [{id:"goals",  icon:"🎯", label:"Goals", gated: tier === "FREE"}] : []),
     {id:"report", icon:"📋", label:"Report"},
   ];
   return (
