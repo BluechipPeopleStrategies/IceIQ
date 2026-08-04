@@ -103,3 +103,55 @@ export function displayQuestionNumber(answered, qLen) {
   const n = Number(answered) > 0 ? Number(answered) : 0;
   return Math.min(n + 1, total);
 }
+
+// ─────────────────────────────────────────────────────────
+// Speed bonus
+// ─────────────────────────────────────────────────────────
+
+/**
+ * Question types that earn a speed bonus.
+ *
+ * Interactive/rink types only. MC/TF/seq are excluded because answering those
+ * fast mostly measures reading speed, which is literacy, not hockey IQ.
+ */
+export const SPEED_TYPES = new Set([
+  "drag-target", "drag-place", "multi-tap", "sequence-rink", "path-draw",
+  "lane-select", "hot-spots", "zone-click", "rink-label", "rink-drag",
+  "rink-match", "scenario",
+]);
+
+/** How long the decaying bonus window runs, once it starts. */
+export const SPEED_DURATION_MS = 15000;
+
+/** Bonus for an instant correct answer; decays linearly to 0 over the window. */
+export const SPEED_MAX_BONUS = 50;
+
+/**
+ * Reading grace before the bonus clock starts.
+ *
+ * `questionStartedAt` is stamped the moment the question RENDERS, so without a
+ * grace the bar told a nine-year-old to "answer fast" while they were still
+ * looking at the play for the first time (SHELL-7, 2026-08-03). Every seeded
+ * scenario is `type: "scenario"`, so that was every placement/point/selection
+ * question in the game. The bonus is meant to reward reading the ice quickly,
+ * not reading the screen quickly — so the clock only starts once there has been
+ * time to actually look.
+ *
+ * This deliberately does NOT apply to the ?timed=1 hard-cutoff mode, where the
+ * cliff is the whole point.
+ */
+export const SPEED_GRACE_MS = 4000;
+
+/**
+ * Bonus points for a correct answer, by how fast it came.
+ *
+ * `now` is injectable so the decay curve and the grace are testable without
+ * waiting in real time.
+ */
+export function computeSpeedBonus(qt, ok, startedAt, now = Date.now()) {
+  if (!ok) return 0;
+  if (!SPEED_TYPES.has(qt)) return 0;
+  const elapsed = Math.max(0, now - startedAt - SPEED_GRACE_MS);
+  const remaining = Math.max(0, SPEED_DURATION_MS - elapsed);
+  return Math.floor((remaining / SPEED_DURATION_MS) * SPEED_MAX_BONUS);
+}

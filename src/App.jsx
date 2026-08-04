@@ -17,7 +17,7 @@ import RinkReadsRinkQuestion from "./RinkReadsRinkQuestion.jsx";
 import RinkReadsRink from "./RinkReadsRink";
 import { COMPETENCIES, getJourneyV2, ACTIVITY_METRICS, GAME_SENSE_UNLOCK_SESSIONS, calcCompetencyScores, calcGameSenseScore } from "./utils/gameSense.js";
 import { getTrainingLog, seedDemoTrainingForRoster } from "./utils/trainingLog.js";
-import { upsertResult, skipResult, isSkipped, answeredCount, sessionQuestionCount, displayQuestionNumber } from "./utils/quizResults.js";
+import { upsertResult, skipResult, isSkipped, answeredCount, sessionQuestionCount, displayQuestionNumber, computeSpeedBonus, SPEED_TYPES, SPEED_DURATION_MS, SPEED_MAX_BONUS, SPEED_GRACE_MS } from "./utils/quizResults.js";
 import { preAppScreen } from "./utils/authRouting.js";
 import { canSelfRate } from "./data/selfRating.js";
 import { isChunkLoadError, shouldReloadForChunkError } from "./utils/chunkReload.js";
@@ -176,14 +176,32 @@ const QUESTS_COACH = [
   { id:"focus1",   label:"Check your team's focus",       nav:"home",  gate:null,             target:1 },
 ];
 
-// SMART goal categories
+// SMART goal categories.
+// EVERY level in LEVELS (shared.jsx) must have an entry. A missing key gave
+// U7 players an empty tab strip, a card reading "Your Goal — ", and a save that
+// would have upserted `category: ''` (2026-08-03). goalCatsFor() below is the
+// belt-and-braces guard so a future added level degrades to a usable screen
+// instead of a broken one.
+// U7 categories are deliberately cross-ice, skills-not-systems, and carry no
+// position language. PENDING THOMAS'S SIGN-OFF (hockey content).
 const GOAL_CATS = {
+  "U7 / Initiation": ["Skating","Puck Control","Passing","Teamwork"],
   "U9 / Novice":     ["Skating","Passing","Shooting","Defense","Game IQ"],
   "U11 / Atom":      ["Skating","Puck Protection","Gap Control","Rush Reads","Special Teams","Game IQ"],
   "U13 / Peewee":    ["Edge Work","Shot Selection","Defensive Zone","Zone Entry","Special Teams","Leadership"],
   "U15 / Bantam":    ["Systems Play","Transition","Special Teams","Physical Play","Gap Control","Leadership"],
   "U18 / Midget":    ["Game Management","Advanced Tactics","Special Teams","Neutral Zone Play","Breakouts","Leadership"],
 };
+
+// Goal categories for a level, never empty.
+// An unknown/absent level falls back to the simplest set rather than returning
+// [], which is what rendered an empty tab strip and let a `category: ''` row
+// reach the database. Callers can treat the result as always having a [0].
+const GOAL_CATS_FALLBACK = GOAL_CATS["U9 / Novice"];
+function goalCatsFor(level) {
+  const cats = GOAL_CATS[level];
+  return Array.isArray(cats) && cats.length ? cats : GOAL_CATS_FALLBACK;
+}
 
 const SMART_PROMPTS = {
   S: "What specifically will you work on? (be precise)",
@@ -1524,7 +1542,7 @@ function Home({ player, onNav, demoMode, subscriptionTier, questFlagsBump, onPro
   const ratedSkills = Object.values(selfRatings||{}).filter(v => v !== null).length;
   const totalSkills = Object.keys(selfRatings||{}).length;
   const goalCount = Object.keys(goals||{}).filter(k => goals[k]?.goal).length;
-  const goalCats = (GOAL_CATS[level]||[]).length;
+  const goalCats = goalCatsFor(level).length;
   const weeklyRecord = getThisWeekRecord();
   const weeklyAllowed = canAccess("weeklyChallenge", subscriptionTier).allowed;
 
@@ -1936,9 +1954,13 @@ function Quiz({ player, onFinish, onBack, tier, onUpgrade, focus = null }) {
   const [skippedQs, setSkippedQs] = useState([]);
   // Speed bonus: when an interactive question is on screen, track when it
   // loaded so a correct answer can earn a time-based bonus. 15-second
-  // window, max 50 bonus points per question, linear decay to 0. Wrong
-  // answers earn no bonus regardless of speed.
+  // window, max 50 bonus points per question, linear decay to 0, starting
+  // after a SPEED_GRACE_MS reading head start. Wrong answers earn no bonus
+  // regardless of speed.
   const [questionStartedAt, setQuestionStartedAt] = useState(() => Date.now());
+  // Questions PRESENTED before the one on screen. Moves only in advance(),
+  // alongside setQuestionStartedAt — never on answer. See qDisplayNum below.
+  const [presentedCount, setPresentedCount] = useState(0);
   const [lastSpeedBonus, setLastSpeedBonus] = useState(0);
   const [speedTotal, setSpeedTotal] = useState(0);
   const [flagReason, setFlagReason] = useState("");
@@ -2026,10 +2048,15 @@ function Quiz({ player, onFinish, onBack, tier, onUpgrade, focus = null }) {
   // header past qLen again ("Question 8 of 7"), which is the overrun fixed on
   // 2026-08-02. Clamped so the catch-up phase reads "7 of 7" rather than beyond.
   const qNum = Math.min(answeredCount(results), qLen);
-  // 1-based number for the header. `qNum` is already clamped, so a bare
-  // `qNum + 1` reads "Question 6 of 5" on the last question of every session
-  // — the 2026-08-02 clamp went inside Math.min and left the +1 outside it.
-  const qDisplayNum = displayQuestionNumber(qNum, qLen);
+  // 1-based number for the header, fed from questions PRESENTED, not answered.
+  // answeredCount() moves the instant the answer is recorded, and scenario
+  // point/selection primitives auto-submit on the tap — so the header flipped to
+  // "Question 5 of 5" while the player was still reading question 4's feedback
+  // (SHELL-8, Thomas 2026-08-03: "it looked like it moved it to question five of
+  // five before I could even advance it"). displayQuestionNumber is correct for
+  // what it does; it was being handed the wrong input. `answeredCount` still
+  // feeds the progress bar, isLast and scoring — those SHOULD move on answer.
+  const qDisplayNum = displayQuestionNumber(presentedCount, qLen);
   const isLast = qNum >= qLen - 1;
   // Leaving mid-quiz used to discard the whole session silently — Thomas hit
   // this on 2026-08-03: "I clicked the back button when it was five of five and
@@ -2129,19 +2156,9 @@ function Quiz({ player, onFinish, onBack, tier, onUpgrade, focus = null }) {
     return () => clearTimeout(t);
   }, [questionStartedAt, timedMode, question?.id, sel, seqAnswered, rinkQResult]);
 
-  // Speed-bonus window. Interactive (rink) questions get a timed bonus;
-  // MC/TF/seq don't because reading-speed is mostly literacy, not hockey IQ.
-  const SPEED_TYPES = new Set(["drag-target","drag-place","multi-tap","sequence-rink","path-draw","lane-select","hot-spots","zone-click","rink-label","rink-drag","rink-match","scenario"]);
-  const SPEED_DURATION_MS = 15000;
-  const SPEED_MAX_BONUS = 50;
-
-  function computeSpeedBonus(qt, ok, startedAt) {
-    if (!ok) return 0;
-    if (!SPEED_TYPES.has(qt)) return 0;
-    const elapsed = Date.now() - startedAt;
-    const remaining = Math.max(0, SPEED_DURATION_MS - elapsed);
-    return Math.floor((remaining / SPEED_DURATION_MS) * SPEED_MAX_BONUS);
-  }
+  // Speed-bonus window (SPEED_TYPES / SPEED_DURATION_MS / SPEED_MAX_BONUS /
+  // SPEED_GRACE_MS / computeSpeedBonus now live in utils/quizResults.js, where
+  // the rest of the quiz maths is and where the grace can be asserted directly).
 
   function handlePick(i) {
     if (sel !== null || !q) return;
@@ -2212,6 +2229,7 @@ function Quiz({ player, onFinish, onBack, tier, onUpgrade, focus = null }) {
         setRinkQResult(null);
         setLastSpeedBonus(0);
         setQuestionStartedAt(Date.now());
+        setPresentedCount(n => n + 1);
         return;
       }
       setQuizDone(true);
@@ -2230,6 +2248,7 @@ function Quiz({ player, onFinish, onBack, tier, onUpgrade, focus = null }) {
         setRinkQResult(null);
         setLastSpeedBonus(0);
         setQuestionStartedAt(Date.now());
+        setPresentedCount(n => n + 1);
         return;
       }
       setQuizDone(true);
@@ -2243,6 +2262,7 @@ function Quiz({ player, onFinish, onBack, tier, onUpgrade, focus = null }) {
     setRinkQResult(null);
     setLastSpeedBonus(0);
     setQuestionStartedAt(Date.now());
+    setPresentedCount(n => n + 1);
   }
 
   // RinkReadsRinkQuestion dispatcher routes ONLY for rink-native interactive
@@ -2581,12 +2601,13 @@ function Quiz({ player, onFinish, onBack, tier, onUpgrade, focus = null }) {
         )}
 
         {/* Speed-bonus timer — only for interactive types when NOT in timed
-            mode. Drains live; freezes on answer with the awarded bonus.
-            Wrong answers freeze at 0. */}
+            mode. Holds full through the reading grace, then drains live;
+            freezes on answer with the awarded bonus. Wrong answers freeze at 0. */}
         {!timedMode && SPEED_TYPES.has(qtype) && (
           <SpeedTimerBar
             startedAt={questionStartedAt}
             durationMs={SPEED_DURATION_MS}
+            graceMs={SPEED_GRACE_MS}
             maxBonus={SPEED_MAX_BONUS}
             frozen={answered}
             achieved={lastSpeedBonus}
@@ -4030,7 +4051,7 @@ function WeeklyResults({ score, results, onHome, player }) {
 // SMART GOALS SCREEN
 // ─────────────────────────────────────────────────────────
 function GoalsScreen({ player, onSave, onBack }) {
-  const cats = GOAL_CATS[player.level] || [];
+  const cats = goalCatsFor(player.level);
   const [goals, setGoals] = useState({ ...(player.goals || {}) });
   const [active, setActive] = useState(cats[0] || "");
   const [step, setStep] = useState("S");
@@ -4040,7 +4061,7 @@ function GoalsScreen({ player, onSave, onBack }) {
   const SMART_ICONS = {S:"🎯",M:"📏",A:"✅",R:"🏒",T:"📅"};
   const SMART_EXAMPLES = {
     "Skating":      {S:"Improve my backward crossovers on both sides",M:"Coach rates me 'On Track' in skating within 4 weeks",A:"I can already do basic crossovers",R:"Better backward skating helps my gap control as a defender",T:"By end of October"},
-    "Gap Control":  {S:"Maintain a 10-foot gap on all rush situations",M:"Reduce missed gap assignments to 0 per game",A:"I understand gap theory already",R:"Gap control is the #1 D skill in atom hockey",T:"Before Christmas break"},
+    "Gap Control":  {S:"Maintain a 10-foot gap on all rush situations",M:"Reduce missed gap assignments to 0 per game",A:"I understand gap theory already",R:"Gap control is the #1 D skill at my level",T:"Before Christmas break"},
     "Rush Reads":   {S:"Make the correct 2-on-1 decision every time",M:"Score 80%+ on Rush Reads in RinkReads",A:"I get the concept, just need reps",R:"Rush reads are my weakest RinkReads category",T:"End of this month"},
     "Shooting":     {S:"Improve my quick-release wrist shot accuracy",M:"Hit top corners 3 out of 5 in practice drills",A:"I have good fundamentals already",R:"Quick release is what separates scorers at this level",T:"Within 6 weeks"},
     "Game IQ":      {S:"Pre-read plays before the puck arrives",M:"RinkReads score improves from current to Hockey Sense tier",A:"I've started thinking about it more already",R:"Faster reads = better plays",T:"End of season"},
@@ -4065,6 +4086,10 @@ function GoalsScreen({ player, onSave, onBack }) {
   const example = SMART_EXAMPLES[active] || {};
 
   function handleSaveGoal() {
+    // No active category means there is nothing to save against, and saving
+    // anyway writes `category: ''` to the goals table. goalCatsFor() should make
+    // this unreachable; this is the second lock on the same door.
+    if (!active) return;
     const g = goals[active] || {};
     // Fallback: if the top goal field is empty, backfill it from S so the
     // downstream save (SB.saveGoal) doesn't silently drop the entry.
@@ -4579,24 +4604,33 @@ function TimedCountdownBar({ startedAt, durationMs, frozen }) {
   );
 }
 
-function SpeedTimerBar({ startedAt, durationMs, maxBonus, frozen, achieved }) {
+// `graceMs` is a reading head start: the bar sits full and says "look first"
+// until it elapses, and only then does the bonus begin to decay. Mirrors
+// computeSpeedBonus(), which subtracts the same grace — the two must agree or
+// the bar lies about what is still on offer. (SHELL-7, 2026-08-03.)
+function SpeedTimerBar({ startedAt, durationMs, maxBonus, frozen, achieved, graceMs = 0 }) {
   const [tick, setTick] = useState(0);
   useEffect(() => {
     if (frozen) return;
     const id = setInterval(() => setTick(t => t + 1), 100);
     return () => clearInterval(id);
   }, [frozen, startedAt]);
-  const elapsed = Date.now() - startedAt;
+  const sinceStart = Date.now() - startedAt;
+  const inGrace = !frozen && sinceStart < graceMs;
+  const graceLeft = Math.max(0, Math.ceil((graceMs - sinceStart) / 1000));
+  const elapsed = Math.max(0, sinceStart - graceMs);
   const remaining = Math.max(0, durationMs - elapsed);
-  const pct = Math.max(0, Math.min(100, (remaining / durationMs) * 100));
+  const pct = inGrace ? 100 : Math.max(0, Math.min(100, (remaining / durationMs) * 100));
   const inWindow = remaining > 0;
-  // Frozen → show what was earned. Live → show "up to +N" while ticking.
+  // Frozen → show what was earned. In grace → tell them to look at the play.
+  // Live → show "up to +N" while ticking.
   const label = frozen
     ? (achieved > 0 ? `⚡ +${achieved} speed pts` : `⏱ Out of time`)
+    : inGrace ? `👀 Look at the play first`
     : (inWindow ? `⏱ Answer fast — up to +${Math.floor((remaining / durationMs) * maxBonus)} pts` : `⏱ Bonus window closed`);
   const color = frozen
     ? (achieved > 0 ? C.gold : C.dimmer)
-    : (pct > 60 ? C.gold : pct > 25 ? "#eab308" : C.red);
+    : (inGrace ? C.gold : pct > 60 ? C.gold : pct > 25 ? "#eab308" : C.red);
   return (
     <div style={{
       marginBottom: ".75rem", padding: ".5rem .75rem",
@@ -4604,7 +4638,9 @@ function SpeedTimerBar({ startedAt, durationMs, maxBonus, frozen, achieved }) {
     }}>
       <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:".35rem",fontSize:11,fontWeight:800,color:color,letterSpacing:".04em"}}>
         <span>{label}</span>
-        {!frozen && inWindow && <span style={{color:C.dimmer,fontWeight:700}}>{(remaining / 1000).toFixed(1)}s</span>}
+        {inGrace
+          ? <span style={{color:C.dimmer,fontWeight:700}}>timer starts in {graceLeft}s</span>
+          : (!frozen && inWindow && <span style={{color:C.dimmer,fontWeight:700}}>{(remaining / 1000).toFixed(1)}s</span>)}
       </div>
       <div style={{height:4,background:C.dimmest,borderRadius:2,overflow:"hidden"}}>
         <div style={{
@@ -8805,7 +8841,13 @@ export default function App() {
               </div>
             </StickyHeader>
             <div style={{padding:"1.25rem",maxWidth:560,margin:"0 auto"}}>
-              <TrainingLog playerId={player.id || "__demo__"} />
+              {/* Opens expanded HERE only. This screen's entire body is this one
+                  card, so a collapsed card meant a screen whose sole purpose is
+                  logging rendered nothing that looked tappable (SHELL-10). The
+                  Home and Profile instances stay collapsed, where the card is
+                  one of many. `defaultExpanded` is initial state only, so the
+                  player can still collapse it. */}
+              <TrainingLog playerId={player.id || "__demo__"} defaultExpanded />
             </div>
           </div>
         )}

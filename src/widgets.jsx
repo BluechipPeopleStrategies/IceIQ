@@ -1,7 +1,7 @@
 // Widgets — small eager-loaded components extracted from App.jsx.
 // These render on the first-paint path (Home/Profile/etc.) so they are NOT lazy-loaded.
 
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect, useMemo, useId } from "react";
 import { C, FONT, Card, Label } from "./shared.jsx";
 import { getTrainingLog, saveTrainingSession, getTrainingSummary } from "./utils/trainingLog.js";
 
@@ -112,7 +112,11 @@ const ACTIVITIES = [
   { type: "other",         label: "Create Your Own",    icon: "📝",  unit: "min",   color: C.green },
 ];
 
-export function TrainingLog({ playerId }) {
+// `defaultExpanded` lets a host screen decide the starting state. The Home and
+// Profile screens embed this card among many others, so it stays collapsed
+// there. The dedicated Off-Ice Training screen has nothing else on it — a
+// collapsed card is the entire body — so it passes `defaultExpanded`.
+export function TrainingLog({ playerId, defaultExpanded = false }) {
   // Bump this whenever we save so the running log re-reads fresh LS.
   const [refreshTick, setRefreshTick] = useState(0);
   const log = useMemo(() => getTrainingLog(playerId), [playerId, refreshTick]);
@@ -139,21 +143,53 @@ export function TrainingLog({ playerId }) {
   const [activeType, setActiveType] = useState(null);
   const [saved, setSaved] = useState(null);
   const [showAllSessions, setShowAllSessions] = useState(false);
-  // Collapsed by default — header doubles as toggle. When the user clicks
-  // anywhere on the row OR taps the chevron it expands to show all 8
-  // activities. Click again (or the X chevron) to collapse.
-  const [expanded, setExpanded] = useState(false);
+  // Header doubles as the expand/collapse toggle. Collapsed unless the host
+  // screen asks otherwise (see `defaultExpanded` above). Initial state only —
+  // once mounted, the user's toggling wins.
+  const [expanded, setExpanded] = useState(defaultExpanded);
+  // Unique per instance so two TrainingLogs on one page don't share a datalist.
+  const instanceId = useId();
+  const coachListId = `training-coach-${instanceId}`;
   // Snapshot for the collapsed-state subhead: total sessions logged across
   // all activity types, plus the most recent session's date if any.
   const totalSessions = log.sessions.length;
-  const lastDate = totalSessions > 0
-    ? log.sessions.slice().sort((a, b) => (b.date || "").localeCompare(a.date || ""))[0]?.date
-    : null;
+  // Newest-first view of the log, reused for the "last session" date and for
+  // the coach roster below. `.reverse()` first so that among sessions sharing
+  // a date the most recently *entered* one sorts first (Array#sort is stable).
+  const newestFirst = useMemo(
+    () => [...(log.sessions || [])].reverse()
+      .sort((a, b) => String(b.date || "").localeCompare(String(a.date || ""))),
+    [log.sessions],
+  );
+  const lastDate = totalSessions > 0 ? newestFirst[0]?.date : null;
+  // Distinct coach names the player has already typed, most recent first. No
+  // schema change needed — `coach` has been stored per session all along, it
+  // just was never read back. Feeds the datalist and seeds the coach field.
+  const coachOptions = useMemo(() => {
+    const out = [];
+    for (const s of newestFirst) {
+      const name = String(s?.coach || "").trim();
+      if (!name) continue;
+      if (out.some(n => n.toLowerCase() === name.toLowerCase())) continue;
+      out.push(name);
+    }
+    return out;
+  }, [newestFirst]);
+  const lastCoach = coachOptions[0] || "";
 
   function openActivity(type) {
     const isOpening = activeType !== type;
     setActiveType(isOpening ? type : null);
-    if (isOpening) { setSessionDate(today); setSessionNotes(""); setSessionCoach(""); setSessionPrice(""); setShotType(null); }
+    // Seed the coach with whoever ran the most recent session — same coach
+    // week over week is the common case, and it stays fully editable.
+    if (isOpening) { setSessionDate(today); setSessionNotes(""); setSessionCoach(lastCoach); setSessionPrice(""); setShotType(null); }
+  }
+
+  // Native date pickers only open on the calendar glyph unless asked. Optional-
+  // chained + try/catch: unsupported in Firefox/Safari, and Chrome throws
+  // NotAllowedError if the focus wasn't user-initiated. Either way, no-op.
+  function openDatePicker(e) {
+    try { e.currentTarget.showPicker?.(); } catch {}
   }
 
   function logSession(type, value, unit, label = "") {
@@ -172,7 +208,9 @@ export function TrainingLog({ playerId }) {
     );
     setSaved(type);
     setSessionNotes("");
-    setSessionCoach("");
+    // Coach deliberately NOT cleared — it was the second place the name got
+    // thrown away. Logging two sessions back to back is almost always the
+    // same coach, and it stays editable either way.
     setSessionPrice("");
     setRefreshTick(t => t + 1);
     setTimeout(() => setSaved(null), 2000);
@@ -181,20 +219,27 @@ export function TrainingLog({ playerId }) {
 
   return (
     <Card style={{ marginBottom: "1rem" }}>
-      {/* Click-to-toggle header. Acts as the visible affordance when the
-          log is collapsed, and as the collapse control when expanded. */}
+      {/* Click-to-toggle header. Styled as a real control — filled surface,
+          border, padding, and a labelled chip — so the collapsed state reads
+          as tappable. Previously this was a transparent, border-less,
+          padding-less button whose only cue was an 18px chevron, which made
+          the whole feature look inert on the dedicated Training screen. */}
       <button
         type="button"
         onClick={() => { setExpanded(e => !e); if (expanded) setActiveType(null); }}
         style={{
-          width: "100%", background: "transparent", border: "none",
-          padding: 0, cursor: "pointer", textAlign: "left",
+          width: "100%", boxSizing: "border-box",
+          background: expanded ? C.bgGlass : C.goldDim,
+          border: `1px solid ${expanded ? C.border : C.goldBorder}`,
+          borderRadius: 12, padding: ".7rem .85rem",
+          cursor: "pointer", textAlign: "left",
           display: "flex", alignItems: "center", justifyContent: "space-between",
-          gap: ".75rem", marginBottom: expanded ? ".5rem" : 0,
+          gap: ".75rem", marginBottom: expanded ? ".75rem" : 0,
+          transition: "background .15s, border .15s",
         }}
         aria-expanded={expanded}
       >
-        <div style={{ display: "flex", flexDirection: "column", gap: 2 }}>
+        <div style={{ display: "flex", flexDirection: "column", gap: 2, minWidth: 0 }}>
           <Label>Training Log</Label>
           <div style={{ fontSize: 11, color: C.dimmer, fontFamily: FONT.body }}>
             {totalSessions === 0
@@ -203,11 +248,20 @@ export function TrainingLog({ playerId }) {
           </div>
         </div>
         <span style={{
-          color: C.dim, fontFamily: FONT.body, fontSize: 18, fontWeight: 700,
-          padding: "0 .25rem", lineHeight: 1, flexShrink: 0,
-          transform: expanded ? "rotate(180deg)" : "rotate(0deg)",
-          transition: "transform .15s",
-        }} aria-hidden>▾</span>
+          display: "flex", alignItems: "center", gap: ".3rem", flexShrink: 0,
+          background: expanded ? C.dimmest : C.gold,
+          color: expanded ? C.dim : C.bg,
+          border: `1px solid ${expanded ? C.border : C.gold}`,
+          borderRadius: 8, padding: ".3rem .6rem",
+          fontFamily: FONT.body, fontSize: 12, fontWeight: 700, lineHeight: 1,
+        }}>
+          {expanded ? "Close" : "Log a session"}
+          <span style={{
+            fontSize: 13, lineHeight: 1,
+            transform: expanded ? "rotate(180deg)" : "rotate(0deg)",
+            transition: "transform .15s",
+          }} aria-hidden>▾</span>
+        </span>
       </button>
       {!expanded ? null : (
       <div style={{ display: "flex", flexDirection: "column", gap: ".75rem" }}>
@@ -216,10 +270,22 @@ export function TrainingLog({ playerId }) {
           const isActive = activeType === act.type;
           const justSaved = saved === act.type;
           return (
-            <div key={act.type} style={{
+            <div key={act.type}
+              // The whole row is the hit target, not just the far-right chip —
+              // on a phone the label and the "+ Log" button sit at opposite
+              // edges, so the thumb was nowhere near the only tappable thing.
+              // Opening only: tapping an already-open row does nothing, because
+              // the open row IS the form and a stray tap on its padding must
+              // not discard half-entered input. Cancel stays explicit.
+              // No role/tabIndex here on purpose: the "+ Log" button inside is
+              // still a real button, so keyboard and screen-reader users keep
+              // one clean control instead of a duplicate tab stop wrapping it.
+              onClick={isActive ? undefined : () => openActivity(act.type)}
+              style={{
               background: C.bgGlass,
               border: `1px solid ${isActive ? act.color + "60" : C.border}`,
               borderRadius: 12, padding: ".85rem 1rem",
+              cursor: isActive ? "default" : "pointer",
               transition: "border .15s"
             }}>
               <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: isActive ? ".75rem" : 0 }}>
@@ -235,8 +301,12 @@ export function TrainingLog({ playerId }) {
                     </div>
                   </div>
                 </div>
-                <button onClick={() => openActivity(act.type)}
-                  style={{ background: isActive ? act.color : C.dimmest, color: isActive ? C.bg : act.color, border: "none", borderRadius: 8, padding: ".3rem .75rem", cursor: "pointer", fontSize: 12, fontWeight: 700, fontFamily: FONT.body }}>
+                {/* stopPropagation matters: without it a tap here would fire
+                    the chip AND bubble to the row's onClick, toggling twice
+                    and landing back where it started. */}
+                <button type="button"
+                  onClick={e => { e.stopPropagation(); openActivity(act.type); }}
+                  style={{ background: isActive ? act.color : C.dimmest, color: isActive ? C.bg : act.color, border: "none", borderRadius: 8, padding: ".3rem .75rem", cursor: "pointer", fontSize: 12, fontWeight: 700, fontFamily: FONT.body, flexShrink: 0 }}>
                   {isActive ? "Cancel" : "+ Log"}
                 </button>
               </div>
@@ -246,15 +316,27 @@ export function TrainingLog({ playerId }) {
                   <div style={{ display: "flex", flexDirection: "column", gap: ".35rem", marginBottom: ".75rem" }}>
                     <label style={{ fontSize: 10, color: C.dimmer, letterSpacing: ".08em", textTransform: "uppercase", fontWeight: 700 }}>Date</label>
                     <input type="date" value={sessionDate} min={oneMonthAgo} max={today} onChange={e => setSessionDate(e.target.value)}
+                      onFocus={openDatePicker} onClick={openDatePicker}
                       style={{ background: C.bgGlass, border: `1px solid ${C.border}`, borderRadius: 8, padding: ".5rem .75rem", color: C.white, fontFamily: FONT.body, fontSize: 13, outline: "none", colorScheme: "dark" }} />
                     <div style={{fontSize:10,color:C.dimmer,letterSpacing:".04em"}}>Log sessions from the past month only.</div>
                   </div>
                   <div style={{ display: "flex", gap: ".5rem", marginBottom: ".75rem" }}>
                     <div style={{ flex: 2, display: "flex", flexDirection: "column", gap: ".35rem" }}>
                       <label style={{ fontSize: 10, color: C.dimmer, letterSpacing: ".08em", textTransform: "uppercase", fontWeight: 700 }}>Coach</label>
+                      {/* Backed by the roster of coaches already in the log, so
+                          the same name doesn't get retyped (and misspelled)
+                          every session. Still a free-text input — a new coach
+                          just gets typed in and joins the list next time. */}
                       <input type="text" value={sessionCoach} onChange={e => setSessionCoach(e.target.value)}
+                        list={coachOptions.length ? coachListId : undefined}
+                        autoComplete="off"
                         placeholder="Who led the session? (optional)"
                         style={{ background: C.bgGlass, border: `1px solid ${C.border}`, borderRadius: 8, padding: ".5rem .75rem", color: C.white, fontFamily: FONT.body, fontSize: 13, outline: "none", width: "100%", boxSizing: "border-box" }} />
+                      {coachOptions.length > 0 && (
+                        <datalist id={coachListId}>
+                          {coachOptions.map(name => <option key={name} value={name} />)}
+                        </datalist>
+                      )}
                     </div>
                     <div style={{ flex: 1, display: "flex", flexDirection: "column", gap: ".35rem" }}>
                       <label style={{ fontSize: 10, color: C.dimmer, letterSpacing: ".08em", textTransform: "uppercase", fontWeight: 700 }}>
