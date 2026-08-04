@@ -21,6 +21,7 @@ import { upsertResult, skipResult, isSkipped, answeredCount, sessionQuestionCoun
 import { preAppScreen } from "./utils/authRouting.js";
 import { canSelfRate } from "./data/selfRating.js";
 import { canSetGoals } from "./data/goalBands.js";
+import { rememberScreen, recallScreen, forgetScreen } from "./utils/routeMemory.js";
 import { exampleFor } from "./data/goalStarters.js";
 import { isChunkLoadError, shouldReloadForChunkError } from "./utils/chunkReload.js";
 import { cachePlayer, mergeCachedPlayer, clearCachedPlayer } from "./utils/playerCache.js";
@@ -7988,10 +7989,20 @@ export default function App() {
   const demoModeRef = useRef(false);
   demoModeRef.current = demoMode;
   const [demoCoachRatings, setDemoCoachRatings] = useState(null);
-  const [screen, setScreen] = useState("home");
+  // Restore the screen the player was on before a reload or a crash. Lazily
+  // initialised so it costs nothing on the common path, and the module only
+  // returns an allow-listed string -- never an in-progress quiz, never an
+  // object screen whose live payload cannot survive a reload.
+  const [screen, setScreen] = useState(() => recallScreen() || "home");
   // Skill Path lesson focus — when set, the next quiz session is scoped
   // to this ledger node's concept and its result clears/stars the node.
   const [pathFocus, setPathFocus] = useState(null); // pathNode | null
+
+  // Persist the current screen so a reload lands where the player was. Object
+  // screens clear the memory rather than writing a half-record -- their live
+  // payload cannot survive a reload, and restoring the kind without it is the
+  // exact crash class fixed in e999307.
+  useEffect(() => { rememberScreen(screen); }, [screen]);
   const [prevScore, setPrevScore] = useState(null);
   const [totalSessions, setTotalSessions] = useState(0);
   const [quizResults, setQuizResults] = useState([]);
@@ -8342,7 +8353,7 @@ export default function App() {
       // Reset the probe too, or the next sign-in inherits the last account's
       // verdict -- a "missing" left over from a stranded account would show the
       // recovery form instantly to whoever signs in next, before we have looked.
-      else { setProfile(null); setPlayer(null); setUserEmail(null); setProfileProbe("pending"); }
+      else { setProfile(null); setPlayer(null); setUserEmail(null); setProfileProbe("pending"); forgetScreen(); setScreen("home"); }
     });
     return () => { mounted = false; data?.subscription?.unsubscribe?.(); };
   }, [demoMode]);
