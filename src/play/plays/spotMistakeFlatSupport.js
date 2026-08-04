@@ -115,7 +115,10 @@ export const SPOT_MISTAKE_FLAT_SUPPORT = {
         { kind: "blocked", from: [146, 58], to: [147, 44], label: "picked off" },
       ],
       possessionChange: { kind: "interception", fromTeam: "home", toActor: "D1", counterTo: [136, 43] },
-      cue: { label: "Covered", shortLabel: "Covered", x: 146, y: 64 },
+      // youngLabel added 2026-08-03 (S2-18): a lone "Covered" left the player to
+      // guess what was covered. The cue sits at the head of the pass line, so
+      // the plain form names the lane, matching the node prose.
+      cue: { label: "Covered", youngLabel: "Lane covered", shortLabel: "Covered", x: 146, y: 64 },
     },
   },
 };

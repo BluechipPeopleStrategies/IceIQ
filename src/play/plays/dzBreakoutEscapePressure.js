@@ -135,7 +135,12 @@ export const DZ_BREAKOUT_ESCAPE_PRESSURE = {
       // runs to x=200 -- the old x:192.5 pushed the pill 2.5 units past the
       // edge, clipping it, and overlapped the D1/G tokens besides (caught
       // via live Playwright screenshot, 2026-07-30, not just data review).
-      cue: { label: "Read the ice again", shortLabel: "Look again", x: 175, y: 52 },
+      // The full label is 18 chars and overflows the young-band pill (Cue Label
+      // Size Rule, MAX_CUE_LABEL_CHARS = 12). This play carries U11/U13 as well
+      // as U15/U18, so the young read gets the short neutral form and the film
+      // room keeps the full one. Still deliberately says nothing about which
+      // forechecker or which side (S2-18, 2026-08-03).
+      cue: { label: "Read the ice again", youngLabel: "Look again", shortLabel: "Look again", x: 175, y: 52 },
       // Full 2x2 (which forechecker x which side) so neither attribute has a
       // majority across options — a 3-option single-attribute-swap set let a
       // player solve this by word-frequency counting alone, with zero

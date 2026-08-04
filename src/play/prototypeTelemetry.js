@@ -84,12 +84,22 @@ export function telemetryCueText(node, ageBand = "") {
 
   if (!cue) return "";
 
-  const raw =
-    group === "young"
-      ? cue.youngLabel || cue.shortLabel || cue.label || ""
-      : group === "trainer"
-        ? cue.shortLabel || cue.trainerLabel || cue.label || ""
-        : cue.label || "";
+  // Telemetry must record the string that was ON SCREEN, or the log describes a
+  // session nobody had. This file had a THIRD ordering of the same fallback
+  // chain (a renderer, a lint, and this), and it preferred shortLabel over
+  // label — so a cue displaying "Read the ice again" was logged as "Look
+  // again". Both `young` and `trainer` map to bands the renderer draws through
+  // its non-film path, so both take the rendered order.
+  //
+  // The renderer in AnimatedPlay.jsx (`cueLabelForAge`) is the source of truth:
+  // non-film shows `youngLabel || label || shortLabel`, film shows `label`.
+  // shortLabel is a truncation, not a plainer phrasing, which is how a bare
+  // "Angle" pill ended up on the ice with nothing to explain it.
+  //
+  // `trainerLabel` is dropped: no cue in the catalog has ever authored one, so
+  // it only ever contributed a phantom branch to this chain.
+  const rendered = cue.youngLabel || cue.label || cue.shortLabel || "";
+  const raw = group === "film" ? (cue.label || "") : rendered;
 
   return playerFacingTelemetryText(raw, ageBand);
 }

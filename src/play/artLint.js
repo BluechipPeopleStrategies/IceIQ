@@ -37,6 +37,17 @@ function isYoungBand(play) {
   return (play.ageBands || []).some((b) => ["U7", "U9", "U11", "U13"].includes(b));
 }
 
+// The string a young-band player actually SEES in the cue pill. This must stay
+// in lockstep with cueLabelForAge() in AnimatedPlay.jsx — the lint used to
+// measure cue.label while the renderer drew youngLabel, so a 30-char youngLabel
+// paired with a short label passed the Cue Label Size Rule and then overflowed
+// the pill on screen (S2-18, 2026-08-03). Measure what renders, not what the
+// authoring data happens to call the canonical form.
+export function renderedCueLabel(cue) {
+  if (!cue) return "";
+  return cue.youngLabel || cue.label || cue.shortLabel || "";
+}
+
 // Collect every [x, y] a node puts on the ice, labeled by what it is.
 function nodePoints(node) {
   const pts = [];
@@ -100,9 +111,9 @@ export function artLint(play) {
     // cue rules: cue markers and cue-like overlays must not cover an actor,
     // and rink labels stay short for young bands
     const cues = [];
-    if (node.cue && typeof node.cue.x === "number") cues.push({ label: node.cue.label || "", p: [node.cue.x, node.cue.y] });
+    if (node.cue && typeof node.cue.x === "number") cues.push({ label: renderedCueLabel(node.cue), p: [node.cue.x, node.cue.y] });
     for (const o of node.overlays || []) {
-      if (o.kind === "cue" && typeof o.x === "number") cues.push({ label: o.label || "", p: [o.x, o.y] });
+      if (o.kind === "cue" && typeof o.x === "number") cues.push({ label: renderedCueLabel(o), p: [o.x, o.y] });
     }
     for (const c of cues) {
       for (const [actorId, p] of settled) {
@@ -111,6 +122,7 @@ export function artLint(play) {
         if (d < CUE_BLOCK_FT) blocks.push({ rule: "cue-covers-actor", nodeId, detail });
         else if (d < CUE_WARN_FT) warns.push({ rule: "cue-covers-actor", nodeId, detail });
       }
+      // Length is measured against the rendered string (see renderedCueLabel).
       if (young && c.label && c.label.length > MAX_CUE_LABEL_CHARS) {
         add("cue-label-length", nodeId, `"${c.label}" (${c.label.length} chars)`);
       }

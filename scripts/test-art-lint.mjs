@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import { describe, it } from "node:test";
-import { artLint, artLintCatalog, RULES } from "../src/play/artLint.js";
+import { artLint, artLintCatalog, RULES, renderedCueLabel } from "../src/play/artLint.js";
 import { ALL_ANIMATED_PLAYS } from "../src/play/playCatalog.js";
 import { expandTwoOnOneFamily } from "../src/play/kernels/twoOnOneKernel.js";
 
@@ -89,6 +89,28 @@ describe("art lint: golden cases (one per rule — the promotion loop's pins)", 
   it("cue-label-length: long rink labels warn for young bands", () => {
     const p = basePlay({ rush: { cue: { label: "Quick shot lane open", x: 130, y: 20 } } });
     assert.ok(artLint(p).warns.some((w) => w.rule === "cue-label-length"));
+  });
+
+  it("cue-label-length: measures the RENDERED string, not label (S2-18 regression)", () => {
+    // A long youngLabel behind a short label is what a young player actually
+    // sees, so it must warn — the old lint measured label and let it through.
+    const p = basePlay({ rush: { cue: { label: "Step", youngLabel: "Step across into the lane", x: 130, y: 20 } } });
+    assert.ok(artLint(p).warns.some((w) => w.rule === "cue-label-length"), JSON.stringify(artLint(p).warns));
+
+    // Conversely a long label with a short youngLabel renders short and is fine.
+    const q = basePlay({ rush: { cue: { label: "Read the ice again", youngLabel: "Look again", x: 130, y: 20 } } });
+    assert.ok(!artLint(q).warns.some((w) => w.rule === "cue-label-length"));
+
+    // shortLabel is the last resort, same as the renderer's fallback chain.
+    const s = basePlay({ rush: { cue: { shortLabel: "Way too long to fit here", x: 130, y: 20 } } });
+    assert.ok(artLint(s).warns.some((w) => w.rule === "cue-label-length"));
+  });
+
+  it("renderedCueLabel mirrors cueLabelForAge's fallback chain", () => {
+    assert.equal(renderedCueLabel({ label: "Step", shortLabel: "St" }), "Step");
+    assert.equal(renderedCueLabel({ label: "Step", youngLabel: "Steps to you" }), "Steps to you");
+    assert.equal(renderedCueLabel({ shortLabel: "Angle" }), "Angle");
+    assert.equal(renderedCueLabel(undefined), "");
   });
 
   it("answer-leak-arrow: a pass arrow to the correct target blocks", () => {

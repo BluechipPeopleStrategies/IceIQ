@@ -53,7 +53,10 @@ export const PREDICT_TWO_ON_ONE_DEFENDER_STEP = {
       motions: [
         { kind: "skate", from: [162, 49], to: [158, 51], actor: "D1" },
       ],
-      cue: { label: "Step", shortLabel: "Step", x: 158, y: 44 },
+      // youngLabel added 2026-08-03 (S2-18): the pill rendered as a bare "Step"
+      // with nothing to say what stepped or where. The cue sits on D1, so the
+      // plain form names the move the way the node prose does.
+      cue: { label: "Step", youngLabel: "Steps to you", shortLabel: "Step", x: 158, y: 44 },
     },
   },
 };
