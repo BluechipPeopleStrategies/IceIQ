@@ -21,7 +21,13 @@ import { buildFinding, buildUnsupportedModel, SEVERITY, ANSWER_IMPACT } from "./
 // the emitted trace rather than the declared endpoints -- new findings can now
 // appear on definitions that previously passed, so this is output-changing and
 // the version bumps per the convention above.
-export const DETECTORS_VERSION = "hard-failure-detectors-v3";
+// v4 (2026-08-03): adds detectImpossibleSpeed. v3 closed the acceleration half
+// of "the validated motion is not the motion that plays"; the speed half was
+// never checked anywhere -- topSpeedMPS was cited in every profile and read
+// only for stopping distance and interception timing. Same output-changing
+// rule: a definition that passed can now carry a new finding, so the version
+// bumps.
+export const DETECTORS_VERSION = "hard-failure-detectors-v4";
 
 function distance(a, b) {
   return Math.hypot(b[0] - a[0], b[1] - a[1]);
@@ -172,6 +178,103 @@ export function detectImpossibleSampledAcceleration(samples, actorId, profile) {
     severity: SEVERITY.HARD_FAILURE,
     answerImpact: ANSWER_IMPACT.CHANGES_ANSWER,
     explanation: `Actor ${actorId} (${profile.ageBand}) goes from ${worst.prevSpeed.toFixed(2)} to ${worst.speed.toFixed(2)} m/s across a ${worst.dt.toFixed(2)}s sample interval at t=${worst.at.toFixed(2)}s -- ${worst.accel.toFixed(2)} m/s^2 in the emitted trace, exceeding this age band's capability (${profile.player.avgAccelMPS2.value} m/s^2, +${((ACCEL_SAFETY_FACTOR - 1) * 100).toFixed(0)}% headroom). The endpoint check passed, so the motion that was certified is not the motion that plays.`,
+  });
+}
+
+// --- 2c. Impossible speed, measured on the EMITTED SAMPLES ------------------
+// Detector 2b closed the ACCELERATION half of "the validated motion is not the
+// motion that plays". This closes the SPEED half, which was never checked at
+// all: topSpeedMPS was cited in every profile and used only to derive stopping
+// distance (detector 3) and to time an interception (detector 9), so nothing
+// anywhere asked whether a skater's own motion stayed under it.
+//
+// It matters precisely BECAUSE the from-rest model is the one being sampled.
+// Under d = 0.5*a*t^2 the exit speed of a leg is v = 2d/T, so a long route
+// given a generous duration passes the acceleration cap comfortably while
+// implying a skater moving faster than that age band has ever been measured
+// skating. The acceleration is fine; the speed is fiction. A U13 profile tops
+// out at 8.6 m/s, so a 40 m route in 8 s certifies at 1.25 m/s^2 (well under
+// the 4.13 cap) and exits at 10 m/s.
+//
+// Deliberately measures the emitted samples rather than the declared endpoints,
+// for the same structural reason 2b does: whatever motion model the simulator
+// adopts later, the played curve is what gets judged.
+//
+// Scoped to skater tracks by the caller (pass a skater's id, never "puck") --
+// a puck leaves the stick far faster than any skater and is judged against
+// puck physics in detectUnreachablePass.
+export function detectImpossibleSpeed(samples, actorId, profile) {
+  const track = (samples || [])
+    .filter((s) => s.actorId === actorId)
+    .sort((a, b) => a.t - b.t);
+  if (track.length < 2) return null;
+
+  const topSpeed = profile.player?.topSpeedMPS?.value;
+  if (!Number.isFinite(topSpeed)) {
+    return buildUnsupportedModel({
+      validatorCode: "impossible-speed", validatorVersion: DETECTORS_VERSION,
+      actorId, eventTime: track[0].t,
+      reason: "profile carries no topSpeedMPS value -- no speed cap to check against",
+    });
+  }
+  const cap = topSpeed * ACCEL_SAFETY_FACTOR;
+
+  // An interval's AVERAGE speed is not its peak, and using the average would
+  // make this detector an artifact of SAMPLE_STEP_S -- the same mistake 2b was
+  // written to avoid. On a 40 m / 8 s route the true exit speed is 10.0 m/s but
+  // the last half-second interval averages 9.69, which slips under the cap.
+  //
+  // For constant acceleration, an interval's average speed IS its instantaneous
+  // speed at the interval's midpoint. So acceleration is the change between
+  // consecutive midpoints over their separation, and the speed at the END of an
+  // interval is its midpoint speed plus half an interval of that acceleration.
+  // Exact for the constant-acceleration curve the simulator emits, and it
+  // recovers 10.0 m/s on the case above regardless of step size.
+  //
+  // The first interval is special: the actor is at rest at t0, so the gap from
+  // the start to that interval's midpoint is dt/2, not dt. Without that, a
+  // single-interval track reports 1.5x the average instead of the correct 2x.
+  const avg = [];
+  for (let i = 1; i < track.length; i++) {
+    const dt = track[i].t - track[i - 1].t;
+    if (dt <= 0) continue; // duplicate samples carry no claim
+    avg.push({ v: distance(track[i - 1].pos, track[i].pos) / dt, dt, at: track[i - 1].t });
+  }
+  if (!avg.length) return null;
+
+  let worst = null;
+  for (let i = 0; i < avg.length; i++) {
+    const { v, dt, at } = avg[i];
+    const prevV = i === 0 ? 0 : avg[i - 1].v;
+    const midpointGap = i === 0 ? dt / 2 : (dt + avg[i - 1].dt) / 2;
+    const accel = (v - prevV) / midpointGap;
+    const peak = v + accel * (dt / 2);
+    if (worst === null || peak > worst.speed) worst = { speed: peak, intervalAvg: v, dt, at };
+  }
+
+  if (!worst || worst.speed <= cap) return null;
+
+  return buildFinding({
+    validatorCode: "impossible-speed",
+    validatorVersion: DETECTORS_VERSION,
+    actorId,
+    eventTime: worst.at,
+    eventIntervalS: worst.dt,
+    measuredValue: worst.speed,
+    threshold: cap,
+    units: "m/s",
+    profileId: profile.id,
+    profileVersion: profile.schemaVersion,
+    assumptions: [
+      "speed measured per inter-sample interval, straight-line",
+      "peak speed recovered from the interval midpoint identity, exact under constant acceleration and independent of sample step",
+      "actor starts from rest at its first sample",
+      `${((ACCEL_SAFETY_FACTOR - 1) * 100).toFixed(0)}% headroom over the profile mean (topSpeedMPS is a mean of measured maxima, not a hard ceiling)`,
+    ],
+    solverVersion: DETECTORS_VERSION,
+    severity: SEVERITY.HARD_FAILURE,
+    answerImpact: ANSWER_IMPACT.CHANGES_ANSWER,
+    explanation: `Actor ${actorId} (${profile.ageBand}) reaches ${worst.speed.toFixed(2)} m/s in the emitted trace (the ${worst.dt.toFixed(2)}s interval at t=${worst.at.toFixed(2)}s averages ${worst.intervalAvg.toFixed(2)} m/s and is still accelerating), exceeding this age band's cited top speed (${topSpeed} m/s, +${((ACCEL_SAFETY_FACTOR - 1) * 100).toFixed(0)}% headroom). The acceleration is within capability; the speed it accelerates TO is not.`,
   });
 }
 

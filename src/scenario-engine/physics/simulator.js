@@ -14,7 +14,7 @@ import {
   detectImpossibleTurning, detectPossibleBoardContact,
   detectUnreachablePass, detectIllegalBounds, detectOverlappingActorActions,
   detectInconsistentPossession, detectPossibleInterception,
-  detectImpossibleSampledAcceleration,
+  detectImpossibleSampledAcceleration, detectImpossibleSpeed,
 } from "./hardFailureDetectors.js";
 import { isUnsupportedModel, SEVERITY } from "./findings.js";
 import { rinkProfile } from "../rinkFrame.js";
@@ -38,7 +38,11 @@ import { rinkProfile } from "../rinkFrame.js";
 // this string as its version namespace and does NOT hash the samples, so
 // failing to bump here would let a materially different trace keep an identical
 // hash -- the bump is what makes the provenance record honest.
-export const SIMULATOR_VERSION = "level1-simulator-v4";
+// v5 (2026-08-03): runs detectImpossibleSpeed on each skate action's emitted
+// samples alongside the sampled-acceleration check. Findings feed physicsClean
+// directly, so a definition that previously certified can now hard-fail -- same
+// output-changing rule as v3/v4.
+export const SIMULATOR_VERSION = "level1-simulator-v5";
 
 // Pinned solver contract -- declared and versioned explicitly, per the
 // spec's requirement, even for the fields Level 1 doesn't currently need.
@@ -221,6 +225,12 @@ export async function simulate(def, physicsProfile) {
       if (!isPuckAction) {
         const sampledAccel = detectImpossibleSampledAcceleration(actionSamples, action.actorId, physicsProfile);
         if (sampledAccel) findings.push(sampledAccel);
+        // And the speed it accelerates TO. A long route given a generous
+        // duration passes the acceleration cap while implying a skater faster
+        // than that age band has ever been measured -- the acceleration is
+        // fine, the speed is fiction.
+        const sampledSpeed = detectImpossibleSpeed(actionSamples, action.actorId, physicsProfile);
+        if (sampledSpeed) findings.push(sampledSpeed);
       }
       // A carried puck moves with its carrier -- mirror the same samples
       // onto the puck's own track too, so consumers always have a real

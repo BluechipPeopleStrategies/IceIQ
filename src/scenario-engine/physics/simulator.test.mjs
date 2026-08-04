@@ -152,8 +152,15 @@ ok("solver contract is versioned", typeof SOLVER_CONTRACT.version === "string");
     initialState: turningInitialState,
     decisionFreeze: { time: 100, observableCues: ["test"] },
     intendedActions: [
-      { actorId: "D1", kind: "skate", startTime: 0, endTime: 2.5, toPosition: [10, 0] }, // 10m/2.5s: 3.2 m/s^2, within U13's 4.75 cap
-      { actorId: "D1", kind: "skate", startTime: 2.5, endTime: 5.5, toPosition: [25, 3] }, // ~11 degree turn, 15.3m/3s: 3.4 m/s^2, also within cap
+      { actorId: "D1", kind: "skate", startTime: 0, endTime: 2.5, toPosition: [10, 0] }, // 10m/2.5s: 3.2 m/s^2, within U13's 4.75 cap; exits at 8.0 m/s, within the 9.89 speed cap
+      // ~11 degree turn, 15.3m. Was 3s, which is 3.4 m/s^2 -- within the
+      // acceleration cap, and detectImpossibleSpeed (2026-08-03) then showed it
+      // exits at 2d/T = 10.2 m/s, faster than a U13 has ever been measured
+      // skating (8.6 m/s cited). The fixture was written to isolate TURNING and
+      // its author checked acceleration but not speed, which is exactly the gap
+      // that detector exists to close -- it caught this on its first run.
+      // 3.5s keeps the same geometry at 2.5 m/s^2 and 8.74 m/s, inside both caps.
+      { actorId: "D1", kind: "skate", startTime: 2.5, endTime: 6.0, toPosition: [25, 3] },
     ],
   });
   const outsideTrace = await simulate(outsideDef, u13Profile);
