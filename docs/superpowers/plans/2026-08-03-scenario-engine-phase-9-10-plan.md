@@ -18,6 +18,54 @@
 
 ---
 
+## ANSWERED — 2026-08-04
+
+All eight are settled. Four Thomas answered directly, all on the recommendation;
+four were taken on their stated default. The table below is kept for its
+reasoning, but it is now a record, not an open question.
+
+| # | Answer |
+|---|---|
+| **D1** | **No headless judging.** The runner prepares and stages; every candidate stops and waits for an attended session. |
+| **D2** | **Free.** Structural novelty only, via `noveltySignature.js`. No paid API spend. Results labelled as not the spec's full bar. |
+| **D3** | *(default)* Budget numbers proposed with the runner, once there is a runner to have them. |
+| **D4** | **Gates 1-9 AND complete player-facing copy.** Gate-clean artifacts and promotion-ready items are reported as two separate numbers. |
+| **D5** | *(default)* Age siblings count **once**. Reported separately as an age-coverage multiplier. |
+| **D6** | **Benchmark what exists and report the shortfall.** No claim gets auto-approved to inflate the number. |
+| **D7** | *(default)* The scheduled task stays **Disabled**, still pointed at the now-frozen script, which refuses to run. Nothing is registered or unregistered. |
+| **D8** | *(default)* Gate 10 signed **per template class**, sampled per the spec's own audit rule. Everything outside the sample is reported as unsatisfied, not claimed. |
+
+### What D1 and D6 together mean — read this before starting Phase 9
+
+They interact, and the interaction is the most important thing on this page.
+
+**D1 says the runner can never judge.** **D6 says the bottleneck is claim
+authoring, not compute.** Put together: the overnight runner's entire job is to
+prepare candidates from tactical claims that a human has to write first, and then
+stop and wait for a human to judge them.
+
+So the runner sits between two human steps and automates the cheap part.
+
+That is not an argument against building it — a prep-and-stage runner is still
+useful, and Phase 9's real deliverable is the *safety proof*, which has value
+regardless. But it does mean:
+
+1. **Phase 9's proof matters more than Phase 9's runner.** The eleven properties
+   are worth demonstrating even if the runner is never enabled, because they are
+   what makes "could we enable it" answerable at all.
+2. **Phase 10 should probably be run early and small.** If the honest output is
+   "the ceiling is claim authoring", that is worth knowing before building more
+   runner, not after. The two most valuable numbers it can produce —
+   hours-per-approved-claim and states-per-claim — need neither the 200-state bar
+   nor a finished runner.
+3. **The order in this plan is worth revisiting.** Consider a minimal Phase 10
+   measurement against the one existing claim BEFORE Phase 9's full build, purely
+   to find out whether the throughput story is a compute story at all.
+
+That reordering is a recommendation, not a decision already taken.
+
+---
+
 ## Decisions that need Thomas (read this section, skip the rest if short on time)
 
 These are open questions the plan cannot answer for him. Each row states the default the plan will follow if he says nothing, so silence is safe but not silent.
