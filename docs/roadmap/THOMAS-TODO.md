@@ -11,7 +11,21 @@ Three kinds of item, and they are genuinely different:
 
 ---
 
-## 1. DO · Apply five migrations · ~5 min · **highest leverage on this page**
+## 1. ~~DO · Apply five migrations~~ · **DONE 2026-08-04**
+
+All five applied. Every table the app touches is present, verified by REST
+probe. `goals` exists, so SMART Goals was never at risk. `smoke:training` and
+`smoke:challenge` both pass against the live database for the first time.
+
+One line still outstanding, whenever you are at a desk — it removes a policy
+that is currently unused, so nothing is broken while it waits:
+
+```sql
+drop policy if exists "challenge_results teammate read" on public.challenge_results;
+```
+
+<details><summary>Original entry</summary>
+
 
 The migration files and the live database drifted. `migration_0022` recorded the
 verification itself on 2026-08-02: **five tables that the migration history
@@ -65,6 +79,8 @@ order by exists, t.name;
 **Optional, and it removes this whole item permanently:** run `supabase login`
 then `supabase link` once. After that I could apply migrations myself — though I
 would still ask before touching production schema.
+
+</details>
 
 ---
 

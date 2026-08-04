@@ -1,5 +1,25 @@
 # Migration drift — repo vs production, 2026-08-03
 
+> **RESOLVED 2026-08-04.** All five missing migrations were applied by Thomas from the
+> Supabase SQL editor, in order, one at a time. A REST probe of every one of the
+> 25 tables the app touches now comes back present — including `goals`, whose
+> status this document called genuinely unknown. SMART Goals had been saving to
+> Supabase correctly all along.
+>
+> Two smoke tests that had never been able to run now pass against the live
+> database: `smoke:training` (RLS proven both ways — the owning coach reads a
+> session, an unrelated coach gets zero rows) and `smoke:challenge` (an
+> unrelated coach blocked on both tables).
+>
+> One thing was changed rather than replayed: `migration_0002`'s insert policy
+> was applied in its HARDENED form from `migration_0022` section 5. Replaying
+> the file verbatim would have recreated the forgeable-attribution hole that
+> 0022 was written to close, because the file predates the fix. That is the
+> real hazard of replaying migrations against a drifted database, and it is
+> worth remembering the next time this happens.
+>
+> The rest of this document is kept as the record of how the drift was found.
+
 > **This document was rewritten after its first version got the main claim
 > wrong.** The first pass concluded that eight tables "have no migration in the
 > repo and cannot be recreated from it." That was false, and the correction is
