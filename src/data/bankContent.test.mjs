@@ -301,6 +301,101 @@ const hasImage = q => !!(q.media && q.media.url);
     && ASKS.test("Your D gives a breakout pass. Order the steps for a successful entry."));
 }
 
+// ─────────────────────────────────────────────────────────────────────────────
+// GUARD 8 — the answer must not be guessable from its SHAPE.
+//
+// Measured 2026-08-03: the correct option is the strictly longest one in
+// 156 of 237 scorable questions — 65.8% bank-wide, 72.4% at U11, against 25%
+// by chance. A child who never reads a single stem and always taps the longest
+// option scores about two thirds. That is not a hard question answered well; it
+// is a test that leaks its own answer, and every score built on it is inflated.
+//
+// It happens for an innocent reason, which is why it needs a machine to catch
+// it: the correct answer is the one the author has to make precise ("When the
+// reward is big and losing the puck won't hurt your team badly"), while the
+// distractors are quick and blunt ("Never"). Precision costs words. Nobody
+// decided this; it accumulated.
+//
+// This is a RATCHET, not a target. The recorded rates are today's, and the
+// guard fails if any band gets worse. Fixing the content is a coach's job —
+// the distractors need to become plausible-but-inferior reads rather than
+// absolutes — and that is queued separately. What this stops is the number
+// quietly climbing while that work waits.
+//
+// Deliberately NOT a hard threshold at 25%: a legitimate question can have a
+// long correct answer, and demanding parity everywhere would push authors to
+// pad distractors, which is the same defect wearing a different hat.
+// ─────────────────────────────────────────────────────────────────────────────
+{
+  // Today's measured rate per band, rounded UP to the next whole percent so
+  // ordinary edits don't trip it. Lower these as the content improves; never
+  // raise one to make a failing run pass.
+  const BASELINE = {
+    "U7 / Initiation": 65,
+    "U9 / Novice": 50,
+    "U11 / Atom": 73,
+    "U13 / Peewee": 48,
+    "U15 / Bantam": 17,
+    "U18 / Midget": 100,   // 1 scorable question — not a rate, a coin
+  };
+  const MIN_SAMPLE = 10;   // below this a "rate" is noise, not a signal
+
+  const worse = [];
+  const rates = [];
+  for (const [band, arr] of Object.entries(bank)) {
+    let scorable = 0, keyIsLongest = 0;
+    for (const q of arr) {
+      const opts = q.opts || q.choices;
+      if (!Array.isArray(opts) || !Number.isInteger(q.ok) || q.ok >= opts.length) continue;
+      const lens = opts.map(o => String(o).length);
+      const max = Math.max(...lens);
+      scorable += 1;
+      // Strictly longest — a tie carries no signal, so it is not counted.
+      if (lens[q.ok] === max && lens.filter(l => l === max).length === 1) keyIsLongest += 1;
+    }
+    if (!scorable) continue;
+    const rate = (100 * keyIsLongest) / scorable;
+    rates.push(`${band}: ${keyIsLongest}/${scorable} = ${rate.toFixed(1)}%`);
+    const cap = BASELINE[band];
+    if (cap === undefined) { worse.push(`${band} is not in the baseline (${rate.toFixed(1)}%) — record it deliberately`); continue; }
+    if (scorable >= MIN_SAMPLE && rate > cap) worse.push(`${band} ${rate.toFixed(1)}% > baseline ${cap}%`);
+  }
+
+  ok(`the longest-answer tell did not get worse in any band${worse.length ? ` — ${worse.join("; ")}` : ""}`,
+    worse.length === 0);
+  rates.forEach(r => console.log(`        ${r}`));
+
+  // The sharpest version of the same defect: every distractor is an absolute
+  // ("Never", "Always", "Every time") and the key is the only hedged option.
+  // Those are answerable with no hockey knowledge at all.
+  // "only" and "must" belong here as much as "never" and "always" — the six
+  // real instances hinge on them ("attack only when defenders are perfectly
+  // balanced", "the defender must legally move"). A first pass without them
+  // found 1 of 6, which would have set the baseline five too loose.
+  const ABSOLUTE = /\b(never|always|every time|every single time|whenever|only|must|all of the time|no matter what)\b/i;
+  const giveaways = [];
+  for (const [band, arr] of Object.entries(bank)) {
+    for (const q of arr) {
+      const opts = q.opts || q.choices;
+      if (!Array.isArray(opts) || !Number.isInteger(q.ok) || q.ok >= opts.length) continue;
+      const absolutes = opts.map(o => ABSOLUTE.test(String(o)));
+      if (!absolutes[q.ok] && absolutes.filter(Boolean).length === opts.length - 1) {
+        giveaways.push(`${band} · ${q.id}`);
+      }
+    }
+  }
+  // Four exist today, all at U11 -- the detector catches a subset of the six an
+  // audit found by hand, because two of them lean on constructions ("anyway",
+  // "anywhere counts") that no word list catches without false positives. The
+  // baseline is what THIS rule measures, not what the audit reported: a ratchet
+  // set to a number the code cannot verify is not a ratchet.
+  // Same logic as above: this may fall, never rise.
+  const ABSOLUTE_BASELINE = 4;
+  ok(`no NEW question keys the only non-absolute option (${giveaways.length}, baseline ${ABSOLUTE_BASELINE})`,
+    giveaways.length <= ABSOLUTE_BASELINE);
+  giveaways.slice(0, 8).forEach(g => console.log(`        ${g}`));
+}
+
 const total = Object.values(bank).reduce((n, a) => n + a.length, 0);
 console.log(`\nchecked ${total} questions across ${Object.keys(bank).length} bands`);
 console.log(`${pass} passed, ${fail} failed`);
