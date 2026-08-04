@@ -44,6 +44,22 @@ function shuffledOptions(opts) {
   return a;
 }
 
+// What job the player has on this read. Keyed off the actor's authored ROLE,
+// which is one of exactly four values across the whole catalog: puckCarrier,
+// support, defender, goalie. The line this replaced tested `=== "F1"`, so every
+// decision actor not literally named F1 was called a "support read" — the
+// backchecker, both forecheckers, all three gap-control defenders, and, most
+// wrongly, the puck carrier in the goalie-slide play.
+const DECISION_ROLE_LABEL = {
+  puckCarrier: "you have the puck",
+  support: "off-puck read",
+  defender: "defensive read",
+  goalie: "goalie read",
+};
+function decisionRoleLabel(actor) {
+  return DECISION_ROLE_LABEL[actor?.role] || "your read";
+}
+
 function actorDisplayLabel(actor, isDecisionActor, profile) {
   if (isDecisionActor) return "YOU";
 
@@ -320,6 +336,19 @@ function NodeSummary({ node, profile, pickedOption, lastKind, coachFeedback, onR
 export default function AnimatedPlay({ play, ageBand = "U11", onEvent, onNext, nextLabel }) {
   const profile = profileForAge(ageBand);
   const [nodeId, setNodeId] = useState(play.start);
+  // Who YOU are, carried past the read that asked.
+  //
+  // Identity was `node.decisionActor === actor.id`, and NO terminal node in the
+  // catalog carries decisionActor — 65 of 65. So the gold ring and the "YOU"
+  // caption both vanished the instant you answered, which is the moment the
+  // outcome is being explained to you. On the backcheck play that left two
+  // identical navy circles with no text at all, and the feedback then talks
+  // about "F1".
+  //
+  // Sticky rather than derived from the graph, because a play can ask twice
+  // (dz_breakout does) and the right answer on an outcome screen is whoever you
+  // were on the read that produced it.
+  const youIdRef = useRef(null);
   const [picked, setPicked] = useState(null);
   const [pickedOption, setPickedOption] = useState(null);
   const [judgePick, setJudgePick] = useState(null);
@@ -335,6 +364,11 @@ export default function AnimatedPlay({ play, ageBand = "U11", onEvent, onNext, n
 
   const actorMap = useMemo(() => Object.fromEntries(play.actors.map((a) => [a.id, a])), [play.actors]);
   const node = play.nodes[nodeId];
+  // Latch on the way past. Terminal nodes carry no decisionActor, so this holds
+  // the last one a read declared and every downstream outcome keeps marking the
+  // same player as YOU.
+  if (node?.decisionActor) youIdRef.current = node.decisionActor;
+  const youId = node?.decisionActor || youIdRef.current;
   const kind = resolveKindForAge(node, ageBand);
   const activeOpts = kind === "verdict" && judgePick ? node.ask?.justify?.opts : node.ask?.opts;
   // Re-shuffles on every new node/judge step (new `activeOpts` identity), not
@@ -422,6 +456,7 @@ export default function AnimatedPlay({ play, ageBand = "U11", onEvent, onNext, n
   }
 
   function replay() {
+    youIdRef.current = null;
     setNodeId(play.start);
     setPicked(null);
     setPickedOption(null);
@@ -524,11 +559,17 @@ export default function AnimatedPlay({ play, ageBand = "U11", onEvent, onNext, n
         {play.actors.map((actor) => {
           const p = positions[actor.id];
           if (!p) return null;
-          const isDecisionActor = node.decisionActor === actor.id;
+          const isDecisionActor = youId === actor.id;
           return (
             <g key={actor.id} transform={`translate(${p[0]},${p[1]})`} style={{ transition: "transform 1.4s cubic-bezier(.4,0,.2,1)" }} filter="url(#ap-shadow)">
               <ActorToken actor={actorMap[actor.id]} ageBand={ageBand} isDecisionActor={isDecisionActor} />
-              {(profile.token === "figure" || (isDecisionActor && actor.role === "defender") || (profile.token === "symbol" && actor.role !== "goalie")) && (
+              {/* `isDecisionActor` alone was NOT enough to earn a caption: at
+                  U11/U13 (`token`) it was gated on `role === "defender"`, so a
+                  forward who is YOU fell through to the token's interior label
+                  and said "F1". Three U11 plays showed no "YOU" anywhere while
+                  the prompt asked "what should YOU do?". Whoever the player is,
+                  they get named. */}
+              {(isDecisionActor || profile.token === "figure" || (profile.token === "symbol" && actor.role !== "goalie")) && (
                 <text y="-8.5" textAnchor="middle" fontSize="3.2" fill="#0B1A33" fontWeight="900">{actorDisplayLabel(actor, isDecisionActor, profile)}</text>
               )}
             </g>
@@ -552,7 +593,12 @@ export default function AnimatedPlay({ play, ageBand = "U11", onEvent, onNext, n
 
       <div style={{ padding: "8px 4px 2px" }}>
         <div style={{ fontSize: 11, fontWeight: 900, letterSpacing: ".5px", textTransform: "uppercase", color: profile.accent }}>
-          {profile.label}{node.decisionActor ? ` - ${node.decisionActor === "F1" ? "you have the puck" : "support read"}` : ""}
+          {/* This branched on an actor ID, not a role, so everything not
+              literally named "F1" was labelled "support read" — including the
+              backchecker, both forecheckers, all three gap-control D, and the
+              player who is carrying the puck in the goalie-slide play. Nine of
+              21 decision nodes described the wrong job. Read the role. */}
+          {profile.label}{youId ? ` - ${decisionRoleLabel(actorMap[youId])}` : ""}
         </div>
         {node.terminal && lastKind === "predict-next" && pickedOption && (
           <div style={{ fontSize: 12.5, fontWeight: 700, color: "#5B6575", margin: "4px 0 2px" }}>
