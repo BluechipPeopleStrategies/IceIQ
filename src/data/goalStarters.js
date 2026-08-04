@@ -138,9 +138,9 @@ const U7_CATEGORIES = {
       "Listen the first time my coach talks",
     ],
     M: [
+      "Say one good thing to a teammate every shift",
       "Make 3 passes to a teammate every game",
       "Be first on the ice for 4 practices in a row",
-      "Say one good thing to a teammate every shift",
     ],
     R: [
       "Hockey is more fun when my whole team is having fun",
@@ -191,7 +191,6 @@ const U9_CATEGORIES = {
     ],
     M: [
       "Do 10 clean crossovers each way at practice",
-      "My coach marks Backward Skating as Consistent",
       "Stop on my weak side 8 times out of 10",
     ],
     R: [
@@ -209,7 +208,6 @@ const U9_CATEGORIES = {
     M: [
       "Land 8 of 10 flat passes in a practice drill",
       "Catch 10 passes in a row without losing one",
-      "My coach marks Receiving Passes as Consistent",
     ],
     R: [
       "A flat pass is way easier for a teammate to catch",
@@ -224,10 +222,8 @@ const U9_CATEGORIES = {
       "Pick a corner before I shoot",
     ],
     M: [
-      // Preserved verbatim from the old SMART_EXAMPLES table.
-      "Hit top corners 3 out of 5 in practice drills",
+      "Hit the net on 8 of 10 shots in a practice drill",
       "Get 8 of 10 wrist shots up off the ice",
-      "My coach marks Wrist Shot as Consistent",
     ],
     R: [
       "A quick shot gives the goalie less time to set",
@@ -242,9 +238,8 @@ const U9_CATEGORIES = {
       "Stay between my check and our net",
     ],
     M: [
-      "Beat my check back to our net 4 times a game",
-      "My coach marks Transition Awareness as Consistent",
       "Take away 3 passes a game with my stick down",
+      "Beat my check back to our net 4 times a game",
     ],
     R: [
       "Getting back fast gives our goalie help",
@@ -259,9 +254,8 @@ const U9_CATEGORIES = {
       "Decide to pass or shoot before I get the puck",
     ],
     M: [
-      "Score 70% or better on Hockey Sense in RinkReads",
-      "My coach marks Space Awareness as Consistent",
       "Ask my coach for 1 read to work on each week",
+      "Score 70% or better on Hockey Sense in RinkReads",
     ],
     R: [
       "Open ice means my teammate has somewhere to pass",
@@ -310,7 +304,6 @@ const U11_CATEGORIES = {
       "Tighten my turns so I keep my speed through them",
     ],
     M: [
-      "Coach rates my skating Consistent within 4 weeks",
       "Do 20 backward crossovers each way without a stumble",
       "Beat my check to 5 loose pucks in a game",
     ],
@@ -332,7 +325,6 @@ const U11_CATEGORIES = {
     ],
     M: [
       "Win 6 of 10 board battles in a practice drill",
-      "Coach rates my puck protection Consistent in 4 weeks",
       "Come out of 8 of 10 battles still holding the puck",
     ],
     R: [
@@ -350,8 +342,7 @@ const U11_CATEGORIES = {
       "Angle the puck carrier toward the boards",
     ],
     M: [
-      "Hold a tight gap on 10 rushes in a row",
-      "Coach rates my gap control Consistent in 4 weeks",
+      "Hold a tight gap on 8 of 10 rushes against me",
       "Stand up 8 of 10 rushes at the blue line",
     ],
     A: [
@@ -367,14 +358,13 @@ const U11_CATEGORIES = {
   "Rush Reads": {
     // S / M / A preserved verbatim.
     S: [
-      "Make the correct 2-on-1 decision every time",
       "Take away the pass and let my goalie take the shot",
       "Read the rush before I get to the blue line",
+      "Make the correct 2-on-1 decision every time",
     ],
     M: [
-      "Score 80%+ on Rush Reads in RinkReads",
-      "Coach rates my rush reads Consistent in 6 weeks",
       "Make the right read on 8 of 10 odd-man rushes",
+      "Score 80%+ on Rush Reads in RinkReads",
     ],
     A: [
       "I get the concept, just need reps",
@@ -393,14 +383,13 @@ const U11_CATEGORIES = {
       "Keep the power play moving with quick puck touches",
     ],
     M: [
-      "Kill 8 of 10 penalties I am on the ice for",
-      "Coach rates my penalty killing Consistent in 6 weeks",
       "Get 3 pucks to the net on the power play each game",
+      "Kill 8 of 10 penalties I am on the ice for",
     ],
     R: [
-      "Special teams often decide who wins the game",
       "Killing a penalty gets my team momentum back",
       "Power play time is where I get to create",
+      "Special teams often decide who wins the game",
     ],
   },
   "Game IQ": {
@@ -414,7 +403,6 @@ const U11_CATEGORIES = {
     M: [
       "RinkReads score improves from current to Hockey Sense tier",
       "Score 80% or better on Hockey Sense in RinkReads",
-      "Coach rates my reading of the play Consistent in 6 weeks",
     ],
     A: [
       "I've started thinking about it more already",
@@ -467,7 +455,6 @@ const U13_CATEGORIES = {
       "Do mohawk turns on both sides at full speed",
     ],
     M: [
-      "Coach rates my edge work Consistent in 6 weeks",
       "Do 10 clean tight turns each way in a practice",
       "Escape pressure with a tight turn 5 times a game",
     ],
@@ -484,9 +471,8 @@ const U13_CATEGORIES = {
       "Shoot for a rebound when the goalie is set",
     ],
     M: [
-      "Get 3 shots on net from the slot each game",
-      "Coach rates my shot selection Consistent in 6 weeks",
       "Get 8 of 10 shots through in a practice drill",
+      "Get 3 shots on net from the slot each game",
     ],
     R: [
       "The right shot at the right time beats a hard one",
@@ -496,14 +482,13 @@ const U13_CATEGORIES = {
   },
   "Defensive Zone": {
     S: [
-      "Win the net-front battle on every shot",
       "Support my defence partner low in our zone",
       "Box out instead of chasing the puck carrier",
+      "Win the net-front battle on every shot",
     ],
     M: [
-      "Coach rates my zone coverage Consistent in 6 weeks",
-      "Win 8 of 10 net-front battles in a practice drill",
       "Clear the front of our net 5 times a game",
+      "Win 8 of 10 net-front battles in a practice drill",
     ],
     R: [
       "Winning the net front is how we end their shifts",
@@ -519,7 +504,6 @@ const U13_CATEGORIES = {
     ],
     M: [
       "Make a clean entry on 7 of 10 tries in a game",
-      "Coach rates my zone entries Consistent in 6 weeks",
       "Carry the puck in with control 5 times a game",
     ],
     R: [
@@ -535,7 +519,6 @@ const U13_CATEGORIES = {
       "Get to the net front and hold my ground",
     ],
     M: [
-      "Coach rates my penalty killing Consistent in 6 weeks",
       "Block or deflect 3 shots a game on the kill",
       "Get 4 pucks to the net on the power play each game",
     ],
@@ -553,13 +536,13 @@ const U13_CATEGORIES = {
     ],
     M: [
       "Talk to 3 teammates on the bench every period",
-      "Be first on the ice for 8 practices in a row",
       "Ask my coach 1 question after every game this month",
+      "Be first on the ice for 8 practices in a row",
     ],
     R: [
       "A team plays better when someone lifts it up",
-      "Leaders get trusted with the big minutes",
       "How I act after a mistake sets the tone",
+      "Leaders get trusted with the big minutes",
     ],
   },
 };
@@ -605,9 +588,8 @@ const U15_CATEGORIES = {
       "Rotate properly in our defensive zone coverage",
     ],
     M: [
-      "Coach rates my systems play Consistent in 8 weeks",
-      "Make the right system read on 8 of 10 shifts",
       "Review 1 shift on video with my coach each week",
+      "Make the right system read on 8 of 10 shifts",
     ],
     R: [
       "A system works when all five of us read it the same",
@@ -623,7 +605,6 @@ const U15_CATEGORIES = {
     ],
     M: [
       "Start 3 clean transitions up ice each game",
-      "Coach rates my transition speed Consistent in 8 weeks",
       "React within one second on 8 of 10 turnovers",
     ],
     R: [
@@ -639,32 +620,30 @@ const U15_CATEGORIES = {
       "Get into the seam for one-timers on the half wall",
     ],
     M: [
-      "Coach rates my special teams Consistent in 8 weeks",
       "Get 5 pucks to the net a game on the power play",
       "Break up 3 entries a game on the penalty kill",
     ],
     R: [
-      "Special teams minutes are earned, not given",
       "A kill can change the momentum of a whole game",
+      "Special teams minutes are earned, not given",
       "Power play time is where scorers get noticed",
     ],
   },
   "Physical Play": {
     S: [
       "Angle the puck carrier off instead of lunging",
-      "Take the body cleanly, never from behind",
+      "Take a check with my head up and my feet under me",
       "Use my body to seal the wall and win pucks",
       "Win body position in front of our net",
     ],
     M: [
       "Win 7 of 10 board battles in a practice drill",
-      "Coach rates my body position Consistent in 8 weeks",
       "Play 4 straight games clean of hitting penalties",
     ],
     R: [
       "Winning body position wins the puck back",
-      "Clean, hard hockey is what coaches trust",
       "Angling keeps me in control and out of the box",
+      "Clean, hard hockey is what coaches trust",
     ],
   },
   "Gap Control": {
@@ -674,7 +653,6 @@ const U15_CATEGORIES = {
       "Stand up the rush before it reaches our blue line",
     ],
     M: [
-      "Coach rates my gap control Consistent in 8 weeks",
       "Stand up 8 of 10 rushes at our blue line",
       "Force 3 dump-ins a game with a tight gap",
     ],
@@ -693,12 +671,11 @@ const U15_CATEGORIES = {
     M: [
       "Lead a warmup drill 4 times this month",
       "Check in with one teammate after every game",
-      "Coach rates my leadership Consistent in 8 weeks",
     ],
     R: [
       "The room follows whoever works hardest in it",
-      "Leadership is why coaches give out big minutes",
       "Teams go as far as their leaders take them",
+      "Leadership is why coaches give out big minutes",
     ],
   },
 };
@@ -744,7 +721,6 @@ const U18_CATEGORIES = {
     ],
     M: [
       "Keep my shifts under 45 seconds for a full game",
-      "Coach rates my game management Proficient in 8 weeks",
       "Review 2 late-game shifts on video each month",
     ],
     R: [
@@ -760,9 +736,8 @@ const U18_CATEGORIES = {
       "Adjust my route when the forecheck changes",
     ],
     M: [
-      "Name their system correctly in 3 straight games",
-      "Coach rates my tactical reads Proficient in 8 weeks",
       "Review 1 opponent system on video every week",
+      "Name their system correctly in 3 straight games",
     ],
     R: [
       "Reading their system is how I find the open ice",
@@ -777,7 +752,6 @@ const U18_CATEGORIES = {
       "Win the retrieval after every failed entry",
     ],
     M: [
-      "Coach rates my special teams Proficient in 8 weeks",
       "Break up 4 entries a game on the penalty kill",
       "Get 6 pucks to the net a game on the power play",
     ],
@@ -794,9 +768,8 @@ const U18_CATEGORIES = {
       "Hold my layer in our neutral zone forecheck",
     ],
     M: [
-      "Coach rates my neutral zone play Proficient in 8 weeks",
-      "Force 5 turnovers in the neutral zone each game",
       "Hit the blue line with speed on 8 of 10 rushes",
+      "Force 5 turnovers in the neutral zone each game",
     ],
     R: [
       "The neutral zone decides who gets to attack",
@@ -811,9 +784,8 @@ const U18_CATEGORIES = {
       "Beat the forecheck with one touch under pressure",
     ],
     M: [
-      "Complete 9 of 10 first passes in a game",
-      "Coach rates my breakouts Proficient in 8 weeks",
       "Exit our zone cleanly on 8 of 10 attempts",
+      "Complete 9 of 10 first passes in a game",
     ],
     R: [
       "A clean breakout is where every rush starts",
@@ -828,9 +800,8 @@ const U18_CATEGORIES = {
       "Own my mistakes out loud so others can too",
     ],
     M: [
-      "Check in with 2 teammates after every game",
       "Lead 4 team warmups this month",
-      "Coach rates my leadership Proficient in 8 weeks",
+      "Check in with 2 teammates after every game",
     ],
     R: [
       "Teams take on the habits of their older players",

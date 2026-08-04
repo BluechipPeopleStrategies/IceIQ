@@ -16,6 +16,7 @@
 import { readFileSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 import { dirname, join } from "node:path";
+import { canSetGoals } from "./goalBands.js";
 import {
   GOAL_CATEGORIES,
   SMART_FIELDS,
@@ -259,6 +260,79 @@ ok("an unknown field returns nothing", starterOptionsFor("U13 / Peewee", "Zone E
   missing.slice(0, 8).forEach((m) => console.log(`        ${m}`));
 }
 
+// ---- controllability: a goal the player cannot cause is not their goal ------
+//
+// 28 of the 29 categories above U7 carried exactly one "Coach rates my X
+// Consistent" measurable — a template someone applied, not drift. It fails
+// three ways at once: the athlete cannot cause it, cannot observe it, and in
+// minor hockey the ladder mostly never gets updated, so it silently resolves as
+// FAILED for reasons they did not cause. ratingCopy.js states in capitals that
+// MOST PLAYERS HAVE NO TEAM, so for the typical user these were goals nobody
+// could ever mark done.
+//
+// Coach references stay legal in ACHIEVABLE, where this file already uses them
+// correctly ("My coach has worked on it with me") — that is coach input as
+// evidence of feasibility, which is exactly right.
+{
+  const VERDICT = /\b(coach rates|my coach marks)\b/i;
+  const bad = [];
+  for (const [level, cats] of Object.entries(GOAL_CATEGORIES)) {
+    for (const cat of cats) {
+      for (const s of starterOptionsFor(level, cat, "M")) {
+        if (VERDICT.test(s)) bad.push(`${level} · ${cat} · "${s}"`);
+      }
+    }
+  }
+  ok(`no Measurable resolves on a coach's verdict${bad.length ? ` — ${bad.length}` : ""}`,
+    bad.length === 0);
+  bad.slice(0, 6).forEach(b => console.log(`        ${b}`));
+}
+
+// ---- index 0 is the live product, so it carries an extra standard -----------
+//
+// exampleFor() returns opts[0] and App.jsx renders it as the placeholder a
+// player actually sees. So whatever sits at index 0 is shipped, and the other
+// two options in the array are not — they are only reachable once tappable
+// chips exist. Ten of 33 categories used to lead their Measurable with a coach
+// verdict, which meant that was the only measurable those players ever saw.
+{
+  const NEVER_FIRST = [
+    [/\b(coach rates|my coach marks)\b/i, "a coach's verdict"],
+    // Cross-session streaks only. A streak bounded inside one session, where
+    // the streak IS the skill, is legitimate — "10 snowplow stops in a row at
+    // practice" is a rep target, not an all-or-nothing month. What fails is a
+    // streak spanning games or practices, where one bad day zeroes the work.
+    [/\bstraight (games|practices)\b|\b(games|practices) in a row\b/i, "a cross-session streak"],
+    [/\bnever\b|\bevery shift\b|on every shot/i, "an absolute"],
+  ];
+  // Scoped to bands that actually reach a player. U7 keeps its content in this
+  // file — for reuse by whatever replaces SMART for the youngest band, and so
+  // the decision is reversible — but canSetGoals() closes the door, so holding
+  // it to a shipping standard would be enforcing a rule on strings nobody sees.
+  //
+  // U7 is also the proof the gate is right: all THREE of its Teamwork
+  // measurables were independently flagged by a reviewer. There was no good
+  // option to lead with, because measurement itself is the wrong ask at 5-6.
+  const bad = [];
+  for (const [level, cats] of Object.entries(GOAL_CATEGORIES)) {
+    if (!canSetGoals(level)) continue;
+    for (const cat of cats) {
+      const first = starterOptionsFor(level, cat, "M")[0] || "";
+      for (const [re, why] of NEVER_FIRST) {
+        if (re.test(first)) bad.push(`${level} · ${cat} leads with ${why}: "${first}"`);
+      }
+    }
+  }
+  ok(`no shipping category leads its Measurable with a verdict, streak or absolute${bad.length ? ` — ${bad.length}` : ""}`,
+    bad.length === 0);
+  bad.slice(0, 6).forEach(b => console.log(`        ${b}`));
+
+  ok("U7 does not set SMART goals, and U9 is the first band that does",
+    !canSetGoals("U7 / Initiation") && canSetGoals("U9 / Novice"));
+  ok("the goal gate fails closed on an unparseable level, like canSelfRate",
+    !canSetGoals("") && !canSetGoals(null) && !canSetGoals("Rookie"));
+}
+
 // ---- the migrated strings survived ------------------------------------------
 // Nine strings came over from App.jsx's SMART_EXAMPLES. These are the ones kept
 // verbatim; the four that changed, and why, are documented at the top of
@@ -277,7 +351,15 @@ ok("an unknown field returns nothing", starterOptionsFor("U13 / Peewee", "Zone E
     ["U11 / Atom", "Game IQ", "S", "Pre-read plays before the puck arrives"],
     ["U11 / Atom", "Game IQ", "M", "RinkReads score improves from current to Hockey Sense tier"],
     ["U11 / Atom", "Game IQ", "R", "Faster reads = better plays"],
-    ["U9 / Novice", "Shooting", "M", "Hit top corners 3 out of 5 in practice drills"],
+    // "Hit top corners 3 out of 5 in practice drills" was pinned here and is
+    // now CUT. It came over verbatim from SMART_EXAMPLES, and being inherited
+    // was the only reason it survived a migration that correctly rejected three
+    // other strings on content grounds. Three independent expert reviews
+    // (psychology, developmental, hockey) each cut it: most 7-to-8 year olds
+    // cannot elevate a puck at all, so 60% top-corner accuracy is a weekly
+    // failure generator at the age with the least accumulated evidence that
+    // they are any good. It was also M[0], so under exampleFor it was the ONLY
+    // measurable a U9 ever saw for shooting. Provenance is not justification.
   ];
   const lost = KEPT.filter(([l, c, f, s]) => !starterOptionsFor(l, c, f).includes(s));
   ok(`the preserved SMART_EXAMPLES strings are still present${lost.length ? ` — ${lost.length} lost` : ""}`,

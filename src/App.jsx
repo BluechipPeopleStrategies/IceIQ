@@ -20,6 +20,7 @@ import { getTrainingLog, seedDemoTrainingForRoster } from "./utils/trainingLog.j
 import { upsertResult, skipResult, isSkipped, answeredCount, sessionQuestionCount, displayQuestionNumber, computeSpeedBonus, SPEED_TYPES, SPEED_DURATION_MS, SPEED_MAX_BONUS, SPEED_GRACE_MS } from "./utils/quizResults.js";
 import { preAppScreen } from "./utils/authRouting.js";
 import { canSelfRate } from "./data/selfRating.js";
+import { canSetGoals } from "./data/goalBands.js";
 import { exampleFor } from "./data/goalStarters.js";
 import { isChunkLoadError, shouldReloadForChunkError } from "./utils/chunkReload.js";
 import { cachePlayer, mergeCachedPlayer, clearCachedPlayer } from "./utils/playerCache.js";
@@ -1732,11 +1733,13 @@ function Home({ player, onNav, demoMode, subscriptionTier, questFlagsBump, onPro
             <div style={{fontSize:11,color:C.purple}}>Adaptive · {player.sessionLength||10}Q</div>
             </div>
           </button>
+          {canSetGoals(level) && (
           <button onClick={() => onNav("goals")} style={{background:`linear-gradient(135deg,rgba(252,76,2,.1),rgba(252,76,2,.03))`,border:`1px solid ${C.goldBorder}`,borderRadius:14,padding:"1.1rem",cursor:"pointer",textAlign:"left",color:C.white,fontFamily:FONT.body}}>
             <div style={{fontSize:22,marginBottom:".4rem"}}>🎯</div>
             <div style={{fontWeight:700,fontSize:14,marginBottom:2}}>My Goals</div>
             <div style={{fontSize:11,color:C.gold}}>{goalCount}/{goalCats} set</div>
           </button>
+          )}
           <button onClick={() => onNav("study")} style={{background:C.bgCard,border:`1px solid ${C.border}`,borderRadius:14,padding:"1.1rem",cursor:"pointer",textAlign:"left",color:C.white,fontFamily:FONT.body,position:"relative",overflow:"hidden"}}>
             <img src={imgTactics} alt="" style={{position:"absolute",inset:0,width:"100%",height:"100%",objectFit:"cover",opacity:0.12,pointerEvents:"none"}}/>
             <div style={{position:"relative"}}>
@@ -8827,7 +8830,11 @@ export default function App() {
         {screen === "skills-onboarding" && <Suspense fallback={<LazyFallback/>}><SkillsOnboarding player={player} tier={tier} onUpgrade={promptUpgrade} onSave={(r, opts) => handleSkillsSave(r, { navigate: opts?.final !== false })} onBack={()=>setScreen("home")}/></Suspense>}
         {screen === "insights" && <Suspense fallback={<LazyFallback/>}><InsightsScreen onBack={()=>setScreen("home")} onInsightRead={bumpQuestFlags}/></Suspense>}
         {screen === "study"   && <StudyScreen player={player} onBack={()=>setScreen("home")} onNav={setScreen}/>}
-        {screen === "goals"   && (canAccess("smartGoals", tier).allowed
+        {/* U7 does not set SMART goals -- see src/data/goalBands.js. Gated at the
+            route as well as the tile, so a stale nav or a deep link cannot
+            reach a five-field form the band should never be shown. */}
+        {screen === "goals"   && !canSetGoals(player?.level) && <Screen><div style={{color:C.dimmer,textAlign:"center",paddingTop:"4rem"}}>Goals open up at U9. Keep skating!</div></Screen>}
+        {screen === "goals"   && canSetGoals(player?.level) && (canAccess("smartGoals", tier).allowed
           ? <GoalsScreen player={player} onSave={handleGoalsSave} onBack={()=>setScreen("home")}/>
           : <GatedGoalsScreen onBack={()=>setScreen("home")} onUnlock={()=>promptUpgrade("smartGoals","pro")}/>
         )}
