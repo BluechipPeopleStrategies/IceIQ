@@ -186,7 +186,16 @@ export default function ReactionDrill({ playerId = "default", onExit }) {
   function start() {
     const d = getDrill(playerId, "reaction");
     startLevelRef.current = d.level;
-    engineRef.current = createAdaptiveLevel(d.level, { ...gymCueHooks() });
+    // Seed the promote/relegate streak from storage, like the other eleven
+    // drills. Without this the counter restarted at zero every session, and
+    // since levelling up needs three consecutive clean reps, a player who went
+    // 2-up and left had those two erased. Across sessions this drill could
+    // never promote at all — its stored level was frozen wherever it started.
+    engineRef.current = createAdaptiveLevel(d.level, {
+      startUps: d.streak.ups,
+      startDowns: d.streak.downs,
+      ...gymCueHooks(),
+    });
     setCorrect(0);
     setRts([]);
     setTrialIndex(0);
@@ -207,6 +216,9 @@ export default function ReactionDrill({ playerId = "default", onExit }) {
           score,
           points,
           level: engineRef.current.level,
+          // The other half of the same bug: the level was saved but the streak
+          // that earns the next level was not, so it reloaded as {0,0}.
+          streak: { ups: engineRef.current.ups, downs: engineRef.current.downs },
           meta: { avgRt },
         })
       );
