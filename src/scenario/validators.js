@@ -43,7 +43,10 @@ export function distance(a, b) {
 // defender on a pass lane so lineHitsCircle is true) instead of re-deriving it.
 export const PASS_INTERCEPT_RADIUS = INTERCEPT_RADIUS;
 
-export function lineHitsCircle(a, b, c, r) {
+// Perpendicular distance from point c to the segment a->b. Split out of
+// lineHitsCircle so a rule can report HOW blocked a lane is, not just that it
+// is — "0.75x the intercept radius" is a far more useful finding than "true".
+export function distanceToSegment(c, a, b) {
   const dx = b.x - a.x, dy = b.y - a.y;
   const len2 = dx * dx + dy * dy;
   let t = 0;
@@ -52,8 +55,11 @@ export function lineHitsCircle(a, b, c, r) {
     t = Math.max(0, Math.min(1, t));
   }
   const px = a.x + t * dx, py = a.y + t * dy;
-  const d = Math.sqrt((c.x - px) ** 2 + (c.y - py) ** 2);
-  return d < r;
+  return Math.sqrt((c.x - px) ** 2 + (c.y - py) ** 2);
+}
+
+export function lineHitsCircle(a, b, c, r) {
+  return distanceToSegment(c, a, b) < r;
 }
 
 function resolveTargetCoords(target) {
@@ -631,6 +637,62 @@ const rules = [
       return { kind: "err", msg: `goalie "${g.id}" at y=${g.y.toFixed(3)} is ${offCenterM.toFixed(1)} m off the net's center line (y=0.5) — the net is only 1.8 m wide; this goalie is not covering it` };
     }
     return null;
+  },
+
+  // A keyed `place` target the puck cannot actually be moved to is a board
+  // whose own answer does not work. `u13_breakout_position_place_v1` shipped
+  // with its second forechecker 1.41 m off the D-to-centre lane — 0.75x the
+  // intercept radius — so one of the three "outlets that beat this pressure"
+  // was itself covered, and the board scored it correct anyway.
+  //
+  // Nothing caught it: PC-4b only fires on deep cross-crease targets, and the
+  // pass-lane rules only ever look at DECLARED pass actions, never at where a
+  // placement question keys its answers. This closes that specific gap —
+  // every keyed placement is treated as an implied outlet from the carrier.
+  //
+  // Warn rather than error: a board may legitimately key a supporting position
+  // that is not itself a pass target (a player skating to open ice for a
+  // second touch). The QA baseline makes a warning block anyway once it is new,
+  // which is the right weight for "look at this" rather than "this is wrong".
+  function placementOutletsAreOpen(s) {
+    if (s.interaction?.kind !== "place") return null;
+    const placements = s.correct?.placements;
+    if (!Array.isArray(placements) || !placements.length) return null;
+    const puck = (s.actors || []).find(a => a.kind === "puck");
+    if (!puck) return null;
+
+    // Only meaningful when OUR side has the puck. On a defensive-coverage board
+    // the opponent carries it and the keyed placements are defending positions,
+    // not outlets — there is no lane from the puck to them to be open or shut.
+    // Both false positives this rule produced on its first run were that case,
+    // and in both the reported blocker was the carrier itself, 0.002 from a
+    // lane that starts at its own stick.
+    const nearest = (s.actors || [])
+      .filter(a => a.kind !== "puck")
+      .map(a => ({ a, d: distance(a, puck) }))
+      .sort((x, y) => x.d - y.d)[0];
+    const OURS = ["teammate", "player"];
+    if (!nearest || !OURS.includes(nearest.a.kind)) return null;
+
+    const opponents = (s.actors || []).filter(a => a.kind === "defender" || a.kind === "opponent");
+    if (!opponents.length) return null;
+
+    const blocked = [];
+    for (const p of placements) {
+      // Zone-keyed placements resolve through the module's own helper, so a
+      // zone outlet is checked at its centroid rather than skipped.
+      const t = resolveTargetCoords(p);
+      if (!t) continue;
+      for (const o of opponents) {
+        const d = distanceToSegment(o, puck, t);
+        if (d < INTERCEPT_RADIUS) {
+          blocked.push(`"${p.id}" at (${t.x.toFixed(2)},${t.y.toFixed(2)}) — ${o.id} sits ${d.toFixed(3)} from the lane (${(d / INTERCEPT_RADIUS).toFixed(2)}x the intercept radius)`);
+          break;
+        }
+      }
+    }
+    if (!blocked.length) return null;
+    return { kind: "warn", msg: `keyed placement is covered by an opponent, so the board's own answer does not beat the pressure it describes: ${blocked.join("; ")}` };
   },
 
   // ── SOFT WARNINGS

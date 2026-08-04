@@ -3,34 +3,113 @@
   "type": "scenario",
   "nodeId": "u13.breakout-and-regroup",
   "level": "U13 / Peewee",
-  "levels": ["U13 / Peewee"],
-  "themes": ["breakout", "positioning", "puck-support"],
+  "levels": [
+    "U13 / Peewee"
+  ],
+  "themes": [
+    "breakout",
+    "positioning",
+    "puck-support"
+  ],
   "cat": "Breakout",
   "difficulty": 3,
-  "stage": { "view": "left", "zone": "def-zone" },
-  "read": { "cue": "a forechecker has sealed the strong-side wall, taking away the usual winger outlet", "decoy": { "x": 0.1, "y": 0.78 } },
+  "stage": {
+    "view": "left",
+    "zone": "def-zone"
+  },
+  "read": {
+    "cue": "a forechecker has sealed the strong-side wall, taking away the usual winger outlet",
+    "decoy": {
+      "x": 0.1,
+      "y": 0.78
+    }
+  },
   "actors": [
-    { "id": "dmate", "kind": "teammate", "x": 0.07, "y": 0.85, "tag": "D" },
-    { "id": "puck", "kind": "puck", "x": 0.072, "y": 0.852 },
-    { "id": "fc1", "kind": "defender", "x": 0.14, "y": 0.82, "tag": "" },
-    { "id": "fc2", "kind": "defender", "x": 0.22, "y": 0.55, "tag": "" },
-    { "id": "g", "kind": "goalie", "x": 0.06, "y": 0.5, "tag": "" },
-    { "id": "sw", "kind": "player", "x": 0.34, "y": 0.62, "tag": "RW" },
-    { "id": "c", "kind": "teammate", "x": 0.46, "y": 0.5, "tag": "C" },
-    { "id": "ww", "kind": "teammate", "x": 0.34, "y": 0.34, "tag": "LW" }
+    {
+      "id": "dmate",
+      "kind": "teammate",
+      "x": 0.07,
+      "y": 0.85,
+      "tag": "D"
+    },
+    {
+      "id": "puck",
+      "kind": "puck",
+      "x": 0.072,
+      "y": 0.852
+    },
+    {
+      "id": "fc1",
+      "kind": "defender",
+      "x": 0.14,
+      "y": 0.82,
+      "tag": ""
+    },
+    {
+      "id": "fc2",
+      "kind": "defender",
+      "x": 0.3,
+      "y": 0.72,
+      "tag": ""
+    },
+    {
+      "id": "g",
+      "kind": "goalie",
+      "x": 0.06,
+      "y": 0.5,
+      "tag": ""
+    },
+    {
+      "id": "sw",
+      "kind": "player",
+      "x": 0.34,
+      "y": 0.62,
+      "tag": "RW"
+    },
+    {
+      "id": "c",
+      "kind": "teammate",
+      "x": 0.46,
+      "y": 0.5,
+      "tag": "C"
+    },
+    {
+      "id": "ww",
+      "kind": "teammate",
+      "x": 0.34,
+      "y": 0.34,
+      "tag": "LW"
+    }
   ],
   "interaction": {
     "kind": "place",
-    "items": ["sw", "c", "ww"],
+    "items": [
+      "sw",
+      "c",
+      "ww"
+    ],
     "showTargets": false,
     "prompt": "A forechecker has sealed your strong-side wall. Drag your three forwards to the outlets that beat this pressure."
   },
   "correct": {
     "kind": "place",
     "placements": [
-      { "id": "ww", "zoneId": "dz-half-wall-weak" },
-      { "id": "c", "x": 0.28, "y": 0.5, "tolerance": 0.09 },
-      { "id": "sw", "x": 0.11, "y": 0.63, "tolerance": 0.08 }
+      {
+        "id": "ww",
+        "zoneId": "dz-half-wall-weak"
+      },
+      {
+        "id": "c",
+        "x": 0.28,
+        "y": 0.5,
+        "tolerance": 0.09
+      },
+      {
+        "id": "sw",
+        "x": 0.11,
+        "y": 0.63,
+        "tolerance": 0.08
+      }
     ]
   },
   "feedback": {
