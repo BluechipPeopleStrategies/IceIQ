@@ -217,6 +217,90 @@ const hasImage = q => !!(q.media && q.media.url);
     bites && spares);
 }
 
+// ─────────────────────────────────────────────────────────────────────────────
+// GUARD 7 — an `mc` or `seq` stem has to actually ask something.
+//
+// 45 questions described a situation and then stopped. The child read a
+// paragraph about a 2-on-1 and was shown four options with no question attached
+// to them. Fixed in 501ed5a (and the `next` ones by rendering a badge), and this
+// holds the number at zero.
+//
+// Unlike the under-specified detector, which the audit itself called unreliable,
+// this one is exact: a stem either contains an interrogative or it does not, and
+// the type-aware version had a 0% false-positive rate over 45 hand-checked
+// candidates.
+//
+// The exemptions are the interesting part. `tf`, `mistake`, `next` and `multi`
+// are exempt because the UI supplies their ask as chrome — a True/False pair, a
+// "spot the mistake" frame, a "What's Your Next Move?" badge. So each exemption
+// NAMES ITS RENDER SITE and the guard checks that the site still renders it.
+// That is the whole lesson of this defect: the `next` badge was defined and
+// never rendered, and 17 questions asked nothing for months because a string
+// existed in the source and no pixel existed on screen. Deleting a badge now
+// trips this guard instead of silently recreating the bug.
+// ─────────────────────────────────────────────────────────────────────────────
+{
+  // A real ask: a question mark, a stem that runs into its options with a colon,
+  // or a clause-initial directive verb ("Pick the...", "Order the steps...").
+  //
+  // Clause-initial, NOT string-initial. A `seq` stem almost always sets the
+  // situation first and gives the instruction in a second sentence — "You have
+  // to move it out of your zone. Put these steps in the right order." Anchoring
+  // at the start of the string flagged three of those as askless on the first
+  // run, which would have been a detector bug reported as a content defect.
+  const ASKS = /\?|:\s*$|(^|[.!?]\s+)(pick|choose|order|rank|select|name|identify|decide|put|tap|drag)\b/i;
+  const NEEDS_ASK = new Set(["mc", "seq"]);
+  const askless = [];
+  for (const [band, arr] of Object.entries(bank)) {
+    for (const q of arr) {
+      if (!NEEDS_ASK.has(q.type)) continue;
+      const stem = [q.q, q.question, q.sit].find(s => typeof s === "string" && s.trim());
+      if (!stem || !ASKS.test(stem.trim())) {
+        askless.push(`${band} · ${q.id} · "${(stem || "").slice(-60)}"`);
+      }
+    }
+  }
+  ok(`every mc/seq stem contains an actual ask${askless.length ? ` — found ${askless.length}` : ""}`,
+    askless.length === 0);
+  askless.slice(0, 8).forEach(b => console.log(`        ${b}`));
+
+  // The exempt types, and the render site that supplies each one's ask. If a
+  // site stops rendering its chrome, the exemption is no longer earned.
+  const app = readFileSync(join(HERE, "..", "App.jsx"), "utf8");
+  // Needles are the rendered chrome itself, not a word that happens to appear
+  // somewhere in a 6000-line file. A needle that would pass by accident guards
+  // nothing.
+  //
+  // And each one is COUNTED, not merely found. There are two quiz surfaces —
+  // the main quiz and the weekly quiz — and each renders its own copy of this
+  // chrome. Checking for presence only proves one of them survived: verified by
+  // deleting the main-quiz badge and watching this assertion still pass, which
+  // is exactly the half-missing state that let 17 `next` questions ship with no
+  // ask on one of the two screens.
+  const CHROME = [
+    { type: "next", sites: 2, needle: `qtype === "next" ? "🔮 What's Your Next Move?"` },
+    { type: "mistake", sites: 2, needle: `🔍 Spot the Mistake` },
+    { type: "tf", sites: 1, needle: `{["True","False"].map` },
+  ];
+  const countOf = (s) => app.split(s).length - 1;
+  const missing = CHROME.filter(c => countOf(c.needle) < c.sites)
+    .map(c => `${c.type}: ${countOf(c.needle)} of ${c.sites} render sites`);
+  ok(`every ask-exempt type still renders the chrome that supplies its ask, on every surface${missing.length ? ` — ${missing.join("; ")}` : ""}`,
+    missing.length === 0);
+
+  // And the detector still bites, so a green line here means something.
+  // And the detector still bites, and still spares the real phrasings the bank
+  // uses — including the second-sentence instruction that caught it out.
+  ok("the ask guard still bites on a stem that only describes a situation",
+    !ASKS.test("You are on a 2-on-1 with your winger and the defender backs in")
+    && !ASKS.test("Your defence partner has the puck behind the net and you are open")
+    && ASKS.test("What is the best play?")
+    && ASKS.test("Order the steps for getting the puck out of your end:")
+    && ASKS.test("Pick the teammate with the open lane")
+    && ASKS.test("You need to move it out of your zone. Put these steps in the right order.")
+    && ASKS.test("Your D gives a breakout pass. Order the steps for a successful entry."));
+}
+
 const total = Object.values(bank).reduce((n, a) => n + a.length, 0);
 console.log(`\nchecked ${total} questions across ${Object.keys(bank).length} bands`);
 console.log(`${pass} passed, ${fail} failed`);
