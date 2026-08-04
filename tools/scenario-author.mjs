@@ -26,6 +26,7 @@ import { fileURLToPath } from "node:url";
 import { buildSystemPrompt, buildJsonSchema } from "./scenario-author/prompt.js";
 import { lintScenario } from "./scenario-author/validate.mjs";
 import { asciiRink } from "./scenario-author/ascii.mjs";
+import { assertNotFrozen } from "./lib/frozen-tools.mjs";
 
 // Resolve the claude binary explicitly so spawn finds it on Windows
 // (where the npm shim is `claude.cmd`, not `claude`).
@@ -140,6 +141,13 @@ function extractScenario(rawStdout) {
 // Commands
 
 async function cmdNew({ positional, flags }) {
+  // FROZEN (Phase 9 Task 1). `new` is the write path: it shells out to the
+  // Claude CLI and drops the result into src/scenario/seeds/ by default. The
+  // read-only subcommands (validate / show / help) stay usable on purpose —
+  // they are the only CLI access to lintScenario() and are needed to audit the
+  // legacy seeds during the migration.
+  assertNotFrozen("tools/scenario-author.mjs");
+
   const description = positional.join(" ").trim();
   if (!description) {
     console.error("Usage: scenario-author new \"<description of the scenario>\"");

@@ -3,6 +3,7 @@
 // Kept framework-free and path-explicit so it is unit-testable with temp files
 // (tools/review-store.test.mjs).
 import { readFileSync, writeFileSync, appendFileSync, existsSync } from "node:fs";
+import { assertNotFrozen } from "./lib/frozen-tools.mjs";
 
 // nodeId age prefix (e.g. "u15") → bank age-level display name.
 const AGE_LEVEL = {
@@ -58,6 +59,13 @@ function removeFromQueue(paths, id) {
 // Approve: push the question into bank.json under each of its levels (dedupe by
 // id), remove it from the queue, log. Returns { ok, levels, bankCount }.
 export function approve(paths, id, ts) {
+  // FROZEN (Phase 9 Task 1). approve() is the direct-writer named in the
+  // framework-fit audit: it appends into bank.json with no run record and no
+  // recall path. Only approve() is frozen — enqueue/loadQueue/reject/sendBack/
+  // editItem stay live, because gauntlet-run and gauntlet-audit depend on them
+  // and none of them touch the live bank.
+  assertNotFrozen("tools/review-store.mjs approve()");
+
   const q = loadQueue(paths);
   const item = q.items.find((i) => i.question?.id === id);
   if (!item) return { ok: false, error: "id not found in queue" };

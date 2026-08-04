@@ -1,6 +1,15 @@
 #!/usr/bin/env node
 // Unit tests for the review store (founder approval dashboard backend logic).
 // Uses a temp dir with fixture files; no Vite/HTTP. Run: node tools/review-store.test.mjs
+//
+// approve() is FROZEN as of Phase 9 Task 1 (tools/lib/frozen-tools.mjs). These
+// tests exercise it directly against temp fixtures — they never touch the real
+// bank.json — so they opt out of the freeze rather than deleting the coverage.
+// ESM hoists the imports above this line, but the guard reads process.env at
+// CALL time, so this assignment still lands before the first approve().
+// The freeze itself is proven in tools/lib/frozenTools.test.mjs.
+process.env.RINKREADS_ALLOW_FROZEN = "1";
+
 import { mkdtempSync, writeFileSync, readFileSync, rmSync, existsSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";

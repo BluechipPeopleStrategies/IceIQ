@@ -5,6 +5,12 @@
 
 import { readFileSync, readdirSync, renameSync, existsSync, rmSync, appendFileSync } from "node:fs";
 import { join } from "node:path";
+import { assertNotFrozen } from "../tools/lib/frozen-tools.mjs";
+
+// FROZEN (Phase 9 Task 1). This whole script exists to overwrite live seeds:
+// it rmSync's an existing same-ID destination and renames the replacement over
+// it, with no run record. Nothing below this line runs.
+assertNotFrozen("scripts/batch-approve.mjs");
 
 const args = process.argv.slice(2);
 const ix = args.indexOf("--list");

@@ -1,4 +1,85 @@
 #requires -Version 5.1
+#
+# ############################################################################
+# ## RETIRED 2026-08-03 (Phase 9 Task 1). THIS SCRIPT NO LONGER RUNS.       ##
+# ############################################################################
+#
+# Kept on disk as a record of how the scenario engine was built. The hard stop
+# below is the FIRST executable statement in the file, on purpose: everything
+# past it - the resume loop, the prompt, the claude invocation - is history,
+# not a runnable procedure.
+#
+# Why it was stopped: this is not a factory runner. It is an 8-pass loop that
+# shells `claude -p ... --dangerously-skip-permissions` with write access to the
+# whole working tree and instructs the model to commit after each pass. The
+# Windows scheduled task \RinkReads-ScenarioEngine-Overnight still points here.
+# That task is Disabled, but "disabled" is one checkbox away from "enabled", so
+# the script itself now refuses rather than relying on the task's state.
+#
+# There is deliberately NO override env var here. The human-at-a-keyboard
+# escape hatch (RINKREADS_ALLOW_FROZEN) exists for the Node direct-writers in
+# tools/lib/frozen-tools.mjs; it is not honoured by this script, because an
+# unattended runner is exactly what the freeze is defending against.
+#
+# The supported replacement is the scenario-engine foundation: stage runs via
+# src/scenario-engine/factoryPipeline.js, promote via scripts/promote-scenario.mjs.
+# Per the design spec's "Scheduled runner boundary", a nightly runner stays
+# disabled until one manual run, interruption/resume, recall, and promotion
+# safety all pass, and it must take a single-instance lock, build an immutable
+# run envelope, run preflights, and never bypass the manual enable switch.
+
+# The param block has to stay the first statement PowerShell parses, so it is
+# hoisted here from its original position further down (left in place there,
+# commented out, so the historical body still reads correctly). It exists only
+# so a caller that still passes -RepoDir/-MaxPasses/etc gets the refusal message
+# below instead of a parameter-binding error. The defaults are deliberately
+# inert: a retired script must not evaluate anything to print why it stopped,
+# and under PowerShell 5.1 the original $PSScriptRoot default threw during
+# binding, which swallowed the message.
+[CmdletBinding()]
+param(
+  [string]$RepoDir,
+  [int]$MaxPasses,
+  [string]$Model,
+  [string]$Effort,
+  [string]$ClaudeExe
+)
+
+Write-Host ''
+Write-Host '  +---------------------------------------------------------------+'
+Write-Host '  |  STOPPED - scenario-engine-overnight.ps1 is retired.          |'
+Write-Host '  +---------------------------------------------------------------+'
+Write-Host ''
+Write-Host '  Nothing ran. No Claude session was started, no files were touched.'
+Write-Host ''
+Write-Host '  This script is not a factory runner. It is an 8-pass loop that runs'
+Write-Host '  `claude -p --dangerously-skip-permissions` with write access to the'
+Write-Host '  entire working tree and tells the model to commit after each pass.'
+Write-Host '  It was retired on 2026-08-03 (scenario-engine plan, Phase 9 Task 1)'
+Write-Host '  so that the scheduled task existing is no longer the same thing as'
+Write-Host '  an unattended agent being able to rewrite the repo.'
+Write-Host ''
+Write-Host '  There is no override flag. That is intentional.'
+Write-Host ''
+Write-Host '  What to use instead:'
+Write-Host '    - stage a run:  src/scenario-engine/factoryPipeline.js'
+Write-Host '    - promote:      node scripts/promote-scenario.mjs'
+Write-Host ''
+Write-Host '  Read:'
+Write-Host '    docs/superpowers/specs/2026-07-29-scenario-engine-design.md'
+Write-Host '      -> "Scheduled runner boundary" for what a supported nightly'
+Write-Host '         runner must do before it is allowed to be enabled at all.'
+Write-Host ''
+Write-Host '  The scheduled task \RinkReads-ScenarioEngine-Overnight still points'
+Write-Host '  at this file and is Disabled. Removing it is a separate, deliberate'
+Write-Host '  decision - this script refuses regardless of the task state.'
+Write-Host ''
+exit 1
+
+# ===========================================================================
+# Everything below this line is retained for the historical record only.
+# ===========================================================================
+#
 # scenario-engine-overnight.ps1 - the 2026-07-29 overnight scenario-engine build.
 #
 # Headless-invokes Claude Code (Opus 5, max effort, ultracode multi-agent orchestration
@@ -20,14 +101,15 @@
 #
 # Register with register-scenario-engine-task.ps1 (once, by hand - task registration is
 # blocked from inside a Claude sandbox).
-[CmdletBinding()]
-param(
-  [string]$RepoDir = (Resolve-Path (Join-Path $PSScriptRoot '..')).Path,
-  [int]$MaxPasses = 8,
-  [string]$Model = 'claude-opus-5',
-  [string]$Effort = 'max',
-  [string]$ClaudeExe
-)
+# (hoisted to the top of the file on retirement - see note there)
+# [CmdletBinding()]
+# param(
+#   [string]$RepoDir = (Resolve-Path (Join-Path $PSScriptRoot '..')).Path,
+#   [int]$MaxPasses = 8,
+#   [string]$Model = 'claude-opus-5',
+#   [string]$Effort = 'max',
+#   [string]$ClaudeExe
+# )
 $ErrorActionPreference = 'Stop'
 
 if (-not $ClaudeExe) {

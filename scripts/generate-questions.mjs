@@ -15,6 +15,12 @@ import { createClient } from "@supabase/supabase-js";
 import { buildSystemPrompt } from "../tools/scenario-author/prompt.js";
 import { lintScenario } from "../tools/scenario-author/validate.mjs";
 import { runAgent } from "../tools/lib/claude-agent.mjs";
+import { assertNotFrozen } from "../tools/lib/frozen-tools.mjs";
+
+// FROZEN (Phase 9 Task 1). This script spends metered LLM calls and writes the
+// results straight into src/scenario/seeds/. Guarded before any env, Supabase,
+// or LLM work happens, so a stray invocation costs nothing.
+assertNotFrozen("scripts/generate-questions.mjs");
 
 const ROOT = path.dirname(fileURLToPath(import.meta.url)) + "/..";
 const SEEDS_DIR = path.join(ROOT, "src/scenario/seeds");

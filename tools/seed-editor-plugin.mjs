@@ -13,6 +13,7 @@ import { fileURLToPath } from "node:url";
 import { writeFileSync } from "node:fs";
 import { validateScenario } from "../src/scenario/schema.js";
 import { runHockeyValidators } from "../src/scenario/validators.js";
+import { assertNotFrozen } from "./lib/frozen-tools.mjs";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const seedsDir = resolve(__dirname, "..", "src/scenario/seeds");
@@ -50,6 +51,18 @@ export function seedEditorPlugin() {
         const route = req.url.split("?")[0];
         try {
           if (route === "/__seed/save" && req.method === "POST") {
+            // FROZEN (Phase 9 Task 1). This route writes src/scenario/seeds/
+            // directly, and with `force` it writes seeds that failed
+            // validation. Guarded HERE rather than at module load, because
+            // vite.config.js imports this plugin during `npm run build` and a
+            // module-level throw would break the production build.
+            // 423 Locked so the editor UI can show the reason verbatim.
+            try {
+              assertNotFrozen("tools/seed-editor-plugin.mjs (POST /__seed/save)");
+            } catch (frozenErr) {
+              console.error(frozenErr.message);
+              return send(res, 423, { ok: false, frozen: true, wrote: false, errs: [frozenErr.message] });
+            }
             const body = await readBody(req);
             const { id, scenario, force } = body;
             // Allow hyphens too (seed ids embed nodeId slugs like
