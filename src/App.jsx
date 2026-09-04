@@ -492,6 +492,13 @@ const QuestionReviewScreen = lazyWithReload(() => import("./screens.jsx").then(m
 const ReviewScreen = lazyWithReload(() => import("./review/ReviewScreen.jsx"));
 const BrowseScreen = lazyWithReload(() => import("./review/BrowseScreen.jsx"));
 const ScenarioPlayground = lazyWithReload(() => import("./scenario/ScenarioPlayground.jsx").then(m => ({ default: m.ScenarioPlayground })));
+const Dev3DScenarioRoute = lazyWithReload(async () => {
+  const [{ default: Scenario3DStage }, { default: scenario }] = await Promise.all([
+    import("./scenario/three/Scenario3DStage.jsx"),
+    import("./scenario/seeds/gvis_u11_reading-the-play_b633.json"),
+  ]);
+  return { default: () => <Scenario3DStage scenario={scenario} /> };
+});
 const ReadThePlay = lazyWithReload(() => import("./play/ReadThePlay.jsx"));
 const ProfileSetup = lazyWithReload(() => import("./screens.jsx").then(m => ({ default: m.ProfileSetup })));
 const PlansScreen = lazyWithReload(() => import("./screens.jsx").then(m => ({ default: m.PlansScreen })));
@@ -8620,6 +8627,10 @@ export default function App() {
   // to feel the interaction before it ships. (`#scenarios`)
   if (hashRoute === "scenarios") {
     return <Suspense fallback={<LazyFallback/>}><ScenarioPlayground/></Suspense>;
+  }
+  // Hidden manual-only 3D prototype route. No nav entry; browse directly to #dev-3d-scenario.
+  if (hashRoute === "dev-3d-scenario") {
+    return <Suspense fallback={<LazyFallback/>}><Dev3DScenarioRoute/></Suspense>;
   }
   // Owner-only review dashboard. Backed by the dev-only /__review/* endpoints
   // (tools/review-server-plugin.mjs), so it only functions under `npm run dev`.
