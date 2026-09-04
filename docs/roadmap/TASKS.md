@@ -1,10 +1,10 @@
 # RinkReads — Task List
 
-**Last updated:** 2026-08-03 (evening) · Round-4 decisions taken and three shipped against them: the QA gate can now fail, Run the Play happens in one end zone, and the engine checks the speed a skater accelerates TO. Earlier: two hotfixes shipped to production (#5, #6): account creation, team joining, quiz scoring, contradictory verdicts, a question that drew its own answer, and drag. Migration 0022 applied and the privilege-escalation chain verified closed by running the exploit. Built since: skip-and-return, Tier 1 positional-language validator, and Best Option now learns both blue lines and teaches offside. **PR #7 is open for the whole branch (69+ commits) — read its body before merging; the Brain Gym playtest and the skills-onboarding crash should come first.** See changelog.
+**Last updated:** 2026-09-04 · A staged-only, seed-recorded defensive-zone-breakout parameter space is now implemented for the approved escape-under-pressure claim. It produces 18 load-bearing U13 states, validates schema/claim/novelty/physics in tests, and does not write to a live bank or schedule a runner. The prior Round-4 decisions and production hotfix history remain below. See changelog.
 
 **Scope:** RinkReads **app build + content factory**. Launch/distribution (sending the beta, marketing) and the separate BlueChip business are **out of scope** — parked at the bottom. Priority = position in this list. A new idea that isn't here goes to the **Parking Lot** first, then gets promoted on purpose — that's the scope-creep guard.
 
-**Branch:** `feature/shareable-beta`
+**Branch:** `main`
 
 **Notion mirror (view-only):** [open in Notion](https://app.notion.com/p/398c5405e7f68172b891e7b7a5aac5ea) · this file is the source of truth; the mirror is a one-way copy, re-synced from here.
 
@@ -54,6 +54,18 @@
 - *(New ideas land here first, then get promoted into NEXT/LATER on purpose.)*
 
 ## Changelog
+
+- **2026-09-04** — Thomas approved tactical claim
+  `claim_dz_breakout_retrieval_escape_pressure_v1`. Phase 10.1 now has a
+  staged-only vertical slice: a seed-recorded defensive-zone-breakout
+  parameter space with three load-bearing axes (forechecker approach, escape
+  lane, outlet lane) yields 18 possible U13 ScenarioDefinitions. The suite
+  validates each output's schema, approved-claim provenance, novelty, and
+  physics. It does not write a live bank, schedule a runner, or promote a
+  scenario; the next gate is a capped staged run and a measured throughput
+  benchmark. The legacy adapter import-guard test now uses Node filesystem
+  scanning rather than a POSIX shell pipeline, so the standard scenario suite
+  runs under Windows PowerShell/cmd.
 
 - **2026-08-03 (later)** — Round-4 decisions taken (`docs/manual-playtest/2026-08-03-decisions-round4.md`),
   all four on the recommendation: playback samples the validated acceleration

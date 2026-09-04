@@ -143,9 +143,15 @@ describe("seeded tactical claims store", () => {
       assert.equal(sourcesExistOnDisk(claim), true);
     });
 
-    it(`${file}: is not self-approved (no claim in this plan is pre-approved on Thomas's behalf)`, () => {
+    it(`${file}: carries either no approval or a valid recorded human approval`, () => {
+      if (claim.status === CLAIM_STATUS.APPROVED) {
+        assert.equal(APPROVED_REVIEWERS.includes(claim.approval.approvedBy), true);
+        assert.equal(typeof claim.approval.approvedDate, "string");
+        return;
+      }
+
       assert.equal(claim.approval.approvedBy, null);
-      assert.notEqual(claim.status, CLAIM_STATUS.APPROVED);
+      assert.equal(claim.approval.approvedDate, null);
     });
 
     it(`${file}: content hash is stable (recomputes to the same value)`, async () => {

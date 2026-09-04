@@ -15,6 +15,7 @@ import {
   detectUnreachablePass, detectIllegalBounds, detectOverlappingActorActions,
   detectInconsistentPossession, detectPossibleInterception,
   detectImpossibleSampledAcceleration, detectImpossibleSpeed,
+  detectMotionModelVelocityConsistency,
 } from "./hardFailureDetectors.js";
 import { isUnsupportedModel, SEVERITY } from "./findings.js";
 import { rinkProfile } from "../rinkFrame.js";
@@ -42,7 +43,12 @@ import { rinkProfile } from "../rinkFrame.js";
 // samples alongside the sampled-acceleration check. Findings feed physicsClean
 // directly, so a definition that previously certified can now hard-fail -- same
 // output-changing rule as v3/v4.
-export const SIMULATOR_VERSION = "level1-simulator-v5";
+// v6 (2026-09-04): adds authored initial-velocity, constant-velocity, and
+// decelerate-to-rest segments to the rendered trace, with their declared
+// vectors bound to the sampled path. It also measures sampled acceleration at
+// interval midpoints, correcting the final short interval of an action. Both
+// change trace findings/samples, so the trace identity version must advance.
+export const SIMULATOR_VERSION = "level1-simulator-v6";
 
 // Pinned solver contract -- declared and versioned explicitly, per the
 // spec's requirement, even for the fields Level 1 doesn't currently need.
@@ -89,12 +95,12 @@ const SAMPLE_STEP_S = 0.5;
 // full speed inside the first sample step -- unbounded acceleration, and
 // invisible because nothing measured the samples).
 //
-// A skater accelerates from rest, so distance grows with the SQUARE of
-// elapsed time: d(tau) = 0.5*a*tau^2 with a = 2*d/T^2, which is exactly the
+// By default a skater accelerates from rest, so distance grows with the SQUARE
+// of elapsed time: d(tau) = 0.5*a*tau^2 with a = 2*d/T^2, which is exactly the
 // acceleration detectImpossibleAcceleration checks against the profile cap.
-// Sampling that curve makes the certified acceleration and the played
-// acceleration the same number by construction, and makes it independent of
-// SAMPLE_STEP_S rather than an artifact of sampling resolution.
+// `constant-velocity` and `decelerate-to-rest` are explicit, vector-bound
+// exceptions for an already-moving decision-frame actor. Sampling each model
+// makes the certified and played motion the same number by construction.
 //
 // A pass or shot is NOT from rest -- the puck leaves the stick at speed and
 // holds it (Level 1 models no drag), so those stay linear. That split matches
@@ -106,11 +112,13 @@ function sampleAction(action, fromPos) {
   if (!action.toPosition || action.endTime === undefined) return [];
   const duration = action.endTime - action.startTime;
   if (duration <= 0) return [{ t: action.startTime, pos: fromPos }];
-  const acceleratesFromRest = !FROM_REST_KINDS_EXCLUDED.includes(action.kind);
+  const acceleratesFromRest = !FROM_REST_KINDS_EXCLUDED.includes(action.kind) && !["constant-velocity", "decelerate-to-rest"].includes(action.motionModel);
   const samples = [];
   for (let t = action.startTime; t < action.endTime; t += SAMPLE_STEP_S) {
     const elapsedFraction = (t - action.startTime) / duration;
-    const frac = acceleratesFromRest ? elapsedFraction * elapsedFraction : elapsedFraction;
+    const frac = action.motionModel === "decelerate-to-rest"
+      ? 2 * elapsedFraction - elapsedFraction * elapsedFraction
+      : (acceleratesFromRest ? elapsedFraction * elapsedFraction : elapsedFraction);
     samples.push({
       t: round6(t),
       pos: [round6(fromPos[0] + (action.toPosition[0] - fromPos[0]) * frac), round6(fromPos[1] + (action.toPosition[1] - fromPos[1]) * frac)],
@@ -134,6 +142,7 @@ export async function simulate(def, physicsProfile) {
 
   const findings = [];
   const samples = [];
+  const actorById = new Map(def.initialState.actors.map((actor) => [actor.id, actor]));
   // Track each actor's own BODY position across their skate actions -- an
   // action's "from" is the actor's position after their own previous
   // action (or their initial position, if this is their first). A pass/
@@ -176,11 +185,16 @@ export async function simulate(def, physicsProfile) {
     // their movement carries it along -- computed from the carrier as of
     // BEFORE this action runs, not after.
     const carriesPuck = !isPuckAction && action.actorId === puckCarrierId;
+    const declaredVelocity = action.initialVelocity ?? actorById.get(action.actorId)?.velocity;
+    const initialSpeedMPS = ["constant-velocity", "decelerate-to-rest"].includes(action.motionModel) && Array.isArray(declaredVelocity)
+      ? Math.hypot(declaredVelocity[0], declaredVelocity[1])
+      : 0;
 
     const checks = [
       detectTeleportation(action, actionIndex, fromPos),
       detectImpossibleAcceleration(action, actionIndex, fromPos, profileWithFrame),
       detectImpossibleStopping(action, actionIndex, fromPos, profileWithFrame, def.decisionFreeze?.time),
+      detectMotionModelVelocityConsistency(action, actionIndex, fromPos, declaredVelocity, profileWithFrame),
       detectUnreachablePass(action, actionIndex, fromPos, profileWithFrame),
       detectIllegalBounds(action, actionIndex, profileWithFrame),
       detectPossibleBoardContact(action, actionIndex, fromPos, profileWithFrame),
@@ -223,13 +237,13 @@ export async function simulate(def, physicsProfile) {
       // here, and belongs to Level 2 (detectImpossibleStopping covers only the
       // specific case of decelerating before the decision freeze).
       if (!isPuckAction) {
-        const sampledAccel = detectImpossibleSampledAcceleration(actionSamples, action.actorId, physicsProfile);
+        const sampledAccel = detectImpossibleSampledAcceleration(actionSamples, action.actorId, physicsProfile, { initialSpeedMPS });
         if (sampledAccel) findings.push(sampledAccel);
         // And the speed it accelerates TO. A long route given a generous
         // duration passes the acceleration cap while implying a skater faster
         // than that age band has ever been measured -- the acceleration is
         // fine, the speed is fiction.
-        const sampledSpeed = detectImpossibleSpeed(actionSamples, action.actorId, physicsProfile);
+        const sampledSpeed = detectImpossibleSpeed(actionSamples, action.actorId, physicsProfile, { initialSpeedMPS });
         if (sampledSpeed) findings.push(sampledSpeed);
       }
       // A carried puck moves with its carrier -- mirror the same samples

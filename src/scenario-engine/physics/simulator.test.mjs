@@ -430,7 +430,7 @@ ok("solver contract is versioned", typeof SOLVER_CONTRACT.version === "string");
   ];
   const finding = detectImpossibleSampledAcceleration(jumpy, "D1", u13Profile);
   ok("sampled-acceleration detector flags a hand-built impossible trace", finding !== null && finding.severity === SEVERITY.HARD_FAILURE);
-  ok("its measured value is the acceleration actually implied by those samples", finding !== null && Math.abs(finding.measuredValue - 16) < 0.01);
+  ok("its measured value uses midpoint timing from the emitted samples", finding !== null && Math.abs(finding.measuredValue - 32) < 0.01);
   ok("a stationary actor makes no motion claim and is not flagged", detectImpossibleSampledAcceleration([{ t: 0, pos: [0, 0], actorId: "D1" }], "D1", u13Profile) === null);
 }
 

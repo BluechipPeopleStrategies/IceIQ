@@ -67,8 +67,13 @@ ok("rejects an actor missing role", !corrupt((d) => { delete d.initialState.acto
 ok("rejects a duplicate actor id", !corrupt((d) => { d.initialState.actors.push({ ...d.initialState.actors[0] }); }).ok);
 ok("rejects a non-finite actor position", !corrupt((d) => { d.initialState.actors[0].position = [NaN, 0]; }).ok);
 ok("rejects an actor position outside the rink", !corrupt((d) => { d.initialState.actors[0].position = [1000, 1000]; }).ok);
+ok("accepts an optional actor velocity vector", corrupt((d) => { d.initialState.actors[2].velocity = [8.6, 0]; }).ok);
+ok("rejects a malformed actor velocity vector", !corrupt((d) => { d.initialState.actors[2].velocity = [8.6]; }).ok);
+ok("rejects a non-finite actor velocity vector", !corrupt((d) => { d.initialState.actors[2].velocity = [Infinity, 0]; }).ok);
 ok("rejects a missing puck position", !corrupt((d) => { delete d.initialState.puck; }).ok);
 ok("rejects an intendedAction referencing an undeclared actor", !corrupt((d) => { d.intendedActions.push({ actorId: "GHOST", kind: "skate", startTime: 2 }); }).ok);
+ok("accepts the constant-velocity motion model", corrupt((d) => { d.intendedActions[0].motionModel = "constant-velocity"; }).ok);
+ok("rejects an unknown motion model", !corrupt((d) => { d.intendedActions[0].motionModel = "teleport"; }).ok);
 ok("rejects intendedActions out of time order", !corrupt((d) => { d.intendedActions[0].startTime = 5; }).ok);
 ok("rejects an endTime before startTime", !corrupt((d) => { d.intendedActions[0].endTime = -1; }).ok);
 ok("rejects a missing decisionFreeze.time", !corrupt((d) => { delete d.decisionFreeze.time; }).ok);

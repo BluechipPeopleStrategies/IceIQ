@@ -27,7 +27,11 @@ import { buildFinding, buildUnsupportedModel, SEVERITY, ANSWER_IMPACT } from "./
 // only for stopping distance and interception timing. Same output-changing
 // rule: a definition that passed can now carry a new finding, so the version
 // bumps.
-export const DETECTORS_VERSION = "hard-failure-detectors-v4";
+// v5 (2026-09-04): constant-velocity actions can start from an explicitly
+// declared initial speed. Sampled acceleration/speed gates now take that
+// speed as their baseline rather than incorrectly treating the actor as at
+// rest.
+export const DETECTORS_VERSION = "hard-failure-detectors-v5";
 
 function distance(a, b) {
   return Math.hypot(b[0] - a[0], b[1] - a[1]);
@@ -74,16 +78,21 @@ export function detectTeleportation(action, actionIndex, fromPos) {
 }
 
 // --- 2. Impossible acceleration --------------------------------------------
-// Level-1 simplification: each action is treated as starting from rest
-// (no continuous velocity carried across actions yet -- a real limitation,
-// not hidden: see the module comment). Required average acceleration to
-// cover the claimed distance in the claimed time, via d = 0.5*a*t^2.
+// Level-1's default is a skater starting from rest (no continuous velocity
+// carried across action boundaries yet). A `constant-velocity` action is the
+// narrow exception for an actor whose already-moving decision-frame state is
+// explicitly declared; it has zero acceleration and is judged from emitted
+// samples against its declared initial speed.
 const ACCEL_SAFETY_FACTOR = 1.15; // 15% headroom before flagging -- profiles are means with real variance (stdDev), not hard caps
 
 export function detectImpossibleAcceleration(action, actionIndex, fromPos, profile) {
   // Actor-only -- see detectTeleportation's comment; a pass/shot's distance
   // is the puck's, checked by detectUnreachablePass against puck physics.
   if (["pass", "shot"].includes(action.kind)) return null;
+  // This action declares an already-moving skater and a constant-velocity
+  // segment. Its acceleration is zero; the emitted-sample speed gate still
+  // certifies the actual speed against the profile below.
+  if (action.motionModel === "constant-velocity") return null;
   if (!action.toPosition || action.endTime === undefined) {
     return buildUnsupportedModel({
       validatorCode: "impossible-acceleration", validatorVersion: DETECTORS_VERSION,
@@ -110,6 +119,52 @@ export function detectImpossibleAcceleration(action, actionIndex, fromPos, profi
   return null;
 }
 
+// --- 2a. Declared velocity must match a non-rest trajectory -----------------
+// Constant-velocity and decelerate-to-rest segments carry a vector state at
+// their start. The renderer samples their straight-line target, so accept
+// neither a mismatched direction nor a mismatched speed: that would make the
+// declared decision-frame state disagree with the motion that plays.
+export function detectMotionModelVelocityConsistency(action, actionIndex, fromPos, initialVelocity, profile) {
+  if (!['constant-velocity', 'decelerate-to-rest'].includes(action.motionModel)) return null;
+  if (!action.toPosition || !Number.isFinite(action.endTime) || !Number.isFinite(action.startTime)) {
+    return buildUnsupportedModel({
+      validatorCode: 'inconsistent-motion-model-velocity', validatorVersion: DETECTORS_VERSION,
+      actorId: action.actorId, actionIndex, eventTime: action.startTime,
+      reason: 'constant/decelerating motion needs a finite start/end position and duration',
+    });
+  }
+  const duration = action.endTime - action.startTime;
+  if (duration <= 0) return null;
+  if (!Array.isArray(initialVelocity) || initialVelocity.length !== 2 || !initialVelocity.every(Number.isFinite)) {
+    return buildFinding({
+      validatorCode: 'inconsistent-motion-model-velocity', validatorVersion: DETECTORS_VERSION,
+      actorId: action.actorId, actionIndex, eventTime: action.startTime, eventIntervalS: duration,
+      measuredValue: 1, threshold: 0, units: 'm/s',
+      profileId: profile.id, profileVersion: profile.schemaVersion,
+      assumptions: ['constant/decelerating actions must declare their starting velocity'],
+      solverVersion: DETECTORS_VERSION, severity: SEVERITY.HARD_FAILURE, answerImpact: ANSWER_IMPACT.CHANGES_ANSWER,
+      explanation: `Actor ${action.actorId}'s ${action.motionModel} segment has no finite declared initial velocity to bind the sampled trajectory.`,
+    });
+  }
+  const factor = action.motionModel === 'decelerate-to-rest' ? 2 : 1;
+  const expected = [
+    factor * (action.toPosition[0] - fromPos[0]) / duration,
+    factor * (action.toPosition[1] - fromPos[1]) / duration,
+  ];
+  const mismatch = Math.hypot(expected[0] - initialVelocity[0], expected[1] - initialVelocity[1]);
+  const tolerance = 0.001;
+  if (mismatch <= tolerance) return null;
+  return buildFinding({
+    validatorCode: 'inconsistent-motion-model-velocity', validatorVersion: DETECTORS_VERSION,
+    actorId: action.actorId, actionIndex, eventTime: action.startTime, eventIntervalS: duration,
+    measuredValue: mismatch, threshold: tolerance, units: 'm/s',
+    profileId: profile.id, profileVersion: profile.schemaVersion,
+    assumptions: ['straight-line Level-1 motion', action.motionModel === 'constant-velocity' ? 'v = displacement / duration' : 'v0 = 2 * displacement / duration for constant deceleration to rest'],
+    solverVersion: DETECTORS_VERSION, severity: SEVERITY.HARD_FAILURE, answerImpact: ANSWER_IMPACT.CHANGES_ANSWER,
+    explanation: `Actor ${action.actorId}'s declared initial velocity [${initialVelocity.map((n) => n.toFixed(3)).join(', ')}] m/s does not match the ${action.motionModel} path implied by its endpoints [${expected.map((n) => n.toFixed(3)).join(', ')}] m/s.`,
+  });
+}
+
 // --- 2b. Impossible acceleration, measured on the EMITTED SAMPLES -----------
 // Every detector above reasons from an action's declared start/end positions
 // and its duration. Nothing has ever measured the samples the simulator
@@ -123,16 +178,16 @@ export function detectImpossibleAcceleration(action, actionIndex, fromPos, profi
 // the samples it emitted, so the certified curve and the played curve cannot
 // silently diverge again.
 //
-// Level-1 consistency: an actor is treated as starting from rest at their
-// first sample, the same assumption detector 2 makes and the same one the
-// module header documents (no continuous velocity is carried across actions
-// yet). Velocity over each inter-sample interval is its own straight-line
-// distance over its own elapsed time; the implied acceleration is the change
-// in that velocity across the interval in which it changed.
+// Level-1 normally treats an actor as starting from rest at their first
+// sample. A constant-velocity action may instead provide a declared initial
+// speed from its actor state. Velocity over each inter-sample interval is its
+// own straight-line distance over its own elapsed time; the implied
+// acceleration is the change in that velocity across the interval in which
+// it changed.
 //
 // actorId is the caller's choice deliberately -- pass a skater's id, not
 // "puck", since the cap compared against is the SKATER's avgAccelMPS2.
-export function detectImpossibleSampledAcceleration(samples, actorId, profile) {
+export function detectImpossibleSampledAcceleration(samples, actorId, profile, { initialSpeedMPS = 0 } = {}) {
   const track = (samples || [])
     .filter((s) => s.actorId === actorId)
     .sort((a, b) => a.t - b.t);
@@ -143,17 +198,24 @@ export function detectImpossibleSampledAcceleration(samples, actorId, profile) {
 
   const cap = profile.player.avgAccelMPS2.value * ACCEL_SAFETY_FACTOR;
   let worst = null;
-  let prevSpeed = 0; // at rest at the first sample
+  let prevSpeed = initialSpeedMPS;
+  let prevIntervalS = null;
 
   for (let i = 1; i < track.length; i++) {
     const dt = track[i].t - track[i - 1].t;
     if (dt <= 0) continue; // duplicate/again-at-same-instant samples carry no claim
     const speed = distance(track[i - 1].pos, track[i].pos) / dt;
-    const accel = Math.abs(speed - prevSpeed) / dt;
+    // Each interval's average speed occurs at its midpoint. Comparing two
+    // adjacent midpoint speeds therefore uses half the previous interval plus
+    // half the current one -- essential when an action's final sample has a
+    // short remainder interval.
+    const midpointGap = prevIntervalS === null ? dt / 2 : (dt + prevIntervalS) / 2;
+    const accel = Math.abs(speed - prevSpeed) / midpointGap;
     if (worst === null || accel > worst.accel) {
-      worst = { accel, speed, prevSpeed, dt, at: track[i - 1].t };
+      worst = { accel, speed, prevSpeed, dt: midpointGap, at: track[i - 1].t };
     }
     prevSpeed = speed;
+    prevIntervalS = dt;
   }
 
   if (!worst || worst.accel <= cap) return null;
@@ -170,7 +232,7 @@ export function detectImpossibleSampledAcceleration(samples, actorId, profile) {
     profileId: profile.id,
     profileVersion: profile.schemaVersion,
     assumptions: [
-      "starts from rest at the actor's first sample",
+      initialSpeedMPS === 0 ? "starts from rest at the actor's first sample" : `starts at declared ${initialSpeedMPS.toFixed(2)} m/s`,
       "speed measured per inter-sample interval, straight-line",
       `${((ACCEL_SAFETY_FACTOR - 1) * 100).toFixed(0)}% headroom over the profile mean`,
     ],
@@ -203,7 +265,7 @@ export function detectImpossibleSampledAcceleration(samples, actorId, profile) {
 // Scoped to skater tracks by the caller (pass a skater's id, never "puck") --
 // a puck leaves the stick far faster than any skater and is judged against
 // puck physics in detectUnreachablePass.
-export function detectImpossibleSpeed(samples, actorId, profile) {
+export function detectImpossibleSpeed(samples, actorId, profile, { initialSpeedMPS = 0 } = {}) {
   const track = (samples || [])
     .filter((s) => s.actorId === actorId)
     .sort((a, b) => a.t - b.t);
@@ -245,7 +307,7 @@ export function detectImpossibleSpeed(samples, actorId, profile) {
   let worst = null;
   for (let i = 0; i < avg.length; i++) {
     const { v, dt, at } = avg[i];
-    const prevV = i === 0 ? 0 : avg[i - 1].v;
+    const prevV = i === 0 ? initialSpeedMPS : avg[i - 1].v;
     const midpointGap = i === 0 ? dt / 2 : (dt + avg[i - 1].dt) / 2;
     const accel = (v - prevV) / midpointGap;
     const peak = v + accel * (dt / 2);
@@ -268,7 +330,7 @@ export function detectImpossibleSpeed(samples, actorId, profile) {
     assumptions: [
       "speed measured per inter-sample interval, straight-line",
       "peak speed recovered from the interval midpoint identity, exact under constant acceleration and independent of sample step",
-      "actor starts from rest at its first sample",
+      initialSpeedMPS === 0 ? "actor starts from rest at its first sample" : `actor starts at declared ${initialSpeedMPS.toFixed(2)} m/s`,
       `${((ACCEL_SAFETY_FACTOR - 1) * 100).toFixed(0)}% headroom over the profile mean (topSpeedMPS is a mean of measured maxima, not a hard ceiling)`,
     ],
     solverVersion: DETECTORS_VERSION,

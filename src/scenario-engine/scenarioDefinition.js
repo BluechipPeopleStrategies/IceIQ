@@ -24,6 +24,7 @@ import { canonicalStringify } from "./canonicalHash.js";
 export const SCENARIO_DEFINITION_SCHEMA_VERSION = "scenario-definition-v1";
 
 const PROOF_MODES = new Set(["kernel-derived", "approved-claim-derived", "coach-declared"]);
+const MOTION_MODELS = new Set(["accelerate-from-rest", "constant-velocity", "decelerate-to-rest"]);
 
 function isFiniteXY(point) {
   return Array.isArray(point) && point.length === 2 && point.every((n) => typeof n === "number" && Number.isFinite(n));
@@ -100,6 +101,9 @@ export function validateScenarioDefinition(def) {
       if (a.facing !== undefined && !Number.isFinite(a.facing)) {
         errs.push(`initialState.actors[${a.id}].facing must be a finite radian angle if present`);
       }
+      if (a.velocity !== undefined && !isFiniteXY(a.velocity)) {
+        errs.push(`initialState.actors[${a.id}].velocity must be a finite [x,y] metres-per-second vector if present`);
+      }
       // Per spec, actor state includes "position, velocity, facing, role,
       // body/stick envelope, reach, and possession." Phase 1 only has
       // enough context to check the fields present at authoring time --
@@ -127,6 +131,12 @@ export function validateScenarioDefinition(def) {
         errs.push(`intendedActions[${i}].actorId must reference a declared actor`);
       }
       if (!action?.kind || typeof action.kind !== "string") errs.push(`intendedActions[${i}] missing kind`);
+      if (action?.motionModel !== undefined && !MOTION_MODELS.has(action.motionModel)) {
+        errs.push(`intendedActions[${i}].motionModel must be one of ${[...MOTION_MODELS].join("/")} if present`);
+      }
+      if (action?.initialVelocity !== undefined && !isFiniteXY(action.initialVelocity)) {
+        errs.push(`intendedActions[${i}].initialVelocity must be a finite [x,y] metres-per-second vector if present`);
+      }
       if (!Number.isFinite(action?.startTime) || action.startTime < 0) {
         errs.push(`intendedActions[${i}].startTime must be a non-negative number of seconds`);
       } else {

@@ -105,12 +105,23 @@ ok("the fixture's own pass action is labeled 'pass', not guessed", puckMotions.l
 // "animatedPlayV2Adapter" also matches PROSE mentions of the filename in
 // comments (e.g. simulator.js's own changelog-style comments), which is a
 // false positive, not a real consumer.
-import { execSync } from "node:child_process";
-const grepResult = execSync(
-  String.raw`grep -rlE "(from[[:space:]]+[\"'][^\"']*animatedPlayV2Adapter|require\([\"'][^\"']*animatedPlayV2Adapter)" src/ --include="*.jsx" --include="*.js" 2>&1 || true`,
-  { cwd: new URL("../..", import.meta.url).pathname.replace(/^\/([A-Za-z]):/, "$1:"), encoding: "utf8" }
-);
-const importers = grepResult.split("\n").filter((l) => l && !l.includes("animatedPlayV2Adapter.js") && !l.includes("animatedPlayV2Adapter.test.mjs"));
+import { readdirSync } from "node:fs";
+import { fileURLToPath } from "node:url";
+
+const srcRoot = fileURLToPath(new URL("..", import.meta.url));
+const importPattern = /(?:from\s+["'][^"']*animatedPlayV2Adapter|require\(["'][^"']*animatedPlayV2Adapter)/;
+
+function findImporters(directory) {
+  return readdirSync(directory, { withFileTypes: true }).flatMap((entry) => {
+    const filePath = `${directory}/${entry.name}`;
+    if (entry.isDirectory()) return findImporters(filePath);
+    if (!/\.(?:js|jsx)$/.test(entry.name)) return [];
+    if (entry.name === "animatedPlayV2Adapter.js" || entry.name === "animatedPlayV2Adapter.test.mjs") return [];
+    return importPattern.test(readFileSync(filePath, "utf8")) ? [filePath] : [];
+  });
+}
+
+const importers = findImporters(srcRoot);
 ok("nothing outside this module and its own test imports animatedPlayV2Adapter.js yet", importers.length === 0);
 
 console.log(`\n${pass} passed, ${fail} failed`);
