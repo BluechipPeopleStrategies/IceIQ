@@ -35,3 +35,15 @@ exceptions occurred. The updated Read the Numbers introduction is also live.
 Screenshot: `evidence/u11-changed-cue-live-phone.png`. These are browser viewport
 checks; no physical phone test is claimed. The current integrated practice suite
 passes 158 tests and the production build passes.
+## Support routes and graphics recovery release
+
+`a046ea6` deployed through Vercel successfully and was verified at 01:25 Edmonton.
+The live 390 px review showed the current 167-test release. Shoot to loose-puck
+support to Plan route accepted two points from the branch-specific origin
+(14.6, 2.4), supported reduced-motion inspection, saved the route/reason and
+restored the same reflection after reload. The route-specific completion exposed
+no unsupported AI control. No failed requests, page exceptions or overflow were
+recorded in that live route flow. The actual WEBGL_lose_context extension also
+forced loss on the live Shootout: its WebGL layer detached, 2D opacity became 1
+with pointer events active, and the next open-target shot produced a goal and
+points. This does not establish physical-phone GPU performance.

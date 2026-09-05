@@ -7,7 +7,7 @@ The first integrated preview is ready for a walkthrough. Start with the U11 sequ
 
 **Follow-up quality pass is live:** `98809ec` deployed successfully and was verified at 00:43 Edmonton. The optional changed-cue comparison, eleven revised Gym introductions and secondary-text contrast fixes are included. **158 practice tests and the production build pass.** The live phone flow completed three reads, saved an original Pass and revised Carry explanation, and restored both after reload with no overflow, failed requests or page exceptions.
 
-**Current route/mobile pass:** implemented and verified locally, awaiting deployment. Read three now supports tapping a support route with preview, undo, keyboard coordinates and saved explanations. Shootout/Best Option recover to 2D after graphics-context loss and stop hidden WebGL rendering after completion. The current suite passes **167 tests**; production build and touch-event browser flows pass.
+**Route/mobile pass is live:** `a046ea6` deployed and verified at 01:25 Edmonton. Read three now supports tapping a support route with preview, undo, keyboard coordinates and saved explanations. Shootout/Best Option recover to 2D after graphics-context loss and stop hidden WebGL rendering after completion. The current suite passes **167 tests**; production build and touch-event browser flows pass. On the live phone-sized HTTPS view, the route and reason from the Shoot branch survive reload. A forced graphics loss also left the live 2D Shootout playable, with a subsequent shot scored.
 
 ## Walkthrough
 
