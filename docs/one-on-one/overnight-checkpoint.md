@@ -1,8 +1,10 @@
 # RinkReads overnight checkpoint
 
-Updated September 5, 2026, 03:10 Edmonton. Actual-branch recall implemented and locally checked; final production-preview/publication steps underway. Prior phone/coach fixes remain live in `cabeee0`. Target: 7:00 a.m. Edmonton today (13:00 UTC).
+Updated September 5, 2026, 03:17 Edmonton. Actual-branch recall deployed in `8a2a5e9` and verified live on the phone-sized HTTPS site. Prior releases remain live. Target: 7:00 a.m. Edmonton today (13:00 UTC).
 
 ## Continue from here
+
+**Recall publication complete: `8a2a5e9`.** Vercel succeeded. The public review shows 208 tests. An older saved U9 Carry/pass play opened recall; actual touch input corrected its order, a note saved and reopened byte-identical, and Show the order remained recorded after immediate reload. Original U9/U11 reflection JSON stayed byte-identical. No failed requests, page errors or overflow in the checked live flows. Production normal-motion tablet verification also passed. Evidence: `phone-preview.md` and `evidence/recall-live-phone.png`. This supersedes the publication-next wording in the local record below. Commit/push this verification record if it is still modified; do not repeat the implementation or checks.
 
 **Newest slice locally verified: optional actual-branch recall.** `ReadSequenceRecall.jsx` adds three exact authored freezes after a completed U9/U11 sequence. U9 fixes the opening, U11 orders all three. Facts/captions derive from the selected path, with larger rink inspection, touch/keyboard moves, optional speech/reason, separate bound local attempt and JSON download. Help is recorded immediately; mismatch feedback remains truthful after help. Original reflection/AI payloads are untouched. In-memory scratch survives replay/age changes; Start over clears only current recall/scope. Review fixes include stale speech, assistance hiding mismatches, lost drafts, same-key sibling warning and fresh-attempt reset isolation. 208 practice tests/build pass; all11 paths and66 permutations tested. Browser checks cover U11 shot/high support, U9 pass/return with real touch events, match/mismatch, help/reload, JSON export, same original saves, focus and reset isolation. Finish production-preview/live checks and record the scoped release. Do not repeat this implementation. Design: `connected-read-recall.md`.
 

@@ -1,6 +1,6 @@
 # RinkReads — Task List
 
-**Last updated:** 2026-09-05 · Actual-branch U9/U11 recall implemented and locally verified; production-preview and publication checks underway. Three exact freezes, fixed U9 opening, touch/keyboard ordering, larger pictures, optional note and separate bound records. Help and unfinished drafts survive appropriate transitions; Start over clears only its scope. 208 practice tests/build pass. Prior phone/coach fixes remain live in `cabeee0`.
+**Last updated:** 2026-09-05 · Actual-branch U9/U11 recall deployed in `8a2a5e9` and verified live at 03:17 Edmonton. Touch correction, note/save/reload and immediate help-record persistence pass, with original U9/U11 reflection JSON unchanged. 208 practice tests/build pass. Evidence: `docs/one-on-one/phone-preview.md`.
 
 **Scope:** RinkReads **app build + content factory**. Launch/distribution (sending the beta, marketing) and the separate BlueChip business are **out of scope** — parked at the bottom. Priority = position in this list. A new idea that isn't here goes to the **Parking Lot** first, then gets promoted on purpose — that's the scope-creep guard.
 
@@ -54,6 +54,8 @@
 - *(New ideas land here first, then get promoted into NEXT/LATER on purpose.)*
 
 ## Changelog
+
+- **2026-09-05 — Play recall verified live.** Vercel deployed `8a2a5e9`. The public 390 px review shows 208 tests; an older saved U9 play accepted touch reordering, saved/reopened the note and order exactly, retained Show the order after immediate reload, and left original U9/U11 JSON unchanged. No failed requests, page exceptions or overflow in checked flows. Evidence: `docs/one-on-one/phone-preview.md`.
 
 - **2026-09-05 — Recall the chosen play.** Added optional U9/U11 ordering of exactly three branch-specific freezes, a fixed U9 opening, factual captions, full-size inspection, touch/keyboard moves, read-aloud cancellation, optional note and separate local JSON records/downloads. Original choices, final support and changed-cue comparison are unchanged. Chronology feedback and help use are separate; draft notes survive replay/age changes and fresh attempts clear only their own recall. Nineteen new helper/storage tests cover all eleven paths and 66 permutations. 208 practice tests/build pass; browser flows include mismatch/correction, assistance, unchanged original saves, export/reload and reset isolation. Design: `docs/one-on-one/connected-read-recall.md`.
 

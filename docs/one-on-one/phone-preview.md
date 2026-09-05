@@ -72,3 +72,9 @@ checks, not a physical-phone test or a child comprehension study.
 - Reduced-motion replay returned to the visible reflection: its focused heading was at 75.83–135.83 px.
 - Focusing a Coach Lab coordinate stopped the clock at 0.4 s and retained the same focused input across fourteen animation frames. Resume started from 0.4 s. Escape paused; Tab then left the rink instead of switching players. An actual coordinate edit accepted -0.5 and returned to the paused director as designed.
 - No horizontal overflow, page exceptions or failed requests appeared in these checked flows. Checks were in a browser viewport, not on physical phone hardware.
+
+## Actual-branch recall release
+
+`8a2a5e9` deployed successfully: [Vercel deployment](https://vercel.com/bluechippeoplestrategies-projects/ice-iq/7YuKCzVWwK2F6GYkNxZQuBcKoWEb). Verified on the public HTTPS origin at 03:17 Edmonton, September 5, at 390 × 844.
+
+The public review shows **208 tests passed**. An older completed U9 Carry/pass reflection opened the new recall exercise. It first reported the incorrect ordering; a native touch event moved the carry picture earlier, then the corrected order and optional note saved and reopened byte-identical. The original U9 and U11 reflection JSON stayed byte-identical. Show the order was recorded immediately and remained visible after reload. No horizontal overflow, page exceptions or failed requests appeared in these checked flows. Evidence: `evidence/recall-live-phone.png`. These are browser viewport and browser-generated touch checks, not physical-device or child-comprehension evidence.
