@@ -1,6 +1,7 @@
 import { DRAFT_VERSION, sampleDraft, validateDraft } from './director.js';
 
 export const READ_ACTIONS = Object.freeze(['shoot', 'pass', 'carry']);
+export const MAX_THIRD_ROUTE_POINTS = 12;
 const HALF_LENGTH = 30.48;
 const HALF_WIDTH = 12.954;
 const CORNER_RADIUS = 8.5344;
@@ -267,7 +268,75 @@ export function moveThirdReadActor(session, point) {
   if (session?.phase !== 'read-3' || !session.third) throw new Error('Reach read three before moving the support player.');
   const next = clone(session);
   next.third.point = clampSequencePoint(point?.x, point?.y);
+  next.third.route = null;
   return next;
+}
+
+function sameRoutePoint(a, b) {
+  return Boolean(a && b && Math.hypot(a.x - b.x, a.y - b.y) <= 1e-9);
+}
+
+function thirdRouteOrigin(session) {
+  const target = targetFor(session.first.action, session.second.targetId);
+  if (session.third?.actorId !== target.moveActorId) throw new Error('The route must use the current off-puck support player.');
+  const actor = target.state.actors.find(item => item.id === target.moveActorId);
+  return { x: actor.x, y: actor.y };
+}
+
+export function setThirdReadRoute(session, waypoints) {
+  if (session?.phase !== 'read-3' || !session.third) throw new Error('Reach read three before planning a support route.');
+  if (!Array.isArray(waypoints)) throw new TypeError('A route needs an array of rink waypoints.');
+  if (waypoints.length > MAX_THIRD_ROUTE_POINTS) throw new RangeError(`Use up to ${MAX_THIRD_ROUTE_POINTS} route waypoints.`);
+  const route = [thirdRouteOrigin(session)];
+  for (const waypoint of waypoints) {
+    const point = clampSequencePoint(waypoint?.x, waypoint?.y);
+    if (sameRoutePoint(point, route.at(-1))) throw new RangeError('Move each route point away from the previous point.');
+    route.push(point);
+  }
+  const next = clone(session);
+  next.third.route = waypoints.length ? route : null;
+  next.third.point = waypoints.length ? { ...route.at(-1) } : null;
+  return next;
+}
+
+export function getThirdReadRoute(session) {
+  if (!['read-3', 'complete'].includes(session?.phase) || !session.third?.route) return null;
+  return clone(session.third.route);
+}
+
+export function sampleThirdReadRoute(session, rawProgress) {
+  if (!Number.isFinite(rawProgress)) throw new TypeError('Route preview progress must be finite.');
+  const route = getThirdReadRoute(session);
+  if (!route) throw new Error('Plan a support route before previewing it.');
+  // Distance-normalized illustration only; this is not validated skating physics.
+  const lengths = route.slice(1).map((point, index) => Math.hypot(point.x - route[index].x, point.y - route[index].y));
+  let remaining = clamp(rawProgress, 0, 1) * lengths.reduce((sum, length) => sum + length, 0);
+  let segment = 0;
+  while (segment < lengths.length - 1 && remaining > lengths[segment]) {
+    remaining -= lengths[segment];
+    segment += 1;
+  }
+  const from = route[segment];
+  const to = route[segment + 1];
+  const progress = clamp(remaining / lengths[segment], 0, 1);
+  const state = clone(targetFor(session.first.action, session.second.targetId).state);
+  const actor = state.actors.find(item => item.id === session.third.actorId);
+  actor.x = progress === 1 ? to.x : lerp(from.x, to.x, progress);
+  actor.y = progress === 1 ? to.y : lerp(from.y, to.y, progress);
+  actor.facing = Math.atan2(to.y - from.y, to.x - from.x);
+  return state;
+}
+
+function restoreThirdRoute(session, third) {
+  const route = third.route;
+  if (!Array.isArray(route) || route.length < 2 || route.length > MAX_THIRD_ROUTE_POINTS + 1) throw new TypeError('The saved route has an invalid waypoint count.');
+  for (const point of route) {
+    const bounded = clampSequencePoint(point?.x, point?.y);
+    if (!sameRoutePoint(point, bounded)) throw new RangeError('The saved route must stay inside the rink.');
+  }
+  if (!sameRoutePoint(route[0], thirdRouteOrigin(session))) throw new Error('The saved route must start at the read-two support position.');
+  if (![third.point?.x, third.point?.y].every(Number.isFinite) || !sameRoutePoint(route.at(-1), third.point)) throw new Error('The saved route must end at the final support position.');
+  return setThirdReadRoute(session, route.slice(1));
 }
 
 function placementEvidence(session) {
@@ -327,7 +396,11 @@ export function serializeReadSequence(session) {
     scenarioId: U11_READ_SEQUENCE.id,
     first: { action: session.first.action, reason: session.first.reason },
     second: { targetId: session.second.targetId },
-    third: { point: { x: session.third.point.x, y: session.third.point.y }, reason: session.third.reason },
+    third: {
+      point: { x: session.third.point.x, y: session.third.point.y },
+      reason: session.third.reason,
+      ...(session.third.route ? { route: session.third.route.map(({ x, y }) => ({ x, y })) } : {}),
+    },
     ...(session.changedCue ? { changedCue: { id: CHANGED_CUE_ID, action: session.changedCue.action, reason: session.changedCue.reason } } : {}),
     reviewStatus: 'draft-for-coach-review',
   });
@@ -340,7 +413,9 @@ export function restoreReadSequence(raw) {
     let session = createReadSequenceSession();
     session = advanceSequencePlayback(submitFirstRead(session, saved.first), 1);
     session = advanceSequencePlayback(selectSecondRead(session, saved.second?.targetId), 1);
-    session = moveThirdReadActor(session, saved.third?.point);
+    session = saved.third && Object.hasOwn(saved.third, 'route')
+      ? restoreThirdRoute(session, saved.third)
+      : moveThirdReadActor(session, saved.third?.point);
     session = submitThirdRead(session, saved.third?.reason);
     if (saved.changedCue != null) {
       if (saved.changedCue.id !== CHANGED_CUE_ID) return null;
@@ -413,7 +488,7 @@ export function advanceSequencePlayback(session, rawProgress) {
   } else if (next.phase === 'consequence-2') {
     const target = targetFor(next.first.action, next.second.targetId);
     next.phase = 'read-3';
-    next.third = { actorId: target.moveActorId, point: null, reason: '' };
+    next.third = { actorId: target.moveActorId, point: null, reason: '', route: null };
   } else {
     next.phase = next.replayReturnPhase;
     next.replayReturnPhase = null;

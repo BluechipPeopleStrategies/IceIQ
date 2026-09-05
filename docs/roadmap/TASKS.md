@@ -1,6 +1,6 @@
 # RinkReads — Task List
 
-**Last updated:** 2026-09-05 · Phone review and follow-up quality pass are live (`98809ec`, verified 00:43 Edmonton). The follow-up adds the U11 single-cue comparison with preserved reflections, corrects all eleven remaining Brain Gym introductions, and improves shared text contrast. 158 practice tests and build pass. Current evidence: `docs/one-on-one/verification.md`; overnight checkpoint remains active for 7am review.
+**Last updated:** 2026-09-05 · Support-route planning added to the U11 third read, with saved route explanations and touch/keyboard preview controls. Context-loss fallback and invisible WebGL rendering fixed in Shootout/Best Option. 167 practice tests/build and actual browser flows pass; public deployment follows scoped commit. Evidence: `docs/one-on-one/verification.md`.
 
 **Scope:** RinkReads **app build + content factory**. Launch/distribution (sending the beta, marketing) and the separate BlueChip business are **out of scope** — parked at the bottom. Priority = position in this list. A new idea that isn't here goes to the **Parking Lot** first, then gets promoted on purpose — that's the scope-creep guard.
 
@@ -54,6 +54,8 @@
 - *(New ideas land here first, then get promoted into NEXT/LATER on purpose.)*
 
 ## Changelog
+
+- **2026-09-05 — U11 support routes and mobile graphics reliability.** Read three now offers a branch-specific route with up to twelve tapped/numeric points, Undo/Clear, preview/pause/progress, reduced-motion manual inspection and saved route/reason alongside the original three reads and changed-cue reflection. Other actors/puck remain frozen; route feedback has no automatic grade or incomplete AI opinion. Blank numeric fields, accidental swipe points and stale routes are handled. Native WebGL loss switches to the existing playable 2D game; completed Shootout/Best Option unmount hidden 3D and remount on restart. 167 practice tests and build pass. Actual touch-event, replay/export/reload, forced context-loss, full-session and remount checks recorded in `docs/one-on-one/verification.md`. Plan: `docs/superpowers/plans/2026-09-05-u11-support-route-and-mobile-fallback.md`.
 
 - **2026-09-05 — Follow-up verified live.** Vercel completed deployment of `98809ec`. The public 390 px review-to-three-reads-to-changed-cue flow preserves original Pass and revised Carry reasons after reload. Updated Gym instructions are visible. No overflow, failed requests or page exceptions in the checked flow. Evidence: `docs/one-on-one/phone-preview.md`.
 

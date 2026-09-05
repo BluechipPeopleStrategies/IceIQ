@@ -287,3 +287,130 @@ test('saved comparison round-trips separately from original answers and legacy r
   corrupt.changedCue = { ...updated.changedCue, id: 'unrecognized-cue' };
   assert.equal(restoreReadSequence(corrupt), null);
 });
+
+const routeOrigins = [
+  ['pass', 'return-lane', 'F2', 17.1, -3.5],
+  ['pass', 'hold-wide', 'F1', 15.4, 2.3],
+  ['pass', 'shoot-open', 'F1', 14.8, 2.5],
+  ['shoot', 'rebound-space', 'F1', 14.6, 2.4],
+  ['shoot', 'high-support', 'F1', 14.6, 2.5],
+  ['carry', 'support-middle', 'F1', 18, 5.4],
+  ['carry', 'attack-outside', 'F2', 15.4, -3.1],
+];
+
+test('routes begin at the actual off-puck actor in each of the seven read-two results', () => {
+  assert.equal(typeof sequenceCore.setThirdReadRoute, 'function');
+  for (const [action, targetId, actorId, x, y] of routeOrigins) {
+    const session = reachReadThree(action, targetId);
+    const snapshot = structuredClone(session);
+    const waypoints = [{ x: 12, y: -1 }, { x: 13, y: 0 }];
+    const routed = sequenceCore.setThirdReadRoute(session, waypoints);
+    assert.equal(routed.third.actorId, actorId);
+    assert.deepEqual(routed.third.route, [{ x, y }, { x: 12, y: -1 }, { x: 13, y: 0 }]);
+    assert.deepEqual(routed.third.point, { x: 13, y: 0 });
+    const exposed = sequenceCore.getThirdReadRoute(routed);
+    exposed[0].x = 99;
+    waypoints[1].x = 99;
+    assert.deepEqual(routed.third.route, [{ x, y }, { x: 12, y: -1 }, { x: 13, y: 0 }]);
+    assert.deepEqual(session, snapshot);
+    const start = sequenceCore.sampleThirdReadRoute(routed, 0);
+    assert.equal(start.actors.find(actor => actor.id === actorId).x, x);
+    assert.equal(start.actors.find(actor => actor.id === actorId).y, y);
+  }
+});
+
+test('route sampling follows distance along every segment rather than cutting across the corner', () => {
+  assert.equal(typeof sequenceCore.sampleThirdReadRoute, 'function');
+  const session = reachReadThree('pass', 'hold-wide');
+  const baseline = currentSequenceState(session);
+  const routed = sequenceCore.setThirdReadRoute(session, [{ x: 19.4, y: 2.3 }, { x: 19.4, y: -0.7 }]);
+  const snapshot = structuredClone(routed);
+  for (const [progress, x, y, facing] of [[-1, 15.4, 2.3, 0], [2 / 7, 17.4, 2.3, 0], [3.5 / 7, 18.9, 2.3, 0], [5.5 / 7, 19.4, 0.8, -Math.PI / 2], [2, 19.4, -0.7, -Math.PI / 2]]) {
+    const sampled = sequenceCore.sampleThirdReadRoute(routed, progress);
+    const mover = sampled.actors.find(actor => actor.id === 'F1');
+    assert.ok(Math.abs(mover.x - x) < 1e-9);
+    assert.ok(Math.abs(mover.y - y) < 1e-9);
+    assert.ok(Math.abs(mover.facing - facing) < 1e-9);
+    assert.deepEqual(sampled.puck, baseline.puck);
+    assert.deepEqual(sampled.actors.filter(actor => actor.id !== 'F1'), baseline.actors.filter(actor => actor.id !== 'F1'));
+    sampled.puck.x = 99;
+    sampled.actors[0].x = 99;
+  }
+  assert.deepEqual(routed, snapshot);
+  for (const value of [NaN, Infinity, undefined, '0.5']) assert.throws(() => sequenceCore.sampleThirdReadRoute(routed, value), /finite/);
+  assert.throws(() => sequenceCore.sampleThirdReadRoute(session, 0.5), /route/i);
+});
+
+test('routes bound finite waypoints and reject excess or zero-length segments without mutating the prior session', () => {
+  assert.equal(typeof sequenceCore.setThirdReadRoute, 'function');
+  const session = reachReadThree('pass', 'hold-wide');
+  const snapshot = structuredClone(session);
+  const routed = sequenceCore.setThirdReadRoute(session, [{ x: 99, y: 99 }]);
+  const point = routed.third.point;
+  assert.ok(point.x <= 30.48 && point.y <= 12.954);
+  assert.ok(Math.hypot(point.x - 21.9456, point.y - 4.4196) <= 8.5344 - 0.65 + 1e-9);
+  const twelve = Array.from({ length: 12 }, (_, index) => ({ x: 5 + index, y: 0 }));
+  assert.equal(sequenceCore.setThirdReadRoute(session, twelve).third.route.length, 13);
+  assert.equal(sequenceCore.MAX_THIRD_ROUTE_POINTS, 12);
+  assert.throws(() => sequenceCore.setThirdReadRoute(session, [...twelve, { x: 20, y: 0 }]), /12/);
+  for (const invalid of [null, {}, [{ x: NaN, y: 0 }], [{ x: 1, y: Infinity }], [null], [{ x: '1', y: 0 }], [{ x: 15.4, y: 2.3 }], [{ x: 12, y: 0 }, { x: 12, y: 0 }], [{ x: 99, y: 99 }, { x: 99, y: 99 }]]) {
+    assert.throws(() => sequenceCore.setThirdReadRoute(session, invalid));
+  }
+  assert.deepEqual(session, snapshot);
+  assert.throws(() => sequenceCore.setThirdReadRoute(reachReadTwo('pass'), twelve), /read three/i);
+  assert.throws(() => sequenceCore.setThirdReadRoute(completeSequence(), twelve), /read three/i);
+});
+
+test('clearing a route requires a fresh placement and a direct placement removes stale route playback', () => {
+  assert.equal(typeof sequenceCore.setThirdReadRoute, 'function');
+  const session = reachReadThree('carry', 'attack-outside');
+  assert.equal(sequenceCore.getThirdReadRoute(session), null);
+  const routed = sequenceCore.setThirdReadRoute(session, [{ x: 17, y: 1 }]);
+  const cleared = sequenceCore.setThirdReadRoute(routed, []);
+  assert.equal(cleared.third.point, null);
+  assert.equal(sequenceCore.getThirdReadRoute(cleared), null);
+  assert.throws(() => submitThirdRead(cleared, reason), /Move/);
+  const placed = moveThirdReadActor(routed, { x: 15, y: 2 });
+  assert.equal(sequenceCore.getThirdReadRoute(placed), null);
+  assert.deepEqual(placed.third.point, { x: 15, y: 2 });
+  assert.equal(sequenceCore.getThirdReadRoute(createReadSequenceSession()), null);
+  assert.equal(sequenceCore.getThirdReadRoute(replayFirstConsequence(routed)), null);
+  assert.deepEqual(sequenceCore.getThirdReadRoute(advanceSequencePlayback(replayFirstConsequence(routed), 1)), routed.third.route);
+});
+
+test('completed route reflections restore alongside comparisons, preserve replay and send only the final position to AI', () => {
+  assert.equal(typeof sequenceCore.setThirdReadRoute, 'function');
+  const session = reachReadThree('pass', 'return-lane');
+  const routed = sequenceCore.setThirdReadRoute(session, [{ x: 19, y: -3.5 }, { x: 19, y: 1 }]);
+  const complete = sequenceCore.submitChangedCueRead(submitThirdRead(routed, reason), { action: 'carry', reason });
+  const raw = serializeReadSequence(complete);
+  assert.deepEqual(JSON.parse(raw).third.route, [{ x: 17.1, y: -3.5 }, { x: 19, y: -3.5 }, { x: 19, y: 1 }]);
+  const restored = restoreReadSequence(raw);
+  assert.deepEqual(restored.third, complete.third);
+  assert.deepEqual(restored.changedCue, complete.changedCue);
+  assert.deepEqual(sequenceCore.getThirdReadRoute(restored), complete.third.route);
+  const replayed = advanceSequencePlayback(replayFirstConsequence(restored), 1);
+  assert.deepEqual(replayed.third, complete.third);
+  const direct = submitThirdRead(moveThirdReadActor(session, { x: 19, y: 1 }), reason);
+  assert.deepEqual(createFinalReadJudgePayload(complete), createFinalReadJudgePayload(direct));
+  assert.doesNotMatch(JSON.stringify(createFinalReadJudgePayload(complete)), /third\.route|waypoints/);
+  const legacy = JSON.parse(raw);
+  delete legacy.third.route;
+  assert.deepEqual(restoreReadSequence(legacy).third.point, { x: 19, y: 1 });
+  assert.equal(sequenceCore.getThirdReadRoute(restoreReadSequence(legacy)), null);
+});
+
+test('restore rejects malformed routes, altered origins, endpoints, off-ice positions and empty segments', () => {
+  assert.equal(typeof sequenceCore.setThirdReadRoute, 'function');
+  const complete = submitThirdRead(sequenceCore.setThirdReadRoute(reachReadThree('pass', 'hold-wide'), [{ x: 19.4, y: 2.3 }, { x: 19.4, y: -0.7 }]), reason);
+  const valid = JSON.parse(serializeReadSequence(complete));
+  const invalidRoutes = [null, {}, [], [{ x: 15.4, y: 2.3 }], [{ x: 15.5, y: 2.3 }, ...valid.third.route.slice(1)], [valid.third.route[0], { x: 19.4, y: 2.3 }, { x: 19.4, y: -0.8 }], [valid.third.route[0], { x: 99, y: 99 }, valid.third.point], [valid.third.route[0], { x: '19', y: 0 }, valid.third.point], [valid.third.route[0], { x: NaN, y: 0 }, valid.third.point], [valid.third.route[0], valid.third.route[0], valid.third.point], [valid.third.route[0], ...Array.from({ length: 13 }, (_, i) => ({ x: 5 + i, y: 0 }))]];
+  for (const route of invalidRoutes) {
+    const malformed = structuredClone(valid);
+    malformed.third.route = route;
+    assert.equal(restoreReadSequence(malformed), null, `Must reject ${JSON.stringify(route)}`);
+  }
+  const changedPoint = structuredClone(valid);
+  changedPoint.third.point.x += 0.1;
+  assert.equal(restoreReadSequence(changedPoint), null);
+});

@@ -1,6 +1,7 @@
 import React from "react";
 import { Canvas } from "@react-three/fiber";
 import { PCFShadowMap } from "three";
+import { watchWebglContextLoss } from "./webglLifecycle.js";
 
 class WebglBoundary extends React.Component {
   constructor(props) {
@@ -30,15 +31,32 @@ export default function GymVisualStage({
   scene3d,
   camera,
   inputLayer = "none",
+  active = true,
   children,
   ariaLabel,
 }) {
   const [webglReady, setWebglReady] = React.useState(false);
   const [webglFailed, setWebglFailed] = React.useState(false);
+  const lossCleanup = React.useRef(null);
+  const failWebgl = React.useCallback(() => {
+    lossCleanup.current?.();
+    lossCleanup.current = null;
+    setWebglReady(false);
+    // Sticky for this drill mount: a lost context must not start a retry loop.
+    setWebglFailed(true);
+  }, []);
+
+  React.useLayoutEffect(() => {
+    if (!active) setWebglReady(false);
+    return () => {
+      lossCleanup.current?.();
+      lossCleanup.current = null;
+    };
+  }, [active]);
 
   return (
     <div
-      className={`gym-stage gym-visual-stage${webglReady && !webglFailed ? " has-webgl" : ""}`}
+      className={`gym-stage gym-visual-stage${active && webglReady && !webglFailed ? " has-webgl" : ""}`}
       aria-label={ariaLabel}
     >
       <canvas
@@ -47,15 +65,17 @@ export default function GymVisualStage({
         onMouseDown={onCanvasPointer}
         onTouchStart={onCanvasPointer}
       />
-      {!webglFailed && (
+      {active && !webglFailed && (
         <div className={`gym-webgl-layer input-${inputLayer}`}>
-          <WebglBoundary onFailure={() => setWebglFailed(true)}>
+          <WebglBoundary onFailure={failWebgl}>
             <Canvas
               camera={camera}
               dpr={[1, 1.75]}
               shadows={{ type: PCFShadowMap }}
               gl={{ antialias: true, alpha: true, powerPreference: "high-performance" }}
               onCreated={({ gl }) => {
+                lossCleanup.current?.();
+                lossCleanup.current = watchWebglContextLoss(gl.domElement, failWebgl);
                 gl.setClearColor(0x07131f, 1);
                 setWebglReady(true);
               }}

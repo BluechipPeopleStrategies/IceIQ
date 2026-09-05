@@ -971,6 +971,7 @@ export default function ShootoutDrill({ playerId = "default", onExit }) {
 
       <div style={{ display: phase === "playing" ? "block" : "none" }}>
         <GymVisualStage
+          active={phase === "playing"}
           canvasRef={canvasRef}
           onCanvasPointer={onCanvasTap}
           inputLayer="webgl"

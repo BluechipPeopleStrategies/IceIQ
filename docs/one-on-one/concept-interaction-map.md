@@ -1,7 +1,7 @@
 # RinkReads concept-to-interaction map
 
 **Status:** source inventory and coach-review planning map
-**Date:** 2026-09-04
+**Date:** 2026-09-05
 **Machine-readable companion:** `docs/one-on-one/concept-interaction-map.json`
 **Ready-made examples:** `src/one-on-one/coach-question-examples.json`
 
@@ -35,7 +35,7 @@ The age bands and depths below come from `src/data/curriculum-ledger.json` versi
 | Source note | Concept, working prerequisites and ledger age fit | Best interaction and concrete scenario | Movement/source boundary | Wired now and next use |
 |---|---|---|---|---|
 | `scanning.md` | **scanning**; foundational input gate, with reading-the-play as the next use. U7 I, U9 I, U11 D, U13 M, U15/U18 R. | **Freeze → read → reposition → explain.** U7 2v1: after looking away from the puck, move `YOU` from the crowded middle lane to visible open ice. | The note defines looking and cue acquisition but supplies no coordinates or head-turn animation. The example positions are newly authored and static. | Raw note is searchable in Practice Library; six guided scanning lessons exist. Example: `coach-example-u7-scan-open-ice`. Future sequences may animate a shoulder check only when explicitly keyed.
-| `off-puck-support-offense.md` | **off-puck-support-offense**; working dependencies: scanning, reading-the-play and passing-lane awareness. U9 I, U11 D, U13 M, U15/U18 R. | **Freeze → reposition → compare → explain.** U9 2v2: move `YOU` out of a blocked line into open ice with a clear puck path. | The note includes an approximate lane-clearance authoring reminder, not a universal graded distance. The example does not reuse that number as an automatic correctness threshold. | Raw note, an animated play and six guided support lessons exist. Example: `coach-example-u9-support-window`. Future route drawing can show a coach-authored reoffer after a pass.
+| `off-puck-support-offense.md` | **off-puck-support-offense**; working dependencies: scanning, reading-the-play and passing-lane awareness. U9 I, U11 D, U13 M, U15/U18 R. | **Freeze → reposition or plan support route → explain.** U9 2v2: move `YOU` out of a blocked line into open ice with a clear puck path. U11 read three: plan the actual off-puck attacker's path from the selected branch. | The note includes an approximate lane-clearance authoring reminder, not a universal graded distance. The route preview follows the learner's points while other actors and the puck stay frozen; it does not validate skating or predict a defender response. | Raw note, an animated play and six guided support lessons exist. Example: `coach-example-u9-support-window`. U11 read three now supports tap/numeric route points, preview and saved explanation. Broader coach route/pass drawing remains planned.
 | `defensive-angling.md` | **angling-steering**; working dependencies: reading-the-play, defensive-side positioning and usable skating stance. U9 I, U11/U13 D, U15 M, U18 R. | **Freeze → reposition → counterfactual.** U9 1v1: place `YOU` inside the carrier so the middle path to the left net is covered and outside ice remains. | “The attacker threatens middle before the freeze” is a required authored cue. The prose alone does not say where the attacker skated from. | Raw note and animated angling play exist. Example: `coach-example-u9-angle-wide`. Next use: flip carrier side and verify the learner flips the angle rather than memorizing a rink coordinate.
 | `dz-breakout-retrieval-under-pressure.md` | **breakout-and-regroup**; working dependencies: scanning, reading-the-play, puck control and safe net-side orientation. U11 I, U13 D, U15 M, U18 R. | **Watch authored commitment → pause → choose action/target → explain.** U11 2v2: with F1 committed below the left net, choose `carry` behind the net away from pressure. | The note describes commitment and escape but does not provide metres or timing. The ready example is a frozen post-commitment board. Animated playback must use explicit authored keys or the existing validated play. | Raw note and `DZ_BREAKOUT_ESCAPE_PRESSURE` are in the catalog. Example: `coach-example-u11-retrieval-away`. Planned siblings in the note remain planned, not completed coverage.
 | `forecheck-pressure.md` | **forecheck-pressure**; working dependencies: angling-steering, scanning and time-and-space. U11 I, U13 D, U15 M, U18 R. | **Freeze → reposition → watch authored response → compare.** U15 3v3: angle `YOU` from inside so the middle is removed while the reverse stays visible. | The note requires an authored pressure angle; speed alone is not the answer. No automatic carrier response may be inferred from the static source. | Raw note and two animated forecheck plays exist. Example: `coach-example-u15-forecheck-angle`. A later sequence can branch to a reverse only after the carrier’s turn-back is explicitly authored.
@@ -52,7 +52,7 @@ The age bands and depths below come from `src/data/curriculum-ledger.json` versi
 | Interaction | Sequence role | Suitable sources | Current boundary |
 |---|---|---|---|
 | Reposition controlled actors | Pause at a state, let the learner express spacing/assignment, compare with the coach reference, then explain. | Scanning, support, angling, gap, forecheck, backcheck, odd-man support. | Coach-question drafts support this now. Position differences are descriptive; no single coordinate is certified as correct.
-| Draw route or pass | Author a future path from the current state, then play exactly that path. | Breakout, forecheck reverse, backcheck lane, support reoffer. | Director keyframes exist; a dedicated route/pass drawing interaction remains planned. Never derive a path from prose.
+| Draw route or pass | Record a learner's path from the current state, then preview that path for discussion. | Breakout, forecheck reverse, backcheck lane, support reoffer. | Dedicated support-route planning is implemented in U11 read three: up to 12 points after the actual Start, tap or numeric Add, Undo/Clear, numbered polyline and progress inspection. Only the chosen off-puck marker moves. Routes save/export without a score or AI review. Broader coach route/pass drawing remains planned; director keyframes still require explicit authoring.
 | Select receiver or puck target | Express who/where receives the next puck action. | Odd-man, support, scanning, breakout. | Existing scenario/rink question types already score their own target geometry. Preserve those scorers; coach-question `action` does not replace receiver selection.
 | Predict next movement | Pause only after a committed movement or constraint is visible, then ask what authored lane/space changes next. | Odd-man defender commitment, forecheck turn-back, backcheck responsibility change. | Existing predict-next animated content remains. Do not ask what an opponent “will” do from unknown intent.
 | Spot and fix a mistake | Show the authored mistake state, identify the cue, then reposition or choose the repair. | Flat support, gap backing in, puck chasing, missed backcheck lane. | Existing mistake/verdict questions remain available; coach positioning adds an explainable correction, not a replacement scorer.
@@ -63,16 +63,30 @@ The age bands and depths below come from `src/data/curriculum-ledger.json` versi
 
 ## U11 three-read sequence implementation
 
-The first sequence is implemented in `ReadSequence.jsx` and is the default shared Practice Hub view. Action plus explanation leads to an authored pass/carry/shoot branch, a branch-specific target decision, and an off-puck positioning/explanation read. Completed reflections save per player. Optional AI covers the final support read only and requires a configured server key, currently absent. Exact implementation sources and verification: `u11-read-sequence.md`. The concept progression below records the broader teaching intent.
+The first sequence is implemented in `ReadSequence.jsx` and is the default shared Practice Hub view. Action plus explanation leads to an authored pass/carry/shoot branch, a branch-specific target decision, and an off-puck placement or support-route read with a free explanation. Completed reflections save per player. Optional AI is available only for completed direct placements and requires a configured server key, currently absent; the final-position AI panel is hidden for route reflections. Exact implementation sources and verification: `u11-read-sequence.md`. The concept progression below records the broader teaching intent.
+
+The dedicated U11 route controls begin at the branch-specific off-puck player's
+actual position, shown as Start with text coordinates. Learners add up to 12
+points after Start by tapping or entering both coordinates and pressing **Add
+point**; blank numeric entries are rejected. **Undo last point** and **Clear
+route** edit the path. The numbered polyline preview follows each segment while
+other players and the puck stay frozen. Pause/progress controls support
+inspection; reduced motion uses manual **Inspect my route**. The completed v1
+reflection saves and exports the route, final point and reason, and older v1
+reflections without routes still reopen. Mode toggles preserve a temporary route
+until a direct placement edits the position. This source-bound discussion of
+space and passing lanes adds no validated skating, defender reaction or route
+grading claim. Broader coach route/pass drawing and richer recall remain future
+work.
 
 **Concept spine:** scanning → odd-man read → goalie/time-and-space check → off-puck support.
 **Source notes:** `scanning.md`, `odd-man-reads.md`, `two-on-one-goalie-late-after-pass.md`, `off-puck-support-offense.md`.
 
 1. **Read the defender.** Start from an explicitly authored 2v1 rush state. D1 commits enough to affect the carrier’s shot route while F2 remains separated. Ask the puck carrier to identify the defender cue and choose the next action/target. If the learner passes, the next state explicitly changes puck ownership to F2. If the learner shoots or carries, that choice enters a different authored state or an honest reset; the sequence must not pretend the pass happened.
 2. **Receiver checks the goalie.** This beat exists only on the pass branch. Show the pass completed, F2 in possession and the goalie’s authored current alignment. Ask the receiver to choose or explain the next action. “Goalie late” must be visible from position/orientation or stated as the frozen condition; the sequence does not guarantee a goal.
-3. **Off-puck player finds the next scoring-support position.** After the receiver decision, ask the original carrier where to support for a pass, screen or possible rebound. A rebound state is allowed only if the coach explicitly authors the shot and save/rebound event. Otherwise the prompt stays prospective: position for the next option without claiming a rebound occurred.
+3. **Off-puck player finds the next support position or route.** After read two, use the highlighted off-puck attacker from that exact branch, which may be F1 or F2. The learner places that player or plans a route and explains the lane or space they want to use. A loose-puck state must already be explicitly authored by the chosen branch; the learner's support route does not create a shot, save, rebound or new puck possession.
 
-The sequence should support selection, positioning and explanation inside one state machine. Recall/order can follow the play: **read defender → check receiver/goalie picture → become the next off-puck option**. MC/TF may test a single forced cue inside a beat, but the branch state carries the teaching logic.
+The sequence supports selection, positioning, bounded support-route planning and explanation inside one state machine. Future recall/order can follow the play: **read defender → check receiver/goalie picture → become the next off-puck option**. MC/TF may test a single forced cue inside a beat, but the branch state carries the teaching logic.
 
 ## Evidence and approval boundary
 

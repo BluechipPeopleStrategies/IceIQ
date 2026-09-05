@@ -563,6 +563,7 @@ export default function BestOptionDrill({ playerId = "default", onExit }) {
 
       <div style={{ display: phase === "playing" ? "block" : "none" }}>
         <GymVisualStage
+          active={phase === "playing"}
           canvasRef={canvasRef}
           inputLayer="none"
           ariaLabel="Frozen offensive-zone decision scene with labelled puck carrier, teammates, defenders, goalie, and reveal route."

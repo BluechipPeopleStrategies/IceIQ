@@ -10,17 +10,21 @@ import {
   getChangedCueComparison,
   getReadTwoPrompt,
   getSelectedSecondTarget,
+  getThirdReadRoute,
   moveThirdReadActor,
   replayFirstConsequence,
   restoreReadSequence,
   selectSecondRead,
   serializeReadSequence,
+  setThirdReadRoute,
+  sampleThirdReadRoute,
   submitChangedCueRead,
   submitFirstRead,
   submitThirdRead,
 } from './readSequenceCore.js';
 import { NHL_200X85_PROFILE } from '../scenario-engine/rinkFrame.js';
 import { AIReviewPanel } from './CoachQuestionLab.jsx';
+import RoutePlanner from './RoutePlanner.jsx';
 import './ReadSequence.css';
 
 const ACTION_COPY = {
@@ -33,9 +37,10 @@ const { bounds: RINK_BOUNDS, landmarks: RINK_MARKS } = NHL_200X85_PROFILE;
 const HALF_WIDTH = RINK_BOUNDS.maxY;
 const GOAL_X = RINK_MARKS.goalLineRight[0];
 
-function RinkStage({ state, targets = [], onTarget, moveActorId, onMove, showReadLanes = false, changedCue = false }) {
+function RinkStage({ state, targets = [], onTarget, moveActorId, onMove, showReadLanes = false, changedCue = false, route = null, onRoutePoint }) {
   const svg = useRef(null);
   const drag = useRef(null);
+  const routeTap = useRef(null);
   const stageId = useId().replace(/[^a-zA-Z0-9_-]/g, '');
   const puckCarrier = state.actors.find(actor => actor.id === state.puck.owner);
   const support = state.actors.find(actor => actor.id === 'F2');
@@ -59,6 +64,14 @@ function RinkStage({ state, targets = [], onTarget, moveActorId, onMove, showRea
   }
 
   function finishMove(event) {
+    if (routeTap.current?.pointerId === event.pointerId) {
+      const tap = routeTap.current;
+      routeTap.current = null;
+      if (Math.hypot(event.clientX - tap.x, event.clientY - tap.y) < 8) {
+        const point = eventPoint(event);
+        if (point) onRoutePoint?.(point);
+      }
+    }
     if (drag.current && svg.current?.hasPointerCapture(event.pointerId)) svg.current.releasePointerCapture(event.pointerId);
     drag.current = null;
   }
@@ -74,10 +87,13 @@ function RinkStage({ state, targets = [], onTarget, moveActorId, onMove, showRea
 
   return <div className="rs-stage-wrap">
     <svg ref={svg} className="rs-rink" viewBox="-1.5 -14.5 34 29" role="group" aria-label="Right half of the rink. Navy circles attack the right net; gold shapes defend."
-      onPointerDown={event => { if (onMove && !event.target.closest?.('.rs-actor')) { const point = eventPoint(event); if (point) onMove(point); } }}
+      onPointerDown={event => {
+        if (onRoutePoint && event.button === 0) { routeTap.current = { pointerId: event.pointerId, x: event.clientX, y: event.clientY }; svg.current?.setPointerCapture(event.pointerId); }
+        else if (onMove && !event.target.closest?.('.rs-actor')) { const point = eventPoint(event); if (point) onMove(point); }
+      }}
       onPointerMove={event => { if (drag.current?.pointerId === event.pointerId) { const point = eventPoint(event); if (point) onMove(point); } }}
-      onPointerUp={finishMove} onPointerCancel={finishMove} onLostPointerCapture={() => { drag.current = null; }}
-      style={{ touchAction: onMove ? 'none' : 'auto' }}>
+      onPointerUp={finishMove} onPointerCancel={event => { routeTap.current = null; finishMove(event); }} onLostPointerCapture={() => { drag.current = null; routeTap.current = null; }}
+      style={{ touchAction: onMove ? 'none' : onRoutePoint ? 'pan-y' : 'auto' }}>
       <title>U11 connected two-on-one</title>
       <desc>{changedCue ? 'Changed opening freeze: D1 is now on the pass line between the puck and F2. Every other player and the puck stayed in the same place.' : 'D1 partly covers the middle. F2 begins slightly flat on the weak side. The puck and positions update from the selected branch.'}</desc>
       <defs>
@@ -97,6 +113,11 @@ function RinkStage({ state, targets = [], onTarget, moveActorId, onMove, showRea
         <line x1={state.puck.x} y1={state.puck.y} x2={support.x} y2={support.y} stroke="#C9A24B" strokeWidth=".13" strokeDasharray=".35 .28" markerEnd={`url(#${stageId}-arrow)`} />
         <line x1={state.puck.x} y1={state.puck.y} x2={GOAL_X} y2="0" stroke="#0B1A33" strokeWidth=".12" strokeDasharray=".28 .3" opacity=".55" />
         <text x={changedCue ? 4 : 17.2} y={changedCue ? -7.5 : 3} fontSize=".55" fill="#0B1A33">{changedCue ? 'D1 IN THE PASS LINE' : 'SHOT LANE SHADED'}</text>
+      </g>}
+      {route && <g className="rs-planned-route" pointerEvents="none" aria-hidden="true">
+        <polyline points={route.map(point => `${point.x},${point.y}`).join(' ')} />
+        <text x={route[0].x} y={route[0].y - 1.6} textAnchor="middle">Start</text>
+        {route.slice(1).map((point, index) => <g key={index} transform={`translate(${point.x} ${point.y})`}><circle r=".64" /><text y=".29" textAnchor="middle">{index + 1}</text></g>)}
       </g>}
       {targets.map((target, index) => <g key={target.id} className="rs-rink-target" transform={`translate(${target.x} ${target.y})`} role="button" tabIndex="0" aria-label={`Choose ${target.label}`}
         onClick={() => onTarget?.(target.id)} onKeyDown={event => { if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); onTarget?.(target.id); } }}>
@@ -209,14 +230,19 @@ export default function ReadSequence({ playerId = null } = {}) {
   const [paused, setPaused] = useState(false);
   const [notice, setNotice] = useState(() => session.phase === 'complete' ? 'Your saved three-read reflection is open.' : '');
   const [reducedMotion, setReducedMotion] = useState(false);
+  const [routeMode, setRouteMode] = useState(Boolean(session.third?.route));
+  const [routeDraft, setRouteDraft] = useState(null);
+  const [routeProgress, setRouteProgress] = useState(null);
+  const [routePlaying, setRoutePlaying] = useState(false);
   const phaseHeading = useRef(null);
   const previousPhase = useRef(session.phase);
   const previousStorageKey = useRef(storageKey);
-  const state = useMemo(() => currentSequenceState(session), [session]);
+  const route = useMemo(() => getThirdReadRoute(session), [session]);
+  const state = useMemo(() => route && routeProgress != null ? sampleThirdReadRoute(session, routeProgress) : currentSequenceState(session), [session, route, routeProgress]);
   const activePlayback = ['consequence-1', 'consequence-2', 'replay-1'].includes(session.phase);
   const readTwo = session.first ? getReadTwoPrompt(session) : null;
   const selectedTarget = getSelectedSecondTarget(session);
-  const finalJudgePayload = useMemo(() => session.phase === 'complete' ? createFinalReadJudgePayload(session) : null, [session]);
+  const finalJudgePayload = useMemo(() => session.phase === 'complete' && !session.third?.route ? createFinalReadJudgePayload(session) : null, [session]);
 
   useEffect(() => {
     const media = window.matchMedia?.('(prefers-reduced-motion: reduce)');
@@ -236,6 +262,10 @@ export default function ReadSequence({ playerId = null } = {}) {
     setChosenAction(next.first?.action || null);
     setFirstReason(next.first?.reason || '');
     setThirdReason(next.third?.reason || '');
+    setRouteMode(Boolean(next.third?.route));
+    setRouteDraft(null);
+    setRouteProgress(null);
+    setRoutePlaying(false);
     setNotice(restored ? 'This player’s saved three-read reflection is open.' : 'Fresh sequence ready for this player.');
   }, [storageKey]);
 
@@ -274,12 +304,35 @@ export default function ReadSequence({ playerId = null } = {}) {
     return () => cancelAnimationFrame(frame);
   }, [session.phase, paused, reducedMotion]); // playback progress advances inside one phase without restarting its clock
 
+  useEffect(() => {
+    if (!routePlaying || !route || reducedMotion) return undefined;
+    let frame;
+    let started;
+    const tick = now => {
+      if (started == null) started = now;
+      const progress = Math.min(1, (now - started) / 3200);
+      setRouteProgress(progress);
+      if (progress < 1) frame = requestAnimationFrame(tick);
+      else setRoutePlaying(false);
+    };
+    frame = requestAnimationFrame(tick);
+    return () => cancelAnimationFrame(frame);
+  }, [routePlaying, route, reducedMotion]);
+
+  useEffect(() => {
+    if (reducedMotion) setRoutePlaying(false);
+  }, [reducedMotion]);
+
   function reset() {
     setSession(createReadSequenceSession());
     setChosenAction(null);
     setFirstReason('');
     setThirdReason('');
     setPaused(false);
+    setRouteMode(false);
+    setRouteDraft(null);
+    setRouteProgress(null);
+    setRoutePlaying(false);
     setNotice('Fresh sequence ready.');
     try { localStorage.removeItem(storageKey); } catch { /* Device storage is optional. */ }
   }
@@ -303,17 +356,47 @@ export default function ReadSequence({ playerId = null } = {}) {
   }
 
   function moveActor(point) {
-    try { setSession(moveThirdReadActor(session, point)); setNotice(''); }
+    try { setSession(moveThirdReadActor(session, point)); setRouteDraft(null); setRouteProgress(null); setRoutePlaying(false); setNotice(''); }
     catch (error) { setNotice(error.message); }
   }
 
+  function updateRoute(waypoints) {
+    const next = setThirdReadRoute(session, waypoints);
+    setSession(next);
+    setRouteDraft(null);
+    setRouteProgress(null);
+    setRoutePlaying(false);
+    setNotice('');
+  }
+
+  function addRoutePoint(point) {
+    updateRoute([...(route?.slice(1) || []), point]);
+  }
+
+  function changeMoveMode(planRoute) {
+    if (planRoute === routeMode) return;
+    setRouteMode(planRoute);
+    if (planRoute) updateRoute(routeDraft || []);
+    else {
+      setRouteDraft(route?.slice(1) || null);
+      if (session.third?.point) setSession(moveThirdReadActor(session, session.third.point));
+    }
+    setRouteProgress(null);
+    setRoutePlaying(false);
+  }
+
+  function previewRoute() {
+    setRouteProgress(0);
+    setRoutePlaying(!reducedMotion);
+  }
+
   function finish() {
-    try { setSession(submitThirdRead(session, thirdReason)); setNotice(''); }
+    try { setSession(submitThirdRead(session, thirdReason)); setRouteProgress(null); setRoutePlaying(false); setNotice(''); }
     catch (error) { setNotice(error.message); }
   }
 
   function replay() {
-    try { setPaused(false); setSession(replayFirstConsequence(session)); setNotice('Replaying the action you selected.'); }
+    try { setPaused(false); setRouteProgress(null); setRoutePlaying(false); setSession(replayFirstConsequence(session)); setNotice('Replaying the action you selected.'); }
     catch (error) { setNotice(error.message); }
   }
 
@@ -325,12 +408,16 @@ export default function ReadSequence({ playerId = null } = {}) {
     <Progress session={session} />
     <div className="rs-workspace">
       <div className="rs-board-panel">
+        {session.phase === 'read-3' && <div className="rs-move-modes" role="group" aria-label="How to show your support"><button type="button" aria-pressed={!routeMode} onClick={() => changeMoveMode(false)}>Move player</button><button type="button" aria-pressed={routeMode} onClick={() => changeMoveMode(true)}>Plan route</button></div>}
         <RinkStage state={state}
           showReadLanes={session.phase === 'read-1'}
           targets={session.phase === 'read-2' ? session.availableSecondTargets : []}
           onTarget={session.phase === 'read-2' ? chooseTarget : undefined}
-          moveActorId={session.phase === 'read-3' ? session.third.actorId : null}
-          onMove={session.phase === 'read-3' ? moveActor : undefined} />
+          moveActorId={session.phase === 'read-3' && !routeMode ? session.third.actorId : null}
+          onMove={session.phase === 'read-3' && !routeMode ? moveActor : undefined}
+          route={route}
+          onRoutePoint={session.phase === 'read-3' && routeMode ? point => { try { addRoutePoint(point); } catch (error) { setNotice(error.message); } } : undefined} />
+        {((session.phase === 'read-3' && routeMode) || (session.phase === 'complete' && route)) && <RoutePlanner key={`${storageKey}:${session.phase}`} route={route} origin={selectedTarget?.state.actors.find(actor => actor.id === session.third.actorId)} actorLabel={movingActor?.label} onChange={updateRoute} onAddPoint={addRoutePoint} progress={routeProgress} playing={routePlaying} reducedMotion={reducedMotion} onPreview={previewRoute} onPause={() => setRoutePlaying(false)} onProgress={progress => { setRoutePlaying(false); setRouteProgress(progress); }} readOnly={session.phase === 'complete'} />}
         <div className="rs-playback-bar">
           <span>{activePlayback ? `${branch?.actionLabel || 'Selected'} consequence · ${Math.round(session.playbackProgress * 100)}%` : session.phase === 'read-1' ? 'Freeze · read 1' : session.phase === 'read-2' ? 'Freeze · read 2' : session.phase === 'read-3' ? 'Freeze · read 3' : 'Sequence reflection'}</span>
           <div>{activePlayback && !reducedMotion && <button type="button" onClick={() => setPaused(value => !value)}>{paused ? 'Resume' : 'Pause'}</button>}
@@ -360,11 +447,11 @@ export default function ReadSequence({ playerId = null } = {}) {
         {session.phase === 'consequence-2' && <div className="rs-playing" role="status"><p className="rs-step">THE SECOND READ CHANGES THE SHAPE</p><h2 ref={phaseHeading} tabIndex="-1">{selectedTarget?.label}</h2><p>{selectedTarget?.summary}</p></div>}
 
         {session.phase === 'read-3' && <>
-          <p className="rs-step">READ 3 · HELP WITHOUT THE PUCK</p><h2 ref={phaseHeading} tabIndex="-1">Move {movingActor?.label} to a helpful next position. Then explain the support.</h2>
+          <p className="rs-step">READ 3 · HELP WITHOUT THE PUCK</p><h2 ref={phaseHeading} tabIndex="-1">{routeMode ? `Plan how ${movingActor?.label} gets to useful space. Then explain the route.` : `Move ${movingActor?.label} to a helpful next position. Then explain the support.`}</h2>
           <div className="rs-cue-card"><b>Keep the whole picture</b><p>The puck is {state.puck.owner ? `with ${state.actors.find(actor => actor.id === state.puck.owner)?.label || state.puck.owner}` : 'still loose'}. Read D1, the puck line and separation. There is no one coordinate to match.</p></div>
-          <p className="rs-hint">Drag the highlighted player, tap the ice, use arrow keys, or adjust the coordinates.</p>
-          {movingActor && <div className="rs-coordinate-row"><label>Rink length<input type="number" step=".5" value={Number(movingActor.x.toFixed(1))} onChange={event => { const x = Number(event.target.value); if (Number.isFinite(x)) moveActor({ x, y: movingActor.y }); }} /></label><label>Rink width<input type="number" step=".5" value={Number(movingActor.y.toFixed(1))} onChange={event => { const y = Number(event.target.value); if (Number.isFinite(y)) moveActor({ x: movingActor.x, y }); }} /></label></div>}
-          <label className="rs-reason">Why does this position help?<textarea rows="4" maxLength="600" value={thirdReason} onChange={event => setThirdReason(event.target.value)} placeholder="Explain the lane or space this creates, protects or keeps available." /><small>{thirdReason.length}/600</small></label>
+          <p className="rs-hint">{routeMode ? 'Use the route controls below the rink to add points, undo a turn, or preview your plan.' : 'Drag the highlighted player, tap the ice, use arrow keys, or adjust the coordinates.'}</p>
+          {movingActor && !routeMode && <div className="rs-coordinate-row"><label>Rink length<input type="number" step=".5" value={Number(movingActor.x.toFixed(1))} onChange={event => { const x = event.target.valueAsNumber; if (Number.isFinite(x)) moveActor({ x, y: movingActor.y }); }} /></label><label>Rink width<input type="number" step=".5" value={Number(movingActor.y.toFixed(1))} onChange={event => { const y = event.target.valueAsNumber; if (Number.isFinite(y)) moveActor({ x: movingActor.x, y }); }} /></label></div>}
+          <label className="rs-reason">{routeMode ? 'What lane or space are you trying to use?' : 'Why does this position help?'}<textarea rows="4" maxLength="600" value={thirdReason} onChange={event => setThirdReason(event.target.value)} placeholder="Explain the lane or space this creates, protects or keeps available." /><small>{thirdReason.length}/600</small></label>
           <button type="button" className="rs-primary" onClick={finish}>Finish the three reads →</button>
         </>}
 
@@ -372,7 +459,8 @@ export default function ReadSequence({ playerId = null } = {}) {
           <p className="rs-step">THREE READS COMPLETE · DRAFT FOR COACH REVIEW</p><h2 ref={phaseHeading} tabIndex="-1">Your choices stayed connected.</h2>
           <div className="rs-summary"><section><span>1</span><div><b>{ACTION_COPY[session.first.action].label}</b><p>{session.first.reason}</p></div></section><section><span>2</span><div><b>{selectedTarget.label}</b><p>{selectedTarget.summary}</p></div></section><section><span>3</span><div><b>{state.actors.find(actor => actor.id === session.third.actorId)?.label} moved</b><p>{session.third.reason}</p></div></section></div>
           <div className="rs-evidence"><b>{session.localEvidence.heading}</b><ul>{session.localEvidence.observations.map(observation => <li key={observation}>{observation}</li>)}</ul><p>{session.localEvidence.note}</p></div>
-          <section className="rs-final-ai"><p className="rs-step">OPTIONAL AI OPINION · FINAL READ ONLY</p><h3>Review my final positioning</h3><p>The AI coach reviews only the board after read two, your final support move and your explanation. It runs only when you press the button.</p><AIReviewPanel key={`${session.first.action}:${session.second.targetId}:${session.third.point.x}:${session.third.point.y}`} question={finalJudgePayload.question} attempt={finalJudgePayload.attempt} /></section>
+          {finalJudgePayload && <section className="rs-final-ai"><p className="rs-step">OPTIONAL AI OPINION · FINAL READ ONLY</p><h3>Review my final positioning</h3><p>The AI coach reviews only the board after read two, your final support move and your explanation. It runs only when you press the button.</p><AIReviewPanel key={`${session.first.action}:${session.second.targetId}:${session.third.point.x}:${session.third.point.y}`} question={finalJudgePayload.question} attempt={finalJudgePayload.attempt} /></section>}
+          {route && <p className="rs-hint">Your route and explanation are saved for a coach discussion. There is no automatic route grade or AI route review.</p>}
           <p className="rs-saved-note">Saved on this device for this player scope. No score or mastery mark was added.</p>
           <div className="rs-complete-actions"><button type="button" className="rs-primary" onClick={replay}>Replay my first choice</button><button type="button" onClick={() => { try { downloadReflection(session); setNotice('Reflection downloaded without a player identity or score.'); } catch (error) { setNotice(error.message); } }}>Download reflection</button><button type="button" onClick={reset}>Try a new branch</button></div>
         </>}

@@ -7,11 +7,13 @@ The first integrated preview is ready for a walkthrough. Start with the U11 sequ
 
 **Follow-up quality pass is live:** `98809ec` deployed successfully and was verified at 00:43 Edmonton. The optional changed-cue comparison, eleven revised Gym introductions and secondary-text contrast fixes are included. **158 practice tests and the production build pass.** The live phone flow completed three reads, saved an original Pass and revised Carry explanation, and restored both after reload with no overflow, failed requests or page exceptions.
 
+**Current route/mobile pass:** implemented and verified locally, awaiting deployment. Read three now supports tapping a support route with preview, undo, keyboard coordinates and saved explanations. Shootout/Best Option recover to 2D after graphics-context loss and stop hidden WebGL rendering after completion. The current suite passes **167 tests**; production build and touch-event browser flows pass.
+
 ## Walkthrough
 
 | Open the hosted preview | What to try |
 | --- | --- |
-| [Practice Arena](https://ice-iq.vercel.app/#practice-arena) | Choose Pass, explain the defender cue, choose the next target, then move the off-puck player and explain why. Repeat with Carry to see a different continuation. Finish a sequence and try **One thing changes**: compare the original freeze with D1 in the pass lane, then save a new action and reason. |
+| [Practice Arena](https://ice-iq.vercel.app/#practice-arena) | Choose Pass, explain the defender cue, choose the next target, then move the off-puck player or choose **Plan route** and explain why. Repeat with Carry to see a different continuation. Finish a sequence and try **One thing changes**: compare the original freeze with D1 in the pass lane, then save a new action and reason. |
 | Practice Arena → Coach Lab | Choose one of 12 examples across U7–U18. Move a player, explain, and compare with the separate coach reference. Switch to authoring to change the question and reference. |
 | Practice Arena → Learn the game | Four guided lessons per selected age: 24 lessons and 48 questions. The source library also exposes the original question bank, scenarios, animated plays and coach personas. Age-scoped selection is implemented; child comprehension and curriculum admission remain open. |
 | Practice Arena → Play | Free play, Read & React and Set up a rep. Change the gap, start a rep, replay and save a setup. |
@@ -35,7 +37,7 @@ The first integrated preview is ready for a walkthrough. Start with the U11 sequ
 
 ## Verified
 
-Current follow-up: `npm run test:practice` reports **158 tests passed**, including simulation, replay, director, curriculum, coach questions, storage, AI adapter mocks, Gym scoring/progression, shot geometry, phone-review packaging and the changed-cue comparison. Production build passed. The comparison checks cover actual puck-offset geometry, original-answer/replay immutability, save/restore and older v1 reflections. The prior integrated `npm run test:scenario-engine` run passed; see the detailed verification record for the final rerun status.
+Current follow-up: `npm run test:practice` reports **167 tests passed**, including simulation, replay, director, curriculum, coach questions, storage, AI adapter mocks, Gym scoring/progression, shot geometry, phone-review packaging, changed-cue comparison, branch-specific support routes and WebGL context-loss lifecycle. Production build passed. The comparison checks cover actual puck-offset geometry, original-answer/replay immutability, save/restore and older v1 reflections. The prior integrated `npm run test:scenario-engine` run passed; see the detailed verification record for the final rerun status.
 
 The earlier integrated browser checks covered all 12 Gym launch/back flows; full five-shot mouse and keyboard shootouts; sequence branch, replay, positioning, explanation and reload flows; coach drag/keyboard/save/reopen/compare; guided MC → TF completion/retry/focus; and desktop, 820 px tablet and 390 px phone layouts. The public phone release was also checked on its live HTTPS origin. Follow-up checks include changed-cue phone/tablet layouts and sample goals/skills; comparison replay/download and production-preview reload preserve both answers, as recorded in [verification.md](verification.md).
 
@@ -49,6 +51,6 @@ These are browser viewport checks. No physical phone or iPad test, full screen-r
 2. **The arena is a hosted prototype.** Phone access and the current follow-up are live and verified. Cloud practice persistence, a production judge and main-app Arena navigation are not implemented.
 3. **Character references are finished enough to review, not finished game models.** Four native 1254×1254 transparent navy/gold sheets exist, plus a 40-clip animation specification. Rigged models, animation clips and free-camera character assets remain to be produced. No purchase was made. [Free and paid paths](asset-shortlist.md).
 4. **Age policy and age validation remain open.** The original quiz still uses the existing `ALL_AGES_MODE` mixed-age policy; this quality pass does not resolve that policy. The new guided curriculum explicitly selects lessons for the chosen age, but that is not evidence of age comprehension. New geometry, prompts and answer alignment need coach/player review before curriculum admission. The three-read sequence and its changed-cue comparison are U11 drafts.
-5. Dedicated route drawing, richer prediction/recall sequences, whole-sequence AI review, physical phone/iPad testing and further production integration remain future work. Existing feature surfaces remain; this pass did not verify every authenticated production workflow.
+5. U11 support-route planning is implemented. Broader coach route/pass drawing, richer prediction/recall sequences, whole-sequence AI review, physical phone/iPad testing and further production integration remain future work. Existing feature surfaces remain; this pass did not verify every authenticated production workflow.
 
 These improvements are substantial prototype and usability work. They are not NHL-level character animation or a completed commercial hockey simulation.
