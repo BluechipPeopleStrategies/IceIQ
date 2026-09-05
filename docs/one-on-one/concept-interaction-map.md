@@ -59,7 +59,7 @@ The age bands and depths below come from `src/data/curriculum-ledger.json` versi
 | Free explanation | Capture the learner’s reason and compare it with the coach’s cue list and explanation. | All 12 notes. | Coach questions require a reason and return no correctness score.
 | Compare or counterfactual | Change one load-bearing cue and ask how the decision changes. | Defender takes shot vs pass, goalie square vs late, support marked vs free, first defender recovered vs beat. | The completed U11 sequence offers an original/changed opening freeze: only D1 moves from the shot lane into the pass line. Learners save a new action and reason alongside their first answer, without a grade or invented fourth consequence. More authored variants remain planned.
 | Multiple choice / true-false | Check recognition when the frozen state has one defensible answer. | Pass lane removed, committed retrieval side, simple young scan. | Existing library and guided scorers remain authoritative. Use sparingly for forced reads, not open judgments.
-| Recall / order | Reconstruct cue order after a sequence: scan, identify constraint, act, re-scan. | Scanning, breakout, odd-man and transition. | Existing sequence questions keep their source order/scorer. New sequence content must preserve branch-specific state.
+| Recall / order | Reconstruct cue order after a sequence: scan, identify constraint, act, re-scan. | Scanning, breakout, odd-man and transition. | Existing sequence questions retain their scorer. Optional U9/U11 recall derives three exact freezes from the completed chosen branch. U9 fixes its opening; U11 reorders all three. Touch/keyboard moves, larger pictures, factual captions, optional reasons and assisted-order records check chronology only. Final support and changed-cue states stay separate. See `connected-read-recall.md`.
 
 ## U9 three-read sequence implementation
 
@@ -97,8 +97,7 @@ reflection saves and exports the route, final point and reason, and older v1
 reflections without routes still reopen. Mode toggles preserve a temporary route
 until a direct placement edits the position. This source-bound discussion of
 space and passing lanes adds no validated skating, defender reaction or route
-grading claim. Broader coach route/pass drawing and richer recall remain future
-work.
+grading claim. Broader coach route/pass drawing remains future work. Optional actual-branch recall is implemented after completion; it checks the order of the three authored freezes and records assistance separately from tactical judgment.
 
 **Concept spine:** scanning → odd-man read → goalie/time-and-space check → off-puck support.
 **Source notes:** `scanning.md`, `odd-man-reads.md`, `two-on-one-goalie-late-after-pass.md`, `off-puck-support-offense.md`.

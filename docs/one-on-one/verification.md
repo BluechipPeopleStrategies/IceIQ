@@ -2,7 +2,7 @@
 September 5, 2026 · Shared phone preview and local production-build checks
 
 ## Automated checks
-- `npm run test:practice`: 189 passing tests, zero failures, including public asset packaging, changed-cue reflections, branch-specific routes, age isolation, WebGL lifecycle, scoped coach controls and buffered coordinate editing.
+- `npm run test:practice`: 208 passing tests, zero failures, including public asset packaging, changed-cue reflections, branch-specific routes, age isolation, WebGL lifecycle, scoped coach controls and buffered coordinate editing.
 - `npm run test:scenario-engine`: passed every existing component suite, including physics, canonical frames, compiled playback, factory state/promotion/recall and parameter-space generation.
 - `npm run build`: passed. Existing large-chunk and mixed static/dynamic import warnings remain.
 - `git diff --check`: no whitespace errors; Windows line-ending notices only.
@@ -71,3 +71,16 @@ No physical iPad, sustained low-power GPU benchmark, full screen-reader audit, a
 - Coach keyboard flow: running rink Tab switches players, Escape pauses, paused Tab navigates normally. Space on the camera button activates the button rather than shooting. Window blur clears input and pauses. Resume advanced from 1.3 s to 1.5 s without resetting to zero. Evidence: `evidence/coach-paused-input-phone.png`.
 - Focusing a coordinate during live practice and during director animation stopped the clock and retained the same focused DOM input across animation frames. Negative-decimal typing then worked. The final production build repeated the live-focus check with no overflow or page exceptions.
 - These checks use browser viewports and browser-generated touch/keyboard events. Physical phone keyboard, speech voice quality, sustained GPU performance and child comprehension have not been tested.
+
+
+## Actual-branch recall — September 5, 2026, 03:10 Edmonton
+
+- **208 practice tests pass; production build passes.** Nineteen recall/storage cases cover eleven U9/U11 paths, 66 permutations, sparse/foreign/malformed IDs, fixed U9 openings, support unchanged/loop cases, strict local basis, legacy/replay equivalence and unchanged original reflection/AI data.
+- U11 Shoot/high-support: wrong order → keyboard/button reorder → matching order → optional explanation → real JSON download. The downloaded path/card order, note and help flag matched the checked attempt. Larger-picture focus returns to the same card. The visible picture description matches its accessible SVG description.
+- An unchecked note survived first-action replay and U9/U11 switching. An edited saved note was correctly marked as needing another check. Show the order → Mix again → Check retained both mismatch feedback and the help flag; reload preserved that assisted mismatch. The original sequence JSON stayed byte-identical.
+- Instrumented speech was cancelled on an order change. No device voice quality claim is made.
+- At 390 × 844, a native touch event on the 134.5 × 44 px Earlier button reordered the U9 pass/return pair. Its opening had no movement controls; the correct chronology and note saved. Reset removed only U9 sequence/recall state; repeating exactly the same answers produced a fresh, unchecked recall with an empty note, while U11 storage remained unchanged.
+- Evidence: `evidence/recall-u11-desktop.png`, `evidence/recall-u9-phone.png`, `evidence/recall-large-rink-phone.png`. A duplicate sibling key warning found in the first development check was fixed; subsequent checked flows had no console errors.
+- New teaching content remains a coach-review draft. These browser checks do not demonstrate physical-device performance, screen-reader user comprehension, memory/scanning improvement or tactical correctness.
+
+- Final production preview at 820 × 1180 with normal motion: U11 Carry → F2 in the middle seam → support/reason → recalled order/note → larger picture → save/reload passed. The SVG description matched the pictured F2 possession and F1 support state, focus returned to its card, and the restored order/note matched without overflow. Evidence: `evidence/recall-u11-tablet.png`.

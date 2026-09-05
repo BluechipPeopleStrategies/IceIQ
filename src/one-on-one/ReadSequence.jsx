@@ -29,6 +29,8 @@ import { NHL_200X85_PROFILE } from '../scenario-engine/rinkFrame.js';
 import { AIReviewPanel } from './CoachQuestionLab.jsx';
 import RoutePlanner from './RoutePlanner.jsx';
 import RinkCoordinateInput from './RinkCoordinateInput.jsx';
+import ReadSequenceRecall from './ReadSequenceRecall.jsx';
+import { getReadSequenceRecallStorageKey } from './readSequenceRecallStorage.js';
 import { speakParts, stopSpeaking, ttsSupported } from '../speak.js';
 import './ReadSequence.css';
 
@@ -42,7 +44,7 @@ const { bounds: RINK_BOUNDS, landmarks: RINK_MARKS } = NHL_200X85_PROFILE;
 const HALF_WIDTH = RINK_BOUNDS.maxY;
 const GOAL_X = RINK_MARKS.goalLineRight[0];
 
-function RinkStage({ state, definition = U11_READ_SEQUENCE, targets = [], onTarget, moveActorId, onMove, showReadLanes = false, changedCue = false, route = null, onRoutePoint }) {
+function RinkStage({ state, definition = U11_READ_SEQUENCE, description, targets = [], onTarget, moveActorId, onMove, showReadLanes = false, changedCue = false, route = null, onRoutePoint }) {
   const svg = useRef(null);
   const drag = useRef(null);
   const routeTap = useRef(null);
@@ -107,7 +109,7 @@ function RinkStage({ state, definition = U11_READ_SEQUENCE, targets = [], onTarg
       onPointerUp={finishMove} onPointerCancel={event => { routeTap.current = null; finishMove(event); }} onLostPointerCapture={() => { drag.current = null; routeTap.current = null; }}
       style={{ touchAction: onMove ? 'none' : onRoutePoint ? 'pan-y' : 'auto' }}>
       <title>{definition.ageBand} connected two-on-one</title>
-      <desc>{changedCue ? 'Changed opening freeze: D1 is now on the pass line between the puck and F2. Every other player and the puck stayed in the same place.' : definition.ui?.stageDescription || 'D1 partly covers the middle. F2 begins slightly flat on the weak side. The puck and positions update from the selected branch.'}</desc>
+      <desc>{description || (changedCue ? 'Changed opening freeze: D1 is now on the pass line between the puck and F2. Every other player and the puck stayed in the same place.' : definition.ui?.stageDescription || 'D1 partly covers the middle. F2 begins slightly flat on the weak side. The puck and positions update from the selected branch.')}</desc>
       <defs>
         <linearGradient id={`${stageId}-ice`} x1="0" x2="1" y1="0" y2="1"><stop stopColor="#fffdfa" /><stop offset="1" stopColor="#e8edf1" /></linearGradient>
         <filter id={`${stageId}-shadow`}><feDropShadow dx="0" dy=".16" stdDeviation=".18" floodOpacity=".28" /></filter>
@@ -234,7 +236,7 @@ function ChangedCueComparison({ session, onSave }) {
   </section>;
 }
 
-function ReadSequenceLesson({ playerId, definition, scratch, rememberDraft }) {
+function ReadSequenceLesson({ playerId, definition, scratch, rememberDraft, recallDraftAccess }) {
   const storageKey = getReadSequenceStorageKey(playerId, definition.id);
   const copy = definition.ui || {};
   const isU11 = definition.id === U11_READ_SEQUENCE.id;
@@ -374,7 +376,10 @@ function ReadSequenceLesson({ playerId, definition, scratch, rememberDraft }) {
     setRouteProgress(null);
     setRoutePlaying(false);
     setNotice('Fresh sequence ready.');
-    try { localStorage.removeItem(storageKey); } catch { /* Device storage is optional. */ }
+    recallDraftAccess.clear();
+    for (const key of [storageKey, getReadSequenceRecallStorageKey(playerId, definition.id)]) {
+      try { localStorage.removeItem(key); } catch { /* Device storage is optional. */ }
+    }
     returnToContent();
   }
 
@@ -535,6 +540,7 @@ function ReadSequenceLesson({ playerId, definition, scratch, rememberDraft }) {
         {notice && <p className="rs-notice" role="status">{notice}</p>}
       </aside>
     </div>
+    {session.phase === 'complete' && <ReadSequenceRecall key={`${storageKey}:recall`} session={session} playerId={playerId} draftAccess={recallDraftAccess} renderBoard={(state, description) => <RinkStage state={state} definition={definition} description={description} />} />}
     {isU11 && session.phase === 'complete' && <ChangedCueComparison key={storageKey} session={session} onSave={setSession} />}
     <SourceNotes definition={definition} />
   </section>;
@@ -543,11 +549,13 @@ function ReadSequenceLesson({ playerId, definition, scratch, rememberDraft }) {
 export default function ReadSequence({ playerId = null } = {}) {
   const [scenarioId, setScenarioId] = useState(U11_READ_SEQUENCE.id);
   const drafts = useRef(new Map());
+  const recallDrafts = useRef(new Map());
   const draftKey = getReadSequenceStorageKey(playerId, scenarioId);
   const rememberDraft = useMemo(() => draft => drafts.current.set(draftKey, draft), [draftKey]);
+  const recallDraftAccess = useMemo(() => ({ get: () => recallDrafts.current.get(draftKey), remember: draft => recallDrafts.current.set(draftKey, draft), clear: () => recallDrafts.current.delete(draftKey) }), [draftKey]);
   const definition = getReadSequenceDefinition(scenarioId);
   return <div className="rs-root" data-age={definition.ageBand}>
     <nav className="rs-age-picker" aria-label="Connected reads age group"><span>CHOOSE YOUR READ</span><div>{READ_SEQUENCE_CATALOG.map(item => <button type="button" key={item.id} aria-pressed={scenarioId === item.id} aria-label={`${item.ageBand} connected reads`} onClick={() => setScenarioId(item.id)}>{item.ageBand}<small>{item.ageBand === 'U9' ? 'Find space' : 'Read the pressure'}</small></button>)}</div><p>Completed reflections save separately for each age on this device.</p></nav>
-    <ReadSequenceLesson key={draftKey} playerId={playerId} definition={definition} scratch={drafts.current.get(draftKey)} rememberDraft={rememberDraft} />
+    <ReadSequenceLesson key={draftKey} playerId={playerId} definition={definition} scratch={drafts.current.get(draftKey)} rememberDraft={rememberDraft} recallDraftAccess={recallDraftAccess} />
   </div>;
 }
