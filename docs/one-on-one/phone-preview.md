@@ -19,3 +19,7 @@ The build packages an explicit allowlist: review landing, Character Studio, four
 Hosted AI review returns a clear unavailable result before any network request. The local adapter remains usable in development when configured; production judge deployment remains future work.
 
 Validation before deployment: 155 practice tests and production build pass. Two added tests verify packaged links/images and exclusion of internal documents. A 390 px browser check against the production build exercised landing to arena, coach movement/reason/comparison, unavailable AI with zero judge requests, and navy/gold character switching without overflow. This is phone-sized browser testing, not testing on Thomas's physical phone.
+
+## Live verification
+
+Code commit `019e8d9` deployed successfully through the existing Vercel Git integration (GitHub status: Deployment has completed). Verified the public HTTPS origin after deployment: `/review/` returns 200; its arena link opens the U11 three-read view; Brain Gym loads; all four navy/gold character PNG variants decode at 1254 px; and Shootout starts with six target controls. At 390 px these pages have no horizontal overflow. The monitored live checks recorded zero failed HTTP requests and zero page exceptions. The browser still reports non-blocking Three.js Clock/preload warnings. Screenshot: `evidence/shootout-live-phone.png`.
