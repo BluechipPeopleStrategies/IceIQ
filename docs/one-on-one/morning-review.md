@@ -11,7 +11,7 @@ The integrated preview is ready for a walkthrough. Start with the U11 sequence, 
 
 ## Walkthrough
 
-The new U9 slice has passed local production-build verification; public deployment verification is recorded separately below when complete. Select **U9 / Find space** in Read the play: choose Pass or Carry, make the next puck decision, then move the highlighted player or plan a route and give a short reason. Read aloud is optional. U9 and U11 save separately; switching between them preserves unfinished work while this view stays open.
+**U9 is live:** `304848c` deployed and was verified at 02:00 Edmonton. Select **U9 / Find space** in Read the play: choose Pass or Carry, make the next puck decision, then move the highlighted player or plan a route and give a short reason. Read aloud is optional. The live phone-sized flow accepted a receiver touch and route point, saved and reopened the U9 reflection, and left the older U11 saved JSON unchanged. U9 and U11 save separately; switching between them preserves unfinished work while this view stays open.
 
 | Open the hosted preview | What to try |
 | --- | --- |

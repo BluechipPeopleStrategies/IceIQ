@@ -47,3 +47,17 @@ recorded in that live route flow. The actual WEBGL_lose_context extension also
 forced loss on the live Shootout: its WebGL layer detached, 2D opacity became 1
 with pointer events active, and the next open-target shot produced a goal and
 points. This does not establish physical-phone GPU performance.
+
+## U9 age expansion release
+
+`304848c` deployed through Vercel successfully and was verified at 02:00 Edmonton
+on September 5. The public review shows U9 + U11 and the 176-test release.
+At 390 × 844, the existing U11 reflection reopened; keyboard selection of U9
+kept focus on its age button. Pass → a touch directly on the return receiver →
+Plan route → a touch waypoint near `(17,-6)` → short explanation completed.
+The route began at the correct teammate origin `(18.5,-4)`. Reload and selecting
+U9 restored the exact point/route and reasons. The old U11 saved JSON remained
+byte-identical. U9 exposed no unsupported AI or changed-cue control. No failed
+HTTP requests, page exceptions or horizontal overflow occurred in this flow.
+Evidence: `evidence/u9-live-phone.png`. These are live-origin browser/touch-event
+checks, not a physical-phone test or a child comprehension study.
