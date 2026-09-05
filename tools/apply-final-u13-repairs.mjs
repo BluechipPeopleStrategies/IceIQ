@@ -1,0 +1,27 @@
+import {writeFileSync,existsSync} from 'node:fs';
+import {readBankFiles,readJson} from './experimental-bank-files.mjs';
+import {questionContentHash} from './question-batch-core.mjs';
+const receipt='docs/factory/research/question-review/repairs/u13-final-repairs.json';
+if(existsSync(receipt))throw Error('Repair already recorded.');
+const before=readBankFiles().bank;
+const additionsPath='src/one-on-one/experimental-expansion/u13-additions.json';
+const scenesPath='src/one-on-one/experimental-expansion/u13-scenarios.json';
+const additions=readJson(additionsPath),scenes=readJson(scenesPath);
+const row=additions.find(s=>s.scenarioId==='exp26-u13-015').questions.find(q=>q.id==='exp26-u13-015-q7');
+row.options.find(o=>o.id==='a').text='Gold 1';
+row.basis='coaching';
+row.prompt='Which teammate can support behind YOU if Gold 1 turns inside?';
+const scene=scenes.find(s=>s.id==='exp26b-u13-016');
+scene.version++;
+scene.briefing='Navy attacks Gold’s net and defends Navy’s net. YOU attempted a pass in Gold’s zone; Gold 1 intercepted and Gold 2 moves through the middle. D1 is behind the play.';
+const question=scene.questions.find(q=>q.id==='exp26b-u13-016-q5');
+question.prompt='Imagine D1 wins the puck back while Gold 2 remains in the middle. Which call gives the team useful new information?';
+question.options=[{id:'a',text:'D1 has it; Gold 2 is still middle'},{id:'b',text:'Keep the original forward passing pattern'},{id:'c',text:'Gold 2 is no longer a concern'}];
+question.answer=['a'];
+question.explanation='The call identifies D1 as the new carrier and Gold 2 as the remaining pressure cue. That updates teammates after the interception without promising a clear outlet. D1 still checks the lane before passing; YOU offer support that fits the new pressure.';
+writeFileSync(additionsPath,JSON.stringify(additions,null,2)+'\n');
+writeFileSync(scenesPath,JSON.stringify(scenes,null,2)+'\n');
+const after=readBankFiles().bank,changes=[];
+for(const oldScene of before){const next=after.find(s=>s.id===oldScene.id);for(const oldQuestion of oldScene.questions){const q=next.questions.find(q=>q.id===oldQuestion.id),prior=questionContentHash(oldScene,oldQuestion),hash=questionContentHash(next,q);if(prior!==hash)changes.push({questionId:q.id,scenarioId:next.id,baseVersion:oldScene.version,newVersion:next.version,before:oldQuestion,after:q,beforeContentHash:prior,afterContentHash:hash,reason:next.id==='exp26-u13-015'?'Replaced a duplicate opponent choice and treated conditional support as coaching.':'Removed an inaccurate blue-line location from the scene; the changed-cue question now teaches a useful possession-and-pressure call after recovery.'});}}
+writeFileSync(receipt,JSON.stringify({status:'applied-awaiting-independent-recheck',author:'root',changedAt:new Date().toISOString(),changes,sceneEdits:[{scenarioId:scene.id,before:before.find(s=>s.id===scene.id).briefing,after:scene.briefing}]},null,2)+'\n');
+console.log(JSON.stringify({changes:changes.length}));

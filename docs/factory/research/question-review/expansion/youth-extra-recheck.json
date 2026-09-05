@@ -1,0 +1,36 @@
+{
+  "reviewer": "luna-u11-second-youth",
+  "model": "gpt-5.6-luna",
+  "reviewedAt": "2026-09-05",
+  "coverage": [
+    {
+      "questionId": "exp26-u7-001-q7",
+      "scenarioId": "exp26-u7-001",
+      "scenarioVersion": 1,
+      "contentHash": "02fb9eafb709f681a519a50d1db4a2e26acee080360816b47fffffd178655751",
+      "decision": "pass",
+      "reason": "Pass. The turnover is explicitly introduced as an imagined branch, so it is clearly conditional rather than a claim about the frozen scene. The answer asks the beginner to notice who has the puck before choosing a response and does not rely on an unstated current possession."
+    },
+    {
+      "questionId": "exp26-u7-001-q8",
+      "scenarioId": "exp26-u7-001",
+      "scenarioVersion": 1,
+      "contentHash": "e57b4afce8b94cf02ef8ffff2489beb97aef76358990cfdde5b1c85ded4333a7",
+      "decision": "pass",
+      "reason": "Pass. The prompt explicitly makes Navy2's relocation a hypothetical next state. Both named players are represented in the supplied setup, and tracking the teammate's new location plus the opposing player who may block the way is a meaningful conditional read."
+    },
+    {
+      "questionId": "exp26-u7-001-q9",
+      "scenarioId": "exp26-u7-001",
+      "scenarioVersion": 1,
+      "contentHash": "9fb85fd03ea4b259bc2809f27dfeebdc14fb1a48e75113f2f986e01e9447bb81",
+      "decision": "pass",
+      "reason": "Pass. YOU is the actual position actor and the scene states that YOU hold the puck. The proposed reference is a distinct nearby coaching example that changes the passing angle toward represented Navy2; the explanation keeps the move conditional and does not claim a single guaranteed location."
+    }
+  ],
+  "limits": [
+    "AI coaching review, not human approval; no rendered-image certification.",
+    "The decisions check the repaired questions against the complete supplied U7 scene. Conditional branches are assessed as imagined coaching prompts, while current actors and current puck ownership remain grounded in the freeze.",
+    "Static content cannot certify movement, timing, formal rules, or learning transfer."
+  ]
+}

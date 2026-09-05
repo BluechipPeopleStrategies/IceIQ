@@ -1,0 +1,361 @@
+{
+  "status": "applied-awaiting-independent-recheck",
+  "author": "root",
+  "changedAt": "2026-09-05T20:03:47.466Z",
+  "changes": [
+    {
+      "questionId": "exp26-u13-015-q7",
+      "scenarioId": "exp26-u13-015",
+      "baseVersion": 1,
+      "newVersion": 1,
+      "before": {
+        "type": "choice",
+        "prompt": "Which Navy teammate can help behind YOU if Gold 1 turns inside?",
+        "options": [
+          {
+            "id": "a",
+            "text": "Gold 2"
+          },
+          {
+            "id": "b",
+            "text": "D1"
+          },
+          {
+            "id": "c",
+            "text": "Gold 2"
+          }
+        ],
+        "answer": [
+          "b"
+        ],
+        "basis": "scene",
+        "explanation": "D1 is positioned deeper behind YOU and can support recovery if Gold 1 turns inside; if D1 is pulled away, protect the route back to Navy’s net yourself.",
+        "id": "exp26-u13-015-q7"
+      },
+      "after": {
+        "type": "choice",
+        "prompt": "Which teammate can support behind YOU if Gold 1 turns inside?",
+        "options": [
+          {
+            "id": "a",
+            "text": "Gold 1"
+          },
+          {
+            "id": "b",
+            "text": "D1"
+          },
+          {
+            "id": "c",
+            "text": "Gold 2"
+          }
+        ],
+        "answer": [
+          "b"
+        ],
+        "basis": "coaching",
+        "explanation": "D1 is positioned deeper behind YOU and can support recovery if Gold 1 turns inside; if D1 is pulled away, protect the route back to Navy’s net yourself.",
+        "id": "exp26-u13-015-q7"
+      },
+      "beforeContentHash": "ae28e14a7e9d0b41206b88aa102fed15cbfe352e7cf98ccd2db5ee2f08a5d96d",
+      "afterContentHash": "f8a2ee2ed5fc1a831594ab912616d3686925f87e2b5615d89a5753d3091ad527",
+      "reason": "Replaced a duplicate opponent choice and treated conditional support as coaching."
+    },
+    {
+      "questionId": "exp26b-u13-016-q1",
+      "scenarioId": "exp26b-u13-016",
+      "baseVersion": 2,
+      "newVersion": 3,
+      "before": {
+        "type": "choice",
+        "prompt": "Which team has possession now?",
+        "options": [
+          {
+            "id": "a",
+            "text": "Gold"
+          },
+          {
+            "id": "b",
+            "text": "Navy"
+          },
+          {
+            "id": "c",
+            "text": "Neither can be identified"
+          }
+        ],
+        "answer": [
+          "a"
+        ],
+        "basis": "scene",
+        "explanation": "Gold 1 is assigned the puck after interception, so Navy’s attacking routes become recovery routes; if D1 wins it, update.",
+        "id": "exp26b-u13-016-q1"
+      },
+      "after": {
+        "type": "choice",
+        "prompt": "Which team has possession now?",
+        "options": [
+          {
+            "id": "a",
+            "text": "Gold"
+          },
+          {
+            "id": "b",
+            "text": "Navy"
+          },
+          {
+            "id": "c",
+            "text": "Neither can be identified"
+          }
+        ],
+        "answer": [
+          "a"
+        ],
+        "basis": "scene",
+        "explanation": "Gold 1 is assigned the puck after interception, so Navy’s attacking routes become recovery routes; if D1 wins it, update.",
+        "id": "exp26b-u13-016-q1"
+      },
+      "beforeContentHash": "2d0fcc9919dbea93b9b11749b74370682bc5b7954dd99e4424fcfd9c6d5dd7ba",
+      "afterContentHash": "26b469ad75372697b1e43e51e66e6d3c86d935d399961bbb4f8ce80567ee8113",
+      "reason": "Removed an inaccurate blue-line location from the scene; the changed-cue question now teaches a useful possession-and-pressure call after recovery."
+    },
+    {
+      "questionId": "exp26b-u13-016-q2",
+      "scenarioId": "exp26b-u13-016",
+      "baseVersion": 2,
+      "newVersion": 3,
+      "before": {
+        "type": "multi",
+        "prompt": "Which two concerns follow the interception?",
+        "options": [
+          {
+            "id": "a",
+            "text": "Gold 1’s puck route"
+          },
+          {
+            "id": "b",
+            "text": "Gold 2’s middle lane"
+          },
+          {
+            "id": "c",
+            "text": "Continuing the original pass pattern"
+          }
+        ],
+        "answer": [
+          "a",
+          "b"
+        ],
+        "basis": "coaching",
+        "explanation": "The new carrier and middle support are immediate threats; repeating attack pattern ignores turnover.",
+        "id": "exp26b-u13-016-q2"
+      },
+      "after": {
+        "type": "multi",
+        "prompt": "Which two concerns follow the interception?",
+        "options": [
+          {
+            "id": "a",
+            "text": "Gold 1’s puck route"
+          },
+          {
+            "id": "b",
+            "text": "Gold 2’s middle lane"
+          },
+          {
+            "id": "c",
+            "text": "Continuing the original pass pattern"
+          }
+        ],
+        "answer": [
+          "a",
+          "b"
+        ],
+        "basis": "coaching",
+        "explanation": "The new carrier and middle support are immediate threats; repeating attack pattern ignores turnover.",
+        "id": "exp26b-u13-016-q2"
+      },
+      "beforeContentHash": "aab539c97a56f4079d4cf3f66fc8dfcc3f46a54451e59f164535bc9bde27aec7",
+      "afterContentHash": "96312ee57882e6e59993414905f11168891dba0f8efc8909f551d6d7fdf7ac5a",
+      "reason": "Removed an inaccurate blue-line location from the scene; the changed-cue question now teaches a useful possession-and-pressure call after recovery."
+    },
+    {
+      "questionId": "exp26b-u13-016-q3",
+      "scenarioId": "exp26b-u13-016",
+      "baseVersion": 2,
+      "newVersion": 3,
+      "before": {
+        "type": "sequence",
+        "prompt": "Arrange one immediate cover response.",
+        "options": [
+          {
+            "id": "a",
+            "text": "Call the turnover"
+          },
+          {
+            "id": "b",
+            "text": "Take the nearer open lane"
+          },
+          {
+            "id": "c",
+            "text": "Hand off when D1 arrives"
+          }
+        ],
+        "answer": [
+          "a",
+          "b",
+          "c"
+        ],
+        "basis": "coaching",
+        "explanation": "Calling updates teammates; taking nearer lane prevents a free attack; handoff keeps coverage connected.",
+        "id": "exp26b-u13-016-q3"
+      },
+      "after": {
+        "type": "sequence",
+        "prompt": "Arrange one immediate cover response.",
+        "options": [
+          {
+            "id": "a",
+            "text": "Call the turnover"
+          },
+          {
+            "id": "b",
+            "text": "Take the nearer open lane"
+          },
+          {
+            "id": "c",
+            "text": "Hand off when D1 arrives"
+          }
+        ],
+        "answer": [
+          "a",
+          "b",
+          "c"
+        ],
+        "basis": "coaching",
+        "explanation": "Calling updates teammates; taking nearer lane prevents a free attack; handoff keeps coverage connected.",
+        "id": "exp26b-u13-016-q3"
+      },
+      "beforeContentHash": "8be3173e8a959dfd97a12a79089f5352627a85f8d43043f3dfe1a6a8864a0daf",
+      "afterContentHash": "c29ce3e1913d84e69775a22a021325fad93796eee0d7552e09aa5a0fd88412d2",
+      "reason": "Removed an inaccurate blue-line location from the scene; the changed-cue question now teaches a useful possession-and-pressure call after recovery."
+    },
+    {
+      "questionId": "exp26b-u13-016-q4",
+      "scenarioId": "exp26b-u13-016",
+      "baseVersion": 2,
+      "newVersion": 3,
+      "before": {
+        "type": "position",
+        "prompt": "Move YOU to a cover point that keeps Gold 1’s puck side and Gold 2’s middle route in view.",
+        "basis": "coaching",
+        "explanation": "This central point keeps the carrier side and middle support in view during the interception; if Gold 1 turns inside, follow the nearer threat and communicate the switch.",
+        "actorId": "n1",
+        "reference": {
+          "x": 15,
+          "y": 1
+        },
+        "id": "exp26b-u13-016-q4"
+      },
+      "after": {
+        "type": "position",
+        "prompt": "Move YOU to a cover point that keeps Gold 1’s puck side and Gold 2’s middle route in view.",
+        "basis": "coaching",
+        "explanation": "This central point keeps the carrier side and middle support in view during the interception; if Gold 1 turns inside, follow the nearer threat and communicate the switch.",
+        "actorId": "n1",
+        "reference": {
+          "x": 15,
+          "y": 1
+        },
+        "id": "exp26b-u13-016-q4"
+      },
+      "beforeContentHash": "d7e01aa50d3f39b1e15306350ae59009e88d9a7e2ee25cf449cb324125ff9e6b",
+      "afterContentHash": "3991e78bacdfb7a043fef06efe9ff45e3a78e26ab27f182c8e48967a23ae5a8c",
+      "reason": "Removed an inaccurate blue-line location from the scene; the changed-cue question now teaches a useful possession-and-pressure call after recovery."
+    },
+    {
+      "questionId": "exp26b-u13-016-q5",
+      "scenarioId": "exp26b-u13-016",
+      "baseVersion": 2,
+      "newVersion": 3,
+      "before": {
+        "type": "choice",
+        "prompt": "D1 wins the puck back and Gold 2 remains in the middle. What should YOU recheck before supporting?",
+        "options": [
+          {
+            "id": "a",
+            "text": "D1’s outlet and Gold 2’s position"
+          },
+          {
+            "id": "b",
+            "text": "Gold 1’s old attacking route"
+          },
+          {
+            "id": "c",
+            "text": "Whether the turnover ends play"
+          }
+        ],
+        "answer": [
+          "a"
+        ],
+        "basis": "coaching",
+        "explanation": "A second possession change makes D1 the new Navy carrier, while Gold 2 remains a separate threat; check both before choosing support, and protect first if pressure closes the outlet.",
+        "id": "exp26b-u13-016-q5"
+      },
+      "after": {
+        "type": "choice",
+        "prompt": "Imagine D1 wins the puck back while Gold 2 remains in the middle. Which call gives the team useful new information?",
+        "options": [
+          {
+            "id": "a",
+            "text": "D1 has it; Gold 2 is still middle"
+          },
+          {
+            "id": "b",
+            "text": "Keep the original forward passing pattern"
+          },
+          {
+            "id": "c",
+            "text": "Gold 2 is no longer a concern"
+          }
+        ],
+        "answer": [
+          "a"
+        ],
+        "basis": "coaching",
+        "explanation": "The call identifies D1 as the new carrier and Gold 2 as the remaining pressure cue. That updates teammates after the interception without promising a clear outlet. D1 still checks the lane before passing; YOU offer support that fits the new pressure.",
+        "id": "exp26b-u13-016-q5"
+      },
+      "beforeContentHash": "e211cbb05dc654dc6648aba4b6f2d8e54ae3a81cf3dceb12e2879071f0a7fc0c",
+      "afterContentHash": "03b6c2a631c088d20f27b2053db6ac09689ece726e94640cae01ee81fc2dddf1",
+      "reason": "Removed an inaccurate blue-line location from the scene; the changed-cue question now teaches a useful possession-and-pressure call after recovery."
+    },
+    {
+      "questionId": "exp26b-u13-016-q6",
+      "scenarioId": "exp26b-u13-016",
+      "baseVersion": 2,
+      "newVersion": 3,
+      "before": {
+        "type": "explain",
+        "prompt": "Name one attacking intention you must abandon after the interception.",
+        "basis": "coaching",
+        "explanation": "The planned forward pass is no longer the job once Gold owns puck, so call turnover and cover nearest lane; if Navy recovers, rebuild from new location.",
+        "id": "exp26b-u13-016-q6"
+      },
+      "after": {
+        "type": "explain",
+        "prompt": "Name one attacking intention you must abandon after the interception.",
+        "basis": "coaching",
+        "explanation": "The planned forward pass is no longer the job once Gold owns puck, so call turnover and cover nearest lane; if Navy recovers, rebuild from new location.",
+        "id": "exp26b-u13-016-q6"
+      },
+      "beforeContentHash": "dbdb020dea6dd5dbe5921dbb8638217db2edc5bfde6884005048b265c516ec41",
+      "afterContentHash": "dd15483f4aaa65f6e58939f59e3154983229765f0309f5909df75af56e9ae2c5",
+      "reason": "Removed an inaccurate blue-line location from the scene; the changed-cue question now teaches a useful possession-and-pressure call after recovery."
+    }
+  ],
+  "sceneEdits": [
+    {
+      "scenarioId": "exp26b-u13-016",
+      "before": "Navy attacks Gold’s net and defends Navy’s net. YOU attempted a pass at the right blue line; Gold 1 intercepted and Gold 2 moves middle. D1 is behind the play.",
+      "after": "Navy attacks Gold’s net and defends Navy’s net. YOU attempted a pass in Gold’s zone; Gold 1 intercepted and Gold 2 moves through the middle. D1 is behind the play."
+    }
+  ]
+}

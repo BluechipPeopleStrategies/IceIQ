@@ -1,0 +1,1659 @@
+{
+  "status": "applied-awaiting-independent-recheck",
+  "author": "luna-youth-peer-u11",
+  "changedAt": "2026-09-05T19:33:33.809Z",
+  "firstReview": {
+    "path": "docs/factory/research/question-review/expansion/u11-first.json",
+    "reviewer": "luna-youth-peer-u11",
+    "reviewKind": "AI coaching review",
+    "reviewedAt": "2026-09-05",
+    "sha256": "c92db0da5fea953e2961d20d5cd80634d7437ab0e5f74051437aba705787689d"
+  },
+  "scenarioEdits": [
+    {
+      "scenarioId": "exp26b-u11-008",
+      "baseVersion": 1,
+      "newVersion": 2,
+      "before": {
+        "briefing": "Navy attacks +x. YOU has the puck in the neutral zone; D1 is behind and inside, while F2 is wide ahead. The rep includes a small-area rule: take one controlled touch before deciding whether to continue the carry.",
+        "cues": [
+          "Open space is ahead of YOU.",
+          "D1 is behind and inside.",
+          "F2 is wide ahead, but the lane can change."
+        ],
+        "setup": {
+          "actors": [
+            {
+              "id": "h1",
+              "label": "YOU",
+              "team": "home",
+              "role": "skater",
+              "x": -8,
+              "y": -4,
+              "facing": 0
+            },
+            {
+              "id": "h2",
+              "label": "F2",
+              "team": "home",
+              "role": "skater",
+              "x": 1,
+              "y": -8,
+              "facing": 0.2
+            },
+            {
+              "id": "a1",
+              "label": "D1",
+              "team": "away",
+              "role": "skater",
+              "x": -2,
+              "y": 2,
+              "facing": -2.7
+            }
+          ],
+          "puck": {
+            "owner": "h1"
+          }
+        }
+      },
+      "after": {
+        "briefing": "Navy attacks +x. YOU has the puck in the neutral zone; D1 is ahead and inside, while F2 is wide ahead. The rep includes a small-area rule: take one controlled touch before deciding whether to continue the carry.",
+        "cues": [
+          "Open space is ahead of YOU.",
+          "D1 is ahead and inside.",
+          "F2 is wide ahead, but the lane can change."
+        ],
+        "setup": {
+          "actors": [
+            {
+              "id": "h1",
+              "label": "YOU",
+              "team": "home",
+              "role": "skater",
+              "x": -8,
+              "y": -4,
+              "facing": 0
+            },
+            {
+              "id": "h2",
+              "label": "F2",
+              "team": "home",
+              "role": "skater",
+              "x": 1,
+              "y": -8,
+              "facing": 0.2
+            },
+            {
+              "id": "a1",
+              "label": "D1",
+              "team": "away",
+              "role": "skater",
+              "x": -2,
+              "y": 2,
+              "facing": -2.7
+            }
+          ],
+          "puck": {
+            "owner": "h1"
+          }
+        }
+      },
+      "questionIds": [
+        "exp26b-u11-008-q1",
+        "exp26b-u11-008-q2",
+        "exp26b-u11-008-q3",
+        "exp26b-u11-008-q4",
+        "exp26b-u11-008-q5",
+        "exp26b-u11-008-q6"
+      ]
+    },
+    {
+      "scenarioId": "exp26b-u11-017",
+      "baseVersion": 1,
+      "newVersion": 2,
+      "before": {
+        "briefing": "Gold attacks -x. F1 has moved ahead of YOU toward the left net; F2 is farther wide. YOU is behind the play and the goalie is visible. The first reach is stated to have missed.",
+        "cues": [
+          "F1 is ahead toward the left net.",
+          "The first reach missed.",
+          "F2 is a separate wide threat."
+        ],
+        "setup": {
+          "actors": [
+            {
+              "id": "h1",
+              "label": "YOU",
+              "team": "home",
+              "role": "skater",
+              "x": 13,
+              "y": 2,
+              "facing": 0.7
+            },
+            {
+              "id": "a1",
+              "label": "F1",
+              "team": "away",
+              "role": "skater",
+              "x": 15,
+              "y": 4,
+              "facing": 0
+            },
+            {
+              "id": "a2",
+              "label": "F2",
+              "team": "away",
+              "role": "skater",
+              "x": 19,
+              "y": -5,
+              "facing": 0
+            },
+            {
+              "id": "g",
+              "label": "G",
+              "team": "home",
+              "role": "goalie",
+              "x": 26,
+              "y": 0,
+              "facing": 3.1
+            }
+          ],
+          "puck": {
+            "owner": "a1"
+          }
+        }
+      },
+      "after": {
+        "briefing": "Gold attacks -x. F1 has moved ahead of YOU toward the left net; F2 is farther wide. YOU is behind the play and the goalie is visible. The first reach is stated to have missed.",
+        "cues": [
+          "F1 is ahead toward the left net.",
+          "The first reach missed.",
+          "F2 is a separate wide threat."
+        ],
+        "setup": {
+          "actors": [
+            {
+              "id": "h1",
+              "label": "YOU",
+              "team": "home",
+              "role": "skater",
+              "x": 13,
+              "y": 2,
+              "facing": 0.7
+            },
+            {
+              "id": "a1",
+              "label": "F1",
+              "team": "away",
+              "role": "skater",
+              "x": 11,
+              "y": 4,
+              "facing": 3.14
+            },
+            {
+              "id": "a2",
+              "label": "F2",
+              "team": "away",
+              "role": "skater",
+              "x": 19,
+              "y": -5,
+              "facing": 0
+            },
+            {
+              "id": "g",
+              "label": "G",
+              "team": "home",
+              "role": "goalie",
+              "x": 26,
+              "y": 0,
+              "facing": 3.1
+            }
+          ],
+          "puck": {
+            "owner": "a1"
+          }
+        }
+      },
+      "questionIds": [
+        "exp26b-u11-017-q1",
+        "exp26b-u11-017-q2",
+        "exp26b-u11-017-q3",
+        "exp26b-u11-017-q4",
+        "exp26b-u11-017-q5",
+        "exp26b-u11-017-q6"
+      ]
+    }
+  ],
+  "changes": [
+    {
+      "questionId": "exp26-u11-003-q8",
+      "scenarioId": "exp26-u11-003",
+      "baseVersion": 1,
+      "newVersion": 2,
+      "before": {
+        "id": "exp26-u11-003-q8",
+        "type": "multi",
+        "prompt": "Which two responses could follow D1's reaction to your re-offer?",
+        "options": [
+          {
+            "id": "a",
+            "text": "Use the new lane if F1 can reach it"
+          },
+          {
+            "id": "b",
+            "text": "Notice space D1 leaves for F2 if D1 follows"
+          },
+          {
+            "id": "c",
+            "text": "Pass to yourself through D1"
+          }
+        ],
+        "answer": [
+          "a",
+          "b"
+        ],
+        "basis": "coaching",
+        "explanation": "D1's response creates the next decision: use the lane, or exploit the space that the defender left."
+      },
+      "after": {
+        "id": "exp26-u11-003-q8",
+        "type": "multi",
+        "prompt": "Which two responses could follow D1's reaction to your re-offer?",
+        "options": [
+          {
+            "id": "a",
+            "text": "Use the new lane if F1 can reach it"
+          },
+          {
+            "id": "b",
+            "text": "Notice space D1 leaves for F2 if D1 follows"
+          },
+          {
+            "id": "c",
+            "text": "Hold the same direct lane while D1 remains between F1 and YOU"
+          }
+        ],
+        "answer": [
+          "a",
+          "b"
+        ],
+        "basis": "coaching",
+        "explanation": "D1's response creates the next decision: use the lane, or exploit the space that the defender left."
+      },
+      "beforeContentHash": "fcd5d82cb5b7b358a458dff9396f9530c2f6cce557f1c4457fae60c6ab12cbea",
+      "afterContentHash": "8f1d69a20252c53d9e689d89edb33d3656d14f004400a3f1cba6ff94b58b3dff",
+      "firstReviewFindingIds": [
+        "u11-p2-dummy-distractors"
+      ],
+      "reason": "Replace the impossible self-pass distractor with a credible choice that tests whether the player changes an obstructed lane."
+    },
+    {
+      "questionId": "exp26-u11-004-q9",
+      "scenarioId": "exp26-u11-004",
+      "baseVersion": 1,
+      "newVersion": 2,
+      "before": {
+        "id": "exp26-u11-004-q9",
+        "type": "position",
+        "prompt": "Move YOU to a support point above the shaded return line.",
+        "actorId": "h1",
+        "reference": {
+          "x": 12.2,
+          "y": 6.1
+        },
+        "basis": "coaching",
+        "explanation": "The point gives F2 a new relationship to read while keeping D1 visible."
+      },
+      "after": {
+        "id": "exp26-u11-004-q9",
+        "type": "position",
+        "prompt": "Move YOU to a support point above the direct return lane between your old position and F2.",
+        "actorId": "h1",
+        "reference": {
+          "x": 12.2,
+          "y": 6.1
+        },
+        "basis": "coaching",
+        "explanation": "This point gives F2 a new support relationship while keeping D1 visible; the lane is inferred from the named players."
+      },
+      "beforeContentHash": "03138dae908ef51416e165f6bc3c800e9e8a2c3121ecc261746d584030f2fe26",
+      "afterContentHash": "58c2dcd0f9f517f5abd86b93b98aadb622ad522a3dc19a8bce1d17302dc0017c",
+      "firstReviewFindingIds": [
+        "u11-p2-unrendered-return-line"
+      ],
+      "reason": "Use a named direct return lane that can be inferred from the actual players instead of an unrendered shaded object."
+    },
+    {
+      "questionId": "exp26-u11-018-q7",
+      "scenarioId": "exp26-u11-018",
+      "baseVersion": 1,
+      "newVersion": 2,
+      "before": {
+        "id": "exp26-u11-018-q7",
+        "type": "choice",
+        "prompt": "What should YOU communicate on the backcheck?",
+        "options": [
+          {
+            "id": "a",
+            "text": "D1 has F1; I am tracking F2 toward the left net"
+          },
+          {
+            "id": "b",
+            "text": "I am chasing the puck only"
+          },
+          {
+            "id": "c",
+            "text": "F2 does not receive"
+          }
+        ],
+        "answer": [
+          "a"
+        ],
+        "basis": "coaching",
+        "explanation": "The call identifies the uncovered runner and the teammate pressure."
+      },
+      "after": {
+        "id": "exp26-u11-018-q7",
+        "type": "choice",
+        "prompt": "What should YOU communicate on the backcheck?",
+        "options": [
+          {
+            "id": "a",
+            "text": "D1 has F1; I am tracking F2 toward the right net"
+          },
+          {
+            "id": "b",
+            "text": "I am chasing the puck only"
+          },
+          {
+            "id": "c",
+            "text": "F2 does not receive"
+          }
+        ],
+        "answer": [
+          "a"
+        ],
+        "basis": "coaching",
+        "explanation": "The call identifies the uncovered runner and the teammate pressure."
+      },
+      "beforeContentHash": "5ee98ada44f31b86ce572813ce2db7fc45ab89ff67477c6257b1d4e12f6fe258",
+      "afterContentHash": "356db9d8a76bb4e23d275e291f133bee6c8ea867bbca4978b0cb94c88f127e68",
+      "firstReviewFindingIds": [
+        "u11-p1-original-018-net-direction"
+      ],
+      "reason": "Align the communication key with Navy attacking +x toward the right net."
+    },
+    {
+      "questionId": "exp26-u11-018-q9",
+      "scenarioId": "exp26-u11-018",
+      "baseVersion": 1,
+      "newVersion": 2,
+      "before": {
+        "id": "exp26-u11-018-q9",
+        "type": "position",
+        "prompt": "Move YOU between F2 and the left net.",
+        "actorId": "h1",
+        "reference": {
+          "x": 10,
+          "y": -1.6
+        },
+        "basis": "coaching",
+        "explanation": "This point improves the defended net-side relationship to F2 and keeps F1 visible."
+      },
+      "after": {
+        "id": "exp26-u11-018-q9",
+        "type": "position",
+        "prompt": "Move YOU between F2 and the right net.",
+        "actorId": "h1",
+        "reference": {
+          "x": 19,
+          "y": -1.6
+        },
+        "basis": "coaching",
+        "explanation": "This point places YOU on the defended net-side of F2 and keeps F1 visible; the recovery route remains conditional on F2’s movement."
+      },
+      "beforeContentHash": "57bc8a30669c14275e4ec325ef4517419692517ae4f408018539c90ab839f66c",
+      "afterContentHash": "67ad2ef17ef431154e2b259807988811884f58cf799a2eb7de34d7968ad2fa64",
+      "firstReviewFindingIds": [
+        "u11-p1-original-018-net-direction"
+      ],
+      "reason": "Place the defender on the actual net-side of F2, then name that right-net relationship."
+    },
+    {
+      "questionId": "exp26-u11-024-q9",
+      "scenarioId": "exp26-u11-024",
+      "baseVersion": 1,
+      "newVersion": 2,
+      "before": {
+        "id": "exp26-u11-024-q9",
+        "type": "position",
+        "prompt": "Move YOU behind the right blue line with F1 visible.",
+        "actorId": "h1",
+        "reference": {
+          "x": 12.4,
+          "y": -3.4
+        },
+        "basis": "coaching",
+        "explanation": "This point completes the practice reset while retaining the carrier in view."
+      },
+      "after": {
+        "id": "exp26-u11-024-q9",
+        "type": "position",
+        "prompt": "Move YOU to the neutral-zone side of the right blue line with F1 visible.",
+        "actorId": "h1",
+        "reference": {
+          "x": 6,
+          "y": -3
+        },
+        "basis": "coaching",
+        "explanation": "This point places YOU on the neutral-zone side of the right blue line for this practice reset while keeping F1 visible; it is illustrative, not a formal offside verdict."
+      },
+      "beforeContentHash": "62810fe613d1a362c2dc9ab3a80ab376bc8829c41fab27a2266e258739525c10",
+      "afterContentHash": "53f3959b392321500194f6e9b0754c9689338be23f385c18b295883673af0631",
+      "firstReviewFindingIds": [
+        "u11-p1-original-024-reset-target"
+      ],
+      "reason": "Return to the neutral-zone side explicitly and use the supplied neutral-side example point."
+    },
+    {
+      "questionId": "exp26b-u11-008-q1",
+      "scenarioId": "exp26b-u11-008",
+      "baseVersion": 1,
+      "newVersion": 2,
+      "before": {
+        "id": "exp26b-u11-008-q1",
+        "type": "choice",
+        "prompt": "Which player is behind YOU in this neutral-zone picture?",
+        "options": [
+          {
+            "id": "a",
+            "text": "F2"
+          },
+          {
+            "id": "b",
+            "text": "D1"
+          },
+          {
+            "id": "c",
+            "text": "YOU"
+          }
+        ],
+        "answer": [
+          "b"
+        ],
+        "basis": "scene",
+        "explanation": "D1 is behind and inside YOU relative to the +x attack."
+      },
+      "after": {
+        "id": "exp26b-u11-008-q1",
+        "type": "choice",
+        "prompt": "Which player is farther up ice from YOU in this +x attack?",
+        "options": [
+          {
+            "id": "a",
+            "text": "F2"
+          },
+          {
+            "id": "b",
+            "text": "D1"
+          },
+          {
+            "id": "c",
+            "text": "YOU"
+          }
+        ],
+        "answer": [
+          "b"
+        ],
+        "basis": "scene",
+        "explanation": "D1 is farther up ice than YOU on the +x direction and sits inside the route."
+      },
+      "beforeContentHash": "dcd9f4a32e56a230b1eed4fb0675f74bd36531e0d1a11d68c267473a8c7914f8",
+      "afterContentHash": "18d96b64e17bdc73a23951c74ab2de843a3664342c985d20667c341341ebe63b",
+      "firstReviewFindingIds": [
+        "u11-p1-new-008-behind-key"
+      ],
+      "reason": "Align the scene briefing/cue and question with D1 being ahead of YOU on the +x attack."
+    },
+    {
+      "questionId": "exp26b-u11-008-q2",
+      "scenarioId": "exp26b-u11-008",
+      "baseVersion": 1,
+      "newVersion": 2,
+      "before": {
+        "id": "exp26b-u11-008-q2",
+        "type": "multi",
+        "prompt": "Which two cues should change a carry decision?",
+        "options": [
+          {
+            "id": "a",
+            "text": "Whether the forward lane stays open"
+          },
+          {
+            "id": "b",
+            "text": "Whether D1 can close from inside"
+          },
+          {
+            "id": "c",
+            "text": "That F2 is wide so the carry must continue"
+          }
+        ],
+        "answer": [
+          "a",
+          "b"
+        ],
+        "basis": "coaching",
+        "explanation": "The lane and defender movement explain whether carrying preserves space; F2 is an option, not a command."
+      },
+      "after": {
+        "id": "exp26b-u11-008-q2",
+        "type": "multi",
+        "prompt": "Which two cues should change a carry decision?",
+        "options": [
+          {
+            "id": "a",
+            "text": "Whether the forward lane stays open"
+          },
+          {
+            "id": "b",
+            "text": "Whether D1 can close from inside"
+          },
+          {
+            "id": "c",
+            "text": "That F2 is wide so the carry must continue"
+          }
+        ],
+        "answer": [
+          "a",
+          "b"
+        ],
+        "basis": "coaching",
+        "explanation": "The lane and defender movement explain whether carrying preserves space; F2 is an option, not a command."
+      },
+      "beforeContentHash": "50d0d49d466bb542c6eff0f52684cc8efe50a65ba15d8afd7faacd702a72a20a",
+      "afterContentHash": "248fb61aa335b66a52d1a05eda7e4820d6bd49f531ff824e8dd3cdf1078a2706",
+      "firstReviewFindingIds": [
+        "u11-p1-new-008-behind-key"
+      ],
+      "reason": "Align the scene briefing/cue and question with D1 being ahead of YOU on the +x attack."
+    },
+    {
+      "questionId": "exp26b-u11-008-q3",
+      "scenarioId": "exp26b-u11-008",
+      "baseVersion": 1,
+      "newVersion": 2,
+      "before": {
+        "id": "exp26b-u11-008-q3",
+        "type": "sequence",
+        "prompt": "Arrange the open-space scan.",
+        "options": [
+          {
+            "id": "a",
+            "text": "Check the lane and D1"
+          },
+          {
+            "id": "b",
+            "text": "Take the controlled touch"
+          },
+          {
+            "id": "c",
+            "text": "Re-read F2 and the next lane"
+          }
+        ],
+        "answer": [
+          "a",
+          "b",
+          "c"
+        ],
+        "basis": "coaching",
+        "explanation": "A small touch earns new information; the next decision comes from the changed relationships."
+      },
+      "after": {
+        "id": "exp26b-u11-008-q3",
+        "type": "sequence",
+        "prompt": "Arrange the open-space scan.",
+        "options": [
+          {
+            "id": "a",
+            "text": "Check the lane and D1"
+          },
+          {
+            "id": "b",
+            "text": "Take the controlled touch"
+          },
+          {
+            "id": "c",
+            "text": "Re-read F2 and the next lane"
+          }
+        ],
+        "answer": [
+          "a",
+          "b",
+          "c"
+        ],
+        "basis": "coaching",
+        "explanation": "A small touch earns new information; the next decision comes from the changed relationships."
+      },
+      "beforeContentHash": "959449a15cf1f06e7b9dd8f4b3907819f138a237b64262310689bd6a616a1d73",
+      "afterContentHash": "485cbc81b4acecaabf8bf0de4114e083b2a8786b2baa91ca7b4b7aedfb2362ed",
+      "firstReviewFindingIds": [
+        "u11-p1-new-008-behind-key"
+      ],
+      "reason": "Align the scene briefing/cue and question with D1 being ahead of YOU on the +x attack."
+    },
+    {
+      "questionId": "exp26b-u11-008-q4",
+      "scenarioId": "exp26b-u11-008",
+      "baseVersion": 1,
+      "newVersion": 2,
+      "before": {
+        "id": "exp26b-u11-008-q4",
+        "type": "position",
+        "prompt": "Move YOU into an example forward lane that leaves room from F2.",
+        "actorId": "h1",
+        "reference": {
+          "x": -4,
+          "y": -4.5
+        },
+        "basis": "coaching",
+        "explanation": "The point moves +x into the open lane while leaving F2 on a separate wide route."
+      },
+      "after": {
+        "id": "exp26b-u11-008-q4",
+        "type": "position",
+        "prompt": "Move YOU into an example forward lane that leaves room from F2.",
+        "actorId": "h1",
+        "reference": {
+          "x": -4,
+          "y": -4.5
+        },
+        "basis": "coaching",
+        "explanation": "The point moves +x into the open lane while leaving F2 on a separate wide route."
+      },
+      "beforeContentHash": "120b20d0e51e14403d908712d893b6806aa5e688bc5701772c115a8ad5e05cb2",
+      "afterContentHash": "32bc79c2601c04da299e6d5deb4695890e43c5309363ac0c84ffe06abf0a632a",
+      "firstReviewFindingIds": [
+        "u11-p1-new-008-behind-key"
+      ],
+      "reason": "Align the scene briefing/cue and question with D1 being ahead of YOU on the +x attack."
+    },
+    {
+      "questionId": "exp26b-u11-008-q5",
+      "scenarioId": "exp26b-u11-008",
+      "baseVersion": 1,
+      "newVersion": 2,
+      "before": {
+        "id": "exp26b-u11-008-q5",
+        "type": "choice",
+        "prompt": "D1 turns and reaches the wide lane before your next touch. What should you change?",
+        "options": [
+          {
+            "id": "a",
+            "text": "Protect or use F2 if that lane remains reachable"
+          },
+          {
+            "id": "b",
+            "text": "Continue wide because the first lane was open"
+          },
+          {
+            "id": "c",
+            "text": "Stop and wait for D1 to choose"
+          }
+        ],
+        "answer": [
+          "a"
+        ],
+        "basis": "coaching",
+        "explanation": "D1 has changed the lane. Check whether protection or F2 now gives a safer continuation."
+      },
+      "after": {
+        "id": "exp26b-u11-008-q5",
+        "type": "choice",
+        "prompt": "D1 turns and reaches the wide lane before your next touch. What should you change?",
+        "options": [
+          {
+            "id": "a",
+            "text": "Protect or use F2 if that lane remains reachable"
+          },
+          {
+            "id": "b",
+            "text": "Continue wide because the first lane was open"
+          },
+          {
+            "id": "c",
+            "text": "Stop and wait for D1 to choose"
+          }
+        ],
+        "answer": [
+          "a"
+        ],
+        "basis": "coaching",
+        "explanation": "D1 has changed the lane. Check whether protection or F2 now gives a safer continuation."
+      },
+      "beforeContentHash": "4b66055b3f69363a3bfcc6f8ba9233a92e883488d186c1af360aa7969c83b2e6",
+      "afterContentHash": "c19dbe7967364d39ad230a4d6f95846f1068df33650a33b47d1b73ad6e807f83",
+      "firstReviewFindingIds": [
+        "u11-p1-new-008-behind-key"
+      ],
+      "reason": "Align the scene briefing/cue and question with D1 being ahead of YOU on the +x attack."
+    },
+    {
+      "questionId": "exp26b-u11-008-q6",
+      "scenarioId": "exp26b-u11-008",
+      "baseVersion": 1,
+      "newVersion": 2,
+      "before": {
+        "id": "exp26b-u11-008-q6",
+        "type": "explain",
+        "prompt": "What movement from D1 would make you stop carrying forward?",
+        "basis": "coaching",
+        "explanation": "A turn that closes the lane ahead or cuts off your support should trigger a re-read. Explain where F2 or a protected touch could replace the carry."
+      },
+      "after": {
+        "id": "exp26b-u11-008-q6",
+        "type": "explain",
+        "prompt": "What movement from D1 would make you stop carrying forward?",
+        "basis": "coaching",
+        "explanation": "A turn that closes the lane ahead or cuts off your support should trigger a re-read. Explain where F2 or a protected touch could replace the carry."
+      },
+      "beforeContentHash": "f427ef57ce4cc1b3a4f20e01a20dc563726855dc21aea14f6bdc9b7519a94177",
+      "afterContentHash": "2d251dfd1312562387ba05ab758cc02dd0f4e6da43bef917c1cc64c9bb3f7577",
+      "firstReviewFindingIds": [
+        "u11-p1-new-008-behind-key"
+      ],
+      "reason": "Align the scene briefing/cue and question with D1 being ahead of YOU on the +x attack."
+    },
+    {
+      "questionId": "exp26b-u11-017-q1",
+      "scenarioId": "exp26b-u11-017",
+      "baseVersion": 1,
+      "newVersion": 2,
+      "before": {
+        "id": "exp26b-u11-017-q1",
+        "type": "choice",
+        "prompt": "Which attacker has moved beyond YOU toward the left net?",
+        "options": [
+          {
+            "id": "a",
+            "text": "F1"
+          },
+          {
+            "id": "b",
+            "text": "F2"
+          },
+          {
+            "id": "c",
+            "text": "The goalie"
+          }
+        ],
+        "answer": [
+          "a"
+        ],
+        "basis": "scene",
+        "explanation": "The briefing identifies F1 as ahead of YOU toward the left net."
+      },
+      "after": {
+        "id": "exp26b-u11-017-q1",
+        "type": "choice",
+        "prompt": "Which attacker has moved beyond YOU toward the left net?",
+        "options": [
+          {
+            "id": "a",
+            "text": "F1"
+          },
+          {
+            "id": "b",
+            "text": "F2"
+          },
+          {
+            "id": "c",
+            "text": "The goalie"
+          }
+        ],
+        "answer": [
+          "a"
+        ],
+        "basis": "scene",
+        "explanation": "The briefing identifies F1 as ahead of YOU toward the left net."
+      },
+      "beforeContentHash": "dfe6ad4474c3fce60f196b271ae843a6a07b77e8f33c5415a25a693f03dbbd35",
+      "afterContentHash": "9e7b2d6182163f7d7565e0457ebc1421db72220c10e74202fb55f53c99f0b2d9",
+      "firstReviewFindingIds": [
+        "u11-p1-new-017-direction"
+      ],
+      "reason": "Make the supplied actor geometry and facing agree with the stated Gold -x attack and “ahead toward the left net” cue."
+    },
+    {
+      "questionId": "exp26b-u11-017-q2",
+      "scenarioId": "exp26b-u11-017",
+      "baseVersion": 1,
+      "newVersion": 2,
+      "before": {
+        "id": "exp26b-u11-017-q2",
+        "type": "multi",
+        "prompt": "Which two details guide a useful recovery?",
+        "options": [
+          {
+            "id": "a",
+            "text": "F1's route to the net"
+          },
+          {
+            "id": "b",
+            "text": "F2's separate wide position"
+          },
+          {
+            "id": "c",
+            "text": "A second reach from behind even if the picture changes"
+          }
+        ],
+        "answer": [
+          "a",
+          "b"
+        ],
+        "basis": "coaching",
+        "explanation": "The carrier route and second attacker shape recovery. A repeated reach may leave the net-side relationship worse."
+      },
+      "after": {
+        "id": "exp26b-u11-017-q2",
+        "type": "multi",
+        "prompt": "Which two details guide a useful recovery?",
+        "options": [
+          {
+            "id": "a",
+            "text": "F1's route to the net"
+          },
+          {
+            "id": "b",
+            "text": "F2's separate wide position"
+          },
+          {
+            "id": "c",
+            "text": "A second reach from behind even if the picture changes"
+          }
+        ],
+        "answer": [
+          "a",
+          "b"
+        ],
+        "basis": "coaching",
+        "explanation": "The carrier route and second attacker shape recovery. A repeated reach may leave the net-side relationship worse."
+      },
+      "beforeContentHash": "61465230ae4b98a17a680a4e4c1d77b49803a38531cd08047e17cea3ebb93eb3",
+      "afterContentHash": "315011b712059d98391c0d37b572eae4fdb375eede5d41490338cd16e7a1fe96",
+      "firstReviewFindingIds": [
+        "u11-p1-new-017-direction"
+      ],
+      "reason": "Make the supplied actor geometry and facing agree with the stated Gold -x attack and “ahead toward the left net” cue."
+    },
+    {
+      "questionId": "exp26b-u11-017-q3",
+      "scenarioId": "exp26b-u11-017",
+      "baseVersion": 1,
+      "newVersion": 2,
+      "before": {
+        "id": "exp26b-u11-017-q3",
+        "type": "sequence",
+        "prompt": "Arrange the recovery response.",
+        "options": [
+          {
+            "id": "a",
+            "text": "Recognize the missed reach"
+          },
+          {
+            "id": "b",
+            "text": "Recover toward the net-side space"
+          },
+          {
+            "id": "c",
+            "text": "Re-check F1 and F2"
+          }
+        ],
+        "answer": [
+          "a",
+          "b",
+          "c"
+        ],
+        "basis": "coaching",
+        "explanation": "The response prioritizes a useful relationship and then updates both attackers."
+      },
+      "after": {
+        "id": "exp26b-u11-017-q3",
+        "type": "sequence",
+        "prompt": "Arrange the recovery response.",
+        "options": [
+          {
+            "id": "a",
+            "text": "Recognize the missed reach"
+          },
+          {
+            "id": "b",
+            "text": "Recover toward the net-side space"
+          },
+          {
+            "id": "c",
+            "text": "Re-check F1 and F2"
+          }
+        ],
+        "answer": [
+          "a",
+          "b",
+          "c"
+        ],
+        "basis": "coaching",
+        "explanation": "The response prioritizes a useful relationship and then updates both attackers."
+      },
+      "beforeContentHash": "d77181dcacf67b9e5d218d66e19b984a6971f88f1b4e53d35ef6800710ae0ffb",
+      "afterContentHash": "3884e7ea62af6dbf5305e0788754a17f51c3cd71eeefcbb37f12bfc24293e559",
+      "firstReviewFindingIds": [
+        "u11-p1-new-017-direction"
+      ],
+      "reason": "Make the supplied actor geometry and facing agree with the stated Gold -x attack and “ahead toward the left net” cue."
+    },
+    {
+      "questionId": "exp26b-u11-017-q4",
+      "scenarioId": "exp26b-u11-017",
+      "baseVersion": 1,
+      "newVersion": 2,
+      "before": {
+        "id": "exp26b-u11-017-q4",
+        "type": "position",
+        "prompt": "Move YOU to a recovery point between the attackers and the left net.",
+        "actorId": "h1",
+        "reference": {
+          "x": 10,
+          "y": 2.5
+        },
+        "basis": "coaching",
+        "explanation": "This point moves toward the defended net-side lane and keeps F2 visible across the ice."
+      },
+      "after": {
+        "id": "exp26b-u11-017-q4",
+        "type": "position",
+        "prompt": "Move YOU to a recovery point between the attackers and the left net.",
+        "actorId": "h1",
+        "reference": {
+          "x": 10,
+          "y": 2.5
+        },
+        "basis": "coaching",
+        "explanation": "This point moves toward the defended net-side lane and keeps F2 visible across the ice."
+      },
+      "beforeContentHash": "23a64a995e04fbcf934857a7154f85a88dd70192337256aa8ea54bd0390fa42a",
+      "afterContentHash": "c6df92c3461182c01d561f25122afef69eabc96adba107bba34c2193ea85c8a4",
+      "firstReviewFindingIds": [
+        "u11-p1-new-017-direction"
+      ],
+      "reason": "Make the supplied actor geometry and facing agree with the stated Gold -x attack and “ahead toward the left net” cue."
+    },
+    {
+      "questionId": "exp26b-u11-017-q5",
+      "scenarioId": "exp26b-u11-017",
+      "baseVersion": 1,
+      "newVersion": 2,
+      "before": {
+        "id": "exp26b-u11-017-q5",
+        "type": "choice",
+        "prompt": "F1 slows toward the boards while F2 drives middle. What should update?",
+        "options": [
+          {
+            "id": "a",
+            "text": "Your recovery should protect the new middle threat while staying connected to F1"
+          },
+          {
+            "id": "b",
+            "text": "Keep chasing F1 into the boards"
+          },
+          {
+            "id": "c",
+            "text": "Ignore F2 because the first reach was on F1"
+          }
+        ],
+        "answer": [
+          "a"
+        ],
+        "basis": "coaching",
+        "explanation": "F1 and F2 changed jobs in the picture. Protect the middle and keep a playable relationship to F1."
+      },
+      "after": {
+        "id": "exp26b-u11-017-q5",
+        "type": "choice",
+        "prompt": "F1 slows toward the boards while F2 drives middle. What should update?",
+        "options": [
+          {
+            "id": "a",
+            "text": "Your recovery should protect the new middle threat while staying connected to F1"
+          },
+          {
+            "id": "b",
+            "text": "Keep chasing F1 into the boards"
+          },
+          {
+            "id": "c",
+            "text": "Ignore F2 because the first reach was on F1"
+          }
+        ],
+        "answer": [
+          "a"
+        ],
+        "basis": "coaching",
+        "explanation": "F1 and F2 changed jobs in the picture. Protect the middle and keep a playable relationship to F1."
+      },
+      "beforeContentHash": "89a14d128e14e5b5eded75f37e2f6bc44730f686c01a5e9f52ae501e4bb566d2",
+      "afterContentHash": "258fa08c37839c77b186a4225806642b258f6110c61700a38036a8ab3d34801b",
+      "firstReviewFindingIds": [
+        "u11-p1-new-017-direction"
+      ],
+      "reason": "Make the supplied actor geometry and facing agree with the stated Gold -x attack and “ahead toward the left net” cue."
+    },
+    {
+      "questionId": "exp26b-u11-017-q6",
+      "scenarioId": "exp26b-u11-017",
+      "baseVersion": 1,
+      "newVersion": 2,
+      "before": {
+        "id": "exp26b-u11-017-q6",
+        "type": "explain",
+        "prompt": "Why can recovering toward the net be better than reaching again from behind?",
+        "basis": "coaching",
+        "explanation": "The net-side relationship limits the dangerous lane and keeps both attackers in view. A second reach may miss and leave the middle unprotected."
+      },
+      "after": {
+        "id": "exp26b-u11-017-q6",
+        "type": "explain",
+        "prompt": "Why can recovering toward the net be better than reaching again from behind?",
+        "basis": "coaching",
+        "explanation": "The net-side relationship limits the dangerous lane and keeps both attackers in view. A second reach may miss and leave the middle unprotected."
+      },
+      "beforeContentHash": "8cb11fb63ee493b2bdd8b8173d010f5099628b14320a20e503580e067d94e5d5",
+      "afterContentHash": "adeefb23974cf7ac32aca34df63266d7309baa41ad638985ecac03d353d419fa",
+      "firstReviewFindingIds": [
+        "u11-p1-new-017-direction"
+      ],
+      "reason": "Make the supplied actor geometry and facing agree with the stated Gold -x attack and “ahead toward the left net” cue."
+    },
+    {
+      "questionId": "exp26b-u11-001-q5",
+      "scenarioId": "exp26b-u11-001",
+      "baseVersion": 1,
+      "newVersion": 2,
+      "before": {
+        "id": "exp26b-u11-001-q5",
+        "type": "choice",
+        "prompt": "D1 drops toward F2 before your touch. What should change first?",
+        "options": [
+          {
+            "id": "a",
+            "text": "Protect the puck and scan a different exit"
+          },
+          {
+            "id": "b",
+            "text": "Pass inside immediately because F2 was the first outlet"
+          },
+          {
+            "id": "c",
+            "text": "Stop reading and skate into D1"
+          }
+        ],
+        "answer": [
+          "a"
+        ],
+        "basis": "coaching",
+        "explanation": "D1 closing the middle changes the named outlet; protecting the puck buys a chance to find a wall-side or return option."
+      },
+      "after": {
+        "id": "exp26b-u11-001-q5",
+        "type": "choice",
+        "prompt": "D1 drops toward F2 before your touch. What should change first?",
+        "options": [
+          {
+            "id": "a",
+            "text": "Protect the puck and scan a different exit"
+          },
+          {
+            "id": "b",
+            "text": "Pass inside immediately because F2 was the first outlet"
+          },
+          {
+            "id": "c",
+            "text": "Carry toward F2 through the middle even though D1 has dropped into that lane"
+          }
+        ],
+        "answer": [
+          "a"
+        ],
+        "basis": "coaching",
+        "explanation": "D1 closing the middle changes the named outlet; protecting the puck buys a chance to find a wall-side or return option."
+      },
+      "beforeContentHash": "9f93c961529398e2b69d8ad84fc03bc610bdd06b37840f25efa44ee6066d10e6",
+      "afterContentHash": "239b267bba2dbfea32bc41a5e16ea98844e6b0d10d12a3461141a27f7d6d6e13",
+      "firstReviewFindingIds": [
+        "u11-p2-dummy-distractors"
+      ],
+      "reason": "Replace the unsafe collision-like distractor with a credible failure to update after D1 closes the named lane."
+    },
+    {
+      "questionId": "exp26b-u11-003-q2",
+      "scenarioId": "exp26b-u11-003",
+      "baseVersion": 1,
+      "newVersion": 2,
+      "before": {
+        "id": "exp26b-u11-003-q2",
+        "type": "multi",
+        "prompt": "Which two checks make a re-offer useful?",
+        "options": [
+          {
+            "id": "a",
+            "text": "Whether D1 follows the new angle"
+          },
+          {
+            "id": "b",
+            "text": "Whether F1 can still see and reach YOU"
+          },
+          {
+            "id": "c",
+            "text": "Whether the same route is still blocked after you move"
+          }
+        ],
+        "answer": [
+          "a",
+          "b"
+        ],
+        "basis": "coaching",
+        "explanation": "D1's response and F1's sightline explain availability; matching the old route can keep the line blocked."
+      },
+      "after": {
+        "id": "exp26b-u11-003-q2",
+        "type": "multi",
+        "prompt": "Which three checks belong in a useful re-offer read?",
+        "options": [
+          {
+            "id": "a",
+            "text": "Whether D1 follows the new angle"
+          },
+          {
+            "id": "b",
+            "text": "Whether F1 can still see and reach YOU"
+          },
+          {
+            "id": "c",
+            "text": "Whether the same route is still blocked after you move"
+          }
+        ],
+        "answer": [
+          "a",
+          "b",
+          "c"
+        ],
+        "basis": "coaching",
+        "explanation": "Check whether D1 follows, whether F1 can still see and reach YOU, and whether the old route is still blocked. Those three observations tell you whether the changed angle helped."
+      },
+      "beforeContentHash": "2ee6ea88e2e8b099dbe535dc9db06df7495d689b3221fd98f9e3fd8cd42e4a23",
+      "afterContentHash": "418f1ea50d8690d9d5d515a9d394d4340fc49c1e82f84efe7c302de9c19b3e54",
+      "firstReviewFindingIds": [
+        "u11-p2-reoffer-cardinality"
+      ],
+      "reason": "Keep all three legitimate re-offer checks and make the answer cardinality explicit."
+    },
+    {
+      "questionId": "exp26b-u11-004-q5",
+      "scenarioId": "exp26b-u11-004",
+      "baseVersion": 1,
+      "newVersion": 2,
+      "before": {
+        "id": "exp26b-u11-004-q5",
+        "type": "choice",
+        "prompt": "F2 carries toward the middle instead of returning. What should YOU do?",
+        "options": [
+          {
+            "id": "a",
+            "text": "Adjust support relative to F2 and call the available lane"
+          },
+          {
+            "id": "b",
+            "text": "Stay on the old return line and stop scanning"
+          },
+          {
+            "id": "c",
+            "text": "Skate directly into F2's path"
+          }
+        ],
+        "answer": [
+          "a"
+        ],
+        "basis": "coaching",
+        "explanation": "F2's carry changes the carrier-support relationship. Move with space and communication while keeping D1 visible."
+      },
+      "after": {
+        "id": "exp26b-u11-004-q5",
+        "type": "choice",
+        "prompt": "F2 carries toward the middle instead of returning. What should YOU do?",
+        "options": [
+          {
+            "id": "a",
+            "text": "Adjust support relative to F2 and call the available lane"
+          },
+          {
+            "id": "b",
+            "text": "Stay on the old return line and stop scanning"
+          },
+          {
+            "id": "c",
+            "text": "Stay on the old return lane while F2 carries into the middle"
+          }
+        ],
+        "answer": [
+          "a"
+        ],
+        "basis": "coaching",
+        "explanation": "F2's carry changes the carrier-support relationship. Move with space and communication while keeping D1 visible."
+      },
+      "beforeContentHash": "457f5b3a41856d618af03fa743ae9913acc5dff8ce803e4fe82b0819728f39b7",
+      "afterContentHash": "a063f313c69c3b11f82f5dd5e3616e0026fc06dd87375d08762c510baf82864c",
+      "firstReviewFindingIds": [
+        "u11-p2-dummy-distractors"
+      ],
+      "reason": "Replace the unsafe path-crossing distractor with a context-specific stale-support mistake."
+    },
+    {
+      "questionId": "exp26b-u11-006-q4",
+      "scenarioId": "exp26b-u11-006",
+      "baseVersion": 1,
+      "newVersion": 2,
+      "before": {
+        "id": "exp26b-u11-006-q4",
+        "type": "position",
+        "prompt": "Move YOU to an approach point below the rebound that keeps the net and D1 visible.",
+        "actorId": "h1",
+        "reference": {
+          "x": 22.1,
+          "y": -4.1
+        },
+        "basis": "coaching",
+        "explanation": "This point changes YOU toward the rebound while keeping the net-side defender in view."
+      },
+      "after": {
+        "id": "exp26b-u11-006-q4",
+        "type": "position",
+        "prompt": "Move YOU to an inside approach point near the loose puck that keeps the right net and D1 visible.",
+        "actorId": "h1",
+        "reference": {
+          "x": 22.1,
+          "y": -4.1
+        },
+        "basis": "coaching",
+        "explanation": "This point brings YOU toward the loose puck from the inside while retaining the net-side defender in view."
+      },
+      "beforeContentHash": "68ea04ae3c1b388792a7b5db049b3223cb580a878dbb2ce04bd57a9380fe0f81",
+      "afterContentHash": "ab567220f437810a07ae7e52b3c34d43c23c994cced9e95f514e9bb38b59e64e",
+      "firstReviewFindingIds": [
+        "u11-p1-rebound-position"
+      ],
+      "reason": "Use named rink relationships instead of an incorrect screen-relative “below” reference."
+    },
+    {
+      "questionId": "exp26b-u11-006-q5",
+      "scenarioId": "exp26b-u11-006",
+      "baseVersion": 1,
+      "newVersion": 2,
+      "before": {
+        "id": "exp26b-u11-006-q5",
+        "type": "choice",
+        "prompt": "D1 reaches the puck first. What should you update?",
+        "options": [
+          {
+            "id": "a",
+            "text": "Whether to support F1 or pressure the new carrier"
+          },
+          {
+            "id": "b",
+            "text": "Assume your second shot is still available"
+          },
+          {
+            "id": "c",
+            "text": "Skate through D1 to the net"
+          }
+        ],
+        "answer": [
+          "a"
+        ],
+        "basis": "coaching",
+        "explanation": "D1 winning the loose puck changes possession and your job. Read F1 and the new carrier before choosing pressure or support."
+      },
+      "after": {
+        "id": "exp26b-u11-006-q5",
+        "type": "choice",
+        "prompt": "D1 reaches the puck first. What should you update?",
+        "options": [
+          {
+            "id": "a",
+            "text": "Whether to support F1 or pressure the new carrier"
+          },
+          {
+            "id": "b",
+            "text": "Assume your second shot is still available"
+          },
+          {
+            "id": "c",
+            "text": "Chase the loose puck as if D1 had not reached it first"
+          }
+        ],
+        "answer": [
+          "a"
+        ],
+        "basis": "coaching",
+        "explanation": "D1 winning the loose puck changes possession and your job. Read F1 and the new carrier before choosing pressure or support."
+      },
+      "beforeContentHash": "94af0987657c28b1797641b38b37845ff53aebfe5d72531680f44259b53a817f",
+      "afterContentHash": "91354db0f231cd93c447f7393f287ef8253e663995cc584e080fbd097a326794",
+      "firstReviewFindingIds": [
+        "u11-p2-dummy-distractors"
+      ],
+      "reason": "Replace the impossible skate-through-defender distractor with a realistic failure to update after D1 wins the puck."
+    },
+    {
+      "questionId": "exp26b-u11-007-q5",
+      "scenarioId": "exp26b-u11-007",
+      "baseVersion": 1,
+      "newVersion": 2,
+      "before": {
+        "id": "exp26b-u11-007-q5",
+        "type": "choice",
+        "prompt": "D1 follows outside and F2 opens inside. What becomes worth checking?",
+        "options": [
+          {
+            "id": "a",
+            "text": "Whether F2 can now receive from your protected position"
+          },
+          {
+            "id": "b",
+            "text": "Whether to keep carrying without looking"
+          },
+          {
+            "id": "c",
+            "text": "Whether D1 has become a teammate"
+          }
+        ],
+        "answer": [
+          "a"
+        ],
+        "basis": "coaching",
+        "explanation": "D1's movement changes the inside lane. Check F2's reachability before releasing or carrying again."
+      },
+      "after": {
+        "id": "exp26b-u11-007-q5",
+        "type": "choice",
+        "prompt": "D1 follows outside and F2 opens inside. What becomes worth checking?",
+        "options": [
+          {
+            "id": "a",
+            "text": "Whether F2 can now receive from your protected position"
+          },
+          {
+            "id": "b",
+            "text": "Whether to keep carrying without looking"
+          },
+          {
+            "id": "c",
+            "text": "Keep the outside carry after D1 follows, ignoring F2’s new inside lane"
+          }
+        ],
+        "answer": [
+          "a"
+        ],
+        "basis": "coaching",
+        "explanation": "D1's movement changes the inside lane. Check F2's reachability before releasing or carrying again."
+      },
+      "beforeContentHash": "12a9895a759dd9b1bb5ba96b7474796cd9552f0fd80c16f130167c292f497cda",
+      "afterContentHash": "d761f35cb6ad6929067a75b68583f9ba26c1aaeeae0cdfbcefe3d50e8971bff4",
+      "firstReviewFindingIds": [
+        "u11-p2-dummy-distractors"
+      ],
+      "reason": "Replace the teammate-identity distractor with a specific stale-carry mistake after D1 follows."
+    },
+    {
+      "questionId": "exp26b-u11-016-q2",
+      "scenarioId": "exp26b-u11-016",
+      "baseVersion": 1,
+      "newVersion": 2,
+      "before": {
+        "id": "exp26b-u11-016-q2",
+        "type": "multi",
+        "prompt": "What does an inside approach try to preserve?",
+        "options": [
+          {
+            "id": "a",
+            "text": "The middle and the route to the net"
+          },
+          {
+            "id": "b",
+            "text": "A chance to chase F2 wide immediately"
+          },
+          {
+            "id": "c",
+            "text": "A predictable carrier path regardless of movement"
+          }
+        ],
+        "answer": [
+          "a",
+          "b"
+        ],
+        "basis": "coaching",
+        "explanation": "Inside positioning protects the middle while showing the carrier a wall-side route; F2 still needs a scan."
+      },
+      "after": {
+        "id": "exp26b-u11-016-q2",
+        "type": "multi",
+        "prompt": "What does an inside approach try to preserve?",
+        "options": [
+          {
+            "id": "a",
+            "text": "The middle and the route to the net"
+          },
+          {
+            "id": "b",
+            "text": "A chance to chase F2 wide immediately"
+          },
+          {
+            "id": "c",
+            "text": "A predictable carrier path regardless of movement"
+          }
+        ],
+        "answer": [
+          "a"
+        ],
+        "basis": "coaching",
+        "explanation": "Inside positioning protects the middle and route to the net while showing the carrier a wall-side route; F2 remains a separate scan, not an immediate chase."
+      },
+      "beforeContentHash": "c67e83958d7c83e4a5ebdeb4272546613eafb5e971fac3269db9408e7db45c62",
+      "afterContentHash": "f220ec47677031d6e0515e633a9b5eac80f2c8025be7a8614d32bff9795cf739",
+      "firstReviewFindingIds": [
+        "u11-p1-new-016-answer"
+      ],
+      "reason": "Remove the incorrect immediate-wide-chase key; F2 remains a scan while the inside approach protects the middle/net route."
+    },
+    {
+      "questionId": "exp26b-u11-018-q2",
+      "scenarioId": "exp26b-u11-018",
+      "baseVersion": 1,
+      "newVersion": 2,
+      "before": {
+        "id": "exp26b-u11-018-q2",
+        "type": "multi",
+        "prompt": "What belongs in your backcheck read?",
+        "options": [
+          {
+            "id": "a",
+            "text": "F2's route toward the right net"
+          },
+          {
+            "id": "b",
+            "text": "D1's ability to stay with F1"
+          },
+          {
+            "id": "c",
+            "text": "The puck alone, without scanning F2"
+          }
+        ],
+        "answer": [
+          "a",
+          "b"
+        ],
+        "basis": "coaching",
+        "explanation": "The uncovered runner and teammate pressure define the backcheck job; puck chasing alone can abandon F2."
+      },
+      "after": {
+        "id": "exp26b-u11-018-q2",
+        "type": "multi",
+        "prompt": "What belongs in your backcheck read?",
+        "options": [
+          {
+            "id": "a",
+            "text": "F2’s route toward the left net"
+          },
+          {
+            "id": "b",
+            "text": "D1's ability to stay with F1"
+          },
+          {
+            "id": "c",
+            "text": "The puck alone, without scanning F2"
+          }
+        ],
+        "answer": [
+          "a",
+          "b"
+        ],
+        "basis": "coaching",
+        "explanation": "The uncovered runner toward the left net and D1’s pressure on F1 define the backcheck job."
+      },
+      "beforeContentHash": "33f33d4d80e276272f89a7bed365568d84928707494d3c6d93e6b79711b19cd7",
+      "afterContentHash": "01ee168bf7b7d847637d0a8f8f4f6222bfdea83b423d64c2b5e4f80336f4669e",
+      "firstReviewFindingIds": [
+        "u11-p1-new-018-net-direction"
+      ],
+      "reason": "Align F2’s route with the stated Gold -x attack."
+    },
+    {
+      "questionId": "exp26b-u11-021-q5",
+      "scenarioId": "exp26b-u11-021",
+      "baseVersion": 1,
+      "newVersion": 2,
+      "before": {
+        "id": "exp26b-u11-021-q5",
+        "type": "choice",
+        "prompt": "D1 moves into your shooting line and F2 becomes clearly reachable. What deserves a new look?",
+        "options": [
+          {
+            "id": "a",
+            "text": "A cross-ice pass to F2"
+          },
+          {
+            "id": "b",
+            "text": "A shot through D1 without checking"
+          },
+          {
+            "id": "c",
+            "text": "A pass behind the net to no one"
+          }
+        ],
+        "answer": [
+          "a"
+        ],
+        "basis": "coaching",
+        "explanation": "D1 changed the shooting lane while F2 became more reachable, so the pass deserves a fresh read."
+      },
+      "after": {
+        "id": "exp26b-u11-021-q5",
+        "type": "choice",
+        "prompt": "D1 moves into your shooting line and F2 becomes clearly reachable. What deserves a new look?",
+        "options": [
+          {
+            "id": "a",
+            "text": "A cross-ice pass to F2"
+          },
+          {
+            "id": "b",
+            "text": "A shot through D1 without checking"
+          },
+          {
+            "id": "c",
+            "text": "Keep carrying toward the right net after D1 enters the shooting line"
+          }
+        ],
+        "answer": [
+          "a"
+        ],
+        "basis": "coaching",
+        "explanation": "D1 changed the shooting lane while F2 became more reachable, so the pass deserves a fresh read."
+      },
+      "beforeContentHash": "043e9b5b6a1fe4c130b49cfd0fb1441822874840ccd5a868eacb2645498ade3e",
+      "afterContentHash": "6e4b1cd252dc761e44ca6329533ee545c385cc2067af77a9cda24fec1487ba68",
+      "firstReviewFindingIds": [
+        "u11-p2-dummy-distractors"
+      ],
+      "reason": "Replace the empty-net/no-one distractor with a realistic choice to carry after D1 enters the shooting line."
+    }
+  ],
+  "reconciliations": [
+    {
+      "questionId": "exp26b-u11-023-q1",
+      "scenarioId": "exp26b-u11-023",
+      "firstReviewFindingId": "u11-p1-new-023-owner-distance",
+      "disposition": "no-change",
+      "before": {
+        "id": "exp26b-u11-023-q1",
+        "type": "choice",
+        "prompt": "Why does YOU have a different first job from F2?",
+        "options": [
+          {
+            "id": "a",
+            "text": "F2 is closer to the loose puck"
+          },
+          {
+            "id": "b",
+            "text": "YOU owns the puck"
+          },
+          {
+            "id": "c",
+            "text": "D1 is a navy player"
+          }
+        ],
+        "answer": [
+          "a"
+        ],
+        "basis": "scene",
+        "explanation": "F2 is the nearer navy player to the loose puck; YOU can support from above."
+      },
+      "after": {
+        "id": "exp26b-u11-023-q1",
+        "type": "choice",
+        "prompt": "Why does YOU have a different first job from F2?",
+        "options": [
+          {
+            "id": "a",
+            "text": "F2 is closer to the loose puck"
+          },
+          {
+            "id": "b",
+            "text": "YOU owns the puck"
+          },
+          {
+            "id": "c",
+            "text": "D1 is a navy player"
+          }
+        ],
+        "answer": [
+          "a"
+        ],
+        "basis": "scene",
+        "explanation": "F2 is the nearer navy player to the loose puck; YOU can support from above."
+      },
+      "beforeContentHash": "7ac8e5ed34f06ec79ace82b34992071ba0dd8dd3df817ec2d3b4dcfdf0fbf796",
+      "afterContentHash": "7ac8e5ed34f06ec79ace82b34992071ba0dd8dd3df817ec2d3b4dcfdf0fbf796",
+      "evidence": "The frozen distances are puck (23,-9) to YOU (21,-5) = 4.47 m and to F2 (19,-9) = 4.00 m, so F2 is correctly nearer. The explicit coach assignment also names F2 as retriever; the first-review finding is rejected."
+    }
+  ],
+  "limits": [
+    "Repairs are content edits only; independent second review is still required.",
+    "Original 600-bank scenarios remain untouched."
+  ]
+}

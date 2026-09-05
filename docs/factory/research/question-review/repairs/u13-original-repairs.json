@@ -1,0 +1,646 @@
+{
+  "status": "applied-awaiting-independent-recheck",
+  "author": "luna-u13-rebuild",
+  "changedAt": "2026-09-05T20:17:53.509Z",
+  "sourceFiles": {
+    "base": "src/one-on-one/experimental-bank/u13.json",
+    "additions": "src/one-on-one/experimental-expansion/u13-additions.json"
+  },
+  "changes": [
+    {
+      "questionId": "exp26-u13-001-q1",
+      "scenarioId": "exp26-u13-001",
+      "baseVersion": 1,
+      "newVersion": 2,
+      "before": {
+        "id": "exp26-u13-001-q1",
+        "type": "choice",
+        "prompt": "Where is the puck at this freeze?",
+        "options": [
+          {
+            "id": "a",
+            "text": "On D2’s stick"
+          },
+          {
+            "id": "b",
+            "text": "Across the neutral zone"
+          },
+          {
+            "id": "c",
+            "text": "Loose near the side boards"
+          }
+        ],
+        "answer": [
+          "c"
+        ],
+        "explanation": "The puck marker is separate from every player near the side boards.",
+        "basis": "scene"
+      },
+      "after": {
+        "id": "exp26-u13-001-q1",
+        "type": "choice",
+        "prompt": "Where is the puck at this freeze?",
+        "options": [
+          {
+            "id": "a",
+            "text": "On D2’s stick"
+          },
+          {
+            "id": "b",
+            "text": "Across the neutral zone"
+          },
+          {
+            "id": "c",
+            "text": "Loose near the side boards"
+          }
+        ],
+        "answer": [
+          "c"
+        ],
+        "explanation": "The puck marker is separate from every player near the side boards.",
+        "basis": "scene"
+      },
+      "beforeContentHash": "5f1122f634e7dfb0e8243c75af48610801ae647679efd0abce2d6a321f2f0a98",
+      "afterContentHash": "7750b782756d4daaa4abc6c1fca3fc3a0fe0d876427c7adcf6c22461c566c3b6",
+      "reason": "Moved the loose puck onto the upper side board and aligned YOU’s facing and approach references with the described rim retrieval; preserve the loose-puck read and conditional coaching."
+    },
+    {
+      "questionId": "exp26-u13-001-q2",
+      "scenarioId": "exp26-u13-001",
+      "baseVersion": 1,
+      "newVersion": 2,
+      "before": {
+        "id": "exp26-u13-001-q2",
+        "type": "multi",
+        "prompt": "Which two pieces of information help before this pickup?",
+        "options": [
+          {
+            "id": "a",
+            "text": "Whether D2 can offer an outlet"
+          },
+          {
+            "id": "b",
+            "text": "Where Gold 1 is approaching from"
+          },
+          {
+            "id": "c",
+            "text": "Which player last scored"
+          }
+        ],
+        "answer": [
+          "a",
+          "b"
+        ],
+        "explanation": "Pressure and support shape the first read; they do not guarantee a specific pass.",
+        "basis": "coaching"
+      },
+      "after": {
+        "id": "exp26-u13-001-q2",
+        "type": "multi",
+        "prompt": "Which two pieces of information help before this pickup?",
+        "options": [
+          {
+            "id": "a",
+            "text": "Whether D2 can offer an outlet"
+          },
+          {
+            "id": "b",
+            "text": "Where Gold 1 is approaching from"
+          },
+          {
+            "id": "c",
+            "text": "Which player last scored"
+          }
+        ],
+        "answer": [
+          "a",
+          "b"
+        ],
+        "explanation": "Pressure and support shape the first read; they do not guarantee a specific pass.",
+        "basis": "coaching"
+      },
+      "beforeContentHash": "395fa6d9732b4286598ddaf1b48975fbfe72a515cdf6c94b0013abca7146b7fd",
+      "afterContentHash": "530d79e14df351e89b53a654872bd12de43d46865f3891551f7719628dd2edc9",
+      "reason": "Moved the loose puck onto the upper side board and aligned YOU’s facing and approach references with the described rim retrieval; preserve the loose-puck read and conditional coaching."
+    },
+    {
+      "questionId": "exp26-u13-001-q3",
+      "scenarioId": "exp26-u13-001",
+      "baseVersion": 1,
+      "newVersion": 2,
+      "before": {
+        "id": "exp26-u13-001-q3",
+        "type": "sequence",
+        "prompt": "Order one preparation routine for this rim.",
+        "options": [
+          {
+            "id": "a",
+            "text": "Look over your shoulder"
+          },
+          {
+            "id": "b",
+            "text": "Approach while checking pressure"
+          },
+          {
+            "id": "c",
+            "text": "Control the puck and reassess the outlet"
+          }
+        ],
+        "answer": [
+          "a",
+          "b",
+          "c"
+        ],
+        "basis": "coaching",
+        "explanation": "This is a suggested routine; scanning may happen repeatedly."
+      },
+      "after": {
+        "id": "exp26-u13-001-q3",
+        "type": "sequence",
+        "prompt": "Order one preparation routine for this rim.",
+        "options": [
+          {
+            "id": "a",
+            "text": "Look over your shoulder"
+          },
+          {
+            "id": "b",
+            "text": "Approach while checking pressure"
+          },
+          {
+            "id": "c",
+            "text": "Control the puck and reassess the outlet"
+          }
+        ],
+        "answer": [
+          "a",
+          "b",
+          "c"
+        ],
+        "basis": "coaching",
+        "explanation": "This is a suggested routine; scanning may happen repeatedly."
+      },
+      "beforeContentHash": "7e4e52f7d7d14edcb15d059f84d24f371fbea174ac4d33796d7c36f8b12f6b3f",
+      "afterContentHash": "92a44a184c7c6e6f0ec2d5d905c08429166fcdb1d4da2e2654a1cfc9e2c8c65e",
+      "reason": "Moved the loose puck onto the upper side board and aligned YOU’s facing and approach references with the described rim retrieval; preserve the loose-puck read and conditional coaching."
+    },
+    {
+      "questionId": "exp26-u13-001-q4",
+      "scenarioId": "exp26-u13-001",
+      "baseVersion": 1,
+      "newVersion": 2,
+      "before": {
+        "id": "exp26-u13-001-q4",
+        "type": "position",
+        "prompt": "Move YOU toward a pickup position that preserves a view of Gold 1.",
+        "actorId": "home-skater-1",
+        "reference": {
+          "x": -21,
+          "y": 6
+        },
+        "basis": "coaching",
+        "explanation": "A position inside the rim can allow a check of pressure. Another angle may suit the puck’s actual travel."
+      },
+      "after": {
+        "id": "exp26-u13-001-q4",
+        "type": "position",
+        "prompt": "Move YOU toward a pickup position that preserves a view of Gold 1.",
+        "actorId": "home-skater-1",
+        "reference": {
+          "x": -21,
+          "y": 10.5
+        },
+        "basis": "coaching",
+        "explanation": "A position inside the rim can allow a check of pressure. Another angle may suit the puck’s actual travel."
+      },
+      "beforeContentHash": "d78eec5f35650ce181e24147e18d6637979248afde726c126226bcc27f0bfe36",
+      "afterContentHash": "4c62058e58a694a7f2cc567868b3e2fb6dc6c28c930f035126374956abcba0b8",
+      "reason": "Moved the loose puck onto the upper side board and aligned YOU’s facing and approach references with the described rim retrieval; preserve the loose-puck read and conditional coaching."
+    },
+    {
+      "questionId": "exp26-u13-001-q5",
+      "scenarioId": "exp26-u13-001",
+      "baseVersion": 1,
+      "newVersion": 2,
+      "before": {
+        "id": "exp26-u13-001-q5",
+        "type": "choice",
+        "prompt": "Suppose Gold 1 now reaches the wall first. What deserves a fresh look?",
+        "options": [
+          {
+            "id": "a",
+            "text": "Contain and support rather than assume you own the puck"
+          },
+          {
+            "id": "b",
+            "text": "Continue the planned outlet as though possession is secure"
+          },
+          {
+            "id": "c",
+            "text": "Leave for a rush before seeing the puck"
+          }
+        ],
+        "answer": [
+          "a"
+        ],
+        "explanation": "A contested pickup changes the job. The exact response depends on support and reach.",
+        "basis": "coaching"
+      },
+      "after": {
+        "id": "exp26-u13-001-q5",
+        "type": "choice",
+        "prompt": "Suppose Gold 1 now reaches the wall first. What deserves a fresh look?",
+        "options": [
+          {
+            "id": "a",
+            "text": "Contain and support rather than assume you own the puck"
+          },
+          {
+            "id": "b",
+            "text": "Continue the planned outlet as though possession is secure"
+          },
+          {
+            "id": "c",
+            "text": "Leave for a rush before seeing the puck"
+          }
+        ],
+        "answer": [
+          "a"
+        ],
+        "explanation": "A contested pickup changes the job. The exact response depends on support and reach.",
+        "basis": "coaching"
+      },
+      "beforeContentHash": "73c57e48080657be39a4091df10b5ff53013060605175e51cc82108b380aa961",
+      "afterContentHash": "d26d7339a1747cee532abfd9308022228cc7eafb48d3d0a474e18246b7694eb4",
+      "reason": "Moved the loose puck onto the upper side board and aligned YOU’s facing and approach references with the described rim retrieval; preserve the loose-puck read and conditional coaching."
+    },
+    {
+      "questionId": "exp26-u13-001-q6",
+      "scenarioId": "exp26-u13-001",
+      "baseVersion": 1,
+      "newVersion": 2,
+      "before": {
+        "id": "exp26-u13-001-q6",
+        "type": "explain",
+        "prompt": "What would you look at twice while retrieving this rim?",
+        "basis": "coaching",
+        "explanation": "Explain how the forechecker or outlet may move between the first scan and the pickup."
+      },
+      "after": {
+        "id": "exp26-u13-001-q6",
+        "type": "explain",
+        "prompt": "What would you look at twice while retrieving this rim?",
+        "basis": "coaching",
+        "explanation": "Explain how the forechecker or outlet may move between the first scan and the pickup."
+      },
+      "beforeContentHash": "404b1d8034731efbe9deb2ab4562b0000ac092706c3edee3c2d96b2420868d7d",
+      "afterContentHash": "15ee474483df58f2861f4b7ee60f8b36ea51da0b0d5ffcc36dc47951fbcb02cc",
+      "reason": "Moved the loose puck onto the upper side board and aligned YOU’s facing and approach references with the described rim retrieval; preserve the loose-puck read and conditional coaching."
+    },
+    {
+      "questionId": "exp26-u13-001-q7",
+      "scenarioId": "exp26-u13-001",
+      "baseVersion": 1,
+      "newVersion": 2,
+      "before": {
+        "type": "choice",
+        "prompt": "Which new fact would make the planned pickup less certain?",
+        "options": [
+          {
+            "id": "a",
+            "text": "Gold 1 reaches the rim before YOU"
+          },
+          {
+            "id": "b",
+            "text": "D2 remains behind the puck"
+          },
+          {
+            "id": "c",
+            "text": "W stays higher in the zone"
+          }
+        ],
+        "answer": [
+          "a"
+        ],
+        "basis": "scene",
+        "explanation": "Gold 1 reaching the rim changes possession risk, so YOU must protect and support; if YOU arrives first with control, the outlet scan returns.",
+        "id": "exp26-u13-001-q7"
+      },
+      "after": {
+        "type": "choice",
+        "prompt": "Which new fact would make the planned pickup less certain?",
+        "options": [
+          {
+            "id": "a",
+            "text": "Gold 1 reaches the rim before YOU"
+          },
+          {
+            "id": "b",
+            "text": "D2 remains behind the puck"
+          },
+          {
+            "id": "c",
+            "text": "W stays higher in the zone"
+          }
+        ],
+        "answer": [
+          "a"
+        ],
+        "basis": "scene",
+        "explanation": "Gold 1 reaching the rim changes possession risk, so YOU must protect and support; if YOU arrives first with control, the outlet scan returns.",
+        "id": "exp26-u13-001-q7"
+      },
+      "beforeContentHash": "0cb1a771916e8460ce1b0880028021726d752e48cda740fd4562d3ec2ad67e41",
+      "afterContentHash": "84ac837754572fe92f6f39c48c151552f83ad04f17e74eca109e73a864330636",
+      "reason": "Moved the loose puck onto the upper side board and aligned YOU’s facing and approach references with the described rim retrieval; preserve the loose-puck read and conditional coaching."
+    },
+    {
+      "questionId": "exp26-u13-001-q8",
+      "scenarioId": "exp26-u13-001",
+      "baseVersion": 1,
+      "newVersion": 2,
+      "before": {
+        "type": "multi",
+        "prompt": "Which two words would make the next call useful?",
+        "options": [
+          {
+            "id": "a",
+            "text": "Name the pressure side"
+          },
+          {
+            "id": "b",
+            "text": "Name D2’s support status"
+          },
+          {
+            "id": "c",
+            "text": "Call for a pass without naming a lane"
+          }
+        ],
+        "answer": [
+          "a",
+          "b"
+        ],
+        "basis": "coaching",
+        "explanation": "A pressure-side call and support status give teammates actionable information; a vague pass call does not say what changed.",
+        "id": "exp26-u13-001-q8"
+      },
+      "after": {
+        "type": "multi",
+        "prompt": "Which two words would make the next call useful?",
+        "options": [
+          {
+            "id": "a",
+            "text": "Name the pressure side"
+          },
+          {
+            "id": "b",
+            "text": "Name D2’s support status"
+          },
+          {
+            "id": "c",
+            "text": "Call for a pass without naming a lane"
+          }
+        ],
+        "answer": [
+          "a",
+          "b"
+        ],
+        "basis": "coaching",
+        "explanation": "A pressure-side call and support status give teammates actionable information; a vague pass call does not say what changed.",
+        "id": "exp26-u13-001-q8"
+      },
+      "beforeContentHash": "af77d3770fc526500cd563afe5eaa23710bc4af2647bfd967360340236c81b36",
+      "afterContentHash": "19f1f36550cef189d9ae08d4a8f654f53d79e235cf8451bcf67f363786521a87",
+      "reason": "Moved the loose puck onto the upper side board and aligned YOU’s facing and approach references with the described rim retrieval; preserve the loose-puck read and conditional coaching."
+    },
+    {
+      "questionId": "exp26-u13-001-q9",
+      "scenarioId": "exp26-u13-001",
+      "baseVersion": 1,
+      "newVersion": 2,
+      "before": {
+        "type": "position",
+        "prompt": "Move YOU to an approach angle that keeps the loose rim and Gold 1 in view.",
+        "basis": "coaching",
+        "explanation": "The offset approach preserves a view of both puck and forechecker; if Gold 1 crosses the lane, slow and support rather than reaching blind.",
+        "actorId": "home-skater-1",
+        "reference": {
+          "x": -20,
+          "y": 6
+        },
+        "id": "exp26-u13-001-q9"
+      },
+      "after": {
+        "type": "position",
+        "prompt": "Move YOU to an approach angle that keeps the loose rim and Gold 1 in view.",
+        "basis": "coaching",
+        "explanation": "The offset approach preserves a view of both puck and forechecker; if Gold 1 crosses the lane, slow and support rather than reaching blind.",
+        "actorId": "home-skater-1",
+        "reference": {
+          "x": -20,
+          "y": 10.2
+        },
+        "id": "exp26-u13-001-q9"
+      },
+      "beforeContentHash": "ffca29c01f1a0ec12530990e2623a43feb98d1e571971a4c4125421e7e62116a",
+      "afterContentHash": "8b2b6024d5945f6c59032ea1eafbdb11cdbc85ee91852ceade45f26411b31c45",
+      "reason": "Moved the loose puck onto the upper side board and aligned YOU’s facing and approach references with the described rim retrieval; preserve the loose-puck read and conditional coaching."
+    },
+    {
+      "questionId": "exp26-u13-001-q10",
+      "scenarioId": "exp26-u13-001",
+      "baseVersion": 1,
+      "newVersion": 2,
+      "before": {
+        "type": "explain",
+        "prompt": "How would you decide whether to collect or contain at the rim?",
+        "basis": "coaching",
+        "explanation": "Compare who can reach the puck, Gold 1’s route and D2’s support before committing; if the opponent arrives first, contain and wait for help.",
+        "id": "exp26-u13-001-q10"
+      },
+      "after": {
+        "type": "explain",
+        "prompt": "How would you decide whether to collect or contain at the rim?",
+        "basis": "coaching",
+        "explanation": "Compare who can reach the puck, Gold 1’s route and D2’s support before committing; if the opponent arrives first, contain and wait for help.",
+        "id": "exp26-u13-001-q10"
+      },
+      "beforeContentHash": "0f277d16c6f1e27002b024f815d82ed1efd617d6059370436241cad6f1cf3850",
+      "afterContentHash": "c242910a81c66c162ca4c28862db41f83ee192a207a176bbff0d311c060f0026",
+      "reason": "Moved the loose puck onto the upper side board and aligned YOU’s facing and approach references with the described rim retrieval; preserve the loose-puck read and conditional coaching."
+    },
+    {
+      "questionId": "exp26-u13-010-q1",
+      "scenarioId": "exp26-u13-010",
+      "baseVersion": 1,
+      "newVersion": 2,
+      "before": {
+        "id": "exp26-u13-010-q1",
+        "type": "choice",
+        "prompt": "Where is YOU compared with the net-front centre?",
+        "options": [
+          {
+            "id": "a",
+            "text": "At centre ice"
+          },
+          {
+            "id": "b",
+            "text": "Behind F1 in the neutral zone"
+          },
+          {
+            "id": "c",
+            "text": "Beside the net, toward the side boards"
+          }
+        ],
+        "answer": [
+          "c"
+        ],
+        "explanation": "YOU are beside Gold’s net, away from the middle of the ice.",
+        "basis": "scene"
+      },
+      "after": {
+        "id": "exp26-u13-010-q1",
+        "type": "choice",
+        "prompt": "Where are YOU compared with the net-front centre?",
+        "options": [
+          {
+            "id": "a",
+            "text": "At centre ice"
+          },
+          {
+            "id": "b",
+            "text": "Behind F1 in the neutral zone"
+          },
+          {
+            "id": "c",
+            "text": "Beside the net, toward the side boards"
+          }
+        ],
+        "answer": [
+          "c"
+        ],
+        "explanation": "YOU are beside Gold’s net, away from the middle of the ice.",
+        "basis": "scene"
+      },
+      "beforeContentHash": "54405ad856332731fcba081543e8fff72e12552d5796eefb29930e18335dce72",
+      "afterContentHash": "8fa5ba0f695038e2997957b2b9c79d60328cb580ae85a5a7ff6755317e477f6d",
+      "reason": "Corrected the approved scene question grammar while preserving its keyed scene answer."
+    }
+  ],
+  "sceneEdits": [
+    {
+      "scenarioId": "exp26-u13-001",
+      "beforeVersion": 1,
+      "afterVersion": 2,
+      "before": {
+        "setup": {
+          "actors": [
+            {
+              "id": "home-skater-1",
+              "label": "YOU",
+              "team": "home",
+              "role": "skater",
+              "x": -18,
+              "y": 7,
+              "facing": 2.9441970937399127
+            },
+            {
+              "id": "home-skater-2",
+              "label": "D2",
+              "team": "home",
+              "role": "skater",
+              "x": -22,
+              "y": -4,
+              "facing": 1.6539375586833378
+            },
+            {
+              "id": "home-skater-3",
+              "label": "W",
+              "team": "home",
+              "role": "skater",
+              "x": -8,
+              "y": 9,
+              "facing": -3.0750244898139694
+            },
+            {
+              "id": "away-skater-1",
+              "label": "A1",
+              "team": "away",
+              "role": "skater",
+              "x": -13,
+              "y": 3,
+              "facing": 2.677945044588987
+            }
+          ],
+          "puck": {
+            "owner": null,
+            "x": -23,
+            "y": 8
+          }
+        },
+        "briefing": "YOU are approaching a loose rim. Gold 1 is closing from the middle. D2 waits behind the puck as a possible outlet. Navy attacks Gold’s net and defends Navy’s net. This is a selected-player teaching view; no movement is implied unless stated."
+      },
+      "after": {
+        "setup": {
+          "actors": [
+            {
+              "id": "home-skater-1",
+              "label": "YOU",
+              "team": "home",
+              "role": "skater",
+              "x": -18,
+              "y": 7,
+              "facing": 2.337
+            },
+            {
+              "id": "home-skater-2",
+              "label": "D2",
+              "team": "home",
+              "role": "skater",
+              "x": -22,
+              "y": -4,
+              "facing": 1.6539375586833378
+            },
+            {
+              "id": "home-skater-3",
+              "label": "W",
+              "team": "home",
+              "role": "skater",
+              "x": -8,
+              "y": 9,
+              "facing": -3.0750244898139694
+            },
+            {
+              "id": "away-skater-1",
+              "label": "A1",
+              "team": "away",
+              "role": "skater",
+              "x": -13,
+              "y": 3,
+              "facing": 2.677945044588987
+            }
+          ],
+          "puck": {
+            "owner": null,
+            "x": -23,
+            "y": 12.2
+          }
+        },
+        "briefing": "YOU are approaching a loose rim. Gold 1 is closing from the middle. D2 waits behind the puck as a possible outlet. Navy attacks Gold’s net and defends Navy’s net. This is a selected-player teaching view; no movement is implied unless stated."
+      },
+      "reason": "The original rim briefing said side-board retrieval while the loose puck was visibly in open ice. The puck now sits near the upper board and YOU faces the approach."
+    },
+    {
+      "scenarioId": "exp26-u13-010",
+      "beforeVersion": 1,
+      "afterVersion": 2,
+      "before": {
+        "briefing": "F1 has the puck high near the side boards. YOU are beside Gold’s net on the same side. This non-contact recognition exercise asks YOU to become visible near the front before a possible shot or pass. Navy attacks Gold’s net and defends Navy’s net. This is a selected-player teaching view; no movement is implied unless stated."
+      },
+      "after": {
+        "briefing": "F1 has the puck high near the side boards. YOU are beside Gold’s net on the same side. This non-contact recognition exercise asks YOU to become visible near the front before a possible shot or pass. Navy attacks Gold’s net and defends Navy’s net. This is a selected-player teaching view; no movement is implied unless stated."
+      },
+      "reason": "Version bump accompanies the grammar repair so the scenario and its additive extension remain aligned."
+    }
+  ]
+}

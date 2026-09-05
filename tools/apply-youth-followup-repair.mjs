@@ -1,0 +1,11 @@
+import {readFileSync,writeFileSync,existsSync} from 'node:fs';
+import {readBankFiles} from './experimental-bank-files.mjs';
+import {questionContentHash} from './question-batch-core.mjs';
+const path='docs/factory/research/question-review/repairs/youth-branch-clarity.json';
+if(existsSync(path))throw Error('Receipt exists.');
+const {bank}=readBankFiles({ages:['U9']}),s=bank.find(s=>s.id==='exp26-u9-013'),q=s.questions.find(q=>q.id==='exp26-u9-013-q7'),before=structuredClone(q);
+q.prompt='For the next branch, imagine Gold1 reaches the puck after YOU release it. In this change routine, what should YOU do?';
+const file='src/one-on-one/experimental-expansion/u9-additions.json',data=JSON.parse(readFileSync(file,'utf8'));
+Object.assign(data.find(r=>r.scenarioId===s.id).questions.find(r=>r.id===q.id),q);
+writeFileSync(file,JSON.stringify(data,null,2)+'\n');
+writeFileSync(path,JSON.stringify({status:'applied-awaiting-independent-recheck',author:'root',changes:[{questionId:q.id,scenarioId:s.id,before,after:q,beforeContentHash:questionContentHash(s,before),afterContentHash:questionContentHash(s,q),reason:'Make the future branch explicitly hypothetical so it cannot be mistaken for possession in the current freeze. The named change routine remains unchanged.'}]},null,2)+'\n');

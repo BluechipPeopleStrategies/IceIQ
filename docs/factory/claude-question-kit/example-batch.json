@@ -1,0 +1,195 @@
+{
+  "schemaVersion": 1,
+  "batchId": "claude-example",
+  "status": "draft-not-reviewed",
+  "scenarios": [
+    {
+      "id": "claude-example-u11-001",
+      "version": 1,
+      "ageBand": "U11",
+      "title": "FORMAT EXAMPLE — replace with an original situation",
+      "family": "retrieval-scan",
+      "topic": "Scanning",
+      "objective": "Locate an outlet and approaching pressure before planning a retrieval.",
+      "briefing": "Navy attacks the right net (+x); gold attacks the left net. YOU are approaching a loose puck near the side wall. F2 is an outlet toward the middle; D1 is approaching from up ice. No player has recovered the puck yet.",
+      "setup": {
+        "actors": [
+          {
+            "id": "h1",
+            "label": "YOU",
+            "team": "home",
+            "role": "skater",
+            "x": -16,
+            "y": -6,
+            "facing": -2.356
+          },
+          {
+            "id": "h2",
+            "label": "F2",
+            "team": "home",
+            "role": "skater",
+            "x": -10,
+            "y": -1,
+            "facing": 3.14
+          },
+          {
+            "id": "a1",
+            "label": "D1",
+            "team": "away",
+            "role": "skater",
+            "x": -12,
+            "y": -6,
+            "facing": 3.14
+          }
+        ],
+        "puck": {
+          "owner": null,
+          "x": -18,
+          "y": -8
+        }
+      },
+      "focusActorId": "h1",
+      "cues": [
+        "The puck is loose beside the wall.",
+        "F2 is away from the wall.",
+        "D1 approaches from the up-ice side."
+      ],
+      "tags": [
+        "retrieval-scan",
+        "scanning",
+        "experimental"
+      ],
+      "sources": [
+        {
+          "id": "hc-vision-2024",
+          "title": "7 Principles for Coaches: Vision & Scanning",
+          "url": "https://www.hockeycanada.ca/en-ca/news/seven-coaching-principles-vision-scanning-2024-ncw",
+          "section": "Key Information to Identify; Reading Pressure / Corner Situations",
+          "use": "Supports checking teammates and pressure; answers are original scene analysis."
+        }
+      ],
+      "limits": "Static original practice illustration; movement and outcomes are not simulated. A frozen picture cannot measure an actual shoulder check or the arrival order. Position references are examples, not graded target zones.",
+      "questions": [
+        {
+          "id": "claude-example-u11-001-q1",
+          "type": "choice",
+          "prompt": "What is true about possession at this freeze?",
+          "options": [
+            {
+              "id": "a",
+              "text": "YOU already control the puck"
+            },
+            {
+              "id": "b",
+              "text": "The puck is loose"
+            },
+            {
+              "id": "c",
+              "text": "D1 has made a pass"
+            }
+          ],
+          "answer": [
+            "b"
+          ],
+          "basis": "scene",
+          "explanation": "The puck is drawn away from every blade and has no owner."
+        },
+        {
+          "id": "claude-example-u11-001-q2",
+          "type": "multi",
+          "prompt": "Which two things would help YOU plan the pickup?",
+          "options": [
+            {
+              "id": "a",
+              "text": "Where F2 is available"
+            },
+            {
+              "id": "b",
+              "text": "The direction D1 approaches from"
+            },
+            {
+              "id": "c",
+              "text": "Only the loose puck, without checking the players"
+            }
+          ],
+          "answer": [
+            "a",
+            "b"
+          ],
+          "basis": "coaching",
+          "explanation": "An outlet and the approaching pressure inform the next action; neither guarantees a successful pickup."
+        },
+        {
+          "id": "claude-example-u11-001-q3",
+          "type": "sequence",
+          "prompt": "Arrange this suggested retrieval plan.",
+          "options": [
+            {
+              "id": "a",
+              "text": "Find the pressure and outlet"
+            },
+            {
+              "id": "b",
+              "text": "Approach and control the loose puck"
+            },
+            {
+              "id": "c",
+              "text": "Check whether the outlet is still available"
+            }
+          ],
+          "answer": [
+            "a",
+            "b",
+            "c"
+          ],
+          "basis": "coaching",
+          "explanation": "This is a simple discussion routine. Real scanning may repeat throughout the approach."
+        },
+        {
+          "id": "claude-example-u11-001-q4",
+          "type": "position",
+          "prompt": "Move YOU to an approach point that leaves a view toward F2.",
+          "actorId": "h1",
+          "reference": {
+            "x": -18,
+            "y": -6.5
+          },
+          "basis": "coaching",
+          "explanation": "The example approaches on the middle side of the puck and short of the wall, with F2 in the wider scene. Other controlled approaches can preserve an outlet."
+        },
+        {
+          "id": "claude-example-u11-001-q5",
+          "type": "choice",
+          "prompt": "Suppose D1 closes the middle outlet before the pickup. What could YOU reconsider?",
+          "options": [
+            {
+              "id": "a",
+              "text": "Use the same middle pass regardless"
+            },
+            {
+              "id": "b",
+              "text": "Check another exit before committing"
+            },
+            {
+              "id": "c",
+              "text": "Assume F2 has already received"
+            }
+          ],
+          "answer": [
+            "b"
+          ],
+          "basis": "coaching",
+          "explanation": "The old outlet may no longer be useful. A turn, protected hold or different pass depends on the new pressure."
+        },
+        {
+          "id": "claude-example-u11-001-q6",
+          "type": "explain",
+          "prompt": "What would you want to see again just before touching this puck?",
+          "basis": "coaching",
+          "explanation": "Name a change in D1 or F2 that could alter the plan. Saying where you would look is more useful than simply saying “scan.”"
+        }
+      ]
+    }
+  ],
+  "additions": []
+}

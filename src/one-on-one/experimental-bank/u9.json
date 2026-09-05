@@ -1018,7 +1018,7 @@
   },
   {
     "id": "exp26-u9-006",
-    "version": 1,
+    "version": 2,
     "ageBand": "U9",
     "title": "Find pressure before a corner pickup",
     "family": "corner-pickup-scan",
@@ -1147,30 +1147,28 @@
         "id": "exp26-u9-006-q2"
       },
       {
-        "type": "sequence",
-        "prompt": "Arrange one pickup preparation.",
+        "id": "exp26-u9-006-q3",
+        "type": "choice",
+        "prompt": "You spotted Gold1 and Navy2 before moving. When should you look for them again?",
         "options": [
           {
             "id": "a",
-            "text": "Find the loose puck"
+            "text": "Only once the puck is on your stick"
           },
           {
             "id": "b",
-            "text": "Look for pressure and support"
+            "text": "Keep checking as you approach and before choosing your first touch"
           },
           {
             "id": "c",
-            "text": "Approach and choose a controlled next action"
+            "text": "After you send the pass to Navy2"
           }
         ],
         "answer": [
-          "a",
-          "b",
-          "c"
+          "b"
         ],
         "basis": "coaching",
-        "explanation": "This is a suggested practice sequence. No exact route is established by the source.",
-        "id": "exp26-u9-006-q3"
+        "explanation": "Gold1 and Navy2 can move while you approach. Keep checking pressure and support along with the puck, so your first touch fits the newest picture. Looking once does not finish the job."
       },
       {
         "type": "position",

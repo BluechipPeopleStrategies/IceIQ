@@ -1,0 +1,600 @@
+{
+  "status": "applied-awaiting-independent-recheck",
+  "author": "root",
+  "changedAt": "2026-09-05T19:37:27.107Z",
+  "changes": [
+    {
+      "questionId": "exp26-u15-001-q7",
+      "scenarioId": "exp26-u15-001",
+      "reason": "Use the named F3 cover and acknowledge that it is not established in the freeze.",
+      "before": {
+        "id": "exp26-u15-001-q7",
+        "type": "choice",
+        "prompt": "What should YOU communicate before stepping down?",
+        "options": [
+          {
+            "id": "a",
+            "text": "D2 is cover only while the high lane stays connected"
+          },
+          {
+            "id": "b",
+            "text": "The pinch has already won the puck"
+          },
+          {
+            "id": "c",
+            "text": "F1 is the preferred carrier regardless of the route"
+          }
+        ],
+        "answer": [
+          "a"
+        ],
+        "basis": "coaching",
+        "explanation": "The message names D2 and the conditional cover, so teammates can update if the route changes."
+      },
+      "after": {
+        "id": "exp26-u15-001-q7",
+        "type": "choice",
+        "prompt": "F3 has not reached YOUR high position. Which call fits before a possible pinch?",
+        "options": [
+          {
+            "id": "a",
+            "text": "F3, confirm high cover before I step down"
+          },
+          {
+            "id": "b",
+            "text": "D2 is on the ice, so I am going now"
+          },
+          {
+            "id": "c",
+            "text": "F1 is near the puck, so the cover can wait"
+          }
+        ],
+        "answer": [
+          "a"
+        ],
+        "basis": "coaching",
+        "explanation": "The drill names F3 as the replacement for YOUR high position. Ask for that cover and check the puck route before committing; a call alone does not establish it."
+      },
+      "beforeContentHash": "274ab555f022f64eb8532b4707f5a330a5af2651a0b1a814f585a9a592ca378a",
+      "afterContentHash": "ccce082f903cfe2f01f5a40ad8cf07e8da99dbbd3806df8b1db6af813bbc7f58"
+    },
+    {
+      "questionId": "exp26-u15-001-q8",
+      "scenarioId": "exp26-u15-001",
+      "reason": "Make the changed state explicit and tie cover to F3 rather than substituting D2.",
+      "before": {
+        "id": "exp26-u15-001-q8",
+        "type": "multi",
+        "prompt": "Which two changes would cancel the pinch?",
+        "options": [
+          {
+            "id": "a",
+            "text": "D2 drops below the play"
+          },
+          {
+            "id": "b",
+            "text": "F1 loses the puck route"
+          },
+          {
+            "id": "c",
+            "text": "Gold stays away from the puck"
+          }
+        ],
+        "answer": [
+          "a",
+          "b"
+        ],
+        "basis": "coaching",
+        "explanation": "Cover and puck access explain the pinch; if either disappears, hold high or recover."
+      },
+      "after": {
+        "id": "exp26-u15-001-q8",
+        "type": "multi",
+        "prompt": "After F3 reaches high cover, which changes would make YOU reconsider the pinch?",
+        "options": [
+          {
+            "id": "a",
+            "text": "F3 leaves that high position"
+          },
+          {
+            "id": "b",
+            "text": "The puck moves beyond F1’s reachable route"
+          },
+          {
+            "id": "c",
+            "text": "Gold stays away from the puck"
+          }
+        ],
+        "answer": [
+          "a",
+          "b"
+        ],
+        "basis": "coaching",
+        "explanation": "The hypothetical cover is now established, but a change in cover or puck access can remove the reason to pinch. Hold or recover if the updated picture no longer supports it."
+      },
+      "beforeContentHash": "1f7cd5051d929cdd463e6a0c413e36e5d35318f8707c8175dfb46c29d6c9fb3f",
+      "afterContentHash": "921655a7b470099a5d3554ae3cc7e1edf5c406c6e5a761df7d7ec21eeb3efc99"
+    },
+    {
+      "questionId": "exp26-u15-001-q9",
+      "scenarioId": "exp26-u15-001",
+      "reason": "Move the designated covering player, and actually put that player higher than the wall contest.",
+      "before": {
+        "id": "exp26-u15-001-q9",
+        "type": "position",
+        "prompt": "Move D2 to an example high support position behind YOU.",
+        "actorId": "home-skater-2",
+        "reference": {
+          "x": 11,
+          "y": -4
+        },
+        "basis": "coaching",
+        "explanation": "This gives YOU a different cover relationship while preserving the puck-side read."
+      },
+      "after": {
+        "id": "exp26-u15-001-q9",
+        "type": "position",
+        "prompt": "Move F3 to illustrate the named replacement for YOUR high position.",
+        "actorId": "home-skater-5",
+        "reference": {
+          "x": 10,
+          "y": 7
+        },
+        "basis": "coaching",
+        "explanation": "F3 is now near YOUR high area, on the neutral-zone side of the wall contest. This illustrates the cover condition; whether a pinch is reachable still needs a fresh puck read."
+      },
+      "beforeContentHash": "20415136c4502d2d587e2aa5df7c3ed74331441c71d456b9cd5e25a0029bd6eb",
+      "afterContentHash": "6bc7be6a482ab7c795dfaa6b353c691350cef97360d4f116b77ef49baee0e0cb"
+    },
+    {
+      "questionId": "exp26-u15-001-q10",
+      "scenarioId": "exp26-u15-001",
+      "reason": "Add a distinct branch where cover is present but puck access has disappeared.",
+      "before": {
+        "id": "exp26-u15-001-q10",
+        "type": "explain",
+        "prompt": "F3 reaches the space YOU left. Explain how that changes your job.",
+        "basis": "coaching",
+        "explanation": "Name F3 in the vacated space, then weigh holding high against recovering. The answer depends on D2 cover and puck possession."
+      },
+      "after": {
+        "id": "exp26-u15-001-q10",
+        "type": "explain",
+        "prompt": "F3 reaches YOUR high area, but the loose puck travels past F1 toward neutral ice. What changes?",
+        "basis": "coaching",
+        "explanation": "High cover satisfies only one condition. If YOU cannot reach the puck safely, hold or recover and communicate the escape route. F3 arriving does not make every pinch useful."
+      },
+      "beforeContentHash": "ad4be2fc252d9e1c8a5a4ee6a665a4d030023fc3bedcf3d40a99a0ce0dfdf2da",
+      "afterContentHash": "4c5243c5e488c2a9f922f7fa1522f5126b83c7a78843ceba68b897d67c5d2736"
+    },
+    {
+      "questionId": "exp26-u15-006-q7",
+      "scenarioId": "exp26-u15-006",
+      "reason": "Correct the unsupported D1 call while preserving the actual division of responsibilities.",
+      "before": {
+        "id": "exp26-u15-006-q7",
+        "type": "choice",
+        "prompt": "What should YOU say after D1 calls Gold 2?",
+        "options": [
+          {
+            "id": "a",
+            "text": "I have Gold 2; tell me if Gold 1 cuts inside"
+          },
+          {
+            "id": "b",
+            "text": "The puck is already safe"
+          },
+          {
+            "id": "c",
+            "text": "D1 will cover both attackers"
+          }
+        ],
+        "answer": [
+          "a"
+        ],
+        "basis": "coaching",
+        "explanation": "The communication names the assigned attacker and the condition that would change the handoff."
+      },
+      "after": {
+        "id": "exp26-u15-006-q7",
+        "type": "choice",
+        "prompt": "What should YOU say while D1 contains Gold 1?",
+        "options": [
+          {
+            "id": "a",
+            "text": "I have Gold 2; tell me if Gold 1 cuts inside"
+          },
+          {
+            "id": "b",
+            "text": "The puck is already safe"
+          },
+          {
+            "id": "c",
+            "text": "D1 will cover both attackers"
+          }
+        ],
+        "answer": [
+          "a"
+        ],
+        "basis": "coaching",
+        "explanation": "Name Gold 2 as the inside attacker you are helping with and ask for a call if Gold 1 cuts inside. D1’s stated call concerns Gold 1, not Gold 2."
+      },
+      "beforeContentHash": "d583961196cae0fc8953b6a86cf30708e4322f8b6890a7df607a5ea0cedc0ad5",
+      "afterContentHash": "d23b506c67802a74fa8b167a59e60c6250a3484f318215d3f639d9939496e2e3"
+    },
+    {
+      "questionId": "exp26-u15-006-q9",
+      "scenarioId": "exp26-u15-006",
+      "reason": "The previous positive-x target moved away from the defended navy net.",
+      "before": {
+        "id": "exp26-u15-006-q9",
+        "type": "position",
+        "prompt": "Move YOU toward a net-side relationship with Gold 2.",
+        "actorId": "home-skater-1",
+        "reference": {
+          "x": 4,
+          "y": -1
+        },
+        "basis": "coaching",
+        "explanation": "This point keeps YOU between Gold 2 and the defended net while Gold 1 remains visible."
+      },
+      "after": {
+        "id": "exp26-u15-006-q9",
+        "type": "position",
+        "prompt": "Move YOU toward a net-side relationship with Gold 2.",
+        "actorId": "home-skater-1",
+        "reference": {
+          "x": -6,
+          "y": -1
+        },
+        "basis": "coaching",
+        "explanation": "This example is nearer the navy net than Gold 2 and stays separate from the wide carrier route. It illustrates the goal-side relationship; reachability and a possible handoff still depend on the moving play."
+      },
+      "beforeContentHash": "cb8dec624ab5062fd471108cf8ab8ce1abd8b81a6a247fe9eee128c2b86fd9a0",
+      "afterContentHash": "be4d6b317949580abcc1dcb883b6f57e7b79b1c57d5ea7c4b1aba6b319032ad7"
+    },
+    {
+      "questionId": "exp26-u15-008-q9",
+      "scenarioId": "exp26-u15-008",
+      "reason": "The previous target crossed to the opposite side despite the prompt specifying YOUR side.",
+      "before": {
+        "id": "exp26-u15-008-q9",
+        "type": "position",
+        "prompt": "Move YOU to an inside support position on your side of the net.",
+        "actorId": "home-skater-1",
+        "reference": {
+          "x": -19,
+          "y": -1.5
+        },
+        "basis": "coaching",
+        "explanation": "This point keeps YOU connected to the low lane while Gold changes sides."
+      },
+      "after": {
+        "id": "exp26-u15-008-q9",
+        "type": "position",
+        "prompt": "Move YOU to an inside support position on your side of the net.",
+        "actorId": "home-skater-1",
+        "reference": {
+          "x": -24,
+          "y": 3
+        },
+        "basis": "coaching",
+        "explanation": "This example stays on YOUR current side of the net, closer to the middle than the starting spot. Keep track of Gold 1 and C’s slot coverage before choosing whether to hold or follow."
+      },
+      "beforeContentHash": "470950153677269e9fbf1b273729ee1f3dee79cf8a41f7c220b59672e0de4ef8",
+      "afterContentHash": "732071708b1b3e2f4d3cd3d5b4c5887ee50bc27c576c0dc89cd63009e7731d17"
+    },
+    {
+      "questionId": "exp26-u15-008-q10",
+      "scenarioId": "exp26-u15-008",
+      "reason": "Replace the absent D1 with visible D2 and retain the conditional handoff.",
+      "before": {
+        "id": "exp26-u15-008-q10",
+        "type": "explain",
+        "prompt": "C is pulled away and Gold 2 becomes uncovered. What do you name?",
+        "basis": "coaching",
+        "explanation": "Name Gold 2 and the open inside lane, then communicate whether D1 or YOU takes the new relationship."
+      },
+      "after": {
+        "id": "exp26-u15-008-q10",
+        "type": "explain",
+        "prompt": "C is pulled away and Gold 2 becomes uncovered. What do you name?",
+        "basis": "coaching",
+        "explanation": "Name Gold 2 and the open slot lane. Communicate whether YOU or D2 can take that reachable threat while the other player tracks Gold 1; C leaving does not create an automatic side swap."
+      },
+      "beforeContentHash": "bf158c85387c05a2a4bcf7ba7386a6c0936a2843fea50337febf001df8b3c3d0",
+      "afterContentHash": "0d91e9a7782943308299dbc74705a3740eca0e96a502a0a877b2dd88b1291d6f"
+    },
+    {
+      "questionId": "exp26-u15-013-q9",
+      "scenarioId": "exp26-u15-013",
+      "reason": "Make the target actually closer to the navy end than the battle.",
+      "before": {
+        "id": "exp26-u15-013-q9",
+        "type": "position",
+        "prompt": "Move YOU closer to Navy’s net than the battle while keeping C visible.",
+        "actorId": "home-skater-1",
+        "reference": {
+          "x": -4,
+          "y": 3.2
+        },
+        "basis": "coaching",
+        "explanation": "This point supports behind the battle and leaves C a possible outlet."
+      },
+      "after": {
+        "id": "exp26-u15-013-q9",
+        "type": "position",
+        "prompt": "Move YOU closer to Navy’s net than the battle while keeping C visible.",
+        "actorId": "home-skater-1",
+        "reference": {
+          "x": -13,
+          "y": 3.2
+        },
+        "basis": "coaching",
+        "explanation": "This example is on the navy-net side of the wall contest and separate from F1, with C inside as another outlet. Reposition again if the loose puck or Gold pressure changes."
+      },
+      "beforeContentHash": "97e826ce717eb1e74cb4da2a5f985a5233c24fe933f7b21089b3a0ed6522293d",
+      "afterContentHash": "b924fddebbe2f17c5207ceb7c39c33100470b269e07413c017eca1e9a0ab2bd8"
+    },
+    {
+      "questionId": "exp26b-u15-002-q4",
+      "scenarioId": "exp26b-u15-002",
+      "reason": "Use a meaningful wall adjustment that increases clearance from Gold 1; reject a proposed move through the defender.",
+      "before": {
+        "id": "exp26b-u15-002-q4",
+        "type": "position",
+        "prompt": "Move YOU along the half wall to open a diagonal lane to F3.",
+        "actorId": "h1",
+        "reference": {
+          "x": 19.5,
+          "y": 8.1
+        },
+        "basis": "coaching",
+        "explanation": "This changes the carrier angle while keeping F2 and F3 visible."
+      },
+      "after": {
+        "id": "exp26b-u15-002-q4",
+        "type": "position",
+        "prompt": "Move YOU a little toward the blue line along the half wall to compare a different diagonal to F3.",
+        "actorId": "h1",
+        "reference": {
+          "x": 16,
+          "y": 9
+        },
+        "basis": "coaching",
+        "explanation": "Backing along the wall changes the diagonal around Gold 1 while keeping both receivers in view. It illustrates an angle change, not a guaranteed open pass; recheck the defender and F3 before using it."
+      },
+      "beforeContentHash": "662896bae3342d72c87d4dabf366ea27ec33468f26fda70bb80a33ab2fa3b052",
+      "afterContentHash": "85348f43ee66e7aeafb7fd85f0f11968f3ccb0e881a83cd88bb0f4b8a93497ca"
+    },
+    {
+      "questionId": "exp26-u18-001-q7",
+      "scenarioId": "exp26-u18-001",
+      "reason": "Preserve the exact score-and-clock state rather than replacing it with one minute.",
+      "before": {
+        "id": "exp26-u18-001-q7",
+        "type": "choice",
+        "prompt": "What should YOU communicate with one minute left?",
+        "options": [
+          {
+            "id": "a",
+            "text": "We value possession, but I will use a clear forward lane"
+          },
+          {
+            "id": "b",
+            "text": "The lead removes every forward option"
+          },
+          {
+            "id": "c",
+            "text": "F1 is the first outlet regardless of the pressure route"
+          }
+        ],
+        "answer": [
+          "a"
+        ],
+        "basis": "coaching",
+        "explanation": "The message balances the stated lead with a conditional forward choice."
+      },
+      "after": {
+        "id": "exp26-u18-001-q7",
+        "type": "choice",
+        "prompt": "What should YOU communicate with 48 seconds left?",
+        "options": [
+          {
+            "id": "a",
+            "text": "We value possession, but I will use a clear forward lane"
+          },
+          {
+            "id": "b",
+            "text": "The lead removes every forward option"
+          },
+          {
+            "id": "c",
+            "text": "F1 is the first outlet regardless of the pressure route"
+          }
+        ],
+        "answer": [
+          "a"
+        ],
+        "basis": "coaching",
+        "explanation": "The message balances the stated lead with a conditional forward choice."
+      },
+      "beforeContentHash": "df8af493b868256292493073583b065bc525cb8bf914e9d6fd41871d520e513c",
+      "afterContentHash": "db1649cbd01b1a35b6afc554ef6f4322be078cef01732bcec3c9acdefb38bc03"
+    },
+    {
+      "questionId": "exp26-u18-005-q7",
+      "scenarioId": "exp26-u18-005",
+      "reason": "Name D2, the actual deeper-cover player, instead of absent D1.",
+      "before": {
+        "id": "exp26-u18-005-q7",
+        "type": "choice",
+        "prompt": "What should YOU communicate before joining the second wave?",
+        "options": [
+          {
+            "id": "a",
+            "text": "F1 has control and D1 is behind me; call if either changes"
+          },
+          {
+            "id": "b",
+            "text": "The attack makes cover unnecessary"
+          },
+          {
+            "id": "c",
+            "text": "F2 owns the puck"
+          }
+        ],
+        "answer": [
+          "a"
+        ],
+        "basis": "coaching",
+        "explanation": "The message names carrier and cover, the two conditions for activation."
+      },
+      "after": {
+        "id": "exp26-u18-005-q7",
+        "type": "choice",
+        "prompt": "What should YOU communicate before joining the second wave?",
+        "options": [
+          {
+            "id": "a",
+            "text": "F1 has control and D2 is behind me; call if either changes"
+          },
+          {
+            "id": "b",
+            "text": "The attack makes cover unnecessary"
+          },
+          {
+            "id": "c",
+            "text": "F2 owns the puck"
+          }
+        ],
+        "answer": [
+          "a"
+        ],
+        "basis": "coaching",
+        "explanation": "The message names carrier and cover, the two conditions for activation."
+      },
+      "beforeContentHash": "08b9e5e119e003dfcaf675d1915ef7580e1a87a042faa52e81222c6c488acf81",
+      "afterContentHash": "ed9de37a0116ec5ffbcd01e796796ed448332061565d18def41161b6d54ae17f"
+    },
+    {
+      "questionId": "exp26-u18-005-q8",
+      "scenarioId": "exp26-u18-005",
+      "reason": "Keep the conditional activation tied to the assigned D2 cover.",
+      "before": {
+        "id": "exp26-u18-005-q8",
+        "type": "multi",
+        "prompt": "Which two changes should stop activation?",
+        "options": [
+          {
+            "id": "a",
+            "text": "F1 loses control"
+          },
+          {
+            "id": "b",
+            "text": "D1 leaves the deeper cover"
+          },
+          {
+            "id": "c",
+            "text": "F2 stays wide"
+          }
+        ],
+        "answer": [
+          "a",
+          "b"
+        ],
+        "basis": "coaching",
+        "explanation": "Possession and cover determine whether the second wave remains responsible."
+      },
+      "after": {
+        "id": "exp26-u18-005-q8",
+        "type": "multi",
+        "prompt": "Which two changes should stop activation?",
+        "options": [
+          {
+            "id": "a",
+            "text": "F1 loses control"
+          },
+          {
+            "id": "b",
+            "text": "D2 leaves the deeper cover"
+          },
+          {
+            "id": "c",
+            "text": "F2 stays wide"
+          }
+        ],
+        "answer": [
+          "a",
+          "b"
+        ],
+        "basis": "coaching",
+        "explanation": "Possession and cover determine whether the second wave remains responsible."
+      },
+      "beforeContentHash": "7c8ea0d4d921ea6898b3177cfef5f92620db39db2dbc0cd7d5590a04c891e0ce",
+      "afterContentHash": "53a354ef2415b806a0dfc5163a6e6e2427753a06cd51bfcc88b7ba9c49b0af98"
+    },
+    {
+      "questionId": "exp26-u18-005-q9",
+      "scenarioId": "exp26-u18-005",
+      "reason": "The target is behind F1, not between F1 and F3; remove another absent D1 reference.",
+      "before": {
+        "id": "exp26-u18-005-q9",
+        "type": "position",
+        "prompt": "Move YOU into a second-wave lane between F1 and F3.",
+        "actorId": "home-skater-1",
+        "reference": {
+          "x": 0,
+          "y": 4.5
+        },
+        "basis": "coaching",
+        "explanation": "This point supports the carrier while keeping D1 and the high option visible."
+      },
+      "after": {
+        "id": "exp26-u18-005-q9",
+        "type": "position",
+        "prompt": "Move YOU to a second-wave lane behind F1, separate from F3.",
+        "actorId": "home-skater-1",
+        "reference": {
+          "x": 0,
+          "y": 4.5
+        },
+        "basis": "coaching",
+        "explanation": "This point supports behind the carrier and stays in a different lane from F3. Keep D2’s deeper cover and Gold 3’s recovery in view before continuing the activation."
+      },
+      "beforeContentHash": "96625e544570e625b324386a5277eff19fa393905be99c3eb0865844edff7c6d",
+      "afterContentHash": "731a581bb06ace6b4f5dc46bfdfc8d2e31b2f452e070856b20900b714b1987b6"
+    },
+    {
+      "questionId": "exp26-u18-007-q9",
+      "scenarioId": "exp26-u18-007",
+      "reason": "The former target was low in the zone. The reviewer’s proposed x21 target was also low: D1 at x23 is the player who already rotated down, not the vacated point.",
+      "before": {
+        "id": "exp26-u18-007-q9",
+        "type": "position",
+        "prompt": "Move YOU toward the vacated point while keeping F1 visible.",
+        "actorId": "home-skater-1",
+        "reference": {
+          "x": 20,
+          "y": 1
+        },
+        "basis": "coaching",
+        "explanation": "This point covers high space while preserving the low threat scan."
+      },
+      "after": {
+        "id": "exp26-u18-007-q9",
+        "type": "position",
+        "prompt": "Move YOU toward the vacated point while keeping F1 visible.",
+        "actorId": "home-skater-1",
+        "reference": {
+          "x": 10,
+          "y": 6
+        },
+        "basis": "coaching",
+        "explanation": "This moves YOU toward the vacated point near the attacking blue line, on the opposite side from D2. Locate F1 and the exit threats; visibility does not guarantee a clear pass."
+      },
+      "beforeContentHash": "d659973065d5f46369150ab7af460e483c4db401dbdcd7e5b3af4fa43f96887a",
+      "afterContentHash": "81c7c6f04244cc35da642a211f1ce6b6858ed7c832627d82958ef2b6f88bd9f8"
+    }
+  ]
+}

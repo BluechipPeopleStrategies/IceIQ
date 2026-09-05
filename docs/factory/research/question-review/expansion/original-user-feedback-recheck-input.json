@@ -1,0 +1,613 @@
+{
+  "instruction": "Independent visual/content recheck after a user-reported canonical repair. Inspect the complete composed scenes and all ten questions for exp26-u13-001, plus the grammar repair exp26-u13-010-q1. Confirm puck placement agrees with rim/side-board wording, retrieval orientation, actor references, and exact final hashes. This is a review packet; do not edit the bank.",
+  "reviewer": "pending-independent-review",
+  "reviewKind": "AI visual/content recheck",
+  "preparedAt": "2026-09-05T20:18:06.324Z",
+  "sourceFiles": [
+    "src/one-on-one/experimental-bank/u13.json",
+    "src/one-on-one/experimental-expansion/u13-additions.json"
+  ],
+  "assignedQuestionIds": [
+    "exp26-u13-001-q1",
+    "exp26-u13-001-q2",
+    "exp26-u13-001-q3",
+    "exp26-u13-001-q4",
+    "exp26-u13-001-q5",
+    "exp26-u13-001-q6",
+    "exp26-u13-001-q7",
+    "exp26-u13-001-q8",
+    "exp26-u13-001-q9",
+    "exp26-u13-001-q10",
+    "exp26-u13-010-q1"
+  ],
+  "coverage": [
+    {
+      "questionId": "exp26-u13-001-q1",
+      "scenarioId": "exp26-u13-001",
+      "scenarioVersion": 2,
+      "contentHash": "7750b782756d4daaa4abc6c1fca3fc3a0fe0d876427c7adcf6c22461c566c3b6"
+    },
+    {
+      "questionId": "exp26-u13-001-q2",
+      "scenarioId": "exp26-u13-001",
+      "scenarioVersion": 2,
+      "contentHash": "530d79e14df351e89b53a654872bd12de43d46865f3891551f7719628dd2edc9"
+    },
+    {
+      "questionId": "exp26-u13-001-q3",
+      "scenarioId": "exp26-u13-001",
+      "scenarioVersion": 2,
+      "contentHash": "92a44a184c7c6e6f0ec2d5d905c08429166fcdb1d4da2e2654a1cfc9e2c8c65e"
+    },
+    {
+      "questionId": "exp26-u13-001-q4",
+      "scenarioId": "exp26-u13-001",
+      "scenarioVersion": 2,
+      "contentHash": "4c62058e58a694a7f2cc567868b3e2fb6dc6c28c930f035126374956abcba0b8"
+    },
+    {
+      "questionId": "exp26-u13-001-q5",
+      "scenarioId": "exp26-u13-001",
+      "scenarioVersion": 2,
+      "contentHash": "d26d7339a1747cee532abfd9308022228cc7eafb48d3d0a474e18246b7694eb4"
+    },
+    {
+      "questionId": "exp26-u13-001-q6",
+      "scenarioId": "exp26-u13-001",
+      "scenarioVersion": 2,
+      "contentHash": "15ee474483df58f2861f4b7ee60f8b36ea51da0b0d5ffcc36dc47951fbcb02cc"
+    },
+    {
+      "questionId": "exp26-u13-001-q7",
+      "scenarioId": "exp26-u13-001",
+      "scenarioVersion": 2,
+      "contentHash": "84ac837754572fe92f6f39c48c151552f83ad04f17e74eca109e73a864330636"
+    },
+    {
+      "questionId": "exp26-u13-001-q8",
+      "scenarioId": "exp26-u13-001",
+      "scenarioVersion": 2,
+      "contentHash": "19f1f36550cef189d9ae08d4a8f654f53d79e235cf8451bcf67f363786521a87"
+    },
+    {
+      "questionId": "exp26-u13-001-q9",
+      "scenarioId": "exp26-u13-001",
+      "scenarioVersion": 2,
+      "contentHash": "8b2b6024d5945f6c59032ea1eafbdb11cdbc85ee91852ceade45f26411b31c45"
+    },
+    {
+      "questionId": "exp26-u13-001-q10",
+      "scenarioId": "exp26-u13-001",
+      "scenarioVersion": 2,
+      "contentHash": "c242910a81c66c162ca4c28862db41f83ee192a207a176bbff0d311c060f0026"
+    },
+    {
+      "questionId": "exp26-u13-010-q1",
+      "scenarioId": "exp26-u13-010",
+      "scenarioVersion": 2,
+      "contentHash": "8fa5ba0f695038e2997957b2b9c79d60328cb580ae85a5a7ff6755317e477f6d"
+    }
+  ],
+  "scenarios": [
+    {
+      "id": "exp26-u13-001",
+      "version": 2,
+      "ageBand": "U13",
+      "title": "Read the rim before reaching it",
+      "family": "breakout-retrieval",
+      "topic": "breakout retrieval",
+      "objective": "Notice the forechecker before collecting a rim.",
+      "briefing": "YOU are approaching a loose rim. Gold 1 is closing from the middle. D2 waits behind the puck as a possible outlet. Navy attacks Gold’s net and defends Navy’s net. This is a selected-player teaching view; no movement is implied unless stated.",
+      "setup": {
+        "actors": [
+          {
+            "id": "home-skater-1",
+            "label": "YOU",
+            "team": "home",
+            "role": "skater",
+            "x": -18,
+            "y": 7,
+            "facing": 2.337
+          },
+          {
+            "id": "home-skater-2",
+            "label": "D2",
+            "team": "home",
+            "role": "skater",
+            "x": -22,
+            "y": -4,
+            "facing": 1.6539375586833378
+          },
+          {
+            "id": "home-skater-3",
+            "label": "W",
+            "team": "home",
+            "role": "skater",
+            "x": -8,
+            "y": 9,
+            "facing": -3.0750244898139694
+          },
+          {
+            "id": "away-skater-1",
+            "label": "A1",
+            "team": "away",
+            "role": "skater",
+            "x": -13,
+            "y": 3,
+            "facing": 2.677945044588987
+          }
+        ],
+        "puck": {
+          "owner": null,
+          "x": -23,
+          "y": 12.2
+        }
+      },
+      "focusActorId": "home-skater-1",
+      "cues": [
+        "The puck marker is separate from every player near the side boards.",
+        "YOU are approaching a loose rim. Gold 1 is closing from the middle. D2 waits behind the puck as a possible outlet."
+      ],
+      "tags": [
+        "breakout-retrieval"
+      ],
+      "sources": [
+        {
+          "id": "hc-defence-2020",
+          "title": "Developing Skilled Defencemen — Overview",
+          "url": "https://cdn.hockeycanada.ca/hockey-canada/Hockey-Programs/Players/Downloads/2020/developing-defence-overview-e.pdf",
+          "section": "PDF page 12, Breakouts",
+          "use": "Supports the stated coaching principle. The setup, alternatives and suggested answers are original experimental coaching synthesis, not source-certified."
+        }
+      ],
+      "limits": "Age adaptation and tactical alternatives await coaching review. Static setup: no skating speed, interception timing or uniquely optimal route has been validated. Positional references are examples, not scored targets.",
+      "questions": [
+        {
+          "id": "exp26-u13-001-q1",
+          "type": "choice",
+          "prompt": "Where is the puck at this freeze?",
+          "options": [
+            {
+              "id": "a",
+              "text": "On D2’s stick"
+            },
+            {
+              "id": "b",
+              "text": "Across the neutral zone"
+            },
+            {
+              "id": "c",
+              "text": "Loose near the side boards"
+            }
+          ],
+          "answer": [
+            "c"
+          ],
+          "explanation": "The puck marker is separate from every player near the side boards.",
+          "basis": "scene"
+        },
+        {
+          "id": "exp26-u13-001-q2",
+          "type": "multi",
+          "prompt": "Which two pieces of information help before this pickup?",
+          "options": [
+            {
+              "id": "a",
+              "text": "Whether D2 can offer an outlet"
+            },
+            {
+              "id": "b",
+              "text": "Where Gold 1 is approaching from"
+            },
+            {
+              "id": "c",
+              "text": "Which player last scored"
+            }
+          ],
+          "answer": [
+            "a",
+            "b"
+          ],
+          "explanation": "Pressure and support shape the first read; they do not guarantee a specific pass.",
+          "basis": "coaching"
+        },
+        {
+          "id": "exp26-u13-001-q3",
+          "type": "sequence",
+          "prompt": "Order one preparation routine for this rim.",
+          "options": [
+            {
+              "id": "a",
+              "text": "Look over your shoulder"
+            },
+            {
+              "id": "b",
+              "text": "Approach while checking pressure"
+            },
+            {
+              "id": "c",
+              "text": "Control the puck and reassess the outlet"
+            }
+          ],
+          "answer": [
+            "a",
+            "b",
+            "c"
+          ],
+          "basis": "coaching",
+          "explanation": "This is a suggested routine; scanning may happen repeatedly."
+        },
+        {
+          "id": "exp26-u13-001-q4",
+          "type": "position",
+          "prompt": "Move YOU toward a pickup position that preserves a view of Gold 1.",
+          "actorId": "home-skater-1",
+          "reference": {
+            "x": -21,
+            "y": 10.5
+          },
+          "basis": "coaching",
+          "explanation": "A position inside the rim can allow a check of pressure. Another angle may suit the puck’s actual travel."
+        },
+        {
+          "id": "exp26-u13-001-q5",
+          "type": "choice",
+          "prompt": "Suppose Gold 1 now reaches the wall first. What deserves a fresh look?",
+          "options": [
+            {
+              "id": "a",
+              "text": "Contain and support rather than assume you own the puck"
+            },
+            {
+              "id": "b",
+              "text": "Continue the planned outlet as though possession is secure"
+            },
+            {
+              "id": "c",
+              "text": "Leave for a rush before seeing the puck"
+            }
+          ],
+          "answer": [
+            "a"
+          ],
+          "explanation": "A contested pickup changes the job. The exact response depends on support and reach.",
+          "basis": "coaching"
+        },
+        {
+          "id": "exp26-u13-001-q6",
+          "type": "explain",
+          "prompt": "What would you look at twice while retrieving this rim?",
+          "basis": "coaching",
+          "explanation": "Explain how the forechecker or outlet may move between the first scan and the pickup."
+        },
+        {
+          "type": "choice",
+          "prompt": "Which new fact would make the planned pickup less certain?",
+          "options": [
+            {
+              "id": "a",
+              "text": "Gold 1 reaches the rim before YOU"
+            },
+            {
+              "id": "b",
+              "text": "D2 remains behind the puck"
+            },
+            {
+              "id": "c",
+              "text": "W stays higher in the zone"
+            }
+          ],
+          "answer": [
+            "a"
+          ],
+          "basis": "scene",
+          "explanation": "Gold 1 reaching the rim changes possession risk, so YOU must protect and support; if YOU arrives first with control, the outlet scan returns.",
+          "id": "exp26-u13-001-q7"
+        },
+        {
+          "type": "multi",
+          "prompt": "Which two words would make the next call useful?",
+          "options": [
+            {
+              "id": "a",
+              "text": "Name the pressure side"
+            },
+            {
+              "id": "b",
+              "text": "Name D2’s support status"
+            },
+            {
+              "id": "c",
+              "text": "Call for a pass without naming a lane"
+            }
+          ],
+          "answer": [
+            "a",
+            "b"
+          ],
+          "basis": "coaching",
+          "explanation": "A pressure-side call and support status give teammates actionable information; a vague pass call does not say what changed.",
+          "id": "exp26-u13-001-q8"
+        },
+        {
+          "type": "position",
+          "prompt": "Move YOU to an approach angle that keeps the loose rim and Gold 1 in view.",
+          "basis": "coaching",
+          "explanation": "The offset approach preserves a view of both puck and forechecker; if Gold 1 crosses the lane, slow and support rather than reaching blind.",
+          "actorId": "home-skater-1",
+          "reference": {
+            "x": -20,
+            "y": 10.2
+          },
+          "id": "exp26-u13-001-q9"
+        },
+        {
+          "type": "explain",
+          "prompt": "How would you decide whether to collect or contain at the rim?",
+          "basis": "coaching",
+          "explanation": "Compare who can reach the puck, Gold 1’s route and D2’s support before committing; if the opponent arrives first, contain and wait for help.",
+          "id": "exp26-u13-001-q10"
+        }
+      ]
+    },
+    {
+      "id": "exp26-u13-010",
+      "version": 2,
+      "ageBand": "U13",
+      "title": "Be available near the net before the shot",
+      "family": "net-front-recognition",
+      "topic": "net front recognition",
+      "objective": "Recognize a receiving or deflection area without prescribing a net battle.",
+      "briefing": "F1 has the puck high near the side boards. YOU are beside Gold’s net on the same side. This non-contact recognition exercise asks YOU to become visible near the front before a possible shot or pass. Navy attacks Gold’s net and defends Navy’s net. This is a selected-player teaching view; no movement is implied unless stated.",
+      "setup": {
+        "actors": [
+          {
+            "id": "home-skater-1",
+            "label": "YOU",
+            "team": "home",
+            "role": "skater",
+            "x": 25,
+            "y": 7,
+            "facing": 3.017237659043032
+          },
+          {
+            "id": "home-skater-2",
+            "label": "F1",
+            "team": "home",
+            "role": "skater",
+            "x": 17,
+            "y": 8,
+            "facing": 0
+          },
+          {
+            "id": "away-skater-1",
+            "label": "A1",
+            "team": "away",
+            "role": "skater",
+            "x": 21,
+            "y": 4,
+            "facing": 2.356194490192345
+          },
+          {
+            "id": "away-goalie-2",
+            "label": "G",
+            "team": "away",
+            "role": "goalie",
+            "x": 26,
+            "y": 0,
+            "facing": 3.141592653589793
+          }
+        ],
+        "puck": {
+          "owner": "home-skater-2"
+        }
+      },
+      "focusActorId": "home-skater-1",
+      "cues": [
+        "YOU are beside Gold’s net, away from the middle of the ice.",
+        "F1 has the puck high near the side boards. YOU are beside Gold’s net on the same side. This non-contact recognition exercise asks YOU to become visible near the front before a possible shot or pass."
+      ],
+      "tags": [
+        "net-front-recognition"
+      ],
+      "sources": [
+        {
+          "id": "hc-u13-core",
+          "title": "U13 Skills — Core Skills",
+          "url": "https://cdn.hockeycanada.ca/hockey-canada/Hockey-Programs/Players/Downloads/2020/u13-core-skills-e.pdf",
+          "section": "Page 1, individual tactics and team play",
+          "use": "Supports age/topic placement only. The setup, alternatives and suggested answers are original experimental coaching synthesis, not source-certified."
+        }
+      ],
+      "limits": "U13 recognition-only net-front exercise. No contested net battles, screening-contact rules or tip execution are certified. Static setup: no skating speed, interception timing or uniquely optimal route has been validated. Positional references are examples, not scored targets.",
+      "questions": [
+        {
+          "id": "exp26-u13-010-q1",
+          "type": "choice",
+          "prompt": "Where are YOU compared with the net-front centre?",
+          "options": [
+            {
+              "id": "a",
+              "text": "At centre ice"
+            },
+            {
+              "id": "b",
+              "text": "Behind F1 in the neutral zone"
+            },
+            {
+              "id": "c",
+              "text": "Beside the net, toward the side boards"
+            }
+          ],
+          "answer": [
+            "c"
+          ],
+          "explanation": "YOU are beside Gold’s net, away from the middle of the ice.",
+          "basis": "scene"
+        },
+        {
+          "id": "exp26-u13-010-q2",
+          "type": "multi",
+          "prompt": "Which two things should you check before presenting near the front?",
+          "options": [
+            {
+              "id": "a",
+              "text": "Where Gold 1 is defending"
+            },
+            {
+              "id": "b",
+              "text": "Where F1 can see you"
+            },
+            {
+              "id": "c",
+              "text": "Whether standing on the goalie guarantees a goal"
+            }
+          ],
+          "answer": [
+            "a",
+            "b"
+          ],
+          "explanation": "Availability requires a view and useful separation. This exercise does not authorize contact with a goalie.",
+          "basis": "coaching"
+        },
+        {
+          "id": "exp26-u13-010-q3",
+          "type": "sequence",
+          "prompt": "Arrange a possible preparation for a front-of-net option.",
+          "options": [
+            {
+              "id": "a",
+              "text": "Read the puck carrier"
+            },
+            {
+              "id": "b",
+              "text": "Find available space near the front"
+            },
+            {
+              "id": "c",
+              "text": "Present the stick and watch the puck"
+            }
+          ],
+          "answer": [
+            "a",
+            "b",
+            "c"
+          ],
+          "basis": "coaching",
+          "explanation": "This is a recognition routine; movement and stick skill require on-ice practice."
+        },
+        {
+          "id": "exp26-u13-010-q4",
+          "type": "position",
+          "prompt": "Move YOU to an example receiving position near the front.",
+          "actorId": "home-skater-1",
+          "reference": {
+            "x": 23,
+            "y": -2
+          },
+          "basis": "coaching",
+          "explanation": "The reference illustrates a different side of Gold 1. Other safe, visible receiving spots may work."
+        },
+        {
+          "id": "exp26-u13-010-q5",
+          "type": "choice",
+          "prompt": "If Gold 1 follows and closes the route, what could help?",
+          "options": [
+            {
+              "id": "a",
+              "text": "Reoffer in another visible pocket"
+            },
+            {
+              "id": "b",
+              "text": "Assume the same pass remains open"
+            },
+            {
+              "id": "c",
+              "text": "Move onto the goalie’s position"
+            }
+          ],
+          "answer": [
+            "a"
+          ],
+          "explanation": "Another pocket or a delayed arrival may help; no static point is guaranteed open.",
+          "basis": "coaching"
+        },
+        {
+          "id": "exp26-u13-010-q6",
+          "type": "explain",
+          "prompt": "What should F1 be able to see before trying to involve YOU?",
+          "basis": "coaching",
+          "explanation": "A recognizable target and a route that is not simply through the defender; timing also matters."
+        },
+        {
+          "type": "choice",
+          "prompt": "Why is YOU beside the net rather than already in the slot?",
+          "options": [
+            {
+              "id": "a",
+              "text": "The scene asks YOU to become visible near the front"
+            },
+            {
+              "id": "b",
+              "text": "The puck is loose behind the net"
+            },
+            {
+              "id": "c",
+              "text": "Gold 1 owns the puck"
+            }
+          ],
+          "answer": [
+            "a"
+          ],
+          "basis": "scene",
+          "explanation": "The exercise states the recognition task is to become visible near the front; if the puck or defender moves, choose a new lane.",
+          "id": "exp26-u13-010-q7"
+        },
+        {
+          "type": "multi",
+          "prompt": "Which two details should F1 see before involving YOU?",
+          "options": [
+            {
+              "id": "a",
+              "text": "Your route to the front"
+            },
+            {
+              "id": "b",
+              "text": "Gold 1’s coverage position"
+            },
+            {
+              "id": "c",
+              "text": "Whether F1 can shoot through Gold 1 without changing the angle"
+            }
+          ],
+          "answer": [
+            "a",
+            "b"
+          ],
+          "basis": "coaching",
+          "explanation": "F1 needs your reachable route and the defender’s coverage to choose; no net outcome is guaranteed from the freeze.",
+          "id": "exp26-u13-010-q8"
+        },
+        {
+          "type": "position",
+          "prompt": "Move YOU from the side of the net into a visible net-front lane outside Gold 1.",
+          "basis": "coaching",
+          "explanation": "The position makes YOU visible without standing on Gold 1’s body line; if Gold 1 closes, slide to a separate support lane.",
+          "actorId": "home-skater-1",
+          "reference": {
+            "x": 24,
+            "y": 1
+          },
+          "id": "exp26-u13-010-q9"
+        },
+        {
+          "type": "explain",
+          "prompt": "What is the difference between being near the net and being useful near the net?",
+          "basis": "coaching",
+          "explanation": "A useful spot changes the goalie’s sightline or offers a reachable pass while preserving separation; if it blocks F1’s lane, proximity alone does not help.",
+          "id": "exp26-u13-010-q10"
+        }
+      ]
+    }
+  ]
+}

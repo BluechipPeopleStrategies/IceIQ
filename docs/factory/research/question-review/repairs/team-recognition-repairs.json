@@ -1,0 +1,156 @@
+{
+  "status": "applied-awaiting-independent-recheck",
+  "author": "root",
+  "changedAt": "2026-09-05T20:08:43.139Z",
+  "changes": [
+    {
+      "questionId": "exp26-u7-001-q7",
+      "scenarioId": "exp26-u7-001",
+      "baseVersion": 1,
+      "newVersion": 1,
+      "before": {
+        "id": "exp26-u7-001-q7",
+        "type": "choice",
+        "prompt": "If Gold1 reaches the puck first, what is your first new question?",
+        "options": [
+          {
+            "id": "a",
+            "text": "Who has it now?"
+          },
+          {
+            "id": "b",
+            "text": "Can I pass the old way?"
+          },
+          {
+            "id": "c",
+            "text": "Did Navy2 score?"
+          }
+        ],
+        "answer": [
+          "a"
+        ],
+        "basis": "coaching",
+        "explanation": "Gold1's arrival may change ownership. Naming the new owner keeps YOU from acting on the old loose-puck picture."
+      },
+      "after": {
+        "id": "exp26-u7-001-q7",
+        "type": "choice",
+        "prompt": "Imagine Gold1 takes the puck from YOU. What should you notice first?",
+        "options": [
+          {
+            "id": "a",
+            "text": "Who has it now?"
+          },
+          {
+            "id": "b",
+            "text": "Can I pass the old way?"
+          },
+          {
+            "id": "c",
+            "text": "Did Navy2 score?"
+          }
+        ],
+        "answer": [
+          "a"
+        ],
+        "basis": "coaching",
+        "explanation": "Gold1 now has the puck, so YOU must notice the change before deciding what to do. YOU cannot keep passing as though the puck were still yours."
+      },
+      "beforeContentHash": "eda810a9c88e274cdf179dabdd9a0ba38d0cd911e906d0353fd43bd5d0a5e01d",
+      "afterContentHash": "02fb9eafb709f681a519a50d1db4a2e26acee080360816b47fffffd178655751",
+      "reason": "Aligned the extension with YOU already owning the puck, made future changes explicit, and removed an impossible instruction to stand between a carried puck and its receiver."
+    },
+    {
+      "questionId": "exp26-u7-001-q8",
+      "scenarioId": "exp26-u7-001",
+      "baseVersion": 1,
+      "newVersion": 1,
+      "before": {
+        "id": "exp26-u7-001-q8",
+        "type": "multi",
+        "prompt": "After the pickup, which two players should YOU find?",
+        "options": [
+          {
+            "id": "a",
+            "text": "Gold1 near the puck"
+          },
+          {
+            "id": "b",
+            "text": "Navy2 in the middle"
+          },
+          {
+            "id": "c",
+            "text": "A player who is not shown"
+          }
+        ],
+        "answer": [
+          "a",
+          "b"
+        ],
+        "basis": "coaching",
+        "explanation": "Gold1 is the pressure cue and Navy2 is the visible teammate. Seeing both helps decide whether to shield, carry, or pass."
+      },
+      "after": {
+        "id": "exp26-u7-001-q8",
+        "type": "multi",
+        "prompt": "Imagine Navy2 moves to a new spot while YOU hold the puck. Which two players should YOU keep track of?",
+        "options": [
+          {
+            "id": "a",
+            "text": "Gold1, who may block the way"
+          },
+          {
+            "id": "b",
+            "text": "Navy2 in the new spot"
+          },
+          {
+            "id": "c",
+            "text": "Only where Navy2 used to stand"
+          }
+        ],
+        "answer": [
+          "a",
+          "b"
+        ],
+        "basis": "coaching",
+        "explanation": "Check where Navy2 is now and where Gold1 is before choosing a pass. A teammate’s old spot may no longer be useful."
+      },
+      "beforeContentHash": "acc5d52be64380c64d9f752b6978addb20ef8607aabc2909a4fab933fca41b4d",
+      "afterContentHash": "e57b4afce8b94cf02ef8ffff2489beb97aef76358990cfdde5b1c85ded4333a7",
+      "reason": "Aligned the extension with YOU already owning the puck, made future changes explicit, and removed an impossible instruction to stand between a carried puck and its receiver."
+    },
+    {
+      "questionId": "exp26-u7-001-q9",
+      "scenarioId": "exp26-u7-001",
+      "baseVersion": 1,
+      "newVersion": 1,
+      "before": {
+        "id": "exp26-u7-001-q9",
+        "type": "position",
+        "prompt": "Place YOU between the puck and Navy2 with Gold1 in view.",
+        "actorId": "home-skater-1",
+        "reference": {
+          "x": -5,
+          "y": -1
+        },
+        "basis": "coaching",
+        "explanation": "This example keeps YOU connected to Navy2 while leaving Gold1 visible. Another controlled support spot can work."
+      },
+      "after": {
+        "id": "exp26-u7-001-q9",
+        "type": "position",
+        "prompt": "Move YOU with the puck to try a different passing angle toward Navy2.",
+        "actorId": "home-skater-1",
+        "reference": {
+          "x": -5,
+          "y": -1
+        },
+        "basis": "coaching",
+        "explanation": "Try a controlled move that leaves a clear path toward Navy2 while keeping Gold1 in view. The puck stays with YOU. This is one example to discuss, not the only place that can work."
+      },
+      "beforeContentHash": "2f4f3c7ce7b53dfde97674b7cd19cff745931e41ba2d740e34bdada73c081e61",
+      "afterContentHash": "9fb85fd03ea4b259bc2809f27dfeebdc14fb1a48e75113f2f986e01e9447bb81",
+      "reason": "Aligned the extension with YOU already owning the puck, made future changes explicit, and removed an impossible instruction to stand between a carried puck and its receiver."
+    }
+  ]
+}

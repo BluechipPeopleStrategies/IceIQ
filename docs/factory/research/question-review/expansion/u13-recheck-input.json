@@ -1,0 +1,684 @@
+{
+  "instruction": "Independently check the final current content and complete scene. Keep the earlier receipts immutable. Every listed ID needs a current-hash pass or an actionable revision. This can serve as the second review for a newly discovered repair.",
+  "assignedQuestionIds": [
+    "exp26-u13-015-q7",
+    "exp26b-u13-016-q1",
+    "exp26b-u13-016-q2",
+    "exp26b-u13-016-q3",
+    "exp26b-u13-016-q4",
+    "exp26b-u13-016-q5",
+    "exp26b-u13-016-q6"
+  ],
+  "manifest": [
+    {
+      "questionId": "exp26-u13-015-q7",
+      "scenarioId": "exp26-u13-015",
+      "scenarioVersion": 1,
+      "contentHash": "f8a2ee2ed5fc1a831594ab912616d3686925f87e2b5615d89a5753d3091ad527",
+      "status": "flag",
+      "highRisk": false,
+      "riskReason": "",
+      "findingIds": [
+        "u13-p2-repeat-q7-targets"
+      ],
+      "firstReviewer": "luna-u11-peer-u13",
+      "firstContentHash": "e1754a5f370423becc4535ac786b45890466586124c6f027ed255ddeb5c6f4b8",
+      "previousReview": {
+        "questionId": "exp26-u13-015-q7",
+        "scenarioId": "exp26-u13-015",
+        "scenarioVersion": 1,
+        "contentHash": "ae28e14a7e9d0b41206b88aa102fed15cbfe352e7cf98ccd2db5ee2f08a5d96d",
+        "decision": "revise",
+        "severity": "P2",
+        "reason": "The prompt asks for a Navy teammate, but options a and c are the same opponent (Gold 2). That duplicate leaves only one distinct alternative and weakens the role read even though D1 is the correct deeper support in the setup.",
+        "proposedQuestion": {
+          "id": "exp26-u13-015-q7",
+          "type": "choice",
+          "prompt": "Which player is deeper behind YOU and can support if Gold 1 turns inside?",
+          "options": [
+            {
+              "id": "a",
+              "text": "Gold 1"
+            },
+            {
+              "id": "b",
+              "text": "D1"
+            },
+            {
+              "id": "c",
+              "text": "Gold 2"
+            }
+          ],
+          "answer": [
+            "b"
+          ],
+          "basis": "coaching",
+          "explanation": "D1 is positioned deeper behind YOU and can support recovery if Gold 1 turns inside. Gold 1 and Gold 2 are the two actual attackers, so they are not Navy support; if D1 is pulled away, protect the route back to the Navy net."
+        },
+        "recommendedChange": "Replace the duplicate Gold 2 option with a distinct actual player and preserve the conditional D1 support explanation."
+      }
+    },
+    {
+      "questionId": "exp26b-u13-016-q1",
+      "scenarioId": "exp26b-u13-016",
+      "scenarioVersion": 1,
+      "contentHash": "26b469ad75372697b1e43e51e66e6d3c86d935d399961bbb4f8ce80567ee8113",
+      "status": "flag",
+      "highRisk": false,
+      "riskReason": "",
+      "findingIds": [
+        "u13-p2-direction-notation"
+      ],
+      "firstReviewer": "luna-u11-peer-u13",
+      "firstContentHash": "0390aea3699314a5f5479d457a8ea4442e02ae5caeccd335649c26183681c05d",
+      "previousReview": {
+        "questionId": "exp26b-u13-016-q1",
+        "scenarioId": "exp26b-u13-016",
+        "scenarioVersion": 2,
+        "contentHash": "2d0fcc9919dbea93b9b11749b74370682bc5b7954dd99e4424fcfd9c6d5dd7ba",
+        "decision": "pass",
+        "reason": "Inspected the complete current scene (Cover the lane after an interception) and this question against its setup: puck state is g1, with visible actors YOU, D1, Gold 1, Gold 2; keyed answer a matches the stated coaching read, and the explanation preserves conditional alternatives without claiming an unshown outcome."
+      }
+    },
+    {
+      "questionId": "exp26b-u13-016-q2",
+      "scenarioId": "exp26b-u13-016",
+      "scenarioVersion": 1,
+      "contentHash": "96312ee57882e6e59993414905f11168891dba0f8efc8909f551d6d7fdf7ac5a",
+      "status": "flag",
+      "highRisk": false,
+      "riskReason": "",
+      "findingIds": [
+        "u13-p2-direction-notation"
+      ],
+      "firstReviewer": "luna-u11-peer-u13",
+      "firstContentHash": "00c17fa8200ef027eadcc4ea293abb4196381e7b63020a019ec9704a3ad52c17",
+      "previousReview": {
+        "questionId": "exp26b-u13-016-q2",
+        "scenarioId": "exp26b-u13-016",
+        "scenarioVersion": 2,
+        "contentHash": "aab539c97a56f4079d4cf3f66fc8dfcc3f46a54451e59f164535bc9bde27aec7",
+        "decision": "pass",
+        "reason": "Inspected the complete current scene (Cover the lane after an interception) and this question against its setup: puck state is g1, with visible actors YOU, D1, Gold 1, Gold 2; keyed answer a, b matches the stated coaching read, and the explanation preserves conditional alternatives without claiming an unshown outcome."
+      }
+    },
+    {
+      "questionId": "exp26b-u13-016-q3",
+      "scenarioId": "exp26b-u13-016",
+      "scenarioVersion": 1,
+      "contentHash": "c29ce3e1913d84e69775a22a021325fad93796eee0d7552e09aa5a0fd88412d2",
+      "status": "flag",
+      "highRisk": false,
+      "riskReason": "",
+      "findingIds": [
+        "u13-p2-direction-notation"
+      ],
+      "firstReviewer": "luna-u11-peer-u13",
+      "firstContentHash": "93884d5aa013d960ba253566e66673a089ebc157edd99e408998cf789a9c22a0",
+      "previousReview": {
+        "questionId": "exp26b-u13-016-q3",
+        "scenarioId": "exp26b-u13-016",
+        "scenarioVersion": 2,
+        "contentHash": "8be3173e8a959dfd97a12a79089f5352627a85f8d43043f3dfe1a6a8864a0daf",
+        "decision": "pass",
+        "reason": "Inspected the complete current scene (Cover the lane after an interception) and this question against its setup: puck state is g1, with visible actors YOU, D1, Gold 1, Gold 2; keyed answer a, b, c matches the stated coaching read, and the explanation preserves conditional alternatives without claiming an unshown outcome."
+      }
+    },
+    {
+      "questionId": "exp26b-u13-016-q4",
+      "scenarioId": "exp26b-u13-016",
+      "scenarioVersion": 1,
+      "contentHash": "3991e78bacdfb7a043fef06efe9ff45e3a78e26ab27f182c8e48967a23ae5a8c",
+      "status": "flag",
+      "highRisk": false,
+      "riskReason": "",
+      "findingIds": [
+        "u13-p2-direction-notation",
+        "u13-p2-duplicate-new-prompts"
+      ],
+      "firstReviewer": "luna-u11-peer-u13",
+      "firstContentHash": "efb2cf065add21e655e71fea993372aedcfdb5935a25f5a3e14c91cc09283922",
+      "previousReview": {
+        "questionId": "exp26b-u13-016-q4",
+        "scenarioId": "exp26b-u13-016",
+        "scenarioVersion": 2,
+        "contentHash": "d7e01aa50d3f39b1e15306350ae59009e88d9a7e2ee25cf449cb324125ff9e6b",
+        "decision": "pass",
+        "reason": "Inspected the complete current scene (Cover the lane after an interception) and this question against its setup: puck state is g1, with visible actors YOU, D1, Gold 1, Gold 2; keyed answer open response matches the stated coaching read, and the explanation preserves conditional alternatives without claiming an unshown outcome."
+      }
+    },
+    {
+      "questionId": "exp26b-u13-016-q5",
+      "scenarioId": "exp26b-u13-016",
+      "scenarioVersion": 1,
+      "contentHash": "03b6c2a631c088d20f27b2053db6ac09689ece726e94640cae01ee81fc2dddf1",
+      "status": "flag",
+      "highRisk": false,
+      "riskReason": "",
+      "findingIds": [
+        "u13-p2-direction-notation",
+        "u13-p2-duplicate-new-prompts"
+      ],
+      "firstReviewer": "luna-u11-peer-u13",
+      "firstContentHash": "a76bc450475e0b947a5024e901b571314404ddb2163498dd32a4fd361f974d01",
+      "previousReview": {
+        "questionId": "exp26b-u13-016-q5",
+        "scenarioId": "exp26b-u13-016",
+        "scenarioVersion": 2,
+        "contentHash": "e211cbb05dc654dc6648aba4b6f2d8e54ae3a81cf3dceb12e2879071f0a7fc0c",
+        "decision": "revise",
+        "severity": "P2",
+        "reason": "This current prompt repeats the same turnover-recheck teaching target as original exp26-u13-019-q5: after D1 wins the puck, inspect the new outlet and Gold 2. The current scene can add value by testing the handoff call tied to its interception setup.",
+        "proposedQuestion": {
+          "id": "exp26b-u13-016-q5",
+          "type": "choice",
+          "prompt": "D1 wins the puck back while Gold 2 remains in the middle. What should YOU call first?",
+          "options": [
+            {
+              "id": "a",
+              "text": "D1 has it; Gold 2 is still middle"
+            },
+            {
+              "id": "b",
+              "text": "Gold 1 is still the Navy carrier"
+            },
+            {
+              "id": "c",
+              "text": "The old forward pass is still on"
+            }
+          ],
+          "answer": [
+            "a"
+          ],
+          "basis": "coaching",
+          "explanation": "Naming D1 as the new carrier and Gold 2 as the remaining middle threat gives the team a usable handoff. If D1 cannot use the outlet, protect first and update the call rather than forcing the old attack."
+        },
+        "recommendedChange": "Retarget this row to the scene-specific carrier-and-threat handoff call, then recalculate its content hash for recheck."
+      }
+    },
+    {
+      "questionId": "exp26b-u13-016-q6",
+      "scenarioId": "exp26b-u13-016",
+      "scenarioVersion": 1,
+      "contentHash": "dd15483f4aaa65f6e58939f59e3154983229765f0309f5909df75af56e9ae2c5",
+      "status": "flag",
+      "highRisk": false,
+      "riskReason": "",
+      "findingIds": [
+        "u13-p2-direction-notation"
+      ],
+      "firstReviewer": "luna-u11-peer-u13",
+      "firstContentHash": "872449d979c5842cc7f0386ae8cccae2bdc06d8161047a121fcc58e778be81c4",
+      "previousReview": {
+        "questionId": "exp26b-u13-016-q6",
+        "scenarioId": "exp26b-u13-016",
+        "scenarioVersion": 2,
+        "contentHash": "dbdb020dea6dd5dbe5921dbb8638217db2edc5bfde6884005048b265c516ec41",
+        "decision": "pass",
+        "reason": "Inspected the complete current scene (Cover the lane after an interception) and this question against its setup: puck state is g1, with visible actors YOU, D1, Gold 1, Gold 2; keyed answer open response matches the stated coaching read, and the explanation preserves conditional alternatives without claiming an unshown outcome."
+      }
+    }
+  ],
+  "scenarios": [
+    {
+      "id": "exp26-u13-015",
+      "version": 1,
+      "ageBand": "U13",
+      "title": "Angle from the middle toward the wall",
+      "family": "angling-recovery",
+      "topic": "angling recovery",
+      "objective": "Protect the middle while retaining a route back toward the net.",
+      "briefing": "Gold 1 carries along the puck-side half wall toward the Navy net. YOU approach from inside. Your drill goal is to guide the carrier outward while remaining able to recover toward your net. Navy attacks Gold’s net and defends Navy’s net. This is a selected-player teaching view; no movement is implied unless stated.",
+      "setup": {
+        "actors": [
+          {
+            "id": "home-skater-1",
+            "label": "YOU",
+            "team": "home",
+            "role": "skater",
+            "x": -3,
+            "y": 3,
+            "facing": 2.0344439357957027
+          },
+          {
+            "id": "home-skater-2",
+            "label": "D1",
+            "team": "home",
+            "role": "skater",
+            "x": -14,
+            "y": 0,
+            "facing": 0.844153986113171
+          },
+          {
+            "id": "away-skater-1",
+            "label": "A1",
+            "team": "away",
+            "role": "skater",
+            "x": -6,
+            "y": 9,
+            "facing": 3.141592653589793
+          },
+          {
+            "id": "away-skater-2",
+            "label": "A2",
+            "team": "away",
+            "role": "skater",
+            "x": -11,
+            "y": -3,
+            "facing": 1.176005207095135
+          }
+        ],
+        "puck": {
+          "owner": "away-skater-1"
+        }
+      },
+      "focusActorId": "home-skater-1",
+      "cues": [
+        "Gold 1 is drawn close to the puck-side boards in the defending half of the rink.",
+        "Gold 1 carries along the puck-side half wall toward the Navy net. YOU approach from inside. Your drill goal is to guide the carrier outward while remaining able to recover toward your net."
+      ],
+      "tags": [
+        "angling-recovery"
+      ],
+      "sources": [
+        {
+          "id": "usa-transition-2019",
+          "title": "Winning in Transition: Angling, Gaps and Creating Turnovers in Today's Game",
+          "url": "https://www.usahockey.com/news_article/show/988313-winning-in-transition-angling-gaps-and-creating-turnovers-in-today-s-game",
+          "section": "A Proper Angle",
+          "use": "Supports the stated coaching principle. The setup, alternatives and suggested answers are original experimental coaching synthesis, not source-certified."
+        }
+      ],
+      "limits": "Age adaptation and tactical alternatives await coaching review. Static setup: no skating speed, interception timing or uniquely optimal route has been validated. Positional references are examples, not scored targets.",
+      "questions": [
+        {
+          "id": "exp26-u13-015-q1",
+          "type": "choice",
+          "prompt": "Where is Gold 1 carrying the puck?",
+          "options": [
+            {
+              "id": "a",
+              "text": "Along the puck-side half wall"
+            },
+            {
+              "id": "b",
+              "text": "In the low slot"
+            },
+            {
+              "id": "c",
+              "text": "At the opposite-side point"
+            }
+          ],
+          "answer": [
+            "a"
+          ],
+          "explanation": "Gold 1 is drawn close to the puck-side boards in the defending half of the rink.",
+          "basis": "scene"
+        },
+        {
+          "id": "exp26-u13-015-q2",
+          "type": "multi",
+          "prompt": "Which two relationships fit the stated angling goal?",
+          "options": [
+            {
+              "id": "a",
+              "text": "An approach that gives Gold 1 the middle for free"
+            },
+            {
+              "id": "b",
+              "text": "A route that permits recovery toward the Navy net"
+            },
+            {
+              "id": "c",
+              "text": "An approach from the inside"
+            }
+          ],
+          "answer": [
+            "b",
+            "c"
+          ],
+          "explanation": "The objective is to influence space while preserving recovery, not simply to arrive first.",
+          "basis": "coaching"
+        },
+        {
+          "id": "exp26-u13-015-q3",
+          "type": "sequence",
+          "prompt": "Order one angling read from this freeze.",
+          "options": [
+            {
+              "id": "a",
+              "text": "Notice Gold 1’s route and your net"
+            },
+            {
+              "id": "b",
+              "text": "Choose an inside approach"
+            },
+            {
+              "id": "c",
+              "text": "Update when Gold 1 passes or changes direction"
+            }
+          ],
+          "answer": [
+            "a",
+            "b",
+            "c"
+          ],
+          "basis": "coaching",
+          "explanation": "The approach changes with the carrier; this is not a fixed collision route."
+        },
+        {
+          "id": "exp26-u13-015-q4",
+          "type": "position",
+          "prompt": "Move YOU into an example inside position beside the half wall.",
+          "actorId": "home-skater-1",
+          "reference": {
+            "x": -8,
+            "y": 5
+          },
+          "basis": "coaching",
+          "explanation": "This reference stays inside Gold 1 and closer to the defending net. Several approach angles may satisfy the same relationship."
+        },
+        {
+          "id": "exp26-u13-015-q5",
+          "type": "choice",
+          "prompt": "Gold 1 passes inside to Gold 2. What deserves attention now?",
+          "options": [
+            {
+              "id": "a",
+              "text": "Remain beside the wall and ignore the pass"
+            },
+            {
+              "id": "b",
+              "text": "Recover toward the new puck threat"
+            },
+            {
+              "id": "c",
+              "text": "Complete the old approach regardless"
+            }
+          ],
+          "answer": [
+            "b"
+          ],
+          "explanation": "A release changes the threat. Retaining recovery momentum helps the next defensive action.",
+          "basis": "coaching"
+        },
+        {
+          "id": "exp26-u13-015-q6",
+          "type": "explain",
+          "prompt": "Why can a fast approach be unhelpful if it sends you past Gold 1?",
+          "basis": "coaching",
+          "explanation": "Explain how overshooting may leave the middle or recovery route available to the attacker."
+        },
+        {
+          "type": "choice",
+          "prompt": "Which teammate can support behind YOU if Gold 1 turns inside?",
+          "options": [
+            {
+              "id": "a",
+              "text": "Gold 1"
+            },
+            {
+              "id": "b",
+              "text": "D1"
+            },
+            {
+              "id": "c",
+              "text": "Gold 2"
+            }
+          ],
+          "answer": [
+            "b"
+          ],
+          "basis": "coaching",
+          "explanation": "D1 is positioned deeper behind YOU and can support recovery if Gold 1 turns inside; if D1 is pulled away, protect the route back to Navy’s net yourself.",
+          "id": "exp26-u13-015-q7"
+        },
+        {
+          "type": "multi",
+          "prompt": "Which two conditions support an inside angle?",
+          "options": [
+            {
+              "id": "a",
+              "text": "YOU can stay between carrier and net"
+            },
+            {
+              "id": "b",
+              "text": "D1 remains available behind"
+            },
+            {
+              "id": "c",
+              "text": "YOU skates past the puck"
+            }
+          ],
+          "answer": [
+            "a",
+            "b"
+          ],
+          "basis": "coaching",
+          "explanation": "Inside position protects the net and D1 provides recovery support; skating past loses both control and angle.",
+          "id": "exp26-u13-015-q8"
+        },
+        {
+          "type": "position",
+          "prompt": "Move YOU closer to the inside lane beside Gold 1’s path.",
+          "basis": "coaching",
+          "explanation": "The inside spot keeps the carrier outside and preserves a recovery route to Navy’s net; if Gold 1 passes inside, switch threats.",
+          "actorId": "home-skater-1",
+          "reference": {
+            "x": -6,
+            "y": 2
+          },
+          "id": "exp26-u13-015-q9"
+        },
+        {
+          "type": "explain",
+          "prompt": "Why is the wall the preferred direction in this angle, while still requiring a read?",
+          "basis": "coaching",
+          "explanation": "Guiding a carrier toward the wall protects the middle, but the carrier’s speed, pass and support can change the next route; if Gold 2 appears inside, recover.",
+          "id": "exp26-u13-015-q10"
+        }
+      ]
+    },
+    {
+      "id": "exp26b-u13-016",
+      "version": 3,
+      "ageBand": "U13",
+      "title": "Cover the lane after an interception",
+      "family": "post-interception-cover",
+      "topic": "transition defence",
+      "objective": "Change from an attacking pass intention to the nearest defensive cover after Gold intercepts",
+      "briefing": "Navy attacks Gold’s net and defends Navy’s net. YOU attempted a pass in Gold’s zone; Gold 1 intercepted and Gold 2 moves through the middle. D1 is behind the play.",
+      "setup": {
+        "actors": [
+          {
+            "id": "n1",
+            "label": "YOU",
+            "team": "home",
+            "role": "skater",
+            "x": 18,
+            "y": 4,
+            "facing": 3
+          },
+          {
+            "id": "n2",
+            "label": "D1",
+            "team": "home",
+            "role": "skater",
+            "x": 11,
+            "y": -6,
+            "facing": 3
+          },
+          {
+            "id": "g1",
+            "label": "Gold 1",
+            "team": "away",
+            "role": "skater",
+            "x": 19,
+            "y": 3,
+            "facing": 3.1
+          },
+          {
+            "id": "g2",
+            "label": "Gold 2",
+            "team": "away",
+            "role": "skater",
+            "x": 16,
+            "y": -1,
+            "facing": 3
+          }
+        ],
+        "puck": {
+          "owner": "g1",
+          "x": 17.972,
+          "y": 2.342
+        }
+      },
+      "focusActorId": "n1",
+      "cues": [
+        "Gold 1 clearly intercepted YOU’s pass.",
+        "Gold 2 is the second attacker moving middle; D1 is behind."
+      ],
+      "tags": [
+        "post-interception-cover",
+        "transition defence"
+      ],
+      "sources": [
+        {
+          "id": "usa-transition-2019",
+          "title": "Winning in Transition: Angling, Gaps and Creating Turnovers in Today's Game",
+          "url": "https://www.usahockey.com/news_article/show/988313-winning-in-transition-angling-gaps-and-creating-turnovers-in-today-s-game",
+          "section": "Closing The Gap and A Proper Angle",
+          "use": "Supports the stated transition principle. The setup, alternatives and suggested answers are original experimental coaching synthesis."
+        },
+        {
+          "id": "usa-transition-drill-2016",
+          "title": "14U Offense-Defense-Out with a Goalie Twist",
+          "url": "https://www.usahockey.com/news_article/show/636604-14u-offense-defense-out-with-a-goalie-twist",
+          "section": "Coaching points: middle-lane backcheck",
+          "use": "Supports the stated middle-lane coaching principle. The setup, alternatives and suggested answers are original experimental coaching synthesis."
+        }
+      ],
+      "limits": "Static teaching freeze only: no speed, reach, interception timing or uniquely optimal route is validated. Answers are coaching suggestions grounded in visible cues.",
+      "questions": [
+        {
+          "type": "choice",
+          "prompt": "Which team has possession now?",
+          "options": [
+            {
+              "id": "a",
+              "text": "Gold"
+            },
+            {
+              "id": "b",
+              "text": "Navy"
+            },
+            {
+              "id": "c",
+              "text": "Neither can be identified"
+            }
+          ],
+          "answer": [
+            "a"
+          ],
+          "basis": "scene",
+          "explanation": "Gold 1 is assigned the puck after interception, so Navy’s attacking routes become recovery routes; if D1 wins it, update.",
+          "id": "exp26b-u13-016-q1"
+        },
+        {
+          "type": "multi",
+          "prompt": "Which two concerns follow the interception?",
+          "options": [
+            {
+              "id": "a",
+              "text": "Gold 1’s puck route"
+            },
+            {
+              "id": "b",
+              "text": "Gold 2’s middle lane"
+            },
+            {
+              "id": "c",
+              "text": "Continuing the original pass pattern"
+            }
+          ],
+          "answer": [
+            "a",
+            "b"
+          ],
+          "basis": "coaching",
+          "explanation": "The new carrier and middle support are immediate threats; repeating attack pattern ignores turnover.",
+          "id": "exp26b-u13-016-q2"
+        },
+        {
+          "type": "sequence",
+          "prompt": "Arrange one immediate cover response.",
+          "options": [
+            {
+              "id": "a",
+              "text": "Call the turnover"
+            },
+            {
+              "id": "b",
+              "text": "Take the nearer open lane"
+            },
+            {
+              "id": "c",
+              "text": "Hand off when D1 arrives"
+            }
+          ],
+          "answer": [
+            "a",
+            "b",
+            "c"
+          ],
+          "basis": "coaching",
+          "explanation": "Calling updates teammates; taking nearer lane prevents a free attack; handoff keeps coverage connected.",
+          "id": "exp26b-u13-016-q3"
+        },
+        {
+          "type": "position",
+          "prompt": "Move YOU to a cover point that keeps Gold 1’s puck side and Gold 2’s middle route in view.",
+          "basis": "coaching",
+          "explanation": "This central point keeps the carrier side and middle support in view during the interception; if Gold 1 turns inside, follow the nearer threat and communicate the switch.",
+          "actorId": "n1",
+          "reference": {
+            "x": 15,
+            "y": 1
+          },
+          "id": "exp26b-u13-016-q4"
+        },
+        {
+          "type": "choice",
+          "prompt": "Imagine D1 wins the puck back while Gold 2 remains in the middle. Which call gives the team useful new information?",
+          "options": [
+            {
+              "id": "a",
+              "text": "D1 has it; Gold 2 is still middle"
+            },
+            {
+              "id": "b",
+              "text": "Keep the original forward passing pattern"
+            },
+            {
+              "id": "c",
+              "text": "Gold 2 is no longer a concern"
+            }
+          ],
+          "answer": [
+            "a"
+          ],
+          "basis": "coaching",
+          "explanation": "The call identifies D1 as the new carrier and Gold 2 as the remaining pressure cue. That updates teammates after the interception without promising a clear outlet. D1 still checks the lane before passing; YOU offer support that fits the new pressure.",
+          "id": "exp26b-u13-016-q5"
+        },
+        {
+          "type": "explain",
+          "prompt": "Name one attacking intention you must abandon after the interception.",
+          "basis": "coaching",
+          "explanation": "The planned forward pass is no longer the job once Gold owns puck, so call turnover and cover nearest lane; if Navy recovers, rebuild from new location.",
+          "id": "exp26b-u13-016-q6"
+        }
+      ]
+    }
+  ]
+}

@@ -1,40 +1,55 @@
-# Critical coaching review — experimental 100
+# Question bank review — 200 experimental scenarios
 
-September 5, 2026. User-selected approach: lower-cost GPT-5.6 Luna reviewers at medium reasoning; one full review of every question, with an independent second review of all flags and high-risk questions. This is an AI coaching audit, not a credentialed coach's approval.
+September 5, 2026. The mixed expansion adds 1,000 questions: 100 new scenarios with six questions each, plus four follow-ups on each of the original 100 scenes. The authoring catalog has 1,600 questions. Normal practice presents 1,500, including 200 optional reflections (13.3%); another 100 reflections remain available in authoring and direct links. All remain outside approved-bank and mastery admission.
 
-| Coverage | Result |
+| Evidence | Final result |
 |---|---:|
-| Original scenarios | 100 |
-| Questions reviewed in full | 600 |
-| Independent second reviews | 127 |
-| High-risk questions included in the second pass | 53 |
-| Questions flagged in the first pass | 81 |
-| Confirmed repairs, independently rechecked | 4 |
-| Questions with a teaching-design flag or suggestion | 55 |
-| Questions with no open AI finding | 545 |
+| Questions with a complete first AI review | 1600 |
+| Questions with an independent second AI review | 462 |
+| Added questions reviewed | 1000 |
+| Added questions receiving an independent second review | 335 |
+| Added questions checked again after content or scene edits | 321 |
+| Unique question IDs in this turn's repair receipts | 219 |
+| Open reconciled AI findings | 0 |
 
-## What changed
+Reviewers used GPT-5.6 Luna. The initial 600-question review used medium reasoning. Weak expansion drafts were rejected; replacement authoring and review used Luna with high reasoning effort. A different reviewer checked every flag, high-risk question and subsequent repair. Every receipt is bound to the scene and question actually reviewed.
 
-Three prompts allowed two defensible updates while offering a single keyed choice. `exp26-u13-014-q5`, `exp26-u15-010-q5` and `exp26-u15-013-q5` now ask for two checks and accept both in a multi-select. This supports the owner's preference for conditional alternatives rather than false certainty.
+## Repairs and retained decisions
 
-`exp26-u9-014-q6` replaces “charging” wording with a question about giving the restarting player room. Its explanation names the Hockey Canada U9 half-ice three-metre retreat and warns against applying that specific restart to every North American program. The scenario remains explicitly scoped to that model. All four scenario versions advanced to 2; all four revised questions passed the independent recheck.
+Repairs address wrong player references and movement targets, net direction and rink-area geometry, unstated possession changes, incorrect answer keys, repeated teaching targets, weak distractors, and conditional feedback. Scene corrections recheck all affected questions, even when the question text itself did not change. Some changes are wording or scene-context corrections; the repair count is not a count of separate tactical failures.
 
-## What remains flagged
+The original four repairs remain recorded in revisions.json and revisions-second-check.json. The later 55-item follow-up retained 54 scoped planning routines and repaired the U9 corner-pickup scan question. Further owner feedback corrected the U13 rim and board locations and the approved YOU grammar. These repairs have separate versioned receipts and independent rechecks of every affected scene/question hash. Unaffected original content is preserved.
 
-A final individual check narrowed the broad 79-question sequence flag to 55 items: one scanning-order concern and 54 optional teaching-variety improvements. Twenty-four flags were rejected, including a question that was actually multi-select and questions where the stated event order was a valid learning target. The remaining questions are queued for editorial judgment about scenario-specific learning value. The recurring scan / act / recheck routine may be useful as a discussion aid, but its repetition is weak question-bank variety. The recommended next pass retains sequencing where order is the actual skill and uses changing cues, competing priorities or conditional branches elsewhere. This queue is a teaching-design concern, not proof that every suggested sequence is tactically wrong.
+Not every reviewer proposal was accepted. For example, F2 was correctly the nearest player in the disputed U11 loose-puck distance question; a suggested replacement point in the U18 rotation was still too low; and future branches were clarified as hypothetical rather than silently changing the freeze. Earlier findings remain available as history alongside the final adjudications.
 
-The first reviewers incorrectly described these suggestions as mandatory scored sequences. The independent review checked the implementation: coaching-basis responses return no correctness score, and options are shuffled. Those scoring claims were rejected. A separate flag demanding skating-speed evidence for a static U9 placement question was also rejected; the question does not claim to simulate the skate.
+## Use the result
 
-## How to inspect and revise
+- [Before-and-after samples with downloadable feedback](repair-samples.html)
+- [Searchable catalog and Claude context builder](../../claude-question-kit/catalog.html)
+- [Claude authoring contract](../../claude-question-kit/START-HERE.md)
+- [Full Claude project parameters, historical checks and return contract](../../claude-project/RINKREADS-CLAUDE-PROJECT.md)
+- [Curriculum coverage map](../../curriculum-map/index.html)
+- [Original 55-item follow-up](followup/review.html)
+- [Final combined review manifest](combined-review.json)
 
-Open the local app at `?arena=experimental&review=triage#practice-arena`. The workshop offers Browse grid and Triage deck, exact question IDs, current-version flags, source notes, a link back to the rink, before/after text editing, structural checks, and a downloadable revision draft. Practice responses and local flags are isolated by player and question version. Saving a workshop draft does not change the serving bank. Existing approved-bank review routes remain at `#browse` and `#triage`.
+The local app's experimental workshop supports current-version flags, revision drafts and opening each question on the rink. Saving a draft or validating a Claude batch does not publish it. New batches need the same review and repair process.
 
-The first reports and second-pass adjudications are retained as receipts. `catalog-review.json` contains the reconciled 600-row manifest used by the workshop; `revisions.json` records the four before/after changes. `reviewed-question-manifest.json` hashes the original scenario context plus each question. The audit checks that the current bank has no unreviewed content changes beyond the four independently rechecked revisions.
+## Reproduce the evidence
 
-Run `node tools/audit-experimental-coaching.mjs` from the repository root to validate coverage, revision hashes and the current queue. It fails if required coverage is missing or current content has changed without a matching recheck.
+Run these from the repository root, in order:
 
-## Review boundaries
+1. `node tools/audit-experimental-coaching.mjs` — verifies the original 600 and their targeted versioned repairs.
+2. `node tools/audit-question-expansion.mjs` — verifies all 1,000 additions, independent coverage, repair chains and final content hashes; produces combined-review.json.
+3. `node tools/build-question-catalog.mjs` — regenerates the 200/1,600 HTML, JSON and CSV catalog.
+4. `node tools/build-question-repair-samples.mjs` and `node tools/build-coaching-followup.mjs` — regenerate readable examples from actual receipts.
+5. `node tools/build-question-review-summary.mjs` — regenerates this summary.
 
-The rubric emphasizes puck management, fundamentals, scanning, time and space, flexible responsibilities and defensible alternatives. It does not claim a universal positionless system. Current rule differences must be named rather than silently assuming NHL, Canadian or US youth rules are interchangeable.
+Files ending in first.json retain the frozen first-pass hashes. Second and recheck reports can reference later versions. Repair receipts preserve before/after evidence; their creation-time status is historical. The exact current status comes from combined-review.json, not a stale intermediate queue. Historical catalog-review.json covers only the original 600 and is superseded by the combined manifest for the workshop.
 
-All 100 scenarios remain experimental and outside approved-bank/mastery admission. The review examined question text, answer logic, age fit, sources and canonical geometry. It does not establish all rendered scenes, animation physics, on-ice transfer, measured question frequency or human-coach approval. The purchased Jack Han book was unavailable; public descriptions support topic inspiration only.
+## Boundaries
+
+AI review is not approval by a credentialed human coach. The rubric prioritizes puck management, fundamentals, time and space, scanning, communication and flexible responsibilities, with explicit North American rule and system differences. No universal positionless system is claimed.
+
+The content audit checks text, answer logic, sources and canonical scene relationships. It does not certify every rendered camera angle, skating physics, on-ice transfer or measured frequency of real-world questions. Tactical and placement responses are coaching discussions without objective scores. Human feedback can still identify improvements after this audit.
+
+The purchased Jack Han book was unavailable. Public descriptions informed topics only; no unseen book pages, proprietary diagrams or question wording were reproduced. Source references explain support for general principles, not permission to copy or certification of an original scenario.

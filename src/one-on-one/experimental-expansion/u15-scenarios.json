@@ -1,0 +1,3211 @@
+[
+  {
+    "id": "exp26b-u15-001",
+    "version": 1,
+    "ageBand": "U15",
+    "title": "Pinch with a visible cover",
+    "family": "pinch-cover-read",
+    "topic": "Offensive blue line",
+    "objective": "Join the attack only when the high cover and puck route support the pinch.",
+    "briefing": "Navy attacks the Gold net. YOU is near the offensive blue line with D2 high support; F1 carries below and Gold has two defenders between the puck and net. The rep is a declared cover decision, not a promise of a successful pinch.",
+    "setup": {
+      "actors": [
+        {
+          "id": "h1",
+          "label": "YOU",
+          "team": "home",
+          "role": "skater",
+          "x": 11,
+          "y": 8,
+          "facing": 0.2
+        },
+        {
+          "id": "h2",
+          "label": "D2",
+          "team": "home",
+          "role": "skater",
+          "x": 10,
+          "y": -5,
+          "facing": 1
+        },
+        {
+          "id": "h3",
+          "label": "F1",
+          "team": "home",
+          "role": "skater",
+          "x": 21,
+          "y": 9,
+          "facing": 2.3
+        },
+        {
+          "id": "a1",
+          "label": "A1",
+          "team": "away",
+          "role": "skater",
+          "x": 23,
+          "y": 8,
+          "facing": 2.5
+        },
+        {
+          "id": "a2",
+          "label": "A2",
+          "team": "away",
+          "role": "skater",
+          "x": 16,
+          "y": 4,
+          "facing": 1
+        },
+        {
+          "id": "a3",
+          "label": "A3",
+          "team": "away",
+          "role": "skater",
+          "x": 20,
+          "y": -3,
+          "facing": 1.6
+        }
+      ],
+      "puck": {
+        "owner": null,
+        "x": 20,
+        "y": 10
+      }
+    },
+    "focusActorId": "h1",
+    "cues": [
+      "The puck is loose below YOU.",
+      "D2 is high support.",
+      "The cover is a stated practice condition, not an outcome."
+    ],
+    "tags": [
+      "experimental",
+      "expansion"
+    ],
+    "sources": [
+      {
+        "id": "hc-defence-2020",
+        "title": "Developing Skilled Defencemen — Overview",
+        "url": "https://cdn.hockeycanada.ca/hockey-canada/Hockey-Programs/Players/Downloads/2020/developing-defence-overview-e.pdf",
+        "section": "PDF page 20, Offensive Zone Play",
+        "use": "Supports the stated coaching principle. The setup, alternatives and suggested answers are original experimental coaching synthesis, not source-certified."
+      }
+    ],
+    "limits": "Static experimental practice scene. Positions are examples and do not prove timing, execution, possession outcome, or a universal team system; coaching responses are ungraded.",
+    "questions": [
+      {
+        "id": "exp26b-u15-001-q1",
+        "type": "choice",
+        "prompt": "What is directly stated about the high cover?",
+        "options": [
+          {
+            "id": "a",
+            "text": "D2 is the named high support"
+          },
+          {
+            "id": "b",
+            "text": "YOU has already pinched"
+          },
+          {
+            "id": "c",
+            "text": "Gold has lost possession"
+          }
+        ],
+        "answer": [
+          "a"
+        ],
+        "basis": "scene",
+        "explanation": "D2 is identified as high support; the loose puck and still frame do not prove a completed pinch."
+      },
+      {
+        "id": "exp26b-u15-001-q2",
+        "type": "multi",
+        "prompt": "Which two checks belong before stepping down?",
+        "options": [
+          {
+            "id": "a",
+            "text": "Whether D2 can cover behind YOU"
+          },
+          {
+            "id": "b",
+            "text": "Whether F1 can keep or recover the puck"
+          },
+          {
+            "id": "c",
+            "text": "Whether the blue line itself makes the pinch safe"
+          }
+        ],
+        "answer": [
+          "a",
+          "b"
+        ],
+        "basis": "coaching",
+        "explanation": "Cover and puck access explain why the pinch may fit; the line alone does not remove the recovery risk."
+      },
+      {
+        "id": "exp26b-u15-001-q3",
+        "type": "sequence",
+        "prompt": "Arrange a supported-pinch read.",
+        "options": [
+          {
+            "id": "a",
+            "text": "Check D2 and the puck route"
+          },
+          {
+            "id": "b",
+            "text": "Step down while D2’s cover still protects the recovery lane"
+          },
+          {
+            "id": "c",
+            "text": "Re-check the puck and high space"
+          }
+        ],
+        "answer": [
+          "a",
+          "b",
+          "c"
+        ],
+        "basis": "coaching",
+        "explanation": "The cover and route set the conditions; the final scan decides whether to continue or recover."
+      },
+      {
+        "id": "exp26b-u15-001-q4",
+        "type": "position",
+        "prompt": "Move YOU to a conservative high position with D2 visible.",
+        "actorId": "h1",
+        "reference": {
+          "x": 10.5,
+          "y": 7.2
+        },
+        "basis": "coaching",
+        "explanation": "This keeps YOU near the line while preserving the high support relationship."
+      },
+      {
+        "id": "exp26b-u15-001-q5",
+        "type": "choice",
+        "prompt": "D2 is pulled low by a changing puck route. What should YOU reconsider?",
+        "options": [
+          {
+            "id": "a",
+            "text": "Hold high or recover until cover is restored"
+          },
+          {
+            "id": "b",
+            "text": "Pinch farther because D2 is busy"
+          },
+          {
+            "id": "c",
+            "text": "Assume F1 will win the puck"
+          }
+        ],
+        "answer": [
+          "a"
+        ],
+        "basis": "coaching",
+        "explanation": "D2 no longer covers the same space, so the safer branch is to preserve the line or recover while scanning F1."
+      },
+      {
+        "id": "exp26b-u15-001-q6",
+        "type": "explain",
+        "prompt": "Which three cues make this pinch supported rather than merely aggressive?",
+        "basis": "coaching",
+        "explanation": "Name D2 as the cover, the reachable puck route, and the recovery lane. If either support cue disappears, keep the blue line protected."
+      }
+    ]
+  },
+  {
+    "id": "exp26b-u15-002",
+    "version": 1,
+    "ageBand": "U15",
+    "title": "Draw one penalty killer",
+    "family": "powerplay-draw-out",
+    "topic": "Power-play support",
+    "objective": "Move the puck to shift one penalty killer while keeping a second receiver available.",
+    "briefing": "Navy attacks the Gold net on a power play. YOU has the puck near the right half wall; F2 is low, F3 is inside, and Gold 1 is between YOU and F2. The scene gives a local passing choice, not a prescribed formation.",
+    "setup": {
+      "actors": [
+        {
+          "id": "h1",
+          "label": "YOU",
+          "team": "home",
+          "role": "skater",
+          "x": 18,
+          "y": 9,
+          "facing": 0
+        },
+        {
+          "id": "h2",
+          "label": "F2",
+          "team": "home",
+          "role": "skater",
+          "x": 24,
+          "y": 6,
+          "facing": 2.6
+        },
+        {
+          "id": "h3",
+          "label": "F3",
+          "team": "home",
+          "role": "skater",
+          "x": 21,
+          "y": -1,
+          "facing": 1.8
+        },
+        {
+          "id": "a1",
+          "label": "D1",
+          "team": "away",
+          "role": "skater",
+          "x": 11,
+          "y": 3,
+          "facing": 0.7
+        },
+        {
+          "id": "a2",
+          "label": "A1",
+          "team": "away",
+          "role": "skater",
+          "x": 20,
+          "y": 5,
+          "facing": 2
+        },
+        {
+          "id": "a3",
+          "label": "A2",
+          "team": "away",
+          "role": "skater",
+          "x": 23,
+          "y": 1,
+          "facing": 2.1
+        }
+      ],
+      "puck": {
+        "owner": "h1"
+      }
+    },
+    "focusActorId": "h1",
+    "cues": [
+      "YOU owns the puck at the half wall.",
+      "Gold 1 sits between YOU and F2.",
+      "F3 is an inside receiver."
+    ],
+    "tags": [
+      "experimental",
+      "expansion"
+    ],
+    "sources": [
+      {
+        "id": "usa-special-teams-2015",
+        "title": "Special Teams Tactics with Mike Guentzel",
+        "url": "https://www.usahockey.com/news_article/show/567732-special-teams-tactics-with-mike-guentzel",
+        "section": "Youth power-play advice / creating 2-on-1s",
+        "use": "Supports the stated coaching principle. The setup, alternatives and suggested answers are original experimental coaching synthesis, not source-certified."
+      }
+    ],
+    "limits": "Static experimental practice scene. Positions are examples and do not prove timing, execution, possession outcome, or a universal team system; coaching responses are ungraded.",
+    "questions": [
+      {
+        "id": "exp26b-u15-002-q1",
+        "type": "choice",
+        "prompt": "Which player currently owns the puck?",
+        "options": [
+          {
+            "id": "a",
+            "text": "F2"
+          },
+          {
+            "id": "b",
+            "text": "YOU"
+          },
+          {
+            "id": "c",
+            "text": "Gold 1"
+          }
+        ],
+        "answer": [
+          "b"
+        ],
+        "basis": "scene",
+        "explanation": "The setup assigns the puck to YOU, so the local read starts from the half wall."
+      },
+      {
+        "id": "exp26b-u15-002-q2",
+        "type": "multi",
+        "prompt": "Which two cues support moving the puck?",
+        "options": [
+          {
+            "id": "a",
+            "text": "Gold 1's position relative to F2"
+          },
+          {
+            "id": "b",
+            "text": "F3's reachable inside lane"
+          },
+          {
+            "id": "c",
+            "text": "The power play fixes every receiver in place"
+          }
+        ],
+        "answer": [
+          "a",
+          "b"
+        ],
+        "basis": "coaching",
+        "explanation": "Coverage and support make the puck move useful; the structure still changes as Gold shifts."
+      },
+      {
+        "id": "exp26b-u15-002-q3",
+        "type": "sequence",
+        "prompt": "Arrange a local power-play read.",
+        "options": [
+          {
+            "id": "a",
+            "text": "Identify the pressure and two receivers"
+          },
+          {
+            "id": "b",
+            "text": "Move the puck to change the coverage"
+          },
+          {
+            "id": "c",
+            "text": "Re-check the next lane"
+          }
+        ],
+        "answer": [
+          "a",
+          "b",
+          "c"
+        ],
+        "basis": "coaching",
+        "explanation": "The pass is a tool to move coverage, then the new lane must be read again."
+      },
+      {
+        "id": "exp26b-u15-002-q4",
+        "type": "position",
+        "prompt": "Move YOU a little toward the blue line along the half wall to compare a different diagonal to F3.",
+        "actorId": "h1",
+        "reference": {
+          "x": 16,
+          "y": 9
+        },
+        "basis": "coaching",
+        "explanation": "Backing along the wall changes the diagonal around Gold 1 while keeping both receivers in view. It illustrates an angle change, not a guaranteed open pass; recheck the defender and F3 before using it."
+      },
+      {
+        "id": "exp26b-u15-002-q5",
+        "type": "choice",
+        "prompt": "Gold 1 commits toward F2 after your angle change. What deserves a fresh check?",
+        "options": [
+          {
+            "id": "a",
+            "text": "Whether F3 or the original wall lane is now reachable"
+          },
+          {
+            "id": "b",
+            "text": "Force F2 because the defender moved"
+          },
+          {
+            "id": "c",
+            "text": "Stay on the same angle without scanning"
+          }
+        ],
+        "answer": [
+          "a"
+        ],
+        "basis": "coaching",
+        "explanation": "Gold 1's commitment changes both receiving relationships; choose only after checking the new lane."
+      },
+      {
+        "id": "exp26b-u15-002-q6",
+        "type": "explain",
+        "prompt": "Name the half-wall space and explain how changing your angle can affect two receivers.",
+        "basis": "coaching",
+        "explanation": "The half wall gives YOU a carrier reference; changing the line can pull Gold 1 and expose F3 or F2, depending on which route stays open."
+      }
+    ]
+  },
+  {
+    "id": "exp26b-u15-003",
+    "version": 1,
+    "ageBand": "U15",
+    "title": "Shift the penalty kill toward the new side",
+    "family": "pk-side-shift",
+    "topic": "Penalty-kill coverage",
+    "objective": "Exchange a flank responsibility while keeping the slot protected.",
+    "briefing": "Gold attacks the Navy net on a penalty play. YOU is low on the right side, D1 protects inside, and Gold 1 has the puck high left. Gold 2 is opposite and can become the next receiver.",
+    "setup": {
+      "actors": [
+        {
+          "id": "h1",
+          "label": "YOU",
+          "team": "home",
+          "role": "skater",
+          "x": -23,
+          "y": -4,
+          "facing": 1.2
+        },
+        {
+          "id": "h2",
+          "label": "D1",
+          "team": "home",
+          "role": "skater",
+          "x": -22,
+          "y": 4,
+          "facing": 1
+        },
+        {
+          "id": "a1",
+          "label": "F1",
+          "team": "away",
+          "role": "skater",
+          "x": -16,
+          "y": 5,
+          "facing": 1.9
+        },
+        {
+          "id": "a2",
+          "label": "F2",
+          "team": "away",
+          "role": "skater",
+          "x": -15,
+          "y": -3,
+          "facing": 1.8
+        },
+        {
+          "id": "a3",
+          "label": "A1",
+          "team": "away",
+          "role": "skater",
+          "x": -18,
+          "y": 10,
+          "facing": 3.1
+        },
+        {
+          "id": "a4",
+          "label": "A2",
+          "team": "away",
+          "role": "skater",
+          "x": -24,
+          "y": 7,
+          "facing": 0.5
+        },
+        {
+          "id": "a5",
+          "label": "A3",
+          "team": "away",
+          "role": "skater",
+          "x": -20,
+          "y": 0,
+          "facing": 1.4
+        }
+      ],
+      "puck": {
+        "owner": "a1"
+      }
+    },
+    "focusActorId": "h1",
+    "cues": [
+      "Gold 1 has the puck high left.",
+      "D1 is inside support.",
+      "YOU is responsible for a changing low-side relationship."
+    ],
+    "tags": [
+      "experimental",
+      "expansion"
+    ],
+    "sources": [
+      {
+        "id": "usa-special-teams-2015",
+        "title": "Special Teams Tactics with Mike Guentzel",
+        "url": "https://www.usahockey.com/news_article/show/567732-special-teams-tactics-with-mike-guentzel",
+        "section": "Penalty-kill discussion / removing selected options",
+        "use": "Supports the stated coaching principle. The setup, alternatives and suggested answers are original experimental coaching synthesis, not source-certified."
+      }
+    ],
+    "limits": "Static experimental practice scene. Positions are examples and do not prove timing, execution, possession outcome, or a universal team system; coaching responses are ungraded.",
+    "questions": [
+      {
+        "id": "exp26b-u15-003-q1",
+        "type": "choice",
+        "prompt": "Which team is YOU defending in this setup?",
+        "options": [
+          {
+            "id": "a",
+            "text": "Navy"
+          },
+          {
+            "id": "b",
+            "text": "Gold"
+          },
+          {
+            "id": "c",
+            "text": "Both teams"
+          }
+        ],
+        "answer": [
+          "b"
+        ],
+        "basis": "scene",
+        "explanation": "YOU is navy and Gold has the puck, so this is a defensive read."
+      },
+      {
+        "id": "exp26b-u15-003-q2",
+        "type": "multi",
+        "prompt": "Which two cues matter during a flank-to-flank shift?",
+        "options": [
+          {
+            "id": "a",
+            "text": "D1's inside support"
+          },
+          {
+            "id": "b",
+            "text": "Gold 2's new receiving lane"
+          },
+          {
+            "id": "c",
+            "text": "The puck side never changes"
+          }
+        ],
+        "answer": [
+          "a",
+          "b"
+        ],
+        "basis": "coaching",
+        "explanation": "Inside support and the next receiver guide the exchange; the puck side can change the task."
+      },
+      {
+        "id": "exp26b-u15-003-q3",
+        "type": "sequence",
+        "prompt": "Which order keeps the slot protected during the flank shift?",
+        "options": [
+          {
+            "id": "a",
+            "text": "Name the puck side and slot"
+          },
+          {
+            "id": "b",
+            "text": "Exchange the low-side relationship"
+          },
+          {
+            "id": "c",
+            "text": "Re-check the opposite receiver"
+          }
+        ],
+        "answer": [
+          "a",
+          "b",
+          "c"
+        ],
+        "basis": "coaching",
+        "explanation": "The shift preserves the slot while the puck and receiver move across the picture."
+      },
+      {
+        "id": "exp26b-u15-003-q4",
+        "type": "position",
+        "prompt": "Move YOU to a more central low-slot cover position.",
+        "actorId": "h1",
+        "reference": {
+          "x": -21,
+          "y": -2.2
+        },
+        "basis": "coaching",
+        "explanation": "This places YOU nearer the inside lane and keeps the puck side in view."
+      },
+      {
+        "id": "exp26b-u15-003-q5",
+        "type": "choice",
+        "prompt": "Gold passes across to Gold 2. What should you check first?",
+        "options": [
+          {
+            "id": "a",
+            "text": "Whether D1 and YOU still cover the inside lane"
+          },
+          {
+            "id": "b",
+            "text": "Chase the old puck side"
+          },
+          {
+            "id": "c",
+            "text": "Leave the slot to follow the pass"
+          }
+        ],
+        "answer": [
+          "a"
+        ],
+        "basis": "coaching",
+        "explanation": "The cross-ice pass changes the coverage picture; protect the inside lane while deciding who takes the new carrier."
+      },
+      {
+        "id": "exp26b-u15-003-q6",
+        "type": "explain",
+        "prompt": "Why can a penalty kill not cover every pass at once?",
+        "basis": "coaching",
+        "explanation": "Players must protect the most dangerous reachable lane and communicate exchanges. When Gold moves the puck, the coverage relationship changes and needs a new scan."
+      }
+    ]
+  },
+  {
+    "id": "exp26b-u15-004",
+    "version": 1,
+    "ageBand": "U15",
+    "title": "Recover the power-play draw",
+    "family": "powerplay-draw-recovery",
+    "topic": "Special-teams faceoff",
+    "objective": "Read possession after a power-play draw before choosing retrieval or support.",
+    "briefing": "Navy attacks the Gold net on a power play. The draw has sent the puck loose near the right circle; YOU is closest, F2 is low support, and Gold 1 closes from above.",
+    "setup": {
+      "actors": [
+        {
+          "id": "h1",
+          "label": "YOU",
+          "team": "home",
+          "role": "skater",
+          "x": 21,
+          "y": 8,
+          "facing": -1.6
+        },
+        {
+          "id": "h2",
+          "label": "F2",
+          "team": "home",
+          "role": "skater",
+          "x": 17,
+          "y": 6,
+          "facing": 0
+        },
+        {
+          "id": "h3",
+          "label": "F3",
+          "team": "home",
+          "role": "skater",
+          "x": 24,
+          "y": -3,
+          "facing": 1.9
+        },
+        {
+          "id": "a1",
+          "label": "D1",
+          "team": "away",
+          "role": "skater",
+          "x": 11,
+          "y": 4,
+          "facing": 0.2
+        },
+        {
+          "id": "a2",
+          "label": "A1",
+          "team": "away",
+          "role": "skater",
+          "x": 22,
+          "y": 5,
+          "facing": 2.3
+        },
+        {
+          "id": "a3",
+          "label": "A2",
+          "team": "away",
+          "role": "skater",
+          "x": 23,
+          "y": -1,
+          "facing": 1.8
+        }
+      ],
+      "puck": {
+        "owner": null,
+        "x": 21,
+        "y": 6
+      }
+    },
+    "focusActorId": "h1",
+    "cues": [
+      "The puck is loose after the draw.",
+      "YOU is nearest the puck.",
+      "Gold 1 is closing from above."
+    ],
+    "tags": [
+      "experimental",
+      "expansion"
+    ],
+    "sources": [
+      {
+        "id": "usa-special-teams-2015",
+        "title": "Special Teams Tactics with Mike Guentzel",
+        "url": "https://www.usahockey.com/news_article/show/567732-special-teams-tactics-with-mike-guentzel",
+        "section": "Preparation / faceoff and retrieval plan",
+        "use": "Supports the stated coaching principle. The setup, alternatives and suggested answers are original experimental coaching synthesis, not source-certified."
+      }
+    ],
+    "limits": "Static experimental practice scene. Positions are examples and do not prove timing, execution, possession outcome, or a universal team system; coaching responses are ungraded.",
+    "questions": [
+      {
+        "id": "exp26b-u15-004-q1",
+        "type": "choice",
+        "prompt": "Has Navy secured the puck yet?",
+        "options": [
+          {
+            "id": "a",
+            "text": "Yes, YOU owns it"
+          },
+          {
+            "id": "b",
+            "text": "No, the puck is loose"
+          },
+          {
+            "id": "c",
+            "text": "Gold owns it"
+          }
+        ],
+        "answer": [
+          "b"
+        ],
+        "basis": "scene",
+        "explanation": "The puck has no owner in the setup, so the draw has not established possession."
+      },
+      {
+        "id": "exp26b-u15-004-q2",
+        "type": "multi",
+        "prompt": "Which two priorities belong in the retrieval?",
+        "options": [
+          {
+            "id": "a",
+            "text": "Gold 1's pressure route"
+          },
+          {
+            "id": "b",
+            "text": "F2's support after control"
+          },
+          {
+            "id": "c",
+            "text": "The faceoff label guarantees a clean win"
+          }
+        ],
+        "answer": [
+          "a",
+          "b"
+        ],
+        "basis": "coaching",
+        "explanation": "Pressure and support shape the retrieval; the draw result must still be read."
+      },
+      {
+        "id": "exp26b-u15-004-q3",
+        "type": "sequence",
+        "prompt": "Arrange a possible start after the draw.",
+        "options": [
+          {
+            "id": "a",
+            "text": "Find the loose puck and pressure"
+          },
+          {
+            "id": "b",
+            "text": "Approach under control"
+          },
+          {
+            "id": "c",
+            "text": "Check F2 and the exit again"
+          }
+        ],
+        "answer": [
+          "a",
+          "b",
+          "c"
+        ],
+        "basis": "coaching",
+        "explanation": "The route begins with the actual loose puck and updates after control."
+      },
+      {
+        "id": "exp26b-u15-004-q4",
+        "type": "position",
+        "prompt": "Move YOU to an approach angle near the puck-side circle with F2 visible.",
+        "actorId": "h1",
+        "reference": {
+          "x": 20.5,
+          "y": 7.2
+        },
+        "basis": "coaching",
+        "explanation": "This point approaches the puck while leaving F2 and Gold 1 in the scene."
+      },
+      {
+        "id": "exp26b-u15-004-q5",
+        "type": "choice",
+        "prompt": "Gold 1 reaches the puck first. What is useful now?",
+        "options": [
+          {
+            "id": "a",
+            "text": "Switch to pressure or support based on the new carrier"
+          },
+          {
+            "id": "b",
+            "text": "Continue the Navy retrieval plan"
+          },
+          {
+            "id": "c",
+            "text": "Assume F2 has the puck"
+          }
+        ],
+        "answer": [
+          "a"
+        ],
+        "basis": "coaching",
+        "explanation": "Gold possession changes the job. Re-scan the carrier and the next defensive lane."
+      },
+      {
+        "id": "exp26b-u15-004-q6",
+        "type": "explain",
+        "prompt": "How does F2 change the recovery choice after the draw?",
+        "basis": "coaching",
+        "explanation": "F2 can support the pickup or become the outlet, depending on who controls the puck and where Gold 1 closes."
+      }
+    ]
+  },
+  {
+    "id": "exp26b-u15-005",
+    "version": 2,
+    "ageBand": "U15",
+    "title": "Replace high support after entry",
+    "family": "entry-support-replace",
+    "topic": "Zone-entry support",
+    "objective": "Fill a changed high support role without crowding the puck carrier.",
+    "briefing": "Navy attacks Gold’s net. After F2 receives the entry pass, YOU are on the wall side of F2 and F3 supports lower in the zone. Gold 1 and Gold 2 defend inside while D1 is nearer the blue line. The next support job depends on F2 and those defenders.",
+    "setup": {
+      "actors": [
+        {
+          "id": "h1",
+          "label": "YOU",
+          "team": "home",
+          "role": "skater",
+          "x": 20,
+          "y": 8,
+          "facing": -1.7
+        },
+        {
+          "id": "h2",
+          "label": "F2",
+          "team": "home",
+          "role": "skater",
+          "x": 19,
+          "y": 0,
+          "facing": 0
+        },
+        {
+          "id": "h3",
+          "label": "F3",
+          "team": "home",
+          "role": "skater",
+          "x": 24,
+          "y": -5,
+          "facing": 2.3
+        },
+        {
+          "id": "a1",
+          "label": "D1",
+          "team": "away",
+          "role": "skater",
+          "x": 10,
+          "y": 4,
+          "facing": -0.4
+        },
+        {
+          "id": "a2",
+          "label": "A1",
+          "team": "away",
+          "role": "skater",
+          "x": 22,
+          "y": 6,
+          "facing": -2
+        },
+        {
+          "id": "a3",
+          "label": "A2",
+          "team": "away",
+          "role": "skater",
+          "x": 23,
+          "y": -1,
+          "facing": 2.9
+        }
+      ],
+      "puck": {
+        "owner": "h2"
+      }
+    },
+    "focusActorId": "h1",
+    "cues": [
+      "F2 owns the puck after the stated entry pass.",
+      "YOU is the high support option.",
+      "Gold has two inside defenders."
+    ],
+    "tags": [
+      "experimental",
+      "expansion"
+    ],
+    "sources": [
+      {
+        "id": "hc-practice-2020",
+        "title": "U15 / U18 Practice Plan — High Performance Practice 4",
+        "url": "https://cdn.hockeycanada.ca/hockey-canada/Hockey-Programs/Players/Downloads/2020/u15-u18-practice-plan-e.pdf",
+        "section": "Printed page 2, Entries — Delay",
+        "use": "Supports the stated coaching principle. The setup, alternatives and suggested answers are original experimental coaching synthesis, not source-certified."
+      }
+    ],
+    "limits": "Static experimental practice scene. Positions are examples and do not prove timing, execution, possession outcome, or a universal team system; coaching responses are ungraded.",
+    "questions": [
+      {
+        "id": "exp26b-u15-005-q1",
+        "type": "choice",
+        "prompt": "After the entry pass, which Navy player is the carrier?",
+        "options": [
+          {
+            "id": "a",
+            "text": "F3"
+          },
+          {
+            "id": "b",
+            "text": "F2"
+          },
+          {
+            "id": "c",
+            "text": "YOU"
+          }
+        ],
+        "answer": [
+          "b"
+        ],
+        "basis": "scene",
+        "explanation": "The setup assigns possession to F2 after the entry pass."
+      },
+      {
+        "id": "exp26b-u15-005-q2",
+        "type": "multi",
+        "prompt": "Which two details matter when filling high support?",
+        "options": [
+          {
+            "id": "a",
+            "text": "F2's puck position"
+          },
+          {
+            "id": "b",
+            "text": "Gold's inside coverage"
+          },
+          {
+            "id": "c",
+            "text": "A high support spot chosen without checking F2’s lane"
+          }
+        ],
+        "answer": [
+          "a",
+          "b"
+        ],
+        "basis": "coaching",
+        "explanation": "Support follows the carrier and coverage; a fixed spot can crowd or disconnect the play."
+      },
+      {
+        "id": "exp26b-u15-005-q3",
+        "type": "sequence",
+        "prompt": "Arrange the post-entry support change.",
+        "options": [
+          {
+            "id": "a",
+            "text": "Find F2 and the inside coverage"
+          },
+          {
+            "id": "b",
+            "text": "Offer a separated high lane"
+          },
+          {
+            "id": "c",
+            "text": "Re-check the carrier and exit"
+          }
+        ],
+        "answer": [
+          "a",
+          "b",
+          "c"
+        ],
+        "basis": "coaching",
+        "explanation": "The support lane is useful only if it remains reachable from F2."
+      },
+      {
+        "id": "exp26b-u15-005-q4",
+        "type": "position",
+        "prompt": "Move YOU into a high-slot support example after F2 receives.",
+        "actorId": "h1",
+        "reference": {
+          "x": 20.5,
+          "y": 4
+        },
+        "basis": "coaching",
+        "explanation": "This gives F2 a higher connection while keeping the defenders visible."
+      },
+      {
+        "id": "exp26b-u15-005-q5",
+        "type": "choice",
+        "prompt": "F2 loses the puck to Gold 2. What takes priority?",
+        "options": [
+          {
+            "id": "a",
+            "text": "Re-read the transition and recover toward the dangerous lane"
+          },
+          {
+            "id": "b",
+            "text": "Stay high waiting for F2"
+          },
+          {
+            "id": "c",
+            "text": "Assume the entry is still controlled"
+          }
+        ],
+        "answer": [
+          "a"
+        ],
+        "basis": "coaching",
+        "explanation": "Possession changed, so the role changes before the old support route is continued."
+      },
+      {
+        "id": "exp26b-u15-005-q6",
+        "type": "explain",
+        "prompt": "Which support space did YOU fill, and what route does it leave F2?",
+        "basis": "coaching",
+        "explanation": "A separated high-slot lane gives F2 a visible outlet or room to carry. If Gold closes it, re-offer from another reachable angle."
+      }
+    ]
+  },
+  {
+    "id": "exp26b-u15-006",
+    "version": 1,
+    "ageBand": "U15",
+    "title": "Recover behind the puck-side handoff",
+    "family": "backcheck-handoff-recovery",
+    "topic": "Backchecking communication",
+    "objective": "Track the second attacker after a puck-side handoff and keep the net-side lane in view.",
+    "briefing": "Gold attacks the Navy net. Gold 1 carries toward the Navy net, D1 is set near that route, and Gold 2 is inside support. YOU is recovering between the puck side and Gold 2; C trails farther back.",
+    "setup": {
+      "actors": [
+        {
+          "id": "h1",
+          "label": "YOU",
+          "team": "home",
+          "role": "skater",
+          "x": -8,
+          "y": 2,
+          "facing": 1.2
+        },
+        {
+          "id": "h2",
+          "label": "D1",
+          "team": "home",
+          "role": "skater",
+          "x": -18,
+          "y": 4,
+          "facing": 1
+        },
+        {
+          "id": "h3",
+          "label": "C",
+          "team": "home",
+          "role": "skater",
+          "x": -10,
+          "y": -7,
+          "facing": 1.4
+        },
+        {
+          "id": "a1",
+          "label": "A1",
+          "team": "away",
+          "role": "skater",
+          "x": -22,
+          "y": 7,
+          "facing": 2.7
+        },
+        {
+          "id": "a2",
+          "label": "A2",
+          "team": "away",
+          "role": "skater",
+          "x": -15,
+          "y": 1,
+          "facing": 2.1
+        },
+        {
+          "id": "a3",
+          "label": "A3",
+          "team": "away",
+          "role": "skater",
+          "x": -5,
+          "y": -4,
+          "facing": 2.8
+        }
+      ],
+      "puck": {
+        "owner": "a1"
+      }
+    },
+    "focusActorId": "h1",
+    "cues": [
+      "Gold 1 has the puck.",
+      "D1 is set on the puck-side route.",
+      "YOU is recovering near Gold 2."
+    ],
+    "tags": [
+      "experimental",
+      "expansion"
+    ],
+    "sources": [
+      {
+        "id": "usa-transition-drill-2016",
+        "title": "14U Offense-Defense-Out with a Goalie Twist",
+        "url": "https://www.usahockey.com/news_article/show/636604-14u-offense-defense-out-with-a-goalie-twist",
+        "section": "Coaching Points / roles away from the puck",
+        "use": "Supports the stated coaching principle. The setup, alternatives and suggested answers are original experimental coaching synthesis, not source-certified."
+      }
+    ],
+    "limits": "Static experimental practice scene. Positions are examples and do not prove timing, execution, possession outcome, or a universal team system; coaching responses are ungraded.",
+    "questions": [
+      {
+        "id": "exp26b-u15-006-q1",
+        "type": "choice",
+        "prompt": "Which attacker is the inside support in this picture?",
+        "options": [
+          {
+            "id": "a",
+            "text": "Gold 1"
+          },
+          {
+            "id": "b",
+            "text": "Gold 2"
+          },
+          {
+            "id": "c",
+            "text": "D1"
+          }
+        ],
+        "answer": [
+          "b"
+        ],
+        "basis": "scene",
+        "explanation": "Gold 2 is the named inside support while Gold 1 carries."
+      },
+      {
+        "id": "exp26b-u15-006-q2",
+        "type": "multi",
+        "prompt": "Which two checks shape your recovery?",
+        "options": [
+          {
+            "id": "a",
+            "text": "D1's coverage of Gold 1"
+          },
+          {
+            "id": "b",
+            "text": "Gold 2's route toward the net"
+          },
+          {
+            "id": "c",
+            "text": "The trailing C position decides the puck carrier"
+          }
+        ],
+        "answer": [
+          "a",
+          "b"
+        ],
+        "basis": "coaching",
+        "explanation": "The covered carrier and the inside route define the next recovery relationship."
+      },
+      {
+        "id": "exp26b-u15-006-q3",
+        "type": "sequence",
+        "prompt": "Arrange a recovery update.",
+        "options": [
+          {
+            "id": "a",
+            "text": "Locate the carrier and inside support"
+          },
+          {
+            "id": "b",
+            "text": "Choose the more dangerous reachable lane"
+          },
+          {
+            "id": "c",
+            "text": "Call the new assignment and scan again"
+          }
+        ],
+        "answer": [
+          "a",
+          "b",
+          "c"
+        ],
+        "basis": "coaching",
+        "explanation": "The first scan names both threats before the recovery lane is chosen."
+      },
+      {
+        "id": "exp26b-u15-006-q4",
+        "type": "position",
+        "prompt": "Move YOU to a net-side relationship with Gold 2 while keeping D1 visible.",
+        "actorId": "h1",
+        "reference": {
+          "x": -13,
+          "y": -1.5
+        },
+        "basis": "coaching",
+        "explanation": "This changes YOU toward the inside threat without occupying D1's puck-side line."
+      },
+      {
+        "id": "exp26b-u15-006-q5",
+        "type": "choice",
+        "prompt": "Gold 2 cuts inside behind D1. What deserves the quickest re-read?",
+        "options": [
+          {
+            "id": "a",
+            "text": "The inside lane and whether D1 needs help"
+          },
+          {
+            "id": "b",
+            "text": "Stay with the original recovery line"
+          },
+          {
+            "id": "c",
+            "text": "Follow C because C is trailing"
+          }
+        ],
+        "answer": [
+          "a"
+        ],
+        "basis": "coaching",
+        "explanation": "The inside cut changes the danger; support D1 or recover to that lane according to the visible route."
+      },
+      {
+        "id": "exp26b-u15-006-q6",
+        "type": "explain",
+        "prompt": "What makes a recovery call useful after a puck-side handoff?",
+        "basis": "coaching",
+        "explanation": "Name the covered carrier, the inside attacker and the lane you are taking. If either route changes, call the new threat before moving."
+      }
+    ]
+  },
+  {
+    "id": "exp26b-u15-007",
+    "version": 1,
+    "ageBand": "U15",
+    "title": "Turn the forecheck into a support angle",
+    "family": "neutral-regroup-angle",
+    "topic": "Neutral-zone regroup",
+    "objective": "Use a changing forecheck to select a reachable teammate and preserve a reset connection.",
+    "briefing": "Navy attacks the Gold net. YOU owns the puck near the neutral-zone boards; Gold 1 closes the wall and Gold 2 shades F1. D2 is deeper across the rink, while F1 offers a forward connection.",
+    "setup": {
+      "actors": [
+        {
+          "id": "h1",
+          "label": "YOU",
+          "team": "home",
+          "role": "skater",
+          "x": -6,
+          "y": 5,
+          "facing": 0
+        },
+        {
+          "id": "h2",
+          "label": "D2",
+          "team": "home",
+          "role": "skater",
+          "x": -12,
+          "y": -5,
+          "facing": 2.8
+        },
+        {
+          "id": "h3",
+          "label": "F1",
+          "team": "home",
+          "role": "skater",
+          "x": 7,
+          "y": 2,
+          "facing": 2.9
+        },
+        {
+          "id": "a1",
+          "label": "A1",
+          "team": "away",
+          "role": "skater",
+          "x": -1,
+          "y": 6,
+          "facing": 2.8
+        },
+        {
+          "id": "a2",
+          "label": "A2",
+          "team": "away",
+          "role": "skater",
+          "x": 1,
+          "y": 0,
+          "facing": 2.5
+        },
+        {
+          "id": "a3",
+          "label": "A3",
+          "team": "away",
+          "role": "skater",
+          "x": 10,
+          "y": -4,
+          "facing": 2.2
+        }
+      ],
+      "puck": {
+        "owner": "h1"
+      }
+    },
+    "focusActorId": "h1",
+    "cues": [
+      "YOU owns the puck.",
+      "Gold 1 pressures the board side.",
+      "D2 is the deeper reset and F1 is ahead."
+    ],
+    "tags": [
+      "experimental",
+      "expansion"
+    ],
+    "sources": [
+      {
+        "id": "hc-defence-2020",
+        "title": "Developing Skilled Defencemen — Overview",
+        "url": "https://cdn.hockeycanada.ca/hockey-canada/Hockey-Programs/Players/Downloads/2020/developing-defence-overview-e.pdf",
+        "section": "PDF page 14, Neutral Zone Regroups",
+        "use": "Supports the stated coaching principle. The setup, alternatives and suggested answers are original experimental coaching synthesis, not source-certified."
+      }
+    ],
+    "limits": "Static experimental practice scene. Positions are examples and do not prove timing, execution, possession outcome, or a universal team system; coaching responses are ungraded.",
+    "questions": [
+      {
+        "id": "exp26b-u15-007-q1",
+        "type": "choice",
+        "prompt": "Which Navy player gives the deeper reset option?",
+        "options": [
+          {
+            "id": "a",
+            "text": "F1"
+          },
+          {
+            "id": "b",
+            "text": "D2"
+          },
+          {
+            "id": "c",
+            "text": "Gold 2"
+          }
+        ],
+        "answer": [
+          "b"
+        ],
+        "basis": "scene",
+        "explanation": "D2 is the deeper Navy connection in the setup."
+      },
+      {
+        "id": "exp26b-u15-007-q2",
+        "type": "multi",
+        "prompt": "Which two observations help choose a route?",
+        "options": [
+          {
+            "id": "a",
+            "text": "Gold 1's pressure line"
+          },
+          {
+            "id": "b",
+            "text": "Whether F1 or D2 is reachable"
+          },
+          {
+            "id": "c",
+            "text": "The board side decides the pass by itself"
+          }
+        ],
+        "answer": [
+          "a",
+          "b"
+        ],
+        "basis": "coaching",
+        "explanation": "Pressure and reachability create the decision; the side of the rink alone is insufficient."
+      },
+      {
+        "id": "exp26b-u15-007-q3",
+        "type": "sequence",
+        "prompt": "Arrange the regroup scan.",
+        "options": [
+          {
+            "id": "a",
+            "text": "Read the forecheck route"
+          },
+          {
+            "id": "b",
+            "text": "Compare F1 and D2"
+          },
+          {
+            "id": "c",
+            "text": "Carry or pass, then check the next lane"
+          }
+        ],
+        "answer": [
+          "a",
+          "b",
+          "c"
+        ],
+        "basis": "coaching",
+        "explanation": "The angle is selected after both pressure and support are located."
+      },
+      {
+        "id": "exp26b-u15-007-q4",
+        "type": "position",
+        "prompt": "Move YOU to a central angle that keeps D2 and F1 visible.",
+        "actorId": "h1",
+        "reference": {
+          "x": -2,
+          "y": 3.2
+        },
+        "basis": "coaching",
+        "explanation": "This opens a view of both the reset and forward connection without copying either player."
+      },
+      {
+        "id": "exp26b-u15-007-q5",
+        "type": "choice",
+        "prompt": "Gold 2 steps toward F1 while Gold 1 stays wide. What is useful?",
+        "options": [
+          {
+            "id": "a",
+            "text": "Protect the puck and compare D2 with the new inside lane"
+          },
+          {
+            "id": "b",
+            "text": "Force F1 because Gold 2 moved"
+          },
+          {
+            "id": "c",
+            "text": "Use D2 without checking the carrier angle"
+          }
+        ],
+        "answer": [
+          "a"
+        ],
+        "basis": "coaching",
+        "explanation": "The pressure picture changed, so the reset and forward options need a fresh comparison."
+      },
+      {
+        "id": "exp26b-u15-007-q6",
+        "type": "explain",
+        "prompt": "Why does an angle help a regroup more than simply moving away from the boards?",
+        "basis": "coaching",
+        "explanation": "An angle can keep the puck carrier connected to both D2 and F1 while showing the forecheck. If one route closes, the other remains a live branch only when reachable."
+      }
+    ]
+  },
+  {
+    "id": "exp26b-u15-008",
+    "version": 1,
+    "ageBand": "U15",
+    "title": "Call the net-side exchange",
+    "family": "behind-net-communication",
+    "topic": "Defensive coverage communication",
+    "objective": "Coordinate a behind-net exchange by naming the puck carrier, inside threat and teammate cover.",
+    "briefing": "Gold attacks the Navy net. Gold 1 carries behind the Navy net; YOU is on the near side, D2 is opposite, and C protects the slot against Gold 2. The handoff depends on which side Gold 1 exits.",
+    "setup": {
+      "actors": [
+        {
+          "id": "h1",
+          "label": "YOU",
+          "team": "home",
+          "role": "skater",
+          "x": -24,
+          "y": -3,
+          "facing": 1.2
+        },
+        {
+          "id": "h2",
+          "label": "D2",
+          "team": "home",
+          "role": "skater",
+          "x": -24,
+          "y": 5,
+          "facing": 1
+        },
+        {
+          "id": "h3",
+          "label": "C",
+          "team": "home",
+          "role": "skater",
+          "x": -17,
+          "y": 1,
+          "facing": 1
+        },
+        {
+          "id": "a1",
+          "label": "A1",
+          "team": "away",
+          "role": "skater",
+          "x": -28,
+          "y": 0,
+          "facing": 2.4
+        },
+        {
+          "id": "a2",
+          "label": "A2",
+          "team": "away",
+          "role": "skater",
+          "x": -20,
+          "y": 3,
+          "facing": 2.7
+        },
+        {
+          "id": "a3",
+          "label": "A3",
+          "team": "away",
+          "role": "skater",
+          "x": -18,
+          "y": -7,
+          "facing": 2.8
+        }
+      ],
+      "puck": {
+        "owner": "a1"
+      }
+    },
+    "focusActorId": "h1",
+    "cues": [
+      "Gold 1 is behind the Navy net.",
+      "YOU and D2 are on opposite sides.",
+      "C is the slot support against Gold 2."
+    ],
+    "tags": [
+      "experimental",
+      "expansion"
+    ],
+    "sources": [
+      {
+        "id": "hc-u15-u18-core",
+        "title": "U15 / U18 Core Skills — Train to Train",
+        "url": "https://cdn.hockeycanada.ca/hockey-canada/Hockey-Programs/Players/Downloads/2020/u15-u18-core-skills-e.pdf",
+        "section": "Page 1, Team Play / Defensive Skills",
+        "use": "Supports age/topic placement only. The setup, alternatives and suggested answers are original experimental coaching synthesis, not source-certified."
+      }
+    ],
+    "limits": "Static experimental practice scene. Positions are examples and do not prove timing, execution, possession outcome, or a universal team system; coaching responses are ungraded.",
+    "questions": [
+      {
+        "id": "exp26b-u15-008-q1",
+        "type": "choice",
+        "prompt": "Where is Gold 1 relative to the Navy net?",
+        "options": [
+          {
+            "id": "a",
+            "text": "Behind it"
+          },
+          {
+            "id": "b",
+            "text": "At the centre line"
+          },
+          {
+            "id": "c",
+            "text": "In the Gold crease"
+          }
+        ],
+        "answer": [
+          "a"
+        ],
+        "basis": "scene",
+        "explanation": "The briefing places Gold 1 behind the Navy net."
+      },
+      {
+        "id": "exp26b-u15-008-q2",
+        "type": "multi",
+        "prompt": "Which two names belong in a useful handoff call?",
+        "options": [
+          {
+            "id": "a",
+            "text": "Gold 1 and the side of exit"
+          },
+          {
+            "id": "b",
+            "text": "C and Gold 2 in the slot"
+          },
+          {
+            "id": "c",
+            "text": "The word switch without a threat"
+          }
+        ],
+        "answer": [
+          "a",
+          "b"
+        ],
+        "basis": "coaching",
+        "explanation": "The call needs the carrier route and the inside threat so the exchange can be coordinated."
+      },
+      {
+        "id": "exp26b-u15-008-q3",
+        "type": "sequence",
+        "prompt": "Arrange the behind-net response.",
+        "options": [
+          {
+            "id": "a",
+            "text": "Identify Gold 1 and Gold 2"
+          },
+          {
+            "id": "b",
+            "text": "Call the side and teammate exchange"
+          },
+          {
+            "id": "c",
+            "text": "Re-check the net-side lane"
+          }
+        ],
+        "answer": [
+          "a",
+          "b",
+          "c"
+        ],
+        "basis": "coaching",
+        "explanation": "The exchange starts with the carrier and inside threat, then updates after the exit."
+      },
+      {
+        "id": "exp26b-u15-008-q4",
+        "type": "position",
+        "prompt": "Move YOU to an inside support position on the near side with C visible.",
+        "actorId": "h1",
+        "reference": {
+          "x": -21,
+          "y": -1
+        },
+        "basis": "coaching",
+        "explanation": "This keeps YOU connected to the carrier side while preserving C's slot relationship."
+      },
+      {
+        "id": "exp26b-u15-008-q5",
+        "type": "choice",
+        "prompt": "Gold 1 exits on D2's side and Gold 2 cuts inward. What changes first?",
+        "options": [
+          {
+            "id": "a",
+            "text": "The side exchange and slot coverage"
+          },
+          {
+            "id": "b",
+            "text": "Stay on the original near-side assignment"
+          },
+          {
+            "id": "c",
+            "text": "Follow the carrier without naming Gold 2"
+          }
+        ],
+        "answer": [
+          "a"
+        ],
+        "basis": "coaching",
+        "explanation": "Both the exit and inside route changed, so update the handoff and protect the slot."
+      },
+      {
+        "id": "exp26b-u15-008-q6",
+        "type": "explain",
+        "prompt": "Why should a behind-net call include an exit side and a threat name?",
+        "basis": "coaching",
+        "explanation": "The puck carrier can emerge on either side while the slot threat remains separate. Naming both tells teammates which relationship to exchange and which lane to protect."
+      }
+    ]
+  },
+  {
+    "id": "exp26b-u15-009",
+    "version": 2,
+    "ageBand": "U15",
+    "title": "Stay above a low cycle",
+    "family": "cycle-high-outlet",
+    "topic": "Offensive support",
+    "objective": "Maintain a separated high outlet while teammates cycle low in the attacking zone.",
+    "briefing": "Navy attacks Gold’s net. F1 carries behind the goal line; F2 supports along the side and YOU arrive high. Gold 1 guards the slot, Gold 2 watches the higher lane, and Gold 3 protects space near the net.",
+    "setup": {
+      "actors": [
+        {
+          "id": "h1",
+          "label": "YOU",
+          "team": "home",
+          "role": "skater",
+          "x": 15,
+          "y": 7,
+          "facing": -1.4
+        },
+        {
+          "id": "h2",
+          "label": "F1",
+          "team": "home",
+          "role": "skater",
+          "x": 28,
+          "y": -5,
+          "facing": 2.6
+        },
+        {
+          "id": "h3",
+          "label": "F2",
+          "team": "home",
+          "role": "skater",
+          "x": 22,
+          "y": -8,
+          "facing": 2.4
+        },
+        {
+          "id": "a1",
+          "label": "A1",
+          "team": "away",
+          "role": "skater",
+          "x": 21,
+          "y": 1,
+          "facing": 2.1
+        },
+        {
+          "id": "a2",
+          "label": "A2",
+          "team": "away",
+          "role": "skater",
+          "x": 14,
+          "y": 4,
+          "facing": 2.5
+        },
+        {
+          "id": "a3",
+          "label": "A3",
+          "team": "away",
+          "role": "skater",
+          "x": 24,
+          "y": 3,
+          "facing": 2.9
+        }
+      ],
+      "puck": {
+        "owner": "h2"
+      }
+    },
+    "focusActorId": "h1",
+    "cues": [
+      "F1 controls below the Gold net.",
+      "F2 is lower-side support.",
+      "Gold 1 guards the slot."
+    ],
+    "tags": [
+      "experimental",
+      "expansion"
+    ],
+    "sources": [
+      {
+        "id": "hc-u15-u18-core",
+        "title": "U15 / U18 Core Skills — Train to Train",
+        "url": "https://cdn.hockeycanada.ca/hockey-canada/Hockey-Programs/Players/Downloads/2020/u15-u18-core-skills-e.pdf",
+        "section": "Page 1, Team Play / Offensive Skills: cycling and support",
+        "use": "Supports age/topic placement only. The setup, alternatives and suggested answers are original experimental coaching synthesis, not source-certified."
+      }
+    ],
+    "limits": "Static experimental practice scene. Positions are examples and do not prove timing, execution, possession outcome, or a universal team system; coaching responses are ungraded.",
+    "questions": [
+      {
+        "id": "exp26b-u15-009-q1",
+        "type": "choice",
+        "prompt": "Which Navy forward carries below the Gold net?",
+        "options": [
+          {
+            "id": "a",
+            "text": "F1"
+          },
+          {
+            "id": "b",
+            "text": "F2"
+          },
+          {
+            "id": "c",
+            "text": "YOU"
+          }
+        ],
+        "answer": [
+          "a"
+        ],
+        "basis": "scene",
+        "explanation": "The setup assigns the puck below the net to F1."
+      },
+      {
+        "id": "exp26b-u15-009-q2",
+        "type": "multi",
+        "prompt": "Which two details support a high outlet?",
+        "options": [
+          {
+            "id": "a",
+            "text": "F1's ability to see above support"
+          },
+          {
+            "id": "b",
+            "text": "Gold 1's slot coverage"
+          },
+          {
+            "id": "c",
+            "text": "Following F2 into the same low space"
+          }
+        ],
+        "answer": [
+          "a",
+          "b"
+        ],
+        "basis": "coaching",
+        "explanation": "Carrier visibility and the slot defender shape the value of a separated high outlet."
+      },
+      {
+        "id": "exp26b-u15-009-q3",
+        "type": "sequence",
+        "prompt": "Arrange a high-outlet read.",
+        "options": [
+          {
+            "id": "a",
+            "text": "Locate F1, F2 and the slot defender"
+          },
+          {
+            "id": "b",
+            "text": "Offer a separated high lane"
+          },
+          {
+            "id": "c",
+            "text": "Re-check the carrier and point-side pressure"
+          }
+        ],
+        "answer": [
+          "a",
+          "b",
+          "c"
+        ],
+        "basis": "coaching",
+        "explanation": "The outlet remains useful only when the carrier and pressure can connect to it."
+      },
+      {
+        "id": "exp26b-u15-009-q4",
+        "type": "position",
+        "prompt": "Move YOU to a high pocket away from F2 with F1 visible.",
+        "actorId": "h1",
+        "reference": {
+          "x": 18,
+          "y": 4.5
+        },
+        "basis": "coaching",
+        "explanation": "This creates a different high connection while leaving the low cycle space open."
+      },
+      {
+        "id": "exp26b-u15-009-q5",
+        "type": "choice",
+        "prompt": "Gold 1 leaves the slot to pressure the puck. What should YOU weigh?",
+        "options": [
+          {
+            "id": "a",
+            "text": "An inside connection if F1 can reach it, or hold high if Gold 2 covers"
+          },
+          {
+            "id": "b",
+            "text": "Drop beside F2 without checking the slot"
+          },
+          {
+            "id": "c",
+            "text": "Shoot because the slot defender moved"
+          }
+        ],
+        "answer": [
+          "a"
+        ],
+        "basis": "coaching",
+        "explanation": "Gold 1 leaving can open an inside branch, but F1’s passing route and Gold 2’s coverage still need a scan."
+      },
+      {
+        "id": "exp26b-u15-009-q6",
+        "type": "explain",
+        "prompt": "How does a high outlet help a low cycle?",
+        "basis": "coaching",
+        "explanation": "It gives F1 a separated option and can make Gold choose between the slot and the carrier. If the route is covered, remain available or reset instead of crowding F2."
+      }
+    ]
+  },
+  {
+    "id": "exp26b-u15-010",
+    "version": 1,
+    "ageBand": "U15",
+    "title": "Change the point release picture",
+    "family": "point-release-traffic",
+    "topic": "Point attack and traffic",
+    "objective": "Compare a point release with a screen and a cross-slot option when the defender changes the lane.",
+    "briefing": "Navy attacks the Gold net. YOU controls at the point; F1 is near the Gold crease, F2 is across the high slot, and Gold 1 shades YOU. The visible screen and support are conditional practice cues.",
+    "setup": {
+      "actors": [
+        {
+          "id": "h1",
+          "label": "YOU",
+          "team": "home",
+          "role": "skater",
+          "x": 9,
+          "y": 8,
+          "facing": -0.1
+        },
+        {
+          "id": "h2",
+          "label": "F1",
+          "team": "home",
+          "role": "skater",
+          "x": 24,
+          "y": 1,
+          "facing": 2.6
+        },
+        {
+          "id": "h3",
+          "label": "F2",
+          "team": "home",
+          "role": "skater",
+          "x": 14,
+          "y": -1,
+          "facing": 1.8
+        },
+        {
+          "id": "a1",
+          "label": "A1",
+          "team": "away",
+          "role": "skater",
+          "x": 10,
+          "y": 4,
+          "facing": 2.8
+        },
+        {
+          "id": "a2",
+          "label": "A2",
+          "team": "away",
+          "role": "skater",
+          "x": 22,
+          "y": 4,
+          "facing": 2.5
+        },
+        {
+          "id": "a3",
+          "label": "A3",
+          "team": "away",
+          "role": "skater",
+          "x": 20,
+          "y": -5,
+          "facing": 2.7
+        }
+      ],
+      "puck": {
+        "owner": "h1"
+      }
+    },
+    "focusActorId": "h1",
+    "cues": [
+      "YOU controls at the point.",
+      "F1 is near the net-front lane.",
+      "Gold 1 shades the direct release."
+    ],
+    "tags": [
+      "experimental",
+      "expansion"
+    ],
+    "sources": [
+      {
+        "id": "hc-defence-2020",
+        "title": "Developing Skilled Defencemen — Overview",
+        "url": "https://cdn.hockeycanada.ca/hockey-canada/Hockey-Programs/Players/Downloads/2020/developing-defence-overview-e.pdf",
+        "section": "PDF pages 18–19, Shooting",
+        "use": "Supports the stated coaching principle. The setup, alternatives and suggested answers are original experimental coaching synthesis, not source-certified."
+      }
+    ],
+    "limits": "Static experimental practice scene. Positions are examples and do not prove timing, execution, possession outcome, or a universal team system; coaching responses are ungraded.",
+    "questions": [
+      {
+        "id": "exp26b-u15-010-q1",
+        "type": "choice",
+        "prompt": "Which Navy player is the net-front reference?",
+        "options": [
+          {
+            "id": "a",
+            "text": "F1"
+          },
+          {
+            "id": "b",
+            "text": "F2"
+          },
+          {
+            "id": "c",
+            "text": "Gold 1"
+          }
+        ],
+        "answer": [
+          "a"
+        ],
+        "basis": "scene",
+        "explanation": "F1 is the Navy player positioned near the net-front lane."
+      },
+      {
+        "id": "exp26b-u15-010-q2",
+        "type": "multi",
+        "prompt": "Which two checks shape the point decision?",
+        "options": [
+          {
+            "id": "a",
+            "text": "Whether F1 still screens a useful lane"
+          },
+          {
+            "id": "b",
+            "text": "Whether F2 is reachable across the slot"
+          },
+          {
+            "id": "c",
+            "text": "The point role alone chooses the release without a lane check"
+          }
+        ],
+        "answer": [
+          "a",
+          "b"
+        ],
+        "basis": "coaching",
+        "explanation": "Screen quality and the cross-slot connection shape the decision after the defender shifts."
+      },
+      {
+        "id": "exp26b-u15-010-q3",
+        "type": "sequence",
+        "prompt": "Arrange a changed-lane point read.",
+        "options": [
+          {
+            "id": "a",
+            "text": "Check Gold 1 and F1"
+          },
+          {
+            "id": "b",
+            "text": "Compare the release with F2"
+          },
+          {
+            "id": "c",
+            "text": "Re-check the net-side lane"
+          }
+        ],
+        "answer": [
+          "a",
+          "b",
+          "c"
+        ],
+        "basis": "coaching",
+        "explanation": "The direct release is one branch; support and screen cues decide whether it remains useful."
+      },
+      {
+        "id": "exp26b-u15-010-q4",
+        "type": "position",
+        "prompt": "Move YOU to a point angle that separates the release from F1.",
+        "actorId": "h1",
+        "reference": {
+          "x": 12,
+          "y": 6.5
+        },
+        "basis": "coaching",
+        "explanation": "This changes the shooting line while keeping the screen and cross-slot option visible."
+      },
+      {
+        "id": "exp26b-u15-010-q5",
+        "type": "choice",
+        "prompt": "Gold 1 opens the point but F1 moves away from the crease. What deserves attention?",
+        "options": [
+          {
+            "id": "a",
+            "text": "Compare F2 or a protected release with the lost screen"
+          },
+          {
+            "id": "b",
+            "text": "Release through the former lane before checking F1’s screen"
+          },
+          {
+            "id": "c",
+            "text": "Assume the goalie remains screened"
+          }
+        ],
+        "answer": [
+          "a"
+        ],
+        "basis": "coaching",
+        "explanation": "The defender and screen both changed, so the next choice depends on the new support picture."
+      },
+      {
+        "id": "exp26b-u15-010-q6",
+        "type": "explain",
+        "prompt": "What makes feedback on a point release useful in this rep?",
+        "basis": "coaching",
+        "explanation": "Name Gold 1, F1 and F2, then explain how their lanes affect a release, pass or protected reset. The screen cue can disappear before the choice."
+      }
+    ]
+  },
+  {
+    "id": "exp26b-u15-011",
+    "version": 1,
+    "ageBand": "U15",
+    "title": "Receive the loose goalie outlet",
+    "family": "goalie-outlet-reception",
+    "topic": "Breakout communication",
+    "objective": "Prepare for a goalie outlet while treating the puck as loose until a player controls it.",
+    "briefing": "Navy attacks the Gold net. The Navy goalie has released a short pass toward YOU near the corner; Gold 1 closes that side. D2 is across the net and C is inside support.",
+    "setup": {
+      "actors": [
+        {
+          "id": "h1",
+          "label": "YOU",
+          "team": "home",
+          "role": "skater",
+          "x": -23,
+          "y": -7,
+          "facing": 1.5
+        },
+        {
+          "id": "h2",
+          "label": "D2",
+          "team": "home",
+          "role": "skater",
+          "x": -24,
+          "y": 5,
+          "facing": 1
+        },
+        {
+          "id": "h3",
+          "label": "C",
+          "team": "home",
+          "role": "skater",
+          "x": -16,
+          "y": 1,
+          "facing": 1.2
+        },
+        {
+          "id": "a1",
+          "label": "A1",
+          "team": "away",
+          "role": "skater",
+          "x": -20,
+          "y": -6,
+          "facing": 1.4
+        },
+        {
+          "id": "a2",
+          "label": "A2",
+          "team": "away",
+          "role": "skater",
+          "x": -15,
+          "y": 4,
+          "facing": 2.6
+        },
+        {
+          "id": "a3",
+          "label": "A3",
+          "team": "away",
+          "role": "skater",
+          "x": -8,
+          "y": 0,
+          "facing": 2.4
+        },
+        {
+          "id": "g1",
+          "label": "G",
+          "team": "home",
+          "role": "goalie",
+          "x": -28,
+          "y": 0,
+          "facing": 3.14
+        }
+      ],
+      "puck": {
+        "owner": null,
+        "x": -21,
+        "y": -7
+      }
+    },
+    "focusActorId": "h1",
+    "cues": [
+      "The goalie released the puck toward YOU.",
+      "The puck is loose in transit.",
+      "Gold 1 is closing the corner."
+    ],
+    "tags": [
+      "experimental",
+      "expansion"
+    ],
+    "sources": [
+      {
+        "id": "usa-transition-drill-2016",
+        "title": "14U Offense-Defense-Out with a Goalie Twist",
+        "url": "https://www.usahockey.com/news_article/show/636604-14u-offense-defense-out-with-a-goalie-twist",
+        "section": "Purpose / goalie or defender breakout pass",
+        "use": "Supports the stated coaching principle. The setup, alternatives and suggested answers are original experimental coaching synthesis, not source-certified."
+      }
+    ],
+    "limits": "Static experimental practice scene. Positions are examples and do not prove timing, execution, possession outcome, or a universal team system; coaching responses are ungraded.",
+    "questions": [
+      {
+        "id": "exp26b-u15-011-q1",
+        "type": "choice",
+        "prompt": "Who controls the outlet puck at the freeze?",
+        "options": [
+          {
+            "id": "a",
+            "text": "YOU"
+          },
+          {
+            "id": "b",
+            "text": "The goalie"
+          },
+          {
+            "id": "c",
+            "text": "No one yet"
+          }
+        ],
+        "answer": [
+          "c"
+        ],
+        "basis": "scene",
+        "explanation": "The puck is shown loose in transit, so no player has possession at the freeze."
+      },
+      {
+        "id": "exp26b-u15-011-q2",
+        "type": "multi",
+        "prompt": "Which two receiver checks belong before the touch?",
+        "options": [
+          {
+            "id": "a",
+            "text": "Gold 1's closing route"
+          },
+          {
+            "id": "b",
+            "text": "D2 or C as a support option"
+          },
+          {
+            "id": "c",
+            "text": "The release label confirms a clean reception"
+          }
+        ],
+        "answer": [
+          "a",
+          "b"
+        ],
+        "basis": "coaching",
+        "explanation": "Pressure and support shape the first touch; the goalie release does not decide its result."
+      },
+      {
+        "id": "exp26b-u15-011-q3",
+        "type": "sequence",
+        "prompt": "Arrange a loose-outlet routine.",
+        "options": [
+          {
+            "id": "a",
+            "text": "Find the puck and pressure"
+          },
+          {
+            "id": "b",
+            "text": "Approach with a support option"
+          },
+          {
+            "id": "c",
+            "text": "Choose the touch from the updated lane"
+          }
+        ],
+        "answer": [
+          "a",
+          "b",
+          "c"
+        ],
+        "basis": "coaching",
+        "explanation": "The actual loose puck and changing pressure drive the reception."
+      },
+      {
+        "id": "exp26b-u15-011-q4",
+        "type": "position",
+        "prompt": "Move YOU to a ready receiving angle near the corner with D2 visible.",
+        "actorId": "h1",
+        "reference": {
+          "x": -22,
+          "y": -6
+        },
+        "basis": "coaching",
+        "explanation": "This changes the approach angle while keeping the cross-ice outlet in view."
+      },
+      {
+        "id": "exp26b-u15-011-q5",
+        "type": "choice",
+        "prompt": "Gold 1 reaches the planned touch lane first. What should be reconsidered?",
+        "options": [
+          {
+            "id": "a",
+            "text": "Protect the puck or use D2/C if reachable"
+          },
+          {
+            "id": "b",
+            "text": "Continue toward the original touch"
+          },
+          {
+            "id": "c",
+            "text": "Assume the goalie can retrieve it again"
+          }
+        ],
+        "answer": [
+          "a"
+        ],
+        "basis": "coaching",
+        "explanation": "Gold pressure changes the reception job, so protect or use the remaining support after checking access."
+      },
+      {
+        "id": "exp26b-u15-011-q6",
+        "type": "explain",
+        "prompt": "What could YOU communicate before the goalie releases another outlet?",
+        "basis": "coaching",
+        "explanation": "Name the pressure side and the support you can see. A short call can help the release choose a reachable lane, then update after the puck is touched."
+      }
+    ]
+  },
+  {
+    "id": "exp26b-u15-012",
+    "version": 1,
+    "ageBand": "U15",
+    "title": "Read the second option in a two-on-one",
+    "family": "two-on-one-lane-read",
+    "topic": "Rush decision",
+    "objective": "Update a two-on-one choice when a defender changes the passing connection.",
+    "briefing": "Navy attacks the Gold net. YOU carries toward the Gold net, F2 is the second attacker, and Gold 1 has moved into the direct pass lane. The goalie is square to YOU; no finish is established.",
+    "setup": {
+      "actors": [
+        {
+          "id": "h1",
+          "label": "YOU",
+          "team": "home",
+          "role": "skater",
+          "x": 22,
+          "y": 1,
+          "facing": 0
+        },
+        {
+          "id": "h2",
+          "label": "F2",
+          "team": "home",
+          "role": "skater",
+          "x": 25,
+          "y": -6,
+          "facing": 2.8
+        },
+        {
+          "id": "a1",
+          "label": "A1",
+          "team": "away",
+          "role": "skater",
+          "x": 17,
+          "y": 0,
+          "facing": 3.1
+        },
+        {
+          "id": "a2",
+          "label": "A2",
+          "team": "away",
+          "role": "skater",
+          "x": 20,
+          "y": 7,
+          "facing": 2.8
+        },
+        {
+          "id": "a3",
+          "label": "A3",
+          "team": "away",
+          "role": "skater",
+          "x": 24,
+          "y": 5,
+          "facing": 2.7
+        },
+        {
+          "id": "g1",
+          "label": "G",
+          "team": "away",
+          "role": "goalie",
+          "x": 28,
+          "y": 0,
+          "facing": 3.14
+        }
+      ],
+      "puck": {
+        "owner": "h1"
+      }
+    },
+    "focusActorId": "h1",
+    "cues": [
+      "YOU owns the puck.",
+      "F2 is the second Navy attacker.",
+      "Gold 1 occupies the direct pass lane."
+    ],
+    "tags": [
+      "experimental",
+      "expansion"
+    ],
+    "sources": [
+      {
+        "id": "hc-u15-u18-core",
+        "title": "U15 / U18 Core Skills — Train to Train",
+        "url": "https://cdn.hockeycanada.ca/hockey-canada/Hockey-Programs/Players/Downloads/2020/u15-u18-core-skills-e.pdf",
+        "section": "Page 1, shooting choice and smart puck support",
+        "use": "Supports age/topic placement only. The setup, alternatives and suggested answers are original experimental coaching synthesis, not source-certified."
+      }
+    ],
+    "limits": "Static experimental practice scene. Positions are examples and do not prove timing, execution, possession outcome, or a universal team system; coaching responses are ungraded.",
+    "questions": [
+      {
+        "id": "exp26b-u15-012-q1",
+        "type": "choice",
+        "prompt": "What has Gold 1 changed?",
+        "options": [
+          {
+            "id": "a",
+            "text": "The direct passing connection"
+          },
+          {
+            "id": "b",
+            "text": "The score"
+          },
+          {
+            "id": "c",
+            "text": "The goalie position"
+          }
+        ],
+        "answer": [
+          "a"
+        ],
+        "basis": "scene",
+        "explanation": "Gold 1 is stated to have moved into the direct passing connection."
+      },
+      {
+        "id": "exp26b-u15-012-q2",
+        "type": "multi",
+        "prompt": "Which two cues should shape the next touch?",
+        "options": [
+          {
+            "id": "a",
+            "text": "The goalie's relation to YOU"
+          },
+          {
+            "id": "b",
+            "text": "F2's route after Gold 1's move"
+          },
+          {
+            "id": "c",
+            "text": "The two-on-one label decides the finish"
+          }
+        ],
+        "answer": [
+          "a",
+          "b"
+        ],
+        "basis": "coaching",
+        "explanation": "The defender, goalie and support route determine whether a shot, pass or protection is useful."
+      },
+      {
+        "id": "exp26b-u15-012-q3",
+        "type": "sequence",
+        "prompt": "Arrange a changed two-on-one read.",
+        "options": [
+          {
+            "id": "a",
+            "text": "Locate Gold 1 and F2"
+          },
+          {
+            "id": "b",
+            "text": "Compare the carrier and second option"
+          },
+          {
+            "id": "c",
+            "text": "Re-check the goalie and lane"
+          }
+        ],
+        "answer": [
+          "a",
+          "b",
+          "c"
+        ],
+        "basis": "coaching",
+        "explanation": "The original advantage changes when the defender moves, so the second option must be read again."
+      },
+      {
+        "id": "exp26b-u15-012-q4",
+        "type": "position",
+        "prompt": "Move YOU to a carrier angle that keeps F2 and the goalie visible.",
+        "actorId": "h1",
+        "reference": {
+          "x": 23,
+          "y": 2.5
+        },
+        "basis": "coaching",
+        "explanation": "This angle gives a different view of the passing lane without moving into the net area."
+      },
+      {
+        "id": "exp26b-u15-012-q5",
+        "type": "choice",
+        "prompt": "Gold 1 turns toward YOU and F2 gains separation. What could improve?",
+        "options": [
+          {
+            "id": "a",
+            "text": "A pass if F2 remains reachable, or a shot if the goalie gives room"
+          },
+          {
+            "id": "b",
+            "text": "Force the pass through Gold 1"
+          },
+          {
+            "id": "c",
+            "text": "Ignore F2 and shoot through the defender"
+          }
+        ],
+        "answer": [
+          "a"
+        ],
+        "basis": "coaching",
+        "explanation": "F2 separation changes the branch, while the goalie and defender still determine whether the pass or shot is usable."
+      },
+      {
+        "id": "exp26b-u15-012-q6",
+        "type": "explain",
+        "prompt": "How can feedback respect both a possible shot and a possible pass?",
+        "basis": "coaching",
+        "explanation": "Tie the choice to Gold 1, F2 and the goalie. If the defender closes the carrier but F2 is reachable, pass; if F2 is covered and the carrier lane remains open, consider the shot."
+      }
+    ]
+  },
+  {
+    "id": "exp26b-u15-013",
+    "version": 1,
+    "ageBand": "U15",
+    "title": "Support the loose touch of a wall battle",
+    "family": "wall-battle-second-touch",
+    "topic": "Puck recovery",
+    "objective": "Arrive as second support for a loose touch while leaving the first player room to compete.",
+    "briefing": "Navy attacks the Gold net. F1 and Gold 1 contest a puck near the boards; YOU is the second Navy player and C is an inside outlet. Gold 2 can close C after the next touch.",
+    "setup": {
+      "actors": [
+        {
+          "id": "h1",
+          "label": "YOU",
+          "team": "home",
+          "role": "skater",
+          "x": 15,
+          "y": -3,
+          "facing": 2.4
+        },
+        {
+          "id": "h2",
+          "label": "F1",
+          "team": "home",
+          "role": "skater",
+          "x": 21,
+          "y": -1,
+          "facing": 2.6
+        },
+        {
+          "id": "h3",
+          "label": "C",
+          "team": "home",
+          "role": "skater",
+          "x": 18,
+          "y": 4,
+          "facing": 1.9
+        },
+        {
+          "id": "a1",
+          "label": "A1",
+          "team": "away",
+          "role": "skater",
+          "x": 21,
+          "y": -2,
+          "facing": 2.4
+        },
+        {
+          "id": "a2",
+          "label": "A2",
+          "team": "away",
+          "role": "skater",
+          "x": 18,
+          "y": 1,
+          "facing": 2.5
+        },
+        {
+          "id": "a3",
+          "label": "A3",
+          "team": "away",
+          "role": "skater",
+          "x": 25,
+          "y": 5,
+          "facing": 2.8
+        }
+      ],
+      "puck": {
+        "owner": null,
+        "x": 21,
+        "y": -1
+      }
+    },
+    "focusActorId": "h1",
+    "cues": [
+      "The puck is loose in a wall contest.",
+      "F1 is the first Navy contest player.",
+      "C is an inside outlet."
+    ],
+    "tags": [
+      "experimental",
+      "expansion"
+    ],
+    "sources": [
+      {
+        "id": "hc-u15-u18-core",
+        "title": "U15 / U18 Core Skills — Train to Train",
+        "url": "https://cdn.hockeycanada.ca/hockey-canada/Hockey-Programs/Players/Downloads/2020/u15-u18-core-skills-e.pdf",
+        "section": "Page 1, timing, support and spatial awareness",
+        "use": "Supports age/topic placement only. The setup, alternatives and suggested answers are original experimental coaching synthesis, not source-certified."
+      }
+    ],
+    "limits": "Static experimental practice scene. Positions are examples and do not prove timing, execution, possession outcome, or a universal team system; coaching responses are ungraded.",
+    "questions": [
+      {
+        "id": "exp26b-u15-013-q1",
+        "type": "choice",
+        "prompt": "Which Navy player has the first wall-contest role?",
+        "options": [
+          {
+            "id": "a",
+            "text": "F1"
+          },
+          {
+            "id": "b",
+            "text": "YOU"
+          },
+          {
+            "id": "c",
+            "text": "C"
+          }
+        ],
+        "answer": [
+          "a"
+        ],
+        "basis": "scene",
+        "explanation": "F1 is the named first contest player; YOU is the second support."
+      },
+      {
+        "id": "exp26b-u15-013-q2",
+        "type": "multi",
+        "prompt": "Which two cues make second support useful?",
+        "options": [
+          {
+            "id": "a",
+            "text": "The next loose touch from the contest"
+          },
+          {
+            "id": "b",
+            "text": "C's inside outlet staying reachable"
+          },
+          {
+            "id": "c",
+            "text": "Taking F1's exact space"
+          }
+        ],
+        "answer": [
+          "a",
+          "b"
+        ],
+        "basis": "coaching",
+        "explanation": "The second player reads the next touch and keeps the outlet available instead of crowding the contest."
+      },
+      {
+        "id": "exp26b-u15-013-q3",
+        "type": "sequence",
+        "prompt": "Arrange a second-support read.",
+        "options": [
+          {
+            "id": "a",
+            "text": "Stay outside F1's contest space"
+          },
+          {
+            "id": "b",
+            "text": "Track the loose touch and C"
+          },
+          {
+            "id": "c",
+            "text": "Choose recovery or support after the touch"
+          }
+        ],
+        "answer": [
+          "a",
+          "b",
+          "c"
+        ],
+        "basis": "coaching",
+        "explanation": "The support job depends on the touch and the outlet after the contest."
+      },
+      {
+        "id": "exp26b-u15-013-q4",
+        "type": "position",
+        "prompt": "Move YOU to a pocket closer to Navy's net than the battle with C visible.",
+        "actorId": "h1",
+        "reference": {
+          "x": 16,
+          "y": 3.2
+        },
+        "basis": "coaching",
+        "explanation": "This creates a recovery pocket that is separate from F1 and connected to C."
+      },
+      {
+        "id": "exp26b-u15-013-q5",
+        "type": "choice",
+        "prompt": "Gold 2 closes C as the puck rolls free. What should be checked?",
+        "options": [
+          {
+            "id": "a",
+            "text": "The carrier side, another outlet and the inside lane"
+          },
+          {
+            "id": "b",
+            "text": "Step into F1's space"
+          },
+          {
+            "id": "c",
+            "text": "Assume C remains available"
+          }
+        ],
+        "answer": [
+          "a"
+        ],
+        "basis": "coaching",
+        "explanation": "C is no longer the same outlet, so update the support and recovery choices."
+      },
+      {
+        "id": "exp26b-u15-013-q6",
+        "type": "explain",
+        "prompt": "What is a useful second-player job when F1 does not win the puck cleanly?",
+        "basis": "coaching",
+        "explanation": "Track the loose touch, protect the inside lane and offer C or another reachable outlet. The second player supports the next decision rather than copying the contest."
+      }
+    ]
+  },
+  {
+    "id": "exp26b-u15-014",
+    "version": 1,
+    "ageBand": "U15",
+    "title": "Hold the puck through a line change",
+    "family": "line-change-possession",
+    "topic": "Puck management",
+    "objective": "Preserve a usable connection while one teammate changes and the forward options adjust.",
+    "briefing": "Navy attacks the Gold net. F3 is changing and unavailable for this rep; YOU carries in the neutral zone, D2 is behind, and F1 and F2 are ahead. The goal is to read possession options as support changes.",
+    "setup": {
+      "actors": [
+        {
+          "id": "h1",
+          "label": "YOU",
+          "team": "home",
+          "role": "skater",
+          "x": -1,
+          "y": -2,
+          "facing": 0.2
+        },
+        {
+          "id": "h2",
+          "label": "D2",
+          "team": "home",
+          "role": "skater",
+          "x": -10,
+          "y": 5,
+          "facing": 2.7
+        },
+        {
+          "id": "h3",
+          "label": "F1",
+          "team": "home",
+          "role": "skater",
+          "x": 9,
+          "y": 6,
+          "facing": 2.9
+        },
+        {
+          "id": "h4",
+          "label": "F2",
+          "team": "home",
+          "role": "skater",
+          "x": 12,
+          "y": -5,
+          "facing": 2.6
+        },
+        {
+          "id": "a1",
+          "label": "A1",
+          "team": "away",
+          "role": "skater",
+          "x": 2,
+          "y": 2,
+          "facing": 2.8
+        },
+        {
+          "id": "a2",
+          "label": "A2",
+          "team": "away",
+          "role": "skater",
+          "x": 6,
+          "y": -1,
+          "facing": 2.5
+        },
+        {
+          "id": "a3",
+          "label": "A3",
+          "team": "away",
+          "role": "skater",
+          "x": -4,
+          "y": -8,
+          "facing": 2.9
+        }
+      ],
+      "puck": {
+        "owner": "h1"
+      }
+    },
+    "focusActorId": "h1",
+    "cues": [
+      "F3 is changing and unavailable.",
+      "YOU owns the puck.",
+      "D2 is behind while F1 and F2 are ahead."
+    ],
+    "tags": [
+      "experimental",
+      "expansion"
+    ],
+    "sources": [
+      {
+        "id": "hc-u15-u18-core",
+        "title": "U15 / U18 Core Skills — Train to Train",
+        "url": "https://cdn.hockeycanada.ca/hockey-canada/Hockey-Programs/Players/Downloads/2020/u15-u18-core-skills-e.pdf",
+        "section": "Page 1, puck management and communication",
+        "use": "Supports age/topic placement only. The setup, alternatives and suggested answers are original experimental coaching synthesis, not source-certified."
+      }
+    ],
+    "limits": "Static experimental practice scene. Positions are examples and do not prove timing, execution, possession outcome, or a universal team system; coaching responses are ungraded.",
+    "questions": [
+      {
+        "id": "exp26b-u15-014-q1",
+        "type": "choice",
+        "prompt": "Which teammate is unavailable during this rep?",
+        "options": [
+          {
+            "id": "a",
+            "text": "F1"
+          },
+          {
+            "id": "b",
+            "text": "F3"
+          },
+          {
+            "id": "c",
+            "text": "D2"
+          }
+        ],
+        "answer": [
+          "b"
+        ],
+        "basis": "scene",
+        "explanation": "The cues state that F3 is changing and unavailable."
+      },
+      {
+        "id": "exp26b-u15-014-q2",
+        "type": "multi",
+        "prompt": "Which two checks matter with one support option missing?",
+        "options": [
+          {
+            "id": "a",
+            "text": "D2's reset connection"
+          },
+          {
+            "id": "b",
+            "text": "F1 or F2's reachable route"
+          },
+          {
+            "id": "c",
+            "text": "The change requires a dump regardless of pressure"
+          }
+        ],
+        "answer": [
+          "a",
+          "b"
+        ],
+        "basis": "coaching",
+        "explanation": "A reset and a forward route preserve choices while the line change reduces one support option."
+      },
+      {
+        "id": "exp26b-u15-014-q3",
+        "type": "sequence",
+        "prompt": "Arrange a possession read during the change.",
+        "options": [
+          {
+            "id": "a",
+            "text": "Locate pressure and the remaining support"
+          },
+          {
+            "id": "b",
+            "text": "Protect or move to the reachable connection"
+          },
+          {
+            "id": "c",
+            "text": "Re-check when F3 returns"
+          }
+        ],
+        "answer": [
+          "a",
+          "b",
+          "c"
+        ],
+        "basis": "coaching",
+        "explanation": "The temporary absence changes the options, then the next scan can include the new player."
+      },
+      {
+        "id": "exp26b-u15-014-q4",
+        "type": "position",
+        "prompt": "Move YOU to a position with D2 and F1 visible as different connections.",
+        "actorId": "h1",
+        "reference": {
+          "x": 1,
+          "y": 2.5
+        },
+        "basis": "coaching",
+        "explanation": "This point changes the carrier angle while retaining a reset and forward option."
+      },
+      {
+        "id": "exp26b-u15-014-q5",
+        "type": "choice",
+        "prompt": "A new F3 appears in a clear middle lane. What can you reconsider?",
+        "options": [
+          {
+            "id": "a",
+            "text": "A middle connection if pressure and support make it reachable"
+          },
+          {
+            "id": "b",
+            "text": "Leave the puck without checking the new lane"
+          },
+          {
+            "id": "c",
+            "text": "Assume the change makes every route safe"
+          }
+        ],
+        "answer": [
+          "a"
+        ],
+        "basis": "coaching",
+        "explanation": "The new player changes the support picture, but the carrier still checks access and pressure."
+      },
+      {
+        "id": "exp26b-u15-014-q6",
+        "type": "explain",
+        "prompt": "Why does a line change call for a possession read rather than one fixed action?",
+        "basis": "coaching",
+        "explanation": "The available outlet set changes while the puck and pressure remain live. Name D2, the forward route and the arriving F3, then choose the connection that stays reachable."
+      }
+    ]
+  },
+  {
+    "id": "exp26b-u15-015",
+    "version": 2,
+    "ageBand": "U15",
+    "title": "Reset around a crowded slot",
+    "family": "slot-crowding-reset",
+    "topic": "Offensive possession",
+    "objective": "Keep a possession route available when the slot is shaded and a low teammate can become the next outlet.",
+    "briefing": "Navy attacks Gold’s net. YOU control near the puck-side half wall; Gold 1 shades F2 in the slot, F1 is behind the goal line, and D1 holds the high point with Gold 3 nearby. The rep asks YOU to compare a connected reset with the crowded inside option.",
+    "setup": {
+      "actors": [
+        {
+          "id": "h1",
+          "label": "YOU",
+          "team": "home",
+          "role": "skater",
+          "x": 20,
+          "y": 9,
+          "facing": 0
+        },
+        {
+          "id": "h2",
+          "label": "F1",
+          "team": "home",
+          "role": "skater",
+          "x": 28,
+          "y": -5,
+          "facing": 2.5
+        },
+        {
+          "id": "h3",
+          "label": "F2",
+          "team": "home",
+          "role": "skater",
+          "x": 19,
+          "y": 3,
+          "facing": 1.9
+        },
+        {
+          "id": "a1",
+          "label": "A1",
+          "team": "away",
+          "role": "skater",
+          "x": 20,
+          "y": 4,
+          "facing": 2.6
+        },
+        {
+          "id": "a2",
+          "label": "A2",
+          "team": "away",
+          "role": "skater",
+          "x": 24,
+          "y": 1,
+          "facing": 2.8
+        },
+        {
+          "id": "a3",
+          "label": "A3",
+          "team": "away",
+          "role": "skater",
+          "x": 12,
+          "y": 6,
+          "facing": 2.2
+        },
+        {
+          "id": "h4",
+          "label": "D1",
+          "team": "home",
+          "role": "skater",
+          "x": 10,
+          "y": 7,
+          "facing": 0
+        }
+      ],
+      "puck": {
+        "owner": "h1"
+      }
+    },
+    "focusActorId": "h1",
+    "cues": [
+      "YOU controls at the half wall.",
+      "Gold 1 shades F2 in the slot.",
+      "F1 is a low outlet and D1 holds the point."
+    ],
+    "tags": [
+      "experimental",
+      "expansion"
+    ],
+    "sources": [
+      {
+        "id": "hc-u15-u18-core",
+        "title": "U15 / U18 Core Skills — Train to Train",
+        "url": "https://cdn.hockeycanada.ca/hockey-canada/Hockey-Programs/Players/Downloads/2020/u15-u18-core-skills-e.pdf",
+        "section": "Page 1, puck management, cycling and support",
+        "use": "Supports age/topic placement only. The setup, alternatives and suggested answers are original experimental coaching synthesis, not source-certified."
+      }
+    ],
+    "limits": "Static experimental practice scene. Positions are examples and do not prove timing, execution, possession outcome, or a universal team system; coaching responses are ungraded.",
+    "questions": [
+      {
+        "id": "exp26b-u15-015-q1",
+        "type": "choice",
+        "prompt": "Which Navy teammate is the low outlet?",
+        "options": [
+          {
+            "id": "a",
+            "text": "F1"
+          },
+          {
+            "id": "b",
+            "text": "F2"
+          },
+          {
+            "id": "c",
+            "text": "D1"
+          }
+        ],
+        "answer": [
+          "a"
+        ],
+        "basis": "scene",
+        "explanation": "F1 is the Navy player below the Gold net and available as the low outlet."
+      },
+      {
+        "id": "exp26b-u15-015-q2",
+        "type": "multi",
+        "prompt": "Which two details support a reset?",
+        "options": [
+          {
+            "id": "a",
+            "text": "Gold 1's slot shading"
+          },
+          {
+            "id": "b",
+            "text": "F1's reachable low route"
+          },
+          {
+            "id": "c",
+            "text": "The half-wall label decides the next pass"
+          }
+        ],
+        "answer": [
+          "a",
+          "b"
+        ],
+        "basis": "coaching",
+        "explanation": "The defender and low outlet determine whether the reset can preserve possession."
+      },
+      {
+        "id": "exp26b-u15-015-q3",
+        "type": "sequence",
+        "prompt": "Arrange a connected reset.",
+        "options": [
+          {
+            "id": "a",
+            "text": "Locate F2, F1 and the high point"
+          },
+          {
+            "id": "b",
+            "text": "Protect the puck from the slot shade"
+          },
+          {
+            "id": "c",
+            "text": "Use the reachable outlet and scan again"
+          }
+        ],
+        "answer": [
+          "a",
+          "b",
+          "c"
+        ],
+        "basis": "coaching",
+        "explanation": "The reset keeps the puck connected while the shaded slot and low route are re-read."
+      },
+      {
+        "id": "exp26b-u15-015-q4",
+        "type": "position",
+        "prompt": "Move YOU off the wall to a support angle with F1 and F2 visible.",
+        "actorId": "h1",
+        "reference": {
+          "x": 18,
+          "y": 7.5
+        },
+        "basis": "coaching",
+        "explanation": "This small move off the wall changes the carrier angle while keeping F1, F2 and the high outlet available to scan. Each passing lane still depends on the defenders."
+      },
+      {
+        "id": "exp26b-u15-015-q5",
+        "type": "choice",
+        "prompt": "Gold 1 leaves F2 to pressure YOU on the wall. What should be weighed?",
+        "options": [
+          {
+            "id": "a",
+            "text": "A quick F2 connection if the slot remains reachable, or F1 support"
+          },
+          {
+            "id": "b",
+            "text": "Force F2 because the defender moved"
+          },
+          {
+            "id": "c",
+            "text": "Send the puck low without checking F1"
+          }
+        ],
+        "answer": [
+          "a"
+        ],
+        "basis": "coaching",
+        "explanation": "The defender move may open F2, but carrier angle and F1 support still determine the connected choice."
+      },
+      {
+        "id": "exp26b-u15-015-q6",
+        "type": "explain",
+        "prompt": "Name two support areas in this reset and explain their different value.",
+        "basis": "coaching",
+        "explanation": "F1 offers a low outlet, while F2 offers an inside option if Gold 1 leaves it reachable. D1 is a high reset to check too, with Gold 3 nearby. Naming an outlet does not guarantee it is open."
+      }
+    ]
+  }
+]
