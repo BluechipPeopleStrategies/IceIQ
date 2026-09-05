@@ -1,12 +1,12 @@
 # RinkReads overnight checkpoint
 
-Updated September 5, 2026, 00:35 Edmonton. Phone access is live; the follow-up quality pass is implemented and tested locally. Target: 7:00 a.m. Edmonton today (13:00 UTC).
+Updated September 5, 2026, 00:43 Edmonton. Phone access and the follow-up quality pass are deployed and verified live. Target: 7:00 a.m. Edmonton today (13:00 UTC).
 
 ## Continue from here
 
 **Live release:** [Shared phone review](https://ice-iq.vercel.app/review/) deployed in `019e8d9`; `5396ec1` records live verification. The hosted Arena, Gym, Shootout comparisons and Character Studio work without a desktop server or shared Wi-Fi. The phone-access request supersedes the earlier DEV-only restriction. Do not restore it. [Phone-preview.md](phone-preview.md) records the boundaries and public-origin checks. The static allowlist publishes review pages/images, not raw planning documents, manifests or workstation paths.
 
-**Current follow-up, not yet deployed:** optional U11 **One thing changes**, all eleven non-Shootout Gym introduction corrections, shared secondary-text contrast fixes, and review of local sample goals/skills. **158 practice tests and the production build pass.** Comparison replay/export and production-preview reload checks pass; the 390 px packaged review has no overflow or broken images. Verification, review HTML and roadmap are updated. Check those results and git status before committing, pushing and verifying the follow-up on the live origin; do not treat local implementation as deployed.
+**Follow-up deployed:** `98809ec` is live (Vercel success), including optional U11 **One thing changes**, all eleven non-Shootout Gym introduction corrections and shared text contrast fixes. **158 practice tests and build pass.** The live 390 px HTTPS flow completed three reads, saved original Pass and changed-cue Carry reasons, and restored both on reload. Review images load and changed Gym copy is visible; no overflow, failed HTTP requests or page exceptions. Local comparison replay/export and sample Goals/Skills were also verified. Evidence: `phone-preview.md`, `verification.md`, and `evidence/u11-changed-cue-live-phone.png`. Commit and push the final verification record if it is still modified; no implementation work remains in this quality slice.
 
 The existing same-task heartbeat is `rinkreads-overnight-build`, scheduled every 30 minutes through 13:00 UTC. Verify its current status before assuming another run will occur. Read this file and [morning-review.md](morning-review.md), then check git log and the current diff. Do not repeat completed discovery, the eleven-intro copy audit, or the changed-cue implementation. No purchases, production content admission, real account mutation or live AI use has been performed.
 
@@ -45,7 +45,7 @@ No physical phone/iPad test, sustained low-power GPU benchmark, full screen-read
 
 ## Remaining work for useful overnight continuations
 
-1. Perform the scoped commit/push and live follow-up check; local comparison persistence/export and document reconciliation are complete. Confirm the public review actually contains the changed-cue and copy/contrast changes before reporting them as live.
+1. Phone publication, changed-cue persistence/export, introduction copy, contrast and live verification are complete. Check the log for the final verification record, then move to another bounded gap; do not repeat this slice.
 2. Check reduced-motion, tablet/phone interaction and sustained rendering/fallback behaviour against the actual build. Fix concrete issues and preserve the distinction between viewport testing and physical-device evidence.
 3. Record the original quiz's unresolved mixed-age `ALL_AGES_MODE` policy for the owner. Keep new guided lessons explicitly age-scoped and all new examples marked as drafts; do not silently claim or introduce age validation.
 4. Continue only bounded useful improvements supported by the source notes and actual gaps. Route drawing, richer prediction/order/recall sequences and expansion beyond the first U11 chain remain open; the single-D1 comparison and sample goals/skills review are already done.

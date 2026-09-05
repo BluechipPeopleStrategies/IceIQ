@@ -23,3 +23,15 @@ Validation before deployment: 155 practice tests and production build pass. Two 
 ## Live verification
 
 Code commit `019e8d9` deployed successfully through the existing Vercel Git integration (GitHub status: Deployment has completed). Verified the public HTTPS origin after deployment: `/review/` returns 200; its arena link opens the U11 three-read view; Brain Gym loads; all four navy/gold character PNG variants decode at 1254 px; and Shootout starts with six target controls. At 390 px these pages have no horizontal overflow. The monitored live checks recorded zero failed HTTP requests and zero page exceptions. The browser still reports non-blocking Three.js Clock/preload warnings. Screenshot: `evidence/shootout-live-phone.png`.
+
+## Follow-up quality release
+
+`98809ec` deployed through Vercel successfully and was verified at 00:43 Edmonton.
+At the live HTTPS origin and a 390 px viewport, the review returned 200 with all
+images loaded; the U11 Pass → shoot-open → move/explain sequence completed; the
+single-D1 comparison saved a revised Carry/reason; and a full reload restored
+both answers unchanged. No horizontal overflow, failed HTTP requests or page
+exceptions occurred. The updated Read the Numbers introduction is also live.
+Screenshot: `evidence/u11-changed-cue-live-phone.png`. These are browser viewport
+checks; no physical phone test is claimed. The current integrated practice suite
+passes 158 tests and the production build passes.

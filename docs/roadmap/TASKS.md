@@ -1,6 +1,6 @@
 # RinkReads — Task List
 
-**Last updated:** 2026-09-05 · Phone review is live. Follow-up quality pass adds the U11 single-cue comparison with preserved reflections, corrects all eleven remaining Brain Gym introductions, and improves shared text contrast. 158 practice tests and build pass. Current evidence: `docs/one-on-one/verification.md`; overnight checkpoint remains active for 7am review.
+**Last updated:** 2026-09-05 · Phone review and follow-up quality pass are live (`98809ec`, verified 00:43 Edmonton). The follow-up adds the U11 single-cue comparison with preserved reflections, corrects all eleven remaining Brain Gym introductions, and improves shared text contrast. 158 practice tests and build pass. Current evidence: `docs/one-on-one/verification.md`; overnight checkpoint remains active for 7am review.
 
 **Scope:** RinkReads **app build + content factory**. Launch/distribution (sending the beta, marketing) and the separate BlueChip business are **out of scope** — parked at the bottom. Priority = position in this list. A new idea that isn't here goes to the **Parking Lot** first, then gets promoted on purpose — that's the scope-creep guard.
 
@@ -54,6 +54,8 @@
 - *(New ideas land here first, then get promoted into NEXT/LATER on purpose.)*
 
 ## Changelog
+
+- **2026-09-05 — Follow-up verified live.** Vercel completed deployment of `98809ec`. The public 390 px review-to-three-reads-to-changed-cue flow preserves original Pass and revised Carry reasons after reload. Updated Gym instructions are visible. No overflow, failed requests or page exceptions in the checked flow. Evidence: `docs/one-on-one/phone-preview.md`.
 
 - **2026-09-05 — Follow-up teaching and readability review.** Added the optional U11 “One thing changes” comparison: only D1 moves from the shaded shot route into the actual puck-to-F2 pass line. The first answer, revised action/reason and original three-read branch remain separate through replay, save/restore and JSON export. Corrected all eleven remaining Gym introductions against their real stimuli; removed unsupported transfer and training-frequency claims without changing scoring. Raised shared secondary-text contrast and used the BlueChip font/colour in text overlays and remaining inputs. Verified reduced-motion sequence flow, phone/tablet comparison, and sample Goals/Skills. 158 practice tests/build pass. Existing original-quiz ALL_AGES_MODE policy remains an explicit age-filtering limitation; the new guided curriculum has separate age scope.
 
