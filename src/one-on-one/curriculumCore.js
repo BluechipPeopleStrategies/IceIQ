@@ -83,7 +83,7 @@ export function scoreCurriculumQuestion(question, answer) {
 export function recordCurriculumAnswer(progress, questionId, correct) {
   if (typeof correct !== 'boolean') throw new TypeError('correct must be boolean');
   const old = progress[questionId];
-  return { ...progress, [questionId]: { attempted: true, firstCorrect: old?.firstCorrect ?? correct, mastered: !!(old?.mastered || correct) } };
+  return { ...progress, [questionId]: { attempted: true, firstCorrect: old?.firstCorrect ?? correct, mastered: old?.mastered === true, lastCorrect: correct } };
 }
 
 export function readCurriculumProgress(raw, knownQuestionIds) {
@@ -95,6 +95,7 @@ export function readCurriculumProgress(raw, knownQuestionIds) {
       const answer = saved.answers[id];
       if (answer?.attempted === true && typeof answer.firstCorrect === 'boolean' && typeof answer.mastered === 'boolean') {
         result[id] = { attempted: true, firstCorrect: answer.firstCorrect, mastered: answer.mastered };
+        if (typeof answer.lastCorrect === 'boolean') result[id].lastCorrect = answer.lastCorrect;
       }
     }
     return result;

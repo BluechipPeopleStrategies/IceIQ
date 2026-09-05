@@ -488,6 +488,7 @@ function lazyWithReload(factory) {
   }));
 }
 
+const PlayerLearningHome = lazyWithReload(() => import("./player/PlayerLearningHome.jsx"));
 const AdminReports = lazyWithReload(() => import("./screens.jsx").then(m => ({ default: m.AdminReports })));
 const QuestionReviewScreen = lazyWithReload(() => import("./screens.jsx").then(m => ({ default: m.QuestionReviewScreen })));
 const ReviewScreen = lazyWithReload(() => import("./review/ReviewScreen.jsx"));
@@ -1592,7 +1593,7 @@ function Home({ player, onNav, demoMode, subscriptionTier, questFlagsBump, onPro
   return (
     <div style={{minHeight:"100vh",background:C.bg,fontFamily:FONT.body,color:C.white,paddingBottom:80}}>
       {/* Header */}
-      <div style={{padding:"1.5rem 1.25rem 1rem",maxWidth:560,margin:"0 auto"}}>
+      <div style={{padding:"1.5rem 1.25rem 1rem",maxWidth:1120,margin:"0 auto"}}>
         <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start",marginBottom:"1.5rem"}}>
           <div>
             <div style={{display:"flex",alignItems:"center",gap:".45rem",marginBottom:".2rem"}}>
@@ -1626,6 +1627,12 @@ function Home({ player, onNav, demoMode, subscriptionTier, questFlagsBump, onPro
           </div>
           <button onClick={() => onNav("profile")} style={{background:C.bgCard,border:`1px solid ${C.border}`,borderRadius:10,width:38,height:38,cursor:"pointer",color:C.dimmer,fontSize:16,display:"flex",alignItems:"center",justifyContent:"center"}}>⚙</button>
         </div>
+
+        <Suspense fallback={<LazyFallback/>}><PlayerLearningHome player={player} onNavigate={({id,ageBand,worldId}) => {
+          if (["learn","practice","experimental","library"].includes(id)) {
+            onNav({kind:"player-learning", search:new URLSearchParams({arena:id === "learn" ? "worlds" : id,age:ageBand,...(worldId ? {world:worldId} : {})}).toString()});
+          } else onNav(({progress:"gamesense",history:"journey",brain:"cogym",play:"readplay"})[id] || id);
+        }}/></Suspense>
 
         {/* For-parents start-here card — dismissible, persists via LS */}
         <HomeStartHereCard onRead={() => onNav("parents")} subscriptionTier={subscriptionTier} />
@@ -1668,162 +1675,6 @@ function Home({ player, onNav, demoMode, subscriptionTier, questFlagsBump, onPro
             <HockeyInsightWidget onInsightRead={onBumpQuestFlags}/>
           </div>
         )}
-
-        {/* RinkReads Journey — laid out inline so it's the first thing on the
-            Home screen. The full-screen JourneyScreen is still reachable via
-            the "View full →" link on the card header. */}
-        <JourneyBody player={player} tier={subscriptionTier} demoMode={demoMode} onViewFull={() => onNav("journey")} onUpgrade={onPromptUpgrade} />
-
-        {/* IQ Score Hero — only at the top when unlocked. Locked state
-            drops further down the page (see below). */}
-        {iqUnlocked && iqHero}
-
-        {/* Skill Path hero — the Duolingo-style curriculum path. Shows the
-            next node on the player's age-band path so Home always has a
-            single obvious "continue" action. */}
-        {(() => {
-          try {
-            const band = levelToBand(level);
-            const p = getPath(band);
-            const st = getPathState(player?.id || "__demo__", band, p);
-            const next = st.activeNode;
-            const era = next ? p.units[next.unitIdx]?.name : null;
-            const pct = st.totalCount ? Math.round((st.clearedCount / st.totalCount) * 100) : 0;
-
-            // Leak Finder: weakest category with a real sample (6+ reads,
-            // under 75%, not yet mastered). GAME_DESIGN_SPEC.md B3.
-            let leak = null;
-            try {
-              const m = computeCategoryMastery(player?.quizHistory);
-              const cands = Object.entries(m).filter(([, v]) => v.attempts >= 6 && v.accuracy < 0.75 && v.stars < 3);
-              if (cands.length) {
-                cands.sort((a, b) => a[1].accuracy - b[1].accuracy);
-                leak = { cat: cands[0][0], pct: Math.round(cands[0][1].accuracy * 100), n: cands[0][1].attempts };
-              }
-            } catch {}
-
-            return (<>
-              <button onClick={() => onNav("path")} style={{width:"100%",background:C.gradientPrimary,border:"none",borderRadius:16,padding:"1.05rem 1.15rem",cursor:"pointer",textAlign:"left",color:C.bg,fontFamily:FONT.body,marginBottom:".85rem",boxShadow:"inset 0 -5px 0 rgba(0,0,0,.22), 0 8px 22px rgba(201,162,75,.28)",position:"relative",overflow:"hidden"}}>
-                <div style={{fontSize:10.5,fontWeight:800,letterSpacing:".16em",textTransform:"uppercase",opacity:.9,marginBottom:3}}>
-                  Skill Path · {band}{era ? ` · ${era} Era` : ""} · {st.clearedCount}/{st.totalCount}
-                </div>
-                <div style={{fontFamily:FONT.display,fontSize:"1.35rem",letterSpacing:".02em",marginBottom:2}}>
-                  {next ? `Next up: ${next.name}` : st.totalCount ? "Path complete — push for 3 stars" : "Walk the path"}
-                </div>
-                <div style={{fontSize:12,opacity:.9,marginBottom:".6rem"}}>{next?.readConnection ? next.readConnection : "One skill at a time, in the order the game teaches it."}</div>
-                <div style={{height:6,background:"rgba(0,0,0,.28)",borderRadius:4,overflow:"hidden"}}>
-                  <div style={{width:`${pct}%`,height:"100%",background:"#fff",borderRadius:4,transition:"width .3s"}}/>
-                </div>
-              </button>
-
-              {leak && (
-                <button onClick={() => onNav({ __leak: leak.cat })} style={{width:"100%",background:C.bgCard,border:`1px solid ${C.border}`,borderLeft:`4px solid #CC1F2B`,borderRadius:14,padding:".85rem 1rem",cursor:"pointer",textAlign:"left",color:C.white,fontFamily:FONT.body,marginBottom:".85rem",display:"flex",alignItems:"center",gap:".8rem"}}>
-                  <span style={{fontSize:24}}>🔧</span>
-                  <span style={{flex:1}}>
-                    <span style={{display:"block",fontSize:10.5,fontWeight:800,letterSpacing:".14em",textTransform:"uppercase",color:"#e05563"}}>Leak Finder</span>
-                    <span style={{display:"block",fontFamily:FONT.display,fontSize:"1.05rem"}}>{leak.cat} · {leak.pct}% over {leak.n} reads</span>
-                    <span style={{display:"block",fontSize:11.5,color:C.dim}}>Patch it with a focused session</span>
-                  </span>
-                  <span style={{fontSize:18,color:C.dim}}>→</span>
-                </button>
-              )}
-
-              <button onClick={() => onNav("challenges")} style={{width:"100%",background:C.bgCard,border:`1px solid ${C.border}`,borderRadius:14,padding:".85rem 1rem",cursor:"pointer",textAlign:"left",color:C.white,fontFamily:FONT.body,marginBottom:"1rem",display:"flex",alignItems:"center",gap:".8rem"}}>
-                <span style={{fontSize:24}}>🗺️</span>
-                <span style={{flex:1}}>
-                  <span style={{display:"block",fontFamily:FONT.display,fontSize:"1.05rem"}}>Challenges</span>
-                  <span style={{display:"block",fontSize:11.5,color:C.dim}}>Daily Drill · Speed Round · Weekly — clear the path to unlock more</span>
-                </span>
-                <span style={{fontSize:18,color:C.dim}}>→</span>
-              </button>
-            </>);
-          } catch { return null; }
-        })()}
-
-        {/* Quick action grid */}
-        <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:".75rem",marginBottom:"1rem"}}>
-          <button onClick={() => onNav("quiz")} style={{background:`linear-gradient(135deg,rgba(201,162,75,.15),rgba(201,162,75,.05))`,border:`1px solid ${C.purpleBorder}`,borderRadius:14,padding:"1.1rem",cursor:"pointer",textAlign:"left",color:C.white,fontFamily:FONT.body,position:"relative",overflow:"hidden"}}>
-            <img src={imgCoreApp} alt="" style={{position:"absolute",inset:0,width:"100%",height:"100%",objectFit:"cover",opacity:0.12,pointerEvents:"none"}}/>
-            <div style={{position:"relative"}}>
-            <div style={{fontSize:22,marginBottom:".4rem"}}>🧠</div>
-            <div style={{fontWeight:700,fontSize:14,marginBottom:2}}>Take Quiz</div>
-            <div style={{fontSize:11,color:C.purple}}>Adaptive · {player.sessionLength||10}Q</div>
-            </div>
-          </button>
-          {canSetGoals(level) && (
-          <button onClick={() => onNav("goals")} style={{background:`linear-gradient(135deg,rgba(201,162,75,.1),rgba(201,162,75,.03))`,border:`1px solid ${C.goldBorder}`,borderRadius:14,padding:"1.1rem",cursor:"pointer",textAlign:"left",color:C.white,fontFamily:FONT.body}}>
-            <div style={{fontSize:22,marginBottom:".4rem"}}>🎯</div>
-            <div style={{fontWeight:700,fontSize:14,marginBottom:2}}>My Goals</div>
-            <div style={{fontSize:11,color:C.gold}}>{goalCount}/{goalCats} set</div>
-          </button>
-          )}
-          <button onClick={() => onNav("study")} style={{background:C.bgCard,border:`1px solid ${C.border}`,borderRadius:14,padding:"1.1rem",cursor:"pointer",textAlign:"left",color:C.white,fontFamily:FONT.body,position:"relative",overflow:"hidden"}}>
-            <img src={imgTactics} alt="" style={{position:"absolute",inset:0,width:"100%",height:"100%",objectFit:"cover",opacity:0.12,pointerEvents:"none"}}/>
-            <div style={{position:"relative"}}>
-            <div style={{fontSize:22,marginBottom:".4rem"}}>📺</div>
-            <div style={{fontWeight:700,fontSize:14,marginBottom:2}}>Study</div>
-            <div style={{fontSize:11,color:C.dimmer}}>Games, drills, Pro Hockey Intel</div>
-            </div>
-          </button>
-          <button onClick={() => onNav("report")} style={{background:C.bgCard,border:`1px solid ${C.border}`,borderRadius:14,padding:"1.1rem",cursor:"pointer",textAlign:"left",color:C.white,fontFamily:FONT.body,position:"relative",overflow:"hidden"}}>
-            <img src={imgDataPanel} alt="" style={{position:"absolute",inset:0,width:"100%",height:"100%",objectFit:"cover",opacity:0.12,pointerEvents:"none"}}/>
-            <div style={{position:"relative"}}>
-            <div style={{fontSize:22,marginBottom:".4rem"}}>📋</div>
-            <div style={{fontWeight:700,fontSize:14,marginBottom:2}}>Report</div>
-            <div style={{fontSize:11,color:C.dimmer}}>Development arc</div>
-            </div>
-          </button>
-          <button onClick={() => onNav("training")} style={{background:`linear-gradient(135deg,rgba(91,164,232,.14),rgba(91,164,232,.03))`,border:`1px solid rgba(91,164,232,.35)`,borderRadius:14,padding:"1.1rem",cursor:"pointer",textAlign:"left",color:C.white,fontFamily:FONT.body,position:"relative",overflow:"hidden",gridColumn:"1 / span 2"}}>
-            <div style={{display:"flex",alignItems:"center",gap:".7rem"}}>
-              <div style={{fontSize:28,flexShrink:0}}>💪</div>
-              <div style={{flex:1,minWidth:0}}>
-                <div style={{fontWeight:700,fontSize:14,marginBottom:2}}>Off-Ice Training</div>
-                <div style={{fontSize:11,color:C.blue}}>Log practice, skills, pucks — fuels your journey</div>
-              </div>
-              <span style={{color:C.blue,fontSize:16,flexShrink:0}}>→</span>
-            </div>
-          </button>
-        </div>
-
-        {/* Game Sense Profile button */}
-        <button onClick={() => onNav("gamesense")} style={{width:"100%",display:"block",textAlign:"left",background:`linear-gradient(135deg,rgba(201,162,75,.12),rgba(201,162,75,.04))`,border:`1px solid ${C.purpleBorder}`,borderRadius:14,padding:"1rem 1.1rem",cursor:"pointer",color:C.white,fontFamily:FONT.body,marginBottom:"1rem",position:"relative",overflow:"hidden"}}>
-          <img src={imgProfile} alt="" style={{position:"absolute",inset:0,width:"100%",height:"100%",objectFit:"cover",opacity:0.08,pointerEvents:"none"}}/>
-          <div style={{position:"relative"}}>
-            <div style={{display:"flex",alignItems:"center",gap:".6rem"}}>
-              <span style={{fontSize:20}}>📊</span>
-              <div>
-                <div style={{fontSize:10,letterSpacing:".14em",textTransform:"uppercase",color:C.purple,fontWeight:800}}>Game Sense Profile</div>
-                <div style={{fontSize:12,color:C.dim,marginTop:1}}>Spider chart · Competencies · Trend</div>
-              </div>
-            </div>
-          </div>
-        </button>
-
-        <button onClick={() => onNav("cogym")} style={{width:"100%",display:"block",textAlign:"left",background:`linear-gradient(135deg,rgba(91,164,232,.14),rgba(91,164,232,.03))`,border:`1px solid rgba(91,164,232,.35)`,borderRadius:14,padding:"1rem 1.1rem",cursor:"pointer",color:C.white,fontFamily:FONT.body,marginBottom:"1rem",position:"relative",overflow:"hidden"}}>
-          <div style={{display:"flex",alignItems:"center",gap:".6rem"}}>
-            <span style={{fontSize:20}}>🧠</span>
-            <div>
-              <div style={{fontSize:10,letterSpacing:".14em",textTransform:"uppercase",color:"#5ba4e8",fontWeight:800}}>Brain Gym</div>
-              <div style={{fontSize:12,color:C.dim,marginTop:1}}>Anticipation · Awareness · Reaction</div>
-            </div>
-          </div>
-        </button>
-
-        {["U11","U13"].includes(String(player?.level||"").trim().split(/[\s/]/)[0]) && (
-        <button onClick={() => onNav("readplay")} style={{width:"100%",display:"block",textAlign:"left",background:`linear-gradient(135deg,rgba(122,215,143,.14),rgba(122,215,143,.03))`,border:`1px solid rgba(122,215,143,.35)`,borderRadius:14,padding:"1rem 1.1rem",cursor:"pointer",color:C.white,fontFamily:FONT.body,marginBottom:"1rem",position:"relative",overflow:"hidden"}}>
-          <div style={{display:"flex",alignItems:"center",gap:".6rem"}}>
-            <span style={{fontSize:20}}>🏒</span>
-            <div>
-              <div style={{fontSize:10,letterSpacing:".14em",textTransform:"uppercase",color:"#7ad78f",fontWeight:800}}>Read the Play</div>
-              <div style={{fontSize:12,color:C.dim,marginTop:1}}>Watch it develop · Make the read</div>
-            </div>
-          </div>
-        </button>
-        )}
-
-        {/* Locked Game Sense hero drops here so early-game players see
-            action tiles first and the progress gauge as follow-up context. */}
-        {!iqUnlocked && iqHero}
 
         {/* Weekly Challenge — compact entry for PRO+ users; FREE users see it in the Pro upgrade button below */}
         {weeklyAllowed && (
@@ -8806,13 +8657,14 @@ export default function App() {
           users, leaving no way back to landing. */}
       {demoMode && (
         <div style={{position:"sticky",top:0,background:profile?.__dev ? C.bgElevated : C.purple,color:profile?.__dev ? C.dim : C.bg,padding:".4rem 1rem",fontSize:11,fontWeight:600,textAlign:"center",zIndex:200,display:"flex",alignItems:"center",justifyContent:"center",gap:".75rem",borderBottom:profile?.__dev ? `1px solid ${C.border}` : "none"}}>
-          {profile?.__dev ? `🛠️ Dev bypass · ${tier}` : profile?.__preview ? "👀 Preview — nothing you do is saved." : "🎮 Demo mode — data won't be saved."}
+          {profile?.__dev ? `🛠️ Dev bypass · ${tier}` : profile?.__preview ? "👀 Sample player · practice stays on this device." : "🎮 Demo player · practice stays on this device."}
           <button onClick={exitDemo} style={{background:profile?.__dev ? C.bgCard : C.white,color:profile?.__dev ? C.gold : C.bg,border:profile?.__dev ? `1px solid ${C.goldBorder}` : "none",borderRadius:6,padding:"3px 10px",fontWeight:800,fontSize:11,cursor:"pointer",fontFamily:FONT.body}}>← Back to landing</button>
         </div>
       )}
 
       <div style={{paddingBottom: screen==="quiz"||screen==="results" ? 0 : 80}}>
         {screen === "home"    && <Home player={tierLimitedPlayer(player, tier)} onNav={(s)=>{ if (s && typeof s === "object" && s.__leak) { setPathFocus({ cat: s.__leak }); setScreen("quiz"); } else setScreen(s); }} demoMode={demoMode} subscriptionTier={tier} questFlagsBump={questFlagsBump} onPromptUpgrade={promptUpgrade} onBumpQuestFlags={bumpQuestFlags} onSaveProgress={() => triggerSignup("save_progress")} onFirstLine={() => setFirstLineToast(true)} onSignup={() => triggerSignup("quest_cta")}/>}
+        {screen?.kind === "player-learning" && <Suspense fallback={<LazyFallback/>}><PracticeArena key={`${player.id}:${screen.search}`} player={player} initialSearch={screen.search} onBack={()=>setScreen("home")}/></Suspense>}
         {screen === "quiz"    && (demoMode && !profile?.__dev && (()=>{ try { return localStorage.getItem("rinkreads_demo_quiz_taken") === "1"; } catch { return false; } })()
           ? <DemoQuizCapScreen onBack={()=>setScreen("home")} onSignUp={exitDemo}/>
           : tier === "FREE" && !demoMode && isAtFreeQuizCap()

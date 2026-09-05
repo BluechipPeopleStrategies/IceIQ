@@ -52,7 +52,7 @@ test('content gate rejects extra strands and contradictory goal ownership', () =
   for (const pattern of [/24 lessons/, /unknown strand/, /net context/, /goalie team/]) assert.match(errors, pattern);
 });
 
-test('first miss stays recorded, later mastery earns once, review misses never erase earned points', () => {
+test('retries preserve the first result but never award instant mastery or points', () => {
   const question = questions[0];
   const initial = {};
   let progress = recordCurriculumAnswer(initial, question.id, false);
@@ -60,8 +60,14 @@ test('first miss stays recorded, later mastery earns once, review misses never e
   progress = recordCurriculumAnswer(progress, question.id, true);
   progress = recordCurriculumAnswer(progress, question.id, false);
   assert.deepEqual(initial, {});
-  assert.deepEqual(progress[question.id], { attempted: true, firstCorrect: false, mastered: true });
-  assert.deepEqual(curriculumStats(progress, [question]), { attempted: 1, mastered: 1, points: 100, total: 1 });
+  assert.deepEqual(progress[question.id], { attempted: true, firstCorrect: false, mastered: false, lastCorrect: false });
+  assert.deepEqual(curriculumStats(progress, [question]), { attempted: 1, mastered: 0, points: 0, total: 1 });
+});
+
+test('new attempts preserve an actual legacy award without upgrading new records', () => {
+  const legacy = { old: { attempted: true, firstCorrect: false, mastered: true } };
+  assert.equal(recordCurriculumAnswer(legacy, 'old', false).old.mastered, true);
+  assert.equal(recordCurriculumAnswer(legacy, 'new', true).new.mastered, false);
 });
 
 test('storage loader drops malformed and unknown records rather than trusting saved points', () => {

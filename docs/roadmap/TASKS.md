@@ -1,6 +1,6 @@
 # RinkReads — Task List
 
-**Last updated:** 2026-09-05, 16:42 Edmonton · **Approved practice UI and calibration are live:** pushed 292e395 and f1f4306 after explicit owner approval. GitHub main matches f1f4306 and Vercel reports successful deployment. The live 390 px rim question moves W, shows conditional feedback and preserves the answer after reload; curriculum JSON matches the approved artifact exactly. Six worlds and the seven-stop U13 Rush Arena journey load. Human-coach approval and unrelated player/goals/coach/engine WIP remain separate. See [deployment evidence](../one-on-one/2026-09-05-approved-calibration-deployment.md).
+**Last updated:** 2026-09-05, 17:09 Edmonton · **Player Home and sustained practice ready locally:** the six-world glass Home connects to eligible library evidence within the player session. 33 focused tests, production build, phone/desktop inspection, reload and production-bundle identity checks pass. Old records remain separate; experimental/draft questions earn no mastery credit. See [verification](../one-on-one/2026-09-05-player-home-verification.md). The approved calibration deployment remains live at f1f4306; this new release is not yet published.
 
 **Scope:** RinkReads **app build + content factory**. Launch/distribution (sending the beta, marketing) and the separate BlueChip business are **out of scope** — parked at the bottom. Priority = position in this list. A new idea that isn't here goes to the **Parking Lot** first, then gets promoted on purpose — that's the scope-creep guard.
 
@@ -56,6 +56,8 @@
 - *(New ideas land here first, then get promoted into NEXT/LATER on purpose.)*
 
 ## Changelog
+
+- **2026-09-05 — Player Home and sustained practice integration.** Implemented the approved six-world Home plan with player-scoped in-app learning, a direct library entry and separate dated mastery evidence. Preserved history, rejected expanded experimental IDs, stopped instant draft/library mastery awards and protected unreadable evidence from overwrite. 33 tests/build pass; 390/1440 layouts and production-bundle answer-to-Home flow verified. [Evidence](../one-on-one/2026-09-05-player-home-verification.md).
 
 - **2026-09-05, 16:42 Edmonton — approved push and live verification:** published only the two approved commits, 292e395 and f1f4306. Fresh 34-test check and isolated build pass; GitHub confirms the exact main hash and Vercel reports success. Public mobile rim placement/feedback/reload and worlds checks pass with no observed overflow or runtime errors. Curriculum JSON is byte-identical to the approved artifact. Local documentation receipt: `docs/one-on-one/2026-09-05-approved-calibration-deployment.md`.
 
