@@ -2,13 +2,26 @@
 September 5, 2026 · Shared phone preview and local production-build checks
 
 ## Automated checks
-- `npm run test:practice`: 208 passing tests, zero failures, including public asset packaging, changed-cue reflections, branch-specific routes, age isolation, WebGL lifecycle, scoped coach controls and buffered coordinate editing.
+- `npm run test:practice`: 225 passing tests, zero failures, including Coach Lab route compilation and tap cancellation, public asset packaging, changed-cue reflections, branch-specific routes, age isolation, WebGL lifecycle, scoped coach controls and buffered coordinate editing.
 - `npm run test:scenario-engine`: passed every existing component suite, including physics, canonical frames, compiled playback, factory state/promotion/recall and parameter-space generation.
 - `npm run build`: passed. Existing large-chunk and mixed static/dynamic import warnings remain.
 - `git diff --check`: no whitespace errors; Windows line-ending notices only.
 - Judge tests use mocked provider responses. The real local status endpoint returns `configured: false`; no real model call or provider charge occurred.
 
 ## Actual browser coverage
+
+### Coach Lab player routes, September 5
+
+Seventeen new tests cover route timing/immutability, exact sampled Start, rounded boards, minimum intervals, possession, frozen/goalie rules and native pointer cancellation. Existing director and U9/U11 reflection tests remain green. The production build passes with the existing import/chunk warnings.
+
+Browser checks at 320/390/1280 px covered captured nonzero Start, numeric negative coordinates, both 3D cameras, SVG board, normal-motion preview/pause, reduced-motion endpoint inspection, Apply, Cancel, Undo and invalidation of Undo after another edit. Whole-rink centre mapped to (0,0); broadcast centre mapped to (20,0), matching each camera's look-at point. Native touch input added board and 3D positions; a vertical canvas touch scroll moved the page without changing the point list. Controls outside the pending editor were disabled. Preview and rink both fit the 390 px viewport after explicit inspection.
+
+Cancel exported byte-identical original JSON. Apply retained all other actor keys and puck ownership, replaced only the selected actor's remaining motion, and held a 6-second finish through 8 seconds. Applying from 2 seconds preserved the sampled anchor and earlier key. Animate play changed the player's sampled coordinates. Undo restored exact previous JSON; an intervening title edit removed Undo. Frozen players were blocked, an unfrozen goalie preview worked, and the final 7.95-to-8-second interval was accepted after fixing floating-point launch comparison.
+
+The fresh production preview at 5185 accepted a touch waypoint and numeric waypoint, then Apply/Save/Export. Full reload and Reopen produced byte-identical JSON; the endpoint still held at 8 seconds. No page exceptions, failed requests or horizontal document overflow occurred in these checked flows. Independent review corrected preview visibility, inaccurate facing copy and the minimum-time launch guard. Evidence: `evidence/coach-route-phone.png`, `evidence/coach-route-desktop.png`. This is browser-generated touch/viewport evidence, not physical-device, skating-physics or coaching-validity certification. Live publication is recorded separately in `phone-preview.md`.
+
+### Earlier integrated checks
+
 | Surface | Verified action/result |
 | --- | --- |
 | U11 three reads | Pass → shoot-open → reposition → explanation → completion; Carry → keep outside → reposition; first-choice replay preserves answers; completed reflection survives reload. Missing action/reason/move stays in a local message. |

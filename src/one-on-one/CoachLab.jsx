@@ -6,8 +6,10 @@ import { createTeamGame, stepTeamGame } from './teamSimulation.js';
 import { feetPointToRinkFrame } from '../scenario-engine/rinkFrame.js';
 import { handleCoachPlayKeyDown, releaseCoachPlayInput, resumeCoachPlay } from './coachPlayInput.js';
 import RinkCoordinateInput from './RinkCoordinateInput.jsx';
+import CoachRouteEditor from './CoachRouteEditor.jsx';
 
 function assertDraft(draft){const check=validateDraft(draft);if(!check.ok)throw new Error(check.errs.join('; '));return draft;}
+function hasRouteTime(time,duration){return duration-time+Number.EPSILON*Math.max(1,time,duration)*4>=.05;}
 export function draftFromPlay(play) {
   if(play.space?.units!=='rink-200x85') throw new Error('This source needs a coordinate adapter before it can be edited.');
   const node=play.nodes[play.start];
@@ -29,11 +31,32 @@ export default function CoachLab({sourcePlay,initialDraft,onDraftChange,onCreate
   const playSurface=useRef(null),playHelpId=useId();
   const [time,setTime]=useState(0),[frame,setFrame]=useState(frameRef.current),[selected,setSelected]=useState(draft.actors[0].id);
   const [camera,setCamera]=useState('full'),[running,setRunning]=useState(false),[live,setLive]=useState(false),[notice,setNotice]=useState(''),[speed,setSpeed]=useState(1),[saved,setSaved]=useState([]);
+  const [routeEditor,setRouteEditor]=useState(null),[routeUndo,setRouteUndo]=useState(null);
+  const routeButton=useRef(null);
   const runRef=useRef(false),liveRef=useRef(false),speedRef=useRef(1),cameraRef=useRef('full'),keys=useRef(new Set()),action=useRef(null),stick=useRef({x:0,y:0});
   const stop=useCallback(()=>{runRef.current=false;setRunning(false);releaseCoachPlayInput({keys,action,stick});},[]);
   function show(t,next=draftRef.current){timeRef.current=t;setTime(t);const f=sampleDraft(next,t);frameRef.current=f;setFrame(f);}
-  function edit(fn){stop();liveRef.current=false;setLive(false);try{const next=fn(draftRef.current);assertDraft(next);draftRef.current=next;setDraft(next);onDraftChange?.(next);show(timeRef.current,next);setNotice('');}catch(e){setNotice(e.message)}}
-  function replace(next){stop();assertDraft(next);draftRef.current=next;setDraft(next);onDraftChange?.(next);liveRef.current=false;setLive(false);setSelected(next.actors[0].id);show(0,next);}
+  function edit(fn){stop();liveRef.current=false;setLive(false);try{const next=fn(draftRef.current);assertDraft(next);draftRef.current=next;setDraft(next);onDraftChange?.(next);show(timeRef.current,next);setRouteUndo(null);setNotice('');return next;}catch(e){setNotice(e.message);return null;}}
+  function replace(next){stop();assertDraft(next);draftRef.current=next;setDraft(next);onDraftChange?.(next);liveRef.current=false;setLive(false);setRouteEditor(null);setRouteUndo(null);setSelected(next.actors[0].id);show(0,next);}
+  function focusRouteButton(){requestAnimationFrame(()=>routeButton.current?.focus({preventScroll:true}));}
+  function beginRoute(){
+    const current=draftRef.current,chosen=current.actors.find(item=>item.id===selected),startTime=timeRef.current;
+    if(liveRef.current||!chosen||chosen.frozen||!hasRouteTime(startTime,current.duration))return;
+    stop();show(startTime,current);setNotice('');setRouteEditor({draft:current,actorId:selected,startTime});
+  }
+  function cancelRoute(){setRouteEditor(null);focusRouteButton();}
+  function applyRoute(plan){
+    if(!routeEditor||draftRef.current!==routeEditor.draft||selected!==routeEditor.actorId||timeRef.current!==routeEditor.startTime||liveRef.current)throw new Error('The play changed while planning. Cancel and start the route from the current moment.');
+    assertDraft(plan.draft);
+    const before=draftRef.current,next=edit(()=>plan.draft);
+    if(!next)throw new Error('The route could not be applied. Your draft has not been replaced.');
+    setRouteUndo({before,after:next,startTime:routeEditor.startTime});setRouteEditor(null);show(routeEditor.startTime,next);
+    setNotice(`${plan.actorLabel}'s route applied. Press Animate play to follow the movement.`);focusRouteButton();
+  }
+  function undoRoute(){
+    if(!routeUndo||draftRef.current!==routeUndo.after){setRouteUndo(null);return;}
+    const previous=routeUndo;if(edit(()=>previous.before)){show(previous.startTime,previous.before);setNotice('Route undone. The previous movement is restored.');focusRouteButton();}
+  }
   useEffect(()=>{
     let id,last=0,acc=0,painted=0;
     function tick(now){id=requestAnimationFrame(tick);const dt=last?Math.min(.1,(now-last)/1000):0;last=now;if(!runRef.current){acc=0;return;}
@@ -57,22 +80,29 @@ export default function CoachLab({sourcePlay,initialDraft,onDraftChange,onCreate
     <div className="pf-section-title"><div><p className="oo-eyebrow">COACH LAB / BUILD THE MOMENT</p><h1>Your ice.<br/><em>Your possibilities.</em></h1></div><div className="pf-director-intro">Add the players. Set the space.<br/>Move through time and make the play.</div></div>
     <div className="pf-director-layout"><div className="pf-director-rink">
       <div className="oo-rink-toolbar"><span>{live?(running?'LIVE PRACTICE':frame.outcome?'PRACTICE FINISHED':'PRACTICE PAUSED'):running?'PLAYING YOUR TIMELINE':'DIRECTOR / PAUSED'}</span><span>{draft.actors.filter(a=>a.role!=='goalie'&&a.team==='home').length} v {draft.actors.filter(a=>a.role!=='goalie'&&a.team==='away').length}<b>{time.toFixed(1)}s</b></span></div>
+      {routeEditor?<CoachRouteEditor {...routeEditor} onApply={applyRoute} onCancel={cancelRoute}/>:<>
       <div ref={playSurface} className="pf-director-canvas" tabIndex={0} role="group" aria-label="Coach practice rink" aria-describedby={playHelpId} onKeyDown={event=>handleCoachPlayKeyDown(event,{running:runRef.current,live:liveRef.current,input:{keys,action,stick},stop})} onBlur={()=>releaseCoachPlayInput({keys,action,stick})} onPointerDownCapture={event=>{if(liveRef.current&&event.target.tagName==='CANVAS')playSurface.current?.focus({preventScroll:true});}}><PracticeScene frameRef={frameRef} axesRef={axesRef} roster={draft.actors} camera={camera} selectedActor={live?frame.selectedId:selected} onSelect={setSelected} onPlace={!running&&!live?place:undefined}/><div className="oo-camera-controls"><button onClick={()=>{const c=camera==='full'?'broadcast':'full';setCamera(c);cameraRef.current=c}}>{camera==='full'?'Rink camera':'Whole rink'}</button></div><div id={playHelpId} className="pf-rink-caption">{live?(running?'Tap or focus rink: arrows/WASD move · Space shoots · P passes · Tab switches · Esc pauses.':frame.outcome?'Finished · Tab moves between controls. Restart practice to play again.':'Paused · Tab moves between controls. Resume practice to use the rink keys.'):`Drag a player, or choose one and tap the ice. Editing at ${time.toFixed(1)}s.`}</div>{live&&<div className="pf-live-pad"><div>{[['↑',0,1],['←',-1,0],['↓',0,-1],['→',1,0]].map(([label,x,y])=><button key={label} aria-label={`Skate ${label}`} onPointerDown={e=>{e.preventDefault();e.currentTarget.setPointerCapture(e.pointerId);stick.current={x,y}}} onPointerUp={()=>stick.current={x:0,y:0}} onPointerCancel={()=>stick.current={x:0,y:0}} onLostPointerCapture={()=>stick.current={x:0,y:0}}>{label}</button>)}</div><button onClick={()=>action.current='pass'}>Pass</button><button onClick={()=>action.current='shoot'}>Shoot</button><button onClick={()=>action.current='switch'}>Change player</button></div>}</div>
       <div className="oo-transport"><button className="oo-play-button" onClick={running?stop:live?(frame.outcome?playLive:resumeLive):playTimeline}>{running?'Ⅱ Pause':live?(frame.outcome?'↻ Restart practice':'▶ Resume practice'):'▶ Animate play'}</button><div className="oo-timeline"><label htmlFor="pf-director-time">PLAY TIMELINE <span>{time.toFixed(1)} / {draft.duration}s</span></label><input id="pf-director-time" type="range" min="0" max={draft.duration} step=".05" value={Math.min(time,draft.duration)} onChange={e=>{stop();liveRef.current=false;setLive(false);show(Number(e.target.value))}}/></div><select aria-label="Animation speed" value={speed} onChange={e=>{const s=Number(e.target.value);setSpeed(s);speedRef.current=s}}><option value=".25">¼ speed</option><option value=".5">½ speed</option><option value="1">1× speed</option></select><button aria-label="Rewind coach play" onClick={()=>{stop();liveRef.current=false;setLive(false);show(0)}}>↺</button></div>
       <div className="pf-director-help"><b>1</b> Set starting positions at 0s. <b>2</b> Move the timeline forward. <b>3</b> Drag players to their next positions. Press Animate play.</div>
+      <div className="pf-route-launch"><button ref={routeButton} type="button" className="oo-secondary" disabled={live||actor?.frozen||!actor||!hasRouteTime(time,draft.duration)} onClick={beginRoute}>Plan player route</button>{routeUndo&&<button type="button" onClick={undoRoute}>Undo route</button>}<p>{live?'Rewind the coach play to plan movement.':actor?.frozen?'Unfreeze the selected player to plan a route.':!hasRouteTime(time,draft.duration)?'Move the timeline earlier to leave room for a route.':`Plan ${actor?.label || 'this player'}'s next positions from the current moment.`}</p></div>
+      </>}
+      <fieldset className="pf-authoring-lock" disabled={Boolean(routeEditor)}>
       {frame.outcome&&<p className="pf-earned" role="status">{String(frame.outcome).toUpperCase()} · Reset the practice or edit the setup and try another read.</p>}
       <div className="pf-draft-strip"><input aria-label="Play title" value={draft.title} onChange={e=>edit(d=>({...d,title:e.target.value}))}/><button onClick={save}>Save draft</button>{onCreateQuestion&&<button onClick={()=>{stop();onCreateQuestion(draft)}}>Ask about these starting positions</button>}<button onClick={()=>{try{downloadDraft(draft);setNotice('Draft exported.')}catch(e){setNotice(e.message)}}}>Export</button><label className="pf-import">Import<input type="file" accept="application/json,.json" onChange={importFile}/></label></div>
       {draft.sourceRef&&<p className="pf-source-id">Based on {draft.sourceRef.id}. Positions copied from the source opening; timing and edits are an unvalidated exploration. The original question is unchanged.</p>}
       {!!saved.length&&<label className="pf-saved">REOPEN A SAVED PLAY<select aria-label="Reopen a saved play" value="" onChange={e=>{try{replace(saved.find(s=>String(s.id)===e.target.value).draft);setNotice('Saved draft reopened.')}catch(err){setNotice(err.message)}}}><option value="">Choose a saved draft…</option>{saved.map(s=><option key={s.id} value={s.id}>{s.draft.title} · {new Date(s.id).toLocaleTimeString()}</option>)}</select></label>}
+      </fieldset>
       {notice&&<p className="oo-notice" role="status">{notice}</p>}
     </div><aside className="pf-roster-panel">
+      <fieldset className="pf-authoring-lock" disabled={Boolean(routeEditor)}>
       <p className="oo-eyebrow">START WITH A TEMPLATE</p><div className="pf-templates">{[1,2,3,4,5].map(n=><button key={n} onClick={()=>replace(createDraft(n,n))}>{n}v{n}</button>)}</div>
       <div className="pf-add-row"><button onClick={()=>edit(d=>addActor(d,'home'))}>+ Teammate</button><button onClick={()=>edit(d=>addActor(d,'away'))}>+ Opponent</button></div>
       <div className="pf-add-row"><button onClick={()=>edit(d=>addActor(d,'home','goalie'))}>+ Home goalie</button><button onClick={()=>edit(d=>addActor(d,'away','goalie'))}>+ Away goalie</button></div>
       <div className="pf-roster">{draft.actors.map(a=><button key={a.id} aria-pressed={a.id===selected} className={`${a.team} ${a.id===selected?'selected':''}`} onClick={()=>setSelected(a.id)}><b>{a.label}</b><span>{a.team==='home'?'Teammate':'Opponent'}<small>{a.role==='goalie'?'Goalie':`${a.keys.length} position keys`}</small></span>{a.frozen&&<em>Frozen</em>}</button>)}</div>
       {actor&&pose&&<div className="pf-player-controls"><div className="pf-player-heading"><strong>{actor.label} · Player controls</strong><button aria-label="Remove selected player" onClick={()=>{try{const next=removeActor(draftRef.current,selected);replace(next)}catch(e){setNotice(e.message)}}}>Remove</button></div><button className={actor.frozen?'oo-primary':'oo-secondary'} onClick={()=>edit(d=>setFrozen(d,selected,!actor.frozen,timeRef.current))}>{actor.frozen?'❄ Frozen — unfreeze player':'Freeze this player'}</button><div className="pf-coordinates"><label>LENGTH (m)<RinkCoordinateInput aria-label="Player length position" onFocus={stop} step=".25" resetKey={`${selected}:${time}`} value={Number(pose.x.toFixed(2))} onCommit={x=>place({x,y:pose.y},selected)}/></label><label>WIDTH (m)<RinkCoordinateInput aria-label="Player width position" onFocus={stop} step=".25" resetKey={`${selected}:${time}`} value={Number(pose.y.toFixed(2))} onCommit={y=>place({x:pose.x,y},selected)}/></label></div><label>FACING · {Math.round(pose.facing*180/Math.PI)}°<input aria-label="Player facing" type="range" min="-180" max="180" value={pose.facing*180/Math.PI} onChange={e=>edit(d=>{let n=actor.frozen?setFrozen(d,selected,false,timeRef.current):d;n=putKey(n,selected,timeRef.current,{x:pose.x,y:pose.y,facing:Number(e.target.value)*Math.PI/180});return actor.frozen?setFrozen(n,selected,true,timeRef.current):n})}/></label><p className="oo-eyebrow">POSITION KEYS</p><div className="pf-keys">{actor.keys.map(k=><button key={k.time} onClick={()=>{stop();liveRef.current=false;setLive(false);show(k.time)}}>{k.time.toFixed(1)}s</button>)}</div><button className="oo-secondary" onClick={()=>{stop();liveRef.current=false;setLive(false);show(Math.min(draft.duration,timeRef.current+2))}}>Next movement beat +2s</button></div>}
       <label className="pf-puck-owner">GIVE THE PUCK TO<select aria-label="Puck carrier" value={draft.puck.owner||''} onChange={e=>edit(d=>({...d,puck:{...d.puck,owner:e.target.value||null}}))}><option value="">Loose puck</option>{draft.actors.filter(a=>a.role!=='goalie').map(a=><option key={a.id} value={a.id}>{a.label} · {a.team}</option>)}</select></label>
-      <button className="oo-primary" onClick={playLive}>Play this setup →</button><p className="pf-small">Live practice uses prototype support and opponent movement. Freeze locks still apply.</p>
+      <button className="oo-primary" onClick={playLive}>Play this setup →</button><p className="pf-small">Animate play follows your planned movement. Play this setup starts at 0s and uses live prototype support and opponent movement. Freeze locks still apply.</p>
+      </fieldset>
     </aside></div>
   </section>;
 }

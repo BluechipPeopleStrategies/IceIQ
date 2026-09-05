@@ -1,8 +1,12 @@
 # RinkReads overnight checkpoint
 
-Updated September 5, 2026, 03:17 Edmonton. Actual-branch recall deployed in `8a2a5e9` and verified live on the phone-sized HTTPS site. Prior releases remain live. Target: 7:00 a.m. Edmonton today (13:00 UTC).
+Updated September 5, 2026, 03:55 Edmonton. Coach Lab player routes are locally verified and ready for the scoped release. Prior releases remain live. Target: 7:00 a.m. Edmonton today (13:00 UTC).
 
 ## Continue from here
+
+**Newest slice: Coach Lab player-route authoring.** Root integrated `CoachRouteEditor`, agent helper `directorRoutes` and 3D/SVG native tap surfaces. Pending points remain separate, Apply replaces selected actor keys from sampled Start onward and holds endpoint; Cancel/Undo preserve exact previous JSON, later edits invalidate Undo. 225 practice tests and build pass. Local browser proof includes 3D full/broadcast (centres map 0,0 and20,0), SVG actual touch, canvas scroll with no added point, negative numeric points, normal/reduced preview with visible rink, captured nonzero Start, locked external controls, exact Apply/Cancel/Undo, frozen/goalie and final .05 interval, Animate movement and Save/Export/Reload on production preview5185. No page exceptions/failed requests/overflow. Independent review corrected preview placement, facing-copy accuracy and floating minimum guard. Root owns release: finish scoped commit/push, await Vercel success, verify live phone Apply/Save/Reload, then record it. Do not redo this implementation. Plan and source uses: `coach-skating-routes.md`; local proof: `verification.md`.
+
+Next work remains within the original source-led teaching scope: other age sequences, richer prediction/read variants, route-to-question integration and timed pass transfer need bounded follow-ups. AI is still unconfigured; no paid calls/assets. Production rigs remain unbuilt. The existing every-30-minute heartbeat remains active until 7am; Thomas's status check was answered while this slice continued.
 
 **Recall publication complete: `8a2a5e9`.** Vercel succeeded. The public review shows 208 tests. An older saved U9 Carry/pass play opened recall; actual touch input corrected its order, a note saved and reopened byte-identical, and Show the order remained recorded after immediate reload. Original U9/U11 reflection JSON stayed byte-identical. No failed requests, page errors or overflow in the checked live flows. Production normal-motion tablet verification also passed. Evidence: `phone-preview.md` and `evidence/recall-live-phone.png`. This supersedes the publication-next wording in the local record below. Commit/push this verification record if it is still modified; do not repeat the implementation or checks.
 

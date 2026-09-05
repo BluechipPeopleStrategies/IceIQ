@@ -1,8 +1,10 @@
 import { Component, memo, useEffect, useMemo, useRef } from 'react';
 import { Canvas, useFrame, useThree } from '@react-three/fiber';
+import { Line } from '@react-three/drei';
 import * as THREE from 'three';
 import Skater from './Skater.jsx';
 import { RINK, GOAL_X, makeIceTexture, roundedRinkShape } from './rinkMaterials.js';
+import { isCoachRoutePoint, listenForCoachRouteTaps, worldPointToCoachRoute } from './coachRouteSurfaceInput.js';
 
 class SceneBoundary extends Component {
   state = { failed: false };
@@ -115,9 +117,46 @@ function Guides({ frameRef, visible }) {
   </group>;
 }
 
-function Content({ frameRef, camera, onPlace, selectedActor, showGuides, roster, onSelect, axesRef }) {
+function RouteTapInput({ onPoint }) {
+  const { gl, camera } = useThree();
+  const callback = useRef(onPoint);
+  callback.current = onPoint;
+  useEffect(() => {
+    const canvas = gl.domElement;
+    const raycaster = new THREE.Raycaster();
+    const ice = new THREE.Plane(new THREE.Vector3(0, 1, 0), 0);
+    const hit = new THREE.Vector3();
+    return listenForCoachRouteTaps(canvas, event => {
+      const rect = canvas.getBoundingClientRect();
+      if (!rect.width || !rect.height || event.clientX < rect.left || event.clientX > rect.right || event.clientY < rect.top || event.clientY > rect.bottom) return;
+      const pointer = new THREE.Vector2((event.clientX - rect.left) / rect.width * 2 - 1, 1 - (event.clientY - rect.top) / rect.height * 2);
+      camera.updateMatrixWorld();
+      raycaster.setFromCamera(pointer, camera);
+      if (!raycaster.ray.intersectPlane(ice, hit)) return;
+      const point = worldPointToCoachRoute(hit);
+      if (point) callback.current(point);
+    });
+  }, [gl, camera]);
+  return null;
+}
+
+function RouteOverlay({ points }) {
+  const validPoints = useMemo(() => (points || []).filter(isCoachRoutePoint), [points]);
+  const linePoints = useMemo(() => validPoints.map(point => [point.y, .06, -point.x]), [validPoints]);
+  return <group>
+    {/* Drei Line disposes its line geometry and material when points change or it unmounts. */}
+    {linePoints.length > 1 && <Line points={linePoints} color="#153a50" lineWidth={3} />}
+    {validPoints.map((point, index) => <mesh key={index} rotation={[-Math.PI / 2, 0, 0]} position={[point.y, .075, -point.x]}>
+      <ringGeometry args={index === 0 ? [.38, .52, 24] : [.2, .38, 24]} /><meshBasicMaterial color={index === 0 ? '#153a50' : '#886714'} side={THREE.DoubleSide} />
+    </mesh>)}
+  </group>;
+}
+
+function Content({ frameRef, camera, onPlace, selectedActor, showGuides, roster, onSelect, axesRef, routePoints, onRoutePoint }) {
   const state = frameRef.current;
   const dragging = useRef(null);
+  const routing = typeof onRoutePoint === 'function';
+  useEffect(() => { dragging.current = null; }, [routing]);
   function pointerDown(e) {
     e.stopPropagation();
     const point={x:-e.point.z,y:e.point.x};
@@ -137,12 +176,14 @@ function Content({ frameRef, camera, onPlace, selectedActor, showGuides, roster,
     <Skater frameRef={frameRef} actorKey="goalie" colour="#0B1A33" number="1" goalie /></>}
     {roster&&<group rotation={[0,Math.PI,0]}><Goal/></group>}
     <Puck frameRef={frameRef} />{!roster&&<Guides frameRef={frameRef} visible={showGuides} />}
-    {onPlace && <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, .015, 0]} onPointerDown={pointerDown} onPointerMove={e=>{if(dragging.current){e.stopPropagation();onPlace({x:-e.point.z,y:e.point.x},dragging.current);}}} onPointerUp={release} onPointerCancel={release}><planeGeometry args={[RINK.widthM, RINK.lengthM]} /><meshBasicMaterial transparent opacity={0} depthWrite={false} /></mesh>}
+    {routePoints && <RouteOverlay points={routePoints} />}
+    {routing && <RouteTapInput onPoint={onRoutePoint} />}
+    {onPlace && !routing && <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, .015, 0]} onPointerDown={pointerDown} onPointerMove={e=>{if(dragging.current){e.stopPropagation();onPlace({x:-e.point.z,y:e.point.x},dragging.current);}}} onPointerUp={release} onPointerCancel={release}><planeGeometry args={[RINK.widthM, RINK.lengthM]} /><meshBasicMaterial transparent opacity={0} depthWrite={false} /></mesh>}
   </>;
 }
 
 function PracticeScene(props) {
-  return <SceneBoundary><Canvas aria-label="Interactive one-on-one hockey practice rink" shadows={{ type: THREE.PCFShadowMap }} dpr={[1, 1.5]} camera={{ position: [12, 16, -1], fov: 46, near: .1, far: 160 }} gl={{ antialias: true, powerPreference: 'high-performance', alpha: false }} fallback={<div className="oo-render-error">This browser cannot display the 3D rink. <a href="#">Back to RinkReads</a></div>}>
+  return <SceneBoundary><Canvas aria-label="Interactive one-on-one hockey practice rink" style={typeof props.onRoutePoint === 'function' ? { touchAction: 'pan-y' } : undefined} shadows={{ type: THREE.PCFShadowMap }} dpr={[1, 1.5]} camera={{ position: [12, 16, -1], fov: 46, near: .1, far: 160 }} gl={{ antialias: true, powerPreference: 'high-performance', alpha: false }} fallback={<div className="oo-render-error">This browser cannot display the 3D rink. <a href="#">Back to RinkReads</a></div>}>
     <Content {...props} />
   </Canvas></SceneBoundary>;
 }

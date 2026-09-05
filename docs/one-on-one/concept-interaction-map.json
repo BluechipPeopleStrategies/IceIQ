@@ -14,7 +14,7 @@
   "boundaries": {
     "sourcePrinciple": "Source notes define principles and evidence boundaries; they do not silently define coordinates, paths, timing or certified answers for new boards.",
     "authoredBoard": "Ready-made examples are coach-review drafts with authored static positions in canonical metres.",
-    "movement": "Every ready-made draft has duration 8 and exactly one key at time 0 per actor. Future automatic movement needs explicit authored keys or an existing validated play.",
+    "movement": "Every ready-made draft has duration 8 and exactly one key at time 0 per actor. Coach Lab player-route authoring is implemented and locally browser verified; publication pending; applied points become explicit director keys. Source prose never supplies automatic movement.",
     "assessment": "Learner positions, actions and reasons are compared with a coach reference without score, pass/fail or transfer claims.",
     "promotion": "Examples are not approved claims or promoted curriculum."
   },
@@ -47,8 +47,8 @@
     {
       "id": "draw-route-pass",
       "sequenceRole": "author the future path from the current state",
-      "current": "director keyframes and U9/U11 final support-route planning; broader coach route/pass drawing remains planned",
-      "preserve": "never derive paths from prose"
+      "current": "U9/U11 final support-route planning plus locally implemented Coach Lab player routes using 3D whole-rink/broadcast, SVG board or numeric points; Coach Lab locally browser verified; publication pending; timed pass transfers remain unbuilt",
+      "preserve": "never derive paths from prose; connected-read routes freeze other actors and puck, while Coach Lab preview follows their existing director keys and unchanged puck ownership"
     },
     {
       "id": "select-receiver-puck-target",
@@ -231,7 +231,7 @@
           "six Guided Curriculum lessons including a U7 prerequisite"
         ],
         "planned": [
-          "draw an explicit reoffer route after a completed pass"
+        "author a source-specific reoffer sequence and timed pass transfer"
         ]
       },
       "evidence": {
@@ -940,6 +940,79 @@
       }
     }
   ],
+  "coachPlayerRoutes": {
+    "status": "locally-browser-verified-publication-pending",
+    "documentation": "docs/one-on-one/coach-skating-routes.md",
+    "helper": "src/one-on-one/directorRoutes.js#createDirectorRoutePlan",
+    "entry": "Coach Lab: Plan player route from an unfrozen selected player at the captured director time, outside live practice",
+    "coordinates": "canonical rink metres; exact sampled Start plus 1-12 explicit destination points",
+    "views": [
+      "3D whole-rink camera",
+      "3D broadcast camera",
+      "SVG rink board",
+      "numeric Add route point with incomplete and non-finite value rejection"
+    ],
+    "pendingControls": [
+      "Undo last point",
+      "Clear points",
+      "Return to Start",
+      "finish time",
+      "facing mode",
+      "preview, pause and progress inspection",
+      "reduced-motion manual inspection",
+      "Cancel route",
+      "Apply player route"
+    ],
+    "apply": "clone the draft, preserve the selected player's keys before Start, add the exact sampled Start anchor, replace every key at or after Start, and hold the endpoint through the draft end",
+    "preserve": "earlier position and facing interpolation, other actors' keys, puck ownership and source metadata",
+    "timing": "at least 0.05 seconds inside draft duration; segment time proportional to segment length; duplicate adjacent points and near-colliding key times rejected",
+    "facing": {
+      "defaultKeep": "hold the sampled absolute facing direction",
+      "optionalTravel": "destination keys use incoming segment bearing; the director interpolates turning between keys rather than tracking the puck"
+    },
+    "preview": "selected player follows the planned keys, other players follow their own existing keys, and the puck follows its unchanged current carrier",
+    "undo": "one-step Undo route restores the prior draft while the applied draft remains current; another edit clears the undo",
+    "persistence": "pending points are local to the editor; Apply updates the working draft; existing Save draft and Export retain ordinary rinkreads-director-draft-v1 keys",
+    "playbackBoundary": "Animate play follows director keys; live practice starts from the initial setup and uses its own movement",
+    "teachingUses": [
+      {
+        "note": "docs/library/off-puck-support-offense.md",
+        "use": "discuss open ice and a usable passing line from the carrier",
+        "authoredCue": "carrier, defender and available space; the approximate normalized lane reminder is not a metre threshold or route score"
+      },
+      {
+        "note": "docs/library/forecheck-pressure.md",
+        "use": "discuss pressure direction and visible middle or reverse outlets",
+        "authoredCue": "pressure angle and any carrier turn-back must be explicitly authored; no inferred response or pass"
+      },
+      {
+        "note": "docs/library/backcheck-recovery.md",
+        "use": "discuss an inside recovery route and the support threat it addresses",
+        "authoredCue": "inside support threat and the teammate already covering the carrier"
+      },
+      {
+        "note": "docs/library/backcheck-recovery-defender-gets-beat.md",
+        "use": "discuss becoming the next inside defender after responsibility changes",
+        "authoredCue": "the first defender's loss of the carrier is explicitly visible, not generated by the route"
+      },
+      {
+        "note": "docs/library/defensive-angling.md",
+        "use": "compare a planned inside approach with the visible middle lane",
+        "authoredCue": "carrier threat; facing interpolation is not a skating demonstration"
+      },
+      {
+        "note": "docs/library/dz-breakout-retrieval-under-pressure.md",
+        "use": "plan carry direction away from visible forecheck commitment",
+        "authoredCue": "committed pressure side and net-side cue; no inferred reverse pass or successful escape"
+      }
+    ],
+    "sourceBoundary": "teaching uses are not new completed lessons; source notes supply discussion principles, never route coordinates or timing; ready-made question snapshots remain static",
+    "unbuilt": [
+      "timed puck ownership transfers and pass-path authoring in the route editor",
+      "automatic opponent reactions"
+    ],
+    "assessmentBoundary": "no route score, AI route judgment, validated skating mechanics, collision-success result or on-ice transfer claim"
+  },
   "readyMadeCoverage": {
     "file": "src/one-on-one/coach-question-examples.json",
     "total": 12,
