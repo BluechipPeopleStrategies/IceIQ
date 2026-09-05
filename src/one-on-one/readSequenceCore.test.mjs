@@ -443,7 +443,7 @@ test('scenario catalog lookup preserves default U11 scope and separates U9 devic
   assert.equal(typeof sequenceCore.getReadSequenceDefinition, 'function');
   assert.equal(typeof sequenceCore.getReadSequenceStorageKey, 'function');
   assert.strictEqual(sequenceCore.getReadSequenceDefinition(), U11_READ_SEQUENCE);
-  assert.deepEqual(sequenceCore.READ_SEQUENCE_CATALOG.map(item => item.ageBand), ['U9', 'U11']);
+  assert.deepEqual(sequenceCore.READ_SEQUENCE_CATALOG.map(item => item.ageBand), ['U9', 'U11', 'U13']);
   const u9 = sequenceCore.READ_SEQUENCE_CATALOG[0];
   assert.strictEqual(sequenceCore.getReadSequenceDefinition(u9.id), sequenceCore.U9_READ_SEQUENCE);
   assert.equal(createReadSequenceSession().scenarioId, U11_READ_SEQUENCE.id);

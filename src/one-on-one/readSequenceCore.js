@@ -1,11 +1,12 @@
 import { DRAFT_VERSION, validateDraft } from './director.js';
 import { U11_READ_SEQUENCE, CHANGED_CUE_ID, CHANGED_CUE_STATE } from './readSequenceU11.js';
 import { U9_READ_SEQUENCE } from './readSequenceU9.js';
+import { U13_READ_SEQUENCE } from './readSequenceU13.js';
 
-export { U11_READ_SEQUENCE, U9_READ_SEQUENCE };
+export { U11_READ_SEQUENCE, U9_READ_SEQUENCE, U13_READ_SEQUENCE };
 export const READ_ACTIONS = Object.freeze(['shoot', 'pass', 'carry']);
 export const MAX_THIRD_ROUTE_POINTS = 12;
-export const READ_SEQUENCE_CATALOG = Object.freeze([U9_READ_SEQUENCE, U11_READ_SEQUENCE]);
+export const READ_SEQUENCE_CATALOG = Object.freeze([U9_READ_SEQUENCE, U11_READ_SEQUENCE, U13_READ_SEQUENCE]);
 const HALF_LENGTH = 30.48;
 const HALF_WIDTH = 12.954;
 const CORNER_RADIUS = 8.5344;

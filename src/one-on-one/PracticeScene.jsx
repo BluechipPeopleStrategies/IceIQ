@@ -188,4 +188,5 @@ function PracticeScene(props) {
   </Canvas></SceneBoundary>;
 }
 
+export { Ice, Arena, Puck };
 export default memo(PracticeScene);

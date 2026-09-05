@@ -5,6 +5,7 @@ import {
   serializeReadSequence,
   U9_READ_SEQUENCE,
   U11_READ_SEQUENCE,
+  U13_READ_SEQUENCE,
 } from './readSequenceCore.js';
 
 const MOMENTS = ['opening', 'after-first', 'after-second'];
@@ -12,6 +13,36 @@ const MOMENTS = ['opening', 'after-first', 'after-second'];
 // Recall describes these specific authored events; teaching prompts may reveal
 // a card's place in the lesson or ask for a new action, so they are not reused.
 const RECALL_COPY = {
+  [U13_READ_SEQUENCE.id]: {
+    shoot: {
+      caption: 'Shot leaves the puck loose',
+      description: 'The puck is loose short of the goalie. F2 is across the ice from YOU.',
+      targets: {
+        'inside-support': {
+          caption: 'F2 moves inside',
+          description: 'F2 is closer to the middle. The puck is still loose short of the goalie.',
+        },
+        'wide-support': {
+          caption: 'F2 stays wide',
+          description: 'F2 is across the ice in wider space. The puck is still loose short of the goalie.',
+        },
+      },
+    },
+    carry: {
+      caption: 'You carry outside',
+      description: 'You have the puck outside. D1 is nearer the shot line, and F2 is farther forward.',
+      targets: {
+        'pass-f2': {
+          caption: 'Pass to F2',
+          description: 'F2 has the puck across the ice. You are outside without it.',
+        },
+        'outside-space': {
+          caption: 'You carry farther outside',
+          description: 'You have the puck in wider ice. F2 is across the ice without it.',
+        },
+      },
+    },
+  },
   [U9_READ_SEQUENCE.id]: {
     pass: {
       caption: 'Your teammate has the puck',

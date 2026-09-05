@@ -1,8 +1,10 @@
 # U13 connected reads: Read the lane switch
 
-**Status:** Proposal / coach-review draft. Not implemented, age-validated, tactically graded or published as a lesson.
+**Status:** Implemented local coach-review draft under the owner's overnight age-expansion direction; the new version is not yet verified as deployed. Production-preview save, reload, recall and download checks are complete for the U13 implementation before the new 3D presentation. The 3D presentation is under release review. Not age-validated, tactically graded or admitted to the curriculum.
 
-**Drafted:** 2026-09-05. This is a candidate for the next connected-read slice after the current U11 copy work. Reconcile the teaching tradeoff below before implementation. This document does not change the curriculum ledger, runtime, saved sessions or public preview.
+**Drafted:** 2026-09-05. Implementation decision: use option 1 below, a clearly described worked Shoot/Carry comparison with four complete paths. Carry teaches a changed lane; Shoot continues with loose-puck support. Completion records reflection, not mastery of a shared objective. Preserve the existing U9/U11 definitions, saved outputs and U11 optional judging/comparison. No change to curriculum admission or the ledger.
+
+The local implementation contains a U13 scenario definition and recall captions in the existing connected-read catalog, age-aware presentation, phone age-picker wrapping and disabled unsupported review controls. Geometry, branch and persistence tests are passing, and all four paths have completed in the production-preview browser at a 390 px phone viewport. The verification record below separates the completed pre-3D checks from the later presentation update and physical-device review. Root owns UI/browser integration, a data agent owns scenario/core/recall, and an independent reviewer checks source and state claims. No new physics, AI connection or production character system is introduced.
 
 ## Teaching purpose
 
@@ -14,7 +16,7 @@ The goalkeeper's movement is an observable change in position. The lesson must n
 
 ## Sources and what they support
 
-| Repository source | Use in this proposal | Boundary |
+| Repository source | Use in this draft | Boundary |
 |---|---|---|
 | [Odd-Man Reads](../library/odd-man-reads.md) | Read defender commitment; its U13 calibration connects defender commitment and goalie movement as one sequence. | The specific cross-ice pass answer in that note applies to its own authored scene. Do not transfer its answer to an opening where D1 occupies the pass lane. |
 | [2-on-1: Pass Lane Removed](../library/two-on-one-pass-lane-removed.md) | A 2-on-1 does not automatically require a pass. When D1 removes that lane, consider the open shot lane or attack space. | It does not guarantee that a shot scores or that a carry forces a particular defender response. |
@@ -26,9 +28,9 @@ These repository notes support the teaching concepts. All coordinates, transitio
 
 ## Worked comparison and contract tradeoff
 
-Offer **Shoot / Carry** as a transparent worked comparison. Suggested introduction:
+Offer **Shoot / Carry** as a transparent worked comparison. The implemented introduction is always visible, including at the phone viewport:
 
-> In this example, compare shooting now with carrying the puck. Watch what changes after your choice, then plan how the other attacker can help.
+> This worked example compares Shoot and Carry. Carry shows a lane change; Shoot leads to loose-puck support. Watch your chosen play, then explain how the other attacker could help.
 
 This deliberately limits the offered first choices; it is not an exhaustive list of hockey actions. The opening pass is visibly occupied by D1. Do not add a successful straight pass through that defender just to retain three action buttons. If a future version requires Pass as a third opening action, it needs an independently authored and reviewed consequence rather than automatic arrival at F2.
 
@@ -36,19 +38,19 @@ The **Carry branch carries the lane-switch objective**. Its next freeze supports
 
 The **Shoot branch becomes loose-puck support**. Its second read is about where F2 should support, followed by a plan for F1. It does not provide the same second shot/pass decision as Carry. No goalie save, rebound or pickup is assumed.
 
-If the curriculum requirement is that every completed attempt demonstrates the defender-and-goalie lane-switch read, the full three-read contract weakens that objective on Shoot. Before implementation, choose one of these truthful treatments:
+If the curriculum requirement is that every completed attempt demonstrates the defender-and-goalie lane-switch read, the full three-read contract weakens that objective on Shoot. Implementation selected option 1 from the following treatments; the alternatives remain here as the design decision record:
 
 1. Keep both complete branches, explicitly describing this as a worked Shoot/Carry comparison with different follow-up reads. Record completion as participation/reflection, not proof that every learner met the lane-switch objective.
 2. Present Carry as a worked continuation after the opening discussion, so everyone observes the lane switch. This changes the current action-dependent consequence contract and must be labelled as a separate example rather than pretending the learner chose Carry.
 3. Let Shoot finish earlier with discussion. This changes the current fixed three-read completion contract.
 
-The proposed states below support option 1. The other options are alternatives, not implied implementation decisions. A fabricated rebound, guaranteed recovery or unrelated return pass would conceal the tradeoff rather than solve it.
+The authored states below implement option 1. Options 2 and 3 remain unimplemented alternatives. A fabricated rebound, guaranteed recovery or unrelated return pass would conceal the tradeoff rather than solve it.
 
-## Proposed state geometry
+## Authored state geometry
 
 Use the canonical rink frame in metres, attacking toward positive x. F1 is labelled `YOU`; F2, D1 and G may retain their U13 labels. F1 owns the opening puck. All actors remain inside the attacking zone.
 
-For these candidate freezes, F1 and F2 face 0 radians; D1 and G face pi radians. This simple facing is illustrative. Review visible stick positions and goalie presentation in the actual renderer before accepting it. Derive an owned puck using the shared state helper, not the carrier's centre. An unowned puck uses the explicit loose position below.
+For these freezes, F1 and F2 face 0 radians and D1 faces pi radians. Implementation review found that a fixed goalie facing pi looked away from the actual puck; G now faces the helper-derived puck at each authored freeze. Interpolated facing is illustrative, not a measured set stance, tracking or recovery state. Owned puck positions use the shared state helper, not the carrier's centre. An unowned puck uses the explicit loose position below. Independent geometry review and the browser checks below cover this local marker presentation; they do not establish a validated player or goalie model.
 
 | State ID | F1 / YOU (x, y) | F2 (x, y) | D1 (x, y) | G (x, y) | Puck |
 |---|---|---|---|---|---|
@@ -60,7 +62,7 @@ For these candidate freezes, F1 and F2 face 0 radians; D1 and G face pi radians.
 | `shoot-inside-support` | (19, 4.6) | (22, -1) | (20, 0.4) | (25, 2) | Unowned at (23.2, 3.2) |
 | `shoot-wide-support` | (19, 4.6) | (20, -5) | (20, 0.4) | (25, 2) | Unowned at (23.2, 3.2) |
 
-All other state attributes should use the existing shared actor/state contracts. These state IDs are design labels, not registered runtime IDs. No transition duration has been validated. Do not derive a claim about skating speed, puck speed, defender reach or goalie recovery from the interpolation duration.
+All other state attributes use the existing shared actor/state contracts. The shared interpolation adds a small lateral curve to unowned-puck transitions, including transitions whose loose-puck endpoints match. Therefore describe the puck as remaining loose, not staying motionless; do not change existing U9/U11 interpolation in this slice. The table names identify the authored freezes within the registered scenario; runtime selects the opening, branch state or target state through the existing session contract. No transition duration has been validated as a physical measurement. Do not derive a claim about skating speed, puck speed, defender reach or goalie recovery from the interpolation duration.
 
 ## Read 1: action and reason
 
@@ -98,7 +100,7 @@ The source-supported observation is that D1 now occupies the route toward net ce
 
 **Prompt:** "The puck is still loose. Which space should F2 support?"
 
-**Optional cue:** "Look at the loose puck, F1 and D1 before choosing a space."
+**Optional cue:** "Look at the loose puck, your position and D1 before choosing a space."
 
 | Target ID | Label / kind | Target coordinate | Resulting state | Authored outcome |
 |---|---|---|---|---|
@@ -122,18 +124,18 @@ Use the existing free placement / optional route interaction. The route must sta
 
 For possession branches, discuss usable support space, a passing line and separation. For loose-puck branches, discuss the player's plan and relationship to the visible players without treating the carrier-based support rule as a recovery grade. A coordinate or a route is evidence of the learner's intended plan, not proof of a sound read. Do not require matching one authored ideal point.
 
-## Runtime boundaries to reconcile before implementation
+## Implemented runtime contract and retained boundaries
 
-- A proposed identifier is `u13-lane-switch-three-reads-v1`; it is not registered. Use an explicit U13 age band and its own storage scope. Do not reuse the legacy U11 key or reinterpret existing U9/U11 saves.
+- `u13-lane-switch-three-reads-v1` is registered locally with an explicit U13 age band and separate storage scope. It does not reuse the legacy U11 key or reinterpret existing U9/U11 saves.
 - Keep the original action/reason, target, support point/route and support reason immutable once completed. Replays must show the actual selected branch.
 - Existing per-scenario action lists can express the worked Shoot/Carry comparison. Preserve normal Carry possession and Shoot's unowned puck semantics.
 - The first branch and each target must supply its own consequence, prompt, target list and final off-puck actor. Do not let generic copy call a loose-puck situation a completed pass or possession support.
 - Keep prompts neutral. Observed movement may inform a decision; unknown opponent intent cannot support a prediction answer.
-- Preserve the current U11-only changed-cue and final-position AI boundaries unless separately designed. This proposal adds no AI call, key, automatic tactical grade, XP, timer or guaranteed outcome.
-- Existing optional recall should reconstruct the selected three authored freezes if this proposal is integrated. It must not substitute the Carry lane-switch sequence for a learner who chose Shoot.
-- Preserve pause/replay, reduced-motion inspection, readable phone prompts, coordinate input and route controls. This design has not been physically tested on a phone or iPad.
+- The current U11-only changed-cue and final-position AI boundaries remain unchanged. U13 adds no AI call, key, automatic tactical grade, XP, timer or guaranteed outcome.
+- Optional recall reconstructs the selected three authored freezes with U13-specific captions. Tests verify that it does not substitute the Carry lane-switch sequence for a learner who chose Shoot. Production-preview completion, reload, recall and download checks passed before the 3D presentation update.
+- Preserve pause/replay, reduced-motion inspection, readable phone prompts, coordinate input and route controls. Browser checks at a 390 px phone viewport are recorded below; physical phone or iPad testing has not been established by these checks.
 
-## Checks performed while drafting and remaining review
+## Historical checks performed while drafting
 
 Read-only Node checks used `createSequenceState` and the current shared puck offset. The seven candidate freezes were accepted by the existing geometry validator. That establishes accepted state shape and rink bounds, not physics or tactical validity.
 
@@ -141,4 +143,19 @@ Read-only Node checks used `createSequenceState` and the current shared puck off
 - After Carry, D1 is approximately 2.57 m from the puck-to-F2 segment and 0.37 m from the segment to net centre. These illustrate the intended change in lane coverage; they are not certified reach thresholds.
 - Sampling the current Carry-to-pass puck interpolation at 1,001 evenly spaced progress values gave approximately 2.26 m minimum separation between puck and D1's centre. This includes the shared owned-puck offset and the current interpolation's small lateral arc. It is a visual geometry check, not an interception or reaction-time test.
 
-No browser review, physical-device test, new runtime test or implementation was performed for this proposal. Before implementation, reconcile the Shoot/Carry objective tradeoff, review the exact animation and framing, and decide whether the lesson remains an ungraded worked comparison. If implemented, verify all four paths, actual puck/stick geometry, route origins/endpoints, age separation, save/reload, recall and unchanged U9/U11 behavior. A passing build or geometry check must not be described as age or hockey validation.
+Those initial proposal checks were read-only: no browser review, physical-device test, new runtime test or implementation had been performed at that drafting stage. The subsequent local implementation and verification are recorded separately below. The lesson remains an ungraded worked comparison under option 1.
+
+## Completed production-preview verification before 3D — 2026-09-05
+
+- **Automated checks:** Eight new U13 tests pass, covering the actual offset puck's lane geometry, all four state/possession/support-actor paths, rejected opening Pass, route origins, point/route save and restore, replay identity, age-separated storage and recall, and unavailable U13 AI/comparison. The full practice suite passes **233 tests**, and the production build passes. The existing U11 golden fixture remains unchanged; existing U9/U11 behavior and saved-output tests pass.
+- **Independent source and geometry review:** The reviewer checked the exact authored module against the four source notes and curriculum ledger, confirmed all four puck owners and route origins, and verified that G faces the actual offset puck at all seven freezes. Sampling six transitions at 1,001 points each found no puck overlap with the reviewed defender/goalie body or facing markers. Source wording separates Carry possession support from ungraded Shoot loose-puck positioning. These are source and diagram checks, not tactical, collision-physics or age validation.
+- **Four phone-viewport paths:** Root completed Carry → F2, Carry → outside space, Shoot → inside support and Shoot → wider support in the production-preview browser at **390 px** with reduced motion. Each showed the correct puck owner or loose-puck state, correct movable support actor, and no U13 AI or changed-cue controls. No page errors or horizontal overflow were observed.
+- **Playback and keyboard:** Normal-motion Carry paused at **58%** and resumed correctly. Keyboard age selection and focus passed. These are browser checks, not a physical-device performance claim.
+- **Native rink and route controls:** A native touch on F2 reached Carry → F2. A touch route point at approximately **(20, 2)** followed by a numeric point at exactly **(22, 0)** retained the exact implicit origin **(21, 5)**. Route preview paused at **31%**.
+- **Completion and persistence:** The completed reflection and recall were saved and reopened after reload; the saved reflection remained exact, and download checks passed. Both prior U11 records remained unchanged. These completed browser checks supplement the automated save/restore and recall tests.
+
+## Later 3D presentation update — release review
+
+The main connected-read board now has a navy/gold 3D rink and a Tactical board choice; recall and changed-cue comparison retain their flat boards. This is a presentation change over the canonical scenario state. The practice suite now passes **243 tests**, including the scene-frame and camera tests and public review asset checks. Final 3D browser and deployment verification remain part of the release review. Do not describe the pre-3D browser checks above as evidence for untested 3D controls or fallback behavior. The new version's deployment has not yet been verified, and no physical phone/iPad, skating-physics or curriculum-admission validation is claimed.
+
+A passing build, geometry check or completed phone-viewport path must not be described as age or hockey validation.

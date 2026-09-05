@@ -1,10 +1,12 @@
 # RinkReads overnight checkpoint
 
-Updated September 5, 2026, 04:30 Edmonton. Target: **7:00 a.m. Edmonton today (13:00 UTC)**. The existing `rinkreads-overnight-build` heartbeat is active every 30 minutes until the deadline; do not duplicate it.
+Updated September 5, 2026, 05:35 Edmonton. Target: **7:00 a.m. Edmonton today (13:00 UTC)**. The existing `rinkreads-overnight-build` heartbeat is active every 30 minutes until the deadline; do not duplicate it.
 
 ## Continue from here
 
-**Current release complete: `2b5ae75`, U11 player wording and recall labels.** Vercel succeeded and live phone verification finished at 04:30 Edmonton. Three presentation files simplify questions and match buttons/rink labels/speech with current possession and YOU grammar. Canonical U11 definition, seven outcomes, AI payloads, saved reflections and recall JSON remain unchanged. All seven local phone paths, tablet playback, speech, existing saves/downloads passed; live restored the older Shoot reflection/recall and all three old storage values, then completed/reloaded a fresh Pass/return/support explanation exactly. 225 practice tests and build pass. No page exceptions, failed requests or overflow in the fresh live flow. Finish committing this verification record if modified, then choose the next bounded slice. Do not redo this or the completed Coach Lab routes (`106ec3e`).
+**Current local slice: U13 worked comparison and 3D connected-read presentation.** Thomas requested higher-quality scenario visuals. The new lazy scene renders the same canonical actors/puck with procedural navy/gold skaters, goalie, ice/light, readable labels and targets, broadcast desktop and end-zone phone framing. Tactical board remains available; real context loss returns there without losing answers. U13 adds four worked Shoot/Carry paths, separate records and actual-branch recall. All 15 U9/U11/U13 local phone paths, target hit areas, native touch route, no-point page scrolling, pause/frozen pixels, view switching and fallback/save/reload have passed. 243 practice tests and build pass. Final initial-label styling, screenshots, scoped commit/push and live verification are still in progress. See `connected-read-visual-design.md`, `u13-lane-switch-design.md` and `verification.md`. Do not claim deployment yet.
+
+**Last verified live release:** `2b5ae75` U11 wording, verified 04:30 Edmonton; verification HEAD `4262ab2`. Existing U11 canonical fixture and saved outputs remain unchanged. Coach Lab routes (`106ec3e`) are also complete; do not repeat those slices.
 
 Thomas asked whether everything was still getting worked on. Root answered yes and continued this slice. The broader build is still active; no claim that the commercial app, production animation or AI judging is finished.
 
@@ -24,7 +26,7 @@ Thomas asked whether everything was still getting worked on. Root answered yes a
 
 ## Verification and boundaries
 
-**Current:** 225 practice tests, build and scoped diff checks pass. Local route browser checks include actual touch, both 3D cameras, SVG/numeric input, canvas scrolling with no added points, nonzero Start, locked outside controls, preview/pause/reduced motion, Apply/Cancel/Undo exact JSON, frozen/goalie and final .05-second guards, movement, save/export/full reload. Production preview 5185 retains exact saved routes and endpoint hold. No page exceptions, failed requests or document overflow in checked 320/390/1280 px flows. Independent final code audit found no P1/P2 blocker. Evidence: `verification.md` and `evidence/coach-route-phone.png`/`coach-route-desktop.png`.
+**Current:** 243 practice tests pass. Current U13/3D checks and fixes are recorded in `verification.md`; release build and live evidence follow there. The older Coach Lab director checks at its 225-test release included actual touch, both cameras, SVG/numeric input, no-point page scrolling, nonzero Start, preview/pause/reduced motion, Apply/Cancel/Undo exact JSON, frozen/goalie guards, movement and save/export/full reload. Preserve those completed checks without presenting them as new connected-read evidence.
 
 Prior integrated scenario-engine suite passed; current route slice does not modify that engine. Existing chunk/import, clock-deprecation and splash-preload warnings remain. Browser viewport and browser-generated touch evidence is not a physical phone/iPad or child comprehension test.
 
@@ -34,8 +36,8 @@ New content and geometry stay coach-review drafts, not admitted curriculum. The 
 
 ## Next useful bounded work
 
-1. U11 wording publication/live verification is complete. Continue source-led teaching improvements rather than repeating completed slices.
-2. `u13-lane-switch-design.md` is an unimplemented coach-review proposal with explicit geometry and sources. It proposes Shoot/Carry at an opening with D1 in the passing line. Carry produces the lane-switch read; Shoot instead leads to loose-puck support. Preserve that teaching tradeoff instead of manufacturing equivalent outcomes. New scenario/storage identity and bounded implementation/review are required; no U13 AI or changed-cue support is implied.
+1. Finish the current U13/3D slice: final screenshots/build, scoped commit/push, wait for Vercel, verify actual public phone route and preserved saves, then record deployment evidence. Never include the obsolete `read-scene-phone-initial.png` in the release evidence.
+2. U13 is implemented locally. Carry produces the lane-switch read; Shoot instead leads to loose-puck support. Preserve that worked-comparison teaching tradeoff. No U13 AI, changed-cue support, tactical grade or age validation is implied.
 3. Route-to-question integration, timed passes, richer prediction/changed-cue sequences and remaining ages need bounded designs. Live AI, whole-sequence judging, cloud persistence, main-app navigation, physical-device performance, coach/player comprehension, curriculum admission and rigged character motion remain open.
 4. At 7:00 a.m., stop this overnight run and leave a self-contained review with working hosted links, deployed changes, actual checks and material limits. Keep `morning-review.md` and the canonical `docs/roadmap/TASKS.md` current.
 

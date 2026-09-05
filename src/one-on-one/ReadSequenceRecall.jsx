@@ -156,7 +156,7 @@ export default function ReadSequenceRecall({ session, playerId, renderBoard, dra
   }
 
   return <section className="rs-recall" aria-label="Optional play recall">
-    <div className="rs-recall-intro"><div><p className="rs-step">OPTIONAL · REMEMBER THE PLAY</p><h2>{title}</h2><p>Look back at the moments from the play you made.</p></div><span className="rs-recall-pill">{isYoung ? 'U9 · Two pictures to place' : 'U11 · Three moments'}</span></div>
+    <div className="rs-recall-intro"><div><p className="rs-step">OPTIONAL · REMEMBER THE PLAY</p><h2>{title}</h2><p>Look back at the moments from the play you made.</p></div><span className="rs-recall-pill">{recall.ageBand} · {isYoung ? 'Two pictures to place' : 'Three moments'}</span></div>
     <button type="button" aria-expanded={open} aria-controls={contentId} onClick={toggle}>{open ? 'Close play recall' : savedHere ? 'Open my saved recall' : 'Try play recall'}</button>
     {open && <div id={contentId} className="rs-recall-body">
       <div className="rs-recall-task"><h3 ref={heading} tabIndex="-1">{prompt}</h3><p>Use Earlier and Later to change your order. Open any rink picture for a closer look.</p>

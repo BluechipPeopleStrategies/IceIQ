@@ -30,6 +30,7 @@ import { AIReviewPanel } from './CoachQuestionLab.jsx';
 import RoutePlanner from './RoutePlanner.jsx';
 import RinkCoordinateInput from './RinkCoordinateInput.jsx';
 import ReadSequenceRecall from './ReadSequenceRecall.jsx';
+import ReadSequenceBoard from './ReadSequenceBoard.jsx';
 import { U11_PLAYER_COPY } from './readSequencePlayerCopy.js';
 import { getReadSequenceRecallStorageKey } from './readSequenceRecallStorage.js';
 import { speakParts, stopSpeaking, ttsSupported } from '../speak.js';
@@ -137,6 +138,7 @@ function RinkStage({ state, definition = U11_READ_SEQUENCE, description, targets
         {route.slice(1).map((point, index) => <g key={index} transform={`translate(${point.x} ${point.y})`}><circle r=".64" /><text y=".29" textAnchor="middle">{index + 1}</text></g>)}
       </g>}
       {state.actors.map(actor => {
+        const selected = actor.id === moveActorId;
         const movable = actor.id === moveActorId && Boolean(onMove);
         const transform = `translate(${actor.x} ${actor.y}) rotate(${actor.facing * 180 / Math.PI})`;
         return <g key={actor.id} transform={transform} style={{ filter: `url(#${stageId}-shadow)` }} className={`rs-actor ${actor.team} ${actor.role} ${movable ? 'movable' : ''}`}
@@ -146,7 +148,7 @@ function RinkStage({ state, definition = U11_READ_SEQUENCE, description, targets
           {actor.role === 'goalie' ? <path d="M-.72 -.9 H.72 V.9 H-.72 Z" /> : actor.team === 'home' ? <circle r=".78" /> : <path d="M 0 -1 L .86 0 L 0 1 L -.86 0 Z" />}
           <path className="rs-facing" d="M .25 0 H 1.18" />
           <text transform={`rotate(${-actor.facing * 180 / Math.PI})`} y="-1.22" textAnchor="middle">{actor.label}</text>
-          {movable && <circle className="rs-move-ring" r="1.35" />}
+          {selected && <circle className="rs-move-ring" r="1.35" />}
         </g>;
       })}
       {targets.map((target, index) => { const badge = targetBadge(target); return <g key={target.id} className="rs-rink-target" transform={`translate(${target.x} ${target.y})`} role="button" tabIndex="0" aria-label={`Choose ${target.label}`}
@@ -242,6 +244,7 @@ function ChangedCueComparison({ session, onSave }) {
 function ReadSequenceLesson({ playerId, definition, scratch, rememberDraft, recallDraftAccess }) {
   const storageKey = getReadSequenceStorageKey(playerId, definition.id);
   const isU11 = definition.id === U11_READ_SEQUENCE.id;
+  const isYoung = definition.ageBand === 'U9';
   const copy = isU11 ? U11_PLAYER_COPY : definition.ui || {};
   const firstPrompt = copy.firstPrompt || definition.firstPrompt;
   const actions = definition.actions || READ_ACTIONS;
@@ -251,6 +254,7 @@ function ReadSequenceLesson({ playerId, definition, scratch, rememberDraft, reca
   const [firstReason, setFirstReason] = useState(() => scratch?.firstReason ?? session.first?.reason ?? '');
   const [thirdReason, setThirdReason] = useState(() => scratch?.thirdReason ?? session.third?.reason ?? '');
   const [paused, setPaused] = useState(false);
+  const [boardView, setBoardView] = useState('3d');
   const [notice, setNotice] = useState(() => session.phase === 'complete' ? 'Your saved three-read reflection is open.' : '');
   const [reducedMotion, setReducedMotion] = useState(false);
   const [routeMode, setRouteMode] = useState(scratch?.routeMode ?? Boolean(session.third?.route));
@@ -269,9 +273,9 @@ function ReadSequenceLesson({ playerId, definition, scratch, rememberDraft, reca
   const canonicalReadTwo = session.first ? getReadTwoPrompt(session) : null;
   const branchCopy = copy.branches?.[session.first?.action];
   const readTwo = canonicalReadTwo && { ...canonicalReadTwo, prompt: branchCopy?.prompt || canonicalReadTwo.prompt, cue: branchCopy?.cue || canonicalReadTwo.cue };
-  const displayTargets = session.availableSecondTargets.map(target => ({ ...target, label: branchCopy?.targets[target.id]?.label || target.label }));
+  const displayTargets = session.availableSecondTargets.map(target => ({ ...target, label: branchCopy?.targets?.[target.id]?.label || target.label }));
   const selectedTarget = getSelectedSecondTarget(session);
-  const selectedText = selectedTarget && { label: branchCopy?.targets[selectedTarget.id]?.label || selectedTarget.label, summary: branchCopy?.targets[selectedTarget.id]?.summary || selectedTarget.summary };
+  const selectedText = selectedTarget && { label: branchCopy?.targets?.[selectedTarget.id]?.label || selectedTarget.label, summary: branchCopy?.targets?.[selectedTarget.id]?.summary || selectedTarget.summary };
   const finalJudgePayload = useMemo(() => isU11 && session.phase === 'complete' && !session.third?.route ? createFinalReadJudgePayload(session) : null, [session, isU11]);
 
   useEffect(() => {
@@ -296,7 +300,7 @@ function ReadSequenceLesson({ playerId, definition, scratch, rememberDraft, reca
       const heading = toBoard ? boardHeading.current : phaseHeading.current;
       if (!panel) return;
       const top = panel.getBoundingClientRect().top;
-      const end = toBoard ? panel.querySelector('.rs-stage-wrap') : heading;
+      const end = toBoard ? panel.querySelector('.rs-visual-board, .rs-stage-wrap') : heading;
       const bottom = end?.getBoundingClientRect().bottom ?? top;
       const visibleHeight = window.visualViewport?.height || window.innerHeight;
       if (top < 8 || bottom > visibleHeight - 8) {
@@ -460,9 +464,9 @@ function ReadSequenceLesson({ playerId, definition, scratch, rememberDraft, reca
   const consequenceText = branchCopy?.consequence || branch?.consequence;
   const actionNoun = session.first?.action === 'shoot' ? 'shot' : branch?.actionLabel?.toLowerCase() || 'choice';
   const movingActor = session.third ? state.actors.find(actor => actor.id === session.third.actorId) : null;
-  const movingLabel = isU11 ? movingActor?.label : movingActor?.name;
-  const routeLabel = isU11 ? movingLabel : 'the highlighted player';
-  const thirdPrompt = isU11
+  const movingLabel = isYoung ? movingActor?.name : movingActor?.label || movingActor?.name;
+  const routeLabel = isYoung ? 'the highlighted player' : movingLabel;
+  const thirdPrompt = !isYoung
     ? routeMode ? `${movingLabel === 'YOU' ? 'Plan your path.' : `Plan a path for ${movingLabel}.`} What space do you want to use?` : `${movingLabel === 'YOU' ? 'Where would you move to help?' : `Where should ${movingLabel} move to help?`} Show your idea and explain it.`
     : routeMode ? 'Plan a path for the highlighted player. How will it help?' : 'Move the highlighted player to help the player with the puck.';
   const thirdCue = copy.thirdCue || `The puck is ${state.puck.owner ? `with ${state.actors.find(actor => actor.id === state.puck.owner)?.label || state.puck.owner}` : 'still loose'}. Look at D1 and the space around the puck.`;
@@ -473,7 +477,7 @@ function ReadSequenceLesson({ playerId, definition, scratch, rememberDraft, reca
       ? [readTwo.prompt, readTwo.cue, ...displayTargets.map((target, index) => `${index + 1}. ${target.label}`)]
       : session.phase === 'read-3' ? [thirdPrompt, thirdCue, 'Why does this help?'] : null;
   const boardCopy = session.phase === 'read-1'
-    ? { step: 'READ 1 · LOOK, THEN CHOOSE', prompt: firstPrompt, cue: isU11 ? 'Notice the defender, teammate and goalie before you choose.' : 'Find your teammate, the defender and the space between them.' }
+    ? { step: 'READ 1 · LOOK, THEN CHOOSE', prompt: firstPrompt, cue: copy.openingBoardCue || (isYoung ? 'Find your teammate, the defender and the space between them.' : 'Notice the defender, teammate and goalie before you choose.') }
     : session.phase === 'read-2'
       ? { step: 'READ 2 · LOOK AGAIN', prompt: readTwo.prompt, cue: readTwo.cue }
       : session.phase === 'read-3'
@@ -482,21 +486,28 @@ function ReadSequenceLesson({ playerId, definition, scratch, rememberDraft, reca
           ? { step: 'WATCH YOUR NEXT CHOICE', prompt: selectedText.label, cue: selectedText.summary }
           : { step: session.phase === 'replay-1' ? 'REPLAY YOUR FIRST CHOICE' : 'WATCH YOUR CHOICE', prompt: `Your ${actionNoun} changes the play.`, cue: consequenceText };
 
+  const boardProps = {
+    state, definition,
+    targets: session.phase === 'read-2' ? displayTargets : [],
+    onTarget: session.phase === 'read-2' ? chooseTarget : undefined,
+    moveActorId: session.phase === 'read-3' ? session.third.actorId : null,
+    onMove: session.phase === 'read-3' && !routeMode ? moveActor : undefined,
+    route,
+    onRoutePoint: session.phase === 'read-3' && routeMode ? point => { try { addRoutePoint(point); } catch (error) { setNotice(error.message); } } : undefined,
+  };
+  const visualPlaying = (activePlayback && !paused && !reducedMotion) || (routePlaying && !reducedMotion);
+  const visualTime = activePlayback ? session.playbackProgress * (session.phase === 'consequence-2' ? 1.25 : 1.75) : (routeProgress || 0) * 3.2;
+
   return <section className="rs-lesson" aria-label={`${definition.ageBand} connected read sequence`} data-player-scope={playerId ? 'player' : 'local'}>
     <header className="rs-hero"><div><p className="rs-kicker">{definition.ageBand} · {copy.kicker || 'ODD-MAN READS'} · COACH-REVIEW DRAFT</p><h1>Three reads.<br /><em>{copy.heroAccent || 'One shifting 2-on-1.'}</em></h1><p>{copy.intro || 'Choose from what you see. Watch your choice change the play. Then read the ice again.'}</p></div><div className="rs-hero-note"><b>Short and untimed</b><span>{copy.note || 'Your explanation matters more than matching one drawing.'}</span></div></header>
     <Progress session={session} labels={copy.progressLabels} />
     <div className="rs-workspace">
       <div ref={boardPanel} className="rs-board-panel">
-        {session.phase !== 'complete' && <div className="rs-board-prompt"><p className="rs-step">{boardCopy.step}</p><h2 ref={boardHeading} tabIndex="-1">{boardCopy.prompt}</h2><p className="rs-board-cue">{boardCopy.cue}</p><ReadAloudControls parts={spokenParts} rate={isU11 ? .95 : .88} /></div>}
+        {session.phase !== 'complete' && <div className="rs-board-prompt"><p className="rs-step">{boardCopy.step}</p><h2 ref={boardHeading} tabIndex="-1">{boardCopy.prompt}</h2><p className="rs-board-cue">{boardCopy.cue}</p><ReadAloudControls parts={spokenParts} rate={isYoung ? .88 : .95} /></div>}
         {session.phase === 'read-3' && <div className="rs-move-modes" role="group" aria-label="How to show your support"><button type="button" aria-pressed={!routeMode} onClick={() => changeMoveMode(false)}>Move player</button><button type="button" aria-pressed={routeMode} onClick={() => changeMoveMode(true)}>Plan route</button></div>}
-        <RinkStage state={state} definition={definition}
-          showReadLanes={isU11 && session.phase === 'read-1'}
-          targets={session.phase === 'read-2' ? displayTargets : []}
-          onTarget={session.phase === 'read-2' ? chooseTarget : undefined}
-          moveActorId={session.phase === 'read-3' && !routeMode ? session.third.actorId : null}
-          onMove={session.phase === 'read-3' && !routeMode ? moveActor : undefined}
-          route={route}
-          onRoutePoint={session.phase === 'read-3' && routeMode ? point => { try { addRoutePoint(point); } catch (error) { setNotice(error.message); } } : undefined} />
+        <ReadSequenceBoard {...boardProps} view={boardView} onViewChange={setBoardView}
+          playing={visualPlaying} time={visualTime} supportPoint={session.third?.point || null}
+          fallbackBoard={<RinkStage {...boardProps} showReadLanes={isU11 && session.phase === 'read-1'} />} />
         {((session.phase === 'read-3' && routeMode) || (session.phase === 'complete' && route)) && <RoutePlanner key={`${storageKey}:${session.phase}`} route={route} origin={selectedTarget?.state.actors.find(actor => actor.id === session.third.actorId)} actorLabel={routeLabel} onChange={updateRoute} onAddPoint={addRoutePoint} progress={routeProgress} playing={routePlaying} reducedMotion={reducedMotion} onPreview={previewRoute} onPause={() => setRoutePlaying(false)} onProgress={progress => { setRoutePlaying(false); setRouteProgress(progress); }} readOnly={session.phase === 'complete'} />}
         <div className="rs-playback-bar">
           <span>{activePlayback ? `${branch?.actionLabel || 'Selected'} consequence · ${Math.round(session.playbackProgress * 100)}%` : session.phase === 'read-1' ? 'Freeze · read 1' : session.phase === 'read-2' ? 'Freeze · read 2' : session.phase === 'read-3' ? 'Freeze · read 3' : 'Sequence reflection'}</span>
@@ -507,13 +518,13 @@ function ReadSequenceLesson({ playerId, definition, scratch, rememberDraft, reca
       </div>
 
       <aside ref={readPanel} className={`rs-read-panel ${session.phase === 'complete' ? 'rs-complete-panel' : ''}`} data-phase={session.phase}>
-        <ReadAloudControls parts={spokenParts} rate={isU11 ? .95 : .88} />
+        <ReadAloudControls parts={spokenParts} rate={isYoung ? .88 : .95} />
         {session.phase === 'read-1' && <>
-          <p className="rs-step">READ 1 · {isU11 ? 'IDENTIFY THE CUE' : 'LOOK, THEN CHOOSE'}</p><h2 ref={phaseHeading} tabIndex="-1">{firstPrompt}</h2>
-          <div className="rs-cue-card"><b>{isU11 ? 'Look at the ice' : 'Find your team'}</b><ul>{(copy.firstCues || ['D1 partly shades the shot route but does not erase every option.', 'F2 is open enough to consider, but slightly flat.', 'The goalie starts nearer the middle while the puck begins off-centre.']).map(cue => <li key={cue}>{cue}</li>)}</ul></div>
+          <p className="rs-step">READ 1 · {isYoung ? 'LOOK, THEN CHOOSE' : 'IDENTIFY THE CUE'}</p><h2 ref={phaseHeading} tabIndex="-1">{firstPrompt}</h2>
+          <div className="rs-cue-card"><b>{isYoung ? 'Find your team' : 'Look at the ice'}</b><ul>{(copy.firstCues || ['D1 partly shades the shot route but does not erase every option.', 'F2 is open enough to consider, but slightly flat.', 'The goalie starts nearer the middle while the puck begins off-centre.']).map(cue => <li key={cue}>{cue}</li>)}</ul></div>
           <fieldset className="rs-actions"><legend>What would you do?</legend>{actions.map(action => <button type="button" key={action} aria-pressed={chosenAction === action} onClick={() => setChosenAction(action)}><b>{actionCopy[action].label}</b><span>{actionCopy[action].detail}</span></button>)}</fieldset>
-          <label className="rs-reason">{firstReasonLabel}<textarea rows={isU11 ? 4 : 2} maxLength="600" value={firstReason} onChange={event => setFirstReason(event.target.value)} placeholder={copy.firstReasonPlaceholder || 'Name the defender, lane, support or goalie cue that shaped your choice.'} /><small>{firstReason.length}/600</small></label>
-          {!isU11 && <p className="rs-hint">A few words are enough. You can say your reason to a coach and have them type it.</p>}
+          <label className="rs-reason">{firstReasonLabel}<textarea rows={isYoung ? 2 : 4} maxLength="600" value={firstReason} onChange={event => setFirstReason(event.target.value)} placeholder={copy.firstReasonPlaceholder || 'Name the defender, lane, support or goalie cue that shaped your choice.'} /><small>{firstReason.length}/600</small></label>
+          {isYoung && <p className="rs-hint">A few words are enough. You can say your reason to a coach and have them type it.</p>}
           <button type="button" className="rs-primary" onClick={submitReadOne}>Play my choice →</button>
           <details className="rs-rubric"><summary>For the coach</summary><p>{copy.firstDiscussion || 'The shot route is only partly covered and F2’s alignment is not perfect. Timing and the reason can make different actions defensible. A pass just because it is a 2-on-1, or a shot treated as a guaranteed goal, misses the read.'}</p></details>
         </>}
@@ -521,7 +532,7 @@ function ReadSequenceLesson({ playerId, definition, scratch, rememberDraft, reca
         {(session.phase === 'consequence-1' || session.phase === 'replay-1') && <div className="rs-playing" role="status"><p className="rs-step">YOUR {actionNoun.toUpperCase()} IS CHANGING THE PLAY</p><h2 ref={phaseHeading} tabIndex="-1">Watch where the players and puck move.</h2><p>{consequenceText}</p>{reducedMotion && <small>Reduced-motion mode moves directly to the next freeze.</small>}</div>}
 
         {session.phase === 'read-2' && <>
-          <p className="rs-step">READ 2 · {isU11 ? 'TIMING & SPACE' : 'LOOK AGAIN'}</p><h2 ref={phaseHeading} tabIndex="-1">{readTwo.prompt}</h2><div className="rs-cue-card"><b>{isU11 ? 'Re-scan now' : 'What changed?'}</b><p>{readTwo.cue}</p></div>
+          <p className="rs-step">READ 2 · {isYoung ? 'LOOK AGAIN' : 'TIMING & SPACE'}</p><h2 ref={phaseHeading} tabIndex="-1">{readTwo.prompt}</h2><div className="rs-cue-card"><b>{isYoung ? 'What changed?' : 'Re-scan now'}</b><p>{readTwo.cue}</p></div>
           <div className="rs-target-list">{displayTargets.map((target, index) => <button type="button" key={target.id} onClick={() => chooseTarget(target.id)}><span>{index + 1}</span><b>{target.label}</b><small>{target.kind === 'receiver' ? 'Tap receiver' : 'Tap space'}</small></button>)}</div>
           <p className="rs-hint">Tap a numbered marker on the rink or use these matching buttons.</p>
         </>}
@@ -530,10 +541,10 @@ function ReadSequenceLesson({ playerId, definition, scratch, rememberDraft, reca
 
         {session.phase === 'read-3' && <>
           <p className="rs-step">READ 3 · HELP WITHOUT THE PUCK</p><h2 ref={phaseHeading} tabIndex="-1">{thirdPrompt}</h2>
-          <div className="rs-cue-card"><b>{isU11 ? 'Keep the whole picture' : 'Help your team'}</b><p>{thirdCue}</p></div>
-          <p className="rs-hint">{routeMode ? 'Use the route controls below the rink to add points, undo a turn, or preview your plan.' : 'Drag the highlighted player, tap the ice, use arrow keys, or adjust the coordinates.'}</p>
+          <div className="rs-cue-card"><b>{isYoung ? 'Help your team' : 'Keep the whole picture'}</b><p>{thirdCue}</p></div>
+          <p className="rs-hint">{routeMode ? 'Use the route controls below the rink to add points, undo a turn, or preview your plan.' : boardView === '3d' ? 'Tap the ice where the highlighted player should go, or use the position controls below. The tactical board also supports dragging and arrow keys.' : 'Drag the highlighted player, tap the ice, use arrow keys, or adjust the coordinates.'}</p>
           {movingActor && !routeMode && <div className="rs-coordinate-row"><label>Rink length<RinkCoordinateInput step=".5" value={Number(movingActor.x.toFixed(1))} resetKey={`${session.scenarioId}:${session.second.targetId}:${movingActor.id}`} onCommit={x => moveActor({ x, y: movingActor.y })} /></label><label>Rink width<RinkCoordinateInput step=".5" value={Number(movingActor.y.toFixed(1))} resetKey={`${session.scenarioId}:${session.second.targetId}:${movingActor.id}`} onCommit={y => moveActor({ x: movingActor.x, y })} /></label></div>}
-          <label className="rs-reason">{routeMode ? 'What lane or space are you trying to use?' : 'Why does this position help?'}<textarea rows={isU11 ? 4 : 2} maxLength="600" value={thirdReason} onChange={event => setThirdReason(event.target.value)} placeholder={copy.thirdReasonPlaceholder || 'Explain the lane or space this creates, protects or keeps available.'} /><small>{thirdReason.length}/600</small></label>
+          <label className="rs-reason">{routeMode ? 'What lane or space are you trying to use?' : 'Why does this position help?'}<textarea rows={isYoung ? 2 : 4} maxLength="600" value={thirdReason} onChange={event => setThirdReason(event.target.value)} placeholder={copy.thirdReasonPlaceholder || 'Explain the lane or space this creates, protects or keeps available.'} /><small>{thirdReason.length}/600</small></label>
           <button type="button" className="rs-primary" onClick={finish}>Finish the three reads →</button>
         </>}
 
@@ -564,7 +575,7 @@ export default function ReadSequence({ playerId = null } = {}) {
   const recallDraftAccess = useMemo(() => ({ get: () => recallDrafts.current.get(draftKey), remember: draft => recallDrafts.current.set(draftKey, draft), clear: () => recallDrafts.current.delete(draftKey) }), [draftKey]);
   const definition = getReadSequenceDefinition(scenarioId);
   return <div className="rs-root" data-age={definition.ageBand}>
-    <nav className="rs-age-picker" aria-label="Connected reads age group"><span>CHOOSE YOUR READ</span><div>{READ_SEQUENCE_CATALOG.map(item => <button type="button" key={item.id} aria-pressed={scenarioId === item.id} aria-label={`${item.ageBand} connected reads`} onClick={() => setScenarioId(item.id)}>{item.ageBand}<small>{item.ageBand === 'U9' ? 'Find space' : 'Read the pressure'}</small></button>)}</div><p>Completed reflections save separately for each age on this device.</p></nav>
+    <nav className="rs-age-picker" aria-label="Connected reads age group"><span>CHOOSE YOUR READ</span><div>{READ_SEQUENCE_CATALOG.map(item => <button type="button" key={item.id} aria-pressed={scenarioId === item.id} aria-label={`${item.ageBand} connected reads`} onClick={() => setScenarioId(item.id)}>{item.ageBand}<small>{item.ui?.ageLabel || (item.ageBand === 'U9' ? 'Find space' : 'Read the pressure')}</small></button>)}</div><p>Completed reflections save separately for each age on this device.</p></nav>
     <ReadSequenceLesson key={draftKey} playerId={playerId} definition={definition} scratch={drafts.current.get(draftKey)} rememberDraft={rememberDraft} recallDraftAccess={recallDraftAccess} />
   </div>;
 }

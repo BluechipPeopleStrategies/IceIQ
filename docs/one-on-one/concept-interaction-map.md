@@ -142,6 +142,39 @@ as described above; timed pass transfers remain future work. Optional actual-bra
 
 The sequence supports selection, positioning, bounded support-route planning and explanation inside one state machine. Future recall/order can follow the play: **read defender → check receiver/goalie picture → become the next off-puck option**. MC/TF may test a single forced cue inside a beat, but the branch state carries the teaching logic.
 
+## U13 lane-switch connected draft
+
+**Status: local coach-review draft; pending deployment.** The catalog now includes
+`u13-lane-switch-three-reads-v1`, authored in `src/one-on-one/readSequenceU13.js`.
+This implements option 1 of [the lane-switch design](u13-lane-switch-design.md):
+an explicitly limited **Shoot / Carry worked comparison**, with four paths.
+It does not add a successful opening pass through D1 or treat every completion
+as evidence that the learner understood the lane switch.
+
+| First choice / target | Second consequence | Final movable support actor / route Start |
+|---|---|---|
+| Carry / `pass-f2` | Pass reaches F2 after the shown lane change. | F1 / YOU at (21, 5) m |
+| Carry / `outside-space` | F1 carries farther outside and keeps possession. | F2 at (22, -4) m |
+| Shoot / `inside-support` | F2 moves inside; the puck remains unowned short of the goalie. | F1 / YOU at (19, 4.6) m |
+| Shoot / `wide-support` | F2 stays wider; the puck remains unowned short of the goalie. | F1 / YOU at (19, 4.6) m |
+
+The Carry branch carries the lane-switch objective: D1 moves from the pass line
+toward the shot line, F2 advances, and the goalie changes position. Shoot instead
+continues into loose-puck support; no contact, save, rebound or pickup is assumed.
+Both paths use action/reason, a branch-specific target, then ungraded support
+placement or route planning and a reason. Optional recall orders the three actual
+freezes from the chosen path; it checks chronology, not tactics or mastery.
+
+The source mapping is `two-on-one-pass-lane-removed.md` for the opening constraint,
+`odd-man-reads.md` for reading defender/goalie changes, and
+`off-puck-support-offense.md` for discussing space and available support.
+`two-on-one-support-too-flat.md` informs F2's changing depth; the curriculum ledger
+supplies U13 scope (odd-man/decision-making D, off-puck support M). These sources
+do not certify coordinates, timing, a loose-puck recovery rule or a route grade.
+U13 has its own scenario-bound reflection/recall records and adds no AI review or
+changed-cue comparison. This local draft is not a promoted claim or a new public
+admission tier; earlier deployed-feature records and approval limits remain intact.
+
 ## Evidence and approval boundary
 
 - These examples are `example-for-coach-review`; they are not promoted curriculum, approved tactical claims or automated grading rules.
