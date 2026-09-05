@@ -13,6 +13,8 @@ import { cue, gymCueHooks } from "./gymAudio";
 import { ScoreCount, ConfettiBurst, SessionSummary } from "./gymFx";
 import { sessionRankLabel } from "./gymProgressCore";
 import { makeTrial, scoreTrial } from "./lateReadCore";
+import GymVisualStage from "./GymVisualStage";
+import RemainingDrillsScene3D from "./RemainingDrillsScene3D";
 
 // "Late Read" — cognitive flexibility / inhibition.
 // You carry the puck (YOU, lower middle). A teammate is cued as the play (a gold
@@ -375,6 +377,13 @@ export default function LateReadDrill({ playerId = "default", onExit }) {
     resolveTap(idx);
   }
 
+  function handleTapAt(tap) {
+    const sc = sceneRef.current;
+    if (phase !== "playing" || !sc.tr || sc.resolved || sc.stage !== "live") return;
+    const idx = hitTeammate(tap);
+    if (idx >= 0) resolveTap(idx);
+  }
+
   // The level the player came in at, so the results card can show the move
   // rather than just the destination (S2-27).
   const startLevelRef = useRef(1);
@@ -560,13 +569,16 @@ export default function LateReadDrill({ playerId = "default", onExit }) {
         </p>
       )}
 
-      <div className="gym-stage" style={{ display: phase === "playing" ? "block" : "none" }}>
-        <canvas
-          ref={canvasRef}
-          className="gym-canvas"
-          onMouseDown={handleTap}
-          onTouchStart={handleTap}
-        />
+      <div style={{ display: phase === "playing" ? "block" : "none" }}>
+        <GymVisualStage
+          active={phase === "playing"}
+          canvasRef={canvasRef}
+          onCanvasPointer={handleTap}
+          inputLayer="webgl"
+          ariaLabel="Three-dimensional rink where a late defensive change moves the best passing read."
+          camera={{ position: [0, 86, 0], fov: 40, near: 0.1, far: 180 }}
+          scene3d={<RemainingDrillsScene3D mode="lateread" sceneRef={sceneRef} onTap={handleTapAt} />}
+        >
 
         {/* Rule 1: exactly one primary action, in the same place every stage.
             "Read it" was the control S2-23 asked to move into the middle of the
@@ -587,6 +599,7 @@ export default function LateReadDrill({ playerId = "default", onExit }) {
             </button>
           </div>
         )}
+        </GymVisualStage>
       </div>
 
       {phase === "done" && (

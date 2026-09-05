@@ -1,5 +1,8 @@
 import React, { useMemo } from "react";
 import * as THREE from "three";
+import { buildHockeyPlayerRig } from '../one-on-one/hockeyPlayerRig.js';
+import { CARRY_OFFSET } from '../one-on-one/simulation.js';
+import { PlayerLocator } from '../visuals/PlayerLocator.jsx';
 
 export function ArenaLights({ dramatic = false }) {
   return (
@@ -60,68 +63,25 @@ export function IceSheet3D({ width = 10, depth = 5, endZone = false, blueLines =
   );
 }
 
-function Jersey({ colour }) {
-  return (
-    <mesh castShadow position={[0, 0.55, 0]}>
-      <capsuleGeometry args={[0.23, 0.42, 5, 10]} />
-      <meshStandardMaterial color={colour} roughness={0.58} />
-    </mesh>
-  );
-}
-
-// Original low-poly articulated skater built from geometry already shipped by
-// Three. It reads as a hockey body at game scale without adding asset/network
-// dependencies. Position and facing remain wholly presentation-only.
+// The same navy/gold equipment and neutral stance as the practice rink.
+// Internal .77 scale preserves this component's earlier ~1.3m model height;
+// callers retain their existing scale, local facing and game-state positions.
 export function HockeySkater({
-  colour = "#1b6cb0",
-  accent = "#ffffff",
+  colour = "#0B1A33",
+  accent,
   puck = false,
   goalie = false,
+  isLearner = false,
   scale = 1,
 }) {
-  const dark = "#0a1724";
+  const rig = useMemo(() => buildHockeyPlayerRig({ colour, accent, goalie }), [colour, accent, goalie]);
+  React.useEffect(() => () => rig.dispose(), [rig]);
   return (
     <group scale={scale}>
-      <Jersey colour={colour} />
-      <mesh castShadow position={[0, 1.08, -0.02]}>
-        <sphereGeometry args={[0.2, 18, 14]} />
-        <meshStandardMaterial color={goalie ? "#f7f9fa" : dark} roughness={0.5} />
-      </mesh>
-      <mesh castShadow position={[0, 1.11, -0.19]}>
-        <boxGeometry args={[0.28, 0.17, 0.05]} />
-        <meshStandardMaterial color={accent} metalness={0.32} roughness={0.3} />
-      </mesh>
-      {[-0.14, 0.14].map((x) => (
-        <group key={x} position={[x, 0.1, 0]} rotation={[0, 0, x < 0 ? 0.12 : -0.12]}>
-          <mesh castShadow position={[0, 0.2, 0]}>
-            <capsuleGeometry args={[goalie ? 0.12 : 0.075, 0.45, 4, 8]} />
-            <meshStandardMaterial color={goalie ? "#f6f7f8" : dark} roughness={0.55} />
-          </mesh>
-          <mesh castShadow position={[0, -0.09, -0.08]} rotation={[0.08, 0, 0]}>
-            <boxGeometry args={[goalie ? 0.22 : 0.12, 0.08, 0.34]} />
-            <meshStandardMaterial color={dark} roughness={0.45} />
-          </mesh>
-        </group>
-      ))}
-      <mesh castShadow position={[0.32, 0.53, -0.05]} rotation={[0.15, 0, -0.62]}>
-        <capsuleGeometry args={[0.055, 0.48, 4, 8]} />
-        <meshStandardMaterial color={colour} roughness={0.56} />
-      </mesh>
-      <mesh castShadow position={[-0.31, 0.55, 0.02]} rotation={[-0.15, 0, 0.62]}>
-        <capsuleGeometry args={[0.055, 0.46, 4, 8]} />
-        <meshStandardMaterial color={colour} roughness={0.56} />
-      </mesh>
-      <mesh castShadow position={[0.42, 0.08, -0.1]} rotation={[0.08, 0, -0.24]}>
-        <cylinderGeometry args={[0.025, 0.025, 1.42, 8]} />
-        <meshStandardMaterial color="#8b5a32" roughness={0.65} />
-      </mesh>
-      <mesh castShadow position={[0.28, -0.02, -0.42]} rotation={[0, 0.32, 0]}>
-        <boxGeometry args={[0.52, 0.06, 0.13]} />
-        <meshStandardMaterial color={dark} roughness={0.5} />
-      </mesh>
+      <group scale={.77}>{isLearner && <PlayerLocator />}<primitive object={rig.group} /></group>
       {puck && (
-        <mesh castShadow position={[0.06, -0.045, -0.55]}>
-          <cylinderGeometry args={[0.09, 0.09, 0.045, 24]} />
+        <mesh castShadow position={[CARRY_OFFSET.lateral * .77, .039, -CARRY_OFFSET.forward * .77]}>
+          <cylinderGeometry args={[0.065, 0.065, 0.035, 24]} />
           <meshStandardMaterial color="#03070a" roughness={0.42} />
         </mesh>
       )}

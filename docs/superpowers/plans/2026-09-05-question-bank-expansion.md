@@ -31,6 +31,7 @@
 - [x] Create a searchable HTML catalog, full JSON/CSV exports, source catalog, copy-ready Claude prompt, example batch and read-only batch validator.
 - [x] Verify malformed imports, stale targets, duplicate IDs, off-ice positioning and exact exports. Verify expanded practice in the browser, run relevant tests/build and update the roadmap.
 - [x] Prepare the scoped content commit from a clean staged checkout: 33 focused tests, both coaching audits and the build pass independently of unrelated working changes.
+- [x] Verify and separately stage the nine 3D game conversions: 377 scoped practice tests, production build, final runtime feedback checks and independent review of the final cue/label repairs.
 - [ ] Finish scoped integration of the local UI/3D work separately from the content package; preserve unrelated player, goals, coach and engine changes.
 
 ## Owner refinements implemented in the local review build
@@ -41,7 +42,7 @@
 - Show labels shades approximate rink regions; a puck symbol in the legend replaces repeated PUCK callouts.
 - Local anonymous events record exact scene version and content hash for views, checks, retries, skips, camera choices and flag categories. Reports/export expose sample sizes and storage failures; no cross-player aggregation or mastery credit.
 - Six worlds have a second-level mission journey with profile/age/world-scoped visited state and no invented completion awards.
-- Nine formerly flat rink games now have 3D adapters alongside the two existing 3D games; final gameplay QA and repairs are tracked separately from the content release.
+- Nine formerly flat rink games now have verified 3D adapters alongside the two existing 3D games; the scoped game commit is separate from the content release and remaining mixed UI work.
 
 ## Claude project handoff
 

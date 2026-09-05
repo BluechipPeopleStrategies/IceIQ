@@ -14,6 +14,8 @@ import { cue, gymCueHooks } from "./gymAudio";
 import { ScoreCount, ConfettiBurst, SessionSummary } from "./gymFx";
 import { sessionRankLabel } from "./gymProgressCore";
 import { makeFormation, scoreRead } from "./readNumbersCore";
+import GymVisualStage from "./GymVisualStage";
+import RemainingDrillsScene3D from "./RemainingDrillsScene3D";
 
 // "Read the Numbers" — visual memory + selective recall.
 // A formation of skaters, each wearing a distinct jersey NUMBER, flashes on
@@ -250,6 +252,24 @@ export default function ReadNumbersDrill({ playerId = "default", onExit }) {
     resolveRep(result.success);
   }
 
+  function handleTapAt(tap) {
+    const sc = sceneRef.current;
+    if (phase !== "playing" || sc.resolved || sc.stage !== "pick") return;
+    const idx = hitSkater(tap);
+    if (idx < 0) return;
+    const answerMs = sc.pickTs != null ? performance.now() - sc.pickTs : ANSWER_WINDOW_MS;
+    const result = scoreRead(idx, sc.targetIndex, answerMs, ANSWER_WINDOW_MS);
+    sc.resolved = true;
+    sc.stage = "feedback";
+    sc.pickedIndex = idx;
+    sc.repPoints = result.points;
+    clearTimers();
+    setStage("feedback");
+    setLast({ success: result.success, repPoints: result.points, target: sc.skaters[sc.targetIndex].number, pickedNumber: sc.skaters[idx].number });
+    render();
+    resolveRep(result.success);
+  }
+
   // The level the player came in at, so the results card can show the move
   // rather than just the destination (S2-27).
   const startLevelRef = useRef(1);
@@ -414,13 +434,16 @@ export default function ReadNumbersDrill({ playerId = "default", onExit }) {
         </p>
       )}
 
-      <div className="gym-stage" style={{ display: phase === "playing" ? "block" : "none" }}>
-        <canvas
-          ref={canvasRef}
-          className="gym-canvas"
-          onMouseDown={handleTap}
-          onTouchStart={handleTap}
-        />
+      <div style={{ display: phase === "playing" ? "block" : "none" }}>
+        <GymVisualStage
+          active={phase === "playing"}
+          canvasRef={canvasRef}
+          onCanvasPointer={handleTap}
+          inputLayer="webgl"
+          ariaLabel="Three-dimensional rink with numbered skaters to remember and find."
+          camera={{ position: [0, 86, 0], fov: 40, near: 0.1, far: 180 }}
+          scene3d={<RemainingDrillsScene3D mode="readnumbers" sceneRef={sceneRef} onTap={handleTapAt} />}
+        >
 
         {/* Rule 1: exactly one primary action, in the same place every stage. */}
         {phase === "playing" && stage === "ready" && (
@@ -439,6 +462,7 @@ export default function ReadNumbersDrill({ playerId = "default", onExit }) {
             </button>
           </div>
         )}
+        </GymVisualStage>
       </div>
 
       {phase === "done" && (

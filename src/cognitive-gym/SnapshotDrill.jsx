@@ -13,6 +13,8 @@ import { cue, gymCueHooks } from "./gymAudio";
 import { ScoreCount, ConfettiBurst, SessionSummary } from "./gymFx";
 import { sessionRankLabel } from "./gymProgressCore";
 import { makeFormation, scoreTap, pxPerFoot } from "./snapshotCore";
+import GymVisualStage from "./GymVisualStage";
+import SnapshotScene3D from "./SnapshotScene3D";
 
 // "Snapshot" — glance memory / perception span.
 // A formation of skaters flashes on the rink for a short window, then everything
@@ -244,13 +246,11 @@ export default function SnapshotDrill({ playerId = "default", onExit }) {
     }
   }
 
-  function handleTap(evt) {
+  function handleTapAt(tap) {
     const sc = sceneRef.current;
-    if (phase !== "playing" || !sc.open || sc.resolved) return;
+    if (phase !== "playing" || !sc.open || sc.resolved || !tap) return;
     // ignore taps before the formation has flashed and hidden (no peeking)
     if (!sc.armed) return;
-    evt.preventDefault();
-    const tap = pointerPos(evt, canvasRef.current);
     const result = scoreTap(tap, sc.open, sc.W, sc.H);
     sc.resolved = true;
     sc.tap = tap;
@@ -261,6 +261,12 @@ export default function SnapshotDrill({ playerId = "default", onExit }) {
     setLast({ success: result.success, distFt: Math.round(result.distFt), repPoints: result.points });
     render();
     resolveRep(result.success);
+  }
+
+  function handleTap(evt) {
+    if (phase !== "playing") return;
+    evt.preventDefault();
+    handleTapAt(pointerPos(evt, canvasRef.current));
   }
 
   // The level the player came in at, for the results card (S2-27).
@@ -432,13 +438,16 @@ export default function SnapshotDrill({ playerId = "default", onExit }) {
         </p>
       )}
 
-      <div className="gym-stage" style={{ display: phase === "playing" ? "block" : "none" }}>
-        <canvas
-          ref={canvasRef}
-          className="gym-canvas"
-          onMouseDown={handleTap}
-          onTouchStart={handleTap}
-        />
+      <div style={{ display: phase === "playing" ? "block" : "none" }}>
+        <GymVisualStage
+          active={phase === "playing"}
+          canvasRef={canvasRef}
+          onCanvasPointer={handleTap}
+          inputLayer="webgl"
+          ariaLabel="Three-dimensional rink memory snapshot with an open teammate marker."
+          camera={{ position: [0, 86, 0], fov: 40, near: 0.1, far: 180 }}
+          scene3d={<SnapshotScene3D sceneRef={sceneRef} onTap={handleTapAt} />}
+        >
 
         {phase === "playing" && stage === "ready" && (
           <div className="gym-rail">
@@ -456,6 +465,7 @@ export default function SnapshotDrill({ playerId = "default", onExit }) {
             </button>
           </div>
         )}
+        </GymVisualStage>
       </div>
 
       {phase === "done" && (

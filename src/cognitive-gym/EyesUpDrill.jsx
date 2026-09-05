@@ -15,6 +15,9 @@ import { cue, gymCueHooks } from "./gymAudio";
 import { ScoreCount, ConfettiBurst, SessionSummary } from "./gymFx";
 import { sessionRankLabel } from "./gymProgressCore";
 import { pickFlash, scoreTap, flashMs } from "./eyesUpCore";
+import GymVisualStage from "./GymVisualStage";
+import EyesUpScene3D from "./EyesUpScene3D";
+import { resizeEyesUpTrial } from "./eyesUpScene3DCore.js";
 
 // "Eyes Up" — peripheral vision.
 // A puck sits at center ice the whole rep as a fixation point: keep your eyes on
@@ -220,6 +223,23 @@ export default function EyesUpDrill({ playerId = "default", onExit }) {
     if (success) setHits((h) => h + 1);
   }, []);
 
+  const handleTapAt = useCallback((tap) => {
+    const sc = sceneRef.current;
+    if (phase !== "playing" || !sc.flash || sc.resolved || !sc.armed || !tap) return;
+    const result = scoreTap(tap, sc.flash, sc.W, sc.H);
+    sc.resolved = true;
+    sc.showFlash = false;
+    sc.tap = tap;
+    sc.result = result;
+    sc.repPoints = result.points;
+    sc.stage = "feedback";
+    clearTimers();
+    setStage("feedback");
+    setLast({ success: result.success, distFt: Math.round(result.distFt), repPoints: result.points });
+    render();
+    resolveTrial(result.success);
+  }, [phase, render, resolveTrial]);
+
   // The marked-up result holds until the player taps Next look. It used to
   // clear itself after 1.4 s, which is not long enough to compare where you
   // tapped against where the teammate actually was.
@@ -240,18 +260,7 @@ export default function EyesUpDrill({ playerId = "default", onExit }) {
     if (!sc.armed) return;
     evt.preventDefault();
     const tap = pointerPos(evt, canvasRef.current);
-    const result = scoreTap(tap, sc.flash, sc.W, sc.H);
-    sc.resolved = true;
-    sc.showFlash = false;
-    sc.tap = tap;
-    sc.result = result;
-    sc.repPoints = result.points;
-    sc.stage = "feedback";
-    clearTimers();
-    setStage("feedback");
-    setLast({ success: result.success, distFt: Math.round(result.distFt), repPoints: result.points });
-    render();
-    resolveTrial(result.success);
+    handleTapAt(tap);
   }
 
   // The level the player came in at, so the results card can show the move
@@ -298,17 +307,10 @@ export default function EyesUpDrill({ playerId = "default", onExit }) {
       const host = rootRef.current;
       const sc = sceneRef.current;
       if (!canvas || !host || !sc.flash) return;
-      const prevW = sc.W;
-      const prevH = sc.H;
       const { ctx, W, H } = setupCanvas(canvas, host);
       sc.ctx = ctx;
       // rescale the stored positions so the play stays put
-      const kx = W / (prevW || W);
-      const ky = H / (prevH || H);
-      sc.W = W;
-      sc.H = H;
-      sc.flash = { ...sc.flash, x: sc.flash.x * kx, y: sc.flash.y * ky, hitR: sc.flash.hitR * Math.min(kx, ky) };
-      if (sc.tap) sc.tap = { x: sc.tap.x * kx, y: sc.tap.y * ky };
+      Object.assign(sc, resizeEyesUpTrial(sc, W, H));
       render();
     };
     window.addEventListener("resize", onResize);
@@ -416,13 +418,16 @@ export default function EyesUpDrill({ playerId = "default", onExit }) {
         </p>
       )}
 
-      <div className="gym-stage" style={{ display: phase === "playing" ? "block" : "none" }}>
-        <canvas
-          ref={canvasRef}
-          className="gym-canvas"
-          onMouseDown={handleTap}
-          onTouchStart={handleTap}
-        />
+      <div style={{ display: phase === "playing" ? "block" : "none" }}>
+        <GymVisualStage
+          active={phase === "playing"}
+          canvasRef={canvasRef}
+          onCanvasPointer={handleTap}
+          inputLayer="webgl"
+          ariaLabel="Three-dimensional full-rink peripheral vision drill with a center fixation puck and flashing teammate marker."
+          camera={{ position: [0, 86, 0], fov: 40, near: 0.1, far: 180 }}
+          scene3d={<EyesUpScene3D sceneRef={sceneRef} onTap={handleTapAt} />}
+        >
 
         {/* Rule 1: exactly one primary action, in the same place every stage. */}
         {phase === "playing" && stage === "ready" && (
@@ -441,6 +446,7 @@ export default function EyesUpDrill({ playerId = "default", onExit }) {
             </button>
           </div>
         )}
+        </GymVisualStage>
       </div>
 
       {phase === "done" && (

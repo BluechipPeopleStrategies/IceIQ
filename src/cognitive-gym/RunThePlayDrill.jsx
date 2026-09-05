@@ -15,6 +15,8 @@ import {
   skaterAtPoint,
   scoreRun,
 } from "./runThePlayCore";
+import GymVisualStage from "./GymVisualStage";
+import RemainingDrillsScene3D from "./RemainingDrillsScene3D";
 
 // "Run the Play" — Simon on ice. The coach calls a passing play: the puck
 // moves skater to skater, each catch lights the skater up with its own note.
@@ -251,6 +253,23 @@ export default function RunThePlayDrill({ playerId = "default", onExit }) {
     }
   }
 
+  function onTapAt(p) {
+    const sc = sceneRef.current;
+    if (phase !== "playing" || sc.stage !== "recall") return;
+    const idx = skaterAtPoint(sc.skaters, p.x, p.y);
+    if (idx < 0) return;
+    const expected = sc.seq[sc.taps.length];
+    sc.taps.push(idx);
+    sc.lastTapTs = performance.now();
+    setTapCount(sc.taps.length);
+    if (idx !== expected) {
+      resolveRep(scoreRun(sc.taps, sc.seq), idx);
+      return;
+    }
+    cue(`note${idx}`);
+    if (sc.taps.length === sc.seq.length) resolveRep(scoreRun(sc.taps, sc.seq), null);
+  }
+
   function advanceRep() {
     const next = sceneRef.current.repIndex + 1;
     if (next >= REPS) {
@@ -394,12 +413,16 @@ export default function RunThePlayDrill({ playerId = "default", onExit }) {
         </div>
       )}
 
-      <div className="gym-stage" style={{ display: phase === "playing" ? "block" : "none" }}>
-        <canvas
-          ref={canvasRef}
-          className="gym-canvas"
-          onPointerDown={onCanvasTap}
-        />
+      <div style={{ display: phase === "playing" ? "block" : "none" }}>
+        <GymVisualStage
+          active={phase === "playing"}
+          canvasRef={canvasRef}
+          onCanvasPointer={onCanvasTap}
+          inputLayer="webgl"
+          ariaLabel="Three-dimensional end-zone rink for watching and repeating a passing sequence."
+          camera={{ position: [0, 86, 0], fov: 40, near: 0.1, far: 180 }}
+          scene3d={<RemainingDrillsScene3D mode="runtheplay" sceneRef={sceneRef} onTap={onTapAt} />}
+        >
 
         {/* Action Rail: exactly one primary action, in the same place every
             stage, inside the play surface. makeSkaters keeps skaters out of
@@ -420,6 +443,7 @@ export default function RunThePlayDrill({ playerId = "default", onExit }) {
             </button>
           </div>
         )}
+        </GymVisualStage>
       </div>
 
       {phase === "playing" && (

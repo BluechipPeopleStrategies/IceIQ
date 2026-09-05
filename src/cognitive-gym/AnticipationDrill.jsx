@@ -16,6 +16,8 @@ import { cue, gymCueHooks } from "./gymAudio";
 import { ScoreCount, ConfettiBurst, SessionSummary } from "./gymFx";
 import { sessionRankLabel } from "./gymProgressCore";
 import { DIRECTIONS, guessAxis, scorePass, feetPerPixel, formatDistance, rateMiss } from "./anticipationCore";
+import GymVisualStage from "./GymVisualStage";
+import AnticipationScene3D from "./AnticipationScene3D";
 
 // "Read the Pass" — trajectory prediction.
 // A puck launches across the ice from any side and disappears partway. The
@@ -157,6 +159,31 @@ export default function AnticipationDrill({ playerId = "default", onExit }) {
     setLevel(lvl);
     if (success) setHits((h) => h + 1);
   }, []);
+
+  const handleGuessAt = useCallback((pos) => {
+    const sc = sceneRef.current;
+    if (phase !== "playing" || !sc.traj || sc.revealStart !== null || !pos) return;
+    const traj = sc.traj;
+    const idx = Math.min(
+      Math.floor((performance.now() - sc.startedAt) / 1000 / DT),
+      traj.pts.length - 1
+    );
+    const guessC = traj.axis === "y"
+      ? Math.min(Math.max(pos.y, 0), traj.playH)
+      : Math.min(Math.max(pos.x, 0), sc.W);
+    const { success, errorFt, points } = scorePass(
+      guessC,
+      traj.crossPos,
+      traj.ftPerPx,
+      traj.toleranceFt
+    );
+    sc.guessC = guessC;
+    sc.result = success ? "hit" : "miss";
+    sc.errorFt = errorFt;
+    sc.repPoints = points;
+    sc.frozenIdx = idx;
+    sc.revealStart = performance.now();
+  }, [phase]);
 
   // The replayed path and the tolerance window hold until the player taps Next
   // rep. This drill's whole teaching moment is the dashed line showing where
@@ -320,34 +347,10 @@ export default function AnticipationDrill({ playerId = "default", onExit }) {
   }
 
   function handleGuess(evt) {
-    const sc = sceneRef.current;
-    if (phase !== "playing" || !sc.traj || sc.revealStart !== null) return;
+    if (phase !== "playing") return;
     evt.preventDefault();
     const pos = pointerPos(evt, canvasRef.current);
-    const traj = sc.traj;
-    const idx = Math.min(
-      Math.floor((performance.now() - sc.startedAt) / 1000 / DT),
-      traj.pts.length - 1
-    );
-    // Clamp the guess into the playable sheet: on the y axis that is the rail
-    // boundary, not the canvas bottom, so a tap can never resolve to a point
-    // the puck could not have crossed.
-    const guessC =
-      traj.axis === "y"
-        ? Math.min(Math.max(pos.y, 0), traj.playH)
-        : Math.min(Math.max(pos.x, 0), sc.W);
-    const { success, errorFt, points } = scorePass(
-      guessC,
-      traj.crossPos,
-      traj.ftPerPx,
-      traj.toleranceFt
-    );
-    sc.guessC = guessC;
-    sc.result = success ? "hit" : "miss";
-    sc.errorFt = errorFt;
-    sc.repPoints = points;
-    sc.frozenIdx = idx;
-    sc.revealStart = performance.now();
+    handleGuessAt(pos);
   }
 
   // The level the player came in at, so the results card can show the move
@@ -470,13 +473,16 @@ export default function AnticipationDrill({ playerId = "default", onExit }) {
         </div>
       )}
 
-      <div className="gym-stage" style={{ display: phase === "playing" ? "block" : "none" }}>
-        <canvas
-          ref={canvasRef}
-          className="gym-canvas"
-          onMouseDown={handleGuess}
-          onTouchStart={handleGuess}
-        />
+      <div style={{ display: phase === "playing" ? "block" : "none" }}>
+        <GymVisualStage
+          active={phase === "playing"}
+          canvasRef={canvasRef}
+          onCanvasPointer={handleGuess}
+          inputLayer="webgl"
+          ariaLabel="Three-dimensional rink with a moving pass and a gold crossing bar."
+          camera={{ position: [0, 86, 0], fov: 40, near: 0.1, far: 180 }}
+          scene3d={<AnticipationScene3D sceneRef={sceneRef} onTap={handleGuessAt} />}
+        >
 
         {/* Action Rail rule 1: one primary action, in the same place every
             stage. This drill is tap-only while the puck is live, so the rail is
@@ -489,6 +495,7 @@ export default function AnticipationDrill({ playerId = "default", onExit }) {
             </button>
           </div>
         )}
+        </GymVisualStage>
       </div>
 
       {phase === "done" && (

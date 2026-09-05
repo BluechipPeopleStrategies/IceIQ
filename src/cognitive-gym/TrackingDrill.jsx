@@ -16,6 +16,8 @@ import { cue, gymCueHooks } from "./gymAudio";
 import { ScoreCount, ConfettiBurst, SessionSummary } from "./gymFx";
 import { sessionRankLabel } from "./gymProgressCore";
 import { shiftPoints } from "./trackingCore";
+import GymVisualStage from "./GymVisualStage";
+import TrackingScene3D from "./TrackingScene3D";
 
 // "Head on a Swivel" — multi-object tracking (divided attention / awareness).
 // Three teammates flash gold, then every skater turns white and starts moving.
@@ -342,11 +344,9 @@ export default function TrackingDrill({ playerId = "default", onExit }) {
     rafRef.current = requestAnimationFrame(frame);
   }
 
-  function handlePick(evt) {
+  function handlePickAt(pos) {
     const sc = sceneRef.current;
-    if (phase !== "playing" || sc.stage !== "pick") return;
-    evt.preventDefault();
-    const pos = pointerPos(evt, canvasRef.current);
+    if (phase !== "playing" || sc.stage !== "pick" || !pos) return;
     // nearest dot under the tap, whether or not it is already picked
     let best = -1;
     let bestDist = Infinity;
@@ -389,6 +389,12 @@ export default function TrackingDrill({ playerId = "default", onExit }) {
     if (sc.picks.size >= TARGETS) return; // already tapped your three
     sc.picks.add(best);
     setRemaining(TARGETS - sc.picks.size);
+  }
+
+  function handlePick(evt) {
+    if (phase !== "playing") return;
+    evt.preventDefault();
+    handlePickAt(pointerPos(evt, canvasRef.current));
   }
 
   // Lock in the three picks (and any soccer-ball call) and grade the shift.
@@ -642,13 +648,16 @@ export default function TrackingDrill({ playerId = "default", onExit }) {
               up and out of the play surface — the longest control travel in the
               gym (S2-28). Now every control floats inside the rink, in the band
               the skaters are kept out of. */}
-          <div className="gym-stage" style={{ display: phase === "playing" ? "block" : "none" }}>
-            <canvas
-              ref={canvasRef}
-              className="gym-canvas"
-              onMouseDown={handlePick}
-              onTouchStart={handlePick}
-            />
+          <div style={{ display: phase === "playing" ? "block" : "none" }}>
+            <GymVisualStage
+              active={phase === "playing"}
+              canvasRef={canvasRef}
+              onCanvasPointer={handlePick}
+              inputLayer="webgl"
+              ariaLabel="Three-dimensional rink with moving skaters for Baylor's Pick."
+              camera={{ position: [0, 86, 0], fov: 40, near: 0.1, far: 180 }}
+              scene3d={<TrackingScene3D sceneRef={sceneRef} onTap={handlePickAt} />}
+            >
 
             {phase === "playing" && stage === "ready" && (
               <div className="gym-rail">
@@ -676,6 +685,7 @@ export default function TrackingDrill({ playerId = "default", onExit }) {
                 </button>
               </div>
             )}
+            </GymVisualStage>
           </div>
 
           {phase === "done" && (

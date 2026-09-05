@@ -18,6 +18,8 @@ import {
   scoreSecondary,
   combine,
 } from "./twoThingsCore";
+import GymVisualStage from "./GymVisualStage";
+import RemainingDrillsScene3D from "./RemainingDrillsScene3D";
 
 // "Two Things at Once" — divided attention / dual task.
 // Two tasks run at the same time and BOTH count. PRIMARY: a puck slides across
@@ -303,6 +305,14 @@ export default function TwoThingsDrill({ playerId = "default", onExit }) {
     setTickN((n) => n + 1);
   }
 
+  function handleTapAt(tap) {
+    const sc = sceneRef.current;
+    if (phase !== "playing" || sc.stage !== "live" || sc.resolved || sc.primaryTapMs != null) return;
+    sc.primaryTapMs = performance.now() - sc.startTs;
+    sc.tapPos = tap;
+    setTickN((n) => n + 1);
+  }
+
   // Tap a shape button: register the SECONDARY answer (only the first counts).
   function pickShape(choiceIndex) {
     const sc = sceneRef.current;
@@ -561,13 +571,16 @@ export default function TwoThingsDrill({ playerId = "default", onExit }) {
         </div>
       )}
 
-      <div className="gym-stage" style={{ display: phase === "playing" ? "block" : "none" }}>
-        <canvas
-          ref={canvasRef}
-          className="gym-canvas"
-          onMouseDown={handleCanvasTap}
-          onTouchStart={handleCanvasTap}
-        />
+      <div style={{ display: phase === "playing" ? "block" : "none" }}>
+        <GymVisualStage
+          active={phase === "playing"}
+          canvasRef={canvasRef}
+          onCanvasPointer={handleCanvasTap}
+          inputLayer="webgl"
+          ariaLabel="Three-dimensional rink with a moving puck and a second shape cue."
+          camera={{ position: [0, 86, 0], fov: 40, near: 0.1, far: 180 }}
+          scene3d={<RemainingDrillsScene3D mode="twothings" sceneRef={sceneRef} onTap={handleTapAt} />}
+        >
 
         {/* Action Rail. Rule 4 — multi-choice controls use the same rail, and
             this drill is the reason that rule exists: the shape cue flashed at
@@ -612,6 +625,7 @@ export default function TwoThingsDrill({ playerId = "default", onExit }) {
             })}
           </div>
         )}
+        </GymVisualStage>
       </div>
 
       {phase === "playing" && (

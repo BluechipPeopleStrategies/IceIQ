@@ -13,6 +13,8 @@ import { cue, gymCueHooks } from "./gymAudio";
 import { ScoreCount, ConfettiBurst, SessionSummary } from "./gymFx";
 import { sessionRankLabel } from "./gymProgressCore";
 import { makeFormation, scoreLane } from "./findLaneCore";
+import GymVisualStage from "./GymVisualStage";
+import RemainingDrillsScene3D from "./RemainingDrillsScene3D";
 
 // "Find the Lane" — spatial pattern recognition.
 // You carry the puck (YOU, lower middle). Several teammates spread out as open
@@ -350,6 +352,13 @@ export default function FindLaneDrill({ playerId = "default", onExit }) {
     resolveTap(idx);
   }
 
+  function handleTapAt(tap) {
+    const sc = sceneRef.current;
+    if (phase !== "playing" || !sc.you || sc.resolved || sc.stage !== "live") return;
+    const idx = hitReceiver(tap);
+    if (idx >= 0) resolveTap(idx);
+  }
+
   // The level the player came in at, so the results card can show the move
   // rather than just the destination (S2-27).
   const startLevelRef = useRef(1);
@@ -527,13 +536,16 @@ export default function FindLaneDrill({ playerId = "default", onExit }) {
         </p>
       )}
 
-      <div className="gym-stage" style={{ display: phase === "playing" ? "block" : "none" }}>
-        <canvas
-          ref={canvasRef}
-          className="gym-canvas"
-          onMouseDown={handleTap}
-          onTouchStart={handleTap}
-        />
+      <div style={{ display: phase === "playing" ? "block" : "none" }}>
+        <GymVisualStage
+          active={phase === "playing"}
+          canvasRef={canvasRef}
+          onCanvasPointer={handleTap}
+          inputLayer="webgl"
+          ariaLabel="Three-dimensional rink with a puck carrier, teammates, defenders, and passing lanes."
+          camera={{ position: [0, 86, 0], fov: 40, near: 0.1, far: 180 }}
+          scene3d={<RemainingDrillsScene3D mode="findlane" sceneRef={sceneRef} onTap={handleTapAt} />}
+        >
 
         {/* Rule 1: exactly one primary action, in the same place every stage. */}
         {phase === "playing" && stage === "ready" && (
@@ -552,6 +564,7 @@ export default function FindLaneDrill({ playerId = "default", onExit }) {
             </button>
           </div>
         )}
+        </GymVisualStage>
       </div>
 
       {phase === "done" && (

@@ -27,9 +27,11 @@ The six learning worlds have accessible winding mission paths with explicit visi
 
 ## Verification and integration boundary
 
-- Full working-tree practice suite: 560 passed; catalog/return suite: 13 passed; production build passed.
+- Full working-tree practice suite after final game repairs: 561 passed; catalog/return suite: 13 passed; production build passed.
 - Clean checkout containing only the staged content deliverable: 33 focused tests, original and combined coaching audits, and production build passed. Package files retain their byte-exact manifest hashes across checkout.
+- The separate staged game checkout passed 377 practice tests and its production build. One concurrent suite run stalled in an unchanged judge timeout test; the isolated serial rerun passed. Legacy renderer integration tests remain with their corresponding working-tree implementation and pass in the full 561-test run.
 - Browser checks exercised the repaired rim scene, question controls, labels, reflection skip, exact-version analytics and report refresh. Worlds were checked at 390px and 1280px, with keyboard navigation and scoped progress storage.
-- Nine previously flat rink games now have 3D adapters in the local candidate, alongside two existing 3D games. Gameplay QA and the selective shared-renderer integration are tracked separately.
+- Nine previously flat rink games now have 3D adapters, alongside two existing 3D games. The game commit uses the shared rig and camera, with only the required Arena visibility change from the mixed renderer file.
+- All nine converted surfaces received browser checks during implementation. Final checks verified Read Numbers' visible/hidden labels and a correct skater tap, Late Read's live cue and wrong-teammate response, Run the Play's recall tap and ordered feedback, and Two Things' separate timing/shape response. Late Read's missing arrow and Run the Play's stray pre-answer order labels were repaired and rechecked. Physical-device testing and every level/difficulty combination remain unverified.
 
 The content commit is not a claim that all mixed application changes have been deployed. The shared working tree also contains earlier player, goals, coach and scenario-engine work. Those changes must not be swept into this delivery. Physical-device testing, human coach calibration and explicit semantic curriculum bindings remain open.

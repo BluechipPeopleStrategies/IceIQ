@@ -65,16 +65,16 @@ export function Goal() {
   return <group>{lines.map(([a, b], i) => <Tube key={i} a={a} b={b} />)}{net.map(([a, b], i) => <Tube key={`n${i}`} a={a} b={b} radius={.007} colour="#d7e0df" />)}</group>;
 }
 
-function Arena() {
+function Arena({ openView = false }) {
   return <group>
     <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, -.18, 0]} receiveShadow><planeGeometry args={[100, 120]} /><meshStandardMaterial color="#0B1A33" roughness={.9} /></mesh>
-    {[-1, 1].map(side => <group key={side}>
+    {!openView && <group>{[-1, 1].map(side => <group key={side}>
       {[0, 1, 2, 3, 4].map(row => <mesh key={row} position={[side * (15.4 + row * 1.1), .7 + row * .55, -1]} receiveShadow><boxGeometry args={[1.1, .35 + row * 1.08, 64]} /><meshStandardMaterial color={row % 2 ? '#292b2d' : '#202224'} /></mesh>)}
       <mesh position={[side * 13.3, 2.1, -5]}><boxGeometry args={[.04, .07, 43]} /><meshBasicMaterial color="#aacde2" /></mesh>
     </group>)}
     <mesh position={[0, 4.5, -35]}><boxGeometry args={[46, 10, 1]} /><meshStandardMaterial color="#1b1d20" /></mesh>
     <mesh position={[0, 4.2, -34.4]}><boxGeometry args={[11, 2.5, .2]} /><meshStandardMaterial color="#101214" /></mesh>
-    <mesh position={[0, 2.4, -34.22]}><boxGeometry args={[26, .04, .08]} /><meshBasicMaterial color="#C9A24B" /></mesh>
+    <mesh position={[0, 2.4, -34.22]}><boxGeometry args={[26, .04, .08]} /><meshBasicMaterial color="#C9A24B" /></mesh></group>}
   </group>;
 }
 
