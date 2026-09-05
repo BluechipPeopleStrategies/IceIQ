@@ -3,6 +3,7 @@ import { Canvas, useFrame, useThree } from '@react-three/fiber';
 import { Line } from '@react-three/drei';
 import * as THREE from 'three';
 import Skater from './Skater.jsx';
+import PuckLocator3D from '../visuals/PuckLocator3D.jsx';
 import { RINK, GOAL_X, makeIceTexture, roundedRinkShape } from './rinkMaterials.js';
 import { isCoachRoutePoint, listenForCoachRouteTaps, worldPointToCoachRoute } from './coachRouteSurfaceInput.js';
 
@@ -12,17 +13,17 @@ class SceneBoundary extends Component {
   render() { return this.state.failed ? <div className="oo-render-error">The 3D rink could not start on this browser. Try reloading with hardware acceleration enabled. <a href="#">Back to RinkReads</a></div> : this.props.children; }
 }
 
-function Rail({ height, thickness, colour, inset = 0 }) {
+function Rail({ height, thickness, colour, inset = 0, clear = false }) {
   const geometry = useMemo(() => {
     const outer = roundedRinkShape(inset - .18), inner = roundedRinkShape(inset + .1);
     outer.holes.push(new THREE.Path(inner.getPoints(24).reverse()));
     return new THREE.ExtrudeGeometry(outer, { depth: thickness, bevelEnabled: false, steps: 1, curveSegments: 16 });
   }, [thickness, inset]);
   useEffect(() => () => geometry.dispose(), [geometry]);
-  return <mesh geometry={geometry} rotation={[-Math.PI / 2, 0, 0]} position={[0, height, 0]} receiveShadow castShadow><meshStandardMaterial color={colour} roughness={.6} /></mesh>;
+  return <mesh geometry={geometry} rotation={[-Math.PI / 2, 0, 0]} position={[0, height, 0]} receiveShadow={!clear} castShadow={!clear}><meshStandardMaterial color={colour} roughness={.6} transparent={clear} opacity={clear ? .08 : 1} depthWrite={!clear} /></mesh>;
 }
 
-function Ice({ hideZoneLines = false }) {
+function Ice({ hideZoneLines = false, clearBoards = false }) {
   const texture = useMemo(() => makeIceTexture({ hideZoneLines }), [hideZoneLines]);
   useEffect(() => () => texture.dispose(), [texture]);
   const geometry = useMemo(() => {
@@ -35,8 +36,8 @@ function Ice({ hideZoneLines = false }) {
   return <group>
     <mesh geometry={geometry} rotation={[-Math.PI / 2, 0, 0]} receiveShadow><meshStandardMaterial map={texture} roughness={.37} metalness={.12} color="#f2fbff" /></mesh>
     <Rail height={0} thickness={.18} colour="#d2a643" />
-    <Rail height={.18} thickness={.92} colour="#e8ece8" />
-    <Rail height={1.1} thickness={.10} colour="#253646" />
+    <Rail height={.18} thickness={.92} colour="#e8ece8" clear={clearBoards} />
+    <Rail height={1.1} thickness={.10} colour="#253646" clear={clearBoards} />
   </group>;
 }
 
@@ -90,13 +91,8 @@ function CameraRig({ cameraMode, axesRef }) {
   return null;
 }
 
-function Puck({ frameRef }) {
-  const ref = useRef();
-  useFrame(() => { const p = frameRef.current?.puck; if (p && ref.current) ref.current.position.set(p.y, .075, -p.x); });
-  return <group ref={ref}>
-    <mesh castShadow><cylinderGeometry args={[.115, .115, .055, 20]} /><meshStandardMaterial color="#111b23" roughness={.65} /></mesh>
-    <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, -.012, 0]}><ringGeometry args={[.17, .205, 32]} /><meshBasicMaterial color="#111b23" transparent opacity={.45} /></mesh>
-  </group>;
+function Puck({ frameRef, showLabel = false }) {
+  return <PuckLocator3D frameRef={frameRef} showLabel={showLabel} />;
 }
 
 function Guides({ frameRef, visible }) {

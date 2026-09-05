@@ -77,3 +77,14 @@
 /* Keep the 1v1 modes reachable inside the arena without a second brand header. */
 :root .pf-hub>.oo-app>.oo-header{display:flex;height:auto;padding:22px 0 0;border:0;justify-content:flex-start}
 :root .pf-hub>.oo-app>.oo-header>.oo-brand,:root .pf-hub>.oo-app>.oo-header>.oo-preview-tag{display:none}
+
+/* Shared glass controls: compact visuals with full-sized touch targets. */
+:root .pf-hub :is(.srv-pill,.rs-camera-toolbar){background:linear-gradient(145deg,#ffffff0b,#0b1a3399);border:1px solid #ffffff24;box-shadow:inset 0 1px #ffffff16,0 4px 18px #030b1618;backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px)}
+:root .pf-hub :is(.srv-camera-mode,.rs-camera-toolbar,.rd-tools,.dp-actions) button,:root .pf-hub .rs-view-fit{background:linear-gradient(150deg,#ffffff13,#ffffff04);border:1px solid #ffffff32;box-shadow:inset 0 1px #ffffff25,0 3px 10px #030b1620;backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-radius:24px;min-height:44px;color:#edf3fa}
+:root .pf-hub .srv-pill button{border-radius:22px;transition:background .16s,border-color .16s;min-height:44px}
+:root .pf-hub .srv-pill button[aria-pressed=true],:root .pf-hub .rs-camera-toolbar button[aria-pressed=true],:root .pf-hub :is(.gc-primary,.rd-primary){background:linear-gradient(145deg,#f7dfa7ed,#d8b761e8 55%,#c39b40eb);color:#0b1a33;border:1px solid #fff4b58c;box-shadow:inset 0 1px #fff9,inset 0 -1px #9b742c55,0 4px 14px #080e1824;backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-radius:24px;min-height:44px}
+:root .pf-hub .srv-pill button:hover:not([aria-pressed=true]):not(:disabled){background:#ffffff0b}
+@media(prefers-reduced-transparency:reduce){:root .pf-hub :is(.srv-pill,.rs-camera-toolbar),:root .pf-hub :is(.srv-camera-mode,.rs-camera-toolbar,.rd-tools,.dp-actions) button{background:#183047;backdrop-filter:none;-webkit-backdrop-filter:none}}
+
+/* Compact the inside of answer choices while retaining their separate gaps. */
+:root .pf-hub :is(.gc-options,.pf-options) button{min-height:44px;padding:8px 12px;gap:10px}

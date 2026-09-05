@@ -1,11 +1,18 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { selectPracticeQuestions } from './practiceQuestionSelection.js';
+import { selectPracticeQuestions, summarizePracticeRecord } from './practiceQuestionSelection.js';
 
 const scenario = { questions: [
   { id: 'q1', type: 'choice' }, { id: 'q2', type: 'explain' },
   { id: 'q3', type: 'position' }, { id: 'q4', type: 'explain' },
 ] };
+
+test('catalog progress counts only current routine questions, including an optional skip', () => {
+  const current={...scenario,version:2};
+  const record={version:2,answers:{q1:{reviewed:true},q2:{reviewed:true,response:''},q4:{reviewed:true},unknown:{reviewed:true}}};
+  assert.deepEqual(summarizePracticeRecord(current,record),{questionCount:3,reviewedCount:2});
+  assert.deepEqual(summarizePracticeRecord(current,{...record,version:1}),{questionCount:3,reviewedCount:0});
+});
 
 test('normal practice keeps one reflection and preserves authored question order', () => {
   assert.deepEqual(selectPracticeQuestions(scenario).map(question => question.id), ['q1', 'q2', 'q3']);

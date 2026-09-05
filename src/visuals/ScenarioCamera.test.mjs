@@ -46,6 +46,46 @@ function camera() {
   return value;
 }
 
+test('visible camera buttons zoom, rotate, tilt and pan the real view without changing the scene', () => {
+  const canvas = surface(), view = camera();
+  const release = cameraModule.connectScenarioCameraControls(view, canvas, [0, 1, -18], () => {});
+  try {
+    assert.equal(typeof release.command, 'function');
+    release.command({ type: 'zoom', direction: 1 });
+    assert.ok(view.zoom > 1);
+    release.command({ type: 'zoom', direction: -1 });
+    assert.ok(Math.abs(view.zoom - 1) < 1e-9);
+    const start = view.position.clone();
+    release.command({ type: 'rotate', direction: 1 });
+    assert.ok(view.position.distanceTo(start) > .1);
+    release.command({ type: 'rotate', direction: -1 });
+    assert.ok(view.position.distanceTo(start) < 1e-8);
+    release.command({ type: 'tilt', direction: 1 });
+    assert.ok(view.position.y < start.y, 'Lower looks across the ice');
+    const orientation = view.quaternion.clone();
+    release.command({ type: 'pan-x', direction: 1 });
+    assert.ok(view.quaternion.angleTo(orientation) < 1e-7, 'Moving the view retains its angle');
+    for (let i = 0; i < 80; i++) release.command({ type: 'zoom', direction: 1 });
+    assert.ok(view.zoom <= 2.5);
+  } finally { release(); }
+  const ended = view.position.clone(), zoom = view.zoom;
+  release.command({ type: 'rotate', direction: 1 });
+  release.command({ type: 'zoom', direction: 1 });
+  assert.deepEqual(view.position.toArray(), ended.toArray());
+  assert.equal(view.zoom, zoom);
+});
+
+test('direct input rotates without opening a panel and leaves ordinary page scrolling alone',()=>{
+ const canvas=surface(),view=camera(),start=view.position.clone();
+ const release=cameraModule.connectScenarioCameraControls(view,canvas,[0,1,-18],()=>{},{directInput:true});
+ try{
+  emit(canvas,'pointerdown');emit(canvas.ownerDocument,'pointermove',{clientX:165,pageX:165});emit(canvas.ownerDocument,'pointerup',{clientX:165,pageX:165});
+  assert.ok(view.position.distanceTo(start)>.1);
+  const zoom=view.zoom;emit(canvas,'wheel',{deltaY:-100});assert.equal(view.zoom,zoom);
+  emit(canvas,'wheel',{deltaY:-100,ctrlKey:true});assert.ok(view.zoom>zoom);
+ }finally{release();}
+});
+
 test('camera adjustment owns drag/zoom only until cleanup, without an inertial animation loop', () => {
   assert.equal(typeof cameraModule.connectScenarioCameraControls, 'function', 'Camera adjustment must have a scoped native-input lifecycle');
   const canvas = surface(), view = camera(), target = [0, 1, -18];
@@ -124,6 +164,40 @@ test('touch rotation and pinch use the same scoped camera lifecycle and cancel c
   } finally { release(); }
 });
 
+test('explicit Move view pans with mouse, touch and keyboard, keeps orientation and clamps its target', () => {
+  const canvas = surface(), view = camera();
+  const bounds = { minX: 10, maxX: 29, minY: -8, maxY: 8 };
+  let target;
+  const release = cameraModule.connectScenarioCameraControls(view, canvas, [0, 1, -18], () => {}, {
+    panMode: true, bounds, onTargetChange: value => { target = value; },
+  });
+  try {
+    assert.match(canvas.getAttribute('aria-label'), /move the view|pan/i);
+    const orientation = view.quaternion.clone(), initial = view.position.clone();
+    emit(canvas, 'pointerdown'); emit(canvas.ownerDocument, 'pointermove', { clientX: 155 }); emit(canvas.ownerDocument, 'pointerup');
+    assert.ok(view.position.distanceTo(initial) > .1);
+    assert.ok(view.quaternion.angleTo(orientation) < 1e-7, 'Pan must not secretly rotate the camera.');
+    const mouse = view.position.clone();
+    emit(canvas, 'pointerdown', { pointerType: 'touch', pointerId: 2 });
+    emit(canvas.ownerDocument, 'pointermove', { pointerType: 'touch', pointerId: 2, pageX: 145, clientX: 145 });
+    emit(canvas.ownerDocument, 'pointerup', { pointerType: 'touch', pointerId: 2 });
+    assert.ok(view.position.distanceTo(mouse) > .1, 'One finger moves the view in Move mode.');
+    const touch = view.position.clone();
+    emit(canvas, 'keydown', { key: 'ArrowUp' });
+    assert.ok(view.position.distanceTo(touch) > .1);
+    assert.ok(view.quaternion.angleTo(orientation) < 1e-7);
+    for (let index = 0; index < 100; index++) emit(canvas, 'keydown', { key: 'ArrowLeft' });
+    assert.ok(target.every(Number.isFinite));
+    assert.ok(target[0] >= bounds.minY - 4 && target[0] <= bounds.maxY + 4);
+    assert.ok(-target[2] >= bounds.minX - 4 && -target[2] <= bounds.maxX + 4);
+    assert.equal(target[1], 1, 'Pan remains parallel to the ice.');
+  } finally { release(); }
+  const ended = view.position.clone();
+  emit(canvas, 'keydown', { key: 'ArrowLeft' });
+  assert.deepEqual(view.position.toArray(), ended.toArray());
+  assert.equal(canvas.style.touchAction, 'pan-y');
+});
+
 test('the real camera component preserves an adjusted view across new frame objects and mode changes, fitting only changed framing', () => {
   assert.equal(typeof cameraModule.default, 'function');
   const canvas = surface(), view = camera(), noop = () => {}, host = {};
@@ -159,6 +233,18 @@ test('the real camera component preserves an adjusted view across new frame obje
     assert.ok(view.position.distanceTo(adjusted) < 1e-9, 'Returning to answering retains the adjusted angle');
     assert.equal(view.zoom, adjustedZoom);
     assert.equal(canvas.style.touchAction, 'pan-y');
+    render({ bounds, cameraAdjusting: true, cameraPanMode: true });
+    const beforePan = view.position.clone();
+    emit(canvas, 'keydown', { key: 'ArrowLeft' });
+    assert.ok(view.position.distanceTo(beforePan) > .1);
+    const panned = view.position.clone(), pannedDirection = view.quaternion.clone();
+    render({ bounds, cameraAdjusting: false, cameraPanMode: true });
+    render({ bounds, cameraAdjusting: true, cameraPanMode: false });
+    assert.ok(view.position.distanceTo(panned) < 1e-9, 'Switching Move to Turn must retain the camera position.');
+    assert.ok(view.quaternion.angleTo(pannedDirection) < 1e-7, 'Re-entering must keep the panned orbit target.');
+    render({ bounds, cameraAdjusting: true, cameraPanMode: false, cameraResetToken: 1 });
+    assert.ok(view.position.distanceTo(fit) < 1e-9, 'Reset must restore the selected preset without resetting a lesson.');
+    assert.equal(view.zoom, 1);
     render({ bounds, cameraPreset: 'behind-net' });
     assert.deepEqual(view.position.toArray(), getReadSceneCamera(bounds, 350 / 420, 'behind-net').position);
     const wider = { ...bounds, minX: 0 };

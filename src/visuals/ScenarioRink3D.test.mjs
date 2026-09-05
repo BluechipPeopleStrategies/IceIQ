@@ -14,19 +14,52 @@ const cache = new URL('../../node_modules/.cache/rinkreads-rink-input/', import.
 mkdirSync(cache, { recursive: true });
 const output = new URL('input.mjs', cache);
 await build({
-  stdin: { contents: `${readFileSync(source, 'utf8')}\nexport { ActorControl, Content };`, resolveDir: fileURLToPath(new URL('.', source)), loader: 'jsx' },
-  outfile: fileURLToPath(output), bundle: true, packages: 'external', platform: 'node', format: 'esm', jsx: 'automatic', logLevel: 'silent',
+  stdin: { contents: `${readFileSync(source, 'utf8')}\nexport { ActorControl, Content, RinkActorAnswer };`, resolveDir: fileURLToPath(new URL('.', source)), loader: 'jsx' },
+  outfile: fileURLToPath(output), bundle: true, packages: 'external', platform: 'node', format: 'esm', jsx: 'automatic', loader: { '.css': 'empty' }, logLevel: 'silent',
   plugins: [{ name: 'scene-input-host', setup(api) {
     api.onResolve({ filter: /^react$/ }, () => ({ path: 'react', external: true }));
     api.onResolve({ filter: /^@react-three\/(fiber|drei)$/ }, args => ({ path: args.path, namespace: 'input-host' }));
     api.onLoad({ filter: /.*/, namespace: 'input-host' }, args => ({ contents: args.path.endsWith('fiber')
-      ? 'export const useThree = () => globalThis.__rrRinkInputContext; export const Canvas = () => null;'
-      : 'import { createElement } from "react"; export const Html = ({ children }) => createElement("html-host", null, children); export const Line = () => null;' }));
+      ? 'export const useThree = () => globalThis.__rrRinkInputContext; export const useFrame = () => {}; export const Canvas = () => null;'
+      : 'import { createElement } from "react"; export const Html = ({ children }) => createElement("html-host", null, children); export const Line = () => null; export const Billboard = ({ children }) => children;' }));
     api.onResolve({ filter: /(ScenarioCamera\.jsx|Skater\.jsx|PracticeScene\.jsx)$/ }, () => ({ path: 'visual-hosts', namespace: 'scene-host' }));
     api.onLoad({ filter: /.*/, namespace: 'scene-host' }, () => ({ contents: 'export default function Host() { return null; } export const Arena = Host, Ice = Host, Goal = Host, Puck = Host;' }));
   } }],
 });
-const { ActorControl, Content } = await import(output.href);
+const { ActorControl, Content, RinkActorAnswer } = await import(output.href);
+
+test('select-only actor answers require a completed tap and never accept drags or cancelled gestures', () => {
+  const h = harness(RinkActorAnswer), answers = [];
+  try {
+    h.render({ actorId: 'F2', onAnswer: (...args) => answers.push(args) });
+    h.act('onPointerDown'); assert.equal(answers.length, 0);
+    h.act('onPointerUp'); assert.deepEqual(answers, [['F2', 'rink-tap']]);
+    for (const cancel of ['onPointerCancel', 'onPointerLeave', 'onLostPointerCapture']) {
+      h.act('onPointerDown'); h.act(cancel); h.act('onPointerUp');
+    }
+    h.act('onPointerDown'); h.act('onPointerMove', { clientX: 230 }); h.act('onPointerUp');
+    h.act('onPointerDown'); h.act('onPointerUp', { pointerId: 2 }); h.act('onPointerUp');
+    assert.equal(answers.length, 1);
+  } finally { h.dispose(); }
+});
+
+test('actor answer surfaces reject scrolling, second fingers and camera mode changes; keyboard remains equivalent', () => {
+  const h = harness(RinkActorAnswer), answers = [];
+  const props = { actorId: 'G', onAnswer: (...args) => answers.push(args) };
+  try {
+    h.render(props);
+    h.act('onPointerDown'); emit(h.canvas.ownerDocument, 'pointerdown', { pointerId: 2 }); h.act('onPointerUp');
+    h.act('onPointerDown'); emit(h.canvas.ownerDocument, 'scroll'); h.act('onPointerUp');
+    h.act('onPointerDown'); h.render({ ...props, enabled: false }); h.act('onPointerUp');
+    h.act('onKeyDown', { key: 'Enter', preventDefault() {} });
+    assert.equal(answers.length, 0);
+    h.render(props);
+    h.act('onKeyDown', { key: 'Enter', preventDefault() {} });
+    h.act('onKeyDown', { key: 'Enter', repeat: true, preventDefault() {} });
+    h.act('onClick', { detail: 1 });
+    assert.deepEqual(answers, [['G', 'keyboard']]);
+  } finally { h.dispose(); }
+});
 
 function surface() {
   const target = new EventTarget();
@@ -147,6 +180,20 @@ test('removing the editable actor releases dragging so fresh ice taps still work
     assert.deepEqual(h.button().released, [1]);
     emit(h.canvas, 'pointerdown'); emit(h.canvas, 'pointerup');
     assert.equal(points.length, 1, 'Actor removal must not strand the parent in dragging mode');
+  } finally { h.dispose(); }
+});
+
+test('dragging a player temporarily disables answers on other actors', () => {
+  const h = harness(Content);
+  const actors = [actorProps().actor, {...actorProps().actor,id:'F3',label:'F3',x:18}];
+  try {
+    h.render(contentProps({frame:{actors,puck:null},onSelect(){},selectableIds:['F3'],onActorAnswer(){}}));
+    const answer = h.instances.find(node=>node.type==='button'&&node.props['aria-label']==='Choose F3 on rink');
+    assert.ok(answer); assert.equal(answer.props.disabled,false);
+    h.act('onPointerDown');
+    assert.equal(answer.props.disabled,true);
+    h.act('onPointerUp');
+    assert.equal(answer.props.disabled,false);
   } finally { h.dispose(); }
 });
 

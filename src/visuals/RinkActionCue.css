@@ -1,0 +1,14 @@
+.rink-action-anchor { position: relative; display: block; width: 0; height: 0; }
+.rink-action-offset { position: absolute; left: 0; top: 0; display: block; width: max-content; }
+.rink-action-connector { position: absolute; top: 0; left: 0; height: 1px; background: #243e58a6; transform-origin: left center; pointer-events: none; }
+:root .rink-action-cue, :root .pf-hub .rink-action-cue, :root .rs-root .rink-action-cue {
+  display: grid; place-items: center; width: auto; min-width: 52px; min-height: 44px;
+  margin: 0; padding: 0; border: 0; border-radius: 12px; color: #fff;
+  background: transparent; box-shadow: none; font: 700 10px/1.2 Inter,Arial,sans-serif;
+  cursor: pointer; touch-action: pan-y;
+}
+.rink-action-pill { display: inline-flex; align-items: center; justify-content: center; gap: 4px; padding: 5px 7px; min-height: 25px; box-sizing: border-box; border: 1px solid #ffffffba; border-radius: 9px; background: linear-gradient(150deg,#294159eb,#0b1a33ec); box-shadow: inset 0 1px #ffffff38,0 2px 5px #0003; backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); white-space: nowrap; }
+.rink-action-pill svg { width: 12px; height: 12px; flex: 0 0 12px; }
+.rink-action-cue:hover .rink-action-pill { border-color: #edce84; background: #203e57; }
+:root .rink-action-cue:focus-visible { outline: 2px solid #c9a24b; outline-offset: 2px; }
+.rink-action-cue:disabled { opacity: .5; cursor: default; }

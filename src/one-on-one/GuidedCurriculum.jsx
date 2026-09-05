@@ -1,5 +1,6 @@
 import { useEffect, useId, useRef, useState } from 'react';
 import pack from './curriculum-draft.json';
+import { initialGuidedLessonIndex } from './learningNavigation.js';
 import { COACH_PERSONAS, coachReaction, getCoachForQuestion } from '../coachPersonas.js';
 import { CoachFeedback } from '../play/CoachFeedback.jsx';
 import { NHL_200X85_PROFILE } from '../scenario-engine/rinkFrame.js';
@@ -126,9 +127,9 @@ export function CurriculumBoard({ visual, title, inspectable = false, sceneView 
   </figure>;
 }
 
-function CurriculumSession({ playerId, ageBand }) {
+function CurriculumSession({ playerId, ageBand, initialLessonId }) {
   const [age, setAge] = useState(() => CURRICULUM_AGES.find(value => value === String(ageBand).split(' ')[0]) || 'U11');
-  const [lessonIndex, setLessonIndex] = useState(0);
+  const [lessonIndex, setLessonIndex] = useState(() => initialGuidedLessonIndex(pack.lessons, CURRICULUM_STRANDS, ageBand, initialLessonId));
   const [step, setStep] = useState(0);
   const [answer, setAnswer] = useState(null);
   const [complete, setComplete] = useState(false);
@@ -201,7 +202,7 @@ function CurriculumSession({ playerId, ageBand }) {
   </section>;
 }
 
-export default function GuidedCurriculum({ playerId = 'practice-preview', ageBand = 'U11' }) {
+export default function GuidedCurriculum({ playerId = 'practice-preview', ageBand = 'U11', initialLessonId }) {
   if (CONTENT_ERRORS.length) return <section className="gc-root" role="alert"><h2>These lessons need a content check.</h2><p>The curriculum could not be opened safely.</p></section>;
-  return <CurriculumSession key={`${playerId}:${ageBand}`} playerId={playerId} ageBand={ageBand} />;
+  return <CurriculumSession key={`${playerId}:${ageBand}:${initialLessonId||'first'}`} playerId={playerId} ageBand={ageBand} initialLessonId={initialLessonId} />;
 }

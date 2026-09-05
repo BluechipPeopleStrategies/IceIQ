@@ -36,9 +36,9 @@ function SourceQuestion({item,coachId,onCredit,playerId}) {
   </div>;
 }
 
-export default function PracticeLibrary({onOpenDraft,playerId='practice-preview',ageBand='U11'}) {
+export default function PracticeLibrary({onOpenDraft,playerId='practice-preview',ageBand='U11',initialConcept=''}) {
   const [bank,setBank]=useState(null),[error,setError]=useState('');
-  const [age,setAge]=useState(()=>LEVELS.find(value=>value.split(' ')[0]===String(ageBand).split(' ')[0])||'U11 / Atom'),[concept,setConcept]=useState(''),[type,setType]=useState(''),[search,setSearch]=useState(''),[selected,setSelected]=useState(null),[attempt,setAttempt]=useState(0),[coachId,setCoachId]=useState('auto');
+  const [age,setAge]=useState(()=>LEVELS.find(value=>value.split(' ')[0]===String(ageBand).split(' ')[0])||'U11 / Atom'),[concept,setConcept]=useState(initialConcept),[type,setType]=useState(''),[search,setSearch]=useState(''),[selected,setSelected]=useState(null),[attempt,setAttempt]=useState(0),[coachId,setCoachId]=useState('auto');
   const progressKey=`rinkreads_practice_lessons_v1:${playerId}`;
   const [progress,setProgress]=useState(()=>readProgress(progressKey));
   const [notice,setNotice]=useState('');

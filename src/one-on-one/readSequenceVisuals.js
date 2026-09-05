@@ -76,7 +76,8 @@ export function getReadSceneCamera(bounds, aspect, preset = 'broadcast') {
   // A tiny overhead offset keeps the world-up orbit axis well-defined at the
   // pole, while remaining visually overhead (less than .06 degrees of tilt).
   const backward = normalized(preset === 'behind-net' ? [0, 1.45, -1]
-    : preset === 'overhead' ? [0, 1, .001]
+    : preset === 'overhead' ? safeAspect > 1 ? [.001, 1, 0] : [0, 1, .001]
+      : preset === 'rink-side' ? [1, .62, .16]
       : safeAspect < 1 ? [0, 1.6, 1] : [1, 1.6, .3]);
   const rightAxis = normalized(cross([0, 1, 0], backward));
   const upAxis = cross(backward, rightAxis);

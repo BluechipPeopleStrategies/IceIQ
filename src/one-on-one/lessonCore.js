@@ -14,7 +14,7 @@ export function creditLesson(progress,key,correct) {
   return {...progress,[key]:{firstCorrect:old?.firstCorrect ?? correct,mastered:!!(correct||old?.mastered),points:correct||old?.mastered?100:0}};
 }
 export function buildLibrary(bank,plays) {
-  const rows=Object.entries(bank).flatMap(([age,items])=>items.map(source=>({key:`${age}:${source.id}`,age,type:source.type||'mc',concept:source.conceptId||source.concepts?.[0]||source.concept||'',title:source.title||source.sit||source.q||source.prompt||source.id,source})));
+  const rows=Object.entries(bank).flatMap(([age,items])=>items.map(source=>({key:`${age}:${source.id}`,age,type:source.type||'mc',concept:source.conceptId||source.concepts?.[0]||source.concept||String(source.nodeId||'').match(/^u(?:7|9|11|13|15|18)\.(.+)$/i)?.[1]||'',title:source.title||source.sit||source.q||source.prompt||source.id,source})));
   for(const source of plays) for(const band of source.ageBands||['U7','U9','U11','U13','U15','U18']) {
     const age=Object.keys(bank).find(a=>a.startsWith(`${band} `))||band;
     rows.push({key:`${age}:${source.id}`,age,type:'animated-play',concept:source.concept,title:source.title,source});
