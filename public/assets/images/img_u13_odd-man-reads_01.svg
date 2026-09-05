@@ -1,14 +1,63 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="1200" height="800" viewBox="0 0 1200 800" role="img" aria-labelledby="title desc">
-  <title>Gold odd-man rush with shot lane open</title>
-  <desc>Gold attacks right to left. The white defender blocks the pass to the middle teammate while the puck carrier has a clear lane to the net.</desc>
+  <title id="title">Gold odd-man rush with shot lane open</title>
+  <desc id="desc">Gold attacks right to left. The white defender blocks the pass to the middle teammate while the puck carrier has a clear lane to the net.</desc>
   <defs>
+<linearGradient id="icePaint" x1="0" y1="0" x2="0.15" y2="1"><stop stop-color="#FFFFFF"/><stop offset=".5" stop-color="#EFF6F7"/><stop offset="1" stop-color="#D5E5EB"/></linearGradient>
+  <radialGradient id="iceLight" cx=".48" cy=".2" r=".75"><stop stop-color="#FFFFFF" stop-opacity=".65"/><stop offset="1" stop-color="#FFFFFF" stop-opacity="0"/></radialGradient>
+  <linearGradient id="goldJersey" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#F3D88D"/><stop offset=".5" stop-color="#C9A24B"/><stop offset="1" stop-color="#916A2F"/></linearGradient>
+  <linearGradient id="navyJersey" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#607D9D"/><stop offset=".48" stop-color="#294363"/><stop offset="1" stop-color="#0B1A33"/></linearGradient>
+  <linearGradient id="helmetPaint" x1="0" y1="0" x2=".7" y2="1"><stop stop-color="#71869A"/><stop offset=".4" stop-color="#23384E"/><stop offset="1" stop-color="#071322"/></linearGradient>
+  <linearGradient id="padPaint" x1="0" y1="0" x2="1" y2=".25"><stop stop-color="#FFFDF7"/><stop offset=".6" stop-color="#E8ECEA"/><stop offset="1" stop-color="#A0AFB9"/></linearGradient>
+  <pattern id="netMesh" width="4" height="4" patternUnits="userSpaceOnUse"><rect width="4" height="4" fill="#F5EFE6"/><path d="M0 0h4v4" fill="none" stroke="#7B8792" stroke-width=".4"/></pattern><linearGradient id="whiteJersey" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#FFFFFF"/><stop offset=".6" stop-color="#F5F4EC"/><stop offset="1" stop-color="#CBD6DC"/></linearGradient><linearGradient id="goldShell" x1="0" y1="0" x2=".3" y2="1"><stop stop-color="#F4DE9D"/><stop offset="1" stop-color="#C9A24B"/></linearGradient><g id="art-gold"><g transform="translate(0 0) rotate(0) scale(1)" stroke-linecap="round" stroke-linejoin="round">
+    <ellipse cx="0" cy="6" rx="8.4" ry="2.4" fill="#061123" opacity=".2"/>
+    <path d="M-2.6 2.5l-.6 4m5.8-4 .6 4" stroke="#061123" stroke-width="3.2"/><path d="M-3 4.3v1.3m6-1.3v1.3" stroke="#142744" stroke-width="2.5"/><path d="M-5.2 7h3.6m3.2 0h3.6" stroke="#061123" stroke-width="2.1"/><path d="M-5.4 8h3.8m3.2 0h3.8" stroke="#91A2AD" stroke-width=".6"/>
+    <path d="M-4.2-2.8Q-6.5-2.4-7.8 1.5L-6 3-3-.3M4.2-2.8Q6.5-2.4 7.8 1.5L6 3 3-.3" fill="url(#goldJersey)" stroke="#0B1A33" stroke-width=".6"/>
+    <path d="M-7.3 .1-5.3 1.2m12.6-1.1-2 1.1" stroke="#142744" stroke-width="1.1"/>
+    <path d="M-4.3-3Q0-4.2 4.3-3L4.8 3Q0 4.8-4.8 3Z" fill="url(#goldJersey)" stroke="#061123" stroke-width=".6"/>
+    <path d="M-4.4 2Q0 3.2 4.4 2" fill="none" stroke="#142744" stroke-width="1.1"/>
+    <path d="M-3.3-2Q0-2.6 3.3-2" fill="none" stroke="#FFFFFF" opacity=".3" stroke-width=".55"/>
+    <ellipse cx="-6.8" cy="2" rx="1.6" ry="1.4" fill="#14263B" stroke="#142744" stroke-width=".5"/>
+    <ellipse cx="6.8" cy="2" rx="1.6" ry="1.4" fill="#14263B" stroke="#142744" stroke-width=".5"/>
+    <g transform="translate(0 -1.2)"><ellipse cx="0" cy="-5.1" rx="3.5" ry="3.1" fill="url(#helmetPaint)" stroke="#061123" stroke-width=".6"/>
+    <path d="M-2.7-5.7Q-2.1-7.3 .6-7.3" fill="none" stroke="#B5C6D0" stroke-width=".6"/>
+    <path d="M-2.4-4.9Q0-4.1 2.4-4.9L1.9-2.6Q0-1.5-1.9-2.6Z" fill="#EAC3A5" stroke="#22374A" stroke-width=".4"/>
+    <path d="M-2.4-4.8h4.8m-4.5 1.3h4.2m-3.3-1.3.2 2.6m2-2.6-.2 2.6" fill="none" stroke="#7F97A7" stroke-width=".4"/></g>
+  </g></g><g id="art-white"><g transform="translate(0 0) rotate(0) scale(1)" stroke-linecap="round" stroke-linejoin="round">
+    <ellipse cx="0" cy="6" rx="8.4" ry="2.4" fill="#061123" opacity=".2"/>
+    <path d="M-2.6 2.5l-.6 4m5.8-4 .6 4" stroke="#061123" stroke-width="3.2"/><path d="M-3 4.3v1.3m6-1.3v1.3" stroke="#142744" stroke-width="2.5"/><path d="M-5.2 7h3.6m3.2 0h3.6" stroke="#061123" stroke-width="2.1"/><path d="M-5.4 8h3.8m3.2 0h3.8" stroke="#91A2AD" stroke-width=".6"/>
+    <path d="M-4.2-2.8Q-6.5-2.4-7.8 1.5L-6 3-3-.3M4.2-2.8Q6.5-2.4 7.8 1.5L6 3 3-.3" fill="url(#whiteJersey)" stroke="#0B1A33" stroke-width=".6"/>
+    <path d="M-7.3 .1-5.3 1.2m12.6-1.1-2 1.1" stroke="#142744" stroke-width="1.1"/>
+    <path d="M-4.3-3Q0-4.2 4.3-3L4.8 3Q0 4.8-4.8 3Z" fill="url(#whiteJersey)" stroke="#061123" stroke-width=".6"/>
+    <path d="M-4.4 2Q0 3.2 4.4 2" fill="none" stroke="#142744" stroke-width="1.1"/>
+    <path d="M-3.3-2Q0-2.6 3.3-2" fill="none" stroke="#FFFFFF" opacity=".3" stroke-width=".55"/>
+    <ellipse cx="-6.8" cy="2" rx="1.6" ry="1.4" fill="#14263B" stroke="#142744" stroke-width=".5"/>
+    <ellipse cx="6.8" cy="2" rx="1.6" ry="1.4" fill="#14263B" stroke="#142744" stroke-width=".5"/>
+    <path d="M-3.7-.7h7.4m-7.4 1.1h7.4" fill="none" stroke="#142744" stroke-width=".55"/><g transform="translate(0 -1.2)"><ellipse cx="0" cy="-5.1" rx="3.5" ry="3.1" fill="url(#helmetPaint)" stroke="#061123" stroke-width=".6"/>
+    <path d="M-2.7-5.7Q-2.1-7.3 .6-7.3" fill="none" stroke="#B5C6D0" stroke-width=".6"/>
+    <path d="M-2.4-4.9Q0-4.1 2.4-4.9L1.9-2.6Q0-1.5-1.9-2.6Z" fill="#EAC3A5" stroke="#22374A" stroke-width=".4"/>
+    <path d="M-2.4-4.8h4.8m-4.5 1.3h4.2m-3.3-1.3.2 2.6m2-2.6-.2 2.6" fill="none" stroke="#7F97A7" stroke-width=".4"/></g>
+  </g></g><g id="art-goalie"><g transform="translate(0 0) rotate(0) scale(1)" stroke-linecap="round" stroke-linejoin="round">
+    <ellipse cx="0" cy="6" rx="8.4" ry="2.4" fill="#061123" opacity=".2"/>
+    <rect x="-6" y="1.5" width="5" height="6.5" rx="1" fill="url(#padPaint)" stroke="#334554" stroke-width=".5"/><rect x="1" y="1.5" width="5" height="6.5" rx="1" fill="url(#padPaint)" stroke="#334554" stroke-width=".5"/><path d="M-5.3 3h3.6m3.4 0h3.6m-10.6 2h3.6m3.4 0h3.6" stroke="#142744" stroke-width=".8"/>
+    <path d="M-4.2-2.8Q-6.5-2.4-7.8 1.5L-6 3-3-.3M4.2-2.8Q6.5-2.4 7.8 1.5L6 3 3-.3" fill="url(#whiteJersey)" stroke="#0B1A33" stroke-width=".6"/>
+    <path d="M-7.3 .1-5.3 1.2m12.6-1.1-2 1.1" stroke="#142744" stroke-width="1.1"/>
+    <path d="M-4.3-3Q0-4.2 4.3-3L4.8 3Q0 4.8-4.8 3Z" fill="url(#whiteJersey)" stroke="#061123" stroke-width=".6"/>
+    <path d="M-4.4 2Q0 3.2 4.4 2" fill="none" stroke="#142744" stroke-width="1.1"/>
+    <path d="M-3.3-2Q0-2.6 3.3-2" fill="none" stroke="#FFFFFF" opacity=".3" stroke-width=".55"/>
+    <ellipse cx="-6.8" cy="2" rx="1.6" ry="1.4" fill="url(#padPaint)" stroke="#142744" stroke-width=".5"/>
+    <ellipse cx="6.8" cy="2" rx="1.6" ry="1.4" fill="url(#padPaint)" stroke="#142744" stroke-width=".5"/>
+    <g transform="translate(0 -1.2)"><ellipse cx="0" cy="-5.1" rx="3.5" ry="3.1" fill="url(#helmetPaint)" stroke="#061123" stroke-width=".6"/>
+    <path d="M-2.7-5.7Q-2.1-7.3 .6-7.3" fill="none" stroke="#B5C6D0" stroke-width=".6"/>
+    <path d="M-2.4-4.9Q0-4.1 2.4-4.9L1.9-2.6Q0-1.5-1.9-2.6Z" fill="#F5EFE6" stroke="#22374A" stroke-width=".4"/>
+    <path d="M-2.4-4.8h4.8m-4.5 1.3h4.2m-3.3-1.3.2 2.6m2-2.6-.2 2.6" fill="none" stroke="#7F97A7" stroke-width=".4"/></g>
+  </g></g>
     <style>
-      .ice{fill:#f7fbff;stroke:#9cc7df;stroke-width:8}
+      .ice{fill:url(#icePaint);stroke:#0B1A33;stroke-width:8}
       .line-red{stroke:#d84b4b;stroke-width:5}
       .line-blue{stroke:#4f8fd8;stroke-width:6}
       .circle{fill:none;stroke:#c7dcea;stroke-width:4}
-      .gold{fill:#d6a300;stroke:#7b5a00;stroke-width:5}
-      .white{fill:#ffffff;stroke:#6f7d88;stroke-width:5}
+      .gold{fill:url(#goldShell);stroke:#7b5a00;stroke-width:5}
+      .white{fill:url(#whiteJersey);stroke:#5B6675;stroke-width:5}
       .stick{stroke:#2d3740;stroke-width:6;stroke-linecap:round}
       .puck{fill:#111827}
       .net{fill:none;stroke:#c92f2f;stroke-width:8;stroke-linecap:round;stroke-linejoin:round}
@@ -25,22 +74,27 @@
   <circle class="circle" cx="910" cy="245" r="78"/>
   <circle class="circle" cx="910" cy="555" r="78"/>
   <path class="crease" d="M153 315 C225 335 225 465 153 485 Z"/>
+  <path d="M107 345 65 365 65 435 107 455Z" fill="url(#netMesh)"/>
   <path class="net" d="M107 345 L107 455 M107 345 L65 365 M107 455 L65 435 M65 365 L65 435"/>
   <g transform="translate(145 400)">
     <ellipse class="white" cx="0" cy="0" rx="28" ry="42"/>
+    <use href="#art-goalie" transform="scale(2.4347826086956523)"/>
     <line class="stick" x1="20" y1="14" x2="55" y2="34"/>
   </g>
   <g transform="translate(845 560)">
     <circle class="gold" cx="0" cy="0" r="34"/>
+    <use href="#art-gold" transform="scale(2.9565217391304346)"/>
     <line class="stick" x1="-24" y1="-15" x2="-70" y2="-30"/>
     <circle class="puck" cx="-78" cy="-34" r="9"/>
   </g>
   <g transform="translate(610 398)">
     <circle class="gold" cx="0" cy="0" r="32"/>
+    <use href="#art-gold" transform="scale(2.782608695652174)"/>
     <line class="stick" x1="-14" y1="25" x2="-46" y2="54"/>
   </g>
   <g transform="translate(720 470)">
     <circle class="white" cx="0" cy="0" r="34"/>
+    <use href="#art-white" transform="scale(2.9565217391304346)"/>
     <line class="stick" x1="-28" y1="18" x2="-100" y2="-38"/>
   </g>
 </svg>

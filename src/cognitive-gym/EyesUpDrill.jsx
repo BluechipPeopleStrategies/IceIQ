@@ -1,3 +1,4 @@
+import { drawHockeyPuck } from "../visuals/hockeyArtCanvas.js";
 import { useRef, useState, useCallback, useEffect } from "react";
 import {
   createAdaptiveLevel,
@@ -71,10 +72,7 @@ export default function EyesUpDrill({ playerId = "default", onExit }) {
     // center fixation puck — keep your eyes here the whole time
     const cx = W / 2;
     const cy = H / 2;
-    ctx.fillStyle = "#0b1b2b";
-    ctx.beginPath();
-    ctx.arc(cx, cy, 9, 0, Math.PI * 2);
-    ctx.fill();
+    drawHockeyPuck(ctx, cx, cy, 9);
     // a thin gold ring around it so the fixation point reads as "look here"
     ctx.strokeStyle = "#f2b705";
     ctx.lineWidth = 2;

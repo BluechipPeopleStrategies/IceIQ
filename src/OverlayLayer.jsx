@@ -17,6 +17,7 @@ const SPRITE_SHEETS = {
 const goaliePoseIdx = (team, base) => (team === "yellow" ? 0 : 8) + (base % 8);
 
 export function OverlayLayer({ overlays }) {
+  const namespace = `overlay-${React.useId().replace(/[^a-zA-Z0-9_-]/g, '')}`;
   if (!Array.isArray(overlays) || overlays.length === 0) return null;
   return (
     <div style={{ position: "absolute", inset: 0, pointerEvents: "none" }}>
@@ -88,13 +89,13 @@ export function OverlayLayer({ overlays }) {
             <svg key={o.id || i} viewBox="0 0 100 100" preserveAspectRatio="none"
               style={{ position: "absolute", inset: 0, width: "100%", height: "100%", overflow: "visible" }}>
               <defs>
-                <marker id={`fa-${i}`} markerWidth="5" markerHeight="5" refX="2.4" refY="2.5" orient="auto">
+                <marker id={`${namespace}-fa-${i}`} markerWidth="5" markerHeight="5" refX="2.4" refY="2.5" orient="auto">
                   <path d="M0,0 L5,2.5 L0,5 Z" fill={col} />
                 </marker>
               </defs>
               <path d={`M${x1},${y1} Q ${cx},${cy} ${x2},${y2}`} fill="none" stroke={col}
                 strokeWidth={o.width || 2.4} strokeDasharray="5 3" strokeLinecap="round"
-                markerEnd={`url(#fa-${i})`} vectorEffect="non-scaling-stroke" />
+                markerEnd={`url(#${namespace}-fa-${i})`} vectorEffect="non-scaling-stroke" />
             </svg>
           );
         }

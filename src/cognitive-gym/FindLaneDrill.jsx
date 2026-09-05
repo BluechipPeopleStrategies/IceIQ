@@ -1,4 +1,6 @@
+import { HockeyPlayerArt } from "../visuals/HockeyPlayerArt.jsx";
 import { useRef, useState, useCallback, useEffect } from "react";
+import { drawHockeyPlayer, drawHockeyPuck, drawHockeyLabel } from "../visuals/hockeyArtCanvas.js";
 import {
   createAdaptiveLevel,
   setupCanvas,
@@ -51,66 +53,31 @@ export default function FindLaneDrill({ playerId = "default", onExit }) {
     timersRef.current.push(setTimeout(fn, ms));
   }
 
-  // Draw the puck carrier (YOU): a gold dot with a dark ring and a small puck
-  // beside it so the carrier is distinct by shape, not color alone.
+  // YOU keeps the gold task cue, dark ring and exact adjacent puck position.
   function drawYou(ctx, p, r) {
-    ctx.fillStyle = "#f2b705";
-    ctx.beginPath();
-    ctx.arc(p.x, p.y, r, 0, Math.PI * 2);
-    ctx.fill();
-    ctx.strokeStyle = "#0b1b2b";
-    ctx.lineWidth = 3;
-    ctx.beginPath();
-    ctx.arc(p.x, p.y, r, 0, Math.PI * 2);
-    ctx.stroke();
-    // the puck, tucked at the carrier's feet
-    ctx.fillStyle = "#0b1b2b";
-    ctx.beginPath();
-    ctx.arc(p.x + r * 0.9, p.y + r * 0.7, Math.max(4, r * 0.32), 0, Math.PI * 2);
-    ctx.fill();
-    // "YOU" label
-    ctx.fillStyle = "#0b1b2b";
-    ctx.font = `700 ${Math.round(r * 0.8)}px system-ui, sans-serif`;
-    ctx.textAlign = "center";
-    ctx.textBaseline = "middle";
-    ctx.fillText("YOU", p.x, p.y);
-    ctx.textBaseline = "alphabetic";
+    drawHockeyPlayer(ctx, { ...p, r, jersey: "#f2b705" });
+    ctx.strokeStyle = "#0B1A33"; ctx.lineWidth = 3;
+    ctx.beginPath(); ctx.arc(p.x, p.y, r, 0, Math.PI * 2); ctx.stroke();
+    drawHockeyPuck(ctx, p.x + r * .9, p.y + r * .7, Math.max(4, r * .32));
+    drawHockeyLabel(ctx, "YOU", p.x, p.y, r, { ink: "#0B1A33", plate: "#f2b705" });
   }
 
-  // A teammate (receiver): a filled blue dot with a light ring.
+  // A navy receiver keeps the light ring at the original target radius.
   function drawReceiver(ctx, p, r) {
-    ctx.fillStyle = "#1b6cb0";
-    ctx.beginPath();
-    ctx.arc(p.x, p.y, r, 0, Math.PI * 2);
-    ctx.fill();
-    ctx.strokeStyle = "#cfe6f6";
-    ctx.lineWidth = 2.5;
-    ctx.beginPath();
-    ctx.arc(p.x, p.y, r, 0, Math.PI * 2);
-    ctx.stroke();
+    drawHockeyPlayer(ctx, { ...p, r, team: "home" });
+    ctx.strokeStyle = "#F5EFE6"; ctx.lineWidth = 2.5;
+    ctx.beginPath(); ctx.arc(p.x, p.y, r, 0, Math.PI * 2); ctx.stroke();
   }
 
-  // A defender: a grey dot with an X through it (shape, not color alone).
+  // A gold defender keeps the X mark, so the role is not conveyed by colour alone.
   function drawDefender(ctx, p, r) {
-    ctx.fillStyle = "#cdd9e1";
-    ctx.beginPath();
-    ctx.arc(p.x, p.y, r, 0, Math.PI * 2);
-    ctx.fill();
-    ctx.strokeStyle = "#5b7587";
-    ctx.lineWidth = 2;
-    ctx.beginPath();
-    ctx.arc(p.x, p.y, r, 0, Math.PI * 2);
-    ctx.stroke();
-    ctx.strokeStyle = "#3d5061";
-    ctx.lineWidth = 2.5;
-    ctx.lineCap = "round";
-    const s = r * 0.6;
-    ctx.beginPath();
-    ctx.moveTo(p.x - s, p.y - s);
-    ctx.lineTo(p.x + s, p.y + s);
-    ctx.moveTo(p.x + s, p.y - s);
-    ctx.lineTo(p.x - s, p.y + s);
-    ctx.stroke();
+    drawHockeyPlayer(ctx, { ...p, r, team: "away" });
+    ctx.strokeStyle = "#5B6675"; ctx.lineWidth = 2;
+    ctx.beginPath(); ctx.arc(p.x, p.y, r, 0, Math.PI * 2); ctx.stroke();
+    ctx.strokeStyle = "#0B1A33"; ctx.lineWidth = 2.5; ctx.lineCap = "round";
+    const s = r * .6;
+    ctx.beginPath(); ctx.moveTo(p.x - s, p.y - s); ctx.lineTo(p.x + s, p.y + s);
+    ctx.moveTo(p.x + s, p.y - s); ctx.lineTo(p.x - s, p.y + s); ctx.stroke();
   }
 
   // Render the scene. During "live" we draw the formation plus a shrinking
@@ -519,17 +486,17 @@ export default function FindLaneDrill({ playerId = "default", onExit }) {
             <line x1="140" y1="108" x2="225" y2="30" stroke="#1f9d55" strokeWidth="3.5" />
             {/* a blocked lane: faded with an X */}
             <line x1="140" y1="108" x2="60" y2="34" stroke="#8a98a3" strokeWidth="1.5" strokeDasharray="4 5" opacity="0.5" />
-            <path d="M94 64 l10 10 M104 64 l-10 10" stroke="#3d5061" strokeWidth="2.5" strokeLinecap="round" />
             {/* YOU, the puck carrier */}
-            <circle cx="140" cy="108" r="13" fill="#f2b705" stroke="#0b1b2b" strokeWidth="3" />
+            <g transform="translate(140,108)"><circle r="13" fill="#F5EFE6" stroke="#0b1b2b" strokeWidth="3" /><HockeyPlayerArt radius={12.22} team="away" /></g>
             <circle cx="151" cy="116" r="4" fill="#0b1b2b" />
             {/* a defender clogging a lane */}
-            <circle cx="99" cy="69" r="11" fill="#cdd9e1" stroke="#5b7587" strokeWidth="2" />
+            <g transform="translate(99,69)"><circle r="11" fill="#F5EFE6" stroke="#5b7587" strokeWidth="2" /><HockeyPlayerArt radius={10.34} team="away" /></g>
+            <path d="M94 64 l10 10 M104 64 l-10 10" stroke="#3d5061" strokeWidth="2.5" strokeLinecap="round" />
             {/* the open teammate (green ring) */}
-            <circle cx="225" cy="30" r="11" fill="#1b6cb0" stroke="#cfe6f6" strokeWidth="2.5" />
+            <g transform="translate(225,30)"><circle r="11" fill="#F5EFE6" stroke="#cfe6f6" strokeWidth="2.5" /><HockeyPlayerArt radius={10.34} team="home" /></g>
             <circle cx="225" cy="30" r="16" fill="none" stroke="#1f9d55" strokeWidth="3" />
             {/* a covered teammate */}
-            <circle cx="60" cy="34" r="11" fill="#1b6cb0" stroke="#cfe6f6" strokeWidth="2.5" />
+            <g transform="translate(60,34)"><circle r="11" fill="#F5EFE6" stroke="#cfe6f6" strokeWidth="2.5" /><HockeyPlayerArt radius={10.34} team="home" /></g>
           </svg>
           <p className="gym-goal"><strong>Your goal:</strong> tap the teammate with a clear passing lane before time runs out.</p>
           <p>

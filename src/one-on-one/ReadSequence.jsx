@@ -26,6 +26,8 @@ import {
   submitThirdRead,
 } from './readSequenceCore.js';
 import { NHL_200X85_PROFILE } from '../scenario-engine/rinkFrame.js';
+import { HockeyPlayerArt } from '../visuals/HockeyPlayerArt.jsx';
+import BoardInspection from '../visuals/BoardInspection.jsx';
 import { AIReviewPanel } from './CoachQuestionLab.jsx';
 import RoutePlanner from './RoutePlanner.jsx';
 import RinkCoordinateInput from './RinkCoordinateInput.jsx';
@@ -46,7 +48,7 @@ const { bounds: RINK_BOUNDS, landmarks: RINK_MARKS } = NHL_200X85_PROFILE;
 const HALF_WIDTH = RINK_BOUNDS.maxY;
 const GOAL_X = RINK_MARKS.goalLineRight[0];
 
-function RinkStage({ state, definition = U11_READ_SEQUENCE, description, targets = [], onTarget, moveActorId, onMove, showReadLanes = false, changedCue = false, route = null, onRoutePoint }) {
+function RinkStage({ state, definition = U11_READ_SEQUENCE, description, targets = [], onTarget, moveActorId, onMove, showReadLanes = false, changedCue = false, route = null, onRoutePoint, inspectable = false }) {
   const svg = useRef(null);
   const drag = useRef(null);
   const routeTap = useRef(null);
@@ -54,6 +56,8 @@ function RinkStage({ state, definition = U11_READ_SEQUENCE, description, targets
   const puckCarrier = state.actors.find(actor => actor.id === state.puck.owner);
   const carrierName = puckCarrier?.label || puckCarrier?.name || puckCarrier?.id;
   const puckDescription = carrierName === 'YOU' ? 'You have the puck.' : carrierName ? `${carrierName} has the puck.` : 'No player has the puck.';
+  const stageDescription = (definition.ui?.stageDescription || 'Navy players attack the right net. Gold players defend.')
+    .replace('Navy circles', 'Navy players').replace('Gold shapes', 'Gold players').replace('gold shapes', 'gold players');
   const support = state.actors.find(actor => actor.id === 'F2');
 
   function targetBadge(target) {
@@ -103,8 +107,8 @@ function RinkStage({ state, definition = U11_READ_SEQUENCE, description, targets
     onMove(clampSequencePoint(actor.x + direction[0] * step, actor.y + direction[1] * step));
   }
 
-  return <div className="rs-stage-wrap">
-    <svg ref={svg} className="rs-rink" viewBox="-1.5 -14.5 34 29" role="group" aria-label="Right half of the rink. Navy circles attack the right net; gold shapes defend."
+  return <><div className="rs-stage-wrap">
+    <svg ref={svg} className="rs-rink" viewBox="-1.5 -14.5 34 29" role="group" aria-label="Right half of the rink. Navy players attack the right net; gold players defend."
       onPointerDown={event => {
         if (onRoutePoint && event.button === 0) { routeTap.current = { pointerId: event.pointerId, x: event.clientX, y: event.clientY }; svg.current?.setPointerCapture(event.pointerId); }
         else if (onMove && !event.target.closest?.('.rs-actor')) { const point = eventPoint(event); if (point) onMove(point); }
@@ -113,13 +117,19 @@ function RinkStage({ state, definition = U11_READ_SEQUENCE, description, targets
       onPointerUp={finishMove} onPointerCancel={event => { routeTap.current = null; finishMove(event); }} onLostPointerCapture={() => { drag.current = null; routeTap.current = null; }}
       style={{ touchAction: onMove ? 'none' : onRoutePoint ? 'pan-y' : 'auto' }}>
       <title>{definition.ageBand} connected two-on-one</title>
-      <desc>{description || (changedCue ? 'Changed opening freeze: D1 is now on the pass line between the puck and F2. Every other player and the puck stayed in the same place.' : `${definition.ui?.stageDescription || 'Navy circles attack the right net. Gold shapes defend.'} ${puckDescription}`)}</desc>
+      <desc>{description || (changedCue ? 'Changed opening freeze: D1 is now on the pass line between the puck and F2. Every other player and the puck stayed in the same place.' : `${stageDescription} ${puckDescription}`)}</desc>
       <defs>
-        <linearGradient id={`${stageId}-ice`} x1="0" x2="1" y1="0" y2="1"><stop stopColor="#fffdfa" /><stop offset="1" stopColor="#e8edf1" /></linearGradient>
+        <linearGradient id={`${stageId}-ice`} x1="0" x2="1" y1="0" y2="1"><stop stopColor="#fbfdff" /><stop offset=".52" stopColor="#eaf1f5" /><stop offset="1" stopColor="#cddde5" /></linearGradient>
+        <filter id={`${stageId}-ice-depth`} x="-10%" y="-15%" width="120%" height="135%"><feDropShadow dx="0" dy=".3" stdDeviation=".2" floodColor="#071528" floodOpacity=".5" /></filter>
+        <path id={`${stageId}-surface`} d="M 0 -12.954 H 21.9456 A 8.5344 8.5344 0 0 1 30.48 -4.4196 V 4.4196 A 8.5344 8.5344 0 0 1 21.9456 12.954 H 0 Z" />
         <filter id={`${stageId}-shadow`}><feDropShadow dx="0" dy=".16" stdDeviation=".18" floodOpacity=".28" /></filter>
         <marker id={`${stageId}-arrow`} markerWidth="4" markerHeight="4" refX="3" refY="2" orient="auto"><path d="M0 0 L4 2 L0 4 Z" fill="#C9A24B" /></marker>
       </defs>
-      <path d="M 0 -12.954 H 21.9456 A 8.5344 8.5344 0 0 1 30.48 -4.4196 V 4.4196 A 8.5344 8.5344 0 0 1 21.9456 12.954 H 0 Z" fill={`url(#${stageId}-ice)`} stroke="#8793a1" strokeWidth=".22" />
+      <g pointerEvents="none" filter={`url(#${stageId}-ice-depth)`}>
+        <use href={`#${stageId}-surface`} fill="#f3f6f8" stroke="#213b51" strokeWidth=".78" />
+        <use href={`#${stageId}-surface`} fill="none" stroke="#d0ae65" strokeWidth=".44" />
+        <use href={`#${stageId}-surface`} fill={`url(#${stageId}-ice)`} stroke="#edf4f7" strokeWidth=".14" />
+      </g>
       <g fill="none" strokeLinecap="round">
         <line x1={RINK_MARKS.blueLineRightMid[0]} x2={RINK_MARKS.blueLineRightMid[0]} y1={RINK_BOUNDS.minY} y2={RINK_BOUNDS.maxY} stroke="#5079a5" strokeWidth=".18" opacity=".52" />
         <line x1={GOAL_X} x2={GOAL_X} y1="-9" y2="9" stroke="#b55b60" strokeWidth=".16" opacity=".7" />
@@ -145,20 +155,23 @@ function RinkStage({ state, definition = U11_READ_SEQUENCE, description, targets
           role={movable ? 'button' : undefined} tabIndex={movable ? 0 : undefined}
           aria-label={`${actor.label || actor.name}, ${actor.team} ${actor.role}${movable ? '. Drag, tap the ice, or use arrow keys to move.' : ''}`}
           onPointerDown={event => beginMove(event, actor)} onKeyDown={event => moveWithKeyboard(event, actor)}>
-          {actor.role === 'goalie' ? <path d="M-.72 -.9 H.72 V.9 H-.72 Z" /> : actor.team === 'home' ? <circle r=".78" /> : <path d="M 0 -1 L .86 0 L 0 1 L -.86 0 Z" />}
+          <g fill="transparent" stroke="none" pointerEvents="all">
+            {actor.role === 'goalie' ? <path d="M-.72 -.9 H.72 V.9 H-.72 Z" /> : actor.team === 'home' ? <circle r=".78" /> : <path d="M 0 -1 L .86 0 L 0 1 L -.86 0 Z" />}
+          </g>
+          <g transform={`rotate(${-actor.facing * 180 / Math.PI})`}><HockeyPlayerArt radius={.78} team={actor.team} goalie={actor.role === 'goalie'} facing={actor.facing * 180 / Math.PI} /></g>
           <path className="rs-facing" d="M .25 0 H 1.18" />
           <text transform={`rotate(${-actor.facing * 180 / Math.PI})`} y="-1.22" textAnchor="middle">{actor.label}</text>
           {selected && <circle className="rs-move-ring" r="1.35" />}
         </g>;
       })}
-      {targets.map((target, index) => { const badge = targetBadge(target); return <g key={target.id} className="rs-rink-target" transform={`translate(${target.x} ${target.y})`} role="button" tabIndex="0" aria-label={`Choose ${target.label}`}
+      {targets.map((target, index) => { const badge = targetBadge(target); return <g key={target.id} className="rs-rink-target" transform={`translate(${target.x} ${target.y})`} role={onTarget ? 'button' : 'img'} tabIndex={onTarget ? 0 : undefined} aria-label={onTarget ? `Choose ${target.label}` : target.label}
         onClick={() => onTarget?.(target.id)} onKeyDown={event => { if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); onTarget?.(target.id); } }}>
         <circle className="rs-target-area" r="1.75" /><circle className="rs-target-number" cx={badge.x} cy={badge.y} r=".75" /><text x={badge.x} y={badge.y + .35} textAnchor="middle">{index + 1}</text>
       </g>; })}
       <g className="rs-puck" pointerEvents="none" transform={`translate(${state.puck.x} ${state.puck.y})`}><circle r=".27" /><circle r=".53" /></g>
     </svg>
     <div className="rs-rink-legend"><span><i className="navy" /> Attack</span><span><i className="gold" /> Defend</span><span><i className="puck" /> Puck</span></div>
-  </div>;
+  </div>{inspectable && <BoardInspection title={`${definition.ageBand} · ${changedCue ? 'Changed opening' : 'Hockey board'}`} renderBoard={() => <RinkStage state={state} definition={definition} description={description} targets={targets} moveActorId={moveActorId} showReadLanes={showReadLanes} changedCue={changedCue} route={route} />} />}</>;
 }
 
 function Progress({ session, labels = ['Choose from the cue', 'Re-scan the change', 'Move without the puck'] }) {
@@ -219,8 +232,8 @@ function ChangedCueComparison({ session, onSave }) {
     <button type="button" aria-expanded={open} aria-controls={contentId} onClick={() => setOpen(value => !value)}>{open ? 'Hide comparison' : session.changedCue ? 'View my changed-cue comparison' : 'Try one changed cue'}</button>
     {open && <div id={contentId} className="rs-comparison-content">
       <div className="rs-comparison-boards">
-        <figure><figcaption><b>Original freeze</b><span>D1 is near the line from the puck to the net.</span></figcaption><RinkStage state={comparison.originalState} showReadLanes /></figure>
-        <figure><figcaption><b>Only D1 moved</b><span>D1 is now between the puck and F2.</span></figcaption><RinkStage state={comparison.changedState} showReadLanes changedCue /></figure>
+        <figure><figcaption><b>Original freeze</b><span>D1 is near the line from the puck to the net.</span></figcaption><RinkStage inspectable state={comparison.originalState} showReadLanes /></figure>
+        <figure><figcaption><b>Only D1 moved</b><span>D1 is now between the puck and F2.</span></figcaption><RinkStage inspectable state={comparison.changedState} showReadLanes changedCue /></figure>
       </div>
       <div className="rs-cue-card"><b>What changed?</b><p>{comparison.cue}</p></div>
       <div className="rs-comparison-response">
@@ -507,7 +520,7 @@ function ReadSequenceLesson({ playerId, definition, scratch, rememberDraft, reca
         {session.phase === 'read-3' && <div className="rs-move-modes" role="group" aria-label="How to show your support"><button type="button" aria-pressed={!routeMode} onClick={() => changeMoveMode(false)}>Move player</button><button type="button" aria-pressed={routeMode} onClick={() => changeMoveMode(true)}>Plan route</button></div>}
         <ReadSequenceBoard {...boardProps} view={boardView} onViewChange={setBoardView}
           playing={visualPlaying} time={visualTime} supportPoint={session.third?.point || null}
-          fallbackBoard={<RinkStage {...boardProps} showReadLanes={isU11 && session.phase === 'read-1'} />} />
+          fallbackBoard={<RinkStage inspectable {...boardProps} showReadLanes={isU11 && session.phase === 'read-1'} />} />
         {((session.phase === 'read-3' && routeMode) || (session.phase === 'complete' && route)) && <RoutePlanner key={`${storageKey}:${session.phase}`} route={route} origin={selectedTarget?.state.actors.find(actor => actor.id === session.third.actorId)} actorLabel={routeLabel} onChange={updateRoute} onAddPoint={addRoutePoint} progress={routeProgress} playing={routePlaying} reducedMotion={reducedMotion} onPreview={previewRoute} onPause={() => setRoutePlaying(false)} onProgress={progress => { setRoutePlaying(false); setRouteProgress(progress); }} readOnly={session.phase === 'complete'} />}
         <div className="rs-playback-bar">
           <span>{activePlayback ? `${branch?.actionLabel || 'Selected'} consequence · ${Math.round(session.playbackProgress * 100)}%` : session.phase === 'read-1' ? 'Freeze · read 1' : session.phase === 'read-2' ? 'Freeze · read 2' : session.phase === 'read-3' ? 'Freeze · read 3' : 'Sequence reflection'}</span>

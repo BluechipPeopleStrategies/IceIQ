@@ -1,4 +1,6 @@
+import { HockeyPlayerArt } from "../visuals/HockeyPlayerArt.jsx";
 import { useRef, useState, useCallback, useEffect } from "react";
+import { drawHockeyPlayer, drawHockeyPuck } from "../visuals/hockeyArtCanvas.js";
 import {
   createAdaptiveLevel,
   setupCanvas,
@@ -55,57 +57,20 @@ export default function SnapshotDrill({ playerId = "default", onExit }) {
   // color alone: open = gold double ring, teammate = filled dot with a light
   // ring, defender = dot with an X through it.
   function drawMarker(ctx, mk, r) {
-    if (mk.kind === "open") {
-      ctx.fillStyle = "#f2b705";
-      ctx.beginPath();
-      ctx.arc(mk.x, mk.y, r, 0, Math.PI * 2);
-      ctx.fill();
-      ctx.strokeStyle = "#9a7400";
-      ctx.lineWidth = 2.5;
-      ctx.beginPath();
-      ctx.arc(mk.x, mk.y, r, 0, Math.PI * 2);
-      ctx.stroke();
-      // outer double ring so the open teammate is unmistakable by shape
-      ctx.strokeStyle = "#0b1b2b";
-      ctx.lineWidth = 2;
-      ctx.beginPath();
-      ctx.arc(mk.x, mk.y, r + 5, 0, Math.PI * 2);
-      ctx.stroke();
-      return;
+    const open = mk.kind === "open", defender = mk.kind === "defender";
+    drawHockeyPlayer(ctx, { ...mk, r, team: defender ? "away" : "home", jersey: open ? "#f2b705" : defender ? "#cdd9e1" : null });
+    ctx.strokeStyle = open ? "#9a7400" : defender ? "#5B6675" : "#F5EFE6";
+    ctx.lineWidth = defender ? 2 : 2.5;
+    ctx.beginPath(); ctx.arc(mk.x, mk.y, r, 0, Math.PI * 2); ctx.stroke();
+    if (open) {
+      ctx.strokeStyle = "#0B1A33"; ctx.lineWidth = 2;
+      ctx.beginPath(); ctx.arc(mk.x, mk.y, r + 5, 0, Math.PI * 2); ctx.stroke();
+    } else if (defender) {
+      ctx.strokeStyle = "#0B1A33"; ctx.lineWidth = 2.5; ctx.lineCap = "round";
+      const s = r * .6;
+      ctx.beginPath(); ctx.moveTo(mk.x - s, mk.y - s); ctx.lineTo(mk.x + s, mk.y + s);
+      ctx.moveTo(mk.x + s, mk.y - s); ctx.lineTo(mk.x - s, mk.y + s); ctx.stroke();
     }
-    if (mk.kind === "defender") {
-      ctx.fillStyle = "#cdd9e1";
-      ctx.beginPath();
-      ctx.arc(mk.x, mk.y, r, 0, Math.PI * 2);
-      ctx.fill();
-      ctx.strokeStyle = "#5b7587";
-      ctx.lineWidth = 2;
-      ctx.beginPath();
-      ctx.arc(mk.x, mk.y, r, 0, Math.PI * 2);
-      ctx.stroke();
-      // an X through the dot marks a defender (shape, not color)
-      ctx.strokeStyle = "#3d5061";
-      ctx.lineWidth = 2.5;
-      ctx.lineCap = "round";
-      const s = r * 0.6;
-      ctx.beginPath();
-      ctx.moveTo(mk.x - s, mk.y - s);
-      ctx.lineTo(mk.x + s, mk.y + s);
-      ctx.moveTo(mk.x + s, mk.y - s);
-      ctx.lineTo(mk.x - s, mk.y + s);
-      ctx.stroke();
-      return;
-    }
-    // teammate: filled blue dot with a light ring
-    ctx.fillStyle = "#1b6cb0";
-    ctx.beginPath();
-    ctx.arc(mk.x, mk.y, r, 0, Math.PI * 2);
-    ctx.fill();
-    ctx.strokeStyle = "#cfe6f6";
-    ctx.lineWidth = 2.5;
-    ctx.beginPath();
-    ctx.arc(mk.x, mk.y, r, 0, Math.PI * 2);
-    ctx.stroke();
   }
 
   // Render the rink plus, depending on the stage: the whole formation (flash),
@@ -128,10 +93,7 @@ export default function SnapshotDrill({ playerId = "default", onExit }) {
 
     // a puck near center, a small nod to a live play
     if (sc.puck) {
-      ctx.fillStyle = "#0b1b2b";
-      ctx.beginPath();
-      ctx.arc(sc.puck.x, sc.puck.y, 6, 0, Math.PI * 2);
-      ctx.fill();
+      drawHockeyPuck(ctx, sc.puck.x, sc.puck.y, 6);
     }
 
     // the flash: show the whole formation for the glance window
@@ -433,13 +395,13 @@ export default function SnapshotDrill({ playerId = "default", onExit }) {
             {/* a puck near the middle */}
             <circle cx="140" cy="58" r="5" fill="#0b1b2b" />
             {/* teammates */}
-            <circle cx="70" cy="34" r="11" fill="#1b6cb0" stroke="#cfe6f6" strokeWidth="2.5" />
-            <circle cx="215" cy="78" r="11" fill="#1b6cb0" stroke="#cfe6f6" strokeWidth="2.5" />
+            <g transform="translate(70,34)"><circle r="11" fill="#F5EFE6" stroke="#cfe6f6" strokeWidth="2.5" /><HockeyPlayerArt radius={10.34} team="home" /></g>
+            <g transform="translate(215,78)"><circle r="11" fill="#F5EFE6" stroke="#cfe6f6" strokeWidth="2.5" /><HockeyPlayerArt radius={10.34} team="home" /></g>
             {/* a defender (dot with an X) */}
-            <circle cx="105" cy="84" r="11" fill="#cdd9e1" stroke="#5b7587" strokeWidth="2" />
+            <g transform="translate(105,84)"><circle r="11" fill="#cdd9e1" stroke="#5b7587" strokeWidth="2" /><g style={{ filter: "grayscale(1)" }}><HockeyPlayerArt radius={10.34} team="away" /></g></g>
             <path d="M99 78 l12 12 M111 78 l-12 12" stroke="#3d5061" strokeWidth="2.5" strokeLinecap="round" />
             {/* the open teammate (gold double ring) */}
-            <circle cx="205" cy="30" r="11" fill="#f2b705" stroke="#9a7400" strokeWidth="2.5" />
+            <g transform="translate(205,30)"><circle r="11" fill="#F5EFE6" stroke="#9a7400" strokeWidth="2.5" /><HockeyPlayerArt radius={10.34} team="away" /></g>
             <circle cx="205" cy="30" r="16" fill="none" stroke="#0b1b2b" strokeWidth="2" />
           </svg>
           <p className="gym-goal"><strong>Your goal:</strong> remember where the gold, double-ringed teammate appeared.</p>

@@ -5,7 +5,7 @@ import { ALL_ANIMATED_PLAYS } from '../play/playCatalog.js';
 import AnimatedPlay from '../play/AnimatedPlay.jsx';
 import { ScenarioRenderer } from '../scenario/index.js';
 import RinkReadsRinkQuestion from '../RinkReadsRinkQuestion.jsx';
-import { OverlayLayer } from '../OverlayLayer.jsx';
+import ScenarioImage from '../visuals/ScenarioImage.jsx';
 import { COACH_PERSONAS, getCoachForQuestion, coachReaction } from '../coachPersonas.js';
 import { CoachFeedback } from '../play/CoachFeedback.jsx';
 import { TYPE_LABELS, questionOptions, scoreLesson, creditLesson, buildLibrary } from './lessonCore.js';
@@ -24,7 +24,7 @@ function SourceQuestion({item,coachId,onCredit,playerId}) {
   const options=questionOptions(q);
   return <div className="pf-question">
     {!spatial&&<><p className="oo-eyebrow">{TYPE_LABELS[item.type]||item.type} · {item.age.split(' / ')[0]}</p>{q.question&&q.sit&&<p>{q.sit}</p>}<h2>{q.question||q.sit||q.q||q.prompt||q.title}</h2>
-      {q.media?.type==='image'&&q.media.url&&<div style={{position:'relative',marginBottom:18}}><img className="pf-question-media" style={{display:'block',marginBottom:0}} src={q.media.url} alt={q.media.alt||'Source question illustration'}/><OverlayLayer overlays={q.overlays}/></div>}
+      <ScenarioImage media={q.media} overlays={q.overlays} frameRatio={null}/>
       {q.type==='seq'?<><ol className="pf-sequence">{order.map((idx,i)=><li key={idx}><span>{q.items[idx]}</span><button disabled={result!==null||i===0} aria-label={`Move step ${i+1} up`} onClick={()=>setOrder(a=>{const n=[...a];[n[i-1],n[i]]=[n[i],n[i-1]];return n;})}>↑</button><button disabled={result!==null||i===order.length-1} aria-label={`Move step ${i+1} down`} onClick={()=>setOrder(a=>{const n=[...a];[n[i],n[i+1]]=[n[i+1],n[i]];return n;})}>↓</button></li>)}</ol><button className="oo-primary" disabled={result!==null} onClick={()=>submit(scoreLesson(q,order),order)}>Check the sequence</button></>:<div className="pf-options">{options.map(({value,text})=>{
         const chosen=q.type==='multi'?picks.includes(value):answer===value;
         const correct=result!==null&&q.type!=='multi'&&scoreLesson(q,value);

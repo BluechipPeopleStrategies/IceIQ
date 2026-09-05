@@ -1,3 +1,4 @@
+import { drawHockeyPuck } from "../visuals/hockeyArtCanvas.js";
 import { useRef, useState, useCallback, useEffect } from "react";
 import {
   createAdaptiveLevel,
@@ -69,17 +70,7 @@ export default function TwoThingsDrill({ playerId = "default", onExit }) {
   // Draw the puck: a dark dot with a white ring (distinct by shape, not color),
   // travelling its straight lane.
   function drawPuck(ctx, x, y, r) {
-    ctx.save();
-    ctx.fillStyle = "#0b1b2b";
-    ctx.beginPath();
-    ctx.arc(x, y, r, 0, Math.PI * 2);
-    ctx.fill();
-    ctx.strokeStyle = "#ffffff";
-    ctx.lineWidth = Math.max(2, r * 0.35);
-    ctx.beginPath();
-    ctx.arc(x, y, r, 0, Math.PI * 2);
-    ctx.stroke();
-    ctx.restore();
+    drawHockeyPuck(ctx, x, y, r, { ringWidth: Math.max(2, r * 0.35), ringColour: "#ffffff" });
   }
 
   // Draw a shape glyph centered at (x, y) with half-size s, stroked navy. Shapes

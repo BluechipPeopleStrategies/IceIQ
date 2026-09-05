@@ -12,10 +12,11 @@ import { CoachFeedback } from "./CoachFeedback.jsx";
 import { coachFeedbackHeadline } from "./coachFeedbackTone.js";
 import { applyCoachAnswer, loadCoachReinforcement, saveCoachReinforcement } from "./coachReinforcement.js";
 import { getCoachForQuestion } from "../coachPersonas.js";
+import { HockeyPlayerArt } from "../visuals/HockeyPlayerArt.jsx";
 
 const TEAM_FILL = {
-  home: "#0F4C8C",
-  away: "#1A1A1A",
+  home: "#0B1A33",
+  away: "#C9A24B",
 };
 
 const VIEWS = {
@@ -70,7 +71,7 @@ function actorDisplayLabel(actor, isDecisionActor, profile) {
     if (actor.role === "support" && actor.team !== "home") return "Open";
 
     // U7/U9 screens should not label every checker.
-    // The black token already communicates pressure; repeated labels create clutter.
+    // The contrasting uniform already communicates pressure; repeated labels create clutter.
     return "";
   }
 
@@ -162,9 +163,18 @@ function cueLabelForAge(cue, profile) {
 }
 
 function RinkBackdrop() {
+  const id = `ap-ice-${React.useId().replace(/[^a-zA-Z0-9_-]/g, "")}`;
   return (
-    <g>
-      <rect x="2" y="2" width="196" height="81" rx="27" fill="#EEF5FB" stroke="#0B1A33" strokeWidth="1.4" />
+    <g aria-hidden="true" pointerEvents="none">
+      <defs>
+        <linearGradient id={id} x1="0" y1="0" x2=".2" y2="1"><stop stopColor="#FFFFFF" /><stop offset=".48" stopColor="#EFF6F7" /><stop offset="1" stopColor="#D5E5EB" /></linearGradient>
+        <clipPath id={`${id}-clip`}><rect x="2" y="2" width="196" height="81" rx="27" /></clipPath>
+      </defs>
+      <rect x="2" y="2" width="196" height="81" rx="27" fill={`url(#${id})`} stroke="#0B1A33" strokeWidth="1.4" />
+      <g clipPath={`url(#${id}-clip)`} fill="none" stroke="#6A8C9F" strokeWidth=".15" opacity=".16">
+        {Array.from({ length: 14 }, (_, i) => <path key={i} d={`M${(i * 17) % 193},${(i * 23) % 81}q7 -2 15 1`} />)}
+      </g>
+      <rect x="3.1" y="3.1" width="193.8" height="78.8" rx="26" fill="none" stroke="#C9A24B" strokeWidth=".45" />
       <rect x="99.2" y="2" width="1.6" height="81" fill="#D23A3A" />
       <rect x="74" y="2" width="2" height="81" fill="#2B6FD6" />
       <rect x="124" y="2" width="2" height="81" fill="#2B6FD6" />
@@ -178,9 +188,11 @@ function RinkBackdrop() {
         <circle cx="31" cy="63" r="13" />
       </g>
       <path d="M188.3,38 A6,6 0 0 0 188.3,47 Z" fill="#BCDcff" stroke="#D23A3A" strokeWidth="0.5" />
-      <rect x="189" y="39" width="4" height="7" fill="none" stroke="#D23A3A" strokeWidth="1" />
+      <rect x="189" y="39" width="4" height="7" fill="#F5EFE6" stroke="#D23A3A" strokeWidth="1" />
+      <path d="M190 39v7m1-7v7m1-7v7m-3-5h4m-4 2h4m-4 2h4" fill="none" stroke="#5B6675" strokeWidth=".15" />
       <path d="M11.7,38 A6,6 0 0 1 11.7,47 Z" fill="#BCDcff" stroke="#D23A3A" strokeWidth="0.5" />
-      <rect x="7" y="39" width="4" height="7" fill="none" stroke="#D23A3A" strokeWidth="1" />
+      <rect x="7" y="39" width="4" height="7" fill="#F5EFE6" stroke="#D23A3A" strokeWidth="1" />
+      <path d="M8 39v7m1-7v7m1-7v7m-3-5h4m-4 2h4m-4 2h4" fill="none" stroke="#5B6675" strokeWidth=".15" />
     </g>
   );
 }
@@ -212,15 +224,16 @@ function RoutePath({ motion, trail, delayMs }) {
 function ActorToken({ actor, ageBand, isDecisionActor }) {
   const spec = tokenSpec({ actor, ageBand, isDecisionActor });
   const profile = profileForAge(ageBand);
-  const showInteriorLabel = profile.token === "token" || (profile.token === "symbol" && spec.role === "goalie");
+  const showInteriorLabel = profile.token === "symbol" && spec.role === "goalie";
   const fill = TEAM_FILL[spec.team] || TEAM_FILL.home;
-  const labelFill = spec.team === "home" ? "#FFFFFF" : "#FFFFFF";
+  const labelFill = spec.team === "home" ? "#FFFFFF" : "#0B1A33";
 
   if (spec.role === "goalie") {
     return (
       <g>
-        <rect x="-4.5" y="-5" width="9" height="10" rx="2.3" fill={fill} stroke="#FFFFFF" strokeWidth="0.8" />
-        {showInteriorLabel && <text y="1.5" fontSize="3.4" fill={labelFill} fontWeight="900" textAnchor="middle">G</text>}
+        <rect x="-4.5" y="-5" width="9" height="10" rx="2.3" fill={spec.representation === "symbol" ? fill : "#F5EFE6"} stroke="#FFFFFF" strokeWidth="0.8" />
+        {spec.representation !== "symbol" && <HockeyPlayerArt radius={4.4} team={spec.team} goalie />}
+        {showInteriorLabel && <><rect x="-1.6" y="-1.4" width="3.2" height="3.4" rx=".4" fill={fill} /><text y="1.5" fontSize="3.4" fill={labelFill} fontWeight="900" textAnchor="middle">G</text></>}
       </g>
     );
   }
@@ -240,8 +253,8 @@ function ActorToken({ actor, ageBand, isDecisionActor }) {
   if (spec.representation === "figure") {
     return (
       <g>
-        <circle r={isDecisionActor ? 5.5 : 5} fill={fill} stroke="#FFFFFF" strokeWidth="0.9" />
-        <path d="M-3.2,-1.6 C-1.2,-3 1.2,-3 3.2,-1.6" fill="none" stroke="#FFFFFF" strokeWidth="1.05" strokeLinecap="round" opacity="0.95" />
+        <circle r={isDecisionActor ? 5.5 : 5} fill="#F5EFE6" stroke="#FFFFFF" strokeWidth="0.9" />
+        <HockeyPlayerArt radius={isDecisionActor ? 5.1 : 4.6} team={spec.team} />
         {isDecisionActor && <circle r="7" fill="none" stroke="#C9A24B" strokeWidth="1" strokeDasharray="2 1.5" />}
       </g>
     );
@@ -249,16 +262,15 @@ function ActorToken({ actor, ageBand, isDecisionActor }) {
 
   return (
     <g>
-      <circle r={isDecisionActor ? 5.2 : 4.5} fill={fill} stroke="#FFFFFF" strokeWidth="0.75" />
+      <circle r={isDecisionActor ? 5.2 : 4.5} fill="#F5EFE6" stroke="#FFFFFF" strokeWidth="0.75" />
+      <HockeyPlayerArt radius={isDecisionActor ? 4.8 : 4.2} team={spec.team} />
       {isDecisionActor && <circle r="6.8" fill="none" stroke="#C9A24B" strokeWidth="0.9" strokeDasharray="2 1.5" />}
       {spec.role === "defender" && (
-        <g stroke="#FFFFFF" strokeWidth="1.2" strokeLinecap="round">
-          <line x1="-2.7" y1="-2.7" x2="2.7" y2="2.7" />
-          <line x1="-2.7" y1="2.7" x2="2.7" y2="-2.7" />
+        <g stroke="#0B1A33" strokeWidth=".7" strokeLinecap="round">
+          <circle r="1.8" fill="#F5EFE6" stroke="none" />
+          <line x1="-1.1" y1="-1.1" x2="1.1" y2="1.1" />
+          <line x1="-1.1" y1="1.1" x2="1.1" y2="-1.1" />
         </g>
-      )}
-      {showInteriorLabel && spec.role !== "defender" && (
-        <text y="1.4" fontSize="3.1" fill={labelFill} fontWeight="900" textAnchor="middle">{spec.interiorLabel}</text>
       )}
     </g>
   );
@@ -563,14 +575,10 @@ export default function AnimatedPlay({ play, ageBand = "U11", onEvent, onNext, n
           return (
             <g key={actor.id} transform={`translate(${p[0]},${p[1]})`} style={{ transition: "transform 1.4s cubic-bezier(.4,0,.2,1)" }} filter="url(#ap-shadow)">
               <ActorToken actor={actorMap[actor.id]} ageBand={ageBand} isDecisionActor={isDecisionActor} />
-              {/* `isDecisionActor` alone was NOT enough to earn a caption: at
-                  U11/U13 (`token`) it was gated on `role === "defender"`, so a
-                  forward who is YOU fell through to the token's interior label
-                  and said "F1". Three U11 plays showed no "YOU" anywhere while
-                  the prompt asked "what should YOU do?". Whoever the player is,
-                  they get named. */}
-              {(isDecisionActor || profile.token === "figure" || (profile.token === "symbol" && actor.role !== "goalie")) && (
-                <text y="-8.5" textAnchor="middle" fontSize="3.2" fill="#0B1A33" fontWeight="900">{actorDisplayLabel(actor, isDecisionActor, profile)}</text>
+              {/* Keep YOU through every outcome. Trainer labels sit above the
+                  equipment so the name and the figure remain readable. */}
+              {(isDecisionActor || profile.token === "figure" || (profile.token === "symbol" && actor.role !== "goalie") || (profile.token === "token" && actor.role !== "defender")) && (
+                <text y="-8.5" textAnchor="middle" fontSize="3.2" fill="#0B1A33" stroke="#F5EFE6" strokeWidth=".65" paintOrder="stroke" fontWeight="900">{actorDisplayLabel(actor, isDecisionActor, profile)}</text>
               )}
             </g>
           );
@@ -578,6 +586,7 @@ export default function AnimatedPlay({ play, ageBand = "U11", onEvent, onNext, n
         {displayedPuck && (
           <g transform={`translate(${displayedPuck[0]},${displayedPuck[1]})`} style={{ transition: "transform 1.4s cubic-bezier(.4,0,.2,1)" }}>
             <circle r="1.35" fill="#111111" stroke="#FFFFFF" strokeWidth="0.35" />
+            <ellipse cy="-.35" rx=".8" ry=".3" fill="#5B6675" />
           </g>
         )}
         {!node.terminal && kind === "spot-mistake" && (

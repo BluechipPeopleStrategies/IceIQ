@@ -1,4 +1,6 @@
+import { HockeyPlayerArt } from "../visuals/HockeyPlayerArt.jsx";
 import { useRef, useState, useCallback, useEffect } from "react";
+import { drawHockeyPlayer, drawHockeyPuck, drawHockeyLabel } from "../visuals/hockeyArtCanvas.js";
 import {
   createAdaptiveLevel,
   setupCanvas,
@@ -59,97 +61,52 @@ export default function BestOptionDrill({ playerId = "default", onExit }) {
     timersRef.current.push(setTimeout(fn, ms));
   }
 
-  // The puck carrier (YOU): a gold dot with a dark ring and a small puck beside
-  // it so the carrier is distinct by shape, not color alone.
+  // YOU keeps the gold task cue, dark ring and exact adjacent puck position.
   function drawYou(ctx, p, r) {
-    ctx.fillStyle = "#f2b705";
-    ctx.beginPath();
-    ctx.arc(p.x, p.y, r, 0, Math.PI * 2);
-    ctx.fill();
-    ctx.strokeStyle = "#0b1b2b";
-    ctx.lineWidth = 3;
-    ctx.beginPath();
-    ctx.arc(p.x, p.y, r, 0, Math.PI * 2);
-    ctx.stroke();
-    ctx.fillStyle = "#0b1b2b";
-    ctx.beginPath();
-    ctx.arc(p.x + r * 0.9, p.y + r * 0.7, Math.max(4, r * 0.32), 0, Math.PI * 2);
-    ctx.fill();
-    ctx.fillStyle = "#0b1b2b";
-    ctx.font = `700 ${Math.round(r * 0.8)}px system-ui, sans-serif`;
-    ctx.textAlign = "center";
-    ctx.textBaseline = "middle";
-    ctx.fillText("YOU", p.x, p.y);
-    ctx.textBaseline = "alphabetic";
+    drawHockeyPlayer(ctx, { ...p, r, jersey: "#f2b705" });
+    ctx.strokeStyle = "#0B1A33"; ctx.lineWidth = 3;
+    ctx.beginPath(); ctx.arc(p.x, p.y, r, 0, Math.PI * 2); ctx.stroke();
+    drawHockeyPuck(ctx, p.x + r * .9, p.y + r * .7, Math.max(4, r * .32));
+    drawHockeyLabel(ctx, "YOU", p.x, p.y, r, { ink: "#0B1A33", plate: "#f2b705" });
   }
 
-  // A teammate: a filled blue dot with a light ring. Open teammates get a small
+  // A navy teammate keeps the light ring at the original target radius. Open teammates get a small
   // gold notch label so "open" reads by shape, not color alone.
   function drawTeammate(ctx, p, r, open) {
-    ctx.fillStyle = "#1b6cb0";
-    ctx.beginPath();
-    ctx.arc(p.x, p.y, r, 0, Math.PI * 2);
-    ctx.fill();
-    ctx.strokeStyle = "#cfe6f6";
-    ctx.lineWidth = 2.5;
-    ctx.beginPath();
-    ctx.arc(p.x, p.y, r, 0, Math.PI * 2);
-    ctx.stroke();
+    drawHockeyPlayer(ctx, { ...p, r, team: "home" });
+    ctx.strokeStyle = "#F5EFE6"; ctx.lineWidth = 2.5;
+    ctx.beginPath(); ctx.arc(p.x, p.y, r, 0, Math.PI * 2); ctx.stroke();
   }
 
-  // A defender: a grey dot with an X through it (shape, not color alone).
+  // A gold defender keeps the X mark, so the role is not conveyed by colour alone.
   function drawDefender(ctx, p, r) {
-    ctx.fillStyle = "#cdd9e1";
-    ctx.beginPath();
-    ctx.arc(p.x, p.y, r, 0, Math.PI * 2);
-    ctx.fill();
-    ctx.strokeStyle = "#5b7587";
-    ctx.lineWidth = 2;
-    ctx.beginPath();
-    ctx.arc(p.x, p.y, r, 0, Math.PI * 2);
-    ctx.stroke();
-    ctx.strokeStyle = "#3d5061";
-    ctx.lineWidth = 2.5;
-    ctx.lineCap = "round";
-    const s = r * 0.6;
-    ctx.beginPath();
-    ctx.moveTo(p.x - s, p.y - s);
-    ctx.lineTo(p.x + s, p.y + s);
-    ctx.moveTo(p.x + s, p.y - s);
-    ctx.lineTo(p.x - s, p.y + s);
-    ctx.stroke();
+    drawHockeyPlayer(ctx, { ...p, r, team: "away" });
+    ctx.strokeStyle = "#5B6675"; ctx.lineWidth = 2;
+    ctx.beginPath(); ctx.arc(p.x, p.y, r, 0, Math.PI * 2); ctx.stroke();
+    ctx.strokeStyle = "#0B1A33"; ctx.lineWidth = 2.5; ctx.lineCap = "round";
+    const s = r * .6;
+    ctx.beginPath(); ctx.moveTo(p.x - s, p.y - s); ctx.lineTo(p.x + s, p.y + s);
+    ctx.moveTo(p.x + s, p.y - s); ctx.lineTo(p.x - s, p.y + s); ctx.stroke();
   }
 
   // The net + goalie at the left end. Net is a small goal frame; goalie is a
   // dark pad-shape so it reads distinct from the round skaters.
   function drawNet(ctx, net, r) {
-    const w = r * 1.5;
-    const h = r * 2.2;
-    ctx.save();
-    ctx.strokeStyle = "#c8102e";
-    ctx.lineWidth = 3;
-    ctx.strokeRect(net.x - w * 0.4, net.y - h / 2, w, h);
-    ctx.restore();
+    const w = r * 1.5, h = r * 2.2;
+    const left = net.x - w * .4, top = net.y - h / 2;
+    ctx.save(); ctx.fillStyle = "rgba(245,239,230,.6)"; ctx.fillRect(left, top, w, h);
+    ctx.strokeStyle = "#5B6675"; ctx.lineWidth = .7;
+    for (let step = 1; step < 5; step++) {
+      ctx.beginPath(); ctx.moveTo(left + w * step / 5, top); ctx.lineTo(left + w * step / 5, top + h); ctx.stroke();
+      ctx.beginPath(); ctx.moveTo(left, top + h * step / 5); ctx.lineTo(left + w, top + h * step / 5); ctx.stroke();
+    }
+    ctx.strokeStyle = "#c8102e"; ctx.lineWidth = 3; ctx.strokeRect(left, top, w, h); ctx.restore();
   }
   function drawGoalie(ctx, g, r) {
-    ctx.save();
-    ctx.fillStyle = "#2b3a47";
-    ctx.beginPath();
-    ctx.arc(g.x, g.y, r * 0.85, 0, Math.PI * 2);
-    ctx.fill();
-    ctx.strokeStyle = "#f4f9fc";
-    ctx.lineWidth = 2;
-    ctx.beginPath();
-    ctx.arc(g.x, g.y, r * 0.85, 0, Math.PI * 2);
-    ctx.stroke();
-    // a "G" so the goalie reads by label too
-    ctx.fillStyle = "#f4f9fc";
-    ctx.font = `700 ${Math.round(r * 0.7)}px system-ui, sans-serif`;
-    ctx.textAlign = "center";
-    ctx.textBaseline = "middle";
-    ctx.fillText("G", g.x, g.y);
-    ctx.textBaseline = "alphabetic";
-    ctx.restore();
+    drawHockeyPlayer(ctx, { ...g, r: r * .85, team: "away", goalie: true });
+    ctx.strokeStyle = "#F5EFE6"; ctx.lineWidth = 2;
+    ctx.beginPath(); ctx.arc(g.x, g.y, r * .85, 0, Math.PI * 2); ctx.stroke();
+    drawHockeyLabel(ctx, "G", g.x, g.y, r, { ink: "#0B1A33", plate: "#F5EFE6", scale: .7 });
   }
 
   // Render the scene. During "live" we draw the frozen play plus a shrinking
@@ -516,20 +473,20 @@ export default function BestOptionDrill({ playerId = "default", onExit }) {
             <rect width="280" height="130" rx="8" fill="#eaf4fb" />
             {/* the net at the left */}
             <rect x="14" y="50" width="14" height="30" fill="none" stroke="#c8102e" strokeWidth="3" />
-            <circle cx="36" cy="65" r="9" fill="#2b3a47" stroke="#f4f9fc" strokeWidth="2" />
+            <g transform="translate(36,65)"><circle r="9" fill="#F5EFE6" stroke="#f4f9fc" strokeWidth="2" /><HockeyPlayerArt radius={8.5} team="away" goalie /></g>
             {/* YOU, the puck carrier, on the right */}
-            <circle cx="190" cy="92" r="13" fill="#f2b705" stroke="#0b1b2b" strokeWidth="3" />
+            <g transform="translate(190,92)"><circle r="13" fill="#F5EFE6" stroke="#0b1b2b" strokeWidth="3" /><HockeyPlayerArt radius={12.22} team="away" /></g>
             <circle cx="201" cy="100" r="4" fill="#0b1b2b" />
             {/* the shot option: a line to the net */}
             <line x1="190" y1="92" x2="40" y2="68" stroke="#1f9d55" strokeWidth="2.5" />
             {/* the pass option: a line to an open teammate (back door) */}
             <line x1="190" y1="92" x2="70" y2="30" stroke="#1b6cb0" strokeWidth="2.5" strokeDasharray="5 4" />
-            <circle cx="70" cy="30" r="10" fill="#1b6cb0" stroke="#cfe6f6" strokeWidth="2.5" />
+            <g transform="translate(70,30)"><circle r="10" fill="#F5EFE6" stroke="#cfe6f6" strokeWidth="2.5" /><HockeyPlayerArt radius={9.4} team="home" /></g>
             {/* the carry option: an arrow into open ice */}
             <line x1="190" y1="92" x2="150" y2="55" stroke="#0b1b2b" strokeWidth="2.5" />
             <path d="M150 55 l9 3 M150 55 l1 9" stroke="#0b1b2b" strokeWidth="2.5" strokeLinecap="round" fill="none" />
             {/* a defender pressuring */}
-            <circle cx="135" cy="80" r="10" fill="#cdd9e1" stroke="#5b7587" strokeWidth="2" />
+            <g transform="translate(135,80)"><circle r="10" fill="#F5EFE6" stroke="#5b7587" strokeWidth="2" /><HockeyPlayerArt radius={9.4} team="away" /></g>
             <path d="M130 75 l10 10 M140 75 l-10 10" stroke="#3d5061" strokeWidth="2.5" strokeLinecap="round" />
           </svg>
           <p className="gym-goal"><strong>Your goal:</strong> look at the lanes, then choose shoot, pass, or carry.</p>

@@ -1,7 +1,17 @@
 import { useState, useRef, useEffect, useCallback, useMemo, Component } from "react";
 import RinkReadsRink from "./RinkReadsRink";
+import { HockeyPlayerArt } from "./visuals/HockeyPlayerArt.jsx";
 import { C, FONT } from "./shared.jsx";
 import { RINK_FEATURES, getRinkFeatureName, getRinkFeatureAbbr } from "./data/rinkFeatures.js";
+
+// Decorative only: all hit geometry, selection and verdict rings stay at the caller.
+function QuestionPlayerArt({ kind = "player", radius = 11 }) {
+  if (!["player", "teammate", "attacker", "defender", "coach", "goalie"].includes(kind)) return null;
+  return <g style={kind === "goalie" ? { filter: "grayscale(1)" } : undefined}>
+    <HockeyPlayerArt radius={radius} goalie={kind === "goalie"}
+      team={kind === "defender" || kind === "attacker" ? "away" : "home"} facing={null}/>
+  </g>;
+}
 
 const M = 10;
 const RINK_VIEWS = {
@@ -72,7 +82,7 @@ function Feedback({ state, message }) {
 
 const questionTextStyle = { color: C.white, fontFamily: FONT.body, fontSize: 15, lineHeight: 1.5, margin: "0 0 0.25rem" };
 const hintTextStyle = { color: C.dim, fontFamily: FONT.body, fontSize: 12, margin: "0 0 0.75rem" };
-const rinkFrameStyle = { position: "relative", borderRadius: 10, overflow: "hidden", border: `1px solid ${C.border}`, background: C.bgCard, marginBottom: "0.75rem" };
+const rinkFrameStyle = { position: "relative", borderRadius: 10, overflow: "hidden", border: "1px solid rgba(201,162,75,.32)", background: C.bgCard, boxShadow: "0 8px 24px rgba(3,12,25,.2)", marginBottom: "0.75rem" };
 const overlaySvgStyle = (interactive = true) => ({ position: "absolute", inset: 0, width: "100%", height: "100%", pointerEvents: interactive ? "auto" : "none" });
 const actionRowStyle = (justify = "flex-end") => ({ display: "flex", gap: "0.5rem", marginTop: "0.5rem", justifyContent: justify });
 const secondaryBtnStyle = {
@@ -240,8 +250,11 @@ function validateQuestion(q) {
 //      half-authored data.
 // Procedural-rink questions (no media.url) already author in SVG coords,
 // so they pass through unchanged.
-function scaleNormalizedCoordsForRender(question) {
+export function scaleNormalizedCoordsForRender(question) {
   if (!question || typeof question !== "object" || !question.media?.url) return question;
+  // These renderers use CSS positions on MediaCanvas, so their authored 0–1
+  // image ratios must stay ratios. Only the SVG renderers below use 600×300.
+  if (["hot-spots", "rink-label", "rink-drag", "rink-match"].includes(question.type)) return question;
   const pairs = [];
   const addPair = (obj) => {
     if (obj && typeof obj === "object" && Number.isFinite(obj.x) && Number.isFinite(obj.y)) {
@@ -743,7 +756,8 @@ function DragPlace({ question, onAnswer, onReset }) {
                 <circle cx="0" cy="0" r="11" fill={fills[chip.kind] || "#185FA5"}
                   stroke={isCorrect ? "#22c55e" : isWrong ? "#ef4444" : "#fff"}
                   strokeWidth={isCorrect || isWrong ? "2.2" : "1.5"} />
-                <text x="0" y="4" textAnchor="middle" fill="#fff" fontSize="10" fontWeight="600">{chipId}</text>
+                <QuestionPlayerArt kind={chip.kind}/>
+                <text x="0" y="-16" textAnchor="middle" fill="#24364A" stroke="#fff" strokeWidth="2" paintOrder="stroke" fontSize="10" fontWeight="600">{chipId}</text>
               </g>
             );
           })}
@@ -942,7 +956,8 @@ function MultiTap({ question, onAnswer, onReset }) {
                   stroke={ringColor} strokeWidth="1.8"
                   strokeDasharray={ringDash} opacity={ringOp} />
                 <circle cx="0" cy="0" r="11" fill={fills[m.type] || "#185FA5"} stroke="#fff" strokeWidth="1.5" />
-                <text x="0" y="4" textAnchor="middle" fill="#fff" fontSize="10" fontWeight="600">
+                <QuestionPlayerArt kind={m.type}/>
+                <text x="0" y="25" textAnchor="middle" fill="#24364A" stroke="#fff" strokeWidth="2" paintOrder="stroke" fontSize="10" fontWeight="600">
                   {m.label || labels[m.type] || ""}
                 </text>
                 {isMissed && (
@@ -1055,7 +1070,8 @@ function Sequence({ question, onAnswer, onReset }) {
                     strokeWidth="2.2" />
                 )}
                 <circle cx="0" cy="0" r="11" fill={fills[m.type] || "#185FA5"} stroke="#fff" strokeWidth="1.5" />
-                <text x="0" y="4" textAnchor="middle" fill="#fff" fontSize="10" fontWeight="600">
+                <QuestionPlayerArt kind={m.type}/>
+                <text x="0" y="25" textAnchor="middle" fill="#24364A" stroke="#fff" strokeWidth="2" paintOrder="stroke" fontSize="10" fontWeight="600">
                   {m.label || labels[m.type] || ""}
                 </text>
                 {tapped && (
@@ -1366,15 +1382,16 @@ function PathDraw({ question, onAnswer, onReset }) {
           )}
           {/* Replay skaters — two icons moving in sync along both paths. */}
           {result && playerSkater && (
-            <g style={{pointerEvents:"none"}}>
-              <circle cx={playerSkater.x} cy={playerSkater.y} r="10" fill={resultColor} stroke="#0b1220" strokeWidth="2"/>
-              <text x={playerSkater.x} y={playerSkater.y + 3} textAnchor="middle" fontSize="11">⛸️</text>
+            <g transform={`translate(${playerSkater.x},${playerSkater.y})`} style={{pointerEvents:"none"}}>
+              <circle r="10" fill={resultColor} stroke="#0b1220" strokeWidth="2"/>
+              <HockeyPlayerArt radius={9} team="home" facing={null}/>
             </g>
           )}
           {result && idealSkater && idealD && (
-            <g style={{pointerEvents:"none"}}>
-              <circle cx={idealSkater.x} cy={idealSkater.y} r="10" fill="#22c55e" stroke="#0b1220" strokeWidth="2"/>
-              <text x={idealSkater.x} y={idealSkater.y + 3} textAnchor="middle" fontSize="11">✓</text>
+            <g transform={`translate(${idealSkater.x},${idealSkater.y})`} style={{pointerEvents:"none"}}>
+              <circle r="10" fill="#22c55e" stroke="#0b1220" strokeWidth="2"/>
+              <HockeyPlayerArt radius={9} team="home" facing={null}/>
+              <text x="12" y="-9" textAnchor="middle" fontSize="11" fill="#22c55e" stroke="#0b1220" strokeWidth="1.5" paintOrder="stroke">✓</text>
             </g>
           )}
         </svg>
@@ -1541,8 +1558,8 @@ function MediaCanvas({ media, children }) {
     <div style={{
       position: "relative", width: "100%",
       borderRadius: 10, overflow: "hidden",
-      border: `1px solid ${C.border}`, background: "#000",
-      marginBottom: "0.75rem",
+      border: "1px solid rgba(201,162,75,.32)", background: "#071426",
+      boxShadow: "0 8px 24px rgba(3,12,25,.2)", marginBottom: "0.75rem",
       ...aspectStyle,
     }}>
       <img src={media.url} alt={media.alt || ""}

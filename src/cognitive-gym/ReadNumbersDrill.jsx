@@ -1,4 +1,6 @@
+import { HockeyPlayerArt } from "../visuals/HockeyPlayerArt.jsx";
 import { useRef, useState, useCallback, useEffect } from "react";
+import { drawHockeyPlayer, drawHockeyLabel } from "../visuals/hockeyArtCanvas.js";
 import {
   createAdaptiveLevel,
   setupCanvas,
@@ -58,24 +60,10 @@ export default function ReadNumbersDrill({ playerId = "default", onExit }) {
   // the target ringed and the player's pick marked right/wrong by shape.
   function drawSkater(ctx, s, r, { showNumber, mark }) {
     ctx.save();
-    ctx.fillStyle = "#0b1b2b";
-    ctx.beginPath();
-    ctx.arc(s.x, s.y, r, 0, Math.PI * 2);
-    ctx.fill();
-    ctx.strokeStyle = "#f2b705";
-    ctx.lineWidth = 3;
-    ctx.beginPath();
-    ctx.arc(s.x, s.y, r, 0, Math.PI * 2);
-    ctx.stroke();
-    if (showNumber) {
-      ctx.fillStyle = "#f4f9fc";
-      const fs = Math.round(r * (String(s.number).length >= 3 ? 0.8 : 1.0));
-      ctx.font = `800 ${fs}px system-ui, sans-serif`;
-      ctx.textAlign = "center";
-      ctx.textBaseline = "middle";
-      ctx.fillText(String(s.number), s.x, s.y);
-      ctx.textBaseline = "alphabetic";
-    }
+    drawHockeyPlayer(ctx, { ...s, r, team: "home" });
+    ctx.strokeStyle = "#f2b705"; ctx.lineWidth = 3;
+    ctx.beginPath(); ctx.arc(s.x, s.y, r, 0, Math.PI * 2); ctx.stroke();
+    if (showNumber) drawHockeyLabel(ctx, s.number, s.x, s.y, r, { scale: String(s.number).length >= 3 ? .8 : 1 });
     ctx.restore();
 
     if (mark === "target") {
@@ -388,13 +376,13 @@ export default function ReadNumbersDrill({ playerId = "default", onExit }) {
           <h2>Read the Numbers</h2>
           <svg viewBox="0 0 280 130" width="100%" style={{ maxWidth: 280, display: "block", margin: "0 auto 14px", borderRadius: 10 }} aria-hidden="true">
             <rect width="280" height="130" rx="8" fill="#eaf4fb" />
-            <circle cx="60" cy="40" r="22" fill="#0b1b2b" stroke="#f2b705" strokeWidth="3" />
+            <g transform="translate(60,40)"><circle r="22" fill="#F5EFE6" stroke="#f2b705" strokeWidth="3" /><HockeyPlayerArt radius={20.68} team="home" /></g>
             <text x="60" y="41" fill="#f4f9fc" fontSize="18" fontWeight="800" textAnchor="middle" dominantBaseline="central" fontFamily="system-ui, sans-serif">4</text>
-            <circle cx="150" cy="70" r="22" fill="#0b1b2b" stroke="#f2b705" strokeWidth="3" />
+            <g transform="translate(150,70)"><circle r="22" fill="#F5EFE6" stroke="#f2b705" strokeWidth="3" /><HockeyPlayerArt radius={20.68} team="home" /></g>
             <text x="150" y="71" fill="#f4f9fc" fontSize="18" fontWeight="800" textAnchor="middle" dominantBaseline="central" fontFamily="system-ui, sans-serif">83</text>
-            <circle cx="220" cy="35" r="22" fill="#0b1b2b" stroke="#f2b705" strokeWidth="3" />
+            <g transform="translate(220,35)"><circle r="22" fill="#F5EFE6" stroke="#f2b705" strokeWidth="3" /><HockeyPlayerArt radius={20.68} team="home" /></g>
             <text x="220" y="36" fill="#f4f9fc" fontSize="18" fontWeight="800" textAnchor="middle" dominantBaseline="central" fontFamily="system-ui, sans-serif">17</text>
-            <circle cx="105" cy="100" r="22" fill="#0b1b2b" stroke="#f2b705" strokeWidth="3" />
+            <g transform="translate(105,100)"><circle r="22" fill="#F5EFE6" stroke="#f2b705" strokeWidth="3" /><HockeyPlayerArt radius={20.68} team="home" /></g>
             <text x="105" y="101" fill="#f4f9fc" fontSize="18" fontWeight="800" textAnchor="middle" dominantBaseline="central" fontFamily="system-ui, sans-serif">9</text>
           </svg>
           <p className="gym-goal"><strong>Your goal:</strong> remember each skater's number and spot.</p>

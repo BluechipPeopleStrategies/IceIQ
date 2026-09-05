@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef, useCallback, useMemo, lazy, Suspense } from "react";
+import { useState, useEffect, useRef, useCallback, useMemo, useId, lazy, Suspense } from "react";
 import { COACH_PERSONAS, getAgeTier, getCoachForQuestion } from "./coachPersonas.js";
 import * as SB from "./supabase";
 import { supabase, hasSupabase } from "./supabase";
@@ -57,7 +57,8 @@ import {
   C, FONT, LEVELS, POSITIONS, POSITIONS_U11UP, SEASONS, ALL_AGES_MODE,
   RinkReadsLogo, Screen, Card, Pill, Label, PrimaryBtn, SecBtn, BackBtn, ProgressBar, StickyHeader,
 } from "./shared.jsx";
-import { OverlayLayer } from "./OverlayLayer.jsx";
+import ScenarioImage from "./visuals/ScenarioImage.jsx";
+import { HockeyPlayerArt } from "./visuals/HockeyPlayerArt.jsx";
 import { RinkPlayTest } from "./RinkPlay.jsx";
 import { PathScreen } from "./path/PathScreen.jsx";
 import { ChallengesHub } from "./path/ChallengesHub.jsx";
@@ -938,19 +939,23 @@ async function saveTeamResult(coachCode, results, season) {
 // RINK DIAGRAMS
 // ─────────────────────────────────────────────────────────
 function RinkDiagram({ type }) {
+  const artId = `concept-rink-${useId().replace(/[^a-zA-Z0-9_-]/g, '')}`;
   const w=300, h=160, cx=w/2, cy=h/2;
   const Ice = () => (
     <g>
-      <rect x="3" y="3" width={w-6} height={h-6} rx="26" fill={C.ice} stroke={C.rink} strokeWidth="1.5"/>
+      <defs><linearGradient id={artId} x1="0" y1="0" x2="1" y2="1"><stop stopColor="#fffdf7"/><stop offset="1" stopColor="#dce6ec"/></linearGradient></defs>
+      <rect x="3" y="3" width={w-6} height={h-6} rx="26" fill={`url(#${artId})`} stroke="#183049" strokeWidth="2.6"/>
+      <rect x="5" y="5" width={w-10} height={h-10} rx="24" fill="none" stroke="#C9A24B" strokeWidth=".6"/>
       <line x1={cx} y1="3" x2={cx} y2={h-3} stroke={C.rink} strokeWidth="1" strokeDasharray="5,4" opacity="0.3"/>
       <circle cx={cx} cy={cy} r="18" fill="none" stroke={C.rink} strokeWidth="1" opacity="0.3"/>
       <circle cx={cx} cy={cy} r="3" fill={C.rink} opacity="0.25"/>
     </g>
   );
   const Player = ({x,y,color,label}) => (
-    <g>
-      <circle cx={x} cy={y} r="11" fill={color} stroke="white" strokeWidth="2"/>
-      <text x={x} y={y} textAnchor="middle" dominantBaseline="middle" fill="white" fontSize="7.5" fontWeight="700">{label}</text>
+    <g transform={`translate(${x} ${y})`} opacity={color?.includes('0.3') ? .35 : 1}>
+      <HockeyPlayerArt radius={11} team={color === '#dc2626' ? 'away' : 'home'} goalie={label === 'G'} />
+      <rect x={-(label.length*5+7)/2} y="-19" width={label.length*5+7} height="9" rx="2.5" fill="#0B1A33" stroke="#E5C578" strokeWidth=".5"/>
+      <text y="-12" textAnchor="middle" fill="#F5EFE6" fontSize="7" fontFamily="Inter,system-ui,sans-serif" fontWeight="800">{label}</text>
     </g>
   );
   const Arrow = ({x1,y1,x2,y2,color="#C9A24B",dash,arc}) => {
@@ -965,8 +970,8 @@ function RinkDiagram({ type }) {
       </g>
     );
   };
-  const Net = ({x,y}) => <rect x={x} y={y} width="13" height="26" rx="3" fill="none" stroke={C.rink} strokeWidth="2.5"/>;
-  const Puck = ({x,y}) => <circle cx={x} cy={y} r="5" fill="#111827" stroke="white" strokeWidth="1.5"/>;
+  const Net = ({x,y}) => <g><rect x={x} y={y} width="13" height="26" rx="3" fill="#ffffff70" stroke="#ae3540" strokeWidth="2"/>{[1,2,3,4,5].map(i=><line key={i} x1={x+1} y1={y+i*4.3} x2={x+12} y2={y+i*4.3} stroke="#728595" strokeWidth=".5"/>)}<line x1={x+6.5} y1={y+1} x2={x+6.5} y2={y+25} stroke="#728595" strokeWidth=".5"/></g>;
+  const Puck = ({x,y}) => <g><circle cx={x+.8} cy={y+1.4} r="5" fill="#0b1a3333"/><circle cx={x} cy={y} r="5" fill="#111827" stroke="white" strokeWidth="1.5"/><path d={`M${x-2.7} ${y-1.8}Q${x} ${y-3.4} ${x+2.7} ${y-1.8}`} fill="none" stroke="#8497a3" strokeWidth=".65"/></g>;
   const Tag = ({x,y,text,color}) => (
     <g>
       <rect x={x-2} y={y-10} width={text.length*7+4} height={14} rx={4} fill={`${color}22`}/>
@@ -976,7 +981,7 @@ function RinkDiagram({ type }) {
 
   const diagrams = {
     "2on1": (
-      <svg width={w} height={h} style={{display:"block"}}>
+      <svg viewBox={`0 0 ${w} ${h}`} style={{display:"block",width:"100%",height:"auto"}}>
         <Ice/><Net x={w-16} y={cy-13}/>
         <Player x={115} y={cy-18} color="#16a34a" label="A1"/>
         <Player x={115} y={cy+18} color="#16a34a" label="A2"/>
@@ -989,7 +994,7 @@ function RinkDiagram({ type }) {
       </svg>
     ),
     "coverage": (
-      <svg width={w} height={h} style={{display:"block"}}>
+      <svg viewBox={`0 0 ${w} ${h}`} style={{display:"block",width:"100%",height:"auto"}}>
         <Ice/><Net x={4} y={cy-13}/>
         <Player x={145} y={45} color="#dc2626" label="A1"/>
         <Player x={170} y={80} color="#dc2626" label="A2"/>
@@ -1003,7 +1008,7 @@ function RinkDiagram({ type }) {
       </svg>
     ),
     "blueline": (
-      <svg width={w} height={h} style={{display:"block"}}>
+      <svg viewBox={`0 0 ${w} ${h}`} style={{display:"block",width:"100%",height:"auto"}}>
         <Ice/><Net x={w-16} y={cy-13}/>
         <line x1={cx+12} y1="3" x2={cx+12} y2={h-3} stroke="#1d4ed8" strokeWidth="3" opacity="0.8"/>
         <text x={cx+18} y={18} fill="#1d4ed8" fontSize="8" fontWeight="700">BLUE LINE</text>
@@ -1016,7 +1021,7 @@ function RinkDiagram({ type }) {
       </svg>
     ),
     "forecheck": (
-      <svg width={w} height={h} style={{display:"block"}}>
+      <svg viewBox={`0 0 ${w} ${h}`} style={{display:"block",width:"100%",height:"auto"}}>
         <Ice/><Net x={4} y={cy-13}/>
         <Player x={88} y={cy} color="#dc2626" label="D"/>
         <Puck x={99} y={cy-5}/>
@@ -1029,7 +1034,7 @@ function RinkDiagram({ type }) {
       </svg>
     ),
     "goalie_angle": (
-      <svg width={w} height={h} style={{display:"block"}}>
+      <svg viewBox={`0 0 ${w} ${h}`} style={{display:"block",width:"100%",height:"auto"}}>
         <Ice/><Net x={4} y={cy-13}/>
         <Player x={165} y={cy-22} color="#dc2626" label="S"/>
         <Arrow x1={160} y1={cy-20} x2={55} y2={cy} color="#dc2626"/>
@@ -1042,7 +1047,7 @@ function RinkDiagram({ type }) {
       </svg>
     ),
     "goalie_2on1": (
-      <svg width={w} height={h} style={{display:"block"}}>
+      <svg viewBox={`0 0 ${w} ${h}`} style={{display:"block",width:"100%",height:"auto"}}>
         <Ice/><Net x={4} y={cy-13}/>
         <Player x={168} y={cy-22} color="#dc2626" label="A1"/>
         <Player x={168} y={cy+22} color="#dc2626" label="A2"/>
@@ -1057,7 +1062,7 @@ function RinkDiagram({ type }) {
   };
 
   return diagrams[type] ? (
-    <div style={{background:"#f0f8ff",borderRadius:14,padding:".85rem",border:`2px solid ${C.rink}28`,display:"flex",justifyContent:"center"}}>
+    <div style={{background:"linear-gradient(135deg,#2a3f58,#0B1A33)",borderRadius:18,padding:".55rem",border:"1px solid #C9A24B66",boxShadow:"0 12px 30px #0b1a3328",display:"flex",justifyContent:"center",overflow:"hidden"}}>
       {diagrams[type]}
     </div>
   ) : null;
@@ -2491,19 +2496,7 @@ function Quiz({ player, onFinish, onBack, tier, onUpgrade, focus = null }) {
             image as its own clickable canvas (hot-spots, drag-target,
             multi-tap, etc.) — otherwise the kid sees the picture twice. */}
         {q.media?.url && !isRinkQ && (
-          <div style={{
-            position:"sticky", top:62, zIndex:10,
-            marginBottom:"1rem", borderRadius:12, overflow:"hidden",
-            border:`1px solid ${C.border}`, background:"#000",
-            aspectRatio: q.media?.ratio || "16/9",
-            boxShadow: "0 8px 24px rgba(0,0,0,.5)",
-          }}>
-            <img src={q.media.url} alt={q.media.alt || ""}
-              draggable={false}
-              loading="eager" decoding="async" fetchpriority="high"
-              style={{width:"100%", height:"100%", objectFit: q.media?.aspect ? "cover" : "contain", display:"block", userSelect:"none"}} />
-            {Array.isArray(q.overlays) && <OverlayLayer overlays={q.overlays} />}
-          </div>
+          <ScenarioImage media={q.media} overlays={q.overlays} sticky />
         )}
 
         {/* Mini-rink diagram — for any non-interactive MC-shape question
@@ -2520,30 +2513,6 @@ function Quiz({ player, onFinish, onBack, tier, onUpgrade, focus = null }) {
             boxShadow: "0 8px 24px rgba(0,0,0,.5)",
           }}>
             <RinkReadsRink {...q.rink} />
-            {/* Render any explicit markers (puck, attackers, defenders,
-                teammates, goalie) as a non-interactive overlay. Mirrors
-                what HotSpotsRink draws but without click handlers. */}
-            {Array.isArray(q.rink.markers) && q.rink.markers.length > 0 && (
-              <svg viewBox={q.rink.view === "left" ? "0 0 600 300" : "0 0 600 300"}
-                preserveAspectRatio="none"
-                style={{position:"absolute",inset:0,width:"100%",height:"100%",pointerEvents:"none"}}>
-                {q.rink.markers.map((m, i) => {
-                  const fill = m.type === "puck" ? "#000"
-                    : m.type === "goalie" ? "#5BA4E8"
-                    : m.type === "attacker" ? "#0b1220"
-                    : m.type === "defender" ? "#ef4444"
-                    : "#22c55e"; // teammate
-                  const stroke = m.type === "attacker" ? "#fff" : (m.type === "puck" ? "#fff" : "none");
-                  const r = m.type === "puck" ? 5 : 11;
-                  return (
-                    <g key={i} transform={`translate(${m.x},${m.y})`}>
-                      <circle cx="0" cy="0" r={r} fill={fill} stroke={stroke} strokeWidth={stroke==="none"?0:1.5}/>
-                      {m.label && <text x="0" y="3.5" textAnchor="middle" fontSize="9" fontWeight="800" fill="#fff" pointerEvents="none">{m.label}</text>}
-                    </g>
-                  );
-                })}
-              </svg>
-            )}
           </div>
         )}
 
@@ -3908,18 +3877,7 @@ function WeeklyQuiz({ player, onBack, onFinish }) {
         </div>
 
         {q.media?.url && (
-          <div style={{
-            position:"relative",
-            marginBottom:"1rem", borderRadius:12, overflow:"hidden",
-            border:`1px solid ${C.border}`, background:"#000",
-            aspectRatio: q.media?.ratio || "16/9",
-          }}>
-            <img src={q.media.url} alt={q.media.alt || ""}
-              draggable={false}
-              loading="eager" decoding="async" fetchpriority="high"
-              style={{width:"100%", height:"100%", objectFit: q.media?.aspect ? "cover" : "contain", display:"block", userSelect:"none"}} />
-            {Array.isArray(q.overlays) && <OverlayLayer overlays={q.overlays} />}
-          </div>
+          <ScenarioImage media={q.media} overlays={q.overlays} />
         )}
         {(qtype === "mc" || qtype === "next") && (
           <Card style={{marginBottom:"1.25rem",background:qtype === "next" ? C.goldDim : C.purpleDim,border:`1px solid ${qtype === "next" ? C.goldBorder : C.purpleBorder}`}}>
@@ -5937,11 +5895,7 @@ function QuestionPreviewFallback({ question, onAnswer }) {
   return (
     <div>
       {q.media?.url && (
-        <div style={{position:"relative",marginBottom:"1rem",borderRadius:12,overflow:"hidden",border:`1px solid ${C.border}`,background:"#000",aspectRatio:q.media?.ratio||"16/9",display:"flex",alignItems:"center",justifyContent:"center"}}>
-          <img src={q.media.url} alt={q.media.alt || ""} loading="eager" decoding="async"
-            style={{maxWidth:"100%",maxHeight:"100%",objectFit:q.media?.aspect?"cover":"contain",display:"block"}}/>
-          {Array.isArray(q.overlays) && <OverlayLayer overlays={q.overlays} />}
-        </div>
+        <ScenarioImage media={q.media} overlays={q.overlays} />
       )}
       <div style={{background:C.purpleDim,border:`1px solid ${C.purpleBorder}`,borderRadius:12,padding:"1rem 1.1rem",marginBottom:"1.25rem"}}>
         <div style={{fontSize:10,letterSpacing:".14em",textTransform:"uppercase",color:C.purple,marginBottom:".5rem",fontWeight:700}}>{isTF ? "True or False?" : q.sit ? "Game Situation" : "Question"}</div>

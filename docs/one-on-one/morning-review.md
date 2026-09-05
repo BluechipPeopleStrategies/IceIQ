@@ -1,6 +1,8 @@
 # RinkReads morning review
 September 5, 2026 · Prepared for 7:00 a.m. Edmonton
 
+**All-scenario visual follow-up is prepared locally; publication verification is next.** All 41 source illustrations serving 133 image questions have refreshed players, goalies, ice and nets from unchanged authored geometry. Quiz/scenario, coach/curriculum, animated-play and Gym renderers use richer matching art. Read-only enlarged pictures and boards support phone inspection. Two older coordinate bugs are fixed, and Snapshot keeps gray defenders so its gold target stays distinct. **265 practice tests and the production build pass.** [Scope, hashes and actual browser checks](all-scenario-visuals.md). The following releases were already public before this broader pass.
+
 The shared preview now includes **U13 connected reads and the 3D presentation**, deployed in `cf96277` and verified live at 05:34 Edmonton. Start with U11, compare the simpler U9 reads and U13 Shoot/Carry example, then review the coach tools, curriculum, Brain Gym and character references. The release passes 243 practice tests and its production build; the live phone-sized flow preserves older records and saves/reopens the new reflection exactly.
 
 **Live phone review:** [Open the shared review](https://ice-iq.vercel.app/review/). Phone access deployed in `019e8d9` and was verified on the public HTTPS site. It works without the desktop's server or Wi-Fi network. [Phone-preview.md](phone-preview.md) records the deployment and checks.

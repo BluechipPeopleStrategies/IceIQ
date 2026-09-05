@@ -134,9 +134,9 @@ function rinkPaint(ctx, W, H, orientation) {
   const gradient = orientation === "portrait"
     ? ctx.createLinearGradient(0, 0, W, H)
     : ctx.createLinearGradient(0, 0, W, H * 0.7);
-  gradient.addColorStop(0, "#f9fdff");
-  gradient.addColorStop(0.48, "#eaf6fb");
-  gradient.addColorStop(1, "#d9edf6");
+  gradient.addColorStop(0, "#FFFFFF");
+  gradient.addColorStop(0.48, "#EFF6F7");
+  gradient.addColorStop(1, "#D5E5EB");
   const glow = ctx.createRadialGradient(W * 0.48, H * 0.24, 0, W * 0.48, H * 0.24, Math.max(W, H) * 0.52);
   glow.addColorStop(0, "rgba(255,255,255,0.8)");
   glow.addColorStop(1, "rgba(255,255,255,0)");
@@ -245,7 +245,7 @@ export function drawRink(ctx, W, H, { orientation = "landscape", zone = "full" }
   // pattern is deterministic and uses no per-frame arrays or random numbers.
   ctx.save();
   ctx.globalAlpha = 0.075;
-  ctx.strokeStyle = "#4b7790";
+  ctx.strokeStyle = "#5B6675";
   ctx.lineWidth = 1;
   for (let i = 0; i < 11; i += 1) {
     const sx = ((i * 83) % 97) / 97 * W;
@@ -354,15 +354,15 @@ export function drawRink(ctx, W, H, { orientation = "landscape", zone = "full" }
 // boards + a lighter glass line just inside them
 function drawBoards(ctx, W, H, R, m) {
   ctx.save();
-  ctx.shadowColor = "rgba(1, 12, 21, 0.34)";
+  ctx.shadowColor = "rgba(11, 26, 51, 0.30)";
   ctx.shadowBlur = 12;
   roundRectPath(ctx, m, m, W - 2 * m, H - 2 * m, R);
-  ctx.strokeStyle = "#27485e";
+  ctx.strokeStyle = "#0B1A33";
   ctx.lineWidth = 4;
   ctx.stroke();
   ctx.shadowBlur = 0;
   roundRectPath(ctx, m + 2.5, m + 2.5, W - 2 * m - 5, H - 2 * m - 5, Math.max(0, R - 2.5));
-  ctx.strokeStyle = "rgba(190,231,247,0.78)";
+  ctx.strokeStyle = "#C9A24B";
   ctx.lineWidth = 1.5;
   ctx.stroke();
   ctx.restore();
@@ -395,7 +395,7 @@ function drawZoneBoards(ctx, W, H, R, m, orientation) {
   ctx.save();
   ctx.lineCap = "butt";
   zonePath(ctx, W, H, R, m, orientation);
-  ctx.strokeStyle = "#6b8294";
+  ctx.strokeStyle = "#0B1A33";
   ctx.lineWidth = 3;
   ctx.stroke();
   ctx.restore();

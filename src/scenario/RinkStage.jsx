@@ -7,6 +7,7 @@
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import RinkReadsRink from "../RinkReadsRink.jsx";
+import { HockeyPlayerArt } from "../visuals/HockeyPlayerArt.jsx";
 import { RINK_W, RINK_H, denorm } from "./schema.js";
 import { rinkRenderFor } from "./youngRink.js";
 import { C } from "../shared.jsx";
@@ -106,11 +107,13 @@ function ActorMarker({ actor, highlight, hideTag, offset, ageStyle = "playbook",
   const showStick = actor.facing &&
     (actor.kind === "player" || actor.kind === "teammate" || actor.kind === "defender");
   let stickLine = null;
+  let facing = null;
   if (showStick) {
     const fp = denorm(actor.facing);
     const dx = fp.x - p.x, dy = fp.y - p.y;
     const len = Math.sqrt(dx * dx + dy * dy);
-    if (len > 0.5) {
+    if (Number.isFinite(len) && len > 0.5) {
+      facing = Math.atan2(dy, dx) * 180 / Math.PI;
       // Stick reaches ~16px out from the body in the facing direction.
       const STICK_LEN = 16;
       const ex = (dx / len) * STICK_LEN;
@@ -126,7 +129,7 @@ function ActorMarker({ actor, highlight, hideTag, offset, ageStyle = "playbook",
   }
 
   return (
-    <g transform={`translate(${p.x},${p.y})`}
+    <g data-rink-actor={actor.id} data-facing={facing ?? undefined} transform={`translate(${p.x},${p.y})`}
       filter={`url(#${highlight ? HIGHLIGHT_FILTER_ID : SHADOW_FILTER_ID})`}>
       {/* Highlight ring under the body — only when this actor is being
           flagged (e.g. the defender who intercepted a pass). */}
@@ -138,71 +141,36 @@ function ActorMarker({ actor, highlight, hideTag, offset, ageStyle = "playbook",
         </circle>
       )}
       {stickLine}
-      {/* GOALIE — playbook: plain square; friendly: rounded "pad" block with
-          little leg pads, clearly distinct from skater circles. */}
+      {/* Keep the original identity rings and shapes around the equipment.
+          A neutral illustration is used unless the author supplies facing. */}
       {actor.kind === "goalie" && (
-        ageStyle === "playbook" ? (
-          <>
-            <rect x="-11" y="-11" width="22" height="22" rx="3"
-              fill={palette.fill} stroke={palette.stroke} strokeWidth="1.6"/>
-            <text x="0" y="4" textAnchor="middle" fill={palette.text}
-              fontSize="11" fontWeight="800" style={labelStyle}>G</text>
-          </>
-        ) : (
-          <>
-            {/* leg pads peeking below the body */}
-            <rect x="-9" y="6" width="7" height="9" rx="3" fill={palette.fill} stroke={palette.stroke} strokeWidth="1.2"/>
-            <rect x="2" y="6" width="7" height="9" rx="3" fill={palette.fill} stroke={palette.stroke} strokeWidth="1.2"/>
-            {/* body */}
-            <rect x="-11" y="-13" width="22" height="24" rx="8"
-              fill={palette.fill} stroke={palette.stroke} strokeWidth="1.8"/>
-            <text x="0" y="3" textAnchor="middle" fill={palette.text}
-              fontSize="12" fontWeight="800" style={labelStyle}>G</text>
-          </>
-        )
-      )}
-
-      {/* DEFENDER — X-marked circle (playbook opponent symbol). Hollow
-          ring + thick X reads as "other team" without relying on red. */}
-      {actor.kind === "defender" && (
         <>
-          <circle cx="0" cy="0" r="11" fill={palette.fill}
-            stroke={palette.stroke} strokeWidth="1.6"/>
-          <line x1="-6" y1="-6" x2="6" y2="6"
-            stroke={palette.stroke} strokeWidth="2.4" strokeLinecap="round"/>
-          <line x1="-6" y1="6" x2="6" y2="-6"
-            stroke={palette.stroke} strokeWidth="2.4" strokeLinecap="round"/>
+          <rect x="-11" y={ageStyle === "playbook" ? -11 : -13} width="22" height={ageStyle === "playbook" ? 22 : 26} rx={ageStyle === "playbook" ? 3 : 8}
+            fill={palette.fill} fillOpacity=".12" stroke={palette.stroke} strokeWidth="1.6"/>
+          <g style={goalieFill === "#51607A" ? { filter: "grayscale(1)" } : undefined}>
+            <HockeyPlayerArt radius={12} goalie team={goalieFill === "#1a1a1a" ? "away" : "home"} facing={null}/>
+          </g>
+          <text x="9" y="13" textAnchor="middle" fill={palette.text} fontSize="7" fontWeight="800" style={labelStyle}>G</text>
         </>
       )}
-
-      {/* TEAMMATE — solid filled circle (playbook home symbol). Position
-          tag is rendered inside the circle when present. */}
-      {actor.kind === "teammate" && (
+      {(actor.kind === "defender" || actor.kind === "teammate" || actor.kind === "player") && (
         <>
-          <circle cx="0" cy="0" r="11" fill={palette.fill}
-            stroke={palette.stroke} strokeWidth="1.6"/>
-          {positionTag && (
-            <text x="0" y="4" textAnchor="middle" fill={palette.text}
-              fontSize="10" fontWeight="800" style={labelStyle}>
-              {positionTag}
-            </text>
-          )}
-        </>
-      )}
-
-      {/* PLAYER (YOU) — playbook: smaller plain circle (r=12); friendly:
-          doubled-ring filled circle (r=14) so the first-person is
-          unmistakable. Larger than other markers. Position tag inside. */}
-      {actor.kind === "player" && (
-        <>
-          <circle cx="0" cy="0" r={ageStyle === "playbook" ? 12 : 14} fill={palette.fill}
-            stroke="#fff" strokeWidth="1.6"/>
-          {ageStyle !== "playbook" && (
+          <circle cx="0" cy="0" r={actor.kind === "player" ? (ageStyle === "playbook" ? 12 : 14) : 11}
+            fill={palette.fill} fillOpacity=".12" stroke={palette.stroke} strokeWidth="1.6"/>
+          {actor.kind === "player" && ageStyle !== "playbook" && (
             <circle cx="0" cy="0" r="17" fill="none" stroke="#fff" strokeWidth="1.6"/>
           )}
+          <HockeyPlayerArt radius={actor.kind === "player" ? (ageStyle === "playbook" ? 12 : 14) : 11}
+            team={actor.kind === "defender" ? "away" : "home"} facing={facing}/>
+          {actor.kind === "defender" && (
+            <g transform="translate(8,8)" pointerEvents="none">
+              <circle r="4.5" fill="#172B3D" stroke="#fff" strokeWidth=".8"/>
+              <path d="M-2-2 2 2 M-2 2 2-2" fill="none" stroke="#fff" strokeWidth="1.3" strokeLinecap="round"/>
+            </g>
+          )}
           {positionTag && (
-            <text x="0" y="4" textAnchor="middle" fill={palette.text}
-              fontSize="11" fontWeight="800" style={labelStyle}>{positionTag}</text>
+            <text x="0" y={actor.label || actor.kind === "player" ? 24 : -16} textAnchor="middle" fill={palette.text}
+              fontSize="10" fontWeight="800" style={labelStyle}>{positionTag}</text>
           )}
         </>
       )}
@@ -352,6 +320,8 @@ export default function RinkStage({ stage, actors, levels, scanWindow, highlight
       position: "relative", borderRadius: 10, overflow: "hidden",
       border: `1px solid ${C.border}`, background: C.bgCard, marginBottom: ".75rem",
     }}>
+      {/* The legend must not contribute to the actor overlay's height. */}
+      <div data-rink-surface="true" style={{ position: "relative" }}>
       <RinkReadsRink view={view} zone={stage.zone} markers={[]} hideZoneLines={hideZoneLines} />
       {/* Zone badge — names the end of the ice on-screen so the read can't
           start with a misread of which zone the player is in. */}
@@ -388,7 +358,7 @@ export default function RinkStage({ stage, actors, levels, scanWindow, highlight
           </>
         );
       })()}
-      <svg ref={svgRef}
+      <svg data-rink-layer="actors" ref={svgRef}
         viewBox={viewBox}
         preserveAspectRatio="none"
         style={{ position: "absolute", inset: 0, width: "100%", height: "100%" }}>
@@ -410,6 +380,7 @@ export default function RinkStage({ stage, actors, levels, scanWindow, highlight
         {/* Primitive renders over the actors. */}
         {typeof children === "function" ? children(svgPoint) : children}
       </svg>
+      </div>
       <RinkLegend actors={actors} goalieFill={goalieFill} zone={stage.zone}/>
     </div>
   );
@@ -423,11 +394,11 @@ function RinkLegend({ actors, goalieFill, zone }) {
   if (kinds.has("player"))   items.push({ glyph: "double-circle", text: "you"      });
   if (kinds.has("teammate")) items.push({ glyph: "circle",        text: "your team"});
   if (kinds.has("defender")) items.push({ glyph: "x",             text: "opponents"});
-  if (kinds.has("goalie"))   items.push({ glyph: "square",        text: zone === "off-zone" ? "their goalie" : "your goalie", fill: goalieFill });
+  if (kinds.has("goalie"))   items.push({ glyph: "square",        text: zone === "off-zone" ? "their goalie" : zone === "def-zone" ? "your goalie" : "goalie", fill: goalieFill });
   if (kinds.has("puck"))     items.push({ glyph: "puck",          text: "puck"     });
   return (
     <div style={{
-      display: "flex", gap: "1rem", justifyContent: "center", alignItems: "center",
+      display: "flex", flexWrap: "wrap", gap: ".35rem .85rem", justifyContent: "center", alignItems: "center",
       padding: ".4rem .6rem", background: "rgba(11,18,32,.6)",
       borderTop: `1px solid ${C.border}`, fontSize: 10,
       letterSpacing: ".06em", textTransform: "uppercase",
@@ -444,31 +415,24 @@ function RinkLegend({ actors, goalieFill, zone }) {
 }
 
 function LegendGlyph({ kind, fill }) {
-  const W = 18, H = 18;
   return (
-    <svg width={W} height={H} viewBox="-10 -10 20 20" style={{ flexShrink: 0 }}>
-      {kind === "double-circle" && (
-        <>
-          <circle cx="0" cy="0" r="6" fill="#0F4C8C" stroke="#fff" strokeWidth="1.2"/>
-          <circle cx="0" cy="0" r="8.5" fill="none" stroke="#fff" strokeWidth="1.2"/>
-        </>
-      )}
-      {kind === "circle" && (
-        <circle cx="0" cy="0" r="6" fill="#0F4C8C" stroke="#fff" strokeWidth="1.2"/>
+    <svg width="20" height="20" viewBox="-10 -10 20 20" style={{ flexShrink: 0 }} aria-hidden="true">
+      {kind === "double-circle" && <circle r="9" fill="none" stroke="#fff" strokeWidth="1"/>}
+      {(kind === "double-circle" || kind === "circle" || kind === "x") && (
+        <HockeyPlayerArt radius={8} team={kind === "x" ? "away" : "home"} facing={null}/>
       )}
       {kind === "x" && (
-        <>
-          <circle cx="0" cy="0" r="6" fill="#1a1a1a" stroke="#fff" strokeWidth="1.2"/>
-          <line x1="-3.2" y1="-3.2" x2="3.2" y2="3.2" stroke="#fff" strokeWidth="1.6" strokeLinecap="round"/>
-          <line x1="-3.2" y1="3.2" x2="3.2" y2="-3.2" stroke="#fff" strokeWidth="1.6" strokeLinecap="round"/>
-        </>
+        <g transform="translate(6,6)">
+          <circle r="3.5" fill="#172B3D" stroke="#fff" strokeWidth=".6"/>
+          <path d="M-1.5-1.5 1.5 1.5 M-1.5 1.5 1.5-1.5" stroke="#fff" strokeWidth="1"/>
+        </g>
       )}
       {kind === "square" && (
-        <rect x="-6.5" y="-6.5" width="13" height="13" rx="4.5" fill={fill || "#51607A"} stroke="#fff" strokeWidth="1.2"/>
+        <g style={fill === "#51607A" ? { filter: "grayscale(1)" } : undefined}>
+          <HockeyPlayerArt radius={8.5} goalie team={fill === "#1a1a1a" ? "away" : "home"} facing={null}/>
+        </g>
       )}
-      {kind === "puck" && (
-        <circle cx="0" cy="0" r="4" fill="#0a0a0a" stroke="#fff" strokeWidth="1.2"/>
-      )}
+      {kind === "puck" && <circle cx="0" cy="0" r="4" fill="#0a0a0a" stroke="#fff" strokeWidth="1.2"/>}
     </svg>
   );
 }

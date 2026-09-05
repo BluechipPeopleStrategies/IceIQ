@@ -1,4 +1,5 @@
 import { useRef, useState, useCallback, useEffect } from "react";
+import { drawHockeyPlayer, drawHockeyLabel } from "../visuals/hockeyArtCanvas.js";
 import {
   createAdaptiveLevel,
   levelT,
@@ -293,13 +294,10 @@ export default function TrackingDrill({ playerId = "default", onExit }) {
           stroke = "#0f4a7d";
         }
 
-        ctx.fillStyle = fill;
-        ctx.strokeStyle = stroke;
-        ctx.lineWidth = 2.5;
-        ctx.beginPath();
-        ctx.arc(d.x, d.y, d.r, 0, Math.PI * 2);
-        ctx.fill();
-        ctx.stroke();
+        // All moving skaters use the same unnumbered figure; identity cues remain phase-gated below.
+        drawHockeyPlayer(ctx, { x: d.x, y: d.y, r: d.r, jersey: fill });
+        ctx.strokeStyle = stroke; ctx.lineWidth = 2.5;
+        ctx.beginPath(); ctx.arc(d.x, d.y, d.r, 0, Math.PI * 2); ctx.stroke();
 
         // check / cross glyph (shape, not color alone, for accessibility)
         if (mark) {
@@ -327,7 +325,7 @@ export default function TrackingDrill({ playerId = "default", onExit }) {
           ctx.font = `700 ${Math.round(d.r * 0.9)}px system-ui, sans-serif`;
           ctx.textAlign = "center";
           ctx.textBaseline = "middle";
-          ctx.fillText(String(keyRank.get(idx)), d.x, d.y);
+          drawHockeyLabel(ctx, keyRank.get(idx), d.x, d.y, d.r, { ink: isPicked ? "#F5EFE6" : "#0B1A33", plate: fill, scale: .9 });
         }
 
         // soccer ball on the ball-carrier — shown while memorizing and on reveal

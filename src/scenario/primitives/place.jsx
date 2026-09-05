@@ -13,6 +13,7 @@ import { denorm, RINK_W, RINK_H } from "../schema.js";
 import { resolveTarget } from "../zones.js";
 import { scorePlace } from "./place-scorer.js";
 import { revealPlan, shouldAutoReveal } from "./place-reveal.js";
+import { HockeyPlayerArt } from "../../visuals/HockeyPlayerArt.jsx";
 
 const KIND_FILL = {
   player: "#0F4C8C", teammate: "#0F4C8C", defender: "#1a1a1a", goalie: "#51607A", puck: "#0a0a0a",
@@ -222,6 +223,11 @@ export function PlacePrimitive({ interaction, correct, actors, svgPoint, view, l
         // neither right nor wrong — it gets a neutral ring and no mark.
         const ring = p ? p.ring : (dragging === id ? "#C9A24B" : "#fff");
         const isGoalie = a.kind === "goalie";
+        const isSkater = ["player", "teammate", "defender"].includes(a.kind);
+        const dx = a.facing ? (a.facing.x - a.x) * RINK_W : 0;
+        const dy = a.facing ? (a.facing.y - a.y) * RINK_H : 0;
+        const facing = isSkater && Number.isFinite(dx) && Number.isFinite(dy) && Math.hypot(dx, dy) > .5
+          ? Math.atan2(dy, dx) * 180 / Math.PI : null;
         return (
           <g key={id} transform={`translate(${px.x},${px.y})`}
             onPointerDown={(e) => startDrag(e, id)}
@@ -234,18 +240,28 @@ export function PlacePrimitive({ interaction, correct, actors, svgPoint, view, l
                 stroke="#C9A24B" strokeWidth="1.4" strokeDasharray="3 3" opacity="0.8"/>
             )}
             {isGoalie ? (
-              <rect x="-11" y="-12" width="22" height="22" rx="7" fill={KIND_FILL.goalie} stroke={ring} strokeWidth="2"/>
+              <>
+                <rect x="-11" y="-12" width="22" height="22" rx="7" fill={KIND_FILL.goalie} fillOpacity=".12" stroke={ring} strokeWidth="2"/>
+                {/* This primitive has no goalie-team context. Retain neutral equipment. */}
+                <g style={{ filter: "grayscale(1)" }}><HockeyPlayerArt radius={11} goalie facing={null}/></g>
+              </>
             ) : a.kind === "defender" ? (
               <>
-                <circle cx="0" cy="0" r="11" fill={KIND_FILL.defender} stroke={ring} strokeWidth="2"/>
-                <line x1="-5" y1="-5" x2="5" y2="5" stroke="#fff" strokeWidth="2" strokeLinecap="round"/>
-                <line x1="-5" y1="5" x2="5" y2="-5" stroke="#fff" strokeWidth="2" strokeLinecap="round"/>
+                <circle cx="0" cy="0" r="11" fill={KIND_FILL.defender} fillOpacity=".12" stroke={ring} strokeWidth="2"/>
+                <HockeyPlayerArt radius={11} team="away" facing={facing}/>
+                <g transform="translate(8,8)" pointerEvents="none">
+                  <circle r="4.5" fill="#172B3D" stroke="#fff" strokeWidth=".8"/>
+                  <path d="M-2-2 2 2 M-2 2 2-2" fill="none" stroke="#fff" strokeWidth="1.3" strokeLinecap="round"/>
+                </g>
               </>
             ) : (
-              <circle cx="0" cy="0" r="12" fill={KIND_FILL[a.kind] || KIND_FILL.teammate} stroke={ring} strokeWidth="2"/>
+              <>
+                <circle cx="0" cy="0" r="12" fill={KIND_FILL[a.kind] || KIND_FILL.teammate} fillOpacity={isSkater ? .12 : 1} stroke={ring} strokeWidth="2"/>
+                {isSkater && <HockeyPlayerArt radius={12} team="home" facing={facing}/>}
+              </>
             )}
             {(a.tag || isGoalie) && (
-              <text x="0" y="4" textAnchor="middle" fill="#fff" fontSize="10" fontWeight="800"
+              <text x="0" y="-18" textAnchor="middle" fill="#fff" fontSize="10" fontWeight="800"
                 style={{ pointerEvents: "none", paintOrder: "stroke", textShadow: "0 1px 2px rgba(0,0,0,.85)" }}>
                 {a.tag || "G"}
               </text>

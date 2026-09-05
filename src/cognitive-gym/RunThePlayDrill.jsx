@@ -1,4 +1,6 @@
+import { HockeyPlayerArt } from "../visuals/HockeyPlayerArt.jsx";
 import { useRef, useState, useCallback, useEffect } from "react";
+import { drawHockeyPlayer, drawHockeyPuck, drawHockeyLabel } from "../visuals/hockeyArtCanvas.js";
 import { createAdaptiveLevel, setupCanvas, pointerPos, drawRink, REPS_PER_SESSION } from "./gymEngine";
 import { getDrill, saveSession } from "./gymStorage";
 import { cue, gymCueHooks } from "./gymAudio";
@@ -65,42 +67,22 @@ export default function RunThePlayDrill({ playerId = "default", onExit }) {
   }
 
   function drawSkater(ctx, s, idx, { lit = false, wrong = false, dim = false } = {}) {
-    ctx.save();
-    ctx.globalAlpha = dim ? 0.45 : 1;
-    ctx.fillStyle = wrong ? "#c8102e" : lit ? "#f2b705" : "#1b6cb0";
-    ctx.beginPath();
-    ctx.arc(s.x, s.y, s.r * (lit ? 1.15 : 1), 0, Math.PI * 2);
-    ctx.fill();
-    ctx.strokeStyle = "#0b1b2b";
-    ctx.lineWidth = 2.5;
-    ctx.stroke();
+    ctx.save(); ctx.globalAlpha = dim ? .45 : 1;
+    const jersey = wrong ? "#c8102e" : lit ? "#f2b705" : "#0B1A33";
+    drawHockeyPlayer(ctx, { ...s, r: s.r * (lit ? 1.15 : 1), jersey });
+    ctx.strokeStyle = "#0B1A33"; ctx.lineWidth = 2.5;
+    ctx.beginPath(); ctx.arc(s.x, s.y, s.r * (lit ? 1.15 : 1), 0, Math.PI * 2); ctx.stroke();
     if (lit) {
-      ctx.strokeStyle = "#f2b705";
-      ctx.lineWidth = 3;
-      ctx.beginPath();
-      ctx.arc(s.x, s.y, s.r * 1.5, 0, Math.PI * 2);
-      ctx.stroke();
+      ctx.strokeStyle = "#f2b705"; ctx.lineWidth = 3;
+      ctx.beginPath(); ctx.arc(s.x, s.y, s.r * 1.5, 0, Math.PI * 2); ctx.stroke();
     }
-    ctx.fillStyle = lit ? "#0b1b2b" : "#f4f9fc";
-    ctx.font = `700 ${Math.round(s.r * 0.85)}px system-ui, sans-serif`;
-    ctx.textAlign = "center";
-    ctx.textBaseline = "middle";
-    ctx.fillText(String(JERSEYS[idx % JERSEYS.length]), s.x, s.y);
+    drawHockeyLabel(ctx, JERSEYS[idx % JERSEYS.length], s.x, s.y, s.r,
+      { ink: lit ? "#0B1A33" : "#F5EFE6", plate: jersey, scale: .85 });
     ctx.restore();
   }
 
   function drawPuck(ctx, x, y, r) {
-    ctx.save();
-    ctx.fillStyle = "#0b1b2b";
-    ctx.beginPath();
-    ctx.arc(x, y, r, 0, Math.PI * 2);
-    ctx.fill();
-    ctx.strokeStyle = "#ffffff";
-    ctx.lineWidth = Math.max(1.5, r * 0.35);
-    ctx.beginPath();
-    ctx.arc(x, y, r, 0, Math.PI * 2);
-    ctx.stroke();
-    ctx.restore();
+    drawHockeyPuck(ctx, x, y, r, { ringWidth: Math.max(1.5, r * .35), ringColour: "#ffffff" });
   }
 
   const render = useCallback(() => {
@@ -382,9 +364,9 @@ export default function RunThePlayDrill({ playerId = "default", onExit }) {
             <rect width="280" height="150" rx="8" fill="#eaf4fb" />
             <line x1="60" y1="98" x2="140" y2="40" stroke="#1f9d55" strokeWidth="2.5" strokeDasharray="6 6" />
             <line x1="140" y1="40" x2="215" y2="88" stroke="#1f9d55" strokeWidth="2.5" strokeDasharray="6 6" />
-            <circle cx="60" cy="98" r="16" fill="#1b6cb0" stroke="#0b1b2b" strokeWidth="2.5" />
-            <circle cx="140" cy="40" r="16" fill="#f2b705" stroke="#0b1b2b" strokeWidth="2.5" />
-            <circle cx="215" cy="88" r="16" fill="#1b6cb0" stroke="#0b1b2b" strokeWidth="2.5" />
+            <g transform="translate(60,98)"><circle r="16" fill="#F5EFE6" stroke="#0b1b2b" strokeWidth="2.5" /><HockeyPlayerArt radius={15.04} team="home" /></g>
+            <g transform="translate(140,40)"><circle r="16" fill="#F5EFE6" stroke="#0b1b2b" strokeWidth="2.5" /><HockeyPlayerArt radius={15.04} team="away" /></g>
+            <g transform="translate(215,88)"><circle r="16" fill="#F5EFE6" stroke="#0b1b2b" strokeWidth="2.5" /><HockeyPlayerArt radius={15.04} team="home" /></g>
             <text x="60" y="103" textAnchor="middle" fontSize="13" fontWeight="700" fill="#f4f9fc" fontFamily="system-ui, sans-serif">9</text>
             <text x="140" y="45" textAnchor="middle" fontSize="13" fontWeight="700" fill="#0b1b2b" fontFamily="system-ui, sans-serif">16</text>
             <text x="215" y="93" textAnchor="middle" fontSize="13" fontWeight="700" fill="#f4f9fc" fontFamily="system-ui, sans-serif">7</text>

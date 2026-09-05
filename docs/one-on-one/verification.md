@@ -130,3 +130,7 @@ The local quality pass above is now published as **`cf96277`**. [Vercel deployme
 - Switching to the tactical board left zero WebGL canvases; switching back to 3D created one. The checked live flow had no page exceptions, failed requests or horizontal overflow.
 - The final 320 px containment check remains **local** evidence: both U13 Carry targets were fully contained at 44 × 44 px with no overflow after the grid and target-clamping fixes. The forced `WEBGL_lose_context` recovery check above also remains local evidence; forced loss was not repeated on this live release.
 - These are public-origin browser and generated-touch checks. No live AI call, physical-device result, child-comprehension finding or tactical/age-validity acceptance is claimed. Practice saves remain device-local.
+
+## All-scenario visual pass — September 5, 2026, local verification
+
+The broader owner-requested pass covers every current scenario renderer family and 41 authored source images serving 133 questions. **265 practice tests and production build pass.** Detailed fixed-coordinate hashes, actual 390/1280 px browser flows, dialog zoom/focus, 28-opening layer alignment, source input handlers, animated feedback, Gym cues and exact curriculum reload evidence are recorded in [all-scenario-visuals.md](all-scenario-visuals.md). Public deployment verification is pending. This does not add a live AI key, rigged animation assets, physical-device validation or curriculum admission.

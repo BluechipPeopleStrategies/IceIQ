@@ -104,7 +104,7 @@
     "test:goals": "node src/data/goalStarters.test.mjs",
     "test:drill-progression": "node src/cognitive-gym/drillProgression.test.mjs",
     "test:route-memory": "node src/utils/routeMemory.test.mjs",
-    "test:practice": "node --test src/one-on-one/*.test.mjs tools/practice-judge.test.mjs tools/practice-review-assets.test.mjs src/cognitive-gym/*.test.mjs scripts/test-shootout.mjs scripts/test-gym*.mjs scripts/test-animated-play.mjs scripts/test-play-catalog.mjs scripts/test-coach-personas.mjs scripts/test-coach-feedback-tone.mjs"
+    "test:practice": "node --test src/one-on-one/*.test.mjs src/visuals/*.test.mjs src/scenario/playerArtwork.test.mjs tools/practice-judge.test.mjs tools/practice-review-assets.test.mjs src/cognitive-gym/*.test.mjs scripts/test-shootout.mjs scripts/test-gym*.mjs scripts/test-animated-play.mjs scripts/test-play-catalog.mjs scripts/test-coach-personas.mjs scripts/test-coach-feedback-tone.mjs"
   },
   "dependencies": {
     "@react-three/drei": "^9.122.0",

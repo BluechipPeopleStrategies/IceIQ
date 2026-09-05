@@ -22,12 +22,12 @@
 // own esbuild (a devDependency already in the tree) into node_modules/.cache and
 // imported — no new dependency, nothing written into the source tree.
 
-import { readFileSync, writeFileSync, mkdirSync, readdirSync } from "node:fs";
+import { readFileSync, mkdirSync, readdirSync } from "node:fs";
 import { pathToFileURL, fileURLToPath } from "node:url";
 import { join, relative } from "node:path";
 import { createElement } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
-import { transformWithEsbuild } from "vite";
+import { build } from "esbuild";
 import { levelsOf, isYoungBand, halfIceView, rinkRenderFor } from "./youngRink.js";
 
 let pass = 0, fail = 0;
@@ -42,11 +42,8 @@ const RINK_SRC = new URL("./src/RinkReadsRink.jsx", ROOT);
 const CACHE_DIR = new URL("./node_modules/.cache/rinkreads-young-rink/", ROOT);
 const CACHE_FILE = new URL("./RinkReadsRink.gen.mjs", CACHE_DIR);
 mkdirSync(CACHE_DIR, { recursive: true });
-{
-  const code = readFileSync(RINK_SRC, "utf8");
-  const out = await transformWithEsbuild(code, RINK_SRC.pathname, { loader: "jsx", jsx: "automatic" });
-  writeFileSync(CACHE_FILE, out.code);
-}
+await build({ entryPoints: [fileURLToPath(RINK_SRC)], outfile: fileURLToPath(CACHE_FILE),
+  bundle: true, packages: "external", platform: "node", format: "esm", jsx: "automatic", logLevel: "silent" });
 const { default: RinkReadsRink, RINK_DIMENSIONS: D } = await import(CACHE_FILE.href);
 
 const CX = D.length / 2;                                  // 300 — centre red line

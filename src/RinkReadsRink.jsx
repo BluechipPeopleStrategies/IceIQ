@@ -1,4 +1,5 @@
-import { useMemo, Component } from "react";
+import { useId, useMemo, Component } from "react";
+import { HockeyPlayerArt } from "./visuals/HockeyPlayerArt.jsx";
 
 const M = 10;
 
@@ -309,8 +310,9 @@ function Marker({ marker, replayT }) {
   if (marker.type === "goalie") {
     return (
       <g transform={`translate(${mx}, ${my})`}>
-        <ellipse cx={0} cy={0} rx={4.8} ry={6.2} fill="#444441" stroke="#fff" strokeWidth="0.7" />
-        <text x={0} y={1.9} textAnchor="middle" fill="#fff"
+        {/* Legacy markers do not identify the goalie's team. Keep neutral equipment. */}
+        <g style={{ filter: "grayscale(1)" }}><HockeyPlayerArt radius={6.2} goalie facing={null} /></g>
+        <text x={0} y={-8} textAnchor="middle" fill="#24364A" stroke="#fff" strokeWidth="1.5" paintOrder="stroke"
           fontSize="5.6" fontWeight="700" fontFamily="system-ui">G</text>
       </g>
     );
@@ -357,7 +359,8 @@ function Marker({ marker, replayT }) {
       <circle cx={0} cy={0} r={playerRadius}
         fill={isDefender ? `url(#${patternId})` : fill}
         stroke="#fff" strokeWidth={isYou ? 1.0 : 0.7} />
-      <text x={0} y={2} textAnchor="middle" fill="#fff"
+      <HockeyPlayerArt radius={playerRadius} team={marker.type === "defender" || marker.type === "attacker" ? "away" : "home"} facing={null} />
+      <text x={0} y={-playerRadius - 2.5} textAnchor="middle" fill="#24364A" stroke="#fff" strokeWidth="1.5" paintOrder="stroke"
         fontSize="5.6" fontWeight="700" fontFamily="system-ui">{label}</text>
       {marker.caption && (
         <text x={0} y={12.5} textAnchor="middle" fill={COLORS.textMuted}
@@ -466,6 +469,7 @@ function RinkReadsRinkInner({
   className = "",
   style = {},
 }) {
+  const surfaceId = `rink-surface-${useId().replace(/[^a-zA-Z0-9_-]/g, "")}`;
   const safeView = sanitizeView(view);
   const safeMarkers = useMemo(() => {
     const arr = Array.isArray(markers) ? markers : [];
@@ -495,7 +499,7 @@ function RinkReadsRinkInner({
   const showRight = safeView === "full" || safeView === "right";
   const showCenter = safeView === "full" || safeView === "neutral";
   const showCenterCircle = safeView === "full";
-  const clipId = `rinkClip-${safeView}`;
+  const clipId = `${surfaceId}-clip`;
 
   let outlinePath;
   if (safeView === "left") outlinePath = halfRinkPath("left");
@@ -510,6 +514,14 @@ function RinkReadsRinkInner({
           IIHF sheet on a half-ice board (and React warns on a multi-child title). */}
       <title>{`${hideZoneLines ? "Half-ice" : "Olympic IIHF"} hockey rink (${safeView} view)`}</title>
       <defs>
+        <linearGradient id={`${surfaceId}-ice`} x1="0" y1="0" x2="0" y2="1">
+          <stop stopColor="#FFFFFF" />
+          <stop offset=".48" stopColor={COLORS.ice} />
+          <stop offset="1" stopColor="#DCEBF3" />
+        </linearGradient>
+        <pattern id={`${surfaceId}-texture`} width="36" height="26" patternUnits="userSpaceOnUse">
+          <path d="M2 7 18 5 M12 20 32 17 M27 10 35 8" fill="none" stroke="#8AAABD" strokeWidth=".4" opacity=".16" />
+        </pattern>
         <clipPath id={clipId}>
           <path d={outlinePath} />
         </clipPath>
@@ -524,14 +536,16 @@ function RinkReadsRinkInner({
         </marker>
       </defs>
 
-      <path d={outlinePath} fill={COLORS.ice} />
+      <path d={outlinePath} fill={`url(#${surfaceId}-ice)`} stroke="#091A30" strokeWidth="5" />
+      <path d={outlinePath} fill={`url(#${surfaceId}-texture)`} />
 
       <g clipPath={`url(#${clipId})`}>
         <Zone zoneKey={safeZone} />
         {safeOverlays.map((o, i) => <Zone key={`ov-${i}`} zoneKey={o} />)}
       </g>
 
-      <path d={outlinePath} fill="none" stroke={COLORS.boards} strokeWidth="0.6" />
+      <path d={outlinePath} fill="none" stroke={COLORS.boards} strokeWidth="1.4" />
+      <path d={outlinePath} fill="none" stroke="#C9A24B" strokeWidth=".45" />
 
       <g clipPath={`url(#${clipId})`}>
         {/* A half-view does NOT crop the blue line out: the "right" viewBox runs

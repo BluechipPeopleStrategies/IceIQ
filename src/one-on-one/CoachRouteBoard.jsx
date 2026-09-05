@@ -1,9 +1,10 @@
 import { useEffect, useId, useRef } from 'react';
 import { NHL_200X85_PROFILE } from '../scenario-engine/rinkFrame.js';
+import { HockeyPlayerArt } from '../visuals/HockeyPlayerArt.jsx';
 import { isCoachRoutePoint, listenForCoachRouteTaps, portraitPointToCoachRoute } from './coachRouteSurfaceInput.js';
 
 const { bounds, lengthM, widthM, landmarks } = NHL_200X85_PROFILE;
-const NAVY = '#0B1A33', GOLD = '#C9A24B', BONE = '#F5EFE6';
+const NAVY = '#0B1A33', BONE = '#F5EFE6';
 
 // A portrait view of the same canonical metres used by the 3D rink. This
 // surface only reports pending points; actor selection and editing stay outside.
@@ -13,6 +14,7 @@ export default function CoachRouteBoard({ frame, actorId, points = [], onPoint }
   callback.current = onPoint;
   const interactive = typeof onPoint === 'function';
   const labelId = useId();
+  const paintId = `coach-route-${labelId.replace(/[^a-zA-Z0-9_-]/g, '')}`;
   const actors = frame?.actors || [];
   const actor = actors.find(item => item.id === actorId);
   const route = points.filter(isCoachRoutePoint);
@@ -37,11 +39,20 @@ export default function CoachRouteBoard({ frame, actorId, points = [], onPoint }
   }, [interactive]);
 
   return <svg ref={svg} className="coach-route-board" viewBox="-14.5 -32 29 64" role="group" aria-labelledby={labelId}
-    style={{ display: 'block', width: '100%', height: '100%', minHeight: 360, background: '#14243C', touchAction: interactive ? 'pan-y' : 'auto' }}>
+    style={{ display: 'block', width: '100%', height: '100%', minHeight: 360, background: 'linear-gradient(145deg,#203a51,#0c1c32)', touchAction: interactive ? 'pan-y' : 'auto' }}>
     <title id={labelId}>{actor?.label || 'Selected player'} route planning board</title>
-    <desc>The whole rink is shown from above. Navy circles are teammates, gold diamonds are opponents, and the small dark dot is the puck. The start ring stays at the original position. {interactive ? 'Tap the ice to add a route point, or use the coordinate controls below. Points remain a plan until Apply.' : 'The line shows your pending route. Players show the current preview moment.'}</desc>
+    <desc>The whole rink is shown from above. Navy players are teammates, gold players are opponents, and the small dark dot is the puck. The start ring stays at the original position. {interactive ? 'Tap the ice to add a route point, or use the coordinate controls below. Points remain a plan until Apply.' : 'The line shows your pending route. Players show the current preview moment.'}</desc>
     <g transform="rotate(-90)">
-      <rect x={bounds.minX} y={bounds.minY} width={lengthM} height={widthM} rx="8.5344" fill={BONE} stroke="#9AA8B3" strokeWidth=".18" />
+      <defs>
+        <linearGradient id={`${paintId}-ice`} x1="0" x2="1" y1="0" y2="1"><stop stopColor="#fbfdff" /><stop offset=".52" stopColor="#eaf1f5" /><stop offset="1" stopColor="#cddde5" /></linearGradient>
+        <filter id={`${paintId}-depth`} x="-10%" y="-15%" width="120%" height="135%"><feDropShadow dx="0" dy=".3" stdDeviation=".2" floodColor="#071528" floodOpacity=".5" /></filter>
+        <rect id={`${paintId}-surface`} x={bounds.minX} y={bounds.minY} width={lengthM} height={widthM} rx="8.5344" />
+      </defs>
+      <g pointerEvents="none" filter={`url(#${paintId}-depth)`}>
+        <use href={`#${paintId}-surface`} fill="#f3f6f8" stroke="#213b51" strokeWidth=".78" />
+        <use href={`#${paintId}-surface`} fill="none" stroke="#d0ae65" strokeWidth=".44" />
+        <use href={`#${paintId}-surface`} fill={`url(#${paintId}-ice)`} stroke="#edf4f7" strokeWidth=".14" />
+      </g>
       <g fill="none" stroke="#75889c" strokeWidth=".09" opacity=".65">
         <line x1="0" x2="0" y1={bounds.minY} y2={bounds.maxY} /><circle r="4.57" />
         {[-1, 1].map(side => <g key={side} transform={`scale(${side} 1)`}>
@@ -54,11 +65,7 @@ export default function CoachRouteBoard({ frame, actorId, points = [], onPoint }
       {route.length > 1 && <polyline points={route.map(point => `${point.x},${point.y}`).join(' ')} fill="none" stroke={NAVY} strokeWidth=".22" strokeLinejoin="round" strokeDasharray=".4 .2" pointerEvents="none" />}
       {actors.map(item => <g key={item.id} transform={`translate(${item.x} ${item.y})`} pointerEvents="none">
         {item.id === actorId && <circle r="1.4" fill="none" stroke="#886714" strokeWidth=".2" strokeDasharray=".25 .13" />}
-        {item.role === 'goalie'
-          ? <rect x="-.7" y="-.9" width="1.4" height="1.8" rx=".12" fill={item.team === 'home' ? NAVY : GOLD} stroke={NAVY} strokeWidth=".1" />
-          : item.team === 'home'
-            ? <circle r=".78" fill={NAVY} stroke="#ffffff" strokeWidth=".13" />
-            : <path d="M 0 -1 L .9 0 L 0 1 L -.9 0 Z" fill={GOLD} stroke={NAVY} strokeWidth=".13" />}
+        <HockeyPlayerArt radius={.78} team={item.team} goalie={item.role === 'goalie'} facing={item.facing * 180 / Math.PI} />
         <path d="M .25 0 H 1.15" transform={`rotate(${item.facing * 180 / Math.PI})`} stroke={BONE} strokeWidth=".13" />
         <text transform="rotate(90)" y="-1.6" textAnchor="middle" fontSize=".92" fontWeight="800" fontFamily="Inter,Arial,sans-serif" fill={NAVY} stroke={BONE} strokeWidth=".12" paintOrder="stroke">{item.label || item.id}</text>
       </g>)}

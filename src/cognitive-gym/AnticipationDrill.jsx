@@ -1,3 +1,4 @@
+import { drawHockeyPuck } from "../visuals/hockeyArtCanvas.js";
 import { useRef, useState, useCallback, useEffect } from "react";
 import {
   createAdaptiveLevel,
@@ -171,10 +172,7 @@ export default function AnticipationDrill({ playerId = "default", onExit }) {
   }
 
   function drawPuck(ctx, x, y, r) {
-    ctx.fillStyle = "#0b1b2b";
-    ctx.beginPath();
-    ctx.arc(x, y, r, 0, Math.PI * 2);
-    ctx.fill();
+    drawHockeyPuck(ctx, x, y, r);
   }
 
   function loop() {
