@@ -1,7 +1,7 @@
 # RinkReads morning review
 September 5, 2026 · Prepared for 7:00 a.m. Edmonton
 
-The first integrated preview is ready for a walkthrough. Start with the U11 sequence, then review the coach tools, curriculum, Brain Gym and character references.
+The integrated preview is ready for a walkthrough. Start with the U11 sequence, then try the simpler U9 reads and review the coach tools, curriculum, Brain Gym and character references.
 
 **Live phone review:** [Open the shared review](https://ice-iq.vercel.app/review/). Phone access deployed in `019e8d9` and was verified on the public HTTPS site. It works without the desktop's server or Wi-Fi network. [Phone-preview.md](phone-preview.md) records the deployment and checks.
 
@@ -10,6 +10,8 @@ The first integrated preview is ready for a walkthrough. Start with the U11 sequ
 **Route/mobile pass is live:** `a046ea6` deployed and verified at 01:25 Edmonton. Read three now supports tapping a support route with preview, undo, keyboard coordinates and saved explanations. Shootout/Best Option recover to 2D after graphics-context loss and stop hidden WebGL rendering after completion. The current suite passes **167 tests**; production build and touch-event browser flows pass. On the live phone-sized HTTPS view, the route and reason from the Shoot branch survive reload. A forced graphics loss also left the live 2D Shootout playable, with a subsequent shot scored.
 
 ## Walkthrough
+
+The new U9 slice has passed local production-build verification; public deployment verification is recorded separately below when complete. Select **U9 / Find space** in Read the play: choose Pass or Carry, make the next puck decision, then move the highlighted player or plan a route and give a short reason. Read aloud is optional. U9 and U11 save separately; switching between them preserves unfinished work while this view stays open.
 
 | Open the hosted preview | What to try |
 | --- | --- |
@@ -26,6 +28,7 @@ The first integrated preview is ready for a walkthrough. Start with the U11 sequ
 
 - BlueChip navy, gold and bone; local Playfair Display and Inter; glass panels, consistent pills, readable gold actions and larger touch controls.
 - The U11 sequence has three connected reads with different pass, carry and shoot consequences. It combines action/target choices, player movement and free explanations. A simulated goal or matching coordinates never certifies the reasoning.
+- The U9 draft adds four simpler connected paths, only YOU tagged on the ice, short reasons and optional device read-aloud. Numbered receiver targets now sit above player markers and accept taps directly on the receiver. U11 data, seven branch outputs, route saves and AI payloads remain byte-identical to the previous version. [U9 draft](u9-read-sequence.md).
 - The follow-up adds an optional **One thing changes** comparison after completion. Only D1 moves, from partial shot coverage onto the visible puck-to-F2 pass line. The learner records a retained or revised action and a reason; the original answers and replay remain intact. The saved comparison is an optional field in the existing v1 reflection and its download. No new outcome, tactical grade or AI opinion is generated.
 - The source map covers all 12 substantive guiding notes, age progression, interaction choices, prerequisites and what is implemented versus planned.
 - Coach references and learner attempts remain separate. U9 direction arrows and simple turn buttons make the angling cue visible.
@@ -37,7 +40,7 @@ The first integrated preview is ready for a walkthrough. Start with the U11 sequ
 
 ## Verified
 
-Current follow-up: `npm run test:practice` reports **167 tests passed**, including simulation, replay, director, curriculum, coach questions, storage, AI adapter mocks, Gym scoring/progression, shot geometry, phone-review packaging, changed-cue comparison, branch-specific support routes and WebGL context-loss lifecycle. Production build passed. The comparison checks cover actual puck-offset geometry, original-answer/replay immutability, save/restore and older v1 reflections. The prior integrated `npm run test:scenario-engine` run passed; see the detailed verification record for the final rerun status.
+Current follow-up: `npm run test:practice` reports **176 tests passed**, including simulation, replay, director, curriculum, coach questions, storage, AI adapter mocks, Gym scoring/progression, shot geometry, phone-review packaging, changed-cue comparison, branch-specific support routes, WebGL context-loss lifecycle and age-scoped U9/U11 saves. Production build passed. All four U9 paths completed in a 390 px browser; actual touch events selected a receiver and added a route. Keyboard age selection retains focus, and switching/reload/export preserve the appropriate answers. Speech invocation and cancellation were instrumented; device voice quality was not evaluated. The prior integrated scenario-engine run passed; this slice did not modify that engine.
 
 The earlier integrated browser checks covered all 12 Gym launch/back flows; full five-shot mouse and keyboard shootouts; sequence branch, replay, positioning, explanation and reload flows; coach drag/keyboard/save/reopen/compare; guided MC → TF completion/retry/focus; and desktop, 820 px tablet and 390 px phone layouts. The public phone release was also checked on its live HTTPS origin. Follow-up checks include changed-cue phone/tablet layouts and sample goals/skills; comparison replay/download and production-preview reload preserve both answers, as recorded in [verification.md](verification.md).
 
@@ -50,7 +53,7 @@ These are browser viewport checks. No physical phone or iPad test, full screen-r
 1. **AI has no configured live key.** Hosted review returns unavailable before sending an AI request; the local server adapter is also unconfigured. No live AI judgment is claimed. The final U11 opinion, if configured in future, concerns final positioning only. The changed-cue comparison adds no AI request.
 2. **The arena is a hosted prototype.** Phone access and the current follow-up are live and verified. Cloud practice persistence, a production judge and main-app Arena navigation are not implemented.
 3. **Character references are finished enough to review, not finished game models.** Four native 1254×1254 transparent navy/gold sheets exist, plus a 40-clip animation specification. Rigged models, animation clips and free-camera character assets remain to be produced. No purchase was made. [Free and paid paths](asset-shortlist.md).
-4. **Age policy and age validation remain open.** The original quiz still uses the existing `ALL_AGES_MODE` mixed-age policy; this quality pass does not resolve that policy. The new guided curriculum explicitly selects lessons for the chosen age, but that is not evidence of age comprehension. New geometry, prompts and answer alignment need coach/player review before curriculum admission. The three-read sequence and its changed-cue comparison are U11 drafts.
-5. U11 support-route planning is implemented. Broader coach route/pass drawing, richer prediction/recall sequences, whole-sequence AI review, physical phone/iPad testing and further production integration remain future work. Existing feature surfaces remain; this pass did not verify every authenticated production workflow.
+4. **Age policy and age validation remain open.** The original quiz still uses the existing `ALL_AGES_MODE` mixed-age policy; this quality pass does not resolve that policy. The new guided curriculum and connected U9/U11 reads select content by age, but that is not evidence of child comprehension. New geometry, prompts and answer alignment need coach/player review before curriculum admission. U9 has no AI or changed-cue exercise; the optional comparison remains a U11 draft.
+5. U9 and U11 support-route planning is implemented. Other ages, broader coach route/pass drawing, richer prediction/recall sequences, whole-sequence AI review, physical phone/iPad testing and further production integration remain future work. Existing feature surfaces remain; this pass did not verify every authenticated production workflow.
 
 These improvements are substantial prototype and usability work. They are not NHL-level character animation or a completed commercial hockey simulation.

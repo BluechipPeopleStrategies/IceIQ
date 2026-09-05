@@ -1,6 +1,6 @@
 # RinkReads — Task List
 
-**Last updated:** 2026-09-05 · Support-route planning added to the U11 third read, with saved route explanations and touch/keyboard preview controls. Context-loss fallback and invisible WebGL rendering fixed in Shootout/Best Option. 167 practice tests/build and actual browser flows pass; deployed in `a046ea6` and verified live at 01:25 Edmonton. Evidence: `docs/one-on-one/verification.md`.
+**Last updated:** 2026-09-05 · U9 connected reads now have four simpler paths, age-separated saves, optional read aloud and the shared placement/route controls. U11 data and branch behavior are preserved. Receiver target visibility/taps and age-switch keyboard focus are fixed. 176 practice tests/build and phone/desktop browser flows pass; public verification follows the scoped release. Evidence: `docs/one-on-one/verification.md`.
 
 **Scope:** RinkReads **app build + content factory**. Launch/distribution (sending the beta, marketing) and the separate BlueChip business are **out of scope** — parked at the bottom. Priority = position in this list. A new idea that isn't here goes to the **Parking Lot** first, then gets promoted on purpose — that's the scope-creep guard.
 
@@ -54,6 +54,8 @@
 - *(New ideas land here first, then get promoted into NEXT/LATER on purpose.)*
 
 ## Changelog
+
+- **2026-09-05 — U9 connected reads and age isolation.** Added a source-bound U9 draft with Pass/Carry, two next choices per branch, generic player labels and final support placement/routes. Shared core now resolves the scenario for transitions, storage and restore; old U11 keys and byte-identical branch/reflection/AI outputs remain. Optional device speech stops on phase/age changes. In-memory drafts survive age switches; completed saves/export remain scoped. U9 rejects unsupported AI/comparison. Fixed receiver markers covering their own numbered target and restored direct receiver taps; kept age-picker keyboard focus. 176 practice tests and build pass; all four U9 phone flows plus touch, keyboard, normal/reduced motion, replay and save/reload checked. Plan: `docs/superpowers/plans/2026-09-05-age-scoped-connected-reads.md`.
 
 - **2026-09-05 — Support routes verified live.** Vercel deployed `a046ea6`. The public 390 px Shoot branch accepted a support route, retained the exact route/reason after reload, and exposed no route AI claim. Live forced graphics loss switched Shootout to playable 2D, with the next shot scored. Evidence: `docs/one-on-one/phone-preview.md`.
 

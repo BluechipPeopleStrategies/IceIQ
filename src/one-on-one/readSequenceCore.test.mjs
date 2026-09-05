@@ -1,5 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
+import { createHash } from 'node:crypto';
 import * as sequenceCore from './readSequenceCore.js';
 import {
   U11_READ_SEQUENCE,
@@ -413,4 +414,208 @@ test('restore rejects malformed routes, altered origins, endpoints, off-ice posi
   const changedPoint = structuredClone(valid);
   changedPoint.third.point.x += 0.1;
   assert.equal(restoreReadSequence(changedPoint), null);
+});
+
+test('shared sequence geometry keeps canonical puck attachment and validates authored positions with custom labels', async () => {
+  const geometry = await import('./readSequenceGeometry.js').catch(() => ({}));
+  assert.equal(typeof geometry.createSequenceState, 'function');
+  const positions = { F1: { x: 10, y: 4, facing: 0 }, F2: { x: 13.1, y: -4.5, facing: 0 }, D1: { x: 16.1, y: 1.5, facing: Math.PI }, G: { x: 25.1, y: 0.4, facing: Math.atan2(3.6, -15.1) } };
+  const actors = [
+    { id: 'F1', label: 'YOU', name: 'You', team: 'home', role: 'skater' },
+    { id: 'F2', label: 'BUDDY', name: 'Buddy', team: 'home', role: 'skater' },
+    { id: 'D1', label: 'DEFENDER', name: 'Defender', team: 'away', role: 'skater' },
+    { id: 'G', label: 'GOALIE', name: 'Goalie', team: 'away', role: 'goalie' },
+  ];
+  const state = geometry.createSequenceState(positions, { owner: 'F1', actors });
+  assert.deepEqual(state.puck, { owner: 'F1', x: 11, y: 4.7 });
+  assert.equal(state.actors.find(actor => actor.id === 'F2').label, 'BUDDY');
+  assert.equal(state.actors.find(actor => actor.id === 'F2').name, 'Buddy');
+  const generic = geometry.createSequenceState(positions, { owner: 'F1', actors: actors.map(actor => ({ ...actor, label: actor.id === 'F1' ? 'YOU' : '' })) });
+  assert.deepEqual(generic.actors.map(actor => actor.label), ['YOU', '', '', '']);
+  assert.equal(generic.actors.find(actor => actor.id === 'D1').name, 'Defender');
+  assert.deepEqual(geometry.createSequenceState(positions, { owner: null, looseAt: { x: 20, y: -1 } }).puck, { owner: null, x: 20, y: -1 });
+  positions.F1.x = 99;
+  assert.equal(state.actors[0].x, 10);
+  assert.throws(() => geometry.createSequenceState(positions, { owner: 'F1' }), /geometry/);
+});
+
+test('scenario catalog lookup preserves default U11 scope and separates U9 device storage without accepting unknown IDs', () => {
+  assert.equal(typeof sequenceCore.getReadSequenceDefinition, 'function');
+  assert.equal(typeof sequenceCore.getReadSequenceStorageKey, 'function');
+  assert.strictEqual(sequenceCore.getReadSequenceDefinition(), U11_READ_SEQUENCE);
+  assert.deepEqual(sequenceCore.READ_SEQUENCE_CATALOG.map(item => item.ageBand), ['U9', 'U11']);
+  const u9 = sequenceCore.READ_SEQUENCE_CATALOG[0];
+  assert.strictEqual(sequenceCore.getReadSequenceDefinition(u9.id), sequenceCore.U9_READ_SEQUENCE);
+  assert.equal(createReadSequenceSession().scenarioId, U11_READ_SEQUENCE.id);
+  assert.equal(createReadSequenceSession(u9.id).scenarioId, u9.id);
+  assert.equal(sequenceCore.getReadSequenceStorageKey('a:b'), 'rinkreads_read_sequence_v1:a%3Ab');
+  assert.equal(sequenceCore.getReadSequenceStorageKey(null, U11_READ_SEQUENCE.id), 'rinkreads_read_sequence_v1:local');
+  assert.equal(sequenceCore.getReadSequenceStorageKey('a:b', u9.id), `rinkreads_read_sequence_v1:a%3Ab:${u9.id}`);
+  for (const id of ['unknown', '', null, {}, 9]) {
+    assert.throws(() => sequenceCore.getReadSequenceDefinition(id), /scenario/i);
+    assert.throws(() => createReadSequenceSession(id), /scenario/i);
+    assert.throws(() => sequenceCore.getReadSequenceStorageKey('player', id), /scenario/i);
+  }
+});
+
+test('every session transition and read rejects an unknown or missing scenario instead of falling back to U11', () => {
+  const complete = completeSequence();
+  const readThree = reachReadThree('pass', 'hold-wide');
+  const first = submitFirstRead(createReadSequenceSession(), { action: 'pass', reason });
+  const calls = [
+    [createReadSequenceSession(), session => submitFirstRead(session, { action: 'pass', reason })],
+    [reachReadTwo('pass'), session => selectSecondRead(session, 'hold-wide')],
+    [readThree, session => moveThirdReadActor(session, { x: 12, y: 0 })],
+    [readThree, session => sequenceCore.setThirdReadRoute(session, [{ x: 12, y: 0 }])],
+    [readThree, session => sequenceCore.getThirdReadRoute(session)],
+    [moveThirdReadActor(readThree, { x: 12, y: 0 }), session => submitThirdRead(session, reason)],
+    [complete, session => currentSequenceState(session)],
+    [first, session => advanceSequencePlayback(session, 0.5)],
+    [complete, session => replayFirstConsequence(session)],
+    [complete, session => sequenceCore.getReadTwoPrompt(session)],
+    [complete, session => sequenceCore.getSelectedSecondTarget(session)],
+    [complete, session => serializeReadSequence(session)],
+    [complete, session => createFinalReadJudgePayload(session)],
+    [complete, session => sequenceCore.getChangedCueComparison(session)],
+  ];
+  for (const id of ['unknown', undefined, null, {}, '']) {
+    for (const [session, call] of calls) {
+      assert.throws(() => call({ ...session, scenarioId: id }), /scenario/i, `${call.name || 'session API'} must reject ${String(id)}`);
+    }
+    const saved = JSON.parse(serializeReadSequence(complete));
+    saved.scenarioId = id;
+    assert.equal(restoreReadSequence(saved), null);
+  }
+});
+
+test('U11 definition, seven branch outcomes, comparison, route saves and final AI data remain byte-identical through scenario extraction', () => {
+  const records = [U11_READ_SEQUENCE, createReadSequenceSession()];
+  for (const action of sequenceCore.READ_ACTIONS) {
+    const first = submitFirstRead(createReadSequenceSession(), { action, reason: 'Regression reason' });
+    const readTwo = advanceSequencePlayback(first, 1);
+    records.push(first, currentSequenceState(advanceSequencePlayback(first, 0.5)), readTwo);
+    for (const target of readTwo.availableSecondTargets) {
+      const readThree = advanceSequencePlayback(selectSecondRead(readTwo, target.id), 1);
+      const complete = submitThirdRead(sequenceCore.setThirdReadRoute(readThree, [{ x: 12, y: 1 }, { x: 13, y: 0 }]), 'Regression support');
+      const compared = sequenceCore.submitChangedCueRead(complete, { action: 'carry', reason: 'Regression comparison' });
+      records.push(readThree, currentSequenceState(complete), serializeReadSequence(compared), sequenceCore.getChangedCueComparison(compared), createFinalReadJudgePayload(complete));
+    }
+  }
+  // Captured from the U11 implementation before introducing a second sequence.
+  assert.equal(createHash('sha256').update(JSON.stringify(records)).digest('hex'), 'caa6a775cb814515830b16d3fdb022aaef55ceb34c0020c193842b502b7c7aaa');
+});
+
+test('U9 offers only pass and carry, preserves its own actors and excludes U11 targets and optional reviews', () => {
+  assert.ok(sequenceCore.U9_READ_SEQUENCE, 'A separate U9 definition must be available');
+  const definition = sequenceCore.U9_READ_SEQUENCE;
+  const initial = createReadSequenceSession(definition.id);
+  assert.equal(initial.scenarioId, definition.id);
+  assert.deepEqual(definition.actions, ['pass', 'carry']);
+  assert.throws(() => submitFirstRead(initial, { action: 'shoot', reason }), /action|scenario/i);
+  for (const [action, owner] of [['pass', 'F2'], ['carry', 'F1']]) {
+    const first = submitFirstRead(initial, { action, reason });
+    const during = currentSequenceState(advanceSequencePlayback(first, 0.5));
+    assert.equal(during.puck.owner, action === 'carry' ? 'F1' : null);
+    const readTwo = advanceSequencePlayback(first, 1);
+    assert.equal(currentSequenceState(readTwo).puck.owner, owner);
+    assert.throws(() => selectSecondRead(readTwo, action === 'pass' ? 'hold-wide' : 'attack-outside'), /not available/);
+    assert.strictEqual(sequenceCore.getReadTwoPrompt(readTwo), definition.branches[action].read2);
+    for (const actor of currentSequenceState(readTwo).actors) {
+      assert.doesNotMatch(actor.label, /^(F[12]|D1|G)$/);
+    }
+    const readThree = advanceSequencePlayback(selectSecondRead(readTwo, readTwo.availableSecondTargets[0].id), 1);
+    const complete = submitThirdRead(moveThirdReadActor(readThree, { x: 12, y: 0 }), reason);
+    assert.equal(complete.scenarioId, definition.id);
+    assert.throws(() => sequenceCore.getChangedCueComparison(complete), /scenario|comparison/i);
+    assert.throws(() => sequenceCore.submitChangedCueRead(complete, { action: 'pass', reason }), /scenario|comparison/i);
+    assert.throws(() => createFinalReadJudgePayload(complete), /not supported|scenario/i);
+    assert.doesNotMatch(JSON.stringify(complete.localEvidence), /\bD1\b|\bF[12]\b/);
+  }
+});
+
+test('U9 route reflections restore only in their selected scenario and reject cross-age or cross-branch records', () => {
+  assert.ok(sequenceCore.U9_READ_SEQUENCE, 'A separate U9 definition must be available');
+  const definition = sequenceCore.U9_READ_SEQUENCE;
+  const readTwo = advanceSequencePlayback(submitFirstRead(createReadSequenceSession(definition.id), { action: 'pass', reason }), 1);
+  const readThree = advanceSequencePlayback(selectSecondRead(readTwo, readTwo.availableSecondTargets[0].id), 1);
+  const complete = submitThirdRead(sequenceCore.setThirdReadRoute(readThree, [{ x: 12, y: 0 }, { x: 13, y: 1 }]), reason);
+  const raw = serializeReadSequence(complete);
+  const saved = JSON.parse(raw);
+  assert.equal(saved.scenarioId, definition.id);
+  assert.equal(restoreReadSequence(raw), null, 'Default U11 scope must never open a U9 reflection');
+  assert.equal(restoreReadSequence(raw, U11_READ_SEQUENCE.id), null);
+  const restored = restoreReadSequence(raw, definition.id);
+  assert.deepEqual(restored, complete);
+  assert.deepEqual(advanceSequencePlayback(replayFirstConsequence(restored), 1), restored);
+  assert.equal(restoreReadSequence(serializeReadSequence(completeSequence()), definition.id), null);
+  const withU11Target = { ...saved, second: { targetId: 'hold-wide' } };
+  assert.equal(restoreReadSequence(withU11Target, definition.id), null);
+  const withU11Comparison = { ...saved, changedCue: { id: 'd1-pass-lane-v1', action: 'carry', reason } };
+  assert.equal(restoreReadSequence(withU11Comparison, definition.id), null);
+  const withOtherBranch = { ...saved, first: { action: 'carry', reason } };
+  assert.equal(restoreReadSequence(withOtherBranch, definition.id), null);
+  assert.throws(() => serializeReadSequence({ ...completeSequence(), scenarioId: definition.id }), /not available|scenario/i);
+  const pointOnly = structuredClone(saved);
+  delete pointOnly.third.route;
+  assert.deepEqual(restoreReadSequence(pointOnly, definition.id).third.point, complete.third.point);
+});
+
+test('all four U9 target choices carry their own puck owner, generic actor metadata and route origin into the final read', () => {
+  const u9Id = 'u9-connected-support-three-reads-v1';
+  const initial = createReadSequenceSession(u9Id);
+  assert.equal(initial.scenarioId, u9Id, 'U9 must not silently begin as U11');
+  const opening = currentSequenceState(initial);
+  assert.equal(opening.actors.find(actor => actor.id === 'F1').x, 14);
+  assert.equal(opening.actors.find(actor => actor.id === 'F2').x, 17);
+  const cases = [
+    ['pass', 'return-pass', 'F2', 18.5, -4, 'F1'],
+    ['pass', 'carry-space', 'F1', 16, 4, 'F2'],
+    ['carry', 'pass-teammate', 'F1', 17.5, 6, 'F2'],
+    ['carry', 'keep-puck', 'F2', 18, -4, 'F1'],
+  ];
+  for (const [action, targetId, actorId, x, y, owner] of cases) {
+    const readTwo = advanceSequencePlayback(submitFirstRead(initial, { action, reason }), 1);
+    const readThree = advanceSequencePlayback(selectSecondRead(readTwo, targetId), 1);
+    const state = currentSequenceState(readThree);
+    assert.equal(state.puck.owner, owner);
+    assert.equal(readThree.third.actorId, actorId);
+    assert.deepEqual(state.actors.map(actor => actor.label), ['YOU', '', '', '']);
+    assert.deepEqual(state.actors.map(actor => actor.name), ['You', 'Your teammate', 'The defender', 'The goalie']);
+    const routed = sequenceCore.setThirdReadRoute(readThree, [{ x: x + 1, y }, { x: x + 1, y: y + 1 }]);
+    assert.deepEqual(routed.third.route[0], { x, y });
+    const halfway = sequenceCore.sampleThirdReadRoute(routed, 0.5);
+    assert.equal(halfway.actors.find(actor => actor.id === actorId).x, x + 1);
+    assert.equal(halfway.actors.find(actor => actor.id === actorId).y, y);
+    assert.deepEqual(halfway.puck, state.puck);
+    assert.deepEqual(halfway.actors.filter(actor => actor.id !== actorId), state.actors.filter(actor => actor.id !== actorId));
+    const complete = submitThirdRead(routed, reason);
+    assert.deepEqual(restoreReadSequence(serializeReadSequence(complete), u9Id).third, complete.third);
+    assert.deepEqual(advanceSequencePlayback(replayFirstConsequence(complete), 1).first, complete.first);
+  }
+});
+
+test('a U9 director snapshot uses generic names for hidden labels while preserving every visible pose and puck position', () => {
+  const session = createReadSequenceSession('u9-connected-support-three-reads-v1');
+  const state = currentSequenceState(session);
+  const before = structuredClone(state);
+  const draft = sequenceCore.stateToStaticDirectorDraft(state, 'U9 opening snapshot');
+  assert.deepEqual(draft.actors.map(actor => actor.label), ['YOU', 'Your teammate', 'The defender', 'The goalie']);
+  assert.deepEqual(draft.puck, state.puck);
+  for (const actor of state.actors) {
+    const captured = draft.actors.find(item => item.id === actor.id);
+    assert.deepEqual(captured.keys, [{ time: 0, x: actor.x, y: actor.y, facing: actor.facing }]);
+  }
+  assert.deepEqual(state, before);
+  assert.deepEqual(state.actors.map(actor => actor.label), ['YOU', '', '', '']);
+});
+
+test('U9 placement observations name either you or your teammate and refer to the defender without empty labels', () => {
+  for (const [targetId, name] of [['return-pass', 'Your teammate'], ['carry-space', 'You']]) {
+    const readTwo = advanceSequencePlayback(submitFirstRead(createReadSequenceSession('u9-connected-support-three-reads-v1'), { action: 'pass', reason }), 1);
+    const readThree = advanceSequencePlayback(selectSecondRead(readTwo, targetId), 1);
+    const complete = submitThirdRead(moveThirdReadActor(readThree, { x: 12, y: 0 }), reason);
+    assert.ok(complete.localEvidence.observations.slice(0, 2).every(observation => observation.startsWith(`${name} `)));
+    assert.match(complete.localEvidence.observations[2], /the defender’s position/);
+    assert.doesNotMatch(JSON.stringify(complete.localEvidence), /\bD1\b|\bF[12]\b|\bYOU\b/);
+  }
 });
