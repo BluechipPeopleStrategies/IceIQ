@@ -2,7 +2,7 @@
 September 5, 2026 · Shared phone preview and local production-build checks
 
 ## Automated checks
-- `npm run test:practice`: 167 passing tests, zero failures, including the public asset packaging, changed-cue reflections, seven branch-specific route origins and WebGL lifecycle paths.
+- `npm run test:practice`: 189 passing tests, zero failures, including public asset packaging, changed-cue reflections, branch-specific routes, age isolation, WebGL lifecycle, scoped coach controls and buffered coordinate editing.
 - `npm run test:scenario-engine`: passed every existing component suite, including physics, canonical frames, compiled playback, factory state/promotion/recall and parameter-space generation.
 - `npm run build`: passed. Existing large-chunk and mixed static/dynamic import warnings remain.
 - `git diff --check`: no whitespace errors; Windows line-ending notices only.
@@ -59,3 +59,15 @@ Evidence: `evidence/u9-first-read-phone.png`, `u9-target-phone-before-fix.png`, 
 
 ## Continuing verification limits
 No physical iPad, sustained low-power GPU benchmark, full screen-reader audit, authenticated production journey audit, live AI judgment, production judge deployment, source-content promotion or rigged character acceptance is claimed. New arena routes are available in the shared public review with device-local saves; hosted AI makes no network request. See `phone-preview.md` for live deployment evidence and `morning-review.md` for remaining feature gates. The original quiz still has its existing `ALL_AGES_MODE` mixed-age policy; this pass does not certify that bank as age-filtered. The new Guided Curriculum is explicitly age-scoped.
+
+
+## Phone read flow and Coach Lab input — September 5, 2026, 02:37 Edmonton
+
+- Final practice suite: **189 passed, zero failures**. Production build passes with the same existing import/chunk warnings. Thirteen new focused cases cover game-key ownership/release, transport state and coordinate parsing. Independent read-only reviewers identified the reduced-motion navigation race and active-coordinate remount; both fixes were browser-checked.
+- At 390 × 844, the baseline U11 next-read rink started at -17.27 px while its question started at 484.48 px. The revised view puts the question at 56.08–151.77 px and rink at 264.70–545.31 px, with one visible current heading and no horizontal overflow. Evidence: `evidence/connected-read-scroll-before.png` and `evidence/connected-read-scroll-after.png`.
+- Instrumented reduced-motion U9 flow: validation error caused zero app scroll calls; successful first submission caused one. Receiver selection, keyboard player movement and route Add caused no further app scroll. Completion remained at its reflection; replay with reduced motion focused the visible reflection after the board prompt disappeared.
+- Production-preview desktop U11 Shoot → pause/resume → loose-puck support → movement/reason → complete/reload passed. The desktop uses its adjacent heading; the 820 × 1180 U9 flow shows the question and full rink together, without overflow. Evidence: `evidence/connected-read-tablet.png`.
+- Native coordinate keystrokes: blank and incomplete minus preserved the original actor pose; typing -4 then -0.5 updated the actual coordinate and retained the negative decimal after blur. Coach JSON exported through the UI was byte-identical before/after clearing an input, and the final exported key recorded -0.5 without an extra key. Switching actors discarded incomplete text.
+- Coach keyboard flow: running rink Tab switches players, Escape pauses, paused Tab navigates normally. Space on the camera button activates the button rather than shooting. Window blur clears input and pauses. Resume advanced from 1.3 s to 1.5 s without resetting to zero. Evidence: `evidence/coach-paused-input-phone.png`.
+- Focusing a coordinate during live practice and during director animation stopped the clock and retained the same focused DOM input across animation frames. Negative-decimal typing then worked. The final production build repeated the live-focus check with no overflow or page exceptions.
+- These checks use browser viewports and browser-generated touch/keyboard events. Physical phone keyboard, speech voice quality, sustained GPU performance and child comprehension have not been tested.
