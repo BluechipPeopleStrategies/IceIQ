@@ -1,6 +1,6 @@
 # RinkReads — Task List
 
-**Last updated:** 2026-09-05, 16:36 Edmonton · **Claude calibration integrated locally:** validated all 50 returned records; amended five experimental scenarios and independently rechecked all 28 changed question hashes. U11 receiving geometry, net-front angle, grammar, distractors and conditional feedback are repaired; the later rim placement now moves W for a shorter outlet. All 1,600 current question hashes match review receipts; 34 focused tests and isolated production build pass. The original Claude ZIP stays frozen, and a feedback package supplies packet 02. Public UI/content deployment and human-coach approval remain separate. See [calibration decisions](../factory/research/question-review/calibration/calibration-adjudication.md) and [verification](../factory/research/question-review/calibration/verification.json).
+**Last updated:** 2026-09-05, 16:42 Edmonton · **Approved practice UI and calibration are live:** pushed 292e395 and f1f4306 after explicit owner approval. GitHub main matches f1f4306 and Vercel reports successful deployment. The live 390 px rim question moves W, shows conditional feedback and preserves the answer after reload; curriculum JSON matches the approved artifact exactly. Six worlds and the seven-stop U13 Rush Arena journey load. Human-coach approval and unrelated player/goals/coach/engine WIP remain separate. See [deployment evidence](../one-on-one/2026-09-05-approved-calibration-deployment.md).
 
 **Scope:** RinkReads **app build + content factory**. Launch/distribution (sending the beta, marketing) and the separate BlueChip business are **out of scope** — parked at the bottom. Priority = position in this list. A new idea that isn't here goes to the **Parking Lot** first, then gets promoted on purpose — that's the scope-creep guard.
 
@@ -56,6 +56,8 @@
 - *(New ideas land here first, then get promoted into NEXT/LATER on purpose.)*
 
 ## Changelog
+
+- **2026-09-05, 16:42 Edmonton — approved push and live verification:** published only the two approved commits, 292e395 and f1f4306. Fresh 34-test check and isolated build pass; GitHub confirms the exact main hash and Vercel reports success. Public mobile rim placement/feedback/reload and worlds checks pass with no observed overflow or runtime errors. Curriculum JSON is byte-identical to the approved artifact. Local documentation receipt: `docs/one-on-one/2026-09-05-approved-calibration-deployment.md`.
 
 - **2026-09-05, 16:36 Edmonton — Claude calibration repairs:** original return preserved, all 50 records validated, five scenarios updated with 28 exact independent Luna rechecks. A remaining duplicate rim task became a W-support placement; the proposed goalie-contact rewrite was declined. Current combined review has zero unreconciled AI flags, 1,600 matching hashes and preserved historical findings. 34 focused tests and the isolated build pass; selected 390/1280 px placement, feedback and reload checks pass. Public publishing remains blocked by automatic approval review; no deployment claimed.
 
