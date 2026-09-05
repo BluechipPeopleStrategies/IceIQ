@@ -1,6 +1,12 @@
 # Phone-accessible review
 
-## Latest release: Coach Lab player routes
+## Latest release: U11 player wording and recall labels
+
+`2b5ae75` deployed successfully: [Vercel deployment](https://vercel.com/bluechippeoplestrategies-projects/ice-iq/2xDxhJGoMqWtVQRTraipXnDPGvvR). Verified on the public HTTPS origin at **04:30 Edmonton, September 5**, at 390 × 844.
+
+The existing Shoot/loose-puck support reflection reopened with the new label and explanation. Its recall captions and rink descriptions consistently identify YOU. All three pre-existing U9/U11 read/recall storage values remained byte-identical. In an isolated fresh session, Pass → Pass back to YOU → F2 support placement/reason completed and survived a full reload exactly. The opening and second questions, three target buttons and their rink accessible labels matched. No page exceptions, failed requests or horizontal overflow occurred in that fresh flow. The 225-test practice suite and production build passed before publication. Local seven-path, speech and export evidence is in `u11-player-copy-review.md`; no physical-device or child-comprehension result is claimed.
+
+## Coach Lab player routes
 
 `106ec3e` deployed successfully: [Vercel deployment](https://vercel.com/bluechippeoplestrategies-projects/ice-iq/8QEB7gTadb8rh2157Q4kRn5M2N3T). Verified on the public HTTPS origin at **03:59 Edmonton, September 5**, at 390 × 844.
 

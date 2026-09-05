@@ -1,6 +1,6 @@
 # RinkReads — Task List
 
-**Last updated:** 2026-09-05 · U11 player wording and recall labels simplified; all seven phone branches, speech text and exact saved-data preservation checked locally. 225 practice tests/build pass; publication pending. Coach Lab routes remain live (`106ec3e`). U13 lane-switch design is an unimplemented coach-review proposal.
+**Last updated:** 2026-09-05 · U11 player wording/recall release `2b5ae75` deployed and verified live at 04:30 Edmonton: old saves unchanged and fresh Pass/return/support/reason restored exactly after reload. 225 practice tests/build pass. U13 lane-switch design remains an unimplemented coach-review proposal.
 
 **Scope:** RinkReads **app build + content factory**. Launch/distribution (sending the beta, marketing) and the separate BlueChip business are **out of scope** — parked at the bottom. Priority = position in this list. A new idea that isn't here goes to the **Parking Lot** first, then gets promoted on purpose — that's the scope-creep guard.
 
@@ -54,6 +54,8 @@
 - *(New ideas land here first, then get promoted into NEXT/LATER on purpose.)*
 
 ## Changelog
+
+- **2026-09-05 — U11 wording verified live.** Vercel completed `2b5ae75`. Public 390 px checks restored the older Shoot reflection and consistent YOU recall descriptions, preserved all three old U9/U11 storage values, and completed/reloaded a fresh Pass/return/support explanation exactly. Target buttons and rink labels agree. No page exceptions, failed requests or overflow in the fresh flow. Evidence: `docs/one-on-one/phone-preview.md`.
 
 - **2026-09-05 — Clearer U11 player questions and recall.** Simplified prompts and consequence descriptions; matched numbered rink targets, buttons, summaries and read-aloud text; aligned recall captions with the YOU marker. Current puck descriptions follow possession without calling every unowned puck loose. Presentation-only changes preserve canonical definitions, branch states, IDs, saved reflections, AI payloads and recall exports. All seven U11 paths passed phone browser checks; production-preview reload/download preserved existing JSON byte-for-byte. 225 practice tests/build pass. Evidence: `docs/one-on-one/u11-player-copy-review.md`. Recorded `docs/one-on-one/u13-lane-switch-design.md` as a proposal only; its Shoot/Carry teaching tradeoff remains explicit.
 

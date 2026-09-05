@@ -13,7 +13,7 @@ The integrated preview is ready for a walkthrough. Start with the U11 sequence, 
 
 ## Walkthrough
 
-**Latest local teaching pass:** U11 questions now use simpler words and consistent rink/button/read-aloud labels. Recall names the visible YOU player, with grammatical descriptions and current puck ownership. All seven paths, phone layouts, tablet playback and unchanged saved answers were checked; deployment verification is pending. [Copy review and evidence](u11-player-copy-review.md). The next U13 lane-switch sequence is [a design proposal](u13-lane-switch-design.md), not a playable release.
+**Latest teaching pass is live:** `2b5ae75` deployed and was verified at 04:30 Edmonton. U11 questions now use simpler words and consistent rink/button/read-aloud labels. Recall names the visible YOU player, with grammatical descriptions and current puck ownership. All seven paths were checked locally; the live phone view preserved older answers and saved/reloaded a fresh Pass/return/support explanation exactly. [Copy review and evidence](u11-player-copy-review.md). The next U13 lane-switch sequence is [a design proposal](u13-lane-switch-design.md), not a playable release.
 
 **Coach Lab routes are live:** `106ec3e` deployed and was verified at 03:59 Edmonton. Plan movement in 3D or on the rink board, inspect it, Apply and Save. Live touch/numeric input, export and full reload/reopen retained exact route data and the endpoint hold. The three existing read/recall records were unchanged. **225 practice tests and build pass.**
 

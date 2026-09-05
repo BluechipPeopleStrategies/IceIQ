@@ -1,6 +1,6 @@
 # U11 player copy review
 
-**Status:** Local UI copy slice, pending deployment. The lesson remains a coach-review draft.
+**Status:** Deployed in `2b5ae75`, verified live at 04:30 Edmonton. The lesson remains a coach-review draft.
 **Date:** 2026-09-05.
 
 The U11 connected-read screens now use shorter, more concrete player-facing prompts.
@@ -52,7 +52,9 @@ The implementing agent reported the following checks; this review note was prepa
 
 Evidence: [U11 question at phone width](evidence/u11-player-copy-question-phone.png) and [U11 recall at phone width](evidence/u11-player-copy-recall-phone.png).
 
-These are browser checks, not physical phone/iPad testing, voice-quality assessment or evidence of child comprehension. Simpler copy still needs coach and player review. The new wording is local-only until publication is separately recorded.
+Live 390 px verification also restored an existing Shoot reflection/recall, preserved all three old U9/U11 storage values, and completed a fresh Pass/return/support/reason path with exact reload persistence. The questions, targets and rink labels matched, without page errors, failed requests or overflow in the fresh flow. Deployment details are in [phone-preview.md](phone-preview.md).
+
+These are browser checks, not physical phone/iPad testing, voice-quality assessment or evidence of child comprehension. Simpler copy still needs coach and player review.
 
 ## Separate next proposal
 

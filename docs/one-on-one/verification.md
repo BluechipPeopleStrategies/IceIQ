@@ -16,7 +16,7 @@ All seven U11 action/target combinations completed in isolated 390 px browser se
 
 Full reload of the production preview restored an existing Carry/support-middle reflection under the new display label. Larger recall pictures, move/inspection labels and speech consistently use YOU with grammatical sentences. Both pre-existing read/recall localStorage values remained byte-identical; Download recall returned the exact canonical stored bytes. No overflow or page exceptions occurred in checked flows. The 225-test practice suite and production build pass, including the unchanged U11 golden fixture. These display changes do not modify branch states, stored definitions or the AI payload.
 
-Evidence: `evidence/u11-player-copy-question-phone.png`, `evidence/u11-player-copy-recall-phone.png`; details: `u11-player-copy-review.md`. Publication remains pending until recorded in `phone-preview.md`. Browser/speech instrumentation is not physical-device, device-voice-quality or child-comprehension validation.
+Evidence: `evidence/u11-player-copy-question-phone.png`, `evidence/u11-player-copy-recall-phone.png`; details: `u11-player-copy-review.md`. Deployed as `2b5ae75`, live verified at 04:30 Edmonton; `phone-preview.md` records old-save preservation and a fresh phone Pass/return/support/reload flow. Browser/speech instrumentation is not physical-device, device-voice-quality or child-comprehension validation.
 
 ### Coach Lab player routes, September 5
 
