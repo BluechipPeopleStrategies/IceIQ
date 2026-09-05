@@ -10,6 +10,14 @@ September 5, 2026 · Shared phone preview and local production-build checks
 
 ## Actual browser coverage
 
+### U11 player wording and recall labels, September 5
+
+All seven U11 action/target combinations completed in isolated 390 px browser sessions. The current question, numbered-marker accessible labels, matching buttons, consequence summary and final puck description agree with the chosen branch. Production-preview normal-motion tablet playback accepted Pause/Resume; instrumented read-aloud text matched the visible question and three target labels. U9 retained its own opening prompt.
+
+Full reload of the production preview restored an existing Carry/support-middle reflection under the new display label. Larger recall pictures, move/inspection labels and speech consistently use YOU with grammatical sentences. Both pre-existing read/recall localStorage values remained byte-identical; Download recall returned the exact canonical stored bytes. No overflow or page exceptions occurred in checked flows. The 225-test practice suite and production build pass, including the unchanged U11 golden fixture. These display changes do not modify branch states, stored definitions or the AI payload.
+
+Evidence: `evidence/u11-player-copy-question-phone.png`, `evidence/u11-player-copy-recall-phone.png`; details: `u11-player-copy-review.md`. Publication remains pending until recorded in `phone-preview.md`. Browser/speech instrumentation is not physical-device, device-voice-quality or child-comprehension validation.
+
 ### Coach Lab player routes, September 5
 
 Seventeen new tests cover route timing/immutability, exact sampled Start, rounded boards, minimum intervals, possession, frozen/goalie rules and native pointer cancellation. Existing director and U9/U11 reflection tests remain green. The production build passes with the existing import/chunk warnings.

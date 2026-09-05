@@ -1,10 +1,10 @@
 # RinkReads overnight checkpoint
 
-Updated September 5, 2026, 04:00 Edmonton. Target: **7:00 a.m. Edmonton today (13:00 UTC)**. The existing `rinkreads-overnight-build` heartbeat is active every 30 minutes until the deadline; do not duplicate it.
+Updated September 5, 2026, 04:29 Edmonton. Target: **7:00 a.m. Edmonton today (13:00 UTC)**. The existing `rinkreads-overnight-build` heartbeat is active every 30 minutes until the deadline; do not duplicate it.
 
 ## Continue from here
 
-**Current release complete: `106ec3e`, Coach Lab player routes.** Vercel succeeded and live phone verification finished at 03:59 Edmonton. The public review shows 225; native touch/numeric points, reduced-motion inspection, Apply/Save/Export/full reload/Reopen preserve exact JSON and endpoint hold. All 3 prior read/recall records are unchanged, with no failed requests, page exceptions or overflow. Code, independent review, 225 practice tests, build, local production-preview and live checks are complete. Commit/push this verification record if still modified, then choose the next bounded slice. Do not redo this implementation or deployment. Evidence: `phone-preview.md`, `verification.md`, `coach-skating-routes.md`.
+**Current slice: U11 player wording and recall labels, locally verified and ready to publish.** Three presentation files simplify questions and match buttons/rink labels/speech with current possession and YOU grammar. Canonical U11 definition, seven outcomes, AI payloads, saved reflections and recall JSON remain unchanged. All seven phone branches, normal-motion tablet playback, speech text, production-preview reload and byte-identical existing saves/downloads passed. 225 practice tests and build pass. Finish scoped commit/push and live verification; see `u11-player-copy-review.md`. Coach Lab route release `106ec3e` and its live record `fe75738` are complete; do not redo them.
 
 Thomas asked whether everything was still getting worked on. Root answered yes and continued this slice. The broader build is still active; no claim that the commercial app, production animation or AI judging is finished.
 
@@ -34,8 +34,8 @@ New content and geometry stay coach-review drafts, not admitted curriculum. The 
 
 ## Next useful bounded work
 
-1. Current route release and live verification are complete. Continue source-led teaching improvements rather than repeating completed slices.
-2. Simplify technical U11 player-facing words such as authored shot, with deliberate golden-fixture review preserving all actual states. A source-bound U13 inside-support/backcheck sequence is a possible next age slice: visible teammate covering carrier, inside threat, learner route/reason. Do not invent opponent intent or a defender getting beaten without explicit authored movement.
+1. Finish U11 wording publication/live verification, then continue source-led teaching improvements rather than repeating completed slices.
+2. `u13-lane-switch-design.md` is an unimplemented coach-review proposal with explicit geometry and sources. It proposes Shoot/Carry at an opening with D1 in the passing line. Carry produces the lane-switch read; Shoot instead leads to loose-puck support. Preserve that teaching tradeoff instead of manufacturing equivalent outcomes. New scenario/storage identity and bounded implementation/review are required; no U13 AI or changed-cue support is implied.
 3. Route-to-question integration, timed passes, richer prediction/changed-cue sequences and remaining ages need bounded designs. Live AI, whole-sequence judging, cloud persistence, main-app navigation, physical-device performance, coach/player comprehension, curriculum admission and rigged character motion remain open.
 4. At 7:00 a.m., stop this overnight run and leave a self-contained review with working hosted links, deployed changes, actual checks and material limits. Keep `morning-review.md` and the canonical `docs/roadmap/TASKS.md` current.
 

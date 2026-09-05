@@ -9,8 +9,22 @@ function loadAttempt(key, session) {
   catch { return null; }
 }
 
+function playerFacingRecallText(text) {
+  return text.replace(/\bF1 has\b/g, 'You have')
+    .replace(/\bF1 is\b/g, 'You are')
+    .replace(/\bF1 carries\b/g, 'You carry')
+    .replace(/\bF1\b/g, 'YOU');
+}
+
 export default function ReadSequenceRecall({ session, playerId, renderBoard, draftAccess }) {
   const recall = useMemo(() => createReadSequenceRecall(session), [session]);
+  // Keep the saved recall basis unchanged; only these fixed card descriptions
+  // use the same player name as the visible YOU marker.
+  const displayCards = useMemo(() => recall.ageBand === 'U11' ? recall.cards.map(card => ({
+    ...card,
+    caption: playerFacingRecallText(card.caption),
+    description: playerFacingRecallText(card.description),
+  })) : recall.cards, [recall]);
   const storageKey = getReadSequenceRecallStorageKey(playerId, session.scenarioId);
   const [initial] = useState(() => {
     const draft = draftAccess?.get();
@@ -38,7 +52,7 @@ export default function ReadSequenceRecall({ session, playerId, renderBoard, dra
   const isYoung = recall.fixedOpening;
   const title = isYoung ? 'Put your play in order.' : 'Rebuild the play you watched.';
   const prompt = isYoung ? 'The first picture is in place. Put the other two in the order you watched.' : 'Put these three moments in order. Follow the puck and the players.';
-  const inspectedCard = recall.cards.find(card => card.id === inspecting);
+  const inspectedCard = displayCards.find(card => card.id === inspecting);
 
   useEffect(() => () => { stopSpeaking(); cancelAnimationFrame(pendingFocus.current); }, []);
   useEffect(() => {
@@ -146,7 +160,7 @@ export default function ReadSequenceRecall({ session, playerId, renderBoard, dra
     <button type="button" aria-expanded={open} aria-controls={contentId} onClick={toggle}>{open ? 'Close play recall' : savedHere ? 'Open my saved recall' : 'Try play recall'}</button>
     {open && <div id={contentId} className="rs-recall-body">
       <div className="rs-recall-task"><h3 ref={heading} tabIndex="-1">{prompt}</h3><p>Use Earlier and Later to change your order. Open any rink picture for a closer look.</p>
-        {ttsSupported() && <div className="rs-recall-tools"><button type="button" onClick={() => speakParts([prompt, ...order.map(id => recall.cards.find(card => card.id === id).description)], { rate: isYoung ? .88 : .95 })}>Read the moments aloud</button><button type="button" onClick={stopSpeaking}>Stop reading moments</button></div>}
+        {ttsSupported() && <div className="rs-recall-tools"><button type="button" onClick={() => speakParts([prompt, ...order.map(id => displayCards.find(card => card.id === id).description)], { rate: isYoung ? .88 : .95 })}>Read the moments aloud</button><button type="button" onClick={stopSpeaking}>Stop reading moments</button></div>}
       </div>
       {inspectedCard && <section className="rs-recall-inspection" aria-label="Full rink picture">
         <div className="rs-recall-inspection-title"><h3 ref={inspectionHeading} tabIndex="-1">{inspectedCard.caption}</h3><button type="button" onClick={closeInspection}>Back to my order</button></div>
@@ -155,7 +169,7 @@ export default function ReadSequenceRecall({ session, playerId, renderBoard, dra
       </section>}
       <ol className="rs-recall-order" aria-label="Your play order">
         {order.map((id, index) => {
-          const card = recall.cards.find(item => item.id === id);
+          const card = displayCards.find(item => item.id === id);
           const locked = isYoung && index === 0;
           return <li key={id} className={locked ? 'rs-recall-fixed' : ''}>
             <div className="rs-recall-card-head"><span className="rs-recall-place">{index + 1}</span><span>{locked ? 'Opening · in place' : 'Your order'}</span></div>

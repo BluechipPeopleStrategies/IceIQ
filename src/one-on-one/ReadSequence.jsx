@@ -30,6 +30,7 @@ import { AIReviewPanel } from './CoachQuestionLab.jsx';
 import RoutePlanner from './RoutePlanner.jsx';
 import RinkCoordinateInput from './RinkCoordinateInput.jsx';
 import ReadSequenceRecall from './ReadSequenceRecall.jsx';
+import { U11_PLAYER_COPY } from './readSequencePlayerCopy.js';
 import { getReadSequenceRecallStorageKey } from './readSequenceRecallStorage.js';
 import { speakParts, stopSpeaking, ttsSupported } from '../speak.js';
 import './ReadSequence.css';
@@ -50,6 +51,8 @@ function RinkStage({ state, definition = U11_READ_SEQUENCE, description, targets
   const routeTap = useRef(null);
   const stageId = useId().replace(/[^a-zA-Z0-9_-]/g, '');
   const puckCarrier = state.actors.find(actor => actor.id === state.puck.owner);
+  const carrierName = puckCarrier?.label || puckCarrier?.name || puckCarrier?.id;
+  const puckDescription = carrierName === 'YOU' ? 'You have the puck.' : carrierName ? `${carrierName} has the puck.` : 'No player has the puck.';
   const support = state.actors.find(actor => actor.id === 'F2');
 
   function targetBadge(target) {
@@ -109,7 +112,7 @@ function RinkStage({ state, definition = U11_READ_SEQUENCE, description, targets
       onPointerUp={finishMove} onPointerCancel={event => { routeTap.current = null; finishMove(event); }} onLostPointerCapture={() => { drag.current = null; routeTap.current = null; }}
       style={{ touchAction: onMove ? 'none' : onRoutePoint ? 'pan-y' : 'auto' }}>
       <title>{definition.ageBand} connected two-on-one</title>
-      <desc>{description || (changedCue ? 'Changed opening freeze: D1 is now on the pass line between the puck and F2. Every other player and the puck stayed in the same place.' : definition.ui?.stageDescription || 'D1 partly covers the middle. F2 begins slightly flat on the weak side. The puck and positions update from the selected branch.')}</desc>
+      <desc>{description || (changedCue ? 'Changed opening freeze: D1 is now on the pass line between the puck and F2. Every other player and the puck stayed in the same place.' : `${definition.ui?.stageDescription || 'Navy circles attack the right net. Gold shapes defend.'} ${puckDescription}`)}</desc>
       <defs>
         <linearGradient id={`${stageId}-ice`} x1="0" x2="1" y1="0" y2="1"><stop stopColor="#fffdfa" /><stop offset="1" stopColor="#e8edf1" /></linearGradient>
         <filter id={`${stageId}-shadow`}><feDropShadow dx="0" dy=".16" stdDeviation=".18" floodOpacity=".28" /></filter>
@@ -126,7 +129,7 @@ function RinkStage({ state, definition = U11_READ_SEQUENCE, description, targets
       {showReadLanes && puckCarrier && support && <g fill="none" pointerEvents="none">
         <line x1={state.puck.x} y1={state.puck.y} x2={support.x} y2={support.y} stroke="#C9A24B" strokeWidth=".13" strokeDasharray=".35 .28" markerEnd={`url(#${stageId}-arrow)`} />
         <line x1={state.puck.x} y1={state.puck.y} x2={GOAL_X} y2="0" stroke="#0B1A33" strokeWidth=".12" strokeDasharray=".28 .3" opacity=".55" />
-        <text x={changedCue ? 4 : 17.2} y={changedCue ? -7.5 : 3} fontSize=".55" fill="#0B1A33">{changedCue ? 'D1 IN THE PASS LINE' : 'SHOT LANE SHADED'}</text>
+        <text x={changedCue ? 4 : 17.2} y={changedCue ? -7.5 : 3} fontSize=".55" fill="#0B1A33">{changedCue ? 'D1 IN THE PASS LINE' : 'D1 NEAR SHOT LINE'}</text>
       </g>}
       {route && <g className="rs-planned-route" pointerEvents="none" aria-hidden="true">
         <polyline points={route.map(point => `${point.x},${point.y}`).join(' ')} />
@@ -210,11 +213,11 @@ function ChangedCueComparison({ session, onSave }) {
   return <section className="rs-comparison" aria-label="Optional changed-cue comparison">
     <p className="rs-step">OPTIONAL · RETURN TO THE FIRST FREEZE</p>
     <h2>One thing changes.</h2>
-    <p>Go back to the start. Move only D1. Would you keep your first choice or try something else?</p>
+    <p>Look at the start again. Only D1 has moved. Would you keep your first choice or try something else?</p>
     <button type="button" aria-expanded={open} aria-controls={contentId} onClick={() => setOpen(value => !value)}>{open ? 'Hide comparison' : session.changedCue ? 'View my changed-cue comparison' : 'Try one changed cue'}</button>
     {open && <div id={contentId} className="rs-comparison-content">
       <div className="rs-comparison-boards">
-        <figure><figcaption><b>Original freeze</b><span>D1 shades part of the shot lane.</span></figcaption><RinkStage state={comparison.originalState} showReadLanes /></figure>
+        <figure><figcaption><b>Original freeze</b><span>D1 is near the line from the puck to the net.</span></figcaption><RinkStage state={comparison.originalState} showReadLanes /></figure>
         <figure><figcaption><b>Only D1 moved</b><span>D1 is now between the puck and F2.</span></figcaption><RinkStage state={comparison.changedState} showReadLanes changedCue /></figure>
       </div>
       <div className="rs-cue-card"><b>What changed?</b><p>{comparison.cue}</p></div>
@@ -238,8 +241,9 @@ function ChangedCueComparison({ session, onSave }) {
 
 function ReadSequenceLesson({ playerId, definition, scratch, rememberDraft, recallDraftAccess }) {
   const storageKey = getReadSequenceStorageKey(playerId, definition.id);
-  const copy = definition.ui || {};
   const isU11 = definition.id === U11_READ_SEQUENCE.id;
+  const copy = isU11 ? U11_PLAYER_COPY : definition.ui || {};
+  const firstPrompt = copy.firstPrompt || definition.firstPrompt;
   const actions = definition.actions || READ_ACTIONS;
   const actionCopy = copy.actionCopy || ACTION_COPY;
   const [session, setSession] = useState(() => scratch?.session || loadSavedSequence(storageKey, definition.id) || createReadSequenceSession(definition.id));
@@ -262,8 +266,12 @@ function ReadSequenceLesson({ playerId, definition, scratch, rememberDraft, reca
   const route = useMemo(() => getThirdReadRoute(session), [session]);
   const state = useMemo(() => route && routeProgress != null ? sampleThirdReadRoute(session, routeProgress) : currentSequenceState(session), [session, route, routeProgress]);
   const activePlayback = ['consequence-1', 'consequence-2', 'replay-1'].includes(session.phase);
-  const readTwo = session.first ? getReadTwoPrompt(session) : null;
+  const canonicalReadTwo = session.first ? getReadTwoPrompt(session) : null;
+  const branchCopy = copy.branches?.[session.first?.action];
+  const readTwo = canonicalReadTwo && { ...canonicalReadTwo, prompt: branchCopy?.prompt || canonicalReadTwo.prompt, cue: branchCopy?.cue || canonicalReadTwo.cue };
+  const displayTargets = session.availableSecondTargets.map(target => ({ ...target, label: branchCopy?.targets[target.id]?.label || target.label }));
   const selectedTarget = getSelectedSecondTarget(session);
+  const selectedText = selectedTarget && { label: branchCopy?.targets[selectedTarget.id]?.label || selectedTarget.label, summary: branchCopy?.targets[selectedTarget.id]?.summary || selectedTarget.summary };
   const finalJudgePayload = useMemo(() => isU11 && session.phase === 'complete' && !session.third?.route ? createFinalReadJudgePayload(session) : null, [session, isU11]);
 
   useEffect(() => {
@@ -449,29 +457,30 @@ function ReadSequenceLesson({ playerId, definition, scratch, rememberDraft, reca
   }
 
   const branch = session.first ? definition.branches[session.first.action] : null;
+  const consequenceText = branchCopy?.consequence || branch?.consequence;
   const actionNoun = session.first?.action === 'shoot' ? 'shot' : branch?.actionLabel?.toLowerCase() || 'choice';
   const movingActor = session.third ? state.actors.find(actor => actor.id === session.third.actorId) : null;
   const movingLabel = isU11 ? movingActor?.label : movingActor?.name;
   const routeLabel = isU11 ? movingLabel : 'the highlighted player';
   const thirdPrompt = isU11
-    ? routeMode ? `Plan how ${movingLabel} gets to useful space. Then explain the route.` : `Move ${movingLabel} to a helpful next position. Then explain the support.`
+    ? routeMode ? `${movingLabel === 'YOU' ? 'Plan your path.' : `Plan a path for ${movingLabel}.`} What space do you want to use?` : `${movingLabel === 'YOU' ? 'Where would you move to help?' : `Where should ${movingLabel} move to help?`} Show your idea and explain it.`
     : routeMode ? 'Plan a path for the highlighted player. How will it help?' : 'Move the highlighted player to help the player with the puck.';
-  const thirdCue = copy.thirdCue || `The puck is ${state.puck.owner ? `with ${state.actors.find(actor => actor.id === state.puck.owner)?.label || state.puck.owner}` : 'still loose'}. Read D1, the puck line and separation. There is no one coordinate to match.`;
+  const thirdCue = copy.thirdCue || `The puck is ${state.puck.owner ? `with ${state.actors.find(actor => actor.id === state.puck.owner)?.label || state.puck.owner}` : 'still loose'}. Look at D1 and the space around the puck.`;
   const firstReasonLabel = copy.firstReasonLabel || 'What did you notice?';
   const spokenParts = session.phase === 'read-1'
-    ? [definition.firstPrompt, ...actions.map(action => actionCopy[action].label), firstReasonLabel]
+    ? [firstPrompt, ...actions.map(action => actionCopy[action].label), firstReasonLabel]
     : session.phase === 'read-2'
-      ? [readTwo.prompt, readTwo.cue, ...session.availableSecondTargets.map((target, index) => `${index + 1}. ${target.label}`)]
+      ? [readTwo.prompt, readTwo.cue, ...displayTargets.map((target, index) => `${index + 1}. ${target.label}`)]
       : session.phase === 'read-3' ? [thirdPrompt, thirdCue, 'Why does this help?'] : null;
   const boardCopy = session.phase === 'read-1'
-    ? { step: 'READ 1 · LOOK, THEN CHOOSE', prompt: definition.firstPrompt, cue: isU11 ? 'Notice the defender, teammate and goalie before you choose.' : 'Find your teammate, the defender and the space between them.' }
+    ? { step: 'READ 1 · LOOK, THEN CHOOSE', prompt: firstPrompt, cue: isU11 ? 'Notice the defender, teammate and goalie before you choose.' : 'Find your teammate, the defender and the space between them.' }
     : session.phase === 'read-2'
       ? { step: 'READ 2 · LOOK AGAIN', prompt: readTwo.prompt, cue: readTwo.cue }
       : session.phase === 'read-3'
         ? { step: 'READ 3 · HELP WITHOUT THE PUCK', prompt: thirdPrompt, cue: thirdCue }
         : session.phase === 'consequence-2'
-          ? { step: 'WATCH YOUR NEXT CHOICE', prompt: selectedTarget.label, cue: selectedTarget.summary }
-          : { step: session.phase === 'replay-1' ? 'REPLAY YOUR FIRST CHOICE' : 'WATCH YOUR CHOICE', prompt: `Your ${actionNoun} changes the play.`, cue: branch?.consequence };
+          ? { step: 'WATCH YOUR NEXT CHOICE', prompt: selectedText.label, cue: selectedText.summary }
+          : { step: session.phase === 'replay-1' ? 'REPLAY YOUR FIRST CHOICE' : 'WATCH YOUR CHOICE', prompt: `Your ${actionNoun} changes the play.`, cue: consequenceText };
 
   return <section className="rs-lesson" aria-label={`${definition.ageBand} connected read sequence`} data-player-scope={playerId ? 'player' : 'local'}>
     <header className="rs-hero"><div><p className="rs-kicker">{definition.ageBand} · {copy.kicker || 'ODD-MAN READS'} · COACH-REVIEW DRAFT</p><h1>Three reads.<br /><em>{copy.heroAccent || 'One shifting 2-on-1.'}</em></h1><p>{copy.intro || 'Choose from what you see. Watch your choice change the play. Then read the ice again.'}</p></div><div className="rs-hero-note"><b>Short and untimed</b><span>{copy.note || 'Your explanation matters more than matching one drawing.'}</span></div></header>
@@ -482,7 +491,7 @@ function ReadSequenceLesson({ playerId, definition, scratch, rememberDraft, reca
         {session.phase === 'read-3' && <div className="rs-move-modes" role="group" aria-label="How to show your support"><button type="button" aria-pressed={!routeMode} onClick={() => changeMoveMode(false)}>Move player</button><button type="button" aria-pressed={routeMode} onClick={() => changeMoveMode(true)}>Plan route</button></div>}
         <RinkStage state={state} definition={definition}
           showReadLanes={isU11 && session.phase === 'read-1'}
-          targets={session.phase === 'read-2' ? session.availableSecondTargets : []}
+          targets={session.phase === 'read-2' ? displayTargets : []}
           onTarget={session.phase === 'read-2' ? chooseTarget : undefined}
           moveActorId={session.phase === 'read-3' && !routeMode ? session.third.actorId : null}
           onMove={session.phase === 'read-3' && !routeMode ? moveActor : undefined}
@@ -500,8 +509,8 @@ function ReadSequenceLesson({ playerId, definition, scratch, rememberDraft, reca
       <aside ref={readPanel} className={`rs-read-panel ${session.phase === 'complete' ? 'rs-complete-panel' : ''}`} data-phase={session.phase}>
         <ReadAloudControls parts={spokenParts} rate={isU11 ? .95 : .88} />
         {session.phase === 'read-1' && <>
-          <p className="rs-step">READ 1 · {isU11 ? 'IDENTIFY THE CUE' : 'LOOK, THEN CHOOSE'}</p><h2 ref={phaseHeading} tabIndex="-1">{definition.firstPrompt}</h2>
-          <div className="rs-cue-card"><b>{isU11 ? 'Visible before the freeze' : 'Find your team'}</b><ul>{(copy.firstCues || ['D1 partly shades the shot route but does not erase every option.', 'F2 is open enough to consider, but slightly flat.', 'The goalie starts nearer the middle while the puck begins off-centre.']).map(cue => <li key={cue}>{cue}</li>)}</ul></div>
+          <p className="rs-step">READ 1 · {isU11 ? 'IDENTIFY THE CUE' : 'LOOK, THEN CHOOSE'}</p><h2 ref={phaseHeading} tabIndex="-1">{firstPrompt}</h2>
+          <div className="rs-cue-card"><b>{isU11 ? 'Look at the ice' : 'Find your team'}</b><ul>{(copy.firstCues || ['D1 partly shades the shot route but does not erase every option.', 'F2 is open enough to consider, but slightly flat.', 'The goalie starts nearer the middle while the puck begins off-centre.']).map(cue => <li key={cue}>{cue}</li>)}</ul></div>
           <fieldset className="rs-actions"><legend>What would you do?</legend>{actions.map(action => <button type="button" key={action} aria-pressed={chosenAction === action} onClick={() => setChosenAction(action)}><b>{actionCopy[action].label}</b><span>{actionCopy[action].detail}</span></button>)}</fieldset>
           <label className="rs-reason">{firstReasonLabel}<textarea rows={isU11 ? 4 : 2} maxLength="600" value={firstReason} onChange={event => setFirstReason(event.target.value)} placeholder={copy.firstReasonPlaceholder || 'Name the defender, lane, support or goalie cue that shaped your choice.'} /><small>{firstReason.length}/600</small></label>
           {!isU11 && <p className="rs-hint">A few words are enough. You can say your reason to a coach and have them type it.</p>}
@@ -509,15 +518,15 @@ function ReadSequenceLesson({ playerId, definition, scratch, rememberDraft, reca
           <details className="rs-rubric"><summary>For the coach</summary><p>{copy.firstDiscussion || 'The shot route is only partly covered and F2’s alignment is not perfect. Timing and the reason can make different actions defensible. A pass just because it is a 2-on-1, or a shot treated as a guaranteed goal, misses the read.'}</p></details>
         </>}
 
-        {(session.phase === 'consequence-1' || session.phase === 'replay-1') && <div className="rs-playing" role="status"><p className="rs-step">YOUR {actionNoun.toUpperCase()} IS CHANGING THE PLAY</p><h2 ref={phaseHeading} tabIndex="-1">Stay with the branch you chose.</h2><p>{branch.consequence}</p>{reducedMotion && <small>Reduced-motion mode moves directly to the next freeze.</small>}</div>}
+        {(session.phase === 'consequence-1' || session.phase === 'replay-1') && <div className="rs-playing" role="status"><p className="rs-step">YOUR {actionNoun.toUpperCase()} IS CHANGING THE PLAY</p><h2 ref={phaseHeading} tabIndex="-1">Watch where the players and puck move.</h2><p>{consequenceText}</p>{reducedMotion && <small>Reduced-motion mode moves directly to the next freeze.</small>}</div>}
 
         {session.phase === 'read-2' && <>
           <p className="rs-step">READ 2 · {isU11 ? 'TIMING & SPACE' : 'LOOK AGAIN'}</p><h2 ref={phaseHeading} tabIndex="-1">{readTwo.prompt}</h2><div className="rs-cue-card"><b>{isU11 ? 'Re-scan now' : 'What changed?'}</b><p>{readTwo.cue}</p></div>
-          <div className="rs-target-list">{session.availableSecondTargets.map((target, index) => <button type="button" key={target.id} onClick={() => chooseTarget(target.id)}><span>{index + 1}</span><b>{target.label}</b><small>{target.kind === 'receiver' ? 'Tap receiver' : 'Tap space'}</small></button>)}</div>
+          <div className="rs-target-list">{displayTargets.map((target, index) => <button type="button" key={target.id} onClick={() => chooseTarget(target.id)}><span>{index + 1}</span><b>{target.label}</b><small>{target.kind === 'receiver' ? 'Tap receiver' : 'Tap space'}</small></button>)}</div>
           <p className="rs-hint">Tap a numbered marker on the rink or use these matching buttons.</p>
         </>}
 
-        {session.phase === 'consequence-2' && <div className="rs-playing" role="status"><p className="rs-step">THE SECOND READ CHANGES THE SHAPE</p><h2 ref={phaseHeading} tabIndex="-1">{selectedTarget?.label}</h2><p>{selectedTarget?.summary}</p></div>}
+        {session.phase === 'consequence-2' && <div className="rs-playing" role="status"><p className="rs-step">WATCH YOUR NEXT CHOICE</p><h2 ref={phaseHeading} tabIndex="-1">{selectedText?.label}</h2><p>{selectedText?.summary}</p></div>}
 
         {session.phase === 'read-3' && <>
           <p className="rs-step">READ 3 · HELP WITHOUT THE PUCK</p><h2 ref={phaseHeading} tabIndex="-1">{thirdPrompt}</h2>
@@ -529,8 +538,8 @@ function ReadSequenceLesson({ playerId, definition, scratch, rememberDraft, reca
         </>}
 
         {session.phase === 'complete' && <>
-          <p className="rs-step">THREE READS COMPLETE · DRAFT FOR COACH REVIEW</p><h2 ref={phaseHeading} tabIndex="-1">Your choices stayed connected.</h2>
-          <div className="rs-summary"><section><span>1</span><div><b>{actionCopy[session.first.action].label}</b><p>{session.first.reason}</p></div></section><section><span>2</span><div><b>{selectedTarget.label}</b><p>{selectedTarget.summary}</p></div></section><section><span>3</span><div><b>{movingLabel} moved</b><p>{session.third.reason}</p></div></section></div>
+          <p className="rs-step">THREE READS COMPLETE · DRAFT FOR COACH REVIEW</p><h2 ref={phaseHeading} tabIndex="-1">Your three reads</h2>
+          <div className="rs-summary"><section><span>1</span><div><b>{actionCopy[session.first.action].label}</b><p>{session.first.reason}</p></div></section><section><span>2</span><div><b>{selectedText.label}</b><p>{selectedText.summary}</p></div></section><section><span>3</span><div><b>{movingLabel} moved</b><p>{session.third.reason}</p></div></section></div>
           <div className="rs-evidence"><b>{session.localEvidence.heading}</b><ul>{session.localEvidence.observations.map(observation => <li key={observation}>{observation}</li>)}</ul><p>{session.localEvidence.note}</p></div>
           {finalJudgePayload && <section className="rs-final-ai"><p className="rs-step">OPTIONAL AI OPINION · FINAL READ ONLY</p><h3>Review my final positioning</h3><p>The AI coach reviews only the board after read two, your final support move and your explanation. It runs only when you press the button.</p><AIReviewPanel key={`${session.first.action}:${session.second.targetId}:${session.third.point.x}:${session.third.point.y}`} question={finalJudgePayload.question} attempt={finalJudgePayload.attempt} /></section>}
           {route && <p className="rs-hint">Your route and explanation are saved for a coach discussion. There is no automatic route grade or AI route review.</p>}
