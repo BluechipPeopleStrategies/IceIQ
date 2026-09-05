@@ -2,7 +2,7 @@
 // AI payloads keep their existing wording/data. Never write these labels back
 // into a session or use them as the recall-card storage basis.
 export const U11_PLAYER_COPY = Object.freeze({
-  firstPrompt: 'Look at D1, F2 and the goalie. Would you pass, shoot or carry? What helped you decide?',
+  firstPrompt: 'You have the puck. Look at D1, F2 and the goalie. Would you pass, shoot or carry? What helped you decide?',
   progressLabels: ['Look and choose', 'Look again', 'Help without the puck'],
   firstCues: [
     'D1 is between you and the net, near your shooting line.',

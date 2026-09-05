@@ -9,10 +9,11 @@ function jerseyTexture(number) {
   const t = new THREE.CanvasTexture(c); t.colorSpace = THREE.SRGBColorSpace; return t;
 }
 
-function buildRig(goalie, colour, number) {
+function buildRig(goalie, colour, number, showStick = true) {
   const group = new THREE.Group();
   const materials = {
     jersey: new THREE.MeshStandardMaterial({ color: colour, roughness: .72 }),
+    helmet: new THREE.MeshStandardMaterial({ color: colour, roughness: .32, metalness: .08 }),
     dark: new THREE.MeshStandardMaterial({ color: '#101114', roughness: .66 }),
     trim: new THREE.MeshStandardMaterial({ color: colour === '#C9A24B' ? '#0B1A33' : '#C9A24B', roughness: .65 }),
     white: new THREE.MeshStandardMaterial({ color: '#f5f5ee', roughness: .6 }),
@@ -39,8 +40,9 @@ function buildRig(goalie, colour, number) {
   ellipsoid(.29, [1.14, .63, .68], materials.dark, [0, .64, .04]);
   const neck = ellipsoid(.09, [1, 1, 1], materials.skin, [0, 1.33, -.14]);
   const head = ellipsoid(.16, [1, 1.1, 1], materials.skin, [0, 1.49, -.2]);
-  ellipsoid(.181, [1.04, .88, 1.12], materials.dark, [0, 1.57, -.18]);
-  box([.34, .035, .12], materials.dark, [0, 1.52, -.345]);
+  ellipsoid(.181, [1.04, .88, 1.12], materials.helmet, [0, 1.57, -.18]);
+  box([.34, .035, .12], materials.helmet, [0, 1.52, -.345]);
+  ellipsoid(.182, [.22, .885, 1.125], materials.trim, [0, 1.572, -.18]);
   // Youth full face cage; explicit bars remain readable from the game camera.
   for (let i = 0; i < 4; i++) box([.29 - i * .02, .014, .018], materials.metal, [0, 1.48 - i * .055, -.363 + i * .014]);
   for (let i = -1; i <= 1; i++) box([.012, .19, .018], materials.metal, [i * .085, 1.40, -.348]);
@@ -57,6 +59,7 @@ function buildRig(goalie, colour, number) {
   }));
   const shaft = limb(.021, materials.stick); const blade = limb(.043, materials.dark);
   const stickTape = limb(.026, materials.white);
+  shaft.visible = blade.visible = stickTape.visible = showStick;
   const rig = { group, update(actor, time, actionTime = -100) {
     const speed = Math.hypot(actor.vx || 0, actor.vy || 0), stride = Math.min(speed / 5.5, 1);
     const cycle = time * (6 + speed * 1.3), shot = Math.max(0, 1 - (time - actionTime) * 3);
@@ -83,9 +86,9 @@ function buildRig(goalie, colour, number) {
   return rig;
 }
 
-export default function Skater({ frameRef, actorKey, colour, number, goalie = false, selected = false }) {
+export default function Skater({ frameRef, actorKey, colour, number, goalie = false, selected = false, showStick = true }) {
   const holder = useRef();
-  const rig = useMemo(() => buildRig(goalie, colour, number), [goalie, colour, number]);
+  const rig = useMemo(() => buildRig(goalie, colour, number, showStick), [goalie, colour, number, showStick]);
   useEffect(() => () => rig.dispose(), [rig]);
   useFrame(() => {
     const frame = frameRef.current, actor = frame?.actors?.find(a => a.id === actorKey) || frame?.[actorKey]; if (!actor || !holder.current) return;

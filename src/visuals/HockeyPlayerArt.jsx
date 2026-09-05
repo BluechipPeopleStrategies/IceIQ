@@ -1,4 +1,5 @@
-import { useId } from 'react';
+import { useId, useState } from 'react';
+import { overheadArtworkPath } from './overheadArtwork.js';
 
 /**
  * Decorative player artwork for existing SVG rink coordinates.
@@ -6,7 +7,7 @@ import { useId } from 'react';
  * hit targets, team meaning and visibility. Unknown facing is a neutral icon.
  * Authored facing uses SVG degrees: zero is right, positive is clockwise.
  */
-export function HockeyPlayerArt({ radius = 10, team = 'home', goalie = false, facing = null, opacity = 1 }) {
+function VectorPlayerFallback({ radius = 10, team = 'home', goalie = false, facing = null, opacity = 1 }) {
   const id = `hockey-art-${useId().replace(/[^a-zA-Z0-9_-]/g, '')}`;
   const r = Number.isFinite(radius) && radius > 0 ? radius : 10;
   const directed = Number.isFinite(facing);
@@ -55,6 +56,24 @@ export function HockeyPlayerArt({ radius = 10, team = 'home', goalie = false, fa
       <path d="M-2.5-4.8 2.5-4.8 M-2.2-3.5 2.2-3.5 M-1.2-4.8 -1-2.1 M1.2-4.8 1-2.1" fill="none" stroke="#7F97A7" strokeWidth=".4" />
       {goalie && <path d="M-2.6-6.4Q0-7.5 2.6-6.4" fill="none" stroke="#E9ECE8" strokeWidth=".8" />}
     </g>
+  </g>;
+}
+
+export function HockeyPlayerArt({ radius = 10, team = 'home', goalie = false, facing = null, opacity = 1, showStick = false }) {
+  const [failed, setFailed] = useState(false);
+  const r = Number.isFinite(radius) && radius > 0 ? radius : 10;
+  const directed = Number.isFinite(facing);
+  const gold = team === 'away';
+  if (failed) return <VectorPlayerFallback radius={r} team={team} goalie={goalie} facing={facing} opacity={opacity} />;
+  return <g className="hockey-player-art" data-hockey-art={goalie ? 'goalie' : 'skater'} data-team={gold ? 'away' : 'home'} data-pose={directed ? 'authored-heading' : 'neutral'}
+    aria-hidden="true" pointerEvents="none" opacity={opacity} transform={`scale(${r / 10})`}>
+    <image href={overheadArtworkPath({ team, goalie })} x="-10" y="-10" width="20" height="20"
+      transform={directed ? `rotate(${facing + 90})` : undefined} onError={() => setFailed(true)} />
+    {showStick && directed && <g transform={`rotate(${facing + 90})`} fill="none" strokeLinecap="round" strokeLinejoin="round" data-equipment="stick">
+      <path d="M 5.2 2 L 8 -12 L 4.5 -13" stroke="#FFFFFF" strokeWidth="1.5" />
+      <path d="M 5.2 2 L 8 -12 L 4.5 -13" stroke="#172B3E" strokeWidth=".9" />
+      <path d="M 8 -12 L 4.5 -13" stroke="#07111D" strokeWidth="1.25" />
+    </g>}
   </g>;
 }
 

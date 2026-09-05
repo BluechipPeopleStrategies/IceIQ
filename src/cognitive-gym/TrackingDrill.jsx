@@ -417,6 +417,7 @@ export default function TrackingDrill({ playerId = "default", onExit }) {
     setShift(0);
     setBonus(0);
     setPoints(0);
+    setSaved(null);
     setLevelUpIn(engineRef.current.toPromote);
     setPhase("playing");
     requestAnimationFrame(() => startShift(0));

@@ -4,7 +4,8 @@ import { Html, Line } from '@react-three/drei';
 import * as THREE from 'three';
 import Skater from './Skater.jsx';
 import { Ice, Arena, Goal, Puck } from './PracticeScene.jsx';
-import { createReadSceneFrame, getReadSceneBounds, getReadSceneCamera, clampReadSceneTargetCenter } from './readSequenceVisuals.js';
+import { createReadSceneFrame, getReadSceneBounds, clampReadSceneTargetCenter } from './readSequenceVisuals.js';
+import ScenarioCamera from '../visuals/ScenarioCamera.jsx';
 import { isCoachRoutePoint, listenForCoachRouteTaps, worldPointToCoachRoute } from './coachRouteSurfaceInput.js';
 import { watchWebglContextLoss } from '../cognitive-gym/webglLifecycle.js';
 import './ReadSequenceScene.css';
@@ -21,23 +22,7 @@ class ReadSceneBoundary extends Component {
   render() { return this.state.failed ? null : this.props.children; }
 }
 
-function FixedCamera({ bounds }) {
-  const { camera, size, invalidate } = useThree();
-  useLayoutEffect(() => {
-    const view = getReadSceneCamera(bounds, size.width / Math.max(1, size.height));
-    camera.position.set(...view.position);
-    camera.up.set(0, 1, 0);
-    camera.zoom = 1;
-    camera.lookAt(...view.target);
-    for (const key of ['left', 'right', 'top', 'bottom', 'near', 'far']) camera[key] = view[key];
-    camera.updateProjectionMatrix();
-    camera.updateMatrixWorld();
-    invalidate();
-  }, [bounds, camera, size.width, size.height, invalidate]);
-  return null;
-}
-
-function CompletedIceTap({ onPoint, bounds }) {
+function CompletedIceTap({ onPoint, bounds, cameraPreset }) {
   const { gl, camera, size } = useThree();
   const callback = useRef(onPoint);
   callback.current = onPoint;
@@ -56,7 +41,7 @@ function CompletedIceTap({ onPoint, bounds }) {
       const point = worldPointToCoachRoute(hit);
       if (point && point.x >= 0) callback.current(point);
     });
-  }, [gl, camera, bounds, size.width, size.height]);
+  }, [gl, camera, bounds, cameraPreset, size.width, size.height]);
   return null;
 }
 
@@ -101,7 +86,7 @@ function ActorChip({ actor, labelledActors, movable }) {
   </Html>;
 }
 
-function TargetMarker({ target, index, targets, actors, puck, labelledActors, onTarget }) {
+function TargetMarker({ target, index, targets, actors, puck, labelledActors, onTarget, disabled }) {
   const button = useRef(null);
   const { invalidate } = useThree();
   const attachButton = useCallback(node => {
@@ -156,11 +141,11 @@ function TargetMarker({ target, index, targets, actors, puck, labelledActors, on
     <mesh position={world(target, .06)} rotation={[-Math.PI / 2, 0, 0]}>
       <ringGeometry args={[.7, .8, 40]} /><meshBasicMaterial color="#876114" transparent opacity={.9} depthWrite={false} />
     </mesh>
-    <Html center position={world(target, .1)} zIndexRange={[40, 30]}>
+    <Html center position={world(target, .1)} zIndexRange={[40, 30]} style={{ pointerEvents: disabled ? 'none' : 'auto' }}>
       <span className="rs-scene-target-connector" ref={connector} aria-hidden="true" />
-      <button ref={attachButton} type="button" className="rs-scene-target" aria-label={`Choose ${target.label}`} title={`${index + 1}. ${target.label}`}
+      <button ref={attachButton} type="button" className="rs-scene-target" disabled={disabled} style={{ pointerEvents: disabled ? 'none' : 'auto' }} aria-label={`Choose ${target.label}`} title={`${index + 1}. ${target.label}`}
         onPointerDown={stop} onPointerMove={stop} onPointerUp={stop} onPointerCancel={stop} onLostPointerCapture={stop}
-        onClick={event => { event.stopPropagation(); onTarget?.(target.id); }}>
+        onClick={event => { event.stopPropagation(); if (!disabled) onTarget?.(target.id); }}>
         <span className="rs-scene-target-number" aria-hidden="true">{index + 1}</span>
         <span className="rs-scene-sr-only">{target.label}</span>
       </button>
@@ -168,31 +153,32 @@ function TargetMarker({ target, index, targets, actors, puck, labelledActors, on
   </>;
 }
 
-function SceneContents({ frame, frameRef, bounds, definition, targets, onTarget, moveActorId, onMove, onRoutePoint, route, playing }) {
+function SceneContents({ frame, frameRef, bounds, definition, targets, onTarget, moveActorId, onMove, onRoutePoint, route, playing, cameraPreset, cameraAdjusting }) {
   const { invalidate } = useThree();
   // A frozen read has no independent animation loop; every authored frame or
   // user edit requests one render, and Skater receives the finite lesson clock.
   useLayoutEffect(() => { invalidate(); }, [frame, bounds, targets, route, moveActorId, invalidate]);
   const labelledActors = definition.ui?.labelledActors !== false && definition.ageBand !== 'U9';
-  const movable = !playing && moveActorId && frame.actors.some(actor => actor.id === moveActorId) && typeof onMove === 'function';
-  const tap = !playing && targets.length === 0 ? typeof onRoutePoint === 'function' ? onRoutePoint : movable ? onMove : null : null;
+  const answering = !playing && !cameraAdjusting;
+  const movable = answering && moveActorId && frame.actors.some(actor => actor.id === moveActorId) && typeof onMove === 'function';
+  const tap = answering && targets.length === 0 ? typeof onRoutePoint === 'function' ? onRoutePoint : movable ? onMove : null : null;
   return <>
     <color attach="background" args={['#182d40']} />
     <ambientLight intensity={.9} color="#e4edf5" />
     <hemisphereLight args={['#f8fcff', '#64778c', 1.4]} />
     <directionalLight position={[-10, 27, -12]} intensity={2.4} color="#fff8e8" castShadow shadow-mapSize={[2048, 2048]} shadow-camera-left={-24} shadow-camera-right={24} shadow-camera-top={36} shadow-camera-bottom={-36} shadow-camera-near={1} shadow-camera-far={75} shadow-bias={-.00015} shadow-normalBias={.025} />
     <directionalLight position={[12, 14, -30]} intensity={.7} color="#d8eaff" />
-    <FixedCamera bounds={bounds} /><Arena /><Ice /><Goal />
+    <ScenarioCamera bounds={bounds} cameraPreset={cameraPreset} cameraAdjusting={cameraAdjusting} /><Arena /><Ice hideZoneLines={definition.ui?.hideZoneLines === true || definition.ageBand === 'U9'} /><Goal />
     <PlannedRoute route={route} />
     {frame.actors.map(actor => <Skater key={actor.id} frameRef={frameRef} actorKey={actor.id} colour={actor.team === 'home' ? '#0B1A33' : '#C9A24B'} number={JERSEY_NUMBERS[actor.id] || '8'} goalie={actor.role === 'goalie'} selected={actor.id === moveActorId} />)}
     <PuckHalo puck={frame.puck} /><Puck frameRef={frameRef} />
     {frame.actors.map(actor => <ActorChip key={actor.id} actor={actor} labelledActors={labelledActors} movable={movable && actor.id === moveActorId} />)}
-    {targets.map((target, index) => <TargetMarker key={target.id} target={target} index={index} targets={targets} actors={frame.actors} puck={frame.puck} labelledActors={labelledActors} onTarget={onTarget} />)}
-    {tap && <CompletedIceTap key={typeof onRoutePoint === 'function' ? 'route' : `move-${moveActorId}`} onPoint={tap} bounds={bounds} />}
+    {targets.map((target, index) => <TargetMarker key={target.id} target={target} index={index} targets={targets} actors={frame.actors} puck={frame.puck} labelledActors={labelledActors} onTarget={onTarget} disabled={!answering || typeof onTarget !== 'function'} />)}
+    {tap && <CompletedIceTap key={typeof onRoutePoint === 'function' ? 'route' : `move-${moveActorId}`} onPoint={tap} bounds={bounds} cameraPreset={cameraPreset} />}
   </>;
 }
 
-function ReadScene({ state, definition, playing = false, time = 0, supportPoint = null, route = null, wide = false, targets = [], onTarget, moveActorId = null, onMove, onRoutePoint, onFailure }) {
+function ReadScene({ state, definition, playing = false, time = 0, supportPoint = null, route = null, wide = false, targets = [], onTarget, moveActorId = null, onMove, onRoutePoint, onFailure, cameraPreset = 'broadcast', cameraAdjusting = false }) {
   const previous = useRef(null);
   const frameRef = useRef(null);
   const lossCleanup = useRef(null);
@@ -223,11 +209,11 @@ function ReadScene({ state, definition, playing = false, time = 0, supportPoint 
   useEffect(() => () => { lossCleanup.current?.(); lossCleanup.current = null; }, []);
   const bounds = useMemo(() => getReadSceneBounds(definition, { supportPoint, route, wide }), [definition, supportPoint, route, wide]);
   return <div className="rs-scene3d" role="group" aria-label={`${definition.ageBand} connected read. Three-dimensional rink. Navy players attack; gold players defend.`}>
-    <Canvas orthographic frameloop="demand" aria-label="Hockey play with labelled players, puck and net" style={{ touchAction: 'pan-y' }} shadows={{ type: THREE.PCFShadowMap }} dpr={[1, 1.5]}
+    <Canvas orthographic frameloop="demand" aria-label={cameraAdjusting ? 'Adjust hockey camera. Drag or use arrow keys to rotate; pinch, scroll or use plus and minus to zoom.' : 'Hockey play with labelled players, puck and net'} style={{ touchAction: cameraAdjusting ? 'none' : 'pan-y' }} shadows={{ type: THREE.PCFShadowMap }} dpr={[1, 1.5]}
       camera={{ position: [16, 28, -8], left: -20, right: 20, top: 20, bottom: -20, near: .1, far: 160 }}
       gl={{ antialias: true, powerPreference: 'high-performance', alpha: false }} fallback="This browser cannot display the 3D rink. Choose Tactical board to continue."
       onCreated={({ gl }) => { lossCleanup.current?.(); lossCleanup.current = watchWebglContextLoss(gl.domElement, fail); }}>
-      <SceneContents {...{ frame, frameRef, bounds, definition, targets, onTarget, moveActorId, onMove, onRoutePoint, route, playing }} />
+      <SceneContents {...{ frame, frameRef, bounds, definition, targets, onTarget, moveActorId, onMove, onRoutePoint, route, playing, cameraPreset, cameraAdjusting }} />
     </Canvas>
   </div>;
 }

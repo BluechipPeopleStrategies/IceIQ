@@ -22,7 +22,7 @@
 // --assets-only refreshes illustration paint without rewriting the manifest.
 
 import sharp from "sharp";
-import { mkdirSync, writeFileSync } from "fs";
+import { mkdirSync, readFileSync, writeFileSync } from "fs";
 import { dirname, join } from "path";
 import { fileURLToPath } from "url";
 
@@ -30,12 +30,18 @@ const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 const OUT_DIR = join(ROOT, "public", "assets", "scenes-u11");
 const MANIFEST = join(ROOT, "src", "data", "scene-manifest.json");
 const ASSETS_ONLY = process.argv.includes("--assets-only");
+const EQUIPMENT_IMAGES = Object.fromEntries(
+  ["skater-navy", "skater-gold", "goalie-navy", "goalie-gold"].map((id) => [
+    id,
+    `data:image/png;base64,${readFileSync(join(ROOT, "public", "assets", "characters", "top-down-v2", `${id}.png`)).toString("base64")}`,
+  ])
+);
 
 // ── palette (from RinkReadsRink.jsx + shared.jsx) ────────────────────
 const P = {
-  ice: "#EFF6F7", iceEdge: "#C9A24B",
-  boards: "#0B1A33", red: "#CC1F2B", blue: "#185FA5",
-  creaseFill: "rgba(55,138,221,0.18)", creaseLine: "#378ADD",
+  ice: "#F7FCFF", iceEdge: "#C6DEEC",
+  boards: "#0B1A33", red: "#D3233E", blue: "#1E63B5",
+  creaseFill: "#C5E2F5", creaseLine: "#D3233E",
   yFill: "#C9A24B", yEdge: "#854F0B", yText: "#0B1A33",
   bFill: "#0B1A33", bEdge: "#061123", bText: "#ffffff",
   puck: "#111111", glow: "#FC4C02",
@@ -58,7 +64,7 @@ function rink() {
   s.push(`<clipPath id="rk"><rect x="3" y="3" width="594" height="294" rx="52"/></clipPath>`);
   s.push(`<g clip-path="url(#rk)">`);
   s.push(`<rect x="0" y="0" width="600" height="300" fill="url(#iceLight)"/>`);
-  s.push(`<g fill="none" stroke="#5B6675" stroke-width="0.45" opacity="0.09">`);
+  s.push(`<g fill="none" stroke="#6B99B8" stroke-width="0.45" opacity="0.06">`);
   for (let i = 0; i < 24; i++) {
     const x = (i * 83) % 600, y = (i * 47) % 300;
     s.push(`<path d="M${x},${y}q12,-4 27,2"/>`);
@@ -93,38 +99,17 @@ function rink() {
 // Decorative paint shared by every scene. None of these marks uses lane/open
 // coordinates: answer overlays remain exclusively in the untouched manifest.
 function artDefs() {
-  return `<linearGradient id="icePaint" x1="0" y1="0" x2="0.15" y2="1"><stop stop-color="#FFFFFF"/><stop offset=".5" stop-color="#EFF6F7"/><stop offset="1" stop-color="#D5E5EB"/></linearGradient>
-  <radialGradient id="iceLight" cx=".48" cy=".2" r=".75"><stop stop-color="#FFFFFF" stop-opacity=".65"/><stop offset="1" stop-color="#FFFFFF" stop-opacity="0"/></radialGradient>
-  <linearGradient id="goldJersey" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#F3D88D"/><stop offset=".5" stop-color="#C9A24B"/><stop offset="1" stop-color="#916A2F"/></linearGradient>
-  <linearGradient id="navyJersey" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#607D9D"/><stop offset=".48" stop-color="#294363"/><stop offset="1" stop-color="#0B1A33"/></linearGradient>
-  <linearGradient id="helmetPaint" x1="0" y1="0" x2=".7" y2="1"><stop stop-color="#71869A"/><stop offset=".4" stop-color="#23384E"/><stop offset="1" stop-color="#071322"/></linearGradient>
-  <linearGradient id="padPaint" x1="0" y1="0" x2="1" y2=".25"><stop stop-color="#FFFDF7"/><stop offset=".6" stop-color="#E8ECEA"/><stop offset="1" stop-color="#A0AFB9"/></linearGradient>
-  <pattern id="netMesh" width="4" height="4" patternUnits="userSpaceOnUse"><rect width="4" height="4" fill="#F5EFE6"/><path d="M0 0h4v4" fill="none" stroke="#7B8792" stroke-width=".4"/></pattern>`;
+  return `<linearGradient id="icePaint" x1="0" y1="0" x2="0.15" y2="1"><stop stop-color="#FFFFFF"/><stop offset=".5" stop-color="#F7FCFF"/><stop offset="1" stop-color="#EAF5FC"/></linearGradient>
+  <radialGradient id="iceLight" cx=".48" cy=".2" r=".75"><stop stop-color="#FFFFFF" stop-opacity=".35"/><stop offset="1" stop-color="#FFFFFF" stop-opacity="0"/></radialGradient>
+  <pattern id="netMesh" width="4" height="4" patternUnits="userSpaceOnUse"><rect width="4" height="4" fill="#FFFFFF"/><path d="M0 0h4v4" fill="none" stroke="#7B8792" stroke-width=".4"/></pattern>`;
 }
 
-// A full helmet/jersey/pad figure inside the existing marker footprint. The
-// authored stick remains separate and unchanged; this adds no new stick cue.
+// Shared overhead body equipment inside the existing marker footprint. The
+// source faces up, so the existing +90 rotation aligns it with authored facing.
+// The authored stick remains separate and unchanged; no pose is inferred.
 function hockeyFigure(a, r) {
-  const gold = a.team === "y", trim = gold ? "#142744" : "#D9B765";
-  const jersey = `url(#${gold ? "gold" : "navy"}Jersey)`;
-  const gear = a.goalie
-    ? `<rect x="-6" y="1.5" width="5" height="6.5" rx="1" fill="url(#padPaint)" stroke="#334554" stroke-width=".5"/><rect x="1" y="1.5" width="5" height="6.5" rx="1" fill="url(#padPaint)" stroke="#334554" stroke-width=".5"/><path d="M-5.3 3h3.6m3.4 0h3.6m-10.6 2h3.6m3.4 0h3.6" stroke="${trim}" stroke-width=".8"/>`
-    : `<path d="M-2.6 2.5l-.6 4m5.8-4 .6 4" stroke="#061123" stroke-width="3.2"/><path d="M-3 4.3v1.3m6-1.3v1.3" stroke="${trim}" stroke-width="2.5"/><path d="M-5.2 7h3.6m3.2 0h3.6" stroke="#061123" stroke-width="2.1"/><path d="M-5.4 8h3.8m3.2 0h3.8" stroke="#91A2AD" stroke-width=".6"/>`;
-  return `<g transform="translate(${a.x} ${a.y}) rotate(${(a.facing ?? 0) + 90}) scale(${r / 11.5})" stroke-linecap="round" stroke-linejoin="round">
-    <ellipse cx="0" cy="6" rx="8.4" ry="2.4" fill="#061123" opacity=".2"/>
-    ${gear}
-    <path d="M-4.2-2.8Q-6.5-2.4-7.8 1.5L-6 3-3-.3M4.2-2.8Q6.5-2.4 7.8 1.5L6 3 3-.3" fill="${jersey}" stroke="#0B1A33" stroke-width=".6"/>
-    <path d="M-7.3 .1-5.3 1.2m12.6-1.1-2 1.1" stroke="${trim}" stroke-width="1.1"/>
-    <path d="M-4.3-3Q0-4.2 4.3-3L4.8 3Q0 4.8-4.8 3Z" fill="${jersey}" stroke="#061123" stroke-width=".6"/>
-    <path d="M-4.4 2Q0 3.2 4.4 2" fill="none" stroke="${trim}" stroke-width="1.1"/>
-    <path d="M-3.3-2Q0-2.6 3.3-2" fill="none" stroke="#FFFFFF" opacity=".3" stroke-width=".55"/>
-    <ellipse cx="-6.8" cy="2" rx="1.6" ry="1.4" fill="${a.goalie ? 'url(#padPaint)' : '#14263B'}" stroke="${trim}" stroke-width=".5"/>
-    <ellipse cx="6.8" cy="2" rx="1.6" ry="1.4" fill="${a.goalie ? 'url(#padPaint)' : '#14263B'}" stroke="${trim}" stroke-width=".5"/>
-    <g transform="translate(0 -1.2)"><ellipse cx="0" cy="-5.1" rx="3.5" ry="3.1" fill="url(#helmetPaint)" stroke="#061123" stroke-width=".6"/>
-    <path d="M-2.7-5.7Q-2.1-7.3 .6-7.3" fill="none" stroke="#B5C6D0" stroke-width=".6"/>
-    <path d="M-2.4-4.9Q0-4.1 2.4-4.9L1.9-2.6Q0-1.5-1.9-2.6Z" fill="${a.goalie ? '#F5EFE6' : '#EAC3A5'}" stroke="#22374A" stroke-width=".4"/>
-    <path d="M-2.4-4.8h4.8m-4.5 1.3h4.2m-3.3-1.3.2 2.6m2-2.6-.2 2.6" fill="none" stroke="#7F97A7" stroke-width=".4"/></g>
-  </g>`;
+  const id = `${a.goalie ? "goalie" : "skater"}-${a.team === "y" ? "gold" : "navy"}`;
+  return `<g transform="translate(${a.x} ${a.y}) rotate(${(a.facing ?? 0) + 90}) scale(${r / 11.5})"><image href="${EQUIPMENT_IMAGES[id]}" x="-11.5" y="-11.5" width="23" height="23" preserveAspectRatio="xMidYMid meet"/></g>`;
 }
 
 // ── actors ───────────────────────────────────────────────────────────

@@ -21,7 +21,7 @@ export default function ReadSequenceBoard({ view, onViewChange, fallbackBoard, .
   const show3d = view === '3d' && !failed;
   const carrier = scene.state.actors.find(actor => actor.id === scene.state.puck.owner);
   const carrierName = carrier?.label || carrier?.name || carrier?.id;
-  const possession = carrierName === 'YOU' ? 'You have the puck.' : carrierName ? `${carrierName} has the puck.` : 'No player has the puck.';
+  const possession = carrierName === 'YOU' ? 'You have the puck.' : carrierName ? `${carrierName} has the puck.` : scene.playing ? 'Watch the puck as the play continues.' : 'The puck is loose. No player has possession.';
 
   return <div className="rs-visual-board" aria-describedby={descriptionId}>
     <div className="rs-view-bar">

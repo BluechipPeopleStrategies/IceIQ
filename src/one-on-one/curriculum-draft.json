@@ -47,7 +47,7 @@
         {
           "id": "practice-draft-u7-look-first-mc",
           "type": "mc",
-          "sit": "Your teammate is ready to pass to YOU. What should you do first?",
+          "sit": "Your teammate is ready to pass to you. What should you do first?",
           "opts": [
             "Look around for the other player.",
             "Keep watching only the puck."
@@ -65,7 +65,8 @@
                 "x": 12,
                 "y": 0,
                 "label": "YOU",
-                "hasPuck": false
+                "hasPuck": false,
+                "facing": -2.462799869682609
               },
               {
                 "id": "T",
@@ -74,7 +75,8 @@
                 "x": 8,
                 "y": -3,
                 "label": "",
-                "hasPuck": true
+                "hasPuck": true,
+                "facing": 0
               },
               {
                 "id": "D",
@@ -83,10 +85,11 @@
                 "x": 15,
                 "y": 3,
                 "label": "",
-                "hasPuck": false
+                "hasPuck": false,
+                "facing": -2.4069389806078125
               }
             ],
-            "caption": "Your teammate has the puck. The other player is beside you.",
+            "caption": "Your teammate has the puck. Another player is close to you.",
             "arrows": [],
             "coordinateSystem": "rink-centred-metres",
             "presentation": "authored-static-draft",
@@ -104,7 +107,7 @@
           "type": "tf",
           "sit": "Looking around before the pass helps you notice the other player.",
           "ok": true,
-          "why": "The other player is beside YOU. A look before receiving helps you know they are there.",
+          "why": "The other player is beside you. A look before receiving helps you know they are there.",
           "tip": "Find one player near you.",
           "visual": {
             "view": "half-right",
@@ -116,7 +119,8 @@
                 "x": 12,
                 "y": 0,
                 "label": "YOU",
-                "hasPuck": false
+                "hasPuck": false,
+                "facing": -2.462799869682609
               },
               {
                 "id": "T",
@@ -125,7 +129,8 @@
                 "x": 8,
                 "y": -3,
                 "label": "",
-                "hasPuck": true
+                "hasPuck": true,
+                "facing": 0
               },
               {
                 "id": "D",
@@ -134,10 +139,11 @@
                 "x": 15,
                 "y": 3,
                 "label": "",
-                "hasPuck": false
+                "hasPuck": false,
+                "facing": -2.4069389806078125
               }
             ],
-            "caption": "Your teammate has the puck. The other player is beside you.",
+            "caption": "Your teammate has the puck. Another player is close to you.",
             "arrows": [],
             "coordinateSystem": "rink-centred-metres",
             "presentation": "authored-static-draft",
@@ -181,12 +187,12 @@
           "type": "mc",
           "sit": "After looking around, which pass has a clear path?",
           "opts": [
-            "Pass to the lower teammate.",
-            "Pass to the upper teammate.",
-            "Wait for the lower pass to open."
+            "Pass to the teammate whose path is blocked.",
+            "Pass to the teammate with nobody in the way.",
+            "Wait for the blocked pass to open."
           ],
           "ok": 1,
-          "why": "The upper path is clear. The other player is directly on the path to the lower teammate.",
+          "why": "One teammate has a clear pass path. The other player is directly on the path to your other teammate.",
           "tip": "Look at the path too.",
           "visual": {
             "view": "half-right",
@@ -198,7 +204,8 @@
                 "x": 11,
                 "y": 0,
                 "label": "YOU",
-                "hasPuck": true
+                "hasPuck": true,
+                "facing": 0
               },
               {
                 "id": "TOP",
@@ -207,7 +214,8 @@
                 "x": 18,
                 "y": -5,
                 "label": "",
-                "hasPuck": false
+                "hasPuck": false,
+                "facing": 2.392448028983776
               },
               {
                 "id": "BOTTOM",
@@ -216,7 +224,8 @@
                 "x": 18,
                 "y": 5,
                 "label": "",
-                "hasPuck": false
+                "hasPuck": false,
+                "facing": -2.5066796320948272
               },
               {
                 "id": "D",
@@ -225,7 +234,8 @@
                 "x": 14.5,
                 "y": 2.5,
                 "label": "",
-                "hasPuck": false
+                "hasPuck": false,
+                "facing": -2.486670721584594
               },
               {
                 "id": "G",
@@ -234,10 +244,11 @@
                 "x": 25,
                 "y": 0,
                 "label": "",
-                "hasPuck": false
+                "hasPuck": false,
+                "facing": 3.0970068364610928
               }
             ],
-            "caption": "One player stands between YOU and the lower teammate.",
+            "caption": "One pass path is blocked by the other player. The other teammate has a clear path from you.",
             "arrows": [],
             "coordinateSystem": "rink-centred-metres",
             "presentation": "authored-static-draft",
@@ -253,7 +264,7 @@
         {
           "id": "practice-draft-u9-find-clear-pass-tf",
           "type": "tf",
-          "sit": "The lower teammate is the best choice because nobody stands right beside them.",
+          "sit": "A teammate with space to stand is the best choice even if another player blocks the pass.",
           "ok": false,
           "why": "Their skates have space, but the pass would go through the other player.",
           "tip": "Open player and open path.",
@@ -267,7 +278,8 @@
                 "x": 11,
                 "y": 0,
                 "label": "YOU",
-                "hasPuck": true
+                "hasPuck": true,
+                "facing": 0
               },
               {
                 "id": "TOP",
@@ -276,7 +288,8 @@
                 "x": 18,
                 "y": -5,
                 "label": "",
-                "hasPuck": false
+                "hasPuck": false,
+                "facing": 2.392448028983776
               },
               {
                 "id": "BOTTOM",
@@ -285,7 +298,8 @@
                 "x": 18,
                 "y": 5,
                 "label": "",
-                "hasPuck": false
+                "hasPuck": false,
+                "facing": -2.5066796320948272
               },
               {
                 "id": "D",
@@ -294,7 +308,8 @@
                 "x": 14.5,
                 "y": 2.5,
                 "label": "",
-                "hasPuck": false
+                "hasPuck": false,
+                "facing": -2.486670721584594
               },
               {
                 "id": "G",
@@ -303,10 +318,11 @@
                 "x": 25,
                 "y": 0,
                 "label": "",
-                "hasPuck": false
+                "hasPuck": false,
+                "facing": 3.0970068364610928
               }
             ],
-            "caption": "One player stands between YOU and the lower teammate.",
+            "caption": "One pass path is blocked by the other player. The other teammate has a clear path from you.",
             "arrows": [],
             "coordinateSystem": "rink-centred-metres",
             "presentation": "authored-static-draft",
@@ -348,15 +364,15 @@
         {
           "id": "practice-draft-u11-check-both-sides-mc",
           "type": "mc",
-          "sit": "YOU wants a clear pass. What does checking both sides reveal?",
+          "sit": "You want a clear pass. What does checking both sides reveal?",
           "opts": [
             "F2 is the safest choice because the pass is shorter.",
             "D1 leaves no pass to either teammate.",
-            "F3 has a clear receiving lane below YOU.",
-            "The near-side pass is worth waiting for instead."
+            "F3 has a clear receiving lane from you.",
+            "The pass to F2 is worth waiting for instead."
           ],
           "ok": 2,
-          "why": "D1 blocks F2. The lower lane to F3 is clear, so checking both sides changes the decision.",
+          "why": "D1 blocks F2. The lane to F3 is clear, so checking both sides changes the decision.",
           "tip": "Scan past the first jersey.",
           "visual": {
             "view": "half-right",
@@ -368,7 +384,8 @@
                 "x": 14,
                 "y": 0,
                 "label": "YOU",
-                "hasPuck": true
+                "hasPuck": true,
+                "facing": 0
               },
               {
                 "id": "F2",
@@ -377,7 +394,8 @@
                 "x": 19,
                 "y": -3,
                 "label": "F2",
-                "hasPuck": false
+                "hasPuck": false,
+                "facing": 2.411546860702875
               },
               {
                 "id": "F3",
@@ -386,7 +404,8 @@
                 "x": 18,
                 "y": 6,
                 "label": "F3",
-                "hasPuck": false
+                "hasPuck": false,
+                "facing": -2.0763269428514306
               },
               {
                 "id": "D1",
@@ -395,7 +414,8 @@
                 "x": 16.5,
                 "y": -1.5,
                 "label": "D1",
-                "hasPuck": false
+                "hasPuck": false,
+                "facing": 2.1955788732965065
               },
               {
                 "id": "G",
@@ -404,10 +424,11 @@
                 "x": 25,
                 "y": 0,
                 "label": "",
-                "hasPuck": false
+                "hasPuck": false,
+                "facing": 3.0836575599663765
               }
             ],
-            "caption": "F2 is above YOU; F3 is below. D1 stands in the F2 pass lane.",
+            "caption": "D1 blocks your pass to F2. Your pass to F3 has a clear path.",
             "arrows": [],
             "coordinateSystem": "rink-centred-metres",
             "presentation": "authored-static-draft",
@@ -423,7 +444,7 @@
         {
           "id": "practice-draft-u11-check-both-sides-tf",
           "type": "tf",
-          "sit": "A defender between YOU and a teammate can make that pass unavailable.",
+          "sit": "A defender between you and a teammate can make that pass unavailable.",
           "ok": true,
           "why": "D1 stands on F2’s lane. A scan must find pressure as well as teammates.",
           "tip": "Find the defender in the lane.",
@@ -437,7 +458,8 @@
                 "x": 14,
                 "y": 0,
                 "label": "YOU",
-                "hasPuck": true
+                "hasPuck": true,
+                "facing": 0
               },
               {
                 "id": "F2",
@@ -446,7 +468,8 @@
                 "x": 19,
                 "y": -3,
                 "label": "F2",
-                "hasPuck": false
+                "hasPuck": false,
+                "facing": 2.411546860702875
               },
               {
                 "id": "F3",
@@ -455,7 +478,8 @@
                 "x": 18,
                 "y": 6,
                 "label": "F3",
-                "hasPuck": false
+                "hasPuck": false,
+                "facing": -2.0763269428514306
               },
               {
                 "id": "D1",
@@ -464,7 +488,8 @@
                 "x": 16.5,
                 "y": -1.5,
                 "label": "D1",
-                "hasPuck": false
+                "hasPuck": false,
+                "facing": 2.1955788732965065
               },
               {
                 "id": "G",
@@ -473,10 +498,11 @@
                 "x": 25,
                 "y": 0,
                 "label": "",
-                "hasPuck": false
+                "hasPuck": false,
+                "facing": 3.0836575599663765
               }
             ],
-            "caption": "F2 is above YOU; F3 is below. D1 stands in the F2 pass lane.",
+            "caption": "D1 blocks your pass to F2. Your pass to F3 has a clear path.",
             "arrows": [],
             "coordinateSystem": "rink-centred-metres",
             "presentation": "authored-static-draft",
@@ -518,12 +544,12 @@
         {
           "id": "practice-draft-u13-refresh-picture-mc",
           "type": "mc",
-          "sit": "YOU planned to pass to F3 before D1 moved. Which pass is clear now?",
+          "sit": "You planned to pass to F3 before D1 moved. Which pass is clear now?",
           "opts": [
             "Keep the original pass to F3.",
-            "Pass to F2 above YOU.",
+            "Pass to F2 through the clear lane.",
             "Put the puck into the middle between the teammates.",
-            "Hold the puck and wait for the original lower pass."
+            "Hold the puck and wait for the original pass to F3."
           ],
           "ok": 1,
           "why": "D1 now occupies F3’s lane. F2’s lane is clear. Use the current picture rather than protecting the first plan.",
@@ -538,7 +564,8 @@
                 "x": 11,
                 "y": 0,
                 "label": "YOU",
-                "hasPuck": true
+                "hasPuck": true,
+                "facing": 0
               },
               {
                 "id": "F2",
@@ -547,7 +574,8 @@
                 "x": 19,
                 "y": -6,
                 "label": "F2",
-                "hasPuck": false
+                "hasPuck": false,
+                "facing": 2.3871124697553876
               },
               {
                 "id": "F3",
@@ -556,7 +584,8 @@
                 "x": 19,
                 "y": 6,
                 "label": "F3",
-                "hasPuck": false
+                "hasPuck": false,
+                "facing": -2.4827289938697534
               },
               {
                 "id": "D1",
@@ -565,7 +594,8 @@
                 "x": 15,
                 "y": 3,
                 "label": "D1",
-                "hasPuck": false
+                "hasPuck": false,
+                "facing": -2.462799869682609
               },
               {
                 "id": "G",
@@ -574,10 +604,11 @@
                 "x": 25,
                 "y": 0,
                 "label": "",
-                "hasPuck": false
+                "hasPuck": false,
+                "facing": 3.0970068364610928
               }
             ],
-            "caption": "The arrow shows D1’s move already completed. Players show the current moment.",
+            "caption": "D1 has moved into F3’s pass lane. The arrow shows the completed move.",
             "arrows": [
               {
                 "from": [
@@ -607,7 +638,7 @@
           "type": "tf",
           "sit": "The current position of D1 is a reason to update an earlier passing plan.",
           "ok": true,
-          "why": "D1 has moved into the lower lane. The original plan no longer matches the visible board.",
+          "why": "D1 has moved into F3’s lane. The original plan no longer matches the visible rink.",
           "tip": "Update the read, then act.",
           "visual": {
             "view": "half-right",
@@ -619,7 +650,8 @@
                 "x": 11,
                 "y": 0,
                 "label": "YOU",
-                "hasPuck": true
+                "hasPuck": true,
+                "facing": 0
               },
               {
                 "id": "F2",
@@ -628,7 +660,8 @@
                 "x": 19,
                 "y": -6,
                 "label": "F2",
-                "hasPuck": false
+                "hasPuck": false,
+                "facing": 2.3871124697553876
               },
               {
                 "id": "F3",
@@ -637,7 +670,8 @@
                 "x": 19,
                 "y": 6,
                 "label": "F3",
-                "hasPuck": false
+                "hasPuck": false,
+                "facing": -2.4827289938697534
               },
               {
                 "id": "D1",
@@ -646,7 +680,8 @@
                 "x": 15,
                 "y": 3,
                 "label": "D1",
-                "hasPuck": false
+                "hasPuck": false,
+                "facing": -2.462799869682609
               },
               {
                 "id": "G",
@@ -655,10 +690,11 @@
                 "x": 25,
                 "y": 0,
                 "label": "",
-                "hasPuck": false
+                "hasPuck": false,
+                "facing": 3.0970068364610928
               }
             ],
-            "caption": "The arrow shows D1’s move already completed. Players show the current moment.",
+            "caption": "D1 has moved into F3’s pass lane. The arrow shows the completed move.",
             "arrows": [
               {
                 "from": [
@@ -714,13 +750,13 @@
           "type": "mc",
           "sit": "The goal is to keep possession through a clear pass. Which outlet does a full scan reveal?",
           "opts": [
-            "Try F2 because F2 is farther forward.",
+            "Try F2 because F2 is closer to the attacking net.",
             "Try F3 because the pass changes sides.",
             "Push the puck through the middle past A1.",
-            "Use D2 behind YOU, then rebuild."
+            "Use D2 farther from the attacking net, then rebuild."
           ],
           "ok": 3,
-          "why": "Both forward lanes contain opponents. D2’s lane is clear and meets the stated possession objective.",
+          "why": "Both lanes toward the attacking net contain opponents. D2’s lane is clear and meets the stated possession objective.",
           "tip": "A reset can be the next good read.",
           "visual": {
             "view": "half-right",
@@ -732,7 +768,8 @@
                 "x": 15,
                 "y": 0,
                 "label": "YOU",
-                "hasPuck": true
+                "hasPuck": true,
+                "facing": 0
               },
               {
                 "id": "F2",
@@ -741,7 +778,8 @@
                 "x": 22,
                 "y": 4,
                 "label": "F2",
-                "hasPuck": false
+                "hasPuck": false,
+                "facing": -2.6235241251330725
               },
               {
                 "id": "F3",
@@ -750,7 +788,8 @@
                 "x": 20,
                 "y": -6,
                 "label": "F3",
-                "hasPuck": false
+                "hasPuck": false,
+                "facing": 2.1170064082233475
               },
               {
                 "id": "D2",
@@ -759,7 +798,8 @@
                 "x": 9,
                 "y": 5,
                 "label": "D2",
-                "hasPuck": false
+                "hasPuck": false,
+                "facing": -0.5632087577297507
               },
               {
                 "id": "A1",
@@ -768,7 +808,8 @@
                 "x": 18.5,
                 "y": 2,
                 "label": "A1",
-                "hasPuck": false
+                "hasPuck": false,
+                "facing": -2.6250349718713237
               },
               {
                 "id": "A2",
@@ -777,7 +818,8 @@
                 "x": 17.5,
                 "y": -3,
                 "label": "A2",
-                "hasPuck": false
+                "hasPuck": false,
+                "facing": 1.967569211637085
               },
               {
                 "id": "G",
@@ -786,10 +828,11 @@
                 "x": 25,
                 "y": 0,
                 "label": "",
-                "hasPuck": false
+                "hasPuck": false,
+                "facing": 3.077237201942531
               }
             ],
-            "caption": "A1 blocks F2; A2 blocks F3. D2 behind the puck has a clear lane.",
+            "caption": "A1 blocks F2’s lane and A2 blocks F3’s. D2 offers a clear reset pass away from the attacking net.",
             "arrows": [],
             "coordinateSystem": "rink-centred-metres",
             "presentation": "authored-static-draft",
@@ -805,10 +848,10 @@
         {
           "id": "practice-draft-u15-find-reset-tf",
           "type": "tf",
-          "sit": "A teammate behind the puck can be the best outlet when the forward lanes are closed.",
+          "sit": "A teammate farther from the attacking net can be the best outlet when the lanes toward it are closed.",
           "ok": true,
-          "why": "D2 offers a clear pass while both forward routes are blocked. This does not guarantee the next play.",
-          "tip": "Scan behind as well as ahead.",
+          "why": "D2 offers a clear pass while both routes toward the attacking net are blocked. This does not guarantee the next play.",
+          "tip": "Look for a reset as well as a pass toward the net.",
           "visual": {
             "view": "half-right",
             "actors": [
@@ -819,7 +862,8 @@
                 "x": 15,
                 "y": 0,
                 "label": "YOU",
-                "hasPuck": true
+                "hasPuck": true,
+                "facing": 0
               },
               {
                 "id": "F2",
@@ -828,7 +872,8 @@
                 "x": 22,
                 "y": 4,
                 "label": "F2",
-                "hasPuck": false
+                "hasPuck": false,
+                "facing": -2.6235241251330725
               },
               {
                 "id": "F3",
@@ -837,7 +882,8 @@
                 "x": 20,
                 "y": -6,
                 "label": "F3",
-                "hasPuck": false
+                "hasPuck": false,
+                "facing": 2.1170064082233475
               },
               {
                 "id": "D2",
@@ -846,7 +892,8 @@
                 "x": 9,
                 "y": 5,
                 "label": "D2",
-                "hasPuck": false
+                "hasPuck": false,
+                "facing": -0.5632087577297507
               },
               {
                 "id": "A1",
@@ -855,7 +902,8 @@
                 "x": 18.5,
                 "y": 2,
                 "label": "A1",
-                "hasPuck": false
+                "hasPuck": false,
+                "facing": -2.6250349718713237
               },
               {
                 "id": "A2",
@@ -864,7 +912,8 @@
                 "x": 17.5,
                 "y": -3,
                 "label": "A2",
-                "hasPuck": false
+                "hasPuck": false,
+                "facing": 1.967569211637085
               },
               {
                 "id": "G",
@@ -873,10 +922,11 @@
                 "x": 25,
                 "y": 0,
                 "label": "",
-                "hasPuck": false
+                "hasPuck": false,
+                "facing": 3.077237201942531
               }
             ],
-            "caption": "A1 blocks F2; A2 blocks F3. D2 behind the puck has a clear lane.",
+            "caption": "A1 blocks F2’s lane and A2 blocks F3’s. D2 offers a clear reset pass away from the attacking net.",
             "arrows": [],
             "coordinateSystem": "rink-centred-metres",
             "presentation": "authored-static-draft",
@@ -922,7 +972,7 @@
           "opts": [
             "F2: the pass line is clear despite the close marker.",
             "F3: its lane is clear and the receiver is unmarked.",
-            "D2: the outlet behind YOU is worth using.",
+            "D2: the reset outlet away from the attacking net is worth using.",
             "The middle: push the puck past A3 toward the net."
           ],
           "ok": 1,
@@ -938,7 +988,8 @@
                 "x": 13,
                 "y": 0,
                 "label": "YOU",
-                "hasPuck": true
+                "hasPuck": true,
+                "facing": 0
               },
               {
                 "id": "F2",
@@ -947,7 +998,8 @@
                 "x": 21,
                 "y": -5,
                 "label": "F2",
-                "hasPuck": false
+                "hasPuck": false,
+                "facing": 2.4685963013618237
               },
               {
                 "id": "F3",
@@ -956,7 +1008,8 @@
                 "x": 21,
                 "y": 6,
                 "label": "F3",
-                "hasPuck": false
+                "hasPuck": false,
+                "facing": -2.4827289938697534
               },
               {
                 "id": "D2",
@@ -965,7 +1018,8 @@
                 "x": 8,
                 "y": -6,
                 "label": "D2",
-                "hasPuck": false
+                "hasPuck": false,
+                "facing": 0.8314704655879233
               },
               {
                 "id": "A1",
@@ -974,7 +1028,8 @@
                 "x": 21.6,
                 "y": -3.4,
                 "label": "A1",
-                "hasPuck": false
+                "hasPuck": false,
+                "facing": 2.6591776966533405
               },
               {
                 "id": "A2",
@@ -983,7 +1038,8 @@
                 "x": 10.5,
                 "y": -3,
                 "label": "A2",
-                "hasPuck": false
+                "hasPuck": false,
+                "facing": 0.7966971175690041
               },
               {
                 "id": "A3",
@@ -992,7 +1048,8 @@
                 "x": 18,
                 "y": 0,
                 "label": "A3",
-                "hasPuck": false
+                "hasPuck": false,
+                "facing": 2.9975962318809013
               },
               {
                 "id": "G",
@@ -1001,10 +1058,11 @@
                 "x": 25,
                 "y": 0,
                 "label": "",
-                "hasPuck": false
+                "hasPuck": false,
+                "facing": 3.0889141630259966
               }
             ],
-            "caption": "F2 has a clear line but a close marker. A2 blocks D2. F3 has lane and receiving space.",
+            "caption": "A1 is close to F2. A2 blocks D2’s pass lane. F3 has a clear lane and room to receive.",
             "arrows": [],
             "coordinateSystem": "rink-centred-metres",
             "presentation": "authored-static-draft",
@@ -1034,7 +1092,8 @@
                 "x": 13,
                 "y": 0,
                 "label": "YOU",
-                "hasPuck": true
+                "hasPuck": true,
+                "facing": 0
               },
               {
                 "id": "F2",
@@ -1043,7 +1102,8 @@
                 "x": 21,
                 "y": -5,
                 "label": "F2",
-                "hasPuck": false
+                "hasPuck": false,
+                "facing": 2.4685963013618237
               },
               {
                 "id": "F3",
@@ -1052,7 +1112,8 @@
                 "x": 21,
                 "y": 6,
                 "label": "F3",
-                "hasPuck": false
+                "hasPuck": false,
+                "facing": -2.4827289938697534
               },
               {
                 "id": "D2",
@@ -1061,7 +1122,8 @@
                 "x": 8,
                 "y": -6,
                 "label": "D2",
-                "hasPuck": false
+                "hasPuck": false,
+                "facing": 0.8314704655879233
               },
               {
                 "id": "A1",
@@ -1070,7 +1132,8 @@
                 "x": 21.6,
                 "y": -3.4,
                 "label": "A1",
-                "hasPuck": false
+                "hasPuck": false,
+                "facing": 2.6591776966533405
               },
               {
                 "id": "A2",
@@ -1079,7 +1142,8 @@
                 "x": 10.5,
                 "y": -3,
                 "label": "A2",
-                "hasPuck": false
+                "hasPuck": false,
+                "facing": 0.7966971175690041
               },
               {
                 "id": "A3",
@@ -1088,7 +1152,8 @@
                 "x": 18,
                 "y": 0,
                 "label": "A3",
-                "hasPuck": false
+                "hasPuck": false,
+                "facing": 2.9975962318809013
               },
               {
                 "id": "G",
@@ -1097,10 +1162,11 @@
                 "x": 25,
                 "y": 0,
                 "label": "",
-                "hasPuck": false
+                "hasPuck": false,
+                "facing": 3.0889141630259966
               }
             ],
-            "caption": "F2 has a clear line but a close marker. A2 blocks D2. F3 has lane and receiving space.",
+            "caption": "A1 is close to F2. A2 blocks D2’s pass lane. F3 has a clear lane and room to receive.",
             "arrows": [],
             "coordinateSystem": "rink-centred-metres",
             "presentation": "authored-static-draft",
@@ -1142,13 +1208,13 @@
         {
           "id": "practice-draft-u7-help-space-mc",
           "type": "mc",
-          "sit": "Where can YOU go to help?",
+          "sit": "Where can you go to help?",
           "opts": [
-            "Into the open ice below YOU.",
+            "Into open ice away from the puck.",
             "Right beside the teammate with the puck."
           ],
           "ok": 0,
-          "why": "The lower ice gives your teammate another place to pass. Crowding beside the puck puts you in the same space.",
+          "why": "Open ice gives your teammate another place to pass. Crowding beside the puck puts you in the same space.",
           "tip": "Find your own bit of ice.",
           "visual": {
             "view": "half-right",
@@ -1160,7 +1226,8 @@
                 "x": 13,
                 "y": 2,
                 "label": "YOU",
-                "hasPuck": false
+                "hasPuck": false,
+                "facing": -1.9957179191541725
               },
               {
                 "id": "T",
@@ -1169,7 +1236,8 @@
                 "x": 10,
                 "y": -3,
                 "label": "",
-                "hasPuck": true
+                "hasPuck": true,
+                "facing": 0
               },
               {
                 "id": "D",
@@ -1178,10 +1246,11 @@
                 "x": 14,
                 "y": -3,
                 "label": "",
-                "hasPuck": false
+                "hasPuck": false,
+                "facing": 2.9506154908388975
               }
             ],
-            "caption": "Your teammate has the puck. The lower ice is open.",
+            "caption": "Your teammate has the puck. There is open ice away from the puck and the other player.",
             "arrows": [],
             "coordinateSystem": "rink-centred-metres",
             "presentation": "authored-static-draft",
@@ -1211,7 +1280,8 @@
                 "x": 13,
                 "y": 2,
                 "label": "YOU",
-                "hasPuck": false
+                "hasPuck": false,
+                "facing": -1.9957179191541725
               },
               {
                 "id": "T",
@@ -1220,7 +1290,8 @@
                 "x": 10,
                 "y": -3,
                 "label": "",
-                "hasPuck": true
+                "hasPuck": true,
+                "facing": 0
               },
               {
                 "id": "D",
@@ -1229,10 +1300,11 @@
                 "x": 14,
                 "y": -3,
                 "label": "",
-                "hasPuck": false
+                "hasPuck": false,
+                "facing": 2.9506154908388975
               }
             ],
-            "caption": "Your teammate has the puck. The lower ice is open.",
+            "caption": "Your teammate has the puck. There is open ice away from the puck and the other player.",
             "arrows": [],
             "coordinateSystem": "rink-centred-metres",
             "presentation": "authored-static-draft",
@@ -1274,14 +1346,14 @@
         {
           "id": "practice-draft-u9-leave-shadow-mc",
           "type": "mc",
-          "sit": "The pass path to YOU is blocked. How can you offer a better choice?",
+          "sit": "The pass path to you are blocked. How can you offer a better choice?",
           "opts": [
             "Stay behind the other player and call louder.",
             "Skate right beside the puck carrier.",
-            "Move farther into the open ice below YOU."
+            "Move out of the blocked path into open ice."
           ],
           "ok": 2,
-          "why": "Moving lower changes the passing angle. Calling from the same spot does not remove the player blocking the path.",
+          "why": "Moving into a new lane changes the passing angle. Calling from the same spot does not remove the player blocking the path.",
           "tip": "Find a path the puck can use.",
           "visual": {
             "view": "half-right",
@@ -1293,7 +1365,8 @@
                 "x": 18,
                 "y": 1,
                 "label": "YOU",
-                "hasPuck": false
+                "hasPuck": false,
+                "facing": -2.6871296313257407
               },
               {
                 "id": "T",
@@ -1302,7 +1375,8 @@
                 "x": 10,
                 "y": -3,
                 "label": "",
-                "hasPuck": true
+                "hasPuck": true,
+                "facing": 0
               },
               {
                 "id": "D",
@@ -1311,10 +1385,11 @@
                 "x": 14,
                 "y": -1,
                 "label": "",
-                "hasPuck": false
+                "hasPuck": false,
+                "facing": -2.699505045681153
               }
             ],
-            "caption": "The other player is directly between the puck and YOU. Lower ice is open.",
+            "caption": "The other player is between you and the puck. Moving out of that blocked path can open a new passing angle.",
             "arrows": [],
             "coordinateSystem": "rink-centred-metres",
             "presentation": "authored-static-draft",
@@ -1332,7 +1407,7 @@
           "type": "tf",
           "sit": "A teammate can have room to stand while the pass to them is blocked.",
           "ok": true,
-          "why": "YOU has room, but another player is on the pass path. Both room and a clear path matter.",
+          "why": "You have room, but another player is on the pass path. Both room and a clear path matter.",
           "tip": "Check the whole path.",
           "visual": {
             "view": "half-right",
@@ -1344,7 +1419,8 @@
                 "x": 18,
                 "y": 1,
                 "label": "YOU",
-                "hasPuck": false
+                "hasPuck": false,
+                "facing": -2.6871296313257407
               },
               {
                 "id": "T",
@@ -1353,7 +1429,8 @@
                 "x": 10,
                 "y": -3,
                 "label": "",
-                "hasPuck": true
+                "hasPuck": true,
+                "facing": 0
               },
               {
                 "id": "D",
@@ -1362,10 +1439,11 @@
                 "x": 14,
                 "y": -1,
                 "label": "",
-                "hasPuck": false
+                "hasPuck": false,
+                "facing": -2.699505045681153
               }
             ],
-            "caption": "The other player is directly between the puck and YOU. Lower ice is open.",
+            "caption": "The other player is between you and the puck. Moving out of that blocked path can open a new passing angle.",
             "arrows": [],
             "coordinateSystem": "rink-centred-metres",
             "presentation": "authored-static-draft",
@@ -1407,15 +1485,15 @@
         {
           "id": "practice-draft-u11-change-angle-mc",
           "type": "mc",
-          "sit": "What adjustment makes YOU a clearer passing option?",
+          "sit": "What adjustment makes you a clearer passing option?",
           "opts": [
             "Hold still because your skates have room.",
-            "Move lower into open ice, changing the angle around D1.",
+            "Move into open ice away from D1, changing the passing angle.",
             "Move directly toward D1.",
             "Join F3 beside D2."
           ],
           "ok": 1,
-          "why": "Moving lower changes the lane around D1. Staying still or moving toward D1 keeps the problem; F3 already has pressure.",
+          "why": "Moving into open ice changes the lane around D1. Staying still or moving toward D1 keeps the problem; F3 already has pressure.",
           "tip": "Change the angle, not the volume.",
           "visual": {
             "view": "half-right",
@@ -1427,7 +1505,8 @@
                 "x": 17,
                 "y": 4,
                 "label": "YOU",
-                "hasPuck": false
+                "hasPuck": false,
+                "facing": -2.1279942977642845
               },
               {
                 "id": "F1",
@@ -1436,7 +1515,8 @@
                 "x": 12,
                 "y": -3,
                 "label": "F1",
-                "hasPuck": true
+                "hasPuck": true,
+                "facing": 0
               },
               {
                 "id": "F3",
@@ -1445,7 +1525,8 @@
                 "x": 20,
                 "y": -6,
                 "label": "F3",
-                "hasPuck": false
+                "hasPuck": false,
+                "facing": 2.668844044448406
               },
               {
                 "id": "D1",
@@ -1454,7 +1535,8 @@
                 "x": 14.5,
                 "y": 0.5,
                 "label": "D1",
-                "hasPuck": false
+                "hasPuck": false,
+                "facing": -2.0453426868085485
               },
               {
                 "id": "D2",
@@ -1463,7 +1545,8 @@
                 "x": 19,
                 "y": -5.4,
                 "label": "D2",
-                "hasPuck": false
+                "hasPuck": false,
+                "facing": 2.6806152652119675
               },
               {
                 "id": "G",
@@ -1472,10 +1555,11 @@
                 "x": 25,
                 "y": -1,
                 "label": "",
-                "hasPuck": false
+                "hasPuck": false,
+                "facing": -3.0238070574535
               }
             ],
-            "caption": "D1 blocks the pass to YOU. F3 is marked. Ice farther below YOU is open.",
+            "caption": "D1 blocks your pass from F1. D2 marks F3. There is open ice away from both defenders.",
             "arrows": [],
             "coordinateSystem": "rink-centred-metres",
             "presentation": "authored-static-draft",
@@ -1505,7 +1589,8 @@
                 "x": 17,
                 "y": 4,
                 "label": "YOU",
-                "hasPuck": false
+                "hasPuck": false,
+                "facing": -2.1279942977642845
               },
               {
                 "id": "F1",
@@ -1514,7 +1599,8 @@
                 "x": 12,
                 "y": -3,
                 "label": "F1",
-                "hasPuck": true
+                "hasPuck": true,
+                "facing": 0
               },
               {
                 "id": "F3",
@@ -1523,7 +1609,8 @@
                 "x": 20,
                 "y": -6,
                 "label": "F3",
-                "hasPuck": false
+                "hasPuck": false,
+                "facing": 2.668844044448406
               },
               {
                 "id": "D1",
@@ -1532,7 +1619,8 @@
                 "x": 14.5,
                 "y": 0.5,
                 "label": "D1",
-                "hasPuck": false
+                "hasPuck": false,
+                "facing": -2.0453426868085485
               },
               {
                 "id": "D2",
@@ -1541,7 +1629,8 @@
                 "x": 19,
                 "y": -5.4,
                 "label": "D2",
-                "hasPuck": false
+                "hasPuck": false,
+                "facing": 2.6806152652119675
               },
               {
                 "id": "G",
@@ -1550,10 +1639,11 @@
                 "x": 25,
                 "y": -1,
                 "label": "",
-                "hasPuck": false
+                "hasPuck": false,
+                "facing": -3.0238070574535
               }
             ],
-            "caption": "D1 blocks the pass to YOU. F3 is marked. Ice farther below YOU is open.",
+            "caption": "D1 blocks your pass from F1. D2 marks F3. There is open ice away from both defenders.",
             "arrows": [],
             "coordinateSystem": "rink-centred-metres",
             "presentation": "authored-static-draft",
@@ -1595,15 +1685,15 @@
         {
           "id": "practice-draft-u13-pass-reoffer-mc",
           "type": "mc",
-          "sit": "After passing to F1, which action offers a new forward return option?",
+          "sit": "After passing to F1, which action offers a new return option closer to the attacking net?",
           "opts": [
             "Stay at the old spot behind D1.",
             "Follow the puck onto F1.",
-            "Skate into the open lower ice ahead of YOU.",
+            "Skate into open ice toward the attacking net, away from D1.",
             "Stand beside the marked F3."
           ],
           "ok": 2,
-          "why": "The old lane contains D1. Moving forward on the lower side creates a new angle without crowding F1 or joining F3’s marker.",
+          "why": "The old lane contains D1. Moving toward the attacking net through open ice creates a new angle without crowding F1 or joining F3’s marker.",
           "tip": "After passing, become an option again.",
           "visual": {
             "view": "half-right",
@@ -1615,7 +1705,8 @@
                 "x": 12,
                 "y": 2,
                 "label": "YOU",
-                "hasPuck": false
+                "hasPuck": false,
+                "facing": -0.7239046670832077
               },
               {
                 "id": "F1",
@@ -1624,7 +1715,8 @@
                 "x": 16,
                 "y": -3,
                 "label": "F1",
-                "hasPuck": true
+                "hasPuck": true,
+                "facing": 0
               },
               {
                 "id": "F3",
@@ -1633,7 +1725,8 @@
                 "x": 21,
                 "y": -6,
                 "label": "F3",
-                "hasPuck": false
+                "hasPuck": false,
+                "facing": 2.411546860702875
               },
               {
                 "id": "D1",
@@ -1642,7 +1735,8 @@
                 "x": 14,
                 "y": -0.5,
                 "label": "D1",
-                "hasPuck": false
+                "hasPuck": false,
+                "facing": -0.5693131911006619
               },
               {
                 "id": "D2",
@@ -1651,7 +1745,8 @@
                 "x": 19.5,
                 "y": -5.1,
                 "label": "D2",
-                "hasPuck": false
+                "hasPuck": false,
+                "facing": 2.321459431752299
               },
               {
                 "id": "G",
@@ -1660,10 +1755,11 @@
                 "x": 25,
                 "y": -1,
                 "label": "",
-                "hasPuck": false
+                "hasPuck": false,
+                "facing": -2.9659223086133073
               }
             ],
-            "caption": "Your pass has reached F1. D1 blocks the old return lane. Lower ice ahead is open.",
+            "caption": "Your pass has reached F1. D1 covers the old return lane. Open ice away from D1 offers a new angle toward the attacking net.",
             "arrows": [
               {
                 "from": [
@@ -1691,9 +1787,9 @@
         {
           "id": "practice-draft-u13-pass-reoffer-tf",
           "type": "tf",
-          "sit": "After passing, YOU can help again by finding a new clear return angle.",
+          "sit": "After passing, you can help again by finding a new clear return angle.",
           "ok": true,
-          "why": "D1 covers your original position. Reoffering from lower open ice gives F1 a different option.",
+          "why": "D1 covers your original position. Reoffering from open ice away from D1 gives F1 a different option.",
           "tip": "Pass, look, and reoffer.",
           "visual": {
             "view": "half-right",
@@ -1705,7 +1801,8 @@
                 "x": 12,
                 "y": 2,
                 "label": "YOU",
-                "hasPuck": false
+                "hasPuck": false,
+                "facing": -0.7239046670832077
               },
               {
                 "id": "F1",
@@ -1714,7 +1811,8 @@
                 "x": 16,
                 "y": -3,
                 "label": "F1",
-                "hasPuck": true
+                "hasPuck": true,
+                "facing": 0
               },
               {
                 "id": "F3",
@@ -1723,7 +1821,8 @@
                 "x": 21,
                 "y": -6,
                 "label": "F3",
-                "hasPuck": false
+                "hasPuck": false,
+                "facing": 2.411546860702875
               },
               {
                 "id": "D1",
@@ -1732,7 +1831,8 @@
                 "x": 14,
                 "y": -0.5,
                 "label": "D1",
-                "hasPuck": false
+                "hasPuck": false,
+                "facing": -0.5693131911006619
               },
               {
                 "id": "D2",
@@ -1741,7 +1841,8 @@
                 "x": 19.5,
                 "y": -5.1,
                 "label": "D2",
-                "hasPuck": false
+                "hasPuck": false,
+                "facing": 2.321459431752299
               },
               {
                 "id": "G",
@@ -1750,10 +1851,11 @@
                 "x": 25,
                 "y": -1,
                 "label": "",
-                "hasPuck": false
+                "hasPuck": false,
+                "facing": -2.9659223086133073
               }
             ],
-            "caption": "Your pass has reached F1. D1 blocks the old return lane. Lower ice ahead is open.",
+            "caption": "Your pass has reached F1. D1 covers the old return lane. Open ice away from D1 offers a new angle toward the attacking net.",
             "arrows": [
               {
                 "from": [
@@ -1807,15 +1909,15 @@
         {
           "id": "practice-draft-u15-two-angles-mc",
           "type": "mc",
-          "sit": "F1 needs an outlet. What should YOU preserve here?",
+          "sit": "F1 needs an outlet. What should you preserve here?",
           "opts": [
-            "The separate lower angle with receiving space.",
+            "Your separate passing angle with receiving space.",
             "A spot next to F2 on the same pressured route.",
             "A spot behind D1 on the F2 lane.",
             "A spot beside F1 in the puck space."
           ],
           "ok": 0,
-          "why": "YOU provides a distinct clear outlet. Joining the upper route duplicates F2’s pressured option instead of helping F1 escape it.",
+          "why": "You provide a distinct clear outlet. Joining F2’s route duplicates that pressured option instead of helping F1 escape it.",
           "tip": "Different angles create different choices.",
           "visual": {
             "view": "half-right",
@@ -1827,7 +1929,8 @@
                 "x": 19,
                 "y": 6,
                 "label": "YOU",
-                "hasPuck": false
+                "hasPuck": false,
+                "facing": -2.20657787396789
               },
               {
                 "id": "F1",
@@ -1836,7 +1939,8 @@
                 "x": 14,
                 "y": 0,
                 "label": "F1",
-                "hasPuck": true
+                "hasPuck": true,
+                "facing": 0
               },
               {
                 "id": "F2",
@@ -1845,7 +1949,8 @@
                 "x": 20,
                 "y": -5,
                 "label": "F2",
-                "hasPuck": false
+                "hasPuck": false,
+                "facing": 2.301428892364348
               },
               {
                 "id": "D1",
@@ -1854,7 +1959,8 @@
                 "x": 17,
                 "y": -2.5,
                 "label": "D1",
-                "hasPuck": false
+                "hasPuck": false,
+                "facing": 2.1467149264132495
               },
               {
                 "id": "D2",
@@ -1863,7 +1969,8 @@
                 "x": 21,
                 "y": -4,
                 "label": "D2",
-                "hasPuck": false
+                "hasPuck": false,
+                "facing": 2.4896126806848144
               },
               {
                 "id": "G",
@@ -1872,10 +1979,11 @@
                 "x": 25,
                 "y": 0,
                 "label": "",
-                "hasPuck": false
+                "hasPuck": false,
+                "facing": 3.0836575599663765
               }
             ],
-            "caption": "F2 has upper-side pressure. YOU offers the clear lower route.",
+            "caption": "D1 and D2 pressure F2’s route. You offer F1 a separate, clear passing lane.",
             "arrows": [],
             "coordinateSystem": "rink-centred-metres",
             "presentation": "authored-static-draft",
@@ -1893,7 +2001,7 @@
           "type": "tf",
           "sit": "Two teammates on one covered route automatically create two usable options.",
           "ok": false,
-          "why": "A defender on that route can affect both. The lower angle helps by changing the lane, not just adding jerseys.",
+          "why": "A defender on that route can affect both. Your separate angle helps by changing the lane, not just adding jerseys.",
           "tip": "Count usable lanes, not jerseys.",
           "visual": {
             "view": "half-right",
@@ -1905,7 +2013,8 @@
                 "x": 19,
                 "y": 6,
                 "label": "YOU",
-                "hasPuck": false
+                "hasPuck": false,
+                "facing": -2.20657787396789
               },
               {
                 "id": "F1",
@@ -1914,7 +2023,8 @@
                 "x": 14,
                 "y": 0,
                 "label": "F1",
-                "hasPuck": true
+                "hasPuck": true,
+                "facing": 0
               },
               {
                 "id": "F2",
@@ -1923,7 +2033,8 @@
                 "x": 20,
                 "y": -5,
                 "label": "F2",
-                "hasPuck": false
+                "hasPuck": false,
+                "facing": 2.301428892364348
               },
               {
                 "id": "D1",
@@ -1932,7 +2043,8 @@
                 "x": 17,
                 "y": -2.5,
                 "label": "D1",
-                "hasPuck": false
+                "hasPuck": false,
+                "facing": 2.1467149264132495
               },
               {
                 "id": "D2",
@@ -1941,7 +2053,8 @@
                 "x": 21,
                 "y": -4,
                 "label": "D2",
-                "hasPuck": false
+                "hasPuck": false,
+                "facing": 2.4896126806848144
               },
               {
                 "id": "G",
@@ -1950,10 +2063,11 @@
                 "x": 25,
                 "y": 0,
                 "label": "",
-                "hasPuck": false
+                "hasPuck": false,
+                "facing": 3.0836575599663765
               }
             ],
-            "caption": "F2 has upper-side pressure. YOU offers the clear lower route.",
+            "caption": "D1 and D2 pressure F2’s route. You offer F1 a separate, clear passing lane.",
             "arrows": [],
             "coordinateSystem": "rink-centred-metres",
             "presentation": "authored-static-draft",
@@ -1999,11 +2113,11 @@
           "opts": [
             "Stay because this was the first planned receiving spot.",
             "Move beside F2 to support closer to the net.",
-            "Move lower to create a different line from F1.",
+            "Move into open ice away from D1 to create a different line from F1.",
             "Move toward D1 to try receiving in front of the blocker."
           ],
           "ok": 2,
-          "why": "D1 blocks the old line. Moving lower creates an angle away from that blocker; F2’s marked space is not the alternative F1 needs.",
+          "why": "D1 blocks the old line. Moving into open ice creates an angle away from that blocker; F2’s marked space is not the alternative F1 needs.",
           "tip": "Be open to the current route.",
           "visual": {
             "view": "half-right",
@@ -2015,7 +2129,8 @@
                 "x": 20,
                 "y": 2,
                 "label": "YOU",
-                "hasPuck": false
+                "hasPuck": false,
+                "facing": -2.4069389806078125
               },
               {
                 "id": "F1",
@@ -2024,7 +2139,8 @@
                 "x": 13,
                 "y": -4,
                 "label": "F1",
-                "hasPuck": true
+                "hasPuck": true,
+                "facing": 0
               },
               {
                 "id": "F2",
@@ -2033,7 +2149,8 @@
                 "x": 21,
                 "y": -6,
                 "label": "F2",
-                "hasPuck": false
+                "hasPuck": false,
+                "facing": 2.788469868040897
               },
               {
                 "id": "D1",
@@ -2042,7 +2159,8 @@
                 "x": 16.5,
                 "y": -1,
                 "label": "D1",
-                "hasPuck": false
+                "hasPuck": false,
+                "facing": -2.3724532199974746
               },
               {
                 "id": "D2",
@@ -2051,7 +2169,8 @@
                 "x": 20,
                 "y": -5.7,
                 "label": "D2",
-                "hasPuck": false
+                "hasPuck": false,
+                "facing": 2.778445643643617
               },
               {
                 "id": "G",
@@ -2060,10 +2179,11 @@
                 "x": 25,
                 "y": -1,
                 "label": "",
-                "hasPuck": false
+                "hasPuck": false,
+                "facing": -2.925042348613704
               }
             ],
-            "caption": "D1 moved onto your lane. F2 has a marker. The lower outside ice is open.",
+            "caption": "D1 has moved into your pass lane from F1. D2 marks F2. Open ice away from both defenders offers another angle.",
             "arrows": [
               {
                 "from": [
@@ -2093,7 +2213,7 @@
           "type": "tf",
           "sit": "A defender’s move onto your lane is a reason to recheck your support position.",
           "ok": true,
-          "why": "D1 now occupies the original line. YOU needs a position that fits the current route from F1.",
+          "why": "D1 now occupies the original line. You need a position that fits the current route from F1.",
           "tip": "Recheck your own passing lane.",
           "visual": {
             "view": "half-right",
@@ -2105,7 +2225,8 @@
                 "x": 20,
                 "y": 2,
                 "label": "YOU",
-                "hasPuck": false
+                "hasPuck": false,
+                "facing": -2.4069389806078125
               },
               {
                 "id": "F1",
@@ -2114,7 +2235,8 @@
                 "x": 13,
                 "y": -4,
                 "label": "F1",
-                "hasPuck": true
+                "hasPuck": true,
+                "facing": 0
               },
               {
                 "id": "F2",
@@ -2123,7 +2245,8 @@
                 "x": 21,
                 "y": -6,
                 "label": "F2",
-                "hasPuck": false
+                "hasPuck": false,
+                "facing": 2.788469868040897
               },
               {
                 "id": "D1",
@@ -2132,7 +2255,8 @@
                 "x": 16.5,
                 "y": -1,
                 "label": "D1",
-                "hasPuck": false
+                "hasPuck": false,
+                "facing": -2.3724532199974746
               },
               {
                 "id": "D2",
@@ -2141,7 +2265,8 @@
                 "x": 20,
                 "y": -5.7,
                 "label": "D2",
-                "hasPuck": false
+                "hasPuck": false,
+                "facing": 2.778445643643617
               },
               {
                 "id": "G",
@@ -2150,10 +2275,11 @@
                 "x": 25,
                 "y": -1,
                 "label": "",
-                "hasPuck": false
+                "hasPuck": false,
+                "facing": -2.925042348613704
               }
             ],
-            "caption": "D1 moved onto your lane. F2 has a marker. The lower outside ice is open.",
+            "caption": "D1 has moved into your pass lane from F1. D2 marks F2. Open ice away from both defenders offers another angle.",
             "arrows": [
               {
                 "from": [
@@ -2207,7 +2333,7 @@
         {
           "id": "practice-draft-u7-guard-way-mc",
           "type": "mc",
-          "sit": "How can YOU help protect your net?",
+          "sit": "How can you help protect your net?",
           "opts": [
             "Chase behind the player with the puck.",
             "Stay between that player and the way to your net."
@@ -2225,7 +2351,8 @@
                 "x": 20,
                 "y": 0,
                 "label": "YOU",
-                "hasPuck": false
+                "hasPuck": false,
+                "facing": -2.306354563845514
               },
               {
                 "id": "P",
@@ -2234,7 +2361,8 @@
                 "x": 15,
                 "y": -5,
                 "label": "",
-                "hasPuck": true
+                "hasPuck": true,
+                "facing": 0
               },
               {
                 "id": "G",
@@ -2243,10 +2371,11 @@
                 "x": 25.5,
                 "y": 0,
                 "label": "",
-                "hasPuck": false
+                "hasPuck": false,
+                "facing": -2.7061186297965
               }
             ],
-            "caption": "The net on the right is YOUR net. The other player has the puck.",
+            "caption": "Your goalie is guarding your net. The other player has the puck.",
             "arrows": [],
             "coordinateSystem": "rink-centred-metres",
             "presentation": "authored-static-draft",
@@ -2276,7 +2405,8 @@
                 "x": 20,
                 "y": 0,
                 "label": "YOU",
-                "hasPuck": false
+                "hasPuck": false,
+                "facing": -2.306354563845514
               },
               {
                 "id": "P",
@@ -2285,7 +2415,8 @@
                 "x": 15,
                 "y": -5,
                 "label": "",
-                "hasPuck": true
+                "hasPuck": true,
+                "facing": 0
               },
               {
                 "id": "G",
@@ -2294,10 +2425,11 @@
                 "x": 25.5,
                 "y": 0,
                 "label": "",
-                "hasPuck": false
+                "hasPuck": false,
+                "facing": -2.7061186297965
               }
             ],
-            "caption": "The net on the right is YOUR net. The other player has the puck.",
+            "caption": "Your goalie is guarding your net. The other player has the puck.",
             "arrows": [],
             "coordinateSystem": "rink-centred-metres",
             "presentation": "authored-static-draft",
@@ -2339,7 +2471,7 @@
         {
           "id": "practice-draft-u9-protect-middle-mc",
           "type": "mc",
-          "sit": "The other player has the puck near the side. What space should YOU keep covered?",
+          "sit": "The other player has the puck near the side. What space should you keep covered?",
           "opts": [
             "The middle route between that player and your net.",
             "Only the space behind the puck near the boards.",
@@ -2358,7 +2490,8 @@
                 "x": 20,
                 "y": -1,
                 "label": "YOU",
-                "hasPuck": false
+                "hasPuck": false,
+                "facing": -2.306354563845514
               },
               {
                 "id": "P",
@@ -2367,7 +2500,8 @@
                 "x": 15,
                 "y": -6,
                 "label": "",
-                "hasPuck": true
+                "hasPuck": true,
+                "facing": 0
               },
               {
                 "id": "G",
@@ -2376,10 +2510,11 @@
                 "x": 25.5,
                 "y": 0,
                 "label": "",
-                "hasPuck": false
+                "hasPuck": false,
+                "facing": -2.6231269656388068
               }
             ],
-            "caption": "The net on the right is YOUR net. The puck is near the upper side.",
+            "caption": "The puck carrier is away from the middle. Your goalie is guarding your net.",
             "arrows": [],
             "coordinateSystem": "rink-centred-metres",
             "presentation": "authored-static-draft",
@@ -2409,7 +2544,8 @@
                 "x": 20,
                 "y": -1,
                 "label": "YOU",
-                "hasPuck": false
+                "hasPuck": false,
+                "facing": -2.306354563845514
               },
               {
                 "id": "P",
@@ -2418,7 +2554,8 @@
                 "x": 15,
                 "y": -6,
                 "label": "",
-                "hasPuck": true
+                "hasPuck": true,
+                "facing": 0
               },
               {
                 "id": "G",
@@ -2427,10 +2564,11 @@
                 "x": 25.5,
                 "y": 0,
                 "label": "",
-                "hasPuck": false
+                "hasPuck": false,
+                "facing": -2.6231269656388068
               }
             ],
-            "caption": "The net on the right is YOUR net. The puck is near the upper side.",
+            "caption": "The puck carrier is away from the middle. Your goalie is guarding your net.",
             "arrows": [],
             "coordinateSystem": "rink-centred-metres",
             "presentation": "authored-static-draft",
@@ -2472,7 +2610,7 @@
         {
           "id": "practice-draft-u11-hold-inside-mc",
           "type": "mc",
-          "sit": "The attacker is approaching the middle. Which response keeps YOU inside and able to adjust?",
+          "sit": "The attacker is approaching the middle. Which response keeps you inside and able to adjust?",
           "opts": [
             "Plant both skates and reach away from the middle.",
             "Retreat straight to the goal line before reading the attacker.",
@@ -2492,7 +2630,8 @@
                 "x": 19,
                 "y": -2,
                 "label": "YOU",
-                "hasPuck": false
+                "hasPuck": false,
+                "facing": -2.597504791197532
               },
               {
                 "id": "F1",
@@ -2501,7 +2640,8 @@
                 "x": 14,
                 "y": -5,
                 "label": "F1",
-                "hasPuck": true
+                "hasPuck": true,
+                "facing": 0
               },
               {
                 "id": "G",
@@ -2510,10 +2650,11 @@
                 "x": 25.5,
                 "y": 0,
                 "label": "",
-                "hasPuck": false
+                "hasPuck": false,
+                "facing": -2.743155365038044
               }
             ],
-            "caption": "The right net is yours. The arrow shows the attacker’s completed approach.",
+            "caption": "Your goalie guards your net. The arrow shows F1’s completed approach toward the middle.",
             "arrows": [
               {
                 "from": [
@@ -2555,7 +2696,8 @@
                 "x": 19,
                 "y": -2,
                 "label": "YOU",
-                "hasPuck": false
+                "hasPuck": false,
+                "facing": -2.597504791197532
               },
               {
                 "id": "F1",
@@ -2564,7 +2706,8 @@
                 "x": 14,
                 "y": -5,
                 "label": "F1",
-                "hasPuck": true
+                "hasPuck": true,
+                "facing": 0
               },
               {
                 "id": "G",
@@ -2573,10 +2716,11 @@
                 "x": 25.5,
                 "y": 0,
                 "label": "",
-                "hasPuck": false
+                "hasPuck": false,
+                "facing": -2.743155365038044
               }
             ],
-            "caption": "The right net is yours. The arrow shows the attacker’s completed approach.",
+            "caption": "Your goalie guards your net. The arrow shows F1’s completed approach toward the middle.",
             "arrows": [
               {
                 "from": [
@@ -2630,15 +2774,15 @@
         {
           "id": "practice-draft-u13-share-threats-mc",
           "type": "mc",
-          "sit": "D2 is already inside F2. What is YOUR immediate responsibility?",
+          "sit": "D2 is already inside F2. What is your immediate responsibility?",
           "opts": [
             "Leave F1 to join D2 beside F2.",
             "Manage the space to F1 while protecting the middle route.",
-            "Chase behind F1 toward the upper boards.",
+            "Chase behind F1 toward the nearest boards.",
             "Retreat beside the goalie and stop influencing F1."
           ],
           "ok": 1,
-          "why": "D2 covers the lower threat. Leaving F1 or retreating to the goalie gives the carrier the middle YOU currently protects.",
+          "why": "D2 covers F2. Leaving F1 or retreating to the goalie gives the carrier the middle you currently protect.",
           "tip": "Read your threat and your help.",
           "visual": {
             "view": "half-right",
@@ -2650,7 +2794,8 @@
                 "x": 19,
                 "y": -2,
                 "label": "YOU",
-                "hasPuck": false
+                "hasPuck": false,
+                "facing": -2.597504791197532
               },
               {
                 "id": "D2",
@@ -2659,7 +2804,8 @@
                 "x": 21,
                 "y": 4,
                 "label": "D2",
-                "hasPuck": false
+                "hasPuck": false,
+                "facing": -2.18992145975477
               },
               {
                 "id": "F1",
@@ -2668,7 +2814,8 @@
                 "x": 14,
                 "y": -5,
                 "label": "F1",
-                "hasPuck": true
+                "hasPuck": true,
+                "facing": 0
               },
               {
                 "id": "F2",
@@ -2677,7 +2824,8 @@
                 "x": 20,
                 "y": 6,
                 "label": "F2",
-                "hasPuck": false
+                "hasPuck": false,
+                "facing": -2.0181914969605153
               },
               {
                 "id": "G",
@@ -2686,10 +2834,11 @@
                 "x": 25.5,
                 "y": -0.5,
                 "label": "",
-                "hasPuck": false
+                "hasPuck": false,
+                "facing": -2.784283970581693
               }
             ],
-            "caption": "The right net is yours. YOU faces F1. D2 is inside F2 on the lower side.",
+            "caption": "You face F1 with the puck. D2 is between F2 and your net.",
             "arrows": [],
             "coordinateSystem": "rink-centred-metres",
             "presentation": "authored-static-draft",
@@ -2705,9 +2854,9 @@
         {
           "id": "practice-draft-u13-share-threats-tf",
           "type": "tf",
-          "sit": "Seeing D2 near F2 means YOU can abandon the carrier’s route to the middle.",
+          "sit": "Seeing D2 near F2 means you can abandon the carrier’s route to the middle.",
           "ok": false,
-          "why": "D2 covers another threat. F1 still has the puck and YOU still protects that route.",
+          "why": "D2 covers another threat. F1 still has the puck and you still protect that route.",
           "tip": "Help does not erase your read.",
           "visual": {
             "view": "half-right",
@@ -2719,7 +2868,8 @@
                 "x": 19,
                 "y": -2,
                 "label": "YOU",
-                "hasPuck": false
+                "hasPuck": false,
+                "facing": -2.597504791197532
               },
               {
                 "id": "D2",
@@ -2728,7 +2878,8 @@
                 "x": 21,
                 "y": 4,
                 "label": "D2",
-                "hasPuck": false
+                "hasPuck": false,
+                "facing": -2.18992145975477
               },
               {
                 "id": "F1",
@@ -2737,7 +2888,8 @@
                 "x": 14,
                 "y": -5,
                 "label": "F1",
-                "hasPuck": true
+                "hasPuck": true,
+                "facing": 0
               },
               {
                 "id": "F2",
@@ -2746,7 +2898,8 @@
                 "x": 20,
                 "y": 6,
                 "label": "F2",
-                "hasPuck": false
+                "hasPuck": false,
+                "facing": -2.0181914969605153
               },
               {
                 "id": "G",
@@ -2755,10 +2908,11 @@
                 "x": 25.5,
                 "y": -0.5,
                 "label": "",
-                "hasPuck": false
+                "hasPuck": false,
+                "facing": -2.784283970581693
               }
             ],
-            "caption": "The right net is yours. YOU faces F1. D2 is inside F2 on the lower side.",
+            "caption": "You face F1 with the puck. D2 is between F2 and your net.",
             "arrows": [],
             "coordinateSystem": "rink-centred-metres",
             "presentation": "authored-static-draft",
@@ -2800,9 +2954,9 @@
         {
           "id": "practice-draft-u15-verify-help-mc",
           "type": "mc",
-          "sit": "Before YOU leaves the inside route to press F1 toward the boards, what must be confirmed?",
+          "sit": "Before you leave the inside route to press F1 toward the boards, what must be confirmed?",
           "opts": [
-            "H2 has actually taken responsibility for the middle space YOU would leave.",
+            "H2 has actually taken responsibility for the middle space you would leave.",
             "H2 is visible somewhere behind the puck.",
             "F1 is near the boards, so middle cover no longer matters.",
             "H3 is near F2, so H3 must also cover F1."
@@ -2820,7 +2974,8 @@
                 "x": 19,
                 "y": -1,
                 "label": "YOU",
-                "hasPuck": false
+                "hasPuck": false,
+                "facing": -2.290867020568993
               },
               {
                 "id": "H2",
@@ -2829,7 +2984,8 @@
                 "x": 14,
                 "y": -7,
                 "label": "H2",
-                "hasPuck": false
+                "hasPuck": false,
+                "facing": 0.9113651930873276
               },
               {
                 "id": "H3",
@@ -2838,7 +2994,8 @@
                 "x": 22,
                 "y": 4,
                 "label": "H3",
-                "hasPuck": false
+                "hasPuck": false,
+                "facing": -2.18992145975477
               },
               {
                 "id": "F1",
@@ -2847,7 +3004,8 @@
                 "x": 15,
                 "y": -5,
                 "label": "F1",
-                "hasPuck": true
+                "hasPuck": true,
+                "facing": 0
               },
               {
                 "id": "F2",
@@ -2856,7 +3014,8 @@
                 "x": 22,
                 "y": 6,
                 "label": "F2",
-                "hasPuck": false
+                "hasPuck": false,
+                "facing": -2.093243439986084
               },
               {
                 "id": "G",
@@ -2865,10 +3024,11 @@
                 "x": 25.5,
                 "y": -0.5,
                 "label": "",
-                "hasPuck": false
+                "hasPuck": false,
+                "facing": -2.7502446340565085
               }
             ],
-            "caption": "The right net is yours. H2 is approaching behind the puck. H3 covers the lower attacker.",
+            "caption": "H2 is approaching F1 but has not taken over your middle space. H3 covers F2.",
             "arrows": [
               {
                 "from": [
@@ -2898,7 +3058,7 @@
           "type": "tf",
           "sit": "Approaching help must be distinguished from help already covering the middle.",
           "ok": true,
-          "why": "H2 is moving toward the play, but is not yet shown holding the inside space YOU would leave.",
+          "why": "H2 is moving toward the play, but is not yet shown holding the inside space you would leave.",
           "tip": "Read where help is now.",
           "visual": {
             "view": "half-right",
@@ -2910,7 +3070,8 @@
                 "x": 19,
                 "y": -1,
                 "label": "YOU",
-                "hasPuck": false
+                "hasPuck": false,
+                "facing": -2.290867020568993
               },
               {
                 "id": "H2",
@@ -2919,7 +3080,8 @@
                 "x": 14,
                 "y": -7,
                 "label": "H2",
-                "hasPuck": false
+                "hasPuck": false,
+                "facing": 0.9113651930873276
               },
               {
                 "id": "H3",
@@ -2928,7 +3090,8 @@
                 "x": 22,
                 "y": 4,
                 "label": "H3",
-                "hasPuck": false
+                "hasPuck": false,
+                "facing": -2.18992145975477
               },
               {
                 "id": "F1",
@@ -2937,7 +3100,8 @@
                 "x": 15,
                 "y": -5,
                 "label": "F1",
-                "hasPuck": true
+                "hasPuck": true,
+                "facing": 0
               },
               {
                 "id": "F2",
@@ -2946,7 +3110,8 @@
                 "x": 22,
                 "y": 6,
                 "label": "F2",
-                "hasPuck": false
+                "hasPuck": false,
+                "facing": -2.093243439986084
               },
               {
                 "id": "G",
@@ -2955,10 +3120,11 @@
                 "x": 25.5,
                 "y": -0.5,
                 "label": "",
-                "hasPuck": false
+                "hasPuck": false,
+                "facing": -2.7502446340565085
               }
             ],
-            "caption": "The right net is yours. H2 is approaching behind the puck. H3 covers the lower attacker.",
+            "caption": "H2 is approaching F1 but has not taken over your middle space. H3 covers F2.",
             "arrows": [
               {
                 "from": [
@@ -3012,7 +3178,7 @@
         {
           "id": "practice-draft-u18-two-threats-mc",
           "type": "mc",
-          "sit": "Which response preserves both-threat awareness in this 2-on-1 against YOU?",
+          "sit": "Which response preserves both-threat awareness in this 2-on-1 against you?",
           "opts": [
             "Rush at F1’s outside shoulder and leave the cross-ice route.",
             "Turn fully toward F2 and stop tracking F1.",
@@ -3020,7 +3186,7 @@
             "Move behind the goalie to wait for a shot."
           ],
           "ok": 2,
-          "why": "YOU influences the route between attackers. Chasing F1 outside removes that influence; watching only F2 loses the carrier. Keep both threats in the read.",
+          "why": "You influence the route between attackers. Chasing F1 outside removes that influence; watching only F2 loses the carrier. Keep both threats in the read.",
           "tip": "See both threats; protect the middle.",
           "visual": {
             "view": "half-right",
@@ -3032,7 +3198,8 @@
                 "x": 18,
                 "y": 1.3,
                 "label": "YOU",
-                "hasPuck": false
+                "hasPuck": false,
+                "facing": -2.0538320878095417
               },
               {
                 "id": "F1",
@@ -3041,7 +3208,8 @@
                 "x": 14,
                 "y": -5,
                 "label": "F1",
-                "hasPuck": true
+                "hasPuck": true,
+                "facing": 0
               },
               {
                 "id": "F2",
@@ -3050,7 +3218,8 @@
                 "x": 21,
                 "y": 6,
                 "label": "F2",
-                "hasPuck": false
+                "hasPuck": false,
+                "facing": -2.093243439986084
               },
               {
                 "id": "G",
@@ -3059,10 +3228,11 @@
                 "x": 25,
                 "y": -0.77,
                 "label": "",
-                "hasPuck": false
+                "hasPuck": false,
+                "facing": -2.791617798260003
               }
             ],
-            "caption": "The right net is yours. YOU is on the cross-ice route. The goalie is set toward F1.",
+            "caption": "You cover the cross-ice route between F1 and F2. Your goalie is set toward F1.",
             "arrows": [],
             "coordinateSystem": "rink-centred-metres",
             "presentation": "authored-static-draft",
@@ -3092,7 +3262,8 @@
                 "x": 18,
                 "y": 1.3,
                 "label": "YOU",
-                "hasPuck": false
+                "hasPuck": false,
+                "facing": -2.0538320878095417
               },
               {
                 "id": "F1",
@@ -3101,7 +3272,8 @@
                 "x": 14,
                 "y": -5,
                 "label": "F1",
-                "hasPuck": true
+                "hasPuck": true,
+                "facing": 0
               },
               {
                 "id": "F2",
@@ -3110,7 +3282,8 @@
                 "x": 21,
                 "y": 6,
                 "label": "F2",
-                "hasPuck": false
+                "hasPuck": false,
+                "facing": -2.093243439986084
               },
               {
                 "id": "G",
@@ -3119,10 +3292,11 @@
                 "x": 25,
                 "y": -0.77,
                 "label": "",
-                "hasPuck": false
+                "hasPuck": false,
+                "facing": -2.791617798260003
               }
             ],
-            "caption": "The right net is yours. YOU is on the cross-ice route. The goalie is set toward F1.",
+            "caption": "You cover the cross-ice route between F1 and F2. Your goalie is set toward F1.",
             "arrows": [],
             "coordinateSystem": "rink-centred-metres",
             "presentation": "authored-static-draft",
@@ -3164,9 +3338,9 @@
         {
           "id": "practice-draft-u7-open-friend-mc",
           "type": "mc",
-          "sit": "The other player is in your way to the net. What can YOU do?",
+          "sit": "The other player is in your way to the net. What can you do?",
           "opts": [
-            "Pass to your teammate in the open ice below YOU.",
+            "Pass to your teammate in the open ice.",
             "Keep taking the puck toward the net along the crowded path."
           ],
           "ok": 0,
@@ -3182,7 +3356,8 @@
                 "x": 14,
                 "y": -4,
                 "label": "YOU",
-                "hasPuck": true
+                "hasPuck": true,
+                "facing": 0
               },
               {
                 "id": "F2",
@@ -3191,7 +3366,8 @@
                 "x": 20,
                 "y": 5,
                 "label": "",
-                "hasPuck": false
+                "hasPuck": false,
+                "facing": -2.1066624434733385
               },
               {
                 "id": "D1",
@@ -3200,7 +3376,8 @@
                 "x": 18,
                 "y": -2.77,
                 "label": "",
-                "hasPuck": false
+                "hasPuck": false,
+                "facing": -2.9282240114379854
               },
               {
                 "id": "G",
@@ -3209,10 +3386,11 @@
                 "x": 25,
                 "y": -0.6,
                 "label": "",
-                "hasPuck": false
+                "hasPuck": false,
+                "facing": -2.8667303157906203
               }
             ],
-            "caption": "The other player blocks the direct path to the right net. The lower teammate has a clear pass path.",
+            "caption": "The other player blocks your path to the net. Your teammate is away from that player, with a clear pass path.",
             "arrows": [],
             "coordinateSystem": "rink-centred-metres",
             "presentation": "authored-static-draft",
@@ -3228,9 +3406,9 @@
         {
           "id": "practice-draft-u7-open-friend-tf",
           "type": "tf",
-          "sit": "Your teammate below YOU has a clear path for a pass.",
+          "sit": "Your teammate has a clear path for a pass.",
           "ok": true,
-          "why": "Nobody stands between YOU and that teammate. The player near the net route is not on this pass path.",
+          "why": "Nobody stands between you and that teammate. The player near the net route is not on this pass path.",
           "tip": "Find the clear path.",
           "visual": {
             "view": "half-right",
@@ -3242,7 +3420,8 @@
                 "x": 14,
                 "y": -4,
                 "label": "YOU",
-                "hasPuck": true
+                "hasPuck": true,
+                "facing": 0
               },
               {
                 "id": "F2",
@@ -3251,7 +3430,8 @@
                 "x": 20,
                 "y": 5,
                 "label": "",
-                "hasPuck": false
+                "hasPuck": false,
+                "facing": -2.1066624434733385
               },
               {
                 "id": "D1",
@@ -3260,7 +3440,8 @@
                 "x": 18,
                 "y": -2.77,
                 "label": "",
-                "hasPuck": false
+                "hasPuck": false,
+                "facing": -2.9282240114379854
               },
               {
                 "id": "G",
@@ -3269,10 +3450,11 @@
                 "x": 25,
                 "y": -0.6,
                 "label": "",
-                "hasPuck": false
+                "hasPuck": false,
+                "facing": -2.8667303157906203
               }
             ],
-            "caption": "The other player blocks the direct path to the right net. The lower teammate has a clear pass path.",
+            "caption": "The other player blocks your path to the net. Your teammate is away from that player, with a clear pass path.",
             "arrows": [],
             "coordinateSystem": "rink-centred-metres",
             "presentation": "authored-static-draft",
@@ -3315,9 +3497,9 @@
         {
           "id": "practice-draft-u9-blocked-pass-mc",
           "type": "mc",
-          "sit": "The pass is blocked. What should YOU use?",
+          "sit": "The pass is blocked. What should you use?",
           "opts": [
-            "Try the pass to the teammate below YOU.",
+            "Try the blocked pass to your teammate.",
             "Use the clear space toward the net.",
             "Hold the puck and wait for the same pass to open."
           ],
@@ -3334,7 +3516,8 @@
                 "x": 14,
                 "y": -4,
                 "label": "YOU",
-                "hasPuck": true
+                "hasPuck": true,
+                "facing": 0
               },
               {
                 "id": "T",
@@ -3343,7 +3526,8 @@
                 "x": 20,
                 "y": 5,
                 "label": "",
-                "hasPuck": false
+                "hasPuck": false,
+                "facing": -2.1066624434733385
               },
               {
                 "id": "D",
@@ -3352,7 +3536,8 @@
                 "x": 17,
                 "y": 0.5,
                 "label": "",
-                "hasPuck": false
+                "hasPuck": false,
+                "facing": -2.042573837975647
               },
               {
                 "id": "G",
@@ -3361,10 +3546,11 @@
                 "x": 25,
                 "y": -0.6,
                 "label": "",
-                "hasPuck": false
+                "hasPuck": false,
+                "facing": -2.8667303157906203
               }
             ],
-            "caption": "The other player blocks the pass to your lower teammate. The direct route toward the right net is clear.",
+            "caption": "The other player blocks your pass to your teammate. Your direct route toward the attacking net is clear.",
             "arrows": [],
             "coordinateSystem": "rink-centred-metres",
             "presentation": "authored-static-draft",
@@ -3380,7 +3566,7 @@
         {
           "id": "practice-draft-u9-blocked-pass-tf",
           "type": "tf",
-          "sit": "Having a teammate means YOU must pass even when the other player blocks it.",
+          "sit": "Having a teammate means you must pass even when the other player blocks it.",
           "ok": false,
           "why": "Here the other player blocks the pass but leaves another route open. A teammate is an option, not an order.",
           "tip": "Choose the available play.",
@@ -3394,7 +3580,8 @@
                 "x": 14,
                 "y": -4,
                 "label": "YOU",
-                "hasPuck": true
+                "hasPuck": true,
+                "facing": 0
               },
               {
                 "id": "T",
@@ -3403,7 +3590,8 @@
                 "x": 20,
                 "y": 5,
                 "label": "",
-                "hasPuck": false
+                "hasPuck": false,
+                "facing": -2.1066624434733385
               },
               {
                 "id": "D",
@@ -3412,7 +3600,8 @@
                 "x": 17,
                 "y": 0.5,
                 "label": "",
-                "hasPuck": false
+                "hasPuck": false,
+                "facing": -2.042573837975647
               },
               {
                 "id": "G",
@@ -3421,10 +3610,11 @@
                 "x": 25,
                 "y": -0.6,
                 "label": "",
-                "hasPuck": false
+                "hasPuck": false,
+                "facing": -2.8667303157906203
               }
             ],
-            "caption": "The other player blocks the pass to your lower teammate. The direct route toward the right net is clear.",
+            "caption": "The other player blocks your pass to your teammate. Your direct route toward the attacking net is clear.",
             "arrows": [],
             "coordinateSystem": "rink-centred-metres",
             "presentation": "authored-static-draft",
@@ -3471,7 +3661,7 @@
             "Take the direct shot toward the net.",
             "Keep carrying along the route toward D1.",
             "Hold the puck and wait for D1 to leave the route.",
-            "Pass to F2 through the lower lane."
+            "Pass to F2 through the clear lane."
           ],
           "ok": 3,
           "why": "D1 occupies the shot route while the line to F2 is clear. The pass uses that separation; the others keep the puck in pressure or delay without creating an option.",
@@ -3486,7 +3676,8 @@
                 "x": 14,
                 "y": -4,
                 "label": "YOU",
-                "hasPuck": true
+                "hasPuck": true,
+                "facing": 0
               },
               {
                 "id": "F2",
@@ -3495,7 +3686,8 @@
                 "x": 20,
                 "y": 5,
                 "label": "F2",
-                "hasPuck": false
+                "hasPuck": false,
+                "facing": -2.1066624434733385
               },
               {
                 "id": "D1",
@@ -3504,7 +3696,8 @@
                 "x": 18,
                 "y": -2.77,
                 "label": "D1",
-                "hasPuck": false
+                "hasPuck": false,
+                "facing": -2.9282240114379854
               },
               {
                 "id": "G",
@@ -3513,10 +3706,11 @@
                 "x": 25,
                 "y": -0.6,
                 "label": "",
-                "hasPuck": false
+                "hasPuck": false,
+                "facing": -2.8667303157906203
               }
             ],
-            "caption": "The defender blocks the direct path to the right net. The lower teammate has a clear pass path.",
+            "caption": "D1 blocks your direct shot route. F2 has a clear pass path away from D1.",
             "arrows": [],
             "coordinateSystem": "rink-centred-metres",
             "presentation": "authored-static-draft",
@@ -3534,7 +3728,7 @@
           "type": "tf",
           "sit": "On this board, D1 blocks the shot route while F2’s passing lane is clear.",
           "ok": true,
-          "why": "D1 is between YOU and the net, away from the lower pass. The geometry supports the F2 option in this specific scene.",
+          "why": "D1 is between you and the net, away from the pass to F2. The geometry supports the F2 option in this specific scene.",
           "tip": "The defender reveals the read.",
           "visual": {
             "view": "half-right",
@@ -3546,7 +3740,8 @@
                 "x": 14,
                 "y": -4,
                 "label": "YOU",
-                "hasPuck": true
+                "hasPuck": true,
+                "facing": 0
               },
               {
                 "id": "F2",
@@ -3555,7 +3750,8 @@
                 "x": 20,
                 "y": 5,
                 "label": "F2",
-                "hasPuck": false
+                "hasPuck": false,
+                "facing": -2.1066624434733385
               },
               {
                 "id": "D1",
@@ -3564,7 +3760,8 @@
                 "x": 18,
                 "y": -2.77,
                 "label": "D1",
-                "hasPuck": false
+                "hasPuck": false,
+                "facing": -2.9282240114379854
               },
               {
                 "id": "G",
@@ -3573,10 +3770,11 @@
                 "x": 25,
                 "y": -0.6,
                 "label": "",
-                "hasPuck": false
+                "hasPuck": false,
+                "facing": -2.8667303157906203
               }
             ],
-            "caption": "The defender blocks the direct path to the right net. The lower teammate has a clear pass path.",
+            "caption": "D1 blocks your direct shot route. F2 has a clear pass path away from D1.",
             "arrows": [],
             "coordinateSystem": "rink-centred-metres",
             "presentation": "authored-static-draft",
@@ -3619,11 +3817,11 @@
         {
           "id": "practice-draft-u13-receive-finish-mc",
           "type": "mc",
-          "sit": "YOU has received the pass with a clear shot route. How can YOU use the goalie’s current position?",
+          "sit": "You have received the pass with a clear shot route. How can you use the goalie’s current position?",
           "opts": [
             "Hold until the goalie becomes square.",
             "Take the available shot now.",
-            "Carry back toward the old upper-side pressure.",
+            "Carry back toward the pressure near F1.",
             "Return the puck simply because F1 made the first pass."
           ],
           "ok": 1,
@@ -3639,7 +3837,8 @@
                 "x": 21,
                 "y": 5,
                 "label": "YOU",
-                "hasPuck": true
+                "hasPuck": true,
+                "facing": 0
               },
               {
                 "id": "F1",
@@ -3648,7 +3847,8 @@
                 "x": 14,
                 "y": -4,
                 "label": "F1",
-                "hasPuck": false
+                "hasPuck": false,
+                "facing": 0.875032199501343
               },
               {
                 "id": "D1",
@@ -3657,7 +3857,8 @@
                 "x": 18,
                 "y": -3,
                 "label": "D1",
-                "hasPuck": false
+                "hasPuck": false,
+                "facing": 1.134552064218546
               },
               {
                 "id": "G",
@@ -3666,10 +3867,11 @@
                 "x": 25,
                 "y": -2,
                 "label": "",
-                "hasPuck": false
+                "hasPuck": false,
+                "facing": 1.9476580731201336
               }
             ],
-            "caption": "The pass has arrived at YOU. The goalie is still on the old upper side, away from YOUR direct shooting line.",
+            "caption": "You have received F1’s pass. The goalie is still set toward F1’s side, away from your new shooting line.",
             "arrows": [
               {
                 "from": [
@@ -3711,7 +3913,8 @@
                 "x": 21,
                 "y": 5,
                 "label": "YOU",
-                "hasPuck": true
+                "hasPuck": true,
+                "facing": 0
               },
               {
                 "id": "F1",
@@ -3720,7 +3923,8 @@
                 "x": 14,
                 "y": -4,
                 "label": "F1",
-                "hasPuck": false
+                "hasPuck": false,
+                "facing": 0.875032199501343
               },
               {
                 "id": "D1",
@@ -3729,7 +3933,8 @@
                 "x": 18,
                 "y": -3,
                 "label": "D1",
-                "hasPuck": false
+                "hasPuck": false,
+                "facing": 1.134552064218546
               },
               {
                 "id": "G",
@@ -3738,10 +3943,11 @@
                 "x": 25,
                 "y": -2,
                 "label": "",
-                "hasPuck": false
+                "hasPuck": false,
+                "facing": 1.9476580731201336
               }
             ],
-            "caption": "The pass has arrived at YOU. The goalie is still on the old upper side, away from YOUR direct shooting line.",
+            "caption": "You have received F1’s pass. The goalie is still set toward F1’s side, away from your new shooting line.",
             "arrows": [
               {
                 "from": [
@@ -3798,13 +4004,13 @@
           "type": "mc",
           "sit": "The objective is to use the current clear scoring route. Which action keeps that threat?",
           "opts": [
-            "Pass backward only because F2 is available.",
+            "Pass away from the attacking net only because F2 is available.",
             "Wait for D1 to enter the shot route.",
-            "Attack the clear shot route in front of YOU.",
-            "Carry down toward D1 and the crowded lower side."
+            "Attack your clear shot route toward the net.",
+            "Carry toward D1 and the crowded ice."
           ],
           "ok": 2,
-          "why": "YOU already has the clear shooting route. F2’s availability alone does not justify moving backward and giving up this threat. This is not a ban on reset passes.",
+          "why": "You already have the clear shooting route. F2’s availability alone does not justify moving away from the net and giving up this threat. This is not a ban on reset passes.",
           "tip": "Check what the pass adds.",
           "visual": {
             "view": "half-right",
@@ -3816,7 +4022,8 @@
                 "x": 19,
                 "y": -3,
                 "label": "YOU",
-                "hasPuck": true
+                "hasPuck": true,
+                "facing": 0
               },
               {
                 "id": "F2",
@@ -3825,7 +4032,8 @@
                 "x": 13,
                 "y": -8,
                 "label": "F2",
-                "hasPuck": false
+                "hasPuck": false,
+                "facing": 0.6729963522279694
               },
               {
                 "id": "D1",
@@ -3834,7 +4042,8 @@
                 "x": 22,
                 "y": 4,
                 "label": "D1",
-                "hasPuck": false
+                "hasPuck": false,
+                "facing": -1.8727940413926745
               },
               {
                 "id": "G",
@@ -3843,10 +4052,11 @@
                 "x": 25,
                 "y": -0.75,
                 "label": "",
-                "hasPuck": false
+                "hasPuck": false,
+                "facing": -2.819242219241113
               }
             ],
-            "caption": "F2 is open but behind YOU on the upper side. D1 is away from YOUR direct shot route.",
+            "caption": "F2 is open farther from the attacking net. D1 is away from your direct shot route.",
             "arrows": [],
             "coordinateSystem": "rink-centred-metres",
             "presentation": "authored-static-draft",
@@ -3864,7 +4074,7 @@
           "type": "tf",
           "sit": "An open teammate is automatically the best target in every 2-on-1.",
           "ok": false,
-          "why": "F2 is open but behind the attack, while YOU has the immediate shot route. Judge what threat the pass creates.",
+          "why": "F2 is open farther from the attacking net, while you have the immediate shot route. Judge what threat the pass creates.",
           "tip": "Open and dangerous are different checks.",
           "visual": {
             "view": "half-right",
@@ -3876,7 +4086,8 @@
                 "x": 19,
                 "y": -3,
                 "label": "YOU",
-                "hasPuck": true
+                "hasPuck": true,
+                "facing": 0
               },
               {
                 "id": "F2",
@@ -3885,7 +4096,8 @@
                 "x": 13,
                 "y": -8,
                 "label": "F2",
-                "hasPuck": false
+                "hasPuck": false,
+                "facing": 0.6729963522279694
               },
               {
                 "id": "D1",
@@ -3894,7 +4106,8 @@
                 "x": 22,
                 "y": 4,
                 "label": "D1",
-                "hasPuck": false
+                "hasPuck": false,
+                "facing": -1.8727940413926745
               },
               {
                 "id": "G",
@@ -3903,10 +4116,11 @@
                 "x": 25,
                 "y": -0.75,
                 "label": "",
-                "hasPuck": false
+                "hasPuck": false,
+                "facing": -2.819242219241113
               }
             ],
-            "caption": "F2 is open but behind YOU on the upper side. D1 is away from YOUR direct shot route.",
+            "caption": "F2 is open farther from the attacking net. D1 is away from your direct shot route.",
             "arrows": [],
             "coordinateSystem": "rink-centred-metres",
             "presentation": "authored-static-draft",
@@ -3948,15 +4162,15 @@
         {
           "id": "practice-draft-u18-both-defenders-mc",
           "type": "mc",
-          "sit": "Which play uses the clear route after YOU reads both defenders?",
+          "sit": "Which play uses the clear route after you read both defenders?",
           "opts": [
-            "Pass to F2 through the lower lane.",
+            "Pass to F2 through the clear lane.",
             "Force F3 because F3 is close to the net.",
             "Shoot directly through D1.",
             "Carry into D1 while watching only D2."
           ],
           "ok": 0,
-          "why": "D1 occupies the shot route and D2 occupies F3’s route. F2’s lower lane avoids both defenders and offers the clear attacking option.",
+          "why": "D1 occupies the shot route and D2 occupies F3’s route. F2’s lane avoids both defenders and offers the clear attacking option.",
           "tip": "Read the second defender before committing.",
           "visual": {
             "view": "half-right",
@@ -3968,7 +4182,8 @@
                 "x": 14,
                 "y": -4,
                 "label": "YOU",
-                "hasPuck": true
+                "hasPuck": true,
+                "facing": 0
               },
               {
                 "id": "F2",
@@ -3977,7 +4192,8 @@
                 "x": 21,
                 "y": 5,
                 "label": "F2",
-                "hasPuck": false
+                "hasPuck": false,
+                "facing": -2.18992145975477
               },
               {
                 "id": "F3",
@@ -3986,7 +4202,8 @@
                 "x": 21,
                 "y": -6,
                 "label": "F3",
-                "hasPuck": false
+                "hasPuck": false,
+                "facing": 2.7354945952721774
               },
               {
                 "id": "D1",
@@ -3995,7 +4212,8 @@
                 "x": 18,
                 "y": -2.77,
                 "label": "D1",
-                "hasPuck": false
+                "hasPuck": false,
+                "facing": -2.9282240114379854
               },
               {
                 "id": "D2",
@@ -4004,7 +4222,8 @@
                 "x": 19,
                 "y": -5.43,
                 "label": "D2",
-                "hasPuck": false
+                "hasPuck": false,
+                "facing": 2.6759470452496616
               },
               {
                 "id": "G",
@@ -4013,10 +4232,11 @@
                 "x": 25,
                 "y": -0.6,
                 "label": "",
-                "hasPuck": false
+                "hasPuck": false,
+                "facing": -2.8667303157906203
               }
             ],
-            "caption": "This is a 3-on-2. D1 blocks the shot route; D2 blocks F3’s upper lane. F2’s lower lane is clear.",
+            "caption": "This is a 3-on-2. D1 blocks the shot and D2 blocks your pass to F3. Your pass to F2 avoids both defenders.",
             "arrows": [],
             "coordinateSystem": "rink-centred-metres",
             "presentation": "authored-static-draft",
@@ -4032,9 +4252,9 @@
         {
           "id": "practice-draft-u18-both-defenders-tf",
           "type": "tf",
-          "sit": "Once YOU reads D1, D2 cannot change the best pass.",
+          "sit": "Once you read D1, D2 cannot change the best pass.",
           "ok": false,
-          "why": "D2 removes the F3 pass. Reading only D1 would miss that constraint and could send the puck into the upper defender.",
+          "why": "D2 removes the F3 pass. Reading only D1 would miss that constraint and could send the puck into D2.",
           "tip": "Read every defender affecting the choice.",
           "visual": {
             "view": "half-right",
@@ -4046,7 +4266,8 @@
                 "x": 14,
                 "y": -4,
                 "label": "YOU",
-                "hasPuck": true
+                "hasPuck": true,
+                "facing": 0
               },
               {
                 "id": "F2",
@@ -4055,7 +4276,8 @@
                 "x": 21,
                 "y": 5,
                 "label": "F2",
-                "hasPuck": false
+                "hasPuck": false,
+                "facing": -2.18992145975477
               },
               {
                 "id": "F3",
@@ -4064,7 +4286,8 @@
                 "x": 21,
                 "y": -6,
                 "label": "F3",
-                "hasPuck": false
+                "hasPuck": false,
+                "facing": 2.7354945952721774
               },
               {
                 "id": "D1",
@@ -4073,7 +4296,8 @@
                 "x": 18,
                 "y": -2.77,
                 "label": "D1",
-                "hasPuck": false
+                "hasPuck": false,
+                "facing": -2.9282240114379854
               },
               {
                 "id": "D2",
@@ -4082,7 +4306,8 @@
                 "x": 19,
                 "y": -5.43,
                 "label": "D2",
-                "hasPuck": false
+                "hasPuck": false,
+                "facing": 2.6759470452496616
               },
               {
                 "id": "G",
@@ -4091,10 +4316,11 @@
                 "x": 25,
                 "y": -0.6,
                 "label": "",
-                "hasPuck": false
+                "hasPuck": false,
+                "facing": -2.8667303157906203
               }
             ],
-            "caption": "This is a 3-on-2. D1 blocks the shot route; D2 blocks F3’s upper lane. F2’s lower lane is clear.",
+            "caption": "This is a 3-on-2. D1 blocks the shot and D2 blocks your pass to F3. Your pass to F2 avoids both defenders.",
             "arrows": [],
             "coordinateSystem": "rink-centred-metres",
             "presentation": "authored-static-draft",
@@ -4151,5 +4377,19 @@
       "existing scenario-validator acceptance",
       "physics or future-motion accuracy"
     ]
+  },
+  "poseProvenance": {
+    "version": "curriculum-authored-facing-v1",
+    "status": "authored-presentation-for-coach-review",
+    "authoredDate": "2026-09-05",
+    "units": "radians",
+    "angleConvention": "Zero points along +x; positive angles turn toward +y.",
+    "puckOffset": {
+      "x": 1,
+      "y": 0.58
+    },
+    "carrierPose": "Facing 0 preserves the original explicit puck offset.",
+    "otherPoses": "Skaters without the puck and goalies face the actual offset puck in each frozen scene.",
+    "evidenceBoundary": "These are newly authored presentation poses: not measured gaze, not validated tactical orientation, and not used to grade any answer."
   }
 }

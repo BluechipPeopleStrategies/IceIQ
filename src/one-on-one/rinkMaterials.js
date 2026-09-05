@@ -5,7 +5,7 @@ export const RINK = NHL_200X85_PROFILE;
 export const GOAL_X = RINK.landmarks.goalLineRight[0];
 export function world(x, y, height = 0) { return [y, height, -x]; }
 
-export function makeIceTexture() {
+export function makeIceTexture({ hideZoneLines = false } = {}) {
   const canvas = document.createElement('canvas');
   canvas.width = 1536; canvas.height = 3072;
   const ctx = canvas.getContext('2d');
@@ -30,9 +30,11 @@ export function makeIceTexture() {
     const p = point(x, y); ctx.strokeStyle = colour; ctx.lineWidth = width * sx;
     ctx.beginPath(); ctx.ellipse(p[0], p[1], radius * sx, radius * sy, 0, 0, Math.PI * 2); ctx.stroke();
   };
-  line(0, '#b95465', .28); line(-7.62, '#5088b1', .30); line(7.62, '#5088b1', .30);
+  if (!hideZoneLines) {
+    line(0, '#bd344c', .28); line(-7.62, '#286ca7', .30); line(7.62, '#286ca7', .30);
+    circle(0, 0, 4.572, '#286ca7');
+  }
   line(GOAL_X, '#bc6170', .06); line(-GOAL_X, '#bc6170', .06);
-  circle(0, 0, 4.572, '#5088b1');
   for (const x of [-20.7264, 20.7264]) for (const y of [-6.7056, 6.7056]) {
     circle(x, y, 4.572, '#bc6170'); circle(x, y, .3, '#bc6170', .18);
     for (const dy of [-.58, .58]) {

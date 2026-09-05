@@ -130,7 +130,7 @@ test('Carry retains possession and its pass clears D1 visually while Shoot stays
     const progress = step / 100;
     assert.equal(core.currentSequenceState(core.advanceSequencePlayback(carry, progress)).puck.owner, 'F1');
     const shotState = core.currentSequenceState(core.advanceSequencePlayback(shot, progress));
-    assert.equal(shotState.puck.owner, null);
+    assert.equal(shotState.puck.owner, progress === 0 ? 'F1' : null);
     assert.ok(shotState.puck.x < shotState.actors.find(actor => actor.id === 'G').x);
     const passState = core.currentSequenceState(core.advanceSequencePlayback(pass, progress));
     const defender = passState.actors.find(actor => actor.id === 'D1');
@@ -149,7 +149,8 @@ test('U13 route and point reflections restore only in their own scenario and rep
       assert.deepEqual(restored, session);
       assert.equal(core.restoreReadSequence(raw), null);
       assert.equal(core.restoreReadSequence(raw, core.U9_READ_SEQUENCE.id), null);
-      assert.equal(core.serializeReadSequence(core.advanceSequencePlayback(core.replayFirstConsequence(restored), 1)), raw);
+      const firstReplay = core.advanceSequencePlayback(core.replayFirstConsequence(restored), 1);
+      assert.equal(core.serializeReadSequence(core.advanceSequencePlayback(firstReplay, 1)), raw);
       assert.equal(JSON.parse(raw).scenarioId, id);
       assert.deepEqual(JSON.parse(raw).first, { action, reason });
     }
@@ -189,7 +190,8 @@ test('U13 recall reconstructs the actual three freezes, never substitutes Carry 
     assert.deepEqual(restoreReadSequenceRecallAttempt(saved, core.restoreReadSequence(raw, id)), { order: recall.initialOrder, reason: 'My recall note', usedAnswer: true, matchesPlay: false });
     assert.equal(restoreReadSequenceRecallAttempt(saved, complete('pass', 'return-lane', core.U11_READ_SEQUENCE.id)), null);
     assert.equal(core.serializeReadSequence(session), raw);
-    assert.deepEqual(createReadSequenceRecall(core.advanceSequencePlayback(core.replayFirstConsequence(session), 1)), recall);
+    const firstReplay = core.advanceSequencePlayback(core.replayFirstConsequence(session), 1);
+    assert.deepEqual(createReadSequenceRecall(core.advanceSequencePlayback(firstReplay, 1)), recall);
   }
 });
 

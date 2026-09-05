@@ -64,16 +64,20 @@ const normalized = vector => {
 };
 
 /**
- * Orthographic high-oblique view using Three's default up [0, 1, 0].
+ * Orthographic presets using Three's default up [0, 1, 0].
  * Canonical [x, y] maps to world [y, height, -x]. Portrait looks down ice
  * with +x attacking screen-up; landscape retains the screen-right broadcast view.
  * Fit the whole bounds prism, including skater height, before applying aspect.
  */
-export function getReadSceneCamera(bounds, aspect) {
+export function getReadSceneCamera(bounds, aspect, preset = 'broadcast') {
   const { minX, maxX, minY, maxY } = bounds;
   const safeAspect = Number.isFinite(aspect) && aspect > 0 ? aspect : 1;
   const target = [(minY + maxY) / 2, PLAYER_HEIGHT / 2, -(minX + maxX) / 2];
-  const backward = normalized(safeAspect < 1 ? [0, 1.6, 1] : [1, 1.6, 0.3]);
+  // A tiny overhead offset keeps the world-up orbit axis well-defined at the
+  // pole, while remaining visually overhead (less than .06 degrees of tilt).
+  const backward = normalized(preset === 'behind-net' ? [0, 1.45, -1]
+    : preset === 'overhead' ? [0, 1, .001]
+      : safeAspect < 1 ? [0, 1.6, 1] : [1, 1.6, .3]);
   const rightAxis = normalized(cross([0, 1, 0], backward));
   const upAxis = cross(backward, rightAxis);
   const distance = Math.hypot(maxX - minX, maxY - minY, PLAYER_HEIGHT) + 10;
@@ -81,14 +85,12 @@ export function getReadSceneCamera(bounds, aspect) {
 
   let horizontal = 0;
   let vertical = 0;
-  let depth = 0;
   for (const x of [minX, maxX]) {
     for (const y of [minY, maxY]) {
       for (const height of [0, PLAYER_HEIGHT]) {
         const relative = [y - target[0], height - target[1], -x - target[2]];
         horizontal = Math.max(horizontal, Math.abs(dot(relative, rightAxis)));
         vertical = Math.max(vertical, Math.abs(dot(relative, upAxis)));
-        depth = Math.max(depth, Math.abs(dot(relative, backward)));
       }
     }
   }
@@ -102,6 +104,8 @@ export function getReadSceneCamera(bounds, aspect) {
     top: halfHeight,
     bottom: -halfHeight,
     near: 0.1,
-    far: distance + depth + 5,
+    // Adjustment may rotate away from the fitted preset. Enclose the bounds
+    // sphere so a previously overhead far plane cannot slice through the ice.
+    far: distance + Math.hypot(maxX - minX, maxY - minY, PLAYER_HEIGHT) / 2 + 5,
   };
 }

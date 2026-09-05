@@ -35,6 +35,10 @@ function reachReadThree(action, targetId) {
   return advanceSequencePlayback(selectSecondRead(reachReadTwo(action), targetId), 1);
 }
 
+function replayBothConsequences(session) {
+  return advanceSequencePlayback(advanceSequencePlayback(replayFirstConsequence(session), 1), 1);
+}
+
 test('each first action produces its own authored consequence and puck context', () => {
   const expected = { pass: 'F2', carry: 'F1', shoot: null };
   for (const action of ['pass', 'shoot', 'carry']) {
@@ -140,7 +144,9 @@ test('replay is deterministic and never changes either submitted answer', () => 
   assert.equal(replaying.replayReturnPhase, 'complete');
   assert.equal(replaying.first.action, 'pass');
   assert.equal(replaying.second.targetId, 'hold-wide');
-  const finished = advanceSequencePlayback(replaying, 1);
+  const secondReplay = advanceSequencePlayback(replaying, 1);
+  assert.equal(secondReplay.phase, 'replay-2');
+  const finished = advanceSequencePlayback(secondReplay, 1);
   assert.equal(finished.phase, 'complete');
   assert.deepEqual(finished.first, snapshot.first);
   assert.deepEqual(finished.second, snapshot.second);
@@ -258,7 +264,7 @@ test('comparison accepts revised or retained actions with reasons without changi
     assert.deepEqual(createFinalReadJudgePayload(updated), createFinalReadJudgePayload(complete));
     assert.equal(updated.changedCue.score, undefined);
     assert.equal(updated.changedCue.verdict, undefined);
-    assert.deepEqual(advanceSequencePlayback(replayFirstConsequence(updated), 1).changedCue, updated.changedCue);
+    assert.deepEqual(replayBothConsequences(updated).changedCue, updated.changedCue);
   }
   assert.deepEqual(complete, before);
   assert.throws(() => sequenceCore.submitChangedCueRead(complete, { action: 'shoot', reason: ' ' }), /reason/);
@@ -376,7 +382,7 @@ test('clearing a route requires a fresh placement and a direct placement removes
   assert.deepEqual(placed.third.point, { x: 15, y: 2 });
   assert.equal(sequenceCore.getThirdReadRoute(createReadSequenceSession()), null);
   assert.equal(sequenceCore.getThirdReadRoute(replayFirstConsequence(routed)), null);
-  assert.deepEqual(sequenceCore.getThirdReadRoute(advanceSequencePlayback(replayFirstConsequence(routed), 1)), routed.third.route);
+  assert.deepEqual(sequenceCore.getThirdReadRoute(replayBothConsequences(routed)), routed.third.route);
 });
 
 test('completed route reflections restore alongside comparisons, preserve replay and send only the final position to AI', () => {
@@ -390,7 +396,7 @@ test('completed route reflections restore alongside comparisons, preserve replay
   assert.deepEqual(restored.third, complete.third);
   assert.deepEqual(restored.changedCue, complete.changedCue);
   assert.deepEqual(sequenceCore.getThirdReadRoute(restored), complete.third.route);
-  const replayed = advanceSequencePlayback(replayFirstConsequence(restored), 1);
+  const replayed = replayBothConsequences(restored);
   assert.deepEqual(replayed.third, complete.third);
   const direct = submitThirdRead(moveThirdReadActor(session, { x: 19, y: 1 }), reason);
   assert.deepEqual(createFinalReadJudgePayload(complete), createFinalReadJudgePayload(direct));
@@ -546,7 +552,7 @@ test('U9 route reflections restore only in their selected scenario and reject cr
   assert.equal(restoreReadSequence(raw, U11_READ_SEQUENCE.id), null);
   const restored = restoreReadSequence(raw, definition.id);
   assert.deepEqual(restored, complete);
-  assert.deepEqual(advanceSequencePlayback(replayFirstConsequence(restored), 1), restored);
+  assert.deepEqual(replayBothConsequences(restored), restored);
   assert.equal(restoreReadSequence(serializeReadSequence(completeSequence()), definition.id), null);
   const withU11Target = { ...saved, second: { targetId: 'hold-wide' } };
   assert.equal(restoreReadSequence(withU11Target, definition.id), null);
@@ -590,7 +596,7 @@ test('all four U9 target choices carry their own puck owner, generic actor metad
     assert.deepEqual(halfway.actors.filter(actor => actor.id !== actorId), state.actors.filter(actor => actor.id !== actorId));
     const complete = submitThirdRead(routed, reason);
     assert.deepEqual(restoreReadSequence(serializeReadSequence(complete), u9Id).third, complete.third);
-    assert.deepEqual(advanceSequencePlayback(replayFirstConsequence(complete), 1).first, complete.first);
+    assert.deepEqual(replayBothConsequences(complete).first, complete.first);
   }
 });
 

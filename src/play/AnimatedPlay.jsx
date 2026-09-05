@@ -167,31 +167,31 @@ function RinkBackdrop() {
   return (
     <g aria-hidden="true" pointerEvents="none">
       <defs>
-        <linearGradient id={id} x1="0" y1="0" x2=".2" y2="1"><stop stopColor="#FFFFFF" /><stop offset=".48" stopColor="#EFF6F7" /><stop offset="1" stopColor="#D5E5EB" /></linearGradient>
+        <linearGradient id={id} x1="0" y1="0" x2=".2" y2="1"><stop stopColor="#FFFFFF" /><stop offset=".48" stopColor="#F7FCFF" /><stop offset="1" stopColor="#EAF5FC" /></linearGradient>
         <clipPath id={`${id}-clip`}><rect x="2" y="2" width="196" height="81" rx="27" /></clipPath>
       </defs>
       <rect x="2" y="2" width="196" height="81" rx="27" fill={`url(#${id})`} stroke="#0B1A33" strokeWidth="1.4" />
-      <g clipPath={`url(#${id}-clip)`} fill="none" stroke="#6A8C9F" strokeWidth=".15" opacity=".16">
+      <g clipPath={`url(#${id}-clip)`} fill="none" stroke="#6B99B8" strokeWidth=".15" opacity=".10">
         {Array.from({ length: 14 }, (_, i) => <path key={i} d={`M${(i * 17) % 193},${(i * 23) % 81}q7 -2 15 1`} />)}
       </g>
-      <rect x="3.1" y="3.1" width="193.8" height="78.8" rx="26" fill="none" stroke="#C9A24B" strokeWidth=".45" />
-      <rect x="99.2" y="2" width="1.6" height="81" fill="#D23A3A" />
-      <rect x="74" y="2" width="2" height="81" fill="#2B6FD6" />
-      <rect x="124" y="2" width="2" height="81" fill="#2B6FD6" />
-      <rect x="11" y="9" width="0.7" height="67" fill="#D23A3A" />
-      <rect x="188.3" y="9" width="0.7" height="67" fill="#D23A3A" />
-      <circle cx="100" cy="42.5" r="13" fill="none" stroke="#D23A3A" strokeWidth="0.6" />
-      <g fill="none" stroke="#D23A3A" strokeWidth="0.6">
+      <rect x="3.1" y="3.1" width="193.8" height="78.8" rx="26" fill="none" stroke="#C6DEEC" strokeWidth=".45" />
+      <rect x="99.2" y="2" width="1.6" height="81" fill="#D3233E" />
+      <rect x="74" y="2" width="2" height="81" fill="#1E63B5" />
+      <rect x="124" y="2" width="2" height="81" fill="#1E63B5" />
+      <rect x="11" y="9" width="0.7" height="67" fill="#D3233E" />
+      <rect x="188.3" y="9" width="0.7" height="67" fill="#D3233E" />
+      <circle cx="100" cy="42.5" r="13" fill="none" stroke="#D3233E" strokeWidth="0.6" />
+      <g fill="none" stroke="#D3233E" strokeWidth="0.6">
         <circle cx="169" cy="22" r="13" />
         <circle cx="169" cy="63" r="13" />
         <circle cx="31" cy="22" r="13" />
         <circle cx="31" cy="63" r="13" />
       </g>
-      <path d="M188.3,38 A6,6 0 0 0 188.3,47 Z" fill="#BCDcff" stroke="#D23A3A" strokeWidth="0.5" />
-      <rect x="189" y="39" width="4" height="7" fill="#F5EFE6" stroke="#D23A3A" strokeWidth="1" />
+      <path d="M188.3,38 A6,6 0 0 0 188.3,47 Z" fill="#C5E2F5" stroke="#D3233E" strokeWidth="0.5" />
+      <rect x="189" y="39" width="4" height="7" fill="#FFFFFF" stroke="#D3233E" strokeWidth="1" />
       <path d="M190 39v7m1-7v7m1-7v7m-3-5h4m-4 2h4m-4 2h4" fill="none" stroke="#5B6675" strokeWidth=".15" />
-      <path d="M11.7,38 A6,6 0 0 1 11.7,47 Z" fill="#BCDcff" stroke="#D23A3A" strokeWidth="0.5" />
-      <rect x="7" y="39" width="4" height="7" fill="#F5EFE6" stroke="#D23A3A" strokeWidth="1" />
+      <path d="M11.7,38 A6,6 0 0 1 11.7,47 Z" fill="#C5E2F5" stroke="#D3233E" strokeWidth="0.5" />
+      <rect x="7" y="39" width="4" height="7" fill="#FFFFFF" stroke="#D3233E" strokeWidth="1" />
       <path d="M8 39v7m1-7v7m1-7v7m-3-5h4m-4 2h4m-4 2h4" fill="none" stroke="#5B6675" strokeWidth=".15" />
     </g>
   );
@@ -578,7 +578,7 @@ export default function AnimatedPlay({ play, ageBand = "U11", onEvent, onNext, n
               {/* Keep YOU through every outcome. Trainer labels sit above the
                   equipment so the name and the figure remain readable. */}
               {(isDecisionActor || profile.token === "figure" || (profile.token === "symbol" && actor.role !== "goalie") || (profile.token === "token" && actor.role !== "defender")) && (
-                <text y="-8.5" textAnchor="middle" fontSize="3.2" fill="#0B1A33" stroke="#F5EFE6" strokeWidth=".65" paintOrder="stroke" fontWeight="900">{actorDisplayLabel(actor, isDecisionActor, profile)}</text>
+                <text y="-8.5" textAnchor="middle" fontSize="3.2" fill="#0B1A33" stroke="#FFFFFF" strokeWidth=".8" strokeLinejoin="round" paintOrder="stroke" fontWeight="900">{actorDisplayLabel(actor, isDecisionActor, profile)}</text>
               )}
             </g>
           );

@@ -234,3 +234,43 @@ test('every target candidate keeps its complete 44px hit area inside narrow and 
   assert.deepEqual(clampReadSceneTargetCenter([100, 150], { width: 244, height: 420 }), [100, 150]);
   assert.deepEqual(clampReadSceneTargetCenter([-20, 500], { width: 244, height: 420 }), [28, 392]);
 });
+
+test('broadcast, behind-net and overhead presets fit the same authored play from distinct requested angles', () => {
+  for (const definition of definitions) {
+    const bounds = getReadSceneBounds(definition);
+    const before = JSON.stringify(bounds);
+    for (const aspect of [244 / 420, 390 / 420, 1, 1.8, 3.2]) {
+      const views = Object.fromEntries(['broadcast', 'behind-net', 'overhead'].map(preset => [preset, getReadSceneCamera(bounds, aspect, preset)]));
+      for (const settings of Object.values(views)) assertFits(bounds, settings);
+      const behind = new Vector3(...views['behind-net'].position).sub(new Vector3(...views['behind-net'].target)).normalize();
+      const overhead = new Vector3(...views.overhead.position).sub(new Vector3(...views.overhead.target)).normalize();
+      assert.ok(behind.z < -.4, 'Behind net must look back from the attacking goal end');
+      assert.ok(overhead.y > .9999, 'Overhead must look almost vertically down on the ice');
+      assert.notDeepEqual(views.broadcast.position, views['behind-net'].position);
+      assert.notDeepEqual(views.broadcast.position, views.overhead.position);
+      assert.deepEqual(getReadSceneCamera({ ...bounds }, aspect, 'broadcast'), views.broadcast, 'Equivalent bounds must describe the same view');
+      assert.deepEqual(getReadSceneCamera(bounds, aspect, 'unknown-view'), views.broadcast, 'Unknown presets must retain a usable default');
+    }
+    assert.equal(JSON.stringify(bounds), before);
+  }
+});
+
+test('camera depth keeps the entire rink visible when a fitted overhead view is tilted or rotated', () => {
+  for (const bounds of [rink, fullHalf, ...definitions.map(definition => getReadSceneBounds(definition))]) {
+    for (const preset of ['broadcast', 'behind-net', 'overhead']) {
+      const settings = getReadSceneCamera(bounds, 390 / 420, preset);
+      const camera = actualCamera(settings), target = new Vector3(...settings.target);
+      const distance = camera.position.distanceTo(target);
+      for (const polar of [.0001, Math.PI / 4, Math.PI * .4]) for (let i = 0; i < 12; i++) {
+        const azimuth = i * Math.PI / 6;
+        camera.position.set(Math.sin(polar) * Math.sin(azimuth), Math.cos(polar), Math.sin(polar) * Math.cos(azimuth)).multiplyScalar(distance).add(target);
+        camera.lookAt(target); camera.updateMatrixWorld(true);
+        for (const corner of boxCorners(bounds)) {
+          const projected = corner.clone().project(camera);
+          assert.ok(projected.z >= -1 - 1e-9 && projected.z <= 1 + 1e-9,
+            `${preset}: orbiting must not clip the rink at a stale far plane`);
+        }
+      }
+    }
+  }
+});

@@ -304,6 +304,10 @@ function lerpAngle(from, to, progress) {
 
 function interpolateState(from, to, progress, keepOwner = null) {
   const p = clamp(progress, 0, 1);
+  if (p === 0) return clone(from);
+  if (p === 1) return clone(to);
+  const stationaryLoosePuck = from.puck.owner === null && to.puck.owner === null
+    && from.puck.x === to.puck.x && from.puck.y === to.puck.y;
   return {
     actors: from.actors.map(actor => {
       const target = to.actors.find(item => item.id === actor.id);
@@ -312,7 +316,7 @@ function interpolateState(from, to, progress, keepOwner = null) {
     puck: {
       owner: p >= 1 ? to.puck.owner : keepOwner,
       x: lerp(from.puck.x, to.puck.x, p),
-      y: lerp(from.puck.y, to.puck.y, p) + Math.sin(Math.PI * p) * (keepOwner ? 0 : 0.35),
+      y: lerp(from.puck.y, to.puck.y, p) + Math.sin(Math.PI * p) * (keepOwner || stationaryLoosePuck ? 0 : 0.35),
     },
   };
 }
@@ -336,16 +340,20 @@ export function currentSequenceState(session) {
   }
   if (!session.second || session.phase === 'read-2') return clone(branch.state);
   const target = targetFor(session.first.action, session.second.targetId, session);
-  if (session.phase === 'consequence-2') {
+  if (session.phase === 'consequence-2' || session.phase === 'replay-2') {
     const retainedOwner = branch.state.puck.owner && branch.state.puck.owner === target.state.puck.owner ? branch.state.puck.owner : null;
     return interpolateState(branch.state, target.state, session.playbackProgress, retainedOwner);
   }
   return applyThirdPoint(target.state, session.third);
 }
 
+export function isSequencePlaybackPhase(phase) {
+  return ['consequence-1', 'consequence-2', 'replay-1', 'replay-2'].includes(phase);
+}
+
 export function advanceSequencePlayback(session, rawProgress) {
   definitionForSession(session);
-  if (!['consequence-1', 'consequence-2', 'replay-1'].includes(session?.phase)) throw new Error('No sequence consequence is active.');
+  if (!isSequencePlaybackPhase(session?.phase)) throw new Error('No sequence consequence is active.');
   if (!Number.isFinite(rawProgress)) throw new TypeError('Playback progress must be finite.');
   const next = clone(session);
   next.playbackProgress = clamp(rawProgress, 0, 1);
@@ -357,6 +365,9 @@ export function advanceSequencePlayback(session, rawProgress) {
     const target = targetFor(next.first.action, next.second.targetId, next);
     next.phase = 'read-3';
     next.third = { actorId: target.moveActorId, point: null, reason: '', route: null };
+  } else if (next.phase === 'replay-1' && next.second && ['read-3', 'complete'].includes(next.replayReturnPhase)) {
+    next.phase = 'replay-2';
+    next.playbackProgress = 0;
   } else {
     next.phase = next.replayReturnPhase;
     next.replayReturnPhase = null;

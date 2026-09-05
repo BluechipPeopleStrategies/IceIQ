@@ -25,15 +25,15 @@ function collectScenarios() {
 
 // Compose the live bank from src/data/bank.json (gauntlet output, keyed by age
 // level → question[]) plus any scenario seeds. Always returns an object keyed
-// by all 6 levels, even when empty. Bank version bumped to v27 (2026-06-04
-// blank-slate wipe) so any pre-wipe composed bank in sessionStorage is dropped.
+// by all 6 levels, even when empty. Version 28 keeps navy-team wording in sync
+// with the September 5 artwork; discard older composed banks on reload.
 export function loadQB() {
   if (cached) return Promise.resolve(cached);
 
-  const CACHE_KEY = "rinkreads_qb_cache_v27";
+  const CACHE_KEY = "rinkreads_qb_cache_v28";
   try {
     // Drop every prior cache version (pre-wipe banks must not be served).
-    for (let v = 3; v <= 26; v++) sessionStorage.removeItem(`rinkreads_qb_cache_v${v}`);
+    for (let v = 3; v <= 27; v++) sessionStorage.removeItem(`rinkreads_qb_cache_v${v}`);
     sessionStorage.removeItem("rinkreads_qb_cache");
     const stored = sessionStorage.getItem(CACHE_KEY);
     if (stored) { cached = JSON.parse(stored); return Promise.resolve(cached); }

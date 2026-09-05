@@ -127,7 +127,7 @@ const rinkPaintCache = new WeakMap();
 
 function rinkPaint(ctx, W, H, orientation) {
   // Recording contexts used by geometry exporters can omit cosmetic gradients.
-  if (!ctx.createLinearGradient || !ctx.createRadialGradient) return { ice: '#eaf6fb', glow: 'transparent' };
+  if (!ctx.createLinearGradient || !ctx.createRadialGradient) return { ice: '#F7FCFF', glow: 'transparent' };
   const key = `${Math.round(W)}x${Math.round(H)}:${orientation}`;
   const cached = rinkPaintCache.get(ctx);
   if (cached?.key === key) return cached;
@@ -135,10 +135,10 @@ function rinkPaint(ctx, W, H, orientation) {
     ? ctx.createLinearGradient(0, 0, W, H)
     : ctx.createLinearGradient(0, 0, W, H * 0.7);
   gradient.addColorStop(0, "#FFFFFF");
-  gradient.addColorStop(0.48, "#EFF6F7");
-  gradient.addColorStop(1, "#D5E5EB");
+  gradient.addColorStop(0.48, "#F7FCFF");
+  gradient.addColorStop(1, "#EAF5FC");
   const glow = ctx.createRadialGradient(W * 0.48, H * 0.24, 0, W * 0.48, H * 0.24, Math.max(W, H) * 0.52);
-  glow.addColorStop(0, "rgba(255,255,255,0.8)");
+  glow.addColorStop(0, "rgba(255,255,255,0.35)");
   glow.addColorStop(1, "rgba(255,255,255,0)");
   const paints = { key, ice: gradient, glow };
   rinkPaintCache.set(ctx, paints);
@@ -158,7 +158,7 @@ function roundRectPath(ctx, x, y, w, h, r) {
 }
 
 function faceoffDot(ctx, x, y) {
-  ctx.fillStyle = "#c8102e";
+  ctx.fillStyle = "#D3233E";
   ctx.beginPath();
   ctx.arc(x, y, 3, 0, Math.PI * 2);
   ctx.fill();
@@ -244,8 +244,8 @@ export function drawRink(ctx, W, H, { orientation = "landscape", zone = "full" }
   // surface feel like ice while preserving every drill's clue geometry. The
   // pattern is deterministic and uses no per-frame arrays or random numbers.
   ctx.save();
-  ctx.globalAlpha = 0.075;
-  ctx.strokeStyle = "#5B6675";
+  ctx.globalAlpha = 0.06;
+  ctx.strokeStyle = "#6B99B8";
   ctx.lineWidth = 1;
   for (let i = 0; i < 11; i += 1) {
     const sx = ((i * 83) % 97) / 97 * W;
@@ -255,7 +255,7 @@ export function drawRink(ctx, W, H, { orientation = "landscape", zone = "full" }
     ctx.quadraticCurveTo(sx, sy + H * 0.018, sx + W * 0.055, sy);
     ctx.stroke();
   }
-  ctx.globalAlpha = 0.32;
+  ctx.globalAlpha = 0.18;
   ctx.fillStyle = paints.glow;
   ctx.fillRect(0, 0, W, H);
   ctx.restore();
@@ -281,25 +281,25 @@ export function drawRink(ctx, W, H, { orientation = "landscape", zone = "full" }
   // lines and the play finally agree. Landscape stays the default; the seven
   // drills that were already correct are untouched.
   ctx.save();
-  ctx.globalAlpha = 0.8;
-  ctx.fillStyle = "#1b6cb0";
+  ctx.globalAlpha = 1;
+  ctx.fillStyle = "#1E63B5";
   if (orientation === "portrait") {
     ctx.fillRect(0, H * 0.33 - 2.5, W, 5);
     ctx.fillRect(0, H * 0.67 - 2.5, W, 5);
-    ctx.fillStyle = "#c8102e";
+    ctx.fillStyle = "#D3233E";
     ctx.fillRect(0, H * 0.5 - 2, W, 4);
   } else {
     ctx.fillRect(W * 0.33 - 2.5, 0, 5, H);
     ctx.fillRect(W * 0.67 - 2.5, 0, 5, H);
-    ctx.fillStyle = "#c8102e";
+    ctx.fillStyle = "#D3233E";
     ctx.fillRect(W * 0.5 - 2, 0, 4, H);
   }
   ctx.restore();
 
   // goal lines (thin red) near each end
   ctx.save();
-  ctx.globalAlpha = 0.55;
-  ctx.strokeStyle = "#c8102e";
+  ctx.globalAlpha = 1;
+  ctx.strokeStyle = "#D3233E";
   ctx.lineWidth = 1.5;
   [0.08, 0.92].forEach((g) => {
     ctx.beginPath();
@@ -310,7 +310,7 @@ export function drawRink(ctx, W, H, { orientation = "landscape", zone = "full" }
   ctx.restore();
 
   // center circle + dot
-  ctx.strokeStyle = "#1b6cb0";
+  ctx.strokeStyle = "#1E63B5";
   ctx.lineWidth = 2;
   ctx.beginPath();
   ctx.arc(W * 0.5, H * 0.5, Math.min(W, H) * 0.16, 0, Math.PI * 2);
@@ -325,7 +325,7 @@ export function drawRink(ctx, W, H, { orientation = "landscape", zone = "full" }
     [0.8, 0.3],
     [0.8, 0.7],
   ].forEach(([fx, fy]) => {
-    ctx.strokeStyle = "#c8102e";
+    ctx.strokeStyle = "#D3233E";
     ctx.lineWidth = 1.5;
     ctx.beginPath();
     ctx.arc(W * fx, H * fy, circ, 0, Math.PI * 2);
@@ -335,8 +335,8 @@ export function drawRink(ctx, W, H, { orientation = "landscape", zone = "full" }
 
   // blue goal creases at each end
   const crease = Math.min(W, H) * 0.09;
-  ctx.fillStyle = "rgba(27,108,176,0.22)";
-  ctx.strokeStyle = "#1b6cb0";
+  ctx.fillStyle = "#C5E2F5";
+  ctx.strokeStyle = "#D3233E";
   ctx.lineWidth = 1.5;
   ctx.beginPath();
   ctx.arc(W * 0.08, H * 0.5, crease, -Math.PI / 2, Math.PI / 2);
@@ -354,15 +354,15 @@ export function drawRink(ctx, W, H, { orientation = "landscape", zone = "full" }
 // boards + a lighter glass line just inside them
 function drawBoards(ctx, W, H, R, m) {
   ctx.save();
-  ctx.shadowColor = "rgba(11, 26, 51, 0.30)";
-  ctx.shadowBlur = 12;
+  ctx.shadowColor = "rgba(11, 26, 51, 0.24)";
+  ctx.shadowBlur = 7;
   roundRectPath(ctx, m, m, W - 2 * m, H - 2 * m, R);
   ctx.strokeStyle = "#0B1A33";
   ctx.lineWidth = 4;
   ctx.stroke();
   ctx.shadowBlur = 0;
   roundRectPath(ctx, m + 2.5, m + 2.5, W - 2 * m - 5, H - 2 * m - 5, Math.max(0, R - 2.5));
-  ctx.strokeStyle = "#C9A24B";
+  ctx.strokeStyle = "#C6DEEC";
   ctx.lineWidth = 1.5;
   ctx.stroke();
   ctx.restore();
@@ -415,8 +415,8 @@ function drawEndZoneMarkings(ctx, W, H, orientation) {
 
   // goal line, running the full width of the zone
   ctx.save();
-  ctx.globalAlpha = 0.55;
-  ctx.strokeStyle = "#c8102e";
+  ctx.globalAlpha = 1;
+  ctx.strokeStyle = "#D3233E";
   ctx.lineWidth = 1.5;
   ctx.beginPath();
   if (portrait) { ctx.moveTo(0, H * g); ctx.lineTo(W, H * g); }
@@ -425,8 +425,8 @@ function drawEndZoneMarkings(ctx, W, H, orientation) {
   ctx.restore();
 
   // crease, opening away from the end boards
-  ctx.fillStyle = "rgba(27,108,176,0.22)";
-  ctx.strokeStyle = "#1b6cb0";
+  ctx.fillStyle = "#C5E2F5";
+  ctx.strokeStyle = "#D3233E";
   ctx.lineWidth = 1.5;
   ctx.beginPath();
   if (portrait) ctx.arc(net.x, net.y, net.r, 0, Math.PI);
@@ -436,15 +436,32 @@ function drawEndZoneMarkings(ctx, W, H, orientation) {
 
   // the net itself, sitting on the goal line
   ctx.save();
-  ctx.strokeStyle = "#c8102e";
+  ctx.strokeStyle = "#D3233E";
   ctx.lineWidth = 2;
-  ctx.fillStyle = "rgba(255,255,255,0.85)";
+  ctx.fillStyle = "#FFFFFF";
   const nw = (portrait ? W : H) * NET_MOUTH_FRAC;   // mouth, across the zone
   const nd = (portrait ? H : W) * NET_DEPTH_FRAC;   // depth, behind the goal line
   ctx.beginPath();
   if (portrait) ctx.rect(net.x - nw / 2, net.y - nd, nw, nd);
   else ctx.rect(net.x - nd, net.y - nw / 2, nd, nw);
   ctx.fill();
+  ctx.stroke();
+  // Fine netting stays inside the existing goal frame; its anchor and mouth
+  // remain the same coordinates used by the end-zone placement keep-out.
+  ctx.strokeStyle = "#93AABD";
+  ctx.lineWidth = 0.6;
+  ctx.beginPath();
+  for (let i = 1; i < 4; i += 1) {
+    const cross = -nw / 2 + nw * i / 4;
+    const depth = nd * i / 4;
+    if (portrait) {
+      ctx.moveTo(net.x + cross, net.y - nd); ctx.lineTo(net.x + cross, net.y);
+      ctx.moveTo(net.x - nw / 2, net.y - depth); ctx.lineTo(net.x + nw / 2, net.y - depth);
+    } else {
+      ctx.moveTo(net.x - nd, net.y + cross); ctx.lineTo(net.x, net.y + cross);
+      ctx.moveTo(net.x - depth, net.y - nw / 2); ctx.lineTo(net.x - depth, net.y + nw / 2);
+    }
+  }
   ctx.stroke();
   ctx.restore();
 
@@ -455,7 +472,7 @@ function drawEndZoneMarkings(ctx, W, H, orientation) {
     ? [[near, FACEOFF_FROM_GOAL_LINE], [far, FACEOFF_FROM_GOAL_LINE]]
     : [[FACEOFF_FROM_GOAL_LINE, near], [FACEOFF_FROM_GOAL_LINE, far]];
   spots.forEach(([fx, fy]) => {
-    ctx.strokeStyle = "#c8102e";
+    ctx.strokeStyle = "#D3233E";
     ctx.lineWidth = 1.5;
     ctx.beginPath();
     ctx.arc(W * fx, H * fy, circ, 0, Math.PI * 2);

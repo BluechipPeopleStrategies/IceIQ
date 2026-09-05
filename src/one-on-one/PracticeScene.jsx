@@ -22,8 +22,8 @@ function Rail({ height, thickness, colour, inset = 0 }) {
   return <mesh geometry={geometry} rotation={[-Math.PI / 2, 0, 0]} position={[0, height, 0]} receiveShadow castShadow><meshStandardMaterial color={colour} roughness={.6} /></mesh>;
 }
 
-function Ice() {
-  const texture = useMemo(makeIceTexture, []);
+function Ice({ hideZoneLines = false }) {
+  const texture = useMemo(() => makeIceTexture({ hideZoneLines }), [hideZoneLines]);
   useEffect(() => () => texture.dispose(), [texture]);
   const geometry = useMemo(() => {
     const g = new THREE.ShapeGeometry(roundedRinkShape(.08), 28);

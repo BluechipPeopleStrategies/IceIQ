@@ -47,7 +47,7 @@ test('all curriculum boards opt into one closed inspector while retaining the ex
     assert.equal((normal.match(/class="board-inspection-open"/g) || []).length, 1);
     assert.doesNotMatch(readOnly, /<button|<dialog|<canvas/);
     for (const actor of question.visual.actors) assert.ok(readOnly.includes(`translate(${actor.x} ${actor.y})`));
-    assert.equal((readOnly.match(/data-pose="neutral"/g) || []).length, question.visual.actors.length);
+    assert.equal((readOnly.match(/data-pose="authored-heading"/g) || []).length, question.visual.actors.length);
     assert.equal(JSON.stringify(question.visual), before);
   }
 });

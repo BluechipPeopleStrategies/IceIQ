@@ -1,0 +1,172 @@
+{
+  "version": "sgs-positioning-benchmark-v1",
+  "measuredAt": "2026-09-05T13:45:20.263Z",
+  "command": "node tools/benchmark-positioning-sgs.mjs",
+  "nodeVersion": "v24.14.1",
+  "hardware": {
+    "platform": "win32",
+    "architecture": "x64",
+    "cpuModel": "AMD Ryzen 7 9800X3D 8-Core Processor           ",
+    "logicalCpuCount": 16
+  },
+  "scope": "Local planning prototype; two teaching families in five team formats. No bank admission or approval is performed.",
+  "rawConfigurations": 640,
+  "distinctParameterSetsWithinFormats": 640,
+  "distinctExactFreezeSequences": 640,
+  "isolatedPlacementPathsCompleted": 640,
+  "predefinedChoicePaths": {
+    "attempted": 17280,
+    "completed": 15834,
+    "blocked": 1446
+  },
+  "physicsEvaluated": 0,
+  "physicsClean": null,
+  "aiReviewed": 0,
+  "aiApproved": null,
+  "admitted": 0,
+  "poseProvenance": "Authored opening: F1 faces the attacking end; other skaters and G face the actual puck. F1 faces its carry path; the support-family D1 pressure pose faces F1. G turns toward each resulting puck freeze. The selected player keeps their submitted pose.",
+  "plannedEvidenceFields": [
+    "selected input method/choice ID per answer",
+    "source-file content hashes bound to each saved session"
+  ],
+  "elapsedMs": 11540,
+  "templateHash": "0a3ee638800e0c73a61660f70d35036ea4c6f680295310d03e4ecfe0b37de850",
+  "sourceHashes": {
+    "docs/library/gap-control.md": "13eebf1a7a620a49420c1ef1dbe7352f2fdc5762346ee6fd6c1b86fcca8e19de",
+    "docs/library/defensive-angling.md": "875d3f2c46c50c8db92b3015376aa8010c32db10ebe3acd20f0c985e51471f05",
+    "docs/library/off-puck-support-offense.md": "683b569949c672c95b434fcebf7cb6c0a0e9ccf8bfbe2ebd0f89259ca9ff297a",
+    "docs/library/scanning.md": "647d31c58557073ef108bdbb3aaa459b1d17ca8e85863d66638c2fd9173dc978",
+    "src/one-on-one/positioningSequenceCore.js": "1c9615ee71aa3d721d6e1b382c9b69a6e40695da97036a8713aaf6a3db1c264e",
+    "src/one-on-one/readSequenceGeometry.js": "6deb38af46788637880db3c9e75f7511a8b3e88ca3fc50246244952c02503415",
+    "src/one-on-one/director.js": "497eba30a4d2ed9b470c43be5210bd025934cd12ce07cee55dea5326507477b2",
+    "src/scenario-engine/rinkFrame.js": "97bde79aa502103a4f7808cc01f9c8ad24a1ef1bf64db51fd2ec71d573f9ae60",
+    "src/scenario-engine/generator/parameterSpace.js": "0efe3540bf2c83569b7a8496c3a46e445a6ec4144d87ca27e6901f4f6c6b3387",
+    "tools/benchmark-positioning-sgs.mjs": "82059dc07106035f7acbc666e9bc5c3695a7d61d2a145d19809e8954c1c4f5b6"
+  },
+  "perFormat": [
+    {
+      "teamSize": 1,
+      "family": "gap-and-inside-position",
+      "rawConfigurations": 128,
+      "distinctParameterSets": 128,
+      "distinctExactFreezeSequences": 128,
+      "isolatedPlacementPathsCompleted": 128,
+      "predefinedChoicePaths": {
+        "attempted": 3456,
+        "completed": 2586,
+        "blocked": 870,
+        "blockedByGuard": {
+          "bodyOverlap": 798,
+          "carriedPuckOverlap": 72,
+          "passPathOverlap": 0
+        },
+        "blockedAtRead": {
+          "1": 576,
+          "2": 216,
+          "3": 78
+        }
+      }
+    },
+    {
+      "teamSize": 2,
+      "family": "off-puck-support",
+      "rawConfigurations": 128,
+      "distinctParameterSets": 128,
+      "distinctExactFreezeSequences": 128,
+      "isolatedPlacementPathsCompleted": 128,
+      "predefinedChoicePaths": {
+        "attempted": 3456,
+        "completed": 3456,
+        "blocked": 0,
+        "blockedByGuard": {
+          "bodyOverlap": 0,
+          "carriedPuckOverlap": 0,
+          "passPathOverlap": 0
+        },
+        "blockedAtRead": {
+          "1": 0,
+          "2": 0,
+          "3": 0
+        }
+      }
+    },
+    {
+      "teamSize": 3,
+      "family": "off-puck-support",
+      "rawConfigurations": 128,
+      "distinctParameterSets": 128,
+      "distinctExactFreezeSequences": 128,
+      "isolatedPlacementPathsCompleted": 128,
+      "predefinedChoicePaths": {
+        "attempted": 3456,
+        "completed": 3264,
+        "blocked": 192,
+        "blockedByGuard": {
+          "bodyOverlap": 0,
+          "carriedPuckOverlap": 0,
+          "passPathOverlap": 192
+        },
+        "blockedAtRead": {
+          "1": 0,
+          "2": 192,
+          "3": 0
+        }
+      }
+    },
+    {
+      "teamSize": 4,
+      "family": "off-puck-support",
+      "rawConfigurations": 128,
+      "distinctParameterSets": 128,
+      "distinctExactFreezeSequences": 128,
+      "isolatedPlacementPathsCompleted": 128,
+      "predefinedChoicePaths": {
+        "attempted": 3456,
+        "completed": 3264,
+        "blocked": 192,
+        "blockedByGuard": {
+          "bodyOverlap": 0,
+          "carriedPuckOverlap": 0,
+          "passPathOverlap": 192
+        },
+        "blockedAtRead": {
+          "1": 0,
+          "2": 192,
+          "3": 0
+        }
+      }
+    },
+    {
+      "teamSize": 5,
+      "family": "off-puck-support",
+      "rawConfigurations": 128,
+      "distinctParameterSets": 128,
+      "distinctExactFreezeSequences": 128,
+      "isolatedPlacementPathsCompleted": 128,
+      "predefinedChoicePaths": {
+        "attempted": 3456,
+        "completed": 3264,
+        "blocked": 192,
+        "blockedByGuard": {
+          "bodyOverlap": 0,
+          "carriedPuckOverlap": 0,
+          "passPathOverlap": 192
+        },
+        "blockedAtRead": {
+          "1": 0,
+          "2": 192,
+          "3": 0
+        }
+      }
+    }
+  ],
+  "method": [
+    "Enumerate 128 declared load-bearing parameter combinations in each of five formats. No mirrors, prose alternatives or random jitter add credit.",
+    "For each configuration, fingerprint only the exact initial/read-two/read-three actor poses, teams/roles and puck/owner pose from an isolated-placement path; IDs, display labels, titles and parameter labels do not enter that geometry hash.",
+    "The isolated point is D1 at (27,-6) for 1v1 and F2 at (5,-7) for larger formats. These are deliberate geometry probes, not suggested hockey positions.",
+    "Try all 27 sequences of Stay/Back/Forward, resolving each choice from the actual current read origin. A guard ends that button path; later choices are not executed.",
+    "Guard categories describe overlap in the illustration. Blocked does not mean a wrong hockey answer; completed does not mean a correct answer or a successful real play.",
+    "Director snapshot validation, exact owner attachment and saved-session reconstruction are checked for every isolated path. These checks do not replace the gated physics/tactical/AI/promotion pipeline.",
+    "Physics-clean and AI-approved are null because neither assessment ran. Their evaluated counts and actual admissions are zero."
+  ]
+}

@@ -18,7 +18,7 @@ test('unknown heading stays neutral and decorative without introducing labels or
     assert.match(result, /data-pose="neutral"/);
     assert.match(result, /pointer-events="none"/);
     assert.match(result, /aria-hidden="true"/);
-    assert.doesNotMatch(result, /rotate\(|<text|<image|tabindex|role="button"/);
+    assert.doesNotMatch(result, /rotate\(|<text|tabindex|role="button"/);
   }
 });
 
@@ -31,13 +31,15 @@ test('authored headings and team/goalie role remain explicit at the caller suppl
   assert.match(result, /rotate\(0\)/);
 });
 
-test('many players and comparison boards have distinct SVG paint definitions', () => {
+test('many players share the four overhead assets without duplicate SVG IDs', () => {
   const result = renderToStaticMarkup(createElement('svg', null, ...Array.from({ length: 20 }, (_, index) => createElement(HockeyPlayerArt, { key: index, team: index % 2 ? 'away' : 'home', goalie: index % 5 === 0 }))));
   const ids = [...result.matchAll(/id="([^"]+)"/g)].map(match => match[1]);
-  assert.equal(ids.length, 60);
+  assert.equal(ids.length, 0, 'Raster equipment needs no per-player gradient definitions');
   assert.equal(new Set(ids).size, ids.length);
   const references = [...result.matchAll(/url\(#([^)]*)\)/g)].map(match => match[1]);
-  assert.ok(references.length > 20);
+  assert.equal((result.match(/<image /g) || []).length, 20);
+  assert.match(result, /skater-navy\.png/);
+  assert.match(result, /goalie-gold\.png/);
   assert.ok(references.every(id => ids.includes(id)));
 });
 

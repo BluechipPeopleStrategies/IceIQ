@@ -211,7 +211,8 @@ test('unchanged support, loop routes, changed cues and replay never become extra
       else assert.throws(() => core.createFinalReadJudgePayload(session), /not supported/);
       const restored = core.restoreReadSequence(raw, session.scenarioId);
       assert.deepEqual(create(restored), result);
-      assert.deepEqual(create(core.advanceSequencePlayback(core.replayFirstConsequence(restored), 1)), result);
+      const firstReplay = core.advanceSequencePlayback(core.replayFirstConsequence(restored), 1);
+      assert.deepEqual(create(core.advanceSequencePlayback(firstReplay, 1)), result);
     }
     const legacy = JSON.parse(core.serializeReadSequence(loop));
     delete legacy.third.route;

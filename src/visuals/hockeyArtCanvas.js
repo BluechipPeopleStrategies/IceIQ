@@ -1,3 +1,5 @@
+import { overheadArtworkImage } from './overheadArtwork.js';
+
 // Presentation only. Every figure fits the caller's existing circular footprint;
 // no actor, hit radius, facing, timer or task state is created or changed here.
 const NAVY = '#0B1A33';
@@ -16,6 +18,19 @@ function ellipse(ctx, x, y, rx, ry, fill) {
 export function drawHockeyPlayer(ctx, { x, y, r, team = 'home', goalie = false, jersey = null, facing = null }) {
   if (![x, y, r].every(Number.isFinite) || r <= 0) return;
   const colour = jersey || (team === 'away' ? GOLD : NAVY);
+  const spriteTeam = [GOLD, '#f2b705', '#F2B705', '#e1b24a'].includes(colour) ? 'away' : 'home';
+  const sprite = overheadArtworkImage({ team: spriteTeam, goalie });
+  // Special task colours keep their existing painter: they can encode a memory
+  // target, warning or reveal and must not be replaced by a uniform colour.
+  const uniformColour = [NAVY, GOLD, '#f2b705', '#F2B705'].includes(colour);
+  if (sprite && uniformColour) {
+    ctx.save();
+    ctx.translate(x, y);
+    if (Number.isFinite(facing)) ctx.rotate((facing + 90) * Math.PI / 180);
+    ctx.drawImage(sprite, -r, -r, r * 2, r * 2);
+    ctx.restore();
+    return;
+  }
   const trim = colour === NAVY ? GOLD : NAVY;
   ctx.save();
   ctx.translate(x, y);
