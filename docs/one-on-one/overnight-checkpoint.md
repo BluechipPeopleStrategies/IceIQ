@@ -4,6 +4,8 @@ Updated September 5, 2026, 00:12 Edmonton. First integrated review build verifie
 
 ## Continue from here
 
+**Latest owner steering: phone access.** Shared preview routes are enabled for production. `tools/practice-review-assets.mjs` packages the allowlisted review/character pages at `/review/` and `/review/characters/`; no raw docs/manifests are published. Hosted arena uses the fixed practice-preview identity, and hosted AI returns unavailable before any request. 155 tests/build and 390 px production-preview flows pass. Deploy/check record: `docs/one-on-one/phone-preview.md`. This supersedes all older DEV-only/local-only statements below. Do not restore that restriction. Public review URL is https://ice-iq.vercel.app/review/.
+
 The same-task heartbeat `rinkreads-overnight-build` is active every 30 minutes through 13:00 UTC. Read this file and `docs/one-on-one/morning-review.md` before working. Do not repeat discovery or rebuild completed features. Check git log for the saved checkpoint commit. No purchases, production content admission, real account mutation, or live AI use has been performed.
 
 ## Owner direction

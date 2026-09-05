@@ -8633,18 +8633,20 @@ export default function App() {
   if (hashRoute === "scenarios") {
     return <Suspense fallback={<LazyFallback/>}><ScenarioPlayground/></Suspense>;
   }
-  // Local gameplay/art review only; production learning and player-art gates remain open.
-  if (import.meta.env.DEV && ['shootout-before','shootout-now','brain-gym'].includes(hashRoute)) {
+  // Shareable prototype routes. Hosted review uses separate device-local practice records.
+  // This does not promote draft lessons into the live curriculum or change main navigation.
+  const practiceReviewPlayer = import.meta.env.DEV ? player : undefined;
+  if (['shootout-before','shootout-now','brain-gym'].includes(hashRoute)) {
     return <Suspense fallback={<LazyFallback/>}><GymComparison key={hashRoute} view={hashRoute==='shootout-before'?'before':hashRoute==='shootout-now'?'now':'gym'}/></Suspense>;
   }
-  if (import.meta.env.DEV && hashRoute === "practice-arena") {
-    return <Suspense fallback={<LazyFallback/>}><PracticeArena key={player?.id || "practice-preview"} player={player}/></Suspense>;
+  if (hashRoute === "practice-arena") {
+    return <Suspense fallback={<LazyFallback/>}><PracticeArena key={practiceReviewPlayer?.id || "practice-preview"} player={practiceReviewPlayer}/></Suspense>;
   }
-  if (import.meta.env.DEV && hashRoute === "legacy-two-on-one") {
+  if (hashRoute === "legacy-two-on-one") {
     return <Suspense fallback={<LazyFallback/>}><LegacyTwoOnOne/></Suspense>;
   }
-  if (import.meta.env.DEV && hashRoute === "one-on-one") {
-    return <Suspense fallback={<LazyFallback/>}><OneOnOnePractice playerId={player?.id || "practice-preview"}/></Suspense>;
+  if (hashRoute === "one-on-one") {
+    return <Suspense fallback={<LazyFallback/>}><OneOnOnePractice playerId={practiceReviewPlayer?.id || "practice-preview"}/></Suspense>;
   }
   // Hidden manual-only 3D prototype route. No nav entry; browse directly to #dev-3d-scenario.
   if (hashRoute === "dev-3d-scenario") {

@@ -1,6 +1,6 @@
 # RinkReads — Task List
 
-**Last updated:** 2026-09-05 00:12 Edmonton · First integrated Practice Arena review build verified: U11 three connected reads, coach positioning questions, source curriculum, scalable animation tools and upgraded Brain Gym. BlueChip navy/gold glass styling and profile/accessibility fixes integrated. 153 practice tests, existing scenario-engine suite and production build pass. Arena remains DEV-only; production integration, live AI, physical iPad testing, rigged art and curriculum admission remain open. Review: `docs/one-on-one/morning-review.md`.
+**Last updated:** 2026-09-05 · Phone access added at Thomas's request: shared review, arena, comparison games and character previews included in the production deployment, with separate device-local practice records and no hosted AI requests. 155 practice tests and production build pass. Account/cloud integration, live AI, physical iPad testing, rigged art and curriculum admission remain open. Review: `docs/one-on-one/phone-preview.md`.
 
 **Scope:** RinkReads **app build + content factory**. Launch/distribution (sending the beta, marketing) and the separate BlueChip business are **out of scope** — parked at the bottom. Priority = position in this list. A new idea that isn't here goes to the **Parking Lot** first, then gets promoted on purpose — that's the scope-creep guard.
 
@@ -54,6 +54,8 @@
 - *(New ideas land here first, then get promoted into NEXT/LATER on purpose.)*
 
 ## Changelog
+
+- **2026-09-05 — Phone-accessible review.** Owner requested access from a phone. Enabled the existing prototype hashes in production without changing main navigation, isolated hosted practice identity, blocked unconfigured hosted AI calls before network access, and packaged twelve explicit review assets without raw documentation/manifests. Added dependency/link tests; 155 practice tests, production build and 390 px production-preview flow checks pass. Public entry: `https://ice-iq.vercel.app/review/`. This supersedes the earlier DEV-only review restriction.
 
 - **2026-09-05 — Integrated review checkpoint and quality fixes.** Completed the U11 sequence with true pass/carry/shoot branches, target selection, player movement, free reasons, replay and completed-reflection persistence. Integrated 12 coach examples and 24 lessons/48 questions with all 12 source notes mapped. Fixed gold-button contrast, distinguishable radar series, U9 facing controls, canonical goalie positions, profile-scoped persistence, stale saved lists, deferred React errors and keyboard Shootout. Added navy/gold transparent character references and a 40-clip specification, not rigged animation. All independent concrete review findings resolved; 153 practice tests, scenario-engine suite and build pass. Actual browser evidence and remaining work are in `docs/one-on-one/verification.md` and `overnight-checkpoint.md`. The 7am owner review remains the target.
 

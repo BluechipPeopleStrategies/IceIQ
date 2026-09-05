@@ -3,6 +3,8 @@ September 5, 2026 · Prepared for 7:00 a.m. Edmonton
 
 The first integrated preview is ready for a walkthrough. Start with the U11 sequence, then review the coach tools, curriculum, Brain Gym and character references.
 
+**Phone review:** [Open the shared review](https://ice-iq.vercel.app/review/). The September 5 phone-access request supersedes the localhost-only/DEV-route limitation recorded in the original checkpoint below. The review routes are now included in the production build with separate practice storage; [phone-preview.md](phone-preview.md) records the boundary and verification.
+
 ## Walkthrough
 
 | Open locally | What to try |

@@ -3,9 +3,10 @@ import react from '@vitejs/plugin-react'
 import { reviewServerPlugin } from './tools/review-server-plugin.mjs'
 import { seedEditorPlugin } from './tools/seed-editor-plugin.mjs'
 import { practiceJudgePlugin } from './tools/practice-judge-plugin.mjs'
+import { practiceReviewAssetsPlugin } from './tools/practice-review-assets.mjs'
 
 export default defineConfig({
-  plugins: [react(), reviewServerPlugin(), seedEditorPlugin(), practiceJudgePlugin()],
+  plugins: [react(), reviewServerPlugin(), seedEditorPlugin(), practiceJudgePlugin(), practiceReviewAssetsPlugin()],
   build: {
     minify: 'terser',
     terserOptions: {

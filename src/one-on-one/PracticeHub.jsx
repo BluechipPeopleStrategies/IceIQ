@@ -17,7 +17,7 @@ export default function PracticeHub({player}) {
   function openDraft(play){try{openDirector(draftFromPlay(play))}catch(e){setError(e.message)}}
   function askAboutDraft(draft){setQuestionDraft(structuredClone(draft));setQuestionRevision(v=>v+1);setCoachView('questions')}
   return <main className="pf-hub">
-    <header className="pf-header"><a href="#" className="pf-brand"><RinkReadsLogo size={27} wordmark/><span>PRACTICE ARENA</span></a><nav aria-label="RinkReads arena">{TABS.map(([id,label])=><button key={id} aria-pressed={tab===id} onClick={()=>{setTab(id);setError('')}}>{label}</button>)}</nav><span className="pf-preview">DEVELOPMENT BUILD</span></header>
+    <header className="pf-header"><a href="#" className="pf-brand"><RinkReadsLogo size={27} wordmark/><span>PRACTICE ARENA</span></a><nav aria-label="RinkReads arena">{TABS.map(([id,label])=><button key={id} aria-pressed={tab===id} onClick={()=>{setTab(id);setError('')}}>{label}</button>)}</nav><span className="pf-preview">REVIEW BUILD</span></header>
     {error&&<p role="alert">{error}</p>}
     {tab==='read'&&<ReadSequence key={player?.id||'practice-preview'} playerId={player?.id||'practice-preview'}/>}
     {tab==='play'&&<OneOnOne key={player?.id||'practice-preview'} playerId={player?.id||'practice-preview'}/>}

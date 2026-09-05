@@ -1,6 +1,8 @@
 export const PRACTICE_JUDGE_ENDPOINT = '/__practice/judge';
 
 const FALLBACK_MESSAGE = 'AI coach review is unavailable right now. Your answer has not been graded.';
+const HOSTED_PREVIEW = import.meta.env?.PROD === true;
+const HOSTED_MESSAGE = 'AI coach review is not enabled in this shared preview. Your answer has not been graded.';
 
 async function readResponse(response) {
   try { return await response.json(); }
@@ -12,6 +14,7 @@ function failure(code, message, unavailable = true) {
 }
 
 export async function getPracticeJudgeStatus({ fetchImpl = globalThis.fetch, signal } = {}) {
+  if (HOSTED_PREVIEW) return { configured: false, model: null, message: HOSTED_MESSAGE };
   try {
     const response = await fetchImpl(PRACTICE_JUDGE_ENDPOINT, { method: 'GET', headers: { Accept: 'application/json' }, signal });
     const body = await readResponse(response);
@@ -25,6 +28,7 @@ export async function getPracticeJudgeStatus({ fetchImpl = globalThis.fetch, sig
 }
 
 export async function judgePracticeAttempt(payload, { fetchImpl = globalThis.fetch, signal } = {}) {
+  if (HOSTED_PREVIEW) return failure('not_configured', HOSTED_MESSAGE);
   try {
     const response = await fetchImpl(PRACTICE_JUDGE_ENDPOINT, {
       method: 'POST',
