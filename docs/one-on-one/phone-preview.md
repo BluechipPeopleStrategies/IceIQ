@@ -61,3 +61,14 @@ byte-identical. U9 exposed no unsupported AI or changed-cue control. No failed
 HTTP requests, page exceptions or horizontal overflow occurred in this flow.
 Evidence: `evidence/u9-live-phone.png`. These are live-origin browser/touch-event
 checks, not a physical-phone test or a child comprehension study.
+
+
+## Phone read flow and Coach Lab release
+
+`cabeee0` deployed successfully: [Vercel deployment](https://vercel.com/bluechippeoplestrategies-projects/ice-iq/E9zNyDbig9PzGWNfDivep5KsWpjn). Verified on the public HTTPS origin at 02:46 Edmonton, September 5, at 390 × 844.
+
+- The shared review shows **189 tests passed**. The next-read prompt and cue render directly above the rink. Evidence: `evidence/phone-read-flow-live.png`.
+- U9 Carry → pass to teammate → position at width -0.5 → free reason completed. The saved reflection was byte-identical after reload; the older U11 saved JSON remained unchanged. Starting over intentionally clears that age's previous completion; persistence was checked after completing the new attempt.
+- Reduced-motion replay returned to the visible reflection: its focused heading was at 75.83–135.83 px.
+- Focusing a Coach Lab coordinate stopped the clock at 0.4 s and retained the same focused input across fourteen animation frames. Resume started from 0.4 s. Escape paused; Tab then left the rink instead of switching players. An actual coordinate edit accepted -0.5 and returned to the paused director as designed.
+- No horizontal overflow, page exceptions or failed requests appeared in these checked flows. Checks were in a browser viewport, not on physical phone hardware.

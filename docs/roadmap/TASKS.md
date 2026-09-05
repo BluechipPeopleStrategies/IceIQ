@@ -1,6 +1,6 @@
 # RinkReads — Task List
 
-**Last updated:** 2026-09-05 · Phone read flow and Coach Lab input fixes locally verified at 02:37 Edmonton; publication next. Current prompts stay above the rink; practice resumes its paused frame, scoped keyboard controls release correctly, and coordinates retain incomplete negative text without zeroing the player. 189 practice tests/build pass. U9/U11 and earlier review releases remain live. Evidence: `docs/one-on-one/verification.md`.
+**Last updated:** 2026-09-05 · Phone read flow and Coach Lab input fixes deployed in `cabeee0` and verified live at 02:46 Edmonton. U9 negative-coordinate completion/reload, unchanged U11 save, reduced-motion reflection focus, paused coordinate focus and same-frame resume pass. 189 practice tests/build pass. Evidence: `docs/one-on-one/phone-preview.md`.
 
 **Scope:** RinkReads **app build + content factory**. Launch/distribution (sending the beta, marketing) and the separate BlueChip business are **out of scope** — parked at the bottom. Priority = position in this list. A new idea that isn't here goes to the **Parking Lot** first, then gets promoted on purpose — that's the scope-creep guard.
 
@@ -54,6 +54,8 @@
 - *(New ideas land here first, then get promoted into NEXT/LATER on purpose.)*
 
 ## Changelog
+
+- **2026-09-05 — Phone read and Coach Lab fixes verified live.** Vercel completed `cabeee0`; the public review shows 189 tests. U9 Carry → pass → coordinate/reason completion restores exactly after reload, preserving the previous U11 save. Reduced-motion replay focuses its visible reflection. Coach coordinate focus stops the clock without replacing the input, Resume retains the frame, and paused Tab leaves the rink. No failed requests, page exceptions or overflow in checked flows. Evidence: `docs/one-on-one/phone-preview.md`.
 
 - **2026-09-05 — Phone read flow and Coach Lab editing.** Put each current question above the rink on stacked layouts and return there after explicit successful decisions, without scrolling during edits or automatic playback. Reduced-motion replay resolves the currently rendered reflection. Coach controls now capture keys only on the focused running rink; Escape pauses, paused Tab works normally, and Resume keeps the current frame. Buffered numeric fields accept negative decimals, ignore incomplete values and pause the director/live clock before typing. Independent review findings fixed. 189 practice tests and build pass, with phone/tablet/desktop browser evidence. Plan: `docs/superpowers/plans/2026-09-05-phone-read-flow-and-coach-input.md`.
 

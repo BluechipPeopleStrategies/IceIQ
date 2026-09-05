@@ -9,6 +9,8 @@ The integrated preview is ready for a walkthrough. Start with the U11 sequence, 
 
 **Route/mobile pass is live:** `a046ea6` deployed and verified at 01:25 Edmonton. Read three now supports tapping a support route with preview, undo, keyboard coordinates and saved explanations. Shootout/Best Option recover to 2D after graphics-context loss and stop hidden WebGL rendering after completion. That release passed **167 tests**; production build and touch-event browser flows pass. On the live phone-sized HTTPS view, the route and reason from the Shoot branch survive reload. A forced graphics loss also left the live 2D Shootout playable, with a subsequent shot scored.
 
+**Phone/coach editing pass is live:** `cabeee0` deployed and was verified at 02:46 Edmonton. Questions stay with the rink on stacked layouts. Coach coordinate editing stops playback and preserves negative decimals; Resume keeps the paused frame. The public U9 completion restored after reload and the older U11 save stayed unchanged. Reduced-motion replay focuses its visible reflection. **189 practice tests and build pass.**
+
 ## Walkthrough
 
 **U9 is live:** `304848c` deployed and was verified at 02:00 Edmonton. Select **U9 / Find space** in Read the play: choose Pass or Carry, make the next puck decision, then move the highlighted player or plan a route and give a short reason. Read aloud is optional. The live phone-sized flow accepted a receiver touch and route point, saved and reopened the U9 reflection, and left the older U11 saved JSON unchanged. U9 and U11 save separately; switching between them preserves unfinished work while this view stays open.
