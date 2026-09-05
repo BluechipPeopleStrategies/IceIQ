@@ -1,5 +1,13 @@
 # Phone-accessible review
 
+## Latest release: Coach Lab player routes
+
+`106ec3e` deployed successfully: [Vercel deployment](https://vercel.com/bluechippeoplestrategies-projects/ice-iq/8QEB7gTadb8rh2157Q4kRn5M2N3T). Verified on the public HTTPS origin at **03:59 Edmonton, September 5**, at 390 × 844.
+
+The public review displays **225 tests passed**. Coach Lab → Animate a play → Plan player route accepted a native touch point at (-7,-4) and a numeric point at (3,1.5). Reduced-motion inspection showed the 5-second finish with the rink and controls visible together. Apply, Save draft, Export, full page reload and Reopen produced byte-identical director JSON. The player stayed at the finish through 8 seconds. All three existing read/recall storage records remained unchanged. No horizontal document overflow, page exceptions or failed requests occurred in these checked flows. Evidence: `evidence/coach-route-live-phone.png`.
+
+These are browser viewport and browser-generated touch checks, not a physical-device or coaching-validity test. The new editor authors skating-position keys; timed pass transfers and AI route grades remain unbuilt. Existing paid/account gates and device-local practice scope are unchanged.
+
 September 5, 2026. Thomas requested phone access to the new demos. The earlier localhost-only restriction is superseded for these explicitly labelled review routes; this does not admit draft questions into the live curriculum.
 
 Review landing: https://ice-iq.vercel.app/review/

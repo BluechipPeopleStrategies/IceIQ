@@ -1,6 +1,6 @@
 # Coach Lab player routes
 
-**Status:** implemented and browser-verified locally; release verification is recorded in `phone-preview.md`.
+**Status:** deployed in `106ec3e` and verified on the live phone-sized HTTPS site at 03:59 Edmonton, September 5. Release evidence is in `phone-preview.md`.
 **Date:** 2026-09-05.
 
 Coach Lab's **Plan player route** control turns a coach's chosen points and

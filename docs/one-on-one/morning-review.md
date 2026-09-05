@@ -13,6 +13,8 @@ The integrated preview is ready for a walkthrough. Start with the U11 sequence, 
 
 ## Walkthrough
 
+**Coach Lab routes are live:** `106ec3e` deployed and was verified at 03:59 Edmonton. Plan movement in 3D or on the rink board, inspect it, Apply and Save. Live touch/numeric input, export and full reload/reopen retained exact route data and the endpoint hold. The three existing read/recall records were unchanged. **225 practice tests and build pass.**
+
 **Play recall is live:** `8a2a5e9` deployed and was verified at 03:17 Edmonton. Finish a U9 or U11 sequence, then open **Try play recall**. The phone flow used touch to correct the order, saved/reopened its note, and preserved the help flag and original hockey reflection. **208 practice tests and build pass.**
 
 **U9 is live:** `304848c` deployed and was verified at 02:00 Edmonton. Select **U9 / Find space** in Read the play: choose Pass or Carry, make the next puck decision, then move the highlighted player or plan a route and give a short reason. Read aloud is optional. The live phone-sized flow accepted a receiver touch and route point, saved and reopened the U9 reflection, and left the older U11 saved JSON unchanged. U9 and U11 save separately; switching between them preserves unfinished work while this view stays open.

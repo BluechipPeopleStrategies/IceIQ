@@ -14,7 +14,7 @@
   "boundaries": {
     "sourcePrinciple": "Source notes define principles and evidence boundaries; they do not silently define coordinates, paths, timing or certified answers for new boards.",
     "authoredBoard": "Ready-made examples are coach-review drafts with authored static positions in canonical metres.",
-    "movement": "Every ready-made draft has duration 8 and exactly one key at time 0 per actor. Coach Lab player-route authoring is implemented and locally browser verified; publication pending; applied points become explicit director keys. Source prose never supplies automatic movement.",
+    "movement": "Every ready-made draft has duration 8 and exactly one key at time 0 per actor. Coach Lab player-route authoring is deployed and live-phone verified; applied points become explicit director keys. Source prose never supplies automatic movement.",
     "assessment": "Learner positions, actions and reasons are compared with a coach reference without score, pass/fail or transfer claims.",
     "promotion": "Examples are not approved claims or promoted curriculum."
   },
@@ -47,7 +47,7 @@
     {
       "id": "draw-route-pass",
       "sequenceRole": "author the future path from the current state",
-      "current": "U9/U11 final support-route planning plus locally implemented Coach Lab player routes using 3D whole-rink/broadcast, SVG board or numeric points; Coach Lab locally browser verified; publication pending; timed pass transfers remain unbuilt",
+      "current": "U9/U11 final support-route planning plus deployed Coach Lab player routes using 3D whole-rink/broadcast, SVG board or numeric points; Coach Lab live-phone verified on deployment 106ec3e; evidence: docs/one-on-one/phone-preview.md; timed pass transfers remain unbuilt",
       "preserve": "never derive paths from prose; connected-read routes freeze other actors and puck, while Coach Lab preview follows their existing director keys and unchanged puck ownership"
     },
     {
@@ -941,7 +941,11 @@
     }
   ],
   "coachPlayerRoutes": {
-    "status": "locally-browser-verified-publication-pending",
+    "status": "deployed-live-phone-verified",
+    "verification": {
+      "deploymentCommit": "106ec3e",
+      "evidence": "docs/one-on-one/phone-preview.md"
+    },
     "documentation": "docs/one-on-one/coach-skating-routes.md",
     "helper": "src/one-on-one/directorRoutes.js#createDirectorRoutePlan",
     "entry": "Coach Lab: Plan player route from an unfrozen selected player at the captured director time, outside live practice",
