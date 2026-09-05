@@ -1,6 +1,10 @@
 # Phone-accessible review
 
-## Latest release: U11 player wording and recall labels
+## Latest release: all scenario visuals
+
+`22782f6` deployed successfully and was verified at **06:15 Edmonton, September 5**. The public review shows 41 refreshed illustrations and 265 passing practice tests; all images load, with no horizontal overflow at 320 or 390 px. All 41 live source assets match their committed Git-blob SHA-256 hashes. At 390 x 844, read-only board/picture enlargement and keyboard dismissal worked. Answering the original U13 odd-man question produced its existing feedback and 100 practice points; full reload preserved the exact answer JSON and eleven older RinkReads values. Checked flows had no page exceptions or failed requests. [Deployment, detailed scope and screenshots](all-scenario-visuals.md). This remains browser viewport testing, not a physical-device test.
+
+## Earlier release: U11 player wording and recall labels
 
 `2b5ae75` deployed successfully: [Vercel deployment](https://vercel.com/bluechippeoplestrategies-projects/ice-iq/2xDxhJGoMqWtVQRTraipXnDPGvvR). Verified on the public HTTPS origin at **04:30 Edmonton, September 5**, at 390 × 844.
 

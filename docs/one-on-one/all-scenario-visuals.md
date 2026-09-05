@@ -1,6 +1,6 @@
 # All-scenario visual quality pass
 
-**September 5, 2026 — local implementation and asset verification; release pending.**
+**September 5, 2026 — live in `22782f6`; public verification completed at 06:15 Edmonton.**
 
 The visual refresh extends beyond Connected Reads to the existing scenario
 renderers, animated plays, Brain Gym and source illustrations. It changes
@@ -180,11 +180,29 @@ The review landing also uses a single-column statistics layout at 320 px; its ea
 
 ## Release
 
-Local checks complete; commit, deployment and fresh public-origin verification
-are pending. This line must be replaced before claiming the upgrade is live.
+Code commit `22782f6` deployed successfully through the existing Git integration:
+[Vercel deployment](https://vercel.com/bluechippeoplestrategies-projects/ice-iq/3iukrmiHfht2QyxFmZUCXzrG4tHn).
+The [phone review](https://ice-iq.vercel.app/review/) returned 200, displayed the
+41-illustration/265-test release, and loaded all its images. Fresh 320 and 390 px
+checks had no horizontal document overflow.
+
+All 41 public illustration responses returned 200 and matched the SHA-256 hashes
+of their exact Git blobs at `22782f6`. This uses committed bytes, avoiding local
+Windows line-ending differences for SVG files.
+
+At the public origin and 390 x 844, the tactical board opened at 200% in a
+read-only inspector with no interactive cloned actors; Escape returned focus.
+The previously missing source question `img_u13_odd-man-reads_01` displayed its
+illustration, opened at 150%, and retained its four original answers. Selecting
+the original correct answer displayed the existing coach feedback and 100
+practice points. A full reload preserved the exact new answer JSON; all eleven
+older RinkReads storage values remained byte-identical. No page exceptions or
+failed requests occurred in these checked live flows. Screenshots:
+`evidence/all-scenario-live-board-phone.png`,
+`evidence/all-scenario-live-source-phone.png`, and
+`evidence/all-scenario-live-review-phone.png`.
 
 The earlier Connected Reads 3D release is recorded separately in
-`phone-preview.md` and `verification.md`; it does not prove this broader pass is
-live. No physical phone/iPad, sustained GPU, screen-reader-user, child
+`phone-preview.md` and `verification.md`. No physical phone/iPad, sustained GPU, screen-reader-user, child
 comprehension, live AI or tactical/age-validation claim is made here. The
 original quiz's existing mixed-age policy remains outside this visual pass.

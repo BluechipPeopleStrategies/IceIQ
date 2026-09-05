@@ -28,8 +28,8 @@
 - [x] Practice: coach opening/attempt/ghost comparison, 48 curriculum question boards, connected tactical boards, changed-cue comparison, recall thumbnails/inspection. Preserve source state and save records.
 - [x] Animated and Gym: 25 play definitions/98 nodes through shared drawing primitives; ten rink-based drills and other cue surfaces through matching art while retaining task cues and timing. Snapshot defenders remain gray so the gold memory target stays unique.
 - [x] Main/weekly/review/source image questions: shared read-only enlarge/zoom, exact original fit and overlay alignment, keyboard dismissal/focus return. All 41 authored source illustrations refreshed; six small concept diagrams and duplicate legacy overlay cleanup.
-- [ ] Verify actual desktop/phone flows; no assertion that all authenticated journeys, image pixels or physical devices were reviewed. Run focused renderer/game tests, the practice suite and production build.
-- [ ] Update coverage/evidence, roadmap and review, commit/push and verify the live release.
+- [x] Verify actual desktop/phone flows; no assertion that all authenticated journeys, image pixels or physical devices were reviewed. Run focused renderer/game tests, the practice suite and production build.
+- [x] Update coverage/evidence, roadmap and review, commit/push and verify the live release. `22782f6` deployed; public verification completed at 06:15 Edmonton, September 5. See `docs/one-on-one/all-scenario-visuals.md` for exact coverage and limits.
 
 ## Coverage audit
 
@@ -37,7 +37,7 @@ Current bundled source inspection: 262 unique bank rows, 133 image-backed MC; 28
 
 The old `#dev-3d-scenario` disc prototype and explicit “before” views are historical comparisons; they must stay labelled as such. The new source renderer is the live question path, not that isolated debug prototype.
 
-### Practice SVG coverage — implemented locally, browser review pending
+### Practice SVG coverage — implemented and browser verified
 
 Scope files: `CoachQuestionLab.jsx/.css`, `GuidedCurriculum.jsx/.css`, the `RinkStage` presentation inside `ReadSequence.jsx`, `ReadSequenceRecall.css`, and `CoachRouteBoard.jsx`.
 
