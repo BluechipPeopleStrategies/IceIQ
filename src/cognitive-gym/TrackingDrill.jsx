@@ -615,20 +615,19 @@ export default function TrackingDrill({ playerId = "default", onExit }) {
                 <circle cx="240" cy="82" r="14" fill="#ffffff" stroke="#5b7587" strokeWidth="2" />
                 <text x="150" y="77" fontSize="18" textAnchor="middle">⚽</text>
               </svg>
-              <p className="gym-goal"><strong>Your goal:</strong> keep track of all three teammates at once, even while the play is moving.</p>
+              <p className="gym-goal"><strong>Your goal:</strong> follow the three marked teammates as they move.</p>
               <p>
-                <strong>The game:</strong> three teammates flash gold, then every
-                skater turns white and starts moving. Keep tabs on all three at once
-                without staring at any one of them. When play stops, tap your three
-                teammates. You start each shift when you are ready. Blue check means
-                right, orange cross means wrong.
+                <strong>The game:</strong> tap Start shift. Three teammates flash
+                gold, then all skaters look alike and move. When they stop, tap
+                your three teammates and Lock in. To change a pick, tap it again.
+                Bonus: double-tap a selected teammate to call who had the soccer
+                ball. Check marks and crosses show your result.
               </p>
               <div className="gym-trains">
-                <strong>Why it matters</strong>
+                <strong>Talk hockey</strong>
                 <span>
-                  Knowing where your options are without staring at the puck is how
-                  you find the open player, break out cleanly, and see the check before
-                  it arrives.
+                  Which teammate was hardest to follow through traffic? Describe
+                  where you last saw them, as you would when talking through a play.
                 </span>
               </div>
               <button className="gym-btn" onClick={start}>

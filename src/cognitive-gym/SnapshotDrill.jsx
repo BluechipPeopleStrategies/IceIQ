@@ -442,25 +442,19 @@ export default function SnapshotDrill({ playerId = "default", onExit }) {
             <circle cx="205" cy="30" r="11" fill="#f2b705" stroke="#9a7400" strokeWidth="2.5" />
             <circle cx="205" cy="30" r="16" fill="none" stroke="#0b1b2b" strokeWidth="2" />
           </svg>
-          <p className="gym-goal"><strong>Your goal:</strong> take one quick snapshot of the ice and remember where the open teammate was.</p>
+          <p className="gym-goal"><strong>Your goal:</strong> remember where the gold, double-ringed teammate appeared.</p>
           <p>
-            <strong>The game:</strong> tap Show me and the whole formation flashes
-            for a split second, then hides. One teammate is clearly the open one
-            (a gold double-ringed marker). The rest are teammates and defenders
-            (a dot with an X) to read past. After it hides, tap the spot where the
-            open teammate was. Landing in the same spot counts, and the closer you
-            are the more points you earn. As you level up the flash gets shorter,
-            the ice gets busier, and the window tightens. You start each look when
-            you are ready.
+            <strong>The game:</strong> tap Show me. Find the gold teammate with
+            two rings while the players are visible. After they hide, tap where
+            that teammate was. Compare your tap with the revealed formation.
+            Closer taps earn more points. Higher levels give you a shorter look
+            and more players to look past.
           </p>
           <div className="gym-trains">
-            <strong>Why it matters</strong>
+            <strong>Talk hockey</strong>
             <span>
-              Good players read the ice in one heads-up look before the pass
-              arrives, so they already know their options the moment they get the
-              puck. Training that one-glance snapshot is how you make a quick play
-              under pressure instead of stickhandling with your head down looking
-              for help.
+              What helped you remember the spot? In a hockey play, what could
+              change after your last look?
             </span>
           </div>
           <button className="gym-btn" onClick={start}>

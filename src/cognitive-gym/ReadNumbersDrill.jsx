@@ -397,25 +397,19 @@ export default function ReadNumbersDrill({ playerId = "default", onExit }) {
             <circle cx="105" cy="100" r="22" fill="#0b1b2b" stroke="#f2b705" strokeWidth="3" />
             <text x="105" y="101" fill="#f4f9fc" fontSize="18" fontWeight="800" textAnchor="middle" dominantBaseline="central" fontFamily="system-ui, sans-serif">9</text>
           </svg>
-          <p className="gym-goal"><strong>Your goal:</strong> memorize which teammate wore which number, then find the one you're asked about.</p>
+          <p className="gym-goal"><strong>Your goal:</strong> remember each skater's number and spot.</p>
           <p>
-            <strong>The game:</strong> tap Watch and a handful of skaters, each
-            wearing a jersey number, appear together on the ice. Memorize who
-            is who, then the numbers hide. We call out a number, "which one was
-            #83?", and you tap where that skater was standing. The faster you
-            find them, the more points you earn. As you level up there are more
-            skaters to hold in memory, less time to look, and the numbers grow
-            from one digit to two to three. You start each rep when you are
-            ready.
+            <strong>The game:</strong> tap Watch to see the numbered skaters.
+            Their numbers hide, and a question asks for one number. Tap the skater
+            who wore it. The skaters stay in place. Faster correct taps earn more
+            points. Higher levels add skaters and longer numbers, with less time
+            to look.
           </p>
           <div className="gym-trains">
-            <strong>Why it matters</strong>
+            <strong>Talk hockey</strong>
             <span>
-              A quick glance at the bench or the rush has to stick, who is
-              open, who just came on, who you are covering. Training your eyes
-              to lock a number to a spot on the ice, and hold it after the
-              picture changes, is how you find the right teammate without
-              having to look twice.
+              What helped you link a number to a spot? When skaters move during
+              hockey, what would you need to check again?
             </span>
           </div>
           <button className="gym-btn" onClick={start}>

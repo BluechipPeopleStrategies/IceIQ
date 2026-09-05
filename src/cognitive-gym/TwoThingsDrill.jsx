@@ -495,7 +495,7 @@ export default function TwoThingsDrill({ playerId = "default", onExit }) {
   }
 
   const hint = {
-    ready: "Tap Go. Watch the puck, tap it as it crosses the red center line, and tap the shape that flashes up top.",
+    ready: "Tap Go. Tap the puck at the red center line and match the shape above the buttons.",
     live: "Tap the puck right as it hits center, and pick the shape that just flashed. Both count.",
     reveal: last
       ? last.success
@@ -549,28 +549,19 @@ export default function TwoThingsDrill({ playerId = "default", onExit }) {
             <circle cx="206" cy="100" r="11" fill="rgba(27,108,176,0.18)" stroke="#0b1b2b" strokeWidth="2.5" />
             <rect x="236" y="89" width="22" height="22" fill="rgba(27,108,176,0.18)" stroke="#0b1b2b" strokeWidth="2.5" />
           </svg>
-          <p className="gym-goal"><strong>Your goal:</strong> tap the puck right as it crosses the center line, and tap the shape that flashes up top, at the same time. Both count.</p>
+          <p className="gym-goal"><strong>Your goal:</strong> time the puck crossing and match the flashed shape in each round.</p>
           <p>
-            <strong>The game:</strong> tap Go and a puck slides across the rink.
-            Tap it right as it crosses the red center line (you get a small window
-            around the crossing). While the puck is moving, a shape flashes up top,
-            a circle, a triangle, or a square, and the shape buttons light up. Tap
-            the matching shape before the puck leaves the ice. A round only counts
-            when you do BOTH, and the closer your puck tap is to dead-center and the
-            faster you call the shape, the more points you earn. As you level up the
-            puck moves faster (a tighter window), the shape flashes for less time and
-            closer to the crossing, and a third shape gets added. You start each rep
-            when you are ready.
+            <strong>The game:</strong> tap Go. Tap the puck as it crosses the red
+            center line. A shape also flashes just above the buttons. Tap the
+            matching shape button before the puck leaves the ice. Make both taps
+            during the round; they do not have to happen at the same instant.
+            Both answers must match for a successful round.
           </p>
           <div className="gym-trains">
-            <strong>Why it matters</strong>
+            <strong>Talk hockey</strong>
             <span>
-              Hockey never asks you to do one thing at a time. You track the puck
-              and the play while still reading where bodies and lanes are, all at
-              once. Training your brain to hold two jobs at the same time, the puck
-              in front of you and a cue off to the side, is how you keep your head
-              up for two things at once instead of locking onto one and losing the
-              other.
+              Which cue did you notice first? Talk with a coach about a moment
+              when you wanted to watch the puck and another player.
             </span>
           </div>
           <button className="gym-btn" onClick={start}>

@@ -532,30 +532,19 @@ export default function BestOptionDrill({ playerId = "default", onExit }) {
             <circle cx="135" cy="80" r="10" fill="#cdd9e1" stroke="#5b7587" strokeWidth="2" />
             <path d="M130 75 l10 10 M140 75 l-10 10" stroke="#3d5061" strokeWidth="2.5" strokeLinecap="round" />
           </svg>
-          <p className="gym-goal"><strong>Your goal:</strong> read the frozen play and pick the best option, shoot, pass, or carry, before the clock runs out.</p>
+          <p className="gym-goal"><strong>Your goal:</strong> look at the lanes, then choose shoot, pass, or carry.</p>
           <p>
-            <strong>The game:</strong> you have the puck (the gold YOU marker) and
-            the net is at the far end. Tap Read it, the play freezes and a
-            countdown ring starts shrinking around you, and three buttons turn on:
-            SHOOT, PASS, and CARRY. Exactly one is the best read. Maybe you have a
-            clear lane and a leaning goalie (shoot), maybe a teammate is wide open
-            back door while a defender blocks you (pass), or maybe there is no shot
-            and no open teammate but open ice ahead (carry). Tap the best call
-            before the ring runs out. The faster you read it right, the more points
-            you earn. As you level up the clock gets shorter, more bodies fill the
-            ice, and the second-best option gets more tempting. You start each rep
-            when you are ready.
+            <strong>The game:</strong> tap Read it. Find YOU with the puck, then
+            look at the net, teammates, defenders, and blue line. Choose SHOOT,
+            PASS, or CARRY before the countdown ring empties. Each scene has one
+            scored answer. After choosing, check the shown route and reason.
+            Faster matching answers earn more points.
           </p>
           <div className="gym-trains">
-            <strong>Why it matters</strong>
+            <strong>Talk hockey</strong>
             <span>
-              When you get the puck in the offensive zone you have a heartbeat to
-              decide: shoot it, move it, or take it. Good players make that read
-              fast and make it right, so they get the shot off before the lane
-              closes, find the open teammate before the defender slides over, or
-              keep their feet moving when nothing is there yet. Training that
-              shoot, pass, or carry decision is how you stop freezing with the puck
-              and start making the play the ice is giving you.
+              Which player or lane helped you choose? Show a coach what you saw
+              and discuss whether another choice could work.
             </span>
           </div>
           <button className="gym-btn" onClick={start}>

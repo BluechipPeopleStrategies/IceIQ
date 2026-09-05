@@ -293,25 +293,18 @@ export default function ReactionDrill({ playerId = "default", onExit }) {
             <circle cx="200" cy="55" r="34" fill="#e8590c" />
             <text x="200" y="60" fontSize="14" fontWeight="700" textAnchor="middle" fill="#ffffff">HOLD</text>
           </svg>
-          <p className="gym-goal"><strong>Your goal:</strong> fire on blue, stay still on orange, and beat the clock every time.</p>
+          <p className="gym-goal"><strong>Your goal:</strong> tap for SHOOT. Wait for HOLD or FAKE.</p>
           <p>
-            <strong>The game:</strong> after a random delay the light flashes.{" "}
-            <strong>
-              Blue says SHOOT, hit the space bar or tap as fast as you can.
-              Orange says HOLD, don't touch.
-            </strong>{" "}
-            Tapping on orange is a turnover and earns nothing. Fast, clean shots
-            earn the big points. The window gets tighter as you level up, and at
-            higher levels a violet <strong>FAKE</strong> light starts showing up too
-            — hold on that one just like orange, but reading it right is worth
-            more.
+            <strong>The game:</strong> wait for the light's word. For blue
+            SHOOT, tap the light or press Space before it disappears. For orange
+            HOLD, keep waiting. Higher levels add violet FAKE: wait for that too.
+            Faster SHOOT taps and correct waits earn points.
           </p>
           <div className="gym-trains">
-            <strong>Why it matters</strong>
+            <strong>Talk hockey</strong>
             <span>
-              A faster release gets the puck off before the window closes, and
-              the discipline to hold stops you from forcing a bad pass or jumping
-              offside.
+              The word tells you what to do here. In a hockey play, which visible
+              clues would help you decide whether to shoot or wait?
             </span>
           </div>
           <button className="gym-btn" onClick={start}>

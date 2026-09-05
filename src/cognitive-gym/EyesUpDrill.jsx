@@ -390,23 +390,18 @@ export default function EyesUpDrill({ playerId = "default", onExit }) {
             <circle cx="244" cy="24" r="9" fill="#1b6cb0" stroke="#ffffff" strokeWidth="3" />
             <circle cx="244" cy="24" r="13" fill="none" stroke="#0b1b2b" strokeWidth="1.5" />
           </svg>
-          <p className="gym-goal"><strong>Your goal:</strong> keep your eyes on the center puck and catch where a teammate flashes out of the corner of your eye.</p>
+          <p className="gym-goal"><strong>Your goal:</strong> look at the center puck and notice where a marker flashes.</p>
           <p>
-            <strong>The game:</strong> tap Go, then keep your eyes on the center
-            puck the whole time. After a short wait a teammate flashes for a split
-            second out near the boards, then disappears. Tap the spot where it
-            appeared. Landing in the same region counts, and the closer you are to
-            the exact spot the more points you earn. As you level up the flash gets
-            shorter, lands farther out toward the boards, and shows up in more
-            places. You start each look when you are ready.
+            <strong>The game:</strong> tap Go and look at the center puck. A
+            ringed marker briefly appears off to the side. Tap where it appeared,
+            then compare your tap with the marked spot. Closer taps earn more
+            points. Higher levels give you a shorter look.
           </p>
           <div className="gym-trains">
-            <strong>Why it matters</strong>
+            <strong>Talk hockey</strong>
             <span>
-              Hockey is played with your eyes up, not glued to the puck. Catching a
-              teammate or a checker out of the corner of your eye is how you make
-              the shoulder check, find the back-door option, and feel the play
-              around you before you ever turn your head.
+              What can you notice beside you while looking ahead? Ask a coach
+              when you would also turn your head to check the ice.
             </span>
           </div>
           <button className="gym-btn" onClick={start}>

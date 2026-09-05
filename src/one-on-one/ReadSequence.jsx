@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useId, useMemo, useRef, useState } from 'react';
 import {
   READ_ACTIONS,
   U11_READ_SEQUENCE,
@@ -7,6 +7,7 @@ import {
   createFinalReadJudgePayload,
   createReadSequenceSession,
   currentSequenceState,
+  getChangedCueComparison,
   getReadTwoPrompt,
   getSelectedSecondTarget,
   moveThirdReadActor,
@@ -14,6 +15,7 @@ import {
   restoreReadSequence,
   selectSecondRead,
   serializeReadSequence,
+  submitChangedCueRead,
   submitFirstRead,
   submitThirdRead,
 } from './readSequenceCore.js';
@@ -31,9 +33,10 @@ const { bounds: RINK_BOUNDS, landmarks: RINK_MARKS } = NHL_200X85_PROFILE;
 const HALF_WIDTH = RINK_BOUNDS.maxY;
 const GOAL_X = RINK_MARKS.goalLineRight[0];
 
-function RinkStage({ state, targets = [], onTarget, moveActorId, onMove, showReadLanes = false }) {
+function RinkStage({ state, targets = [], onTarget, moveActorId, onMove, showReadLanes = false, changedCue = false }) {
   const svg = useRef(null);
   const drag = useRef(null);
+  const stageId = useId().replace(/[^a-zA-Z0-9_-]/g, '');
   const puckCarrier = state.actors.find(actor => actor.id === state.puck.owner);
   const support = state.actors.find(actor => actor.id === 'F2');
 
@@ -76,13 +79,13 @@ function RinkStage({ state, targets = [], onTarget, moveActorId, onMove, showRea
       onPointerUp={finishMove} onPointerCancel={finishMove} onLostPointerCapture={() => { drag.current = null; }}
       style={{ touchAction: onMove ? 'none' : 'auto' }}>
       <title>U11 connected two-on-one</title>
-      <desc>D1 partly covers the middle. F2 begins slightly flat on the weak side. The puck and positions update from the selected branch.</desc>
+      <desc>{changedCue ? 'Changed opening freeze: D1 is now on the pass line between the puck and F2. Every other player and the puck stayed in the same place.' : 'D1 partly covers the middle. F2 begins slightly flat on the weak side. The puck and positions update from the selected branch.'}</desc>
       <defs>
-        <linearGradient id="rs-ice" x1="0" x2="1" y1="0" y2="1"><stop stopColor="#fffdfa" /><stop offset="1" stopColor="#e8edf1" /></linearGradient>
-        <filter id="rs-shadow"><feDropShadow dx="0" dy=".16" stdDeviation=".18" floodOpacity=".28" /></filter>
-        <marker id="rs-arrow" markerWidth="4" markerHeight="4" refX="3" refY="2" orient="auto"><path d="M0 0 L4 2 L0 4 Z" fill="#C9A24B" /></marker>
+        <linearGradient id={`${stageId}-ice`} x1="0" x2="1" y1="0" y2="1"><stop stopColor="#fffdfa" /><stop offset="1" stopColor="#e8edf1" /></linearGradient>
+        <filter id={`${stageId}-shadow`}><feDropShadow dx="0" dy=".16" stdDeviation=".18" floodOpacity=".28" /></filter>
+        <marker id={`${stageId}-arrow`} markerWidth="4" markerHeight="4" refX="3" refY="2" orient="auto"><path d="M0 0 L4 2 L0 4 Z" fill="#C9A24B" /></marker>
       </defs>
-      <path d="M 0 -12.954 H 21.9456 A 8.5344 8.5344 0 0 1 30.48 -4.4196 V 4.4196 A 8.5344 8.5344 0 0 1 21.9456 12.954 H 0 Z" fill="url(#rs-ice)" stroke="#8793a1" strokeWidth=".22" />
+      <path d="M 0 -12.954 H 21.9456 A 8.5344 8.5344 0 0 1 30.48 -4.4196 V 4.4196 A 8.5344 8.5344 0 0 1 21.9456 12.954 H 0 Z" fill={`url(#${stageId}-ice)`} stroke="#8793a1" strokeWidth=".22" />
       <g fill="none" strokeLinecap="round">
         <line x1={RINK_MARKS.blueLineRightMid[0]} x2={RINK_MARKS.blueLineRightMid[0]} y1={RINK_BOUNDS.minY} y2={RINK_BOUNDS.maxY} stroke="#5079a5" strokeWidth=".18" opacity=".52" />
         <line x1={GOAL_X} x2={GOAL_X} y1="-9" y2="9" stroke="#b55b60" strokeWidth=".16" opacity=".7" />
@@ -91,9 +94,9 @@ function RinkStage({ state, targets = [], onTarget, moveActorId, onMove, showRea
         <path d={`M ${GOAL_X} -1.829 A 1.829 1.829 0 0 0 ${GOAL_X} 1.829`} fill="#C9A24B12" stroke="#C9A24B" strokeWidth=".1" />
       </g>
       {showReadLanes && puckCarrier && support && <g fill="none" pointerEvents="none">
-        <line x1={state.puck.x} y1={state.puck.y} x2={support.x} y2={support.y} stroke="#C9A24B" strokeWidth=".13" strokeDasharray=".35 .28" markerEnd="url(#rs-arrow)" />
+        <line x1={state.puck.x} y1={state.puck.y} x2={support.x} y2={support.y} stroke="#C9A24B" strokeWidth=".13" strokeDasharray=".35 .28" markerEnd={`url(#${stageId}-arrow)`} />
         <line x1={state.puck.x} y1={state.puck.y} x2={GOAL_X} y2="0" stroke="#0B1A33" strokeWidth=".12" strokeDasharray=".28 .3" opacity=".55" />
-        <text x="17.2" y="3" fontSize=".55" fill="#0B1A33">SHOT LANE SHADED</text>
+        <text x={changedCue ? 4 : 17.2} y={changedCue ? -7.5 : 3} fontSize=".55" fill="#0B1A33">{changedCue ? 'D1 IN THE PASS LINE' : 'SHOT LANE SHADED'}</text>
       </g>}
       {targets.map((target, index) => <g key={target.id} className="rs-rink-target" transform={`translate(${target.x} ${target.y})`} role="button" tabIndex="0" aria-label={`Choose ${target.label}`}
         onClick={() => onTarget?.(target.id)} onKeyDown={event => { if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); onTarget?.(target.id); } }}>
@@ -102,7 +105,7 @@ function RinkStage({ state, targets = [], onTarget, moveActorId, onMove, showRea
       {state.actors.map(actor => {
         const movable = actor.id === moveActorId && Boolean(onMove);
         const transform = `translate(${actor.x} ${actor.y}) rotate(${actor.facing * 180 / Math.PI})`;
-        return <g key={actor.id} transform={transform} className={`rs-actor ${actor.team} ${actor.role} ${movable ? 'movable' : ''}`}
+        return <g key={actor.id} transform={transform} style={{ filter: `url(#${stageId}-shadow)` }} className={`rs-actor ${actor.team} ${actor.role} ${movable ? 'movable' : ''}`}
           role={movable ? 'button' : undefined} tabIndex={movable ? 0 : undefined}
           aria-label={`${actor.label}, ${actor.team} ${actor.role}${movable ? '. Drag, tap the ice, or use arrow keys to move.' : ''}`}
           onPointerDown={event => beginMove(event, actor)} onKeyDown={event => moveWithKeyboard(event, actor)}>
@@ -151,6 +154,50 @@ function downloadReflection(session) {
   link.download = 'rinkreads-u11-three-read-reflection.json';
   link.click();
   setTimeout(() => URL.revokeObjectURL(url), 0);
+}
+
+function ChangedCueComparison({ session, onSave }) {
+  const comparison = useMemo(() => getChangedCueComparison(session), [session]);
+  const [open, setOpen] = useState(Boolean(session.changedCue));
+  const [action, setAction] = useState(session.changedCue?.action || null);
+  const [reason, setReason] = useState(session.changedCue?.reason || '');
+  const [notice, setNotice] = useState('');
+  const contentId = useId();
+
+  function save() {
+    try {
+      onSave(submitChangedCueRead(session, { action, reason }));
+      setNotice('Comparison recorded. Your reflection download now includes both answers.');
+    } catch (error) { setNotice(error.message); }
+  }
+
+  return <section className="rs-comparison" aria-label="Optional changed-cue comparison">
+    <p className="rs-step">OPTIONAL · RETURN TO THE FIRST FREEZE</p>
+    <h2>One thing changes.</h2>
+    <p>Go back to the start. Move only D1. Would you keep your first choice or try something else?</p>
+    <button type="button" aria-expanded={open} aria-controls={contentId} onClick={() => setOpen(value => !value)}>{open ? 'Hide comparison' : session.changedCue ? 'View my changed-cue comparison' : 'Try one changed cue'}</button>
+    {open && <div id={contentId} className="rs-comparison-content">
+      <div className="rs-comparison-boards">
+        <figure><figcaption><b>Original freeze</b><span>D1 shades part of the shot lane.</span></figcaption><RinkStage state={comparison.originalState} showReadLanes /></figure>
+        <figure><figcaption><b>Only D1 moved</b><span>D1 is now between the puck and F2.</span></figcaption><RinkStage state={comparison.changedState} showReadLanes changedCue /></figure>
+      </div>
+      <div className="rs-cue-card"><b>What changed?</b><p>{comparison.cue}</p></div>
+      <div className="rs-comparison-response">
+        <div>
+          <h3>Your first answer</h3><div className="rs-comparison-answer"><b>{ACTION_COPY[comparison.originalAnswer.action].label}</b><p>{comparison.originalAnswer.reason}</p></div>
+          {comparison.revisedAnswer && <><h3>Your saved answer with D1 moved</h3><div className="rs-comparison-answer"><b>{ACTION_COPY[comparison.revisedAnswer.action].label}</b><p>{comparison.revisedAnswer.reason}</p></div></>}
+          <p className="rs-hint">This is a new look at the opening freeze. Your three-read play stays as you made it. This comparison does not play a new outcome.</p>
+        </div>
+        <div>
+          <fieldset className="rs-actions rs-comparison-actions"><legend>With D1 here, what would you do?</legend>{READ_ACTIONS.map(choice => <button type="button" key={choice} aria-pressed={action === choice} onClick={() => setAction(choice)}>{ACTION_COPY[choice].label}</button>)}</fieldset>
+          <label className="rs-reason">Why keep or change your choice?<textarea rows="4" maxLength="600" value={reason} onChange={event => setReason(event.target.value)} placeholder="I would… because D1 is now…" /><small>{reason.length}/600</small></label>
+          <button type="button" className="rs-primary" onClick={save}>Save my comparison</button>
+          <p className="rs-hint">Explain how your choice fits the new lane or space. Different choices can be discussed when the reason fits. No automatic grade or AI opinion is added here.</p>
+          {notice && <p className="rs-notice" role="status">{notice}</p>}
+        </div>
+      </div>
+    </div>}
+  </section>;
 }
 
 export default function ReadSequence({ playerId = null } = {}) {
@@ -332,6 +379,7 @@ export default function ReadSequence({ playerId = null } = {}) {
         {notice && <p className="rs-notice" role="status">{notice}</p>}
       </aside>
     </div>
+    {session.phase === 'complete' && <ChangedCueComparison key={storageKey} session={session} onSave={setSession} />}
     <SourceNotes />
   </section>;
 }

@@ -1,5 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
+import * as sequenceCore from './readSequenceCore.js';
 import {
   U11_READ_SEQUENCE,
   advanceSequencePlayback,
@@ -204,4 +205,85 @@ test('the three reads cite exact local teaching notes and remain explicitly illu
   ]);
   assert.equal(U11_READ_SEQUENCE.status, 'draft-for-coach-review');
   assert.match(U11_READ_SEQUENCE.evidenceBoundary, /illustrative|authored/i);
+});
+
+function completeSequence() {
+  return submitThirdRead(
+    moveThirdReadActor(reachReadThree('pass', 'hold-wide'), { x: 18, y: 1.5 }),
+    'I stayed available behind the puck.',
+  );
+}
+
+test('changed-cue comparison moves only D1 onto the actual pass line, leaving the original freeze intact', () => {
+  assert.equal(typeof sequenceCore.getChangedCueComparison, 'function');
+  const initialBefore = structuredClone(U11_READ_SEQUENCE.initialState);
+  const complete = completeSequence();
+  const before = structuredClone(complete);
+  const comparison = sequenceCore.getChangedCueComparison(complete);
+  assert.deepEqual(comparison.originalState, initialBefore);
+  assert.deepEqual(comparison.originalAnswer, complete.first);
+  const originalD1 = comparison.originalState.actors.find(actor => actor.id === 'D1');
+  const changedD1 = comparison.changedState.actors.find(actor => actor.id === 'D1');
+  const support = comparison.changedState.actors.find(actor => actor.id === 'F2');
+  const puck = comparison.changedState.puck;
+  assert.ok(distanceToSegment(originalD1, puck, support) > 4, 'The original defender stays outside the pass line');
+  assert.ok(distanceToSegment(changedD1, puck, support) < 0.05, 'The changed defender visibly occupies the actual puck-to-F2 pass');
+  assert.ok(distanceToSegment(changedD1, puck, { x: 26.91384, y: 0 }) > 3, 'The changed defender no longer shades the shot line');
+  assert.ok(Math.hypot(changedD1.x - originalD1.x, changedD1.y - originalD1.y) > 3, 'A meaningful cue change, not cosmetic jitter');
+  assert.equal(changedD1.facing, originalD1.facing);
+  assert.deepEqual(comparison.changedState.puck, comparison.originalState.puck);
+  for (const actor of comparison.changedState.actors.filter(actor => actor.id !== 'D1')) {
+    assert.deepEqual(actor, comparison.originalState.actors.find(item => item.id === actor.id));
+  }
+  comparison.changedState.actors[0].x = 99;
+  comparison.originalState.actors[0].x = 99;
+  comparison.originalAnswer.reason = 'mutated';
+  assert.deepEqual(complete, before);
+  assert.deepEqual(U11_READ_SEQUENCE.initialState, initialBefore);
+});
+
+test('comparison accepts revised or retained actions with reasons without changing the three-read result or AI request', () => {
+  assert.equal(typeof sequenceCore.submitChangedCueRead, 'function');
+  const complete = completeSequence();
+  const before = structuredClone(complete);
+  for (const action of ['shoot', 'carry', 'pass']) {
+    const updated = sequenceCore.submitChangedCueRead(complete, { action, reason: 'I noticed D1 is now between the puck and F2, so my timing would matter.' });
+    assert.equal(updated.phase, 'complete');
+    assert.equal(updated.changedCue.action, action);
+    assert.deepEqual(updated.first, complete.first);
+    assert.deepEqual(updated.second, complete.second);
+    assert.deepEqual(updated.third, complete.third);
+    assert.deepEqual(currentSequenceState(updated), currentSequenceState(complete));
+    assert.deepEqual(createFinalReadJudgePayload(updated), createFinalReadJudgePayload(complete));
+    assert.equal(updated.changedCue.score, undefined);
+    assert.equal(updated.changedCue.verdict, undefined);
+    assert.deepEqual(advanceSequencePlayback(replayFirstConsequence(updated), 1).changedCue, updated.changedCue);
+  }
+  assert.deepEqual(complete, before);
+  assert.throws(() => sequenceCore.submitChangedCueRead(complete, { action: 'shoot', reason: ' ' }), /reason/);
+  assert.throws(() => sequenceCore.submitChangedCueRead(complete, { action: 'shoot', reason: 'x'.repeat(601) }), /600/);
+  assert.throws(() => sequenceCore.submitChangedCueRead(complete, { action: 'teleport', reason }), /Shoot, Pass or Carry/);
+  assert.throws(() => sequenceCore.submitChangedCueRead(createReadSequenceSession(), { action: 'shoot', reason }), /three reads/i);
+  assert.throws(() => sequenceCore.getChangedCueComparison(reachReadTwo('shoot')), /three reads/i);
+});
+
+test('saved comparison round-trips separately from original answers and legacy reflections still restore', () => {
+  assert.equal(typeof sequenceCore.submitChangedCueRead, 'function');
+  const complete = completeSequence();
+  const legacy = JSON.parse(serializeReadSequence(complete));
+  delete legacy.changedCue;
+  assert.deepEqual(restoreReadSequence(legacy).first, complete.first);
+  assert.equal(restoreReadSequence(legacy).changedCue, null);
+  const updated = sequenceCore.submitChangedCueRead(complete, { action: 'shoot', reason: 'D1 moved into the pass line, so I would use the shot space.' });
+  const raw = serializeReadSequence(updated);
+  assert.doesNotMatch(raw, /playerId|score|verdict/i);
+  const restored = restoreReadSequence(raw);
+  assert.deepEqual(restored.changedCue, updated.changedCue);
+  assert.deepEqual(restored.first, complete.first);
+  assert.deepEqual(sequenceCore.getChangedCueComparison(restored).revisedAnswer, updated.changedCue);
+  const corrupt = JSON.parse(raw);
+  corrupt.changedCue.action = 'teleport';
+  assert.equal(restoreReadSequence(corrupt), null);
+  corrupt.changedCue = { ...updated.changedCue, id: 'unrecognized-cue' };
+  assert.equal(restoreReadSequence(corrupt), null);
 });

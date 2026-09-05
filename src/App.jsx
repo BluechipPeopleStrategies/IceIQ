@@ -124,7 +124,7 @@ const VERSION = "0.1-beta";
 const RELEASE_DATE = "June 2026";
 const CHANGELOG = [
   { v:"0.1-beta", date:"June 2026", notes:[
-    {icon:"🧠", title:"The Brain Gym is open", desc:"A new set of quick brain games that train the stuff you can't drill on the ice: scanning, peripheral vision, reading a pass, and picking the best option under pressure. Short, fast, and a little addictive."},
+    {icon:"🧠", title:"The Brain Gym is open", desc:"Short games for noticing cues, following a pass, remembering positions, and choosing an action. Try a few rounds, then talk with your coach about what you noticed and where that cue appears on the ice."},
     {icon:"🏒", title:"Plays that unfold", desc:"Scenarios now branch. You read the play one decision at a time and watch how it develops from the choice you make, just like a real shift. Closer to hockey, less like a worksheet."},
     {icon:"✨", title:"Sharper ice, clearer reads", desc:"The rink diagrams got a real makeover so positions and lanes are easier to see, questions can be read aloud, and we added fresh scenarios on breakouts, D-zone coverage, and support play."},
   ]},
@@ -4564,7 +4564,7 @@ function SkillsRadar({ cats, selfRatings, coachRatings, selfScale, coachScale })
           })() : [full];
           return (
             <g key={`l${i}`}>
-              <text x={lx.toFixed(1)} y={ly.toFixed(1)} fontSize="10" fontWeight="700" fill={C.white} textAnchor={anchor} dominantBaseline="middle" fontFamily="'Inter', 'DM Sans', sans-serif">
+              <text x={lx.toFixed(1)} y={ly.toFixed(1)} fontSize="10" fontWeight="700" fill={C.white} textAnchor={anchor} dominantBaseline="middle" fontFamily="'Inter', sans-serif">
                 {parts.length === 1 ? parts[0] : (
                   <>
                     <tspan x={lx.toFixed(1)} dy="-0.4em">{parts[0]}</tspan>
@@ -5473,12 +5473,12 @@ function JourneyBody({ player, tier, demoMode, onViewFull, onUpgrade }) {
                   fill={fill} stroke={stroke} strokeWidth={2.5} opacity={l.unlocked || isNext ? 1 : .7}/>
                 <text x={x} y={y+5} textAnchor="middle" fontSize="14" fontWeight="800"
                   fill={l.unlocked ? "#fff" : isNext ? world.accent : "rgba(255,255,255,.6)"}
-                  style={{userSelect:"none",pointerEvents:"none",fontFamily:"'Inter','DM Sans',sans-serif"}}>
+                  style={{userSelect:"none",pointerEvents:"none",fontFamily:"'Inter',sans-serif"}}>
                   {l.unlocked ? "✓" : l.levelInWorld + 1}
                 </text>
                 <text x={x} y={y+40} textAnchor="middle" fontSize="9" fontWeight="700"
                   fill={l.unlocked || isNext ? "#fff" : "rgba(255,255,255,.55)"}
-                  style={{userSelect:"none",pointerEvents:"none",fontFamily:"'Inter','DM Sans',sans-serif"}}>
+                  style={{userSelect:"none",pointerEvents:"none",fontFamily:"'Inter',sans-serif"}}>
                   {l.name}
                 </text>
               </g>
@@ -6701,7 +6701,7 @@ function LandingRadarCard({ onPreview }) {
               <text key={`l${i}`} x={lx.toFixed(1)} y={ly.toFixed(1)}
                     fontSize="10" fontWeight="700" fill={C.dim}
                     textAnchor={anchor} dominantBaseline="middle"
-                    fontFamily="'Inter','DM Sans',sans-serif">
+                    fontFamily="'Inter',sans-serif">
                 {twoLine ? (
                   <>
                     <tspan x={lx.toFixed(1)} dy="-0.45em">{words[0]}</tspan>
@@ -8778,7 +8778,7 @@ export default function App() {
           body { background: #080e1a; color: #f8fafc; -webkit-font-smoothing: antialiased; }
           ::-webkit-scrollbar { width: 4px; }
           ::-webkit-scrollbar-thumb { background: rgba(248,250,252,.08); border-radius: 2px; }
-          input, textarea, button, select { font-family: 'Inter', 'DM Sans', system-ui, sans-serif; }
+          input, textarea, button, select { font-family: 'Inter', system-ui, sans-serif; }
           button:active { opacity: .8; }
           textarea { resize: none; }
         `}</style>
@@ -8841,7 +8841,7 @@ export default function App() {
         body { background: #080e1a; color: #f8fafc; -webkit-font-smoothing: antialiased; }
         ::-webkit-scrollbar { width: 4px; }
         ::-webkit-scrollbar-thumb { background: rgba(248,250,252,.08); border-radius: 2px; }
-        input, textarea, button, select { font-family: 'DM Sans', 'Inter', system-ui, sans-serif; }
+        input, textarea, button, select { font-family: 'Inter', system-ui, sans-serif; }
         button:active { opacity: .8; }
         textarea { resize: none; }
       `}</style>

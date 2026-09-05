@@ -392,22 +392,18 @@ export default function RunThePlayDrill({ playerId = "default", onExit }) {
             <circle cx="163" cy="30" r="10" fill="none" stroke="#1f9d55" strokeWidth="2.5" />
             <text x="163" y="34" textAnchor="middle" fontSize="11" fontWeight="700" fill="#1f9d55" fontFamily="system-ui, sans-serif">2</text>
           </svg>
-          <p className="gym-goal"><strong>Your goal:</strong> watch the coach's passing play, then run it back in the same order.</p>
+          <p className="gym-goal"><strong>Your goal:</strong> watch the passing order, then tap it back.</p>
           <p>
-            <strong>The game:</strong> the puck moves skater to skater and each
-            catch lights up with its own sound. When the play ends, it's your
-            turn: tap the skaters in the same order. One wrong tap and the
-            play breaks down, but every pass you held still counts. Longer
-            plays, more skaters, and faster passing as your level climbs.
+            <strong>The game:</strong> tap Go and watch which skaters light up
+            as the puck moves. Then tap them in the same order. A different tap
+            ends the round; the steps you matched still earn points. Higher
+            levels have longer sequences and faster passes.
           </p>
           <div className="gym-trains">
-            <strong>Why it matters</strong>
+            <strong>Talk hockey</strong>
             <span>
-              Coaches draw plays once, then expect you to run them. Holding a
-              sequence in your head — who touches it, in what order — is the
-              same memory you use for breakouts, set faceoff plays, and
-              power-play rotations. Players who hold the play run it without
-              hesitating.
+              Tell a coach who received the puck first, next, and last. Which
+              part of a passing play would you like to see again?
             </span>
           </div>
           <button className="gym-btn" onClick={start}>

@@ -452,20 +452,18 @@ export default function AnticipationDrill({ playerId = "default", onExit }) {
             <circle cx="24" cy="72" r="7" fill="#0b1b2b" />
             <circle cx="244" cy="28" r="6" fill="#f2b705" stroke="#0b1b2b" strokeWidth="1.5" />
           </svg>
-          <p className="gym-goal"><strong>Your goal:</strong> call where the puck is going before it gets there.</p>
+          <p className="gym-goal"><strong>Your goal:</strong> predict where the hidden puck crosses the gold bar.</p>
           <p>
-            <strong>The game:</strong> a puck launches across the ice, then
-            disappears partway. Track its angle and speed in your head, then tap
-            the gold bar where it will cross. It can come from any side. After
-            you tap, the gold dot shows the exact crossing: land on it for a
-            Perfect read, inside the short window still counts, outside is a miss.
+            <strong>The game:</strong> watch the puck's direction before it
+            disappears. Tap the gold bar where you think it will cross. The puck
+            can come from any side. Then compare your tap with the gold dot and
+            marked target window. Closer taps earn more points.
           </p>
           <div className="gym-trains">
-            <strong>Why it matters</strong>
+            <strong>Talk hockey</strong>
             <span>
-              Reading a pass early is how you pick off a lane, beat a player to
-              the spot, and arrive where the puck will be instead of chasing
-              where it was.
+              What clues help you predict where a pass is going? Describe what
+              you saw before the puck disappeared.
             </span>
           </div>
           <button className="gym-btn" onClick={start}>

@@ -28,7 +28,8 @@ export const C = {
   redBorder:"rgba(239,68,68,0.25)",
   white:    "#F5EFE6",
   dim:      "rgba(248,250,252,0.6)",
-  dimmer:   "rgba(248,250,252,0.35)",
+  // Small secondary labels retain at least 4.9:1 on the three shared navy surfaces.
+  dimmer:   "rgba(248,250,252,0.55)",
   dimmest:  "rgba(248,250,252,0.08)",
   border:   "rgba(255,255,255,0.08)",
   borderMid:"rgba(255,255,255,0.14)",
@@ -60,7 +61,7 @@ export const SEASONS = ["2025-26","2026 Spring/Summer","2026-27"];
 // up-right to suggest forward gaze. The single-color `mono` mode is for
 // places where the gradient + multi-tone fill would be too busy (small
 // favicons, monochrome contexts). The `wordmark` prop renders the full
-// horizontal lockup with "RINK READS" set in the Anton display font.
+// horizontal lockup with "RINK READS" set in the BlueChip display font.
 export function RinkReadsLogo({ size = 32, color, mono = false, wordmark = false }) {
   // Unique gradient id per render so multiple logos on a page don't collide.
   const gid = `rrIris-${Math.random().toString(36).slice(2, 8)}`;
@@ -90,7 +91,7 @@ export function RinkReadsLogo({ size = 32, color, mono = false, wordmark = false
 
   if (!wordmark) return Icon;
 
-  // Horizontal lockup — icon + "RINK READS" in Anton uppercase. Sized so the
+  // Horizontal lockup — icon + "RINK READS" in Playfair uppercase. Sized so the
   // wordmark cap-height matches roughly 50% of the icon height.
   const wordSize = Math.round(size * 0.52);
   return (

@@ -7,6 +7,7 @@
 // goalie.png}. Coordinate space: 0–1 normalized (matches the author tool).
 
 import React from "react";
+import { C, FONT } from './shared.jsx';
 
 const SPRITE_SHEETS = {
   yellow: { src: "/assets/sprites/player-yellow.png", cols: 4, rows: 2, cellW: 384, cellH: 512 },
@@ -48,9 +49,9 @@ export function OverlayLayer({ overlays }) {
               padding: "4px 10px",
               fontSize: (o.size ?? 18) * (o.scale ?? 1),
               fontWeight: 800,
-              color: o.color || "#facc15",
+              color: o.color || C.gold,
               textShadow: "0 1px 3px rgba(0,0,0,0.8), 0 0 6px rgba(0,0,0,0.6)",
-              fontFamily: "'Anton',Impact,sans-serif",
+              fontFamily: FONT.body,
               letterSpacing: 0.5,
               whiteSpace: "pre",
               userSelect: "none",

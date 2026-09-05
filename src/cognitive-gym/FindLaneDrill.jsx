@@ -531,26 +531,19 @@ export default function FindLaneDrill({ playerId = "default", onExit }) {
             {/* a covered teammate */}
             <circle cx="60" cy="34" r="11" fill="#1b6cb0" stroke="#cfe6f6" strokeWidth="2.5" />
           </svg>
-          <p className="gym-goal"><strong>Your goal:</strong> spot the one teammate with a clean passing lane and hit them before it closes.</p>
+          <p className="gym-goal"><strong>Your goal:</strong> tap the teammate with a clear passing lane before time runs out.</p>
           <p>
-            <strong>The game:</strong> you have the puck (the gold YOU marker).
-            Teammates are open targets (blue dots) and defenders clog the ice
-            (grey dots with an X). Exactly one teammate has a clear lane. Tap Read
-            it, the play appears and a countdown ring starts shrinking around you,
-            and you tap the teammate you think is open before the ring runs out.
-            The faster you find the seam, the more points you earn. As you level
-            up there are more teammates and defenders to read, the open lane gets
-            tighter, and the countdown gets quicker. You start each rep when you
-            are ready.
+            <strong>The game:</strong> tap Read it. Find YOU with the puck and
+            look for a path to a teammate without a defender in the way.
+            Defenders have an X. Each round has one clear lane. Tap that teammate
+            before the countdown ring empties, then check the revealed pass.
+            Faster correct taps earn more points.
           </p>
           <div className="gym-trains">
-            <strong>Why it matters</strong>
+            <strong>Talk hockey</strong>
             <span>
-              The puck is only yours for a second, and the open seam does not stay
-              open. Learning to see the one clear lane through traffic, and to
-              thread the pass before a defender slides over to take it away, is how
-              you turn a scramble into a clean play and put the puck on a
-              teammate's tape instead of into a shin pad.
+              Point out the defender beside a blocked lane. What would have to
+              change for that pass to become an option?
             </span>
           </div>
           <button className="gym-btn" onClick={start}>

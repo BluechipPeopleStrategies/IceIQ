@@ -51,6 +51,14 @@ const INITIAL_STATE = stateFromLayout(layout(
   pose(25.1, 0.4, Math.atan2(4 - 0.4, 10 - 25.1)),
 ), { owner: 'F1' });
 
+const CHANGED_CUE_ID = 'd1-pass-lane-v1';
+// A separate opening freeze, not the next state of any chosen branch.
+// Only D1's position changes: the midpoint of the visible puck-to-F2 line.
+const CHANGED_CUE_STATE = stateFromLayout(Object.fromEntries(INITIAL_STATE.actors.map(actor => [
+  actor.id,
+  actor.id === 'D1' ? pose(12.05, 0.1, actor.facing) : pose(actor.x, actor.y, actor.facing),
+])), { owner: 'F1' });
+
 const FIRST_BRANCHES = {
   pass: {
     actionLabel: 'Pass',
@@ -205,6 +213,7 @@ export function createReadSequenceSession() {
     first: null,
     second: null,
     third: null,
+    changedCue: null,
     availableSecondTargets: [],
     localEvidence: null,
     reviewStatus: 'in-progress',
@@ -288,6 +297,27 @@ export function submitThirdRead(session, reason) {
   return next;
 }
 
+export function getChangedCueComparison(session) {
+  if (session?.phase !== 'complete' || !session.third?.reason) throw new Error('Finish all three reads before comparing the changed cue.');
+  return {
+    id: CHANGED_CUE_ID,
+    originalState: clone(INITIAL_STATE),
+    changedState: clone(CHANGED_CUE_STATE),
+    originalAnswer: clone(session.first),
+    revisedAnswer: session.changedCue ? clone(session.changedCue) : null,
+    cue: 'D1 moved from part of the shot lane into the pass line between the puck and F2. The attackers, goalie and puck stayed in the same places.',
+    sourceRef: { note: 'docs/library/two-on-one-pass-lane-removed.md' },
+  };
+}
+
+export function submitChangedCueRead(session, { action, reason }) {
+  getChangedCueComparison(session);
+  branchFor(action);
+  const next = clone(session);
+  next.changedCue = { id: CHANGED_CUE_ID, action, reason: boundedReason(reason) };
+  return next;
+}
+
 export function serializeReadSequence(session) {
   if (session?.phase !== 'complete' || !session.first || !session.second || !session.third?.point || !session.third?.reason) {
     throw new Error('Finish all three reads before saving this reflection.');
@@ -298,6 +328,7 @@ export function serializeReadSequence(session) {
     first: { action: session.first.action, reason: session.first.reason },
     second: { targetId: session.second.targetId },
     third: { point: { x: session.third.point.x, y: session.third.point.y }, reason: session.third.reason },
+    ...(session.changedCue ? { changedCue: { id: CHANGED_CUE_ID, action: session.changedCue.action, reason: session.changedCue.reason } } : {}),
     reviewStatus: 'draft-for-coach-review',
   });
 }
@@ -310,7 +341,12 @@ export function restoreReadSequence(raw) {
     session = advanceSequencePlayback(submitFirstRead(session, saved.first), 1);
     session = advanceSequencePlayback(selectSecondRead(session, saved.second?.targetId), 1);
     session = moveThirdReadActor(session, saved.third?.point);
-    return submitThirdRead(session, saved.third?.reason);
+    session = submitThirdRead(session, saved.third?.reason);
+    if (saved.changedCue != null) {
+      if (saved.changedCue.id !== CHANGED_CUE_ID) return null;
+      session = submitChangedCueRead(session, saved.changedCue);
+    }
+    return session;
   } catch {
     return null;
   }

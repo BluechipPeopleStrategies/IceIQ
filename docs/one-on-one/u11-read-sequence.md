@@ -20,6 +20,14 @@ The completion view repeats all three submitted choices. Local evidence describe
 
 An optional **Review my final positioning** section reuses the practice judge only after all three reads are complete and only after the player presses its button. It sends the actual read-two result as both the initial and reference snapshot, explicitly labels that repeated snapshot as a comparison baseline rather than an ideal answer, and sends the final moved snapshot plus the player's final explanation. The request uses `docs/library/off-puck-support-offense.md` with an open support-lane rubric and no expected action or fixed correct coordinate. No player identity is included. When the local judge has no configured key, the existing panel reports that it is unavailable and produces no replacement grade.
 
+## Optional comparison: one thing changes
+
+After completion, **Try one changed cue** opens a comparison of the original opening freeze with a separate freeze where only D1's position changes. D1 moves from `(16.1, 1.5)` to `(12.05, 0.1)` metres: the midpoint of the visible puck-to-F2 segment, clearly away from the shot line. D1 keeps the same facing, and F1, F2, the goalie and puck are identical in both boards. This applies the existing `two-on-one-pass-lane-removed.md` cue without adding a new coaching rule or simulating how D1 reached the new position.
+
+The two boards appear together on larger screens and stack on phones. The original action and reason stay visible. The learner selects Shoot, Pass or Carry and explains why they would keep or change the original choice. Any of those actions with a bounded, non-empty explanation can be recorded for discussion; the program does not decide whether the reason is tactically sound. Local text describes the changed defender position only. It does not award points, assert a goal, submit an AI request, change the original three answers, or play a consequence from the original branch as if it belonged to the changed board.
+
+**Save my comparison** adds an optional `changedCue` record (`id`, `action`, `reason`) to the existing v1 completed reflection. The original answer remains in `first`; the comparison ID binds the revised answer to this specific changed freeze. Both answers persist in the existing device/player scope and in **Download reflection**, without a player identity or score. Old v1 reflections without `changedCue` restore normally; malformed or unknown comparison records fail restore. Comparison drafts are not saved until the learner presses Save. First-choice replay returns to the completed three-read state and preserves the saved comparison. The separate final-position AI request still contains only read three.
+
 ## Sources and authored boundary
 
 - `docs/library/odd-man-reads.md` supplies the requirement to show defender commitment and read shot/pass space rather than guess intent.
@@ -45,6 +53,9 @@ Read-two targets work both as large rink markers and ordinary buttons. The read-
 - movement of only the named off-puck player;
 - descriptive evidence with no score;
 - deterministic replay with no silent answer changes;
+- comparison geometry: D1 occupies the actual pass segment and leaves the shot line while every other actor, facing and puck state remains unchanged;
+- independent original/revised answers, original three-read state and AI-payload immutability;
+- comparison save/restore, legacy v1 compatibility, invalid comparison rejection and replay persistence;
 - exact source-note references and draft review status.
 
-`ReadSequence` is now the default Practice Hub view. Twelve core tests cover branches, canonical geometry, serialization/restore and final AI payload. Browser testing covered pass/carry branches, pointer/keyboard movement, missing inputs, replay, completed-reflection persistence and tablet layout. Player ID scopes the local storage key; exported reflections and AI payloads omit it. Only completed reflections are restored; unfinished sessions are not autosaved. The local AI adapter is unconfigured, so no live judgment is claimed. See `verification.md`.
+`ReadSequence` is now the default Practice Hub view. Fifteen core tests cover branches, canonical geometry, serialization/restore, final AI payload and the optional changed-cue comparison. Three new comparison tests were run failing against the absent feature before implementation, then passed with all twelve existing tests. Prior browser testing covered pass/carry branches, pointer/keyboard movement, missing inputs, replay, completed-reflection persistence and tablet layout. Browser verification of the new comparison is recorded by the integrating task in `verification.md`; the core tests alone do not establish visual or phone acceptance. Player ID scopes the local storage key; exported reflections and AI payloads omit it. Only completed reflections are restored; unfinished sessions are not autosaved. The local AI adapter is unconfigured, so no live judgment is claimed.

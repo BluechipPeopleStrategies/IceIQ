@@ -562,32 +562,19 @@ export default function LateReadDrill({ playerId = "default", onExit }) {
             <circle cx="224" cy="30" r="11" fill="#1b6cb0" stroke="#cfe6f6" strokeWidth="2.5" />
             <circle cx="224" cy="30" r="16" fill="none" stroke="#f2b705" strokeWidth="3" />
           </svg>
-          <p className="gym-goal"><strong>Your goal:</strong> hit the teammate the play is going to right now, and switch if a defender steps up and the read changes late.</p>
+          <p className="gym-goal"><strong>Your goal:</strong> tap the cued teammate and watch for a late change.</p>
           <p>
-            <strong>The game:</strong> you have the puck (the gold YOU marker) and
-            a teammate is cued as the play, a gold arrow and ring from you to them.
-            Tap Read it, the play appears and a countdown ring starts shrinking
-            around you. On some reps nothing changes and your first read is right,
-            so hit that teammate. On other reps a defender steps up late and the
-            cue jumps to a different open teammate. When that happens you have to
-            read the change and hit the NEW open teammate, not the one you first
-            locked onto. Tap the teammate the gold arrow points to right now,
-            before the ring runs out. The quicker you settle on the right read, the
-            more points you earn. As you level up more reps change, the change
-            fires later so you get less time to react, the clock gets shorter, and
-            there are more bodies on the ice. You start each rep when you are ready.
+            <strong>The game:</strong> tap Read it. A gold arrow and ring mark a
+            teammate. Sometimes a defender steps into that lane and the cue moves
+            to someone else. Tap the teammate the arrow points to now, before the
+            countdown ring empties. Then check the revealed pass. Faster correct
+            taps earn more points.
           </p>
           <div className="gym-trains">
-            <strong>Why it matters</strong>
+            <strong>Talk hockey</strong>
             <span>
-              The play you saw a second ago is not always the play that is there
-              now. A defender steps up, a lane closes, and the right pass becomes
-              the wrong one. Good players do not force their first idea once the ice
-              changes. They keep their head up, read the defender stepping into the
-              lane, and switch to the teammate who is open now. Training that, not
-              committing too early and adjusting when the picture changes, is how
-              you stop throwing pucks into trouble and start making the play the ice
-              is actually giving you.
+              What changed before your tap? Describe how the defender's position
+              affected the pass you were considering.
             </span>
           </div>
           <button className="gym-btn" onClick={start}>
