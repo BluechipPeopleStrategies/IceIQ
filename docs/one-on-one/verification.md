@@ -120,3 +120,13 @@ This quality pass is verified locally and has **not yet been deployed**. The pro
 - These are browser viewport, generated touch and local graphics-lifecycle checks. No physical phone/iPad, device voice quality, sustained GPU benchmark, child comprehension or tactical/age-validity acceptance is claimed. The connected sequences remain coach-review drafts, and these visual changes add no live AI key or model request.
 
 - **Final narrow-screen fixes:** At 320 px, the canvas initially held its former grid width after a resize; zero-minimum grid columns/panels now shrink correctly. A U13 Carry target was partly clipped; all candidate button centres now clamp to a 28 px inset before obstacle scoring, and connectors follow the actual offset. Browser checks show both 44 px targets fully inside the 261 px canvas with no document overflow. A new failing-first regression covers every authored target/candidate at six canvas widths; 243 tests pass. Label and target portal mounts request one render and chips have a default lift, preventing delayed initial label placement without adding an animation loop.
+
+## Connected-read 3D live verification — September 5, 2026, 05:34 Edmonton
+
+The local quality pass above is now published as **`cf96277`**. [Vercel deployment succeeded](https://vercel.com/bluechippeoplestrategies-projects/ice-iq/4vwRTyCS7bHcJXFZoZs9CwPKzbAx); the **243-test practice suite and production build passed** before publication.
+
+- At the [public arena](https://ice-iq.vercel.app/#practice-arena), a 390 px browser viewport showed the 3D rink and U13 sequence. All three pre-existing U9/U11 read/recall storage records remained unchanged.
+- U13 Carry → native touch on F2 → Plan route accepted a floor-tap waypoint `(20.75680072542246, 1.1)` from origin `(21, 5)`, followed by numeric waypoint `(22, -1)`. Reduced-motion inspection worked. The explanation completed; this live download was compared and matched the exact saved JSON. A full reload restored the exact saved reflection, and U13 recall opened.
+- Switching to the tactical board left zero WebGL canvases; switching back to 3D created one. The checked live flow had no page exceptions, failed requests or horizontal overflow.
+- The final 320 px containment check remains **local** evidence: both U13 Carry targets were fully contained at 44 × 44 px with no overflow after the grid and target-clamping fixes. The forced `WEBGL_lose_context` recovery check above also remains local evidence; forced loss was not repeated on this live release.
+- These are public-origin browser and generated-touch checks. No live AI call, physical-device result, child-comprehension finding or tactical/age-validity acceptance is claimed. Practice saves remain device-local.

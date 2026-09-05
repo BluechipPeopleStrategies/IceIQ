@@ -92,3 +92,13 @@ checks, not a physical-phone test or a child comprehension study.
 `8a2a5e9` deployed successfully: [Vercel deployment](https://vercel.com/bluechippeoplestrategies-projects/ice-iq/7YuKCzVWwK2F6GYkNxZQuBcKoWEb). Verified on the public HTTPS origin at 03:17 Edmonton, September 5, at 390 × 844.
 
 The public review shows **208 tests passed**. An older completed U9 Carry/pass reflection opened the new recall exercise. It first reported the incorrect ordering; a native touch event moved the carry picture earlier, then the corrected order and optional note saved and reopened byte-identical. The original U9 and U11 reflection JSON stayed byte-identical. Show the order was recorded immediately and remained visible after reload. No horizontal overflow, page exceptions or failed requests appeared in these checked flows. Evidence: `evidence/recall-live-phone.png`. These are browser viewport and browser-generated touch checks, not physical-device or child-comprehension evidence.
+
+## 3D connected reads and U13 release — September 5, 05:34 Edmonton
+
+**`cf96277` deployed successfully:** [Vercel deployment](https://vercel.com/bluechippeoplestrategies-projects/ice-iq/4vwRTyCS7bHcJXFZoZs9CwPKzbAx). The **243-test practice suite and production build passed**. Verified on the [public arena](https://ice-iq.vercel.app/#practice-arena) at a 390 px browser viewport.
+
+The public view shows the 3D rink and U13 connected sequence. All three existing U9/U11 read/recall storage records remained unchanged. U13 Carry → a native touch on F2 → Plan route accepted floor point `(20.75680072542246, 1.1)` from the correct origin `(21, 5)`, plus numeric point `(22, -1)`. Reduced-motion inspection worked. The explanation completed, the downloaded JSON matched the exact saved reflection, and a full reload restored it unchanged. U13 recall opened successfully.
+
+Switching to the tactical board removed the WebGL canvas; switching back created one canvas. No page exceptions, failed requests or horizontal overflow occurred in this checked live flow. The final local 320 px check also confirmed both U13 targets fully contained at 44 × 44 px with no overflow. Forced WebGL context-loss recovery was verified locally, not repeated on this live release; details and the earlier interrupted local download comparison are recorded separately in `verification.md`.
+
+Practice storage remains device-local and does not sync between phones or computers. No live AI call or physical phone/iPad test is claimed. The connected sequences remain coach-review drafts rather than validated child-comprehension or tactical assessments.

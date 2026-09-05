@@ -1,12 +1,12 @@
 # RinkReads overnight checkpoint
 
-Updated September 5, 2026, 05:35 Edmonton. Target: **7:00 a.m. Edmonton today (13:00 UTC)**. The existing `rinkreads-overnight-build` heartbeat is active every 30 minutes until the deadline; do not duplicate it.
+Updated September 5, 2026, 05:34 Edmonton. Target: **7:00 a.m. Edmonton today (13:00 UTC)**. The existing `rinkreads-overnight-build` heartbeat is active every 30 minutes until the deadline; do not duplicate it.
 
 ## Continue from here
 
-**Current local slice: U13 worked comparison and 3D connected-read presentation.** Thomas requested higher-quality scenario visuals. The new lazy scene renders the same canonical actors/puck with procedural navy/gold skaters, goalie, ice/light, readable labels and targets, broadcast desktop and end-zone phone framing. Tactical board remains available; real context loss returns there without losing answers. U13 adds four worked Shoot/Carry paths, separate records and actual-branch recall. All 15 U9/U11/U13 local phone paths, target hit areas, native touch route, no-point page scrolling, pause/frozen pixels, view switching and fallback/save/reload have passed. 243 practice tests and build pass. Final initial-label styling, screenshots, scoped commit/push and live verification are still in progress. See `connected-read-visual-design.md`, `u13-lane-switch-design.md` and `verification.md`. Do not claim deployment yet.
+**Current release complete: `cf96277`, U13 worked comparison and 3D connected-read presentation.** Vercel succeeded and live phone verification finished at 05:34 Edmonton. Thomas requested higher-quality scenario visuals. The new lazy scene renders the same canonical actors/puck with procedural navy/gold skaters, goalie, ice/light, readable labels and targets, broadcast desktop and end-zone phone framing. Tactical board remains available; actual local context loss returns there without losing answers. U13 adds four worked Shoot/Carry paths, separate records and actual-branch recall. All 15 local paths, native route touch, no-point scrolling, frozen pixels, view switching and fallback/save/reload passed. Final 320 px grid and target-clamping fixes passed. **243 tests and build pass.** Live native F2/route touch, numeric endpoint, completion, exact download/full reload and recall opening passed with three older records unchanged; no errors, failed requests or overflow. Finish committing the verification record if modified, then choose the next bounded slice. See `connected-read-visual-design.md`, `u13-lane-switch-design.md`, `phone-preview.md` and `verification.md`.
 
-**Last verified live release:** `2b5ae75` U11 wording, verified 04:30 Edmonton; verification HEAD `4262ab2`. Existing U11 canonical fixture and saved outputs remain unchanged. Coach Lab routes (`106ec3e`) are also complete; do not repeat those slices.
+**Prior verified releases:** `2b5ae75` U11 wording (04:30 Edmonton), `106ec3e` Coach Lab routes. Existing U11 canonical fixture and saved outputs remain unchanged. Do not repeat these completed slices.
 
 Thomas asked whether everything was still getting worked on. Root answered yes and continued this slice. The broader build is still active; no claim that the commercial app, production animation or AI judging is finished.
 
@@ -36,8 +36,8 @@ New content and geometry stay coach-review drafts, not admitted curriculum. The 
 
 ## Next useful bounded work
 
-1. Finish the current U13/3D slice: final screenshots/build, scoped commit/push, wait for Vercel, verify actual public phone route and preserved saves, then record deployment evidence. Never include the obsolete `read-scene-phone-initial.png` in the release evidence.
-2. U13 is implemented locally. Carry produces the lane-switch read; Shoot instead leads to loose-puck support. Preserve that worked-comparison teaching tradeoff. No U13 AI, changed-cue support, tactical grade or age validation is implied.
+1. U13/3D publication and live verification are complete. Continue bounded quality/source work; do not redo this release. The untracked `read-scene-phone-initial.png` is an obsolete first iteration, not release evidence.
+2. U13 is live as a coach-review worked comparison. Carry produces the lane-switch read; Shoot instead leads to loose-puck support. Preserve that teaching tradeoff. No U13 AI, changed-cue support, tactical grade or age validation is implied.
 3. Route-to-question integration, timed passes, richer prediction/changed-cue sequences and remaining ages need bounded designs. Live AI, whole-sequence judging, cloud persistence, main-app navigation, physical-device performance, coach/player comprehension, curriculum admission and rigged character motion remain open.
 4. At 7:00 a.m., stop this overnight run and leave a self-contained review with working hosted links, deployed changes, actual checks and material limits. Keep `morning-review.md` and the canonical `docs/roadmap/TASKS.md` current.
 

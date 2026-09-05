@@ -1,6 +1,6 @@
 # Connected reads: 3D visual layer
 
-**Status:** Implemented locally, September 5, 2026. Integration browser QA is underway. This record does not claim deployment, physical-phone testing or classroom validation.
+**Status:** Deployed as `cf96277`, September 5, 2026; public phone-viewport verification completed at 05:34 Edmonton. See `verification.md` and `phone-preview.md` for exact evidence. This does not establish physical-phone performance or classroom validation.
 
 ## Purpose and scope
 
