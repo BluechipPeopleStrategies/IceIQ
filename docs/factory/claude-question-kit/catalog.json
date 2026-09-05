@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "status": "experimental-not-approved",
-  "generatedAt": "2026-09-05T20:30:48.357Z",
+  "generatedAt": "2026-09-05T22:33:31.311Z",
   "counts": {
     "scenarios": 200,
     "questions": 1600
@@ -9,7 +9,7 @@
   "scenarios": [
     {
       "id": "exp26-u7-001",
-      "version": 1,
+      "version": 2,
       "ageBand": "U7",
       "title": "Who is on my team?",
       "family": "team-recognition",
@@ -180,14 +180,14 @@
             },
             {
               "id": "c",
-              "text": "Close your eyes"
+              "text": "Shoot the puck away without looking for Navy2"
             }
           ],
           "answer": [
             "a"
           ],
           "basis": "coaching",
-          "explanation": "A teammate can become covered. Look again or find clearer space.",
+          "explanation": "A teammate can become covered. Look again or find clearer space. Sending the puck away before you look can give Gold1 a chance to get it.",
           "id": "exp26-u7-001-q5"
         },
         {
@@ -252,8 +252,8 @@
           "prompt": "Move YOU with the puck to try a different passing angle toward Navy2.",
           "actorId": "home-skater-1",
           "reference": {
-            "x": -5,
-            "y": -1
+            "x": -6,
+            "y": 2
           },
           "basis": "coaching",
           "explanation": "Try a controlled move that leaves a clear path toward Navy2 while keeping Gold1 in view. The puck stays with YOU. This is one example to discuss, not the only place that can work."
@@ -261,7 +261,7 @@
         {
           "id": "exp26-u7-001-q10",
           "type": "explain",
-          "prompt": "Tell an adult what changed when Gold1 got closer.",
+          "prompt": "Imagine Gold1 skates closer to YOU. Tell an adult what changed.",
           "basis": "coaching",
           "explanation": "A useful answer names Gold1 as closer pressure and Navy2 as a teammate to find. The next puck touch should follow that new picture."
         }
@@ -5915,7 +5915,7 @@
     },
     {
       "id": "exp26-u9-006",
-      "version": 2,
+      "version": 3,
       "ageBand": "U9",
       "title": "Find pressure before a corner pickup",
       "family": "corner-pickup-scan",
@@ -6081,26 +6081,26 @@
         },
         {
           "type": "choice",
-          "prompt": "Imagine Gold1 changes to the boards side. What must you update?",
+          "prompt": "Imagine Gold1 moves to the boards side. What should you check again?",
           "options": [
             {
               "id": "a",
-              "text": "The pressure-side information"
+              "text": "Which side Gold1 is coming from"
             },
             {
               "id": "b",
-              "text": "Only the puck colour"
+              "text": "Only where the puck is sitting"
             },
             {
               "id": "c",
-              "text": "Nothing"
+              "text": "Nothing, because you already looked once"
             }
           ],
           "answer": [
             "a"
           ],
           "basis": "coaching",
-          "explanation": "A changed pressure side changes the information for the next decision.",
+          "explanation": "Check which side Gold1 is coming from now. Finding the puck alone does not tell you where the pressure is. One early look does not cover a later change.",
           "id": "exp26-u9-006-q5"
         },
         {
@@ -6115,7 +6115,7 @@
           "type": "explain",
           "prompt": "Navy2 sees Gold1 closing from the inside. What could Navy2 call to help YOU before the pickup?",
           "basis": "coaching",
-          "explanation": "A short call such as “Pressure inside; I am along the boards” gives the pressure side and an outlet. YOU still checks the play: the call helps the scan and does not replace it."
+          "explanation": "A short call such as “Pressure inside; I am along the boards” gives the pressure side and an outlet. YOU still check the play: the call helps the scan and does not replace it."
         },
         {
           "id": "exp26-u9-006-q8",
@@ -11908,7 +11908,7 @@
     },
     {
       "id": "exp26-u11-002",
-      "version": 1,
+      "version": 2,
       "ageBand": "U11",
       "title": "Pressure behind the receiver",
       "family": "receive-scan",
@@ -11950,7 +11950,7 @@
             "team": "away",
             "role": "skater",
             "x": -3,
-            "y": 6,
+            "y": 2,
             "facing": -2.9
           }
         ],
@@ -12063,7 +12063,7 @@
           "actorId": "h2",
           "reference": {
             "x": -7,
-            "y": 2
+            "y": 8.5
           },
           "basis": "coaching",
           "explanation": "The example opens a diagonal from F1 and more separation from D1. It is one option, not a required skating route."
@@ -12154,8 +12154,8 @@
           "prompt": "Move YOU to a shoulder that opens F1's lane and leaves D1 inside.",
           "actorId": "h2",
           "reference": {
-            "x": -5.7,
-            "y": 5.5
+            "x": -4,
+            "y": 8
           },
           "basis": "coaching",
           "explanation": "The changed angle separates YOU from D1 while preserving a route from F1."
@@ -22985,13 +22985,13 @@
     },
     {
       "id": "exp26-u13-001",
-      "version": 2,
+      "version": 3,
       "ageBand": "U13",
       "title": "Read the rim before reaching it",
       "family": "breakout-retrieval",
       "topic": "breakout retrieval",
       "objective": "Notice the forechecker before collecting a rim.",
-      "briefing": "YOU are approaching a loose rim. Gold 1 is closing from the middle. D2 waits behind the puck as a possible outlet. Navy attacks Gold’s net and defends Navy’s net. This is a selected-player teaching view; no movement is implied unless stated.",
+      "briefing": "YOU are approaching a loose rim. Gold 1 is closing from the middle. D2 waits low on the far side as a possible outlet. Navy attacks Gold’s net and defends Navy’s net. This is a selected-player teaching view; no movement is implied unless stated.",
       "setup": {
         "actors": [
           {
@@ -23040,7 +23040,7 @@
       "focusActorId": "home-skater-1",
       "cues": [
         "The puck marker is separate from every player near the side boards.",
-        "YOU are approaching a loose rim. Gold 1 is closing from the middle. D2 waits behind the puck as a possible outlet."
+        "YOU are approaching a loose rim. Gold 1 is closing from the middle. D2 waits low on the far side as a possible outlet."
       ],
       "tags": [
         "breakout-retrieval"
@@ -23095,14 +23095,14 @@
             },
             {
               "id": "c",
-              "text": "Which player last scored"
+              "text": "A guaranteed pass to W after the pickup"
             }
           ],
           "answer": [
             "a",
             "b"
           ],
-          "explanation": "Pressure and support shape the first read; they do not guarantee a specific pass.",
+          "explanation": "Pressure and support shape the first read. Check them again as you approach; no outlet is guaranteed to stay open.",
           "basis": "coaching"
         },
         {
@@ -23184,7 +23184,7 @@
             },
             {
               "id": "b",
-              "text": "D2 remains behind the puck"
+              "text": "D2 stays low on the far side"
             },
             {
               "id": "c",
@@ -23194,8 +23194,8 @@
           "answer": [
             "a"
           ],
-          "basis": "scene",
-          "explanation": "Gold 1 reaching the rim changes possession risk, so YOU must protect and support; if YOU arrives first with control, the outlet scan returns.",
+          "basis": "coaching",
+          "explanation": "Gold 1 reaching the rim first makes your pickup less certain. Check possession, reach and support before choosing how to respond. If YOU arrive first and gain control, check the outlets again.",
           "id": "exp26-u13-001-q7"
         },
         {
@@ -23225,13 +23225,13 @@
         },
         {
           "type": "position",
-          "prompt": "Move YOU to an approach angle that keeps the loose rim and Gold 1 in view.",
+          "prompt": "If YOU gain control at the rim, move W closer along the boards to offer a shorter outlet.",
           "basis": "coaching",
-          "explanation": "The offset approach preserves a view of both puck and forechecker; if Gold 1 crosses the lane, slow and support rather than reaching blind.",
-          "actorId": "home-skater-1",
+          "explanation": "This example brings W closer along the boards, away from Gold 1 in the freeze. Use it only after YOU gain control and the lane is open. If Gold 1 moves into the lane, W needs a different angle or outlet.",
+          "actorId": "home-skater-3",
           "reference": {
-            "x": -20,
-            "y": 10.2
+            "x": -16,
+            "y": 11
           },
           "id": "exp26-u13-001-q9"
         },
@@ -25383,7 +25383,7 @@
     },
     {
       "id": "exp26-u13-010",
-      "version": 2,
+      "version": 3,
       "ageBand": "U13",
       "title": "Be available near the net before the shot",
       "family": "net-front-recognition",
@@ -25525,7 +25525,7 @@
             "c"
           ],
           "basis": "coaching",
-          "explanation": "This is a recognition routine; movement and stick skill require on-ice practice."
+          "explanation": "This is one possible preparation routine. Keep watching the puck carrier as you move and offer your stick; these actions can overlap. Movement and stick skill require on-ice practice."
         },
         {
           "id": "exp26-u13-010-q4",
@@ -25572,7 +25572,7 @@
         },
         {
           "type": "choice",
-          "prompt": "Why is YOU beside the net rather than already in the slot?",
+          "prompt": "Why are YOU beside the net rather than already in the slot?",
           "options": [
             {
               "id": "a",
@@ -25621,13 +25621,13 @@
         },
         {
           "type": "position",
-          "prompt": "Move YOU from the side of the net into a visible net-front lane outside Gold 1.",
+          "prompt": "Move YOU into a strong-side net-front lane that is not directly behind Gold 1.",
           "basis": "coaching",
-          "explanation": "The position makes YOU visible without standing on Gold 1’s body line; if Gold 1 closes, slide to a separate support lane.",
+          "explanation": "This example offers F1 a passing angle away from Gold 1 in the freeze. It does not guarantee a completed pass. If Gold 1 moves across, check whether another pocket or a higher outlet is open.",
           "actorId": "home-skater-1",
           "reference": {
             "x": 24,
-            "y": 1
+            "y": 4.5
           },
           "id": "exp26-u13-010-q9"
         },
@@ -47647,9 +47647,9 @@
       "family": "team-recognition",
       "type": "choice",
       "prompt": "Imagine Gold1 steps between you and Navy2. What could you do?",
-      "explanation": "A teammate can become covered. Look again or find clearer space.",
-      "hash": "020e042ab8d05e4ea2d5d1ea207d8c3ab1ce339fe4d957a5d75677214d7dc5ef",
-      "review": "no-open-ai-finding"
+      "explanation": "A teammate can become covered. Look again or find clearer space. Sending the puck away before you look can give Gold1 a chance to get it.",
+      "hash": "862825e91b64ac8bfae2a950553718e77ae3309b6f6e68102ea6e41c4106d5d1",
+      "review": "revised-and-rechecked"
     },
     {
       "scenarioId": "exp26-u7-001",
@@ -47700,7 +47700,7 @@
       "type": "position",
       "prompt": "Move YOU with the puck to try a different passing angle toward Navy2.",
       "explanation": "Try a controlled move that leaves a clear path toward Navy2 while keeping Gold1 in view. The puck stays with YOU. This is one example to discuss, not the only place that can work.",
-      "hash": "9fb85fd03ea4b259bc2809f27dfeebdc14fb1a48e75113f2f986e01e9447bb81",
+      "hash": "970c333ff00a471955569c0db02a4dd775d81c07dbeab79c362633416287ee5b",
       "review": "no-open-ai-finding"
     },
     {
@@ -47711,9 +47711,9 @@
       "topic": "Rink awareness",
       "family": "team-recognition",
       "type": "explain",
-      "prompt": "Tell an adult what changed when Gold1 got closer.",
+      "prompt": "Imagine Gold1 skates closer to YOU. Tell an adult what changed.",
       "explanation": "A useful answer names Gold1 as closer pressure and Navy2 as a teammate to find. The next puck touch should follow that new picture.",
-      "hash": "1ee40ab5e050d52941cebacec97143dde308c0a415ae4af1ca5b34ebd12f2db5",
+      "hash": "62c48396301588adc0f3b7c66cce33958ea483d2ec09ca41700a7f4d44168b7a",
       "review": "no-open-ai-finding"
     },
     {
@@ -50376,10 +50376,10 @@
       "topic": "Scanning",
       "family": "corner-pickup-scan",
       "type": "choice",
-      "prompt": "Imagine Gold1 changes to the boards side. What must you update?",
-      "explanation": "A changed pressure side changes the information for the next decision.",
-      "hash": "e7af48e878b426e46f76464e224325114e734776e35a75e4ff1c2cfcd078616c",
-      "review": "no-open-ai-finding"
+      "prompt": "Imagine Gold1 moves to the boards side. What should you check again?",
+      "explanation": "Check which side Gold1 is coming from now. Finding the puck alone does not tell you where the pressure is. One early look does not cover a later change.",
+      "hash": "aa8b2a9d74b75f790317b773449044d3aaf228a7380e41f3a3c7d82aa752d251",
+      "review": "revised-and-rechecked"
     },
     {
       "scenarioId": "exp26-u9-006",
@@ -50403,8 +50403,8 @@
       "family": "corner-pickup-scan",
       "type": "explain",
       "prompt": "Navy2 sees Gold1 closing from the inside. What could Navy2 call to help YOU before the pickup?",
-      "explanation": "A short call such as “Pressure inside; I am along the boards” gives the pressure side and an outlet. YOU still checks the play: the call helps the scan and does not replace it.",
-      "hash": "d04bc3ad6ae7fd3164ab957dfce5d334b3d1db7896224e253aaa3a6c51b15459",
+      "explanation": "A short call such as “Pressure inside; I am along the boards” gives the pressure side and an outlet. YOU still check the play: the call helps the scan and does not replace it.",
+      "hash": "bc90fac9039e8da38f051f1cb6bb57b9ad10a6fd423daa378a60addd619785c0",
       "review": "no-open-ai-finding"
     },
     {
@@ -52926,8 +52926,8 @@
       "type": "choice",
       "prompt": "Who still owns the puck before the proposed pass?",
       "explanation": "F1 is the designated carrier; YOU are preparing to receive.",
-      "hash": "c9bbf3f146b0a8a663dd78a76317cb754ddaa18d912cc64c7fe3cc9ed1bc626c",
-      "review": "no-open-ai-finding"
+      "hash": "d20f45e0691f41ec4d701582b51fca83d88b0317ddb82ec29ec1193dd09c2961",
+      "review": "revised-and-rechecked"
     },
     {
       "scenarioId": "exp26-u11-002",
@@ -52939,8 +52939,8 @@
       "type": "multi",
       "prompt": "Which information matters before YOU turn up ice?",
       "explanation": "All three affect a turn or next pass. An intended reception must not be treated as completed possession.",
-      "hash": "4171512bc2179d7efb4be94ed4736ace1c2a61d8e8a156fac8a3d5cbec7ea1d7",
-      "review": "no-open-ai-finding"
+      "hash": "cf27475cd4e6a28f92e74b008d8ced1ea9215498658ba712a87ba97de720579d",
+      "review": "revised-and-rechecked"
     },
     {
       "scenarioId": "exp26-u11-002",
@@ -52952,8 +52952,8 @@
       "type": "sequence",
       "prompt": "Order this receiving-and-next-read suggestion.",
       "explanation": "This routine separates preparation, possession and decision; another scan during reception may be useful.",
-      "hash": "dd2f90ddbed21241b737b163bcbfdf9609f8127dfa84b9ed386166c3e8912833",
-      "review": "no-open-ai-finding"
+      "hash": "94e7eed1f964ac2df65d102a4871f28ee68904bc072b828ee13d98730ffe72e4",
+      "review": "revised-and-rechecked"
     },
     {
       "scenarioId": "exp26-u11-002",
@@ -52965,8 +52965,8 @@
       "type": "position",
       "prompt": "Move YOU to a receiving spot that separates you from D1.",
       "explanation": "The example opens a diagonal from F1 and more separation from D1. It is one option, not a required skating route.",
-      "hash": "8a2086d3d80b9a205651330f10212dfcc142fcd2cd1adcb4c53cd77dbba8d28c",
-      "review": "no-open-ai-finding"
+      "hash": "cf5bad19ecbeccec27cc286cf22a836fd8e3102881d405447f15cb5f621504d8",
+      "review": "revised-and-rechecked"
     },
     {
       "scenarioId": "exp26-u11-002",
@@ -52978,8 +52978,8 @@
       "type": "choice",
       "prompt": "If D1 stays far back and the lane ahead remains open after reception, what becomes an option?",
       "explanation": "An open lane can support carrying. F2 or a return pass may still be useful if their evidence is better.",
-      "hash": "8d4812d12bf01817edab0169a608afc27e225f9ee85abdc87720c579f1dcd6d0",
-      "review": "no-open-ai-finding"
+      "hash": "cb61a6226be40ffd20997e8290d1f51c62a02d7d700cd377f977cced23b2aa6f",
+      "review": "revised-and-rechecked"
     },
     {
       "scenarioId": "exp26-u11-002",
@@ -52991,8 +52991,8 @@
       "type": "explain",
       "prompt": "Why is facing the passer not enough information for this reception?",
       "explanation": "A receiver can see the puck while missing pressure from another direction. Explain what you would check and how it affects your next touch.",
-      "hash": "f946582a8a1b24c4534d3ec2971a1d84dc1825d04cf2504513970bdd4d04893a",
-      "review": "no-open-ai-finding"
+      "hash": "5c15d1803f9d18f137f86c3159618ccaadeed5e878c93b4cac14eff34093eb3a",
+      "review": "revised-and-rechecked"
     },
     {
       "scenarioId": "exp26-u11-002",
@@ -53004,7 +53004,7 @@
       "type": "choice",
       "prompt": "What should YOU learn before F1 releases the pass?",
       "explanation": "The pressure location and the reachable receiving shoulder explain why the reception can stay adaptable.",
-      "hash": "a4f73ef7ad2c9ee731d92589da7dd74f8240e417b03213e55d6e10d5ad16419b",
+      "hash": "ddef650215b8b21a935a18b79114234eb9d5f17b789d0b3a0bdfda7872a3bca9",
       "review": "no-open-ai-finding"
     },
     {
@@ -53017,7 +53017,7 @@
       "type": "multi",
       "prompt": "Which two signs support receiving away from D1?",
       "explanation": "The passer's view and D1's position make the target useful; F2 is a later read.",
-      "hash": "c02e8dabba21015d790f5447de0fb5f0b6cc807c9897d34c1eecc16612f8cffa",
+      "hash": "44461260c5ada687597e97bc76af11d782bc628b27f9a868d3ce764e990c04f6",
       "review": "no-open-ai-finding"
     },
     {
@@ -53030,7 +53030,7 @@
       "type": "position",
       "prompt": "Move YOU to a shoulder that opens F1's lane and leaves D1 inside.",
       "explanation": "The changed angle separates YOU from D1 while preserving a route from F1.",
-      "hash": "fcb6c836118b15b71621f170f8fc1f364a6609e8c50e1b64fdc8a4f420f0317f",
+      "hash": "a50675cce1b9c93f4855f7104e8214dea237df8c46d378205a01a8d2e2f06e50",
       "review": "no-open-ai-finding"
     },
     {
@@ -53043,7 +53043,7 @@
       "type": "explain",
       "prompt": "D1 reaches your inside shoulder as the puck arrives. Explain the changed reception and next scan.",
       "explanation": "Protect the first touch away from D1, then scan whether F2 or a return lane remains. A turn is conditional on the space that is still there.",
-      "hash": "6dd54ec3d4770fc0a788fb51a3da4b95e868649b0cde2fc12134b56c97cda940",
+      "hash": "d40414944f24735520998eddb003b674d9758aa602e951e4e010a13af7782b70",
       "review": "no-open-ai-finding"
     },
     {
@@ -57996,7 +57996,7 @@
       "type": "choice",
       "prompt": "Where is the puck at this freeze?",
       "explanation": "The puck marker is separate from every player near the side boards.",
-      "hash": "7750b782756d4daaa4abc6c1fca3fc3a0fe0d876427c7adcf6c22461c566c3b6",
+      "hash": "ce3e0b7afb8ae9122b5ec69ac3c2cbc99449006a6bd0be1b90118d60393e21ec",
       "review": "revised-and-rechecked"
     },
     {
@@ -58008,8 +58008,8 @@
       "family": "breakout-retrieval",
       "type": "multi",
       "prompt": "Which two pieces of information help before this pickup?",
-      "explanation": "Pressure and support shape the first read; they do not guarantee a specific pass.",
-      "hash": "530d79e14df351e89b53a654872bd12de43d46865f3891551f7719628dd2edc9",
+      "explanation": "Pressure and support shape the first read. Check them again as you approach; no outlet is guaranteed to stay open.",
+      "hash": "49f32f02e1f90656ed1daf14e81cb7631b47caf3895a99e47ed72d3ec2ba0f16",
       "review": "revised-and-rechecked"
     },
     {
@@ -58022,7 +58022,7 @@
       "type": "sequence",
       "prompt": "Order one preparation routine for this rim.",
       "explanation": "This is a suggested routine; scanning may happen repeatedly.",
-      "hash": "92a44a184c7c6e6f0ec2d5d905c08429166fcdb1d4da2e2654a1cfc9e2c8c65e",
+      "hash": "e4268122d12e1e1d9c58d53962bdb725a31c9b7e9037b52c28752135f87cfbcd",
       "review": "no-open-ai-finding"
     },
     {
@@ -58035,7 +58035,7 @@
       "type": "position",
       "prompt": "Move YOU toward a pickup position that preserves a view of Gold 1.",
       "explanation": "A position inside the rim can allow a check of pressure. Another angle may suit the puck’s actual travel.",
-      "hash": "4c62058e58a694a7f2cc567868b3e2fb6dc6c28c930f035126374956abcba0b8",
+      "hash": "8a66f61f3e0d4b43e1abae7e61dccff7d835ac979847b2ca4ec9bfa8af502f41",
       "review": "revised-and-rechecked"
     },
     {
@@ -58048,7 +58048,7 @@
       "type": "choice",
       "prompt": "Suppose Gold 1 now reaches the wall first. What deserves a fresh look?",
       "explanation": "A contested pickup changes the job. The exact response depends on support and reach.",
-      "hash": "d26d7339a1747cee532abfd9308022228cc7eafb48d3d0a474e18246b7694eb4",
+      "hash": "3e07b8005780e65bd262f06dc93b3a09439a5c6772e965bcd5e482e44c407c05",
       "review": "revised-and-rechecked"
     },
     {
@@ -58061,7 +58061,7 @@
       "type": "explain",
       "prompt": "What would you look at twice while retrieving this rim?",
       "explanation": "Explain how the forechecker or outlet may move between the first scan and the pickup.",
-      "hash": "15ee474483df58f2861f4b7ee60f8b36ea51da0b0d5ffcc36dc47951fbcb02cc",
+      "hash": "618cf913b80319d95bfe8a5a92513cb3ac1903b001dd81ec98cf1c054fee61e1",
       "review": "revised-and-rechecked"
     },
     {
@@ -58073,8 +58073,8 @@
       "family": "breakout-retrieval",
       "type": "choice",
       "prompt": "Which new fact would make the planned pickup less certain?",
-      "explanation": "Gold 1 reaching the rim changes possession risk, so YOU must protect and support; if YOU arrives first with control, the outlet scan returns.",
-      "hash": "84ac837754572fe92f6f39c48c151552f83ad04f17e74eca109e73a864330636",
+      "explanation": "Gold 1 reaching the rim first makes your pickup less certain. Check possession, reach and support before choosing how to respond. If YOU arrive first and gain control, check the outlets again.",
+      "hash": "44cb8bce417ab03345c8632118fcc2cda100813bcb139549509199dddc015c59",
       "review": "no-open-ai-finding"
     },
     {
@@ -58087,7 +58087,7 @@
       "type": "multi",
       "prompt": "Which two words would make the next call useful?",
       "explanation": "A pressure-side call and support status give teammates actionable information; a vague pass call does not say what changed.",
-      "hash": "19f1f36550cef189d9ae08d4a8f654f53d79e235cf8451bcf67f363786521a87",
+      "hash": "4527ed5d650e2214fa9f51b62b00578a10ed77d886a4280cf02c4b70947ce439",
       "review": "no-open-ai-finding"
     },
     {
@@ -58098,9 +58098,9 @@
       "topic": "breakout retrieval",
       "family": "breakout-retrieval",
       "type": "position",
-      "prompt": "Move YOU to an approach angle that keeps the loose rim and Gold 1 in view.",
-      "explanation": "The offset approach preserves a view of both puck and forechecker; if Gold 1 crosses the lane, slow and support rather than reaching blind.",
-      "hash": "8b2b6024d5945f6c59032ea1eafbdb11cdbc85ee91852ceade45f26411b31c45",
+      "prompt": "If YOU gain control at the rim, move W closer along the boards to offer a shorter outlet.",
+      "explanation": "This example brings W closer along the boards, away from Gold 1 in the freeze. Use it only after YOU gain control and the lane is open. If Gold 1 moves into the lane, W needs a different angle or outlet.",
+      "hash": "57184aadc66a67ec7dcf26f8b6cadf9dd6d8b16bc42b90505a4c800e9487e3b8",
       "review": "no-open-ai-finding"
     },
     {
@@ -58113,7 +58113,7 @@
       "type": "explain",
       "prompt": "How would you decide whether to collect or contain at the rim?",
       "explanation": "Compare who can reach the puck, Gold 1’s route and D2’s support before committing; if the opponent arrives first, contain and wait for help.",
-      "hash": "c242910a81c66c162ca4c28862db41f83ee192a207a176bbff0d311c060f0026",
+      "hash": "27fb13f55f00b3b9b27d15bf1bc50fae43ec03b677814b8ded45c726b50a96d2",
       "review": "no-open-ai-finding"
     },
     {
@@ -59191,8 +59191,8 @@
       "family": "net-front-recognition",
       "type": "sequence",
       "prompt": "Arrange a possible preparation for a front-of-net option.",
-      "explanation": "This is a recognition routine; movement and stick skill require on-ice practice.",
-      "hash": "bb3e3e74102ba21d599b0fac2357f5e42c052546d83437cf9e6d987ef29418bf",
+      "explanation": "This is one possible preparation routine. Keep watching the puck carrier as you move and offer your stick; these actions can overlap. Movement and stick skill require on-ice practice.",
+      "hash": "85062822e665b485067f017992730b59575b0deb4745d59f6e2fa819e928ad61",
       "review": "no-open-ai-finding"
     },
     {
@@ -59242,9 +59242,9 @@
       "topic": "net front recognition",
       "family": "net-front-recognition",
       "type": "choice",
-      "prompt": "Why is YOU beside the net rather than already in the slot?",
+      "prompt": "Why are YOU beside the net rather than already in the slot?",
       "explanation": "The exercise states the recognition task is to become visible near the front; if the puck or defender moves, choose a new lane.",
-      "hash": "98bef0a9362755c99e8baac55134f83633b2f344509794754c4049a45b16bd0d",
+      "hash": "dd4b5aac2b6d202043cc1c0cbf59d52dd6efdad2c80b8622dbc1e223bd0ff56c",
       "review": "no-open-ai-finding"
     },
     {
@@ -59268,9 +59268,9 @@
       "topic": "net front recognition",
       "family": "net-front-recognition",
       "type": "position",
-      "prompt": "Move YOU from the side of the net into a visible net-front lane outside Gold 1.",
-      "explanation": "The position makes YOU visible without standing on Gold 1’s body line; if Gold 1 closes, slide to a separate support lane.",
-      "hash": "abadbf660e215ed238c741e8beba2327efbd83d33f784821f07e9fe33adc2fed",
+      "prompt": "Move YOU into a strong-side net-front lane that is not directly behind Gold 1.",
+      "explanation": "This example offers F1 a passing angle away from Gold 1 in the freeze. It does not guarantee a completed pass. If Gold 1 moves across, check whether another pocket or a higher outlet is open.",
+      "hash": "66da1265e8883c1c9b995ff6d1cb3ec56360b346d57b41255d5c8ad5ff5fec52",
       "review": "no-open-ai-finding"
     },
     {

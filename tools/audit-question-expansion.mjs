@@ -26,7 +26,7 @@ const index=reports=>{
 const a=index(first),b=index(second),c=index(rechecks),addedIds=new Set(added.map(r=>r.q.id));
 // Later owner-reported visual defects have separate receipts. Keep every
 // historical review; supersede only with an independently reviewed repair hash.
-for(const file of ['original-user-feedback-recheck.json','related-board-recheck.json']){
+for(const file of ['original-user-feedback-recheck.json','related-board-recheck.json','calibration-final-recheck.json']){
  const path=join(root,'followup',file);if(!existsSync(path))continue;
  const report=readJson(path);
  for(const row of report.coverage||[]){

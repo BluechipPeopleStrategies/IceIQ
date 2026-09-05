@@ -1018,7 +1018,7 @@
   },
   {
     "id": "exp26-u9-006",
-    "version": 2,
+    "version": 3,
     "ageBand": "U9",
     "title": "Find pressure before a corner pickup",
     "family": "corner-pickup-scan",
@@ -1184,26 +1184,26 @@
       },
       {
         "type": "choice",
-        "prompt": "Imagine Gold1 changes to the boards side. What must you update?",
+        "prompt": "Imagine Gold1 moves to the boards side. What should you check again?",
         "options": [
           {
             "id": "a",
-            "text": "The pressure-side information"
+            "text": "Which side Gold1 is coming from"
           },
           {
             "id": "b",
-            "text": "Only the puck colour"
+            "text": "Only where the puck is sitting"
           },
           {
             "id": "c",
-            "text": "Nothing"
+            "text": "Nothing, because you already looked once"
           }
         ],
         "answer": [
           "a"
         ],
         "basis": "coaching",
-        "explanation": "A changed pressure side changes the information for the next decision.",
+        "explanation": "Check which side Gold1 is coming from now. Finding the puck alone does not tell you where the pressure is. One early look does not cover a later change.",
         "id": "exp26-u9-006-q5"
       },
       {

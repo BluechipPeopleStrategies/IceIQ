@@ -1,13 +1,26 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {readFileSync} from 'node:fs';
+import {readFileSync,existsSync} from 'node:fs';
 import {join} from 'node:path';
 import {createHash} from 'node:crypto';
 import {readBankFiles} from './experimental-bank-files.mjs';
 const root='docs/factory/claude-project',read=file=>JSON.parse(readFileSync(join(root,file),'utf8'));
 
-test('Claude package covers each current scene/question exactly once and preserves exact review evidence',()=>{
- const snapshot=read('bank-snapshot.json');assert.deepEqual(snapshot.scenarios,readBankFiles().bank);
+test('frozen Claude package preserves its baseline and accounts for every subsequent calibration repair',()=>{
+ const snapshot=read('bank-snapshot.json'),expected=structuredClone(snapshot.scenarios);
+ const receiptPath='docs/factory/research/question-review/repairs/claude-calibration-repairs.json';
+ if(existsSync(receiptPath)){
+  const receipt=JSON.parse(readFileSync(receiptPath,'utf8'));
+  assert.equal(receipt.sourceReturn.snapshotId,snapshot.snapshotId);
+  assert.equal(receipt.status,'applied-and-independently-rechecked');
+  for(const edit of receipt.sceneEdits){
+   const index=expected.findIndex(s=>s.id===edit.scenarioId);
+   assert.deepEqual(expected[index],edit.before,'Repair must start from the exact frozen scene');
+   assert.equal(edit.after.version,edit.before.version+1);
+   expected[index]=edit.after;
+  }
+ }
+ assert.deepEqual(expected,readBankFiles().bank,'No undocumented divergence from the handoff');
  const packets=snapshot.packets.map(p=>read(`packets/${p.id}.json`));
  assert.equal(packets.length,40);
  const sceneIds=packets.flatMap(p=>p.scenarios.map(s=>s.id)),qids=packets.flatMap(p=>p.scenarios.flatMap(s=>s.questions.map(q=>q.id)));

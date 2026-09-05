@@ -28,11 +28,12 @@ test('flagging revised content never transfers a draft from an older receipt',()
 
 test('the actual manifest format binds a saved flag and rejects a newer scene version',()=>{
  const manifest=JSON.parse(readFileSync(new URL('../../docs/factory/research/question-review/current-content-manifest.json',import.meta.url)));
- const question={id:'exp26-u13-001-q1'},scenario={id:'exp26-u13-001',version:2};
+ const scenario=JSON.parse(readFileSync(new URL('./experimental-bank/u13.json',import.meta.url))).find(s=>s.id==='exp26-u13-001');
+ const question=scenario.questions.find(q=>q.id==='exp26-u13-001-q1');
  const identity=questionReviewIdentity(scenario,question,manifest);
  assert.equal(identity.questionId,question.id);
  const state=recordFlag(restoreReview(null),scenario,question,{category:'Unclear question',note:'Review this cue'},'now',identity);
  assert.equal(reviewIdentityMatches(state.items[reviewItemKey(scenario,question)],identity),true);
- assert.equal(questionReviewIdentity({...scenario,version:3},question,manifest),null);
+ assert.equal(questionReviewIdentity({...scenario,version:scenario.version+1},question,manifest),null);
  assert.equal(reviewIdentityMatches({},{}),false);
 });

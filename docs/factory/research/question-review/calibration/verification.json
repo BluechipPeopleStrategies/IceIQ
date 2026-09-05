@@ -1,0 +1,90 @@
+{
+  "verifiedAt": "2026-09-05T22:36:19.029Z",
+  "status": "locally-applied-independent-ai-review-passed",
+  "humanCoachApproval": false,
+  "published": false,
+  "uiBaseCommit": "292e395796e416227c1567d67899a1281306dbaf",
+  "sourceReturn": {
+    "path": "docs/factory/claude-project/claude-output/review-packet-01-calibration.json",
+    "sha256": "392b8182befb38634d28cb5d9fa5de99f3daa7613b3a81bf497bab547a7e43ba",
+    "snapshotId": "rr-20260905-c8403be16748c919",
+    "packetId": "packet-01-calibration"
+  },
+  "counts": {
+    "scenarios": 200,
+    "questions": 1600,
+    "firstPass": 1600,
+    "secondPass": 468,
+    "expansionQuestions": 1000,
+    "expansionHighRisk": 23,
+    "revisionRechecks": 360,
+    "followupReviewed": 55,
+    "openQuestionFlags": 0,
+    "calibrationReviewed": 50,
+    "calibrationChangedHashes": 28,
+    "calibrationIndependentRecheck": 28,
+    "untouchedScenarios": 195
+  },
+  "checks": {
+    "sourceReturnAgainstFrozenSnapshot": {
+      "errors": 0,
+      "warnings": 0
+    },
+    "processedReturnAgainstLiveBank": {
+      "rejected": true,
+      "errorCount": 55,
+      "reason": "Processed packet versions are stale; rejection prevents re-import."
+    },
+    "independentReviewStalenessGate": "Preflight rejected superseded q9 review before final recheck; no bank writes occurred.",
+    "currentContentReceipts": "All 1600 scene/question hashes and scene versions match the composed bank.",
+    "focusedTests": {
+      "tests": 34,
+      "passed": 34,
+      "failed": 0
+    },
+    "build": {
+      "checkout": "tmp/calibration-preview",
+      "result": "pass",
+      "seconds": 8.51,
+      "knownWarnings": [
+        "Existing chunk-size warning",
+        "Existing static/dynamic import overlap",
+        "Empty vendor-supabase chunk"
+      ]
+    },
+    "browser": {
+      "baseUrl": "http://127.0.0.1:5177",
+      "viewports": [
+        "1280x900 desktop",
+        "390x844 mobile/touch emulation"
+      ],
+      "checked": [
+        "U11 q4 D1 inside, placement (-7,8.5), conditional example feedback",
+        "U13 net-front q9 placement (24,4.5), conditional passing-angle feedback",
+        "U13 rim q9 moves W to (-16,11), puck remains by boards, shorter-outlet feedback",
+        "Rim q9 placement and feedback persist after full reload",
+        "U9 q5 revised choices and selected-answer feedback",
+        "U7 q5 revised distractor displays without horizontal overflow",
+        "U13 net-front q3 explicitly permits overlapping preparation actions"
+      ],
+      "horizontalOverflow": false,
+      "applicationConsoleErrorsObserved": 0
+    }
+  },
+  "geometry": {
+    "netFrontPuck": {
+      "owner": "home-skater-2",
+      "x": 18,
+      "y": 8.7
+    },
+    "defenderDistanceToBeforePassingSegment": 0.5224521402481056,
+    "defenderDistanceToAfterPassingSegment": 2.1300029933495055,
+    "limit": "Static distance from depicted puck, not an interception or pass-completion simulation."
+  },
+  "limits": [
+    "Independent AI review is not human-coach approval.",
+    "Only selected rendered flows were checked; physical devices, all camera angles and on-ice transfer remain unverified.",
+    "The original Claude ZIP remains frozen; packet 02 and the other195 scenarios retain their baseline versions.",
+    "Local build and review do not establish public deployment."
+  ]
+}

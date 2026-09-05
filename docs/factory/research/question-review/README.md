@@ -5,11 +5,11 @@ September 5, 2026. The mixed expansion adds 1,000 questions: 100 new scenarios w
 | Evidence | Final result |
 |---|---:|
 | Questions with a complete first AI review | 1600 |
-| Questions with an independent second AI review | 462 |
+| Questions with an independent second AI review | 468 |
 | Added questions reviewed | 1000 |
-| Added questions receiving an independent second review | 335 |
-| Added questions checked again after content or scene edits | 321 |
-| Unique question IDs in this turn's repair receipts | 219 |
+| Added questions receiving an independent second review | 341 |
+| Added questions checked again after content or scene edits | 327 |
+| Unique question IDs in this turn's repair receipts | 234 |
 | Open reconciled AI findings | 0 |
 
 Reviewers used GPT-5.6 Luna. The initial 600-question review used medium reasoning. Weak expansion drafts were rejected; replacement authoring and review used Luna with high reasoning effort. A different reviewer checked every flag, high-risk question and subsequent repair. Every receipt is bound to the scene and question actually reviewed.
@@ -21,6 +21,8 @@ Repairs address wrong player references and movement targets, net direction and 
 The original four repairs remain recorded in revisions.json and revisions-second-check.json. The later 55-item follow-up retained 54 scoped planning routines and repaired the U9 corner-pickup scan question. Further owner feedback corrected the U13 rim and board locations and the approved YOU grammar. These repairs have separate versioned receipts and independent rechecks of every affected scene/question hash. Unaffected original content is preserved.
 
 Not every reviewer proposal was accepted. For example, F2 was correctly the nearest player in the disputed U11 loose-puck distance question; a suggested replacement point in the U18 rotation was still too low; and future branches were clarified as hypothetical rather than silently changing the freeze. Earlier findings remain available as history alongside the final adjudications.
+
+The returned Claude calibration packet covered 50 questions. Codex adjudication and independent Luna review produced five scenario updates affecting 28 exact question hashes. Repairs include receiving-side geometry, net-front passing angle, YOU grammar, credible distractors and conditional feedback. A repeated rim-placement task now moves W to offer a shorter board-side outlet after control. The proposed goalie-contact rewrite was declined. A first independent recheck retained one finding; the revised W question resolved it. See [calibration decisions and operating lessons](calibration/calibration-adjudication.md). The original Claude ZIP stays frozen as the historical baseline; its processed packet 01 cannot be re-imported against newer live versions.
 
 ## Use the result
 

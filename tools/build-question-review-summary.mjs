@@ -31,6 +31,8 @@ The original four repairs remain recorded in revisions.json and revisions-second
 
 Not every reviewer proposal was accepted. For example, F2 was correctly the nearest player in the disputed U11 loose-puck distance question; a suggested replacement point in the U18 rotation was still too low; and future branches were clarified as hypothetical rather than silently changing the freeze. Earlier findings remain available as history alongside the final adjudications.
 
+The returned Claude calibration packet covered 50 questions. Codex adjudication and independent Luna review produced five scenario updates affecting 28 exact question hashes. Repairs include receiving-side geometry, net-front passing angle, YOU grammar, credible distractors and conditional feedback. A repeated rim-placement task now moves W to offer a shorter board-side outlet after control. The proposed goalie-contact rewrite was declined. A first independent recheck retained one finding; the revised W question resolved it. See [calibration decisions and operating lessons](calibration/calibration-adjudication.md). The original Claude ZIP stays frozen as the historical baseline; its processed packet 01 cannot be re-imported against newer live versions.
+
 ## Use the result
 
 - [Before-and-after samples with downloadable feedback](repair-samples.html)
