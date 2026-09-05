@@ -1,5 +1,17 @@
 # RinkReads overnight checkpoint
 
+## Current release — September 5, 08:01 Edmonton
+
+`86c250c` is live. [Vercel deployment](https://vercel.com/bluechippeoplestrategies-projects/ice-iq/FsJJk7ijaGTkxB7A66Vm4Y4fYKFY) completed successfully. The shared review now includes rotatable 3D guided/coach/SGS scenes, individual player facing and visible sticks, connected puck-state fixes, a 1v1–5v5 positioning draft catalog and the U7 rink tour. Planning: [SGS plan](SGS-PLAN.md). Scope and limits: [SGS visual review](sgs-visual-review.md).
+
+325 practice tests, 18 bank-content, 41 young-view and 8 identity checks pass; the production build passes. At the public HTTPS origin and 390 px, the review loaded all eight images; three new/current scene images matched their committed hashes. The default 1v1 completed three real choices/reasons and restored exact saved JSON after reload. The U7 on-rink circle and blue-line buttons succeeded. Fourteen prior non-SGS local records retained the same combined hash. No page exceptions or horizontal overflow occurred in these checked flows. A fresh screenshot corrects an offscreen WebGL capture artifact in the U7 review image; this does not change the app.
+
+[Open Scenario Lab](https://ice-iq.vercel.app/?arena=sgs#practice-arena) · [Open U7 rink discovery](https://ice-iq.vercel.app/?arena=sgs&sgs=discover#practice-arena) · [Review](https://ice-iq.vercel.app/review/)
+
+The 640 entries are draft configurations of two families; none is newly AI/physics-approved or admitted to the live bank. Remaining work is coach calibration, broader validated families/ages, production character rigs, remaining legacy 3D migration and physical iPad verification. The older 7 a.m. target was superseded by Thomas's instruction to continue; do not infer a new schedule from these historical notes.
+
+## Earlier verification history
+
 Updated September 5, 2026, 06:15 Edmonton. Target: **7:00 a.m. Edmonton today (13:00 UTC)**. The existing `rinkreads-overnight-build` heartbeat is active every 30 minutes until the deadline; do not duplicate it.
 
 ## Continue from here

@@ -1,6 +1,6 @@
 # RinkReads — Task List
 
-**Last updated:** 2026-09-05, 07:59 Edmonton · Revised player poses/sticks and shared 3D scenario views; added the SGS planning draft, 1v1–5v5 positioning prototype and U7 rink tour. 325 practice tests and production build pass; live verification pending; see docs/one-on-one/sgs-visual-review.md. Earlier visual release 22782f6 was rejected as insufficient and is historical evidence only.
+**Last updated:** 2026-09-05, 08:01 Edmonton · Revised player poses/sticks and shared 3D scenario views; added the SGS planning draft, 1v1–5v5 positioning prototype and U7 rink tour. 325 practice tests and production build pass; 86c250c live with exact 1v1 reload, U7 marker checks and fourteen prior records preserved; see docs/one-on-one/sgs-visual-review.md. Earlier visual release 22782f6 was rejected as insufficient and is historical evidence only.
 
 **Scope:** RinkReads **app build + content factory**. Launch/distribution (sending the beta, marketing) and the separate BlueChip business are **out of scope** — parked at the bottom. Priority = position in this list. A new idea that isn't here goes to the **Parking Lot** first, then gets promoted on purpose — that's the scope-creep guard.
 
@@ -54,6 +54,8 @@
 - *(New ideas land here first, then get promoted into NEXT/LATER on purpose.)*
 
 ## Changelog
+
+- **2026-09-05 (SGS live verification)** — Vercel completed `86c250c`; public 390 px checks passed for current image hashes, three 1v1 answers with exact reload, U7 on-rink feature selection and preservation of fourteen prior records. No page exceptions or horizontal overflow. Refreshed the U7 screenshot after detecting an offscreen capture artifact; application behavior is unchanged.
 
 - **2026-09-05 (SGS and player presentation)** — Replaced same-facing/no-stick curriculum markers with authored poses and visible equipment; added shared rotatable 3D views, camera-neutral curriculum wording, exact loose-puck adapters and both-event connected replay. Built a separate 640-configuration positioning review catalog from 1v1–5v5 and four-feature U7 rink tour. Browser checks cover actual drag, 3v3 continuation/save/export/reload, 5v5 context-loss fallback and U7 native markers. No draft admission or new AI/physics approval. Planning and measured evidence: `docs/one-on-one/SGS-PLAN.md`, `sgs-benchmark.md`, `sgs-visual-review.md`.
 
