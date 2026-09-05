@@ -4,10 +4,14 @@ import { getDrill, saveSession } from "./gymStorage";
 import { cue, gymCueHooks } from "./gymAudio";
 import { ScoreCount, ConfettiBurst, SessionSummary } from "./gymFx";
 import { sessionRankLabel } from "./gymProgressCore";
+import GymVisualStage from "./GymVisualStage";
+import ShootoutScene3D from "./ShootoutScene3D";
+import useGymVisibilityPause from "./useGymVisibilityPause";
 import {
   makeShot,
   scoreShot,
   isCellOpenAt,
+  CELL_IDS,
   cellRects,
   cellAtPoint,
   nearestCellWithin,
@@ -27,6 +31,14 @@ const SHOOT_ANIM_MS = 460; // release-to-outcome animation length
 const POKE_ANIM_MS = 520; // goalie stick sweep + puck skid when the clock runs out
 const NEAR_SCALE = 1.0; // net scale at the hash marks (release point)
 const FAR_SCALE = 0.42; // net scale at center ice
+const CELL_LABELS = Object.freeze({
+  gloveHi: "Glove high",
+  midHi: "High middle",
+  blkrHi: "Blocker high",
+  gloveLo: "Glove low",
+  fiveHole: "Five hole",
+  blkrLo: "Blocker low",
+});
 
 export default function ShootoutDrill({ playerId = "default", onExit }) {
   const rootRef = useRef(null);
@@ -48,6 +60,28 @@ export default function ShootoutDrill({ playerId = "default", onExit }) {
   const [saved, setSaved] = useState(null);
   const [combo, setCombo] = useState(0);
   const [pips, setPips] = useState([]); // "goal" | "save" per finished shot
+  const [targetStates, setTargetStates] = useState({});
+  const [targetAnnouncement, setTargetAnnouncement] = useState("");
+  const targetStatesRef = useRef({});
+  const targetSignatureRef = useRef("");
+
+  useGymVisibilityPause(sceneRef, phase === "playing", rootRef);
+
+  const syncTargetStates = useCallback((elapsedMs = 0) => {
+    const shot = sceneRef.current.shot;
+    if (!shot) return;
+    const signature = CELL_IDS.map((id) => (isCellOpenAt(shot, id, elapsedMs) ? "1" : "0")).join("");
+    if (signature === targetSignatureRef.current) return;
+    const previous = targetStatesRef.current;
+    const next = Object.fromEntries(CELL_IDS.map((id, index) => [id, signature[index] === "1" ? "open" : "covered"]));
+    const newlyCovered = CELL_IDS.filter((id) => previous[id] === "open" && next[id] === "covered");
+    targetSignatureRef.current = signature;
+    targetStatesRef.current = next;
+    setTargetStates(next);
+    if (newlyCovered.length) {
+      setTargetAnnouncement(`${newlyCovered.map((id) => CELL_LABELS[id]).join(" and ")} ${newlyCovered.length === 1 ? "is" : "are"} now covered.`);
+    }
+  }, []);
 
   function clearTimers() {
     timersRef.current.forEach(clearTimeout);
@@ -567,8 +601,10 @@ export default function ShootoutDrill({ playerId = "default", onExit }) {
   const tick = useCallback(() => {
     const sc = sceneRef.current;
     if (sc.stage === "live") {
+      const elapsed = performance.now() - sc.startTs;
       render();
-      if (performance.now() - sc.startTs >= sc.shot.shotClockMs) {
+      syncTargetStates(elapsed);
+      if (elapsed >= sc.shot.shotClockMs) {
         resolveShot(null); // out of ice, never got the shot off
         return;
       }
@@ -590,7 +626,7 @@ export default function ShootoutDrill({ playerId = "default", onExit }) {
       rafRef.current = requestAnimationFrame(tick);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [render]);
+  }, [render, syncTargetStates]);
 
   const startRep = useCallback((repIndex) => {
     const canvas = canvasRef.current;
@@ -614,10 +650,14 @@ export default function ShootoutDrill({ playerId = "default", onExit }) {
       pokeAnimStart: null,
       repIndex,
     };
+    targetSignatureRef.current = "";
+    targetStatesRef.current = {};
+    setTargetAnnouncement("");
+    syncTargetStates(0);
     setStage("ready");
     render();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [render]);
+  }, [render, syncTargetStates]);
 
   function go() {
     const sc = sceneRef.current;
@@ -625,6 +665,7 @@ export default function ShootoutDrill({ playerId = "default", onExit }) {
     cue("go");
     sc.stage = "live";
     sc.startTs = performance.now();
+    setTargetAnnouncement("Shot is live. Use number keys 1 through 6 to choose a net opening.");
     setStage("live");
     rafRef.current = requestAnimationFrame(tick);
   }
@@ -688,6 +729,7 @@ export default function ShootoutDrill({ playerId = "default", onExit }) {
     sc.stage = "reveal";
     setStage("reveal");
     setLast({ success: false, repPoints: 0, expired: true });
+    setTargetAnnouncement("The shooting window closed. Move to the next shot when ready.");
     render();
     resolveRep(false);
   }
@@ -697,6 +739,7 @@ export default function ShootoutDrill({ playerId = "default", onExit }) {
     sc.stage = "reveal";
     setStage("reveal");
     setLast({ success: sc.result.success, repPoints: sc.result.points, expired: false });
+    setTargetAnnouncement(sc.result.success ? "Goal. Move to the next shot when ready." : "Saved. Move to the next shot when ready.");
     render();
     resolveRep(sc.result.success);
   }
@@ -777,6 +820,11 @@ export default function ShootoutDrill({ playerId = "default", onExit }) {
   useEffect(() => {
     if (phase !== "playing") return undefined;
     const onKey = (e) => {
+      if (stage === "live" && /^[1-6]$/.test(e.key) && !e.repeat) {
+        e.preventDefault();
+        resolveShot(CELL_IDS[Number(e.key) - 1]);
+        return;
+      }
       if (e.code !== "Space" && e.key !== " ") return;
       if (stage === "ready") {
         e.preventDefault();
@@ -788,8 +836,7 @@ export default function ShootoutDrill({ playerId = "default", onExit }) {
     };
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [phase, stage]);
+  }, [phase, stage, resolveShot]);
 
   const saves = pips.filter((p) => p === "save").length;
   const goals = pips.filter((p) => p === "goal").length;
@@ -897,17 +944,16 @@ export default function ShootoutDrill({ playerId = "default", onExit }) {
             <strong>The game:</strong> you're in alone. Tap Go and you skate
             in — the net gets bigger the closer you get, but the goalie keeps
             taking spots away. Open spots are outlined in gold. Tap one to
-            shoot before you run out of ice. Every goalie has a tell: read
-            the scouting report and use it. More goals than saves and you win
+            shoot before you run out of ice. Read this goalie's scouting
+            report, then check the open spots. More goals than saves and you win
             the shootout.
           </p>
           <div className="gym-trains">
             <strong>Why it matters</strong>
             <span>
-              Breakaway scorers don't guess — they read the goalie on the way
-              in and shoot where he isn't. Training that read, at speed and
-              under a closing window, is how you stay calm in alone instead
-              of panicking and shooting into a pad.
+              Look at the goalie before you choose a target. In this game,
+              open spots can close as you approach. Use the scouting report,
+              then check what is open right now. What changed your choice?
             </span>
           </div>
           <button className="gym-btn" onClick={start}>
@@ -923,8 +969,22 @@ export default function ShootoutDrill({ playerId = "default", onExit }) {
         </p>
       )}
 
-      <div className="gym-stage" style={{ display: phase === "playing" ? "block" : "none" }}>
-        <canvas ref={canvasRef} className="gym-canvas" onPointerDown={onCanvasTap} />
+      <div style={{ display: phase === "playing" ? "block" : "none" }}>
+        <GymVisualStage
+          canvasRef={canvasRef}
+          onCanvasPointer={onCanvasTap}
+          inputLayer="webgl"
+          ariaLabel="First-person shootout rink. Aim at one of six labelled net openings."
+          camera={{ position: [0, 0.22, 7.4], fov: 46, near: 0.1, far: 40 }}
+          scene3d={
+            <ShootoutScene3D
+              sceneRef={sceneRef}
+              onSelectCell={resolveShot}
+              onExpire={() => resolveShot(null)}
+              onAnimationComplete={() => {}}
+            />
+          }
+        >
 
         {phase === "playing" && stage === "ready" && (
           <div className="gym-rail">
@@ -956,6 +1016,28 @@ export default function ShootoutDrill({ playerId = "default", onExit }) {
             </button>
           </div>
         )}
+        </GymVisualStage>
+        {phase === "playing" && stage === "live" && (
+          <div className="gym-shootout-target-grid" role="group" aria-label="Choose one of six net openings">
+            {CELL_IDS.map((id, index) => {
+              const state = targetStates[id] || "covered";
+              return (
+                <button
+                  key={id}
+                  type="button"
+                  data-state={state}
+                  aria-label={`${index + 1}. ${CELL_LABELS[id]}. ${state}.`}
+                  onClick={() => resolveShot(id)}
+                >
+                  <kbd>{index + 1}</kbd>
+                  <strong>{CELL_LABELS[id]}</strong>
+                  <small>{state === "open" ? "OPEN" : "COVERED"}</small>
+                </button>
+              );
+            })}
+          </div>
+        )}
+        <p className="gym-sr-only" aria-live="polite" aria-atomic="true">{targetAnnouncement}</p>
       </div>
 
       {phase === "done" && (

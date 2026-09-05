@@ -1,0 +1,1019 @@
+{
+  "version": "rinkreads-concept-interaction-map-v1",
+  "status": "draft-source-inventory",
+  "date": "2026-09-04",
+  "organizingUnit": "play-sequence",
+  "sourceInventory": {
+    "directory": "docs/library",
+    "substantiveNotes": 12,
+    "excluded": [
+      "docs/library/_TEMPLATE.md",
+      "docs/library/INDEX.md"
+    ]
+  },
+  "boundaries": {
+    "sourcePrinciple": "Source notes define principles and evidence boundaries; they do not silently define coordinates, paths, timing or certified answers for new boards.",
+    "authoredBoard": "Ready-made examples are coach-review drafts with authored static positions in canonical metres.",
+    "movement": "Every ready-made draft has duration 8 and exactly one key at time 0 per actor. Future automatic movement needs explicit authored keys or an existing validated play.",
+    "assessment": "Learner positions, actions and reasons are compared with a coach reference without score, pass/fail or transfer claims.",
+    "promotion": "Examples are not approved claims or promoted curriculum."
+  },
+  "presentationHandoff": {
+    "navy": "#0B1A33",
+    "gold": "#C9A24B",
+    "bone": "#F5EFE6",
+    "headingFont": "Playfair Display",
+    "bodyFont": "Inter",
+    "accessibility": "Never use color as the only answer cue."
+  },
+  "curriculumLedger": {
+    "file": "src/data/curriculum-ledger.json",
+    "version": "3.1.0",
+    "prerequisitesEncoded": false,
+    "depthLegend": {
+      "I": "introduced",
+      "D": "developing",
+      "M": "mastery emphasis",
+      "R": "refinement"
+    }
+  },
+  "interactionTypes": [
+    {
+      "id": "reposition-actors",
+      "sequenceRole": "pause, express spacing or assignment, compare, explain",
+      "current": "coach-question position drafts",
+      "preserve": "descriptive comparison; no single coordinate certification"
+    },
+    {
+      "id": "draw-route-pass",
+      "sequenceRole": "author the future path from the current state",
+      "current": "director keyframes exist; dedicated route/pass drawing remains planned",
+      "preserve": "never derive paths from prose"
+    },
+    {
+      "id": "select-receiver-puck-target",
+      "sequenceRole": "choose who or where receives the puck",
+      "current": "existing scenario/rink scorers",
+      "preserve": "keep existing target geometry/scorer"
+    },
+    {
+      "id": "predict-next-movement",
+      "sequenceRole": "predict after visible committed movement",
+      "current": "existing animated predict-next content",
+      "preserve": "no prediction from unknown opponent intent"
+    },
+    {
+      "id": "spot-fix-mistake",
+      "sequenceRole": "identify cue, then repair position or action",
+      "current": "existing mistake/verdict questions plus coach comparison",
+      "preserve": "do not replace original scorer"
+    },
+    {
+      "id": "free-explanation",
+      "sequenceRole": "state why and compare with coach cue list",
+      "current": "coach-question reason comparison",
+      "preserve": "no correctness score"
+    },
+    {
+      "id": "compare-counterfactual",
+      "sequenceRole": "change one load-bearing cue and reconsider",
+      "current": "draft comparison; authored variants next",
+      "preserve": "coordinate jitter is not a new decision"
+    },
+    {
+      "id": "multiple-choice-true-false",
+      "sequenceRole": "recognize one genuinely forced cue",
+      "current": "Practice Library and Guided Curriculum",
+      "preserve": "use when single-answer geometry is objective"
+    },
+    {
+      "id": "recall-order",
+      "sequenceRole": "reconstruct cue and action order",
+      "current": "existing sequence questions",
+      "preserve": "branch-specific state must remain truthful"
+    }
+  ],
+  "sources": [
+    {
+      "note": "docs/library/scanning.md",
+      "title": "Scanning",
+      "concepts": [
+        "scanning",
+        "reading-the-play"
+      ],
+      "prerequisites": {
+        "status": "working authoring dependencies inferred from source and ledger definitions; not encoded ledger edges",
+        "conceptIds": []
+      },
+      "ledgerAgeFit": [
+        {
+          "ageBand": "U7",
+          "depth": "I"
+        },
+        {
+          "ageBand": "U9",
+          "depth": "I"
+        },
+        {
+          "ageBand": "U11",
+          "depth": "D"
+        },
+        {
+          "ageBand": "U13",
+          "depth": "M"
+        },
+        {
+          "ageBand": "U15",
+          "depth": "R"
+        },
+        {
+          "ageBand": "U18",
+          "depth": "R"
+        }
+      ],
+      "sourcePrinciple": "Look away from the puck to acquire the teammate, space or pressure cue before choosing.",
+      "recommendedInteraction": {
+        "sequencePattern": [
+          "freeze-read",
+          "reposition",
+          "explain"
+        ],
+        "learnerControl": "move controlled-team YOU to the open option created by the scan",
+        "automaticMovement": false
+      },
+      "movement": {
+        "sourceAuthored": "none; the note supplies a principle, not coordinates or timing",
+        "readyExample": "static director snapshots with one key per actor at time 0",
+        "futureRule": "automatic movement is allowed only from explicit coach-authored keys or an existing validated play"
+      },
+      "referenceReason": "The authored reference separates YOU from middle pressure and gives the puck carrier a visible option; it illustrates the scan result, not the head-turn itself.",
+      "scenarioIdea": "U7 2v1 on half ice: after looking, move YOU from the crowded middle to open outside ice.",
+      "exampleId": "coach-example-u7-scan-open-ice",
+      "wiring": {
+        "now": [
+          "Practice Library raw note",
+          "six Guided Curriculum lessons"
+        ],
+        "planned": [
+          "explicitly keyed shoulder-check sequence where visible"
+        ]
+      },
+      "evidence": {
+        "scope": "note names Swedish/IIHF/Hockey Canada lineage; direct source URL is not supplied",
+        "externalNames": [
+          "2024 SHL/SDHL scanning study, J. Sports Sci. 2024.2433899",
+          "IIHF small-area-games research",
+          "Hockey Canada LTPD"
+        ]
+      }
+    },
+    {
+      "note": "docs/library/off-puck-support-offense.md",
+      "title": "Off-Puck Support, Offense",
+      "concepts": [
+        "off-puck-support-offense",
+        "scanning",
+        "passing"
+      ],
+      "prerequisites": {
+        "status": "working authoring dependencies inferred from source and ledger definitions; not encoded ledger edges",
+        "conceptIds": [
+          "scanning",
+          "reading-the-play",
+          "passing"
+        ]
+      },
+      "ledgerAgeFit": [
+        {
+          "ageBand": "U9",
+          "depth": "I"
+        },
+        {
+          "ageBand": "U11",
+          "depth": "D"
+        },
+        {
+          "ageBand": "U13",
+          "depth": "M"
+        },
+        {
+          "ageBand": "U15",
+          "depth": "R"
+        },
+        {
+          "ageBand": "U18",
+          "depth": "R"
+        }
+      ],
+      "sourcePrinciple": "A useful supporter has open ice and a puck path that pressure does not occupy.",
+      "recommendedInteraction": {
+        "sequencePattern": [
+          "freeze-read",
+          "reposition",
+          "compare",
+          "explain"
+        ],
+        "learnerControl": "move controlled-team YOU to create a distinct support angle",
+        "automaticMovement": false
+      },
+      "movement": {
+        "sourceAuthored": "none; the note supplies a principle, not coordinates or timing",
+        "readyExample": "static director snapshots with one key per actor at time 0",
+        "futureRule": "automatic movement is allowed only from explicit coach-authored keys or an existing validated play"
+      },
+      "referenceReason": "The reference changes the lane instead of applying the note's approximate authoring distance as a universal score threshold.",
+      "scenarioIdea": "U9 2v2: move YOU out of a blocked path into a clean passing window.",
+      "exampleId": "coach-example-u9-support-window",
+      "wiring": {
+        "now": [
+          "Practice Library raw note",
+          "animated support play",
+          "six Guided Curriculum lessons including a U7 prerequisite"
+        ],
+        "planned": [
+          "draw an explicit reoffer route after a completed pass"
+        ]
+      },
+      "evidence": {
+        "scope": "generic citations in note; not refreshed",
+        "externalNames": [
+          "Hockey Canada LTPD",
+          "IIHF small-area-games research",
+          "Pond/small-area play"
+        ]
+      }
+    },
+    {
+      "note": "docs/library/defensive-angling.md",
+      "title": "Defensive Angling",
+      "concepts": [
+        "angling-steering",
+        "defensive-side-positioning"
+      ],
+      "prerequisites": {
+        "status": "working authoring dependencies inferred from source and ledger definitions; not encoded ledger edges",
+        "conceptIds": [
+          "reading-the-play",
+          "defensive-side-positioning",
+          "backward-transitions"
+        ]
+      },
+      "ledgerAgeFit": [
+        {
+          "ageBand": "U9",
+          "depth": "I"
+        },
+        {
+          "ageBand": "U11",
+          "depth": "D"
+        },
+        {
+          "ageBand": "U13",
+          "depth": "D"
+        },
+        {
+          "ageBand": "U15",
+          "depth": "M"
+        },
+        {
+          "ageBand": "U18",
+          "depth": "R"
+        }
+      ],
+      "sourcePrinciple": "Start inside and steer the carrier toward lower-danger outside ice instead of reaching across.",
+      "recommendedInteraction": {
+        "sequencePattern": [
+          "freeze-read",
+          "reposition",
+          "counterfactual",
+          "explain"
+        ],
+        "learnerControl": "move and face controlled-team YOU between the carrier and middle",
+        "automaticMovement": false
+      },
+      "movement": {
+        "sourceAuthored": "none; the note supplies a principle, not coordinates or timing",
+        "readyExample": "static director snapshots with one key per actor at time 0",
+        "futureRule": "automatic movement is allowed only from explicit coach-authored keys or an existing validated play"
+      },
+      "referenceReason": "The authored board visibly places the defender inside; a mirrored cue should require a mirrored angle.",
+      "scenarioIdea": "U9 1v1: protect the path to the left net and leave the boards as the safer side.",
+      "exampleId": "coach-example-u9-angle-wide",
+      "wiring": {
+        "now": [
+          "Practice Library raw note",
+          "animated defensive-angling play"
+        ],
+        "planned": [
+          "one-cue side flip for counterfactual comparison"
+        ]
+      },
+      "evidence": {
+        "scope": "short internal principle note without a direct external citation",
+        "externalNames": []
+      }
+    },
+    {
+      "note": "docs/library/dz-breakout-retrieval-under-pressure.md",
+      "title": "D-zone breakout: retrieval under forecheck pressure",
+      "concepts": [
+        "breakout-and-regroup",
+        "scanning",
+        "puck-control"
+      ],
+      "prerequisites": {
+        "status": "working authoring dependencies inferred from source and ledger definitions; not encoded ledger edges",
+        "conceptIds": [
+          "scanning",
+          "reading-the-play",
+          "puck-control"
+        ]
+      },
+      "ledgerAgeFit": [
+        {
+          "ageBand": "U11",
+          "depth": "I"
+        },
+        {
+          "ageBand": "U13",
+          "depth": "D"
+        },
+        {
+          "ageBand": "U15",
+          "depth": "M"
+        },
+        {
+          "ageBand": "U18",
+          "depth": "R"
+        }
+      ],
+      "sourcePrinciple": "Use the net as protection and escape away from the forechecker's committed side, never through the own slot.",
+      "recommendedInteraction": {
+        "sequencePattern": [
+          "watch-authored-commitment",
+          "pause",
+          "choose-action-or-target",
+          "explain"
+        ],
+        "learnerControl": "choose carry direction or target after the committed side is visible",
+        "automaticMovement": "existing validated play or explicit coach keys only"
+      },
+      "movement": {
+        "sourceAuthored": "none; the note supplies a principle, not coordinates or timing",
+        "readyExample": "static director snapshots with one key per actor at time 0",
+        "futureRule": "automatic movement is allowed only from explicit coach-authored keys or an existing validated play"
+      },
+      "referenceReason": "The example starts after F1's commitment and uses carry as the reference; it does not invent the approach path.",
+      "scenarioIdea": "U11 2v2: F1 commits below the left net; carry behind the net to the side F1 turned away from.",
+      "exampleId": "coach-example-u11-retrieval-away",
+      "wiring": {
+        "now": [
+          "Practice Library raw note",
+          "DZ_BREAKOUT_ESCAPE_PRESSURE animated play"
+        ],
+        "planned": [
+          "three sibling cue variants listed in the note",
+          "verdict variant"
+        ]
+      },
+      "evidence": {
+        "scope": "note cites a general USA Hockey practice-plan page; not refreshed",
+        "externalNames": [
+          "USA Hockey ADM practice plans"
+        ]
+      }
+    },
+    {
+      "note": "docs/library/forecheck-pressure.md",
+      "title": "Forecheck Pressure",
+      "concepts": [
+        "forecheck-pressure",
+        "angling-steering",
+        "time-and-space"
+      ],
+      "prerequisites": {
+        "status": "working authoring dependencies inferred from source and ledger definitions; not encoded ledger edges",
+        "conceptIds": [
+          "angling-steering",
+          "scanning",
+          "time-and-space"
+        ]
+      },
+      "ledgerAgeFit": [
+        {
+          "ageBand": "U11",
+          "depth": "I"
+        },
+        {
+          "ageBand": "U13",
+          "depth": "D"
+        },
+        {
+          "ageBand": "U15",
+          "depth": "M"
+        },
+        {
+          "ageBand": "U18",
+          "depth": "R"
+        }
+      ],
+      "sourcePrinciple": "Angle first pressure to remove middle and finish with reverse awareness; speed alone is not the read.",
+      "recommendedInteraction": {
+        "sequencePattern": [
+          "freeze-read",
+          "reposition",
+          "watch-authored-response",
+          "compare",
+          "explain"
+        ],
+        "learnerControl": "move and face controlled-team forechecker",
+        "automaticMovement": "carrier response requires explicit authored keys"
+      },
+      "movement": {
+        "sourceAuthored": "none; the note supplies a principle, not coordinates or timing",
+        "readyExample": "static director snapshots with one key per actor at time 0",
+        "futureRule": "automatic movement is allowed only from explicit coach-authored keys or an existing validated play"
+      },
+      "referenceReason": "The reference begins from the inside lane and maintains awareness of middle and reverse options.",
+      "scenarioIdea": "U15 3v3: reposition YOU to angle a wall-side carrier while accounting for middle and reverse outlets.",
+      "exampleId": "coach-example-u15-forecheck-angle",
+      "wiring": {
+        "now": [
+          "Practice Library raw note",
+          "force-wall animated play",
+          "take-away-reverse animated play"
+        ],
+        "planned": [
+          "branch only after an explicit carrier turn-back"
+        ]
+      },
+      "evidence": {
+        "scope": "ledger marks forecheck-pressure lineage as single-source and thin; note has no direct external citation",
+        "externalNames": [
+          "Hockey Canada lineage in curriculum ledger"
+        ]
+      }
+    },
+    {
+      "note": "docs/library/gap-control.md",
+      "title": "Gap Control",
+      "concepts": [
+        "gap-control",
+        "defensive-side-positioning",
+        "time-and-space"
+      ],
+      "prerequisites": {
+        "status": "working authoring dependencies inferred from source and ledger definitions; not encoded ledger edges",
+        "conceptIds": [
+          "reading-the-play",
+          "defensive-side-positioning",
+          "backward-transitions"
+        ]
+      },
+      "ledgerAgeFit": [
+        {
+          "ageBand": "U11",
+          "depth": "I"
+        },
+        {
+          "ageBand": "U13",
+          "depth": "D"
+        },
+        {
+          "ageBand": "U15",
+          "depth": "M"
+        },
+        {
+          "ageBand": "U18",
+          "depth": "R"
+        }
+      ],
+      "sourcePrinciple": "Manage space from inside position and stay adjustable instead of reaching early or backing straight in.",
+      "recommendedInteraction": {
+        "sequencePattern": [
+          "freeze-read",
+          "reposition",
+          "compare-reasons"
+        ],
+        "learnerControl": "move and face controlled-team YOU while protecting middle",
+        "automaticMovement": false
+      },
+      "movement": {
+        "sourceAuthored": "none; the note supplies a principle, not coordinates or timing",
+        "readyExample": "static director snapshots with one key per actor at time 0",
+        "futureRule": "automatic movement is allowed only from explicit coach-authored keys or an existing validated play"
+      },
+      "referenceReason": "No single metre gap is certified; the reference demonstrates goal-side, inside and adjustable relationships.",
+      "scenarioIdea": "U11 1v1: reposition YOU inside an entering carrier with room to match the rush.",
+      "exampleId": "coach-example-u11-gap-inside",
+      "wiring": {
+        "now": [
+          "Practice Library raw note",
+          "two animated gap plays",
+          "six Guided Curriculum lessons including younger prerequisites"
+        ],
+        "planned": [
+          "explicit carrier speed/direction keyframes before moving-gap comparison"
+        ]
+      },
+      "evidence": {
+        "scope": "specific named sources in note; URL copied without refresh",
+        "externalNames": [
+          "USA Hockey Skill Progressions for Youth Hockey, 2019",
+          "Hockey Canada U11 Player Pathway, 2022",
+          "Hockey Canada U13 Player Pathway, 2023",
+          "Sacilotto, 7 Rules of Defensive Hockey"
+        ]
+      }
+    },
+    {
+      "note": "docs/library/odd-man-reads.md",
+      "title": "Odd-Man Reads",
+      "concepts": [
+        "odd-man-reads",
+        "decision-making",
+        "puck-carrier-options",
+        "off-puck-support-offense"
+      ],
+      "prerequisites": {
+        "status": "working authoring dependencies inferred from source and ledger definitions; not encoded ledger edges",
+        "conceptIds": [
+          "scanning",
+          "decision-making",
+          "puck-carrier-options",
+          "off-puck-support-offense"
+        ]
+      },
+      "ledgerAgeFit": [
+        {
+          "ageBand": "U11",
+          "depth": "I"
+        },
+        {
+          "ageBand": "U13",
+          "depth": "D"
+        },
+        {
+          "ageBand": "U15",
+          "depth": "M"
+        },
+        {
+          "ageBand": "U18",
+          "depth": "R"
+        }
+      ],
+      "youngerWedge": "The note includes U7/U9 language, but the formal odd-man ledger begins U11; younger boards should stay positionless reading prerequisites.",
+      "sourcePrinciple": "Read which lane the defender has actually taken; support stays separated in open ice.",
+      "recommendedInteraction": {
+        "sequencePattern": [
+          "watch-visible-commitment",
+          "pause",
+          "select-or-reposition",
+          "explain"
+        ],
+        "learnerControl": "select a target/action or move controlled support",
+        "automaticMovement": "only explicit defender movement may establish commitment"
+      },
+      "movement": {
+        "sourceAuthored": "none; the note supplies a principle, not coordinates or timing",
+        "readyExample": "static director snapshots with one key per actor at time 0",
+        "futureRule": "automatic movement is allowed only from explicit coach-authored keys or an existing validated play"
+      },
+      "referenceReason": "The reference positions support away from the defender who occupies the carrier's route, without asserting that every 2v1 is a pass.",
+      "scenarioIdea": "U7 positionless prerequisite: after the other player moves toward the puck, move YOU into separate open ice.",
+      "exampleId": "coach-example-u7-find-open-teammate",
+      "wiring": {
+        "now": [
+          "Practice Library raw note",
+          "animated 2v1 family",
+          "six Guided Curriculum lessons"
+        ],
+        "planned": [
+          "open rubrics when shot and pass both remain defensible"
+        ]
+      },
+      "evidence": {
+        "scope": "general USA Hockey pages and internal support note; not refreshed",
+        "externalNames": [
+          "USA Hockey Small-Area Games",
+          "USA Hockey Practice Plans"
+        ]
+      }
+    },
+    {
+      "note": "docs/library/backcheck-recovery.md",
+      "title": "Backcheck Recovery",
+      "concepts": [
+        "backcheck-recovery",
+        "transition-reads",
+        "defensive-side-positioning"
+      ],
+      "prerequisites": {
+        "status": "working authoring dependencies inferred from source and ledger definitions; not encoded ledger edges",
+        "conceptIds": [
+          "transition-reads",
+          "scanning",
+          "defensive-side-positioning"
+        ]
+      },
+      "ledgerAgeFit": [
+        {
+          "ageBand": "U11",
+          "depth": "I"
+        },
+        {
+          "ageBand": "U13",
+          "depth": "D"
+        },
+        {
+          "ageBand": "U15",
+          "depth": "M"
+        },
+        {
+          "ageBand": "U18",
+          "depth": "R"
+        }
+      ],
+      "sourcePrinciple": "Remove the most dangerous inside support option instead of duplicating puck pressure from behind.",
+      "recommendedInteraction": {
+        "sequencePattern": [
+          "freeze-read",
+          "reposition",
+          "explain-assignment"
+        ],
+        "learnerControl": "move controlled-team backchecker into the inside recovery lane",
+        "automaticMovement": false
+      },
+      "movement": {
+        "sourceAuthored": "none; the note supplies a principle, not coordinates or timing",
+        "readyExample": "static director snapshots with one key per actor at time 0",
+        "futureRule": "automatic movement is allowed only from explicit coach-authored keys or an existing validated play"
+      },
+      "referenceReason": "The current carrier defender stays fixed, making the backchecker's non-duplicated responsibility visible.",
+      "scenarioIdea": "U13 3v2: D1 has the carrier; move YOU between inside support and the left net.",
+      "exampleId": "coach-example-u13-backcheck-inside",
+      "wiring": {
+        "now": [
+          "Practice Library raw note",
+          "animated backcheck recovery play"
+        ],
+        "planned": [
+          "counterfactual that moves the highest threat to another lane"
+        ]
+      },
+      "evidence": {
+        "scope": "short internal principle note without a direct external citation",
+        "externalNames": []
+      }
+    },
+    {
+      "note": "docs/library/backcheck-recovery-defender-gets-beat.md",
+      "title": "Backcheck Recovery: Defender Gets Beat",
+      "concepts": [
+        "backcheck-recovery",
+        "transition-reads",
+        "coverage-reads"
+      ],
+      "prerequisites": {
+        "status": "working authoring dependencies inferred from source and ledger definitions; not encoded ledger edges",
+        "conceptIds": [
+          "backcheck-recovery",
+          "transition-reads",
+          "coverage-reads"
+        ]
+      },
+      "ledgerAgeFit": [
+        {
+          "ageBand": "U11",
+          "depth": "I"
+        },
+        {
+          "ageBand": "U13",
+          "depth": "D"
+        },
+        {
+          "ageBand": "U15",
+          "depth": "M"
+        },
+        {
+          "ageBand": "U18",
+          "depth": "R"
+        }
+      ],
+      "sourcePrinciple": "When the first defender is behind the carrier, the backchecker may need to become the next inside defender.",
+      "recommendedInteraction": {
+        "sequencePattern": [
+          "pause-after-explicit-beat",
+          "fix-position",
+          "compare-responsibility",
+          "explain"
+        ],
+        "learnerControl": "move controlled-team YOU from support coverage to the carrier's inside route",
+        "automaticMovement": "the beat must be authored or stated as the frozen current condition"
+      },
+      "movement": {
+        "sourceAuthored": "none; the note supplies a principle, not coordinates or timing",
+        "readyExample": "static director snapshots with one key per actor at time 0",
+        "futureRule": "automatic movement is allowed only from explicit coach-authored keys or an existing validated play"
+      },
+      "referenceReason": "D1 is visibly behind F1 and D2 remains goal-side of support, so the authored reference changes YOUR current responsibility.",
+      "scenarioIdea": "U18 3v3: move YOU to become the next defender after D1 is beat.",
+      "exampleId": "coach-example-u18-backcheck-next-defender",
+      "wiring": {
+        "now": [
+          "Practice Library raw note",
+          "animated defender-gets-beat variant whose current sourceRef points to scenario-family standards"
+        ],
+        "planned": [
+          "focused-note provenance alignment for older play"
+        ]
+      },
+      "evidence": {
+        "scope": "short internal principle note without a direct external citation",
+        "externalNames": []
+      }
+    },
+    {
+      "note": "docs/library/two-on-one-pass-lane-removed.md",
+      "title": "2-on-1: Pass Lane Removed",
+      "concepts": [
+        "odd-man-reads",
+        "decision-making",
+        "puck-carrier-options",
+        "shooting"
+      ],
+      "prerequisites": {
+        "status": "working authoring dependencies inferred from source and ledger definitions; not encoded ledger edges",
+        "conceptIds": [
+          "odd-man-reads",
+          "scanning",
+          "decision-making"
+        ]
+      },
+      "ledgerAgeFit": [
+        {
+          "ageBand": "U11",
+          "depth": "I"
+        },
+        {
+          "ageBand": "U13",
+          "depth": "D"
+        },
+        {
+          "ageBand": "U15",
+          "depth": "M"
+        },
+        {
+          "ageBand": "U18",
+          "depth": "R"
+        }
+      ],
+      "youngerWedge": "The note provides U7/U9 words, but formal odd-man instruction begins at U11 in the ledger.",
+      "sourcePrinciple": "A 2v1 is not automatically a pass; when the defender removes that lane, use the space opened elsewhere.",
+      "recommendedInteraction": {
+        "sequencePattern": [
+          "freeze-read",
+          "choose-action",
+          "explain-visible-lanes"
+        ],
+        "learnerControl": "choose shoot/pass/carry from the authored frozen state",
+        "automaticMovement": false
+      },
+      "movement": {
+        "sourceAuthored": "none; the note supplies a principle, not coordinates or timing",
+        "readyExample": "static director snapshots with one key per actor at time 0",
+        "futureRule": "automatic movement is allowed only from explicit coach-authored keys or an existing validated play"
+      },
+      "referenceReason": "The authored defender intersects the pass lane while staying away from the direct shot route, making shoot a forced reference on this board only.",
+      "scenarioIdea": "U13 2v1: D1 removes F2 and leaves the direct right-net shot route clear.",
+      "exampleId": "coach-example-u13-2v1-pass-removed",
+      "wiring": {
+        "now": [
+          "Practice Library raw note",
+          "animated variant",
+          "Guided Curriculum use"
+        ],
+        "planned": [
+          "align older play sourceRef, which currently points to the family plan"
+        ]
+      },
+      "evidence": {
+        "scope": "short internal principle note without a direct external citation",
+        "externalNames": []
+      }
+    },
+    {
+      "note": "docs/library/two-on-one-goalie-late-after-pass.md",
+      "title": "2-on-1: Goalie Late After Pass",
+      "concepts": [
+        "odd-man-reads",
+        "shooting",
+        "time-and-space"
+      ],
+      "prerequisites": {
+        "status": "working authoring dependencies inferred from source and ledger definitions; not encoded ledger edges",
+        "conceptIds": [
+          "odd-man-reads",
+          "receiving",
+          "shooting"
+        ]
+      },
+      "ledgerAgeFit": [
+        {
+          "ageBand": "U11",
+          "depth": "I"
+        },
+        {
+          "ageBand": "U13",
+          "depth": "D"
+        },
+        {
+          "ageBand": "U15",
+          "depth": "M"
+        },
+        {
+          "ageBand": "U18",
+          "depth": "R"
+        }
+      ],
+      "sourcePrinciple": "After completed lateral puck movement, a displaced goalie can make a quick shot the current read.",
+      "recommendedInteraction": {
+        "sequencePattern": [
+          "pause-after-authored-pass",
+          "choose-action",
+          "explain-goalie-position"
+        ],
+        "learnerControl": "choose the receiver's next action",
+        "automaticMovement": "pass and goalie slide require explicit authored keys; static example begins after the pass"
+      },
+      "movement": {
+        "sourceAuthored": "none; the note supplies a principle, not coordinates or timing",
+        "readyExample": "static director snapshots with one key per actor at time 0",
+        "futureRule": "automatic movement is allowed only from explicit coach-authored keys or an existing validated play"
+      },
+      "referenceReason": "Puck ownership is already on YOU and the goalie is still on F1's side; no unseen pass or guaranteed goal is asserted.",
+      "scenarioIdea": "U15 2v1: after the pass, choose shoot while the goalie remains displaced.",
+      "exampleId": "coach-example-u15-2v1-goalie-late",
+      "wiring": {
+        "now": [
+          "Practice Library raw note",
+          "animated variant",
+          "Guided Curriculum use"
+        ],
+        "planned": [
+          "align older play sourceRef, which currently points to the family plan"
+        ]
+      },
+      "evidence": {
+        "scope": "short internal principle note without a direct external citation",
+        "externalNames": []
+      }
+    },
+    {
+      "note": "docs/library/two-on-one-support-too-flat.md",
+      "title": "2-on-1: Support Too Flat",
+      "concepts": [
+        "odd-man-reads",
+        "off-puck-support-offense",
+        "decision-making",
+        "time-and-space"
+      ],
+      "prerequisites": {
+        "status": "working authoring dependencies inferred from source and ledger definitions; not encoded ledger edges",
+        "conceptIds": [
+          "odd-man-reads",
+          "off-puck-support-offense",
+          "decision-making"
+        ]
+      },
+      "ledgerAgeFit": [
+        {
+          "ageBand": "U11",
+          "depth": "I"
+        },
+        {
+          "ageBand": "U13",
+          "depth": "D"
+        },
+        {
+          "ageBand": "U15",
+          "depth": "M"
+        },
+        {
+          "ageBand": "U18",
+          "depth": "R"
+        }
+      ],
+      "sourcePrinciple": "An available teammate is not automatically a dangerous option; judge what the pass adds.",
+      "recommendedInteraction": {
+        "sequencePattern": [
+          "freeze-read",
+          "choose-action",
+          "free-explanation",
+          "counterfactual"
+        ],
+        "learnerControl": "choose an action and explain defender, receiver and goalie cues",
+        "automaticMovement": false
+      },
+      "movement": {
+        "sourceAuthored": "none; the note supplies a principle, not coordinates or timing",
+        "readyExample": "static director snapshots with one key per actor at time 0",
+        "futureRule": "automatic movement is allowed only from explicit coach-authored keys or an existing validated play"
+      },
+      "referenceReason": "The U18 3v2 reference carries, but the open rubric accepts a supported pass or shot because the defender only partly covers the shot and receiver cues are layered.",
+      "scenarioIdea": "U18 3v2: D1 partly covers shot, F2 is wide/behind/marked and F3 has nearby pressure; compare justified actions.",
+      "exampleId": "coach-example-u18-layered-support-read",
+      "wiring": {
+        "now": [
+          "Practice Library raw note",
+          "animated variant",
+          "Guided Curriculum use"
+        ],
+        "planned": [
+          "one-cue counterfactuals",
+          "align older play sourceRef, which currently points to the family plan"
+        ]
+      },
+      "evidence": {
+        "scope": "short internal principle note without a direct external citation",
+        "externalNames": []
+      }
+    }
+  ],
+  "readyMadeCoverage": {
+    "file": "src/one-on-one/coach-question-examples.json",
+    "total": 12,
+    "position": 8,
+    "action": 4,
+    "forced": 6,
+    "open": 6,
+    "formations": [
+      "1v1",
+      "2v1",
+      "2v2",
+      "3v2",
+      "3v3"
+    ],
+    "ages": [
+      "U7",
+      "U9",
+      "U11",
+      "U13",
+      "U15",
+      "U18"
+    ]
+  },
+  "u11SequenceRoadmap": {
+    "id": "u11-three-read-odd-man-sequence",
+    "status": "roadmap-not-implemented",
+    "sourceNotes": [
+      "docs/library/scanning.md",
+      "docs/library/odd-man-reads.md",
+      "docs/library/two-on-one-goalie-late-after-pass.md",
+      "docs/library/off-puck-support-offense.md"
+    ],
+    "beats": [
+      {
+        "order": 1,
+        "read": "defender",
+        "state": "authored 2v1 rush with visible D1 commitment",
+        "interaction": [
+          "select-action-or-target",
+          "explain"
+        ],
+        "branchRule": "Only a pass choice may enter the receiver state; shoot/carry uses a distinct authored outcome or honest reset."
+      },
+      {
+        "order": 2,
+        "read": "receiver-checks-goalie",
+        "state": "pass branch with puck explicitly owned by receiver and authored goalie alignment",
+        "interaction": [
+          "choose-action",
+          "explain"
+        ],
+        "branchRule": "No pass or goalie slide is inferred, and a shot does not guarantee a goal."
+      },
+      {
+        "order": 3,
+        "read": "off-puck-rebound-or-next-option",
+        "state": "original carrier becomes off-puck support",
+        "interaction": [
+          "reposition",
+          "explain"
+        ],
+        "branchRule": "A rebound state exists only after an explicitly authored shot and save/rebound; otherwise ask prospectively for next support."
+      }
+    ],
+    "recallOrder": [
+      "read defender",
+      "check receiver and goalie picture",
+      "become the next off-puck option"
+    ]
+  },
+  "evidenceBoundary": {
+    "sourcesRefreshedExternally": false,
+    "approvedClaimsCreated": false,
+    "transferClaims": false,
+    "note": "External names and URLs are copied only from existing repository notes."
+  }
+}

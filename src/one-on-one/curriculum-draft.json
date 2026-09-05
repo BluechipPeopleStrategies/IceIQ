@@ -1,0 +1,4155 @@
+{
+  "version": "rinkreads-curriculum-draft-v1",
+  "status": "draft-for-review",
+  "coordinateSystem": "rink-centred-metres",
+  "authoredDate": "2026-09-04",
+  "scope": "24 new authored lessons, 48 questions; development preview only",
+  "provenance": "Explicit authored static boards. No inferred source trajectories, source-answer inheritance, tactical-claim approval, physics validation or curriculum promotion.",
+  "ageSequence": [
+    "U7",
+    "U9",
+    "U11",
+    "U13",
+    "U15",
+    "U18"
+  ],
+  "strandSequence": [
+    "scanning",
+    "off-puck-support-offense",
+    "gap-control",
+    "odd-man-reads"
+  ],
+  "lessons": [
+    {
+      "id": "practice-draft-u7-look-first",
+      "ageBand": "U7",
+      "conceptId": "scanning",
+      "curriculumStrand": "scanning",
+      "title": "Look before the puck comes",
+      "teachingPoint": "Look around before receiving to notice nearby players.",
+      "learnerAction": "Choose when to look around.",
+      "ageRationale": "One nearby opponent and one passing teammate; two concrete choices, no timer.",
+      "status": "draft-for-review",
+      "ageAlignment": "existing-ledger-strand-new-question",
+      "sourceRef": {
+        "note": "docs/library/scanning.md",
+        "url": null,
+        "reason": "New authored scene applying the source principle; source answers are unchanged.",
+        "supportingNotes": [
+          "src/data/curriculum-ledger.json",
+          "src/scenario/GOLDEN-RULES-2026-06-11.md"
+        ],
+        "evidenceScope": "Internal source note; no direct stable supporting URL supplied.",
+        "approvedClaimId": null
+      },
+      "visualRelation": "Both questions assess this same authored frozen board; no movement occurs between questions.",
+      "questions": [
+        {
+          "id": "practice-draft-u7-look-first-mc",
+          "type": "mc",
+          "sit": "Your teammate is ready to pass to YOU. What should you do first?",
+          "opts": [
+            "Look around for the other player.",
+            "Keep watching only the puck."
+          ],
+          "ok": 0,
+          "why": "Looking around helps you notice the other player before the puck arrives. Watching only the puck misses that information.",
+          "tip": "Look, then get ready.",
+          "visual": {
+            "view": "half-right",
+            "actors": [
+              {
+                "id": "YOU",
+                "team": "home",
+                "role": "skater",
+                "x": 12,
+                "y": 0,
+                "label": "YOU",
+                "hasPuck": false
+              },
+              {
+                "id": "T",
+                "team": "home",
+                "role": "skater",
+                "x": 8,
+                "y": -3,
+                "label": "",
+                "hasPuck": true
+              },
+              {
+                "id": "D",
+                "team": "away",
+                "role": "skater",
+                "x": 15,
+                "y": 3,
+                "label": "",
+                "hasPuck": false
+              }
+            ],
+            "caption": "Your teammate has the puck. The other player is beside you.",
+            "arrows": [],
+            "coordinateSystem": "rink-centred-metres",
+            "presentation": "authored-static-draft",
+            "hideBlueLines": true,
+            "renderRequirements": [
+              "One puck on the hasPuck actor.",
+              "YOU label and outline; teams also differ by shape or pattern.",
+              "Show caption and arrow labels; arrows depict only their explicit authored cue."
+            ],
+            "netContext": "right-net-is-attacking-net"
+          }
+        },
+        {
+          "id": "practice-draft-u7-look-first-tf",
+          "type": "tf",
+          "sit": "Looking around before the pass helps you notice the other player.",
+          "ok": true,
+          "why": "The other player is beside YOU. A look before receiving helps you know they are there.",
+          "tip": "Find one player near you.",
+          "visual": {
+            "view": "half-right",
+            "actors": [
+              {
+                "id": "YOU",
+                "team": "home",
+                "role": "skater",
+                "x": 12,
+                "y": 0,
+                "label": "YOU",
+                "hasPuck": false
+              },
+              {
+                "id": "T",
+                "team": "home",
+                "role": "skater",
+                "x": 8,
+                "y": -3,
+                "label": "",
+                "hasPuck": true
+              },
+              {
+                "id": "D",
+                "team": "away",
+                "role": "skater",
+                "x": 15,
+                "y": 3,
+                "label": "",
+                "hasPuck": false
+              }
+            ],
+            "caption": "Your teammate has the puck. The other player is beside you.",
+            "arrows": [],
+            "coordinateSystem": "rink-centred-metres",
+            "presentation": "authored-static-draft",
+            "hideBlueLines": true,
+            "renderRequirements": [
+              "One puck on the hasPuck actor.",
+              "YOU label and outline; teams also differ by shape or pattern.",
+              "Show caption and arrow labels; arrows depict only their explicit authored cue."
+            ],
+            "netContext": "right-net-is-attacking-net"
+          }
+        }
+      ]
+    },
+    {
+      "id": "practice-draft-u9-find-clear-pass",
+      "ageBand": "U9",
+      "conceptId": "scanning",
+      "curriculumStrand": "scanning",
+      "title": "Look beyond the nearest lane",
+      "teachingPoint": "Check the whole pass path, not just the teammate.",
+      "learnerAction": "Choose the unobstructed pass.",
+      "ageRationale": "Two receiving choices and one clear blocker; three plain-language answers.",
+      "status": "draft-for-review",
+      "ageAlignment": "existing-ledger-strand-new-question",
+      "sourceRef": {
+        "note": "docs/library/scanning.md",
+        "url": null,
+        "reason": "New authored scene applying the source principle; source answers are unchanged.",
+        "supportingNotes": [
+          "src/data/curriculum-ledger.json",
+          "src/scenario/GOLDEN-RULES-2026-06-11.md"
+        ],
+        "evidenceScope": "Internal source note; no direct stable supporting URL supplied.",
+        "approvedClaimId": null
+      },
+      "visualRelation": "Both questions assess this same authored frozen board; no movement occurs between questions.",
+      "questions": [
+        {
+          "id": "practice-draft-u9-find-clear-pass-mc",
+          "type": "mc",
+          "sit": "After looking around, which pass has a clear path?",
+          "opts": [
+            "Pass to the lower teammate.",
+            "Pass to the upper teammate.",
+            "Wait for the lower pass to open."
+          ],
+          "ok": 1,
+          "why": "The upper path is clear. The other player is directly on the path to the lower teammate.",
+          "tip": "Look at the path too.",
+          "visual": {
+            "view": "half-right",
+            "actors": [
+              {
+                "id": "YOU",
+                "team": "home",
+                "role": "skater",
+                "x": 11,
+                "y": 0,
+                "label": "YOU",
+                "hasPuck": true
+              },
+              {
+                "id": "TOP",
+                "team": "home",
+                "role": "skater",
+                "x": 18,
+                "y": -5,
+                "label": "",
+                "hasPuck": false
+              },
+              {
+                "id": "BOTTOM",
+                "team": "home",
+                "role": "skater",
+                "x": 18,
+                "y": 5,
+                "label": "",
+                "hasPuck": false
+              },
+              {
+                "id": "D",
+                "team": "away",
+                "role": "skater",
+                "x": 14.5,
+                "y": 2.5,
+                "label": "",
+                "hasPuck": false
+              },
+              {
+                "id": "G",
+                "team": "away",
+                "role": "goalie",
+                "x": 25,
+                "y": 0,
+                "label": "",
+                "hasPuck": false
+              }
+            ],
+            "caption": "One player stands between YOU and the lower teammate.",
+            "arrows": [],
+            "coordinateSystem": "rink-centred-metres",
+            "presentation": "authored-static-draft",
+            "hideBlueLines": true,
+            "renderRequirements": [
+              "One puck on the hasPuck actor.",
+              "YOU label and outline; teams also differ by shape or pattern.",
+              "Show caption and arrow labels; arrows depict only their explicit authored cue."
+            ],
+            "netContext": "right-net-is-attacking-net"
+          }
+        },
+        {
+          "id": "practice-draft-u9-find-clear-pass-tf",
+          "type": "tf",
+          "sit": "The lower teammate is the best choice because nobody stands right beside them.",
+          "ok": false,
+          "why": "Their skates have space, but the pass would go through the other player.",
+          "tip": "Open player and open path.",
+          "visual": {
+            "view": "half-right",
+            "actors": [
+              {
+                "id": "YOU",
+                "team": "home",
+                "role": "skater",
+                "x": 11,
+                "y": 0,
+                "label": "YOU",
+                "hasPuck": true
+              },
+              {
+                "id": "TOP",
+                "team": "home",
+                "role": "skater",
+                "x": 18,
+                "y": -5,
+                "label": "",
+                "hasPuck": false
+              },
+              {
+                "id": "BOTTOM",
+                "team": "home",
+                "role": "skater",
+                "x": 18,
+                "y": 5,
+                "label": "",
+                "hasPuck": false
+              },
+              {
+                "id": "D",
+                "team": "away",
+                "role": "skater",
+                "x": 14.5,
+                "y": 2.5,
+                "label": "",
+                "hasPuck": false
+              },
+              {
+                "id": "G",
+                "team": "away",
+                "role": "goalie",
+                "x": 25,
+                "y": 0,
+                "label": "",
+                "hasPuck": false
+              }
+            ],
+            "caption": "One player stands between YOU and the lower teammate.",
+            "arrows": [],
+            "coordinateSystem": "rink-centred-metres",
+            "presentation": "authored-static-draft",
+            "hideBlueLines": true,
+            "renderRequirements": [
+              "One puck on the hasPuck actor.",
+              "YOU label and outline; teams also differ by shape or pattern.",
+              "Show caption and arrow labels; arrows depict only their explicit authored cue."
+            ],
+            "netContext": "right-net-is-attacking-net"
+          }
+        }
+      ]
+    },
+    {
+      "id": "practice-draft-u11-check-both-sides",
+      "ageBand": "U11",
+      "conceptId": "scanning",
+      "curriculumStrand": "scanning",
+      "title": "Scan both sides",
+      "teachingPoint": "Looking on both sides can reveal an option beyond the obvious puck-side choice.",
+      "learnerAction": "Compare two passing lanes.",
+      "ageRationale": "Two plausible teammates; the obvious near lane contains a defender.",
+      "status": "draft-for-review",
+      "ageAlignment": "existing-ledger-strand-new-question",
+      "sourceRef": {
+        "note": "docs/library/scanning.md",
+        "url": null,
+        "reason": "New authored scene applying the source principle; source answers are unchanged.",
+        "supportingNotes": [
+          "src/data/curriculum-ledger.json",
+          "src/scenario/GOLDEN-RULES-2026-06-11.md"
+        ],
+        "evidenceScope": "Internal source note; no direct stable supporting URL supplied.",
+        "approvedClaimId": null
+      },
+      "visualRelation": "Both questions assess this same authored frozen board; no movement occurs between questions.",
+      "questions": [
+        {
+          "id": "practice-draft-u11-check-both-sides-mc",
+          "type": "mc",
+          "sit": "YOU wants a clear pass. What does checking both sides reveal?",
+          "opts": [
+            "F2 is the safest choice because the pass is shorter.",
+            "D1 leaves no pass to either teammate.",
+            "F3 has a clear receiving lane below YOU.",
+            "The near-side pass is worth waiting for instead."
+          ],
+          "ok": 2,
+          "why": "D1 blocks F2. The lower lane to F3 is clear, so checking both sides changes the decision.",
+          "tip": "Scan past the first jersey.",
+          "visual": {
+            "view": "half-right",
+            "actors": [
+              {
+                "id": "YOU",
+                "team": "home",
+                "role": "skater",
+                "x": 14,
+                "y": 0,
+                "label": "YOU",
+                "hasPuck": true
+              },
+              {
+                "id": "F2",
+                "team": "home",
+                "role": "skater",
+                "x": 19,
+                "y": -3,
+                "label": "F2",
+                "hasPuck": false
+              },
+              {
+                "id": "F3",
+                "team": "home",
+                "role": "skater",
+                "x": 18,
+                "y": 6,
+                "label": "F3",
+                "hasPuck": false
+              },
+              {
+                "id": "D1",
+                "team": "away",
+                "role": "skater",
+                "x": 16.5,
+                "y": -1.5,
+                "label": "D1",
+                "hasPuck": false
+              },
+              {
+                "id": "G",
+                "team": "away",
+                "role": "goalie",
+                "x": 25,
+                "y": 0,
+                "label": "",
+                "hasPuck": false
+              }
+            ],
+            "caption": "F2 is above YOU; F3 is below. D1 stands in the F2 pass lane.",
+            "arrows": [],
+            "coordinateSystem": "rink-centred-metres",
+            "presentation": "authored-static-draft",
+            "hideBlueLines": true,
+            "renderRequirements": [
+              "One puck on the hasPuck actor.",
+              "YOU label and outline; teams also differ by shape or pattern.",
+              "Show caption and arrow labels; arrows depict only their explicit authored cue."
+            ],
+            "netContext": "right-net-is-attacking-net"
+          }
+        },
+        {
+          "id": "practice-draft-u11-check-both-sides-tf",
+          "type": "tf",
+          "sit": "A defender between YOU and a teammate can make that pass unavailable.",
+          "ok": true,
+          "why": "D1 stands on F2’s lane. A scan must find pressure as well as teammates.",
+          "tip": "Find the defender in the lane.",
+          "visual": {
+            "view": "half-right",
+            "actors": [
+              {
+                "id": "YOU",
+                "team": "home",
+                "role": "skater",
+                "x": 14,
+                "y": 0,
+                "label": "YOU",
+                "hasPuck": true
+              },
+              {
+                "id": "F2",
+                "team": "home",
+                "role": "skater",
+                "x": 19,
+                "y": -3,
+                "label": "F2",
+                "hasPuck": false
+              },
+              {
+                "id": "F3",
+                "team": "home",
+                "role": "skater",
+                "x": 18,
+                "y": 6,
+                "label": "F3",
+                "hasPuck": false
+              },
+              {
+                "id": "D1",
+                "team": "away",
+                "role": "skater",
+                "x": 16.5,
+                "y": -1.5,
+                "label": "D1",
+                "hasPuck": false
+              },
+              {
+                "id": "G",
+                "team": "away",
+                "role": "goalie",
+                "x": 25,
+                "y": 0,
+                "label": "",
+                "hasPuck": false
+              }
+            ],
+            "caption": "F2 is above YOU; F3 is below. D1 stands in the F2 pass lane.",
+            "arrows": [],
+            "coordinateSystem": "rink-centred-metres",
+            "presentation": "authored-static-draft",
+            "hideBlueLines": true,
+            "renderRequirements": [
+              "One puck on the hasPuck actor.",
+              "YOU label and outline; teams also differ by shape or pattern.",
+              "Show caption and arrow labels; arrows depict only their explicit authored cue."
+            ],
+            "netContext": "right-net-is-attacking-net"
+          }
+        }
+      ]
+    },
+    {
+      "id": "practice-draft-u13-refresh-picture",
+      "ageBand": "U13",
+      "conceptId": "scanning",
+      "curriculumStrand": "scanning",
+      "title": "Update the read",
+      "teachingPoint": "Update an earlier scan when a defender changes the lane.",
+      "learnerAction": "Replace a stale passing plan.",
+      "ageRationale": "Adds explicitly completed movement; compare earlier information with the frozen board.",
+      "status": "draft-for-review",
+      "ageAlignment": "existing-ledger-strand-new-question",
+      "sourceRef": {
+        "note": "docs/library/scanning.md",
+        "url": null,
+        "reason": "New authored scene applying the source principle; source answers are unchanged.",
+        "supportingNotes": [
+          "src/data/curriculum-ledger.json",
+          "src/scenario/GOLDEN-RULES-2026-06-11.md"
+        ],
+        "evidenceScope": "Internal source note; no direct stable supporting URL supplied.",
+        "approvedClaimId": null
+      },
+      "visualRelation": "Both questions assess this same authored frozen board; no movement occurs between questions.",
+      "questions": [
+        {
+          "id": "practice-draft-u13-refresh-picture-mc",
+          "type": "mc",
+          "sit": "YOU planned to pass to F3 before D1 moved. Which pass is clear now?",
+          "opts": [
+            "Keep the original pass to F3.",
+            "Pass to F2 above YOU.",
+            "Put the puck into the middle between the teammates.",
+            "Hold the puck and wait for the original lower pass."
+          ],
+          "ok": 1,
+          "why": "D1 now occupies F3’s lane. F2’s lane is clear. Use the current picture rather than protecting the first plan.",
+          "tip": "Scan again when the picture changes.",
+          "visual": {
+            "view": "half-right",
+            "actors": [
+              {
+                "id": "YOU",
+                "team": "home",
+                "role": "skater",
+                "x": 11,
+                "y": 0,
+                "label": "YOU",
+                "hasPuck": true
+              },
+              {
+                "id": "F2",
+                "team": "home",
+                "role": "skater",
+                "x": 19,
+                "y": -6,
+                "label": "F2",
+                "hasPuck": false
+              },
+              {
+                "id": "F3",
+                "team": "home",
+                "role": "skater",
+                "x": 19,
+                "y": 6,
+                "label": "F3",
+                "hasPuck": false
+              },
+              {
+                "id": "D1",
+                "team": "away",
+                "role": "skater",
+                "x": 15,
+                "y": 3,
+                "label": "D1",
+                "hasPuck": false
+              },
+              {
+                "id": "G",
+                "team": "away",
+                "role": "goalie",
+                "x": 25,
+                "y": 0,
+                "label": "",
+                "hasPuck": false
+              }
+            ],
+            "caption": "The arrow shows D1’s move already completed. Players show the current moment.",
+            "arrows": [
+              {
+                "from": [
+                  15,
+                  -3
+                ],
+                "to": [
+                  15,
+                  3
+                ],
+                "label": "D1 moved here"
+              }
+            ],
+            "coordinateSystem": "rink-centred-metres",
+            "presentation": "authored-static-draft",
+            "hideBlueLines": true,
+            "renderRequirements": [
+              "One puck on the hasPuck actor.",
+              "YOU label and outline; teams also differ by shape or pattern.",
+              "Show caption and arrow labels; arrows depict only their explicit authored cue."
+            ],
+            "netContext": "right-net-is-attacking-net"
+          }
+        },
+        {
+          "id": "practice-draft-u13-refresh-picture-tf",
+          "type": "tf",
+          "sit": "The current position of D1 is a reason to update an earlier passing plan.",
+          "ok": true,
+          "why": "D1 has moved into the lower lane. The original plan no longer matches the visible board.",
+          "tip": "Update the read, then act.",
+          "visual": {
+            "view": "half-right",
+            "actors": [
+              {
+                "id": "YOU",
+                "team": "home",
+                "role": "skater",
+                "x": 11,
+                "y": 0,
+                "label": "YOU",
+                "hasPuck": true
+              },
+              {
+                "id": "F2",
+                "team": "home",
+                "role": "skater",
+                "x": 19,
+                "y": -6,
+                "label": "F2",
+                "hasPuck": false
+              },
+              {
+                "id": "F3",
+                "team": "home",
+                "role": "skater",
+                "x": 19,
+                "y": 6,
+                "label": "F3",
+                "hasPuck": false
+              },
+              {
+                "id": "D1",
+                "team": "away",
+                "role": "skater",
+                "x": 15,
+                "y": 3,
+                "label": "D1",
+                "hasPuck": false
+              },
+              {
+                "id": "G",
+                "team": "away",
+                "role": "goalie",
+                "x": 25,
+                "y": 0,
+                "label": "",
+                "hasPuck": false
+              }
+            ],
+            "caption": "The arrow shows D1’s move already completed. Players show the current moment.",
+            "arrows": [
+              {
+                "from": [
+                  15,
+                  -3
+                ],
+                "to": [
+                  15,
+                  3
+                ],
+                "label": "D1 moved here"
+              }
+            ],
+            "coordinateSystem": "rink-centred-metres",
+            "presentation": "authored-static-draft",
+            "hideBlueLines": true,
+            "renderRequirements": [
+              "One puck on the hasPuck actor.",
+              "YOU label and outline; teams also differ by shape or pattern.",
+              "Show caption and arrow labels; arrows depict only their explicit authored cue."
+            ],
+            "netContext": "right-net-is-attacking-net"
+          }
+        }
+      ]
+    },
+    {
+      "id": "practice-draft-u15-find-reset",
+      "ageBand": "U15",
+      "conceptId": "scanning",
+      "curriculumStrand": "scanning",
+      "title": "Scan for the safe reset",
+      "teachingPoint": "A clear outlet behind the puck can preserve possession when forward lanes close.",
+      "learnerAction": "Choose the pass that meets a possession objective.",
+      "ageRationale": "Three alternatives and two blockers; advancing distance is not the only cue.",
+      "status": "draft-for-review",
+      "ageAlignment": "existing-ledger-strand-new-question",
+      "sourceRef": {
+        "note": "docs/library/scanning.md",
+        "url": null,
+        "reason": "New authored scene applying the source principle; source answers are unchanged.",
+        "supportingNotes": [
+          "src/data/curriculum-ledger.json",
+          "src/scenario/GOLDEN-RULES-2026-06-11.md"
+        ],
+        "evidenceScope": "Internal source note; no direct stable supporting URL supplied.",
+        "approvedClaimId": null
+      },
+      "visualRelation": "Both questions assess this same authored frozen board; no movement occurs between questions.",
+      "questions": [
+        {
+          "id": "practice-draft-u15-find-reset-mc",
+          "type": "mc",
+          "sit": "The goal is to keep possession through a clear pass. Which outlet does a full scan reveal?",
+          "opts": [
+            "Try F2 because F2 is farther forward.",
+            "Try F3 because the pass changes sides.",
+            "Push the puck through the middle past A1.",
+            "Use D2 behind YOU, then rebuild."
+          ],
+          "ok": 3,
+          "why": "Both forward lanes contain opponents. D2’s lane is clear and meets the stated possession objective.",
+          "tip": "A reset can be the next good read.",
+          "visual": {
+            "view": "half-right",
+            "actors": [
+              {
+                "id": "YOU",
+                "team": "home",
+                "role": "skater",
+                "x": 15,
+                "y": 0,
+                "label": "YOU",
+                "hasPuck": true
+              },
+              {
+                "id": "F2",
+                "team": "home",
+                "role": "skater",
+                "x": 22,
+                "y": 4,
+                "label": "F2",
+                "hasPuck": false
+              },
+              {
+                "id": "F3",
+                "team": "home",
+                "role": "skater",
+                "x": 20,
+                "y": -6,
+                "label": "F3",
+                "hasPuck": false
+              },
+              {
+                "id": "D2",
+                "team": "home",
+                "role": "skater",
+                "x": 9,
+                "y": 5,
+                "label": "D2",
+                "hasPuck": false
+              },
+              {
+                "id": "A1",
+                "team": "away",
+                "role": "skater",
+                "x": 18.5,
+                "y": 2,
+                "label": "A1",
+                "hasPuck": false
+              },
+              {
+                "id": "A2",
+                "team": "away",
+                "role": "skater",
+                "x": 17.5,
+                "y": -3,
+                "label": "A2",
+                "hasPuck": false
+              },
+              {
+                "id": "G",
+                "team": "away",
+                "role": "goalie",
+                "x": 25,
+                "y": 0,
+                "label": "",
+                "hasPuck": false
+              }
+            ],
+            "caption": "A1 blocks F2; A2 blocks F3. D2 behind the puck has a clear lane.",
+            "arrows": [],
+            "coordinateSystem": "rink-centred-metres",
+            "presentation": "authored-static-draft",
+            "hideBlueLines": true,
+            "renderRequirements": [
+              "One puck on the hasPuck actor.",
+              "YOU label and outline; teams also differ by shape or pattern.",
+              "Show caption and arrow labels; arrows depict only their explicit authored cue."
+            ],
+            "netContext": "right-net-is-attacking-net"
+          }
+        },
+        {
+          "id": "practice-draft-u15-find-reset-tf",
+          "type": "tf",
+          "sit": "A teammate behind the puck can be the best outlet when the forward lanes are closed.",
+          "ok": true,
+          "why": "D2 offers a clear pass while both forward routes are blocked. This does not guarantee the next play.",
+          "tip": "Scan behind as well as ahead.",
+          "visual": {
+            "view": "half-right",
+            "actors": [
+              {
+                "id": "YOU",
+                "team": "home",
+                "role": "skater",
+                "x": 15,
+                "y": 0,
+                "label": "YOU",
+                "hasPuck": true
+              },
+              {
+                "id": "F2",
+                "team": "home",
+                "role": "skater",
+                "x": 22,
+                "y": 4,
+                "label": "F2",
+                "hasPuck": false
+              },
+              {
+                "id": "F3",
+                "team": "home",
+                "role": "skater",
+                "x": 20,
+                "y": -6,
+                "label": "F3",
+                "hasPuck": false
+              },
+              {
+                "id": "D2",
+                "team": "home",
+                "role": "skater",
+                "x": 9,
+                "y": 5,
+                "label": "D2",
+                "hasPuck": false
+              },
+              {
+                "id": "A1",
+                "team": "away",
+                "role": "skater",
+                "x": 18.5,
+                "y": 2,
+                "label": "A1",
+                "hasPuck": false
+              },
+              {
+                "id": "A2",
+                "team": "away",
+                "role": "skater",
+                "x": 17.5,
+                "y": -3,
+                "label": "A2",
+                "hasPuck": false
+              },
+              {
+                "id": "G",
+                "team": "away",
+                "role": "goalie",
+                "x": 25,
+                "y": 0,
+                "label": "",
+                "hasPuck": false
+              }
+            ],
+            "caption": "A1 blocks F2; A2 blocks F3. D2 behind the puck has a clear lane.",
+            "arrows": [],
+            "coordinateSystem": "rink-centred-metres",
+            "presentation": "authored-static-draft",
+            "hideBlueLines": true,
+            "renderRequirements": [
+              "One puck on the hasPuck actor.",
+              "YOU label and outline; teams also differ by shape or pattern.",
+              "Show caption and arrow labels; arrows depict only their explicit authored cue."
+            ],
+            "netContext": "right-net-is-attacking-net"
+          }
+        }
+      ]
+    },
+    {
+      "id": "practice-draft-u18-read-receiver",
+      "ageBand": "U18",
+      "conceptId": "scanning",
+      "curriculumStrand": "scanning",
+      "title": "Read the receiving situation",
+      "teachingPoint": "Evaluate both the lane and the receiver’s surrounding pressure.",
+      "learnerAction": "Find the outlet with a clear lane and unmarked receiving space.",
+      "ageRationale": "Combines lane occupancy with pressure at the receiver; a clear line alone is insufficient.",
+      "status": "draft-for-review",
+      "ageAlignment": "existing-ledger-strand-new-question",
+      "sourceRef": {
+        "note": "docs/library/scanning.md",
+        "url": null,
+        "reason": "New authored scene applying the source principle; source answers are unchanged.",
+        "supportingNotes": [
+          "src/data/curriculum-ledger.json",
+          "src/scenario/GOLDEN-RULES-2026-06-11.md"
+        ],
+        "evidenceScope": "Internal source note; no direct stable supporting URL supplied.",
+        "approvedClaimId": null
+      },
+      "visualRelation": "Both questions assess this same authored frozen board; no movement occurs between questions.",
+      "questions": [
+        {
+          "id": "practice-draft-u18-read-receiver-mc",
+          "type": "mc",
+          "sit": "Which outlet has both a clear lane and the most clearly unmarked receiving space?",
+          "opts": [
+            "F2: the pass line is clear despite the close marker.",
+            "F3: its lane is clear and the receiver is unmarked.",
+            "D2: the outlet behind YOU is worth using.",
+            "The middle: push the puck past A3 toward the net."
+          ],
+          "ok": 1,
+          "why": "F3 meets both conditions. F2 has receiving pressure; A2 blocks D2. A pass through A3 fails the lane check.",
+          "tip": "Scan the route and the arrival.",
+          "visual": {
+            "view": "half-right",
+            "actors": [
+              {
+                "id": "YOU",
+                "team": "home",
+                "role": "skater",
+                "x": 13,
+                "y": 0,
+                "label": "YOU",
+                "hasPuck": true
+              },
+              {
+                "id": "F2",
+                "team": "home",
+                "role": "skater",
+                "x": 21,
+                "y": -5,
+                "label": "F2",
+                "hasPuck": false
+              },
+              {
+                "id": "F3",
+                "team": "home",
+                "role": "skater",
+                "x": 21,
+                "y": 6,
+                "label": "F3",
+                "hasPuck": false
+              },
+              {
+                "id": "D2",
+                "team": "home",
+                "role": "skater",
+                "x": 8,
+                "y": -6,
+                "label": "D2",
+                "hasPuck": false
+              },
+              {
+                "id": "A1",
+                "team": "away",
+                "role": "skater",
+                "x": 21.6,
+                "y": -3.4,
+                "label": "A1",
+                "hasPuck": false
+              },
+              {
+                "id": "A2",
+                "team": "away",
+                "role": "skater",
+                "x": 10.5,
+                "y": -3,
+                "label": "A2",
+                "hasPuck": false
+              },
+              {
+                "id": "A3",
+                "team": "away",
+                "role": "skater",
+                "x": 18,
+                "y": 0,
+                "label": "A3",
+                "hasPuck": false
+              },
+              {
+                "id": "G",
+                "team": "away",
+                "role": "goalie",
+                "x": 25,
+                "y": 0,
+                "label": "",
+                "hasPuck": false
+              }
+            ],
+            "caption": "F2 has a clear line but a close marker. A2 blocks D2. F3 has lane and receiving space.",
+            "arrows": [],
+            "coordinateSystem": "rink-centred-metres",
+            "presentation": "authored-static-draft",
+            "hideBlueLines": true,
+            "renderRequirements": [
+              "One puck on the hasPuck actor.",
+              "YOU label and outline; teams also differ by shape or pattern.",
+              "Show caption and arrow labels; arrows depict only their explicit authored cue."
+            ],
+            "netContext": "right-net-is-attacking-net"
+          }
+        },
+        {
+          "id": "practice-draft-u18-read-receiver-tf",
+          "type": "tf",
+          "sit": "A clear line to F2 proves that F2 will have time after receiving.",
+          "ok": false,
+          "why": "A1 is already close. The board cannot prove future time, and the receiving pressure makes F3 worth comparing.",
+          "tip": "A clear pass is part of the read.",
+          "visual": {
+            "view": "half-right",
+            "actors": [
+              {
+                "id": "YOU",
+                "team": "home",
+                "role": "skater",
+                "x": 13,
+                "y": 0,
+                "label": "YOU",
+                "hasPuck": true
+              },
+              {
+                "id": "F2",
+                "team": "home",
+                "role": "skater",
+                "x": 21,
+                "y": -5,
+                "label": "F2",
+                "hasPuck": false
+              },
+              {
+                "id": "F3",
+                "team": "home",
+                "role": "skater",
+                "x": 21,
+                "y": 6,
+                "label": "F3",
+                "hasPuck": false
+              },
+              {
+                "id": "D2",
+                "team": "home",
+                "role": "skater",
+                "x": 8,
+                "y": -6,
+                "label": "D2",
+                "hasPuck": false
+              },
+              {
+                "id": "A1",
+                "team": "away",
+                "role": "skater",
+                "x": 21.6,
+                "y": -3.4,
+                "label": "A1",
+                "hasPuck": false
+              },
+              {
+                "id": "A2",
+                "team": "away",
+                "role": "skater",
+                "x": 10.5,
+                "y": -3,
+                "label": "A2",
+                "hasPuck": false
+              },
+              {
+                "id": "A3",
+                "team": "away",
+                "role": "skater",
+                "x": 18,
+                "y": 0,
+                "label": "A3",
+                "hasPuck": false
+              },
+              {
+                "id": "G",
+                "team": "away",
+                "role": "goalie",
+                "x": 25,
+                "y": 0,
+                "label": "",
+                "hasPuck": false
+              }
+            ],
+            "caption": "F2 has a clear line but a close marker. A2 blocks D2. F3 has lane and receiving space.",
+            "arrows": [],
+            "coordinateSystem": "rink-centred-metres",
+            "presentation": "authored-static-draft",
+            "hideBlueLines": true,
+            "renderRequirements": [
+              "One puck on the hasPuck actor.",
+              "YOU label and outline; teams also differ by shape or pattern.",
+              "Show caption and arrow labels; arrows depict only their explicit authored cue."
+            ],
+            "netContext": "right-net-is-attacking-net"
+          }
+        }
+      ]
+    },
+    {
+      "id": "practice-draft-u7-help-space",
+      "ageBand": "U7",
+      "conceptId": "reading-the-play",
+      "curriculumStrand": "off-puck-support-offense",
+      "title": "Help from open ice",
+      "teachingPoint": "Help a teammate by finding your own open space.",
+      "learnerAction": "Choose space away from the puck crowd.",
+      "ageRationale": "Positionless prerequisite; only three skaters, no formal support system.",
+      "status": "draft-for-review",
+      "ageAlignment": "prerequisite-extension-needs-review",
+      "sourceRef": {
+        "note": "docs/library/off-puck-support-offense.md",
+        "url": null,
+        "reason": "New authored scene applying the source principle; source answers are unchanged. Prerequisite extension; not an approved age-ledger node for this strand.",
+        "supportingNotes": [
+          "src/data/curriculum-ledger.json",
+          "src/scenario/GOLDEN-RULES-2026-06-11.md"
+        ],
+        "evidenceScope": "Internal source note; no direct stable supporting URL supplied.",
+        "approvedClaimId": null
+      },
+      "visualRelation": "Both questions assess this same authored frozen board; no movement occurs between questions.",
+      "questions": [
+        {
+          "id": "practice-draft-u7-help-space-mc",
+          "type": "mc",
+          "sit": "Where can YOU go to help?",
+          "opts": [
+            "Into the open ice below YOU.",
+            "Right beside the teammate with the puck."
+          ],
+          "ok": 0,
+          "why": "The lower ice gives your teammate another place to pass. Crowding beside the puck puts you in the same space.",
+          "tip": "Find your own bit of ice.",
+          "visual": {
+            "view": "half-right",
+            "actors": [
+              {
+                "id": "YOU",
+                "team": "home",
+                "role": "skater",
+                "x": 13,
+                "y": 2,
+                "label": "YOU",
+                "hasPuck": false
+              },
+              {
+                "id": "T",
+                "team": "home",
+                "role": "skater",
+                "x": 10,
+                "y": -3,
+                "label": "",
+                "hasPuck": true
+              },
+              {
+                "id": "D",
+                "team": "away",
+                "role": "skater",
+                "x": 14,
+                "y": -3,
+                "label": "",
+                "hasPuck": false
+              }
+            ],
+            "caption": "Your teammate has the puck. The lower ice is open.",
+            "arrows": [],
+            "coordinateSystem": "rink-centred-metres",
+            "presentation": "authored-static-draft",
+            "hideBlueLines": true,
+            "renderRequirements": [
+              "One puck on the hasPuck actor.",
+              "YOU label and outline; teams also differ by shape or pattern.",
+              "Show caption and arrow labels; arrows depict only their explicit authored cue."
+            ],
+            "netContext": "right-net-is-attacking-net"
+          }
+        },
+        {
+          "id": "practice-draft-u7-help-space-tf",
+          "type": "tf",
+          "sit": "Standing right beside the puck is the only way to help.",
+          "ok": false,
+          "why": "You can help from open ice too. Give your teammate another place to find you.",
+          "tip": "Move where you can be seen.",
+          "visual": {
+            "view": "half-right",
+            "actors": [
+              {
+                "id": "YOU",
+                "team": "home",
+                "role": "skater",
+                "x": 13,
+                "y": 2,
+                "label": "YOU",
+                "hasPuck": false
+              },
+              {
+                "id": "T",
+                "team": "home",
+                "role": "skater",
+                "x": 10,
+                "y": -3,
+                "label": "",
+                "hasPuck": true
+              },
+              {
+                "id": "D",
+                "team": "away",
+                "role": "skater",
+                "x": 14,
+                "y": -3,
+                "label": "",
+                "hasPuck": false
+              }
+            ],
+            "caption": "Your teammate has the puck. The lower ice is open.",
+            "arrows": [],
+            "coordinateSystem": "rink-centred-metres",
+            "presentation": "authored-static-draft",
+            "hideBlueLines": true,
+            "renderRequirements": [
+              "One puck on the hasPuck actor.",
+              "YOU label and outline; teams also differ by shape or pattern.",
+              "Show caption and arrow labels; arrows depict only their explicit authored cue."
+            ],
+            "netContext": "right-net-is-attacking-net"
+          }
+        }
+      ]
+    },
+    {
+      "id": "practice-draft-u9-leave-shadow",
+      "ageBand": "U9",
+      "conceptId": "off-puck-support-offense",
+      "curriculumStrand": "off-puck-support-offense",
+      "title": "Step out of the blocked path",
+      "teachingPoint": "Move where the puck can reach you without crossing another player.",
+      "learnerAction": "Find a new receiving angle.",
+      "ageRationale": "One blocker and a simple move out of its shadow; no position jargon.",
+      "status": "draft-for-review",
+      "ageAlignment": "existing-ledger-strand-new-question",
+      "sourceRef": {
+        "note": "docs/library/off-puck-support-offense.md",
+        "url": null,
+        "reason": "New authored scene applying the source principle; source answers are unchanged.",
+        "supportingNotes": [
+          "src/data/curriculum-ledger.json",
+          "src/scenario/GOLDEN-RULES-2026-06-11.md"
+        ],
+        "evidenceScope": "Internal source note; no direct stable supporting URL supplied.",
+        "approvedClaimId": null
+      },
+      "visualRelation": "Both questions assess this same authored frozen board; no movement occurs between questions.",
+      "questions": [
+        {
+          "id": "practice-draft-u9-leave-shadow-mc",
+          "type": "mc",
+          "sit": "The pass path to YOU is blocked. How can you offer a better choice?",
+          "opts": [
+            "Stay behind the other player and call louder.",
+            "Skate right beside the puck carrier.",
+            "Move farther into the open ice below YOU."
+          ],
+          "ok": 2,
+          "why": "Moving lower changes the passing angle. Calling from the same spot does not remove the player blocking the path.",
+          "tip": "Find a path the puck can use.",
+          "visual": {
+            "view": "half-right",
+            "actors": [
+              {
+                "id": "YOU",
+                "team": "home",
+                "role": "skater",
+                "x": 18,
+                "y": 1,
+                "label": "YOU",
+                "hasPuck": false
+              },
+              {
+                "id": "T",
+                "team": "home",
+                "role": "skater",
+                "x": 10,
+                "y": -3,
+                "label": "",
+                "hasPuck": true
+              },
+              {
+                "id": "D",
+                "team": "away",
+                "role": "skater",
+                "x": 14,
+                "y": -1,
+                "label": "",
+                "hasPuck": false
+              }
+            ],
+            "caption": "The other player is directly between the puck and YOU. Lower ice is open.",
+            "arrows": [],
+            "coordinateSystem": "rink-centred-metres",
+            "presentation": "authored-static-draft",
+            "hideBlueLines": true,
+            "renderRequirements": [
+              "One puck on the hasPuck actor.",
+              "YOU label and outline; teams also differ by shape or pattern.",
+              "Show caption and arrow labels; arrows depict only their explicit authored cue."
+            ],
+            "netContext": "right-net-is-attacking-net"
+          }
+        },
+        {
+          "id": "practice-draft-u9-leave-shadow-tf",
+          "type": "tf",
+          "sit": "A teammate can have room to stand while the pass to them is blocked.",
+          "ok": true,
+          "why": "YOU has room, but another player is on the pass path. Both room and a clear path matter.",
+          "tip": "Check the whole path.",
+          "visual": {
+            "view": "half-right",
+            "actors": [
+              {
+                "id": "YOU",
+                "team": "home",
+                "role": "skater",
+                "x": 18,
+                "y": 1,
+                "label": "YOU",
+                "hasPuck": false
+              },
+              {
+                "id": "T",
+                "team": "home",
+                "role": "skater",
+                "x": 10,
+                "y": -3,
+                "label": "",
+                "hasPuck": true
+              },
+              {
+                "id": "D",
+                "team": "away",
+                "role": "skater",
+                "x": 14,
+                "y": -1,
+                "label": "",
+                "hasPuck": false
+              }
+            ],
+            "caption": "The other player is directly between the puck and YOU. Lower ice is open.",
+            "arrows": [],
+            "coordinateSystem": "rink-centred-metres",
+            "presentation": "authored-static-draft",
+            "hideBlueLines": true,
+            "renderRequirements": [
+              "One puck on the hasPuck actor.",
+              "YOU label and outline; teams also differ by shape or pattern.",
+              "Show caption and arrow labels; arrows depict only their explicit authored cue."
+            ],
+            "netContext": "right-net-is-attacking-net"
+          }
+        }
+      ]
+    },
+    {
+      "id": "practice-draft-u11-change-angle",
+      "ageBand": "U11",
+      "conceptId": "off-puck-support-offense",
+      "curriculumStrand": "off-puck-support-offense",
+      "title": "Change the support angle",
+      "teachingPoint": "Adjust your position when a defender occupies the receiving lane.",
+      "learnerAction": "Create a line around the defender.",
+      "ageRationale": "A second marked teammate distinguishes an available-looking position from a usable lane.",
+      "status": "draft-for-review",
+      "ageAlignment": "existing-ledger-strand-new-question",
+      "sourceRef": {
+        "note": "docs/library/off-puck-support-offense.md",
+        "url": null,
+        "reason": "New authored scene applying the source principle; source answers are unchanged.",
+        "supportingNotes": [
+          "src/data/curriculum-ledger.json",
+          "src/scenario/GOLDEN-RULES-2026-06-11.md"
+        ],
+        "evidenceScope": "Internal source note; no direct stable supporting URL supplied.",
+        "approvedClaimId": null
+      },
+      "visualRelation": "Both questions assess this same authored frozen board; no movement occurs between questions.",
+      "questions": [
+        {
+          "id": "practice-draft-u11-change-angle-mc",
+          "type": "mc",
+          "sit": "What adjustment makes YOU a clearer passing option?",
+          "opts": [
+            "Hold still because your skates have room.",
+            "Move lower into open ice, changing the angle around D1.",
+            "Move directly toward D1.",
+            "Join F3 beside D2."
+          ],
+          "ok": 1,
+          "why": "Moving lower changes the lane around D1. Staying still or moving toward D1 keeps the problem; F3 already has pressure.",
+          "tip": "Change the angle, not the volume.",
+          "visual": {
+            "view": "half-right",
+            "actors": [
+              {
+                "id": "YOU",
+                "team": "home",
+                "role": "skater",
+                "x": 17,
+                "y": 4,
+                "label": "YOU",
+                "hasPuck": false
+              },
+              {
+                "id": "F1",
+                "team": "home",
+                "role": "skater",
+                "x": 12,
+                "y": -3,
+                "label": "F1",
+                "hasPuck": true
+              },
+              {
+                "id": "F3",
+                "team": "home",
+                "role": "skater",
+                "x": 20,
+                "y": -6,
+                "label": "F3",
+                "hasPuck": false
+              },
+              {
+                "id": "D1",
+                "team": "away",
+                "role": "skater",
+                "x": 14.5,
+                "y": 0.5,
+                "label": "D1",
+                "hasPuck": false
+              },
+              {
+                "id": "D2",
+                "team": "away",
+                "role": "skater",
+                "x": 19,
+                "y": -5.4,
+                "label": "D2",
+                "hasPuck": false
+              },
+              {
+                "id": "G",
+                "team": "away",
+                "role": "goalie",
+                "x": 25,
+                "y": -1,
+                "label": "",
+                "hasPuck": false
+              }
+            ],
+            "caption": "D1 blocks the pass to YOU. F3 is marked. Ice farther below YOU is open.",
+            "arrows": [],
+            "coordinateSystem": "rink-centred-metres",
+            "presentation": "authored-static-draft",
+            "hideBlueLines": true,
+            "renderRequirements": [
+              "One puck on the hasPuck actor.",
+              "YOU label and outline; teams also differ by shape or pattern.",
+              "Show caption and arrow labels; arrows depict only their explicit authored cue."
+            ],
+            "netContext": "right-net-is-attacking-net"
+          }
+        },
+        {
+          "id": "practice-draft-u11-change-angle-tf",
+          "type": "tf",
+          "sit": "Calling from the same position removes D1 from the passing lane.",
+          "ok": false,
+          "why": "Calling can get attention, but D1 still occupies the line. Your position must create the option.",
+          "tip": "Move to make the pass possible.",
+          "visual": {
+            "view": "half-right",
+            "actors": [
+              {
+                "id": "YOU",
+                "team": "home",
+                "role": "skater",
+                "x": 17,
+                "y": 4,
+                "label": "YOU",
+                "hasPuck": false
+              },
+              {
+                "id": "F1",
+                "team": "home",
+                "role": "skater",
+                "x": 12,
+                "y": -3,
+                "label": "F1",
+                "hasPuck": true
+              },
+              {
+                "id": "F3",
+                "team": "home",
+                "role": "skater",
+                "x": 20,
+                "y": -6,
+                "label": "F3",
+                "hasPuck": false
+              },
+              {
+                "id": "D1",
+                "team": "away",
+                "role": "skater",
+                "x": 14.5,
+                "y": 0.5,
+                "label": "D1",
+                "hasPuck": false
+              },
+              {
+                "id": "D2",
+                "team": "away",
+                "role": "skater",
+                "x": 19,
+                "y": -5.4,
+                "label": "D2",
+                "hasPuck": false
+              },
+              {
+                "id": "G",
+                "team": "away",
+                "role": "goalie",
+                "x": 25,
+                "y": -1,
+                "label": "",
+                "hasPuck": false
+              }
+            ],
+            "caption": "D1 blocks the pass to YOU. F3 is marked. Ice farther below YOU is open.",
+            "arrows": [],
+            "coordinateSystem": "rink-centred-metres",
+            "presentation": "authored-static-draft",
+            "hideBlueLines": true,
+            "renderRequirements": [
+              "One puck on the hasPuck actor.",
+              "YOU label and outline; teams also differ by shape or pattern.",
+              "Show caption and arrow labels; arrows depict only their explicit authored cue."
+            ],
+            "netContext": "right-net-is-attacking-net"
+          }
+        }
+      ]
+    },
+    {
+      "id": "practice-draft-u13-pass-reoffer",
+      "ageBand": "U13",
+      "conceptId": "off-puck-support-offense",
+      "curriculumStrand": "off-puck-support-offense",
+      "title": "Offer the next pass",
+      "teachingPoint": "After passing, find a new angle rather than staying a covered outlet.",
+      "learnerAction": "Choose a forward return option.",
+      "ageRationale": "Adds a completed pass and a defender occupying the old return lane.",
+      "status": "draft-for-review",
+      "ageAlignment": "existing-ledger-strand-new-question",
+      "sourceRef": {
+        "note": "docs/library/off-puck-support-offense.md",
+        "url": null,
+        "reason": "New authored scene applying the source principle; source answers are unchanged.",
+        "supportingNotes": [
+          "src/data/curriculum-ledger.json",
+          "src/scenario/GOLDEN-RULES-2026-06-11.md"
+        ],
+        "evidenceScope": "Internal source note; no direct stable supporting URL supplied.",
+        "approvedClaimId": null
+      },
+      "visualRelation": "Both questions assess this same authored frozen board; no movement occurs between questions.",
+      "questions": [
+        {
+          "id": "practice-draft-u13-pass-reoffer-mc",
+          "type": "mc",
+          "sit": "After passing to F1, which action offers a new forward return option?",
+          "opts": [
+            "Stay at the old spot behind D1.",
+            "Follow the puck onto F1.",
+            "Skate into the open lower ice ahead of YOU.",
+            "Stand beside the marked F3."
+          ],
+          "ok": 2,
+          "why": "The old lane contains D1. Moving forward on the lower side creates a new angle without crowding F1 or joining F3’s marker.",
+          "tip": "After passing, become an option again.",
+          "visual": {
+            "view": "half-right",
+            "actors": [
+              {
+                "id": "YOU",
+                "team": "home",
+                "role": "skater",
+                "x": 12,
+                "y": 2,
+                "label": "YOU",
+                "hasPuck": false
+              },
+              {
+                "id": "F1",
+                "team": "home",
+                "role": "skater",
+                "x": 16,
+                "y": -3,
+                "label": "F1",
+                "hasPuck": true
+              },
+              {
+                "id": "F3",
+                "team": "home",
+                "role": "skater",
+                "x": 21,
+                "y": -6,
+                "label": "F3",
+                "hasPuck": false
+              },
+              {
+                "id": "D1",
+                "team": "away",
+                "role": "skater",
+                "x": 14,
+                "y": -0.5,
+                "label": "D1",
+                "hasPuck": false
+              },
+              {
+                "id": "D2",
+                "team": "away",
+                "role": "skater",
+                "x": 19.5,
+                "y": -5.1,
+                "label": "D2",
+                "hasPuck": false
+              },
+              {
+                "id": "G",
+                "team": "away",
+                "role": "goalie",
+                "x": 25,
+                "y": -1,
+                "label": "",
+                "hasPuck": false
+              }
+            ],
+            "caption": "Your pass has reached F1. D1 blocks the old return lane. Lower ice ahead is open.",
+            "arrows": [
+              {
+                "from": [
+                  12,
+                  2
+                ],
+                "to": [
+                  16,
+                  -3
+                ],
+                "label": "Pass already completed"
+              }
+            ],
+            "coordinateSystem": "rink-centred-metres",
+            "presentation": "authored-static-draft",
+            "hideBlueLines": true,
+            "renderRequirements": [
+              "One puck on the hasPuck actor.",
+              "YOU label and outline; teams also differ by shape or pattern.",
+              "Show caption and arrow labels; arrows depict only their explicit authored cue."
+            ],
+            "netContext": "right-net-is-attacking-net"
+          }
+        },
+        {
+          "id": "practice-draft-u13-pass-reoffer-tf",
+          "type": "tf",
+          "sit": "After passing, YOU can help again by finding a new clear return angle.",
+          "ok": true,
+          "why": "D1 covers your original position. Reoffering from lower open ice gives F1 a different option.",
+          "tip": "Pass, look, and reoffer.",
+          "visual": {
+            "view": "half-right",
+            "actors": [
+              {
+                "id": "YOU",
+                "team": "home",
+                "role": "skater",
+                "x": 12,
+                "y": 2,
+                "label": "YOU",
+                "hasPuck": false
+              },
+              {
+                "id": "F1",
+                "team": "home",
+                "role": "skater",
+                "x": 16,
+                "y": -3,
+                "label": "F1",
+                "hasPuck": true
+              },
+              {
+                "id": "F3",
+                "team": "home",
+                "role": "skater",
+                "x": 21,
+                "y": -6,
+                "label": "F3",
+                "hasPuck": false
+              },
+              {
+                "id": "D1",
+                "team": "away",
+                "role": "skater",
+                "x": 14,
+                "y": -0.5,
+                "label": "D1",
+                "hasPuck": false
+              },
+              {
+                "id": "D2",
+                "team": "away",
+                "role": "skater",
+                "x": 19.5,
+                "y": -5.1,
+                "label": "D2",
+                "hasPuck": false
+              },
+              {
+                "id": "G",
+                "team": "away",
+                "role": "goalie",
+                "x": 25,
+                "y": -1,
+                "label": "",
+                "hasPuck": false
+              }
+            ],
+            "caption": "Your pass has reached F1. D1 blocks the old return lane. Lower ice ahead is open.",
+            "arrows": [
+              {
+                "from": [
+                  12,
+                  2
+                ],
+                "to": [
+                  16,
+                  -3
+                ],
+                "label": "Pass already completed"
+              }
+            ],
+            "coordinateSystem": "rink-centred-metres",
+            "presentation": "authored-static-draft",
+            "hideBlueLines": true,
+            "renderRequirements": [
+              "One puck on the hasPuck actor.",
+              "YOU label and outline; teams also differ by shape or pattern.",
+              "Show caption and arrow labels; arrows depict only their explicit authored cue."
+            ],
+            "netContext": "right-net-is-attacking-net"
+          }
+        }
+      ]
+    },
+    {
+      "id": "practice-draft-u15-two-angles",
+      "ageBand": "U15",
+      "conceptId": "off-puck-support-offense",
+      "curriculumStrand": "off-puck-support-offense",
+      "title": "Keep a different support angle",
+      "teachingPoint": "Offer distinct usable lanes instead of sharing one covered route.",
+      "learnerAction": "Preserve the clear lower outlet.",
+      "ageRationale": "Multiple attackers and blockers make duplicated support the diagnostic distractor.",
+      "status": "draft-for-review",
+      "ageAlignment": "existing-ledger-strand-new-question",
+      "sourceRef": {
+        "note": "docs/library/off-puck-support-offense.md",
+        "url": null,
+        "reason": "New authored scene applying the source principle; source answers are unchanged.",
+        "supportingNotes": [
+          "src/data/curriculum-ledger.json",
+          "src/scenario/GOLDEN-RULES-2026-06-11.md"
+        ],
+        "evidenceScope": "Internal source note; no direct stable supporting URL supplied.",
+        "approvedClaimId": null
+      },
+      "visualRelation": "Both questions assess this same authored frozen board; no movement occurs between questions.",
+      "questions": [
+        {
+          "id": "practice-draft-u15-two-angles-mc",
+          "type": "mc",
+          "sit": "F1 needs an outlet. What should YOU preserve here?",
+          "opts": [
+            "The separate lower angle with receiving space.",
+            "A spot next to F2 on the same pressured route.",
+            "A spot behind D1 on the F2 lane.",
+            "A spot beside F1 in the puck space."
+          ],
+          "ok": 0,
+          "why": "YOU provides a distinct clear outlet. Joining the upper route duplicates F2’s pressured option instead of helping F1 escape it.",
+          "tip": "Different angles create different choices.",
+          "visual": {
+            "view": "half-right",
+            "actors": [
+              {
+                "id": "YOU",
+                "team": "home",
+                "role": "skater",
+                "x": 19,
+                "y": 6,
+                "label": "YOU",
+                "hasPuck": false
+              },
+              {
+                "id": "F1",
+                "team": "home",
+                "role": "skater",
+                "x": 14,
+                "y": 0,
+                "label": "F1",
+                "hasPuck": true
+              },
+              {
+                "id": "F2",
+                "team": "home",
+                "role": "skater",
+                "x": 20,
+                "y": -5,
+                "label": "F2",
+                "hasPuck": false
+              },
+              {
+                "id": "D1",
+                "team": "away",
+                "role": "skater",
+                "x": 17,
+                "y": -2.5,
+                "label": "D1",
+                "hasPuck": false
+              },
+              {
+                "id": "D2",
+                "team": "away",
+                "role": "skater",
+                "x": 21,
+                "y": -4,
+                "label": "D2",
+                "hasPuck": false
+              },
+              {
+                "id": "G",
+                "team": "away",
+                "role": "goalie",
+                "x": 25,
+                "y": 0,
+                "label": "",
+                "hasPuck": false
+              }
+            ],
+            "caption": "F2 has upper-side pressure. YOU offers the clear lower route.",
+            "arrows": [],
+            "coordinateSystem": "rink-centred-metres",
+            "presentation": "authored-static-draft",
+            "hideBlueLines": true,
+            "renderRequirements": [
+              "One puck on the hasPuck actor.",
+              "YOU label and outline; teams also differ by shape or pattern.",
+              "Show caption and arrow labels; arrows depict only their explicit authored cue."
+            ],
+            "netContext": "right-net-is-attacking-net"
+          }
+        },
+        {
+          "id": "practice-draft-u15-two-angles-tf",
+          "type": "tf",
+          "sit": "Two teammates on one covered route automatically create two usable options.",
+          "ok": false,
+          "why": "A defender on that route can affect both. The lower angle helps by changing the lane, not just adding jerseys.",
+          "tip": "Count usable lanes, not jerseys.",
+          "visual": {
+            "view": "half-right",
+            "actors": [
+              {
+                "id": "YOU",
+                "team": "home",
+                "role": "skater",
+                "x": 19,
+                "y": 6,
+                "label": "YOU",
+                "hasPuck": false
+              },
+              {
+                "id": "F1",
+                "team": "home",
+                "role": "skater",
+                "x": 14,
+                "y": 0,
+                "label": "F1",
+                "hasPuck": true
+              },
+              {
+                "id": "F2",
+                "team": "home",
+                "role": "skater",
+                "x": 20,
+                "y": -5,
+                "label": "F2",
+                "hasPuck": false
+              },
+              {
+                "id": "D1",
+                "team": "away",
+                "role": "skater",
+                "x": 17,
+                "y": -2.5,
+                "label": "D1",
+                "hasPuck": false
+              },
+              {
+                "id": "D2",
+                "team": "away",
+                "role": "skater",
+                "x": 21,
+                "y": -4,
+                "label": "D2",
+                "hasPuck": false
+              },
+              {
+                "id": "G",
+                "team": "away",
+                "role": "goalie",
+                "x": 25,
+                "y": 0,
+                "label": "",
+                "hasPuck": false
+              }
+            ],
+            "caption": "F2 has upper-side pressure. YOU offers the clear lower route.",
+            "arrows": [],
+            "coordinateSystem": "rink-centred-metres",
+            "presentation": "authored-static-draft",
+            "hideBlueLines": true,
+            "renderRequirements": [
+              "One puck on the hasPuck actor.",
+              "YOU label and outline; teams also differ by shape or pattern.",
+              "Show caption and arrow labels; arrows depict only their explicit authored cue."
+            ],
+            "netContext": "right-net-is-attacking-net"
+          }
+        }
+      ]
+    },
+    {
+      "id": "practice-draft-u18-support-change",
+      "ageBand": "U18",
+      "conceptId": "off-puck-support-offense",
+      "curriculumStrand": "off-puck-support-offense",
+      "title": "Stay useful when a lane closes",
+      "teachingPoint": "Support must fit the current lane and pressure, not a preselected destination.",
+      "learnerAction": "Adjust after the defender closes your lane.",
+      "ageRationale": "A third attacker and second defender separate congestion, lane pressure and a useful alternative angle.",
+      "status": "draft-for-review",
+      "ageAlignment": "existing-ledger-strand-new-question",
+      "sourceRef": {
+        "note": "docs/library/off-puck-support-offense.md",
+        "url": null,
+        "reason": "New authored scene applying the source principle; source answers are unchanged.",
+        "supportingNotes": [
+          "src/data/curriculum-ledger.json",
+          "src/scenario/GOLDEN-RULES-2026-06-11.md"
+        ],
+        "evidenceScope": "Internal source note; no direct stable supporting URL supplied.",
+        "approvedClaimId": null
+      },
+      "visualRelation": "Both questions assess this same authored frozen board; no movement occurs between questions.",
+      "questions": [
+        {
+          "id": "practice-draft-u18-support-change-mc",
+          "type": "mc",
+          "sit": "Which adjustment responds to D1 without duplicating F2’s covered option?",
+          "opts": [
+            "Stay because this was the first planned receiving spot.",
+            "Move beside F2 to support closer to the net.",
+            "Move lower to create a different line from F1.",
+            "Move toward D1 to try receiving in front of the blocker."
+          ],
+          "ok": 2,
+          "why": "D1 blocks the old line. Moving lower creates an angle away from that blocker; F2’s marked space is not the alternative F1 needs.",
+          "tip": "Be open to the current route.",
+          "visual": {
+            "view": "half-right",
+            "actors": [
+              {
+                "id": "YOU",
+                "team": "home",
+                "role": "skater",
+                "x": 20,
+                "y": 2,
+                "label": "YOU",
+                "hasPuck": false
+              },
+              {
+                "id": "F1",
+                "team": "home",
+                "role": "skater",
+                "x": 13,
+                "y": -4,
+                "label": "F1",
+                "hasPuck": true
+              },
+              {
+                "id": "F2",
+                "team": "home",
+                "role": "skater",
+                "x": 21,
+                "y": -6,
+                "label": "F2",
+                "hasPuck": false
+              },
+              {
+                "id": "D1",
+                "team": "away",
+                "role": "skater",
+                "x": 16.5,
+                "y": -1,
+                "label": "D1",
+                "hasPuck": false
+              },
+              {
+                "id": "D2",
+                "team": "away",
+                "role": "skater",
+                "x": 20,
+                "y": -5.7,
+                "label": "D2",
+                "hasPuck": false
+              },
+              {
+                "id": "G",
+                "team": "away",
+                "role": "goalie",
+                "x": 25,
+                "y": -1,
+                "label": "",
+                "hasPuck": false
+              }
+            ],
+            "caption": "D1 moved onto your lane. F2 has a marker. The lower outside ice is open.",
+            "arrows": [
+              {
+                "from": [
+                  17,
+                  4
+                ],
+                "to": [
+                  16.5,
+                  -1
+                ],
+                "label": "D1 moved onto the lane"
+              }
+            ],
+            "coordinateSystem": "rink-centred-metres",
+            "presentation": "authored-static-draft",
+            "hideBlueLines": true,
+            "renderRequirements": [
+              "One puck on the hasPuck actor.",
+              "YOU label and outline; teams also differ by shape or pattern.",
+              "Show caption and arrow labels; arrows depict only their explicit authored cue."
+            ],
+            "netContext": "right-net-is-attacking-net"
+          }
+        },
+        {
+          "id": "practice-draft-u18-support-change-tf",
+          "type": "tf",
+          "sit": "A defender’s move onto your lane is a reason to recheck your support position.",
+          "ok": true,
+          "why": "D1 now occupies the original line. YOU needs a position that fits the current route from F1.",
+          "tip": "Recheck your own passing lane.",
+          "visual": {
+            "view": "half-right",
+            "actors": [
+              {
+                "id": "YOU",
+                "team": "home",
+                "role": "skater",
+                "x": 20,
+                "y": 2,
+                "label": "YOU",
+                "hasPuck": false
+              },
+              {
+                "id": "F1",
+                "team": "home",
+                "role": "skater",
+                "x": 13,
+                "y": -4,
+                "label": "F1",
+                "hasPuck": true
+              },
+              {
+                "id": "F2",
+                "team": "home",
+                "role": "skater",
+                "x": 21,
+                "y": -6,
+                "label": "F2",
+                "hasPuck": false
+              },
+              {
+                "id": "D1",
+                "team": "away",
+                "role": "skater",
+                "x": 16.5,
+                "y": -1,
+                "label": "D1",
+                "hasPuck": false
+              },
+              {
+                "id": "D2",
+                "team": "away",
+                "role": "skater",
+                "x": 20,
+                "y": -5.7,
+                "label": "D2",
+                "hasPuck": false
+              },
+              {
+                "id": "G",
+                "team": "away",
+                "role": "goalie",
+                "x": 25,
+                "y": -1,
+                "label": "",
+                "hasPuck": false
+              }
+            ],
+            "caption": "D1 moved onto your lane. F2 has a marker. The lower outside ice is open.",
+            "arrows": [
+              {
+                "from": [
+                  17,
+                  4
+                ],
+                "to": [
+                  16.5,
+                  -1
+                ],
+                "label": "D1 moved onto the lane"
+              }
+            ],
+            "coordinateSystem": "rink-centred-metres",
+            "presentation": "authored-static-draft",
+            "hideBlueLines": true,
+            "renderRequirements": [
+              "One puck on the hasPuck actor.",
+              "YOU label and outline; teams also differ by shape or pattern.",
+              "Show caption and arrow labels; arrows depict only their explicit authored cue."
+            ],
+            "netContext": "right-net-is-attacking-net"
+          }
+        }
+      ]
+    },
+    {
+      "id": "practice-draft-u7-guard-way",
+      "ageBand": "U7",
+      "conceptId": "reading-the-play",
+      "curriculumStrand": "gap-control",
+      "title": "Keep the way to your net covered",
+      "teachingPoint": "Stay between the other player and the way to your net.",
+      "learnerAction": "Choose inside protection instead of chasing behind.",
+      "ageRationale": "One-cue prerequisite: no gap jargon, blue lines, timers or fixed-position labels.",
+      "status": "draft-for-review",
+      "ageAlignment": "prerequisite-extension-needs-review",
+      "sourceRef": {
+        "note": "docs/library/gap-control.md",
+        "url": "https://cdn1.sportngin.com/attachments/document/0066/4690/Skill_Progression_Manual_19_FINAL.pdf",
+        "reason": "New authored scene applying the source principle; source answers are unchanged. Prerequisite extension; not an approved age-ledger node for this strand.",
+        "supportingNotes": [
+          "src/data/curriculum-ledger.json",
+          "src/scenario/GOLDEN-RULES-2026-06-11.md"
+        ],
+        "evidenceScope": "Existing principle-level source URL, not independently refreshed.",
+        "approvedClaimId": null
+      },
+      "visualRelation": "Both questions assess this same authored frozen board; no movement occurs between questions.",
+      "questions": [
+        {
+          "id": "practice-draft-u7-guard-way-mc",
+          "type": "mc",
+          "sit": "How can YOU help protect your net?",
+          "opts": [
+            "Chase behind the player with the puck.",
+            "Stay between that player and the way to your net."
+          ],
+          "ok": 1,
+          "why": "Staying between the player and the net keeps the direct way covered. Chasing behind leaves it open.",
+          "tip": "Keep the net behind you.",
+          "visual": {
+            "view": "half-right",
+            "actors": [
+              {
+                "id": "YOU",
+                "team": "home",
+                "role": "skater",
+                "x": 20,
+                "y": 0,
+                "label": "YOU",
+                "hasPuck": false
+              },
+              {
+                "id": "P",
+                "team": "away",
+                "role": "skater",
+                "x": 15,
+                "y": -5,
+                "label": "",
+                "hasPuck": true
+              },
+              {
+                "id": "G",
+                "team": "home",
+                "role": "goalie",
+                "x": 25.5,
+                "y": 0,
+                "label": "",
+                "hasPuck": false
+              }
+            ],
+            "caption": "The net on the right is YOUR net. The other player has the puck.",
+            "arrows": [],
+            "coordinateSystem": "rink-centred-metres",
+            "presentation": "authored-static-draft",
+            "hideBlueLines": true,
+            "renderRequirements": [
+              "One puck on the hasPuck actor.",
+              "YOU label and outline; teams also differ by shape or pattern.",
+              "Show caption and arrow labels; arrows depict only their explicit authored cue."
+            ],
+            "netContext": "right-net-is-learners-own"
+          }
+        },
+        {
+          "id": "practice-draft-u7-guard-way-tf",
+          "type": "tf",
+          "sit": "Chasing behind the puck leaves more room on the way to your net.",
+          "ok": true,
+          "why": "The player can move toward the net while you are behind. Stay between them and the net to cover that space.",
+          "tip": "Protect the way, not just the puck.",
+          "visual": {
+            "view": "half-right",
+            "actors": [
+              {
+                "id": "YOU",
+                "team": "home",
+                "role": "skater",
+                "x": 20,
+                "y": 0,
+                "label": "YOU",
+                "hasPuck": false
+              },
+              {
+                "id": "P",
+                "team": "away",
+                "role": "skater",
+                "x": 15,
+                "y": -5,
+                "label": "",
+                "hasPuck": true
+              },
+              {
+                "id": "G",
+                "team": "home",
+                "role": "goalie",
+                "x": 25.5,
+                "y": 0,
+                "label": "",
+                "hasPuck": false
+              }
+            ],
+            "caption": "The net on the right is YOUR net. The other player has the puck.",
+            "arrows": [],
+            "coordinateSystem": "rink-centred-metres",
+            "presentation": "authored-static-draft",
+            "hideBlueLines": true,
+            "renderRequirements": [
+              "One puck on the hasPuck actor.",
+              "YOU label and outline; teams also differ by shape or pattern.",
+              "Show caption and arrow labels; arrows depict only their explicit authored cue."
+            ],
+            "netContext": "right-net-is-learners-own"
+          }
+        }
+      ]
+    },
+    {
+      "id": "practice-draft-u9-protect-middle",
+      "ageBand": "U9",
+      "conceptId": "reading-the-play",
+      "curriculumStrand": "gap-control",
+      "title": "Protect the middle space",
+      "teachingPoint": "Cover the direct middle route instead of chasing the puck to the boards.",
+      "learnerAction": "Choose between protecting space, chasing and retreating.",
+      "ageRationale": "Three ordinary-language choices; no formal gap-system instruction.",
+      "status": "draft-for-review",
+      "ageAlignment": "prerequisite-extension-needs-review",
+      "sourceRef": {
+        "note": "docs/library/gap-control.md",
+        "url": "https://cdn1.sportngin.com/attachments/document/0066/4690/Skill_Progression_Manual_19_FINAL.pdf",
+        "reason": "New authored scene applying the source principle; source answers are unchanged. Prerequisite extension; not an approved age-ledger node for this strand.",
+        "supportingNotes": [
+          "src/data/curriculum-ledger.json",
+          "src/scenario/GOLDEN-RULES-2026-06-11.md"
+        ],
+        "evidenceScope": "Existing principle-level source URL, not independently refreshed.",
+        "approvedClaimId": null
+      },
+      "visualRelation": "Both questions assess this same authored frozen board; no movement occurs between questions.",
+      "questions": [
+        {
+          "id": "practice-draft-u9-protect-middle-mc",
+          "type": "mc",
+          "sit": "The other player has the puck near the side. What space should YOU keep covered?",
+          "opts": [
+            "The middle route between that player and your net.",
+            "Only the space behind the puck near the boards.",
+            "Only the space beside the goalpost."
+          ],
+          "ok": 0,
+          "why": "The middle route leads toward your net. Chasing the puck to the side or waiting at a post gives up that space.",
+          "tip": "Keep the middle covered.",
+          "visual": {
+            "view": "half-right",
+            "actors": [
+              {
+                "id": "YOU",
+                "team": "home",
+                "role": "skater",
+                "x": 20,
+                "y": -1,
+                "label": "YOU",
+                "hasPuck": false
+              },
+              {
+                "id": "P",
+                "team": "away",
+                "role": "skater",
+                "x": 15,
+                "y": -6,
+                "label": "",
+                "hasPuck": true
+              },
+              {
+                "id": "G",
+                "team": "home",
+                "role": "goalie",
+                "x": 25.5,
+                "y": 0,
+                "label": "",
+                "hasPuck": false
+              }
+            ],
+            "caption": "The net on the right is YOUR net. The puck is near the upper side.",
+            "arrows": [],
+            "coordinateSystem": "rink-centred-metres",
+            "presentation": "authored-static-draft",
+            "hideBlueLines": true,
+            "renderRequirements": [
+              "One puck on the hasPuck actor.",
+              "YOU label and outline; teams also differ by shape or pattern.",
+              "Show caption and arrow labels; arrows depict only their explicit authored cue."
+            ],
+            "netContext": "right-net-is-learners-own"
+          }
+        },
+        {
+          "id": "practice-draft-u9-protect-middle-tf",
+          "type": "tf",
+          "sit": "Even when the puck is near the boards, the middle way to your net still matters.",
+          "ok": true,
+          "why": "The puck can return toward the middle. Your position should help cover that direct route.",
+          "tip": "Puck at the side, eyes on the middle.",
+          "visual": {
+            "view": "half-right",
+            "actors": [
+              {
+                "id": "YOU",
+                "team": "home",
+                "role": "skater",
+                "x": 20,
+                "y": -1,
+                "label": "YOU",
+                "hasPuck": false
+              },
+              {
+                "id": "P",
+                "team": "away",
+                "role": "skater",
+                "x": 15,
+                "y": -6,
+                "label": "",
+                "hasPuck": true
+              },
+              {
+                "id": "G",
+                "team": "home",
+                "role": "goalie",
+                "x": 25.5,
+                "y": 0,
+                "label": "",
+                "hasPuck": false
+              }
+            ],
+            "caption": "The net on the right is YOUR net. The puck is near the upper side.",
+            "arrows": [],
+            "coordinateSystem": "rink-centred-metres",
+            "presentation": "authored-static-draft",
+            "hideBlueLines": true,
+            "renderRequirements": [
+              "One puck on the hasPuck actor.",
+              "YOU label and outline; teams also differ by shape or pattern.",
+              "Show caption and arrow labels; arrows depict only their explicit authored cue."
+            ],
+            "netContext": "right-net-is-learners-own"
+          }
+        }
+      ]
+    },
+    {
+      "id": "practice-draft-u11-hold-inside",
+      "ageBand": "U11",
+      "conceptId": "gap-control",
+      "curriculumStrand": "gap-control",
+      "title": "Hold the inside",
+      "teachingPoint": "Manage space while staying on the net side of the attacker.",
+      "learnerAction": "Choose adjustable skating instead of an early reach or passive retreat.",
+      "ageRationale": "Introduces the U11 gap-control node with one carrier and clear inside position.",
+      "status": "draft-for-review",
+      "ageAlignment": "existing-ledger-strand-new-question",
+      "sourceRef": {
+        "note": "docs/library/gap-control.md",
+        "url": "https://cdn1.sportngin.com/attachments/document/0066/4690/Skill_Progression_Manual_19_FINAL.pdf",
+        "reason": "New authored scene applying the source principle; source answers are unchanged.",
+        "supportingNotes": [
+          "src/data/curriculum-ledger.json",
+          "src/scenario/GOLDEN-RULES-2026-06-11.md"
+        ],
+        "evidenceScope": "Existing principle-level source URL, not independently refreshed.",
+        "approvedClaimId": null
+      },
+      "visualRelation": "Both questions assess this same authored frozen board; no movement occurs between questions.",
+      "questions": [
+        {
+          "id": "practice-draft-u11-hold-inside-mc",
+          "type": "mc",
+          "sit": "The attacker is approaching the middle. Which response keeps YOU inside and able to adjust?",
+          "opts": [
+            "Plant both skates and reach away from the middle.",
+            "Retreat straight to the goal line before reading the attacker.",
+            "Cross to the attacker’s outside shoulder.",
+            "Keep moving with the approach while protecting the middle route."
+          ],
+          "ok": 3,
+          "why": "Available feet let you adjust the space without giving up the inside. Reaching early or dropping straight back gives the attacker room.",
+          "tip": "Moving feet, middle protected.",
+          "visual": {
+            "view": "half-right",
+            "actors": [
+              {
+                "id": "YOU",
+                "team": "home",
+                "role": "skater",
+                "x": 19,
+                "y": -2,
+                "label": "YOU",
+                "hasPuck": false
+              },
+              {
+                "id": "F1",
+                "team": "away",
+                "role": "skater",
+                "x": 14,
+                "y": -5,
+                "label": "F1",
+                "hasPuck": true
+              },
+              {
+                "id": "G",
+                "team": "home",
+                "role": "goalie",
+                "x": 25.5,
+                "y": 0,
+                "label": "",
+                "hasPuck": false
+              }
+            ],
+            "caption": "The right net is yours. The arrow shows the attacker’s completed approach.",
+            "arrows": [
+              {
+                "from": [
+                  11,
+                  -7
+                ],
+                "to": [
+                  14,
+                  -5
+                ],
+                "label": "Attacker approached here"
+              }
+            ],
+            "coordinateSystem": "rink-centred-metres",
+            "presentation": "authored-static-draft",
+            "hideBlueLines": true,
+            "renderRequirements": [
+              "One puck on the hasPuck actor.",
+              "YOU label and outline; teams also differ by shape or pattern.",
+              "Show caption and arrow labels; arrows depict only their explicit authored cue."
+            ],
+            "netContext": "right-net-is-learners-own"
+          }
+        },
+        {
+          "id": "practice-draft-u11-hold-inside-tf",
+          "type": "tf",
+          "sit": "A close attacker is always a reason to stop moving and reach for the puck.",
+          "ok": false,
+          "why": "Distance alone does not make a reach safe. The attacker still has a middle route, so keep the ability to adjust.",
+          "tip": "Read space before the poke.",
+          "visual": {
+            "view": "half-right",
+            "actors": [
+              {
+                "id": "YOU",
+                "team": "home",
+                "role": "skater",
+                "x": 19,
+                "y": -2,
+                "label": "YOU",
+                "hasPuck": false
+              },
+              {
+                "id": "F1",
+                "team": "away",
+                "role": "skater",
+                "x": 14,
+                "y": -5,
+                "label": "F1",
+                "hasPuck": true
+              },
+              {
+                "id": "G",
+                "team": "home",
+                "role": "goalie",
+                "x": 25.5,
+                "y": 0,
+                "label": "",
+                "hasPuck": false
+              }
+            ],
+            "caption": "The right net is yours. The arrow shows the attacker’s completed approach.",
+            "arrows": [
+              {
+                "from": [
+                  11,
+                  -7
+                ],
+                "to": [
+                  14,
+                  -5
+                ],
+                "label": "Attacker approached here"
+              }
+            ],
+            "coordinateSystem": "rink-centred-metres",
+            "presentation": "authored-static-draft",
+            "hideBlueLines": true,
+            "renderRequirements": [
+              "One puck on the hasPuck actor.",
+              "YOU label and outline; teams also differ by shape or pattern.",
+              "Show caption and arrow labels; arrows depict only their explicit authored cue."
+            ],
+            "netContext": "right-net-is-learners-own"
+          }
+        }
+      ]
+    },
+    {
+      "id": "practice-draft-u13-share-threats",
+      "ageBand": "U13",
+      "conceptId": "gap-control",
+      "curriculumStrand": "gap-control",
+      "title": "Contain your threat",
+      "teachingPoint": "Inside protection still matters when a teammate covers another attacker.",
+      "learnerAction": "Identify your puck-side responsibility.",
+      "ageRationale": "Adds another attacker and defensive teammate so two responsibilities must be distinguished.",
+      "status": "draft-for-review",
+      "ageAlignment": "existing-ledger-strand-new-question",
+      "sourceRef": {
+        "note": "docs/library/gap-control.md",
+        "url": "https://cdn1.sportngin.com/attachments/document/0066/4690/Skill_Progression_Manual_19_FINAL.pdf",
+        "reason": "New authored scene applying the source principle; source answers are unchanged.",
+        "supportingNotes": [
+          "src/data/curriculum-ledger.json",
+          "src/scenario/GOLDEN-RULES-2026-06-11.md"
+        ],
+        "evidenceScope": "Existing principle-level source URL, not independently refreshed.",
+        "approvedClaimId": null
+      },
+      "visualRelation": "Both questions assess this same authored frozen board; no movement occurs between questions.",
+      "questions": [
+        {
+          "id": "practice-draft-u13-share-threats-mc",
+          "type": "mc",
+          "sit": "D2 is already inside F2. What is YOUR immediate responsibility?",
+          "opts": [
+            "Leave F1 to join D2 beside F2.",
+            "Manage the space to F1 while protecting the middle route.",
+            "Chase behind F1 toward the upper boards.",
+            "Retreat beside the goalie and stop influencing F1."
+          ],
+          "ok": 1,
+          "why": "D2 covers the lower threat. Leaving F1 or retreating to the goalie gives the carrier the middle YOU currently protects.",
+          "tip": "Read your threat and your help.",
+          "visual": {
+            "view": "half-right",
+            "actors": [
+              {
+                "id": "YOU",
+                "team": "home",
+                "role": "skater",
+                "x": 19,
+                "y": -2,
+                "label": "YOU",
+                "hasPuck": false
+              },
+              {
+                "id": "D2",
+                "team": "home",
+                "role": "skater",
+                "x": 21,
+                "y": 4,
+                "label": "D2",
+                "hasPuck": false
+              },
+              {
+                "id": "F1",
+                "team": "away",
+                "role": "skater",
+                "x": 14,
+                "y": -5,
+                "label": "F1",
+                "hasPuck": true
+              },
+              {
+                "id": "F2",
+                "team": "away",
+                "role": "skater",
+                "x": 20,
+                "y": 6,
+                "label": "F2",
+                "hasPuck": false
+              },
+              {
+                "id": "G",
+                "team": "home",
+                "role": "goalie",
+                "x": 25.5,
+                "y": -0.5,
+                "label": "",
+                "hasPuck": false
+              }
+            ],
+            "caption": "The right net is yours. YOU faces F1. D2 is inside F2 on the lower side.",
+            "arrows": [],
+            "coordinateSystem": "rink-centred-metres",
+            "presentation": "authored-static-draft",
+            "hideBlueLines": true,
+            "renderRequirements": [
+              "One puck on the hasPuck actor.",
+              "YOU label and outline; teams also differ by shape or pattern.",
+              "Show caption and arrow labels; arrows depict only their explicit authored cue."
+            ],
+            "netContext": "right-net-is-learners-own"
+          }
+        },
+        {
+          "id": "practice-draft-u13-share-threats-tf",
+          "type": "tf",
+          "sit": "Seeing D2 near F2 means YOU can abandon the carrier’s route to the middle.",
+          "ok": false,
+          "why": "D2 covers another threat. F1 still has the puck and YOU still protects that route.",
+          "tip": "Help does not erase your read.",
+          "visual": {
+            "view": "half-right",
+            "actors": [
+              {
+                "id": "YOU",
+                "team": "home",
+                "role": "skater",
+                "x": 19,
+                "y": -2,
+                "label": "YOU",
+                "hasPuck": false
+              },
+              {
+                "id": "D2",
+                "team": "home",
+                "role": "skater",
+                "x": 21,
+                "y": 4,
+                "label": "D2",
+                "hasPuck": false
+              },
+              {
+                "id": "F1",
+                "team": "away",
+                "role": "skater",
+                "x": 14,
+                "y": -5,
+                "label": "F1",
+                "hasPuck": true
+              },
+              {
+                "id": "F2",
+                "team": "away",
+                "role": "skater",
+                "x": 20,
+                "y": 6,
+                "label": "F2",
+                "hasPuck": false
+              },
+              {
+                "id": "G",
+                "team": "home",
+                "role": "goalie",
+                "x": 25.5,
+                "y": -0.5,
+                "label": "",
+                "hasPuck": false
+              }
+            ],
+            "caption": "The right net is yours. YOU faces F1. D2 is inside F2 on the lower side.",
+            "arrows": [],
+            "coordinateSystem": "rink-centred-metres",
+            "presentation": "authored-static-draft",
+            "hideBlueLines": true,
+            "renderRequirements": [
+              "One puck on the hasPuck actor.",
+              "YOU label and outline; teams also differ by shape or pattern.",
+              "Show caption and arrow labels; arrows depict only their explicit authored cue."
+            ],
+            "netContext": "right-net-is-learners-own"
+          }
+        }
+      ]
+    },
+    {
+      "id": "practice-draft-u15-verify-help",
+      "ageBand": "U15",
+      "conceptId": "gap-control",
+      "curriculumStrand": "gap-control",
+      "title": "Verify the help before pressing",
+      "teachingPoint": "Approaching help is not the same as established cover for the space you would leave.",
+      "learnerAction": "Distinguish approaching support from inside coverage.",
+      "ageRationale": "Adds recovery and role-handover judgment without claiming a future arrival time.",
+      "status": "draft-for-review",
+      "ageAlignment": "existing-ledger-strand-new-question",
+      "sourceRef": {
+        "note": "docs/library/gap-control.md",
+        "url": "https://cdn1.sportngin.com/attachments/document/0066/4690/Skill_Progression_Manual_19_FINAL.pdf",
+        "reason": "New authored scene applying the source principle; source answers are unchanged.",
+        "supportingNotes": [
+          "src/data/curriculum-ledger.json",
+          "src/scenario/GOLDEN-RULES-2026-06-11.md"
+        ],
+        "evidenceScope": "Existing principle-level source URL, not independently refreshed.",
+        "approvedClaimId": null
+      },
+      "visualRelation": "Both questions assess this same authored frozen board; no movement occurs between questions.",
+      "questions": [
+        {
+          "id": "practice-draft-u15-verify-help-mc",
+          "type": "mc",
+          "sit": "Before YOU leaves the inside route to press F1 toward the boards, what must be confirmed?",
+          "opts": [
+            "H2 has actually taken responsibility for the middle space YOU would leave.",
+            "H2 is visible somewhere behind the puck.",
+            "F1 is near the boards, so middle cover no longer matters.",
+            "H3 is near F2, so H3 must also cover F1."
+          ],
+          "ok": 0,
+          "why": "H2 is approaching but is not yet shown covering your inside space. A step outward must not silently open that route for F1.",
+          "tip": "Confirm the cover before the step.",
+          "visual": {
+            "view": "half-right",
+            "actors": [
+              {
+                "id": "YOU",
+                "team": "home",
+                "role": "skater",
+                "x": 19,
+                "y": -1,
+                "label": "YOU",
+                "hasPuck": false
+              },
+              {
+                "id": "H2",
+                "team": "home",
+                "role": "skater",
+                "x": 14,
+                "y": -7,
+                "label": "H2",
+                "hasPuck": false
+              },
+              {
+                "id": "H3",
+                "team": "home",
+                "role": "skater",
+                "x": 22,
+                "y": 4,
+                "label": "H3",
+                "hasPuck": false
+              },
+              {
+                "id": "F1",
+                "team": "away",
+                "role": "skater",
+                "x": 15,
+                "y": -5,
+                "label": "F1",
+                "hasPuck": true
+              },
+              {
+                "id": "F2",
+                "team": "away",
+                "role": "skater",
+                "x": 22,
+                "y": 6,
+                "label": "F2",
+                "hasPuck": false
+              },
+              {
+                "id": "G",
+                "team": "home",
+                "role": "goalie",
+                "x": 25.5,
+                "y": -0.5,
+                "label": "",
+                "hasPuck": false
+              }
+            ],
+            "caption": "The right net is yours. H2 is approaching behind the puck. H3 covers the lower attacker.",
+            "arrows": [
+              {
+                "from": [
+                  11,
+                  -9
+                ],
+                "to": [
+                  14,
+                  -7
+                ],
+                "label": "H2 approached here"
+              }
+            ],
+            "coordinateSystem": "rink-centred-metres",
+            "presentation": "authored-static-draft",
+            "hideBlueLines": true,
+            "renderRequirements": [
+              "One puck on the hasPuck actor.",
+              "YOU label and outline; teams also differ by shape or pattern.",
+              "Show caption and arrow labels; arrows depict only their explicit authored cue."
+            ],
+            "netContext": "right-net-is-learners-own"
+          }
+        },
+        {
+          "id": "practice-draft-u15-verify-help-tf",
+          "type": "tf",
+          "sit": "Approaching help must be distinguished from help already covering the middle.",
+          "ok": true,
+          "why": "H2 is moving toward the play, but is not yet shown holding the inside space YOU would leave.",
+          "tip": "Read where help is now.",
+          "visual": {
+            "view": "half-right",
+            "actors": [
+              {
+                "id": "YOU",
+                "team": "home",
+                "role": "skater",
+                "x": 19,
+                "y": -1,
+                "label": "YOU",
+                "hasPuck": false
+              },
+              {
+                "id": "H2",
+                "team": "home",
+                "role": "skater",
+                "x": 14,
+                "y": -7,
+                "label": "H2",
+                "hasPuck": false
+              },
+              {
+                "id": "H3",
+                "team": "home",
+                "role": "skater",
+                "x": 22,
+                "y": 4,
+                "label": "H3",
+                "hasPuck": false
+              },
+              {
+                "id": "F1",
+                "team": "away",
+                "role": "skater",
+                "x": 15,
+                "y": -5,
+                "label": "F1",
+                "hasPuck": true
+              },
+              {
+                "id": "F2",
+                "team": "away",
+                "role": "skater",
+                "x": 22,
+                "y": 6,
+                "label": "F2",
+                "hasPuck": false
+              },
+              {
+                "id": "G",
+                "team": "home",
+                "role": "goalie",
+                "x": 25.5,
+                "y": -0.5,
+                "label": "",
+                "hasPuck": false
+              }
+            ],
+            "caption": "The right net is yours. H2 is approaching behind the puck. H3 covers the lower attacker.",
+            "arrows": [
+              {
+                "from": [
+                  11,
+                  -9
+                ],
+                "to": [
+                  14,
+                  -7
+                ],
+                "label": "H2 approached here"
+              }
+            ],
+            "coordinateSystem": "rink-centred-metres",
+            "presentation": "authored-static-draft",
+            "hideBlueLines": true,
+            "renderRequirements": [
+              "One puck on the hasPuck actor.",
+              "YOU label and outline; teams also differ by shape or pattern.",
+              "Show caption and arrow labels; arrows depict only their explicit authored cue."
+            ],
+            "netContext": "right-net-is-learners-own"
+          }
+        }
+      ]
+    },
+    {
+      "id": "practice-draft-u18-two-threats",
+      "ageBand": "U18",
+      "conceptId": "gap-control",
+      "curriculumStrand": "gap-control",
+      "title": "Protect the pass without chasing",
+      "teachingPoint": "As the lone defender, retain awareness of the carrier and separated support attacker.",
+      "learnerAction": "Choose adjustable middle protection over an outside chase.",
+      "ageRationale": "Integrates goalie alignment and a numbers disadvantage; no guaranteed save or interception.",
+      "status": "draft-for-review",
+      "ageAlignment": "existing-ledger-strand-new-question",
+      "sourceRef": {
+        "note": "docs/library/gap-control.md",
+        "url": "https://cdn1.sportngin.com/attachments/document/0066/4690/Skill_Progression_Manual_19_FINAL.pdf",
+        "reason": "New authored scene applying the source principle; source answers are unchanged.",
+        "supportingNotes": [
+          "src/data/curriculum-ledger.json",
+          "src/scenario/GOLDEN-RULES-2026-06-11.md"
+        ],
+        "evidenceScope": "Existing principle-level source URL, not independently refreshed.",
+        "approvedClaimId": null
+      },
+      "visualRelation": "Both questions assess this same authored frozen board; no movement occurs between questions.",
+      "questions": [
+        {
+          "id": "practice-draft-u18-two-threats-mc",
+          "type": "mc",
+          "sit": "Which response preserves both-threat awareness in this 2-on-1 against YOU?",
+          "opts": [
+            "Rush at F1’s outside shoulder and leave the cross-ice route.",
+            "Turn fully toward F2 and stop tracking F1.",
+            "Stay adjustable inside, keeping the carrier and pass threat in view.",
+            "Move behind the goalie to wait for a shot."
+          ],
+          "ok": 2,
+          "why": "YOU influences the route between attackers. Chasing F1 outside removes that influence; watching only F2 loses the carrier. Keep both threats in the read.",
+          "tip": "See both threats; protect the middle.",
+          "visual": {
+            "view": "half-right",
+            "actors": [
+              {
+                "id": "YOU",
+                "team": "home",
+                "role": "skater",
+                "x": 18,
+                "y": 1.3,
+                "label": "YOU",
+                "hasPuck": false
+              },
+              {
+                "id": "F1",
+                "team": "away",
+                "role": "skater",
+                "x": 14,
+                "y": -5,
+                "label": "F1",
+                "hasPuck": true
+              },
+              {
+                "id": "F2",
+                "team": "away",
+                "role": "skater",
+                "x": 21,
+                "y": 6,
+                "label": "F2",
+                "hasPuck": false
+              },
+              {
+                "id": "G",
+                "team": "home",
+                "role": "goalie",
+                "x": 25,
+                "y": -0.77,
+                "label": "",
+                "hasPuck": false
+              }
+            ],
+            "caption": "The right net is yours. YOU is on the cross-ice route. The goalie is set toward F1.",
+            "arrows": [],
+            "coordinateSystem": "rink-centred-metres",
+            "presentation": "authored-static-draft",
+            "hideBlueLines": true,
+            "renderRequirements": [
+              "One puck on the hasPuck actor.",
+              "YOU label and outline; teams also differ by shape or pattern.",
+              "Show caption and arrow labels; arrows depict only their explicit authored cue."
+            ],
+            "netContext": "right-net-is-learners-own"
+          }
+        },
+        {
+          "id": "practice-draft-u18-two-threats-tf",
+          "type": "tf",
+          "sit": "Because the goalie is set toward F1, the cross-ice pass no longer needs defending.",
+          "ok": false,
+          "why": "A pass to separated F2 changes the threat. The goalie’s current alignment does not erase that possibility.",
+          "tip": "Goalie alignment does not remove the second attacker.",
+          "visual": {
+            "view": "half-right",
+            "actors": [
+              {
+                "id": "YOU",
+                "team": "home",
+                "role": "skater",
+                "x": 18,
+                "y": 1.3,
+                "label": "YOU",
+                "hasPuck": false
+              },
+              {
+                "id": "F1",
+                "team": "away",
+                "role": "skater",
+                "x": 14,
+                "y": -5,
+                "label": "F1",
+                "hasPuck": true
+              },
+              {
+                "id": "F2",
+                "team": "away",
+                "role": "skater",
+                "x": 21,
+                "y": 6,
+                "label": "F2",
+                "hasPuck": false
+              },
+              {
+                "id": "G",
+                "team": "home",
+                "role": "goalie",
+                "x": 25,
+                "y": -0.77,
+                "label": "",
+                "hasPuck": false
+              }
+            ],
+            "caption": "The right net is yours. YOU is on the cross-ice route. The goalie is set toward F1.",
+            "arrows": [],
+            "coordinateSystem": "rink-centred-metres",
+            "presentation": "authored-static-draft",
+            "hideBlueLines": true,
+            "renderRequirements": [
+              "One puck on the hasPuck actor.",
+              "YOU label and outline; teams also differ by shape or pattern.",
+              "Show caption and arrow labels; arrows depict only their explicit authored cue."
+            ],
+            "netContext": "right-net-is-learners-own"
+          }
+        }
+      ]
+    },
+    {
+      "id": "practice-draft-u7-open-friend",
+      "ageBand": "U7",
+      "conceptId": "odd-man-reads",
+      "curriculumStrand": "odd-man-reads",
+      "title": "Find the open teammate",
+      "teachingPoint": "When the other player blocks your way, find a teammate in open ice.",
+      "learnerAction": "Identify the unblocked teammate.",
+      "ageRationale": "Simple reading-the-play prerequisite: one cue, two choices, no rush jargon or timing demands.",
+      "status": "draft-for-review",
+      "ageAlignment": "prerequisite-extension-needs-review",
+      "sourceRef": {
+        "note": "docs/library/odd-man-reads.md",
+        "url": "https://www.usahockey.com/smallareagames",
+        "reason": "New authored scene applying the source principle; source answers are unchanged. Prerequisite extension; not an approved age-ledger node for this strand.",
+        "supportingNotes": [
+          "src/data/curriculum-ledger.json",
+          "src/scenario/GOLDEN-RULES-2026-06-11.md"
+        ],
+        "evidenceScope": "Existing principle-level source URL, not independently refreshed.",
+        "approvedClaimId": null
+      },
+      "visualRelation": "Both questions assess this same authored frozen board; no movement occurs between questions.",
+      "questions": [
+        {
+          "id": "practice-draft-u7-open-friend-mc",
+          "type": "mc",
+          "sit": "The other player is in your way to the net. What can YOU do?",
+          "opts": [
+            "Pass to your teammate in the open ice below YOU.",
+            "Keep taking the puck toward the net along the crowded path."
+          ],
+          "ok": 0,
+          "why": "Your teammate is away from the other player and the pass path is clear. Going straight into that player keeps the puck in the crowd.",
+          "tip": "Look for your open teammate.",
+          "visual": {
+            "view": "half-right",
+            "actors": [
+              {
+                "id": "YOU",
+                "team": "home",
+                "role": "skater",
+                "x": 14,
+                "y": -4,
+                "label": "YOU",
+                "hasPuck": true
+              },
+              {
+                "id": "F2",
+                "team": "home",
+                "role": "skater",
+                "x": 20,
+                "y": 5,
+                "label": "",
+                "hasPuck": false
+              },
+              {
+                "id": "D1",
+                "team": "away",
+                "role": "skater",
+                "x": 18,
+                "y": -2.77,
+                "label": "",
+                "hasPuck": false
+              },
+              {
+                "id": "G",
+                "team": "away",
+                "role": "goalie",
+                "x": 25,
+                "y": -0.6,
+                "label": "",
+                "hasPuck": false
+              }
+            ],
+            "caption": "The other player blocks the direct path to the right net. The lower teammate has a clear pass path.",
+            "arrows": [],
+            "coordinateSystem": "rink-centred-metres",
+            "presentation": "authored-static-draft",
+            "hideBlueLines": true,
+            "renderRequirements": [
+              "One puck on the hasPuck actor.",
+              "YOU label and outline; teams also differ by shape or pattern.",
+              "Show caption and arrow labels; arrows depict only their explicit authored cue."
+            ],
+            "netContext": "right-net-is-attacking-net"
+          }
+        },
+        {
+          "id": "practice-draft-u7-open-friend-tf",
+          "type": "tf",
+          "sit": "Your teammate below YOU has a clear path for a pass.",
+          "ok": true,
+          "why": "Nobody stands between YOU and that teammate. The player near the net route is not on this pass path.",
+          "tip": "Find the clear path.",
+          "visual": {
+            "view": "half-right",
+            "actors": [
+              {
+                "id": "YOU",
+                "team": "home",
+                "role": "skater",
+                "x": 14,
+                "y": -4,
+                "label": "YOU",
+                "hasPuck": true
+              },
+              {
+                "id": "F2",
+                "team": "home",
+                "role": "skater",
+                "x": 20,
+                "y": 5,
+                "label": "",
+                "hasPuck": false
+              },
+              {
+                "id": "D1",
+                "team": "away",
+                "role": "skater",
+                "x": 18,
+                "y": -2.77,
+                "label": "",
+                "hasPuck": false
+              },
+              {
+                "id": "G",
+                "team": "away",
+                "role": "goalie",
+                "x": 25,
+                "y": -0.6,
+                "label": "",
+                "hasPuck": false
+              }
+            ],
+            "caption": "The other player blocks the direct path to the right net. The lower teammate has a clear pass path.",
+            "arrows": [],
+            "coordinateSystem": "rink-centred-metres",
+            "presentation": "authored-static-draft",
+            "hideBlueLines": true,
+            "renderRequirements": [
+              "One puck on the hasPuck actor.",
+              "YOU label and outline; teams also differ by shape or pattern.",
+              "Show caption and arrow labels; arrows depict only their explicit authored cue."
+            ],
+            "netContext": "right-net-is-attacking-net"
+          }
+        }
+      ]
+    },
+    {
+      "id": "practice-draft-u9-blocked-pass",
+      "ageBand": "U9",
+      "conceptId": "odd-man-reads",
+      "curriculumStrand": "odd-man-reads",
+      "title": "Use the open space",
+      "teachingPoint": "Having a teammate does not make every pass available.",
+      "learnerAction": "Use the open attacking route when the pass is blocked.",
+      "ageRationale": "Reverses the earlier cue: a teammate exists but the path is closed. Three positionless choices.",
+      "status": "draft-for-review",
+      "ageAlignment": "prerequisite-extension-needs-review",
+      "sourceRef": {
+        "note": "docs/library/two-on-one-pass-lane-removed.md",
+        "url": "https://www.usahockey.com/smallareagames",
+        "reason": "New authored scene applying the source principle; source answers are unchanged. Prerequisite extension; not an approved age-ledger node for this strand.",
+        "supportingNotes": [
+          "src/data/curriculum-ledger.json",
+          "src/scenario/GOLDEN-RULES-2026-06-11.md",
+          "docs/library/odd-man-reads.md"
+        ],
+        "evidenceScope": "Existing principle-level source URL, not independently refreshed.",
+        "approvedClaimId": null
+      },
+      "visualRelation": "Both questions assess this same authored frozen board; no movement occurs between questions.",
+      "questions": [
+        {
+          "id": "practice-draft-u9-blocked-pass-mc",
+          "type": "mc",
+          "sit": "The pass is blocked. What should YOU use?",
+          "opts": [
+            "Try the pass to the teammate below YOU.",
+            "Use the clear space toward the net.",
+            "Hold the puck and wait for the same pass to open."
+          ],
+          "ok": 1,
+          "why": "The other player stands on the pass path and leaves another route open. Use that clear space instead of forcing the pass.",
+          "tip": "Read the open space first.",
+          "visual": {
+            "view": "half-right",
+            "actors": [
+              {
+                "id": "YOU",
+                "team": "home",
+                "role": "skater",
+                "x": 14,
+                "y": -4,
+                "label": "YOU",
+                "hasPuck": true
+              },
+              {
+                "id": "T",
+                "team": "home",
+                "role": "skater",
+                "x": 20,
+                "y": 5,
+                "label": "",
+                "hasPuck": false
+              },
+              {
+                "id": "D",
+                "team": "away",
+                "role": "skater",
+                "x": 17,
+                "y": 0.5,
+                "label": "",
+                "hasPuck": false
+              },
+              {
+                "id": "G",
+                "team": "away",
+                "role": "goalie",
+                "x": 25,
+                "y": -0.6,
+                "label": "",
+                "hasPuck": false
+              }
+            ],
+            "caption": "The other player blocks the pass to your lower teammate. The direct route toward the right net is clear.",
+            "arrows": [],
+            "coordinateSystem": "rink-centred-metres",
+            "presentation": "authored-static-draft",
+            "hideBlueLines": true,
+            "renderRequirements": [
+              "One puck on the hasPuck actor.",
+              "YOU label and outline; teams also differ by shape or pattern.",
+              "Show caption and arrow labels; arrows depict only their explicit authored cue."
+            ],
+            "netContext": "right-net-is-attacking-net"
+          }
+        },
+        {
+          "id": "practice-draft-u9-blocked-pass-tf",
+          "type": "tf",
+          "sit": "Having a teammate means YOU must pass even when the other player blocks it.",
+          "ok": false,
+          "why": "Here the other player blocks the pass but leaves another route open. A teammate is an option, not an order.",
+          "tip": "Choose the available play.",
+          "visual": {
+            "view": "half-right",
+            "actors": [
+              {
+                "id": "YOU",
+                "team": "home",
+                "role": "skater",
+                "x": 14,
+                "y": -4,
+                "label": "YOU",
+                "hasPuck": true
+              },
+              {
+                "id": "T",
+                "team": "home",
+                "role": "skater",
+                "x": 20,
+                "y": 5,
+                "label": "",
+                "hasPuck": false
+              },
+              {
+                "id": "D",
+                "team": "away",
+                "role": "skater",
+                "x": 17,
+                "y": 0.5,
+                "label": "",
+                "hasPuck": false
+              },
+              {
+                "id": "G",
+                "team": "away",
+                "role": "goalie",
+                "x": 25,
+                "y": -0.6,
+                "label": "",
+                "hasPuck": false
+              }
+            ],
+            "caption": "The other player blocks the pass to your lower teammate. The direct route toward the right net is clear.",
+            "arrows": [],
+            "coordinateSystem": "rink-centred-metres",
+            "presentation": "authored-static-draft",
+            "hideBlueLines": true,
+            "renderRequirements": [
+              "One puck on the hasPuck actor.",
+              "YOU label and outline; teams also differ by shape or pattern.",
+              "Show caption and arrow labels; arrows depict only their explicit authored cue."
+            ],
+            "netContext": "right-net-is-attacking-net"
+          }
+        }
+      ]
+    },
+    {
+      "id": "practice-draft-u11-defender-shot",
+      "ageBand": "U11",
+      "conceptId": "odd-man-reads",
+      "curriculumStrand": "odd-man-reads",
+      "title": "Read the lane the defender takes",
+      "teachingPoint": "A defender on the shooting route can leave the support pass open.",
+      "learnerAction": "Choose the clear support pass.",
+      "ageRationale": "First formal ledger odd-man read; two attackers, one defender, one clear attacking alternative.",
+      "status": "draft-for-review",
+      "ageAlignment": "existing-ledger-strand-new-question",
+      "sourceRef": {
+        "note": "docs/library/odd-man-reads.md",
+        "url": "https://www.usahockey.com/smallareagames",
+        "reason": "New authored scene applying the source principle; source answers are unchanged.",
+        "supportingNotes": [
+          "src/data/curriculum-ledger.json",
+          "src/scenario/GOLDEN-RULES-2026-06-11.md"
+        ],
+        "evidenceScope": "Existing principle-level source URL, not independently refreshed.",
+        "approvedClaimId": null
+      },
+      "visualRelation": "Both questions assess this same authored frozen board; no movement occurs between questions.",
+      "questions": [
+        {
+          "id": "practice-draft-u11-defender-shot-mc",
+          "type": "mc",
+          "sit": "D1 blocks the direct shot route. Which action uses the clear option in this 2-on-1?",
+          "opts": [
+            "Take the direct shot toward the net.",
+            "Keep carrying along the route toward D1.",
+            "Hold the puck and wait for D1 to leave the route.",
+            "Pass to F2 through the lower lane."
+          ],
+          "ok": 3,
+          "why": "D1 occupies the shot route while the line to F2 is clear. The pass uses that separation; the others keep the puck in pressure or delay without creating an option.",
+          "tip": "Read D1, then use the free lane.",
+          "visual": {
+            "view": "half-right",
+            "actors": [
+              {
+                "id": "YOU",
+                "team": "home",
+                "role": "skater",
+                "x": 14,
+                "y": -4,
+                "label": "YOU",
+                "hasPuck": true
+              },
+              {
+                "id": "F2",
+                "team": "home",
+                "role": "skater",
+                "x": 20,
+                "y": 5,
+                "label": "F2",
+                "hasPuck": false
+              },
+              {
+                "id": "D1",
+                "team": "away",
+                "role": "skater",
+                "x": 18,
+                "y": -2.77,
+                "label": "D1",
+                "hasPuck": false
+              },
+              {
+                "id": "G",
+                "team": "away",
+                "role": "goalie",
+                "x": 25,
+                "y": -0.6,
+                "label": "",
+                "hasPuck": false
+              }
+            ],
+            "caption": "The defender blocks the direct path to the right net. The lower teammate has a clear pass path.",
+            "arrows": [],
+            "coordinateSystem": "rink-centred-metres",
+            "presentation": "authored-static-draft",
+            "hideBlueLines": true,
+            "renderRequirements": [
+              "One puck on the hasPuck actor.",
+              "YOU label and outline; teams also differ by shape or pattern.",
+              "Show caption and arrow labels; arrows depict only their explicit authored cue."
+            ],
+            "netContext": "right-net-is-attacking-net"
+          }
+        },
+        {
+          "id": "practice-draft-u11-defender-shot-tf",
+          "type": "tf",
+          "sit": "On this board, D1 blocks the shot route while F2’s passing lane is clear.",
+          "ok": true,
+          "why": "D1 is between YOU and the net, away from the lower pass. The geometry supports the F2 option in this specific scene.",
+          "tip": "The defender reveals the read.",
+          "visual": {
+            "view": "half-right",
+            "actors": [
+              {
+                "id": "YOU",
+                "team": "home",
+                "role": "skater",
+                "x": 14,
+                "y": -4,
+                "label": "YOU",
+                "hasPuck": true
+              },
+              {
+                "id": "F2",
+                "team": "home",
+                "role": "skater",
+                "x": 20,
+                "y": 5,
+                "label": "F2",
+                "hasPuck": false
+              },
+              {
+                "id": "D1",
+                "team": "away",
+                "role": "skater",
+                "x": 18,
+                "y": -2.77,
+                "label": "D1",
+                "hasPuck": false
+              },
+              {
+                "id": "G",
+                "team": "away",
+                "role": "goalie",
+                "x": 25,
+                "y": -0.6,
+                "label": "",
+                "hasPuck": false
+              }
+            ],
+            "caption": "The defender blocks the direct path to the right net. The lower teammate has a clear pass path.",
+            "arrows": [],
+            "coordinateSystem": "rink-centred-metres",
+            "presentation": "authored-static-draft",
+            "hideBlueLines": true,
+            "renderRequirements": [
+              "One puck on the hasPuck actor.",
+              "YOU label and outline; teams also differ by shape or pattern.",
+              "Show caption and arrow labels; arrows depict only their explicit authored cue."
+            ],
+            "netContext": "right-net-is-attacking-net"
+          }
+        }
+      ]
+    },
+    {
+      "id": "practice-draft-u13-receive-finish",
+      "ageBand": "U13",
+      "conceptId": "odd-man-reads",
+      "curriculumStrand": "odd-man-reads",
+      "title": "Use the opening after the pass",
+      "teachingPoint": "Recognize the shooting opening after lateral puck movement while the goalie is not square.",
+      "learnerAction": "Choose a prompt shot from the newly open side.",
+      "ageRationale": "Adds a completed pass and current goalie location without a numerical timing claim.",
+      "status": "draft-for-review",
+      "ageAlignment": "existing-ledger-strand-new-question",
+      "sourceRef": {
+        "note": "docs/library/two-on-one-goalie-late-after-pass.md",
+        "url": "https://www.usahockey.com/practiceplans",
+        "reason": "New authored scene applying the source principle; source answers are unchanged.",
+        "supportingNotes": [
+          "src/data/curriculum-ledger.json",
+          "src/scenario/GOLDEN-RULES-2026-06-11.md",
+          "docs/library/odd-man-reads.md"
+        ],
+        "evidenceScope": "Existing principle-level source URL, not independently refreshed.",
+        "approvedClaimId": null
+      },
+      "visualRelation": "Both questions assess this same authored frozen board; no movement occurs between questions.",
+      "questions": [
+        {
+          "id": "practice-draft-u13-receive-finish-mc",
+          "type": "mc",
+          "sit": "YOU has received the pass with a clear shot route. How can YOU use the goalie’s current position?",
+          "opts": [
+            "Hold until the goalie becomes square.",
+            "Take the available shot now.",
+            "Carry back toward the old upper-side pressure.",
+            "Return the puck simply because F1 made the first pass."
+          ],
+          "ok": 1,
+          "why": "The goalie is away from your shot line after the pass. Shooting uses the current opening; holding or returning the puck lets that moment pass. A goal is not guaranteed.",
+          "tip": "Receive, read the net, use the opening.",
+          "visual": {
+            "view": "half-right",
+            "actors": [
+              {
+                "id": "YOU",
+                "team": "home",
+                "role": "skater",
+                "x": 21,
+                "y": 5,
+                "label": "YOU",
+                "hasPuck": true
+              },
+              {
+                "id": "F1",
+                "team": "home",
+                "role": "skater",
+                "x": 14,
+                "y": -4,
+                "label": "F1",
+                "hasPuck": false
+              },
+              {
+                "id": "D1",
+                "team": "away",
+                "role": "skater",
+                "x": 18,
+                "y": -3,
+                "label": "D1",
+                "hasPuck": false
+              },
+              {
+                "id": "G",
+                "team": "away",
+                "role": "goalie",
+                "x": 25,
+                "y": -2,
+                "label": "",
+                "hasPuck": false
+              }
+            ],
+            "caption": "The pass has arrived at YOU. The goalie is still on the old upper side, away from YOUR direct shooting line.",
+            "arrows": [
+              {
+                "from": [
+                  14,
+                  -4
+                ],
+                "to": [
+                  21,
+                  5
+                ],
+                "label": "Pass already completed"
+              }
+            ],
+            "coordinateSystem": "rink-centred-metres",
+            "presentation": "authored-static-draft",
+            "hideBlueLines": true,
+            "renderRequirements": [
+              "One puck on the hasPuck actor.",
+              "YOU label and outline; teams also differ by shape or pattern.",
+              "Show caption and arrow labels; arrows depict only their explicit authored cue."
+            ],
+            "netContext": "right-net-is-attacking-net"
+          }
+        },
+        {
+          "id": "practice-draft-u13-receive-finish-tf",
+          "type": "tf",
+          "sit": "Waiting for the goalie to get square would preserve the same opening.",
+          "ok": false,
+          "why": "The opening comes from the goalie’s position away from your new line. Getting square changes that picture.",
+          "tip": "Read the goalie’s position now.",
+          "visual": {
+            "view": "half-right",
+            "actors": [
+              {
+                "id": "YOU",
+                "team": "home",
+                "role": "skater",
+                "x": 21,
+                "y": 5,
+                "label": "YOU",
+                "hasPuck": true
+              },
+              {
+                "id": "F1",
+                "team": "home",
+                "role": "skater",
+                "x": 14,
+                "y": -4,
+                "label": "F1",
+                "hasPuck": false
+              },
+              {
+                "id": "D1",
+                "team": "away",
+                "role": "skater",
+                "x": 18,
+                "y": -3,
+                "label": "D1",
+                "hasPuck": false
+              },
+              {
+                "id": "G",
+                "team": "away",
+                "role": "goalie",
+                "x": 25,
+                "y": -2,
+                "label": "",
+                "hasPuck": false
+              }
+            ],
+            "caption": "The pass has arrived at YOU. The goalie is still on the old upper side, away from YOUR direct shooting line.",
+            "arrows": [
+              {
+                "from": [
+                  14,
+                  -4
+                ],
+                "to": [
+                  21,
+                  5
+                ],
+                "label": "Pass already completed"
+              }
+            ],
+            "coordinateSystem": "rink-centred-metres",
+            "presentation": "authored-static-draft",
+            "hideBlueLines": true,
+            "renderRequirements": [
+              "One puck on the hasPuck actor.",
+              "YOU label and outline; teams also differ by shape or pattern.",
+              "Show caption and arrow labels; arrows depict only their explicit authored cue."
+            ],
+            "netContext": "right-net-is-attacking-net"
+          }
+        }
+      ]
+    },
+    {
+      "id": "practice-draft-u15-available-dangerous",
+      "ageBand": "U15",
+      "conceptId": "odd-man-reads",
+      "curriculumStrand": "odd-man-reads",
+      "title": "Available is not always dangerous",
+      "teachingPoint": "An open teammate behind the attack is not automatically better than a clear shooting route.",
+      "learnerAction": "Keep the immediate scoring threat.",
+      "ageRationale": "Distinguishes pass availability from attacking value using backward support and a clear shot lane.",
+      "status": "draft-for-review",
+      "ageAlignment": "existing-ledger-strand-new-question",
+      "sourceRef": {
+        "note": "docs/library/two-on-one-support-too-flat.md",
+        "url": "https://www.usahockey.com/smallareagames",
+        "reason": "New authored scene applying the source principle; source answers are unchanged.",
+        "supportingNotes": [
+          "src/data/curriculum-ledger.json",
+          "src/scenario/GOLDEN-RULES-2026-06-11.md",
+          "docs/library/odd-man-reads.md"
+        ],
+        "evidenceScope": "Existing principle-level source URL, not independently refreshed.",
+        "approvedClaimId": null
+      },
+      "visualRelation": "Both questions assess this same authored frozen board; no movement occurs between questions.",
+      "questions": [
+        {
+          "id": "practice-draft-u15-available-dangerous-mc",
+          "type": "mc",
+          "sit": "The objective is to use the current clear scoring route. Which action keeps that threat?",
+          "opts": [
+            "Pass backward only because F2 is available.",
+            "Wait for D1 to enter the shot route.",
+            "Attack the clear shot route in front of YOU.",
+            "Carry down toward D1 and the crowded lower side."
+          ],
+          "ok": 2,
+          "why": "YOU already has the clear shooting route. F2’s availability alone does not justify moving backward and giving up this threat. This is not a ban on reset passes.",
+          "tip": "Check what the pass adds.",
+          "visual": {
+            "view": "half-right",
+            "actors": [
+              {
+                "id": "YOU",
+                "team": "home",
+                "role": "skater",
+                "x": 19,
+                "y": -3,
+                "label": "YOU",
+                "hasPuck": true
+              },
+              {
+                "id": "F2",
+                "team": "home",
+                "role": "skater",
+                "x": 13,
+                "y": -8,
+                "label": "F2",
+                "hasPuck": false
+              },
+              {
+                "id": "D1",
+                "team": "away",
+                "role": "skater",
+                "x": 22,
+                "y": 4,
+                "label": "D1",
+                "hasPuck": false
+              },
+              {
+                "id": "G",
+                "team": "away",
+                "role": "goalie",
+                "x": 25,
+                "y": -0.75,
+                "label": "",
+                "hasPuck": false
+              }
+            ],
+            "caption": "F2 is open but behind YOU on the upper side. D1 is away from YOUR direct shot route.",
+            "arrows": [],
+            "coordinateSystem": "rink-centred-metres",
+            "presentation": "authored-static-draft",
+            "hideBlueLines": true,
+            "renderRequirements": [
+              "One puck on the hasPuck actor.",
+              "YOU label and outline; teams also differ by shape or pattern.",
+              "Show caption and arrow labels; arrows depict only their explicit authored cue."
+            ],
+            "netContext": "right-net-is-attacking-net"
+          }
+        },
+        {
+          "id": "practice-draft-u15-available-dangerous-tf",
+          "type": "tf",
+          "sit": "An open teammate is automatically the best target in every 2-on-1.",
+          "ok": false,
+          "why": "F2 is open but behind the attack, while YOU has the immediate shot route. Judge what threat the pass creates.",
+          "tip": "Open and dangerous are different checks.",
+          "visual": {
+            "view": "half-right",
+            "actors": [
+              {
+                "id": "YOU",
+                "team": "home",
+                "role": "skater",
+                "x": 19,
+                "y": -3,
+                "label": "YOU",
+                "hasPuck": true
+              },
+              {
+                "id": "F2",
+                "team": "home",
+                "role": "skater",
+                "x": 13,
+                "y": -8,
+                "label": "F2",
+                "hasPuck": false
+              },
+              {
+                "id": "D1",
+                "team": "away",
+                "role": "skater",
+                "x": 22,
+                "y": 4,
+                "label": "D1",
+                "hasPuck": false
+              },
+              {
+                "id": "G",
+                "team": "away",
+                "role": "goalie",
+                "x": 25,
+                "y": -0.75,
+                "label": "",
+                "hasPuck": false
+              }
+            ],
+            "caption": "F2 is open but behind YOU on the upper side. D1 is away from YOUR direct shot route.",
+            "arrows": [],
+            "coordinateSystem": "rink-centred-metres",
+            "presentation": "authored-static-draft",
+            "hideBlueLines": true,
+            "renderRequirements": [
+              "One puck on the hasPuck actor.",
+              "YOU label and outline; teams also differ by shape or pattern.",
+              "Show caption and arrow labels; arrows depict only their explicit authored cue."
+            ],
+            "netContext": "right-net-is-attacking-net"
+          }
+        }
+      ]
+    },
+    {
+      "id": "practice-draft-u18-both-defenders",
+      "ageBand": "U18",
+      "conceptId": "odd-man-reads",
+      "curriculumStrand": "odd-man-reads",
+      "title": "Read both defenders",
+      "teachingPoint": "In a 3-on-2, evaluate both defenders before committing to a lane.",
+      "learnerAction": "Find the support pass that avoids both occupied routes.",
+      "ageRationale": "Three attackers and two defenders; an advanced upper receiver is tempting but its lane is blocked.",
+      "status": "draft-for-review",
+      "ageAlignment": "existing-ledger-strand-new-question",
+      "sourceRef": {
+        "note": "docs/library/odd-man-reads.md",
+        "url": "https://www.usahockey.com/smallareagames",
+        "reason": "New authored scene applying the source principle; source answers are unchanged.",
+        "supportingNotes": [
+          "src/data/curriculum-ledger.json",
+          "src/scenario/GOLDEN-RULES-2026-06-11.md"
+        ],
+        "evidenceScope": "Existing principle-level source URL, not independently refreshed.",
+        "approvedClaimId": null
+      },
+      "visualRelation": "Both questions assess this same authored frozen board; no movement occurs between questions.",
+      "questions": [
+        {
+          "id": "practice-draft-u18-both-defenders-mc",
+          "type": "mc",
+          "sit": "Which play uses the clear route after YOU reads both defenders?",
+          "opts": [
+            "Pass to F2 through the lower lane.",
+            "Force F3 because F3 is close to the net.",
+            "Shoot directly through D1.",
+            "Carry into D1 while watching only D2."
+          ],
+          "ok": 0,
+          "why": "D1 occupies the shot route and D2 occupies F3’s route. F2’s lower lane avoids both defenders and offers the clear attacking option.",
+          "tip": "Read the second defender before committing.",
+          "visual": {
+            "view": "half-right",
+            "actors": [
+              {
+                "id": "YOU",
+                "team": "home",
+                "role": "skater",
+                "x": 14,
+                "y": -4,
+                "label": "YOU",
+                "hasPuck": true
+              },
+              {
+                "id": "F2",
+                "team": "home",
+                "role": "skater",
+                "x": 21,
+                "y": 5,
+                "label": "F2",
+                "hasPuck": false
+              },
+              {
+                "id": "F3",
+                "team": "home",
+                "role": "skater",
+                "x": 21,
+                "y": -6,
+                "label": "F3",
+                "hasPuck": false
+              },
+              {
+                "id": "D1",
+                "team": "away",
+                "role": "skater",
+                "x": 18,
+                "y": -2.77,
+                "label": "D1",
+                "hasPuck": false
+              },
+              {
+                "id": "D2",
+                "team": "away",
+                "role": "skater",
+                "x": 19,
+                "y": -5.43,
+                "label": "D2",
+                "hasPuck": false
+              },
+              {
+                "id": "G",
+                "team": "away",
+                "role": "goalie",
+                "x": 25,
+                "y": -0.6,
+                "label": "",
+                "hasPuck": false
+              }
+            ],
+            "caption": "This is a 3-on-2. D1 blocks the shot route; D2 blocks F3’s upper lane. F2’s lower lane is clear.",
+            "arrows": [],
+            "coordinateSystem": "rink-centred-metres",
+            "presentation": "authored-static-draft",
+            "hideBlueLines": true,
+            "renderRequirements": [
+              "One puck on the hasPuck actor.",
+              "YOU label and outline; teams also differ by shape or pattern.",
+              "Show caption and arrow labels; arrows depict only their explicit authored cue."
+            ],
+            "netContext": "right-net-is-attacking-net"
+          }
+        },
+        {
+          "id": "practice-draft-u18-both-defenders-tf",
+          "type": "tf",
+          "sit": "Once YOU reads D1, D2 cannot change the best pass.",
+          "ok": false,
+          "why": "D2 removes the F3 pass. Reading only D1 would miss that constraint and could send the puck into the upper defender.",
+          "tip": "Read every defender affecting the choice.",
+          "visual": {
+            "view": "half-right",
+            "actors": [
+              {
+                "id": "YOU",
+                "team": "home",
+                "role": "skater",
+                "x": 14,
+                "y": -4,
+                "label": "YOU",
+                "hasPuck": true
+              },
+              {
+                "id": "F2",
+                "team": "home",
+                "role": "skater",
+                "x": 21,
+                "y": 5,
+                "label": "F2",
+                "hasPuck": false
+              },
+              {
+                "id": "F3",
+                "team": "home",
+                "role": "skater",
+                "x": 21,
+                "y": -6,
+                "label": "F3",
+                "hasPuck": false
+              },
+              {
+                "id": "D1",
+                "team": "away",
+                "role": "skater",
+                "x": 18,
+                "y": -2.77,
+                "label": "D1",
+                "hasPuck": false
+              },
+              {
+                "id": "D2",
+                "team": "away",
+                "role": "skater",
+                "x": 19,
+                "y": -5.43,
+                "label": "D2",
+                "hasPuck": false
+              },
+              {
+                "id": "G",
+                "team": "away",
+                "role": "goalie",
+                "x": 25,
+                "y": -0.6,
+                "label": "",
+                "hasPuck": false
+              }
+            ],
+            "caption": "This is a 3-on-2. D1 blocks the shot route; D2 blocks F3’s upper lane. F2’s lower lane is clear.",
+            "arrows": [],
+            "coordinateSystem": "rink-centred-metres",
+            "presentation": "authored-static-draft",
+            "hideBlueLines": true,
+            "renderRequirements": [
+              "One puck on the hasPuck actor.",
+              "YOU label and outline; teams also differ by shape or pattern.",
+              "Show caption and arrow labels; arrows depict only their explicit authored cue."
+            ],
+            "netContext": "right-net-is-attacking-net"
+          }
+        }
+      ]
+    }
+  ],
+  "qualityChecks": {
+    "checkedAt": "2026-09-04",
+    "lessonCount": 24,
+    "questionCount": 48,
+    "ageCounts": {
+      "U7": 4,
+      "U9": 4,
+      "U11": 4,
+      "U13": 4,
+      "U15": 4,
+      "U18": 4
+    },
+    "mcOptionCounts": {
+      "U7": 2,
+      "U9": 3,
+      "U11": 4,
+      "U13": 4,
+      "U15": 4,
+      "U18": 4
+    },
+    "tfAnswerBalance": {
+      "true": 12,
+      "false": 12
+    },
+    "checked": [
+      "unique lesson/question IDs",
+      "one MC and one TF per lesson",
+      "finite rounded-rink-bounded actor and arrow coordinates",
+      "exactly one puck and YOU per board",
+      "identical board data across each question pair",
+      "U7/U9 only YOU actor label",
+      "four strands per age",
+      "non-empty feedback and source notes"
+    ],
+    "notChecked": [
+      "browser rendering",
+      "hockey adjudication",
+      "player comprehension",
+      "existing scenario-validator acceptance",
+      "physics or future-motion accuracy"
+    ]
+  }
+}

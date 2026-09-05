@@ -2,20 +2,19 @@
 // Keeping these in one place lets Rollup split screen chunks without pulling in the rest of App.jsx.
 
 export const C = {
-  // Oilers navy family for surfaces
-  bg:       "#041E42",
-  bgCard:   "#0a2850",
-  bgElevated:"#0e3566",
+  // BlueChip palette selected by the owner; keep hex tokens for alpha suffix callers.
+  bg:       "#0B1A33",
+  bgCard:   "#14243C",
+  bgElevated:"#20324C",
   bgGlass:  "rgba(255,255,255,0.05)",
-  // Primary brand: Oilers orange (token name kept as `gold` to avoid ~500 call-site renames)
-  gold:     "#FC4C02",
-  goldDim:  "rgba(252,76,2,0.15)",
-  goldBorder:"rgba(252,76,2,0.35)",
-  // Secondary accent: retro-dynasty deep orange (token name kept as `purple` to avoid renames)
-  purple:   "#CF4520",
-  purpleDim:"rgba(207,69,32,0.14)",
-  purpleBorder:"rgba(207,69,32,0.32)",
-  // Info/data blue — tuned to sit on navy
+  // Legacy token names retained; brand accents now use BlueChip gold.
+  gold:     "#C9A24B",
+  goldDim:  "rgba(201,162,75,0.12)",
+  goldBorder:"rgba(201,162,75,0.36)",
+  purple:   "#C9A24B",
+  purpleDim:"rgba(201,162,75,0.12)",
+  purpleBorder:"rgba(201,162,75,0.32)",
+  // Semantic info blue remains distinct from the brand.
   blue:     "#5BA4E8",
   blueDim:  "rgba(91,164,232,0.12)",
   // Semantic — unchanged (universal error/success/warning conventions)
@@ -27,23 +26,20 @@ export const C = {
   red:      "#ef4444",
   redDim:   "rgba(239,68,68,0.08)",
   redBorder:"rgba(239,68,68,0.25)",
-  white:    "#f8fafc",
+  white:    "#F5EFE6",
   dim:      "rgba(248,250,252,0.6)",
   dimmer:   "rgba(248,250,252,0.35)",
   dimmest:  "rgba(248,250,252,0.08)",
   border:   "rgba(255,255,255,0.08)",
   borderMid:"rgba(255,255,255,0.14)",
   ice:      "#e8f4fb",
-  rink:     "#0e3566",
-  // Brand-primary gradient — gold → retro-dynasty orange. Used on all
-  // primary CTA buttons and the landing signup chip. Centralized here so
-  // a brand tweak is a one-line change, not a grep-and-replace.
-  gradientPrimary: "linear-gradient(135deg, #FC4C02, #CF4520)",
+  rink:     "#20324C",
+  gradientPrimary: "linear-gradient(145deg, #E7CE96, #C9A24B 55%, #B48A36)",
 };
 
 export const FONT = {
-  display: "'Anton', 'Oswald', 'Barlow Condensed', Impact, sans-serif",
-  body: "'DM Sans', 'Inter', system-ui, sans-serif",
+  display: "'Playfair Display', Georgia, serif",
+  body: "'Inter', system-ui, sans-serif",
 };
 
 export const LEVELS = ["U7 / Initiation","U9 / Novice","U11 / Atom","U13 / Peewee","U15 / Bantam","U18 / Midget"];
@@ -68,19 +64,19 @@ export const SEASONS = ["2025-26","2026 Spring/Summer","2026-27"];
 export function RinkReadsLogo({ size = 32, color, mono = false, wordmark = false }) {
   // Unique gradient id per render so multiple logos on a page don't collide.
   const gid = `rrIris-${Math.random().toString(36).slice(2, 8)}`;
-  const stroke = color || "#041E42";
-  const fillIris = mono ? (color || "#FC4C02") : `url(#${gid})`;
-  const fillPuckOuter = mono ? (color || "#041E42") : "#041E42";
+  const stroke = color || C.white;
+  const fillIris = mono ? (color || C.gold) : `url(#${gid})`;
+  const fillPuckOuter = mono ? (color || C.bg) : C.bg;
   const fillPuckInner = mono ? "#f8fafc" : "#f8fafc";
-  const fillPupil = mono ? (color || "#041E42") : "#041E42";
-  const fillEyebrow = mono ? (color || "#FC4C02") : `url(#${gid})`;
+  const fillPupil = mono ? (color || C.bg) : C.bg;
+  const fillEyebrow = mono ? (color || C.gold) : `url(#${gid})`;
 
   const Icon = (
     <svg width={size} height={size} viewBox="0 0 64 64" aria-label="RinkReads logo" style={{display:"block",flexShrink:0}}>
       <defs>
         <linearGradient id={gid} x1="0%" y1="0%" x2="100%" y2="100%">
-          <stop offset="0%" stopColor="#FC4C02"/>
-          <stop offset="100%" stopColor="#CF4520"/>
+          <stop offset="0%" stopColor="#E7CE96"/>
+          <stop offset="100%" stopColor={C.gold}/>
         </linearGradient>
       </defs>
       <circle cx="32" cy="35" r="26" fill={fillPuckOuter}/>
@@ -101,7 +97,7 @@ export function RinkReadsLogo({ size = 32, color, mono = false, wordmark = false
     <span style={{display:"inline-flex",alignItems:"center",gap:Math.max(6, size*0.18),flexShrink:0}}>
       {Icon}
       <span style={{
-        fontFamily:"'Anton','Oswald','Barlow Condensed',Impact,sans-serif",
+        fontFamily:FONT.display,
         fontSize: wordSize,
         lineHeight: 1,
         letterSpacing: "0.03em",
@@ -110,10 +106,10 @@ export function RinkReadsLogo({ size = 32, color, mono = false, wordmark = false
         whiteSpace: "nowrap",
       }}>
         Rink <span style={{
-          background: mono ? undefined : "linear-gradient(135deg,#FC4C02,#CF4520)",
+          background: mono ? undefined : C.gradientPrimary,
           WebkitBackgroundClip: mono ? undefined : "text",
           WebkitTextFillColor: mono ? undefined : "transparent",
-          color: mono ? (color || "#FC4C02") : undefined,
+          color: mono ? (color || C.gold) : undefined,
         }}>Reads</span>
       </span>
     </span>
@@ -213,7 +209,7 @@ export function RinkDiagramZones({ zones, onZoneClick, selected, correct, dark =
 export const Screen = ({children, pad=true}) => (
   <div style={{
     minHeight:"100vh",
-    background:`linear-gradient(135deg, ${C.bg} 0%, ${C.bg} 70%, rgba(30, 87, 153, 0.15) 100%)`,
+    background:`radial-gradient(ellipse at 85% 0%, rgba(201,162,75,.07), transparent 45%), ${C.bg}`,
     backgroundAttachment:"fixed",
     color:C.white,
     fontFamily:FONT.body,
@@ -224,8 +220,7 @@ export const Screen = ({children, pad=true}) => (
       position:"absolute",
       top:0,left:0,right:0,bottom:0,
       backgroundImage:`
-        linear-gradient(90deg, transparent 0%, rgba(201, 168, 76, 0.02) 50%, transparent 100%),
-        repeating-linear-gradient(0deg, transparent 0px, rgba(59, 130, 246, 0.03) 2px, transparent 4px)
+        linear-gradient(120deg, transparent 35%, rgba(255,255,255,.025) 50%, transparent 65%)
       `,
       pointerEvents:"none"
     }}/>
@@ -237,13 +232,13 @@ export const Card = ({children, style, onClick, glow}) => (
   <div onClick={onClick}
     {...(onClick ? { role:"button", tabIndex:0, onKeyDown:(e)=>{ if(e.key==="Enter"||e.key===" "){ e.preventDefault(); onClick(e); } } } : {})}
     style={{
-    background:"rgba(13, 21, 37, 0.45)",
-    backdropFilter:"blur(12px)",
-    WebkitBackdropFilter:"blur(12px)",
+    background:"linear-gradient(145deg,rgba(245,239,230,.065),rgba(245,239,230,.015)),rgba(11,26,51,.78)",
+    backdropFilter:"blur(20px)",
+    WebkitBackdropFilter:"blur(20px)",
     border:`1px solid ${glow?C.goldBorder:"rgba(255, 255, 255, 0.1)"}`,
     borderRadius:16,
     padding:"1.25rem",
-    boxShadow: glow?"0 0 24px rgba(252,76,2,0.08)":"0 8px 32px rgba(0, 0, 0, 0.1)",
+    boxShadow: glow?"inset 0 1px 0 #ffffff12,0 0 32px rgba(201,162,75,.06)":"inset 0 1px 0 #ffffff0d,0 16px 40px #0003",
     cursor:onClick?"pointer":"default",
     transition:"all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.3s ease",
     animation:"slideInUp 0.5s ease-out",
@@ -258,6 +253,9 @@ export const Pill = ({children, color=C.purple, bg}) => (
     color,
     border:`1px solid ${color}35`,
     borderRadius:20,
+    backdropFilter:"blur(12px)",
+    WebkitBackdropFilter:"blur(12px)",
+    boxShadow:"inset 0 1px 0 #ffffff12",
     padding:"3px 10px",
     fontSize:11,
     fontWeight:700,
@@ -271,9 +269,10 @@ export const Label = ({children, style}) => (
 
 export const PrimaryBtn = ({onClick,children,disabled,style}) => (
   <button onClick={onClick} disabled={disabled} style={{
-    background:disabled?"rgba(252,76,2,.2)":C.gold,
-    color:disabled?"rgba(252,76,2,.4)":C.bg,
-    border:"none",borderRadius:12,
+    background:disabled?C.goldDim:C.gradientPrimary,
+    color:disabled?C.dim:C.bg,
+    border:`1px solid ${disabled?C.border:C.goldBorder}`,borderRadius:12,
+    boxShadow:disabled?"none":"inset 0 1px 0 #fff9,0 5px 20px #C9A24B12",
     padding:"1rem 1.25rem",
     cursor:disabled?"default":"pointer",
     fontWeight:800,fontSize:15,
@@ -287,9 +286,10 @@ export const PrimaryBtn = ({onClick,children,disabled,style}) => (
 
 export const SecBtn = ({onClick,children,style}) => (
   <button onClick={onClick} style={{
-    background:"none",
-    color:C.dim,
-    border:`1px solid ${C.border}`,
+    background:"linear-gradient(145deg,#ffffff0d,#ffffff03)",
+    color:C.white,
+    border:`1px solid ${C.borderMid}`,
+    backdropFilter:"blur(12px)",
     borderRadius:12,padding:"1rem 1.25rem",
     cursor:"pointer",fontWeight:600,fontSize:14,
     fontFamily:FONT.body,width:"100%",

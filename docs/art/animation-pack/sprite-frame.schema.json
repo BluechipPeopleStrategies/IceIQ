@@ -1,0 +1,633 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://rinkreads.local/schemas/sprite-frame-v1.json",
+  "title": "RinkReads sprite frame candidate metadata",
+  "description": "Metadata for an actual measured frame, not a planned job. Passing shape validation alone does not approve art or camera accuracy.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion",
+    "assetId",
+    "packId",
+    "characterId",
+    "uniformId",
+    "handedness",
+    "status",
+    "file",
+    "image",
+    "camera",
+    "registration",
+    "animation",
+    "provenance",
+    "review"
+  ],
+  "properties": {
+    "schemaVersion": {
+      "const": "rinkreads-sprite-frame-v1"
+    },
+    "assetId": {
+      "type": "string",
+      "minLength": 1
+    },
+    "packId": {
+      "type": "string",
+      "minLength": 1
+    },
+    "characterId": {
+      "type": "string",
+      "minLength": 1
+    },
+    "uniformId": {
+      "type": "string",
+      "minLength": 1
+    },
+    "handedness": {
+      "enum": [
+        "right-shot",
+        "left-shot",
+        "standard-left-catching",
+        "full-right-catching"
+      ]
+    },
+    "status": {
+      "enum": [
+        "candidate",
+        "reference-only",
+        "accepted-for-preview",
+        "rejected",
+        "production-approved"
+      ]
+    },
+    "file": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "path",
+        "sha256",
+        "bytes",
+        "mimeType"
+      ],
+      "properties": {
+        "path": {
+          "type": "string",
+          "minLength": 1
+        },
+        "sha256": {
+          "type": "string",
+          "pattern": "^[A-Fa-f0-9]{64}$"
+        },
+        "bytes": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "mimeType": {
+          "const": "image/png"
+        }
+      }
+    },
+    "image": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "nativeWidthPx",
+        "nativeHeightPx",
+        "currentWidthPx",
+        "currentHeightPx",
+        "upscaled",
+        "channelMode",
+        "colorSpace",
+        "alphaMode",
+        "transparentPixelFraction",
+        "partialAlphaPixelFraction",
+        "opaqueBoundsPx",
+        "hasBakedShadow",
+        "hasBakedPuck",
+        "hasBakedLabels",
+        "hasBakedBackground"
+      ],
+      "properties": {
+        "nativeWidthPx": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "nativeHeightPx": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "currentWidthPx": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "currentHeightPx": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "upscaled": {
+          "type": "boolean"
+        },
+        "channelMode": {
+          "enum": [
+            "RGBA",
+            "RGB",
+            "P",
+            "LA"
+          ]
+        },
+        "colorSpace": {
+          "enum": [
+            "sRGB",
+            "unknown"
+          ]
+        },
+        "alphaMode": {
+          "enum": [
+            "straight",
+            "premultiplied",
+            "absent",
+            "unknown"
+          ]
+        },
+        "transparentPixelFraction": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "partialAlphaPixelFraction": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "opaqueBoundsPx": {
+          "$ref": "#/$defs/rect"
+        },
+        "hasBakedShadow": {
+          "type": "boolean"
+        },
+        "hasBakedPuck": {
+          "type": "boolean"
+        },
+        "hasBakedLabels": {
+          "type": "boolean"
+        },
+        "hasBakedBackground": {
+          "type": "boolean"
+        }
+      }
+    },
+    "camera": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "viewId",
+        "projection",
+        "requestedRelativeAzimuthDeg",
+        "requestedElevationDeg",
+        "angleEvidence",
+        "screenRollDeg"
+      ],
+      "properties": {
+        "viewId": {
+          "type": "string",
+          "minLength": 1
+        },
+        "projection": {
+          "enum": [
+            "orthographic",
+            "perspective",
+            "weak-perspective",
+            "unverified"
+          ]
+        },
+        "requestedRelativeAzimuthDeg": {
+          "type": "number",
+          "minimum": 0,
+          "exclusiveMaximum": 360
+        },
+        "requestedElevationDeg": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 90
+        },
+        "angleEvidence": {
+          "enum": [
+            "prompt-intent-only",
+            "visual-approximation",
+            "controlled-render-metadata"
+          ]
+        },
+        "controlledRelativeAzimuthDeg": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": 0,
+          "exclusiveMaximum": 360
+        },
+        "controlledElevationDeg": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": 0,
+          "maximum": 90
+        },
+        "verticalFovDeg": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "exclusiveMinimum": 0,
+          "exclusiveMaximum": 180
+        },
+        "screenRollDeg": {
+          "type": "number",
+          "minimum": -180,
+          "maximum": 180
+        },
+        "sourceCameraId": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      }
+    },
+    "registration": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "coordinateOrigin",
+        "rootPivotPx",
+        "leftSkateContactPx",
+        "rightSkateContactPx",
+        "stickBladeContactPx",
+        "originalCanvasPx",
+        "trimRectPx",
+        "calibration"
+      ],
+      "properties": {
+        "coordinateOrigin": {
+          "const": "top-left"
+        },
+        "rootPivotPx": {
+          "$ref": "#/$defs/point"
+        },
+        "leftSkateContactPx": {
+          "$ref": "#/$defs/point"
+        },
+        "rightSkateContactPx": {
+          "$ref": "#/$defs/point"
+        },
+        "stickBladeContactPx": {
+          "$ref": "#/$defs/point"
+        },
+        "originalCanvasPx": {
+          "$ref": "#/$defs/dimensions"
+        },
+        "trimRectPx": {
+          "$ref": "#/$defs/rect"
+        },
+        "calibration": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "mode",
+            "referenceWorldLengthM",
+            "referenceStartPx",
+            "referenceEndPx",
+            "measurementMethod"
+          ],
+          "properties": {
+            "mode": {
+              "enum": [
+                "projected-equipped-height",
+                "projected-ground-plane-axis"
+              ]
+            },
+            "referenceWorldLengthM": {
+              "type": "number",
+              "exclusiveMinimum": 0
+            },
+            "referenceStartPx": {
+              "$ref": "#/$defs/point"
+            },
+            "referenceEndPx": {
+              "$ref": "#/$defs/point"
+            },
+            "measurementMethod": {
+              "enum": [
+                "controlled-render-anchor",
+                "manually-calibrated-candidate"
+              ]
+            }
+          }
+        }
+      }
+    },
+    "animation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "clipId",
+        "frameIndex",
+        "sampleTimeMs",
+        "authoringFps",
+        "loop",
+        "rootMotion"
+      ],
+      "properties": {
+        "clipId": {
+          "type": "string",
+          "minLength": 1
+        },
+        "frameIndex": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "sampleTimeMs": {
+          "type": "number",
+          "minimum": 0
+        },
+        "authoringFps": {
+          "const": 24
+        },
+        "loop": {
+          "type": "boolean"
+        },
+        "rootMotion": {
+          "const": "in-place"
+        }
+      }
+    },
+    "provenance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "generationJobId",
+        "promptFile",
+        "generatedAt",
+        "provider",
+        "referenceAssets",
+        "originalReturnedPath",
+        "licenseReceipt"
+      ],
+      "properties": {
+        "generationJobId": {
+          "type": "string",
+          "minLength": 1
+        },
+        "promptFile": {
+          "type": "string",
+          "minLength": 1
+        },
+        "generatedAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "provider": {
+          "type": "string",
+          "minLength": 1
+        },
+        "model": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "seed": {
+          "type": [
+            "integer",
+            "null"
+          ]
+        },
+        "referenceAssets": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "assetId",
+              "sha256"
+            ],
+            "properties": {
+              "assetId": {
+                "type": "string"
+              },
+              "sha256": {
+                "type": "string",
+                "pattern": "^[A-Fa-f0-9]{64}$"
+              }
+            }
+          }
+        },
+        "originalReturnedPath": {
+          "type": "string",
+          "minLength": 1
+        },
+        "licenseReceipt": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      }
+    },
+    "review": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "reviewer",
+        "reviewedAt",
+        "alphaPass",
+        "anatomyPass",
+        "equipmentPass",
+        "handednessPass",
+        "viewPass",
+        "iceContactPass",
+        "smallScalePass",
+        "notes"
+      ],
+      "properties": {
+        "reviewer": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "reviewedAt": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "date-time"
+        },
+        "alphaPass": {
+          "type": "boolean"
+        },
+        "anatomyPass": {
+          "type": "boolean"
+        },
+        "equipmentPass": {
+          "type": "boolean"
+        },
+        "handednessPass": {
+          "type": "boolean"
+        },
+        "viewPass": {
+          "type": "boolean"
+        },
+        "iceContactPass": {
+          "type": "boolean"
+        },
+        "smallScalePass": {
+          "type": "boolean"
+        },
+        "notes": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  },
+  "$defs": {
+    "point": {
+      "type": "array",
+      "prefixItems": [
+        {
+          "type": "number",
+          "minimum": 0
+        },
+        {
+          "type": "number",
+          "minimum": 0
+        }
+      ],
+      "minItems": 2,
+      "maxItems": 2
+    },
+    "rect": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "x",
+        "y",
+        "width",
+        "height"
+      ],
+      "properties": {
+        "x": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "y": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "width": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "height": {
+          "type": "integer",
+          "minimum": 1
+        }
+      }
+    },
+    "dimensions": {
+      "type": "array",
+      "prefixItems": [
+        {
+          "type": "integer",
+          "minimum": 1
+        },
+        {
+          "type": "integer",
+          "minimum": 1
+        }
+      ],
+      "minItems": 2,
+      "maxItems": 2
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "status": {
+            "enum": [
+              "accepted-for-preview",
+              "production-approved"
+            ]
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "image": {
+            "properties": {
+              "channelMode": {
+                "const": "RGBA"
+              },
+              "colorSpace": {
+                "const": "sRGB"
+              },
+              "alphaMode": {
+                "const": "straight"
+              },
+              "transparentPixelFraction": {
+                "exclusiveMinimum": 0
+              },
+              "hasBakedShadow": {
+                "const": false
+              },
+              "hasBakedPuck": {
+                "const": false
+              },
+              "hasBakedLabels": {
+                "const": false
+              },
+              "hasBakedBackground": {
+                "const": false
+              }
+            }
+          },
+          "review": {
+            "properties": {
+              "reviewer": {
+                "type": "string",
+                "minLength": 1
+              },
+              "reviewedAt": {
+                "type": "string",
+                "format": "date-time"
+              },
+              "alphaPass": {
+                "const": true
+              },
+              "anatomyPass": {
+                "const": true
+              },
+              "equipmentPass": {
+                "const": true
+              },
+              "handednessPass": {
+                "const": true
+              },
+              "viewPass": {
+                "const": true
+              },
+              "iceContactPass": {
+                "const": true
+              },
+              "smallScalePass": {
+                "const": true
+              }
+            }
+          }
+        }
+      }
+    }
+  ]
+}

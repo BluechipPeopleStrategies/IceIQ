@@ -10,6 +10,9 @@ import { cue, gymCueHooks } from "./gymAudio";
 import { ScoreCount, ConfettiBurst, SessionSummary } from "./gymFx";
 import { sessionRankLabel } from "./gymProgressCore";
 import { makeSituation, scoreChoice, OPTIONS } from "./bestOptionCore";
+import GymVisualStage from "./GymVisualStage";
+import BestOptionScene3D from "./BestOptionScene3D";
+import useGymVisibilityPause from "./useGymVisibilityPause";
 
 // "Best Option" — decision speed.
 // A play freezes with the puck on YOUR stick. Three reads are offered as
@@ -43,6 +46,8 @@ export default function BestOptionDrill({ playerId = "default", onExit }) {
   const [last, setLast] = useState(null); // { success, repPoints, expired, best }
 
   const [saved, setSaved] = useState(null);
+
+  useGymVisibilityPause(sceneRef, phase === "playing", rootRef);
 
   function clearTimers() {
     timersRef.current.forEach(clearTimeout);
@@ -567,8 +572,14 @@ export default function BestOptionDrill({ playerId = "default", onExit }) {
         </p>
       )}
 
-      <div className="gym-stage" style={{ display: phase === "playing" ? "block" : "none" }}>
-        <canvas ref={canvasRef} className="gym-canvas" />
+      <div style={{ display: phase === "playing" ? "block" : "none" }}>
+        <GymVisualStage
+          canvasRef={canvasRef}
+          inputLayer="none"
+          ariaLabel="Frozen offensive-zone decision scene with labelled puck carrier, teammates, defenders, goalie, and reveal route."
+          camera={{ position: [0, 7.4, 6.6], fov: 42, near: 0.1, far: 40 }}
+          scene3d={<BestOptionScene3D sceneRef={sceneRef} />}
+        >
 
         {/* Rule 1: exactly one primary action, in the same place every stage.
             Rule 4: the three reads are that action while the clock runs — they
@@ -600,6 +611,7 @@ export default function BestOptionDrill({ playerId = "default", onExit }) {
             </button>
           </div>
         )}
+        </GymVisualStage>
       </div>
 
       {phase === "done" && (

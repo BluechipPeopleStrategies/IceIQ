@@ -37,6 +37,9 @@ function recordingCtx() {
     calls,
     beginPath: rec("beginPath"), closePath: rec("closePath"),
     moveTo: rec("moveTo"), lineTo: rec("lineTo"), arcTo: rec("arcTo"),
+    quadraticCurveTo: rec('quadraticCurveTo'),
+    createLinearGradient: () => ({ addColorStop: rec('linearColorStop') }),
+    createRadialGradient: () => ({ addColorStop: rec('radialColorStop') }),
     arc: rec("arc"), rect: rec("rect"), fillRect: rec("fillRect"),
     fill: rec("fill"), stroke: rec("stroke"), clip: rec("clip"),
     save: rec("save"), restore: rec("restore"),
@@ -56,7 +59,7 @@ const W = 600, H = 372;
   // A blue line spans the full width of the sheet. In the old full-sheet
   // portrait view they were fillRect(0, H*0.33, W, 5) and fillRect(0, H*0.67, W, 5).
   const fullWidthBars = ctx.calls.filter(
-    (c) => c.name === "fillRect" && c.args[0] === 0 && c.args[2] === W
+    (c) => c.name === "fillRect" && c.args[0] === 0 && c.args[2] === W && c.args[3] < H * .05
   );
   ok("the end-zone view draws no full-width blue or centre line", fullWidthBars.length === 0);
 
@@ -65,7 +68,7 @@ const W = 600, H = 372;
   const full = recordingCtx();
   drawRink(full, W, H, { orientation: "portrait", zone: "full" });
   const fullSheetBars = full.calls.filter(
-    (c) => c.name === "fillRect" && c.args[0] === 0 && c.args[2] === W
+    (c) => c.name === "fillRect" && c.args[0] === 0 && c.args[2] === W && c.args[3] < H * .05
   );
   ok("the full-sheet view still draws its three lines — the check above means something",
     fullSheetBars.length === 3);

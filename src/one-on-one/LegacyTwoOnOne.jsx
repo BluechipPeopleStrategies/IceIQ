@@ -1,0 +1,3 @@
+import AnimatedPlay from '../play/AnimatedPlay.jsx';
+import { TWO_ON_ONE_READ_PLAY } from '../play/plays/twoOnOneRead.js';
+export default function LegacyTwoOnOne(){return <main style={{minHeight:'100vh',background:'#0b1c2b',color:'#eef4f8',padding:'24px',fontFamily:'system-ui'}}><div style={{maxWidth:1000,margin:'auto'}}><p style={{fontSize:11,letterSpacing:2,color:'#dab78c'}}>RINKREADS · EXISTING SCENARIO</p><h1>2-on-1: Defender steps up</h1><p style={{color:'#b5c8d4'}}>This is your existing animated 2-on-1 and its original question, answers and feedback.</p><AnimatedPlay play={TWO_ON_ONE_READ_PLAY} ageBand="U11"/><p><a style={{color:'#efbd86'}} href="#one-on-one">Open the new one-on-one simulator →</a></p></div></main>}

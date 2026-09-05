@@ -333,7 +333,7 @@ function NodeSummary({ node, profile, pickedOption, lastKind, coachFeedback, onR
   );
 }
 
-export default function AnimatedPlay({ play, ageBand = "U11", onEvent, onNext, nextLabel }) {
+export default function AnimatedPlay({ play, ageBand = "U11", onEvent, onNext, nextLabel, coachOverride }) {
   const profile = profileForAge(ageBand);
   const [nodeId, setNodeId] = useState(play.start);
   // Who YOU are, carried past the read that asked.
@@ -426,7 +426,7 @@ export default function AnimatedPlay({ play, ageBand = "U11", onEvent, onNext, n
 
     setPicked(index);
     setPickedOption(opt);
-    const coach = getCoachForQuestion({ id: `${play.id}:${nodeId}`, cat: play.coachCategory });
+    const coach = coachOverride || getCoachForQuestion({ id: `${play.id}:${nodeId}`, cat: play.coachCategory });
     const reinforcement = loadCoachReinforcement();
     const reinforcementResult = applyCoachAnswer(reinforcement, {
       id: `${play.id}:${nodeId}:${opt.id}`,

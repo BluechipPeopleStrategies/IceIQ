@@ -1,0 +1,10 @@
+/* Owner-selected BlueChip brand, copied from references/brand-guidelines.md.
+   Local OFL fonts keep the game independent of third-party font requests. */
+@font-face{font-family:'Playfair Display';src:url('/fonts/PlayfairDisplay.ttf') format('truetype');font-weight:400 900;font-style:normal;font-display:swap}
+@font-face{font-family:'Inter';src:url('/fonts/Inter.ttf') format('truetype');font-weight:100 900;font-style:normal;font-display:swap}
+:root{--brand-navy:#0B1A33;--brand-gold:#C9A24B;--brand-bone:#F5EFE6;--brand-slate:#5B6675;--font-heading:'Playfair Display',Georgia,serif;--font-body:'Inter',system-ui,sans-serif}
+html body{background:var(--brand-navy);font-family:var(--font-body)}
+:root .pf-hub,:root .oo-app,:root .gc-root,:root .gym-root{font-family:var(--font-body)}
+:root .pf-hub h1,:root .pf-hub h2,:root .oo-app h1,:root .oo-app h2,:root .gc-root h1,:root .gc-root h2,:root .gc-root h3,:root .gym-root h1,:root .gym-root h2,:root .gym-root h3{font-family:var(--font-heading);font-weight:700;letter-spacing:-.025em}
+:root .pf-header nav button,:root .pf-hub button,:root .gym-root button,:root .gc-root button{font-family:var(--font-body)}
+:root .gym-stat-num,:root .gym-chip,:root .gym-card-meta,:root .gym-card-stars{font-family:var(--font-body);font-variant-numeric:tabular-nums}

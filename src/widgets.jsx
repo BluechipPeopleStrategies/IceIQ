@@ -44,7 +44,7 @@ export function HockeyInsightWidget({ onInsightRead } = {}) {
       maxWidth:560, margin:"0 auto 1rem", padding:"0 1.25rem",
     }}>
       <div style={{
-        background:`linear-gradient(135deg, rgba(252,76,2,.06), rgba(207,69,32,.06))`,
+        background:`linear-gradient(135deg, rgba(201,162,75,.06), rgba(201,162,75,.06))`,
         border:`1px solid ${C.border}`,
         borderLeft:`3px solid ${C.gold}`,
         borderRadius:10, padding:".65rem .85rem",

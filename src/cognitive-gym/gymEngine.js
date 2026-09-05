@@ -123,6 +123,28 @@ export function setupCanvas(canvas, host, aspect = 0.62) {
   return { ctx, W, H };
 }
 
+const rinkPaintCache = new WeakMap();
+
+function rinkPaint(ctx, W, H, orientation) {
+  // Recording contexts used by geometry exporters can omit cosmetic gradients.
+  if (!ctx.createLinearGradient || !ctx.createRadialGradient) return { ice: '#eaf6fb', glow: 'transparent' };
+  const key = `${Math.round(W)}x${Math.round(H)}:${orientation}`;
+  const cached = rinkPaintCache.get(ctx);
+  if (cached?.key === key) return cached;
+  const gradient = orientation === "portrait"
+    ? ctx.createLinearGradient(0, 0, W, H)
+    : ctx.createLinearGradient(0, 0, W, H * 0.7);
+  gradient.addColorStop(0, "#f9fdff");
+  gradient.addColorStop(0.48, "#eaf6fb");
+  gradient.addColorStop(1, "#d9edf6");
+  const glow = ctx.createRadialGradient(W * 0.48, H * 0.24, 0, W * 0.48, H * 0.24, Math.max(W, H) * 0.52);
+  glow.addColorStop(0, "rgba(255,255,255,0.8)");
+  glow.addColorStop(1, "rgba(255,255,255,0)");
+  const paints = { key, ice: gradient, glow };
+  rinkPaintCache.set(ctx, paints);
+  return paints;
+}
+
 // Rounded-rectangle path (the boards' rounded corners).
 function roundRectPath(ctx, x, y, w, h, r) {
   const rr = Math.min(r, w / 2, h / 2);
@@ -209,13 +231,34 @@ export function drawRink(ctx, W, H, { orientation = "landscape", zone = "full" }
     : () => roundRectPath(ctx, m, m, W - 2 * m, H - 2 * m, R);
 
   icePath();
-  ctx.fillStyle = "#f4f9fc";
+  const paints = rinkPaint(ctx, W, H, orientation);
+  ctx.fillStyle = paints.ice;
   ctx.fill();
 
   // everything inside stays within the boards
   ctx.save();
   icePath();
   ctx.clip();
+
+  // Low-contrast skate texture and overhead-light blooms make the shared 2D
+  // surface feel like ice while preserving every drill's clue geometry. The
+  // pattern is deterministic and uses no per-frame arrays or random numbers.
+  ctx.save();
+  ctx.globalAlpha = 0.075;
+  ctx.strokeStyle = "#4b7790";
+  ctx.lineWidth = 1;
+  for (let i = 0; i < 11; i += 1) {
+    const sx = ((i * 83) % 97) / 97 * W;
+    const sy = ((i * 47) % 89) / 89 * H;
+    ctx.beginPath();
+    ctx.moveTo(sx - W * 0.04, sy - H * 0.015);
+    ctx.quadraticCurveTo(sx, sy + H * 0.018, sx + W * 0.055, sy);
+    ctx.stroke();
+  }
+  ctx.globalAlpha = 0.32;
+  ctx.fillStyle = paints.glow;
+  ctx.fillRect(0, 0, W, H);
+  ctx.restore();
 
   if (endZone) {
     drawEndZoneMarkings(ctx, W, H, orientation);
@@ -310,14 +353,19 @@ export function drawRink(ctx, W, H, { orientation = "landscape", zone = "full" }
 
 // boards + a lighter glass line just inside them
 function drawBoards(ctx, W, H, R, m) {
+  ctx.save();
+  ctx.shadowColor = "rgba(1, 12, 21, 0.34)";
+  ctx.shadowBlur = 12;
   roundRectPath(ctx, m, m, W - 2 * m, H - 2 * m, R);
-  ctx.strokeStyle = "#6b8294";
-  ctx.lineWidth = 3;
+  ctx.strokeStyle = "#27485e";
+  ctx.lineWidth = 4;
   ctx.stroke();
+  ctx.shadowBlur = 0;
   roundRectPath(ctx, m + 2.5, m + 2.5, W - 2 * m - 5, H - 2 * m - 5, Math.max(0, R - 2.5));
-  ctx.strokeStyle = "rgba(173,216,230,0.55)";
+  ctx.strokeStyle = "rgba(190,231,247,0.78)";
   ctx.lineWidth = 1.5;
   ctx.stroke();
+  ctx.restore();
 }
 
 // A zone has boards on THREE sides. The fourth is the blue line — open ice,

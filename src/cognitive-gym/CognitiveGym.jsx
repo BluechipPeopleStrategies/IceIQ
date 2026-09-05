@@ -136,7 +136,7 @@ const DRILLS = [
     skill: "Shot Read",
     blurb: "Skate in alone, read the goalie, pick your spot before you run out of ice.",
     goal: "Win the shootout: read which part of the net is open on the way in and shoot it before the goalie takes it away.",
-    why: "Breakaway scorers don't guess. They read the goalie on the way in and shoot where he isn't. Every goalie has a tell, and the scouting report only helps if you use it. Training that read at speed, with the window closing, is how you stay calm in alone instead of shooting into a pad.",
+    why: "Look at the goalie before you choose a target. In this game, open spots can close as you approach. Use the scouting report, then check what is open right now. What changed your choice?",
     trains: "Reading the goalie, shot selection under pressure, using a scouting report",
     build: "canvas",
     component: ShootoutDrill,
@@ -185,7 +185,7 @@ export default function CognitiveGym({ playerId = "default", onBack, ageBand = n
   if (activeId) {
     const Drill = DRILLS.find((d) => d.id === activeId).component;
     return (
-      <div className="gym-root">
+      <div className="gym-root gym-root--active">
         <Drill
           playerId={playerId}
           onExit={() => {
@@ -198,7 +198,7 @@ export default function CognitiveGym({ playerId = "default", onBack, ageBand = n
   }
 
   return (
-    <div className="gym-root">
+    <div className="gym-root gym-root--hub">
       {onBack && (
         <button
           className="gym-btn gym-btn-ghost"
@@ -209,6 +209,7 @@ export default function CognitiveGym({ playerId = "default", onBack, ageBand = n
         </button>
       )}
       <header className="gym-header">
+        <span className="gym-kicker">RinkReads training lab</span>
         <h1>Brain Gym</h1>
         <button
           type="button"

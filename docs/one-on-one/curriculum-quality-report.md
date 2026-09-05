@@ -1,0 +1,40 @@
+# Authored launch curriculum quality report — 2026-09-04
+
+Deliverable: `curriculum-draft.json` in this directory. It contains 24 newly authored lessons and 48 questions: one MC and one TF for each of four strands in U7, U9, U11, U13, U15 and U18. This is draft material for the new preview, not a claim of approved curriculum, live-bank promotion or validated scenarios.
+
+## Progression and sources
+
+- **Scanning:** `docs/library/scanning.md`, Definition, The read and Age calibration. The ledger `src/data/curriculum-ledger.json` has U7 introduction; U9 introduction; U11 development; U13 mastery; U15/U18 refinement. Progression: look before receiving → inspect a lane → scan both sides → refresh after movement → find a reset → compare lane and receiver pressure. The source note supplies no direct stable URL; no statistical transfer claim was reused.
+- **Support:** `docs/library/off-puck-support-offense.md`, Definition, The read and Age calibration. Ledger begins at U9; U7 is a newly authored positionless reading-the-play prerequisite and is identified as such. Progression: find separate space → leave a blocked lane → change angle → reoffer after passing → avoid duplicated support → adapt after a lane change. The note has principle-level references but no direct stable URL. Its approximate interception threshold was not reused as a validated physical constant.
+- **Gap / inside protection:** `docs/library/gap-control.md`, Objective Read and Sources. Existing support URL: [USA Hockey youth skill progressions](https://cdn1.sportngin.com/attachments/document/0066/4690/Skill_Progression_Manual_19_FINAL.pdf). The ledger starts formal gap control at U11. U7/U9 use `conceptId: reading-the-play`, `curriculumStrand: gap-control`, and simple middle/net protection, because `src/scenario/GOLDEN-RULES-2026-06-11.md` rule 13 gates formal gap-control themes to U11+. Older progression adds inside movement, teammate responsibility, established versus approaching help, and two-threat protection. Those exact new situations remain coach-review drafts supported at principle level.
+- **Odd-man reads:** `docs/library/odd-man-reads.md`, Objective Read, Age Calibration and Question framing contract; `docs/library/two-on-one-pass-lane-removed.md`, `two-on-one-support-too-flat.md`, and `two-on-one-goalie-late-after-pass.md`. Existing URLs are [USA Hockey small-area games](https://www.usahockey.com/smallareagames) and [practice plans](https://www.usahockey.com/practiceplans). The formal ledger begins at U11; U7/U9 are marked prerequisite extensions, although the source notes supply young-band wording. Progression contrasts open pass and blocked pass, then adds goalie position, support value, and a 3-on-2 read involving both defenders.
+
+URLs are carried from existing repository notes, not independently refreshed or represented as direct approval of the newly drawn scene. Source IDs, files and answer keys remain untouched.
+
+## Content and visual contract
+
+Coordinates are explicit canonical centred rink metres; top-level `coordinateSystem` is `rink-centred-metres`. Each question has a `visual` object, and each MC/TF pair shares identical board content. Actors are positioned, not given inferred simulation trajectories. Arrow captions expressly identify completed authored movement/passes; they do not imply measured speed or predict an opponent’s next decision.
+
+Each board has a caption, exactly one puck, a marked YOU, and a net context. Defensive lessons say the right-hand net is the learner’s own. Other lessons attack the right net. Render `netContext`/caption instead of assuming home always attacks right. U7 boards must remain half-ice with blue lines hidden; U7/U9 have generic actors, no position labels other than YOU, and no pressure timers. Labels, shapes/patterns and an outline must supplement team colour.
+
+MCs have 2/3/4 options at U7/U9/older ages. Distractors target watching only the puck, passing to a blocked-but-visible teammate, keeping stale information, crowding the puck, duplicating a support lane, abandoning inside coverage, or passing merely because a teammate is available. Older questions state the objective where two actions might otherwise be defensible: preserve possession, retain a current scoring threat, or satisfy both clear-lane and receiving-space checks. TF answers are balanced 12 true / 12 false. Feedback explains the mechanism rather than only the answer.
+
+## Verification and remaining gates
+
+Mechanical checks passed: 24 lessons, 48 distinct question IDs, one question pair per lesson, four strands per age, required age option counts, typed/in-range answer keys, one puck and YOU, generic young labels, finite actor/arrow coordinates inside rounded rink bounds, and identical boards within each pair. No diagram was rendered by this agent; root owns browser review. Readability/geometry were reviewed editorially, not tested with players or certified by a hockey coach.
+
+`docs/factory/tactics/claims/claim_dz_breakout_retrieval_escape_pressure_v1.json` is approved only for a different defensive-zone retrieval cue and U11+. It was inspected for the approval boundary and was not applied to these lessons. All new `approvedClaimId` values remain null. There is no sufficiently broad approved claim set to certify this 24-lesson pack automatically.
+
+Required next checks: root visual review of the actual preview (especially label/caption visibility, own-net identification and U7 half-ice), reviewer check of the older multi-cue choices, and age-comprehension review. Existing scenario validators are a separate promotion gate; this preview JSON is intentionally not a live seed format. The initial authoring pass wrote temporary artifacts only. The subsequent implementation below adds the preview files; no live bank or seed was changed and no production content promotion occurred.
+
+## Root integration verification — September 5
+
+Six curriculum tests pass, including exact lesson/strand coverage, net context and goalie-team consistency. Root verified U7 MC-to-TF completion/retry, one-time rewards, half-ice/own-net cues, focus handoff and tablet layout. Source lessons initialize to the active player's age, and source scenarios receive the active player identity. Older-band content was reviewed in source, not comprehension-tested with children. New lessons remain coach-review drafts outside the live seed bank. Earlier agent-only verification notes below are historical; final coverage is in `verification.md`.
+
+## Guided preview implementation
+
+`src/one-on-one/GuidedCurriculum.jsx` consumes the copied `curriculum-draft.json` directly. Six age choices select four lessons, each with the teaching point, authored static SVG board, and sequential MC/TF questions. Existing coach personas supply the selectable coach and age-tier feedback. Completed movements use numbered arrows with readable authored labels under the board; no path is inferred. Net ownership is explicitly identified, U7 is half-ice with no blue lines, actors use team shapes as well as colour, and one puck is attached to its authored carrier.
+
+`curriculumCore.js` provides the content gate, strict answer scoring and immutable progress helpers. Progress uses `rinkreads_guided_curriculum_v1:<playerId>` and records first correctness plus mastery; points are derived at 100 per mastered question and cannot be farmed by replay. Malformed or unknown saved records are discarded. Changing player identity creates a fresh session reading that player's separate key. Browser-storage failure keeps progress in memory and displays an explanation. These points do not change Game Sense Score.
+
+Verification: five Node tests pass, covering the complete authored pack, typed answers, duplicated IDs/changed paired boards, age/coordinate/puck regressions, one-time rewards and malformed storage. Independent esbuild JSX/CSS bundling passed. React server rendering passed for all six initial age views. Browser interaction and visual inspection remain with the integrating root task; no browser, commit or push was performed by this implementer.

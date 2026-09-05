@@ -38,7 +38,7 @@ import { CoachChallengeSection, ChallengeCard, ChallengeRunScreen } from "./team
 import { ToastContainer, toast } from "./toast.jsx";
 import { QotDCard, QotDScreen } from "./questionOfDay.jsx";
 import { SpeedRoundCard, SpeedRoundScreen } from "./speedRound.jsx";
-import CognitiveGym from "./cognitive-gym/CognitiveGym";
+const CognitiveGym = lazy(() => import("./cognitive-gym/CognitiveGym"));
 import FeedbackWidget from "./devtools/FeedbackWidget";
 import { AdminRoute, AdminLayout } from "./admin.jsx";
 import { getWeeklyStreak, bumpWeeklyStreak, topCategoryStreak, updateCategoryStreaks } from "./utils/streaks.js";
@@ -400,7 +400,7 @@ function QuestChecklist({ role, quests, results, onTap, onDismiss, onAllComplete
   const nextIdx = results.findIndex(r => !r.done && !r.acknowledged);
   const nextQuest = nextIdx >= 0 ? quests[nextIdx] : null;
   return (
-    <div style={{background:`linear-gradient(135deg, rgba(252,76,2,0.08), rgba(207,69,32,0.06))`,border:`1px solid ${C.goldBorder}`,borderRadius:14,padding:"1rem 1rem .9rem",marginBottom:"1rem"}}>
+    <div style={{background:`linear-gradient(135deg, rgba(201,162,75,0.08), rgba(201,162,75,0.06))`,border:`1px solid ${C.goldBorder}`,borderRadius:14,padding:"1rem 1rem .9rem",marginBottom:"1rem"}}>
       <div style={{display:"flex",alignItems:"center",gap:".65rem",marginBottom:collapsed ? 0 : ".85rem"}}>
         <AvatarDisc name={coachName} kind="coach" size={36}/>
         <div style={{flex:1,minWidth:0}}>
@@ -447,7 +447,7 @@ function QuestChecklist({ role, quests, results, onTap, onDismiss, onAllComplete
             <div style={{fontSize:10,color:C.dimmer,fontWeight:700,letterSpacing:".04em"}}>{checked} of {total}</div>
           </div>
           {showSignupCTA && onSignup && (
-            <button onClick={onSignup} style={{marginTop:".75rem",width:"100%",background:C.gradientPrimary,color:C.bg,border:"none",borderRadius:12,padding:".75rem",cursor:"pointer",fontWeight:800,fontSize:13,fontFamily:FONT.body,letterSpacing:".02em",boxShadow:"0 4px 14px rgba(252,76,2,.25), inset 0 1px 0 rgba(255,255,255,.25)",display:"flex",alignItems:"center",justifyContent:"center",gap:".4rem"}}>
+            <button onClick={onSignup} style={{marginTop:".75rem",width:"100%",background:C.gradientPrimary,color:C.bg,border:"none",borderRadius:12,padding:".75rem",cursor:"pointer",fontWeight:800,fontSize:13,fontFamily:FONT.body,letterSpacing:".02em",boxShadow:"0 4px 14px rgba(201,162,75,.25), inset 0 1px 0 rgba(255,255,255,.25)",display:"flex",alignItems:"center",justifyContent:"center",gap:".4rem"}}>
               <span style={{fontSize:14}}>🏒</span>
               Create your free account →
             </button>
@@ -500,6 +500,10 @@ const Dev3DScenarioRoute = lazyWithReload(async () => {
   return { default: () => <Scenario3DStage scenario={scenario} /> };
 });
 const ReadThePlay = lazyWithReload(() => import("./play/ReadThePlay.jsx"));
+const OneOnOnePractice = lazyWithReload(() => import("./one-on-one/OneOnOne.jsx"));
+const PracticeArena = lazyWithReload(() => import("./one-on-one/PracticeHub.jsx"));
+const LegacyTwoOnOne = lazyWithReload(() => import("./one-on-one/LegacyTwoOnOne.jsx"));
+const GymComparison = lazyWithReload(() => import("./one-on-one/GymComparison.jsx"));
 const ProfileSetup = lazyWithReload(() => import("./screens.jsx").then(m => ({ default: m.ProfileSetup })));
 const PlansScreen = lazyWithReload(() => import("./screens.jsx").then(m => ({ default: m.PlansScreen })));
 const GameSenseReportScreen = lazyWithReload(() => import("./screens.jsx").then(m => ({ default: m.GameSenseReportScreen })));
@@ -949,7 +953,7 @@ function RinkDiagram({ type }) {
       <text x={x} y={y} textAnchor="middle" dominantBaseline="middle" fill="white" fontSize="7.5" fontWeight="700">{label}</text>
     </g>
   );
-  const Arrow = ({x1,y1,x2,y2,color="#FC4C02",dash,arc}) => {
+  const Arrow = ({x1,y1,x2,y2,color="#C9A24B",dash,arc}) => {
     const dx=x2-x1, dy=y2-y1, len=Math.sqrt(dx*dx+dy*dy);
     const ux=dx/len, uy=dy/len;
     const hx=x2-ux*12, hy=y2-uy*12;
@@ -1307,7 +1311,7 @@ function SeqQuestion({ q, onAnswer, answered, colorblind }) {
         })}
       </div>
       {!submitted && (
-        <button onClick={submit} style={{background:C.purple,color:C.white,border:"none",borderRadius:12,padding:".85rem",cursor:"pointer",fontWeight:700,fontSize:14,fontFamily:FONT.body,width:"100%"}}>
+        <button onClick={submit} style={{background:C.purple,color:C.bg,border:"none",borderRadius:12,padding:".85rem",cursor:"pointer",fontWeight:700,fontSize:14,fontFamily:FONT.body,width:"100%"}}>
           Submit Order →
         </button>
       )}
@@ -1608,7 +1612,7 @@ function Home({ player, onNav, demoMode, subscriptionTier, questFlagsBump, onPro
               {player?.isAdmin && (
                 <button onClick={() => { window.location.hash = "admin"; }}
                   title="Open admin dashboard"
-                  style={{background:"rgba(252,76,2,.12)",border:`1px solid ${C.goldBorder}`,borderRadius:20,padding:"2px 8px",fontSize:10,fontWeight:800,letterSpacing:".06em",color:C.gold,cursor:"pointer",display:"flex",alignItems:"center",gap:".25rem",fontFamily:FONT.body}}>
+                  style={{background:"rgba(201,162,75,.12)",border:`1px solid ${C.goldBorder}`,borderRadius:20,padding:"2px 8px",fontSize:10,fontWeight:800,letterSpacing:".06em",color:C.gold,cursor:"pointer",display:"flex",alignItems:"center",gap:".25rem",fontFamily:FONT.body}}>
                   ★ ADMIN
                 </button>
               )}
@@ -1694,7 +1698,7 @@ function Home({ player, onNav, demoMode, subscriptionTier, questFlagsBump, onPro
             } catch {}
 
             return (<>
-              <button onClick={() => onNav("path")} style={{width:"100%",background:C.gradientPrimary,border:"none",borderRadius:16,padding:"1.05rem 1.15rem",cursor:"pointer",textAlign:"left",color:"#fff",fontFamily:FONT.body,marginBottom:".85rem",boxShadow:"inset 0 -5px 0 rgba(0,0,0,.22), 0 8px 22px rgba(252,76,2,.28)",position:"relative",overflow:"hidden"}}>
+              <button onClick={() => onNav("path")} style={{width:"100%",background:C.gradientPrimary,border:"none",borderRadius:16,padding:"1.05rem 1.15rem",cursor:"pointer",textAlign:"left",color:C.bg,fontFamily:FONT.body,marginBottom:".85rem",boxShadow:"inset 0 -5px 0 rgba(0,0,0,.22), 0 8px 22px rgba(201,162,75,.28)",position:"relative",overflow:"hidden"}}>
                 <div style={{fontSize:10.5,fontWeight:800,letterSpacing:".16em",textTransform:"uppercase",opacity:.9,marginBottom:3}}>
                   Skill Path · {band}{era ? ` · ${era} Era` : ""} · {st.clearedCount}/{st.totalCount}
                 </div>
@@ -1733,7 +1737,7 @@ function Home({ player, onNav, demoMode, subscriptionTier, questFlagsBump, onPro
 
         {/* Quick action grid */}
         <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:".75rem",marginBottom:"1rem"}}>
-          <button onClick={() => onNav("quiz")} style={{background:`linear-gradient(135deg,rgba(207,69,32,.15),rgba(207,69,32,.05))`,border:`1px solid ${C.purpleBorder}`,borderRadius:14,padding:"1.1rem",cursor:"pointer",textAlign:"left",color:C.white,fontFamily:FONT.body,position:"relative",overflow:"hidden"}}>
+          <button onClick={() => onNav("quiz")} style={{background:`linear-gradient(135deg,rgba(201,162,75,.15),rgba(201,162,75,.05))`,border:`1px solid ${C.purpleBorder}`,borderRadius:14,padding:"1.1rem",cursor:"pointer",textAlign:"left",color:C.white,fontFamily:FONT.body,position:"relative",overflow:"hidden"}}>
             <img src={imgCoreApp} alt="" style={{position:"absolute",inset:0,width:"100%",height:"100%",objectFit:"cover",opacity:0.12,pointerEvents:"none"}}/>
             <div style={{position:"relative"}}>
             <div style={{fontSize:22,marginBottom:".4rem"}}>🧠</div>
@@ -1742,7 +1746,7 @@ function Home({ player, onNav, demoMode, subscriptionTier, questFlagsBump, onPro
             </div>
           </button>
           {canSetGoals(level) && (
-          <button onClick={() => onNav("goals")} style={{background:`linear-gradient(135deg,rgba(252,76,2,.1),rgba(252,76,2,.03))`,border:`1px solid ${C.goldBorder}`,borderRadius:14,padding:"1.1rem",cursor:"pointer",textAlign:"left",color:C.white,fontFamily:FONT.body}}>
+          <button onClick={() => onNav("goals")} style={{background:`linear-gradient(135deg,rgba(201,162,75,.1),rgba(201,162,75,.03))`,border:`1px solid ${C.goldBorder}`,borderRadius:14,padding:"1.1rem",cursor:"pointer",textAlign:"left",color:C.white,fontFamily:FONT.body}}>
             <div style={{fontSize:22,marginBottom:".4rem"}}>🎯</div>
             <div style={{fontWeight:700,fontSize:14,marginBottom:2}}>My Goals</div>
             <div style={{fontSize:11,color:C.gold}}>{goalCount}/{goalCats} set</div>
@@ -1777,7 +1781,7 @@ function Home({ player, onNav, demoMode, subscriptionTier, questFlagsBump, onPro
         </div>
 
         {/* Game Sense Profile button */}
-        <button onClick={() => onNav("gamesense")} style={{width:"100%",display:"block",textAlign:"left",background:`linear-gradient(135deg,rgba(207,69,32,.12),rgba(207,69,32,.04))`,border:`1px solid ${C.purpleBorder}`,borderRadius:14,padding:"1rem 1.1rem",cursor:"pointer",color:C.white,fontFamily:FONT.body,marginBottom:"1rem",position:"relative",overflow:"hidden"}}>
+        <button onClick={() => onNav("gamesense")} style={{width:"100%",display:"block",textAlign:"left",background:`linear-gradient(135deg,rgba(201,162,75,.12),rgba(201,162,75,.04))`,border:`1px solid ${C.purpleBorder}`,borderRadius:14,padding:"1rem 1.1rem",cursor:"pointer",color:C.white,fontFamily:FONT.body,marginBottom:"1rem",position:"relative",overflow:"hidden"}}>
           <img src={imgProfile} alt="" style={{position:"absolute",inset:0,width:"100%",height:"100%",objectFit:"cover",opacity:0.08,pointerEvents:"none"}}/>
           <div style={{position:"relative"}}>
             <div style={{display:"flex",alignItems:"center",gap:".6rem"}}>
@@ -1829,7 +1833,7 @@ function Home({ player, onNav, demoMode, subscriptionTier, questFlagsBump, onPro
         )}
 
         {showProPreview && !upgradeDismissed && (
-          <button onClick={()=>onNav("plans")} style={{width:"100%",display:"block",textAlign:"left",background:`linear-gradient(135deg,rgba(252,76,2,.12),rgba(207,69,32,.08))`,border:`1px solid ${C.goldBorder}`,borderRadius:14,padding:"1rem 1.1rem",cursor:"pointer",color:C.white,fontFamily:FONT.body,marginBottom:"1rem",position:"relative"}}>
+          <button onClick={()=>onNav("plans")} style={{width:"100%",display:"block",textAlign:"left",background:`linear-gradient(135deg,rgba(201,162,75,.12),rgba(201,162,75,.08))`,border:`1px solid ${C.goldBorder}`,borderRadius:14,padding:"1rem 1.1rem",cursor:"pointer",color:C.white,fontFamily:FONT.body,marginBottom:"1rem",position:"relative"}}>
             <span onClick={(e)=>{e.stopPropagation();e.preventDefault();dismissUpgrade();}} role="button" aria-label="Dismiss" style={{position:"absolute",top:6,right:8,width:22,height:22,display:"flex",alignItems:"center",justifyContent:"center",color:C.dimmer,fontSize:14,cursor:"pointer",borderRadius:6,lineHeight:1}}>✕</span>
             <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:".5rem",paddingRight:"1.6rem"}}>
               <div style={{display:"flex",alignItems:"center",gap:".5rem"}}>
@@ -2862,7 +2866,7 @@ function Quiz({ player, onFinish, onBack, tier, onUpgrade, focus = null }) {
           return (
           <div ref={el => { if (el) setTimeout(() => el.scrollIntoView({behavior:"smooth",block:"nearest"}), 150); }} style={{marginTop:"1rem"}}>
             <Card style={{
-              background: userCorrect ? (streak >= 4 ? "rgba(252,76,2,.1)" : "rgba(34,197,94,.06)") : C.redDim,
+              background: userCorrect ? (streak >= 4 ? "rgba(201,162,75,.1)" : "rgba(34,197,94,.06)") : C.redDim,
               border:`1px solid ${userCorrect ? (streak >= 4 ? C.goldBorder : C.greenBorder) : C.redBorder}`,
               marginBottom:"1rem"
             }}>
@@ -2895,7 +2899,7 @@ function Quiz({ player, onFinish, onBack, tier, onUpgrade, focus = null }) {
                           actually talking, not as the question's content. */}
                       {flavor && (
                         <div style={{
-                          fontFamily: "'Caveat', cursive, system-ui",
+                          fontFamily: FONT.display,
                           fontSize: 17,
                           fontWeight: 600,
                           lineHeight: 1.3,
@@ -2936,7 +2940,7 @@ function Quiz({ player, onFinish, onBack, tier, onUpgrade, focus = null }) {
                 Finish & See Results →
               </button>
             ) : (
-              <button onClick={advance} style={{background:C.purple,color:C.white,border:"none",borderRadius:12,padding:".9rem",cursor:"pointer",fontWeight:700,fontSize:14,fontFamily:FONT.body,width:"100%"}}>
+              <button onClick={advance} style={{background:C.purple,color:C.bg,border:"none",borderRadius:12,padding:".9rem",cursor:"pointer",fontWeight:700,fontSize:14,fontFamily:FONT.body,width:"100%"}}>
                 Next Question →
               </button>
             )}
@@ -3404,7 +3408,7 @@ function QuizFeedbackCard({ player, score, tier }) {
   return (
     <Card style={{
       marginBottom: "1rem",
-      background: isFree ? `linear-gradient(135deg,rgba(252,76,2,.1),rgba(252,76,2,.02))` : C.bgCard,
+      background: isFree ? `linear-gradient(135deg,rgba(201,162,75,.1),rgba(201,162,75,.02))` : C.bgCard,
       border: `1px solid ${isFree ? C.goldBorder : C.border}`,
     }}>
       <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start",gap:".5rem",marginBottom:".5rem"}}>
@@ -3486,7 +3490,7 @@ function Results({ results, player, prevScore, totalSessions, seqPerfect, mistak
 
       {/* Badges */}
       {badges.length > 0 && (
-        <Card style={{marginBottom:"1rem",background:`linear-gradient(135deg,rgba(252,76,2,.08),rgba(252,76,2,.02))`,border:`1px solid ${C.goldBorder}`}}>
+        <Card style={{marginBottom:"1rem",background:`linear-gradient(135deg,rgba(201,162,75,.08),rgba(201,162,75,.02))`,border:`1px solid ${C.goldBorder}`}}>
           <Label>Badges Earned</Label>
           <div style={{display:"flex",gap:".6rem",flexWrap:"wrap"}}>
             {badges.map((b,i) => (
@@ -3552,7 +3556,7 @@ function Results({ results, player, prevScore, totalSessions, seqPerfect, mistak
       </Card>
 
       {showMilestoneBanner && (
-        <Card style={{marginBottom:"1rem",background:`linear-gradient(135deg,rgba(252,76,2,.12),rgba(252,76,2,.04))`,border:`1px solid ${C.goldBorder}`,textAlign:"center",padding:"1.25rem"}}>
+        <Card style={{marginBottom:"1rem",background:`linear-gradient(135deg,rgba(201,162,75,.12),rgba(201,162,75,.04))`,border:`1px solid ${C.goldBorder}`,textAlign:"center",padding:"1.25rem"}}>
           <div style={{fontSize:24,marginBottom:".4rem"}}>🏆</div>
           <div style={{fontFamily:FONT.display,fontWeight:800,fontSize:"1.1rem",color:C.gold,marginBottom:".3rem"}}>5 quizzes complete!</div>
           <div style={{fontSize:12,color:C.dim,lineHeight:1.5,marginBottom:".85rem"}}>Free keeps only your last 5 sessions. Upgrade to track your full journey and see your progress over time.</div>
@@ -4018,7 +4022,7 @@ function WeeklyQuiz({ player, onBack, onFinish }) {
                     </div>
                     {flavor && (
                       <div style={{
-                        fontFamily: "'Caveat', cursive, system-ui",
+                        fontFamily: FONT.display,
                         fontSize: 17,
                         fontWeight: 600,
                         lineHeight: 1.3,
@@ -4224,7 +4228,7 @@ function GoalsScreen({ player, onSave, onBack }) {
             <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginTop:".75rem"}}>
               <div style={{fontSize:11,color:C.dimmer}}>{completedSteps.length}/5 steps complete</div>
               {step !== "T" && (
-                <button onClick={() => setStep(SMART_STEPS[SMART_STEPS.indexOf(step)+1])} style={{background:C.purple,color:C.white,border:"none",borderRadius:8,padding:".4rem 1rem",cursor:"pointer",fontSize:12,fontWeight:700,fontFamily:FONT.body}}>
+                <button onClick={() => setStep(SMART_STEPS[SMART_STEPS.indexOf(step)+1])} style={{background:C.purple,color:C.bg,border:"none",borderRadius:8,padding:".4rem 1rem",cursor:"pointer",fontSize:12,fontWeight:700,fontFamily:FONT.body}}>
                   Next →
                 </button>
               )}
@@ -4439,7 +4443,7 @@ function Skills({ player, tier, onSave, onBack, onUpgrade }) {
           const selfColor = selfVal ? getScaleColor(selfScale, selfVal) : null;
           if (isLocked) {
             return (
-              <Card key={s.id} style={{marginBottom:".75rem",border:`1px dashed ${C.goldBorder}`,background:"rgba(252,76,2,0.04)",opacity:0.7}}>
+              <Card key={s.id} style={{marginBottom:".75rem",border:`1px dashed ${C.goldBorder}`,background:"rgba(201,162,75,0.04)",opacity:0.7}}>
                 <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",gap:".5rem",marginBottom:3}}>
                   <div style={{fontWeight:700,fontSize:14,color:C.dim}}>{s.name}</div>
                   <div style={{fontSize:10,letterSpacing:".1em",color:C.gold,fontWeight:800,flexShrink:0}}>🔒 PRO</div>
@@ -4517,7 +4521,8 @@ function SkillsRadar({ cats, selfRatings, coachRatings, selfScale, coachScale })
 
   return (
     <div style={{display:"flex",flexDirection:"column",alignItems:"center"}}>
-      <svg width={W} height={H} viewBox={`0 0 ${W} ${H}`} style={{display:"block",maxWidth:"100%",height:"auto"}}>
+      <svg width={W} height={H} viewBox={`0 0 ${W} ${H}`} role="img" aria-label="Skills map comparing self and coach ratings" style={{display:"block",maxWidth:"100%",height:"auto"}}>
+        <title>Skills map comparing self and coach ratings</title>
         {/* Grid rings */}
         {rings.map(r => {
           const pts = axes.map((_, i) => point(i, r * radius).map(v => v.toFixed(1)).join(",")).join(" ");
@@ -4530,21 +4535,21 @@ function SkillsRadar({ cats, selfRatings, coachRatings, selfScale, coachScale })
         })}
         {/* Coach polygon (under self) */}
         {coachPath && (
-          <path d={coachPath} fill={C.gold} fillOpacity="0.08" stroke={C.gold} strokeWidth="2" strokeOpacity="0.65"/>
+          <path d={coachPath} fill={C.gold} fillOpacity="0.08" stroke={C.gold} strokeWidth="2" strokeOpacity="0.8" strokeDasharray="6 4"/>
         )}
         {/* Self polygon */}
-        <path d={selfPath} fill={C.purple} fillOpacity="0.18" stroke={C.purple} strokeWidth="2"/>
+        <path d={selfPath} fill={C.blue} fillOpacity="0.15" stroke={C.blue} strokeWidth="2"/>
         {/* Self data points */}
         {axes.map((a, i) => {
           if (a.self === null) return null;
           const [x, y] = point(i, a.self * radius);
-          return <circle key={`s${i}`} cx={x.toFixed(1)} cy={y.toFixed(1)} r="3.5" fill={C.purple}/>;
+          return <circle key={`s${i}`} cx={x.toFixed(1)} cy={y.toFixed(1)} r="3.5" fill={C.blue}/>;
         })}
         {/* Coach data points */}
         {hasCoach && axes.map((a, i) => {
           if (a.coach === null) return null;
           const [x, y] = point(i, a.coach * radius);
-          return <circle key={`c${i}`} cx={x.toFixed(1)} cy={y.toFixed(1)} r="3.5" fill={C.gold}/>;
+          return <rect key={`c${i}`} x={(x-3.2).toFixed(1)} y={(y-3.2).toFixed(1)} width="6.4" height="6.4" fill={C.gold} transform={`rotate(45 ${x.toFixed(1)} ${y.toFixed(1)})`}/>;
         })}
         {/* Category labels */}
         {axes.map((a, i) => {
@@ -4573,11 +4578,11 @@ function SkillsRadar({ cats, selfRatings, coachRatings, selfScale, coachScale })
       </svg>
       <div style={{display:"flex",gap:"1.25rem",marginTop:".75rem",fontSize:11}}>
         <div style={{display:"flex",alignItems:"center",gap:".3rem",color:C.dim}}>
-          <span style={{display:"inline-block",width:10,height:10,background:C.purple,borderRadius:"50%"}}/> Self
+          <svg width="24" height="12" viewBox="0 0 24 12" aria-hidden="true"><line x1="1" y1="6" x2="23" y2="6" stroke={C.blue} strokeWidth="2"/><circle cx="12" cy="6" r="3.5" fill={C.blue}/></svg> Self
         </div>
         {hasCoach && (
           <div style={{display:"flex",alignItems:"center",gap:".3rem",color:C.dim}}>
-            <span style={{display:"inline-block",width:10,height:10,background:C.gold,borderRadius:"50%"}}/> Coach
+            <svg width="24" height="12" viewBox="0 0 24 12" aria-hidden="true"><line x1="1" y1="6" x2="23" y2="6" stroke={C.gold} strokeWidth="2" strokeDasharray="4 3"/><rect x="8.8" y="2.8" width="6.4" height="6.4" fill={C.gold} transform="rotate(45 12 6)"/></svg> Coach
           </div>
         )}
       </div>
@@ -5484,7 +5489,7 @@ function JourneyBody({ player, tier, demoMode, onViewFull, onUpgrade }) {
 
       {/* Level detail — lists every activity requirement for the chosen level */}
       {showLevel && (
-        <Card style={{marginBottom:"1rem",background:showLevel.unlocked?"rgba(34,197,94,.08)":"rgba(252,76,2,.08)",border:`1px solid ${showLevel.unlocked?C.greenBorder:C.goldBorder}`}}>
+        <Card style={{marginBottom:"1rem",background:showLevel.unlocked?"rgba(34,197,94,.08)":"rgba(201,162,75,.08)",border:`1px solid ${showLevel.unlocked?C.greenBorder:C.goldBorder}`}}>
           <div style={{display:"flex",alignItems:"center",gap:".75rem",marginBottom:".55rem"}}>
             <div style={{fontSize:28,width:44,height:44,borderRadius:10,background:showLevel.worldGradient,display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0}}>{showLevel.worldIcon}</div>
             <div style={{flex:1,minWidth:0}}>
@@ -5516,7 +5521,7 @@ function JourneyBody({ player, tier, demoMode, onViewFull, onUpgrade }) {
       )}
 
       {tier === "FREE" && (
-        <Card style={{marginBottom:"1rem",background:`linear-gradient(135deg,rgba(252,76,2,.08),rgba(207,69,32,.04))`,border:`1px dashed ${C.goldBorder}`,padding:"1rem 1.1rem"}}>
+        <Card style={{marginBottom:"1rem",background:`linear-gradient(135deg,rgba(201,162,75,.08),rgba(201,162,75,.04))`,border:`1px dashed ${C.goldBorder}`,padding:"1rem 1.1rem"}}>
           <div style={{display:"flex",alignItems:"flex-start",gap:".65rem",marginBottom:".55rem"}}>
             <div style={{fontSize:22,flexShrink:0}}>⛰️</div>
             <div style={{flex:1,minWidth:0}}>
@@ -6189,7 +6194,7 @@ function Profile({ player, onSave, onBack, onReset, demoMode, tier, onUpgrade, u
                     <div style={{fontSize:12,color:C.dim,marginTop:1}}>{subtitle}</div>
                   </div>
                 </div>
-                <button onClick={() => onNav && onNav("parent")} style={{background:done?C.bgElevated:C.purple,color:done?C.purple:C.white,border:`1px solid ${C.purpleBorder}`,borderRadius:8,padding:".45rem 1rem",cursor:"pointer",fontSize:12,fontWeight:700,fontFamily:FONT.body,flexShrink:0}}>
+                <button onClick={() => onNav && onNav("parent")} style={{background:done?C.bgElevated:C.purple,color:done?C.purple:C.bg,border:`1px solid ${C.purpleBorder}`,borderRadius:8,padding:".45rem 1rem",cursor:"pointer",fontSize:12,fontWeight:700,fontFamily:FONT.body,flexShrink:0}}>
                   {done ? "Update →" : "Start →"}
                 </button>
               </div>
@@ -6435,7 +6440,7 @@ function StudyScreen({ player, onBack, onNav, focusCompetency }) {
             return ranked.map((f, i) => {
               const isWeakHit = weakCatSet.has((f.skill || "").toLowerCase());
               return (
-                <div key={i} style={{padding:".7rem .85rem",background:isWeakHit?"rgba(252,76,2,.06)":C.bgElevated,borderRadius:8,border:`1px solid ${isWeakHit?C.goldBorder:C.border}`,marginBottom:".45rem"}}>
+                <div key={i} style={{padding:".7rem .85rem",background:isWeakHit?"rgba(201,162,75,.06)":C.bgElevated,borderRadius:8,border:`1px solid ${isWeakHit?C.goldBorder:C.border}`,marginBottom:".45rem"}}>
                   <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",gap:".5rem",marginBottom:3}}>
                     <div style={{fontSize:13,fontWeight:700,color:C.white}}>{f.skill}</div>
                     {isWeakHit && <div style={{fontSize:9,letterSpacing:".1em",textTransform:"uppercase",color:C.gold,fontWeight:800,flexShrink:0}}>Weak spot</div>}
@@ -6770,7 +6775,7 @@ function LandingInsightsCard() {
           <span style={{fontSize:12.5,color:C.white,lineHeight:1.45,flex:1}}>{ins.headline}</span>
         </div>
       ))}
-      <div style={{marginTop:".85rem",padding:".7rem .85rem",background:"rgba(252,76,2,0.06)",border:`1px dashed ${C.goldBorder}`,borderRadius:10,display:"flex",alignItems:"center",gap:".55rem"}}>
+      <div style={{marginTop:".85rem",padding:".7rem .85rem",background:"rgba(201,162,75,0.06)",border:`1px dashed ${C.goldBorder}`,borderRadius:10,display:"flex",alignItems:"center",gap:".55rem"}}>
         <span style={{fontSize:14}}>🔒</span>
         <span style={{fontSize:12,color:C.dim,flex:1,lineHeight:1.45}}>Unlock more insights — free account.</span>
       </div>
@@ -7035,7 +7040,7 @@ function AuthScreen({ onAuthenticated, onDemo, onDevEnter, onPreview, prefill })
 
       {/* Layered overlays — heavier navy fade + warm Oilers-orange radial glow */}
       <div style={{position:"absolute",inset:0,background:"linear-gradient(180deg,rgba(4,30,66,0.78) 0%,rgba(4,30,66,0.6) 45%,rgba(4,30,66,0.94) 100%)",pointerEvents:"none"}}/>
-      <div style={{position:"absolute",inset:0,background:"radial-gradient(ellipse 80% 60% at 50% 40%,rgba(252,76,2,0.08) 0%,transparent 70%)",pointerEvents:"none"}}/>
+      <div style={{position:"absolute",inset:0,background:"radial-gradient(ellipse 80% 60% at 50% 40%,rgba(201,162,75,0.08) 0%,transparent 70%)",pointerEvents:"none"}}/>
 
       {/* Subtle top-right door — flips between modes and scrolls to the
           auth card so the user actually sees the form change. Hidden on
@@ -7121,7 +7126,7 @@ function AuthScreen({ onAuthenticated, onDemo, onDevEnter, onPreview, prefill })
 
         {/* Hero brand block */}
         <div style={{textAlign:"center",marginBottom:"1.5rem"}}>
-          <div style={{display:"inline-flex",alignItems:"center",gap:".55rem",background:"rgba(3,9,15,0.6)",backdropFilter:"blur(12px)",WebkitBackdropFilter:"blur(12px)",border:`1px solid rgba(252,76,2,0.2)`,borderRadius:14,padding:".55rem 1.1rem",marginBottom:"1.1rem"}}>
+          <div style={{display:"inline-flex",alignItems:"center",gap:".55rem",background:"rgba(3,9,15,0.6)",backdropFilter:"blur(12px)",WebkitBackdropFilter:"blur(12px)",border:`1px solid rgba(201,162,75,0.2)`,borderRadius:14,padding:".55rem 1.1rem",marginBottom:"1.1rem"}}>
             <RinkReadsLogo size={26}/>
             <span style={{fontFamily:FONT.display,fontWeight:800,fontSize:"1.6rem",color:C.gold,letterSpacing:".1em"}}>RinkReads</span>
           </div>
@@ -7159,10 +7164,10 @@ function AuthScreen({ onAuthenticated, onDemo, onDevEnter, onPreview, prefill })
           ].map(x => (
             <a key={x.hash} href={x.hash}
                style={{display:"inline-flex",alignItems:"center",gap:".3rem",
-                       background:"rgba(252,76,2,0.06)",
-                       border:`1px solid rgba(252,76,2,0.25)`,
+                       background:"rgba(201,162,75,0.06)",
+                       border:`1px solid rgba(201,162,75,0.25)`,
                        borderRadius:999,padding:".3rem .7rem",
-                       color:"rgba(252,76,2,.85)",fontSize:11,fontFamily:FONT.body,
+                       color:"rgba(201,162,75,.85)",fontSize:11,fontFamily:FONT.body,
                        textDecoration:"none",fontWeight:600,letterSpacing:".01em"}}>
               <span style={{fontSize:12}}>{x.icon}</span>
               <span>{x.label}</span>
@@ -7271,14 +7276,14 @@ function AuthScreen({ onAuthenticated, onDemo, onDevEnter, onPreview, prefill })
         {/* Coach preview — only coach-side demo remains; players sign up. */}
         <div style={{marginTop:"1.75rem",paddingTop:"1.5rem",borderTop:"1px solid rgba(255,255,255,0.07)"}}>
           <div style={{fontSize:11,letterSpacing:".14em",textTransform:"uppercase",color:"rgba(248,250,252,.35)",fontWeight:700,textAlign:"center",marginBottom:"1rem"}}>Coaching a team? See the dashboard</div>
-          <div style={{background:"rgba(252,76,2,0.07)",border:"1px solid rgba(252,76,2,0.2)",borderRadius:10,padding:".75rem .85rem",color:C.white,fontFamily:FONT.body,textAlign:"left",marginBottom:".75rem"}}>
+          <div style={{background:"rgba(201,162,75,0.07)",border:"1px solid rgba(201,162,75,0.2)",borderRadius:10,padding:".75rem .85rem",color:C.white,fontFamily:FONT.body,textAlign:"left",marginBottom:".75rem"}}>
             <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:".55rem"}}>
               <div>
-                <div style={{fontWeight:700,fontSize:12,color:"rgba(252,76,2,.9)",marginBottom:1}}>Team IQ by concept — where to coach next.</div>
+                <div style={{fontWeight:700,fontSize:12,color:"rgba(201,162,75,.9)",marginBottom:1}}>Team IQ by concept — where to coach next.</div>
                 <div style={{fontSize:10,color:"rgba(248,250,252,.4)"}}>U11 AA Edmonton Selects · 16 players</div>
               </div>
             </div>
-            <div style={{borderTop:"1px solid rgba(252,76,2,0.12)",paddingTop:".5rem",display:"flex",flexDirection:"column",gap:".35rem"}}>
+            <div style={{borderTop:"1px solid rgba(201,162,75,0.12)",paddingTop:".5rem",display:"flex",flexDirection:"column",gap:".35rem"}}>
               {[
                 { label: "Decision-Making", pct: 72, weak: false },
                 { label: "Compete",         pct: 88, weak: false },
@@ -7286,7 +7291,7 @@ function AuthScreen({ onAuthenticated, onDemo, onDevEnter, onPreview, prefill })
                 { label: "Breakouts",       pct: 64, weak: false },
                 { label: "Net-Front",       pct: 58, weak: false },
               ].map(row => {
-                const barColor = row.weak ? "#ef4444" : row.pct >= 80 ? "#22c55e" : "rgba(252,76,2,.85)";
+                const barColor = row.weak ? "#ef4444" : row.pct >= 80 ? "#22c55e" : "rgba(201,162,75,.85)";
                 const labelColor = row.weak ? "#fca5a5" : "rgba(248,250,252,.75)";
                 return (
                   <div key={row.label} style={{display:"grid",gridTemplateColumns:"92px 1fr 32px",alignItems:"center",gap:".5rem"}}>
@@ -7299,7 +7304,7 @@ function AuthScreen({ onAuthenticated, onDemo, onDevEnter, onPreview, prefill })
                 );
               })}
             </div>
-            <div style={{marginTop:".65rem",paddingTop:".45rem",borderTop:"1px solid rgba(252,76,2,0.12)",fontSize:10,color:"rgba(248,250,252,.55)",lineHeight:1.45}}>
+            <div style={{marginTop:".65rem",paddingTop:".45rem",borderTop:"1px solid rgba(201,162,75,0.12)",fontSize:10,color:"rgba(248,250,252,.55)",lineHeight:1.45}}>
               <span style={{color:"#ef4444",fontWeight:800}}>🎯 Tuesday's focus:</span> D-zone coverage — 9 of 16 players below 50%.
             </div>
           </div>
@@ -7675,7 +7680,7 @@ function TeamFocusCard({ team, roster, onOpenDrills }) {
   const ordered = Object.keys(COMPETENCIES).sort((a, b) => agg.teamAverages[a] - agg.teamAverages[b]);
   return (
     <>
-      <div style={{background:`linear-gradient(135deg, rgba(252,76,2,0.14), rgba(207,69,32,0.06))`,
+      <div style={{background:`linear-gradient(135deg, rgba(201,162,75,0.14), rgba(201,162,75,0.06))`,
                    border:`1px solid ${C.goldBorder}`, borderRadius:14,
                    padding:"1rem 1.1rem", marginBottom:"1rem"}}>
         <div style={{fontSize:10,letterSpacing:".14em",textTransform:"uppercase",
@@ -7870,7 +7875,7 @@ function CoachHome({ profile, onSignOut, onOpenPlayer, demoMode, subscriptionTie
                 <div style={{flex:1,minWidth:0}}>
                   <div style={{fontWeight:700,fontSize:15,marginBottom:2}}>{t.name}</div>
                   <div style={{fontSize:11,color:C.dimmer,marginBottom:4}}>{t.level} · {t.season}</div>
-                  <span style={{display:"inline-block",fontSize:10,letterSpacing:".12em",textTransform:"uppercase",fontWeight:700,padding:"2px 8px",borderRadius:999,background:isHeadCoach?"rgba(252,76,2,0.12)":"rgba(91,164,232,0.12)",color:isHeadCoach?C.gold:C.blue,border:`1px solid ${isHeadCoach?"rgba(252,76,2,0.35)":"rgba(91,164,232,0.35)"}`}}>
+                  <span style={{display:"inline-block",fontSize:10,letterSpacing:".12em",textTransform:"uppercase",fontWeight:700,padding:"2px 8px",borderRadius:999,background:isHeadCoach?"rgba(201,162,75,0.12)":"rgba(91,164,232,0.12)",color:isHeadCoach?C.gold:C.blue,border:`1px solid ${isHeadCoach?"rgba(201,162,75,0.35)":"rgba(91,164,232,0.35)"}`}}>
                     {isHeadCoach ? "★ Head Coach" : "Assistant Coach"}
                   </span>
                 </div>
@@ -8628,6 +8633,19 @@ export default function App() {
   if (hashRoute === "scenarios") {
     return <Suspense fallback={<LazyFallback/>}><ScenarioPlayground/></Suspense>;
   }
+  // Local gameplay/art review only; production learning and player-art gates remain open.
+  if (import.meta.env.DEV && ['shootout-before','shootout-now','brain-gym'].includes(hashRoute)) {
+    return <Suspense fallback={<LazyFallback/>}><GymComparison key={hashRoute} view={hashRoute==='shootout-before'?'before':hashRoute==='shootout-now'?'now':'gym'}/></Suspense>;
+  }
+  if (import.meta.env.DEV && hashRoute === "practice-arena") {
+    return <Suspense fallback={<LazyFallback/>}><PracticeArena key={player?.id || "practice-preview"} player={player}/></Suspense>;
+  }
+  if (import.meta.env.DEV && hashRoute === "legacy-two-on-one") {
+    return <Suspense fallback={<LazyFallback/>}><LegacyTwoOnOne/></Suspense>;
+  }
+  if (import.meta.env.DEV && hashRoute === "one-on-one") {
+    return <Suspense fallback={<LazyFallback/>}><OneOnOnePractice playerId={player?.id || "practice-preview"}/></Suspense>;
+  }
   // Hidden manual-only 3D prototype route. No nav entry; browse directly to #dev-3d-scenario.
   if (hashRoute === "dev-3d-scenario") {
     return <Suspense fallback={<LazyFallback/>}><Dev3DScenarioRoute/></Suspense>;
@@ -8831,9 +8849,9 @@ export default function App() {
           reachable — the previous version hid the banner entirely for dev
           users, leaving no way back to landing. */}
       {demoMode && (
-        <div style={{position:"sticky",top:0,background:profile?.__dev ? C.bgElevated : C.purple,color:profile?.__dev ? C.dim : C.white,padding:".4rem 1rem",fontSize:11,fontWeight:600,textAlign:"center",zIndex:200,display:"flex",alignItems:"center",justifyContent:"center",gap:".75rem",borderBottom:profile?.__dev ? `1px solid ${C.border}` : "none"}}>
+        <div style={{position:"sticky",top:0,background:profile?.__dev ? C.bgElevated : C.purple,color:profile?.__dev ? C.dim : C.bg,padding:".4rem 1rem",fontSize:11,fontWeight:600,textAlign:"center",zIndex:200,display:"flex",alignItems:"center",justifyContent:"center",gap:".75rem",borderBottom:profile?.__dev ? `1px solid ${C.border}` : "none"}}>
           {profile?.__dev ? `🛠️ Dev bypass · ${tier}` : profile?.__preview ? "👀 Preview — nothing you do is saved." : "🎮 Demo mode — data won't be saved."}
-          <button onClick={exitDemo} style={{background:profile?.__dev ? C.bgCard : C.white,color:profile?.__dev ? C.gold : C.purple,border:profile?.__dev ? `1px solid ${C.goldBorder}` : "none",borderRadius:6,padding:"3px 10px",fontWeight:800,fontSize:11,cursor:"pointer",fontFamily:FONT.body}}>← Back to landing</button>
+          <button onClick={exitDemo} style={{background:profile?.__dev ? C.bgCard : C.white,color:profile?.__dev ? C.gold : C.bg,border:profile?.__dev ? `1px solid ${C.goldBorder}` : "none",borderRadius:6,padding:"3px 10px",fontWeight:800,fontSize:11,cursor:"pointer",fontFamily:FONT.body}}>← Back to landing</button>
         </div>
       )}
 
@@ -8869,7 +8887,7 @@ export default function App() {
         {screen === "report"  && <Report player={tierLimitedPlayer(player, tier)} onBack={()=>setScreen("home")} demoCoachData={demoMode?demoCoachRatings:null} tier={tier} onUpgrade={(f,t)=>promptUpgrade(f,t)}/>}
         {screen === "gamesense" && <Suspense fallback={<LazyFallback/>}><GameSenseReportScreen player={player} onBack={()=>setScreen("home")} demoMode={demoMode} demoCoachData={demoMode?demoCoachRatings:null} onNavigate={setScreen}/></Suspense>}
         {screen === "journey" && <JourneyScreen player={player} tier={tier} demoMode={demoMode} onBack={()=>setScreen("home")} onNav={setScreen} onUpgrade={promptUpgrade}/>}
-        {screen === "cogym" && <CognitiveGym playerId={player.id || "__demo__"} ageBand={player?.level || null} onBack={()=>setScreen("home")}/>}
+        {screen === "cogym" && <Suspense fallback={<LazyFallback/>}><CognitiveGym playerId={player.id || "__demo__"} ageBand={player?.level || null} onBack={()=>setScreen("home")}/></Suspense>}
         {screen === "readplay" && <Suspense fallback={<LazyFallback/>}><ReadThePlay player={player} onBack={()=>setScreen("home")}/></Suspense>}
         <FeedbackWidget screen={screen} version={VERSION} />
         {screen === "training" && (
@@ -8986,7 +9004,7 @@ export default function App() {
           sessions (the tester is impersonating a real FREE/PRO/TEAM user and
           shouldn't see a sign-up CTA). */}
       {demoMode && !profile?.__dev && !firstLineToast && screen !== "results" && (
-        <button onClick={() => triggerSignup("demo_chip")} style={{position:"fixed",bottom:88,right:10,zIndex:150,background:C.gradientPrimary,color:C.bg,border:"none",borderRadius:999,padding:"6px 12px 6px 10px",cursor:"pointer",fontSize:11,fontWeight:800,fontFamily:FONT.body,letterSpacing:".02em",display:"flex",alignItems:"center",gap:"4px",boxShadow:"0 4px 14px rgba(252,76,2,.35), inset 0 1px 0 rgba(255,255,255,.25)"}}>
+        <button onClick={() => triggerSignup("demo_chip")} style={{position:"fixed",bottom:88,right:10,zIndex:150,background:C.gradientPrimary,color:C.bg,border:"none",borderRadius:999,padding:"6px 12px 6px 10px",cursor:"pointer",fontSize:11,fontWeight:800,fontFamily:FONT.body,letterSpacing:".02em",display:"flex",alignItems:"center",gap:"4px",boxShadow:"0 4px 14px rgba(201,162,75,.35), inset 0 1px 0 rgba(255,255,255,.25)"}}>
           <span style={{fontSize:12}}>🏒</span>
           Sign Up Free →
         </button>

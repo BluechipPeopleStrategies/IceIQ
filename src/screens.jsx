@@ -451,7 +451,7 @@ export function PlansScreen({ onBack, tier }) {
                   if (row.group) {
                     return (
                       <tr key={i}>
-                        <td colSpan={5} style={{padding:".65rem .75rem .3rem",fontSize:10,letterSpacing:".12em",textTransform:"uppercase",color:C.gold,fontWeight:800,background:"rgba(252,76,2,.04)"}}>{row.group}</td>
+                        <td colSpan={5} style={{padding:".65rem .75rem .3rem",fontSize:10,letterSpacing:".12em",textTransform:"uppercase",color:C.gold,fontWeight:800,background:"rgba(201,162,75,.04)"}}>{row.group}</td>
                       </tr>
                     );
                   }
@@ -485,7 +485,7 @@ export function PlansScreen({ onBack, tier }) {
         </div>
 
         {/* CTA */}
-        <div style={{background:`linear-gradient(135deg,rgba(252,76,2,.1),rgba(207,69,32,.04))`,border:`1px solid ${C.goldBorder}`,borderRadius:14,padding:"1.25rem",textAlign:"center"}}>
+        <div style={{background:`linear-gradient(135deg,rgba(201,162,75,.1),rgba(201,162,75,.04))`,border:`1px solid ${C.goldBorder}`,borderRadius:14,padding:"1.25rem",textAlign:"center"}}>
           <div style={{fontSize:10,letterSpacing:".14em",textTransform:"uppercase",color:C.gold,fontWeight:800,marginBottom:".35rem"}}>Early access</div>
           <div style={{fontSize:14,fontWeight:700,color:C.white,marginBottom:".55rem",lineHeight:1.3}}>Online checkout is coming soon. In the meantime, reach out and we'll set you up directly.</div>
           <a href="mailto:rinkreads@gmail.com?subject=RinkReads Pro Early Access" style={{display:"inline-block",background:C.gold,color:C.bg,border:"none",borderRadius:10,padding:".7rem 1.5rem",cursor:"pointer",fontWeight:800,fontSize:13,fontFamily:FONT.body,textDecoration:"none"}}>Contact us for early access →</a>
@@ -547,7 +547,7 @@ function SpiderChart({ scores }) {
 
         <polygon
           points={points.map(p => `${p.x},${p.y}`).join(" ")}
-          fill={`rgba(207,69,32,0.2)`}
+          fill={`rgba(201,162,75,0.2)`}
           stroke={C.gold}
           strokeWidth="2" />
 
@@ -880,7 +880,7 @@ export function ParentAssessmentScreen({ player, onBack, onSave, demoMode, onSig
           })}
 
           {onSignup && (
-            <button onClick={onSignup} style={{marginTop:".75rem",width:"100%",background:C.gradientPrimary,color:C.bg,border:"none",borderRadius:12,padding:".9rem",cursor:"pointer",fontWeight:800,fontSize:14,fontFamily:FONT.body,letterSpacing:".02em",boxShadow:"0 4px 14px rgba(252,76,2,.25), inset 0 1px 0 rgba(255,255,255,.25)"}}>
+            <button onClick={onSignup} style={{marginTop:".75rem",width:"100%",background:C.gradientPrimary,color:C.bg,border:"none",borderRadius:12,padding:".9rem",cursor:"pointer",fontWeight:800,fontSize:14,fontFamily:FONT.body,letterSpacing:".02em",boxShadow:"0 4px 14px rgba(201,162,75,.25), inset 0 1px 0 rgba(255,255,255,.25)"}}>
               🏒 Sign up free to fill this out yourself →
             </button>
           )}
@@ -1886,8 +1886,8 @@ export function ParentsPage({ onNavigate, onContact, photoSrc }) {
         {/* Hero — personal-note typography (Caveat) to signal this section
             is a direct address to the reader, not marketing copy. */}
         <div style={S.eyebrow}>For first-time parents</div>
-        <h1 style={{...S.h1, fontFamily:"'Caveat', 'Kalam', cursive", fontWeight:700, fontSize:44, letterSpacing:0}}>Welcome to RinkReads.</h1>
-        <p style={{...S.lead, fontFamily:"'Caveat', 'Kalam', cursive", fontWeight:500, fontSize:22, lineHeight:1.5}}>
+        <h1 style={{...S.h1, fontFamily:FONT.display, fontWeight:700, fontSize:44, letterSpacing:0}}>Welcome to RinkReads.</h1>
+        <p style={{...S.lead, fontFamily:FONT.body, fontWeight:500, fontSize:22, lineHeight:1.5}}>
           Your kid may already know how to chase a puck. This is where they
           learn to think the game.
         </p>
@@ -2157,8 +2157,8 @@ export function CoachesPage({ onNavigate, onContact }) {
         {/* Hero — personal-note typography (Caveat). Only the direct-address
             lead is handwritten; the rest of the page stays in the body font. */}
         <div style={S.eyebrow}>For coaches</div>
-        <h1 style={{...S.h1, fontFamily:"'Caveat', 'Kalam', cursive", fontWeight:700, fontSize:44, letterSpacing:0}}>Thank you, Coach.</h1>
-        <p style={{...S.lead, fontFamily:"'Caveat', 'Kalam', cursive", fontWeight:500, fontSize:22, lineHeight:1.5}}>
+        <h1 style={{...S.h1, fontFamily:FONT.display, fontWeight:700, fontSize:44, letterSpacing:0}}>Thank you, Coach.</h1>
+        <p style={{...S.lead, fontFamily:FONT.body, fontWeight:500, fontSize:22, lineHeight:1.5}}>
           Coaching is hard. You give up weeknights, you eat cold dinners, you
           field parent emails you didn't ask for, and you carry a team's
           development on your shoulders for reasons most people will never
@@ -2408,15 +2408,15 @@ export function PlayersPage({ onNavigate, onContact }) {
     <div style={{minHeight:"100vh",background:C.bg,padding:"2.5rem 1rem",fontFamily:FONT.body,color:C.white}}>
       <div style={{maxWidth:760,margin:"0 auto",lineHeight:1.65}}>
         <div style={S.eyebrow}>For players</div>
-        <h1 style={{...S.h1, fontFamily:"'Caveat', 'Kalam', cursive", fontWeight:700, fontSize:44, letterSpacing:0}}>Hey, player. This is yours.</h1>
-        <p style={{...S.lead, fontFamily:"'Caveat', 'Kalam', cursive", fontWeight:500, fontSize:22, lineHeight:1.5}}>
+        <h1 style={{...S.h1, fontFamily:FONT.display, fontWeight:700, fontSize:44, letterSpacing:0}}>Hey, player. This is yours.</h1>
+        <p style={{...S.lead, fontFamily:FONT.body, fontWeight:500, fontSize:22, lineHeight:1.5}}>
           Your parents signed you up, but this app isn't theirs. It's yours.
           Your profile. Your goals. Your streak. The kids who get the most out
           of RinkReads are the ones who open it on their own, pick their own
           drills to watch, and chase their own score.
         </p>
 
-        <div style={{background:"rgba(252,76,2,.08)",border:`1px solid ${C.goldBorder}`,borderRadius:16,padding:"1rem",margin:"1.1rem 0 1.2rem"}}>
+        <div style={{background:"rgba(201,162,75,.08)",border:`1px solid ${C.goldBorder}`,borderRadius:16,padding:"1rem",margin:"1.1rem 0 1.2rem"}}>
           <div style={{fontSize:13,color:C.dim,lineHeight:1.55,marginBottom:".8rem"}}>
             Ready to train your hockey brain? Create an account or sign in first, then you can take quizzes, build your profile, and track your progress.
           </div>
@@ -2518,8 +2518,8 @@ export function AssociationsPage({ onNavigate, onContact }) {
     <div style={{minHeight:"100vh",background:C.bg,padding:"2.5rem 1rem",fontFamily:FONT.body,color:C.white}}>
       <div style={{maxWidth:760,margin:"0 auto",lineHeight:1.65}}>
         <div style={S.eyebrow}>For associations</div>
-        <h1 style={{...S.h1, fontFamily:"'Caveat', 'Kalam', cursive", fontWeight:700, fontSize:44, letterSpacing:0}}>Thank you for running hockey.</h1>
-        <p style={{...S.lead, fontFamily:"'Caveat', 'Kalam', cursive", fontWeight:500, fontSize:22, lineHeight:1.5}}>
+        <h1 style={{...S.h1, fontFamily:FONT.display, fontWeight:700, fontSize:44, letterSpacing:0}}>Thank you for running hockey.</h1>
+        <p style={{...S.lead, fontFamily:FONT.body, fontWeight:500, fontSize:22, lineHeight:1.5}}>
           Associations are the volunteers nobody claps for — the ones who
           keep ice booked, coaches trained, and kids on teams season after
           season. We built RinkReads to give your coaches a tool they can
@@ -2700,7 +2700,7 @@ const S = {
   calloutBody: { fontSize:14, color:C.white, lineHeight:1.6 },
   tierGrid: { display:"grid", gridTemplateColumns:"repeat(auto-fit, minmax(140px, 1fr))", gap:10, marginTop:14 },
   tierCard: { background:C.bgCard, border:`1px solid ${C.border}`, borderRadius:10, padding:14 },
-  tierCardHighlighted: { border:`2px solid ${C.gold}`, background:`linear-gradient(135deg,${C.bgCard},rgba(252,76,2,.06))` },
+  tierCardHighlighted: { border:`2px solid ${C.gold}`, background:`linear-gradient(135deg,${C.bgCard},rgba(201,162,75,.06))` },
   tierLabel: { fontSize:11, letterSpacing:".1em", textTransform:"uppercase", color:C.dimmer, marginBottom:4, fontWeight:700 },
   tierLabelHighlighted: { color:C.gold },
   tierPrice: { fontSize:14, fontWeight:700, marginBottom:6, color:C.white },

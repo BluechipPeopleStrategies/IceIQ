@@ -1,0 +1,2605 @@
+[
+  {
+    "version": "rinkreads-coach-question-v1",
+    "id": "coach-example-u7-scan-open-ice",
+    "title": "Look, then find open ice",
+    "ageBand": "U7",
+    "prompt": "Your team attacks the right net. You looked before the pass and saw the other player in the middle. Move YOU to open ice where your teammate has a clear option.",
+    "type": "position",
+    "controlledTeam": "home",
+    "initialDraft": {
+      "version": "rinkreads-director-draft-v1",
+      "title": "U7 2v1 scan before the pass",
+      "duration": 8,
+      "actors": [
+        {
+          "id": "home-skater-1",
+          "label": "TEAMMATE",
+          "team": "home",
+          "role": "skater",
+          "keys": [
+            {
+              "time": 0,
+              "x": 10,
+              "y": 0,
+              "facing": 0
+            }
+          ],
+          "frozen": false,
+          "fixedPose": null
+        },
+        {
+          "id": "home-skater-2",
+          "label": "YOU",
+          "team": "home",
+          "role": "skater",
+          "keys": [
+            {
+              "time": 0,
+              "x": 12,
+              "y": 2,
+              "facing": 0
+            }
+          ],
+          "frozen": false,
+          "fixedPose": null
+        },
+        {
+          "id": "away-skater-1",
+          "label": "OTHER PLAYER",
+          "team": "away",
+          "role": "skater",
+          "keys": [
+            {
+              "time": 0,
+              "x": 14,
+              "y": 0,
+              "facing": 3.141592653589793
+            }
+          ],
+          "frozen": false,
+          "fixedPose": null
+        },
+        {
+          "id": "away-goalie-1",
+          "label": "GOALIE",
+          "team": "away",
+          "role": "goalie",
+          "keys": [
+            {
+              "time": 0,
+              "x": 25.6,
+              "y": 0,
+              "facing": 3.141592653589793
+            }
+          ],
+          "frozen": false,
+          "fixedPose": null
+        }
+      ],
+      "puck": {
+        "owner": "home-skater-1"
+      },
+      "sourceRef": {
+        "id": "u7-2v1-scan-before-the-pass",
+        "nodeId": "scanning",
+        "note": "docs/library/scanning.md"
+      },
+      "status": "development-not-validated"
+    },
+    "referenceDraft": {
+      "version": "rinkreads-director-draft-v1",
+      "title": "U7 2v1 scan before the pass",
+      "duration": 8,
+      "actors": [
+        {
+          "id": "home-skater-1",
+          "label": "TEAMMATE",
+          "team": "home",
+          "role": "skater",
+          "keys": [
+            {
+              "time": 0,
+              "x": 10,
+              "y": 0,
+              "facing": 0
+            }
+          ],
+          "frozen": false,
+          "fixedPose": null
+        },
+        {
+          "id": "home-skater-2",
+          "label": "YOU",
+          "team": "home",
+          "role": "skater",
+          "keys": [
+            {
+              "time": 0,
+              "x": 14,
+              "y": 7,
+              "facing": 4.183185307179587
+            }
+          ],
+          "frozen": false,
+          "fixedPose": null
+        },
+        {
+          "id": "away-skater-1",
+          "label": "OTHER PLAYER",
+          "team": "away",
+          "role": "skater",
+          "keys": [
+            {
+              "time": 0,
+              "x": 14,
+              "y": 0,
+              "facing": 3.141592653589793
+            }
+          ],
+          "frozen": false,
+          "fixedPose": null
+        },
+        {
+          "id": "away-goalie-1",
+          "label": "GOALIE",
+          "team": "away",
+          "role": "goalie",
+          "keys": [
+            {
+              "time": 0,
+              "x": 25.6,
+              "y": 0,
+              "facing": 3.141592653589793
+            }
+          ],
+          "frozen": false,
+          "fixedPose": null
+        }
+      ],
+      "puck": {
+        "owner": "home-skater-1"
+      },
+      "sourceRef": {
+        "id": "u7-2v1-scan-before-the-pass",
+        "nodeId": "scanning",
+        "note": "docs/library/scanning.md"
+      },
+      "status": "development-not-validated"
+    },
+    "coachExplanation": "The reference moves YOU away from the crowded puck lane. The other player stays in the middle, while the new outside angle gives the teammate a visible passing option. The source teaches the scan; these exact positions are an authored example for review.",
+    "expectedAction": null,
+    "sourceRef": {
+      "note": "docs/library/scanning.md"
+    },
+    "status": "example-for-coach-review",
+    "view": "half-right",
+    "rubric": {
+      "mode": "forced",
+      "mustNotice": [
+        "The other player occupies the middle near the puck.",
+        "Open ice exists away from that pressure."
+      ],
+      "acceptableActions": [],
+      "avoid": [
+        "Crowding the puck carrier",
+        "Hiding behind the other player"
+      ],
+      "followUpCue": "If the other player moves outside, scan again and find the newly open side."
+    }
+  },
+  {
+    "version": "rinkreads-coach-question-v1",
+    "id": "coach-example-u9-support-window",
+    "title": "Give the puck a clear path",
+    "ageBand": "U9",
+    "prompt": "Your team attacks the right net. The path from your teammate to YOU is crowded. Move YOU to open ice with a clear path for the puck.",
+    "type": "position",
+    "controlledTeam": "home",
+    "initialDraft": {
+      "version": "rinkreads-director-draft-v1",
+      "title": "U9 2v2 support window",
+      "duration": 8,
+      "actors": [
+        {
+          "id": "home-skater-1",
+          "label": "TEAMMATE",
+          "team": "home",
+          "role": "skater",
+          "keys": [
+            {
+              "time": 0,
+              "x": 10,
+              "y": 0,
+              "facing": 0
+            }
+          ],
+          "frozen": false,
+          "fixedPose": null
+        },
+        {
+          "id": "home-skater-2",
+          "label": "YOU",
+          "team": "home",
+          "role": "skater",
+          "keys": [
+            {
+              "time": 0,
+              "x": 16,
+              "y": 1,
+              "facing": 3.141592653589793
+            }
+          ],
+          "frozen": false,
+          "fixedPose": null
+        },
+        {
+          "id": "away-skater-1",
+          "label": "OTHER PLAYER",
+          "team": "away",
+          "role": "skater",
+          "keys": [
+            {
+              "time": 0,
+              "x": 13,
+              "y": 0.5,
+              "facing": 3.141592653589793
+            }
+          ],
+          "frozen": false,
+          "fixedPose": null
+        },
+        {
+          "id": "away-skater-2",
+          "label": "OTHER PLAYER 2",
+          "team": "away",
+          "role": "skater",
+          "keys": [
+            {
+              "time": 0,
+              "x": 21,
+              "y": -6,
+              "facing": 3.141592653589793
+            }
+          ],
+          "frozen": false,
+          "fixedPose": null
+        },
+        {
+          "id": "away-goalie-1",
+          "label": "GOALIE",
+          "team": "away",
+          "role": "goalie",
+          "keys": [
+            {
+              "time": 0,
+              "x": 25.6,
+              "y": 0,
+              "facing": 3.141592653589793
+            }
+          ],
+          "frozen": false,
+          "fixedPose": null
+        }
+      ],
+      "puck": {
+        "owner": "home-skater-1"
+      },
+      "sourceRef": {
+        "id": "u9-2v2-support-window",
+        "nodeId": "off-puck-support-offense",
+        "note": "docs/library/off-puck-support-offense.md"
+      },
+      "status": "development-not-validated"
+    },
+    "referenceDraft": {
+      "version": "rinkreads-director-draft-v1",
+      "title": "U9 2v2 support window",
+      "duration": 8,
+      "actors": [
+        {
+          "id": "home-skater-1",
+          "label": "TEAMMATE",
+          "team": "home",
+          "role": "skater",
+          "keys": [
+            {
+              "time": 0,
+              "x": 10,
+              "y": 0,
+              "facing": 0
+            }
+          ],
+          "frozen": false,
+          "fixedPose": null
+        },
+        {
+          "id": "home-skater-2",
+          "label": "YOU",
+          "team": "home",
+          "role": "skater",
+          "keys": [
+            {
+              "time": 0,
+              "x": 17,
+              "y": 7,
+              "facing": 4.083185307179586
+            }
+          ],
+          "frozen": false,
+          "fixedPose": null
+        },
+        {
+          "id": "away-skater-1",
+          "label": "OTHER PLAYER",
+          "team": "away",
+          "role": "skater",
+          "keys": [
+            {
+              "time": 0,
+              "x": 13,
+              "y": 0.5,
+              "facing": 3.141592653589793
+            }
+          ],
+          "frozen": false,
+          "fixedPose": null
+        },
+        {
+          "id": "away-skater-2",
+          "label": "OTHER PLAYER 2",
+          "team": "away",
+          "role": "skater",
+          "keys": [
+            {
+              "time": 0,
+              "x": 21,
+              "y": -6,
+              "facing": 3.141592653589793
+            }
+          ],
+          "frozen": false,
+          "fixedPose": null
+        },
+        {
+          "id": "away-goalie-1",
+          "label": "GOALIE",
+          "team": "away",
+          "role": "goalie",
+          "keys": [
+            {
+              "time": 0,
+              "x": 25.6,
+              "y": 0,
+              "facing": 3.141592653589793
+            }
+          ],
+          "frozen": false,
+          "fixedPose": null
+        }
+      ],
+      "puck": {
+        "owner": "home-skater-1"
+      },
+      "sourceRef": {
+        "id": "u9-2v2-support-window",
+        "nodeId": "off-puck-support-offense",
+        "note": "docs/library/off-puck-support-offense.md"
+      },
+      "status": "development-not-validated"
+    },
+    "coachExplanation": "The reference changes the passing angle instead of standing behind the other player. YOU is in separate open ice and the straight path from the puck no longer crosses an opponent. This is an authored position built from the source principle, not a copied source diagram.",
+    "expectedAction": null,
+    "sourceRef": {
+      "note": "docs/library/off-puck-support-offense.md"
+    },
+    "status": "example-for-coach-review",
+    "view": "half-right",
+    "rubric": {
+      "mode": "forced",
+      "mustNotice": [
+        "An opponent sits on the current passing path.",
+        "Separate open ice is available."
+      ],
+      "acceptableActions": [],
+      "avoid": [
+        "Standing in the blocked lane",
+        "Skating into the puck carrier's space"
+      ],
+      "followUpCue": "If the blocker follows YOU, re-scan for the space that movement opened."
+    }
+  },
+  {
+    "version": "rinkreads-coach-question-v1",
+    "id": "coach-example-u9-angle-wide",
+    "title": "Keep the middle between you and your net",
+    "ageBand": "U9",
+    "prompt": "Your team defends the left net. Move YOU between the puck carrier and the middle path so the safer space is toward the boards.",
+    "type": "position",
+    "controlledTeam": "home",
+    "initialDraft": {
+      "version": "rinkreads-director-draft-v1",
+      "title": "U9 1v1 protect the middle",
+      "duration": 8,
+      "actors": [
+        {
+          "id": "home-skater-1",
+          "label": "YOU",
+          "team": "home",
+          "role": "skater",
+          "keys": [
+            {
+              "time": 0,
+              "x": -9,
+              "y": -8,
+              "facing": 3.141592653589793
+            }
+          ],
+          "frozen": false,
+          "fixedPose": null
+        },
+        {
+          "id": "home-goalie-1",
+          "label": "GOALIE",
+          "team": "home",
+          "role": "goalie",
+          "keys": [
+            {
+              "time": 0,
+              "x": -25.6,
+              "y": 0,
+              "facing": 0
+            }
+          ],
+          "frozen": false,
+          "fixedPose": null
+        },
+        {
+          "id": "away-skater-1",
+          "label": "OTHER PLAYER",
+          "team": "away",
+          "role": "skater",
+          "keys": [
+            {
+              "time": 0,
+              "x": -5,
+              "y": -6,
+              "facing": 3.141592653589793
+            }
+          ],
+          "frozen": false,
+          "fixedPose": null
+        }
+      ],
+      "puck": {
+        "owner": "away-skater-1"
+      },
+      "sourceRef": {
+        "id": "u9-1v1-protect-the-middle",
+        "nodeId": "angling-steering",
+        "note": "docs/library/defensive-angling.md"
+      },
+      "status": "development-not-validated"
+    },
+    "referenceDraft": {
+      "version": "rinkreads-director-draft-v1",
+      "title": "U9 1v1 protect the middle",
+      "duration": 8,
+      "actors": [
+        {
+          "id": "home-skater-1",
+          "label": "YOU",
+          "team": "home",
+          "role": "skater",
+          "keys": [
+            {
+              "time": 0,
+              "x": -11,
+              "y": -3,
+              "facing": 2.55
+            }
+          ],
+          "frozen": false,
+          "fixedPose": null
+        },
+        {
+          "id": "home-goalie-1",
+          "label": "GOALIE",
+          "team": "home",
+          "role": "goalie",
+          "keys": [
+            {
+              "time": 0,
+              "x": -25.6,
+              "y": 0,
+              "facing": 0
+            }
+          ],
+          "frozen": false,
+          "fixedPose": null
+        },
+        {
+          "id": "away-skater-1",
+          "label": "OTHER PLAYER",
+          "team": "away",
+          "role": "skater",
+          "keys": [
+            {
+              "time": 0,
+              "x": -5,
+              "y": -6,
+              "facing": 3.141592653589793
+            }
+          ],
+          "frozen": false,
+          "fixedPose": null
+        }
+      ],
+      "puck": {
+        "owner": "away-skater-1"
+      },
+      "sourceRef": {
+        "id": "u9-1v1-protect-the-middle",
+        "nodeId": "angling-steering",
+        "note": "docs/library/defensive-angling.md"
+      },
+      "status": "development-not-validated"
+    },
+    "coachExplanation": "The reference places YOU on the inside path toward the left net and leaves lower-danger ice outside. The body angle faces the carrier without reaching across. The note supplies the angling principle; the exact placement is a coach-review example.",
+    "expectedAction": null,
+    "sourceRef": {
+      "note": "docs/library/defensive-angling.md"
+    },
+    "status": "example-for-coach-review",
+    "view": "full",
+    "rubric": {
+      "mode": "forced",
+      "mustNotice": [
+        "The left net is YOUR net.",
+        "The carrier can threaten the middle."
+      ],
+      "acceptableActions": [],
+      "avoid": [
+        "Starting outside the carrier",
+        "Reaching across and opening the middle"
+      ],
+      "followUpCue": "If the carrier turns back, keep the net-side relationship and adjust the angle."
+    }
+  },
+  {
+    "version": "rinkreads-coach-question-v1",
+    "id": "coach-example-u11-gap-inside",
+    "title": "Hold inside space and stay adjustable",
+    "ageBand": "U11",
+    "prompt": "Your team defends the left net. F1 enters with the puck. Move YOU to protect the middle while keeping room to match the rush.",
+    "type": "position",
+    "controlledTeam": "home",
+    "initialDraft": {
+      "version": "rinkreads-director-draft-v1",
+      "title": "U11 1v1 hold an adjustable gap",
+      "duration": 8,
+      "actors": [
+        {
+          "id": "home-skater-1",
+          "label": "YOU",
+          "team": "home",
+          "role": "skater",
+          "keys": [
+            {
+              "time": 0,
+              "x": -12,
+              "y": -7,
+              "facing": 3.141592653589793
+            }
+          ],
+          "frozen": false,
+          "fixedPose": null
+        },
+        {
+          "id": "home-goalie-1",
+          "label": "G",
+          "team": "home",
+          "role": "goalie",
+          "keys": [
+            {
+              "time": 0,
+              "x": -25.6,
+              "y": 0,
+              "facing": 0
+            }
+          ],
+          "frozen": false,
+          "fixedPose": null
+        },
+        {
+          "id": "away-skater-1",
+          "label": "F1",
+          "team": "away",
+          "role": "skater",
+          "keys": [
+            {
+              "time": 0,
+              "x": 1,
+              "y": -2,
+              "facing": 3.141592653589793
+            }
+          ],
+          "frozen": false,
+          "fixedPose": null
+        }
+      ],
+      "puck": {
+        "owner": "away-skater-1"
+      },
+      "sourceRef": {
+        "id": "u11-1v1-hold-an-adjustable-gap",
+        "nodeId": "gap-control",
+        "note": "docs/library/gap-control.md"
+      },
+      "status": "development-not-validated"
+    },
+    "referenceDraft": {
+      "version": "rinkreads-director-draft-v1",
+      "title": "U11 1v1 hold an adjustable gap",
+      "duration": 8,
+      "actors": [
+        {
+          "id": "home-skater-1",
+          "label": "YOU",
+          "team": "home",
+          "role": "skater",
+          "keys": [
+            {
+              "time": 0,
+              "x": -9,
+              "y": -1,
+              "facing": 2.9
+            }
+          ],
+          "frozen": false,
+          "fixedPose": null
+        },
+        {
+          "id": "home-goalie-1",
+          "label": "G",
+          "team": "home",
+          "role": "goalie",
+          "keys": [
+            {
+              "time": 0,
+              "x": -25.6,
+              "y": 0,
+              "facing": 0
+            }
+          ],
+          "frozen": false,
+          "fixedPose": null
+        },
+        {
+          "id": "away-skater-1",
+          "label": "F1",
+          "team": "away",
+          "role": "skater",
+          "keys": [
+            {
+              "time": 0,
+              "x": 1,
+              "y": -2,
+              "facing": 3.141592653589793
+            }
+          ],
+          "frozen": false,
+          "fixedPose": null
+        }
+      ],
+      "puck": {
+        "owner": "away-skater-1"
+      },
+      "sourceRef": {
+        "id": "u11-1v1-hold-an-adjustable-gap",
+        "nodeId": "gap-control",
+        "note": "docs/library/gap-control.md"
+      },
+      "status": "development-not-validated"
+    },
+    "coachExplanation": "The reference keeps YOU goal-side and inside the carrier, with a stance facing the developing rush. It does not prescribe a universal distance or promise a stop; it shows the source cue in one authored frozen board.",
+    "expectedAction": null,
+    "sourceRef": {
+      "note": "docs/library/gap-control.md",
+      "url": "https://cdn1.sportngin.com/attachments/document/0066/4690/Skill_Progression_Manual_19_FINAL.pdf"
+    },
+    "status": "example-for-coach-review",
+    "view": "full",
+    "rubric": {
+      "mode": "open",
+      "mustNotice": [
+        "The left net is YOUR net.",
+        "The carrier is outside YOU, with room toward the middle."
+      ],
+      "acceptableActions": [],
+      "avoid": [
+        "Backing directly into the goalie",
+        "Reaching early from outside position"
+      ],
+      "followUpCue": "Show a carrier speed or direction change and ask the learner to adjust rather than defend one fixed spot."
+    }
+  },
+  {
+    "version": "rinkreads-coach-question-v1",
+    "id": "coach-example-u11-retrieval-away",
+    "title": "Escape the committed side",
+    "ageBand": "U11",
+    "prompt": "Your team defends the left net and exits toward the right. F1 has committed below your net. Which action starts the escape away from that pressure?",
+    "type": "action",
+    "controlledTeam": "home",
+    "initialDraft": {
+      "version": "rinkreads-director-draft-v1",
+      "title": "U11 2v2 retrieval away from pressure",
+      "duration": 8,
+      "actors": [
+        {
+          "id": "home-skater-1",
+          "label": "YOU",
+          "team": "home",
+          "role": "skater",
+          "keys": [
+            {
+              "time": 0,
+              "x": -25,
+              "y": -2,
+              "facing": 4.71238898038469
+            }
+          ],
+          "frozen": false,
+          "fixedPose": null
+        },
+        {
+          "id": "home-skater-2",
+          "label": "W1",
+          "team": "home",
+          "role": "skater",
+          "keys": [
+            {
+              "time": 0,
+              "x": -16,
+              "y": 7,
+              "facing": 3.141592653589793
+            }
+          ],
+          "frozen": false,
+          "fixedPose": null
+        },
+        {
+          "id": "home-goalie-1",
+          "label": "G",
+          "team": "home",
+          "role": "goalie",
+          "keys": [
+            {
+              "time": 0,
+              "x": -25.6,
+              "y": 0,
+              "facing": 0
+            }
+          ],
+          "frozen": false,
+          "fixedPose": null
+        },
+        {
+          "id": "away-skater-1",
+          "label": "F1",
+          "team": "away",
+          "role": "skater",
+          "keys": [
+            {
+              "time": 0,
+              "x": -21,
+              "y": -6,
+              "facing": 3.7831853071795862
+            }
+          ],
+          "frozen": false,
+          "fixedPose": null
+        },
+        {
+          "id": "away-skater-2",
+          "label": "F2",
+          "team": "away",
+          "role": "skater",
+          "keys": [
+            {
+              "time": 0,
+              "x": -10,
+              "y": 0,
+              "facing": 3.141592653589793
+            }
+          ],
+          "frozen": false,
+          "fixedPose": null
+        }
+      ],
+      "puck": {
+        "owner": "home-skater-1"
+      },
+      "sourceRef": {
+        "id": "u11-2v2-retrieval-away-from-pressure",
+        "nodeId": "breakout-and-regroup",
+        "note": "docs/library/dz-breakout-retrieval-under-pressure.md"
+      },
+      "status": "development-not-validated"
+    },
+    "referenceDraft": {
+      "version": "rinkreads-director-draft-v1",
+      "title": "U11 2v2 retrieval away from pressure",
+      "duration": 8,
+      "actors": [
+        {
+          "id": "home-skater-1",
+          "label": "YOU",
+          "team": "home",
+          "role": "skater",
+          "keys": [
+            {
+              "time": 0,
+              "x": -25,
+              "y": -2,
+              "facing": 4.71238898038469
+            }
+          ],
+          "frozen": false,
+          "fixedPose": null
+        },
+        {
+          "id": "home-skater-2",
+          "label": "W1",
+          "team": "home",
+          "role": "skater",
+          "keys": [
+            {
+              "time": 0,
+              "x": -16,
+              "y": 7,
+              "facing": 3.141592653589793
+            }
+          ],
+          "frozen": false,
+          "fixedPose": null
+        },
+        {
+          "id": "home-goalie-1",
+          "label": "G",
+          "team": "home",
+          "role": "goalie",
+          "keys": [
+            {
+              "time": 0,
+              "x": -25.6,
+              "y": 0,
+              "facing": 0
+            }
+          ],
+          "frozen": false,
+          "fixedPose": null
+        },
+        {
+          "id": "away-skater-1",
+          "label": "F1",
+          "team": "away",
+          "role": "skater",
+          "keys": [
+            {
+              "time": 0,
+              "x": -21,
+              "y": -6,
+              "facing": 3.7831853071795862
+            }
+          ],
+          "frozen": false,
+          "fixedPose": null
+        },
+        {
+          "id": "away-skater-2",
+          "label": "F2",
+          "team": "away",
+          "role": "skater",
+          "keys": [
+            {
+              "time": 0,
+              "x": -10,
+              "y": 0,
+              "facing": 3.141592653589793
+            }
+          ],
+          "frozen": false,
+          "fixedPose": null
+        }
+      ],
+      "puck": {
+        "owner": "home-skater-1"
+      },
+      "sourceRef": {
+        "id": "u11-2v2-retrieval-away-from-pressure",
+        "nodeId": "breakout-and-regroup",
+        "note": "docs/library/dz-breakout-retrieval-under-pressure.md"
+      },
+      "status": "development-not-validated"
+    },
+    "coachExplanation": "Carry behind the net toward the side F1 has turned away from. The net separates the puck from pressure, while carrying straight into F1 or through the slot increases danger. The board is a static authored decision moment; it does not claim an automatically simulated route.",
+    "expectedAction": "carry",
+    "sourceRef": {
+      "note": "docs/library/dz-breakout-retrieval-under-pressure.md",
+      "url": "https://www.usahockey.com/practiceplans"
+    },
+    "status": "example-for-coach-review",
+    "view": "full",
+    "rubric": {
+      "mode": "forced",
+      "mustNotice": [
+        "F1 has committed to one side of the net.",
+        "The own-slot route is dangerous."
+      ],
+      "acceptableActions": [
+        "carry"
+      ],
+      "avoid": [
+        "Carry into F1",
+        "Carry through the front of the left net",
+        "Wait behind the net"
+      ],
+      "followUpCue": "Reverse which side F1 commits to; the escape side must reverse too."
+    }
+  },
+  {
+    "version": "rinkreads-coach-question-v1",
+    "id": "coach-example-u15-forecheck-angle",
+    "title": "Angle pressure before adding speed",
+    "ageBand": "U15",
+    "prompt": "Your team attacks the right net. D1 controls the puck near the wall with a middle outlet and reverse support. Move YOU to remove the middle first while keeping the reverse in the read.",
+    "type": "position",
+    "controlledTeam": "home",
+    "initialDraft": {
+      "version": "rinkreads-director-draft-v1",
+      "title": "U15 3v3 forecheck angle",
+      "duration": 8,
+      "actors": [
+        {
+          "id": "home-skater-1",
+          "label": "YOU",
+          "team": "home",
+          "role": "skater",
+          "keys": [
+            {
+              "time": 0,
+              "x": 18,
+              "y": 8,
+              "facing": 0
+            }
+          ],
+          "frozen": false,
+          "fixedPose": null
+        },
+        {
+          "id": "home-skater-2",
+          "label": "F2",
+          "team": "home",
+          "role": "skater",
+          "keys": [
+            {
+              "time": 0,
+              "x": 12,
+              "y": -5,
+              "facing": 0
+            }
+          ],
+          "frozen": false,
+          "fixedPose": null
+        },
+        {
+          "id": "home-skater-3",
+          "label": "F3",
+          "team": "home",
+          "role": "skater",
+          "keys": [
+            {
+              "time": 0,
+              "x": 10,
+              "y": 6,
+              "facing": 0
+            }
+          ],
+          "frozen": false,
+          "fixedPose": null
+        },
+        {
+          "id": "away-skater-1",
+          "label": "D1",
+          "team": "away",
+          "role": "skater",
+          "keys": [
+            {
+              "time": 0,
+              "x": 23,
+              "y": 6,
+              "facing": 3.141592653589793
+            }
+          ],
+          "frozen": false,
+          "fixedPose": null
+        },
+        {
+          "id": "away-skater-2",
+          "label": "D2",
+          "team": "away",
+          "role": "skater",
+          "keys": [
+            {
+              "time": 0,
+              "x": 16,
+              "y": 0,
+              "facing": 3.141592653589793
+            }
+          ],
+          "frozen": false,
+          "fixedPose": null
+        },
+        {
+          "id": "away-skater-3",
+          "label": "D3",
+          "team": "away",
+          "role": "skater",
+          "keys": [
+            {
+              "time": 0,
+              "x": 24,
+              "y": -5,
+              "facing": 3.141592653589793
+            }
+          ],
+          "frozen": false,
+          "fixedPose": null
+        },
+        {
+          "id": "away-goalie-1",
+          "label": "G",
+          "team": "away",
+          "role": "goalie",
+          "keys": [
+            {
+              "time": 0,
+              "x": 25.6,
+              "y": 0,
+              "facing": 3.141592653589793
+            }
+          ],
+          "frozen": false,
+          "fixedPose": null
+        }
+      ],
+      "puck": {
+        "owner": "away-skater-1"
+      },
+      "sourceRef": {
+        "id": "u15-3v3-forecheck-angle",
+        "nodeId": "forecheck-pressure",
+        "note": "docs/library/forecheck-pressure.md"
+      },
+      "status": "development-not-validated"
+    },
+    "referenceDraft": {
+      "version": "rinkreads-director-draft-v1",
+      "title": "U15 3v3 forecheck angle",
+      "duration": 8,
+      "actors": [
+        {
+          "id": "home-skater-1",
+          "label": "YOU",
+          "team": "home",
+          "role": "skater",
+          "keys": [
+            {
+              "time": 0,
+              "x": 20,
+              "y": 3,
+              "facing": 0.75
+            }
+          ],
+          "frozen": false,
+          "fixedPose": null
+        },
+        {
+          "id": "home-skater-2",
+          "label": "F2",
+          "team": "home",
+          "role": "skater",
+          "keys": [
+            {
+              "time": 0,
+              "x": 12,
+              "y": -5,
+              "facing": 0
+            }
+          ],
+          "frozen": false,
+          "fixedPose": null
+        },
+        {
+          "id": "home-skater-3",
+          "label": "F3",
+          "team": "home",
+          "role": "skater",
+          "keys": [
+            {
+              "time": 0,
+              "x": 10,
+              "y": 6,
+              "facing": 0
+            }
+          ],
+          "frozen": false,
+          "fixedPose": null
+        },
+        {
+          "id": "away-skater-1",
+          "label": "D1",
+          "team": "away",
+          "role": "skater",
+          "keys": [
+            {
+              "time": 0,
+              "x": 23,
+              "y": 6,
+              "facing": 3.141592653589793
+            }
+          ],
+          "frozen": false,
+          "fixedPose": null
+        },
+        {
+          "id": "away-skater-2",
+          "label": "D2",
+          "team": "away",
+          "role": "skater",
+          "keys": [
+            {
+              "time": 0,
+              "x": 16,
+              "y": 0,
+              "facing": 3.141592653589793
+            }
+          ],
+          "frozen": false,
+          "fixedPose": null
+        },
+        {
+          "id": "away-skater-3",
+          "label": "D3",
+          "team": "away",
+          "role": "skater",
+          "keys": [
+            {
+              "time": 0,
+              "x": 24,
+              "y": -5,
+              "facing": 3.141592653589793
+            }
+          ],
+          "frozen": false,
+          "fixedPose": null
+        },
+        {
+          "id": "away-goalie-1",
+          "label": "G",
+          "team": "away",
+          "role": "goalie",
+          "keys": [
+            {
+              "time": 0,
+              "x": 25.6,
+              "y": 0,
+              "facing": 3.141592653589793
+            }
+          ],
+          "frozen": false,
+          "fixedPose": null
+        }
+      ],
+      "puck": {
+        "owner": "away-skater-1"
+      },
+      "sourceRef": {
+        "id": "u15-3v3-forecheck-angle",
+        "nodeId": "forecheck-pressure",
+        "note": "docs/library/forecheck-pressure.md"
+      },
+      "status": "development-not-validated"
+    },
+    "coachExplanation": "The reference starts pressure from the inside lane and faces toward the carrier's wall-side space. That makes the pressure direction deliberate and keeps the middle outlet from becoming the easy escape. It illustrates the source rule without claiming that this static board has authored movement.",
+    "expectedAction": null,
+    "sourceRef": {
+      "note": "docs/library/forecheck-pressure.md"
+    },
+    "status": "example-for-coach-review",
+    "view": "full",
+    "rubric": {
+      "mode": "open",
+      "mustNotice": [
+        "The carrier has both a middle outlet and reverse support.",
+        "Pressure direction matters more than raw speed."
+      ],
+      "acceptableActions": [],
+      "avoid": [
+        "A straight-line chase that opens the middle",
+        "Finishing pressure with no reverse awareness"
+      ],
+      "followUpCue": "Let the carrier turn back and ask whether YOUR finish still removes the reverse."
+    }
+  },
+  {
+    "version": "rinkreads-coach-question-v1",
+    "id": "coach-example-u13-backcheck-inside",
+    "title": "Recover through the dangerous lane",
+    "ageBand": "U13",
+    "prompt": "Your team defends the left net. D1 has the carrier. Move YOU to remove F2's inside support lane instead of following the puck from behind.",
+    "type": "position",
+    "controlledTeam": "home",
+    "initialDraft": {
+      "version": "rinkreads-director-draft-v1",
+      "title": "U13 3v2 backcheck inside support",
+      "duration": 8,
+      "actors": [
+        {
+          "id": "home-skater-1",
+          "label": "D1",
+          "team": "home",
+          "role": "skater",
+          "keys": [
+            {
+              "time": 0,
+              "x": -13,
+              "y": -3,
+              "facing": 0
+            }
+          ],
+          "frozen": false,
+          "fixedPose": null
+        },
+        {
+          "id": "home-skater-2",
+          "label": "YOU",
+          "team": "home",
+          "role": "skater",
+          "keys": [
+            {
+              "time": 0,
+              "x": 2,
+              "y": -5,
+              "facing": 3.141592653589793
+            }
+          ],
+          "frozen": false,
+          "fixedPose": null
+        },
+        {
+          "id": "home-skater-3",
+          "label": "D2",
+          "team": "home",
+          "role": "skater",
+          "keys": [
+            {
+              "time": 0,
+              "x": -2,
+              "y": 9,
+              "facing": 3.141592653589793
+            }
+          ],
+          "frozen": false,
+          "fixedPose": null
+        },
+        {
+          "id": "home-goalie-1",
+          "label": "G",
+          "team": "home",
+          "role": "goalie",
+          "keys": [
+            {
+              "time": 0,
+              "x": -25.6,
+              "y": 0,
+              "facing": 0
+            }
+          ],
+          "frozen": false,
+          "fixedPose": null
+        },
+        {
+          "id": "away-skater-1",
+          "label": "F1",
+          "team": "away",
+          "role": "skater",
+          "keys": [
+            {
+              "time": 0,
+              "x": -4,
+              "y": -4,
+              "facing": 3.141592653589793
+            }
+          ],
+          "frozen": false,
+          "fixedPose": null
+        },
+        {
+          "id": "away-skater-2",
+          "label": "F2",
+          "team": "away",
+          "role": "skater",
+          "keys": [
+            {
+              "time": 0,
+              "x": -7,
+              "y": 4,
+              "facing": 3.141592653589793
+            }
+          ],
+          "frozen": false,
+          "fixedPose": null
+        }
+      ],
+      "puck": {
+        "owner": "away-skater-1"
+      },
+      "sourceRef": {
+        "id": "u13-3v2-backcheck-inside-support",
+        "nodeId": "backcheck-recovery",
+        "note": "docs/library/backcheck-recovery.md"
+      },
+      "status": "development-not-validated"
+    },
+    "referenceDraft": {
+      "version": "rinkreads-director-draft-v1",
+      "title": "U13 3v2 backcheck inside support",
+      "duration": 8,
+      "actors": [
+        {
+          "id": "home-skater-1",
+          "label": "D1",
+          "team": "home",
+          "role": "skater",
+          "keys": [
+            {
+              "time": 0,
+              "x": -13,
+              "y": -3,
+              "facing": 0
+            }
+          ],
+          "frozen": false,
+          "fixedPose": null
+        },
+        {
+          "id": "home-skater-2",
+          "label": "YOU",
+          "team": "home",
+          "role": "skater",
+          "keys": [
+            {
+              "time": 0,
+              "x": -11,
+              "y": 2,
+              "facing": 3.141592653589793
+            }
+          ],
+          "frozen": false,
+          "fixedPose": null
+        },
+        {
+          "id": "home-skater-3",
+          "label": "D2",
+          "team": "home",
+          "role": "skater",
+          "keys": [
+            {
+              "time": 0,
+              "x": -2,
+              "y": 9,
+              "facing": 3.141592653589793
+            }
+          ],
+          "frozen": false,
+          "fixedPose": null
+        },
+        {
+          "id": "home-goalie-1",
+          "label": "G",
+          "team": "home",
+          "role": "goalie",
+          "keys": [
+            {
+              "time": 0,
+              "x": -25.6,
+              "y": 0,
+              "facing": 0
+            }
+          ],
+          "frozen": false,
+          "fixedPose": null
+        },
+        {
+          "id": "away-skater-1",
+          "label": "F1",
+          "team": "away",
+          "role": "skater",
+          "keys": [
+            {
+              "time": 0,
+              "x": -4,
+              "y": -4,
+              "facing": 3.141592653589793
+            }
+          ],
+          "frozen": false,
+          "fixedPose": null
+        },
+        {
+          "id": "away-skater-2",
+          "label": "F2",
+          "team": "away",
+          "role": "skater",
+          "keys": [
+            {
+              "time": 0,
+              "x": -7,
+              "y": 4,
+              "facing": 3.141592653589793
+            }
+          ],
+          "frozen": false,
+          "fixedPose": null
+        }
+      ],
+      "puck": {
+        "owner": "away-skater-1"
+      },
+      "sourceRef": {
+        "id": "u13-3v2-backcheck-inside-support",
+        "nodeId": "backcheck-recovery",
+        "note": "docs/library/backcheck-recovery.md"
+      },
+      "status": "development-not-validated"
+    },
+    "coachExplanation": "The reference puts YOU between the inside support and the left net. D1 remains responsible for the carrier, so chasing the puck would duplicate pressure and leave F2 available. These exact roles and locations are authored for this example.",
+    "expectedAction": null,
+    "sourceRef": {
+      "note": "docs/library/backcheck-recovery.md"
+    },
+    "status": "example-for-coach-review",
+    "view": "full",
+    "rubric": {
+      "mode": "open",
+      "mustNotice": [
+        "D1 already has the carrier.",
+        "F2 is the inside support threat."
+      ],
+      "acceptableActions": [],
+      "avoid": [
+        "Chasing the puck from behind",
+        "Recovering outside the most dangerous support"
+      ],
+      "followUpCue": "Move F2 outside and add a new inside threat; the recovery responsibility should change."
+    }
+  },
+  {
+    "version": "rinkreads-coach-question-v1",
+    "id": "coach-example-u18-backcheck-next-defender",
+    "title": "Change jobs when the first defender is beat",
+    "ageBand": "U18",
+    "prompt": "Your team defends the left net. F1 has passed D1, while D2 is goal-side of F2. Move YOU to become the next inside defender on the carrier.",
+    "type": "position",
+    "controlledTeam": "home",
+    "initialDraft": {
+      "version": "rinkreads-director-draft-v1",
+      "title": "U18 3v3 become the next defender",
+      "duration": 8,
+      "actors": [
+        {
+          "id": "home-skater-1",
+          "label": "D1",
+          "team": "home",
+          "role": "skater",
+          "keys": [
+            {
+              "time": 0,
+              "x": -3,
+              "y": -3,
+              "facing": 3.141592653589793
+            }
+          ],
+          "frozen": false,
+          "fixedPose": null
+        },
+        {
+          "id": "home-skater-2",
+          "label": "YOU",
+          "team": "home",
+          "role": "skater",
+          "keys": [
+            {
+              "time": 0,
+              "x": -5,
+              "y": 5,
+              "facing": 3.141592653589793
+            }
+          ],
+          "frozen": false,
+          "fixedPose": null
+        },
+        {
+          "id": "home-skater-3",
+          "label": "D2",
+          "team": "home",
+          "role": "skater",
+          "keys": [
+            {
+              "time": 0,
+              "x": -12,
+              "y": 6,
+              "facing": 0
+            }
+          ],
+          "frozen": false,
+          "fixedPose": null
+        },
+        {
+          "id": "home-goalie-1",
+          "label": "G",
+          "team": "home",
+          "role": "goalie",
+          "keys": [
+            {
+              "time": 0,
+              "x": -25.6,
+              "y": 0,
+              "facing": 0
+            }
+          ],
+          "frozen": false,
+          "fixedPose": null
+        },
+        {
+          "id": "away-skater-1",
+          "label": "F1",
+          "team": "away",
+          "role": "skater",
+          "keys": [
+            {
+              "time": 0,
+              "x": -9,
+              "y": -3,
+              "facing": 3.141592653589793
+            }
+          ],
+          "frozen": false,
+          "fixedPose": null
+        },
+        {
+          "id": "away-skater-2",
+          "label": "F2",
+          "team": "away",
+          "role": "skater",
+          "keys": [
+            {
+              "time": 0,
+              "x": -9,
+              "y": 5,
+              "facing": 3.141592653589793
+            }
+          ],
+          "frozen": false,
+          "fixedPose": null
+        },
+        {
+          "id": "away-skater-3",
+          "label": "F3",
+          "team": "away",
+          "role": "skater",
+          "keys": [
+            {
+              "time": 0,
+              "x": -1,
+              "y": 8,
+              "facing": 3.141592653589793
+            }
+          ],
+          "frozen": false,
+          "fixedPose": null
+        }
+      ],
+      "puck": {
+        "owner": "away-skater-1"
+      },
+      "sourceRef": {
+        "id": "u18-3v3-become-the-next-defender",
+        "nodeId": "backcheck-recovery",
+        "note": "docs/library/backcheck-recovery-defender-gets-beat.md"
+      },
+      "status": "development-not-validated"
+    },
+    "referenceDraft": {
+      "version": "rinkreads-director-draft-v1",
+      "title": "U18 3v3 become the next defender",
+      "duration": 8,
+      "actors": [
+        {
+          "id": "home-skater-1",
+          "label": "D1",
+          "team": "home",
+          "role": "skater",
+          "keys": [
+            {
+              "time": 0,
+              "x": -3,
+              "y": -3,
+              "facing": 3.141592653589793
+            }
+          ],
+          "frozen": false,
+          "fixedPose": null
+        },
+        {
+          "id": "home-skater-2",
+          "label": "YOU",
+          "team": "home",
+          "role": "skater",
+          "keys": [
+            {
+              "time": 0,
+              "x": -13,
+              "y": -1,
+              "facing": 2.9
+            }
+          ],
+          "frozen": false,
+          "fixedPose": null
+        },
+        {
+          "id": "home-skater-3",
+          "label": "D2",
+          "team": "home",
+          "role": "skater",
+          "keys": [
+            {
+              "time": 0,
+              "x": -12,
+              "y": 6,
+              "facing": 0
+            }
+          ],
+          "frozen": false,
+          "fixedPose": null
+        },
+        {
+          "id": "home-goalie-1",
+          "label": "G",
+          "team": "home",
+          "role": "goalie",
+          "keys": [
+            {
+              "time": 0,
+              "x": -25.6,
+              "y": 0,
+              "facing": 0
+            }
+          ],
+          "frozen": false,
+          "fixedPose": null
+        },
+        {
+          "id": "away-skater-1",
+          "label": "F1",
+          "team": "away",
+          "role": "skater",
+          "keys": [
+            {
+              "time": 0,
+              "x": -9,
+              "y": -3,
+              "facing": 3.141592653589793
+            }
+          ],
+          "frozen": false,
+          "fixedPose": null
+        },
+        {
+          "id": "away-skater-2",
+          "label": "F2",
+          "team": "away",
+          "role": "skater",
+          "keys": [
+            {
+              "time": 0,
+              "x": -9,
+              "y": 5,
+              "facing": 3.141592653589793
+            }
+          ],
+          "frozen": false,
+          "fixedPose": null
+        },
+        {
+          "id": "away-skater-3",
+          "label": "F3",
+          "team": "away",
+          "role": "skater",
+          "keys": [
+            {
+              "time": 0,
+              "x": -1,
+              "y": 8,
+              "facing": 3.141592653589793
+            }
+          ],
+          "frozen": false,
+          "fixedPose": null
+        }
+      ],
+      "puck": {
+        "owner": "away-skater-1"
+      },
+      "sourceRef": {
+        "id": "u18-3v3-become-the-next-defender",
+        "nodeId": "backcheck-recovery",
+        "note": "docs/library/backcheck-recovery-defender-gets-beat.md"
+      },
+      "status": "development-not-validated"
+    },
+    "coachExplanation": "The reference changes YOUR responsibility because D1 is now behind the puck carrier. D2 still has the support threat, so YOU recovers inside F1's route instead of staying beside F2. The beat is stated as the frozen condition; no unshown movement is inferred.",
+    "expectedAction": null,
+    "sourceRef": {
+      "note": "docs/library/backcheck-recovery-defender-gets-beat.md"
+    },
+    "status": "example-for-coach-review",
+    "view": "full",
+    "rubric": {
+      "mode": "open",
+      "mustNotice": [
+        "D1 is behind the carrier.",
+        "D2 is already goal-side of F2."
+      ],
+      "acceptableActions": [],
+      "avoid": [
+        "Continuing to double-cover F2",
+        "Treating D1 as if D1 still has the carrier"
+      ],
+      "followUpCue": "Restore D1 between F1 and the net; YOUR job can return to the inside support threat."
+    }
+  },
+  {
+    "version": "rinkreads-coach-question-v1",
+    "id": "coach-example-u7-find-open-teammate",
+    "title": "Move where both players can see you",
+    "ageBand": "U7",
+    "prompt": "Your team attacks the right net. The other player has moved toward your teammate with the puck. Move YOU into open ice away from that player.",
+    "type": "position",
+    "controlledTeam": "home",
+    "initialDraft": {
+      "version": "rinkreads-director-draft-v1",
+      "title": "U7 find the open teammate",
+      "duration": 8,
+      "actors": [
+        {
+          "id": "home-skater-1",
+          "label": "TEAMMATE",
+          "team": "home",
+          "role": "skater",
+          "keys": [
+            {
+              "time": 0,
+              "x": 13,
+              "y": -4,
+              "facing": 0
+            }
+          ],
+          "frozen": false,
+          "fixedPose": null
+        },
+        {
+          "id": "home-skater-2",
+          "label": "YOU",
+          "team": "home",
+          "role": "skater",
+          "keys": [
+            {
+              "time": 0,
+              "x": 16,
+              "y": -1,
+              "facing": 0
+            }
+          ],
+          "frozen": false,
+          "fixedPose": null
+        },
+        {
+          "id": "away-skater-1",
+          "label": "OTHER PLAYER",
+          "team": "away",
+          "role": "skater",
+          "keys": [
+            {
+              "time": 0,
+              "x": 18,
+              "y": -3,
+              "facing": 3.141592653589793
+            }
+          ],
+          "frozen": false,
+          "fixedPose": null
+        },
+        {
+          "id": "away-goalie-1",
+          "label": "GOALIE",
+          "team": "away",
+          "role": "goalie",
+          "keys": [
+            {
+              "time": 0,
+              "x": 25.6,
+              "y": 0,
+              "facing": 3.141592653589793
+            }
+          ],
+          "frozen": false,
+          "fixedPose": null
+        }
+      ],
+      "puck": {
+        "owner": "home-skater-1"
+      },
+      "sourceRef": {
+        "id": "u7-find-the-open-teammate",
+        "nodeId": "odd-man-reads",
+        "note": "docs/library/odd-man-reads.md"
+      },
+      "status": "development-not-validated"
+    },
+    "referenceDraft": {
+      "version": "rinkreads-director-draft-v1",
+      "title": "U7 find the open teammate",
+      "duration": 8,
+      "actors": [
+        {
+          "id": "home-skater-1",
+          "label": "TEAMMATE",
+          "team": "home",
+          "role": "skater",
+          "keys": [
+            {
+              "time": 0,
+              "x": 13,
+              "y": -4,
+              "facing": 0
+            }
+          ],
+          "frozen": false,
+          "fixedPose": null
+        },
+        {
+          "id": "home-skater-2",
+          "label": "YOU",
+          "team": "home",
+          "role": "skater",
+          "keys": [
+            {
+              "time": 0,
+              "x": 20,
+              "y": 6,
+              "facing": 3.7831853071795862
+            }
+          ],
+          "frozen": false,
+          "fixedPose": null
+        },
+        {
+          "id": "away-skater-1",
+          "label": "OTHER PLAYER",
+          "team": "away",
+          "role": "skater",
+          "keys": [
+            {
+              "time": 0,
+              "x": 18,
+              "y": -3,
+              "facing": 3.141592653589793
+            }
+          ],
+          "frozen": false,
+          "fixedPose": null
+        },
+        {
+          "id": "away-goalie-1",
+          "label": "GOALIE",
+          "team": "away",
+          "role": "goalie",
+          "keys": [
+            {
+              "time": 0,
+              "x": 25.6,
+              "y": 0,
+              "facing": 3.141592653589793
+            }
+          ],
+          "frozen": false,
+          "fixedPose": null
+        }
+      ],
+      "puck": {
+        "owner": "home-skater-1"
+      },
+      "sourceRef": {
+        "id": "u7-find-the-open-teammate",
+        "nodeId": "odd-man-reads",
+        "note": "docs/library/odd-man-reads.md"
+      },
+      "status": "development-not-validated"
+    },
+    "coachExplanation": "The reference puts YOU in separate open ice where the teammate can see a clear pass. The other player stays near the puck route and cannot stand in both places. This is a simple positionless reading prerequisite, not formal odd-man tactics.",
+    "expectedAction": null,
+    "sourceRef": {
+      "note": "docs/library/odd-man-reads.md",
+      "url": "https://www.usahockey.com/smallareagames"
+    },
+    "status": "example-for-coach-review",
+    "view": "half-right",
+    "rubric": {
+      "mode": "open",
+      "mustNotice": [
+        "The other player is near the teammate with the puck.",
+        "Open ice exists away from that player."
+      ],
+      "acceptableActions": [],
+      "avoid": [
+        "Skating beside the other player",
+        "Standing in the teammate's puck route"
+      ],
+      "followUpCue": "Move the other player toward YOU and ask which ice is open now."
+    }
+  },
+  {
+    "version": "rinkreads-coach-question-v1",
+    "id": "coach-example-u13-2v1-pass-removed",
+    "title": "Use the shot when the pass is removed",
+    "ageBand": "U13",
+    "prompt": "Your team attacks the right net. D1 sits directly in the lane to F2 while the route from YOU to the net is clear. Which action uses the available threat?",
+    "type": "action",
+    "controlledTeam": "home",
+    "initialDraft": {
+      "version": "rinkreads-director-draft-v1",
+      "title": "U13 2v1 pass lane removed",
+      "duration": 8,
+      "actors": [
+        {
+          "id": "home-skater-1",
+          "label": "YOU",
+          "team": "home",
+          "role": "skater",
+          "keys": [
+            {
+              "time": 0,
+              "x": 16,
+              "y": -6,
+              "facing": 0
+            }
+          ],
+          "frozen": false,
+          "fixedPose": null
+        },
+        {
+          "id": "home-skater-2",
+          "label": "F2",
+          "team": "home",
+          "role": "skater",
+          "keys": [
+            {
+              "time": 0,
+              "x": 19,
+              "y": 6,
+              "facing": 0
+            }
+          ],
+          "frozen": false,
+          "fixedPose": null
+        },
+        {
+          "id": "away-skater-1",
+          "label": "D1",
+          "team": "away",
+          "role": "skater",
+          "keys": [
+            {
+              "time": 0,
+              "x": 18,
+              "y": 2,
+              "facing": 3.141592653589793
+            }
+          ],
+          "frozen": false,
+          "fixedPose": null
+        },
+        {
+          "id": "away-goalie-1",
+          "label": "G",
+          "team": "away",
+          "role": "goalie",
+          "keys": [
+            {
+              "time": 0,
+              "x": 25.6,
+              "y": 0,
+              "facing": 3.141592653589793
+            }
+          ],
+          "frozen": false,
+          "fixedPose": null
+        }
+      ],
+      "puck": {
+        "owner": "home-skater-1"
+      },
+      "sourceRef": {
+        "id": "u13-2v1-pass-lane-removed",
+        "nodeId": "odd-man-reads",
+        "note": "docs/library/two-on-one-pass-lane-removed.md"
+      },
+      "status": "development-not-validated"
+    },
+    "referenceDraft": {
+      "version": "rinkreads-director-draft-v1",
+      "title": "U13 2v1 pass lane removed",
+      "duration": 8,
+      "actors": [
+        {
+          "id": "home-skater-1",
+          "label": "YOU",
+          "team": "home",
+          "role": "skater",
+          "keys": [
+            {
+              "time": 0,
+              "x": 16,
+              "y": -6,
+              "facing": 0
+            }
+          ],
+          "frozen": false,
+          "fixedPose": null
+        },
+        {
+          "id": "home-skater-2",
+          "label": "F2",
+          "team": "home",
+          "role": "skater",
+          "keys": [
+            {
+              "time": 0,
+              "x": 19,
+              "y": 6,
+              "facing": 0
+            }
+          ],
+          "frozen": false,
+          "fixedPose": null
+        },
+        {
+          "id": "away-skater-1",
+          "label": "D1",
+          "team": "away",
+          "role": "skater",
+          "keys": [
+            {
+              "time": 0,
+              "x": 18,
+              "y": 2,
+              "facing": 3.141592653589793
+            }
+          ],
+          "frozen": false,
+          "fixedPose": null
+        },
+        {
+          "id": "away-goalie-1",
+          "label": "G",
+          "team": "away",
+          "role": "goalie",
+          "keys": [
+            {
+              "time": 0,
+              "x": 25.6,
+              "y": 0,
+              "facing": 3.141592653589793
+            }
+          ],
+          "frozen": false,
+          "fixedPose": null
+        }
+      ],
+      "puck": {
+        "owner": "home-skater-1"
+      },
+      "sourceRef": {
+        "id": "u13-2v1-pass-lane-removed",
+        "nodeId": "odd-man-reads",
+        "note": "docs/library/two-on-one-pass-lane-removed.md"
+      },
+      "status": "development-not-validated"
+    },
+    "coachExplanation": "Shoot through the open route. D1 has chosen the passing lane and is not in the direct line from YOU to the right net. The source principle is conditional on these visible lanes; it is not a rule to shoot every 2-on-1.",
+    "expectedAction": "shoot",
+    "sourceRef": {
+      "note": "docs/library/two-on-one-pass-lane-removed.md"
+    },
+    "status": "example-for-coach-review",
+    "view": "full",
+    "rubric": {
+      "mode": "forced",
+      "mustNotice": [
+        "D1 is directly on the pass to F2.",
+        "The shot route to the right net is clear."
+      ],
+      "acceptableActions": [
+        "shoot"
+      ],
+      "avoid": [
+        "Force the pass through D1",
+        "Delay until D1 and the goalie recover"
+      ],
+      "followUpCue": "Move D1 into the shot lane and off the pass lane; the action should change."
+    }
+  },
+  {
+    "version": "rinkreads-coach-question-v1",
+    "id": "coach-example-u15-2v1-goalie-late",
+    "title": "Use the opening after the puck moves",
+    "ageBand": "U15",
+    "prompt": "Your team attacks the right net. The pass is already complete and YOU has the puck. The goalie remains on F1's side. Which action uses the current opening?",
+    "type": "action",
+    "controlledTeam": "home",
+    "initialDraft": {
+      "version": "rinkreads-director-draft-v1",
+      "title": "U15 2v1 goalie late after completed pass",
+      "duration": 8,
+      "actors": [
+        {
+          "id": "home-skater-1",
+          "label": "F1",
+          "team": "home",
+          "role": "skater",
+          "keys": [
+            {
+              "time": 0,
+              "x": 14,
+              "y": -5,
+              "facing": 0
+            }
+          ],
+          "frozen": false,
+          "fixedPose": null
+        },
+        {
+          "id": "home-skater-2",
+          "label": "YOU",
+          "team": "home",
+          "role": "skater",
+          "keys": [
+            {
+              "time": 0,
+              "x": 20,
+              "y": 5,
+              "facing": 0
+            }
+          ],
+          "frozen": false,
+          "fixedPose": null
+        },
+        {
+          "id": "away-skater-1",
+          "label": "D1",
+          "team": "away",
+          "role": "skater",
+          "keys": [
+            {
+              "time": 0,
+              "x": 17,
+              "y": -2,
+              "facing": 3.141592653589793
+            }
+          ],
+          "frozen": false,
+          "fixedPose": null
+        },
+        {
+          "id": "away-goalie-1",
+          "label": "G",
+          "team": "away",
+          "role": "goalie",
+          "keys": [
+            {
+              "time": 0,
+              "x": 25.6,
+              "y": -4,
+              "facing": 3.141592653589793
+            }
+          ],
+          "frozen": false,
+          "fixedPose": null
+        }
+      ],
+      "puck": {
+        "owner": "home-skater-2"
+      },
+      "sourceRef": {
+        "id": "u15-2v1-goalie-late-after-completed-pass",
+        "nodeId": "odd-man-reads",
+        "note": "docs/library/two-on-one-goalie-late-after-pass.md"
+      },
+      "status": "development-not-validated"
+    },
+    "referenceDraft": {
+      "version": "rinkreads-director-draft-v1",
+      "title": "U15 2v1 goalie late after completed pass",
+      "duration": 8,
+      "actors": [
+        {
+          "id": "home-skater-1",
+          "label": "F1",
+          "team": "home",
+          "role": "skater",
+          "keys": [
+            {
+              "time": 0,
+              "x": 14,
+              "y": -5,
+              "facing": 0
+            }
+          ],
+          "frozen": false,
+          "fixedPose": null
+        },
+        {
+          "id": "home-skater-2",
+          "label": "YOU",
+          "team": "home",
+          "role": "skater",
+          "keys": [
+            {
+              "time": 0,
+              "x": 20,
+              "y": 5,
+              "facing": 0
+            }
+          ],
+          "frozen": false,
+          "fixedPose": null
+        },
+        {
+          "id": "away-skater-1",
+          "label": "D1",
+          "team": "away",
+          "role": "skater",
+          "keys": [
+            {
+              "time": 0,
+              "x": 17,
+              "y": -2,
+              "facing": 3.141592653589793
+            }
+          ],
+          "frozen": false,
+          "fixedPose": null
+        },
+        {
+          "id": "away-goalie-1",
+          "label": "G",
+          "team": "away",
+          "role": "goalie",
+          "keys": [
+            {
+              "time": 0,
+              "x": 25.6,
+              "y": -4,
+              "facing": 3.141592653589793
+            }
+          ],
+          "frozen": false,
+          "fixedPose": null
+        }
+      ],
+      "puck": {
+        "owner": "home-skater-2"
+      },
+      "sourceRef": {
+        "id": "u15-2v1-goalie-late-after-completed-pass",
+        "nodeId": "odd-man-reads",
+        "note": "docs/library/two-on-one-goalie-late-after-pass.md"
+      },
+      "status": "development-not-validated"
+    },
+    "coachExplanation": "Shoot from the receiving side before choosing to hold or return the puck. The frozen board shows the puck already on YOU and the goalie displaced toward F1; it does not invent pass timing or guarantee a goal.",
+    "expectedAction": "shoot",
+    "sourceRef": {
+      "note": "docs/library/two-on-one-goalie-late-after-pass.md"
+    },
+    "status": "example-for-coach-review",
+    "view": "full",
+    "rubric": {
+      "mode": "forced",
+      "mustNotice": [
+        "The pass is already complete.",
+        "The goalie remains displaced toward F1."
+      ],
+      "acceptableActions": [
+        "shoot"
+      ],
+      "avoid": [
+        "Hold until the goalie becomes square",
+        "Return the puck without a new visible reason"
+      ],
+      "followUpCue": "Move the goalie square to YOU before the freeze and ask whether the same shot remains forced."
+    }
+  },
+  {
+    "version": "rinkreads-coach-question-v1",
+    "id": "coach-example-u18-layered-support-read",
+    "title": "Judge what each option adds",
+    "ageBand": "U18",
+    "prompt": "Your team attacks the right net. D1 partly covers the direct shot, F2 is wide but behind and marked, and F3 is a forward option with pressure nearby. Which action would you use now, and why?",
+    "type": "action",
+    "controlledTeam": "home",
+    "initialDraft": {
+      "version": "rinkreads-director-draft-v1",
+      "title": "U18 3v2 layered support judgment",
+      "duration": 8,
+      "actors": [
+        {
+          "id": "home-skater-1",
+          "label": "YOU",
+          "team": "home",
+          "role": "skater",
+          "keys": [
+            {
+              "time": 0,
+              "x": 14,
+              "y": -4,
+              "facing": 0
+            }
+          ],
+          "frozen": false,
+          "fixedPose": null
+        },
+        {
+          "id": "home-skater-2",
+          "label": "F2",
+          "team": "home",
+          "role": "skater",
+          "keys": [
+            {
+              "time": 0,
+              "x": 11,
+              "y": 7,
+              "facing": 0
+            }
+          ],
+          "frozen": false,
+          "fixedPose": null
+        },
+        {
+          "id": "home-skater-3",
+          "label": "F3",
+          "team": "home",
+          "role": "skater",
+          "keys": [
+            {
+              "time": 0,
+              "x": 20,
+              "y": 7,
+              "facing": 3.7831853071795862
+            }
+          ],
+          "frozen": false,
+          "fixedPose": null
+        },
+        {
+          "id": "away-skater-1",
+          "label": "D1",
+          "team": "away",
+          "role": "skater",
+          "keys": [
+            {
+              "time": 0,
+              "x": 20,
+              "y": -1,
+              "facing": 3.141592653589793
+            }
+          ],
+          "frozen": false,
+          "fixedPose": null
+        },
+        {
+          "id": "away-skater-2",
+          "label": "D2",
+          "team": "away",
+          "role": "skater",
+          "keys": [
+            {
+              "time": 0,
+              "x": 13,
+              "y": 6,
+              "facing": 3.141592653589793
+            }
+          ],
+          "frozen": false,
+          "fixedPose": null
+        },
+        {
+          "id": "away-goalie-1",
+          "label": "G",
+          "team": "away",
+          "role": "goalie",
+          "keys": [
+            {
+              "time": 0,
+              "x": 25.6,
+              "y": 0,
+              "facing": 3.141592653589793
+            }
+          ],
+          "frozen": false,
+          "fixedPose": null
+        }
+      ],
+      "puck": {
+        "owner": "home-skater-1"
+      },
+      "sourceRef": {
+        "id": "u18-3v2-layered-support-judgment",
+        "nodeId": "odd-man-reads",
+        "note": "docs/library/two-on-one-support-too-flat.md"
+      },
+      "status": "development-not-validated"
+    },
+    "referenceDraft": {
+      "version": "rinkreads-director-draft-v1",
+      "title": "U18 3v2 layered support judgment",
+      "duration": 8,
+      "actors": [
+        {
+          "id": "home-skater-1",
+          "label": "YOU",
+          "team": "home",
+          "role": "skater",
+          "keys": [
+            {
+              "time": 0,
+              "x": 14,
+              "y": -4,
+              "facing": 0
+            }
+          ],
+          "frozen": false,
+          "fixedPose": null
+        },
+        {
+          "id": "home-skater-2",
+          "label": "F2",
+          "team": "home",
+          "role": "skater",
+          "keys": [
+            {
+              "time": 0,
+              "x": 11,
+              "y": 7,
+              "facing": 0
+            }
+          ],
+          "frozen": false,
+          "fixedPose": null
+        },
+        {
+          "id": "home-skater-3",
+          "label": "F3",
+          "team": "home",
+          "role": "skater",
+          "keys": [
+            {
+              "time": 0,
+              "x": 20,
+              "y": 7,
+              "facing": 3.7831853071795862
+            }
+          ],
+          "frozen": false,
+          "fixedPose": null
+        },
+        {
+          "id": "away-skater-1",
+          "label": "D1",
+          "team": "away",
+          "role": "skater",
+          "keys": [
+            {
+              "time": 0,
+              "x": 20,
+              "y": -1,
+              "facing": 3.141592653589793
+            }
+          ],
+          "frozen": false,
+          "fixedPose": null
+        },
+        {
+          "id": "away-skater-2",
+          "label": "D2",
+          "team": "away",
+          "role": "skater",
+          "keys": [
+            {
+              "time": 0,
+              "x": 13,
+              "y": 6,
+              "facing": 3.141592653589793
+            }
+          ],
+          "frozen": false,
+          "fixedPose": null
+        },
+        {
+          "id": "away-goalie-1",
+          "label": "G",
+          "team": "away",
+          "role": "goalie",
+          "keys": [
+            {
+              "time": 0,
+              "x": 25.6,
+              "y": 0,
+              "facing": 3.141592653589793
+            }
+          ],
+          "frozen": false,
+          "fixedPose": null
+        }
+      ],
+      "puck": {
+        "owner": "home-skater-1"
+      },
+      "sourceRef": {
+        "id": "u18-3v2-layered-support-judgment",
+        "nodeId": "odd-man-reads",
+        "note": "docs/library/two-on-one-support-too-flat.md"
+      },
+      "status": "development-not-validated"
+    },
+    "coachExplanation": "The reference carries to change the shooting and passing angles instead of treating any available teammate as an automatic pass. A quick pass to F3 or a screened shot can also be defended if the learner names the nearby pressure and the lane they expect to use. This is open coach judgment, not an automatically graded single answer.",
+    "expectedAction": "carry",
+    "sourceRef": {
+      "note": "docs/library/two-on-one-support-too-flat.md"
+    },
+    "status": "example-for-coach-review",
+    "view": "full",
+    "rubric": {
+      "mode": "open",
+      "mustNotice": [
+        "D1 only partly covers the shot route.",
+        "F2 is wide, behind the puck and marked by D2.",
+        "F3 is forward but has nearby pressure."
+      ],
+      "acceptableActions": [
+        "carry",
+        "pass",
+        "shoot"
+      ],
+      "avoid": [
+        "Pass to F2 only because F2 is available",
+        "Claim that one partly covered cue makes another action automatic"
+      ],
+      "followUpCue": "Move D1 fully into the shot lane or move D2 off F2; ask how that changes the action and the reason."
+    }
+  }
+]

@@ -1,6 +1,7 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
 import App from './App'
+import './brand.css'
 
 // Inject global animations for Liquid Glass theme
 const style = document.createElement('style');
@@ -44,12 +45,12 @@ class RootErrorBoundary extends React.Component {
   render() {
     if (!this.state.error) return this.props.children;
     return (
-      <div style={{minHeight:'100vh',background:'#080e1a',color:'#f8fafc',fontFamily:"'DM Sans', system-ui, sans-serif",display:'flex',alignItems:'center',justifyContent:'center',padding:'1.5rem'}}>
+      <div style={{minHeight:'100vh',background:'#0B1A33',color:'#F5EFE6',fontFamily:"'Inter', system-ui, sans-serif",display:'flex',alignItems:'center',justifyContent:'center',padding:'1.5rem'}}>
         <div style={{maxWidth:380,textAlign:'center',background:'rgba(13,21,37,0.6)',border:'1px solid rgba(255,255,255,0.1)',borderRadius:16,padding:'1.75rem'}}>
           <div style={{fontSize:34,marginBottom:'.5rem'}}>⚠️</div>
-          <div style={{fontFamily:"'Anton', Impact, sans-serif",fontSize:'1.4rem',color:'#C9A24B',letterSpacing:'.03em',marginBottom:'.5rem'}}>Something went wrong</div>
+          <div style={{fontFamily:"'Playfair Display', Georgia, serif",fontSize:'1.4rem',color:'#C9A24B',letterSpacing:'.03em',marginBottom:'.5rem'}}>Something went wrong</div>
           <div style={{fontSize:13,color:'#9fb0c3',lineHeight:1.5,marginBottom:'1.25rem'}}>The app hit an unexpected error. Reloading usually fixes it.</div>
-          <button onClick={() => window.location.reload()} style={{background:'#C9A24B',color:'#080e1a',border:'none',borderRadius:10,padding:'.75rem 1.5rem',cursor:'pointer',fontWeight:800,fontSize:14,fontFamily:"'DM Sans', system-ui, sans-serif"}}>Reload</button>
+          <button onClick={() => window.location.reload()} style={{background:'#C9A24B',color:'#0B1A33',border:'none',borderRadius:10,padding:'.75rem 1.5rem',cursor:'pointer',fontWeight:800,fontSize:14,fontFamily:"'Inter', system-ui, sans-serif"}}>Reload</button>
         </div>
       </div>
     );
