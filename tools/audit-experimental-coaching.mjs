@@ -1,0 +1,28 @@
+import fs from 'node:fs';
+import crypto from 'node:crypto';
+import assert from 'node:assert/strict';
+const dir='docs/factory/research/question-review';
+const read=name=>JSON.parse(fs.readFileSync(`${dir}/${name}`,'utf8'));
+const first=['young','middle','older'].map(lane=>read(`${lane}-first.json`));
+const second=read('second-review.json'),recheck=read('revisions-second-check.json'),sequenceReview=read('sequence-adjudication.json');
+const baseline=read('reviewed-question-manifest.json').questions;
+const bank=fs.readdirSync('src/one-on-one/experimental-bank').filter(f=>/^u\d+\.json$/.test(f)).flatMap(f=>JSON.parse(fs.readFileSync(`src/one-on-one/experimental-bank/${f}`,'utf8')));
+const hash=v=>crypto.createHash('sha256').update(JSON.stringify(v)).digest('hex');
+const current=bank.flatMap(s=>s.questions.map(q=>{const {questions,version,...scene}=s;return {questionId:q.id,scenarioId:s.id,scenarioVersion:version,contentHash:hash({scene,question:q})};}));
+const rows=first.flatMap(r=>r.coverage),ids=current.map(q=>q.questionId).sort();
+assert.equal(ids.length,600);assert.equal(new Set(ids).size,600);
+assert.deepEqual(rows.map(r=>r.questionId).sort(),ids,'Full first-pass coverage');
+const required=rows.filter(r=>r.status==='flag'||r.highRisk).map(r=>r.questionId).sort();
+assert.deepEqual(second.coverage.map(r=>r.questionId).sort(),required,'Every flag and high-risk question gets a second review');
+const corrected=new Map(recheck.results.map(r=>[r.questionId,r]));
+const changed=current.filter(q=>q.contentHash!==baseline.find(b=>b.questionId===q.questionId)?.contentHash);
+assert.deepEqual(changed.map(q=>q.questionId).sort(),[...corrected.keys()].sort(),'Every changed question rechecked');
+for(const q of changed){assert.equal(corrected.get(q.questionId).contentHash,q.contentHash);assert.equal(corrected.get(q.questionId).status,'pass');}
+assert.deepEqual(sequenceReview.results.map(r=>r.questionId).sort(),second.findings.find(f=>f.id==='second-001').questionIds.slice().sort(),'Every broad sequence flag individually adjudicated');
+const findings=second.findings.filter(f=>f.adjudication!=='rejected'&&f.id!=='second-001').map(f=>({...f,questionIds:f.questionIds.filter(id=>!corrected.has(id))})).filter(f=>f.questionIds.length);
+for(const row of sequenceReview.results.filter(r=>r.status==='retain'))findings.push({id:`teaching-${row.questionId}`,severity:row.questionId==='exp26-u9-006-q3'?'P2':'P3',category:'teaching',questionIds:[row.questionId],scenarioIds:[row.scenarioId],issue:row.reason,recommendedChange:row.questionId==='exp26-u9-006-q3'?'Make pressure scanning part of the approach and the final check before touching the puck. Discuss how looking for the puck and pressure can overlap.':'Consider a conditional choice or cue comparison if it teaches this scenario better. Retain an explicitly scoped sequence where its ordering adds learning value; this is an editorial opportunity, not an established tactical error.',sourceUrls:[]});
+const pending=new Set(findings.flatMap(f=>f.questionIds));
+const coverage=current.map(q=>({...q,firstReviewed:true,secondReviewed:required.includes(q.questionId),revisionRechecked:corrected.has(q.questionId),status:pending.has(q.questionId)?'revision-needed':corrected.has(q.questionId)?'revised-and-rechecked':'no-open-ai-finding'}));
+const report={reviewKind:'AI coaching review; not human coach approval',reviewedAt:'2026-09-05',counts:{scenarios:bank.length,questions:600,firstPass:600,secondPass:required.length,highRisk:rows.filter(r=>r.highRisk).length,firstPassFlags:rows.filter(r=>r.status==='flag').length,revisionRechecks:corrected.size,openQuestionFlags:pending.size,noOpenAiFinding:600-pending.size},coverage,findings,limits:['All questions remain experimental. No admission to the approved bank or mastery scoring.','Text, question structure and canonical geometry were reviewed; this does not certify all rendered scenes or on-ice execution.','Human coach review remains separate. The open sequence-design flags are the next content revision queue.']};
+fs.writeFileSync(`${dir}/catalog-review.json`,JSON.stringify(report,null,2)+'\n');
+console.log(JSON.stringify(report.counts,null,2));

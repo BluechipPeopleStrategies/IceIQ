@@ -1,0 +1,190 @@
+{
+  "status": "local-experimental-revisions-awaiting-second-check",
+  "changes": [
+    {
+      "scenarioId": "exp26-u13-014",
+      "baseVersion": 1,
+      "newVersion": 2,
+      "questionId": "exp26-u13-014-q5",
+      "before": {
+        "id": "exp26-u13-014-q5",
+        "type": "choice",
+        "prompt": "If C recovers alongside Gold 1, what should you update?",
+        "options": [
+          {
+            "id": "a",
+            "text": "The assumption that you are completely alone"
+          },
+          {
+            "id": "b",
+            "text": "A plan to stop watching Gold 2"
+          },
+          {
+            "id": "c",
+            "text": "Which threat C can help cover"
+          }
+        ],
+        "answer": [
+          "c"
+        ],
+        "explanation": "Recovering help can change responsibilities, but communication and the second attacker still matter.",
+        "basis": "coaching"
+      },
+      "after": {
+        "id": "exp26-u13-014-q5",
+        "type": "multi",
+        "prompt": "With C back alongside Gold 1, which two checks help you defend together?",
+        "options": [
+          {
+            "id": "a",
+            "text": "Reassess whether you still need to cover the rush alone"
+          },
+          {
+            "id": "b",
+            "text": "Stop tracking Gold 2 because C has returned"
+          },
+          {
+            "id": "c",
+            "text": "Communicate which threat C can help cover"
+          }
+        ],
+        "answer": [
+          "a",
+          "c"
+        ],
+        "explanation": "Recovering help can change responsibilities, but communication and the second attacker still matter.",
+        "basis": "coaching"
+      }
+    },
+    {
+      "scenarioId": "exp26-u15-010",
+      "baseVersion": 1,
+      "newVersion": 2,
+      "questionId": "exp26-u15-010-q5",
+      "before": {
+        "id": "exp26-u15-010-q5",
+        "type": "choice",
+        "prompt": "F1 moves away before release. What should you reconsider?",
+        "options": [
+          {
+            "id": "a",
+            "text": "The now-changed traffic and passing options"
+          },
+          {
+            "id": "b",
+            "text": "The assumption that the same screen still exists"
+          },
+          {
+            "id": "c",
+            "text": "A requirement to shoot immediately regardless"
+          }
+        ],
+        "answer": [
+          "a"
+        ],
+        "explanation": "The screen was a changing cue, not a permanent property of the shot.",
+        "basis": "coaching"
+      },
+      "after": {
+        "id": "exp26-u15-010-q5",
+        "type": "multi",
+        "prompt": "F1 moves away before release. Which two checks are useful now?",
+        "options": [
+          {
+            "id": "a",
+            "text": "Recheck the shot lane and available passing options"
+          },
+          {
+            "id": "b",
+            "text": "Check whether any useful screen remains"
+          },
+          {
+            "id": "c",
+            "text": "Shoot immediately even if the lane has changed"
+          }
+        ],
+        "answer": [
+          "a",
+          "b"
+        ],
+        "explanation": "The screen was a changing cue, not a permanent property of the shot.",
+        "basis": "coaching"
+      }
+    },
+    {
+      "scenarioId": "exp26-u15-013",
+      "baseVersion": 1,
+      "newVersion": 2,
+      "questionId": "exp26-u15-013-q5",
+      "before": {
+        "id": "exp26-u15-013-q5",
+        "type": "choice",
+        "prompt": "Gold 2 moves onto C’s outlet. What must be updated?",
+        "options": [
+          {
+            "id": "a",
+            "text": "The next passing option after a recovery"
+          },
+          {
+            "id": "b",
+            "text": "The assumption that C is still free"
+          },
+          {
+            "id": "c",
+            "text": "The belief that F1 is no longer in a contest"
+          }
+        ],
+        "answer": [
+          "a"
+        ],
+        "explanation": "Winning the battle does not guarantee the originally planned outlet.",
+        "basis": "coaching"
+      },
+      "after": {
+        "id": "exp26-u15-013-q5",
+        "type": "multi",
+        "prompt": "Gold 2 moves onto C’s outlet. Which two checks help you adjust?",
+        "options": [
+          {
+            "id": "a",
+            "text": "Look for the next available pass if Navy wins the puck"
+          },
+          {
+            "id": "b",
+            "text": "Recheck whether C can still receive safely"
+          },
+          {
+            "id": "c",
+            "text": "Assume F1 has won the puck because Gold 2 moved"
+          }
+        ],
+        "answer": [
+          "a",
+          "b"
+        ],
+        "explanation": "Winning the battle does not guarantee the originally planned outlet.",
+        "basis": "coaching"
+      }
+    },
+    {
+      "scenarioId": "exp26-u9-014",
+      "baseVersion": 1,
+      "newVersion": 2,
+      "questionId": "exp26-u9-014-q6",
+      "before": {
+        "type": "explain",
+        "prompt": "Why does charging straight at Gold1 immediately miss the stated routine?",
+        "basis": "coaching",
+        "explanation": "The model grants the restarting team room before resumption. Keep this explanation scoped to the declared activity.",
+        "id": "exp26-u9-014-q6"
+      },
+      "after": {
+        "type": "explain",
+        "prompt": "Why do you need to give Gold1 room before play continues?",
+        "basis": "coaching",
+        "explanation": "In this named Hockey Canada U9 half-ice model, attackers back off three metres after the goalie freezes the puck. That gives the defending team room to restart with possession. Follow the instructions for your local game format; do not assume every North American U9 program uses this restart.",
+        "id": "exp26-u9-014-q6"
+      }
+    }
+  ]
+}

@@ -1,6 +1,6 @@
 # RinkReads — Task List
 
-**Last updated:** 2026-09-05, 11:32 Edmonton · **PAUSED at Thomas's request; resume in a new chat.** Preserve the [3D question scenarios as a template](../one-on-one/3d-question-template.md); broader gameplay is optional inspiration to use only where it fits naturally. All implementation agents stopped. Shared 3D/question, lineup and visual changes remain work in progress; latest immediate action preview and hover changes are not verified. Earlier passing checks do not cover the current tree. Resume from [paused handoff](../one-on-one/2026-09-05-paused-handoff.md), including the new goalie-out-of-position / goalie-in-position comparison request. No final release or deployment is claimed.
+**Last updated:** 2026-09-05, 12:28 Edmonton · **Resumed by Thomas: experimental content and coaching review.** The separate 100-scenario / 600-question bank has full AI review coverage, 127 independent second reviews, four repaired/rechecked questions, and 55 teaching-design flags/suggestions. See the [coaching audit](../factory/research/question-review/README.md). Local worlds, camera, mastery, goals, coach-assessment and question-workshop integrations are in the working tree; production release remains separate. Earlier paused work is preserved; this is not a blanket approval of unrelated WIP.
 
 **Scope:** RinkReads **app build + content factory**. Launch/distribution (sending the beta, marketing) and the separate BlueChip business are **out of scope** — parked at the bottom. Priority = position in this list. A new idea that isn't here goes to the **Parking Lot** first, then gets promoted on purpose — that's the scope-creep guard.
 
@@ -56,6 +56,8 @@
 - *(New ideas land here first, then get promoted into NEXT/LATER on purpose.)*
 
 ## Changelog
+
+- **2026-09-05, 12:28 Edmonton — Experimental bank and critical coaching review:** created the requested age mix (10/15/25/25/15/10) with six questions each. Lower-cost Luna reviewers applied the owner-selected puck-management, fundamentals, time/space and flexible-role rubric; all 600 questions reviewed and all 127 flagged/high-risk cases independently checked. Four concrete wording/answer repairs rechecked; 55 individually reconciled teaching-design items remain in the triage queue. Local question workshop supports exact-version flags and revision drafts without publishing. Added spaced-practice defaults (five questions, five dates, two weeks, seven-day span, 80% accuracy), six-world home, observation-based coach ratings and richer goal/check-in modules. Fresh integration verification is recorded in the audit handoff; no human-coach approval or deployment claim.
 
 - **2026-09-05, 11:32 Edmonton — Template direction clarified:** saved a [3D question scenario design template](../one-on-one/3d-question-template.md). Thomas wants those scenarios preserved and broader gameplay considered only where it fits naturally. No game integration or implementation resumed.
 
