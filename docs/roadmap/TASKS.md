@@ -1,6 +1,6 @@
 # RinkReads — Task List
 
-**Last updated:** 2026-09-06 · Packets 21–35 are deployed and verified. Packet 36 repairs five scenes / 30 affected question versions after independent exact-content review; isolated release checks are underway. Supabase stays deferred.
+**Last updated:** 2026-09-06 · All completed Claude packets through 36 are adjudicated and deployed. This continuation repaired 78 scenes / 464 affected question versions across packets 21–36. Latest release 8057760 passed 46 focused tests, build, local visual checks and live answer/reload verification. Packets 37–40 are not yet available. Supabase remains deferred.
 
 **Scope:** RinkReads **app build + content factory**. Launch/distribution (sending the beta, marketing) and the separate BlueChip business are **out of scope** — parked at the bottom. Priority = position in this list. A new idea that isn't here goes to the **Parking Lot** first, then gets promoted on purpose — that's the scope-creep guard.
 
@@ -56,6 +56,8 @@
 - *(New ideas land here first, then get promoted into NEXT/LATER on purpose.)*
 
 ## Changelog
+
+- 2026-09-06 · All completed Claude packets through 36 are adjudicated and deployed. This continuation repaired 78 scenes / 464 affected question versions across packets 21–36. Latest release 8057760 passed 46 focused tests, build, local visual checks and live answer/reload verification. Packets 37–40 are not yet available. Supabase remains deferred.
 
 - 2026-09-06 · Packets 21–35 are deployed and verified. Packet 36 repairs five scenes / 30 affected question versions after independent exact-content review; isolated release checks are underway. Supabase stays deferred.
 
