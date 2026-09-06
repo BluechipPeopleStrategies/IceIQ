@@ -1,6 +1,6 @@
 # RinkReads — Task List
 
-**Last updated:** 2026-09-05 · Production d9f06fa includes reviewed packets 01–14. Packet 14: six repairs, 35 tests/build passed, live corrected answer and feedback verified at 390 px. Coach/goals/training remains held for Supabase sign-in and migration 0024.
+**Last updated:** 2026-09-05 · Packets 01–14 remain live. Review protocol strengthened with eight receipt-backed calibration cases, explicit reviewer accountability and concrete role/geometry/state checks. Supabase and the coach/goals/training migration are deferred until tomorrow by Thomas; no database action this session.
 
 **Scope:** RinkReads **app build + content factory**. Launch/distribution (sending the beta, marketing) and the separate BlueChip business are **out of scope** — parked at the bottom. Priority = position in this list. A new idea that isn't here goes to the **Parking Lot** first, then gets promoted on purpose — that's the scope-creep guard.
 
@@ -56,6 +56,8 @@
 - *(New ideas land here first, then get promoted into NEXT/LATER on purpose.)*
 
 ## Changelog
+
+- **2026-09-05** — Added [review correction instructions](../factory/CLAUDE-REVIEW-UPDATE.md), eight historical calibration cases and a separately packaged Claude update. Verified all eight before/after/current hashes and ZIP contents. Explicitly records that initial Codex/Luna reviews also missed defects. Frozen project, packets and returns unchanged. Supabase deferred until tomorrow by owner direction.
 
 - **2026-09-05** — Published packet 14 as d9f06fa; exact-commit Vercel success and live revised communication question/feedback verified. All 50 questions reviewed, six repairs independently rechecked. [Deployment evidence](../one-on-one/2026-09-05-packet-14-production.md).
 

@@ -7,6 +7,11 @@
 
 ## Current priorities (canonical)
 
+For Claude/Codex question-packet reviews, first read
+`docs/factory/CLAUDE-REVIEW-UPDATE.md` and complete its historical calibration.
+This supplements the frozen Claude project without replacing its snapshot or
+reopening processed packets. Earlier AI pass labels are not proof of correctness.
+
 `docs/roadmap/TASKS.md` is the single living task list — priority + sequencing,
 scope = app build + content factory. Treat it as the sequencing source of
 truth; owner decisions and approved architecture still govern what a task may
