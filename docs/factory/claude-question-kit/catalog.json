@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "status": "experimental-not-approved",
-  "generatedAt": "2026-09-06T03:47:52.877Z",
+  "generatedAt": "2026-09-06T03:59:59.920Z",
   "counts": {
     "scenarios": 200,
     "questions": 1600
@@ -13731,7 +13731,7 @@
     },
     {
       "id": "exp26-u11-009",
-      "version": 1,
+      "version": 2,
       "ageBand": "U11",
       "title": "Turn before the traffic closes",
       "family": "evasive-route",
@@ -13951,7 +13951,7 @@
             },
             {
               "id": "c",
-              "text": "YOU still sees the puck"
+              "text": "YOU still see the puck"
             }
           ],
           "answer": [
@@ -13984,7 +13984,7 @@
     },
     {
       "id": "exp26-u11-010",
-      "version": 1,
+      "version": 2,
       "ageBand": "U11",
       "title": "Receive into an open shoulder",
       "family": "receiving-space",
@@ -14172,7 +14172,7 @@
           "options": [
             {
               "id": "a",
-              "text": "The wider target is available only while D1 stays inside it"
+              "text": "I am offering a wider target; check the passing lane as D1 moves"
             },
             {
               "id": "b",
@@ -14237,7 +14237,7 @@
     },
     {
       "id": "exp26-u11-011",
-      "version": 1,
+      "version": 2,
       "ageBand": "U11",
       "title": "Use the half wall to change the passing route",
       "family": "indirect-pass",
@@ -14462,7 +14462,7 @@
             },
             {
               "id": "b",
-              "text": "Whether D2 remains available at the opposite point"
+              "text": "Whether D2 can close the receiving area"
             },
             {
               "id": "c",
@@ -14474,7 +14474,7 @@
             "b"
           ],
           "basis": "coaching",
-          "explanation": "The rebound location and D2’s opposite-point support determine whether the wall changes the useful route; D2’s stillness alone does not."
+          "explanation": "The receiving location and D2’s pressure affect whether the indirect route is useful. A frozen position does not establish D2’s next movement."
         },
         {
           "id": "exp26-u11-011-q9",
@@ -14493,13 +14493,13 @@
           "type": "explain",
           "prompt": "D1 turns to the wall before the pass. Explain what you recheck.",
           "basis": "coaching",
-          "explanation": "Compare the rebound route with D2’s opposite-point support and D1’s new facing. Use whichever remains reachable and protected."
+          "explanation": "Recheck D1’s new position, the board route and whether D2 can reach the receiving area. F1 can hold or YOU can offer another angle if the indirect route is no longer usable."
         }
       ]
     },
     {
       "id": "exp26-u11-012",
-      "version": 1,
+      "version": 2,
       "ageBand": "U11",
       "title": "Recover the pass that missed",
       "family": "missed-reception",
@@ -14654,7 +14654,7 @@
         {
           "id": "exp26-u11-012-q5",
           "type": "choice",
-          "prompt": "If D1 reaches the puck first, what has changed?",
+          "prompt": "If D1 reaches the puck first and controls it, what has changed?",
           "options": [
             {
               "id": "a",
@@ -14689,7 +14689,7 @@
           "options": [
             {
               "id": "a",
-              "text": "The puck is below me; I am checking D1 before recovering"
+              "text": "The puck is closer to the side boards than I am; I am checking D1 before recovering"
             },
             {
               "id": "b",
@@ -14734,19 +14734,19 @@
         {
           "id": "exp26-u11-012-q9",
           "type": "position",
-          "prompt": "Move YOU toward the loose puck on the far-side lane from F1's intended pass.",
+          "prompt": "Move YOU closer to the loose puck while checking D1.",
           "actorId": "h2",
           "reference": {
             "x": 6.5,
             "y": -4.7
           },
           "basis": "coaching",
-          "explanation": "This point approaches the actual puck from the far-side lane of F1's intended pass while preserving a view of D1; arrival and control remain open."
+          "explanation": "This example moves YOU closer to the puck while leaving room to recheck D1. Arrival and control are not established by the marker."
         },
         {
           "id": "exp26-u11-012-q10",
           "type": "explain",
-          "prompt": "D1 arrives first. How do you communicate the new job?",
+          "prompt": "D1 reaches the puck first and gains control. How do you communicate the new job?",
           "basis": "coaching",
           "explanation": "Say D1 has possession, then identify whether to pressure D1 or support F1 while F1 and YOU re-form."
         }
@@ -53940,7 +53940,7 @@
       "type": "multi",
       "prompt": "Which two changes would make the first turn poor?",
       "explanation": "The teammate and defender can remove the turn; puck visibility alone is not enough.",
-      "hash": "d1c9f4fcb1b6ddccf8a464dee35d3ea3df04cd9a7bb6e868705d78eb5590f71e",
+      "hash": "f5ee85a712e779d4a9ac4956ae15decdd173196d0c3e58f6b56758fce397b871",
       "review": "no-open-ai-finding"
     },
     {
@@ -54057,7 +54057,7 @@
       "type": "choice",
       "prompt": "What should F1 know about your receiving target?",
       "explanation": "The message ties the target to D1 and F1's route, keeping the choice conditional.",
-      "hash": "bd58938e54621661266e72764bcb8bebad985f0a3a9202b0fcbbed250070481e",
+      "hash": "c0817bca691a58b2e480badc6b6a1eeb4454a755494cdbdc123310985fced89f",
       "review": "no-open-ai-finding"
     },
     {
@@ -54199,8 +54199,8 @@
       "family": "indirect-pass",
       "type": "multi",
       "prompt": "Which two cues shape the bank point?",
-      "explanation": "The rebound location and D2’s opposite-point support determine whether the wall changes the useful route; D2’s stillness alone does not.",
-      "hash": "e7fade4876ce0dc3403bb853a7c1cdad269f84e532475143628798f289765099",
+      "explanation": "The receiving location and D2’s pressure affect whether the indirect route is useful. A frozen position does not establish D2’s next movement.",
+      "hash": "022058c6a406c35100b9614694b7d3f387861ac352a941fcdcd204e42a607e96",
       "review": "no-open-ai-finding"
     },
     {
@@ -54225,8 +54225,8 @@
       "family": "indirect-pass",
       "type": "explain",
       "prompt": "D1 turns to the wall before the pass. Explain what you recheck.",
-      "explanation": "Compare the rebound route with D2’s opposite-point support and D1’s new facing. Use whichever remains reachable and protected.",
-      "hash": "279669993f17091e36d8a61b3e934f670847821b7e429ff569a1a1ab980799f1",
+      "explanation": "Recheck D1’s new position, the board route and whether D2 can reach the receiving area. F1 can hold or YOU can offer another angle if the indirect route is no longer usable.",
+      "hash": "23b2f4583be364d75c23f7d31f1f1a9e590c5305212f5bf42575c537ce3d9985",
       "review": "no-open-ai-finding"
     },
     {
@@ -54289,10 +54289,10 @@
       "topic": "Puck control",
       "family": "missed-reception",
       "type": "choice",
-      "prompt": "If D1 reaches the puck first, what has changed?",
+      "prompt": "If D1 reaches the puck first and controls it, what has changed?",
       "explanation": "Actual possession controls the next situation; the intended receiver does not retain ownership after an opponent recovers.",
-      "hash": "99da1c626be97a4b7855d8e1d91f76f120ac0b51a78dbbbdf7eefb783dd549f3",
-      "review": "no-open-ai-finding"
+      "hash": "0d3185888dc5941f13c2ead3a7b17d6b489e147d48d1b954ea65d31e8b1ee4fb",
+      "review": "revised-and-rechecked"
     },
     {
       "scenarioId": "exp26-u11-012",
@@ -54317,7 +54317,7 @@
       "type": "choice",
       "prompt": "What should YOU tell F1 after the pass drifts?",
       "explanation": "The call reports the actual puck and pressure, which replaces the planned target.",
-      "hash": "3c49c167c8393a0340e43490a1955a5fa8e2a971f258246fec9bc306ea735ad1",
+      "hash": "1af45213a84b394a9ed6a29b7c1b19b5f76eb389244673306cdc758316d35eeb",
       "review": "no-open-ai-finding"
     },
     {
@@ -54341,9 +54341,9 @@
       "topic": "Puck control",
       "family": "missed-reception",
       "type": "position",
-      "prompt": "Move YOU toward the loose puck on the far-side lane from F1's intended pass.",
-      "explanation": "This point approaches the actual puck from the far-side lane of F1's intended pass while preserving a view of D1; arrival and control remain open.",
-      "hash": "cce43d75d4ec329ce73835b264e1152a174cdfbf391f1efa198f1bd3fe04761e",
+      "prompt": "Move YOU closer to the loose puck while checking D1.",
+      "explanation": "This example moves YOU closer to the puck while leaving room to recheck D1. Arrival and control are not established by the marker.",
+      "hash": "a9045f5e360281db5c11cbfa42dd3eb6688e45866380d29dec25598daa23ac7a",
       "review": "no-open-ai-finding"
     },
     {
@@ -54354,9 +54354,9 @@
       "topic": "Puck control",
       "family": "missed-reception",
       "type": "explain",
-      "prompt": "D1 arrives first. How do you communicate the new job?",
+      "prompt": "D1 reaches the puck first and gains control. How do you communicate the new job?",
       "explanation": "Say D1 has possession, then identify whether to pressure D1 or support F1 while F1 and YOU re-form.",
-      "hash": "bb717495880177bc659f3608763ceb8a4b5fb1ac0a26853bbbd1c34daace93d8",
+      "hash": "49c2a1c63d1a7f31d0e8c219df2f7a7f41e5f4a151165bb2f062a5d8e6658d8e",
       "review": "no-open-ai-finding"
     },
     {
