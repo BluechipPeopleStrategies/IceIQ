@@ -27,3 +27,7 @@ Reviewer IDs describe the recorded process; these local files are not a cryptogr
 - The repair report shows all 60 cards; searching an exact ID returns one card. Its U18 filter returns seven cards. Desktop and 390 px mobile rendering were inspected; mobile document client and scroll widths are both 375 px. A missing favicon request was removed with a local empty favicon declaration.
 - Catalog metadata now recognizes these sixty exact reviewed repairs without altering historical review records. The overlay requires matching scenario ID, scenario version and content hash; older or changed content cannot inherit it. Sixty matching catalog labels were checked.
 - `.gitattributes` preserves raw bytes throughout this repair record so frozen file identities survive Windows checkout.
+
+## Production verification
+
+Release `5c17736820cb7d01d5f6b13e9a18f6e49417e97b` received Vercel success. All sixty exact replacement prompts were found in the live ExperimentalPractice bundle, whose URL and SHA-256 are in `production-receipt.json`. Live U18 single-choice and U9 multi-answer submissions both returned “Yep, you got it.” Both production page checks reported zero console errors. The local repair report remains an administrator artifact; it is not added to the public production asset allowlist.
