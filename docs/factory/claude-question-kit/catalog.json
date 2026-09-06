@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "status": "experimental-not-approved",
-  "generatedAt": "2026-09-06T07:36:08.904Z",
+  "generatedAt": "2026-09-06T07:47:24.001Z",
   "counts": {
     "scenarios": 200,
     "questions": 1600
@@ -19701,13 +19701,13 @@
     },
     {
       "id": "exp26b-u11-009",
-      "version": 1,
+      "version": 2,
       "ageBand": "U11",
       "title": "Turn around the traffic",
       "family": "turn-around-traffic",
       "topic": "Skating",
       "objective": "Turn into space that avoids a teammate and the defender while keeping the puck protected.",
-      "briefing": "Navy attacks +x. YOU carries through the middle; F2 is directly ahead and D1 is offset to the inside. The useful turning space is beside the traffic, but it depends on F2's movement.",
+      "briefing": "Navy attacks the right net (+x). YOU carry in the neutral zone; F2 is directly up ice from you and D1 is closer to the middle. Space beside them may offer a turn, depending on how both players move.",
       "setup": {
         "actors": [
           {
@@ -19766,7 +19766,7 @@
         {
           "id": "exp26b-u11-009-q1",
           "type": "choice",
-          "prompt": "Who is in YOU's straight-ahead route?",
+          "prompt": "Who is directly up ice from YOU?",
           "options": [
             {
               "id": "a",
@@ -19853,7 +19853,7 @@
         {
           "id": "exp26b-u11-009-q5",
           "type": "choice",
-          "prompt": "F2 moves toward the same outside space. What should you reconsider?",
+          "prompt": "F2 moves toward the same outside space. What should YOU reconsider?",
           "options": [
             {
               "id": "a",
@@ -19872,7 +19872,7 @@
             "a"
           ],
           "basis": "coaching",
-          "explanation": "F2 changing route removes the first turning space. Re-scan for another angle or wait for a usable lane."
+          "explanation": "F2 moving toward that space may narrow your turning route. Recheck the gap and pressure before choosing a different turn, a pass or a protected touch."
         },
         {
           "id": "exp26b-u11-009-q6",
@@ -19885,13 +19885,13 @@
     },
     {
       "id": "exp26b-u11-010",
-      "version": 1,
+      "version": 2,
       "ageBand": "U11",
       "title": "Receive outside the defender",
       "family": "receive-wide-shoulder",
       "topic": "Receiving",
       "objective": "Choose a receiving angle that leaves room to protect the first touch.",
-      "briefing": "Navy attacks +x. F1 carries on the left side and YOU is ahead, with D1 inside the intended route. F2 is high right. The receiver should present a target F1 can actually reach.",
+      "briefing": "Navy attacks the right net (+x). F1 has the puck in the neutral zone. YOU are farther up ice on the same side of the middle. D1 is up ice from YOU and closer to the middle; F2 is wider on the other side. Offer a receiving target only if F1 can reach it.",
       "setup": {
         "actors": [
           {
@@ -19937,9 +19937,9 @@
       },
       "focusActorId": "h1",
       "cues": [
-        "F1 owns the puck on the left.",
-        "D1 is inside YOU's route.",
-        "F2 is a high right option after a controlled reception."
+        "F1 owns the puck.",
+        "D1 is farther up ice and closer to the middle than YOU.",
+        "F2 is across the middle and may offer a continuation after reception."
       ],
       "tags": [
         "experimental",
@@ -19959,7 +19959,7 @@
         {
           "id": "exp26b-u11-010-q1",
           "type": "choice",
-          "prompt": "Which player is closest to YOU's inside shoulder?",
+          "prompt": "Which player is nearest to YOU and closer to the middle?",
           "options": [
             {
               "id": "a",
@@ -19978,7 +19978,7 @@
             "b"
           ],
           "basis": "scene",
-          "explanation": "D1 is inside and near YOU; F1 is the passer."
+          "explanation": "D1 is the nearest shown player to YOU and is closer to the middle of the rink. F1 has the puck."
         },
         {
           "id": "exp26b-u11-010-q2",
@@ -20003,7 +20003,7 @@
             "b"
           ],
           "basis": "coaching",
-          "explanation": "The pass route and defender distance explain the wider target; F2 is only a later read."
+          "explanation": "Check the pass route and separation from D1 before widening. You can also scan F2 before receiving, then recheck that option after control."
         },
         {
           "id": "exp26b-u11-010-q3",
@@ -20038,10 +20038,10 @@
           "actorId": "h1",
           "reference": {
             "x": 5.8,
-            "y": -4.4
+            "y": -5.5
           },
           "basis": "coaching",
-          "explanation": "This point opens F1's diagonal lane and changes D1's closing angle."
+          "explanation": "The example moves YOU wider and up ice, increasing separation from D1. It changes the passing angle from F1, but does not guarantee an open lane or reception."
         },
         {
           "id": "exp26b-u11-010-q5",
@@ -20078,13 +20078,13 @@
     },
     {
       "id": "exp26b-u11-011",
-      "version": 1,
+      "version": 2,
       "ageBand": "U11",
       "title": "Bank the puck off the wall",
       "family": "wall-bounce-receive",
       "topic": "Passing",
       "objective": "Use a wall option to change the route around a defender, then read the rebound.",
-      "briefing": "Navy attacks +x. F1 has the puck at the left half wall; D1 sits between F1 and YOU. YOU is nearer the boards and F2 is inside. The wall is a practice surface, not a certain receiver.",
+      "briefing": "Navy attacks the right net (+x). F1 owns the puck between the middle and the side boards. D1 is near the direct route to YOU, who are farther up ice and wider. F2 is closer to the middle; D2 is farther toward the right net. A bank off the side boards is one possible route to assess.",
       "setup": {
         "actors": [
           {
@@ -20139,9 +20139,9 @@
       },
       "focusActorId": "h1",
       "cues": [
-        "D1 blocks the direct half-wall lane.",
-        "YOU is near the wall beyond D1.",
-        "F2 is inside and D2 is above the play."
+        "D1 is near the direct passing route.",
+        "YOU are farther up ice and wider than D1.",
+        "F2 is closer to the middle; D2 may affect that option."
       ],
       "tags": [
         "experimental",
@@ -20161,26 +20161,26 @@
         {
           "id": "exp26b-u11-011-q1",
           "type": "choice",
-          "prompt": "What makes the direct F1-to-YOU lane difficult?",
+          "prompt": "Which defender is nearest the direct F1-to-YOU passing route?",
           "options": [
             {
               "id": "a",
-              "text": "D1 sits in the line"
+              "text": "D1"
             },
             {
               "id": "b",
-              "text": "F2 owns the puck"
+              "text": "D2"
             },
             {
               "id": "c",
-              "text": "The wall is behind F1"
+              "text": "Neither defender is near that route"
             }
           ],
           "answer": [
             "a"
           ],
           "basis": "scene",
-          "explanation": "D1 is between F1 and YOU in the direct line."
+          "explanation": "D1 is near the line between F1 and YOU. The freeze does not prove stick reach or an interception."
         },
         {
           "id": "exp26b-u11-011-q2",
@@ -20193,7 +20193,7 @@
             },
             {
               "id": "b",
-              "text": "Whether F2 remains an inside option"
+              "text": "Whether the inside option to F2 stays clear of D2"
             },
             {
               "id": "c",
@@ -20236,14 +20236,14 @@
         {
           "id": "exp26b-u11-011-q4",
           "type": "position",
-          "prompt": "Move YOU to a receiving point along the wall beyond D1.",
+          "prompt": "Move YOU toward the side boards, farther up ice than D1, to offer a possible bank-pass target.",
           "actorId": "h1",
           "reference": {
             "x": 20.2,
-            "y": 8.5
+            "y": 11.5
           },
           "basis": "coaching",
-          "explanation": "This point creates a new wall relationship while keeping F2 and D2 in the wider scene."
+          "explanation": "The example moves YOU closer to the side boards and farther up ice than D1. F1 still needs to judge a reachable bank point and rebound; no bounce or completed pass is guaranteed."
         },
         {
           "id": "exp26b-u11-011-q5",
@@ -20267,7 +20267,7 @@
             "a"
           ],
           "basis": "coaching",
-          "explanation": "D1's turn changes both routes. Compare the wall rebound with F2's inside availability before choosing."
+          "explanation": "D1 turning toward the boards is a cue to reassess, not proof that a route closed or opened. Compare the bank option with F2 and D2 before choosing."
         },
         {
           "id": "exp26b-u11-011-q6",
@@ -20280,13 +20280,13 @@
     },
     {
       "id": "exp26b-u11-012",
-      "version": 1,
+      "version": 2,
       "ageBand": "U11",
       "title": "Recover the pass that drifts",
       "family": "drifting-pass-recovery",
       "topic": "Puck control",
       "objective": "Find the actual puck location after a pass misses its intended target.",
-      "briefing": "Navy attacks +x. F1 has sent a pass toward YOU, but the puck is loose below the intended line. D1 is ahead of the loose puck and F2 is to the inside.",
+      "briefing": "Navy attacks the right net (+x). F1 has sent a pass toward YOU, but it missed: the puck is loose farther toward the side boards and up ice from YOU. D1 is farther up ice than the puck; F2 is across the middle of the rink.",
       "setup": {
         "actors": [
           {
@@ -20334,9 +20334,9 @@
       },
       "focusActorId": "h1",
       "cues": [
-        "The puck is loose below YOU.",
-        "D1 is ahead of the puck.",
-        "F1 and F2 remain visible support options."
+        "The loose puck is closer to the side boards than YOU.",
+        "D1 is farther up ice than the puck.",
+        "F1 and F2 may offer support after a navy recovery."
       ],
       "tags": [
         "experimental",
@@ -20360,22 +20360,22 @@
           "options": [
             {
               "id": "a",
-              "text": "Below YOU"
+              "text": "Closer to the side boards and farther up ice"
             },
             {
               "id": "b",
-              "text": "With D1"
+              "text": "Under D1’s control"
             },
             {
               "id": "c",
-              "text": "Above F2"
+              "text": "Closer to centre ice than YOU"
             }
           ],
           "answer": [
             "a"
           ],
           "basis": "scene",
-          "explanation": "The loose puck is below YOU and has no owner."
+          "explanation": "The puck is loose, farther up ice and closer to the side boards than YOU. No player is assigned control."
         },
         {
           "id": "exp26b-u11-012-q2",
@@ -20392,7 +20392,7 @@
             },
             {
               "id": "c",
-              "text": "Did the intended pass arrive at the planned spot?"
+              "text": "Can YOU follow the original plan without locating the loose puck?"
             }
           ],
           "answer": [
@@ -20431,27 +20431,27 @@
         {
           "id": "exp26b-u11-012-q4",
           "type": "position",
-          "prompt": "Move YOU toward the loose puck while keeping D1 in sight.",
+          "prompt": "Move YOU closer to the loose puck, then recheck D1.",
           "actorId": "h1",
           "reference": {
             "x": 6.5,
             "y": -4.6
           },
           "basis": "coaching",
-          "explanation": "This point approaches the actual loose puck and preserves a view up ice."
+          "explanation": "This example reduces the distance to the loose puck. Recheck D1 while approaching; the marker does not prove a safe route, visibility or control."
         },
         {
           "id": "exp26b-u11-012-q5",
           "type": "choice",
-          "prompt": "D1 reaches the loose puck first. What changed?",
+          "prompt": "D1 gains control of the loose puck first. What changed?",
           "options": [
             {
               "id": "a",
-              "text": "D1 may now be the carrier, so support and pressure jobs switch"
+              "text": "Gold now has possession; navy must reassess pressure and coverage"
             },
             {
               "id": "b",
-              "text": "YOU still owns the pass"
+              "text": "YOU still own the pass"
             },
             {
               "id": "c",
@@ -20462,7 +20462,7 @@
             "a"
           ],
           "basis": "coaching",
-          "explanation": "D1 reaching first changes possession. Re-read F1, F2, and the net-side risk before choosing your job."
+          "explanation": "D1 is a gold opponent. With control explicitly established, navy changes to defence. Coordinate pressure and coverage with F1 and F2; reaching the puck alone would not establish possession."
         },
         {
           "id": "exp26b-u11-012-q6",
@@ -20475,13 +20475,13 @@
     },
     {
       "id": "exp26b-u11-013",
-      "version": 1,
+      "version": 2,
       "ageBand": "U11",
       "title": "Open the shooting lane",
       "family": "slot-lane-change",
       "topic": "Shooting",
       "objective": "Reassess a shooting lane when a defender moves toward another attacker.",
-      "briefing": "Navy attacks +x. YOU controls the puck high in the right-side lane; D1 is between YOU and the net. F2 is low and wide. If D1 moves, the lane and support read change together.",
+      "briefing": "Navy attacks the right net (+x). YOU control the puck in the middle of the attacking zone; D1 is between YOU and the net. F2 is wider and farther toward the right goal line. If D1 moves, reassess both the shooting lane and the pass.",
       "setup": {
         "actors": [
           {
@@ -20527,9 +20527,9 @@
       },
       "focusActorId": "h1",
       "cues": [
-        "D1 occupies the straight shooting line.",
-        "F2 is lower and wide.",
-        "The net and goalie are visible, but a shot outcome is not proven."
+        "D1 occupies the direct shooting line.",
+        "F2 is wider and closer to the right goal line than YOU.",
+        "The freeze does not prove a shot will reach the net or score."
       ],
       "tags": [
         "experimental",
@@ -20598,7 +20598,7 @@
         {
           "id": "exp26b-u11-013-q3",
           "type": "sequence",
-          "prompt": "Arrange this high-lane decision.",
+          "prompt": "Arrange this shooting-lane read.",
           "options": [
             {
               "id": "a",
@@ -20619,19 +20619,19 @@
             "c"
           ],
           "basis": "coaching",
-          "explanation": "The carrier waits for the updated lane, then chooses among the still-reachable options."
+          "explanation": "Check the current lane and support, then choose among the available options. You do not have to wait for D1 to move."
         },
         {
           "id": "exp26b-u11-013-q4",
           "type": "position",
-          "prompt": "Move YOU to a shooting angle outside D1 while keeping F2 visible.",
+          "prompt": "Move YOU sideways to change the shooting angle around D1.",
           "actorId": "h1",
           "reference": {
             "x": 16,
             "y": 2.2
           },
           "basis": "coaching",
-          "explanation": "This point changes the line from YOU to the net and keeps F2 in the scene; it does not certify a shot."
+          "explanation": "The example moves the carrier and puck sideways and changes the line to the net. Recheck D1, the goalie and F2; the position does not prove an open shot."
         },
         {
           "id": "exp26b-u11-013-q5",
@@ -20660,9 +20660,9 @@
         {
           "id": "exp26b-u11-013-q6",
           "type": "explain",
-          "prompt": "Why can the slot and half wall lead to different choices here?",
+          "prompt": "How do your position and F2’s wider position offer different choices?",
           "basis": "coaching",
-          "explanation": "The slot has a different relationship to D1, the net, and F2. Explain which lane is visible now and what movement would make another option safer."
+          "explanation": "YOU have a central shooting line with D1 in it; F2 offers a wider passing option. Compare those routes and explain what must stay open before using either."
         }
       ]
     },
@@ -56681,9 +56681,9 @@
       "topic": "Skating",
       "family": "turn-around-traffic",
       "type": "choice",
-      "prompt": "Who is in YOU's straight-ahead route?",
+      "prompt": "Who is directly up ice from YOU?",
       "explanation": "F2 is directly ahead of YOU in the scene.",
-      "hash": "7813cfcbb5c632ae1c62e681dcec0b3287f52a07cd2a7da3eadf1338f7e6e855",
+      "hash": "6775392972f468d51a29bccb34364f77f2b9eed7996ac30feee6302f85895439",
       "review": "no-open-ai-finding"
     },
     {
@@ -56696,7 +56696,7 @@
       "type": "multi",
       "prompt": "Which two relationships belong in the turn?",
       "explanation": "The teammate and defender both affect the turn. Re-check the outside space as either moves.",
-      "hash": "eeff1b990272a1d479742958e0057dfd5836303f26246f9775f2420afaec64e4",
+      "hash": "d27f5a83baf0255971ff3f74ada11b46cd855a2c00288da40d0fa34e590b5295",
       "review": "no-open-ai-finding"
     },
     {
@@ -56709,7 +56709,7 @@
       "type": "sequence",
       "prompt": "Arrange this controlled-turn plan.",
       "explanation": "The turn changes the angle, then the puck and lane must be checked again.",
-      "hash": "90d1c9b5c8837cf7867591fa774a7b0aed5b67c033e536bbe409cde98ad5aa9a",
+      "hash": "a1185e5521c11691fb8ca45f5ce8d30f5e1c2fc3c4a45f62019b1535e537da18",
       "review": "no-open-ai-finding"
     },
     {
@@ -56722,7 +56722,7 @@
       "type": "position",
       "prompt": "Move YOU beside the traffic into a possible turning space.",
       "explanation": "This point leaves F2 ahead and D1 inside, giving YOU a changed angle without assuming the space is empty later.",
-      "hash": "bcc7f8fcf2a67cb0640c66b3a70bf1f6a11a339c0e1b32ffcd5dcc7c3b4058b0",
+      "hash": "a10173e67d43ba03c3876d51de76af0ee34b8ebbd5651d8fb59aa318be4e2cbd",
       "review": "no-open-ai-finding"
     },
     {
@@ -56733,9 +56733,9 @@
       "topic": "Skating",
       "family": "turn-around-traffic",
       "type": "choice",
-      "prompt": "F2 moves toward the same outside space. What should you reconsider?",
-      "explanation": "F2 changing route removes the first turning space. Re-scan for another angle or wait for a usable lane.",
-      "hash": "d995764d155903b4516959b0a4cd2c648f784d09c8de068bef68ef75320770b7",
+      "prompt": "F2 moves toward the same outside space. What should YOU reconsider?",
+      "explanation": "F2 moving toward that space may narrow your turning route. Recheck the gap and pressure before choosing a different turn, a pass or a protected touch.",
+      "hash": "10a36d6d6a714f87f46c90e71426d32b7c376414280f42615727f68e08a074b7",
       "review": "no-open-ai-finding"
     },
     {
@@ -56748,7 +56748,7 @@
       "type": "explain",
       "prompt": "Why must a turn account for F2 as well as D1?",
       "explanation": "F2 can occupy or open the turning lane. A good turn keeps both players in the scan so the puck stays protected while the next option changes.",
-      "hash": "c1073eaedb18fe20b43b07bacb29017a7b112c5657bc754b522c90b8fd97e3c9",
+      "hash": "79c5d2bc30f3411c9e629918160e0ce4726113bd62b5580f5e09073631b50acb",
       "review": "no-open-ai-finding"
     },
     {
@@ -56759,9 +56759,9 @@
       "topic": "Receiving",
       "family": "receive-wide-shoulder",
       "type": "choice",
-      "prompt": "Which player is closest to YOU's inside shoulder?",
-      "explanation": "D1 is inside and near YOU; F1 is the passer.",
-      "hash": "2e31b50fb42f6ffc0c4ef52770b9fda9dca9156df33cd7abf72d519b9638f4ce",
+      "prompt": "Which player is nearest to YOU and closer to the middle?",
+      "explanation": "D1 is the nearest shown player to YOU and is closer to the middle of the rink. F1 has the puck.",
+      "hash": "996c4cf6e9e77dfcdcb2f93fd4baeb1baba72f68b4615f75f6dd63acc8dd4531",
       "review": "no-open-ai-finding"
     },
     {
@@ -56773,8 +56773,8 @@
       "family": "receive-wide-shoulder",
       "type": "multi",
       "prompt": "Which two checks support receiving wider?",
-      "explanation": "The pass route and defender distance explain the wider target; F2 is only a later read.",
-      "hash": "6b17f8964d839e4973b95555ce08f0cba84b9a54f2a47fc9cd4ec74eadaec949",
+      "explanation": "Check the pass route and separation from D1 before widening. You can also scan F2 before receiving, then recheck that option after control.",
+      "hash": "cfe8dfd0fb4ec934a0dbe5a000443c6f6dcaf58dc0883239c82e043d3588ca7f",
       "review": "no-open-ai-finding"
     },
     {
@@ -56787,7 +56787,7 @@
       "type": "sequence",
       "prompt": "Arrange this reception.",
       "explanation": "The target must be reachable first, then the touch can respond to pressure.",
-      "hash": "c431be138784205591d3548edd1250abfda54b22d78f7ace2af542ddd87d9652",
+      "hash": "35328884513a60a5210d6b2a95180d3f7680394c0b5540d9fccaaa7cc921d0c4",
       "review": "no-open-ai-finding"
     },
     {
@@ -56799,8 +56799,8 @@
       "family": "receive-wide-shoulder",
       "type": "position",
       "prompt": "Move YOU wider and slightly up ice to separate from D1.",
-      "explanation": "This point opens F1's diagonal lane and changes D1's closing angle.",
-      "hash": "0bf39d61a150a5cd07a227b35b2177e9bbafde10ed5b93314d12f7682d70ad06",
+      "explanation": "The example moves YOU wider and up ice, increasing separation from D1. It changes the passing angle from F1, but does not guarantee an open lane or reception.",
+      "hash": "2bb1085de182a126ea57cad3594d38e53fd253e2e8e27c2c8764078a96101d6e",
       "review": "no-open-ai-finding"
     },
     {
@@ -56813,7 +56813,7 @@
       "type": "choice",
       "prompt": "The pass arrives behind YOU. What should the plan account for?",
       "explanation": "The actual puck location changes the first task. Recover under control, then re-read pressure and support.",
-      "hash": "a0e365d3286e70ff7665173ca2c80af7a62c88cee83be7594f5b6c49c8e37d9e",
+      "hash": "b6801f5bc95ff3e45dc63bca189ee91cbc0127df67ad10fb67a54047704efec0",
       "review": "no-open-ai-finding"
     },
     {
@@ -56826,7 +56826,7 @@
       "type": "explain",
       "prompt": "What makes a slightly wider target useful in this picture?",
       "explanation": "It can separate the first touch from D1 and preserve a protected direction, provided F1 can reach it and the lane stays open.",
-      "hash": "3bde071d09410d72261a0a66f87b77e3ccab113691e87a6a3d27558e99ecd9b4",
+      "hash": "c2aad43eb43d8b34968e4e2df674ed762a7daeaf435104a524e42d800a4d158e",
       "review": "no-open-ai-finding"
     },
     {
@@ -56837,9 +56837,9 @@
       "topic": "Passing",
       "family": "wall-bounce-receive",
       "type": "choice",
-      "prompt": "What makes the direct F1-to-YOU lane difficult?",
-      "explanation": "D1 is between F1 and YOU in the direct line.",
-      "hash": "8f767212126696a050defc43392d36d479a818510d414599b83ccfecbd8270d5",
+      "prompt": "Which defender is nearest the direct F1-to-YOU passing route?",
+      "explanation": "D1 is near the line between F1 and YOU. The freeze does not prove stick reach or an interception.",
+      "hash": "a6cc419cc9c8dd375071dde25e61e17aeddb866153aedf5329bc7a6350642f24",
       "review": "no-open-ai-finding"
     },
     {
@@ -56852,7 +56852,7 @@
       "type": "multi",
       "prompt": "Which two details matter before using the wall?",
       "explanation": "The wall changes the route but not the need to read the rebound, pressure, and inside support.",
-      "hash": "b917f075c14df36b2a053fedb8564a637e49caca0d90ed40f2e1f2abb3895a6f",
+      "hash": "3a1720d0f12b2d453866936d30b4d4689f9a3167ca1511600799213b792ac3df",
       "review": "no-open-ai-finding"
     },
     {
@@ -56865,7 +56865,7 @@
       "type": "sequence",
       "prompt": "Arrange a wall-option plan.",
       "explanation": "The route around D1 is only useful if the rebound and next lane remain controllable.",
-      "hash": "66929ba51903edc113b737658c35c9ec07e9dae1845633f73f57ed7258cf9744",
+      "hash": "079c0383517000f586207f5037198b80867007a420a1522f82122be10dd3797b",
       "review": "no-open-ai-finding"
     },
     {
@@ -56876,9 +56876,9 @@
       "topic": "Passing",
       "family": "wall-bounce-receive",
       "type": "position",
-      "prompt": "Move YOU to a receiving point along the wall beyond D1.",
-      "explanation": "This point creates a new wall relationship while keeping F2 and D2 in the wider scene.",
-      "hash": "5940b8934371257ca25c111fa7747427710da6b09b6b1ebdabf6842a28d813d2",
+      "prompt": "Move YOU toward the side boards, farther up ice than D1, to offer a possible bank-pass target.",
+      "explanation": "The example moves YOU closer to the side boards and farther up ice than D1. F1 still needs to judge a reachable bank point and rebound; no bounce or completed pass is guaranteed.",
+      "hash": "61ff8237c5767b701c4ca7f6fd2df21bf3aaf005bbc4b42b85063b9f40e9a366",
       "review": "no-open-ai-finding"
     },
     {
@@ -56890,8 +56890,8 @@
       "family": "wall-bounce-receive",
       "type": "choice",
       "prompt": "D1 turns toward the boards before F1 releases. What should you revisit?",
-      "explanation": "D1's turn changes both routes. Compare the wall rebound with F2's inside availability before choosing.",
-      "hash": "b7a8f7307a252afa5db306a425fa6fa6f66e64d9d55040e88b89efe6b1fed4e4",
+      "explanation": "D1 turning toward the boards is a cue to reassess, not proof that a route closed or opened. Compare the bank option with F2 and D2 before choosing.",
+      "hash": "aa10a0c13b2413aa24491c13f207c91e1b58e6ac7a703957e6ad93a153d79099",
       "review": "no-open-ai-finding"
     },
     {
@@ -56904,7 +56904,7 @@
       "type": "explain",
       "prompt": "How is a wall option different from simply passing through D1?",
       "explanation": "It changes the puck route around the defender and creates a new rebound to read. The option remains conditional on the rebound and support.",
-      "hash": "9bd905d23b81bb9227c3a9fd75349049cc2bf25e664fd0d3aabe7e77277de78b",
+      "hash": "73faf64294c253e7ebc5d158696b942c1230491fd1e3e536054456f0759a66c1",
       "review": "no-open-ai-finding"
     },
     {
@@ -56916,8 +56916,8 @@
       "family": "drifting-pass-recovery",
       "type": "choice",
       "prompt": "Where is the puck compared with YOU?",
-      "explanation": "The loose puck is below YOU and has no owner.",
-      "hash": "8f780dae282a7a2553e2eb2088d95cf09539ed5a48ca4ca9fdfdc41576d08767",
+      "explanation": "The puck is loose, farther up ice and closer to the side boards than YOU. No player is assigned control.",
+      "hash": "26762960b5624b42c47805c71a9b2607e423c4da599fde9a433a033eec330ec6",
       "review": "no-open-ai-finding"
     },
     {
@@ -56930,7 +56930,7 @@
       "type": "multi",
       "prompt": "Which two questions help a useful recovery?",
       "explanation": "The actual puck and pressure determine recovery; the intended spot is no longer the live cue.",
-      "hash": "f9864800dde565ab343c05f106427cb2d441a26a2c4986c2f901344c0bde19cb",
+      "hash": "8b63ea4ca01cf3080d576c6c752b99fbf9cc4f2c07d224bcb32495a9fed4b662",
       "review": "no-open-ai-finding"
     },
     {
@@ -56943,7 +56943,7 @@
       "type": "sequence",
       "prompt": "Arrange this missed-pass response.",
       "explanation": "The recovery begins from the real puck location and updates once possession is possible.",
-      "hash": "01419f8784ed4f32b60b75471f7fc6525764130bf48e688836dd2b77e262338f",
+      "hash": "097259dd4c65130a47dd0a704df64059b9cf01d32d24321a65e490dc0bb293fa",
       "review": "no-open-ai-finding"
     },
     {
@@ -56954,9 +56954,9 @@
       "topic": "Puck control",
       "family": "drifting-pass-recovery",
       "type": "position",
-      "prompt": "Move YOU toward the loose puck while keeping D1 in sight.",
-      "explanation": "This point approaches the actual loose puck and preserves a view up ice.",
-      "hash": "a82a8348fae16edb029d98f2fa4c688eddc784cf6a7da18186ac4b75abc72e13",
+      "prompt": "Move YOU closer to the loose puck, then recheck D1.",
+      "explanation": "This example reduces the distance to the loose puck. Recheck D1 while approaching; the marker does not prove a safe route, visibility or control.",
+      "hash": "4b2f3a2b47c944df8fff82185f0a60956a59401d1a4c1d79da5101fad3e2ffcf",
       "review": "no-open-ai-finding"
     },
     {
@@ -56967,9 +56967,9 @@
       "topic": "Puck control",
       "family": "drifting-pass-recovery",
       "type": "choice",
-      "prompt": "D1 reaches the loose puck first. What changed?",
-      "explanation": "D1 reaching first changes possession. Re-read F1, F2, and the net-side risk before choosing your job.",
-      "hash": "3778c4f52d45373fd4c4cc5712b47a61deac49a2637a5d3a27d5444c2dd77b67",
+      "prompt": "D1 gains control of the loose puck first. What changed?",
+      "explanation": "D1 is a gold opponent. With control explicitly established, navy changes to defence. Coordinate pressure and coverage with F1 and F2; reaching the puck alone would not establish possession.",
+      "hash": "2c651a372ac7abb5db66199472390c2b43807085ba1115e083fcafe8c58f6927",
       "review": "no-open-ai-finding"
     },
     {
@@ -56982,7 +56982,7 @@
       "type": "explain",
       "prompt": "What could you say to F1 after the pass misses?",
       "explanation": "Name the actual puck location and D1's pressure, then call your next support or recovery cue so F1 can adjust the next route.",
-      "hash": "9e33b82f58a7d460ae04f43c6c2858e70d2002801e485a1fab491c219d08ea38",
+      "hash": "80be3cd66c52e2103e8ebeeb22e9ad21051476f9d16ac77bf539b86edf5c6b7b",
       "review": "no-open-ai-finding"
     },
     {
@@ -56995,7 +56995,7 @@
       "type": "choice",
       "prompt": "Who is between YOU and the right net?",
       "explanation": "D1 is between YOU and the goalie in the direct lane.",
-      "hash": "ec692968bfc4a323cd90ee7bfb936c0729c7d499d69cea54ccdda36d13f51b2c",
+      "hash": "b75edb51770b329cabdb812c38d7d962c6cb592d88847e84258da40353c9d734",
       "review": "no-open-ai-finding"
     },
     {
@@ -57008,7 +57008,7 @@
       "type": "multi",
       "prompt": "Which two cues should be read together?",
       "explanation": "The defender and teammate create the choice. A lane only becomes useful if it remains open after the movement.",
-      "hash": "39392870f733b7744cc352670d954683c15a5d2bb75848a7c3302352ce03d4b8",
+      "hash": "de10a0b0ad75648c6c20ce2597ccbcd80594b3868d381897a531e920027211d9",
       "review": "no-open-ai-finding"
     },
     {
@@ -57019,9 +57019,9 @@
       "topic": "Shooting",
       "family": "slot-lane-change",
       "type": "sequence",
-      "prompt": "Arrange this high-lane decision.",
-      "explanation": "The carrier waits for the updated lane, then chooses among the still-reachable options.",
-      "hash": "28b20a41369fcd9c9a4243a1e279658ab8736daa0dac60d854065b92edb9c763",
+      "prompt": "Arrange this shooting-lane read.",
+      "explanation": "Check the current lane and support, then choose among the available options. You do not have to wait for D1 to move.",
+      "hash": "0cad8985d7b747ec450d476f04c8ae0e7ea6cde1c8c0dbb2a1d4ef78f4950c5b",
       "review": "no-open-ai-finding"
     },
     {
@@ -57032,9 +57032,9 @@
       "topic": "Shooting",
       "family": "slot-lane-change",
       "type": "position",
-      "prompt": "Move YOU to a shooting angle outside D1 while keeping F2 visible.",
-      "explanation": "This point changes the line from YOU to the net and keeps F2 in the scene; it does not certify a shot.",
-      "hash": "c8fc1150791d0567a02df6eefd6f967e4e5f4a3bc387a13ff9f9080d8832ea4e",
+      "prompt": "Move YOU sideways to change the shooting angle around D1.",
+      "explanation": "The example moves the carrier and puck sideways and changes the line to the net. Recheck D1, the goalie and F2; the position does not prove an open shot.",
+      "hash": "b78448482f6692e2713f1fabb1d48f951c67e4c0ae210ec38bc9fed0de2b2317",
       "review": "no-open-ai-finding"
     },
     {
@@ -57047,7 +57047,7 @@
       "type": "choice",
       "prompt": "D1 moves toward F2 and the direct lane opens. What deserves a new look?",
       "explanation": "D1's movement changes the lane, but the carrier still reads space and support before choosing.",
-      "hash": "ac82c99519c397957f81734066a1ed2654ac9cc09ccc1c0d9bd9e04254060e61",
+      "hash": "2ea8ddb506e823fde51d30419129ef82cde494500779ca835e104d5eff7d3f09",
       "review": "no-open-ai-finding"
     },
     {
@@ -57058,9 +57058,9 @@
       "topic": "Shooting",
       "family": "slot-lane-change",
       "type": "explain",
-      "prompt": "Why can the slot and half wall lead to different choices here?",
-      "explanation": "The slot has a different relationship to D1, the net, and F2. Explain which lane is visible now and what movement would make another option safer.",
-      "hash": "73972e541543118eafa92ad7fa91d4d2fe0f38d231adf0abd5df2267ece4e6be",
+      "prompt": "How do your position and F2’s wider position offer different choices?",
+      "explanation": "YOU have a central shooting line with D1 in it; F2 offers a wider passing option. Compare those routes and explain what must stay open before using either.",
+      "hash": "4b712c39dda31d6b1451a1c35f486b8ab6446d9e8c98e766f4048c79909fdda5",
       "review": "no-open-ai-finding"
     },
     {

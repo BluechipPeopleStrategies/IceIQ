@@ -1,6 +1,6 @@
 # RinkReads — Task List
 
-**Last updated:** 2026-09-06 · Packet 17: 30 question versions repaired across five scenarios after source and independent checks. Packet 01–16 deployment remains live while packet 17 release verification runs. Supabase remains outside this packet work.
+**Last updated:** 2026-09-06 · Packet 18: 30 question versions repaired across five scenarios after source and independent checks. Packets 01–17 remain live while packet 18 release verification runs. Supabase remains outside this packet work.
 
 **Scope:** RinkReads **app build + content factory**. Launch/distribution (sending the beta, marketing) and the separate BlueChip business are **out of scope** — parked at the bottom. Priority = position in this list. A new idea that isn't here goes to the **Parking Lot** first, then gets promoted on purpose — that's the scope-creep guard.
 
@@ -56,6 +56,10 @@
 - *(New ideas land here first, then get promoted into NEXT/LATER on purpose.)*
 
 ## Changelog
+
+- 2026-09-06 · Curriculum audit follow-up: packet 18 reports defensive-play keyword misclassification for exp26b-u11-009 and exp26b-u11-010. Check their actual bindings before reclassification; content repairs do not resolve this classifier issue.
+
+- 2026-09-06 · Packet 18: 30 question versions repaired across five scenarios after source and independent checks. Packets 01–17 remain live while packet 18 release verification runs. Supabase remains outside this packet work.
 
 - 2026-09-06 · Packet 17: 30 question versions repaired across five scenarios after source and independent checks. Packet 01–16 deployment remains live while packet 17 release verification runs. Supabase remains outside this packet work.
 
@@ -263,3 +267,4 @@
 - **2026-07-09 (evening)** — Play-engine audit + 4 improvements shipped (waypoint curves, choreography beats, outcome ghost trails, rink anchors; new gate `npm run test:play-engine`, 18 tests; all existing gates green). Earlier today: library source docs committed, gap-control pair QC'd (distinct, keep both), forecheck take-away-the-reverse built. Native rebuild of the inspiration backlog promoted into NEXT #3 (per Thomas); engine backlog captured in LATER; gym items renumbered NEXT #5–#7.
 - **2026-07-09 (later)** — Gym Phase 1 built, tested, committed (8 gym commits); NOW entry converted to the owner's 10-min gate + push decision. Gym Phase 2 added as NEXT #6 (blocked by Daily Faceoff, one streak owner); gym Phase 3 spelled out in LATER; sound pass marked shipped.
 - **2026-07-09** — Created. Folded `2026-07-09-next-7.md` + `docs/BACKLOG.md` into one living doc; archived the dated next-7, session-handoff, and backlog to `docs/roadmap/archive/`. Beta-send moved to Parking Lot (launch, out of scope). Playtest gate + Gym Phase 1 set as NOW.
+
