@@ -1,6 +1,6 @@
 # RinkReads — Task List
 
-**Last updated:** 2026-09-05 · **Packets 02–06 repaired locally:** 23 scenarios / 115 question hashes, independently rechecked; experimental only, two U7 curriculum bindings held. Coverage now follows runtime selection (1,300 questions + 200 optional reflections), and local events retain authored age/topic/family. Remote privacy migration remains pending.
+**Last updated:** 2026-09-05 · **Packets 07–09 repaired locally:** 14 additional scenarios / 72 question versions, independently rechecked. Experimental bank remains 200 scenarios / 1,600 authored questions; combined audit has no open AI question flags. Prior U7 curriculum holds and remote privacy migration remain pending.
 
 **Scope:** RinkReads **app build + content factory**. Launch/distribution (sending the beta, marketing) and the separate BlueChip business are **out of scope** — parked at the bottom. Priority = position in this list. A new idea that isn't here goes to the **Parking Lot** first, then gets promoted on purpose — that's the scope-creep guard.
 
@@ -56,6 +56,8 @@
 - *(New ideas land here first, then get promoted into NEXT/LATER on purpose.)*
 
 ## Changelog
+
+- **2026-09-05** — Applied Claude packets 07–09 after reviewing all 122 assigned questions and independently rechecking 72 changed versions across 14 scenarios. Corrected unsupported circle landmarks, ambiguous attacking-end wording, guaranteed-pass claims, grammar and defensive teammate relevance. Preserved original returns and exact historical repair evidence; generalized the receipt-gated applicator and regenerated catalogs/audits. Experimental only, no human coach approval or deployment. [Adjudication](../factory/research/question-review/packets-07-09/root-content-adjudication.md).
 
 - **2026-09-05** — Applied adjudicated Claude packets 02–06 to the experimental bank with exact before/after evidence and independent checks across 115 affected questions. Corrected additional possession, uncertainty and blue-line scene errors; retained U7 support/receiving curriculum holds. Updated catalogs and full hash audit. Added local authored-age/topic/family telemetry with unknown historical buckets and a phone-checked report. Corrected curriculum counts to actual loader/selection behavior; no tactical-novelty or mastery claim. [Repairs](../factory/research/question-review/packets-02-06/root-content-adjudication.md) · [Coverage](2026-09-05-curriculum-coverage.md).
 

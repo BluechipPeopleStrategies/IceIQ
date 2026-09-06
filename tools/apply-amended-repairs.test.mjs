@@ -129,3 +129,35 @@ test("independent receipt rejects duplicate question rows", () => {
     /duplicate question IDs/,
   );
 });
+
+
+test("source packet paths reject traversal and duplicate assignments", () => {
+  for (const sourcePackets of [["../packet-07"], ["packet-07", "packet-07"]]) {
+    const file = temporaryProposal(proposal => { proposal.sourcePackets = sourcePackets; });
+    assert.throws(() => testPlan({ proposalPath: file }), /Invalid source packet IDs/);
+  }
+});
+
+test("proposal cannot relabel its immutable source closure", () => {
+  const file = temporaryProposal(proposal => { proposal.packets[0].scenarios[0].sourceAffectedQuestionIds = []; });
+  assert.throws(() => testPlan({ proposalPath: file }), /source closure mismatch/);
+});
+
+test("source packet list must match packet payloads", () => {
+  const file = temporaryProposal(proposal => { proposal.sourcePackets = ["packet-07"]; });
+  assert.throws(() => testPlan({ proposalPath: file }), /Source packet assignment mismatch/);
+});
+
+
+test("packets 07-09 retain source closure and independently cover extra repairs", () => {
+  const proposalPath = path.resolve("docs/factory/research/question-review/packets-07-09/proposed-repairs.json");
+  const parts = reconstructPartsFromApplicationReceipt(path.resolve("docs/factory/research/question-review/packets-07-09/application-receipt.json"));
+  const plan = buildPlan({ proposalPath, parts });
+  assert.equal(plan.changedIds.size, 14);
+  assert.equal(plan.changedRows.length, 72);
+  assert.deepEqual(Object.keys(plan.sourceReturnFileHashes), ["packet-07", "packet-08", "packet-09"]);
+  assert.ok(plan.changedRows.some(row => row.questionId === "exp26-u9-011-q6"));
+  const receipt = JSON.parse(fs.readFileSync(path.resolve("docs/factory/research/question-review/packets-07-09/independent-final-recheck.json")));
+  validateIndependentReceipt(receipt, plan.proposal, fs.readFileSync(proposalPath), plan.changedRows);
+  assert.throws(() => buildPlan({ proposalPath }), /stale scenario version/);
+});

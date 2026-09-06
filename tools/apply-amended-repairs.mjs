@@ -1,4 +1,4 @@
-// Dry-run-first applicator for the amended packets-02–06 proposal.
+// Dry-run-first applicator for reviewed packet proposals (02–06 by default).
 // It never writes unless --write and a matching independent exact-hash receipt
 // are both supplied. No source bank is imported or approved by this module.
 // Receipt contract for the eventual writer:
@@ -20,10 +20,12 @@ export const REPO_ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url
 export const PROPOSAL_PATH = path.join(REPO_ROOT, "docs/factory/research/question-review/packets-02-06/proposed-repairs.json");
 export const SOURCE_SNAPSHOT_ID = "rr-20260905-c8403be16748c919";
 const AGES = ["u7", "u9", "u11", "u13", "u15", "u18"];
-const SOURCE_RETURN_FILES = Object.fromEntries(["02", "03", "04", "05", "06"].map(n => [
-  `packet-${n}`,
-  path.join(REPO_ROOT, `docs/factory/claude-project/claude-output/review-packet-${n}.json`),
-]));
+function sourceReturnFiles(proposal) {
+  const ids = proposal.sourcePackets;
+  if (!Array.isArray(ids) || !ids.length || ids.some(id => !/^packet-\d{2}$/.test(id)) || new Set(ids).size !== ids.length) fail("Invalid source packet IDs");
+  assert.deepEqual(proposal.packets.map(packet => packet.packetId), ids, "Source packet assignment mismatch");
+  return Object.fromEntries(ids.map(id => [id, path.join(REPO_ROOT, `docs/factory/claude-project/claude-output/review-${id}.json`)]));
+}
 
 const clone = value => structuredClone(value);
 const sha256 = bytes => createHash("sha256").update(bytes).digest("hex");
@@ -103,7 +105,9 @@ function assertQuestionClosure(current, scenario) {
   if (new Set(rowIds).size !== rowIds.length) fail(`${scenario.scenarioId}: changedQuestions contains duplicate IDs`);
   assert.deepEqual([...rowIds].sort(), [...actual].sort(), `${scenario.scenarioId}: changedQuestions coverage mismatch`);
   assert.deepEqual([...scenario.finalAffectedQuestionIds].sort(), [...actual].sort(), `${scenario.scenarioId}: final closure mismatch`);
-  assert.deepEqual([...scenario.sourceAffectedQuestionIds].sort(), [...actual].sort(), `${scenario.scenarioId}: source closure mismatch`);
+  // The final review may repair additional retained questions. Preserve the
+  // Claude closure separately and verify it against the immutable source return.
+  for (const id of scenario.sourceAffectedQuestionIds) if (!actual.includes(id)) fail(`${scenario.scenarioId}: source closure mismatch`);
   for (const row of scenario.changedQuestions) {
     const old = oldById.get(row.questionId);
     const next = nextById.get(row.questionId);
@@ -155,7 +159,7 @@ export function validateIndependentReceipt(receipt, proposal, proposalBytes, cha
   if (receipt.status !== "approved-for-write") fail(`Receipt status must be approved-for-write, got ${receipt.status}`);
   if (receipt.proposalSha256 !== sha256(proposalBytes)) fail("Independent receipt is bound to different proposal bytes");
   if (receipt.sourceSnapshotId !== proposal.sourceSnapshotId) fail("Independent receipt snapshot mismatch");
-  assert.deepEqual(receipt.sourceReturnFileHashes, readSourceReturnFileHashes(), "Claude output byte hashes changed or are absent");
+  assert.deepEqual(receipt.sourceReturnFileHashes, readSourceReturnFileHashes(proposal), "Claude output byte hashes changed or are absent");
   if (!receipt.reviewer || receipt.reviewer === (proposal.author || "goals_finish")) fail("Independent reviewer must differ from proposal author");
   const rows = new Map((receipt.questions || []).map(row => [row.questionId, row]));
   assert.equal(rows.size, (receipt.questions || []).length, "Independent receipt contains duplicate question IDs");
@@ -176,6 +180,15 @@ export function buildPlan({ proposalPath = PROPOSAL_PATH, receiptPath = null, wr
   const proposal = JSON.parse(proposalBytes.toString("utf8"));
   if (proposal.status !== "proposed-not-independently-rechecked") fail("Only the proposed-not-independently-rechecked artifact is accepted");
   if (proposal.sourceSnapshotId !== SOURCE_SNAPSHOT_ID) fail("Unexpected source snapshot");
+  for (const [packetId, file] of Object.entries(sourceReturnFiles(proposal))) {
+    const returned = readJson(file);
+    const packet = proposal.packets.find(row => row.packetId === packetId);
+    for (const scenario of packet.scenarios) {
+      const source = returned.repairs.find(row => row.scenarioId === scenario.scenarioId);
+      if (!source) fail(`${scenario.scenarioId}: absent from source return`);
+      assert.deepEqual([...scenario.sourceAffectedQuestionIds].sort(), [...source.affectedQuestionIds].sort(), `${scenario.scenarioId}: source closure mismatch`);
+    }
+  }
   const parts = injectedParts || readBankFiles();
   const { patched, changedIds } = applyToParts(parts, proposal);
   const patchedOriginal = [...patched.original.values()];
@@ -197,13 +210,13 @@ export function buildPlan({ proposalPath = PROPOSAL_PATH, receiptPath = null, wr
   }
   return {
     proposal, proposalPath, receiptPath, parts, patched, composed, changedIds, changedRows,
-    proposalSha256: sha256(proposalBytes), sourceReturnFileHashes: readSourceReturnFileHashes(),
+    proposalSha256: sha256(proposalBytes), sourceReturnFileHashes: readSourceReturnFileHashes(proposal),
     validationErrors, writeAuthorized: Boolean(write && receiptPath),
   };
 }
 
-function readSourceReturnFileHashes() {
-  return Object.fromEntries(Object.entries(SOURCE_RETURN_FILES).map(([packetId, file]) => [packetId, sha256(readFileSync(file))]));
+function readSourceReturnFileHashes(proposal) {
+  return Object.fromEntries(Object.entries(sourceReturnFiles(proposal)).map(([packetId, file]) => [packetId, sha256(readFileSync(file))]));
 }
 
 export function writePlan(plan) {
@@ -253,7 +266,10 @@ if (process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.me
   const write = process.argv.includes("--write");
   const receiptIndex = process.argv.indexOf("--receipt");
   const receiptPath = receiptIndex >= 0 ? process.argv[receiptIndex + 1] : null;
-  const plan = buildPlan({ receiptPath, write });
+  const proposalIndex = process.argv.indexOf("--proposal");
+  if (proposalIndex >= 0 && (!process.argv[proposalIndex + 1] || process.argv[proposalIndex + 1].startsWith("--"))) fail("--proposal requires a path");
+  const proposalPath = proposalIndex >= 0 ? path.resolve(process.argv[proposalIndex + 1]) : PROPOSAL_PATH;
+  const plan = buildPlan({ proposalPath, receiptPath, write });
   if (write) writePlan(plan);
   console.log(JSON.stringify({ mode: write ? "write" : "dry-run", proposalSha256: plan.proposalSha256, scenarios: plan.changedIds.size, changedQuestions: plan.changedRows.length, validationErrors: plan.validationErrors }, null, 2));
 }
