@@ -1,6 +1,6 @@
 # RinkReads — Task List
 
-**Last updated:** 2026-09-06 · Five staged repair flows checked in browser. Two U11 placement rubrics implemented as development-only geometry previews; 295 live placement questions remain uncalibrated. Local player/admin feedback built; authenticated backend drafted, Supabase deferred. No deployment this pass.
+**Last updated:** 2026-09-06 · Five verified repairs applied locally with exact receipts. Two placement drafts now show shaded ranges and first/latest comparison; four calibration scenes have refined choices and versioned identities. 295 placement questions remain uncalibrated. Supabase deferred; no deployment this pass.
 
 **Scope:** RinkReads **app build + content factory**. Launch/distribution (sending the beta, marketing) and the separate BlueChip business are **out of scope** — parked at the bottom. Priority = position in this list. A new idea that isn't here goes to the **Parking Lot** first, then gets promoted on purpose — that's the scope-creep guard.
 
@@ -56,6 +56,8 @@
 - *(New ideas land here first, then get promoted into NEXT/LATER on purpose.)*
 
 ## Changelog
+
+- 2026-09-06: Applied five verified source repairs and refreshed catalog, current hashes and curriculum bindings. Added matching 3D/overhead draft shading and bounded first/latest placement comparison. Refined three calibration decision prompts, varied single-choice answer positions and narrowed two static-scene titles. 19 targeted tests, build and feedback release boundary passed; local browser verified shading and changed-attempt feedback. No human coach certification, Supabase work or deployment. See docs/factory/coaching-panel/IMPLEMENTATION-2026-09-06.md.
 
 - 2026-09-06: Verified all five staged repair response flows. Added pure placement evaluator, two exact-source draft rubrics, explained bands/retry, explicit ungraded fallback, bounded local events and measured coverage. Six tests/build/release-boundary check pass. No calibrated grades or live-bank promotion; shaded areas and broader rubric coverage remain. See docs/factory/coaching-panel/PLACEMENT-PILOT.md.
 

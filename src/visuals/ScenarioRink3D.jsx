@@ -108,6 +108,7 @@ function ActorControl({ actor, selected, focused, cameraAdjusting, labelledActor
 function Markings({ overlays, onIcePoint, enabled }) {
   const canChoose = enabled && typeof onIcePoint === 'function';
   return <group>
+    {(overlays.cells || []).map(c=><mesh key={`area:${c.x}:${c.y}`} position={world(c,.035)} rotation={[-Math.PI/2,0,0]} raycast={()=>null}><planeGeometry args={[c.size,c.size]}/><meshBasicMaterial color={c.band==='strong'?'#167b70':'#b47c13'} transparent opacity={c.band==='strong'?.35:.22} depthWrite={false}/></mesh>)}
     {(overlays.polylines || []).map(line => {
       const points = (line.points || []).filter(point => Array.isArray(point) && point.length === 2 && point.every(Number.isFinite));
       if (points.length < 2) return null;

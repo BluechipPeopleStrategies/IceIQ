@@ -1,5 +1,16 @@
 import {isCoachRoutePoint} from './coachRouteSurfaceInput.js';
 export function placementSource(s,q){const {questions,version,...scene}=s;return JSON.stringify({scene,question:q})}
+// Conservative grid: shade a cell only when its centre and four corners agree.
+export function samplePlacementAreas(input,size=.5){
+ if(!Number.isFinite(size)||size<.25||size>2)return [];
+ const cells=[];
+ for(let x=-30;x<=30;x+=size)for(let y=-12.5;y<=12.5;y+=size){
+  const points=[{x,y},...[-1,1].flatMap(a=>[-1,1].map(b=>({x:x+a*size/2,y:y+b*size/2})))];
+  const bands=points.map(point=>evaluatePlacement({...input,point}).previewBand);
+  if(bands.every(b=>b==='strong'||b==='workable'))cells.push({x,y,size,band:bands.every(b=>b==='strong')?'strong':'workable'});
+ }
+ return cells;
+}
 const distance=(a,b)=>Math.hypot(a.x-b.x,a.y-b.y);
 function segmentDistance(p,a,b){const dx=b.x-a.x,dy=b.y-a.y,d=dx*dx+dy*dy;if(d<1e-10)return NaN;const t=Math.max(0,Math.min(1,((p.x-a.x)*dx+(p.y-a.y)*dy)/d));return distance(p,{x:a.x+t*dx,y:a.y+t*dy})}
 export function evaluatePlacement({scene,point,rubric:r,questionId,scenarioVersion,sourceSignature}){

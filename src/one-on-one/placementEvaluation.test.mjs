@@ -1,5 +1,13 @@
 import test from 'node:test';import assert from 'node:assert/strict';import {evaluatePlacement} from './placementEvaluation.js';
 import fs from 'node:fs';import {placementSource} from './placementEvaluation.js';
+import {samplePlacementAreas} from './placementEvaluation.js';
+test('shaded cells obey the evaluator and stale rubrics expose no areas',()=>{
+ const input={scene,rubric,questionId:'q',scenarioVersion:1,sourceSignature:'source'};
+ const cells=samplePlacementAreas(input,2);assert(cells.length>0);
+ for(const c of cells)assert(['strong','workable'].includes(evaluatePlacement({...input,point:c}).previewBand));
+ assert.deepEqual(samplePlacementAreas({...input,sourceSignature:'stale'},2),[]);
+ assert.deepEqual(samplePlacementAreas(input,0),[]);
+});
 const scene={actors:[{id:'you',x:0,y:0},{id:'receiver',x:10,y:0},{id:'defender',x:5,y:3}],puck:{x:10,y:0}};
 const rubric={questionId:'q',scenarioVersion:1,sourceSignature:'source',status:'draft',actorId:'you',criteria:[{id:'lane',type:'lane',target:'receiver',blockers:['defender'],strongMin:2,workableMin:1,label:'Passing lane'}]};
 const run=(point,over={})=>evaluatePlacement({scene,point,rubric,questionId:'q',scenarioVersion:1,sourceSignature:'source',...over});

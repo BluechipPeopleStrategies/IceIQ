@@ -39,7 +39,7 @@
   "candidates": [
     {
       "id": "cal26-u7-skating-space-001",
-      "version": 1,
+      "version": 2,
       "ageBand": "U7",
       "title": "Pause before the turn",
       "family": "skating-space-awareness",
@@ -200,26 +200,26 @@
         {
           "id": "cal26-u7-skating-space-001-q5",
           "type": "choice",
-          "prompt": "If Navy2 moves into the pocket you chose, what could you do next?",
+          "prompt": "Navy2 stops in the space you chose. You want room for your turn. Where could you go?",
           "options": [
             {
-              "id": "a",
-              "text": "Look for another clear space"
+              "id": "b",
+              "text": "Right beside Navy2"
             },
             {
-              "id": "b",
-              "text": "Follow very close behind Navy2"
+              "id": "a",
+              "text": "Another clear space"
             },
             {
               "id": "c",
-              "text": "Use the same spot without checking"
+              "text": "The spot Navy2 is standing on"
             }
           ],
           "answer": [
             "a"
           ],
           "basis": "coaching",
-          "explanation": "Navy2 now occupies your planned space. Look again and choose room that is still available."
+          "explanation": "Choose another clear space so you have room to turn. Being close to a teammate can sometimes help with a pass; here the task is to find room for your own turn."
         },
         {
           "id": "cal26-u7-skating-space-001-q6",
@@ -260,7 +260,7 @@
     },
     {
       "id": "cal26-u9-wall-turn-001",
-      "version": 1,
+      "version": 2,
       "ageBand": "U9",
       "title": "Turn away from the wall",
       "family": "turning-space-choice",
@@ -346,16 +346,16 @@
           "prompt": "Which player is closest to YOU in this picture?",
           "options": [
             {
-              "id": "a",
-              "text": "Gold1"
-            },
-            {
               "id": "b",
               "text": "Navy2"
             },
             {
               "id": "c",
               "text": "Gold2"
+            },
+            {
+              "id": "a",
+              "text": "Gold1"
             }
           ],
           "answer": [
@@ -430,26 +430,26 @@
         {
           "id": "cal26-u9-wall-turn-001-q5",
           "type": "choice",
-          "prompt": "If Gold2 moves into the middle space, what might you do?",
+          "prompt": "Gold2 moves into the middle space you planned to use. Which part of your plan needs another look?",
           "options": [
             {
               "id": "a",
-              "text": "Recheck and find another space"
+              "text": "The turn into that middle space"
             },
             {
               "id": "b",
-              "text": "Turn there without looking"
+              "text": "Where you started beside the wall"
             },
             {
               "id": "c",
-              "text": "Assume the middle stays empty"
+              "text": "Who had the puck at the start"
             }
           ],
           "answer": [
             "a"
           ],
           "basis": "coaching",
-          "explanation": "The new player changes the visible picture, so rechecking and choosing another space is a reasonable next discussion. The freeze does not establish which route would succeed."
+          "explanation": "Gold2 now occupies the space you planned to turn into. Reassess that route before committing. The starting position and starting puck owner have not changed; another route or a support pass could be useful if available."
         },
         {
           "id": "cal26-u9-wall-turn-001-q6",
@@ -490,9 +490,9 @@
     },
     {
       "id": "cal26-u11-pivot-lane-001",
-      "version": 1,
+      "version": 2,
       "ageBand": "U11",
-      "title": "Turn out of pressure",
+      "title": "Read space before a turn",
       "family": "pivot-decision",
       "topic": "Skating decisions",
       "objective": "Read a visible pressure player and support space before discussing a pivot or continuation.",
@@ -577,12 +577,12 @@
           "prompt": "Who is directly in front of YOU relative to the way YOU face?",
           "options": [
             {
-              "id": "a",
-              "text": "Gold1"
-            },
-            {
               "id": "b",
               "text": "Navy2"
+            },
+            {
+              "id": "a",
+              "text": "Gold1"
             },
             {
               "id": "c",
@@ -661,26 +661,26 @@
         {
           "id": "cal26-u11-pivot-lane-001-q5",
           "type": "choice",
-          "prompt": "Gold1 moves out of the lane YOU face. Which option deserves another look?",
+          "prompt": "Gold1 leaves the space ahead of YOU. Navy2 remains available for support. Which option has just become worth comparing with the support pass?",
           "options": [
             {
-              "id": "a",
-              "text": "Compare continuing into that space with turning toward support"
-            },
-            {
               "id": "b",
-              "text": "Turn toward Navy2 regardless of the new space"
+              "text": "Passing to Navy2"
             },
             {
               "id": "c",
-              "text": "Pass through Gold2 without checking"
+              "text": "Holding the puck in the current spot"
+            },
+            {
+              "id": "a",
+              "text": "Carrying into the space Gold1 left"
             }
           ],
           "answer": [
             "a"
           ],
           "basis": "coaching",
-          "explanation": "The changed pressure may make continuing useful. Compare the new space with the support option before choosing; neither is automatically open."
+          "explanation": "Carrying into the newly available space is the changed option. Passing to Navy2 or holding briefly can still be defensible, depending on pressure and timing. Gold1 leaving alone does not prove that carrying will succeed."
         },
         {
           "id": "cal26-u11-pivot-lane-001-q6",
@@ -721,9 +721,9 @@
     },
     {
       "id": "cal26-u13-pace-change-001",
-      "version": 1,
+      "version": 3,
       "ageBand": "U13",
-      "title": "Change pace into space",
+      "title": "Compare pressure and support",
       "family": "pace-change-decision",
       "topic": "Skating decisions",
       "objective": "Use defender distance, support and open ice as observations when discussing a pace change before a turn.",
@@ -901,26 +901,26 @@
         {
           "id": "cal26-u13-pace-change-001-q5",
           "type": "choice",
-          "prompt": "If Gold2 covers Navy2, what could you consider?",
+          "prompt": "Gold2 moves into the direct line to Navy2. Which planned option needs to be reconsidered first?",
           "options": [
             {
               "id": "a",
-              "text": "Compare Navy3 and available carrying space before choosing"
+              "text": "A pass to Navy3"
             },
             {
               "id": "b",
-              "text": "Send the planned pass to Navy2 through Gold2"
+              "text": "A pass to Navy2"
             },
             {
               "id": "c",
-              "text": "Change pace toward Gold1 without checking the gap"
+              "text": "A carry into open space"
             }
           ],
           "answer": [
-            "a"
+            "b"
           ],
           "basis": "coaching",
-          "explanation": "The support cue changed, so recheck for another support or space before choosing. The freeze does not establish that any one alternative succeeds."
+          "explanation": "Gold2 now occupies the direct line to Navy2, so reassess that pass. Navy3 and carrying space are alternatives to compare, with Gold1 and the new pressure checked before committing. Neither alternative is guaranteed to work."
         },
         {
           "id": "cal26-u13-pace-change-001-q6",
