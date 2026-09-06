@@ -14,7 +14,7 @@ This request activates this visual design work. It does not resume the unrelated
 
 Thomas wants significantly higher-quality 3D characters, especially body shape, colors and animation; more animated presentation for younger ages; a more X's-and-O's treatment for older ages; high-quality first-person views; freely adjustable 3D viewpoints during authoring; and different questions attached to different viewpoints and decision points within one situation.
 
-Two terms are awaiting clarification: whether "anime quality" means an anime-inspired art style or improved animated-model quality, and whether "Sensorina" refers to NHL Sense Arena. Do not lock an anime art direction or treat the first concept sheet as selected while these are open. The earlier simplified-realism recommendation is no longer the design's default assumption.
+Thomas subsequently supplied two visual references and clarified the art direction: rounded cartoon characters for the youngest ages, becoming less cartoonish and more realistic, with older/more regular features as the age group increases. This replaces the open-ended "anime quality" terminology question. Whether "Sensorina" refers to NHL Sense Arena remains unconfirmed. The earlier generated simplified-realism concept is discussion history, not the selected visual target.
 
 The target is one coherent 3D hockey situation with independently selectable character/tactical presentation, viewpoint, decision point and question. The current browser/tablet product remains the delivery baseline; first-person does not by itself add a VR-headset implementation requirement.
 
@@ -29,15 +29,30 @@ The target is one coherent 3D hockey situation with independently selectable cha
 
 The existing saved rink screenshot was inspected as historical visual evidence, not as a live-browser verification of the current working tree. Substantial unrelated WIP is present and must remain separate.
 
-## Character quality and appearance discussion
+## Character appearance: owner-supplied progression
 
-| Direction | Benefit | Tradeoff |
+Thomas supplied two images in this conversation, with the instruction: "Should get less cartoonish and more realistic as the kids get older. The older age groups would see older or more regular features."
+
+- **Reference 1, youngest:** the red-uniform cartoon hockey child. Carry forward the oversized rounded head, compact body, short limbs, chunky gloves/skates, friendly face and smooth dimensional finish. These traits establish the intended youngest-age character direction.
+- **Reference 2, older:** the navy/yellow angular hockey illustration. Carry forward the more regular head-to-body proportion, longer athletic limbs, visible bend at the joints and recognizably hockey-specific posture. It is an illustration; its faceted shading is a separate surface-style choice, not evidence of a supplied 3D model.
+
+The attachments were inspected directly in the conversation. They have not been saved as project assets or assigned fabricated local paths/hashes. They are inspiration references, not licensed runtime models. Their logos, lettering and source-sheet badges are not part of the RinkReads design. Uniform colors remain a separate choice; the established navy/gold family is the working palette until Thomas changes it.
+
+### Proposed three-stage family
+
+The age mapping below is a recommendation for discussion, not an owner-approved cutoff:
+
+| Suggested age band | Body and face | Movement and detail |
 |---|---|---|
-| Simplified realism — initial proposal only | Believable hockey silhouettes, readable sticks and equipment, restrained surface detail | Needs careful modeling so simplification retains the important hockey cues |
-| Detailed realism | Closest to the current character reference sheets in close-up | Small details may disappear at rink scale; more modeling and rendering work |
-| More stylized proportions | Strong silhouettes and larger distinguishing shapes | Changes the character direction and needs an explicit owner choice |
+| U7-U9 | Rounded, large-headed, compact and friendly, guided by reference 1 | Expressive, clear poses; smooth broad forms and readable equipment |
+| U11-U13 | Transitional proportions: smaller relative head, longer limbs and more defined athletic stance | Youthful energy with increasingly natural skating, turns and stick work |
+| U15-U18 | Older/regular features, normal athletic proportions, guided by reference 2 and Thomas's realism direction | More natural restrained movement and mature equipment/material detail; optional tactical X/O presentation |
 
-No precise style selection has been recorded yet. The first concept sheet explores simplified realism and remains discussion material. Thomas's clarified quality target requires strong body design, consistent color/material treatment and polished movement at both rink scale and close first-person distances. It is a visual proposal, not anatomy, rink-geometry or production approval.
+These should feel like one character family growing up. Retain uniform placement, equipment language, team identity, handedness and animation conventions across the stages. Age progression changes shape and features, not just uniform scale or texture detail. Each stage needs fitted equipment, suitable skin weights and retested contact poses; sharing a skeleton is useful only where it preserves those qualities.
+
+Recommend translating the older reference's proportions/posture into smooth, polished 3D surfaces. Thomas is being asked whether to retain its angular low-poly finish or move further toward realism. Do not treat that recommendation as selected yet.
+
+Every age stage must work in full 3D, at normal rink scale and in close player-eye views. Younger cartoon proportions still need complete youth equipment, clear stick contacts and honest tactical reach. Preserve the full-face protection requirement from the existing character standard even where the inspiration image simplifies it.
 
 ## Age presentation and tactical mode
 
@@ -52,15 +67,15 @@ Age presentation, camera viewpoint, Frozen/Continuous pacing and Learning/Challe
 
 ## Player family
 
-Start with one youth-medium skater master and one separate goalie master. Navy and gold are material variants of the same models, not independently generated characters. Preserve the current large dark/light uniform fields, full youth face protection and visible face. Use original equipment without third-party branding.
+Design the three age stages together before choosing the first rigged prototype, so one youth-medium model does not silently become the look for every age. Build skaters and goalies as separate asset families with a common presentation contract. Navy and gold are material variants of each accepted age-stage model, not independently generated characters. Preserve the current large dark/light uniform fields, full youth face protection and visible face. Use original equipment without third-party branding.
 
-Keep credible hockey anatomy, a readable shoulder/waist silhouette, separated skates, clear bent knees and one continuous stick. Exact stylization is pending Thomas's answer. Avoid fine detail that obscures the larger forms; a first-person close-up also needs convincing materials and complete equipment. The small player must still show which way the body faces and which side the stick occupies.
+Apply the age-stage proportions above while keeping readable shoulders/waist, separated skates, clear bent knees and one continuous stick. The progression is selected; exact stage boundaries and the older model's surface treatment remain open. Avoid fine detail that obscures the larger forms; a first-person close-up also needs convincing materials and complete equipment. The small player must still show which way the body faces and which side the stick occupies.
 
 First prototype: one right-shot skater, as requested in the existing authored-asset standard. The current generated skater reference is observed left-shot; do not copy its grip and label it right-shot. Build and verify a separate left-shot variant after the first master works. Never mirror a character image or use negative scale to fake handedness.
 
 Goalie: a distinct body/equipment silhouette, pads, blocker, catcher, goalie stick and separate motion. Start with standard left-catching. The legacy Shootout is full-right; preserve its current anatomical scoring mapping until model, labels, hit targets and scoring adapters can be changed and verified together.
 
-Keep body/equipment variation separate from team identity. Future youth-small and youth-tall versions need appropriate proportions and equipment fits, rather than scaling one body to imply every age.
+Keep body/equipment variation separate from team identity. The youngest, transitional and older looks are part of the requested direction, with the exact three-band mapping still proposed. Each requires appropriate proportions and equipment fits rather than uniform scaling of one body.
 
 ## Readability and identity
 
@@ -175,7 +190,7 @@ Make 3D the normal presentation for these physical scenes. A graphics failure mu
 
 ## Review and creation order
 
-1. **Look and interaction:** resolve the meaning of "anime," the reference product, character-versus-marker presentation and first-person scan/author permissions. The existing concept is discussion material, not the selected visual target.
+1. **Look and interaction:** create a coherent three-stage character design from Thomas's two supplied references; settle age boundaries and the older character's smooth/faceted finish. Confirm the reference product, character-versus-marker presentation and first-person scan/author permissions. The earlier generated concept is discussion history, not the selected visual target.
 2. **One asset and viewpoint proof:** build one skater, its navy/gold variants, a goalie and a focused 3D rink. Inspect close-up, eight headings, side, overhead and true player-eye views, then at actual phone/tablet size. Compare character and tactical modes using the same actors.
 3. **One motion and teaching proof:** use one existing authored passing situation. Prove receive/pass contact, puck release, pause/seek and camera switching. Demonstrate several reviewed observer questions at one decision point with exact saved camera/state restoration and honest visibility limits.
 4. **Shared integration:** replace the duplicate player paths and migrate the scene inventory in small verified groups.

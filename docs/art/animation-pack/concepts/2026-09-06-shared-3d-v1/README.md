@@ -4,7 +4,7 @@ Created September 6, 2026 for Thomas's shared 3D player/rink design request.
 
 Status: **style proposal for review**. Not an accepted model, technical turnaround, animation, accurate rink plan or runtime asset. No owner selection has been recorded.
 
-Follow-up: Thomas requested significantly higher-quality bodies/colors/animation, age-adaptive character versus tactical presentation, first-person views and viewpoint-specific questions. This initial image has not been chosen as that visual target. See the revised design; the precise meaning of "anime quality" remains under discussion.
+Follow-up: Thomas requested significantly higher-quality bodies/colors/animation, age-adaptive character versus tactical presentation, first-person views and viewpoint-specific questions. He then supplied two references establishing rounded cartoon characters for the youngest ages, progressing to older, more regular athletic features. This initial image has not been chosen as that visual target. See the revised design for the owner-selected progression and still-open age boundaries/surface finish.
 
 - Image: [player-rink-concept-v1.png](player-rink-concept-v1.png)
 - SHA-256: `65f2d038efd35d444baedaac036203501b7cf9e35d9dc0d886a09df23cfdb013`
