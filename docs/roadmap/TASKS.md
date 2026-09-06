@@ -1,6 +1,6 @@
 # RinkReads — Task List
 
-**Last updated:** 2026-09-06 · Choice-order implementation and presentation metadata built locally; 52 tests pass. Independent code findings resolved. Five U13 content drafts held after review; 78 other candidates remain unreviewed. Production a075efe unchanged; Supabase deferred.
+**Last updated:** 2026-09-06 · Stable choice ordering deployed at e8e31fc with live checks. Five U13 rewrites under independent review; two movement drafts rejected for worsening blocker clearance. Remaining 78 lexical candidates await bounded review. Supabase deferred.
 
 **Scope:** RinkReads **app build + content factory**. Launch/distribution (sending the beta, marketing) and the separate BlueChip business are **out of scope** — parked at the bottom. Priority = position in this list. A new idea that isn't here goes to the **Parking Lot** first, then gets promoted on purpose — that's the scope-creep guard.
 
