@@ -83,3 +83,8 @@ Export named clips from the manifest, in-place, with no extra root translation. 
 The current Shootout drawing is **full-right**: its glove is screen-left and blocker/stick screen-right. This new pack is **standard left-catching**, the opposite. Neither is a labeling error if the full character is internally consistent. The pack must not silently replace that mesh or horizontally flip the generated image.
 
 Choose an explicit avatar handedness at integration. For standard front view, map `gloveHi/gloveLo` to viewer-right targets and `blkrHi/blkrLo` to viewer-left; for legacy full-right, preserve the existing mapping. `midHi` and `fiveHole` remain central. Keep core IDs anatomical, not defined by screen columns. Update target positions, labels, goalie limbs, hit areas, 2D fallback and animation lookup together. Test both handedness variants against identical open/covered IDs and scoring. Screenshots alone cannot prove this mapping. The initial generation has no permission to alter the scoring core.
+
+
+## Owner follow-up ? September 6 ? 3D clarity
+
+Reserve G for goalie; skater labels and jerseys use authored numbers. First-person must show the observer's stick. Remove the persistent player ring/halo in 3D. The implemented puck revision removes the opaque circular backing and keeps a visible black physical puck in perspective; actual puck translucency remains unconfirmed. These updates do not change existing SVG markers or source actor identities.

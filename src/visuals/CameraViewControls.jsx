@@ -1,3 +1,4 @@
+import { actorDisplayName } from './actorLabel.js';
 import { getReadSceneCamera } from '../one-on-one/readSequenceVisuals.js';
 import './CameraViewControls.css';
 
@@ -45,7 +46,7 @@ export default function CameraViewControls({ actors = [], observerId, onObserver
   return <div className="camera-view-controls">
     <div className="cvc-row">
       <div className="cvc-presets" role="group" aria-label="Camera angle">{presetOptions.map(({ value, label }) => <button type="button" key={value} disabled={disabled} aria-label={label} title={`${label} view`} aria-pressed={preset === value} onClick={() => { if (disabled) return; onPresetChange(value); onAdjustingChange(false); }}><CameraViewThumbnail view={value} /><span>{label}</span></button>)}</div>
-      {onObserverChange && actors.length>0 && <label>Player eyes <select aria-label="First-person observer" disabled={disabled} value={preset==='first-person'?observerId??'':''} onChange={event=>{if(!disabled&&event.target.value){onObserverChange(event.target.value);onAdjustingChange(false);}}}><option value="">Choose player</option>{actors.filter(actor=>Number.isFinite(actor.facing)).map(actor=><option key={actor.id} value={actor.id}>{actor.label||actor.id}</option>)}</select></label>}
+      {onObserverChange && actors.length>0 && <label>Player eyes <select aria-label="First-person observer" disabled={disabled} value={preset==='first-person'?observerId??'':''} onChange={event=>{if(!disabled&&event.target.value){onObserverChange(event.target.value);onAdjustingChange(false);}}}><option value="">Choose player</option>{actors.filter(actor=>Number.isFinite(actor.facing)).map(actor=><option key={actor.id} value={actor.id}>{actorDisplayName(actor)}</option>)}</select></label>}
       <div className="cvc-actions" role="group" aria-label="Camera controls">
         <button type="button" disabled={disabled} className="cvc-icon-button" aria-label="Reset view" title="Reset view" onClick={() => { if (!disabled) onReset(); }}><ResetIcon /></button>
         <button type="button" disabled={disabled} className="cvc-icon-button cvc-adjust-button" aria-label={adjusting ? 'Done adjusting' : 'Adjust camera'} title={adjusting ? 'Done adjusting' : 'Adjust camera'} aria-pressed={adjusting} aria-expanded={adjusting} onClick={() => { if (!disabled) onAdjustingChange(!adjusting); }}><AdjustIcon active={adjusting} /><span>{adjusting ? 'Done' : 'Adjust view'}</span></button>

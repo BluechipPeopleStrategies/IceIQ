@@ -64,7 +64,7 @@ function bladeGeometry() {
 }
 
 /** Local forward is -Z. Positions and facing belong exclusively to the caller. */
-export function buildHockeyPlayerRig({ goalie = false, colour = NAVY, number = '', showStick = true, ageBand, stage, finish } = {}) {
+export function buildHockeyPlayerRig({ goalie = false, colour = NAVY, number = '', showStick = true, ageBand, stage, finish, view } = {}) {
   const group = new THREE.Group();
   const roundedStudy = finish === 'rounded-study';
   const jerseyColour = new THREE.Color(colour).getHexString().toUpperCase() === 'C9A24B' ? GOLD : NAVY;
@@ -90,6 +90,7 @@ export function buildHockeyPlayerRig({ goalie = false, colour = NAVY, number = '
   const buckets = new Map(), partNames = new Set(), resources = [];
   const matrix = new THREE.Matrix4(), quaternion = new THREE.Quaternion();
   const part = (name, geometry, material, position = [0, 0, 0], rotation = [0, 0, 0], scale = [1, 1, 1]) => {
+    if (view === 'first-person' && !/^(stick-|hockey-glove|glove-|goalie-blocker|blocker-face|catching-)/.test(name)) {geometry.dispose();return;}
     if (roundedStudy && ['shoulder-yoke','chest-crest-border','chest-crest','crest-bar'].includes(name)) {geometry.dispose();return;}
     partNames.add(name);
     quaternion.setFromEuler(new THREE.Euler(...rotation));
@@ -216,7 +217,11 @@ export function buildHockeyPlayerRig({ goalie = false, colour = NAVY, number = '
     if (!goalie) {
       rounded('hockey-glove', [.15, .13, .16], 'pants', hand, [-.25, 0, side * .16], .035);
       rounded('glove-cuff', [.16, .045, .13], 'trim', [hand[0], hand[1] + .062, hand[2] + .015], [-.25, 0, side * .16], .012);
-      for (let finger = 0; finger < 3; finger++) rounded('glove-finger-roll', [.03, .024, .11], 'jersey', [hand[0] - .045 + finger * .043, hand[1] + .035, hand[2] - .025], [-.25, 0, 0], .008);
+      // External segmented knuckle protection: the shell top is handY+.065.
+      // The earlier +.035 rolls were buried inside the shell and invisible.
+      for (let finger = 0; finger < 3; finger++) rounded('glove-finger-roll', [.038, .035, .105], 'jersey', [hand[0] - .045 + finger * .045, hand[1] + .075, hand[2] - .025], [-.25, 0, 0], .012);
+      rounded('glove-thumb', [.06, .075, .095], 'pants', [hand[0] - side*.073, hand[1]-.012, hand[2]-.029], [.25, side*.20, side*.25], .024);
+      rounded('glove-thumb-padding', [.043, .026, .07], 'jersey', [hand[0] - side*.075, hand[1]+.023, hand[2]-.035], [.25, side*.20, side*.25], .012);
     } else if (side === 1) {
       rounded('goalie-blocker', [.255, .33, .095], 'cream', [hand[0] + .022, hand[1] - .008, hand[2] - .06], [.12, -.16, -.08], .035);
       rounded('blocker-face-stripe', [.055, .29, .015], 'jersey', [hand[0] + .08, hand[1] - .007, hand[2] - .116], [.12, -.16, -.08], .008);
@@ -293,7 +298,7 @@ export function buildHockeyPlayerRig({ goalie = false, colour = NAVY, number = '
   }
   group.add(bones[0]); for (const bone of bones.slice(1)) bones[0].add(bone);
   let numberTexture = null, numberMaterial = null;
-  if (typeof document !== 'undefined' && number !== '' && number !== null) {
+  if (view !== 'first-person' && typeof document !== 'undefined' && number !== '' && number !== null) {
     const canvas = document.createElement('canvas'); canvas.width = 128; canvas.height = 128;
     const context = canvas.getContext('2d');
     if (context) {
@@ -305,7 +310,7 @@ export function buildHockeyPlayerRig({ goalie = false, colour = NAVY, number = '
       const numberMesh = new THREE.Mesh(geometry, numberMaterial); numberMesh.name = 'jersey-number'; numberMesh.position.set(0, bodyY(1.18), .172); bones[12].add(numberMesh);
     }
   }
-  group.userData = { finish: roundedStudy ? 'rounded-study' : 'integration-candidate', stage: Object.hasOwn({young:1,youth:1,older:1}, stage) ? stage : resolveCharacterStage(ageBand), proportions: {...proportions}, pose: 'balanced-ready', parts: [...partNames], palette: { jersey: jerseyColour, helmet: jerseyColour, trim: trimColour },
+  group.userData = { view: view === 'first-person' ? view : 'world', finish: roundedStudy ? 'rounded-study' : 'integration-candidate', stage: Object.hasOwn({young:1,youth:1,older:1}, stage) ? stage : resolveCharacterStage(ageBand), proportions: {...proportions}, pose: 'balanced-ready', parts: [...partNames], palette: { jersey: jerseyColour, helmet: jerseyColour, trim: trimColour },
     carryContact: showStick ? { x: CARRY_OFFSET.lateral, y: .052, z: -CARRY_OFFSET.forward } : null };
   // Rigid weighted equipment segments preserve their lengths. In-place IK moves
   // the knees between hip and skate anchors; the scenario alone moves the root.

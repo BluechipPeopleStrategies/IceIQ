@@ -6,13 +6,13 @@ export function parseStartingView(input) {
  if (input == null) return null;
  const view = typeof input === 'string' ? {type:'preset',preset:input} : input;
  if (view.type === 'preset' && PRESETS.includes(view.preset)) return {type:'preset',preset:view.preset};
- const fov=finite(view.fov,70,'fov');
+ const fov=finite(view.fov,view.type==='first-person'?80:70,'fov');
  if(fov<35 || fov>100) throw new Error('Camera fov must be 35–100 degrees');
  if(view.type==='first-person') {
   if(typeof view.actorId!=='string'||!view.actorId) throw new Error('First-person camera requires actorId');
   const eyeHeight=view.eyeHeight==null?undefined:finite(view.eyeHeight,1.45,'eyeHeight');
   if(eyeHeight<.5||eyeHeight>2.2) throw new Error('Invalid camera eyeHeight');
-  return {type:view.type,actorId:view.actorId,eyeHeight,fov,lookYaw:finite(view.lookYaw,0,'lookYaw'),lookPitch:Math.max(-1.2,Math.min(1.2,finite(view.lookPitch,0,'lookPitch')))};
+  return {type:view.type,actorId:view.actorId,eyeHeight,fov,lookYaw:finite(view.lookYaw,0,'lookYaw'),lookPitch:Math.max(-1.2,Math.min(1.2,finite(view.lookPitch,-.45,'lookPitch')))};
  }
  if(view.type==='perspective') {
   if(![view.position,view.target].every(p=>Array.isArray(p)&&p.length===3&&p.every(Number.isFinite))) throw new Error('Perspective camera requires finite position and target');

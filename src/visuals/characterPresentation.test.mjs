@@ -69,3 +69,17 @@ test('positive preparation turn agrees with positive head yaw and lateral direct
  assert.ok(direction.x>0,'Positive torso turn must face toward local +X.');
  }finally{rig.dispose();}
 });
+test('first-person rig keeps real gloves and stick but removes camera-intersecting body',()=>{
+ const rig=buildHockeyPlayerRig({view:'first-person'});try{
+ assert.ok(rig.group.userData.parts.includes('hockey-glove'));assert.ok(rig.group.userData.parts.includes('stick-shaft'));
+ for(const part of ['face','helmet-shell','tailored-jersey','skate-boot','forearm-sleeve'])assert.equal(rig.group.userData.parts.includes(part),false);
+ }finally{rig.dispose();}
+});
+test('glove finger padding lies outside the glove shell and thumb contours are present',()=>{
+ const rig=buildHockeyPlayerRig({view:'first-person'});try{
+ const positions=rig.group.getObjectByName('equipment-jersey').geometry.getAttribute('position');let top=-Infinity;
+ for(let i=0;i<positions.count;i++)top=Math.max(top,positions.getY(i));
+ assert.ok(top>1.12,'Knuckle rolls must project above the top-hand shell, not remain buried inside it.');
+ assert.ok(rig.group.userData.parts.includes('glove-thumb'));
+ }finally{rig.dispose();}
+});

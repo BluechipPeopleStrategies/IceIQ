@@ -8,6 +8,7 @@ import RinkActorAnswer from './RinkActorAnswer.jsx';
 import RinkGoalAnswer from './RinkGoalAnswer.jsx';
 import RinkActionCue from './RinkActionCue.jsx';
 import Skater from '../one-on-one/ScenarioSkater.jsx';
+import FirstPersonEquipment from './FirstPersonEquipment.jsx';
 import { isFocusedActor } from './PlayerLocator.jsx';
 import { compactActorLabel, actorDisplayName, actorJerseyNumber } from './actorLabel.js';
 import { Arena, Ice, Goal, Puck } from '../one-on-one/PracticeScene.jsx';
@@ -165,6 +166,7 @@ function Content({ frame, frameRef, bounds, ageBand, stage, finish, presentation
     {typeof onGoalAnswer === 'function' && goalAnswerSides.filter(side => side === 'right' || (side === 'left' && showBothGoals)).map(side => <RinkGoalAnswer key={side} side={side} onAnswer={onGoalAnswer} enabled={!cameraAdjusting && !dragging} />)}
     {typeof onActorAnswer === 'function' && frame.actors.filter(actor => passActorIds.includes(actor.id)).map(actor => <RinkActionCue key={`pass-${actor.id}`} action="pass" point={actor} actors={frame.actors} puck={frame.puck} enabled={!cameraAdjusting && !dragging} onAnswer={(_, method) => onActorAnswer(actor.id, method)} label={`Select pass to ${compactActorLabel(actor)}`} />)}
     <Markings overlays={overlays} onIcePoint={onIcePoint} enabled={!cameraAdjusting && !dragging} />
+    {frame.actors.filter(actor=>cameraView?.type==='first-person' && actor.id===cameraView.actorId).map(actor=><FirstPersonEquipment key={`equipment-${actor.id}`} frameRef={frameRef} actorKey={actor.id} colour={actor.team==='home'?'#0B1A33':'#C9A24B'} goalie={actor.role==='goalie'} ageBand={ageBand} stage={stage} finish={finish} showStick={Number.isFinite(actor.facing)}/>)}
     {frame.actors.map((actor, index) => <Skater finish={finish} ageBand={ageBand} stage={stage} presentation={cameraView?.type==='first-person'?'characters':presentation} visible={cameraView?.type!=="first-person" || actor.id!==cameraView.actorId} showHeading={cameraPreset === 'overhead'} key={actor.id} frameRef={frameRef} actorKey={actor.id} colour={actor.team === 'home' ? '#0B1A33' : '#C9A24B'} number={actorJerseyNumber(actor, index + 1)} goalie={actor.role === 'goalie'} selected={actor.id === selectedActorId} isLearner={isFocusedActor(actor, focusActorId)} showStick={Number.isFinite(actor.facing)} />)}
     {frame.puck && puckPresentation !== 'hidden' && <Puck frameRef={frameRef} showLabel={false} />}
     {frame.actors.map(actor => {

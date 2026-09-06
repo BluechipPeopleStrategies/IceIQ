@@ -62,6 +62,8 @@
 
 ## Changelog
 
+- 2026-09-06 ? Owner 3D feedback implemented locally: goalie-only G, correct jersey numbers, visible world-anchored first-person gloves/stick, no player halos or opaque puck backing, refined gloves/glass/roof/net. 66 tests and build pass; actual phone/desktop captures inspected. Art refinement remains open; no deployment.
+
 - 2026-09-06 ? Shared 3D local candidate: age-progressive solid-team rigs, deterministic motion, rendered-ready saved question cameras, tactical X/O, enclosed player-eye rink and two editable Blender studies. 102 targeted tests and production build pass; actual desktop/phone views inspected. Final art, complete pickup/skating clips and all-scenario acceptance remain open; no deployment.
 
 - **2026-09-06** · Thomas confirmed all-scenario scope for the shared visual/motion standards; solid gold jerseys/gold helmets versus solid navy jerseys/navy helmets; physics-consistent skating, rim-pickup preparation and defending actions; and discernible first-person decisions using supplied Sense Arena screenshots. Reconfirmed the optional automatic starting view per question. Updated the [character standard](../art/animation-pack/STANDARD.md) and [shared design](../superpowers/specs/2026-09-06-shared-3d-players-and-rinks-design.md). Requirements are recorded; models, motion and catalog-wide migration are not implemented by this update.

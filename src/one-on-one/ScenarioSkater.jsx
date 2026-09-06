@@ -16,8 +16,7 @@ export default function Skater({ frameRef, actorKey, colour, number, goalie = fa
   const modelStage = stage ?? initialActor?.stage;
   const rig = useMemo(() => {
     const player = buildHockeyPlayerRig({ goalie, colour, number, showStick, ageBand: modelAge, stage: modelStage, finish });
-    // Draw real equipment after the learner outline so the ring cannot erase
-    // part of the shaft when the low stick crosses the body-height marker.
+    // Keep physical equipment in a stable draw order.
     player.group.renderOrder = 1;
     return player;
   }, [goalie, colour, number, showStick, modelAge, modelStage, finish]);
@@ -38,7 +37,6 @@ export default function Skater({ frameRef, actorKey, colour, number, goalie = fa
   });
   return <group ref={holder}>
     {isLearner && <PlayerLocator />}
-    {selected && !isLearner && <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, .018, 0]}><ringGeometry args={[.67, .70, 48]} /><meshBasicMaterial color="#B8D8EC" transparent opacity={.9} /></mesh>}
     <primitive object={rig.group} />
     {tactical && <group ref={marker}><TacticalPlayerMarker colour={colour} /></group>}
     {!tactical && showHeading && showStick && <group ref={heading}><mesh position={[0, .06, -.82]} rotation={[-Math.PI / 2, 0, 0]}><coneGeometry args={[.15, .36, 3]} /><meshBasicMaterial color={colour} /></mesh></group>}

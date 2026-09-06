@@ -5,23 +5,23 @@ import { Vector3 } from 'three';
 import { placePuckLabel, puckLabelObstacles } from './puckLabelPlacement.js';
 import './PuckLocator3D.css';
 
-export function placePuckLocator(object, puck) {
+export function placePuckLocator(object, puck, height = .075) {
   if (!object) return;
   object.visible = Boolean(puck && Number.isFinite(puck.x) && Number.isFinite(puck.y));
-  if (object.visible) object.position.set(puck.y, .075, -puck.x);
+  if (object.visible) object.position.set(puck.y, height, -puck.x);
 }
 
 export function puckLocatorRadius(worldUnitsPerPixel) {
   return Math.max(.2, Math.min(.42, 4 * worldUnitsPerPixel));
 }
 
-export function alignPuckHalo(halo, camera) {
-  if (halo) halo.quaternion.copy(camera.quaternion);
+export function puckPresentationSize(perspective, worldUnitsPerPixel) {
+  return perspective ? {radius: .0381, height: .0254} : {radius: puckLocatorRadius(worldUnitsPerPixel), height: .055};
 }
 
-/** Legibility overlay centered on the actual puck, including during flight. */
+/** Puck at its source position, without a circular backing. */
 export default function PuckLocator3D({ puck, frameRef, showLabel = false }) {
-  const holder = useRef(null), marker = useRef(null), halo = useRef(null);
+  const holder = useRef(null), marker = useRef(null);
   const tag = useRef(null), previousQuadrant = useRef(null);
   const projected = useMemo(() => new Vector3(), []);
   const { invalidate } = useThree();
@@ -30,14 +30,14 @@ export default function PuckLocator3D({ puck, frameRef, showLabel = false }) {
   const initiallyVisible = Boolean(initialPuck && Number.isFinite(initialPuck.x) && Number.isFinite(initialPuck.y));
   useFrame(({ camera, size }) => {
     const current = frameRef ? frameRef.current?.puck : puck;
-    placePuckLocator(holder.current, current);
+    placePuckLocator(holder.current, current, camera.isPerspectiveCamera ? .0127 : .0275);
     if (!holder.current?.visible || !marker.current) { if (tag.current) tag.current.style.visibility = 'hidden'; return; }
     camera.updateMatrixWorld();
     const unitsPerPixel = camera.isOrthographicCamera
       ? (camera.top - camera.bottom) / camera.zoom / Math.max(1, size.height)
       : 2 * Math.hypot(camera.position.x - current.y, camera.position.y, camera.position.z + current.x) * Math.tan(camera.fov * Math.PI / 360) / Math.max(1, size.height);
-    marker.current.scale.setScalar(puckLocatorRadius(unitsPerPixel) / .28);
-    alignPuckHalo(halo.current, camera);
+    const dimensions = puckPresentationSize(camera.isPerspectiveCamera, unitsPerPixel);
+    marker.current.scale.set(dimensions.radius / .28, dimensions.height / .055, dimensions.radius / .28);
     if (!tag.current) return;
     const project = (x, y, height) => {
       projected.set(y, height, -x).project(camera);
@@ -65,12 +65,8 @@ export default function PuckLocator3D({ puck, frameRef, showLabel = false }) {
   }, -1);
   return <group ref={holder} name="puck-locator" visible={initiallyVisible} position={initiallyVisible ? [initialPuck.y, .075, -initialPuck.x] : [0, .075, 0]}>
     <group ref={marker}>
-      {/* The outline is a legibility overlay; the puck below stays on the ice. */}
-      <group ref={halo}>
-        <mesh renderOrder={98}><ringGeometry args={[.30, .45, 40]} /><meshBasicMaterial color="#FFFFFF" depthTest={false} depthWrite={false} toneMapped={false} /></mesh>
-        <mesh renderOrder={99}><ringGeometry args={[.44, .5, 40]} /><meshBasicMaterial color="#0B1A33" depthTest={false} depthWrite={false} toneMapped={false} /></mesh>
-      </group>
-      <mesh renderOrder={100}><cylinderGeometry args={[.28, .28, .055, 24]} /><meshBasicMaterial color="#080D16" depthTest={false} depthWrite={false} toneMapped={false} /></mesh>
+      {/* No circular backing: the real scene remains visible around the puck. */}
+      <mesh><cylinderGeometry args={[.28, .28, .055, 32]} /><meshStandardMaterial color="#080D16" roughness={.8} /></mesh>
     </group>
     {showLabel && <Html center position={[0, 0, 0]} zIndexRange={[14, 4]} style={{ pointerEvents: 'none' }}>
       <span ref={attachTag} className="pl-screen-marker" aria-hidden="true"><span className="pl-screen-leader" /><span className="pl-screen-label">PUCK</span></span>

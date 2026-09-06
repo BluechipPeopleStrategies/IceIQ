@@ -2,6 +2,20 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { compactActorLabel, actorDisplayName, actorJerseyNumber } from './actorLabel.js';
 
+test('G is reserved for goalies while skaters and jerseys use their authored number', () => {
+  const skater = {id:'G1',label:'G1',number:4,team:'away'};
+  const goalie = {id:'G2',label:'G2',number:31,team:'away',role:'goalie'};
+  assert.equal(compactActorLabel(skater),'4');
+  assert.equal(actorDisplayName(skater),'Gold 4');
+  assert.equal(actorJerseyNumber(skater,2),'4');
+  assert.equal(compactActorLabel(goalie),'G');
+  assert.equal(actorDisplayName(goalie),'Gold goalie');
+  assert.equal(actorJerseyNumber(goalie,3),'31');
+  assert.equal(compactActorLabel({id:'G1',label:'G1',team:'away'}),'1');
+  assert.equal(compactActorLabel({id:'N1',label:'N1',jerseyNumber:7,team:'home'}),'7');
+  assert.equal(compactActorLabel({id:'N1',label:'YOU',number:7,team:'home'}),'YOU');
+});
+
 test('short visual labels preserve actor identities and distinguish named focus from possession', () => {
   const actors = [{ id: 'g-away', role: 'goalie', label: 'The goalie' }, { id: 'F3', label: 'Your teammate' }, { id: 'F1', label: 'YOU' }, { id: 'D4', label: 'D4', hasPuck: true }];
   const before = JSON.stringify(actors);

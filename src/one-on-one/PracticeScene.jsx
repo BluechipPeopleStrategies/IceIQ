@@ -4,6 +4,7 @@ import { Line } from '@react-three/drei';
 import * as THREE from 'three';
 import Skater from './Skater.jsx';
 import RinkEnclosure from '../visuals/RinkEnclosure.jsx';
+import GoalNet from '../visuals/GoalNet.jsx';
 import PuckLocator3D from '../visuals/PuckLocator3D.jsx';
 import { RINK, GOAL_X, makeIceTexture, roundedRinkShape } from './rinkMaterials.js';
 import { isCoachRoutePoint, listenForCoachRouteTaps, worldPointToCoachRoute } from './coachRouteSurfaceInput.js';
@@ -58,13 +59,7 @@ export function Goal() {
     [[-w, h, z], [-.6, .91, z - .85]], [[w, h, z], [.6, .91, z - .85]],
     [[-.6, .91, z - .85], [.6, .91, z - .85]],
   ];
-  const net = [];
-  for (let i = 0; i <= 12; i++) { const x = -.74 + i * 1.48 / 12; net.push([[x, .03, z - 1.1], [x * .81, .91, z - .85]]); }
-  for (let i = 0; i <= 9; i++) { const y = .03 + i * .88 / 9, rw = .74 - i * .14 / 9, rz = z - 1.1 + i * .25 / 9; net.push([[-rw, y, rz], [rw, y, rz]]); }
-  for (const side of [-1, 1]) for (let i = 0; i <= 8; i++) {
-    const t = i / 8; net.push([[side * w, h * t, z], [side * (.74 - .14 * t), .03 + .88 * t, z - 1.1 + .25 * t]]);
-  }
-  return <group>{lines.map(([a, b], i) => <Tube key={i} a={a} b={b} />)}{net.map(([a, b], i) => <Tube key={`n${i}`} a={a} b={b} radius={.007} colour="#d7e0df" />)}</group>;
+  return <group>{lines.map(([a, b], i) => <Tube key={i} a={a} b={b} />)}<GoalNet goalX={GOAL_X}/></group>;
 }
 
 function Arena({ openView = false, playerEye = false }) {

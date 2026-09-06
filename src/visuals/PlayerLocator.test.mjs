@@ -32,15 +32,9 @@ test('an explicit named focus can be D4 without changing identity, possession or
   assert.deepEqual(actors.filter(actor => locator.isFocusedActor(actor, null)), []);
   assert.equal(actors[1].label, 'D4');
 });
-test('persistent locator surrounds the actor body and faces the camera while SVG stays noninteractive', () => {
+test('3D players have no persistent halo while SVG identity remains noninteractive', () => {
   assert.equal(typeof locator.PlayerLocator, 'function');
-  const marker = locator.PlayerLocator();
-  assert.equal(marker.props.name, 'learner-locator');
-  assert.deepEqual(marker.props.children.props.position, [0, .85, 0], 'The focus outline follows the body center, not an offset point on the ice');
-  const rings = marker.props.children.props.children;
-  assert.equal(rings.length, 3);
-  assert.equal(new Set(rings.map(ring => ring.props.children[1].props.color)).size, 3);
-  assert.ok(rings.every(ring => ring.props.children[1].props.depthTest === false));
+  assert.equal(locator.PlayerLocator(), null);
   const svg = locator.SvgPlayerLocator({ radius: 1.5 });
   assert.equal(svg.props['data-player-locator'], 'YOU');
   assert.equal(svg.props.pointerEvents, 'none');

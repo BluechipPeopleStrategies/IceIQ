@@ -3,29 +3,20 @@ import assert from 'node:assert/strict';
 import { mkdirSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { build } from 'esbuild';
-import { Group, OrthographicCamera, PerspectiveCamera, Vector3 } from 'three';
+import { Group } from 'three';
 import {renderToStaticMarkup} from 'react-dom/server';
 const cache = new URL('../../node_modules/.cache/puck-locator/', import.meta.url);
 mkdirSync(cache, { recursive: true });
 const output = new URL('puck.mjs', cache);
 await build({ entryPoints: [fileURLToPath(new URL('./PuckLocator3D.jsx', import.meta.url))], outfile: fileURLToPath(output), bundle: true, packages: 'external', platform: 'node', format: 'esm', jsx: 'automatic', loader: { '.css': 'empty' }, logLevel: 'silent' });
-const { placePuckLocator, puckLocatorRadius, alignPuckHalo, SvgPuckLocator } = await import(output.href);
+const { placePuckLocator, puckLocatorRadius, puckPresentationSize, SvgPuckLocator } = await import(output.href);
 
-test('puck outline projects as a circle centered on the puck through oblique and overhead camera views', () => {
-  assert.equal(typeof alignPuckHalo, 'function');
-  for (const camera of [new OrthographicCamera(-8, 8, 8, -8, .1, 100), new PerspectiveCamera(45, 1, .1, 100)]) {
-    for (const position of [[12, 7, 3], [0, 20, .01], [-8, 6, -12]]) {
-      camera.position.set(...position); camera.lookAt(0, .075, 0); camera.updateMatrixWorld();
-      const holder = new Group(), halo = new Group();
-      holder.position.set(0, .075, 0); holder.add(halo);
-      alignPuckHalo(halo, camera); holder.updateMatrixWorld(true);
-      const center = new Vector3().setFromMatrixPosition(holder.matrixWorld).project(camera);
-      const projected = [[.5, 0, 0], [0, .5, 0], [-.5, 0, 0], [0, -.5, 0]]
-        .map(point => new Vector3(...point).applyMatrix4(halo.matrixWorld).project(camera));
-      const radii = projected.map(point => Math.hypot(point.x - center.x, point.y - center.y));
-      assert.ok(Math.max(...radii) - Math.min(...radii) < 1e-8, 'The locator outline must not flatten or tilt away from its puck.');
-    }
-  }
+test('perspective puck uses physical dimensions and sits on ice without a backing', () => {
+  assert.deepEqual(puckPresentationSize(true, 1), {radius:.0381,height:.0254});
+  assert.deepEqual(puckPresentationSize(true, .001), {radius:.0381,height:.0254});
+  const object = new Group();
+  placePuckLocator(object,{x:4,y:2},.0127);
+  assert.deepEqual(object.position.toArray(),[2,.0127,-4]);
 });
 
 test('puck marker follows exact coordinates for owned and in-flight pucks without snapping to actors', () => {
