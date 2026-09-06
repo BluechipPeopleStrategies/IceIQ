@@ -8,7 +8,7 @@ const cache = new URL('../../node_modules/.cache/learning-worlds/', import.meta.
 mkdirSync(cache, { recursive: true });
 const coreOutput = new URL('core.mjs', cache);
 await build({ entryPoints: [fileURLToPath(new URL('./learningWorldsCore.js', import.meta.url))], outfile: fileURLToPath(coreOutput), bundle: true, packages: 'external', platform: 'node', format: 'esm', logLevel: 'silent' });
-const { getLearningWorlds, missionAvailability, LEARNING_ACTIVITIES } = await import(coreOutput.href);
+const { getLearningWorlds, missionAvailability, LEARNING_ACTIVITIES, learningActivitiesForAge } = await import(coreOutput.href);
 const ledger = JSON.parse(readFileSync(new URL('../data/curriculum-ledger.json', import.meta.url), 'utf8'));
 const pack = JSON.parse(readFileSync(new URL('./curriculum-draft.json', import.meta.url), 'utf8'));
 
@@ -148,4 +148,19 @@ test('a home deep link opens the requested real world with a safe fallback for a
   assert.match(linked.text(), /Manage the space in front/);
   const invalid = mount({ initialWorldId: 'invented' });
   assert.equal(invalid.all(node => node.props['data-world-id'] === 'hockey-sense' && node.props['aria-pressed']).length, 1);
+});
+
+test('older age pathways promote decisions rather than beginner rink discovery', () => {
+ for(const age of ['U15','U18','U15 / Bantam']) {
+  const activities=learningActivitiesForAge(age);
+  assert.ok(!activities.some(a=>a.id==='discover'));
+  assert.ok(activities.some(a=>a.id==='library'));
+  assert.ok(activities.some(a=>a.id==='choose'));
+ }
+ assert.ok(learningActivitiesForAge('U7').some(a=>a.id==='discover'));
+});
+
+test('U15 world view does not send a missing mission to rink discovery', () => {
+ const view=mount({ageBand:'U15'});
+ assert.doesNotMatch(view.text(), /Explore the rink|Get to know the ice/);
 });

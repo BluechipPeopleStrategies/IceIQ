@@ -13,6 +13,11 @@ export const LEARNING_ACTIVITIES = [
   { id: 'brain', title: 'Brain Gym', description: 'Try the existing awareness and decision games.', target: { tab: 'brain' }, icon: 'scan' },
 ];
 
+export function learningActivitiesForAge(ageBand) {
+  const advanced = ['U15', 'U18'].includes(levelToBand(ageBand));
+  return LEARNING_ACTIVITIES.filter(activity => !advanced || activity.id !== 'discover');
+}
+
 // The path owns age scope; the ledger owns domain identity. Catalog matches
 // mirror the existing library's concept filter, without fuzzy inference.
 export function getLearningWorlds(ageBand, { library = [] } = {}) {

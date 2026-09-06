@@ -1,6 +1,6 @@
 # RinkReads — Task List
 
-**Last updated:** 2026-09-05, 17:09 Edmonton · **Player Home and sustained practice ready locally:** the six-world glass Home connects to eligible library evidence within the player session. 33 focused tests, production build, phone/desktop inspection, reload and production-bundle identity checks pass. Old records remain separate; experimental/draft questions earn no mastery credit. See [verification](../one-on-one/2026-09-05-player-home-verification.md). The approved calibration deployment remains live at f1f4306; this new release is not yet published.
+**Last updated:** 2026-09-05, 19:49 Edmonton · **Age-aware world pathways:** U15/U18 no longer promote beginner rink discovery, including empty-mission fallbacks. Nine world tests and actual U15 browser checks pass. App completion work continues locally; no new deployment claimed.
 
 **Scope:** RinkReads **app build + content factory**. Launch/distribution (sending the beta, marketing) and the separate BlueChip business are **out of scope** — parked at the bottom. Priority = position in this list. A new idea that isn't here goes to the **Parking Lot** first, then gets promoted on purpose — that's the scope-creep guard.
 
@@ -56,6 +56,8 @@
 - *(New ideas land here first, then get promoted into NEXT/LATER on purpose.)*
 
 ## Changelog
+
+- **2026-09-05 — age-aware world activities:** removed beginner rink discovery promotion from U15/U18 world cards and sent missing-mission actions to the lesson library. Younger discovery and reference navigation remain available. Nine tests pass; isolated U15 browser confirms six relevant activity cards and the library fallback.
 
 - **2026-09-05 — Player Home and sustained practice integration.** Implemented the approved six-world Home plan with player-scoped in-app learning, a direct library entry and separate dated mastery evidence. Preserved history, rejected expanded experimental IDs, stopped instant draft/library mastery awards and protected unreadable evidence from overwrite. 33 tests/build pass; 390/1440 layouts and production-bundle answer-to-Home flow verified. [Evidence](../one-on-one/2026-09-05-player-home-verification.md).
 
