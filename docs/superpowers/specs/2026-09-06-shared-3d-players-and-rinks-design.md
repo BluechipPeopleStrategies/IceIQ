@@ -14,9 +14,11 @@ This request activates this visual design work. It does not resume the unrelated
 
 Thomas wants significantly higher-quality 3D characters, especially body shape, colors and animation; more animated presentation for younger ages; a more X's-and-O's treatment for older ages; high-quality first-person views; freely adjustable 3D viewpoints during authoring; and different questions attached to different viewpoints and decision points within one situation.
 
-Thomas subsequently supplied two visual references and clarified the art direction: rounded cartoon characters for the youngest ages, becoming less cartoonish and more realistic, with older/more regular features as the age group increases. This replaces the open-ended "anime quality" terminology question. Whether "Sensorina" refers to NHL Sense Arena remains unconfirmed. The earlier generated simplified-realism concept is discussion history, not the selected visual target.
+Thomas subsequently supplied two visual references and clarified the art direction: rounded cartoon characters for the youngest ages, becoming less cartoonish and more realistic, with older/more regular features as the age group increases. This replaces the open-ended "anime quality" terminology question. Three subsequent first-person screenshots visibly identify Sense Arena and establish the reference. The earlier generated simplified-realism concept is discussion history, not the selected visual target.
 
 The target is one coherent 3D hockey situation with independently selectable character/tactical presentation, viewpoint, decision point and question. The current browser/tablet product remains the delivery baseline; first-person does not by itself add a VR-headset implementation requirement.
+
+**Owner scope confirmation:** "I want this across all scenarios." The age-progressive characters, solid jersey/matching-helmet team colors, physically coherent hockey movement, discernible first-person cues and optional question starting view are shared requirements for every scenario surface and authoring path. They are not special cases for one demonstration. Existing scenarios need migration/verification; new scenarios inherit the same rules. Still scenes must depict a credible pose at their selected event, and animated scenes must preserve the full preparation/contact/continuation. A trial scene proves only that trial, not catalog-wide completion. These owner requirements are also recorded in the [character, camera and animation standard](../../art/animation-pack/STANDARD.md).
 
 ## What exists, checked in this checkout
 
@@ -36,7 +38,7 @@ Thomas supplied two images in this conversation, with the instruction: "Should g
 - **Reference 1, youngest:** the red-uniform cartoon hockey child. Carry forward the oversized rounded head, compact body, short limbs, chunky gloves/skates, friendly face and smooth dimensional finish. These traits establish the intended youngest-age character direction.
 - **Reference 2, older:** the navy/yellow angular hockey illustration. Carry forward the more regular head-to-body proportion, longer athletic limbs, visible bend at the joints and recognizably hockey-specific posture. It is an illustration; its faceted shading is a separate surface-style choice, not evidence of a supplied 3D model.
 
-The attachments were inspected directly in the conversation. They have not been saved as project assets or assigned fabricated local paths/hashes. They are inspiration references, not licensed runtime models. Their logos, lettering and source-sheet badges are not part of the RinkReads design. Uniform colors remain a separate choice; the established navy/gold family is the working palette until Thomas changes it.
+The attachments were inspected directly in the conversation. They have not been saved as project assets or assigned fabricated local paths/hashes. They are inspiration references, not licensed runtime models. Their logos, lettering and source-sheet badges are not part of the RinkReads design. Thomas subsequently selected solid gold jerseys with matching gold helmets and solid navy jerseys with matching navy helmets; the reference images do not override those choices.
 
 ### Proposed three-stage family
 
@@ -67,7 +69,9 @@ Age presentation, camera viewpoint, Frozen/Continuous pacing and Learning/Challe
 
 ## Player family
 
-Design the three age stages together before choosing the first rigged prototype, so one youth-medium model does not silently become the look for every age. Build skaters and goalies as separate asset families with a common presentation contract. Navy and gold are material variants of each accepted age-stage model, not independently generated characters. Preserve the current large dark/light uniform fields, full youth face protection and visible face. Use original equipment without third-party branding.
+Design the three age stages together before choosing the first rigged prototype, so one youth-medium model does not silently become the look for every age. Build skaters and goalies as separate asset families with a common presentation contract. Navy and gold are material variants of each accepted age-stage model, not independently generated characters. Preserve full youth face protection and visible face. Use original equipment without third-party branding.
+
+**Confirmed uniform direction:** solid gold jersey and matching gold helmet versus solid navy jersey and matching navy helmet, for both skaters and goalies across age stages. Use the existing gold `#C9A24B` and navy `#0B1A33` as working material base colors. Remove the earlier contrasting shoulder panels, sleeve bands and jersey stripes from the new design. Lighting/material shading can vary naturally without creating another team color scheme. Neutral equipment details and readable numbers remain separate from the solid jersey/helmet fields; exact pants, glove and pad finishes are not independently selected by this instruction. The previous mixed-color concepts remain historical reference images.
 
 Apply the age-stage proportions above while keeping readable shoulders/waist, separated skates, clear bent knees and one continuous stick. The progression is selected; exact stage boundaries and the older model's surface treatment remain open. Avoid fine detail that obscures the larger forms; a first-person close-up also needs convincing materials and complete equipment. The small player must still show which way the body faces and which side the stick occupies.
 
@@ -102,9 +106,28 @@ Create a small reusable motion set before expanding the existing larger animatio
 4. Receive, carry, forehand pass and wrist shot, with explicit contact/release timing.
 5. Goalie ready stance, lateral shuffle, butterfly and recovery.
 
-For the very first proof, only ready/glide, receive/pass and goalie ready/shuffle are required. The other clips follow after that proof is accepted. Do not imply that a neutral model expresses a head scan, shooting deception, stick pressure or another pose-dependent teaching cue.
+The first model proof can use ready/glide poses, but motion acceptance must also include the owner-requested rim-pickup approach and a defending sequence before the family is described as ready for general scenarios. Receive/pass and goalie ready/shuffle are additional baseline cases. Do not imply that a neutral model expresses a head scan, shooting deception, stick pressure or another pose-dependent teaching cue.
 
 The scenario owns root position, facing, puck ownership and release time. Animation adds body movement around those facts. A skating cycle must not move the player twice; a pass animation must not keep the puck attached after release. Pause, seek, replay, actor-freeze and camera changes must reproduce the same pose at the same scenario time.
+
+### Confirmed movement quality: hockey actions with physical continuity
+
+Thomas wants realistic skating, turning and general animation from a physics perspective. His concrete examples: a rim pickup includes preparation/turning before arrival, and a defending player must not appear to perform forward strides while their task/movement requires something else. This applies even to the youngest cartoon-shaped characters.
+
+Use explicit movement intent and action phases with position, velocity, acceleration, body facing, head look, skate orientation/contact, stick pose and puck interaction. Position travel and body facing are independent; speed alone cannot choose the skating animation. "Defender" is a role, not an instruction to skate backward in every situation.
+
+| Situation | Required visible behavior |
+|---|---|
+| Rim pickup | Authored approach, scan where required, preparation/edge change and appropriate turn before contact, stick presentation, timed pickup and continuous exit route |
+| Defending | Forward pursuit, backward skating, lateral adjustment, pivot or glide according to actual movement intent and threat; no generic forward-stride loop while retreating |
+| Glide | Feet/body settle into a supported glide when no push is occurring; legs do not churn continuously just because the actor is moving |
+| Turn/pivot | Body/skates prepare and change orientation continuously; heading does not snap at a waypoint |
+| Stop/accelerate | Visible push or braking phase agrees with speed changes, support feet and the authored path |
+| Puck contact | Stick and puck meet at the authored time; ownership/release agree with contact and continuation |
+
+The exact preparation time, turn radius, acceleration and force limits need a selected skating model and hockey-reviewed examples. Do not invent numerical biomechanical limits or turn one rim-pickup example into a universal maneuver. If the existing trace cannot represent the necessary preparation or contact, improve the authored motion/trace through the engine workflow; a cosmetic animation must not pretend to repair a contradictory path.
+
+Acceptance must combine trajectory/contact measurements with actual pose inspection. Scrub normal and slow playback from overhead, side and the decision's first-person view. Check anticipation before arrival, speed/stride agreement, supporting-foot slip, blade/ice contact, anatomical stick grip, smooth facing changes, puck transfer and continuity into the next action. A numerically valid root path is insufficient if the body performs the wrong hockey action.
 
 ## One 3D rink family
 
@@ -135,7 +158,24 @@ Looking around must not rotate the actor's skates, body or stick unless the auth
 
 Close-range acceptance includes complete 360-degree equipment/body geometry, convincing proportions and materials, readable teammate/opponent silhouettes, correctly placed own hands/stick where visible, clear puck/net, stable near clipping and correct occlusion. Hide only the selected avatar's camera-intersecting head geometry where necessary; retain its world body/occlusion for other views. Avoid camera travel through boards or heads, exaggerated wide-angle distortion and involuntary head bob. Actual eye height, field of view and equipment visibility need review in the first live prototype.
 
-The likely reference, [NHL Sense Arena's official player page](https://hockey.sensearena.com/players), checked September 6, describes VR training around scanning, reading opponents and pre-scan practice with 3D replay. Reference identity is still unconfirmed. Use it to discuss the desired experience; this source does not establish equivalent RinkReads visual quality or learning outcomes.
+The supplied first-person screenshots visibly identify Sense Arena, confirming the reference. [NHL Sense Arena's official player page](https://hockey.sensearena.com/players), checked September 6, describes VR training around scanning, reading opponents and pre-scan practice with 3D replay. The source does not establish equivalent RinkReads visual quality or learning outcomes.
+
+### Owner-supplied first-person reference and decision clarity
+
+Thomas's requirement is that first-person quality be discernible enough to make decisions from what is shown. The three attached Sense Arena screenshots establish the desired player-eye spatial view: recognizable players and sticks at different depths, visible boards/markings, a readable goal/goalie relationship, and a foreground glove/stick in the third image. They are inspected inspiration references, not saved local model assets or pixel-accurate implementation specifications.
+
+First-person acceptance is tied to the question's cues:
+
+- Distinguish teams and identify the relevant actors without depending on tiny labels or advertising.
+- Read body facing, stick side/blade position and the preparation/movement that the question depends on.
+- Locate the puck and judge relevant passing/shot lanes, pressure, available ice and goalie coverage from the allowed view.
+- Preserve useful depth and scale with a suitable eye position and field of view; avoid distortion that misrepresents gaps or reach.
+- Keep the foreground glove/stick and question UI from covering essential cues. Keep crowd, advertisements, glare and rink decoration visually subordinate.
+- Demonstrate the same clarity for younger stylized and older realistic models. A tactical marker may not substitute for a body/stick cue that is needed in first-person.
+- Show arrows/targets only when allowed by the question or explanation. The teaching overlays in a reference screenshot do not authorize revealing the answer during an assessment.
+- Check the actual question at intended phone/tablet/desktop size and with permitted scanning. Required assets and starting camera must be ready before input or the decision timer begins. A small reference image or a detailed model close-up alone cannot prove the read works.
+
+For the first viewpoint proof, record the exact cues the learner is expected to notice, show the scene without explanatory overlays, and ask a reviewer to identify those cues. If a required cue cannot be discerned, adjust the viewpoint/model/lighting or withhold that question variant from grading.
 
 ## One scene, multiple viewpoint questions
 
@@ -146,6 +186,8 @@ Proposed author workflow: open a scenario, scrub/freeze at a decision point, sel
 ### Confirmed option: starting view per question
 
 Thomas clarified: "when a question pops up, it auto-starts at that angle. Just as an option."
+
+Thomas reiterated this after confirming all-scenario scope: the capability is available for every question, while assigning a starting view is optional per question.
 
 - A question can optionally save a starting camera view: an authored external angle or a named player's first-person view.
 - Entering that question automatically applies its saved view before the question becomes answerable. The learner does not have to find the angle manually.
@@ -190,7 +232,7 @@ Make 3D the normal presentation for these physical scenes. A graphics failure mu
 
 ## Review and creation order
 
-1. **Look and interaction:** create a coherent three-stage character design from Thomas's two supplied references; settle age boundaries and the older character's smooth/faceted finish. Confirm the reference product, character-versus-marker presentation and first-person scan/author permissions. The earlier generated concept is discussion history, not the selected visual target.
+1. **Look and interaction:** create a coherent three-stage character design from Thomas's two supplied character references, solid gold/navy jersey-and-helmet selection and three Sense Arena first-person references. Settle age boundaries, the older character's smooth/faceted finish, character-versus-marker presentation and first-person scan/author permissions. The earlier generated concept is discussion history, not the selected visual target.
 2. **One asset and viewpoint proof:** build one skater, its navy/gold variants, a goalie and a focused 3D rink. Inspect close-up, eight headings, side, overhead and true player-eye views, then at actual phone/tablet size. Compare character and tactical modes using the same actors.
 3. **One motion and teaching proof:** use one existing authored passing situation. Prove receive/pass contact, puck release, pause/seek and camera switching. Demonstrate several reviewed observer questions at one decision point with exact saved camera/state restoration and honest visibility limits.
 4. **Shared integration:** replace the duplicate player paths and migrate the scene inventory in small verified groups.
@@ -206,6 +248,7 @@ Make 3D the normal presentation for these physical scenes. A graphics failure mu
 - Verify pause, freeze, replay seek, reduced-motion operation, asset-load failure and WebGL context loss.
 - Verify independent head scan and body facing, no time advance on camera switches, true player-eye perspective, correct occlusion, stable near clipping and exact viewpoint restoration.
 - Verify each observer question's visible cues, supported response and exposure history; marker mode must not remove a cue required for grading.
+- Verify the rim-pickup preparation and defending movement examples, physical continuity and body action alongside the authoritative path. Record cue-identification review in the actual first-person question and solid jersey/helmet team distinction.
 - Reuse the current performance targets: 60 fps desktop and stable 30 fps on a physical baseline iPad, measured with the specified multi-player scenes. These are targets, not verified results.
 - Thomas reviews the exact candidate and its hash before production-asset acceptance. Hockey cue correctness and art acceptance remain separate judgments.
 

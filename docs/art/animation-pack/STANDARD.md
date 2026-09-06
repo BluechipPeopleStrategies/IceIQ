@@ -2,6 +2,18 @@
 
 Version `rinkreads-character-pack-v1`, drafted 2026-09-04.
 
+## Owner update — September 6, 2026 — all scenarios
+
+Thomas confirmed that the shared player, uniform, hockey-motion and first-person readability requirements apply **across all scenarios**, including existing scenarios as they are brought up to this standard. A successful prototype does not establish coverage of the whole catalog.
+
+- Characters progress from rounded, expressive cartoon proportions for the youngest ages toward older, more regular athletic features for older ages. The exact age cutoffs and older surface finish remain under discussion.
+- Jerseys are solid gold with gold helmets, or solid navy with navy helmets. This supersedes the September 4 contrasting bands/panels and dark-helmet-for-both treatment. Earlier mixed-color sheets remain historical reference images, not the selected uniform design.
+- Skating/body action must match movement intent, travel, facing and puck contact. Include preparation before a rim pickup, appropriate backward/lateral/pivot/forward actions when defending, and real glide phases. Continuous leg churning or a generic forward-stride loop is not acceptable for every movement.
+- First-person scenes must make the question's hockey cues discernible: relevant actors, body/stick orientation, puck, lanes, pressure, available space and goalie coverage. Thomas supplied Sense Arena screenshots as the reference. Verify cues at actual display size and from the allowed camera, across all age styles.
+- Every question can optionally save a starting camera view. Opening that question automatically applies its saved angle, including a player-eye view; without one, retain normal lesson camera behavior. Post-entry camera access and playback remain separate choices.
+
+Full decisions, proposed construction details and acceptance examples: [shared 3D players and rinks design](../../superpowers/specs/2026-09-06-shared-3d-players-and-rinks-design.md). This is an owner-approved requirement update, not a claim of completed assets, implementation or migration.
+
 **Current brand direction:** BlueChip navy `#0B1A33`, gold `#C9A24B`, bone `#F5EFE6`; headings Playfair Display, body Inter. Four current concept sheets show navy and gold jerseys for both skater and goalie. This supersedes the earlier black/yellow art direction. Existing black/yellow filenames and source prompts remain accurate historical provenance; see [the measured navy/gold review](NAVY-GOLD-REVIEW.md). Values below are proposed production contracts and budgets unless labeled as current code. They are not measurements of generated images or completed assets.
 
 ## Character identity
@@ -10,7 +22,7 @@ The authored target started as one youth-medium right-shot skater and one youth-
 
 Thomas clarified that “white” meant lighter skin visible inside the helmet, not a white jersey. The featured skater has a visible lighter-complexion human face behind its complete cage in the new navy/gold uniforms. Keep that correction in future prompts; do not hide the face behind an opaque black mask. The white-jersey generated variant is rejected as a misunderstanding, not an approved away uniform.
 
-Home wears a deep navy jersey with gold bands. Away uses a gold jersey with navy shoulder/cuff panels; pants and helmets stay dark/navy, with bone separators. The uniforms have distinct large light/dark fields as well as trim. Add runtime player number, team shape and selection cue; do not rely on color alone or bake question-specific labels into the character. No real person likeness or third-party sports/equipment branding is required.
+Per Thomas's September 6 direction, home wears a solid navy jersey and matching navy helmet; away wears a solid gold jersey and matching gold helmet. Use working base colors navy `#0B1A33` and gold `#C9A24B`. Do not reintroduce the former gold bands, navy shoulder/cuff panels or both-teams-navy helmets. Exact pants, glove and pad finishes remain separate from the selected jersey/helmet colors. Add runtime player number, team shape and selection cue; do not rely on color alone or bake question-specific labels into the character. No real person likeness or third-party sports/equipment branding is required.
 
 The goalie has a separate silhouette, mask, stick, catching glove, blocker, pads and motion set. Enlarging a skater's knees is not a goalie model. Both characters require complete youth face protection and real equipment contact points. Neutral glides have two parallel skate axes; purposeful edge/stride clips may diverge only as authored.
 
