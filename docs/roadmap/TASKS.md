@@ -1,6 +1,6 @@
 # RinkReads — Task List
 
-**Last updated:** 2026-09-05 · Production 23ece84 includes packets 01–11 and the migration-independent player release. Packet 12: 50 questions reviewed, three repairs applied and independently rechecked; release verification in progress. Coach/goals/training remains held for Supabase sign-in and migration 0024.
+**Last updated:** 2026-09-05 · Production 1fc1282 includes reviewed packets 01–12 and the migration-independent player release. Packet 12: 35 tests/build passed; live corrected answer and optional-reflection feedback verified. Coach/goals/training remains held for Supabase sign-in and migration 0024.
 
 **Scope:** RinkReads **app build + content factory**. Launch/distribution (sending the beta, marketing) and the separate BlueChip business are **out of scope** — parked at the bottom. Priority = position in this list. A new idea that isn't here goes to the **Parking Lot** first, then gets promoted on purpose — that's the scope-creep guard.
 
@@ -56,6 +56,8 @@
 - *(New ideas land here first, then get promoted into NEXT/LATER on purpose.)*
 
 ## Changelog
+
+- **2026-09-05** — Published packet 12 as 1fc1282 on top of production 23ece84. Vercel success, live answer submission and optional-reflection skip/feedback confirmed at 390 px. Three independently rechecked fixes; 35 tests and build passed. [Deployment evidence](../one-on-one/2026-09-05-packet-12-production.md).
 
 - **2026-09-05** — Adjudicated all 50 packet-12 questions and repaired three rebound questions, including two retained defects missed by earlier reviews. Original return preserved, three exact hashes independently rechecked; source partitions and generated review catalog refreshed. [Evidence](../factory/research/question-review/packet-12/root-content-adjudication.md).
 
