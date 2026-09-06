@@ -1,0 +1,655 @@
+{
+  "schemaVersion": 1,
+  "author": "Codex root",
+  "status": "applied-locally",
+  "sourceSnapshotId": "rr-20260905-c8403be16748c919",
+  "proposalSha256": "e90b69c6ea29ebae57ff4e96ebf4a675a0eb11d6497b81f65233b006ccff3622",
+  "sourceReturnFileHashes": {
+    "packet-12": "92c43a0d33b69b4adfa6d786f492820305f334a85b0960f4763fc9dc213c3f6c"
+  },
+  "independentReview": "docs/factory/research/question-review/packet-12/independent-final-recheck.json",
+  "changes": [
+    {
+      "scenarioId": "exp26-u11-006",
+      "questionId": "exp26-u11-006-q7",
+      "beforeContentHash": "cd5f60ae441e7c14c538c487cdc004592c021aee2344a94effa9e1656f239003",
+      "afterContentHash": "6251f3655f3364ca2fd09ef8c32b55c3e3de06c7de9384f585ba031fcea8b1b7",
+      "before": {
+        "id": "exp26-u11-006-q7",
+        "type": "choice",
+        "prompt": "What should YOU call while approaching the rebound?",
+        "options": [
+          {
+            "id": "a",
+            "text": "Puck below the circle; D1 is between it and the net"
+          },
+          {
+            "id": "b",
+            "text": "The second shot is ours"
+          },
+          {
+            "id": "c",
+            "text": "F1 must shoot next"
+          }
+        ],
+        "answer": [
+          "a"
+        ],
+        "basis": "coaching",
+        "explanation": "The call names the actual puck and defender, which helps F1 understand the recovery read."
+      },
+      "after": {
+        "id": "exp26-u11-006-q7",
+        "type": "choice",
+        "prompt": "What should YOU call while approaching the rebound?",
+        "options": [
+          {
+            "id": "a",
+            "text": "Puck inside the circle; D1 is positioned closer to centre ice than the puck"
+          },
+          {
+            "id": "b",
+            "text": "The second shot is ours"
+          },
+          {
+            "id": "c",
+            "text": "F1 must shoot next"
+          }
+        ],
+        "answer": [
+          "a"
+        ],
+        "basis": "coaching",
+        "explanation": "The call correctly places the puck inside the circle and notes that D1 sits closer to centre ice than the puck, which helps F1 read the recovery lane."
+      },
+      "reason": "Independent packet-12 review completed; exact replacement retained unchanged."
+    },
+    {
+      "scenarioId": "exp26-u11-006",
+      "questionId": "exp26-u11-006-q9",
+      "beforeContentHash": "8ad5841d2624dc4f9a2e36d1bf56af2418230aa0b3f04f54b5aa9e2390d6d8d8",
+      "afterContentHash": "82d0ea153a377144ab7642a3ada2e9f0e19ccdb218c4a723252baefa969ad08e",
+      "before": {
+        "id": "exp26-u11-006-q9",
+        "type": "position",
+        "prompt": "Move YOU toward the loose puck from the opposite-side boards while keeping D1 and Gold's net in view.",
+        "actorId": "h2",
+        "reference": {
+          "x": 22.2,
+          "y": -4.2
+        },
+        "basis": "coaching",
+        "explanation": "This point gives YOU a different side-board approach to the loose puck while preserving D1 and Gold's net in view; it does not prove arrival order or control."
+      },
+      "after": {
+        "id": "exp26-u11-006-q9",
+        "type": "position",
+        "prompt": "Move YOU toward the loose puck with a different approach from F1.",
+        "actorId": "h2",
+        "reference": {
+          "x": 21,
+          "y": 3.5
+        },
+        "basis": "coaching",
+        "explanation": "This example moves YOU closer to the loose puck from a different angle than F1. Check D1’s movement before continuing; it does not establish who arrives first."
+      },
+      "reason": "Root follow-up corrected the original reference: (22.2,-4.2) was 9.23m from the puck versus YOU at 8.06m and was not at the boards; the amended (21,3.5) point is closer and uses a different angle."
+    },
+    {
+      "scenarioId": "exp26-u11-006",
+      "questionId": "exp26-u11-006-q10",
+      "beforeContentHash": "eafdc89b71040d0051c4428bd9793656c18ab413de1713e85a6318fb2a327be2",
+      "afterContentHash": "528a198461211a256d708ecad769f5d52d86437c94f54ea57682161161d0d12a",
+      "before": {
+        "id": "exp26-u11-006-q10",
+        "type": "explain",
+        "prompt": "The goalie covers before you arrive. What do you re-read?",
+        "basis": "coaching",
+        "explanation": "The loose-puck option is gone, so identify who has the puck and where F1 can support before choosing the next pressure or reset."
+      },
+      "after": {
+        "id": "exp26-u11-006-q10",
+        "type": "explain",
+        "prompt": "The goalie covers the puck and the whistle stops play. What changes?",
+        "basis": "coaching",
+        "explanation": "Stop playing the puck. The rebound chance is over; prepare for the restart and your next assignment."
+      },
+      "reason": "Root follow-up made the stoppage explicit before restart advice; the original covered-puck wording did not state the whistle."
+    }
+  ],
+  "sceneEdits": [
+    {
+      "scenarioId": "exp26-u11-006",
+      "before": {
+        "id": "exp26-u11-006",
+        "version": 1,
+        "ageBand": "U11",
+        "title": "Find the loose rebound first",
+        "family": "rebound-awareness",
+        "topic": "Shooting",
+        "objective": "Separate a loose puck from a promised rebound goal.",
+        "briefing": "Navy attacks the right net (+x); gold attacks the left net. The coach states that F1’s previous shot came loose to the goalie’s side. YOU are arriving away from the puck. No goal or next touch is assumed.",
+        "setup": {
+          "actors": [
+            {
+              "id": "h1",
+              "label": "F1",
+              "team": "home",
+              "role": "skater",
+              "x": 20,
+              "y": 2,
+              "facing": 0
+            },
+            {
+              "id": "h2",
+              "label": "YOU",
+              "team": "home",
+              "role": "skater",
+              "x": 19,
+              "y": -2,
+              "facing": 0
+            },
+            {
+              "id": "a1",
+              "label": "D1",
+              "team": "away",
+              "role": "skater",
+              "x": 22,
+              "y": 1,
+              "facing": 2.8
+            },
+            {
+              "id": "g1",
+              "label": "G",
+              "team": "away",
+              "role": "goalie",
+              "x": 26,
+              "y": 0,
+              "facing": 3.14
+            }
+          ],
+          "puck": {
+            "owner": null,
+            "x": 23,
+            "y": 5
+          }
+        },
+        "focusActorId": "h2",
+        "cues": [
+          "The loose puck is on the positive-y side of the goal area.",
+          "D1 stands closer to the middle.",
+          "YOU must locate the puck before planning a second action."
+        ],
+        "tags": [
+          "rebound-awareness",
+          "shooting",
+          "experimental"
+        ],
+        "sources": [
+          {
+            "id": "usah-skill-progressions-2018",
+            "title": "USA Hockey: Skill Progressions for Youth Hockey",
+            "url": "https://cdn1.sportngin.com/attachments/document/0066/4690/Skill_Progression_Manual_19_FINAL.pdf",
+            "section": "10-and-Under, printed pages 17–19 (PDF pages 23–25)",
+            "use": "Lists skill/team topics; Canadian adaptation and answers remain experimental."
+          }
+        ],
+        "limits": "Static original practice illustration; movement and outcomes are not simulated. Rebound shooting is a topic connection; neither save physics nor arrival order is simulated. No net-front contact is instructed. Position references are examples, not graded target zones.",
+        "questions": [
+          {
+            "id": "exp26-u11-006-q1",
+            "type": "choice",
+            "prompt": "Where is the puck relative to the goalie at this freeze?",
+            "options": [
+              {
+                "id": "a",
+                "text": "At centre ice"
+              },
+              {
+                "id": "b",
+                "text": "Off to one side of the goalie, still loose"
+              },
+              {
+                "id": "c",
+                "text": "Already in the goalie’s glove"
+              }
+            ],
+            "answer": [
+              "b"
+            ],
+            "basis": "scene",
+            "explanation": "The puck is beside the goalie’s current area and has no owner. It is neither at centre ice nor held by the goalie."
+          },
+          {
+            "id": "exp26-u11-006-q2",
+            "type": "multi",
+            "prompt": "Which cues matter for your next approach?",
+            "options": [
+              {
+                "id": "a",
+                "text": "Where the loose puck actually is"
+              },
+              {
+                "id": "b",
+                "text": "Where D1 is relative to the approach"
+              },
+              {
+                "id": "c",
+                "text": "The assumption that the next touch must be a shot"
+              }
+            ],
+            "answer": [
+              "a",
+              "b"
+            ],
+            "basis": "coaching",
+            "explanation": "Locate both puck and obstruction. A second chance still needs a real recovery and shooting opportunity."
+          },
+          {
+            "id": "exp26-u11-006-q3",
+            "type": "sequence",
+            "prompt": "Arrange this suggested rebound-read routine.",
+            "options": [
+              {
+                "id": "a",
+                "text": "Locate the loose puck"
+              },
+              {
+                "id": "b",
+                "text": "Check the approach and establish control if possible"
+              },
+              {
+                "id": "c",
+                "text": "Reassess a shot or pass"
+              }
+            ],
+            "answer": [
+              "a",
+              "b",
+              "c"
+            ],
+            "basis": "coaching",
+            "explanation": "This example emphasizes control and a new read. An immediate touch could be appropriate if the actual arrival supports it."
+          },
+          {
+            "id": "exp26-u11-006-q4",
+            "type": "position",
+            "prompt": "Move YOU to show an approach toward the loose-puck side.",
+            "actorId": "h2",
+            "reference": {
+              "x": 21,
+              "y": 6
+            },
+            "basis": "coaching",
+            "explanation": "The example approaches from outside D1’s current middle position. It is not proof that YOU arrive first."
+          },
+          {
+            "id": "exp26-u11-006-q5",
+            "type": "choice",
+            "prompt": "If the goalie covers the puck before YOU arrive, what changes?",
+            "options": [
+              {
+                "id": "a",
+                "text": "The puck is still available for a rebound shot"
+              },
+              {
+                "id": "b",
+                "text": "YOU can assume a goal"
+              },
+              {
+                "id": "c",
+                "text": "The previous loose-puck plan no longer applies"
+              }
+            ],
+            "answer": [
+              "c"
+            ],
+            "basis": "coaching",
+            "explanation": "A covered puck is a different state. Do not continue acting on the earlier loose-puck assumption."
+          },
+          {
+            "id": "exp26-u11-006-q6",
+            "type": "explain",
+            "prompt": "What extra information would you need before predicting a second shot?",
+            "basis": "coaching",
+            "explanation": "You might need puck movement, defender speed, control and whether play is still active. A static loose puck does not establish them."
+          },
+          {
+            "id": "exp26-u11-006-q7",
+            "type": "choice",
+            "prompt": "What should YOU call while approaching the rebound?",
+            "options": [
+              {
+                "id": "a",
+                "text": "Puck below the circle; D1 is between it and the net"
+              },
+              {
+                "id": "b",
+                "text": "The second shot is ours"
+              },
+              {
+                "id": "c",
+                "text": "F1 must shoot next"
+              }
+            ],
+            "answer": [
+              "a"
+            ],
+            "basis": "coaching",
+            "explanation": "The call names the actual puck and defender, which helps F1 understand the recovery read."
+          },
+          {
+            "id": "exp26-u11-006-q8",
+            "type": "multi",
+            "prompt": "Which two changes would alter the rebound plan?",
+            "options": [
+              {
+                "id": "a",
+                "text": "D1 controls the puck"
+              },
+              {
+                "id": "b",
+                "text": "F1 becomes a reachable support option"
+              },
+              {
+                "id": "c",
+                "text": "The net stays at the same end"
+              }
+            ],
+            "answer": [
+              "a",
+              "b"
+            ],
+            "basis": "coaching",
+            "explanation": "Possession and support change the next job; the net location alone does not decide the play."
+          },
+          {
+            "id": "exp26-u11-006-q9",
+            "type": "position",
+            "prompt": "Move YOU toward the loose puck from the opposite-side boards while keeping D1 and Gold's net in view.",
+            "actorId": "h2",
+            "reference": {
+              "x": 22.2,
+              "y": -4.2
+            },
+            "basis": "coaching",
+            "explanation": "This point gives YOU a different side-board approach to the loose puck while preserving D1 and Gold's net in view; it does not prove arrival order or control."
+          },
+          {
+            "id": "exp26-u11-006-q10",
+            "type": "explain",
+            "prompt": "The goalie covers before you arrive. What do you re-read?",
+            "basis": "coaching",
+            "explanation": "The loose-puck option is gone, so identify who has the puck and where F1 can support before choosing the next pressure or reset."
+          }
+        ]
+      },
+      "after": {
+        "id": "exp26-u11-006",
+        "version": 2,
+        "ageBand": "U11",
+        "title": "Find the loose rebound first",
+        "family": "rebound-awareness",
+        "topic": "Shooting",
+        "objective": "Separate a loose puck from a promised rebound goal.",
+        "briefing": "Navy attacks the right net (+x); gold attacks the left net. The coach states that F1’s previous shot came loose to the goalie’s side. YOU are arriving away from the puck. No goal or next touch is assumed.",
+        "setup": {
+          "actors": [
+            {
+              "id": "h1",
+              "label": "F1",
+              "team": "home",
+              "role": "skater",
+              "x": 20,
+              "y": 2,
+              "facing": 0
+            },
+            {
+              "id": "h2",
+              "label": "YOU",
+              "team": "home",
+              "role": "skater",
+              "x": 19,
+              "y": -2,
+              "facing": 0
+            },
+            {
+              "id": "a1",
+              "label": "D1",
+              "team": "away",
+              "role": "skater",
+              "x": 22,
+              "y": 1,
+              "facing": 2.8
+            },
+            {
+              "id": "g1",
+              "label": "G",
+              "team": "away",
+              "role": "goalie",
+              "x": 26,
+              "y": 0,
+              "facing": 3.14
+            }
+          ],
+          "puck": {
+            "owner": null,
+            "x": 23,
+            "y": 5
+          }
+        },
+        "focusActorId": "h2",
+        "cues": [
+          "The loose puck is on the positive-y side of the goal area.",
+          "D1 stands closer to the middle.",
+          "YOU must locate the puck before planning a second action."
+        ],
+        "tags": [
+          "rebound-awareness",
+          "shooting",
+          "experimental"
+        ],
+        "sources": [
+          {
+            "id": "usah-skill-progressions-2018",
+            "title": "USA Hockey: Skill Progressions for Youth Hockey",
+            "url": "https://cdn1.sportngin.com/attachments/document/0066/4690/Skill_Progression_Manual_19_FINAL.pdf",
+            "section": "10-and-Under, printed pages 17–19 (PDF pages 23–25)",
+            "use": "Lists skill/team topics; Canadian adaptation and answers remain experimental."
+          }
+        ],
+        "limits": "Static original practice illustration; movement and outcomes are not simulated. Rebound shooting is a topic connection; neither save physics nor arrival order is simulated. No net-front contact is instructed. Position references are examples, not graded target zones.",
+        "questions": [
+          {
+            "id": "exp26-u11-006-q1",
+            "type": "choice",
+            "prompt": "Where is the puck relative to the goalie at this freeze?",
+            "options": [
+              {
+                "id": "a",
+                "text": "At centre ice"
+              },
+              {
+                "id": "b",
+                "text": "Off to one side of the goalie, still loose"
+              },
+              {
+                "id": "c",
+                "text": "Already in the goalie’s glove"
+              }
+            ],
+            "answer": [
+              "b"
+            ],
+            "basis": "scene",
+            "explanation": "The puck is beside the goalie’s current area and has no owner. It is neither at centre ice nor held by the goalie."
+          },
+          {
+            "id": "exp26-u11-006-q2",
+            "type": "multi",
+            "prompt": "Which cues matter for your next approach?",
+            "options": [
+              {
+                "id": "a",
+                "text": "Where the loose puck actually is"
+              },
+              {
+                "id": "b",
+                "text": "Where D1 is relative to the approach"
+              },
+              {
+                "id": "c",
+                "text": "The assumption that the next touch must be a shot"
+              }
+            ],
+            "answer": [
+              "a",
+              "b"
+            ],
+            "basis": "coaching",
+            "explanation": "Locate both puck and obstruction. A second chance still needs a real recovery and shooting opportunity."
+          },
+          {
+            "id": "exp26-u11-006-q3",
+            "type": "sequence",
+            "prompt": "Arrange this suggested rebound-read routine.",
+            "options": [
+              {
+                "id": "a",
+                "text": "Locate the loose puck"
+              },
+              {
+                "id": "b",
+                "text": "Check the approach and establish control if possible"
+              },
+              {
+                "id": "c",
+                "text": "Reassess a shot or pass"
+              }
+            ],
+            "answer": [
+              "a",
+              "b",
+              "c"
+            ],
+            "basis": "coaching",
+            "explanation": "This example emphasizes control and a new read. An immediate touch could be appropriate if the actual arrival supports it."
+          },
+          {
+            "id": "exp26-u11-006-q4",
+            "type": "position",
+            "prompt": "Move YOU to show an approach toward the loose-puck side.",
+            "actorId": "h2",
+            "reference": {
+              "x": 21,
+              "y": 6
+            },
+            "basis": "coaching",
+            "explanation": "The example approaches from outside D1’s current middle position. It is not proof that YOU arrive first."
+          },
+          {
+            "id": "exp26-u11-006-q5",
+            "type": "choice",
+            "prompt": "If the goalie covers the puck before YOU arrive, what changes?",
+            "options": [
+              {
+                "id": "a",
+                "text": "The puck is still available for a rebound shot"
+              },
+              {
+                "id": "b",
+                "text": "YOU can assume a goal"
+              },
+              {
+                "id": "c",
+                "text": "The previous loose-puck plan no longer applies"
+              }
+            ],
+            "answer": [
+              "c"
+            ],
+            "basis": "coaching",
+            "explanation": "A covered puck is a different state. Do not continue acting on the earlier loose-puck assumption."
+          },
+          {
+            "id": "exp26-u11-006-q6",
+            "type": "explain",
+            "prompt": "What extra information would you need before predicting a second shot?",
+            "basis": "coaching",
+            "explanation": "You might need puck movement, defender speed, control and whether play is still active. A static loose puck does not establish them."
+          },
+          {
+            "id": "exp26-u11-006-q7",
+            "type": "choice",
+            "prompt": "What should YOU call while approaching the rebound?",
+            "options": [
+              {
+                "id": "a",
+                "text": "Puck inside the circle; D1 is positioned closer to centre ice than the puck"
+              },
+              {
+                "id": "b",
+                "text": "The second shot is ours"
+              },
+              {
+                "id": "c",
+                "text": "F1 must shoot next"
+              }
+            ],
+            "answer": [
+              "a"
+            ],
+            "basis": "coaching",
+            "explanation": "The call correctly places the puck inside the circle and notes that D1 sits closer to centre ice than the puck, which helps F1 read the recovery lane."
+          },
+          {
+            "id": "exp26-u11-006-q8",
+            "type": "multi",
+            "prompt": "Which two changes would alter the rebound plan?",
+            "options": [
+              {
+                "id": "a",
+                "text": "D1 controls the puck"
+              },
+              {
+                "id": "b",
+                "text": "F1 becomes a reachable support option"
+              },
+              {
+                "id": "c",
+                "text": "The net stays at the same end"
+              }
+            ],
+            "answer": [
+              "a",
+              "b"
+            ],
+            "basis": "coaching",
+            "explanation": "Possession and support change the next job; the net location alone does not decide the play."
+          },
+          {
+            "id": "exp26-u11-006-q9",
+            "type": "position",
+            "prompt": "Move YOU toward the loose puck with a different approach from F1.",
+            "actorId": "h2",
+            "reference": {
+              "x": 21,
+              "y": 3.5
+            },
+            "basis": "coaching",
+            "explanation": "This example moves YOU closer to the loose puck from a different angle than F1. Check D1’s movement before continuing; it does not establish who arrives first."
+          },
+          {
+            "id": "exp26-u11-006-q10",
+            "type": "explain",
+            "prompt": "The goalie covers the puck and the whistle stops play. What changes?",
+            "basis": "coaching",
+            "explanation": "Stop playing the puck. The rebound chance is over; prepare for the restart and your next assignment."
+          }
+        ]
+      }
+    }
+  ],
+  "limits": "Experimental content only. Independent AI review is not human coach approval or mastery admission.",
+  "appliedAt": "2026-09-06T03:47:48.989Z"
+}

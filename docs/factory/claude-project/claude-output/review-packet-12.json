@@ -1,0 +1,2184 @@
+{
+  "schemaVersion": 1,
+  "kind": "rinkreads-content-review",
+  "status": "draft-not-reviewed",
+  "snapshotId": "rr-20260905-c8403be16748c919",
+  "packetId": "packet-12",
+  "completion": "complete",
+  "coverage": [
+    {
+      "scenarioId": "exp26-u11-004",
+      "questionId": "exp26-u11-004-q1",
+      "baseContentHash": "bc259f957e141258c9c375d157f41033d2b3e3134d0054f913b2047cc98927d7",
+      "verdict": "retain",
+      "reason": "Scene fact: puck.owner is h2 (F2); briefing states the pass already finished. Options b is the only one matching the actual ownership field.",
+      "checks": {
+        "roster": "pass",
+        "geometry": "pass",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "pass"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "YOU (h1) at (10,4) facing 0 rad; F2 (h2) at (14,-3) facing 0 rad; D1 (a1) at (12,0.5) facing 2.7 rad.",
+          "Puck owner is F2 (h2); rendered carried-puck position is (15,-2.3) using x=a.x+cos(facing)-0.7*sin(facing), y=a.y+sin(facing)+0.7*cos(facing).",
+          "D1 (12,0.5) sits exactly on the straight segment between YOU (10,4) and F2 (14,-3) (parametrized t=0.5 on both axes)."
+        ],
+        "stated": [
+          "Briefing: YOU have just passed to F2, who now owns the puck; the freeze begins after reception, not during flight.",
+          "Briefing: D1 lies between your old position and F2.",
+          "Cue: D1 shades the old return line."
+        ],
+        "unproven": [
+          "Whether D1 can actually reach or intercept anything is not shown; the collinearity is a static geometry fact, not a simulated block (calibration lesson 3).",
+          "Whether F2 carries or returns the puck, and any future movement of any actor, is unproven from a static freeze."
+        ]
+      },
+      "sourceUrls": [
+        "https://cdn.hockeycanada.ca/hockey-canada/Hockey-Programs/Coaching/u11-program/downloads/2022/u11-player-pathway-e.pdf"
+      ]
+    },
+    {
+      "scenarioId": "exp26-u11-004",
+      "questionId": "exp26-u11-004-q2",
+      "baseContentHash": "0377a8db094b06429af1db8d371c7dfaff33fde8925ad24c80863ee9f3f535ef",
+      "verdict": "retain",
+      "reason": "Coaching guidance correctly credits offering a new angle and reading D1 as ways to stay useful without the puck; \"remain in the old return line without checking D1\" is a plausible but weaker choice since D1 already shades that line.",
+      "checks": {
+        "roster": "pass",
+        "geometry": "pass",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "pass"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "YOU (h1) at (10,4) facing 0 rad; F2 (h2) at (14,-3) facing 0 rad; D1 (a1) at (12,0.5) facing 2.7 rad.",
+          "Puck owner is F2 (h2); rendered carried-puck position is (15,-2.3) using x=a.x+cos(facing)-0.7*sin(facing), y=a.y+sin(facing)+0.7*cos(facing).",
+          "D1 (12,0.5) sits exactly on the straight segment between YOU (10,4) and F2 (14,-3) (parametrized t=0.5 on both axes)."
+        ],
+        "stated": [
+          "Briefing: YOU have just passed to F2, who now owns the puck; the freeze begins after reception, not during flight.",
+          "Briefing: D1 lies between your old position and F2.",
+          "Cue: D1 shades the old return line."
+        ],
+        "unproven": [
+          "Whether D1 can actually reach or intercept anything is not shown; the collinearity is a static geometry fact, not a simulated block (calibration lesson 3).",
+          "Whether F2 carries or returns the puck, and any future movement of any actor, is unproven from a static freeze."
+        ]
+      },
+      "sourceUrls": [
+        "https://cdn.hockeycanada.ca/hockey-canada/Hockey-Programs/Coaching/u11-program/downloads/2022/u11-player-pathway-e.pdf"
+      ],
+      "alternative": "If D1 has clearly abandoned the old return line, holding that original spot could still work; the point is to keep checking, not to always move."
+    },
+    {
+      "scenarioId": "exp26-u11-004",
+      "questionId": "exp26-u11-004-q3",
+      "baseContentHash": "6a66aa1f678099379075b647a68684a376fc118166ee8416b04c47978c334672",
+      "verdict": "retain",
+      "reason": "The three steps (recognize possession changed, find space outside the old lane, show a new option/re-read D1) are a defensible routine that the explanation itself qualifies as not promising a second pass; matches the historical \"no-open-ai-finding\" record.",
+      "checks": {
+        "roster": "pass",
+        "geometry": "pass",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "pass"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "YOU (h1) at (10,4) facing 0 rad; F2 (h2) at (14,-3) facing 0 rad; D1 (a1) at (12,0.5) facing 2.7 rad.",
+          "Puck owner is F2 (h2); rendered carried-puck position is (15,-2.3) using x=a.x+cos(facing)-0.7*sin(facing), y=a.y+sin(facing)+0.7*cos(facing).",
+          "D1 (12,0.5) sits exactly on the straight segment between YOU (10,4) and F2 (14,-3) (parametrized t=0.5 on both axes)."
+        ],
+        "stated": [
+          "Briefing: YOU have just passed to F2, who now owns the puck; the freeze begins after reception, not during flight.",
+          "Briefing: D1 lies between your old position and F2.",
+          "Cue: D1 shades the old return line."
+        ],
+        "unproven": [
+          "Whether D1 can actually reach or intercept anything is not shown; the collinearity is a static geometry fact, not a simulated block (calibration lesson 3).",
+          "Whether F2 carries or returns the puck, and any future movement of any actor, is unproven from a static freeze."
+        ]
+      },
+      "sourceUrls": [
+        "https://cdn.hockeycanada.ca/hockey-canada/Hockey-Programs/Coaching/u11-program/downloads/2022/u11-player-pathway-e.pdf"
+      ],
+      "alternative": "A player could offer the new option and reassess D1 in the same glance rather than as two strictly separate steps; scanning and moving can overlap here."
+    },
+    {
+      "scenarioId": "exp26-u11-004",
+      "questionId": "exp26-u11-004-q4",
+      "baseContentHash": "a60af945536669c65f24c8c148b2e735f6ae1d9dd4b41078088356dec76671f0",
+      "verdict": "retain",
+      "reason": "Reference (16,3) is on ice, 6.08m from YOU’s actual (10,4), and sits clear of the old YOU-F2 return line, consistent with \"moves beyond the old obstruction.\"",
+      "checks": {
+        "roster": "pass",
+        "geometry": "pass",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "pass"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "YOU (h1) at (10,4) facing 0 rad; F2 (h2) at (14,-3) facing 0 rad; D1 (a1) at (12,0.5) facing 2.7 rad.",
+          "Puck owner is F2 (h2); rendered carried-puck position is (15,-2.3) using x=a.x+cos(facing)-0.7*sin(facing), y=a.y+sin(facing)+0.7*cos(facing).",
+          "D1 (12,0.5) sits exactly on the straight segment between YOU (10,4) and F2 (14,-3) (parametrized t=0.5 on both axes)."
+        ],
+        "stated": [
+          "Briefing: YOU have just passed to F2, who now owns the puck; the freeze begins after reception, not during flight.",
+          "Briefing: D1 lies between your old position and F2.",
+          "Cue: D1 shades the old return line."
+        ],
+        "unproven": [
+          "Whether D1 can actually reach or intercept anything is not shown; the collinearity is a static geometry fact, not a simulated block (calibration lesson 3).",
+          "Whether F2 carries or returns the puck, and any future movement of any actor, is unproven from a static freeze."
+        ]
+      },
+      "sourceUrls": [
+        "https://cdn.hockeycanada.ca/hockey-canada/Hockey-Programs/Coaching/u11-program/downloads/2022/u11-player-pathway-e.pdf"
+      ],
+      "alternative": "A tighter, closer angle could also open a new return line if it still clears D1’s shading; the example is not the only usable spot."
+    },
+    {
+      "scenarioId": "exp26-u11-004",
+      "questionId": "exp26-u11-004-q5",
+      "baseContentHash": "264d09bb5ac91cbedb75566de0c95c5bb61b709b8560b7074283cf9a57899c98",
+      "verdict": "retain",
+      "reason": "Correctly treats F2 carrying forward as a real possibility requiring adjustment, not a scripted return; \"insist F2 pass back\" and \"stay put\" are appropriately marked as rigid/static distractors.",
+      "checks": {
+        "roster": "pass",
+        "geometry": "pass",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "pass"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "YOU (h1) at (10,4) facing 0 rad; F2 (h2) at (14,-3) facing 0 rad; D1 (a1) at (12,0.5) facing 2.7 rad.",
+          "Puck owner is F2 (h2); rendered carried-puck position is (15,-2.3) using x=a.x+cos(facing)-0.7*sin(facing), y=a.y+sin(facing)+0.7*cos(facing).",
+          "D1 (12,0.5) sits exactly on the straight segment between YOU (10,4) and F2 (14,-3) (parametrized t=0.5 on both axes)."
+        ],
+        "stated": [
+          "Briefing: YOU have just passed to F2, who now owns the puck; the freeze begins after reception, not during flight.",
+          "Briefing: D1 lies between your old position and F2.",
+          "Cue: D1 shades the old return line."
+        ],
+        "unproven": [
+          "Whether D1 can actually reach or intercept anything is not shown; the collinearity is a static geometry fact, not a simulated block (calibration lesson 3).",
+          "Whether F2 carries or returns the puck, and any future movement of any actor, is unproven from a static freeze."
+        ]
+      },
+      "sourceUrls": [
+        "https://cdn.hockeycanada.ca/hockey-canada/Hockey-Programs/Coaching/u11-program/downloads/2022/u11-player-pathway-e.pdf"
+      ],
+      "alternative": "If F2 is already under pressure carrying forward, briefly holding your current spot while reading the developing lane can also be reasonable before committing to a new position."
+    },
+    {
+      "scenarioId": "exp26-u11-004",
+      "questionId": "exp26-u11-004-q6",
+      "baseContentHash": "a301db05f6b2f6f1264c3577fd701e2179ae7a2f92299385d5f108e6c2c25c13",
+      "verdict": "retain",
+      "reason": "Open reflection; explanation lists plausible effects (support, pulling a defender, opening a lane) without asserting a guaranteed outcome, consistent with the no-answer-key reflection contract.",
+      "checks": {
+        "roster": "pass",
+        "geometry": "pass",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "pass"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "YOU (h1) at (10,4) facing 0 rad; F2 (h2) at (14,-3) facing 0 rad; D1 (a1) at (12,0.5) facing 2.7 rad.",
+          "Puck owner is F2 (h2); rendered carried-puck position is (15,-2.3) using x=a.x+cos(facing)-0.7*sin(facing), y=a.y+sin(facing)+0.7*cos(facing).",
+          "D1 (12,0.5) sits exactly on the straight segment between YOU (10,4) and F2 (14,-3) (parametrized t=0.5 on both axes)."
+        ],
+        "stated": [
+          "Briefing: YOU have just passed to F2, who now owns the puck; the freeze begins after reception, not during flight.",
+          "Briefing: D1 lies between your old position and F2.",
+          "Cue: D1 shades the old return line."
+        ],
+        "unproven": [
+          "Whether D1 can actually reach or intercept anything is not shown; the collinearity is a static geometry fact, not a simulated block (calibration lesson 3).",
+          "Whether F2 carries or returns the puck, and any future movement of any actor, is unproven from a static freeze."
+        ]
+      },
+      "sourceUrls": [
+        "https://cdn.hockeycanada.ca/hockey-canada/Hockey-Programs/Coaching/u11-program/downloads/2022/u11-player-pathway-e.pdf"
+      ],
+      "alternative": "A player could also conclude their movement accomplishes nothing this time if D1 does not react and F2 never becomes reachable; that is itself a valid observation for a reflection with no answer key."
+    },
+    {
+      "scenarioId": "exp26-u11-004",
+      "questionId": "exp26-u11-004-q7",
+      "baseContentHash": "08244ee597824010e51e37a48f5522961186062dfebf88ae2c97963305710b6b",
+      "verdict": "retain",
+      "reason": "Correct option keeps the return conditional (\"tell me if the lane opens\") rather than demanding the puck back, matching the scene’s uncertain, still-developing possession; \"must come straight back\" is an appropriately-flagged absolute distractor.",
+      "checks": {
+        "roster": "pass",
+        "geometry": "pass",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "pass"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "YOU (h1) at (10,4) facing 0 rad; F2 (h2) at (14,-3) facing 0 rad; D1 (a1) at (12,0.5) facing 2.7 rad.",
+          "Puck owner is F2 (h2); rendered carried-puck position is (15,-2.3) using x=a.x+cos(facing)-0.7*sin(facing), y=a.y+sin(facing)+0.7*cos(facing).",
+          "D1 (12,0.5) sits exactly on the straight segment between YOU (10,4) and F2 (14,-3) (parametrized t=0.5 on both axes)."
+        ],
+        "stated": [
+          "Briefing: YOU have just passed to F2, who now owns the puck; the freeze begins after reception, not during flight.",
+          "Briefing: D1 lies between your old position and F2.",
+          "Cue: D1 shades the old return line."
+        ],
+        "unproven": [
+          "Whether D1 can actually reach or intercept anything is not shown; the collinearity is a static geometry fact, not a simulated block (calibration lesson 3).",
+          "Whether F2 carries or returns the puck, and any future movement of any actor, is unproven from a static freeze."
+        ]
+      },
+      "sourceUrls": [
+        "https://cdn.hockeycanada.ca/hockey-canada/Hockey-Programs/Coaching/u11-program/downloads/2022/u11-player-pathway-e.pdf"
+      ],
+      "alternative": "A shorter, single-word support call (\"outlet here\") can work too if teammates already share the same read; full sentences are not mandatory."
+    },
+    {
+      "scenarioId": "exp26-u11-004",
+      "questionId": "exp26-u11-004-q8",
+      "baseContentHash": "e02b98c42fdc63a5135be85096bcfd01d2da234cc397323b433c310d47a32988",
+      "verdict": "retain",
+      "reason": "F2’s current direction and D1’s coverage of the old lane are the two facts that actually describe the new job; \"the fact YOU passed once\" is correctly excluded as irrelevant history.",
+      "checks": {
+        "roster": "pass",
+        "geometry": "pass",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "pass"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "YOU (h1) at (10,4) facing 0 rad; F2 (h2) at (14,-3) facing 0 rad; D1 (a1) at (12,0.5) facing 2.7 rad.",
+          "Puck owner is F2 (h2); rendered carried-puck position is (15,-2.3) using x=a.x+cos(facing)-0.7*sin(facing), y=a.y+sin(facing)+0.7*cos(facing).",
+          "D1 (12,0.5) sits exactly on the straight segment between YOU (10,4) and F2 (14,-3) (parametrized t=0.5 on both axes)."
+        ],
+        "stated": [
+          "Briefing: YOU have just passed to F2, who now owns the puck; the freeze begins after reception, not during flight.",
+          "Briefing: D1 lies between your old position and F2.",
+          "Cue: D1 shades the old return line."
+        ],
+        "unproven": [
+          "Whether D1 can actually reach or intercept anything is not shown; the collinearity is a static geometry fact, not a simulated block (calibration lesson 3).",
+          "Whether F2 carries or returns the puck, and any future movement of any actor, is unproven from a static freeze."
+        ]
+      },
+      "sourceUrls": [
+        "https://cdn.hockeycanada.ca/hockey-canada/Hockey-Programs/Coaching/u11-program/downloads/2022/u11-player-pathway-e.pdf"
+      ],
+      "alternative": "Ice condition/fatigue could occasionally also matter to where you can physically get to, but it is not shown in this freeze and is not needed to answer this scene."
+    },
+    {
+      "scenarioId": "exp26-u11-004",
+      "questionId": "exp26-u11-004-q9",
+      "baseContentHash": "986f7f292d200ab57d86922e653177a80c34a0fb4e1731f1073de27891ac37a3",
+      "verdict": "retain",
+      "reason": "Reference (12.2,6.1) is on ice and lies off the YOU(10,4)-F2(14,-3) segment (perpendicular offset ~2.4m by cross-product), matching \"outside the direct return lane\"; this exact wording/point was already through two repair rounds (u11-repairs.json, u11-actor-repairs.json) and independently rechecked as pass in expansion/u11-recheck.json and u11-second.json.",
+      "checks": {
+        "roster": "pass",
+        "geometry": "pass",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "pass"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "YOU (h1) at (10,4) facing 0 rad; F2 (h2) at (14,-3) facing 0 rad; D1 (a1) at (12,0.5) facing 2.7 rad.",
+          "Puck owner is F2 (h2); rendered carried-puck position is (15,-2.3) using x=a.x+cos(facing)-0.7*sin(facing), y=a.y+sin(facing)+0.7*cos(facing).",
+          "D1 (12,0.5) sits exactly on the straight segment between YOU (10,4) and F2 (14,-3) (parametrized t=0.5 on both axes)."
+        ],
+        "stated": [
+          "Briefing: YOU have just passed to F2, who now owns the puck; the freeze begins after reception, not during flight.",
+          "Briefing: D1 lies between your old position and F2.",
+          "Cue: D1 shades the old return line."
+        ],
+        "unproven": [
+          "Whether D1 can actually reach or intercept anything is not shown; the collinearity is a static geometry fact, not a simulated block (calibration lesson 3).",
+          "Whether F2 carries or returns the puck, and any future movement of any actor, is unproven from a static freeze."
+        ]
+      },
+      "sourceUrls": [
+        "https://cdn.hockeycanada.ca/hockey-canada/Hockey-Programs/Coaching/u11-program/downloads/2022/u11-player-pathway-e.pdf"
+      ],
+      "alternative": "A shorter lateral move that still clears the old return line and keeps D1 in view could also work; this is one example point, not the only correct one."
+    },
+    {
+      "scenarioId": "exp26-u11-004",
+      "questionId": "exp26-u11-004-q10",
+      "baseContentHash": "5e864f92cce045a74340ee48bc4a844c4ab2085a3b4a244a14941f457c7d1861",
+      "verdict": "retain",
+      "reason": "Conditional explain question; the supplied explanation only asks the learner to match support to F2’s new spot, track D1, and communicate availability — it does not assert D1 will actually turn or that a return pass will happen.",
+      "checks": {
+        "roster": "pass",
+        "geometry": "pass",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "pass"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "YOU (h1) at (10,4) facing 0 rad; F2 (h2) at (14,-3) facing 0 rad; D1 (a1) at (12,0.5) facing 2.7 rad.",
+          "Puck owner is F2 (h2); rendered carried-puck position is (15,-2.3) using x=a.x+cos(facing)-0.7*sin(facing), y=a.y+sin(facing)+0.7*cos(facing).",
+          "D1 (12,0.5) sits exactly on the straight segment between YOU (10,4) and F2 (14,-3) (parametrized t=0.5 on both axes)."
+        ],
+        "stated": [
+          "Briefing: YOU have just passed to F2, who now owns the puck; the freeze begins after reception, not during flight.",
+          "Briefing: D1 lies between your old position and F2.",
+          "Cue: D1 shades the old return line."
+        ],
+        "unproven": [
+          "Whether D1 can actually reach or intercept anything is not shown; the collinearity is a static geometry fact, not a simulated block (calibration lesson 3).",
+          "Whether F2 carries or returns the puck, and any future movement of any actor, is unproven from a static freeze."
+        ]
+      },
+      "sourceUrls": [
+        "https://cdn.hockeycanada.ca/hockey-canada/Hockey-Programs/Coaching/u11-program/downloads/2022/u11-player-pathway-e.pdf"
+      ],
+      "alternative": "If D1 does not actually turn with F2, the read changes again; YOU might instead close support toward F2’s original side."
+    },
+    {
+      "scenarioId": "exp26-u11-005",
+      "questionId": "exp26-u11-005-q1",
+      "baseContentHash": "464027f4cfe112fe7b9ae76508855b09f740df6b04a9c19ded15e0628bd6b2c3",
+      "verdict": "retain",
+      "reason": "Scene fact: YOU x=18 > F1 x=17 while navy attacks +x, so YOU is ahead of F1 toward the attacking (right) end; verified numerically. \"Behind\" and \"level\" options are both false on this coordinate comparison.",
+      "checks": {
+        "roster": "pass",
+        "geometry": "pass",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "pass"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "F1 (h1) at (17,8) facing 0; YOU (h2) at (18,1) facing pi; D1 (a1) at (19.5,7) facing pi; D2 (a2) at (22,0) facing pi.",
+          "Puck owner is F1; rendered carried-puck position is (18,8.7).",
+          "YOU x=18 > F1 x=17 (navy attacks +x): YOU stands ahead of F1 toward the attacking end. No defender has x<17 (behind F1)."
+        ],
+        "stated": [
+          "Briefing: F1 owns the puck near the half wall; D1 is ahead of the carrier; YOU are also ahead of F1 but nearer the middle.",
+          "Cue: the immediate pressure is ahead of F1; space behind F1 is not occupied by a shown defender."
+        ],
+        "unproven": [
+          "Whether D1 or D2 will actually pressure or close a lane, and any recovery-time claim, is not shown in a static freeze.",
+          "Any hypothetical (D2 moving into the reset lane, etc.) is explicitly introduced as a hypothetical, not a depicted fact."
+        ]
+      },
+      "sourceUrls": [
+        "https://cdn1.sportngin.com/attachments/document/0066/4690/Skill_Progression_Manual_19_FINAL.pdf"
+      ]
+    },
+    {
+      "scenarioId": "exp26-u11-005",
+      "questionId": "exp26-u11-005-q2",
+      "baseContentHash": "99f181edf0c071c9e53b40e95b178ecba178380527a3d40d8407378528fbff27",
+      "verdict": "retain",
+      "reason": "A usable line and separation from pressure are the two defensible general aims of a reset; \"closest possible position to the boards in every case\" is correctly flagged as a false universal rule.",
+      "checks": {
+        "roster": "pass",
+        "geometry": "pass",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "pass"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "F1 (h1) at (17,8) facing 0; YOU (h2) at (18,1) facing pi; D1 (a1) at (19.5,7) facing pi; D2 (a2) at (22,0) facing pi.",
+          "Puck owner is F1; rendered carried-puck position is (18,8.7).",
+          "YOU x=18 > F1 x=17 (navy attacks +x): YOU stands ahead of F1 toward the attacking end. No defender has x<17 (behind F1)."
+        ],
+        "stated": [
+          "Briefing: F1 owns the puck near the half wall; D1 is ahead of the carrier; YOU are also ahead of F1 but nearer the middle.",
+          "Cue: the immediate pressure is ahead of F1; space behind F1 is not occupied by a shown defender."
+        ],
+        "unproven": [
+          "Whether D1 or D2 will actually pressure or close a lane, and any recovery-time claim, is not shown in a static freeze.",
+          "Any hypothetical (D2 moving into the reset lane, etc.) is explicitly introduced as a hypothetical, not a depicted fact."
+        ]
+      },
+      "sourceUrls": [
+        "https://cdn1.sportngin.com/attachments/document/0066/4690/Skill_Progression_Manual_19_FINAL.pdf"
+      ],
+      "alternative": "Sometimes staying slightly off the boards gives a better passing angle than hugging them; boards distance is not the goal in itself."
+    },
+    {
+      "scenarioId": "exp26-u11-005",
+      "questionId": "exp26-u11-005-q3",
+      "baseContentHash": "bab1e515403015c4064c1b194278206c55da52cabdc9133ee3d85216a992c217",
+      "verdict": "retain",
+      "reason": "The three-step routine (notice pressure, offer a visible option behind it, reassess after F1 chooses) is explicitly conditional in its own explanation and does not force a strict order beyond noticing pressure first; consistent with the prior independent pass on this exact hash.",
+      "checks": {
+        "roster": "pass",
+        "geometry": "pass",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "pass"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "F1 (h1) at (17,8) facing 0; YOU (h2) at (18,1) facing pi; D1 (a1) at (19.5,7) facing pi; D2 (a2) at (22,0) facing pi.",
+          "Puck owner is F1; rendered carried-puck position is (18,8.7).",
+          "YOU x=18 > F1 x=17 (navy attacks +x): YOU stands ahead of F1 toward the attacking end. No defender has x<17 (behind F1)."
+        ],
+        "stated": [
+          "Briefing: F1 owns the puck near the half wall; D1 is ahead of the carrier; YOU are also ahead of F1 but nearer the middle.",
+          "Cue: the immediate pressure is ahead of F1; space behind F1 is not occupied by a shown defender."
+        ],
+        "unproven": [
+          "Whether D1 or D2 will actually pressure or close a lane, and any recovery-time claim, is not shown in a static freeze.",
+          "Any hypothetical (D2 moving into the reset lane, etc.) is explicitly introduced as a hypothetical, not a depicted fact."
+        ]
+      },
+      "sourceUrls": [
+        "https://cdn1.sportngin.com/attachments/document/0066/4690/Skill_Progression_Manual_19_FINAL.pdf"
+      ],
+      "alternative": "Offering the option and noticing pressure can happen in the same scan rather than two discrete steps."
+    },
+    {
+      "scenarioId": "exp26-u11-005",
+      "questionId": "exp26-u11-005-q4",
+      "baseContentHash": "c8b2fa4dce3d7aecb478e0b3fc41f14798c16c56022628c5b739d22e7ebe9ac4",
+      "verdict": "retain",
+      "reason": "Reference (13,3) is on ice, sits behind F1 (x=13<17, i.e. toward the defending end given navy attacks +x), and is 7.63m/9.49m from D1/D2 respectively — genuine separation, matching \"outlet behind F1 with space from D1.\"",
+      "checks": {
+        "roster": "pass",
+        "geometry": "pass",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "pass"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "F1 (h1) at (17,8) facing 0; YOU (h2) at (18,1) facing pi; D1 (a1) at (19.5,7) facing pi; D2 (a2) at (22,0) facing pi.",
+          "Puck owner is F1; rendered carried-puck position is (18,8.7).",
+          "YOU x=18 > F1 x=17 (navy attacks +x): YOU stands ahead of F1 toward the attacking end. No defender has x<17 (behind F1)."
+        ],
+        "stated": [
+          "Briefing: F1 owns the puck near the half wall; D1 is ahead of the carrier; YOU are also ahead of F1 but nearer the middle.",
+          "Cue: the immediate pressure is ahead of F1; space behind F1 is not occupied by a shown defender."
+        ],
+        "unproven": [
+          "Whether D1 or D2 will actually pressure or close a lane, and any recovery-time claim, is not shown in a static freeze.",
+          "Any hypothetical (D2 moving into the reset lane, etc.) is explicitly introduced as a hypothetical, not a depicted fact."
+        ]
+      },
+      "sourceUrls": [
+        "https://cdn1.sportngin.com/attachments/document/0066/4690/Skill_Progression_Manual_19_FINAL.pdf"
+      ],
+      "alternative": "A slightly higher (more central) reset point could also create separation from D1 while staying reachable; this is one example, not the only correct spot."
+    },
+    {
+      "scenarioId": "exp26-u11-005",
+      "questionId": "exp26-u11-005-q5",
+      "baseContentHash": "69d1b1e5cc6814208c31cde42e80b733bfbb78d162ca15df928929ad07ccdd0c",
+      "verdict": "retain",
+      "reason": "Correctly treats a hypothetical D2 move into the lane as a reason to recheck options rather than assuming the first reset must still happen or that the lane only mattered pre-move; this is explicitly framed as a hypothetical (\"Suppose D2 now moves...\").",
+      "checks": {
+        "roster": "pass",
+        "geometry": "pass",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "pass"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "F1 (h1) at (17,8) facing 0; YOU (h2) at (18,1) facing pi; D1 (a1) at (19.5,7) facing pi; D2 (a2) at (22,0) facing pi.",
+          "Puck owner is F1; rendered carried-puck position is (18,8.7).",
+          "YOU x=18 > F1 x=17 (navy attacks +x): YOU stands ahead of F1 toward the attacking end. No defender has x<17 (behind F1)."
+        ],
+        "stated": [
+          "Briefing: F1 owns the puck near the half wall; D1 is ahead of the carrier; YOU are also ahead of F1 but nearer the middle.",
+          "Cue: the immediate pressure is ahead of F1; space behind F1 is not occupied by a shown defender."
+        ],
+        "unproven": [
+          "Whether D1 or D2 will actually pressure or close a lane, and any recovery-time claim, is not shown in a static freeze.",
+          "Any hypothetical (D2 moving into the reset lane, etc.) is explicitly introduced as a hypothetical, not a depicted fact."
+        ]
+      },
+      "sourceUrls": [
+        "https://cdn1.sportngin.com/attachments/document/0066/4690/Skill_Progression_Manual_19_FINAL.pdf"
+      ],
+      "alternative": "If no other angle or protected hold is available, F1 may have to carry through contact briefly rather than force a pass; this is not the only fallback."
+    },
+    {
+      "scenarioId": "exp26-u11-005",
+      "questionId": "exp26-u11-005-q6",
+      "baseContentHash": "b1e0931f5a04863d1d98287fd87551946d293b0373fb7b7d35a533b6f1fcf00a",
+      "verdict": "retain",
+      "reason": "Open reflection asking what makes a backward pass actually useful (pressure avoided, options gained) rather than just conceding ground; no answer key, consistent with the reflection contract.",
+      "checks": {
+        "roster": "pass",
+        "geometry": "pass",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "pass"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "F1 (h1) at (17,8) facing 0; YOU (h2) at (18,1) facing pi; D1 (a1) at (19.5,7) facing pi; D2 (a2) at (22,0) facing pi.",
+          "Puck owner is F1; rendered carried-puck position is (18,8.7).",
+          "YOU x=18 > F1 x=17 (navy attacks +x): YOU stands ahead of F1 toward the attacking end. No defender has x<17 (behind F1)."
+        ],
+        "stated": [
+          "Briefing: F1 owns the puck near the half wall; D1 is ahead of the carrier; YOU are also ahead of F1 but nearer the middle.",
+          "Cue: the immediate pressure is ahead of F1; space behind F1 is not occupied by a shown defender."
+        ],
+        "unproven": [
+          "Whether D1 or D2 will actually pressure or close a lane, and any recovery-time claim, is not shown in a static freeze.",
+          "Any hypothetical (D2 moving into the reset lane, etc.) is explicitly introduced as a hypothetical, not a depicted fact."
+        ]
+      },
+      "sourceUrls": [
+        "https://cdn1.sportngin.com/attachments/document/0066/4690/Skill_Progression_Manual_19_FINAL.pdf"
+      ],
+      "alternative": "A player could also conclude a backward pass is not worth it here if it does not clearly relieve pressure or open a new option; that is a valid reflection answer too."
+    },
+    {
+      "scenarioId": "exp26-u11-005",
+      "questionId": "exp26-u11-005-q7",
+      "baseContentHash": "fba86d62d22479e9ef9ef72dc2b6152d11a3a56208c66793cd09d054cd900690",
+      "verdict": "retain",
+      "reason": "Reference to D1 (19.5,7) ahead of F1 (17,8) and F1 owning the puck supports \"reachable reset if pressure removes the forward lane\"; option b overclaims the reset works even if D2 has already taken the lane, and option c wrongly claims it pulls YOU into D1’s route (YOU/D1 are 6.18m apart in this freeze) — both correctly excluded.",
+      "checks": {
+        "roster": "pass",
+        "geometry": "pass",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "pass"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "F1 (h1) at (17,8) facing 0; YOU (h2) at (18,1) facing pi; D1 (a1) at (19.5,7) facing pi; D2 (a2) at (22,0) facing pi.",
+          "Puck owner is F1; rendered carried-puck position is (18,8.7).",
+          "YOU x=18 > F1 x=17 (navy attacks +x): YOU stands ahead of F1 toward the attacking end. No defender has x<17 (behind F1)."
+        ],
+        "stated": [
+          "Briefing: F1 owns the puck near the half wall; D1 is ahead of the carrier; YOU are also ahead of F1 but nearer the middle.",
+          "Cue: the immediate pressure is ahead of F1; space behind F1 is not occupied by a shown defender."
+        ],
+        "unproven": [
+          "Whether D1 or D2 will actually pressure or close a lane, and any recovery-time claim, is not shown in a static freeze.",
+          "Any hypothetical (D2 moving into the reset lane, etc.) is explicitly introduced as a hypothetical, not a depicted fact."
+        ]
+      },
+      "sourceUrls": [
+        "https://cdn1.sportngin.com/attachments/document/0066/4690/Skill_Progression_Manual_19_FINAL.pdf"
+      ],
+      "alternative": "If D1 has clearly not yet closed the forward lane, F1 might not need the reset at all and can continue forward."
+    },
+    {
+      "scenarioId": "exp26-u11-005",
+      "questionId": "exp26-u11-005-q8",
+      "baseContentHash": "fb71afd6008c2c2678d49255badec316871b62edc91dbc10f703e2221a534939",
+      "verdict": "retain",
+      "reason": "D2 moving into the offered lane or F1 losing sight of YOU are real reasons the reset stops working; D1 staying put is correctly excluded since it changes nothing about the reset itself.",
+      "checks": {
+        "roster": "pass",
+        "geometry": "pass",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "pass"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "F1 (h1) at (17,8) facing 0; YOU (h2) at (18,1) facing pi; D1 (a1) at (19.5,7) facing pi; D2 (a2) at (22,0) facing pi.",
+          "Puck owner is F1; rendered carried-puck position is (18,8.7).",
+          "YOU x=18 > F1 x=17 (navy attacks +x): YOU stands ahead of F1 toward the attacking end. No defender has x<17 (behind F1)."
+        ],
+        "stated": [
+          "Briefing: F1 owns the puck near the half wall; D1 is ahead of the carrier; YOU are also ahead of F1 but nearer the middle.",
+          "Cue: the immediate pressure is ahead of F1; space behind F1 is not occupied by a shown defender."
+        ],
+        "unproven": [
+          "Whether D1 or D2 will actually pressure or close a lane, and any recovery-time claim, is not shown in a static freeze.",
+          "Any hypothetical (D2 moving into the reset lane, etc.) is explicitly introduced as a hypothetical, not a depicted fact."
+        ]
+      },
+      "sourceUrls": [
+        "https://cdn1.sportngin.com/attachments/document/0066/4690/Skill_Progression_Manual_19_FINAL.pdf"
+      ],
+      "alternative": "A change in the referee/whistle state (e.g., a stoppage) would also end the play, though that is outside what this freeze can show."
+    },
+    {
+      "scenarioId": "exp26-u11-005",
+      "questionId": "exp26-u11-005-q9",
+      "baseContentHash": "8c90da457d0ccb8e8f8e4c01df89ea368f6dc0b246cd480c85b26bcad02d2113",
+      "verdict": "retain",
+      "reason": "Reference (14.2,2.4) for actor h2 (YOU) is on ice, 4.05m from YOU’s actual (18,1), and keeps D1 (19.5,7) and D2 (22,0) at real distance while sitting behind F1 (17,8) toward the middle; this exact question already went through a repair (actorId h1→h2) and two independent rechecks that both returned \"pass\" on this identical hash.",
+      "checks": {
+        "roster": "pass",
+        "geometry": "pass",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "pass"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "F1 (h1) at (17,8) facing 0; YOU (h2) at (18,1) facing pi; D1 (a1) at (19.5,7) facing pi; D2 (a2) at (22,0) facing pi.",
+          "Puck owner is F1; rendered carried-puck position is (18,8.7).",
+          "YOU x=18 > F1 x=17 (navy attacks +x): YOU stands ahead of F1 toward the attacking end. No defender has x<17 (behind F1)."
+        ],
+        "stated": [
+          "Briefing: F1 owns the puck near the half wall; D1 is ahead of the carrier; YOU are also ahead of F1 but nearer the middle.",
+          "Cue: the immediate pressure is ahead of F1; space behind F1 is not occupied by a shown defender."
+        ],
+        "unproven": [
+          "Whether D1 or D2 will actually pressure or close a lane, and any recovery-time claim, is not shown in a static freeze.",
+          "Any hypothetical (D2 moving into the reset lane, etc.) is explicitly introduced as a hypothetical, not a depicted fact."
+        ]
+      },
+      "sourceUrls": [
+        "https://cdn1.sportngin.com/attachments/document/0066/4690/Skill_Progression_Manual_19_FINAL.pdf"
+      ],
+      "alternative": "A point slightly closer to the boards could also work as a reset if it still keeps both defenders visible; the reference is an example, not the only valid one."
+    },
+    {
+      "scenarioId": "exp26-u11-005",
+      "questionId": "exp26-u11-005-q10",
+      "baseContentHash": "560924e380db4104a4713e8c6128c95fbc6ab71fa90decbd09233ab7362581ef",
+      "verdict": "retain",
+      "reason": "Explain question conditioned on \"D2 closes the reset while F1 still has the puck\"; the explanation asks the learner to name the closed reset and re-scan rather than assuming a fixed next action, consistent with the no-guaranteed-outcome rule.",
+      "checks": {
+        "roster": "pass",
+        "geometry": "pass",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "pass"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "F1 (h1) at (17,8) facing 0; YOU (h2) at (18,1) facing pi; D1 (a1) at (19.5,7) facing pi; D2 (a2) at (22,0) facing pi.",
+          "Puck owner is F1; rendered carried-puck position is (18,8.7).",
+          "YOU x=18 > F1 x=17 (navy attacks +x): YOU stands ahead of F1 toward the attacking end. No defender has x<17 (behind F1)."
+        ],
+        "stated": [
+          "Briefing: F1 owns the puck near the half wall; D1 is ahead of the carrier; YOU are also ahead of F1 but nearer the middle.",
+          "Cue: the immediate pressure is ahead of F1; space behind F1 is not occupied by a shown defender."
+        ],
+        "unproven": [
+          "Whether D1 or D2 will actually pressure or close a lane, and any recovery-time claim, is not shown in a static freeze.",
+          "Any hypothetical (D2 moving into the reset lane, etc.) is explicitly introduced as a hypothetical, not a depicted fact."
+        ]
+      },
+      "sourceUrls": [
+        "https://cdn1.sportngin.com/attachments/document/0066/4690/Skill_Progression_Manual_19_FINAL.pdf"
+      ],
+      "alternative": "If no other outlet is open, F1 protecting the puck and waiting for a teammate to get open is also a defensible next read."
+    },
+    {
+      "scenarioId": "exp26-u11-006",
+      "questionId": "exp26-u11-006-q1",
+      "baseContentHash": "ed696b3a4366b40311980fd2804ad18babf7cbb6374e356e5ea73dbac13070ff",
+      "verdict": "retain",
+      "reason": "Scene fact: puck is loose (owner null) at (23,5), 2.86m from the goalie (26,0) — clearly off to a side and not centre ice (0,0) nor in the goalie’s possession, matching option b.",
+      "checks": {
+        "roster": "pass",
+        "geometry": "pass",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "pass"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "F1 (h1) at (20,2) facing 0; YOU (h2) at (19,-2) facing 0; D1 (a1) at (22,1) facing 2.8; G (g1, goalie) at (26,0) facing pi.",
+          "Puck is loose (owner: null) at (23,5).",
+          "The nearest rendered faceoff circle (radius 4.572) is centred at (20.7,6.7); distance from puck to that centre is 2.86m, i.e. the puck sits inside that circle, not below/outside it.",
+          "Ordered along x: D1 (22) < puck (23) < goalie/net area (26): D1 is on the centre-ice side of the puck, not between the puck and the net."
+        ],
+        "stated": [
+          "Briefing: the coach states F1's previous shot came loose to the goalie's side; YOU are arriving away from the puck; no goal or next touch is assumed.",
+          "Cue: the loose puck is on the positive-y side of the goal area; D1 stands closer to the middle."
+        ],
+        "unproven": [
+          "Whether YOU or D1 reaches the puck first, whether the goalie covers it, and any save/rebound physics are not simulated."
+        ]
+      },
+      "sourceUrls": [
+        "https://cdn1.sportngin.com/attachments/document/0066/4690/Skill_Progression_Manual_19_FINAL.pdf"
+      ]
+    },
+    {
+      "scenarioId": "exp26-u11-006",
+      "questionId": "exp26-u11-006-q2",
+      "baseContentHash": "ffb2eab8c78eda1585ed309c4dfd7f11756abe08057f871878138dd96c115ade",
+      "verdict": "retain",
+      "reason": "Locating the puck and D1 are the two real cues; \"the assumption that the next touch must be a shot\" is correctly excluded as an unsupported assumption from a still frame.",
+      "checks": {
+        "roster": "pass",
+        "geometry": "pass",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "pass"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "F1 (h1) at (20,2) facing 0; YOU (h2) at (19,-2) facing 0; D1 (a1) at (22,1) facing 2.8; G (g1, goalie) at (26,0) facing pi.",
+          "Puck is loose (owner: null) at (23,5).",
+          "The nearest rendered faceoff circle (radius 4.572) is centred at (20.7,6.7); distance from puck to that centre is 2.86m, i.e. the puck sits inside that circle, not below/outside it.",
+          "Ordered along x: D1 (22) < puck (23) < goalie/net area (26): D1 is on the centre-ice side of the puck, not between the puck and the net."
+        ],
+        "stated": [
+          "Briefing: the coach states F1's previous shot came loose to the goalie's side; YOU are arriving away from the puck; no goal or next touch is assumed.",
+          "Cue: the loose puck is on the positive-y side of the goal area; D1 stands closer to the middle."
+        ],
+        "unproven": [
+          "Whether YOU or D1 reaches the puck first, whether the goalie covers it, and any save/rebound physics are not simulated."
+        ]
+      },
+      "sourceUrls": [
+        "https://cdn1.sportngin.com/attachments/document/0066/4690/Skill_Progression_Manual_19_FINAL.pdf"
+      ],
+      "alternative": "Watching the goalie’s post-save recovery could also matter once in real play, though it is not something this static scene can show."
+    },
+    {
+      "scenarioId": "exp26-u11-006",
+      "questionId": "exp26-u11-006-q3",
+      "baseContentHash": "dba55a15cee971d21828e06f592cb436fc723b71d4e9e2a36ff3f4b3a35d4151",
+      "verdict": "retain",
+      "reason": "The sequence (locate puck, approach/establish control if possible, reassess shot or pass) is explicitly hedged in its own explanation (\"An immediate touch could be appropriate if the actual arrival supports it\"); this exact question was flagged historically as a P3 teaching note but the later mixed-proposals.json independent pass kept it because q5/q6 already test the covered-puck branch and the missing-evidence question, so the sequence does not force an artificial stop-look-execute order in practice.",
+      "checks": {
+        "roster": "pass",
+        "geometry": "pass",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "pass"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "F1 (h1) at (20,2) facing 0; YOU (h2) at (19,-2) facing 0; D1 (a1) at (22,1) facing 2.8; G (g1, goalie) at (26,0) facing pi.",
+          "Puck is loose (owner: null) at (23,5).",
+          "The nearest rendered faceoff circle (radius 4.572) is centred at (20.7,6.7); distance from puck to that centre is 2.86m, i.e. the puck sits inside that circle, not below/outside it.",
+          "Ordered along x: D1 (22) < puck (23) < goalie/net area (26): D1 is on the centre-ice side of the puck, not between the puck and the net."
+        ],
+        "stated": [
+          "Briefing: the coach states F1's previous shot came loose to the goalie's side; YOU are arriving away from the puck; no goal or next touch is assumed.",
+          "Cue: the loose puck is on the positive-y side of the goal area; D1 stands closer to the middle."
+        ],
+        "unproven": [
+          "Whether YOU or D1 reaches the puck first, whether the goalie covers it, and any save/rebound physics are not simulated."
+        ]
+      },
+      "sourceUrls": [
+        "https://cdn1.sportngin.com/attachments/document/0066/4690/Skill_Progression_Manual_19_FINAL.pdf"
+      ],
+      "alternative": "If the puck is clearly reachable at speed, a player might shoot without a separate \"establish control\" step; this sequence is a discussion aid, not a mandated order."
+    },
+    {
+      "scenarioId": "exp26-u11-006",
+      "questionId": "exp26-u11-006-q4",
+      "baseContentHash": "ab53a3197116ad8a32e1cfb2f34c690edf81b9f89a2746216cf91e5849029c8a",
+      "verdict": "retain",
+      "reason": "Reference (21,6) for h2 (YOU) is on ice, 8.25m from YOU’s actual (19,-2), and approaches from a different side than D1 (22,1), matching \"outside D1’s current middle position.\"",
+      "checks": {
+        "roster": "pass",
+        "geometry": "pass",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "pass"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "F1 (h1) at (20,2) facing 0; YOU (h2) at (19,-2) facing 0; D1 (a1) at (22,1) facing 2.8; G (g1, goalie) at (26,0) facing pi.",
+          "Puck is loose (owner: null) at (23,5).",
+          "The nearest rendered faceoff circle (radius 4.572) is centred at (20.7,6.7); distance from puck to that centre is 2.86m, i.e. the puck sits inside that circle, not below/outside it.",
+          "Ordered along x: D1 (22) < puck (23) < goalie/net area (26): D1 is on the centre-ice side of the puck, not between the puck and the net."
+        ],
+        "stated": [
+          "Briefing: the coach states F1's previous shot came loose to the goalie's side; YOU are arriving away from the puck; no goal or next touch is assumed.",
+          "Cue: the loose puck is on the positive-y side of the goal area; D1 stands closer to the middle."
+        ],
+        "unproven": [
+          "Whether YOU or D1 reaches the puck first, whether the goalie covers it, and any save/rebound physics are not simulated."
+        ]
+      },
+      "sourceUrls": [
+        "https://cdn1.sportngin.com/attachments/document/0066/4690/Skill_Progression_Manual_19_FINAL.pdf"
+      ],
+      "alternative": "Approaching more directly up the middle could also work if D1 has already committed to one side; the example is one approach angle among others."
+    },
+    {
+      "scenarioId": "exp26-u11-006",
+      "questionId": "exp26-u11-006-q5",
+      "baseContentHash": "c9401c90cde31f3edb18ecf2cda10c03e575a9f6b36b4e9fd8bd0d341a28f1e3",
+      "verdict": "retain",
+      "reason": "Correctly treats a goalie covering the puck as ending the earlier loose-puck plan rather than letting the learner assume continued availability or a goal; matches the historical high-risk flag noting a static frame cannot certify the outcome, which this question does not attempt to do.",
+      "checks": {
+        "roster": "pass",
+        "geometry": "pass",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "pass"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "F1 (h1) at (20,2) facing 0; YOU (h2) at (19,-2) facing 0; D1 (a1) at (22,1) facing 2.8; G (g1, goalie) at (26,0) facing pi.",
+          "Puck is loose (owner: null) at (23,5).",
+          "The nearest rendered faceoff circle (radius 4.572) is centred at (20.7,6.7); distance from puck to that centre is 2.86m, i.e. the puck sits inside that circle, not below/outside it.",
+          "Ordered along x: D1 (22) < puck (23) < goalie/net area (26): D1 is on the centre-ice side of the puck, not between the puck and the net."
+        ],
+        "stated": [
+          "Briefing: the coach states F1's previous shot came loose to the goalie's side; YOU are arriving away from the puck; no goal or next touch is assumed.",
+          "Cue: the loose puck is on the positive-y side of the goal area; D1 stands closer to the middle."
+        ],
+        "unproven": [
+          "Whether YOU or D1 reaches the puck first, whether the goalie covers it, and any save/rebound physics are not simulated."
+        ]
+      },
+      "sourceUrls": [
+        "https://cdn1.sportngin.com/attachments/document/0066/4690/Skill_Progression_Manual_19_FINAL.pdf"
+      ],
+      "alternative": "If the whistle has not actually blown, a player might still look for a second loose puck or rebound off the cover attempt, but that is a new read, not a continuation of the old one."
+    },
+    {
+      "scenarioId": "exp26-u11-006",
+      "questionId": "exp26-u11-006-q6",
+      "baseContentHash": "eec7e02caba38c6d422a91c00b4a3cfa0bfd2bde29af6ec9055b73173101575d",
+      "verdict": "retain",
+      "reason": "Open reflection about what additional information (movement, speed, control, live play) would be needed before predicting a second shot; no answer key, consistent with the reflection contract.",
+      "checks": {
+        "roster": "pass",
+        "geometry": "pass",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "pass"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "F1 (h1) at (20,2) facing 0; YOU (h2) at (19,-2) facing 0; D1 (a1) at (22,1) facing 2.8; G (g1, goalie) at (26,0) facing pi.",
+          "Puck is loose (owner: null) at (23,5).",
+          "The nearest rendered faceoff circle (radius 4.572) is centred at (20.7,6.7); distance from puck to that centre is 2.86m, i.e. the puck sits inside that circle, not below/outside it.",
+          "Ordered along x: D1 (22) < puck (23) < goalie/net area (26): D1 is on the centre-ice side of the puck, not between the puck and the net."
+        ],
+        "stated": [
+          "Briefing: the coach states F1's previous shot came loose to the goalie's side; YOU are arriving away from the puck; no goal or next touch is assumed.",
+          "Cue: the loose puck is on the positive-y side of the goal area; D1 stands closer to the middle."
+        ],
+        "unproven": [
+          "Whether YOU or D1 reaches the puck first, whether the goalie covers it, and any save/rebound physics are not simulated."
+        ]
+      },
+      "sourceUrls": [
+        "https://cdn1.sportngin.com/attachments/document/0066/4690/Skill_Progression_Manual_19_FINAL.pdf"
+      ],
+      "alternative": "A player could also answer that no amount of extra information settles it until the puck actually moves again; that is a valid reflection answer too."
+    },
+    {
+      "scenarioId": "exp26-u11-006",
+      "questionId": "exp26-u11-006-q7",
+      "baseContentHash": "cd5f60ae441e7c14c538c487cdc004592c021aee2344a94effa9e1656f239003",
+      "verdict": "repair",
+      "reason": "REPAIR: original correct option read \"Puck below the circle; D1 is between it and the net.\" Verified against the exact render source: the puck (23,5) is 2.86m from the nearest faceoff-circle centre (20.7,6.7), i.e. inside a 4.572m-radius circle, not below/outside it; and ordered along x, D1 (22) sits on the centre-ice side of the puck (23), closer to centre ice than the puck, not between the puck and the net (~26). Both clauses of the \"correct\" option misdescribed the actual coordinates — a real geometry/landmark defect (the same class the project instructions flag: describing a skater relative to a landmark the coordinates do not support), not merely an illustrative choice. Replaced with an accurate call; see repairs[].",
+      "checks": {
+        "roster": "pass",
+        "geometry": "fail",
+        "answer": "fail",
+        "feedback": "fail",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "pass"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "F1 (h1) at (20,2) facing 0; YOU (h2) at (19,-2) facing 0; D1 (a1) at (22,1) facing 2.8; G (g1, goalie) at (26,0) facing pi.",
+          "Puck is loose (owner: null) at (23,5).",
+          "The nearest rendered faceoff circle (radius 4.572) is centred at (20.7,6.7); distance from puck to that centre is 2.86m, i.e. the puck sits inside that circle, not below/outside it.",
+          "Ordered along x: D1 (22) < puck (23) < goalie/net area (26): D1 is on the centre-ice side of the puck, not between the puck and the net."
+        ],
+        "stated": [
+          "Briefing: the coach states F1's previous shot came loose to the goalie's side; YOU are arriving away from the puck; no goal or next touch is assumed.",
+          "Cue: the loose puck is on the positive-y side of the goal area; D1 stands closer to the middle."
+        ],
+        "unproven": [
+          "Whether YOU or D1 reaches the puck first, whether the goalie covers it, and any save/rebound physics are not simulated."
+        ]
+      },
+      "sourceUrls": [
+        "https://cdn1.sportngin.com/attachments/document/0066/4690/Skill_Progression_Manual_19_FINAL.pdf"
+      ],
+      "alternative": "A shorter call naming only the puck’s location (\"puck’s loose, still in the circle\") could also work in real play if time is short; the fuller call is not mandatory phrasing."
+    },
+    {
+      "scenarioId": "exp26-u11-006",
+      "questionId": "exp26-u11-006-q8",
+      "baseContentHash": "6b27b5e8dac0f63313500c18bff7a2d45144516d62df7f9337eccbc5bf44acfa",
+      "verdict": "retain",
+      "reason": "D1 controlling the puck and F2 becoming reachable support both genuinely change the next job; the net staying at the same end is correctly excluded as a non-change (nets do not move mid-play).",
+      "checks": {
+        "roster": "pass",
+        "geometry": "pass",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "pass"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "F1 (h1) at (20,2) facing 0; YOU (h2) at (19,-2) facing 0; D1 (a1) at (22,1) facing 2.8; G (g1, goalie) at (26,0) facing pi.",
+          "Puck is loose (owner: null) at (23,5).",
+          "The nearest rendered faceoff circle (radius 4.572) is centred at (20.7,6.7); distance from puck to that centre is 2.86m, i.e. the puck sits inside that circle, not below/outside it.",
+          "Ordered along x: D1 (22) < puck (23) < goalie/net area (26): D1 is on the centre-ice side of the puck, not between the puck and the net."
+        ],
+        "stated": [
+          "Briefing: the coach states F1's previous shot came loose to the goalie's side; YOU are arriving away from the puck; no goal or next touch is assumed.",
+          "Cue: the loose puck is on the positive-y side of the goal area; D1 stands closer to the middle."
+        ],
+        "unproven": [
+          "Whether YOU or D1 reaches the puck first, whether the goalie covers it, and any save/rebound physics are not simulated."
+        ]
+      },
+      "sourceUrls": [
+        "https://cdn1.sportngin.com/attachments/document/0066/4690/Skill_Progression_Manual_19_FINAL.pdf"
+      ],
+      "alternative": "A whistle/offside would also change the plan, though that is outside what this freeze depicts."
+    },
+    {
+      "scenarioId": "exp26-u11-006",
+      "questionId": "exp26-u11-006-q9",
+      "baseContentHash": "8ad5841d2624dc4f9a2e36d1bf56af2418230aa0b3f04f54b5aa9e2390d6d8d8",
+      "verdict": "retain",
+      "reason": "Reference (22.2,-4.2) for actor h2 (YOU) is on ice, 3.88m from YOU’s actual (19,-2), approaches the loose puck (23,5) from the opposite (negative-y) side of the ice from the puck, and keeps D1 (22,1) and the goalie/net (26,0) at a real, visible distance; this exact question already went through two repair rounds (actorId + wording) and multiple independent rechecks that returned \"pass.\"",
+      "checks": {
+        "roster": "pass",
+        "geometry": "pass",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "pass"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "F1 (h1) at (20,2) facing 0; YOU (h2) at (19,-2) facing 0; D1 (a1) at (22,1) facing 2.8; G (g1, goalie) at (26,0) facing pi.",
+          "Puck is loose (owner: null) at (23,5).",
+          "The nearest rendered faceoff circle (radius 4.572) is centred at (20.7,6.7); distance from puck to that centre is 2.86m, i.e. the puck sits inside that circle, not below/outside it.",
+          "Ordered along x: D1 (22) < puck (23) < goalie/net area (26): D1 is on the centre-ice side of the puck, not between the puck and the net."
+        ],
+        "stated": [
+          "Briefing: the coach states F1's previous shot came loose to the goalie's side; YOU are arriving away from the puck; no goal or next touch is assumed.",
+          "Cue: the loose puck is on the positive-y side of the goal area; D1 stands closer to the middle."
+        ],
+        "unproven": [
+          "Whether YOU or D1 reaches the puck first, whether the goalie covers it, and any save/rebound physics are not simulated."
+        ]
+      },
+      "sourceUrls": [
+        "https://cdn1.sportngin.com/attachments/document/0066/4690/Skill_Progression_Manual_19_FINAL.pdf"
+      ],
+      "alternative": "Approaching from the same side as the puck could also work and might be faster in real play; the opposite-side route is one example, chosen to vary the read, not the only one."
+    },
+    {
+      "scenarioId": "exp26-u11-006",
+      "questionId": "exp26-u11-006-q10",
+      "baseContentHash": "eafdc89b71040d0051c4428bd9793656c18ab413de1713e85a6318fb2a327be2",
+      "verdict": "retain",
+      "reason": "Explain question conditioned on the goalie covering before arrival; the explanation asks the learner to identify the new possession state and F1’s support rather than assume a specific next action, consistent with the no-guaranteed-outcome rule.",
+      "checks": {
+        "roster": "pass",
+        "geometry": "pass",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "pass"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "F1 (h1) at (20,2) facing 0; YOU (h2) at (19,-2) facing 0; D1 (a1) at (22,1) facing 2.8; G (g1, goalie) at (26,0) facing pi.",
+          "Puck is loose (owner: null) at (23,5).",
+          "The nearest rendered faceoff circle (radius 4.572) is centred at (20.7,6.7); distance from puck to that centre is 2.86m, i.e. the puck sits inside that circle, not below/outside it.",
+          "Ordered along x: D1 (22) < puck (23) < goalie/net area (26): D1 is on the centre-ice side of the puck, not between the puck and the net."
+        ],
+        "stated": [
+          "Briefing: the coach states F1's previous shot came loose to the goalie's side; YOU are arriving away from the puck; no goal or next touch is assumed.",
+          "Cue: the loose puck is on the positive-y side of the goal area; D1 stands closer to the middle."
+        ],
+        "unproven": [
+          "Whether YOU or D1 reaches the puck first, whether the goalie covers it, and any save/rebound physics are not simulated."
+        ]
+      },
+      "sourceUrls": [
+        "https://cdn1.sportngin.com/attachments/document/0066/4690/Skill_Progression_Manual_19_FINAL.pdf"
+      ],
+      "alternative": "If the whistle has not blown, checking for a second loose puck near the crease is also a defensible next look before choosing pressure or reset."
+    },
+    {
+      "scenarioId": "exp26-u11-007",
+      "questionId": "exp26-u11-007-q1",
+      "baseContentHash": "7c5068e092213dab8503a70f24ea1c0e683485e80f29884172b6305c00188a68",
+      "verdict": "retain",
+      "reason": "Scene fact: D1 is the only opposing skater in the setup; \"a defender behind the right net\" does not exist in this scene’s roster, correctly excluded as a distractor rather than an asserted fact.",
+      "checks": {
+        "roster": "pass",
+        "geometry": "pass",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "pass"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "YOU (h1) at (7,8) facing 0; F2 (h2) at (11,2) facing 2.7; D1 (a1) at (9,6) facing 2.356.",
+          "Puck owner is YOU; rendered carried-puck position is (8,8.7).",
+          "D1's y=6 sits between YOU's y=8 (nearer the boards) and mid-ice (y=0), consistent with the cue that D1 approaches from the middle side."
+        ],
+        "stated": [
+          "Briefing: YOU own the puck near the side boards; D1 approaches from the middle side; F2 is an outlet inside; this is a no-contact planning exercise."
+        ],
+        "unproven": [
+          "Whether D1 actually closes the gap, or whether the inside lane to F2 stays open, is not simulated from a static freeze."
+        ]
+      },
+      "sourceUrls": [
+        "https://www.hockeycanada.ca/en-ca/news/seven-coaching-principles-puck-control-2024-ncw"
+      ]
+    },
+    {
+      "scenarioId": "exp26-u11-007",
+      "questionId": "exp26-u11-007-q2",
+      "baseContentHash": "b010f60d4a21c5763ea6669c2ec7efadb2a42280f26d6754ee93b419d8093802",
+      "verdict": "retain",
+      "reason": "Noticing D1’s reach/movement and checking F2’s availability both genuinely preserve options; \"watch only the puck for the whole play\" is correctly excluded as tunnel vision that would miss both cues.",
+      "checks": {
+        "roster": "pass",
+        "geometry": "pass",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "pass"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "YOU (h1) at (7,8) facing 0; F2 (h2) at (11,2) facing 2.7; D1 (a1) at (9,6) facing 2.356.",
+          "Puck owner is YOU; rendered carried-puck position is (8,8.7).",
+          "D1's y=6 sits between YOU's y=8 (nearer the boards) and mid-ice (y=0), consistent with the cue that D1 approaches from the middle side."
+        ],
+        "stated": [
+          "Briefing: YOU own the puck near the side boards; D1 approaches from the middle side; F2 is an outlet inside; this is a no-contact planning exercise."
+        ],
+        "unproven": [
+          "Whether D1 actually closes the gap, or whether the inside lane to F2 stays open, is not simulated from a static freeze."
+        ]
+      },
+      "sourceUrls": [
+        "https://www.hockeycanada.ca/en-ca/news/seven-coaching-principles-puck-control-2024-ncw"
+      ],
+      "alternative": "Briefly looking down at the puck to control an awkward bounce is fine for an instant; the distractor is about doing this for the \"whole play,\" which is the part that is wrong."
+    },
+    {
+      "scenarioId": "exp26-u11-007",
+      "questionId": "exp26-u11-007-q3",
+      "baseContentHash": "4c4af66bb0f56b3632a9c17ba3123063f9a2a6b2da733dfb735ba3a2887c5187",
+      "verdict": "retain",
+      "reason": "The sequence (notice which side D1 threatens, keep control while using space, recheck outlet/escape) is explicitly framed by its own explanation as conditional, and the independent recheck in followup/mixed-proposals.json kept this question because q2 covers the component cues and q5 tests the newly opened lane, so the order does not claim a rigid one-way routine.",
+      "checks": {
+        "roster": "pass",
+        "geometry": "pass",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "pass"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "YOU (h1) at (7,8) facing 0; F2 (h2) at (11,2) facing 2.7; D1 (a1) at (9,6) facing 2.356.",
+          "Puck owner is YOU; rendered carried-puck position is (8,8.7).",
+          "D1's y=6 sits between YOU's y=8 (nearer the boards) and mid-ice (y=0), consistent with the cue that D1 approaches from the middle side."
+        ],
+        "stated": [
+          "Briefing: YOU own the puck near the side boards; D1 approaches from the middle side; F2 is an outlet inside; this is a no-contact planning exercise."
+        ],
+        "unproven": [
+          "Whether D1 actually closes the gap, or whether the inside lane to F2 stays open, is not simulated from a static freeze."
+        ]
+      },
+      "sourceUrls": [
+        "https://www.hockeycanada.ca/en-ca/news/seven-coaching-principles-puck-control-2024-ncw"
+      ],
+      "alternative": "A player already aware of D1’s side from the previous few seconds might recheck the outlet without a separate \"notice\" step; these can overlap."
+    },
+    {
+      "scenarioId": "exp26-u11-007",
+      "questionId": "exp26-u11-007-q4",
+      "baseContentHash": "1c559fc281fed2b435e64bdb06b70a02a2b426618c7e27c901b65013208c81b4",
+      "verdict": "retain",
+      "reason": "Reference (6,9) for h1 (YOU) is on ice, 1.41m from YOU’s actual (7,8), and moves toward the wall away from D1’s approach direction, matching \"possible holding spot away from D1’s current approach.\"",
+      "checks": {
+        "roster": "pass",
+        "geometry": "pass",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "pass"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "YOU (h1) at (7,8) facing 0; F2 (h2) at (11,2) facing 2.7; D1 (a1) at (9,6) facing 2.356.",
+          "Puck owner is YOU; rendered carried-puck position is (8,8.7).",
+          "D1's y=6 sits between YOU's y=8 (nearer the boards) and mid-ice (y=0), consistent with the cue that D1 approaches from the middle side."
+        ],
+        "stated": [
+          "Briefing: YOU own the puck near the side boards; D1 approaches from the middle side; F2 is an outlet inside; this is a no-contact planning exercise."
+        ],
+        "unproven": [
+          "Whether D1 actually closes the gap, or whether the inside lane to F2 stays open, is not simulated from a static freeze."
+        ]
+      },
+      "sourceUrls": [
+        "https://www.hockeycanada.ca/en-ca/news/seven-coaching-principles-puck-control-2024-ncw"
+      ],
+      "alternative": "Protecting the puck in place without moving could also work briefly if D1 has not closed distance yet; the example move is not mandatory."
+    },
+    {
+      "scenarioId": "exp26-u11-007",
+      "questionId": "exp26-u11-007-q5",
+      "baseContentHash": "4b19e7144395402f9b72a7fae4a18c8842fe601046d4af730265e453cb4a14f3",
+      "verdict": "retain",
+      "reason": "Correctly treats D1 following toward the wall and F2’s lane opening as a hypothetical reason to check the inside pass, without claiming boards-holding is always required or that F2’s earlier position still guarantees an outlet (F2 has already been shown to be capable of moving, per the scene’s own facing/position).",
+      "checks": {
+        "roster": "pass",
+        "geometry": "pass",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "pass"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "YOU (h1) at (7,8) facing 0; F2 (h2) at (11,2) facing 2.7; D1 (a1) at (9,6) facing 2.356.",
+          "Puck owner is YOU; rendered carried-puck position is (8,8.7).",
+          "D1's y=6 sits between YOU's y=8 (nearer the boards) and mid-ice (y=0), consistent with the cue that D1 approaches from the middle side."
+        ],
+        "stated": [
+          "Briefing: YOU own the puck near the side boards; D1 approaches from the middle side; F2 is an outlet inside; this is a no-contact planning exercise."
+        ],
+        "unproven": [
+          "Whether D1 actually closes the gap, or whether the inside lane to F2 stays open, is not simulated from a static freeze."
+        ]
+      },
+      "sourceUrls": [
+        "https://www.hockeycanada.ca/en-ca/news/seven-coaching-principles-puck-control-2024-ncw"
+      ],
+      "alternative": "If D1 has not actually committed to the wall, staying patient on the boards a moment longer is also defensible before forcing the inside pass."
+    },
+    {
+      "scenarioId": "exp26-u11-007",
+      "questionId": "exp26-u11-007-q6",
+      "baseContentHash": "3634e7b51638b81e958c917d0284b2b381856e8b6e8810cc8dca983968b5f44d",
+      "verdict": "retain",
+      "reason": "Open reflection about how protecting the puck could help F2 become useful (buying time for a lane to open); no answer key, consistent with the reflection contract.",
+      "checks": {
+        "roster": "pass",
+        "geometry": "pass",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "pass"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "YOU (h1) at (7,8) facing 0; F2 (h2) at (11,2) facing 2.7; D1 (a1) at (9,6) facing 2.356.",
+          "Puck owner is YOU; rendered carried-puck position is (8,8.7).",
+          "D1's y=6 sits between YOU's y=8 (nearer the boards) and mid-ice (y=0), consistent with the cue that D1 approaches from the middle side."
+        ],
+        "stated": [
+          "Briefing: YOU own the puck near the side boards; D1 approaches from the middle side; F2 is an outlet inside; this is a no-contact planning exercise."
+        ],
+        "unproven": [
+          "Whether D1 actually closes the gap, or whether the inside lane to F2 stays open, is not simulated from a static freeze."
+        ]
+      },
+      "sourceUrls": [
+        "https://www.hockeycanada.ca/en-ca/news/seven-coaching-principles-puck-control-2024-ncw"
+      ],
+      "alternative": "A player could also conclude protection does not help here if D1 simply keeps pace and no lane changes; that is a valid reflection answer too."
+    },
+    {
+      "scenarioId": "exp26-u11-007",
+      "questionId": "exp26-u11-007-q7",
+      "baseContentHash": "7345ad3565da22f9d82aa45c0ffbce15528aff1cd82074a29aecf94c60e602f2",
+      "verdict": "retain",
+      "reason": "Correct call names D1’s actual side (inside, y=6 vs YOU’s y=8) and keeps F2’s availability conditional on D1 following; \"I will carry outside even if the picture changes\" and \"F2 must stop moving\" are correctly excluded as rigid/unsupported.",
+      "checks": {
+        "roster": "pass",
+        "geometry": "pass",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "pass"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "YOU (h1) at (7,8) facing 0; F2 (h2) at (11,2) facing 2.7; D1 (a1) at (9,6) facing 2.356.",
+          "Puck owner is YOU; rendered carried-puck position is (8,8.7).",
+          "D1's y=6 sits between YOU's y=8 (nearer the boards) and mid-ice (y=0), consistent with the cue that D1 approaches from the middle side."
+        ],
+        "stated": [
+          "Briefing: YOU own the puck near the side boards; D1 approaches from the middle side; F2 is an outlet inside; this is a no-contact planning exercise."
+        ],
+        "unproven": [
+          "Whether D1 actually closes the gap, or whether the inside lane to F2 stays open, is not simulated from a static freeze."
+        ]
+      },
+      "sourceUrls": [
+        "https://www.hockeycanada.ca/en-ca/news/seven-coaching-principles-puck-control-2024-ncw"
+      ],
+      "alternative": "A shorter call (\"D1’s inside\") can work if F2 already knows to watch for the lane; the fuller sentence is not mandatory phrasing."
+    },
+    {
+      "scenarioId": "exp26-u11-007",
+      "questionId": "exp26-u11-007-q8",
+      "baseContentHash": "1fb302717f762a2765d97329fc6d6248f5c4980b61d3f7c3796e450f1de4940d",
+      "verdict": "retain",
+      "reason": "D1 staying inside YOU (y=6<8, confirmed) and F2 being reachable from the protected touch are the two real supporting cues; \"the wall itself makes the puck safe\" is correctly excluded as a false-safety absolute.",
+      "checks": {
+        "roster": "pass",
+        "geometry": "pass",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "pass"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "YOU (h1) at (7,8) facing 0; F2 (h2) at (11,2) facing 2.7; D1 (a1) at (9,6) facing 2.356.",
+          "Puck owner is YOU; rendered carried-puck position is (8,8.7).",
+          "D1's y=6 sits between YOU's y=8 (nearer the boards) and mid-ice (y=0), consistent with the cue that D1 approaches from the middle side."
+        ],
+        "stated": [
+          "Briefing: YOU own the puck near the side boards; D1 approaches from the middle side; F2 is an outlet inside; this is a no-contact planning exercise."
+        ],
+        "unproven": [
+          "Whether D1 actually closes the gap, or whether the inside lane to F2 stays open, is not simulated from a static freeze."
+        ]
+      },
+      "sourceUrls": [
+        "https://www.hockeycanada.ca/en-ca/news/seven-coaching-principles-puck-control-2024-ncw"
+      ],
+      "alternative": "Body position and stick protection matter too, though this diagram does not model contact/technique, so those are not testable from the scene itself."
+    },
+    {
+      "scenarioId": "exp26-u11-007",
+      "questionId": "exp26-u11-007-q9",
+      "baseContentHash": "96a6b1b091bdb8a3b127c5033a0426241641674073a8a638e484ffec1a5c0fa6",
+      "verdict": "retain",
+      "reason": "Reference (8.1,8.2) for h1 (YOU) is on ice, 1.12m from YOU’s actual (7,8), moves slightly toward the boards (y up from 8 to 8.2) while leaving F2 (11,2) visible, matching \"toward the outside while keeping F2 inside the picture.\"",
+      "checks": {
+        "roster": "pass",
+        "geometry": "pass",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "pass"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "YOU (h1) at (7,8) facing 0; F2 (h2) at (11,2) facing 2.7; D1 (a1) at (9,6) facing 2.356.",
+          "Puck owner is YOU; rendered carried-puck position is (8,8.7).",
+          "D1's y=6 sits between YOU's y=8 (nearer the boards) and mid-ice (y=0), consistent with the cue that D1 approaches from the middle side."
+        ],
+        "stated": [
+          "Briefing: YOU own the puck near the side boards; D1 approaches from the middle side; F2 is an outlet inside; this is a no-contact planning exercise."
+        ],
+        "unproven": [
+          "Whether D1 actually closes the gap, or whether the inside lane to F2 stays open, is not simulated from a static freeze."
+        ]
+      },
+      "sourceUrls": [
+        "https://www.hockeycanada.ca/en-ca/news/seven-coaching-principles-puck-control-2024-ncw"
+      ],
+      "alternative": "A larger move toward the boards could create even more separation from D1, though it risks losing sight of F2; the smaller move is one reasonable balance."
+    },
+    {
+      "scenarioId": "exp26-u11-007",
+      "questionId": "exp26-u11-007-q10",
+      "baseContentHash": "65baba3b396cfc8f051261a1214c1e46fedb567fd1974d61480c7aecb86cb082",
+      "verdict": "retain",
+      "reason": "Explain question conditioned on \"D1 follows outside and F2 opens\"; the explanation asks the learner to name D1’s movement and check the reachable lane, passing only if it stays open, rather than asserting the pass will succeed.",
+      "checks": {
+        "roster": "pass",
+        "geometry": "pass",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "pass"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "YOU (h1) at (7,8) facing 0; F2 (h2) at (11,2) facing 2.7; D1 (a1) at (9,6) facing 2.356.",
+          "Puck owner is YOU; rendered carried-puck position is (8,8.7).",
+          "D1's y=6 sits between YOU's y=8 (nearer the boards) and mid-ice (y=0), consistent with the cue that D1 approaches from the middle side."
+        ],
+        "stated": [
+          "Briefing: YOU own the puck near the side boards; D1 approaches from the middle side; F2 is an outlet inside; this is a no-contact planning exercise."
+        ],
+        "unproven": [
+          "Whether D1 actually closes the gap, or whether the inside lane to F2 stays open, is not simulated from a static freeze."
+        ]
+      },
+      "sourceUrls": [
+        "https://www.hockeycanada.ca/en-ca/news/seven-coaching-principles-puck-control-2024-ncw"
+      ],
+      "alternative": "If D1 only partially commits outside, continuing to protect and wait one more beat is also defensible instead of passing immediately."
+    },
+    {
+      "scenarioId": "exp26-u11-008",
+      "questionId": "exp26-u11-008-q1",
+      "baseContentHash": "f8661999591a25fbde4e3d9f935416458def3fd93ed80287c214e7ebb67faeaa",
+      "verdict": "retain",
+      "reason": "Scene fact: a static freeze can show relative locations directly; it cannot show exact skating speed or who wins a hypothetical race, matching option b and excluding a and c.",
+      "checks": {
+        "roster": "pass",
+        "geometry": "pass",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "pass"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "YOU (h1) at (-7,-4) facing 0; F2 (h2) at (1,-6) facing pi; D1 (a1) at (-2,2) facing -2.8.",
+          "Puck owner is YOU; rendered carried-puck position is (-6,-3.3).",
+          "F2 x=1 > YOU x=-7 (navy attacks +x): F2 is ahead on the same (negative-y, wide) side; D1 y=2 is offset from that wide-side lane."
+        ],
+        "stated": [
+          "Briefing: YOU carry in the neutral area; D1 is offset toward the middle; F2 is farther up the same wide side; speed is not shown."
+        ],
+        "unproven": [
+          "Skating speed, acceleration and who reaches the wide lane first are not established by a static freeze (explicitly stated in limits)."
+        ]
+      },
+      "sourceUrls": [
+        "https://www.hockeycanada.ca/en-ca/news/seven-coaching-principles-puck-control-2024-ncw"
+      ]
+    },
+    {
+      "scenarioId": "exp26-u11-008",
+      "questionId": "exp26-u11-008-q2",
+      "baseContentHash": "ade25f828c8bdfe7c2d29240f6836e140536b282e5d9aa0b4f495fd82dcd6dc4",
+      "verdict": "retain",
+      "reason": "D1 moving into the route and F2 moving into a useful lane both genuinely change a carry decision; \"the camera rotating while players stay fixed\" is correctly excluded, matching the project’s own rule that physical directions do not change with camera/screen orientation.",
+      "checks": {
+        "roster": "pass",
+        "geometry": "pass",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "pass"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "YOU (h1) at (-7,-4) facing 0; F2 (h2) at (1,-6) facing pi; D1 (a1) at (-2,2) facing -2.8.",
+          "Puck owner is YOU; rendered carried-puck position is (-6,-3.3).",
+          "F2 x=1 > YOU x=-7 (navy attacks +x): F2 is ahead on the same (negative-y, wide) side; D1 y=2 is offset from that wide-side lane."
+        ],
+        "stated": [
+          "Briefing: YOU carry in the neutral area; D1 is offset toward the middle; F2 is farther up the same wide side; speed is not shown."
+        ],
+        "unproven": [
+          "Skating speed, acceleration and who reaches the wide lane first are not established by a static freeze (explicitly stated in limits)."
+        ]
+      },
+      "sourceUrls": [
+        "https://www.hockeycanada.ca/en-ca/news/seven-coaching-principles-puck-control-2024-ncw"
+      ],
+      "alternative": "A whistle or offside call would also change the decision, though that is outside what this freeze can depict."
+    },
+    {
+      "scenarioId": "exp26-u11-008",
+      "questionId": "exp26-u11-008-q3",
+      "baseContentHash": "f010efa34c92848d05a7cdcc88d7694d60dacbbd61d71616375a6ed9a1913711",
+      "verdict": "retain",
+      "reason": "The sequence (find a route, carry under control while observing D1, choose again as the gap changes) is explicitly framed as requiring an updated read rather than promising the initially open route stays open; the independent recheck in followup/mixed-proposals.json kept this question because q5 already makes the \"D1 closes the lane\" alternative explicit and q6 asks what movement would trigger the update.",
+      "checks": {
+        "roster": "pass",
+        "geometry": "pass",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "pass"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "YOU (h1) at (-7,-4) facing 0; F2 (h2) at (1,-6) facing pi; D1 (a1) at (-2,2) facing -2.8.",
+          "Puck owner is YOU; rendered carried-puck position is (-6,-3.3).",
+          "F2 x=1 > YOU x=-7 (navy attacks +x): F2 is ahead on the same (negative-y, wide) side; D1 y=2 is offset from that wide-side lane."
+        ],
+        "stated": [
+          "Briefing: YOU carry in the neutral area; D1 is offset toward the middle; F2 is farther up the same wide side; speed is not shown."
+        ],
+        "unproven": [
+          "Skating speed, acceleration and who reaches the wide lane first are not established by a static freeze (explicitly stated in limits)."
+        ]
+      },
+      "sourceUrls": [
+        "https://www.hockeycanada.ca/en-ca/news/seven-coaching-principles-puck-control-2024-ncw"
+      ],
+      "alternative": "A player already watching D1 continuously might not experience these as separate steps; they can overlap during a smooth carry."
+    },
+    {
+      "scenarioId": "exp26-u11-008",
+      "questionId": "exp26-u11-008-q4",
+      "baseContentHash": "7b0706d6b8a963b0e5447d105719eef59a91cbaac664d062c12c6eaa93663f74",
+      "verdict": "retain",
+      "reason": "Reference (-3,-5) for h1 (YOU) is on ice, 4.12m from YOU’s actual (-7,-4), advances toward +x (the attacking direction) without heading directly at D1 (-2,2), matching \"possible next wide carrying position.\"",
+      "checks": {
+        "roster": "pass",
+        "geometry": "pass",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "pass"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "YOU (h1) at (-7,-4) facing 0; F2 (h2) at (1,-6) facing pi; D1 (a1) at (-2,2) facing -2.8.",
+          "Puck owner is YOU; rendered carried-puck position is (-6,-3.3).",
+          "F2 x=1 > YOU x=-7 (navy attacks +x): F2 is ahead on the same (negative-y, wide) side; D1 y=2 is offset from that wide-side lane."
+        ],
+        "stated": [
+          "Briefing: YOU carry in the neutral area; D1 is offset toward the middle; F2 is farther up the same wide side; speed is not shown."
+        ],
+        "unproven": [
+          "Skating speed, acceleration and who reaches the wide lane first are not established by a static freeze (explicitly stated in limits)."
+        ]
+      },
+      "sourceUrls": [
+        "https://www.hockeycanada.ca/en-ca/news/seven-coaching-principles-puck-control-2024-ncw"
+      ],
+      "alternative": "A slightly more central route could also work if it keeps F2 reachable while still avoiding D1; the example is one option among others."
+    },
+    {
+      "scenarioId": "exp26-u11-008",
+      "questionId": "exp26-u11-008-q5",
+      "baseContentHash": "fff785aed1f075143bb17734280c4f7e11185662d11b63711df12b54de7d7d78",
+      "verdict": "retain",
+      "reason": "Correctly treats D1 reaching the wide lane first as a reason to reconsider pace/direction/F2’s outlet, rather than keeping a route just because it was open earlier or assuming F2 stays available without checking.",
+      "checks": {
+        "roster": "pass",
+        "geometry": "pass",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "pass"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "YOU (h1) at (-7,-4) facing 0; F2 (h2) at (1,-6) facing pi; D1 (a1) at (-2,2) facing -2.8.",
+          "Puck owner is YOU; rendered carried-puck position is (-6,-3.3).",
+          "F2 x=1 > YOU x=-7 (navy attacks +x): F2 is ahead on the same (negative-y, wide) side; D1 y=2 is offset from that wide-side lane."
+        ],
+        "stated": [
+          "Briefing: YOU carry in the neutral area; D1 is offset toward the middle; F2 is farther up the same wide side; speed is not shown."
+        ],
+        "unproven": [
+          "Skating speed, acceleration and who reaches the wide lane first are not established by a static freeze (explicitly stated in limits)."
+        ]
+      },
+      "sourceUrls": [
+        "https://www.hockeycanada.ca/en-ca/news/seven-coaching-principles-puck-control-2024-ncw"
+      ],
+      "alternative": "If F2 has clearly not moved and the lane is only lightly contested, briefly continuing the original route while watching D1 closely can also be reasonable before switching."
+    },
+    {
+      "scenarioId": "exp26-u11-008",
+      "questionId": "exp26-u11-008-q6",
+      "baseContentHash": "61bfc1bd56a52afe52699d1c3792099409f797039c56e7db79d69712ad696318",
+      "verdict": "retain",
+      "reason": "Open reflection about what movement (D1’s path, F2’s availability) would change the plan to keep carrying; no answer key, consistent with the reflection contract.",
+      "checks": {
+        "roster": "pass",
+        "geometry": "pass",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "pass"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "YOU (h1) at (-7,-4) facing 0; F2 (h2) at (1,-6) facing pi; D1 (a1) at (-2,2) facing -2.8.",
+          "Puck owner is YOU; rendered carried-puck position is (-6,-3.3).",
+          "F2 x=1 > YOU x=-7 (navy attacks +x): F2 is ahead on the same (negative-y, wide) side; D1 y=2 is offset from that wide-side lane."
+        ],
+        "stated": [
+          "Briefing: YOU carry in the neutral area; D1 is offset toward the middle; F2 is farther up the same wide side; speed is not shown."
+        ],
+        "unproven": [
+          "Skating speed, acceleration and who reaches the wide lane first are not established by a static freeze (explicitly stated in limits)."
+        ]
+      },
+      "sourceUrls": [
+        "https://www.hockeycanada.ca/en-ca/news/seven-coaching-principles-puck-control-2024-ncw"
+      ],
+      "alternative": "A player could also answer that nothing needs to change yet if neither D1 nor F2 has actually moved; that is a valid reflection answer too."
+    },
+    {
+      "scenarioId": "exp26-u11-008",
+      "questionId": "exp26-u11-008-q7",
+      "baseContentHash": "8e33c6ab8ad204924c9c198011e519b1c83f77d9747e10d4d5cd54754d47a732",
+      "verdict": "retain",
+      "reason": "Correct message reports the visible space and makes the next cue conditional on D1 closing the lane, rather than asserting certainty (\"the carry is certain to work\") or a rigid instruction (\"stay wide even if D1 arrives\"), both correctly excluded as false-certainty/rigid distractors.",
+      "checks": {
+        "roster": "pass",
+        "geometry": "pass",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "pass"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "YOU (h1) at (-7,-4) facing 0; F2 (h2) at (1,-6) facing pi; D1 (a1) at (-2,2) facing -2.8.",
+          "Puck owner is YOU; rendered carried-puck position is (-6,-3.3).",
+          "F2 x=1 > YOU x=-7 (navy attacks +x): F2 is ahead on the same (negative-y, wide) side; D1 y=2 is offset from that wide-side lane."
+        ],
+        "stated": [
+          "Briefing: YOU carry in the neutral area; D1 is offset toward the middle; F2 is farther up the same wide side; speed is not shown."
+        ],
+        "unproven": [
+          "Skating speed, acceleration and who reaches the wide lane first are not established by a static freeze (explicitly stated in limits)."
+        ]
+      },
+      "sourceUrls": [
+        "https://www.hockeycanada.ca/en-ca/news/seven-coaching-principles-puck-control-2024-ncw"
+      ],
+      "alternative": "A shorter call (\"room here, watch D1\") can work if F2 is already tracking the same picture; the fuller sentence is not mandatory phrasing."
+    },
+    {
+      "scenarioId": "exp26-u11-008",
+      "questionId": "exp26-u11-008-q8",
+      "baseContentHash": "672f5083f05d81af48104a63a2b2b452d5e22d8c77f3cb533581e044a2ae9f28",
+      "verdict": "retain",
+      "reason": "The lane ahead of YOU and F2’s current availability are the two facts that should be re-checked after D1 turns; clinging to \"the original open-space label\" is correctly excluded since the label is now stale.",
+      "checks": {
+        "roster": "pass",
+        "geometry": "pass",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "pass"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "YOU (h1) at (-7,-4) facing 0; F2 (h2) at (1,-6) facing pi; D1 (a1) at (-2,2) facing -2.8.",
+          "Puck owner is YOU; rendered carried-puck position is (-6,-3.3).",
+          "F2 x=1 > YOU x=-7 (navy attacks +x): F2 is ahead on the same (negative-y, wide) side; D1 y=2 is offset from that wide-side lane."
+        ],
+        "stated": [
+          "Briefing: YOU carry in the neutral area; D1 is offset toward the middle; F2 is farther up the same wide side; speed is not shown."
+        ],
+        "unproven": [
+          "Skating speed, acceleration and who reaches the wide lane first are not established by a static freeze (explicitly stated in limits)."
+        ]
+      },
+      "sourceUrls": [
+        "https://www.hockeycanada.ca/en-ca/news/seven-coaching-principles-puck-control-2024-ncw"
+      ],
+      "alternative": "Ice/traffic from other players could also matter in a fuller-ice drill, though this scene only shows these three skaters."
+    },
+    {
+      "scenarioId": "exp26-u11-008",
+      "questionId": "exp26-u11-008-q9",
+      "baseContentHash": "62854721864feec5b0eb943f93c5a0d2d7df87b704956064fe1e8de5f9cb2353",
+      "verdict": "retain",
+      "reason": "Reference (-3.8,-4.8) for h1 (YOU) is on ice, 3.30m from YOU’s actual (-7,-4), advances into the open lane ahead of D1 while leaving F2 (1,-6) on the outside, matching the prompt.",
+      "checks": {
+        "roster": "pass",
+        "geometry": "pass",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "pass"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "YOU (h1) at (-7,-4) facing 0; F2 (h2) at (1,-6) facing pi; D1 (a1) at (-2,2) facing -2.8.",
+          "Puck owner is YOU; rendered carried-puck position is (-6,-3.3).",
+          "F2 x=1 > YOU x=-7 (navy attacks +x): F2 is ahead on the same (negative-y, wide) side; D1 y=2 is offset from that wide-side lane."
+        ],
+        "stated": [
+          "Briefing: YOU carry in the neutral area; D1 is offset toward the middle; F2 is farther up the same wide side; speed is not shown."
+        ],
+        "unproven": [
+          "Skating speed, acceleration and who reaches the wide lane first are not established by a static freeze (explicitly stated in limits)."
+        ]
+      },
+      "sourceUrls": [
+        "https://www.hockeycanada.ca/en-ca/news/seven-coaching-principles-puck-control-2024-ncw"
+      ],
+      "alternative": "A slightly wider route could keep more separation from D1 at the cost of a longer path; the example favours directness."
+    },
+    {
+      "scenarioId": "exp26-u11-008",
+      "questionId": "exp26-u11-008-q10",
+      "baseContentHash": "da4a6fd880c6155d1ddebd51564bfa8d4e0e003bea8cb1dce5a08d9da5a76f4e",
+      "verdict": "retain",
+      "reason": "Explain question conditioned on \"D1 reaches the wide lane\"; the explanation asks the learner to re-check the forward lane and protect if needed, using F2 only if that route stays reachable, rather than asserting a guaranteed escape.",
+      "checks": {
+        "roster": "pass",
+        "geometry": "pass",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "pass"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "YOU (h1) at (-7,-4) facing 0; F2 (h2) at (1,-6) facing pi; D1 (a1) at (-2,2) facing -2.8.",
+          "Puck owner is YOU; rendered carried-puck position is (-6,-3.3).",
+          "F2 x=1 > YOU x=-7 (navy attacks +x): F2 is ahead on the same (negative-y, wide) side; D1 y=2 is offset from that wide-side lane."
+        ],
+        "stated": [
+          "Briefing: YOU carry in the neutral area; D1 is offset toward the middle; F2 is farther up the same wide side; speed is not shown."
+        ],
+        "unproven": [
+          "Skating speed, acceleration and who reaches the wide lane first are not established by a static freeze (explicitly stated in limits)."
+        ]
+      },
+      "sourceUrls": [
+        "https://www.hockeycanada.ca/en-ca/news/seven-coaching-principles-puck-control-2024-ncw"
+      ],
+      "alternative": "If D1 has fully sealed the wide lane, protecting and resetting toward support behind YOU is also defensible instead of forcing the forward lane."
+    }
+  ],
+  "repairs": [
+    {
+      "scenarioId": "exp26-u11-006",
+      "baseVersion": 1,
+      "baseScenarioHash": "0931a3e5b2dd5dc4425d084116985dbd558a6611adc48625778de09e07624c11",
+      "replacement": {
+        "id": "exp26-u11-006",
+        "version": 2,
+        "ageBand": "U11",
+        "title": "Find the loose rebound first",
+        "family": "rebound-awareness",
+        "topic": "Shooting",
+        "objective": "Separate a loose puck from a promised rebound goal.",
+        "briefing": "Navy attacks the right net (+x); gold attacks the left net. The coach states that F1’s previous shot came loose to the goalie’s side. YOU are arriving away from the puck. No goal or next touch is assumed.",
+        "setup": {
+          "actors": [
+            {
+              "id": "h1",
+              "label": "F1",
+              "team": "home",
+              "role": "skater",
+              "x": 20,
+              "y": 2,
+              "facing": 0
+            },
+            {
+              "id": "h2",
+              "label": "YOU",
+              "team": "home",
+              "role": "skater",
+              "x": 19,
+              "y": -2,
+              "facing": 0
+            },
+            {
+              "id": "a1",
+              "label": "D1",
+              "team": "away",
+              "role": "skater",
+              "x": 22,
+              "y": 1,
+              "facing": 2.8
+            },
+            {
+              "id": "g1",
+              "label": "G",
+              "team": "away",
+              "role": "goalie",
+              "x": 26,
+              "y": 0,
+              "facing": 3.14
+            }
+          ],
+          "puck": {
+            "owner": null,
+            "x": 23,
+            "y": 5
+          }
+        },
+        "focusActorId": "h2",
+        "cues": [
+          "The loose puck is on the positive-y side of the goal area.",
+          "D1 stands closer to the middle.",
+          "YOU must locate the puck before planning a second action."
+        ],
+        "tags": [
+          "rebound-awareness",
+          "shooting",
+          "experimental"
+        ],
+        "sources": [
+          {
+            "id": "usah-skill-progressions-2018",
+            "title": "USA Hockey: Skill Progressions for Youth Hockey",
+            "url": "https://cdn1.sportngin.com/attachments/document/0066/4690/Skill_Progression_Manual_19_FINAL.pdf",
+            "section": "10-and-Under, printed pages 17–19 (PDF pages 23–25)",
+            "use": "Lists skill/team topics; Canadian adaptation and answers remain experimental."
+          }
+        ],
+        "limits": "Static original practice illustration; movement and outcomes are not simulated. Rebound shooting is a topic connection; neither save physics nor arrival order is simulated. No net-front contact is instructed. Position references are examples, not graded target zones.",
+        "questions": [
+          {
+            "id": "exp26-u11-006-q1",
+            "type": "choice",
+            "prompt": "Where is the puck relative to the goalie at this freeze?",
+            "options": [
+              {
+                "id": "a",
+                "text": "At centre ice"
+              },
+              {
+                "id": "b",
+                "text": "Off to one side of the goalie, still loose"
+              },
+              {
+                "id": "c",
+                "text": "Already in the goalie’s glove"
+              }
+            ],
+            "answer": [
+              "b"
+            ],
+            "basis": "scene",
+            "explanation": "The puck is beside the goalie’s current area and has no owner. It is neither at centre ice nor held by the goalie."
+          },
+          {
+            "id": "exp26-u11-006-q2",
+            "type": "multi",
+            "prompt": "Which cues matter for your next approach?",
+            "options": [
+              {
+                "id": "a",
+                "text": "Where the loose puck actually is"
+              },
+              {
+                "id": "b",
+                "text": "Where D1 is relative to the approach"
+              },
+              {
+                "id": "c",
+                "text": "The assumption that the next touch must be a shot"
+              }
+            ],
+            "answer": [
+              "a",
+              "b"
+            ],
+            "basis": "coaching",
+            "explanation": "Locate both puck and obstruction. A second chance still needs a real recovery and shooting opportunity."
+          },
+          {
+            "id": "exp26-u11-006-q3",
+            "type": "sequence",
+            "prompt": "Arrange this suggested rebound-read routine.",
+            "options": [
+              {
+                "id": "a",
+                "text": "Locate the loose puck"
+              },
+              {
+                "id": "b",
+                "text": "Check the approach and establish control if possible"
+              },
+              {
+                "id": "c",
+                "text": "Reassess a shot or pass"
+              }
+            ],
+            "answer": [
+              "a",
+              "b",
+              "c"
+            ],
+            "basis": "coaching",
+            "explanation": "This example emphasizes control and a new read. An immediate touch could be appropriate if the actual arrival supports it."
+          },
+          {
+            "id": "exp26-u11-006-q4",
+            "type": "position",
+            "prompt": "Move YOU to show an approach toward the loose-puck side.",
+            "actorId": "h2",
+            "reference": {
+              "x": 21,
+              "y": 6
+            },
+            "basis": "coaching",
+            "explanation": "The example approaches from outside D1’s current middle position. It is not proof that YOU arrive first."
+          },
+          {
+            "id": "exp26-u11-006-q5",
+            "type": "choice",
+            "prompt": "If the goalie covers the puck before YOU arrive, what changes?",
+            "options": [
+              {
+                "id": "a",
+                "text": "The puck is still available for a rebound shot"
+              },
+              {
+                "id": "b",
+                "text": "YOU can assume a goal"
+              },
+              {
+                "id": "c",
+                "text": "The previous loose-puck plan no longer applies"
+              }
+            ],
+            "answer": [
+              "c"
+            ],
+            "basis": "coaching",
+            "explanation": "A covered puck is a different state. Do not continue acting on the earlier loose-puck assumption."
+          },
+          {
+            "id": "exp26-u11-006-q6",
+            "type": "explain",
+            "prompt": "What extra information would you need before predicting a second shot?",
+            "basis": "coaching",
+            "explanation": "You might need puck movement, defender speed, control and whether play is still active. A static loose puck does not establish them."
+          },
+          {
+            "id": "exp26-u11-006-q7",
+            "type": "choice",
+            "prompt": "What should YOU call while approaching the rebound?",
+            "options": [
+              {
+                "id": "a",
+                "text": "Puck inside the circle; D1 is positioned closer to centre ice than the puck"
+              },
+              {
+                "id": "b",
+                "text": "The second shot is ours"
+              },
+              {
+                "id": "c",
+                "text": "F1 must shoot next"
+              }
+            ],
+            "answer": [
+              "a"
+            ],
+            "basis": "coaching",
+            "explanation": "The call correctly places the puck inside the circle and notes that D1 sits closer to centre ice than the puck, which helps F1 read the recovery lane."
+          },
+          {
+            "id": "exp26-u11-006-q8",
+            "type": "multi",
+            "prompt": "Which two changes would alter the rebound plan?",
+            "options": [
+              {
+                "id": "a",
+                "text": "D1 controls the puck"
+              },
+              {
+                "id": "b",
+                "text": "F1 becomes a reachable support option"
+              },
+              {
+                "id": "c",
+                "text": "The net stays at the same end"
+              }
+            ],
+            "answer": [
+              "a",
+              "b"
+            ],
+            "basis": "coaching",
+            "explanation": "Possession and support change the next job; the net location alone does not decide the play."
+          },
+          {
+            "id": "exp26-u11-006-q9",
+            "type": "position",
+            "prompt": "Move YOU toward the loose puck from the opposite-side boards while keeping D1 and Gold's net in view.",
+            "actorId": "h2",
+            "reference": {
+              "x": 22.2,
+              "y": -4.2
+            },
+            "basis": "coaching",
+            "explanation": "This point gives YOU a different side-board approach to the loose puck while preserving D1 and Gold's net in view; it does not prove arrival order or control."
+          },
+          {
+            "id": "exp26-u11-006-q10",
+            "type": "explain",
+            "prompt": "The goalie covers before you arrive. What do you re-read?",
+            "basis": "coaching",
+            "explanation": "The loose-puck option is gone, so identify who has the puck and where F1 can support before choosing the next pressure or reset."
+          }
+        ]
+      },
+      "affectedQuestionIds": [
+        "exp26-u11-006-q7"
+      ],
+      "reasons": [
+        {
+          "questionIds": [
+            "exp26-u11-006-q7"
+          ],
+          "issue": "The scored \"correct\" option for a coaching-basis choice question misdescribed the actual scene: it claimed the puck was \"below the circle\" when the puck (23,5) is actually 2.86m from the nearest faceoff-circle centre (20.7,6.7) — inside the 4.572m-radius circle, not below/outside it — and it claimed \"D1 is between it and the net\" when, ordered along x, D1 (22) sits on the centre-ice side of the puck (23), i.e. between centre ice and the puck, not between the puck and the net (~26).",
+          "change": "Replaced the option text with \"Puck inside the circle; D1 is positioned closer to centre ice than the puck\" and updated the explanation to match; no other field, actor, or coordinate in the scenario changed.",
+          "evidence": "Computed via Node against the real render source (docs/factory/claude-project/validation/src/one-on-one/experimentalPractice board geometry: faceoff circles at (±20.7,±6.7) r=4.572) and the scenario’s own setup coordinates; distance(puck,(20.7,6.7))=2.86 <4.572; x-order D1(22)<puck(23)<goalie(26)."
+        }
+      ],
+      "replacementReview": {
+        "status": "self-checked",
+        "coverage": [
+          {
+            "questionId": "exp26-u11-006-q1",
+            "contentHash": "ed696b3a4366b40311980fd2804ad18babf7cbb6374e356e5ea73dbac13070ff",
+            "checks": {
+              "roster": "pass",
+              "geometry": "pass",
+              "answer": "pass",
+              "feedback": "pass",
+              "age": "pass",
+              "sources": "pass",
+              "grammar": "pass"
+            },
+            "reason": "Scene fact: puck is loose (owner null) at (23,5), 2.86m from the goalie (26,0) — clearly off to a side and not centre ice (0,0) nor in the goalie’s possession, matching option b. (Unchanged by the repair; rechecked against the replacement scenario’s identical setup.)"
+          },
+          {
+            "questionId": "exp26-u11-006-q2",
+            "contentHash": "ffb2eab8c78eda1585ed309c4dfd7f11756abe08057f871878138dd96c115ade",
+            "checks": {
+              "roster": "pass",
+              "geometry": "pass",
+              "answer": "pass",
+              "feedback": "pass",
+              "age": "pass",
+              "sources": "pass",
+              "grammar": "pass"
+            },
+            "reason": "Locating the puck and D1 are the two real cues; \"the assumption that the next touch must be a shot\" is correctly excluded as an unsupported assumption from a still frame. (Unchanged by the repair; rechecked against the replacement scenario’s identical setup.)"
+          },
+          {
+            "questionId": "exp26-u11-006-q3",
+            "contentHash": "dba55a15cee971d21828e06f592cb436fc723b71d4e9e2a36ff3f4b3a35d4151",
+            "checks": {
+              "roster": "pass",
+              "geometry": "pass",
+              "answer": "pass",
+              "feedback": "pass",
+              "age": "pass",
+              "sources": "pass",
+              "grammar": "pass"
+            },
+            "reason": "The sequence (locate puck, approach/establish control if possible, reassess shot or pass) is explicitly hedged in its own explanation (\"An immediate touch could be appropriate if the actual arrival supports it\"); this exact question was flagged historically as a P3 teaching note but the later mixed-proposals.json independent pass kept it because q5/q6 already test the covered-puck branch and the missing-evidence question, so the sequence does not force an artificial stop-look-execute order in practice. (Unchanged by the repair; rechecked against the replacement scenario’s identical setup.)"
+          },
+          {
+            "questionId": "exp26-u11-006-q4",
+            "contentHash": "ab53a3197116ad8a32e1cfb2f34c690edf81b9f89a2746216cf91e5849029c8a",
+            "checks": {
+              "roster": "pass",
+              "geometry": "pass",
+              "answer": "pass",
+              "feedback": "pass",
+              "age": "pass",
+              "sources": "pass",
+              "grammar": "pass"
+            },
+            "reason": "Reference (21,6) for h2 (YOU) is on ice, 8.25m from YOU’s actual (19,-2), and approaches from a different side than D1 (22,1), matching \"outside D1’s current middle position.\" (Unchanged by the repair; rechecked against the replacement scenario’s identical setup.)"
+          },
+          {
+            "questionId": "exp26-u11-006-q5",
+            "contentHash": "c9401c90cde31f3edb18ecf2cda10c03e575a9f6b36b4e9fd8bd0d341a28f1e3",
+            "checks": {
+              "roster": "pass",
+              "geometry": "pass",
+              "answer": "pass",
+              "feedback": "pass",
+              "age": "pass",
+              "sources": "pass",
+              "grammar": "pass"
+            },
+            "reason": "Correctly treats a goalie covering the puck as ending the earlier loose-puck plan rather than letting the learner assume continued availability or a goal; matches the historical high-risk flag noting a static frame cannot certify the outcome, which this question does not attempt to do. (Unchanged by the repair; rechecked against the replacement scenario’s identical setup.)"
+          },
+          {
+            "questionId": "exp26-u11-006-q6",
+            "contentHash": "eec7e02caba38c6d422a91c00b4a3cfa0bfd2bde29af6ec9055b73173101575d",
+            "checks": {
+              "roster": "pass",
+              "geometry": "pass",
+              "answer": "pass",
+              "feedback": "pass",
+              "age": "pass",
+              "sources": "pass",
+              "grammar": "pass"
+            },
+            "reason": "Open reflection about what additional information (movement, speed, control, live play) would be needed before predicting a second shot; no answer key, consistent with the reflection contract. (Unchanged by the repair; rechecked against the replacement scenario’s identical setup.)"
+          },
+          {
+            "questionId": "exp26-u11-006-q7",
+            "contentHash": "6251f3655f3364ca2fd09ef8c32b55c3e3de06c7de9384f585ba031fcea8b1b7",
+            "checks": {
+              "roster": "pass",
+              "geometry": "pass",
+              "answer": "pass",
+              "feedback": "pass",
+              "age": "pass",
+              "sources": "pass",
+              "grammar": "pass"
+            },
+            "reason": "Final self-check of the repaired option: puck (23,5) is 2.86m from the nearest faceoff-circle centre (20.7,6.7), inside its 4.572m radius, matching \"inside the circle\"; D1 (22) sits between centre ice (0) and the puck (23) on the x-axis, matching \"closer to centre ice than the puck.\" Both clauses now match the actual coordinates."
+          },
+          {
+            "questionId": "exp26-u11-006-q8",
+            "contentHash": "6b27b5e8dac0f63313500c18bff7a2d45144516d62df7f9337eccbc5bf44acfa",
+            "checks": {
+              "roster": "pass",
+              "geometry": "pass",
+              "answer": "pass",
+              "feedback": "pass",
+              "age": "pass",
+              "sources": "pass",
+              "grammar": "pass"
+            },
+            "reason": "D1 controlling the puck and F2 becoming reachable support both genuinely change the next job; the net staying at the same end is correctly excluded as a non-change (nets do not move mid-play). (Unchanged by the repair; rechecked against the replacement scenario’s identical setup.)"
+          },
+          {
+            "questionId": "exp26-u11-006-q9",
+            "contentHash": "8ad5841d2624dc4f9a2e36d1bf56af2418230aa0b3f04f54b5aa9e2390d6d8d8",
+            "checks": {
+              "roster": "pass",
+              "geometry": "pass",
+              "answer": "pass",
+              "feedback": "pass",
+              "age": "pass",
+              "sources": "pass",
+              "grammar": "pass"
+            },
+            "reason": "Reference (22.2,-4.2) for actor h2 (YOU) is on ice, 3.88m from YOU’s actual (19,-2), approaches the loose puck (23,5) from the opposite (negative-y) side of the ice from the puck, and keeps D1 (22,1) and the goalie/net (26,0) at a real, visible distance; this exact question already went through two repair rounds (actorId + wording) and multiple independent rechecks that returned \"pass.\" (Unchanged by the repair; rechecked against the replacement scenario’s identical setup.)"
+          },
+          {
+            "questionId": "exp26-u11-006-q10",
+            "contentHash": "eafdc89b71040d0051c4428bd9793656c18ab413de1713e85a6318fb2a327be2",
+            "checks": {
+              "roster": "pass",
+              "geometry": "pass",
+              "answer": "pass",
+              "feedback": "pass",
+              "age": "pass",
+              "sources": "pass",
+              "grammar": "pass"
+            },
+            "reason": "Explain question conditioned on the goalie covering before arrival; the explanation asks the learner to identify the new possession state and F1’s support rather than assume a specific next action, consistent with the no-guaranteed-outcome rule. (Unchanged by the repair; rechecked against the replacement scenario’s identical setup.)"
+          }
+        ]
+      }
+    }
+  ],
+  "sourceChecks": [
+    {
+      "url": "https://cdn.hockeycanada.ca/hockey-canada/Hockey-Programs/Coaching/u11-program/downloads/2022/u11-player-pathway-e.pdf",
+      "checkedAt": "2026-09-05T00:00:00Z",
+      "access": "read",
+      "scope": "Hockey Canada Canadian Player Pathway, U11 Hockey section. Confirmed the cited \"U11 Skills Matrix\" appears on the document’s own printed/PDF page 22, listing Moving Puck Control, Moving Passing & Receiving, and Team Play (incl. \"Basic breakouts\") for the U11/Learn-to-Play stage. Supports the age-topic connection for off-puck support/passing at U11; does not approve these specific coordinates, answers, or outcomes.",
+      "jurisdiction": "Canada (Hockey Canada)",
+      "ageFormat": "U11",
+      "claim": "Age-topic support for pass-and-support teaching content in exp26-u11-004."
+    },
+    {
+      "url": "https://cdn1.sportngin.com/attachments/document/0066/4690/Skill_Progression_Manual_19_FINAL.pdf",
+      "checkedAt": "2026-09-05T00:00:00Z",
+      "access": "read",
+      "scope": "USA Hockey Skill Progressions for Youth Hockey. Confirmed the \"10-and-Under\" section on printed pages 17-19 (PDF pages 23-25) lists \"puck protection\" and \"change of pace\" under Puck Control, and \"off rebound\" under Shooting — directly matching the topics of exp26-u11-005/006/007/008. This is a USA Hockey 10-and-Under (not Hockey Canada U11) resource; the scenario’s own \"use\" field already discloses this as a Canadian adaptation, so no undisclosed age/jurisdiction mismatch. Supports topic relevance only, not these exact answers.",
+      "jurisdiction": "USA (USA Hockey), adapted for Canadian U11 use per scenario disclosure",
+      "ageFormat": "10-and-Under (adapted to U11)",
+      "claim": "Age-topic support for reset-support (exp26-u11-005) and rebound-awareness (exp26-u11-006) content."
+    },
+    {
+      "url": "https://www.hockeycanada.ca/en-ca/news/seven-coaching-principles-puck-control-2024-ncw",
+      "checkedAt": "2026-09-05T00:00:00Z",
+      "access": "read",
+      "scope": "Hockey Canada news article, \"7 Principles for Coaches: Puck Control\" (Sept 17, 2024). Fetched via a browser-style User-Agent after an initial 403 to a plain fetch. Confirmed the cited \"Building Skills Through Progression\" and \"Incorporating Vision & Scanning\" section headers exist verbatim and discuss stationary-to-moving progression and scanning while handling the puck. The article is framed for \"all age levels\" generically, with no U11-specific claim; the scenario’s \"use\" field correctly scopes it to \"supports progressive handling with awareness,\" not a specific rule or age binding.",
+      "jurisdiction": "Canada (Hockey Canada)",
+      "ageFormat": "All ages (no specific band stated)",
+      "claim": "General coaching-principle support for puck-protection/change-of-pace content in exp26-u11-007/008."
+    }
+  ],
+  "remainingQuestionIds": []
+}

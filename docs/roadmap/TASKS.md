@@ -1,6 +1,6 @@
 # RinkReads — Task List
 
-**Last updated:** 2026-09-05 · Packets10–11 repaired locally: 9 scenarios /45 question versions, independently rechecked. Preparing packet and migration-independent player release. Coach/training migration remains unverified remotely.
+**Last updated:** 2026-09-05 · Production 23ece84 includes packets 01–11 and the migration-independent player release. Packet 12: 50 questions reviewed, three repairs applied and independently rechecked; release verification in progress. Coach/goals/training remains held for Supabase sign-in and migration 0024.
 
 **Scope:** RinkReads **app build + content factory**. Launch/distribution (sending the beta, marketing) and the separate BlueChip business are **out of scope** — parked at the bottom. Priority = position in this list. A new idea that isn't here goes to the **Parking Lot** first, then gets promoted on purpose — that's the scope-creep guard.
 
@@ -56,6 +56,10 @@
 - *(New ideas land here first, then get promoted into NEXT/LATER on purpose.)*
 
 ## Changelog
+
+- **2026-09-05** — Adjudicated all 50 packet-12 questions and repaired three rebound questions, including two retained defects missed by earlier reviews. Original return preserved, three exact hashes independently rechecked; source partitions and generated review catalog refreshed. [Evidence](../factory/research/question-review/packet-12/root-content-adjudication.md).
+
+- **2026-09-05** — Published migration-independent player+packet release23ece84; Vercel success and live Home/repairedquestion verified. Supabase auth check confirms missingtoken. Packet12 received afterpublication and begins separate review. [Evidence](../one-on-one/2026-09-05-player-packet-production.md).
 
 - **2026-09-05** — Repaired packets10–11 including false nearest-player geometry, repeated board claims and camera-relative retained text. All45 changed hashes independently rechecked, 35 tests passed. Preparing migration-independent player-home/age/3D release; hold coach/training until remote database verification.
 

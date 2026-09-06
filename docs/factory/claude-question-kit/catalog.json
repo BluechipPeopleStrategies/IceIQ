@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "status": "experimental-not-approved",
-  "generatedAt": "2026-09-06T03:31:08.754Z",
+  "generatedAt": "2026-09-06T03:47:52.877Z",
   "counts": {
     "scenarios": 200,
     "questions": 1600
@@ -12961,7 +12961,7 @@
     },
     {
       "id": "exp26-u11-006",
-      "version": 1,
+      "version": 2,
       "ageBand": "U11",
       "title": "Find the loose rebound first",
       "family": "rebound-awareness",
@@ -13160,7 +13160,7 @@
           "options": [
             {
               "id": "a",
-              "text": "Puck below the circle; D1 is between it and the net"
+              "text": "Puck inside the circle; D1 is positioned closer to centre ice than the puck"
             },
             {
               "id": "b",
@@ -13175,7 +13175,7 @@
             "a"
           ],
           "basis": "coaching",
-          "explanation": "The call names the actual puck and defender, which helps F1 understand the recovery read."
+          "explanation": "The call correctly places the puck inside the circle and notes that D1 sits closer to centre ice than the puck, which helps F1 read the recovery lane."
         },
         {
           "id": "exp26-u11-006-q8",
@@ -13205,21 +13205,21 @@
         {
           "id": "exp26-u11-006-q9",
           "type": "position",
-          "prompt": "Move YOU toward the loose puck from the opposite-side boards while keeping D1 and Gold's net in view.",
+          "prompt": "Move YOU toward the loose puck with a different approach from F1.",
           "actorId": "h2",
           "reference": {
-            "x": 22.2,
-            "y": -4.2
+            "x": 21,
+            "y": 3.5
           },
           "basis": "coaching",
-          "explanation": "This point gives YOU a different side-board approach to the loose puck while preserving D1 and Gold's net in view; it does not prove arrival order or control."
+          "explanation": "This example moves YOU closer to the loose puck from a different angle than F1. Check D1’s movement before continuing; it does not establish who arrives first."
         },
         {
           "id": "exp26-u11-006-q10",
           "type": "explain",
-          "prompt": "The goalie covers before you arrive. What do you re-read?",
+          "prompt": "The goalie covers the puck and the whistle stops play. What changes?",
           "basis": "coaching",
-          "explanation": "The loose-puck option is gone, so identify who has the puck and where F1 can support before choosing the next pressure or reset."
+          "explanation": "Stop playing the puck. The rebound chance is over; prepare for the restart and your next assignment."
         }
       ]
     },
@@ -53536,8 +53536,8 @@
       "family": "rebound-awareness",
       "type": "choice",
       "prompt": "What should YOU call while approaching the rebound?",
-      "explanation": "The call names the actual puck and defender, which helps F1 understand the recovery read.",
-      "hash": "cd5f60ae441e7c14c538c487cdc004592c021aee2344a94effa9e1656f239003",
+      "explanation": "The call correctly places the puck inside the circle and notes that D1 sits closer to centre ice than the puck, which helps F1 read the recovery lane.",
+      "hash": "6251f3655f3364ca2fd09ef8c32b55c3e3de06c7de9384f585ba031fcea8b1b7",
       "review": "no-open-ai-finding"
     },
     {
@@ -53561,9 +53561,9 @@
       "topic": "Shooting",
       "family": "rebound-awareness",
       "type": "position",
-      "prompt": "Move YOU toward the loose puck from the opposite-side boards while keeping D1 and Gold's net in view.",
-      "explanation": "This point gives YOU a different side-board approach to the loose puck while preserving D1 and Gold's net in view; it does not prove arrival order or control.",
-      "hash": "8ad5841d2624dc4f9a2e36d1bf56af2418230aa0b3f04f54b5aa9e2390d6d8d8",
+      "prompt": "Move YOU toward the loose puck with a different approach from F1.",
+      "explanation": "This example moves YOU closer to the loose puck from a different angle than F1. Check D1’s movement before continuing; it does not establish who arrives first.",
+      "hash": "82d0ea153a377144ab7642a3ada2e9f0e19ccdb218c4a723252baefa969ad08e",
       "review": "no-open-ai-finding"
     },
     {
@@ -53574,9 +53574,9 @@
       "topic": "Shooting",
       "family": "rebound-awareness",
       "type": "explain",
-      "prompt": "The goalie covers before you arrive. What do you re-read?",
-      "explanation": "The loose-puck option is gone, so identify who has the puck and where F1 can support before choosing the next pressure or reset.",
-      "hash": "eafdc89b71040d0051c4428bd9793656c18ab413de1713e85a6318fb2a327be2",
+      "prompt": "The goalie covers the puck and the whistle stops play. What changes?",
+      "explanation": "Stop playing the puck. The rebound chance is over; prepare for the restart and your next assignment.",
+      "hash": "528a198461211a256d708ecad769f5d52d86437c94f54ea57682161161d0d12a",
       "review": "no-open-ai-finding"
     },
     {
