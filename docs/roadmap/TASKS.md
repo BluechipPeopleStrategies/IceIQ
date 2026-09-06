@@ -1,6 +1,6 @@
 # RinkReads — Task List
 
-**Last updated:** 2026-09-06 · All40 Claude returns are present and adjudicated. Packets37–40 add113 repaired question versions across20 U18 scenes after exact independent review; final isolated release verification underway. Supabase remains deferred.
+**Last updated:** 2026-09-06 · Nine net-overlap scenes repaired in isolated release candidate codex/net-overlap-repairs: six goalies, three skaters, 58 affected question hashes. 28 tests and build passed; 18 opening captures inspected and 10 placement/reload flows verified. No repair push/deployment performed. Supabase remains deferred.
 
 **Scope:** RinkReads **app build + content factory**. Launch/distribution (sending the beta, marketing) and the separate BlueChip business are **out of scope** — parked at the bottom. Priority = position in this list. A new idea that isn't here goes to the **Parking Lot** first, then gets promoted on purpose — that's the scope-creep guard.
 
@@ -56,6 +56,8 @@
 - *(New ideas land here first, then get promoted into NEXT/LATER on purpose.)*
 
 ## Changelog
+
+- **2026-09-06** · Repaired the nine net-overlap findings from the 200-scene audit. Preserved 191 unrelated scenes, bumped affected versions, refreshed 58 hashes and saved independent review plus desktop/phone/placement evidence. [Repair receipt and release notes](../factory/research/question-review/net-overlap-repairs/README.md). Next: admit and release the verified repair payload, then bind stable curriculum concepts and investigate thin coverage. Historical audit and packet reviews remain unchanged.
 
 - 2026-09-06 · All40 Claude returns are present and adjudicated. Packets37–40 add113 repaired question versions across20 U18 scenes after exact independent review; final isolated release verification underway. Supabase remains deferred.
 

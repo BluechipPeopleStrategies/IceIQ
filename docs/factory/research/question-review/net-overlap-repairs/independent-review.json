@@ -1,0 +1,468 @@
+{
+  "schemaVersion": 1,
+  "kind": "independent-net-overlap-repair-review",
+  "date": "2026-09-06",
+  "scope": {
+    "receiptStatus": "repaired-awaiting-render-verification",
+    "sceneCount": 9,
+    "affectedQuestionVersions": 58,
+    "review": "Read-only comparison of receipt before/after actors, full affected questions, rendered puck outputs, goal-line/net-depth and ownership context.",
+    "geometry": {
+      "goalLineRightM": 26.91384,
+      "goalLineLeftM": -26.91384,
+      "practiceSceneGoalMeshDepthM": 1.1
+    },
+    "limits": [
+      "This review does not certify source citations, coaching correctness, animation timing, collision physics, or browser rendering.",
+      "Coordinates are rink-plane x/y; puck y is rink transverse position, not elevation.",
+      "Verdict clear-in-this-pass means no question-specific inconsistency found in this bounded review; it is not approval for release."
+    ]
+  },
+  "rows": [
+    {
+      "sceneId": "exp26b-u13-006",
+      "sceneHash": "8b96203568dc598153caa227bc0aa342835ca85b0de084bca8add2b420d6f12a",
+      "affectedQuestionIds": [
+        "exp26b-u13-006-q1",
+        "exp26b-u13-006-q2",
+        "exp26b-u13-006-q3",
+        "exp26b-u13-006-q4",
+        "exp26b-u13-006-q5",
+        "exp26b-u13-006-q6"
+      ],
+      "actorChange": {
+        "actorId": "ga",
+        "before": {
+          "id": "ga",
+          "label": "Gold goalie",
+          "team": "away",
+          "role": "goalie",
+          "x": 27,
+          "y": 0,
+          "facing": 3.14
+        },
+        "after": {
+          "id": "ga",
+          "label": "Gold goalie",
+          "team": "away",
+          "role": "goalie",
+          "x": 26,
+          "y": 0,
+          "facing": 3.141592653589793
+        }
+      },
+      "renderedPuckBefore": {
+        "owner": "n2",
+        "x": 13.823285954222207,
+        "y": -8.324567488312155
+      },
+      "renderedPuckAfter": {
+        "owner": "n2",
+        "x": 13.823285954222207,
+        "y": -8.324567488312155
+      },
+      "verdict": "clear-in-this-pass",
+      "concreteChecks": [
+        "After goalie ga is (26,0), 0.91384 m in front of right goal line 26.91384; rendered puck remains D2-owned at (13.8232859542,-8.3245674883).",
+        "q1-q6 references remain consistent with Gold 1 screening the D2-to-net line; q4 target (26,-1) stays on the ice and outside the goal volume."
+      ],
+      "findings": []
+    },
+    {
+      "sceneId": "exp26b-u13-007",
+      "sceneHash": "979d4591a040117f85714d6daad7db8f53d087e18c0c772f4fa512ab78c7601d",
+      "affectedQuestionIds": [
+        "exp26b-u13-007-q1",
+        "exp26b-u13-007-q2",
+        "exp26b-u13-007-q3",
+        "exp26b-u13-007-q4",
+        "exp26b-u13-007-q5",
+        "exp26b-u13-007-q6"
+      ],
+      "actorChange": {
+        "actorId": "ga",
+        "before": {
+          "id": "ga",
+          "label": "Gold goalie",
+          "team": "away",
+          "role": "goalie",
+          "x": 27,
+          "y": 0,
+          "facing": 3.14
+        },
+        "after": {
+          "id": "ga",
+          "label": "Gold goalie",
+          "team": "away",
+          "role": "goalie",
+          "x": 26,
+          "y": 0,
+          "facing": 3.141592653589793
+        }
+      },
+      "renderedPuckBefore": {
+        "owner": "n2",
+        "x": 13.823285954222207,
+        "y": 7.675432511687844
+      },
+      "renderedPuckAfter": {
+        "owner": "n2",
+        "x": 13.823285954222207,
+        "y": 7.675432511687844
+      },
+      "verdict": "clear-in-this-pass",
+      "concreteChecks": [
+        "After goalie ga is (26,0), 0.91384 m in front of right goal line; rendered puck remains D2-owned at (13.8232859542,7.6754325117).",
+        "q1 text now asks for the nearest Gold skater, while q2-q6 retain conditional lane language; q4 target (23,-2) does not depend on goalie being behind the line."
+      ],
+      "findings": []
+    },
+    {
+      "sceneId": "exp26b-u13-014",
+      "sceneHash": "4465d6e525912eacc7803acc6255e98744320bb287b15a2c6ed8454020a07f8f",
+      "affectedQuestionIds": [
+        "exp26b-u13-014-q1",
+        "exp26b-u13-014-q2",
+        "exp26b-u13-014-q3",
+        "exp26b-u13-014-q4",
+        "exp26b-u13-014-q5",
+        "exp26b-u13-014-q6"
+      ],
+      "actorChange": {
+        "actorId": "nga",
+        "before": {
+          "id": "nga",
+          "label": "Navy goalie",
+          "team": "home",
+          "role": "goalie",
+          "x": -27,
+          "y": 0,
+          "facing": 0
+        },
+        "after": {
+          "id": "nga",
+          "label": "Navy goalie",
+          "team": "home",
+          "role": "goalie",
+          "x": -26,
+          "y": 0,
+          "facing": 0
+        }
+      },
+      "renderedPuckBefore": {
+        "owner": null,
+        "x": -26,
+        "y": 0.6
+      },
+      "renderedPuckAfter": {
+        "owner": null,
+        "x": -26,
+        "y": 0.6
+      },
+      "verdict": "clear-in-this-pass",
+      "concreteChecks": [
+        "After goalie nga is (-26,0), 0.91384 m in front of left goal line -26.91384; loose rendered puck is (-26,0.6).",
+        "At the freeze D1 (-26,-1) is 1.6 m from puck and goalie is 0.6 m away; q1 correctly says D1 is closest shown skater while goalie is closer overall, without assigning control."
+      ],
+      "findings": []
+    },
+    {
+      "sceneId": "exp26b-u13-019",
+      "sceneHash": "9ab99c3fbfabf93b62a9c813527132eb9d9b1d0573f5fd380d2752e08f8677ac",
+      "affectedQuestionIds": [
+        "exp26b-u13-019-q1",
+        "exp26b-u13-019-q2",
+        "exp26b-u13-019-q3",
+        "exp26b-u13-019-q4",
+        "exp26b-u13-019-q5",
+        "exp26b-u13-019-q6"
+      ],
+      "actorChange": {
+        "actorId": "ng",
+        "before": {
+          "id": "ng",
+          "label": "Navy goalie",
+          "team": "home",
+          "role": "goalie",
+          "x": -27,
+          "y": 0,
+          "facing": 0
+        },
+        "after": {
+          "id": "ng",
+          "label": "Navy goalie",
+          "team": "home",
+          "role": "goalie",
+          "x": -28.8,
+          "y": -2,
+          "facing": -1.0603080048781208
+        }
+      },
+      "renderedPuckBefore": {
+        "owner": "n2",
+        "x": -25.1590019537153,
+        "y": -6.11528406471607
+      },
+      "renderedPuckAfter": {
+        "owner": "n2",
+        "x": -25.1590019537153,
+        "y": -6.11528406471607
+      },
+      "verdict": "clear-in-this-pass",
+      "concreteChecks": [
+        "After goalie ng is (-28.8,-2), outside the 1.1 m left-net mesh on the outlet side; rendered puck remains D1-owned at (-25.1590019537,-6.1152840647).",
+        "q1-q6 consistently describe the goalie release as prior context and D1 as current owner; q4 target (-20,4) is unchanged and its feedback keeps pass usability conditional."
+      ],
+      "findings": []
+    },
+    {
+      "sceneId": "exp26b-u15-008",
+      "sceneHash": "3b6cca38b8e2cf03c4a13aebbfdfee0a278a1db5d4c5efb53214b65d1e53a504",
+      "affectedQuestionIds": [
+        "exp26b-u15-008-q1",
+        "exp26b-u15-008-q2",
+        "exp26b-u15-008-q3",
+        "exp26b-u15-008-q4",
+        "exp26b-u15-008-q5",
+        "exp26b-u15-008-q6"
+      ],
+      "actorChange": {
+        "actorId": "a1",
+        "before": {
+          "id": "a1",
+          "label": "A1",
+          "team": "away",
+          "role": "skater",
+          "x": -28,
+          "y": 0,
+          "facing": 2.4
+        },
+        "after": {
+          "id": "a1",
+          "label": "A1",
+          "team": "away",
+          "role": "skater",
+          "x": -29,
+          "y": 0,
+          "facing": 1.5707963267948966
+        }
+      },
+      "renderedPuckBefore": {
+        "owner": "a1",
+        "x": -29.210217941927052,
+        "y": 0.15928757967227913
+      },
+      "renderedPuckAfter": {
+        "owner": "a1",
+        "x": -29.7,
+        "y": 1
+      },
+      "verdict": "clear-in-this-pass",
+      "concreteChecks": [
+        "After carrier A1 is (-29,0), beyond left goal line by 2.08616 m; rendered puck is explicitly attached to A1 at (-29.7,1), an ice-plane coordinate with no invented height.",
+        "All six affected questions retain A1 possession and behind-net retrieval context; q4 target (-24,2) remains a separate comparison point, with no claim that the target is automatically open."
+      ],
+      "findings": []
+    },
+    {
+      "sceneId": "exp26b-u15-011",
+      "sceneHash": "76c62b390404b5672def3799f750140c12b0b5751ec385a05458e5a00d19d921",
+      "affectedQuestionIds": [
+        "exp26b-u15-011-q1",
+        "exp26b-u15-011-q2",
+        "exp26b-u15-011-q3",
+        "exp26b-u15-011-q4",
+        "exp26b-u15-011-q5",
+        "exp26b-u15-011-q6"
+      ],
+      "actorChange": {
+        "actorId": "g1",
+        "before": {
+          "id": "g1",
+          "label": "G",
+          "team": "home",
+          "role": "goalie",
+          "x": -28,
+          "y": 0,
+          "facing": 3.14
+        },
+        "after": {
+          "id": "g1",
+          "label": "G",
+          "team": "home",
+          "role": "goalie",
+          "x": -28.8,
+          "y": -2,
+          "facing": -0.5700404636997103
+        }
+      },
+      "renderedPuckBefore": {
+        "owner": null,
+        "x": -21,
+        "y": -7
+      },
+      "renderedPuckAfter": {
+        "owner": null,
+        "x": -21,
+        "y": -7
+      },
+      "verdict": "clear-in-this-pass",
+      "concreteChecks": [
+        "After goalie G is (-28.8,-2), outside the 1.1 m left-net mesh on the outlet side; rendered puck remains loose at (-21,-7).",
+        "The six questions correctly preserve loose-in-transit state and conditional reception; Gold 1 (-20,-6) is 1.414 m from puck versus YOU (-23,-7) at 2 m, so pressure is a live competing touch."
+      ],
+      "findings": []
+    },
+    {
+      "sceneId": "exp26b-u15-012",
+      "sceneHash": "e918984cc5a9b069fad2905155aa4b765e7c81f4b23e2e046c7b6d467e100076",
+      "affectedQuestionIds": [
+        "exp26b-u15-012-q1",
+        "exp26b-u15-012-q2",
+        "exp26b-u15-012-q3",
+        "exp26b-u15-012-q4",
+        "exp26b-u15-012-q5",
+        "exp26b-u15-012-q6"
+      ],
+      "actorChange": {
+        "actorId": "g1",
+        "before": {
+          "id": "g1",
+          "label": "G",
+          "team": "away",
+          "role": "goalie",
+          "x": 28,
+          "y": 0,
+          "facing": 3.14
+        },
+        "after": {
+          "id": "g1",
+          "label": "G",
+          "team": "away",
+          "role": "goalie",
+          "x": 26,
+          "y": 0,
+          "facing": 3.141592653589793
+        }
+      },
+      "renderedPuckBefore": {
+        "owner": "h1",
+        "x": 23,
+        "y": 1.7
+      },
+      "renderedPuckAfter": {
+        "owner": "h1",
+        "x": 23,
+        "y": 1.7
+      },
+      "verdict": "clear-in-this-pass",
+      "concreteChecks": [
+        "After goalie G is (26,0), 0.91384 m in front of right goal line; rendered puck remains YOU-owned at (23,1.7).",
+        "q1-q6 retain the 2-on-1 roles and make shot/pass usability conditional on Gold 1, F2 and goalie; q4 target (23,2.5) does not alter ownership."
+      ],
+      "findings": []
+    },
+    {
+      "sceneId": "exp26-u18-007",
+      "sceneHash": "2025ef7b805a579d12d89d47b9c241bd98fb24818e43e290568d0470d28bc2a6",
+      "affectedQuestionIds": [
+        "exp26-u18-007-q1",
+        "exp26-u18-007-q2",
+        "exp26-u18-007-q3",
+        "exp26-u18-007-q4",
+        "exp26-u18-007-q5",
+        "exp26-u18-007-q6",
+        "exp26-u18-007-q7",
+        "exp26-u18-007-q8",
+        "exp26-u18-007-q9",
+        "exp26-u18-007-q10"
+      ],
+      "actorChange": {
+        "actorId": "home-skater-4",
+        "before": {
+          "id": "home-skater-4",
+          "label": "F1",
+          "team": "home",
+          "role": "skater",
+          "x": 28,
+          "y": 0,
+          "facing": 0
+        },
+        "after": {
+          "id": "home-skater-4",
+          "label": "F1",
+          "team": "home",
+          "role": "skater",
+          "x": 29,
+          "y": 0,
+          "facing": -1.5707963267948966
+        }
+      },
+      "renderedPuckBefore": {
+        "owner": "home-skater-4",
+        "x": 29,
+        "y": 0.7
+      },
+      "renderedPuckAfter": {
+        "owner": "home-skater-4",
+        "x": 29.7,
+        "y": -1
+      },
+      "verdict": "clear-in-this-pass",
+      "concreteChecks": [
+        "After carrier F1 is (29,0), 2.08616 m beyond right goal line; rendered puck is F1-owned at (29.7,-1), still on the rink plane and attached to the carrier.",
+        "All ten affected questions retain F1 behind-goal-line possession and the point/low rotation; q4 target (11,7) remains a hypothetical support point with timing explicitly unproved."
+      ],
+      "findings": []
+    },
+    {
+      "sceneId": "exp26b-u18-007",
+      "sceneHash": "1c906b73272c7997be61460f1cd998b770f4fdce01813c3ee146588568b34395",
+      "affectedQuestionIds": [
+        "exp26b-u18-007-q1",
+        "exp26b-u18-007-q2",
+        "exp26b-u18-007-q3",
+        "exp26b-u18-007-q4",
+        "exp26b-u18-007-q5",
+        "exp26b-u18-007-q6"
+      ],
+      "actorChange": {
+        "actorId": "h3",
+        "before": {
+          "id": "h3",
+          "label": "F1",
+          "team": "home",
+          "role": "skater",
+          "x": 28,
+          "y": 0,
+          "facing": 0
+        },
+        "after": {
+          "id": "h3",
+          "label": "F1",
+          "team": "home",
+          "role": "skater",
+          "x": 29,
+          "y": 0,
+          "facing": -1.5707963267948966
+        }
+      },
+      "renderedPuckBefore": {
+        "owner": "h3",
+        "x": 29,
+        "y": 0.7
+      },
+      "renderedPuckAfter": {
+        "owner": "h3",
+        "x": 29.7,
+        "y": -1
+      },
+      "verdict": "clear-in-this-pass",
+      "concreteChecks": [
+        "After carrier F1 is (29,0), 2.08616 m beyond right goal line; rendered puck is F1-owned at (29.7,-1), still on the rink plane and attached to the carrier.",
+        "All six affected questions retain the temporary point assignment and F1 behind-goal-line possession; q4 target (11,7) keeps arrival conditional and q5-q6 preserve low-threat updates."
+      ],
+      "findings": []
+    }
+  ]
+}

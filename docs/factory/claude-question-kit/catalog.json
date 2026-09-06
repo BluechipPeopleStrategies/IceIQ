@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "status": "experimental-not-approved",
-  "generatedAt": "2026-09-06T15:25:18.755Z",
+  "generatedAt": "2026-09-06T17:36:40.715Z",
   "counts": {
     "scenarios": 200,
     "questions": 1600
@@ -30649,7 +30649,7 @@
     },
     {
       "id": "exp26b-u13-006",
-      "version": 3,
+      "version": 4,
       "ageBand": "U13",
       "title": "Screen from the goalie’s sightline",
       "family": "net-front-screen",
@@ -30708,15 +30708,15 @@
             "label": "Gold goalie",
             "team": "away",
             "role": "goalie",
-            "x": 27,
+            "x": 26,
             "y": 0,
-            "facing": 3.14
+            "facing": 3.141592653589793
           }
         ],
         "puck": {
           "owner": "n2",
-          "x": 13.823,
-          "y": -8.325
+          "x": 13.823285954222207,
+          "y": -8.324567488312155
         }
       },
       "focusActorId": "n1",
@@ -30748,7 +30748,7 @@
       "questions": [
         {
           "type": "choice",
-          "prompt": "Which opponent is nearest the direct line from D2 toward the net?",
+          "prompt": "Which Gold skater is nearest the direct line from D2 toward the net?",
           "options": [
             {
               "id": "a",
@@ -30868,7 +30868,7 @@
     },
     {
       "id": "exp26b-u13-007",
-      "version": 3,
+      "version": 4,
       "ageBand": "U13",
       "title": "Move the puck around the blocked point lane",
       "family": "point-lane-adjustment",
@@ -30918,15 +30918,15 @@
             "label": "Gold goalie",
             "team": "away",
             "role": "goalie",
-            "x": 27,
+            "x": 26,
             "y": 0,
-            "facing": 3.14
+            "facing": 3.141592653589793
           }
         ],
         "puck": {
           "owner": "n2",
-          "x": 13.823,
-          "y": 7.675
+          "x": 13.823285954222207,
+          "y": 7.675432511687844
         }
       },
       "focusActorId": "n1",
@@ -30959,7 +30959,7 @@
       "questions": [
         {
           "type": "choice",
-          "prompt": "Which opponent is nearest D2’s direct shooting line?",
+          "prompt": "Which Gold skater is nearest D2’s direct shooting line?",
           "options": [
             {
               "id": "a",
@@ -32299,7 +32299,7 @@
     },
     {
       "id": "exp26b-u13-014",
-      "version": 3,
+      "version": 4,
       "ageBand": "U13",
       "title": "Choose the second rebound job",
       "family": "rebound-role-choice",
@@ -32349,7 +32349,7 @@
             "label": "Navy goalie",
             "team": "home",
             "role": "goalie",
-            "x": -27,
+            "x": -26,
             "y": 0,
             "facing": 0
           }
@@ -33326,13 +33326,13 @@
     },
     {
       "id": "exp26b-u13-019",
-      "version": 3,
+      "version": 4,
       "ageBand": "U13",
       "title": "Change jobs after a goalie outlet",
       "family": "goalie-outlet-support",
       "topic": "defensive-zone breakout",
       "objective": "Become support when the goalie’s outlet changes the puck side",
-      "briefing": "Navy defends the left net. The goalie passed to D1 near one corner, and D1 now controls the puck. YOU are across the middle; D2 is farther from the goal line and Gold 1 forechecks.",
+      "briefing": "Navy defends the left net. The goalie passed to D1 near one corner, and D1 now controls the puck. YOU are across the middle; D2 is farther from the goal line and Gold 1 forechecks. The goalie remains behind the net, outside the mesh on D1’s side.",
       "setup": {
         "actors": [
           {
@@ -33376,15 +33376,15 @@
             "label": "Navy goalie",
             "team": "home",
             "role": "goalie",
-            "x": -27,
-            "y": 0,
-            "facing": 0
+            "x": -28.8,
+            "y": -2,
+            "facing": -1.0603080048781208
           }
         ],
         "puck": {
           "owner": "n2",
-          "x": -25.159,
-          "y": -6.115
+          "x": -25.1590019537153,
+          "y": -6.11528406471607
         }
       },
       "focusActorId": "n1",
@@ -40650,7 +40650,7 @@
     },
     {
       "id": "exp26b-u15-008",
-      "version": 2,
+      "version": 3,
       "ageBand": "U15",
       "title": "Call the net-side exchange",
       "family": "behind-net-communication",
@@ -40691,9 +40691,9 @@
             "label": "A1",
             "team": "away",
             "role": "skater",
-            "x": -28,
+            "x": -29,
             "y": 0,
-            "facing": 2.4
+            "facing": 1.5707963267948966
           },
           {
             "id": "a2",
@@ -40715,7 +40715,9 @@
           }
         ],
         "puck": {
-          "owner": "a1"
+          "owner": "a1",
+          "x": -29.7,
+          "y": 1
         }
       },
       "focusActorId": "h1",
@@ -41283,13 +41285,13 @@
     },
     {
       "id": "exp26b-u15-011",
-      "version": 2,
+      "version": 3,
       "ageBand": "U15",
       "title": "Receive the loose goalie outlet",
       "family": "goalie-outlet-reception",
       "topic": "Breakout communication",
       "objective": "Prepare for a goalie outlet while treating the puck as loose until a player controls it.",
-      "briefing": "Navy attacks the right net. The Navy goalie has released an outlet, but the puck is still loose near YOU. Gold 1 is nearby on the same side. D2 is across the net and C is nearer the middle. The freeze does not establish the puck’s travel direction or a clean reception.",
+      "briefing": "Navy attacks the right net. The Navy goalie has released an outlet, but the puck is still loose near YOU. Gold 1 is nearby on the same side. D2 is across the net and C is nearer the middle. The freeze does not establish the puck’s travel direction or a clean reception. The goalie remains behind the net, outside the mesh on the outlet side.",
       "setup": {
         "actors": [
           {
@@ -41351,9 +41353,9 @@
             "label": "G",
             "team": "home",
             "role": "goalie",
-            "x": -28,
-            "y": 0,
-            "facing": 3.14
+            "x": -28.8,
+            "y": -2,
+            "facing": -0.5700404636997103
           }
         ],
         "puck": {
@@ -41505,7 +41507,7 @@
     },
     {
       "id": "exp26b-u15-012",
-      "version": 2,
+      "version": 3,
       "ageBand": "U15",
       "title": "Read the second option in a two-on-one",
       "family": "two-on-one-lane-read",
@@ -41546,13 +41548,15 @@
             "label": "G",
             "team": "away",
             "role": "goalie",
-            "x": 28,
+            "x": 26,
             "y": 0,
-            "facing": 3.14
+            "facing": 3.141592653589793
           }
         ],
         "puck": {
-          "owner": "h1"
+          "owner": "h1",
+          "x": 23,
+          "y": 1.7
         }
       },
       "focusActorId": "h1",
@@ -44185,7 +44189,7 @@
     },
     {
       "id": "exp26-u18-007",
-      "version": 2,
+      "version": 3,
       "ageBand": "U18",
       "title": "A defender rotates low while a forward covers the point",
       "family": "offensive-role-exchange",
@@ -44226,9 +44230,9 @@
             "label": "F1",
             "team": "home",
             "role": "skater",
-            "x": 28,
+            "x": 29,
             "y": 0,
-            "facing": 0
+            "facing": -1.5707963267948966
           },
           {
             "id": "home-skater-5",
@@ -44286,7 +44290,9 @@
           }
         ],
         "puck": {
-          "owner": "home-skater-4"
+          "owner": "home-skater-4",
+          "x": 29.7,
+          "y": -1
         }
       },
       "focusActorId": "home-skater-1",
@@ -46741,7 +46747,7 @@
     },
     {
       "id": "exp26b-u18-007",
-      "version": 2,
+      "version": 3,
       "ageBand": "U18",
       "title": "Exchange the point and low roles",
       "family": "point-low-exchange",
@@ -46773,9 +46779,9 @@
             "label": "F1",
             "team": "home",
             "role": "skater",
-            "x": 28,
+            "x": 29,
             "y": 0,
-            "facing": 0
+            "facing": -1.5707963267948966
           },
           {
             "id": "h4",
@@ -46833,7 +46839,9 @@
           }
         ],
         "puck": {
-          "owner": "h3"
+          "owner": "h3",
+          "x": 29.7,
+          "y": -1
         }
       },
       "focusActorId": "h1",
@@ -61698,10 +61706,10 @@
       "topic": "offensive-zone net front",
       "family": "net-front-screen",
       "type": "choice",
-      "prompt": "Which opponent is nearest the direct line from D2 toward the net?",
+      "prompt": "Which Gold skater is nearest the direct line from D2 toward the net?",
       "explanation": "Gold 1 is near that line. Position alone does not prove a blocked shot or successful screen.",
-      "hash": "fe9e158cdf12edba1ad95943b632d949bdebf0ffa9ad5b4466e16eeacdff1607",
-      "review": "no-open-ai-finding"
+      "hash": "525a4cfb1f3ecd6c3577c7ac44076a66b4a2fc86741ebc5285226b1df6a77190",
+      "review": "awaiting-ai-review"
     },
     {
       "scenarioId": "exp26b-u13-006",
@@ -61713,8 +61721,8 @@
       "type": "multi",
       "prompt": "Which two details matter for a useful screen?",
       "explanation": "The screen works through sightline and carrier access; standing on W crowds the net and closes support.",
-      "hash": "2ad3504b22110741ccf668bd235b0b44b765c8d72b0122d6699e28d272bd3dab",
-      "review": "no-open-ai-finding"
+      "hash": "c4314c69369256b4f92fbe587d26cdf48e03c9b3844a9af690ae3dcb8da553f3",
+      "review": "awaiting-ai-review"
     },
     {
       "scenarioId": "exp26b-u13-006",
@@ -61726,8 +61734,8 @@
       "type": "sequence",
       "prompt": "Arrange one screen read.",
       "explanation": "The puck line shows where screening matters; separation keeps two options; a seal requires a new angle.",
-      "hash": "9e33cc639d0f00e6d2c7c126fe761273c394dc34ae753186b625c889e6267543",
-      "review": "no-open-ai-finding"
+      "hash": "2d0a1c17b7633efca83f2d6e98d4795304affba3228d81578a14c9a457641cdc",
+      "review": "awaiting-ai-review"
     },
     {
       "scenarioId": "exp26b-u13-006",
@@ -61739,8 +61747,8 @@
       "type": "position",
       "prompt": "Move YOU toward the goal line to compare a net-front position separate from W.",
       "explanation": "The example changes the net-front angle and stays separate from W. Check the goalie, traffic and puck line before treating it as a screen.",
-      "hash": "2a500c04bf7d28b77a7eb9865d41911ae6d05d0ea990b1bedd7902ed0d9b3027",
-      "review": "no-open-ai-finding"
+      "hash": "d35efcc8f07bd413e706d3a8579bd1eb27ef76454b06f9a2699f59d475a7ef6d",
+      "review": "awaiting-ai-review"
     },
     {
       "scenarioId": "exp26b-u13-006",
@@ -61752,8 +61760,8 @@
       "type": "choice",
       "prompt": "If Gold 1 turns to box you out, what could D2 read?",
       "explanation": "Gold 1’s position changes the screen and passing lanes, so D2 updates the option; if none opens, reset.",
-      "hash": "773cafad9dccbd994e0b37cc0b8fb0c61dac58fd83ad8e96d6301edf67e6e2be",
-      "review": "no-open-ai-finding"
+      "hash": "a658126f747d36a94e9e25467ab13f968c5aeab9f4fd127e6f7de3db5c42dce3",
+      "review": "awaiting-ai-review"
     },
     {
       "scenarioId": "exp26b-u13-006",
@@ -61765,8 +61773,8 @@
       "type": "explain",
       "prompt": "How can you screen without turning the play into a collision?",
       "explanation": "Check puck position and available net-front space. Keep control of your movement and avoid contact with the goalie; a static spot does not establish a legal or effective screen.",
-      "hash": "74127621a9a939abd351fcb4f3811e003be595875691a4fc9f7e9db089f87404",
-      "review": "no-open-ai-finding"
+      "hash": "3cc09d28e8c347acc50da0e1032565b9d8a0fe527dbc3ab98bf87e89b7206a81",
+      "review": "awaiting-ai-review"
     },
     {
       "scenarioId": "exp26b-u13-007",
@@ -61776,10 +61784,10 @@
       "topic": "point attack",
       "family": "point-lane-adjustment",
       "type": "choice",
-      "prompt": "Which opponent is nearest D2’s direct shooting line?",
+      "prompt": "Which Gold skater is nearest D2’s direct shooting line?",
       "explanation": "Gold 1 is near the direct shooting line. Check reach and movement before treating it as closed.",
-      "hash": "0d8874160c041228cf24a5dc16f182ce2822ed9033d7364816d2a86f519bc280",
-      "review": "no-open-ai-finding"
+      "hash": "a20db04a96e13d090e673a8ae7e137cde493ad183f1874aafd1a6e2020fefbfe",
+      "review": "awaiting-ai-review"
     },
     {
       "scenarioId": "exp26b-u13-007",
@@ -61791,8 +61799,8 @@
       "type": "multi",
       "prompt": "Which two alternatives deserve a look?",
       "explanation": "Changing the angle or connecting low can move the problem; forcing a blocked lane ignores the defender.",
-      "hash": "24eb250c9630cfdc5e482dce32c6443078b14db895f6a4cb2afaf7c28ac22c0f",
-      "review": "no-open-ai-finding"
+      "hash": "a65d222345547c3084e6bb471fbcfc426c7f2d57c705431c47b40f2afcf6fc6b",
+      "review": "awaiting-ai-review"
     },
     {
       "scenarioId": "exp26b-u13-007",
@@ -61804,8 +61812,8 @@
       "type": "sequence",
       "prompt": "Order one read of a contested shooting lane.",
       "explanation": "Locate the defender, compare an angle change, then reassess the lane. A changed position alone does not establish an open shot.",
-      "hash": "97880cbf1b2bcccfe1a76adf897f41c9404e37f1219080b1a46e09752292d818",
-      "review": "no-open-ai-finding"
+      "hash": "3e78c0474519341e539a054374c121e61b8407743aff4e32047856d0094288a4",
+      "review": "awaiting-ai-review"
     },
     {
       "scenarioId": "exp26b-u13-007",
@@ -61817,8 +61825,8 @@
       "type": "position",
       "prompt": "Move YOU to compare an offset support position near the net.",
       "explanation": "The example changes the angle between YOU, D2 and the net. Recheck Gold 1 and W; it does not establish a screen or an open pass.",
-      "hash": "6be6bedef1f72696d8e4a9f2e20c8a33fa57bc1bc9dc7455290eac186e46491e",
-      "review": "no-open-ai-finding"
+      "hash": "1c1e60a309b00abcc7cfb89fa506a14d7a10722424086224fc72bac5d529d5b0",
+      "review": "awaiting-ai-review"
     },
     {
       "scenarioId": "exp26b-u13-007",
@@ -61830,8 +61838,8 @@
       "type": "choice",
       "prompt": "If Gold 1 follows your lateral move, what changes first?",
       "explanation": "Gold 1’s movement changes low and point lanes, so D2 scans the new spacing; if both stay closed, reset.",
-      "hash": "3f847f11a9b7a958a8f01de6b29fed6cb73e3650962f143a40a50b7daf5051dd",
-      "review": "no-open-ai-finding"
+      "hash": "2f65284c7ca947c8d4036e57fb39f817dd3622d30e67854e93ee5318f1c74c56",
+      "review": "awaiting-ai-review"
     },
     {
       "scenarioId": "exp26b-u13-007",
@@ -61843,8 +61851,8 @@
       "type": "explain",
       "prompt": "Why should D2 recheck the lane when Gold 1 follows a support move?",
       "explanation": "A defender’s movement can close one route and open another. Compare the resulting shot and pass options rather than assuming every lateral move succeeds or fails.",
-      "hash": "79bdfa058290aacfea27bef584e86ba74b2d9cc29b80e19789c8196915ea3e0c",
-      "review": "no-open-ai-finding"
+      "hash": "4ee2bfde8742ac17e537b6e6521a7c753ea262a65d2e7deeaacf349c0048b833",
+      "review": "awaiting-ai-review"
     },
     {
       "scenarioId": "exp26b-u13-008",
@@ -62324,8 +62332,8 @@
       "type": "choice",
       "prompt": "Which shown skater is closest to the loose rebound?",
       "explanation": "D1 is the closest shown skater. The goalie is also nearby and is closer to the puck; proximity does not establish control.",
-      "hash": "b105fc7a992905b02e9c3d2ab5694bb8193bd872d9f48c14371712e6de3f0c4e",
-      "review": "no-open-ai-finding"
+      "hash": "d8671928f5fcea9bb311e0109f15bbadb0f3030fb60f53ef1b1d8a7e33ba49ea",
+      "review": "awaiting-ai-review"
     },
     {
       "scenarioId": "exp26b-u13-014",
@@ -62337,8 +62345,8 @@
       "type": "multi",
       "prompt": "Which two cues shape your second job?",
       "explanation": "Gold 2 is another scoring threat while D1 approaches the rebound. Check both that route and the puck contest.",
-      "hash": "1284c2e229458eac4985fe4f69eefa052e146a05e32c3406deb2acb5ab2f5efb",
-      "review": "no-open-ai-finding"
+      "hash": "afcc5b86bba4561f78b42b2954cbf5737a89d48d5d2cc02918407cd9450e85e9",
+      "review": "awaiting-ai-review"
     },
     {
       "scenarioId": "exp26b-u13-014",
@@ -62350,8 +62358,8 @@
       "type": "sequence",
       "prompt": "Arrange one second-player rebound read.",
       "explanation": "The closest skater is not automatically the winner. Check the goalie and opponent before deciding who contests and who covers.",
-      "hash": "73e649d91e3bc75dd7aaac3ed001df10dba55ad9a15822e4f9f2cad840ca6483",
-      "review": "no-open-ai-finding"
+      "hash": "e91bf7622b010a4d9ffce57d9a32525317f686cb66e130096673f515c65d30a7",
+      "review": "awaiting-ai-review"
     },
     {
       "scenarioId": "exp26b-u13-014",
@@ -62363,8 +62371,8 @@
       "type": "position",
       "prompt": "Move YOU to a net-side cover position while D1 approaches the loose rebound.",
       "explanation": "The target keeps YOU net-side of Gold 2 and leaves D1 room to contest the rebound; D1 is the closest shown skater to the loose puck, so control is unresolved.",
-      "hash": "12dfe299ddfe3e71b92e52be5444554c563998ad812d3fd83ca56cd1dbdf8dc1",
-      "review": "no-open-ai-finding"
+      "hash": "4f6d38074cb115fcfb5d7c60fb820a157442b959294c90360972e8507c78da6e",
+      "review": "awaiting-ai-review"
     },
     {
       "scenarioId": "exp26b-u13-014",
@@ -62376,8 +62384,8 @@
       "type": "choice",
       "prompt": "If D1 gains clear control, what should YOU reassess?",
       "explanation": "D1’s control changes the puck threat, so keep Gold 2 covered and prepare an outlet; if Gold 2 leaves, scan next lane.",
-      "hash": "f1a053cdf1a1fdad09af5813952be0754a0ce19fa50e1617f3b974ced873e3a2",
-      "review": "no-open-ai-finding"
+      "hash": "04ee0743f6f8ffbbf8a4b2c5807593a4171f1dcf7d968dcf3173cfee98d637ed",
+      "review": "awaiting-ai-review"
     },
     {
       "scenarioId": "exp26b-u13-014",
@@ -62389,8 +62397,8 @@
       "type": "explain",
       "prompt": "Why must a rebound read distinguish loose from controlled?",
       "explanation": "A loose puck may require a contest or containment. Control changes the available actions; a goalie cover or official’s signal requires another reassessment.",
-      "hash": "faa5b9dd2dd4f3fc39844d4620859f16e40fd2ec77dcb67e362a38edb4f2a893",
-      "review": "no-open-ai-finding"
+      "hash": "d2567b05d2111b60a68c9ebf50a26caf67bc2c69827a7b9f462eb0e24c2c7fed",
+      "review": "awaiting-ai-review"
     },
     {
       "scenarioId": "exp26b-u13-015",
@@ -62714,8 +62722,8 @@
       "type": "choice",
       "prompt": "Who receives the goalie’s outlet?",
       "explanation": "D1 is assigned the puck after release, so YOU become support on the new side; if Gold wins it, update.",
-      "hash": "644f95b54389d7612b6c9cd52c10b5b38d636a0bb0be35d21efb81724e38fa88",
-      "review": "no-open-ai-finding"
+      "hash": "cc8b5b68575afdd2c638a1eb271e01d5d1a7cf0c99aedf52d034cef74ae17ebe",
+      "review": "awaiting-ai-review"
     },
     {
       "scenarioId": "exp26b-u13-019",
@@ -62727,8 +62735,8 @@
       "type": "multi",
       "prompt": "Which two changes should YOU make?",
       "explanation": "The release changes support side and forechecker remains relevant; staying fixed ignores both cues.",
-      "hash": "33b8adf774ee9a060592590c10896473a804eedbb8cfd541b09c73e6eb2fdf1e",
-      "review": "no-open-ai-finding"
+      "hash": "e6c5d1bbadaccfcfca9be0b5d09bc9e58d4c650d79c21d6be3bb249e50de1c28",
+      "review": "awaiting-ai-review"
     },
     {
       "scenarioId": "exp26b-u13-019",
@@ -62740,8 +62748,8 @@
       "type": "sequence",
       "prompt": "Arrange one goalie-outlet support change.",
       "explanation": "Puck side determines route; showing a lane connects D1; Gold 1 decides whether it is safe.",
-      "hash": "b340d31d5c8375e1b1ca588c0fd9488dad12a768dd2e9f20f485674fdc1e776b",
-      "review": "no-open-ai-finding"
+      "hash": "601b819ef1edadb815da3bed2fbd3704c8321e00f6bfa17517996d0139a1c784",
+      "review": "awaiting-ai-review"
     },
     {
       "scenarioId": "exp26b-u13-019",
@@ -62753,8 +62761,8 @@
       "type": "position",
       "prompt": "Move YOU nearer the middle to compare an outlet for D1.",
       "explanation": "The example moves YOU closer to D1 while remaining across the middle. Recheck Gold 1 and D2 before calling for the pass.",
-      "hash": "ca7363932eb1861bae8e9f89fec7dbba972744fc03820629a8d3f704872105d6",
-      "review": "no-open-ai-finding"
+      "hash": "12fa55c6e6838d7ac95dc113aab5d0f90c38e799d3d865f8e40c592e254cf813",
+      "review": "awaiting-ai-review"
     },
     {
       "scenarioId": "exp26b-u13-019",
@@ -62766,8 +62774,8 @@
       "type": "choice",
       "prompt": "If Gold 1 closes the middle outlet, what is a useful update?",
       "explanation": "The forechecker removed the first route, so D2 and D1’s protection become the next read; if middle reopens, present again.",
-      "hash": "88d0aae0787b4f4effb436cba9489c23a9e47bdaae9ae2609976710d52ea33a9",
-      "review": "no-open-ai-finding"
+      "hash": "4da80e10282705dabcc8c71c7c164feb4e327475bda40aa16f9ecd151d670b85",
+      "review": "awaiting-ai-review"
     },
     {
       "scenarioId": "exp26b-u13-019",
@@ -62779,8 +62787,8 @@
       "type": "explain",
       "prompt": "Why does the goalie’s release change your support job?",
       "explanation": "The new puck owner and side determine where a short outlet can exist, so move with the play while scanning Gold 1; if contested, support becomes protection.",
-      "hash": "46a9343773f974a2e45fc94d806ac78fa80f47a29634a51d9ba302c653fe2fe8",
-      "review": "no-open-ai-finding"
+      "hash": "646ea372b665d37f5bfd2532133de36888a7e8477d050882911939153a7c3fe6",
+      "review": "awaiting-ai-review"
     },
     {
       "scenarioId": "exp26b-u13-020",
@@ -65756,8 +65764,8 @@
       "type": "choice",
       "prompt": "Where is Gold 1 relative to the Navy net?",
       "explanation": "The briefing places Gold 1 behind the Navy net.",
-      "hash": "018676552e79a5c330f080c12c0b67029b23026982a361ae4eb1fc8bc4352627",
-      "review": "no-open-ai-finding"
+      "hash": "852d3190e937c3bc6ce6b1e450ff0d7fe71f972d2d32edc799d292dc9210a5ec",
+      "review": "awaiting-ai-review"
     },
     {
       "scenarioId": "exp26b-u15-008",
@@ -65769,8 +65777,8 @@
       "type": "multi",
       "prompt": "Which two names belong in a useful handoff call?",
       "explanation": "The call needs the carrier route and the inside threat so the exchange can be coordinated.",
-      "hash": "2292373b5142fb795a957ae5ce1dfbe110b01cc701da4216b1c694cf464a743e",
-      "review": "no-open-ai-finding"
+      "hash": "dc46068c895f62fe3ea733b6a53ba9c8e0f6d784dd85098e513e13f2ca1334b0",
+      "review": "awaiting-ai-review"
     },
     {
       "scenarioId": "exp26b-u15-008",
@@ -65782,8 +65790,8 @@
       "type": "sequence",
       "prompt": "Arrange the behind-net response.",
       "explanation": "The exchange starts with the carrier and inside threat, then updates after the exit.",
-      "hash": "3e8bb5cb09a23082d274d668037d3056bcad62a6fff46c0553758fa322929faa",
-      "review": "no-open-ai-finding"
+      "hash": "4f2612546e11a453e530b37153478abb3e917ac1486f127feaef347e3a2c03d9",
+      "review": "awaiting-ai-review"
     },
     {
       "scenarioId": "exp26b-u15-008",
@@ -65795,8 +65803,8 @@
       "type": "position",
       "prompt": "Move YOU nearer the middle on your current side to compare inside support.",
       "explanation": "The example moves YOU toward the middle and stays separate from C. Check Gold 1’s exit and Gold 2’s route before changing responsibility.",
-      "hash": "15a82b9cc0ac90f45e1ee2ec055b76f067c100c82b9b05218d1c068a8f256583",
-      "review": "no-open-ai-finding"
+      "hash": "405dc039935f6bec95f629c166e87b2b5992c9b9300d176f9ea04a8c2dea44bb",
+      "review": "awaiting-ai-review"
     },
     {
       "scenarioId": "exp26b-u15-008",
@@ -65808,8 +65816,8 @@
       "type": "choice",
       "prompt": "Gold 1 exits on D2's side and Gold 2 cuts inward. What changes first?",
       "explanation": "Both the exit and inside route changed, so update the handoff and protect the slot.",
-      "hash": "4b4845aef79490d86f972d44ff77cdf7648175e61107bce0eda94f7b29777df9",
-      "review": "no-open-ai-finding"
+      "hash": "51c396975820c3684137e3627a0d4e38ab0de8aec65be1f7636535596ac82f20",
+      "review": "awaiting-ai-review"
     },
     {
       "scenarioId": "exp26b-u15-008",
@@ -65821,8 +65829,8 @@
       "type": "explain",
       "prompt": "Why should a behind-net call include an exit side and a threat name?",
       "explanation": "The puck carrier can emerge on either side while the slot threat remains separate. Naming both tells teammates which relationship to exchange and which lane to protect.",
-      "hash": "aea4c6120edf698ea4a02f27300cb2f91e3faa6c771f5eb646eb36ea613612ea",
-      "review": "no-open-ai-finding"
+      "hash": "d63cd2af4bc5f5dd0d9a4be13fee463685f611e264b6df3888eaabb26710c272",
+      "review": "awaiting-ai-review"
     },
     {
       "scenarioId": "exp26b-u15-009",
@@ -65990,8 +65998,8 @@
       "type": "choice",
       "prompt": "Who controls the outlet puck at the freeze?",
       "explanation": "The puck is shown loose in transit, so no player has possession at the freeze.",
-      "hash": "d28c08ffb026a4ffe2ddd5adda007e8ed5dd56587db54240c26c242043cce46f",
-      "review": "no-open-ai-finding"
+      "hash": "73b5f5b1b66451154e76af1dc6c3795528767807671c0c1b7f387dd33dedc836",
+      "review": "awaiting-ai-review"
     },
     {
       "scenarioId": "exp26b-u15-011",
@@ -66003,8 +66011,8 @@
       "type": "multi",
       "prompt": "Which two receiver checks belong before the touch?",
       "explanation": "Pressure and support shape the first touch; the goalie release does not decide its result.",
-      "hash": "bf14d1562986cae8d9890d5e2cc5370323831725b06917ec02016912f98e3a2c",
-      "review": "no-open-ai-finding"
+      "hash": "266d3e1ff246fc48c49e27f8918d789c26f3271d9732401b798b94357375bd74",
+      "review": "awaiting-ai-review"
     },
     {
       "scenarioId": "exp26b-u15-011",
@@ -66016,8 +66024,8 @@
       "type": "sequence",
       "prompt": "Arrange a loose-outlet routine.",
       "explanation": "Finding the puck and checking pressure can overlap with approaching using a support option; both can happen while skating. The touch still comes last because it must match whichever lane is actually open once YOU get there.",
-      "hash": "77ffb32306611db763def382cdec3203d0f013561b708c7c131618743d8939b7",
-      "review": "no-open-ai-finding"
+      "hash": "7a6860dd33170c8a936bc240d8464a96ff114d810f30558c6f2619d1df6f3fb2",
+      "review": "awaiting-ai-review"
     },
     {
       "scenarioId": "exp26b-u15-011",
@@ -66029,8 +66037,8 @@
       "type": "position",
       "prompt": "Move YOU to compare an approach to the loose puck.",
       "explanation": "The example is closer to the puck, but also closer to Gold 1. Check the next touch and the routes toward D2 or C; arriving near the puck does not establish control.",
-      "hash": "7274438f3e169e698849f3a7094c03988f04e81c55de183b0bc754452d432615",
-      "review": "no-open-ai-finding"
+      "hash": "655091e8743415edfcb38d0bd9a16a8e24cc101b83292fc4c09ffd7bbe2b1d7c",
+      "review": "awaiting-ai-review"
     },
     {
       "scenarioId": "exp26b-u15-011",
@@ -66042,8 +66050,8 @@
       "type": "choice",
       "prompt": "Gold 1 reaches the planned touch lane first. What should be reconsidered?",
       "explanation": "If Gold 1 reaches the lane first, reassess whether YOU can recover the loose puck. Protection or a pass requires a playable touch; neither is already established.",
-      "hash": "af1b0060090e9078813ab9d5a49a85f215cd4556e3f772c6c5296024c77b157e",
-      "review": "no-open-ai-finding"
+      "hash": "e3283d48dc3e3598bf92d121dc40086a9aa3c49e3e07005ceea0e897daac9477",
+      "review": "awaiting-ai-review"
     },
     {
       "scenarioId": "exp26b-u15-011",
@@ -66055,8 +66063,8 @@
       "type": "explain",
       "prompt": "What could YOU communicate before the goalie releases another outlet?",
       "explanation": "Name the pressure side and the support YOU can see. A short call can help the release choose a reachable lane, then update after the puck is touched.",
-      "hash": "ca69f789d777e2faf544b086142f21a7b6a07d911a740bac7af9e9397f42f64d",
-      "review": "no-open-ai-finding"
+      "hash": "d22869fd170805c3dff40eb5e3d6c79969d451cc44429d0833de014cd20ad991",
+      "review": "awaiting-ai-review"
     },
     {
       "scenarioId": "exp26b-u15-012",
@@ -66068,8 +66076,8 @@
       "type": "choice",
       "prompt": "What has Gold 1 changed?",
       "explanation": "Gold 1 is stated to have moved into the direct passing connection.",
-      "hash": "d051acbb47c6fdbc9a695e7461a3ea2c52e75acb2dfe02e6460b7c37a7f65898",
-      "review": "no-open-ai-finding"
+      "hash": "c955e79840681e1aca6a1336e576558882272e5c3d52441772b9a79ad6e99c6c",
+      "review": "awaiting-ai-review"
     },
     {
       "scenarioId": "exp26b-u15-012",
@@ -66081,8 +66089,8 @@
       "type": "multi",
       "prompt": "Which two cues should shape the next touch?",
       "explanation": "The defender, goalie and support route determine whether a shot, pass or protection is useful.",
-      "hash": "2e15d73d7ad3d9e46ce511b26b5393539a4698c219609a59ea8a4d0c5e9850fe",
-      "review": "no-open-ai-finding"
+      "hash": "b872d1fde36fc9a02a77bfe6693e63a39537c7293b829040e8af48b4e333fa24",
+      "review": "awaiting-ai-review"
     },
     {
       "scenarioId": "exp26b-u15-012",
@@ -66094,8 +66102,8 @@
       "type": "sequence",
       "prompt": "Arrange a changed two-on-one read.",
       "explanation": "Locating Gold 1 and F2 can overlap with comparing the carrier and second option; both are part of the same scan. Re-checking the goalie and lane still comes last because the read must reflect whichever option is open right before the touch.",
-      "hash": "b8eff643c5ada73c7b8bedcedf6f66268713fb912cbe56d16090ad6d07b6116c",
-      "review": "no-open-ai-finding"
+      "hash": "3c595a7e86edb4ab10dd67b741c5d80a97182410bb6d5614acd4cfd9f1ed4906",
+      "review": "awaiting-ai-review"
     },
     {
       "scenarioId": "exp26b-u15-012",
@@ -66107,8 +66115,8 @@
       "type": "position",
       "prompt": "Move YOU to compare a different angle toward F2 and the net.",
       "explanation": "The example changes the carrier’s passing and shooting angles. Recheck Gold 1, F2 and the goalie before choosing; the new point does not establish an open lane.",
-      "hash": "b6b887e2e8814da12144e758a94a47f3f9705721c5929b55993b7c21d402150f",
-      "review": "no-open-ai-finding"
+      "hash": "c7800d9809c41b2dfa810528b6916e2d5d7aed1740e71644c855227de2c530de",
+      "review": "awaiting-ai-review"
     },
     {
       "scenarioId": "exp26b-u15-012",
@@ -66120,8 +66128,8 @@
       "type": "choice",
       "prompt": "Gold 1 turns toward YOU and F2 gains separation. What could improve?",
       "explanation": "F2 separation changes the branch, while the goalie and defender still determine whether the pass or shot is usable.",
-      "hash": "da3614be04bb7fcaaed25e5fe76006b716e379a86a42046d568c8e36aad93947",
-      "review": "no-open-ai-finding"
+      "hash": "cc408286527963b8ee354b95950110a563fb26a5ec1baedd3188ec9fcd0706d3",
+      "review": "awaiting-ai-review"
     },
     {
       "scenarioId": "exp26b-u15-012",
@@ -66133,8 +66141,8 @@
       "type": "explain",
       "prompt": "How can feedback respect both a possible shot and a possible pass?",
       "explanation": "Tie the choice to Gold 1, F2 and the goalie. If the defender closes the carrier but F2 is reachable, pass; if F2 is covered and the carrier lane remains open, consider the shot.",
-      "hash": "e95f6f7efa05a1e0c34f698a5b8d02f7b740695b56e8424b1484fe30f0588d5a",
-      "review": "no-open-ai-finding"
+      "hash": "c4dabc4ab0718a233bc5897c6cba072680474c64b89e855e3af92f6f8ea6ae31",
+      "review": "awaiting-ai-review"
     },
     {
       "scenarioId": "exp26b-u15-013",
@@ -67160,8 +67168,8 @@
       "type": "choice",
       "prompt": "Which high area has the coach assigned YOU to cover?",
       "explanation": "The briefing explicitly assigns the vacated point during the role exchange.",
-      "hash": "6422998deaf75eed9438261ee4166b5be513c046edc798925715afd61c29ad6d",
-      "review": "no-open-ai-finding"
+      "hash": "4dc9e7454fde19044e5265cbe07eea1151b2a111587dfb1dfee9ced483d3fd9e",
+      "review": "awaiting-ai-review"
     },
     {
       "scenarioId": "exp26-u18-007",
@@ -67173,8 +67181,8 @@
       "type": "multi",
       "prompt": "Which two checks make that cover useful?",
       "explanation": "Current responsibilities follow the stated exchange, while pressure and possession still govern position.",
-      "hash": "80959c584c72cff7b1903e7da12d6749dac07a43aae899db64fbadfac5de922f",
-      "review": "no-open-ai-finding"
+      "hash": "f90edf957e539478911511debf21c1d79744c80b3579bb6bce84262dde1c4e22",
+      "review": "awaiting-ai-review"
     },
     {
       "scenarioId": "exp26-u18-007",
@@ -67186,8 +67194,8 @@
       "type": "sequence",
       "prompt": "Arrange the stated role replacement.",
       "explanation": "This is a team-plan example, not a universal instruction for every offensive rotation.",
-      "hash": "ab68a4d533ebff23da1ed57a2c302555cf57fcb348b91b991e1e6353c1bebc9e",
-      "review": "no-open-ai-finding"
+      "hash": "29509e85612ca853c635db94fb26571f33611727b7b8dd8b97b18b9a7f9a89aa",
+      "review": "awaiting-ai-review"
     },
     {
       "scenarioId": "exp26-u18-007",
@@ -67199,8 +67207,8 @@
       "type": "position",
       "prompt": "Move YOU toward the vacated point to illustrate the assigned cover.",
       "explanation": "The reference replaces a high role without copying D2’s opposite point. Timing and passing lanes remain conditional.",
-      "hash": "9e4e087dfc10eca76ec5f5ba923728373790cb5d52c7bef22d810de1367dc4f8",
-      "review": "no-open-ai-finding"
+      "hash": "5a8d9001bf8a96199813476229ef9a7d6d380df4dd519056cf72b179ecd6ad6f",
+      "review": "awaiting-ai-review"
     },
     {
       "scenarioId": "exp26-u18-007",
@@ -67212,8 +67220,8 @@
       "type": "choice",
       "prompt": "F1 loses the puck behind the net. What becomes relevant immediately?",
       "explanation": "Recheck the puck state and exit threats while moving into the assigned cover. YOU start inside the zone, so the point is not already covered in this frame.",
-      "hash": "3d9d331ada33acbdeb25a4c8ac0d0c9b5e32d9e4c9802035209c47ecaf6309f5",
-      "review": "revised-and-rechecked"
+      "hash": "11c43e80338696ff305d34d91ba5525681674c5cf85960d278c7b1e0966a602b",
+      "review": "awaiting-ai-review"
     },
     {
       "scenarioId": "exp26-u18-007",
@@ -67225,8 +67233,8 @@
       "type": "explain",
       "prompt": "Explain the difference between your listed position as F3 and your temporary rink responsibility.",
       "explanation": "A forward can fill point support under an explicit exchange; the label does not by itself determine every next action.",
-      "hash": "d09a7d3a04722f4cf7786993fcbc0868a49437510cdabbf74ff97dcb6cbc8699",
-      "review": "no-open-ai-finding"
+      "hash": "db90c7c8089d8949d0a2672760f2fb7e5531b038c40a25c2c9aad1d6a96d0026",
+      "review": "awaiting-ai-review"
     },
     {
       "scenarioId": "exp26-u18-007",
@@ -67238,8 +67246,8 @@
       "type": "choice",
       "prompt": "What should YOU communicate about the temporary point cover?",
       "explanation": "The message states the temporary area and asks for the teammate rotation.",
-      "hash": "5ae3a4e2708711650fa618688501136e1c419e5a5b27c8290487cb924efa1e07",
-      "review": "no-open-ai-finding"
+      "hash": "e4c6c3d9f881755307d5113c0bf127dfd0eb829b02a4ba22353f86b7a9773b5f",
+      "review": "awaiting-ai-review"
     },
     {
       "scenarioId": "exp26-u18-007",
@@ -67251,8 +67259,8 @@
       "type": "multi",
       "prompt": "Which two cues affect your point responsibility?",
       "explanation": "Carrier and teammate rotation shape the temporary responsibility.",
-      "hash": "a60cd85a630585a3b971e92e21fd775e426a1592630d2a842aa5c5b6ea2ef69f",
-      "review": "no-open-ai-finding"
+      "hash": "44d1f57c1f144e919ce6059c8aea373017bf03bfb177c1d8e2b7b2cd1305c168",
+      "review": "awaiting-ai-review"
     },
     {
       "scenarioId": "exp26-u18-007",
@@ -67264,8 +67272,8 @@
       "type": "position",
       "prompt": "Move YOU toward the vacated point and compare the route toward F1.",
       "explanation": "The example is near the attacking blue line, opposite D2 and farther from F1. Check the low outlet and exit threats; arrival and a clear pass are not established.",
-      "hash": "b45d405ea49a3e7c358807ee3c26b503766465b35f4d610faecdaa01458076d4",
-      "review": "no-open-ai-finding"
+      "hash": "b3c95ecb619ab101af5993232e513e5e6192330745eca7cea52fad463079c124",
+      "review": "awaiting-ai-review"
     },
     {
       "scenarioId": "exp26-u18-007",
@@ -67277,8 +67285,8 @@
       "type": "explain",
       "prompt": "F1 loses the puck behind the net. What do YOU communicate?",
       "explanation": "Call the low threat and D1’s rotation, then keep the point connection while the new carrier and lane are identified.",
-      "hash": "198fc6aebff48fa6b1e8e72f67fe77061c6f572ae80889ba4976ce082fd57fa2",
-      "review": "no-open-ai-finding"
+      "hash": "4b05fcb83dc8e97f06ba7d903b166d9ab63767969f514fd8e7f4f2a7d951b155",
+      "review": "awaiting-ai-review"
     },
     {
       "scenarioId": "exp26-u18-008",
@@ -68148,8 +68156,8 @@
       "type": "choice",
       "prompt": "Which area are YOU assigned to cover for this rep?",
       "explanation": "The briefing explicitly assigns YOU the high point cover for this drill.",
-      "hash": "6386d333bfcfc36abb77a5caede8b469d44feef41f7fb663ac466b1047c3942c",
-      "review": "no-open-ai-finding"
+      "hash": "f43ca46ba31f84913c9b68d13338bbadfbf04a66bd9ccfcaee48f925cd080d32",
+      "review": "awaiting-ai-review"
     },
     {
       "scenarioId": "exp26b-u18-007",
@@ -68161,8 +68169,8 @@
       "type": "multi",
       "prompt": "Which carrier and teammate rotation cues make the temporary cover useful?",
       "explanation": "The temporary job follows the carrier and the teammate rotation; usual labels do not decide the area.",
-      "hash": "63d309f99796abd2f1664d291980aa43fe85f25ff597d21e01879285cbd87164",
-      "review": "no-open-ai-finding"
+      "hash": "81c586b12f431052a2283c56e8602e05df1c11c7cb20622cccbbb529e4292173",
+      "review": "awaiting-ai-review"
     },
     {
       "scenarioId": "exp26b-u18-007",
@@ -68174,8 +68182,8 @@
       "type": "sequence",
       "prompt": "Arrange the role replacement.",
       "explanation": "The explicit assignment starts the job, then carrier and rotation guide the update.",
-      "hash": "9cd4d344f18b5753512089ec83b8df49098f898452d4086d5f5d050d74ba02a2",
-      "review": "no-open-ai-finding"
+      "hash": "a8eb83c89a0ef8f81865eb80fd51f701ad36082c93edc56473731d4c6ea4fc30",
+      "review": "awaiting-ai-review"
     },
     {
       "scenarioId": "exp26b-u18-007",
@@ -68187,8 +68195,8 @@
       "type": "position",
       "prompt": "Move YOU toward the vacated point near the attacking blue line.",
       "explanation": "The example moves toward the blue line, on D1’s side, and farther from F1. Check the exit threats and low outlet; reaching this point in time is not established.",
-      "hash": "0be483516c12730d88f91bce8a8412ffb797d31b44d99479f845399e43e27d72",
-      "review": "no-open-ai-finding"
+      "hash": "f118b9d0420b7eae9e85e925e88d6dd22e8a262a042c9bb10d58cb173221a146",
+      "review": "awaiting-ai-review"
     },
     {
       "scenarioId": "exp26b-u18-007",
@@ -68200,8 +68208,8 @@
       "type": "choice",
       "prompt": "F1 loses it behind the net: which low threat must enter your update?",
       "explanation": "The puck location changes the immediate threat; keep the point relationship while coordinating the low response.",
-      "hash": "2084cdcd011b00a5a0d4294f823c211b69e58c921b2fe13ccd6431c6d1042fff",
-      "review": "no-open-ai-finding"
+      "hash": "f311f756c42d44d09d5a4fcfc95c448eecb46991a10cc5333392d090270b711b",
+      "review": "awaiting-ai-review"
     },
     {
       "scenarioId": "exp26b-u18-007",
@@ -68213,8 +68221,8 @@
       "type": "explain",
       "prompt": "Explain the difference between your listed position as a forward and your temporary rink responsibility.",
       "explanation": "Your label describes your normal role; the coach has assigned the point for this rep. Communicate the temporary area and update when the puck or rotation changes.",
-      "hash": "94c063a3cf9e1edf60e4934562e0e31c1731d7ec18a4216d028b58a15582faaf",
-      "review": "no-open-ai-finding"
+      "hash": "071855dd12e12284fdc5cfad60eabca208b0b775ee7441c7899d0accb49fccb8",
+      "review": "awaiting-ai-review"
     },
     {
       "scenarioId": "exp26b-u18-008",

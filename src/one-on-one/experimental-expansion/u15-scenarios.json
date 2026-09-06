@@ -1533,7 +1533,7 @@
   },
   {
     "id": "exp26b-u15-008",
-    "version": 2,
+    "version": 3,
     "ageBand": "U15",
     "title": "Call the net-side exchange",
     "family": "behind-net-communication",
@@ -1574,9 +1574,9 @@
           "label": "A1",
           "team": "away",
           "role": "skater",
-          "x": -28,
+          "x": -29,
           "y": 0,
-          "facing": 2.4
+          "facing": 1.5707963267948966
         },
         {
           "id": "a2",
@@ -1598,7 +1598,9 @@
         }
       ],
       "puck": {
-        "owner": "a1"
+        "owner": "a1",
+        "x": -29.7,
+        "y": 1
       }
     },
     "focusActorId": "h1",
@@ -2166,13 +2168,13 @@
   },
   {
     "id": "exp26b-u15-011",
-    "version": 2,
+    "version": 3,
     "ageBand": "U15",
     "title": "Receive the loose goalie outlet",
     "family": "goalie-outlet-reception",
     "topic": "Breakout communication",
     "objective": "Prepare for a goalie outlet while treating the puck as loose until a player controls it.",
-    "briefing": "Navy attacks the right net. The Navy goalie has released an outlet, but the puck is still loose near YOU. Gold 1 is nearby on the same side. D2 is across the net and C is nearer the middle. The freeze does not establish the puck’s travel direction or a clean reception.",
+    "briefing": "Navy attacks the right net. The Navy goalie has released an outlet, but the puck is still loose near YOU. Gold 1 is nearby on the same side. D2 is across the net and C is nearer the middle. The freeze does not establish the puck’s travel direction or a clean reception. The goalie remains behind the net, outside the mesh on the outlet side.",
     "setup": {
       "actors": [
         {
@@ -2234,9 +2236,9 @@
           "label": "G",
           "team": "home",
           "role": "goalie",
-          "x": -28,
-          "y": 0,
-          "facing": 3.14
+          "x": -28.8,
+          "y": -2,
+          "facing": -0.5700404636997103
         }
       ],
       "puck": {
@@ -2388,7 +2390,7 @@
   },
   {
     "id": "exp26b-u15-012",
-    "version": 2,
+    "version": 3,
     "ageBand": "U15",
     "title": "Read the second option in a two-on-one",
     "family": "two-on-one-lane-read",
@@ -2429,13 +2431,15 @@
           "label": "G",
           "team": "away",
           "role": "goalie",
-          "x": 28,
+          "x": 26,
           "y": 0,
-          "facing": 3.14
+          "facing": 3.141592653589793
         }
       ],
       "puck": {
-        "owner": "h1"
+        "owner": "h1",
+        "x": 23,
+        "y": 1.7
       }
     },
     "focusActorId": "h1",
