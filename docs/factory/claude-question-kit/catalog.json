@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "status": "experimental-not-approved",
-  "generatedAt": "2026-09-06T14:19:35.985Z",
+  "generatedAt": "2026-09-06T14:27:17.229Z",
   "counts": {
     "scenarios": 200,
     "questions": 1600
@@ -41283,13 +41283,13 @@
     },
     {
       "id": "exp26b-u15-011",
-      "version": 1,
+      "version": 2,
       "ageBand": "U15",
       "title": "Receive the loose goalie outlet",
       "family": "goalie-outlet-reception",
       "topic": "Breakout communication",
       "objective": "Prepare for a goalie outlet while treating the puck as loose until a player controls it.",
-      "briefing": "Navy attacks the Gold net. The Navy goalie has released a short pass toward YOU near the corner; Gold 1 closes that side. D2 is across the net and C is inside support.",
+      "briefing": "Navy attacks the right net. The Navy goalie has released an outlet, but the puck is still loose near YOU. Gold 1 is nearby on the same side. D2 is across the net and C is nearer the middle. The freeze does not establish the puck’s travel direction or a clean reception.",
       "setup": {
         "actors": [
           {
@@ -41364,9 +41364,9 @@
       },
       "focusActorId": "h1",
       "cues": [
-        "The goalie released the puck toward YOU.",
-        "The puck is loose in transit.",
-        "Gold 1 is closing the corner."
+        "The goalie has released an outlet.",
+        "The puck is loose near YOU.",
+        "Gold 1 is nearby on the same side."
       ],
       "tags": [
         "experimental",
@@ -41456,19 +41456,19 @@
             "c"
           ],
           "basis": "coaching",
-          "explanation": "The actual loose puck and changing pressure drive the reception."
+          "explanation": "Finding the puck and checking pressure can overlap with approaching using a support option; both can happen while skating. The touch still comes last because it must match whichever lane is actually open once YOU get there."
         },
         {
           "id": "exp26b-u15-011-q4",
           "type": "position",
-          "prompt": "Move YOU to a ready receiving angle near the corner with D2 visible.",
+          "prompt": "Move YOU to compare an approach to the loose puck.",
           "actorId": "h1",
           "reference": {
             "x": -22,
             "y": -6
           },
           "basis": "coaching",
-          "explanation": "This changes the approach angle while keeping the cross-ice outlet in view."
+          "explanation": "The example is closer to the puck, but also closer to Gold 1. Check the next touch and the routes toward D2 or C; arriving near the puck does not establish control."
         },
         {
           "id": "exp26b-u15-011-q5",
@@ -41477,7 +41477,7 @@
           "options": [
             {
               "id": "a",
-              "text": "Protect the puck or use D2/C if reachable"
+              "text": "Recheck access; protect only after control, or find reachable support"
             },
             {
               "id": "b",
@@ -41492,26 +41492,26 @@
             "a"
           ],
           "basis": "coaching",
-          "explanation": "Gold pressure changes the reception job, so protect or use the remaining support after checking access."
+          "explanation": "If Gold 1 reaches the lane first, reassess whether YOU can recover the loose puck. Protection or a pass requires a playable touch; neither is already established."
         },
         {
           "id": "exp26b-u15-011-q6",
           "type": "explain",
           "prompt": "What could YOU communicate before the goalie releases another outlet?",
           "basis": "coaching",
-          "explanation": "Name the pressure side and the support you can see. A short call can help the release choose a reachable lane, then update after the puck is touched."
+          "explanation": "Name the pressure side and the support YOU can see. A short call can help the release choose a reachable lane, then update after the puck is touched."
         }
       ]
     },
     {
       "id": "exp26b-u15-012",
-      "version": 1,
+      "version": 2,
       "ageBand": "U15",
       "title": "Read the second option in a two-on-one",
       "family": "two-on-one-lane-read",
       "topic": "Rush decision",
       "objective": "Update a two-on-one choice when a defender changes the passing connection.",
-      "briefing": "Navy attacks the Gold net. YOU carries toward the Gold net, F2 is the second attacker, and Gold 1 has moved into the direct pass lane. The goalie is square to YOU; no finish is established.",
+      "briefing": "Navy attacks the right net. YOU control the puck and F2 is the second attacker. Gold 1 occupies the direct line between YOU and F2. The goalie is near the net; no save or finish is established.",
       "setup": {
         "actors": [
           {
@@ -41537,27 +41537,9 @@
             "label": "A1",
             "team": "away",
             "role": "skater",
-            "x": 17,
-            "y": 0,
+            "x": 23,
+            "y": -1.33,
             "facing": 3.1
-          },
-          {
-            "id": "a2",
-            "label": "A2",
-            "team": "away",
-            "role": "skater",
-            "x": 20,
-            "y": 7,
-            "facing": 2.8
-          },
-          {
-            "id": "a3",
-            "label": "A3",
-            "team": "away",
-            "role": "skater",
-            "x": 24,
-            "y": 5,
-            "facing": 2.7
           },
           {
             "id": "g1",
@@ -41575,7 +41557,7 @@
       },
       "focusActorId": "h1",
       "cues": [
-        "YOU owns the puck.",
+        "YOU own the puck.",
         "F2 is the second Navy attacker.",
         "Gold 1 occupies the direct pass lane."
       ],
@@ -41667,19 +41649,19 @@
             "c"
           ],
           "basis": "coaching",
-          "explanation": "The original advantage changes when the defender moves, so the second option must be read again."
+          "explanation": "Locating Gold 1 and F2 can overlap with comparing the carrier and second option; both are part of the same scan. Re-checking the goalie and lane still comes last because the read must reflect whichever option is open right before the touch."
         },
         {
           "id": "exp26b-u15-012-q4",
           "type": "position",
-          "prompt": "Move YOU to a carrier angle that keeps F2 and the goalie visible.",
+          "prompt": "Move YOU to compare a different angle toward F2 and the net.",
           "actorId": "h1",
           "reference": {
             "x": 23,
             "y": 2.5
           },
           "basis": "coaching",
-          "explanation": "This angle gives a different view of the passing lane without moving into the net area."
+          "explanation": "The example changes the carrier’s passing and shooting angles. Recheck Gold 1, F2 and the goalie before choosing; the new point does not establish an open lane."
         },
         {
           "id": "exp26b-u15-012-q5",
@@ -41716,13 +41698,13 @@
     },
     {
       "id": "exp26b-u15-013",
-      "version": 1,
+      "version": 2,
       "ageBand": "U15",
       "title": "Support the loose touch of a wall battle",
       "family": "wall-battle-second-touch",
       "topic": "Puck recovery",
       "objective": "Arrive as second support for a loose touch while leaving the first player room to compete.",
-      "briefing": "Navy attacks the Gold net. F1 and Gold 1 contest a puck near the boards; YOU is the second Navy player and C is an inside outlet. Gold 2 can close C after the next touch.",
+      "briefing": "Navy attacks the Gold net. F1 and Gold 1 contest a puck near the boards; YOU are the second Navy player and C is an inside outlet. Gold 2 can close C after the next touch.",
       "setup": {
         "actors": [
           {
@@ -41730,8 +41712,8 @@
             "label": "YOU",
             "team": "home",
             "role": "skater",
-            "x": 15,
-            "y": -3,
+            "x": 19,
+            "y": 7.5,
             "facing": 2.4
           },
           {
@@ -41739,8 +41721,8 @@
             "label": "F1",
             "team": "home",
             "role": "skater",
-            "x": 21,
-            "y": -1,
+            "x": 24,
+            "y": 10.5,
             "facing": 2.6
           },
           {
@@ -41748,8 +41730,8 @@
             "label": "C",
             "team": "home",
             "role": "skater",
-            "x": 18,
-            "y": 4,
+            "x": 17,
+            "y": 3,
             "facing": 1.9
           },
           {
@@ -41757,8 +41739,8 @@
             "label": "A1",
             "team": "away",
             "role": "skater",
-            "x": 21,
-            "y": -2,
+            "x": 24.3,
+            "y": 9.6,
             "facing": 2.4
           },
           {
@@ -41766,8 +41748,8 @@
             "label": "A2",
             "team": "away",
             "role": "skater",
-            "x": 18,
-            "y": 1,
+            "x": 16.3,
+            "y": 3.6,
             "facing": 2.5
           },
           {
@@ -41775,15 +41757,15 @@
             "label": "A3",
             "team": "away",
             "role": "skater",
-            "x": 25,
-            "y": 5,
+            "x": 21,
+            "y": -3,
             "facing": 2.8
           }
         ],
         "puck": {
           "owner": null,
-          "x": 21,
-          "y": -1
+          "x": 24,
+          "y": 10.5
         }
       },
       "focusActorId": "h1",
@@ -41829,7 +41811,7 @@
             "a"
           ],
           "basis": "scene",
-          "explanation": "F1 is the named first contest player; YOU is the second support."
+          "explanation": "F1 is the named first contest player; YOU are the second support."
         },
         {
           "id": "exp26b-u15-013-q2",
@@ -41854,7 +41836,7 @@
             "b"
           ],
           "basis": "coaching",
-          "explanation": "The second player reads the next touch and keeps the outlet available instead of crowding the contest."
+          "explanation": "Read the next loose touch and whether C can be reached without crowding F1. Gold 2 is already close to C, so that outlet is not guaranteed."
         },
         {
           "id": "exp26b-u15-013-q3",
@@ -41880,19 +41862,19 @@
             "c"
           ],
           "basis": "coaching",
-          "explanation": "The support job depends on the touch and the outlet after the contest."
+          "explanation": "Staying outside F1's space and tracking the loose touch and C happen together, not one after the other. The final step, choosing recovery or support, only becomes clear once the touch actually resolves."
         },
         {
           "id": "exp26b-u15-013-q4",
           "type": "position",
-          "prompt": "Move YOU to a pocket closer to Navy's net than the battle with C visible.",
+          "prompt": "Move YOU nearer the middle to compare support outside F1’s contest.",
           "actorId": "h1",
           "reference": {
-            "x": 16,
-            "y": 3.2
+            "x": 19,
+            "y": 4
           },
           "basis": "coaching",
-          "explanation": "This creates a recovery pocket that is separate from F1 and connected to C."
+          "explanation": "The example is farther from the wall contest and closer to C. Compare that inside support with the chance to recover the next loose touch; Gold 2 is near C and the route is not guaranteed."
         },
         {
           "id": "exp26b-u15-013-q5",
@@ -41923,19 +41905,19 @@
           "type": "explain",
           "prompt": "What is a useful second-player job when F1 does not win the puck cleanly?",
           "basis": "coaching",
-          "explanation": "Track the loose touch, protect the inside lane and offer C or another reachable outlet. The second player supports the next decision rather than copying the contest."
+          "explanation": "Track the loose touch and the inside threat while leaving F1 room. After a playable touch, compare C with another reachable outlet. No one controls the puck yet."
         }
       ]
     },
     {
       "id": "exp26b-u15-014",
-      "version": 1,
+      "version": 2,
       "ageBand": "U15",
       "title": "Hold the puck through a line change",
       "family": "line-change-possession",
       "topic": "Puck management",
       "objective": "Preserve a usable connection while one teammate changes and the forward options adjust.",
-      "briefing": "Navy attacks the Gold net. F3 is changing and unavailable for this rep; YOU carries in the neutral zone, D2 is behind, and F1 and F2 are ahead. The goal is to read possession options as support changes.",
+      "briefing": "Navy attacks the Gold net. F3 is changing and unavailable for this rep; YOU carry in the neutral zone, D2 is behind, and F1 and F2 are ahead. The goal is to read possession options as support changes.",
       "setup": {
         "actors": [
           {
@@ -42009,7 +41991,7 @@
       "focusActorId": "h1",
       "cues": [
         "F3 is changing and unavailable.",
-        "YOU owns the puck.",
+        "YOU own the puck.",
         "D2 is behind while F1 and F2 are ahead."
       ],
       "tags": [
@@ -42100,24 +42082,24 @@
             "c"
           ],
           "basis": "coaching",
-          "explanation": "The temporary absence changes the options, then the next scan can include the new player."
+          "explanation": "Keep scanning pressure and support while protecting or moving the puck. Recheck throughout the change, including when the replacement arrives; this is one suggested order, not a reason to stop scanning."
         },
         {
           "id": "exp26b-u15-014-q4",
           "type": "position",
-          "prompt": "Move YOU to a position with D2 and F1 visible as different connections.",
+          "prompt": "Move YOU to compare a reset toward D2 with a forward route toward F1.",
           "actorId": "h1",
           "reference": {
-            "x": 1,
-            "y": 2.5
+            "x": -3,
+            "y": 0
           },
           "basis": "coaching",
-          "explanation": "This point changes the carrier angle while retaining a reset and forward option."
+          "explanation": "The example is closer to D2 and farther from F1. Compare pressure and both routes before using either; shorter distance does not guarantee an open pass."
         },
         {
           "id": "exp26b-u15-014-q5",
           "type": "choice",
-          "prompt": "A new F3 appears in a clear middle lane. What can you reconsider?",
+          "prompt": "A new F3 appears in a clear middle lane. What can YOU reconsider?",
           "options": [
             {
               "id": "a",
@@ -42149,7 +42131,7 @@
     },
     {
       "id": "exp26b-u15-015",
-      "version": 2,
+      "version": 3,
       "ageBand": "U15",
       "title": "Reset around a crowded slot",
       "family": "slot-crowding-reset",
@@ -42228,7 +42210,7 @@
       },
       "focusActorId": "h1",
       "cues": [
-        "YOU controls at the half wall.",
+        "YOU control at the half wall.",
         "Gold 1 shades F2 in the slot.",
         "F1 is a low outlet and D1 holds the point."
       ],
@@ -42250,7 +42232,7 @@
         {
           "id": "exp26b-u15-015-q1",
           "type": "choice",
-          "prompt": "Which Navy teammate is the low outlet?",
+          "prompt": "Which Navy teammate is positioned behind Gold’s goal line?",
           "options": [
             {
               "id": "a",
@@ -42269,7 +42251,7 @@
             "a"
           ],
           "basis": "scene",
-          "explanation": "F1 is the Navy player below the Gold net and available as the low outlet."
+          "explanation": "F1 is behind Gold’s goal line as a possible low outlet. Check the defenders before assuming a pass can reach F1."
         },
         {
           "id": "exp26b-u15-015-q2",
@@ -42282,7 +42264,7 @@
             },
             {
               "id": "b",
-              "text": "F1's reachable low route"
+              "text": "Whether the low route to F1 is reachable"
             },
             {
               "id": "c",
@@ -42320,19 +42302,19 @@
             "c"
           ],
           "basis": "coaching",
-          "explanation": "The reset keeps the puck connected while the shaded slot and low route are re-read."
+          "explanation": "Scan F2, F1 and D1 while protecting the puck, then use a reachable option and scan again. Scanning and protection can overlap; a named outlet is not necessarily open."
         },
         {
           "id": "exp26b-u15-015-q4",
           "type": "position",
-          "prompt": "Move YOU off the wall to a support angle with F1 and F2 visible.",
+          "prompt": "Move YOU nearer the middle to compare the routes toward F1, F2 and D1.",
           "actorId": "h1",
           "reference": {
             "x": 18,
             "y": 7.5
           },
           "basis": "coaching",
-          "explanation": "This small move off the wall changes the carrier angle while keeping F1, F2 and the high outlet available to scan. Each passing lane still depends on the defenders."
+          "explanation": "The example changes the carrier angle and brings YOU closer to all three teammates, but also closer to Gold 1 and Gold 3. Recheck the defenders before using any route."
         },
         {
           "id": "exp26b-u15-015-q5",
@@ -65998,7 +65980,7 @@
       "type": "choice",
       "prompt": "Who controls the outlet puck at the freeze?",
       "explanation": "The puck is shown loose in transit, so no player has possession at the freeze.",
-      "hash": "7a2a09c83c3fb9da75422647569191b49a019478d6ea8ebf3721314aeec74d50",
+      "hash": "d28c08ffb026a4ffe2ddd5adda007e8ed5dd56587db54240c26c242043cce46f",
       "review": "no-open-ai-finding"
     },
     {
@@ -66011,7 +65993,7 @@
       "type": "multi",
       "prompt": "Which two receiver checks belong before the touch?",
       "explanation": "Pressure and support shape the first touch; the goalie release does not decide its result.",
-      "hash": "a7d5cd126a632eca751ca5246757cafaa331fc85b8d9b63fd77970f4cb130064",
+      "hash": "bf14d1562986cae8d9890d5e2cc5370323831725b06917ec02016912f98e3a2c",
       "review": "no-open-ai-finding"
     },
     {
@@ -66023,8 +66005,8 @@
       "family": "goalie-outlet-reception",
       "type": "sequence",
       "prompt": "Arrange a loose-outlet routine.",
-      "explanation": "The actual loose puck and changing pressure drive the reception.",
-      "hash": "331d8d20afad1c42fb1e4a2546db8a622374e4ae6bea4e11a8a9bf01f3119bb5",
+      "explanation": "Finding the puck and checking pressure can overlap with approaching using a support option; both can happen while skating. The touch still comes last because it must match whichever lane is actually open once YOU get there.",
+      "hash": "77ffb32306611db763def382cdec3203d0f013561b708c7c131618743d8939b7",
       "review": "no-open-ai-finding"
     },
     {
@@ -66035,9 +66017,9 @@
       "topic": "Breakout communication",
       "family": "goalie-outlet-reception",
       "type": "position",
-      "prompt": "Move YOU to a ready receiving angle near the corner with D2 visible.",
-      "explanation": "This changes the approach angle while keeping the cross-ice outlet in view.",
-      "hash": "563796ce5905fe3d32cce1757da2b69f403334afca96c56602c81c9448d7d3f0",
+      "prompt": "Move YOU to compare an approach to the loose puck.",
+      "explanation": "The example is closer to the puck, but also closer to Gold 1. Check the next touch and the routes toward D2 or C; arriving near the puck does not establish control.",
+      "hash": "7274438f3e169e698849f3a7094c03988f04e81c55de183b0bc754452d432615",
       "review": "no-open-ai-finding"
     },
     {
@@ -66049,8 +66031,8 @@
       "family": "goalie-outlet-reception",
       "type": "choice",
       "prompt": "Gold 1 reaches the planned touch lane first. What should be reconsidered?",
-      "explanation": "Gold pressure changes the reception job, so protect or use the remaining support after checking access.",
-      "hash": "ebac0332ed7b4072917451f5dace63d6d6c09a1a6d0ca1e82fd72087d53a7739",
+      "explanation": "If Gold 1 reaches the lane first, reassess whether YOU can recover the loose puck. Protection or a pass requires a playable touch; neither is already established.",
+      "hash": "af1b0060090e9078813ab9d5a49a85f215cd4556e3f772c6c5296024c77b157e",
       "review": "no-open-ai-finding"
     },
     {
@@ -66062,8 +66044,8 @@
       "family": "goalie-outlet-reception",
       "type": "explain",
       "prompt": "What could YOU communicate before the goalie releases another outlet?",
-      "explanation": "Name the pressure side and the support you can see. A short call can help the release choose a reachable lane, then update after the puck is touched.",
-      "hash": "cf5b9e43e1ecdf0e5608bf898b6bd41251d77d77ae0b8c686f238052d5c0c170",
+      "explanation": "Name the pressure side and the support YOU can see. A short call can help the release choose a reachable lane, then update after the puck is touched.",
+      "hash": "ca69f789d777e2faf544b086142f21a7b6a07d911a740bac7af9e9397f42f64d",
       "review": "no-open-ai-finding"
     },
     {
@@ -66076,7 +66058,7 @@
       "type": "choice",
       "prompt": "What has Gold 1 changed?",
       "explanation": "Gold 1 is stated to have moved into the direct passing connection.",
-      "hash": "c4bb145e96a7f258ae941e555a099a35ed69a813b3f5b7e30801beca96034a6d",
+      "hash": "d051acbb47c6fdbc9a695e7461a3ea2c52e75acb2dfe02e6460b7c37a7f65898",
       "review": "no-open-ai-finding"
     },
     {
@@ -66089,7 +66071,7 @@
       "type": "multi",
       "prompt": "Which two cues should shape the next touch?",
       "explanation": "The defender, goalie and support route determine whether a shot, pass or protection is useful.",
-      "hash": "98bface97f2888b99a66c5683b74051a78039459288e90623923c9cdad2bb4b9",
+      "hash": "2e15d73d7ad3d9e46ce511b26b5393539a4698c219609a59ea8a4d0c5e9850fe",
       "review": "no-open-ai-finding"
     },
     {
@@ -66101,8 +66083,8 @@
       "family": "two-on-one-lane-read",
       "type": "sequence",
       "prompt": "Arrange a changed two-on-one read.",
-      "explanation": "The original advantage changes when the defender moves, so the second option must be read again.",
-      "hash": "b929d4672d264051fa61a71a5801b07b88c5bcef0923f8abbae4c0d09d1b17fb",
+      "explanation": "Locating Gold 1 and F2 can overlap with comparing the carrier and second option; both are part of the same scan. Re-checking the goalie and lane still comes last because the read must reflect whichever option is open right before the touch.",
+      "hash": "b8eff643c5ada73c7b8bedcedf6f66268713fb912cbe56d16090ad6d07b6116c",
       "review": "no-open-ai-finding"
     },
     {
@@ -66113,9 +66095,9 @@
       "topic": "Rush decision",
       "family": "two-on-one-lane-read",
       "type": "position",
-      "prompt": "Move YOU to a carrier angle that keeps F2 and the goalie visible.",
-      "explanation": "This angle gives a different view of the passing lane without moving into the net area.",
-      "hash": "89f3a03e5d304a6305ce5c22b225ff44c781e2bda43d9f391dde92151f009582",
+      "prompt": "Move YOU to compare a different angle toward F2 and the net.",
+      "explanation": "The example changes the carrier’s passing and shooting angles. Recheck Gold 1, F2 and the goalie before choosing; the new point does not establish an open lane.",
+      "hash": "b6b887e2e8814da12144e758a94a47f3f9705721c5929b55993b7c21d402150f",
       "review": "no-open-ai-finding"
     },
     {
@@ -66128,7 +66110,7 @@
       "type": "choice",
       "prompt": "Gold 1 turns toward YOU and F2 gains separation. What could improve?",
       "explanation": "F2 separation changes the branch, while the goalie and defender still determine whether the pass or shot is usable.",
-      "hash": "147dbe8dbb051794d92ddfb46f756fb9a92d33275b8d5993ec6adbc0b1a9f195",
+      "hash": "da3614be04bb7fcaaed25e5fe76006b716e379a86a42046d568c8e36aad93947",
       "review": "no-open-ai-finding"
     },
     {
@@ -66141,7 +66123,7 @@
       "type": "explain",
       "prompt": "How can feedback respect both a possible shot and a possible pass?",
       "explanation": "Tie the choice to Gold 1, F2 and the goalie. If the defender closes the carrier but F2 is reachable, pass; if F2 is covered and the carrier lane remains open, consider the shot.",
-      "hash": "3428af348518f5a50dacdef6642e78478678610a6e6d6168efb5984d5a516da5",
+      "hash": "e95f6f7efa05a1e0c34f698a5b8d02f7b740695b56e8424b1484fe30f0588d5a",
       "review": "no-open-ai-finding"
     },
     {
@@ -66153,8 +66135,8 @@
       "family": "wall-battle-second-touch",
       "type": "choice",
       "prompt": "Which Navy player has the first wall-contest role?",
-      "explanation": "F1 is the named first contest player; YOU is the second support.",
-      "hash": "a1ca22d4e0ead0b36216e835443593a6527249a22c9a2d96bdc317ad0c30bc18",
+      "explanation": "F1 is the named first contest player; YOU are the second support.",
+      "hash": "e0faa5d585ff4d0bafd82fed165a2a4b1dda2bd4f28cac6762263ac97b5d4fc0",
       "review": "no-open-ai-finding"
     },
     {
@@ -66166,8 +66148,8 @@
       "family": "wall-battle-second-touch",
       "type": "multi",
       "prompt": "Which two cues make second support useful?",
-      "explanation": "The second player reads the next touch and keeps the outlet available instead of crowding the contest.",
-      "hash": "c077af008011f16f84e3a0cb2fca3353c9082a4bca3e367df4b07b89bfd6c6f3",
+      "explanation": "Read the next loose touch and whether C can be reached without crowding F1. Gold 2 is already close to C, so that outlet is not guaranteed.",
+      "hash": "20901f4e9a94dcc494a552973b0ab6847988203c2e1da1619f2fc0e8d761f631",
       "review": "no-open-ai-finding"
     },
     {
@@ -66179,8 +66161,8 @@
       "family": "wall-battle-second-touch",
       "type": "sequence",
       "prompt": "Arrange a second-support read.",
-      "explanation": "The support job depends on the touch and the outlet after the contest.",
-      "hash": "b0a30d61cfb1f1107cabdb7126756c1beb46debc7a7b8869e8c3e3a1d3eb09b6",
+      "explanation": "Staying outside F1's space and tracking the loose touch and C happen together, not one after the other. The final step, choosing recovery or support, only becomes clear once the touch actually resolves.",
+      "hash": "391ff69cc56e2958b335c47d5725078f48cc3a0d4e500aac4ca605ca907864ce",
       "review": "no-open-ai-finding"
     },
     {
@@ -66191,9 +66173,9 @@
       "topic": "Puck recovery",
       "family": "wall-battle-second-touch",
       "type": "position",
-      "prompt": "Move YOU to a pocket closer to Navy's net than the battle with C visible.",
-      "explanation": "This creates a recovery pocket that is separate from F1 and connected to C.",
-      "hash": "003fbed6631afcc0413d3ace585732a36eb074b006ea681f4835e44e50891bf5",
+      "prompt": "Move YOU nearer the middle to compare support outside F1’s contest.",
+      "explanation": "The example is farther from the wall contest and closer to C. Compare that inside support with the chance to recover the next loose touch; Gold 2 is near C and the route is not guaranteed.",
+      "hash": "1f799f723211f515ae9438e4c9c1997ca3159cbafbde66f31d9f3c560e3bc98e",
       "review": "no-open-ai-finding"
     },
     {
@@ -66206,7 +66188,7 @@
       "type": "choice",
       "prompt": "Gold 2 closes C as the puck rolls free. What should be checked?",
       "explanation": "C is no longer the same outlet, so update the support and recovery choices.",
-      "hash": "8e5d4e155170f2020674c2f4b0124c66b318582c55b7851e8db86ed8cf826773",
+      "hash": "6d8e6e220d7b2fe06bedb1e2cfe7b005695d0f1e087e9729617fa6408f62addd",
       "review": "no-open-ai-finding"
     },
     {
@@ -66218,8 +66200,8 @@
       "family": "wall-battle-second-touch",
       "type": "explain",
       "prompt": "What is a useful second-player job when F1 does not win the puck cleanly?",
-      "explanation": "Track the loose touch, protect the inside lane and offer C or another reachable outlet. The second player supports the next decision rather than copying the contest.",
-      "hash": "db856aa9b31e2ce1273f36c02aaf0f08f14054a9266dba47cd4e2438e9c6a457",
+      "explanation": "Track the loose touch and the inside threat while leaving F1 room. After a playable touch, compare C with another reachable outlet. No one controls the puck yet.",
+      "hash": "6aaf6b69efd6568d8f4b30de4cf071a060e9e0e291f32fd0368b25ac62872d56",
       "review": "no-open-ai-finding"
     },
     {
@@ -66232,7 +66214,7 @@
       "type": "choice",
       "prompt": "Which teammate is unavailable during this rep?",
       "explanation": "The cues state that F3 is changing and unavailable.",
-      "hash": "2771034488a6e50a0ff7db29270061789bec60a67c42d207e1d1d3a6cd90e7d5",
+      "hash": "4a459f9ecebd34dfbf96303895178dbe7b883ccf299383b1cc99efc351525977",
       "review": "no-open-ai-finding"
     },
     {
@@ -66245,7 +66227,7 @@
       "type": "multi",
       "prompt": "Which two checks matter with one support option missing?",
       "explanation": "A reset and a forward route preserve choices while the line change reduces one support option.",
-      "hash": "5d668a2f3f000f4a9bc84b3de6c959cab8dba84c26086b534246ff2960f1b481",
+      "hash": "4d3f550348b008bcfa2347b9554ec0ce88397f52c2efc615fd299ab6ae224ef0",
       "review": "no-open-ai-finding"
     },
     {
@@ -66257,8 +66239,8 @@
       "family": "line-change-possession",
       "type": "sequence",
       "prompt": "Arrange a possession read during the change.",
-      "explanation": "The temporary absence changes the options, then the next scan can include the new player.",
-      "hash": "281ffd1d1dd9b1cb93ae628be412ba159778446dd077f78fd42fae0636b82028",
+      "explanation": "Keep scanning pressure and support while protecting or moving the puck. Recheck throughout the change, including when the replacement arrives; this is one suggested order, not a reason to stop scanning.",
+      "hash": "11289ac0fb8215e3a138e5a66e0d99b7df617336db06f1c6e0da508b2e55d23a",
       "review": "no-open-ai-finding"
     },
     {
@@ -66269,9 +66251,9 @@
       "topic": "Puck management",
       "family": "line-change-possession",
       "type": "position",
-      "prompt": "Move YOU to a position with D2 and F1 visible as different connections.",
-      "explanation": "This point changes the carrier angle while retaining a reset and forward option.",
-      "hash": "e5d5bc5889d9101786b52c66d83d21e1824caf09e859ec6345fa0b7512077d5a",
+      "prompt": "Move YOU to compare a reset toward D2 with a forward route toward F1.",
+      "explanation": "The example is closer to D2 and farther from F1. Compare pressure and both routes before using either; shorter distance does not guarantee an open pass.",
+      "hash": "acb2a5fbf91bd5d00431d81a53158027a04f14bfeaf7d29cc5e050ae57ae51af",
       "review": "no-open-ai-finding"
     },
     {
@@ -66282,9 +66264,9 @@
       "topic": "Puck management",
       "family": "line-change-possession",
       "type": "choice",
-      "prompt": "A new F3 appears in a clear middle lane. What can you reconsider?",
+      "prompt": "A new F3 appears in a clear middle lane. What can YOU reconsider?",
       "explanation": "The new player changes the support picture, but the carrier still checks access and pressure.",
-      "hash": "79c8d52d324f309e49d69ce169d48c8971544e79b53f751ed39e4ba39c626c84",
+      "hash": "2d9d961db78cbdd8198480d3affc92b7a20ade44a81de69c2b26240c827ed079",
       "review": "no-open-ai-finding"
     },
     {
@@ -66297,7 +66279,7 @@
       "type": "explain",
       "prompt": "Why does a line change call for a possession read rather than one fixed action?",
       "explanation": "The available outlet set changes while the puck and pressure remain live. Name D2, the forward route and the arriving F3, then choose the connection that stays reachable.",
-      "hash": "ad9a4b9ca529198ef6aa8c783126881557b2535a8b8d1f10466b6bcbf2b25afa",
+      "hash": "693618e17f1c0be232da5ff07713c39ae67bd199cc0b83de520a2f5af5de77ad",
       "review": "no-open-ai-finding"
     },
     {
@@ -66308,9 +66290,9 @@
       "topic": "Offensive possession",
       "family": "slot-crowding-reset",
       "type": "choice",
-      "prompt": "Which Navy teammate is the low outlet?",
-      "explanation": "F1 is the Navy player below the Gold net and available as the low outlet.",
-      "hash": "6f50089ab36da01a9d7ee1e09b4904445978236c8e159f0b25636e3f36590972",
+      "prompt": "Which Navy teammate is positioned behind Gold’s goal line?",
+      "explanation": "F1 is behind Gold’s goal line as a possible low outlet. Check the defenders before assuming a pass can reach F1.",
+      "hash": "03abb7e046da7566373e1b3e31f63280a60efe257a80d3305f0359822fe305f4",
       "review": "no-open-ai-finding"
     },
     {
@@ -66323,7 +66305,7 @@
       "type": "multi",
       "prompt": "Which two details support a reset?",
       "explanation": "The defender and low outlet determine whether the reset can preserve possession.",
-      "hash": "dd0bc9682c61dd1023cabadf59af564c17260fe2090dc3fb65530fb5afa7133e",
+      "hash": "a9c67c0deb01f7ef46fe49c9cf0170a51e4e71cc944461b17d82110b3ae7c2e6",
       "review": "no-open-ai-finding"
     },
     {
@@ -66335,8 +66317,8 @@
       "family": "slot-crowding-reset",
       "type": "sequence",
       "prompt": "Arrange a connected reset.",
-      "explanation": "The reset keeps the puck connected while the shaded slot and low route are re-read.",
-      "hash": "73ef5eeca58462518310f57550c46696fb6cf5e011a1ec85a4f1de8d74f70a54",
+      "explanation": "Scan F2, F1 and D1 while protecting the puck, then use a reachable option and scan again. Scanning and protection can overlap; a named outlet is not necessarily open.",
+      "hash": "1c90dcff82a8423d95e400222f2b06d085d3f16b9aaac0d2a34073d08e0f3742",
       "review": "no-open-ai-finding"
     },
     {
@@ -66347,9 +66329,9 @@
       "topic": "Offensive possession",
       "family": "slot-crowding-reset",
       "type": "position",
-      "prompt": "Move YOU off the wall to a support angle with F1 and F2 visible.",
-      "explanation": "This small move off the wall changes the carrier angle while keeping F1, F2 and the high outlet available to scan. Each passing lane still depends on the defenders.",
-      "hash": "6a36017bf42114af04df4e124cc07778e0d2ed09ae6e0b9b423f9a8265936a88",
+      "prompt": "Move YOU nearer the middle to compare the routes toward F1, F2 and D1.",
+      "explanation": "The example changes the carrier angle and brings YOU closer to all three teammates, but also closer to Gold 1 and Gold 3. Recheck the defenders before using any route.",
+      "hash": "61fd47859e6570d830cfafd208363bdc0e2beea3c8f7b2ce447ea8aa082ec09d",
       "review": "no-open-ai-finding"
     },
     {
@@ -66362,7 +66344,7 @@
       "type": "choice",
       "prompt": "Gold 1 leaves F2 to pressure YOU on the wall. What should be weighed?",
       "explanation": "The defender move may open F2, but carrier angle and F1 support still determine the connected choice.",
-      "hash": "aced1eeb50ed46bb517831e8d22dfe083b14a433027191f00c2b6aba95d9f5ce",
+      "hash": "d3102383b8418f617df6fedabd29b2448ba4b39412ae938eee81b8b7c256e6c2",
       "review": "no-open-ai-finding"
     },
     {
@@ -66375,7 +66357,7 @@
       "type": "explain",
       "prompt": "Name two support areas in this reset and explain their different value.",
       "explanation": "F1 offers a low outlet, while F2 offers an inside option if Gold 1 leaves it reachable. D1 is a high reset to check too, with Gold 3 nearby. Naming an outlet does not guarantee it is open.",
-      "hash": "ae7c9b2ee61a294629a98a3a98d30c9f4f3be7fc10df07fdcbefc4032d4157dd",
+      "hash": "37886a2f9ec5159529d5845bcbd7198640c5dd53e1e2a95925e9d4007ae08cb0",
       "review": "no-open-ai-finding"
     },
     {
