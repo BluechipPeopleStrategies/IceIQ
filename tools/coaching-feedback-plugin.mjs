@@ -11,8 +11,9 @@ export function validateContextFeedback(value,bank){
  const allowed=['Scene looks wrong','Wording unclear','Answer questionable','Too easy/hard','This works well'];
  return {id:crypto.randomUUID(),receivedAt:new Date().toISOString(),status:'new',questionId:q.id,scenarioId:s.id,scenarioVersion:s.version,afterHash:value.contentHash,note:value.note.trim(),tags:(value.tags||[]).filter(t=>allowed.includes(t)),context:value.context||{},questionSnapshot:q};
 }
-export function mergeFeedbackHistory(notes,dispositions){return notes.map(note=>{const updates=dispositions.filter(d=>d.feedbackId===note.id&&['investigating','changed','needs-context','no-change'].includes(d.status));return {...note,status:updates.at(-1)?.status||'received',updates};});}
+export function mergeFeedbackHistory(notes,dispositions){return notes.map(note=>{const updates=dispositions.filter(d=>d.feedbackId===note.id&&['investigating','changed','needs-context','no-change'].includes(d.status));return {...note,status:updates.at(-1)?.status||'received',updates,internalNotes:dispositions.filter(d=>d.feedbackId===note.id&&d.status==='internal-note')};});}
 const lines=file=>fs.existsSync(file)?fs.readFileSync(file,'utf8').split(/\r?\n/).filter(Boolean).map(l=>JSON.parse(l)):[];
+export function playerFeedbackView(notes,owner){return owner?notes.filter(n=>n.ownerId===owner).map(n=>({id:n.id,note:n.note,questionId:n.questionId,receivedAt:n.receivedAt,status:n.status,updates:n.updates.filter(u=>u.publicSummary).map(u=>({status:u.status,summary:u.publicSummary}))})):[];}
 export function validateFeedback(value,pack,hash){
  if(value?.packetSha256!==hash)throw Error('This draft changed. Reload before sending feedback.');
  const q=pack.directChanges.find(q=>q.questionId===value.questionId);
@@ -29,13 +30,18 @@ export function coachingFeedbackPlugin(){return {name:'local-coaching-feedback',
   res.setHeader('Content-Type','application/json');
   res.setHeader('Cache-Control','no-store');
   const dir=path.join(server.config.root,'tmp/coaching-feedback');
-  if(req.method==='GET'){try{return res.end(JSON.stringify({notes:mergeFeedbackHistory(lines(path.join(dir,'inbox.jsonl')),lines(path.join(dir,'dispositions.jsonl')))}));}catch{res.statusCode=500;return res.end(JSON.stringify({error:'Could not read feedback history.'}));}}
+  if(req.method==='GET'){try{const notes=mergeFeedbackHistory(lines(path.join(dir,'inbox.jsonl')),lines(path.join(dir,'dispositions.jsonl')));const admin=new URL(req.url,'http://localhost').searchParams.get('view')==='admin';return res.end(JSON.stringify({previewOnly:true,notes:admin?notes:playerFeedbackView(notes,req.headers['x-feedback-owner'])}));}catch{res.statusCode=500;return res.end(JSON.stringify({error:'Could not read feedback history.'}));}}
   try{let body='';for await(const chunk of req){body+=chunk;if(Buffer.byteLength(body)>20000)throw Error('Feedback too large.');}
+   if(new URL(req.url,'http://localhost').searchParams.get('action')==='comment'){
+    const v=JSON.parse(body);if(!lines(path.join(dir,'inbox.jsonl')).some(n=>n.id===v.feedbackId)||typeof v.note!=='string'||!v.note.trim()||v.note.length>4000)throw Error('Require an existing feedback item and a short note.');
+    fs.appendFileSync(path.join(dir,'dispositions.jsonl'),JSON.stringify({feedbackId:v.feedbackId,status:'internal-note',summary:v.note.trim(),recordedAt:new Date().toISOString()})+'\n');return res.end(JSON.stringify({saved:true}));
+   }
    const file=path.join(server.config.root,'docs/factory/coaching-panel/pilot-2026-09-06/staged-repairs.json');
    const raw=fs.readFileSync(file,'utf8'),hash=crypto.createHash('sha256').update(raw).digest('hex');
    const value=JSON.parse(body),pack=JSON.parse(raw);
    const bank=value.scope==='coaching-pilot-2026-09-06'?pack.scenarios:value.scope==='skating-2026-09-06'?JSON.parse(fs.readFileSync(path.join(server.config.root,'docs/factory/calibration/skating-movement-2026-09-06.json'),'utf8')).candidates:readBankFiles().bank;
    const entry=value.contentHash?validateContextFeedback(value,bank):validateFeedback(value,pack,hash);
+   const owner=req.headers['x-feedback-owner'];if(typeof owner==='string'&&/^[a-zA-Z0-9-]{16,80}$/.test(owner))entry.ownerId=owner;
    fs.mkdirSync(dir,{recursive:true});
    fs.appendFileSync(path.join(dir,'inbox.jsonl'),JSON.stringify(entry)+'\n');
    res.end(JSON.stringify({saved:true,id:entry.id}));

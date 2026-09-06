@@ -18,6 +18,10 @@ No automatic/background agent is installed. Submitted notes are picked up during
 
 ## In-question panel and follow-up history
 
+September 6 view split: `admin.html` is the local administrator desk, with all notes grouped by question, search/status filters, exact context, verification evidence and internal thoughts. Player responses are a server-side projection filtered by a browser-local owner token; legacy unowned notebook notes stay admin-only. Only disposition `publicSummary` is shown as explanatory player copy. Internal summaries, evidence, raw snapshots and administrator thoughts are omitted from the player response. Include publicSummary when recording a player-facing follow-up.
+
+This token and the admin query parameter are development presentation boundaries, not login, authorization or multi-user security. The endpoint stays loopback/same-origin. Do not deploy this as shared-account access control. Future authenticated backend must bind ownership to a verified account and authorize administrator endpoints. Thomas's optional thoughts do not mark anything fixed or block agent repairs.
+
 Experimental questions now include Leave a thought and My feedback history beside the rink. Optional tags never replace the note. Send captures the exact source hash/version, current answer, current actor positions/facing, puck state and presentation type (3D/overhead, not exact camera orbit). This local single-owner history includes notebook notes too. It is not a multi-user production service.
 
 Record a follow-up by writing a JSON file with feedbackId, status and summary, then run `node tools/update-coaching-feedback.mjs <file.json>`. Supported states are investigating, changed, needs-context and no-change. Changed additionally requires afterHash, beforeText, afterText and evidence. The command appends to dispositions.jsonl; it never overwrites the received note. The panel reads this history on opening or Refresh and offers a before/after comparison where recorded. Do not invent a completed change to demonstrate the UI.
