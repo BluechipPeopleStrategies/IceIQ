@@ -17,8 +17,14 @@ Luna's initial 39–40 findings missed the point and net-side geometry defects a
 
 ## Verification
 
-Three new regressions failed against the unrepaired bank: point direction, net-side distance and loose-puck approach. All49 focused release tests passed after application, including these three regressions. Build exited0 in10.27seconds. Local browser: exp26b-u18-007-q4 rendered the repaired scene, accepted placement(11,7) and displayed the matching conditional coaching suggestion. Screenshot inspected inline at390px; no horizontal overflow. This is not an exhaustive visual or desktop audit.
+Three new regressions failed against the unrepaired bank: point direction, net-side distance and loose-puck approach. All 49 focused release tests passed after application, including these three regressions. Build exited 0 in 10.27 seconds. Local browser: exp26b-u18-007-q4 rendered the repaired scene, accepted placement (11,7) and displayed the matching conditional coaching suggestion. Screenshot inspected inline at 390px; no horizontal overflow. This is not an exhaustive visual or desktop audit.
 
 Historical follow-ups retain all 55 archived versions. This batch changes five additional current-original matches, from 35 to 30; archive mismatches rise from 20 to 25, resolved through immutable receipts. No historical record is deleted.
 
 Original Claude files and the frozen project snapshot remain unchanged. AI review is not human coach approval or mastery admission. Supabase and unrelated app changes are excluded.
+
+## Production verification
+
+Release `3851cae32c03ed7e1ac8c637e9fe678d567e79d6` (root `9123a40`) reported Vercel success: https://vercel.com/bluechippeoplestrategies-projects/ice-iq/A8HD8TTbVhXbgz8CpQ72FwDBPqtW . Live exp26b-u18-007-q4 displayed the corrected prompt, accepted placement (11,7), and retained both coordinates and matching conditional feedback after a cache-bypassing reload. No horizontal overflow at 390px.
+
+Final inventory confirms 40 complete returns with 1,600 unique question IDs, 200 unique scenes and zero duplicate coverage IDs. No packet remains outstanding. This is completion of the packet workflow, not a claim that the bank is defect-free or human-coach-approved.
