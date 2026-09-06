@@ -5,9 +5,10 @@ import { seedEditorPlugin } from './tools/seed-editor-plugin.mjs'
 import { practiceJudgePlugin } from './tools/practice-judge-plugin.mjs'
 import { practiceReviewAssetsPlugin } from './tools/practice-review-assets.mjs'
 import { practiceContentAssetsPlugin } from './tools/practice-content-assets.mjs'
+import { coachingFeedbackPlugin } from './tools/coaching-feedback-plugin.mjs'
 
 export default defineConfig({
-  plugins: [react(), reviewServerPlugin(), seedEditorPlugin(), practiceJudgePlugin(), practiceReviewAssetsPlugin(), practiceContentAssetsPlugin()],
+  plugins: [react(), reviewServerPlugin(), seedEditorPlugin(), practiceJudgePlugin(), practiceReviewAssetsPlugin(), practiceContentAssetsPlugin(), coachingFeedbackPlugin()],
   build: {
     minify: 'terser',
     terserOptions: {

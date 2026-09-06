@@ -12,6 +12,7 @@ import { createPracticeAnalyticsStore } from './experimentalPracticeAnalytics.js
 import ExperimentalPracticeInsights from './ExperimentalPracticeInsights.jsx';
 import contentManifest from '../../docs/factory/research/question-review/current-content-manifest.json';
 import calibrationPack from '../../docs/factory/calibration/skating-movement-2026-09-06.json';
+import coachingPilot from '../../docs/factory/coaching-panel/pilot-2026-09-06/staged-repairs.json';
 import {experimentalRinkContext} from './experimentalRinkContext.js';
 
 function downloadFile(filename,text,type){
@@ -101,13 +102,16 @@ function ScenarioQuestions({scenario:s,record,onRecord,onFlag,onMetric}){
 }
 
 export default function ExperimentalPractice({playerId='practice-preview',bank:suppliedBank=EXPERIMENTAL_BANK,initialAge=''}){
- const calibration=new URLSearchParams(window.location.search).get('calibration')==='skating-2026-09-06';
- const bank=calibration?calibrationPack.candidates:suppliedBank;
- const storagePlayer=calibration?`${playerId}:calibration:skating-2026-09-06`:playerId;
+ const calibrationId=new URLSearchParams(window.location.search).get('calibration');
+ const pilot=calibrationId==='coaching-pilot-2026-09-06';
+ const calibration=pilot||calibrationId==='skating-2026-09-06';
+ const bank=pilot?coachingPilot.scenarios:calibration?calibrationPack.candidates:suppliedBank;
+ const storagePlayer=calibration?`${playerId}:calibration:${calibrationId}`:playerId;
  const key=attemptStorageKey(storagePlayer),reviewKey=reviewStorageKey(storagePlayer);
  const analytics=useMemo(()=>createPracticeAnalyticsStore(),[]);
  const [showInsights,setShowInsights]=useState(()=>new URLSearchParams(window.location.search).get('insights')==='curriculum');
  const metric=useCallback((event,s,q,extra={})=>{
+  if(calibration)return;
   const identity=contentManifest.questions[q.id];
   if(!identity||identity.scenarioId!==s.id||identity.scenarioVersion!==s.version)return;
   const meta={...identity,questionId:q.id,basis:q.basis,questionType:q.type,...extra};
@@ -116,7 +120,7 @@ export default function ExperimentalPractice({playerId='practice-preview',bank:s
   if(event==='skip')analytics.recordReflectionSkip(meta);
   if(event==='flag')analytics.recordQuestionFlag(meta);
   if(event==='camera')analytics.recordCameraUse(meta);
- },[analytics]);
+ },[analytics,calibration]);
  const [reviewState,setReviewState]=useState(()=>{try{return restoreReview(localStorage.getItem(reviewKey));}catch{return restoreReview(null);}});
  const [reviewMode,setReviewMode]=useState(()=>!calibration&&['triage','browse'].includes(new URLSearchParams(window.location.search).get('review')));
  const saveReview=next=>{setReviewState(next);try{localStorage.setItem(reviewKey,JSON.stringify(next));setSaveError(false);}catch{setSaveError(true);}};
@@ -137,7 +141,7 @@ export default function ExperimentalPractice({playerId='practice-preview',bank:s
  return <section className="ep-root" aria-label="Experimental scenario bank">
   <header className="ep-heading"><div><p className="ep-kicker">RINKREADS / EXPERIMENTAL PRACTICE</p><h1>One situation.<br/><em>Several ways to read it.</em></h1><p>Explore original hockey situations, place players, spot cues and explain your choices.</p></div><div className="ep-count"><strong>{bank.length}</strong><span>SCENARIOS</span><small>{practiceCount} practice questions · {count} in the authoring bank</small></div></header>
   <p className="ep-experimental">Experimental collection · Teaching answers are drafts for coaching review. Practice here does not award mastery points.</p>
-  {calibration&&<p className="ep-experimental"><strong>Calibration drafts · 4 scenes / 24 authored questions.</strong> These are separate from the normal bank. Static movement decisions do not assess skating technique. Responses save separately on this device; activity is excluded from normal practice analytics. <a href="/docs/factory/calibration/index.html">Review and export coaching feedback ↗</a></p>}
+  {calibration&&<p className="ep-experimental"><strong>Calibration drafts · {bank.length} scenes / {count} authored questions.</strong> These are separate from the normal bank. Static movement decisions do not assess skating technique. Responses save separately on this device; activity is excluded from normal practice analytics. <a href="/docs/factory/calibration/index.html">Review and export coaching feedback ↗</a></p>}
   {stored.error&&<p role="alert">Saved experimental responses could not be restored. Earlier practice history is unchanged.</p>}{saveError&&<p role="alert">Your responses are kept for this visit, but this browser could not save them.</p>}
   {!calibration&&<div className="ep-catalog-actions"><button type="button" onClick={()=>toggleReview(!reviewMode)}>{reviewMode?'Return to practice':'Question workshop · browse and triage'}</button><button type="button" aria-expanded={showInsights} onClick={()=>setShowInsights(v=>!v)}>{showInsights?'Hide practice report':'Practice report'}</button><a href="/docs/factory/curriculum-map/index.html" target="_blank" rel="noreferrer">Curriculum coverage ↗</a><a href="/docs/factory/RinkReads-Claude-Project-2026-09-05.zip" download>Download Claude project</a></div>}
   {!calibration&&showInsights&&<ExperimentalPracticeInsights store={analytics} bank={bank} manifest={contentManifest}/>}
