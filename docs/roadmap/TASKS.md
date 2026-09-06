@@ -1,6 +1,6 @@
 # RinkReads — Task List
 
-**Last updated:** 2026-09-06 · Player/admin feedback presentations separated locally. In-question optional feedback and follow-up history implemented locally. Optional feedback notebook and isolated repair preview ready; Codex owns review and repairs, owner approval checklist removed. Coaching panel pilot completed: five scenes / 34 questions, five independently rechecked draft repairs staged, not applied; model calibration failures and corrections preserved. Production 0126049 verified: 200 scenes with exact-content bindings (194 mapped, six taxonomy holds), local feedback aggregation, four separate calibration drafts / 24 questions, and screenshot-driven U11 wall retrieval, answer acknowledgement and zone wording repairs. Nine prior net-overlap repairs remain deployed as fb74d5b. Graded placement-area feedback is designed, not yet implemented. Supabase remains deferred.
+**Last updated:** 2026-09-06 · Feedback production boundary verified; authenticated backend draft prepared, not applied. Player/admin feedback presentations separated locally. In-question optional feedback and follow-up history implemented locally. Optional feedback notebook and isolated repair preview ready; Codex owns review and repairs, owner approval checklist removed. Coaching panel pilot completed: five scenes / 34 questions, five independently rechecked draft repairs staged, not applied; model calibration failures and corrections preserved. Production 0126049 verified: 200 scenes with exact-content bindings (194 mapped, six taxonomy holds), local feedback aggregation, four separate calibration drafts / 24 questions, and screenshot-driven U11 wall retrieval, answer acknowledgement and zone wording repairs. Nine prior net-overlap repairs remain deployed as fb74d5b. Graded placement-area feedback is designed, not yet implemented. Supabase remains deferred.
 
 **Scope:** RinkReads **app build + content factory**. Launch/distribution (sending the beta, marketing) and the separate BlueChip business are **out of scope** — parked at the bottom. Priority = position in this list. A new idea that isn't here goes to the **Parking Lot** first, then gets promoted on purpose — that's the scope-creep guard.
 
@@ -56,6 +56,8 @@
 - *(New ideas land here first, then get promoted into NEXT/LATER on purpose.)*
 
 ## Changelog
+
+- 2026-09-06: Audited existing AdminRoute/profile hardening. Prepared authenticated feedback release plan and draft SQL with owner-derived submission, registry identity and separate internal/public updates. SQL not executed (local Docker daemon unavailable); Supabase remains deferred. Gated local feedback/pilot to development and verified production output excludes the local endpoint/owner transport/admin HTML. Seven tests and build pass; no deployment.
 
 - 2026-09-06: Split local player feedback from administrator desk. Player history filters by browser owner token and omits internal evidence/notes; admin desk groups/searches/filters all notes and saves internal thoughts. Tested actual API filtering, internal-note persistence, seven unit tests and build. Browser token is preview partitioning, not authentication; shared role enforcement remains deferred.
 
