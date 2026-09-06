@@ -128,6 +128,20 @@ Extend the existing [multi-perspective play proposal](2026-09-05-multi-perspecti
 
 Proposed author workflow: open a scenario, scrub/freeze at a decision point, select an actor or move the author camera, save that view, choose the learning objective, attach a question and supported answer/feedback, then preview exactly what the learner can see. A second perspective becomes a separately reviewed question variant linked to the same world state, rather than an arbitrary rewrite of the original answer.
 
+### Confirmed option: starting view per question
+
+Thomas clarified: "when a question pops up, it auto-starts at that angle. Just as an option."
+
+- A question can optionally save a starting camera view: an authored external angle or a named player's first-person view.
+- Entering that question automatically applies its saved view before the question becomes answerable. The learner does not have to find the angle manually.
+- A question without a saved view uses the normal lesson camera behavior. Existing questions do not require new camera settings.
+- Apply the starting view on question entry, not on every render; this must not fight any permitted camera adjustment afterward.
+- Starting view and permission to look around afterward are separate settings. This clarification does not settle scan/free-camera access.
+- "Auto-starts" refers to camera initialization; playback, decision time and answer state keep their own existing controls.
+- Verify question-to-question transitions and re-entry with and without a saved view, including first-person actor binding and readiness. No temporary wrong-angle frame should become an answerable question.
+
+This is an accepted design requirement, not an implemented feature.
+
 Illustrative prompts for one frozen 2-on-1:
 
 | View | Possible learning question |

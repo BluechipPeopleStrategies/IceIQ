@@ -1,6 +1,6 @@
 # RinkReads — Task List
 
-**Last updated:** 2026-09-06 · Shared 3D design expanded with owner direction: higher-quality characters, expressive younger-age/tactical older-age presentation, first-person views and viewpoint-specific decision questions. Interaction details remain under discussion; model creation and integration remain open. All-scene audit and curriculum map completed over the 200-scene / 1,600-question snapshot. 400 release-app captures, zero load failures/overflow; nine actor/net footprint defects remain to repair. Routine practice has 1,500 questions with 200 optional reflections (13.3%). All 40 packet integrations remain deployed; this audit made no content fixes or deployment. Supabase stays deferred.
+**Last updated:** 2026-09-06 · Shared 3D design expanded with owner direction: higher-quality characters, expressive younger-age/tactical older-age presentation, first-person views and viewpoint-specific decision questions. Optional per-question starting camera views are confirmed; remaining interaction details, model creation and integration stay open. All-scene audit and curriculum map completed over the 200-scene / 1,600-question snapshot. 400 release-app captures, zero load failures/overflow; nine actor/net footprint defects remain to repair. Routine practice has 1,500 questions with 200 optional reflections (13.3%). All 40 packet integrations remain deployed; this audit made no content fixes or deployment. Supabase stays deferred.
 
 **Scope:** RinkReads **app build + content factory**. Launch/distribution (sending the beta, marketing) and the separate BlueChip business are **out of scope** — parked at the bottom. Priority = position in this list. A new idea that isn't here goes to the **Parking Lot** first, then gets promoted on purpose — that's the scope-creep guard.
 
@@ -58,6 +58,8 @@
 - *(New ideas land here first, then get promoted into NEXT/LATER on purpose.)*
 
 ## Changelog
+
+- **2026-09-06** · Thomas confirmed an optional saved starting camera view per question: opening the question automatically applies that angle, including first-person. Questions without it retain normal lesson camera behavior. Post-entry camera controls remain a separate choice. Recorded in the [shared 3D design](../superpowers/specs/2026-09-06-shared-3d-players-and-rinks-design.md); implementation remains open.
 
 - **2026-09-06** · Recorded Thomas's clarified 3D direction: higher-quality animated characters, age-adaptive character/tactical presentation, true player-eye views and multiple questions at saved viewpoints/decision moments. Expanded the [shared design](../superpowers/specs/2026-09-06-shared-3d-players-and-rinks-design.md) with author-camera workflow, player scan controls, close-up quality checks and viewpoint-bound question validity. Art terminology and interaction choices remain open; no new runtime implementation or release.
 
