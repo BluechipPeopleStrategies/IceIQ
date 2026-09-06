@@ -50,3 +50,18 @@ test('wall battle starts near the attacking side boards with an unowned puck',()
  const first=s.setup.actors.find(a=>a.label==='F1'),opponent=s.setup.actors.find(a=>a.label==='A1');
  assert.ok(distance(first,p)<1);assert.ok(distance(opponent,p)<1.5);
 });
+
+test('U18 forward covering the point moves toward the attacking blue line',()=>{
+ const s=scene('exp26b-u18-007'),q=question(s,4),a=s.setup.actors.find(a=>a.id===q.actorId);
+ assert.ok(Math.abs(q.reference.x-7.62)<Math.abs(a.x-7.62));
+ assert.ok(q.reference.y>0,'cover the vacated point on D1 side');
+});
+test('U18 penalty-kill comparison is weak-side and closer to the net than its low threat',()=>{
+ const s=scene('exp26b-u18-004'),q=question(s,4),threat=s.setup.actors.find(a=>a.label==='A2'),carrier=s.setup.actors.find(a=>a.id===s.setup.puck.owner);
+ assert.ok(q.reference.y*carrier.y<0);
+ assert.ok(distance(q.reference,{x:-26.82,y:0})<distance(threat,{x:-26.82,y:0}));
+});
+test('U18 drifting-pass approach gets closer to the actual puck without assigning control',()=>{
+ const s=scene('exp26b-u18-009'),q=question(s,4),a=s.setup.actors.find(a=>a.id===q.actorId);
+ assert.equal(s.setup.puck.owner,null);assert.ok(distance(q.reference,s.setup.puck)<distance(a,s.setup.puck));
+});

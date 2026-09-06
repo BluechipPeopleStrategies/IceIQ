@@ -13,8 +13,8 @@ const snapshots = loadHistoricalQuestionSnapshots(join(reviewRoot, "repairs"));
 test("all historical follow-ups resolve to exact archived or current content", () => {
   const resolved = rows.map(row => resolveHistoricalQuestion(row, source.get(row.questionId), snapshots));
   assert.equal(resolved.length, 55);
-  // Packet 21–34 repairs changed 15 more of the 55 archived question versions.
-  assert.equal(resolved.filter(row => !row.matchesCurrent).length, 20);
+  // Packets 37–40 changed five more originals; all 55 historical versions remain receipted.
+  assert.equal(resolved.filter(row => !row.matchesCurrent).length, 25);
   resolved.forEach((result, index) => {
     assert.equal(result.contentHash, rows[index].contentHash);
     assert.equal(result.question.id, rows[index].questionId);
