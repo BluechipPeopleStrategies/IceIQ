@@ -105,7 +105,7 @@ export default function ExperimentalPractice({playerId='practice-preview',bank=E
  const metric=useCallback((event,s,q,extra={})=>{
   const identity=contentManifest.questions[q.id];
   if(!identity||identity.scenarioId!==s.id||identity.scenarioVersion!==s.version)return;
-  const meta={...identity,questionId:q.id,basis:q.basis,questionType:q.type,...extra};
+  const meta={...identity,questionId:q.id,basis:q.basis,questionType:q.type,ageBand:s.ageBand,topic:s.topic,family:s.family,...extra};
   if(event==='view')analytics.recordQuestionView(meta);
   if(event==='check')analytics.recordQuestionCheck(meta);
   if(event==='skip')analytics.recordReflectionSkip(meta);

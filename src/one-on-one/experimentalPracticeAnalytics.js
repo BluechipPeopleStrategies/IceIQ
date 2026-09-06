@@ -5,6 +5,7 @@ export const ANALYTICS_STORAGE_KEY = 'rinkreads_experimental_practice_analytics_
 const EVENT_NAMES = new Set(['question_view', 'question_check', 'reflection_skip', 'question_flag', 'camera_use']);
 const QUESTION_TYPES = new Set(['choice', 'multi', 'sequence', 'position', 'explain']);
 const BASES = new Set(['scene', 'coaching']);
+const AGE_BANDS = new Set(['U7', 'U9', 'U11', 'U13', 'U15', 'U18']);
 const FLAG_CATEGORIES = new Set(['Hockey decision', 'Scene or player position', 'Unclear question', 'Age or wording', 'Answer or feedback', 'Rule or safety', 'Other']);
 const CAMERA_ACTIONS = new Set(['labels-on', 'labels-off', 'camera-full', 'camera-broadcast', 'camera-rink-side', 'camera-behind-net', 'camera-overhead', 'focus-change']);
 
@@ -34,6 +35,8 @@ export function isValidAnalyticsEvent(event) {
   if (!EVENT_NAMES.has(event.event) || !validText(event.id, 220) || !validTimestamp(event.at)) return false;
   if (!validText(event.scenarioId) || !validVersion(event.scenarioVersion) || !validText(event.questionId)) return false;
   if (event.contentHash !== undefined && !validText(event.contentHash, 160)) return false;
+  if (event.ageBand !== undefined && !AGE_BANDS.has(event.ageBand)) return false;
+  if (['topic', 'family'].some(field => event[field] !== undefined && !validText(event[field], 120))) return false;
   if (event.basis !== undefined && !BASES.has(event.basis)) return false;
   if (event.questionType !== undefined && !QUESTION_TYPES.has(event.questionType)) return false;
   if (event.viewEventId !== undefined && !validText(event.viewEventId, 220)) return false;
@@ -56,6 +59,8 @@ function normalizeMeta(meta) {
     questionId: typeof meta.questionId === 'string' ? meta.questionId.trim() : '',
   };
   if (typeof meta.contentHash === 'string' && meta.contentHash.trim()) normalized.contentHash = meta.contentHash.trim();
+  if (AGE_BANDS.has(meta.ageBand)) normalized.ageBand = meta.ageBand;
+  for (const field of ['topic', 'family']) if (validText(meta[field], 120)) normalized[field] = meta[field].trim();
   if (BASES.has(meta.basis)) normalized.basis = meta.basis;
   if (QUESTION_TYPES.has(meta.questionType)) normalized.questionType = meta.questionType;
   return validText(normalized.scenarioId) && validVersion(normalized.scenarioVersion) && validText(normalized.questionId) ? normalized : null;
@@ -64,7 +69,7 @@ function normalizeMeta(meta) {
 export function normalizeAnalyticsEvent(event) {
   if (!isValidAnalyticsEvent(event)) return null;
   const copy = { event: event.event, id: event.id, at: event.at, scenarioId: event.scenarioId, scenarioVersion: event.scenarioVersion, questionId: event.questionId };
-  for (const field of ['contentHash', 'basis', 'questionType']) if (event[field] !== undefined) copy[field] = event[field];
+  for (const field of ['contentHash', 'basis', 'questionType', 'ageBand', 'topic', 'family']) if (event[field] !== undefined) copy[field] = event[field];
   if (event.event === 'question_check') Object.assign(copy, { attemptNumber: event.attemptNumber, retry: event.retry, ...(event.viewEventId ? { viewEventId: event.viewEventId } : {}), ...(event.basis === 'scene' ? { sceneMatch: event.sceneMatch } : {}) });
   if (event.event === 'reflection_skip' && event.viewEventId) copy.viewEventId = event.viewEventId;
   if (event.event === 'question_flag') copy.category = event.category;
@@ -250,6 +255,8 @@ export function buildPracticeInsights(input) {
       cameraUses: cameraUses.length,
     },
     mostViewed: aggregate(views, aggregateKey, event => ({ scenarioId: event.scenarioId, scenarioVersion: event.scenarioVersion, questionId: event.questionId, contentHash: event.contentHash })),
+    viewsByAge: aggregate(views, event => event.ageBand || 'unknown'),
+    viewsByTopic: aggregate(views, event => event.topic || 'unknown'),
     mostRetried,
     mostFlagged,
     completionRates,

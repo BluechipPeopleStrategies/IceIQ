@@ -165,3 +165,21 @@ test('exposes memory-only status when persistence fails', () => {
   assert.equal(store.getState().storageStatus, 'memory-only');
   assert.equal(JSON.parse(store.exportJSON()).events.length, 1);
 });
+
+
+test('authored curriculum context survives reload without adding personal fields', () => {
+ const target=storage();const store=createPracticeAnalyticsStore({storage:target,sessionId:'context'});
+ const meta={...base,ageBand:'U9',topic:'Receiving',family:'wall-reception',playerName:'Not retained'};
+ store.recordQuestionView(meta);store.recordQuestionCheck(meta);
+ const restored=restorePracticeAnalytics(target.raw());
+ for(const event of restored.events){assert.equal(event.ageBand,'U9');assert.equal(event.topic,'Receiving');assert.equal(event.family,'wall-reception');assert.equal(event.playerName,undefined);}
+ assert.deepEqual(buildPracticeInsights(restored).viewsByAge,[{key:'U9',count:1}]);
+});
+
+test('historical events without curriculum context remain unknown rather than inferred', () => {
+ const store=createPracticeAnalyticsStore({storage:storage(),sessionId:'old-context'});
+ store.recordQuestionView(base);
+ const restored=restorePracticeAnalytics(store.exportJSON());
+ assert.equal(restored.events.length,1);assert.equal(restored.events[0].ageBand,undefined);
+ assert.deepEqual(buildPracticeInsights(restored).viewsByAge,[{key:'unknown',count:1}]);
+});

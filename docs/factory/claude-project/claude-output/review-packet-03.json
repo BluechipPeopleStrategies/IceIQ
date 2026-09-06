@@ -1,0 +1,3281 @@
+{
+  "schemaVersion": 1,
+  "kind": "rinkreads-content-review",
+  "status": "draft-not-reviewed",
+  "snapshotId": "rr-20260905-c8403be16748c919",
+  "packetId": "packet-03",
+  "completion": "complete",
+  "coverage": [
+    {
+      "scenarioId": "exp26-u7-007",
+      "questionId": "exp26-u7-007-q1",
+      "baseContentHash": "2894c56bedc1ee163aa193889079a0c233c0a64c684dec1c359ed4cd40837a1d",
+      "verdict": "retain",
+      "reason": "Scene fact. The briefing assigns YOU the navy goal at the -x end and YOU stand at x=-25.5, 1.63 m in front of the navy goal line at x=-27.13, so option b is the only supported answer and basis scene is correct.",
+      "checks": {
+        "roster": "pass",
+        "geometry": "pass",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "pass"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "YOU (home-skater-1, displayed Navy team, label YOU) at x=-25.5, y=0, facing 0 rad, about 1.63 m in front of the navy goal line at x=-27.13.",
+          "H2 (home-skater-2, displayed \"Navy 2\") at x=-18, y=7, facing -2.5 rad.",
+          "A1 (away-skater-1, displayed \"Gold 1\") at x=-18, y=-3, facing 2.7 rad, and A1 owns the puck.",
+          "The carried puck renders at x=-19.203, y=-3.205 by the engine formula, 1.221 m from Gold1 and 7.066 m from YOU.",
+          "All three actors and the carried puck are inside the ice surface by isCoachRoutePoint."
+        ],
+        "stated": [
+          "The briefing assigns YOU a short turn defending the navy goal at the -x end.",
+          "The briefing says the coach names the blue area in front of the net the crease.",
+          "The briefing says YOU are a skater taking a turn, not a permanent goalie, and that Navy2 takes the next turn.",
+          "The briefing says navy attacks the +x end and gold attacks the -x end, and that the full rink is only an orientation map for a small activity."
+        ],
+        "unproven": [
+          "No actor is shown moving; facing does not establish where any player is looking.",
+          "Nothing establishes puck velocity, a shot, a pass or any completed action.",
+          "Nothing establishes how long the turn lasts or when the coach ends it.",
+          "The rendered camera framing and on-screen legibility were not inspected; no application view was available."
+        ]
+      },
+      "alternative": "None. The defended goal is fixed by the briefing, so no alternative answer is defensible here.",
+      "sourceUrls": [
+        "https://www.hockeycanada.ca/en-ca/hockey-programs/coaching/under-7/faq",
+        "https://cdn1.sportngin.com/attachments/document/0066/4690/Skill_Progression_Manual_19_FINAL.pdf"
+      ]
+    },
+    {
+      "scenarioId": "exp26-u7-007",
+      "questionId": "exp26-u7-007-q2",
+      "baseContentHash": "a760ff90419ef3f9d041f659d6e16d51d3e7c6f369fd4f54ed9a9e73bcfba350",
+      "verdict": "retain",
+      "reason": "Scene fact. The briefing explicitly names the blue area the crease, and the explanation correctly scopes it as naming an area rather than a crease-entry rule. Hockey Canada U7 setup guidance says a crease need not be drawn for U7 games, which is a format note recorded in the source check, not a defect in a vocabulary question on a full-rink orientation map.",
+      "checks": {
+        "roster": "pass",
+        "geometry": "pass",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "pass"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "YOU (home-skater-1, displayed Navy team, label YOU) at x=-25.5, y=0, facing 0 rad, about 1.63 m in front of the navy goal line at x=-27.13.",
+          "H2 (home-skater-2, displayed \"Navy 2\") at x=-18, y=7, facing -2.5 rad.",
+          "A1 (away-skater-1, displayed \"Gold 1\") at x=-18, y=-3, facing 2.7 rad, and A1 owns the puck.",
+          "The carried puck renders at x=-19.203, y=-3.205 by the engine formula, 1.221 m from Gold1 and 7.066 m from YOU.",
+          "All three actors and the carried puck are inside the ice surface by isCoachRoutePoint."
+        ],
+        "stated": [
+          "The briefing assigns YOU a short turn defending the navy goal at the -x end.",
+          "The briefing says the coach names the blue area in front of the net the crease.",
+          "The briefing says YOU are a skater taking a turn, not a permanent goalie, and that Navy2 takes the next turn.",
+          "The briefing says navy attacks the +x end and gold attacks the -x end, and that the full rink is only an orientation map for a small activity."
+        ],
+        "unproven": [
+          "No actor is shown moving; facing does not establish where any player is looking.",
+          "Nothing establishes puck velocity, a shot, a pass or any completed action.",
+          "Nothing establishes how long the turn lasts or when the coach ends it.",
+          "The rendered camera framing and on-screen legibility were not inspected; no application view was available."
+        ]
+      },
+      "alternative": "None on the key. A coach running an actual U7 cross-ice game may have no drawn crease, which is a format note rather than a different answer.",
+      "sourceUrls": [
+        "https://www.hockeycanada.ca/en-ca/hockey-programs/coaching/under-7/faq",
+        "https://cdn1.sportngin.com/attachments/document/0066/4690/Skill_Progression_Manual_19_FINAL.pdf"
+      ]
+    },
+    {
+      "scenarioId": "exp26-u7-007",
+      "questionId": "exp26-u7-007-q3",
+      "baseContentHash": "0fc2e01402983e93f12c6e59f3b187cb2a68d7f33fb6ced141ca1b1290bddac5",
+      "verdict": "retain",
+      "reason": "The order matches the rotation the briefing declares and the explanation attributes the swap to the coach rather than to a rule. Hockey Canada U7 FAQ and USA Hockey 8U both support rotating the goal-defending role without full-time goaltenders.",
+      "checks": {
+        "roster": "pass",
+        "geometry": "pass",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "pass"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "YOU (home-skater-1, displayed Navy team, label YOU) at x=-25.5, y=0, facing 0 rad, about 1.63 m in front of the navy goal line at x=-27.13.",
+          "H2 (home-skater-2, displayed \"Navy 2\") at x=-18, y=7, facing -2.5 rad.",
+          "A1 (away-skater-1, displayed \"Gold 1\") at x=-18, y=-3, facing 2.7 rad, and A1 owns the puck.",
+          "The carried puck renders at x=-19.203, y=-3.205 by the engine formula, 1.221 m from Gold1 and 7.066 m from YOU.",
+          "All three actors and the carried puck are inside the ice surface by isCoachRoutePoint."
+        ],
+        "stated": [
+          "The briefing assigns YOU a short turn defending the navy goal at the -x end.",
+          "The briefing says the coach names the blue area in front of the net the crease.",
+          "The briefing says YOU are a skater taking a turn, not a permanent goalie, and that Navy2 takes the next turn.",
+          "The briefing says navy attacks the +x end and gold attacks the -x end, and that the full rink is only an orientation map for a small activity."
+        ],
+        "unproven": [
+          "No actor is shown moving; facing does not establish where any player is looking.",
+          "Nothing establishes puck velocity, a shot, a pass or any completed action.",
+          "Nothing establishes how long the turn lasts or when the coach ends it.",
+          "The rendered camera framing and on-screen legibility were not inspected; no application view was available."
+        ]
+      },
+      "alternative": "A coach can end a turn early or change the rotation order; the sequence is the declared activity routine, not a fixed law.",
+      "sourceUrls": [
+        "https://www.hockeycanada.ca/en-ca/hockey-programs/coaching/under-7/faq",
+        "https://cdn1.sportngin.com/attachments/document/0066/4690/Skill_Progression_Manual_19_FINAL.pdf"
+      ]
+    },
+    {
+      "scenarioId": "exp26-u7-007",
+      "questionId": "exp26-u7-007-q4",
+      "baseContentHash": "8c363dcd0953234461cbb49fba18a6db77c123f1a95718bcabc51775a0f8b79e",
+      "verdict": "retain",
+      "reason": "Both keyed facts are directly supported: A1/Gold1 owns the puck in the setup, and the briefing says Navy2 takes the next turn. The distractor contradicts the briefing, which states YOU are not a permanent goalie.",
+      "checks": {
+        "roster": "pass",
+        "geometry": "pass",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "pass"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "YOU (home-skater-1, displayed Navy team, label YOU) at x=-25.5, y=0, facing 0 rad, about 1.63 m in front of the navy goal line at x=-27.13.",
+          "H2 (home-skater-2, displayed \"Navy 2\") at x=-18, y=7, facing -2.5 rad.",
+          "A1 (away-skater-1, displayed \"Gold 1\") at x=-18, y=-3, facing 2.7 rad, and A1 owns the puck.",
+          "The carried puck renders at x=-19.203, y=-3.205 by the engine formula, 1.221 m from Gold1 and 7.066 m from YOU.",
+          "All three actors and the carried puck are inside the ice surface by isCoachRoutePoint."
+        ],
+        "stated": [
+          "The briefing assigns YOU a short turn defending the navy goal at the -x end.",
+          "The briefing says the coach names the blue area in front of the net the crease.",
+          "The briefing says YOU are a skater taking a turn, not a permanent goalie, and that Navy2 takes the next turn.",
+          "The briefing says navy attacks the +x end and gold attacks the -x end, and that the full rink is only an orientation map for a small activity."
+        ],
+        "unproven": [
+          "No actor is shown moving; facing does not establish where any player is looking.",
+          "Nothing establishes puck velocity, a shot, a pass or any completed action.",
+          "Nothing establishes how long the turn lasts or when the coach ends it.",
+          "The rendered camera framing and on-screen legibility were not inspected; no application view was available."
+        ]
+      },
+      "alternative": "None. Both keyed items are stated facts, and the multi-select format correctly carries two supported answers.",
+      "sourceUrls": [
+        "https://www.hockeycanada.ca/en-ca/hockey-programs/coaching/under-7/faq",
+        "https://cdn1.sportngin.com/attachments/document/0066/4690/Skill_Progression_Manual_19_FINAL.pdf"
+      ]
+    },
+    {
+      "scenarioId": "exp26-u7-007",
+      "questionId": "exp26-u7-007-q5",
+      "baseContentHash": "6fa2cdda2c0bfb051dad88864b182110ff7c8e12b4b4d41d8c4225d1dc646ab4",
+      "verdict": "repair",
+      "reason": "Low-severity contract conformance. The prompt supplies a changed condition (\"Imagine Navy2 gains control\"), which the answer contract assigns to basis coaching, but the question is set to basis scene. Because the engine scores scene-basis choice questions objectively (\"You read the scene\"), a supplied hypothetical is presented as a directly readable scene fact. 24 of 26 \"Imagine\" prompts in the snapshot already use coaching; the only other scene-basis instance is exp26-u7-002-q5, outside this packet. The counter-argument is real and worth stating: the hypothetical is explicitly stated in the prompt and has exactly one logical answer, so Codex may reasonably decline this single change without affecting the rest of the repair.",
+      "checks": {
+        "roster": "pass",
+        "geometry": "pass",
+        "answer": "fail",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "pass"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "YOU (home-skater-1, displayed Navy team, label YOU) at x=-25.5, y=0, facing 0 rad, about 1.63 m in front of the navy goal line at x=-27.13.",
+          "H2 (home-skater-2, displayed \"Navy 2\") at x=-18, y=7, facing -2.5 rad.",
+          "A1 (away-skater-1, displayed \"Gold 1\") at x=-18, y=-3, facing 2.7 rad, and A1 owns the puck.",
+          "The carried puck renders at x=-19.203, y=-3.205 by the engine formula, 1.221 m from Gold1 and 7.066 m from YOU.",
+          "All three actors and the carried puck are inside the ice surface by isCoachRoutePoint."
+        ],
+        "stated": [
+          "The briefing assigns YOU a short turn defending the navy goal at the -x end.",
+          "The briefing says the coach names the blue area in front of the net the crease.",
+          "The briefing says YOU are a skater taking a turn, not a permanent goalie, and that Navy2 takes the next turn.",
+          "The briefing says navy attacks the +x end and gold attacks the -x end, and that the full rink is only an orientation map for a small activity."
+        ],
+        "unproven": [
+          "No actor is shown moving; facing does not establish where any player is looking.",
+          "Nothing establishes puck velocity, a shot, a pass or any completed action.",
+          "Nothing establishes how long the turn lasts or when the coach ends it.",
+          "The rendered camera framing and on-screen legibility were not inspected; no application view was available."
+        ]
+      },
+      "alternative": "Keeping the current wording and only changing basis preserves the teaching objective. Declining the change is defensible if Codex judges a prompt-stated hypothetical to count as an explicitly stated fact.",
+      "sourceUrls": [
+        "https://www.hockeycanada.ca/en-ca/hockey-programs/coaching/under-7/faq",
+        "https://cdn1.sportngin.com/attachments/document/0066/4690/Skill_Progression_Manual_19_FINAL.pdf"
+      ]
+    },
+    {
+      "scenarioId": "exp26-u7-007",
+      "questionId": "exp26-u7-007-q6",
+      "baseContentHash": "f69e9fcbc5c9e141c5bc6a100039abe1ace7d7e163c3e41ec07c75a7bb451bec",
+      "verdict": "retain",
+      "reason": "Optional reflection with no answer key and no writing requirement, correctly on coaching basis. The prompt fits the declared rotation and the scenario limits already state that no goaltending technique is scored.",
+      "checks": {
+        "roster": "pass",
+        "geometry": "pass",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "pass"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "YOU (home-skater-1, displayed Navy team, label YOU) at x=-25.5, y=0, facing 0 rad, about 1.63 m in front of the navy goal line at x=-27.13.",
+          "H2 (home-skater-2, displayed \"Navy 2\") at x=-18, y=7, facing -2.5 rad.",
+          "A1 (away-skater-1, displayed \"Gold 1\") at x=-18, y=-3, facing 2.7 rad, and A1 owns the puck.",
+          "The carried puck renders at x=-19.203, y=-3.205 by the engine formula, 1.221 m from Gold1 and 7.066 m from YOU.",
+          "All three actors and the carried puck are inside the ice surface by isCoachRoutePoint."
+        ],
+        "stated": [
+          "The briefing assigns YOU a short turn defending the navy goal at the -x end.",
+          "The briefing says the coach names the blue area in front of the net the crease.",
+          "The briefing says YOU are a skater taking a turn, not a permanent goalie, and that Navy2 takes the next turn.",
+          "The briefing says navy attacks the +x end and gold attacks the -x end, and that the full rink is only an orientation map for a small activity."
+        ],
+        "unproven": [
+          "No actor is shown moving; facing does not establish where any player is looking.",
+          "Nothing establishes puck velocity, a shot, a pass or any completed action.",
+          "Nothing establishes how long the turn lasts or when the coach ends it.",
+          "The rendered camera framing and on-screen legibility were not inspected; no application view was available."
+        ]
+      },
+      "alternative": "Any respectful answer works; encouragement, giving space and offering to help are all acceptable.",
+      "sourceUrls": [
+        "https://www.hockeycanada.ca/en-ca/hockey-programs/coaching/under-7/faq",
+        "https://cdn1.sportngin.com/attachments/document/0066/4690/Skill_Progression_Manual_19_FINAL.pdf"
+      ]
+    },
+    {
+      "scenarioId": "exp26-u7-007",
+      "questionId": "exp26-u7-007-q7",
+      "baseContentHash": "764c86e50259aa02796ac65a6a2813f93e11d8c1bd8bdf4f33e42df47af71921",
+      "verdict": "repair",
+      "reason": "Scene mismatch. The prompt asks what to do \"if Gold1 enters your support lane\", which presumes YOU are supporting a navy puck carrier. In this scene Gold1 owns the puck, Navy2 is 10.276 m from it and carries nothing, and YOU are a goal-defender 1.63 m in front of the navy goal line. Option b (\"Stand beside Navy2 again\") refers to a shared position that never existed, and option c is an absurd distractor. Separately, \"support lane\" is off-puck support system language: USA Hockey 8U says no time should be spent teaching team-play systems at this age, and the locked curriculum ledger introduces off-puck-support-offense at U9, not U7.",
+      "checks": {
+        "roster": "pass",
+        "geometry": "pass",
+        "answer": "fail",
+        "feedback": "fail",
+        "age": "fail",
+        "sources": "pass",
+        "grammar": "pass"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "YOU (home-skater-1, displayed Navy team, label YOU) at x=-25.5, y=0, facing 0 rad, about 1.63 m in front of the navy goal line at x=-27.13.",
+          "H2 (home-skater-2, displayed \"Navy 2\") at x=-18, y=7, facing -2.5 rad.",
+          "A1 (away-skater-1, displayed \"Gold 1\") at x=-18, y=-3, facing 2.7 rad, and A1 owns the puck.",
+          "The carried puck renders at x=-19.203, y=-3.205 by the engine formula, 1.221 m from Gold1 and 7.066 m from YOU.",
+          "All three actors and the carried puck are inside the ice surface by isCoachRoutePoint."
+        ],
+        "stated": [
+          "The briefing assigns YOU a short turn defending the navy goal at the -x end.",
+          "The briefing says the coach names the blue area in front of the net the crease.",
+          "The briefing says YOU are a skater taking a turn, not a permanent goalie, and that Navy2 takes the next turn.",
+          "The briefing says navy attacks the +x end and gold attacks the -x end, and that the full rink is only an orientation map for a small activity."
+        ],
+        "unproven": [
+          "No actor is shown moving; facing does not establish where any player is looking.",
+          "Nothing establishes puck velocity, a shot, a pass or any completed action.",
+          "Nothing establishes how long the turn lasts or when the coach ends it.",
+          "The rendered camera framing and on-screen legibility were not inspected; no application view was available."
+        ]
+      },
+      "alternative": "A U7-appropriate first action here is to locate the puck owner and the puck. If Navy2 won the puck the useful cue would change to looking up the ice, which the replacement explanation states as the condition.",
+      "sourceUrls": [
+        "https://www.hockeycanada.ca/en-ca/hockey-programs/coaching/under-7/faq",
+        "https://cdn1.sportngin.com/attachments/document/0066/4690/Skill_Progression_Manual_19_FINAL.pdf"
+      ]
+    },
+    {
+      "scenarioId": "exp26-u7-007",
+      "questionId": "exp26-u7-007-q8",
+      "baseContentHash": "c4e7acc2d7fdfb851e363e961e816b5a306adc35539a7e97c0c871e2e4acaa15",
+      "verdict": "repair",
+      "reason": "Roster and possession error. Option a is \"Navy2's puck\", but Navy2 (H2) does not own the puck in this scene; A1/Gold1 does. The keyed pair therefore contains a false ownership claim, and the explanation compounds it by calling Navy2 \"the carrier\". The prompt also depends on q7's invented support-lane move (\"after moving\"), so it inherits that scene mismatch.",
+      "checks": {
+        "roster": "fail",
+        "geometry": "pass",
+        "answer": "fail",
+        "feedback": "fail",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "pass"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "YOU (home-skater-1, displayed Navy team, label YOU) at x=-25.5, y=0, facing 0 rad, about 1.63 m in front of the navy goal line at x=-27.13.",
+          "H2 (home-skater-2, displayed \"Navy 2\") at x=-18, y=7, facing -2.5 rad.",
+          "A1 (away-skater-1, displayed \"Gold 1\") at x=-18, y=-3, facing 2.7 rad, and A1 owns the puck.",
+          "The carried puck renders at x=-19.203, y=-3.205 by the engine formula, 1.221 m from Gold1 and 7.066 m from YOU.",
+          "All three actors and the carried puck are inside the ice surface by isCoachRoutePoint."
+        ],
+        "stated": [
+          "The briefing assigns YOU a short turn defending the navy goal at the -x end.",
+          "The briefing says the coach names the blue area in front of the net the crease.",
+          "The briefing says YOU are a skater taking a turn, not a permanent goalie, and that Navy2 takes the next turn.",
+          "The briefing says navy attacks the +x end and gold attacks the -x end, and that the full rink is only an orientation map for a small activity."
+        ],
+        "unproven": [
+          "No actor is shown moving; facing does not establish where any player is looking.",
+          "Nothing establishes puck velocity, a shot, a pass or any completed action.",
+          "Nothing establishes how long the turn lasts or when the coach ends it.",
+          "The rendered camera framing and on-screen legibility were not inspected; no application view was available."
+        ]
+      },
+      "alternative": "Which cues matter genuinely varies, but any supported pair has to name a cue this scene actually contains: the puck owner, the puck position relative to the navy net, or Navy2 as the next player in the rotation.",
+      "sourceUrls": [
+        "https://www.hockeycanada.ca/en-ca/hockey-programs/coaching/under-7/faq",
+        "https://cdn1.sportngin.com/attachments/document/0066/4690/Skill_Progression_Manual_19_FINAL.pdf"
+      ]
+    },
+    {
+      "scenarioId": "exp26-u7-007",
+      "questionId": "exp26-u7-007-q9",
+      "baseContentHash": "f5b9b9bd36361b32b469a0e08b2d6ff6da0604ac6c70aa4f17d0970c08b3d0fe",
+      "verdict": "repair",
+      "reason": "Geometry and role failure, the highest-impact item in this scenario. The reference (-5,-2) moves YOU 20.597 m from the navy net YOU were assigned to defend, out past the blue line at x=-7.62. The prompt says \"below the carrier\", but the only carrier is Gold1 at (-18,-3), 13.038 m from the reference, and the reference y=-2 is above Gold1's y=-3, so \"below\" is false either way. The explanation says the move \"gives Navy2 separation\", yet Navy2 is 15.811 m from the reference. Every spatial claim attached to this reference is false against the actual coordinates.",
+      "checks": {
+        "roster": "pass",
+        "geometry": "fail",
+        "answer": "fail",
+        "feedback": "fail",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "pass"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "YOU (home-skater-1, displayed Navy team, label YOU) at x=-25.5, y=0, facing 0 rad, about 1.63 m in front of the navy goal line at x=-27.13.",
+          "H2 (home-skater-2, displayed \"Navy 2\") at x=-18, y=7, facing -2.5 rad.",
+          "A1 (away-skater-1, displayed \"Gold 1\") at x=-18, y=-3, facing 2.7 rad, and A1 owns the puck.",
+          "The carried puck renders at x=-19.203, y=-3.205 by the engine formula, 1.221 m from Gold1 and 7.066 m from YOU.",
+          "All three actors and the carried puck are inside the ice surface by isCoachRoutePoint."
+        ],
+        "stated": [
+          "The briefing assigns YOU a short turn defending the navy goal at the -x end.",
+          "The briefing says the coach names the blue area in front of the net the crease.",
+          "The briefing says YOU are a skater taking a turn, not a permanent goalie, and that Navy2 takes the next turn.",
+          "The briefing says navy attacks the +x end and gold attacks the -x end, and that the full rink is only an orientation map for a small activity."
+        ],
+        "unproven": [
+          "No actor is shown moving; facing does not establish where any player is looking.",
+          "Nothing establishes puck velocity, a shot, a pass or any completed action.",
+          "Nothing establishes how long the turn lasts or when the coach ends it.",
+          "The rendered camera framing and on-screen legibility were not inspected; no application view was available."
+        ]
+      },
+      "alternative": "A position reference here is one example, not an exclusive dot. Any nearby spot in front of the navy net that keeps the puck in view is defensible, and the right spot changes as the puck moves.",
+      "sourceUrls": [
+        "https://www.hockeycanada.ca/en-ca/hockey-programs/coaching/under-7/faq",
+        "https://cdn1.sportngin.com/attachments/document/0066/4690/Skill_Progression_Manual_19_FINAL.pdf"
+      ]
+    },
+    {
+      "scenarioId": "exp26-u7-007",
+      "questionId": "exp26-u7-007-q10",
+      "baseContentHash": "cf994b1db90cae7436e01309c295c1e04a2b099cdf37d65b745324638281c33d",
+      "verdict": "repair",
+      "reason": "The reflection presumes a crowding problem the scene does not contain: YOU are 9.579 m from Navy2, and no two navy players share a space. It also belongs to the same imported support-lane block as q7 to q9, so it teaches a spacing lesson that no cue in this scene sets up.",
+      "checks": {
+        "roster": "pass",
+        "geometry": "pass",
+        "answer": "fail",
+        "feedback": "fail",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "pass"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "YOU (home-skater-1, displayed Navy team, label YOU) at x=-25.5, y=0, facing 0 rad, about 1.63 m in front of the navy goal line at x=-27.13.",
+          "H2 (home-skater-2, displayed \"Navy 2\") at x=-18, y=7, facing -2.5 rad.",
+          "A1 (away-skater-1, displayed \"Gold 1\") at x=-18, y=-3, facing 2.7 rad, and A1 owns the puck.",
+          "The carried puck renders at x=-19.203, y=-3.205 by the engine formula, 1.221 m from Gold1 and 7.066 m from YOU.",
+          "All three actors and the carried puck are inside the ice surface by isCoachRoutePoint."
+        ],
+        "stated": [
+          "The briefing assigns YOU a short turn defending the navy goal at the -x end.",
+          "The briefing says the coach names the blue area in front of the net the crease.",
+          "The briefing says YOU are a skater taking a turn, not a permanent goalie, and that Navy2 takes the next turn.",
+          "The briefing says navy attacks the +x end and gold attacks the -x end, and that the full rink is only an orientation map for a small activity."
+        ],
+        "unproven": [
+          "No actor is shown moving; facing does not establish where any player is looking.",
+          "Nothing establishes puck velocity, a shot, a pass or any completed action.",
+          "Nothing establishes how long the turn lasts or when the coach ends it.",
+          "The rendered camera framing and on-screen legibility were not inspected; no application view was available."
+        ]
+      },
+      "alternative": "Spacing is a real U7 idea, but it needs a scene where two teammates are actually close together. In this scene the rotation itself is the teachable point.",
+      "sourceUrls": [
+        "https://www.hockeycanada.ca/en-ca/hockey-programs/coaching/under-7/faq",
+        "https://cdn1.sportngin.com/attachments/document/0066/4690/Skill_Progression_Manual_19_FINAL.pdf"
+      ]
+    },
+    {
+      "scenarioId": "exp26-u7-008",
+      "questionId": "exp26-u7-008-q1",
+      "baseContentHash": "f565b9398747f5c595f68821ba2d41a0f9673d370a846d7a4eb5ba701661660a",
+      "verdict": "retain",
+      "reason": "Scene fact, verified by coordinates: YOU face 0 rad toward +x and Navy2 is at x=-6, behind that facing direction. Grammar is correct for a third-person named player (\"Where is Navy2\") next to second-person \"the way YOU face\".",
+      "checks": {
+        "roster": "pass",
+        "geometry": "pass",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "pass"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "YOU (home-skater-1) at x=0, y=0, facing 0 rad, and YOU own the puck.",
+          "The carried puck renders at x=1, y=0.7 (1 m ahead, 0.7 m to the left of facing), inside the ice.",
+          "H2 (home-skater-2, displayed \"Navy 2\") at x=-6, y=5, behind the +x facing direction, 8.215 m from the carried puck.",
+          "A1 (away-skater-1, displayed \"Gold 1\") at x=7, y=-4, ahead of YOU and on the opposite side across the rink, 7.622 m from the carried puck."
+        ],
+        "stated": [
+          "The briefing says YOU face the attacking end and hold the puck.",
+          "The briefing says the coach asks YOU to find Navy2 before deciding on a puck action.",
+          "Cue three states that finding Navy2 does not prove a pass is open."
+        ],
+        "unproven": [
+          "Facing does not prove that YOU have or have not already looked behind.",
+          "Nothing establishes that Gold1 will move, or how fast anyone can skate.",
+          "A pass back to Navy2 is not shown; the geometry only shows that Gold1 is 7.62 m from the nearest point of that lane, which is not proof the pass completes.",
+          "Rendered legibility and camera framing were not inspected; no application view was available."
+        ]
+      },
+      "alternative": "None. Behind is the only position supported by the coordinates.",
+      "sourceUrls": [
+        "https://www.hockeycanada.ca/en-ca/news/seven-coaching-principles-vision-scanning-2024-ncw",
+        "https://www.hockeycanada.ca/en-ca/news/seven-coaching-principles-puck-control-2024-ncw"
+      ]
+    },
+    {
+      "scenarioId": "exp26-u7-008",
+      "questionId": "exp26-u7-008-q2",
+      "baseContentHash": "da8b86a28ef3b052578df546cf40f1374e332641e892ae61f661e6935931c3a4",
+      "verdict": "retain",
+      "reason": "The keyed pair is exactly the two information sources Hockey Canada's Vision and Scanning principle names: where teammates are and where opposition pressure comes from. The \"guaranteed goal\" distractor is purposeful here rather than a giveaway, because cue three of this scene explicitly teaches that finding Navy2 does not prove a pass is open.",
+      "checks": {
+        "roster": "pass",
+        "geometry": "pass",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "pass"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "YOU (home-skater-1) at x=0, y=0, facing 0 rad, and YOU own the puck.",
+          "The carried puck renders at x=1, y=0.7 (1 m ahead, 0.7 m to the left of facing), inside the ice.",
+          "H2 (home-skater-2, displayed \"Navy 2\") at x=-6, y=5, behind the +x facing direction, 8.215 m from the carried puck.",
+          "A1 (away-skater-1, displayed \"Gold 1\") at x=7, y=-4, ahead of YOU and on the opposite side across the rink, 7.622 m from the carried puck."
+        ],
+        "stated": [
+          "The briefing says YOU face the attacking end and hold the puck.",
+          "The briefing says the coach asks YOU to find Navy2 before deciding on a puck action.",
+          "Cue three states that finding Navy2 does not prove a pass is open."
+        ],
+        "unproven": [
+          "Facing does not prove that YOU have or have not already looked behind.",
+          "Nothing establishes that Gold1 will move, or how fast anyone can skate.",
+          "A pass back to Navy2 is not shown; the geometry only shows that Gold1 is 7.62 m from the nearest point of that lane, which is not proof the pass completes.",
+          "Rendered legibility and camera framing were not inspected; no application view was available."
+        ]
+      },
+      "alternative": "Open space and the puck itself are also worth seeing; the keyed pair is the source-supported minimum, not an exhaustive list.",
+      "sourceUrls": [
+        "https://www.hockeycanada.ca/en-ca/news/seven-coaching-principles-vision-scanning-2024-ncw",
+        "https://www.hockeycanada.ca/en-ca/news/seven-coaching-principles-puck-control-2024-ncw"
+      ]
+    },
+    {
+      "scenarioId": "exp26-u7-008",
+      "questionId": "exp26-u7-008-q3",
+      "baseContentHash": "221523eeb6c50ba05615b80090f720e28b982dba786395bcf1981209e87d6f9d",
+      "verdict": "retain",
+      "reason": "The order is scoped as an activity reporting routine and the explanation explicitly says a screen answer does not demonstrate a real shoulder check, so it does not impose an artificial look-decide-execute order on live play. This is the scoping the earlier P3 sequence findings on other scenarios asked for.",
+      "checks": {
+        "roster": "pass",
+        "geometry": "pass",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "pass"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "YOU (home-skater-1) at x=0, y=0, facing 0 rad, and YOU own the puck.",
+          "The carried puck renders at x=1, y=0.7 (1 m ahead, 0.7 m to the left of facing), inside the ice.",
+          "H2 (home-skater-2, displayed \"Navy 2\") at x=-6, y=5, behind the +x facing direction, 8.215 m from the carried puck.",
+          "A1 (away-skater-1, displayed \"Gold 1\") at x=7, y=-4, ahead of YOU and on the opposite side across the rink, 7.622 m from the carried puck."
+        ],
+        "stated": [
+          "The briefing says YOU face the attacking end and hold the puck.",
+          "The briefing says the coach asks YOU to find Navy2 before deciding on a puck action.",
+          "Cue three states that finding Navy2 does not prove a pass is open."
+        ],
+        "unproven": [
+          "Facing does not prove that YOU have or have not already looked behind.",
+          "Nothing establishes that Gold1 will move, or how fast anyone can skate.",
+          "A pass back to Navy2 is not shown; the geometry only shows that Gold1 is 7.62 m from the nearest point of that lane, which is not proof the pass completes.",
+          "Rendered legibility and camera framing were not inspected; no application view was available."
+        ]
+      },
+      "alternative": "Noticing your facing and looking behind overlap in real play; only the third step, reporting to the coach, is genuinely last.",
+      "sourceUrls": [
+        "https://www.hockeycanada.ca/en-ca/news/seven-coaching-principles-vision-scanning-2024-ncw",
+        "https://www.hockeycanada.ca/en-ca/news/seven-coaching-principles-puck-control-2024-ncw"
+      ]
+    },
+    {
+      "scenarioId": "exp26-u7-008",
+      "questionId": "exp26-u7-008-q4",
+      "baseContentHash": "321023fef91565ffbfd55aa2687193791fab6829a56e263d736c9a6c29b89ca8",
+      "verdict": "retain",
+      "reason": "Position reference verified: YOU move from (0,0) to (0,-4), 4 m, staying on the ice, and the carried puck follows to (1,-3.3), also on the ice. Navy2 is on the +y side, so the move genuinely goes away from Navy2's side. The explanation labels it a practice reset rather than an ideal game position, which keeps it from reading as a positional rule.",
+      "checks": {
+        "roster": "pass",
+        "geometry": "pass",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "pass"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "YOU (home-skater-1) at x=0, y=0, facing 0 rad, and YOU own the puck.",
+          "The carried puck renders at x=1, y=0.7 (1 m ahead, 0.7 m to the left of facing), inside the ice.",
+          "H2 (home-skater-2, displayed \"Navy 2\") at x=-6, y=5, behind the +x facing direction, 8.215 m from the carried puck.",
+          "A1 (away-skater-1, displayed \"Gold 1\") at x=7, y=-4, ahead of YOU and on the opposite side across the rink, 7.622 m from the carried puck."
+        ],
+        "stated": [
+          "The briefing says YOU face the attacking end and hold the puck.",
+          "The briefing says the coach asks YOU to find Navy2 before deciding on a puck action.",
+          "Cue three states that finding Navy2 does not prove a pass is open."
+        ],
+        "unproven": [
+          "Facing does not prove that YOU have or have not already looked behind.",
+          "Nothing establishes that Gold1 will move, or how fast anyone can skate.",
+          "A pass back to Navy2 is not shown; the geometry only shows that Gold1 is 7.62 m from the nearest point of that lane, which is not proof the pass completes.",
+          "Rendered legibility and camera framing were not inspected; no application view was available."
+        ]
+      },
+      "alternative": "The reference sits in the same lateral band as Gold1 (y=-4), which is worth an independent reviewer's eye. It is defensible as a looking-practice reset but would not be the recommendation in a live game, and the explanation says so.",
+      "sourceUrls": [
+        "https://www.hockeycanada.ca/en-ca/news/seven-coaching-principles-vision-scanning-2024-ncw",
+        "https://www.hockeycanada.ca/en-ca/news/seven-coaching-principles-puck-control-2024-ncw"
+      ]
+    },
+    {
+      "scenarioId": "exp26-u7-008",
+      "questionId": "exp26-u7-008-q5",
+      "baseContentHash": "feb752e4df0e53c86813f5c51d4940a71765298393a99d5df5593e06cd2b37ef",
+      "verdict": "retain",
+      "reason": "A clearly labelled hypothetical on coaching basis, correctly unscored. The keyed answer, relocating the teammate when their position changes, is directly supported by the Hockey Canada scanning principle. The absolute-word distractor is the misunderstanding being corrected rather than a giveaway.",
+      "checks": {
+        "roster": "pass",
+        "geometry": "pass",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "pass"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "YOU (home-skater-1) at x=0, y=0, facing 0 rad, and YOU own the puck.",
+          "The carried puck renders at x=1, y=0.7 (1 m ahead, 0.7 m to the left of facing), inside the ice.",
+          "H2 (home-skater-2, displayed \"Navy 2\") at x=-6, y=5, behind the +x facing direction, 8.215 m from the carried puck.",
+          "A1 (away-skater-1, displayed \"Gold 1\") at x=7, y=-4, ahead of YOU and on the opposite side across the rink, 7.622 m from the carried puck."
+        ],
+        "stated": [
+          "The briefing says YOU face the attacking end and hold the puck.",
+          "The briefing says the coach asks YOU to find Navy2 before deciding on a puck action.",
+          "Cue three states that finding Navy2 does not prove a pass is open."
+        ],
+        "unproven": [
+          "Facing does not prove that YOU have or have not already looked behind.",
+          "Nothing establishes that Gold1 will move, or how fast anyone can skate.",
+          "A pass back to Navy2 is not shown; the geometry only shows that Gold1 is 7.62 m from the nearest point of that lane, which is not proof the pass completes.",
+          "Rendered legibility and camera framing were not inspected; no application view was available."
+        ]
+      },
+      "alternative": "How often to re-locate a teammate depends on pressure and puck position; the point is that one look is not permanent, not a fixed frequency.",
+      "sourceUrls": [
+        "https://www.hockeycanada.ca/en-ca/news/seven-coaching-principles-vision-scanning-2024-ncw",
+        "https://www.hockeycanada.ca/en-ca/news/seven-coaching-principles-puck-control-2024-ncw"
+      ]
+    },
+    {
+      "scenarioId": "exp26-u7-008",
+      "questionId": "exp26-u7-008-q6",
+      "baseContentHash": "0292847af01e181a11d5158b584d41875cd49db285b53076241e6d15aaacd8a6",
+      "verdict": "retain",
+      "reason": "Optional reflection, coaching basis, no answer key, no writing requirement. It names a concrete example from the scene and accepts pointing or speech, which suits the age.",
+      "checks": {
+        "roster": "pass",
+        "geometry": "pass",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "pass"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "YOU (home-skater-1) at x=0, y=0, facing 0 rad, and YOU own the puck.",
+          "The carried puck renders at x=1, y=0.7 (1 m ahead, 0.7 m to the left of facing), inside the ice.",
+          "H2 (home-skater-2, displayed \"Navy 2\") at x=-6, y=5, behind the +x facing direction, 8.215 m from the carried puck.",
+          "A1 (away-skater-1, displayed \"Gold 1\") at x=7, y=-4, ahead of YOU and on the opposite side across the rink, 7.622 m from the carried puck."
+        ],
+        "stated": [
+          "The briefing says YOU face the attacking end and hold the puck.",
+          "The briefing says the coach asks YOU to find Navy2 before deciding on a puck action.",
+          "Cue three states that finding Navy2 does not prove a pass is open."
+        ],
+        "unproven": [
+          "Facing does not prove that YOU have or have not already looked behind.",
+          "Nothing establishes that Gold1 will move, or how fast anyone can skate.",
+          "A pass back to Navy2 is not shown; the geometry only shows that Gold1 is 7.62 m from the nearest point of that lane, which is not proof the pass completes.",
+          "Rendered legibility and camera framing were not inspected; no application view was available."
+        ]
+      },
+      "alternative": "Pressure, open space and the far side of the ice are all acceptable answers alongside Navy2.",
+      "sourceUrls": [
+        "https://www.hockeycanada.ca/en-ca/news/seven-coaching-principles-vision-scanning-2024-ncw",
+        "https://www.hockeycanada.ca/en-ca/news/seven-coaching-principles-puck-control-2024-ncw"
+      ]
+    },
+    {
+      "scenarioId": "exp26-u7-008",
+      "questionId": "exp26-u7-008-q7",
+      "baseContentHash": "9342d1f5990db9db8c5e8f9787da28afecd32ff5ea49e0219e6c13d6f997dfc2",
+      "verdict": "retain",
+      "reason": "This is the applied youth-repairs.json content and its after-hash matches the snapshot, so the earlier Navy3 finding is superseded and closed. Independently rechecked: Navy2 is a real displayed actor, and the pass-back lane from the carried puck (1,0.7) to Navy2 (-6,5) has Gold1 8.043 m from its nearest point, with Gold1's projection falling behind the puck end of the segment, so actor-centre proximity does not indicate a blocked lane. The explanation correctly stops short of guaranteeing the pass.",
+      "checks": {
+        "roster": "pass",
+        "geometry": "pass",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "pass"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "YOU (home-skater-1) at x=0, y=0, facing 0 rad, and YOU own the puck.",
+          "The carried puck renders at x=1, y=0.7 (1 m ahead, 0.7 m to the left of facing), inside the ice.",
+          "H2 (home-skater-2, displayed \"Navy 2\") at x=-6, y=5, behind the +x facing direction, 8.215 m from the carried puck.",
+          "A1 (away-skater-1, displayed \"Gold 1\") at x=7, y=-4, ahead of YOU and on the opposite side across the rink, 7.622 m from the carried puck."
+        ],
+        "stated": [
+          "The briefing says YOU face the attacking end and hold the puck.",
+          "The briefing says the coach asks YOU to find Navy2 before deciding on a puck action.",
+          "Cue three states that finding Navy2 does not prove a pass is open."
+        ],
+        "unproven": [
+          "Facing does not prove that YOU have or have not already looked behind.",
+          "Nothing establishes that Gold1 will move, or how fast anyone can skate.",
+          "A pass back to Navy2 is not shown; the geometry only shows that Gold1 is 7.62 m from the nearest point of that lane, which is not proof the pass completes.",
+          "Rendered legibility and camera framing were not inspected; no application view was available."
+        ]
+      },
+      "alternative": "Carrying into space or protecting the puck are also defensible once Gold1 commits; the explanation already conditions the pass on a clear lane.",
+      "sourceUrls": [
+        "https://www.hockeycanada.ca/en-ca/news/seven-coaching-principles-vision-scanning-2024-ncw",
+        "https://www.hockeycanada.ca/en-ca/news/seven-coaching-principles-puck-control-2024-ncw"
+      ]
+    },
+    {
+      "scenarioId": "exp26-u7-008",
+      "questionId": "exp26-u7-008-q8",
+      "baseContentHash": "d9330f0cd367154a4d1d40adf4e51a3b16e07a5c5db96649920f2d3090e69eff",
+      "verdict": "retain",
+      "reason": "Applied repair, hash current, independently rechecked. Both keyed items are genuine pre-pass checks and the third option is a credible beginner error rather than a joke. Noted for the independent reviewer: the static schema does not render stick angle, so \"where Navy2's stick is now\" is a real-ice habit question rather than a diagram read. It does not claim the app displays a stick, and USA Hockey 8U names stick-on-ice habits at this age, so it is retained rather than flagged as a defect.",
+      "checks": {
+        "roster": "pass",
+        "geometry": "pass",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "pass"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "YOU (home-skater-1) at x=0, y=0, facing 0 rad, and YOU own the puck.",
+          "The carried puck renders at x=1, y=0.7 (1 m ahead, 0.7 m to the left of facing), inside the ice.",
+          "H2 (home-skater-2, displayed \"Navy 2\") at x=-6, y=5, behind the +x facing direction, 8.215 m from the carried puck.",
+          "A1 (away-skater-1, displayed \"Gold 1\") at x=7, y=-4, ahead of YOU and on the opposite side across the rink, 7.622 m from the carried puck."
+        ],
+        "stated": [
+          "The briefing says YOU face the attacking end and hold the puck.",
+          "The briefing says the coach asks YOU to find Navy2 before deciding on a puck action.",
+          "Cue three states that finding Navy2 does not prove a pass is open."
+        ],
+        "unproven": [
+          "Facing does not prove that YOU have or have not already looked behind.",
+          "Nothing establishes that Gold1 will move, or how fast anyone can skate.",
+          "A pass back to Navy2 is not shown; the geometry only shows that Gold1 is 7.62 m from the nearest point of that lane, which is not proof the pass completes.",
+          "Rendered legibility and camera framing were not inspected; no application view was available."
+        ]
+      },
+      "alternative": "Distance and the receiver's speed also matter; the two keyed checks are the minimum, and a multi-select legitimately carries both.",
+      "sourceUrls": [
+        "https://www.hockeycanada.ca/en-ca/news/seven-coaching-principles-vision-scanning-2024-ncw",
+        "https://www.hockeycanada.ca/en-ca/news/seven-coaching-principles-puck-control-2024-ncw"
+      ]
+    },
+    {
+      "scenarioId": "exp26-u7-008",
+      "questionId": "exp26-u7-008-q9",
+      "baseContentHash": "a77c6a1c8963d6fdb7c4ba6c43ed0e240f68716700f2110605bf5273bad547a6",
+      "verdict": "retain",
+      "reason": "Applied repair, hash current. Position verified: actorId home-skater-2 matches the prompt subject Navy2 (displayed \"Navy 2\"), the reference (-4,3) is on the ice, it moves Navy2 2.828 m, it stays behind YOUR facing direction, and it shortens the pass distance from the carried puck from 8.215 m to 5.504 m, so \"room for a short pass\" is true rather than asserted.",
+      "checks": {
+        "roster": "pass",
+        "geometry": "pass",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "pass"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "YOU (home-skater-1) at x=0, y=0, facing 0 rad, and YOU own the puck.",
+          "The carried puck renders at x=1, y=0.7 (1 m ahead, 0.7 m to the left of facing), inside the ice.",
+          "H2 (home-skater-2, displayed \"Navy 2\") at x=-6, y=5, behind the +x facing direction, 8.215 m from the carried puck.",
+          "A1 (away-skater-1, displayed \"Gold 1\") at x=7, y=-4, ahead of YOU and on the opposite side across the rink, 7.622 m from the carried puck."
+        ],
+        "stated": [
+          "The briefing says YOU face the attacking end and hold the puck.",
+          "The briefing says the coach asks YOU to find Navy2 before deciding on a puck action.",
+          "Cue three states that finding Navy2 does not prove a pass is open."
+        ],
+        "unproven": [
+          "Facing does not prove that YOU have or have not already looked behind.",
+          "Nothing establishes that Gold1 will move, or how fast anyone can skate.",
+          "A pass back to Navy2 is not shown; the geometry only shows that Gold1 is 7.62 m from the nearest point of that lane, which is not proof the pass completes.",
+          "Rendered legibility and camera framing were not inspected; no application view was available."
+        ]
+      },
+      "alternative": "Several nearby spots behind YOU give a similar angle; the explanation already says so, and the exact distance would change with the players' real passing range.",
+      "sourceUrls": [
+        "https://www.hockeycanada.ca/en-ca/news/seven-coaching-principles-vision-scanning-2024-ncw",
+        "https://www.hockeycanada.ca/en-ca/news/seven-coaching-principles-puck-control-2024-ncw"
+      ]
+    },
+    {
+      "scenarioId": "exp26-u7-008",
+      "questionId": "exp26-u7-008-q10",
+      "baseContentHash": "912663b76701324db98e1c4be664a22fbbd444fbc7f20435838ab3b88cd27f9e",
+      "verdict": "retain",
+      "reason": "Applied repair, hash current. Optional reflection on coaching basis, correctly conditional: it says a pass back can help and explicitly adds that you do not have to use it every time.",
+      "checks": {
+        "roster": "pass",
+        "geometry": "pass",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "pass"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "YOU (home-skater-1) at x=0, y=0, facing 0 rad, and YOU own the puck.",
+          "The carried puck renders at x=1, y=0.7 (1 m ahead, 0.7 m to the left of facing), inside the ice.",
+          "H2 (home-skater-2, displayed \"Navy 2\") at x=-6, y=5, behind the +x facing direction, 8.215 m from the carried puck.",
+          "A1 (away-skater-1, displayed \"Gold 1\") at x=7, y=-4, ahead of YOU and on the opposite side across the rink, 7.622 m from the carried puck."
+        ],
+        "stated": [
+          "The briefing says YOU face the attacking end and hold the puck.",
+          "The briefing says the coach asks YOU to find Navy2 before deciding on a puck action.",
+          "Cue three states that finding Navy2 does not prove a pass is open."
+        ],
+        "unproven": [
+          "Facing does not prove that YOU have or have not already looked behind.",
+          "Nothing establishes that Gold1 will move, or how fast anyone can skate.",
+          "A pass back to Navy2 is not shown; the geometry only shows that Gold1 is 7.62 m from the nearest point of that lane, which is not proof the pass completes.",
+          "Rendered legibility and camera framing were not inspected; no application view was available."
+        ]
+      },
+      "alternative": "Carrying forward or waiting for Gold1 to commit are equally defensible; the reflection has no key and is not scored.",
+      "sourceUrls": [
+        "https://www.hockeycanada.ca/en-ca/news/seven-coaching-principles-vision-scanning-2024-ncw",
+        "https://www.hockeycanada.ca/en-ca/news/seven-coaching-principles-puck-control-2024-ncw"
+      ]
+    },
+    {
+      "scenarioId": "exp26-u7-009",
+      "questionId": "exp26-u7-009-q1",
+      "baseContentHash": "3b27632c1852bc5aa15514a27d66234d68fab16435bd09732c30d8d86dca9dc3",
+      "verdict": "retain",
+      "reason": "Scene fact. The setup gives puck ownership to home-skater-2, displayed \"Navy 2\", and the briefing states it. Both distractors are the other two named actors, so the roster is correct.",
+      "checks": {
+        "roster": "pass",
+        "geometry": "pass",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "pass"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "YOU (home-skater-1) at x=-3, y=2, facing 0 rad, without the puck.",
+          "H2 (home-skater-2, displayed \"Navy 2\") at x=5, y=2, facing pi, and Navy2 owns the puck.",
+          "The carried puck renders at x=4, y=1.3, which is between YOU and Navy2 and 7.035 m from YOU.",
+          "A1 (away-skater-1, displayed \"Gold 1\") at x=9, y=-5, 8.043 m from the carried puck.",
+          "The right blue line is at x=7.62, so Navy2 at x=5 is 2.62 m short of it and is not beyond it."
+        ],
+        "stated": [
+          "The briefing says a gentle partner pass has finished, that Navy2 controls the puck and that YOU no longer do.",
+          "The briefing says the picture begins after reception and does not show the pass path.",
+          "The briefing asks YOU to leave Navy2 room while staying in the activity."
+        ],
+        "unproven": [
+          "The pass path, its speed and its quality are not shown; only the post-reception state is supplied.",
+          "Navy2 facing pi does not prove Navy2 is looking at YOU.",
+          "No briefing or cue establishes a blue line, a meeting line or any landmark convention for this activity.",
+          "Rendered legibility and camera framing were not inspected; no application view was available."
+        ]
+      },
+      "alternative": "None. Ownership is fixed by the setup.",
+      "sourceUrls": [
+        "https://www.hockeycanada.ca/en-ca/hockey-programs/coaching/under-7/coaches/skills",
+        "https://cdn1.sportngin.com/attachments/document/0066/4690/Skill_Progression_Manual_19_FINAL.pdf"
+      ]
+    },
+    {
+      "scenarioId": "exp26-u7-009",
+      "questionId": "exp26-u7-009-q2",
+      "baseContentHash": "f12e0f396c95ff14c6f8f082dbf1359d2d43225e1467d60f63453043efc552b4",
+      "verdict": "retain",
+      "reason": "Scene fact, and a genuinely useful one: it teaches the learner that the frame is a post-reception state rather than an animation. The briefing says exactly this, so basis scene is correct.",
+      "checks": {
+        "roster": "pass",
+        "geometry": "pass",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "pass"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "YOU (home-skater-1) at x=-3, y=2, facing 0 rad, without the puck.",
+          "H2 (home-skater-2, displayed \"Navy 2\") at x=5, y=2, facing pi, and Navy2 owns the puck.",
+          "The carried puck renders at x=4, y=1.3, which is between YOU and Navy2 and 7.035 m from YOU.",
+          "A1 (away-skater-1, displayed \"Gold 1\") at x=9, y=-5, 8.043 m from the carried puck.",
+          "The right blue line is at x=7.62, so Navy2 at x=5 is 2.62 m short of it and is not beyond it."
+        ],
+        "stated": [
+          "The briefing says a gentle partner pass has finished, that Navy2 controls the puck and that YOU no longer do.",
+          "The briefing says the picture begins after reception and does not show the pass path.",
+          "The briefing asks YOU to leave Navy2 room while staying in the activity."
+        ],
+        "unproven": [
+          "The pass path, its speed and its quality are not shown; only the post-reception state is supplied.",
+          "Navy2 facing pi does not prove Navy2 is looking at YOU.",
+          "No briefing or cue establishes a blue line, a meeting line or any landmark convention for this activity.",
+          "Rendered legibility and camera framing were not inspected; no application view was available."
+        ]
+      },
+      "alternative": "None. The briefing states the frame boundary explicitly.",
+      "sourceUrls": [
+        "https://www.hockeycanada.ca/en-ca/hockey-programs/coaching/under-7/coaches/skills",
+        "https://cdn1.sportngin.com/attachments/document/0066/4690/Skill_Progression_Manual_19_FINAL.pdf"
+      ]
+    },
+    {
+      "scenarioId": "exp26-u7-009",
+      "questionId": "exp26-u7-009-q3",
+      "baseContentHash": "0b2a038a2bfbcf90ac6f67ff4611f1b87eda27c9bd87c46a53af28f19f7eda84",
+      "verdict": "retain",
+      "reason": "The ordered events are the supplied history, not an inferred simulation, and the explanation says so. Basis scene is correct because each step is explicitly stated in the briefing.",
+      "checks": {
+        "roster": "pass",
+        "geometry": "pass",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "pass"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "YOU (home-skater-1) at x=-3, y=2, facing 0 rad, without the puck.",
+          "H2 (home-skater-2, displayed \"Navy 2\") at x=5, y=2, facing pi, and Navy2 owns the puck.",
+          "The carried puck renders at x=4, y=1.3, which is between YOU and Navy2 and 7.035 m from YOU.",
+          "A1 (away-skater-1, displayed \"Gold 1\") at x=9, y=-5, 8.043 m from the carried puck.",
+          "The right blue line is at x=7.62, so Navy2 at x=5 is 2.62 m short of it and is not beyond it."
+        ],
+        "stated": [
+          "The briefing says a gentle partner pass has finished, that Navy2 controls the puck and that YOU no longer do.",
+          "The briefing says the picture begins after reception and does not show the pass path.",
+          "The briefing asks YOU to leave Navy2 room while staying in the activity."
+        ],
+        "unproven": [
+          "The pass path, its speed and its quality are not shown; only the post-reception state is supplied.",
+          "Navy2 facing pi does not prove Navy2 is looking at YOU.",
+          "No briefing or cue establishes a blue line, a meeting line or any landmark convention for this activity.",
+          "Rendered legibility and camera framing were not inspected; no application view was available."
+        ]
+      },
+      "alternative": "None on the order. The explanation correctly avoids claiming the pass was independently simulated.",
+      "sourceUrls": [
+        "https://www.hockeycanada.ca/en-ca/hockey-programs/coaching/under-7/coaches/skills",
+        "https://cdn1.sportngin.com/attachments/document/0066/4690/Skill_Progression_Manual_19_FINAL.pdf"
+      ]
+    },
+    {
+      "scenarioId": "exp26-u7-009",
+      "questionId": "exp26-u7-009-q4",
+      "baseContentHash": "93d06578f22fa59ca33f504f1c8d2b8dc4d8a7e1203233c06d205ce88f5f62b0",
+      "verdict": "retain",
+      "reason": "Position verified: YOU move from (-3,2) to (0,-3), 5.831 m, on the ice, ending 7.071 m from Navy2 rather than stacked on the carrier. The reference sits about 45 degrees off Navy2's facing, which supports a spatial availability claim; the explanation stays non-exclusive (\"Other clear places may fit\").",
+      "checks": {
+        "roster": "pass",
+        "geometry": "pass",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "pass"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "YOU (home-skater-1) at x=-3, y=2, facing 0 rad, without the puck.",
+          "H2 (home-skater-2, displayed \"Navy 2\") at x=5, y=2, facing pi, and Navy2 owns the puck.",
+          "The carried puck renders at x=4, y=1.3, which is between YOU and Navy2 and 7.035 m from YOU.",
+          "A1 (away-skater-1, displayed \"Gold 1\") at x=9, y=-5, 8.043 m from the carried puck.",
+          "The right blue line is at x=7.62, so Navy2 at x=5 is 2.62 m short of it and is not beyond it."
+        ],
+        "stated": [
+          "The briefing says a gentle partner pass has finished, that Navy2 controls the puck and that YOU no longer do.",
+          "The briefing says the picture begins after reception and does not show the pass path.",
+          "The briefing asks YOU to leave Navy2 room while staying in the activity."
+        ],
+        "unproven": [
+          "The pass path, its speed and its quality are not shown; only the post-reception state is supplied.",
+          "Navy2 facing pi does not prove Navy2 is looking at YOU.",
+          "No briefing or cue establishes a blue line, a meeting line or any landmark convention for this activity.",
+          "Rendered legibility and camera framing were not inspected; no application view was available."
+        ]
+      },
+      "alternative": "Any separated spot that leaves Navy2 room works. Facing does not prove Navy2 has looked, so this is availability of space rather than proof of being seen.",
+      "sourceUrls": [
+        "https://www.hockeycanada.ca/en-ca/hockey-programs/coaching/under-7/coaches/skills",
+        "https://cdn1.sportngin.com/attachments/document/0066/4690/Skill_Progression_Manual_19_FINAL.pdf"
+      ]
+    },
+    {
+      "scenarioId": "exp26-u7-009",
+      "questionId": "exp26-u7-009-q5",
+      "baseContentHash": "d6d26017ceece15c69bcd2e466846f5bda2f7f27291efe734f29aeed17956616",
+      "verdict": "retain",
+      "reason": "A clearly stated hypothetical on coaching basis. Making yourself available for a return pass is directly supported by USA Hockey's 8U puck-support item, and the explanation correctly conditions the return pass on a clear route.",
+      "checks": {
+        "roster": "pass",
+        "geometry": "pass",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "pass"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "YOU (home-skater-1) at x=-3, y=2, facing 0 rad, without the puck.",
+          "H2 (home-skater-2, displayed \"Navy 2\") at x=5, y=2, facing pi, and Navy2 owns the puck.",
+          "The carried puck renders at x=4, y=1.3, which is between YOU and Navy2 and 7.035 m from YOU.",
+          "A1 (away-skater-1, displayed \"Gold 1\") at x=9, y=-5, 8.043 m from the carried puck.",
+          "The right blue line is at x=7.62, so Navy2 at x=5 is 2.62 m short of it and is not beyond it."
+        ],
+        "stated": [
+          "The briefing says a gentle partner pass has finished, that Navy2 controls the puck and that YOU no longer do.",
+          "The briefing says the picture begins after reception and does not show the pass path.",
+          "The briefing asks YOU to leave Navy2 room while staying in the activity."
+        ],
+        "unproven": [
+          "The pass path, its speed and its quality are not shown; only the post-reception state is supplied.",
+          "Navy2 facing pi does not prove Navy2 is looking at YOU.",
+          "No briefing or cue establishes a blue line, a meeting line or any landmark convention for this activity.",
+          "Rendered legibility and camera framing were not inspected; no application view was available."
+        ]
+      },
+      "alternative": "Skating to a different pocket, or simply giving Navy2 more room, can be better if Gold1 closes the near side.",
+      "sourceUrls": [
+        "https://www.hockeycanada.ca/en-ca/hockey-programs/coaching/under-7/coaches/skills",
+        "https://cdn1.sportngin.com/attachments/document/0066/4690/Skill_Progression_Manual_19_FINAL.pdf"
+      ]
+    },
+    {
+      "scenarioId": "exp26-u7-009",
+      "questionId": "exp26-u7-009-q6",
+      "baseContentHash": "f88de791b9969d9d8f1b9b7f4285a8c542a7c6ae4c15e18a22508df1dd1752ba",
+      "verdict": "retain",
+      "reason": "Optional reflection, coaching basis, no key. It captures the actual objective of the scenario, the change of role after possession changes.",
+      "checks": {
+        "roster": "pass",
+        "geometry": "pass",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "pass"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "YOU (home-skater-1) at x=-3, y=2, facing 0 rad, without the puck.",
+          "H2 (home-skater-2, displayed \"Navy 2\") at x=5, y=2, facing pi, and Navy2 owns the puck.",
+          "The carried puck renders at x=4, y=1.3, which is between YOU and Navy2 and 7.035 m from YOU.",
+          "A1 (away-skater-1, displayed \"Gold 1\") at x=9, y=-5, 8.043 m from the carried puck.",
+          "The right blue line is at x=7.62, so Navy2 at x=5 is 2.62 m short of it and is not beyond it."
+        ],
+        "stated": [
+          "The briefing says a gentle partner pass has finished, that Navy2 controls the puck and that YOU no longer do.",
+          "The briefing says the picture begins after reception and does not show the pass path.",
+          "The briefing asks YOU to leave Navy2 room while staying in the activity."
+        ],
+        "unproven": [
+          "The pass path, its speed and its quality are not shown; only the post-reception state is supplied.",
+          "Navy2 facing pi does not prove Navy2 is looking at YOU.",
+          "No briefing or cue establishes a blue line, a meeting line or any landmark convention for this activity.",
+          "Rendered legibility and camera framing were not inspected; no application view was available."
+        ]
+      },
+      "alternative": "Answers about staying involved, giving room, or getting open are all acceptable.",
+      "sourceUrls": [
+        "https://www.hockeycanada.ca/en-ca/hockey-programs/coaching/under-7/coaches/skills",
+        "https://cdn1.sportngin.com/attachments/document/0066/4690/Skill_Progression_Manual_19_FINAL.pdf"
+      ]
+    },
+    {
+      "scenarioId": "exp26-u7-009",
+      "questionId": "exp26-u7-009-q7",
+      "baseContentHash": "87f46cac571fccf54eb92345d331791618bb88b3a87300974743eb27fee82ceb",
+      "verdict": "repair",
+      "reason": "Two defects. First, option c (\"Leave the puck behind\") presumes YOU have the puck, contradicting the scene and this scenario's own q1 key. Second, the prompt introduces the blue line as an activity landmark that no briefing line or cue establishes, and the age band is wrong for it: Hockey Canada's U7 FAQ says positional-play and offside concepts are introduced later, at the U11 full-ice transition, and U7 plays cross-ice, where the blue line is not part of the playing area.",
+      "checks": {
+        "roster": "pass",
+        "geometry": "pass",
+        "answer": "fail",
+        "feedback": "fail",
+        "age": "fail",
+        "sources": "pass",
+        "grammar": "pass"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "YOU (home-skater-1) at x=-3, y=2, facing 0 rad, without the puck.",
+          "H2 (home-skater-2, displayed \"Navy 2\") at x=5, y=2, facing pi, and Navy2 owns the puck.",
+          "The carried puck renders at x=4, y=1.3, which is between YOU and Navy2 and 7.035 m from YOU.",
+          "A1 (away-skater-1, displayed \"Gold 1\") at x=9, y=-5, 8.043 m from the carried puck.",
+          "The right blue line is at x=7.62, so Navy2 at x=5 is 2.62 m short of it and is not beyond it."
+        ],
+        "stated": [
+          "The briefing says a gentle partner pass has finished, that Navy2 controls the puck and that YOU no longer do.",
+          "The briefing says the picture begins after reception and does not show the pass path.",
+          "The briefing asks YOU to leave Navy2 room while staying in the activity."
+        ],
+        "unproven": [
+          "The pass path, its speed and its quality are not shown; only the post-reception state is supplied.",
+          "Navy2 facing pi does not prove Navy2 is looking at YOU.",
+          "No briefing or cue establishes a blue line, a meeting line or any landmark convention for this activity.",
+          "Rendered legibility and camera framing were not inspected; no application view was available."
+        ]
+      },
+      "alternative": "The defensible U7 read here is about the teammate and the pressure, not a line. Getting to open space is one option; giving Navy2 more room is another.",
+      "sourceUrls": [
+        "https://www.hockeycanada.ca/en-ca/hockey-programs/coaching/under-7/coaches/skills",
+        "https://cdn1.sportngin.com/attachments/document/0066/4690/Skill_Progression_Manual_19_FINAL.pdf"
+      ]
+    },
+    {
+      "scenarioId": "exp26-u7-009",
+      "questionId": "exp26-u7-009-q8",
+      "baseContentHash": "c64eb40a09c55b9bb3c9116b14fc32efb6f6c5d910f0a479cd552e6b2e64e47b",
+      "verdict": "repair",
+      "reason": "Incorrect landmark asserted as an objectively scored scene fact, the highest-impact item in this packet. The explanation states \"Navy2 is the teammate beyond the line\", but the right blue line is at x=7.62 and Navy2 is at x=5, so Navy2 is 2.62 m short of it and on the same side as YOU. This is the exact defect class the historical record already names, a skater described as past a line the coordinates place them inside. The question is basis scene, so the engine scores this false claim as a correct scene read. It also depends on \"the meeting line\", a convention the scene never defines, and introduces an unseen goalie as a distractor.",
+      "checks": {
+        "roster": "pass",
+        "geometry": "fail",
+        "answer": "fail",
+        "feedback": "fail",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "pass"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "YOU (home-skater-1) at x=-3, y=2, facing 0 rad, without the puck.",
+          "H2 (home-skater-2, displayed \"Navy 2\") at x=5, y=2, facing pi, and Navy2 owns the puck.",
+          "The carried puck renders at x=4, y=1.3, which is between YOU and Navy2 and 7.035 m from YOU.",
+          "A1 (away-skater-1, displayed \"Gold 1\") at x=9, y=-5, 8.043 m from the carried puck.",
+          "The right blue line is at x=7.62, so Navy2 at x=5 is 2.62 m short of it and is not beyond it."
+        ],
+        "stated": [
+          "The briefing says a gentle partner pass has finished, that Navy2 controls the puck and that YOU no longer do.",
+          "The briefing says the picture begins after reception and does not show the pass path.",
+          "The briefing asks YOU to leave Navy2 room while staying in the activity."
+        ],
+        "unproven": [
+          "The pass path, its speed and its quality are not shown; only the post-reception state is supplied.",
+          "Navy2 facing pi does not prove Navy2 is looking at YOU.",
+          "No briefing or cue establishes a blue line, a meeting line or any landmark convention for this activity.",
+          "Rendered legibility and camera framing were not inspected; no application view was available."
+        ]
+      },
+      "alternative": "Which players matter is genuinely Navy2 and Gold1, so the underlying idea survives; what fails is the landmark claim attached to it, which has to be removed rather than reworded.",
+      "sourceUrls": [
+        "https://www.hockeycanada.ca/en-ca/hockey-programs/coaching/under-7/coaches/skills",
+        "https://cdn1.sportngin.com/attachments/document/0066/4690/Skill_Progression_Manual_19_FINAL.pdf"
+      ]
+    },
+    {
+      "scenarioId": "exp26-u7-009",
+      "questionId": "exp26-u7-009-q9",
+      "baseContentHash": "fe83936b668f229ac811dc4dcfd27d4f5a6151b3eef34fba2867ccd2904d2262",
+      "verdict": "repair",
+      "reason": "Prompt contradicts its own reference. The prompt says \"Place YOU closer to Navy2\", but the reference (-4,-4) moves YOU from 8.000 m to 10.817 m from Navy2, that is 2.817 m farther away. The second clause is also empty: Gold1 at y=-5 is already below YOU at y=2, so the reference achieves nothing it claims. The explanation repeats both false claims.",
+      "checks": {
+        "roster": "pass",
+        "geometry": "fail",
+        "answer": "fail",
+        "feedback": "fail",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "pass"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "YOU (home-skater-1) at x=-3, y=2, facing 0 rad, without the puck.",
+          "H2 (home-skater-2, displayed \"Navy 2\") at x=5, y=2, facing pi, and Navy2 owns the puck.",
+          "The carried puck renders at x=4, y=1.3, which is between YOU and Navy2 and 7.035 m from YOU.",
+          "A1 (away-skater-1, displayed \"Gold 1\") at x=9, y=-5, 8.043 m from the carried puck.",
+          "The right blue line is at x=7.62, so Navy2 at x=5 is 2.62 m short of it and is not beyond it."
+        ],
+        "stated": [
+          "The briefing says a gentle partner pass has finished, that Navy2 controls the puck and that YOU no longer do.",
+          "The briefing says the picture begins after reception and does not show the pass path.",
+          "The briefing asks YOU to leave Navy2 room while staying in the activity."
+        ],
+        "unproven": [
+          "The pass path, its speed and its quality are not shown; only the post-reception state is supplied.",
+          "Navy2 facing pi does not prove Navy2 is looking at YOU.",
+          "No briefing or cue establishes a blue line, a meeting line or any landmark convention for this activity.",
+          "Rendered legibility and camera framing were not inspected; no application view was available."
+        ]
+      },
+      "alternative": "A position reference is one example, not an exclusive dot. Several open spots on the far side from Gold1 offer a short receiving angle, and the right one changes with pressure.",
+      "sourceUrls": [
+        "https://www.hockeycanada.ca/en-ca/hockey-programs/coaching/under-7/coaches/skills",
+        "https://cdn1.sportngin.com/attachments/document/0066/4690/Skill_Progression_Manual_19_FINAL.pdf"
+      ]
+    },
+    {
+      "scenarioId": "exp26-u7-009",
+      "questionId": "exp26-u7-009-q10",
+      "baseContentHash": "a9a416ac4dc57f3ffb6bac0dcab7b3baf979ae62b7726fac784cb5cdc6b0305a",
+      "verdict": "repair",
+      "reason": "The reflection presupposes the blue-line guide that q7 and q8 invent, asking why \"the blue line\" is a guide when no briefing line, cue or setup element establishes it as one. With the landmark removed from q7 and q8, this prompt would reference something the learner never saw.",
+      "checks": {
+        "roster": "pass",
+        "geometry": "pass",
+        "answer": "pass",
+        "feedback": "fail",
+        "age": "fail",
+        "sources": "pass",
+        "grammar": "pass"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "YOU (home-skater-1) at x=-3, y=2, facing 0 rad, without the puck.",
+          "H2 (home-skater-2, displayed \"Navy 2\") at x=5, y=2, facing pi, and Navy2 owns the puck.",
+          "The carried puck renders at x=4, y=1.3, which is between YOU and Navy2 and 7.035 m from YOU.",
+          "A1 (away-skater-1, displayed \"Gold 1\") at x=9, y=-5, 8.043 m from the carried puck.",
+          "The right blue line is at x=7.62, so Navy2 at x=5 is 2.62 m short of it and is not beyond it."
+        ],
+        "stated": [
+          "The briefing says a gentle partner pass has finished, that Navy2 controls the puck and that YOU no longer do.",
+          "The briefing says the picture begins after reception and does not show the pass path.",
+          "The briefing asks YOU to leave Navy2 room while staying in the activity."
+        ],
+        "unproven": [
+          "The pass path, its speed and its quality are not shown; only the post-reception state is supplied.",
+          "Navy2 facing pi does not prove Navy2 is looking at YOU.",
+          "No briefing or cue establishes a blue line, a meeting line or any landmark convention for this activity.",
+          "Rendered legibility and camera framing were not inspected; no application view was available."
+        ]
+      },
+      "alternative": "Spacing after a completed pass is the defensible U7 lesson here, and it is what the replacement asks about.",
+      "sourceUrls": [
+        "https://www.hockeycanada.ca/en-ca/hockey-programs/coaching/under-7/coaches/skills",
+        "https://cdn1.sportngin.com/attachments/document/0066/4690/Skill_Progression_Manual_19_FINAL.pdf"
+      ]
+    },
+    {
+      "scenarioId": "exp26-u7-010",
+      "questionId": "exp26-u7-010-q1",
+      "baseContentHash": "f933fd455fb5323c3e9cb9b166751909a6eda066a0c571cba2b36adcf0a56ac1",
+      "verdict": "retain",
+      "reason": "Scene fact. The setup gives puck ownership to away-skater-1, displayed \"Gold 1\", and the briefing states Gold1 gained it after the miss. Both facts agree.",
+      "checks": {
+        "roster": "pass",
+        "geometry": "pass",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "pass"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "YOU (home-skater-1) at x=-4, y=4, facing -0.4 rad.",
+          "H2 (home-skater-2, displayed \"Navy 2\") at x=2, y=5, facing -2.9 rad.",
+          "A1 (away-skater-1, displayed \"Gold 1\") at x=5, y=-2, facing 2.7 rad, and A1 owns the puck.",
+          "The puck is owned, not loose: it renders as a carried puck at x=3.797, y=-2.205.",
+          "Navy2 is 7.426 m from the carried puck and YOU are 9.965 m from it, so Navy2 is the nearer navy player."
+        ],
+        "stated": [
+          "The briefing says Navy2 missed a pass and Gold1 gained the puck, in a friendly keep-away activity.",
+          "The briefing says the picture starts after that change of possession.",
+          "The briefing says Navy2 looks to YOU for encouragement and the coach invites everyone to keep trying."
+        ],
+        "unproven": [
+          "The missed pass itself is not shown; only its stated result is supplied.",
+          "Facing does not prove that Navy2 is looking at YOU.",
+          "Nothing establishes that anyone can reach the puck, or how quickly.",
+          "Rendered legibility and camera framing were not inspected; no application view was available."
+        ]
+      },
+      "alternative": "None. Ownership is fixed by the setup and the briefing.",
+      "sourceUrls": [
+        "https://cdn1.sportngin.com/attachments/document/0066/4690/Skill_Progression_Manual_19_FINAL.pdf",
+        "https://www.hockeycanada.ca/en-ca/hockey-programs/coaching/under-7/faq"
+      ]
+    },
+    {
+      "scenarioId": "exp26-u7-010",
+      "questionId": "exp26-u7-010-q2",
+      "baseContentHash": "dec8d6bcd26fd252306ec5eb2a509387df56b87e76310c5589bab89d4e8006d3",
+      "verdict": "retain",
+      "reason": "Coaching basis, multi-select with two genuinely supportive options. USA Hockey 8U names acceptable on-ice conduct toward teammates as a topic for this age. The third option is the unkind absolute the scenario is teaching against, so it is purposeful rather than a giveaway.",
+      "checks": {
+        "roster": "pass",
+        "geometry": "pass",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "pass"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "YOU (home-skater-1) at x=-4, y=4, facing -0.4 rad.",
+          "H2 (home-skater-2, displayed \"Navy 2\") at x=2, y=5, facing -2.9 rad.",
+          "A1 (away-skater-1, displayed \"Gold 1\") at x=5, y=-2, facing 2.7 rad, and A1 owns the puck.",
+          "The puck is owned, not loose: it renders as a carried puck at x=3.797, y=-2.205.",
+          "Navy2 is 7.426 m from the carried puck and YOU are 9.965 m from it, so Navy2 is the nearer navy player."
+        ],
+        "stated": [
+          "The briefing says Navy2 missed a pass and Gold1 gained the puck, in a friendly keep-away activity.",
+          "The briefing says the picture starts after that change of possession.",
+          "The briefing says Navy2 looks to YOU for encouragement and the coach invites everyone to keep trying."
+        ],
+        "unproven": [
+          "The missed pass itself is not shown; only its stated result is supplied.",
+          "Facing does not prove that Navy2 is looking at YOU.",
+          "Nothing establishes that anyone can reach the puck, or how quickly.",
+          "Rendered legibility and camera framing were not inspected; no application view was available."
+        ]
+      },
+      "alternative": "Many other kind phrasings work; the explanation already says so, and this is a discussion aid rather than a graded key.",
+      "sourceUrls": [
+        "https://cdn1.sportngin.com/attachments/document/0066/4690/Skill_Progression_Manual_19_FINAL.pdf",
+        "https://www.hockeycanada.ca/en-ca/hockey-programs/coaching/under-7/faq"
+      ]
+    },
+    {
+      "scenarioId": "exp26-u7-010",
+      "questionId": "exp26-u7-010-q3",
+      "baseContentHash": "e65f7ae1e8c48b2cdd199ea92f82f84db50681a375853d4923f0827a78d6d386",
+      "verdict": "retain",
+      "reason": "The routine is explicitly scoped as suggested, and the explanation says it is not the only acceptable order for showing support, so it does not impose an artificial sequence.",
+      "checks": {
+        "roster": "pass",
+        "geometry": "pass",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "pass"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "YOU (home-skater-1) at x=-4, y=4, facing -0.4 rad.",
+          "H2 (home-skater-2, displayed \"Navy 2\") at x=2, y=5, facing -2.9 rad.",
+          "A1 (away-skater-1, displayed \"Gold 1\") at x=5, y=-2, facing 2.7 rad, and A1 owns the puck.",
+          "The puck is owned, not loose: it renders as a carried puck at x=3.797, y=-2.205.",
+          "Navy2 is 7.426 m from the carried puck and YOU are 9.965 m from it, so Navy2 is the nearer navy player."
+        ],
+        "stated": [
+          "The briefing says Navy2 missed a pass and Gold1 gained the puck, in a friendly keep-away activity.",
+          "The briefing says the picture starts after that change of possession.",
+          "The briefing says Navy2 looks to YOU for encouragement and the coach invites everyone to keep trying."
+        ],
+        "unproven": [
+          "The missed pass itself is not shown; only its stated result is supplied.",
+          "Facing does not prove that Navy2 is looking at YOU.",
+          "Nothing establishes that anyone can reach the puck, or how quickly.",
+          "Rendered legibility and camera framing were not inspected; no application view was available."
+        ]
+      },
+      "alternative": "Encouraging first and noticing second is equally kind; the explanation already permits a different order.",
+      "sourceUrls": [
+        "https://cdn1.sportngin.com/attachments/document/0066/4690/Skill_Progression_Manual_19_FINAL.pdf",
+        "https://www.hockeycanada.ca/en-ca/hockey-programs/coaching/under-7/faq"
+      ]
+    },
+    {
+      "scenarioId": "exp26-u7-010",
+      "questionId": "exp26-u7-010-q4",
+      "baseContentHash": "21fd1fa7eab318b47bb8bdf042eb904bcb073ef381834bd736bdb3f25fe49205",
+      "verdict": "retain",
+      "reason": "Position verified: YOU move from (-4,4) to (-1,0), 5 m, on the ice, ending 5.831 m from Navy2, slightly nearer than the starting 6.083 m and clearly separate. The explanation labels it a reset rather than a defensive answer key.",
+      "checks": {
+        "roster": "pass",
+        "geometry": "pass",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "pass"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "YOU (home-skater-1) at x=-4, y=4, facing -0.4 rad.",
+          "H2 (home-skater-2, displayed \"Navy 2\") at x=2, y=5, facing -2.9 rad.",
+          "A1 (away-skater-1, displayed \"Gold 1\") at x=5, y=-2, facing 2.7 rad, and A1 owns the puck.",
+          "The puck is owned, not loose: it renders as a carried puck at x=3.797, y=-2.205.",
+          "Navy2 is 7.426 m from the carried puck and YOU are 9.965 m from it, so Navy2 is the nearer navy player."
+        ],
+        "stated": [
+          "The briefing says Navy2 missed a pass and Gold1 gained the puck, in a friendly keep-away activity.",
+          "The briefing says the picture starts after that change of possession.",
+          "The briefing says Navy2 looks to YOU for encouragement and the coach invites everyone to keep trying."
+        ],
+        "unproven": [
+          "The missed pass itself is not shown; only its stated result is supplied.",
+          "Facing does not prove that Navy2 is looking at YOU.",
+          "Nothing establishes that anyone can reach the puck, or how quickly.",
+          "Rendered legibility and camera framing were not inspected; no application view was available."
+        ]
+      },
+      "alternative": "The reference does move YOU nearer Gold1 (10.817 m to 6.325 m), which is acceptable for a stated practice reset but would not be a defensive recommendation. The explanation already scopes it that way.",
+      "sourceUrls": [
+        "https://cdn1.sportngin.com/attachments/document/0066/4690/Skill_Progression_Manual_19_FINAL.pdf",
+        "https://www.hockeycanada.ca/en-ca/hockey-programs/coaching/under-7/faq"
+      ]
+    },
+    {
+      "scenarioId": "exp26-u7-010",
+      "questionId": "exp26-u7-010-q5",
+      "baseContentHash": "a22693ae275c4e315a91c1bd9ce3fa53457f868cfcb30b36b34db139bda3e3fe",
+      "verdict": "retain",
+      "reason": "A clearly labelled hypothetical on coaching basis, correctly unscored. Both distractors are realistic reactions for this age rather than joke answers, and the key supports trying again with help.",
+      "checks": {
+        "roster": "pass",
+        "geometry": "pass",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "pass"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "YOU (home-skater-1) at x=-4, y=4, facing -0.4 rad.",
+          "H2 (home-skater-2, displayed \"Navy 2\") at x=2, y=5, facing -2.9 rad.",
+          "A1 (away-skater-1, displayed \"Gold 1\") at x=5, y=-2, facing 2.7 rad, and A1 owns the puck.",
+          "The puck is owned, not loose: it renders as a carried puck at x=3.797, y=-2.205.",
+          "Navy2 is 7.426 m from the carried puck and YOU are 9.965 m from it, so Navy2 is the nearer navy player."
+        ],
+        "stated": [
+          "The briefing says Navy2 missed a pass and Gold1 gained the puck, in a friendly keep-away activity.",
+          "The briefing says the picture starts after that change of possession.",
+          "The briefing says Navy2 looks to YOU for encouragement and the coach invites everyone to keep trying."
+        ],
+        "unproven": [
+          "The missed pass itself is not shown; only its stated result is supplied.",
+          "Facing does not prove that Navy2 is looking at YOU.",
+          "Nothing establishes that anyone can reach the puck, or how quickly.",
+          "Rendered legibility and camera framing were not inspected; no application view was available."
+        ]
+      },
+      "alternative": "Asking a coach or a teammate for help, or slowing the next attempt down, are equally good answers.",
+      "sourceUrls": [
+        "https://cdn1.sportngin.com/attachments/document/0066/4690/Skill_Progression_Manual_19_FINAL.pdf",
+        "https://www.hockeycanada.ca/en-ca/hockey-programs/coaching/under-7/faq"
+      ]
+    },
+    {
+      "scenarioId": "exp26-u7-010",
+      "questionId": "exp26-u7-010-q6",
+      "baseContentHash": "9b6c4c65fe1a3d963aaa56684df661ebf696c68afab528885475793b018d0244",
+      "verdict": "retain",
+      "reason": "Optional reflection, coaching basis, no key, explicitly allowing an adult to record the child's own words. It matches the scenario objective.",
+      "checks": {
+        "roster": "pass",
+        "geometry": "pass",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "pass"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "YOU (home-skater-1) at x=-4, y=4, facing -0.4 rad.",
+          "H2 (home-skater-2, displayed \"Navy 2\") at x=2, y=5, facing -2.9 rad.",
+          "A1 (away-skater-1, displayed \"Gold 1\") at x=5, y=-2, facing 2.7 rad, and A1 owns the puck.",
+          "The puck is owned, not loose: it renders as a carried puck at x=3.797, y=-2.205.",
+          "Navy2 is 7.426 m from the carried puck and YOU are 9.965 m from it, so Navy2 is the nearer navy player."
+        ],
+        "stated": [
+          "The briefing says Navy2 missed a pass and Gold1 gained the puck, in a friendly keep-away activity.",
+          "The briefing says the picture starts after that change of possession.",
+          "The briefing says Navy2 looks to YOU for encouragement and the coach invites everyone to keep trying."
+        ],
+        "unproven": [
+          "The missed pass itself is not shown; only its stated result is supplied.",
+          "Facing does not prove that Navy2 is looking at YOU.",
+          "Nothing establishes that anyone can reach the puck, or how quickly.",
+          "Rendered legibility and camera framing were not inspected; no application view was available."
+        ]
+      },
+      "alternative": "Any respectful, encouraging answer is welcome; nothing here is scored.",
+      "sourceUrls": [
+        "https://cdn1.sportngin.com/attachments/document/0066/4690/Skill_Progression_Manual_19_FINAL.pdf",
+        "https://www.hockeycanada.ca/en-ca/hockey-programs/coaching/under-7/faq"
+      ]
+    },
+    {
+      "scenarioId": "exp26-u7-010",
+      "questionId": "exp26-u7-010-q7",
+      "baseContentHash": "6852e28f8693aadf3d66c469dbb19a568e1645bd42a1e723d84e4d207ddcb1bd",
+      "verdict": "repair",
+      "reason": "Three defects. The premise \"if Gold1 controls the loose puck\" contradicts the scene, where Gold1 already owns the puck and nothing is loose. The prompt drops the YOU focus and asks what \"navy players\" should do. Option a asks the child to \"protect the navy end\", which is team-play system language: USA Hockey 8U states plainly that no time should be spent teaching team-play systems at this age, and the locked ledger has no defensive-play node at U7. Option c (\"Check who owns it now\") is also a defensible first action and is close to the keyed explanation's own reasoning, so a reasonable alternative is marked wrong.",
+      "checks": {
+        "roster": "pass",
+        "geometry": "pass",
+        "answer": "fail",
+        "feedback": "fail",
+        "age": "fail",
+        "sources": "pass",
+        "grammar": "pass"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "YOU (home-skater-1) at x=-4, y=4, facing -0.4 rad.",
+          "H2 (home-skater-2, displayed \"Navy 2\") at x=2, y=5, facing -2.9 rad.",
+          "A1 (away-skater-1, displayed \"Gold 1\") at x=5, y=-2, facing 2.7 rad, and A1 owns the puck.",
+          "The puck is owned, not loose: it renders as a carried puck at x=3.797, y=-2.205.",
+          "Navy2 is 7.426 m from the carried puck and YOU are 9.965 m from it, so Navy2 is the nearer navy player."
+        ],
+        "stated": [
+          "The briefing says Navy2 missed a pass and Gold1 gained the puck, in a friendly keep-away activity.",
+          "The briefing says the picture starts after that change of possession.",
+          "The briefing says Navy2 looks to YOU for encouragement and the coach invites everyone to keep trying."
+        ],
+        "unproven": [
+          "The missed pass itself is not shown; only its stated result is supplied.",
+          "Facing does not prove that Navy2 is looking at YOU.",
+          "Nothing establishes that anyone can reach the puck, or how quickly.",
+          "Rendered legibility and camera framing were not inspected; no application view was available."
+        ]
+      },
+      "alternative": "Noticing the new owner and locating the teammate is a defensible U7 first action; so is simply getting to open space. The replacement keys the noticing step and leaves the rest open.",
+      "sourceUrls": [
+        "https://cdn1.sportngin.com/attachments/document/0066/4690/Skill_Progression_Manual_19_FINAL.pdf",
+        "https://www.hockeycanada.ca/en-ca/hockey-programs/coaching/under-7/faq"
+      ]
+    },
+    {
+      "scenarioId": "exp26-u7-010",
+      "questionId": "exp26-u7-010-q8",
+      "baseContentHash": "2c8bc15235b585ef4d94d9195d0d86dbb49827ab586be42b59a15ab7e1649036",
+      "verdict": "repair",
+      "reason": "False scene fact in an objectively scored question. Keyed option a says \"The puck is loose\", but the setup gives ownership to away-skater-1, the briefing says Gold1 gained the puck, and this scenario's own q1 keys Gold1 as the owner. Keyed option b, \"Gold1 is above it\", is also not a usable cue: the puck is carried, so it is placed by the engine from Gold1's own position and facing, 0.206 m below Gold1 in y, and moving Gold1 moves it. The question is basis scene, so the engine scores both claims as correct scene reads.",
+      "checks": {
+        "roster": "pass",
+        "geometry": "fail",
+        "answer": "fail",
+        "feedback": "fail",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "pass"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "YOU (home-skater-1) at x=-4, y=4, facing -0.4 rad.",
+          "H2 (home-skater-2, displayed \"Navy 2\") at x=2, y=5, facing -2.9 rad.",
+          "A1 (away-skater-1, displayed \"Gold 1\") at x=5, y=-2, facing 2.7 rad, and A1 owns the puck.",
+          "The puck is owned, not loose: it renders as a carried puck at x=3.797, y=-2.205.",
+          "Navy2 is 7.426 m from the carried puck and YOU are 9.965 m from it, so Navy2 is the nearer navy player."
+        ],
+        "stated": [
+          "The briefing says Navy2 missed a pass and Gold1 gained the puck, in a friendly keep-away activity.",
+          "The briefing says the picture starts after that change of possession.",
+          "The briefing says Navy2 looks to YOU for encouragement and the coach invites everyone to keep trying."
+        ],
+        "unproven": [
+          "The missed pass itself is not shown; only its stated result is supplied.",
+          "Facing does not prove that Navy2 is looking at YOU.",
+          "Nothing establishes that anyone can reach the puck, or how quickly.",
+          "Rendered legibility and camera framing were not inspected; no application view was available."
+        ]
+      },
+      "alternative": "The underlying objective, noticing possession after a mistake, is sound and worth keeping; only the claimed facts have to change.",
+      "sourceUrls": [
+        "https://cdn1.sportngin.com/attachments/document/0066/4690/Skill_Progression_Manual_19_FINAL.pdf",
+        "https://www.hockeycanada.ca/en-ca/hockey-programs/coaching/under-7/faq"
+      ]
+    },
+    {
+      "scenarioId": "exp26-u7-010",
+      "questionId": "exp26-u7-010-q9",
+      "baseContentHash": "da0fc3136100c94e9ee77db376bb9737a91331a6d640102ecb78438c7296fd88",
+      "verdict": "repair",
+      "reason": "Both spatial claims in the prompt are false at the given reference, and the explanation invents possession. The reference (0,0) is 4.391 m from the carried puck at (3.797,-2.205), which is not \"beside the puck\", and Navy2 at y=5 is above the reference, not below it. The explanation calls it \"the loose puck\" and says the move \"approaches\" it, but Gold1 owns that puck. This repeats the historical possession-invented failure class recorded for exp26-u7-001-q7 and q8.",
+      "checks": {
+        "roster": "pass",
+        "geometry": "fail",
+        "answer": "fail",
+        "feedback": "fail",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "pass"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "YOU (home-skater-1) at x=-4, y=4, facing -0.4 rad.",
+          "H2 (home-skater-2, displayed \"Navy 2\") at x=2, y=5, facing -2.9 rad.",
+          "A1 (away-skater-1, displayed \"Gold 1\") at x=5, y=-2, facing 2.7 rad, and A1 owns the puck.",
+          "The puck is owned, not loose: it renders as a carried puck at x=3.797, y=-2.205.",
+          "Navy2 is 7.426 m from the carried puck and YOU are 9.965 m from it, so Navy2 is the nearer navy player."
+        ],
+        "stated": [
+          "The briefing says Navy2 missed a pass and Gold1 gained the puck, in a friendly keep-away activity.",
+          "The briefing says the picture starts after that change of possession.",
+          "The briefing says Navy2 looks to YOU for encouragement and the coach invites everyone to keep trying."
+        ],
+        "unproven": [
+          "The missed pass itself is not shown; only its stated result is supplied.",
+          "Facing does not prove that Navy2 is looking at YOU.",
+          "Nothing establishes that anyone can reach the puck, or how quickly.",
+          "Rendered legibility and camera framing were not inspected; no application view was available."
+        ]
+      },
+      "alternative": "A reset position for the next try is a defensible job for this question; several open spots away from Gold1 work, and the replacement gives one example rather than an exclusive dot.",
+      "sourceUrls": [
+        "https://cdn1.sportngin.com/attachments/document/0066/4690/Skill_Progression_Manual_19_FINAL.pdf",
+        "https://www.hockeycanada.ca/en-ca/hockey-programs/coaching/under-7/faq"
+      ]
+    },
+    {
+      "scenarioId": "exp26-u7-010",
+      "questionId": "exp26-u7-010-q10",
+      "baseContentHash": "ed2d37b031a68073fea8a2fdc3c4adebb63091081f6e5b3335866384cd1e6d2b",
+      "verdict": "repair",
+      "reason": "Prompt is sound and stays; the explanation is not. It tells the learner to \"read the new loose puck\", but the puck is owned by Gold1 in this scene. Only the explanation needs correcting, so the repair keeps the prompt byte-for-byte.",
+      "checks": {
+        "roster": "pass",
+        "geometry": "pass",
+        "answer": "pass",
+        "feedback": "fail",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "pass"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "YOU (home-skater-1) at x=-4, y=4, facing -0.4 rad.",
+          "H2 (home-skater-2, displayed \"Navy 2\") at x=2, y=5, facing -2.9 rad.",
+          "A1 (away-skater-1, displayed \"Gold 1\") at x=5, y=-2, facing 2.7 rad, and A1 owns the puck.",
+          "The puck is owned, not loose: it renders as a carried puck at x=3.797, y=-2.205.",
+          "Navy2 is 7.426 m from the carried puck and YOU are 9.965 m from it, so Navy2 is the nearer navy player."
+        ],
+        "stated": [
+          "The briefing says Navy2 missed a pass and Gold1 gained the puck, in a friendly keep-away activity.",
+          "The briefing says the picture starts after that change of possession.",
+          "The briefing says Navy2 looks to YOU for encouragement and the coach invites everyone to keep trying."
+        ],
+        "unproven": [
+          "The missed pass itself is not shown; only its stated result is supplied.",
+          "Facing does not prove that Navy2 is looking at YOU.",
+          "Nothing establishes that anyone can reach the puck, or how quickly.",
+          "Rendered legibility and camera framing were not inspected; no application view was available."
+        ]
+      },
+      "alternative": "Reading pressure, finding space, or simply resetting with a teammate are all acceptable answers to this reflection; it has no key.",
+      "sourceUrls": [
+        "https://cdn1.sportngin.com/attachments/document/0066/4690/Skill_Progression_Manual_19_FINAL.pdf",
+        "https://www.hockeycanada.ca/en-ca/hockey-programs/coaching/under-7/faq"
+      ]
+    },
+    {
+      "scenarioId": "exp26b-u7-001",
+      "questionId": "exp26b-u7-001-q1",
+      "baseContentHash": "e137c42ad919e5cce4cf7ec48e12a2fd848e4178814daa2fa218319c61b6ab00",
+      "verdict": "retain",
+      "reason": "Scene fact. The setup puck has owner null with an explicit position at (-14,-3), so \"Nobody yet\" is the only supported answer. This is the applied youth-repairs.json content and its after-hash matches the snapshot, so the earlier board-geometry finding is superseded and closed.",
+      "checks": {
+        "roster": "pass",
+        "geometry": "pass",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "pass"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "YOU (home-skater-1) at x=-18, y=-3, facing 0.2 rad, 4 m from the loose puck.",
+          "The puck is loose with owner null at x=-14, y=-3, inside the ice.",
+          "Navy2 (home-skater-2, label \"Navy2\") at x=-9, y=3, 7.81 m from the loose puck.",
+          "Gold1 (away-skater-1, label \"Gold1\") at x=-12, y=-8, 5.385 m from the loose puck and 4.954 m from the -y side boards at y=-12.954.",
+          "The loose puck at y=-3 is in the middle band of the ice, not against the boards, matching the briefing wording \"open ice\"."
+        ],
+        "stated": [
+          "The briefing says YOU are skating toward a loose puck in open ice.",
+          "The briefing says Navy2 is across the middle with room and Gold1 is approaching from the side nearest the boards.",
+          "The briefing says the coach asks YOU to look while approaching, then choose what helps."
+        ],
+        "unproven": [
+          "No speed, arrival time or pickup outcome is established; the frame is static.",
+          "Gold1 facing 1.2 rad does not prove where Gold1 is looking, and \"approaching\" is a stated condition rather than a shown motion.",
+          "Whether YOU or Gold1 would reach the puck first is not established by the picture.",
+          "Rendered legibility and camera framing were not inspected; no application view was available."
+        ]
+      },
+      "alternative": "None. Ownership is null in the setup.",
+      "sourceUrls": [
+        "https://www.hockeycanada.ca/en-ca/hockey-programs/coaching/under-7/coaches/skills",
+        "https://www.hockeycanada.ca/en-ca/news/seven-coaching-principles-vision-scanning-2024-ncw"
+      ]
+    },
+    {
+      "scenarioId": "exp26b-u7-001",
+      "questionId": "exp26b-u7-001-q2",
+      "baseContentHash": "75fd975e16961c0c6e91784da1cc6279cd9afabb58248f2548ea98bbc2b5b1f0",
+      "verdict": "retain",
+      "reason": "Applied repair, hash current, independently rechecked. The keyed pair is exactly the teammate-and-pressure cue pair Hockey Canada names, and the board-side wording is now accurate: Gold1 at y=-8 is between the puck and the -y side boards at y=-12.954, while the puck itself at y=-3 is correctly described as open ice rather than board side.",
+      "checks": {
+        "roster": "pass",
+        "geometry": "pass",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "pass"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "YOU (home-skater-1) at x=-18, y=-3, facing 0.2 rad, 4 m from the loose puck.",
+          "The puck is loose with owner null at x=-14, y=-3, inside the ice.",
+          "Navy2 (home-skater-2, label \"Navy2\") at x=-9, y=3, 7.81 m from the loose puck.",
+          "Gold1 (away-skater-1, label \"Gold1\") at x=-12, y=-8, 5.385 m from the loose puck and 4.954 m from the -y side boards at y=-12.954.",
+          "The loose puck at y=-3 is in the middle band of the ice, not against the boards, matching the briefing wording \"open ice\"."
+        ],
+        "stated": [
+          "The briefing says YOU are skating toward a loose puck in open ice.",
+          "The briefing says Navy2 is across the middle with room and Gold1 is approaching from the side nearest the boards.",
+          "The briefing says the coach asks YOU to look while approaching, then choose what helps."
+        ],
+        "unproven": [
+          "No speed, arrival time or pickup outcome is established; the frame is static.",
+          "Gold1 facing 1.2 rad does not prove where Gold1 is looking, and \"approaching\" is a stated condition rather than a shown motion.",
+          "Whether YOU or Gold1 would reach the puck first is not established by the picture.",
+          "Rendered legibility and camera framing were not inspected; no application view was available."
+        ]
+      },
+      "alternative": "Open space and the puck itself are also worth noticing; the keyed pair is the source-supported minimum for this age.",
+      "sourceUrls": [
+        "https://www.hockeycanada.ca/en-ca/hockey-programs/coaching/under-7/coaches/skills",
+        "https://www.hockeycanada.ca/en-ca/news/seven-coaching-principles-vision-scanning-2024-ncw"
+      ]
+    },
+    {
+      "scenarioId": "exp26b-u7-001",
+      "questionId": "exp26b-u7-001-q3",
+      "baseContentHash": "ac4f18010163bcfc5eb46f34cd146c0e30f25789311a495160fa04265f24c24f",
+      "verdict": "retain",
+      "reason": "Position verified: actorId home-skater-1 matches the prompt subject YOU, the reference (-15,-2) is on the ice, it moves YOU 3.162 m toward the loose puck, and it ends 1.414 m from the puck and 6.708 m from Gold1, so both clauses of the prompt hold. The explanation stays non-exclusive.",
+      "checks": {
+        "roster": "pass",
+        "geometry": "pass",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "pass"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "YOU (home-skater-1) at x=-18, y=-3, facing 0.2 rad, 4 m from the loose puck.",
+          "The puck is loose with owner null at x=-14, y=-3, inside the ice.",
+          "Navy2 (home-skater-2, label \"Navy2\") at x=-9, y=3, 7.81 m from the loose puck.",
+          "Gold1 (away-skater-1, label \"Gold1\") at x=-12, y=-8, 5.385 m from the loose puck and 4.954 m from the -y side boards at y=-12.954.",
+          "The loose puck at y=-3 is in the middle band of the ice, not against the boards, matching the briefing wording \"open ice\"."
+        ],
+        "stated": [
+          "The briefing says YOU are skating toward a loose puck in open ice.",
+          "The briefing says Navy2 is across the middle with room and Gold1 is approaching from the side nearest the boards.",
+          "The briefing says the coach asks YOU to look while approaching, then choose what helps."
+        ],
+        "unproven": [
+          "No speed, arrival time or pickup outcome is established; the frame is static.",
+          "Gold1 facing 1.2 rad does not prove where Gold1 is looking, and \"approaching\" is a stated condition rather than a shown motion.",
+          "Whether YOU or Gold1 would reach the puck first is not established by the picture.",
+          "Rendered legibility and camera framing were not inspected; no application view was available."
+        ]
+      },
+      "alternative": "Any controlled approach angle near the puck that keeps Gold1 in view works; the exact dot is illustrative.",
+      "sourceUrls": [
+        "https://www.hockeycanada.ca/en-ca/hockey-programs/coaching/under-7/coaches/skills",
+        "https://www.hockeycanada.ca/en-ca/news/seven-coaching-principles-vision-scanning-2024-ncw"
+      ]
+    },
+    {
+      "scenarioId": "exp26b-u7-001",
+      "questionId": "exp26b-u7-001-q4",
+      "baseContentHash": "fa1b6b15c7f34cb0a1e61e7ada01f3c8f27247733c58f92bb81d8d3425a99991",
+      "verdict": "retain",
+      "reason": "Applied repair, hash current. The sequence is explicitly framed as one possible story rather than a claim that it happened, and the explanation tells the learner to keep checking Gold1 during the approach, which avoids the stop-scanning-then-decide failure the contract warns about.",
+      "checks": {
+        "roster": "pass",
+        "geometry": "pass",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "pass"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "YOU (home-skater-1) at x=-18, y=-3, facing 0.2 rad, 4 m from the loose puck.",
+          "The puck is loose with owner null at x=-14, y=-3, inside the ice.",
+          "Navy2 (home-skater-2, label \"Navy2\") at x=-9, y=3, 7.81 m from the loose puck.",
+          "Gold1 (away-skater-1, label \"Gold1\") at x=-12, y=-8, 5.385 m from the loose puck and 4.954 m from the -y side boards at y=-12.954.",
+          "The loose puck at y=-3 is in the middle band of the ice, not against the boards, matching the briefing wording \"open ice\"."
+        ],
+        "stated": [
+          "The briefing says YOU are skating toward a loose puck in open ice.",
+          "The briefing says Navy2 is across the middle with room and Gold1 is approaching from the side nearest the boards.",
+          "The briefing says the coach asks YOU to look while approaching, then choose what helps."
+        ],
+        "unproven": [
+          "No speed, arrival time or pickup outcome is established; the frame is static.",
+          "Gold1 facing 1.2 rad does not prove where Gold1 is looking, and \"approaching\" is a stated condition rather than a shown motion.",
+          "Whether YOU or Gold1 would reach the puck first is not established by the picture.",
+          "Rendered legibility and camera framing were not inspected; no application view was available."
+        ]
+      },
+      "alternative": "Carrying instead of passing is equally defensible once control is won; the explanation already conditions the pass on the check.",
+      "sourceUrls": [
+        "https://www.hockeycanada.ca/en-ca/hockey-programs/coaching/under-7/coaches/skills",
+        "https://www.hockeycanada.ca/en-ca/news/seven-coaching-principles-vision-scanning-2024-ncw"
+      ]
+    },
+    {
+      "scenarioId": "exp26b-u7-001",
+      "questionId": "exp26b-u7-001-q5",
+      "baseContentHash": "5f0cba358a10951922580ad44cbdb208203998c0835f3cf7699549b05616878c",
+      "verdict": "retain",
+      "reason": "Applied repair, hash current. This is the correction of the earlier \"protect a puck you do not own\" finding: the change of ownership is now an explicit hypothetical, and the explanation states plainly that YOU cannot carry or pass a puck Gold1 controls. Basis coaching is correct for a changed condition.",
+      "checks": {
+        "roster": "pass",
+        "geometry": "pass",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "pass"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "YOU (home-skater-1) at x=-18, y=-3, facing 0.2 rad, 4 m from the loose puck.",
+          "The puck is loose with owner null at x=-14, y=-3, inside the ice.",
+          "Navy2 (home-skater-2, label \"Navy2\") at x=-9, y=3, 7.81 m from the loose puck.",
+          "Gold1 (away-skater-1, label \"Gold1\") at x=-12, y=-8, 5.385 m from the loose puck and 4.954 m from the -y side boards at y=-12.954.",
+          "The loose puck at y=-3 is in the middle band of the ice, not against the boards, matching the briefing wording \"open ice\"."
+        ],
+        "stated": [
+          "The briefing says YOU are skating toward a loose puck in open ice.",
+          "The briefing says Navy2 is across the middle with room and Gold1 is approaching from the side nearest the boards.",
+          "The briefing says the coach asks YOU to look while approaching, then choose what helps."
+        ],
+        "unproven": [
+          "No speed, arrival time or pickup outcome is established; the frame is static.",
+          "Gold1 facing 1.2 rad does not prove where Gold1 is looking, and \"approaching\" is a stated condition rather than a shown motion.",
+          "Whether YOU or Gold1 would reach the puck first is not established by the picture.",
+          "Rendered legibility and camera framing were not inspected; no application view was available."
+        ]
+      },
+      "alternative": "Backing off to take away space, or supporting Navy2 instead of pressuring directly, are both defensible once Gold1 has control.",
+      "sourceUrls": [
+        "https://www.hockeycanada.ca/en-ca/hockey-programs/coaching/under-7/coaches/skills",
+        "https://www.hockeycanada.ca/en-ca/news/seven-coaching-principles-vision-scanning-2024-ncw"
+      ]
+    },
+    {
+      "scenarioId": "exp26b-u7-001",
+      "questionId": "exp26b-u7-001-q6",
+      "baseContentHash": "f7b9a227ad1e37d99d782c8fedad82d9b6e2a66764f0675c4cf5ae39b8a0db13",
+      "verdict": "retain",
+      "reason": "Applied repair, hash current. Optional reflection, coaching basis, no key. It conditions the passing choice on the lane staying clear rather than promising a completed pass.",
+      "checks": {
+        "roster": "pass",
+        "geometry": "pass",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "pass"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "YOU (home-skater-1) at x=-18, y=-3, facing 0.2 rad, 4 m from the loose puck.",
+          "The puck is loose with owner null at x=-14, y=-3, inside the ice.",
+          "Navy2 (home-skater-2, label \"Navy2\") at x=-9, y=3, 7.81 m from the loose puck.",
+          "Gold1 (away-skater-1, label \"Gold1\") at x=-12, y=-8, 5.385 m from the loose puck and 4.954 m from the -y side boards at y=-12.954.",
+          "The loose puck at y=-3 is in the middle band of the ice, not against the boards, matching the briefing wording \"open ice\"."
+        ],
+        "stated": [
+          "The briefing says YOU are skating toward a loose puck in open ice.",
+          "The briefing says Navy2 is across the middle with room and Gold1 is approaching from the side nearest the boards.",
+          "The briefing says the coach asks YOU to look while approaching, then choose what helps."
+        ],
+        "unproven": [
+          "No speed, arrival time or pickup outcome is established; the frame is static.",
+          "Gold1 facing 1.2 rad does not prove where Gold1 is looking, and \"approaching\" is a stated condition rather than a shown motion.",
+          "Whether YOU or Gold1 would reach the puck first is not established by the picture.",
+          "Rendered legibility and camera framing were not inspected; no application view was available."
+        ]
+      },
+      "alternative": "Navy2 also matters as a second option if Gold1 wins the puck; the reflection has no key and accepts either reading.",
+      "sourceUrls": [
+        "https://www.hockeycanada.ca/en-ca/hockey-programs/coaching/under-7/coaches/skills",
+        "https://www.hockeycanada.ca/en-ca/news/seven-coaching-principles-vision-scanning-2024-ncw"
+      ]
+    }
+  ],
+  "repairs": [
+    {
+      "scenarioId": "exp26-u7-007",
+      "baseVersion": 1,
+      "baseScenarioHash": "a0d409e3a865dfdc529d7daed174763e24025a6c5e847b67471e121b5e02d06b",
+      "replacement": {
+        "id": "exp26-u7-007",
+        "version": 2,
+        "ageBand": "U7",
+        "title": "My turn to defend the goal",
+        "family": "rotating-goal-role",
+        "topic": "Rink awareness",
+        "objective": "Recognize the goal-defending turn and nearby crease.",
+        "briefing": "YOU have a short turn defending the navy goal at the -x end. The coach names the blue area in front of the net the crease. You are a skater taking a turn, not a permanent goalie. Gold1 has the puck; Navy2 takes the next turn. Navy attacks the +x end; gold attacks the -x end. The full rink is an orientation map for this small activity.",
+        "setup": {
+          "actors": [
+            {
+              "id": "home-skater-1",
+              "label": "YOU",
+              "team": "home",
+              "role": "skater",
+              "x": -25.5,
+              "y": 0,
+              "facing": 0
+            },
+            {
+              "id": "home-skater-2",
+              "label": "H2",
+              "team": "home",
+              "role": "skater",
+              "x": -18,
+              "y": 7,
+              "facing": -2.5
+            },
+            {
+              "id": "away-skater-1",
+              "label": "A1",
+              "team": "away",
+              "role": "skater",
+              "x": -18,
+              "y": -3,
+              "facing": 2.7
+            }
+          ],
+          "puck": {
+            "owner": "away-skater-1"
+          }
+        },
+        "focusActorId": "home-skater-1",
+        "cues": [
+          "YOU are assigned the navy goal at the -x end.",
+          "The blue area is named the crease.",
+          "Navy2 is next in the rotation."
+        ],
+        "tags": [
+          "rotating-goal-role",
+          "foundation",
+          "experimental"
+        ],
+        "sources": [
+          {
+            "id": "hc-u7-faq",
+            "title": "Hockey Canada: Answering questions about Timbits U7 hockey",
+            "url": "https://www.hockeycanada.ca/en-ca/hockey-programs/coaching/under-7/faq",
+            "section": "Core requirements; full-time goaltenders; early skill development",
+            "use": "Supports cross-ice development and rotating the goal-defending role. Our practice picture is not a copy of the game layout."
+          },
+          {
+            "id": "usah-skill-progression-2019",
+            "title": "USA Hockey: Skill Progressions for Youth Hockey (2019)",
+            "url": "https://cdn1.sportngin.com/attachments/document/0066/4690/Skill_Progression_Manual_19_FINAL.pdf",
+            "section": "8-and-Under: printed pp.6-8 / PDF pp.12-14, Player Knowledge, Individual Skills and Team Concepts",
+            "use": "Supports beginner puck pursuit, getting available for a pass, broad skill development and respectful conduct. US age categories do not establish Canadian game rules."
+          }
+        ],
+        "limits": "Static experimental illustration. Coaching responses and reference positions are suggestions. No skating, tactical mastery or learning transfer is certified. An adult may read questions and record spoken reflections. ",
+        "questions": [
+          {
+            "type": "choice",
+            "prompt": "Which goal are YOU defending?",
+            "options": [
+              {
+                "id": "a",
+                "text": "The gold goal at the +x end"
+              },
+              {
+                "id": "b",
+                "text": "The navy goal at the -x end"
+              },
+              {
+                "id": "c",
+                "text": "No goal"
+              }
+            ],
+            "answer": [
+              "b"
+            ],
+            "basis": "scene",
+            "explanation": "The briefing assigns YOU the navy goal at the -x end for this turn.",
+            "id": "exp26-u7-007-q1"
+          },
+          {
+            "type": "choice",
+            "prompt": "What did the coach call the blue area by the net?",
+            "options": [
+              {
+                "id": "a",
+                "text": "The crease"
+              },
+              {
+                "id": "b",
+                "text": "A bench"
+              },
+              {
+                "id": "c",
+                "text": "A faceoff circle"
+              }
+            ],
+            "answer": [
+              "a"
+            ],
+            "basis": "scene",
+            "explanation": "The name is given in the briefing. This identifies an area, not a crease-entry rule.",
+            "id": "exp26-u7-007-q2"
+          },
+          {
+            "type": "sequence",
+            "prompt": "Arrange our goal-defending turns.",
+            "options": [
+              {
+                "id": "a",
+                "text": "YOU take this turn"
+              },
+              {
+                "id": "b",
+                "text": "The coach ends it"
+              },
+              {
+                "id": "c",
+                "text": "Navy2 takes the next turn"
+              }
+            ],
+            "answer": [
+              "a",
+              "b",
+              "c"
+            ],
+            "basis": "coaching",
+            "explanation": "This is the declared rotation; the coach controls the swap.",
+            "id": "exp26-u7-007-q3"
+          },
+          {
+            "type": "multi",
+            "prompt": "Which facts belong to this activity?",
+            "options": [
+              {
+                "id": "a",
+                "text": "Gold1 has the puck"
+              },
+              {
+                "id": "b",
+                "text": "YOU stay goalie forever"
+              },
+              {
+                "id": "c",
+                "text": "Navy2 gets a turn"
+              }
+            ],
+            "answer": [
+              "a",
+              "c"
+            ],
+            "basis": "scene",
+            "explanation": "Gold1 owns the puck and Navy2 is next. The role is shared.",
+            "id": "exp26-u7-007-q4"
+          },
+          {
+            "type": "choice",
+            "prompt": "Imagine Navy2 gains control of the puck. Who has it then?",
+            "options": [
+              {
+                "id": "a",
+                "text": "Gold1 still has it"
+              },
+              {
+                "id": "b",
+                "text": "Navy2 has it"
+              },
+              {
+                "id": "c",
+                "text": "The crease has it"
+              }
+            ],
+            "answer": [
+              "b"
+            ],
+            "basis": "coaching",
+            "explanation": "The answer follows the stated change of possession.",
+            "id": "exp26-u7-007-q5"
+          },
+          {
+            "type": "explain",
+            "prompt": "How could you help Navy2 enjoy the next turn?",
+            "basis": "coaching",
+            "explanation": "Encouragement and room to try are useful answers. No goaltending technique is scored.",
+            "id": "exp26-u7-007-q6"
+          },
+          {
+            "id": "exp26-u7-007-q7",
+            "type": "choice",
+            "prompt": "It is YOUR turn near the navy net. Where should YOU look first?",
+            "options": [
+              {
+                "id": "a",
+                "text": "At Gold1 and the puck"
+              },
+              {
+                "id": "b",
+                "text": "At the far end of the rink"
+              },
+              {
+                "id": "c",
+                "text": "At your own skates"
+              }
+            ],
+            "answer": [
+              "a"
+            ],
+            "basis": "coaching",
+            "explanation": "Gold1 has the puck at your end, so that is where the play is right now. If Navy2 wins the puck, look up the ice instead, because the play moves away from your net."
+          },
+          {
+            "id": "exp26-u7-007-q8",
+            "type": "multi",
+            "prompt": "Which two things tell YOU where the play is right now?",
+            "options": [
+              {
+                "id": "a",
+                "text": "Gold1 has the puck"
+              },
+              {
+                "id": "b",
+                "text": "How close the puck is to the navy net"
+              },
+              {
+                "id": "c",
+                "text": "Who takes the next turn after YOU"
+              }
+            ],
+            "answer": [
+              "a",
+              "b"
+            ],
+            "basis": "coaching",
+            "explanation": "The puck owner and how close the puck is to your net tell YOU what is happening now. Who takes the next turn matters between turns, not during this one."
+          },
+          {
+            "id": "exp26-u7-007-q9",
+            "type": "position",
+            "prompt": "Move YOU to a spot in front of the navy net where you can still see the puck.",
+            "actorId": "home-skater-1",
+            "reference": {
+              "x": -25,
+              "y": -0.85
+            },
+            "basis": "coaching",
+            "explanation": "From here YOU stay in front of the navy net and can still see Gold1 and the puck. It is one example spot, and where you stand changes as the puck moves. This is an activity suggestion, not goaltending technique."
+          },
+          {
+            "id": "exp26-u7-007-q10",
+            "type": "explain",
+            "prompt": "Why does everyone get a turn defending the goal?",
+            "basis": "coaching",
+            "explanation": "Sharing the turn lets every player practise many parts of the game instead of only one. Any answer in your own words is fine, and nothing here is scored."
+          }
+        ]
+      },
+      "affectedQuestionIds": [
+        "exp26-u7-007-q10",
+        "exp26-u7-007-q5",
+        "exp26-u7-007-q7",
+        "exp26-u7-007-q8",
+        "exp26-u7-007-q9"
+      ],
+      "reasons": [
+        {
+          "questionIds": [
+            "exp26-u7-007-q7",
+            "exp26-u7-007-q8",
+            "exp26-u7-007-q9",
+            "exp26-u7-007-q10"
+          ],
+          "issue": "Questions 7 to 10 describe a different situation from the one the scene shows. They assume YOU are supporting a navy puck carrier in a support lane, when Gold1 owns the puck, Navy2 carries nothing, and YOU are taking a goal-defending turn 1.63 m in front of the navy goal line.",
+          "change": "All four are rewritten to the situation this scene actually shows: where to look on a goal-defending turn, which cues say where the play is, one example spot in front of the navy net, and why the rotation is shared. No scene metadata, setup, briefing, cue, source or limit text is touched.",
+          "evidence": "Setup puck.owner is away-skater-1, so the carried puck renders at (-19.203,-3.205), 1.221 m from Gold1 and 10.276 m from Navy2. The q9 reference (-5,-2) moves YOU 20.597 m off the goal YOU are assigned, 13.038 m from the only carrier and 15.811 m from the Navy2 it claims to give separation to, and the reference y=-2 is above Gold1 y=-3, so \"below the carrier\" is false in any reading. USA Hockey Skill Progressions PDF p.14 states no time should be spent teaching team-play systems at 8-and-Under, and the locked curriculum ledger introduces off-puck-support-offense at U9, not U7."
+        },
+        {
+          "questionIds": [
+            "exp26-u7-007-q5"
+          ],
+          "issue": "The prompt supplies a changed condition but the question is set to basis scene, which the engine scores objectively as a directly readable scene fact.",
+          "change": "Basis changed from scene to coaching. Prompt, options, key and explanation are unchanged byte-for-byte.",
+          "evidence": "The answer contract assigns changed conditions to coaching basis, and 24 of the 26 \"Imagine\" prompts in this snapshot already use coaching. The only other scene-basis instance, exp26-u7-002-q5, sits outside this packet and is flagged in the report rather than changed here. This is the lowest-confidence item in the packet and can be declined on its own."
+        }
+      ],
+      "replacementReview": {
+        "status": "self-checked",
+        "coverage": [
+          {
+            "questionId": "exp26-u7-007-q1",
+            "contentHash": "2894c56bedc1ee163aa193889079a0c233c0a64c684dec1c359ed4cd40837a1d",
+            "checks": {
+              "roster": "pass",
+              "geometry": "pass",
+              "answer": "pass",
+              "feedback": "pass",
+              "age": "pass",
+              "sources": "pass",
+              "grammar": "pass"
+            },
+            "reason": "Unchanged. Scene fact confirmed against the unchanged setup: YOU at x=-25.5 in front of the navy goal line at x=-27.13."
+          },
+          {
+            "questionId": "exp26-u7-007-q2",
+            "contentHash": "a760ff90419ef3f9d041f659d6e16d51d3e7c6f369fd4f54ed9a9e73bcfba350",
+            "checks": {
+              "roster": "pass",
+              "geometry": "pass",
+              "answer": "pass",
+              "feedback": "pass",
+              "age": "pass",
+              "sources": "pass",
+              "grammar": "pass"
+            },
+            "reason": "Unchanged. The briefing still names the crease; the explanation still scopes it as an area name, not a rule."
+          },
+          {
+            "questionId": "exp26-u7-007-q3",
+            "contentHash": "0fc2e01402983e93f12c6e59f3b187cb2a68d7f33fb6ced141ca1b1290bddac5",
+            "checks": {
+              "roster": "pass",
+              "geometry": "pass",
+              "answer": "pass",
+              "feedback": "pass",
+              "age": "pass",
+              "sources": "pass",
+              "grammar": "pass"
+            },
+            "reason": "Unchanged. Rotation order still matches the briefing and the Hockey Canada / USA Hockey rotation guidance."
+          },
+          {
+            "questionId": "exp26-u7-007-q4",
+            "contentHash": "8c363dcd0953234461cbb49fba18a6db77c123f1a95718bcabc51775a0f8b79e",
+            "checks": {
+              "roster": "pass",
+              "geometry": "pass",
+              "answer": "pass",
+              "feedback": "pass",
+              "age": "pass",
+              "sources": "pass",
+              "grammar": "pass"
+            },
+            "reason": "Unchanged. Gold1 still owns the puck and Navy2 is still next; both keyed facts hold."
+          },
+          {
+            "questionId": "exp26-u7-007-q5",
+            "contentHash": "d66461a2c49216de3c7fe750b561d3777ee5c7f2f39ddfe23d8067890d79a134",
+            "checks": {
+              "roster": "pass",
+              "geometry": "pass",
+              "answer": "pass",
+              "feedback": "pass",
+              "age": "pass",
+              "sources": "pass",
+              "grammar": "pass"
+            },
+            "reason": "Basis changed from scene to coaching only. Prompt, options, key and explanation are byte-identical, so the teaching objective is preserved and the supplied hypothetical is no longer scored as a directly readable scene fact."
+          },
+          {
+            "questionId": "exp26-u7-007-q6",
+            "contentHash": "f69e9fcbc5c9e141c5bc6a100039abe1ace7d7e163c3e41ec07c75a7bb451bec",
+            "checks": {
+              "roster": "pass",
+              "geometry": "pass",
+              "answer": "pass",
+              "feedback": "pass",
+              "age": "pass",
+              "sources": "pass",
+              "grammar": "pass"
+            },
+            "reason": "Unchanged. Optional reflection, no key, no writing requirement."
+          },
+          {
+            "questionId": "exp26-u7-007-q7",
+            "contentHash": "177128e3066ddcad5efcb6822c58fde1ef3cf614ca8b63cbc2db62fbbe99b9d2",
+            "checks": {
+              "roster": "pass",
+              "geometry": "pass",
+              "answer": "pass",
+              "feedback": "pass",
+              "age": "pass",
+              "sources": "pass",
+              "grammar": "pass"
+            },
+            "reason": "Replaced. Now asks where to look on this turn, using only actors this scene contains. Gold1 owns the puck at the -x end, which the setup confirms. The condition (if Navy2 wins the puck, look up the ice) is stated rather than promised. No team-system language, no contact or safety claim."
+          },
+          {
+            "questionId": "exp26-u7-007-q8",
+            "contentHash": "a12bb0cc5c27a6aceb3ff189e87ea6bc2e49a7a3db6310af0d5911c26d6ecb54",
+            "checks": {
+              "roster": "pass",
+              "geometry": "pass",
+              "answer": "pass",
+              "feedback": "pass",
+              "age": "pass",
+              "sources": "pass",
+              "grammar": "pass"
+            },
+            "reason": "Replaced. Both keyed cues are true of this scene: Gold1 owns the puck, and puck-to-net distance is readable from the drawn positions. The third option is a real fact about the activity that is simply not a cue for right now, which makes it a credible distractor rather than a giveaway."
+          },
+          {
+            "questionId": "exp26-u7-007-q9",
+            "contentHash": "567905b923b779ce76ed0bd2197a64a6737ff31a3759dd96f055cf82b2a9c663",
+            "checks": {
+              "roster": "pass",
+              "geometry": "pass",
+              "answer": "pass",
+              "feedback": "pass",
+              "age": "pass",
+              "sources": "pass",
+              "grammar": "pass"
+            },
+            "reason": "Replaced. Reference (-25,-0.85) verified on the ice, moves YOU 0.986 m, keeps YOU 2.13 m in front of the navy goal line and 7.32 m from Gold1, and sits 0.01 m off the straight line between the carried puck at (-19.203,-3.205) and the net front. actorId home-skater-1 matches the prompt subject YOU. The explanation claims sight of the puck, not a goaltending technique."
+          },
+          {
+            "questionId": "exp26-u7-007-q10",
+            "contentHash": "6512b0d5c28700e4789246dc8863ced91725eb42ea4f4f0b7c06fd11ff838a3f",
+            "checks": {
+              "roster": "pass",
+              "geometry": "pass",
+              "answer": "pass",
+              "feedback": "pass",
+              "age": "pass",
+              "sources": "pass",
+              "grammar": "pass"
+            },
+            "reason": "Replaced. Optional reflection on the rotation itself, which is the scenario family. Supported by Hockey Canada U7 FAQ and USA Hockey 8U on not designating full-time goaltenders. Distinct from q6, which asks how to help Navy2 rather than why the rotation exists."
+          }
+        ]
+      }
+    },
+    {
+      "scenarioId": "exp26-u7-009",
+      "baseVersion": 1,
+      "baseScenarioHash": "f8e61a41762a9b182826ee64b8d4e3f91aa4e84809ef0fdab58aa4f2c048c41b",
+      "replacement": {
+        "id": "exp26-u7-009",
+        "version": 2,
+        "ageBand": "U7",
+        "title": "My partner has it now",
+        "family": "after-pass-role",
+        "topic": "Passing",
+        "objective": "Recognize the new puck owner after a completed partner pass.",
+        "briefing": "A gentle partner pass has finished. Navy2 controls the puck; YOU no longer do. This picture begins after reception and does not show the pass path. Leave Navy2 room while staying in the activity. Navy attacks the +x end; gold attacks the -x end. The full rink is an orientation map for this small activity.",
+        "setup": {
+          "actors": [
+            {
+              "id": "home-skater-1",
+              "label": "YOU",
+              "team": "home",
+              "role": "skater",
+              "x": -3,
+              "y": 2,
+              "facing": 0
+            },
+            {
+              "id": "home-skater-2",
+              "label": "H2",
+              "team": "home",
+              "role": "skater",
+              "x": 5,
+              "y": 2,
+              "facing": 3.141592653589793
+            },
+            {
+              "id": "away-skater-1",
+              "label": "A1",
+              "team": "away",
+              "role": "skater",
+              "x": 9,
+              "y": -5,
+              "facing": 2.5
+            }
+          ],
+          "puck": {
+            "owner": "home-skater-2"
+          }
+        },
+        "focusActorId": "home-skater-1",
+        "cues": [
+          "Navy2 owns the puck.",
+          "YOU are now without it.",
+          "The earlier pass is stated, not animated."
+        ],
+        "tags": [
+          "after-pass-role",
+          "foundation",
+          "experimental"
+        ],
+        "sources": [
+          {
+            "id": "hc-u7-skills",
+            "title": "Hockey Canada: Fundamental skill development for Timbits U7 hockey",
+            "url": "https://www.hockeycanada.ca/en-ca/hockey-programs/coaching/under-7/coaches/skills",
+            "section": "U7 Skills Matrix: skating, puck control, passing and receiving",
+            "use": "Supports beginner skill topics, not the original scene answers or a digital measurement of technique."
+          },
+          {
+            "id": "usah-skill-progression-2019",
+            "title": "USA Hockey: Skill Progressions for Youth Hockey (2019)",
+            "url": "https://cdn1.sportngin.com/attachments/document/0066/4690/Skill_Progression_Manual_19_FINAL.pdf",
+            "section": "8-and-Under: printed pp.6-8 / PDF pp.12-14, Player Knowledge, Individual Skills and Team Concepts",
+            "use": "Supports beginner puck pursuit, getting available for a pass, broad skill development and respectful conduct. US age categories do not establish Canadian game rules."
+          }
+        ],
+        "limits": "Static experimental illustration. Coaching responses and reference positions are suggestions. No skating, tactical mastery or learning transfer is certified. An adult may read questions and record spoken reflections. ",
+        "questions": [
+          {
+            "type": "choice",
+            "prompt": "Who controls the puck now?",
+            "options": [
+              {
+                "id": "a",
+                "text": "YOU"
+              },
+              {
+                "id": "b",
+                "text": "Navy2"
+              },
+              {
+                "id": "c",
+                "text": "Gold1"
+              }
+            ],
+            "answer": [
+              "b"
+            ],
+            "basis": "scene",
+            "explanation": "The setup begins with the puck controlled by Navy2.",
+            "id": "exp26-u7-009-q1"
+          },
+          {
+            "type": "choice",
+            "prompt": "Does this picture show the whole moving pass?",
+            "options": [
+              {
+                "id": "a",
+                "text": "Yes, every moment"
+              },
+              {
+                "id": "b",
+                "text": "No, it starts after reception"
+              },
+              {
+                "id": "c",
+                "text": "It shows two passes"
+              }
+            ],
+            "answer": [
+              "b"
+            ],
+            "basis": "scene",
+            "explanation": "The briefing limits it to the state after reception.",
+            "id": "exp26-u7-009-q2"
+          },
+          {
+            "type": "sequence",
+            "prompt": "Put these stated events in order.",
+            "options": [
+              {
+                "id": "a",
+                "text": "YOU had the puck"
+              },
+              {
+                "id": "b",
+                "text": "The partner pass finished"
+              },
+              {
+                "id": "c",
+                "text": "Navy2 controls it now"
+              }
+            ],
+            "answer": [
+              "a",
+              "b",
+              "c"
+            ],
+            "basis": "scene",
+            "explanation": "This is the supplied history, not an independently simulated pass.",
+            "id": "exp26-u7-009-q3"
+          },
+          {
+            "type": "position",
+            "prompt": "Find separate space where Navy2 can still see YOU.",
+            "actorId": "home-skater-1",
+            "reference": {
+              "x": 0,
+              "y": -3
+            },
+            "basis": "coaching",
+            "explanation": "This gives Navy2 room and leaves a visible partner. Other clear places may fit.",
+            "id": "exp26-u7-009-q4"
+          },
+          {
+            "type": "choice",
+            "prompt": "Imagine Navy2 asks for a return target. What could you do?",
+            "options": [
+              {
+                "id": "a",
+                "text": "Make yourself available again"
+              },
+              {
+                "id": "b",
+                "text": "Stand on Navy2"
+              },
+              {
+                "id": "c",
+                "text": "Leave without telling anyone"
+              }
+            ],
+            "answer": [
+              "a"
+            ],
+            "basis": "coaching",
+            "explanation": "You can stay involved by getting available. A return pass still needs a clear route.",
+            "id": "exp26-u7-009-q5"
+          },
+          {
+            "type": "explain",
+            "prompt": "What changed for YOU when the pass finished?",
+            "basis": "coaching",
+            "explanation": "YOU changed from having the puck to being without it. You can still help the activity.",
+            "id": "exp26-u7-009-q6"
+          },
+          {
+            "id": "exp26-u7-009-q7",
+            "type": "choice",
+            "prompt": "Gold1 skates closer to Navy2. What could YOU do to stay useful?",
+            "options": [
+              {
+                "id": "a",
+                "text": "Find open space where Navy2 could reach YOU with a pass"
+              },
+              {
+                "id": "b",
+                "text": "Skate straight at Navy2 to take the puck back"
+              },
+              {
+                "id": "c",
+                "text": "Stand still until someone calls your name"
+              }
+            ],
+            "answer": [
+              "a"
+            ],
+            "basis": "coaching",
+            "explanation": "Navy2 has the puck and Gold1 is the pressure. Open space gives Navy2 a choice. It only becomes a pass if the route from Navy2 to YOU stays clear."
+          },
+          {
+            "id": "exp26-u7-009-q8",
+            "type": "multi",
+            "prompt": "Which two things should YOU watch now that Navy2 has the puck?",
+            "options": [
+              {
+                "id": "a",
+                "text": "Where Navy2 is on the ice"
+              },
+              {
+                "id": "b",
+                "text": "Where Gold1 is coming from"
+              },
+              {
+                "id": "c",
+                "text": "Where the puck was before the pass"
+              }
+            ],
+            "answer": [
+              "a",
+              "b"
+            ],
+            "basis": "coaching",
+            "explanation": "Your teammate and the pressure are the two cues that change what YOU do next. Where the puck used to be does not tell YOU anything about now."
+          },
+          {
+            "id": "exp26-u7-009-q9",
+            "type": "position",
+            "prompt": "Place YOU in open space where Navy2 could pass to YOU, away from Gold1.",
+            "actorId": "home-skater-1",
+            "reference": {
+              "x": 0,
+              "y": 5
+            },
+            "basis": "coaching",
+            "explanation": "From here YOU are on the opposite side from Gold1 with a short open route to the puck. It is one example spot; another open place can work, and a pass still depends on that route staying clear."
+          },
+          {
+            "id": "exp26-u7-009-q10",
+            "type": "explain",
+            "prompt": "Why does Navy2 need room after taking the pass?",
+            "basis": "coaching",
+            "explanation": "Standing too close takes away the space Navy2 needs to carry the puck, and it can bring Gold1 to both of you at once. Any answer in your own words is fine."
+          }
+        ]
+      },
+      "affectedQuestionIds": [
+        "exp26-u7-009-q10",
+        "exp26-u7-009-q7",
+        "exp26-u7-009-q8",
+        "exp26-u7-009-q9"
+      ],
+      "reasons": [
+        {
+          "questionIds": [
+            "exp26-u7-009-q8"
+          ],
+          "issue": "A false landmark claim is asserted as an objectively scored scene fact. The explanation says Navy2 is \"the teammate beyond the line\", and the question uses basis scene.",
+          "change": "The question is rewritten as a coaching-basis cue question about the teammate and the pressure, with no line in it.",
+          "evidence": "The right blue line is at x=7.62 and Navy2 is at x=5, so Navy2 is 2.62 m short of the line and on the same side of it as YOU at x=-3. This is the same defect class the historical record already records, a skater described as past a line the coordinates place them inside. Hockey Canada Vision and Scanning names teammates and opposition pressure as the two key information sources, which is what the replacement keys."
+        },
+        {
+          "questionIds": [
+            "exp26-u7-009-q7",
+            "exp26-u7-009-q10"
+          ],
+          "issue": "Both questions build on a blue-line meeting convention that no briefing line, cue or setup element establishes, and q7 additionally offers \"Leave the puck behind\" to a player who does not have the puck.",
+          "change": "q7 becomes an explicit pressure hypothetical about getting to open space, with no option implying YOU hold the puck. q10 becomes a reflection about giving the carrier room, which the briefing already asks for.",
+          "evidence": "The setup gives the puck to home-skater-2 and the briefing states YOU no longer have it, so any option about leaving the puck contradicts the scene. Hockey Canada U7 FAQ states that positional play and offside are introduced later, at the U11 transition to full ice, and U7 plays cross-ice, so the blue line is not part of this age group's playing area."
+        },
+        {
+          "questionIds": [
+            "exp26-u7-009-q9"
+          ],
+          "issue": "The prompt and its reference contradict each other. \"Place YOU closer to Navy2\" is paired with a reference that moves YOU farther away, and the second clause about keeping Gold1 below YOU was already true before the move.",
+          "change": "The prompt becomes a receiving offer away from Gold1, and the reference is moved to (0,5), which satisfies every clause it states.",
+          "evidence": "From (-3,2) to (-4,-4) the distance to Navy2 rises from 8.000 m to 10.817 m. The replacement reference (0,5) is on the ice, moves YOU 4.243 m, cuts the distance to Navy2 to 5.831 m, sits on the opposite side of centre from Gold1, and leaves Gold1 8.043 m from the nearest point of the puck-to-reference lane. Following the calibration decision on U11-002 q9, this is an example receiving offer rather than a mandatory route."
+        }
+      ],
+      "replacementReview": {
+        "status": "self-checked",
+        "coverage": [
+          {
+            "questionId": "exp26-u7-009-q1",
+            "contentHash": "3b27632c1852bc5aa15514a27d66234d68fab16435bd09732c30d8d86dca9dc3",
+            "checks": {
+              "roster": "pass",
+              "geometry": "pass",
+              "answer": "pass",
+              "feedback": "pass",
+              "age": "pass",
+              "sources": "pass",
+              "grammar": "pass"
+            },
+            "reason": "Unchanged. Setup ownership is Navy2; key holds."
+          },
+          {
+            "questionId": "exp26-u7-009-q2",
+            "contentHash": "f12e0f396c95ff14c6f8f082dbf1359d2d43225e1467d60f63453043efc552b4",
+            "checks": {
+              "roster": "pass",
+              "geometry": "pass",
+              "answer": "pass",
+              "feedback": "pass",
+              "age": "pass",
+              "sources": "pass",
+              "grammar": "pass"
+            },
+            "reason": "Unchanged. The briefing still bounds the frame to the post-reception state."
+          },
+          {
+            "questionId": "exp26-u7-009-q3",
+            "contentHash": "0b2a038a2bfbcf90ac6f67ff4611f1b87eda27c9bd87c46a53af28f19f7eda84",
+            "checks": {
+              "roster": "pass",
+              "geometry": "pass",
+              "answer": "pass",
+              "feedback": "pass",
+              "age": "pass",
+              "sources": "pass",
+              "grammar": "pass"
+            },
+            "reason": "Unchanged. Supplied history, still explicitly labelled as supplied rather than simulated."
+          },
+          {
+            "questionId": "exp26-u7-009-q4",
+            "contentHash": "93d06578f22fa59ca33f504f1c8d2b8dc4d8a7e1203233c06d205ce88f5f62b0",
+            "checks": {
+              "roster": "pass",
+              "geometry": "pass",
+              "answer": "pass",
+              "feedback": "pass",
+              "age": "pass",
+              "sources": "pass",
+              "grammar": "pass"
+            },
+            "reason": "Unchanged. Reference (0,-3) still verified: 5.831 m move, on ice, 7.071 m from Navy2."
+          },
+          {
+            "questionId": "exp26-u7-009-q5",
+            "contentHash": "d6d26017ceece15c69bcd2e466846f5bda2f7f27291efe734f29aeed17956616",
+            "checks": {
+              "roster": "pass",
+              "geometry": "pass",
+              "answer": "pass",
+              "feedback": "pass",
+              "age": "pass",
+              "sources": "pass",
+              "grammar": "pass"
+            },
+            "reason": "Unchanged. Hypothetical on coaching basis, return pass still conditioned on a clear route."
+          },
+          {
+            "questionId": "exp26-u7-009-q6",
+            "contentHash": "f88de791b9969d9d8f1b9b7f4285a8c542a7c6ae4c15e18a22508df1dd1752ba",
+            "checks": {
+              "roster": "pass",
+              "geometry": "pass",
+              "answer": "pass",
+              "feedback": "pass",
+              "age": "pass",
+              "sources": "pass",
+              "grammar": "pass"
+            },
+            "reason": "Unchanged. Optional reflection, no key."
+          },
+          {
+            "questionId": "exp26-u7-009-q7",
+            "contentHash": "82e99580a2a8d0a13a6794bd2e05a2f1dc6872c67febfab5e2cd97bb34948a28",
+            "checks": {
+              "roster": "pass",
+              "geometry": "pass",
+              "answer": "pass",
+              "feedback": "pass",
+              "age": "pass",
+              "sources": "pass",
+              "grammar": "pass"
+            },
+            "reason": "Replaced. The blue line is gone and the possession error is gone: no option now implies YOU hold the puck. Both distractors are realistic young-player errors, chasing your own teammate and standing still. The pass is conditioned on the route staying clear."
+          },
+          {
+            "questionId": "exp26-u7-009-q8",
+            "contentHash": "cd2897405e807445f738b0df6ecf3222c18e89d64ecd2672759cf5aa9f376748",
+            "checks": {
+              "roster": "pass",
+              "geometry": "pass",
+              "answer": "pass",
+              "feedback": "pass",
+              "age": "pass",
+              "sources": "pass",
+              "grammar": "pass"
+            },
+            "reason": "Replaced and moved to coaching basis, because it now asks what to watch rather than asserting a landmark fact. The keyed pair is the teammate-and-pressure pair Hockey Canada names. The third option is an outdated cue, which is the distractor type the calibration feedback asked for."
+          },
+          {
+            "questionId": "exp26-u7-009-q9",
+            "contentHash": "9e131f51629cc92f1e91fc792da4d7108c7efaddbaffaf353595840a7f494b05",
+            "checks": {
+              "roster": "pass",
+              "geometry": "pass",
+              "answer": "pass",
+              "feedback": "pass",
+              "age": "pass",
+              "sources": "pass",
+              "grammar": "pass"
+            },
+            "reason": "Replaced. Reference (0,5) verified on the ice, moves YOU 4.243 m, and genuinely satisfies both clauses this time: distance to Navy2 falls from 8.000 m to 5.831 m, the reference is on the opposite side of centre from Gold1 (y=+5 against y=-5), and Gold1 sits 8.043 m from the nearest point of the puck-to-reference lane. actorId home-skater-1 matches the prompt subject YOU."
+          },
+          {
+            "questionId": "exp26-u7-009-q10",
+            "contentHash": "8fa39be4b7950ccd3e3b03dc28f2f88ef1438d86955299899e9b3a483fe9cd52",
+            "checks": {
+              "roster": "pass",
+              "geometry": "pass",
+              "answer": "pass",
+              "feedback": "pass",
+              "age": "pass",
+              "sources": "pass",
+              "grammar": "pass"
+            },
+            "reason": "Replaced. Optional reflection about giving the carrier room, which the briefing already asks for (\"Leave Navy2 room\"). No landmark, no absolute, and it is distinct from q6 (what changed for YOU) and q5 (what YOU could do next)."
+          }
+        ]
+      }
+    },
+    {
+      "scenarioId": "exp26-u7-010",
+      "baseVersion": 1,
+      "baseScenarioHash": "9f8f6a98b235bcc22db40ce68c8973eb64901091327912daacb06d1dbcc2573f",
+      "replacement": {
+        "id": "exp26-u7-010",
+        "version": 2,
+        "ageBand": "U7",
+        "title": "A mistake and another try",
+        "family": "reset-after-mistake",
+        "topic": "Teamwork",
+        "objective": "Respond kindly to a teammate error while noticing possession.",
+        "briefing": "In a friendly keep-away activity, Navy2 missed a pass and Gold1 gained the puck. The picture starts after that change. Navy2 looks to YOU for encouragement; the coach invites everyone to keep trying. Navy attacks the +x end; gold attacks the -x end. The full rink is an orientation map for this small activity.",
+        "setup": {
+          "actors": [
+            {
+              "id": "home-skater-1",
+              "label": "YOU",
+              "team": "home",
+              "role": "skater",
+              "x": -4,
+              "y": 4,
+              "facing": -0.4
+            },
+            {
+              "id": "home-skater-2",
+              "label": "H2",
+              "team": "home",
+              "role": "skater",
+              "x": 2,
+              "y": 5,
+              "facing": -2.9
+            },
+            {
+              "id": "away-skater-1",
+              "label": "A1",
+              "team": "away",
+              "role": "skater",
+              "x": 5,
+              "y": -2,
+              "facing": 2.7
+            }
+          ],
+          "puck": {
+            "owner": "away-skater-1"
+          }
+        },
+        "focusActorId": "home-skater-1",
+        "cues": [
+          "Gold1 owns the puck now.",
+          "The missed pass was described.",
+          "Everyone is invited to try again."
+        ],
+        "tags": [
+          "reset-after-mistake",
+          "foundation",
+          "experimental"
+        ],
+        "sources": [
+          {
+            "id": "usah-skill-progression-2019",
+            "title": "USA Hockey: Skill Progressions for Youth Hockey (2019)",
+            "url": "https://cdn1.sportngin.com/attachments/document/0066/4690/Skill_Progression_Manual_19_FINAL.pdf",
+            "section": "8-and-Under: printed pp.6-8 / PDF pp.12-14, Player Knowledge, Individual Skills and Team Concepts",
+            "use": "Supports beginner puck pursuit, getting available for a pass, broad skill development and respectful conduct. US age categories do not establish Canadian game rules."
+          },
+          {
+            "id": "hc-u7-faq",
+            "title": "Hockey Canada: Answering questions about Timbits U7 hockey",
+            "url": "https://www.hockeycanada.ca/en-ca/hockey-programs/coaching/under-7/faq",
+            "section": "Core requirements; full-time goaltenders; early skill development",
+            "use": "Supports cross-ice development and rotating the goal-defending role. Our practice picture is not a copy of the game layout."
+          }
+        ],
+        "limits": "Static experimental illustration. Coaching responses and reference positions are suggestions. No skating, tactical mastery or learning transfer is certified. An adult may read questions and record spoken reflections. ",
+        "questions": [
+          {
+            "type": "choice",
+            "prompt": "Who has the puck after the missed pass?",
+            "options": [
+              {
+                "id": "a",
+                "text": "Navy2"
+              },
+              {
+                "id": "b",
+                "text": "Gold1"
+              },
+              {
+                "id": "c",
+                "text": "YOU"
+              }
+            ],
+            "answer": [
+              "b"
+            ],
+            "basis": "scene",
+            "explanation": "The current owner and stated event both identify Gold1.",
+            "id": "exp26-u7-010-q1"
+          },
+          {
+            "type": "multi",
+            "prompt": "Which words could encourage Navy2?",
+            "options": [
+              {
+                "id": "a",
+                "text": "We can try again"
+              },
+              {
+                "id": "b",
+                "text": "I can help"
+              },
+              {
+                "id": "c",
+                "text": "Never make a mistake"
+              }
+            ],
+            "answer": [
+              "a",
+              "b"
+            ],
+            "basis": "coaching",
+            "explanation": "These are supportive examples. Other kind words may work too.",
+            "id": "exp26-u7-010-q2"
+          },
+          {
+            "type": "sequence",
+            "prompt": "Arrange one helpful response.",
+            "options": [
+              {
+                "id": "a",
+                "text": "Notice what happened"
+              },
+              {
+                "id": "b",
+                "text": "Encourage your partner"
+              },
+              {
+                "id": "c",
+                "text": "Get ready for another try"
+              }
+            ],
+            "answer": [
+              "a",
+              "b",
+              "c"
+            ],
+            "basis": "coaching",
+            "explanation": "This is a suggested routine, not the only acceptable order for showing support.",
+            "id": "exp26-u7-010-q3"
+          },
+          {
+            "type": "position",
+            "prompt": "For the next reset, find separate practice space near Navy2.",
+            "actorId": "home-skater-1",
+            "reference": {
+              "x": -1,
+              "y": 0
+            },
+            "basis": "coaching",
+            "explanation": "This keeps YOU involved without occupying another player. It is a reset, not a defensive answer key.",
+            "id": "exp26-u7-010-q4"
+          },
+          {
+            "type": "choice",
+            "prompt": "Imagine YOU miss the next pass. What could help?",
+            "options": [
+              {
+                "id": "a",
+                "text": "Trying again with support"
+              },
+              {
+                "id": "b",
+                "text": "Quitting every activity"
+              },
+              {
+                "id": "c",
+                "text": "Blaming the puck"
+              }
+            ],
+            "answer": [
+              "a"
+            ],
+            "basis": "coaching",
+            "explanation": "A mistake can lead to another supported attempt.",
+            "id": "exp26-u7-010-q5"
+          },
+          {
+            "type": "explain",
+            "prompt": "Say one kind thing you would like a teammate to tell you.",
+            "basis": "coaching",
+            "explanation": "Any respectful encouraging answer is welcome. An adult can record the child's own words.",
+            "id": "exp26-u7-010-q6"
+          },
+          {
+            "id": "exp26-u7-010-q7",
+            "type": "choice",
+            "prompt": "Gold1 has the puck now. What is a good first thing for YOU to do?",
+            "options": [
+              {
+                "id": "a",
+                "text": "Notice who has the puck and where Navy2 is"
+              },
+              {
+                "id": "b",
+                "text": "Wait for the coach to tell YOU what happened"
+              },
+              {
+                "id": "c",
+                "text": "Skate to where the pass was going"
+              }
+            ],
+            "answer": [
+              "a"
+            ],
+            "basis": "coaching",
+            "explanation": "The puck changed hands, so the old plan is finished. Noticing the new owner and where your teammate is gives YOU something useful to do next."
+          },
+          {
+            "id": "exp26-u7-010-q8",
+            "type": "multi",
+            "prompt": "Which two things are true in this picture?",
+            "options": [
+              {
+                "id": "a",
+                "text": "Gold1 is the puck owner"
+              },
+              {
+                "id": "b",
+                "text": "The pass to Navy2 did not finish"
+              },
+              {
+                "id": "c",
+                "text": "YOU are the navy player closest to the puck"
+              }
+            ],
+            "answer": [
+              "a",
+              "b"
+            ],
+            "basis": "scene",
+            "explanation": "The picture starts after the miss, with Gold1 holding the puck. Navy2 is actually the navy player nearer the puck, so the third choice does not match what YOU can see."
+          },
+          {
+            "id": "exp26-u7-010-q9",
+            "type": "position",
+            "prompt": "Place YOU in open space where Navy2 can find YOU for the next try.",
+            "actorId": "home-skater-1",
+            "reference": {
+              "x": -2,
+              "y": 7
+            },
+            "basis": "coaching",
+            "explanation": "This gives YOU room on the far side from Gold1 and a short open route to Navy2 for the next try. It is one example spot; another open place can work. The picture does not prove Navy2 has already looked at YOU."
+          },
+          {
+            "id": "exp26-u7-010-q10",
+            "type": "explain",
+            "prompt": "What does “another try” mean after a missed pass?",
+            "basis": "coaching",
+            "explanation": "It means noticing what is true now, that Gold1 has the puck and Navy2 does not, and then getting ready to help again. Repeating the old pass plan without looking ignores where Gold1 is. Any answer in your own words is fine."
+          }
+        ]
+      },
+      "affectedQuestionIds": [
+        "exp26-u7-010-q10",
+        "exp26-u7-010-q7",
+        "exp26-u7-010-q8",
+        "exp26-u7-010-q9"
+      ],
+      "reasons": [
+        {
+          "questionIds": [
+            "exp26-u7-010-q8"
+          ],
+          "issue": "A keyed scene fact is false. The question is basis scene and keys \"The puck is loose\", but the puck is owned. Its second keyed option, \"Gold1 is above it\", describes an artefact of the carried-puck formula rather than a readable cue.",
+          "change": "The question keeps basis scene and its noticing-possession objective, but every claim is replaced with one that is checkable from the setup, the briefing and the drawn positions.",
+          "evidence": "setup.puck.owner is away-skater-1, the briefing says Gold1 gained the puck, and this scenario's own q1 keys Gold1. The carried puck renders at (3.797,-2.205), only 0.206 m below Gold1 in y, and moving Gold1 moves it, so the relation cannot be a cue. The new distractor is verifiably false: Navy2 is 7.426 m from that puck and YOU are 9.965 m from it."
+        },
+        {
+          "questionIds": [
+            "exp26-u7-010-q7",
+            "exp26-u7-010-q10"
+          ],
+          "issue": "Both carry the same false loose-puck premise. q7 also drops the YOU focus, keys team-play system language, and marks a defensible alternative wrong.",
+          "change": "q7 is rewritten around the actual change of possession with the YOU focus restored and no system language. q10 keeps its prompt byte-for-byte and only its explanation is corrected.",
+          "evidence": "The puck is owned in the setup, so \"loose\" is false in both items. USA Hockey Skill Progressions PDF p.14 states that no time should be spent teaching systems related to team play at 8-and-Under, which rules out \"protect the navy end\" at this band, and the locked ledger has no defensive-play node at U7. Original option c, \"Check who owns it now\", restated the keyed explanation's own reasoning while being marked wrong."
+        },
+        {
+          "questionIds": [
+            "exp26-u7-010-q9"
+          ],
+          "issue": "Both spatial claims in the prompt are false at the given reference, and the explanation invents possession by calling an owned puck loose and telling YOU to approach it.",
+          "change": "The question becomes a reset-space placement for the next try, with a reference that satisfies what the prompt states.",
+          "evidence": "The reference (0,0) is 4.391 m from the carried puck, so it is not beside it, and Navy2 at y=5 is above y=0, not below. The replacement reference (-2,7) is on the ice, moves YOU 3.606 m, shortens the distance to Navy2 from 6.083 m to 4.472 m, and does not move YOU closer to Gold1 (10.817 m to 11.402 m). This repeats and repairs the historical possession-invented class recorded for exp26-u7-001-q7 and q8."
+        }
+      ],
+      "replacementReview": {
+        "status": "self-checked",
+        "coverage": [
+          {
+            "questionId": "exp26-u7-010-q1",
+            "contentHash": "f933fd455fb5323c3e9cb9b166751909a6eda066a0c571cba2b36adcf0a56ac1",
+            "checks": {
+              "roster": "pass",
+              "geometry": "pass",
+              "answer": "pass",
+              "feedback": "pass",
+              "age": "pass",
+              "sources": "pass",
+              "grammar": "pass"
+            },
+            "reason": "Unchanged. Setup ownership is Gold1; key holds."
+          },
+          {
+            "questionId": "exp26-u7-010-q2",
+            "contentHash": "dec8d6bcd26fd252306ec5eb2a509387df56b87e76310c5589bab89d4e8006d3",
+            "checks": {
+              "roster": "pass",
+              "geometry": "pass",
+              "answer": "pass",
+              "feedback": "pass",
+              "age": "pass",
+              "sources": "pass",
+              "grammar": "pass"
+            },
+            "reason": "Unchanged. Encouragement options, coaching basis, no key change."
+          },
+          {
+            "questionId": "exp26-u7-010-q3",
+            "contentHash": "e65f7ae1e8c48b2cdd199ea92f82f84db50681a375853d4923f0827a78d6d386",
+            "checks": {
+              "roster": "pass",
+              "geometry": "pass",
+              "answer": "pass",
+              "feedback": "pass",
+              "age": "pass",
+              "sources": "pass",
+              "grammar": "pass"
+            },
+            "reason": "Unchanged. Routine still explicitly scoped as suggested."
+          },
+          {
+            "questionId": "exp26-u7-010-q4",
+            "contentHash": "21fd1fa7eab318b47bb8bdf042eb904bcb073ef381834bd736bdb3f25fe49205",
+            "checks": {
+              "roster": "pass",
+              "geometry": "pass",
+              "answer": "pass",
+              "feedback": "pass",
+              "age": "pass",
+              "sources": "pass",
+              "grammar": "pass"
+            },
+            "reason": "Unchanged. Reference (-1,0) still verified: 5 m move, on ice, 5.831 m from Navy2."
+          },
+          {
+            "questionId": "exp26-u7-010-q5",
+            "contentHash": "a22693ae275c4e315a91c1bd9ce3fa53457f868cfcb30b36b34db139bda3e3fe",
+            "checks": {
+              "roster": "pass",
+              "geometry": "pass",
+              "answer": "pass",
+              "feedback": "pass",
+              "age": "pass",
+              "sources": "pass",
+              "grammar": "pass"
+            },
+            "reason": "Unchanged. Hypothetical on coaching basis."
+          },
+          {
+            "questionId": "exp26-u7-010-q6",
+            "contentHash": "9b6c4c65fe1a3d963aaa56684df661ebf696c68afab528885475793b018d0244",
+            "checks": {
+              "roster": "pass",
+              "geometry": "pass",
+              "answer": "pass",
+              "feedback": "pass",
+              "age": "pass",
+              "sources": "pass",
+              "grammar": "pass"
+            },
+            "reason": "Unchanged. Optional reflection, no key."
+          },
+          {
+            "questionId": "exp26-u7-010-q7",
+            "contentHash": "7e1dbf50d95a3a1acaeabe631dcdb7a07099023d891d836458e350a5b11a0919",
+            "checks": {
+              "roster": "pass",
+              "geometry": "pass",
+              "answer": "pass",
+              "feedback": "pass",
+              "age": "pass",
+              "sources": "pass",
+              "grammar": "pass"
+            },
+            "reason": "Replaced. The false loose-puck premise is gone, the YOU focus is restored, and the team-system option is gone. Both distractors are credible: waiting passively, and continuing an outdated plan."
+          },
+          {
+            "questionId": "exp26-u7-010-q8",
+            "contentHash": "ca56f1e8f743159f10318e38cbeece0373d768d242e2f9fca17f67343a9c8177",
+            "checks": {
+              "roster": "pass",
+              "geometry": "pass",
+              "answer": "pass",
+              "feedback": "pass",
+              "age": "pass",
+              "sources": "pass",
+              "grammar": "pass"
+            },
+            "reason": "Replaced, basis scene retained because every claim is now checkable. Keyed a matches setup ownership; keyed b matches the briefing. Distractor c is verifiably false from the drawn positions and the app position list: Navy2 is 7.426 m from the carried puck at (3.797,-2.205) and YOU are 9.965 m from it. Noted honestly: whether that 2.5 m difference is legible on the rendered board was not checked, though the app also shows an exact player-location list."
+          },
+          {
+            "questionId": "exp26-u7-010-q9",
+            "contentHash": "1db2fe8f2682d7002d7b60ae91d30daee724ec7072556ad07b4b585358ae3f25",
+            "checks": {
+              "roster": "pass",
+              "geometry": "pass",
+              "answer": "pass",
+              "feedback": "pass",
+              "age": "pass",
+              "sources": "pass",
+              "grammar": "pass"
+            },
+            "reason": "Replaced. Reference (-2,7) verified on the ice, moves YOU 3.606 m, ends 4.472 m from Navy2 (down from 6.083 m) and on the far side of centre from Gold1 (y=+7 against y=-2), and does not move closer to Gold1. actorId home-skater-1 matches the prompt subject YOU. The explanation explicitly refuses to claim Navy2 has already looked."
+          },
+          {
+            "questionId": "exp26-u7-010-q10",
+            "contentHash": "978a3a74bf6b0c97118d3886ba2bce7ba1399d2627d37e84af14afab34bc4c9e",
+            "checks": {
+              "roster": "pass",
+              "geometry": "pass",
+              "answer": "pass",
+              "feedback": "pass",
+              "age": "pass",
+              "sources": "pass",
+              "grammar": "pass"
+            },
+            "reason": "Prompt kept byte-for-byte, including its curly quotation marks. Only the explanation changed, replacing the false \"new loose puck\" with the actual possession state."
+          }
+        ]
+      }
+    }
+  ],
+  "sourceChecks": [
+    {
+      "url": "https://www.hockeycanada.ca/en-ca/hockey-programs/coaching/under-7/faq",
+      "checkedAt": "2026-09-05T00:00:00Z",
+      "access": "read",
+      "jurisdiction": "Canada (Hockey Canada)",
+      "ageFormat": "U7 / Timbits cross-ice",
+      "claim": "U7 rotates the goal-defending role and does not designate full-time goaltenders; positional play, offside and icing are introduced later at the U11 full-ice transition; a crease need not be drawn for U7 games.",
+      "scope": "Read in full with a browser user-agent (HTTP 200). Supports the rotating goal-defending turn in exp26-u7-007 and supports treating positional/landmark instruction as a later-age topic. It does not certify any coordinate, any answer key, or any goaltending technique, and it describes a Canadian program model only."
+    },
+    {
+      "url": "https://www.hockeycanada.ca/en-ca/hockey-programs/coaching/under-7/coaches/skills",
+      "checkedAt": "2026-09-05T00:00:00Z",
+      "access": "read",
+      "jurisdiction": "Canada (Hockey Canada)",
+      "ageFormat": "U7 / LTPD Fundamentals 1",
+      "claim": "The U7 skills matrix is skill-focused (balance, edges, starting/stopping, puck control, passing and receiving, shooting) with only body/stick fakes and angling as individual tactics; 85% of practice time on skills and 15% on individual tactics.",
+      "scope": "Read in full with a browser user-agent (HTTP 200). Supports keeping U7 questions at concrete skill and cue level and supports the finding that team-tactic language is above this band. It contains no team-play or support-lane content and does not certify these scenes or answers."
+    },
+    {
+      "url": "https://www.hockeycanada.ca/en-ca/news/seven-coaching-principles-vision-scanning-2024-ncw",
+      "checkedAt": "2026-09-05T00:00:00Z",
+      "access": "read",
+      "jurisdiction": "Canada (Hockey Canada)",
+      "ageFormat": "All ages, coaching principle",
+      "claim": "When scanning, players should focus on two main sources of information: where their teammates are and where the opposition pressure is coming from; scanning should be taught at all age levels.",
+      "scope": "Read in full with a browser user-agent (HTTP 200). Supports the teammate-plus-pressure cue pair used in exp26-u7-008 and in the proposed exp26-u7-009 q8. It does not certify that any specific pass is open, and it is coaching guidance rather than a playing rule."
+    },
+    {
+      "url": "https://www.hockeycanada.ca/en-ca/news/seven-coaching-principles-puck-control-2024-ncw",
+      "checkedAt": "2026-09-05T00:00:00Z",
+      "access": "read",
+      "jurisdiction": "Canada (Hockey Canada)",
+      "ageFormat": "All ages, coaching principle",
+      "claim": "Puck control is taught progressively and is combined with vision and scanning; awareness supports better decisions with the puck.",
+      "scope": "Read in full with a browser user-agent (HTTP 200). Supports the progression and awareness framing in exp26-u7-008. It does not certify a route, a defender response or an outcome."
+    },
+    {
+      "url": "https://cdn1.sportngin.com/attachments/document/0066/4690/Skill_Progression_Manual_19_FINAL.pdf",
+      "checkedAt": "2026-09-05T00:00:00Z",
+      "access": "read",
+      "jurisdiction": "United States (USA Hockey)",
+      "ageFormat": "8-and-Under (printed pp.6-8 / PDF pp.12-14)",
+      "claim": "PDF p.14 states that no time should be spent teaching systems related to team play at 8-and-Under; players should learn puck pursuit and puck support (making themselves available for a pass, the beginning of getting open and of finding passing lanes). PDF p.13 states coaches should not designate full-time goaltenders. PDF p.12 states 8U players are not at a cognitive level to be lectured on these topics.",
+      "scope": "PDF fetched (HTTP 200) and pages 12-14 extracted and read. Supports removing team-system wording from U7 items and supports keeping get-open and puck-pursuit content. US age categories do not establish Canadian playing rules, and the manual does not certify these coordinates or answers."
+    }
+  ],
+  "remainingQuestionIds": []
+}

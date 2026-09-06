@@ -1,6 +1,6 @@
 # RinkReads — Task List
 
-**Last updated:** 2026-09-05 · **Explore the rink is U7/U9 only:** removed from U11+ activities, learning navigation and mission fallback; old links open age-appropriate worlds.  **Rink games verified locally:** fixed Eyes Up silently falling back to flat ice; all eleven rink games mount 3D. Phone framing and context-loss fallback checked. Coach/goals/training release remains local; remote privacy migration remains pending.
+**Last updated:** 2026-09-05 · **Packets 02–06 repaired locally:** 23 scenarios / 115 question hashes, independently rechecked; experimental only, two U7 curriculum bindings held. Coverage now follows runtime selection (1,300 questions + 200 optional reflections), and local events retain authored age/topic/family. Remote privacy migration remains pending.
 
 **Scope:** RinkReads **app build + content factory**. Launch/distribution (sending the beta, marketing) and the separate BlueChip business are **out of scope** — parked at the bottom. Priority = position in this list. A new idea that isn't here goes to the **Parking Lot** first, then gets promoted on purpose — that's the scope-creep guard.
 
@@ -56,6 +56,8 @@
 - *(New ideas land here first, then get promoted into NEXT/LATER on purpose.)*
 
 ## Changelog
+
+- **2026-09-05** — Applied adjudicated Claude packets 02–06 to the experimental bank with exact before/after evidence and independent checks across 115 affected questions. Corrected additional possession, uncertainty and blue-line scene errors; retained U7 support/receiving curriculum holds. Updated catalogs and full hash audit. Added local authored-age/topic/family telemetry with unknown historical buckets and a phone-checked report. Corrected curriculum counts to actual loader/selection behavior; no tactical-novelty or mastery claim. [Repairs](../factory/research/question-review/packets-02-06/root-content-adjudication.md) · [Coverage](2026-09-05-curriculum-coverage.md).
 
 - **2026-09-05** — Thomas restricted Explore the rink to U7 and U9. One shared age rule now covers world cards, fallback actions, navigation and legacy discovery links. U11/U13/U15/U18 use worlds/library instead. Six-band browser selection and 16 navigation/world component checks pass; isolated production build passes.
 

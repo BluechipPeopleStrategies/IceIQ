@@ -33,6 +33,12 @@ Not every reviewer proposal was accepted. For example, F2 was correctly the near
 
 The returned Claude calibration packet covered 50 questions. Codex adjudication and independent Luna review produced five scenario updates affecting 28 exact question hashes. Repairs include receiving-side geometry, net-front passing angle, YOU grammar, credible distractors and conditional feedback. A repeated rim-placement task now moves W to offer a shorter board-side outlet after control. The proposed goalie-contact rewrite was declined. A first independent recheck retained one finding; the revised W question resolved it. See [calibration decisions and operating lessons](calibration/calibration-adjudication.md). The original Claude ZIP stays frozen as the historical baseline; its processed packet 01 cannot be re-imported against newer live versions.
 
+## Returned packets 02–06
+
+The September 5 follow-up repairs 23 experimental scenarios and 115 affected question hashes. Codex read the full replacements; Luna independently rechecked 16 further question amendments and all six questions affected by a corrected blue-line briefing. Original Claude returns remain frozen. Full evidence: [packet application receipt](packets-02-06/application-receipt.json) and [independent recheck](packets-02-06/independent-final-recheck.json).
+
+The U7 support/receiving bindings for exp26b-u7-007 and exp26b-u7-008 remain curriculum holds. A clean exact-content audit is not curriculum admission, human coach approval, or on-ice validation. The current 1,600 authored prompts yield 1,300 non-reflection questions and 200 optional reflections in normal practice (1,500 visible prompts).
+
 ## Use the result
 
 - [Before-and-after samples with downloadable feedback](repair-samples.html)
