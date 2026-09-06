@@ -147,7 +147,7 @@ function Markings({ overlays, onIcePoint, enabled }) {
   </group>;
 }
 
-function Content({ frame, frameRef, bounds, cameraPreset, cameraAdjusting, cameraPanMode, cameraCommand, cameraResetToken, hideZoneLines, selectedActorId, focusActorId, onSelect, onMove, onIcePoint, editableIds, selectableIds = [], passActorIds = [], onActorAnswer, onGoalAnswer, goalAnswerSides = ['right'], labelledActors, overlays, showBothGoals, showRinkAreas, puckPresentation = 'highlighted' }) {
+function Content({ frame, frameRef, bounds, ageBand, stage, finish, presentation, cameraView, cameraEntryKey, onReady, onCameraViewChange, cameraPreset, cameraAdjusting, cameraPanMode, cameraCommand, cameraResetToken, hideZoneLines, selectedActorId, focusActorId, onSelect, onMove, onIcePoint, editableIds, selectableIds = [], passActorIds = [], onActorAnswer, onGoalAnswer, goalAnswerSides = ['right'], labelledActors, overlays, showBothGoals, showRinkAreas, puckPresentation = 'highlighted' }) {
   const { invalidate } = useThree();
   const dragBounds = useRef(null);
   const [dragging, setDragging] = useState(false);
@@ -159,15 +159,16 @@ function Content({ frame, frameRef, bounds, cameraPreset, cameraAdjusting, camer
     <ambientLight intensity={.9} color="#e4edf5" /><hemisphereLight args={['#f8fcff', '#64778c', 1.4]} />
     <directionalLight position={[-10, 27, -12]} intensity={2.4} color="#fff8e8" castShadow shadow-mapSize={[1024, 1024]} shadow-camera-left={-25} shadow-camera-right={25} shadow-camera-top={38} shadow-camera-bottom={-38} shadow-camera-near={1} shadow-camera-far={90} shadow-bias={-.00015} shadow-normalBias={.025} />
     <directionalLight position={[12, 14, -30]} intensity={.7} color="#d8eaff" />
-    <ScenarioCamera cameraDirect={!dragging} bounds={dragging ? dragBounds.current : bounds} {...{ cameraPreset, cameraAdjusting, cameraPanMode, cameraCommand, cameraResetToken }} />
+    <ScenarioCamera key={cameraEntryKey} {...{cameraView, frame, onReady, onCameraViewChange}} cameraDirect={!dragging} bounds={dragging ? dragBounds.current : bounds} {...{ cameraPreset, cameraAdjusting, cameraPanMode, cameraCommand, cameraResetToken }} />
     {showRinkAreas&&<RinkAreaLabels bounds={bounds}/>}
-    <Arena openView /><Ice clearBoards hideZoneLines={hideZoneLines} /><Goal />{showBothGoals && <group rotation={[0, Math.PI, 0]}><Goal /></group>}
+    <Arena playerEye={cameraView?.type === 'first-person'} openView={cameraView?.type !== 'first-person'} /><Ice clearBoards={cameraView?.type !== 'first-person'} hideZoneLines={hideZoneLines} /><Goal />{showBothGoals && <group rotation={[0, Math.PI, 0]}><Goal /></group>}
     {typeof onGoalAnswer === 'function' && goalAnswerSides.filter(side => side === 'right' || (side === 'left' && showBothGoals)).map(side => <RinkGoalAnswer key={side} side={side} onAnswer={onGoalAnswer} enabled={!cameraAdjusting && !dragging} />)}
     {typeof onActorAnswer === 'function' && frame.actors.filter(actor => passActorIds.includes(actor.id)).map(actor => <RinkActionCue key={`pass-${actor.id}`} action="pass" point={actor} actors={frame.actors} puck={frame.puck} enabled={!cameraAdjusting && !dragging} onAnswer={(_, method) => onActorAnswer(actor.id, method)} label={`Select pass to ${compactActorLabel(actor)}`} />)}
     <Markings overlays={overlays} onIcePoint={onIcePoint} enabled={!cameraAdjusting && !dragging} />
-    {frame.actors.map((actor, index) => <Skater showHeading={cameraPreset === 'overhead'} key={actor.id} frameRef={frameRef} actorKey={actor.id} colour={actor.team === 'home' ? '#0B1A33' : '#C9A24B'} number={actorJerseyNumber(actor, index + 1)} goalie={actor.role === 'goalie'} selected={actor.id === selectedActorId} isLearner={isFocusedActor(actor, focusActorId)} showStick={Number.isFinite(actor.facing)} />)}
+    {frame.actors.map((actor, index) => <Skater finish={finish} ageBand={ageBand} stage={stage} presentation={cameraView?.type==='first-person'?'characters':presentation} visible={cameraView?.type!=="first-person" || actor.id!==cameraView.actorId} showHeading={cameraPreset === 'overhead'} key={actor.id} frameRef={frameRef} actorKey={actor.id} colour={actor.team === 'home' ? '#0B1A33' : '#C9A24B'} number={actorJerseyNumber(actor, index + 1)} goalie={actor.role === 'goalie'} selected={actor.id === selectedActorId} isLearner={isFocusedActor(actor, focusActorId)} showStick={Number.isFinite(actor.facing)} />)}
     {frame.puck && puckPresentation !== 'hidden' && <Puck frameRef={frameRef} showLabel={false} />}
     {frame.actors.map(actor => {
+      if(cameraView?.type==='first-person' && actor.id===cameraView.actorId) return null;
       const focused = isFocusedActor(actor, focusActorId);
       const label = focused || labelledActors ? compactActorLabel(actor) : '';
       const editable = editableIds.includes(actor.id) && typeof onSelect === 'function';
@@ -178,7 +179,7 @@ function Content({ frame, frameRef, bounds, cameraPreset, cameraAdjusting, camer
       </Html>;
       if (!label && !editable) return null;
       if (editable) return <ActorControl key={actor.id} actor={actor} focused={focused} selected={selectedActorId === actor.id} {...{ cameraAdjusting, labelledActors, onSelect, onMove }} onDragStart={startDrag} onDragEnd={endDrag} />;
-      const badge = <span className={`srv-actor-label srv-static-label ${actor.team}${/^\d+$/.test(label) ? ' srv-jersey-number' : ''}`}>{label}</span>;
+      const badge = <span style={presentation==='tactical' && cameraView?.type!=='first-person'?{transform:'translateY(-24px)'}:undefined} className={`srv-actor-label srv-static-label ${actor.team}${/^\d+$/.test(label) ? ' srv-jersey-number' : ''}`}>{label}</span>;
       return <Html key={actor.id} center position={world(actor, actor.role === 'goalie' ? 1.95 : 2.12)} zIndexRange={[20, 10]} style={{ pointerEvents: editable && !cameraAdjusting ? 'auto' : 'none' }}>
         {editable ? <button type="button" className="srv-actor-select" disabled={cameraAdjusting} aria-label={`Select ${actorDisplayName(actor)}`} aria-pressed={selectedActorId === actor.id} onPointerDown={event => event.stopPropagation()} onClick={event => { event.stopPropagation(); if (!cameraAdjusting) onSelect(actor.id); }}>{badge}</button> : badge}
       </Html>;
@@ -187,17 +188,9 @@ function Content({ frame, frameRef, bounds, cameraPreset, cameraAdjusting, camer
   </>;
 }
 
-export default function ScenarioRink3D({ state, bounds, hideZoneLines = false, selectedActorId = null, focusActorId, onSelect, onMove, onIcePoint, editableIds = [], selectableIds = [], passActorIds = [], onActorAnswer, onGoalAnswer, goalAnswerSides, labelledActors = true, overlays = {}, showBothGoals = true, showRinkAreas = false, puckPresentation = 'highlighted', cameraPreset, cameraAdjusting, cameraPanMode = false, cameraCommand = null, cameraResetToken = 0, onFailure, onReady, playing = false, time = 0 }) {
-  const previous = useRef(null);
-  const frame = useMemo(() => {
-    const last = previous.current, dt = time - (last?.time ?? time), velocityById = {};
-    if (playing && last?.playing && dt > 0 && dt <= .25) for (const actor of state.actors) {
-      const prior = last.state.actors.find(item => item.id === actor.id);
-      if (prior) velocityById[actor.id] = { vx: (actor.x - prior.x) / dt, vy: (actor.y - prior.y) / dt };
-    }
-    return createReadSceneFrame(state, { time, velocityById });
-  }, [state, playing, time]);
-  useLayoutEffect(() => { previous.current = { state, playing, time }; }, [state, playing, time]);
+export default function ScenarioRink3D({ state, bounds, hideZoneLines = false, selectedActorId = null, focusActorId, onSelect, onMove, onIcePoint, editableIds = [], selectableIds = [], passActorIds = [], onActorAnswer, onGoalAnswer, goalAnswerSides, labelledActors = true, overlays = {}, showBothGoals = true, showRinkAreas = false, puckPresentation = 'highlighted', ageBand, stage, finish, presentation, onCameraViewChange, cameraView, cameraEntryKey, cameraPreset, cameraAdjusting, cameraPanMode = false, cameraCommand = null, cameraResetToken = 0, onFailure, onReady, playing = false, time = 0 }) {
+  // Authored source time/velocity determines the pose, including paused seeks.
+  const frame = useMemo(() => createReadSceneFrame(state, { time, preserveActorVelocity: true }), [state, time]);
   const frameRef = useRef(frame); frameRef.current = frame;
   const viewBounds = bounds || { minX: -30.48, maxX: 30.48, minY: -12.954, maxY: 12.954 };
   const cleanup = useRef(null);
@@ -207,8 +200,8 @@ export default function ScenarioRink3D({ state, bounds, hideZoneLines = false, s
     <Canvas orthographic frameloop="demand" dpr={[1.5, 2]} shadows={{ type: THREE.PCFShadowMap }} style={{ touchAction: cameraAdjusting ? 'none' : 'pan-y' }}
       camera={{ position: [16, 28, -8], left: -20, right: 20, top: 20, bottom: -20, near: .1, far: 160 }}
       gl={{ antialias: true, powerPreference: 'high-performance', alpha: false }}
-      fallback="This browser cannot display the 3D rink." onCreated={({ gl }) => { cleanup.current?.(); cleanup.current = watchWebglContextLoss(gl.domElement, fail); onReady?.(); }}>
-      <Content {...{ frame, frameRef, cameraPreset, cameraAdjusting, cameraPanMode, cameraCommand, cameraResetToken, hideZoneLines, selectedActorId, focusActorId, onSelect, onMove, onIcePoint, editableIds, selectableIds, passActorIds, onActorAnswer, onGoalAnswer, goalAnswerSides, labelledActors, overlays, showBothGoals, showRinkAreas, puckPresentation }} bounds={viewBounds} />
+      fallback="This browser cannot display the 3D rink." onCreated={({ gl }) => { cleanup.current?.(); cleanup.current = watchWebglContextLoss(gl.domElement, fail); }}>
+      <Content {...{ frame, frameRef, ageBand, stage, finish, presentation, onCameraViewChange, cameraView, cameraEntryKey, onReady, cameraPreset, cameraAdjusting, cameraPanMode, cameraCommand, cameraResetToken, hideZoneLines, selectedActorId, focusActorId, onSelect, onMove, onIcePoint, editableIds, selectableIds, passActorIds, onActorAnswer, onGoalAnswer, goalAnswerSides, labelledActors, overlays, showBothGoals, showRinkAreas, puckPresentation }} bounds={viewBounds} />
     </Canvas>
   </div>;
 }

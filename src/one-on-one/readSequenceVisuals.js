@@ -17,11 +17,15 @@ export function clampReadSceneTargetCenter(center, size) {
 }
 
 /** Rendering data only: never change the lesson's coordinates or puck model. */
-export function createReadSceneFrame(state, { time = 0, velocityById = {} } = {}) {
+export function createReadSceneFrame(state, { time = 0, velocityById = {}, preserveActorVelocity = false } = {}) {
   const frame = structuredClone(state);
   frame.time = Number.isFinite(time) ? time : 0;
   for (const actor of frame.actors) {
-    const velocity = velocityById?.[actor.id];
+    // Authored poses must sample only source velocity. Last-render estimates
+    // differ during playback, pause and seeking and cannot authorize strides.
+    // Keep the estimate option only for legacy actors without motion metadata.
+    const sourceOnly = preserveActorVelocity || actor.motion != null;
+    const velocity = sourceOnly ? actor : velocityById?.[actor.id];
     actor.vx = Number.isFinite(velocity?.vx) ? velocity.vx : 0;
     actor.vy = Number.isFinite(velocity?.vy) ? velocity.vy : 0;
   }

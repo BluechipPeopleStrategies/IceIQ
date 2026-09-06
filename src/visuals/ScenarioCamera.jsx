@@ -1,6 +1,9 @@
 import { useLayoutEffect, useRef } from 'react';
 import { useThree } from '@react-three/fiber';
 import { MOUSE, TOUCH, Vector3 } from 'three';
+import { PerspectiveCamera } from '@react-three/drei';
+import { afterScenarioCameraRender } from './cameraRenderReady.js';
+import { resolvePlayerEye } from './questionCamera.js';
 import { OrbitControls } from 'three-stdlib';
 import { getReadSceneCamera } from '../one-on-one/readSequenceVisuals.js';
 
@@ -22,9 +25,9 @@ export function connectScenarioCameraControls(camera, element, target, invalidat
   controls.enableDamping = false;
   controls.autoRotate = false;
   controls.minPolarAngle = .0001;
-  controls.maxPolarAngle = Math.PI * .4;
-  controls.minZoom = .65;
-  controls.maxZoom = 2.5;
+  controls.maxPolarAngle = camera.isPerspectiveCamera ? Math.PI - .0001 : Math.PI * .4;
+  controls.minZoom = camera.isPerspectiveCamera ? Math.tan(camera.fov * Math.PI / 360) / Math.tan(100 * Math.PI / 360) : .65;
+  controls.maxZoom = camera.isPerspectiveCamera ? Math.tan(camera.fov * Math.PI / 360) / Math.tan(35 * Math.PI / 360) : 2.5;
   controls.rotateSpeed = .65;
   controls.zoomSpeed = .85;
   controls.mouseButtons = { LEFT: panMode ? MOUSE.PAN : MOUSE.ROTATE, MIDDLE: MOUSE.DOLLY, RIGHT: directInput ? MOUSE.PAN : -1 };
@@ -57,7 +60,7 @@ export function connectScenarioCameraControls(camera, element, target, invalidat
   const keyboard = event => {
     const angle = Math.PI / 30;
     if (panMode && ['ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown'].includes(event.key)) {
-      const step = (camera.top - camera.bottom) / Math.max(1, camera.zoom) * .035;
+      const step = (camera.isPerspectiveCamera ? 2 * camera.position.distanceTo(controls.target) * Math.tan(camera.fov * Math.PI / 360) : camera.top - camera.bottom) / Math.max(1, camera.zoom) * .035;
       const right = new Vector3().setFromMatrixColumn(camera.matrixWorld, 0).normalize();
       const up = new Vector3().crossVectors(camera.up, right).normalize();
       const offset = (event.key === 'ArrowLeft' || event.key === 'ArrowRight' ? right : up)
@@ -102,7 +105,7 @@ export function connectScenarioCameraControls(camera, element, target, invalidat
     else if (type === 'pan-x' || type === 'pan-y') {
       const right = new Vector3().setFromMatrixColumn(camera.matrixWorld, 0).normalize();
       const axis = type === 'pan-x' ? right : new Vector3().crossVectors(camera.up, right).normalize();
-      const offset = axis.multiplyScalar((camera.top - camera.bottom) / camera.zoom * .06 * direction);
+      const offset = axis.multiplyScalar((camera.isPerspectiveCamera ? 2 * camera.position.distanceTo(controls.target) * Math.tan(camera.fov * Math.PI / 360) : camera.top - camera.bottom) / camera.zoom * .06 * direction);
       camera.position.add(offset); controls.target.add(offset);
     } else return;
     controls.update(); requestFrame();
@@ -112,8 +115,8 @@ export function connectScenarioCameraControls(camera, element, target, invalidat
 
 /** Camera fitting depends on the framing values, not per-frame object identity.
  * Leaving adjustment retains the chosen angle and zoom for answering. */
-export default function ScenarioCamera({ bounds, cameraPreset = 'broadcast', cameraAdjusting = false, cameraPanMode = false, cameraResetToken = 0, cameraCommand = null, cameraDirect = false }) {
-  const { camera, gl, size, invalidate } = useThree();
+function OrthographicScenarioCamera({ onReady, onCameraViewChange, bounds, cameraPreset = 'broadcast', cameraAdjusting = false, cameraPanMode = false, cameraResetToken = 0, cameraCommand = null, cameraDirect = false }) {
+  const { camera, scene, gl, size, invalidate } = useThree();
   const target = useRef([0, 0, 0]);
   const session = useRef(null), handledCommand = useRef(cameraCommand);
   const { minX, maxX, minY, maxY } = bounds;
@@ -130,6 +133,7 @@ export default function ScenarioCamera({ bounds, cameraPreset = 'broadcast', cam
     invalidate();
   }, [minX, maxX, minY, maxY, cameraPreset, cameraResetToken, camera, size.width, size.height, invalidate]);
 
+  useLayoutEffect(() => { onCameraViewChange?.({type:'preset',preset:cameraPreset}); return afterScenarioCameraRender(scene, camera, onReady, invalidate); }, [cameraPreset, cameraResetToken, camera, scene, size.width, size.height]);
   useLayoutEffect(() => {
     if (!cameraAdjusting && !cameraDirect) return undefined;
     const release = connectScenarioCameraControls(camera, gl.domElement, target.current, invalidate, {
@@ -144,4 +148,43 @@ export default function ScenarioCamera({ bounds, cameraPreset = 'broadcast', cam
     if (cameraAdjusting && cameraCommand) session.current?.command(cameraCommand);
   }, [cameraCommand, cameraAdjusting]);
   return null;
+}
+
+
+/** Look-around changes only the camera quaternion; the observer never orbits or pans. */
+export function connectPlayerEyeControls(camera, element, look, apply, invalidate) {
+ const oldTouch=element.style.touchAction, oldIndex=element.getAttribute('tabindex'), oldLabel=element.getAttribute('aria-label');
+ element.style.touchAction='none'; element.setAttribute('tabindex','0'); element.setAttribute('aria-label','Look around from player eyes. Drag or use arrow keys.');
+ let drag=null, released=false;
+ const update=(yaw,pitch)=>{look.yaw+=yaw;look.pitch=Math.max(-1.2,Math.min(1.2,look.pitch+pitch));apply();invalidate();};
+ const down=e=>{if(e.button!==0||e.isPrimary===false)return;drag={id:e.pointerId,x:e.clientX,y:e.clientY};element.setPointerCapture(e.pointerId);};
+ const move=e=>{if(!drag||drag.id!==e.pointerId)return;update((e.clientX-drag.x)*.004,-(e.clientY-drag.y)*.004);drag.x=e.clientX;drag.y=e.clientY;};
+ const up=e=>{if(drag?.id===e.pointerId)drag=null;};
+ const key=e=>{const directions={ArrowLeft:[-.08,0],ArrowRight:[.08,0],ArrowUp:[0,.06],ArrowDown:[0,-.06]};if(directions[e.key]){e.preventDefault();update(...directions[e.key]);}};
+ const events={pointerdown:down,pointermove:move,pointerup:up,pointercancel:up,lostpointercapture:up,keydown:key};
+ Object.entries(events).forEach(([name,fn])=>element.addEventListener(name,fn));
+ const release=()=>{released=true;Object.entries(events).forEach(([name,fn])=>element.removeEventListener(name,fn));element.style.touchAction=oldTouch;for(const [n,v]of [['tabindex',oldIndex],['aria-label',oldLabel]])v==null?element.removeAttribute(n):element.setAttribute(n,v);};
+ release.command=({type,direction})=>{if(released||![-1,1].includes(direction))return;if(type==='rotate')update(-direction*Math.PI/12,0);if(type==='tilt')update(0,-direction*Math.PI/24);};
+ return release;
+}
+function PerspectiveScenarioCamera({ cameraView, frame, cameraAdjusting, cameraDirect, cameraPanMode, cameraCommand, cameraResetToken, onReady, onCameraViewChange }) {
+ const target=useRef(cameraView.target), ref=useRef(), look=useRef({yaw:cameraView.lookYaw??0,pitch:cameraView.lookPitch??0}), latest=useRef(frame), session=useRef(null), handled=useRef(cameraCommand);
+ latest.current=frame;
+ const {scene,gl,size,invalidate}=useThree();
+ const signature=JSON.stringify(cameraView);
+ const apply=()=>{const camera=ref.current;if(!camera)return;const view=cameraView.type==='first-person'?resolvePlayerEye(cameraView,latest.current.actors,look.current):cameraView;camera.position.set(...view.position);camera.up.set(0,1,0);camera.lookAt(...view.target);camera.updateMatrixWorld();onCameraViewChange?.(cameraView.type==='first-person'?{...cameraView,lookYaw:look.current.yaw,lookPitch:look.current.pitch}:cameraView);};
+ useLayoutEffect(()=>{look.current={yaw:cameraView.lookYaw??0,pitch:cameraView.lookPitch??0};ref.current.zoom=1;target.current=cameraView.target;apply();ref.current.updateProjectionMatrix();invalidate();},[signature,cameraResetToken]);
+ useLayoutEffect(()=>afterScenarioCameraRender(scene,ref.current,onReady,invalidate),[signature,cameraResetToken,scene]);
+ useLayoutEffect(()=>{if(cameraView.type==='first-person'){apply();invalidate();}},[frame,signature]);
+ useLayoutEffect(()=>{ref.current.aspect=size.width/Math.max(1,size.height);ref.current.updateProjectionMatrix();invalidate();},[size.width,size.height]);
+ useLayoutEffect(()=>{
+  if(!cameraAdjusting&&!cameraDirect)return;
+  const release=cameraView.type==='first-person'?connectPlayerEyeControls(ref.current,gl.domElement,look.current,apply,invalidate):connectScenarioCameraControls(ref.current,gl.domElement,target.current,invalidate,{panMode:cameraAdjusting&&cameraPanMode,directInput:!cameraAdjusting,onTargetChange:value=>{target.current=value;onCameraViewChange?.({type:'perspective',position:ref.current.position.toArray(),target:value,fov:Math.max(35,Math.min(100,2*Math.atan(Math.tan(ref.current.fov*Math.PI/360)/ref.current.zoom)*180/Math.PI))});}});
+  session.current=release;return()=>{release();session.current=null;};
+ },[signature,cameraResetToken,cameraAdjusting,cameraDirect,cameraPanMode,gl]);
+ useLayoutEffect(()=>{if(cameraCommand===handled.current)return;handled.current=cameraCommand;if(cameraAdjusting&&cameraCommand)session.current?.command(cameraCommand);},[cameraCommand,cameraAdjusting]);
+ return <PerspectiveCamera ref={ref} makeDefault fov={cameraView.fov??70} near={.04} far={180}/>;
+}
+export default function ScenarioCamera(props) {
+ return props.cameraView && props.cameraView.type!=='preset' ? <PerspectiveScenarioCamera {...props}/> : <OrthographicScenarioCamera {...props}/>;
 }

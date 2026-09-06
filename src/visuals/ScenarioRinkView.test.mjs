@@ -11,13 +11,13 @@ const cache = new URL('../../node_modules/.cache/rinkreads-scenario-view/', impo
 mkdirSync(cache, { recursive: true });
 const output = new URL('view.mjs', cache);
 const source = readFileSync(sourceFile, 'utf8').replace(/^import .* from 'react';/m,
-  "import { Component, lazy, Suspense } from 'react';\nimport { useCallback, useMemo, useRef, useState } from 'test:view-hooks';");
+  "import { Component, lazy, Suspense } from 'react';\nimport { useCallback, useLayoutEffect, useMemo, useRef, useState } from 'test:view-hooks';");
 await build({
   stdin: { contents: source, resolveDir: fileURLToPath(new URL('.', sourceFile)), sourcefile: fileURLToPath(sourceFile), loader: 'jsx' },
   outfile: fileURLToPath(output), bundle: true, packages: 'external', platform: 'node', format: 'esm', jsx: 'automatic', loader: { '.css': 'empty' }, logLevel: 'silent',
   plugins: [{ name: 'view-state-harness', setup(api) {
     api.onResolve({ filter: /^test:view-hooks$/ }, () => ({ path: 'hooks', namespace: 'view-test' }));
-    api.onLoad({ filter: /.*/, namespace: 'view-test' }, () => ({ contents: ['useState', 'useMemo', 'useCallback', 'useRef'].map(name => `export const ${name} = (...args) => globalThis.__rrScenarioViewHooks.${name}(...args);`).join('\n') }));
+    api.onLoad({ filter: /.*/, namespace: 'view-test' }, () => ({ contents: ['useState', 'useMemo', 'useCallback', 'useRef', 'useLayoutEffect'].map(name => `export const ${name} = (...args) => globalThis.__rrScenarioViewHooks.${name}(...args);`).join('\n') }));
     api.onResolve({ filter: /ScenarioRink3D\.jsx$/ }, () => ({ path: 'scene', namespace: 'view-test-scene' }));
     api.onLoad({ filter: /.*/, namespace: 'view-test-scene' }, () => ({ contents: 'export default function Scene() { return null; }' }));
   } }],
@@ -50,6 +50,10 @@ function mountView(props) {
       const index = cursor++;
       if (!slots[index] || !deps.every((value, i) => Object.is(value, slots[index].deps[i]))) slots[index] = { callback, deps };
       return slots[index].callback;
+    },
+    useLayoutEffect(callback, deps) {
+      const index = cursor++;
+      if (!slots[index] || deps.some((value, i) => !Object.is(value, slots[index].deps[i]))) { slots[index] = { deps }; callback(); }
     },
     useRef(initial) { const index = cursor++; return (slots[index] ||= { current: initial }); },
   };
@@ -184,8 +188,37 @@ test('Canvas native fallback remains inert text, never a mount effect that repor
     const canvasOpening = source.match(/<Canvas\b[\s\S]*?\bfallback=("[^"]*"|'[^']*'|\{)/);
     assert.ok(canvasOpening, `${relative} must retain native canvas fallback text`);
     assert.notEqual(canvasOpening[1], '{', `${relative}: no effect component in native canvas fallback`);
-    // ReadSequence still offers its existing tactical-board route. The shared
-    // scenario view uses retry-only recovery and must not promise that route.
-    if (relative === './ScenarioRink3D.jsx') assert.doesNotMatch(canvasOpening[1], /Tactical board/);
+    assert.doesNotMatch(canvasOpening[1], /Tactical board/);
   }
+});
+
+
+test('question entry applies configured viewpoint once and re-entry restores it without changing scene', () => {
+ const props=sceneProps({questionId:'first',startingView:{type:'preset',preset:'overhead'}}), view=mountView(props), state=props.state;
+ assert.equal(view.scene().props.cameraPreset,'overhead');
+ view.click('Behind net'); props.state={...state};view.render();assert.equal(view.scene().props.cameraPreset,'behind-net');
+ props.questionId='second';props.startingView=null;view.render();assert.equal(view.scene().props.cameraPreset,'behind-net');
+ props.questionId='first';props.startingView={type:'preset',preset:'overhead'};view.render();assert.equal(view.scene().props.cameraPreset,'overhead');
+ assert.equal(view.scene().props.state,props.state);
+ view.click('Broadcast');props.questionEntryToken=1;view.render();assert.equal(view.scene().props.cameraPreset,'overhead');
+});
+test('missing first-person observer fails explicitly and cannot report an answerable scene',()=>{
+ const events=[],view=mountView(sceneProps({questionId:'bad',startingView:{type:'first-person',actorId:'missing'},onAvailabilityChange:value=>events.push(value)}));
+ assert.equal(view.scene(),undefined);assert.match(view.text(),/observer missing is missing/);assert.deepEqual(events,[false]);
+});
+
+test('an unsaved next question recovers the normal camera when the prior observer is absent',()=>{
+ const props=sceneProps({questionId:'one',startingView:{type:'first-person',actorId:'F1'}});props.state.actors[0].facing=0;
+ const view=mountView(props);assert.equal(view.scene().props.cameraView.type,'first-person');
+ props.questionId='two';props.startingView=null;props.state={...props.state,actors:props.state.actors.filter(a=>a.id!=='F1')};view.render();
+ assert.equal(view.scene().props.cameraPreset,'broadcast');
+});
+test('scene model stage override also sets the observer eye height',()=>{
+ const props=sceneProps({questionId:'one',stage:'older',startingView:{type:'first-person',actorId:'F1'}});props.state.actors[0]={...props.state.actors[0],facing:0,stage:'young'};
+ const view=mountView(props);assert.equal(view.scene().props.cameraView.eyeHeight,1.6737);
+});
+
+test('an unsaved next question returns to a normal view even with the same observer',()=>{
+ const props=sceneProps({questionId:'one',startingView:{type:'first-person',actorId:'F1'}});props.state.actors[0].facing=0;
+ const view=mountView(props);props.questionId='two';props.startingView=null;view.render();assert.equal(view.scene().props.cameraPreset,'broadcast');
 });

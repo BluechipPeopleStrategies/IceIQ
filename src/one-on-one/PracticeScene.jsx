@@ -3,6 +3,7 @@ import { Canvas, useFrame, useThree } from '@react-three/fiber';
 import { Line } from '@react-three/drei';
 import * as THREE from 'three';
 import Skater from './Skater.jsx';
+import RinkEnclosure from '../visuals/RinkEnclosure.jsx';
 import PuckLocator3D from '../visuals/PuckLocator3D.jsx';
 import { RINK, GOAL_X, makeIceTexture, roundedRinkShape } from './rinkMaterials.js';
 import { isCoachRoutePoint, listenForCoachRouteTaps, worldPointToCoachRoute } from './coachRouteSurfaceInput.js';
@@ -66,10 +67,11 @@ export function Goal() {
   return <group>{lines.map(([a, b], i) => <Tube key={i} a={a} b={b} />)}{net.map(([a, b], i) => <Tube key={`n${i}`} a={a} b={b} radius={.007} colour="#d7e0df" />)}</group>;
 }
 
-function Arena({ openView = false }) {
+function Arena({ openView = false, playerEye = false }) {
   return <group>
     <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, -.18, 0]} receiveShadow><planeGeometry args={[100, 120]} /><meshStandardMaterial color="#0B1A33" roughness={.9} /></mesh>
-    {!openView && <group>{[-1, 1].map(side => <group key={side}>
+    {playerEye && <RinkEnclosure />}
+    {!openView && !playerEye && <group>{[-1, 1].map(side => <group key={side}>
       {[0, 1, 2, 3, 4].map(row => <mesh key={row} position={[side * (15.4 + row * 1.1), .7 + row * .55, -1]} receiveShadow><boxGeometry args={[1.1, .35 + row * 1.08, 64]} /><meshStandardMaterial color={row % 2 ? '#292b2d' : '#202224'} /></mesh>)}
       <mesh position={[side * 13.3, 2.1, -5]}><boxGeometry args={[.04, .07, 43]} /><meshBasicMaterial color="#aacde2" /></mesh>
     </group>)}
@@ -148,7 +150,7 @@ function RouteOverlay({ points }) {
   </group>;
 }
 
-function Content({ frameRef, camera, onPlace, selectedActor, showGuides, roster, onSelect, axesRef, routePoints, onRoutePoint }) {
+function Content({ frameRef, ageBand, camera, onPlace, selectedActor, showGuides, roster, onSelect, axesRef, routePoints, onRoutePoint }) {
   const state = frameRef.current;
   const dragging = useRef(null);
   const routing = typeof onRoutePoint === 'function';
@@ -167,9 +169,9 @@ function Content({ frameRef, camera, onPlace, selectedActor, showGuides, roster,
     <hemisphereLight args={['#f5fbff', '#486479', 1.35]} />
     <directionalLight position={[-10, 27, 0]} intensity={2.25} color="#fff9ed" castShadow shadow-mapSize={[2048, 2048]} shadow-camera-left={-35} shadow-camera-right={35} shadow-camera-top={38} shadow-camera-bottom={-38} shadow-camera-near={1} shadow-camera-far={75} shadow-bias={-.00015} shadow-normalBias={.025} />
     <CameraRig cameraMode={camera} axesRef={axesRef}/><Arena /><Ice /><Goal />
-    {roster ? roster.map((a,i)=><Skater key={a.id} frameRef={frameRef} actorKey={a.id} colour={a.team==='home'?'#0B1A33':'#C9A24B'} number={a.label||String(i+1)} goalie={a.role==='goalie'} selected={selectedActor===a.id}/>) : <><Skater frameRef={frameRef} actorKey="attacker" colour="#0B1A33" number="17" selected={selectedActor === 'attacker' || (!selectedActor && state?.setup?.role !== 'defender')} />
-    <Skater frameRef={frameRef} actorKey="defender" colour="#C9A24B" number="8" selected={selectedActor === 'defender' || (!selectedActor && state?.setup?.role === 'defender')} />
-    <Skater frameRef={frameRef} actorKey="goalie" colour="#0B1A33" number="1" goalie /></>}
+    {roster ? roster.map((a,i)=><Skater ageBand={ageBand ?? state?.setup?.ageBand} key={a.id} frameRef={frameRef} actorKey={a.id} colour={a.team==='home'?'#0B1A33':'#C9A24B'} number={a.label||String(i+1)} goalie={a.role==='goalie'} selected={selectedActor===a.id}/>) : <><Skater ageBand={ageBand ?? state?.setup?.ageBand} frameRef={frameRef} actorKey="attacker" colour="#0B1A33" number="17" selected={selectedActor === 'attacker' || (!selectedActor && state?.setup?.role !== 'defender')} />
+    <Skater ageBand={ageBand ?? state?.setup?.ageBand} frameRef={frameRef} actorKey="defender" colour="#C9A24B" number="8" selected={selectedActor === 'defender' || (!selectedActor && state?.setup?.role === 'defender')} />
+    <Skater ageBand={ageBand ?? state?.setup?.ageBand} frameRef={frameRef} actorKey="goalie" colour="#0B1A33" number="1" goalie /></>}
     {roster&&<group rotation={[0,Math.PI,0]}><Goal/></group>}
     <Puck frameRef={frameRef} />{!roster&&<Guides frameRef={frameRef} visible={showGuides} />}
     {routePoints && <RouteOverlay points={routePoints} />}

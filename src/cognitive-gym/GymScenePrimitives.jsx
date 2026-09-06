@@ -69,12 +69,14 @@ export function IceSheet3D({ width = 10, depth = 5, endZone = false, blueLines =
 export function HockeySkater({
   colour = "#0B1A33",
   accent,
+  ageBand,
+  stage,
   puck = false,
   goalie = false,
   isLearner = false,
   scale = 1,
 }) {
-  const rig = useMemo(() => buildHockeyPlayerRig({ colour, accent, goalie }), [colour, accent, goalie]);
+  const rig = useMemo(() => buildHockeyPlayerRig({ colour, accent, goalie, ageBand, stage }), [colour, accent, goalie, ageBand, stage]);
   React.useEffect(() => () => rig.dispose(), [rig]);
   return (
     <group scale={scale}>
