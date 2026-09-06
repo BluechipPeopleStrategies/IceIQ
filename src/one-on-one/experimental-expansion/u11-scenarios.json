@@ -2490,13 +2490,13 @@
   },
   {
     "id": "exp26b-u11-014",
-    "version": 1,
+    "version": 2,
     "ageBand": "U11",
-    "title": "Leave room beside the screen",
+    "title": "Offer space beside the carrier",
     "family": "screen-side-space",
     "topic": "Positioning",
     "objective": "Support a net-front teammate without occupying the same shooting lane.",
-    "briefing": "Navy attacks +x. F1 is near the right net-front lane, YOU is to the side, D1 marks the middle, and the goalie is set. The rep asks for a useful support relationship, not a fixed net-front spot.",
+    "briefing": "Navy attacks the right net (+x). F1 has the puck nearer the net. YOU are wider, with D1 close to you and slightly nearer the goal line. Find a support option without moving into F1’s direct shooting line.",
     "setup": {
       "actors": [
         {
@@ -2542,9 +2542,9 @@
     },
     "focusActorId": "h1",
     "cues": [
-      "F1 is the puck carrier near the net-front lane.",
-      "D1 protects the middle.",
-      "YOU has space beside the carrier and goalie."
+      "F1 is the navy puck carrier nearer the right net.",
+      "D1 is close to YOU, on the side nearer the goal line.",
+      "A useful support spot depends on the pass and shooting lanes."
     ],
     "tags": [
       "experimental",
@@ -2564,7 +2564,7 @@
       {
         "id": "exp26b-u11-014-q1",
         "type": "choice",
-        "prompt": "Which navy player is closest to the net-front lane?",
+        "prompt": "Which navy player is closest to the right net?",
         "options": [
           {
             "id": "a",
@@ -2583,12 +2583,12 @@
           "b"
         ],
         "basis": "scene",
-        "explanation": "F1 is the navy puck carrier closest to the goalie; YOU is beside the play."
+        "explanation": "F1 is closer to the right net than YOU. D1 is an opponent."
       },
       {
         "id": "exp26b-u11-014-q2",
         "type": "multi",
-        "prompt": "Which two questions clarify YOU's support job?",
+        "prompt": "Which two questions clarify your support job?",
         "options": [
           {
             "id": "a",
@@ -2608,7 +2608,7 @@
           "b"
         ],
         "basis": "coaching",
-        "explanation": "Support is useful when F1 can reach it and the lane stays distinct; crowding F1 removes both choices."
+        "explanation": "Check whether F1 can reach your support spot while keeping room for a shot. Crowding the carrier can reduce options; recheck D1 before moving."
       },
       {
         "id": "exp26b-u11-014-q3",
@@ -2639,14 +2639,14 @@
       {
         "id": "exp26b-u11-014-q4",
         "type": "position",
-        "prompt": "Move YOU beside the shooting lane, away from F1 and D1.",
+        "prompt": "Move YOU beside the shooting lane, clear of D1.",
         "actorId": "h1",
         "reference": {
           "x": 23.5,
           "y": 2.2
         },
         "basis": "coaching",
-        "explanation": "This point leaves F1 in the lane and gives YOU a separate support angle."
+        "explanation": "This example moves YOU farther from D1 and to the side of F1’s direct shooting line. D1 may follow or reach into a lane; the marker does not prove you are uncovered."
       },
       {
         "id": "exp26b-u11-014-q5",
@@ -2655,7 +2655,7 @@
         "options": [
           {
             "id": "a",
-            "text": "Whether the pass reaches you without pulling D1 into the lane"
+            "text": "Whether a pass to YOU is reachable and clear of D1"
           },
           {
             "id": "b",
@@ -2683,13 +2683,13 @@
   },
   {
     "id": "exp26b-u11-015",
-    "version": 1,
+    "version": 2,
     "ageBand": "U11",
-    "title": "Protect the inside gap",
+    "title": "Recover toward the inside",
     "family": "inside-gap-recovery",
     "topic": "Gap control",
-    "objective": "Defend the middle while matching the carrier's changing speed and support.",
-    "briefing": "Gold attacks -x. Navy YOU defends the right net; F1 carries toward the net with F2 wide. YOU starts inside F1's route, with the goalie behind.",
+    "objective": "Recognize when the carrier is ahead and look for a recovery route toward the defended net and middle.",
+    "briefing": "Gold attacks the left net (-x), defended by navy. F1 has the puck and is closer to that net than YOU. F2 is wider on the other side and trailing F1. YOU are closer to the middle but behind the carrier, so this is a recovery read rather than an established defensive gap.",
     "setup": {
       "actors": [
         {
@@ -2708,7 +2708,7 @@
           "role": "skater",
           "x": 9,
           "y": 3,
-          "facing": 0
+          "facing": 3.141592653589793
         },
         {
           "id": "a2",
@@ -2717,16 +2717,16 @@
           "role": "skater",
           "x": 12,
           "y": -6,
-          "facing": 0
+          "facing": 3.141592653589793
         },
         {
           "id": "g",
           "label": "G",
           "team": "home",
           "role": "goalie",
-          "x": 26,
+          "x": -26,
           "y": 0,
-          "facing": 3.1
+          "facing": 0.04159265358979303
         }
       ],
       "puck": {
@@ -2735,9 +2735,9 @@
     },
     "focusActorId": "h1",
     "cues": [
-      "Gold F1 carries toward the right net.",
-      "YOU starts inside the carrier route.",
-      "F2 is wide support; the middle remains the priority cue."
+      "Gold F1 owns the puck and is closer to the left net than YOU.",
+      "YOU are nearer the middle but not between F1 and the defended net.",
+      "F2 is a separate gold passing option."
     ],
     "tags": [
       "experimental",
@@ -2757,7 +2757,7 @@
       {
         "id": "exp26b-u11-015-q1",
         "type": "choice",
-        "prompt": "Which net is YOU defending in this gold attack?",
+        "prompt": "Which net are YOU defending in this gold attack?",
         "options": [
           {
             "id": "a",
@@ -2773,15 +2773,15 @@
           }
         ],
         "answer": [
-          "b"
+          "a"
         ],
         "basis": "scene",
-        "explanation": "Gold attacks -x toward the left, so Navy defends the right net at +x in this diagram."
+        "explanation": "The briefing states that gold attacks the left net. The navy goalie is at that end."
       },
       {
         "id": "exp26b-u11-015-q2",
         "type": "multi",
-        "prompt": "What should your gap relate to?",
+        "prompt": "Which two cues guide your recovery?",
         "options": [
           {
             "id": "a",
@@ -2789,7 +2789,7 @@
           },
           {
             "id": "b",
-            "text": "The space between F1 and the right net"
+            "text": "The space between F1 and the left net"
           },
           {
             "id": "c",
@@ -2801,24 +2801,24 @@
           "b"
         ],
         "basis": "coaching",
-        "explanation": "Gap control connects carrier speed, route, and net protection; one number does not describe the changing picture."
+        "explanation": "Read F1’s route and speed together with the space toward the defended net. The freeze alone does not show whether YOU can catch F1."
       },
       {
         "id": "exp26b-u11-015-q3",
         "type": "sequence",
-        "prompt": "Arrange this inside-gap read.",
+        "prompt": "Arrange this inside-recovery read.",
         "options": [
           {
             "id": "a",
-            "text": "Protect the middle and net"
+            "text": "Locate F1, the middle and the left net"
           },
           {
             "id": "b",
-            "text": "Match F1's route and speed"
+            "text": "Look for a recovery route toward the net side"
           },
           {
             "id": "c",
-            "text": "Re-check F2 and the next lane"
+            "text": "Recheck F1 and F2 as the play changes"
           }
         ],
         "answer": [
@@ -2827,24 +2827,24 @@
           "c"
         ],
         "basis": "coaching",
-        "explanation": "Start with the dangerous middle, then match the carrier and update support."
+        "explanation": "You start behind F1. Work toward a useful defensive relationship, without assuming you can immediately get ahead of the carrier."
       },
       {
         "id": "exp26b-u11-015-q4",
         "type": "position",
-        "prompt": "Move YOU to an inside position between F1 and the right net.",
+        "prompt": "Choose an example recovery point closer to the left net than F1 and nearer the middle.",
         "actorId": "h1",
         "reference": {
-          "x": 14,
+          "x": 8,
           "y": 1.5
         },
         "basis": "coaching",
-        "explanation": "This point stays between the carrier and the net while preserving a view of F2."
+        "explanation": "At this example point, YOU would be closer to the left net and nearer the middle than F1’s shown position. It is a target to assess, not proof that you can reach it before a moving carrier. Recheck F1’s route and F2."
       },
       {
         "id": "exp26b-u11-015-q5",
         "type": "choice",
-        "prompt": "F1 gains the outside of YOU. What must update?",
+        "prompt": "F1 carries farther toward the side boards. What should YOU update?",
         "options": [
           {
             "id": "a",
@@ -2863,26 +2863,26 @@
           "a"
         ],
         "basis": "coaching",
-        "explanation": "F1's route changed the immediate threat. Recover toward the net while re-reading F2 and your support."
+        "explanation": "Reassess the recovery route toward the defended net as F1 moves wider, while scanning F2. Do not assume the original route or timing still works."
       },
       {
         "id": "exp26b-u11-015-q6",
         "type": "explain",
         "prompt": "Why is there no single correct gap number here?",
         "basis": "coaching",
-        "explanation": "F1's speed, route, and distance to the net change the useful relationship. Explain the visible cue that would make you close or contain."
+        "explanation": "F1’s speed and route change what recovery is possible. First account for starting behind the carrier; then explain what would help YOU recover a useful gap without assuming a successful catch-up."
       }
     ]
   },
   {
     "id": "exp26b-u11-016",
-    "version": 1,
+    "version": 2,
     "ageBand": "U11",
     "title": "Guide the carrier to the wall",
     "family": "inside-angle-guide",
     "topic": "Angling",
     "objective": "Use an inside angle to influence the carrier away from the middle without guessing the outcome.",
-    "briefing": "Gold attacks -x. F1 carries along the right side toward Navy's net; YOU is inside the route, F2 trails wide, and the goalie is behind. The angle must follow the carrier's changes.",
+    "briefing": "Gold attacks the left net (-x), defended by navy. F1 carries in a wide lane. YOU are closer to the middle, but F1 is closer to the left net than YOU. F2 trails across the middle. Work toward an inside approach while checking whether you can recover alongside the carrier.",
     "setup": {
       "actors": [
         {
@@ -2901,7 +2901,7 @@
           "role": "skater",
           "x": 9,
           "y": 7,
-          "facing": 0
+          "facing": 3.14
         },
         {
           "id": "a2",
@@ -2917,9 +2917,9 @@
           "label": "G",
           "team": "home",
           "role": "goalie",
-          "x": 26,
+          "x": -26,
           "y": 0,
-          "facing": 3.1
+          "facing": 0.04
         }
       ],
       "puck": {
@@ -2928,9 +2928,9 @@
     },
     "focusActorId": "h1",
     "cues": [
-      "F1 is wide on the right.",
-      "YOU is inside F1.",
-      "F2 trails on the far side."
+      "F1 is in a wide lane.",
+      "YOU are closer to the middle but farther from the left net than F1.",
+      "F2 trails on the other side of the middle."
     ],
     "tags": [
       "experimental",
@@ -2950,7 +2950,7 @@
       {
         "id": "exp26b-u11-016-q1",
         "type": "choice",
-        "prompt": "Where is YOU compared with wide F1?",
+        "prompt": "Where are YOU compared with wide F1?",
         "options": [
           {
             "id": "a",
@@ -2969,7 +2969,7 @@
           "b"
         ],
         "basis": "scene",
-        "explanation": "YOU is inside the wider F1 relative to the goal-side route; the named relationship matters more than a dot."
+        "explanation": "YOU are closer to the middle than F1, but that does not mean YOU are goal-side. F1 is currently closer to the left net."
       },
       {
         "id": "exp26b-u11-016-q2",
@@ -2993,7 +2993,7 @@
           "a"
         ],
         "basis": "coaching",
-        "explanation": "Inside positioning protects the middle and route to the net while showing the carrier a wall-side route; F2 remains a separate scan, not an immediate chase."
+        "explanation": "An inside approach aims to protect the middle, but YOU still have to account for starting behind F1. A wall-side route or successful steering is not guaranteed; keep F2 in the scan."
       },
       {
         "id": "exp26b-u11-016-q3",
@@ -3024,14 +3024,14 @@
       {
         "id": "exp26b-u11-016-q4",
         "type": "position",
-        "prompt": "Move YOU to an inside approach that remains between F1 and the middle.",
+        "prompt": "Move YOU closer to F1 while staying on the side nearer the middle.",
         "actorId": "h1",
         "reference": {
           "x": 10.5,
           "y": 3.5
         },
         "basis": "coaching",
-        "explanation": "This point keeps YOU inside the wide carrier while leaving room to update the angle."
+        "explanation": "The example is closer to F1 and remains nearer the middle. It still leaves YOU farther from the left net than F1, so recheck the recovery route rather than assuming the carrier is contained."
       },
       {
         "id": "exp26b-u11-016-q5",
@@ -3060,21 +3060,21 @@
       {
         "id": "exp26b-u11-016-q6",
         "type": "explain",
-        "prompt": "How would you describe this angle using the slot and half wall?",
+        "prompt": "How could the middle and side boards guide your approach to F1?",
         "basis": "coaching",
-        "explanation": "Say that YOU stays between F1 and the slot, showing the half-wall route while watching the carrier's cut-back and F2."
+        "explanation": "Try to preserve space toward the middle while reading F1’s route near the side boards. You begin behind the carrier; explain how that limits the approach and why F2 still matters."
       }
     ]
   },
   {
     "id": "exp26b-u11-017",
-    "version": 2,
+    "version": 3,
     "ageBand": "U11",
     "title": "Recover toward the net",
     "family": "recover-after-reach",
     "topic": "Defensive recovery",
     "objective": "Recover to a useful net-side relationship after a first reach does not win the puck.",
-    "briefing": "Gold attacks -x. F1 has moved ahead of YOU toward the left net; F2 is farther wide. YOU is behind the play and the goalie is visible. The first reach is stated to have missed.",
+    "briefing": "Gold attacks -x. F1 has moved ahead of YOU toward the left net; F2 is farther wide. YOU are behind the play and the goalie is visible. The first reach is stated to have missed.",
     "setup": {
       "actors": [
         {
@@ -3084,7 +3084,7 @@
           "role": "skater",
           "x": 13,
           "y": 2,
-          "facing": 0.7
+          "facing": 3.141592653589793
         },
         {
           "id": "a1",
@@ -3109,9 +3109,9 @@
           "label": "G",
           "team": "home",
           "role": "goalie",
-          "x": 26,
+          "x": -26,
           "y": 0,
-          "facing": 3.1
+          "facing": 0.04
         }
       ],
       "puck": {
@@ -3217,14 +3217,14 @@
       {
         "id": "exp26b-u11-017-q4",
         "type": "position",
-        "prompt": "Move YOU to a recovery point between the attackers and the left net.",
+        "prompt": "Choose an example recovery point nearer the left net than both attackers.",
         "actorId": "h1",
         "reference": {
           "x": 10,
           "y": 2.5
         },
         "basis": "coaching",
-        "explanation": "This point moves toward the defended net-side lane and keeps F2 visible across the ice."
+        "explanation": "The example is closer to the left net than both attackers’ shown positions. It does not prove YOU can reach it first; keep reassessing F1’s route and F2 across the rink."
       },
       {
         "id": "exp26b-u11-017-q5",
@@ -3233,7 +3233,7 @@
         "options": [
           {
             "id": "a",
-            "text": "Your recovery should protect the new middle threat while staying connected to F1"
+            "text": "Reassess the middle threat from F2 while checking F1’s puck route"
           },
           {
             "id": "b",
@@ -3248,26 +3248,26 @@
           "a"
         ],
         "basis": "coaching",
-        "explanation": "F1 and F2 changed jobs in the picture. Protect the middle and keep a playable relationship to F1."
+        "explanation": "F2 moving into the middle creates a new threat. Recheck both attackers and decide which dangerous lane YOU can affect; the freeze cannot prove that one route covers both."
       },
       {
         "id": "exp26b-u11-017-q6",
         "type": "explain",
         "prompt": "Why can recovering toward the net be better than reaching again from behind?",
         "basis": "coaching",
-        "explanation": "The net-side relationship limits the dangerous lane and keeps both attackers in view. A second reach may miss and leave the middle unprotected."
+        "explanation": "Recovering toward the net can help limit a dangerous lane. Keep scanning both attackers; a net-side marker alone does not prove visibility or coverage, and another reach may leave you farther behind."
       }
     ]
   },
   {
     "id": "exp26b-u11-018",
-    "version": 1,
+    "version": 2,
     "ageBand": "U11",
     "title": "Backcheck the open runner",
     "family": "backcheck-open-runner",
     "topic": "Backchecking",
     "objective": "Choose a backcheck relationship for the uncovered attacker while a teammate pressures the puck.",
-    "briefing": "Gold attacks -x. F1 carries toward the left net and D1 is already pressuring F1. F2 trails on the far side; YOU is behind both attackers and must scan F2 rather than simply chase the puck.",
+    "briefing": "Gold attacks the left net (-x), defended by navy. In this rep, navy D1 is assigned to pressure gold F1, who owns the puck. Gold F2 trails across the middle. YOU start closer to the left net than F2 and must scan that runner while checking whether D1 can maintain pressure.",
     "setup": {
       "actors": [
         {
@@ -3286,7 +3286,7 @@
           "role": "skater",
           "x": 12,
           "y": 6,
-          "facing": 0
+          "facing": 3.1
         },
         {
           "id": "a2",
@@ -3311,9 +3311,9 @@
           "label": "G",
           "team": "home",
           "role": "goalie",
-          "x": 26,
+          "x": -26,
           "y": 0,
-          "facing": 3.1
+          "facing": 0
         }
       ],
       "puck": {
@@ -3322,9 +3322,9 @@
     },
     "focusActorId": "h1",
     "cues": [
-      "D1 is already pressuring F1.",
-      "F2 is the uncovered trailing attacker.",
-      "YOU starts behind the play."
+      "D1 is assigned puck pressure; the freeze does not prove successful pressure.",
+      "F2 is a separate trailing gold attacker.",
+      "YOU start closer to the left net than F2, at the same up-ice coordinate as F1."
     ],
     "tags": [
       "experimental",
@@ -3344,7 +3344,7 @@
       {
         "id": "exp26b-u11-018-q1",
         "type": "choice",
-        "prompt": "Who is already pressuring the puck carrier?",
+        "prompt": "Who has the puck-pressure assignment in this rep?",
         "options": [
           {
             "id": "a",
@@ -3363,7 +3363,7 @@
           "b"
         ],
         "basis": "scene",
-        "explanation": "D1 is shown near F1 and is the stated puck pressure; YOU must read the other attacker."
+        "explanation": "The briefing assigns navy D1 to pressure gold F1. Whether D1 can stay with F1 remains part of the read."
       },
       {
         "id": "exp26b-u11-018-q2",
@@ -3397,7 +3397,7 @@
         "options": [
           {
             "id": "a",
-            "text": "Find F2 and the right net"
+            "text": "Find F2 and the left net"
           },
           {
             "id": "b",
@@ -3414,7 +3414,7 @@
           "c"
         ],
         "basis": "coaching",
-        "explanation": "The route protects the open runner, then updates as the teammate pressure changes."
+        "explanation": "Look for a relationship that limits the runner’s passing or shooting options, then update as D1’s pressure changes."
       },
       {
         "id": "exp26b-u11-018-q4",
@@ -3422,20 +3422,20 @@
         "prompt": "Move YOU toward F2 while staying between F2 and the left net.",
         "actorId": "h1",
         "reference": {
-          "x": 10,
-          "y": -1.5
+          "x": 14.01,
+          "y": -2.8
         },
         "basis": "coaching",
-        "explanation": "This point closes the defended net-side relationship to F2 without pretending that one spot solves the play."
+        "explanation": "This point closes the distance to F2 while staying on the net side of F2's route, without pretending that one spot solves the play."
       },
       {
         "id": "exp26b-u11-018-q5",
         "type": "choice",
-        "prompt": "D1 falls behind F1 and calls for help. How should YOU respond?",
+        "prompt": "D1 cannot stay with F1 and calls for help. What should YOU reassess?",
         "options": [
           {
             "id": "a",
-            "text": "Keep F2 in view while deciding whether the carrier now needs support"
+            "text": "Whether to help pressure F1 while keeping track of F2"
           },
           {
             "id": "b",
@@ -3450,7 +3450,7 @@
           "a"
         ],
         "basis": "coaching",
-        "explanation": "D1's changed position may shift the job. Re-scan both attackers and support the more dangerous reachable lane."
+        "explanation": "F1 is an opponent who may now need defensive pressure, not attacking support. Recheck both attackers and communicate with D1 before changing jobs."
       },
       {
         "id": "exp26b-u11-018-q6",
