@@ -1,6 +1,6 @@
 # RinkReads — Task List
 
-**Last updated:** 2026-09-05 · **Coach, goals and training ready locally:** glass assessments and age-appropriate goal plans, optional effort check-ins, acknowledged training sync/retry and privacy migration. 48 focused checks and isolated build pass; browser save/reload and phone checks complete. Remote migration/authenticated cloud verification remain pending. [Verification](../one-on-one/2026-09-05-coach-goals-training-verification.md).
+**Last updated:** 2026-09-05 · **Explore the rink is U7/U9 only:** removed from U11+ activities, learning navigation and mission fallback; old links open age-appropriate worlds.  **Rink games verified locally:** fixed Eyes Up silently falling back to flat ice; all eleven rink games mount 3D. Phone framing and context-loss fallback checked. Coach/goals/training release remains local; remote privacy migration remains pending.
 
 **Scope:** RinkReads **app build + content factory**. Launch/distribution (sending the beta, marketing) and the separate BlueChip business are **out of scope** — parked at the bottom. Priority = position in this list. A new idea that isn't here goes to the **Parking Lot** first, then gets promoted on purpose — that's the scope-creep guard.
 
@@ -56,6 +56,10 @@
 - *(New ideas land here first, then get promoted into NEXT/LATER on purpose.)*
 
 ## Changelog
+
+- **2026-09-05** — Thomas restricted Explore the rink to U7 and U9. One shared age rule now covers world cards, fallback actions, navigation and legacy discovery links. U11/U13/U15/U18 use worlds/library instead. Six-band browser selection and 16 navigation/world component checks pass; isolated production build passes.
+
+- **2026-09-05** — Fixed the missing Eyes Up rink-shape import, added unresolved-binding regression coverage, and included the detailed provisional Shootout goalie assets with the shared learner locator. All eleven rink games mounted WebGL in the browser; Eyes Up input, 390px framing and stable context-loss fallback checked. 576 practice checks and production build pass. Local only. [Verification](../one-on-one/2026-09-05-rink-games-verification.md).
 
 - **2026-09-05 — coach/goals/training release:** completed local assessment and goal modules, lineup integration, durable training history/retry, local-date repair and private-note separation. 48 checks, isolated build and real sample browser flows pass. Database migration tested with synthetic Postgres identities; not remotely deployed. Question banks remain outside this release.
 

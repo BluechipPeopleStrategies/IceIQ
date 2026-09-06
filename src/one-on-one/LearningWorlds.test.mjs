@@ -113,8 +113,8 @@ test('selecting worlds reveals actual missions, real actions, and no invented co
     component.clickWhere(node => node.props['data-mission-id'] === 'scanning');
     component.clickWhere(node => node.props['data-lesson-id'] === 'practice-draft-u11-check-both-sides');
     assert.deepEqual(component.navigations.at(-1), { tab: 'learn', learn: 'guided', ageBand: 'U11', lessonId: 'practice-draft-u11-check-both-sides' });
-    for (const activity of LEARNING_ACTIVITIES) component.clickWhere(node => node.props['data-activity-id'] === activity.id);
-    assert.equal(component.navigations.length, 8);
+    for (const activity of learningActivitiesForAge('U11')) component.clickWhere(node => node.props['data-activity-id'] === activity.id);
+    assert.equal(component.navigations.length, 7);
   } finally { if (original === undefined) delete globalThis.localStorage; else globalThis.localStorage = original; }
 });
 
@@ -151,16 +151,18 @@ test('a home deep link opens the requested real world with a safe fallback for a
 });
 
 test('older age pathways promote decisions rather than beginner rink discovery', () => {
- for(const age of ['U15','U18','U15 / Bantam']) {
+ for(const age of ['U11','U13','U15','U18','U15 / Bantam']) {
   const activities=learningActivitiesForAge(age);
   assert.ok(!activities.some(a=>a.id==='discover'));
   assert.ok(activities.some(a=>a.id==='library'));
   assert.ok(activities.some(a=>a.id==='choose'));
  }
- assert.ok(learningActivitiesForAge('U7').some(a=>a.id==='discover'));
+ for(const age of ['U7','U9','U9 / Novice']) assert.ok(learningActivitiesForAge(age).some(a=>a.id==='discover'));
 });
 
-test('U15 world view does not send a missing mission to rink discovery', () => {
- const view=mount({ageBand:'U15'});
- assert.doesNotMatch(view.text(), /Explore the rink|Get to know the ice/);
+test('U11 and older world views do not send missing missions to rink discovery', () => {
+ for(const ageBand of ['U11','U13','U15','U18']) {
+  const view=mount({ageBand});
+  assert.doesNotMatch(view.text(), /Explore the rink|Get to know the ice/);
+ }
 });

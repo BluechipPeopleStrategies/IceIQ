@@ -1,4 +1,4 @@
-import React, { useMemo, useRef } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import { Html } from "@react-three/drei";
 import { useFrame } from "@react-three/fiber";
 import * as THREE from "three";
@@ -19,6 +19,52 @@ const CELL_LABELS = {
   fiveHole: "FIVE HOLE",
   blkrLo: "BLOCKER LOW",
 };
+
+// A fixed shooter camera can use detailed transparent artwork on the existing
+// articulated rig. Keep these pivots and footprints aligned with the original
+// coverage illustration; artwork never changes shot truth or hit regions.
+export const SHOOTOUT_GOALIE_ART = Object.freeze({
+  torso: "/assets/goalie/realistic-v1/torso.png",
+  helmet: "/assets/goalie/realistic-v1/helmet.png",
+  catcher: "/assets/goalie/realistic-v1/catcher.png",
+  blocker: "/assets/goalie/realistic-v1/blocker.png",
+  leftPad: "/assets/goalie/realistic-v1/pad-left.png",
+  rightPad: "/assets/goalie/realistic-v1/pad-right.png",
+  sleeve: "/assets/goalie/realistic-v1/sleeve.png",
+  pants: "/assets/goalie/realistic-v1/pants.png",
+});
+
+function useGoalieArtwork() {
+  const [textures, setTextures] = useState(null);
+  useEffect(() => {
+    let cancelled = false, failed = false;
+    const loaded = [], loader = new THREE.TextureLoader();
+    Promise.all(Object.entries(SHOOTOUT_GOALIE_ART).map(([name, path]) => new Promise((resolve, reject) => {
+      loader.load(path, texture => {
+        texture.colorSpace = THREE.SRGBColorSpace;
+        texture.anisotropy = 4;
+        if (cancelled || failed) { texture.dispose(); reject(new Error("Goalie artwork load was cancelled.")); return; }
+        loaded.push(texture);
+        resolve([name, texture]);
+      }, undefined, reject);
+    }))).then(entries => { if (!cancelled) setTextures(Object.fromEntries(entries)); }).catch(() => {
+      // One missing part keeps the entire established fallback rig visible.
+      // Never show a mismatched half-artwork, half-fallback goalie.
+      failed = true;
+      loaded.forEach(texture => texture.dispose()); loaded.length = 0;
+      if (!cancelled) setTextures(null);
+    });
+    return () => { cancelled = true; loaded.forEach(texture => texture.dispose()); loaded.length = 0; };
+  }, []);
+  return textures;
+}
+
+function GoalieArtPart({ texture, size, position = [0, 0, 0] }) {
+  return <mesh position={position}>
+    <planeGeometry args={size} />
+    <meshBasicMaterial map={texture} transparent alphaTest={0.025} toneMapped={false} side={THREE.DoubleSide} />
+  </mesh>;
+}
 
 function elapsedFor(scene, now) {
   if (!scene?.shot) return 0;
@@ -163,6 +209,7 @@ function setSegment(mesh, start, end, scratch) {
 }
 
 function GoalieAvatar({ sceneRef }) {
+  const artwork = useGoalieArtwork();
   const root = useRef(null);
   const torso = useRef(null);
   const stick = useRef(null);
@@ -272,6 +319,7 @@ function GoalieAvatar({ sceneRef }) {
   return (
     <group ref={root}>
       <group ref={torso}>
+        {artwork ? <GoalieArtPart texture={artwork.torso} size={[1.23, 1.03]} position={[0, 0.055, 0.465]} /> : <>
         <mesh castShadow position={[0, 0.12, 0]}>
           <cylinderGeometry args={[0.59, 0.39, 0.86, 10]} />
           <meshStandardMaterial color="#0B1A33" roughness={0.43} />
@@ -291,10 +339,12 @@ function GoalieAvatar({ sceneRef }) {
         <Html center transform distanceFactor={4.5} position={[0, 0.15, 0.43]} style={{ pointerEvents: "none" }}>
           <span className="gym-goalie-crest"><b>RR</b><small>31</small></span>
         </Html>
+        </>}
       </group>
 
       {/* Helmet shell, jaw mask and a recognisable steel cage. */}
       <group position={[0, 0.83, 0.02]}>
+        {artwork ? <GoalieArtPart texture={artwork.helmet} size={[0.62, 0.67]} position={[0, 0, 0.32]} /> : <>
         <mesh castShadow scale={[1, 1.08, 0.94]}>
           <sphereGeometry args={[0.31, 28, 20]} />
           <meshStandardMaterial color="#eef3f5" roughness={0.36} metalness={0.08} />
@@ -315,16 +365,17 @@ function GoalieAvatar({ sceneRef }) {
             <meshStandardMaterial color="#55636d" metalness={0.72} roughness={0.2} />
           </mesh>
         ))}
+        </>}
       </group>
 
       {/* Jointed arms connect the shoulder line to glove and blocker. */}
       {[leftUpper, leftFore, rightUpper, rightFore].map((ref, i) => (
         <mesh key={i} ref={ref} castShadow>
-          <capsuleGeometry args={[0.105, 1, 6, 12]} />
-          <meshStandardMaterial color="#1a1a18" roughness={0.48} />
+          {artwork ? <><planeGeometry args={[0.21, 1]} /><meshBasicMaterial map={artwork.sleeve} transparent alphaTest={0.025} toneMapped={false} side={THREE.DoubleSide} /></> : <><capsuleGeometry args={[0.105, 1, 6, 12]} /><meshStandardMaterial color="#1a1a18" roughness={0.48} /></>}
         </mesh>
       ))}
       <group ref={glove} position={[-0.68, 0.3, 0.12]}>
+        {artwork ? <GoalieArtPart texture={artwork.catcher} size={[0.66, 0.552]} position={[0, 0, 0.17]} /> : <>
         <mesh castShadow scale={[1.1, 0.92, 0.5]}>
           <sphereGeometry args={[0.3, 22, 16]} />
           <meshStandardMaterial color="#f1f4f5" roughness={0.5} />
@@ -333,8 +384,10 @@ function GoalieAvatar({ sceneRef }) {
           <ringGeometry args={[0.13, 0.18, 16]} />
           <meshBasicMaterial color="#52616c" side={THREE.DoubleSide} />
         </mesh>
+        </>}
       </group>
       <group ref={blocker} position={[0.68, 0.31, 0.12]}>
+        {artwork ? <GoalieArtPart texture={artwork.blocker} size={[0.52, 0.46]} position={[0, 0, 0.142]} /> : <>
         <mesh castShadow>
           <boxGeometry args={[0.52, 0.46, 0.25]} />
           <meshStandardMaterial color="#f1f4f5" roughness={0.46} />
@@ -343,15 +396,17 @@ function GoalieAvatar({ sceneRef }) {
           <boxGeometry args={[0.38, 0.035, 0.02]} />
           <meshBasicMaterial color="#C9A24B" />
         </mesh>
+        </>}
       </group>
 
       {/* Anatomical bent stance behind proper rectangular leg pads. */}
+      {artwork && <GoalieArtPart texture={artwork.pants} size={[0.86, 0.68]} position={[0, -0.45, 0.075]} />}
       {[-0.3, 0.3].map((x) => (
         <group key={`leg-${x}`}>
-          <mesh castShadow position={[x, -0.43, -0.02]} rotation={[0.22, 0, x < 0 ? -0.12 : 0.12]}>
+          {!artwork && <mesh castShadow position={[x, -0.43, -0.02]} rotation={[0.22, 0, x < 0 ? -0.12 : 0.12]}>
             <capsuleGeometry args={[0.13, 0.46, 5, 10]} />
             <meshStandardMaterial color="#0a1926" roughness={0.55} />
-          </mesh>
+          </mesh>}
           <mesh castShadow position={[x * 1.22, -1.25, 0.1]} rotation={[0, x < 0 ? -0.16 : 0.16, 0]}>
             <boxGeometry args={[0.44, 0.12, 0.52]} />
             <meshStandardMaterial color="#07131f" roughness={0.45} />
@@ -364,6 +419,7 @@ function GoalieAvatar({ sceneRef }) {
       ))}
       {[-0.31, 0.31].map((x, index) => (
         <group key={`pad-${x}`} ref={index === 0 ? leftPad : rightPad} position={[x, -0.72, 0.1]}>
+          {artwork ? <GoalieArtPart texture={index === 0 ? artwork.leftPad : artwork.rightPad} size={[0.44, 1.08]} position={[0, 0, 0.174]} /> : <>
           <mesh castShadow>
             <boxGeometry args={[0.44, 1.08, 0.3]} />
             <meshStandardMaterial color="#f3f5f6" roughness={0.46} />
@@ -378,6 +434,7 @@ function GoalieAvatar({ sceneRef }) {
             <boxGeometry args={[0.035, 0.94, 0.018]} />
             <meshBasicMaterial color="#C9A24B" />
           </mesh>
+          </>}
         </group>
       ))}
       <group ref={stick} position={[0.73, -0.12, 0.18]} rotation={[-0.45, 0, -0.22]}>

@@ -13,9 +13,12 @@ export const LEARNING_ACTIVITIES = [
   { id: 'brain', title: 'Brain Gym', description: 'Try the existing awareness and decision games.', target: { tab: 'brain' }, icon: 'scan' },
 ];
 
+export function allowsRinkDiscovery(ageBand) {
+  return ['U7', 'U9'].includes(levelToBand(ageBand));
+}
+
 export function learningActivitiesForAge(ageBand) {
-  const advanced = ['U15', 'U18'].includes(levelToBand(ageBand));
-  return LEARNING_ACTIVITIES.filter(activity => !advanced || activity.id !== 'discover');
+  return LEARNING_ACTIVITIES.filter(activity => allowsRinkDiscovery(ageBand) || activity.id !== 'discover');
 }
 
 // The path owns age scope; the ledger owns domain identity. Catalog matches

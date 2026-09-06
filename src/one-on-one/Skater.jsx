@@ -2,6 +2,7 @@ import { useMemo, useEffect, useRef } from 'react';
 import { useFrame } from '@react-three/fiber';
 import * as THREE from 'three';
 import { CARRY_OFFSET } from './simulation.js';
+import { PlayerLocator } from '../visuals/PlayerLocator.jsx';
 
 function jerseyTexture(number) {
   const c = document.createElement('canvas'); c.width = 128; c.height = 128;
@@ -86,9 +87,10 @@ function buildRig(goalie, colour, number, showStick = true) {
   return rig;
 }
 
-export default function Skater({ frameRef, actorKey, colour, number, goalie = false, selected = false, showStick = true }) {
+export default function Skater({ frameRef, actorKey, colour, number, goalie = false, selected = false, isLearner = false, showStick = true, showHeading = false }) {
   const holder = useRef();
   const rig = useMemo(() => buildRig(goalie, colour, number, showStick), [goalie, colour, number, showStick]);
+  const heading = useRef();
   useEffect(() => () => rig.dispose(), [rig]);
   useFrame(() => {
     const frame = frameRef.current, actor = frame?.actors?.find(a => a.id === actorKey) || frame?.[actorKey]; if (!actor || !holder.current) return;
@@ -97,9 +99,12 @@ export default function Skater({ frameRef, actorKey, colour, number, goalie = fa
     const actionTime = actorKey === 'attacker' ? frame.shotAt : actorKey === 'defender' ? frame.actionAt : null;
     rig.update(actor, frame.time, actionTime ?? -100);
     rig.group.scale.y = goalie && frame.outcome === 'save' ? .76 : 1;
+    if (heading.current) heading.current.rotation.y = -(actor.facing || 0);
   });
   return <group ref={holder}>
-    {selected && <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, .018, 0]}><ringGeometry args={[.67, .74, 48]} /><meshBasicMaterial color="#d3943b" transparent opacity={.9} /></mesh>}
+    {isLearner && <PlayerLocator />}
+    {selected && !isLearner && <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, .018, 0]}><ringGeometry args={[.67, .74, 48]} /><meshBasicMaterial color="#d3943b" transparent opacity={.9} /></mesh>}
     <primitive object={rig.group} />
+    {showHeading && showStick && <group ref={heading}><mesh position={[0, .06, -.82]} rotation={[-Math.PI / 2, 0, 0]}><coneGeometry args={[.15, .36, 3]} /><meshBasicMaterial color={colour} /></mesh></group>}
   </group>;
 }
