@@ -1,0 +1,62 @@
+[
+  {
+    "id": "spatial-false",
+    "scope": "logical text/geometry only",
+    "facts": "Goal (30,0), loose puck (20,5), defender D (18,1). All positions in metres.",
+    "item": "Correct answer says D lies on the straight segment between puck and goal. Other alternatives are silly. Is the marked answer acceptable?"
+  },
+  {
+    "id": "spatial-valid",
+    "scope": "logical text/geometry only; do not evaluate unseen rendering or tactical outcomes",
+    "facts": "Goal (30,0), loose puck (20,5), defender D (25,2.5).",
+    "item": "Question: Which named actor lies on the straight puck-goal segment? Answer: D. Explanation: D is the midpoint. This claims position only, not interception."
+  },
+  {
+    "id": "arrival-false",
+    "scope": "state consistency",
+    "facts": "Puck owner is null. An arrival event puts D within reach. No control event or successful touch is stated.",
+    "item": "Question: Who controls the puck now? Marked answer: D, because D arrived first."
+  },
+  {
+    "id": "control-valid",
+    "scope": "state consistency only",
+    "facts": "At t=2.1 an explicitly stipulated successful control event assigns puck owner D. The hypothetical is not a claim that physics has been validated.",
+    "item": "Question: In this stated hypothetical, who now controls the puck? Answer D; explanation cites the successful control event."
+  },
+  {
+    "id": "hidden-cue",
+    "scope": "assessment fairness",
+    "facts": "At question entry the relevant defender is outside FOV and fully occluded. No prior observation, map, text or audio discloses the defender side. Camera is locked.",
+    "item": "Question requires the player to identify that defender side and grades only left as correct based on omniscient world state."
+  },
+  {
+    "id": "observed-cue",
+    "scope": "logical question binding only; rendered visibility is an explicit test premise",
+    "facts": "Both labelled teams and the puck are visibly distinguishable at the stipulated frame; navy 7 visibly controls the puck. No future outcome is asked.",
+    "item": "Question: Which team currently controls the puck? Options Navy/Gold. Answer Navy. Feedback: Navy 7 currently has the puck."
+  },
+  {
+    "id": "grammar-false",
+    "scope": "grammar and comparison",
+    "facts": "YOU at y=2, F1 at y=7, rink middle y=0.",
+    "item": "Prompt: Compared with F1, where does YOU start across the rink width? Answer: Closer to the middle."
+  },
+  {
+    "id": "grammar-valid",
+    "scope": "grammar and comparison only",
+    "facts": "YOU at y=2, F1 at y=7, rink middle y=0.",
+    "item": "Prompt: Compared with F1, where do YOU start across the rink width? Answer: Closer to the middle. Explanation: 2m is less than 7m from y=0."
+  },
+  {
+    "id": "missing-motion",
+    "scope": "complete pickup approval request",
+    "facts": "Only one neutral-pose screenshot is supplied. No sequence, contact event, trace or movement reference.",
+    "item": "Can the entire approach, turn, pickup/control and exit be approved as authentic hockey movement?"
+  },
+  {
+    "id": "floating-blade",
+    "scope": "geometric contact claim",
+    "facts": "Exact transformed blade triangles have lowest y=0.030m. Ice y=0, puck occupies y=0 through 0.0254m. No other stick part contacts the puck.",
+    "item": "The author marks successful blade-puck contact because a carry marker 0.052m high is near the blade."
+  }
+]

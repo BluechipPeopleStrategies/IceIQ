@@ -78,6 +78,18 @@ reasoning within existing fields rather than creating an incompatible return.
 
 ## Calibration and escalation
 
+Read `qualification.json` first. An unqualified reviewer may diagnose and
+research but cannot recommend approval of real work. Do not convert a corrected
+re-run of exposed calibration cases into qualification. The qualification
+record is a review workflow control; it is not wired into app promotion code.
+
+The first run produced four false passes. Required remediation: audit each
+answer clause, treat factual contradictions as defects rather than optional
+wording, separate reaching/control, check camera-dependent phrasing and grammar,
+and never assume a question is an intentionally valid control. Domain subchecks
+cannot hide an overall defect: a correct distance calculation does not excuse
+incorrect text. Preserve the failed raw return and the comparison.
+
 Before question-packet work, perform the eight blind historical cases required
 by `docs/factory/CLAUDE-REVIEW-UPDATE.md`; record verdicts before opening the key
 and reconcile misses. Do not reopen already completed packets.

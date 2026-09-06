@@ -1,0 +1,67 @@
+{
+  "comparedAt": "2026-09-06T21:53:15.612908+00:00",
+  "blindOutputSha256": "d6b4e800f1b27bd96df95d8436ab52c7fddd5edf9749b4b15d1ecc1a0d0b9356",
+  "answerKeySha256": "3d735ed6a1e01e3e6af70e6857de5539a0451be2525fe0eec6186ae7e6d92040",
+  "reviewed": 8,
+  "defectsFlagged": 4,
+  "falsePasses": 4,
+  "qualification": "FAILED",
+  "rows": [
+    {
+      "id": "exp26-u11-006-q7",
+      "expected": "repair",
+      "actual": "PASS",
+      "falsePass": true,
+      "expectedIssue": "Puck is inside the circle; D1 is centre-ice-side of the puck, not between it and the net."
+    },
+    {
+      "id": "exp26-u11-006-q9",
+      "expected": "repair",
+      "actual": "REVISE",
+      "falsePass": false,
+      "expectedIssue": "The reference moves farther from the puck (8.06 m to 9.23 m) and is not at the opposite boards."
+    },
+    {
+      "id": "exp26-u11-006-q10",
+      "expected": "repair",
+      "actual": "REVISE",
+      "falsePass": false,
+      "expectedIssue": "Covered-puck feedback needs an explicit stoppage scenario and must not advise continuing pressure after the whistle."
+    },
+    {
+      "id": "exp26-u11-011-q8",
+      "expected": "repair",
+      "actual": "REVISE",
+      "falsePass": false,
+      "expectedIssue": "D2 is an away-team defender, not opposite-point support."
+    },
+    {
+      "id": "exp26-u11-012-q7",
+      "expected": "repair",
+      "actual": "PASS",
+      "falsePass": true,
+      "expectedIssue": "Below me depends on the camera; the puck is closer to the side boards than YOU."
+    },
+    {
+      "id": "exp26-u11-012-q5",
+      "expected": "repair",
+      "actual": "PASS",
+      "falsePass": true,
+      "expectedIssue": "Reaching the puck first does not establish control."
+    },
+    {
+      "id": "exp26-u11-016-q1",
+      "expected": "repair",
+      "actual": "PASS",
+      "falsePass": true,
+      "expectedIssue": "YOU takes do, not does; preserve Compared with F1."
+    },
+    {
+      "id": "exp26-u11-016-q7",
+      "expected": "repair",
+      "actual": "REVISE",
+      "falsePass": false,
+      "expectedIssue": "F1 is an opponent. Communicate the defensive plan to the shown teammate/goalie, without guaranteeing containment."
+    }
+  ]
+}

@@ -1,0 +1,1214 @@
+{
+  "diagnosticChecks": [
+    {
+      "name": "separated horizontal triangle",
+      "points": [
+        [
+          -1,
+          0.1,
+          -1
+        ],
+        [
+          1,
+          0.1,
+          -1
+        ],
+        [
+          0,
+          0.1,
+          1
+        ]
+      ],
+      "expectedM": 0.0746,
+      "result": {
+        "lowerM": 0.0746,
+        "upperM": 0.0746,
+        "iterations": 1,
+        "bladePoint": [
+          0,
+          0.1,
+          0
+        ],
+        "puckPoint": [
+          0,
+          0.0254,
+          0
+        ]
+      },
+      "passed": true
+    },
+    {
+      "name": "intersecting horizontal triangle",
+      "points": [
+        [
+          -1,
+          0.01,
+          -1
+        ],
+        [
+          1,
+          0.01,
+          -1
+        ],
+        [
+          0,
+          0.01,
+          1
+        ]
+      ],
+      "expectedM": 0,
+      "result": {
+        "lowerM": 0,
+        "upperM": 0,
+        "iterations": 1,
+        "bladePoint": [
+          0,
+          0.01,
+          0
+        ],
+        "puckPoint": [
+          0,
+          0.01,
+          0
+        ]
+      },
+      "passed": true
+    },
+    {
+      "name": "separated vertical triangle",
+      "points": [
+        [
+          0.1,
+          -1,
+          -1
+        ],
+        [
+          0.1,
+          1,
+          -1
+        ],
+        [
+          0.1,
+          0,
+          1
+        ]
+      ],
+      "expectedM": 0.061900000000000004,
+      "result": {
+        "lowerM": 0.06189999999999889,
+        "upperM": 0.061900000000000004,
+        "iterations": 1,
+        "bladePoint": [
+          0.1,
+          0.012699999999999878,
+          -1.1102230246251565e-16
+        ],
+        "puckPoint": [
+          0.0381,
+          0.012699999999999878,
+          -4.2299497238218465e-17
+        ]
+      },
+      "passed": true
+    }
+  ],
+  "schema": "blade-contact-diagnostic-v1",
+  "generatedAt": "2026-09-06T21:52:28.890Z",
+  "sources": {
+    "src/one-on-one/hockeyPlayerRig.js": {
+      "sha256": "8a683d16d89d9e8ed20c4bb8b7a8b809d1e64f30b7a9ebd206cbff1615da9f7c"
+    },
+    "src/visuals/playerMotion.js": {
+      "sha256": "5f7339e6058dedfad3016f24bae0f3ecb3329a29217dd4f57e2ffedd7b6e9a5e"
+    },
+    "src/visuals/FirstPersonEquipment.jsx": {
+      "sha256": "391860f10860483cf2cf2331953b4e18182ff68051c940c05e85b2c7df56e734"
+    },
+    "src/one-on-one/ScenarioSkater.jsx": {
+      "sha256": "15fd014b2c49a19a79fbefea9a24a8f0e6f35dac5646820320bcb71fb2f1ae51"
+    },
+    "src/one-on-one/simulation.js": {
+      "sha256": "565fcd2041c78a24b9021e31ac189801bc312875e9d7d5ad3e84c64b16fee241"
+    },
+    "src/visuals/PuckLocator3D.jsx": {
+      "sha256": "763cc15699106073b344447eca1e9d1cb4845f95bc176c734a08beb48ff6d055"
+    },
+    "src/one-on-one/PracticeScene.jsx": {
+      "sha256": "0eb0aee87ef9a1208f971cb3d883435624f22c3c141dcb07f4fb183a46a4f266"
+    },
+    "tmp/hockey-authority-20260906/blade-contact-diagnostic.mjs": {
+      "sha256": "295338b1df18e0684a48d3f95e60cfe856516f06198119ce016b66f2daf30f2f"
+    }
+  },
+  "instrumentation": {
+    "file": "tmp\\hockey-authority-20260906\\blade-contact-instrumented-rig.mjs",
+    "sha256": "b2bd9d4b23dac0c3c13e94c01d98082b7b27125e7719f4f2e04acbfa247dcdfe",
+    "reason": "Runtime part names survive but merged vertex ranges do not; tmp-only copy adds ranges before unchanged material merge.",
+    "productionFilesChanged": false
+  },
+  "method": {
+    "units": "metres",
+    "worldAxes": "rink (x,y) -> Three (y,height,-x), rotationY=-facing",
+    "geometry": "Original skinned vertices evaluated using SkinnedMesh.getVertexPosition then matrixWorld. Blade face and tape isolated by original part name before material merge. Instrumented and original geometry attributes hashed identically; posed blade vertices compared.",
+    "puck": "Analytic solid upright cylinder, perspective radius .0381, height .0254, centre y .0127 (current PuckLocator3D). Horizontal location is the actual carry marker transformed with actor, not inferred blade contact.",
+    "distance": "Triangle.closestPointToPoint for point/surface distance. Alternating projections of each exact triangle and analytic finite cylinder; feasible nearest pair is upper bound, supporting-plane separation is lower bound. Min bounds over all triangles bound union distance. Tolerance 1e-9m; max 10000 iterations.",
+    "scope": "U11 rounded-study, neutral and authored turn/lean with/without stride; world and first-person from identical actor and source time.",
+    "limitations": [
+      "Geometric separation does not establish hockey technique, grip plausibility, collision dynamics, successful possession, or curriculum correctness.",
+      "No visual/browser review. No bank reads. No changes to production source.",
+      "Analytic circular cylinder is a circumscribed superset of rendered 32-sided puck: positive separation also proves no contact with rendered mesh; positive contact with ideal cylinder alone would need polygon confirmation.",
+      "Measurements concern the carry-marker XY position, not the lab rim puck several metres away.",
+      "World ice plane is y=0; any visual ice mesh offset should be recorded separately if changed."
+    ]
+  },
+  "sourceUnchanged": {
+    "src/one-on-one/hockeyPlayerRig.js": true,
+    "src/visuals/playerMotion.js": true,
+    "src/visuals/FirstPersonEquipment.jsx": true,
+    "src/one-on-one/ScenarioSkater.jsx": true,
+    "src/one-on-one/simulation.js": true,
+    "src/visuals/PuckLocator3D.jsx": true,
+    "src/one-on-one/PracticeScene.jsx": true,
+    "tmp/hockey-authority-20260906/blade-contact-diagnostic.mjs": true
+  },
+  "results": [
+    {
+      "case": "neutral",
+      "view": "world",
+      "actor": {
+        "id": "N1",
+        "x": 16,
+        "y": -2,
+        "facing": 0.6,
+        "vx": 2,
+        "vy": 0,
+        "motion": {
+          "mode": "glide"
+        }
+      },
+      "time": 2,
+      "pose": {
+        "mode": "glide",
+        "phase": 0,
+        "stride": 0,
+        "backward": false,
+        "lateral": 0,
+        "turn": 0,
+        "lean": 0,
+        "lookYaw": 0,
+        "action": null
+      },
+      "geometryHash": "b24c3222292ec470a6353da3a8d591ee7d36c5f64f6de43de9548ce106966c41",
+      "originalGeometryHash": "b24c3222292ec470a6353da3a8d591ee7d36c5f64f6de43de9548ce106966c41",
+      "instrumentationMaxPosedVertexDifferenceM": 0,
+      "partRanges": [
+        {
+          "name": "stick-flat-hooked-blade",
+          "material": "carbon",
+          "start": 5472,
+          "count": 156
+        },
+        {
+          "name": "stick-blade-tape",
+          "material": "cream",
+          "start": 3060,
+          "count": 900
+        },
+        {
+          "name": "stick-blade-tape",
+          "material": "cream",
+          "start": 3960,
+          "count": 900
+        },
+        {
+          "name": "stick-blade-tape",
+          "material": "cream",
+          "start": 4860,
+          "count": 900
+        }
+      ],
+      "carryMarkerWorld": [
+        -0.85762259616819,
+        0.052,
+        -16.430085883533152
+      ],
+      "physicalPuckCenterWorld": [
+        -0.85762259616819,
+        0.0127,
+        -16.430085883533152
+      ],
+      "puckRinkXY": {
+        "x": 16.430085883533152,
+        "y": -0.85762259616819
+      },
+      "blade": {
+        "triangles": 52,
+        "verticalRangeM": [
+          0.029999999329447746,
+          0.11499999463558197
+        ],
+        "lowestSurfaceAboveIceM": 0.029999999329447746,
+        "verticalGapAbovePuckM": 0.004599999329447747,
+        "verticalOverlapM": 0,
+        "puckCenterToSurface": {
+          "distanceM": 0.0180574286762826,
+          "point": [
+            -0.8553325489645804,
+            0.029999999329447746,
+            -16.425445146802268
+          ],
+          "part": "stick-flat-hooked-blade"
+        },
+        "carryMarkerToSurface": {
+          "distanceM": 0.0011792039631539778,
+          "point": [
+            -0.8571017395364742,
+            0.052,
+            -16.429027946693868
+          ],
+          "part": "stick-flat-hooked-blade"
+        },
+        "solidPuckSeparation": {
+          "lowerM": 0.004599999329447747,
+          "upperM": 0.004599999329447747,
+          "bestPair": {
+            "lowerM": 0.004599999329447747,
+            "upperM": 0.004599999329447747,
+            "iterations": 1,
+            "bladePoint": [
+              -0.8599244205725971,
+              0.029999999329447746,
+              -16.423179212890247
+            ],
+            "puckPoint": [
+              -0.8599244205725971,
+              0.0254,
+              -16.423179212890247
+            ],
+            "part": "stick-flat-hooked-blade"
+          },
+          "unconvergedTriangles": 0
+        },
+        "contactPossibleAtCarryXY": "no: certified positive separation"
+      },
+      "bladeIncludingTape": {
+        "triangles": 952,
+        "verticalRangeM": [
+          0.029999999329447746,
+          0.11499999463558197
+        ],
+        "lowestSurfaceAboveIceM": 0.029999999329447746,
+        "verticalGapAbovePuckM": 0.004599999329447747,
+        "verticalOverlapM": 0,
+        "puckCenterToSurface": {
+          "distanceM": 0.0180574286762826,
+          "point": [
+            -0.8553325489645804,
+            0.029999999329447746,
+            -16.425445146802268
+          ],
+          "part": "stick-flat-hooked-blade"
+        },
+        "carryMarkerToSurface": {
+          "distanceM": 0.0011792039631539778,
+          "point": [
+            -0.8571017395364742,
+            0.052,
+            -16.429027946693868
+          ],
+          "part": "stick-flat-hooked-blade"
+        },
+        "solidPuckSeparation": {
+          "lowerM": 0.004599999329447747,
+          "upperM": 0.004599999329447747,
+          "bestPair": {
+            "lowerM": 0.004599999329447747,
+            "upperM": 0.004599999329447747,
+            "iterations": 1,
+            "bladePoint": [
+              -0.8599244205725971,
+              0.029999999329447746,
+              -16.423179212890247
+            ],
+            "puckPoint": [
+              -0.8599244205725971,
+              0.0254,
+              -16.423179212890247
+            ],
+            "part": "stick-flat-hooked-blade"
+          },
+          "unconvergedTriangles": 0
+        },
+        "contactPossibleAtCarryXY": "no: certified positive separation"
+      },
+      "posedBladeTrianglesHash": "45e2d04adc3bedd8413b7630feb1dab7d343cf93b392fed4c61aab36179923e9"
+    },
+    {
+      "case": "neutral",
+      "view": "first-person",
+      "actor": {
+        "id": "N1",
+        "x": 16,
+        "y": -2,
+        "facing": 0.6,
+        "vx": 2,
+        "vy": 0,
+        "motion": {
+          "mode": "glide"
+        }
+      },
+      "time": 2,
+      "pose": {
+        "mode": "glide",
+        "phase": 0,
+        "stride": 0,
+        "backward": false,
+        "lateral": 0,
+        "turn": 0,
+        "lean": 0,
+        "lookYaw": 0,
+        "action": null
+      },
+      "geometryHash": "01c77c66a713142494175a12c50fd385c27833fd8e34de269c0557de331fa89f",
+      "originalGeometryHash": "01c77c66a713142494175a12c50fd385c27833fd8e34de269c0557de331fa89f",
+      "instrumentationMaxPosedVertexDifferenceM": 0,
+      "partRanges": [
+        {
+          "name": "stick-flat-hooked-blade",
+          "material": "carbon",
+          "start": 72,
+          "count": 156
+        },
+        {
+          "name": "stick-blade-tape",
+          "material": "cream",
+          "start": 72,
+          "count": 900
+        },
+        {
+          "name": "stick-blade-tape",
+          "material": "cream",
+          "start": 972,
+          "count": 900
+        },
+        {
+          "name": "stick-blade-tape",
+          "material": "cream",
+          "start": 1872,
+          "count": 900
+        }
+      ],
+      "carryMarkerWorld": [
+        -0.85762259616819,
+        0.052,
+        -16.430085883533152
+      ],
+      "physicalPuckCenterWorld": [
+        -0.85762259616819,
+        0.0127,
+        -16.430085883533152
+      ],
+      "puckRinkXY": {
+        "x": 16.430085883533152,
+        "y": -0.85762259616819
+      },
+      "blade": {
+        "triangles": 52,
+        "verticalRangeM": [
+          0.029999999329447746,
+          0.11499999463558197
+        ],
+        "lowestSurfaceAboveIceM": 0.029999999329447746,
+        "verticalGapAbovePuckM": 0.004599999329447747,
+        "verticalOverlapM": 0,
+        "puckCenterToSurface": {
+          "distanceM": 0.0180574286762826,
+          "point": [
+            -0.8553325489645804,
+            0.029999999329447746,
+            -16.425445146802268
+          ],
+          "part": "stick-flat-hooked-blade"
+        },
+        "carryMarkerToSurface": {
+          "distanceM": 0.0011792039631539778,
+          "point": [
+            -0.8571017395364742,
+            0.052,
+            -16.429027946693868
+          ],
+          "part": "stick-flat-hooked-blade"
+        },
+        "solidPuckSeparation": {
+          "lowerM": 0.004599999329447747,
+          "upperM": 0.004599999329447747,
+          "bestPair": {
+            "lowerM": 0.004599999329447747,
+            "upperM": 0.004599999329447747,
+            "iterations": 1,
+            "bladePoint": [
+              -0.8599244205725971,
+              0.029999999329447746,
+              -16.423179212890247
+            ],
+            "puckPoint": [
+              -0.8599244205725971,
+              0.0254,
+              -16.423179212890247
+            ],
+            "part": "stick-flat-hooked-blade"
+          },
+          "unconvergedTriangles": 0
+        },
+        "contactPossibleAtCarryXY": "no: certified positive separation"
+      },
+      "bladeIncludingTape": {
+        "triangles": 952,
+        "verticalRangeM": [
+          0.029999999329447746,
+          0.11499999463558197
+        ],
+        "lowestSurfaceAboveIceM": 0.029999999329447746,
+        "verticalGapAbovePuckM": 0.004599999329447747,
+        "verticalOverlapM": 0,
+        "puckCenterToSurface": {
+          "distanceM": 0.0180574286762826,
+          "point": [
+            -0.8553325489645804,
+            0.029999999329447746,
+            -16.425445146802268
+          ],
+          "part": "stick-flat-hooked-blade"
+        },
+        "carryMarkerToSurface": {
+          "distanceM": 0.0011792039631539778,
+          "point": [
+            -0.8571017395364742,
+            0.052,
+            -16.429027946693868
+          ],
+          "part": "stick-flat-hooked-blade"
+        },
+        "solidPuckSeparation": {
+          "lowerM": 0.004599999329447747,
+          "upperM": 0.004599999329447747,
+          "bestPair": {
+            "lowerM": 0.004599999329447747,
+            "upperM": 0.004599999329447747,
+            "iterations": 1,
+            "bladePoint": [
+              -0.8599244205725971,
+              0.029999999329447746,
+              -16.423179212890247
+            ],
+            "puckPoint": [
+              -0.8599244205725971,
+              0.0254,
+              -16.423179212890247
+            ],
+            "part": "stick-flat-hooked-blade"
+          },
+          "unconvergedTriangles": 0
+        },
+        "contactPossibleAtCarryXY": "no: certified positive separation"
+      },
+      "posedBladeTrianglesHash": "45e2d04adc3bedd8413b7630feb1dab7d343cf93b392fed4c61aab36179923e9"
+    },
+    {
+      "case": "turn-lean",
+      "view": "world",
+      "actor": {
+        "id": "N1",
+        "x": 16,
+        "y": -2,
+        "facing": 0.6,
+        "vx": 2,
+        "vy": 0,
+        "motion": {
+          "mode": "glide",
+          "turn": 0.7,
+          "lean": 0.3,
+          "lookYaw": 0.6
+        }
+      },
+      "time": 2,
+      "pose": {
+        "mode": "glide",
+        "phase": 0,
+        "stride": 0,
+        "backward": false,
+        "lateral": 0,
+        "turn": 0.7,
+        "lean": 0.3,
+        "lookYaw": 0.6,
+        "action": null
+      },
+      "geometryHash": "b24c3222292ec470a6353da3a8d591ee7d36c5f64f6de43de9548ce106966c41",
+      "originalGeometryHash": "b24c3222292ec470a6353da3a8d591ee7d36c5f64f6de43de9548ce106966c41",
+      "instrumentationMaxPosedVertexDifferenceM": 0,
+      "partRanges": [
+        {
+          "name": "stick-flat-hooked-blade",
+          "material": "carbon",
+          "start": 5472,
+          "count": 156
+        },
+        {
+          "name": "stick-blade-tape",
+          "material": "cream",
+          "start": 3060,
+          "count": 900
+        },
+        {
+          "name": "stick-blade-tape",
+          "material": "cream",
+          "start": 3960,
+          "count": 900
+        },
+        {
+          "name": "stick-blade-tape",
+          "material": "cream",
+          "start": 4860,
+          "count": 900
+        }
+      ],
+      "carryMarkerWorld": [
+        -0.85762259616819,
+        0.052,
+        -16.430085883533152
+      ],
+      "physicalPuckCenterWorld": [
+        -0.85762259616819,
+        0.0127,
+        -16.430085883533152
+      ],
+      "puckRinkXY": {
+        "x": 16.430085883533152,
+        "y": -0.85762259616819
+      },
+      "blade": {
+        "triangles": 52,
+        "verticalRangeM": [
+          0.029999999329447746,
+          0.11499999463558197
+        ],
+        "lowestSurfaceAboveIceM": 0.029999999329447746,
+        "verticalGapAbovePuckM": 0.004599999329447747,
+        "verticalOverlapM": 0,
+        "puckCenterToSurface": {
+          "distanceM": 0.0180574286762826,
+          "point": [
+            -0.8553325489645804,
+            0.029999999329447746,
+            -16.425445146802268
+          ],
+          "part": "stick-flat-hooked-blade"
+        },
+        "carryMarkerToSurface": {
+          "distanceM": 0.0011792039631539778,
+          "point": [
+            -0.8571017395364742,
+            0.052,
+            -16.429027946693868
+          ],
+          "part": "stick-flat-hooked-blade"
+        },
+        "solidPuckSeparation": {
+          "lowerM": 0.004599999329447747,
+          "upperM": 0.004599999329447747,
+          "bestPair": {
+            "lowerM": 0.004599999329447747,
+            "upperM": 0.004599999329447747,
+            "iterations": 1,
+            "bladePoint": [
+              -0.8599244205725971,
+              0.029999999329447746,
+              -16.423179212890247
+            ],
+            "puckPoint": [
+              -0.8599244205725971,
+              0.0254,
+              -16.423179212890247
+            ],
+            "part": "stick-flat-hooked-blade"
+          },
+          "unconvergedTriangles": 0
+        },
+        "contactPossibleAtCarryXY": "no: certified positive separation"
+      },
+      "bladeIncludingTape": {
+        "triangles": 952,
+        "verticalRangeM": [
+          0.029999999329447746,
+          0.11499999463558197
+        ],
+        "lowestSurfaceAboveIceM": 0.029999999329447746,
+        "verticalGapAbovePuckM": 0.004599999329447747,
+        "verticalOverlapM": 0,
+        "puckCenterToSurface": {
+          "distanceM": 0.0180574286762826,
+          "point": [
+            -0.8553325489645804,
+            0.029999999329447746,
+            -16.425445146802268
+          ],
+          "part": "stick-flat-hooked-blade"
+        },
+        "carryMarkerToSurface": {
+          "distanceM": 0.0011792039631539778,
+          "point": [
+            -0.8571017395364742,
+            0.052,
+            -16.429027946693868
+          ],
+          "part": "stick-flat-hooked-blade"
+        },
+        "solidPuckSeparation": {
+          "lowerM": 0.004599999329447747,
+          "upperM": 0.004599999329447747,
+          "bestPair": {
+            "lowerM": 0.004599999329447747,
+            "upperM": 0.004599999329447747,
+            "iterations": 1,
+            "bladePoint": [
+              -0.8599244205725971,
+              0.029999999329447746,
+              -16.423179212890247
+            ],
+            "puckPoint": [
+              -0.8599244205725971,
+              0.0254,
+              -16.423179212890247
+            ],
+            "part": "stick-flat-hooked-blade"
+          },
+          "unconvergedTriangles": 0
+        },
+        "contactPossibleAtCarryXY": "no: certified positive separation"
+      },
+      "posedBladeTrianglesHash": "45e2d04adc3bedd8413b7630feb1dab7d343cf93b392fed4c61aab36179923e9"
+    },
+    {
+      "case": "turn-lean",
+      "view": "first-person",
+      "actor": {
+        "id": "N1",
+        "x": 16,
+        "y": -2,
+        "facing": 0.6,
+        "vx": 2,
+        "vy": 0,
+        "motion": {
+          "mode": "glide",
+          "turn": 0.7,
+          "lean": 0.3,
+          "lookYaw": 0.6
+        }
+      },
+      "time": 2,
+      "pose": {
+        "mode": "glide",
+        "phase": 0,
+        "stride": 0,
+        "backward": false,
+        "lateral": 0,
+        "turn": 0.7,
+        "lean": 0.3,
+        "lookYaw": 0.6,
+        "action": null
+      },
+      "geometryHash": "01c77c66a713142494175a12c50fd385c27833fd8e34de269c0557de331fa89f",
+      "originalGeometryHash": "01c77c66a713142494175a12c50fd385c27833fd8e34de269c0557de331fa89f",
+      "instrumentationMaxPosedVertexDifferenceM": 0,
+      "partRanges": [
+        {
+          "name": "stick-flat-hooked-blade",
+          "material": "carbon",
+          "start": 72,
+          "count": 156
+        },
+        {
+          "name": "stick-blade-tape",
+          "material": "cream",
+          "start": 72,
+          "count": 900
+        },
+        {
+          "name": "stick-blade-tape",
+          "material": "cream",
+          "start": 972,
+          "count": 900
+        },
+        {
+          "name": "stick-blade-tape",
+          "material": "cream",
+          "start": 1872,
+          "count": 900
+        }
+      ],
+      "carryMarkerWorld": [
+        -0.85762259616819,
+        0.052,
+        -16.430085883533152
+      ],
+      "physicalPuckCenterWorld": [
+        -0.85762259616819,
+        0.0127,
+        -16.430085883533152
+      ],
+      "puckRinkXY": {
+        "x": 16.430085883533152,
+        "y": -0.85762259616819
+      },
+      "blade": {
+        "triangles": 52,
+        "verticalRangeM": [
+          0.029999999329447746,
+          0.11499999463558197
+        ],
+        "lowestSurfaceAboveIceM": 0.029999999329447746,
+        "verticalGapAbovePuckM": 0.004599999329447747,
+        "verticalOverlapM": 0,
+        "puckCenterToSurface": {
+          "distanceM": 0.0180574286762826,
+          "point": [
+            -0.8553325489645804,
+            0.029999999329447746,
+            -16.425445146802268
+          ],
+          "part": "stick-flat-hooked-blade"
+        },
+        "carryMarkerToSurface": {
+          "distanceM": 0.0011792039631539778,
+          "point": [
+            -0.8571017395364742,
+            0.052,
+            -16.429027946693868
+          ],
+          "part": "stick-flat-hooked-blade"
+        },
+        "solidPuckSeparation": {
+          "lowerM": 0.004599999329447747,
+          "upperM": 0.004599999329447747,
+          "bestPair": {
+            "lowerM": 0.004599999329447747,
+            "upperM": 0.004599999329447747,
+            "iterations": 1,
+            "bladePoint": [
+              -0.8599244205725971,
+              0.029999999329447746,
+              -16.423179212890247
+            ],
+            "puckPoint": [
+              -0.8599244205725971,
+              0.0254,
+              -16.423179212890247
+            ],
+            "part": "stick-flat-hooked-blade"
+          },
+          "unconvergedTriangles": 0
+        },
+        "contactPossibleAtCarryXY": "no: certified positive separation"
+      },
+      "bladeIncludingTape": {
+        "triangles": 952,
+        "verticalRangeM": [
+          0.029999999329447746,
+          0.11499999463558197
+        ],
+        "lowestSurfaceAboveIceM": 0.029999999329447746,
+        "verticalGapAbovePuckM": 0.004599999329447747,
+        "verticalOverlapM": 0,
+        "puckCenterToSurface": {
+          "distanceM": 0.0180574286762826,
+          "point": [
+            -0.8553325489645804,
+            0.029999999329447746,
+            -16.425445146802268
+          ],
+          "part": "stick-flat-hooked-blade"
+        },
+        "carryMarkerToSurface": {
+          "distanceM": 0.0011792039631539778,
+          "point": [
+            -0.8571017395364742,
+            0.052,
+            -16.429027946693868
+          ],
+          "part": "stick-flat-hooked-blade"
+        },
+        "solidPuckSeparation": {
+          "lowerM": 0.004599999329447747,
+          "upperM": 0.004599999329447747,
+          "bestPair": {
+            "lowerM": 0.004599999329447747,
+            "upperM": 0.004599999329447747,
+            "iterations": 1,
+            "bladePoint": [
+              -0.8599244205725971,
+              0.029999999329447746,
+              -16.423179212890247
+            ],
+            "puckPoint": [
+              -0.8599244205725971,
+              0.0254,
+              -16.423179212890247
+            ],
+            "part": "stick-flat-hooked-blade"
+          },
+          "unconvergedTriangles": 0
+        },
+        "contactPossibleAtCarryXY": "no: certified positive separation"
+      },
+      "posedBladeTrianglesHash": "45e2d04adc3bedd8413b7630feb1dab7d343cf93b392fed4c61aab36179923e9"
+    },
+    {
+      "case": "turn-lean-stride",
+      "view": "world",
+      "actor": {
+        "id": "N1",
+        "x": 16,
+        "y": -2,
+        "facing": 0.6,
+        "vx": 2,
+        "vy": 0,
+        "motion": {
+          "mode": "skate",
+          "turn": 0.7,
+          "lean": 0.3,
+          "lookYaw": 0.6
+        }
+      },
+      "time": 2,
+      "pose": {
+        "mode": "forward",
+        "phase": 2.5132741228718345,
+        "stride": 0.36363636363636365,
+        "backward": false,
+        "lateral": 0,
+        "turn": 0.7,
+        "lean": 0.3,
+        "lookYaw": 0.6,
+        "action": null
+      },
+      "geometryHash": "b24c3222292ec470a6353da3a8d591ee7d36c5f64f6de43de9548ce106966c41",
+      "originalGeometryHash": "b24c3222292ec470a6353da3a8d591ee7d36c5f64f6de43de9548ce106966c41",
+      "instrumentationMaxPosedVertexDifferenceM": 0,
+      "partRanges": [
+        {
+          "name": "stick-flat-hooked-blade",
+          "material": "carbon",
+          "start": 5472,
+          "count": 156
+        },
+        {
+          "name": "stick-blade-tape",
+          "material": "cream",
+          "start": 3060,
+          "count": 900
+        },
+        {
+          "name": "stick-blade-tape",
+          "material": "cream",
+          "start": 3960,
+          "count": 900
+        },
+        {
+          "name": "stick-blade-tape",
+          "material": "cream",
+          "start": 4860,
+          "count": 900
+        }
+      ],
+      "carryMarkerWorld": [
+        -0.85762259616819,
+        0.052,
+        -16.430085883533152
+      ],
+      "physicalPuckCenterWorld": [
+        -0.85762259616819,
+        0.0127,
+        -16.430085883533152
+      ],
+      "puckRinkXY": {
+        "x": 16.430085883533152,
+        "y": -0.85762259616819
+      },
+      "blade": {
+        "triangles": 52,
+        "verticalRangeM": [
+          0.029999999329447746,
+          0.11499999463558197
+        ],
+        "lowestSurfaceAboveIceM": 0.029999999329447746,
+        "verticalGapAbovePuckM": 0.004599999329447747,
+        "verticalOverlapM": 0,
+        "puckCenterToSurface": {
+          "distanceM": 0.0180574286762826,
+          "point": [
+            -0.8553325489645804,
+            0.029999999329447746,
+            -16.425445146802268
+          ],
+          "part": "stick-flat-hooked-blade"
+        },
+        "carryMarkerToSurface": {
+          "distanceM": 0.0011792039631539778,
+          "point": [
+            -0.8571017395364742,
+            0.052,
+            -16.429027946693868
+          ],
+          "part": "stick-flat-hooked-blade"
+        },
+        "solidPuckSeparation": {
+          "lowerM": 0.004599999329447747,
+          "upperM": 0.004599999329447747,
+          "bestPair": {
+            "lowerM": 0.004599999329447747,
+            "upperM": 0.004599999329447747,
+            "iterations": 1,
+            "bladePoint": [
+              -0.8599244205725971,
+              0.029999999329447746,
+              -16.423179212890247
+            ],
+            "puckPoint": [
+              -0.8599244205725971,
+              0.0254,
+              -16.423179212890247
+            ],
+            "part": "stick-flat-hooked-blade"
+          },
+          "unconvergedTriangles": 0
+        },
+        "contactPossibleAtCarryXY": "no: certified positive separation"
+      },
+      "bladeIncludingTape": {
+        "triangles": 952,
+        "verticalRangeM": [
+          0.029999999329447746,
+          0.11499999463558197
+        ],
+        "lowestSurfaceAboveIceM": 0.029999999329447746,
+        "verticalGapAbovePuckM": 0.004599999329447747,
+        "verticalOverlapM": 0,
+        "puckCenterToSurface": {
+          "distanceM": 0.0180574286762826,
+          "point": [
+            -0.8553325489645804,
+            0.029999999329447746,
+            -16.425445146802268
+          ],
+          "part": "stick-flat-hooked-blade"
+        },
+        "carryMarkerToSurface": {
+          "distanceM": 0.0011792039631539778,
+          "point": [
+            -0.8571017395364742,
+            0.052,
+            -16.429027946693868
+          ],
+          "part": "stick-flat-hooked-blade"
+        },
+        "solidPuckSeparation": {
+          "lowerM": 0.004599999329447747,
+          "upperM": 0.004599999329447747,
+          "bestPair": {
+            "lowerM": 0.004599999329447747,
+            "upperM": 0.004599999329447747,
+            "iterations": 1,
+            "bladePoint": [
+              -0.8599244205725971,
+              0.029999999329447746,
+              -16.423179212890247
+            ],
+            "puckPoint": [
+              -0.8599244205725971,
+              0.0254,
+              -16.423179212890247
+            ],
+            "part": "stick-flat-hooked-blade"
+          },
+          "unconvergedTriangles": 0
+        },
+        "contactPossibleAtCarryXY": "no: certified positive separation"
+      },
+      "posedBladeTrianglesHash": "45e2d04adc3bedd8413b7630feb1dab7d343cf93b392fed4c61aab36179923e9"
+    },
+    {
+      "case": "turn-lean-stride",
+      "view": "first-person",
+      "actor": {
+        "id": "N1",
+        "x": 16,
+        "y": -2,
+        "facing": 0.6,
+        "vx": 2,
+        "vy": 0,
+        "motion": {
+          "mode": "skate",
+          "turn": 0.7,
+          "lean": 0.3,
+          "lookYaw": 0.6
+        }
+      },
+      "time": 2,
+      "pose": {
+        "mode": "forward",
+        "phase": 2.5132741228718345,
+        "stride": 0.36363636363636365,
+        "backward": false,
+        "lateral": 0,
+        "turn": 0.7,
+        "lean": 0.3,
+        "lookYaw": 0.6,
+        "action": null
+      },
+      "geometryHash": "01c77c66a713142494175a12c50fd385c27833fd8e34de269c0557de331fa89f",
+      "originalGeometryHash": "01c77c66a713142494175a12c50fd385c27833fd8e34de269c0557de331fa89f",
+      "instrumentationMaxPosedVertexDifferenceM": 0,
+      "partRanges": [
+        {
+          "name": "stick-flat-hooked-blade",
+          "material": "carbon",
+          "start": 72,
+          "count": 156
+        },
+        {
+          "name": "stick-blade-tape",
+          "material": "cream",
+          "start": 72,
+          "count": 900
+        },
+        {
+          "name": "stick-blade-tape",
+          "material": "cream",
+          "start": 972,
+          "count": 900
+        },
+        {
+          "name": "stick-blade-tape",
+          "material": "cream",
+          "start": 1872,
+          "count": 900
+        }
+      ],
+      "carryMarkerWorld": [
+        -0.85762259616819,
+        0.052,
+        -16.430085883533152
+      ],
+      "physicalPuckCenterWorld": [
+        -0.85762259616819,
+        0.0127,
+        -16.430085883533152
+      ],
+      "puckRinkXY": {
+        "x": 16.430085883533152,
+        "y": -0.85762259616819
+      },
+      "blade": {
+        "triangles": 52,
+        "verticalRangeM": [
+          0.029999999329447746,
+          0.11499999463558197
+        ],
+        "lowestSurfaceAboveIceM": 0.029999999329447746,
+        "verticalGapAbovePuckM": 0.004599999329447747,
+        "verticalOverlapM": 0,
+        "puckCenterToSurface": {
+          "distanceM": 0.0180574286762826,
+          "point": [
+            -0.8553325489645804,
+            0.029999999329447746,
+            -16.425445146802268
+          ],
+          "part": "stick-flat-hooked-blade"
+        },
+        "carryMarkerToSurface": {
+          "distanceM": 0.0011792039631539778,
+          "point": [
+            -0.8571017395364742,
+            0.052,
+            -16.429027946693868
+          ],
+          "part": "stick-flat-hooked-blade"
+        },
+        "solidPuckSeparation": {
+          "lowerM": 0.004599999329447747,
+          "upperM": 0.004599999329447747,
+          "bestPair": {
+            "lowerM": 0.004599999329447747,
+            "upperM": 0.004599999329447747,
+            "iterations": 1,
+            "bladePoint": [
+              -0.8599244205725971,
+              0.029999999329447746,
+              -16.423179212890247
+            ],
+            "puckPoint": [
+              -0.8599244205725971,
+              0.0254,
+              -16.423179212890247
+            ],
+            "part": "stick-flat-hooked-blade"
+          },
+          "unconvergedTriangles": 0
+        },
+        "contactPossibleAtCarryXY": "no: certified positive separation"
+      },
+      "bladeIncludingTape": {
+        "triangles": 952,
+        "verticalRangeM": [
+          0.029999999329447746,
+          0.11499999463558197
+        ],
+        "lowestSurfaceAboveIceM": 0.029999999329447746,
+        "verticalGapAbovePuckM": 0.004599999329447747,
+        "verticalOverlapM": 0,
+        "puckCenterToSurface": {
+          "distanceM": 0.0180574286762826,
+          "point": [
+            -0.8553325489645804,
+            0.029999999329447746,
+            -16.425445146802268
+          ],
+          "part": "stick-flat-hooked-blade"
+        },
+        "carryMarkerToSurface": {
+          "distanceM": 0.0011792039631539778,
+          "point": [
+            -0.8571017395364742,
+            0.052,
+            -16.429027946693868
+          ],
+          "part": "stick-flat-hooked-blade"
+        },
+        "solidPuckSeparation": {
+          "lowerM": 0.004599999329447747,
+          "upperM": 0.004599999329447747,
+          "bestPair": {
+            "lowerM": 0.004599999329447747,
+            "upperM": 0.004599999329447747,
+            "iterations": 1,
+            "bladePoint": [
+              -0.8599244205725971,
+              0.029999999329447746,
+              -16.423179212890247
+            ],
+            "puckPoint": [
+              -0.8599244205725971,
+              0.0254,
+              -16.423179212890247
+            ],
+            "part": "stick-flat-hooked-blade"
+          },
+          "unconvergedTriangles": 0
+        },
+        "contactPossibleAtCarryXY": "no: certified positive separation"
+      },
+      "posedBladeTrianglesHash": "45e2d04adc3bedd8413b7630feb1dab7d343cf93b392fed4c61aab36179923e9"
+    }
+  ]
+}

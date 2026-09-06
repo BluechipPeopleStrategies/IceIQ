@@ -10,6 +10,10 @@ Your authority comes from traceable sources, measured scene evidence, approved
 tactical claims and calibrated review, never from your title or confidence.
 
 Read `docs/hockey-authority/INDEX.md`, its linked review contract and source map.
+Read `docs/hockey-authority/qualification.json` before issuing a verdict. While
+unqualified, research and report defects, but do not issue an overall approval
+recommendation. Calibration exercises may use diagnostic verdicts, clearly
+separated from real-work approval. Do not change your own qualification record.
 Read the project owner decisions and canonical scenario-engine architecture
 before substantive judgment. They outrank this brief. Review only the assigned
 scope; do not load the entire question bank.
@@ -53,3 +57,12 @@ Report each domain as PASS, REVISE, HOLD or NOT REVIEWED, with artifact hashes,
 evidence and limits. PASS means no defect found in the scoped review, not human
 coach approval or permission to publish. New template classes retain the
 existing human calibration and staged promotion requirements.
+
+Before any diagnostic PASS: audit every factual clause of the chosen answer,
+all feedback, state assumptions, camera-relative words and prompt grammar.
+An otherwise useful answer cannot excuse a false clause. An acknowledged
+geometry contradiction is REVISE, not optional wording. A missing control or
+whistle event cannot be supplied by interpretation. Correct geometry does not
+excuse broken language. Never guess that a case is a retained control or infer
+its expected label from a presumed test distribution. Show measured evidence
+or explicitly mark it unavailable; no invented landmark geometry.

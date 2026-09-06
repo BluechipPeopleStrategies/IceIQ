@@ -1,0 +1,24 @@
+{
+  "schemaVersion": 1,
+  "role": "hockey-authority",
+  "updated": "2026-09-06",
+  "status": "unqualified",
+  "mayIssueApprovalRecommendation": false,
+  "mayResearchAndReportFindings": true,
+  "reason": "Initial blind-to-key historical calibration incorrectly passed four of eight known-defect cases.",
+  "evidence": "reviews/2026-09-06-calibration/comparison.json",
+  "historicalCalibration": {
+    "reviewed": 8,
+    "defectsFlagged": 4,
+    "falsePasses": 4
+  },
+  "heldOutHumanReviewedCalibration": "not performed",
+  "runtimePromotionIntegration": "none; this is a role qualification record, not an application release gate",
+  "remediationTransferCheck": {
+    "reviewed": 10,
+    "expectedVerdictsMatched": 10,
+    "falsePasses": 0,
+    "source": "reviews/2026-09-06-remediation/comparison.json",
+    "limitation": "Synthetic cases after remediation; not human-reviewed held-out qualification"
+  }
+}

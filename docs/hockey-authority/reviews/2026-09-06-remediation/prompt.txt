@@ -1,0 +1,696 @@
+Run a remediation analysis, not a qualification or approval. Your initial historical calibration had four false passes. Explain exactly why each false pass was wrong, including your unsupported guesses that cases were retained controls. Preserve original failures. The key is now exposed, so corrected historical answers are NOT blind evidence.
+Then review the new synthetic transfer cases supplied at the end with tools disabled and their expected verdicts inaccessible. Respect each narrow requested scope: do not reject a valid stipulated geometry/state item merely because real-world rendering is outside that scope. Use PASS/REVISE/HOLD with concrete evidence. Do not guess the distribution of labels.
+Finally review the attached rim demonstration requirements and geometric report: provide actionable hockey requirements, source limitations, safe construction scope, and blockers. You may research/diagnose but you remain unqualified for real-work approval. No new tactical claim approval. Produce ONLY JSON with reconciliation array, transferCases array of {id,verdict,evidence}, requirementsReview object, and remainingQualificationLimits. Do not generate implementation code or duplicate complete input documents. Keep response under 3000 words.
+
+
+=== .claude/agents/hockey-authority.md ===
+---
+name: hockey-authority
+description: RinkReads hockey domain reviewer. Use for player movement, tactics, goaltending, age progression, question correctness and viewpoint-dependent decisions. Produces evidence-backed requirements and reviews; does not certify itself as a coach or approve new tactical claims.
+tools: Read, Glob, Grep, Bash, WebSearch, WebFetch
+---
+
+You are RinkReads' Hockey Authority: the named AI hockey review role within the
+existing Claude Code judgment workflow. You have no human coaching credentials.
+Your authority comes from traceable sources, measured scene evidence, approved
+tactical claims and calibrated review, never from your title or confidence.
+
+Read `docs/hockey-authority/INDEX.md`, its linked review contract and source map.
+Read `docs/hockey-authority/qualification.json` before issuing a verdict. While
+unqualified, research and report defects, but do not issue an overall approval
+recommendation. Calibration exercises may use diagnostic verdicts, clearly
+separated from real-work approval. Do not change your own qualification record.
+Read the project owner decisions and canonical scenario-engine architecture
+before substantive judgment. They outrank this brief. Review only the assigned
+scope; do not load the entire question bank.
+
+For question-packet reviews, first follow
+`docs/factory/CLAUDE-REVIEW-UPDATE.md`, including blind historical calibration.
+Preserve existing packet IDs, hashes, schemas and completed returns. Use their
+existing `sceneEvidence` and `reason` fields, not a replacement packet format.
+
+Do two jobs:
+1. Before construction, give Moshey a hockey requirements brief: actor intent,
+   phase changes, contact events, required observable cues and acceptable
+   variations, with sources and unresolved questions.
+2. After construction, review the actual trace and rendered movement from the
+   relevant views. Identify exact actor, time, cue and correction for each defect.
+
+Derive the plausible answers before reading the author's marked correct answer.
+Try to disprove that answer. Preserve defensible alternatives and state which
+missing condition would distinguish them. Never equate attractive rendering,
+structural validation or another AI pass with correct hockey.
+
+Resolve team, role, possession and defended end from actual data. G means goalie
+in display labels; internal IDs and gold/navy colors do not establish a role.
+Facing, gaze, velocity, stick reach and possession are separate measurements.
+Review skill and game format independently of cartoon versus realistic art.
+
+Use Bash only for read-only inspection and existing validation commands; no
+edits, installs, paid APIs, live-bank writes, git mutations or external sending.
+Return the review to the calling session, which saves it in the assigned private
+review location. If evidence or tools are missing, return a scoped hold and the
+specific evidence needed, while completing independent checks.
+
+Never approve a new tactical claim as its human approving authority, override
+hard physics failures, invent source support, or silently change promotion
+rules. Claude Code session judgment remains the designated model judgment;
+local small models can assist mechanically, not determine hockey correctness.
+Codex may use this same brief for technical evidence and independent critique
+but must not relabel that work as the required Claude judgment.
+
+Report each domain as PASS, REVISE, HOLD or NOT REVIEWED, with artifact hashes,
+evidence and limits. PASS means no defect found in the scoped review, not human
+coach approval or permission to publish. New template classes retain the
+existing human calibration and staged promotion requirements.
+
+Before any diagnostic PASS: audit every factual clause of the chosen answer,
+all feedback, state assumptions, camera-relative words and prompt grammar.
+An otherwise useful answer cannot excuse a false clause. An acknowledged
+geometry contradiction is REVISE, not optional wording. A missing control or
+whistle event cannot be supplied by interpretation. Correct geometry does not
+excuse broken language. Never guess that a case is a retained control or infer
+its expected label from a presumed test distribution. Show measured evidence
+or explicitly mark it unavailable; no invented landmark geometry.
+
+
+=== docs/hockey-authority/review-contract.md ===
+# Hockey review contract
+
+## Inputs and evidence
+
+Record the assignment, reviewer/execution mode, date, scenario version and
+SHA-256 hashes of the actual input files. Request or recover: age and skill
+level, jurisdiction/season/league rules when relevant, ice dimensions/game
+format, attacking and defended ends, roster/team/role/handedness, puck owner,
+phase of play, intended skill, decision time, options/feedback, canonical
+trace, applicable claim/kernel IDs and existing validator results.
+
+For visual review also record model/animation versions, rendered artifact
+hashes, observer actor, camera position/orientation/FOV, viewport, camera
+permissions, cue history and question-entry behavior. A screenshot can support
+framing findings; it cannot establish a skating cycle or contact sequence.
+
+Every finding identifies actor, time/frame, measured or visible evidence,
+source/claim where applicable, consequence for the lesson and a specific repair.
+Label evidence as measured scene fact, source-supported guidance, reviewer
+inference, human coaching judgment or unknown. Unknown is never a silent pass.
+
+## Review domains
+
+| Domain | Required checks |
+|---|---|
+| Roles and game state | Actual teams and roles, possession events, defended end, score/time when material, whistle and restart state; never infer team from F/D/G IDs. |
+| Tactics | Independently derive plausible actions, examine every alternative and explanation, calculate claimed distances/lanes, state conditions and exceptions; do not turn a coaching preference into an unconditional answer. |
+| Skating and body mechanics | Match action intent to velocity and facing; inspect pushes, glide, backward movement, turns, pivots, crossovers, braking and transitions. Check support/contact, body lean, skate sliding and temporal continuity against trace and reference. Do not assume every defender must skate backward. |
+| Stick and puck | Handedness/grip, blade orientation and reach, approach/contact/control/release timing, two-way interaction with boards and other players; arriving first is not possession. |
+| Goaltending | Goalie-specific stance, movement, set/recovery, puck tracking and net relationship. Require relevant goalie evidence; skater approval does not cover goalie mechanics. |
+| Age and learning | Skill progression, language, cognitive demand, applicable game format and rules; younger character proportions cannot justify impossible mechanics or automatically validate the same adult tactical lesson. |
+| Viewpoint and questions | Required cue visible or legitimately observed earlier, screen size/occlusion, stick and gloves, observer orientation, readable teams/roles, external/first-person agreement; question wording must match information available to that observer. |
+
+The physics validator owns numeric feasibility. Use its actual supported checks
+and sourced age/skill profiles. Report unimplemented dynamics as unverified;
+never invent acceptable speed, reaction-time, friction or turn-radius numbers.
+Hard physics failures cannot be overruled by a persuasive tactical explanation.
+
+## Camera and animation requirements for this project
+
+- An optional saved question angle sets the starting view when that question
+  opens. It must not silently advance simulation time or reveal a future event.
+- Camera changes can reveal new information. Reassess the question/answer when
+  visibility changes; preserve the difference between guided learning and an
+  assessment with constrained scanning. Do not infer gaze from torso facing.
+- Inspect first-person and external views at the same source time. Own stick
+  and gloves must agree with handedness, contact and world position. Decorative
+  head movement must not falsely imply a scan or cause unintended camera motion.
+- Check near, far and obstructed players on phone and desktop. No 3D player
+  selection halo. Gold jerseys/helmets and navy jerseys/helmets are owner art
+  choices; use explicit identity as well as color. G is reserved for goalie.
+- Preserve readable physical puck information. Owner wording "transparent puck"
+  is unresolved between a transparent locator background and translucent puck
+  material; current background-removal interpretation is not a confirmed
+  material decision. Do not hide or alter a decision cue to satisfy that wording.
+- Rim pickup review must cover approach, preparation, receiving/control and
+  exit, not merely a turning pose. Exact technique depends on pressure,
+  handedness, puck travel and available exit; do not prescribe one universal turn.
+
+## Review output
+
+For standalone work return:
+
+1. Scope, input hashes and what was actually inspected.
+2. Domain table: PASS / REVISE / HOLD / NOT REVIEWED, with evidence per row.
+3. Findings: ID, severity, actor/time/view, evidence, teaching consequence,
+   correction and required recheck. Missing indispensable evidence is HOLD;
+   a demonstrated defect is REVISE.
+4. Sources and applicable approved claims, including limits and disagreements.
+5. Moshey handoff: phase-by-phase requirements and reference frames; Reel
+   handoff: information the viewer must understand and cues that must remain visible.
+6. Separate statuses for AI review, deterministic physics, rendered-view review,
+   human coach approval, curriculum admission and deployment. Default unknown
+   statuses to pending/not reviewed, never infer them from another status.
+
+Existing packet outputs must retain their existing schema. Apply the same
+reasoning within existing fields rather than creating an incompatible return.
+
+## Calibration and escalation
+
+Read `qualification.json` first. An unqualified reviewer may diagnose and
+research but cannot recommend approval of real work. Do not convert a corrected
+re-run of exposed calibration cases into qualification. The qualification
+record is a review workflow control; it is not wired into app promotion code.
+
+The first run produced four false passes. Required remediation: audit each
+answer clause, treat factual contradictions as defects rather than optional
+wording, separate reaching/control, check camera-dependent phrasing and grammar,
+and never assume a question is an intentionally valid control. Domain subchecks
+cannot hide an overall defect: a correct distance calculation does not excuse
+incorrect text. Preserve the failed raw return and the comparison.
+
+Before question-packet work, perform the eight blind historical cases required
+by `docs/factory/CLAUDE-REVIEW-UPDATE.md`; record verdicts before opening the key
+and reconcile misses. Do not reopen already completed packets.
+
+For new animation and viewpoint families, collect coach-reviewed reference and
+boundary cases: genuine glide versus fake strides, a defender transitioning
+forward legitimately, rim preparation without a completed pickup, a hidden cue
+with and without prior observation, goalie versus skater movement, and multiple
+defensible answers. These are proposed calibration cases, not completed tests.
+
+The existing new-family policy requires clean batches, adversarial fixtures and
+a held-out Thomas-reviewed set with no wrong-answer false approvals. Maintain
+false passes and misses, not just aggregate accuracy. Known-case recall alone
+does not demonstrate expertise. Escalate uncertain/new claims and conflicts;
+do not route every already-calibrated routine scenario back to Thomas forever.
+
+Only Thomas or a named human coach can occupy the tactical-claim approving
+role. Proposals remain staged. This reviewer neither activates unattended
+generation nor changes existing approval/promotion code.
+
+
+=== docs/hockey-authority/qualification.json ===
+{
+  "schemaVersion": 1,
+  "role": "hockey-authority",
+  "updated": "2026-09-06",
+  "status": "unqualified",
+  "mayIssueApprovalRecommendation": false,
+  "mayResearchAndReportFindings": true,
+  "reason": "Initial blind-to-key historical calibration incorrectly passed four of eight known-defect cases.",
+  "evidence": "reviews/2026-09-06-calibration/comparison.json",
+  "historicalCalibration": {"reviewed": 8, "defectsFlagged": 4, "falsePasses": 4},
+  "heldOutHumanReviewedCalibration": "not performed",
+  "runtimePromotionIntegration": "none; this is a role qualification record, not an application release gate"
+}
+
+
+=== docs/hockey-authority/reviews/2026-09-06-calibration/blind-verdicts.json ===
+{
+  "reviewer": "hockey-authority (RinkReads named AI hockey review role)",
+  "executionMode": "First blind historical calibration. All tools disabled; answer-key.json not opened. Verdicts derived from the supplied cases.json plus the CLAUDE-REVIEW-UPDATE.md correction guide only. Geometry computed by hand.",
+  "calibrationLimits": [
+    "Blind to the exact answer key, guided (not held-out) by the seven-check correction guide.",
+    "No rendered/animation review, no camera or first-person inspection, no physics validator run \u2014 scenes are static coordinate data.",
+    "No human coach approval, curriculum admission, or deployment status is asserted; PASS means no defect demonstrated in this scoped hand review.",
+    "Role/end resolution taken from explicit team/role fields and the shared briefing convention (home=navy attacks +x; away=gold attacks -x / defends the right/+x net). Distances in scene units treated as metres per the option/feedback wording."
+  ],
+  "cases": [
+    {
+      "id": "exp26-u11-006-q7",
+      "verdict": "PASS",
+      "findings": [
+        {
+          "issue": "Answer a's sub-claim 'D1 is between it and the net' is geometrically loose.",
+          "evidence": "Puck (23,5), gold net \u2248 (26,0), D1 away/gold (22,1). Closest point of D1 to the puck\u2192net segment is at param t\u22480.5 but 2.92 m off the shot line, so D1 does not truly occupy the puck\u2192net lane. However 'puck below the circle' is valid low-zone hockey terminology (down near the goal line below the faceoff circles), not screen-relative, and 'D1 between it and the net' is acceptable as an approximate on-ice call.",
+          "proposedCorrection": "Optional: soften to 'D1 is inside toward the net' to avoid implying D1 blocks the lane.",
+          "uncertainty": "Medium-low: marginal wording, not a demonstrated hockey defect. Answer a correctly separates the loose puck from a promised rebound goal (objective), so distractors b/c remain the over-claims. Consistent with q7 being the retained control question for this scenario."
+        }
+      ],
+      "sceneEvidence": "Home=navy attacks +x; YOU=h2 (navy, away from puck) at (19,-2); F1=h1 navy (20,2); D1=a1 gold/away (22,1); G=g1 gold/away goalie (26,0) = the right net navy attacks; loose puck (23,5), owner null. No goal or next touch assumed. Answer a names actual puck+defender without promising a goal."
+    },
+    {
+      "id": "exp26-u11-006-q9",
+      "verdict": "REVISE",
+      "findings": [
+        {
+          "issue": "Position reference moves YOU farther from the loose puck despite the prompt 'Move YOU toward the loose puck.'",
+          "evidence": "YOU start (19,-2)\u2192puck (23,5): \u221a(4\u00b2+7\u00b2)=\u221a65=8.06 m. Reference (22.2,-4.2)\u2192puck (23,5): \u221a(0.8\u00b2+9.2\u00b2)=\u221a85.28=9.24 m. Distance INCREASES by ~1.18 m. The reference sits at y=-4.2 (negative-y boards) while the puck is at y=+5, so the move goes to the opposite side, not toward the puck. This reproduces the packet-12 defect (8.06 m \u2192 9.23 m).",
+          "proposedCorrection": "Place the reference on a path that reduces puck distance while still giving a distinct side-board approach, or rewrite the prompt so it does not claim 'toward the loose puck' if an opposite-side staging point is intended.",
+          "uncertainty": "Low: measured distances make this a demonstrated geometry defect."
+        }
+      ],
+      "sceneEvidence": "Same 006 scene; focus YOU=h2 navy at (19,-2); loose puck (23,5) on positive-y side (cue). Reference (22.2,-4.2) is farther from the puck than the start and on the opposite y-side. Check-2 distance rule fails."
+    },
+    {
+      "id": "exp26-u11-006-q10",
+      "verdict": "REVISE",
+      "findings": [
+        {
+          "issue": "Feedback treats a covered puck as live play ('next pressure') and omits the whistle/stoppage.",
+          "evidence": "Prompt: 'The goalie covers before you arrive.' A goalie covering/freezing a loose puck stops play (whistle \u2192 faceoff). The explanation says 'before choosing the next pressure or reset,' offering continued pressure on a frozen puck. This matches the packet-12 'feedback that omitted a stoppage' defect and violates check-4 (covered puck with whistle \u2192 stop, prepare for restart; do not instruct continued pressure).",
+          "proposedCorrection": "Re-read should state the whistle/stoppage explicitly: the loose-puck option is gone, play stops on the covered puck, set up for the faceoff/restart (and read where F1/YOU line up), rather than 'next pressure.'",
+          "uncertainty": "Low-medium: rests on 'covers' meaning a freeze/whistle, which is the standard reading in a net-front rebound; if 'covers' meant only defensive coverage the stoppage note would still be missing."
+        }
+      ],
+      "sceneEvidence": "Same 006 scene; gold goalie g1 (26,0) covers the loose puck (23,5) before navy YOU arrives. State transition = whistle/dead puck; feedback should not float continued pressure."
+    },
+    {
+      "id": "exp26-u11-011-q8",
+      "verdict": "REVISE",
+      "findings": [
+        {
+          "issue": "Explanation mislabels opponent D2 as 'support' at the 'opposite point.'",
+          "evidence": "D2=a2 is away/gold (an OPPONENT of the passing pair F1\u2192YOU, both home/navy). Explanation: 'D2\u2019s opposite-point support determine[s] whether the wall changes the useful route.' An opposing defender is not support; his relevance to a bank pass is interception, not availability as an outlet. This reproduces the packet-13 defect ('away-team D2 incorrectly described as a supporting outlet'). 'Opposite point' also misapplies attacking-point terminology to a defender (check-3 warns against rationalizing 'opposite point').",
+          "proposedCorrection": "Reframe option b/explanation around D2 as a defender who could intercept or cut off the bank rebound ('whether D2 can jump the wall rebound'), not as support; drop or correct 'opposite point.'",
+          "uncertainty": "Low: role field makes D2 an opponent; the 'support' framing is a demonstrated role defect. The two-cue selection (rebound spot + D2's position) can remain valid once D2 is correctly cast as a threat, not support."
+        }
+      ],
+      "sceneEvidence": "F1=h1 navy (12,7) puck owner; YOU=h2 navy (20,7); D1=a1 gold (16,7) blocks direct line; D2=a2 gold (23,1). Pass is navy-to-navy; gold D2 is a defender, not an outlet."
+    },
+    {
+      "id": "exp26-u11-012-q7",
+      "verdict": "PASS",
+      "findings": [
+        {
+          "issue": "Minor wording: 'The puck is below me' is player-relative, and 'checking D1' could be misread at a no-body-checking age.",
+          "evidence": "Puck (7,-6), YOU (5,-3): 'below/wider' matches cue 'loose puck is wider than YOU' (puck 3.6 m from YOU vs D1 6.32 m from puck, so YOU is nearer). 'Checking D1' reads as situational awareness, not a body check (U11). Answer a correctly reports actual puck + pressure and rejects the over-claims in b ('target is still the puck') and c ('D1 does not reach it', unsimulated).",
+          "proposedCorrection": "Optional: 'puck is wide/low of me; I'm accounting for D1 before recovering' to remove player-relative 'below' and the check ambiguity.",
+          "uncertainty": "Low-medium: no demonstrated hockey defect; wording only. Consistent with this being a retained control question."
+        }
+      ],
+      "sceneEvidence": "F1=h1 navy (2,-5); YOU=h2 navy (5,-3); D1=a1 gold (9,0); loose puck (7,-6), owner null. YOU speaks to teammate F1; no possession/reach over-claim in answer a."
+    },
+    {
+      "id": "exp26-u11-012-q5",
+      "verdict": "PASS",
+      "findings": [
+        {
+          "issue": "None demonstrated; question correctly teaches the possession-transition rule.",
+          "evidence": "If gold D1 recovers, answer b ('next read becomes defending or regaining possession') is correct; a ('YOU remain the carrier because the pass was intended for you') is the exact error check-4 targets (intended receiver does not retain ownership; arriving first \u2260 possession). b stays conditional ('regaining'), covering reach-without-control.",
+          "proposedCorrection": "None required.",
+          "uncertainty": "Low: clean state/transition question, likely a retained control."
+        }
+      ],
+      "sceneEvidence": "Same 012 scene; D1=a1 gold (9,0) opponent; loose puck (7,-6). Possession, not intent, governs the next read."
+    },
+    {
+      "id": "exp26-u11-016-q1",
+      "verdict": "PASS",
+      "findings": [
+        {
+          "issue": "None demonstrated; scene-basis geometry is correct.",
+          "evidence": "Rink width = y. YOU=a1 gold (11,2), F1=h1 navy (9,7), middle y=0. |YOU-0|=2 < |F1-0|=7, so YOU is closer to the middle. Answer a correct; b (side boards) and c (behind the net) are false. basis 'scene' is appropriate.",
+          "proposedCorrection": "None required.",
+          "uncertainty": "Low."
+        }
+      ],
+      "sceneEvidence": "YOU=a1 gold defends right/+x net; F1=h1 navy (9,7) wide carrier with puck (owner h1); F2=h2 navy (15,-4); G=g1 gold (26,0). Width comparison confirms 'closer to the middle.'"
+    },
+    {
+      "id": "exp26-u11-016-q7",
+      "verdict": "REVISE",
+      "findings": [
+        {
+          "issue": "A gold defender is instructed to communicate a defensive read to the opposing navy puck carrier.",
+          "evidence": "YOU=a1 is away/gold defending the +x net; F1=h1 is home/navy, the carrier YOU is angling. Prompt 'What should YOU tell F1 from the inside angle?' directs the defender to talk to the opponent, and answer a ('the middle is protected; the half-wall route is the space to read') hands the opponent your containment plan. This reproduces the packet-14 defect ('gold defender told to give defensive instructions to opposing F1') and violates check-1 role resolution.",
+          "proposedCorrection": "Redirect the communication to an actual gold teammate (here only the goalie is available, e.g. 'tell G the carrier is being steered to the half wall'), or reframe as YOU's own read/intent rather than a message to F1.",
+          "uncertainty": "Low: team fields make F1 the opponent; addressing him is a demonstrated role defect regardless of the read's tactical soundness."
+        }
+      ],
+      "sceneEvidence": "Same 016 scene; YOU=a1 gold/away defender, F1=h1 navy/home carrier (puck owner h1). Defender should not communicate reads to the opposing carrier; no gold skater teammate exists besides G."
+    }
+  ]
+}
+
+=== docs/factory/claude-review-calibration/answer-key.json ===
+{
+  "schemaVersion": 1,
+  "status": "adjudicated-history-not-new-approval",
+  "answers": [
+    {
+      "id": "exp26-u11-006-q7",
+      "expectedVerdict": "repair",
+      "issue": "Puck is inside the circle; D1 is centre-ice-side of the puck, not between it and the net.",
+      "correctedQuestion": {
+        "id": "exp26-u11-006-q7",
+        "type": "choice",
+        "prompt": "What should YOU call while approaching the rebound?",
+        "options": [
+          {
+            "id": "a",
+            "text": "Puck inside the circle; D1 is positioned closer to centre ice than the puck"
+          },
+          {
+            "id": "b",
+            "text": "The second shot is ours"
+          },
+          {
+            "id": "c",
+            "text": "F1 must shoot next"
+          }
+        ],
+        "answer": [
+          "a"
+        ],
+        "basis": "coaching",
+        "explanation": "The call correctly places the puck inside the circle and notes that D1 sits closer to centre ice than the puck, which helps F1 read the recovery lane."
+      },
+      "afterContentHash": "6251f3655f3364ca2fd09ef8c32b55c3e3de06c7de9384f585ba031fcea8b1b7",
+      "evidence": {
+        "receiptPath": "docs/factory/research/question-review/packet-12/application-receipt.json",
+        "receiptSha256": "400cd5f042527d6ca0d2cc425446bccd5eeebc441dadb9e6ca1a2df19d434012"
+      }
+    },
+    {
+      "id": "exp26-u11-006-q9",
+      "expectedVerdict": "repair",
+      "issue": "The reference moves farther from the puck (8.06 m to 9.23 m) and is not at the opposite boards.",
+      "correctedQuestion": {
+        "id": "exp26-u11-006-q9",
+        "type": "position",
+        "prompt": "Move YOU toward the loose puck with a different approach from F1.",
+        "actorId": "h2",
+        "reference": {
+          "x": 21,
+          "y": 3.5
+        },
+        "basis": "coaching",
+        "explanation": "This example moves YOU closer to the loose puck from a different angle than F1. Check D1’s movement before continuing; it does not establish who arrives first."
+      },
+      "afterContentHash": "82d0ea153a377144ab7642a3ada2e9f0e19ccdb218c4a723252baefa969ad08e",
+      "evidence": {
+        "receiptPath": "docs/factory/research/question-review/packet-12/application-receipt.json",
+        "receiptSha256": "400cd5f042527d6ca0d2cc425446bccd5eeebc441dadb9e6ca1a2df19d434012"
+      }
+    },
+    {
+      "id": "exp26-u11-006-q10",
+      "expectedVerdict": "repair",
+      "issue": "Covered-puck feedback needs an explicit stoppage scenario and must not advise continuing pressure after the whistle.",
+      "correctedQuestion": {
+        "id": "exp26-u11-006-q10",
+        "type": "explain",
+        "prompt": "The goalie covers the puck and the whistle stops play. What changes?",
+        "basis": "coaching",
+        "explanation": "Stop playing the puck. The rebound chance is over; prepare for the restart and your next assignment."
+      },
+      "afterContentHash": "528a198461211a256d708ecad769f5d52d86437c94f54ea57682161161d0d12a",
+      "evidence": {
+        "receiptPath": "docs/factory/research/question-review/packet-12/application-receipt.json",
+        "receiptSha256": "400cd5f042527d6ca0d2cc425446bccd5eeebc441dadb9e6ca1a2df19d434012"
+      }
+    },
+    {
+      "id": "exp26-u11-011-q8",
+      "expectedVerdict": "repair",
+      "issue": "D2 is an away-team defender, not opposite-point support.",
+      "correctedQuestion": {
+        "id": "exp26-u11-011-q8",
+        "type": "multi",
+        "prompt": "Which two cues shape the bank point?",
+        "options": [
+          {
+            "id": "a",
+            "text": "Where YOU can receive the rebound"
+          },
+          {
+            "id": "b",
+            "text": "Whether D2 can close the receiving area"
+          },
+          {
+            "id": "c",
+            "text": "That D2 does not move"
+          }
+        ],
+        "answer": [
+          "a",
+          "b"
+        ],
+        "basis": "coaching",
+        "explanation": "The receiving location and D2’s pressure affect whether the indirect route is useful. A frozen position does not establish D2’s next movement."
+      },
+      "afterContentHash": "022058c6a406c35100b9614694b7d3f387861ac352a941fcdcd204e42a607e96",
+      "evidence": {
+        "receiptPath": "docs/factory/research/question-review/packet-13/application-receipt.json",
+        "receiptSha256": "6355bce7b9c6f467b87e5b2e751ea6634d58df5afa442037938295b46e62dad6"
+      }
+    },
+    {
+      "id": "exp26-u11-012-q7",
+      "expectedVerdict": "repair",
+      "issue": "Below me depends on the camera; the puck is closer to the side boards than YOU.",
+      "correctedQuestion": {
+        "id": "exp26-u11-012-q7",
+        "type": "choice",
+        "prompt": "What should YOU tell F1 after the pass drifts?",
+        "options": [
+          {
+            "id": "a",
+            "text": "The puck is closer to the side boards than I am; I am checking D1 before recovering"
+          },
+          {
+            "id": "b",
+            "text": "The intended target is still the puck"
+          },
+          {
+            "id": "c",
+            "text": "D1 does not reach it"
+          }
+        ],
+        "answer": [
+          "a"
+        ],
+        "basis": "coaching",
+        "explanation": "The call reports the actual puck and pressure, which replaces the planned target."
+      },
+      "afterContentHash": "1af45213a84b394a9ed6a29b7c1b19b5f76eb389244673306cdc758316d35eeb",
+      "evidence": {
+        "receiptPath": "docs/factory/research/question-review/packet-13/application-receipt.json",
+        "receiptSha256": "6355bce7b9c6f467b87e5b2e751ea6634d58df5afa442037938295b46e62dad6"
+      }
+    },
+    {
+      "id": "exp26-u11-012-q5",
+      "expectedVerdict": "repair",
+      "issue": "Reaching the puck first does not establish control.",
+      "correctedQuestion": {
+        "id": "exp26-u11-012-q5",
+        "type": "choice",
+        "prompt": "If D1 reaches the puck first and controls it, what has changed?",
+        "options": [
+          {
+            "id": "a",
+            "text": "YOU remain the carrier because the pass was intended for you"
+          },
+          {
+            "id": "b",
+            "text": "The next read becomes defending or regaining possession"
+          },
+          {
+            "id": "c",
+            "text": "F1’s original pass must be replayed"
+          }
+        ],
+        "answer": [
+          "b"
+        ],
+        "basis": "coaching",
+        "explanation": "Actual possession controls the next situation; the intended receiver does not retain ownership after an opponent recovers."
+      },
+      "afterContentHash": "0d3185888dc5941f13c2ead3a7b17d6b489e147d48d1b954ea65d31e8b1ee4fb",
+      "evidence": {
+        "receiptPath": "docs/factory/research/question-review/packet-13/application-receipt.json",
+        "receiptSha256": "6355bce7b9c6f467b87e5b2e751ea6634d58df5afa442037938295b46e62dad6"
+      }
+    },
+    {
+      "id": "exp26-u11-016-q1",
+      "expectedVerdict": "repair",
+      "issue": "YOU takes do, not does; preserve Compared with F1.",
+      "correctedQuestion": {
+        "id": "exp26-u11-016-q1",
+        "type": "choice",
+        "prompt": "Compared with F1, where do YOU start across the rink width?",
+        "options": [
+          {
+            "id": "a",
+            "text": "Closer to the middle"
+          },
+          {
+            "id": "b",
+            "text": "Closer to the side boards beside F1"
+          },
+          {
+            "id": "c",
+            "text": "Behind the right net"
+          }
+        ],
+        "answer": [
+          "a"
+        ],
+        "basis": "scene",
+        "explanation": "YOU are at y=2 and F1 at y=7; the middle is around y=0."
+      },
+      "afterContentHash": "54d427fbeadeb7327cb769c4b9e95eb05ee4326bfdea2dd9019b8e0ef953fafe",
+      "evidence": {
+        "receiptPath": "docs/factory/research/question-review/packet-14/application-receipt.json",
+        "receiptSha256": "e98111947e82d54a13a28731ced360ab66ab9bf6708040cf29184bda3efae496"
+      }
+    },
+    {
+      "id": "exp26-u11-016-q7",
+      "expectedVerdict": "repair",
+      "issue": "F1 is an opponent. Communicate the defensive plan to the shown teammate/goalie, without guaranteeing containment.",
+      "correctedQuestion": {
+        "id": "exp26-u11-016-q7",
+        "type": "choice",
+        "prompt": "What could YOU tell your goalie about the inside angle?",
+        "options": [
+          {
+            "id": "a",
+            "text": "I am guarding the middle and checking F1’s route toward the half wall"
+          },
+          {
+            "id": "b",
+            "text": "I have already taken away every passing option"
+          },
+          {
+            "id": "c",
+            "text": "The route is fixed"
+          }
+        ],
+        "answer": [
+          "a"
+        ],
+        "basis": "coaching",
+        "explanation": "The call tells your teammate what YOU are trying to protect while keeping F1’s next move uncertain."
+      },
+      "afterContentHash": "6a38ce6fb23fb576fb59915caf03019b84e247197d1579dd77f766c77a5dbd46",
+      "evidence": {
+        "receiptPath": "docs/factory/research/question-review/packet-14/application-receipt.json",
+        "receiptSha256": "e98111947e82d54a13a28731ced360ab66ab9bf6708040cf29184bda3efae496"
+      }
+    }
+  ]
+}
+
+
+=== docs/hockey-authority/rim-demonstration-requirements-draft.md ===
+# Rim pickup demonstration: requirements candidate
+
+September 6, 2026. Prepared for Hockey Authority review, not a reviewed lesson
+or accepted movement sequence. No live-bank or all-scenario approval follows
+from this document. The first target is one U11 right-shot skater, with a gold
+jersey and gold helmet, against a navy pressure player. These are bounded demo
+choices, not new defaults for every age or scenario.
+
+## What the demonstration must establish
+
+The learner can see preparation before a pickup, actual stick/puck interaction,
+and a controlled exit. A nearby opponent creates information to notice. We do
+not assume that one exit is universally correct or assign a scored answer
+until the authored state, sources and viewpoint support it.
+
+Use the same actor, puck, clock and rink coordinates for every view. The
+external view makes the sequence inspectable; the first-person view presents
+only information available from the player's current view and prior scanning.
+
+## Source support and its boundary
+
+[Hockey Canada's Developing Skilled Defencemen, 2018–19, PDF page 12](https://cdn.hockeycanada.ca/hockey-canada/Hockey-Programs/Players/Downloads/2018/2018-19-developing-hockey-defencemen-e.pdf)
+describes retrieval preparation through shoulder checking, approach angle and
+deception; it conditions a toes-up-ice pickup on available time and space and
+directs players to assess pressure and support. This supports the need to show
+preparation and contextual choices. It does not prove a specific turn radius,
+animation cadence, contact trajectory, U11 assessment answer or exact exit.
+The document uses historical age terminology; current rule/age applicability
+must be established separately. Text inspected September 6, 2026.
+
+## Required authored phases
+
+| Phase | Evidence required before it can pass |
+|---|---|
+| Approach and observation | Defined puck route, opponent position/velocity and retriever trajectory; actual observation history if a later question depends on a prior scan. Decorative head motion is not proof that a learner saw something. |
+| Preparation | Body heading, skating direction and intended pickup orientation start changing before contact when required by the authored approach; transition remains continuous. Exact technique awaits review. |
+| First contact | A named time/event where the actual transformed blade surface and physical puck meet with vertical overlap; no teleport to a carry marker or through a board. |
+| Receiving/control | Show the change from loose puck to controlled possession, with an explicit event and credible relative motion. First arrival alone does not grant control. |
+| Exit | Puck, hands, stick and body remain geometrically consistent as the skater leaves; pressure changes remain visible and physically feasible. Ending the turn is not enough to prove a completed pickup. |
+
+The trace owns root positions, puck movement and event times. The rig may
+express source-authored body/hand/stick poses, but cannot invent possession,
+retime contact or relocate actors to hide an animation defect. The camera may
+change visibility but cannot change the trace.
+
+## Required views and question entry
+
+- Front/profile/three-quarter character inspection, then external rink view.
+- Retriever first-person with actual stick and gloves; pressure-player view
+  is a comparison, not an automatically equivalent question.
+- Optional saved question angle applied on entry without advancing time.
+- Phone and desktop at the same decision moment, plus a deliberately obscured
+  cue case. If a required cue is unseen and was not observed earlier, the
+  question must be held or changed; do not grade hidden information.
+- A candidate observation question can identify visible pressure. A later
+  tactical-choice question requires separate evidence for its alternatives
+  and conditions. No scored answer is approved by this requirements draft.
+
+## Technical gaps identified before production
+
+The current lab fixture keeps its rim puck at `(18,-10)` while the retriever
+stays at `y=-2`. It demonstrates preparation poses, not retrieval. The shared
+rig's static `carryContact` marker is not a measured blade contact socket.
+Its existing near-blade tolerance is broader than the physical puck radius.
+The September 6 diagnostic measured the blade's lowest point at 30mm above ice
+while the physical puck ends at 25.4mm: a 4.6mm positive separation in all six
+tested pose/view combinations. The marker itself is at 52mm, so closeness to
+that marker is misleading. Evidence and source hashes are in
+`tmp/hockey-authority-20260906/blade-contact-report.json`; this is a scoped
+geometric failure, not a verdict on every possible stick/puck pose.
+The Level-1 simulator does not provide a
+completed rim/receiving solver. These are engineering findings, not a claim
+that the whole scenario-engine physics system is validated for this action.
+
+Use a separate versioned diagnostic trace if a full dynamic solver is not yet
+available, and identify its unverified dynamics. Keep any failed sequence
+visibly diagnostic. Do not export it as an accepted coaching example.
+
+## Handoff and acceptance
+
+Hockey Authority returns source-linked requirements, exceptions and domain
+verdicts. Moshey produces an editable Blender master and animation candidate
+against that brief. Reel reviews whether the actual viewed sequence conveys
+the intended information. Engineering verifies trace, contact, view entry and
+artifact identity. Thomas reviews the resulting visual standard and any new
+tactical claims requiring human approval under the existing policy.
+
+Hashes of the reviewed trace, rig, exported model, camera definitions and
+rendered evidence bind the verdict. A later material change requires a scoped
+recheck. Extend the standard to younger/older variants and other scenarios only
+after the representative sequence passes its applicable gates.
+
+
+=== tmp/hockey-authority-20260906/blade-contact-summary.md ===
+# Blade/puck geometric diagnostic
+
+Current U11 rounded-study geometry; this is technical evidence, not hockey approval.
+
+| Pose | View | Lowest blade above ice (mm) | Blade-to-puck separation bound (mm) | Including tape (mm) |
+|---|---|---:|---:|---:|
+| neutral | world | 30.000 | 4.600–4.600 | 4.600–4.600 |
+| neutral | first-person | 30.000 | 4.600–4.600 | 4.600–4.600 |
+| turn-lean | world | 30.000 | 4.600–4.600 | 4.600–4.600 |
+| turn-lean | first-person | 30.000 | 4.600–4.600 | 4.600–4.600 |
+| turn-lean-stride | world | 30.000 | 4.600–4.600 | 4.600–4.600 |
+| turn-lean-stride | first-person | 30.000 | 4.600–4.600 | 4.600–4.600 |
+
+The perspective puck occupies y=0–25.4 mm. The marker uses y=52 mm; it is not the puck centre. Point-to-marker proximity must not substitute for finite-volume contact. Exact part triangles are evaluated after skinning and world transformation; positive lower bounds certify non-contact. The diagnostic injects vertex-range metadata into a tmp-only source copy and verifies unchanged mesh attributes plus identical posed blade vertices against the original imported rig.
+
+Files: blade-contact-report.json (source hashes, methods, bounds, coordinates, pose/view comparison), blade-contact-diagnostic.mjs (repeatable measurement), blade-contact-instrumented-rig.mjs (tmp-only range instrumentation).
+
+No production source changed, no broad tests, no bank reads, no browser or hockey approval.
+
+Measured result: the current blade does not sit on the ice and cannot touch the grounded perspective puck at the carried XY location. Its lower surface is 30 mm high, leaving 4.6 mm clear air above the puck. The carry marker is only 1.179 mm from the blade surface, despite the physical separation. All six posed blade triangle hashes are identical: these torso/stride poses do not reposition the blade; world and first-person geometry agree exactly. Three analytic control cases (vertical separation, horizontal separation and actual intersection) passed. The physical ice mesh is at y=0 in the inspected PracticeScene.jsx.
+
+
+=== NEW TRANSFER CASES; EXPECTED LABELS NOT SUPPLIED ===
+[{"id": "spatial-false", "scope": "logical text/geometry only", "facts": "Goal (30,0), loose puck (20,5), defender D (18,1). All positions in metres.", "item": "Correct answer says D lies on the straight segment between puck and goal. Other alternatives are silly. Is the marked answer acceptable?"}, {"id": "spatial-valid", "scope": "logical text/geometry only; do not evaluate unseen rendering or tactical outcomes", "facts": "Goal (30,0), loose puck (20,5), defender D (25,2.5).", "item": "Question: Which named actor lies on the straight puck-goal segment? Answer: D. Explanation: D is the midpoint. This claims position only, not interception."}, {"id": "arrival-false", "scope": "state consistency", "facts": "Puck owner is null. An arrival event puts D within reach. No control event or successful touch is stated.", "item": "Question: Who controls the puck now? Marked answer: D, because D arrived first."}, {"id": "control-valid", "scope": "state consistency only", "facts": "At t=2.1 an explicitly stipulated successful control event assigns puck owner D. The hypothetical is not a claim that physics has been validated.", "item": "Question: In this stated hypothetical, who now controls the puck? Answer D; explanation cites the successful control event."}, {"id": "hidden-cue", "scope": "assessment fairness", "facts": "At question entry the relevant defender is outside FOV and fully occluded. No prior observation, map, text or audio discloses the defender side. Camera is locked.", "item": "Question requires the player to identify that defender side and grades only left as correct based on omniscient world state."}, {"id": "observed-cue", "scope": "logical question binding only; rendered visibility is an explicit test premise", "facts": "Both labelled teams and the puck are visibly distinguishable at the stipulated frame; navy 7 visibly controls the puck. No future outcome is asked.", "item": "Question: Which team currently controls the puck? Options Navy/Gold. Answer Navy. Feedback: Navy 7 currently has the puck."}, {"id": "grammar-false", "scope": "grammar and comparison", "facts": "YOU at y=2, F1 at y=7, rink middle y=0.", "item": "Prompt: Compared with F1, where does YOU start across the rink width? Answer: Closer to the middle."}, {"id": "grammar-valid", "scope": "grammar and comparison only", "facts": "YOU at y=2, F1 at y=7, rink middle y=0.", "item": "Prompt: Compared with F1, where do YOU start across the rink width? Answer: Closer to the middle. Explanation: 2m is less than 7m from y=0."}, {"id": "missing-motion", "scope": "complete pickup approval request", "facts": "Only one neutral-pose screenshot is supplied. No sequence, contact event, trace or movement reference.", "item": "Can the entire approach, turn, pickup/control and exit be approved as authentic hockey movement?"}, {"id": "floating-blade", "scope": "geometric contact claim", "facts": "Exact transformed blade triangles have lowest y=0.030m. Ice y=0, puck occupies y=0 through 0.0254m. No other stick part contacts the puck.", "item": "The author marks successful blade-puck contact because a carry marker 0.052m high is near the blade."}]

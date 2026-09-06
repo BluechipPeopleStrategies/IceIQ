@@ -1,0 +1,116 @@
+{
+  "reviewer": "hockey-authority (RinkReads named AI hockey review role)",
+  "executionMode": "First blind historical calibration. All tools disabled; answer-key.json not opened. Verdicts derived from the supplied cases.json plus the CLAUDE-REVIEW-UPDATE.md correction guide only. Geometry computed by hand.",
+  "calibrationLimits": [
+    "Blind to the exact answer key, guided (not held-out) by the seven-check correction guide.",
+    "No rendered/animation review, no camera or first-person inspection, no physics validator run \u2014 scenes are static coordinate data.",
+    "No human coach approval, curriculum admission, or deployment status is asserted; PASS means no defect demonstrated in this scoped hand review.",
+    "Role/end resolution taken from explicit team/role fields and the shared briefing convention (home=navy attacks +x; away=gold attacks -x / defends the right/+x net). Distances in scene units treated as metres per the option/feedback wording."
+  ],
+  "cases": [
+    {
+      "id": "exp26-u11-006-q7",
+      "verdict": "PASS",
+      "findings": [
+        {
+          "issue": "Answer a's sub-claim 'D1 is between it and the net' is geometrically loose.",
+          "evidence": "Puck (23,5), gold net \u2248 (26,0), D1 away/gold (22,1). Closest point of D1 to the puck\u2192net segment is at param t\u22480.5 but 2.92 m off the shot line, so D1 does not truly occupy the puck\u2192net lane. However 'puck below the circle' is valid low-zone hockey terminology (down near the goal line below the faceoff circles), not screen-relative, and 'D1 between it and the net' is acceptable as an approximate on-ice call.",
+          "proposedCorrection": "Optional: soften to 'D1 is inside toward the net' to avoid implying D1 blocks the lane.",
+          "uncertainty": "Medium-low: marginal wording, not a demonstrated hockey defect. Answer a correctly separates the loose puck from a promised rebound goal (objective), so distractors b/c remain the over-claims. Consistent with q7 being the retained control question for this scenario."
+        }
+      ],
+      "sceneEvidence": "Home=navy attacks +x; YOU=h2 (navy, away from puck) at (19,-2); F1=h1 navy (20,2); D1=a1 gold/away (22,1); G=g1 gold/away goalie (26,0) = the right net navy attacks; loose puck (23,5), owner null. No goal or next touch assumed. Answer a names actual puck+defender without promising a goal."
+    },
+    {
+      "id": "exp26-u11-006-q9",
+      "verdict": "REVISE",
+      "findings": [
+        {
+          "issue": "Position reference moves YOU farther from the loose puck despite the prompt 'Move YOU toward the loose puck.'",
+          "evidence": "YOU start (19,-2)\u2192puck (23,5): \u221a(4\u00b2+7\u00b2)=\u221a65=8.06 m. Reference (22.2,-4.2)\u2192puck (23,5): \u221a(0.8\u00b2+9.2\u00b2)=\u221a85.28=9.24 m. Distance INCREASES by ~1.18 m. The reference sits at y=-4.2 (negative-y boards) while the puck is at y=+5, so the move goes to the opposite side, not toward the puck. This reproduces the packet-12 defect (8.06 m \u2192 9.23 m).",
+          "proposedCorrection": "Place the reference on a path that reduces puck distance while still giving a distinct side-board approach, or rewrite the prompt so it does not claim 'toward the loose puck' if an opposite-side staging point is intended.",
+          "uncertainty": "Low: measured distances make this a demonstrated geometry defect."
+        }
+      ],
+      "sceneEvidence": "Same 006 scene; focus YOU=h2 navy at (19,-2); loose puck (23,5) on positive-y side (cue). Reference (22.2,-4.2) is farther from the puck than the start and on the opposite y-side. Check-2 distance rule fails."
+    },
+    {
+      "id": "exp26-u11-006-q10",
+      "verdict": "REVISE",
+      "findings": [
+        {
+          "issue": "Feedback treats a covered puck as live play ('next pressure') and omits the whistle/stoppage.",
+          "evidence": "Prompt: 'The goalie covers before you arrive.' A goalie covering/freezing a loose puck stops play (whistle \u2192 faceoff). The explanation says 'before choosing the next pressure or reset,' offering continued pressure on a frozen puck. This matches the packet-12 'feedback that omitted a stoppage' defect and violates check-4 (covered puck with whistle \u2192 stop, prepare for restart; do not instruct continued pressure).",
+          "proposedCorrection": "Re-read should state the whistle/stoppage explicitly: the loose-puck option is gone, play stops on the covered puck, set up for the faceoff/restart (and read where F1/YOU line up), rather than 'next pressure.'",
+          "uncertainty": "Low-medium: rests on 'covers' meaning a freeze/whistle, which is the standard reading in a net-front rebound; if 'covers' meant only defensive coverage the stoppage note would still be missing."
+        }
+      ],
+      "sceneEvidence": "Same 006 scene; gold goalie g1 (26,0) covers the loose puck (23,5) before navy YOU arrives. State transition = whistle/dead puck; feedback should not float continued pressure."
+    },
+    {
+      "id": "exp26-u11-011-q8",
+      "verdict": "REVISE",
+      "findings": [
+        {
+          "issue": "Explanation mislabels opponent D2 as 'support' at the 'opposite point.'",
+          "evidence": "D2=a2 is away/gold (an OPPONENT of the passing pair F1\u2192YOU, both home/navy). Explanation: 'D2\u2019s opposite-point support determine[s] whether the wall changes the useful route.' An opposing defender is not support; his relevance to a bank pass is interception, not availability as an outlet. This reproduces the packet-13 defect ('away-team D2 incorrectly described as a supporting outlet'). 'Opposite point' also misapplies attacking-point terminology to a defender (check-3 warns against rationalizing 'opposite point').",
+          "proposedCorrection": "Reframe option b/explanation around D2 as a defender who could intercept or cut off the bank rebound ('whether D2 can jump the wall rebound'), not as support; drop or correct 'opposite point.'",
+          "uncertainty": "Low: role field makes D2 an opponent; the 'support' framing is a demonstrated role defect. The two-cue selection (rebound spot + D2's position) can remain valid once D2 is correctly cast as a threat, not support."
+        }
+      ],
+      "sceneEvidence": "F1=h1 navy (12,7) puck owner; YOU=h2 navy (20,7); D1=a1 gold (16,7) blocks direct line; D2=a2 gold (23,1). Pass is navy-to-navy; gold D2 is a defender, not an outlet."
+    },
+    {
+      "id": "exp26-u11-012-q7",
+      "verdict": "PASS",
+      "findings": [
+        {
+          "issue": "Minor wording: 'The puck is below me' is player-relative, and 'checking D1' could be misread at a no-body-checking age.",
+          "evidence": "Puck (7,-6), YOU (5,-3): 'below/wider' matches cue 'loose puck is wider than YOU' (puck 3.6 m from YOU vs D1 6.32 m from puck, so YOU is nearer). 'Checking D1' reads as situational awareness, not a body check (U11). Answer a correctly reports actual puck + pressure and rejects the over-claims in b ('target is still the puck') and c ('D1 does not reach it', unsimulated).",
+          "proposedCorrection": "Optional: 'puck is wide/low of me; I'm accounting for D1 before recovering' to remove player-relative 'below' and the check ambiguity.",
+          "uncertainty": "Low-medium: no demonstrated hockey defect; wording only. Consistent with this being a retained control question."
+        }
+      ],
+      "sceneEvidence": "F1=h1 navy (2,-5); YOU=h2 navy (5,-3); D1=a1 gold (9,0); loose puck (7,-6), owner null. YOU speaks to teammate F1; no possession/reach over-claim in answer a."
+    },
+    {
+      "id": "exp26-u11-012-q5",
+      "verdict": "PASS",
+      "findings": [
+        {
+          "issue": "None demonstrated; question correctly teaches the possession-transition rule.",
+          "evidence": "If gold D1 recovers, answer b ('next read becomes defending or regaining possession') is correct; a ('YOU remain the carrier because the pass was intended for you') is the exact error check-4 targets (intended receiver does not retain ownership; arriving first \u2260 possession). b stays conditional ('regaining'), covering reach-without-control.",
+          "proposedCorrection": "None required.",
+          "uncertainty": "Low: clean state/transition question, likely a retained control."
+        }
+      ],
+      "sceneEvidence": "Same 012 scene; D1=a1 gold (9,0) opponent; loose puck (7,-6). Possession, not intent, governs the next read."
+    },
+    {
+      "id": "exp26-u11-016-q1",
+      "verdict": "PASS",
+      "findings": [
+        {
+          "issue": "None demonstrated; scene-basis geometry is correct.",
+          "evidence": "Rink width = y. YOU=a1 gold (11,2), F1=h1 navy (9,7), middle y=0. |YOU-0|=2 < |F1-0|=7, so YOU is closer to the middle. Answer a correct; b (side boards) and c (behind the net) are false. basis 'scene' is appropriate.",
+          "proposedCorrection": "None required.",
+          "uncertainty": "Low."
+        }
+      ],
+      "sceneEvidence": "YOU=a1 gold defends right/+x net; F1=h1 navy (9,7) wide carrier with puck (owner h1); F2=h2 navy (15,-4); G=g1 gold (26,0). Width comparison confirms 'closer to the middle.'"
+    },
+    {
+      "id": "exp26-u11-016-q7",
+      "verdict": "REVISE",
+      "findings": [
+        {
+          "issue": "A gold defender is instructed to communicate a defensive read to the opposing navy puck carrier.",
+          "evidence": "YOU=a1 is away/gold defending the +x net; F1=h1 is home/navy, the carrier YOU is angling. Prompt 'What should YOU tell F1 from the inside angle?' directs the defender to talk to the opponent, and answer a ('the middle is protected; the half-wall route is the space to read') hands the opponent your containment plan. This reproduces the packet-14 defect ('gold defender told to give defensive instructions to opposing F1') and violates check-1 role resolution.",
+          "proposedCorrection": "Redirect the communication to an actual gold teammate (here only the goalie is available, e.g. 'tell G the carrier is being steered to the half wall'), or reframe as YOU's own read/intent rather than a message to F1.",
+          "uncertainty": "Low: team fields make F1 the opponent; addressing him is a demonstrated role defect regardless of the read's tactical soundness."
+        }
+      ],
+      "sceneEvidence": "Same 016 scene; YOU=a1 gold/away defender, F1=h1 navy/home carrier (puck owner h1). Defender should not communicate reads to the opposing carrier; no gold skater teammate exists besides G."
+    }
+  ]
+}

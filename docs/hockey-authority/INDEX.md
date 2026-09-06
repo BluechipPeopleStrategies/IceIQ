@@ -1,7 +1,13 @@
 # RinkReads Hockey Authority
 
-Created September 6, 2026 at Thomas's request. Status: role and review workflow
-defined; hockey calibration and first rendered movement review remain pending.
+Created September 6, 2026 at Thomas's request. Status: runtime invoked; initial
+historical calibration FAILED with four false passes among eight known defects.
+The role is unqualified for approval recommendations. It may research and
+report findings while remediation proceeds. See [qualification](qualification.json)
+and [the comparison](reviews/2026-09-06-calibration/comparison.json).
+After remediation, all ten synthetic transfer verdicts matched their expected
+labels. This limited regression check does not qualify the reviewer; the
+required human-reviewed held-out calibration remains outstanding.
 
 This is the project's dedicated AI hockey reviewer, operating within the
 existing Claude Code judgment policy. Creating the role does not create human
@@ -27,20 +33,23 @@ findings. The existing promotion process remains authoritative.
   `/hockey-review <scenario or artifact path and review scope>`
 - [Source map and evidence rules](sources.md)
 - [First 3D review assignment](first-3d-review.md)
+- [Run results and preserved failures](reviews/INDEX.md)
+- [Rim demonstration requirements candidate](rim-demonstration-requirements-draft.md)
 - [Owner decisions](../factory/SCENARIO-ENGINE-DECISIONS.md)
 - [Canonical architecture](../superpowers/specs/2026-07-29-scenario-engine-design.md)
 - [Required question-review correction and calibration](../factory/CLAUDE-REVIEW-UPDATE.md)
 
-Claude Code project files are provided; runtime discovery/invocation has not
-been verified in this creation pass. In Codex, read the same role and contract
+Claude Code invocation was verified by an actual subscription-session return
+from `--agent hockey-authority`. In Codex, read the same role and contract
 through the project router; do not claim a native Codex agent registration.
 
 Creation checks: six new role/command/reference files inspected, all local
 Markdown links resolve, and basic agent frontmatter checks pass. The format
 matches [Claude Code's documented project subagents](https://code.claude.com/docs/en/sub-agents).
 `claude agents --json` lists background sessions, not installed definitions,
-so its empty result was not treated as a discovery check. No model judgment
-or human coaching approval was performed by these structural checks.
+so its empty result was not treated as a discovery check. Those structural
+checks did not establish judgment quality; the subsequent failed calibration
+remains recorded and has not been replaced by a clean-looking revised result.
 
 Save new standalone reviews in `reviews/` with unique dated names and exact
 input/output hashes. The calling session persists the read-only agent's return.

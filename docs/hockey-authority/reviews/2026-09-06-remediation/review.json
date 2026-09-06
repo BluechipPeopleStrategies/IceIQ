@@ -1,0 +1,135 @@
+{
+  "analysisType": "remediation-not-qualification",
+  "keyExposedNotBlind": true,
+  "reconciliation": [
+    {
+      "id": "exp26-u11-006-q7",
+      "originalVerdict": "PASS",
+      "correctVerdict": "REVISE",
+      "whyFalsePass": "I measured D1 (22,1) at ~2.92 m off the puck(23,5)->gold-net(26,0) segment and even wrote that D1 'does not truly occupy the puck->net lane', then still passed answer a whose clause 'D1 is between it and the net' asserts exactly that occupancy. An acknowledged geometry contradiction is REVISE, not optional softening. Key confirms the false clause: D1 is centre-ice-side of the puck, and the puck is inside (not below) the circle.",
+      "compoundError": "I explicitly rationalized the case as 'the retained control question for this scenario' - a forbidden inference about test distribution."
+    },
+    {
+      "id": "exp26-u11-012-q7",
+      "originalVerdict": "PASS",
+      "correctVerdict": "REVISE",
+      "whyFalsePass": "Answer a's phrase 'The puck is below me' is camera/observer-relative, not an on-ice bearing. I flagged it but demoted it to 'wording only' and passed. Camera-dependent phrasing in a graded answer is a defect; the key repairs it to 'closer to the side boards than I am.' Correct geometry does not excuse observer-relative language.",
+      "compoundError": "Again guessed 'consistent with this being a retained control question' instead of auditing the clause."
+    },
+    {
+      "id": "exp26-u11-012-q5",
+      "originalVerdict": "PASS",
+      "correctVerdict": "REVISE",
+      "whyFalsePass": "I accepted the prompt as a clean state-transition test and passed. The key repairs the prompt from a reach-only trigger to 'If D1 reaches the puck first AND controls it' - the missing control event is exactly the reach-vs-control confound this bank targets. A missing control/whistle event cannot be supplied by my interpretation; the prompt itself had to change.",
+      "compoundError": "Stated it was 'likely a retained control' - inferring an expected label from presumed distribution."
+    },
+    {
+      "id": "exp26-u11-016-q1",
+      "originalVerdict": "PASS",
+      "correctVerdict": "REVISE",
+      "whyFalsePass": "Width geometry was correct (|2|<|7|, closer to middle) so I passed, but the prompt 'where does YOU start' has a subject-verb agreement defect ('does YOU' -> 'do YOU'). The key's only repair is grammar plus preserving 'Compared with F1.' Correct geometry does not excuse broken language.",
+      "compoundError": "None on distribution here, but I never audited prompt grammar - the specific check the remediation guide requires."
+    },
+    {
+      "id": "crossCuttingRootCause",
+      "summary": "All four misses share one pattern: a domain subcheck that passed (low-zone terminology, distance, transition rule, width geometry) was allowed to mask an overall defect in a factual/camera-relative/grammar/control clause, and three were waved through with an invented 'retained control' assumption. Remediation rule applied going forward: audit every clause and the prompt grammar; treat an acknowledged geometry/camera/state/language contradiction as REVISE; never guess a case is a control."
+    }
+  ],
+  "transferCases": [
+    {
+      "id": "spatial-false",
+      "verdict": "REVISE",
+      "evidence": "Segment puck(20,5)->goal(30,0): P(t)=(20+10t,5-5t). For D(18,1), x=18 gives t=-0.2 (outside [0,1]); y at t=-0.2 is 6, not 1. D is behind the puck and off-line, so 'D lies on the straight segment between puck and goal' is geometrically false. A false marked answer fails even when distractors are silly."
+    },
+    {
+      "id": "spatial-valid",
+      "verdict": "PASS",
+      "evidence": "Midpoint of (20,5) and (30,0) = (25,2.5) = D exactly; D lies on the segment. Claim is scoped to position only, not interception, and rendering/tactics are explicitly out of scope. No defect in the stipulated geometry/text."
+    },
+    {
+      "id": "arrival-false",
+      "verdict": "REVISE",
+      "evidence": "Owner is null; an arrival/within-reach event is stated but no control or successful-touch event exists. 'D controls because D arrived first' is the reach-not-possession error. Arriving first is not possession; no control event supports the marked answer."
+    },
+    {
+      "id": "control-valid",
+      "verdict": "PASS",
+      "evidence": "A successful control event at t=2.1 explicitly assigns owner=D. The question asks who controls in that stated hypothetical; answer D follows directly from the stipulated event. Scope is state consistency only, so unvalidated physics is not a basis to reject a correctly-cited stipulated state."
+    },
+    {
+      "id": "hidden-cue",
+      "verdict": "REVISE",
+      "evidence": "Defender is fully occluded, outside FOV, camera locked, with no prior observation/map/text/audio disclosing the side. Grading 'left' from omniscient world state grades hidden information. Assessment-fairness defect is demonstrated (not merely missing evidence): the question must be changed or held; do not grade a cue the observer cannot have seen."
+    },
+    {
+      "id": "observed-cue",
+      "verdict": "PASS",
+      "evidence": "Visibility of both teams, the puck, and navy 7's control is an explicit stipulated test premise; the question asks current control, answer Navy, feedback cites Navy 7's possession. No future outcome is asked. Cue is available at the graded frame; binding is sound. Do not reject for unseen rendering since visibility is stipulated in scope."
+    },
+    {
+      "id": "grammar-false",
+      "verdict": "REVISE",
+      "evidence": "Comparison is correct (|2|<|7| from y=0, closer to middle), but the prompt 'where does YOU start' has a subject-verb agreement error; 'YOU' takes 'do.' Correct comparison does not excuse broken language. Same defect class as exp26-u11-016-q1."
+    },
+    {
+      "id": "grammar-valid",
+      "verdict": "PASS",
+      "evidence": "Grammar correct ('where do YOU start') and comparison correct (2 m < 7 m from y=0 -> closer to middle). Explanation matches. No defect in scope."
+    },
+    {
+      "id": "missing-motion",
+      "verdict": "HOLD",
+      "evidence": "Only one neutral-pose screenshot supplied; no sequence, contact event, trace or movement reference. Per review contract a screenshot cannot establish a skating cycle or contact/receiving/exit sequence. Indispensable evidence (versioned trace, contact-event times, external+first-person at same source time) is absent, so no movement authenticity determination is possible. Needed: full trace with root positions/puck times, contact event, and the two synchronized views. (Also outside my qualified approval authority regardless.)"
+    },
+    {
+      "id": "floating-blade",
+      "verdict": "REVISE",
+      "evidence": "Transformed blade lowest y=0.030 m; puck occupies y=0 to 0.0254 m -> positive 4.6 mm separation, no vertical overlap, and no other stick part contacts. Positive lower bound certifies non-contact. The 0.052 m carry marker being ~near the blade is proximity to a non-puck-centre marker and is misleading. Marker proximity cannot substitute for finite-volume contact; the 'successful contact' claim is a hard geometry failure and cannot be overruled."
+    }
+  ],
+  "requirementsReview": {
+    "status": "diagnostic-requirements-only; unqualified for real-work approval; no new tactical claim approved",
+    "actionableRequirements": [
+      "Bind one U11 right-shot gold-jersey/gold-helmet retriever vs one navy pressure player to the SAME actor IDs, puck, clock and rink coordinates across every view; external view is the inspectable master, first-person shows only currently-visible plus prior-scanned information.",
+      "Author observable cues per phase: Approach/observation (defined puck route, opponent position/velocity, retriever trajectory, real scan history if a later question depends on it - decorative head motion is not a scan); Preparation (body heading/skating direction/intended pickup orientation begin changing before contact, continuously); First contact (named time/event where transformed blade surface and physical puck have vertical overlap, no teleport/board pass-through); Receiving/control (explicit loose->controlled event with credible relative motion; first arrival is not control); Exit (puck/hands/stick/body stay geometrically consistent, pressure changes remain visible and feasible).",
+      "Right-shot handedness must be consistent in first-person own stick/gloves and world position; verify at identical source time in both views.",
+      "An observation question may ask the learner to identify visible pressure. Any tactical-choice/scored question needs separate evidence and stated conditions for each alternative; the obscured-cue case must hold or change if the cue was never visible or previously observed.",
+      "Do not prescribe a single universal turn/exit; technique depends on pressure, handedness, puck travel and available exit."
+    ],
+    "sourceLimitations": [
+      "Hockey Canada 'Developing Skilled Defencemen' 2018-19 (PDF p.12, inspected 2026-09-06) supports SHOWING retrieval preparation via shoulder check, approach angle and deception and conditions a toes-up-ice pickup on available time/space and pressure/support assessment.",
+      "It does NOT establish a specific turn radius, animation cadence, contact trajectory, a U11 assessment correct answer, or one exact exit. It uses historical age terminology; current rule/age applicability must be established separately before any U11 scored claim.",
+      "No source cited here approves a scored tactical answer for this action."
+    ],
+    "safeConstructionScope": [
+      "Build the editable Blender master + animation candidate and a versioned diagnostic trace of the five phases for the single stipulated U11 matchup.",
+      "Permit an observation-only question identifying visible pressure.",
+      "Keep any failing sequence visibly diagnostic; do not export a defective sequence as an accepted coaching example.",
+      "Extend to younger/older variants or other scenarios only after the representative sequence passes its applicable gates."
+    ],
+    "blockers": [
+      "CONTACT PHASE BLOCKED: measured 4.6 mm positive blade-to-puck separation in all six tested pose/view combinations (blade lowest 30 mm; puck top 25.4 mm). First-contact and receiving/control phases cannot pass until the blade reaches the puck volume; the 52 mm carry marker's ~1.179 mm nearness is misleading and must not be used as contact proof.",
+      "FIXTURE MISMATCH: lab rim puck at (18,-10) with retriever at y=-2 demonstrates preparation poses, not a retrieval; it cannot evidence receiving/exit.",
+      "SOLVER GAP: Level-1 simulator has no completed rim/receiving solver; dynamic feasibility is unverified and must be labelled unverified, not passed.",
+      "SCORED-ANSWER GAP: no scored tactical-choice answer has the separate per-alternative evidence and conditions required; none is approved by this draft.",
+      "AUTHORITY GAP: real-work approval, any new tactical claim, and human coach/curriculum/deployment sign-off remain outside my current qualification."
+    ],
+    "domainStatuses": {
+      "rolesAndGameState": "NOT REVIEWED (no trace supplied)",
+      "tactics": "HOLD (no scored claim; source insufficient for a U11 answer)",
+      "skatingAndBodyMechanics": "HOLD (no sequence/trace; poses only)",
+      "stickAndPuck": "REVISE (contact phase geometrically impossible per diagnostic)",
+      "goaltending": "NOT REVIEWED (no goalie in this demo)",
+      "ageAndLearning": "HOLD (historical age terminology; current U11 applicability unestablished)",
+      "viewpointAndQuestions": "HOLD (obscured-cue handling and synchronized dual-view evidence not yet provided)"
+    }
+  },
+  "remainingQualificationLimits": [
+    "Status remains UNQUALIFIED (qualification.json: 4 of 8 historical false passes). This remediation may not be counted as re-qualification.",
+    "The answer key is now exposed; corrected historical answers are NOT blind evidence and do not demonstrate expertise.",
+    "Held-out Thomas/human-coach-reviewed calibration with zero wrong-answer false approvals has NOT been performed.",
+    "I may research, diagnose and report defects only; I may not issue an overall approval recommendation, approve any new tactical claim, override hard physics/geometry failures, or change my own qualification record.",
+    "This pass performed static text/geometry/state review only: no rendered/animation, camera, first-person, or physics-validator inspection, and tools were disabled for the transfer cases.",
+    "Transfer-case verdicts are diagnostic, kept separate from real-work approval; PASS means no defect found in the stated narrow scope, not permission to publish."
+  ]
+}

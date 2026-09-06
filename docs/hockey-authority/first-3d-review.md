@@ -1,7 +1,12 @@
 # First assignment: shared 3D players and decisions
 
-Status: prepared assignment, not a completed hockey review. This is the first
-bounded use of the new role before extending reviewed patterns across scenarios.
+Status: initial calibration and diagnostic requirements review performed;
+real-work approval remains held. Four historical false passes were preserved,
+followed by ten matched synthetic transfer verdicts. The reviewer remains
+unqualified. The blade-contact diagnostic found a geometric defect; Moshey's
+rendered master attempt remains below the requested art quality. See
+[review evidence](reviews/INDEX.md). A complete rendered hockey sequence has
+not been reviewed or approved. The assignment below remains the acceptance scope.
 
 Read `docs/art/animation-pack/STANDARD.md` and
 `docs/art/animation-pack/2026-09-06-implementation-review.md`. Inspect the actual
