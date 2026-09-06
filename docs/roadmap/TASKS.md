@@ -1,6 +1,6 @@
 # RinkReads — Task List
 
-**Last updated:** 2026-09-05 · **Reviewed packets 01–09 deployed:** production 4457ee6, Vercel success and live phone interaction/reload verified. Packet-only release; separate app work remains local. Prior U7 curriculum holds and remote privacy migration remain pending.
+**Last updated:** 2026-09-05 · Packets10–11 repaired locally: 9 scenarios /45 question versions, independently rechecked. Preparing packet and migration-independent player release. Coach/training migration remains unverified remotely.
 
 **Scope:** RinkReads **app build + content factory**. Launch/distribution (sending the beta, marketing) and the separate BlueChip business are **out of scope** — parked at the bottom. Priority = position in this list. A new idea that isn't here goes to the **Parking Lot** first, then gets promoted on purpose — that's the scope-creep guard.
 
@@ -56,6 +56,8 @@
 - *(New ideas land here first, then get promoted into NEXT/LATER on purpose.)*
 
 ## Changelog
+
+- **2026-09-05** — Repaired packets10–11 including false nearest-player geometry, repeated board claims and camera-relative retained text. All45 changed hashes independently rechecked, 35 tests passed. Preparing migration-independent player-home/age/3D release; hold coach/training until remote database verification.
 
 - **2026-09-05** — Deployed all reviewed packets01–09 through isolated production release4457ee6. 32 focused tests and build passed; Vercel success and live repaired-question submission/reload verified. Root main is intentionally divergent from origin/main; reconcile before the next publication. [Deployment evidence](../one-on-one/2026-09-05-packets-production-deployment.md).
 

@@ -1,4 +1,5 @@
 import test from "node:test";
+import { readBankFiles } from "./experimental-bank-files.mjs";
 import assert from "node:assert/strict";
 import fs from "node:fs";
 import os from "node:os";
@@ -160,4 +161,31 @@ test("packets 07-09 retain source closure and independently cover extra repairs"
   const receipt = JSON.parse(fs.readFileSync(path.resolve("docs/factory/research/question-review/packets-07-09/independent-final-recheck.json")));
   validateIndependentReceipt(receipt, plan.proposal, fs.readFileSync(proposalPath), plan.changedRows);
   assert.throws(() => buildPlan({ proposalPath }), /stale scenario version/);
+});
+
+
+const batch1011Path = path.resolve("docs/factory/research/question-review/packets-10-11/proposed-repairs.json");
+const batch1011Baseline = () => {
+  const receipt = path.resolve("docs/factory/research/question-review/packets-10-11/application-receipt.json");
+  return fs.existsSync(receipt) ? reconstructPartsFromApplicationReceipt(receipt) : readBankFiles();
+};
+test("additional retained-question repairs preserve all source review hashes", () => {
+  const plan = buildPlan({ proposalPath: batch1011Path, parts: batch1011Baseline() });
+  assert.equal(plan.changedIds.size, 9);
+  assert.equal(plan.changedRows.length, 45);
+  assert.equal(plan.proposal.packets.flatMap(p => p.scenarios).filter(s => s.sourceRetainedReview).length, 4);
+});
+test("retained-question repairs cannot bypass source review coverage", () => {
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), "rinkreads-retained-review-"));
+  const proposalPath = path.join(dir, "proposal.json");
+  const proposal = JSON.parse(fs.readFileSync(batch1011Path));
+  const retained = proposal.packets.flatMap(p => p.scenarios).find(s => s.sourceRetainedReview);
+  retained.sourceRetainedReview = false;
+  fs.writeFileSync(proposalPath, JSON.stringify(proposal));
+  assert.throws(() => buildPlan({ proposalPath, parts: batch1011Baseline() }), /absent from source return/);
+});
+test("retained-question source rejects even an otherwise unedited stale question", () => {
+  const parts = batch1011Baseline();
+  parts.bank.find(s => s.id === "exp26b-u9-014").questions[5].prompt += " stale";
+  assert.throws(() => buildPlan({ proposalPath: batch1011Path, parts }), /stale retained-source review/);
 });

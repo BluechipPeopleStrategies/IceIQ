@@ -1,0 +1,1674 @@
+{
+  "schemaVersion": 1,
+  "kind": "rinkreads-content-review",
+  "status": "draft-not-reviewed",
+  "snapshotId": "rr-20260905-c8403be16748c919",
+  "packetId": "packet-11",
+  "completion": "complete",
+  "coverage": [
+    {
+      "scenarioId": "exp26b-u9-013",
+      "questionId": "exp26b-u9-013-q1",
+      "baseContentHash": "fd6bb7115de422dcce004ad0f5cac58fde1738c66fcc5478297722c3463befde",
+      "verdict": "repair",
+      "reason": "Q1 text/answer itself is untouched and correct (puck.owner=away-skater-1=Gold1), but this question's final content hash changes because the scene it belongs to (briefing + sources) is being repaired for an overstated landmark distance and an age-mismatched source citation (see repairs). Marking 'repair' rather than 'retain' because the shared scene those checks evaluate is not sound as-is. GEOMETRY FAIL: the shared briefing states 'Navy2 loses the puck near the attacking blue line', but Navy2's actual loss point (16,1) is 8.38m past the x=7.62 attacking blue line -- 43% of the way through the 19.51m-deep attacking zone, i.e. materially past 'near' the line (the dominant overstated-landmark-distance defect class seen in packets 09-10). SOURCES FAIL: 'usah-u14-situational-roles' is cited to justify this U9 scene's role-change teaching, but the source itself (read 2026-09-05, browser UA) frames the cited four-roles framework explicitly as a 14U concept and discusses no younger age band; citing it here overstates its age applicability.",
+      "checks": {
+        "roster": "pass",
+        "geometry": "fail",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "fail",
+        "grammar": "pass"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "Rendered actors: YOU (home-skater-1) at (13,5) facing 3 rad; Navy2 (home-skater-2) at (16,1) facing 3.1 rad; Navy3 (home-skater-3) at (9,-4) facing 2.8 rad; Gold1 (away-skater-1) at (15,0) facing 3.1 rad, owns the puck.",
+          "Navy3 (x=9) is closer to navy's own defending end (-x) than YOU (x=13), geometrically supporting a defensive-depth reading of 'behind'."
+        ],
+        "stated": [
+          "Briefing (pre-repair): Navy attacks +x, gold attacks -x; Navy2 loses the puck near the attacking blue line; Gold1 collects it and turns back toward the navy end; YOU are beside the play; Navy3 is behind you."
+        ],
+        "unproven": [
+          "No skating speed, contact, or actual defensive success is shown.",
+          "Whether 'behind' means facing-relative or defensive-depth is not disambiguated by the schema; the briefing's explicit statement is used as the basis:scene evidence rather than an inferred facing calculation."
+        ]
+      },
+      "sourceUrls": [
+        "https://www.usahockey.com/news_article/show/1093178",
+        "https://www.hockeycanada.ca/en-ca/hockey-programs/coaching/under-9"
+      ]
+    },
+    {
+      "scenarioId": "exp26b-u9-013",
+      "questionId": "exp26b-u9-013-q2",
+      "baseContentHash": "6b07836387dc0598018f41d3429cfc4e3957f7811ac3232c9d9bafaa468b7f19",
+      "verdict": "repair",
+      "reason": "Q2's own claims are scene-verified (Gold1 turning toward navy end; Navy3 stated as behind you in the briefing, and geometrically deeper toward navy's own end at x=9 vs YOU's x=13), but the scene-level defects below apply here too. GEOMETRY FAIL: the shared briefing states 'Navy2 loses the puck near the attacking blue line', but Navy2's actual loss point (16,1) is 8.38m past the x=7.62 attacking blue line -- 43% of the way through the 19.51m-deep attacking zone, i.e. materially past 'near' the line (the dominant overstated-landmark-distance defect class seen in packets 09-10). SOURCES FAIL: 'usah-u14-situational-roles' is cited to justify this U9 scene's role-change teaching, but the source itself (read 2026-09-05, browser UA) frames the cited four-roles framework explicitly as a 14U concept and discusses no younger age band; citing it here overstates its age applicability.",
+      "checks": {
+        "roster": "pass",
+        "geometry": "fail",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "fail",
+        "grammar": "pass"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "Rendered actors: YOU (home-skater-1) at (13,5) facing 3 rad; Navy2 (home-skater-2) at (16,1) facing 3.1 rad; Navy3 (home-skater-3) at (9,-4) facing 2.8 rad; Gold1 (away-skater-1) at (15,0) facing 3.1 rad, owns the puck.",
+          "Navy3 (x=9) is closer to navy's own defending end (-x) than YOU (x=13), geometrically supporting a defensive-depth reading of 'behind'."
+        ],
+        "stated": [
+          "Briefing (pre-repair): Navy attacks +x, gold attacks -x; Navy2 loses the puck near the attacking blue line; Gold1 collects it and turns back toward the navy end; YOU are beside the play; Navy3 is behind you."
+        ],
+        "unproven": [
+          "No skating speed, contact, or actual defensive success is shown.",
+          "Whether 'behind' means facing-relative or defensive-depth is not disambiguated by the schema; the briefing's explicit statement is used as the basis:scene evidence rather than an inferred facing calculation."
+        ]
+      },
+      "sourceUrls": [
+        "https://www.usahockey.com/news_article/show/1093178",
+        "https://www.hockeycanada.ca/en-ca/hockey-programs/coaching/under-9"
+      ]
+    },
+    {
+      "scenarioId": "exp26b-u9-013",
+      "questionId": "exp26b-u9-013-q3",
+      "baseContentHash": "abeb5a42e0bfd060dd7e5d9bf21ec83c2c92cfd2f1011b285decdce7e559e5ed",
+      "verdict": "repair",
+      "reason": "Position reference (11,4) verified on-ice and genuinely between Gold1's carried-puck position and the navy end; question content itself is sound, but inherits the scene-level defects below. GEOMETRY FAIL: the shared briefing states 'Navy2 loses the puck near the attacking blue line', but Navy2's actual loss point (16,1) is 8.38m past the x=7.62 attacking blue line -- 43% of the way through the 19.51m-deep attacking zone, i.e. materially past 'near' the line (the dominant overstated-landmark-distance defect class seen in packets 09-10). SOURCES FAIL: 'usah-u14-situational-roles' is cited to justify this U9 scene's role-change teaching, but the source itself (read 2026-09-05, browser UA) frames the cited four-roles framework explicitly as a 14U concept and discusses no younger age band; citing it here overstates its age applicability.",
+      "checks": {
+        "roster": "pass",
+        "geometry": "fail",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "fail",
+        "grammar": "pass"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "Rendered actors: YOU (home-skater-1) at (13,5) facing 3 rad; Navy2 (home-skater-2) at (16,1) facing 3.1 rad; Navy3 (home-skater-3) at (9,-4) facing 2.8 rad; Gold1 (away-skater-1) at (15,0) facing 3.1 rad, owns the puck.",
+          "Navy3 (x=9) is closer to navy's own defending end (-x) than YOU (x=13), geometrically supporting a defensive-depth reading of 'behind'."
+        ],
+        "stated": [
+          "Briefing (pre-repair): Navy attacks +x, gold attacks -x; Navy2 loses the puck near the attacking blue line; Gold1 collects it and turns back toward the navy end; YOU are beside the play; Navy3 is behind you."
+        ],
+        "unproven": [
+          "No skating speed, contact, or actual defensive success is shown.",
+          "Whether 'behind' means facing-relative or defensive-depth is not disambiguated by the schema; the briefing's explicit statement is used as the basis:scene evidence rather than an inferred facing calculation."
+        ]
+      },
+      "sourceUrls": [
+        "https://www.usahockey.com/news_article/show/1093178",
+        "https://www.hockeycanada.ca/en-ca/hockey-programs/coaching/under-9"
+      ],
+      "alternative": "A different recovery lane (e.g. staying slightly wider to also block a lateral pass to a second gold attacker, if one existed) can be just as valid as this single (11,4) example; the point is staying between the carrier and the protected end while keeping Navy3 in view, not hitting this exact dot."
+    },
+    {
+      "scenarioId": "exp26b-u9-013",
+      "questionId": "exp26b-u9-013-q4",
+      "baseContentHash": "1b9eb1d49b081fec905113a09cb8627466f885c17ad7d5d760268133de2d3ac8",
+      "verdict": "repair",
+      "reason": "Sequence is an explicitly-labelled coaching discussion routine consistent with calibration guidance on overlapping scan/turn actions; question content itself is sound, but inherits the scene-level defects below. GEOMETRY FAIL: the shared briefing states 'Navy2 loses the puck near the attacking blue line', but Navy2's actual loss point (16,1) is 8.38m past the x=7.62 attacking blue line -- 43% of the way through the 19.51m-deep attacking zone, i.e. materially past 'near' the line (the dominant overstated-landmark-distance defect class seen in packets 09-10). SOURCES FAIL: 'usah-u14-situational-roles' is cited to justify this U9 scene's role-change teaching, but the source itself (read 2026-09-05, browser UA) frames the cited four-roles framework explicitly as a 14U concept and discusses no younger age band; citing it here overstates its age applicability.",
+      "checks": {
+        "roster": "pass",
+        "geometry": "fail",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "fail",
+        "grammar": "pass"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "Rendered actors: YOU (home-skater-1) at (13,5) facing 3 rad; Navy2 (home-skater-2) at (16,1) facing 3.1 rad; Navy3 (home-skater-3) at (9,-4) facing 2.8 rad; Gold1 (away-skater-1) at (15,0) facing 3.1 rad, owns the puck.",
+          "Navy3 (x=9) is closer to navy's own defending end (-x) than YOU (x=13), geometrically supporting a defensive-depth reading of 'behind'."
+        ],
+        "stated": [
+          "Briefing (pre-repair): Navy attacks +x, gold attacks -x; Navy2 loses the puck near the attacking blue line; Gold1 collects it and turns back toward the navy end; YOU are beside the play; Navy3 is behind you."
+        ],
+        "unproven": [
+          "No skating speed, contact, or actual defensive success is shown.",
+          "Whether 'behind' means facing-relative or defensive-depth is not disambiguated by the schema; the briefing's explicit statement is used as the basis:scene evidence rather than an inferred facing calculation."
+        ]
+      },
+      "sourceUrls": [
+        "https://www.usahockey.com/news_article/show/1093178",
+        "https://www.hockeycanada.ca/en-ca/hockey-programs/coaching/under-9"
+      ],
+      "alternative": "Because scanning and turning can overlap, a player who turns while already glancing at Navy3 (rather than strictly sequencing notice-turn-recover) is not making an error; the ordering here is a teaching scaffold, not a graded timing rule."
+    },
+    {
+      "scenarioId": "exp26b-u9-013",
+      "questionId": "exp26b-u9-013-q5",
+      "baseContentHash": "fbb42e1a03cc36609b66f9a8b9bb31853986ab1051895c4381295943706535be",
+      "verdict": "repair",
+      "reason": "Hypothetical is explicitly flagged as a change from the frozen scene; keyed answer does not assert a guaranteed outcome; question content itself is sound, but inherits the scene-level defects below. GEOMETRY FAIL: the shared briefing states 'Navy2 loses the puck near the attacking blue line', but Navy2's actual loss point (16,1) is 8.38m past the x=7.62 attacking blue line -- 43% of the way through the 19.51m-deep attacking zone, i.e. materially past 'near' the line (the dominant overstated-landmark-distance defect class seen in packets 09-10). SOURCES FAIL: 'usah-u14-situational-roles' is cited to justify this U9 scene's role-change teaching, but the source itself (read 2026-09-05, browser UA) frames the cited four-roles framework explicitly as a 14U concept and discusses no younger age band; citing it here overstates its age applicability.",
+      "checks": {
+        "roster": "pass",
+        "geometry": "fail",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "fail",
+        "grammar": "pass"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "Rendered actors: YOU (home-skater-1) at (13,5) facing 3 rad; Navy2 (home-skater-2) at (16,1) facing 3.1 rad; Navy3 (home-skater-3) at (9,-4) facing 2.8 rad; Gold1 (away-skater-1) at (15,0) facing 3.1 rad, owns the puck.",
+          "Navy3 (x=9) is closer to navy's own defending end (-x) than YOU (x=13), geometrically supporting a defensive-depth reading of 'behind'."
+        ],
+        "stated": [
+          "Briefing (pre-repair): Navy attacks +x, gold attacks -x; Navy2 loses the puck near the attacking blue line; Gold1 collects it and turns back toward the navy end; YOU are beside the play; Navy3 is behind you."
+        ],
+        "unproven": [
+          "No skating speed, contact, or actual defensive success is shown.",
+          "Whether 'behind' means facing-relative or defensive-depth is not disambiguated by the schema; the briefing's explicit statement is used as the basis:scene evidence rather than an inferred facing calculation."
+        ]
+      },
+      "sourceUrls": [
+        "https://www.usahockey.com/news_article/show/1093178",
+        "https://www.hockeycanada.ca/en-ca/hockey-programs/coaching/under-9"
+      ],
+      "alternative": "If Navy3 can realistically get across in time, briefly shading toward Navy3's side to double up on Gold1's new route is also defensible, provided YOU does not fully abandon the path to the navy end."
+    },
+    {
+      "scenarioId": "exp26b-u9-013",
+      "questionId": "exp26b-u9-013-q6",
+      "baseContentHash": "4d65c1f552f845e227c1adc22cf97441435e6b9d207b13c0540d3ad4c7258b7a",
+      "verdict": "repair",
+      "reason": "Explain question correctly restates only stated facts; question content itself is sound, but inherits the scene-level defects below. GEOMETRY FAIL: the shared briefing states 'Navy2 loses the puck near the attacking blue line', but Navy2's actual loss point (16,1) is 8.38m past the x=7.62 attacking blue line -- 43% of the way through the 19.51m-deep attacking zone, i.e. materially past 'near' the line (the dominant overstated-landmark-distance defect class seen in packets 09-10). SOURCES FAIL: 'usah-u14-situational-roles' is cited to justify this U9 scene's role-change teaching, but the source itself (read 2026-09-05, browser UA) frames the cited four-roles framework explicitly as a 14U concept and discusses no younger age band; citing it here overstates its age applicability.",
+      "checks": {
+        "roster": "pass",
+        "geometry": "fail",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "fail",
+        "grammar": "pass"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "Rendered actors: YOU (home-skater-1) at (13,5) facing 3 rad; Navy2 (home-skater-2) at (16,1) facing 3.1 rad; Navy3 (home-skater-3) at (9,-4) facing 2.8 rad; Gold1 (away-skater-1) at (15,0) facing 3.1 rad, owns the puck.",
+          "Navy3 (x=9) is closer to navy's own defending end (-x) than YOU (x=13), geometrically supporting a defensive-depth reading of 'behind'."
+        ],
+        "stated": [
+          "Briefing (pre-repair): Navy attacks +x, gold attacks -x; Navy2 loses the puck near the attacking blue line; Gold1 collects it and turns back toward the navy end; YOU are beside the play; Navy3 is behind you."
+        ],
+        "unproven": [
+          "No skating speed, contact, or actual defensive success is shown.",
+          "Whether 'behind' means facing-relative or defensive-depth is not disambiguated by the schema; the briefing's explicit statement is used as the basis:scene evidence rather than an inferred facing calculation."
+        ]
+      },
+      "sourceUrls": [
+        "https://www.usahockey.com/news_article/show/1093178",
+        "https://www.hockeycanada.ca/en-ca/hockey-programs/coaching/under-9"
+      ],
+      "alternative": "A player could also answer in terms of team structure ('someone has to be the last line back') rather than personal proximity; both explanations are acceptable as long as they connect the loss of possession to a new defensive job."
+    },
+    {
+      "scenarioId": "exp26b-u9-014",
+      "questionId": "exp26b-u9-014-q1",
+      "baseContentHash": "4cc94ab0da059af4768e798e2fea8b3ab7ea3773cf7a2e9fc3b344b5e0444b6a",
+      "verdict": "retain",
+      "reason": "Reviewed the current (already-adjudicated where applicable) content independently. Rendered actors: YOU (home-skater-1) at (20,-7) facing 1.2 rad, owns the puck; Navy2 (home-skater-2) at (18,-1) facing -1.4 rad; Gold1 (away-skater-1) at (23,-2) facing 2.8 rad. Prompt: \"What named area is beside YOU?\". All seven checks pass on this content; see sceneEvidence for the specific geometry/claims verified and alternative for the accepted non-exclusive alternative.",
+      "checks": {
+        "roster": "pass",
+        "geometry": "pass",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "pass"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "Rendered actors: YOU (home-skater-1) at (20,-7) facing 1.2 rad, owns the puck; Navy2 (home-skater-2) at (18,-1) facing -1.4 rad; Gold1 (away-skater-1) at (23,-2) facing 2.8 rad.",
+          "The board always draws four faceoff circles at fixed centres (+-20.7,+-6.7), radius 4.572m (src/one-on-one/ExperimentalPractice.jsx ExperimentalBoard); YOU (20,-7) is 0.76m from the (20.7,-6.7) circle centre, i.e. genuinely inside/at that circle."
+        ],
+        "stated": [
+          "Briefing: Navy attacks +x, gold attacks -x; YOU have the puck beside the attacking faceoff circle; Navy2 waits above the circle; Gold1 is between YOU and the net; the circle is named as a search area, not a guaranteed pass spot."
+        ],
+        "unproven": [
+          "No timing, skating speed, or actual eye/shoulder-check direction is shown; a facing angle does not itself prove where a player looked.",
+          "Whether Gold1 is truly 'unbeatable' pressure or merely nearby is not measured; only relative position is computed."
+        ]
+      },
+      "sourceUrls": [
+        "https://www.hockeycanada.ca/en-ca/hockey-programs/coaching/under-9",
+        "https://www.hockeycanada.ca/en-ca/news/seven-coaching-principles-vision-scanning-2024-ncw"
+      ]
+    },
+    {
+      "scenarioId": "exp26b-u9-014",
+      "questionId": "exp26b-u9-014-q2",
+      "baseContentHash": "48671f02a8306117820018ff62ec159495757498de3a0c718dedcd1619cd7914",
+      "verdict": "retain",
+      "reason": "Reviewed the current (already-adjudicated where applicable) content independently. Rendered actors: YOU (home-skater-1) at (20,-7) facing 1.2 rad, owns the puck; Navy2 (home-skater-2) at (18,-1) facing -1.4 rad; Gold1 (away-skater-1) at (23,-2) facing 2.8 rad. Prompt: \"What should YOU check around the circle?\". All seven checks pass on this content; see sceneEvidence for the specific geometry/claims verified and alternative for the accepted non-exclusive alternative.",
+      "checks": {
+        "roster": "pass",
+        "geometry": "pass",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "pass"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "Rendered actors: YOU (home-skater-1) at (20,-7) facing 1.2 rad, owns the puck; Navy2 (home-skater-2) at (18,-1) facing -1.4 rad; Gold1 (away-skater-1) at (23,-2) facing 2.8 rad.",
+          "The board always draws four faceoff circles at fixed centres (+-20.7,+-6.7), radius 4.572m (src/one-on-one/ExperimentalPractice.jsx ExperimentalBoard); YOU (20,-7) is 0.76m from the (20.7,-6.7) circle centre, i.e. genuinely inside/at that circle."
+        ],
+        "stated": [
+          "Briefing: Navy attacks +x, gold attacks -x; YOU have the puck beside the attacking faceoff circle; Navy2 waits above the circle; Gold1 is between YOU and the net; the circle is named as a search area, not a guaranteed pass spot."
+        ],
+        "unproven": [
+          "No timing, skating speed, or actual eye/shoulder-check direction is shown; a facing angle does not itself prove where a player looked.",
+          "Whether Gold1 is truly 'unbeatable' pressure or merely nearby is not measured; only relative position is computed."
+        ]
+      },
+      "sourceUrls": [
+        "https://www.hockeycanada.ca/en-ca/hockey-programs/coaching/under-9",
+        "https://www.hockeycanada.ca/en-ca/news/seven-coaching-principles-vision-scanning-2024-ncw"
+      ]
+    },
+    {
+      "scenarioId": "exp26b-u9-014",
+      "questionId": "exp26b-u9-014-q3",
+      "baseContentHash": "1e76f8cfafebea46bcf7c3163b48748106a13c5b8be7f03ebe68e78a9e354d97",
+      "verdict": "retain",
+      "reason": "Reviewed the current (already-adjudicated where applicable) content independently. Rendered actors: YOU (home-skater-1) at (20,-7) facing 1.2 rad, owns the puck; Navy2 (home-skater-2) at (18,-1) facing -1.4 rad; Gold1 (away-skater-1) at (23,-2) facing 2.8 rad. Prompt: \"Place YOU near the circle with Navy2 visible.\". All seven checks pass on this content; see sceneEvidence for the specific geometry/claims verified and alternative for the accepted non-exclusive alternative.",
+      "checks": {
+        "roster": "pass",
+        "geometry": "pass",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "pass"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "Rendered actors: YOU (home-skater-1) at (20,-7) facing 1.2 rad, owns the puck; Navy2 (home-skater-2) at (18,-1) facing -1.4 rad; Gold1 (away-skater-1) at (23,-2) facing 2.8 rad.",
+          "The board always draws four faceoff circles at fixed centres (+-20.7,+-6.7), radius 4.572m (src/one-on-one/ExperimentalPractice.jsx ExperimentalBoard); YOU (20,-7) is 0.76m from the (20.7,-6.7) circle centre, i.e. genuinely inside/at that circle."
+        ],
+        "stated": [
+          "Briefing: Navy attacks +x, gold attacks -x; YOU have the puck beside the attacking faceoff circle; Navy2 waits above the circle; Gold1 is between YOU and the net; the circle is named as a search area, not a guaranteed pass spot."
+        ],
+        "unproven": [
+          "No timing, skating speed, or actual eye/shoulder-check direction is shown; a facing angle does not itself prove where a player looked.",
+          "Whether Gold1 is truly 'unbeatable' pressure or merely nearby is not measured; only relative position is computed."
+        ]
+      },
+      "sourceUrls": [
+        "https://www.hockeycanada.ca/en-ca/hockey-programs/coaching/under-9",
+        "https://www.hockeycanada.ca/en-ca/news/seven-coaching-principles-vision-scanning-2024-ncw"
+      ],
+      "alternative": "Any point that keeps YOU inside/near the circle while preserving a look at both Navy2 and Gold1 works; (19,-4) is one example, not the only correct dot."
+    },
+    {
+      "scenarioId": "exp26b-u9-014",
+      "questionId": "exp26b-u9-014-q4",
+      "baseContentHash": "b5d40977e3afec9a7838193b1e5659142bedc10b85122b9d8a85a7a3e6a9bab5",
+      "verdict": "retain",
+      "reason": "Reviewed the current (already-adjudicated where applicable) content independently. Rendered actors: YOU (home-skater-1) at (20,-7) facing 1.2 rad, owns the puck; Navy2 (home-skater-2) at (18,-1) facing -1.4 rad; Gold1 (away-skater-1) at (23,-2) facing 2.8 rad. Prompt: \"Arrange the circle search.\". All seven checks pass on this content; see sceneEvidence for the specific geometry/claims verified and alternative for the accepted non-exclusive alternative.",
+      "checks": {
+        "roster": "pass",
+        "geometry": "pass",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "pass"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "Rendered actors: YOU (home-skater-1) at (20,-7) facing 1.2 rad, owns the puck; Navy2 (home-skater-2) at (18,-1) facing -1.4 rad; Gold1 (away-skater-1) at (23,-2) facing 2.8 rad.",
+          "The board always draws four faceoff circles at fixed centres (+-20.7,+-6.7), radius 4.572m (src/one-on-one/ExperimentalPractice.jsx ExperimentalBoard); YOU (20,-7) is 0.76m from the (20.7,-6.7) circle centre, i.e. genuinely inside/at that circle."
+        ],
+        "stated": [
+          "Briefing: Navy attacks +x, gold attacks -x; YOU have the puck beside the attacking faceoff circle; Navy2 waits above the circle; Gold1 is between YOU and the net; the circle is named as a search area, not a guaranteed pass spot."
+        ],
+        "unproven": [
+          "No timing, skating speed, or actual eye/shoulder-check direction is shown; a facing angle does not itself prove where a player looked.",
+          "Whether Gold1 is truly 'unbeatable' pressure or merely nearby is not measured; only relative position is computed."
+        ]
+      },
+      "sourceUrls": [
+        "https://www.hockeycanada.ca/en-ca/hockey-programs/coaching/under-9",
+        "https://www.hockeycanada.ca/en-ca/news/seven-coaching-principles-vision-scanning-2024-ncw"
+      ],
+      "alternative": "A player who checks Gold1 and Navy2 while still skating toward the circle (rather than arriving, then checking) is not wrong; the three-step routine is a discussion scaffold."
+    },
+    {
+      "scenarioId": "exp26b-u9-014",
+      "questionId": "exp26b-u9-014-q5",
+      "baseContentHash": "34f7dae36f03c06ab56dcf0a73b7997799f16aaa1bf35b53857bf5b8387953e8",
+      "verdict": "retain",
+      "reason": "Reviewed the current (already-adjudicated where applicable) content independently. Rendered actors: YOU (home-skater-1) at (20,-7) facing 1.2 rad, owns the puck; Navy2 (home-skater-2) at (18,-1) facing -1.4 rad; Gold1 (away-skater-1) at (23,-2) facing 2.8 rad. Prompt: \"Gold1 moves across the circle. What should guide your choice?\". All seven checks pass on this content; see sceneEvidence for the specific geometry/claims verified and alternative for the accepted non-exclusive alternative.",
+      "checks": {
+        "roster": "pass",
+        "geometry": "pass",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "pass"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "Rendered actors: YOU (home-skater-1) at (20,-7) facing 1.2 rad, owns the puck; Navy2 (home-skater-2) at (18,-1) facing -1.4 rad; Gold1 (away-skater-1) at (23,-2) facing 2.8 rad.",
+          "The board always draws four faceoff circles at fixed centres (+-20.7,+-6.7), radius 4.572m (src/one-on-one/ExperimentalPractice.jsx ExperimentalBoard); YOU (20,-7) is 0.76m from the (20.7,-6.7) circle centre, i.e. genuinely inside/at that circle."
+        ],
+        "stated": [
+          "Briefing: Navy attacks +x, gold attacks -x; YOU have the puck beside the attacking faceoff circle; Navy2 waits above the circle; Gold1 is between YOU and the net; the circle is named as a search area, not a guaranteed pass spot."
+        ],
+        "unproven": [
+          "No timing, skating speed, or actual eye/shoulder-check direction is shown; a facing angle does not itself prove where a player looked.",
+          "Whether Gold1 is truly 'unbeatable' pressure or merely nearby is not measured; only relative position is computed."
+        ]
+      },
+      "sourceUrls": [
+        "https://www.hockeycanada.ca/en-ca/hockey-programs/coaching/under-9",
+        "https://www.hockeycanada.ca/en-ca/news/seven-coaching-principles-vision-scanning-2024-ncw"
+      ],
+      "alternative": "If Navy2 also becomes covered when Gold1 moves, protecting the puck and resetting (rather than forcing any pass) is an equally valid response."
+    },
+    {
+      "scenarioId": "exp26b-u9-014",
+      "questionId": "exp26b-u9-014-q6",
+      "baseContentHash": "7faf1c35d9dc141d77fbb07b5c84a698f91c6e6805e313f22f4b4a206e1ec2cf",
+      "verdict": "retain",
+      "reason": "Reviewed the current (already-adjudicated where applicable) content independently. Rendered actors: YOU (home-skater-1) at (20,-7) facing 1.2 rad, owns the puck; Navy2 (home-skater-2) at (18,-1) facing -1.4 rad; Gold1 (away-skater-1) at (23,-2) facing 2.8 rad. Prompt: \"How can the circle help without deciding the play?\". All seven checks pass on this content; see sceneEvidence for the specific geometry/claims verified and alternative for the accepted non-exclusive alternative.",
+      "checks": {
+        "roster": "pass",
+        "geometry": "pass",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "pass"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "Rendered actors: YOU (home-skater-1) at (20,-7) facing 1.2 rad, owns the puck; Navy2 (home-skater-2) at (18,-1) facing -1.4 rad; Gold1 (away-skater-1) at (23,-2) facing 2.8 rad.",
+          "The board always draws four faceoff circles at fixed centres (+-20.7,+-6.7), radius 4.572m (src/one-on-one/ExperimentalPractice.jsx ExperimentalBoard); YOU (20,-7) is 0.76m from the (20.7,-6.7) circle centre, i.e. genuinely inside/at that circle."
+        ],
+        "stated": [
+          "Briefing: Navy attacks +x, gold attacks -x; YOU have the puck beside the attacking faceoff circle; Navy2 waits above the circle; Gold1 is between YOU and the net; the circle is named as a search area, not a guaranteed pass spot."
+        ],
+        "unproven": [
+          "No timing, skating speed, or actual eye/shoulder-check direction is shown; a facing angle does not itself prove where a player looked.",
+          "Whether Gold1 is truly 'unbeatable' pressure or merely nearby is not measured; only relative position is computed."
+        ]
+      },
+      "sourceUrls": [
+        "https://www.hockeycanada.ca/en-ca/hockey-programs/coaching/under-9",
+        "https://www.hockeycanada.ca/en-ca/news/seven-coaching-principles-vision-scanning-2024-ncw"
+      ],
+      "alternative": "A player could instead describe the circle as a place to slow down and get a repeatable read, rather than a search area per se; both framings are acceptable as long as the circle is not treated as a rule or a guaranteed target."
+    },
+    {
+      "scenarioId": "exp26b-u9-015",
+      "questionId": "exp26b-u9-015-q1",
+      "baseContentHash": "6cc116c65c9badb51f139231eec5585c499a296690870e90eb0aaa7de92c8b74",
+      "verdict": "retain",
+      "reason": "Reviewed the current (already-adjudicated where applicable) content independently. Rendered actors: YOU (home-skater-1) at (17,-1) facing 3 rad; Navy2 (home-skater-2) at (22,-1) facing 0.1 rad, owns the puck; Navy3 (home-skater-3) at (20,-7) facing -0.4 rad; Gold1 (away-skater-1) at (19,-1) facing 3.1 rad. Prompt: \"Who controls the puck now?\". All seven checks pass on this content; see sceneEvidence for the specific geometry/claims verified and alternative for the accepted non-exclusive alternative.",
+      "checks": {
+        "roster": "pass",
+        "geometry": "pass",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "pass"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "Rendered actors: YOU (home-skater-1) at (17,-1) facing 3 rad; Navy2 (home-skater-2) at (22,-1) facing 0.1 rad, owns the puck; Navy3 (home-skater-3) at (20,-7) facing -0.4 rad; Gold1 (away-skater-1) at (19,-1) facing 3.1 rad.",
+          "YOU, Navy2 and Gold1 all share y=-1: Gold1 (x=19) sits exactly on the straight line between YOU (x=17) and the puck's resolved carried position on Navy2 (~22.93,-0.2) -- perpendicular deviation only 0.27m, i.e. Gold1 is essentially exactly on the old return lane.",
+          "Navy3 (y=-7) is 0.27m within a 3.29m-clear angle from Navy2's carried puck (verified: perpendicular distance from Gold1 to the puck-Navy3 line is 3.29m, i.e. genuinely clear of Gold1)."
+        ],
+        "stated": [
+          "Briefing: YOU passed to Navy2 near the attacking end; Navy2 now controls the puck; Gold1 has moved onto the old return lane; Navy3 waits below with a clear-looking angle."
+        ],
+        "unproven": [
+          "The original pass itself (YOU to Navy2) is a stated past event, not shown in flight.",
+          "Whether Navy2 will actually pass, and to whom, is not decided by the freeze; only the current lanes are computed."
+        ]
+      },
+      "sourceUrls": [
+        "https://www.hockeycanada.ca/en-ca/news/seven-coaching-principles-puck-control-2024-ncw",
+        "https://www.hockeycanada.ca/en-ca/news/seven-coaching-principles-vision-scanning-2024-ncw"
+      ]
+    },
+    {
+      "scenarioId": "exp26b-u9-015",
+      "questionId": "exp26b-u9-015-q2",
+      "baseContentHash": "d53347d5e0b390502e996ad01ce66592d11dde963db6fdd1a4e97bbcf70d6f24",
+      "verdict": "retain",
+      "reason": "Reviewed the current (already-adjudicated where applicable) content independently. Rendered actors: YOU (home-skater-1) at (17,-1) facing 3 rad; Navy2 (home-skater-2) at (22,-1) facing 0.1 rad, owns the puck; Navy3 (home-skater-3) at (20,-7) facing -0.4 rad; Gold1 (away-skater-1) at (19,-1) facing 3.1 rad. Prompt: \"What changed after the pass?\". All seven checks pass on this content; see sceneEvidence for the specific geometry/claims verified and alternative for the accepted non-exclusive alternative.",
+      "checks": {
+        "roster": "pass",
+        "geometry": "pass",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "pass"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "Rendered actors: YOU (home-skater-1) at (17,-1) facing 3 rad; Navy2 (home-skater-2) at (22,-1) facing 0.1 rad, owns the puck; Navy3 (home-skater-3) at (20,-7) facing -0.4 rad; Gold1 (away-skater-1) at (19,-1) facing 3.1 rad.",
+          "YOU, Navy2 and Gold1 all share y=-1: Gold1 (x=19) sits exactly on the straight line between YOU (x=17) and the puck's resolved carried position on Navy2 (~22.93,-0.2) -- perpendicular deviation only 0.27m, i.e. Gold1 is essentially exactly on the old return lane.",
+          "Navy3 (y=-7) is 0.27m within a 3.29m-clear angle from Navy2's carried puck (verified: perpendicular distance from Gold1 to the puck-Navy3 line is 3.29m, i.e. genuinely clear of Gold1)."
+        ],
+        "stated": [
+          "Briefing: YOU passed to Navy2 near the attacking end; Navy2 now controls the puck; Gold1 has moved onto the old return lane; Navy3 waits below with a clear-looking angle."
+        ],
+        "unproven": [
+          "The original pass itself (YOU to Navy2) is a stated past event, not shown in flight.",
+          "Whether Navy2 will actually pass, and to whom, is not decided by the freeze; only the current lanes are computed."
+        ]
+      },
+      "sourceUrls": [
+        "https://www.hockeycanada.ca/en-ca/news/seven-coaching-principles-puck-control-2024-ncw",
+        "https://www.hockeycanada.ca/en-ca/news/seven-coaching-principles-vision-scanning-2024-ncw"
+      ]
+    },
+    {
+      "scenarioId": "exp26b-u9-015",
+      "questionId": "exp26b-u9-015-q3",
+      "baseContentHash": "8e489e8f1902d7649e1247ee86ade0e1ea53ed14185b2400befeeb789fa089a9",
+      "verdict": "retain",
+      "reason": "Reviewed the current (already-adjudicated where applicable) content independently. Rendered actors: YOU (home-skater-1) at (17,-1) facing 3 rad; Navy2 (home-skater-2) at (22,-1) facing 0.1 rad, owns the puck; Navy3 (home-skater-3) at (20,-7) facing -0.4 rad; Gold1 (away-skater-1) at (19,-1) facing 3.1 rad. Prompt: \"Place YOU below the old lane to support Navy2.\". All seven checks pass on this content; see sceneEvidence for the specific geometry/claims verified and alternative for the accepted non-exclusive alternative.",
+      "checks": {
+        "roster": "pass",
+        "geometry": "pass",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "pass"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "Rendered actors: YOU (home-skater-1) at (17,-1) facing 3 rad; Navy2 (home-skater-2) at (22,-1) facing 0.1 rad, owns the puck; Navy3 (home-skater-3) at (20,-7) facing -0.4 rad; Gold1 (away-skater-1) at (19,-1) facing 3.1 rad.",
+          "YOU, Navy2 and Gold1 all share y=-1: Gold1 (x=19) sits exactly on the straight line between YOU (x=17) and the puck's resolved carried position on Navy2 (~22.93,-0.2) -- perpendicular deviation only 0.27m, i.e. Gold1 is essentially exactly on the old return lane.",
+          "Navy3 (y=-7) is 0.27m within a 3.29m-clear angle from Navy2's carried puck (verified: perpendicular distance from Gold1 to the puck-Navy3 line is 3.29m, i.e. genuinely clear of Gold1)."
+        ],
+        "stated": [
+          "Briefing: YOU passed to Navy2 near the attacking end; Navy2 now controls the puck; Gold1 has moved onto the old return lane; Navy3 waits below with a clear-looking angle."
+        ],
+        "unproven": [
+          "The original pass itself (YOU to Navy2) is a stated past event, not shown in flight.",
+          "Whether Navy2 will actually pass, and to whom, is not decided by the freeze; only the current lanes are computed."
+        ]
+      },
+      "sourceUrls": [
+        "https://www.hockeycanada.ca/en-ca/news/seven-coaching-principles-puck-control-2024-ncw",
+        "https://www.hockeycanada.ca/en-ca/news/seven-coaching-principles-vision-scanning-2024-ncw"
+      ],
+      "alternative": "Any lower/away-from-Gold1 point that keeps Navy2 in view is defensible; (16,-6) is one example, and a slightly different depth or width can work just as well."
+    },
+    {
+      "scenarioId": "exp26b-u9-015",
+      "questionId": "exp26b-u9-015-q4",
+      "baseContentHash": "b396762238a2408d97a5db900ff95875a867b4d35e20221ee7f3727ec57aae92",
+      "verdict": "retain",
+      "reason": "Reviewed the current (already-adjudicated where applicable) content independently. Rendered actors: YOU (home-skater-1) at (17,-1) facing 3 rad; Navy2 (home-skater-2) at (22,-1) facing 0.1 rad, owns the puck; Navy3 (home-skater-3) at (20,-7) facing -0.4 rad; Gold1 (away-skater-1) at (19,-1) facing 3.1 rad. Prompt: \"Arrange the closed-lane response.\". All seven checks pass on this content; see sceneEvidence for the specific geometry/claims verified and alternative for the accepted non-exclusive alternative.",
+      "checks": {
+        "roster": "pass",
+        "geometry": "pass",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "pass"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "Rendered actors: YOU (home-skater-1) at (17,-1) facing 3 rad; Navy2 (home-skater-2) at (22,-1) facing 0.1 rad, owns the puck; Navy3 (home-skater-3) at (20,-7) facing -0.4 rad; Gold1 (away-skater-1) at (19,-1) facing 3.1 rad.",
+          "YOU, Navy2 and Gold1 all share y=-1: Gold1 (x=19) sits exactly on the straight line between YOU (x=17) and the puck's resolved carried position on Navy2 (~22.93,-0.2) -- perpendicular deviation only 0.27m, i.e. Gold1 is essentially exactly on the old return lane.",
+          "Navy3 (y=-7) is 0.27m within a 3.29m-clear angle from Navy2's carried puck (verified: perpendicular distance from Gold1 to the puck-Navy3 line is 3.29m, i.e. genuinely clear of Gold1)."
+        ],
+        "stated": [
+          "Briefing: YOU passed to Navy2 near the attacking end; Navy2 now controls the puck; Gold1 has moved onto the old return lane; Navy3 waits below with a clear-looking angle."
+        ],
+        "unproven": [
+          "The original pass itself (YOU to Navy2) is a stated past event, not shown in flight.",
+          "Whether Navy2 will actually pass, and to whom, is not decided by the freeze; only the current lanes are computed."
+        ]
+      },
+      "sourceUrls": [
+        "https://www.hockeycanada.ca/en-ca/news/seven-coaching-principles-puck-control-2024-ncw",
+        "https://www.hockeycanada.ca/en-ca/news/seven-coaching-principles-vision-scanning-2024-ncw"
+      ],
+      "alternative": "A player who is already moving to a new angle while still noticing Gold1 (rather than strictly noticing first, then moving) is not making an error; this is a discussion scaffold, not a timed sequence."
+    },
+    {
+      "scenarioId": "exp26b-u9-015",
+      "questionId": "exp26b-u9-015-q5",
+      "baseContentHash": "2606dae15163f3f28324b755f6d5332a8c2f82dcd8431d8534ec46bdf74155cd",
+      "verdict": "retain",
+      "reason": "Reviewed the current (already-adjudicated where applicable) content independently. Rendered actors: YOU (home-skater-1) at (17,-1) facing 3 rad; Navy2 (home-skater-2) at (22,-1) facing 0.1 rad, owns the puck; Navy3 (home-skater-3) at (20,-7) facing -0.4 rad; Gold1 (away-skater-1) at (19,-1) facing 3.1 rad. Prompt: \"Gold1 also closes the lower angle. What could Navy2 do?\". All seven checks pass on this content; see sceneEvidence for the specific geometry/claims verified and alternative for the accepted non-exclusive alternative.",
+      "checks": {
+        "roster": "pass",
+        "geometry": "pass",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "pass"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "Rendered actors: YOU (home-skater-1) at (17,-1) facing 3 rad; Navy2 (home-skater-2) at (22,-1) facing 0.1 rad, owns the puck; Navy3 (home-skater-3) at (20,-7) facing -0.4 rad; Gold1 (away-skater-1) at (19,-1) facing 3.1 rad.",
+          "YOU, Navy2 and Gold1 all share y=-1: Gold1 (x=19) sits exactly on the straight line between YOU (x=17) and the puck's resolved carried position on Navy2 (~22.93,-0.2) -- perpendicular deviation only 0.27m, i.e. Gold1 is essentially exactly on the old return lane.",
+          "Navy3 (y=-7) is 0.27m within a 3.29m-clear angle from Navy2's carried puck (verified: perpendicular distance from Gold1 to the puck-Navy3 line is 3.29m, i.e. genuinely clear of Gold1)."
+        ],
+        "stated": [
+          "Briefing: YOU passed to Navy2 near the attacking end; Navy2 now controls the puck; Gold1 has moved onto the old return lane; Navy3 waits below with a clear-looking angle."
+        ],
+        "unproven": [
+          "The original pass itself (YOU to Navy2) is a stated past event, not shown in flight.",
+          "Whether Navy2 will actually pass, and to whom, is not decided by the freeze; only the current lanes are computed."
+        ]
+      },
+      "sourceUrls": [
+        "https://www.hockeycanada.ca/en-ca/news/seven-coaching-principles-puck-control-2024-ncw",
+        "https://www.hockeycanada.ca/en-ca/news/seven-coaching-principles-vision-scanning-2024-ncw"
+      ],
+      "alternative": "If Navy2 can protect the puck and delay instead of committing to a carry or new pass immediately, that is also a defensible choice while the picture is still closing in."
+    },
+    {
+      "scenarioId": "exp26b-u9-015",
+      "questionId": "exp26b-u9-015-q6",
+      "baseContentHash": "30e67372c5f5bda8d84316d242dcc8995be1240012748351ea57f4dc4fe9be11",
+      "verdict": "retain",
+      "reason": "Reviewed the current (already-adjudicated where applicable) content independently. Rendered actors: YOU (home-skater-1) at (17,-1) facing 3 rad; Navy2 (home-skater-2) at (22,-1) facing 0.1 rad, owns the puck; Navy3 (home-skater-3) at (20,-7) facing -0.4 rad; Gold1 (away-skater-1) at (19,-1) facing 3.1 rad. Prompt: \"Why does a completed pass still need another read?\". All seven checks pass on this content; see sceneEvidence for the specific geometry/claims verified and alternative for the accepted non-exclusive alternative.",
+      "checks": {
+        "roster": "pass",
+        "geometry": "pass",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "pass"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "Rendered actors: YOU (home-skater-1) at (17,-1) facing 3 rad; Navy2 (home-skater-2) at (22,-1) facing 0.1 rad, owns the puck; Navy3 (home-skater-3) at (20,-7) facing -0.4 rad; Gold1 (away-skater-1) at (19,-1) facing 3.1 rad.",
+          "YOU, Navy2 and Gold1 all share y=-1: Gold1 (x=19) sits exactly on the straight line between YOU (x=17) and the puck's resolved carried position on Navy2 (~22.93,-0.2) -- perpendicular deviation only 0.27m, i.e. Gold1 is essentially exactly on the old return lane.",
+          "Navy3 (y=-7) is 0.27m within a 3.29m-clear angle from Navy2's carried puck (verified: perpendicular distance from Gold1 to the puck-Navy3 line is 3.29m, i.e. genuinely clear of Gold1)."
+        ],
+        "stated": [
+          "Briefing: YOU passed to Navy2 near the attacking end; Navy2 now controls the puck; Gold1 has moved onto the old return lane; Navy3 waits below with a clear-looking angle."
+        ],
+        "unproven": [
+          "The original pass itself (YOU to Navy2) is a stated past event, not shown in flight.",
+          "Whether Navy2 will actually pass, and to whom, is not decided by the freeze; only the current lanes are computed."
+        ]
+      },
+      "sourceUrls": [
+        "https://www.hockeycanada.ca/en-ca/news/seven-coaching-principles-puck-control-2024-ncw",
+        "https://www.hockeycanada.ca/en-ca/news/seven-coaching-principles-vision-scanning-2024-ncw"
+      ],
+      "alternative": "A player could instead describe this in terms of the defender's habit of adjusting to take away the first read, rather than focusing on the specific lane; both are acceptable if they show the read must be repeated."
+    },
+    {
+      "scenarioId": "exp26-u11-001",
+      "questionId": "exp26-u11-001-q1",
+      "baseContentHash": "6a0c2c59c3bc2122bf984cb6e7f0e936422992c01d3367bfc7c6dc3df5309b25",
+      "verdict": "retain",
+      "reason": "Reviewed the current (already-adjudicated where applicable) content independently. Rendered actors: YOU (h1) at (-16,-6) facing -2.356 rad (unit vector (-0.707,-0.707), pointing exactly at the loose puck); F2 (h2) at (-10,-1) facing 3.14 rad; D1 (a1) at (-12,-6) facing 3.14 rad (toward -x, i.e. toward the puck). Prompt: \"What is true about possession at this freeze?\". All seven checks pass on this content; see sceneEvidence for the specific geometry/claims verified and alternative for the accepted non-exclusive alternative.",
+      "checks": {
+        "roster": "pass",
+        "geometry": "pass",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "pass"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "Rendered actors: YOU (h1) at (-16,-6) facing -2.356 rad (unit vector (-0.707,-0.707), pointing exactly at the loose puck); F2 (h2) at (-10,-1) facing 3.14 rad; D1 (a1) at (-12,-6) facing 3.14 rad (toward -x, i.e. toward the puck).",
+          "Loose puck at (-18,-8), owner:null.",
+          "Puck-to-wall distance: |y=-8| to the y=-12.954 side wall = 4.954m (straight-wall region; rounded corner only begins at |x|>21.9456, and |x|=18 here).",
+          "F2 (-10,-1) is materially closer to mid-width (y=0, 1m away) and to the neutral zone (x=-10, 7.62m from the near blue line) than the puck (y=-8, x=-18), consistent with 'F2 is an outlet toward the middle'.",
+          "D1 (-12,-6) is closer to the blue line/neutral zone (x=-12) than the puck (x=-18), consistent with 'D1 is approaching from up ice'."
+        ],
+        "stated": [
+          "Briefing: Navy attacks the right net (+x); gold attacks the left net; YOU are approaching a loose puck near the side wall; F2 is an outlet toward the middle; D1 is approaching from up ice; no player has recovered the puck yet."
+        ],
+        "unproven": [
+          "No arrival order, skating speed, or actual shoulder-check is shown; facing does not itself prove a completed look.",
+          "'Near the side wall' is a relative description (puck is 4.95m from the wall vs 8m from mid-ice, i.e. meaningfully closer to the wall) rather than a hugging-the-boards claim; retained as a defensible, non-precise scene description, consistent with calibration guidance that a small/approximate reference is not automatically a defect."
+        ]
+      },
+      "sourceUrls": [
+        "https://www.hockeycanada.ca/en-ca/news/seven-coaching-principles-vision-scanning-2024-ncw"
+      ]
+    },
+    {
+      "scenarioId": "exp26-u11-001",
+      "questionId": "exp26-u11-001-q2",
+      "baseContentHash": "377721eaa80d20575686341d0f736a0ef38c915e667cf91ca6e23b3c3f51224d",
+      "verdict": "retain",
+      "reason": "Reviewed the current (already-adjudicated where applicable) content independently. Rendered actors: YOU (h1) at (-16,-6) facing -2.356 rad (unit vector (-0.707,-0.707), pointing exactly at the loose puck); F2 (h2) at (-10,-1) facing 3.14 rad; D1 (a1) at (-12,-6) facing 3.14 rad (toward -x, i.e. toward the puck). Prompt: \"Which two things would help YOU plan the pickup?\". All seven checks pass on this content; see sceneEvidence for the specific geometry/claims verified and alternative for the accepted non-exclusive alternative.",
+      "checks": {
+        "roster": "pass",
+        "geometry": "pass",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "pass"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "Rendered actors: YOU (h1) at (-16,-6) facing -2.356 rad (unit vector (-0.707,-0.707), pointing exactly at the loose puck); F2 (h2) at (-10,-1) facing 3.14 rad; D1 (a1) at (-12,-6) facing 3.14 rad (toward -x, i.e. toward the puck).",
+          "Loose puck at (-18,-8), owner:null.",
+          "Puck-to-wall distance: |y=-8| to the y=-12.954 side wall = 4.954m (straight-wall region; rounded corner only begins at |x|>21.9456, and |x|=18 here).",
+          "F2 (-10,-1) is materially closer to mid-width (y=0, 1m away) and to the neutral zone (x=-10, 7.62m from the near blue line) than the puck (y=-8, x=-18), consistent with 'F2 is an outlet toward the middle'.",
+          "D1 (-12,-6) is closer to the blue line/neutral zone (x=-12) than the puck (x=-18), consistent with 'D1 is approaching from up ice'."
+        ],
+        "stated": [
+          "Briefing: Navy attacks the right net (+x); gold attacks the left net; YOU are approaching a loose puck near the side wall; F2 is an outlet toward the middle; D1 is approaching from up ice; no player has recovered the puck yet."
+        ],
+        "unproven": [
+          "No arrival order, skating speed, or actual shoulder-check is shown; facing does not itself prove a completed look.",
+          "'Near the side wall' is a relative description (puck is 4.95m from the wall vs 8m from mid-ice, i.e. meaningfully closer to the wall) rather than a hugging-the-boards claim; retained as a defensible, non-precise scene description, consistent with calibration guidance that a small/approximate reference is not automatically a defect."
+        ]
+      },
+      "sourceUrls": [
+        "https://www.hockeycanada.ca/en-ca/news/seven-coaching-principles-vision-scanning-2024-ncw"
+      ],
+      "alternative": "Distance to the puck alone (rather than F2's availability or D1's direction) is not on its own useless information, but by itself it does not describe the retrieval decision the way the two named relationships do."
+    },
+    {
+      "scenarioId": "exp26-u11-001",
+      "questionId": "exp26-u11-001-q3",
+      "baseContentHash": "8230de50438331e42da6e6b7f4b64c7fc331599ff28669b1dd371c1319fe7e82",
+      "verdict": "retain",
+      "reason": "Reviewed the current (already-adjudicated where applicable) content independently. Rendered actors: YOU (h1) at (-16,-6) facing -2.356 rad (unit vector (-0.707,-0.707), pointing exactly at the loose puck); F2 (h2) at (-10,-1) facing 3.14 rad; D1 (a1) at (-12,-6) facing 3.14 rad (toward -x, i.e. toward the puck). Prompt: \"Arrange this suggested retrieval plan.\". All seven checks pass on this content; see sceneEvidence for the specific geometry/claims verified and alternative for the accepted non-exclusive alternative. Prior history: catalog-review.json flagged this sequence as a P3 teaching note (steps could be read as strictly ordered); followup/mixed-proposals.json independently reviewed and decided 'keep', reasoning the explanation already states scanning may repeat. Independently re-verified that reasoning still holds on the current text -- treating this as resolved history, not a fresh defect.",
+      "checks": {
+        "roster": "pass",
+        "geometry": "pass",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "pass"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "Rendered actors: YOU (h1) at (-16,-6) facing -2.356 rad (unit vector (-0.707,-0.707), pointing exactly at the loose puck); F2 (h2) at (-10,-1) facing 3.14 rad; D1 (a1) at (-12,-6) facing 3.14 rad (toward -x, i.e. toward the puck).",
+          "Loose puck at (-18,-8), owner:null.",
+          "Puck-to-wall distance: |y=-8| to the y=-12.954 side wall = 4.954m (straight-wall region; rounded corner only begins at |x|>21.9456, and |x|=18 here).",
+          "F2 (-10,-1) is materially closer to mid-width (y=0, 1m away) and to the neutral zone (x=-10, 7.62m from the near blue line) than the puck (y=-8, x=-18), consistent with 'F2 is an outlet toward the middle'.",
+          "D1 (-12,-6) is closer to the blue line/neutral zone (x=-12) than the puck (x=-18), consistent with 'D1 is approaching from up ice'."
+        ],
+        "stated": [
+          "Briefing: Navy attacks the right net (+x); gold attacks the left net; YOU are approaching a loose puck near the side wall; F2 is an outlet toward the middle; D1 is approaching from up ice; no player has recovered the puck yet."
+        ],
+        "unproven": [
+          "No arrival order, skating speed, or actual shoulder-check is shown; facing does not itself prove a completed look.",
+          "'Near the side wall' is a relative description (puck is 4.95m from the wall vs 8m from mid-ice, i.e. meaningfully closer to the wall) rather than a hugging-the-boards claim; retained as a defensible, non-precise scene description, consistent with calibration guidance that a small/approximate reference is not automatically a defect."
+        ]
+      },
+      "sourceUrls": [
+        "https://www.hockeycanada.ca/en-ca/news/seven-coaching-principles-vision-scanning-2024-ncw"
+      ],
+      "alternative": "Because scanning can continue through the approach rather than stopping once at the start, a player who keeps checking D1/F2 while already skating toward the puck is not making a timing error; this sequence is a discussion scaffold (already softened by its own explanation), a P3-level editorial note carried forward from the prior adjudicated review rather than a fresh defect."
+    },
+    {
+      "scenarioId": "exp26-u11-001",
+      "questionId": "exp26-u11-001-q4",
+      "baseContentHash": "3717d9cee0cafe721f07e91e14ce6ec32a7a1632815536e838cc7488fa92741c",
+      "verdict": "retain",
+      "reason": "Reviewed the current (already-adjudicated where applicable) content independently. Rendered actors: YOU (h1) at (-16,-6) facing -2.356 rad (unit vector (-0.707,-0.707), pointing exactly at the loose puck); F2 (h2) at (-10,-1) facing 3.14 rad; D1 (a1) at (-12,-6) facing 3.14 rad (toward -x, i.e. toward the puck). Prompt: \"Move YOU to an approach point that leaves a view toward F2.\". All seven checks pass on this content; see sceneEvidence for the specific geometry/claims verified and alternative for the accepted non-exclusive alternative.",
+      "checks": {
+        "roster": "pass",
+        "geometry": "pass",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "pass"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "Rendered actors: YOU (h1) at (-16,-6) facing -2.356 rad (unit vector (-0.707,-0.707), pointing exactly at the loose puck); F2 (h2) at (-10,-1) facing 3.14 rad; D1 (a1) at (-12,-6) facing 3.14 rad (toward -x, i.e. toward the puck).",
+          "Loose puck at (-18,-8), owner:null.",
+          "Puck-to-wall distance: |y=-8| to the y=-12.954 side wall = 4.954m (straight-wall region; rounded corner only begins at |x|>21.9456, and |x|=18 here).",
+          "F2 (-10,-1) is materially closer to mid-width (y=0, 1m away) and to the neutral zone (x=-10, 7.62m from the near blue line) than the puck (y=-8, x=-18), consistent with 'F2 is an outlet toward the middle'.",
+          "D1 (-12,-6) is closer to the blue line/neutral zone (x=-12) than the puck (x=-18), consistent with 'D1 is approaching from up ice'."
+        ],
+        "stated": [
+          "Briefing: Navy attacks the right net (+x); gold attacks the left net; YOU are approaching a loose puck near the side wall; F2 is an outlet toward the middle; D1 is approaching from up ice; no player has recovered the puck yet."
+        ],
+        "unproven": [
+          "No arrival order, skating speed, or actual shoulder-check is shown; facing does not itself prove a completed look.",
+          "'Near the side wall' is a relative description (puck is 4.95m from the wall vs 8m from mid-ice, i.e. meaningfully closer to the wall) rather than a hugging-the-boards claim; retained as a defensible, non-precise scene description, consistent with calibration guidance that a small/approximate reference is not automatically a defect."
+        ]
+      },
+      "sourceUrls": [
+        "https://www.hockeycanada.ca/en-ca/news/seven-coaching-principles-vision-scanning-2024-ncw"
+      ],
+      "alternative": "A slightly different approach point that still keeps F2 in view and stays short of the wall (rather than this exact -18,-6.5) is equally valid."
+    },
+    {
+      "scenarioId": "exp26-u11-001",
+      "questionId": "exp26-u11-001-q5",
+      "baseContentHash": "1d53a4fa1d78a2443333adb59decc3edd92b0895405b8d7b92b347827534dc08",
+      "verdict": "retain",
+      "reason": "Reviewed the current (already-adjudicated where applicable) content independently. Rendered actors: YOU (h1) at (-16,-6) facing -2.356 rad (unit vector (-0.707,-0.707), pointing exactly at the loose puck); F2 (h2) at (-10,-1) facing 3.14 rad; D1 (a1) at (-12,-6) facing 3.14 rad (toward -x, i.e. toward the puck). Prompt: \"Suppose D1 closes the middle outlet before the pickup. What could YOU reconsider?\". All seven checks pass on this content; see sceneEvidence for the specific geometry/claims verified and alternative for the accepted non-exclusive alternative.",
+      "checks": {
+        "roster": "pass",
+        "geometry": "pass",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "pass"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "Rendered actors: YOU (h1) at (-16,-6) facing -2.356 rad (unit vector (-0.707,-0.707), pointing exactly at the loose puck); F2 (h2) at (-10,-1) facing 3.14 rad; D1 (a1) at (-12,-6) facing 3.14 rad (toward -x, i.e. toward the puck).",
+          "Loose puck at (-18,-8), owner:null.",
+          "Puck-to-wall distance: |y=-8| to the y=-12.954 side wall = 4.954m (straight-wall region; rounded corner only begins at |x|>21.9456, and |x|=18 here).",
+          "F2 (-10,-1) is materially closer to mid-width (y=0, 1m away) and to the neutral zone (x=-10, 7.62m from the near blue line) than the puck (y=-8, x=-18), consistent with 'F2 is an outlet toward the middle'.",
+          "D1 (-12,-6) is closer to the blue line/neutral zone (x=-12) than the puck (x=-18), consistent with 'D1 is approaching from up ice'."
+        ],
+        "stated": [
+          "Briefing: Navy attacks the right net (+x); gold attacks the left net; YOU are approaching a loose puck near the side wall; F2 is an outlet toward the middle; D1 is approaching from up ice; no player has recovered the puck yet."
+        ],
+        "unproven": [
+          "No arrival order, skating speed, or actual shoulder-check is shown; facing does not itself prove a completed look.",
+          "'Near the side wall' is a relative description (puck is 4.95m from the wall vs 8m from mid-ice, i.e. meaningfully closer to the wall) rather than a hugging-the-boards claim; retained as a defensible, non-precise scene description, consistent with calibration guidance that a small/approximate reference is not automatically a defect."
+        ]
+      },
+      "sourceUrls": [
+        "https://www.hockeycanada.ca/en-ca/news/seven-coaching-principles-vision-scanning-2024-ncw"
+      ],
+      "alternative": "If F2 is still reachable but from a different angle (rather than a fully separate exit), adjusting the same pass's angle can also be reasonable depending on how far D1 has closed."
+    },
+    {
+      "scenarioId": "exp26-u11-001",
+      "questionId": "exp26-u11-001-q6",
+      "baseContentHash": "a164e235f4df9054ffa8f9711d1f337ab1ff7b573748c474a356e730349d1631",
+      "verdict": "retain",
+      "reason": "Reviewed the current (already-adjudicated where applicable) content independently. Rendered actors: YOU (h1) at (-16,-6) facing -2.356 rad (unit vector (-0.707,-0.707), pointing exactly at the loose puck); F2 (h2) at (-10,-1) facing 3.14 rad; D1 (a1) at (-12,-6) facing 3.14 rad (toward -x, i.e. toward the puck). Prompt: \"What would you want to see again just before touching this puck?\". All seven checks pass on this content; see sceneEvidence for the specific geometry/claims verified and alternative for the accepted non-exclusive alternative.",
+      "checks": {
+        "roster": "pass",
+        "geometry": "pass",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "pass"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "Rendered actors: YOU (h1) at (-16,-6) facing -2.356 rad (unit vector (-0.707,-0.707), pointing exactly at the loose puck); F2 (h2) at (-10,-1) facing 3.14 rad; D1 (a1) at (-12,-6) facing 3.14 rad (toward -x, i.e. toward the puck).",
+          "Loose puck at (-18,-8), owner:null.",
+          "Puck-to-wall distance: |y=-8| to the y=-12.954 side wall = 4.954m (straight-wall region; rounded corner only begins at |x|>21.9456, and |x|=18 here).",
+          "F2 (-10,-1) is materially closer to mid-width (y=0, 1m away) and to the neutral zone (x=-10, 7.62m from the near blue line) than the puck (y=-8, x=-18), consistent with 'F2 is an outlet toward the middle'.",
+          "D1 (-12,-6) is closer to the blue line/neutral zone (x=-12) than the puck (x=-18), consistent with 'D1 is approaching from up ice'."
+        ],
+        "stated": [
+          "Briefing: Navy attacks the right net (+x); gold attacks the left net; YOU are approaching a loose puck near the side wall; F2 is an outlet toward the middle; D1 is approaching from up ice; no player has recovered the puck yet."
+        ],
+        "unproven": [
+          "No arrival order, skating speed, or actual shoulder-check is shown; facing does not itself prove a completed look.",
+          "'Near the side wall' is a relative description (puck is 4.95m from the wall vs 8m from mid-ice, i.e. meaningfully closer to the wall) rather than a hugging-the-boards claim; retained as a defensible, non-precise scene description, consistent with calibration guidance that a small/approximate reference is not automatically a defect."
+        ]
+      },
+      "sourceUrls": [
+        "https://www.hockeycanada.ca/en-ca/news/seven-coaching-principles-vision-scanning-2024-ncw"
+      ],
+      "alternative": "A player could instead describe watching D1's stick/body angle rather than only D1's foot position, as long as the answer names a specific, checkable cue."
+    },
+    {
+      "scenarioId": "exp26-u11-001",
+      "questionId": "exp26-u11-001-q7",
+      "baseContentHash": "e4e10ecdec7ada0d3482bac37a8fa2b2a85fa8132162d957651668453edac9d5",
+      "verdict": "retain",
+      "reason": "Reviewed the current (already-adjudicated where applicable) content independently. Rendered actors: YOU (h1) at (-16,-6) facing -2.356 rad (unit vector (-0.707,-0.707), pointing exactly at the loose puck); F2 (h2) at (-10,-1) facing 3.14 rad; D1 (a1) at (-12,-6) facing 3.14 rad (toward -x, i.e. toward the puck). Prompt: \"What should you say before reaching the wall-side puck?\". All seven checks pass on this content; see sceneEvidence for the specific geometry/claims verified and alternative for the accepted non-exclusive alternative.",
+      "checks": {
+        "roster": "pass",
+        "geometry": "pass",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "pass"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "Rendered actors: YOU (h1) at (-16,-6) facing -2.356 rad (unit vector (-0.707,-0.707), pointing exactly at the loose puck); F2 (h2) at (-10,-1) facing 3.14 rad; D1 (a1) at (-12,-6) facing 3.14 rad (toward -x, i.e. toward the puck).",
+          "Loose puck at (-18,-8), owner:null.",
+          "Puck-to-wall distance: |y=-8| to the y=-12.954 side wall = 4.954m (straight-wall region; rounded corner only begins at |x|>21.9456, and |x|=18 here).",
+          "F2 (-10,-1) is materially closer to mid-width (y=0, 1m away) and to the neutral zone (x=-10, 7.62m from the near blue line) than the puck (y=-8, x=-18), consistent with 'F2 is an outlet toward the middle'.",
+          "D1 (-12,-6) is closer to the blue line/neutral zone (x=-12) than the puck (x=-18), consistent with 'D1 is approaching from up ice'."
+        ],
+        "stated": [
+          "Briefing: Navy attacks the right net (+x); gold attacks the left net; YOU are approaching a loose puck near the side wall; F2 is an outlet toward the middle; D1 is approaching from up ice; no player has recovered the puck yet."
+        ],
+        "unproven": [
+          "No arrival order, skating speed, or actual shoulder-check is shown; facing does not itself prove a completed look.",
+          "'Near the side wall' is a relative description (puck is 4.95m from the wall vs 8m from mid-ice, i.e. meaningfully closer to the wall) rather than a hugging-the-boards claim; retained as a defensible, non-precise scene description, consistent with calibration guidance that a small/approximate reference is not automatically a defect."
+        ]
+      },
+      "sourceUrls": [
+        "https://www.hockeycanada.ca/en-ca/news/seven-coaching-principles-vision-scanning-2024-ncw"
+      ],
+      "alternative": "A player who instead names F2's exact body position (open shoulder vs. closed) rather than just 'may be the inside outlet' is also demonstrating the same scanning habit."
+    },
+    {
+      "scenarioId": "exp26-u11-001",
+      "questionId": "exp26-u11-001-q8",
+      "baseContentHash": "685c99741f94e4d2abf0f8ce65eb53fed5e21a0ea91b226fa89ef5dd05405475",
+      "verdict": "retain",
+      "reason": "Reviewed the current (already-adjudicated where applicable) content independently. Rendered actors: YOU (h1) at (-16,-6) facing -2.356 rad (unit vector (-0.707,-0.707), pointing exactly at the loose puck); F2 (h2) at (-10,-1) facing 3.14 rad; D1 (a1) at (-12,-6) facing 3.14 rad (toward -x, i.e. toward the puck). Prompt: \"Which two changes would make the first escape less useful?\". All seven checks pass on this content; see sceneEvidence for the specific geometry/claims verified and alternative for the accepted non-exclusive alternative.",
+      "checks": {
+        "roster": "pass",
+        "geometry": "pass",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "pass"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "Rendered actors: YOU (h1) at (-16,-6) facing -2.356 rad (unit vector (-0.707,-0.707), pointing exactly at the loose puck); F2 (h2) at (-10,-1) facing 3.14 rad; D1 (a1) at (-12,-6) facing 3.14 rad (toward -x, i.e. toward the puck).",
+          "Loose puck at (-18,-8), owner:null.",
+          "Puck-to-wall distance: |y=-8| to the y=-12.954 side wall = 4.954m (straight-wall region; rounded corner only begins at |x|>21.9456, and |x|=18 here).",
+          "F2 (-10,-1) is materially closer to mid-width (y=0, 1m away) and to the neutral zone (x=-10, 7.62m from the near blue line) than the puck (y=-8, x=-18), consistent with 'F2 is an outlet toward the middle'.",
+          "D1 (-12,-6) is closer to the blue line/neutral zone (x=-12) than the puck (x=-18), consistent with 'D1 is approaching from up ice'."
+        ],
+        "stated": [
+          "Briefing: Navy attacks the right net (+x); gold attacks the left net; YOU are approaching a loose puck near the side wall; F2 is an outlet toward the middle; D1 is approaching from up ice; no player has recovered the puck yet."
+        ],
+        "unproven": [
+          "No arrival order, skating speed, or actual shoulder-check is shown; facing does not itself prove a completed look.",
+          "'Near the side wall' is a relative description (puck is 4.95m from the wall vs 8m from mid-ice, i.e. meaningfully closer to the wall) rather than a hugging-the-boards claim; retained as a defensible, non-precise scene description, consistent with calibration guidance that a small/approximate reference is not automatically a defect."
+        ]
+      },
+      "sourceUrls": [
+        "https://www.hockeycanada.ca/en-ca/news/seven-coaching-principles-vision-scanning-2024-ncw"
+      ],
+      "alternative": "A change in the puck's own bounce/spin (not listed) could also reduce the escape's usefulness in a real game, though it is outside what this static scene can show; among the listed options, D1 and F2's relationships are the two the scene actually supports."
+    },
+    {
+      "scenarioId": "exp26-u11-001",
+      "questionId": "exp26-u11-001-q9",
+      "baseContentHash": "cbc0466b87a33589020df093d36013542bfc65930ba2da455777728ddd1ac564",
+      "verdict": "retain",
+      "reason": "Reviewed the current (already-adjudicated where applicable) content independently. Rendered actors: YOU (h1) at (-16,-6) facing -2.356 rad (unit vector (-0.707,-0.707), pointing exactly at the loose puck); F2 (h2) at (-10,-1) facing 3.14 rad; D1 (a1) at (-12,-6) facing 3.14 rad (toward -x, i.e. toward the puck). Prompt: \"Move F2 to a middle support point that gives YOU a visible inside lane.\". All seven checks pass on this content; see sceneEvidence for the specific geometry/claims verified and alternative for the accepted non-exclusive alternative.",
+      "checks": {
+        "roster": "pass",
+        "geometry": "pass",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "pass"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "Rendered actors: YOU (h1) at (-16,-6) facing -2.356 rad (unit vector (-0.707,-0.707), pointing exactly at the loose puck); F2 (h2) at (-10,-1) facing 3.14 rad; D1 (a1) at (-12,-6) facing 3.14 rad (toward -x, i.e. toward the puck).",
+          "Loose puck at (-18,-8), owner:null.",
+          "Puck-to-wall distance: |y=-8| to the y=-12.954 side wall = 4.954m (straight-wall region; rounded corner only begins at |x|>21.9456, and |x|=18 here).",
+          "F2 (-10,-1) is materially closer to mid-width (y=0, 1m away) and to the neutral zone (x=-10, 7.62m from the near blue line) than the puck (y=-8, x=-18), consistent with 'F2 is an outlet toward the middle'.",
+          "D1 (-12,-6) is closer to the blue line/neutral zone (x=-12) than the puck (x=-18), consistent with 'D1 is approaching from up ice'."
+        ],
+        "stated": [
+          "Briefing: Navy attacks the right net (+x); gold attacks the left net; YOU are approaching a loose puck near the side wall; F2 is an outlet toward the middle; D1 is approaching from up ice; no player has recovered the puck yet."
+        ],
+        "unproven": [
+          "No arrival order, skating speed, or actual shoulder-check is shown; facing does not itself prove a completed look.",
+          "'Near the side wall' is a relative description (puck is 4.95m from the wall vs 8m from mid-ice, i.e. meaningfully closer to the wall) rather than a hugging-the-boards claim; retained as a defensible, non-precise scene description, consistent with calibration guidance that a small/approximate reference is not automatically a defect."
+        ]
+      },
+      "sourceUrls": [
+        "https://www.hockeycanada.ca/en-ca/news/seven-coaching-principles-vision-scanning-2024-ncw"
+      ],
+      "alternative": "A slightly different middle-support point for F2 that still opens an inside lane for YOU (rather than this exact -11,-3.5) is equally valid."
+    },
+    {
+      "scenarioId": "exp26-u11-001",
+      "questionId": "exp26-u11-001-q10",
+      "baseContentHash": "dfa197824658cc9675f9cefabdb7ad8c8d5f87e1e26b9563c21bf000291480dd",
+      "verdict": "retain",
+      "reason": "Reviewed the current (already-adjudicated where applicable) content independently. Rendered actors: YOU (h1) at (-16,-6) facing -2.356 rad (unit vector (-0.707,-0.707), pointing exactly at the loose puck); F2 (h2) at (-10,-1) facing 3.14 rad; D1 (a1) at (-12,-6) facing 3.14 rad (toward -x, i.e. toward the puck). Prompt: \"D1 arrives above the puck while F2 drifts behind coverage. How does your first action change?\". All seven checks pass on this content; see sceneEvidence for the specific geometry/claims verified and alternative for the accepted non-exclusive alternative.",
+      "checks": {
+        "roster": "pass",
+        "geometry": "pass",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "pass"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "Rendered actors: YOU (h1) at (-16,-6) facing -2.356 rad (unit vector (-0.707,-0.707), pointing exactly at the loose puck); F2 (h2) at (-10,-1) facing 3.14 rad; D1 (a1) at (-12,-6) facing 3.14 rad (toward -x, i.e. toward the puck).",
+          "Loose puck at (-18,-8), owner:null.",
+          "Puck-to-wall distance: |y=-8| to the y=-12.954 side wall = 4.954m (straight-wall region; rounded corner only begins at |x|>21.9456, and |x|=18 here).",
+          "F2 (-10,-1) is materially closer to mid-width (y=0, 1m away) and to the neutral zone (x=-10, 7.62m from the near blue line) than the puck (y=-8, x=-18), consistent with 'F2 is an outlet toward the middle'.",
+          "D1 (-12,-6) is closer to the blue line/neutral zone (x=-12) than the puck (x=-18), consistent with 'D1 is approaching from up ice'."
+        ],
+        "stated": [
+          "Briefing: Navy attacks the right net (+x); gold attacks the left net; YOU are approaching a loose puck near the side wall; F2 is an outlet toward the middle; D1 is approaching from up ice; no player has recovered the puck yet."
+        ],
+        "unproven": [
+          "No arrival order, skating speed, or actual shoulder-check is shown; facing does not itself prove a completed look.",
+          "'Near the side wall' is a relative description (puck is 4.95m from the wall vs 8m from mid-ice, i.e. meaningfully closer to the wall) rather than a hugging-the-boards claim; retained as a defensible, non-precise scene description, consistent with calibration guidance that a small/approximate reference is not automatically a defect."
+        ]
+      },
+      "sourceUrls": [
+        "https://www.hockeycanada.ca/en-ca/news/seven-coaching-principles-vision-scanning-2024-ncw"
+      ],
+      "alternative": "A player could instead choose to protect the puck along the boards rather than look for a wall-side escape, depending on how tightly D1 has closed; both are defensible depending on the exact distances at the moment of arrival."
+    },
+    {
+      "scenarioId": "exp26-u11-003",
+      "questionId": "exp26-u11-003-q1",
+      "baseContentHash": "6066f57b42a1752dd7c7fa05b4bb77e137af30f05f9e457115d69fe854a1caef",
+      "verdict": "retain",
+      "reason": "Reviewed the current (already-adjudicated where applicable) content independently. Rendered actors: F1 (h1) at (10,-5) facing 0 rad, owns the puck; YOU (h2) at (15,-4) facing 3.14 rad; F2 (h3) at (17,6) facing -2.4 rad; D1 (a1) at (12.5,-4.5) facing 3.14 rad. Prompt: \"Which player stands on the direct line between F1 and YOU?\". All seven checks pass on this content; see sceneEvidence for the specific geometry/claims verified and alternative for the accepted non-exclusive alternative.",
+      "checks": {
+        "roster": "pass",
+        "geometry": "pass",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "pass"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "Rendered actors: F1 (h1) at (10,-5) facing 0 rad, owns the puck; YOU (h2) at (15,-4) facing 3.14 rad; F2 (h3) at (17,6) facing -2.4 rad; D1 (a1) at (12.5,-4.5) facing 3.14 rad.",
+          "D1 (12.5,-4.5) sits exactly at the midpoint of the straight line between F1 (10,-5) and YOU (15,-4) (computed: t=0.5, on-line point = (12.5,-4.5) = D1's exact position) -- true, tight collinearity, not just a loose actor-centre warning.",
+          "Repaired option content confirmed current: q8's third option reads 'Hold the same direct lane while D1 remains between F1 and YOU' (credible distractor, not the earlier impossible self-pass); q9's actorId is h2 (YOU), matching the prompt's subject, not h1 (F1)."
+        ],
+        "stated": [
+          "Briefing: Navy attacks the right net (+x); gold attacks the left net; F1 has possession; YOU are a nearby receiver, but D1 stands between you and the puck; F2 is farther across the ice; the task is to improve your own availability."
+        ],
+        "unproven": [
+          "No interception, pass outcome, or skating route is simulated; only the static blocked line and one alternative point are computed.",
+          "Whether D1 would actually follow YOU's re-offer is an explicit hypothetical in q5/q8/q9/q10, not a scene fact."
+        ]
+      },
+      "sourceUrls": [
+        "https://www.hockeycanada.ca/en-ca/news/seven-coaching-principles-vision-scanning-2024-ncw"
+      ]
+    },
+    {
+      "scenarioId": "exp26-u11-003",
+      "questionId": "exp26-u11-003-q2",
+      "baseContentHash": "8aaa7fc2347520ed76a373f677251a31bdcb7711f28a3bb52918c4d156642606",
+      "verdict": "retain",
+      "reason": "Reviewed the current (already-adjudicated where applicable) content independently. Rendered actors: F1 (h1) at (10,-5) facing 0 rad, owns the puck; YOU (h2) at (15,-4) facing 3.14 rad; F2 (h3) at (17,6) facing -2.4 rad; D1 (a1) at (12.5,-4.5) facing 3.14 rad. Prompt: \"What could make your support more useful?\". All seven checks pass on this content; see sceneEvidence for the specific geometry/claims verified and alternative for the accepted non-exclusive alternative.",
+      "checks": {
+        "roster": "pass",
+        "geometry": "pass",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "pass"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "Rendered actors: F1 (h1) at (10,-5) facing 0 rad, owns the puck; YOU (h2) at (15,-4) facing 3.14 rad; F2 (h3) at (17,6) facing -2.4 rad; D1 (a1) at (12.5,-4.5) facing 3.14 rad.",
+          "D1 (12.5,-4.5) sits exactly at the midpoint of the straight line between F1 (10,-5) and YOU (15,-4) (computed: t=0.5, on-line point = (12.5,-4.5) = D1's exact position) -- true, tight collinearity, not just a loose actor-centre warning.",
+          "Repaired option content confirmed current: q8's third option reads 'Hold the same direct lane while D1 remains between F1 and YOU' (credible distractor, not the earlier impossible self-pass); q9's actorId is h2 (YOU), matching the prompt's subject, not h1 (F1)."
+        ],
+        "stated": [
+          "Briefing: Navy attacks the right net (+x); gold attacks the left net; F1 has possession; YOU are a nearby receiver, but D1 stands between you and the puck; F2 is farther across the ice; the task is to improve your own availability."
+        ],
+        "unproven": [
+          "No interception, pass outcome, or skating route is simulated; only the static blocked line and one alternative point are computed.",
+          "Whether D1 would actually follow YOU's re-offer is an explicit hypothetical in q5/q8/q9/q10, not a scene fact."
+        ]
+      },
+      "sourceUrls": [
+        "https://www.hockeycanada.ca/en-ca/news/seven-coaching-principles-vision-scanning-2024-ncw"
+      ],
+      "alternative": "Simply calling for the puck loudly (without changing the angle) is not itself wrong as a communication habit, but on its own it does not resolve the blocked line the way changing the angle does."
+    },
+    {
+      "scenarioId": "exp26-u11-003",
+      "questionId": "exp26-u11-003-q3",
+      "baseContentHash": "6f8308d6d5cf92922584aff0dbd0193395ea519ad8ab7abf880dda8a3985c683",
+      "verdict": "retain",
+      "reason": "Reviewed the current (already-adjudicated where applicable) content independently. Rendered actors: F1 (h1) at (10,-5) facing 0 rad, owns the puck; YOU (h2) at (15,-4) facing 3.14 rad; F2 (h3) at (17,6) facing -2.4 rad; D1 (a1) at (12.5,-4.5) facing 3.14 rad. Prompt: \"Arrange a simple re-offer routine.\". All seven checks pass on this content; see sceneEvidence for the specific geometry/claims verified and alternative for the accepted non-exclusive alternative.",
+      "checks": {
+        "roster": "pass",
+        "geometry": "pass",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "pass"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "Rendered actors: F1 (h1) at (10,-5) facing 0 rad, owns the puck; YOU (h2) at (15,-4) facing 3.14 rad; F2 (h3) at (17,6) facing -2.4 rad; D1 (a1) at (12.5,-4.5) facing 3.14 rad.",
+          "D1 (12.5,-4.5) sits exactly at the midpoint of the straight line between F1 (10,-5) and YOU (15,-4) (computed: t=0.5, on-line point = (12.5,-4.5) = D1's exact position) -- true, tight collinearity, not just a loose actor-centre warning.",
+          "Repaired option content confirmed current: q8's third option reads 'Hold the same direct lane while D1 remains between F1 and YOU' (credible distractor, not the earlier impossible self-pass); q9's actorId is h2 (YOU), matching the prompt's subject, not h1 (F1)."
+        ],
+        "stated": [
+          "Briefing: Navy attacks the right net (+x); gold attacks the left net; F1 has possession; YOU are a nearby receiver, but D1 stands between you and the puck; F2 is farther across the ice; the task is to improve your own availability."
+        ],
+        "unproven": [
+          "No interception, pass outcome, or skating route is simulated; only the static blocked line and one alternative point are computed.",
+          "Whether D1 would actually follow YOU's re-offer is an explicit hypothetical in q5/q8/q9/q10, not a scene fact."
+        ]
+      },
+      "sourceUrls": [
+        "https://www.hockeycanada.ca/en-ca/news/seven-coaching-principles-vision-scanning-2024-ncw"
+      ],
+      "alternative": "A player who is already moving to the new angle while still checking F1 (rather than strictly noticing-moving-checking in order) is not making a timing error; this is a discussion scaffold."
+    },
+    {
+      "scenarioId": "exp26-u11-003",
+      "questionId": "exp26-u11-003-q4",
+      "baseContentHash": "684823aedb49bb93b85af3302c202c0a003d8e40b453c4a3639fbdd93c1c5a4a",
+      "verdict": "retain",
+      "reason": "Reviewed the current (already-adjudicated where applicable) content independently. Rendered actors: F1 (h1) at (10,-5) facing 0 rad, owns the puck; YOU (h2) at (15,-4) facing 3.14 rad; F2 (h3) at (17,6) facing -2.4 rad; D1 (a1) at (12.5,-4.5) facing 3.14 rad. Prompt: \"Move YOU away from D1’s current passing shadow.\". All seven checks pass on this content; see sceneEvidence for the specific geometry/claims verified and alternative for the accepted non-exclusive alternative.",
+      "checks": {
+        "roster": "pass",
+        "geometry": "pass",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "pass"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "Rendered actors: F1 (h1) at (10,-5) facing 0 rad, owns the puck; YOU (h2) at (15,-4) facing 3.14 rad; F2 (h3) at (17,6) facing -2.4 rad; D1 (a1) at (12.5,-4.5) facing 3.14 rad.",
+          "D1 (12.5,-4.5) sits exactly at the midpoint of the straight line between F1 (10,-5) and YOU (15,-4) (computed: t=0.5, on-line point = (12.5,-4.5) = D1's exact position) -- true, tight collinearity, not just a loose actor-centre warning.",
+          "Repaired option content confirmed current: q8's third option reads 'Hold the same direct lane while D1 remains between F1 and YOU' (credible distractor, not the earlier impossible self-pass); q9's actorId is h2 (YOU), matching the prompt's subject, not h1 (F1)."
+        ],
+        "stated": [
+          "Briefing: Navy attacks the right net (+x); gold attacks the left net; F1 has possession; YOU are a nearby receiver, but D1 stands between you and the puck; F2 is farther across the ice; the task is to improve your own availability."
+        ],
+        "unproven": [
+          "No interception, pass outcome, or skating route is simulated; only the static blocked line and one alternative point are computed.",
+          "Whether D1 would actually follow YOU's re-offer is an explicit hypothetical in q5/q8/q9/q10, not a scene fact."
+        ]
+      },
+      "sourceUrls": [
+        "https://www.hockeycanada.ca/en-ca/news/seven-coaching-principles-vision-scanning-2024-ncw"
+      ],
+      "alternative": "A different point that still moves off the direct F1-YOU line (rather than exactly 13,2) is equally valid, as long as it creates real separation from D1."
+    },
+    {
+      "scenarioId": "exp26-u11-003",
+      "questionId": "exp26-u11-003-q5",
+      "baseContentHash": "753b7286f0b120663c8f8c255337e434cb8f96ddb0f2b8256eec9df3902f027f",
+      "verdict": "retain",
+      "reason": "Reviewed the current (already-adjudicated where applicable) content independently. Rendered actors: F1 (h1) at (10,-5) facing 0 rad, owns the puck; YOU (h2) at (15,-4) facing 3.14 rad; F2 (h3) at (17,6) facing -2.4 rad; D1 (a1) at (12.5,-4.5) facing 3.14 rad. Prompt: \"Suppose D1 follows your new route. What is a useful next read?\". All seven checks pass on this content; see sceneEvidence for the specific geometry/claims verified and alternative for the accepted non-exclusive alternative.",
+      "checks": {
+        "roster": "pass",
+        "geometry": "pass",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "pass"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "Rendered actors: F1 (h1) at (10,-5) facing 0 rad, owns the puck; YOU (h2) at (15,-4) facing 3.14 rad; F2 (h3) at (17,6) facing -2.4 rad; D1 (a1) at (12.5,-4.5) facing 3.14 rad.",
+          "D1 (12.5,-4.5) sits exactly at the midpoint of the straight line between F1 (10,-5) and YOU (15,-4) (computed: t=0.5, on-line point = (12.5,-4.5) = D1's exact position) -- true, tight collinearity, not just a loose actor-centre warning.",
+          "Repaired option content confirmed current: q8's third option reads 'Hold the same direct lane while D1 remains between F1 and YOU' (credible distractor, not the earlier impossible self-pass); q9's actorId is h2 (YOU), matching the prompt's subject, not h1 (F1)."
+        ],
+        "stated": [
+          "Briefing: Navy attacks the right net (+x); gold attacks the left net; F1 has possession; YOU are a nearby receiver, but D1 stands between you and the puck; F2 is farther across the ice; the task is to improve your own availability."
+        ],
+        "unproven": [
+          "No interception, pass outcome, or skating route is simulated; only the static blocked line and one alternative point are computed.",
+          "Whether D1 would actually follow YOU's re-offer is an explicit hypothetical in q5/q8/q9/q10, not a scene fact."
+        ]
+      },
+      "sourceUrls": [
+        "https://www.hockeycanada.ca/en-ca/news/seven-coaching-principles-vision-scanning-2024-ncw"
+      ],
+      "alternative": "If F1 can still see and reach YOU in the new spot despite D1 following, staying there and taking the pass is also reasonable rather than immediately looking elsewhere."
+    },
+    {
+      "scenarioId": "exp26-u11-003",
+      "questionId": "exp26-u11-003-q6",
+      "baseContentHash": "4b83524a34401596e62a33432647b84ba61375206511216eecc93802b0eaaf12",
+      "verdict": "retain",
+      "reason": "Reviewed the current (already-adjudicated where applicable) content independently. Rendered actors: F1 (h1) at (10,-5) facing 0 rad, owns the puck; YOU (h2) at (15,-4) facing 3.14 rad; F2 (h3) at (17,6) facing -2.4 rad; D1 (a1) at (12.5,-4.5) facing 3.14 rad. Prompt: \"How would you tell the difference between “closer” and “more available” here?\". All seven checks pass on this content; see sceneEvidence for the specific geometry/claims verified and alternative for the accepted non-exclusive alternative.",
+      "checks": {
+        "roster": "pass",
+        "geometry": "pass",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "pass"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "Rendered actors: F1 (h1) at (10,-5) facing 0 rad, owns the puck; YOU (h2) at (15,-4) facing 3.14 rad; F2 (h3) at (17,6) facing -2.4 rad; D1 (a1) at (12.5,-4.5) facing 3.14 rad.",
+          "D1 (12.5,-4.5) sits exactly at the midpoint of the straight line between F1 (10,-5) and YOU (15,-4) (computed: t=0.5, on-line point = (12.5,-4.5) = D1's exact position) -- true, tight collinearity, not just a loose actor-centre warning.",
+          "Repaired option content confirmed current: q8's third option reads 'Hold the same direct lane while D1 remains between F1 and YOU' (credible distractor, not the earlier impossible self-pass); q9's actorId is h2 (YOU), matching the prompt's subject, not h1 (F1)."
+        ],
+        "stated": [
+          "Briefing: Navy attacks the right net (+x); gold attacks the left net; F1 has possession; YOU are a nearby receiver, but D1 stands between you and the puck; F2 is farther across the ice; the task is to improve your own availability."
+        ],
+        "unproven": [
+          "No interception, pass outcome, or skating route is simulated; only the static blocked line and one alternative point are computed.",
+          "Whether D1 would actually follow YOU's re-offer is an explicit hypothetical in q5/q8/q9/q10, not a scene fact."
+        ]
+      },
+      "sourceUrls": [
+        "https://www.hockeycanada.ca/en-ca/news/seven-coaching-principles-vision-scanning-2024-ncw"
+      ],
+      "alternative": "A player could instead describe 'available' in terms of the passer's ability to actually see and release to you, rather than only the defender's body position; both are acceptable as long as distance alone is rejected as sufficient."
+    },
+    {
+      "scenarioId": "exp26-u11-003",
+      "questionId": "exp26-u11-003-q7",
+      "baseContentHash": "9cdf4d9d65d6aedec17e454b84c9d8ab2b673202d322fe5daaa323f1598e0bfb",
+      "verdict": "retain",
+      "reason": "Reviewed the current (already-adjudicated where applicable) content independently. Rendered actors: F1 (h1) at (10,-5) facing 0 rad, owns the puck; YOU (h2) at (15,-4) facing 3.14 rad; F2 (h3) at (17,6) facing -2.4 rad; D1 (a1) at (12.5,-4.5) facing 3.14 rad. Prompt: \"What is the useful communication after D1 blocks the first line?\". All seven checks pass on this content; see sceneEvidence for the specific geometry/claims verified and alternative for the accepted non-exclusive alternative.",
+      "checks": {
+        "roster": "pass",
+        "geometry": "pass",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "pass"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "Rendered actors: F1 (h1) at (10,-5) facing 0 rad, owns the puck; YOU (h2) at (15,-4) facing 3.14 rad; F2 (h3) at (17,6) facing -2.4 rad; D1 (a1) at (12.5,-4.5) facing 3.14 rad.",
+          "D1 (12.5,-4.5) sits exactly at the midpoint of the straight line between F1 (10,-5) and YOU (15,-4) (computed: t=0.5, on-line point = (12.5,-4.5) = D1's exact position) -- true, tight collinearity, not just a loose actor-centre warning.",
+          "Repaired option content confirmed current: q8's third option reads 'Hold the same direct lane while D1 remains between F1 and YOU' (credible distractor, not the earlier impossible self-pass); q9's actorId is h2 (YOU), matching the prompt's subject, not h1 (F1)."
+        ],
+        "stated": [
+          "Briefing: Navy attacks the right net (+x); gold attacks the left net; F1 has possession; YOU are a nearby receiver, but D1 stands between you and the puck; F2 is farther across the ice; the task is to improve your own availability."
+        ],
+        "unproven": [
+          "No interception, pass outcome, or skating route is simulated; only the static blocked line and one alternative point are computed.",
+          "Whether D1 would actually follow YOU's re-offer is an explicit hypothetical in q5/q8/q9/q10, not a scene fact."
+        ]
+      },
+      "sourceUrls": [
+        "https://www.hockeycanada.ca/en-ca/news/seven-coaching-principles-vision-scanning-2024-ncw"
+      ],
+      "alternative": "A shorter, single-word call ('leg call' style, e.g. naming a side) can also work at this age as long as it tells F1 both that the picture changed and that reachability still needs checking."
+    },
+    {
+      "scenarioId": "exp26-u11-003",
+      "questionId": "exp26-u11-003-q8",
+      "baseContentHash": "8f1d69a20252c53d9e689d89edb33d3656d14f004400a3f1cba6ff94b58b3dff",
+      "verdict": "retain",
+      "reason": "Reviewed the current (already-adjudicated where applicable) content independently. Rendered actors: F1 (h1) at (10,-5) facing 0 rad, owns the puck; YOU (h2) at (15,-4) facing 3.14 rad; F2 (h3) at (17,6) facing -2.4 rad; D1 (a1) at (12.5,-4.5) facing 3.14 rad. Prompt: \"Which two responses could follow D1's reaction to your re-offer?\". All seven checks pass on this content; see sceneEvidence for the specific geometry/claims verified and alternative for the accepted non-exclusive alternative. Prior repair (u11-repairs.json, applied) replaced an impossible 'pass to yourself through D1' distractor with the current 'Hold the same direct lane while D1 remains between F1 and YOU'. Independently re-verified: this is now a credible, scene-consistent distractor (D1 verified exactly on the F1-YOU line), not a dummy option. Retaining the already-repaired content.",
+      "checks": {
+        "roster": "pass",
+        "geometry": "pass",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "pass"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "Rendered actors: F1 (h1) at (10,-5) facing 0 rad, owns the puck; YOU (h2) at (15,-4) facing 3.14 rad; F2 (h3) at (17,6) facing -2.4 rad; D1 (a1) at (12.5,-4.5) facing 3.14 rad.",
+          "D1 (12.5,-4.5) sits exactly at the midpoint of the straight line between F1 (10,-5) and YOU (15,-4) (computed: t=0.5, on-line point = (12.5,-4.5) = D1's exact position) -- true, tight collinearity, not just a loose actor-centre warning.",
+          "Repaired option content confirmed current: q8's third option reads 'Hold the same direct lane while D1 remains between F1 and YOU' (credible distractor, not the earlier impossible self-pass); q9's actorId is h2 (YOU), matching the prompt's subject, not h1 (F1)."
+        ],
+        "stated": [
+          "Briefing: Navy attacks the right net (+x); gold attacks the left net; F1 has possession; YOU are a nearby receiver, but D1 stands between you and the puck; F2 is farther across the ice; the task is to improve your own availability."
+        ],
+        "unproven": [
+          "No interception, pass outcome, or skating route is simulated; only the static blocked line and one alternative point are computed.",
+          "Whether D1 would actually follow YOU's re-offer is an explicit hypothetical in q5/q8/q9/q10, not a scene fact."
+        ]
+      },
+      "sourceUrls": [
+        "https://www.hockeycanada.ca/en-ca/news/seven-coaching-principles-vision-scanning-2024-ncw"
+      ],
+      "alternative": "If D1 fully abandons F1 to chase YOU, F1 carrying forward alone (rather than either listed option) can also be reasonable, though the two listed responses are the ones this scene most directly supports."
+    },
+    {
+      "scenarioId": "exp26-u11-003",
+      "questionId": "exp26-u11-003-q9",
+      "baseContentHash": "5cb72ec8678525ba1cabf0d4f91c855a20bdf19815b87c2bff4b7886a067058b",
+      "verdict": "retain",
+      "reason": "Reviewed the current (already-adjudicated where applicable) content independently. Rendered actors: F1 (h1) at (10,-5) facing 0 rad, owns the puck; YOU (h2) at (15,-4) facing 3.14 rad; F2 (h3) at (17,6) facing -2.4 rad; D1 (a1) at (12.5,-4.5) facing 3.14 rad. Prompt: \"Move YOU across the blocked line into a visible support angle.\". All seven checks pass on this content; see sceneEvidence for the specific geometry/claims verified and alternative for the accepted non-exclusive alternative. Prior repair (u11-actor-repairs.json, applied) changed actorId from h1 (F1) to h2 (YOU), matching the prompt's subject ('Move YOU'). Independently re-verified with positionSubjectIssue(): no mismatch on current content. Retaining the already-repaired content.",
+      "checks": {
+        "roster": "pass",
+        "geometry": "pass",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "pass"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "Rendered actors: F1 (h1) at (10,-5) facing 0 rad, owns the puck; YOU (h2) at (15,-4) facing 3.14 rad; F2 (h3) at (17,6) facing -2.4 rad; D1 (a1) at (12.5,-4.5) facing 3.14 rad.",
+          "D1 (12.5,-4.5) sits exactly at the midpoint of the straight line between F1 (10,-5) and YOU (15,-4) (computed: t=0.5, on-line point = (12.5,-4.5) = D1's exact position) -- true, tight collinearity, not just a loose actor-centre warning.",
+          "Repaired option content confirmed current: q8's third option reads 'Hold the same direct lane while D1 remains between F1 and YOU' (credible distractor, not the earlier impossible self-pass); q9's actorId is h2 (YOU), matching the prompt's subject, not h1 (F1)."
+        ],
+        "stated": [
+          "Briefing: Navy attacks the right net (+x); gold attacks the left net; F1 has possession; YOU are a nearby receiver, but D1 stands between you and the puck; F2 is farther across the ice; the task is to improve your own availability."
+        ],
+        "unproven": [
+          "No interception, pass outcome, or skating route is simulated; only the static blocked line and one alternative point are computed.",
+          "Whether D1 would actually follow YOU's re-offer is an explicit hypothetical in q5/q8/q9/q10, not a scene fact."
+        ]
+      },
+      "sourceUrls": [
+        "https://www.hockeycanada.ca/en-ca/news/seven-coaching-principles-vision-scanning-2024-ncw"
+      ],
+      "alternative": "A different point that still crosses the blocked line and keeps F2 separate (rather than exactly 14,0.7) is equally valid."
+    },
+    {
+      "scenarioId": "exp26-u11-003",
+      "questionId": "exp26-u11-003-q10",
+      "baseContentHash": "0cd97eaaefedeb4915b9fb461423221f111b50183b393aaa3b46079ea8cd1572",
+      "verdict": "retain",
+      "reason": "Reviewed the current (already-adjudicated where applicable) content independently. Rendered actors: F1 (h1) at (10,-5) facing 0 rad, owns the puck; YOU (h2) at (15,-4) facing 3.14 rad; F2 (h3) at (17,6) facing -2.4 rad; D1 (a1) at (12.5,-4.5) facing 3.14 rad. Prompt: \"F1 carries while D1 follows you. Explain the value of your movement.\". All seven checks pass on this content; see sceneEvidence for the specific geometry/claims verified and alternative for the accepted non-exclusive alternative.",
+      "checks": {
+        "roster": "pass",
+        "geometry": "pass",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "pass"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "Rendered actors: F1 (h1) at (10,-5) facing 0 rad, owns the puck; YOU (h2) at (15,-4) facing 3.14 rad; F2 (h3) at (17,6) facing -2.4 rad; D1 (a1) at (12.5,-4.5) facing 3.14 rad.",
+          "D1 (12.5,-4.5) sits exactly at the midpoint of the straight line between F1 (10,-5) and YOU (15,-4) (computed: t=0.5, on-line point = (12.5,-4.5) = D1's exact position) -- true, tight collinearity, not just a loose actor-centre warning.",
+          "Repaired option content confirmed current: q8's third option reads 'Hold the same direct lane while D1 remains between F1 and YOU' (credible distractor, not the earlier impossible self-pass); q9's actorId is h2 (YOU), matching the prompt's subject, not h1 (F1)."
+        ],
+        "stated": [
+          "Briefing: Navy attacks the right net (+x); gold attacks the left net; F1 has possession; YOU are a nearby receiver, but D1 stands between you and the puck; F2 is farther across the ice; the task is to improve your own availability."
+        ],
+        "unproven": [
+          "No interception, pass outcome, or skating route is simulated; only the static blocked line and one alternative point are computed.",
+          "Whether D1 would actually follow YOU's re-offer is an explicit hypothetical in q5/q8/q9/q10, not a scene fact."
+        ]
+      },
+      "sourceUrls": [
+        "https://www.hockeycanada.ca/en-ca/news/seven-coaching-principles-vision-scanning-2024-ncw"
+      ],
+      "alternative": "A player could instead emphasize that the movement buys F1 more time even if no pass ever comes, rather than focusing only on the lane it opens; both are acceptable as long as 'guaranteed' outcomes are avoided."
+    }
+  ],
+  "repairs": [
+    {
+      "scenarioId": "exp26b-u9-013",
+      "baseVersion": 1,
+      "baseScenarioHash": "00928f8d09c5f6c645498b911d0f162e48f54d1db65b4f28ad2792cf4350552a",
+      "replacement": {
+        "id": "exp26b-u9-013",
+        "version": 2,
+        "ageBand": "U9",
+        "title": "Change roles after a lost puck",
+        "family": "role-change-recovery",
+        "topic": "Transition",
+        "objective": "Recognize a teammate's loss and switch from support attack to defending.",
+        "briefing": "Navy attacks the +x end and gold attacks the -x end. Navy2 loses the puck well into the attacking zone. Gold1 collects it and turns back toward the navy end. YOU are beside the play; Navy3 is behind you.",
+        "setup": {
+          "actors": [
+            {
+              "id": "home-skater-1",
+              "label": "YOU",
+              "team": "home",
+              "role": "skater",
+              "x": 13,
+              "y": 5,
+              "facing": 3
+            },
+            {
+              "id": "home-skater-2",
+              "label": "Navy2",
+              "team": "home",
+              "role": "skater",
+              "x": 16,
+              "y": 1,
+              "facing": 3.1
+            },
+            {
+              "id": "home-skater-3",
+              "label": "Navy3",
+              "team": "home",
+              "role": "skater",
+              "x": 9,
+              "y": -4,
+              "facing": 2.8
+            },
+            {
+              "id": "away-skater-1",
+              "label": "Gold1",
+              "team": "away",
+              "role": "skater",
+              "x": 15,
+              "y": 0,
+              "facing": 3.1
+            }
+          ],
+          "puck": {
+            "owner": "away-skater-1"
+          }
+        },
+        "focusActorId": "home-skater-1",
+        "cues": [
+          "Gold1 collected the puck.",
+          "Gold1 turns toward the navy end.",
+          "YOU are beside the play and Navy3 is behind."
+        ],
+        "tags": [
+          "transition",
+          "role-change",
+          "defending",
+          "experimental",
+          "expansion"
+        ],
+        "sources": [
+          {
+            "id": "hc-u9-development",
+            "title": "Hockey Canada: U9 Development Model",
+            "section": "Skills and game-sense development",
+            "url": "https://www.hockeycanada.ca/en-ca/hockey-programs/coaching/under-9",
+            "use": "Supports age-appropriate game-sense and skating practice; this authored transition is not a rule claim."
+          }
+        ],
+        "limits": "Static transition freeze. Loss, collection, and direction are stated; speed, defensive success, and legal contact are not shown. An adult may read the questions aloud.",
+        "questions": [
+          {
+            "id": "exp26b-u9-013-q1",
+            "type": "choice",
+            "prompt": "Who has the puck after the loss?",
+            "options": [
+              {
+                "id": "a",
+                "text": "Gold1"
+              },
+              {
+                "id": "b",
+                "text": "Navy2"
+              },
+              {
+                "id": "c",
+                "text": "YOU"
+              }
+            ],
+            "answer": [
+              "a"
+            ],
+            "basis": "scene",
+            "explanation": "Gold1 collected the puck. Navy now needs a defensive response."
+          },
+          {
+            "id": "exp26b-u9-013-q2",
+            "type": "multi",
+            "prompt": "What should YOU notice now?",
+            "options": [
+              {
+                "id": "a",
+                "text": "Gold1 turns toward the navy end"
+              },
+              {
+                "id": "b",
+                "text": "Navy3 is behind you"
+              },
+              {
+                "id": "c",
+                "text": "The old attacking plan is still fixed"
+              }
+            ],
+            "answer": [
+              "a",
+              "b"
+            ],
+            "basis": "scene",
+            "explanation": "Gold1's direction and Navy3's support position shape the new defensive picture. The old plan ended with the loss."
+          },
+          {
+            "id": "exp26b-u9-013-q3",
+            "type": "position",
+            "prompt": "Place YOU between Gold1 and the navy end while keeping Navy3 visible.",
+            "actorId": "home-skater-1",
+            "reference": {
+              "x": 11,
+              "y": 4
+            },
+            "basis": "coaching",
+            "explanation": "This example moves YOU back toward the protected end and keeps the carrier in view. Another useful recovery lane may fit the live play."
+          },
+          {
+            "id": "exp26b-u9-013-q4",
+            "type": "sequence",
+            "prompt": "Arrange the role-change response.",
+            "options": [
+              {
+                "id": "a",
+                "text": "Notice Gold1 has it"
+              },
+              {
+                "id": "b",
+                "text": "Turn toward the navy end"
+              },
+              {
+                "id": "c",
+                "text": "Recover while checking Navy3"
+              }
+            ],
+            "answer": [
+              "a",
+              "b",
+              "c"
+            ],
+            "basis": "coaching",
+            "explanation": "Possession changes the role. Turn to protect the navy end, then use Navy3 and Gold1 to choose the recovery lane."
+          },
+          {
+            "id": "exp26b-u9-013-q5",
+            "type": "choice",
+            "prompt": "Gold1 cuts toward the side away from Navy3. What could YOU do?",
+            "options": [
+              {
+                "id": "a",
+                "text": "Stay between the carrier and the navy end, adjusting as needed"
+              },
+              {
+                "id": "b",
+                "text": "Follow Navy3 and lose the carrier"
+              },
+              {
+                "id": "c",
+                "text": "Stay in the attacking end"
+              }
+            ],
+            "answer": [
+              "a"
+            ],
+            "basis": "coaching",
+            "explanation": "Gold1's route changes, but the puck carrier still matters first. Keep the carrier and protected end in view while adjusting."
+          },
+          {
+            "id": "exp26b-u9-013-q6",
+            "type": "explain",
+            "prompt": "Why does the loss change your role?",
+            "basis": "coaching",
+            "explanation": "Navy no longer has the puck. Gold1 is moving toward the navy end, so YOU should help defend and use Navy3's place to read support."
+          }
+        ]
+      },
+      "affectedQuestionIds": [
+        "exp26b-u9-013-q1",
+        "exp26b-u9-013-q2",
+        "exp26b-u9-013-q3",
+        "exp26b-u9-013-q4",
+        "exp26b-u9-013-q5",
+        "exp26b-u9-013-q6"
+      ],
+      "reasons": [
+        {
+          "questionIds": [
+            "exp26b-u9-013-q1",
+            "exp26b-u9-013-q2",
+            "exp26b-u9-013-q3",
+            "exp26b-u9-013-q4",
+            "exp26b-u9-013-q5",
+            "exp26b-u9-013-q6"
+          ],
+          "issue": "Briefing overstates a landmark distance: 'Navy2 loses the puck near the attacking blue line.' Navy2's actual loss point is (16,1). The attacking (right) blue line for Navy (who attacks +x) is at x=7.62, so Navy2 lost the puck 8.38m past the blue line -- about 43% of the way through the 19.51m-deep attacking zone (blue line 7.62 to goal line 27.13), well clear of the line and closer to mid-zone. This is the same 'overstated distance to a landmark' defect class flagged as the dominant defect type in packets 09-10. A second, independent issue in the same scene: the source citation 'usah-u14-situational-roles' (USA Hockey, Culture & Coaching Tips with Grace Hoene) is invoked to support this U9 scene's teaching of role changes, but the source itself frames the cited four-roles framework explicitly as a 14U concept ('At the 14U level, we are looking at making sure they understand the four roles of hockey...'); nothing in the source discusses role teaching below 14U. Citing a 14U-specific framework to source a U9 scene overstates the source's age applicability.",
+          "change": "Replace the briefing's landmark sentence with an accurate description ('Navy2 loses the puck well into the attacking zone') that matches the actual coordinate (x=16) without inventing a new precise distance claim. Remove the age-mismatched 'usah-u14-situational-roles' source from the scenario's sources array, retaining only 'hc-u9-development' (verified, on-topic, and explicitly age-general for U9). No actor, coordinate, facing, puck ownership, question text, option text, or answer key changed. Because briefing and sources are part of the shared 'scene' object hashed with every question, all 6 question content hashes changed mechanically even though only 5 of the 6 questions' own text is literally identical (q1-q6 text unchanged; only the shared scene changed).",
+          "evidence": "Geometry computed directly: attacking blue line x=7.62 (per AUTHORING-CONTRACT.md); Navy2 at x=16; distance = 16-7.62 = 8.38m; zone depth (blue line 7.62 to goal line 27.13) = 19.51m; 8.38/19.51 = 43% into the zone, i.e. materially past 'near the blue line'. Source read: usahockey.com/news_article/show/1093178 fetched 2026-09-05 with a browser user agent (plain fetch returned 403); article states the four-roles framework at '14U' explicitly and discusses no younger age band. hc-u9-development fetched successfully and independently supports U9 small-area decision-making generally."
+        }
+      ],
+      "replacementReview": {
+        "status": "self-checked",
+        "coverage": [
+          {
+            "questionId": "exp26b-u9-013-q1",
+            "contentHash": "ad4af7d41617ba48998a240bb002d006eb3aaf854e0e66c421430deb496e6af2",
+            "checks": {
+              "roster": "pass",
+              "geometry": "pass",
+              "answer": "pass",
+              "feedback": "pass",
+              "age": "pass",
+              "sources": "pass",
+              "grammar": "pass"
+            },
+            "reason": "Final content: briefing now says 'well into the attacking zone' (accurate: Navy2's loss point, x=16, is 8.38m past the x=7.62 attacking blue line, ~43% of the way through a 19.51m-deep zone -- not 'near' the blue line). Sources now list only hc-u9-development (read, on-topic for U9). Q1 itself (who has the puck) is unchanged text and remains scene-verified: puck.owner=away-skater-1=Gold1."
+          },
+          {
+            "questionId": "exp26b-u9-013-q2",
+            "contentHash": "148c314c7d84cf3da3f51d91bda17e1936ab44983b64acaaa1818c709f46c16e",
+            "checks": {
+              "roster": "pass",
+              "geometry": "pass",
+              "answer": "pass",
+              "feedback": "pass",
+              "age": "pass",
+              "sources": "pass",
+              "grammar": "pass"
+            },
+            "reason": "Final content as above. Q2's scene claims verified: Gold1 (facing 3.1 rad, i.e. toward -x) is turning toward the navy end per the briefing/cues, and Navy3 (x=9) is closer to navy's own defending end (-x) than YOU (x=13), supporting the briefing's stated 'Navy3 is behind you' as a defensive-depth reading; this is explicitly stated in the briefing, satisfying basis:scene without relying on facing-relative 'behind'."
+          },
+          {
+            "questionId": "exp26b-u9-013-q3",
+            "contentHash": "10871442378d366b0360581ed3d1812c14b964b568d232b91f17fed40aff3be7",
+            "checks": {
+              "roster": "pass",
+              "geometry": "pass",
+              "answer": "pass",
+              "feedback": "pass",
+              "age": "pass",
+              "sources": "pass",
+              "grammar": "pass"
+            },
+            "reason": "Final content as above. Position reference (11,4) for home-skater-1 (YOU) computed on-ice (isCoachRoutePoint=true) and lies on the -x side of Gold1's carried-puck position (~13.97,-0.66), i.e. genuinely between the carrier and the navy (-x) end, consistent with the coaching prompt."
+          },
+          {
+            "questionId": "exp26b-u9-013-q4",
+            "contentHash": "55d717aeea6be1d4898471236a5b4f1bebb83e53ded9e685dda5430a266aa9b4",
+            "checks": {
+              "roster": "pass",
+              "geometry": "pass",
+              "answer": "pass",
+              "feedback": "pass",
+              "age": "pass",
+              "sources": "pass",
+              "grammar": "pass"
+            },
+            "reason": "Final content as above. Sequence is an explicitly-labelled discussion routine (basis:coaching); its own explanation already treats the three steps as a suggested order rather than a rule, matching the calibration guidance that scanning/turning/recovering can overlap."
+          },
+          {
+            "questionId": "exp26b-u9-013-q5",
+            "contentHash": "2535f214df4ad41e0e63a37a13dd658a69642e756d94f2f3bf860977885a0967",
+            "checks": {
+              "roster": "pass",
+              "geometry": "pass",
+              "answer": "pass",
+              "feedback": "pass",
+              "age": "pass",
+              "sources": "pass",
+              "grammar": "pass"
+            },
+            "reason": "Final content as above. Hypothetical ('Gold1 cuts toward the side away from Navy3') is explicitly flagged as a change from the frozen scene, consistent with basis:coaching; the keyed answer (stay between carrier and navy end) does not assert a guaranteed stop."
+          },
+          {
+            "questionId": "exp26b-u9-013-q6",
+            "contentHash": "eedac92e13c4a43bb55d611ad4958678556a193393c95edc816dff23317391e8",
+            "checks": {
+              "roster": "pass",
+              "geometry": "pass",
+              "answer": "pass",
+              "feedback": "pass",
+              "age": "pass",
+              "sources": "pass",
+              "grammar": "pass"
+            },
+            "reason": "Final content as above. Explain question has no answer key; explanation correctly names the stated facts (no puck, Gold1 moving toward navy end, Navy3's place) without inventing new ones."
+          }
+        ]
+      }
+    }
+  ],
+  "sourceChecks": [
+    {
+      "url": "https://www.hockeycanada.ca/en-ca/hockey-programs/coaching/under-9",
+      "checkedAt": "2026-09-05T21:30:00Z",
+      "access": "read",
+      "jurisdiction": "Canada (Hockey Canada)",
+      "ageFormat": "U9",
+      "claim": "Supports U9 small-area, decision-focused practice as age-appropriate development philosophy.",
+      "scope": "Live page fetched with a browser user agent (plain fetch was not blocked here). Confirms Hockey Canada's U9 philosophy: small-ice/half-ice play, 'develop hockey sense and decision-making', more puck touches and more chances to make decisions and solve problems. Supports the general principle that U9 practice should be decision-dense and small-area; it does not certify this specific authored scene, its coordinates, or any single answer as Hockey-Canada-approved content."
+    },
+    {
+      "url": "https://www.usahockey.com/news_article/show/1093178",
+      "checkedAt": "2026-09-05T21:30:00Z",
+      "access": "read",
+      "jurisdiction": "USA (USA Hockey)",
+      "ageFormat": "14U (explicitly, in the source itself)",
+      "claim": "Was cited to support a U9 scene about switching from attack to defence after a puck loss.",
+      "scope": "Live page fetched with a browser user agent. The article (an interview with coach Grace Hoene) states the four-roles framework explicitly at the 14U level: \"At the 14U level, we are looking at making sure they understand the four roles of hockey ... and working in practice to develop their knowledge of these roles.\" Nothing in the source discusses this framework, or any role-change teaching, at 8U/10U/U9. Citing it for a U9 scene overstates its age applicability; see repair for exp26b-u9-013, which removes this citation rather than keep a mismatched one."
+    },
+    {
+      "url": "https://www.hockeycanada.ca/en-ca/news/seven-coaching-principles-vision-scanning-2024-ncw",
+      "checkedAt": "2026-09-05T21:30:00Z",
+      "access": "read",
+      "jurisdiction": "Canada (Hockey Canada)",
+      "ageFormat": "All ages (explicitly stated in the source)",
+      "claim": "Supports checking teammate location and opponent pressure as the two key things to scan for, at all ages.",
+      "scope": "Live page fetched with a browser user agent. 'Key Information to Identify' states players should focus on two main sources of information: where their teammates are and where the opposition's pressure is coming from. The article explicitly says vision/scanning should be taught 'at all ages levels'. This directly and specifically supports the teammate+pressure scanning claims used across exp26b-u9-014, exp26b-u9-015, exp26-u11-001 and exp26-u11-003. It does not certify any specific coordinate, pass, or 'best' lane in these authored scenes."
+    },
+    {
+      "url": "https://www.hockeycanada.ca/en-ca/news/seven-coaching-principles-puck-control-2024-ncw",
+      "checkedAt": "2026-09-05T21:30:00Z",
+      "access": "read",
+      "jurisdiction": "Canada (Hockey Canada)",
+      "ageFormat": "All ages (explicitly stated in the source)",
+      "claim": "Supports that skilled puck handling opens time/space and gaps for a next play, and that this should be taught at all ages.",
+      "scope": "Live page fetched with a browser user agent. 'Enhancing Time & Space' states that skillful puck handling forces defenders to react, often opening gaps and giving players more time to decide the next play (pass, shoot, or continue). 'Teaching Puck Control at All Age Levels' states this should be taught and reinforced at all ages. Loosely but genuinely supports exp26b-u9-015's premise that a completed pass/possession change should prompt a fresh read for another supporting option; it is original synthesis (the authored coordinates and specific lane are not source-certified)."
+    }
+  ],
+  "remainingQuestionIds": []
+}

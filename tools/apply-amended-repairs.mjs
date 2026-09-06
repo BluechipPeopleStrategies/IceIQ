@@ -185,8 +185,19 @@ export function buildPlan({ proposalPath = PROPOSAL_PATH, receiptPath = null, wr
     const packet = proposal.packets.find(row => row.packetId === packetId);
     for (const scenario of packet.scenarios) {
       const source = returned.repairs.find(row => row.scenarioId === scenario.scenarioId);
-      if (!source) fail(`${scenario.scenarioId}: absent from source return`);
-      assert.deepEqual([...scenario.sourceAffectedQuestionIds].sort(), [...source.affectedQuestionIds].sort(), `${scenario.scenarioId}: source closure mismatch`);
+      if (!source) {
+        if (scenario.sourceRetainedReview !== true) fail(`${scenario.scenarioId}: absent from source return`);
+        const coverage = returned.coverage.filter(row => row.scenarioId === scenario.scenarioId);
+        const current = (injectedParts || readBankFiles()).bank.find(row => row.id === scenario.scenarioId);
+        if (!current || coverage.length !== current.questions.length || new Set(coverage.map(row => row.questionId)).size !== coverage.length) fail(`${scenario.scenarioId}: incomplete retained-source coverage`);
+        for (const question of current.questions) {
+          const row = coverage.find(row => row.questionId === question.id);
+          if (row?.verdict !== "retain" || row.baseContentHash !== questionContentHash(current, question)) fail(`${question.id}: stale retained-source review`);
+        }
+        assert.deepEqual(scenario.sourceAffectedQuestionIds, [], `${scenario.scenarioId}: retained source has no repair closure`);
+      } else {
+        assert.deepEqual([...scenario.sourceAffectedQuestionIds].sort(), [...source.affectedQuestionIds].sort(), `${scenario.scenarioId}: source closure mismatch`);
+      }
     }
   }
   const parts = injectedParts || readBankFiles();
