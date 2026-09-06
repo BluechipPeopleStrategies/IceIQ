@@ -1,6 +1,6 @@
 # RinkReads — Task List
 
-**Last updated:** 2026-09-05 · **Packets 07–09 repaired locally:** 14 additional scenarios / 72 question versions, independently rechecked. Experimental bank remains 200 scenarios / 1,600 authored questions; combined audit has no open AI question flags. Prior U7 curriculum holds and remote privacy migration remain pending.
+**Last updated:** 2026-09-05 · **Reviewed packets 01–09 deployed:** production 4457ee6, Vercel success and live phone interaction/reload verified. Packet-only release; separate app work remains local. Prior U7 curriculum holds and remote privacy migration remain pending.
 
 **Scope:** RinkReads **app build + content factory**. Launch/distribution (sending the beta, marketing) and the separate BlueChip business are **out of scope** — parked at the bottom. Priority = position in this list. A new idea that isn't here goes to the **Parking Lot** first, then gets promoted on purpose — that's the scope-creep guard.
 
@@ -56,6 +56,8 @@
 - *(New ideas land here first, then get promoted into NEXT/LATER on purpose.)*
 
 ## Changelog
+
+- **2026-09-05** — Deployed all reviewed packets01–09 through isolated production release4457ee6. 32 focused tests and build passed; Vercel success and live repaired-question submission/reload verified. Root main is intentionally divergent from origin/main; reconcile before the next publication. [Deployment evidence](../one-on-one/2026-09-05-packets-production-deployment.md).
 
 - **2026-09-05** — Applied Claude packets 07–09 after reviewing all 122 assigned questions and independently rechecking 72 changed versions across 14 scenarios. Corrected unsupported circle landmarks, ambiguous attacking-end wording, guaranteed-pass claims, grammar and defensive teammate relevance. Preserved original returns and exact historical repair evidence; generalized the receipt-gated applicator and regenerated catalogs/audits. Experimental only, no human coach approval or deployment. [Adjudication](../factory/research/question-review/packets-07-09/root-content-adjudication.md).
 
