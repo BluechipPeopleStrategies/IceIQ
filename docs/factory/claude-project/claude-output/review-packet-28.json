@@ -1,0 +1,2790 @@
+{
+  "schemaVersion": 1,
+  "kind": "rinkreads-content-review",
+  "status": "draft-not-reviewed",
+  "snapshotId": "rr-20260905-c8403be16748c919",
+  "packetId": "packet-28",
+  "completion": "complete",
+  "coverage": [
+    {
+      "scenarioId": "exp26b-u13-011",
+      "questionId": "exp26b-u13-011-q1",
+      "baseContentHash": "91d354842c16e2ed7e51272a860f46ca9c61b88eb7fa6a3d338c1a40c1b95b3a",
+      "verdict": "repair",
+      "reason": "Scene-level briefing carries a subject-verb grammar defect ('YOU starts') and an inaccurate direction claim about Gold 2 ('trails wide' when computed coordinates show Gold 2 is ahead of, not behind, Gold 1); both are visible on every question view including this one, so q1 is repaired along with its siblings even though its own answer (a: along the right side toward the blue line) is independently correct.",
+      "checks": {
+        "roster": "pass",
+        "geometry": "fail",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "fail"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "n1 (YOU, Navy/home skater) at (12,2) facing 3 rad",
+          "n2 (D1, Navy/home skater) at (5,-7) facing 2.9 rad",
+          "g1 (Gold 1, Gold/away skater) at (18,6) facing 2.8 rad, owns the puck",
+          "g2 (Gold 2, Gold/away skater) at (13,10) facing 2.7 rad",
+          "Carried puck at (16.823,5.675): matches owner-offset formula x=18+cos(2.8)-0.7*sin(2.8), y=6+sin(2.8)+0.7*cos(2.8) exactly"
+        ],
+        "stated": [
+          "Briefing: Navy attacks Gold's net and defends Navy's net (home attacks +x per contract)",
+          "Briefing (original): 'Gold 1 carries on the right side toward Navy's blue line'; 'YOU starts inside; D1 is behind and Gold 2 trails wide'",
+          "Cues: Gold 1 carries wide right toward the blue line; YOU are inside the carrier, D1 is behind"
+        ],
+        "unproven": [
+          "No stated speed, reach or interception timing for Gold 1, Gold 2 or D1",
+          "Facing does not itself prove where a player is looking",
+          "Whether Gold 1 will continue, cut back, or pass is not established by the still frame"
+        ]
+      },
+      "sourceUrls": [
+        "https://www.usahockey.com/news_article/show/988313-winning-in-transition-angling-gaps-and-creating-turnovers-in-today-s-game",
+        "https://cdn.hockeycanada.ca/hockey-canada/Hockey-Programs/Players/Downloads/2020/developing-defence-overview-e.pdf"
+      ]
+    },
+    {
+      "scenarioId": "exp26b-u13-011",
+      "questionId": "exp26b-u13-011-q2",
+      "baseContentHash": "96cf483c6a3b503b54c9004720fc47cf774f959e068086ad575c9b01008947ea",
+      "verdict": "repair",
+      "reason": "Answer (a: stay inside carrier; b: wall is easier escape) is directly supported by the fetched USA Hockey and Hockey Canada sources ('angle and steer the attack wide: be on the inside of the rush'; push opponent to bad ice at the perimeter). Repaired only because the shared briefing's grammar and Gold-2-direction defects are visible on every question.",
+      "checks": {
+        "roster": "pass",
+        "geometry": "fail",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "fail"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "n1 (YOU, Navy/home skater) at (12,2) facing 3 rad",
+          "n2 (D1, Navy/home skater) at (5,-7) facing 2.9 rad",
+          "g1 (Gold 1, Gold/away skater) at (18,6) facing 2.8 rad, owns the puck",
+          "g2 (Gold 2, Gold/away skater) at (13,10) facing 2.7 rad",
+          "Carried puck at (16.823,5.675): matches owner-offset formula x=18+cos(2.8)-0.7*sin(2.8), y=6+sin(2.8)+0.7*cos(2.8) exactly"
+        ],
+        "stated": [
+          "Briefing: Navy attacks Gold's net and defends Navy's net (home attacks +x per contract)",
+          "Briefing (original): 'Gold 1 carries on the right side toward Navy's blue line'; 'YOU starts inside; D1 is behind and Gold 2 trails wide'",
+          "Cues: Gold 1 carries wide right toward the blue line; YOU are inside the carrier, D1 is behind"
+        ],
+        "unproven": [
+          "No stated speed, reach or interception timing for Gold 1, Gold 2 or D1",
+          "Facing does not itself prove where a player is looking",
+          "Whether Gold 1 will continue, cut back, or pass is not established by the still frame"
+        ]
+      },
+      "alternative": "If Gold 1 suddenly changes speed or lane, briefly widening before re-establishing the inside angle is defensible; crossing behind only becomes reasonable once puck possession actually changes hands.",
+      "sourceUrls": [
+        "https://www.usahockey.com/news_article/show/988313-winning-in-transition-angling-gaps-and-creating-turnovers-in-today-s-game",
+        "https://cdn.hockeycanada.ca/hockey-canada/Hockey-Programs/Players/Downloads/2020/developing-defence-overview-e.pdf"
+      ]
+    },
+    {
+      "scenarioId": "exp26b-u13-011",
+      "questionId": "exp26b-u13-011-q3",
+      "baseContentHash": "c636f4acde45ba62a2bf4a70f409a2672a2f983652185a41ffd9be62f28341c0",
+      "verdict": "repair",
+      "reason": "Sequence (read lane, close inside, finish with D1 support) is a defensible, non-rigid teaching order; scanning and closing can overlap in a live game, which the explanation does not contradict. Repaired only for the shared scene defects.",
+      "checks": {
+        "roster": "pass",
+        "geometry": "fail",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "fail"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "n1 (YOU, Navy/home skater) at (12,2) facing 3 rad",
+          "n2 (D1, Navy/home skater) at (5,-7) facing 2.9 rad",
+          "g1 (Gold 1, Gold/away skater) at (18,6) facing 2.8 rad, owns the puck",
+          "g2 (Gold 2, Gold/away skater) at (13,10) facing 2.7 rad",
+          "Carried puck at (16.823,5.675): matches owner-offset formula x=18+cos(2.8)-0.7*sin(2.8), y=6+sin(2.8)+0.7*cos(2.8) exactly"
+        ],
+        "stated": [
+          "Briefing: Navy attacks Gold's net and defends Navy's net (home attacks +x per contract)",
+          "Briefing (original): 'Gold 1 carries on the right side toward Navy's blue line'; 'YOU starts inside; D1 is behind and Gold 2 trails wide'",
+          "Cues: Gold 1 carries wide right toward the blue line; YOU are inside the carrier, D1 is behind"
+        ],
+        "unproven": [
+          "No stated speed, reach or interception timing for Gold 1, Gold 2 or D1",
+          "Facing does not itself prove where a player is looking",
+          "Whether Gold 1 will continue, cut back, or pass is not established by the still frame"
+        ]
+      },
+      "alternative": "Reading the lane and beginning to close can happen almost simultaneously; a coach could accept a tighter interleaving as long as the inside angle and D1 support are not abandoned.",
+      "sourceUrls": [
+        "https://www.usahockey.com/news_article/show/988313-winning-in-transition-angling-gaps-and-creating-turnovers-in-today-s-game",
+        "https://cdn.hockeycanada.ca/hockey-canada/Hockey-Programs/Players/Downloads/2020/developing-defence-overview-e.pdf"
+      ]
+    },
+    {
+      "scenarioId": "exp26b-u13-011",
+      "questionId": "exp26b-u13-011-q4",
+      "baseContentHash": "f7fa49f82d24636e776b284b9c40a82d68ee541ff1affdae7dd4dce3ae9fd7b9",
+      "verdict": "repair",
+      "reason": "Reference point (15,3) verified: x=15 is 'ahead' of Gold 1 along its direction of travel (facing 2.8 rad, moving toward -x), y=3 is closer to centre than Gold 1's y=6 ('inside'), and it is a plausible ~3.2m step from YOU's start (12,2). Not an exclusive correct dot, consistent with the position-question contract. Repaired only for the shared scene defects.",
+      "checks": {
+        "roster": "pass",
+        "geometry": "fail",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "fail"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "n1 (YOU, Navy/home skater) at (12,2) facing 3 rad",
+          "n2 (D1, Navy/home skater) at (5,-7) facing 2.9 rad",
+          "g1 (Gold 1, Gold/away skater) at (18,6) facing 2.8 rad, owns the puck",
+          "g2 (Gold 2, Gold/away skater) at (13,10) facing 2.7 rad",
+          "Carried puck at (16.823,5.675): matches owner-offset formula x=18+cos(2.8)-0.7*sin(2.8), y=6+sin(2.8)+0.7*cos(2.8) exactly"
+        ],
+        "stated": [
+          "Briefing: Navy attacks Gold's net and defends Navy's net (home attacks +x per contract)",
+          "Briefing (original): 'Gold 1 carries on the right side toward Navy's blue line'; 'YOU starts inside; D1 is behind and Gold 2 trails wide'",
+          "Cues: Gold 1 carries wide right toward the blue line; YOU are inside the carrier, D1 is behind"
+        ],
+        "unproven": [
+          "No stated speed, reach or interception timing for Gold 1, Gold 2 or D1",
+          "Facing does not itself prove where a player is looking",
+          "Whether Gold 1 will continue, cut back, or pass is not established by the still frame"
+        ]
+      },
+      "alternative": "A slightly shallower or deeper point on the same inside angle (for example (16,3.5)) is equally defensible; the reference is an illustration, not the only correct spot.",
+      "sourceUrls": [
+        "https://www.usahockey.com/news_article/show/988313-winning-in-transition-angling-gaps-and-creating-turnovers-in-today-s-game",
+        "https://cdn.hockeycanada.ca/hockey-canada/Hockey-Programs/Players/Downloads/2020/developing-defence-overview-e.pdf"
+      ]
+    },
+    {
+      "scenarioId": "exp26b-u13-011",
+      "questionId": "exp26b-u13-011-q5",
+      "baseContentHash": "27046cc5f55450aa2743dd72e23f75ced9e9d09df05302b894edac6ee45701c3",
+      "verdict": "repair",
+      "reason": "Original prompt ('If Gold 1 passes inside to Gold 2...') asserted a direction contradicted by computed geometry: Gold 2 (13,10) is wider (higher |y|) than Gold 1 (18,6), i.e. farther from the middle, not 'inside'. This compounds the briefing's inaccurate 'trails' claim about the same actor. Repaired: dropped the unsupported direction word; the answer and explanation (attention shifts to Gold 2 and D1) remain valid without it.",
+      "checks": {
+        "roster": "pass",
+        "geometry": "fail",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "fail"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "n1 (YOU, Navy/home skater) at (12,2) facing 3 rad",
+          "n2 (D1, Navy/home skater) at (5,-7) facing 2.9 rad",
+          "g1 (Gold 1, Gold/away skater) at (18,6) facing 2.8 rad, owns the puck",
+          "g2 (Gold 2, Gold/away skater) at (13,10) facing 2.7 rad",
+          "Carried puck at (16.823,5.675): matches owner-offset formula x=18+cos(2.8)-0.7*sin(2.8), y=6+sin(2.8)+0.7*cos(2.8) exactly"
+        ],
+        "stated": [
+          "Briefing: Navy attacks Gold's net and defends Navy's net (home attacks +x per contract)",
+          "Briefing (original): 'Gold 1 carries on the right side toward Navy's blue line'; 'YOU starts inside; D1 is behind and Gold 2 trails wide'",
+          "Cues: Gold 1 carries wide right toward the blue line; YOU are inside the carrier, D1 is behind"
+        ],
+        "unproven": [
+          "No stated speed, reach or interception timing for Gold 1, Gold 2 or D1",
+          "Facing does not itself prove where a player is looking",
+          "Whether Gold 1 will continue, cut back, or pass is not established by the still frame",
+          "Original q5 prompt's premise that the hypothetical pass goes 'inside' is not supported by g2's position relative to g1"
+        ]
+      },
+      "alternative": "If D1 can immediately step up on Gold 2, staying with Gold 1's likely give-and-go return is also defensible rather than fully switching attention.",
+      "sourceUrls": [
+        "https://www.usahockey.com/news_article/show/988313-winning-in-transition-angling-gaps-and-creating-turnovers-in-today-s-game",
+        "https://cdn.hockeycanada.ca/hockey-canada/Hockey-Programs/Players/Downloads/2020/developing-defence-overview-e.pdf"
+      ]
+    },
+    {
+      "scenarioId": "exp26b-u13-011",
+      "questionId": "exp26b-u13-011-q6",
+      "baseContentHash": "f052beef2de6a43a802edb5039f977c46f53e36776ba30b5e3f2606afbbd923d",
+      "verdict": "repair",
+      "reason": "Reflection question with no answer key; explanation is appropriately conditional (\"if the carrier slows, close under control\") and does not guarantee an outcome. Repaired only for the shared scene defects.",
+      "checks": {
+        "roster": "pass",
+        "geometry": "fail",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "fail"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "n1 (YOU, Navy/home skater) at (12,2) facing 3 rad",
+          "n2 (D1, Navy/home skater) at (5,-7) facing 2.9 rad",
+          "g1 (Gold 1, Gold/away skater) at (18,6) facing 2.8 rad, owns the puck",
+          "g2 (Gold 2, Gold/away skater) at (13,10) facing 2.7 rad",
+          "Carried puck at (16.823,5.675): matches owner-offset formula x=18+cos(2.8)-0.7*sin(2.8), y=6+sin(2.8)+0.7*cos(2.8) exactly"
+        ],
+        "stated": [
+          "Briefing: Navy attacks Gold's net and defends Navy's net (home attacks +x per contract)",
+          "Briefing (original): 'Gold 1 carries on the right side toward Navy's blue line'; 'YOU starts inside; D1 is behind and Gold 2 trails wide'",
+          "Cues: Gold 1 carries wide right toward the blue line; YOU are inside the carrier, D1 is behind"
+        ],
+        "unproven": [
+          "No stated speed, reach or interception timing for Gold 1, Gold 2 or D1",
+          "Facing does not itself prove where a player is looking",
+          "Whether Gold 1 will continue, cut back, or pass is not established by the still frame"
+        ]
+      },
+      "alternative": "A player with unusually good closing speed and stick reach might defensibly close faster than 'match the route' suggests, provided the middle is still denied.",
+      "sourceUrls": [
+        "https://www.usahockey.com/news_article/show/988313-winning-in-transition-angling-gaps-and-creating-turnovers-in-today-s-game",
+        "https://cdn.hockeycanada.ca/hockey-canada/Hockey-Programs/Players/Downloads/2020/developing-defence-overview-e.pdf"
+      ]
+    },
+    {
+      "scenarioId": "exp26b-u13-012",
+      "questionId": "exp26b-u13-012-q1",
+      "baseContentHash": "4d2a012299e0ed24aa3cc647dd6617f068437f1b7662e92475037065c0051705",
+      "verdict": "repair",
+      "reason": "Answer (a: Gold 2) verified: |g2.y|=0 is closer to centre than |g1.y|=5, matching the cue 'Gold 2 cuts through middle'. Only defect is the shared briefing grammar error ('YOU is'), visible on every question view including this one.",
+      "checks": {
+        "roster": "pass",
+        "geometry": "pass",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "fail"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "n1 (YOU, Navy/home skater) at (8,9) facing 2.9 rad",
+          "n2 (D1, Navy/home skater) at (14,2) facing 3.1 rad",
+          "g1 (Gold 1, Gold/away skater) at (20,5) facing 3 rad, owns the puck",
+          "g2 (Gold 2, Gold/away skater) at (17,0) facing 3 rad",
+          "Carried puck at (18.911,4.448): matches owner-offset formula x=20+cos(3)-0.7*sin(3), y=5+sin(3)+0.7*cos(3) exactly"
+        ],
+        "stated": [
+          "Briefing: Navy attacks Gold's net and defends Navy's net (home attacks +x per contract)",
+          "Briefing (original): 'Gold 1 carries into the right zone with Gold 2 cutting middle. YOU is the backchecking forward; D1 defends puck side.'",
+          "Cues: Gold 2 cuts through middle without the puck; D1 is on Gold 1's puck side, YOU recover behind"
+        ],
+        "unproven": [
+          "No stated speed, reach or interception timing for Gold 1, Gold 2, D1 or YOU",
+          "Facing does not itself prove where a player is looking",
+          "Whether Gold 2 actually receives the puck before YOU arrives is a stated hypothetical (q5), not the current frame"
+        ]
+      },
+      "sourceUrls": [
+        "https://www.usahockey.com/news_article/show/636604-14u-offense-defense-out-with-a-goalie-twist",
+        "https://www.usahockey.com/news_article/show/988313-winning-in-transition-angling-gaps-and-creating-turnovers-in-today-s-game"
+      ]
+    },
+    {
+      "scenarioId": "exp26b-u13-012",
+      "questionId": "exp26b-u13-012-q2",
+      "baseContentHash": "9ed61f3fbcc8033bc0759da8aefa567266d9652cb8c4dc46c5b39a721cf71e4a",
+      "verdict": "repair",
+      "reason": "Answer (a,b) is supported by the fetched Hockey Canada source ('protect the ice between dots, pivot to the middle... read the attack: where is your support') and the fetched USA Hockey 14U drill ('filling middle lane back to net'). Repaired only for the shared grammar defect.",
+      "checks": {
+        "roster": "pass",
+        "geometry": "pass",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "fail"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "n1 (YOU, Navy/home skater) at (8,9) facing 2.9 rad",
+          "n2 (D1, Navy/home skater) at (14,2) facing 3.1 rad",
+          "g1 (Gold 1, Gold/away skater) at (20,5) facing 3 rad, owns the puck",
+          "g2 (Gold 2, Gold/away skater) at (17,0) facing 3 rad",
+          "Carried puck at (18.911,4.448): matches owner-offset formula x=20+cos(3)-0.7*sin(3), y=5+sin(3)+0.7*cos(3) exactly"
+        ],
+        "stated": [
+          "Briefing: Navy attacks Gold's net and defends Navy's net (home attacks +x per contract)",
+          "Briefing (original): 'Gold 1 carries into the right zone with Gold 2 cutting middle. YOU is the backchecking forward; D1 defends puck side.'",
+          "Cues: Gold 2 cuts through middle without the puck; D1 is on Gold 1's puck side, YOU recover behind"
+        ],
+        "unproven": [
+          "No stated speed, reach or interception timing for Gold 1, Gold 2, D1 or YOU",
+          "Facing does not itself prove where a player is looking",
+          "Whether Gold 2 actually receives the puck before YOU arrives is a stated hypothetical (q5), not the current frame"
+        ]
+      },
+      "alternative": "If D1 is clearly beaten and Gold 1 is the more urgent threat, briefly prioritizing puck pressure over the middle read is defensible.",
+      "sourceUrls": [
+        "https://www.usahockey.com/news_article/show/636604-14u-offense-defense-out-with-a-goalie-twist",
+        "https://www.usahockey.com/news_article/show/988313-winning-in-transition-angling-gaps-and-creating-turnovers-in-today-s-game"
+      ]
+    },
+    {
+      "scenarioId": "exp26b-u13-012",
+      "questionId": "exp26b-u13-012-q3",
+      "baseContentHash": "5e8584cb4fb86cd0c4e99cf9c72941055d5feee77606ca4fe89bc879135018bb",
+      "verdict": "repair",
+      "reason": "Sequence (find inside attacker, recover through middle, communicate handoff) is a defensible non-rigid order for this specific routine. Repaired only for the shared grammar defect.",
+      "checks": {
+        "roster": "pass",
+        "geometry": "pass",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "fail"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "n1 (YOU, Navy/home skater) at (8,9) facing 2.9 rad",
+          "n2 (D1, Navy/home skater) at (14,2) facing 3.1 rad",
+          "g1 (Gold 1, Gold/away skater) at (20,5) facing 3 rad, owns the puck",
+          "g2 (Gold 2, Gold/away skater) at (17,0) facing 3 rad",
+          "Carried puck at (18.911,4.448): matches owner-offset formula x=20+cos(3)-0.7*sin(3), y=5+sin(3)+0.7*cos(3) exactly"
+        ],
+        "stated": [
+          "Briefing: Navy attacks Gold's net and defends Navy's net (home attacks +x per contract)",
+          "Briefing (original): 'Gold 1 carries into the right zone with Gold 2 cutting middle. YOU is the backchecking forward; D1 defends puck side.'",
+          "Cues: Gold 2 cuts through middle without the puck; D1 is on Gold 1's puck side, YOU recover behind"
+        ],
+        "unproven": [
+          "No stated speed, reach or interception timing for Gold 1, Gold 2, D1 or YOU",
+          "Facing does not itself prove where a player is looking",
+          "Whether Gold 2 actually receives the puck before YOU arrives is a stated hypothetical (q5), not the current frame"
+        ]
+      },
+      "alternative": "Recovering through the middle and spotting the inside attacker can happen almost simultaneously on a fast rush; either order is acceptable as long as the D1 handoff still occurs.",
+      "sourceUrls": [
+        "https://www.usahockey.com/news_article/show/636604-14u-offense-defense-out-with-a-goalie-twist",
+        "https://www.usahockey.com/news_article/show/988313-winning-in-transition-angling-gaps-and-creating-turnovers-in-today-s-game"
+      ]
+    },
+    {
+      "scenarioId": "exp26b-u13-012",
+      "questionId": "exp26b-u13-012-q4",
+      "baseContentHash": "9fe819390faa198cf7638cd530a9cf5caae8791321738d8b4189da844f5879a1",
+      "verdict": "repair",
+      "reason": "Reference point (10,3) verified: it lies between Gold 2 (17,0) and Navy's own net (~-27,0) along x, and is a large step toward the middle (y: 9 to 3) from YOU's start, matching 'recover through middle'. Repaired only for the shared grammar defect.",
+      "checks": {
+        "roster": "pass",
+        "geometry": "pass",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "fail"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "n1 (YOU, Navy/home skater) at (8,9) facing 2.9 rad",
+          "n2 (D1, Navy/home skater) at (14,2) facing 3.1 rad",
+          "g1 (Gold 1, Gold/away skater) at (20,5) facing 3 rad, owns the puck",
+          "g2 (Gold 2, Gold/away skater) at (17,0) facing 3 rad",
+          "Carried puck at (18.911,4.448): matches owner-offset formula x=20+cos(3)-0.7*sin(3), y=5+sin(3)+0.7*cos(3) exactly"
+        ],
+        "stated": [
+          "Briefing: Navy attacks Gold's net and defends Navy's net (home attacks +x per contract)",
+          "Briefing (original): 'Gold 1 carries into the right zone with Gold 2 cutting middle. YOU is the backchecking forward; D1 defends puck side.'",
+          "Cues: Gold 2 cuts through middle without the puck; D1 is on Gold 1's puck side, YOU recover behind"
+        ],
+        "unproven": [
+          "No stated speed, reach or interception timing for Gold 1, Gold 2, D1 or YOU",
+          "Facing does not itself prove where a player is looking",
+          "Whether Gold 2 actually receives the puck before YOU arrives is a stated hypothetical (q5), not the current frame"
+        ]
+      },
+      "alternative": "A point slightly closer to the net (for example (5,2)) is equally defensible depending on how much ice Gold 2 has already gained.",
+      "sourceUrls": [
+        "https://www.usahockey.com/news_article/show/636604-14u-offense-defense-out-with-a-goalie-twist",
+        "https://www.usahockey.com/news_article/show/988313-winning-in-transition-angling-gaps-and-creating-turnovers-in-today-s-game"
+      ]
+    },
+    {
+      "scenarioId": "exp26b-u13-012",
+      "questionId": "exp26b-u13-012-q5",
+      "baseContentHash": "a973e9ac32fb991faff19b8379c62e803ff77a98339c79882c7702245a28180f",
+      "verdict": "repair",
+      "reason": "Hypothetical (hedged, basis:coaching) about Gold 2 receiving before YOU arrives; answer (a) is a defensible general principle, not an objective grade. Repaired only for the shared grammar defect.",
+      "checks": {
+        "roster": "pass",
+        "geometry": "pass",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "fail"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "n1 (YOU, Navy/home skater) at (8,9) facing 2.9 rad",
+          "n2 (D1, Navy/home skater) at (14,2) facing 3.1 rad",
+          "g1 (Gold 1, Gold/away skater) at (20,5) facing 3 rad, owns the puck",
+          "g2 (Gold 2, Gold/away skater) at (17,0) facing 3 rad",
+          "Carried puck at (18.911,4.448): matches owner-offset formula x=20+cos(3)-0.7*sin(3), y=5+sin(3)+0.7*cos(3) exactly"
+        ],
+        "stated": [
+          "Briefing: Navy attacks Gold's net and defends Navy's net (home attacks +x per contract)",
+          "Briefing (original): 'Gold 1 carries into the right zone with Gold 2 cutting middle. YOU is the backchecking forward; D1 defends puck side.'",
+          "Cues: Gold 2 cuts through middle without the puck; D1 is on Gold 1's puck side, YOU recover behind"
+        ],
+        "unproven": [
+          "No stated speed, reach or interception timing for Gold 1, Gold 2, D1 or YOU",
+          "Facing does not itself prove where a player is looking",
+          "Whether Gold 2 actually receives the puck before YOU arrives is a stated hypothetical (q5), not the current frame"
+        ]
+      },
+      "alternative": "If D1 can immediately close on Gold 2 after the reception, YOU staying wider to cover a give-and-go back to Gold 1 is also defensible.",
+      "sourceUrls": [
+        "https://www.usahockey.com/news_article/show/636604-14u-offense-defense-out-with-a-goalie-twist",
+        "https://www.usahockey.com/news_article/show/988313-winning-in-transition-angling-gaps-and-creating-turnovers-in-today-s-game"
+      ]
+    },
+    {
+      "scenarioId": "exp26b-u13-012",
+      "questionId": "exp26b-u13-012-q6",
+      "baseContentHash": "3e6e21d6eb1c89e86e73cdb0a8a64f9a66619bbd73efc1ed86bc6ab01b60a24f",
+      "verdict": "repair",
+      "reason": "Reflection question with no answer key; explanation is conditional (\"if both chase one puck, another lane is open\") and names the relevant cue (covering the middle attacker vs. duplicating D1). Repaired only for the shared grammar defect.",
+      "checks": {
+        "roster": "pass",
+        "geometry": "pass",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "fail"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "n1 (YOU, Navy/home skater) at (8,9) facing 2.9 rad",
+          "n2 (D1, Navy/home skater) at (14,2) facing 3.1 rad",
+          "g1 (Gold 1, Gold/away skater) at (20,5) facing 3 rad, owns the puck",
+          "g2 (Gold 2, Gold/away skater) at (17,0) facing 3 rad",
+          "Carried puck at (18.911,4.448): matches owner-offset formula x=20+cos(3)-0.7*sin(3), y=5+sin(3)+0.7*cos(3) exactly"
+        ],
+        "stated": [
+          "Briefing: Navy attacks Gold's net and defends Navy's net (home attacks +x per contract)",
+          "Briefing (original): 'Gold 1 carries into the right zone with Gold 2 cutting middle. YOU is the backchecking forward; D1 defends puck side.'",
+          "Cues: Gold 2 cuts through middle without the puck; D1 is on Gold 1's puck side, YOU recover behind"
+        ],
+        "unproven": [
+          "No stated speed, reach or interception timing for Gold 1, Gold 2, D1 or YOU",
+          "Facing does not itself prove where a player is looking",
+          "Whether Gold 2 actually receives the puck before YOU arrives is a stated hypothetical (q5), not the current frame"
+        ]
+      },
+      "alternative": "In a strict-assignment system where the backchecking forward always takes the puck and the defenceman always takes the man, covering Gold 2 without regard to puck pressure would be the taught response; this scenario assumes a read-based rather than strict-assignment system.",
+      "sourceUrls": [
+        "https://www.usahockey.com/news_article/show/636604-14u-offense-defense-out-with-a-goalie-twist",
+        "https://www.usahockey.com/news_article/show/988313-winning-in-transition-angling-gaps-and-creating-turnovers-in-today-s-game"
+      ]
+    },
+    {
+      "scenarioId": "exp26b-u13-013",
+      "questionId": "exp26b-u13-013-q1",
+      "baseContentHash": "7387dee61b6f993e06ba288104adb49ec1bf8716ad328e966292c92d2873bdd6",
+      "verdict": "repair",
+      "reason": "Question text/answer itself is sound (Gold 2 is the only stated off-puck low attacker), but the scene-level geometry and grammar defects (see scenario reasons) change this question's hash even though its own text is untouched.",
+      "checks": {
+        "roster": "pass",
+        "geometry": "fail",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "fail"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "Original setup: Gold 2 at (22,3), separated in both x and y from Gold 1 (puck carrier, 21,-8) and D1 (23,-8), who are both near the puck."
+        ],
+        "stated": [
+          "Briefing/cues explicitly name Gold 2 as the far-side low-slot attacker.",
+          "Cue explicitly states D1 is below the puck."
+        ],
+        "unproven": [
+          "Whether Gold 2 will actually receive a pass or attack the net from that slot; only current position and briefing intent are established, not a completed play."
+        ]
+      },
+      "sourceUrls": [
+        "https://cdn.hockeycanada.ca/hockey-canada/Hockey-Programs/Players/Downloads/2020/u13-core-skills-e.pdf",
+        "https://cdn.hockeycanada.ca/hockey-canada/Hockey-Programs/Players/Downloads/high_performance_u17_technical_package_e.pdf"
+      ]
+    },
+    {
+      "scenarioId": "exp26b-u13-013",
+      "questionId": "exp26b-u13-013-q2",
+      "baseContentHash": "c40507e318015383db12267a0c680bb70b56929f2d0890f6b3c55839a56e971e",
+      "verdict": "repair",
+      "reason": "Multi-select correctly requires both the low threat's distance and the carrier's passing side; the 'only the puck behind you' distractor is a credible tunnel-vision mistake, not a joke option. Hash changes only via the scene-level cascade.",
+      "checks": {
+        "roster": "pass",
+        "geometry": "fail",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "fail"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "Gold 2 and Gold 1 (puck carrier) occupy different areas of the defensive zone in the setup."
+        ],
+        "stated": [
+          "Briefing frames YOU as weak side, i.e. away from the immediate puck battle."
+        ],
+        "unproven": [
+          "No fixed 'correct' scan order is proven; this coaching question allows either cue to be checked first."
+        ]
+      },
+      "alternative": "A player who checks the carrier's passing side first, then Gold 2's distance, is equally defensible; order is not graded.",
+      "sourceUrls": [
+        "https://cdn.hockeycanada.ca/hockey-canada/Hockey-Programs/Players/Downloads/2020/u13-core-skills-e.pdf",
+        "https://cdn.hockeycanada.ca/hockey-canada/Hockey-Programs/Players/Downloads/high_performance_u17_technical_package_e.pdf"
+      ]
+    },
+    {
+      "scenarioId": "exp26b-u13-013",
+      "questionId": "exp26b-u13-013-q3",
+      "baseContentHash": "be39e9b1f61d44d6942195f91478dbeeb78c54518a1778df39a3830610fb032c",
+      "verdict": "repair",
+      "reason": "The three-step scan (check Gold 2's route, check D1's lane, then adjust position) is a genuinely order-dependent decision, not an artificial 'look then decide' rule forcing scanning to wait — the final adjustment cannot be finalized before the first two reads. Hash changes only via the scene-level cascade.",
+      "checks": {
+        "roster": "pass",
+        "geometry": "fail",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "fail"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "Gold 2 and D1 occupy distinct, independently-checkable positions in the setup."
+        ],
+        "stated": [
+          "Briefing establishes both Gold 2 (low threat) and D1 (below the puck) as relevant reference points."
+        ],
+        "unproven": [
+          "Real-time scanning speed/overlap is not modeled; the static scene cannot prove these reads cannot happen almost simultaneously in play, only that this order is a defensible teaching sequence."
+        ]
+      },
+      "alternative": "A player who glances D1's lane fractionally before Gold 2's route is not tactically wrong; the sequence teaches a dependency, not a stopwatch order.",
+      "sourceUrls": [
+        "https://cdn.hockeycanada.ca/hockey-canada/Hockey-Programs/Players/Downloads/2020/u13-core-skills-e.pdf",
+        "https://cdn.hockeycanada.ca/hockey-canada/Hockey-Programs/Players/Downloads/high_performance_u17_technical_package_e.pdf"
+      ]
+    },
+    {
+      "scenarioId": "exp26b-u13-013",
+      "questionId": "exp26b-u13-013-q4",
+      "baseContentHash": "47797e1b85dfaf9218a6a5785ff939e796e061fd92482477e701bf4bbea3e9c5",
+      "verdict": "repair",
+      "reason": "Position target keeps YOU net-side of Gold 2 while shading toward the slot; verified geometrically consistent (target sits between Gold 2 and the Navy net in both x and y) both before and after the zone-mirror fix, since mirroring preserves all relative geometry. Hash changes because the scene-level zone/grammar fix touches every question.",
+      "checks": {
+        "roster": "pass",
+        "geometry": "fail",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "fail"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "Reference point sits at x equal to Gold 2's x and a y-value between Gold 2's y and the net's y, i.e. plausibly 'between' them."
+        ],
+        "stated": [
+          "Briefing/prompt frame this as staying between Gold 2 and the Navy net."
+        ],
+        "unproven": [
+          "The example point is one plausible coaching location, not the exclusive correct dot; lane/pressure/support could justify a nearby alternative."
+        ]
+      },
+      "alternative": "A slightly deeper or shallower net-side position is also defensible provided it keeps Gold 2 between YOU and the net.",
+      "sourceUrls": [
+        "https://cdn.hockeycanada.ca/hockey-canada/Hockey-Programs/Players/Downloads/2020/u13-core-skills-e.pdf",
+        "https://cdn.hockeycanada.ca/hockey-canada/Hockey-Programs/Players/Downloads/high_performance_u17_technical_package_e.pdf"
+      ]
+    },
+    {
+      "scenarioId": "exp26b-u13-013",
+      "questionId": "exp26b-u13-013-q5",
+      "baseContentHash": "fcc5f417d3b8ad543055f4e2d5030037f584485cd4faa2ddecd6dc55f217f0b7",
+      "verdict": "repair",
+      "reason": "Answer (update the Gold-2/net lane) is correct and the distractors are credible authoring mistakes (freezing to the old spot; fixating only on the stick), not jokes. This question's own explanation additionally had a 'YOU updates' subject-verb agreement error, fixed here.",
+      "checks": {
+        "roster": "pass",
+        "geometry": "fail",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "fail"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "Gold 2's stated position and the Navy-net lane are both established in the setup."
+        ],
+        "stated": [
+          "Prompt explicitly hypothesizes Gold 2 cutting toward the net."
+        ],
+        "unproven": [
+          "The specific route/speed of Gold 2's cut is a hypothetical, not a rendered or timed movement."
+        ]
+      },
+      "alternative": "If Gold 2's cut instead opens a passing lane rather than a direct net drive, YOU may need to communicate a switch rather than only shading the lane; both are coaching-defensible.",
+      "sourceUrls": [
+        "https://cdn.hockeycanada.ca/hockey-canada/Hockey-Programs/Players/Downloads/2020/u13-core-skills-e.pdf",
+        "https://cdn.hockeycanada.ca/hockey-canada/Hockey-Programs/Players/Downloads/high_performance_u17_technical_package_e.pdf"
+      ]
+    },
+    {
+      "scenarioId": "exp26b-u13-013",
+      "questionId": "exp26b-u13-013-q6",
+      "baseContentHash": "14adf32ac77d5d6e5fc986399c9b349fcd36879f7159a03a23681439342eead4",
+      "verdict": "repair",
+      "reason": "Optional reflection on shoulder-checking the half wall without losing Gold 2; not a near-duplicate of q3 (which teaches a scan-then-adjust sequence) or any other sibling. Lowercase 'you' in this explain-type prompt matches the bank-wide convention (85 of 108 explain prompts use lowercase 'you'), so it is not a grammar defect. Hash changes only via the scene-level cascade.",
+      "checks": {
+        "roster": "pass",
+        "geometry": "fail",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "fail"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "Gold 2 and the half wall (Gold 1's puck) are on different sides of YOU's attention."
+        ],
+        "stated": [
+          "Briefing establishes the half-wall puck and the far-side low slot as the two things to track."
+        ],
+        "unproven": [
+          "No single 'correct' shoulder-check technique is graded; this is an ungraded reflection with no answer key."
+        ]
+      },
+      "alternative": "Any technique that periodically re-locates Gold 2 while still checking the puck side is acceptable; there is no single required method.",
+      "sourceUrls": [
+        "https://cdn.hockeycanada.ca/hockey-canada/Hockey-Programs/Players/Downloads/2020/u13-core-skills-e.pdf",
+        "https://cdn.hockeycanada.ca/hockey-canada/Hockey-Programs/Players/Downloads/high_performance_u17_technical_package_e.pdf"
+      ]
+    },
+    {
+      "scenarioId": "exp26b-u13-014",
+      "questionId": "exp26b-u13-014-q1",
+      "baseContentHash": "c0e37cfc76b0b75372c575eba032e2a6d086c1d6adc16067eb56370efd8750f4",
+      "verdict": "repair",
+      "reason": "Verified by direct computation: distances from the loose puck (26,0.6) to D1 (26,-1)=1.6m, YOU (24,2)=2.44m, Gold 2 (22,-5)=6.88m, Gold 1 (20,7)=8.77m — D1 is genuinely closest, so the scene-basis answer is correct. This question's own explanation had a 'YOU reads' subject-verb agreement error, fixed here; the scene-level zone/grammar fix also touches its hash.",
+      "checks": {
+        "roster": "pass",
+        "geometry": "fail",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "fail"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "Loose puck coordinates and all four skaters' coordinates are given in setup; distances computed directly from them."
+        ],
+        "stated": [
+          "Cue states the puck is loose below the crease after Gold 1's shot."
+        ],
+        "unproven": [
+          "Skating speed/reach to actually win the race is not modeled; only static distance is established."
+        ]
+      },
+      "sourceUrls": [
+        "https://cdn.hockeycanada.ca/hockey-canada/Hockey-Programs/Players/Downloads/2020/u13-core-skills-e.pdf",
+        "https://cdn.hockeycanada.ca/hockey-canada/Hockey-Programs/Players/Downloads/high_performance_u17_technical_package_e.pdf"
+      ]
+    },
+    {
+      "scenarioId": "exp26b-u13-014",
+      "questionId": "exp26b-u13-014-q2",
+      "baseContentHash": "7c4d987c9096c6f997fc61d70b2af98516b14f2183d0a3a874edf1aa3a3f682d",
+      "verdict": "repair",
+      "reason": "Correct multi-select (Gold 2's net-side position and D1's route) with a credible outdated-information distractor ('the original shooting lane, without checking'), not a joke. This question's own explanation had a 'YOU balances' subject-verb agreement error, fixed here.",
+      "checks": {
+        "roster": "pass",
+        "geometry": "fail",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "fail"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "Gold 2 (net-side, y=-5) and D1 (closest to the puck) are both established in the setup."
+        ],
+        "stated": [
+          "Briefing/cues state Gold 2 is net-side of YOU and D1 is closest to the rebound."
+        ],
+        "unproven": [
+          "Whether Gold 2 is actually the shooter's primary intended target is not established, only that Gold 2 occupies the net-side danger area."
+        ]
+      },
+      "alternative": "If D1 clearly wins the puck cleanly, the second read shifts more fully to Gold 2 alone; both cues still matter until that is confirmed.",
+      "sourceUrls": [
+        "https://cdn.hockeycanada.ca/hockey-canada/Hockey-Programs/Players/Downloads/2020/u13-core-skills-e.pdf",
+        "https://cdn.hockeycanada.ca/hockey-canada/Hockey-Programs/Players/Downloads/high_performance_u17_technical_package_e.pdf"
+      ]
+    },
+    {
+      "scenarioId": "exp26b-u13-014",
+      "questionId": "exp26b-u13-014-q3",
+      "baseContentHash": "322497e5754ae5ab4696592c3e4022d71407d5041fbec662fc5a3c71471a41f9",
+      "verdict": "repair",
+      "reason": "The three-step read (locate puck, confirm D1 attacks it, protect the net-side attacker) is order-dependent (you cannot commit fully to covering before knowing whether D1 reaches the puck), not an artificial forced sequence. Hash changes only via the scene-level cascade.",
+      "checks": {
+        "roster": "pass",
+        "geometry": "fail",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "fail"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "Puck location and D1's distance to it are both given in setup."
+        ],
+        "stated": [
+          "Cues establish the puck is loose and D1 is closest."
+        ],
+        "unproven": [
+          "Real-time overlap between locating the puck and watching D1 is not modeled; the sequence teaches a logical dependency, not a stopwatch order."
+        ]
+      },
+      "alternative": "A player who keeps peripheral awareness of Gold 2 throughout, rather than strictly after confirming D1, is not tactically wrong.",
+      "sourceUrls": [
+        "https://cdn.hockeycanada.ca/hockey-canada/Hockey-Programs/Players/Downloads/2020/u13-core-skills-e.pdf",
+        "https://cdn.hockeycanada.ca/hockey-canada/Hockey-Programs/Players/Downloads/high_performance_u17_technical_package_e.pdf"
+      ]
+    },
+    {
+      "scenarioId": "exp26b-u13-014",
+      "questionId": "exp26b-u13-014-q4",
+      "baseContentHash": "28d4896e666d3f68cc095274302e0635e282039d95a27883e15faa41dd29fc75",
+      "verdict": "repair",
+      "reason": "Position target keeps YOU between Gold 2 and the Navy net while D1 attacks the rebound; verified geometrically plausible (target x/y both fall between Gold 2's and the net's coordinates) both before and after the zone-mirror fix, since mirroring preserves relative geometry. Hash changes because the scene-level fix touches every question.",
+      "checks": {
+        "roster": "pass",
+        "geometry": "fail",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "fail"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "Reference point's x and y both fall between Gold 2's coordinates and the net/crease coordinates."
+        ],
+        "stated": [
+          "Prompt frames this explicitly as staying between Gold 2 and the Navy net."
+        ],
+        "unproven": [
+          "This is one plausible coaching location, not the exclusive correct dot."
+        ]
+      },
+      "alternative": "A slightly tighter or looser net-side gap is also defensible depending on Gold 2's exact stick position.",
+      "sourceUrls": [
+        "https://cdn.hockeycanada.ca/hockey-canada/Hockey-Programs/Players/Downloads/2020/u13-core-skills-e.pdf",
+        "https://cdn.hockeycanada.ca/hockey-canada/Hockey-Programs/Players/Downloads/high_performance_u17_technical_package_e.pdf"
+      ]
+    },
+    {
+      "scenarioId": "exp26b-u13-014",
+      "questionId": "exp26b-u13-014-q5",
+      "baseContentHash": "6c0bd93d00c63c05651ad243fe9519f61443e244ecc8271851affa4a7c2b18f1",
+      "verdict": "repair",
+      "reason": "Correct answer (reassess whether Gold 2 remains the nearest uncovered attacker) with credible over-commitment distractors (diving at D1's puck; abandoning the net front), not jokes. Hash changes only via the scene-level cascade.",
+      "checks": {
+        "roster": "pass",
+        "geometry": "fail",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "fail"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "Gold 2's net-side position relative to YOU is established in setup."
+        ],
+        "stated": [
+          "Prompt hypothesizes D1 gaining clear control of the puck."
+        ],
+        "unproven": [
+          "Whether D1 actually gains control is a stated hypothetical, not a rendered outcome."
+        ]
+      },
+      "alternative": "If Gold 1 (the original shooter) has also repositioned, YOU may need to scan a third lane rather than only Gold 2; the coaching point is 'reassess', not a single fixed next action.",
+      "sourceUrls": [
+        "https://cdn.hockeycanada.ca/hockey-canada/Hockey-Programs/Players/Downloads/2020/u13-core-skills-e.pdf",
+        "https://cdn.hockeycanada.ca/hockey-canada/Hockey-Programs/Players/Downloads/high_performance_u17_technical_package_e.pdf"
+      ]
+    },
+    {
+      "scenarioId": "exp26b-u13-014",
+      "questionId": "exp26b-u13-014-q6",
+      "baseContentHash": "a53d0494ebd864e268619c4c33022ed890fe3851233dde3d451bc7008e2cb2d3",
+      "verdict": "repair",
+      "reason": "Optional reflection on distinguishing a loose puck from a controlled one; not a near-duplicate of q1 (specific closest-player fact) or q3 (ordered scan). Lowercase 'why must' framing has no YOU-agreement issue. Hash changes only via the scene-level cascade.",
+      "checks": {
+        "roster": "pass",
+        "geometry": "fail",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "fail"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "Loose-puck state and D1's proximity are both given in setup."
+        ],
+        "stated": [
+          "Cue explicitly states the puck is loose below the crease."
+        ],
+        "unproven": [
+          "No answer key exists for this reflection; response length or content is not graded."
+        ]
+      },
+      "alternative": "There is no single required answer; any response that distinguishes a race (loose) from a coverage decision (controlled) is acceptable.",
+      "sourceUrls": [
+        "https://cdn.hockeycanada.ca/hockey-canada/Hockey-Programs/Players/Downloads/2020/u13-core-skills-e.pdf",
+        "https://cdn.hockeycanada.ca/hockey-canada/Hockey-Programs/Players/Downloads/high_performance_u17_technical_package_e.pdf"
+      ]
+    },
+    {
+      "scenarioId": "exp26b-u13-015",
+      "questionId": "exp26b-u13-015-q1",
+      "baseContentHash": "5e3089a65fbdb0436958f0225b42164d367871a9ebe0d24e6bf0b95e78d41092",
+      "verdict": "repair",
+      "reason": "The question's own prompt/options/answer/explanation are correct and unchanged (possession loss is directly stated in the briefing, and both distractors are plausible-but-false: no goal is shown, and the pinch is stated to be at the blue line, not behind a net). It only needs repair because its content hash includes the shared scene briefing, which contains the recurring 'YOU is' subject-verb agreement defect ('YOU is nearest recovering forward' should be 'YOU are nearest recovering forward'). That scene-level defect fails the grammar check for every linked question until the briefing is fixed.",
+      "checks": {
+        "roster": "pass",
+        "geometry": "pass",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "fail"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "n1 (YOU, home) at (11,7) facing 2.8 rad.",
+          "n2 (D1, home) at (18,5) facing 2.9 rad.",
+          "g1 (Gold 1, away) at (22,8) facing 2.8 rad, owns the puck.",
+          "g2 (Gold 2, away) at (18,1) facing 3.0 rad.",
+          "Puck rendered at (20.823,7.675); recomputed with the carried-puck formula (x=22+cos(2.8)-0.7*sin(2.8), y=8+sin(2.8)+0.7*cos(2.8)) gives (20.8233,7.6755), matching exactly.",
+          "No goal, faceoff, or scoring event of any kind is present in setup or cues."
+        ],
+        "stated": [
+          "Briefing: Navy attacks Gold's net and defends Navy's net (Navy/home attacks +x, consistent with the fixed rule).",
+          "Briefing: D1 pinched at the right blue line but Gold 1 won the puck and exits along the wall.",
+          "Briefing: YOU is/are nearest recovering forward; Gold 2 cuts inside.",
+          "Cue: D1's pinch did not gain possession; Gold 1 has puck on the right wall.",
+          "Cue: Gold 2 is the inside option."
+        ],
+        "unproven": [
+          "Facing values (2.8-3.0 rad, all pointed roughly toward -x) show orientation only, not where any player actually looked.",
+          "No speed, reach, or interception timing is established by this static freeze; whether Navy recovers the puck is not shown."
+        ]
+      },
+      "sourceUrls": [
+        "https://www.usahockey.com/news_article/show/988313-winning-in-transition-angling-gaps-and-creating-turnovers-in-today-s-game",
+        "https://cdn.hockeycanada.ca/hockey-canada/Hockey-Programs/Players/Downloads/high_performance_u17_technical_package_e.pdf"
+      ]
+    },
+    {
+      "scenarioId": "exp26b-u13-015",
+      "questionId": "exp26b-u13-015-q2",
+      "baseContentHash": "286fea4daf546cc0caf5acbab4b304ce6f3893b540d01057e1270e84a9ea9b90",
+      "verdict": "repair",
+      "reason": "A prior repair (recorded in docs/factory/research/question-review/repairs/u13-repairs.json) replaced this question's original 'the empty bench' joke distractor with 'Whether an empty wall lane means Gold 1 cannot pass,' but left the explanation text unchanged: it still reads 'bench is irrelevant,' a stale reference to a distractor that no longer exists. The replacement distractor is also not grammatically parallel to the other two options (a clause phrased as a yes/no question versus two possessive noun phrases), which the authoring contract requires ('Keep choices grammatically parallel and plausible'). Beyond that formatting defect, and beyond the scene-level 'YOU is' grammar cascade shared with every sibling question, the answer itself (a,b) remains correct.",
+      "checks": {
+        "roster": "pass",
+        "geometry": "pass",
+        "answer": "pass",
+        "feedback": "fail",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "fail"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "g1 (Gold 1) owns the puck at (20.823,7.675), on the wall side (y=8 vs rink half-width bound 12.954).",
+          "g2 (Gold 2) at (18,1), close to centre ice width-wise, confirming the 'inside' label relative to Gold 1's wall position."
+        ],
+        "stated": [
+          "Cue: Gold 2 is the inside option.",
+          "Briefing: Gold 1 exits along the wall after winning the puck."
+        ],
+        "unproven": [
+          "Whether Gold 1 actually has (or lacks) a clear passing lane off the wall is not established by a still freeze; that is exactly the false inference option c is designed to test, not a settled fact."
+        ]
+      },
+      "alternative": "A coach emphasizing immediate puck pressure could argue the second priority is closing Gold 1's time and space directly (angling the puck carrier) rather than first reading Gold 2's inside route, if Gold 2 is not yet a live shooting threat from that depth. The scene's supported answer (Gold 2's inside route, Gold 1's wall exit) reflects this scenario's stated teaching priority of protecting the middle first; it is a defensible default, not the only correct read.",
+      "sourceUrls": [
+        "https://www.usahockey.com/news_article/show/988313-winning-in-transition-angling-gaps-and-creating-turnovers-in-today-s-game",
+        "https://cdn.hockeycanada.ca/hockey-canada/Hockey-Programs/Players/Downloads/high_performance_u17_technical_package_e.pdf"
+      ]
+    },
+    {
+      "scenarioId": "exp26b-u13-015",
+      "questionId": "exp26b-u13-015-q3",
+      "baseContentHash": "d7e35c123e6f2c3d93b56cdfd0d8330a51899bf4d425e5820a0e6ad6b073ce14",
+      "verdict": "repair",
+      "reason": "The sequence itself (identify new carrier -> recover inside Gold 2's lane -> angle Gold 1 once middle is protected) is a coherent, defensible single example order for a failed-pinch recovery, correctly framed as one order rather than a mandatory universal rule, and its explanation properly hedges each step. It needs repair only because the shared scene briefing carries the 'YOU is' grammar defect, which fails the grammar check for this question too.",
+      "checks": {
+        "roster": "pass",
+        "geometry": "pass",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "fail"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "Puck possession sits with g1 (Gold 1, away), not any Navy actor, confirming the turnover premise the sequence's first step names."
+        ],
+        "stated": [
+          "Briefing and cues establish the pinch failed, Gold 1 has the puck wide, and Gold 2 is the inside cutback option -- matching the sequence's three steps in order."
+        ],
+        "unproven": [
+          "No timing data establishes that this order is the only workable one; scanning, recovering, and angling can overlap in real play, which the explanation does not overclaim against."
+        ]
+      },
+      "alternative": "A coach prioritizing immediate wall pressure could sequence angling Gold 1 before fully sealing the inside lane, if Gold 2 is not yet a real shooting threat. The taught order (identify carrier, seal the inside lane, then angle the wall carrier) is this scenario's default priority for protecting the middle first, not the only workable sequence.",
+      "sourceUrls": [
+        "https://www.usahockey.com/news_article/show/988313-winning-in-transition-angling-gaps-and-creating-turnovers-in-today-s-game",
+        "https://cdn.hockeycanada.ca/hockey-canada/Hockey-Programs/Players/Downloads/high_performance_u17_technical_package_e.pdf"
+      ]
+    },
+    {
+      "scenarioId": "exp26b-u13-015",
+      "questionId": "exp26b-u13-015-q4",
+      "baseContentHash": "4d734b8cfc692ca0617a96334f41744b8d76a0ab41e903fdba3869422786197f",
+      "verdict": "repair",
+      "reason": "Independently recomputed geometry confirms the reference point (14,2) is genuinely 'inside' (y=2, close to Gold 2's y=1 and far from Gold 1's wall-side y=8) and genuinely 'below Gold 2' in the direction Gold attacks (x=14 is between Gold 2's x=18 and the Navy net at x=-27.13, i.e. goal-side of Gold 2, since Gold attacks -x). The point is well inside the rink bounds (|x|<=30.48, |y|<=12.954) and nowhere near a rounded corner. It needs repair only because the shared scene briefing carries the 'YOU is' grammar defect.",
+      "checks": {
+        "roster": "pass",
+        "geometry": "pass",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "fail"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "n1 (YOU) currently at (11,7); actorId 'n1' in this question matches the actual YOU-labelled actor, not a different teammate.",
+          "g2 (Gold 2) at (18,1)."
+        ],
+        "stated": [
+          "Cue: Gold 2 is the inside option, so the reference point is deliberately placed goal-side of and inline with Gold 2 rather than on the wall."
+        ],
+        "unproven": [
+          "The reference is an example location, not the one exclusive correct dot, consistent with the position-question contract."
+        ]
+      },
+      "alternative": "Any point on the direct line between Gold 2 and the Navy net that keeps YOU inside of (i.e. lower y than) Gold 2's wall-side threat and goal-side of Gold 2's current x would serve the same coaching purpose; (14,2) is one example, not the only correct target.",
+      "sourceUrls": [
+        "https://www.usahockey.com/news_article/show/988313-winning-in-transition-angling-gaps-and-creating-turnovers-in-today-s-game",
+        "https://cdn.hockeycanada.ca/hockey-canada/Hockey-Programs/Players/Downloads/high_performance_u17_technical_package_e.pdf"
+      ]
+    },
+    {
+      "scenarioId": "exp26b-u13-015",
+      "questionId": "exp26b-u13-015-q5",
+      "baseContentHash": "eb8a5065b51fdbca2458f605285a8018744b243442089aa8f457b8d7e5269f4c",
+      "verdict": "repair",
+      "reason": "The hypothetical (Gold 2 receives before YOU arrives) is explicitly introduced as a changed condition, matching the authoring contract's rule that any extra condition must be stated. The correct answer (contain Gold 2 and keep the net-side lane closed) is properly hedged with a conditional return-to-scan clause, and both distractors are plausible-but-wrong hockey decisions (chasing a carrier who no longer has the puck; abandoning the middle) rather than jokes. It needs repair only because the shared scene briefing carries the 'YOU is' grammar defect.",
+      "checks": {
+        "roster": "pass",
+        "geometry": "pass",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "fail"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "g2 (Gold 2) at (18,1), the actor the hypothetical names as the new receiver."
+        ],
+        "stated": [
+          "Cue: Gold 2 is the inside option, making Gold 2 the plausible next receiver this hypothetical asks about."
+        ],
+        "unproven": [
+          "Whether Gold 2 actually receives the puck is a stated hypothetical for this question only, not a claim about the frozen scene itself."
+        ]
+      },
+      "alternative": "If Gold 2 is still far from the net and not yet a real shooting threat, a coach could accept a brief continued read on Gold 1 before fully committing to contain Gold 2, provided the inside lane is never abandoned. The suggested answer assumes Gold 2's reception is the more urgent new threat, which is the reasonable default but not the only defensible read.",
+      "sourceUrls": [
+        "https://www.usahockey.com/news_article/show/988313-winning-in-transition-angling-gaps-and-creating-turnovers-in-today-s-game",
+        "https://cdn.hockeycanada.ca/hockey-canada/Hockey-Programs/Players/Downloads/high_performance_u17_technical_package_e.pdf"
+      ]
+    },
+    {
+      "scenarioId": "exp26b-u13-015",
+      "questionId": "exp26b-u13-015-q6",
+      "baseContentHash": "fd37cb97f24be011506cb1b4a143efea145c293317edf3f26eb6a618a2044677",
+      "verdict": "repair",
+      "reason": "This reflection asks the learner to explain why the failed pinch changes the first skating lane; it has no answer key, does not duplicate q1-q5 (each of which asks the learner to act or identify a fact, not to justify the underlying reasoning), and its explanation is properly hedged with a return-to-normal-roles condition. It needs repair only because the shared scene briefing carries the 'YOU is' grammar defect.",
+      "checks": {
+        "roster": "pass",
+        "geometry": "pass",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "fail"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "No new actor or event beyond the four already-listed actors and the stated puck turnover is referenced by this question."
+        ],
+        "stated": [
+          "Briefing and cues jointly establish that possession moved to Gold and that Gold 2's inside route is the more central threat, which the explanation cites as the reason the first skating lane changes."
+        ],
+        "unproven": [
+          "This is an explain-type reflection: no response length or specific wording is scored, and no single phrasing is treated as the only correct answer."
+        ]
+      },
+      "alternative": "A player could reasonably answer that the lane changes primarily because possession flipped to the opponent (the turnover itself), rather than emphasizing Gold 2's inside route specifically. Both answers reflect the same underlying transition-defence read and neither should be marked wrong, since this reflection has no answer key.",
+      "sourceUrls": [
+        "https://www.usahockey.com/news_article/show/988313-winning-in-transition-angling-gaps-and-creating-turnovers-in-today-s-game",
+        "https://cdn.hockeycanada.ca/hockey-canada/Hockey-Programs/Players/Downloads/high_performance_u17_technical_package_e.pdf"
+      ]
+    }
+  ],
+  "repairs": [
+    {
+      "scenarioId": "exp26b-u13-011",
+      "baseVersion": 2,
+      "baseScenarioHash": "d6a120e07341f07de712b3245d1709778a3e0d4aa6f7978e407d10a0b7247469",
+      "replacement": {
+        "id": "exp26b-u13-011",
+        "version": 3,
+        "ageBand": "U13",
+        "title": "Angle the carrier to the wall",
+        "family": "angle-to-wall",
+        "topic": "defensive angling",
+        "objective": "Use an inside approach that guides Gold 1 away from the middle",
+        "briefing": "Navy attacks Gold’s net and defends Navy’s net. Gold 1 carries on the right side toward the blue line. YOU start inside; D1 is behind and Gold 2 is positioned wide.",
+        "setup": {
+          "actors": [
+            {
+              "id": "n1",
+              "label": "YOU",
+              "team": "home",
+              "role": "skater",
+              "x": 12,
+              "y": 2,
+              "facing": 3
+            },
+            {
+              "id": "n2",
+              "label": "D1",
+              "team": "home",
+              "role": "skater",
+              "x": 5,
+              "y": -7,
+              "facing": 2.9
+            },
+            {
+              "id": "g1",
+              "label": "Gold 1",
+              "team": "away",
+              "role": "skater",
+              "x": 18,
+              "y": 6,
+              "facing": 2.8
+            },
+            {
+              "id": "g2",
+              "label": "Gold 2",
+              "team": "away",
+              "role": "skater",
+              "x": 13,
+              "y": 10,
+              "facing": 2.7
+            }
+          ],
+          "puck": {
+            "owner": "g1",
+            "x": 16.823,
+            "y": 5.675
+          }
+        },
+        "focusActorId": "n1",
+        "cues": [
+          "Gold 1 carries wide right toward the blue line.",
+          "YOU are inside the carrier; D1 is behind."
+        ],
+        "tags": [
+          "angle-to-wall",
+          "defensive angling"
+        ],
+        "sources": [
+          {
+            "id": "usa-transition-2019",
+            "title": "Winning in Transition: Angling, Gaps and Creating Turnovers in Today's Game",
+            "url": "https://www.usahockey.com/news_article/show/988313-winning-in-transition-angling-gaps-and-creating-turnovers-in-today-s-game",
+            "section": "Closing The Gap and A Proper Angle",
+            "use": "Supports the stated transition principle. The setup, alternatives and suggested answers are original experimental coaching synthesis."
+          },
+          {
+            "id": "hc-defence-2020",
+            "title": "Developing Skilled Defencemen — Overview",
+            "url": "https://cdn.hockeycanada.ca/hockey-canada/Hockey-Programs/Players/Downloads/2020/developing-defence-overview-e.pdf",
+            "section": "PDF pages 12–18, breakouts, regroups and shooting",
+            "use": "Supports the stated coaching principle. The setup, alternatives and suggested answers are original experimental coaching synthesis."
+          }
+        ],
+        "limits": "Static teaching freeze only: no speed, reach, interception timing or uniquely optimal route is validated. Answers are coaching suggestions grounded in visible cues.",
+        "questions": [
+          {
+            "type": "choice",
+            "prompt": "Where is Gold 1 carrying?",
+            "options": [
+              {
+                "id": "a",
+                "text": "Along the right side toward the blue line"
+              },
+              {
+                "id": "b",
+                "text": "Behind Navy’s left net"
+              },
+              {
+                "id": "c",
+                "text": "Across the middle toward the left side"
+              }
+            ],
+            "answer": [
+              "a"
+            ],
+            "basis": "scene",
+            "explanation": "Gold 1’s route gives YOU an inside angle to guide wide; a different route needs a different approach.",
+            "id": "exp26b-u13-011-q1"
+          },
+          {
+            "type": "multi",
+            "prompt": "Which two relationships fit the angling goal?",
+            "options": [
+              {
+                "id": "a",
+                "text": "YOU stay inside the carrier"
+              },
+              {
+                "id": "b",
+                "text": "The wall remains the easier escape"
+              },
+              {
+                "id": "c",
+                "text": "YOU cross behind immediately"
+              }
+            ],
+            "answer": [
+              "a",
+              "b"
+            ],
+            "basis": "coaching",
+            "explanation": "An inside position protects middle while the wall is the lower-risk direction; crossing behind loses the steering angle.",
+            "id": "exp26b-u13-011-q2"
+          },
+          {
+            "type": "sequence",
+            "prompt": "Order one angling approach.",
+            "options": [
+              {
+                "id": "a",
+                "text": "Read Gold 1’s lane"
+              },
+              {
+                "id": "b",
+                "text": "Close from inside while matching the route"
+              },
+              {
+                "id": "c",
+                "text": "Finish with D1’s support"
+              }
+            ],
+            "answer": [
+              "a",
+              "b",
+              "c"
+            ],
+            "basis": "coaching",
+            "explanation": "The carrier’s route controls approach; matching it protects middle; D1’s support gives the finish a second defender.",
+            "id": "exp26b-u13-011-q3"
+          },
+          {
+            "type": "position",
+            "prompt": "Move YOU inside and slightly ahead of Gold 1 to show the angle.",
+            "basis": "coaching",
+            "explanation": "The inside-ahead position protects middle and leaves Gold 1 the wall; if Gold 1 slows or passes, update rather than skating past.",
+            "actorId": "n1",
+            "reference": {
+              "x": 15,
+              "y": 3
+            },
+            "id": "exp26b-u13-011-q4"
+          },
+          {
+            "type": "choice",
+            "prompt": "If Gold 1 passes to Gold 2, what deserves attention?",
+            "options": [
+              {
+                "id": "a",
+                "text": "Whether Gold 2 threatens middle and D1 can help"
+              },
+              {
+                "id": "b",
+                "text": "Angling the player who no longer has the puck"
+              },
+              {
+                "id": "c",
+                "text": "Assuming the pass solved danger"
+              }
+            ],
+            "answer": [
+              "a"
+            ],
+            "basis": "coaching",
+            "explanation": "The pass changes carrier and inside threat, so switch to Gold 2 and D1; if Gold 2 is covered, recovery changes again.",
+            "id": "exp26b-u13-011-q5"
+          },
+          {
+            "type": "explain",
+            "prompt": "Why can a fast approach be unhelpful here?",
+            "basis": "coaching",
+            "explanation": "Speed without an inside angle can carry YOU past Gold 1 and give up middle, so match the route and keep support connected; if the carrier slows, close under control.",
+            "id": "exp26b-u13-011-q6"
+          }
+        ]
+      },
+      "affectedQuestionIds": [
+        "exp26b-u13-011-q1",
+        "exp26b-u13-011-q2",
+        "exp26b-u13-011-q3",
+        "exp26b-u13-011-q4",
+        "exp26b-u13-011-q5",
+        "exp26b-u13-011-q6"
+      ],
+      "reasons": [
+        {
+          "questionIds": [
+            "exp26b-u13-011-q1",
+            "exp26b-u13-011-q2",
+            "exp26b-u13-011-q3",
+            "exp26b-u13-011-q4",
+            "exp26b-u13-011-q5",
+            "exp26b-u13-011-q6"
+          ],
+          "issue": "Grammar defect in the briefing: 'YOU starts inside' (should be 'YOU start inside'), the standing 'YOU is/starts/has' subject-verb family error confirmed across 27+ prior packets and calibration-adjudication.md.",
+          "change": "Corrected to 'YOU start inside' in the briefing.",
+          "evidence": "AUTHORING-CONTRACT.md and RINKREADS-CLAUDE-PROJECT.md require natural 'YOU are/have/start' agreement. The briefing is shared scene context displayed with every linked question, so the fix cascades all 6 question hashes even though only q5's own text also changed."
+        },
+        {
+          "questionIds": [
+            "exp26b-u13-011-q1",
+            "exp26b-u13-011-q2",
+            "exp26b-u13-011-q3",
+            "exp26b-u13-011-q4",
+            "exp26b-u13-011-q5",
+            "exp26b-u13-011-q6"
+          ],
+          "issue": "Briefing claims 'Gold 2 trails wide', but computed coordinates show Gold 2 (13,10) is 5m further along Gold 1's breakout direction (lower x, i.e. more advanced toward the neutral zone, not behind) than Gold 1 (18,6); only the 'wide' half (y=10 vs y=6) is accurate. Question q5 compounds this: its prompt called the hypothetical Gold-1-to-Gold-2 pass 'inside', but Gold 2's y=10 is farther from centre than Gold 1's y=6, the opposite of inside. The phrase 'Navy's blue line' in the briefing is also bank-wide unique (checked all 30 packet files; occurs nowhere else) and ambiguous about which blue line is meant, so it was simplified to the unqualified 'the blue line' already used by the scene's own cues and q1's option text.",
+          "change": "Reworded the briefing to 'Gold 2 is positioned wide' (dropping the unsupported trailing/behind claim) and dropped 'Navy's' from 'the blue line'. Reworded q5's prompt to 'If Gold 1 passes to Gold 2, what deserves attention?' (dropping the unsupported 'inside' direction claim); the answer and explanation still hold without the directional word.",
+          "evidence": "Computed g1=(18,6) facing 2.8rad vs g2=(13,10) facing 2.7rad: g2-g1=(-5,+4). Carried-puck formula independently verified: x=18+cos(2.8)-0.7*sin(2.8)=16.823, y=6+sin(2.8)+0.7*cos(2.8)=5.675, matching the stored puck position exactly, confirming the actor/facing data used for this computation is the live data, not a misread."
+        }
+      ],
+      "replacementReview": {
+        "status": "self-checked",
+        "coverage": [
+          {
+            "questionId": "exp26b-u13-011-q1",
+            "contentHash": "638309eae04b9593d34966f1288a57ac2d719ff0b14cfe5a0cf150c82fc90ffe",
+            "checks": {
+              "roster": "pass",
+              "geometry": "pass",
+              "answer": "pass",
+              "feedback": "pass",
+              "age": "pass",
+              "sources": "pass",
+              "grammar": "pass"
+            },
+            "reason": "Final self-check: briefing now uses correct YOU agreement and a geometry-consistent description; structuredClone applied so no untouched field changed key order; re-verified against validateExperimentalBank, positionSubjectIssue, questionActorWarnings and the carried-puck on-ice check with zero findings."
+          },
+          {
+            "questionId": "exp26b-u13-011-q2",
+            "contentHash": "dacc6bd293ecf48bba71e922a02c11be34f642b263719baba8a351e8c35f4267",
+            "checks": {
+              "roster": "pass",
+              "geometry": "pass",
+              "answer": "pass",
+              "feedback": "pass",
+              "age": "pass",
+              "sources": "pass",
+              "grammar": "pass"
+            },
+            "reason": "Final self-check: briefing now uses correct YOU agreement and a geometry-consistent description; structuredClone applied so no untouched field changed key order; re-verified against validateExperimentalBank, positionSubjectIssue, questionActorWarnings and the carried-puck on-ice check with zero findings."
+          },
+          {
+            "questionId": "exp26b-u13-011-q3",
+            "contentHash": "805f21a7f0a20f74073feb8a665127adc8d2e22df7436a6261e3ded198f6f761",
+            "checks": {
+              "roster": "pass",
+              "geometry": "pass",
+              "answer": "pass",
+              "feedback": "pass",
+              "age": "pass",
+              "sources": "pass",
+              "grammar": "pass"
+            },
+            "reason": "Final self-check: briefing now uses correct YOU agreement and a geometry-consistent description; structuredClone applied so no untouched field changed key order; re-verified against validateExperimentalBank, positionSubjectIssue, questionActorWarnings and the carried-puck on-ice check with zero findings."
+          },
+          {
+            "questionId": "exp26b-u13-011-q4",
+            "contentHash": "4056a536e8e8a2694dc4efe82f89282e5eaef6b8fd32b75e6486b5967f21dc2c",
+            "checks": {
+              "roster": "pass",
+              "geometry": "pass",
+              "answer": "pass",
+              "feedback": "pass",
+              "age": "pass",
+              "sources": "pass",
+              "grammar": "pass"
+            },
+            "reason": "Final self-check: briefing now uses correct YOU agreement and a geometry-consistent description; structuredClone applied so no untouched field changed key order; re-verified against validateExperimentalBank, positionSubjectIssue, questionActorWarnings and the carried-puck on-ice check with zero findings."
+          },
+          {
+            "questionId": "exp26b-u13-011-q5",
+            "contentHash": "af83521800bc160dd70f97d73bb4e1e9eac40fb599202d637dd54403f3db7149",
+            "checks": {
+              "roster": "pass",
+              "geometry": "pass",
+              "answer": "pass",
+              "feedback": "pass",
+              "age": "pass",
+              "sources": "pass",
+              "grammar": "pass"
+            },
+            "reason": "Final self-check: briefing now uses correct YOU agreement and a geometry-consistent description; structuredClone applied so no untouched field changed key order; re-verified against validateExperimentalBank, positionSubjectIssue, questionActorWarnings and the carried-puck on-ice check with zero findings."
+          },
+          {
+            "questionId": "exp26b-u13-011-q6",
+            "contentHash": "145bd38b0a9a65cee508e4b00fd2b8577c294f0229e98d1749dc95ab7d35a42d",
+            "checks": {
+              "roster": "pass",
+              "geometry": "pass",
+              "answer": "pass",
+              "feedback": "pass",
+              "age": "pass",
+              "sources": "pass",
+              "grammar": "pass"
+            },
+            "reason": "Final self-check: briefing now uses correct YOU agreement and a geometry-consistent description; structuredClone applied so no untouched field changed key order; re-verified against validateExperimentalBank, positionSubjectIssue, questionActorWarnings and the carried-puck on-ice check with zero findings."
+          }
+        ]
+      }
+    },
+    {
+      "scenarioId": "exp26b-u13-012",
+      "baseVersion": 2,
+      "baseScenarioHash": "931f5566a2a3e152c9fff9fa4a5ff4311094b600a34cc4eb7835be065ea7bab8",
+      "replacement": {
+        "id": "exp26b-u13-012",
+        "version": 3,
+        "ageBand": "U13",
+        "title": "Backcheck the middle before the puck",
+        "family": "backcheck-middle",
+        "topic": "transition defence",
+        "objective": "Recover through the middle so the most dangerous attacker stays in view",
+        "briefing": "Navy attacks Gold’s net and defends Navy’s net. Gold 1 carries into the right zone with Gold 2 cutting middle. YOU are the backchecking forward; D1 defends puck side.",
+        "setup": {
+          "actors": [
+            {
+              "id": "n1",
+              "label": "YOU",
+              "team": "home",
+              "role": "skater",
+              "x": 8,
+              "y": 9,
+              "facing": 2.9
+            },
+            {
+              "id": "n2",
+              "label": "D1",
+              "team": "home",
+              "role": "skater",
+              "x": 14,
+              "y": 2,
+              "facing": 3.1
+            },
+            {
+              "id": "g1",
+              "label": "Gold 1",
+              "team": "away",
+              "role": "skater",
+              "x": 20,
+              "y": 5,
+              "facing": 3
+            },
+            {
+              "id": "g2",
+              "label": "Gold 2",
+              "team": "away",
+              "role": "skater",
+              "x": 17,
+              "y": 0,
+              "facing": 3
+            }
+          ],
+          "puck": {
+            "owner": "g1",
+            "x": 18.911,
+            "y": 4.448
+          }
+        },
+        "focusActorId": "n1",
+        "cues": [
+          "Gold 2 cuts through middle without the puck.",
+          "D1 is on Gold 1’s puck side; YOU recover behind."
+        ],
+        "tags": [
+          "backcheck-middle",
+          "transition defence"
+        ],
+        "sources": [
+          {
+            "id": "usa-transition-drill-2016",
+            "title": "14U Offense-Defense-Out with a Goalie Twist",
+            "url": "https://www.usahockey.com/news_article/show/636604-14u-offense-defense-out-with-a-goalie-twist",
+            "section": "Coaching points: middle-lane backcheck",
+            "use": "Supports the stated middle-lane coaching principle. The setup, alternatives and suggested answers are original experimental coaching synthesis."
+          },
+          {
+            "id": "usa-transition-2019",
+            "title": "Winning in Transition: Angling, Gaps and Creating Turnovers in Today's Game",
+            "url": "https://www.usahockey.com/news_article/show/988313-winning-in-transition-angling-gaps-and-creating-turnovers-in-today-s-game",
+            "section": "Closing The Gap and A Proper Angle",
+            "use": "Supports the stated transition principle. The setup, alternatives and suggested answers are original experimental coaching synthesis."
+          }
+        ],
+        "limits": "Static teaching freeze only: no speed, reach, interception timing or uniquely optimal route is validated. Answers are coaching suggestions grounded in visible cues.",
+        "questions": [
+          {
+            "type": "choice",
+            "prompt": "Which attacker is the inside support threat?",
+            "options": [
+              {
+                "id": "a",
+                "text": "Gold 2"
+              },
+              {
+                "id": "b",
+                "text": "Gold 1"
+              },
+              {
+                "id": "c",
+                "text": "D1"
+              }
+            ],
+            "answer": [
+              "a"
+            ],
+            "basis": "scene",
+            "explanation": "Gold 2’s middle cut makes that player the inside threat while D1 engages the carrier; if Gold 2 changes lane, recovery changes.",
+            "id": "exp26b-u13-012-q1"
+          },
+          {
+            "type": "multi",
+            "prompt": "Which two reads make your backcheck useful?",
+            "options": [
+              {
+                "id": "a",
+                "text": "Gold 2’s middle route"
+              },
+              {
+                "id": "b",
+                "text": "Whether D1 contains Gold 1"
+              },
+              {
+                "id": "c",
+                "text": "Skating wide without looking"
+              }
+            ],
+            "answer": [
+              "a",
+              "b"
+            ],
+            "basis": "coaching",
+            "explanation": "The middle route identifies danger and D1’s position tells you whether to support inside; blind wide skating can miss the threat.",
+            "id": "exp26b-u13-012-q2"
+          },
+          {
+            "type": "sequence",
+            "prompt": "Arrange one middle-lane backcheck.",
+            "options": [
+              {
+                "id": "a",
+                "text": "Find the inside attacker"
+              },
+              {
+                "id": "b",
+                "text": "Recover through middle toward the net"
+              },
+              {
+                "id": "c",
+                "text": "Communicate the handoff with D1"
+              }
+            ],
+            "answer": [
+              "a",
+              "b",
+              "c"
+            ],
+            "basis": "coaching",
+            "explanation": "Seeing Gold 2 prevents a puck-only chase; middle recovery protects net; communication avoids two defenders following Gold 1.",
+            "id": "exp26b-u13-012-q3"
+          },
+          {
+            "type": "position",
+            "prompt": "Move YOU into the middle lane between Gold 2 and the Navy net.",
+            "basis": "coaching",
+            "explanation": "The middle position protects the direct threat and lets YOU arrive underneath Gold 2; if D1 loses the carrier, keep both threats visible.",
+            "actorId": "n1",
+            "reference": {
+              "x": 10,
+              "y": 3
+            },
+            "id": "exp26b-u13-012-q4"
+          },
+          {
+            "type": "choice",
+            "prompt": "If Gold 2 receives before you arrive, what changes?",
+            "options": [
+              {
+                "id": "a",
+                "text": "Gold 2 becomes carrier and D1’s coverage must be reassessed"
+              },
+              {
+                "id": "b",
+                "text": "Your original route stays correct automatically"
+              },
+              {
+                "id": "c",
+                "text": "The net-side lane can be abandoned"
+              }
+            ],
+            "answer": [
+              "a"
+            ],
+            "basis": "coaching",
+            "explanation": "The reception changes the threat, so update carrier and roles; if Gold 2 is contained, recover to the next danger.",
+            "id": "exp26b-u13-012-q5"
+          },
+          {
+            "type": "explain",
+            "prompt": "How can you tell you are helping D1 rather than duplicating D1?",
+            "basis": "coaching",
+            "explanation": "Cover the middle attacker while D1 faces the carrier, then call when roles change; if both chase one puck, another lane is open.",
+            "id": "exp26b-u13-012-q6"
+          }
+        ]
+      },
+      "affectedQuestionIds": [
+        "exp26b-u13-012-q1",
+        "exp26b-u13-012-q2",
+        "exp26b-u13-012-q3",
+        "exp26b-u13-012-q4",
+        "exp26b-u13-012-q5",
+        "exp26b-u13-012-q6"
+      ],
+      "reasons": [
+        {
+          "questionIds": [
+            "exp26b-u13-012-q1",
+            "exp26b-u13-012-q2",
+            "exp26b-u13-012-q3",
+            "exp26b-u13-012-q4",
+            "exp26b-u13-012-q5",
+            "exp26b-u13-012-q6"
+          ],
+          "issue": "Grammar defect in the briefing: 'YOU is the backchecking forward' (should be 'YOU are the backchecking forward'), the same standing 'YOU is' family error.",
+          "change": "Corrected to 'YOU are the backchecking forward' in the briefing.",
+          "evidence": "Same standing house rule (AUTHORING-CONTRACT.md; calibration-adjudication.md lesson 2, \"Validate grammar across the whole scene\"). The briefing is shared scene context for every linked question, cascading all 6 hashes even though no question text itself needed to change."
+        }
+      ],
+      "replacementReview": {
+        "status": "self-checked",
+        "coverage": [
+          {
+            "questionId": "exp26b-u13-012-q1",
+            "contentHash": "7e696f1b41420a9f586f3e1cdf13fde65ddc29eea90212a2e99f442f0c309ef3",
+            "checks": {
+              "roster": "pass",
+              "geometry": "pass",
+              "answer": "pass",
+              "feedback": "pass",
+              "age": "pass",
+              "sources": "pass",
+              "grammar": "pass"
+            },
+            "reason": "Final self-check: briefing now uses correct YOU agreement and a geometry-consistent description; structuredClone applied so no untouched field changed key order; re-verified against validateExperimentalBank, positionSubjectIssue, questionActorWarnings and the carried-puck on-ice check with zero findings."
+          },
+          {
+            "questionId": "exp26b-u13-012-q2",
+            "contentHash": "b457f921a1a66d5cbd269dbf48cdeaf0d8fd87e9c0349ad120f3e05d8ffb69b1",
+            "checks": {
+              "roster": "pass",
+              "geometry": "pass",
+              "answer": "pass",
+              "feedback": "pass",
+              "age": "pass",
+              "sources": "pass",
+              "grammar": "pass"
+            },
+            "reason": "Final self-check: briefing now uses correct YOU agreement and a geometry-consistent description; structuredClone applied so no untouched field changed key order; re-verified against validateExperimentalBank, positionSubjectIssue, questionActorWarnings and the carried-puck on-ice check with zero findings."
+          },
+          {
+            "questionId": "exp26b-u13-012-q3",
+            "contentHash": "68ab09efa505576f7f547251e42c29182912ca84d10aa2d9c3c9f7b337f89565",
+            "checks": {
+              "roster": "pass",
+              "geometry": "pass",
+              "answer": "pass",
+              "feedback": "pass",
+              "age": "pass",
+              "sources": "pass",
+              "grammar": "pass"
+            },
+            "reason": "Final self-check: briefing now uses correct YOU agreement and a geometry-consistent description; structuredClone applied so no untouched field changed key order; re-verified against validateExperimentalBank, positionSubjectIssue, questionActorWarnings and the carried-puck on-ice check with zero findings."
+          },
+          {
+            "questionId": "exp26b-u13-012-q4",
+            "contentHash": "59397a201af5473f8b17ac53b845341b6fa66658309a3f9b6745f25f4fefc7f5",
+            "checks": {
+              "roster": "pass",
+              "geometry": "pass",
+              "answer": "pass",
+              "feedback": "pass",
+              "age": "pass",
+              "sources": "pass",
+              "grammar": "pass"
+            },
+            "reason": "Final self-check: briefing now uses correct YOU agreement and a geometry-consistent description; structuredClone applied so no untouched field changed key order; re-verified against validateExperimentalBank, positionSubjectIssue, questionActorWarnings and the carried-puck on-ice check with zero findings."
+          },
+          {
+            "questionId": "exp26b-u13-012-q5",
+            "contentHash": "627222e7627ba2bf2688404f6f1395fb0890b88dc453e032d27521892421deca",
+            "checks": {
+              "roster": "pass",
+              "geometry": "pass",
+              "answer": "pass",
+              "feedback": "pass",
+              "age": "pass",
+              "sources": "pass",
+              "grammar": "pass"
+            },
+            "reason": "Final self-check: briefing now uses correct YOU agreement and a geometry-consistent description; structuredClone applied so no untouched field changed key order; re-verified against validateExperimentalBank, positionSubjectIssue, questionActorWarnings and the carried-puck on-ice check with zero findings."
+          },
+          {
+            "questionId": "exp26b-u13-012-q6",
+            "contentHash": "52057755ca6de59ba6e8a0148b614db5fa6eea0d872b789ab1ad501f1910ed72",
+            "checks": {
+              "roster": "pass",
+              "geometry": "pass",
+              "answer": "pass",
+              "feedback": "pass",
+              "age": "pass",
+              "sources": "pass",
+              "grammar": "pass"
+            },
+            "reason": "Final self-check: briefing now uses correct YOU agreement and a geometry-consistent description; structuredClone applied so no untouched field changed key order; re-verified against validateExperimentalBank, positionSubjectIssue, questionActorWarnings and the carried-puck on-ice check with zero findings."
+          }
+        ]
+      }
+    },
+    {
+      "scenarioId": "exp26b-u13-013",
+      "baseVersion": 2,
+      "baseScenarioHash": "f67be06c1f4c1eb5164d5136cfb3d2c40adebbe995a138cf021dfcb187b5220d",
+      "replacement": {
+        "id": "exp26b-u13-013",
+        "version": 3,
+        "ageBand": "U13",
+        "title": "Cover the far-side low slot",
+        "family": "weak-side-low-coverage",
+        "topic": "defensive-zone coverage",
+        "objective": "Keep the far-side low attacker and puck-side pressure in one picture",
+        "briefing": "Navy attacks Gold’s net and defends Navy’s net. Gold 1 has the puck on the left half wall. Gold 2 waits in the far-side low slot. YOU are weak side; D1 is below the puck.",
+        "setup": {
+          "actors": [
+            {
+              "id": "n1",
+              "label": "YOU",
+              "team": "home",
+              "role": "skater",
+              "x": -20,
+              "y": -2,
+              "facing": 0.14159265358979312
+            },
+            {
+              "id": "n2",
+              "label": "D1",
+              "team": "home",
+              "role": "skater",
+              "x": -23,
+              "y": -8,
+              "facing": 0.3415926535897933
+            },
+            {
+              "id": "g1",
+              "label": "Gold 1",
+              "team": "away",
+              "role": "skater",
+              "x": -21,
+              "y": -8,
+              "facing": 0.2415926535897932
+            },
+            {
+              "id": "g2",
+              "label": "Gold 2",
+              "team": "away",
+              "role": "skater",
+              "x": -22,
+              "y": 3,
+              "facing": 0.14159265358979312
+            }
+          ],
+          "puck": {
+            "owner": "g1",
+            "x": -20.196516365300198,
+            "y": -7.081079955181305
+          }
+        },
+        "focusActorId": "n1",
+        "cues": [
+          "Gold 2 is the far-side low attacker.",
+          "Gold 1 owns puck on the left half wall; YOU are weak side."
+        ],
+        "tags": [
+          "weak-side-low-coverage",
+          "defensive-zone coverage"
+        ],
+        "sources": [
+          {
+            "id": "hc-u13-core",
+            "title": "U13 Skills — Core Skills",
+            "url": "https://cdn.hockeycanada.ca/hockey-canada/Hockey-Programs/Players/Downloads/2020/u13-core-skills-e.pdf",
+            "section": "Page 1, individual tactics and team play",
+            "use": "Supports age/topic placement only. The setup, alternatives and suggested answers are original experimental coaching synthesis."
+          },
+          {
+            "id": "hc-u17-principles",
+            "title": "Team Canada — Program of Excellence: Under 17 Technical Curriculum",
+            "url": "https://cdn.hockeycanada.ca/hockey-canada/Hockey-Programs/Players/Downloads/high_performance_u17_technical_package_e.pdf",
+            "section": "PDF pages 7–8, team support and transition principles",
+            "use": "Supports the stated team-support principle. The setup, alternatives and suggested answers are original experimental coaching synthesis."
+          }
+        ],
+        "limits": "Static teaching freeze only: no speed, reach, interception timing or uniquely optimal route is validated. Answers are coaching suggestions grounded in visible cues.",
+        "questions": [
+          {
+            "type": "choice",
+            "prompt": "Who is the off-puck low threat?",
+            "options": [
+              {
+                "id": "a",
+                "text": "Gold 2"
+              },
+              {
+                "id": "b",
+                "text": "D1"
+              },
+              {
+                "id": "c",
+                "text": "YOU"
+              }
+            ],
+            "answer": [
+              "a"
+            ],
+            "basis": "scene",
+            "explanation": "Gold 2 is the visible far-side attacker, so YOU first keeps that lane in view; if Gold 2 rises, update.",
+            "id": "exp26b-u13-013-q1"
+          },
+          {
+            "type": "multi",
+            "prompt": "Which two things should YOU keep in view?",
+            "options": [
+              {
+                "id": "a",
+                "text": "Gold 2’s distance from the net"
+              },
+              {
+                "id": "b",
+                "text": "The puck carrier’s passing side"
+              },
+              {
+                "id": "c",
+                "text": "Only the puck behind you"
+              }
+            ],
+            "answer": [
+              "a",
+              "b"
+            ],
+            "basis": "coaching",
+            "explanation": "The low threat and carrier side connect the weak-side read; staring only at puck can lose backdoor lane.",
+            "id": "exp26b-u13-013-q2"
+          },
+          {
+            "type": "sequence",
+            "prompt": "Arrange one weak-side coverage scan.",
+            "options": [
+              {
+                "id": "a",
+                "text": "Check Gold 2’s net-side route"
+              },
+              {
+                "id": "b",
+                "text": "See whether D1 has puck-side lane"
+              },
+              {
+                "id": "c",
+                "text": "Adjust between Gold 2 and net"
+              }
+            ],
+            "answer": [
+              "a",
+              "b",
+              "c"
+            ],
+            "basis": "coaching",
+            "explanation": "Gold 2’s route sets danger; D1’s position shows what is covered; final position protects the open net-side lane.",
+            "id": "exp26b-u13-013-q3"
+          },
+          {
+            "type": "position",
+            "prompt": "Move YOU closer to the low slot while staying between Gold 2 and the Navy net.",
+            "basis": "coaching",
+            "explanation": "The net-side position keeps Gold 2 visible and still sees Gold 1; if Gold 2 moves high, follow the new danger.",
+            "actorId": "n1",
+            "reference": {
+              "x": -22,
+              "y": 1
+            },
+            "id": "exp26b-u13-013-q4"
+          },
+          {
+            "type": "choice",
+            "prompt": "Gold 2 cuts from the far-side low slot toward the net. What must YOU update?",
+            "options": [
+              {
+                "id": "a",
+                "text": "The lane between Gold 2 and the Navy net"
+              },
+              {
+                "id": "b",
+                "text": "The old spot even if Gold 2 moves"
+              },
+              {
+                "id": "c",
+                "text": "Only Gold 1’s stick, not the low lane"
+              }
+            ],
+            "answer": [
+              "a"
+            ],
+            "basis": "coaching",
+            "explanation": "Gold 2’s movement changes the net-side lane, so YOU update the coverage relationship before looking back to Gold 1; if the lane closes, communicate the handoff.",
+            "id": "exp26b-u13-013-q5"
+          },
+          {
+            "type": "explain",
+            "prompt": "How can you check the half wall without forgetting Gold 2?",
+            "basis": "coaching",
+            "explanation": "Use a shoulder check that keeps Gold 2 between you and the net, then glance puck-side; if Gold 2 cuts behind, net-side lane wins.",
+            "id": "exp26b-u13-013-q6"
+          }
+        ]
+      },
+      "affectedQuestionIds": [
+        "exp26b-u13-013-q1",
+        "exp26b-u13-013-q2",
+        "exp26b-u13-013-q3",
+        "exp26b-u13-013-q4",
+        "exp26b-u13-013-q5",
+        "exp26b-u13-013-q6"
+      ],
+      "reasons": [
+        {
+          "questionIds": [
+            "exp26b-u13-013-q1",
+            "exp26b-u13-013-q2",
+            "exp26b-u13-013-q3",
+            "exp26b-u13-013-q4",
+            "exp26b-u13-013-q5",
+            "exp26b-u13-013-q6"
+          ],
+          "issue": "Goalie-placement/zone defect: this defensive-zone-coverage scene (Navy covering Gold's far-side low slot in Navy's own end) was built entirely at positive x (actors from 20 to 23), which is Gold's defensive end under the fixed rule 'Navy attacks +x' (so Navy's own defended net sits at negative x, not positive x). Cross-checked against every other goalie-anchored scenario in bank-snapshot.json: home/Navy goalies sit at x=-26/-27 (exp26-u13-016, exp26-u13-018, exp26b-u13-019, exp26-u15-008, exp26-u15-011) and away/Gold goalies sit at x=+26/+27 (exp26-u13-010, exp26-u13-011, exp26b-u13-006, exp26b-u13-007) with zero exceptions outside this scenario's own numbered cluster (exp26b-u13-011 through -015). Sibling scenario exp26b-u13-014 makes the same defect explicit and unmistakable: it places an actual actor labeled 'Navy goalie' at x=27, directly contradicting the fixed rule and every other goalie in the bank.",
+          "change": "Mirrored the scene across the centre line: negated every actor's x-coordinate and reflected each actor's facing (facing' = pi - facing, normalized to [0,2*pi)) so the whole picture now sits correctly in Navy's own defensive zone near x=-20 to -23. This preserves every relative distance, angle and facing relationship between actors exactly (a pure reflection), so no tactical relationship (who is between whom, who faces whom, who is closer) changes — only which physical end of the ice the scene occupies. The owned puck (Gold 1's carry) was recomputed from Gold 1's new position/facing using the app's own carried-puck formula (x=actor.x+cos(facing)-0.7*sin(facing), y=actor.y+sin(facing)+0.7*cos(facing)) rather than a naive coordinate negation, since that formula is not itself symmetric under simple negation. The q4 position-question reference point's x-coordinate was negated to match.",
+          "evidence": "bank-snapshot.json goalie audit (see script output): 6 home/Navy goalies at x=-26/-27 with facing 0, 6+ away/Gold goalies at x=+26/+27 with facing~3.14, zero exceptions outside exp26b-u13-011..015. Recomputed geometry verified on-ice under the rink bounds in AUTHORING-CONTRACT.md (|x|<=30.48, |y|<=12.954, rounded-corner radius 8.5344) and revalidated with the repo's own validateExperimentalBank (0 errors), positionSubjectIssue (no issues) and questionActorWarnings (no issues) after the fix."
+        },
+        {
+          "questionIds": [
+            "exp26b-u13-013-q1",
+            "exp26b-u13-013-q2",
+            "exp26b-u13-013-q3",
+            "exp26b-u13-013-q4",
+            "exp26b-u13-013-q5",
+            "exp26b-u13-013-q6"
+          ],
+          "issue": "Grammar: 'YOU is weak side' in the briefing is a subject-verb agreement error (the single most common defect class across this bank per calibration-adjudication.md and 27 prior packets, with zero exceptions treated as house style). It cascades to all 6 linked question hashes even though only 1 question's own text also changed. q5's own explanation independently repeats the same error family ('so YOU updates the coverage relationship').",
+          "change": "Briefing: 'YOU is weak side' -> 'YOU are weak side'. q5 explanation: 'so YOU updates the coverage relationship' -> 'so YOU update the coverage relationship'.",
+          "evidence": "This scenario's own cue 2 already reads correctly ('YOU are weak side'), proving the briefing's 'YOU is' was an authoring slip, not a deliberate style choice, since the same scene uses both forms."
+        }
+      ],
+      "replacementReview": {
+        "status": "self-checked",
+        "coverage": [
+          {
+            "questionId": "exp26b-u13-013-q1",
+            "contentHash": "4d00e15e8a4dd17c86070a9ce59e3896947ed0734dafa303056c29d68240c00e",
+            "checks": {
+              "roster": "pass",
+              "geometry": "pass",
+              "answer": "pass",
+              "feedback": "pass",
+              "age": "pass",
+              "sources": "pass",
+              "grammar": "pass"
+            },
+            "reason": "Re-read against the corrected scene: geometry now consistent with the fixed team-direction rule and the rest of the bank; briefing grammar corrected; answer, feedback, roster, age and sources unchanged and still valid."
+          },
+          {
+            "questionId": "exp26b-u13-013-q2",
+            "contentHash": "1d10fe3ac74550edaf00ab3ae70126e06d4abf1206e8a879c6c910c62774e73e",
+            "checks": {
+              "roster": "pass",
+              "geometry": "pass",
+              "answer": "pass",
+              "feedback": "pass",
+              "age": "pass",
+              "sources": "pass",
+              "grammar": "pass"
+            },
+            "reason": "Re-read against the corrected scene: geometry now consistent with the fixed team-direction rule and the rest of the bank; briefing grammar corrected; answer, feedback, roster, age and sources unchanged and still valid."
+          },
+          {
+            "questionId": "exp26b-u13-013-q3",
+            "contentHash": "d623971c0514e6187b21443bbd3ea3c10988770963bcb3d45156e1d5fd3de948",
+            "checks": {
+              "roster": "pass",
+              "geometry": "pass",
+              "answer": "pass",
+              "feedback": "pass",
+              "age": "pass",
+              "sources": "pass",
+              "grammar": "pass"
+            },
+            "reason": "Re-read against the corrected scene: geometry now consistent with the fixed team-direction rule and the rest of the bank; briefing grammar corrected; answer, feedback, roster, age and sources unchanged and still valid."
+          },
+          {
+            "questionId": "exp26b-u13-013-q4",
+            "contentHash": "029473449981d8a74734d95b755da592e0738b8db2f851d74ab238b5e9ce0923",
+            "checks": {
+              "roster": "pass",
+              "geometry": "pass",
+              "answer": "pass",
+              "feedback": "pass",
+              "age": "pass",
+              "sources": "pass",
+              "grammar": "pass"
+            },
+            "reason": "Re-read against the corrected scene: geometry now consistent with the fixed team-direction rule and the rest of the bank; briefing grammar corrected; answer, feedback, roster, age and sources unchanged and still valid."
+          },
+          {
+            "questionId": "exp26b-u13-013-q5",
+            "contentHash": "30200a8a675c7da0542f0d4150eb66039fe0a19d1162776323450c6a68bde6c7",
+            "checks": {
+              "roster": "pass",
+              "geometry": "pass",
+              "answer": "pass",
+              "feedback": "pass",
+              "age": "pass",
+              "sources": "pass",
+              "grammar": "pass"
+            },
+            "reason": "Re-read against the corrected scene: geometry now consistent with the fixed team-direction rule and the rest of the bank; grammar ('YOU are'/'YOU update') corrected; answer, feedback, roster, age and sources unchanged and still valid."
+          },
+          {
+            "questionId": "exp26b-u13-013-q6",
+            "contentHash": "bc717e397ab2cb1c1dfccead51c0c527604902a13386b5f4721500e4a32ce344",
+            "checks": {
+              "roster": "pass",
+              "geometry": "pass",
+              "answer": "pass",
+              "feedback": "pass",
+              "age": "pass",
+              "sources": "pass",
+              "grammar": "pass"
+            },
+            "reason": "Re-read against the corrected scene: geometry now consistent with the fixed team-direction rule and the rest of the bank; briefing grammar corrected; answer, feedback, roster, age and sources unchanged and still valid."
+          }
+        ]
+      }
+    },
+    {
+      "scenarioId": "exp26b-u13-014",
+      "baseVersion": 2,
+      "baseScenarioHash": "848d70043af16589b35b1d9e2818db4535b79f8de3851296bb2f45364c0eaa6a",
+      "replacement": {
+        "id": "exp26b-u13-014",
+        "version": 3,
+        "ageBand": "U13",
+        "title": "Choose the second rebound job",
+        "family": "rebound-role-choice",
+        "topic": "net-front defence",
+        "objective": "Separate the first rebound player from the supporting defender’s job",
+        "briefing": "Navy attacks Gold’s net and defends Navy’s net. Gold 1 shoots from the right circle. The rebound is loose below the crease; D1 is closest and YOU are net-side of Gold 2.",
+        "setup": {
+          "actors": [
+            {
+              "id": "n1",
+              "label": "YOU",
+              "team": "home",
+              "role": "skater",
+              "x": -24,
+              "y": 2,
+              "facing": 0.14159265358979312
+            },
+            {
+              "id": "n2",
+              "label": "D1",
+              "team": "home",
+              "role": "skater",
+              "x": -26,
+              "y": -1,
+              "facing": 0.04159265358979303
+            },
+            {
+              "id": "g1",
+              "label": "Gold 1",
+              "team": "away",
+              "role": "skater",
+              "x": -20,
+              "y": 7,
+              "facing": 0.2415926535897932
+            },
+            {
+              "id": "g2",
+              "label": "Gold 2",
+              "team": "away",
+              "role": "skater",
+              "x": -22,
+              "y": -5,
+              "facing": 0.14159265358979312
+            },
+            {
+              "id": "nga",
+              "label": "Navy goalie",
+              "team": "home",
+              "role": "goalie",
+              "x": -27,
+              "y": 0,
+              "facing": 0
+            }
+          ],
+          "puck": {
+            "owner": null,
+            "x": -26,
+            "y": 0.6
+          }
+        },
+        "focusActorId": "n1",
+        "cues": [
+          "The puck is loose below the crease after Gold 1’s shot.",
+          "D1 is closest; Gold 2 is net-side of YOU."
+        ],
+        "tags": [
+          "rebound-role-choice",
+          "net-front defence"
+        ],
+        "sources": [
+          {
+            "id": "hc-u13-core",
+            "title": "U13 Skills — Core Skills",
+            "url": "https://cdn.hockeycanada.ca/hockey-canada/Hockey-Programs/Players/Downloads/2020/u13-core-skills-e.pdf",
+            "section": "Page 1, individual tactics and team play",
+            "use": "Supports age/topic placement only. The setup, alternatives and suggested answers are original experimental coaching synthesis."
+          },
+          {
+            "id": "hc-u17-principles",
+            "title": "Team Canada — Program of Excellence: Under 17 Technical Curriculum",
+            "url": "https://cdn.hockeycanada.ca/hockey-canada/Hockey-Programs/Players/Downloads/high_performance_u17_technical_package_e.pdf",
+            "section": "PDF pages 7–8, team support and transition principles",
+            "use": "Supports the stated team-support principle. The setup, alternatives and suggested answers are original experimental coaching synthesis."
+          }
+        ],
+        "limits": "Static teaching freeze only: no speed, reach, interception timing or uniquely optimal route is validated. Answers are coaching suggestions grounded in visible cues.",
+        "questions": [
+          {
+            "type": "choice",
+            "prompt": "Who is closest to the loose rebound?",
+            "options": [
+              {
+                "id": "a",
+                "text": "D1"
+              },
+              {
+                "id": "b",
+                "text": "YOU"
+              },
+              {
+                "id": "c",
+                "text": "Gold 2"
+              }
+            ],
+            "answer": [
+              "a"
+            ],
+            "basis": "scene",
+            "explanation": "D1 is nearest, so YOU read the next threat and support lane; if D1 misses it, the job changes.",
+            "id": "exp26b-u13-014-q1"
+          },
+          {
+            "type": "multi",
+            "prompt": "Which two cues shape YOU’s second job?",
+            "options": [
+              {
+                "id": "a",
+                "text": "Gold 2’s net-side position"
+              },
+              {
+                "id": "b",
+                "text": "D1’s route to the puck"
+              },
+              {
+                "id": "c",
+                "text": "The original shooting lane, without checking Gold 2 or D1"
+              }
+            ],
+            "answer": [
+              "a",
+              "b"
+            ],
+            "basis": "coaching",
+            "explanation": "Gold 2 may be the scoring threat while D1 attacks puck, so YOU balance routes; jersey number does not locate danger.",
+            "id": "exp26b-u13-014-q2"
+          },
+          {
+            "type": "sequence",
+            "prompt": "Arrange one second-player rebound read.",
+            "options": [
+              {
+                "id": "a",
+                "text": "Locate the loose puck"
+              },
+              {
+                "id": "b",
+                "text": "Confirm D1 attacks it"
+              },
+              {
+                "id": "c",
+                "text": "Protect the dangerous net-side attacker"
+              }
+            ],
+            "answer": [
+              "a",
+              "b",
+              "c"
+            ],
+            "basis": "coaching",
+            "explanation": "Puck location tells you whether D1 can reach; confirming D1 frees YOU to cover; the second job protects the attacker.",
+            "id": "exp26b-u13-014-q3"
+          },
+          {
+            "type": "position",
+            "prompt": "Move YOU between Gold 2 and the Navy net while D1 attacks the rebound.",
+            "basis": "coaching",
+            "explanation": "The net-side position protects Gold 2 and leaves D1 room; if D1 loses the race, reassess possession.",
+            "actorId": "n1",
+            "reference": {
+              "x": -25,
+              "y": -1
+            },
+            "id": "exp26b-u13-014-q4"
+          },
+          {
+            "type": "choice",
+            "prompt": "If D1 gains clear control, what should YOU reassess?",
+            "options": [
+              {
+                "id": "a",
+                "text": "Whether Gold 2 remains the nearest uncovered attacker"
+              },
+              {
+                "id": "b",
+                "text": "Diving onto D1’s puck"
+              },
+              {
+                "id": "c",
+                "text": "Leaving the net front immediately"
+              }
+            ],
+            "answer": [
+              "a"
+            ],
+            "basis": "coaching",
+            "explanation": "D1’s control changes the puck threat, so keep Gold 2 covered and prepare an outlet; if Gold 2 leaves, scan next lane.",
+            "id": "exp26b-u13-014-q5"
+          },
+          {
+            "type": "explain",
+            "prompt": "Why must a rebound read distinguish loose from controlled?",
+            "basis": "coaching",
+            "explanation": "A loose puck requires a race, while control changes the job to coverage and support; if goalie or D1 covers it, chasing the old rebound wastes position.",
+            "id": "exp26b-u13-014-q6"
+          }
+        ]
+      },
+      "affectedQuestionIds": [
+        "exp26b-u13-014-q1",
+        "exp26b-u13-014-q2",
+        "exp26b-u13-014-q3",
+        "exp26b-u13-014-q4",
+        "exp26b-u13-014-q5",
+        "exp26b-u13-014-q6"
+      ],
+      "reasons": [
+        {
+          "questionIds": [
+            "exp26b-u13-014-q1",
+            "exp26b-u13-014-q2",
+            "exp26b-u13-014-q3",
+            "exp26b-u13-014-q4",
+            "exp26b-u13-014-q5",
+            "exp26b-u13-014-q6"
+          ],
+          "issue": "Goalie-placement defect (the exact class flagged as a standing risk): an actor explicitly labeled 'Navy goalie' (team: home) is placed at x=27, but under the fixed rule 'Navy attacks +x' Navy's own net (which a home goalie defends) must sit at negative x — every other home/Navy goalie in bank-snapshot.json sits at x=-26/-27 (exp26-u13-016, exp26-u13-018, exp26b-u13-019, exp26-u15-008, exp26-u15-011) and every away/Gold goalie sits at x=+26/+27, with zero exceptions elsewhere in the bank. This is the same defect as sibling exp26b-u13-013 (same numbered cluster), here made unambiguous by the presence of an actual goalie actor.",
+          "change": "Mirrored the scene across the centre line: negated every actor's x-coordinate (goalie now at x=-27) and reflected each skater's facing (facing' = pi - facing). Recomputed the loose puck's x by negation (it is not owner-carried, so no formula recomputation is needed for it). The goalie's stored facing (0) was NOT propagated through the literal mirror formula: every other goalie in the bank faces away from its own net into the play with zero exceptions (home/-x goalies at facing 0, away/+x goalies at facing~3.14), but this goalie's original facing (0) was already backwards for its erroneous +x placement (every other +x goalie uses facing~3.14) — so a literal reflection of that already-wrong value would have produced facing~3.14 at the corrected -x position, which is backwards yet again. The goalie's facing was instead set to 0 to match the bank's own 100%-consistent convention for a home goalie at negative x. The q4 position-question reference point's x-coordinate was negated to match.",
+          "evidence": "bank-snapshot.json goalie audit (see script output): 6 home/Navy goalies at x=-26/-27 with facing 0, 6+ away/Gold goalies at x=+26/+27 with facing~3.14, zero exceptions outside exp26b-u13-011..015. Recomputed geometry re-verified on-ice under AUTHORING-CONTRACT.md's rink bounds and corner radius, and revalidated with validateExperimentalBank (0 errors), positionSubjectIssue (no issues) and questionActorWarnings (no issues)."
+        },
+        {
+          "questionIds": [
+            "exp26b-u13-014-q1",
+            "exp26b-u13-014-q2",
+            "exp26b-u13-014-q3",
+            "exp26b-u13-014-q4",
+            "exp26b-u13-014-q5",
+            "exp26b-u13-014-q6"
+          ],
+          "issue": "Grammar: 'YOU is net-side of Gold 2' in the briefing is a subject-verb agreement error, cascading to all 6 linked question hashes. q1's explanation independently has 'so YOU reads the next threat' and q2's explanation independently has 'so YOU balances routes' — the same error family, each in that question's own text.",
+          "change": "Briefing: 'YOU is net-side of Gold 2' -> 'YOU are net-side of Gold 2'. q1 explanation: 'so YOU reads the next threat' -> 'so YOU read the next threat'. q2 explanation: 'so YOU balances routes' -> 'so YOU balance routes'.",
+          "evidence": "Cue 2 in this same scenario correctly reads 'Gold 2 is net-side of YOU' (third-person 'Gold 2 is', not 'YOU is'), confirming the briefing's error was a slip in applying second-person agreement, not a deliberate alternate style."
+        }
+      ],
+      "replacementReview": {
+        "status": "self-checked",
+        "coverage": [
+          {
+            "questionId": "exp26b-u13-014-q1",
+            "contentHash": "ac226cf44a1d3431842c00d34ca273ffd3088841ce9404ac0034d3258c62a7dd",
+            "checks": {
+              "roster": "pass",
+              "geometry": "pass",
+              "answer": "pass",
+              "feedback": "pass",
+              "age": "pass",
+              "sources": "pass",
+              "grammar": "pass"
+            },
+            "reason": "Re-read against the corrected scene: geometry now consistent with the fixed team-direction rule and the rest of the bank (goalie now correctly anchors Navy's own net at negative x); this question's own grammar corrected; the closest-to-puck / cue logic re-verified against the mirrored coordinates (relative distances unchanged by a pure reflection); feedback, roster, age and sources unchanged and still valid."
+          },
+          {
+            "questionId": "exp26b-u13-014-q2",
+            "contentHash": "c6e42c2ef3526b6c127f3ddf7c47a5c38daaa8cee40386ae20660b855a5f3747",
+            "checks": {
+              "roster": "pass",
+              "geometry": "pass",
+              "answer": "pass",
+              "feedback": "pass",
+              "age": "pass",
+              "sources": "pass",
+              "grammar": "pass"
+            },
+            "reason": "Re-read against the corrected scene: geometry now consistent with the fixed team-direction rule and the rest of the bank (goalie now correctly anchors Navy's own net at negative x); this question's own grammar corrected; the closest-to-puck / cue logic re-verified against the mirrored coordinates (relative distances unchanged by a pure reflection); feedback, roster, age and sources unchanged and still valid."
+          },
+          {
+            "questionId": "exp26b-u13-014-q3",
+            "contentHash": "f1f79b9ebcfc48e1be0eaa3791ecb80af852bdcb8c8df2a2b11f1d7dbb97ab1a",
+            "checks": {
+              "roster": "pass",
+              "geometry": "pass",
+              "answer": "pass",
+              "feedback": "pass",
+              "age": "pass",
+              "sources": "pass",
+              "grammar": "pass"
+            },
+            "reason": "Re-read against the corrected scene: geometry now consistent with the fixed team-direction rule and the rest of the bank (goalie now correctly anchors Navy's own net at negative x); briefing grammar corrected; answer, feedback, roster, age and sources unchanged and still valid."
+          },
+          {
+            "questionId": "exp26b-u13-014-q4",
+            "contentHash": "cd7b88032b4dba7c8c58ae4edcaa6a3f0af11fda10ab22c72c8bcc903060f54d",
+            "checks": {
+              "roster": "pass",
+              "geometry": "pass",
+              "answer": "pass",
+              "feedback": "pass",
+              "age": "pass",
+              "sources": "pass",
+              "grammar": "pass"
+            },
+            "reason": "Re-read against the corrected scene: geometry now consistent with the fixed team-direction rule and the rest of the bank (goalie now correctly anchors Navy's own net at negative x); briefing grammar corrected; answer, feedback, roster, age and sources unchanged and still valid."
+          },
+          {
+            "questionId": "exp26b-u13-014-q5",
+            "contentHash": "78236fdf2b5ae26379e53d96491d66a00916b663704e243edb70d815432cc14d",
+            "checks": {
+              "roster": "pass",
+              "geometry": "pass",
+              "answer": "pass",
+              "feedback": "pass",
+              "age": "pass",
+              "sources": "pass",
+              "grammar": "pass"
+            },
+            "reason": "Re-read against the corrected scene: geometry now consistent with the fixed team-direction rule and the rest of the bank (goalie now correctly anchors Navy's own net at negative x); briefing grammar corrected; answer, feedback, roster, age and sources unchanged and still valid."
+          },
+          {
+            "questionId": "exp26b-u13-014-q6",
+            "contentHash": "fdf32c0659ec3254d858df81613c31f8c234852059c07d52c660d5420252c633",
+            "checks": {
+              "roster": "pass",
+              "geometry": "pass",
+              "answer": "pass",
+              "feedback": "pass",
+              "age": "pass",
+              "sources": "pass",
+              "grammar": "pass"
+            },
+            "reason": "Re-read against the corrected scene: geometry now consistent with the fixed team-direction rule and the rest of the bank (goalie now correctly anchors Navy's own net at negative x); briefing grammar corrected; answer, feedback, roster, age and sources unchanged and still valid."
+          }
+        ]
+      }
+    },
+    {
+      "scenarioId": "exp26b-u13-015",
+      "baseVersion": 2,
+      "baseScenarioHash": "1212ba5b9fe34388ca88bc25707d19e1ace196d12b40abb9228c86eecc6277d8",
+      "replacement": {
+        "id": "exp26b-u13-015",
+        "version": 3,
+        "ageBand": "U13",
+        "title": "Recover after the pinch misses",
+        "family": "pinch-recovery",
+        "topic": "defensive recovery",
+        "objective": "Protect the middle after D1’s pinch fails and Gold 1 exits wide",
+        "briefing": "Navy attacks Gold’s net and defends Navy’s net. D1 pinched at the right blue line but Gold 1 won the puck and exits along the wall. YOU are nearest recovering forward; Gold 2 cuts inside.",
+        "setup": {
+          "actors": [
+            {
+              "id": "n1",
+              "label": "YOU",
+              "team": "home",
+              "role": "skater",
+              "x": 11,
+              "y": 7,
+              "facing": 2.8
+            },
+            {
+              "id": "n2",
+              "label": "D1",
+              "team": "home",
+              "role": "skater",
+              "x": 18,
+              "y": 5,
+              "facing": 2.9
+            },
+            {
+              "id": "g1",
+              "label": "Gold 1",
+              "team": "away",
+              "role": "skater",
+              "x": 22,
+              "y": 8,
+              "facing": 2.8
+            },
+            {
+              "id": "g2",
+              "label": "Gold 2",
+              "team": "away",
+              "role": "skater",
+              "x": 18,
+              "y": 1,
+              "facing": 3
+            }
+          ],
+          "puck": {
+            "owner": "g1",
+            "x": 20.823,
+            "y": 7.675
+          }
+        },
+        "focusActorId": "n1",
+        "cues": [
+          "D1’s pinch did not gain possession; Gold 1 has puck on the right wall.",
+          "Gold 2 is the inside option."
+        ],
+        "tags": [
+          "pinch-recovery",
+          "defensive recovery"
+        ],
+        "sources": [
+          {
+            "id": "usa-transition-2019",
+            "title": "Winning in Transition: Angling, Gaps and Creating Turnovers in Today's Game",
+            "url": "https://www.usahockey.com/news_article/show/988313-winning-in-transition-angling-gaps-and-creating-turnovers-in-today-s-game",
+            "section": "Closing The Gap and A Proper Angle",
+            "use": "Supports the stated transition principle. The setup, alternatives and suggested answers are original experimental coaching synthesis."
+          },
+          {
+            "id": "hc-u17-principles",
+            "title": "Team Canada — Program of Excellence: Under 17 Technical Curriculum",
+            "url": "https://cdn.hockeycanada.ca/hockey-canada/Hockey-Programs/Players/Downloads/high_performance_u17_technical_package_e.pdf",
+            "section": "PDF pages 7–8, team support and transition principles",
+            "use": "Supports the stated team-support principle. The setup, alternatives and suggested answers are original experimental coaching synthesis."
+          }
+        ],
+        "limits": "Static teaching freeze only: no speed, reach, interception timing or uniquely optimal route is validated. Answers are coaching suggestions grounded in visible cues.",
+        "questions": [
+          {
+            "type": "choice",
+            "prompt": "What happened to D1’s pinch?",
+            "options": [
+              {
+                "id": "a",
+                "text": "It did not gain possession"
+              },
+              {
+                "id": "b",
+                "text": "It created a Navy goal"
+              },
+              {
+                "id": "c",
+                "text": "It happened behind the left net"
+              }
+            ],
+            "answer": [
+              "a"
+            ],
+            "basis": "scene",
+            "explanation": "Possession was lost, so priority moves from attack to recovery; if Navy regains it, update.",
+            "id": "exp26b-u13-015-q1"
+          },
+          {
+            "type": "multi",
+            "prompt": "Which two dangers should YOU read?",
+            "options": [
+              {
+                "id": "a",
+                "text": "Gold 2’s inside route"
+              },
+              {
+                "id": "b",
+                "text": "Gold 1’s wall exit"
+              },
+              {
+                "id": "c",
+                "text": "An assumed empty passing lane for Gold 1"
+              }
+            ],
+            "answer": [
+              "a",
+              "b"
+            ],
+            "basis": "coaching",
+            "explanation": "Gold 1 carries while Gold 2 offers inside support, so recover middle and communicate; an empty-looking wall lane does not prove Gold 1 has no pass.",
+            "id": "exp26b-u13-015-q2"
+          },
+          {
+            "type": "sequence",
+            "prompt": "Arrange one failed-pinch recovery.",
+            "options": [
+              {
+                "id": "a",
+                "text": "Identify the new puck carrier"
+              },
+              {
+                "id": "b",
+                "text": "Recover inside Gold 2’s lane"
+              },
+              {
+                "id": "c",
+                "text": "Angle Gold 1 after middle is protected"
+              }
+            ],
+            "answer": [
+              "a",
+              "b",
+              "c"
+            ],
+            "basis": "coaching",
+            "explanation": "Turnover updates carrier; inside recovery protects net; once middle is covered, wall carrier can be angled.",
+            "id": "exp26b-u13-015-q3"
+          },
+          {
+            "type": "position",
+            "prompt": "Move YOU into the inside recovery lane below Gold 2.",
+            "basis": "coaching",
+            "explanation": "The inside position protects the direct route and lets YOU angle Gold 1 later; if Gold 2 receives, step to new threat.",
+            "actorId": "n1",
+            "reference": {
+              "x": 14,
+              "y": 2
+            },
+            "id": "exp26b-u13-015-q4"
+          },
+          {
+            "type": "choice",
+            "prompt": "If Gold 2 receives before you arrive, what is your priority?",
+            "options": [
+              {
+                "id": "a",
+                "text": "Contain Gold 2 as carrier and keep net-side lane closed"
+              },
+              {
+                "id": "b",
+                "text": "Continue chasing Gold 1’s old route"
+              },
+              {
+                "id": "c",
+                "text": "Leave middle because D1 pinched"
+              }
+            ],
+            "answer": [
+              "a"
+            ],
+            "basis": "coaching",
+            "explanation": "The reception changes who can attack net, so switch scan and contain; if Gold 2 is covered, return to next threat.",
+            "id": "exp26b-u13-015-q5"
+          },
+          {
+            "type": "explain",
+            "prompt": "Why does the failed pinch change your first skating lane?",
+            "basis": "coaching",
+            "explanation": "Possession moved to Gold and inside support is closer to net, so middle recovery protects the highest-risk route; if Navy recovers, transition roles change.",
+            "id": "exp26b-u13-015-q6"
+          }
+        ]
+      },
+      "affectedQuestionIds": [
+        "exp26b-u13-015-q1",
+        "exp26b-u13-015-q2",
+        "exp26b-u13-015-q3",
+        "exp26b-u13-015-q4",
+        "exp26b-u13-015-q5",
+        "exp26b-u13-015-q6"
+      ],
+      "reasons": [
+        {
+          "questionIds": [
+            "exp26b-u13-015-q1",
+            "exp26b-u13-015-q2",
+            "exp26b-u13-015-q3",
+            "exp26b-u13-015-q4",
+            "exp26b-u13-015-q5",
+            "exp26b-u13-015-q6"
+          ],
+          "issue": "The scene briefing contains the recurring bank-wide 'YOU is' subject-verb agreement defect: 'YOU is nearest recovering forward' instead of 'YOU are nearest recovering forward'. This is the same defect class documented across 27 prior packets as a real, consistent authoring mistake (never house style), and it sits in shared scene text, so it degrades the grammar check for every linked question even though five of the six questions' own text did not change.",
+          "change": "Changed only the briefing clause from 'YOU is nearest recovering forward; Gold 2 cuts inside.' to 'YOU are nearest recovering forward; Gold 2 cuts inside.' No actor, coordinate, cue, source, or question-4/5/6 text was touched. Version incremented from 2 to 3.",
+          "evidence": "Direct read of the version-2 briefing text in packets/packet-28.json: the phrase 'YOU is nearest recovering forward' is present verbatim. A prior repair recorded in docs/factory/research/question-review/repairs/u13-repairs.json (baseVersion 1 -> 2) fixed a different sentence in this same briefing (replacing raw +x/-x coordinate wording with 'Navy attacks Gold's net and defends Navy's net'), but that repair did not touch this 'YOU is' phrase, which survived unfixed into version 2."
+        },
+        {
+          "questionIds": [
+            "exp26b-u13-015-q2"
+          ],
+          "issue": "The same prior repair (docs/factory/research/question-review/repairs/u13-repairs.json, finding id 'u13-p2-dummy-distractors') replaced this question's original joke distractor ('The empty bench') with 'Whether an empty wall lane means Gold 1 cannot pass', but left the explanation text unchanged at 'bench is irrelevant' -- a stale reference to a distractor that no longer exists, which now actively confuses a learner reading the feedback. The replacement distractor text is also not grammatically parallel to options a/b (a 'whether...' clause versus two possessive noun phrases), which the authoring contract requires ('Keep choices grammatically parallel and plausible').",
+          "change": "Reworded option c from 'Whether an empty wall lane means Gold 1 cannot pass' to 'An assumed empty passing lane for Gold 1' (a parallel noun phrase carrying the same false-inference teaching point) and updated the explanation from '...so recover middle and communicate; bench is irrelevant.' to '...so recover middle and communicate; an empty-looking wall lane does not prove Gold 1 has no pass.' so the feedback actually names and explains the current distractor. Answer set (a,b) and both correct options' text are unchanged.",
+          "evidence": "Direct comparison of the current packets/packet-28.json question text (option c = 'Whether an empty wall lane means Gold 1 cannot pass', explanation still says 'bench is irrelevant') against docs/factory/research/question-review/repairs/u13-repairs.json's recorded before/after for exp26b-u13-015-q2, which shows the bench-to-inference option swap but no corresponding explanation edit."
+        }
+      ],
+      "replacementReview": {
+        "status": "self-checked",
+        "coverage": [
+          {
+            "questionId": "exp26b-u13-015-q1",
+            "contentHash": "a1b2fa57060c0c745d52803a006ed96fe3ef1cde12491df152777bc998387207",
+            "checks": {
+              "roster": "pass",
+              "geometry": "pass",
+              "answer": "pass",
+              "feedback": "pass",
+              "age": "pass",
+              "sources": "pass",
+              "grammar": "pass"
+            },
+            "reason": "Briefing now reads 'YOU are nearest recovering forward'; question text, options, answer and explanation unchanged and remain correct."
+          },
+          {
+            "questionId": "exp26b-u13-015-q2",
+            "contentHash": "d432d63275525fcf22840762ce59502ce97a7e756435adb26c5bbfcc1c79f53d",
+            "checks": {
+              "roster": "pass",
+              "geometry": "pass",
+              "answer": "pass",
+              "feedback": "pass",
+              "age": "pass",
+              "sources": "pass",
+              "grammar": "pass"
+            },
+            "reason": "Scene grammar fixed; distractor c now reads as a parallel noun phrase and the explanation now names and explains that exact distractor instead of a stale bench reference; answer (a,b) unchanged and correct."
+          },
+          {
+            "questionId": "exp26b-u13-015-q3",
+            "contentHash": "eef0b1095eaa48736c53575f12d6f32fa955c73276ec35f6c89699efbecd6a75",
+            "checks": {
+              "roster": "pass",
+              "geometry": "pass",
+              "answer": "pass",
+              "feedback": "pass",
+              "age": "pass",
+              "sources": "pass",
+              "grammar": "pass"
+            },
+            "reason": "Scene grammar fixed; sequence and explanation unchanged and remain a defensible single example order, not an overclaimed universal rule."
+          },
+          {
+            "questionId": "exp26b-u13-015-q4",
+            "contentHash": "31b59e9a2bb53cf6120ab7ce395b51f72f1b9405fa44d3dc7f08d0051de85f3a",
+            "checks": {
+              "roster": "pass",
+              "geometry": "pass",
+              "answer": "pass",
+              "feedback": "pass",
+              "age": "pass",
+              "sources": "pass",
+              "grammar": "pass"
+            },
+            "reason": "Scene grammar fixed; reference point (14,2) independently reconfirmed on the ice, inside of Gold 2's wall position and goal-side of Gold 2's x, exactly as the prompt and explanation describe."
+          },
+          {
+            "questionId": "exp26b-u13-015-q5",
+            "contentHash": "9bfcb56aa5ac4443d6960e06db5242f3f459b13df715d24f6564244e1062e633",
+            "checks": {
+              "roster": "pass",
+              "geometry": "pass",
+              "answer": "pass",
+              "feedback": "pass",
+              "age": "pass",
+              "sources": "pass",
+              "grammar": "pass"
+            },
+            "reason": "Scene grammar fixed; hypothetical, answer and both distractors unchanged and remain sound and non-absolute."
+          },
+          {
+            "questionId": "exp26b-u13-015-q6",
+            "contentHash": "892cdb8332ed9c1c6f4073fd5f6476c4d70d7dcc21f4e11b670d4f775282fbc2",
+            "checks": {
+              "roster": "pass",
+              "geometry": "pass",
+              "answer": "pass",
+              "feedback": "pass",
+              "age": "pass",
+              "sources": "pass",
+              "grammar": "pass"
+            },
+            "reason": "Scene grammar fixed; reflection text unchanged, remains distinct from q1-q5 and correctly carries no answer key."
+          }
+        ]
+      }
+    }
+  ],
+  "sourceChecks": [
+    {
+      "url": "https://www.usahockey.com/news_article/show/988313-winning-in-transition-angling-gaps-and-creating-turnovers-in-today-s-game",
+      "checkedAt": "2026-09-06T19:10:00Z",
+      "access": "read",
+      "scope": "Read in full via curl with a browser User-Agent (200 OK; WebFetch alone returned 403). Confirms 'A Proper Angle' (push the attacker from 'good ice' in the middle to 'bad ice' at the perimeter, keep momentum back toward your own net, stick on ice, protect the middle) and 'Closing The Gap' (constant D movement, protect good ice, push opponent to bad ice). Directly supports exp26b-u13-011's inside-angle/wall teaching point and the general transition-defence framing of exp26b-u13-012. USA Hockey, general/youth-applicable (explicitly discusses youth-level angling), no specific age-band restriction stated.",
+      "jurisdiction": "USA Hockey",
+      "ageFormat": "General/youth (no specific age-band restriction stated in the article)",
+      "claim": "Angling to protect the middle (\"good ice\") and push the puck carrier to the perimeter (\"bad ice\") is a legitimate coaching principle for the inside-angle and middle-lane teaching points in both scenarios."
+    },
+    {
+      "url": "https://cdn.hockeycanada.ca/hockey-canada/Hockey-Programs/Players/Downloads/2020/developing-defence-overview-e.pdf",
+      "checkedAt": "2026-09-06T19:15:00Z",
+      "access": "read",
+      "scope": "Fetched the PDF (curl with a browser User-Agent, 200 OK) and extracted pages 12-18 with pdftotext. Confirms 'Angle and steer the attack wide: be on the inside of the rush' and 'Protect the ice between dots; pivot to the middle. Don't attack the rush; receive it' (Neutral Zone Defend section), and 'strong backpressure' / 'read the attack: look through the puck carrier...where is the opponent and where is your support' (supports the backcheck/middle-lane recovery point). Directly supports both scenarios' objectives. Hockey Canada, general defenceman development material (not age-labeled to a specific bracket); the setup, alternatives and suggested answers remain original synthesis per the scenario's own \"use\" field.",
+      "jurisdiction": "Hockey Canada",
+      "ageFormat": "General defenceman-development material, not labeled to one specific age band",
+      "claim": "Angling to the inside of the rush and protecting the middle ('ice between the dots') while pivoting are genuine Hockey Canada coaching points, supporting exp26b-u13-011's angling objective and exp26b-u13-012's middle-lane recovery objective."
+    },
+    {
+      "url": "https://www.usahockey.com/news_article/show/636604-14u-offense-defense-out-with-a-goalie-twist",
+      "checkedAt": "2026-09-06T19:20:00Z",
+      "access": "read",
+      "scope": "Read in full via curl with a browser User-Agent (200 OK). Confirms the coaching point: 'teach the proper backcheck skills of moving feet, stick on ice and filling middle lane back to net.' Directly supports exp26b-u13-012's middle-lane backcheck objective. Note: this is a USA Hockey 14U (Bantam-adjacent) drill article; the scenario's own age band is the Canadian-style U13 (approx. ages 11-12), a slightly younger/different-jurisdiction bracket. The scenario's 'use' field already discloses that only the coaching principle, not the drill or its exact age target, is being adapted, consistent with the project's 'note but do not reject older-bracket sources if disclosed as adaptations' guidance.",
+      "jurisdiction": "USA Hockey",
+      "ageFormat": "14U (older/different-jurisdiction bracket than this scenario's Canadian-style U13; disclosed as a principle-only adaptation)",
+      "claim": "The middle-lane backcheck coaching point (filling the middle lane back to the net) is transferable to a U13 backcheck scenario even though the source drill itself targets 14U."
+    },
+    {
+      "url": "https://cdn.hockeycanada.ca/hockey-canada/Hockey-Programs/Players/Downloads/2020/u13-core-skills-e.pdf",
+      "checkedAt": "2026-09-06T05:10:00Z",
+      "access": "read",
+      "scope": "Fetched and read. It is a one-page U13 (Peewee, LTPD 'Learn to Train' stage) skills progression chart covering skating, stationary/moving puck control, passing/receiving and 'Individual Offensive Tactics' (body/stick fakes, dekes). It does not itself discuss defensive-zone coverage, weak-side/low-slot coverage or net-front/rebound roles. Used only to support age/topic placement (this is genuinely U13-appropriate content), exactly as its 'use' field discloses — not cited as support for the specific tactical claims in either scenario.",
+      "jurisdiction": "Canada (Hockey Canada)",
+      "ageFormat": "U13 / Peewee, LTPD Learn to Train stage",
+      "claim": "Age/topic placement only for exp26b-u13-013 and exp26b-u13-014."
+    },
+    {
+      "url": "https://cdn.hockeycanada.ca/hockey-canada/Hockey-Programs/Players/Downloads/high_performance_u17_technical_package_e.pdf",
+      "checkedAt": "2026-09-06T05:15:00Z",
+      "access": "read",
+      "scope": "Fetched and read (Team Canada Program of Excellence U17 Technical Curriculum, (c) Hockey Canada 2008). PDF page 8 contains a 'Support - Defensive' section reading: 'The player defending against the puck carrier requires the support of teammates to ensure that they are active away from the puck carrier and position themselves in a manner that will eliminate the options of the puck carrier. Players must be able to read the offensive options available to the puck carrier and move to a position that minimizes or takes away these options.' This directly and genuinely supports the teaching point in both scenarios (a teammate away from the direct puck battle reading and covering the next-most-dangerous option). This is a U17/POE (national-team-track) source being adapted down to U13 house-league content, which is disclosed in the scenario's own 'use' field ('Supports the stated coaching principle... not source-certified') rather than presented as a U13-specific or rule-level citation.",
+      "jurisdiction": "Canada (Hockey Canada / Program of Excellence, national-team stream)",
+      "ageFormat": "U17 POE source, disclosed as an older-bracket adaptation for U13 content",
+      "claim": "Supports the 'defensive support = read the options away from the puck carrier and cover them' principle used in exp26b-u13-013's weak-side-low coverage and exp26b-u13-014's second-rebound-job teaching point."
+    },
+    {
+      "url": "https://www.usahockey.com/news_article/show/988313-winning-in-transition-angling-gaps-and-creating-turnovers-in-today-s-game",
+      "checkedAt": "2026-09-06T19:05:00Z",
+      "access": "read",
+      "scope": "Read in full via a browser-user-agent fetch (initial WebFetch attempt returned HTTP 403; curl with a standard browser User-Agent returned 200). The article's 'A Proper Angle' and 'Closing The Gap' sections (matching the scenario's cited section name exactly) describe angling toward good ice (the middle) to push attackers to bad ice (the perimeter), and describe defencemen maintaining an active gap rather than standing still, directly supporting this scenario's teaching point of prioritizing the middle/inside lane after a failed pinch. It does not describe a guaranteed outcome, a specific coordinate, or a single mandatory system, matching how the scenario's 'use' field frames it (support for the general principle only; setup and answers are original synthesis).",
+      "jurisdiction": "USA (USA Hockey / National Team Development Program, U18 coaching context, principles presented as general)",
+      "ageFormat": "Coaching-development article, not age-restricted; principles are applied here to U13, which is a downward adaptation of a source discussing U18-level coaching, consistent with the scenario's own disclosure that only the general principle is supported.",
+      "claim": "Supports the 'protect the middle / close the gap after a partial break down' teaching principle behind q2, q3, q4 and q5."
+    },
+    {
+      "url": "https://cdn.hockeycanada.ca/hockey-canada/Hockey-Programs/Players/Downloads/high_performance_u17_technical_package_e.pdf",
+      "checkedAt": "2026-09-06T19:07:00Z",
+      "access": "read",
+      "scope": "PDF fetched and pages 7-8 read directly (rendered and viewed, not just URL-checked). Page 8's 'Support - Defensive' section states the player defending the puck carrier requires support from teammates who position to eliminate the carrier's options, and 'Transition - Defensive' states defensive transition is a team's ability to move quickly from offense to defense on a turnover -- both directly supporting this scenario's team-support and failed-pinch-transition premise. This is a dated (© 2008) Hockey Canada Program of Excellence document written for U17 high-performance players; it is used here only for the general team-support/transition principle at U13, which is disclosed in the scenario's own 'use' field as an adaptation, not as a U13-specific or current-rule citation.",
+      "jurisdiction": "Canada (Hockey Canada Program of Excellence)",
+      "ageFormat": "U17 high-performance technical package (2008), applied here as a general principle to U13 -- an older, higher-age-bracket source disclosed as an adaptation rather than a direct U13 rule.",
+      "claim": "Supports the team-support and defensive-transition principle behind q2, q3, q5 and q6."
+    }
+  ],
+  "remainingQuestionIds": []
+}

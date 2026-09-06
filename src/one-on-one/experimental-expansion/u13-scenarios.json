@@ -1,13 +1,13 @@
 [
   {
     "id": "exp26b-u13-001",
-    "version": 2,
+    "version": 3,
     "ageBand": "U13",
     "title": "Reverse when the first outlet is covered",
     "family": "breakout-reverse-read",
     "topic": "defensive-zone breakout",
     "objective": "Read the forecheck, then use the reverse only when far-side support is available",
-    "briefing": "Navy attacks Gold’s net and defends Navy’s net. YOU have the puck below the left goal line. Gold 1 seals the near-wall lane; D2 is visible on the far side and W is higher.",
+    "briefing": "Navy defends the left net. YOU control the puck behind the goal line. Gold 1 is nearby on the centre-ice side; D2 is across the middle and W is farther up ice. Compare a reverse only if the route is usable.",
     "setup": {
       "actors": [
         {
@@ -55,8 +55,9 @@
     },
     "focusActorId": "n1",
     "cues": [
-      "The puck is assigned to YOU below the left goal line.",
-      "Gold 1 blocks the near wall while D2 is visible across the crease-side lane."
+      "YOU control the puck behind the goal line.",
+      "Gold 1 is nearby on the centre-ice side; D2 is across the middle and W is farther up ice.",
+      "Compare a reverse only if the route is usable."
     ],
     "tags": [
       "breakout-reverse-read",
@@ -82,11 +83,11 @@
     "questions": [
       {
         "type": "choice",
-        "prompt": "Which lane is Gold 1 visibly taking away?",
+        "prompt": "Which opponent is closest to YOU?",
         "options": [
           {
             "id": "a",
-            "text": "The near-wall exit"
+            "text": "Gold 1"
           },
           {
             "id": "b",
@@ -101,7 +102,7 @@
           "a"
         ],
         "basis": "scene",
-        "explanation": "Gold 1 is between YOU and the near-wall exit, so that lane is the pressure cue; the far-side option still needs its own check.",
+        "explanation": "Gold 1 is the shown nearby opponent. Check the actual route rather than assuming the boards or reverse are sealed.",
         "id": "exp26b-u13-001-q1"
       },
       {
@@ -110,11 +111,11 @@
         "options": [
           {
             "id": "a",
-            "text": "D2 is available on the far side"
+            "text": "Whether D2 can receive across the middle"
           },
           {
             "id": "b",
-            "text": "Gold 1 is sealing the near wall"
+            "text": "Gold 1’s pressure near YOU"
           },
           {
             "id": "c",
@@ -126,7 +127,7 @@
           "b"
         ],
         "basis": "scene",
-        "explanation": "D2’s location tells you whether a reverse has support, while Gold 1’s wall position explains the first restriction; the last shift does not change this freeze.",
+        "explanation": "Pressure and the possible receiver both matter. W has not been assigned possession.",
         "id": "exp26b-u13-001-q2"
       },
       {
@@ -157,9 +158,9 @@
       },
       {
         "type": "position",
-        "prompt": "Move D2 to an example support spot that keeps a reverse lane open.",
+        "prompt": "Move D2 to compare another support angle across the middle.",
         "basis": "coaching",
-        "explanation": "A lower far-side spot gives YOU a visible short option after the reverse; if Gold 1 tracks that lane, D2 must adjust again.",
+        "explanation": "The example moves D2 closer to YOU. Check the net, pressure and passing route before considering a reverse.",
         "actorId": "n2",
         "reference": {
           "x": -21,
@@ -202,13 +203,13 @@
   },
   {
     "id": "exp26b-u13-002",
-    "version": 3,
+    "version": 4,
     "ageBand": "U13",
     "title": "Find the middle hinge after the rim",
     "family": "breakout-hinge-support",
     "topic": "breakout support",
     "objective": "Use the middle hinge to connect a rim without skating into the carrier’s lane",
-    "briefing": "Navy attacks Gold’s net and defends Navy’s net. D1 retrieved a rim at the left corner. YOU is low middle, D2 is higher, and Gold 1 steers the carrier toward the wall.",
+    "briefing": "Navy attacks Gold’s net and defends Navy’s net. D1 retrieved a rim at the left corner. YOU are low middle, D2 is higher, and Gold 1 steers the carrier toward the wall.",
     "setup": {
       "actors": [
         {
@@ -256,8 +257,8 @@
     },
     "focusActorId": "n1",
     "cues": [
-      "D1 owns the puck in the left corner.",
-      "YOU are low middle; D2 is higher behind the play."
+      "D1 retrieved a rim at the left corner.",
+      "YOU are low middle, D2 is higher, and Gold 1 steers the carrier toward the wall."
     ],
     "tags": [
       "breakout-hinge-support",
@@ -302,7 +303,7 @@
           "a"
         ],
         "basis": "scene",
-        "explanation": "The puck is assigned to D1, so YOU’s job is support; if possession changes, the support read resets.",
+        "explanation": "The puck is assigned to D1, so your job is support; if possession changes, the support read resets.",
         "id": "exp26b-u13-002-q1"
       },
       {
@@ -315,7 +316,7 @@
           },
           {
             "id": "b",
-            "text": "Distance that keeps you available below pressure"
+            "text": "Separation that leaves a reachable support angle"
           },
           {
             "id": "c",
@@ -360,7 +361,7 @@
         "type": "position",
         "prompt": "Move YOU into an example hinge lane inside Gold 1 and clear of D1’s puck route.",
         "basis": "coaching",
-        "explanation": "The inside spot gives D1 a short connection without copying the corner route; if Gold 1 cuts inside, widen or drop to keep a lane.",
+        "explanation": "The inside spot gives D1 a support angle without copying the corner route; it is farther from D1 than the starting spot, so it is not a guaranteed short connection.",
         "actorId": "n1",
         "reference": {
           "x": -21,
@@ -389,21 +390,21 @@
           "a"
         ],
         "basis": "coaching",
-        "explanation": "Gold 1 removes the original hinge, so changing angle preserves an outlet; if the middle reopens, return without crowding D1.",
+        "explanation": "Gold 1’s move changes the route. Compare another angle while checking possession and other support.",
         "id": "exp26b-u13-002-q5"
       },
       {
         "type": "explain",
         "prompt": "How does your support help D1 even when D1 does not pass?",
         "basis": "coaching",
-        "explanation": "A visible hinge makes Gold 1 respect a second lane, giving D1 time to carry or connect to D2; if pressure ignores you, D1 can use the space.",
+        "explanation": "An available support option may change the defender’s choices. It does not force Gold 1 to react or guarantee extra time for D1.",
         "id": "exp26b-u13-002-q6"
       }
     ]
   },
   {
     "id": "exp26b-u13-003",
-    "version": 2,
+    "version": 3,
     "ageBand": "U13",
     "title": "Stagger the regroup outlets",
     "family": "regroup-stagger",
@@ -426,7 +427,7 @@
           "label": "D1",
           "team": "home",
           "role": "skater",
-          "x": -19,
+          "x": -9,
           "y": -2,
           "facing": 0.1
         },
@@ -460,7 +461,7 @@
       ],
       "puck": {
         "owner": "n2",
-        "x": -18.075,
+        "x": -8.075,
         "y": -1.204
       }
     },
@@ -493,11 +494,11 @@
     "questions": [
       {
         "type": "choice",
-        "prompt": "What makes the current regroup shape difficult?",
+        "prompt": "How are YOU and D2 positioned along the length of the rink?",
         "options": [
           {
             "id": "a",
-            "text": "YOU and D2 offer nearly the same height"
+            "text": "At the same depth near centre ice"
           },
           {
             "id": "b",
@@ -512,7 +513,7 @@
           "a"
         ],
         "basis": "scene",
-        "explanation": "The level support lets one defender cover both lanes; if one player changes height, D1 sees a different outlet.",
+        "explanation": "YOU and D2 share the same depth but are separated across the rink. This alone does not prove one defender covers both.",
         "id": "exp26b-u13-003-q1"
       },
       {
@@ -521,7 +522,7 @@
         "options": [
           {
             "id": "a",
-            "text": "Drop YOU below D2"
+            "text": "Move YOU closer to Navy’s net than D2"
           },
           {
             "id": "b",
@@ -550,7 +551,7 @@
           },
           {
             "id": "b",
-            "text": "Move to a different height from D2"
+            "text": "Compare a different depth from D2"
           },
           {
             "id": "c",
@@ -568,9 +569,9 @@
       },
       {
         "type": "position",
-        "prompt": "Move YOU below D2 to create a staggered regroup outlet.",
+        "prompt": "Move YOU wider and closer to Navy’s net than D2.",
         "basis": "coaching",
-        "explanation": "The lower position separates YOU and D2 and opens a different line to D1; if Gold 1 follows, preserve a connected lane.",
+        "explanation": "The example changes width and depth. It is farther from D1 than the starting spot, so check whether the connection remains useful.",
         "actorId": "n1",
         "reference": {
           "x": -2,
@@ -580,7 +581,7 @@
       },
       {
         "type": "choice",
-        "prompt": "If Gold 1 follows your drop, what should you notice?",
+        "prompt": "If Gold 1 follows your drop, what should YOU notice?",
         "options": [
           {
             "id": "a",
@@ -588,11 +589,11 @@
           },
           {
             "id": "b",
-            "text": "The same pass is automatically safe"
+            "text": "YOU are now the best return option"
           },
           {
             "id": "c",
-            "text": "Whether Gold 1 following makes D2 automatically open"
+            "text": "D2 is still covered exactly as before"
           }
         ],
         "answer": [
@@ -604,22 +605,22 @@
       },
       {
         "type": "explain",
-        "prompt": "Why is different height more useful than simply standing farther apart?",
+        "prompt": "How could changing depth alter D1’s options?",
         "basis": "coaching",
-        "explanation": "Different height changes the defender’s choices and gives D1 a forward and backward connection; distance alone can leave one predictable pass.",
+        "explanation": "It changes the passing angle and spacing. Width can also be useful; compare the actual pressure and accessible lanes.",
         "id": "exp26b-u13-003-q6"
       }
     ]
   },
   {
     "id": "exp26b-u13-004",
-    "version": 2,
+    "version": 3,
     "ageBand": "U13",
     "title": "Support the middle drive without filling it",
     "family": "entry-support-lane",
     "topic": "neutral-zone entry",
     "objective": "Give a middle-driving carrier a second lane instead of skating into the same route",
-    "briefing": "Navy attacks Gold’s net and defends Navy’s net. F1 carries over the right blue line with a middle drive. YOU is wide left, D2 trails high, and Gold 1 protects inside.",
+    "briefing": "Navy attacks the right net. F1 has entered the attacking zone through the middle. YOU are in a wide support lane, D2 is closer to the blue line, and Gold 1 is nearer the middle than YOU.",
     "setup": {
       "actors": [
         {
@@ -676,8 +677,8 @@
     },
     "focusActorId": "n1",
     "cues": [
-      "F1 is the puck carrier entering from the right.",
-      "Gold 1 is inside F1; YOU are wide and D2 trails."
+      "F1 has entered the attacking zone through the middle.",
+      "YOU are in a wide support lane, D2 is closer to the blue line, and Gold 1 is nearer the middle than YOU."
     ],
     "tags": [
       "entry-support-lane",
@@ -727,7 +728,7 @@
       },
       {
         "type": "multi",
-        "prompt": "Which two jobs fit YOU’s wide support?",
+        "prompt": "Which two jobs fit your wide support?",
         "options": [
           {
             "id": "a",
@@ -778,9 +779,9 @@
       },
       {
         "type": "position",
-        "prompt": "Move YOU wider and slightly lower to support F1 without entering the middle.",
+        "prompt": "Move YOU wider while staying closer to the blue line than F1.",
         "basis": "coaching",
-        "explanation": "The wide-lower spot keeps F1’s middle route open and offers a wall-side option; if Gold 2 takes it, rotate behind the play.",
+        "explanation": "The example maintains separation from F1’s middle route. Check the defenders and lane before calling for the puck.",
         "actorId": "n1",
         "reference": {
           "x": 17,
@@ -823,13 +824,13 @@
   },
   {
     "id": "exp26b-u13-005",
-    "version": 2,
+    "version": 3,
     "ageBand": "U13",
     "title": "Delay the wall cycle until the low option appears",
     "family": "cycle-low-option",
     "topic": "offensive-zone cycle",
     "objective": "Use the low player’s position to decide when the cycle can connect below pressure",
-    "briefing": "Navy attacks Gold’s net and defends Navy’s net. W has the puck on the right half wall. YOU is low near the end line, D2 is high at the point, and Gold 1 fronts the wall.",
+    "briefing": "Navy attacks Gold’s net and defends Navy’s net. W has the puck on the right half wall. YOU are low near the end line, D2 is high at the point, and Gold 1 fronts the wall.",
     "setup": {
       "actors": [
         {
@@ -847,7 +848,7 @@
           "team": "home",
           "role": "skater",
           "x": 22,
-          "y": 2,
+          "y": 9,
           "facing": 2.9
         },
         {
@@ -880,14 +881,14 @@
       ],
       "puck": {
         "owner": "n2",
-        "x": 20.862,
-        "y": 1.56
+        "x": 20.861567304400623,
+        "y": 8.55957861360927
       }
     },
     "focusActorId": "n1",
     "cues": [
-      "W owns the puck on the right half wall.",
-      "YOU are below the puck near the end line; D2 is high."
+      "W has the puck on the right half wall.",
+      "YOU are low near the end line, D2 is high at the point, and Gold 1 fronts the wall."
     ],
     "tags": [
       "cycle-low-option",
@@ -913,11 +914,11 @@
     "questions": [
       {
         "type": "choice",
-        "prompt": "Where is YOU relative to W?",
+        "prompt": "Where are YOU relative to W?",
         "options": [
           {
             "id": "a",
-            "text": "Below W near the end line"
+            "text": "Closer to the attacking goal line than W"
           },
           {
             "id": "b",
@@ -932,7 +933,7 @@
           "a"
         ],
         "basis": "scene",
-        "explanation": "YOU’s location creates the low cycle option; moving level with W changes that relationship.",
+        "explanation": "Your location creates the low cycle option; moving level with W changes that relationship.",
         "id": "exp26b-u13-005-q1"
       },
       {
@@ -941,7 +942,7 @@
         "options": [
           {
             "id": "a",
-            "text": "A low lane below wall pressure"
+            "text": "A possible outlet toward the goal line"
           },
           {
             "id": "b",
@@ -970,7 +971,7 @@
           },
           {
             "id": "b",
-            "text": "Present below pressure"
+            "text": "Compare support toward the goal line"
           },
           {
             "id": "c",
@@ -988,9 +989,9 @@
       },
       {
         "type": "position",
-        "prompt": "Move YOU below and inside W to show a low cycle option.",
+        "prompt": "Move YOU to compare a point nearer the goal line and middle than W.",
         "basis": "coaching",
-        "explanation": "The lower-inside spot gives W a short route away from Gold 1 and keeps the net-side lane visible; if Gold 2 drops, move higher.",
+        "explanation": "Relative to W, the example is nearer the goal line and slightly nearer the middle. Both Gold defenders still affect whether a short pass is usable.",
         "actorId": "n1",
         "reference": {
           "x": 24,
@@ -1033,13 +1034,13 @@
   },
   {
     "id": "exp26b-u13-006",
-    "version": 2,
+    "version": 3,
     "ageBand": "U13",
     "title": "Screen from the goalie’s sightline",
     "family": "net-front-screen",
     "topic": "offensive-zone net front",
     "objective": "Choose a net-front position that affects the goalie’s view while leaving a passing lane",
-    "briefing": "Navy attacks Gold’s net and defends Navy’s net. D2 has the puck at the right point. YOU is above the crease, W is low far side, and Gold 1 fronts the shooting lane.",
+    "briefing": "Navy attacks Gold’s net and defends Navy’s net. D2 has the puck at the right point. YOU are above the crease, W is low far side, and Gold 1 fronts the shooting lane.",
     "setup": {
       "actors": [
         {
@@ -1106,7 +1107,7 @@
     "focusActorId": "n1",
     "cues": [
       "D2 has the puck at the right point.",
-      "Gold 1 stands between D2 and the goalie; YOU is above the crease."
+      "YOU are above the crease, W is low far side, and Gold 1 fronts the shooting lane."
     ],
     "tags": [
       "net-front-screen",
@@ -1132,7 +1133,7 @@
     "questions": [
       {
         "type": "choice",
-        "prompt": "Who is between D2 and the goalie’s net?",
+        "prompt": "Which opponent is nearest the direct line from D2 toward the net?",
         "options": [
           {
             "id": "a",
@@ -1151,7 +1152,7 @@
           "a"
         ],
         "basis": "scene",
-        "explanation": "Gold 1 occupies the shooting line, so YOU’s position can change the view without guaranteeing a shot outcome.",
+        "explanation": "Gold 1 is near that line. Position alone does not prove a blocked shot or successful screen.",
         "id": "exp26b-u13-006-q1"
       },
       {
@@ -1160,15 +1161,15 @@
         "options": [
           {
             "id": "a",
-            "text": "YOU remains between goalie and puck line"
+            "text": "Whether YOU can affect the goalie’s view"
           },
           {
             "id": "b",
-            "text": "YOU leaves D2 a visible lane"
+            "text": "Whether D2 has a usable shot or pass"
           },
           {
             "id": "c",
-            "text": "YOU stands directly on W"
+            "text": "YOU stand directly on W"
           }
         ],
         "answer": [
@@ -1207,9 +1208,9 @@
       },
       {
         "type": "position",
-        "prompt": "Move YOU slightly across the crease line to screen without standing on W.",
+        "prompt": "Move YOU toward the goal line to compare a net-front position separate from W.",
         "basis": "coaching",
-        "explanation": "The crease-side spot changes the goalie’s sightline and leaves W’s low lane visible; if Gold 2 takes it, slide out and reoffer.",
+        "explanation": "The example changes the net-front angle and stays separate from W. Check the goalie, traffic and puck line before treating it as a screen.",
         "actorId": "n1",
         "reference": {
           "x": 26,
@@ -1245,20 +1246,20 @@
         "type": "explain",
         "prompt": "How can you screen without turning the play into a collision?",
         "basis": "coaching",
-        "explanation": "Stay in the sightline while giving W and D2 separate routes, then move when Gold 1 closes your space; if the lane disappears, re-support.",
+        "explanation": "Check puck position and available net-front space. Keep control of your movement and avoid contact with the goalie; a static spot does not establish a legal or effective screen.",
         "id": "exp26b-u13-006-q6"
       }
     ]
   },
   {
     "id": "exp26b-u13-007",
-    "version": 2,
+    "version": 3,
     "ageBand": "U13",
     "title": "Move the puck around the blocked point lane",
     "family": "point-lane-adjustment",
     "topic": "point attack",
     "objective": "Recognize a blocker and create a different lane before selecting a shot or pass",
-    "briefing": "Navy attacks Gold’s net and defends Navy’s net. D2 owns the puck at the right point. YOU is between D2 and Gold’s goalie, W is low left, and Gold 1’s stick occupies the direct lane.",
+    "briefing": "Navy attacks the right net. D2 has the puck in a wide position near the blue line. Gold 1 is near the direct shooting line. YOU are nearer the net and middle, with W in a separate wide lane. No stick reach or shot outcome is established.",
     "setup": {
       "actors": [
         {
@@ -1315,8 +1316,9 @@
     },
     "focusActorId": "n1",
     "cues": [
-      "Gold 1’s stick is in the straight lane from D2 toward the net.",
-      "YOU is in front of the goalie; W is low left."
+      "D2 has the puck in a wide position near the blue line.",
+      "Gold 1 is near the direct shooting line.",
+      "YOU are nearer the net and middle, with W in a separate wide lane."
     ],
     "tags": [
       "point-lane-adjustment",
@@ -1342,11 +1344,11 @@
     "questions": [
       {
         "type": "choice",
-        "prompt": "What blocks D2’s straight lane?",
+        "prompt": "Which opponent is nearest D2’s direct shooting line?",
         "options": [
           {
             "id": "a",
-            "text": "Gold 1’s stick and body"
+            "text": "Gold 1"
           },
           {
             "id": "b",
@@ -1361,7 +1363,7 @@
           "a"
         ],
         "basis": "scene",
-        "explanation": "Gold 1 occupies the direct lane, so a lateral move or pass may change it; the other items are outside the stated line.",
+        "explanation": "Gold 1 is near the direct shooting line. Check reach and movement before treating it as closed.",
         "id": "exp26b-u13-007-q1"
       },
       {
@@ -1391,11 +1393,11 @@
       },
       {
         "type": "sequence",
-        "prompt": "Order one response to a blocked point lane.",
+        "prompt": "Order one read of a contested shooting lane.",
         "options": [
           {
             "id": "a",
-            "text": "Locate Gold 1’s stick"
+            "text": "Locate Gold 1 near the puck line"
           },
           {
             "id": "b",
@@ -1412,14 +1414,14 @@
           "c"
         ],
         "basis": "coaching",
-        "explanation": "The stick identifies the constraint; moving creates new geometry; the final scan tells D2 whether a shot or pass is sensible.",
+        "explanation": "Locate the defender, compare an angle change, then reassess the lane. A changed position alone does not establish an open shot.",
         "id": "exp26b-u13-007-q3"
       },
       {
         "type": "position",
-        "prompt": "Move YOU to an offset screen position that leaves D2’s lateral lane visible.",
+        "prompt": "Move YOU to compare an offset support position near the net.",
         "basis": "coaching",
-        "explanation": "The offset position can occupy a new sightline while leaving D2 a route around Gold 1; if the defender follows, reassess.",
+        "explanation": "The example changes the angle between YOU, D2 and the net. Recheck Gold 1 and W; it does not establish a screen or an open pass.",
         "actorId": "n1",
         "reference": {
           "x": 23,
@@ -1429,7 +1431,7 @@
       },
       {
         "type": "choice",
-        "prompt": "If Gold 1 follows YOU’s lateral move, what changes first?",
+        "prompt": "If Gold 1 follows your lateral move, what changes first?",
         "options": [
           {
             "id": "a",
@@ -1453,22 +1455,22 @@
       },
       {
         "type": "explain",
-        "prompt": "Why does moving sideways fail if the defender moves with you?",
+        "prompt": "Why should D2 recheck the lane when Gold 1 follows a support move?",
         "basis": "coaching",
-        "explanation": "A lateral move helps only when it changes the defender’s line or opens a teammate, so D2 watches the response; if tracked, use the new support picture.",
+        "explanation": "A defender’s movement can close one route and open another. Compare the resulting shot and pass options rather than assuming every lateral move succeeds or fails.",
         "id": "exp26b-u13-007-q6"
       }
     ]
   },
   {
     "id": "exp26b-u13-008",
-    "version": 2,
+    "version": 3,
     "ageBand": "U13",
     "title": "Offer the second pass after the give-and-go",
     "family": "give-and-go-reoffer",
     "topic": "offensive-zone support",
     "objective": "Reoffer at a changed angle after a short pass",
-    "briefing": "Navy attacks Gold’s net and defends Navy’s net. YOU carried on the left wall and passed to F2 below the dot. Gold 1 turns toward the puck; D2 is high and W is net-side.",
+    "briefing": "Navy attacks the right net. YOU have passed to F2 near the net-front area. Gold 1 turns toward the new carrier. D2 is nearer the blue line and W is on the other side near the net.",
     "setup": {
       "actors": [
         {
@@ -1514,7 +1516,7 @@
           "role": "skater",
           "x": 20,
           "y": -1,
-          "facing": 3
+          "facing": -0.15
         }
       ],
       "puck": {
@@ -1525,8 +1527,9 @@
     },
     "focusActorId": "n1",
     "cues": [
-      "F2 has the puck below the left dot after the short pass.",
-      "YOU’s original wall position is no longer the best return lane."
+      "YOU have passed to F2 near the net-front area.",
+      "Gold 1 turns toward the new carrier.",
+      "D2 is nearer the blue line and W is on the other side near the net."
     ],
     "tags": [
       "give-and-go-reoffer",
@@ -1571,12 +1574,12 @@
           "a"
         ],
         "basis": "scene",
-        "explanation": "The puck is assigned to F2 below the dot, so YOU must find a new support angle; if F2 loses it, the offensive read ends.",
+        "explanation": "F2 owns the puck after the stated pass. Reassess a support angle using the new carrier and pressure.",
         "id": "exp26b-u13-008-q1"
       },
       {
         "type": "multi",
-        "prompt": "Which two details should shape YOU’s reoffer?",
+        "prompt": "Which two details should shape your reoffer?",
         "options": [
           {
             "id": "a",
@@ -1627,12 +1630,12 @@
       },
       {
         "type": "position",
-        "prompt": "Move YOU inside and slightly lower than F2 to create a fresh return angle.",
+        "prompt": "Move YOU nearer the middle and toward the goal line to compare a return angle.",
         "basis": "coaching",
-        "explanation": "This point shifts YOU inward toward centre ice and slightly below F2, creating a different return angle from Gold 1; if Gold 1 closes it, move high and reoffer.",
+        "explanation": "The example moves YOU nearer the middle than the starting spot while remaining wider than F2. Check Gold 1 and the route before asking for the puck.",
         "actorId": "n1",
         "reference": {
-          "x": 23,
+          "x": 25,
           "y": -3
         },
         "id": "exp26b-u13-008-q4"
@@ -1672,13 +1675,13 @@
   },
   {
     "id": "exp26b-u13-009",
-    "version": 2,
+    "version": 3,
     "ageBand": "U13",
     "title": "Protect the puck below pressure",
     "family": "puck-protection-wall",
     "topic": "offensive-zone puck protection",
     "objective": "Use body position and a support lane when the defender closes from inside",
-    "briefing": "Navy attacks Gold’s net and defends Navy’s net. YOU controls the puck along the right wall with Gold 1 closing from inside. F2 is low behind you and D2 is high at the point.",
+    "briefing": "Navy attacks the right net. YOU control the puck in a wide attacking-zone lane. Gold 1 closes from nearer the middle. F2 is closer to the blue line and wider than YOU; D2 is another option nearer the blue line.",
     "setup": {
       "actors": [
         {
@@ -1726,8 +1729,9 @@
     },
     "focusActorId": "n1",
     "cues": [
-      "YOU control the puck along the right wall.",
-      "Gold 1 is inside and closing; F2 is low behind you."
+      "YOU control the puck in a wide attacking-zone lane.",
+      "Gold 1 closes from nearer the middle.",
+      "F2 is closer to the blue line and wider than YOU; D2 is another option nearer the blue line."
     ],
     "tags": [
       "puck-protection-wall",
@@ -1781,7 +1785,7 @@
         "options": [
           {
             "id": "a",
-            "text": "Gold 1’s stick side"
+            "text": "The direction of Gold 1’s pressure"
           },
           {
             "id": "b",
@@ -1789,7 +1793,7 @@
           },
           {
             "id": "c",
-            "text": "The score from another game"
+            "text": "Assuming every protective turn creates a pass"
           }
         ],
         "answer": [
@@ -1797,7 +1801,7 @@
           "b"
         ],
         "basis": "coaching",
-        "explanation": "The pressure side tells you where to place your body and F2 tells you whether a release exists; unrelated score information cannot solve this puck problem.",
+        "explanation": "Check pressure and F2’s possible support lane. D2 may also matter as a reset; no turn guarantees a pass.",
         "id": "exp26b-u13-009-q2"
       },
       {
@@ -1828,19 +1832,19 @@
       },
       {
         "type": "position",
-        "prompt": "Move YOU closer to the wall while keeping F2 visible.",
+        "prompt": "Move YOU nearer the boards to compare a protective angle.",
         "basis": "coaching",
-        "explanation": "The wall-side position shields the puck from Gold 1 and preserves a glance toward F2; if Gold 1 pins the wall, use the high reset.",
+        "explanation": "The example moves the carrier and puck farther from Gold 1. Body protection and the outlet still need checking.",
         "actorId": "n1",
         "reference": {
           "x": 24,
-          "y": 5
+          "y": 8
         },
         "id": "exp26b-u13-009-q4"
       },
       {
         "type": "choice",
-        "prompt": "If F2 becomes clearly available below you, what might help?",
+        "prompt": "If F2 becomes clearly available behind the puck toward the blue line, what might help?",
         "options": [
           {
             "id": "a",
@@ -1859,7 +1863,7 @@
           "a"
         ],
         "basis": "coaching",
-        "explanation": "F2’s clear lane converts protection into possession; if F2 is covered again, continue protecting or use D2.",
+        "explanation": "Compare a pass if F2 and the route are ready. YOU already have possession; the pass changes the puck carrier rather than creating possession.",
         "id": "exp26b-u13-009-q5"
       },
       {
@@ -1873,13 +1877,13 @@
   },
   {
     "id": "exp26b-u13-010",
-    "version": 2,
+    "version": 3,
     "ageBand": "U13",
     "title": "Close the rush with inside help",
     "family": "rush-gap-support",
     "topic": "neutral-zone defence",
     "objective": "Approach a rush while keeping the inside attacker and teammate in view",
-    "briefing": "Navy attacks Gold’s net and defends Navy’s net. Gold 1 carries through centre with Gold 2 wide right. YOU is the near defender, D1 trails left, and the Navy net is behind you at the left goal line.",
+    "briefing": "Navy defends the left net. Gold 1 carries through the middle of the right-hand zone toward Navy’s end, with Gold 2 wider. YOU and D1 are already closer to Navy’s net than the carrier. No skating speed is specified.",
     "setup": {
       "actors": [
         {
@@ -1927,8 +1931,9 @@
     },
     "focusActorId": "n1",
     "cues": [
-      "Gold 1 is the puck carrier through the middle.",
-      "Gold 2 is wide right; D1 trails on the left."
+      "Gold 1 carries through the middle of the right-hand zone toward Navy’s end, with Gold 2 wider.",
+      "YOU and D1 are already closer to Navy’s net than the carrier.",
+      "No skating speed is specified."
     ],
     "tags": [
       "rush-gap-support",
@@ -1998,7 +2003,7 @@
           "b"
         ],
         "basis": "coaching",
-        "explanation": "The carrier’s lane and D1’s support determine how you close without giving up middle; noise does not describe the rink.",
+        "explanation": "The carrier’s lane and D1’s support affect the closing decision. Neither coverage nor a fixed gap is guaranteed.",
         "id": "exp26b-u13-010-q2"
       },
       {
@@ -2011,7 +2016,7 @@
           },
           {
             "id": "b",
-            "text": "Keep the carrier outside your body line"
+            "text": "Compare an angle that protects the middle"
           },
           {
             "id": "c",
@@ -2024,14 +2029,14 @@
           "c"
         ],
         "basis": "coaching",
-        "explanation": "The route sets priority; steering outside protects the net-side lane; the second scan updates pass and recovery options.",
+        "explanation": "Read the carrier and support before adjusting the gap. Influencing the carrier wide is an aim, not a result proved by this picture.",
         "id": "exp26b-u13-010-q3"
       },
       {
         "type": "position",
-        "prompt": "Move YOU to an inside position between Gold 1 and the Navy net.",
+        "prompt": "Move YOU to compare a closer net-side position against Gold 1.",
         "basis": "coaching",
-        "explanation": "The inside position protects the net while leaving a route to angle Gold 1 wide; if Gold 2 cuts inside, include D1’s help.",
+        "explanation": "The example stays closer to Navy’s net than Gold 1 while reducing the gap. Check speed and Gold 2 before closing.",
         "actorId": "n1",
         "reference": {
           "x": 8,
@@ -2045,7 +2050,7 @@
         "options": [
           {
             "id": "a",
-            "text": "Whether D1 can take Gold 2 while YOU contains Gold 1"
+            "text": "Whether D1 can help with Gold 2 while YOU contain Gold 1"
           },
           {
             "id": "b",
@@ -2074,13 +2079,13 @@
   },
   {
     "id": "exp26b-u13-011",
-    "version": 2,
+    "version": 3,
     "ageBand": "U13",
     "title": "Angle the carrier to the wall",
     "family": "angle-to-wall",
     "topic": "defensive angling",
     "objective": "Use an inside approach that guides Gold 1 away from the middle",
-    "briefing": "Navy attacks Gold’s net and defends Navy’s net. Gold 1 carries on the right side toward Navy’s blue line. YOU starts inside; D1 is behind and Gold 2 trails wide.",
+    "briefing": "Navy attacks Gold’s net and defends Navy’s net. Gold 1 carries on the right side toward the blue line. YOU start inside; D1 is behind and Gold 2 is positioned wide.",
     "setup": {
       "actors": [
         {
@@ -2128,8 +2133,8 @@
     },
     "focusActorId": "n1",
     "cues": [
-      "Gold 1 carries wide right toward the blue line.",
-      "YOU are inside the carrier; D1 is behind."
+      "Gold 1 carries on the right side toward the blue line.",
+      "YOU start inside; D1 is behind and Gold 2 is positioned wide."
     ],
     "tags": [
       "angle-to-wall",
@@ -2187,7 +2192,7 @@
           },
           {
             "id": "b",
-            "text": "The wall remains the easier escape"
+            "text": "An approach that encourages a route toward the boards"
           },
           {
             "id": "c",
@@ -2199,7 +2204,7 @@
           "b"
         ],
         "basis": "coaching",
-        "explanation": "An inside position protects middle while the wall is the lower-risk direction; crossing behind loses the steering angle.",
+        "explanation": "The drill aims to protect middle ice while retaining recovery. Board-side play is not automatically safe; support and pressure still matter.",
         "id": "exp26b-u13-011-q2"
       },
       {
@@ -2216,7 +2221,7 @@
           },
           {
             "id": "c",
-            "text": "Finish with D1’s support"
+            "text": "Recheck D1 and the changed carrier route"
           }
         ],
         "answer": [
@@ -2225,14 +2230,14 @@
           "c"
         ],
         "basis": "coaching",
-        "explanation": "The carrier’s route controls approach; matching it protects middle; D1’s support gives the finish a second defender.",
+        "explanation": "Read the carrier, compare an inside approach and reassess with D1. No fixed finish is required.",
         "id": "exp26b-u13-011-q3"
       },
       {
         "type": "position",
-        "prompt": "Move YOU inside and slightly ahead of Gold 1 to show the angle.",
+        "prompt": "Move YOU to compare an approach nearer the middle and Navy’s net than Gold 1.",
         "basis": "coaching",
-        "explanation": "The inside-ahead position protects middle and leaves Gold 1 the wall; if Gold 1 slows or passes, update rather than skating past.",
+        "explanation": "The example stays inside and net-side of Gold 1, while reducing the gap. Recheck speed, Gold 2 and D1 before closing.",
         "actorId": "n1",
         "reference": {
           "x": 15,
@@ -2242,7 +2247,7 @@
       },
       {
         "type": "choice",
-        "prompt": "If Gold 1 passes inside to Gold 2, what deserves attention?",
+        "prompt": "If Gold 1 passes to Gold 2, what deserves attention?",
         "options": [
           {
             "id": "a",
@@ -2261,7 +2266,7 @@
           "a"
         ],
         "basis": "coaching",
-        "explanation": "The pass changes carrier and inside threat, so switch to Gold 2 and D1; if Gold 2 is covered, recovery changes again.",
+        "explanation": "The pass changes the puck threat. Reassess Gold 2 and agree responsibilities with D1.",
         "id": "exp26b-u13-011-q5"
       },
       {
@@ -2275,13 +2280,13 @@
   },
   {
     "id": "exp26b-u13-012",
-    "version": 2,
+    "version": 3,
     "ageBand": "U13",
     "title": "Backcheck the middle before the puck",
     "family": "backcheck-middle",
     "topic": "transition defence",
     "objective": "Recover through the middle so the most dangerous attacker stays in view",
-    "briefing": "Navy attacks Gold’s net and defends Navy’s net. Gold 1 carries into the right zone with Gold 2 cutting middle. YOU is the backchecking forward; D1 defends puck side.",
+    "briefing": "Navy defends the left net. Gold 1 carries from the right-hand zone toward Navy’s end, with Gold 2 in the middle. YOU are a recovering forward already closer to Navy’s net than both attackers; D1 is nearer the carrier. Coordinate which threat each player can cover.",
     "setup": {
       "actors": [
         {
@@ -2329,8 +2334,9 @@
     },
     "focusActorId": "n1",
     "cues": [
-      "Gold 2 cuts through middle without the puck.",
-      "D1 is on Gold 1’s puck side; YOU recover behind."
+      "Gold 1 carries from the right-hand zone toward Navy’s end, with Gold 2 in the middle.",
+      "YOU are a recovering forward already closer to Navy’s net than both attackers; D1 is nearer the carrier.",
+      "Coordinate which threat each player can cover."
     ],
     "tags": [
       "backcheck-middle",
@@ -2375,7 +2381,7 @@
           "a"
         ],
         "basis": "scene",
-        "explanation": "Gold 2’s middle cut makes that player the inside threat while D1 engages the carrier; if Gold 2 changes lane, recovery changes.",
+        "explanation": "Gold 2 is nearer the middle than Gold 1. D1 is nearer the carrier, but completed coverage is not proved.",
         "id": "exp26b-u13-012-q1"
       },
       {
@@ -2413,7 +2419,7 @@
           },
           {
             "id": "b",
-            "text": "Recover through middle toward the net"
+            "text": "Compare middle support while staying net-side"
           },
           {
             "id": "c",
@@ -2431,9 +2437,9 @@
       },
       {
         "type": "position",
-        "prompt": "Move YOU into the middle lane between Gold 2 and the Navy net.",
+        "prompt": "Move YOU toward the middle while remaining closer to Navy’s net than Gold 2.",
         "basis": "coaching",
-        "explanation": "The middle position protects the direct threat and lets YOU arrive underneath Gold 2; if D1 loses the carrier, keep both threats visible.",
+        "explanation": "The example moves YOU toward the middle but farther from Navy’s net than the starting spot. It remains net-side of Gold 2; check speed and D1 before adjusting.",
         "actorId": "n1",
         "reference": {
           "x": 10,
@@ -2476,13 +2482,13 @@
   },
   {
     "id": "exp26b-u13-013",
-    "version": 2,
+    "version": 3,
     "ageBand": "U13",
     "title": "Cover the far-side low slot",
     "family": "weak-side-low-coverage",
     "topic": "defensive-zone coverage",
     "objective": "Keep the far-side low attacker and puck-side pressure in one picture",
-    "briefing": "Navy attacks Gold’s net and defends Navy’s net. Gold 1 has the puck on the left half wall. Gold 2 waits in the far-side low slot. YOU is weak side; D1 is below the puck.",
+    "briefing": "Navy defends the left net. Gold 1 controls the puck in a wide lane. Gold 2 is across the middle near the net. YOU start on Gold 1’s side of the middle; D1 is nearer the goal line than the carrier. The exercise asks YOU to account for Gold 2.",
     "setup": {
       "actors": [
         {
@@ -2490,48 +2496,49 @@
           "label": "YOU",
           "team": "home",
           "role": "skater",
-          "x": 20,
+          "x": -20,
           "y": -2,
-          "facing": 3
+          "facing": 0.14159265358979312
         },
         {
           "id": "n2",
           "label": "D1",
           "team": "home",
           "role": "skater",
-          "x": 23,
+          "x": -23,
           "y": -8,
-          "facing": 2.8
+          "facing": 0.3415926535897933
         },
         {
           "id": "g1",
           "label": "Gold 1",
           "team": "away",
           "role": "skater",
-          "x": 21,
+          "x": -21,
           "y": -8,
-          "facing": 2.9
+          "facing": 0.2415926535897932
         },
         {
           "id": "g2",
           "label": "Gold 2",
           "team": "away",
           "role": "skater",
-          "x": 22,
+          "x": -22,
           "y": 3,
-          "facing": 3
+          "facing": 0.14159265358979312
         }
       ],
       "puck": {
         "owner": "g1",
-        "x": 19.862,
-        "y": -8.44
+        "x": -20.196516365300198,
+        "y": -7.081079955181305
       }
     },
     "focusActorId": "n1",
     "cues": [
-      "Gold 2 is the far-side low attacker.",
-      "Gold 1 owns puck on the left half wall; YOU are weak side."
+      "Gold 1 controls the puck in a wide lane.",
+      "Gold 2 is across the middle near the net.",
+      "YOU start on Gold 1’s side of the middle; D1 is nearer the goal line than the carrier."
     ],
     "tags": [
       "weak-side-low-coverage",
@@ -2576,7 +2583,7 @@
           "a"
         ],
         "basis": "scene",
-        "explanation": "Gold 2 is the visible far-side attacker, so YOU first keeps that lane in view; if Gold 2 rises, update.",
+        "explanation": "Gold 2 is the off-puck attacker across the middle near the net. Recheck that threat as the puck moves.",
         "id": "exp26b-u13-013-q1"
       },
       {
@@ -2601,12 +2608,12 @@
           "b"
         ],
         "basis": "coaching",
-        "explanation": "The low threat and carrier side connect the weak-side read; staring only at puck can lose backdoor lane.",
+        "explanation": "Check the off-puck threat and carrier repeatedly rather than watching only one.",
         "id": "exp26b-u13-013-q2"
       },
       {
         "type": "sequence",
-        "prompt": "Arrange one weak-side coverage scan.",
+        "prompt": "Arrange one off-puck coverage scan.",
         "options": [
           {
             "id": "a",
@@ -2627,17 +2634,17 @@
           "c"
         ],
         "basis": "coaching",
-        "explanation": "Gold 2’s route sets danger; D1’s position shows what is covered; final position protects the open net-side lane.",
+        "explanation": "Locate Gold 2, check D1’s pressure and adjust the net-side relationship. The position does not establish completed coverage.",
         "id": "exp26b-u13-013-q3"
       },
       {
         "type": "position",
-        "prompt": "Move YOU closer to the low slot while staying between Gold 2 and the Navy net.",
+        "prompt": "Move YOU across the middle to compare a position near Gold 2.",
         "basis": "coaching",
-        "explanation": "The net-side position keeps Gold 2 visible and still sees Gold 1; if Gold 2 moves high, follow the new danger.",
+        "explanation": "The example is nearer Navy’s net than Gold 2 and changes sides across the middle. Gold 1 still owns the puck; check both threats and communicate coverage.",
         "actorId": "n1",
         "reference": {
-          "x": 22,
+          "x": -22,
           "y": 1
         },
         "id": "exp26b-u13-013-q4"
@@ -2663,27 +2670,27 @@
           "a"
         ],
         "basis": "coaching",
-        "explanation": "Gold 2’s movement changes the net-side lane, so YOU updates the coverage relationship before looking back to Gold 1; if the lane closes, communicate the handoff.",
+        "explanation": "Gold 2’s movement changes the net-side lane, so YOU update the coverage relationship before looking back to Gold 1; if the lane closes, communicate the handoff.",
         "id": "exp26b-u13-013-q5"
       },
       {
         "type": "explain",
-        "prompt": "How can you check the half wall without forgetting Gold 2?",
+        "prompt": "How can YOU check the puck without losing Gold 2?",
         "basis": "coaching",
-        "explanation": "Use a shoulder check that keeps Gold 2 between you and the net, then glance puck-side; if Gold 2 cuts behind, net-side lane wins.",
+        "explanation": "Seek a net-side relationship with Gold 2 while repeatedly checking the puck and communicating with D1. Do not leave Gold 2 between YOU and the net as a default rule.",
         "id": "exp26b-u13-013-q6"
       }
     ]
   },
   {
     "id": "exp26b-u13-014",
-    "version": 2,
+    "version": 3,
     "ageBand": "U13",
     "title": "Choose the second rebound job",
     "family": "rebound-role-choice",
     "topic": "net-front defence",
     "objective": "Separate the first rebound player from the supporting defender’s job",
-    "briefing": "Navy attacks Gold’s net and defends Navy’s net. Gold 1 shoots from the right circle. The rebound is loose below the crease; D1 is closest and YOU is net-side of Gold 2.",
+    "briefing": "Navy defends the left net. After Gold 1’s shot, a rebound is loose near the crease. D1 is the closest shown skater, while the goalie is closer still. YOU are nearer Navy’s net than Gold 2. No skater controls the rebound.",
     "setup": {
       "actors": [
         {
@@ -2691,57 +2698,58 @@
           "label": "YOU",
           "team": "home",
           "role": "skater",
-          "x": 24,
+          "x": -24,
           "y": 2,
-          "facing": 3
+          "facing": 0.14159265358979312
         },
         {
           "id": "n2",
           "label": "D1",
           "team": "home",
           "role": "skater",
-          "x": 26,
+          "x": -26,
           "y": -1,
-          "facing": 3.1
+          "facing": 0.04159265358979303
         },
         {
           "id": "g1",
           "label": "Gold 1",
           "team": "away",
           "role": "skater",
-          "x": 20,
+          "x": -20,
           "y": 7,
-          "facing": 2.9
+          "facing": 0.2415926535897932
         },
         {
           "id": "g2",
           "label": "Gold 2",
           "team": "away",
           "role": "skater",
-          "x": 22,
+          "x": -22,
           "y": -5,
-          "facing": 3
+          "facing": 0.14159265358979312
         },
         {
           "id": "nga",
           "label": "Navy goalie",
           "team": "home",
           "role": "goalie",
-          "x": 27,
+          "x": -27,
           "y": 0,
           "facing": 0
         }
       ],
       "puck": {
         "owner": null,
-        "x": 26,
+        "x": -26,
         "y": 0.6
       }
     },
     "focusActorId": "n1",
     "cues": [
-      "The puck is loose below the crease after Gold 1’s shot.",
-      "D1 is closest; Gold 2 is net-side of YOU."
+      "After Gold 1’s shot, a rebound is loose near the crease.",
+      "D1 is the closest shown skater, while the goalie is closer still.",
+      "YOU are nearer Navy’s net than Gold 2."
     ],
     "tags": [
       "rebound-role-choice",
@@ -2767,7 +2775,7 @@
     "questions": [
       {
         "type": "choice",
-        "prompt": "Who is closest to the loose rebound?",
+        "prompt": "Which shown skater is closest to the loose rebound?",
         "options": [
           {
             "id": "a",
@@ -2786,16 +2794,16 @@
           "a"
         ],
         "basis": "scene",
-        "explanation": "D1 is nearest, so YOU reads the next threat and support lane; if D1 misses it, the job changes.",
+        "explanation": "D1 is the closest shown skater. The goalie is also nearby and is closer to the puck; proximity does not establish control.",
         "id": "exp26b-u13-014-q1"
       },
       {
         "type": "multi",
-        "prompt": "Which two cues shape YOU’s second job?",
+        "prompt": "Which two cues shape your second job?",
         "options": [
           {
             "id": "a",
-            "text": "Gold 2’s net-side position"
+            "text": "Gold 2’s route toward the net"
           },
           {
             "id": "b",
@@ -2811,7 +2819,7 @@
           "b"
         ],
         "basis": "coaching",
-        "explanation": "Gold 2 may be the scoring threat while D1 attacks puck, so YOU balances routes; jersey number does not locate danger.",
+        "explanation": "Gold 2 is another scoring threat while D1 approaches the rebound. Check both that route and the puck contest.",
         "id": "exp26b-u13-014-q2"
       },
       {
@@ -2824,11 +2832,11 @@
           },
           {
             "id": "b",
-            "text": "Confirm D1 attacks it"
+            "text": "Check D1’s approach and the goalie"
           },
           {
             "id": "c",
-            "text": "Protect the dangerous net-side attacker"
+            "text": "Coordinate coverage of Gold 2"
           }
         ],
         "answer": [
@@ -2837,17 +2845,17 @@
           "c"
         ],
         "basis": "coaching",
-        "explanation": "Puck location tells you whether D1 can reach; confirming D1 frees YOU to cover; the second job protects the attacker.",
+        "explanation": "The closest skater is not automatically the winner. Check the goalie and opponent before deciding who contests and who covers.",
         "id": "exp26b-u13-014-q3"
       },
       {
         "type": "position",
-        "prompt": "Move YOU between Gold 2 and the Navy net while D1 attacks the rebound.",
+        "prompt": "Move YOU to a net-side cover position while D1 approaches the loose rebound.",
         "basis": "coaching",
-        "explanation": "The net-side position protects Gold 2 and leaves D1 room; if D1 loses the race, reassess possession.",
+        "explanation": "The target keeps YOU net-side of Gold 2 and leaves D1 room to contest the rebound; D1 is the closest shown skater to the loose puck, so control is unresolved.",
         "actorId": "n1",
         "reference": {
-          "x": 25,
+          "x": -25,
           "y": -1
         },
         "id": "exp26b-u13-014-q4"
@@ -2880,20 +2888,20 @@
         "type": "explain",
         "prompt": "Why must a rebound read distinguish loose from controlled?",
         "basis": "coaching",
-        "explanation": "A loose puck requires a race, while control changes the job to coverage and support; if goalie or D1 covers it, chasing the old rebound wastes position.",
+        "explanation": "A loose puck may require a contest or containment. Control changes the available actions; a goalie cover or official’s signal requires another reassessment.",
         "id": "exp26b-u13-014-q6"
       }
     ]
   },
   {
     "id": "exp26b-u13-015",
-    "version": 2,
+    "version": 3,
     "ageBand": "U13",
     "title": "Recover after the pinch misses",
     "family": "pinch-recovery",
     "topic": "defensive recovery",
     "objective": "Protect the middle after D1’s pinch fails and Gold 1 exits wide",
-    "briefing": "Navy attacks Gold’s net and defends Navy’s net. D1 pinched at the right blue line but Gold 1 won the puck and exits along the wall. YOU is nearest recovering forward; Gold 2 cuts inside.",
+    "briefing": "Navy defends the left net. D1 moved down from the right blue line, but Gold 1 won the puck farther into that zone. YOU are already nearer Navy’s net than both Gold attackers. Gold 2 is inside; compare recovery and coverage rather than assuming a race can be won.",
     "setup": {
       "actors": [
         {
@@ -2941,8 +2949,9 @@
     },
     "focusActorId": "n1",
     "cues": [
-      "D1’s pinch did not gain possession; Gold 1 has puck on the right wall.",
-      "Gold 2 is the inside option."
+      "D1 moved down from the right blue line, but Gold 1 won the puck farther into that zone.",
+      "YOU are already nearer Navy’s net than both Gold attackers.",
+      "Gold 2 is inside; compare recovery and coverage rather than assuming a race can be won."
     ],
     "tags": [
       "pinch-recovery",
@@ -3000,11 +3009,11 @@
           },
           {
             "id": "b",
-            "text": "Gold 1’s wall exit"
+            "text": "Gold 1’s route out of the zone"
           },
           {
             "id": "c",
-            "text": "Whether an empty wall lane means Gold 1 cannot pass"
+            "text": "An assumed empty passing lane for Gold 1"
           }
         ],
         "answer": [
@@ -3012,7 +3021,7 @@
           "b"
         ],
         "basis": "coaching",
-        "explanation": "Gold 1 carries while Gold 2 offers inside support, so recover middle and communicate; bench is irrelevant.",
+        "explanation": "Gold 1 carries while Gold 2 offers inside support, so recover middle and communicate; an empty-looking wall lane does not prove Gold 1 has no pass.",
         "id": "exp26b-u13-015-q2"
       },
       {
@@ -3029,7 +3038,7 @@
           },
           {
             "id": "c",
-            "text": "Angle Gold 1 after middle is protected"
+            "text": "Coordinate carrier pressure with D1"
           }
         ],
         "answer": [
@@ -3038,14 +3047,14 @@
           "c"
         ],
         "basis": "coaching",
-        "explanation": "Turnover updates carrier; inside recovery protects net; once middle is covered, wall carrier can be angled.",
+        "explanation": "Locate the new carrier, compare inside coverage and communicate the pressure job. Closing on Gold 1 is not automatically the next step.",
         "id": "exp26b-u13-015-q3"
       },
       {
         "type": "position",
-        "prompt": "Move YOU into the inside recovery lane below Gold 2.",
+        "prompt": "Move YOU toward the middle while remaining closer to Navy’s net than Gold 2.",
         "basis": "coaching",
-        "explanation": "The inside position protects the direct route and lets YOU angle Gold 1 later; if Gold 2 receives, step to new threat.",
+        "explanation": "The example stays net-side of Gold 2 but moves farther from Navy’s net than the starting spot. Check both attackers and D1 before choosing the route.",
         "actorId": "n1",
         "reference": {
           "x": 14,
@@ -3059,7 +3068,7 @@
         "options": [
           {
             "id": "a",
-            "text": "Contain Gold 2 as carrier and keep net-side lane closed"
+            "text": "Reassess Gold 2 as the carrier and coordinate net-side coverage"
           },
           {
             "id": "b",
@@ -3079,16 +3088,16 @@
       },
       {
         "type": "explain",
-        "prompt": "Why does the failed pinch change your first skating lane?",
+        "prompt": "Why does the failed pinch change your next read?",
         "basis": "coaching",
-        "explanation": "Possession moved to Gold and inside support is closer to net, so middle recovery protects the highest-risk route; if Navy recovers, transition roles change.",
+        "explanation": "Gold now has possession. YOU are already net-side, so compare containment and support using both attackers and D1 rather than assuming a particular skating route.",
         "id": "exp26b-u13-015-q6"
       }
     ]
   },
   {
     "id": "exp26b-u13-016",
-    "version": 3,
+    "version": 4,
     "ageBand": "U13",
     "title": "Cover the lane after an interception",
     "family": "post-interception-cover",
@@ -3142,7 +3151,7 @@
     },
     "focusActorId": "n1",
     "cues": [
-      "Gold 1 clearly intercepted YOU’s pass.",
+      "Gold 1 clearly intercepted your pass.",
       "Gold 2 is the second attacker moving middle; D1 is behind."
     ],
     "tags": [
@@ -3226,11 +3235,11 @@
           },
           {
             "id": "b",
-            "text": "Take the nearer open lane"
+            "text": "Compare the carrier and inside support threats"
           },
           {
             "id": "c",
-            "text": "Hand off when D1 arrives"
+            "text": "Coordinate a reachable defensive response with D1"
           }
         ],
         "answer": [
@@ -3239,14 +3248,14 @@
           "c"
         ],
         "basis": "coaching",
-        "explanation": "Calling updates teammates; taking nearer lane prevents a free attack; handoff keeps coverage connected.",
+        "explanation": "Call the turnover, locate both threats and coordinate the response. A call or chosen lane alone does not complete coverage.",
         "id": "exp26b-u13-016-q3"
       },
       {
         "type": "position",
-        "prompt": "Move YOU to a cover point that keeps Gold 1’s puck side and Gold 2’s middle route in view.",
+        "prompt": "Move YOU to compare a middle cover point after the interception.",
         "basis": "coaching",
-        "explanation": "This central point keeps the carrier side and middle support in view during the interception; if Gold 1 turns inside, follow the nearer threat and communicate the switch.",
+        "explanation": "The example is closer to Navy’s net than both Gold attackers. Reassess the carrier and middle support with D1; a point alone does not complete coverage.",
         "actorId": "n1",
         "reference": {
           "x": 15,
@@ -3289,13 +3298,13 @@
   },
   {
     "id": "exp26b-u13-017",
-    "version": 2,
+    "version": 3,
     "ageBand": "U13",
     "title": "Communicate the defensive switch",
     "family": "defensive-switch-call",
     "topic": "defensive coverage",
     "objective": "Exchange pressure with D1 while keeping the inside attacker assigned",
-    "briefing": "Navy attacks Gold’s net and defends Navy’s net. Gold 1 carries left of centre with Gold 2 cutting behind. D1 is closer to carrier; YOU is inside and switch is called.",
+    "briefing": "Navy defends the left net. Gold 1 carries in one side lane, with Gold 2 in a separate support lane. D1 is closer to Gold 1 than YOU. The coach calls for D1 to handle the carrier while YOU account for Gold 2, with the roles changing if the threats change.",
     "setup": {
       "actors": [
         {
@@ -3343,8 +3352,9 @@
     },
     "focusActorId": "n1",
     "cues": [
-      "D1 is closer to Gold 1; YOU are inside Gold 2’s lane.",
-      "The switch is explicitly called; Gold 2 remains visible."
+      "Gold 1 carries in one side lane, with Gold 2 in a separate support lane.",
+      "D1 is closer to Gold 1 than YOU.",
+      "The coach calls for D1 to handle the carrier while YOU account for Gold 2, with the roles changing if the threats change."
     ],
     "tags": [
       "defensive-switch-call",
@@ -3389,7 +3399,7 @@
           "a"
         ],
         "basis": "scene",
-        "explanation": "YOU is inside Gold 2 while D1 is closer to carrier, so the switch requires inside coverage; if Gold 2 changes lane, call it.",
+        "explanation": "YOU are inside Gold 2 while D1 is closer to carrier, so the switch requires inside coverage; if Gold 2 changes lane, call it.",
         "id": "exp26b-u13-017-q1"
       },
       {
@@ -3414,7 +3424,7 @@
           "b"
         ],
         "basis": "coaching",
-        "explanation": "Naming carrier and inside attacker lets defenders exchange jobs without losing lane; unrelated history cannot guide this switch.",
+        "explanation": "Name the carrier responsibility and Gold 2’s route. A switch is not complete just because someone calls it.",
         "id": "exp26b-u13-017-q2"
       },
       {
@@ -3431,7 +3441,7 @@
           },
           {
             "id": "c",
-            "text": "YOU confirms Gold 2’s route"
+            "text": "YOU confirm Gold 2’s route"
           }
         ],
         "answer": [
@@ -3440,14 +3450,14 @@
           "c"
         ],
         "basis": "coaching",
-        "explanation": "The call creates shared information; D1 pressures when YOU knows inside threat; YOU confirms handoff.",
+        "explanation": "The call creates shared information; D1 pressures when YOU know inside threat; YOU confirm handoff.",
         "id": "exp26b-u13-017-q3"
       },
       {
         "type": "position",
-        "prompt": "Move YOU inside Gold 2 while staying available to support D1.",
+        "prompt": "Move YOU nearer the middle while staying closer to Navy’s net than Gold 2.",
         "basis": "coaching",
-        "explanation": "The inside position keeps Gold 2 between YOU and net and leaves a route to D1; if Gold 2 cuts behind, call new lane.",
+        "explanation": "The example places YOU closer to Navy’s net than Gold 2, not with Gold 2 between YOU and the net. Communicate with D1 as either attacker moves.",
         "actorId": "n1",
         "reference": {
           "x": 12,
@@ -3490,13 +3500,13 @@
   },
   {
     "id": "exp26b-u13-018",
-    "version": 2,
+    "version": 3,
     "ageBand": "U13",
     "title": "Escape a supported pinch with a wall pass",
     "family": "pinch-escape",
     "topic": "breakout support",
     "objective": "Move the puck away from a pinching defender while the wall teammate has a visible outlet",
-    "briefing": "Navy attacks Gold’s net and defends Navy’s net. D1 is pinching down the right blue line. YOU controls the puck on the wall; W is behind the pressure and D2 is high.",
+    "briefing": "Navy attacks the right net. D1 has moved down from the blue line. YOU control the puck in a wide lane; W is closer to the blue line and D2 is in a separate lane. Gold 1 is nearby.",
     "setup": {
       "actors": [
         {
@@ -3553,8 +3563,9 @@
     },
     "focusActorId": "n1",
     "cues": [
-      "D1 is moving down the right blue line to support the attack.",
-      "W is behind YOU on the wall; Gold 1 closes from the end line."
+      "D1 has moved down from the blue line.",
+      "YOU control the puck in a wide lane; W is closer to the blue line and D2 is in a separate lane.",
+      "Gold 1 is nearby."
     ],
     "tags": [
       "pinch-escape",
@@ -3580,11 +3591,11 @@
     "questions": [
       {
         "type": "choice",
-        "prompt": "What is D1 doing at the blue line?",
+        "prompt": "What is D1 doing after pinching down from the blue line?",
         "options": [
           {
             "id": "a",
-            "text": "Pinching down to support the wall puck"
+            "text": "Moving down from the blue line into support"
           },
           {
             "id": "b",
@@ -3592,14 +3603,14 @@
           },
           {
             "id": "c",
-            "text": "Taking a faceoff"
+            "text": "Retreating to cover the point"
           }
         ],
         "answer": [
           "a"
         ],
         "basis": "scene",
-        "explanation": "D1’s blue-line activation is the named pinch, so YOU reads whether the puck can move away from pressure; if possession is lost, recovery replaces escape.",
+        "explanation": "D1’s pinch commits a player forward past the blue line, so YOU read whether the puck can move away from pressure; if possession is lost, recovery replaces escape.",
         "id": "exp26b-u13-018-q1"
       },
       {
@@ -3608,11 +3619,11 @@
         "options": [
           {
             "id": "a",
-            "text": "W is visible behind the pressure"
+            "text": "Whether W offers a usable outlet"
           },
           {
             "id": "b",
-            "text": "Gold 1 is closing the wall"
+            "text": "Gold 1’s nearby pressure"
           },
           {
             "id": "c",
@@ -3624,7 +3635,7 @@
           "b"
         ],
         "basis": "coaching",
-        "explanation": "W’s support gives a connected outlet while Gold 1 makes waiting costly; D2’s location is not the immediate escape cue.",
+        "explanation": "Check the pressure and possible outlet. D2 can also matter as a reset; no one’s location guarantees an escape.",
         "id": "exp26b-u13-018-q2"
       },
       {
@@ -3641,7 +3652,7 @@
           },
           {
             "id": "c",
-            "text": "Use W if the wall lane stays open"
+            "text": "Use W only if the passing lane is usable"
           }
         ],
         "answer": [
@@ -3650,18 +3661,18 @@
           "c"
         ],
         "basis": "coaching",
-        "explanation": "D1’s commitment changes support; protection prevents Gold 1 winning it; W helps only when the lane remains visible.",
+        "explanation": "D1’s movement changes the support shape. Protect possession where possible and check the outlet before using it.",
         "id": "exp26b-u13-018-q3"
       },
       {
         "type": "position",
-        "prompt": "Move W behind and slightly inside YOU to show the escape lane.",
+        "prompt": "Move W nearer the middle while staying closer to the blue line than YOU.",
         "basis": "coaching",
-        "explanation": "W’s spot gives YOU a short wall release away from Gold 1 and D1; if Gold 1 fills it, D2 may become the reset.",
+        "explanation": "The example changes W’s passing angle and stays separate from YOU. Check Gold 1, D1 and the route before using the outlet.",
         "actorId": "n3",
         "reference": {
           "x": 18,
-          "y": 8
+          "y": 5.5
         },
         "id": "exp26b-u13-018-q4"
       },
@@ -3700,13 +3711,13 @@
   },
   {
     "id": "exp26b-u13-019",
-    "version": 2,
+    "version": 3,
     "ageBand": "U13",
     "title": "Change jobs after a goalie outlet",
     "family": "goalie-outlet-support",
     "topic": "defensive-zone breakout",
     "objective": "Become support when the goalie’s outlet changes the puck side",
-    "briefing": "Navy attacks Gold’s net and defends Navy’s net. The Navy goalie released the puck to D1 at the left corner. YOU starts opposite; D2 is above the net and Gold 1 forechecks.",
+    "briefing": "Navy defends the left net. The goalie passed to D1 near one corner, and D1 now controls the puck. YOU are across the middle; D2 is farther from the goal line and Gold 1 forechecks.",
     "setup": {
       "actors": [
         {
@@ -3763,8 +3774,8 @@
     },
     "focusActorId": "n1",
     "cues": [
-      "The goalie released the puck to D1 at the left corner.",
-      "YOU is opposite; D2 is above the net."
+      "The goalie passed to D1 near one corner, and D1 now controls the puck.",
+      "YOU are across the middle; D2 is farther from the goal line and Gold 1 forechecks."
     ],
     "tags": [
       "goalie-outlet-support",
@@ -3809,7 +3820,7 @@
           "a"
         ],
         "basis": "scene",
-        "explanation": "D1 is assigned the puck after release, so YOU becomes support on the new side; if Gold wins it, update.",
+        "explanation": "D1 is assigned the puck after release, so YOU become support on the new side; if Gold wins it, update.",
         "id": "exp26b-u13-019-q1"
       },
       {
@@ -3865,9 +3876,9 @@
       },
       {
         "type": "position",
-        "prompt": "Move YOU toward the middle-side outlet above D1.",
+        "prompt": "Move YOU nearer the middle to compare an outlet for D1.",
         "basis": "coaching",
-        "explanation": "The middle-side position gives D1 a forward connection while keeping Gold 1 in view; if Gold 1 closes, drop or reverse.",
+        "explanation": "The example moves YOU closer to D1 while remaining across the middle. Recheck Gold 1 and D2 before calling for the pass.",
         "actorId": "n1",
         "reference": {
           "x": -20,
@@ -3910,13 +3921,13 @@
   },
   {
     "id": "exp26b-u13-020",
-    "version": 2,
+    "version": 3,
     "ageBand": "U13",
     "title": "Keep the third player connected",
     "family": "third-player-balance",
     "topic": "neutral-zone transition",
     "objective": "Choose a third-player height that supports rush and recovery",
-    "briefing": "Navy attacks Gold’s net and defends Navy’s net. F1 carries up the left side with W inside. YOU is the third Navy player, Gold 1 defends the carrier, and Gold 2 is high.",
+    "briefing": "Navy attacks Gold’s net and defends Navy’s net. F1 carries up the left side with W inside. YOU are the third Navy player, Gold 1 defends the carrier, and Gold 2 is high.",
     "setup": {
       "actors": [
         {
@@ -3973,8 +3984,8 @@
     },
     "focusActorId": "n1",
     "cues": [
-      "F1 carries left-side entry; W is inside support.",
-      "YOU are third behind; Gold 2 is high."
+      "F1 carries up the left side with W inside.",
+      "YOU are the third Navy player, Gold 1 defends the carrier, and Gold 2 is high."
     ],
     "tags": [
       "third-player-balance",
@@ -4000,7 +4011,7 @@
     "questions": [
       {
         "type": "choice",
-        "prompt": "What is YOU’s current role?",
+        "prompt": "What is your current role?",
         "options": [
           {
             "id": "a",
@@ -4019,7 +4030,7 @@
           "a"
         ],
         "basis": "scene",
-        "explanation": "YOU is third behind carrier and support, so height balances attack and recovery; if possession changes, job changes.",
+        "explanation": "YOU are third behind carrier and support, so height balances attack and recovery; if possession changes, job changes.",
         "id": "exp26b-u13-020-q1"
       },
       {
@@ -4075,9 +4086,9 @@
       },
       {
         "type": "position",
-        "prompt": "Move YOU to a middle-high trailing position behind F1.",
+        "prompt": "Move YOU toward the middle while staying behind F1 toward the blue line.",
         "basis": "coaching",
-        "explanation": "The trailing middle supports a pass and keeps Gold 2 in view; if F1 loses puck, recover through middle.",
+        "explanation": "The example remains separate from F1 and W. Check Gold 2 and the current possession before choosing an outlet or recovery route.",
         "actorId": "n1",
         "reference": {
           "x": 10,
@@ -4120,13 +4131,13 @@
   },
   {
     "id": "exp26b-u13-021",
-    "version": 2,
+    "version": 3,
     "ageBand": "U13",
     "title": "Use the soft area behind the net",
     "family": "behind-net-escape",
     "topic": "breakout retrieval",
     "objective": "Recognize open ice behind the net and choose a support route that changes the forechecker’s angle",
-    "briefing": "Navy attacks Gold’s net and defends Navy’s net. YOU has the puck behind the left net. Gold 1 is above the goal line on the wall side; D2 is low middle and W is far-side outlet.",
+    "briefing": "Navy defends the left net. YOU control the puck behind that net. Gold 1 is on the centre-ice side of the goal line. D2 is across the middle from YOU, and W is farther up ice on your side.",
     "setup": {
       "actors": [
         {
@@ -4174,8 +4185,9 @@
     },
     "focusActorId": "n1",
     "cues": [
-      "The puck is assigned to YOU behind Navy’s net beyond left goal line.",
-      "Gold 1 is above the goal line wall side; D2 is low middle."
+      "YOU control the puck behind that net.",
+      "Gold 1 is on the centre-ice side of the goal line.",
+      "D2 is across the middle from YOU, and W is farther up ice on your side."
     ],
     "tags": [
       "behind-net-escape",
@@ -4201,7 +4213,7 @@
     "questions": [
       {
         "type": "choice",
-        "prompt": "Where is YOU with the puck?",
+        "prompt": "Where are YOU with the puck?",
         "options": [
           {
             "id": "a",
@@ -4229,11 +4241,11 @@
         "options": [
           {
             "id": "a",
-            "text": "Gold 1 is above the goal line"
+            "text": "Gold 1’s position on the centre-ice side of the goal line"
           },
           {
             "id": "b",
-            "text": "D2 is visible low middle"
+            "text": "D2’s possible support across the middle"
           },
           {
             "id": "c",
@@ -4245,7 +4257,7 @@
           "b"
         ],
         "basis": "coaching",
-        "explanation": "Gold 1’s higher position leaves a route and D2 can connect middle; centre ice is not scene state.",
+        "explanation": "The net, pressure and support change the possible routes. The picture does not guarantee an exit.",
         "id": "exp26b-u13-021-q2"
       },
       {
@@ -4276,9 +4288,9 @@
       },
       {
         "type": "position",
-        "prompt": "Move D2 into a low-middle outlet lane below Gold 1.",
+        "prompt": "Move D2 nearer the middle to compare an outlet from behind the net.",
         "basis": "coaching",
-        "explanation": "The low-middle spot gives YOU a short option after the carry and keeps W separate; if Gold 1 drops inside, D2 re-angles.",
+        "explanation": "The example is slightly farther from YOU than D2’s starting spot. Check the net and pressure before treating the changed angle as a usable pass.",
         "actorId": "n2",
         "reference": {
           "x": -21,
@@ -4292,7 +4304,7 @@
         "options": [
           {
             "id": "a",
-            "text": "Whether W is now far-side outlet and D2 inside support"
+            "text": "Whether W or D2 has a usable outlet angle"
           },
           {
             "id": "b",
@@ -4314,20 +4326,20 @@
         "type": "explain",
         "prompt": "How does the net change the forechecker’s approach without guaranteeing an exit?",
         "basis": "coaching",
-        "explanation": "The net makes Gold 1 turn and may reveal support, but a pass is safe only if the support lane is visible; if lanes stay covered, keep possession.",
+        "explanation": "The net can change the available approach routes. Check the forechecker, receiver and passing lane rather than assuming the obstacle guarantees an exit.",
         "id": "exp26b-u13-021-q6"
       }
     ]
   },
   {
     "id": "exp26b-u13-022",
-    "version": 2,
+    "version": 3,
     "ageBand": "U13",
     "title": "Delay the entry until support arrives",
     "family": "entry-delay-support",
     "topic": "neutral-zone entry",
     "objective": "Use a controlled delay to let support arrive at a different lane",
-    "briefing": "Navy attacks Gold’s net and defends Navy’s net. F1 carries over the left blue line but slows with Gold 1 in middle. YOU trails right; D2 joins late.",
+    "briefing": "Navy attacks Gold’s net and defends Navy’s net. F1 carries into the offensive zone but slows with Gold 1 in middle. YOU trail right; D2 joins late.",
     "setup": {
       "actors": [
         {
@@ -4375,8 +4387,8 @@
     },
     "focusActorId": "n1",
     "cues": [
-      "F1 slowed at the left blue line; Gold 1 shades middle.",
-      "YOU trails right and D2 joins late."
+      "F1 carries into the offensive zone but slows with Gold 1 in middle.",
+      "YOU trail right; D2 joins late."
     ],
     "tags": [
       "entry-delay-support",
@@ -4477,9 +4489,9 @@
       },
       {
         "type": "position",
-        "prompt": "Move YOU to an outside-lower support pocket behind F1.",
+        "prompt": "Move YOU nearer the middle while staying behind F1 toward the blue line.",
         "basis": "coaching",
-        "explanation": "The pocket gives F1 a release behind Gold 1 and keeps D2 separate; if Gold 1 follows, rotate toward D2.",
+        "explanation": "The example changes the angle to F1 while keeping separation from D2. Recheck Gold 1 before offering the pass.",
         "actorId": "n1",
         "reference": {
           "x": 18,
@@ -4489,7 +4501,7 @@
       },
       {
         "type": "choice",
-        "prompt": "If F1 loses control during the delay, what must you reassess first?",
+        "prompt": "If F1 loses control during the delay, what must YOU reassess first?",
         "options": [
           {
             "id": "a",
@@ -4508,27 +4520,27 @@
           "a"
         ],
         "basis": "coaching",
-        "explanation": "A bobble changes entry support to recovery, so locate puck and danger; if F1 regains it, rebuild support.",
+        "explanation": "Loss of control requires locating the puck and pressure again. A bobble alone does not establish Gold possession or a fixed recovery job.",
         "id": "exp26b-u13-022-q5"
       },
       {
         "type": "explain",
         "prompt": "What does saving ice mean in this particular scene?",
         "basis": "coaching",
-        "explanation": "It means staying connected and separated while F1 waits for D2, preserving a route to use or recover through; if delay removes support, it became a problem.",
+        "explanation": "Stay separated enough to offer support while checking F1, D2 and pressure. Whether to keep that space or move depends on the next cue.",
         "id": "exp26b-u13-022-q6"
       }
     ]
   },
   {
     "id": "exp26b-u13-023",
-    "version": 2,
+    "version": 3,
     "ageBand": "U13",
     "title": "Reset from a crowded slot",
     "family": "slot-crowd-reset",
     "topic": "offensive-zone possession",
     "objective": "Recognize an occupied slot and use a high reset to keep possession",
-    "briefing": "Navy attacks Gold’s net and defends Navy’s net. W carries below the left dot. Gold 1 and Gold 2 occupy the slot; YOU is high middle and D2 is weak-side point.",
+    "briefing": "Navy attacks Gold’s net and defends Navy’s net. W carries below the left dot. Gold 1 and Gold 2 occupy the slot; YOU are high middle and D2 is weak-side point.",
     "setup": {
       "actors": [
         {
@@ -4585,8 +4597,8 @@
     },
     "focusActorId": "n1",
     "cues": [
-      "W has puck below the left dot.",
-      "Gold 1 and Gold 2 occupy slot; YOU are high middle."
+      "W carries below the left dot.",
+      "Gold 1 and Gold 2 occupy the slot; YOU are high middle and D2 is weak-side point."
     ],
     "tags": [
       "slot-crowd-reset",
@@ -4631,7 +4643,7 @@
           "a"
         ],
         "basis": "scene",
-        "explanation": "Both Gold defenders occupy the slot, so a direct middle pass is restricted; if one leaves, reset picture changes.",
+        "explanation": "Both Gold defenders occupy slot-area space. Check the actual passing route rather than assuming every middle pass is closed.",
         "id": "exp26b-u13-023-q1"
       },
       {
@@ -4640,7 +4652,7 @@
         "options": [
           {
             "id": "a",
-            "text": "YOU is high and separated"
+            "text": "YOU are high and separated"
           },
           {
             "id": "b",
@@ -4673,7 +4685,7 @@
           },
           {
             "id": "c",
-            "text": "Reenter only after slot changes"
+            "text": "Recheck an attacking route before using it"
           }
         ],
         "answer": [
@@ -4682,14 +4694,14 @@
           "c"
         ],
         "basis": "coaching",
-        "explanation": "Defenders explain why slot is closed; high support preserves possession; reentry waits for a new lane.",
+        "explanation": "Compare the slot traffic with high support and reassess the available routes. A reset does not force the defenders to move.",
         "id": "exp26b-u13-023-q3"
       },
       {
         "type": "position",
-        "prompt": "Move YOU higher and slightly left to show a reset lane from W.",
+        "prompt": "Move YOU nearer the blue line to compare a reset angle from W.",
         "basis": "coaching",
-        "explanation": "The high-left pocket opens a pass away from both slot defenders and leaves D2 intact; if Gold 1 follows, D2 may become reset.",
+        "explanation": "The example remains outside the low cluster and changes the route from W. Check both defenders and D2 before using it.",
         "actorId": "n1",
         "reference": {
           "x": 14,
@@ -4703,7 +4715,7 @@
         "options": [
           {
             "id": "a",
-            "text": "Use D2’s weak-side lane while Gold 2 remains slot"
+            "text": "Check whether D2’s weak-side lane is now usable"
           },
           {
             "id": "b",
@@ -4732,13 +4744,13 @@
   },
   {
     "id": "exp26b-u13-024",
-    "version": 2,
+    "version": 3,
     "ageBand": "U13",
     "title": "Choose the safer side before a change",
     "family": "line-change-puck-management",
     "topic": "late-game possession",
     "objective": "Protect the puck on the wall while a teammate changes and middle is covered",
-    "briefing": "Navy attacks Gold’s net and defends Navy’s net. Navy leads late. YOU controls puck on left wall; W is changing, D2 is safe support, and Gold 1 closes middle.",
+    "briefing": "Navy leads late and defends the left net. YOU control the puck in a wide lane. W is changing and unavailable; D2 is a nearby support option, and Gold 1 closes from nearer the middle. The coach asks YOU to protect possession during the change.",
     "setup": {
       "actors": [
         {
@@ -4786,8 +4798,9 @@
     },
     "focusActorId": "n1",
     "cues": [
-      "The late lead and change are stated objectives.",
-      "Gold 1 closes middle; D2 is behind YOU on wall side."
+      "YOU control the puck in a wide lane.",
+      "W is changing and unavailable; D2 is a nearby support option, and Gold 1 closes from nearer the middle.",
+      "The coach asks YOU to protect possession during the change."
     ],
     "tags": [
       "line-change-puck-management",
@@ -4857,7 +4870,7 @@
           "b"
         ],
         "basis": "coaching",
-        "explanation": "Middle is restricted and D2 is connected wall-side, so hold can preserve possession; an open middle is another picture.",
+        "explanation": "Middle pressure and nearby support can make protection useful. Check the actual route to D2 rather than assuming it is clear.",
         "id": "exp26b-u13-024-q2"
       },
       {
@@ -4888,9 +4901,9 @@
       },
       {
         "type": "position",
-        "prompt": "Move D2 closer to YOU on the wall-side support lane.",
+        "prompt": "Move D2 closer to YOU to compare a short support angle.",
         "basis": "coaching",
-        "explanation": "Closer wall support gives YOU a short connection while middle is covered; if Gold 1 follows, protect and wait.",
+        "explanation": "The example shortens the distance to YOU. Gold 1 remains nearby, so check whether the route is usable before passing.",
         "actorId": "n3",
         "reference": {
           "x": -15,
@@ -4933,13 +4946,13 @@
   },
   {
     "id": "exp26b-u13-025",
-    "version": 2,
+    "version": 3,
     "ageBand": "U13",
     "title": "Recover the puck after a failed clear",
     "family": "failed-clear-recovery",
     "topic": "defensive-zone recovery",
     "objective": "Assign the nearest player to loose puck while the second protects slot",
-    "briefing": "Navy attacks Gold’s net and defends Navy’s net. The Navy clear is blocked at the left blue line. The puck is loose along the wall; YOU is closest, D1 is inside, and Gold 1 attacks the slot.",
+    "briefing": "Navy defends the left net. An attempted clear was blocked at the defensive blue line and returned deeper into the zone. The puck is now loose in a wide lane. YOU are the closest shown skater, D1 is nearer the middle, and Gold 1 is an attacking threat.",
     "setup": {
       "actors": [
         {
@@ -4987,8 +5000,9 @@
     },
     "focusActorId": "n1",
     "cues": [
-      "The clear is blocked and puck is loose along left wall.",
-      "YOU are nearest puck; D1 is inside with Gold 1 approaching slot."
+      "An attempted clear was blocked at the defensive blue line and returned deeper into the zone.",
+      "The puck is now loose in a wide lane.",
+      "YOU are the closest shown skater, D1 is nearer the middle, and Gold 1 is an attacking threat."
     ],
     "tags": [
       "failed-clear-recovery",
@@ -5018,7 +5032,7 @@
         "options": [
           {
             "id": "a",
-            "text": "Loose along the left wall"
+            "text": "Loose in a wide lane deep in Navy’s zone"
           },
           {
             "id": "b",
@@ -5033,7 +5047,7 @@
           "a"
         ],
         "basis": "scene",
-        "explanation": "The puck marker is loose, so YOU reads a retrieval race while D1 protects inside; if control changes, roles update.",
+        "explanation": "The puck marker is loose, so YOU read a retrieval race while D1 protects inside; if control changes, roles update.",
         "id": "exp26b-u13-025-q1"
       },
       {
@@ -5042,11 +5056,11 @@
         "options": [
           {
             "id": "a",
-            "text": "YOU retrieving loose puck"
+            "text": "A retrieval attempt if YOU can reach the puck"
           },
           {
             "id": "b",
-            "text": "D1 protecting the slot"
+            "text": "D1’s inside coverage"
           },
           {
             "id": "c",
@@ -5058,7 +5072,7 @@
           "b"
         ],
         "basis": "coaching",
-        "explanation": "The nearest player attacks puck while inside defender protects danger; two at wall exposes slot.",
+        "explanation": "Coordinate the puck contest and inside coverage. Proximity alone does not assign a guaranteed retrieval.",
         "id": "exp26b-u13-025-q2"
       },
       {
@@ -5084,18 +5098,18 @@
           "c"
         ],
         "basis": "coaching",
-        "explanation": "The call shares information; nearest route decides retrieval; D1’s inside position prevents free slot attack.",
+        "explanation": "Call the loose puck and coordinate reachable roles. D1’s position can help cover Gold 1 but does not guarantee a stopped attack.",
         "id": "exp26b-u13-025-q3"
       },
       {
         "type": "position",
-        "prompt": "Move D1 between Gold 1 and the Navy net while YOU attacks wall puck.",
+        "prompt": "Move D1 to compare a position nearer Navy’s net than Gold 1.",
         "basis": "coaching",
-        "explanation": "D1’s net-side spot protects slot and leaves YOU retrieval lane; if Gold 1 wins puck, D1 becomes carrier defender.",
+        "explanation": "The example keeps D1 net-side of Gold 1 while YOU approach the loose puck. Reassess both threats if possession changes.",
         "actorId": "n2",
         "reference": {
           "x": -19,
-          "y": 1
+          "y": -1.5
         },
         "id": "exp26b-u13-025-q4"
       },
@@ -5105,11 +5119,11 @@
         "options": [
           {
             "id": "a",
-            "text": "D1 contains new carrier while YOU recovers next inside lane"
+            "text": "Reassess the new carrier and agree coverage with D1"
           },
           {
             "id": "b",
-            "text": "YOU keeps chasing loose-puck route"
+            "text": "YOU keep chasing loose-puck route"
           },
           {
             "id": "c",
@@ -5120,7 +5134,7 @@
           "a"
         ],
         "basis": "coaching",
-        "explanation": "Clear control changes puck threat, so D1’s coverage and YOU’s recovery update; if Navy recovers, rebuild support.",
+        "explanation": "Clear control changes puck threat, so D1’s coverage and your recovery update; if Navy recovers, rebuild support.",
         "id": "exp26b-u13-025-q5"
       },
       {

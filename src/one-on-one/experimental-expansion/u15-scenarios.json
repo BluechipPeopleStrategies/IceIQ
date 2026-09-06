@@ -1,13 +1,13 @@
 [
   {
     "id": "exp26b-u15-001",
-    "version": 1,
+    "version": 2,
     "ageBand": "U15",
     "title": "Pinch with a visible cover",
     "family": "pinch-cover-read",
     "topic": "Offensive blue line",
     "objective": "Join the attack only when the high cover and puck route support the pinch.",
-    "briefing": "Navy attacks the Gold net. YOU is near the offensive blue line with D2 high support; F1 carries below and Gold has two defenders between the puck and net. The rep is a declared cover decision, not a promise of a successful pinch.",
+    "briefing": "YOU are near the offensive blue line with D2 high support; F1 is below near the loose puck, and Gold has two defenders between the puck and net.",
     "setup": {
       "actors": [
         {
@@ -60,7 +60,7 @@
           "label": "A3",
           "team": "away",
           "role": "skater",
-          "x": 20,
+          "x": 22,
           "y": -3,
           "facing": 1.6
         }
@@ -73,9 +73,7 @@
     },
     "focusActorId": "h1",
     "cues": [
-      "The puck is loose below YOU.",
-      "D2 is high support.",
-      "The cover is a stated practice condition, not an outcome."
+      "YOU are near the offensive blue line with D2 high support; F1 is below near the loose puck, and Gold has two defenders between the puck and net."
     ],
     "tags": [
       "experimental",
@@ -103,7 +101,7 @@
           },
           {
             "id": "b",
-            "text": "YOU has already pinched"
+            "text": "YOU have already pinched"
           },
           {
             "id": "c",
@@ -170,14 +168,14 @@
       {
         "id": "exp26b-u15-001-q4",
         "type": "position",
-        "prompt": "Move YOU to a conservative high position with D2 visible.",
+        "prompt": "Move YOU nearer the blue line to compare high support.",
         "actorId": "h1",
         "reference": {
           "x": 10.5,
           "y": 7.2
         },
         "basis": "coaching",
-        "explanation": "This keeps YOU near the line while preserving the high support relationship."
+        "explanation": "The example stays separated from D2 and the loose-puck contest. Recheck the next puck owner and recovery space."
       },
       {
         "id": "exp26b-u15-001-q5",
@@ -208,19 +206,19 @@
         "type": "explain",
         "prompt": "Which three cues make this pinch supported rather than merely aggressive?",
         "basis": "coaching",
-        "explanation": "Name D2 as the cover, the reachable puck route, and the recovery lane. If either support cue disappears, keep the blue line protected."
+        "explanation": "Name D2 as the cover, the reachable puck route, and the recovery lane. If any of these support cues disappears, keep the blue line protected."
       }
     ]
   },
   {
     "id": "exp26b-u15-002",
-    "version": 1,
+    "version": 2,
     "ageBand": "U15",
     "title": "Draw one penalty killer",
     "family": "powerplay-draw-out",
     "topic": "Power-play support",
     "objective": "Move the puck to shift one penalty killer while keeping a second receiver available.",
-    "briefing": "Navy attacks the Gold net on a power play. YOU has the puck near the right half wall; F2 is low, F3 is inside, and Gold 1 is between YOU and F2. The scene gives a local passing choice, not a prescribed formation.",
+    "briefing": "Navy attacks the right net. YOU have the puck in a wide lane. F2 is nearer the goal line and F3 is inside. Gold 1 is near the passing route toward F3. Gold D1 is nearer the blue line; the scene does not prescribe a formation.",
     "setup": {
       "actors": [
         {
@@ -284,9 +282,9 @@
     },
     "focusActorId": "h1",
     "cues": [
-      "YOU owns the puck at the half wall.",
-      "Gold 1 sits between YOU and F2.",
-      "F3 is an inside receiver."
+      "YOU have the puck in a wide lane.",
+      "F2 is nearer the goal line and F3 is inside.",
+      "Gold 1 is near the passing route toward F3."
     ],
     "tags": [
       "experimental",
@@ -334,7 +332,7 @@
         "options": [
           {
             "id": "a",
-            "text": "Gold 1's position relative to F2"
+            "text": "Gold 1’s position relative to both receivers"
           },
           {
             "id": "b",
@@ -342,7 +340,7 @@
           },
           {
             "id": "c",
-            "text": "The power play fixes every receiver in place"
+            "text": "Assuming the same receiver is always open"
           }
         ],
         "answer": [
@@ -355,7 +353,7 @@
       {
         "id": "exp26b-u15-002-q3",
         "type": "sequence",
-        "prompt": "Arrange a local power-play read.",
+        "prompt": "Arrange one local passing read.",
         "options": [
           {
             "id": "a",
@@ -363,7 +361,7 @@
           },
           {
             "id": "b",
-            "text": "Move the puck to change the coverage"
+            "text": "Use a pass only if its route is available"
           },
           {
             "id": "c",
@@ -376,19 +374,19 @@
           "c"
         ],
         "basis": "coaching",
-        "explanation": "The pass is a tool to move coverage, then the new lane must be read again."
+        "explanation": "Locate pressure and support, choose an available pass, then reassess. A pass may affect coverage but does not force a specific response."
       },
       {
         "id": "exp26b-u15-002-q4",
         "type": "position",
-        "prompt": "Move YOU a little toward the blue line along the half wall to compare a different diagonal to F3.",
+        "prompt": "Move YOU toward the blue line to compare a passing angle toward F3.",
         "actorId": "h1",
         "reference": {
           "x": 16,
           "y": 9
         },
         "basis": "coaching",
-        "explanation": "Backing along the wall changes the diagonal around Gold 1 while keeping both receivers in view. It illustrates an angle change, not a guaranteed open pass; recheck the defender and F3 before using it."
+        "explanation": "The example changes the diagonal to F3 while leaving F2 separate. Check Gold 1 and the receiver before passing."
       },
       {
         "id": "exp26b-u15-002-q5",
@@ -425,13 +423,13 @@
   },
   {
     "id": "exp26b-u15-003",
-    "version": 1,
+    "version": 2,
     "ageBand": "U15",
     "title": "Shift the penalty kill toward the new side",
     "family": "pk-side-shift",
     "topic": "Penalty-kill coverage",
     "objective": "Exchange a flank responsibility while keeping the slot protected.",
-    "briefing": "Gold attacks the Navy net on a penalty play. YOU is low on the right side, D1 protects inside, and Gold 1 has the puck high left. Gold 2 is opposite and can become the next receiver.",
+    "briefing": "Gold attacks Navy’s left net with five skaters against four. YOU are on the opposite side of the middle from the puck. D1 is on the puck side, and the coach asks YOU to compare inside coverage while teammates pressure the carrier.",
     "setup": {
       "actors": [
         {
@@ -453,25 +451,25 @@
           "facing": 1
         },
         {
-          "id": "a1",
+          "id": "h3",
           "label": "F1",
-          "team": "away",
+          "team": "home",
           "role": "skater",
           "x": -16,
           "y": 5,
           "facing": 1.9
         },
         {
-          "id": "a2",
+          "id": "h4",
           "label": "F2",
-          "team": "away",
+          "team": "home",
           "role": "skater",
           "x": -15,
           "y": -3,
           "facing": 1.8
         },
         {
-          "id": "a3",
+          "id": "a1",
           "label": "A1",
           "team": "away",
           "role": "skater",
@@ -480,7 +478,7 @@
           "facing": 3.1
         },
         {
-          "id": "a4",
+          "id": "a2",
           "label": "A2",
           "team": "away",
           "role": "skater",
@@ -489,13 +487,31 @@
           "facing": 0.5
         },
         {
-          "id": "a5",
+          "id": "a3",
           "label": "A3",
           "team": "away",
           "role": "skater",
           "x": -20,
           "y": 0,
           "facing": 1.4
+        },
+        {
+          "id": "a4",
+          "label": "A4",
+          "team": "away",
+          "role": "skater",
+          "x": -12,
+          "y": 1,
+          "facing": 2.16
+        },
+        {
+          "id": "a5",
+          "label": "A5",
+          "team": "away",
+          "role": "skater",
+          "x": -17,
+          "y": -9,
+          "facing": 1.62
         }
       ],
       "puck": {
@@ -504,9 +520,8 @@
     },
     "focusActorId": "h1",
     "cues": [
-      "Gold 1 has the puck high left.",
-      "D1 is inside support.",
-      "YOU is responsible for a changing low-side relationship."
+      "YOU are on the opposite side of the middle from the puck.",
+      "D1 is on the puck side, and the coach asks YOU to compare inside coverage while teammates pressure the carrier."
     ],
     "tags": [
       "experimental",
@@ -526,7 +541,7 @@
       {
         "id": "exp26b-u15-003-q1",
         "type": "choice",
-        "prompt": "Which team is YOU defending in this setup?",
+        "prompt": "Which team has the puck in this setup?",
         "options": [
           {
             "id": "a",
@@ -545,7 +560,7 @@
           "b"
         ],
         "basis": "scene",
-        "explanation": "YOU is navy and Gold has the puck, so this is a defensive read."
+        "explanation": "Gold has the puck, so Navy is defending and Gold is attacking."
       },
       {
         "id": "exp26b-u15-003-q2",
@@ -558,7 +573,7 @@
           },
           {
             "id": "b",
-            "text": "Gold 2's new receiving lane"
+            "text": "The new receiver’s lane when the puck changes sides"
           },
           {
             "id": "c",
@@ -596,24 +611,24 @@
           "c"
         ],
         "basis": "coaching",
-        "explanation": "The shift preserves the slot while the puck and receiver move across the picture."
+        "explanation": "Naming the puck side and slot gives YOU a reference point, and re-checking the opposite receiver can start as soon as the exchange begins rather than waiting for it to finish -- these reads overlap. Re-checking the opposite receiver still comes last in this list because it confirms the new coverage only after the low-side relationship has actually changed hands."
       },
       {
         "id": "exp26b-u15-003-q4",
         "type": "position",
-        "prompt": "Move YOU to a more central low-slot cover position.",
+        "prompt": "Move YOU nearer the middle to compare low-slot cover.",
         "actorId": "h1",
         "reference": {
           "x": -21,
           "y": -2.2
         },
         "basis": "coaching",
-        "explanation": "This places YOU nearer the inside lane and keeps the puck side in view."
+        "explanation": "The example moves YOU nearer the inside lane and closer to Gold 3. Recheck the carrier and other attackers before changing coverage."
       },
       {
         "id": "exp26b-u15-003-q5",
         "type": "choice",
-        "prompt": "Gold passes across to Gold 2. What should you check first?",
+        "prompt": "Gold passes across to Gold 5. What should YOU check first?",
         "options": [
           {
             "id": "a",
@@ -639,19 +654,19 @@
         "type": "explain",
         "prompt": "Why can a penalty kill not cover every pass at once?",
         "basis": "coaching",
-        "explanation": "Players must protect the most dangerous reachable lane and communicate exchanges. When Gold moves the puck, the coverage relationship changes and needs a new scan."
+        "explanation": "Four Navy skaters face five Gold skaters, so they must prioritize and communicate. Recheck the immediate threats rather than claiming every pass is covered."
       }
     ]
   },
   {
     "id": "exp26b-u15-004",
-    "version": 1,
+    "version": 2,
     "ageBand": "U15",
     "title": "Recover the power-play draw",
     "family": "powerplay-draw-recovery",
     "topic": "Special-teams faceoff",
     "objective": "Read possession after a power-play draw before choosing retrieval or support.",
-    "briefing": "Navy attacks the Gold net on a power play. The draw has sent the puck loose near the right circle; YOU is closest, F2 is low support, and Gold 1 closes from above.",
+    "briefing": "Navy attacks the right net on a power play, five skaters against four. After the draw, the puck is loose near the circle. Gold 1 is closer to it than YOU; F2 is nearer the blue line. No player controls it yet.",
     "setup": {
       "actors": [
         {
@@ -682,16 +697,25 @@
           "facing": 1.9
         },
         {
-          "id": "a1",
+          "id": "h4",
           "label": "D1",
-          "team": "away",
+          "team": "home",
           "role": "skater",
           "x": 11,
           "y": 4,
           "facing": 0.2
         },
         {
-          "id": "a2",
+          "id": "h5",
+          "label": "D2",
+          "team": "home",
+          "role": "skater",
+          "x": 11,
+          "y": -6,
+          "facing": 0.88
+        },
+        {
+          "id": "a1",
           "label": "A1",
           "team": "away",
           "role": "skater",
@@ -700,13 +724,31 @@
           "facing": 2.3
         },
         {
-          "id": "a3",
+          "id": "a2",
           "label": "A2",
           "team": "away",
           "role": "skater",
           "x": 23,
           "y": -1,
           "facing": 1.8
+        },
+        {
+          "id": "a3",
+          "label": "A3",
+          "team": "away",
+          "role": "skater",
+          "x": 17,
+          "y": -4,
+          "facing": 1.19
+        },
+        {
+          "id": "a4",
+          "label": "A4",
+          "team": "away",
+          "role": "skater",
+          "x": 14,
+          "y": 2,
+          "facing": 0.52
         }
       ],
       "puck": {
@@ -717,9 +759,9 @@
     },
     "focusActorId": "h1",
     "cues": [
-      "The puck is loose after the draw.",
-      "YOU is nearest the puck.",
-      "Gold 1 is closing from above."
+      "After the draw, the puck is loose near the circle.",
+      "Gold 1 is closer to it than YOU; F2 is nearer the blue line.",
+      "No player controls it yet."
     ],
     "tags": [
       "experimental",
@@ -743,7 +785,7 @@
         "options": [
           {
             "id": "a",
-            "text": "Yes, YOU owns it"
+            "text": "Yes, YOU own it"
           },
           {
             "id": "b",
@@ -809,24 +851,24 @@
           "c"
         ],
         "basis": "coaching",
-        "explanation": "The route begins with the actual loose puck and updates after control."
+        "explanation": "Finding the puck and approaching under control can overlap, since the read continues while YOU close the distance; it is not a stop-then-look sequence. Checking F2 and the exit again comes last in this list because it confirms the actual outcome only once control (or the lack of it) is settled."
       },
       {
         "id": "exp26b-u15-004-q4",
         "type": "position",
-        "prompt": "Move YOU to an approach angle near the puck-side circle with F2 visible.",
+        "prompt": "Move YOU nearer the loose puck to compare an approach angle.",
         "actorId": "h1",
         "reference": {
           "x": 20.5,
           "y": 7.2
         },
         "basis": "coaching",
-        "explanation": "This point approaches the puck while leaving F2 and Gold 1 in the scene."
+        "explanation": "The example is nearer the puck, but Gold 1 is also close. Check reach and F2 before assuming a retrieval."
       },
       {
         "id": "exp26b-u15-004-q5",
         "type": "choice",
-        "prompt": "Gold 1 reaches the puck first. What is useful now?",
+        "prompt": "Gold 1 gains clear control first. What is useful now?",
         "options": [
           {
             "id": "a",
@@ -845,7 +887,7 @@
           "a"
         ],
         "basis": "coaching",
-        "explanation": "Gold possession changes the job. Re-scan the carrier and the next defensive lane."
+        "explanation": "Confirmed Gold possession changes the puck threat. Coordinate pressure and support using the new carrier; arriving first alone would not establish control."
       },
       {
         "id": "exp26b-u15-004-q6",
@@ -858,13 +900,13 @@
   },
   {
     "id": "exp26b-u15-005",
-    "version": 2,
+    "version": 3,
     "ageBand": "U15",
     "title": "Replace high support after entry",
     "family": "entry-support-replace",
     "topic": "Zone-entry support",
     "objective": "Fill a changed high support role without crowding the puck carrier.",
-    "briefing": "Navy attacks Gold’s net. After F2 receives the entry pass, YOU are on the wall side of F2 and F3 supports lower in the zone. Gold 1 and Gold 2 defend inside while D1 is nearer the blue line. The next support job depends on F2 and those defenders.",
+    "briefing": "Navy attacks the right net. YOU made the entry pass to F2 and now support from a wide lane. F3 is nearer the goal line. Gold 1 and Gold 2 defend inside, while Gold D1 is nearer the blue line. The coach asks YOU to compare support behind F2 toward the blue line.",
     "setup": {
       "actors": [
         {
@@ -928,9 +970,9 @@
     },
     "focusActorId": "h1",
     "cues": [
-      "F2 owns the puck after the stated entry pass.",
-      "YOU is the high support option.",
-      "Gold has two inside defenders."
+      "YOU made the entry pass to F2 and now support from a wide lane.",
+      "F3 is nearer the goal line.",
+      "Gold 1 and Gold 2 defend inside, while Gold D1 is nearer the blue line."
     ],
     "tags": [
       "experimental",
@@ -1020,19 +1062,19 @@
           "c"
         ],
         "basis": "coaching",
-        "explanation": "The support lane is useful only if it remains reachable from F2."
+        "explanation": "Finding F2 and the inside coverage can overlap with skating to the new lane; a player keeps scanning while moving. The final re-check still comes last because it depends on where the play has actually gone once the lane is offered."
       },
       {
         "id": "exp26b-u15-005-q4",
         "type": "position",
-        "prompt": "Move YOU into a high-slot support example after F2 receives.",
+        "prompt": "Move YOU behind F2 toward the blue line to compare high support.",
         "actorId": "h1",
         "reference": {
-          "x": 20.5,
+          "x": 15,
           "y": 4
         },
         "basis": "coaching",
-        "explanation": "This gives F2 a higher connection while keeping the defenders visible."
+        "explanation": "The example is closer to the blue line than F2 and stays separate from the carrier. Check the gold defenders before offering the pass."
       },
       {
         "id": "exp26b-u15-005-q5",
@@ -1063,7 +1105,7 @@
         "type": "explain",
         "prompt": "Which support space did YOU fill, and what route does it leave F2?",
         "basis": "coaching",
-        "explanation": "A separated high-slot lane gives F2 a visible outlet or room to carry. If Gold closes it, re-offer from another reachable angle."
+        "explanation": "Describe the high-slot relationship and a possible return route for F2. The example does not prove that an outlet is visible or reachable; if Gold closes the lane, re-offer from another checked angle."
       }
     ]
   },

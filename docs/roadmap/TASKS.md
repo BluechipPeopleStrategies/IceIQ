@@ -1,6 +1,6 @@
 # RinkReads — Task List
 
-**Last updated:** 2026-09-06 · Packet 20: 30 question versions repaired across five scenarios after source and independent checks. Packets 01–19 remain live while packet 20 release verification runs. Supabase remains outside this packet work.
+**Last updated:** 2026-09-06 · Packets 21–34: 404 question versions repaired across 68 scenes from 572 reviewed records. Initial AI review failures are recorded with final exact-content rechecks. Release verification is in progress; packets 01–20 remain live. Supabase is outside this work.
 
 **Scope:** RinkReads **app build + content factory**. Launch/distribution (sending the beta, marketing) and the separate BlueChip business are **out of scope** — parked at the bottom. Priority = position in this list. A new idea that isn't here goes to the **Parking Lot** first, then gets promoted on purpose — that's the scope-creep guard.
 
@@ -56,6 +56,8 @@
 - *(New ideas land here first, then get promoted into NEXT/LATER on purpose.)*
 
 ## Changelog
+
+- 2026-09-06 · Packets 21–34: 404 question versions repaired across 68 scenes from 572 reviewed records. Initial AI review failures are recorded with final exact-content rechecks. Release verification is in progress; packets 01–20 remain live. Supabase is outside this work.
 
 - 2026-09-06 · Packet 20: 30 question versions repaired across five scenarios after source and independent checks. Packets 01–19 remain live while packet 20 release verification runs. Supabase remains outside this packet work.
 
