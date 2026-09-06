@@ -2,6 +2,7 @@ import React, { useRef } from "react";
 import { useFrame } from "@react-three/fiber";
 import * as THREE from "three";
 import { Arena, Ice, Goal } from "../one-on-one/PracticeScene.jsx";
+import { roundedRinkShape } from "../one-on-one/rinkMaterials.js";
 import { GymRinkCamera } from "./gymRinkScene3D.jsx";
 import {
   pixelToWorldPoint,

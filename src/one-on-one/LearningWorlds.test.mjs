@@ -8,7 +8,7 @@ const cache = new URL('../../node_modules/.cache/learning-worlds/', import.meta.
 mkdirSync(cache, { recursive: true });
 const coreOutput = new URL('core.mjs', cache);
 await build({ entryPoints: [fileURLToPath(new URL('./learningWorldsCore.js', import.meta.url))], outfile: fileURLToPath(coreOutput), bundle: true, packages: 'external', platform: 'node', format: 'esm', logLevel: 'silent' });
-const { getLearningWorlds, missionAvailability, LEARNING_ACTIVITIES } = await import(coreOutput.href);
+const { getLearningWorlds, missionAvailability, LEARNING_ACTIVITIES, learningActivitiesForAge } = await import(coreOutput.href);
 const ledger = JSON.parse(readFileSync(new URL('../data/curriculum-ledger.json', import.meta.url), 'utf8'));
 const pack = JSON.parse(readFileSync(new URL('./curriculum-draft.json', import.meta.url), 'utf8'));
 
@@ -113,8 +113,8 @@ test('selecting worlds reveals actual missions, real actions, and no invented co
     component.clickWhere(node => node.props['data-mission-id'] === 'scanning');
     component.clickWhere(node => node.props['data-lesson-id'] === 'practice-draft-u11-check-both-sides');
     assert.deepEqual(component.navigations.at(-1), { tab: 'learn', learn: 'guided', ageBand: 'U11', lessonId: 'practice-draft-u11-check-both-sides' });
-    for (const activity of LEARNING_ACTIVITIES) component.clickWhere(node => node.props['data-activity-id'] === activity.id);
-    assert.equal(component.navigations.length, 8);
+    for (const activity of learningActivitiesForAge('U11')) component.clickWhere(node => node.props['data-activity-id'] === activity.id);
+    assert.equal(component.navigations.length, 7);
   } finally { if (original === undefined) delete globalThis.localStorage; else globalThis.localStorage = original; }
 });
 
@@ -148,4 +148,21 @@ test('a home deep link opens the requested real world with a safe fallback for a
   assert.match(linked.text(), /Manage the space in front/);
   const invalid = mount({ initialWorldId: 'invented' });
   assert.equal(invalid.all(node => node.props['data-world-id'] === 'hockey-sense' && node.props['aria-pressed']).length, 1);
+});
+
+test('older age pathways promote decisions rather than beginner rink discovery', () => {
+ for(const age of ['U11','U13','U15','U18','U15 / Bantam']) {
+  const activities=learningActivitiesForAge(age);
+  assert.ok(!activities.some(a=>a.id==='discover'));
+  assert.ok(activities.some(a=>a.id==='library'));
+  assert.ok(activities.some(a=>a.id==='choose'));
+ }
+ for(const age of ['U7','U9','U9 / Novice']) assert.ok(learningActivitiesForAge(age).some(a=>a.id==='discover'));
+});
+
+test('U11 and older world views do not send missing missions to rink discovery', () => {
+ for(const ageBand of ['U11','U13','U15','U18']) {
+  const view=mount({ageBand});
+  assert.doesNotMatch(view.text(), /Explore the rink|Get to know the ice/);
+ }
 });

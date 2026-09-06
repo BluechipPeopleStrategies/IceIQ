@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "status": "experimental-not-approved",
-  "generatedAt": "2026-09-06T03:11:37.859Z",
+  "generatedAt": "2026-09-06T03:31:08.754Z",
   "counts": {
     "scenarios": 200,
     "questions": 1600
@@ -10056,13 +10056,13 @@
     },
     {
       "id": "exp26b-u9-008",
-      "version": 1,
+      "version": 2,
       "ageBand": "U9",
-      "title": "Protect the puck beside the boards",
+      "title": "Protect the puck away from pressure",
       "family": "board-puck-protection",
       "topic": "Puck control",
-      "objective": "Use the board side and a support player to protect a carry under pressure.",
-      "briefing": "Navy attacks the +x end and gold attacks the -x end. YOU control the puck beside the boards in the attacking end. Gold1 approaches from the middle. Navy2 waits inside near the faceoff circle. The coach asks you to protect, then look inside.",
+      "objective": "Protect the puck from an approaching opponent and look for support.",
+      "briefing": "Navy attacks the +x end and gold attacks the -x end. YOU control the puck in the attacking zone. Gold1 is three metres behind YOU along the length of the rink and is approaching. Navy2 waits closer to the middle across the ice. The coach asks YOU to keep the puck away from Gold1 and look for support.",
       "setup": {
         "actors": [
           {
@@ -10099,9 +10099,9 @@
       },
       "focusActorId": "home-skater-1",
       "cues": [
-        "YOU control the puck by the boards.",
-        "Gold1 approaches from inside.",
-        "Navy2 waits near the faceoff circle."
+        "YOU control the puck in the attacking zone.",
+        "Gold1 is approaching from farther back along the rink.",
+        "Navy2 is closer to the middle across the ice."
       ],
       "tags": [
         "boards",
@@ -10150,7 +10150,7 @@
             "a"
           ],
           "basis": "scene",
-          "explanation": "YOU are the puck owner by the boards. Gold1 is pressure and Navy2 is support."
+          "explanation": "YOU control the puck. Gold1 is nearby pressure and Navy2 is a possible support option."
         },
         {
           "id": "exp26b-u9-008-q2",
@@ -10159,15 +10159,15 @@
           "options": [
             {
               "id": "a",
-              "text": "Gold1 coming from inside"
+              "text": "Gold1 approaching from farther back along the rink"
             },
             {
               "id": "b",
-              "text": "Navy2 near the circle"
+              "text": "Navy2 waiting closer to the middle"
             },
             {
               "id": "c",
-              "text": "A guaranteed board escape"
+              "text": "A guaranteed escape"
             }
           ],
           "answer": [
@@ -10180,19 +10180,19 @@
         {
           "id": "exp26b-u9-008-q3",
           "type": "position",
-          "prompt": "Place YOU a little closer to the boards with Gold1 in view.",
+          "prompt": "Move YOU farther from Gold1 while keeping track of the defender.",
           "actorId": "home-skater-1",
           "reference": {
             "x": 23,
             "y": 7
           },
           "basis": "coaching",
-          "explanation": "This example gives YOU board-side protection while keeping the defender visible. A safe position depends on the live lane."
+          "explanation": "The example increases separation from Gold1. Keep the puck away from the defender and check Navy2 before choosing the next action. This position alone does not prove protection or a clear escape."
         },
         {
           "id": "exp26b-u9-008-q4",
           "type": "sequence",
-          "prompt": "Arrange this board-side read.",
+          "prompt": "Arrange one puck-protection read.",
           "options": [
             {
               "id": "a",
@@ -10218,7 +10218,7 @@
         {
           "id": "exp26b-u9-008-q5",
           "type": "choice",
-          "prompt": "Gold1 reaches the boards. What could YOU try?",
+          "prompt": "Gold1 moves to cover the route toward the side boards. What could YOU try?",
           "options": [
             {
               "id": "a",
@@ -10237,14 +10237,14 @@
             "a"
           ],
           "basis": "coaching",
-          "explanation": "Gold1 changed the board-side lane. Navy2 or another clear lane may now be safer, depending on the new pressure."
+          "explanation": "If Gold1 covers that route, check Navy2 or another clear lane. Protecting, carrying or passing depends on the new pressure."
         },
         {
           "id": "exp26b-u9-008-q6",
           "type": "explain",
-          "prompt": "Why can the boards help protect the puck?",
+          "prompt": "How can YOU protect the puck while looking for Navy2?",
           "basis": "coaching",
-          "explanation": "The boards give pressure fewer directions to reach from, while YOU can keep your body between Gold1 and the puck. You still need to see Navy2 and the changing lane."
+          "explanation": "Keep the puck away from Gold1, use your body to shield it when possible, and keep checking for Navy2 or clear space. A position on this board does not prove successful protection."
         }
       ]
     },
@@ -10453,13 +10453,13 @@
     },
     {
       "id": "exp26b-u9-010",
-      "version": 1,
+      "version": 2,
       "ageBand": "U9",
       "title": "Support the breakout side",
       "family": "breakout-support",
       "topic": "Off-puck support",
       "objective": "Choose a support lane that helps a carrier exit pressure near the defending end.",
-      "briefing": "Navy attacks the +x end and gold attacks the -x end. Navy2 has the puck near the navy end boards. YOU are below the puck. Gold1 is between the carrier and the middle. Navy3 waits near the blue line. The coach asks you to become a safe outlet.",
+      "briefing": "Navy attacks the +x end and gold attacks the -x end. Navy2 has the puck in the defending end, off to one side. YOU are closer to the side boards than Navy2. Gold1 is ahead of Navy2 along the rink. Navy3 waits farther ahead, toward the neutral zone. The coach asks you to become a safe outlet.",
       "setup": {
         "actors": [
           {
@@ -10505,9 +10505,9 @@
       },
       "focusActorId": "home-skater-1",
       "cues": [
-        "Navy2 has the puck near the navy end boards.",
-        "Gold1 sits between Navy2 and the middle.",
-        "Navy3 waits near the blue line."
+        "Navy2 has the puck in the defending end.",
+        "Gold1 is ahead of Navy2 along the rink.",
+        "Navy3 is farther toward the neutral zone."
       ],
       "tags": [
         "breakout",
@@ -10537,7 +10537,7 @@
         {
           "id": "exp26b-u9-010-q1",
           "type": "choice",
-          "prompt": "Who has the puck near the boards?",
+          "prompt": "Who has the puck in the defending end?",
           "options": [
             {
               "id": "a",
@@ -10565,11 +10565,11 @@
           "options": [
             {
               "id": "a",
-              "text": "Gold1 between Navy2 and middle ice"
+              "text": "Gold1 ahead of Navy2 along the rink"
             },
             {
               "id": "b",
-              "text": "Navy3 near the blue line"
+              "text": "Navy3 farther toward the neutral zone"
             },
             {
               "id": "c",
@@ -10581,19 +10581,19 @@
             "b"
           ],
           "basis": "scene",
-          "explanation": "Gold1's position makes the middle lane harder, and Navy3 is a visible higher option. The route must adapt to pressure."
+          "explanation": "Gold1 is ahead of Navy2, while Navy3 is farther toward the neutral zone. Check the defender and the available passing angles before offering support."
         },
         {
           "id": "exp26b-u9-010-q3",
           "type": "position",
-          "prompt": "Place YOU between Navy2 and the lower-side space, where the carrier can see you.",
+          "prompt": "Place YOU closer to the side boards on a different angle from Navy2.",
           "actorId": "home-skater-1",
           "reference": {
             "x": -19,
             "y": -9
           },
           "basis": "coaching",
-          "explanation": "This example gives Navy2 a lower-side outlet while keeping YOU away from Gold1's middle line. Another clear support lane can work."
+          "explanation": "This example offers a board-side angle away from Gold1. Check whether Navy2 can see and reach YOU; another clear support lane may work."
         },
         {
           "id": "exp26b-u9-010-q4",
@@ -10624,7 +10624,7 @@
         {
           "id": "exp26b-u9-010-q5",
           "type": "choice",
-          "prompt": "Gold1 turns toward your outlet. What might Navy2 use?",
+          "prompt": "Gold1 moves into YOUR outlet lane. What might Navy2 use?",
           "options": [
             {
               "id": "a",
@@ -10648,21 +10648,21 @@
         {
           "id": "exp26b-u9-010-q6",
           "type": "explain",
-          "prompt": "Why can a lower outlet help the carrier?",
+          "prompt": "Why can a board-side outlet help Navy2?",
           "basis": "coaching",
-          "explanation": "Gold1 is between Navy2 and the middle, so a lower-side option can give the carrier a different angle. The carrier still has to check whether YOU remain open."
+          "explanation": "A different angle can offer another choice around Gold1. Navy2 still needs to check whether YOU are reachable and the lane stays clear."
         }
       ]
     },
     {
       "id": "exp26b-u9-011",
-      "version": 1,
+      "version": 2,
       "ageBand": "U9",
       "title": "Read the loose puck after a block",
       "family": "blocked-pass-recovery",
       "topic": "Puck recovery",
       "objective": "Update ownership and support after a defender blocks a pass.",
-      "briefing": "Navy attacks the +x end and gold attacks the -x end. Navy2 tried to pass to YOU, but Gold1 touched the puck and it is loose. YOU are nearest the puck. Navy3 is open on the far side. Gold2 is behind YOU.",
+      "briefing": "Navy attacks the +x end and gold attacks the -x end. Navy2 tried to pass to YOU, but Gold1 touched the puck and it is loose. Gold1 is slightly closer to the loose puck than YOU. Navy3 waits farther across the ice, beyond Gold1. Gold2 is off to your side, so check that player too.",
       "setup": {
         "actors": [
           {
@@ -10719,9 +10719,9 @@
       },
       "focusActorId": "home-skater-1",
       "cues": [
-        "Gold1 touched the pass.",
-        "The puck is loose.",
-        "Navy3 is on the far side and Gold2 is behind YOU."
+        "Gold1 touched the pass; the puck is loose.",
+        "Gold1 is slightly closer to the puck than YOU.",
+        "Navy3 waits beyond Gold1 across the ice; Gold2 is on the other side."
       ],
       "tags": [
         "blocked-pass",
@@ -10783,7 +10783,7 @@
             },
             {
               "id": "b",
-              "text": "Gold2 behind you"
+              "text": "Gold2 off to your side"
             },
             {
               "id": "c",
@@ -10795,19 +10795,19 @@
             "b"
           ],
           "basis": "scene",
-          "explanation": "Gold1 is immediate pressure and Gold2 is behind YOU. The old pass no longer describes the puck state."
+          "explanation": "Gold1 is immediate pressure and Gold2 is off to the side, easy to miss without a scan. The old pass no longer describes the puck state."
         },
         {
           "id": "exp26b-u9-011-q3",
           "type": "position",
-          "prompt": "Place YOU near the puck with a view of Gold1.",
+          "prompt": "Place YOU near the loose puck and check Gold1 before the next touch.",
           "actorId": "home-skater-1",
           "reference": {
             "x": 6,
             "y": 2
           },
           "basis": "coaching",
-          "explanation": "This approaches the puck without losing the nearby defender. Another controlled position can work if both players stay visible."
+          "explanation": "This example brings YOU near the puck. Gold1 is nearby, so check the defender before reaching and do not assume YOU will win control. Another controlled approach may work."
         },
         {
           "id": "exp26b-u9-011-q4",
@@ -10833,7 +10833,7 @@
             "c"
           ],
           "basis": "coaching",
-          "explanation": "The block creates a new state. Locate it, read both pressure players, then identify support before touching or passing."
+          "explanation": "After the block, check the loose puck, both opponents and support. Navy3 is beyond Gold1, so a pass there needs a fresh lane check. These looks can overlap; react if Gold1 gains control first."
         },
         {
           "id": "exp26b-u9-011-q5",
@@ -10870,13 +10870,13 @@
     },
     {
       "id": "exp26b-u9-012",
-      "version": 1,
+      "version": 2,
       "ageBand": "U9",
       "title": "Help away from the puck",
       "family": "defensive-support",
       "topic": "Defending",
       "objective": "Support the defender near the puck while staying aware of the far-side attacker.",
-      "briefing": "Navy attacks the +x end and gold attacks the -x end. Gold1 carries the puck along the lower boards. Navy2 pressures Gold1. YOU are above the play, with Gold2 on the far side. The coach asks you to help without leaving Gold2 unseen.",
+      "briefing": "Navy attacks the +x end and gold attacks the -x end. Gold1 has the puck on the same side of the ice as YOU. Navy2 pressures Gold1. Gold2 is across the ice on the other side. Help Navy2 while keeping track of both gold players.",
       "setup": {
         "actors": [
           {
@@ -10922,9 +10922,9 @@
       },
       "focusActorId": "home-skater-1",
       "cues": [
-        "Gold1 carries low on the boards.",
-        "Navy2 pressures the puck.",
-        "Gold2 is on the far side."
+        "Gold1 has the puck on YOUR side of the ice.",
+        "Navy2 pressures Gold1.",
+        "Gold2 is across the ice on the other side."
       ],
       "tags": [
         "defending",
@@ -11003,14 +11003,14 @@
         {
           "id": "exp26b-u9-012-q3",
           "type": "position",
-          "prompt": "Place YOU between Gold2 and the navy end, with Gold1 visible.",
+          "prompt": "Move YOU toward the middle to help Navy2 while tracking Gold2.",
           "actorId": "home-skater-1",
           "reference": {
             "x": 11,
             "y": 3
           },
           "basis": "coaching",
-          "explanation": "This example brings YOU into a support line that can see the puck and far-side player. The moving play may call for a different lane."
+          "explanation": "This example moves YOU toward the middle across the ice. It is one support position, not proof that Gold2 is covered. Check Gold1, Gold2 and Navy2 before choosing a lane."
         },
         {
           "id": "exp26b-u9-012-q4",
@@ -11036,7 +11036,7 @@
             "c"
           ],
           "basis": "coaching",
-          "explanation": "Start with the puck carrier, then read the first defender, then see the away-side option. This prevents chasing the same player twice."
+          "explanation": "Check the carrier, Navy2 and Gold2 before deciding where to help. These looks can overlap. Avoid both navy players chasing Gold1 while losing track of Gold2."
         },
         {
           "id": "exp26b-u9-012-q5",
@@ -11049,7 +11049,7 @@
             },
             {
               "id": "b",
-              "text": "Stay above Gold2's old spot"
+              "text": "Keep watching only Gold2's old spot"
             },
             {
               "id": "c",
@@ -11073,13 +11073,13 @@
     },
     {
       "id": "exp26b-u9-013",
-      "version": 1,
+      "version": 2,
       "ageBand": "U9",
       "title": "Change roles after a lost puck",
       "family": "role-change-recovery",
       "topic": "Transition",
       "objective": "Recognize a teammate's loss and switch from support attack to defending.",
-      "briefing": "Navy attacks the +x end and gold attacks the -x end. Navy2 loses the puck near the attacking blue line. Gold1 collects it and turns back toward the navy end. YOU are beside the play; Navy3 is behind you.",
+      "briefing": "Navy attacks the +x end and gold attacks the -x end. Navy2 loses the puck well into the attacking zone. Gold1 collects it and turns back toward the navy end. YOU are beside the play; Navy3 is closer to the navy end, on the other side of the ice.",
       "setup": {
         "actors": [
           {
@@ -11125,9 +11125,9 @@
       },
       "focusActorId": "home-skater-1",
       "cues": [
-        "Gold1 collected the puck.",
-        "Gold1 turns toward the navy end.",
-        "YOU are beside the play and Navy3 is behind."
+        "Gold1 collected the puck and turns toward the navy end.",
+        "YOU are beside the play.",
+        "Navy3 is closer to the navy end on the other side of the ice."
       ],
       "tags": [
         "transition",
@@ -11137,13 +11137,6 @@
         "expansion"
       ],
       "sources": [
-        {
-          "id": "usah-u14-situational-roles",
-          "title": "USA Hockey: Culture and Coaching Tips with Grace Hoene",
-          "section": "Four situational roles",
-          "url": "https://www.usahockey.com/news_article/show/1093178",
-          "use": "Supports role changes based on possession and pressure; it does not prescribe a fixed youth system."
-        },
         {
           "id": "hc-u9-development",
           "title": "Hockey Canada: U9 Development Model",
@@ -11189,7 +11182,7 @@
             },
             {
               "id": "b",
-              "text": "Navy3 is behind you"
+              "text": "Navy3 is closer to the navy end"
             },
             {
               "id": "c",
@@ -11276,13 +11269,13 @@
     },
     {
       "id": "exp26b-u9-014",
-      "version": 1,
+      "version": 2,
       "ageBand": "U9",
       "title": "Use the faceoff circle as a search area",
       "family": "circle-search",
       "topic": "Rink awareness",
       "objective": "Use a named rink area to look for support while checking a defender.",
-      "briefing": "Navy attacks the +x end and gold attacks the -x end. YOU have the puck beside the attacking faceoff circle. Navy2 waits above the circle. Gold1 is between you and the net. The coach names the circle as a place to search, not a guaranteed pass spot.",
+      "briefing": "Navy attacks the +x end and gold attacks the -x end. YOU have the puck inside the attacking faceoff circle. Navy2 waits outside the circle, closer to the middle across the ice. Gold1 is between you and the net. The coach names the circle as a place to search, not a guaranteed pass spot.",
       "setup": {
         "actors": [
           {
@@ -11351,7 +11344,7 @@
         {
           "id": "exp26b-u9-014-q1",
           "type": "choice",
-          "prompt": "What named area is beside YOU?",
+          "prompt": "Which painted area are YOU inside?",
           "options": [
             {
               "id": "a",
@@ -11370,7 +11363,7 @@
             "a"
           ],
           "basis": "scene",
-          "explanation": "The briefing names the nearby painted area as a faceoff circle. It is a landmark for this practice."
+          "explanation": "YOU are inside the attacking faceoff circle. It is a landmark, not a guarantee of an open lane."
         },
         {
           "id": "exp26b-u9-014-q2",
@@ -11379,7 +11372,7 @@
           "options": [
             {
               "id": "a",
-              "text": "Navy2 above it"
+              "text": "Navy2 closer to the middle across the ice"
             },
             {
               "id": "b",
@@ -11407,7 +11400,7 @@
             "y": -4
           },
           "basis": "coaching",
-          "explanation": "This brings YOU toward the named search area while keeping Navy2 in view. A different clear place can work."
+          "explanation": "The example moves YOU within the circle toward Navy2. Check Gold1 and whether the next lane stays clear; another position may work."
         },
         {
           "id": "exp26b-u9-014-q4",
@@ -11470,13 +11463,13 @@
     },
     {
       "id": "exp26b-u9-015",
-      "version": 1,
+      "version": 2,
       "ageBand": "U9",
       "title": "Change the plan when the return lane closes",
       "family": "return-lane-change",
       "topic": "Passing",
       "objective": "Update support after a completed pass when the original return lane disappears.",
-      "briefing": "Navy attacks the +x end and gold attacks the -x end. YOU passed to Navy2 near the attacking end. Navy2 now controls the puck. Gold1 has moved onto the old return lane. Navy3 waits below with a clear-looking angle.",
+      "briefing": "Navy attacks the +x end and gold attacks the -x end. YOU passed to Navy2 near the attacking end. Navy2 now controls the puck. Gold1 has moved onto the old return lane. Navy3 waits closer to the side boards on a different angle.",
       "setup": {
         "actors": [
           {
@@ -11578,7 +11571,7 @@
         {
           "id": "exp26b-u9-015-q2",
           "type": "multi",
-          "prompt": "What changed after the pass?",
+          "prompt": "What shapes the new support read?",
           "options": [
             {
               "id": "a",
@@ -11586,7 +11579,7 @@
             },
             {
               "id": "b",
-              "text": "Navy3 waits below"
+              "text": "Navy3 waits closer to the side boards"
             },
             {
               "id": "c",
@@ -11603,14 +11596,14 @@
         {
           "id": "exp26b-u9-015-q3",
           "type": "position",
-          "prompt": "Place YOU below the old lane to support Navy2.",
+          "prompt": "Place YOU on Navy3's side of the ice, on a new angle to Navy2.",
           "actorId": "home-skater-1",
           "reference": {
             "x": 16,
             "y": -6
           },
           "basis": "coaching",
-          "explanation": "This example moves YOU away from Gold1 and toward a lower support angle. Another clear support position may work."
+          "explanation": "The example moves YOU off Gold1's old covered line. Recheck the lane to Navy2 and keep enough separation from Navy3. Another clear angle may work."
         },
         {
           "id": "exp26b-u9-015-q4",
@@ -11636,12 +11629,12 @@
             "c"
           ],
           "basis": "coaching",
-          "explanation": "The new carrier, covered lane, and lower teammate define the update. Moving creates another choice without promising a pass."
+          "explanation": "Find the new carrier, check Gold1 and Navy3, then offer another angle. Moving can create an option but does not promise a pass."
         },
         {
           "id": "exp26b-u9-015-q5",
           "type": "choice",
-          "prompt": "Gold1 also closes the lower angle. What could Navy2 do?",
+          "prompt": "Gold1 blocks YOUR new pass line. What could Navy2 do?",
           "options": [
             {
               "id": "a",
@@ -11653,14 +11646,14 @@
             },
             {
               "id": "c",
-              "text": "Assume YOU is open"
+              "text": "Assume YOU are open"
             }
           ],
           "answer": [
             "a"
           ],
           "basis": "coaching",
-          "explanation": "Both support lanes changed. A carry or another teammate can fit if the current space is clear; Navy2 should not repeat a covered pass."
+          "explanation": "If Gold1 covers YOUR new line, Navy2 can consider a carry or another clear teammate. Recheck Navy3 rather than assuming both support lanes are blocked."
         },
         {
           "id": "exp26b-u9-015-q6",
@@ -11673,7 +11666,7 @@
     },
     {
       "id": "exp26-u11-001",
-      "version": 1,
+      "version": 2,
       "ageBand": "U11",
       "title": "Look beyond the loose puck",
       "family": "retrieval-scan",
@@ -11863,7 +11856,7 @@
           "options": [
             {
               "id": "a",
-              "text": "D1 is above me; F2 may be the inside outlet"
+              "text": "D1 is farther up ice; F2 may be an outlet toward the middle"
             },
             {
               "id": "b",
@@ -11920,7 +11913,7 @@
         {
           "id": "exp26-u11-001-q10",
           "type": "explain",
-          "prompt": "D1 arrives above the puck while F2 drifts behind coverage. How does your first action change?",
+          "prompt": "D1 closes on the puck while F2 moves behind the defender. How could YOUR first action change?",
           "basis": "coaching",
           "explanation": "Connect the new pressure and lost outlet to a protected touch or wall-side escape, then name what you would scan before committing."
         }
@@ -12191,7 +12184,7 @@
     },
     {
       "id": "exp26-u11-003",
-      "version": 1,
+      "version": 2,
       "ageBand": "U11",
       "title": "Step out of the shaded lane",
       "family": "support-angle",
@@ -12388,7 +12381,7 @@
           "options": [
             {
               "id": "a",
-              "text": "I will re-offer above the line; check whether you can reach me"
+              "text": "I will offer a different angle; check whether you can reach me"
             },
             {
               "id": "b",
@@ -52186,78 +52179,78 @@
       "scenarioId": "exp26b-u9-008",
       "questionId": "exp26b-u9-008-q1",
       "age": "U9",
-      "title": "Protect the puck beside the boards",
+      "title": "Protect the puck away from pressure",
       "topic": "Puck control",
       "family": "board-puck-protection",
       "type": "choice",
       "prompt": "Who controls the puck?",
-      "explanation": "YOU are the puck owner by the boards. Gold1 is pressure and Navy2 is support.",
-      "hash": "bb4206a77fa380956ea99637d6e8ceb2c1063f5be0f9abed824eace73cc40f0b",
+      "explanation": "YOU control the puck. Gold1 is nearby pressure and Navy2 is a possible support option.",
+      "hash": "f898fa349f802125ae785267526121c18827a4ebb09262560f65d51096e0d925",
       "review": "no-open-ai-finding"
     },
     {
       "scenarioId": "exp26b-u9-008",
       "questionId": "exp26b-u9-008-q2",
       "age": "U9",
-      "title": "Protect the puck beside the boards",
+      "title": "Protect the puck away from pressure",
       "topic": "Puck control",
       "family": "board-puck-protection",
       "type": "multi",
       "prompt": "What should shape your next touch?",
       "explanation": "Gold1's approach and Navy2's location show the pressure and support picture. No escape is guaranteed.",
-      "hash": "734002dff531624cdc4361a79552c12436ad1b01058d75f1d988c1f2b839cd11",
+      "hash": "7529df63be69fe403d16a3e7e01c05d8b2966b067c27f55ddefcd134bcd5bc3b",
       "review": "no-open-ai-finding"
     },
     {
       "scenarioId": "exp26b-u9-008",
       "questionId": "exp26b-u9-008-q3",
       "age": "U9",
-      "title": "Protect the puck beside the boards",
+      "title": "Protect the puck away from pressure",
       "topic": "Puck control",
       "family": "board-puck-protection",
       "type": "position",
-      "prompt": "Place YOU a little closer to the boards with Gold1 in view.",
-      "explanation": "This example gives YOU board-side protection while keeping the defender visible. A safe position depends on the live lane.",
-      "hash": "32df7678b850f1d73433b9b62358c80f76369910ca0346cb222ccb796c27d2d6",
+      "prompt": "Move YOU farther from Gold1 while keeping track of the defender.",
+      "explanation": "The example increases separation from Gold1. Keep the puck away from the defender and check Navy2 before choosing the next action. This position alone does not prove protection or a clear escape.",
+      "hash": "b5cbe9fe64a6bbcca55700ef1410dd5ffbced91d69edfa5928f073bda4567433",
       "review": "no-open-ai-finding"
     },
     {
       "scenarioId": "exp26b-u9-008",
       "questionId": "exp26b-u9-008-q4",
       "age": "U9",
-      "title": "Protect the puck beside the boards",
+      "title": "Protect the puck away from pressure",
       "topic": "Puck control",
       "family": "board-puck-protection",
       "type": "sequence",
-      "prompt": "Arrange this board-side read.",
+      "prompt": "Arrange one puck-protection read.",
       "explanation": "Read where pressure comes from, protect away from it, then scan for Navy2 or space. The choices connect the named players to the puck.",
-      "hash": "3f4452a676484470d09bfc7f587fe855a21024f19a13116f8efbb57579a539e8",
+      "hash": "f05d69e1658d34d6672a0ddba48f638601961d41c87ab0f2c0fdf5691aaa7521",
       "review": "no-open-ai-finding"
     },
     {
       "scenarioId": "exp26b-u9-008",
       "questionId": "exp26b-u9-008-q5",
       "age": "U9",
-      "title": "Protect the puck beside the boards",
+      "title": "Protect the puck away from pressure",
       "topic": "Puck control",
       "family": "board-puck-protection",
       "type": "choice",
-      "prompt": "Gold1 reaches the boards. What could YOU try?",
-      "explanation": "Gold1 changed the board-side lane. Navy2 or another clear lane may now be safer, depending on the new pressure.",
-      "hash": "2808a9a6a7c7b5fb1ed54e399fd96ddc3c7ecc43e25f819e13c265cfeb004355",
+      "prompt": "Gold1 moves to cover the route toward the side boards. What could YOU try?",
+      "explanation": "If Gold1 covers that route, check Navy2 or another clear lane. Protecting, carrying or passing depends on the new pressure.",
+      "hash": "21871f4761ec6518f90d5cb54e1dd6717dca0aab31f772fb7b6a40b386ec25f4",
       "review": "no-open-ai-finding"
     },
     {
       "scenarioId": "exp26b-u9-008",
       "questionId": "exp26b-u9-008-q6",
       "age": "U9",
-      "title": "Protect the puck beside the boards",
+      "title": "Protect the puck away from pressure",
       "topic": "Puck control",
       "family": "board-puck-protection",
       "type": "explain",
-      "prompt": "Why can the boards help protect the puck?",
-      "explanation": "The boards give pressure fewer directions to reach from, while YOU can keep your body between Gold1 and the puck. You still need to see Navy2 and the changing lane.",
-      "hash": "0159dfdbb6d1e6bcfeb8a2c636dbc088896ad950eb7f012b1aa28a654d22f897",
+      "prompt": "How can YOU protect the puck while looking for Navy2?",
+      "explanation": "Keep the puck away from Gold1, use your body to shield it when possible, and keep checking for Navy2 or clear space. A position on this board does not prove successful protection.",
+      "hash": "0de00e052a7eb2fd1c183765c7749ae9e4e23d9a08f97f7997b25e2bcf93d6db",
       "review": "no-open-ai-finding"
     },
     {
@@ -52346,9 +52339,9 @@
       "topic": "Off-puck support",
       "family": "breakout-support",
       "type": "choice",
-      "prompt": "Who has the puck near the boards?",
+      "prompt": "Who has the puck in the defending end?",
       "explanation": "Navy2 controls the puck. YOU can become an outlet while Gold1 applies pressure.",
-      "hash": "e33e540c1164c15cb88a1226f33a8a6df37cabed3bf91244e8adfa6316f13b14",
+      "hash": "e9ee2f351c214d127088651573d6d8208dd0167391f244ced1a8ecd0d79b6558",
       "review": "no-open-ai-finding"
     },
     {
@@ -52360,8 +52353,8 @@
       "family": "breakout-support",
       "type": "multi",
       "prompt": "Which details help YOU support?",
-      "explanation": "Gold1's position makes the middle lane harder, and Navy3 is a visible higher option. The route must adapt to pressure.",
-      "hash": "b901673291964750c89fe464d9b3c581a2f9ff603229efac1b84f1172b70c56b",
+      "explanation": "Gold1 is ahead of Navy2, while Navy3 is farther toward the neutral zone. Check the defender and the available passing angles before offering support.",
+      "hash": "a21f7bce2bd0e3f6a504ad28b02d3fc28333647a231c14865c66d157f963a244",
       "review": "no-open-ai-finding"
     },
     {
@@ -52372,9 +52365,9 @@
       "topic": "Off-puck support",
       "family": "breakout-support",
       "type": "position",
-      "prompt": "Place YOU between Navy2 and the lower-side space, where the carrier can see you.",
-      "explanation": "This example gives Navy2 a lower-side outlet while keeping YOU away from Gold1's middle line. Another clear support lane can work.",
-      "hash": "5e0c1fab906d0e5626b6fb73def94de33e0c97774b034ab333565251344af027",
+      "prompt": "Place YOU closer to the side boards on a different angle from Navy2.",
+      "explanation": "This example offers a board-side angle away from Gold1. Check whether Navy2 can see and reach YOU; another clear support lane may work.",
+      "hash": "5750d6f3cda2a02406fcf6de6a2d9989b09957b7ec94761d925f6a8043c3e853",
       "review": "no-open-ai-finding"
     },
     {
@@ -52387,7 +52380,7 @@
       "type": "sequence",
       "prompt": "Arrange the breakout support read.",
       "explanation": "Locate the carrier, read pressure, then offer a lane that helps. Navy3 gives another reference for the next choice.",
-      "hash": "1e0f6c57f644dc6251491e76070f44574110adddde0987f16df16c62a60acbc5",
+      "hash": "ab5687eba278437f66fb29ea8fb1bb9d5645789a2efa9547d7ff8b79ad7fd28d",
       "review": "no-open-ai-finding"
     },
     {
@@ -52398,9 +52391,9 @@
       "topic": "Off-puck support",
       "family": "breakout-support",
       "type": "choice",
-      "prompt": "Gold1 turns toward your outlet. What might Navy2 use?",
+      "prompt": "Gold1 moves into YOUR outlet lane. What might Navy2 use?",
       "explanation": "Gold1 changed the outlet. Navy3 or another lane may be safer if the carrier can see it and pressure permits.",
-      "hash": "defbd5fc8788310e6a7fde9a8b134fb22a0b79ffcabd7b6a2f42470a36b189f2",
+      "hash": "bfa557907a2e3e6d27bb67e15f6ec8e79aec5ff96b11395f2a44933b62d7231a",
       "review": "no-open-ai-finding"
     },
     {
@@ -52411,9 +52404,9 @@
       "topic": "Off-puck support",
       "family": "breakout-support",
       "type": "explain",
-      "prompt": "Why can a lower outlet help the carrier?",
-      "explanation": "Gold1 is between Navy2 and the middle, so a lower-side option can give the carrier a different angle. The carrier still has to check whether YOU remain open.",
-      "hash": "d7e498f35fb7d9ab7a1886c6cfe7b7ac02e012167580f792fab9385dcf99e0d6",
+      "prompt": "Why can a board-side outlet help Navy2?",
+      "explanation": "A different angle can offer another choice around Gold1. Navy2 still needs to check whether YOU are reachable and the lane stays clear.",
+      "hash": "e608a89b61e97ae610d2d52733d5ea0ec9cc886263e17e6f91d7d65a712c2775",
       "review": "no-open-ai-finding"
     },
     {
@@ -52426,7 +52419,7 @@
       "type": "choice",
       "prompt": "Who owns the puck after the block?",
       "explanation": "Gold1 touched the pass, but the puck is loose in the setup. Nobody owns it yet.",
-      "hash": "c37bffd7e401a4a490eea3866f01e046637a0e0bd0a91e5680618e136247011d",
+      "hash": "1fc7b2a5ad432994a38737be0ae435ba9d5c050014b574eeb207c5150b60f674",
       "review": "no-open-ai-finding"
     },
     {
@@ -52438,8 +52431,8 @@
       "family": "blocked-pass-recovery",
       "type": "multi",
       "prompt": "What should YOU check before reaching?",
-      "explanation": "Gold1 is immediate pressure and Gold2 is behind YOU. The old pass no longer describes the puck state.",
-      "hash": "5dd4a4bde884281263f885d2f999d9ce1fa1a9128dce748b48cdfd11f6b28dcb",
+      "explanation": "Gold1 is immediate pressure and Gold2 is off to the side, easy to miss without a scan. The old pass no longer describes the puck state.",
+      "hash": "3816e012bdf95b4609a98816afb2065449709260f8c8e3d7d1716f8daeaaba25",
       "review": "no-open-ai-finding"
     },
     {
@@ -52450,9 +52443,9 @@
       "topic": "Puck recovery",
       "family": "blocked-pass-recovery",
       "type": "position",
-      "prompt": "Place YOU near the puck with a view of Gold1.",
-      "explanation": "This approaches the puck without losing the nearby defender. Another controlled position can work if both players stay visible.",
-      "hash": "e9e1586e0269568c3e99e8a0579433d2ca0e399839cf52bce84311053562a2c1",
+      "prompt": "Place YOU near the loose puck and check Gold1 before the next touch.",
+      "explanation": "This example brings YOU near the puck. Gold1 is nearby, so check the defender before reaching and do not assume YOU will win control. Another controlled approach may work.",
+      "hash": "9b5d49d1c795c69394b89bec2a53669a2874aff93fb7b106786753f7575ca2da",
       "review": "no-open-ai-finding"
     },
     {
@@ -52464,8 +52457,8 @@
       "family": "blocked-pass-recovery",
       "type": "sequence",
       "prompt": "Arrange the blocked-pass recovery.",
-      "explanation": "The block creates a new state. Locate it, read both pressure players, then identify support before touching or passing.",
-      "hash": "d767b51300f3d249323905980e864ef0cc169057856bc1339b33aaea964dc70c",
+      "explanation": "After the block, check the loose puck, both opponents and support. Navy3 is beyond Gold1, so a pass there needs a fresh lane check. These looks can overlap; react if Gold1 gains control first.",
+      "hash": "c1cd9a69ce4be4cd5e29eca3f714daacf05b8baea70e63b2ba13a8d1236785a1",
       "review": "no-open-ai-finding"
     },
     {
@@ -52478,7 +52471,7 @@
       "type": "choice",
       "prompt": "Gold1 controls the puck before YOU arrive. What changes?",
       "explanation": "Gold1 becoming the owner changes the role picture. Navy players should read the carrier and protect their end before choosing a response.",
-      "hash": "f6a57503c885f3e469e9b15c7dac19ff351242585c190af9edf7af8f7b483083",
+      "hash": "32b19f0276d06c2355eceaa0a8aabe6af2de165ab573976b6e2918e7b4ffd3e1",
       "review": "no-open-ai-finding"
     },
     {
@@ -52491,7 +52484,7 @@
       "type": "explain",
       "prompt": "Why can the old pass plan disappear?",
       "explanation": "Gold1 touched the pass and the puck became loose. Ownership, pressure, and Navy3's support must be checked again before repeating the old plan.",
-      "hash": "54b1a8376420ccbcf14bb6fd9dff6c5dd411e0da468188dab27f9e09c1eee0d2",
+      "hash": "80d5fed1ba3fbb3d8f354168e9b410729dfc29d2fa341e19f6be378dade9e311",
       "review": "no-open-ai-finding"
     },
     {
@@ -52504,7 +52497,7 @@
       "type": "choice",
       "prompt": "Who has the puck?",
       "explanation": "Gold1 controls the puck. Navy2 is pressuring and YOU can support the play away from the puck.",
-      "hash": "56dd5210d47f7f22a4a2b3ed719a79771e07b2831667502941c7a21aff37562e",
+      "hash": "cd9752f27fdd49b4f3731aead5ec550c922ae1782a129817f11f53b42f549dae",
       "review": "no-open-ai-finding"
     },
     {
@@ -52517,7 +52510,7 @@
       "type": "multi",
       "prompt": "Who should YOU keep in view?",
       "explanation": "The puck carrier and far-side attacker both shape the defensive choice. Watching only Navy2 loses Gold2.",
-      "hash": "3670dbdb6589fcce15f39c52ef19f236109e9d997abf5590befd21662e1ec7c5",
+      "hash": "d926c3c7fb918c4cfea58cd305954606f1ad7b77b3dc6c68fad3c858a3ce85b3",
       "review": "no-open-ai-finding"
     },
     {
@@ -52528,9 +52521,9 @@
       "topic": "Defending",
       "family": "defensive-support",
       "type": "position",
-      "prompt": "Place YOU between Gold2 and the navy end, with Gold1 visible.",
-      "explanation": "This example brings YOU into a support line that can see the puck and far-side player. The moving play may call for a different lane.",
-      "hash": "94fc1d5eb78fbf13c349ee7a59031333b63e37ee7c6585d2380b7935af4c8b59",
+      "prompt": "Move YOU toward the middle to help Navy2 while tracking Gold2.",
+      "explanation": "This example moves YOU toward the middle across the ice. It is one support position, not proof that Gold2 is covered. Check Gold1, Gold2 and Navy2 before choosing a lane.",
+      "hash": "cf715acf9571c672d5e63e828df4f0fe5e3be347a322640d1066936ee16a5d4f",
       "review": "no-open-ai-finding"
     },
     {
@@ -52542,8 +52535,8 @@
       "family": "defensive-support",
       "type": "sequence",
       "prompt": "Arrange the away-side support read.",
-      "explanation": "Start with the puck carrier, then read the first defender, then see the away-side option. This prevents chasing the same player twice.",
-      "hash": "1353dde28b39a8bf966e8e4d43dba087bf9adbb1ffe74f74d5671f687e46ec6c",
+      "explanation": "Check the carrier, Navy2 and Gold2 before deciding where to help. These looks can overlap. Avoid both navy players chasing Gold1 while losing track of Gold2.",
+      "hash": "a009b0a100b372599a9e5d18002f36c9a5548ace7778bedf24177fcbf19a2b54",
       "review": "no-open-ai-finding"
     },
     {
@@ -52556,7 +52549,7 @@
       "type": "choice",
       "prompt": "Gold2 cuts toward the puck side. What changes for YOU?",
       "explanation": "Gold2's movement changes the support picture. Adjust while keeping Gold1 and Gold2 visible so the nearer defender gets useful help.",
-      "hash": "48d5375b8c337e068e008398ea07eaf3710c865a72de1181d4bc9dca1fabf550",
+      "hash": "2c56dd7ef505203aade5d5c86c2847d8ace41e3674a5294ceb84ce006851f4b2",
       "review": "no-open-ai-finding"
     },
     {
@@ -52569,7 +52562,7 @@
       "type": "explain",
       "prompt": "Why can the far-side player matter?",
       "explanation": "Gold2 can become a pass option while Navy2 pressures Gold1. Seeing away from the puck helps YOU choose where support is needed.",
-      "hash": "878b920ca737faba19de3fa6041c4adc5da304188ac5bab9d3ca1a5515fe0ade",
+      "hash": "c76b8be994b2b1dfe189d4eb70d99039bb1fafb8c14be677f85cef96c3dc73a5",
       "review": "no-open-ai-finding"
     },
     {
@@ -52582,7 +52575,7 @@
       "type": "choice",
       "prompt": "Who has the puck after the loss?",
       "explanation": "Gold1 collected the puck. Navy now needs a defensive response.",
-      "hash": "fd6bb7115de422dcce004ad0f5cac58fde1738c66fcc5478297722c3463befde",
+      "hash": "4fa5628b3c888dafcfe62b5906c648aa5744cb4d44eb79f1d85c8bc71beb50ad",
       "review": "no-open-ai-finding"
     },
     {
@@ -52595,7 +52588,7 @@
       "type": "multi",
       "prompt": "What should YOU notice now?",
       "explanation": "Gold1's direction and Navy3's support position shape the new defensive picture. The old plan ended with the loss.",
-      "hash": "6b07836387dc0598018f41d3429cfc4e3957f7811ac3232c9d9bafaa468b7f19",
+      "hash": "df890dba7824cd2f1ec31645e7ebc0d769107cb78be5df6ee7104354a64d0fb1",
       "review": "no-open-ai-finding"
     },
     {
@@ -52608,7 +52601,7 @@
       "type": "position",
       "prompt": "Place YOU between Gold1 and the navy end while keeping Navy3 visible.",
       "explanation": "This example moves YOU back toward the protected end and keeps the carrier in view. Another useful recovery lane may fit the live play.",
-      "hash": "abeb5a42e0bfd060dd7e5d9bf21ec83c2c92cfd2f1011b285decdce7e559e5ed",
+      "hash": "8b8abc6eebda5fcfab454aa7ff69332af1410c32050603c7d1d1766c936e06c9",
       "review": "no-open-ai-finding"
     },
     {
@@ -52621,7 +52614,7 @@
       "type": "sequence",
       "prompt": "Arrange the role-change response.",
       "explanation": "Possession changes the role. Turn to protect the navy end, then use Navy3 and Gold1 to choose the recovery lane.",
-      "hash": "1b9eb1d49b081fec905113a09cb8627466f885c17ad7d5d760268133de2d3ac8",
+      "hash": "9a54c4832dd87997223e91dfafa029a682093521912d8050e99c8caa7c29648d",
       "review": "no-open-ai-finding"
     },
     {
@@ -52634,7 +52627,7 @@
       "type": "choice",
       "prompt": "Gold1 cuts toward the side away from Navy3. What could YOU do?",
       "explanation": "Gold1's route changes, but the puck carrier still matters first. Keep the carrier and protected end in view while adjusting.",
-      "hash": "fbb42e1a03cc36609b66f9a8b9bb31853986ab1051895c4381295943706535be",
+      "hash": "bec0e7ff6fd800761e8f6de240ca753a0b42936cf7019479df2b36c081ff9e2e",
       "review": "no-open-ai-finding"
     },
     {
@@ -52647,7 +52640,7 @@
       "type": "explain",
       "prompt": "Why does the loss change your role?",
       "explanation": "Navy no longer has the puck. Gold1 is moving toward the navy end, so YOU should help defend and use Navy3's place to read support.",
-      "hash": "4d65c1f552f845e227c1adc22cf97441435e6b9d207b13c0540d3ad4c7258b7a",
+      "hash": "76173162b056b3fb6488970c132fa10556049cae35b8f912ff3c675d47381727",
       "review": "no-open-ai-finding"
     },
     {
@@ -52658,9 +52651,9 @@
       "topic": "Rink awareness",
       "family": "circle-search",
       "type": "choice",
-      "prompt": "What named area is beside YOU?",
-      "explanation": "The briefing names the nearby painted area as a faceoff circle. It is a landmark for this practice.",
-      "hash": "4cc94ab0da059af4768e798e2fea8b3ab7ea3773cf7a2e9fc3b344b5e0444b6a",
+      "prompt": "Which painted area are YOU inside?",
+      "explanation": "YOU are inside the attacking faceoff circle. It is a landmark, not a guarantee of an open lane.",
+      "hash": "ef8457f1212838162e03e76b3c69a676998a25941d0dc772e7a137c9cdc53de3",
       "review": "no-open-ai-finding"
     },
     {
@@ -52673,7 +52666,7 @@
       "type": "multi",
       "prompt": "What should YOU check around the circle?",
       "explanation": "Navy2 is a teammate option and Gold1 is pressure. The circle itself does not guarantee a lane.",
-      "hash": "48671f02a8306117820018ff62ec159495757498de3a0c718dedcd1619cd7914",
+      "hash": "3ba8b6435e37bf1b7517245548529b04258534d0345918fc7c85f9c50758dc2a",
       "review": "no-open-ai-finding"
     },
     {
@@ -52685,8 +52678,8 @@
       "family": "circle-search",
       "type": "position",
       "prompt": "Place YOU near the circle with Navy2 visible.",
-      "explanation": "This brings YOU toward the named search area while keeping Navy2 in view. A different clear place can work.",
-      "hash": "1e76f8cfafebea46bcf7c3163b48748106a13c5b8be7f03ebe68e78a9e354d97",
+      "explanation": "The example moves YOU within the circle toward Navy2. Check Gold1 and whether the next lane stays clear; another position may work.",
+      "hash": "c6d4026fc3d3a3e584c9c3118138af312ef3811ec859aeb5253593ca1bf450ee",
       "review": "no-open-ai-finding"
     },
     {
@@ -52699,7 +52692,7 @@
       "type": "sequence",
       "prompt": "Arrange the circle search.",
       "explanation": "The landmark helps orient the players, but the current teammate and defender positions decide the next puck action.",
-      "hash": "b5d40977e3afec9a7838193b1e5659142bedc10b85122b9d8a85a7a3e6a9bab5",
+      "hash": "30054775a41f9dc07d40c195ed4ab412fabbc115f1cc46e3e274ca4043677415",
       "review": "no-open-ai-finding"
     },
     {
@@ -52712,7 +52705,7 @@
       "type": "choice",
       "prompt": "Gold1 moves across the circle. What should guide your choice?",
       "explanation": "Gold1 changed the space around the landmark. Recheck the passing lane and pressure before choosing.",
-      "hash": "34f7dae36f03c06ab56dcf0a73b7997799f16aaa1bf35b53857bf5b8387953e8",
+      "hash": "101c21f58ba7806c857da507102c0042a2275f688df0189883e82d84cb68bbf7",
       "review": "no-open-ai-finding"
     },
     {
@@ -52725,7 +52718,7 @@
       "type": "explain",
       "prompt": "How can the circle help without deciding the play?",
       "explanation": "The circle gives YOU and Navy2 a shared place to orient. Gold1's position and the open lane still decide whether to carry, pass, or hold.",
-      "hash": "7faf1c35d9dc141d77fbb07b5c84a698f91c6e6805e313f22f4b4a206e1ec2cf",
+      "hash": "8e7db378b5742b0c6d1f1adfc6e4a71b824e9aa7d3b6bc870a4c49eab566b307",
       "review": "no-open-ai-finding"
     },
     {
@@ -52738,7 +52731,7 @@
       "type": "choice",
       "prompt": "Who controls the puck now?",
       "explanation": "Navy2 received the pass and now controls the puck.",
-      "hash": "6cc116c65c9badb51f139231eec5585c499a296690870e90eb0aaa7de92c8b74",
+      "hash": "a1bf47d42a2b9f498fd52473d660db71cb474eaab5867a30d18d963f63d00932",
       "review": "no-open-ai-finding"
     },
     {
@@ -52749,9 +52742,9 @@
       "topic": "Passing",
       "family": "return-lane-change",
       "type": "multi",
-      "prompt": "What changed after the pass?",
+      "prompt": "What shapes the new support read?",
       "explanation": "Gold1 removed the old return and Navy3 offers another visible teammate angle. The first plan should be updated.",
-      "hash": "d53347d5e0b390502e996ad01ce66592d11dde963db6fdd1a4e97bbcf70d6f24",
+      "hash": "ec447735043e190b7c7ec93dad52d1383ff07f6028707e34c579a8b55558f3b3",
       "review": "no-open-ai-finding"
     },
     {
@@ -52762,9 +52755,9 @@
       "topic": "Passing",
       "family": "return-lane-change",
       "type": "position",
-      "prompt": "Place YOU below the old lane to support Navy2.",
-      "explanation": "This example moves YOU away from Gold1 and toward a lower support angle. Another clear support position may work.",
-      "hash": "8e489e8f1902d7649e1247ee86ade0e1ea53ed14185b2400befeeb789fa089a9",
+      "prompt": "Place YOU on Navy3's side of the ice, on a new angle to Navy2.",
+      "explanation": "The example moves YOU off Gold1's old covered line. Recheck the lane to Navy2 and keep enough separation from Navy3. Another clear angle may work.",
+      "hash": "ff03fadefdfb73fcb30fe738c61800d917ffa9a871dcdacfccefc0a608bd0f26",
       "review": "no-open-ai-finding"
     },
     {
@@ -52776,8 +52769,8 @@
       "family": "return-lane-change",
       "type": "sequence",
       "prompt": "Arrange the closed-lane response.",
-      "explanation": "The new carrier, covered lane, and lower teammate define the update. Moving creates another choice without promising a pass.",
-      "hash": "b396762238a2408d97a5db900ff95875a867b4d35e20221ee7f3727ec57aae92",
+      "explanation": "Find the new carrier, check Gold1 and Navy3, then offer another angle. Moving can create an option but does not promise a pass.",
+      "hash": "829254720feae7948d0a1d4f906473ab66c71d812f2f6f2db5291d1339306ec3",
       "review": "no-open-ai-finding"
     },
     {
@@ -52788,9 +52781,9 @@
       "topic": "Passing",
       "family": "return-lane-change",
       "type": "choice",
-      "prompt": "Gold1 also closes the lower angle. What could Navy2 do?",
-      "explanation": "Both support lanes changed. A carry or another teammate can fit if the current space is clear; Navy2 should not repeat a covered pass.",
-      "hash": "2606dae15163f3f28324b755f6d5332a8c2f82dcd8431d8534ec46bdf74155cd",
+      "prompt": "Gold1 blocks YOUR new pass line. What could Navy2 do?",
+      "explanation": "If Gold1 covers YOUR new line, Navy2 can consider a carry or another clear teammate. Recheck Navy3 rather than assuming both support lanes are blocked.",
+      "hash": "30ceba8c152a8b4efc33e52127478871e1ed9e59cbe596c69fba81069a935efd",
       "review": "no-open-ai-finding"
     },
     {
@@ -52803,7 +52796,7 @@
       "type": "explain",
       "prompt": "Why does a completed pass still need another read?",
       "explanation": "Navy2 has the puck, but Gold1 moved onto the old return lane. The new carrier needs current support and pressure information before the next action.",
-      "hash": "30e67372c5f5bda8d84316d242dcc8995be1240012748351ea57f4dc4fe9be11",
+      "hash": "24341458a0111da383babc5fc1071c396fed5c0d4b29c6d5faff569d2d484d98",
       "review": "no-open-ai-finding"
     },
     {
@@ -52894,7 +52887,7 @@
       "type": "choice",
       "prompt": "What should you say before reaching the wall-side puck?",
       "explanation": "Naming D1 and F2 connects the actual pressure and outlet to the approach. If either moves, update the plan.",
-      "hash": "e4e10ecdec7ada0d3482bac37a8fa2b2a85fa8132162d957651668453edac9d5",
+      "hash": "2296e3eeb0282c614c2b8d83cdfda518d78124457bc2203becf4aabea711b522",
       "review": "no-open-ai-finding"
     },
     {
@@ -52931,9 +52924,9 @@
       "topic": "Scanning",
       "family": "retrieval-scan",
       "type": "explain",
-      "prompt": "D1 arrives above the puck while F2 drifts behind coverage. How does your first action change?",
+      "prompt": "D1 closes on the puck while F2 moves behind the defender. How could YOUR first action change?",
       "explanation": "Connect the new pressure and lost outlet to a protected touch or wall-side escape, then name what you would scan before committing.",
-      "hash": "dfa197824658cc9675f9cefabdb7ad8c8d5f87e1e26b9563c21bf000291480dd",
+      "hash": "2751b1ae60775bee4280ee1761ad321007392f3009b53936b7ee1d9ace709a1d",
       "review": "no-open-ai-finding"
     },
     {
@@ -53154,7 +53147,7 @@
       "type": "choice",
       "prompt": "What is the useful communication after D1 blocks the first line?",
       "explanation": "The message names the changed angle and keeps F1's pass conditional on reachability.",
-      "hash": "9cdf4d9d65d6aedec17e454b84c9d8ab2b673202d322fe5daaa323f1598e0bfb",
+      "hash": "133070fb15100341bc652d744b2146d824775c17c4c81533afbc0728b5518131",
       "review": "no-open-ai-finding"
     },
     {

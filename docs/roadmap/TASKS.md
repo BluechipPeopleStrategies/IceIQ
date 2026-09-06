@@ -1,6 +1,6 @@
 # RinkReads — Task List
 
-**Last updated:** 2026-09-05 · Approved packet-only release: packets 01–09 included; 02–09 add 37 repaired scenarios / 187 changed question versions. 32 focused tests, full combined audit and isolated build passed. Publication verification follows deployment.
+**Last updated:** 2026-09-05 · Ready release: reviewed packets01–11 plus six-world player home, device-local spaced practice, U7/U9-only rink discovery and verified 3D-game fixes. 73 tests and production build passed. Coach/goals/training migration-dependent release remains held.
 
 **Scope:** RinkReads **app build + content factory**. Launch/distribution (sending the beta, marketing) and the separate BlueChip business are **out of scope** — parked at the bottom. Priority = position in this list. A new idea that isn't here goes to the **Parking Lot** first, then gets promoted on purpose — that's the scope-creep guard.
 
@@ -56,6 +56,8 @@
 - *(New ideas land here first, then get promoted into NEXT/LATER on purpose.)*
 
 ## Changelog
+
+- **2026-09-05** — Prepared packets10–11 (45 independently rechecked question versions) and the migration-independent player release from exact576e1c1/e6c5c05/78194fa file changes. App uses576e1c1, not8428bf7. Supabase, coach, training and goal-builder files remain at production baseline. 73 tests and build passed; sample Home/library and U15 discovery suppression verified at390px.
 
 - **2026-09-05** — Prepared approved packet-only deployment from production f1f4306, carrying the reviewed 02–09 content, immutable receipts, catalogs and exact question manifest. Packet01 calibration was already deployed. Separate player-home, training, coach and unfinished rendering work excluded. No promotion to human-approved content or mastery.
 

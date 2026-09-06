@@ -3,7 +3,7 @@ import { loadQB } from '../qbLoader.js';
 import { ALL_ANIMATED_PLAYS } from '../play/playCatalog.js';
 import { bandsAvailable } from '../path/pathData.js';
 import { buildLibrary } from './lessonCore.js';
-import { getLearningWorlds, LEARNING_ACTIVITIES, missionAvailability } from './learningWorldsCore.js';
+import { getLearningWorlds, learningActivitiesForAge, missionAvailability, allowsRinkDiscovery } from './learningWorldsCore.js';
 import { missionProgressKey, readVisitedMissionIds, recordMissionVisit, summarizeMissionProgress } from './worldMissionProgress.js';
 import WorldMissionJourney from './WorldMissionJourney.jsx';
 import './LearningWorlds.css';
@@ -79,13 +79,13 @@ export function LearningWorldsView({ ageBand = 'U11', initialWorldId, playerId =
           {availability === 'study' && <p className="lw-availability">No matching guided or library lesson for {band} yet. Read the idea above, or explore the rink to get familiar with its spaces.</p>}
           {availability === 'loading' && <p className="lw-availability" role="status">Checking the lesson library… You can explore the learning focus while it loads.</p>}
           {availability === 'unknown' && <p className="lw-availability" role="status">Library availability could not be checked. You can still read the idea and open the library.</p>}
-          {['study', 'loading', 'unknown'].includes(availability) && <button type="button" className="lw-secondary" onClick={() => navigate({ tab: 'learn', learn: availability === 'unknown' ? 'library' : 'discover', ...(availability === 'unknown' ? { conceptId: mission.conceptId } : {}) })}>{availability === 'unknown' ? 'Open lesson library' : 'Explore the rink'} <span aria-hidden="true">→</span></button>}
+          {['study', 'loading', 'unknown'].includes(availability) && <button type="button" className="lw-secondary" onClick={() => navigate({ tab: 'learn', learn: availability === 'unknown' || !allowsRinkDiscovery(band) ? 'library' : 'discover', ...(availability === 'unknown' || !allowsRinkDiscovery(band) ? { conceptId: mission.conceptId } : {}) })}>{availability === 'unknown' || !allowsRinkDiscovery(band) ? 'Open lesson library' : 'Explore the rink'} <span aria-hidden="true">→</span></button>}
         </article>
       </div> : <div className="lw-empty"><h3>No separate missions for {band} in this world yet.</h3><p>Your age group starts with simpler reads. Explore the other worlds or use the guided starters to build your foundations.</p><button type="button" className="lw-secondary" onClick={() => navigate({ tab: 'learn', learn: 'guided' })}>Explore guided starters <span aria-hidden="true">→</span></button></div>}
       {world.foundations.length > 0 && <div className="lw-foundations"><h3>A guided foundation for {band}</h3><p>This starter introduces the idea before its separate curriculum missions.</p>{world.foundations.map(lesson => <button type="button" className="lw-primary" key={lesson.id} data-lesson-id={lesson.id} onClick={() => openGuide(lesson)}>{lesson.title} <span aria-hidden="true">→</span></button>)}</div>}
     </section>
 
-    <section className="lw-activities" aria-labelledby={`${regionId}-activities`}><header><p className="lw-kicker">LEARN IT. TRY IT. COME BACK TO IT.</p><h2 id={`${regionId}-activities`}>Find your way into the game.</h2><p>The worlds show what there is to learn. These activities give you different ways to explore it.</p></header><div className="lw-activity-grid">{LEARNING_ACTIVITIES.map(activity => <button type="button" key={activity.id} className="lw-activity" data-activity-id={activity.id} onClick={() => navigate(activity.target)}><span className="lw-activity-icon"><WorldIcon kind={activity.icon} /></span><span><strong>{activity.title}</strong><span>{activity.description}</span></span><span className="lw-activity-arrow" aria-hidden="true">↗</span></button>)}</div></section>
+    <section className="lw-activities" aria-labelledby={`${regionId}-activities`}><header><p className="lw-kicker">LEARN IT. TRY IT. COME BACK TO IT.</p><h2 id={`${regionId}-activities`}>Find your way into the game.</h2><p>The worlds show what there is to learn. These activities give you different ways to explore it.</p></header><div className="lw-activity-grid">{learningActivitiesForAge(band).map(activity => <button type="button" key={activity.id} className="lw-activity" data-activity-id={activity.id} onClick={() => navigate(activity.target)}><span className="lw-activity-icon"><WorldIcon kind={activity.icon} /></span><span><strong>{activity.title}</strong><span>{activity.description}</span></span><span className="lw-activity-arrow" aria-hidden="true">↗</span></button>)}</div></section>
     <p className="lw-boundary">{guidedCount} guided starters for {band} are one part of this curriculum. Learning focuses describe what to notice; they don’t mean a lesson is complete. On-ice practice remains part of learning the game.</p>
   </section>;
 }

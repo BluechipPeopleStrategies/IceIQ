@@ -38,7 +38,7 @@ function ActorSlot({ sceneRef, role, index = 0 }) {
   const colour = role === "you" || role === "teammate" ? "#0B1A33" : "#C9A24B";
   return (
     <group ref={root}>
-      <HockeySkater colour={colour} accent={role === "defender" || goalie ? "#0B1A33" : "#C9A24B"} puck={role === "you"} goalie={goalie} scale={goalie ? 0.46 : 0.39} />
+      <HockeySkater colour={colour} accent={role === "defender" || goalie ? "#0B1A33" : "#C9A24B"} puck={role === "you"} isLearner={role === "you"} goalie={goalie} scale={goalie ? 0.46 : 0.39} />
       {(role === "you" || role === "teammate") && (
         <Html center position={[0, 0.72, 0]} style={{ pointerEvents: "none" }}>
           <span ref={badge} className="gym-actor-label" />

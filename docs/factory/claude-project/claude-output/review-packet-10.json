@@ -1,0 +1,2555 @@
+{
+  "schemaVersion": 1,
+  "kind": "rinkreads-content-review",
+  "status": "draft-not-reviewed",
+  "snapshotId": "rr-20260905-c8403be16748c919",
+  "packetId": "packet-10",
+  "completion": "complete",
+  "coverage": [
+    {
+      "scenarioId": "exp26b-u9-008",
+      "questionId": "exp26b-u9-008-q1",
+      "baseContentHash": "bb4206a77fa380956ea99637d6e8ceb2c1063f5be0f9abed824eace73cc40f0b",
+      "verdict": "repair",
+      "reason": "Inherits this scene's shared geometry defect: the briefing/cues call the position 'beside the boards'/'by the boards' while YOU (and Gold1) sit 5.95 m from the nearest side boards -- under half the ice width away -- and separately state 'Navy2 waits inside near the faceoff circle' when Navy2 is actually 1.41 m outside the nearest drawn circle (radius 4.572 m); the player who genuinely sits on that circle (YOU, 0.42 m from its centre) is never mentioned in that context. Q1 itself (puck ownership) is accurate (YOU owns the puck per setup.puck.owner), but its OWN explanation also directly restates the false 'by the boards' claim ('YOU are the puck owner by the boards'), so feedback fails in addition to the inherited geometry defect.",
+      "checks": {
+        "roster": "pass",
+        "geometry": "fail",
+        "answer": "pass",
+        "feedback": "fail",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "pass"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "YOU (home-skater-1, label YOU) at (21,7) facing 1.8 rad; Navy2 (home-skater-2) at (17,2) facing 0.5 rad; Gold1 (away-skater-1, label Gold1) at (18,7) facing -1.5 rad. No goalie or fourth skater is drawn.",
+          "The puck is owned by YOU (home-skater-1); the carried-puck render point is (20.09,7.81), on the ice.",
+          "Straight-line distances: YOU-Gold1 3.00 m, YOU-Navy2 6.40 m, Navy2-Gold1 5.10 m.",
+          "Using the 8.5344 m corner radius and the 12.954 m half-width, YOU (and Gold1, same y) sit 5.95 m from the nearest side boards -- under half the ice width away, not 'beside' or 'by' the boards.",
+          "Faceoff-circle centres in this coordinate system sit at (+-20.7,+-6.7) with a drawn radius of 4.572 m. YOU sits only 0.42 m from the (20.7,6.7) circle centre (deep inside the drawn circle), while Navy2 sits 5.98 m from that same centre -- 1.41 m OUTSIDE the drawn circle -- so Navy2 is not 'inside' or meaningfully 'near' a faceoff circle; the player who actually sits on the circle (YOU) is not the one the briefing/cue describe that way."
+        ],
+        "stated": [
+          "Briefing (v1): navy attacks +x, gold attacks -x; YOU control the puck 'beside the boards' in the attacking end; Gold1 approaches from the middle; Navy2 'waits inside near the faceoff circle'; the coach asks you to protect, then look inside.",
+          "Cues: 'YOU control the puck by the boards.' / 'Gold1 approaches from inside.' / 'Navy2 waits near the faceoff circle.'",
+          "Limits: static practice illustration; no contact, handedness, speed, or completed pass shown; an adult may read the questions aloud."
+        ],
+        "unproven": [
+          "Whether Gold1 actually reaches the boards or intercepts anything; only starting positions are given.",
+          "Where either skater is looking; facing is a drawn arrow, not gaze.",
+          "Any contact or stick-reach outcome at the boards."
+        ]
+      },
+      "sourceUrls": [
+        "https://www.hockeycanada.ca/en-ca/news/seven-coaching-principles-puck-control-2024-ncw",
+        "https://www.hockeycanada.ca/en-ca/hockey-programs/coaching/under-9"
+      ]
+    },
+    {
+      "scenarioId": "exp26b-u9-008",
+      "questionId": "exp26b-u9-008-q2",
+      "baseContentHash": "734002dff531624cdc4361a79552c12436ad1b01058d75f1d988c1f2b839cd11",
+      "verdict": "repair",
+      "reason": "Inherits this scene's shared geometry defect: the briefing/cues call the position 'beside the boards'/'by the boards' while YOU (and Gold1) sit 5.95 m from the nearest side boards -- under half the ice width away -- and separately state 'Navy2 waits inside near the faceoff circle' when Navy2 is actually 1.41 m outside the nearest drawn circle (radius 4.572 m); the player who genuinely sits on that circle (YOU, 0.42 m from its centre) is never mentioned in that context. Q2's own option b ('Navy2 near the circle' in the original) restated the false circle-proximity claim directly inside a scored basis:scene option; the answer set (a,b) itself remains correct (both Gold1's approach and Navy2's position are relevant), so only geometry fails here, not answer.",
+      "checks": {
+        "roster": "pass",
+        "geometry": "fail",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "pass"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "YOU (home-skater-1, label YOU) at (21,7) facing 1.8 rad; Navy2 (home-skater-2) at (17,2) facing 0.5 rad; Gold1 (away-skater-1, label Gold1) at (18,7) facing -1.5 rad. No goalie or fourth skater is drawn.",
+          "The puck is owned by YOU (home-skater-1); the carried-puck render point is (20.09,7.81), on the ice.",
+          "Straight-line distances: YOU-Gold1 3.00 m, YOU-Navy2 6.40 m, Navy2-Gold1 5.10 m.",
+          "Using the 8.5344 m corner radius and the 12.954 m half-width, YOU (and Gold1, same y) sit 5.95 m from the nearest side boards -- under half the ice width away, not 'beside' or 'by' the boards.",
+          "Faceoff-circle centres in this coordinate system sit at (+-20.7,+-6.7) with a drawn radius of 4.572 m. YOU sits only 0.42 m from the (20.7,6.7) circle centre (deep inside the drawn circle), while Navy2 sits 5.98 m from that same centre -- 1.41 m OUTSIDE the drawn circle -- so Navy2 is not 'inside' or meaningfully 'near' a faceoff circle; the player who actually sits on the circle (YOU) is not the one the briefing/cue describe that way."
+        ],
+        "stated": [
+          "Briefing (v1): navy attacks +x, gold attacks -x; YOU control the puck 'beside the boards' in the attacking end; Gold1 approaches from the middle; Navy2 'waits inside near the faceoff circle'; the coach asks you to protect, then look inside.",
+          "Cues: 'YOU control the puck by the boards.' / 'Gold1 approaches from inside.' / 'Navy2 waits near the faceoff circle.'",
+          "Limits: static practice illustration; no contact, handedness, speed, or completed pass shown; an adult may read the questions aloud."
+        ],
+        "unproven": [
+          "Whether Gold1 actually reaches the boards or intercepts anything; only starting positions are given.",
+          "Where either skater is looking; facing is a drawn arrow, not gaze.",
+          "Any contact or stick-reach outcome at the boards."
+        ]
+      },
+      "sourceUrls": [
+        "https://www.hockeycanada.ca/en-ca/news/seven-coaching-principles-puck-control-2024-ncw",
+        "https://www.hockeycanada.ca/en-ca/hockey-programs/coaching/under-9"
+      ]
+    },
+    {
+      "scenarioId": "exp26b-u9-008",
+      "questionId": "exp26b-u9-008-q3",
+      "baseContentHash": "32df7678b850f1d73433b9b62358c80f76369910ca0346cb222ccb796c27d2d6",
+      "verdict": "repair",
+      "reason": "Inherits this scene's shared geometry defect: the briefing/cues call the position 'beside the boards'/'by the boards' while YOU (and Gold1) sit 5.95 m from the nearest side boards -- under half the ice width away -- and separately state 'Navy2 waits inside near the faceoff circle' when Navy2 is actually 1.41 m outside the nearest drawn circle (radius 4.572 m); the player who genuinely sits on that circle (YOU, 0.42 m from its centre) is never mentioned in that context. Q3 itself does not add a new defect beyond the inherited scene text.",
+      "checks": {
+        "roster": "pass",
+        "geometry": "fail",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "pass"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "YOU (home-skater-1, label YOU) at (21,7) facing 1.8 rad; Navy2 (home-skater-2) at (17,2) facing 0.5 rad; Gold1 (away-skater-1, label Gold1) at (18,7) facing -1.5 rad. No goalie or fourth skater is drawn.",
+          "The puck is owned by YOU (home-skater-1); the carried-puck render point is (20.09,7.81), on the ice.",
+          "Straight-line distances: YOU-Gold1 3.00 m, YOU-Navy2 6.40 m, Navy2-Gold1 5.10 m.",
+          "Using the 8.5344 m corner radius and the 12.954 m half-width, YOU (and Gold1, same y) sit 5.95 m from the nearest side boards -- under half the ice width away, not 'beside' or 'by' the boards.",
+          "Faceoff-circle centres in this coordinate system sit at (+-20.7,+-6.7) with a drawn radius of 4.572 m. YOU sits only 0.42 m from the (20.7,6.7) circle centre (deep inside the drawn circle), while Navy2 sits 5.98 m from that same centre -- 1.41 m OUTSIDE the drawn circle -- so Navy2 is not 'inside' or meaningfully 'near' a faceoff circle; the player who actually sits on the circle (YOU) is not the one the briefing/cue describe that way."
+        ],
+        "stated": [
+          "Briefing (v1): navy attacks +x, gold attacks -x; YOU control the puck 'beside the boards' in the attacking end; Gold1 approaches from the middle; Navy2 'waits inside near the faceoff circle'; the coach asks you to protect, then look inside.",
+          "Cues: 'YOU control the puck by the boards.' / 'Gold1 approaches from inside.' / 'Navy2 waits near the faceoff circle.'",
+          "Limits: static practice illustration; no contact, handedness, speed, or completed pass shown; an adult may read the questions aloud."
+        ],
+        "unproven": [
+          "Whether Gold1 actually reaches the boards or intercepts anything; only starting positions are given.",
+          "Where either skater is looking; facing is a drawn arrow, not gaze.",
+          "Any contact or stick-reach outcome at the boards."
+        ]
+      },
+      "sourceUrls": [
+        "https://www.hockeycanada.ca/en-ca/news/seven-coaching-principles-puck-control-2024-ncw",
+        "https://www.hockeycanada.ca/en-ca/hockey-programs/coaching/under-9"
+      ],
+      "alternative": "A player could angle slightly differently and still keep both boards-side protection and Gold1 in view; (23,7) is one workable illustration, not the only correct dot -- the actual live pressure and lane decide the safe spot."
+    },
+    {
+      "scenarioId": "exp26b-u9-008",
+      "questionId": "exp26b-u9-008-q4",
+      "baseContentHash": "3f4452a676484470d09bfc7f587fe855a21024f19a13116f8efbb57579a539e8",
+      "verdict": "repair",
+      "reason": "Inherits this scene's shared geometry defect: the briefing/cues call the position 'beside the boards'/'by the boards' while YOU (and Gold1) sit 5.95 m from the nearest side boards -- under half the ice width away -- and separately state 'Navy2 waits inside near the faceoff circle' when Navy2 is actually 1.41 m outside the nearest drawn circle (radius 4.572 m); the player who genuinely sits on that circle (YOU, 0.42 m from its centre) is never mentioned in that context. Q4 itself does not add a new defect beyond the inherited scene text.",
+      "checks": {
+        "roster": "pass",
+        "geometry": "fail",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "pass"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "YOU (home-skater-1, label YOU) at (21,7) facing 1.8 rad; Navy2 (home-skater-2) at (17,2) facing 0.5 rad; Gold1 (away-skater-1, label Gold1) at (18,7) facing -1.5 rad. No goalie or fourth skater is drawn.",
+          "The puck is owned by YOU (home-skater-1); the carried-puck render point is (20.09,7.81), on the ice.",
+          "Straight-line distances: YOU-Gold1 3.00 m, YOU-Navy2 6.40 m, Navy2-Gold1 5.10 m.",
+          "Using the 8.5344 m corner radius and the 12.954 m half-width, YOU (and Gold1, same y) sit 5.95 m from the nearest side boards -- under half the ice width away, not 'beside' or 'by' the boards.",
+          "Faceoff-circle centres in this coordinate system sit at (+-20.7,+-6.7) with a drawn radius of 4.572 m. YOU sits only 0.42 m from the (20.7,6.7) circle centre (deep inside the drawn circle), while Navy2 sits 5.98 m from that same centre -- 1.41 m OUTSIDE the drawn circle -- so Navy2 is not 'inside' or meaningfully 'near' a faceoff circle; the player who actually sits on the circle (YOU) is not the one the briefing/cue describe that way."
+        ],
+        "stated": [
+          "Briefing (v1): navy attacks +x, gold attacks -x; YOU control the puck 'beside the boards' in the attacking end; Gold1 approaches from the middle; Navy2 'waits inside near the faceoff circle'; the coach asks you to protect, then look inside.",
+          "Cues: 'YOU control the puck by the boards.' / 'Gold1 approaches from inside.' / 'Navy2 waits near the faceoff circle.'",
+          "Limits: static practice illustration; no contact, handedness, speed, or completed pass shown; an adult may read the questions aloud."
+        ],
+        "unproven": [
+          "Whether Gold1 actually reaches the boards or intercepts anything; only starting positions are given.",
+          "Where either skater is looking; facing is a drawn arrow, not gaze.",
+          "Any contact or stick-reach outcome at the boards."
+        ]
+      },
+      "sourceUrls": [
+        "https://www.hockeycanada.ca/en-ca/news/seven-coaching-principles-puck-control-2024-ncw",
+        "https://www.hockeycanada.ca/en-ca/hockey-programs/coaching/under-9"
+      ],
+      "alternative": "Scanning and protecting can overlap rather than strictly precede each other; the three actions are a coaching model for this age, not the only possible order."
+    },
+    {
+      "scenarioId": "exp26b-u9-008",
+      "questionId": "exp26b-u9-008-q5",
+      "baseContentHash": "2808a9a6a7c7b5fb1ed54e399fd96ddc3c7ecc43e25f819e13c265cfeb004355",
+      "verdict": "repair",
+      "reason": "Inherits this scene's shared geometry defect: the briefing/cues call the position 'beside the boards'/'by the boards' while YOU (and Gold1) sit 5.95 m from the nearest side boards -- under half the ice width away -- and separately state 'Navy2 waits inside near the faceoff circle' when Navy2 is actually 1.41 m outside the nearest drawn circle (radius 4.572 m); the player who genuinely sits on that circle (YOU, 0.42 m from its centre) is never mentioned in that context. Q5 itself does not add a new defect beyond the inherited scene text.",
+      "checks": {
+        "roster": "pass",
+        "geometry": "fail",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "pass"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "YOU (home-skater-1, label YOU) at (21,7) facing 1.8 rad; Navy2 (home-skater-2) at (17,2) facing 0.5 rad; Gold1 (away-skater-1, label Gold1) at (18,7) facing -1.5 rad. No goalie or fourth skater is drawn.",
+          "The puck is owned by YOU (home-skater-1); the carried-puck render point is (20.09,7.81), on the ice.",
+          "Straight-line distances: YOU-Gold1 3.00 m, YOU-Navy2 6.40 m, Navy2-Gold1 5.10 m.",
+          "Using the 8.5344 m corner radius and the 12.954 m half-width, YOU (and Gold1, same y) sit 5.95 m from the nearest side boards -- under half the ice width away, not 'beside' or 'by' the boards.",
+          "Faceoff-circle centres in this coordinate system sit at (+-20.7,+-6.7) with a drawn radius of 4.572 m. YOU sits only 0.42 m from the (20.7,6.7) circle centre (deep inside the drawn circle), while Navy2 sits 5.98 m from that same centre -- 1.41 m OUTSIDE the drawn circle -- so Navy2 is not 'inside' or meaningfully 'near' a faceoff circle; the player who actually sits on the circle (YOU) is not the one the briefing/cue describe that way."
+        ],
+        "stated": [
+          "Briefing (v1): navy attacks +x, gold attacks -x; YOU control the puck 'beside the boards' in the attacking end; Gold1 approaches from the middle; Navy2 'waits inside near the faceoff circle'; the coach asks you to protect, then look inside.",
+          "Cues: 'YOU control the puck by the boards.' / 'Gold1 approaches from inside.' / 'Navy2 waits near the faceoff circle.'",
+          "Limits: static practice illustration; no contact, handedness, speed, or completed pass shown; an adult may read the questions aloud."
+        ],
+        "unproven": [
+          "Whether Gold1 actually reaches the boards or intercepts anything; only starting positions are given.",
+          "Where either skater is looking; facing is a drawn arrow, not gaze.",
+          "Any contact or stick-reach outcome at the boards."
+        ]
+      },
+      "sourceUrls": [
+        "https://www.hockeycanada.ca/en-ca/news/seven-coaching-principles-puck-control-2024-ncw",
+        "https://www.hockeycanada.ca/en-ca/hockey-programs/coaching/under-9"
+      ],
+      "alternative": "Depending on how tightly Gold1 closes and where Navy2 actually is, holding the puck a beat longer or trying a different angle back the other way could also work; there is no single guaranteed response."
+    },
+    {
+      "scenarioId": "exp26b-u9-008",
+      "questionId": "exp26b-u9-008-q6",
+      "baseContentHash": "0159dfdbb6d1e6bcfeb8a2c636dbc088896ad950eb7f012b1aa28a654d22f897",
+      "verdict": "repair",
+      "reason": "Inherits this scene's shared geometry defect: the briefing/cues call the position 'beside the boards'/'by the boards' while YOU (and Gold1) sit 5.95 m from the nearest side boards -- under half the ice width away -- and separately state 'Navy2 waits inside near the faceoff circle' when Navy2 is actually 1.41 m outside the nearest drawn circle (radius 4.572 m); the player who genuinely sits on that circle (YOU, 0.42 m from its centre) is never mentioned in that context. Q6 itself does not add a new defect beyond the inherited scene text.",
+      "checks": {
+        "roster": "pass",
+        "geometry": "fail",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "pass"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "YOU (home-skater-1, label YOU) at (21,7) facing 1.8 rad; Navy2 (home-skater-2) at (17,2) facing 0.5 rad; Gold1 (away-skater-1, label Gold1) at (18,7) facing -1.5 rad. No goalie or fourth skater is drawn.",
+          "The puck is owned by YOU (home-skater-1); the carried-puck render point is (20.09,7.81), on the ice.",
+          "Straight-line distances: YOU-Gold1 3.00 m, YOU-Navy2 6.40 m, Navy2-Gold1 5.10 m.",
+          "Using the 8.5344 m corner radius and the 12.954 m half-width, YOU (and Gold1, same y) sit 5.95 m from the nearest side boards -- under half the ice width away, not 'beside' or 'by' the boards.",
+          "Faceoff-circle centres in this coordinate system sit at (+-20.7,+-6.7) with a drawn radius of 4.572 m. YOU sits only 0.42 m from the (20.7,6.7) circle centre (deep inside the drawn circle), while Navy2 sits 5.98 m from that same centre -- 1.41 m OUTSIDE the drawn circle -- so Navy2 is not 'inside' or meaningfully 'near' a faceoff circle; the player who actually sits on the circle (YOU) is not the one the briefing/cue describe that way."
+        ],
+        "stated": [
+          "Briefing (v1): navy attacks +x, gold attacks -x; YOU control the puck 'beside the boards' in the attacking end; Gold1 approaches from the middle; Navy2 'waits inside near the faceoff circle'; the coach asks you to protect, then look inside.",
+          "Cues: 'YOU control the puck by the boards.' / 'Gold1 approaches from inside.' / 'Navy2 waits near the faceoff circle.'",
+          "Limits: static practice illustration; no contact, handedness, speed, or completed pass shown; an adult may read the questions aloud."
+        ],
+        "unproven": [
+          "Whether Gold1 actually reaches the boards or intercepts anything; only starting positions are given.",
+          "Where either skater is looking; facing is a drawn arrow, not gaze.",
+          "Any contact or stick-reach outcome at the boards."
+        ]
+      },
+      "sourceUrls": [
+        "https://www.hockeycanada.ca/en-ca/news/seven-coaching-principles-puck-control-2024-ncw",
+        "https://www.hockeycanada.ca/en-ca/hockey-programs/coaching/under-9"
+      ],
+      "alternative": "Board protection is one tool; a player could also protect with body position away from any boards if pressure comes from a different angle. The boards help but do not replace checking Navy2 and the changing lane."
+    },
+    {
+      "scenarioId": "exp26b-u9-009",
+      "questionId": "exp26b-u9-009-q1",
+      "baseContentHash": "12675f1c30c1c84ffe42dacaa011b183819036415d9153d57ea13f0c291145ec",
+      "verdict": "retain",
+      "reason": "All seven checks pass on independent review: roster, geometry, answer, feedback, age, sources and grammar are each verified against the actual coordinates, facing vectors, and puck ownership in this scene (see sceneEvidence). No shared or question-specific defect found.",
+      "checks": {
+        "roster": "pass",
+        "geometry": "pass",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "pass"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "YOU (home-skater-1) at (7,-7) facing 0.2 rad; Navy2 (home-skater-2) at (14,-6) facing 2.5 rad; Gold1 (away-skater-1) at (11,-6) facing -0.4 rad; Gold2 (away-skater-2) at (18,-2) facing 2.7 rad.",
+          "The puck is owned by YOU; carried-puck render point (7.84,-6.12), on the ice.",
+          "The line from YOU (7,-7) to Navy2 (14,-6) passes within 0.42 m of Gold1's actual position (11,-6) at t=0.58 along that segment -- Gold1 genuinely sits in the direct passing lane, not merely near it by coincidence.",
+          "Gold2 (x=18) has the highest x of the four actors, i.e. is genuinely farthest toward the +x net that navy attacks.",
+          "YOU sits 5.95 m from the nearest side boards ('near the side' is a broad, non-landmark-specific claim and is a fair description at that distance, unlike a tight 'beside/by the boards' claim)."
+        ],
+        "stated": [
+          "Briefing (v1): navy attacks +x, gold attacks -x; YOU have the puck near the side; Navy2 is wide ahead; Gold1 is between YOU and Navy2; Gold2 is farther toward the net; the coach asks you to compare the middle and wide options.",
+          "Cues: 'YOU have the puck.' / 'Gold1 is between YOU and Navy2.' / 'Gold2 is farther toward the net.'",
+          "Limits: static scene; a diagram line cannot prove moving interception timing or pass success; an adult may read the questions aloud."
+        ],
+        "unproven": [
+          "Whether a pass to Navy2 would actually be intercepted if attempted; only the static lane geometry is given.",
+          "Where any skater is looking; facing is a drawn arrow, not gaze.",
+          "Any outcome after YOU carries or passes."
+        ]
+      },
+      "sourceUrls": [
+        "https://www.hockeycanada.ca/en-ca/news/seven-coaching-principles-vision-scanning-2024-ncw",
+        "https://www.hockeycanada.ca/en-ca/news/seven-coaching-principles-puck-control-2024-ncw"
+      ]
+    },
+    {
+      "scenarioId": "exp26b-u9-009",
+      "questionId": "exp26b-u9-009-q2",
+      "baseContentHash": "a85e671f1b305d43477a15372662235977a61691e13c768aaf8cb62c4a7eb631",
+      "verdict": "retain",
+      "reason": "All seven checks pass on independent review: roster, geometry, answer, feedback, age, sources and grammar are each verified against the actual coordinates, facing vectors, and puck ownership in this scene (see sceneEvidence). No shared or question-specific defect found.",
+      "checks": {
+        "roster": "pass",
+        "geometry": "pass",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "pass"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "YOU (home-skater-1) at (7,-7) facing 0.2 rad; Navy2 (home-skater-2) at (14,-6) facing 2.5 rad; Gold1 (away-skater-1) at (11,-6) facing -0.4 rad; Gold2 (away-skater-2) at (18,-2) facing 2.7 rad.",
+          "The puck is owned by YOU; carried-puck render point (7.84,-6.12), on the ice.",
+          "The line from YOU (7,-7) to Navy2 (14,-6) passes within 0.42 m of Gold1's actual position (11,-6) at t=0.58 along that segment -- Gold1 genuinely sits in the direct passing lane, not merely near it by coincidence.",
+          "Gold2 (x=18) has the highest x of the four actors, i.e. is genuinely farthest toward the +x net that navy attacks.",
+          "YOU sits 5.95 m from the nearest side boards ('near the side' is a broad, non-landmark-specific claim and is a fair description at that distance, unlike a tight 'beside/by the boards' claim)."
+        ],
+        "stated": [
+          "Briefing (v1): navy attacks +x, gold attacks -x; YOU have the puck near the side; Navy2 is wide ahead; Gold1 is between YOU and Navy2; Gold2 is farther toward the net; the coach asks you to compare the middle and wide options.",
+          "Cues: 'YOU have the puck.' / 'Gold1 is between YOU and Navy2.' / 'Gold2 is farther toward the net.'",
+          "Limits: static scene; a diagram line cannot prove moving interception timing or pass success; an adult may read the questions aloud."
+        ],
+        "unproven": [
+          "Whether a pass to Navy2 would actually be intercepted if attempted; only the static lane geometry is given.",
+          "Where any skater is looking; facing is a drawn arrow, not gaze.",
+          "Any outcome after YOU carries or passes."
+        ]
+      },
+      "sourceUrls": [
+        "https://www.hockeycanada.ca/en-ca/news/seven-coaching-principles-vision-scanning-2024-ncw",
+        "https://www.hockeycanada.ca/en-ca/news/seven-coaching-principles-puck-control-2024-ncw"
+      ]
+    },
+    {
+      "scenarioId": "exp26b-u9-009",
+      "questionId": "exp26b-u9-009-q3",
+      "baseContentHash": "8649ee9dddfd5838319b2b5a2cb0687502073d164e77bac862a5eb9251207fa2",
+      "verdict": "retain",
+      "reason": "All seven checks pass on independent review: roster, geometry, answer, feedback, age, sources and grammar are each verified against the actual coordinates, facing vectors, and puck ownership in this scene (see sceneEvidence). No shared or question-specific defect found.",
+      "checks": {
+        "roster": "pass",
+        "geometry": "pass",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "pass"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "YOU (home-skater-1) at (7,-7) facing 0.2 rad; Navy2 (home-skater-2) at (14,-6) facing 2.5 rad; Gold1 (away-skater-1) at (11,-6) facing -0.4 rad; Gold2 (away-skater-2) at (18,-2) facing 2.7 rad.",
+          "The puck is owned by YOU; carried-puck render point (7.84,-6.12), on the ice.",
+          "The line from YOU (7,-7) to Navy2 (14,-6) passes within 0.42 m of Gold1's actual position (11,-6) at t=0.58 along that segment -- Gold1 genuinely sits in the direct passing lane, not merely near it by coincidence.",
+          "Gold2 (x=18) has the highest x of the four actors, i.e. is genuinely farthest toward the +x net that navy attacks.",
+          "YOU sits 5.95 m from the nearest side boards ('near the side' is a broad, non-landmark-specific claim and is a fair description at that distance, unlike a tight 'beside/by the boards' claim)."
+        ],
+        "stated": [
+          "Briefing (v1): navy attacks +x, gold attacks -x; YOU have the puck near the side; Navy2 is wide ahead; Gold1 is between YOU and Navy2; Gold2 is farther toward the net; the coach asks you to compare the middle and wide options.",
+          "Cues: 'YOU have the puck.' / 'Gold1 is between YOU and Navy2.' / 'Gold2 is farther toward the net.'",
+          "Limits: static scene; a diagram line cannot prove moving interception timing or pass success; an adult may read the questions aloud."
+        ],
+        "unproven": [
+          "Whether a pass to Navy2 would actually be intercepted if attempted; only the static lane geometry is given.",
+          "Where any skater is looking; facing is a drawn arrow, not gaze.",
+          "Any outcome after YOU carries or passes."
+        ]
+      },
+      "sourceUrls": [
+        "https://www.hockeycanada.ca/en-ca/news/seven-coaching-principles-vision-scanning-2024-ncw",
+        "https://www.hockeycanada.ca/en-ca/news/seven-coaching-principles-puck-control-2024-ncw"
+      ],
+      "alternative": "A player could also angle in from a slightly different spot as long as the puck stays reachable and the passing options remain visible; (9,-3) is one workable illustration, not the only correct dot."
+    },
+    {
+      "scenarioId": "exp26b-u9-009",
+      "questionId": "exp26b-u9-009-q4",
+      "baseContentHash": "160ef1b3acaef7132355e48d991f36631826ed0d4a57fc4d6ac68c480abbe76b",
+      "verdict": "retain",
+      "reason": "All seven checks pass on independent review: roster, geometry, answer, feedback, age, sources and grammar are each verified against the actual coordinates, facing vectors, and puck ownership in this scene (see sceneEvidence). No shared or question-specific defect found.",
+      "checks": {
+        "roster": "pass",
+        "geometry": "pass",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "pass"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "YOU (home-skater-1) at (7,-7) facing 0.2 rad; Navy2 (home-skater-2) at (14,-6) facing 2.5 rad; Gold1 (away-skater-1) at (11,-6) facing -0.4 rad; Gold2 (away-skater-2) at (18,-2) facing 2.7 rad.",
+          "The puck is owned by YOU; carried-puck render point (7.84,-6.12), on the ice.",
+          "The line from YOU (7,-7) to Navy2 (14,-6) passes within 0.42 m of Gold1's actual position (11,-6) at t=0.58 along that segment -- Gold1 genuinely sits in the direct passing lane, not merely near it by coincidence.",
+          "Gold2 (x=18) has the highest x of the four actors, i.e. is genuinely farthest toward the +x net that navy attacks.",
+          "YOU sits 5.95 m from the nearest side boards ('near the side' is a broad, non-landmark-specific claim and is a fair description at that distance, unlike a tight 'beside/by the boards' claim)."
+        ],
+        "stated": [
+          "Briefing (v1): navy attacks +x, gold attacks -x; YOU have the puck near the side; Navy2 is wide ahead; Gold1 is between YOU and Navy2; Gold2 is farther toward the net; the coach asks you to compare the middle and wide options.",
+          "Cues: 'YOU have the puck.' / 'Gold1 is between YOU and Navy2.' / 'Gold2 is farther toward the net.'",
+          "Limits: static scene; a diagram line cannot prove moving interception timing or pass success; an adult may read the questions aloud."
+        ],
+        "unproven": [
+          "Whether a pass to Navy2 would actually be intercepted if attempted; only the static lane geometry is given.",
+          "Where any skater is looking; facing is a drawn arrow, not gaze.",
+          "Any outcome after YOU carries or passes."
+        ]
+      },
+      "sourceUrls": [
+        "https://www.hockeycanada.ca/en-ca/news/seven-coaching-principles-vision-scanning-2024-ncw",
+        "https://www.hockeycanada.ca/en-ca/news/seven-coaching-principles-puck-control-2024-ncw"
+      ],
+      "alternative": "Finding the teammate and noticing the defender's lane can happen almost simultaneously through scanning; this is a coaching model for organizing the read, not a strict required order."
+    },
+    {
+      "scenarioId": "exp26b-u9-009",
+      "questionId": "exp26b-u9-009-q5",
+      "baseContentHash": "35fbe75d4af62b3df2e473aed7cef012bcd8a0a035447a3888c3a5e4c10f782f",
+      "verdict": "retain",
+      "reason": "All seven checks pass on independent review: roster, geometry, answer, feedback, age, sources and grammar are each verified against the actual coordinates, facing vectors, and puck ownership in this scene (see sceneEvidence). No shared or question-specific defect found.",
+      "checks": {
+        "roster": "pass",
+        "geometry": "pass",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "pass"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "YOU (home-skater-1) at (7,-7) facing 0.2 rad; Navy2 (home-skater-2) at (14,-6) facing 2.5 rad; Gold1 (away-skater-1) at (11,-6) facing -0.4 rad; Gold2 (away-skater-2) at (18,-2) facing 2.7 rad.",
+          "The puck is owned by YOU; carried-puck render point (7.84,-6.12), on the ice.",
+          "The line from YOU (7,-7) to Navy2 (14,-6) passes within 0.42 m of Gold1's actual position (11,-6) at t=0.58 along that segment -- Gold1 genuinely sits in the direct passing lane, not merely near it by coincidence.",
+          "Gold2 (x=18) has the highest x of the four actors, i.e. is genuinely farthest toward the +x net that navy attacks.",
+          "YOU sits 5.95 m from the nearest side boards ('near the side' is a broad, non-landmark-specific claim and is a fair description at that distance, unlike a tight 'beside/by the boards' claim)."
+        ],
+        "stated": [
+          "Briefing (v1): navy attacks +x, gold attacks -x; YOU have the puck near the side; Navy2 is wide ahead; Gold1 is between YOU and Navy2; Gold2 is farther toward the net; the coach asks you to compare the middle and wide options.",
+          "Cues: 'YOU have the puck.' / 'Gold1 is between YOU and Navy2.' / 'Gold2 is farther toward the net.'",
+          "Limits: static scene; a diagram line cannot prove moving interception timing or pass success; an adult may read the questions aloud."
+        ],
+        "unproven": [
+          "Whether a pass to Navy2 would actually be intercepted if attempted; only the static lane geometry is given.",
+          "Where any skater is looking; facing is a drawn arrow, not gaze.",
+          "Any outcome after YOU carries or passes."
+        ]
+      },
+      "sourceUrls": [
+        "https://www.hockeycanada.ca/en-ca/news/seven-coaching-principles-vision-scanning-2024-ncw",
+        "https://www.hockeycanada.ca/en-ca/news/seven-coaching-principles-puck-control-2024-ncw"
+      ],
+      "alternative": "Depending on exactly how far Gold1 shifts and where Gold2 is by then, carrying past centre or trying a different passing angle could also be reasonable; no single response is guaranteed correct."
+    },
+    {
+      "scenarioId": "exp26b-u9-009",
+      "questionId": "exp26b-u9-009-q6",
+      "baseContentHash": "6fa6267959839741b72dabb716dfbd93e1c03195af12321eb213a7cf18ebe5fd",
+      "verdict": "retain",
+      "reason": "All seven checks pass on independent review: roster, geometry, answer, feedback, age, sources and grammar are each verified against the actual coordinates, facing vectors, and puck ownership in this scene (see sceneEvidence). No shared or question-specific defect found.",
+      "checks": {
+        "roster": "pass",
+        "geometry": "pass",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "pass"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "YOU (home-skater-1) at (7,-7) facing 0.2 rad; Navy2 (home-skater-2) at (14,-6) facing 2.5 rad; Gold1 (away-skater-1) at (11,-6) facing -0.4 rad; Gold2 (away-skater-2) at (18,-2) facing 2.7 rad.",
+          "The puck is owned by YOU; carried-puck render point (7.84,-6.12), on the ice.",
+          "The line from YOU (7,-7) to Navy2 (14,-6) passes within 0.42 m of Gold1's actual position (11,-6) at t=0.58 along that segment -- Gold1 genuinely sits in the direct passing lane, not merely near it by coincidence.",
+          "Gold2 (x=18) has the highest x of the four actors, i.e. is genuinely farthest toward the +x net that navy attacks.",
+          "YOU sits 5.95 m from the nearest side boards ('near the side' is a broad, non-landmark-specific claim and is a fair description at that distance, unlike a tight 'beside/by the boards' claim)."
+        ],
+        "stated": [
+          "Briefing (v1): navy attacks +x, gold attacks -x; YOU have the puck near the side; Navy2 is wide ahead; Gold1 is between YOU and Navy2; Gold2 is farther toward the net; the coach asks you to compare the middle and wide options.",
+          "Cues: 'YOU have the puck.' / 'Gold1 is between YOU and Navy2.' / 'Gold2 is farther toward the net.'",
+          "Limits: static scene; a diagram line cannot prove moving interception timing or pass success; an adult may read the questions aloud."
+        ],
+        "unproven": [
+          "Whether a pass to Navy2 would actually be intercepted if attempted; only the static lane geometry is given.",
+          "Where any skater is looking; facing is a drawn arrow, not gaze.",
+          "Any outcome after YOU carries or passes."
+        ]
+      },
+      "sourceUrls": [
+        "https://www.hockeycanada.ca/en-ca/news/seven-coaching-principles-vision-scanning-2024-ncw",
+        "https://www.hockeycanada.ca/en-ca/news/seven-coaching-principles-puck-control-2024-ncw"
+      ],
+      "alternative": "A defender's movement is not the only thing that can change a lane -- a puck carrier's own movement, speed, or a teammate's relocation can too. The scene only shows one example of a defender-caused change."
+    },
+    {
+      "scenarioId": "exp26b-u9-010",
+      "questionId": "exp26b-u9-010-q1",
+      "baseContentHash": "e33e540c1164c15cb88a1226f33a8a6df37cabed3bf91244e8adfa6316f13b14",
+      "verdict": "repair",
+      "reason": "Inherits this scene's shared geometry defect: the briefing/cues call Navy2's position 'near the navy end boards' (actually 5.48 m off the nearest boards) and Navy3's position 'near the blue line' (actually 6.38 m off that line). Q1's own prompt ('Who has the puck near the boards?') restates the false boards-proximity claim directly; the answer itself (Navy2) remains correct.",
+      "checks": {
+        "roster": "pass",
+        "geometry": "fail",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "pass"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "YOU (home-skater-1) at (-22,-8) facing 0.5 rad; Navy2 (home-skater-2) at (-25,-3) facing 0.2 rad; Navy3 (home-skater-3) at (-14,1) facing 0.1 rad; Gold1 (away-skater-1) at (-20,-4) facing 2.8 rad.",
+          "The puck is owned by Navy2; carried-puck render point (-24.16,-2.12), on the ice.",
+          "Navy2 sits 5.48 m from the nearest end boards -- not tight to the boards the way 'near the ... end boards' implies.",
+          "Navy3 sits 6.38 m from the blue line (x=-7.62) -- the blue line is a thin landmark, and 6.38 m is not 'near' it.",
+          "In the app's actual 2D board renderer (ExperimentalBoard, which draws each point at SVG y = -(scenario y), i.e. +y renders toward the TOP of the rink image, the opposite of the documented 3D-camera convention where +y is toward the bottom), YOU (y=-8) renders lower on screen than the carried puck (y=-2.12) -- 'YOU are below the puck' is correct for the actual 2D rendering.",
+          "Also verified in the same 2D convention: the (-19,-9) reference point in q3 has the most negative y of any point in the scene, so it genuinely renders as the 'lower-side space' described."
+        ],
+        "stated": [
+          "Briefing (v1): navy attacks +x, gold attacks -x; Navy2 has the puck near the navy end boards; YOU are below the puck; Gold1 is between the carrier and the middle; Navy3 waits near the blue line; the coach asks you to become a safe outlet.",
+          "Cues: 'Navy2 has the puck near the navy end boards.' / 'Gold1 sits between Navy2 and the middle.' / 'Navy3 waits near the blue line.'",
+          "Limits: static breakout practice; no full team system, icing, or offside call encoded; an adult may read the questions aloud."
+        ],
+        "unproven": [
+          "Whether Gold1 actually closes the passing lane if Navy2 attempts an outlet; only starting positions are given.",
+          "Where any skater is looking; facing is a drawn arrow, not gaze.",
+          "Any completed-pass or turnover outcome."
+        ]
+      },
+      "sourceUrls": [
+        "https://www.hockeycanada.ca/en-ca/news/seven-coaching-principles-puck-control-2024-ncw",
+        "https://www.hockeycanada.ca/en-ca/news/seven-coaching-principles-vision-scanning-2024-ncw"
+      ]
+    },
+    {
+      "scenarioId": "exp26b-u9-010",
+      "questionId": "exp26b-u9-010-q2",
+      "baseContentHash": "b901673291964750c89fe464d9b3c581a2f9ff603229efac1b84f1172b70c56b",
+      "verdict": "repair",
+      "reason": "Inherits this scene's shared geometry defect: the briefing/cues call Navy2's position 'near the navy end boards' (actually 5.48 m off the nearest boards) and Navy3's position 'near the blue line' (actually 6.38 m off that line). Q2's own option b ('Navy3 near the blue line' in the original) restated the false blue-line-proximity claim directly inside a scored basis:scene option; the answer set (a,b) itself remains correct.",
+      "checks": {
+        "roster": "pass",
+        "geometry": "fail",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "pass"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "YOU (home-skater-1) at (-22,-8) facing 0.5 rad; Navy2 (home-skater-2) at (-25,-3) facing 0.2 rad; Navy3 (home-skater-3) at (-14,1) facing 0.1 rad; Gold1 (away-skater-1) at (-20,-4) facing 2.8 rad.",
+          "The puck is owned by Navy2; carried-puck render point (-24.16,-2.12), on the ice.",
+          "Navy2 sits 5.48 m from the nearest end boards -- not tight to the boards the way 'near the ... end boards' implies.",
+          "Navy3 sits 6.38 m from the blue line (x=-7.62) -- the blue line is a thin landmark, and 6.38 m is not 'near' it.",
+          "In the app's actual 2D board renderer (ExperimentalBoard, which draws each point at SVG y = -(scenario y), i.e. +y renders toward the TOP of the rink image, the opposite of the documented 3D-camera convention where +y is toward the bottom), YOU (y=-8) renders lower on screen than the carried puck (y=-2.12) -- 'YOU are below the puck' is correct for the actual 2D rendering.",
+          "Also verified in the same 2D convention: the (-19,-9) reference point in q3 has the most negative y of any point in the scene, so it genuinely renders as the 'lower-side space' described."
+        ],
+        "stated": [
+          "Briefing (v1): navy attacks +x, gold attacks -x; Navy2 has the puck near the navy end boards; YOU are below the puck; Gold1 is between the carrier and the middle; Navy3 waits near the blue line; the coach asks you to become a safe outlet.",
+          "Cues: 'Navy2 has the puck near the navy end boards.' / 'Gold1 sits between Navy2 and the middle.' / 'Navy3 waits near the blue line.'",
+          "Limits: static breakout practice; no full team system, icing, or offside call encoded; an adult may read the questions aloud."
+        ],
+        "unproven": [
+          "Whether Gold1 actually closes the passing lane if Navy2 attempts an outlet; only starting positions are given.",
+          "Where any skater is looking; facing is a drawn arrow, not gaze.",
+          "Any completed-pass or turnover outcome."
+        ]
+      },
+      "sourceUrls": [
+        "https://www.hockeycanada.ca/en-ca/news/seven-coaching-principles-puck-control-2024-ncw",
+        "https://www.hockeycanada.ca/en-ca/news/seven-coaching-principles-vision-scanning-2024-ncw"
+      ]
+    },
+    {
+      "scenarioId": "exp26b-u9-010",
+      "questionId": "exp26b-u9-010-q3",
+      "baseContentHash": "5e0c1fab906d0e5626b6fb73def94de33e0c97774b034ab333565251344af027",
+      "verdict": "repair",
+      "reason": "Inherits this scene's shared geometry defect: the briefing/cues call Navy2's position 'near the navy end boards' (actually 5.48 m off the nearest boards) and Navy3's position 'near the blue line' (actually 6.38 m off that line). Q3 itself does not add a new defect beyond the inherited scene text.",
+      "checks": {
+        "roster": "pass",
+        "geometry": "fail",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "pass"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "YOU (home-skater-1) at (-22,-8) facing 0.5 rad; Navy2 (home-skater-2) at (-25,-3) facing 0.2 rad; Navy3 (home-skater-3) at (-14,1) facing 0.1 rad; Gold1 (away-skater-1) at (-20,-4) facing 2.8 rad.",
+          "The puck is owned by Navy2; carried-puck render point (-24.16,-2.12), on the ice.",
+          "Navy2 sits 5.48 m from the nearest end boards -- not tight to the boards the way 'near the ... end boards' implies.",
+          "Navy3 sits 6.38 m from the blue line (x=-7.62) -- the blue line is a thin landmark, and 6.38 m is not 'near' it.",
+          "In the app's actual 2D board renderer (ExperimentalBoard, which draws each point at SVG y = -(scenario y), i.e. +y renders toward the TOP of the rink image, the opposite of the documented 3D-camera convention where +y is toward the bottom), YOU (y=-8) renders lower on screen than the carried puck (y=-2.12) -- 'YOU are below the puck' is correct for the actual 2D rendering.",
+          "Also verified in the same 2D convention: the (-19,-9) reference point in q3 has the most negative y of any point in the scene, so it genuinely renders as the 'lower-side space' described."
+        ],
+        "stated": [
+          "Briefing (v1): navy attacks +x, gold attacks -x; Navy2 has the puck near the navy end boards; YOU are below the puck; Gold1 is between the carrier and the middle; Navy3 waits near the blue line; the coach asks you to become a safe outlet.",
+          "Cues: 'Navy2 has the puck near the navy end boards.' / 'Gold1 sits between Navy2 and the middle.' / 'Navy3 waits near the blue line.'",
+          "Limits: static breakout practice; no full team system, icing, or offside call encoded; an adult may read the questions aloud."
+        ],
+        "unproven": [
+          "Whether Gold1 actually closes the passing lane if Navy2 attempts an outlet; only starting positions are given.",
+          "Where any skater is looking; facing is a drawn arrow, not gaze.",
+          "Any completed-pass or turnover outcome."
+        ]
+      },
+      "sourceUrls": [
+        "https://www.hockeycanada.ca/en-ca/news/seven-coaching-principles-puck-control-2024-ncw",
+        "https://www.hockeycanada.ca/en-ca/news/seven-coaching-principles-vision-scanning-2024-ncw"
+      ],
+      "alternative": "Another lane could work as long as it stays clear of Gold1 and visible to Navy2; (-19,-9) is one workable illustration, not the only correct dot."
+    },
+    {
+      "scenarioId": "exp26b-u9-010",
+      "questionId": "exp26b-u9-010-q4",
+      "baseContentHash": "1e0f6c57f644dc6251491e76070f44574110adddde0987f16df16c62a60acbc5",
+      "verdict": "repair",
+      "reason": "Inherits this scene's shared geometry defect: the briefing/cues call Navy2's position 'near the navy end boards' (actually 5.48 m off the nearest boards) and Navy3's position 'near the blue line' (actually 6.38 m off that line). Q4 itself does not add a new defect beyond the inherited scene text.",
+      "checks": {
+        "roster": "pass",
+        "geometry": "fail",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "pass"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "YOU (home-skater-1) at (-22,-8) facing 0.5 rad; Navy2 (home-skater-2) at (-25,-3) facing 0.2 rad; Navy3 (home-skater-3) at (-14,1) facing 0.1 rad; Gold1 (away-skater-1) at (-20,-4) facing 2.8 rad.",
+          "The puck is owned by Navy2; carried-puck render point (-24.16,-2.12), on the ice.",
+          "Navy2 sits 5.48 m from the nearest end boards -- not tight to the boards the way 'near the ... end boards' implies.",
+          "Navy3 sits 6.38 m from the blue line (x=-7.62) -- the blue line is a thin landmark, and 6.38 m is not 'near' it.",
+          "In the app's actual 2D board renderer (ExperimentalBoard, which draws each point at SVG y = -(scenario y), i.e. +y renders toward the TOP of the rink image, the opposite of the documented 3D-camera convention where +y is toward the bottom), YOU (y=-8) renders lower on screen than the carried puck (y=-2.12) -- 'YOU are below the puck' is correct for the actual 2D rendering.",
+          "Also verified in the same 2D convention: the (-19,-9) reference point in q3 has the most negative y of any point in the scene, so it genuinely renders as the 'lower-side space' described."
+        ],
+        "stated": [
+          "Briefing (v1): navy attacks +x, gold attacks -x; Navy2 has the puck near the navy end boards; YOU are below the puck; Gold1 is between the carrier and the middle; Navy3 waits near the blue line; the coach asks you to become a safe outlet.",
+          "Cues: 'Navy2 has the puck near the navy end boards.' / 'Gold1 sits between Navy2 and the middle.' / 'Navy3 waits near the blue line.'",
+          "Limits: static breakout practice; no full team system, icing, or offside call encoded; an adult may read the questions aloud."
+        ],
+        "unproven": [
+          "Whether Gold1 actually closes the passing lane if Navy2 attempts an outlet; only starting positions are given.",
+          "Where any skater is looking; facing is a drawn arrow, not gaze.",
+          "Any completed-pass or turnover outcome."
+        ]
+      },
+      "sourceUrls": [
+        "https://www.hockeycanada.ca/en-ca/news/seven-coaching-principles-puck-control-2024-ncw",
+        "https://www.hockeycanada.ca/en-ca/news/seven-coaching-principles-vision-scanning-2024-ncw"
+      ],
+      "alternative": "Finding the carrier and reading pressure can overlap through scanning; the three actions are a coaching model for this age, not the only possible order."
+    },
+    {
+      "scenarioId": "exp26b-u9-010",
+      "questionId": "exp26b-u9-010-q5",
+      "baseContentHash": "defbd5fc8788310e6a7fde9a8b134fb22a0b79ffcabd7b6a2f42470a36b189f2",
+      "verdict": "repair",
+      "reason": "Inherits this scene's shared geometry defect: the briefing/cues call Navy2's position 'near the navy end boards' (actually 5.48 m off the nearest boards) and Navy3's position 'near the blue line' (actually 6.38 m off that line). Q5 itself does not add a new defect beyond the inherited scene text.",
+      "checks": {
+        "roster": "pass",
+        "geometry": "fail",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "pass"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "YOU (home-skater-1) at (-22,-8) facing 0.5 rad; Navy2 (home-skater-2) at (-25,-3) facing 0.2 rad; Navy3 (home-skater-3) at (-14,1) facing 0.1 rad; Gold1 (away-skater-1) at (-20,-4) facing 2.8 rad.",
+          "The puck is owned by Navy2; carried-puck render point (-24.16,-2.12), on the ice.",
+          "Navy2 sits 5.48 m from the nearest end boards -- not tight to the boards the way 'near the ... end boards' implies.",
+          "Navy3 sits 6.38 m from the blue line (x=-7.62) -- the blue line is a thin landmark, and 6.38 m is not 'near' it.",
+          "In the app's actual 2D board renderer (ExperimentalBoard, which draws each point at SVG y = -(scenario y), i.e. +y renders toward the TOP of the rink image, the opposite of the documented 3D-camera convention where +y is toward the bottom), YOU (y=-8) renders lower on screen than the carried puck (y=-2.12) -- 'YOU are below the puck' is correct for the actual 2D rendering.",
+          "Also verified in the same 2D convention: the (-19,-9) reference point in q3 has the most negative y of any point in the scene, so it genuinely renders as the 'lower-side space' described."
+        ],
+        "stated": [
+          "Briefing (v1): navy attacks +x, gold attacks -x; Navy2 has the puck near the navy end boards; YOU are below the puck; Gold1 is between the carrier and the middle; Navy3 waits near the blue line; the coach asks you to become a safe outlet.",
+          "Cues: 'Navy2 has the puck near the navy end boards.' / 'Gold1 sits between Navy2 and the middle.' / 'Navy3 waits near the blue line.'",
+          "Limits: static breakout practice; no full team system, icing, or offside call encoded; an adult may read the questions aloud."
+        ],
+        "unproven": [
+          "Whether Gold1 actually closes the passing lane if Navy2 attempts an outlet; only starting positions are given.",
+          "Where any skater is looking; facing is a drawn arrow, not gaze.",
+          "Any completed-pass or turnover outcome."
+        ]
+      },
+      "sourceUrls": [
+        "https://www.hockeycanada.ca/en-ca/news/seven-coaching-principles-puck-control-2024-ncw",
+        "https://www.hockeycanada.ca/en-ca/news/seven-coaching-principles-vision-scanning-2024-ncw"
+      ],
+      "alternative": "Depending on exactly how Gold1 turns and where Navy3 ends up, Navy2 could also choose to carry the puck a beat longer rather than pass immediately; no single response is guaranteed correct."
+    },
+    {
+      "scenarioId": "exp26b-u9-010",
+      "questionId": "exp26b-u9-010-q6",
+      "baseContentHash": "d7e498f35fb7d9ab7a1886c6cfe7b7ac02e012167580f792fab9385dcf99e0d6",
+      "verdict": "repair",
+      "reason": "Inherits this scene's shared geometry defect: the briefing/cues call Navy2's position 'near the navy end boards' (actually 5.48 m off the nearest boards) and Navy3's position 'near the blue line' (actually 6.38 m off that line). Q6 itself does not add a new defect beyond the inherited scene text.",
+      "checks": {
+        "roster": "pass",
+        "geometry": "fail",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "pass"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "YOU (home-skater-1) at (-22,-8) facing 0.5 rad; Navy2 (home-skater-2) at (-25,-3) facing 0.2 rad; Navy3 (home-skater-3) at (-14,1) facing 0.1 rad; Gold1 (away-skater-1) at (-20,-4) facing 2.8 rad.",
+          "The puck is owned by Navy2; carried-puck render point (-24.16,-2.12), on the ice.",
+          "Navy2 sits 5.48 m from the nearest end boards -- not tight to the boards the way 'near the ... end boards' implies.",
+          "Navy3 sits 6.38 m from the blue line (x=-7.62) -- the blue line is a thin landmark, and 6.38 m is not 'near' it.",
+          "In the app's actual 2D board renderer (ExperimentalBoard, which draws each point at SVG y = -(scenario y), i.e. +y renders toward the TOP of the rink image, the opposite of the documented 3D-camera convention where +y is toward the bottom), YOU (y=-8) renders lower on screen than the carried puck (y=-2.12) -- 'YOU are below the puck' is correct for the actual 2D rendering.",
+          "Also verified in the same 2D convention: the (-19,-9) reference point in q3 has the most negative y of any point in the scene, so it genuinely renders as the 'lower-side space' described."
+        ],
+        "stated": [
+          "Briefing (v1): navy attacks +x, gold attacks -x; Navy2 has the puck near the navy end boards; YOU are below the puck; Gold1 is between the carrier and the middle; Navy3 waits near the blue line; the coach asks you to become a safe outlet.",
+          "Cues: 'Navy2 has the puck near the navy end boards.' / 'Gold1 sits between Navy2 and the middle.' / 'Navy3 waits near the blue line.'",
+          "Limits: static breakout practice; no full team system, icing, or offside call encoded; an adult may read the questions aloud."
+        ],
+        "unproven": [
+          "Whether Gold1 actually closes the passing lane if Navy2 attempts an outlet; only starting positions are given.",
+          "Where any skater is looking; facing is a drawn arrow, not gaze.",
+          "Any completed-pass or turnover outcome."
+        ]
+      },
+      "sourceUrls": [
+        "https://www.hockeycanada.ca/en-ca/news/seven-coaching-principles-puck-control-2024-ncw",
+        "https://www.hockeycanada.ca/en-ca/news/seven-coaching-principles-vision-scanning-2024-ncw"
+      ],
+      "alternative": "A higher/neutral-zone outlet (like Navy3's) can help just as much as a lower one, depending on which lane pressure actually leaves open; there is no single correct side."
+    },
+    {
+      "scenarioId": "exp26b-u9-011",
+      "questionId": "exp26b-u9-011-q1",
+      "baseContentHash": "c37bffd7e401a4a490eea3866f01e046637a0e0bd0a91e5680618e136247011d",
+      "verdict": "repair",
+      "reason": "Inherits this scene's shared geometry defect: the briefing/cues state 'Gold2 is behind YOU', but the dot product of YOU's facing (0.1 rad) with the direction to Gold2 is +1.39 (positive), meaning Gold2 is on the same side as YOU's facing (about 77 degrees off-centre, near the edge of forward vision) rather than behind. Q1 itself does not add a new defect beyond the inherited scene text.",
+      "checks": {
+        "roster": "pass",
+        "geometry": "fail",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "pass"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "YOU (home-skater-1) at (6,1) facing 0.1 rad; Navy2 (home-skater-2) at (1,1) facing 0.2 rad; Navy3 (home-skater-3) at (5,7) facing -0.2 rad; Gold1 (away-skater-1) at (5,3) facing -1.2 rad; Gold2 (away-skater-2) at (8,-5) facing 2.9 rad.",
+          "The puck is loose (owner: null) at (5,2).",
+          "Straight-line distance to the loose puck: Gold1 1.00 m, YOU 1.41 m, Navy2 4.12 m, Navy3 5.00 m -- among NAVY teammates, YOU genuinely is nearest (Gold1's closer distance reflects that Gold1 is the one who just touched the pass).",
+          "YOU's facing (0.1 rad, direction (1.00,0.10)) dotted with the vector from YOU to Gold2 (dx=2, dy=-6) gives +1.39 -- a POSITIVE value, meaning Gold2 is on the same side as YOU's facing direction (in front / to the side), not behind. The angle between YOU's facing and the direction to Gold2 is about 77 degrees off-centre -- near the edge of forward vision, genuinely easy to miss without turning to scan, but not 'behind'.",
+          "Navy3 (y=7) is 6 m from YOU in y, on the opposite side from Gold2 (y=-5, 6 m from YOU the other way) -- both are fairly described as being to a 'side' relative to YOU, but only Navy3's side is the teammate's 'far side' target; Gold2 is pressure on the near/other side."
+        ],
+        "stated": [
+          "Briefing (v1): navy attacks +x, gold attacks -x; Navy2 tried to pass to YOU, but Gold1 touched the puck and it is loose; YOU are nearest the puck; Navy3 is open on the far side; Gold2 is behind YOU.",
+          "Cues: 'Gold1 touched the pass.' / 'The puck is loose.' / 'Navy3 is on the far side and Gold2 is behind YOU.'",
+          "Limits: the block and loose puck are stated events; static art does not show speed, contact, or possession after the next touch; an adult may read the questions aloud."
+        ],
+        "unproven": [
+          "Whether YOU or Gold1 would actually win the loose puck if play continued; only starting distances are given.",
+          "Where any skater is looking; facing is a drawn arrow, not gaze.",
+          "Any contact or stick-reach outcome at the puck."
+        ]
+      },
+      "sourceUrls": [
+        "https://www.hockeycanada.ca/en-ca/news/seven-coaching-principles-vision-scanning-2024-ncw",
+        "https://www.hockeycanada.ca/en-ca/hockey-programs/coaching/under-9"
+      ]
+    },
+    {
+      "scenarioId": "exp26b-u9-011",
+      "questionId": "exp26b-u9-011-q2",
+      "baseContentHash": "5dd4a4bde884281263f885d2f999d9ce1fa1a9128dce748b48cdfd11f6b28dcb",
+      "verdict": "repair",
+      "reason": "Inherits this scene's shared geometry defect: the briefing/cues state 'Gold2 is behind YOU', but the dot product of YOU's facing (0.1 rad) with the direction to Gold2 is +1.39 (positive), meaning Gold2 is on the same side as YOU's facing (about 77 degrees off-centre, near the edge of forward vision) rather than behind. Q2's own option b ('Gold2 behind you') AND its explanation ('Gold2 is behind YOU') both restate the false directional claim directly; the answer set (a,b) itself remains correct (Gold2 is genuinely worth checking, just not because he is 'behind').",
+      "checks": {
+        "roster": "pass",
+        "geometry": "fail",
+        "answer": "pass",
+        "feedback": "fail",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "pass"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "YOU (home-skater-1) at (6,1) facing 0.1 rad; Navy2 (home-skater-2) at (1,1) facing 0.2 rad; Navy3 (home-skater-3) at (5,7) facing -0.2 rad; Gold1 (away-skater-1) at (5,3) facing -1.2 rad; Gold2 (away-skater-2) at (8,-5) facing 2.9 rad.",
+          "The puck is loose (owner: null) at (5,2).",
+          "Straight-line distance to the loose puck: Gold1 1.00 m, YOU 1.41 m, Navy2 4.12 m, Navy3 5.00 m -- among NAVY teammates, YOU genuinely is nearest (Gold1's closer distance reflects that Gold1 is the one who just touched the pass).",
+          "YOU's facing (0.1 rad, direction (1.00,0.10)) dotted with the vector from YOU to Gold2 (dx=2, dy=-6) gives +1.39 -- a POSITIVE value, meaning Gold2 is on the same side as YOU's facing direction (in front / to the side), not behind. The angle between YOU's facing and the direction to Gold2 is about 77 degrees off-centre -- near the edge of forward vision, genuinely easy to miss without turning to scan, but not 'behind'.",
+          "Navy3 (y=7) is 6 m from YOU in y, on the opposite side from Gold2 (y=-5, 6 m from YOU the other way) -- both are fairly described as being to a 'side' relative to YOU, but only Navy3's side is the teammate's 'far side' target; Gold2 is pressure on the near/other side."
+        ],
+        "stated": [
+          "Briefing (v1): navy attacks +x, gold attacks -x; Navy2 tried to pass to YOU, but Gold1 touched the puck and it is loose; YOU are nearest the puck; Navy3 is open on the far side; Gold2 is behind YOU.",
+          "Cues: 'Gold1 touched the pass.' / 'The puck is loose.' / 'Navy3 is on the far side and Gold2 is behind YOU.'",
+          "Limits: the block and loose puck are stated events; static art does not show speed, contact, or possession after the next touch; an adult may read the questions aloud."
+        ],
+        "unproven": [
+          "Whether YOU or Gold1 would actually win the loose puck if play continued; only starting distances are given.",
+          "Where any skater is looking; facing is a drawn arrow, not gaze.",
+          "Any contact or stick-reach outcome at the puck."
+        ]
+      },
+      "sourceUrls": [
+        "https://www.hockeycanada.ca/en-ca/news/seven-coaching-principles-vision-scanning-2024-ncw",
+        "https://www.hockeycanada.ca/en-ca/hockey-programs/coaching/under-9"
+      ]
+    },
+    {
+      "scenarioId": "exp26b-u9-011",
+      "questionId": "exp26b-u9-011-q3",
+      "baseContentHash": "e9e1586e0269568c3e99e8a0579433d2ca0e399839cf52bce84311053562a2c1",
+      "verdict": "repair",
+      "reason": "Inherits this scene's shared geometry defect: the briefing/cues state 'Gold2 is behind YOU', but the dot product of YOU's facing (0.1 rad) with the direction to Gold2 is +1.39 (positive), meaning Gold2 is on the same side as YOU's facing (about 77 degrees off-centre, near the edge of forward vision) rather than behind. Q3 itself does not add a new defect beyond the inherited scene text.",
+      "checks": {
+        "roster": "pass",
+        "geometry": "fail",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "pass"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "YOU (home-skater-1) at (6,1) facing 0.1 rad; Navy2 (home-skater-2) at (1,1) facing 0.2 rad; Navy3 (home-skater-3) at (5,7) facing -0.2 rad; Gold1 (away-skater-1) at (5,3) facing -1.2 rad; Gold2 (away-skater-2) at (8,-5) facing 2.9 rad.",
+          "The puck is loose (owner: null) at (5,2).",
+          "Straight-line distance to the loose puck: Gold1 1.00 m, YOU 1.41 m, Navy2 4.12 m, Navy3 5.00 m -- among NAVY teammates, YOU genuinely is nearest (Gold1's closer distance reflects that Gold1 is the one who just touched the pass).",
+          "YOU's facing (0.1 rad, direction (1.00,0.10)) dotted with the vector from YOU to Gold2 (dx=2, dy=-6) gives +1.39 -- a POSITIVE value, meaning Gold2 is on the same side as YOU's facing direction (in front / to the side), not behind. The angle between YOU's facing and the direction to Gold2 is about 77 degrees off-centre -- near the edge of forward vision, genuinely easy to miss without turning to scan, but not 'behind'.",
+          "Navy3 (y=7) is 6 m from YOU in y, on the opposite side from Gold2 (y=-5, 6 m from YOU the other way) -- both are fairly described as being to a 'side' relative to YOU, but only Navy3's side is the teammate's 'far side' target; Gold2 is pressure on the near/other side."
+        ],
+        "stated": [
+          "Briefing (v1): navy attacks +x, gold attacks -x; Navy2 tried to pass to YOU, but Gold1 touched the puck and it is loose; YOU are nearest the puck; Navy3 is open on the far side; Gold2 is behind YOU.",
+          "Cues: 'Gold1 touched the pass.' / 'The puck is loose.' / 'Navy3 is on the far side and Gold2 is behind YOU.'",
+          "Limits: the block and loose puck are stated events; static art does not show speed, contact, or possession after the next touch; an adult may read the questions aloud."
+        ],
+        "unproven": [
+          "Whether YOU or Gold1 would actually win the loose puck if play continued; only starting distances are given.",
+          "Where any skater is looking; facing is a drawn arrow, not gaze.",
+          "Any contact or stick-reach outcome at the puck."
+        ]
+      },
+      "sourceUrls": [
+        "https://www.hockeycanada.ca/en-ca/news/seven-coaching-principles-vision-scanning-2024-ncw",
+        "https://www.hockeycanada.ca/en-ca/hockey-programs/coaching/under-9"
+      ],
+      "alternative": "Another controlled position closer to or farther from Gold1 could also work as long as both the puck and Gold1 stay visible; (6,2) is one workable illustration, not the only correct dot."
+    },
+    {
+      "scenarioId": "exp26b-u9-011",
+      "questionId": "exp26b-u9-011-q4",
+      "baseContentHash": "d767b51300f3d249323905980e864ef0cc169057856bc1339b33aaea964dc70c",
+      "verdict": "repair",
+      "reason": "Inherits this scene's shared geometry defect: the briefing/cues state 'Gold2 is behind YOU', but the dot product of YOU's facing (0.1 rad) with the direction to Gold2 is +1.39 (positive), meaning Gold2 is on the same side as YOU's facing (about 77 degrees off-centre, near the edge of forward vision) rather than behind. Q4 itself does not add a new defect beyond the inherited scene text.",
+      "checks": {
+        "roster": "pass",
+        "geometry": "fail",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "pass"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "YOU (home-skater-1) at (6,1) facing 0.1 rad; Navy2 (home-skater-2) at (1,1) facing 0.2 rad; Navy3 (home-skater-3) at (5,7) facing -0.2 rad; Gold1 (away-skater-1) at (5,3) facing -1.2 rad; Gold2 (away-skater-2) at (8,-5) facing 2.9 rad.",
+          "The puck is loose (owner: null) at (5,2).",
+          "Straight-line distance to the loose puck: Gold1 1.00 m, YOU 1.41 m, Navy2 4.12 m, Navy3 5.00 m -- among NAVY teammates, YOU genuinely is nearest (Gold1's closer distance reflects that Gold1 is the one who just touched the pass).",
+          "YOU's facing (0.1 rad, direction (1.00,0.10)) dotted with the vector from YOU to Gold2 (dx=2, dy=-6) gives +1.39 -- a POSITIVE value, meaning Gold2 is on the same side as YOU's facing direction (in front / to the side), not behind. The angle between YOU's facing and the direction to Gold2 is about 77 degrees off-centre -- near the edge of forward vision, genuinely easy to miss without turning to scan, but not 'behind'.",
+          "Navy3 (y=7) is 6 m from YOU in y, on the opposite side from Gold2 (y=-5, 6 m from YOU the other way) -- both are fairly described as being to a 'side' relative to YOU, but only Navy3's side is the teammate's 'far side' target; Gold2 is pressure on the near/other side."
+        ],
+        "stated": [
+          "Briefing (v1): navy attacks +x, gold attacks -x; Navy2 tried to pass to YOU, but Gold1 touched the puck and it is loose; YOU are nearest the puck; Navy3 is open on the far side; Gold2 is behind YOU.",
+          "Cues: 'Gold1 touched the pass.' / 'The puck is loose.' / 'Navy3 is on the far side and Gold2 is behind YOU.'",
+          "Limits: the block and loose puck are stated events; static art does not show speed, contact, or possession after the next touch; an adult may read the questions aloud."
+        ],
+        "unproven": [
+          "Whether YOU or Gold1 would actually win the loose puck if play continued; only starting distances are given.",
+          "Where any skater is looking; facing is a drawn arrow, not gaze.",
+          "Any contact or stick-reach outcome at the puck."
+        ]
+      },
+      "sourceUrls": [
+        "https://www.hockeycanada.ca/en-ca/news/seven-coaching-principles-vision-scanning-2024-ncw",
+        "https://www.hockeycanada.ca/en-ca/hockey-programs/coaching/under-9"
+      ],
+      "alternative": "Checking pressure and finding support can overlap through scanning rather than strictly follow finding the puck first; this is a coaching model, not the only possible order."
+    },
+    {
+      "scenarioId": "exp26b-u9-011",
+      "questionId": "exp26b-u9-011-q5",
+      "baseContentHash": "f6a57503c885f3e469e9b15c7dac19ff351242585c190af9edf7af8f7b483083",
+      "verdict": "repair",
+      "reason": "Inherits this scene's shared geometry defect: the briefing/cues state 'Gold2 is behind YOU', but the dot product of YOU's facing (0.1 rad) with the direction to Gold2 is +1.39 (positive), meaning Gold2 is on the same side as YOU's facing (about 77 degrees off-centre, near the edge of forward vision) rather than behind. Q5 itself does not add a new defect beyond the inherited scene text.",
+      "checks": {
+        "roster": "pass",
+        "geometry": "fail",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "pass"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "YOU (home-skater-1) at (6,1) facing 0.1 rad; Navy2 (home-skater-2) at (1,1) facing 0.2 rad; Navy3 (home-skater-3) at (5,7) facing -0.2 rad; Gold1 (away-skater-1) at (5,3) facing -1.2 rad; Gold2 (away-skater-2) at (8,-5) facing 2.9 rad.",
+          "The puck is loose (owner: null) at (5,2).",
+          "Straight-line distance to the loose puck: Gold1 1.00 m, YOU 1.41 m, Navy2 4.12 m, Navy3 5.00 m -- among NAVY teammates, YOU genuinely is nearest (Gold1's closer distance reflects that Gold1 is the one who just touched the pass).",
+          "YOU's facing (0.1 rad, direction (1.00,0.10)) dotted with the vector from YOU to Gold2 (dx=2, dy=-6) gives +1.39 -- a POSITIVE value, meaning Gold2 is on the same side as YOU's facing direction (in front / to the side), not behind. The angle between YOU's facing and the direction to Gold2 is about 77 degrees off-centre -- near the edge of forward vision, genuinely easy to miss without turning to scan, but not 'behind'.",
+          "Navy3 (y=7) is 6 m from YOU in y, on the opposite side from Gold2 (y=-5, 6 m from YOU the other way) -- both are fairly described as being to a 'side' relative to YOU, but only Navy3's side is the teammate's 'far side' target; Gold2 is pressure on the near/other side."
+        ],
+        "stated": [
+          "Briefing (v1): navy attacks +x, gold attacks -x; Navy2 tried to pass to YOU, but Gold1 touched the puck and it is loose; YOU are nearest the puck; Navy3 is open on the far side; Gold2 is behind YOU.",
+          "Cues: 'Gold1 touched the pass.' / 'The puck is loose.' / 'Navy3 is on the far side and Gold2 is behind YOU.'",
+          "Limits: the block and loose puck are stated events; static art does not show speed, contact, or possession after the next touch; an adult may read the questions aloud."
+        ],
+        "unproven": [
+          "Whether YOU or Gold1 would actually win the loose puck if play continued; only starting distances are given.",
+          "Where any skater is looking; facing is a drawn arrow, not gaze.",
+          "Any contact or stick-reach outcome at the puck."
+        ]
+      },
+      "sourceUrls": [
+        "https://www.hockeycanada.ca/en-ca/news/seven-coaching-principles-vision-scanning-2024-ncw",
+        "https://www.hockeycanada.ca/en-ca/hockey-programs/coaching/under-9"
+      ],
+      "alternative": "Depending on exactly where Gold1 ends up and how quickly Navy players close, a different Navy player (not necessarily the one nearest Gold1) might be best placed to pressure; there is no single guaranteed response."
+    },
+    {
+      "scenarioId": "exp26b-u9-011",
+      "questionId": "exp26b-u9-011-q6",
+      "baseContentHash": "54b1a8376420ccbcf14bb6fd9dff6c5dd411e0da468188dab27f9e09c1eee0d2",
+      "verdict": "repair",
+      "reason": "Inherits this scene's shared geometry defect: the briefing/cues state 'Gold2 is behind YOU', but the dot product of YOU's facing (0.1 rad) with the direction to Gold2 is +1.39 (positive), meaning Gold2 is on the same side as YOU's facing (about 77 degrees off-centre, near the edge of forward vision) rather than behind. Q6 itself does not add a new defect beyond the inherited scene text.",
+      "checks": {
+        "roster": "pass",
+        "geometry": "fail",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "pass"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "YOU (home-skater-1) at (6,1) facing 0.1 rad; Navy2 (home-skater-2) at (1,1) facing 0.2 rad; Navy3 (home-skater-3) at (5,7) facing -0.2 rad; Gold1 (away-skater-1) at (5,3) facing -1.2 rad; Gold2 (away-skater-2) at (8,-5) facing 2.9 rad.",
+          "The puck is loose (owner: null) at (5,2).",
+          "Straight-line distance to the loose puck: Gold1 1.00 m, YOU 1.41 m, Navy2 4.12 m, Navy3 5.00 m -- among NAVY teammates, YOU genuinely is nearest (Gold1's closer distance reflects that Gold1 is the one who just touched the pass).",
+          "YOU's facing (0.1 rad, direction (1.00,0.10)) dotted with the vector from YOU to Gold2 (dx=2, dy=-6) gives +1.39 -- a POSITIVE value, meaning Gold2 is on the same side as YOU's facing direction (in front / to the side), not behind. The angle between YOU's facing and the direction to Gold2 is about 77 degrees off-centre -- near the edge of forward vision, genuinely easy to miss without turning to scan, but not 'behind'.",
+          "Navy3 (y=7) is 6 m from YOU in y, on the opposite side from Gold2 (y=-5, 6 m from YOU the other way) -- both are fairly described as being to a 'side' relative to YOU, but only Navy3's side is the teammate's 'far side' target; Gold2 is pressure on the near/other side."
+        ],
+        "stated": [
+          "Briefing (v1): navy attacks +x, gold attacks -x; Navy2 tried to pass to YOU, but Gold1 touched the puck and it is loose; YOU are nearest the puck; Navy3 is open on the far side; Gold2 is behind YOU.",
+          "Cues: 'Gold1 touched the pass.' / 'The puck is loose.' / 'Navy3 is on the far side and Gold2 is behind YOU.'",
+          "Limits: the block and loose puck are stated events; static art does not show speed, contact, or possession after the next touch; an adult may read the questions aloud."
+        ],
+        "unproven": [
+          "Whether YOU or Gold1 would actually win the loose puck if play continued; only starting distances are given.",
+          "Where any skater is looking; facing is a drawn arrow, not gaze.",
+          "Any contact or stick-reach outcome at the puck."
+        ]
+      },
+      "sourceUrls": [
+        "https://www.hockeycanada.ca/en-ca/news/seven-coaching-principles-vision-scanning-2024-ncw",
+        "https://www.hockeycanada.ca/en-ca/hockey-programs/coaching/under-9"
+      ],
+      "alternative": "A plan can also become outdated by a player's own movement or a whistle, not only by an opponent's touch; this scene shows one specific way a plan can change."
+    },
+    {
+      "scenarioId": "exp26b-u9-012",
+      "questionId": "exp26b-u9-012-q1",
+      "baseContentHash": "56dd5210d47f7f22a4a2b3ed719a79771e07b2831667502941c7a21aff37562e",
+      "verdict": "repair",
+      "reason": "Inherits this scene's shared geometry defect: the briefing/cues describe Gold1 as carrying 'along the lower boards', but Gold1 sits 7.95 m from the nearest side boards -- well clear of them (the 'lower'/'above' relative framing between Gold1 and YOU is itself correct for the app's actual 2D renderer, which draws +y toward the top; only the boards-proximity claim is the overstatement). Q1 itself does not add a new defect beyond the inherited scene text.",
+      "checks": {
+        "roster": "pass",
+        "geometry": "fail",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "pass"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "YOU (home-skater-1) at (10,7) facing 2.5 rad; Navy2 (home-skater-2) at (7,2) facing -2.4 rad; Gold1 (away-skater-1) at (8,5) facing 2.9 rad; Gold2 (away-skater-2) at (13,-5) facing -1.1 rad.",
+          "The puck is owned by Gold1; carried-puck render point (6.86,4.56), on the ice.",
+          "Gold1 sits 7.95 m from the nearest side boards -- well clear of the boards, not 'along' them.",
+          "In the app's actual 2D board renderer (+y renders toward the TOP, the opposite of the documented 3D-camera convention), YOU (y=7) renders higher on screen than Gold1 (y=5) -- 'YOU are above the play' relative to Gold1 is correct for the 2D rendering, and describing Gold1's position as 'lower' relative to YOU is also correct in that same convention (only the 'boards' proximity claim is the overstatement).",
+          "Gold2 (y=-5) is 10-12 m in y from Gold1/Navy2/YOU -- a genuine 'far side' separation."
+        ],
+        "stated": [
+          "Briefing (v1): navy attacks +x, gold attacks -x; Gold1 carries the puck along the lower boards; Navy2 pressures Gold1; YOU are above the play, with Gold2 on the far side; the coach asks you to help without leaving Gold2 unseen.",
+          "Cues: 'Gold1 carries low on the boards.' / 'Navy2 pressures the puck.' / 'Gold2 is on the far side.'",
+          "Limits: static defensive illustration; no permanent position or coverage timing proven; an adult may read the questions aloud."
+        ],
+        "unproven": [
+          "Whether Navy2's pressure actually forces a turnover; only starting positions are given.",
+          "Where any skater is looking; facing is a drawn arrow, not gaze.",
+          "Whether Gold2 would actually receive a pass if Gold1 tried one."
+        ]
+      },
+      "sourceUrls": [
+        "https://www.usahockey.com/news_article/show/1093178",
+        "https://www.hockeycanada.ca/en-ca/news/seven-coaching-principles-vision-scanning-2024-ncw"
+      ]
+    },
+    {
+      "scenarioId": "exp26b-u9-012",
+      "questionId": "exp26b-u9-012-q2",
+      "baseContentHash": "3670dbdb6589fcce15f39c52ef19f236109e9d997abf5590befd21662e1ec7c5",
+      "verdict": "repair",
+      "reason": "Inherits this scene's shared geometry defect: the briefing/cues describe Gold1 as carrying 'along the lower boards', but Gold1 sits 7.95 m from the nearest side boards -- well clear of them (the 'lower'/'above' relative framing between Gold1 and YOU is itself correct for the app's actual 2D renderer, which draws +y toward the top; only the boards-proximity claim is the overstatement). Q2 itself does not add a new defect beyond the inherited scene text.",
+      "checks": {
+        "roster": "pass",
+        "geometry": "fail",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "pass"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "YOU (home-skater-1) at (10,7) facing 2.5 rad; Navy2 (home-skater-2) at (7,2) facing -2.4 rad; Gold1 (away-skater-1) at (8,5) facing 2.9 rad; Gold2 (away-skater-2) at (13,-5) facing -1.1 rad.",
+          "The puck is owned by Gold1; carried-puck render point (6.86,4.56), on the ice.",
+          "Gold1 sits 7.95 m from the nearest side boards -- well clear of the boards, not 'along' them.",
+          "In the app's actual 2D board renderer (+y renders toward the TOP, the opposite of the documented 3D-camera convention), YOU (y=7) renders higher on screen than Gold1 (y=5) -- 'YOU are above the play' relative to Gold1 is correct for the 2D rendering, and describing Gold1's position as 'lower' relative to YOU is also correct in that same convention (only the 'boards' proximity claim is the overstatement).",
+          "Gold2 (y=-5) is 10-12 m in y from Gold1/Navy2/YOU -- a genuine 'far side' separation."
+        ],
+        "stated": [
+          "Briefing (v1): navy attacks +x, gold attacks -x; Gold1 carries the puck along the lower boards; Navy2 pressures Gold1; YOU are above the play, with Gold2 on the far side; the coach asks you to help without leaving Gold2 unseen.",
+          "Cues: 'Gold1 carries low on the boards.' / 'Navy2 pressures the puck.' / 'Gold2 is on the far side.'",
+          "Limits: static defensive illustration; no permanent position or coverage timing proven; an adult may read the questions aloud."
+        ],
+        "unproven": [
+          "Whether Navy2's pressure actually forces a turnover; only starting positions are given.",
+          "Where any skater is looking; facing is a drawn arrow, not gaze.",
+          "Whether Gold2 would actually receive a pass if Gold1 tried one."
+        ]
+      },
+      "sourceUrls": [
+        "https://www.usahockey.com/news_article/show/1093178",
+        "https://www.hockeycanada.ca/en-ca/news/seven-coaching-principles-vision-scanning-2024-ncw"
+      ]
+    },
+    {
+      "scenarioId": "exp26b-u9-012",
+      "questionId": "exp26b-u9-012-q3",
+      "baseContentHash": "94fc1d5eb78fbf13c349ee7a59031333b63e37ee7c6585d2380b7935af4c8b59",
+      "verdict": "repair",
+      "reason": "Inherits this scene's shared geometry defect: the briefing/cues describe Gold1 as carrying 'along the lower boards', but Gold1 sits 7.95 m from the nearest side boards -- well clear of them (the 'lower'/'above' relative framing between Gold1 and YOU is itself correct for the app's actual 2D renderer, which draws +y toward the top; only the boards-proximity claim is the overstatement). Q3 itself does not add a new defect beyond the inherited scene text.",
+      "checks": {
+        "roster": "pass",
+        "geometry": "fail",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "pass"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "YOU (home-skater-1) at (10,7) facing 2.5 rad; Navy2 (home-skater-2) at (7,2) facing -2.4 rad; Gold1 (away-skater-1) at (8,5) facing 2.9 rad; Gold2 (away-skater-2) at (13,-5) facing -1.1 rad.",
+          "The puck is owned by Gold1; carried-puck render point (6.86,4.56), on the ice.",
+          "Gold1 sits 7.95 m from the nearest side boards -- well clear of the boards, not 'along' them.",
+          "In the app's actual 2D board renderer (+y renders toward the TOP, the opposite of the documented 3D-camera convention), YOU (y=7) renders higher on screen than Gold1 (y=5) -- 'YOU are above the play' relative to Gold1 is correct for the 2D rendering, and describing Gold1's position as 'lower' relative to YOU is also correct in that same convention (only the 'boards' proximity claim is the overstatement).",
+          "Gold2 (y=-5) is 10-12 m in y from Gold1/Navy2/YOU -- a genuine 'far side' separation."
+        ],
+        "stated": [
+          "Briefing (v1): navy attacks +x, gold attacks -x; Gold1 carries the puck along the lower boards; Navy2 pressures Gold1; YOU are above the play, with Gold2 on the far side; the coach asks you to help without leaving Gold2 unseen.",
+          "Cues: 'Gold1 carries low on the boards.' / 'Navy2 pressures the puck.' / 'Gold2 is on the far side.'",
+          "Limits: static defensive illustration; no permanent position or coverage timing proven; an adult may read the questions aloud."
+        ],
+        "unproven": [
+          "Whether Navy2's pressure actually forces a turnover; only starting positions are given.",
+          "Where any skater is looking; facing is a drawn arrow, not gaze.",
+          "Whether Gold2 would actually receive a pass if Gold1 tried one."
+        ]
+      },
+      "sourceUrls": [
+        "https://www.usahockey.com/news_article/show/1093178",
+        "https://www.hockeycanada.ca/en-ca/news/seven-coaching-principles-vision-scanning-2024-ncw"
+      ],
+      "alternative": "Another support lane closer to or farther from Gold2 could also work as long as YOU can still see Gold1; (11,3) is one workable illustration, not the only correct dot."
+    },
+    {
+      "scenarioId": "exp26b-u9-012",
+      "questionId": "exp26b-u9-012-q4",
+      "baseContentHash": "1353dde28b39a8bf966e8e4d43dba087bf9adbb1ffe74f74d5671f687e46ec6c",
+      "verdict": "repair",
+      "reason": "Inherits this scene's shared geometry defect: the briefing/cues describe Gold1 as carrying 'along the lower boards', but Gold1 sits 7.95 m from the nearest side boards -- well clear of them (the 'lower'/'above' relative framing between Gold1 and YOU is itself correct for the app's actual 2D renderer, which draws +y toward the top; only the boards-proximity claim is the overstatement). Q4 itself does not add a new defect beyond the inherited scene text.",
+      "checks": {
+        "roster": "pass",
+        "geometry": "fail",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "pass"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "YOU (home-skater-1) at (10,7) facing 2.5 rad; Navy2 (home-skater-2) at (7,2) facing -2.4 rad; Gold1 (away-skater-1) at (8,5) facing 2.9 rad; Gold2 (away-skater-2) at (13,-5) facing -1.1 rad.",
+          "The puck is owned by Gold1; carried-puck render point (6.86,4.56), on the ice.",
+          "Gold1 sits 7.95 m from the nearest side boards -- well clear of the boards, not 'along' them.",
+          "In the app's actual 2D board renderer (+y renders toward the TOP, the opposite of the documented 3D-camera convention), YOU (y=7) renders higher on screen than Gold1 (y=5) -- 'YOU are above the play' relative to Gold1 is correct for the 2D rendering, and describing Gold1's position as 'lower' relative to YOU is also correct in that same convention (only the 'boards' proximity claim is the overstatement).",
+          "Gold2 (y=-5) is 10-12 m in y from Gold1/Navy2/YOU -- a genuine 'far side' separation."
+        ],
+        "stated": [
+          "Briefing (v1): navy attacks +x, gold attacks -x; Gold1 carries the puck along the lower boards; Navy2 pressures Gold1; YOU are above the play, with Gold2 on the far side; the coach asks you to help without leaving Gold2 unseen.",
+          "Cues: 'Gold1 carries low on the boards.' / 'Navy2 pressures the puck.' / 'Gold2 is on the far side.'",
+          "Limits: static defensive illustration; no permanent position or coverage timing proven; an adult may read the questions aloud."
+        ],
+        "unproven": [
+          "Whether Navy2's pressure actually forces a turnover; only starting positions are given.",
+          "Where any skater is looking; facing is a drawn arrow, not gaze.",
+          "Whether Gold2 would actually receive a pass if Gold1 tried one."
+        ]
+      },
+      "sourceUrls": [
+        "https://www.usahockey.com/news_article/show/1093178",
+        "https://www.hockeycanada.ca/en-ca/news/seven-coaching-principles-vision-scanning-2024-ncw"
+      ],
+      "alternative": "Finding the carrier and noticing the first defender's pressure can overlap through scanning; this is a coaching model for organizing the read, not the only possible order."
+    },
+    {
+      "scenarioId": "exp26b-u9-012",
+      "questionId": "exp26b-u9-012-q5",
+      "baseContentHash": "48d5375b8c337e068e008398ea07eaf3710c865a72de1181d4bc9dca1fabf550",
+      "verdict": "repair",
+      "reason": "Inherits this scene's shared geometry defect: the briefing/cues describe Gold1 as carrying 'along the lower boards', but Gold1 sits 7.95 m from the nearest side boards -- well clear of them (the 'lower'/'above' relative framing between Gold1 and YOU is itself correct for the app's actual 2D renderer, which draws +y toward the top; only the boards-proximity claim is the overstatement). Q5 itself does not add a new defect beyond the inherited scene text.",
+      "checks": {
+        "roster": "pass",
+        "geometry": "fail",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "pass"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "YOU (home-skater-1) at (10,7) facing 2.5 rad; Navy2 (home-skater-2) at (7,2) facing -2.4 rad; Gold1 (away-skater-1) at (8,5) facing 2.9 rad; Gold2 (away-skater-2) at (13,-5) facing -1.1 rad.",
+          "The puck is owned by Gold1; carried-puck render point (6.86,4.56), on the ice.",
+          "Gold1 sits 7.95 m from the nearest side boards -- well clear of the boards, not 'along' them.",
+          "In the app's actual 2D board renderer (+y renders toward the TOP, the opposite of the documented 3D-camera convention), YOU (y=7) renders higher on screen than Gold1 (y=5) -- 'YOU are above the play' relative to Gold1 is correct for the 2D rendering, and describing Gold1's position as 'lower' relative to YOU is also correct in that same convention (only the 'boards' proximity claim is the overstatement).",
+          "Gold2 (y=-5) is 10-12 m in y from Gold1/Navy2/YOU -- a genuine 'far side' separation."
+        ],
+        "stated": [
+          "Briefing (v1): navy attacks +x, gold attacks -x; Gold1 carries the puck along the lower boards; Navy2 pressures Gold1; YOU are above the play, with Gold2 on the far side; the coach asks you to help without leaving Gold2 unseen.",
+          "Cues: 'Gold1 carries low on the boards.' / 'Navy2 pressures the puck.' / 'Gold2 is on the far side.'",
+          "Limits: static defensive illustration; no permanent position or coverage timing proven; an adult may read the questions aloud."
+        ],
+        "unproven": [
+          "Whether Navy2's pressure actually forces a turnover; only starting positions are given.",
+          "Where any skater is looking; facing is a drawn arrow, not gaze.",
+          "Whether Gold2 would actually receive a pass if Gold1 tried one."
+        ]
+      },
+      "sourceUrls": [
+        "https://www.usahockey.com/news_article/show/1093178",
+        "https://www.hockeycanada.ca/en-ca/news/seven-coaching-principles-vision-scanning-2024-ncw"
+      ],
+      "alternative": "Depending on how far Gold2 actually cuts and where Navy2's pressure forces Gold1, staying closer to the middle rather than fully committing to Gold2 could also be reasonable; no single response is guaranteed correct."
+    },
+    {
+      "scenarioId": "exp26b-u9-012",
+      "questionId": "exp26b-u9-012-q6",
+      "baseContentHash": "878b920ca737faba19de3fa6041c4adc5da304188ac5bab9d3ca1a5515fe0ade",
+      "verdict": "repair",
+      "reason": "Inherits this scene's shared geometry defect: the briefing/cues describe Gold1 as carrying 'along the lower boards', but Gold1 sits 7.95 m from the nearest side boards -- well clear of them (the 'lower'/'above' relative framing between Gold1 and YOU is itself correct for the app's actual 2D renderer, which draws +y toward the top; only the boards-proximity claim is the overstatement). Q6 itself does not add a new defect beyond the inherited scene text.",
+      "checks": {
+        "roster": "pass",
+        "geometry": "fail",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "pass"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "YOU (home-skater-1) at (10,7) facing 2.5 rad; Navy2 (home-skater-2) at (7,2) facing -2.4 rad; Gold1 (away-skater-1) at (8,5) facing 2.9 rad; Gold2 (away-skater-2) at (13,-5) facing -1.1 rad.",
+          "The puck is owned by Gold1; carried-puck render point (6.86,4.56), on the ice.",
+          "Gold1 sits 7.95 m from the nearest side boards -- well clear of the boards, not 'along' them.",
+          "In the app's actual 2D board renderer (+y renders toward the TOP, the opposite of the documented 3D-camera convention), YOU (y=7) renders higher on screen than Gold1 (y=5) -- 'YOU are above the play' relative to Gold1 is correct for the 2D rendering, and describing Gold1's position as 'lower' relative to YOU is also correct in that same convention (only the 'boards' proximity claim is the overstatement).",
+          "Gold2 (y=-5) is 10-12 m in y from Gold1/Navy2/YOU -- a genuine 'far side' separation."
+        ],
+        "stated": [
+          "Briefing (v1): navy attacks +x, gold attacks -x; Gold1 carries the puck along the lower boards; Navy2 pressures Gold1; YOU are above the play, with Gold2 on the far side; the coach asks you to help without leaving Gold2 unseen.",
+          "Cues: 'Gold1 carries low on the boards.' / 'Navy2 pressures the puck.' / 'Gold2 is on the far side.'",
+          "Limits: static defensive illustration; no permanent position or coverage timing proven; an adult may read the questions aloud."
+        ],
+        "unproven": [
+          "Whether Navy2's pressure actually forces a turnover; only starting positions are given.",
+          "Where any skater is looking; facing is a drawn arrow, not gaze.",
+          "Whether Gold2 would actually receive a pass if Gold1 tried one."
+        ]
+      },
+      "sourceUrls": [
+        "https://www.usahockey.com/news_article/show/1093178",
+        "https://www.hockeycanada.ca/en-ca/news/seven-coaching-principles-vision-scanning-2024-ncw"
+      ],
+      "alternative": "The near-side attacker (Gold1, already pressured by Navy2) matters just as much moment to moment; watching only the far side would lose track of the immediate puck battle."
+    }
+  ],
+  "repairs": [
+    {
+      "scenarioId": "exp26b-u9-008",
+      "baseVersion": 1,
+      "baseScenarioHash": "5cb21ce5fbe9aaf38247c5d14750534397bb60e5f7e574bea5bacb2aff0e8003",
+      "replacement": {
+        "id": "exp26b-u9-008",
+        "version": 2,
+        "ageBand": "U9",
+        "title": "Protect the puck away from pressure",
+        "family": "board-puck-protection",
+        "topic": "Puck control",
+        "objective": "Use the board side and a support player to protect a carry under pressure.",
+        "briefing": "Navy attacks the +x end and gold attacks the -x end. YOU control the puck in the attacking end, off to one side. Gold1 approaches from the middle. Navy2 waits farther inside, away from the boards. The coach asks you to protect, then look inside.",
+        "setup": {
+          "actors": [
+            {
+              "id": "home-skater-1",
+              "label": "YOU",
+              "team": "home",
+              "role": "skater",
+              "x": 21,
+              "y": 7,
+              "facing": 1.8
+            },
+            {
+              "id": "home-skater-2",
+              "label": "Navy2",
+              "team": "home",
+              "role": "skater",
+              "x": 17,
+              "y": 2,
+              "facing": 0.5
+            },
+            {
+              "id": "away-skater-1",
+              "label": "Gold1",
+              "team": "away",
+              "role": "skater",
+              "x": 18,
+              "y": 7,
+              "facing": -1.5
+            }
+          ],
+          "puck": {
+            "owner": "home-skater-1"
+          }
+        },
+        "focusActorId": "home-skater-1",
+        "cues": [
+          "YOU control the puck off to one side, away from the middle.",
+          "Gold1 approaches from inside.",
+          "Navy2 waits farther inside the attacking zone."
+        ],
+        "tags": [
+          "boards",
+          "protection",
+          "support",
+          "experimental",
+          "expansion"
+        ],
+        "sources": [
+          {
+            "id": "hc-puck-control-2024",
+            "title": "Hockey Canada: 7 Principles for Coaches: Puck Control",
+            "section": "Enhancing Time & Space; Puck Protection",
+            "url": "https://www.hockeycanada.ca/en-ca/news/seven-coaching-principles-puck-control-2024-ncw",
+            "use": "Supports puck protection and scanning for a teammate; the authored choice is conditional."
+          },
+          {
+            "id": "hc-u9-development",
+            "title": "Hockey Canada: U9 Development Model",
+            "section": "Skills and game-sense development",
+            "url": "https://www.hockeycanada.ca/en-ca/hockey-programs/coaching/under-9",
+            "use": "Supports age-appropriate puck-control learning; it does not prescribe a universal board route."
+          }
+        ],
+        "limits": "Static practice illustration. It does not show contact, handedness, speed, or a completed pass. An adult may read the questions aloud.",
+        "questions": [
+          {
+            "id": "exp26b-u9-008-q1",
+            "type": "choice",
+            "prompt": "Who controls the puck?",
+            "options": [
+              {
+                "id": "a",
+                "text": "YOU"
+              },
+              {
+                "id": "b",
+                "text": "Navy2"
+              },
+              {
+                "id": "c",
+                "text": "Gold1"
+              }
+            ],
+            "answer": [
+              "a"
+            ],
+            "basis": "scene",
+            "explanation": "YOU are the puck owner by the boards. Gold1 is pressure and Navy2 is support."
+          },
+          {
+            "id": "exp26b-u9-008-q2",
+            "type": "multi",
+            "prompt": "What should shape your next touch?",
+            "options": [
+              {
+                "id": "a",
+                "text": "Gold1 coming from inside"
+              },
+              {
+                "id": "b",
+                "text": "Navy2 waiting farther inside"
+              },
+              {
+                "id": "c",
+                "text": "A guaranteed board escape"
+              }
+            ],
+            "answer": [
+              "a",
+              "b"
+            ],
+            "basis": "scene",
+            "explanation": "Gold1's approach and Navy2's location show the pressure and support picture. No escape is guaranteed."
+          },
+          {
+            "id": "exp26b-u9-008-q3",
+            "type": "position",
+            "prompt": "Place YOU a little closer to the boards with Gold1 in view.",
+            "actorId": "home-skater-1",
+            "reference": {
+              "x": 23,
+              "y": 7
+            },
+            "basis": "coaching",
+            "explanation": "This example gives YOU board-side protection while keeping the defender visible. A safe position depends on the live lane."
+          },
+          {
+            "id": "exp26b-u9-008-q4",
+            "type": "sequence",
+            "prompt": "Arrange this board-side read.",
+            "options": [
+              {
+                "id": "a",
+                "text": "See Gold1 approaching"
+              },
+              {
+                "id": "b",
+                "text": "Protect the puck on the far side"
+              },
+              {
+                "id": "c",
+                "text": "Look for Navy2 or room"
+              }
+            ],
+            "answer": [
+              "a",
+              "b",
+              "c"
+            ],
+            "basis": "coaching",
+            "explanation": "Read where pressure comes from, protect away from it, then scan for Navy2 or space. The choices connect the named players to the puck."
+          },
+          {
+            "id": "exp26b-u9-008-q5",
+            "type": "choice",
+            "prompt": "Gold1 reaches the boards. What could YOU try?",
+            "options": [
+              {
+                "id": "a",
+                "text": "Look inside for Navy2 or a new lane"
+              },
+              {
+                "id": "b",
+                "text": "Force the puck through Gold1"
+              },
+              {
+                "id": "c",
+                "text": "Stop looking and hold forever"
+              }
+            ],
+            "answer": [
+              "a"
+            ],
+            "basis": "coaching",
+            "explanation": "Gold1 changed the board-side lane. Navy2 or another clear lane may now be safer, depending on the new pressure."
+          },
+          {
+            "id": "exp26b-u9-008-q6",
+            "type": "explain",
+            "prompt": "Why can the boards help protect the puck?",
+            "basis": "coaching",
+            "explanation": "The boards give pressure fewer directions to reach from, while YOU can keep your body between Gold1 and the puck. You still need to see Navy2 and the changing lane."
+          }
+        ]
+      },
+      "affectedQuestionIds": [
+        "exp26b-u9-008-q1",
+        "exp26b-u9-008-q2",
+        "exp26b-u9-008-q3",
+        "exp26b-u9-008-q4",
+        "exp26b-u9-008-q5",
+        "exp26b-u9-008-q6"
+      ],
+      "reasons": [
+        {
+          "questionIds": [
+            "exp26b-u9-008-q1",
+            "exp26b-u9-008-q2",
+            "exp26b-u9-008-q3",
+            "exp26b-u9-008-q4",
+            "exp26b-u9-008-q5",
+            "exp26b-u9-008-q6"
+          ],
+          "issue": "Briefing/cues claim YOU controls the puck 'beside the boards'/'by the boards', but YOU sits 5.95 m from the nearest side boards (verified via the 8.5344 m corner radius / 12.954 m half-width geometry) -- under half the ice width away, not a tight boards claim. Q1's own explanation repeats the same false claim ('by the boards').",
+          "change": "Reworded the briefing, cues and Q1's explanation to describe the position as 'in the attacking end, off to one side' / 'off to one side, away from the middle' instead of claiming boards proximity. Coordinates, ownership and the tactical picture are unchanged.",
+          "evidence": "distToBoards(21,7) = 5.95 m using the corner-radius formula (dx=0 in this region, so distance = 12.954 - |y|); computed with the real validation tooling (Node, coachRouteSurfaceInput.js constants), not estimated."
+        },
+        {
+          "questionIds": [
+            "exp26b-u9-008-q1",
+            "exp26b-u9-008-q2",
+            "exp26b-u9-008-q3",
+            "exp26b-u9-008-q4",
+            "exp26b-u9-008-q5",
+            "exp26b-u9-008-q6"
+          ],
+          "issue": "Briefing/cues state 'Navy2 waits inside near the faceoff circle', but Navy2 (17,2) sits 5.98 m from the nearest circle centre (20.7,6.7) -- 1.41 m OUTSIDE the drawn circle's 4.572 m radius -- so Navy2 is neither 'inside' nor closely 'near' a circle. Meanwhile YOU (21,7) sits only 0.42 m from that same circle centre, deep inside it, but is never described that way. Q2's own option b ('Navy2 near the circle') restates this false claim inside a scored basis:scene option.",
+          "change": "Reworded the briefing/cues to describe Navy2 as waiting 'farther inside, away from the boards' / 'farther inside the attacking zone' (an accurate, non-landmark-specific description of Navy2's actual position relative to YOU and Gold1), and changed Q2's option b text from 'Navy2 near the circle' to 'Navy2 waiting farther inside'. The correct answer set (a,b) is unchanged; only the false landmark claim was removed.",
+          "evidence": "Circle centres at (+-20.7,+-6.7) with radius 4.572 m (per ExperimentalPractice.jsx's ExperimentalBoard rendering); dist(Navy2, nearest centre) = 5.98 m computed via Node script; dist(YOU, same centre) = 0.42 m."
+        }
+      ],
+      "replacementReview": {
+        "status": "self-checked",
+        "coverage": [
+          {
+            "questionId": "exp26b-u9-008-q1",
+            "contentHash": "3e6eeef9bd76904980d99bca1f516753e589723e695a6947117bd20447ee8f65",
+            "checks": {
+              "roster": "pass",
+              "geometry": "pass",
+              "answer": "pass",
+              "feedback": "pass",
+              "age": "pass",
+              "sources": "pass",
+              "grammar": "pass"
+            },
+            "reason": "Self-check of the replacement (v2) content: the boards/circle/blue-line/behind-YOU proximity or directional claim identified in the base review has been removed or corrected to match the actual computed geometry (see the scenario repair's reasons/evidence); coordinates, puck ownership, facing, answer keys and all other question text are unchanged from the base version. Re-verified on-ice (isCoachRoutePoint) and structurally valid (validateExperimentalBank) via the real Node tooling. This is a self-check, not an independent second review."
+          },
+          {
+            "questionId": "exp26b-u9-008-q2",
+            "contentHash": "6cf052b36ec89269281dbbc24f6b57ef5207104cc1e0976d5709da85fd708a11",
+            "checks": {
+              "roster": "pass",
+              "geometry": "pass",
+              "answer": "pass",
+              "feedback": "pass",
+              "age": "pass",
+              "sources": "pass",
+              "grammar": "pass"
+            },
+            "reason": "Self-check of the replacement (v2) content: the boards/circle/blue-line/behind-YOU proximity or directional claim identified in the base review has been removed or corrected to match the actual computed geometry (see the scenario repair's reasons/evidence); coordinates, puck ownership, facing, answer keys and all other question text are unchanged from the base version. Re-verified on-ice (isCoachRoutePoint) and structurally valid (validateExperimentalBank) via the real Node tooling. This is a self-check, not an independent second review."
+          },
+          {
+            "questionId": "exp26b-u9-008-q3",
+            "contentHash": "b79c4a6555a7401ef3a4422e14df34edd80adbb24f639488bf9d9f5e613f4c81",
+            "checks": {
+              "roster": "pass",
+              "geometry": "pass",
+              "answer": "pass",
+              "feedback": "pass",
+              "age": "pass",
+              "sources": "pass",
+              "grammar": "pass"
+            },
+            "reason": "Self-check of the replacement (v2) content: the boards/circle/blue-line/behind-YOU proximity or directional claim identified in the base review has been removed or corrected to match the actual computed geometry (see the scenario repair's reasons/evidence); coordinates, puck ownership, facing, answer keys and all other question text are unchanged from the base version. Re-verified on-ice (isCoachRoutePoint) and structurally valid (validateExperimentalBank) via the real Node tooling. This is a self-check, not an independent second review."
+          },
+          {
+            "questionId": "exp26b-u9-008-q4",
+            "contentHash": "33cac93205f1dea3d87c7f29f1715690979264fe14630f2d764fe78263ed3a54",
+            "checks": {
+              "roster": "pass",
+              "geometry": "pass",
+              "answer": "pass",
+              "feedback": "pass",
+              "age": "pass",
+              "sources": "pass",
+              "grammar": "pass"
+            },
+            "reason": "Self-check of the replacement (v2) content: the boards/circle/blue-line/behind-YOU proximity or directional claim identified in the base review has been removed or corrected to match the actual computed geometry (see the scenario repair's reasons/evidence); coordinates, puck ownership, facing, answer keys and all other question text are unchanged from the base version. Re-verified on-ice (isCoachRoutePoint) and structurally valid (validateExperimentalBank) via the real Node tooling. This is a self-check, not an independent second review."
+          },
+          {
+            "questionId": "exp26b-u9-008-q5",
+            "contentHash": "b6d3cb124a2987af31eb1baac70d2d12e65035c79236471fc2e1240ebccbda6b",
+            "checks": {
+              "roster": "pass",
+              "geometry": "pass",
+              "answer": "pass",
+              "feedback": "pass",
+              "age": "pass",
+              "sources": "pass",
+              "grammar": "pass"
+            },
+            "reason": "Self-check of the replacement (v2) content: the boards/circle/blue-line/behind-YOU proximity or directional claim identified in the base review has been removed or corrected to match the actual computed geometry (see the scenario repair's reasons/evidence); coordinates, puck ownership, facing, answer keys and all other question text are unchanged from the base version. Re-verified on-ice (isCoachRoutePoint) and structurally valid (validateExperimentalBank) via the real Node tooling. This is a self-check, not an independent second review."
+          },
+          {
+            "questionId": "exp26b-u9-008-q6",
+            "contentHash": "f38204d366b1552737626c06c1864caf8e7079723913722c44bbbff0ec50470e",
+            "checks": {
+              "roster": "pass",
+              "geometry": "pass",
+              "answer": "pass",
+              "feedback": "pass",
+              "age": "pass",
+              "sources": "pass",
+              "grammar": "pass"
+            },
+            "reason": "Self-check of the replacement (v2) content: the boards/circle/blue-line/behind-YOU proximity or directional claim identified in the base review has been removed or corrected to match the actual computed geometry (see the scenario repair's reasons/evidence); coordinates, puck ownership, facing, answer keys and all other question text are unchanged from the base version. Re-verified on-ice (isCoachRoutePoint) and structurally valid (validateExperimentalBank) via the real Node tooling. This is a self-check, not an independent second review."
+          }
+        ]
+      }
+    },
+    {
+      "scenarioId": "exp26b-u9-010",
+      "baseVersion": 1,
+      "baseScenarioHash": "785a822f4183da711fb3f1697a058b2370898f660735abcaae14994c98dc1bfa",
+      "replacement": {
+        "id": "exp26b-u9-010",
+        "version": 2,
+        "ageBand": "U9",
+        "title": "Support the breakout side",
+        "family": "breakout-support",
+        "topic": "Off-puck support",
+        "objective": "Choose a support lane that helps a carrier exit pressure near the defending end.",
+        "briefing": "Navy attacks the +x end and gold attacks the -x end. Navy2 has the puck in the defending end, off to one side. YOU are below the puck. Gold1 is between the carrier and the middle. Navy3 waits farther up, toward the neutral zone. The coach asks you to become a safe outlet.",
+        "setup": {
+          "actors": [
+            {
+              "id": "home-skater-1",
+              "label": "YOU",
+              "team": "home",
+              "role": "skater",
+              "x": -22,
+              "y": -8,
+              "facing": 0.5
+            },
+            {
+              "id": "home-skater-2",
+              "label": "Navy2",
+              "team": "home",
+              "role": "skater",
+              "x": -25,
+              "y": -3,
+              "facing": 0.2
+            },
+            {
+              "id": "home-skater-3",
+              "label": "Navy3",
+              "team": "home",
+              "role": "skater",
+              "x": -14,
+              "y": 1,
+              "facing": 0.1
+            },
+            {
+              "id": "away-skater-1",
+              "label": "Gold1",
+              "team": "away",
+              "role": "skater",
+              "x": -20,
+              "y": -4,
+              "facing": 2.8
+            }
+          ],
+          "puck": {
+            "owner": "home-skater-2"
+          }
+        },
+        "focusActorId": "home-skater-1",
+        "cues": [
+          "Navy2 has the puck in the defending end, off to one side.",
+          "Gold1 sits between Navy2 and the middle.",
+          "Navy3 waits farther up, toward the neutral zone."
+        ],
+        "tags": [
+          "breakout",
+          "outlet",
+          "support",
+          "experimental",
+          "expansion"
+        ],
+        "sources": [
+          {
+            "id": "hc-puck-control-2024",
+            "title": "Hockey Canada: 7 Principles for Coaches: Puck Control",
+            "section": "Enhancing Time & Space",
+            "url": "https://www.hockeycanada.ca/en-ca/news/seven-coaching-principles-puck-control-2024-ncw",
+            "use": "Supports creating a useful outlet and time with the puck; the authored route is conditional."
+          },
+          {
+            "id": "hc-vision-scanning-2024",
+            "title": "Hockey Canada: 7 Principles for Coaches: Vision & Scanning",
+            "section": "Key Information to Identify; Reading Pressure / Corner Situations",
+            "url": "https://www.hockeycanada.ca/en-ca/news/seven-coaching-principles-vision-scanning-2024-ncw",
+            "use": "Supports checking pressure and support in a corner; it does not certify breakout success."
+          }
+        ],
+        "limits": "Static breakout practice. It does not encode a full team system, icing, or offside call. An adult may read the questions aloud.",
+        "questions": [
+          {
+            "id": "exp26b-u9-010-q1",
+            "type": "choice",
+            "prompt": "Who has the puck in the defending end?",
+            "options": [
+              {
+                "id": "a",
+                "text": "Navy2"
+              },
+              {
+                "id": "b",
+                "text": "YOU"
+              },
+              {
+                "id": "c",
+                "text": "Gold1"
+              }
+            ],
+            "answer": [
+              "a"
+            ],
+            "basis": "scene",
+            "explanation": "Navy2 controls the puck. YOU can become an outlet while Gold1 applies pressure."
+          },
+          {
+            "id": "exp26b-u9-010-q2",
+            "type": "multi",
+            "prompt": "Which details help YOU support?",
+            "options": [
+              {
+                "id": "a",
+                "text": "Gold1 between Navy2 and middle ice"
+              },
+              {
+                "id": "b",
+                "text": "Navy3 farther up, away from pressure"
+              },
+              {
+                "id": "c",
+                "text": "A fixed route no matter what"
+              }
+            ],
+            "answer": [
+              "a",
+              "b"
+            ],
+            "basis": "scene",
+            "explanation": "Gold1's position makes the middle lane harder, and Navy3 is a visible, higher option farther from pressure. The route must adapt to pressure."
+          },
+          {
+            "id": "exp26b-u9-010-q3",
+            "type": "position",
+            "prompt": "Place YOU between Navy2 and the lower-side space, where the carrier can see you.",
+            "actorId": "home-skater-1",
+            "reference": {
+              "x": -19,
+              "y": -9
+            },
+            "basis": "coaching",
+            "explanation": "This example gives Navy2 a lower-side outlet while keeping YOU away from Gold1's middle line. Another clear support lane can work."
+          },
+          {
+            "id": "exp26b-u9-010-q4",
+            "type": "sequence",
+            "prompt": "Arrange the breakout support read.",
+            "options": [
+              {
+                "id": "a",
+                "text": "Find Navy2"
+              },
+              {
+                "id": "b",
+                "text": "See where Gold1 closes"
+              },
+              {
+                "id": "c",
+                "text": "Offer a clear outlet and check Navy3"
+              }
+            ],
+            "answer": [
+              "a",
+              "b",
+              "c"
+            ],
+            "basis": "coaching",
+            "explanation": "Locate the carrier, read pressure, then offer a lane that helps. Navy3 gives another reference for the next choice."
+          },
+          {
+            "id": "exp26b-u9-010-q5",
+            "type": "choice",
+            "prompt": "Gold1 turns toward your outlet. What might Navy2 use?",
+            "options": [
+              {
+                "id": "a",
+                "text": "Navy3 or another clear side"
+              },
+              {
+                "id": "b",
+                "text": "Your covered lane without looking"
+              },
+              {
+                "id": "c",
+                "text": "A pass to Gold1"
+              }
+            ],
+            "answer": [
+              "a"
+            ],
+            "basis": "coaching",
+            "explanation": "Gold1 changed the outlet. Navy3 or another lane may be safer if the carrier can see it and pressure permits."
+          },
+          {
+            "id": "exp26b-u9-010-q6",
+            "type": "explain",
+            "prompt": "Why can a lower outlet help the carrier?",
+            "basis": "coaching",
+            "explanation": "Gold1 is between Navy2 and the middle, so a lower-side option can give the carrier a different angle. The carrier still has to check whether YOU remain open."
+          }
+        ]
+      },
+      "affectedQuestionIds": [
+        "exp26b-u9-010-q1",
+        "exp26b-u9-010-q2",
+        "exp26b-u9-010-q3",
+        "exp26b-u9-010-q4",
+        "exp26b-u9-010-q5",
+        "exp26b-u9-010-q6"
+      ],
+      "reasons": [
+        {
+          "questionIds": [
+            "exp26b-u9-010-q1",
+            "exp26b-u9-010-q2",
+            "exp26b-u9-010-q3",
+            "exp26b-u9-010-q4",
+            "exp26b-u9-010-q5",
+            "exp26b-u9-010-q6"
+          ],
+          "issue": "Briefing/cues and Q1's own prompt claim Navy2 has the puck 'near the navy end boards', but Navy2 (-25,-3) sits 5.48 m from the nearest end boards -- not tight to the boards.",
+          "change": "Reworded the briefing, cues and Q1's prompt to 'in the defending end, off to one side' / 'Who has the puck in the defending end?' instead of claiming boards proximity. Coordinates, ownership and the tactical picture are unchanged.",
+          "evidence": "distToBoards(-25,-3) = 5.48 m (dy=0 in this region, so distance = 30.48 - |x|), computed with the real validation tooling, not estimated."
+        },
+        {
+          "questionIds": [
+            "exp26b-u9-010-q1",
+            "exp26b-u9-010-q2",
+            "exp26b-u9-010-q3",
+            "exp26b-u9-010-q4",
+            "exp26b-u9-010-q5",
+            "exp26b-u9-010-q6"
+          ],
+          "issue": "Briefing/cues and Q2's own option b claim Navy3 waits 'near the blue line', but Navy3 (-14,1) sits 6.38 m from the blue line (x=-7.62) -- the blue line is a thin landmark and 6.38 m is not 'near' it.",
+          "change": "Reworded the briefing/cues to 'farther up, toward the neutral zone', and changed Q2's option b text to 'Navy3 farther up, away from pressure' with a matching explanation. The correct answer set (a,b) is unchanged; only the false landmark distance claim was removed. The 'higher option' language in the explanation was checked against the app's actual 2D renderer (+y renders toward the top) and is accurate, so it was kept.",
+          "evidence": "Navy3 x=-14; blue line x=-7.62; |x| - 7.62 = 6.38 m, computed via Node script."
+        }
+      ],
+      "replacementReview": {
+        "status": "self-checked",
+        "coverage": [
+          {
+            "questionId": "exp26b-u9-010-q1",
+            "contentHash": "ac77ab8747dbc6647769705af4fe7d83a0d400bc1c1597ead2a8053244ecde48",
+            "checks": {
+              "roster": "pass",
+              "geometry": "pass",
+              "answer": "pass",
+              "feedback": "pass",
+              "age": "pass",
+              "sources": "pass",
+              "grammar": "pass"
+            },
+            "reason": "Self-check of the replacement (v2) content: the boards/circle/blue-line/behind-YOU proximity or directional claim identified in the base review has been removed or corrected to match the actual computed geometry (see the scenario repair's reasons/evidence); coordinates, puck ownership, facing, answer keys and all other question text are unchanged from the base version. Re-verified on-ice (isCoachRoutePoint) and structurally valid (validateExperimentalBank) via the real Node tooling. This is a self-check, not an independent second review."
+          },
+          {
+            "questionId": "exp26b-u9-010-q2",
+            "contentHash": "0afa9af764f69a0d38bd9909caba0d5af88f5d292c427e92a5e3b83f5cdb52c1",
+            "checks": {
+              "roster": "pass",
+              "geometry": "pass",
+              "answer": "pass",
+              "feedback": "pass",
+              "age": "pass",
+              "sources": "pass",
+              "grammar": "pass"
+            },
+            "reason": "Self-check of the replacement (v2) content: the boards/circle/blue-line/behind-YOU proximity or directional claim identified in the base review has been removed or corrected to match the actual computed geometry (see the scenario repair's reasons/evidence); coordinates, puck ownership, facing, answer keys and all other question text are unchanged from the base version. Re-verified on-ice (isCoachRoutePoint) and structurally valid (validateExperimentalBank) via the real Node tooling. This is a self-check, not an independent second review."
+          },
+          {
+            "questionId": "exp26b-u9-010-q3",
+            "contentHash": "fbdde665c69821d1f687ce9e8bd05784536f7598ecb4381192b6751bc7cbbecb",
+            "checks": {
+              "roster": "pass",
+              "geometry": "pass",
+              "answer": "pass",
+              "feedback": "pass",
+              "age": "pass",
+              "sources": "pass",
+              "grammar": "pass"
+            },
+            "reason": "Self-check of the replacement (v2) content: the boards/circle/blue-line/behind-YOU proximity or directional claim identified in the base review has been removed or corrected to match the actual computed geometry (see the scenario repair's reasons/evidence); coordinates, puck ownership, facing, answer keys and all other question text are unchanged from the base version. Re-verified on-ice (isCoachRoutePoint) and structurally valid (validateExperimentalBank) via the real Node tooling. This is a self-check, not an independent second review."
+          },
+          {
+            "questionId": "exp26b-u9-010-q4",
+            "contentHash": "51eaeffd5b3196f883441bfdd5e4ccf8a19f96357159caee80f0562cffce1950",
+            "checks": {
+              "roster": "pass",
+              "geometry": "pass",
+              "answer": "pass",
+              "feedback": "pass",
+              "age": "pass",
+              "sources": "pass",
+              "grammar": "pass"
+            },
+            "reason": "Self-check of the replacement (v2) content: the boards/circle/blue-line/behind-YOU proximity or directional claim identified in the base review has been removed or corrected to match the actual computed geometry (see the scenario repair's reasons/evidence); coordinates, puck ownership, facing, answer keys and all other question text are unchanged from the base version. Re-verified on-ice (isCoachRoutePoint) and structurally valid (validateExperimentalBank) via the real Node tooling. This is a self-check, not an independent second review."
+          },
+          {
+            "questionId": "exp26b-u9-010-q5",
+            "contentHash": "c8e72c924c7fd7828093f93f1ef9293efb0087f1ca781e066c93303cab1e8546",
+            "checks": {
+              "roster": "pass",
+              "geometry": "pass",
+              "answer": "pass",
+              "feedback": "pass",
+              "age": "pass",
+              "sources": "pass",
+              "grammar": "pass"
+            },
+            "reason": "Self-check of the replacement (v2) content: the boards/circle/blue-line/behind-YOU proximity or directional claim identified in the base review has been removed or corrected to match the actual computed geometry (see the scenario repair's reasons/evidence); coordinates, puck ownership, facing, answer keys and all other question text are unchanged from the base version. Re-verified on-ice (isCoachRoutePoint) and structurally valid (validateExperimentalBank) via the real Node tooling. This is a self-check, not an independent second review."
+          },
+          {
+            "questionId": "exp26b-u9-010-q6",
+            "contentHash": "329210698249eaceef51349e14dd0431f8f35be3be0ee5b51f090192d5d6f3c6",
+            "checks": {
+              "roster": "pass",
+              "geometry": "pass",
+              "answer": "pass",
+              "feedback": "pass",
+              "age": "pass",
+              "sources": "pass",
+              "grammar": "pass"
+            },
+            "reason": "Self-check of the replacement (v2) content: the boards/circle/blue-line/behind-YOU proximity or directional claim identified in the base review has been removed or corrected to match the actual computed geometry (see the scenario repair's reasons/evidence); coordinates, puck ownership, facing, answer keys and all other question text are unchanged from the base version. Re-verified on-ice (isCoachRoutePoint) and structurally valid (validateExperimentalBank) via the real Node tooling. This is a self-check, not an independent second review."
+          }
+        ]
+      }
+    },
+    {
+      "scenarioId": "exp26b-u9-011",
+      "baseVersion": 1,
+      "baseScenarioHash": "9d50a155e2cb2fa4556d62e078d679e28cdf5065347e78bb035a2b0ebd099188",
+      "replacement": {
+        "id": "exp26b-u9-011",
+        "version": 2,
+        "ageBand": "U9",
+        "title": "Read the loose puck after a block",
+        "family": "blocked-pass-recovery",
+        "topic": "Puck recovery",
+        "objective": "Update ownership and support after a defender blocks a pass.",
+        "briefing": "Navy attacks the +x end and gold attacks the -x end. Navy2 tried to pass to YOU, but Gold1 touched the puck and it is loose. YOU are nearest the puck. Navy3 is open on the far side. Gold2 is off to your side, easy to miss without a scan.",
+        "setup": {
+          "actors": [
+            {
+              "id": "home-skater-1",
+              "label": "YOU",
+              "team": "home",
+              "role": "skater",
+              "x": 6,
+              "y": 1,
+              "facing": 0.1
+            },
+            {
+              "id": "home-skater-2",
+              "label": "Navy2",
+              "team": "home",
+              "role": "skater",
+              "x": 1,
+              "y": 1,
+              "facing": 0.2
+            },
+            {
+              "id": "home-skater-3",
+              "label": "Navy3",
+              "team": "home",
+              "role": "skater",
+              "x": 5,
+              "y": 7,
+              "facing": -0.2
+            },
+            {
+              "id": "away-skater-1",
+              "label": "Gold1",
+              "team": "away",
+              "role": "skater",
+              "x": 5,
+              "y": 3,
+              "facing": -1.2
+            },
+            {
+              "id": "away-skater-2",
+              "label": "Gold2",
+              "team": "away",
+              "role": "skater",
+              "x": 8,
+              "y": -5,
+              "facing": 2.9
+            }
+          ],
+          "puck": {
+            "owner": null,
+            "x": 5,
+            "y": 2
+          }
+        },
+        "focusActorId": "home-skater-1",
+        "cues": [
+          "Gold1 touched the pass.",
+          "The puck is loose.",
+          "Navy3 is on the far side and Gold2 is off to your side."
+        ],
+        "tags": [
+          "blocked-pass",
+          "recovery",
+          "scan",
+          "experimental",
+          "expansion"
+        ],
+        "sources": [
+          {
+            "id": "hc-vision-scanning-2024",
+            "title": "Hockey Canada: 7 Principles for Coaches: Vision & Scanning",
+            "section": "Key Information to Identify",
+            "url": "https://www.hockeycanada.ca/en-ca/news/seven-coaching-principles-vision-scanning-2024-ncw",
+            "use": "Supports updating the read after a deflection and checking pressure; it does not prove recovery."
+          },
+          {
+            "id": "hc-u9-development",
+            "title": "Hockey Canada: U9 Development Model",
+            "section": "Skills and game-sense development",
+            "url": "https://www.hockeycanada.ca/en-ca/hockey-programs/coaching/under-9",
+            "use": "Supports age-appropriate puck pursuit and decision practice; this authored scene is not a rule claim."
+          }
+        ],
+        "limits": "The block and loose puck are stated events. Static art does not show speed, contact, or possession after the next touch. An adult may read the questions aloud.",
+        "questions": [
+          {
+            "id": "exp26b-u9-011-q1",
+            "type": "choice",
+            "prompt": "Who owns the puck after the block?",
+            "options": [
+              {
+                "id": "a",
+                "text": "Nobody yet"
+              },
+              {
+                "id": "b",
+                "text": "YOU"
+              },
+              {
+                "id": "c",
+                "text": "Gold1"
+              }
+            ],
+            "answer": [
+              "a"
+            ],
+            "basis": "scene",
+            "explanation": "Gold1 touched the pass, but the puck is loose in the setup. Nobody owns it yet."
+          },
+          {
+            "id": "exp26b-u9-011-q2",
+            "type": "multi",
+            "prompt": "What should YOU check before reaching?",
+            "options": [
+              {
+                "id": "a",
+                "text": "Gold1 near the puck"
+              },
+              {
+                "id": "b",
+                "text": "Gold2 off to your side"
+              },
+              {
+                "id": "c",
+                "text": "The old pass as if it arrived"
+              }
+            ],
+            "answer": [
+              "a",
+              "b"
+            ],
+            "basis": "scene",
+            "explanation": "Gold1 is immediate pressure and Gold2 is off to the side, easy to miss without a scan. The old pass no longer describes the puck state."
+          },
+          {
+            "id": "exp26b-u9-011-q3",
+            "type": "position",
+            "prompt": "Place YOU near the puck with a view of Gold1.",
+            "actorId": "home-skater-1",
+            "reference": {
+              "x": 6,
+              "y": 2
+            },
+            "basis": "coaching",
+            "explanation": "This approaches the puck without losing the nearby defender. Another controlled position can work if both players stay visible."
+          },
+          {
+            "id": "exp26b-u9-011-q4",
+            "type": "sequence",
+            "prompt": "Arrange the blocked-pass recovery.",
+            "options": [
+              {
+                "id": "a",
+                "text": "Find the loose puck"
+              },
+              {
+                "id": "b",
+                "text": "Check Gold1 and Gold2"
+              },
+              {
+                "id": "c",
+                "text": "Look for Navy3 before the next touch"
+              }
+            ],
+            "answer": [
+              "a",
+              "b",
+              "c"
+            ],
+            "basis": "coaching",
+            "explanation": "The block creates a new state. Locate it, read both pressure players, then identify support before touching or passing."
+          },
+          {
+            "id": "exp26b-u9-011-q5",
+            "type": "choice",
+            "prompt": "Gold1 controls the puck before YOU arrive. What changes?",
+            "options": [
+              {
+                "id": "a",
+                "text": "Navy players need a new defensive read"
+              },
+              {
+                "id": "b",
+                "text": "YOU still have the planned pass"
+              },
+              {
+                "id": "c",
+                "text": "Navy3 must receive it"
+              }
+            ],
+            "answer": [
+              "a"
+            ],
+            "basis": "coaching",
+            "explanation": "Gold1 becoming the owner changes the role picture. Navy players should read the carrier and protect their end before choosing a response."
+          },
+          {
+            "id": "exp26b-u9-011-q6",
+            "type": "explain",
+            "prompt": "Why can the old pass plan disappear?",
+            "basis": "coaching",
+            "explanation": "Gold1 touched the pass and the puck became loose. Ownership, pressure, and Navy3's support must be checked again before repeating the old plan."
+          }
+        ]
+      },
+      "affectedQuestionIds": [
+        "exp26b-u9-011-q1",
+        "exp26b-u9-011-q2",
+        "exp26b-u9-011-q3",
+        "exp26b-u9-011-q4",
+        "exp26b-u9-011-q5",
+        "exp26b-u9-011-q6"
+      ],
+      "reasons": [
+        {
+          "questionIds": [
+            "exp26b-u9-011-q1",
+            "exp26b-u9-011-q2",
+            "exp26b-u9-011-q3",
+            "exp26b-u9-011-q4",
+            "exp26b-u9-011-q5",
+            "exp26b-u9-011-q6"
+          ],
+          "issue": "Briefing/cues and Q2's own option b + explanation state 'Gold2 is behind YOU', but the dot product of YOU's facing vector (cos 0.1, sin 0.1) with the direction from YOU to Gold2 (dx=2, dy=-6) is +1.39 -- positive, meaning Gold2 is on the same side as YOU's facing (about 77 degrees off-centre, near the edge of forward vision, genuinely easy to miss without a scan) rather than literally behind.",
+          "change": "Reworded the briefing, cues, and Q2's option b + explanation from 'behind YOU' to 'off to your side, easy to miss without a scan' -- preserving the teaching point (this opponent is easy to miss and needs a deliberate scan) without the false 'behind' claim. The correct answer set (a,b) is unchanged; coordinates, ownership and facing are unchanged.",
+          "evidence": "facingDot = cos(0.1)*2 + sin(0.1)*(-6) = 1.99 - 0.60 = +1.39, computed via Node script; angle between facing and the direction to Gold2 is approximately 77 degrees (within the forward hemisphere)."
+        }
+      ],
+      "replacementReview": {
+        "status": "self-checked",
+        "coverage": [
+          {
+            "questionId": "exp26b-u9-011-q1",
+            "contentHash": "7518a6d3fbb6b8987339c6643168872d706e40f2df80ea2be28b69d12c600373",
+            "checks": {
+              "roster": "pass",
+              "geometry": "pass",
+              "answer": "pass",
+              "feedback": "pass",
+              "age": "pass",
+              "sources": "pass",
+              "grammar": "pass"
+            },
+            "reason": "Self-check of the replacement (v2) content: the boards/circle/blue-line/behind-YOU proximity or directional claim identified in the base review has been removed or corrected to match the actual computed geometry (see the scenario repair's reasons/evidence); coordinates, puck ownership, facing, answer keys and all other question text are unchanged from the base version. Re-verified on-ice (isCoachRoutePoint) and structurally valid (validateExperimentalBank) via the real Node tooling. This is a self-check, not an independent second review."
+          },
+          {
+            "questionId": "exp26b-u9-011-q2",
+            "contentHash": "6d87811817230fd609d084135357a995e9b516c3f1013a862041ae1db13f0032",
+            "checks": {
+              "roster": "pass",
+              "geometry": "pass",
+              "answer": "pass",
+              "feedback": "pass",
+              "age": "pass",
+              "sources": "pass",
+              "grammar": "pass"
+            },
+            "reason": "Self-check of the replacement (v2) content: the boards/circle/blue-line/behind-YOU proximity or directional claim identified in the base review has been removed or corrected to match the actual computed geometry (see the scenario repair's reasons/evidence); coordinates, puck ownership, facing, answer keys and all other question text are unchanged from the base version. Re-verified on-ice (isCoachRoutePoint) and structurally valid (validateExperimentalBank) via the real Node tooling. This is a self-check, not an independent second review."
+          },
+          {
+            "questionId": "exp26b-u9-011-q3",
+            "contentHash": "583174adead638c7cbc60ea6616983bb266b6c7d7512a3756d4b7e52643c2026",
+            "checks": {
+              "roster": "pass",
+              "geometry": "pass",
+              "answer": "pass",
+              "feedback": "pass",
+              "age": "pass",
+              "sources": "pass",
+              "grammar": "pass"
+            },
+            "reason": "Self-check of the replacement (v2) content: the boards/circle/blue-line/behind-YOU proximity or directional claim identified in the base review has been removed or corrected to match the actual computed geometry (see the scenario repair's reasons/evidence); coordinates, puck ownership, facing, answer keys and all other question text are unchanged from the base version. Re-verified on-ice (isCoachRoutePoint) and structurally valid (validateExperimentalBank) via the real Node tooling. This is a self-check, not an independent second review."
+          },
+          {
+            "questionId": "exp26b-u9-011-q4",
+            "contentHash": "448ec5bf7b460b226f229b349f9566086ad5347ebfafe3f968afbde51beef32e",
+            "checks": {
+              "roster": "pass",
+              "geometry": "pass",
+              "answer": "pass",
+              "feedback": "pass",
+              "age": "pass",
+              "sources": "pass",
+              "grammar": "pass"
+            },
+            "reason": "Self-check of the replacement (v2) content: the boards/circle/blue-line/behind-YOU proximity or directional claim identified in the base review has been removed or corrected to match the actual computed geometry (see the scenario repair's reasons/evidence); coordinates, puck ownership, facing, answer keys and all other question text are unchanged from the base version. Re-verified on-ice (isCoachRoutePoint) and structurally valid (validateExperimentalBank) via the real Node tooling. This is a self-check, not an independent second review."
+          },
+          {
+            "questionId": "exp26b-u9-011-q5",
+            "contentHash": "bccbf1bb0b85efc9d49d4ae37f95e91ffff554dfbe4ad166c84f83c9434da96d",
+            "checks": {
+              "roster": "pass",
+              "geometry": "pass",
+              "answer": "pass",
+              "feedback": "pass",
+              "age": "pass",
+              "sources": "pass",
+              "grammar": "pass"
+            },
+            "reason": "Self-check of the replacement (v2) content: the boards/circle/blue-line/behind-YOU proximity or directional claim identified in the base review has been removed or corrected to match the actual computed geometry (see the scenario repair's reasons/evidence); coordinates, puck ownership, facing, answer keys and all other question text are unchanged from the base version. Re-verified on-ice (isCoachRoutePoint) and structurally valid (validateExperimentalBank) via the real Node tooling. This is a self-check, not an independent second review."
+          },
+          {
+            "questionId": "exp26b-u9-011-q6",
+            "contentHash": "ef3e2ba6f179d5bea0c5f19f89e32ae8b7406d57da0bb6de048832d4058bf1f5",
+            "checks": {
+              "roster": "pass",
+              "geometry": "pass",
+              "answer": "pass",
+              "feedback": "pass",
+              "age": "pass",
+              "sources": "pass",
+              "grammar": "pass"
+            },
+            "reason": "Self-check of the replacement (v2) content: the boards/circle/blue-line/behind-YOU proximity or directional claim identified in the base review has been removed or corrected to match the actual computed geometry (see the scenario repair's reasons/evidence); coordinates, puck ownership, facing, answer keys and all other question text are unchanged from the base version. Re-verified on-ice (isCoachRoutePoint) and structurally valid (validateExperimentalBank) via the real Node tooling. This is a self-check, not an independent second review."
+          }
+        ]
+      }
+    },
+    {
+      "scenarioId": "exp26b-u9-012",
+      "baseVersion": 1,
+      "baseScenarioHash": "e614d6aa1e92503b6f33a9a40fdae56cafe32decf358e2a2f3ba32a864ae8a86",
+      "replacement": {
+        "id": "exp26b-u9-012",
+        "version": 2,
+        "ageBand": "U9",
+        "title": "Help away from the puck",
+        "family": "defensive-support",
+        "topic": "Defending",
+        "objective": "Support the defender near the puck while staying aware of the far-side attacker.",
+        "briefing": "Navy attacks the +x end and gold attacks the -x end. Gold1 carries the puck well below the middle. Navy2 pressures Gold1. YOU are above the play, with Gold2 on the far side. The coach asks you to help without leaving Gold2 unseen.",
+        "setup": {
+          "actors": [
+            {
+              "id": "home-skater-1",
+              "label": "YOU",
+              "team": "home",
+              "role": "skater",
+              "x": 10,
+              "y": 7,
+              "facing": 2.5
+            },
+            {
+              "id": "home-skater-2",
+              "label": "Navy2",
+              "team": "home",
+              "role": "skater",
+              "x": 7,
+              "y": 2,
+              "facing": -2.4
+            },
+            {
+              "id": "away-skater-1",
+              "label": "Gold1",
+              "team": "away",
+              "role": "skater",
+              "x": 8,
+              "y": 5,
+              "facing": 2.9
+            },
+            {
+              "id": "away-skater-2",
+              "label": "Gold2",
+              "team": "away",
+              "role": "skater",
+              "x": 13,
+              "y": -5,
+              "facing": -1.1
+            }
+          ],
+          "puck": {
+            "owner": "away-skater-1"
+          }
+        },
+        "focusActorId": "home-skater-1",
+        "cues": [
+          "Gold1 carries well below the middle.",
+          "Navy2 pressures the puck.",
+          "Gold2 is on the far side."
+        ],
+        "tags": [
+          "defending",
+          "support-away",
+          "scan",
+          "experimental",
+          "expansion"
+        ],
+        "sources": [
+          {
+            "id": "usah-u14-situational-roles",
+            "title": "USA Hockey: Culture and Coaching Tips with Grace Hoene",
+            "section": "Four situational roles",
+            "url": "https://www.usahockey.com/news_article/show/1093178",
+            "use": "Supports flexible roles around puck pressure and support; it is not a universal youth system."
+          },
+          {
+            "id": "hc-vision-scanning-2024",
+            "title": "Hockey Canada: 7 Principles for Coaches: Vision & Scanning",
+            "section": "Key Information to Identify",
+            "url": "https://www.hockeycanada.ca/en-ca/news/seven-coaching-principles-vision-scanning-2024-ncw",
+            "use": "Supports checking the puck and away-side player; the exact position is authored coaching synthesis."
+          }
+        ],
+        "limits": "Static defensive illustration. It does not assign a permanent position or prove coverage timing. An adult may read the questions aloud.",
+        "questions": [
+          {
+            "id": "exp26b-u9-012-q1",
+            "type": "choice",
+            "prompt": "Who has the puck?",
+            "options": [
+              {
+                "id": "a",
+                "text": "Gold1"
+              },
+              {
+                "id": "b",
+                "text": "Navy2"
+              },
+              {
+                "id": "c",
+                "text": "YOU"
+              }
+            ],
+            "answer": [
+              "a"
+            ],
+            "basis": "scene",
+            "explanation": "Gold1 controls the puck. Navy2 is pressuring and YOU can support the play away from the puck."
+          },
+          {
+            "id": "exp26b-u9-012-q2",
+            "type": "multi",
+            "prompt": "Who should YOU keep in view?",
+            "options": [
+              {
+                "id": "a",
+                "text": "Gold1 with the puck"
+              },
+              {
+                "id": "b",
+                "text": "Gold2 away from the puck"
+              },
+              {
+                "id": "c",
+                "text": "Only Navy2"
+              }
+            ],
+            "answer": [
+              "a",
+              "b"
+            ],
+            "basis": "scene",
+            "explanation": "The puck carrier and far-side attacker both shape the defensive choice. Watching only Navy2 loses Gold2."
+          },
+          {
+            "id": "exp26b-u9-012-q3",
+            "type": "position",
+            "prompt": "Place YOU between Gold2 and the navy end, with Gold1 visible.",
+            "actorId": "home-skater-1",
+            "reference": {
+              "x": 11,
+              "y": 3
+            },
+            "basis": "coaching",
+            "explanation": "This example brings YOU into a support line that can see the puck and far-side player. The moving play may call for a different lane."
+          },
+          {
+            "id": "exp26b-u9-012-q4",
+            "type": "sequence",
+            "prompt": "Arrange the away-side support read.",
+            "options": [
+              {
+                "id": "a",
+                "text": "Find Gold1"
+              },
+              {
+                "id": "b",
+                "text": "Notice Navy2's pressure"
+              },
+              {
+                "id": "c",
+                "text": "Check Gold2 and choose help"
+              }
+            ],
+            "answer": [
+              "a",
+              "b",
+              "c"
+            ],
+            "basis": "coaching",
+            "explanation": "Start with the puck carrier, then read the first defender, then see the away-side option. This prevents chasing the same player twice."
+          },
+          {
+            "id": "exp26b-u9-012-q5",
+            "type": "choice",
+            "prompt": "Gold2 cuts toward the puck side. What changes for YOU?",
+            "options": [
+              {
+                "id": "a",
+                "text": "Keep both gold players in view and adjust"
+              },
+              {
+                "id": "b",
+                "text": "Stay above Gold2's old spot"
+              },
+              {
+                "id": "c",
+                "text": "Watch only the puck carrier"
+              }
+            ],
+            "answer": [
+              "a"
+            ],
+            "basis": "coaching",
+            "explanation": "Gold2's movement changes the support picture. Adjust while keeping Gold1 and Gold2 visible so the nearer defender gets useful help."
+          },
+          {
+            "id": "exp26b-u9-012-q6",
+            "type": "explain",
+            "prompt": "Why can the far-side player matter?",
+            "basis": "coaching",
+            "explanation": "Gold2 can become a pass option while Navy2 pressures Gold1. Seeing away from the puck helps YOU choose where support is needed."
+          }
+        ]
+      },
+      "affectedQuestionIds": [
+        "exp26b-u9-012-q1",
+        "exp26b-u9-012-q2",
+        "exp26b-u9-012-q3",
+        "exp26b-u9-012-q4",
+        "exp26b-u9-012-q5",
+        "exp26b-u9-012-q6"
+      ],
+      "reasons": [
+        {
+          "questionIds": [
+            "exp26b-u9-012-q1",
+            "exp26b-u9-012-q2",
+            "exp26b-u9-012-q3",
+            "exp26b-u9-012-q4",
+            "exp26b-u9-012-q5",
+            "exp26b-u9-012-q6"
+          ],
+          "issue": "Briefing/cues claim Gold1 carries the puck 'along the lower boards', but Gold1 (8,5) sits 7.95 m from the nearest side boards -- well clear of them, not 'along' the boards. (The 'lower' framing relative to YOU, who is 'above the play', is itself accurate for the app's actual 2D board renderer, which draws +y toward the top -- only the boards-proximity claim needed correcting.)",
+          "change": "Reworded the briefing/cues to 'well below the middle' instead of claiming boards proximity, while keeping the verified-accurate 'above the play' language for YOU unchanged. Coordinates, ownership and the tactical picture are unchanged.",
+          "evidence": "distToBoards(8,5) = 7.95 m (dy=0 in this region, so distance = 12.954 - |y|), computed with the real validation tooling. YOU y=7 renders higher than Gold1 y=5 in ExperimentalPractice.jsx's ExperimentalBoard (translate(a.x,-a.y)), confirming the 'above'/'lower' relative framing is correct for the actual renderer."
+        }
+      ],
+      "replacementReview": {
+        "status": "self-checked",
+        "coverage": [
+          {
+            "questionId": "exp26b-u9-012-q1",
+            "contentHash": "cb9a31a836183925894b278e4749741d5c37318996a5ac5d3829f0223ba95c78",
+            "checks": {
+              "roster": "pass",
+              "geometry": "pass",
+              "answer": "pass",
+              "feedback": "pass",
+              "age": "pass",
+              "sources": "pass",
+              "grammar": "pass"
+            },
+            "reason": "Self-check of the replacement (v2) content: the boards/circle/blue-line/behind-YOU proximity or directional claim identified in the base review has been removed or corrected to match the actual computed geometry (see the scenario repair's reasons/evidence); coordinates, puck ownership, facing, answer keys and all other question text are unchanged from the base version. Re-verified on-ice (isCoachRoutePoint) and structurally valid (validateExperimentalBank) via the real Node tooling. This is a self-check, not an independent second review."
+          },
+          {
+            "questionId": "exp26b-u9-012-q2",
+            "contentHash": "fdd8469e939f11f92c83b4b7fa97aafe7a26c57fece9cb6b083e5f12ed5c5702",
+            "checks": {
+              "roster": "pass",
+              "geometry": "pass",
+              "answer": "pass",
+              "feedback": "pass",
+              "age": "pass",
+              "sources": "pass",
+              "grammar": "pass"
+            },
+            "reason": "Self-check of the replacement (v2) content: the boards/circle/blue-line/behind-YOU proximity or directional claim identified in the base review has been removed or corrected to match the actual computed geometry (see the scenario repair's reasons/evidence); coordinates, puck ownership, facing, answer keys and all other question text are unchanged from the base version. Re-verified on-ice (isCoachRoutePoint) and structurally valid (validateExperimentalBank) via the real Node tooling. This is a self-check, not an independent second review."
+          },
+          {
+            "questionId": "exp26b-u9-012-q3",
+            "contentHash": "628966681cd6ed35976b214408408fe5fc5152863cb349e746c7d825ca50d1b9",
+            "checks": {
+              "roster": "pass",
+              "geometry": "pass",
+              "answer": "pass",
+              "feedback": "pass",
+              "age": "pass",
+              "sources": "pass",
+              "grammar": "pass"
+            },
+            "reason": "Self-check of the replacement (v2) content: the boards/circle/blue-line/behind-YOU proximity or directional claim identified in the base review has been removed or corrected to match the actual computed geometry (see the scenario repair's reasons/evidence); coordinates, puck ownership, facing, answer keys and all other question text are unchanged from the base version. Re-verified on-ice (isCoachRoutePoint) and structurally valid (validateExperimentalBank) via the real Node tooling. This is a self-check, not an independent second review."
+          },
+          {
+            "questionId": "exp26b-u9-012-q4",
+            "contentHash": "9326fe2f8cea4c5cc408cad51da2acba51fe78c5369b583d1e56ae6f9e706824",
+            "checks": {
+              "roster": "pass",
+              "geometry": "pass",
+              "answer": "pass",
+              "feedback": "pass",
+              "age": "pass",
+              "sources": "pass",
+              "grammar": "pass"
+            },
+            "reason": "Self-check of the replacement (v2) content: the boards/circle/blue-line/behind-YOU proximity or directional claim identified in the base review has been removed or corrected to match the actual computed geometry (see the scenario repair's reasons/evidence); coordinates, puck ownership, facing, answer keys and all other question text are unchanged from the base version. Re-verified on-ice (isCoachRoutePoint) and structurally valid (validateExperimentalBank) via the real Node tooling. This is a self-check, not an independent second review."
+          },
+          {
+            "questionId": "exp26b-u9-012-q5",
+            "contentHash": "8ca7784e34c61c2dcab4380b231bfc1d98879e88014c8e944c96ae92cd216232",
+            "checks": {
+              "roster": "pass",
+              "geometry": "pass",
+              "answer": "pass",
+              "feedback": "pass",
+              "age": "pass",
+              "sources": "pass",
+              "grammar": "pass"
+            },
+            "reason": "Self-check of the replacement (v2) content: the boards/circle/blue-line/behind-YOU proximity or directional claim identified in the base review has been removed or corrected to match the actual computed geometry (see the scenario repair's reasons/evidence); coordinates, puck ownership, facing, answer keys and all other question text are unchanged from the base version. Re-verified on-ice (isCoachRoutePoint) and structurally valid (validateExperimentalBank) via the real Node tooling. This is a self-check, not an independent second review."
+          },
+          {
+            "questionId": "exp26b-u9-012-q6",
+            "contentHash": "dd9ac7a7a174fd09ea6fe27ee939532a00882af78bdbe791aa1cd301e99aa2bd",
+            "checks": {
+              "roster": "pass",
+              "geometry": "pass",
+              "answer": "pass",
+              "feedback": "pass",
+              "age": "pass",
+              "sources": "pass",
+              "grammar": "pass"
+            },
+            "reason": "Self-check of the replacement (v2) content: the boards/circle/blue-line/behind-YOU proximity or directional claim identified in the base review has been removed or corrected to match the actual computed geometry (see the scenario repair's reasons/evidence); coordinates, puck ownership, facing, answer keys and all other question text are unchanged from the base version. Re-verified on-ice (isCoachRoutePoint) and structurally valid (validateExperimentalBank) via the real Node tooling. This is a self-check, not an independent second review."
+          }
+        ]
+      }
+    }
+  ],
+  "sourceChecks": [
+    {
+      "url": "https://www.hockeycanada.ca/en-ca/news/seven-coaching-principles-puck-control-2024-ncw",
+      "checkedAt": "2026-09-05T21:00:00Z",
+      "access": "read",
+      "scope": "Hockey Canada's puck-control coaching-principles article (fetched with a browser user agent after a plain fetch returned 403). Discusses puck protection technique, using the body/boards to shield the puck, and incorporating vision/scanning while carrying under pressure. Supports the general teaching concepts used in exp26b-u9-008 and exp26b-u9-010; it does not certify any specific coordinate, distance claim, or guaranteed outcome in those scenes.",
+      "jurisdiction": "Canada (Hockey Canada)",
+      "ageFormat": "General coaching principles article, not age-banded to U9 specifically",
+      "claim": "Puck protection using body position and awareness of pressure/support while carrying the puck"
+    },
+    {
+      "url": "https://www.hockeycanada.ca/en-ca/hockey-programs/coaching/under-9",
+      "checkedAt": "2026-09-05T21:00:00Z",
+      "access": "read",
+      "scope": "Hockey Canada's Under-9 program page (fetched with a browser user agent after a plain fetch returned 403). Describes the U9 small-area/cross-ice and half-ice development model, its rationale (fun, repetition, avoiding early specialization) and game-sense emphasis at this age. Supports age-appropriate framing for exp26b-u9-008 and exp26b-u9-011; it does not certify these exact scenes, coordinates, or answer keys.",
+      "jurisdiction": "Canada (Hockey Canada)",
+      "ageFormat": "U9 (Under-9)",
+      "claim": "Age-appropriate small-area decision practice at U9"
+    },
+    {
+      "url": "https://www.hockeycanada.ca/en-ca/news/seven-coaching-principles-vision-scanning-2024-ncw",
+      "checkedAt": "2026-09-05T21:00:00Z",
+      "access": "read",
+      "scope": "Hockey Canada's vision-and-scanning coaching-principles article (fetched with a browser user agent after a plain fetch returned 403). Discusses scanning/shoulder-checking to identify teammate position and where opposing pressure is coming from, and reading pressure in corner situations. Supports the scanning/support concepts used in exp26b-u9-009, exp26b-u9-010, exp26b-u9-011 and exp26b-u9-012; it does not certify any specific coordinate, distance claim, or guaranteed pass/interception outcome in those scenes.",
+      "jurisdiction": "Canada (Hockey Canada)",
+      "ageFormat": "General coaching principles article, not age-banded to U9 specifically",
+      "claim": "Scanning for teammates and pressure before acting on the puck"
+    },
+    {
+      "url": "https://www.usahockey.com/news_article/show/1093178",
+      "checkedAt": "2026-09-05T21:00:00Z",
+      "access": "read",
+      "scope": "USA Hockey interview with youth coach Grace Hoene (fetched with a browser user agent after a plain fetch returned 403). Explicitly frames the 'four situational roles' concept as something introduced at the 14U level, not U9; also gives 6U/8U and 10U/12U-appropriate drill guidance separately. Supports flexible-role/support inspiration for exp26b-u9-012's OLDER-age-inspired objective, consistent with the source's own 'use' caveat that it is not a universal youth system; it does not certify that this specific content is delivered at U9 in USA Hockey's own program, and this scenario adapts the concept to a U9-appropriate static scene rather than claiming U14 content.",
+      "jurisdiction": "United States (USA Hockey)",
+      "ageFormat": "14U in the source article; adapted here as an older-age-inspired principle for a U9 scenario, not a U9 default per the AUTHORING-CONTRACT",
+      "claim": "Flexible puck-pressure/support roles inspiring an away-side awareness activity"
+    }
+  ],
+  "remainingQuestionIds": []
+}
