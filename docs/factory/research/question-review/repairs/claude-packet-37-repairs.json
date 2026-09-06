@@ -1,0 +1,4380 @@
+{
+  "schemaVersion": 1,
+  "author": "Codex root",
+  "status": "applied-locally",
+  "sourceSnapshotId": "rr-20260905-c8403be16748c919",
+  "proposalSha256": "17a4d68dbd8f7bab5baea3cd16828da25e7067dc9e933e4bda3ebcdd65a986e7",
+  "sourceReturnFileHashes": {
+    "packet-37": "479a4fa2989fdf0e55c7ec247c09a01f452a09a1ede50ba72d228e86eb812793"
+  },
+  "independentReview": "docs/factory/research/question-review/packet-37/independent-final-recheck.json",
+  "changes": [
+    {
+      "scenarioId": "exp26-u18-001",
+      "questionId": "exp26-u18-001-q1",
+      "beforeContentHash": "1203284e954d277edbf51c97c9da95b985f53a7ddc23bd0429fbcdebc92951f7",
+      "afterContentHash": "77deb5a75d0eea0c0fbc47f6f10a6f338778668ed241906867e97ef3e1c30277",
+      "before": {
+        "id": "exp26-u18-001-q1",
+        "type": "choice",
+        "prompt": "What score-and-clock situation is explicitly given?",
+        "options": [
+          {
+            "id": "a",
+            "text": "Navy trails by two with a full period left"
+          },
+          {
+            "id": "b",
+            "text": "The score is tied and no clock is stated"
+          },
+          {
+            "id": "c",
+            "text": "Navy leads by one with 48 seconds left"
+          }
+        ],
+        "answer": [
+          "c"
+        ],
+        "explanation": "The briefing states the lead and remaining time; they are not inferred from the rink.",
+        "basis": "scene"
+      },
+      "after": {
+        "id": "exp26-u18-001-q1",
+        "type": "choice",
+        "prompt": "What score-and-clock situation is explicitly given?",
+        "options": [
+          {
+            "id": "a",
+            "text": "Navy trails by two with a full period left"
+          },
+          {
+            "id": "b",
+            "text": "The score is tied and no clock is stated"
+          },
+          {
+            "id": "c",
+            "text": "Navy leads by one with 48 seconds left"
+          }
+        ],
+        "answer": [
+          "c"
+        ],
+        "explanation": "The briefing states the lead and remaining time; they are not inferred from the rink.",
+        "basis": "scene"
+      },
+      "reason": "Root checked concrete wording, role, state and geometry; see root-review.md."
+    },
+    {
+      "scenarioId": "exp26-u18-001",
+      "questionId": "exp26-u18-001-q2",
+      "beforeContentHash": "f8fd519847dfe17d7c7f8eff93e7759079f00e1ff5871d753e41775f6728c538",
+      "afterContentHash": "85f5299d54865a609edc4655febfed2affe08038bffe5ee80c2b4dba10ad3349",
+      "before": {
+        "id": "exp26-u18-001-q2",
+        "type": "multi",
+        "prompt": "Which two cues affect the stated possession objective?",
+        "options": [
+          {
+            "id": "a",
+            "text": "The controlled support available through D2 or F3"
+          },
+          {
+            "id": "b",
+            "text": "Gold 1’s pressure toward the carrier"
+          },
+          {
+            "id": "c",
+            "text": "A claim that any attacking pass violates the objective"
+          }
+        ],
+        "answer": [
+          "a",
+          "b"
+        ],
+        "explanation": "The lead changes acceptable risk, but the actual available play still matters.",
+        "basis": "coaching"
+      },
+      "after": {
+        "id": "exp26-u18-001-q2",
+        "type": "multi",
+        "prompt": "Which two cues affect the stated possession objective?",
+        "options": [
+          {
+            "id": "a",
+            "text": "The controlled support available through D2 or F3"
+          },
+          {
+            "id": "b",
+            "text": "Gold 1’s pressure toward the carrier"
+          },
+          {
+            "id": "c",
+            "text": "A claim that any attacking pass violates the objective"
+          }
+        ],
+        "answer": [
+          "a",
+          "b"
+        ],
+        "explanation": "The lead changes acceptable risk, but the actual available play still matters.",
+        "basis": "coaching"
+      },
+      "reason": "Root checked concrete wording, role, state and geometry; see root-review.md."
+    },
+    {
+      "scenarioId": "exp26-u18-001",
+      "questionId": "exp26-u18-001-q3",
+      "beforeContentHash": "3296cf6a0268e08f9130f181e34029b22575ef444eabd6156cc4f3183ae51434",
+      "afterContentHash": "95f7567b37e97c645c5ec4ec08d07dce071201a5ec1513b8fbd0934eaf763f5e",
+      "before": {
+        "id": "exp26-u18-001-q3",
+        "type": "sequence",
+        "prompt": "Arrange a read for this late-game possession.",
+        "options": [
+          {
+            "id": "a",
+            "text": "Confirm time, score and available support"
+          },
+          {
+            "id": "b",
+            "text": "Compare pressure on each controlled option"
+          },
+          {
+            "id": "c",
+            "text": "Choose and communicate the next support job"
+          }
+        ],
+        "answer": [
+          "a",
+          "b",
+          "c"
+        ],
+        "basis": "coaching",
+        "explanation": "This routine follows the stated coaching objective; it is not a universal final-minute rule."
+      },
+      "after": {
+        "id": "exp26-u18-001-q3",
+        "type": "sequence",
+        "prompt": "Arrange a read for this late-game possession.",
+        "options": [
+          {
+            "id": "a",
+            "text": "Confirm time, score and available support"
+          },
+          {
+            "id": "b",
+            "text": "Compare pressure on each controlled option"
+          },
+          {
+            "id": "c",
+            "text": "Choose and communicate the next support job"
+          }
+        ],
+        "answer": [
+          "a",
+          "b",
+          "c"
+        ],
+        "basis": "coaching",
+        "explanation": "Confirming the clock, score and support and comparing pressure on each option can overlap as YOU keep scanning; only the final step, choosing and communicating the next support job, has to come after those reads are in. This is not a universal final-minute rule."
+      },
+      "reason": "Root checked concrete wording, role, state and geometry; see root-review.md."
+    },
+    {
+      "scenarioId": "exp26-u18-001",
+      "questionId": "exp26-u18-001-q4",
+      "beforeContentHash": "c6c9226072bdc9df4fa4117f11529b8d51c958d17d954b4d80e51526fae6c189",
+      "afterContentHash": "e49e75b5ea57c916536eb9cdaa8272b56aba94cab884ad4c08317518ba29f9b5",
+      "before": {
+        "id": "exp26-u18-001-q4",
+        "type": "position",
+        "prompt": "Move YOU to compare a position that keeps more than one controlled outlet visible.",
+        "actorId": "home-skater-1",
+        "reference": {
+          "x": -3,
+          "y": -4
+        },
+        "basis": "coaching",
+        "explanation": "The reference preserves a connection to deeper support while changing Gold 1’s approach. Live pressure could favour a forward option instead."
+      },
+      "after": {
+        "id": "exp26-u18-001-q4",
+        "type": "position",
+        "prompt": "Move YOU to compare the routes toward D2 and F3.",
+        "actorId": "home-skater-1",
+        "reference": {
+          "x": -3,
+          "y": -4
+        },
+        "basis": "coaching",
+        "explanation": "The example moves closer to D2 and farther from Gold 1, but farther from F3. Compare the changed routes and the clock before choosing."
+      },
+      "reason": "Root checked concrete wording, role, state and geometry; see root-review.md."
+    },
+    {
+      "scenarioId": "exp26-u18-001",
+      "questionId": "exp26-u18-001-q5",
+      "beforeContentHash": "a0a7367d03938067d1182f3c094bf6afbb205e46eb4d47b1cb1d7ce514fa0325",
+      "afterContentHash": "9b7dc5a2137d737a3bc7c54c2b87d7c9e7a563d8392724bd120335f0f811c065",
+      "before": {
+        "id": "exp26-u18-001-q5",
+        "type": "choice",
+        "prompt": "F1 becomes clearly open beyond Gold 1 with room to retain the puck. What changes?",
+        "options": [
+          {
+            "id": "a",
+            "text": "A controlled forward pass may now fit the objective"
+          },
+          {
+            "id": "b",
+            "text": "The clock makes every forward pass automatically wrong"
+          },
+          {
+            "id": "c",
+            "text": "D2 must receive regardless of the open route"
+          }
+        ],
+        "answer": [
+          "a"
+        ],
+        "explanation": "A lower-risk forward option can be consistent with protecting a lead.",
+        "basis": "coaching"
+      },
+      "after": {
+        "id": "exp26-u18-001-q5",
+        "type": "choice",
+        "prompt": "F1 becomes clearly open beyond Gold 1 with room to retain the puck. What changes?",
+        "options": [
+          {
+            "id": "a",
+            "text": "A controlled forward pass may now fit the objective"
+          },
+          {
+            "id": "b",
+            "text": "The clock makes every forward pass automatically wrong"
+          },
+          {
+            "id": "c",
+            "text": "D2 must receive regardless of the open route"
+          }
+        ],
+        "answer": [
+          "a"
+        ],
+        "explanation": "A lower-risk forward option can be consistent with protecting a lead.",
+        "basis": "coaching"
+      },
+      "reason": "Root checked concrete wording, role, state and geometry; see root-review.md."
+    },
+    {
+      "scenarioId": "exp26-u18-001",
+      "questionId": "exp26-u18-001-q6",
+      "beforeContentHash": "d94c279a379c3b894043e6ad66d6ee833c7c0b30226bbeba06db2f44c4e23a4c",
+      "afterContentHash": "b902b8b8c71dde13092dbc2f4dc091d03690b971345b30c7d8c56f430c112093",
+      "before": {
+        "id": "exp26-u18-001-q6",
+        "type": "explain",
+        "prompt": "How would you explain a sensible risk tradeoff without reducing it to “never attack with a lead”?",
+        "basis": "coaching",
+        "explanation": "Use the clock, pressure, support and likely possession outcome; acknowledge more than one viable controlled play."
+      },
+      "after": {
+        "id": "exp26-u18-001-q6",
+        "type": "explain",
+        "prompt": "How would YOU explain a sensible risk tradeoff without reducing it to “never attack with a lead”?",
+        "basis": "coaching",
+        "explanation": "Use the clock, pressure, support and likely possession outcome; acknowledge more than one viable controlled play."
+      },
+      "reason": "Root checked concrete wording, role, state and geometry; see root-review.md."
+    },
+    {
+      "scenarioId": "exp26-u18-001",
+      "questionId": "exp26-u18-001-q7",
+      "beforeContentHash": "db1649cbd01b1a35b6afc554ef6f4322be078cef01732bcec3c9acdefb38bc03",
+      "afterContentHash": "1a1cebf9de92447ca59a832ec6d39e3885cef94c315ad170c40dbbc1a67a9f16",
+      "before": {
+        "id": "exp26-u18-001-q7",
+        "type": "choice",
+        "prompt": "What should YOU communicate with 48 seconds left?",
+        "options": [
+          {
+            "id": "a",
+            "text": "We value possession, but I will use a clear forward lane"
+          },
+          {
+            "id": "b",
+            "text": "The lead removes every forward option"
+          },
+          {
+            "id": "c",
+            "text": "F1 is the first outlet regardless of the pressure route"
+          }
+        ],
+        "answer": [
+          "a"
+        ],
+        "basis": "coaching",
+        "explanation": "The message balances the stated lead with a conditional forward choice."
+      },
+      "after": {
+        "id": "exp26-u18-001-q7",
+        "type": "choice",
+        "prompt": "What should YOU communicate with 48 seconds left?",
+        "options": [
+          {
+            "id": "a",
+            "text": "We value possession, but I will use a clear forward lane"
+          },
+          {
+            "id": "b",
+            "text": "The lead removes every forward option"
+          },
+          {
+            "id": "c",
+            "text": "F1 is the first outlet regardless of the pressure route"
+          }
+        ],
+        "answer": [
+          "a"
+        ],
+        "basis": "coaching",
+        "explanation": "The message balances the stated lead with a conditional forward choice."
+      },
+      "reason": "Root checked concrete wording, role, state and geometry; see root-review.md."
+    },
+    {
+      "scenarioId": "exp26-u18-001",
+      "questionId": "exp26-u18-001-q8",
+      "beforeContentHash": "0de93d24ffbfa8e1c41e1ffad6b85c17c4e064fe733d7ec27b21edef5aba13a0",
+      "afterContentHash": "c9af200b1d30dd5cb4dfc3aa78647892646dbe05dbab3a5bea8ed7ca2eebfb84",
+      "before": {
+        "id": "exp26-u18-001-q8",
+        "type": "multi",
+        "prompt": "Which two events change the late-game risk?",
+        "options": [
+          {
+            "id": "a",
+            "text": "Gold pressure closes the support lane"
+          },
+          {
+            "id": "b",
+            "text": "F1 becomes reachable with room"
+          },
+          {
+            "id": "c",
+            "text": "The score stays one goal apart"
+          }
+        ],
+        "answer": [
+          "a",
+          "b"
+        ],
+        "basis": "coaching",
+        "explanation": "Pressure and support change the risk decision while the score remains context."
+      },
+      "after": {
+        "id": "exp26-u18-001-q8",
+        "type": "multi",
+        "prompt": "Which two events change the late-game risk?",
+        "options": [
+          {
+            "id": "a",
+            "text": "Gold pressure closes the support lane"
+          },
+          {
+            "id": "b",
+            "text": "F1 becomes reachable with room"
+          },
+          {
+            "id": "c",
+            "text": "The score stays one goal apart"
+          }
+        ],
+        "answer": [
+          "a",
+          "b"
+        ],
+        "basis": "coaching",
+        "explanation": "Pressure and support change the risk decision while the score remains context."
+      },
+      "reason": "Root checked concrete wording, role, state and geometry; see root-review.md."
+    },
+    {
+      "scenarioId": "exp26-u18-001",
+      "questionId": "exp26-u18-001-q9",
+      "beforeContentHash": "8a50649921cd5b4d8c54ab52b7c178ba4a6f504df145e21fcb4d7dbdeb59fa2b",
+      "afterContentHash": "1b43419263d1f46830ffbbd2d1039e04f76fc4b44bf2ed1f134eb8822d486413",
+      "before": {
+        "id": "exp26-u18-001-q9",
+        "type": "position",
+        "prompt": "Move YOU to a position with F1 and F2 as separate outlets.",
+        "actorId": "home-skater-1",
+        "reference": {
+          "x": 1.5,
+          "y": -5
+        },
+        "basis": "coaching",
+        "explanation": "This point preserves two support relationships for a controlled possession."
+      },
+      "after": {
+        "id": "exp26-u18-001-q9",
+        "type": "position",
+        "prompt": "Move YOU to compare forward routes toward F1 and F2.",
+        "actorId": "home-skater-1",
+        "reference": {
+          "x": 1.5,
+          "y": -5
+        },
+        "basis": "coaching",
+        "explanation": "The example moves closer to both forwards and closer to Gold 1. Check pressure before treating either route as usable."
+      },
+      "reason": "Root checked concrete wording, role, state and geometry; see root-review.md."
+    },
+    {
+      "scenarioId": "exp26-u18-001",
+      "questionId": "exp26-u18-001-q10",
+      "beforeContentHash": "057319f49962db19b6cf933381001703885c0562f0773c5fe5c4ae8d28d89e5b",
+      "afterContentHash": "48fea1319598f5058b39eb04f5c3b2ab747d5eda78c6f9f3c6901222ec115ded",
+      "before": {
+        "id": "exp26-u18-001-q10",
+        "type": "explain",
+        "prompt": "Gold closes F1 but F2 remains open. Explain the late-game branch.",
+        "basis": "coaching",
+        "explanation": "Name the closed lane, check F2, and choose the lower-risk reachable option while keeping the lead context in mind."
+      },
+      "after": {
+        "id": "exp26-u18-001-q10",
+        "type": "explain",
+        "prompt": "Gold closes F1 but F2 remains open. Explain the late-game branch.",
+        "basis": "coaching",
+        "explanation": "Name the closed lane, check F2, and choose the lower-risk reachable option while keeping the lead context in mind."
+      },
+      "reason": "Root checked concrete wording, role, state and geometry; see root-review.md."
+    },
+    {
+      "scenarioId": "exp26-u18-002",
+      "questionId": "exp26-u18-002-q1",
+      "beforeContentHash": "d0e6f31e256d531e629cac8f78c7c252c4dbc02aa1ef1e5e37f279df032d343c",
+      "afterContentHash": "c50dbf815799a83575d52070300e6cf909fea3546b6cbc07f94fef25a4b87022",
+      "before": {
+        "id": "exp26-u18-002-q1",
+        "type": "choice",
+        "prompt": "Is an extra attacker part of this stated setup?",
+        "options": [
+          {
+            "id": "a",
+            "text": "No Navy players are near the net"
+          },
+          {
+            "id": "b",
+            "text": "No, Navy has five skaters and its goalie remains in net"
+          },
+          {
+            "id": "c",
+            "text": "Yes, Navy has six skaters"
+          }
+        ],
+        "answer": [
+          "b"
+        ],
+        "explanation": "The briefing explicitly excludes a goalie pull, avoiding an unstated manpower assumption.",
+        "basis": "scene"
+      },
+      "after": {
+        "id": "exp26-u18-002-q1",
+        "type": "choice",
+        "prompt": "Is an extra attacker part of this stated setup?",
+        "options": [
+          {
+            "id": "a",
+            "text": "No Navy players are near the net"
+          },
+          {
+            "id": "b",
+            "text": "No, Navy has five skaters and its goalie remains in net"
+          },
+          {
+            "id": "c",
+            "text": "Yes, Navy has six skaters"
+          }
+        ],
+        "answer": [
+          "b"
+        ],
+        "explanation": "The briefing explicitly excludes a goalie pull, avoiding an unstated manpower assumption.",
+        "basis": "scene"
+      },
+      "reason": "Root checked concrete wording, role, state and geometry; see root-review.md."
+    },
+    {
+      "scenarioId": "exp26-u18-002",
+      "questionId": "exp26-u18-002-q2",
+      "beforeContentHash": "dde8171877c93f54fde15409bdc446f52b2f451a3942a59ba0418228298fd9e9",
+      "afterContentHash": "fd4f0a55ccf37fd3b8d5c0c56819107d5cb18fb99b2037d6be68eadc7ee8105a",
+      "before": {
+        "id": "exp26-u18-002-q2",
+        "type": "multi",
+        "prompt": "Choose two considerations for generating a remaining chance.",
+        "options": [
+          {
+            "id": "a",
+            "text": "Whether a shot can reach useful traffic"
+          },
+          {
+            "id": "b",
+            "text": "A certainty that shooting from the point always scores"
+          },
+          {
+            "id": "c",
+            "text": "Whether a pass would create a clearer attempt in time"
+          }
+        ],
+        "answer": [
+          "a",
+          "c"
+        ],
+        "explanation": "Time matters, but a rushed blocked shot and a clearer available connection are different possibilities.",
+        "basis": "coaching"
+      },
+      "after": {
+        "id": "exp26-u18-002-q2",
+        "type": "multi",
+        "prompt": "Choose two considerations for generating a remaining chance.",
+        "options": [
+          {
+            "id": "a",
+            "text": "Whether a shot can reach useful traffic"
+          },
+          {
+            "id": "b",
+            "text": "A certainty that shooting from the point always scores"
+          },
+          {
+            "id": "c",
+            "text": "Whether a pass would create a clearer attempt in time"
+          }
+        ],
+        "answer": [
+          "a",
+          "c"
+        ],
+        "explanation": "Time matters, but a rushed blocked shot and a clearer available connection are different possibilities.",
+        "basis": "coaching"
+      },
+      "reason": "Root checked concrete wording, role, state and geometry; see root-review.md."
+    },
+    {
+      "scenarioId": "exp26-u18-002",
+      "questionId": "exp26-u18-002-q3",
+      "beforeContentHash": "12f5ff509ae49d961b6adc902b19b5c47277aace9629157864a6274eb53e1a40",
+      "afterContentHash": "6b82d5e9c56b8bba72d631082b854494411649e1a3d67966c45a194019ba353e",
+      "before": {
+        "id": "exp26-u18-002-q3",
+        "type": "sequence",
+        "prompt": "Arrange a time-aware attacking read.",
+        "options": [
+          {
+            "id": "a",
+            "text": "Check the remaining clock and immediate lanes"
+          },
+          {
+            "id": "b",
+            "text": "Compare the available shot and connecting pass"
+          },
+          {
+            "id": "c",
+            "text": "Commit to a feasible attempt and support its next touch"
+          }
+        ],
+        "answer": [
+          "a",
+          "b",
+          "c"
+        ],
+        "basis": "coaching",
+        "explanation": "The still setup cannot validate travel times or scoring probability."
+      },
+      "after": {
+        "id": "exp26-u18-002-q3",
+        "type": "sequence",
+        "prompt": "Arrange a time-aware attacking read.",
+        "options": [
+          {
+            "id": "a",
+            "text": "Check the remaining clock and immediate lanes"
+          },
+          {
+            "id": "b",
+            "text": "Compare the available shot and connecting pass"
+          },
+          {
+            "id": "c",
+            "text": "Commit to a feasible attempt and support its next touch"
+          }
+        ],
+        "answer": [
+          "a",
+          "b",
+          "c"
+        ],
+        "basis": "coaching",
+        "explanation": "Checking the clock/lanes and comparing the shot against a connecting pass can overlap as YOU scan; only committing to the attempt and supporting its next touch has to come last, once those reads are in. The still setup cannot validate travel times or scoring probability."
+      },
+      "reason": "Root checked concrete wording, role, state and geometry; see root-review.md."
+    },
+    {
+      "scenarioId": "exp26-u18-002",
+      "questionId": "exp26-u18-002-q4",
+      "beforeContentHash": "cb09f955347762415a18355effc16d9552fc2cfdb78c0e20ae7439b10fb82c76",
+      "afterContentHash": "3af7240a8c441669ca588aca8795b3d52b42137e0976a8e984f2d9aa8afcc9c1",
+      "before": {
+        "id": "exp26-u18-002-q4",
+        "type": "position",
+        "prompt": "Move YOU to compare a more central point angle.",
+        "actorId": "home-skater-1",
+        "reference": {
+          "x": 13,
+          "y": 3
+        },
+        "basis": "coaching",
+        "explanation": "The reference changes the shot and pass routes. It may consume time, so it is an illustration rather than a prescribed late-game skate."
+      },
+      "after": {
+        "id": "exp26-u18-002-q4",
+        "type": "position",
+        "prompt": "Move YOU to compare a more central point angle.",
+        "actorId": "home-skater-1",
+        "reference": {
+          "x": 13,
+          "y": 3
+        },
+        "basis": "coaching",
+        "explanation": "The reference changes the shot and pass routes. It may consume time, so it is an illustration rather than a prescribed late-game skate."
+      },
+      "reason": "Root checked concrete wording, role, state and geometry; see root-review.md."
+    },
+    {
+      "scenarioId": "exp26-u18-002",
+      "questionId": "exp26-u18-002-q5",
+      "beforeContentHash": "e75cbb3724884483279523f87e4ec11445bf56742c4038b082b9b635f7d87199",
+      "afterContentHash": "d09adc72bf9651ace5274ad71b506fd750d5ac64b7159eb431dd885f70ae30b4",
+      "before": {
+        "id": "exp26-u18-002-q5",
+        "type": "choice",
+        "prompt": "Gold 1 lunges into the shot lane and F2 becomes visible. What should be considered?",
+        "options": [
+          {
+            "id": "a",
+            "text": "The unchanged shot lane from before the lunge"
+          },
+          {
+            "id": "b",
+            "text": "An automatic hold until the clock expires"
+          },
+          {
+            "id": "c",
+            "text": "A quick checked connection to F2"
+          }
+        ],
+        "answer": [
+          "c"
+        ],
+        "explanation": "The new cue can favour a connection, but the available time and F2’s preparation still matter.",
+        "basis": "coaching"
+      },
+      "after": {
+        "id": "exp26-u18-002-q5",
+        "type": "choice",
+        "prompt": "Gold 1 lunges into the shot lane and F2 becomes visible. What should be considered?",
+        "options": [
+          {
+            "id": "a",
+            "text": "The unchanged shot lane from before the lunge"
+          },
+          {
+            "id": "b",
+            "text": "An automatic hold until the clock expires"
+          },
+          {
+            "id": "c",
+            "text": "A quick checked connection to F2"
+          }
+        ],
+        "answer": [
+          "c"
+        ],
+        "explanation": "The new cue can favour a connection, but the available time and F2’s preparation still matter.",
+        "basis": "coaching"
+      },
+      "reason": "Root checked concrete wording, role, state and geometry; see root-review.md."
+    },
+    {
+      "scenarioId": "exp26-u18-002",
+      "questionId": "exp26-u18-002-q6",
+      "beforeContentHash": "77d137bb90695862a3814b79ec637840a620a43ed4b9741da3e5e15ceb4d56c4",
+      "afterContentHash": "19dfdd3a7b91cacbfc253f817644bc28a19ecae39747c7482606ba55b9292411",
+      "before": {
+        "id": "exp26-u18-002-q6",
+        "type": "explain",
+        "prompt": "Why is “get a shot” incomplete feedback in this final-minute scene?",
+        "basis": "coaching",
+        "explanation": "Explain route, traffic, time and possible next possession; more attempts are not identical chances."
+      },
+      "after": {
+        "id": "exp26-u18-002-q6",
+        "type": "explain",
+        "prompt": "Why is “get a shot” incomplete feedback in this final-minute scene?",
+        "basis": "coaching",
+        "explanation": "Explain route, traffic, time and possible next possession; more attempts are not identical chances."
+      },
+      "reason": "Root checked concrete wording, role, state and geometry; see root-review.md."
+    },
+    {
+      "scenarioId": "exp26-u18-002",
+      "questionId": "exp26-u18-002-q7",
+      "beforeContentHash": "670e860ac4686c154c0166feae0bcc1eb9b8473df421532189b32b8a0156e087",
+      "afterContentHash": "e44d02e75b8dba6f5c2e37c114e0872c967c3a3bf64453c9d5cc821f047a8780",
+      "before": {
+        "id": "exp26-u18-002-q7",
+        "type": "choice",
+        "prompt": "What should YOU communicate while trailing late?",
+        "options": [
+          {
+            "id": "a",
+            "text": "We need a chance; check the lane before forcing it"
+          },
+          {
+            "id": "b",
+            "text": "The deficit makes every shot correct"
+          },
+          {
+            "id": "c",
+            "text": "F2 stays the preferred option even if Gold closes the route"
+          }
+        ],
+        "answer": [
+          "a"
+        ],
+        "basis": "coaching",
+        "explanation": "The call acknowledges the deficit while preserving a scan before risk."
+      },
+      "after": {
+        "id": "exp26-u18-002-q7",
+        "type": "choice",
+        "prompt": "What should YOU communicate while trailing late?",
+        "options": [
+          {
+            "id": "a",
+            "text": "We need a chance; check the lane before forcing it"
+          },
+          {
+            "id": "b",
+            "text": "The deficit makes every shot correct"
+          },
+          {
+            "id": "c",
+            "text": "F2 stays the preferred option even if Gold closes the route"
+          }
+        ],
+        "answer": [
+          "a"
+        ],
+        "basis": "coaching",
+        "explanation": "The call acknowledges the deficit while preserving a scan before risk."
+      },
+      "reason": "Root checked concrete wording, role, state and geometry; see root-review.md."
+    },
+    {
+      "scenarioId": "exp26-u18-002",
+      "questionId": "exp26-u18-002-q8",
+      "beforeContentHash": "dd00cc0895c98e5ce01f7f301adce38e68c0d026503dbf3c6e04d21056ea5f18",
+      "afterContentHash": "c0c87c96828264311d5b5c22dad43e1c4b615dc9b3da57b7bd8f5ffa3457453a",
+      "before": {
+        "id": "exp26-u18-002-q8",
+        "type": "multi",
+        "prompt": "Which two updates support a remaining chance?",
+        "options": [
+          {
+            "id": "a",
+            "text": "Gold 1 commits to the carrier"
+          },
+          {
+            "id": "b",
+            "text": "F2 or F3 becomes reachable"
+          },
+          {
+            "id": "c",
+            "text": "The clock alone creates a lane"
+          }
+        ],
+        "answer": [
+          "a",
+          "b"
+        ],
+        "basis": "coaching",
+        "explanation": "Defender commitment and support access create the attacking branch."
+      },
+      "after": {
+        "id": "exp26-u18-002-q8",
+        "type": "multi",
+        "prompt": "Which two updates support a remaining chance?",
+        "options": [
+          {
+            "id": "a",
+            "text": "Gold 1 commits to the carrier"
+          },
+          {
+            "id": "b",
+            "text": "F2 or F3 becomes reachable"
+          },
+          {
+            "id": "c",
+            "text": "The clock alone creates a lane"
+          }
+        ],
+        "answer": [
+          "a",
+          "b"
+        ],
+        "basis": "coaching",
+        "explanation": "Defender commitment and support access create the attacking branch."
+      },
+      "reason": "Root checked concrete wording, role, state and geometry; see root-review.md."
+    },
+    {
+      "scenarioId": "exp26-u18-002",
+      "questionId": "exp26-u18-002-q9",
+      "beforeContentHash": "8f34740fa0566e66b7d155594211e8a4d3d09d2a120f8a13e9f9349c8c740eb7",
+      "afterContentHash": "49602c47270b37e77530f044baa56343a6b155e304cef3f3607dab09b1baa90f",
+      "before": {
+        "id": "exp26-u18-002-q9",
+        "type": "position",
+        "prompt": "Move YOU to a central point angle with F2 visible.",
+        "actorId": "home-skater-1",
+        "reference": {
+          "x": 10,
+          "y": 1
+        },
+        "basis": "coaching",
+        "explanation": "This point changes the carrier line and keeps the inside option visible."
+      },
+      "after": {
+        "id": "exp26-u18-002-q9",
+        "type": "position",
+        "prompt": "Move YOU to compare a more central point angle toward F2.",
+        "actorId": "home-skater-1",
+        "reference": {
+          "x": 10,
+          "y": 1
+        },
+        "basis": "coaching",
+        "explanation": "The example is nearer the middle and farther from Gold 1. Check the changed passing route, traffic and remaining time; the point does not establish an open lane."
+      },
+      "reason": "Root checked concrete wording, role, state and geometry; see root-review.md."
+    },
+    {
+      "scenarioId": "exp26-u18-002",
+      "questionId": "exp26-u18-002-q10",
+      "beforeContentHash": "25cac54eff88ab9317595e9683d6260c9c43f321c4dfd5181eb3e651fd569d38",
+      "afterContentHash": "b53e7c4bf9c122415feb53b091615159546f588d4544a5133f80d7f892d9a642",
+      "before": {
+        "id": "exp26-u18-002-q10",
+        "type": "explain",
+        "prompt": "Gold blocks F2 but leaves F3 wide. Explain your next read.",
+        "basis": "coaching",
+        "explanation": "Recheck F3 and the net-side lane, then choose a pass or carry only if it remains reachable; the deficit does not remove that condition."
+      },
+      "after": {
+        "id": "exp26-u18-002-q10",
+        "type": "explain",
+        "prompt": "Gold blocks F2 but leaves F3 wide. Explain your next read.",
+        "basis": "coaching",
+        "explanation": "Recheck F3 and the net-side lane, then choose a pass or carry only if it remains reachable; the deficit does not remove that condition."
+      },
+      "reason": "Root checked concrete wording, role, state and geometry; see root-review.md."
+    },
+    {
+      "scenarioId": "exp26-u18-003",
+      "questionId": "exp26-u18-003-q3",
+      "beforeContentHash": "0630a8c455aea0e4245c26b4362d9c6449bc1304b7fe6a7345b9fb205fc49dde",
+      "afterContentHash": "79f31c987257d013bf94ce662690cc945eb3486499ba4bacd66f157e29f23549",
+      "before": {
+        "id": "exp26-u18-003-q3",
+        "type": "sequence",
+        "prompt": "Arrange an entry read under this instruction.",
+        "options": [
+          {
+            "id": "a",
+            "text": "Read the entry defenders"
+          },
+          {
+            "id": "b",
+            "text": "Compare the immediate chance with retained possession"
+          },
+          {
+            "id": "c",
+            "text": "Attack or settle according to the available picture"
+          }
+        ],
+        "answer": [
+          "a",
+          "b",
+          "c"
+        ],
+        "basis": "coaching",
+        "explanation": "Both attacking and settling may be reasonable under different cues."
+      },
+      "after": {
+        "id": "exp26-u18-003-q3",
+        "type": "sequence",
+        "prompt": "Arrange an entry read under this instruction.",
+        "options": [
+          {
+            "id": "a",
+            "text": "Read the entry defenders"
+          },
+          {
+            "id": "b",
+            "text": "Compare the immediate chance with retained possession"
+          },
+          {
+            "id": "c",
+            "text": "Attack or settle according to the available picture"
+          }
+        ],
+        "answer": [
+          "a",
+          "b",
+          "c"
+        ],
+        "basis": "coaching",
+        "explanation": "Reading the entry defenders and comparing the immediate chance against retained possession can overlap as YOU carry; only attacking or settling has to come last, once that picture is clear. Both attacking and settling may be reasonable under different cues."
+      },
+      "reason": "Root checked concrete wording, role, state and geometry; see root-review.md."
+    },
+    {
+      "scenarioId": "exp26-u18-003",
+      "questionId": "exp26-u18-003-q9",
+      "beforeContentHash": "06021d44b788b3f3c96afdc2410a9b0f6abfb818ab1d04378b85017371e8d4d8",
+      "afterContentHash": "9c48b8dd11517ec64bcf533e7cb58d83768b56afeebe3d39bf9db6b469b5d416",
+      "before": {
+        "id": "exp26-u18-003-q9",
+        "type": "position",
+        "prompt": "Move YOU to a carrier angle that connects wide entry and middle support.",
+        "actorId": "home-skater-1",
+        "reference": {
+          "x": 11,
+          "y": 4
+        },
+        "basis": "coaching",
+        "explanation": "This point changes the entry line while retaining both receivers."
+      },
+      "after": {
+        "id": "exp26-u18-003-q9",
+        "type": "position",
+        "prompt": "Move YOU to compare the routes toward F2 and trailing F3.",
+        "actorId": "home-skater-1",
+        "reference": {
+          "x": 11,
+          "y": 4
+        },
+        "basis": "coaching",
+        "explanation": "The example is nearer the middle and closer to F2 and F3, but also closer to Gold 3. Compare pressure and support before choosing a pass."
+      },
+      "reason": "Root checked concrete wording, role, state and geometry; see root-review.md."
+    },
+    {
+      "scenarioId": "exp26-u18-004",
+      "questionId": "exp26-u18-004-q4",
+      "beforeContentHash": "7ca4559b4161aa24d5548db541ee6a84dd727d53d2328fe28324c3ea3c814810",
+      "afterContentHash": "9c3a1b3a1e2577e32c6ab3d2c08df380b1571951fc4be67061224088131ccedc",
+      "before": {
+        "id": "exp26-u18-004-q4",
+        "type": "position",
+        "prompt": "Move YOU to compare a net-side weak-side position.",
+        "actorId": "home-skater-1",
+        "reference": {
+          "x": -25,
+          "y": 2
+        },
+        "basis": "coaching",
+        "explanation": "The reference relates YOU to Gold 3 and the net while preserving awareness of Gold 2. Other low coverage shapes may be valid."
+      },
+      "after": {
+        "id": "exp26-u18-004-q4",
+        "type": "position",
+        "prompt": "Move YOU to compare a net-side weak-side position.",
+        "actorId": "home-skater-1",
+        "reference": {
+          "x": -25,
+          "y": 2
+        },
+        "basis": "coaching",
+        "explanation": "The example is on the opposite side from Gold 1 and closer to Navy’s net than Gold 3. Recheck Gold 2 and Gold 3 before assuming the low lane is covered."
+      },
+      "reason": "Root checked concrete wording, role, state and geometry; see root-review.md."
+    },
+    {
+      "scenarioId": "exp26-u18-004",
+      "questionId": "exp26-u18-004-q6",
+      "beforeContentHash": "50e005b891ce13e065aec0ecf5b229131f399bfddc56fe5d7a5d782214a30c73",
+      "afterContentHash": "40c6f69fec3d8845f4a7cd13fb0f1d87d6687aecdca552a688052cb1996c3a10",
+      "before": {
+        "id": "exp26-u18-004-q6",
+        "type": "explain",
+        "prompt": "Name the backdoor or low-slot area you are protecting and explain the passing threat.",
+        "basis": "coaching",
+        "explanation": "Connect the area to the puck below the goal line and Gold 3’s route; the term alone does not identify a safe position."
+      },
+      "after": {
+        "id": "exp26-u18-004-q6",
+        "type": "explain",
+        "prompt": "Name the backdoor or low-slot area YOU are protecting and explain the passing threat.",
+        "basis": "coaching",
+        "explanation": "Gold 3 is the weak-side low threat in the starting picture. If Gold 2 receives behind the goal line, recheck the route from the new carrier to Gold 3 and communicate any exchange."
+      },
+      "reason": "Root checked concrete wording, role, state and geometry; see root-review.md."
+    },
+    {
+      "scenarioId": "exp26-u18-004",
+      "questionId": "exp26-u18-004-q7",
+      "beforeContentHash": "5d3f6e123ece79e0aaaf7a2fbe36149b8d08cba4d63a3a740084f107b96f6e62",
+      "afterContentHash": "991faa55b78ede0bc307cfc54a3a77cc6193d380e3964d14e17a2eb58e4743ab",
+      "before": {
+        "id": "exp26-u18-004-q7",
+        "type": "choice",
+        "prompt": "What should YOU call during the low exchange?",
+        "options": [
+          {
+            "id": "a",
+            "text": "Gold 2 is the backdoor threat; I am checking D1’s net-side cover"
+          },
+          {
+            "id": "b",
+            "text": "The low rotation covers itself"
+          },
+          {
+            "id": "c",
+            "text": "Gold 3 remains the outside reference after the inside cut"
+          }
+        ],
+        "answer": [
+          "a"
+        ],
+        "basis": "coaching",
+        "explanation": "The call identifies the attacker and teammate relationship that define the handoff."
+      },
+      "after": {
+        "id": "exp26-u18-004-q7",
+        "type": "choice",
+        "prompt": "What should YOU call during the low exchange?",
+        "options": [
+          {
+            "id": "a",
+            "text": "I am tracking Gold 3; confirm who takes the low threat before I switch"
+          },
+          {
+            "id": "b",
+            "text": "The low rotation covers itself"
+          },
+          {
+            "id": "c",
+            "text": "Gold 3 remains the outside reference after the inside cut"
+          }
+        ],
+        "answer": [
+          "a"
+        ],
+        "basis": "coaching",
+        "explanation": "Gold 3 is the assigned weak-side threat; Gold 2 starts behind the goal line. Name the intended handoff and confirm the teammate’s coverage."
+      },
+      "reason": "Root checked concrete wording, role, state and geometry; see root-review.md."
+    },
+    {
+      "scenarioId": "exp26-u18-004",
+      "questionId": "exp26-u18-004-q9",
+      "beforeContentHash": "73f8ceb1e029a13ec908ea2291fbfbba1d1dbd2c8e3e8ed289f2eb0fefdce728",
+      "afterContentHash": "1517d5aa17f810be1e46e0b54b2f32397f74c5459e99af1d323fa519a8f01784",
+      "before": {
+        "id": "exp26-u18-004-q9",
+        "type": "position",
+        "prompt": "Move YOU to a weak-side net-side position with Gold 2 visible.",
+        "actorId": "home-skater-1",
+        "reference": {
+          "x": -18,
+          "y": -1.5
+        },
+        "basis": "coaching",
+        "explanation": "This keeps YOU connected to the backdoor while preserving the low exchange."
+      },
+      "after": {
+        "id": "exp26-u18-004-q9",
+        "type": "position",
+        "prompt": "From the starting picture, compare another net-side position against Gold 3.",
+        "actorId": "home-skater-1",
+        "reference": {
+          "x": -25,
+          "y": 3
+        },
+        "basis": "coaching",
+        "explanation": "The example remains opposite Gold 1 and closer to Navy’s net than Gold 3. It is slightly nearer Gold 3 than the earlier example; other questions’ hypothetical movements have not occurred in this frame."
+      },
+      "reason": "Root checked concrete wording, role, state and geometry; see root-review.md."
+    },
+    {
+      "scenarioId": "exp26-u18-005",
+      "questionId": "exp26-u18-005-q3",
+      "beforeContentHash": "2f4e557708340cb6f6b4ed3e4d8934c7b04f48f4a9c7aa8de074ddc42934d612",
+      "afterContentHash": "e5a4a953dd535a0bebf94bee20979ea2b8195ef6df3940c2d83110bc02ad9897",
+      "before": {
+        "id": "exp26-u18-005-q3",
+        "type": "sequence",
+        "prompt": "Arrange an activation assessment.",
+        "options": [
+          {
+            "id": "a",
+            "text": "Confirm controlled possession"
+          },
+          {
+            "id": "b",
+            "text": "Check covering support and Gold 3"
+          },
+          {
+            "id": "c",
+            "text": "Join or hold according to the updated picture"
+          }
+        ],
+        "answer": [
+          "a",
+          "b",
+          "c"
+        ],
+        "basis": "coaching",
+        "explanation": "The routine assumes the stated cover plan and still needs realistic timing."
+      },
+      "after": {
+        "id": "exp26-u18-005-q3",
+        "type": "sequence",
+        "prompt": "Arrange an activation assessment.",
+        "options": [
+          {
+            "id": "a",
+            "text": "Confirm controlled possession"
+          },
+          {
+            "id": "b",
+            "text": "Check covering support and Gold 3"
+          },
+          {
+            "id": "c",
+            "text": "Join or hold according to the updated picture"
+          }
+        ],
+        "answer": [
+          "a",
+          "b",
+          "c"
+        ],
+        "basis": "coaching",
+        "explanation": "Confirming controlled possession and checking covering support/Gold 3 can overlap as YOU skate; only joining or holding has to come last, once both reads are in. The routine assumes the stated cover plan and still needs realistic timing."
+      },
+      "reason": "Root checked concrete wording, role, state and geometry; see root-review.md."
+    },
+    {
+      "scenarioId": "exp26-u18-005",
+      "questionId": "exp26-u18-005-q4",
+      "beforeContentHash": "99996c21bba91417656f0b73be64739bd1bde3515749527282ebd5b919c9be5d",
+      "afterContentHash": "f65eb252eed51dc168748be3cf7f9aab0e2b5fb1f77855e1193ddbe13d61e46b",
+      "before": {
+        "id": "exp26-u18-005-q4",
+        "type": "position",
+        "prompt": "Move YOU to compare a second-wave supporting lane.",
+        "actorId": "home-skater-1",
+        "reference": {
+          "x": 4,
+          "y": 5
+        },
+        "basis": "coaching",
+        "explanation": "The reference follows behind the leading forwards in a different lane. Whether YOU can get there ahead of Gold 3 is not established."
+      },
+      "after": {
+        "id": "exp26-u18-005-q4",
+        "type": "position",
+        "prompt": "Move YOU to compare a second-wave supporting lane.",
+        "actorId": "home-skater-1",
+        "reference": {
+          "x": 4,
+          "y": 5
+        },
+        "basis": "coaching",
+        "explanation": "The example is behind F2 and F3 but slightly ahead of carrier F1, in a different lane. Recheck D2’s cover and Gold 3; arrival timing and a passing window are not established."
+      },
+      "reason": "Root checked concrete wording, role, state and geometry; see root-review.md."
+    },
+    {
+      "scenarioId": "exp26-u18-005",
+      "questionId": "exp26-u18-005-q8",
+      "beforeContentHash": "53a354ef2415b806a0dfc5163a6e6e2427753a06cd51bfcc88b7ba9c49b0af98",
+      "afterContentHash": "e12dba2c3b583809349e8b0a03a097d515d4447fdc7c77a6633ffcad85db0399",
+      "before": {
+        "id": "exp26-u18-005-q8",
+        "type": "multi",
+        "prompt": "Which two changes should stop activation?",
+        "options": [
+          {
+            "id": "a",
+            "text": "F1 loses control"
+          },
+          {
+            "id": "b",
+            "text": "D2 leaves the deeper cover"
+          },
+          {
+            "id": "c",
+            "text": "F2 stays wide"
+          }
+        ],
+        "answer": [
+          "a",
+          "b"
+        ],
+        "basis": "coaching",
+        "explanation": "Possession and cover determine whether the second wave remains responsible."
+      },
+      "after": {
+        "id": "exp26-u18-005-q8",
+        "type": "multi",
+        "prompt": "Which two changes require reassessing the activation?",
+        "options": [
+          {
+            "id": "a",
+            "text": "F1 loses control"
+          },
+          {
+            "id": "b",
+            "text": "D2 leaves the deeper cover"
+          },
+          {
+            "id": "c",
+            "text": "F2 stays wide"
+          }
+        ],
+        "answer": [
+          "a",
+          "b"
+        ],
+        "basis": "coaching",
+        "explanation": "Possession and cover determine whether the second wave remains responsible."
+      },
+      "reason": "Root checked concrete wording, role, state and geometry; see root-review.md."
+    },
+    {
+      "scenarioId": "exp26-u18-005",
+      "questionId": "exp26-u18-005-q9",
+      "beforeContentHash": "731a581bb06ace6b4f5dc46bfdfc8d2e31b2f452e070856b20900b714b1987b6",
+      "afterContentHash": "cd06c2db07e84df2893c1981b816bc81ddbc36cb300a1ba20265c38ded5232bd",
+      "before": {
+        "id": "exp26-u18-005-q9",
+        "type": "position",
+        "prompt": "Move YOU to a second-wave lane behind F1, separate from F3.",
+        "actorId": "home-skater-1",
+        "reference": {
+          "x": 0,
+          "y": 4.5
+        },
+        "basis": "coaching",
+        "explanation": "This point supports behind the carrier and stays in a different lane from F3. Keep D2’s deeper cover and Gold 3’s recovery in view before continuing the activation."
+      },
+      "after": {
+        "id": "exp26-u18-005-q9",
+        "type": "position",
+        "prompt": "Move YOU to a second-wave lane behind F1, separate from F3.",
+        "actorId": "home-skater-1",
+        "reference": {
+          "x": 0,
+          "y": 4.5
+        },
+        "basis": "coaching",
+        "explanation": "The example stays behind F1 and separate from F3. Check D2’s deeper cover and Gold 3’s recovery before continuing; no open pass is guaranteed."
+      },
+      "reason": "Root checked concrete wording, role, state and geometry; see root-review.md."
+    }
+  ],
+  "sceneEdits": [
+    {
+      "scenarioId": "exp26-u18-001",
+      "before": {
+        "id": "exp26-u18-001",
+        "version": 1,
+        "ageBand": "U18",
+        "title": "Manage the last minute with a lead",
+        "family": "late-game-possession",
+        "topic": "Clock and risk",
+        "objective": "Compare possession options under a stated late-game objective.",
+        "briefing": "Navy leads by one with 48 seconds remaining. YOU have controlled possession near the neutral-zone side boards. The coach asks for a controlled play that preserves defensive support; this does not mean every forward option is forbidden. Navy attacks Gold’s net and defends Navy’s net. This is a selected-player teaching view; no movement is implied unless stated.",
+        "setup": {
+          "actors": [
+            {
+              "id": "home-skater-1",
+              "label": "YOU",
+              "team": "home",
+              "role": "skater",
+              "x": 0,
+              "y": -6,
+              "facing": 0
+            },
+            {
+              "id": "home-skater-2",
+              "label": "D2",
+              "team": "home",
+              "role": "skater",
+              "x": -9,
+              "y": 1,
+              "facing": -0.6610431688506869
+            },
+            {
+              "id": "home-skater-3",
+              "label": "F1",
+              "team": "home",
+              "role": "skater",
+              "x": 9,
+              "y": -8,
+              "facing": 2.922923707715851
+            },
+            {
+              "id": "home-skater-4",
+              "label": "F2",
+              "team": "home",
+              "role": "skater",
+              "x": 14,
+              "y": 5,
+              "facing": -2.4756234162106834
+            },
+            {
+              "id": "home-skater-5",
+              "label": "F3",
+              "team": "home",
+              "role": "skater",
+              "x": 5,
+              "y": 1,
+              "facing": -2.191045812777718
+            },
+            {
+              "id": "away-skater-1",
+              "label": "A1",
+              "team": "away",
+              "role": "skater",
+              "x": 4,
+              "y": -4,
+              "facing": -2.677945044588987
+            },
+            {
+              "id": "away-skater-2",
+              "label": "A2",
+              "team": "away",
+              "role": "skater",
+              "x": 8,
+              "y": 2,
+              "facing": -2.356194490192345
+            },
+            {
+              "id": "away-skater-3",
+              "label": "A3",
+              "team": "away",
+              "role": "skater",
+              "x": 14,
+              "y": -3,
+              "facing": -2.930499320367047
+            },
+            {
+              "id": "away-skater-4",
+              "label": "A4",
+              "team": "away",
+              "role": "skater",
+              "x": 19,
+              "y": 6,
+              "facing": -2.578276392097825
+            },
+            {
+              "id": "away-skater-5",
+              "label": "A5",
+              "team": "away",
+              "role": "skater",
+              "x": -2,
+              "y": 7,
+              "facing": -1.4181469983996315
+            }
+          ],
+          "puck": {
+            "owner": "home-skater-1"
+          }
+        },
+        "focusActorId": "home-skater-1",
+        "cues": [
+          "The briefing states the lead and remaining time; they are not inferred from the rink.",
+          "Navy leads by one with 48 seconds remaining. YOU have controlled possession near the neutral-zone side boards. The coach asks for a controlled play that preserves defensive support; this does not mean every forward option is forbidden."
+        ],
+        "tags": [
+          "late-game-possession"
+        ],
+        "sources": [
+          {
+            "id": "hc-defence-2020",
+            "title": "Developing Skilled Defencemen — Overview",
+            "url": "https://cdn.hockeycanada.ca/hockey-canada/Hockey-Programs/Players/Downloads/2020/developing-defence-overview-e.pdf",
+            "section": "PDF page 15, Neutral Zone Regroups: risk and game situation",
+            "use": "Supports the stated coaching principle. The setup, alternatives and suggested answers are original experimental coaching synthesis, not source-certified."
+          }
+        ],
+        "limits": "Age adaptation and tactical alternatives await coaching review. Static setup: no skating speed, interception timing or uniquely optimal route has been validated. Positional references are examples, not scored targets.",
+        "questions": [
+          {
+            "id": "exp26-u18-001-q1",
+            "type": "choice",
+            "prompt": "What score-and-clock situation is explicitly given?",
+            "options": [
+              {
+                "id": "a",
+                "text": "Navy trails by two with a full period left"
+              },
+              {
+                "id": "b",
+                "text": "The score is tied and no clock is stated"
+              },
+              {
+                "id": "c",
+                "text": "Navy leads by one with 48 seconds left"
+              }
+            ],
+            "answer": [
+              "c"
+            ],
+            "explanation": "The briefing states the lead and remaining time; they are not inferred from the rink.",
+            "basis": "scene"
+          },
+          {
+            "id": "exp26-u18-001-q2",
+            "type": "multi",
+            "prompt": "Which two cues affect the stated possession objective?",
+            "options": [
+              {
+                "id": "a",
+                "text": "The controlled support available through D2 or F3"
+              },
+              {
+                "id": "b",
+                "text": "Gold 1’s pressure toward the carrier"
+              },
+              {
+                "id": "c",
+                "text": "A claim that any attacking pass violates the objective"
+              }
+            ],
+            "answer": [
+              "a",
+              "b"
+            ],
+            "explanation": "The lead changes acceptable risk, but the actual available play still matters.",
+            "basis": "coaching"
+          },
+          {
+            "id": "exp26-u18-001-q3",
+            "type": "sequence",
+            "prompt": "Arrange a read for this late-game possession.",
+            "options": [
+              {
+                "id": "a",
+                "text": "Confirm time, score and available support"
+              },
+              {
+                "id": "b",
+                "text": "Compare pressure on each controlled option"
+              },
+              {
+                "id": "c",
+                "text": "Choose and communicate the next support job"
+              }
+            ],
+            "answer": [
+              "a",
+              "b",
+              "c"
+            ],
+            "basis": "coaching",
+            "explanation": "This routine follows the stated coaching objective; it is not a universal final-minute rule."
+          },
+          {
+            "id": "exp26-u18-001-q4",
+            "type": "position",
+            "prompt": "Move YOU to compare a position that keeps more than one controlled outlet visible.",
+            "actorId": "home-skater-1",
+            "reference": {
+              "x": -3,
+              "y": -4
+            },
+            "basis": "coaching",
+            "explanation": "The reference preserves a connection to deeper support while changing Gold 1’s approach. Live pressure could favour a forward option instead."
+          },
+          {
+            "id": "exp26-u18-001-q5",
+            "type": "choice",
+            "prompt": "F1 becomes clearly open beyond Gold 1 with room to retain the puck. What changes?",
+            "options": [
+              {
+                "id": "a",
+                "text": "A controlled forward pass may now fit the objective"
+              },
+              {
+                "id": "b",
+                "text": "The clock makes every forward pass automatically wrong"
+              },
+              {
+                "id": "c",
+                "text": "D2 must receive regardless of the open route"
+              }
+            ],
+            "answer": [
+              "a"
+            ],
+            "explanation": "A lower-risk forward option can be consistent with protecting a lead.",
+            "basis": "coaching"
+          },
+          {
+            "id": "exp26-u18-001-q6",
+            "type": "explain",
+            "prompt": "How would you explain a sensible risk tradeoff without reducing it to “never attack with a lead”?",
+            "basis": "coaching",
+            "explanation": "Use the clock, pressure, support and likely possession outcome; acknowledge more than one viable controlled play."
+          },
+          {
+            "id": "exp26-u18-001-q7",
+            "type": "choice",
+            "prompt": "What should YOU communicate with 48 seconds left?",
+            "options": [
+              {
+                "id": "a",
+                "text": "We value possession, but I will use a clear forward lane"
+              },
+              {
+                "id": "b",
+                "text": "The lead removes every forward option"
+              },
+              {
+                "id": "c",
+                "text": "F1 is the first outlet regardless of the pressure route"
+              }
+            ],
+            "answer": [
+              "a"
+            ],
+            "basis": "coaching",
+            "explanation": "The message balances the stated lead with a conditional forward choice."
+          },
+          {
+            "id": "exp26-u18-001-q8",
+            "type": "multi",
+            "prompt": "Which two events change the late-game risk?",
+            "options": [
+              {
+                "id": "a",
+                "text": "Gold pressure closes the support lane"
+              },
+              {
+                "id": "b",
+                "text": "F1 becomes reachable with room"
+              },
+              {
+                "id": "c",
+                "text": "The score stays one goal apart"
+              }
+            ],
+            "answer": [
+              "a",
+              "b"
+            ],
+            "basis": "coaching",
+            "explanation": "Pressure and support change the risk decision while the score remains context."
+          },
+          {
+            "id": "exp26-u18-001-q9",
+            "type": "position",
+            "prompt": "Move YOU to a position with F1 and F2 as separate outlets.",
+            "actorId": "home-skater-1",
+            "reference": {
+              "x": 1.5,
+              "y": -5
+            },
+            "basis": "coaching",
+            "explanation": "This point preserves two support relationships for a controlled possession."
+          },
+          {
+            "id": "exp26-u18-001-q10",
+            "type": "explain",
+            "prompt": "Gold closes F1 but F2 remains open. Explain the late-game branch.",
+            "basis": "coaching",
+            "explanation": "Name the closed lane, check F2, and choose the lower-risk reachable option while keeping the lead context in mind."
+          }
+        ]
+      },
+      "after": {
+        "id": "exp26-u18-001",
+        "version": 2,
+        "ageBand": "U18",
+        "title": "Manage the last minute with a lead",
+        "family": "late-game-possession",
+        "topic": "Clock and risk",
+        "objective": "Compare possession options under a stated late-game objective.",
+        "briefing": "Navy leads by one with 48 seconds remaining. YOU have controlled possession in a wide neutral-zone lane. The coach asks for a controlled play that preserves defensive support; this does not mean every forward option is forbidden. Navy attacks Gold’s net and defends Navy’s net. This is a selected-player teaching view; no movement is implied unless stated.",
+        "setup": {
+          "actors": [
+            {
+              "id": "home-skater-1",
+              "label": "YOU",
+              "team": "home",
+              "role": "skater",
+              "x": 0,
+              "y": -6,
+              "facing": 0
+            },
+            {
+              "id": "home-skater-2",
+              "label": "D2",
+              "team": "home",
+              "role": "skater",
+              "x": -9,
+              "y": 1,
+              "facing": -0.6610431688506869
+            },
+            {
+              "id": "home-skater-3",
+              "label": "F1",
+              "team": "home",
+              "role": "skater",
+              "x": 9,
+              "y": -8,
+              "facing": 2.922923707715851
+            },
+            {
+              "id": "home-skater-4",
+              "label": "F2",
+              "team": "home",
+              "role": "skater",
+              "x": 14,
+              "y": 5,
+              "facing": -2.4756234162106834
+            },
+            {
+              "id": "home-skater-5",
+              "label": "F3",
+              "team": "home",
+              "role": "skater",
+              "x": 5,
+              "y": 1,
+              "facing": -2.191045812777718
+            },
+            {
+              "id": "away-skater-1",
+              "label": "A1",
+              "team": "away",
+              "role": "skater",
+              "x": 4,
+              "y": -4,
+              "facing": -2.677945044588987
+            },
+            {
+              "id": "away-skater-2",
+              "label": "A2",
+              "team": "away",
+              "role": "skater",
+              "x": 8,
+              "y": 2,
+              "facing": -2.356194490192345
+            },
+            {
+              "id": "away-skater-3",
+              "label": "A3",
+              "team": "away",
+              "role": "skater",
+              "x": 14,
+              "y": -3,
+              "facing": -2.930499320367047
+            },
+            {
+              "id": "away-skater-4",
+              "label": "A4",
+              "team": "away",
+              "role": "skater",
+              "x": 19,
+              "y": 6,
+              "facing": -2.578276392097825
+            },
+            {
+              "id": "away-skater-5",
+              "label": "A5",
+              "team": "away",
+              "role": "skater",
+              "x": -2,
+              "y": 7,
+              "facing": -1.4181469983996315
+            }
+          ],
+          "puck": {
+            "owner": "home-skater-1"
+          }
+        },
+        "focusActorId": "home-skater-1",
+        "cues": [
+          "The briefing states the lead and remaining time; they are not inferred from the rink.",
+          "Navy leads by one with 48 seconds remaining. YOU have controlled possession in a wide neutral-zone lane. The coach asks for a controlled play that preserves defensive support; this does not mean every forward option is forbidden."
+        ],
+        "tags": [
+          "late-game-possession"
+        ],
+        "sources": [
+          {
+            "id": "hc-defence-2020",
+            "title": "Developing Skilled Defencemen — Overview",
+            "url": "https://cdn.hockeycanada.ca/hockey-canada/Hockey-Programs/Players/Downloads/2020/developing-defence-overview-e.pdf",
+            "section": "PDF page 15, Neutral Zone Regroups: risk and game situation",
+            "use": "Supports the stated coaching principle. The setup, alternatives and suggested answers are original experimental coaching synthesis, not source-certified."
+          }
+        ],
+        "limits": "Age adaptation and tactical alternatives await coaching review. Static setup: no skating speed, interception timing or uniquely optimal route has been validated. Positional references are examples, not scored targets.",
+        "questions": [
+          {
+            "id": "exp26-u18-001-q1",
+            "type": "choice",
+            "prompt": "What score-and-clock situation is explicitly given?",
+            "options": [
+              {
+                "id": "a",
+                "text": "Navy trails by two with a full period left"
+              },
+              {
+                "id": "b",
+                "text": "The score is tied and no clock is stated"
+              },
+              {
+                "id": "c",
+                "text": "Navy leads by one with 48 seconds left"
+              }
+            ],
+            "answer": [
+              "c"
+            ],
+            "explanation": "The briefing states the lead and remaining time; they are not inferred from the rink.",
+            "basis": "scene"
+          },
+          {
+            "id": "exp26-u18-001-q2",
+            "type": "multi",
+            "prompt": "Which two cues affect the stated possession objective?",
+            "options": [
+              {
+                "id": "a",
+                "text": "The controlled support available through D2 or F3"
+              },
+              {
+                "id": "b",
+                "text": "Gold 1’s pressure toward the carrier"
+              },
+              {
+                "id": "c",
+                "text": "A claim that any attacking pass violates the objective"
+              }
+            ],
+            "answer": [
+              "a",
+              "b"
+            ],
+            "explanation": "The lead changes acceptable risk, but the actual available play still matters.",
+            "basis": "coaching"
+          },
+          {
+            "id": "exp26-u18-001-q3",
+            "type": "sequence",
+            "prompt": "Arrange a read for this late-game possession.",
+            "options": [
+              {
+                "id": "a",
+                "text": "Confirm time, score and available support"
+              },
+              {
+                "id": "b",
+                "text": "Compare pressure on each controlled option"
+              },
+              {
+                "id": "c",
+                "text": "Choose and communicate the next support job"
+              }
+            ],
+            "answer": [
+              "a",
+              "b",
+              "c"
+            ],
+            "basis": "coaching",
+            "explanation": "Confirming the clock, score and support and comparing pressure on each option can overlap as YOU keep scanning; only the final step, choosing and communicating the next support job, has to come after those reads are in. This is not a universal final-minute rule."
+          },
+          {
+            "id": "exp26-u18-001-q4",
+            "type": "position",
+            "prompt": "Move YOU to compare the routes toward D2 and F3.",
+            "actorId": "home-skater-1",
+            "reference": {
+              "x": -3,
+              "y": -4
+            },
+            "basis": "coaching",
+            "explanation": "The example moves closer to D2 and farther from Gold 1, but farther from F3. Compare the changed routes and the clock before choosing."
+          },
+          {
+            "id": "exp26-u18-001-q5",
+            "type": "choice",
+            "prompt": "F1 becomes clearly open beyond Gold 1 with room to retain the puck. What changes?",
+            "options": [
+              {
+                "id": "a",
+                "text": "A controlled forward pass may now fit the objective"
+              },
+              {
+                "id": "b",
+                "text": "The clock makes every forward pass automatically wrong"
+              },
+              {
+                "id": "c",
+                "text": "D2 must receive regardless of the open route"
+              }
+            ],
+            "answer": [
+              "a"
+            ],
+            "explanation": "A lower-risk forward option can be consistent with protecting a lead.",
+            "basis": "coaching"
+          },
+          {
+            "id": "exp26-u18-001-q6",
+            "type": "explain",
+            "prompt": "How would YOU explain a sensible risk tradeoff without reducing it to “never attack with a lead”?",
+            "basis": "coaching",
+            "explanation": "Use the clock, pressure, support and likely possession outcome; acknowledge more than one viable controlled play."
+          },
+          {
+            "id": "exp26-u18-001-q7",
+            "type": "choice",
+            "prompt": "What should YOU communicate with 48 seconds left?",
+            "options": [
+              {
+                "id": "a",
+                "text": "We value possession, but I will use a clear forward lane"
+              },
+              {
+                "id": "b",
+                "text": "The lead removes every forward option"
+              },
+              {
+                "id": "c",
+                "text": "F1 is the first outlet regardless of the pressure route"
+              }
+            ],
+            "answer": [
+              "a"
+            ],
+            "basis": "coaching",
+            "explanation": "The message balances the stated lead with a conditional forward choice."
+          },
+          {
+            "id": "exp26-u18-001-q8",
+            "type": "multi",
+            "prompt": "Which two events change the late-game risk?",
+            "options": [
+              {
+                "id": "a",
+                "text": "Gold pressure closes the support lane"
+              },
+              {
+                "id": "b",
+                "text": "F1 becomes reachable with room"
+              },
+              {
+                "id": "c",
+                "text": "The score stays one goal apart"
+              }
+            ],
+            "answer": [
+              "a",
+              "b"
+            ],
+            "basis": "coaching",
+            "explanation": "Pressure and support change the risk decision while the score remains context."
+          },
+          {
+            "id": "exp26-u18-001-q9",
+            "type": "position",
+            "prompt": "Move YOU to compare forward routes toward F1 and F2.",
+            "actorId": "home-skater-1",
+            "reference": {
+              "x": 1.5,
+              "y": -5
+            },
+            "basis": "coaching",
+            "explanation": "The example moves closer to both forwards and closer to Gold 1. Check pressure before treating either route as usable."
+          },
+          {
+            "id": "exp26-u18-001-q10",
+            "type": "explain",
+            "prompt": "Gold closes F1 but F2 remains open. Explain the late-game branch.",
+            "basis": "coaching",
+            "explanation": "Name the closed lane, check F2, and choose the lower-risk reachable option while keeping the lead context in mind."
+          }
+        ]
+      }
+    },
+    {
+      "scenarioId": "exp26-u18-002",
+      "before": {
+        "id": "exp26-u18-002",
+        "version": 1,
+        "ageBand": "U18",
+        "title": "Create another attempt while trailing late",
+        "family": "late-game-attack",
+        "topic": "Clock and attacking support",
+        "objective": "Assess a late attacking choice without declaring a guaranteed scoring play.",
+        "briefing": "Navy trails by one with 32 seconds left and has five skaters on the ice. YOU control at the puck-side point. F1 is near the net, F2 is across the high slot and D2 is the other high player. The goalie remains in net; no extra attacker is assumed. Navy attacks Gold’s net and defends Navy’s net. This is a selected-player teaching view; no movement is implied unless stated.",
+        "setup": {
+          "actors": [
+            {
+              "id": "home-skater-1",
+              "label": "YOU",
+              "team": "home",
+              "role": "skater",
+              "x": 11,
+              "y": 7,
+              "facing": 0
+            },
+            {
+              "id": "home-skater-2",
+              "label": "D2",
+              "team": "home",
+              "role": "skater",
+              "x": 11,
+              "y": -6,
+              "facing": 1.5707963267948966
+            },
+            {
+              "id": "home-skater-3",
+              "label": "F1",
+              "team": "home",
+              "role": "skater",
+              "x": 24,
+              "y": 1,
+              "facing": 2.7091848780192556
+            },
+            {
+              "id": "home-skater-4",
+              "label": "F2",
+              "team": "home",
+              "role": "skater",
+              "x": 18,
+              "y": -4,
+              "facing": 2.137525544318403
+            },
+            {
+              "id": "home-skater-5",
+              "label": "F3",
+              "team": "home",
+              "role": "skater",
+              "x": 25,
+              "y": -8,
+              "facing": 2.321725389192837
+            },
+            {
+              "id": "away-skater-1",
+              "label": "A1",
+              "team": "away",
+              "role": "skater",
+              "x": 16,
+              "y": 5,
+              "facing": 2.761086276477428
+            },
+            {
+              "id": "away-skater-2",
+              "label": "A2",
+              "team": "away",
+              "role": "skater",
+              "x": 22,
+              "y": 0,
+              "facing": 2.5748634360662868
+            },
+            {
+              "id": "away-skater-3",
+              "label": "A3",
+              "team": "away",
+              "role": "skater",
+              "x": 18,
+              "y": -1,
+              "facing": 2.289626326416521
+            },
+            {
+              "id": "away-skater-4",
+              "label": "A4",
+              "team": "away",
+              "role": "skater",
+              "x": 24,
+              "y": -5,
+              "facing": 2.396173177315635
+            },
+            {
+              "id": "away-skater-5",
+              "label": "A5",
+              "team": "away",
+              "role": "skater",
+              "x": 13,
+              "y": -7,
+              "facing": 1.7126933813990606
+            }
+          ],
+          "puck": {
+            "owner": "home-skater-1"
+          }
+        },
+        "focusActorId": "home-skater-1",
+        "cues": [
+          "The briefing explicitly excludes a goalie pull, avoiding an unstated manpower assumption.",
+          "Navy trails by one with 32 seconds left and has five skaters on the ice. YOU control at the puck-side point. F1 is near the net, F2 is across the high slot and D2 is the other high player. The goalie remains in net; no extra attacker is assumed."
+        ],
+        "tags": [
+          "late-game-attack"
+        ],
+        "sources": [
+          {
+            "id": "hc-u15-u18-core",
+            "title": "U15 / U18 Core Skills — Train to Train",
+            "url": "https://cdn.hockeycanada.ca/hockey-canada/Hockey-Programs/Players/Downloads/2020/u15-u18-core-skills-e.pdf",
+            "section": "Page 1, shot choice, puck management and anticipation",
+            "use": "Supports age/topic placement only. The setup, alternatives and suggested answers are original experimental coaching synthesis, not source-certified."
+          }
+        ],
+        "limits": "Age adaptation and tactical alternatives await coaching review. Static setup: no skating speed, interception timing or uniquely optimal route has been validated. Positional references are examples, not scored targets.",
+        "questions": [
+          {
+            "id": "exp26-u18-002-q1",
+            "type": "choice",
+            "prompt": "Is an extra attacker part of this stated setup?",
+            "options": [
+              {
+                "id": "a",
+                "text": "No Navy players are near the net"
+              },
+              {
+                "id": "b",
+                "text": "No, Navy has five skaters and its goalie remains in net"
+              },
+              {
+                "id": "c",
+                "text": "Yes, Navy has six skaters"
+              }
+            ],
+            "answer": [
+              "b"
+            ],
+            "explanation": "The briefing explicitly excludes a goalie pull, avoiding an unstated manpower assumption.",
+            "basis": "scene"
+          },
+          {
+            "id": "exp26-u18-002-q2",
+            "type": "multi",
+            "prompt": "Choose two considerations for generating a remaining chance.",
+            "options": [
+              {
+                "id": "a",
+                "text": "Whether a shot can reach useful traffic"
+              },
+              {
+                "id": "b",
+                "text": "A certainty that shooting from the point always scores"
+              },
+              {
+                "id": "c",
+                "text": "Whether a pass would create a clearer attempt in time"
+              }
+            ],
+            "answer": [
+              "a",
+              "c"
+            ],
+            "explanation": "Time matters, but a rushed blocked shot and a clearer available connection are different possibilities.",
+            "basis": "coaching"
+          },
+          {
+            "id": "exp26-u18-002-q3",
+            "type": "sequence",
+            "prompt": "Arrange a time-aware attacking read.",
+            "options": [
+              {
+                "id": "a",
+                "text": "Check the remaining clock and immediate lanes"
+              },
+              {
+                "id": "b",
+                "text": "Compare the available shot and connecting pass"
+              },
+              {
+                "id": "c",
+                "text": "Commit to a feasible attempt and support its next touch"
+              }
+            ],
+            "answer": [
+              "a",
+              "b",
+              "c"
+            ],
+            "basis": "coaching",
+            "explanation": "The still setup cannot validate travel times or scoring probability."
+          },
+          {
+            "id": "exp26-u18-002-q4",
+            "type": "position",
+            "prompt": "Move YOU to compare a more central point angle.",
+            "actorId": "home-skater-1",
+            "reference": {
+              "x": 13,
+              "y": 3
+            },
+            "basis": "coaching",
+            "explanation": "The reference changes the shot and pass routes. It may consume time, so it is an illustration rather than a prescribed late-game skate."
+          },
+          {
+            "id": "exp26-u18-002-q5",
+            "type": "choice",
+            "prompt": "Gold 1 lunges into the shot lane and F2 becomes visible. What should be considered?",
+            "options": [
+              {
+                "id": "a",
+                "text": "The unchanged shot lane from before the lunge"
+              },
+              {
+                "id": "b",
+                "text": "An automatic hold until the clock expires"
+              },
+              {
+                "id": "c",
+                "text": "A quick checked connection to F2"
+              }
+            ],
+            "answer": [
+              "c"
+            ],
+            "explanation": "The new cue can favour a connection, but the available time and F2’s preparation still matter.",
+            "basis": "coaching"
+          },
+          {
+            "id": "exp26-u18-002-q6",
+            "type": "explain",
+            "prompt": "Why is “get a shot” incomplete feedback in this final-minute scene?",
+            "basis": "coaching",
+            "explanation": "Explain route, traffic, time and possible next possession; more attempts are not identical chances."
+          },
+          {
+            "id": "exp26-u18-002-q7",
+            "type": "choice",
+            "prompt": "What should YOU communicate while trailing late?",
+            "options": [
+              {
+                "id": "a",
+                "text": "We need a chance; check the lane before forcing it"
+              },
+              {
+                "id": "b",
+                "text": "The deficit makes every shot correct"
+              },
+              {
+                "id": "c",
+                "text": "F2 stays the preferred option even if Gold closes the route"
+              }
+            ],
+            "answer": [
+              "a"
+            ],
+            "basis": "coaching",
+            "explanation": "The call acknowledges the deficit while preserving a scan before risk."
+          },
+          {
+            "id": "exp26-u18-002-q8",
+            "type": "multi",
+            "prompt": "Which two updates support a remaining chance?",
+            "options": [
+              {
+                "id": "a",
+                "text": "Gold 1 commits to the carrier"
+              },
+              {
+                "id": "b",
+                "text": "F2 or F3 becomes reachable"
+              },
+              {
+                "id": "c",
+                "text": "The clock alone creates a lane"
+              }
+            ],
+            "answer": [
+              "a",
+              "b"
+            ],
+            "basis": "coaching",
+            "explanation": "Defender commitment and support access create the attacking branch."
+          },
+          {
+            "id": "exp26-u18-002-q9",
+            "type": "position",
+            "prompt": "Move YOU to a central point angle with F2 visible.",
+            "actorId": "home-skater-1",
+            "reference": {
+              "x": 10,
+              "y": 1
+            },
+            "basis": "coaching",
+            "explanation": "This point changes the carrier line and keeps the inside option visible."
+          },
+          {
+            "id": "exp26-u18-002-q10",
+            "type": "explain",
+            "prompt": "Gold blocks F2 but leaves F3 wide. Explain your next read.",
+            "basis": "coaching",
+            "explanation": "Recheck F3 and the net-side lane, then choose a pass or carry only if it remains reachable; the deficit does not remove that condition."
+          }
+        ]
+      },
+      "after": {
+        "id": "exp26-u18-002",
+        "version": 2,
+        "ageBand": "U18",
+        "title": "Create another attempt while trailing late",
+        "family": "late-game-attack",
+        "topic": "Clock and attacking support",
+        "objective": "Assess a late attacking choice without declaring a guaranteed scoring play.",
+        "briefing": "Navy trails by one with 32 seconds left and has five skaters on the ice. YOU control at the puck-side point. F1 is near the net, F2 is across the high slot and D2 is the other high player. Navy’s goalie, omitted from this selected-player view, remains in net; no extra attacker is assumed. Navy attacks Gold’s net and defends Navy’s net. This is a selected-player teaching view; no movement is implied unless stated.",
+        "setup": {
+          "actors": [
+            {
+              "id": "home-skater-1",
+              "label": "YOU",
+              "team": "home",
+              "role": "skater",
+              "x": 11,
+              "y": 7,
+              "facing": 0
+            },
+            {
+              "id": "home-skater-2",
+              "label": "D2",
+              "team": "home",
+              "role": "skater",
+              "x": 11,
+              "y": -6,
+              "facing": 1.5707963267948966
+            },
+            {
+              "id": "home-skater-3",
+              "label": "F1",
+              "team": "home",
+              "role": "skater",
+              "x": 24,
+              "y": 1,
+              "facing": 2.7091848780192556
+            },
+            {
+              "id": "home-skater-4",
+              "label": "F2",
+              "team": "home",
+              "role": "skater",
+              "x": 18,
+              "y": -4,
+              "facing": 2.137525544318403
+            },
+            {
+              "id": "home-skater-5",
+              "label": "F3",
+              "team": "home",
+              "role": "skater",
+              "x": 25,
+              "y": -8,
+              "facing": 2.321725389192837
+            },
+            {
+              "id": "away-skater-1",
+              "label": "A1",
+              "team": "away",
+              "role": "skater",
+              "x": 16,
+              "y": 5,
+              "facing": 2.761086276477428
+            },
+            {
+              "id": "away-skater-2",
+              "label": "A2",
+              "team": "away",
+              "role": "skater",
+              "x": 22,
+              "y": 0,
+              "facing": 2.5748634360662868
+            },
+            {
+              "id": "away-skater-3",
+              "label": "A3",
+              "team": "away",
+              "role": "skater",
+              "x": 18,
+              "y": -1,
+              "facing": 2.289626326416521
+            },
+            {
+              "id": "away-skater-4",
+              "label": "A4",
+              "team": "away",
+              "role": "skater",
+              "x": 24,
+              "y": -5,
+              "facing": 2.396173177315635
+            },
+            {
+              "id": "away-skater-5",
+              "label": "A5",
+              "team": "away",
+              "role": "skater",
+              "x": 13,
+              "y": -7,
+              "facing": 1.7126933813990606
+            }
+          ],
+          "puck": {
+            "owner": "home-skater-1"
+          }
+        },
+        "focusActorId": "home-skater-1",
+        "cues": [
+          "The briefing explicitly excludes a goalie pull, avoiding an unstated manpower assumption.",
+          "Navy trails by one with 32 seconds left and has five skaters on the ice. YOU control at the puck-side point. F1 is near the net, F2 is across the high slot and D2 is the other high player. The goalie remains in net; no extra attacker is assumed."
+        ],
+        "tags": [
+          "late-game-attack"
+        ],
+        "sources": [
+          {
+            "id": "hc-u15-u18-core",
+            "title": "U15 / U18 Core Skills — Train to Train",
+            "url": "https://cdn.hockeycanada.ca/hockey-canada/Hockey-Programs/Players/Downloads/2020/u15-u18-core-skills-e.pdf",
+            "section": "Page 1, shot choice, puck management and anticipation",
+            "use": "Supports age/topic placement only. The setup, alternatives and suggested answers are original experimental coaching synthesis, not source-certified."
+          }
+        ],
+        "limits": "Age adaptation and tactical alternatives await coaching review. Static setup: no skating speed, interception timing or uniquely optimal route has been validated. Positional references are examples, not scored targets.",
+        "questions": [
+          {
+            "id": "exp26-u18-002-q1",
+            "type": "choice",
+            "prompt": "Is an extra attacker part of this stated setup?",
+            "options": [
+              {
+                "id": "a",
+                "text": "No Navy players are near the net"
+              },
+              {
+                "id": "b",
+                "text": "No, Navy has five skaters and its goalie remains in net"
+              },
+              {
+                "id": "c",
+                "text": "Yes, Navy has six skaters"
+              }
+            ],
+            "answer": [
+              "b"
+            ],
+            "explanation": "The briefing explicitly excludes a goalie pull, avoiding an unstated manpower assumption.",
+            "basis": "scene"
+          },
+          {
+            "id": "exp26-u18-002-q2",
+            "type": "multi",
+            "prompt": "Choose two considerations for generating a remaining chance.",
+            "options": [
+              {
+                "id": "a",
+                "text": "Whether a shot can reach useful traffic"
+              },
+              {
+                "id": "b",
+                "text": "A certainty that shooting from the point always scores"
+              },
+              {
+                "id": "c",
+                "text": "Whether a pass would create a clearer attempt in time"
+              }
+            ],
+            "answer": [
+              "a",
+              "c"
+            ],
+            "explanation": "Time matters, but a rushed blocked shot and a clearer available connection are different possibilities.",
+            "basis": "coaching"
+          },
+          {
+            "id": "exp26-u18-002-q3",
+            "type": "sequence",
+            "prompt": "Arrange a time-aware attacking read.",
+            "options": [
+              {
+                "id": "a",
+                "text": "Check the remaining clock and immediate lanes"
+              },
+              {
+                "id": "b",
+                "text": "Compare the available shot and connecting pass"
+              },
+              {
+                "id": "c",
+                "text": "Commit to a feasible attempt and support its next touch"
+              }
+            ],
+            "answer": [
+              "a",
+              "b",
+              "c"
+            ],
+            "basis": "coaching",
+            "explanation": "Checking the clock/lanes and comparing the shot against a connecting pass can overlap as YOU scan; only committing to the attempt and supporting its next touch has to come last, once those reads are in. The still setup cannot validate travel times or scoring probability."
+          },
+          {
+            "id": "exp26-u18-002-q4",
+            "type": "position",
+            "prompt": "Move YOU to compare a more central point angle.",
+            "actorId": "home-skater-1",
+            "reference": {
+              "x": 13,
+              "y": 3
+            },
+            "basis": "coaching",
+            "explanation": "The reference changes the shot and pass routes. It may consume time, so it is an illustration rather than a prescribed late-game skate."
+          },
+          {
+            "id": "exp26-u18-002-q5",
+            "type": "choice",
+            "prompt": "Gold 1 lunges into the shot lane and F2 becomes visible. What should be considered?",
+            "options": [
+              {
+                "id": "a",
+                "text": "The unchanged shot lane from before the lunge"
+              },
+              {
+                "id": "b",
+                "text": "An automatic hold until the clock expires"
+              },
+              {
+                "id": "c",
+                "text": "A quick checked connection to F2"
+              }
+            ],
+            "answer": [
+              "c"
+            ],
+            "explanation": "The new cue can favour a connection, but the available time and F2’s preparation still matter.",
+            "basis": "coaching"
+          },
+          {
+            "id": "exp26-u18-002-q6",
+            "type": "explain",
+            "prompt": "Why is “get a shot” incomplete feedback in this final-minute scene?",
+            "basis": "coaching",
+            "explanation": "Explain route, traffic, time and possible next possession; more attempts are not identical chances."
+          },
+          {
+            "id": "exp26-u18-002-q7",
+            "type": "choice",
+            "prompt": "What should YOU communicate while trailing late?",
+            "options": [
+              {
+                "id": "a",
+                "text": "We need a chance; check the lane before forcing it"
+              },
+              {
+                "id": "b",
+                "text": "The deficit makes every shot correct"
+              },
+              {
+                "id": "c",
+                "text": "F2 stays the preferred option even if Gold closes the route"
+              }
+            ],
+            "answer": [
+              "a"
+            ],
+            "basis": "coaching",
+            "explanation": "The call acknowledges the deficit while preserving a scan before risk."
+          },
+          {
+            "id": "exp26-u18-002-q8",
+            "type": "multi",
+            "prompt": "Which two updates support a remaining chance?",
+            "options": [
+              {
+                "id": "a",
+                "text": "Gold 1 commits to the carrier"
+              },
+              {
+                "id": "b",
+                "text": "F2 or F3 becomes reachable"
+              },
+              {
+                "id": "c",
+                "text": "The clock alone creates a lane"
+              }
+            ],
+            "answer": [
+              "a",
+              "b"
+            ],
+            "basis": "coaching",
+            "explanation": "Defender commitment and support access create the attacking branch."
+          },
+          {
+            "id": "exp26-u18-002-q9",
+            "type": "position",
+            "prompt": "Move YOU to compare a more central point angle toward F2.",
+            "actorId": "home-skater-1",
+            "reference": {
+              "x": 10,
+              "y": 1
+            },
+            "basis": "coaching",
+            "explanation": "The example is nearer the middle and farther from Gold 1. Check the changed passing route, traffic and remaining time; the point does not establish an open lane."
+          },
+          {
+            "id": "exp26-u18-002-q10",
+            "type": "explain",
+            "prompt": "Gold blocks F2 but leaves F3 wide. Explain your next read.",
+            "basis": "coaching",
+            "explanation": "Recheck F3 and the net-side lane, then choose a pass or carry only if it remains reachable; the deficit does not remove that condition."
+          }
+        ]
+      }
+    },
+    {
+      "scenarioId": "exp26-u18-003",
+      "before": {
+        "id": "exp26-u18-003",
+        "version": 1,
+        "ageBand": "U18",
+        "title": "Attack a power-play entry before the setup forms",
+        "family": "power-play-rush-entry",
+        "topic": "Power-play entry",
+        "objective": "Recognize an available rush option without assuming the unit must first arrange a formation.",
+        "briefing": "Navy has five skaters against four. YOU carry a controlled wide entry, F2 offers middle support and F3 trails. The coach permits a rush chance if it is clearly available; the unit is not required to establish an in-zone formation first. Navy attacks Gold’s net and defends Navy’s net. This is a selected-player teaching view; no movement is implied unless stated.",
+        "setup": {
+          "actors": [
+            {
+              "id": "home-skater-1",
+              "label": "YOU",
+              "team": "home",
+              "role": "skater",
+              "x": 13,
+              "y": 8,
+              "facing": 0
+            },
+            {
+              "id": "home-skater-2",
+              "label": "F2",
+              "team": "home",
+              "role": "skater",
+              "x": 16,
+              "y": 0,
+              "facing": 1.9295669970654687
+            },
+            {
+              "id": "home-skater-3",
+              "label": "F3",
+              "team": "home",
+              "role": "skater",
+              "x": 7,
+              "y": -4,
+              "facing": 1.1071487177940904
+            },
+            {
+              "id": "home-skater-4",
+              "label": "D1",
+              "team": "home",
+              "role": "skater",
+              "x": 3,
+              "y": 4,
+              "facing": 0.3805063771123649
+            },
+            {
+              "id": "home-skater-5",
+              "label": "D2",
+              "team": "home",
+              "role": "skater",
+              "x": 2,
+              "y": -7,
+              "facing": 0.9380474917927135
+            },
+            {
+              "id": "away-skater-1",
+              "label": "A1",
+              "team": "away",
+              "role": "skater",
+              "x": 18,
+              "y": 5,
+              "facing": 2.601173153319209
+            },
+            {
+              "id": "away-skater-2",
+              "label": "A2",
+              "team": "away",
+              "role": "skater",
+              "x": 22,
+              "y": -1,
+              "facing": 2.356194490192345
+            },
+            {
+              "id": "away-skater-3",
+              "label": "A3",
+              "team": "away",
+              "role": "skater",
+              "x": 9,
+              "y": 1,
+              "facing": 1.0516502125483738
+            },
+            {
+              "id": "away-skater-4",
+              "label": "A4",
+              "team": "away",
+              "role": "skater",
+              "x": 20,
+              "y": -8,
+              "facing": 1.9832067683922838
+            }
+          ],
+          "puck": {
+            "owner": "home-skater-1"
+          }
+        },
+        "focusActorId": "home-skater-1",
+        "cues": [
+          "The briefing explicitly permits an early rush option while retaining a lane check.",
+          "Navy has five skaters against four. YOU carry a controlled wide entry, F2 offers middle support and F3 trails. The coach permits a rush chance if it is clearly available; the unit is not required to establish an in-zone formation first."
+        ],
+        "tags": [
+          "power-play-rush-entry"
+        ],
+        "sources": [
+          {
+            "id": "usa-special-teams-2015",
+            "title": "Special Teams Tactics with Mike Guentzel",
+            "url": "https://www.usahockey.com/news_article/show/567732-special-teams-tactics-with-mike-guentzel",
+            "section": "Trouble setting up a power play / scoring from the rush",
+            "use": "Supports the stated coaching principle. The setup, alternatives and suggested answers are original experimental coaching synthesis, not source-certified."
+          }
+        ],
+        "limits": "Age adaptation and tactical alternatives await coaching review. Static setup: no skating speed, interception timing or uniquely optimal route has been validated. Positional references are examples, not scored targets.",
+        "questions": [
+          {
+            "id": "exp26-u18-003-q1",
+            "type": "choice",
+            "prompt": "What does the stated team instruction permit?",
+            "options": [
+              {
+                "id": "a",
+                "text": "A clearly available rush chance before a set formation"
+              },
+              {
+                "id": "b",
+                "text": "Only a complete formation before any chance"
+              },
+              {
+                "id": "c",
+                "text": "A guaranteed goal because of five-on-four"
+              }
+            ],
+            "answer": [
+              "a"
+            ],
+            "explanation": "The briefing explicitly permits an early rush option while retaining a lane check.",
+            "basis": "scene"
+          },
+          {
+            "id": "exp26-u18-003-q2",
+            "type": "multi",
+            "prompt": "Which two cues help judge that option?",
+            "options": [
+              {
+                "id": "a",
+                "text": "A requirement to stop solely because it is a power play"
+              },
+              {
+                "id": "b",
+                "text": "F2’s readiness and route"
+              },
+              {
+                "id": "c",
+                "text": "Gold 1 and Gold 2’s coverage of the entry"
+              }
+            ],
+            "answer": [
+              "b",
+              "c"
+            ],
+            "explanation": "The local read still matters on special teams; the numerical advantage is not an answer key.",
+            "basis": "coaching"
+          },
+          {
+            "id": "exp26-u18-003-q3",
+            "type": "sequence",
+            "prompt": "Arrange an entry read under this instruction.",
+            "options": [
+              {
+                "id": "a",
+                "text": "Read the entry defenders"
+              },
+              {
+                "id": "b",
+                "text": "Compare the immediate chance with retained possession"
+              },
+              {
+                "id": "c",
+                "text": "Attack or settle according to the available picture"
+              }
+            ],
+            "answer": [
+              "a",
+              "b",
+              "c"
+            ],
+            "basis": "coaching",
+            "explanation": "Both attacking and settling may be reasonable under different cues."
+          },
+          {
+            "id": "exp26-u18-003-q4",
+            "type": "position",
+            "prompt": "Move YOU to compare a carrier angle connecting the wide entry to middle support.",
+            "actorId": "home-skater-1",
+            "reference": {
+              "x": 16,
+              "y": 6
+            },
+            "basis": "coaching",
+            "explanation": "The example changes the relation to F2 and Gold 1. It does not validate a passing window or skating race."
+          },
+          {
+            "id": "exp26-u18-003-q5",
+            "type": "choice",
+            "prompt": "Gold 2 closes F2 and Gold 1 contains your lane. What could be useful?",
+            "options": [
+              {
+                "id": "a",
+                "text": "Treat the power play as over"
+              },
+              {
+                "id": "b",
+                "text": "Protect possession and look for the trailing support"
+              },
+              {
+                "id": "c",
+                "text": "Force the old rush pass because the coach permitted a chance"
+              }
+            ],
+            "answer": [
+              "b"
+            ],
+            "explanation": "Permission to attack does not require forcing a chance after its routes close.",
+            "basis": "coaching"
+          },
+          {
+            "id": "exp26-u18-003-q6",
+            "type": "explain",
+            "prompt": "How is “allowed to score from the rush” different from “must shoot immediately”?",
+            "basis": "coaching",
+            "explanation": "The first preserves choices based on the defenders; the second ignores whether a useful chance actually exists."
+          },
+          {
+            "id": "exp26-u18-003-q7",
+            "type": "choice",
+            "prompt": "What should YOU say before the permitted rush entry?",
+            "options": [
+              {
+                "id": "a",
+                "text": "The lane is conditional; F2 and F3 show me the next option"
+              },
+              {
+                "id": "b",
+                "text": "The instruction requires an immediate shot"
+              },
+              {
+                "id": "c",
+                "text": "Gold’s pressure shape stays the same after the entry angle changes"
+              }
+            ],
+            "answer": [
+              "a"
+            ],
+            "basis": "coaching",
+            "explanation": "The call keeps permission separate from a forced action and names support."
+          },
+          {
+            "id": "exp26-u18-003-q8",
+            "type": "multi",
+            "prompt": "Which two checks belong before using the rush?",
+            "options": [
+              {
+                "id": "a",
+                "text": "Gold 1 and Gold 2 pressure"
+              },
+              {
+                "id": "b",
+                "text": "F2 or F3 reachability"
+              },
+              {
+                "id": "c",
+                "text": "The power-play label alone"
+              }
+            ],
+            "answer": [
+              "a",
+              "b"
+            ],
+            "basis": "coaching",
+            "explanation": "Pressure and support decide whether the permitted entry is usable."
+          },
+          {
+            "id": "exp26-u18-003-q9",
+            "type": "position",
+            "prompt": "Move YOU to a carrier angle that connects wide entry and middle support.",
+            "actorId": "home-skater-1",
+            "reference": {
+              "x": 11,
+              "y": 4
+            },
+            "basis": "coaching",
+            "explanation": "This point changes the entry line while retaining both receivers."
+          },
+          {
+            "id": "exp26-u18-003-q10",
+            "type": "explain",
+            "prompt": "Gold closes both visible support lanes. What should YOU reconsider?",
+            "basis": "coaching",
+            "explanation": "Protect the puck or reset instead of forcing the permitted rush. Permission remains conditional on a reachable lane."
+          }
+        ]
+      },
+      "after": {
+        "id": "exp26-u18-003",
+        "version": 2,
+        "ageBand": "U18",
+        "title": "Attack a power-play entry before the setup forms",
+        "family": "power-play-rush-entry",
+        "topic": "Power-play entry",
+        "objective": "Recognize an available rush option without assuming the unit must first arrange a formation.",
+        "briefing": "Navy has five skaters against four. YOU carry a controlled wide entry, F2 offers middle support and F3 trails. The coach permits a rush chance if it is clearly available; the unit is not required to establish an in-zone formation first. Navy attacks Gold’s net and defends Navy’s net. This is a selected-player teaching view; no movement is implied unless stated.",
+        "setup": {
+          "actors": [
+            {
+              "id": "home-skater-1",
+              "label": "YOU",
+              "team": "home",
+              "role": "skater",
+              "x": 13,
+              "y": 8,
+              "facing": 0
+            },
+            {
+              "id": "home-skater-2",
+              "label": "F2",
+              "team": "home",
+              "role": "skater",
+              "x": 16,
+              "y": 0,
+              "facing": 1.9295669970654687
+            },
+            {
+              "id": "home-skater-3",
+              "label": "F3",
+              "team": "home",
+              "role": "skater",
+              "x": 7,
+              "y": -4,
+              "facing": 1.1071487177940904
+            },
+            {
+              "id": "home-skater-4",
+              "label": "D1",
+              "team": "home",
+              "role": "skater",
+              "x": 3,
+              "y": 4,
+              "facing": 0.3805063771123649
+            },
+            {
+              "id": "home-skater-5",
+              "label": "D2",
+              "team": "home",
+              "role": "skater",
+              "x": 2,
+              "y": -7,
+              "facing": 0.9380474917927135
+            },
+            {
+              "id": "away-skater-1",
+              "label": "A1",
+              "team": "away",
+              "role": "skater",
+              "x": 18,
+              "y": 5,
+              "facing": 2.601173153319209
+            },
+            {
+              "id": "away-skater-2",
+              "label": "A2",
+              "team": "away",
+              "role": "skater",
+              "x": 22,
+              "y": -1,
+              "facing": 2.356194490192345
+            },
+            {
+              "id": "away-skater-3",
+              "label": "A3",
+              "team": "away",
+              "role": "skater",
+              "x": 9,
+              "y": 1,
+              "facing": 1.0516502125483738
+            },
+            {
+              "id": "away-skater-4",
+              "label": "A4",
+              "team": "away",
+              "role": "skater",
+              "x": 20,
+              "y": -8,
+              "facing": 1.9832067683922838
+            }
+          ],
+          "puck": {
+            "owner": "home-skater-1"
+          }
+        },
+        "focusActorId": "home-skater-1",
+        "cues": [
+          "The briefing explicitly permits an early rush option while retaining a lane check.",
+          "Navy has five skaters against four. YOU carry a controlled wide entry, F2 offers middle support and F3 trails. The coach permits a rush chance if it is clearly available; the unit is not required to establish an in-zone formation first."
+        ],
+        "tags": [
+          "power-play-rush-entry"
+        ],
+        "sources": [
+          {
+            "id": "usa-special-teams-2015",
+            "title": "Special Teams Tactics with Mike Guentzel",
+            "url": "https://www.usahockey.com/news_article/show/567732-special-teams-tactics-with-mike-guentzel",
+            "section": "Trouble setting up a power play / scoring from the rush",
+            "use": "Supports the stated coaching principle. The setup, alternatives and suggested answers are original experimental coaching synthesis, not source-certified."
+          }
+        ],
+        "limits": "Age adaptation and tactical alternatives await coaching review. Static setup: no skating speed, interception timing or uniquely optimal route has been validated. Positional references are examples, not scored targets.",
+        "questions": [
+          {
+            "id": "exp26-u18-003-q1",
+            "type": "choice",
+            "prompt": "What does the stated team instruction permit?",
+            "options": [
+              {
+                "id": "a",
+                "text": "A clearly available rush chance before a set formation"
+              },
+              {
+                "id": "b",
+                "text": "Only a complete formation before any chance"
+              },
+              {
+                "id": "c",
+                "text": "A guaranteed goal because of five-on-four"
+              }
+            ],
+            "answer": [
+              "a"
+            ],
+            "explanation": "The briefing explicitly permits an early rush option while retaining a lane check.",
+            "basis": "scene"
+          },
+          {
+            "id": "exp26-u18-003-q2",
+            "type": "multi",
+            "prompt": "Which two cues help judge that option?",
+            "options": [
+              {
+                "id": "a",
+                "text": "A requirement to stop solely because it is a power play"
+              },
+              {
+                "id": "b",
+                "text": "F2’s readiness and route"
+              },
+              {
+                "id": "c",
+                "text": "Gold 1 and Gold 2’s coverage of the entry"
+              }
+            ],
+            "answer": [
+              "b",
+              "c"
+            ],
+            "explanation": "The local read still matters on special teams; the numerical advantage is not an answer key.",
+            "basis": "coaching"
+          },
+          {
+            "id": "exp26-u18-003-q3",
+            "type": "sequence",
+            "prompt": "Arrange an entry read under this instruction.",
+            "options": [
+              {
+                "id": "a",
+                "text": "Read the entry defenders"
+              },
+              {
+                "id": "b",
+                "text": "Compare the immediate chance with retained possession"
+              },
+              {
+                "id": "c",
+                "text": "Attack or settle according to the available picture"
+              }
+            ],
+            "answer": [
+              "a",
+              "b",
+              "c"
+            ],
+            "basis": "coaching",
+            "explanation": "Reading the entry defenders and comparing the immediate chance against retained possession can overlap as YOU carry; only attacking or settling has to come last, once that picture is clear. Both attacking and settling may be reasonable under different cues."
+          },
+          {
+            "id": "exp26-u18-003-q4",
+            "type": "position",
+            "prompt": "Move YOU to compare a carrier angle connecting the wide entry to middle support.",
+            "actorId": "home-skater-1",
+            "reference": {
+              "x": 16,
+              "y": 6
+            },
+            "basis": "coaching",
+            "explanation": "The example changes the relation to F2 and Gold 1. It does not validate a passing window or skating race."
+          },
+          {
+            "id": "exp26-u18-003-q5",
+            "type": "choice",
+            "prompt": "Gold 2 closes F2 and Gold 1 contains your lane. What could be useful?",
+            "options": [
+              {
+                "id": "a",
+                "text": "Treat the power play as over"
+              },
+              {
+                "id": "b",
+                "text": "Protect possession and look for the trailing support"
+              },
+              {
+                "id": "c",
+                "text": "Force the old rush pass because the coach permitted a chance"
+              }
+            ],
+            "answer": [
+              "b"
+            ],
+            "explanation": "Permission to attack does not require forcing a chance after its routes close.",
+            "basis": "coaching"
+          },
+          {
+            "id": "exp26-u18-003-q6",
+            "type": "explain",
+            "prompt": "How is “allowed to score from the rush” different from “must shoot immediately”?",
+            "basis": "coaching",
+            "explanation": "The first preserves choices based on the defenders; the second ignores whether a useful chance actually exists."
+          },
+          {
+            "id": "exp26-u18-003-q7",
+            "type": "choice",
+            "prompt": "What should YOU say before the permitted rush entry?",
+            "options": [
+              {
+                "id": "a",
+                "text": "The lane is conditional; F2 and F3 show me the next option"
+              },
+              {
+                "id": "b",
+                "text": "The instruction requires an immediate shot"
+              },
+              {
+                "id": "c",
+                "text": "Gold’s pressure shape stays the same after the entry angle changes"
+              }
+            ],
+            "answer": [
+              "a"
+            ],
+            "basis": "coaching",
+            "explanation": "The call keeps permission separate from a forced action and names support."
+          },
+          {
+            "id": "exp26-u18-003-q8",
+            "type": "multi",
+            "prompt": "Which two checks belong before using the rush?",
+            "options": [
+              {
+                "id": "a",
+                "text": "Gold 1 and Gold 2 pressure"
+              },
+              {
+                "id": "b",
+                "text": "F2 or F3 reachability"
+              },
+              {
+                "id": "c",
+                "text": "The power-play label alone"
+              }
+            ],
+            "answer": [
+              "a",
+              "b"
+            ],
+            "basis": "coaching",
+            "explanation": "Pressure and support decide whether the permitted entry is usable."
+          },
+          {
+            "id": "exp26-u18-003-q9",
+            "type": "position",
+            "prompt": "Move YOU to compare the routes toward F2 and trailing F3.",
+            "actorId": "home-skater-1",
+            "reference": {
+              "x": 11,
+              "y": 4
+            },
+            "basis": "coaching",
+            "explanation": "The example is nearer the middle and closer to F2 and F3, but also closer to Gold 3. Compare pressure and support before choosing a pass."
+          },
+          {
+            "id": "exp26-u18-003-q10",
+            "type": "explain",
+            "prompt": "Gold closes both visible support lanes. What should YOU reconsider?",
+            "basis": "coaching",
+            "explanation": "Protect the puck or reset instead of forcing the permitted rush. Permission remains conditional on a reachable lane."
+          }
+        ]
+      }
+    },
+    {
+      "scenarioId": "exp26-u18-004",
+      "before": {
+        "id": "exp26-u18-004",
+        "version": 1,
+        "ageBand": "U18",
+        "title": "Protect the backdoor during a penalty-kill rotation",
+        "family": "penalty-kill-backdoor",
+        "topic": "Special-teams rotation",
+        "objective": "Track a low weak-side threat under a declared penalty-kill responsibility.",
+        "briefing": "Navy kills four-on-five. Gold 1 controls at the puck-side half wall, Gold 2 is below the goal line and Gold 3 waits across the low slot. YOU are the weak-side low defender. This drill assigns YOU the weak-side low threat until a teammate confirms an exchange. Navy attacks Gold’s net and defends Navy’s net. This is a selected-player teaching view; no movement is implied unless stated.",
+        "setup": {
+          "actors": [
+            {
+              "id": "home-skater-1",
+              "label": "YOU",
+              "team": "home",
+              "role": "skater",
+              "x": -23,
+              "y": 4,
+              "facing": -1.2277723863741932
+            },
+            {
+              "id": "home-skater-2",
+              "label": "D1",
+              "team": "home",
+              "role": "skater",
+              "x": -22,
+              "y": -5,
+              "facing": -0.8960553845713439
+            },
+            {
+              "id": "home-skater-3",
+              "label": "F1",
+              "team": "home",
+              "role": "skater",
+              "x": -15,
+              "y": -4,
+              "facing": -2.0344439357957027
+            },
+            {
+              "id": "home-skater-4",
+              "label": "F2",
+              "team": "home",
+              "role": "skater",
+              "x": -15,
+              "y": 4,
+              "facing": -1.7818896600176433
+            },
+            {
+              "id": "away-skater-1",
+              "label": "A1",
+              "team": "away",
+              "role": "skater",
+              "x": -18,
+              "y": -10,
+              "facing": 3.141592653589793
+            },
+            {
+              "id": "away-skater-2",
+              "label": "A2",
+              "team": "away",
+              "role": "skater",
+              "x": -28,
+              "y": -4,
+              "facing": -0.5404195002705842
+            },
+            {
+              "id": "away-skater-3",
+              "label": "A3",
+              "team": "away",
+              "role": "skater",
+              "x": -24,
+              "y": 5,
+              "facing": -1.1902899496825317
+            },
+            {
+              "id": "away-skater-4",
+              "label": "A4",
+              "team": "away",
+              "role": "skater",
+              "x": -12,
+              "y": -1,
+              "facing": -2.158798930342464
+            },
+            {
+              "id": "away-skater-5",
+              "label": "A5",
+              "team": "away",
+              "role": "skater",
+              "x": -18,
+              "y": 8,
+              "facing": -1.5707963267948966
+            }
+          ],
+          "puck": {
+            "owner": "away-skater-1"
+          }
+        },
+        "focusActorId": "home-skater-1",
+        "cues": [
+          "Gold 3 is in the weak-side low slot while Gold 1 carries at the puck-side half wall.",
+          "Navy kills four-on-five. Gold 1 controls at the puck-side half wall, Gold 2 is below the goal line and Gold 3 waits across the low slot. YOU are the weak-side low defender. This drill assigns YOU the weak-side low threat until a teammate confirms an exchange."
+        ],
+        "tags": [
+          "penalty-kill-backdoor"
+        ],
+        "sources": [
+          {
+            "id": "usa-special-teams-2015",
+            "title": "Special Teams Tactics with Mike Guentzel",
+            "url": "https://www.usahockey.com/news_article/show/567732-special-teams-tactics-with-mike-guentzel",
+            "section": "Penalty-kill discussion / options opponents remove",
+            "use": "Supports the stated coaching principle. The setup, alternatives and suggested answers are original experimental coaching synthesis, not source-certified."
+          }
+        ],
+        "limits": "Age adaptation and tactical alternatives await coaching review. Static setup: no skating speed, interception timing or uniquely optimal route has been validated. Positional references are examples, not scored targets.",
+        "questions": [
+          {
+            "id": "exp26-u18-004-q1",
+            "type": "choice",
+            "prompt": "Which attacker is across the low slot from the puck side?",
+            "options": [
+              {
+                "id": "a",
+                "text": "Gold 1"
+              },
+              {
+                "id": "b",
+                "text": "Gold 4"
+              },
+              {
+                "id": "c",
+                "text": "Gold 3"
+              }
+            ],
+            "answer": [
+              "c"
+            ],
+            "explanation": "Gold 3 is in the weak-side low slot while Gold 1 carries at the puck-side half wall.",
+            "basis": "scene"
+          },
+          {
+            "id": "exp26-u18-004-q2",
+            "type": "multi",
+            "prompt": "Select two checks before exchanging the low responsibility.",
+            "options": [
+              {
+                "id": "a",
+                "text": "A teammate’s confirmed coverage"
+              },
+              {
+                "id": "b",
+                "text": "Gold 3’s route near the net"
+              },
+              {
+                "id": "c",
+                "text": "Only the puck below the goal line"
+              }
+            ],
+            "answer": [
+              "a",
+              "b"
+            ],
+            "explanation": "The drill’s handoff condition is explicit; an unconfirmed exchange can leave the weak-side threat unattended.",
+            "basis": "coaching"
+          },
+          {
+            "id": "exp26-u18-004-q3",
+            "type": "sequence",
+            "prompt": "Arrange a coverage handoff under this drill plan.",
+            "options": [
+              {
+                "id": "a",
+                "text": "Identify the moving low threat"
+              },
+              {
+                "id": "b",
+                "text": "Communicate who will cover it"
+              },
+              {
+                "id": "c",
+                "text": "Adjust after coverage is confirmed"
+              }
+            ],
+            "answer": [
+              "a",
+              "b",
+              "c"
+            ],
+            "basis": "coaching",
+            "explanation": "The plan is one teaching constraint, not a claim that every penalty kill uses this handoff."
+          },
+          {
+            "id": "exp26-u18-004-q4",
+            "type": "position",
+            "prompt": "Move YOU to compare a net-side weak-side position.",
+            "actorId": "home-skater-1",
+            "reference": {
+              "x": -25,
+              "y": 2
+            },
+            "basis": "coaching",
+            "explanation": "The reference relates YOU to Gold 3 and the net while preserving awareness of Gold 2. Other low coverage shapes may be valid."
+          },
+          {
+            "id": "exp26-u18-004-q5",
+            "type": "choice",
+            "prompt": "Gold 2 receives below the goal line and Gold 3 cuts inward. What needs updating?",
+            "options": [
+              {
+                "id": "a",
+                "text": "The immediate low pass threat and assigned coverage"
+              },
+              {
+                "id": "b",
+                "text": "The belief that Gold 1 still owns the puck"
+              },
+              {
+                "id": "c",
+                "text": "A requirement for every killer to chase Gold 2"
+              }
+            ],
+            "answer": [
+              "a"
+            ],
+            "explanation": "The new carrier and moving receiver must be read together.",
+            "basis": "coaching"
+          },
+          {
+            "id": "exp26-u18-004-q6",
+            "type": "explain",
+            "prompt": "Name the backdoor or low-slot area you are protecting and explain the passing threat.",
+            "basis": "coaching",
+            "explanation": "Connect the area to the puck below the goal line and Gold 3’s route; the term alone does not identify a safe position."
+          },
+          {
+            "id": "exp26-u18-004-q7",
+            "type": "choice",
+            "prompt": "What should YOU call during the low exchange?",
+            "options": [
+              {
+                "id": "a",
+                "text": "Gold 2 is the backdoor threat; I am checking D1’s net-side cover"
+              },
+              {
+                "id": "b",
+                "text": "The low rotation covers itself"
+              },
+              {
+                "id": "c",
+                "text": "Gold 3 remains the outside reference after the inside cut"
+              }
+            ],
+            "answer": [
+              "a"
+            ],
+            "basis": "coaching",
+            "explanation": "The call identifies the attacker and teammate relationship that define the handoff."
+          },
+          {
+            "id": "exp26-u18-004-q8",
+            "type": "multi",
+            "prompt": "Which two changes require a coverage update?",
+            "options": [
+              {
+                "id": "a",
+                "text": "Gold 2 moves across the slot"
+              },
+              {
+                "id": "b",
+                "text": "D1 rotates away from the net-side lane"
+              },
+              {
+                "id": "c",
+                "text": "The puck remains below the line"
+              }
+            ],
+            "answer": [
+              "a",
+              "b"
+            ],
+            "basis": "coaching",
+            "explanation": "Attacker movement and teammate rotation change the dangerous lane."
+          },
+          {
+            "id": "exp26-u18-004-q9",
+            "type": "position",
+            "prompt": "Move YOU to a weak-side net-side position with Gold 2 visible.",
+            "actorId": "home-skater-1",
+            "reference": {
+              "x": -18,
+              "y": -1.5
+            },
+            "basis": "coaching",
+            "explanation": "This keeps YOU connected to the backdoor while preserving the low exchange."
+          },
+          {
+            "id": "exp26-u18-004-q10",
+            "type": "explain",
+            "prompt": "Gold 3 cuts inward as Gold 2 receives below. Explain the handoff.",
+            "basis": "coaching",
+            "explanation": "Name Gold 3 as the new inside threat, communicate the exchange, and keep the net-side lane covered."
+          }
+        ]
+      },
+      "after": {
+        "id": "exp26-u18-004",
+        "version": 2,
+        "ageBand": "U18",
+        "title": "Protect the backdoor during a penalty-kill rotation",
+        "family": "penalty-kill-backdoor",
+        "topic": "Special-teams rotation",
+        "objective": "Track a low weak-side threat under a declared penalty-kill responsibility.",
+        "briefing": "Navy kills four-on-five. Gold 1 controls at the puck-side half wall, Gold 2 is below the goal line and Gold 3 waits across the low slot. YOU are the weak-side low defender. This drill assigns YOU the weak-side low threat until a teammate confirms an exchange. Navy attacks Gold’s net and defends Navy’s net. This is a selected-player teaching view; no movement is implied unless stated.",
+        "setup": {
+          "actors": [
+            {
+              "id": "home-skater-1",
+              "label": "YOU",
+              "team": "home",
+              "role": "skater",
+              "x": -23,
+              "y": 4,
+              "facing": -1.2277723863741932
+            },
+            {
+              "id": "home-skater-2",
+              "label": "D1",
+              "team": "home",
+              "role": "skater",
+              "x": -22,
+              "y": -5,
+              "facing": -0.8960553845713439
+            },
+            {
+              "id": "home-skater-3",
+              "label": "F1",
+              "team": "home",
+              "role": "skater",
+              "x": -15,
+              "y": -4,
+              "facing": -2.0344439357957027
+            },
+            {
+              "id": "home-skater-4",
+              "label": "F2",
+              "team": "home",
+              "role": "skater",
+              "x": -15,
+              "y": 4,
+              "facing": -1.7818896600176433
+            },
+            {
+              "id": "away-skater-1",
+              "label": "A1",
+              "team": "away",
+              "role": "skater",
+              "x": -18,
+              "y": -10,
+              "facing": 3.141592653589793
+            },
+            {
+              "id": "away-skater-2",
+              "label": "A2",
+              "team": "away",
+              "role": "skater",
+              "x": -28,
+              "y": -4,
+              "facing": -0.5404195002705842
+            },
+            {
+              "id": "away-skater-3",
+              "label": "A3",
+              "team": "away",
+              "role": "skater",
+              "x": -24,
+              "y": 5,
+              "facing": -1.1902899496825317
+            },
+            {
+              "id": "away-skater-4",
+              "label": "A4",
+              "team": "away",
+              "role": "skater",
+              "x": -12,
+              "y": -1,
+              "facing": -2.158798930342464
+            },
+            {
+              "id": "away-skater-5",
+              "label": "A5",
+              "team": "away",
+              "role": "skater",
+              "x": -18,
+              "y": 8,
+              "facing": -1.5707963267948966
+            }
+          ],
+          "puck": {
+            "owner": "away-skater-1"
+          }
+        },
+        "focusActorId": "home-skater-1",
+        "cues": [
+          "Gold 3 is in the weak-side low slot while Gold 1 carries at the puck-side half wall.",
+          "Navy kills four-on-five. Gold 1 controls at the puck-side half wall, Gold 2 is below the goal line and Gold 3 waits across the low slot. YOU are the weak-side low defender. This drill assigns YOU the weak-side low threat until a teammate confirms an exchange."
+        ],
+        "tags": [
+          "penalty-kill-backdoor"
+        ],
+        "sources": [
+          {
+            "id": "usa-special-teams-2015",
+            "title": "Special Teams Tactics with Mike Guentzel",
+            "url": "https://www.usahockey.com/news_article/show/567732-special-teams-tactics-with-mike-guentzel",
+            "section": "Penalty-kill discussion / options opponents remove",
+            "use": "Supports the stated coaching principle. The setup, alternatives and suggested answers are original experimental coaching synthesis, not source-certified."
+          }
+        ],
+        "limits": "Age adaptation and tactical alternatives await coaching review. Static setup: no skating speed, interception timing or uniquely optimal route has been validated. Positional references are examples, not scored targets.",
+        "questions": [
+          {
+            "id": "exp26-u18-004-q1",
+            "type": "choice",
+            "prompt": "Which attacker is across the low slot from the puck side?",
+            "options": [
+              {
+                "id": "a",
+                "text": "Gold 1"
+              },
+              {
+                "id": "b",
+                "text": "Gold 4"
+              },
+              {
+                "id": "c",
+                "text": "Gold 3"
+              }
+            ],
+            "answer": [
+              "c"
+            ],
+            "explanation": "Gold 3 is in the weak-side low slot while Gold 1 carries at the puck-side half wall.",
+            "basis": "scene"
+          },
+          {
+            "id": "exp26-u18-004-q2",
+            "type": "multi",
+            "prompt": "Select two checks before exchanging the low responsibility.",
+            "options": [
+              {
+                "id": "a",
+                "text": "A teammate’s confirmed coverage"
+              },
+              {
+                "id": "b",
+                "text": "Gold 3’s route near the net"
+              },
+              {
+                "id": "c",
+                "text": "Only the puck below the goal line"
+              }
+            ],
+            "answer": [
+              "a",
+              "b"
+            ],
+            "explanation": "The drill’s handoff condition is explicit; an unconfirmed exchange can leave the weak-side threat unattended.",
+            "basis": "coaching"
+          },
+          {
+            "id": "exp26-u18-004-q3",
+            "type": "sequence",
+            "prompt": "Arrange a coverage handoff under this drill plan.",
+            "options": [
+              {
+                "id": "a",
+                "text": "Identify the moving low threat"
+              },
+              {
+                "id": "b",
+                "text": "Communicate who will cover it"
+              },
+              {
+                "id": "c",
+                "text": "Adjust after coverage is confirmed"
+              }
+            ],
+            "answer": [
+              "a",
+              "b",
+              "c"
+            ],
+            "basis": "coaching",
+            "explanation": "The plan is one teaching constraint, not a claim that every penalty kill uses this handoff."
+          },
+          {
+            "id": "exp26-u18-004-q4",
+            "type": "position",
+            "prompt": "Move YOU to compare a net-side weak-side position.",
+            "actorId": "home-skater-1",
+            "reference": {
+              "x": -25,
+              "y": 2
+            },
+            "basis": "coaching",
+            "explanation": "The example is on the opposite side from Gold 1 and closer to Navy’s net than Gold 3. Recheck Gold 2 and Gold 3 before assuming the low lane is covered."
+          },
+          {
+            "id": "exp26-u18-004-q5",
+            "type": "choice",
+            "prompt": "Gold 2 receives below the goal line and Gold 3 cuts inward. What needs updating?",
+            "options": [
+              {
+                "id": "a",
+                "text": "The immediate low pass threat and assigned coverage"
+              },
+              {
+                "id": "b",
+                "text": "The belief that Gold 1 still owns the puck"
+              },
+              {
+                "id": "c",
+                "text": "A requirement for every killer to chase Gold 2"
+              }
+            ],
+            "answer": [
+              "a"
+            ],
+            "explanation": "The new carrier and moving receiver must be read together.",
+            "basis": "coaching"
+          },
+          {
+            "id": "exp26-u18-004-q6",
+            "type": "explain",
+            "prompt": "Name the backdoor or low-slot area YOU are protecting and explain the passing threat.",
+            "basis": "coaching",
+            "explanation": "Gold 3 is the weak-side low threat in the starting picture. If Gold 2 receives behind the goal line, recheck the route from the new carrier to Gold 3 and communicate any exchange."
+          },
+          {
+            "id": "exp26-u18-004-q7",
+            "type": "choice",
+            "prompt": "What should YOU call during the low exchange?",
+            "options": [
+              {
+                "id": "a",
+                "text": "I am tracking Gold 3; confirm who takes the low threat before I switch"
+              },
+              {
+                "id": "b",
+                "text": "The low rotation covers itself"
+              },
+              {
+                "id": "c",
+                "text": "Gold 3 remains the outside reference after the inside cut"
+              }
+            ],
+            "answer": [
+              "a"
+            ],
+            "basis": "coaching",
+            "explanation": "Gold 3 is the assigned weak-side threat; Gold 2 starts behind the goal line. Name the intended handoff and confirm the teammate’s coverage."
+          },
+          {
+            "id": "exp26-u18-004-q8",
+            "type": "multi",
+            "prompt": "Which two changes require a coverage update?",
+            "options": [
+              {
+                "id": "a",
+                "text": "Gold 2 moves across the slot"
+              },
+              {
+                "id": "b",
+                "text": "D1 rotates away from the net-side lane"
+              },
+              {
+                "id": "c",
+                "text": "The puck remains below the line"
+              }
+            ],
+            "answer": [
+              "a",
+              "b"
+            ],
+            "basis": "coaching",
+            "explanation": "Attacker movement and teammate rotation change the dangerous lane."
+          },
+          {
+            "id": "exp26-u18-004-q9",
+            "type": "position",
+            "prompt": "From the starting picture, compare another net-side position against Gold 3.",
+            "actorId": "home-skater-1",
+            "reference": {
+              "x": -25,
+              "y": 3
+            },
+            "basis": "coaching",
+            "explanation": "The example remains opposite Gold 1 and closer to Navy’s net than Gold 3. It is slightly nearer Gold 3 than the earlier example; other questions’ hypothetical movements have not occurred in this frame."
+          },
+          {
+            "id": "exp26-u18-004-q10",
+            "type": "explain",
+            "prompt": "Gold 3 cuts inward as Gold 2 receives below. Explain the handoff.",
+            "basis": "coaching",
+            "explanation": "Name Gold 3 as the new inside threat, communicate the exchange, and keep the net-side lane covered."
+          }
+        ]
+      }
+    },
+    {
+      "scenarioId": "exp26-u18-005",
+      "before": {
+        "id": "exp26-u18-005",
+        "version": 1,
+        "ageBand": "U18",
+        "title": "Join the second wave only after checking possession",
+        "family": "defender-activation",
+        "topic": "Transition support",
+        "objective": "Assess an offensive activation while keeping a stated covering defender.",
+        "briefing": "F1 has recovered the puck and carries into the neutral zone. YOU are the supporting defender; D2 stays deeper by agreement. F2 is ahead and Gold 3 is recovering near YOU. The drill permits an activation only after secure possession and available support are checked. Navy attacks Gold’s net and defends Navy’s net. This is a selected-player teaching view; no movement is implied unless stated.",
+        "setup": {
+          "actors": [
+            {
+              "id": "home-skater-1",
+              "label": "YOU",
+              "team": "home",
+              "role": "skater",
+              "x": -3,
+              "y": 5,
+              "facing": -0.6947382761967031
+            },
+            {
+              "id": "home-skater-2",
+              "label": "D2",
+              "team": "home",
+              "role": "skater",
+              "x": -11,
+              "y": -2,
+              "facing": 0.14189705460416394
+            },
+            {
+              "id": "home-skater-3",
+              "label": "F1",
+              "team": "home",
+              "role": "skater",
+              "x": 3,
+              "y": 0,
+              "facing": 0
+            },
+            {
+              "id": "home-skater-4",
+              "label": "F2",
+              "team": "home",
+              "role": "skater",
+              "x": 11,
+              "y": -7,
+              "facing": 2.4227626539681686
+            },
+            {
+              "id": "home-skater-5",
+              "label": "F3",
+              "team": "home",
+              "role": "skater",
+              "x": 8,
+              "y": 7,
+              "facing": -2.191045812777718
+            },
+            {
+              "id": "away-skater-1",
+              "label": "A1",
+              "team": "away",
+              "role": "skater",
+              "x": 15,
+              "y": 2,
+              "facing": -2.976443976175166
+            },
+            {
+              "id": "away-skater-2",
+              "label": "A2",
+              "team": "away",
+              "role": "skater",
+              "x": 12,
+              "y": -5,
+              "facing": 2.6344941491974563
+            },
+            {
+              "id": "away-skater-3",
+              "label": "A3",
+              "team": "away",
+              "role": "skater",
+              "x": -1,
+              "y": 2,
+              "facing": -0.4636476090008061
+            }
+          ],
+          "puck": {
+            "owner": "home-skater-3"
+          }
+        },
+        "focusActorId": "home-skater-1",
+        "cues": [
+          "The briefing assigns deeper cover to D2 before the activation is considered.",
+          "F1 has recovered the puck and carries into the neutral zone. YOU are the supporting defender; D2 stays deeper by agreement. F2 is ahead and Gold 3 is recovering near YOU. The drill permits an activation only after secure possession and available support are checked."
+        ],
+        "tags": [
+          "defender-activation"
+        ],
+        "sources": [
+          {
+            "id": "hc-defence-2020",
+            "title": "Developing Skilled Defencemen — Overview",
+            "url": "https://cdn.hockeycanada.ca/hockey-canada/Hockey-Programs/Players/Downloads/2020/developing-defence-overview-e.pdf",
+            "section": "PDF page 15, Neutral Zone Regroups: second wave and game situation",
+            "use": "Supports the stated coaching principle. The setup, alternatives and suggested answers are original experimental coaching synthesis, not source-certified."
+          }
+        ],
+        "limits": "Age adaptation and tactical alternatives await coaching review. Static setup: no skating speed, interception timing or uniquely optimal route has been validated. Positional references are examples, not scored targets.",
+        "questions": [
+          {
+            "id": "exp26-u18-005-q1",
+            "type": "choice",
+            "prompt": "Which defender has the explicitly stated deeper-cover role?",
+            "options": [
+              {
+                "id": "a",
+                "text": "Gold 3"
+              },
+              {
+                "id": "b",
+                "text": "D2"
+              },
+              {
+                "id": "c",
+                "text": "YOU"
+              }
+            ],
+            "answer": [
+              "b"
+            ],
+            "explanation": "The briefing assigns deeper cover to D2 before the activation is considered.",
+            "basis": "scene"
+          },
+          {
+            "id": "exp26-u18-005-q2",
+            "type": "multi",
+            "prompt": "Choose two checks for joining the attack.",
+            "options": [
+              {
+                "id": "a",
+                "text": "F1’s quality of possession"
+              },
+              {
+                "id": "b",
+                "text": "The idea that every recovery requires both defenders to go"
+              },
+              {
+                "id": "c",
+                "text": "Whether D2 and recovering pressure support the decision"
+              }
+            ],
+            "answer": [
+              "a",
+              "c"
+            ],
+            "explanation": "Activation is a conditional choice; the source principle does not erase risk.",
+            "basis": "coaching"
+          },
+          {
+            "id": "exp26-u18-005-q3",
+            "type": "sequence",
+            "prompt": "Arrange an activation assessment.",
+            "options": [
+              {
+                "id": "a",
+                "text": "Confirm controlled possession"
+              },
+              {
+                "id": "b",
+                "text": "Check covering support and Gold 3"
+              },
+              {
+                "id": "c",
+                "text": "Join or hold according to the updated picture"
+              }
+            ],
+            "answer": [
+              "a",
+              "b",
+              "c"
+            ],
+            "basis": "coaching",
+            "explanation": "The routine assumes the stated cover plan and still needs realistic timing."
+          },
+          {
+            "id": "exp26-u18-005-q4",
+            "type": "position",
+            "prompt": "Move YOU to compare a second-wave supporting lane.",
+            "actorId": "home-skater-1",
+            "reference": {
+              "x": 4,
+              "y": 5
+            },
+            "basis": "coaching",
+            "explanation": "The reference follows behind the leading forwards in a different lane. Whether YOU can get there ahead of Gold 3 is not established."
+          },
+          {
+            "id": "exp26-u18-005-q5",
+            "type": "choice",
+            "prompt": "F1 bobbles the puck as Gold 3 accelerates. What deserves a fresh decision?",
+            "options": [
+              {
+                "id": "a",
+                "text": "The old activation regardless of possession"
+              },
+              {
+                "id": "b",
+                "text": "A belief that D2 can cover every possible turnover alone"
+              },
+              {
+                "id": "c",
+                "text": "Whether to hold or recover instead of continuing up ice"
+              }
+            ],
+            "answer": [
+              "c"
+            ],
+            "explanation": "Possession quality and pressure changed, so the original support choice may no longer fit.",
+            "basis": "coaching"
+          },
+          {
+            "id": "exp26-u18-005-q6",
+            "type": "explain",
+            "prompt": "What distinguishes a useful second wave from leaving the play without cover?",
+            "basis": "coaching",
+            "explanation": "Discuss secure possession, D2’s role, pressure and a reachable support lane."
+          },
+          {
+            "id": "exp26-u18-005-q7",
+            "type": "choice",
+            "prompt": "What should YOU communicate before joining the second wave?",
+            "options": [
+              {
+                "id": "a",
+                "text": "F1 has control and D2 is behind me; call if either changes"
+              },
+              {
+                "id": "b",
+                "text": "The attack makes cover unnecessary"
+              },
+              {
+                "id": "c",
+                "text": "F2 owns the puck"
+              }
+            ],
+            "answer": [
+              "a"
+            ],
+            "basis": "coaching",
+            "explanation": "The message names carrier and cover, the two conditions for activation."
+          },
+          {
+            "id": "exp26-u18-005-q8",
+            "type": "multi",
+            "prompt": "Which two changes should stop activation?",
+            "options": [
+              {
+                "id": "a",
+                "text": "F1 loses control"
+              },
+              {
+                "id": "b",
+                "text": "D2 leaves the deeper cover"
+              },
+              {
+                "id": "c",
+                "text": "F2 stays wide"
+              }
+            ],
+            "answer": [
+              "a",
+              "b"
+            ],
+            "basis": "coaching",
+            "explanation": "Possession and cover determine whether the second wave remains responsible."
+          },
+          {
+            "id": "exp26-u18-005-q9",
+            "type": "position",
+            "prompt": "Move YOU to a second-wave lane behind F1, separate from F3.",
+            "actorId": "home-skater-1",
+            "reference": {
+              "x": 0,
+              "y": 4.5
+            },
+            "basis": "coaching",
+            "explanation": "This point supports behind the carrier and stays in a different lane from F3. Keep D2’s deeper cover and Gold 3’s recovery in view before continuing the activation."
+          },
+          {
+            "id": "exp26-u18-005-q10",
+            "type": "explain",
+            "prompt": "Gold 3 accelerates as F1 bobbles. What is your new priority?",
+            "basis": "coaching",
+            "explanation": "Recover or hold the cover first, then re-read F1 and F2. The earlier activation plan is stale."
+          }
+        ]
+      },
+      "after": {
+        "id": "exp26-u18-005",
+        "version": 2,
+        "ageBand": "U18",
+        "title": "Join the second wave only after checking possession",
+        "family": "defender-activation",
+        "topic": "Transition support",
+        "objective": "Assess an offensive activation while keeping a stated covering defender.",
+        "briefing": "F1 has recovered the puck and carries into the neutral zone. YOU are the supporting defender; D2 stays deeper by agreement. F2 is ahead and Gold 3 is recovering near YOU. The drill permits an activation only after secure possession and available support are checked. Navy attacks Gold’s net and defends Navy’s net. This is a selected-player teaching view; no movement is implied unless stated.",
+        "setup": {
+          "actors": [
+            {
+              "id": "home-skater-1",
+              "label": "YOU",
+              "team": "home",
+              "role": "skater",
+              "x": -3,
+              "y": 5,
+              "facing": -0.6947382761967031
+            },
+            {
+              "id": "home-skater-2",
+              "label": "D2",
+              "team": "home",
+              "role": "skater",
+              "x": -11,
+              "y": -2,
+              "facing": 0.14189705460416394
+            },
+            {
+              "id": "home-skater-3",
+              "label": "F1",
+              "team": "home",
+              "role": "skater",
+              "x": 3,
+              "y": 0,
+              "facing": 0
+            },
+            {
+              "id": "home-skater-4",
+              "label": "F2",
+              "team": "home",
+              "role": "skater",
+              "x": 11,
+              "y": -7,
+              "facing": 2.4227626539681686
+            },
+            {
+              "id": "home-skater-5",
+              "label": "F3",
+              "team": "home",
+              "role": "skater",
+              "x": 8,
+              "y": 7,
+              "facing": -2.191045812777718
+            },
+            {
+              "id": "away-skater-1",
+              "label": "A1",
+              "team": "away",
+              "role": "skater",
+              "x": 15,
+              "y": 2,
+              "facing": -2.976443976175166
+            },
+            {
+              "id": "away-skater-2",
+              "label": "A2",
+              "team": "away",
+              "role": "skater",
+              "x": 12,
+              "y": -5,
+              "facing": 2.6344941491974563
+            },
+            {
+              "id": "away-skater-3",
+              "label": "A3",
+              "team": "away",
+              "role": "skater",
+              "x": -1,
+              "y": 2,
+              "facing": -0.4636476090008061
+            }
+          ],
+          "puck": {
+            "owner": "home-skater-3"
+          }
+        },
+        "focusActorId": "home-skater-1",
+        "cues": [
+          "The briefing assigns deeper cover to D2 before the activation is considered.",
+          "F1 has recovered the puck and carries into the neutral zone. YOU are the supporting defender; D2 stays deeper by agreement. F2 is ahead and Gold 3 is recovering near YOU. The drill permits an activation only after secure possession and available support are checked."
+        ],
+        "tags": [
+          "defender-activation"
+        ],
+        "sources": [
+          {
+            "id": "hc-defence-2020",
+            "title": "Developing Skilled Defencemen — Overview",
+            "url": "https://cdn.hockeycanada.ca/hockey-canada/Hockey-Programs/Players/Downloads/2020/developing-defence-overview-e.pdf",
+            "section": "PDF page 15, Neutral Zone Regroups: second wave and game situation",
+            "use": "Supports the stated coaching principle. The setup, alternatives and suggested answers are original experimental coaching synthesis, not source-certified."
+          }
+        ],
+        "limits": "Age adaptation and tactical alternatives await coaching review. Static setup: no skating speed, interception timing or uniquely optimal route has been validated. Positional references are examples, not scored targets.",
+        "questions": [
+          {
+            "id": "exp26-u18-005-q1",
+            "type": "choice",
+            "prompt": "Which defender has the explicitly stated deeper-cover role?",
+            "options": [
+              {
+                "id": "a",
+                "text": "Gold 3"
+              },
+              {
+                "id": "b",
+                "text": "D2"
+              },
+              {
+                "id": "c",
+                "text": "YOU"
+              }
+            ],
+            "answer": [
+              "b"
+            ],
+            "explanation": "The briefing assigns deeper cover to D2 before the activation is considered.",
+            "basis": "scene"
+          },
+          {
+            "id": "exp26-u18-005-q2",
+            "type": "multi",
+            "prompt": "Choose two checks for joining the attack.",
+            "options": [
+              {
+                "id": "a",
+                "text": "F1’s quality of possession"
+              },
+              {
+                "id": "b",
+                "text": "The idea that every recovery requires both defenders to go"
+              },
+              {
+                "id": "c",
+                "text": "Whether D2 and recovering pressure support the decision"
+              }
+            ],
+            "answer": [
+              "a",
+              "c"
+            ],
+            "explanation": "Activation is a conditional choice; the source principle does not erase risk.",
+            "basis": "coaching"
+          },
+          {
+            "id": "exp26-u18-005-q3",
+            "type": "sequence",
+            "prompt": "Arrange an activation assessment.",
+            "options": [
+              {
+                "id": "a",
+                "text": "Confirm controlled possession"
+              },
+              {
+                "id": "b",
+                "text": "Check covering support and Gold 3"
+              },
+              {
+                "id": "c",
+                "text": "Join or hold according to the updated picture"
+              }
+            ],
+            "answer": [
+              "a",
+              "b",
+              "c"
+            ],
+            "basis": "coaching",
+            "explanation": "Confirming controlled possession and checking covering support/Gold 3 can overlap as YOU skate; only joining or holding has to come last, once both reads are in. The routine assumes the stated cover plan and still needs realistic timing."
+          },
+          {
+            "id": "exp26-u18-005-q4",
+            "type": "position",
+            "prompt": "Move YOU to compare a second-wave supporting lane.",
+            "actorId": "home-skater-1",
+            "reference": {
+              "x": 4,
+              "y": 5
+            },
+            "basis": "coaching",
+            "explanation": "The example is behind F2 and F3 but slightly ahead of carrier F1, in a different lane. Recheck D2’s cover and Gold 3; arrival timing and a passing window are not established."
+          },
+          {
+            "id": "exp26-u18-005-q5",
+            "type": "choice",
+            "prompt": "F1 bobbles the puck as Gold 3 accelerates. What deserves a fresh decision?",
+            "options": [
+              {
+                "id": "a",
+                "text": "The old activation regardless of possession"
+              },
+              {
+                "id": "b",
+                "text": "A belief that D2 can cover every possible turnover alone"
+              },
+              {
+                "id": "c",
+                "text": "Whether to hold or recover instead of continuing up ice"
+              }
+            ],
+            "answer": [
+              "c"
+            ],
+            "explanation": "Possession quality and pressure changed, so the original support choice may no longer fit.",
+            "basis": "coaching"
+          },
+          {
+            "id": "exp26-u18-005-q6",
+            "type": "explain",
+            "prompt": "What distinguishes a useful second wave from leaving the play without cover?",
+            "basis": "coaching",
+            "explanation": "Discuss secure possession, D2’s role, pressure and a reachable support lane."
+          },
+          {
+            "id": "exp26-u18-005-q7",
+            "type": "choice",
+            "prompt": "What should YOU communicate before joining the second wave?",
+            "options": [
+              {
+                "id": "a",
+                "text": "F1 has control and D2 is behind me; call if either changes"
+              },
+              {
+                "id": "b",
+                "text": "The attack makes cover unnecessary"
+              },
+              {
+                "id": "c",
+                "text": "F2 owns the puck"
+              }
+            ],
+            "answer": [
+              "a"
+            ],
+            "basis": "coaching",
+            "explanation": "The message names carrier and cover, the two conditions for activation."
+          },
+          {
+            "id": "exp26-u18-005-q8",
+            "type": "multi",
+            "prompt": "Which two changes require reassessing the activation?",
+            "options": [
+              {
+                "id": "a",
+                "text": "F1 loses control"
+              },
+              {
+                "id": "b",
+                "text": "D2 leaves the deeper cover"
+              },
+              {
+                "id": "c",
+                "text": "F2 stays wide"
+              }
+            ],
+            "answer": [
+              "a",
+              "b"
+            ],
+            "basis": "coaching",
+            "explanation": "Possession and cover determine whether the second wave remains responsible."
+          },
+          {
+            "id": "exp26-u18-005-q9",
+            "type": "position",
+            "prompt": "Move YOU to a second-wave lane behind F1, separate from F3.",
+            "actorId": "home-skater-1",
+            "reference": {
+              "x": 0,
+              "y": 4.5
+            },
+            "basis": "coaching",
+            "explanation": "The example stays behind F1 and separate from F3. Check D2’s deeper cover and Gold 3’s recovery before continuing; no open pass is guaranteed."
+          },
+          {
+            "id": "exp26-u18-005-q10",
+            "type": "explain",
+            "prompt": "Gold 3 accelerates as F1 bobbles. What is your new priority?",
+            "basis": "coaching",
+            "explanation": "Recover or hold the cover first, then re-read F1 and F2. The earlier activation plan is stale."
+          }
+        ]
+      }
+    }
+  ],
+  "limits": "Experimental content only. Independent AI review is not human coach approval or mastery admission.",
+  "appliedAt": "2026-09-06T15:24:46.421Z"
+}

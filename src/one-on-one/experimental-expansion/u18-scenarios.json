@@ -1,13 +1,13 @@
 [
   {
     "id": "exp26b-u18-001",
-    "version": 1,
+    "version": 2,
     "ageBand": "U18",
     "title": "Manage a lead in the final minute",
     "family": "late-lead-possession",
     "topic": "Clock and risk",
     "objective": "Use the stated clock and score to weigh controlled possession against a safe reset.",
-    "briefing": "Navy leads 3–2 with one minute left. Navy attacks the Gold net. YOU owns the puck near centre; F1 is wide support, F2 is higher, and Gold pressures from both sides. The score and clock are explicit practice conditions.",
+    "briefing": "Navy leads 3–2 with one minute left. Navy attacks the Gold net. YOU own the puck near centre; F1 is wide support, F2 is higher, and Gold pressures from both sides. The score and clock are explicit practice conditions.",
     "setup": {
       "actors": [
         {
@@ -72,7 +72,7 @@
     "focusActorId": "h1",
     "cues": [
       "Navy leads 3–2 with one minute left.",
-      "YOU owns the puck.",
+      "YOU own the puck.",
       "F1 and F2 are visible support options."
     ],
     "tags": [
@@ -93,7 +93,7 @@
       {
         "id": "exp26b-u18-001-q1",
         "type": "choice",
-        "prompt": "Read the freeze: what lead and clock are on the board?",
+        "prompt": "What lead and remaining time does the briefing state?",
         "options": [
           {
             "id": "a",
@@ -168,14 +168,14 @@
       {
         "id": "exp26b-u18-001-q4",
         "type": "position",
-        "prompt": "Move YOU to a position with two controlled outlets visible.",
+        "prompt": "Move YOU to compare routes toward F1 and F2.",
         "actorId": "h1",
         "reference": {
           "x": 1.5,
           "y": -5
         },
         "basis": "coaching",
-        "explanation": "This point keeps F1 and F2 in separate support relationships."
+        "explanation": "The example moves closer to F1 and F2, but also closer to Gold 1. Check pressure and both routes before treating either as a controlled outlet."
       },
       {
         "id": "exp26b-u18-001-q5",
@@ -212,13 +212,13 @@
   },
   {
     "id": "exp26b-u18-002",
-    "version": 1,
+    "version": 2,
     "ageBand": "U18",
     "title": "Create a chance while trailing late",
     "family": "late-trailing-attack",
     "topic": "Clock and attacking support",
     "objective": "Seek a reachable attacking chance while the late deficit makes risk meaningful.",
-    "briefing": "Navy trails 2–3 with one minute left and attacks the Gold net. YOU owns the puck high right; F2 is inside, F3 is wide, and Gold 1 blocks the lane. The scene supports a time-aware branch, not a forced shot.",
+    "briefing": "Navy trails 2–3 with one minute left and attacks the right net. YOU control near the point on one side; F2 is nearer the middle and F3 is wide on the opposite side. Gold 1 is near the direct shot line. Compare a timely shot with reachable support; the clock does not require a forced shot.",
     "setup": {
       "actors": [
         {
@@ -283,7 +283,7 @@
     "focusActorId": "h1",
     "cues": [
       "Navy trails 2–3 with one minute left.",
-      "YOU owns the puck.",
+      "YOU own the puck.",
       "Gold 1 blocks the direct lane; F2 is inside."
     ],
     "tags": [
@@ -361,11 +361,11 @@
           },
           {
             "id": "b",
-            "text": "Use the open lane if it stays reachable"
+            "text": "Compare a shot, pass or reset against the clock"
           },
           {
             "id": "c",
-            "text": "Re-check whether a shot, pass or reset fits"
+            "text": "Use a feasible option and keep scanning"
           }
         ],
         "answer": [
@@ -374,24 +374,24 @@
           "c"
         ],
         "basis": "coaching",
-        "explanation": "The deficit can justify risk, but the lane still needs a real read."
+        "explanation": "Read the pressure and compare the options before using one. These scans can overlap; keep updating rather than choosing only after releasing the puck."
       },
       {
         "id": "exp26b-u18-002-q4",
         "type": "position",
-        "prompt": "Move YOU toward a central point angle while keeping F2 visible.",
+        "prompt": "Move YOU nearer the middle to compare the routes toward F2 and F3.",
         "actorId": "h1",
         "reference": {
           "x": 13,
           "y": 5.5
         },
         "basis": "coaching",
-        "explanation": "This point changes the carrier line toward F2 and the net while retaining the wide option."
+        "explanation": "The example changes both passing angles and brings YOU closer to Gold 1. Check the pressure, lane and remaining time before moving."
       },
       {
         "id": "exp26b-u18-002-q5",
         "type": "choice",
-        "prompt": "With Gold 1 in the shot lane, which F2 change matters?",
+        "prompt": "If Gold 1 closes the shot lane and F2 becomes reachable, what could YOU consider?",
         "options": [
           {
             "id": "a",
@@ -410,7 +410,7 @@
           "a"
         ],
         "basis": "coaching",
-        "explanation": "The defender movement changes the lane and F2 may now be the safer chance."
+        "explanation": "The new picture may favour a checked pass to F2. Compare the available time and pressure; the original shot is not compulsory."
       },
       {
         "id": "exp26b-u18-002-q6",
@@ -423,13 +423,13 @@
   },
   {
     "id": "exp26b-u18-003",
-    "version": 1,
+    "version": 2,
     "ageBand": "U18",
     "title": "Enter the power play before setup",
     "family": "powerplay-rush-entry",
     "topic": "Power-play entry",
     "objective": "Use a permitted rush option while checking support and the penalty-kill shape.",
-    "briefing": "Navy attacks the Gold net on a power play. The team instruction permits a rush entry and a shot if the lane is open. YOU carries high right; F2 is middle, F3 is wide, and Gold has a staggered shape.",
+    "briefing": "Navy attacks the Gold net with five skaters against three in this power-play example. The team instruction permits a rush entry and a shot if the lane is open. YOU carry in a wide attacking lane; F2 is middle, F3 trails in a separate lane, and Gold has a staggered shape.",
     "setup": {
       "actors": [
         {
@@ -460,18 +460,18 @@
           "facing": 1.1
         },
         {
-          "id": "a1",
+          "id": "h4",
           "label": "D1",
-          "team": "away",
+          "team": "home",
           "role": "skater",
           "x": 3,
           "y": 4,
           "facing": 0.4
         },
         {
-          "id": "a2",
+          "id": "h5",
           "label": "D2",
-          "team": "away",
+          "team": "home",
           "role": "skater",
           "x": 2,
           "y": -7,
@@ -494,6 +494,15 @@
           "x": 22,
           "y": -1,
           "facing": 2.4
+        },
+        {
+          "id": "a5",
+          "label": "A3",
+          "team": "away",
+          "role": "skater",
+          "x": 9,
+          "y": 1,
+          "facing": 1.0516502125483738
         }
       ],
       "puck": {
@@ -606,7 +615,7 @@
           "y": 6
         },
         "basis": "coaching",
-        "explanation": "This angle keeps F2 and F3 visible while changing the entry line."
+        "explanation": "The example moves nearer the middle and closer to F2 and F3, but also closer to Gold 1 and Gold 3. Recheck the available routes before passing."
       },
       {
         "id": "exp26b-u18-003-q5",
@@ -643,13 +652,13 @@
   },
   {
     "id": "exp26b-u18-004",
-    "version": 1,
+    "version": 2,
     "ageBand": "U18",
     "title": "Protect the backdoor during rotation",
     "family": "pk-backdoor-rotate",
     "topic": "Special-teams rotation",
     "objective": "Exchange a low defensive responsibility while keeping the backdoor lane covered.",
-    "briefing": "Gold attacks the Navy net on a penalty play. YOU is low on the left side, D1 is near the net, and Gold 1 is below the line with Gold 2 across the low slot. Gold 3 can cut inward.",
+    "briefing": "Gold attacks Navy’s left net with four skaters against three in this penalty-kill example. Gold 1 controls behind the goal line and Gold 2 is across the low slot. YOU are on the side opposite the puck; D1 is on the puck side. The drill assigns YOU the low threat until a teammate confirms coverage. Gold 3 may cut inward in a later hypothetical.",
     "setup": {
       "actors": [
         {
@@ -671,9 +680,9 @@
           "facing": -0.9
         },
         {
-          "id": "a1",
+          "id": "h3",
           "label": "F1",
-          "team": "away",
+          "team": "home",
           "role": "skater",
           "x": -15,
           "y": -4,
@@ -681,7 +690,7 @@
         },
         {
           "id": "a2",
-          "label": "F2",
+          "label": "A4",
           "team": "away",
           "role": "skater",
           "x": -15,
@@ -690,7 +699,7 @@
         },
         {
           "id": "a3",
-          "label": "A1",
+          "label": "A3",
           "team": "away",
           "role": "skater",
           "x": -18,
@@ -699,7 +708,7 @@
         },
         {
           "id": "a4",
-          "label": "A2",
+          "label": "A1",
           "team": "away",
           "role": "skater",
           "x": -28,
@@ -708,7 +717,7 @@
         },
         {
           "id": "a5",
-          "label": "A3",
+          "label": "A2",
           "team": "away",
           "role": "skater",
           "x": -24,
@@ -717,7 +726,7 @@
         }
       ],
       "puck": {
-        "owner": "a1"
+        "owner": "a4"
       }
     },
     "focusActorId": "h1",
@@ -819,14 +828,14 @@
       {
         "id": "exp26b-u18-004-q4",
         "type": "position",
-        "prompt": "Set YOU on the weak-side net-side relation while checking Gold 2.",
+        "prompt": "Compare a position closer to Navy’s net than Gold 2, opposite the puck side.",
         "actorId": "h1",
         "reference": {
-          "x": -21,
-          "y": 2
+          "x": -25,
+          "y": 3
         },
         "basis": "coaching",
-        "explanation": "This keeps YOU connected to the backdoor lane while leaving D1 separate."
+        "explanation": "The example is closer to Navy’s net than Gold 2 and opposite Gold 1. Check the low passing threat and D1 before assuming coverage is complete."
       },
       {
         "id": "exp26b-u18-004-q5",
@@ -855,21 +864,21 @@
       {
         "id": "exp26b-u18-004-q6",
         "type": "explain",
-        "prompt": "Which backdoor and low-slot space are you protecting, and why can the pass reach them?",
+        "prompt": "Which low-slot passing threat should YOU track before exchanging coverage?",
         "basis": "coaching",
-        "explanation": "Describe Gold 2 across the low slot and Gold 3 cutting inward. Keep the net-side lane covered, then update if Gold moves the puck or crosses."
+        "explanation": "Gold 2 starts across the low slot from carrier Gold 1. If Gold 3 cuts inward, update the threats and confirm the teammate exchange; a pass or coverage outcome is not guaranteed."
       }
     ]
   },
   {
     "id": "exp26b-u18-005",
-    "version": 1,
+    "version": 2,
     "ageBand": "U18",
     "title": "Join the second wave after possession check",
     "family": "defender-second-wave",
     "topic": "Transition support",
     "objective": "Activate into a second wave only when the carrier and defensive cover remain connected.",
-    "briefing": "Navy attacks the Gold net. YOU is behind the play; F1 carries through centre, F2 is wide, and F3 is high. D1 is the deeper cover. The activation is a conditional support decision.",
+    "briefing": "Navy attacks the Gold net. YOU are behind the play; F1 carries through centre, F2 is wide, and F3 is high. D1 is the deeper cover. The activation is a conditional support decision.",
     "setup": {
       "actors": [
         {
@@ -973,7 +982,7 @@
       {
         "id": "exp26b-u18-005-q1",
         "type": "choice",
-        "prompt": "Which navy player has the deeper-cover role?",
+        "prompt": "Which Navy player has the deeper-cover role?",
         "options": [
           {
             "id": "a",
@@ -1048,14 +1057,14 @@
       {
         "id": "exp26b-u18-005-q4",
         "type": "position",
-        "prompt": "Move YOU into a second-wave lane between F1 and the high support.",
+        "prompt": "Move YOU to compare second-wave support behind F1.",
         "actorId": "h1",
         "reference": {
           "x": 1,
           "y": 5.5
         },
         "basis": "coaching",
-        "explanation": "This point joins the attack while keeping D1 and F1 in view."
+        "explanation": "The example stays behind F1 and closer to the carrier, but farther from D1 and closer to Gold 3. Recheck cover and pressure before continuing."
       },
       {
         "id": "exp26b-u18-005-q5",
@@ -1092,13 +1101,13 @@
   },
   {
     "id": "exp26b-u18-006",
-    "version": 1,
+    "version": 2,
     "ageBand": "U18",
     "title": "Use the space a forecheck leaves",
     "family": "forecheck-regroup-space",
     "topic": "Regroup decision",
     "objective": "Recognize when a forechecker changes and choose a new regroup connection.",
-    "briefing": "Navy attacks the Gold net. YOU carries from the left side; D2 is behind, F1 is ahead, and Gold 1 and Gold 2 are changing their pressure routes. The open lane must be checked rather than assumed.",
+    "briefing": "Navy attacks the Gold net. YOU carry from a wide neutral-zone lane; D2 is behind, F1 is ahead. Gold 1 continues pressuring YOU while Gold 2 changes its route toward D2. The open lane must be checked rather than assumed, not treated as guaranteed just because one forechecker moved. This is a selected-player teaching view; no movement is implied unless stated.",
     "setup": {
       "actors": [
         {
@@ -1171,8 +1180,8 @@
     },
     "focusActorId": "h1",
     "cues": [
-      "YOU owns the puck.",
-      "Gold 1 and Gold 2 change their pressure routes.",
+      "YOU own the puck.",
+      "Gold 2 changes its pressure route toward D2 while Gold 1 continues pressuring YOU.",
       "D2 and F1 are visible connections."
     ],
     "tags": [
@@ -1275,7 +1284,7 @@
           "y": -4.5
         },
         "basis": "coaching",
-        "explanation": "This point changes the carrier angle while leaving D2 behind support."
+        "explanation": "The example is closer to F1 but also closer to Gold 1. D2 remains deeper and across the middle; check whether either route is reachable."
       },
       {
         "id": "exp26b-u18-006-q5",
@@ -1306,19 +1315,19 @@
         "type": "explain",
         "prompt": "Why can one forechecker leaving still leave the pass closed?",
         "basis": "coaching",
-        "explanation": "Another defender can occupy the same lane, or the carrier-support angle can stay poor. Name Gold 3, D2 or F1 and the lane you would re-check."
+        "explanation": "Another defender can occupy the same lane, or the carrier-support angle can stay poor. Name Gold 3, D2 or F1 and the lane YOU would re-check."
       }
     ]
   },
   {
     "id": "exp26b-u18-007",
-    "version": 1,
+    "version": 2,
     "ageBand": "U18",
     "title": "Exchange the point and low roles",
     "family": "point-low-exchange",
     "topic": "Point and low-zone roles",
     "objective": "Cover a temporarily assigned high area while keeping the low puck threat in view.",
-    "briefing": "Navy attacks the Gold net. YOU is a forward assigned to cover the high point while D1 rotates low. F1 is near the goal line; Gold has three low-side options. The temporary role is explicit for this drill.",
+    "briefing": "Navy attacks the right net. F1 controls behind the goal line and D1 has rotated low. YOU start inside the zone and are assigned to fill the vacated point near the blue line. Gold has five skaters shown. This is a selected-player teaching view; the assignment does not mean the point is already covered.",
     "setup": {
       "actors": [
         {
@@ -1409,7 +1418,7 @@
     },
     "focusActorId": "h1",
     "cues": [
-      "YOU is assigned the high cover for this rep.",
+      "YOU are assigned the high cover for this rep.",
       "D1 rotates low.",
       "Gold has low and point-side options."
     ],
@@ -1431,7 +1440,7 @@
       {
         "id": "exp26b-u18-007-q1",
         "type": "choice",
-        "prompt": "Which area is YOU covering for this particular rep?",
+        "prompt": "Which area are YOU assigned to cover for this rep?",
         "options": [
           {
             "id": "a",
@@ -1506,14 +1515,14 @@
       {
         "id": "exp26b-u18-007-q4",
         "type": "position",
-        "prompt": "Move YOU toward the vacated point while keeping F1 and D1 visible.",
+        "prompt": "Move YOU toward the vacated point near the attacking blue line.",
         "actorId": "h1",
         "reference": {
-          "x": 20,
-          "y": 1
+          "x": 11,
+          "y": 7
         },
         "basis": "coaching",
-        "explanation": "This point covers the high area and preserves a view of the low rotation."
+        "explanation": "The example moves toward the blue line, on D1’s side, and farther from F1. Check the exit threats and low outlet; reaching this point in time is not established."
       },
       {
         "id": "exp26b-u18-007-q5",
@@ -1550,13 +1559,13 @@
   },
   {
     "id": "exp26b-u18-008",
-    "version": 1,
+    "version": 2,
     "ageBand": "U18",
     "title": "Protect the slot after a lost draw",
     "family": "lost-draw-slot",
     "topic": "Faceoff and slot coverage",
     "objective": "Recover inside after a lost defensive draw while reading the next attacker.",
-    "briefing": "Gold attacks the Navy net. Gold 1 controls the puck after the draw; YOU is inside left, D1 is near the net, and Gold 2 and Gold 3 can change the slot picture.",
+    "briefing": "The defensive-zone draw is over at even strength. Gold attacks Navy’s left net and Gold 1 controls after the draw. YOU are assigned inside support; D1 pressures the puck side and D2 is deeper. Track Gold 2 and Gold 3 as the slot picture changes. This selected-player view omits two Gold skaters; the eight shown skaters are not a manpower count.",
     "setup": {
       "actors": [
         {
@@ -1639,7 +1648,7 @@
     "focusActorId": "h1",
     "cues": [
       "Gold 1 controls the puck after the draw.",
-      "YOU has an inside-support job.",
+      "YOU have an inside-support job.",
       "Gold 2 may move toward the slot."
     ],
     "tags": [
@@ -1696,7 +1705,7 @@
           },
           {
             "id": "c",
-            "text": "The draw location alone tells you which inside lane to take"
+            "text": "The draw location alone tells YOU which inside lane to take"
           }
         ],
         "answer": [
@@ -1709,7 +1718,7 @@
       {
         "id": "exp26b-u18-008-q3",
         "type": "sequence",
-        "prompt": "What order protects the inside after the draw is lost?",
+        "prompt": "Arrange one inside-support read after the lost draw.",
         "options": [
           {
             "id": "a",
@@ -1717,7 +1726,7 @@
           },
           {
             "id": "b",
-            "text": "Recover inside with D1"
+            "text": "Coordinate inside support with D1 and D2"
           },
           {
             "id": "c",
@@ -1730,19 +1739,19 @@
           "c"
         ],
         "basis": "coaching",
-        "explanation": "The response protects the inside first, then updates the two attacker routes."
+        "explanation": "Scan the puck and slot threat while coordinating with D1 and D2. Keep updating; this sequence does not guarantee coverage."
       },
       {
         "id": "exp26b-u18-008-q4",
         "type": "position",
-        "prompt": "Place YOU inside while keeping Gold 2’s high-slot route in view.",
+        "prompt": "Compare a net-side position against Gold 2 in the high slot.",
         "actorId": "h1",
         "reference": {
           "x": -18,
           "y": 1
         },
         "basis": "coaching",
-        "explanation": "This point keeps YOU inside the slot threat while D1 remains net-side."
+        "explanation": "The example is closer to Navy’s net than Gold 2 and nearer the middle. Coordinate with D1 and D2 and recheck Gold 3; the location alone does not close the lane."
       },
       {
         "id": "exp26b-u18-008-q5",
@@ -1779,13 +1788,13 @@
   },
   {
     "id": "exp26b-u18-009",
-    "version": 1,
+    "version": 2,
     "ageBand": "U18",
     "title": "Prepare the first touch under pressure",
     "family": "prepared-reception",
     "topic": "Receiving and scanning",
     "objective": "Prepare a receiving angle while keeping a second option when pressure arrives quickly.",
-    "briefing": "Navy attacks the Gold net. The puck is loose after a drifting pass; YOU is near centre, F1 is ahead, F2 is wide, and Gold 1 and Gold 2 close different lanes. The first touch remains conditional.",
+    "briefing": "Navy attacks the Gold net. The puck is loose after a drifting pass; YOU are near centre, F1 is ahead, F2 is wide, and Gold 1 and Gold 2 close different lanes. The first touch remains conditional. This is a selected-player teaching view; no movement is implied unless stated.",
     "setup": {
       "actors": [
         {
@@ -1881,7 +1890,7 @@
           },
           {
             "id": "b",
-            "text": "YOU already controls it"
+            "text": "YOU already control it"
           },
           {
             "id": "c",
@@ -1948,14 +1957,14 @@
       {
         "id": "exp26b-u18-009-q4",
         "type": "position",
-        "prompt": "Move YOU to a receiving angle with a view of F1 and F2.",
+        "prompt": "Move YOU nearer the actual loose puck to compare a receiving approach.",
         "actorId": "h1",
         "reference": {
-          "x": 2.5,
-          "y": 2.5
+          "x": 0,
+          "y": 0
         },
         "basis": "coaching",
-        "explanation": "This point changes YOU toward the loose puck while retaining both support lanes."
+        "explanation": "The example reduces distance to the current puck from about 4.5 m to 3.2 m and moves farther from Gold 1. Keep checking pressure and the drifting puck; YOU do not yet control it."
       },
       {
         "id": "exp26b-u18-009-q5",
@@ -1992,13 +2001,13 @@
   },
   {
     "id": "exp26b-u18-010",
-    "version": 2,
+    "version": 3,
     "ageBand": "U18",
     "title": "Change the third player’s job twice",
     "family": "rapid-turnover-third-player",
     "topic": "Transition and support",
     "objective": "Update a third-player support role after two possession changes.",
-    "briefing": "Navy attacks Gold’s net. Gold 1 controls at this freeze. For the next branch, imagine F1 wins it and tries a pass to F2, then Gold 3 intercepts before F2 controls it. YOU must update the third-player job after each change. Those later events are stated possibilities, not a moving replay.",
+    "briefing": "Navy attacks Gold’s net. Gold 1 controls at this freeze. For the next branch, imagine F1 wins it and tries a pass to F2, then Gold 3 intercepts before F2 controls it. YOU must update the third-player job after each change. Those later events are stated possibilities, not a moving replay. This is a selected-player teaching view; no movement is implied unless stated.",
     "setup": {
       "actors": [
         {
@@ -2110,7 +2119,7 @@
           },
           {
             "id": "b",
-            "text": "YOU controls it"
+            "text": "YOU control it"
           },
           {
             "id": "c",
@@ -2177,14 +2186,14 @@
       {
         "id": "exp26b-u18-010-q4",
         "type": "position",
-        "prompt": "Move YOU inside while checking Gold 2’s outlet relationship.",
+        "prompt": "From the starting Gold 1 possession, compare inside recovery toward Gold 2.",
         "actorId": "h1",
         "reference": {
           "x": 3,
           "y": -2.5
         },
         "basis": "coaching",
-        "explanation": "This point changes YOU toward the inside support lane while leaving the carrier routes visible."
+        "explanation": "The example is nearer the middle and closer to Gold 2, but still farther from Navy’s net than Gold 2. This compares the starting frame; the later hypothetical turnovers have not happened here."
       },
       {
         "id": "exp26b-u18-010-q5",
