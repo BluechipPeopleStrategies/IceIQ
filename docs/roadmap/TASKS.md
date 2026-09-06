@@ -1,6 +1,6 @@
 # RinkReads — Task List
 
-**Last updated:** 2026-09-06 · Optional feedback notebook and isolated repair preview ready; Codex owns review and repairs, owner approval checklist removed. Coaching panel pilot completed: five scenes / 34 questions, five independently rechecked draft repairs staged, not applied; model calibration failures and corrections preserved. Production 0126049 verified: 200 scenes with exact-content bindings (194 mapped, six taxonomy holds), local feedback aggregation, four separate calibration drafts / 24 questions, and screenshot-driven U11 wall retrieval, answer acknowledgement and zone wording repairs. Nine prior net-overlap repairs remain deployed as fb74d5b. Graded placement-area feedback is designed, not yet implemented. Supabase remains deferred.
+**Last updated:** 2026-09-06 · In-question optional feedback and follow-up history implemented locally. Optional feedback notebook and isolated repair preview ready; Codex owns review and repairs, owner approval checklist removed. Coaching panel pilot completed: five scenes / 34 questions, five independently rechecked draft repairs staged, not applied; model calibration failures and corrections preserved. Production 0126049 verified: 200 scenes with exact-content bindings (194 mapped, six taxonomy holds), local feedback aggregation, four separate calibration drafts / 24 questions, and screenshot-driven U11 wall retrieval, answer acknowledgement and zone wording repairs. Nine prior net-overlap repairs remain deployed as fb74d5b. Graded placement-area feedback is designed, not yet implemented. Supabase remains deferred.
 
 **Scope:** RinkReads **app build + content factory**. Launch/distribution (sending the beta, marketing) and the separate BlueChip business are **out of scope** — parked at the bottom. Priority = position in this list. A new idea that isn't here goes to the **Parking Lot** first, then gets promoted on purpose — that's the scope-creep guard.
 
@@ -56,6 +56,8 @@
 - *(New ideas land here first, then get promoted into NEXT/LATER on purpose.)*
 
 ## Changelog
+
+- 2026-09-06: Added Leave a thought / My feedback history to experimental questions, optional tags, exact-source validation and captured answer/positions/view. Added append-only follow-up command and before/after history display. Verified browser submission at moved F2 position, Received to Investigating transition, six focused tests and build. Removed only test receipts. Local workspace service, not deployed or Supabase-backed.
 
 - 2026-09-06: Owner clarified they should not review or rewrite questions. Replaced decisions with optional note-only feedback; local same-origin inbox stores exact question hashes for the next Codex pass. No approval dependency or automatic review claim. Verified browser-to-file submission and removed only the test receipt. See docs/factory/coaching-panel/FEEDBACK-WORKFLOW.md.
 

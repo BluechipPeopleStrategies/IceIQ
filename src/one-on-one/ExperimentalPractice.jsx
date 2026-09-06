@@ -13,6 +13,7 @@ import ExperimentalPracticeInsights from './ExperimentalPracticeInsights.jsx';
 import contentManifest from '../../docs/factory/research/question-review/current-content-manifest.json';
 import calibrationPack from '../../docs/factory/calibration/skating-movement-2026-09-06.json';
 import coachingPilot from '../../docs/factory/coaching-panel/pilot-2026-09-06/staged-repairs.json';
+import CoachingFeedbackPanel from './CoachingFeedbackPanel.jsx';
 import {experimentalRinkContext} from './experimentalRinkContext.js';
 
 function downloadFile(filename,text,type){
@@ -94,7 +95,7 @@ function ScenarioQuestions({scenario:s,record,onRecord,onFlag,onMetric}){
    </div>
    <div className="ep-question"><p className="ep-kicker">QUESTION {index+1} OF {visibleQuestions.length} · {q.basis==='scene'?'READ THE SCENE':'EXPLORE A DECISION'}</p><h3>{q.prompt}</h3><ResponseControls question={q} value={value} onChange={change}/><button type="button" className="ep-primary" disabled={!responseReady(q,value)} onClick={review}>{q.basis==='scene'?'Check the scene':'Compare my thinking'}</button>{q.type==='explain'&&!showReview&&<button type="button" className="ep-skip-reflection" onClick={skipReflection}>Skip reflection / Continue without writing</button>}
     {result&&<div className="ep-response" aria-live="polite"><strong>{result.heading}</strong><p>{result.explanation}</p>{q.answer&&<p><b>{q.basis==='scene'?'Scene answer':'Suggested response'}:</b> {q.answer.map(id=>q.options.find(o=>o.id===id).text).join(q.type==='sequence'?' → ':'; ')}</p>}{isPosition&&<><p>Example position: {q.reference.x}, {q.reference.y} m. Other positions may work; compare the passing lane, pressure and support.</p><button type="button" onClick={()=>setBoard(true)}>Show example on overhead board</button></>}{q.basis==='coaching'&&<small>This draft gives a coaching suggestion. It does not award mastery or grade an exact position.</small>}{index<visibleQuestions.length-1&&<button type="button" className="ep-next" onClick={()=>setIndex(index+1)}>Next question →</button>}</div>}
-    {onFlag?<QuestionFlag key={q.id} onFlag={flag=>onFlag(s,q,{...flag,response:value})}/>:<a href="/docs/factory/calibration/index.html">Record coaching feedback in the calibration catalog ↗</a>}
+    <CoachingFeedbackPanel key={`${s.id}:${s.version}:${q.id}`} scenario={s} question={q} scene={scene} answer={value} view={board||!availability?'overhead':'3d'}/>
    </div>
   </div>
   <details className="ep-source-review"><summary>Teaching notes, sources and review status</summary><p><b>Learning objective:</b> {s.objective}</p><p><b>Cues:</b> {s.cues.join(' · ')}</p><p><b>Limitations:</b> {s.limits}</p><p>Original experimental scenario. AI coaching review findings are available in the question workshop. Human coach approval, animation physics and approved-bank admission remain separate. The rink is a static illustration, not a verified action simulation.</p><ul>{s.sources.map(source=><li key={source.id}><a href={source.url} target="_blank" rel="noreferrer">{source.title}</a> · {source.section}<p>{source.use}</p></li>)}</ul></details>

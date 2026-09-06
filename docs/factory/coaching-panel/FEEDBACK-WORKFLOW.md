@@ -16,4 +16,12 @@ On each subsequent coaching/content work pass:
 
 No automatic/background agent is installed. Submitted notes are picked up during active work passes. Next deployment follows the existing release process; a note is not automatic publishing authorization.
 
+## In-question panel and follow-up history
+
+Experimental questions now include Leave a thought and My feedback history beside the rink. Optional tags never replace the note. Send captures the exact source hash/version, current answer, current actor positions/facing, puck state and presentation type (3D/overhead, not exact camera orbit). This local single-owner history includes notebook notes too. It is not a multi-user production service.
+
+Record a follow-up by writing a JSON file with feedbackId, status and summary, then run `node tools/update-coaching-feedback.mjs <file.json>`. Supported states are investigating, changed, needs-context and no-change. Changed additionally requires afterHash, beforeText, afterText and evidence. The command appends to dispositions.jsonl; it never overwrites the received note. The panel reads this history on opening or Refresh and offers a before/after comparison where recorded. Do not invent a completed change to demonstrate the UI.
+
+Local API validates source identity on submission. Browser drafts survive a failed submission. Normal-bank flags previously saved by the older workshop remain in their original storage; this panel does not erase or migrate them. No server auth or Supabase rollout is included.
+
 Verification for this slice: production build passed; five prior receipt tests and three feedback tests passed; all five revised deep links displayed the correct question headings, including optional q10. Decision-page desktop and narrow layout inspected, then changed to note-only UI and checked again. Browser feedback submission produced an exact local file receipt; only that identifiable test record was removed. User notes were not removed. Browser reload persistence was observed. Backup download-event detection timed out; the primary local-inbox path is verified. No claim of full five-question 3D playtesting or grading-area implementation.

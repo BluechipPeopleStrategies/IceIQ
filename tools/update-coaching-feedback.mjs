@@ -1,0 +1,10 @@
+import fs from 'node:fs';import path from 'node:path';import {fileURLToPath} from 'node:url';
+const root=fileURLToPath(new URL('../',import.meta.url)),dir=path.join(root,'tmp/coaching-feedback');
+const input=process.argv[2];if(!input)throw Error('Usage: node tools/update-coaching-feedback.mjs disposition.json');
+const update=JSON.parse(fs.readFileSync(input,'utf8'));
+const notes=fs.readFileSync(path.join(dir,'inbox.jsonl'),'utf8').split(/\r?\n/).filter(Boolean).map(x=>JSON.parse(x));
+const note=notes.find(n=>n.id===update.feedbackId);if(!note)throw Error('Unknown feedback receipt');
+if(!['investigating','changed','needs-context','no-change'].includes(update.status)||!update.summary?.trim())throw Error('Require a supported status and an explanation');
+if(update.status==='changed'&&(!update.afterHash||!update.beforeText||!update.afterText||!update.evidence))throw Error('Changed requires exact afterHash, beforeText, afterText and verification evidence');
+fs.appendFileSync(path.join(dir,'dispositions.jsonl'),JSON.stringify({...update,beforeHash:note.afterHash,recordedAt:new Date().toISOString()})+'\n');
+console.log('Follow-up recorded for '+note.id);
