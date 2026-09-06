@@ -62,6 +62,8 @@
 
 ## Changelog
 
+- **2026-09-06** · Thomas requested cross-work continuity: bring the paused hockey 3D requirements and evidence-review lessons forward whenever related work arises, applying settled requirements within new authorized scope or surfacing the handoff. Explicit resumption is still required for the paused build. Standing reminder and [handoff](../hockey-authority/PAUSED-HANDOFF.md) updated.
+
 - **2026-09-06** · Thomas paused Hockey Authority and shared 3D player work. [Saved handoff](../hockey-authority/PAUSED-HANDOFF.md) records exact status, failed/held gates, owner preferences and resumption order. Native assets, renders, diagnostics and source snapshots are backed up in verified local-only archives outside tmp. Resume only on explicit owner direction; other RinkReads work is unaffected.
 
 - **2026-09-06** · Ran the [Hockey Authority calibration and first construction review](../hockey-authority/reviews/INDEX.md). Initial Claude review incorrectly passed 4/8 historical defects; revised procedure matched 10/10 synthetic transfer cases, but the authority remains unqualified for approval pending human-reviewed held-out evidence. Root reproduced a 4.6mm blade/puck separation across six pose/view cases. Moshey produced a native Blender/GLB candidate and two renders; files verified, art acceptance held. Rim requirements are drafted and diagnostically reviewed; complete pickup, first-person sequence review and deployment remain open. No live content or runtime changed.

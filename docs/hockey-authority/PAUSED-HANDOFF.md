@@ -7,6 +7,14 @@ RinkReads work. All task agents and Claude/Blender jobs from this work have ende
 
 ## Resume here
 
+**Cross-work reminder (Thomas, September 6):** bring this work forward whenever
+related work touches hockey visuals, movement, first-person decisions or review
+authority. Apply settled requirements within that newly authorized task; where
+implementation is premature, explicitly flag the connection and this handoff.
+Do not restart the paused workstream automatically. In other domains, carry
+forward the evidence/reviewer separation lesson using suitable subject expertise,
+without importing hockey-specific art or product rules.
+
 Read this file, [review evidence](reviews/INDEX.md),
 [qualification.json](qualification.json) and the
 [rim requirements](rim-demonstration-requirements-draft.md). Refresh the current

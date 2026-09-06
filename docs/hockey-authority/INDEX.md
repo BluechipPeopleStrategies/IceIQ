@@ -2,6 +2,9 @@
 
 **PAUSED by Thomas, September 6, 2026.** Read [the saved handoff](PAUSED-HANDOFF.md)
 when he explicitly resumes this work. Do not advance this workstream meanwhile.
+When related authorized work arises, bring these requirements and review lessons
+forward; see the handoff's cross-work reminder. The pause does not mean forgetting
+or recreating the work from scratch.
 
 Created September 6, 2026 at Thomas's request. Status: runtime invoked; initial
 historical calibration FAILED with four false passes among eight known defects.
