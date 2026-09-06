@@ -1,6 +1,6 @@
 # RinkReads — Task List
 
-**Last updated:** 2026-09-06 · Production a075efe verified: ready coaching repairs and calibration refinements live. 34 tests/build/boundary checks passed. Draft placement ranges and local feedback/admin remain excluded; Supabase deferred.
+**Last updated:** 2026-09-06 · Production a075efe remains live. Full-bank choice inventory found 83 wording candidates; five U13 drafts staged for independent payload review, not applied. Supabase and calibrated placement grades deferred.
 
 **Scope:** RinkReads **app build + content factory**. Launch/distribution (sending the beta, marketing) and the separate BlueChip business are **out of scope** — parked at the bottom. Priority = position in this list. A new idea that isn't here goes to the **Parking Lot** first, then gets promoted on purpose — that's the scope-creep guard.
 
@@ -56,6 +56,8 @@
 - *(New ideas land here first, then get promoted into NEXT/LATER on purpose.)*
 
 ## Changelog
+
+- 2026-09-06: Inventoried all 1,600 questions across 200 scenes for wording cues and displayed answer positions. 83 lexical candidates are review leads, not confirmed defects. Added filterable HTML work queue and five exact-source U13 replacement drafts with per-option rationale. Source bank unchanged; independent payload review remains. Two audit tests pass.
 
 - 2026-09-06: Authorized production release of ready changes. Corrected stale historical snapshot test count after tracing the additional archived version to exp26-u11-001-q3. All 34 release tests and production boundary pass. Deployed a075efe; Vercel success and live U11/U13 response flows verified. Local admin/notebook/API return 404. Receipt: docs/factory/coaching-panel/RELEASE-2026-09-06.md.
 
