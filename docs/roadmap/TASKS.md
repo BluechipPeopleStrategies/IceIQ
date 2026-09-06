@@ -1,6 +1,6 @@
 # RinkReads — Task List
 
-**Last updated:** 2026-09-06 · Ready changes releasing after 34 tests, production build and feedback-boundary checks. Historical U11 q3 receipt count corrected. Draft placement ranges and local feedback/admin remain excluded; Supabase deferred. Live verification pending.
+**Last updated:** 2026-09-06 · Production a075efe verified: ready coaching repairs and calibration refinements live. 34 tests/build/boundary checks passed. Draft placement ranges and local feedback/admin remain excluded; Supabase deferred.
 
 **Scope:** RinkReads **app build + content factory**. Launch/distribution (sending the beta, marketing) and the separate BlueChip business are **out of scope** — parked at the bottom. Priority = position in this list. A new idea that isn't here goes to the **Parking Lot** first, then gets promoted on purpose — that's the scope-creep guard.
 
@@ -57,7 +57,7 @@
 
 ## Changelog
 
-- 2026-09-06: Authorized production release of ready changes. Corrected stale historical snapshot test count after tracing the additional archived version to exp26-u11-001-q3. All 34 release tests and production boundary pass. Deployment and live checks tracked in docs/factory/coaching-panel/RELEASE-2026-09-06.md.
+- 2026-09-06: Authorized production release of ready changes. Corrected stale historical snapshot test count after tracing the additional archived version to exp26-u11-001-q3. All 34 release tests and production boundary pass. Deployed a075efe; Vercel success and live U11/U13 response flows verified. Local admin/notebook/API return 404. Receipt: docs/factory/coaching-panel/RELEASE-2026-09-06.md.
 
 - 2026-09-06: Applied five verified source repairs and refreshed catalog, current hashes and curriculum bindings. Added matching 3D/overhead draft shading and bounded first/latest placement comparison. Refined three calibration decision prompts, varied single-choice answer positions and narrowed two static-scene titles. 19 targeted tests, build and feedback release boundary passed; local browser verified shading and changed-attempt feedback. No human coach certification, Supabase work or deployment. See docs/factory/coaching-panel/IMPLEMENTATION-2026-09-06.md.
 
