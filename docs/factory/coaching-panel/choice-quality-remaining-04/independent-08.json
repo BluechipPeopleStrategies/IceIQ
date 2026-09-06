@@ -1,0 +1,514 @@
+{
+  "reviewer": "choice-quality-rewrite-independent-03",
+  "packet": 8,
+  "rows": [
+    {
+      "questionId": "exp26b-u11-021-q5",
+      "scenarioId": "exp26b-u11-021",
+      "scenarioVersion": 2,
+      "contentHash": "47e7ee2b742dd4d8a062c3e55516ac8e1736d96c01dc9d74aa5134b58284a51e",
+      "verdict": "revise",
+      "highRisk": true,
+      "sceneEvidence": {
+        "focusActorId": "h1",
+        "roster": [
+          {
+            "id": "h1",
+            "label": "YOU",
+            "team": "home",
+            "x": 12,
+            "y": 5
+          },
+          {
+            "id": "h2",
+            "label": "F2",
+            "team": "home",
+            "x": 16,
+            "y": -5
+          },
+          {
+            "id": "a1",
+            "label": "D1",
+            "team": "away",
+            "x": 18,
+            "y": 2
+          },
+          {
+            "id": "g",
+            "label": "G",
+            "team": "away",
+            "x": 26,
+            "y": 0
+          }
+        ],
+        "actualPuckOwner": "h1",
+        "canonicalPuck": [
+          13.0,
+          5.7
+        ],
+        "statedContext": "Navy attacks the right net (+x). YOU have the puck and F2 is across the middle. Gold D1 is farther toward the right goal line than both navy skaters, with a lateral position between your lanes. Recheck the defender and available space before carrying, passing or shooting.",
+        "stateLimit": "Prompt new events are hypothetical extensions; do not overwrite frozen ownership or infer execution."
+      },
+      "optionReviews": [
+        {
+          "optionId": "a",
+          "text": "A cross-ice pass to F2",
+          "assessment": "supported conditional principle",
+          "reason": "Stipulated reachable F2 makes pass worth checking, not mandatory best."
+        },
+        {
+          "optionId": "b",
+          "text": "A shot through D1 without checking",
+          "assessment": "weak or ambiguous assessment alternative",
+          "reason": "Shot through defender without checking obviously reckless."
+        },
+        {
+          "optionId": "c",
+          "text": "Keep carrying toward the right net after D1 enters the shooting line",
+          "assessment": "weak or ambiguous assessment alternative",
+          "reason": "Continuing a controlled carry may still change angle; c is not universally wrong merely because shot lane closed."
+        }
+      ],
+      "reason": "Question needs assessment-quality revision and any specific option qualification listed. At U11 the current key is distinguishable by cautious wording versus absolutes, impossible action, or refusing to look; named players do not by themselves create a scene-reading task.",
+      "proposedRepair": {
+        "id": "exp26b-u11-021-q5",
+        "type": "explain",
+        "prompt": "D1 enters the shot line and F2 is reachable. Compare passing to F2 with a controlled carry that changes angle. What would make each useful?",
+        "basis": "coaching",
+        "explanation": "Explain the relevant named players, current possession and conditional alternatives. Stipulated reachable F2 makes pass worth checking, not mandatory best."
+      },
+      "repairLimit": "Reflection is a concrete review draft, not a cleared replacement. For retained choice format, construct matched real options from the same scene and independently recheck key.",
+      "limitations": [
+        "Independent of primary06\u201314: no primary results read before save. Authored keys visible in packet.",
+        "No human, external source, rendered, contact-rule or deployment approval.",
+        "Full setup and briefing/cues read; unrelated question payloads not cleared."
+      ]
+    },
+    {
+      "questionId": "exp26-u13-009-q2",
+      "scenarioId": "exp26-u13-009",
+      "scenarioVersion": 2,
+      "contentHash": "2cf4a8dd69ce1103f31a902f95f0437c80511b02e0698ca81ec14796520aee50",
+      "verdict": "revise",
+      "highRisk": true,
+      "sceneEvidence": {
+        "focusActorId": "home-skater-1",
+        "roster": [
+          {
+            "id": "home-skater-1",
+            "label": "YOU",
+            "team": "home",
+            "x": 5,
+            "y": 0
+          },
+          {
+            "id": "home-skater-2",
+            "label": "F1",
+            "team": "home",
+            "x": 18,
+            "y": 9
+          },
+          {
+            "id": "away-skater-1",
+            "label": "A1",
+            "team": "away",
+            "x": 21,
+            "y": 7
+          },
+          {
+            "id": "away-skater-2",
+            "label": "A2",
+            "team": "away",
+            "x": 22,
+            "y": -3
+          },
+          {
+            "id": "home-skater-3",
+            "label": "D1",
+            "team": "home",
+            "x": 4,
+            "y": -5
+          }
+        ],
+        "actualPuckOwner": "home-skater-2",
+        "canonicalPuck": [
+          19.0,
+          9.7
+        ],
+        "statedContext": "F1 has slowed in a wide attacking-zone lane to protect navy possession. YOU are arriving through the neutral zone. The exercise asks YOU to remain a passing option rather than overtake F1 immediately. Navy attacks the right net and defends the left net.",
+        "stateLimit": "Prompt new events are hypothetical extensions; do not overwrite frozen ownership or infer execution."
+      },
+      "optionReviews": [
+        {
+          "optionId": "a",
+          "text": "The assumption that maximum speed always helps",
+          "assessment": "weak or ambiguous assessment alternative",
+          "reason": "Maximum speed always helps is unobservable universal, not a cue."
+        },
+        {
+          "optionId": "b",
+          "text": "The space between the defenders",
+          "assessment": "supported conditional principle",
+          "reason": "Defender spacing relevant but no opening timing proved."
+        },
+        {
+          "optionId": "c",
+          "text": "F1\u2019s ability to protect possession",
+          "assessment": "supported conditional principle",
+          "reason": "F1 protection quality relevant; slowed and possession stated, not inferred."
+        }
+      ],
+      "reason": "Question needs assessment-quality revision and any specific option qualification listed. At U13 the current key is distinguishable by cautious wording versus absolutes, impossible action, or refusing to look; named players do not by themselves create a scene-reading task.",
+      "proposedRepair": {
+        "id": "exp26-u13-009-q2",
+        "type": "explain",
+        "prompt": "F1 has slowed with the puck. Using Gold1, Gold2 and D1, explain where you could stay available and what would change your arrival pace.",
+        "basis": "coaching",
+        "explanation": "Explain the relevant named players, current possession and conditional alternatives. Defender spacing relevant but no opening timing proved. F1 protection quality relevant; slowed and possession stated, not inferred."
+      },
+      "repairLimit": "Reflection is a concrete review draft, not a cleared replacement. For retained choice format, construct matched real options from the same scene and independently recheck key.",
+      "limitations": [
+        "Independent of primary06\u201314: no primary results read before save. Authored keys visible in packet.",
+        "No human, external source, rendered, contact-rule or deployment approval.",
+        "Full setup and briefing/cues read; unrelated question payloads not cleared."
+      ]
+    },
+    {
+      "questionId": "exp26-u13-011-q8",
+      "scenarioId": "exp26-u13-011",
+      "scenarioVersion": 3,
+      "contentHash": "cce19a2444e7edd8e3edbea1ddd07782222ade01f7de96aec5502601f9d3fe3f",
+      "verdict": "revise",
+      "highRisk": true,
+      "sceneEvidence": {
+        "focusActorId": "home-skater-1",
+        "roster": [
+          {
+            "id": "home-skater-1",
+            "label": "YOU",
+            "team": "home",
+            "x": 12,
+            "y": 0
+          },
+          {
+            "id": "home-skater-2",
+            "label": "D2",
+            "team": "home",
+            "x": 13,
+            "y": -8
+          },
+          {
+            "id": "home-skater-3",
+            "label": "F1",
+            "team": "home",
+            "x": 23,
+            "y": 6
+          },
+          {
+            "id": "away-skater-1",
+            "label": "A1",
+            "team": "away",
+            "x": 18,
+            "y": 0
+          },
+          {
+            "id": "away-goalie-2",
+            "label": "G",
+            "team": "away",
+            "x": 26,
+            "y": 0
+          }
+        ],
+        "actualPuckOwner": "home-skater-1",
+        "canonicalPuck": [
+          13.0,
+          0.7
+        ],
+        "statedContext": "YOU have the puck high in the zone. Gold 1 is directly between YOU and the net. D2 offers a lateral option while F1 is near the far side. Navy attacks Gold\u2019s net and defends Navy\u2019s net. This is a selected-player teaching view; no movement is implied unless stated.",
+        "stateLimit": "Prompt new events are hypothetical extensions; do not overwrite frozen ownership or infer execution."
+      },
+      "optionReviews": [
+        {
+          "optionId": "a",
+          "text": "D2 moves laterally",
+          "assessment": "supported conditional principle",
+          "reason": "D2 lateral movement may offer pass or influence defence, but does not directly move carrier\u2019s puck or necessarily change shot line."
+        },
+        {
+          "optionId": "b",
+          "text": "YOU change the puck\u2019s angle to the net",
+          "assessment": "supported conditional principle",
+          "reason": "Changing puck-to-net angle directly changes shooting line, no guarantee clear."
+        },
+        {
+          "optionId": "c",
+          "text": "Shoot without checking the blocker",
+          "assessment": "weak or ambiguous assessment alternative",
+          "reason": "Unobserved shooting is behavior, not same-category scene change; shot itself changes puck position too, so wording logically muddled."
+        }
+      ],
+      "reason": "Question needs assessment-quality revision and any specific option qualification listed. At U13 the current key is distinguishable by cautious wording versus absolutes, impossible action, or refusing to look; named players do not by themselves create a scene-reading task.",
+      "proposedRepair": {
+        "id": "exp26-u13-011-q8",
+        "type": "explain",
+        "prompt": "Compare moving YOUR puck with D2 moving laterally. Which directly changes the puck-to-net line, and how could the other create a different option?",
+        "basis": "coaching",
+        "explanation": "Explain the relevant named players, current possession and conditional alternatives. D2 lateral movement may offer pass or influence defence, but does not directly move carrier\u2019s puck or necessarily change shot line. Changing puck-to-net angle directly changes shooting line, no guarantee clear."
+      },
+      "repairLimit": "Reflection is a concrete review draft, not a cleared replacement. For retained choice format, construct matched real options from the same scene and independently recheck key.",
+      "limitations": [
+        "Independent of primary06\u201314: no primary results read before save. Authored keys visible in packet.",
+        "No human, external source, rendered, contact-rule or deployment approval.",
+        "Full setup and briefing/cues read; unrelated question payloads not cleared."
+      ]
+    },
+    {
+      "questionId": "exp26-u13-013-q2",
+      "scenarioId": "exp26-u13-013",
+      "scenarioVersion": 2,
+      "contentHash": "e2baa053eb161efb8a9cb9885049988b718bf1102c6794ff470f2392754110f7",
+      "verdict": "revise",
+      "highRisk": true,
+      "sceneEvidence": {
+        "focusActorId": "home-skater-1",
+        "roster": [
+          {
+            "id": "home-skater-1",
+            "label": "YOU",
+            "team": "home",
+            "x": 5,
+            "y": -9
+          },
+          {
+            "id": "home-skater-2",
+            "label": "F2",
+            "team": "home",
+            "x": 9,
+            "y": -3
+          },
+          {
+            "id": "away-skater-1",
+            "label": "A1",
+            "team": "away",
+            "x": 6,
+            "y": -5
+          },
+          {
+            "id": "away-skater-2",
+            "label": "A2",
+            "team": "away",
+            "x": 14,
+            "y": 1
+          }
+        ],
+        "actualPuckOwner": "home-skater-1",
+        "canonicalPuck": [
+          6.0,
+          -8.3
+        ],
+        "statedContext": "YOU control the puck near the puck-side boards. Gold 1 approaches from the middle toward YOU. This exercise explores a protective turn while keeping the puck available; no body check is required. Navy attacks Gold\u2019s net and defends Navy\u2019s net. This is a selected-player teaching view; no movement is implied unless stated.",
+        "stateLimit": "Prompt new events are hypothetical extensions; do not overwrite frozen ownership or infer execution."
+      },
+      "optionReviews": [
+        {
+          "optionId": "a",
+          "text": "Room and support after the turn",
+          "assessment": "supported conditional principle",
+          "reason": "Room/support after turn matters, turn result not established."
+        },
+        {
+          "optionId": "b",
+          "text": "Pressure on the inside",
+          "assessment": "supported conditional principle",
+          "reason": "Inside pressure A1 relevant."
+        },
+        {
+          "optionId": "c",
+          "text": "A promise that a turn always beats the defender",
+          "assessment": "weak or ambiguous assessment alternative",
+          "reason": "Promise always beats is not observable check; answerable on wording."
+        }
+      ],
+      "reason": "Question needs assessment-quality revision and any specific option qualification listed. At U13 the current key is distinguishable by cautious wording versus absolutes, impossible action, or refusing to look; named players do not by themselves create a scene-reading task.",
+      "proposedRepair": {
+        "id": "exp26-u13-013-q2",
+        "type": "explain",
+        "prompt": "Where are Gold1, F2 and the nearby boards relative to YOU? What must remain available after a protective turn?",
+        "basis": "coaching",
+        "explanation": "Explain the relevant named players, current possession and conditional alternatives. Room/support after turn matters, turn result not established. Inside pressure A1 relevant."
+      },
+      "repairLimit": "Reflection is a concrete review draft, not a cleared replacement. For retained choice format, construct matched real options from the same scene and independently recheck key.",
+      "limitations": [
+        "Independent of primary06\u201314: no primary results read before save. Authored keys visible in packet.",
+        "No human, external source, rendered, contact-rule or deployment approval.",
+        "Full setup and briefing/cues read; unrelated question payloads not cleared."
+      ]
+    },
+    {
+      "questionId": "exp26-u13-013-q5",
+      "scenarioId": "exp26-u13-013",
+      "scenarioVersion": 2,
+      "contentHash": "8dbe6fa6e36484ccefdd381f82994857840e36a0390d2ce08291845b1f0fc20e",
+      "verdict": "revise",
+      "highRisk": true,
+      "sceneEvidence": {
+        "focusActorId": "home-skater-1",
+        "roster": [
+          {
+            "id": "home-skater-1",
+            "label": "YOU",
+            "team": "home",
+            "x": 5,
+            "y": -9
+          },
+          {
+            "id": "home-skater-2",
+            "label": "F2",
+            "team": "home",
+            "x": 9,
+            "y": -3
+          },
+          {
+            "id": "away-skater-1",
+            "label": "A1",
+            "team": "away",
+            "x": 6,
+            "y": -5
+          },
+          {
+            "id": "away-skater-2",
+            "label": "A2",
+            "team": "away",
+            "x": 14,
+            "y": 1
+          }
+        ],
+        "actualPuckOwner": "home-skater-1",
+        "canonicalPuck": [
+          6.0,
+          -8.3
+        ],
+        "statedContext": "YOU control the puck near the puck-side boards. Gold 1 approaches from the middle toward YOU. This exercise explores a protective turn while keeping the puck available; no body check is required. Navy attacks Gold\u2019s net and defends Navy\u2019s net. This is a selected-player teaching view; no movement is implied unless stated.",
+        "stateLimit": "Prompt new events are hypothetical extensions; do not overwrite frozen ownership or infer execution."
+      },
+      "optionReviews": [
+        {
+          "optionId": "a",
+          "text": "Consider moving the puck before the space disappears",
+          "assessment": "supported conditional principle",
+          "reason": "Early pass conditional on genuinely ready route/receiver is sound."
+        },
+        {
+          "optionId": "b",
+          "text": "Turn again without checking F2",
+          "assessment": "weak or ambiguous assessment alternative",
+          "reason": "Turn without checking teammate is artificial bad behavior."
+        },
+        {
+          "optionId": "c",
+          "text": "Carry into Gold 1\u2019s approach by default",
+          "assessment": "weak or ambiguous assessment alternative",
+          "reason": "Carry into pressure by default is artificial bad behavior."
+        }
+      ],
+      "reason": "Question needs assessment-quality revision and any specific option qualification listed. At U13 the current key is distinguishable by cautious wording versus absolutes, impossible action, or refusing to look; named players do not by themselves create a scene-reading task.",
+      "proposedRepair": {
+        "id": "exp26-u13-013-q5",
+        "type": "explain",
+        "prompt": "F2 becomes reachable as Gold1 closes. Compare releasing to F2 with continuing protection; what would make you select one?",
+        "basis": "coaching",
+        "explanation": "Explain the relevant named players, current possession and conditional alternatives. Early pass conditional on genuinely ready route/receiver is sound."
+      },
+      "repairLimit": "Reflection is a concrete review draft, not a cleared replacement. For retained choice format, construct matched real options from the same scene and independently recheck key.",
+      "limitations": [
+        "Independent of primary06\u201314: no primary results read before save. Authored keys visible in packet.",
+        "No human, external source, rendered, contact-rule or deployment approval.",
+        "Full setup and briefing/cues read; unrelated question payloads not cleared."
+      ]
+    },
+    {
+      "questionId": "exp26-u13-014-q8",
+      "scenarioId": "exp26-u13-014",
+      "scenarioVersion": 3,
+      "contentHash": "7ca66169d3844a2fb44462a2c76a6a49e8a7f94a53635d4f5ae390f9c565f80e",
+      "verdict": "revise",
+      "highRisk": true,
+      "sceneEvidence": {
+        "focusActorId": "home-skater-1",
+        "roster": [
+          {
+            "id": "home-skater-1",
+            "label": "YOU",
+            "team": "home",
+            "x": -9,
+            "y": 0
+          },
+          {
+            "id": "home-skater-2",
+            "label": "C",
+            "team": "home",
+            "x": -1,
+            "y": -4
+          },
+          {
+            "id": "away-skater-1",
+            "label": "A1",
+            "team": "away",
+            "x": -2,
+            "y": 1
+          },
+          {
+            "id": "away-skater-2",
+            "label": "A2",
+            "team": "away",
+            "x": 4,
+            "y": 7
+          }
+        ],
+        "actualPuckOwner": "away-skater-1",
+        "canonicalPuck": [
+          -3.0,
+          0.30000000000000027
+        ],
+        "statedContext": "Gold 1 carries toward your Navy net. YOU are the defender between Gold 1 and that net. C is recovering through the middle; no closing speed is specified. Navy attacks Gold\u2019s net and defends Navy\u2019s net. This is a selected-player teaching view; no movement is implied unless stated.",
+        "stateLimit": "Prompt new events are hypothetical extensions; do not overwrite frozen ownership or infer execution."
+      },
+      "optionReviews": [
+        {
+          "optionId": "a",
+          "text": "Gold 1\u2019s carrier lane",
+          "assessment": "supported conditional principle",
+          "reason": "Carrier lane informs gap, does not automatically change it."
+        },
+        {
+          "optionId": "b",
+          "text": "C\u2019s recovery position",
+          "assessment": "supported conditional principle",
+          "reason": "C recovery position informs available help, speed unavailable."
+        },
+        {
+          "optionId": "c",
+          "text": "A fixed distance rule regardless of the play",
+          "assessment": "weak or ambiguous assessment alternative",
+          "reason": "Fixed-distance rule regardless ignores context; not a competing observed cue."
+        }
+      ],
+      "reason": "Question needs assessment-quality revision and any specific option qualification listed. At U13 the current key is distinguishable by cautious wording versus absolutes, impossible action, or refusing to look; named players do not by themselves create a scene-reading task.",
+      "proposedRepair": {
+        "id": "exp26-u13-014-q8",
+        "type": "explain",
+        "prompt": "Use Gold1 and C to explain whether YOU would maintain, close or open the gap. What information is missing from this still view?",
+        "basis": "coaching",
+        "explanation": "Explain the relevant named players, current possession and conditional alternatives. Carrier lane informs gap, does not automatically change it. C recovery position informs available help, speed unavailable."
+      },
+      "repairLimit": "Reflection is a concrete review draft, not a cleared replacement. For retained choice format, construct matched real options from the same scene and independently recheck key.",
+      "limitations": [
+        "Independent of primary06\u201314: no primary results read before save. Authored keys visible in packet.",
+        "No human, external source, rendered, contact-rule or deployment approval.",
+        "Full setup and briefing/cues read; unrelated question payloads not cleared."
+      ]
+    }
+  ],
+  "reconciliation": "awaiting primary comparison; saved before primary read",
+  "scope": "Target assessment quality and factual evidence; proposed repairs need re-review."
+}

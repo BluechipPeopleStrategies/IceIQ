@@ -1,0 +1,785 @@
+{
+  "reviewer": "choice-quality-rewrite-independent-03",
+  "packet": 13,
+  "rows": [
+    {
+      "questionId": "exp26b-u15-009-q5",
+      "scenarioId": "exp26b-u15-009",
+      "scenarioVersion": 3,
+      "contentHash": "03bf3a0b61359bf3ce5acf099abc93dd6636bdd668a4178ec504342a6dafccda",
+      "verdict": "revise",
+      "highRisk": true,
+      "sceneEvidence": {
+        "focusActorId": "h1",
+        "roster": [
+          {
+            "id": "h1",
+            "label": "YOU",
+            "team": "home",
+            "x": 15,
+            "y": 7
+          },
+          {
+            "id": "h2",
+            "label": "F1",
+            "team": "home",
+            "x": 28,
+            "y": -5
+          },
+          {
+            "id": "h3",
+            "label": "F2",
+            "team": "home",
+            "x": 22,
+            "y": -8
+          },
+          {
+            "id": "a1",
+            "label": "A1",
+            "team": "away",
+            "x": 21,
+            "y": 1
+          },
+          {
+            "id": "a2",
+            "label": "A2",
+            "team": "away",
+            "x": 14,
+            "y": 4
+          },
+          {
+            "id": "a3",
+            "label": "A3",
+            "team": "away",
+            "x": 24,
+            "y": 3
+          }
+        ],
+        "actualPuckOwner": "h2",
+        "canonicalPuck": [
+          26.782260286356028,
+          -5.084320755536799
+        ],
+        "statedContext": "Navy attacks Gold\u2019s net. F1 carries behind the goal line; F2 supports along the side and YOU arrive high. Gold 1 guards the slot, Gold 2 watches the higher lane, and Gold 3 protects space near the net.",
+        "stateLimit": "Prompt new events are hypothetical extensions; do not overwrite frozen ownership or infer execution."
+      },
+      "optionReviews": [
+        {
+          "optionId": "a",
+          "text": "An inside connection if F1 can reach it, or hold high if Gold 2 covers",
+          "assessment": "supported conditional principle",
+          "reason": "Conditional inside/hold plan valid but greatly longer and more nuanced than rivals."
+        },
+        {
+          "optionId": "b",
+          "text": "Drop beside F2 without checking the slot",
+          "assessment": "weak or ambiguous assessment alternative",
+          "reason": "Unchecked drop beside teammate giveaway."
+        },
+        {
+          "optionId": "c",
+          "text": "Shoot because the slot defender moved",
+          "assessment": "weak or ambiguous assessment alternative",
+          "reason": "YOU have no puck; shoot because marker moves impossible before receipt."
+        }
+      ],
+      "reason": "Question needs assessment-quality revision and any specific option qualification listed. At U15 the current key is distinguishable by cautious wording versus absolutes, impossible action, or refusing to look; named players do not by themselves create a scene-reading task.",
+      "proposedRepair": {
+        "id": "exp26b-u15-009-q5",
+        "type": "explain",
+        "prompt": "Gold1 leaves the slot. What would YOU check about F1\u2019s pass and Gold2 before moving inside or remaining high?",
+        "basis": "coaching",
+        "explanation": "Explain the relevant named players, current possession and conditional alternatives. Conditional inside/hold plan valid but greatly longer and more nuanced than rivals."
+      },
+      "repairLimit": "Reflection is a concrete review draft, not a cleared replacement. For retained choice format, construct matched real options from the same scene and independently recheck key.",
+      "limitations": [
+        "Independent of primary06\u201314: no primary results read before save. Authored keys visible in packet.",
+        "No human, external source, rendered, contact-rule or deployment approval.",
+        "Full setup and briefing/cues read; unrelated question payloads not cleared."
+      ]
+    },
+    {
+      "questionId": "exp26b-u15-014-q2",
+      "scenarioId": "exp26b-u15-014",
+      "scenarioVersion": 2,
+      "contentHash": "4d3f550348b008bcfa2347b9554ec0ce88397f52c2efc615fd299ab6ae224ef0",
+      "verdict": "revise",
+      "highRisk": true,
+      "sceneEvidence": {
+        "focusActorId": "h1",
+        "roster": [
+          {
+            "id": "h1",
+            "label": "YOU",
+            "team": "home",
+            "x": -1,
+            "y": -2
+          },
+          {
+            "id": "h2",
+            "label": "D2",
+            "team": "home",
+            "x": -10,
+            "y": 5
+          },
+          {
+            "id": "h3",
+            "label": "F1",
+            "team": "home",
+            "x": 9,
+            "y": 6
+          },
+          {
+            "id": "h4",
+            "label": "F2",
+            "team": "home",
+            "x": 12,
+            "y": -5
+          },
+          {
+            "id": "a1",
+            "label": "A1",
+            "team": "away",
+            "x": 2,
+            "y": 2
+          },
+          {
+            "id": "a2",
+            "label": "A2",
+            "team": "away",
+            "x": 6,
+            "y": -1
+          },
+          {
+            "id": "a3",
+            "label": "A3",
+            "team": "away",
+            "x": -4,
+            "y": -8
+          }
+        ],
+        "actualPuckOwner": "h1",
+        "canonicalPuck": [
+          -0.1590019537153012,
+          -1.1152840647160696
+        ],
+        "statedContext": "Navy attacks the Gold net. F3 is changing and unavailable for this rep; YOU carry in the neutral zone, D2 is behind, and F1 and F2 are ahead. The goal is to read possession options as support changes.",
+        "stateLimit": "Prompt new events are hypothetical extensions; do not overwrite frozen ownership or infer execution."
+      },
+      "optionReviews": [
+        {
+          "optionId": "a",
+          "text": "D2's reset connection",
+          "assessment": "supported conditional principle",
+          "reason": "D2 reset relevant."
+        },
+        {
+          "optionId": "b",
+          "text": "F1 or F2's reachable route",
+          "assessment": "supported conditional principle",
+          "reason": "F1/F2 forward route relevant."
+        },
+        {
+          "optionId": "c",
+          "text": "The change requires a dump regardless of pressure",
+          "assessment": "weak or ambiguous assessment alternative",
+          "reason": "Mandatory dump from line change is artificial universal, not cue."
+        }
+      ],
+      "reason": "Question needs assessment-quality revision and any specific option qualification listed. At U15 the current key is distinguishable by cautious wording versus absolutes, impossible action, or refusing to look; named players do not by themselves create a scene-reading task.",
+      "proposedRepair": {
+        "id": "exp26b-u15-014-q2",
+        "type": "explain",
+        "prompt": "With F3 unavailable, compare D2 with F1 or F2. Which shown pressure matters for each connection?",
+        "basis": "coaching",
+        "explanation": "Explain the relevant named players, current possession and conditional alternatives. D2 reset relevant. F1/F2 forward route relevant."
+      },
+      "repairLimit": "Reflection is a concrete review draft, not a cleared replacement. For retained choice format, construct matched real options from the same scene and independently recheck key.",
+      "limitations": [
+        "Independent of primary06\u201314: no primary results read before save. Authored keys visible in packet.",
+        "No human, external source, rendered, contact-rule or deployment approval.",
+        "Full setup and briefing/cues read; unrelated question payloads not cleared."
+      ]
+    },
+    {
+      "questionId": "exp26b-u15-014-q5",
+      "scenarioId": "exp26b-u15-014",
+      "scenarioVersion": 2,
+      "contentHash": "2d9d961db78cbdd8198480d3affc92b7a20ade44a81de69c2b26240c827ed079",
+      "verdict": "revise",
+      "highRisk": true,
+      "sceneEvidence": {
+        "focusActorId": "h1",
+        "roster": [
+          {
+            "id": "h1",
+            "label": "YOU",
+            "team": "home",
+            "x": -1,
+            "y": -2
+          },
+          {
+            "id": "h2",
+            "label": "D2",
+            "team": "home",
+            "x": -10,
+            "y": 5
+          },
+          {
+            "id": "h3",
+            "label": "F1",
+            "team": "home",
+            "x": 9,
+            "y": 6
+          },
+          {
+            "id": "h4",
+            "label": "F2",
+            "team": "home",
+            "x": 12,
+            "y": -5
+          },
+          {
+            "id": "a1",
+            "label": "A1",
+            "team": "away",
+            "x": 2,
+            "y": 2
+          },
+          {
+            "id": "a2",
+            "label": "A2",
+            "team": "away",
+            "x": 6,
+            "y": -1
+          },
+          {
+            "id": "a3",
+            "label": "A3",
+            "team": "away",
+            "x": -4,
+            "y": -8
+          }
+        ],
+        "actualPuckOwner": "h1",
+        "canonicalPuck": [
+          -0.1590019537153012,
+          -1.1152840647160696
+        ],
+        "statedContext": "Navy attacks the Gold net. F3 is changing and unavailable for this rep; YOU carry in the neutral zone, D2 is behind, and F1 and F2 are ahead. The goal is to read possession options as support changes.",
+        "stateLimit": "Prompt new events are hypothetical extensions; do not overwrite frozen ownership or infer execution."
+      },
+      "optionReviews": [
+        {
+          "optionId": "a",
+          "text": "A middle connection if pressure and support make it reachable",
+          "assessment": "supported conditional principle",
+          "reason": "New middle support conditional useful."
+        },
+        {
+          "optionId": "b",
+          "text": "Leave the puck without checking the new lane",
+          "assessment": "weak or ambiguous assessment alternative",
+          "reason": "Leaving puck without checking is irrelevant action."
+        },
+        {
+          "optionId": "c",
+          "text": "Assume the change makes every route safe",
+          "assessment": "weak or ambiguous assessment alternative",
+          "reason": "Every route safe from one new teammate clearly false."
+        }
+      ],
+      "reason": "Question needs assessment-quality revision and any specific option qualification listed. At U15 the current key is distinguishable by cautious wording versus absolutes, impossible action, or refusing to look; named players do not by themselves create a scene-reading task.",
+      "proposedRepair": {
+        "id": "exp26b-u15-014-q5",
+        "type": "explain",
+        "prompt": "Imagine F3 becomes available in the middle. What would you compare between that connection, D2 and a forward outlet before choosing?",
+        "basis": "coaching",
+        "explanation": "Explain the relevant named players, current possession and conditional alternatives. New middle support conditional useful."
+      },
+      "repairLimit": "Reflection is a concrete review draft, not a cleared replacement. For retained choice format, construct matched real options from the same scene and independently recheck key.",
+      "limitations": [
+        "Independent of primary06\u201314: no primary results read before save. Authored keys visible in packet.",
+        "No human, external source, rendered, contact-rule or deployment approval.",
+        "Full setup and briefing/cues read; unrelated question payloads not cleared."
+      ]
+    },
+    {
+      "questionId": "exp26b-u15-015-q5",
+      "scenarioId": "exp26b-u15-015",
+      "scenarioVersion": 3,
+      "contentHash": "d3102383b8418f617df6fedabd29b2448ba4b39412ae938eee81b8b7c256e6c2",
+      "verdict": "revise",
+      "highRisk": true,
+      "sceneEvidence": {
+        "focusActorId": "h1",
+        "roster": [
+          {
+            "id": "h1",
+            "label": "YOU",
+            "team": "home",
+            "x": 20,
+            "y": 9
+          },
+          {
+            "id": "h2",
+            "label": "F1",
+            "team": "home",
+            "x": 28,
+            "y": -5
+          },
+          {
+            "id": "h3",
+            "label": "F2",
+            "team": "home",
+            "x": 19,
+            "y": 3
+          },
+          {
+            "id": "a1",
+            "label": "A1",
+            "team": "away",
+            "x": 20,
+            "y": 4
+          },
+          {
+            "id": "a2",
+            "label": "A2",
+            "team": "away",
+            "x": 24,
+            "y": 1
+          },
+          {
+            "id": "a3",
+            "label": "A3",
+            "team": "away",
+            "x": 12,
+            "y": 6
+          },
+          {
+            "id": "h4",
+            "label": "D1",
+            "team": "home",
+            "x": 10,
+            "y": 7
+          }
+        ],
+        "actualPuckOwner": "h1",
+        "canonicalPuck": [
+          21.0,
+          9.7
+        ],
+        "statedContext": "Navy attacks Gold\u2019s net. YOU control near the puck-side half wall; Gold 1 shades F2 in the slot, F1 is behind the goal line, and D1 holds the high point with Gold 3 nearby. The rep asks YOU to compare a connected reset with the crowded inside option.",
+        "stateLimit": "Prompt new events are hypothetical extensions; do not overwrite frozen ownership or infer execution."
+      },
+      "optionReviews": [
+        {
+          "optionId": "a",
+          "text": "A quick F2 connection if the slot remains reachable, or F1 support",
+          "assessment": "supported conditional principle",
+          "reason": "Conditional F2/F1 pair sensible but long catch-all key."
+        },
+        {
+          "optionId": "b",
+          "text": "Force F2 because the defender moved",
+          "assessment": "weak or ambiguous assessment alternative",
+          "reason": "Force from movement alone misreads availability."
+        },
+        {
+          "optionId": "c",
+          "text": "Send the puck low without checking F1",
+          "assessment": "weak or ambiguous assessment alternative",
+          "reason": "Unobserved low send obvious; F1 lane must account net/defenders."
+        }
+      ],
+      "reason": "Question needs assessment-quality revision and any specific option qualification listed. At U15 the current key is distinguishable by cautious wording versus absolutes, impossible action, or refusing to look; named players do not by themselves create a scene-reading task.",
+      "proposedRepair": {
+        "id": "exp26b-u15-015-q5",
+        "type": "explain",
+        "prompt": "Gold1 leaves F2 to pressure YOU. Compare F2, F1 and D1; what would make a short release preferable to a reset?",
+        "basis": "coaching",
+        "explanation": "Explain the relevant named players, current possession and conditional alternatives. Conditional F2/F1 pair sensible but long catch-all key."
+      },
+      "repairLimit": "Reflection is a concrete review draft, not a cleared replacement. For retained choice format, construct matched real options from the same scene and independently recheck key.",
+      "limitations": [
+        "Independent of primary06\u201314: no primary results read before save. Authored keys visible in packet.",
+        "No human, external source, rendered, contact-rule or deployment approval.",
+        "Full setup and briefing/cues read; unrelated question payloads not cleared."
+      ]
+    },
+    {
+      "questionId": "exp26-u18-001-q5",
+      "scenarioId": "exp26-u18-001",
+      "scenarioVersion": 2,
+      "contentHash": "9b7dc5a2137d737a3bc7c54c2b87d7c9e7a563d8392724bd120335f0f811c065",
+      "verdict": "revise",
+      "highRisk": true,
+      "sceneEvidence": {
+        "focusActorId": "home-skater-1",
+        "roster": [
+          {
+            "id": "home-skater-1",
+            "label": "YOU",
+            "team": "home",
+            "x": 0,
+            "y": -6
+          },
+          {
+            "id": "home-skater-2",
+            "label": "D2",
+            "team": "home",
+            "x": -9,
+            "y": 1
+          },
+          {
+            "id": "home-skater-3",
+            "label": "F1",
+            "team": "home",
+            "x": 9,
+            "y": -8
+          },
+          {
+            "id": "home-skater-4",
+            "label": "F2",
+            "team": "home",
+            "x": 14,
+            "y": 5
+          },
+          {
+            "id": "home-skater-5",
+            "label": "F3",
+            "team": "home",
+            "x": 5,
+            "y": 1
+          },
+          {
+            "id": "away-skater-1",
+            "label": "A1",
+            "team": "away",
+            "x": 4,
+            "y": -4
+          },
+          {
+            "id": "away-skater-2",
+            "label": "A2",
+            "team": "away",
+            "x": 8,
+            "y": 2
+          },
+          {
+            "id": "away-skater-3",
+            "label": "A3",
+            "team": "away",
+            "x": 14,
+            "y": -3
+          },
+          {
+            "id": "away-skater-4",
+            "label": "A4",
+            "team": "away",
+            "x": 19,
+            "y": 6
+          },
+          {
+            "id": "away-skater-5",
+            "label": "A5",
+            "team": "away",
+            "x": -2,
+            "y": 7
+          }
+        ],
+        "actualPuckOwner": "home-skater-1",
+        "canonicalPuck": [
+          1.0,
+          -5.3
+        ],
+        "statedContext": "Navy leads by one with 48 seconds remaining. YOU have controlled possession in a wide neutral-zone lane. The coach asks for a controlled play that preserves defensive support; this does not mean every forward option is forbidden. Navy attacks Gold\u2019s net and defends Navy\u2019s net. This is a selected-player teaching view; no movement is implied unless stated.",
+        "stateLimit": "Prompt new events are hypothetical extensions; do not overwrite frozen ownership or infer execution."
+      },
+      "optionReviews": [
+        {
+          "optionId": "a",
+          "text": "A controlled forward pass may now fit the objective",
+          "assessment": "supported conditional principle",
+          "reason": "Controlled F1 pass can meet lead-management goal, explicitly available hypothetical."
+        },
+        {
+          "optionId": "b",
+          "text": "The clock makes every forward pass automatically wrong",
+          "assessment": "weak or ambiguous assessment alternative",
+          "reason": "Clock forbids every forward pass contradicted directly in briefing."
+        },
+        {
+          "optionId": "c",
+          "text": "D2 must receive regardless of the open route",
+          "assessment": "weak or ambiguous assessment alternative",
+          "reason": "D2 mandatory regardless no tactical alternative."
+        }
+      ],
+      "reason": "Question needs assessment-quality revision and any specific option qualification listed. At U18 the current key is distinguishable by cautious wording versus absolutes, impossible action, or refusing to look; named players do not by themselves create a scene-reading task.",
+      "proposedRepair": {
+        "id": "exp26-u18-001-q5",
+        "type": "explain",
+        "prompt": "F1 opens with room to retain possession. Compare that forward option with D2\u2019s reset, considering 48 seconds and defensive support.",
+        "basis": "coaching",
+        "explanation": "Explain the relevant named players, current possession and conditional alternatives. Controlled F1 pass can meet lead-management goal, explicitly available hypothetical."
+      },
+      "repairLimit": "Reflection is a concrete review draft, not a cleared replacement. For retained choice format, construct matched real options from the same scene and independently recheck key.",
+      "limitations": [
+        "Independent of primary06\u201314: no primary results read before save. Authored keys visible in packet.",
+        "No human, external source, rendered, contact-rule or deployment approval.",
+        "Full setup and briefing/cues read; unrelated question payloads not cleared."
+      ]
+    },
+    {
+      "questionId": "exp26-u18-001-q7",
+      "scenarioId": "exp26-u18-001",
+      "scenarioVersion": 2,
+      "contentHash": "1a1cebf9de92447ca59a832ec6d39e3885cef94c315ad170c40dbbc1a67a9f16",
+      "verdict": "revise",
+      "highRisk": true,
+      "sceneEvidence": {
+        "focusActorId": "home-skater-1",
+        "roster": [
+          {
+            "id": "home-skater-1",
+            "label": "YOU",
+            "team": "home",
+            "x": 0,
+            "y": -6
+          },
+          {
+            "id": "home-skater-2",
+            "label": "D2",
+            "team": "home",
+            "x": -9,
+            "y": 1
+          },
+          {
+            "id": "home-skater-3",
+            "label": "F1",
+            "team": "home",
+            "x": 9,
+            "y": -8
+          },
+          {
+            "id": "home-skater-4",
+            "label": "F2",
+            "team": "home",
+            "x": 14,
+            "y": 5
+          },
+          {
+            "id": "home-skater-5",
+            "label": "F3",
+            "team": "home",
+            "x": 5,
+            "y": 1
+          },
+          {
+            "id": "away-skater-1",
+            "label": "A1",
+            "team": "away",
+            "x": 4,
+            "y": -4
+          },
+          {
+            "id": "away-skater-2",
+            "label": "A2",
+            "team": "away",
+            "x": 8,
+            "y": 2
+          },
+          {
+            "id": "away-skater-3",
+            "label": "A3",
+            "team": "away",
+            "x": 14,
+            "y": -3
+          },
+          {
+            "id": "away-skater-4",
+            "label": "A4",
+            "team": "away",
+            "x": 19,
+            "y": 6
+          },
+          {
+            "id": "away-skater-5",
+            "label": "A5",
+            "team": "away",
+            "x": -2,
+            "y": 7
+          }
+        ],
+        "actualPuckOwner": "home-skater-1",
+        "canonicalPuck": [
+          1.0,
+          -5.3
+        ],
+        "statedContext": "Navy leads by one with 48 seconds remaining. YOU have controlled possession in a wide neutral-zone lane. The coach asks for a controlled play that preserves defensive support; this does not mean every forward option is forbidden. Navy attacks Gold\u2019s net and defends Navy\u2019s net. This is a selected-player teaching view; no movement is implied unless stated.",
+        "stateLimit": "Prompt new events are hypothetical extensions; do not overwrite frozen ownership or infer execution."
+      },
+      "optionReviews": [
+        {
+          "optionId": "a",
+          "text": "We value possession, but I will use a clear forward lane",
+          "assessment": "supported conditional principle",
+          "reason": "Balanced conditional plan reasonable but generic and formal."
+        },
+        {
+          "optionId": "b",
+          "text": "The lead removes every forward option",
+          "assessment": "weak or ambiguous assessment alternative",
+          "reason": "Lead forbids forward directly contradicted by briefing."
+        },
+        {
+          "optionId": "c",
+          "text": "F1 is the first outlet regardless of the pressure route",
+          "assessment": "weak or ambiguous assessment alternative",
+          "reason": "F1 predetermined regardless pressure not realistic rival call."
+        }
+      ],
+      "reason": "Question needs assessment-quality revision and any specific option qualification listed. At U18 the current key is distinguishable by cautious wording versus absolutes, impossible action, or refusing to look; named players do not by themselves create a scene-reading task.",
+      "proposedRepair": {
+        "id": "exp26-u18-001-q7",
+        "type": "explain",
+        "prompt": "What short call would help teammates manage the final48 seconds while preserving a forward option? Explain which current lane informs it.",
+        "basis": "coaching",
+        "explanation": "Explain the relevant named players, current possession and conditional alternatives. Balanced conditional plan reasonable but generic and formal."
+      },
+      "repairLimit": "Reflection is a concrete review draft, not a cleared replacement. For retained choice format, construct matched real options from the same scene and independently recheck key.",
+      "limitations": [
+        "Independent of primary06\u201314: no primary results read before save. Authored keys visible in packet.",
+        "No human, external source, rendered, contact-rule or deployment approval.",
+        "Full setup and briefing/cues read; unrelated question payloads not cleared."
+      ]
+    },
+    {
+      "questionId": "exp26-u18-002-q2",
+      "scenarioId": "exp26-u18-002",
+      "scenarioVersion": 2,
+      "contentHash": "fd4f0a55ccf37fd3b8d5c0c56819107d5cb18fb99b2037d6be68eadc7ee8105a",
+      "verdict": "revise",
+      "highRisk": true,
+      "sceneEvidence": {
+        "focusActorId": "home-skater-1",
+        "roster": [
+          {
+            "id": "home-skater-1",
+            "label": "YOU",
+            "team": "home",
+            "x": 11,
+            "y": 7
+          },
+          {
+            "id": "home-skater-2",
+            "label": "D2",
+            "team": "home",
+            "x": 11,
+            "y": -6
+          },
+          {
+            "id": "home-skater-3",
+            "label": "F1",
+            "team": "home",
+            "x": 24,
+            "y": 1
+          },
+          {
+            "id": "home-skater-4",
+            "label": "F2",
+            "team": "home",
+            "x": 18,
+            "y": -4
+          },
+          {
+            "id": "home-skater-5",
+            "label": "F3",
+            "team": "home",
+            "x": 25,
+            "y": -8
+          },
+          {
+            "id": "away-skater-1",
+            "label": "A1",
+            "team": "away",
+            "x": 16,
+            "y": 5
+          },
+          {
+            "id": "away-skater-2",
+            "label": "A2",
+            "team": "away",
+            "x": 22,
+            "y": 0
+          },
+          {
+            "id": "away-skater-3",
+            "label": "A3",
+            "team": "away",
+            "x": 18,
+            "y": -1
+          },
+          {
+            "id": "away-skater-4",
+            "label": "A4",
+            "team": "away",
+            "x": 24,
+            "y": -5
+          },
+          {
+            "id": "away-skater-5",
+            "label": "A5",
+            "team": "away",
+            "x": 13,
+            "y": -7
+          }
+        ],
+        "actualPuckOwner": "home-skater-1",
+        "canonicalPuck": [
+          12.0,
+          7.7
+        ],
+        "statedContext": "Navy trails by one with 32 seconds left and has five skaters on the ice. YOU control at the puck-side point. F1 is near the net, F2 is across the high slot and D2 is the other high player. Navy\u2019s goalie, omitted from this selected-player view, remains in net; no extra attacker is assumed. Navy attacks Gold\u2019s net and defends Navy\u2019s net. This is a selected-player teaching view; no movement is implied unless stated.",
+        "stateLimit": "Prompt new events are hypothetical extensions; do not overwrite frozen ownership or infer execution."
+      },
+      "optionReviews": [
+        {
+          "optionId": "a",
+          "text": "Whether a shot can reach useful traffic",
+          "assessment": "supported conditional principle",
+          "reason": "Shot to useful traffic relevant with32sec left."
+        },
+        {
+          "optionId": "b",
+          "text": "A certainty that shooting from the point always scores",
+          "assessment": "weak or ambiguous assessment alternative",
+          "reason": "Point shot always scores cartoon certainty, not U18 assessment."
+        },
+        {
+          "optionId": "c",
+          "text": "Whether a pass would create a clearer attempt in time",
+          "assessment": "supported conditional principle",
+          "reason": "Clearer attempt in remaining time relevant."
+        }
+      ],
+      "reason": "Question needs assessment-quality revision and any specific option qualification listed. At U18 the current key is distinguishable by cautious wording versus absolutes, impossible action, or refusing to look; named players do not by themselves create a scene-reading task.",
+      "proposedRepair": {
+        "id": "exp26-u18-002-q2",
+        "type": "explain",
+        "prompt": "With32 seconds left, compare a shot toward F1 with a pass to F2 or D2. What defender and timing information would decide?",
+        "basis": "coaching",
+        "explanation": "Explain the relevant named players, current possession and conditional alternatives. Shot to useful traffic relevant with32sec left. Clearer attempt in remaining time relevant."
+      },
+      "repairLimit": "Reflection is a concrete review draft, not a cleared replacement. For retained choice format, construct matched real options from the same scene and independently recheck key.",
+      "limitations": [
+        "Independent of primary06\u201314: no primary results read before save. Authored keys visible in packet.",
+        "No human, external source, rendered, contact-rule or deployment approval.",
+        "Full setup and briefing/cues read; unrelated question payloads not cleared."
+      ]
+    }
+  ],
+  "reconciliation": "awaiting primary comparison; saved before primary read",
+  "scope": "Target assessment quality and factual evidence; proposed repairs need re-review."
+}

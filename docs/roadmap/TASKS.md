@@ -1,6 +1,6 @@
 # RinkReads — Task List
 
-**Last updated:** 2026-09-06 · Step 1 deployed at e8e31fc. Step 2: five exact U13 question replacements applied after qualified independent and root review; 55 tests, build and all five local answer flows pass. Step 3: 78 lexical candidates in 14 bounded packets. Supabase deferred.
+**Last updated:** 2026-09-06 · Steps 1–3 complete: choice ordering and five U13 repairs deployed (5536aed). All 78 remaining candidates reviewed: 18 retained, 60 rewrites queued, 0 context holds. Exact findings and optional-feedback links are in the review report; queued rewrites are not applied. Supabase deferred.
 
 **Scope:** RinkReads **app build + content factory**. Launch/distribution (sending the beta, marketing) and the separate BlueChip business are **out of scope** — parked at the bottom. Priority = position in this list. A new idea that isn't here goes to the **Parking Lot** first, then gets promoted on purpose — that's the scope-creep guard.
 
@@ -56,6 +56,8 @@
 - *(New ideas land here first, then get promoted into NEXT/LATER on purpose.)*
 
 ## Changelog
+
+- 2026-09-06: Completed the ordered choice-quality work: stable choice ordering released at e8e31fc, then five exact U13 repairs at 5536aed after independent/root review (55 tests, build, live and phone checks pass). Reviewed all remaining 78 candidates and 234 options: 18 retained, 60 rewrites queued, 0 context holds. Rejected review history preserved and the named U9 restart rule verified. Added the filterable [review work queue](../factory/coaching-panel/choice-quality-remaining-04/index.html). These 60 replacements are not yet authored or applied; no owner rewriting required. Supabase remains deferred.
 
 - 2026-09-06: Implemented stable answer-independent choice presentation and ID-bound analytics/feedback context. Closed independent code findings including reflection/nested-context capture. 52 regression tests pass; build and production-boundary pass; choice/multi browser checks pass. Two coaching reviews preserved, five drafts held for scene-dependent redesign and qualification gaps. No authored question edits or deployment. See docs/factory/coaching-panel/CHOICE-ORDER-IMPLEMENTATION.md.
 
