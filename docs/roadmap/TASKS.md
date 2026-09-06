@@ -1,6 +1,6 @@
 # RinkReads — Task List
 
-**Last updated:** 2026-09-05 · Packets 01–14 remain live. Review protocol strengthened with eight receipt-backed calibration cases, explicit reviewer accountability and concrete role/geometry/state checks. Supabase and the coach/goals/training migration are deferred until tomorrow by Thomas; no database action this session.
+**Last updated:** 2026-09-05 · Packets 15–16 applied and independently rechecked: 88 questions reviewed, 29 question versions repaired across eight scenarios. Release verification in progress. Supabase deferred until tomorrow; no database action.
 
 **Scope:** RinkReads **app build + content factory**. Launch/distribution (sending the beta, marketing) and the separate BlueChip business are **out of scope** — parked at the bottom. Priority = position in this list. A new idea that isn't here goes to the **Parking Lot** first, then gets promoted on purpose — that's the scope-creep guard.
 
@@ -56,6 +56,8 @@
 - *(New ideas land here first, then get promoted into NEXT/LATER on purpose.)*
 
 ## Changelog
+
+- 2026-09-05 · Packets 15–16 applied and independently rechecked: 88 questions reviewed, 29 question versions repaired across eight scenarios. Release verification in progress. Supabase deferred until tomorrow; no database action.
 
 - **2026-09-05** — Added [review correction instructions](../factory/CLAUDE-REVIEW-UPDATE.md), eight historical calibration cases and a separately packaged Claude update. Verified all eight before/after/current hashes and ZIP contents. Explicitly records that initial Codex/Luna reviews also missed defects. Frozen project, packets and returns unchanged. Supabase deferred until tomorrow by owner direction.
 
