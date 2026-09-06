@@ -22,6 +22,12 @@ Scenario-engine owner authority:
 `docs/factory/SCENARIO-ENGINE-DECISIONS.md`. Canonical architecture:
 `docs/superpowers/specs/2026-07-29-scenario-engine-design.md`.
 
+For hockey movement, tactics, age progression and viewpoint-dependent question
+work, use `docs/hockey-authority/INDEX.md` and the
+`.claude/agents/hockey-authority.md` review role. This implements the existing
+Claude judgment policy; it does not replace human tactical-claim approval,
+physics gates or the question-packet calibration required above.
+
 ## Direction (2026-07-29)
 Build the scenario factory around approved tactical claims, correct-by-construction
 kernels, a deterministic physics layer, Claude judgment, conservative staged
