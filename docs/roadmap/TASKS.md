@@ -1,6 +1,6 @@
 # RinkReads — Task List
 
-**Last updated:** 2026-09-05 · Packet 12 release candidate: all 50 questions reviewed; three independently rechecked rebound repairs. Production parent 23ece84 includes packets 01–11 and the migration-independent player release. Coach/goals/training remains held for Supabase sign-in and migration 0024.
+**Last updated:** 2026-09-05 · Packet 13: all 50 questions reviewed, eight independently rechecked repairs across four scenarios; release verification in progress. Production parent 1fc1282 includes packets 01–12. Coach/goals/training remains held for Supabase sign-in and migration 0024.
 
 **Scope:** RinkReads **app build + content factory**. Launch/distribution (sending the beta, marketing) and the separate BlueChip business are **out of scope** — parked at the bottom. Priority = position in this list. A new idea that isn't here goes to the **Parking Lot** first, then gets promoted on purpose — that's the scope-creep guard.
 
@@ -56,6 +56,8 @@
 - *(New ideas land here first, then get promoted into NEXT/LATER on purpose.)*
 
 ## Changelog
+
+- **2026-09-05** — Adjudicated packet 13: source grammar fix plus seven retained defects involving opponent/support identity, possession assumptions and ambiguous direction/availability language. Eight exact hashes independently rechecked; original returns preserved. [Evidence](../factory/research/question-review/packet-13/root-content-adjudication.md).
 
 - **2026-09-05** — Packet 12 adds three independently rechecked rebound-question repairs following full 50-question review. Corrected puck/circle and defender location, a placement that moved farther from the puck, and explicit stoppage feedback. [Evidence](../factory/research/question-review/packet-12/root-content-adjudication.md).
 
