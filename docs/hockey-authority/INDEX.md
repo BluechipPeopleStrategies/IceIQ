@@ -1,5 +1,8 @@
 # RinkReads Hockey Authority
 
+**PAUSED by Thomas, September 6, 2026.** Read [the saved handoff](PAUSED-HANDOFF.md)
+when he explicitly resumes this work. Do not advance this workstream meanwhile.
+
 Created September 6, 2026 at Thomas's request. Status: runtime invoked; initial
 historical calibration FAILED with four false passes among eight known defects.
 The role is unqualified for approval recommendations. It may research and
