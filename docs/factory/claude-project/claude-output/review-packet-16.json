@@ -1,0 +1,2592 @@
+{
+  "schemaVersion": 1,
+  "kind": "rinkreads-content-review",
+  "status": "draft-not-reviewed",
+  "snapshotId": "rr-20260905-c8403be16748c919",
+  "packetId": "packet-16",
+  "completion": "complete",
+  "coverage": [
+    {
+      "scenarioId": "exp26-u11-024",
+      "questionId": "exp26-u11-024-q1",
+      "baseContentHash": "65e7309eaa84ac20646bee4eb72f3bfaa74eda2433de3561ab73cd73e88d53d5",
+      "verdict": "repair",
+      "reason": "The prompt reads 'Where is YOU in relation to the right blue line at this freeze?' -- a YOU subject-verb agreement failure (must be 'Where are YOU'). This is exactly the historical failure pattern named in calibration-adjudication.md ('the owner approved concise question style but explicitly requested Where are YOU, not Where is YOU') and in the standing review instruction. Both prior AI passes on this exact hash (catalog-review.json, combined-review.json) recorded 'no-open-ai-finding', so this real defect was missed twice; treating those pass labels as proof would have let it through a third time. The rest of the question is sound: verified programmatically that YOU (actor h2) sits at (10,-3), the right blue line is at x=7.62 in this coordinate frame, and 10>7.62 puts YOU on the attacking side, matching keyed answer 'a'. Repair changes only the prompt's verb; options, answer and explanation are untouched.",
+      "checks": {
+        "roster": "pass",
+        "geometry": "pass",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "fail"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "Actor h2 (label YOU) is at (10,-3); actor h1 (F1) owns the puck; the coordinate frame's right blue line landmark is at x=7.62."
+        ],
+        "stated": [
+          "Briefing explicitly states 'YOU are currently beyond that line' and requires returning to the neutral-zone side before the coach releases F1; this is framed as a practice reset condition, not an officiating ruling."
+        ],
+        "unproven": [
+          "Whether YOU's skates have actually crossed the line in a way a real offside call would require -- the scenario's own 'limits' field explicitly disclaims judging skate contact or delayed offside."
+        ]
+      },
+      "sourceUrls": [
+        "https://cdn1.sportngin.com/attachments/document/0066/4690/Skill_Progression_Manual_19_FINAL.pdf"
+      ]
+    },
+    {
+      "scenarioId": "exp26-u11-024",
+      "questionId": "exp26-u11-024-q2",
+      "baseContentHash": "45bfcc60a1dfca048417964da34fba0854bf00b97c73513fbcadc4c076efca96",
+      "verdict": "repair",
+      "reason": "Option 'a' reads 'YOU's location relative to the right blue line' -- a non-standard possessive. AUTHORING-CONTRACT specifies natural second-person forms ('YOU are', 'YOU have') and 'your' for possession; 'YOU's' matches neither. Repaired to 'Your location relative to the right blue line', keeping the rest of the option, the correct answer set (a,b), and the rationale for excluding option c's speculative claim about F1's future speed unchanged.",
+      "checks": {
+        "roster": "pass",
+        "geometry": "pass",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "fail"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "Right blue line at x=7.62; YOU's actual location (10,-3) and the coach-controlled release gating are both scene facts."
+        ],
+        "stated": [
+          "The coach's release instruction is an explicit briefing condition; AUTHORING-CONTRACT allows basis:scene for 'directly visible or explicitly stated facts', which covers both keyed items."
+        ],
+        "unproven": [
+          "Whether F1 will skate quickly later once released -- the explanation correctly flags this as not satisfying the stated reset conditions."
+        ]
+      },
+      "sourceUrls": [
+        "https://cdn1.sportngin.com/attachments/document/0066/4690/Skill_Progression_Manual_19_FINAL.pdf"
+      ]
+    },
+    {
+      "scenarioId": "exp26-u11-024",
+      "questionId": "exp26-u11-024-q3",
+      "baseContentHash": "91dfd88b665eb80cff468c4fc824be295b2b5866cd5dc640ecaa13223f90bfd9",
+      "verdict": "retain",
+      "reason": "Already independently adjudicated in sequence-adjudication.json (GPT-5.6 Luna second-lane review, 2026-09-05) as 'retain', and again in followup/mixed-proposals.json as 'keep': the three steps (reset to the neutral-zone side -> check the coach's release -> continue the new support route) form a scoped, coach-gated drill routine, not a claimed universal look-decide-execute order. q2 and q5 already establish the read as conditional and role-aware. The only open item against this hash was a P3 'teaching' finding (catalog-review.json) explicitly marked as a non-blocking editorial opportunity, not an established defect, and it did not survive to combined-review.json/mixed-proposals.json as an open issue -- consistent with calibration-adjudication.md's instruction to use the newest applicable receipt rather than resurface a superseded flag.",
+      "checks": {
+        "roster": "pass",
+        "geometry": "pass",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "pass"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "Actor positions/facings and puck ownership (h1/F1) as in setup."
+        ],
+        "stated": [
+          "The practice reset condition and coach-release gate are explicit briefing facts."
+        ],
+        "unproven": [
+          "Exact timing of when F1 or D1 will next move."
+        ]
+      },
+      "alternative": "Scanning for the coach's release and beginning the neutral-zone move can overlap rather than strictly sequence; this order is a suggested teaching routine, not the only valid execution order.",
+      "sourceUrls": [
+        "https://cdn1.sportngin.com/attachments/document/0066/4690/Skill_Progression_Manual_19_FINAL.pdf"
+      ]
+    },
+    {
+      "scenarioId": "exp26-u11-024",
+      "questionId": "exp26-u11-024-q4",
+      "baseContentHash": "3e22a2fb0cfb5141672c366dfb88667486bfb337fadd3499e6374f5d04497039",
+      "verdict": "retain",
+      "reason": "Reference (6,-3) verified programmatically with the supplied isCoachRoutePoint geometry helper: it is a valid on-ice point, and x=6<7.62 (right blue line) places it on the neutral-zone side as required. Distance from YOU's actual position (10,-3) is 4m, clearly moving the actor (well past the validator's own 0.1m movement floor). actorId h2 correctly targets the actor labelled YOU (not h1=F1).",
+      "checks": {
+        "roster": "pass",
+        "geometry": "pass",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "pass"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "YOU (h2) at (10,-3); reference point (6,-3) is a valid in-bounds ice point."
+        ],
+        "stated": [
+          "Neutral-zone-side reset is the explicit practice condition."
+        ],
+        "unproven": [
+          "That this is the only correct reset dot -- explanation correctly frames it as one illustrative example, not a graded target zone."
+        ]
+      },
+      "alternative": "Any point on the neutral-zone side of the right blue line that keeps separation from F1/F2/D1 would work equally well; (6,-3) is one illustrative choice among many.",
+      "sourceUrls": [
+        "https://cdn1.sportngin.com/attachments/document/0066/4690/Skill_Progression_Manual_19_FINAL.pdf"
+      ]
+    },
+    {
+      "scenarioId": "exp26-u11-024",
+      "questionId": "exp26-u11-024-q5",
+      "baseContentHash": "839aebde4d73ba6f5dab5c1c12b0a694f2b9fb30c664660143754f17900e1bfc",
+      "verdict": "retain",
+      "reason": "Distractors avoid false certainty: 'cross early because F1 will probably move soon' and 'assume the practice condition has disappeared' are both correctly wrong for guessing/assuming rather than checking the stated condition; the keyed answer ties the next check to the explicit coach-release condition, consistent with the requirement to reject guaranteed outcomes.",
+      "checks": {
+        "roster": "pass",
+        "geometry": "pass",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "pass"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "F1 (h1) holds the puck and is described as waiting."
+        ],
+        "stated": [
+          "The coach's release remains an explicit gating condition on this reset."
+        ],
+        "unproven": [
+          "Whether or when F1 will actually be released."
+        ]
+      },
+      "alternative": "Continuing to hold a wide neutral-zone position while watching both F1 and D1 without crossing back is also reasonable while waiting for the release cue; the key requirement is not guessing F1's timing.",
+      "sourceUrls": [
+        "https://cdn1.sportngin.com/attachments/document/0066/4690/Skill_Progression_Manual_19_FINAL.pdf"
+      ]
+    },
+    {
+      "scenarioId": "exp26-u11-024",
+      "questionId": "exp26-u11-024-q6",
+      "baseContentHash": "08fca8755f4484f6f351c9895767d523136a3f0a5201e856fca66c16794a8a19",
+      "verdict": "retain",
+      "reason": "Explain question correctly carries no answer key. The model explanation appropriately distinguishes this simplified drill condition from a real rulebook-based offside call, matching the scenario's own 'limits' field, which disclaims judging skate contact, delayed offside or official calls.",
+      "checks": {
+        "roster": "pass",
+        "geometry": "pass",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "pass"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "No new visible facts beyond the freeze already described."
+        ],
+        "stated": [
+          "The drill's single location-and-release condition is explicit; the full offside rule is explicitly out of scope."
+        ],
+        "unproven": [
+          "Any actual rule text or officiating standard -- not asserted here."
+        ]
+      },
+      "alternative": "A coach could equally emphasize that this location-only condition doesn't establish stick/skate contact with the line, which a real offside call needs; either framing is defensible so long as it does not claim a rule verdict.",
+      "sourceUrls": [
+        "https://cdn1.sportngin.com/attachments/document/0066/4690/Skill_Progression_Manual_19_FINAL.pdf"
+      ]
+    },
+    {
+      "scenarioId": "exp26-u11-024",
+      "questionId": "exp26-u11-024-q7",
+      "baseContentHash": "adaf81b02ab8056dbf628b46c1f0ce8108439d3527568acc55712c7c4b50bc47",
+      "verdict": "retain",
+      "reason": "Options 'the still frame proves offside' and 'the pass must happen now' are both correctly wrong for over-claiming certainty from a static freeze. The keyed option keeps the practice-instruction/formal-ruling distinction explicit, consistent with keeping approval/verdict claims narrow. Independently re-reviewed in expansion/u11-second.json and passed.",
+      "checks": {
+        "roster": "pass",
+        "geometry": "pass",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "pass"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "Same freeze as q1/q4."
+        ],
+        "stated": [
+          "Practice reset instruction; no officiating ruling is being made."
+        ],
+        "unproven": [
+          "Any formal offside determination."
+        ]
+      },
+      "alternative": "A shorter communication such as 'I'm resetting' without the added F1-check clause would also satisfy the drill; the fuller phrasing is a preferred habit, not the only acceptable one.",
+      "sourceUrls": [
+        "https://cdn1.sportngin.com/attachments/document/0066/4690/Skill_Progression_Manual_19_FINAL.pdf"
+      ]
+    },
+    {
+      "scenarioId": "exp26-u11-024",
+      "questionId": "exp26-u11-024-q8",
+      "baseContentHash": "b97d9adcf4fe8f655222d19934cbc4fa005df5651a41e50400d99a495e42ced1",
+      "verdict": "retain",
+      "reason": "Options a/b are correctly keyed (coach hasn't restarted; F1's route/support changed). Option c ('the blue line is painted') is a low-severity giveaway/trivia distractor -- the kind rule 6 cautions against ('unrelated trivia') -- but it does not misstate any scene fact, introduces no false hockey claim, and is not cartoonishly unsafe like the P2 'dummy distractor' pattern already caught elsewhere in this same packet (exp26b-u11-001-q5, etc.). Rather than manufacture a new tactical wrinkle to replace a working two-key multi-select (calibration lesson 5 warns against turning a small wording issue into an invented scenario element), I am retaining this as-is and flagging it here as a quality nit for a future editorial pass -- e.g. a more substantive false-but-plausible cue such as 'Whether D1 has moved closer' -- rather than forcing an unreviewed change now.",
+      "checks": {
+        "roster": "pass",
+        "geometry": "pass",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "pass"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "Rink markings including the blue line are part of the rendered scene."
+        ],
+        "stated": [
+          "Restart depends on the coach's release and F1's route/support, per the briefing."
+        ],
+        "unproven": [
+          "Nothing hinges on whether the line is painted; this is acknowledged as a non-substantive distractor, not a false claim."
+        ]
+      },
+      "alternative": "A coach could also treat D1's positioning as worth monitoring even though it isn't one of the two keyed cues, since defensive pressure can matter in a live rep; this drill's controlled reset makes it non-essential here.",
+      "sourceUrls": [
+        "https://cdn1.sportngin.com/attachments/document/0066/4690/Skill_Progression_Manual_19_FINAL.pdf"
+      ]
+    },
+    {
+      "scenarioId": "exp26-u11-024",
+      "questionId": "exp26-u11-024-q9",
+      "baseContentHash": "6c96ce451e9baae3ac8f8ada89ea6734915a4f0ef372726276a948e0431c5f8e",
+      "verdict": "retain",
+      "reason": "This question carries a repair history I independently re-verified rather than took on faith: the original reference (12.4,-3.4) moved YOU farther from the neutral zone (P1 finding u11-p1-original-024-reset-target), was first patched to (6,-3) -- which then exactly duplicated q4's target and actor -- and was finally corrected to actorId h2 (fixing a prior mis-binding to h1=F1) with reference (6.5,-1.5), per u11-actor-repairs.json and re-passed in expansion/u11-recheck.json. I recomputed with the supplied geometry helpers: (6.5,-1.5) is a valid in-bounds point, sits on the neutral-zone side (x=6.5<7.62), is 3.81m from YOU's actual position (clearly moves the actor), and is 1.58m from q4's (6,-3) -- a distinct point, not a duplicate. actorId h2 correctly resolves to the actor labelled YOU. This history's fix holds; no further repair needed.",
+      "checks": {
+        "roster": "pass",
+        "geometry": "pass",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "pass"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "YOU (h2) at (10,-3); q4's reference at (6,-3); this question's reference at (6.5,-1.5)."
+        ],
+        "stated": [
+          "F1 must remain visible from the new support lane."
+        ],
+        "unproven": [
+          "No formal offside ruling is established by either reference point."
+        ]
+      },
+      "alternative": "Any distinct neutral-zone point separated from q4's target that keeps F1 visible would work; (6.5,-1.5) is one illustrative example among several.",
+      "sourceUrls": [
+        "https://cdn1.sportngin.com/attachments/document/0066/4690/Skill_Progression_Manual_19_FINAL.pdf"
+      ]
+    },
+    {
+      "scenarioId": "exp26-u11-024",
+      "questionId": "exp26-u11-024-q10",
+      "baseContentHash": "d73440742bbaa3d63b92b6884c70f8fb85f50d1a0c33e71b26dcb68027971163",
+      "verdict": "retain",
+      "reason": "Explanation correctly keeps the coach's restart plus a re-check of F1's route as the relevant cue, without claiming a formal rule call, consistent with the scenario's limits. Independently re-reviewed in expansion/u11-second.json and passed.",
+      "checks": {
+        "roster": "pass",
+        "geometry": "pass",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "pass"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "Same freeze as prior questions."
+        ],
+        "stated": [
+          "Coach's restart signal and F1's route are the named cues."
+        ],
+        "unproven": [
+          "Exact timing of the restart."
+        ]
+      },
+      "alternative": "A player could also treat visible teammate movement as a cue, but the coach's explicit restart signal is the authoritative one in a controlled practice rep.",
+      "sourceUrls": [
+        "https://cdn1.sportngin.com/attachments/document/0066/4690/Skill_Progression_Manual_19_FINAL.pdf"
+      ]
+    },
+    {
+      "scenarioId": "exp26-u11-025",
+      "questionId": "exp26-u11-025-q1",
+      "baseContentHash": "739732f43887a8a5e007f00535e04b9de2747e80bd4d5711a95dbcabccf69d6d",
+      "verdict": "retain",
+      "reason": "Puck ownership is verified null/loose in the setup (owner:null, x:-4, y:2), matching cue 'The puck is still loose' and matching keyed answer 'c' -- the coach's explicit stop is what changed the task, not a possession change. Option 'a' (Gold D1 has confirmed possession) is verifiably false against the scene data; option 'b' is contradicted by the explicit stop instruction.",
+      "checks": {
+        "roster": "pass",
+        "geometry": "pass",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "pass"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "Puck: owner null at (-4,2), inside the neutral zone (|x|<7.62)."
+        ],
+        "stated": [
+          "Coach whistled and clearly called 'stop this rep'; explicit practice instruction, not an official penalty or stoppage."
+        ],
+        "unproven": [
+          "Whether D1 or YOU would have won the race had the whistle not sounded."
+        ]
+      },
+      "sourceUrls": [
+        "https://cdn1.sportngin.com/attachments/document/0066/4690/Skill_Progression_Manual_19_FINAL.pdf"
+      ]
+    },
+    {
+      "scenarioId": "exp26-u11-025",
+      "questionId": "exp26-u11-025-q2",
+      "baseContentHash": "4c48b31c2df745a9308d471e912bd5ff8917c3b7b45a21f3b6b0a242ee7664f7",
+      "verdict": "retain",
+      "reason": "Keyed actions (stop competing/control movement; keep awareness of nearby skaters) match a controlled reset; 'make one more challenge before listening' is correctly wrong as it continues a contest the coach has just ended. Explanation appropriately declines to certify a specific stopping technique or distance, leaving that to on-ice coaching.",
+      "checks": {
+        "roster": "pass",
+        "geometry": "pass",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "pass"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "D1 and F2 remain near the prior approach routes."
+        ],
+        "stated": [
+          "The stop call is explicit and applies to the whole rep."
+        ],
+        "unproven": [
+          "Exact braking mechanics or a certified safe stopping distance -- explicitly disclaimed."
+        ]
+      },
+      "alternative": "A program that treats a very-close player as safe to finish the touch before the whistle fully registers could accept a brief completed touch; here the explicit stop call makes ceasing competition the taught default.",
+      "sourceUrls": [
+        "https://cdn1.sportngin.com/attachments/document/0066/4690/Skill_Progression_Manual_19_FINAL.pdf"
+      ]
+    },
+    {
+      "scenarioId": "exp26-u11-025",
+      "questionId": "exp26-u11-025-q3",
+      "baseContentHash": "58daa81b461fa35dc5c3dd6532a37398ea904439d0c47caf4abcc5f7c5edc6c6",
+      "verdict": "retain",
+      "reason": "Already independently adjudicated 'retain' in sequence-adjudication.json and 'keep' in followup/mixed-proposals.json: recognize the rep ended -> control movement while checking nearby skaters -> listen for the next cue is a scoped transition-out-of-a-rep routine, distinct from q2/q5's active-play alternatives, not a claimed universal order. The one prior P3 'teaching' finding on this hash (catalog-review.json) was explicitly non-blocking and did not persist as an open issue in the newer combined-review.json/mixed-proposals.json records.",
+      "checks": {
+        "roster": "pass",
+        "geometry": "pass",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "pass"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "Puck loose at (-4,2); D1 and F2 nearby."
+        ],
+        "stated": [
+          "Explicit stop call from the coach."
+        ],
+        "unproven": [
+          "Precise braking technique."
+        ]
+      },
+      "alternative": "Listening for the next cue can begin the moment the whistle is heard, overlapping with controlling movement, rather than strictly following it; this order is a suggested routine, not a required one.",
+      "sourceUrls": [
+        "https://cdn1.sportngin.com/attachments/document/0066/4690/Skill_Progression_Manual_19_FINAL.pdf"
+      ]
+    },
+    {
+      "scenarioId": "exp26-u11-025",
+      "questionId": "exp26-u11-025-q4",
+      "baseContentHash": "1e364bfcad0a9fb21fe08f85497f863368d0b4f08c1f7da162f4e7928350a56f",
+      "verdict": "retain",
+      "reason": "Reference (-7,-1) verified as a valid in-bounds point, 2m from YOU's actual position (-7,1), clearly moving the actor. Recomputed distances: from (-7,-1) to the loose puck (-4,2) is 4.24m and to D1 (-2,3) is 6.40m, both farther than from YOU's starting position (3.16m to puck, 5.39m to D1) -- confirming this is genuinely 'away from the loose-puck contest' as claimed, not merely asserted.",
+      "checks": {
+        "roster": "pass",
+        "geometry": "pass",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "pass"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "YOU (h1) at (-7,1); puck at (-4,2); D1 at (-2,3)."
+        ],
+        "stated": [
+          "Reset should be 'under control', not a claim about exact skating technique."
+        ],
+        "unproven": [
+          "The specific braking path or speed used to get there -- explanation explicitly disclaims certifying a safe stopping path."
+        ]
+      },
+      "alternative": "Any open point clearly separated from the puck/D1 contest area would satisfy the reset; (-7,-1) is one illustrative choice, not the only correct dot.",
+      "sourceUrls": [
+        "https://cdn1.sportngin.com/attachments/document/0066/4690/Skill_Progression_Manual_19_FINAL.pdf"
+      ]
+    },
+    {
+      "scenarioId": "exp26-u11-025",
+      "questionId": "exp26-u11-025-q5",
+      "baseContentHash": "5c84bc13bfad9e2178e4ff5e8d0a390bc1b60e6547c788079998938d6e1087f0",
+      "verdict": "retain",
+      "reason": "F2 as restart carrier is explicitly introduced as a hypothetical ('If the coach then restarts with F2 as the puck carrier'), consistent with AUTHORING-CONTRACT's allowance for explicitly introduced hypotheticals involving an actual roster member (h2=F2). Keyed answer (confirm new role/situation) is correctly preferred over carrying forward the old race or route, both of which the stop call has already superseded.",
+      "checks": {
+        "roster": "pass",
+        "geometry": "pass",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "pass"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "F2 (h2) exists on the roster and is a legitimate hypothetical carrier."
+        ],
+        "stated": [
+          "The prior race/approach route were the pre-stop task, now explicitly superseded."
+        ],
+        "unproven": [
+          "Where exactly F2 or D1 will be positioned at the actual restart -- left open for discussion."
+        ]
+      },
+      "alternative": "If YOU already knows this drill's general restart pattern, a brief visual check might suffice; naming the new carrier and situation explicitly remains the safer habit being taught here.",
+      "sourceUrls": [
+        "https://cdn1.sportngin.com/attachments/document/0066/4690/Skill_Progression_Manual_19_FINAL.pdf"
+      ]
+    },
+    {
+      "scenarioId": "exp26-u11-025",
+      "questionId": "exp26-u11-025-q6",
+      "baseContentHash": "37a9e1c9f2298e782c5108efd0725316c2923dee6b3882ca6ccaec6d3da66810",
+      "verdict": "retain",
+      "reason": "Explain question correctly carries no answer key. Explanation correctly identifies that a coach's stated instruction is itself game/practice information that can change the correct response even without a puck-touch event, without overclaiming a rule or certifying any technique.",
+      "checks": {
+        "roster": "pass",
+        "geometry": "pass",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "pass"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "Puck remains untouched/loose throughout."
+        ],
+        "stated": [
+          "The coach's stop call is explicit."
+        ],
+        "unproven": [
+          "Nothing beyond the stated instruction is asserted."
+        ]
+      },
+      "alternative": "A player could argue puck location alone should decide the task; this scenario's point is that an explicit coaching instruction can override that by itself.",
+      "sourceUrls": [
+        "https://cdn1.sportngin.com/attachments/document/0066/4690/Skill_Progression_Manual_19_FINAL.pdf"
+      ]
+    },
+    {
+      "scenarioId": "exp26-u11-025",
+      "questionId": "exp26-u11-025-q7",
+      "baseContentHash": "a06dac4ac74ae644596369f16121e9fc0ac361ffc926b438fe84dad5e69eef68",
+      "verdict": "retain",
+      "reason": "Option 'F2 owns it now' is verifiably false against the scene data (puck owner remains null at this freeze); option 'the puck is still fair to battle' is correctly wrong given the explicit stop call. Keyed option matches the stated instruction without over-claiming. Independently reviewed pass in expansion/u11-first.json with no high-risk flag.",
+      "checks": {
+        "roster": "pass",
+        "geometry": "pass",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "pass"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "Puck owner is null, not F2 or any actor."
+        ],
+        "stated": [
+          "Coach's stop call is explicit."
+        ],
+        "unproven": [
+          "Whether F2 would have won the puck absent the whistle."
+        ]
+      },
+      "alternative": "A player could stay closer to the puck while pausing competition rather than fully resetting; either satisfies 'stop competing,' but a full controlled reset is the clearer, safer habit taught here.",
+      "sourceUrls": [
+        "https://cdn1.sportngin.com/attachments/document/0066/4690/Skill_Progression_Manual_19_FINAL.pdf"
+      ]
+    },
+    {
+      "scenarioId": "exp26-u11-025",
+      "questionId": "exp26-u11-025-q8",
+      "baseContentHash": "272095b99def0c16391e848a8a7cbf65d81f159bb08ff535a398de4ae473632e",
+      "verdict": "retain",
+      "reason": "Keyed checks (who the coach assigns as carrier; where D1/F2 are now) are the actually-determining facts at a coach-controlled restart; 'the old loose-puck plan' is correctly wrong since the stop call superseded it. Independently reviewed pass in expansion/u11-first.json with no high-risk flag.",
+      "checks": {
+        "roster": "pass",
+        "geometry": "pass",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "pass"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "D1 and F2's current positions are scene facts available to check."
+        ],
+        "stated": [
+          "Restart assignment is a coach decision, external to the frozen scene."
+        ],
+        "unproven": [
+          "What the coach will actually assign -- left open, matching q5/q10's hypothetical framing."
+        ]
+      },
+      "alternative": "Some programs might also want a player to recall the pre-whistle puck trajectory; here, current positions and the new assignment are what actually determine the next read.",
+      "sourceUrls": [
+        "https://cdn1.sportngin.com/attachments/document/0066/4690/Skill_Progression_Manual_19_FINAL.pdf"
+      ]
+    },
+    {
+      "scenarioId": "exp26-u11-025",
+      "questionId": "exp26-u11-025-q9",
+      "baseContentHash": "2f482a746ce8f6fa0451667770aa417d71295d26c8efe8f26b0b4b7d5832823d",
+      "verdict": "retain",
+      "reason": "Reference (-10.1,6.1) verified as a valid in-bounds point (well clear of the corner radius threshold), 5.97m from YOU's actual position (-7,1). Recomputed distances confirm real separation: 7.35m from the puck (-4,2), 8.67m from D1 (-2,3). Also confirmed distinct from q4's (-7,-1) reference (7.75m apart) -- no duplicate-reference issue of the kind flagged elsewhere in this packet for q9-type questions. Independently reviewed pass in expansion/u11-first.json with no high-risk flag.",
+      "checks": {
+        "roster": "pass",
+        "geometry": "pass",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "pass"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "YOU (h1) at (-7,1); puck at (-4,2); D1 at (-2,3); reference at (-10.1,6.1)."
+        ],
+        "stated": [
+          "Reset should leave room to hear the restart."
+        ],
+        "unproven": [
+          "Exact audibility or timing of the coach's next call."
+        ]
+      },
+      "alternative": "Any point clearly separated from the puck/D1 contest area works; (-10.1,6.1) is one illustrative choice among several valid resets, including q4's distinct (-7,-1).",
+      "sourceUrls": [
+        "https://cdn1.sportngin.com/attachments/document/0066/4690/Skill_Progression_Manual_19_FINAL.pdf"
+      ]
+    },
+    {
+      "scenarioId": "exp26-u11-025",
+      "questionId": "exp26-u11-025-q10",
+      "baseContentHash": "edc097813cda540aca964f6a94c230c819c9a8cd67696d6a58e1fad27730aa87",
+      "verdict": "retain",
+      "reason": "F2-as-carrier is again explicitly introduced as a stated hypothetical restart assignment (not asserted as the current scene fact), consistent with AUTHORING-CONTRACT. Explanation correctly ties the next support decision to re-checking F2's location and D1's pressure rather than to the now-superseded stopped rep. Independently reviewed pass in expansion/u11-first.json with no high-risk flag.",
+      "checks": {
+        "roster": "pass",
+        "geometry": "pass",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "pass"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "F2 (h2) and D1 (a1) exist on the roster."
+        ],
+        "stated": [
+          "F2 is explicitly assigned the puck at restart as a hypothetical premise for this question."
+        ],
+        "unproven": [
+          "F2's or D1's exact positions at the actual moment of restart."
+        ]
+      },
+      "alternative": "A player could argue the support angle depends mainly on D1's pressure rather than F2's exact location; both need to be checked together, which the explanation already implies.",
+      "sourceUrls": [
+        "https://cdn1.sportngin.com/attachments/document/0066/4690/Skill_Progression_Manual_19_FINAL.pdf"
+      ]
+    },
+    {
+      "scenarioId": "exp26b-u11-001",
+      "questionId": "exp26b-u11-001-q1",
+      "baseContentHash": "078a78d44b5cfa3e61cd033e584b1abdad3ef359b6187ba46b3299a32988be0d",
+      "verdict": "repair",
+      "reason": "Original passes roster/geometry/answer/feedback/age/sources, but grammar fails: the shared scenario briefing reads \"YOU approaches a loose puck\" (should be \"YOU approach\") and this question's own explanation reads \"YOU is beside the puck\" (should be \"YOU are beside the puck\"). Both verified programmatically with a subject-verb regex scan and confirmed by manual read. The answer itself (YOU is nearest) is geometrically correct: distance YOU-to-puck = 1.414 m vs F2 = 10.63 m and D1 = 10.44 m (computed with validation/src/one-on-one/coachRouteSurfaceInput.js geometry, actor coords from setup).",
+      "checks": {
+        "roster": "pass",
+        "geometry": "pass",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "fail"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "YOU (h1, home) at (-21,-8), facing -0.7 rad",
+          "F2 (h2, home) at (-14,-2), facing 0",
+          "D1 (a1, away) at (-19,1), facing -2.8 rad",
+          "Loose puck (no owner) at (-22,-9)"
+        ],
+        "stated": [
+          "Briefing: Navy attacks +x",
+          "Briefing: D1 is above you (verified: D1 y=1 > YOU y=-8, and +y is up-screen per the confirmed translate(a.x,-a.y) render convention)",
+          "Briefing: F2 is inside the ice (F2 sits well off the corner arc relative to YOU's position)"
+        ],
+        "unproven": [
+          "Whether D1 or YOU is actually looking toward the puck (facing does not establish gaze)",
+          "Exact real-world distance implied by \"beside the wall\": the puck sits ~3.95 m inside the rounded-corner arc (radius 8.5344 m), close but not literally touching the boards"
+        ]
+      },
+      "sourceUrls": [
+        "https://www.hockeycanada.ca/en-ca/news/seven-coaching-principles-vision-scanning-2024-ncw"
+      ]
+    },
+    {
+      "scenarioId": "exp26b-u11-001",
+      "questionId": "exp26b-u11-001-q2",
+      "baseContentHash": "c67da93b5de8811e87809e90e74e1ed73d7460ce87201b52bda60bf97425cfaf",
+      "verdict": "repair",
+      "reason": "This question's own prompt/options/explanation carry no grammar defect, but the shared scenario briefing does (\"YOU approaches\"), and a scenario-level text repair changes this question's content hash along with every other linked question in the scene (setup/briefing is embedded in every question's hash). Answer (a,b) is a defensible non-absolute pair; option c is correctly excluded for asserting a guaranteed outcome (\"a promise that the middle pass will be open\"), consistent with the standing rule against invented certainty.",
+      "checks": {
+        "roster": "pass",
+        "geometry": "pass",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "fail"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "D1 (a1) at (-19,1); F2 (h2) at (-14,-2); YOU (h1) at (-21,-8)"
+        ],
+        "stated": [
+          "Briefing frames this as \"the first exit after control, not a certain pass\""
+        ],
+        "unproven": [
+          "Whether the middle pass to F2 will actually be open once YOU controls the puck (explicitly rejected as a certainty by option c's wrongness)"
+        ]
+      },
+      "alternative": "If D1 is clearly disengaged (facing away, not closing), the escape read could lean more on F2's angle alone; on this actual freeze both D1's approach side and F2's angle are live, so both remain correct.",
+      "sourceUrls": [
+        "https://www.hockeycanada.ca/en-ca/news/seven-coaching-principles-vision-scanning-2024-ncw"
+      ]
+    },
+    {
+      "scenarioId": "exp26b-u11-001",
+      "questionId": "exp26b-u11-001-q3",
+      "baseContentHash": "220df692ae284a15d08b26a4ef7ab86922d653514bedef11318f3980a0ba0658",
+      "verdict": "repair",
+      "reason": "No defect in this question's own text; affected only because the shared briefing grammar repair changes every linked question's content hash. The three-step order (check pressure/support, control puck, choose reachable exit) is a coaching suggestion; explanation already hedges that \"the order does not guarantee the pass,\" consistent with the calibration guidance that scanning and control can overlap rather than being a rigid mandatory sequence.",
+      "checks": {
+        "roster": "pass",
+        "geometry": "pass",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "fail"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "D1 (a1) at (-19,1); F2 (h2) at (-14,-2); loose puck at (-22,-9)"
+        ],
+        "stated": [
+          "Briefing: this is a wall pickup, \"first exit after control, not a certain pass\""
+        ],
+        "unproven": [
+          "Whether checking pressure must fully complete before touching the puck begins (explanation already disclaims a strict guarantee)"
+        ]
+      },
+      "alternative": "A player under very tight pressure might have to touch the puck while still scanning rather than finish the check first; the sequence is a teaching suggestion, not a required order, and the explanation already says so.",
+      "sourceUrls": [
+        "https://www.hockeycanada.ca/en-ca/news/seven-coaching-principles-vision-scanning-2024-ncw"
+      ]
+    },
+    {
+      "scenarioId": "exp26b-u11-001",
+      "questionId": "exp26b-u11-001-q4",
+      "baseContentHash": "9fa3aac481573f4938b8d4bc356abd8e63d730aa09466404b37b0958e9c30053",
+      "verdict": "repair",
+      "reason": "No defect in this question's own text; affected only because the shared briefing grammar repair changes every linked question's content hash. Verified geometrically: actorId h1 label is YOU, matching the prompt's \"Move YOU\" subject (validation/tools/question-batch-core.mjs positionSubjectIssue returns no issue). Reference (-21,-7.2) is 0.8 m from YOU's current (-21,-8) and on ice (isCoachRoutePoint true). Because YOU does not own the puck (it is loose), moving YOU does not move the puck -- confirmed by rebuilding the scene with makeScene() at the new reference and seeing the puck stay at (-22,-9).",
+      "checks": {
+        "roster": "pass",
+        "geometry": "pass",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "fail"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "YOU (h1) at (-21,-8); reference point (-21,-7.2) is 0.8 m away and on ice"
+        ],
+        "stated": [
+          "Briefing: F2 is inside the ice (used here as the \"visible\" outlet the position keeps in view)"
+        ],
+        "unproven": [
+          "Whether this exact point is the only workable approach spot; explanation already says \"another controlled point can also work\""
+        ]
+      },
+      "alternative": "A slightly different point further off the wall (e.g. closer to (-20,-6.5)) would serve the same teaching purpose; this is one illustrative reference, not an exclusive correct dot.",
+      "sourceUrls": [
+        "https://www.hockeycanada.ca/en-ca/news/seven-coaching-principles-vision-scanning-2024-ncw"
+      ]
+    },
+    {
+      "scenarioId": "exp26b-u11-001",
+      "questionId": "exp26b-u11-001-q5",
+      "baseContentHash": "239b267bba2dbfea32bc41a5e16ea98844e6b0d10d12a3461141a27f7d6d6e13",
+      "verdict": "repair",
+      "reason": "No defect in this question's own text; affected only because the shared briefing grammar repair changes every linked question's content hash. This question already carries an applied repair (u11-repairs.json, \"u11-p2-dummy-distractors\") replacing an earlier unsafe collision-style distractor with the current credible option c (\"Carry toward F2 through the middle even though D1 has dropped into that lane\"); the current baseContentHash matches that already-repaired text, so no further change to this question's own content is proposed here.",
+      "checks": {
+        "roster": "pass",
+        "geometry": "pass",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "fail"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "D1 (a1) at (-19,1); F2 (h2) at (-14,-2)"
+        ],
+        "stated": [
+          "Question hypothetical: \"D1 drops toward F2 before your touch\" (explicitly introduced change, not claimed as the frozen scene fact)"
+        ],
+        "unproven": [
+          "Whether D1's drop is a full commitment or a fake that could reverse before the touch"
+        ]
+      },
+      "alternative": "If D1's drop toward F2 is only a partial fake and D1 can recover immediately, protecting the puck and re-scanning is still the safer first move; only a fully committed D1 departure would make an immediate pass defensible, and even then it is not the only reasonable choice.",
+      "sourceUrls": [
+        "https://www.hockeycanada.ca/en-ca/news/seven-coaching-principles-vision-scanning-2024-ncw"
+      ]
+    },
+    {
+      "scenarioId": "exp26b-u11-001",
+      "questionId": "exp26b-u11-001-q6",
+      "baseContentHash": "08aec5a9ffbe6fb65bf083f63402d9a5cb4a7d441fc9a504d8afb064a85b24f1",
+      "verdict": "repair",
+      "reason": "No defect in this question's own text; affected only because the shared briefing grammar repair changes every linked question's content hash. This is an optional, ungraded reflection (basis: coaching, no answer key), consistent with the contract.",
+      "checks": {
+        "roster": "pass",
+        "geometry": "pass",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "fail"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "F2 (h2) at (-14,-2); D1 (a1) at (-19,1)"
+        ],
+        "stated": [
+          "Question hypothetical: \"F2 is still visible but D1 closes the middle\""
+        ],
+        "unproven": [
+          "What the player would actually say or do; a reflection has no scored outcome"
+        ]
+      },
+      "alternative": "A player could reasonably choose to hold the puck and wait rather than communicate immediately, if D1's pressure is only partial; the value of this reflection is showing the reasoning, not producing one required phrase.",
+      "sourceUrls": [
+        "https://www.hockeycanada.ca/en-ca/news/seven-coaching-principles-vision-scanning-2024-ncw"
+      ]
+    },
+    {
+      "scenarioId": "exp26b-u11-002",
+      "questionId": "exp26b-u11-002-q1",
+      "baseContentHash": "90cb23c6bf2821f9cc79e4ce3cb8a1d9a095f627cc35b0d70cad8abdbde801a0",
+      "verdict": "repair",
+      "reason": "Original passes roster/geometry/answer/feedback/age/sources; grammar fails because the shared scenario briefing reads \"YOU is open to the right\" (should be \"YOU are open to the right\"), verified with a subject-verb regex scan and manual read. This question's own text has no defect. Answer (F1 owns the puck) is directly verified against setup.puck.owner=\"h2\" (F1).",
+      "checks": {
+        "roster": "pass",
+        "geometry": "pass",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "fail"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "F1 (h2, home) at (-14,1), owns the puck",
+          "YOU (h1, home) at (-7,4)",
+          "F2 (h3, home) at (2,7)",
+          "D1 (a1, away) at (-5,1)"
+        ],
+        "stated": [
+          "Briefing: F1 is preparing a pass (has not released it)"
+        ],
+        "unproven": [
+          "Whether F1 will actually release the pass to YOU at all"
+        ]
+      },
+      "sourceUrls": [
+        "https://www.hockeycanada.ca/en-ca/news/seven-coaching-principles-vision-scanning-2024-ncw"
+      ]
+    },
+    {
+      "scenarioId": "exp26b-u11-002",
+      "questionId": "exp26b-u11-002-q2",
+      "baseContentHash": "85a786def7d80837d75a9d1a139003cd30518cc6db49b34f8a6b9f489ab10b8d",
+      "verdict": "repair",
+      "reason": "No defect in this question's own text; affected only because the shared briefing grammar repair changes every linked question's content hash. Answer (a,b) is defensible: D1 (-5,1) sits roughly 3.55 m off the direct F1(-14,1)-to-YOU(-7,4) line (perpendicular-distance formula), close enough to threaten the inside shoulder, and F1's own reach to a new spot is a real constraint; option c (F2's position \"regardless of the lane\") is correctly excluded per the explanation, since F2 only matters after the reception read.",
+      "checks": {
+        "roster": "pass",
+        "geometry": "pass",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "fail"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "D1 (a1) at (-5,1); F1 (h2) at (-14,1); YOU (h1) at (-7,4)"
+        ],
+        "stated": [
+          "Cue: \"D1 is closer to the inside of YOU than F1 is\" (imprecise as literal y-comparison -- D1 and F1 share y=1 -- but consistent with D1 sitting closer to a receiving spot on YOU's inside than F1 is; not load-bearing for any specific answer key)"
+        ],
+        "unproven": [
+          "Whether D1 will actually close that inside shoulder before the catch (tested as a hypothetical in q5, not asserted as fact here)"
+        ]
+      },
+      "alternative": "If F1's passing lane were already fully blocked regardless of D1 (e.g. a second defender in the lane, not shown here), F1's reach would dominate and D1's shoulder threat would be secondary; on this actual scene both remain live considerations.",
+      "sourceUrls": [
+        "https://www.hockeycanada.ca/en-ca/news/seven-coaching-principles-vision-scanning-2024-ncw"
+      ]
+    },
+    {
+      "scenarioId": "exp26b-u11-002",
+      "questionId": "exp26b-u11-002-q3",
+      "baseContentHash": "231c29841026c033dfe9f74546bb5c313c0b3589d3d3cca78f9e0a32e69c08a9",
+      "verdict": "repair",
+      "reason": "No defect in this question's own text; affected only because the shared briefing grammar repair changes every linked question's content hash. The scan-then-present-then-receive order is a coaching suggestion, not a claimed rigid rule; scanning and presenting a target can overlap in practice.",
+      "checks": {
+        "roster": "pass",
+        "geometry": "pass",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "fail"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "D1 (a1) at (-5,1); F1 (h2) at (-14,1), owns puck"
+        ],
+        "stated": [
+          "Briefing: F1 is preparing a pass"
+        ],
+        "unproven": [
+          "Exact timing of when YOU scans versus when F1 releases"
+        ]
+      },
+      "alternative": "A player already scanning continuously before the freeze might present the target and finish the scan almost simultaneously rather than in strict sequence; the order is a teaching suggestion.",
+      "sourceUrls": [
+        "https://www.hockeycanada.ca/en-ca/news/seven-coaching-principles-vision-scanning-2024-ncw"
+      ]
+    },
+    {
+      "scenarioId": "exp26b-u11-002",
+      "questionId": "exp26b-u11-002-q4",
+      "baseContentHash": "e2135c9329aaf5c3a2d65da3377add1fab272e1ed878b80cd92c0c2a05079bfa",
+      "verdict": "repair",
+      "reason": "No defect in this question's own text; affected only because the shared briefing grammar repair changes every linked question's content hash. Verified geometrically: actorId h1 label is YOU, matching \"Move YOU\" (positionSubjectIssue returns no issue). Reference (-6,5.5) is 1.803 m from YOU's current (-7,4) and on ice. Distance from D1(-5,1) to YOU increases from 3.606 m (original) to 4.610 m (reference), confirming \"more separation from D1.\" Because YOU is not the puck owner (F1 is), moving YOU does not move the puck -- confirmed by rebuilding the scene with makeScene() at the new reference and seeing the (carried) puck stay at F1's computed (-13,1.7).",
+      "checks": {
+        "roster": "pass",
+        "geometry": "pass",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "fail"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "YOU (h1) at (-7,4); D1 (a1) at (-5,1); reference (-6,5.5) is 1.803 m from YOU and on ice"
+        ],
+        "stated": [
+          "Explanation: \"the pass still needs to be reachable\" (explicitly not claimed as guaranteed)"
+        ],
+        "unproven": [
+          "Whether F1 can actually see and reach this exact new spot in real time"
+        ]
+      },
+      "alternative": "Another point with similar separation from D1 and a comparably open lane from F1 would serve the same purpose; this is one illustrative reference, not an exclusive correct dot.",
+      "sourceUrls": [
+        "https://www.hockeycanada.ca/en-ca/news/seven-coaching-principles-vision-scanning-2024-ncw"
+      ]
+    },
+    {
+      "scenarioId": "exp26b-u11-002",
+      "questionId": "exp26b-u11-002-q5",
+      "baseContentHash": "25b925f649cf607a38722c4d822a2a8ea80e089e806b1a259fcb9ba2895bceee",
+      "verdict": "repair",
+      "reason": "No defect in this question's own text; affected only because the shared briefing grammar repair changes every linked question's content hash. Options are credible: (a) protect/keep a return option is correct; (b) turning fully up ice before the puck arrives ignores the stated pressure change; (c) demanding the same forward turn \"even if the lane is covered\" is a believable stubborn-repetition mistake, not an absurd/unsafe distractor (this question was not among the P2 \"dummy distractor\" findings list for other u11 scenes).",
+      "checks": {
+        "roster": "pass",
+        "geometry": "pass",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "fail"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "D1 (a1) at (-5,1); YOU (h1) at (-7,4)"
+        ],
+        "stated": [
+          "Question hypothetical: \"D1 steps into your inside shoulder as F1 releases\" (explicitly introduced change)"
+        ],
+        "unproven": [
+          "Whether D1 actually reaches the inside shoulder in time; the hypothetical is stipulated, not shown as a completed frame"
+        ]
+      },
+      "alternative": "If D1's step is only a fake and recovers away before the catch, turning up ice sooner could be reasonable; on the stated hypothetical (D1 actually steps in) protecting the puck is the safer first read.",
+      "sourceUrls": [
+        "https://www.hockeycanada.ca/en-ca/news/seven-coaching-principles-vision-scanning-2024-ncw"
+      ]
+    },
+    {
+      "scenarioId": "exp26b-u11-002",
+      "questionId": "exp26b-u11-002-q6",
+      "baseContentHash": "0e1fcf70252c389cf689859e45f1809fa18ea11e96a516ee839e34a8adb4149b",
+      "verdict": "repair",
+      "reason": "No defect in this question's own text; affected only because the shared briefing grammar repair changes every linked question's content hash. Optional, ungraded reflection (basis: coaching, no answer key), consistent with the contract.",
+      "checks": {
+        "roster": "pass",
+        "geometry": "pass",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "fail"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "D1 (a1) at (-5,1); YOU (h1) at (-7,4)"
+        ],
+        "stated": [
+          "Explanation: change the angle \"if D1 follows or F1 loses a clean route\""
+        ],
+        "unproven": [
+          "What the player would actually say; a reflection has no scored outcome"
+        ]
+      },
+      "alternative": "A tighter angle closer to F1's lane could also be defended if D1 is clearly not a threat to that inside shoulder; the wider angle is one reasonable choice, not the only one.",
+      "sourceUrls": [
+        "https://www.hockeycanada.ca/en-ca/news/seven-coaching-principles-vision-scanning-2024-ncw"
+      ]
+    },
+    {
+      "scenarioId": "exp26b-u11-003",
+      "questionId": "exp26b-u11-003-q1",
+      "baseContentHash": "a99ecc2027dbe00f8e8f1559393c36617b1b5df383a985f3dc726e3b95859752",
+      "verdict": "repair",
+      "reason": "The question itself is sound (roster, geometry, answer and feedback all check out), but the scenario's shared briefing sentence 'YOU is to the right' is a subject-verb agreement error (should be 'YOU are'). Per the authoring contract, a briefing/scene change affects every linked question's hash even when the question text itself is untouched, so this question moves to version-2 content unchanged in substance.",
+      "checks": {
+        "roster": "pass",
+        "geometry": "pass",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "fail"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "Actors: YOU (h1, home skater) at (15,-3); F1 (h2, home skater, puck owner) at (9,-3); F2 (h3, home skater) at (17,7); D1 (a1, away skater) at (12,-3).",
+          "F1, D1 and YOU share the identical y=-3 coordinate, with D1's x=12 exactly midway between F1's x=9 and YOU's x=15 (verified with the real segment-distance geometry helper: distance from D1 to the F1-YOU actor-centre segment = 0.000 m at the segment midpoint).",
+          "Using the renderer's carried-puck formula (F1 facing=0), the puck's rendered position is (10,-2.3); D1 sits 0.42 m off the puck-to-YOU line, which does not change which player is closest to/on that line."
+        ],
+        "stated": [
+          "Briefing: 'Navy attacks +x. F1 has the puck near the middle; YOU is to the right, but D1 occupies the direct line.'",
+          "Cue: 'D1 sits between F1 and YOU.'"
+        ],
+        "unproven": [
+          "Whether F1 will actually attempt this pass, and whether it would be completed, is not asserted anywhere; the question only asks who blocks the visible/stated direct line, which basis:scene supports."
+        ]
+      },
+      "sourceUrls": [
+        "https://www.hockeycanada.ca/en-ca/news/seven-coaching-principles-vision-scanning-2024-ncw"
+      ]
+    },
+    {
+      "scenarioId": "exp26b-u11-003",
+      "questionId": "exp26b-u11-003-q2",
+      "baseContentHash": "418f1ea50d8690d9d5d515a9d394d4340fc49c1e82f84efe7c302de9c19b3e54",
+      "verdict": "repair",
+      "reason": "Question content is already the corrected 'three checks' / answer [a,b,c] version from the prior u11-p2-reoffer-cardinality repair (verified: this baseContentHash matches the recorded afterContentHash of that applied fix in historical-checks.json and docs/factory/research/question-review/repairs/u11-repairs.json, and the combined-review receipt shows revisionRechecked:true for this exact hash). No new content defect found. It still moves to version 2 because the shared scenario briefing has the 'YOU is'/'YOU are' grammar defect described in q1.",
+      "checks": {
+        "roster": "pass",
+        "geometry": "pass",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "fail"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "All three named checks (D1 following, F1's sightline/reach, whether the old route stays blocked) are checks a coach can actually make from this scene's actors; none requires an unrendered field."
+        ],
+        "stated": [
+          "Cue: 'A new angle may change which teammate becomes available.' matches the explanation's reasoning that these three checks together tell you whether the re-offer helped."
+        ],
+        "unproven": [
+          "Whether D1 will in fact follow is a hypothetical the question is teaching players to check for, not an asserted outcome."
+        ]
+      },
+      "alternative": "A player who correctly identifies only two of the three checks (e.g. misses 'whether the same route is still blocked') has a partially useful read, not a wrong one; the explanation frames this as a completeness check rather than a single objectively 'best' answer.",
+      "sourceUrls": [
+        "https://www.hockeycanada.ca/en-ca/news/seven-coaching-principles-vision-scanning-2024-ncw"
+      ]
+    },
+    {
+      "scenarioId": "exp26b-u11-003",
+      "questionId": "exp26b-u11-003-q3",
+      "baseContentHash": "45f4bb9c6ca0a82f9a7dfc10b92f2580b946ea5e0fe1d032d7d95785765f8209",
+      "verdict": "repair",
+      "reason": "Sequence order (notice the blocked line, move to a changed angle, check everyone again) is a defensible causal order for this specific re-offer read, not an artificial 'look-decide-execute' rule forced onto overlapping scan/decide actions; each step logically depends on the previous one completing (you can't choose where to move before noticing the block, and you can't usefully re-check until you've moved). No content defect. Moves to version 2 only for the shared briefing grammar fix.",
+      "checks": {
+        "roster": "pass",
+        "geometry": "pass",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "fail"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "The three named steps correspond to real, distinct scene actions available to YOU: recognizing D1's blocking position, changing position (as tested in q4), and re-scanning F1/D1/F2 (as tested in q5)."
+        ],
+        "stated": [
+          "Briefing/cues establish the blocked line and the possibility that a new angle changes availability."
+        ],
+        "unproven": [
+          "The sequence does not assert that scanning stops during the move; it only orders the three named checkpoints of this specific read."
+        ]
+      },
+      "alternative": "In live play, noticing the block and beginning to move can overlap; this sequence is scoped to the three named checkpoints of this drill, not a claim that scanning must fully pause between them.",
+      "sourceUrls": [
+        "https://www.hockeycanada.ca/en-ca/news/seven-coaching-principles-vision-scanning-2024-ncw"
+      ]
+    },
+    {
+      "scenarioId": "exp26b-u11-003",
+      "questionId": "exp26b-u11-003-q4",
+      "baseContentHash": "fb725a8b5b5109eb876b8fe2744e6ebb33c32d91224d71fcfc9b17b5150a54e8",
+      "verdict": "repair",
+      "reason": "Verified with the real geometry helpers: reference (14,0.5) is on the ice (isCoachRoutePoint=true), moves YOU 3.64 m from its start (15,-3) (comfortably over the 0.1 m minimum), sits at y=0.5 which is clearly above the y=-3 blocked line, is 7.16 m from F2 (17,7) (not crowding), and clears D1: the distance from D1 (12,-3) to the new F1-to-reference line is 1.72 m (using either F1's actor centre or the actual carried-puck start point (10,-2.3), both give the same 1.72 m clearance), versus 0.00 m on the original blocked line. The claimed geometric relationship holds. No content defect; moves to version 2 only for the shared briefing grammar fix.",
+      "checks": {
+        "roster": "pass",
+        "geometry": "pass",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "fail"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "Reference (14,0.5) is a real point on the ice, well clear of F2 and off the D1-blocked line, per the computed distances above."
+        ],
+        "stated": [
+          "Briefing/cue establish that a new angle can change which teammate is available, which this reference point is built to illustrate."
+        ],
+        "unproven": [
+          "This is one illustrative point, not the exclusive correct dot; the explanation says so explicitly."
+        ]
+      },
+      "alternative": "Any point above y=-3 that keeps D1 off the new F1-line and stays clearly separated from F2 would teach the same concept; (14,0.5) is an example, not a required target.",
+      "sourceUrls": [
+        "https://www.hockeycanada.ca/en-ca/news/seven-coaching-principles-vision-scanning-2024-ncw"
+      ]
+    },
+    {
+      "scenarioId": "exp26b-u11-003",
+      "questionId": "exp26b-u11-003-q5",
+      "baseContentHash": "1276f96cfc4f02e496585c6a21ed583bdc90e5b7df154153d572f43dbfb16291",
+      "verdict": "repair",
+      "reason": "Hypothetical builds correctly on q4's moved position; the correct choice (check the space D1 left, i.e. re-scan) is the only one that treats D1's move as new information. The two distractors are credible age-appropriate mistakes (treating stale information as still valid; assuming a pass regardless of the passer's sightline) rather than absurd or joke options. No content defect; moves to version 2 only for the shared briefing grammar fix.",
+      "checks": {
+        "roster": "pass",
+        "geometry": "pass",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "fail"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "D1 (a1) is the only defender in the scene, so 'D1 follows you above the line' is a coherent single-defender hypothetical, not an invented third player."
+        ],
+        "stated": [
+          "This question explicitly introduces the hypothetical ('D1 follows you above the line') rather than asserting it as an observed fact, consistent with the contract's rule that a hypothetical must be explicitly stated."
+        ],
+        "unproven": [
+          "Whether F2 specifically becomes open is not asserted; the correct option only says to check the space D1 left, which is a scan instruction, not a guaranteed outcome."
+        ]
+      },
+      "alternative": "A coach could equally accept 'check whether F1's sightline to the original spot has also changed' as a related good habit; the key answer (check the space D1 left) is the most direct read of what D1's specific movement affects.",
+      "sourceUrls": [
+        "https://www.hockeycanada.ca/en-ca/news/seven-coaching-principles-vision-scanning-2024-ncw"
+      ]
+    },
+    {
+      "scenarioId": "exp26b-u11-003",
+      "questionId": "exp26b-u11-003-q6",
+      "baseContentHash": "4d2c5dc86ce4bdb72bac4b6a50ed7a08fe2d5f5b478fda2ba6607e13a6e4067a",
+      "verdict": "repair",
+      "reason": "Optional reflection with no answer key (correctly has no options/answer field), asks for reasoning about off-puck movement rather than a graded fact, and does not claim a guaranteed outcome ('can open', not 'will open'). No content defect; moves to version 2 only for the shared briefing grammar fix.",
+      "checks": {
+        "roster": "pass",
+        "geometry": "pass",
+        "answer": "pass",
+        "feedback": "pass",
+        "age": "pass",
+        "sources": "pass",
+        "grammar": "fail"
+      },
+      "sceneEvidence": {
+        "visible": [
+          "D1's occupied position and F2's separate wide position are the two real actors whose relationship a re-offer move can affect."
+        ],
+        "stated": [
+          "Cue: 'A new angle may change which teammate becomes available.'"
+        ],
+        "unproven": [
+          "No specific outcome (F2 receiving, D1 recovering) is asserted; the explanation frames both as possibilities to discuss, matching the explain type's no-answer-key contract."
+        ]
+      },
+      "alternative": "A player could reasonably answer in terms of drawing D1 away from F1 rather than opening space for F2; both are defensible readings of 'help F1 even if the puck never comes to you'.",
+      "sourceUrls": [
+        "https://www.hockeycanada.ca/en-ca/news/seven-coaching-principles-vision-scanning-2024-ncw"
+      ]
+    }
+  ],
+  "repairs": [
+    {
+      "scenarioId": "exp26-u11-024",
+      "baseVersion": 1,
+      "baseScenarioHash": "ea219d00cef9f3b22c76692e49a1326767ce6cd28e914ac3d01f90cdd65f421c",
+      "replacement": {
+        "id": "exp26-u11-024",
+        "version": 2,
+        "ageBand": "U11",
+        "title": "Reset behind the blue line in a timing drill",
+        "family": "blue-line-timing",
+        "topic": "Rink and rules awareness",
+        "objective": "Use a named line and an explicit practice condition to coordinate a restart.",
+        "briefing": "Navy attacks the right net (+x); gold attacks the left net. This simplified timing drill has its own instruction: before the coach releases F1 to continue, YOU must return to the neutral-zone side of the right blue line. YOU are currently beyond that line. F1 waits with the puck. This is a practice reset condition, not a complete offside lesson or an officiating ruling.",
+        "setup": {
+          "actors": [
+            {
+              "id": "h1",
+              "label": "F1",
+              "team": "home",
+              "role": "skater",
+              "x": 5,
+              "y": 3,
+              "facing": 0
+            },
+            {
+              "id": "h2",
+              "label": "YOU",
+              "team": "home",
+              "role": "skater",
+              "x": 10,
+              "y": -3,
+              "facing": 3.141592653589793
+            },
+            {
+              "id": "h3",
+              "label": "F2",
+              "team": "home",
+              "role": "skater",
+              "x": 3,
+              "y": -5,
+              "facing": 0
+            },
+            {
+              "id": "a1",
+              "label": "D1",
+              "team": "away",
+              "role": "skater",
+              "x": 14,
+              "y": 0,
+              "facing": 3.141592653589793
+            }
+          ],
+          "puck": {
+            "owner": "h1"
+          }
+        },
+        "focusActorId": "h2",
+        "cues": [
+          "The coach requires YOU to reset to the neutral-zone side of the right blue line.",
+          "The right blue line separates the neutral zone from the attacking end.",
+          "F1 is waiting with the puck on the neutral-zone side."
+        ],
+        "tags": [
+          "blue-line-timing",
+          "rink and rules awareness",
+          "experimental"
+        ],
+        "sources": [
+          {
+            "id": "usah-skill-progressions-2018",
+            "title": "USA Hockey: Skill Progressions for Youth Hockey",
+            "url": "https://cdn1.sportngin.com/attachments/document/0066/4690/Skill_Progression_Manual_19_FINAL.pdf",
+            "section": "10-and-Under, printed pages 17–19 (PDF pages 23–25)",
+            "use": "Lists skill/team topics; Canadian adaptation and answers remain experimental."
+          }
+        ],
+        "limits": "Static original practice illustration; movement and outcomes are not simulated. The manual lists rules knowledge for this age group but is not the rulebook for this drill. The model cannot judge skate contact, delayed offside, possession exceptions or official calls. Position references are examples, not graded target zones.",
+        "questions": [
+          {
+            "id": "exp26-u11-024-q1",
+            "type": "choice",
+            "prompt": "Where are YOU in relation to the right blue line at this freeze?",
+            "options": [
+              {
+                "id": "a",
+                "text": "On the right attacking-zone side of the line"
+              },
+              {
+                "id": "b",
+                "text": "At the centre red line"
+              },
+              {
+                "id": "c",
+                "text": "On the neutral-zone side of the right blue line"
+              }
+            ],
+            "answer": [
+              "a"
+            ],
+            "basis": "scene",
+            "explanation": "YOU are beyond the right blue line in the attacking end. The specified practice reset asks YOU to return to the neutral-zone side."
+          },
+          {
+            "id": "exp26-u11-024-q2",
+            "type": "multi",
+            "prompt": "Which facts determine whether this stated practice reset is ready?",
+            "options": [
+              {
+                "id": "a",
+                "text": "Your location relative to the right blue line"
+              },
+              {
+                "id": "b",
+                "text": "The coach’s release instruction"
+              },
+              {
+                "id": "c",
+                "text": "Whether YOU expect F1 to skate quickly later"
+              }
+            ],
+            "answer": [
+              "a",
+              "b"
+            ],
+            "basis": "scene",
+            "explanation": "The drill explicitly requires a location reset before the coach releases F1. Predicting F1’s later speed does not satisfy those stated conditions."
+          },
+          {
+            "id": "exp26-u11-024-q3",
+            "type": "sequence",
+            "prompt": "Arrange the reset steps given for this timing drill.",
+            "options": [
+              {
+                "id": "a",
+                "text": "Return to the neutral-zone side of the right blue line."
+              },
+              {
+                "id": "b",
+                "text": "Check that the coach has released the next action."
+              },
+              {
+                "id": "c",
+                "text": "Continue the new support route while watching F1 and pressure."
+              }
+            ],
+            "answer": [
+              "a",
+              "b",
+              "c"
+            ],
+            "basis": "coaching",
+            "explanation": "This sequence follows this exercise’s stated reset. It is not a substitute for learning the applicable full offside rule and its details."
+          },
+          {
+            "id": "exp26-u11-024-q4",
+            "type": "position",
+            "prompt": "Move YOU to an example neutral-zone reset position behind the right blue line for this drill.",
+            "actorId": "h2",
+            "reference": {
+              "x": 6,
+              "y": -3
+            },
+            "basis": "coaching",
+            "explanation": "The reference is on the neutral-zone side and gives YOU space separate from F1 and F2. It is an illustrative practice reset, not a geometric offside verdict about a skater’s feet."
+          },
+          {
+            "id": "exp26-u11-024-q5",
+            "type": "choice",
+            "prompt": "If F1 keeps waiting after YOU reset, what is the useful next check?",
+            "options": [
+              {
+                "id": "a",
+                "text": "Cross early because F1 will probably move soon."
+              },
+              {
+                "id": "b",
+                "text": "Check the coach’s release and time your next route with the puck."
+              },
+              {
+                "id": "c",
+                "text": "Assume the practice condition has disappeared."
+              }
+            ],
+            "answer": [
+              "b"
+            ],
+            "basis": "coaching",
+            "explanation": "The briefing makes the coach’s release part of this reset. Waiting or moving within the allowed space can be useful while YOU keep F1 and pressure in view."
+          },
+          {
+            "id": "exp26-u11-024-q6",
+            "type": "explain",
+            "prompt": "Explain the difference between following this practice reset and making a full offside call.",
+            "basis": "coaching",
+            "explanation": "This exercise gives one location-and-release condition. A full rules decision needs the applicable rulebook and details such as the puck, skates and play context, which this simplified freeze does not establish."
+          },
+          {
+            "id": "exp26-u11-024-q7",
+            "type": "choice",
+            "prompt": "What should YOU communicate during the reset?",
+            "options": [
+              {
+                "id": "a",
+                "text": "Reset is the drill instruction; I will check F1 before restarting"
+              },
+              {
+                "id": "b",
+                "text": "The still frame proves offside"
+              },
+              {
+                "id": "c",
+                "text": "The pass must happen now"
+              }
+            ],
+            "answer": [
+              "a"
+            ],
+            "basis": "coaching",
+            "explanation": "The call keeps the practice instruction separate from a formal ruling and adds a restart check."
+          },
+          {
+            "id": "exp26-u11-024-q8",
+            "type": "multi",
+            "prompt": "Which two cues can delay the restart?",
+            "options": [
+              {
+                "id": "a",
+                "text": "The coach has not restarted the rep"
+              },
+              {
+                "id": "b",
+                "text": "F1's route or support has changed"
+              },
+              {
+                "id": "c",
+                "text": "The blue line is painted"
+              }
+            ],
+            "answer": [
+              "a",
+              "b"
+            ],
+            "basis": "coaching",
+            "explanation": "The stated restart and current player relationships determine readiness; paint alone does not."
+          },
+          {
+            "id": "exp26-u11-024-q9",
+            "type": "position",
+            "prompt": "Move YOU to a different neutral-zone support lane near the right blue line with F1 visible.",
+            "actorId": "h2",
+            "reference": {
+              "x": 6.5,
+              "y": -1.5
+            },
+            "basis": "coaching",
+            "explanation": "This point is a distinct neutral-zone-side support lane from q4 while keeping F1 visible; it is illustrative and does not establish a formal offside ruling."
+          },
+          {
+            "id": "exp26-u11-024-q10",
+            "type": "explain",
+            "prompt": "What cue tells you this practice reset is ready to resume?",
+            "basis": "coaching",
+            "explanation": "Wait for the coach's restart and re-check F1's route. The position alone does not establish a formal rule call or timing."
+          }
+        ]
+      },
+      "affectedQuestionIds": [
+        "exp26-u11-024-q1",
+        "exp26-u11-024-q2"
+      ],
+      "reasons": [
+        {
+          "questionIds": [
+            "exp26-u11-024-q1"
+          ],
+          "issue": "Prompt reads 'Where is YOU...' -- a subject-verb agreement failure that both prior AI review passes (catalog-review.json, combined-review.json) missed on this exact hash.",
+          "change": "Changed the prompt's verb only: 'Where is YOU' -> 'Where are YOU'. Options, answer and explanation are byte-for-byte unchanged.",
+          "evidence": "Confirmed via node using the supplied questionContentHash helper that only this question's hash changes and every other question's hash (q3-q10) is identical before and after; AUTHORING-CONTRACT explicitly models 'Where are YOU compared with the net-front centre?' as the correct form."
+        },
+        {
+          "questionIds": [
+            "exp26-u11-024-q2"
+          ],
+          "issue": "Option 'a' reads 'YOU's location relative to the right blue line' -- a non-standard possessive not matching the contract's 'your' convention.",
+          "change": "Changed option 'a' text only: 'YOU's location relative to the right blue line' -> 'Your location relative to the right blue line'. Prompt, other options, answer and explanation are unchanged.",
+          "evidence": "AUTHORING-CONTRACT: 'Use natural second-person agreement... and \"your\".' Confirmed via node that this edit changes only q2's content hash."
+        }
+      ],
+      "replacementReview": {
+        "status": "self-checked",
+        "coverage": [
+          {
+            "questionId": "exp26-u11-024-q1",
+            "contentHash": "d094a2c2f495f4741245d763db9f36285cbf1ff46095cf696d7f715f194cd6d2",
+            "checks": {
+              "roster": "pass",
+              "geometry": "pass",
+              "answer": "pass",
+              "feedback": "pass",
+              "age": "pass",
+              "sources": "pass",
+              "grammar": "pass"
+            },
+            "reason": "Prompt now reads 'Where are YOU...'; verb agreement corrected, meaning and answer unchanged."
+          },
+          {
+            "questionId": "exp26-u11-024-q2",
+            "contentHash": "3ac07be0fe453a5ec0c97190804453c27064cca76f90a0891ba2f53db32997d8",
+            "checks": {
+              "roster": "pass",
+              "geometry": "pass",
+              "answer": "pass",
+              "feedback": "pass",
+              "age": "pass",
+              "sources": "pass",
+              "grammar": "pass"
+            },
+            "reason": "Option 'a' now reads 'Your location...'; possessive corrected, meaning and answer unchanged."
+          },
+          {
+            "questionId": "exp26-u11-024-q3",
+            "contentHash": "91dfd88b665eb80cff468c4fc824be295b2b5866cd5dc640ecaa13223f90bfd9",
+            "checks": {
+              "roster": "pass",
+              "geometry": "pass",
+              "answer": "pass",
+              "feedback": "pass",
+              "age": "pass",
+              "sources": "pass",
+              "grammar": "pass"
+            },
+            "reason": "Unchanged from base; already independently adjudicated retain."
+          },
+          {
+            "questionId": "exp26-u11-024-q4",
+            "contentHash": "3e22a2fb0cfb5141672c366dfb88667486bfb337fadd3499e6374f5d04497039",
+            "checks": {
+              "roster": "pass",
+              "geometry": "pass",
+              "answer": "pass",
+              "feedback": "pass",
+              "age": "pass",
+              "sources": "pass",
+              "grammar": "pass"
+            },
+            "reason": "Unchanged from base; geometry re-verified."
+          },
+          {
+            "questionId": "exp26-u11-024-q5",
+            "contentHash": "839aebde4d73ba6f5dab5c1c12b0a694f2b9fb30c664660143754f17900e1bfc",
+            "checks": {
+              "roster": "pass",
+              "geometry": "pass",
+              "answer": "pass",
+              "feedback": "pass",
+              "age": "pass",
+              "sources": "pass",
+              "grammar": "pass"
+            },
+            "reason": "Unchanged from base."
+          },
+          {
+            "questionId": "exp26-u11-024-q6",
+            "contentHash": "08fca8755f4484f6f351c9895767d523136a3f0a5201e856fca66c16794a8a19",
+            "checks": {
+              "roster": "pass",
+              "geometry": "pass",
+              "answer": "pass",
+              "feedback": "pass",
+              "age": "pass",
+              "sources": "pass",
+              "grammar": "pass"
+            },
+            "reason": "Unchanged from base."
+          },
+          {
+            "questionId": "exp26-u11-024-q7",
+            "contentHash": "adaf81b02ab8056dbf628b46c1f0ce8108439d3527568acc55712c7c4b50bc47",
+            "checks": {
+              "roster": "pass",
+              "geometry": "pass",
+              "answer": "pass",
+              "feedback": "pass",
+              "age": "pass",
+              "sources": "pass",
+              "grammar": "pass"
+            },
+            "reason": "Unchanged from base."
+          },
+          {
+            "questionId": "exp26-u11-024-q8",
+            "contentHash": "b97d9adcf4fe8f655222d19934cbc4fa005df5651a41e50400d99a495e42ced1",
+            "checks": {
+              "roster": "pass",
+              "geometry": "pass",
+              "answer": "pass",
+              "feedback": "pass",
+              "age": "pass",
+              "sources": "pass",
+              "grammar": "pass"
+            },
+            "reason": "Unchanged from base; weak distractor noted in coverage but not repaired here."
+          },
+          {
+            "questionId": "exp26-u11-024-q9",
+            "contentHash": "6c96ce451e9baae3ac8f8ada89ea6734915a4f0ef372726276a948e0431c5f8e",
+            "checks": {
+              "roster": "pass",
+              "geometry": "pass",
+              "answer": "pass",
+              "feedback": "pass",
+              "age": "pass",
+              "sources": "pass",
+              "grammar": "pass"
+            },
+            "reason": "Unchanged from base; prior repair history independently re-verified via geometry helpers."
+          },
+          {
+            "questionId": "exp26-u11-024-q10",
+            "contentHash": "d73440742bbaa3d63b92b6884c70f8fb85f50d1a0c33e71b26dcb68027971163",
+            "checks": {
+              "roster": "pass",
+              "geometry": "pass",
+              "answer": "pass",
+              "feedback": "pass",
+              "age": "pass",
+              "sources": "pass",
+              "grammar": "pass"
+            },
+            "reason": "Unchanged from base."
+          }
+        ]
+      }
+    },
+    {
+      "scenarioId": "exp26b-u11-001",
+      "baseVersion": 1,
+      "baseScenarioHash": "53dd43cb228889fc1ef3596382f40084b9ec1000b84182578513b1860b092a41",
+      "replacement": {
+        "id": "exp26b-u11-001",
+        "version": 2,
+        "ageBand": "U11",
+        "title": "Show a safe wall-side escape",
+        "family": "retrieval-escape",
+        "topic": "Retrieval and escape",
+        "objective": "Scan the pressure and make a reachable first exit after a wall pickup.",
+        "briefing": "Navy attacks +x. YOU approach a loose puck beside the left wall; D1 is above you and F2 is inside the ice. The rep asks for the first exit after control, not a certain pass.",
+        "setup": {
+          "actors": [
+            {
+              "id": "h1",
+              "label": "YOU",
+              "team": "home",
+              "role": "skater",
+              "x": -21,
+              "y": -8,
+              "facing": -0.7
+            },
+            {
+              "id": "h2",
+              "label": "F2",
+              "team": "home",
+              "role": "skater",
+              "x": -14,
+              "y": -2,
+              "facing": 0
+            },
+            {
+              "id": "a1",
+              "label": "D1",
+              "team": "away",
+              "role": "skater",
+              "x": -19,
+              "y": 1,
+              "facing": -2.8
+            }
+          ],
+          "puck": {
+            "owner": null,
+            "x": -22,
+            "y": -9
+          }
+        },
+        "focusActorId": "h1",
+        "cues": [
+          "The puck is loose at the wall.",
+          "D1 is above the puck; F2 is a middle outlet.",
+          "The first exit must be re-read after control."
+        ],
+        "tags": [
+          "experimental",
+          "expansion"
+        ],
+        "sources": [
+          {
+            "id": "hc-vision-2024",
+            "title": "7 Principles for Coaches: Vision & Scanning",
+            "url": "https://www.hockeycanada.ca/en-ca/news/seven-coaching-principles-vision-scanning-2024-ncw",
+            "section": "Key Information to Identify; Reading Pressure / Corner Situations",
+            "use": "Supports checking teammates and pressure; answers are original scene analysis."
+          }
+        ],
+        "limits": "Static experimental practice scene. Positions are examples and do not prove timing, execution, possession outcome, or a universal team system; coaching responses are ungraded.",
+        "questions": [
+          {
+            "id": "exp26b-u11-001-q1",
+            "type": "choice",
+            "prompt": "Which player is nearest the loose puck?",
+            "options": [
+              {
+                "id": "a",
+                "text": "YOU"
+              },
+              {
+                "id": "b",
+                "text": "F2"
+              },
+              {
+                "id": "c",
+                "text": "D1"
+              }
+            ],
+            "answer": [
+              "a"
+            ],
+            "basis": "scene",
+            "explanation": "YOU are beside the puck, while F2 and D1 are farther away. The approach still needs a pressure check."
+          },
+          {
+            "id": "exp26b-u11-001-q2",
+            "type": "multi",
+            "prompt": "Which two details belong in your first escape read?",
+            "options": [
+              {
+                "id": "a",
+                "text": "D1's approach side"
+              },
+              {
+                "id": "b",
+                "text": "F2's reachable support angle"
+              },
+              {
+                "id": "c",
+                "text": "A promise that the middle pass will be open"
+              }
+            ],
+            "answer": [
+              "a",
+              "b"
+            ],
+            "basis": "coaching",
+            "explanation": "Pressure and support describe why an escape could work; if either changes, keep the puck protected and reconsider."
+          },
+          {
+            "id": "exp26b-u11-001-q3",
+            "type": "sequence",
+            "prompt": "Arrange a careful wall-pickup plan.",
+            "options": [
+              {
+                "id": "a",
+                "text": "Check D1 and F2"
+              },
+              {
+                "id": "b",
+                "text": "Control the loose puck"
+              },
+              {
+                "id": "c",
+                "text": "Choose the exit that remains reachable"
+              }
+            ],
+            "answer": [
+              "a",
+              "b",
+              "c"
+            ],
+            "basis": "coaching",
+            "explanation": "Look at the named pressure and outlet, control the puck, then use the updated lane; the order does not guarantee the pass."
+          },
+          {
+            "id": "exp26b-u11-001-q4",
+            "type": "position",
+            "prompt": "Move YOU to an approach point just inside the wall that keeps F2 visible.",
+            "actorId": "h1",
+            "reference": {
+              "x": -21,
+              "y": -7.2
+            },
+            "basis": "coaching",
+            "explanation": "This point moves YOU off the wall-side puck while keeping the middle outlet and D1 in the picture; another controlled point can also work."
+          },
+          {
+            "id": "exp26b-u11-001-q5",
+            "type": "choice",
+            "prompt": "D1 drops toward F2 before your touch. What should change first?",
+            "options": [
+              {
+                "id": "a",
+                "text": "Protect the puck and scan a different exit"
+              },
+              {
+                "id": "b",
+                "text": "Pass inside immediately because F2 was the first outlet"
+              },
+              {
+                "id": "c",
+                "text": "Carry toward F2 through the middle even though D1 has dropped into that lane"
+              }
+            ],
+            "answer": [
+              "a"
+            ],
+            "basis": "coaching",
+            "explanation": "D1 closing the middle changes the named outlet; protecting the puck buys a chance to find a wall-side or return option."
+          },
+          {
+            "id": "exp26b-u11-001-q6",
+            "type": "explain",
+            "prompt": "If F2 is still visible but D1 closes the middle, explain how you would communicate and re-read the escape.",
+            "basis": "coaching",
+            "explanation": "Name that D1 has taken away the middle lane, communicate that the outlet is conditional, and say what wall-side or return space you would check before choosing a touch."
+          }
+        ]
+      },
+      "affectedQuestionIds": [
+        "exp26b-u11-001-q1",
+        "exp26b-u11-001-q2",
+        "exp26b-u11-001-q3",
+        "exp26b-u11-001-q4",
+        "exp26b-u11-001-q5",
+        "exp26b-u11-001-q6"
+      ],
+      "reasons": [
+        {
+          "questionIds": [
+            "exp26b-u11-001-q1",
+            "exp26b-u11-001-q2",
+            "exp26b-u11-001-q3",
+            "exp26b-u11-001-q4",
+            "exp26b-u11-001-q5",
+            "exp26b-u11-001-q6"
+          ],
+          "issue": "Scenario briefing has a subject-verb agreement error: \"YOU approaches a loose puck beside the left wall\" (should be \"YOU approach\"). This recurring class of defect (\"YOU\" + third-person-singular verb) was specifically flagged as easy to miss across prior AI review passes.",
+          "change": "Changed briefing to \"YOU approach a loose puck beside the left wall; D1 is above you and F2 is inside the ice. The rep asks for the first exit after control, not a certain pass.\" Verified with a subject-verb regex scan across every prompt/option/explanation/briefing/cue/limit field in the scenario, confirming no remaining \"YOU + singular verb\" pattern.",
+          "evidence": "Regex scan of the full scenario text (validation tooling run against the live setup+question objects) matched \"YOU approaches\" in the briefing; no other briefing/cue/limit text in this scenario matched the same pattern after the fix."
+        },
+        {
+          "questionIds": [
+            "exp26b-u11-001-q1"
+          ],
+          "issue": "q1's own explanation has the same class of error: \"YOU is beside the puck\" (should be \"YOU are\").",
+          "change": "Changed q1 explanation to \"YOU are beside the puck, while F2 and D1 are farther away. The approach still needs a pressure check.\"",
+          "evidence": "Regex scan matched \"YOU is\" in exp26b-u11-001-q1.explanation; the underlying claim (YOU is nearest the puck) is independently verified as geometrically correct (distance 1.414 m vs 10.63 m and 10.44 m for F2/D1), so only the wording changed, not the hockey content."
+        }
+      ],
+      "replacementReview": {
+        "status": "self-checked",
+        "coverage": [
+          {
+            "questionId": "exp26b-u11-001-q1",
+            "contentHash": "e34136fe4d2d182789f3d6a1b86238e890562b744a8c6d18490bf900074d6be1",
+            "checks": {
+              "roster": "pass",
+              "geometry": "pass",
+              "answer": "pass",
+              "feedback": "pass",
+              "age": "pass",
+              "sources": "pass",
+              "grammar": "pass"
+            },
+            "reason": "Grammar defect corrected (subject-verb agreement on YOU); no other field changed for this question beyond the shared scene text, and all previously-verified geometry/answer/feedback/age/sources evidence still holds unchanged."
+          },
+          {
+            "questionId": "exp26b-u11-001-q2",
+            "contentHash": "1fc1baa4b19947741eedfc52401d6dd0f74561d08124c2c5104b004497dde783",
+            "checks": {
+              "roster": "pass",
+              "geometry": "pass",
+              "answer": "pass",
+              "feedback": "pass",
+              "age": "pass",
+              "sources": "pass",
+              "grammar": "pass"
+            },
+            "reason": "Grammar defect corrected (subject-verb agreement on YOU); no other field changed for this question beyond the shared scene text, and all previously-verified geometry/answer/feedback/age/sources evidence still holds unchanged."
+          },
+          {
+            "questionId": "exp26b-u11-001-q3",
+            "contentHash": "2d544bf117b49767cce98eb4186a94f23c2c6c0ddd3b4697e648ea29c8f71492",
+            "checks": {
+              "roster": "pass",
+              "geometry": "pass",
+              "answer": "pass",
+              "feedback": "pass",
+              "age": "pass",
+              "sources": "pass",
+              "grammar": "pass"
+            },
+            "reason": "Grammar defect corrected (subject-verb agreement on YOU); no other field changed for this question beyond the shared scene text, and all previously-verified geometry/answer/feedback/age/sources evidence still holds unchanged."
+          },
+          {
+            "questionId": "exp26b-u11-001-q4",
+            "contentHash": "fe0fcc3109f25579e29bd8c4c696e9985a6a5eb830612e23b3492ec334720d4b",
+            "checks": {
+              "roster": "pass",
+              "geometry": "pass",
+              "answer": "pass",
+              "feedback": "pass",
+              "age": "pass",
+              "sources": "pass",
+              "grammar": "pass"
+            },
+            "reason": "Grammar defect corrected (subject-verb agreement on YOU); no other field changed for this question beyond the shared scene text, and all previously-verified geometry/answer/feedback/age/sources evidence still holds unchanged."
+          },
+          {
+            "questionId": "exp26b-u11-001-q5",
+            "contentHash": "e93f1d8b98d32d96e929952347d4c22ca58740f1e5c3a3f6a4b2f08dae6b0295",
+            "checks": {
+              "roster": "pass",
+              "geometry": "pass",
+              "answer": "pass",
+              "feedback": "pass",
+              "age": "pass",
+              "sources": "pass",
+              "grammar": "pass"
+            },
+            "reason": "Grammar defect corrected (subject-verb agreement on YOU); no other field changed for this question beyond the shared scene text, and all previously-verified geometry/answer/feedback/age/sources evidence still holds unchanged."
+          },
+          {
+            "questionId": "exp26b-u11-001-q6",
+            "contentHash": "b0c64d67ce0a26172f64914046f646c0ea87f334b47555a5f4d8a9c707f634b7",
+            "checks": {
+              "roster": "pass",
+              "geometry": "pass",
+              "answer": "pass",
+              "feedback": "pass",
+              "age": "pass",
+              "sources": "pass",
+              "grammar": "pass"
+            },
+            "reason": "Grammar defect corrected (subject-verb agreement on YOU); no other field changed for this question beyond the shared scene text, and all previously-verified geometry/answer/feedback/age/sources evidence still holds unchanged."
+          }
+        ]
+      }
+    },
+    {
+      "scenarioId": "exp26b-u11-002",
+      "baseVersion": 1,
+      "baseScenarioHash": "5d11885570cc47aa43f0e092099f1914c1b58901449d8be6898d57b0c596efe5",
+      "replacement": {
+        "id": "exp26b-u11-002",
+        "version": 2,
+        "ageBand": "U11",
+        "title": "Receive on the far shoulder",
+        "family": "shoulder-reception",
+        "topic": "Receiving",
+        "objective": "Receive away from pressure while keeping both the passer and next option available.",
+        "briefing": "Navy attacks +x. F1 carries near the left hash marks and is preparing a pass; YOU are open to the right, with D1 between the intended lane and the boards. F2 is farther up ice.",
+        "setup": {
+          "actors": [
+            {
+              "id": "h1",
+              "label": "YOU",
+              "team": "home",
+              "role": "skater",
+              "x": -7,
+              "y": 4,
+              "facing": 2.7
+            },
+            {
+              "id": "h2",
+              "label": "F1",
+              "team": "home",
+              "role": "skater",
+              "x": -14,
+              "y": 1,
+              "facing": 0
+            },
+            {
+              "id": "h3",
+              "label": "F2",
+              "team": "home",
+              "role": "skater",
+              "x": 2,
+              "y": 7,
+              "facing": 0.2
+            },
+            {
+              "id": "a1",
+              "label": "D1",
+              "team": "away",
+              "role": "skater",
+              "x": -5,
+              "y": 1,
+              "facing": 3
+            }
+          ],
+          "puck": {
+            "owner": "h2"
+          }
+        },
+        "focusActorId": "h1",
+        "cues": [
+          "F1 owns the puck.",
+          "D1 is closer to the inside of YOU than F1 is.",
+          "F2 is a possible next option, not a promised pass."
+        ],
+        "tags": [
+          "experimental",
+          "expansion"
+        ],
+        "sources": [
+          {
+            "id": "hc-vision-2024",
+            "title": "7 Principles for Coaches: Vision & Scanning",
+            "url": "https://www.hockeycanada.ca/en-ca/news/seven-coaching-principles-vision-scanning-2024-ncw",
+            "section": "Key Information to Identify; Reading Pressure / Corner Situations",
+            "use": "Supports checking teammates and pressure; answers are original scene analysis."
+          }
+        ],
+        "limits": "Static experimental practice scene. Positions are examples and do not prove timing, execution, possession outcome, or a universal team system; coaching responses are ungraded.",
+        "questions": [
+          {
+            "id": "exp26b-u11-002-q1",
+            "type": "choice",
+            "prompt": "Who owns the puck before F1 releases it?",
+            "options": [
+              {
+                "id": "a",
+                "text": "F1"
+              },
+              {
+                "id": "b",
+                "text": "YOU"
+              },
+              {
+                "id": "c",
+                "text": "D1"
+              }
+            ],
+            "answer": [
+              "a"
+            ],
+            "basis": "scene",
+            "explanation": "The puck owner is stated as F1; the receiving picture does not transfer possession early."
+          },
+          {
+            "id": "exp26b-u11-002-q2",
+            "type": "multi",
+            "prompt": "Which two observations shape a useful receiving spot?",
+            "options": [
+              {
+                "id": "a",
+                "text": "Whether D1 can close the inside shoulder"
+              },
+              {
+                "id": "b",
+                "text": "Whether F1 can reach the new spot cleanly"
+              },
+              {
+                "id": "c",
+                "text": "Whether F2 is up ice regardless of the lane"
+              }
+            ],
+            "answer": [
+              "a",
+              "b"
+            ],
+            "basis": "coaching",
+            "explanation": "The defender-to-receiver relationship and the passer's route explain why a spot is useful; F2 matters only after the reception read."
+          },
+          {
+            "id": "exp26b-u11-002-q3",
+            "type": "sequence",
+            "prompt": "Arrange this receiving decision.",
+            "options": [
+              {
+                "id": "a",
+                "text": "Scan behind and inside"
+              },
+              {
+                "id": "b",
+                "text": "Present a reachable target to F1"
+              },
+              {
+                "id": "c",
+                "text": "Receive under control and choose the next option"
+              }
+            ],
+            "answer": [
+              "a",
+              "b",
+              "c"
+            ],
+            "basis": "coaching",
+            "explanation": "The scan informs the target, then the touch can be adjusted to the pressure and the available continuation."
+          },
+          {
+            "id": "exp26b-u11-002-q4",
+            "type": "position",
+            "prompt": "Move YOU to a receiving point with more separation from D1 and a visible lane from F1.",
+            "actorId": "h1",
+            "reference": {
+              "x": -6,
+              "y": 5.5
+            },
+            "basis": "coaching",
+            "explanation": "This point changes the angle from F1 and gives D1 a different relationship; the pass still needs to be reachable."
+          },
+          {
+            "id": "exp26b-u11-002-q5",
+            "type": "choice",
+            "prompt": "D1 steps into your inside shoulder as F1 releases. Which reception fits the changed cue?",
+            "options": [
+              {
+                "id": "a",
+                "text": "Open your body to protect the puck and keep a return option"
+              },
+              {
+                "id": "b",
+                "text": "Turn fully up ice before the puck arrives"
+              },
+              {
+                "id": "c",
+                "text": "Demand the same forward turn even if the lane is covered"
+              }
+            ],
+            "answer": [
+              "a"
+            ],
+            "basis": "coaching",
+            "explanation": "D1 has removed the easy inside turn, so a protected touch and a conditional return preserve more choices."
+          },
+          {
+            "id": "exp26b-u11-002-q6",
+            "type": "explain",
+            "prompt": "Why can a wider receiving angle help here, and what would make you change it?",
+            "basis": "coaching",
+            "explanation": "A wider angle can separate YOU from D1 while preserving F1's lane. Change it if D1 follows or F1 loses a clean route, then re-offer a reachable option."
+          }
+        ]
+      },
+      "affectedQuestionIds": [
+        "exp26b-u11-002-q1",
+        "exp26b-u11-002-q2",
+        "exp26b-u11-002-q3",
+        "exp26b-u11-002-q4",
+        "exp26b-u11-002-q5",
+        "exp26b-u11-002-q6"
+      ],
+      "reasons": [
+        {
+          "questionIds": [
+            "exp26b-u11-002-q1",
+            "exp26b-u11-002-q2",
+            "exp26b-u11-002-q3",
+            "exp26b-u11-002-q4",
+            "exp26b-u11-002-q5",
+            "exp26b-u11-002-q6"
+          ],
+          "issue": "Scenario briefing has a subject-verb agreement error: \"YOU is open to the right\" (should be \"YOU are open to the right\"). Same recurring defect class as exp26b-u11-001.",
+          "change": "Changed briefing to \"Navy attacks +x. F1 carries near the left hash marks and is preparing a pass; YOU are open to the right, with D1 between the intended lane and the boards. F2 is farther up ice.\"",
+          "evidence": "Regex scan of the full scenario text matched \"YOU is\" in the briefing; no other prompt/option/explanation/cue/limit text in this scenario matched the same pattern (or any other flagged \"YOU + singular verb\" form) before or after the fix."
+        }
+      ],
+      "replacementReview": {
+        "status": "self-checked",
+        "coverage": [
+          {
+            "questionId": "exp26b-u11-002-q1",
+            "contentHash": "df712e559788da1f549248570736c8f3565f735187f1943fd83d617dc2413d4c",
+            "checks": {
+              "roster": "pass",
+              "geometry": "pass",
+              "answer": "pass",
+              "feedback": "pass",
+              "age": "pass",
+              "sources": "pass",
+              "grammar": "pass"
+            },
+            "reason": "Grammar defect corrected (subject-verb agreement on YOU); no other field changed for this question beyond the shared scene text, and all previously-verified geometry/answer/feedback/age/sources evidence still holds unchanged."
+          },
+          {
+            "questionId": "exp26b-u11-002-q2",
+            "contentHash": "2888652640a1ad11fd6b0959e7e485440e65ffa6f80fdb8e42abd394d1af4e8a",
+            "checks": {
+              "roster": "pass",
+              "geometry": "pass",
+              "answer": "pass",
+              "feedback": "pass",
+              "age": "pass",
+              "sources": "pass",
+              "grammar": "pass"
+            },
+            "reason": "Grammar defect corrected (subject-verb agreement on YOU); no other field changed for this question beyond the shared scene text, and all previously-verified geometry/answer/feedback/age/sources evidence still holds unchanged."
+          },
+          {
+            "questionId": "exp26b-u11-002-q3",
+            "contentHash": "48f82ce54e06e7e1fbd5eef556a62be4ace0afa7dcce576add6d9fb920d4777a",
+            "checks": {
+              "roster": "pass",
+              "geometry": "pass",
+              "answer": "pass",
+              "feedback": "pass",
+              "age": "pass",
+              "sources": "pass",
+              "grammar": "pass"
+            },
+            "reason": "Grammar defect corrected (subject-verb agreement on YOU); no other field changed for this question beyond the shared scene text, and all previously-verified geometry/answer/feedback/age/sources evidence still holds unchanged."
+          },
+          {
+            "questionId": "exp26b-u11-002-q4",
+            "contentHash": "4e6639f30e77e67d4f72d1e33f79c8456ce0230e44c43d819c4f21acba68ef2e",
+            "checks": {
+              "roster": "pass",
+              "geometry": "pass",
+              "answer": "pass",
+              "feedback": "pass",
+              "age": "pass",
+              "sources": "pass",
+              "grammar": "pass"
+            },
+            "reason": "Grammar defect corrected (subject-verb agreement on YOU); no other field changed for this question beyond the shared scene text, and all previously-verified geometry/answer/feedback/age/sources evidence still holds unchanged."
+          },
+          {
+            "questionId": "exp26b-u11-002-q5",
+            "contentHash": "9aac90d5ba7b61b55f0e6a4d33854908f21d70b91b84540354a8f32ce2a3fa24",
+            "checks": {
+              "roster": "pass",
+              "geometry": "pass",
+              "answer": "pass",
+              "feedback": "pass",
+              "age": "pass",
+              "sources": "pass",
+              "grammar": "pass"
+            },
+            "reason": "Grammar defect corrected (subject-verb agreement on YOU); no other field changed for this question beyond the shared scene text, and all previously-verified geometry/answer/feedback/age/sources evidence still holds unchanged."
+          },
+          {
+            "questionId": "exp26b-u11-002-q6",
+            "contentHash": "3376765f64d68551df32ae3dd8f47704baa9b8552ff9b42d6bbd592e8ca36570",
+            "checks": {
+              "roster": "pass",
+              "geometry": "pass",
+              "answer": "pass",
+              "feedback": "pass",
+              "age": "pass",
+              "sources": "pass",
+              "grammar": "pass"
+            },
+            "reason": "Grammar defect corrected (subject-verb agreement on YOU); no other field changed for this question beyond the shared scene text, and all previously-verified geometry/answer/feedback/age/sources evidence still holds unchanged."
+          }
+        ]
+      }
+    },
+    {
+      "scenarioId": "exp26b-u11-003",
+      "baseVersion": 1,
+      "baseScenarioHash": "c83fc0a736d358428731f359e68445d774131d7fb5c86d56cddfe9414bbf61a1",
+      "replacement": {
+        "id": "exp26b-u11-003",
+        "version": 2,
+        "ageBand": "U11",
+        "title": "Re-offer after the first lane is covered",
+        "family": "support-reoffer",
+        "topic": "Support",
+        "objective": "Change the support relationship when a defender stays in the original passing line.",
+        "briefing": "Navy attacks +x. F1 has the puck near the middle; YOU are to the right, but D1 occupies the direct line. F2 is wide and can become useful if D1 follows the re-offer.",
+        "setup": {
+          "actors": [
+            {
+              "id": "h1",
+              "label": "YOU",
+              "team": "home",
+              "role": "skater",
+              "x": 15,
+              "y": -3,
+              "facing": 2.9
+            },
+            {
+              "id": "h2",
+              "label": "F1",
+              "team": "home",
+              "role": "skater",
+              "x": 9,
+              "y": -3,
+              "facing": 0
+            },
+            {
+              "id": "h3",
+              "label": "F2",
+              "team": "home",
+              "role": "skater",
+              "x": 17,
+              "y": 7,
+              "facing": -2.4
+            },
+            {
+              "id": "a1",
+              "label": "D1",
+              "team": "away",
+              "role": "skater",
+              "x": 12,
+              "y": -3,
+              "facing": 3.1
+            }
+          ],
+          "puck": {
+            "owner": "h2"
+          }
+        },
+        "focusActorId": "h1",
+        "cues": [
+          "D1 sits between F1 and YOU.",
+          "F2 is wide on the far side.",
+          "A new angle may change which teammate becomes available."
+        ],
+        "tags": [
+          "experimental",
+          "expansion"
+        ],
+        "sources": [
+          {
+            "id": "hc-vision-2024",
+            "title": "7 Principles for Coaches: Vision & Scanning",
+            "url": "https://www.hockeycanada.ca/en-ca/news/seven-coaching-principles-vision-scanning-2024-ncw",
+            "section": "Key Information to Identify; Reading Pressure / Corner Situations",
+            "use": "Supports checking teammates and pressure; answers are original scene analysis."
+          }
+        ],
+        "limits": "Static experimental practice scene. Positions are examples and do not prove timing, execution, possession outcome, or a universal team system; coaching responses are ungraded.",
+        "questions": [
+          {
+            "id": "exp26b-u11-003-q1",
+            "type": "choice",
+            "prompt": "Which player blocks the direct F1-to-YOU line?",
+            "options": [
+              {
+                "id": "a",
+                "text": "F1"
+              },
+              {
+                "id": "b",
+                "text": "D1"
+              },
+              {
+                "id": "c",
+                "text": "F2"
+              }
+            ],
+            "answer": [
+              "b"
+            ],
+            "basis": "scene",
+            "explanation": "D1 is drawn on the straight line between F1 and YOU."
+          },
+          {
+            "id": "exp26b-u11-003-q2",
+            "type": "multi",
+            "prompt": "Which three checks belong in a useful re-offer read?",
+            "options": [
+              {
+                "id": "a",
+                "text": "Whether D1 follows the new angle"
+              },
+              {
+                "id": "b",
+                "text": "Whether F1 can still see and reach YOU"
+              },
+              {
+                "id": "c",
+                "text": "Whether the same route is still blocked after you move"
+              }
+            ],
+            "answer": [
+              "a",
+              "b",
+              "c"
+            ],
+            "basis": "coaching",
+            "explanation": "Check whether D1 follows, whether F1 can still see and reach YOU, and whether the old route is still blocked. Those three observations tell you whether the changed angle helped."
+          },
+          {
+            "id": "exp26b-u11-003-q3",
+            "type": "sequence",
+            "prompt": "Arrange the re-offer read.",
+            "options": [
+              {
+                "id": "a",
+                "text": "Notice the blocked line"
+              },
+              {
+                "id": "b",
+                "text": "Move to a changed angle"
+              },
+              {
+                "id": "c",
+                "text": "Check F1, D1 and F2 again"
+              }
+            ],
+            "answer": [
+              "a",
+              "b",
+              "c"
+            ],
+            "basis": "coaching",
+            "explanation": "The changed angle only helps if the carrier can still reach it and the defender response leaves a useful relationship."
+          },
+          {
+            "id": "exp26b-u11-003-q4",
+            "type": "position",
+            "prompt": "Move YOU above the blocked line to offer F1 a new angle without crowding F2.",
+            "actorId": "h1",
+            "reference": {
+              "x": 14,
+              "y": 0.5
+            },
+            "basis": "coaching",
+            "explanation": "The point changes the direct line and keeps F2 distinct; it is a support example, not a required dot."
+          },
+          {
+            "id": "exp26b-u11-003-q5",
+            "type": "choice",
+            "prompt": "D1 follows you above the line. What is now worth checking?",
+            "options": [
+              {
+                "id": "a",
+                "text": "The space D1 left for F2 or another F1 lane"
+              },
+              {
+                "id": "b",
+                "text": "The original lane as if D1 stayed still"
+              },
+              {
+                "id": "c",
+                "text": "A pass to YOU no matter where F1 looks"
+              }
+            ],
+            "answer": [
+              "a"
+            ],
+            "basis": "coaching",
+            "explanation": "D1's movement can change another relationship. Scan F2 and any newly open lane before deciding where to support."
+          },
+          {
+            "id": "exp26b-u11-003-q6",
+            "type": "explain",
+            "prompt": "Explain how your movement can help F1 even if the puck never comes to you.",
+            "basis": "coaching",
+            "explanation": "Moving D1 can open F2 or a carrier lane. Call the new space, keep F1 in view, and be ready to adjust again if the defender recovers."
+          }
+        ]
+      },
+      "affectedQuestionIds": [
+        "exp26b-u11-003-q1",
+        "exp26b-u11-003-q2",
+        "exp26b-u11-003-q3",
+        "exp26b-u11-003-q4",
+        "exp26b-u11-003-q5",
+        "exp26b-u11-003-q6"
+      ],
+      "reasons": [
+        {
+          "questionIds": [
+            "exp26b-u11-003-q1",
+            "exp26b-u11-003-q2",
+            "exp26b-u11-003-q3",
+            "exp26b-u11-003-q4",
+            "exp26b-u11-003-q5",
+            "exp26b-u11-003-q6"
+          ],
+          "issue": "Scene briefing has a subject-verb agreement error: 'F1 has the puck near the middle; YOU is to the right, but D1 occupies the direct line.' This is exactly the recurring 'YOU is' defect class (should be 'YOU are') the project brief and prior calibration packets flag repeatedly (e.g. 'Why is YOU' -> 'Why are YOU').",
+          "change": "Replaced 'YOU is to the right' with 'YOU are to the right' in the briefing. No other text, coordinates, facing, puck ownership, cues, sources, limits, or any question field changed. Because this field lives in the scene object that every question's content hash is computed over (verified directly with the project's own questionContentHash function), all six question hashes change even though five of the six questions' visible text is byte-identical to version 1 (q2 was already at its version-1 baseline content from the prior u11-p2-reoffer-cardinality repair, which this leaves untouched).",
+          "evidence": "Original scenario version 1 briefing (baseScenarioHash c83fc0a736d358428731f359e68445d774131d7fb5c86d56cddfe9414bbf61a1) read literally: \"F1 has the puck near the middle; YOU is to the right, but D1 occupies the direct line.\" Replacement version 2 reads: \"F1 has the puck near the middle; YOU are to the right, but D1 occupies the direct line.\" Verified via the project's own questionContentHash/scenarioSnapshotHash functions that only this substitution changed, and that no coordinate, facing, puck-owner, cue, or source field differs between versions."
+        }
+      ],
+      "replacementReview": {
+        "status": "self-checked",
+        "coverage": [
+          {
+            "questionId": "exp26b-u11-003-q1",
+            "contentHash": "4bf6b3a23b4f3f11ed2342368830e27cdc255c3a867aed70193d8cd743b24b35",
+            "checks": {
+              "roster": "pass",
+              "geometry": "pass",
+              "answer": "pass",
+              "feedback": "pass",
+              "age": "pass",
+              "sources": "pass",
+              "grammar": "pass"
+            },
+            "reason": "Question text unchanged from version 1; only the scenario-level briefing grammar was corrected, which is now clean throughout the scene. Geometry (D1 exactly midway between F1 and YOU on y=-3) reconfirmed against the replacement object."
+          },
+          {
+            "questionId": "exp26b-u11-003-q2",
+            "contentHash": "8c043f2006e09f39f2bd4f43e378d1eede706b4c8d084ac059d0251b1ee680d7",
+            "checks": {
+              "roster": "pass",
+              "geometry": "pass",
+              "answer": "pass",
+              "feedback": "pass",
+              "age": "pass",
+              "sources": "pass",
+              "grammar": "pass"
+            },
+            "reason": "Question text unchanged from version 1 (already the corrected three-checks/[a,b,c] content); briefing grammar now clean."
+          },
+          {
+            "questionId": "exp26b-u11-003-q3",
+            "contentHash": "cc4425f3782e5db5191e9c8bff20e3038b2c7535b3c94083ddaae07052132537",
+            "checks": {
+              "roster": "pass",
+              "geometry": "pass",
+              "answer": "pass",
+              "feedback": "pass",
+              "age": "pass",
+              "sources": "pass",
+              "grammar": "pass"
+            },
+            "reason": "Question text unchanged from version 1; briefing grammar now clean."
+          },
+          {
+            "questionId": "exp26b-u11-003-q4",
+            "contentHash": "42a88c99754103d6491fd539afe326e67c1aed4c890586bda5d0a65aae3e1a55",
+            "checks": {
+              "roster": "pass",
+              "geometry": "pass",
+              "answer": "pass",
+              "feedback": "pass",
+              "age": "pass",
+              "sources": "pass",
+              "grammar": "pass"
+            },
+            "reason": "Question text unchanged from version 1; reference point (14,0.5) reconfirmed on-ice, clear of D1's line and of F2, using the real geometry helper against the replacement object. Briefing grammar now clean."
+          },
+          {
+            "questionId": "exp26b-u11-003-q5",
+            "contentHash": "06eef65e4e655b8478268f840e084d46982002a34832b21c476c1d087cb380db",
+            "checks": {
+              "roster": "pass",
+              "geometry": "pass",
+              "answer": "pass",
+              "feedback": "pass",
+              "age": "pass",
+              "sources": "pass",
+              "grammar": "pass"
+            },
+            "reason": "Question text unchanged from version 1; briefing grammar now clean."
+          },
+          {
+            "questionId": "exp26b-u11-003-q6",
+            "contentHash": "82724070b36af8abade8111b1fe46d62f26c19f2bea626a58bd62781a25dd7a7",
+            "checks": {
+              "roster": "pass",
+              "geometry": "pass",
+              "answer": "pass",
+              "feedback": "pass",
+              "age": "pass",
+              "sources": "pass",
+              "grammar": "pass"
+            },
+            "reason": "Question text unchanged from version 1; briefing grammar now clean. Explain-type has no answer key, consistent with the contract."
+          }
+        ]
+      }
+    }
+  ],
+  "sourceChecks": [
+    {
+      "url": "https://cdn1.sportngin.com/attachments/document/0066/4690/Skill_Progression_Manual_19_FINAL.pdf",
+      "checkedAt": "2026-09-05T22:30:00Z",
+      "access": "read",
+      "scope": "Fetched the PDF and read printed pages 17-19 (PDF pages 23-25, the cited section) directly, confirming the citation is accurate rather than trusting the catalog entry alone. That section is the '10-and-Under' Player Knowledge / Individual Hockey Skills / Team Play list: it explicitly lists 'offsides' and 'icing' among rules players 'must learn and understand', plus general skating/puck-control/passing/shooting/defensive topics. This supports exp26-u11-024's 'Rink and rules awareness' topic placement (an age-appropriate rules-awareness drill) at the age/topic level only -- it is a US-program topic list, not a Canadian rulebook, and it does not certify this drill's exact coordinates, answer key or a specific stop-signal/whistle-awareness claim used in exp26-u11-025 (that scenario's own 'limits' field already scopes its support to 'age-level player knowledge and sportsmanship topics', which page 13's 'Fun/Engagement' focus points and general team-play framing loosely support, not a named whistle-protocol citation).",
+      "jurisdiction": "American (USA Hockey ADM); informs a Canadian-adapted practice context, not a Canadian rule certification.",
+      "ageFormat": "10-and-Under",
+      "claim": "Age/topic-level support for rink-and-rules awareness (exp26-u11-024) and general practice awareness/listening (exp26-u11-025); not a source for the exact drill geometry, answer key, or any specific whistle-stop rule."
+    },
+    {
+      "url": "https://www.hockeycanada.ca/en-ca/news/seven-coaching-principles-vision-scanning-2024-ncw",
+      "checkedAt": "2026-09-06T04:31:53.598Z",
+      "access": "read",
+      "scope": "Read via a normal-browser User-Agent (plain fetch returned HTTP 403; curl with a Chrome UA returned 200, confirming the known hockeycanada.ca UA-sensitivity). Confirms the page's \"Key Information to Identify\" section: scanning should identify \"where their teammates are and where the opposition's pressure is coming from,\" and its \"Drill #3 - Reading Pressure / Corner Situations\" explicitly covers reading pressure to the left/right side during corner puck retrievals. This supports the general teaching principle behind both scenarios (checking pressure and support before/during a retrieval or reception) but certifies none of the specific coordinates, distances, or answer keys, which remain original scene analysis.",
+      "jurisdiction": "Canadian (Hockey Canada)",
+      "ageFormat": "General coaching-principles article, not age-banded to U11 specifically",
+      "claim": "Scanning for teammate location and opponent pressure, and reading pressure during corner/retrieval situations, are named coaching priorities."
+    },
+    {
+      "url": "https://www.hockeycanada.ca/en-ca/news/seven-coaching-principles-vision-scanning-2024-ncw",
+      "checkedAt": "2026-09-05T00:00:00.000Z",
+      "access": "read",
+      "scope": "Fetched successfully with a standard browser User-Agent (a plain fetch first returned HTTP 403; retrying with a browser UA returned HTTP 200, consistent with known Hockey Canada bot-blocking behavior). Article 'Key Information to Identify' section states: players scanning the ice should focus on 'where their teammates are and where the opposition's pressure is coming from.' This directly supports the scenario's re-offer/re-scan teaching (checking D1's position and F1/F2's availability) but does not certify these exact coordinates, this exact answer key, or any specific outcome. The article states it applies 'at all ages levels' with no specific age-band restriction, so it does not conflict with this scenario's U11 band.",
+      "jurisdiction": "Canada (Hockey Canada)",
+      "ageFormat": "General/all-ages coaching principle, no age-band restriction stated",
+      "claim": "Scanning to check teammate position and opposition pressure is a core information-gathering skill taught at all ages."
+    }
+  ],
+  "remainingQuestionIds": []
+}

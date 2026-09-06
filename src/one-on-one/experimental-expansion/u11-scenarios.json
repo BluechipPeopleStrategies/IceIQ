@@ -1,13 +1,13 @@
 [
   {
     "id": "exp26b-u11-001",
-    "version": 1,
+    "version": 2,
     "ageBand": "U11",
     "title": "Show a safe wall-side escape",
     "family": "retrieval-escape",
     "topic": "Retrieval and escape",
     "objective": "Scan the pressure and make a reachable first exit after a wall pickup.",
-    "briefing": "Navy attacks +x. YOU approaches a loose puck beside the left wall; D1 is above you and F2 is inside the ice. The rep asks for the first exit after control, not a certain pass.",
+    "briefing": "Navy attacks the right net (+x). YOU approach a loose puck near the side boards in the left end. D1 is farther up ice and closer to the middle; F2 offers an inside support option. Plan the first exit after gaining control, without assuming a pass will be open.",
     "setup": {
       "actors": [
         {
@@ -41,14 +41,14 @@
       "puck": {
         "owner": null,
         "x": -22,
-        "y": -9
+        "y": -12.4
       }
     },
     "focusActorId": "h1",
     "cues": [
-      "The puck is loose at the wall.",
-      "D1 is above the puck; F2 is a middle outlet.",
-      "The first exit must be re-read after control."
+      "The puck is loose near the side boards.",
+      "D1 is farther up ice and nearer the middle than YOU; F2 is a possible outlet.",
+      "Recheck the exit after gaining control."
     ],
     "tags": [
       "experimental",
@@ -87,7 +87,7 @@
           "a"
         ],
         "basis": "scene",
-        "explanation": "YOU is beside the puck, while F2 and D1 are farther away. The approach still needs a pressure check."
+        "explanation": "YOU are the closest shown player to the loose puck. Being closest does not establish control or arrival order."
       },
       {
         "id": "exp26b-u11-001-q2",
@@ -112,7 +112,7 @@
           "b"
         ],
         "basis": "coaching",
-        "explanation": "Pressure and support describe why an escape could work; if either changes, keep the puck protected and reconsider."
+        "explanation": "Pressure and support shape the possible exit. Recheck both before the pickup and again after gaining control; protect the puck and reconsider if the outlet closes."
       },
       {
         "id": "exp26b-u11-001-q3",
@@ -143,23 +143,23 @@
       {
         "id": "exp26b-u11-001-q4",
         "type": "position",
-        "prompt": "Move YOU to an approach point just inside the wall that keeps F2 visible.",
+        "prompt": "Move YOU toward the loose puck while keeping D1 and F2 in the read.",
         "actorId": "h1",
         "reference": {
           "x": -21,
-          "y": -7.2
+          "y": -10.7
         },
         "basis": "coaching",
-        "explanation": "This point moves YOU off the wall-side puck while keeping the middle outlet and D1 in the picture; another controlled point can also work."
+        "explanation": "This example moves YOU closer to the puck. Recheck D1 and F2 before the first touch; the marker does not prove a safe route or arrival time."
       },
       {
         "id": "exp26b-u11-001-q5",
         "type": "choice",
-        "prompt": "D1 drops toward F2 before your touch. What should change first?",
+        "prompt": "Before your first touch, D1 moves into the passing lane to F2. What should YOU reconsider?",
         "options": [
           {
             "id": "a",
-            "text": "Protect the puck and scan a different exit"
+            "text": "Recheck the pickup and look for another exit if control is gained"
           },
           {
             "id": "b",
@@ -174,7 +174,7 @@
           "a"
         ],
         "basis": "coaching",
-        "explanation": "D1 closing the middle changes the named outlet; protecting the puck buys a chance to find a wall-side or return option."
+        "explanation": "The middle outlet has changed. Reassess the pickup, then protect the puck and check another exit if YOU gain control."
       },
       {
         "id": "exp26b-u11-001-q6",
@@ -187,13 +187,13 @@
   },
   {
     "id": "exp26b-u11-002",
-    "version": 1,
+    "version": 2,
     "ageBand": "U11",
     "title": "Receive on the far shoulder",
     "family": "shoulder-reception",
     "topic": "Receiving",
     "objective": "Receive away from pressure while keeping both the passer and next option available.",
-    "briefing": "Navy attacks +x. F1 carries near the left hash marks and is preparing a pass; YOU is open to the right, with D1 between the intended lane and the boards. F2 is farther up ice.",
+    "briefing": "Navy attacks the right net (+x). F1 has the puck in the left defensive zone and is preparing a pass. YOU are near the left blue line, farther up ice than F1 and closer to the side boards than D1. F2 is farther up ice as a possible next option.",
     "setup": {
       "actors": [
         {
@@ -239,9 +239,9 @@
     },
     "focusActorId": "h1",
     "cues": [
-      "F1 owns the puck.",
-      "D1 is closer to the inside of YOU than F1 is.",
-      "F2 is a possible next option, not a promised pass."
+      "F1 has the puck and is preparing a pass.",
+      "D1 is farther up ice than YOU and closer to the middle.",
+      "F2 is farther up ice as a possible next option."
     ],
     "tags": [
       "experimental",
@@ -305,7 +305,7 @@
           "b"
         ],
         "basis": "coaching",
-        "explanation": "The defender-to-receiver relationship and the passer's route explain why a spot is useful; F2 matters only after the reception read."
+        "explanation": "D1’s position and F1’s passing lane shape the receiving target. Scan F2’s possible continuation too, without assuming the next pass is open."
       },
       {
         "id": "exp26b-u11-002-q3",
@@ -380,13 +380,13 @@
   },
   {
     "id": "exp26b-u11-003",
-    "version": 1,
+    "version": 2,
     "ageBand": "U11",
     "title": "Re-offer after the first lane is covered",
     "family": "support-reoffer",
     "topic": "Support",
     "objective": "Change the support relationship when a defender stays in the original passing line.",
-    "briefing": "Navy attacks +x. F1 has the puck near the middle; YOU is to the right, but D1 occupies the direct line. F2 is wide and can become useful if D1 follows the re-offer.",
+    "briefing": "Navy attacks the right net (+x). F1 has the puck just inside the attacking zone. YOU are farther up ice on the same lateral line, with D1 between you. F2 is wide on the other side and may become useful if D1 follows a new support angle.",
     "setup": {
       "actors": [
         {
@@ -530,7 +530,7 @@
       {
         "id": "exp26b-u11-003-q4",
         "type": "position",
-        "prompt": "Move YOU above the blocked line to offer F1 a new angle without crowding F2.",
+        "prompt": "Move YOU toward the middle to offer F1 a new angle without crowding F2.",
         "actorId": "h1",
         "reference": {
           "x": 14,
@@ -542,7 +542,7 @@
       {
         "id": "exp26b-u11-003-q5",
         "type": "choice",
-        "prompt": "D1 follows you above the line. What is now worth checking?",
+        "prompt": "Suppose D1 follows your move toward the middle. What is worth checking?",
         "options": [
           {
             "id": "a",
