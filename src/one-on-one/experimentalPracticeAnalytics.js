@@ -11,6 +11,7 @@ const CAMERA_ACTIONS = new Set(['labels-on', 'labels-off', 'camera-full', 'camer
 const clone = value => typeof structuredClone === 'function' ? structuredClone(value) : JSON.parse(JSON.stringify(value));
 const validText = (value, max = 180) => typeof value === 'string' && value.trim().length > 0 && value.length <= max;
 const validVersion = value => Number.isSafeInteger(value) && value > 0;
+const validPresentation = value => value.shownOptionIds===undefined&&value.choiceOrderVersion===undefined || value.choiceOrderVersion==='choice-order-v1'&&['choice','multi'].includes(value.questionType)&&Array.isArray(value.shownOptionIds)&&value.shownOptionIds.length>0&&value.shownOptionIds.length<=20&&new Set(value.shownOptionIds).size===value.shownOptionIds.length&&value.shownOptionIds.every(id=>validText(id,100));
 const identity = value => `${value.scenarioId}@${value.scenarioVersion}:${value.questionId}:${value.contentHash || ''}`;
 const validTimestamp = value => validText(value, 80) && Number.isFinite(Date.parse(value)) && new Date(value).toISOString() === value;
 
@@ -31,6 +32,7 @@ export function emptyPracticeAnalytics(sessionId = makeAnonymousSessionId()) {
 
 export function isValidAnalyticsEvent(event) {
   if (!event || typeof event !== 'object' || Array.isArray(event)) return false;
+  if (!validPresentation(event)) return false;
   if (!EVENT_NAMES.has(event.event) || !validText(event.id, 220) || !validTimestamp(event.at)) return false;
   if (!validText(event.scenarioId) || !validVersion(event.scenarioVersion) || !validText(event.questionId)) return false;
   if (event.contentHash !== undefined && !validText(event.contentHash, 160)) return false;
@@ -58,6 +60,9 @@ function normalizeMeta(meta) {
   if (typeof meta.contentHash === 'string' && meta.contentHash.trim()) normalized.contentHash = meta.contentHash.trim();
   if (BASES.has(meta.basis)) normalized.basis = meta.basis;
   if (QUESTION_TYPES.has(meta.questionType)) normalized.questionType = meta.questionType;
+  if(!validPresentation(meta))return null;
+  if(meta.shownOptionIds!==undefined&&(!Array.isArray(meta.questionOptionIds)||meta.questionOptionIds.length!==meta.shownOptionIds.length||meta.shownOptionIds.some(id=>!meta.questionOptionIds.includes(id))))return null;
+  if(meta.shownOptionIds!==undefined){normalized.shownOptionIds=[...meta.shownOptionIds];normalized.choiceOrderVersion=meta.choiceOrderVersion;}
   return validText(normalized.scenarioId) && validVersion(normalized.scenarioVersion) && validText(normalized.questionId) ? normalized : null;
 }
 
@@ -65,6 +70,7 @@ export function normalizeAnalyticsEvent(event) {
   if (!isValidAnalyticsEvent(event)) return null;
   const copy = { event: event.event, id: event.id, at: event.at, scenarioId: event.scenarioId, scenarioVersion: event.scenarioVersion, questionId: event.questionId };
   for (const field of ['contentHash', 'basis', 'questionType']) if (event[field] !== undefined) copy[field] = event[field];
+  if(event.shownOptionIds!==undefined){copy.shownOptionIds=[...event.shownOptionIds];copy.choiceOrderVersion=event.choiceOrderVersion;}
   if (event.event === 'question_check') Object.assign(copy, { attemptNumber: event.attemptNumber, retry: event.retry, ...(event.viewEventId ? { viewEventId: event.viewEventId } : {}), ...(event.basis === 'scene' ? { sceneMatch: event.sceneMatch } : {}) });
   if (event.event === 'reflection_skip' && event.viewEventId) copy.viewEventId = event.viewEventId;
   if (event.event === 'question_flag') copy.category = event.category;

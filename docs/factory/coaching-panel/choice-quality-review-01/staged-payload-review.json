@@ -1,0 +1,93 @@
+{
+  "reviewer": "choice-quality-review-01",
+  "reviewAuthority": "AI advisory only; failed historical calibration and cannot self-certify",
+  "rows": [
+    {
+      "questionId": "exp26-u13-002-q5",
+      "contentHash": "efb1bb9a66d7c96e4e496dc7bf329c62fb80ad98f35d79264f289cebd7286e6f",
+      "hashVerified": true,
+      "verdict": "retain",
+      "highRisk": true,
+      "sceneEvidence": "YOU (home-skater-1) owns the puck at (-25,6). D2 (home-skater-2) is the teammate across the middle at (-24,-6); W and C are separate home teammates. The staged opponent-in-line condition is hypothetical and is not depicted by the frozen image.",
+      "optionReviews": [
+        {"optionId":"a","assessment":"conditionally reasonable but not the named change","reason":"W is a real teammate and potential outlet, but the hypothetical names only an opponent entering the reverse line to D2; W's availability remains unknown."},
+        {"optionId":"b","assessment":"conditionally reasonable but not the named change","reason":"C is a real teammate and potential outlet, but the hypothetical does not establish that C's line changed or is open."},
+        {"optionId":"c","assessment":"supported keyed answer","reason":"The prompt explicitly identifies the planned reverse to D2 and says an opponent entered that passing line."}
+      ],
+      "reason": "The replacement tests identification of the changed option without prescribing the next play. It correctly preserves W, C, a hold, and a later reverse as conditional alternatives. The direct wording is suitable for a U13 change-of-read question.",
+      "proposedRepair": null,
+      "limitations": "The image can establish initial actors and possession, but cannot show the new opponent position, line closure, timing, or interception."
+    },
+    {
+      "questionId": "exp26-u13-003-q5",
+      "contentHash": "69c4835106de1e23a1805f255a3758b2b9f53249d63c49feb7549e15685f765c",
+      "hashVerified": true,
+      "verdict": "retain",
+      "highRisk": true,
+      "sceneEvidence": "D1 (home-skater-2) owns the puck at (-22,7); YOU (home-skater-1) is the wide support at (-7,9); Gold 1/A1 is the opponent at (-14,8), spatially near the D1-to-YOU segment; C (home-skater-3) is a teammate at (-13,1). The follow and clear-C-line conditions are hypothetical.",
+      "optionReviews": [
+        {"optionId":"a","assessment":"factually excluded by the hypothetical","reason":"The prompt explicitly preserves a separate clear D1-to-C line, so C does not need the new angle described."},
+        {"optionId":"b","assessment":"supported keyed answer","reason":"Gold 1 is stated to remain between YOU and D1, directly changing the D1-to-YOU support relationship."},
+        {"optionId":"c","assessment":"relevant carrier alternative but not a support line","reason":"D1 may keep possession, as the explanation states, but retention is D1's decision and does not identify which receiver's lane needs a new angle."}
+      ],
+      "reason": "Actor identities are correct and the prompt separates the two teammate passing lines. Option c is a different category, but it is a defensible carrier alternative rather than careless or absurd; the question remains clear and age-appropriate.",
+      "proposedRepair": null,
+      "limitations": "The frozen image does not prove an inward move, continuing shadow, or a future clear line to C. Those are explicit hypothetical premises only."
+    },
+    {
+      "questionId": "exp26-u13-006-q5",
+      "contentHash": "c9604884ead211e0c171c5cd89b4b4a07b4840a207e365dbb5c9abe289efff46",
+      "hashVerified": true,
+      "verdict": "retain",
+      "highRisk": true,
+      "sceneEvidence": "D1 (home-skater-2) owns the puck at (-9,-2). YOU (home-skater-1) is at (2,6), F1 (home-skater-3) at (4,9), and Gold 1/A1 at (-1,4). The initial D1-to-YOU distance is about 13.60 units and D1-to-F1 about 17.03; these distances do not determine lane availability. The new lane occupancy and clear F1 line are hypothetical.",
+      "optionReviews": [
+        {"optionId":"a","assessment":"plausible movement with the wrong spacing effect","reason":"Moving beside F1 could sometimes exchange or drag coverage, but as worded on the same passing line it does not offer two separate passing options."},
+        {"optionId":"b","assessment":"supported keyed answer","reason":"A distinct angle outside the stated blocker changes YOU's line while preserving F1 as another line for D1 to assess."},
+        {"optionId":"c","assessment":"conditionally useful off-puck position but not a clear option","reason":"Depth can occupy a defender or support a later change, but staying behind Gold 1 leaves Gold 1 on the named D1-to-YOU line."}
+      ],
+      "reason": "The question teaches spacing and reoffering rather than a guaranteed pass. It does not treat proximity as control or promise that the new angle succeeds. Vocabulary and decision load fit U13 if coached as a read rather than a fixed route.",
+      "proposedRepair": null,
+      "limitations": "The image cannot establish future lane clearance, defender motion, or pass success. 'Outside Gold 1's line' must be evaluated live."
+    },
+    {
+      "questionId": "exp26-u13-011-q5",
+      "contentHash": "4f98fc6d0a345fe166b93d9f5a0c62fd360c07d62a8a1992946be842f5f38368",
+      "hashVerified": true,
+      "verdict": "retain",
+      "highRisk": true,
+      "sceneEvidence": "YOU (home-skater-1) owns the puck at (12,0); Gold 1/A1 is directly on the initial puck-to-goalie line at (18,0); D2 (home-skater-2) is a lateral teammate at (13,-8). Initial YOU-to-D2 distance is about 8.06 units. The follow, blocked current shot line, clear D2 line, and receiving room are explicit hypotheticals.",
+      "optionReviews": [
+        {"optionId":"a","assessment":"conditionally valid in another picture but contradicted here","reason":"Shots through traffic can be purposeful, but this question explicitly declares the current shot line blocked and asks which option uses available support."},
+        {"optionId":"b","assessment":"defensible alternative in some pressure patterns but does not answer the question","reason":"A carry toward a defender can draw or freeze pressure before a cutback, yet as written it does not use D2's stated support."},
+        {"optionId":"c","assessment":"supported keyed answer","reason":"Passing to D2 directly uses the clear line and receiving room supplied by the hypothetical without guaranteeing reception or a next result."}
+      ],
+      "reason": "The answer is deliberately constrained by the hypothetical, but the explanation restores conditionality and acknowledges that a carry or later shot could become useful. The decision remains understandable for U13 and correctly names the puck carrier and teammate.",
+      "proposedRepair": null,
+      "limitations": "The static image shows only the initial blocked shot lane; it cannot verify Gold 1's follow, D2's future clearance, pass speed, reception, or next play."
+    },
+    {
+      "questionId": "exp26-u13-012-q5",
+      "contentHash": "3ae16b7358e09384cf35f2782ae5b381325738b32c4b1b1ac3a7efc6693c4c4a",
+      "hashVerified": true,
+      "verdict": "retain",
+      "highRisk": true,
+      "sceneEvidence": "F2 (home-skater-2) owns the puck at (15,8) after the stated pass; YOU (home-skater-1) is off puck at (11,1); Gold 2/A2 is the opponent at (22,-2). The planned return route and Gold 2's move into it are not shown and are explicitly hypothetical.",
+      "optionReviews": [
+        {"optionId":"a","assessment":"conditionally possible continuation but unsupported as a new line","reason":"Continuing a route might drag Gold 2 or create space elsewhere, but the prompt states that route is blocked and asks for a different passing line."},
+        {"optionId":"b","assessment":"supported keyed answer","reason":"Changing support angle changes the line F2 can assess while preserving F2's authority to keep the puck or choose elsewhere."},
+        {"optionId":"c","assessment":"useful communication in some cases but geometrically insufficient","reason":"Calling can help F2 locate support, but calling from the same spot does not itself alter the blocked lane."}
+      ],
+      "reason": "The repair correctly preserves F2 as carrier, YOU as off-puck support, and Gold 2 as opponent. It teaches a simple U13 give-and-go reoffer without requiring the return pass or claiming the new lane is automatically clear.",
+      "proposedRepair": null,
+      "limitations": "Image relevance is limited to the initial possession and actor identities; the route, defender movement, and resulting lane exist only in the hypothetical."
+    }
+  ],
+  "overall": {
+    "payloadVerdicts": {"retain":5,"repair":0,"hold":0},
+    "hashes": "All five beforeHash and afterHash values independently recomputed with questionContentHash and matched staged-repairs.json.",
+    "ageChallenge": "All five are appropriately simple U13 perception-and-adjustment reads. They should remain flexible examples, not team-system mandates.",
+    "imageRelevance": "Each question is anchored to the frozen scene's real possession and actor identities. Each changed lane or defender move is explicitly hypothetical; none is claimed as visible in the current static image.",
+    "approvalStatus": "Retained by this advisory AI review only. This is not human coach approval and, because calibration failed, is not sufficient independent clearance."
+  }
+}

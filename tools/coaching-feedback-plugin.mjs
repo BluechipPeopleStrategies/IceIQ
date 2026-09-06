@@ -3,13 +3,26 @@ import path from 'node:path';
 import crypto from 'node:crypto';
 import {readBankFiles} from './experimental-bank-files.mjs';
 import {questionContentHash} from './question-batch-core.mjs';
+import {presentationMetadata} from '../src/one-on-one/choicePresentation.js';
 export function validateContextFeedback(value,bank){
  const s=bank.find(s=>s.id===value.scenarioId),q=s?.questions.find(q=>q.id===value.questionId);
  if(!q||s.version!==value.scenarioVersion||questionContentHash(s,q)!==value.contentHash)throw Error('Question changed. Reload before sending. Your note remains saved.');
  if(typeof value.note!=='string'||!value.note.trim()||value.note.length>4000)throw Error('Add a note of 1–4000 characters.');
  if(JSON.stringify(value.context||{}).length>12000)throw Error('Context too large.');
+ const rawContext=value.context||{},context={};
+ const point=p=>{if(!p||!Number.isFinite(p.x)||!Number.isFinite(p.y))throw Error('Invalid scene point.');return {x:p.x,y:p.y};};
+ const text=v=>typeof v==='string'&&v.length>0&&v.length<=100;
+ if(rawContext.view!==undefined){if(!['3d','overhead'].includes(rawContext.view))throw Error('Invalid view.');context.view=rawContext.view;}
+ if(rawContext.actors!==undefined){if(!Array.isArray(rawContext.actors)||rawContext.actors.length>30)throw Error('Invalid actors.');context.actors=rawContext.actors.map(a=>{if(!text(a.id)||!Number.isFinite(a.facing))throw Error('Invalid actor.');return {id:a.id,...point(a),facing:a.facing};});}
+ if(rawContext.puck!==undefined){context.puck=point(rawContext.puck);if(text(rawContext.puck.owner))context.puck.owner=rawContext.puck.owner;}
+ for(const field of ['shownOptionIds','choiceOrderVersion'])if(rawContext[field]!==undefined)context[field]=rawContext[field];
+ if(q.type!=='explain'&&rawContext.answer!==undefined){const answer=rawContext.answer;if(answer===null)context.answer=null;else if(q.type==='position')context.answer=point(answer);else {const validIds=(q.options||[]).map(o=>o.id);if(!Array.isArray(answer)||answer.length>20||new Set(answer).size!==answer.length||answer.some(id=>!text(id)||!validIds.includes(id)))throw Error('Invalid answer IDs.');context.answer=[...answer];}}
+ if(context.shownOptionIds!==undefined||context.choiceOrderVersion!==undefined){
+  const verified=presentationMetadata(q,Array.isArray(context.shownOptionIds)?context.shownOptionIds.map(id=>({id})):[]);
+  if(!verified.shownOptionIds||verified.choiceOrderVersion!==context.choiceOrderVersion)throw Error('Displayed choices do not match the question.');
+ }
  const allowed=['Scene looks wrong','Wording unclear','Answer questionable','Too easy/hard','This works well'];
- return {id:crypto.randomUUID(),receivedAt:new Date().toISOString(),status:'new',questionId:q.id,scenarioId:s.id,scenarioVersion:s.version,afterHash:value.contentHash,note:value.note.trim(),tags:(value.tags||[]).filter(t=>allowed.includes(t)),context:value.context||{},questionSnapshot:q};
+ return {id:crypto.randomUUID(),receivedAt:new Date().toISOString(),status:'new',questionId:q.id,scenarioId:s.id,scenarioVersion:s.version,afterHash:value.contentHash,note:value.note.trim(),tags:(value.tags||[]).filter(t=>allowed.includes(t)),context,questionSnapshot:q};
 }
 export function mergeFeedbackHistory(notes,dispositions){return notes.map(note=>{const updates=dispositions.filter(d=>d.feedbackId===note.id&&['investigating','changed','needs-context','no-change'].includes(d.status));return {...note,status:updates.at(-1)?.status||'received',updates,internalNotes:dispositions.filter(d=>d.feedbackId===note.id&&d.status==='internal-note')};});}
 const lines=file=>fs.existsSync(file)?fs.readFileSync(file,'utf8').split(/\r?\n/).filter(Boolean).map(l=>JSON.parse(l)):[];

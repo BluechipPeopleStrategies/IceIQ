@@ -1,6 +1,6 @@
 # RinkReads — Task List
 
-**Last updated:** 2026-09-06 · Implementation plan saved for choice ordering, review instrumentation, five-scene repair batches and verified releases. Production a075efe unchanged; 83 candidates and five U13 drafts remain in the review queue. Supabase deferred.
+**Last updated:** 2026-09-06 · Choice-order implementation and presentation metadata built locally; 52 tests pass. Independent code findings resolved. Five U13 content drafts held after review; 78 other candidates remain unreviewed. Production a075efe unchanged; Supabase deferred.
 
 **Scope:** RinkReads **app build + content factory**. Launch/distribution (sending the beta, marketing) and the separate BlueChip business are **out of scope** — parked at the bottom. Priority = position in this list. A new idea that isn't here goes to the **Parking Lot** first, then gets promoted on purpose — that's the scope-creep guard.
 
@@ -56,6 +56,8 @@
 - *(New ideas land here first, then get promoted into NEXT/LATER on purpose.)*
 
 ## Changelog
+
+- 2026-09-06: Implemented stable answer-independent choice presentation and ID-bound analytics/feedback context. Closed independent code findings including reflection/nested-context capture. 52 regression tests pass; build and production-boundary pass; choice/multi browser checks pass. Two coaching reviews preserved, five drafts held for scene-dependent redesign and qualification gaps. No authored question edits or deployment. See docs/factory/coaching-panel/CHOICE-ORDER-IMPLEMENTATION.md.
 
 - 2026-09-06: Added the six-task question-choice quality implementation plan, covering stable answer-independent presentation, traceable analytics, independent payload review, guarded source repair, optional-feedback queue and release checks. Planning only; no source question changes. Plan: [question choice quality](../superpowers/plans/2026-09-06-question-choice-quality.md).
 

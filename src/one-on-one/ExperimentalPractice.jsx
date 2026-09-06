@@ -15,6 +15,8 @@ import calibrationPack from '../../docs/factory/calibration/skating-movement-202
 import coachingPilot from '../../docs/factory/coaching-panel/pilot-2026-09-06/staged-repairs.json';
 import CoachingFeedbackPanel from './CoachingFeedbackPanel.jsx';
 import PlacementFeedback from './PlacementFeedback.jsx';
+import {choiceSeed,presentChoices,presentationMetadata} from './choicePresentation.js';
+import choiceOrderExceptions from './choiceOrderExceptions.json';
 import placementPack from '../../docs/factory/coaching-panel/placement-pilot.json';
 import {samplePlacementAreas,placementSource} from './placementEvaluation.js';
 import {experimentalRinkContext} from './experimentalRinkContext.js';
@@ -47,7 +49,7 @@ export function ExperimentalBoard({scene,onPoint,reference}){
  </svg>;
 }
 
-function ResponseControls({question:q,value,onChange}){
+function ResponseControls({question:q,value,onChange,displayedOptions=q.options}){
  if(q.type==='explain')return <label className="ep-reflection">Your thinking (optional)<textarea value={value||''} maxLength={10000} onChange={e=>onChange(e.target.value)} placeholder="What did you notice? A short answer is enough."/></label>;
  if(q.type==='position')return <p className="ep-hint">Select a position on the rink, or use the coordinate controls. You can compare your choice with an example after responding.</p>;
  if(q.type==='sequence')return <ol className="ep-sequence">{value.map((id,index)=>{
@@ -55,7 +57,7 @@ function ResponseControls({question:q,value,onChange}){
   const move=direction=>{const next=[...value];[next[index],next[index+direction]]=[next[index+direction],next[index]];onChange(next);};
   return <li key={id}><span className="ep-order">{index+1}</span><span>{option.text}</span><button type="button" disabled={index===0} aria-label={`Move ${option.text} earlier`} onClick={()=>move(-1)}>↑</button><button type="button" disabled={index===value.length-1} aria-label={`Move ${option.text} later`} onClick={()=>move(1)}>↓</button></li>;
  })}</ol>;
- return <div className="ep-options" role="group" aria-label={q.type==='multi'?'Choose all that apply':'Choose one answer'}>{q.options.map(option=>{
+ return <div className="ep-options" role="group" aria-label={q.type==='multi'?'Choose all that apply':'Choose one answer'}>{displayedOptions.map(option=>{
   const picked=value.includes(option.id);
   return <button type="button" key={option.id} aria-pressed={picked} onClick={()=>onChange(q.type==='multi'?(picked?value.filter(id=>id!==option.id):[...value,option.id]):[option.id])}><span className={q.type==='multi'?'ep-check':'ep-radio'}>{picked?'✓':''}</span>{option.text}</button>;
  })}</div>;
@@ -71,7 +73,11 @@ function ScenarioQuestions({scenario:s,record,onRecord,onFlag,onMetric}){
  const [index,setIndex]=useState(()=>Math.max(0,visibleQuestions.findIndex(q=>q.id===requestedQuestionId))),[drafts,setDrafts]=useState({}),[board,setBoard]=useState(false),[availability,setAvailability]=useState(true),[notice,setNotice]=useState('');
  const currentAnswers=record?.version===s.version?record.answers||{}:{};
  const q=visibleQuestions[index]||visibleQuestions[0], saved=currentAnswers[q.id];
- useEffect(()=>{onMetric('view',s,q);},[onMetric,s,q]);
+ const [presentationSeed]=useState(()=>choiceSeed());
+ const presentationIdentity=contentManifest.questions[q.id]?.scenarioVersion===s.version?contentManifest.questions[q.id].contentHash:placementSource(s,q);
+ const displayedOptions=useMemo(()=>presentChoices(q,{seed:presentationSeed,contentHash:presentationIdentity,preserveOrder:choiceOrderExceptions.some(e=>e.questionId===q.id&&e.contentHash===presentationIdentity)}),[q,presentationSeed,presentationIdentity]);
+ const choiceMeta=useMemo(()=>presentationMetadata(q,displayedOptions),[q,displayedOptions]);
+ useEffect(()=>{onMetric('view',s,q,choiceMeta);},[onMetric,s,q,choiceMeta]);
  useEffect(()=>{const url=new URL(window.location.href);url.searchParams.set('scenario',s.id);url.searchParams.set('question',q.id);window.history.replaceState(window.history.state,'',url);},[s.id,q.id]);
  const value=Object.hasOwn(drafts,q.id)?drafts[q.id]:saved?.value??defaultResponse(q);
  const [revealed,setRevealed]=useState({});
@@ -89,7 +95,7 @@ function ScenarioQuestions({scenario:s,record,onRecord,onFlag,onMetric}){
  useEffect(()=>{setCoordinates({x:String(actor?.x??''),y:String(actor?.y??'')});},[q.id,actor?.x,actor?.y]);
  const change=next=>{setDrafts(current=>({...current,[q.id]:next}));setRevealed(current=>({...current,[q.id]:false}));if(q.type!=='explain'&&responseReady(q,next))onRecord(q,next,false);setNotice('');};
  const move=point=>{if(isCoachRoutePoint(point))change({x:Math.round(point.x*100)/100,y:Math.round(point.y*100)/100});};
- const review=()=>{if(!responseReady(q,value))return;onRecord(q,value,true);onMetric('check',s,q,{sceneMatch:reviewResponse(q,value)?.matched});setRevealed(current=>({...current,[q.id]:true}));};
+ const review=()=>{if(!responseReady(q,value))return;onRecord(q,value,true);onMetric('check',s,q,{...choiceMeta,sceneMatch:reviewResponse(q,value)?.matched});setRevealed(current=>({...current,[q.id]:true}));};
   const skipReflection=()=>{onRecord(q,'',true);onMetric('skip',s,q);setDrafts(current=>{const next={...current};delete next[q.id];return next;});setRevealed(current=>({...current,[q.id]:true}));};
  return <section className="ep-scenario" aria-label={s.title}>
   <header><p className="ep-kicker">{s.ageBand} / {s.topic} / {s.id}</p><h2>{s.title}</h2><p className="ep-briefing">{s.briefing}</p></header>
@@ -101,10 +107,10 @@ function ScenarioQuestions({scenario:s,record,onRecord,onFlag,onMetric}){
     {notice&&<p role="alert">{notice}</p>}
     <details className="ep-positions"><summary>Player locations and facing</summary><ul>{scene.actors.map(a=><li key={a.id}>{actorDisplayName(a)} · {a.x.toFixed(1)}, {a.y.toFixed(1)} m · {Math.round(a.facing*180/Math.PI)}°</li>)}</ul><p>0° faces the right end of the rink. Turning the camera does not change the players’ directions.</p></details>
    </div>
-   <div className="ep-question"><p className="ep-kicker">QUESTION {index+1} OF {visibleQuestions.length} · {q.basis==='scene'?'READ THE SCENE':'EXPLORE A DECISION'}</p><h3>{q.prompt}</h3><ResponseControls question={q} value={value} onChange={change}/><button type="button" className="ep-primary" disabled={!responseReady(q,value)} onClick={review}>{isPosition?'Check my position':q.basis==='scene'?'Check the scene':'Compare my thinking'}</button>{q.type==='explain'&&!showReview&&<button type="button" className="ep-skip-reflection" onClick={skipReflection}>Skip reflection / Continue without writing</button>}
+   <div className="ep-question"><p className="ep-kicker">QUESTION {index+1} OF {visibleQuestions.length} · {q.basis==='scene'?'READ THE SCENE':'EXPLORE A DECISION'}</p><h3>{q.prompt}</h3><ResponseControls question={q} displayedOptions={displayedOptions} value={value} onChange={change}/><button type="button" className="ep-primary" disabled={!responseReady(q,value)} onClick={review}>{isPosition?'Check my position':q.basis==='scene'?'Check the scene':'Compare my thinking'}</button>{q.type==='explain'&&!showReview&&<button type="button" className="ep-skip-reflection" onClick={skipReflection}>Skip reflection / Continue without writing</button>}
     {isPosition&&showReview&&<PlacementFeedback showAreas={showAreas} onToggleAreas={()=>setShowAreas(v=>!v)} hasAreas={areaCells.length>0} scenario={s} question={q} scene={scene} point={value} onNext={index<visibleQuestions.length-1?()=>setIndex(index+1):null} onExample={()=>setBoard(true)} onTry={()=>setRevealed(old=>({...old,[q.id]:false}))}/>}
     {result&&!isPosition&&<div className="ep-response" aria-live="polite"><strong>{result.heading}</strong><p>{result.explanation}</p>{q.answer&&<p><b>{q.basis==='scene'?'Scene answer':'Suggested response'}:</b> {q.answer.map(id=>q.options.find(o=>o.id===id).text).join(q.type==='sequence'?' → ':'; ')}</p>}{isPosition&&<><p>Example position: {q.reference.x}, {q.reference.y} m. Other positions may work; compare the passing lane, pressure and support.</p><button type="button" onClick={()=>setBoard(true)}>Show example on overhead board</button></>}{q.basis==='coaching'&&<small>This draft gives a coaching suggestion. It does not award mastery or grade an exact position.</small>}{index<visibleQuestions.length-1&&<button type="button" className="ep-next" onClick={()=>setIndex(index+1)}>Next question →</button>}</div>}
-    {import.meta.env.DEV?<CoachingFeedbackPanel key={`${s.id}:${s.version}:${q.id}`} scenario={s} question={q} scene={scene} answer={value} view={board||!availability?'overhead':'3d'}/>:onFlag?<QuestionFlag key={q.id} onFlag={flag=>onFlag(s,q,{...flag,response:value})}/>:null}
+    {import.meta.env.DEV?<CoachingFeedbackPanel presentation={choiceMeta} key={`${s.id}:${s.version}:${q.id}`} scenario={s} question={q} scene={scene} answer={value} view={board||!availability?'overhead':'3d'}/>:onFlag?<QuestionFlag key={q.id} onFlag={flag=>onFlag(s,q,{...flag,response:value})}/>:null}
    </div>
   </div>
   <details className="ep-source-review"><summary>Teaching notes, sources and review status</summary><p><b>Learning objective:</b> {s.objective}</p><p><b>Cues:</b> {s.cues.join(' · ')}</p><p><b>Limitations:</b> {s.limits}</p><p>Original experimental scenario. AI coaching review findings are available in the question workshop. Human coach approval, animation physics and approved-bank admission remain separate. The rink is a static illustration, not a verified action simulation.</p><ul>{s.sources.map(source=><li key={source.id}><a href={source.url} target="_blank" rel="noreferrer">{source.title}</a> · {source.section}<p>{source.use}</p></li>)}</ul></details>
@@ -124,7 +130,7 @@ export default function ExperimentalPractice({playerId='practice-preview',bank:s
   if(calibration)return;
   const identity=contentManifest.questions[q.id];
   if(!identity||identity.scenarioId!==s.id||identity.scenarioVersion!==s.version)return;
-  const meta={...identity,questionId:q.id,basis:q.basis,questionType:q.type,...extra};
+  const meta={...identity,questionId:q.id,basis:q.basis,questionType:q.type,...extra,questionOptionIds:q.options?.map(o=>o.id)};
   if(event==='view')analytics.recordQuestionView(meta);
   if(event==='check')analytics.recordQuestionCheck(meta);
   if(event==='skip')analytics.recordReflectionSkip(meta);

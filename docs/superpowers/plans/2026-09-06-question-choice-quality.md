@@ -148,3 +148,11 @@ assert.equal(finalReview.verdict, 'retain'); // validated packet contract
 This plan is complete when stable choice presentation is verified, all 83 original candidates have an evidenced disposition, cleared repairs are applied, and live checks match release receipts. Holds may remain only with specific unresolved evidence; they are not described as repaired. Review of 83 candidates does not certify every one of the 1,600 questions, and the inventory is not an empirical measure of learning quality.
 
 Plan self-review: source identity/history is covered in Tasks 1/4/5; hockey and age quality in Tasks 1/5; position bias in Task 2; observation data in Task 3; optional user feedback in Task 5; release verification in Task 6. Supabase, mastery and new curriculum generation are explicitly excluded. No implementation was performed as part of writing this plan.
+
+## Execution progress (September 6)
+
+- Task 1: two reviews completed; root disposition holds all five drafts. Calibration gaps and exact issues preserved. No application clearance.
+- Tasks 2/3: implementation and independent code review completed locally; 52 combined tests pass. Single/multi browser stability verified. Remaining release checks listed in CHOICE-ORDER-IMPLEMENTATION.md.
+- Task 4: no question applied, since no draft cleared the content gate.
+- Task 5: initial exact-hash queue saved (five holds, 78 unreviewed); queue interface and further content batches remain.
+- Task 6: build/boundary pass locally; new implementation not deployed. Production remains a075efe.
