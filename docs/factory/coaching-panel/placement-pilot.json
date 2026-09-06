@@ -1,0 +1,116 @@
+{
+  "status": "draft-geometry-only",
+  "limitations": "Thresholds authored for prototype testing only; no human calibration, predictive physics or mastery eligibility.",
+  "rubrics": [
+    {
+      "questionId": "exp26-u11-001-q4",
+      "scenarioVersion": 4,
+      "sourceSignature": "{\"scene\":{\"id\":\"exp26-u11-001\",\"ageBand\":\"U11\",\"title\":\"Look beyond the loose puck\",\"family\":\"retrieval-scan\",\"topic\":\"Scanning\",\"objective\":\"Locate an outlet and approaching pressure before planning a retrieval.\",\"briefing\":\"You are in Navy’s defensive zone, where Navy defends the nearby net. YOU are approaching a loose puck near the side boards. F2 is a possible outlet toward the middle; D1 is approaching from up ice. No player has recovered the puck yet.\",\"setup\":{\"actors\":[{\"id\":\"h1\",\"label\":\"YOU\",\"team\":\"home\",\"role\":\"skater\",\"x\":-16,\"y\":-6,\"facing\":-1.88283844835743},{\"id\":\"h2\",\"label\":\"F2\",\"team\":\"home\",\"role\":\"skater\",\"x\":-10,\"y\":-1,\"facing\":3.14},{\"id\":\"a1\",\"label\":\"D1\",\"team\":\"away\",\"role\":\"skater\",\"x\":-12,\"y\":-6,\"facing\":3.14}],\"puck\":{\"owner\":null,\"x\":-18,\"y\":-12.2}},\"focusActorId\":\"h1\",\"cues\":[\"The puck is loose beside the wall.\",\"F2 is away from the wall.\",\"D1 approaches from the up-ice side.\"],\"tags\":[\"retrieval-scan\",\"scanning\",\"experimental\"],\"sources\":[{\"id\":\"hc-vision-2024\",\"title\":\"7 Principles for Coaches: Vision & Scanning\",\"url\":\"https://www.hockeycanada.ca/en-ca/news/seven-coaching-principles-vision-scanning-2024-ncw\",\"section\":\"Key Information to Identify; Reading Pressure / Corner Situations\",\"use\":\"Supports checking teammates and pressure; answers are original scene analysis.\"}],\"limits\":\"Static original practice illustration; movement and outcomes are not simulated. A frozen picture cannot measure an actual shoulder check or the arrival order. Position references are examples, not graded target zones.\"},\"question\":{\"id\":\"exp26-u11-001-q4\",\"type\":\"position\",\"prompt\":\"Move YOU to an approach point on the middle side of the wall-side puck.\",\"actorId\":\"h1\",\"reference\":{\"x\":-18,\"y\":-10.5},\"basis\":\"coaching\",\"explanation\":\"The example is 1.70 m from the puck and closer to rink middle than the puck. Recheck F2 and D1 before the touch; the marker does not prove where YOU look or whether possession is gained.\"}}",
+      "contentHash": "f955c778d81d105b2849fab65a05d62246b0e7c5a52b4560c057156033ba4062",
+      "rubricVersion": 1,
+      "status": "draft",
+      "actorId": "h1",
+      "criteria": [
+        {
+          "id": "approach",
+          "type": "distance",
+          "target": "puck",
+          "label": "Approach distance",
+          "strongMin": 0.75,
+          "strongMax": 3,
+          "workableMin": 0.25,
+          "workableMax": 4.5,
+          "feedback": {
+            "strong": "Near the puck with room before the touch.",
+            "workable": "Approach distance is at the edge of this draft range.",
+            "adjust": "Try a spot closer to the puck, leaving room before the touch."
+          }
+        },
+        {
+          "id": "side",
+          "type": "middle-side",
+          "target": "puck",
+          "label": "Middle side",
+          "strongMin": 0.5,
+          "workableMin": 0,
+          "feedback": {
+            "strong": "You are on the middle side of the puck.",
+            "workable": "There is little room between your spot and the puck’s board-side line.",
+            "adjust": "Move to the middle side of the puck."
+          }
+        },
+        {
+          "id": "pressure",
+          "type": "distance",
+          "target": "a1",
+          "label": "Room from D1",
+          "strongMin": 3,
+          "strongMax": null,
+          "workableMin": 1.5,
+          "workableMax": null,
+          "feedback": {
+            "strong": "This spot leaves room from D1.",
+            "workable": "D1 is close. Consider more room.",
+            "adjust": "This spot crowds D1."
+          }
+        }
+      ],
+      "rubricHash": "66bd01c2f5a5f9d577d3d8c2cdcb157a07fcad20f1571cd07a1a38962b712ec5"
+    },
+    {
+      "questionId": "exp26-u11-001-q9",
+      "scenarioVersion": 4,
+      "sourceSignature": "{\"scene\":{\"id\":\"exp26-u11-001\",\"ageBand\":\"U11\",\"title\":\"Look beyond the loose puck\",\"family\":\"retrieval-scan\",\"topic\":\"Scanning\",\"objective\":\"Locate an outlet and approaching pressure before planning a retrieval.\",\"briefing\":\"You are in Navy’s defensive zone, where Navy defends the nearby net. YOU are approaching a loose puck near the side boards. F2 is a possible outlet toward the middle; D1 is approaching from up ice. No player has recovered the puck yet.\",\"setup\":{\"actors\":[{\"id\":\"h1\",\"label\":\"YOU\",\"team\":\"home\",\"role\":\"skater\",\"x\":-16,\"y\":-6,\"facing\":-1.88283844835743},{\"id\":\"h2\",\"label\":\"F2\",\"team\":\"home\",\"role\":\"skater\",\"x\":-10,\"y\":-1,\"facing\":3.14},{\"id\":\"a1\",\"label\":\"D1\",\"team\":\"away\",\"role\":\"skater\",\"x\":-12,\"y\":-6,\"facing\":3.14}],\"puck\":{\"owner\":null,\"x\":-18,\"y\":-12.2}},\"focusActorId\":\"h1\",\"cues\":[\"The puck is loose beside the wall.\",\"F2 is away from the wall.\",\"D1 approaches from the up-ice side.\"],\"tags\":[\"retrieval-scan\",\"scanning\",\"experimental\"],\"sources\":[{\"id\":\"hc-vision-2024\",\"title\":\"7 Principles for Coaches: Vision & Scanning\",\"url\":\"https://www.hockeycanada.ca/en-ca/news/seven-coaching-principles-vision-scanning-2024-ncw\",\"section\":\"Key Information to Identify; Reading Pressure / Corner Situations\",\"use\":\"Supports checking teammates and pressure; answers are original scene analysis.\"}],\"limits\":\"Static original practice illustration; movement and outcomes are not simulated. A frozen picture cannot measure an actual shoulder check or the arrival order. Position references are examples, not graded target zones.\"},\"question\":{\"id\":\"exp26-u11-001-q9\",\"type\":\"position\",\"prompt\":\"Move F2 toward the middle so YOU have a passing option after recovering the puck.\",\"actorId\":\"h2\",\"reference\":{\"x\":-16,\"y\":0},\"basis\":\"coaching\",\"explanation\":\"The example brings F2 closer to the middle of the rink and leaves D1 outside the straight line from the loose puck to F2. Compare those relationships at your chosen spot. Recheck after recovery; the picture does not guarantee a completed pass.\"}}",
+      "contentHash": "4cbbdb8dc215a2500a82e57e4e9e4300ae16738d05a2c4d30ec3b5d80e7157ce",
+      "rubricVersion": 1,
+      "status": "draft",
+      "actorId": "h2",
+      "criteria": [
+        {
+          "id": "middle",
+          "type": "middle",
+          "label": "Middle support",
+          "strongMax": 0.5,
+          "workableMax": 1,
+          "feedback": {
+            "strong": "F2 is close to the rink’s middle.",
+            "workable": "F2 is near the middle, with some width.",
+            "adjust": "Bring F2 closer to the middle for this task."
+          }
+        },
+        {
+          "id": "lane",
+          "type": "lane",
+          "target": "puck",
+          "blockers": [
+            "a1"
+          ],
+          "label": "Line from the puck",
+          "strongMin": 2,
+          "workableMin": 1,
+          "feedback": {
+            "strong": "D1 is outside the direct line from the puck.",
+            "workable": "D1 is near that line. Try a different angle.",
+            "adjust": "D1 crowds the direct line. Change the support angle."
+          }
+        },
+        {
+          "id": "support",
+          "type": "distance",
+          "target": "puck",
+          "label": "Support distance",
+          "strongMin": 2,
+          "strongMax": 15,
+          "workableMin": 1,
+          "workableMax": 18,
+          "feedback": {
+            "strong": "F2 is within this draft support-distance range.",
+            "workable": "The support distance has a tradeoff.",
+            "adjust": "Try a more connected support spot."
+          }
+        }
+      ],
+      "rubricHash": "68b0077002db5f86b4f3f00123327500f1e0df69882040fd46bd260efa11a1d7"
+    }
+  ]
+}
