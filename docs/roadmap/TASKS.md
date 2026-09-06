@@ -1,6 +1,6 @@
 # RinkReads — Task List
 
-**Last updated:** 2026-09-06 · Production 0126049 verified: 200 scenes with exact-content bindings (194 mapped, six taxonomy holds), local feedback aggregation, four separate calibration drafts / 24 questions, and screenshot-driven U11 wall retrieval, answer acknowledgement and zone wording repairs. Nine prior net-overlap repairs remain deployed as fb74d5b. Graded placement-area feedback is designed, not yet implemented. Supabase remains deferred.
+**Last updated:** 2026-09-06 · Coaching panel pilot completed: five scenes / 34 questions, five independently rechecked draft repairs staged, not applied; model calibration failures and corrections preserved. Production 0126049 verified: 200 scenes with exact-content bindings (194 mapped, six taxonomy holds), local feedback aggregation, four separate calibration drafts / 24 questions, and screenshot-driven U11 wall retrieval, answer acknowledgement and zone wording repairs. Nine prior net-overlap repairs remain deployed as fb74d5b. Graded placement-area feedback is designed, not yet implemented. Supabase remains deferred.
 
 **Scope:** RinkReads **app build + content factory**. Launch/distribution (sending the beta, marketing) and the separate BlueChip business are **out of scope** — parked at the bottom. Priority = position in this list. A new idea that isn't here goes to the **Parking Lot** first, then gets promoted on purpose — that's the scope-creep guard.
 
@@ -56,6 +56,8 @@
 - *(New ideas land here first, then get promoted into NEXT/LATER on purpose.)*
 
 ## Changelog
+
+- 2026-09-06: Completed research-enabled coaching panel pilot with source receipts, blind reviews, all-option review, stronger escalation after Luna calibration failure, root adjudication and five staged repairs. Added reusable charter and receipt validator (five tests pass). Live bank unchanged; rendered/human calibration and broader distractor-quality work remain. See docs/factory/coaching-panel/pilot-2026-09-06/REPORT.md.
 
 - **2026-09-06** · Deployed 0126049; Vercel success and live calibration counts, U11 revised question/zone context and 31-concept report verified. Calibration remains separate from normal practice; human coaching and placement-rubric calibration are next.
 

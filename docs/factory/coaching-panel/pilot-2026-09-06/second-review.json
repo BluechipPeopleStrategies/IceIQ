@@ -1,0 +1,521 @@
+{
+  "reviewer": "Sol independent",
+  "rows": [
+    {
+      "questionId": "cal26-u7-skating-space-001-q1",
+      "contentHash": "d60dc0848cdcab2185f00358d20620eb74f743962b3b311c7db23459ed8bfb24",
+      "verdict": "retain",
+      "highRisk": false,
+      "sceneEvidence": "puck.owner is home-skater-1, labelled YOU; Navy2 and Gold1 are separate actors.",
+      "optionReviews": [
+        {"optionId": "a", "assessment": "supported", "reason": "Matches the explicit puck owner."},
+        {"optionId": "b", "assessment": "unsupported but plausible U7 distractor", "reason": "Navy2 is a teammate but is not the owner."},
+        {"optionId": "c", "assessment": "unsupported but plausible U7 distractor", "reason": "Gold1 is an opponent but is not the owner."}
+      ],
+      "reason": "A simple U7 ownership observation. The skating sources support age-topic placement, not this exact key; the owner field supplies the key.",
+      "proposedRepair": null,
+      "limitations": ["Static scene; no puck-control quality is assessed."]
+    },
+    {
+      "questionId": "cal26-u7-skating-space-001-q2",
+      "contentHash": "2e35aa93ba8f5de34b018b867dd2d6c6fb7be52b028ac1ff0c6cf5555016db43",
+      "verdict": "retain",
+      "highRisk": false,
+      "sceneEvidence": "Navy2 and Gold1 have visible coordinates; no velocity exists and the briefing says speed is not shown.",
+      "optionReviews": [
+        {"optionId": "a", "assessment": "supported", "reason": "Navy2's location is rendered."},
+        {"optionId": "b", "assessment": "supported", "reason": "Gold1's location is rendered."},
+        {"optionId": "c", "assessment": "unsupported", "reason": "A future skating speed cannot be observed in a freeze."}
+      ],
+      "reason": "The two visible-position answers and motion distractor are clear for U7.",
+      "proposedRepair": null,
+      "limitations": ["The sources do not validate a digital speed inference; the item correctly rejects one."]
+    },
+    {
+      "questionId": "cal26-u7-skating-space-001-q3",
+      "contentHash": "4e70c84614d8485ad4099e0aaa529d81f7732effba28cee3bfcd929d64fbe28d",
+      "verdict": "retain",
+      "highRisk": true,
+      "sceneEvidence": "The strings form a coherent look, choose, recheck routine; no scene state establishes an exclusive temporal order.",
+      "optionReviews": [
+        {"optionId": "a", "assessment": "supported as suggested first step", "reason": "Scanning players before selecting space is age-appropriate."},
+        {"optionId": "b", "assessment": "supported as suggested second step", "reason": "A candidate pocket follows the initial look."},
+        {"optionId": "c", "assessment": "supported as suggested final check", "reason": "The wording says before changing direction, but rechecking can also occur while choosing."}
+      ],
+      "reason": "Retain only as a labelled coaching suggestion. The UI and explanation do not treat the shuffled order as objective mastery.",
+      "proposedRepair": null,
+      "limitations": ["a-c-b is also defensible if the second look confirms the pocket before it is chosen."]
+    },
+    {
+      "questionId": "cal26-u7-skating-space-001-q4",
+      "contentHash": "347edb4bd39318fe687275d504d62b631af8417b7d02ce0c523fc9657b74248e",
+      "verdict": "retain",
+      "highRisk": true,
+      "sceneEvidence": "Reference (-5,-8) is inside the renderer's rounded NHL bounds; it is 4.24 m from Navy2 and 12.53 m from Gold1. The carried puck follows YOU in makeScene.",
+      "optionReviews": [],
+      "reason": "The reference is a legal, visibly separate example and the explanation admits multiple open spots. This is suitable as a U7 discussion marker.",
+      "proposedRepair": null,
+      "limitations": ["No minimum clearance is defined; 4.24 m is descriptive, not a certified safe radius."]
+    },
+    {
+      "questionId": "cal26-u7-skating-space-001-q5",
+      "contentHash": "8a82d000fcb6e3677e2d37c285255368dfa7271c93c5011877557dc975ad9114",
+      "verdict": "retain",
+      "highRisk": false,
+      "sceneEvidence": "The hypothetical explicitly changes the selected pocket by placing Navy2 in it.",
+      "optionReviews": [
+        {"optionId": "a", "assessment": "supported", "reason": "A changed space calls for another look."},
+        {"optionId": "b", "assessment": "weak but age-appropriate distractor", "reason": "Following very close does not restore open space."},
+        {"optionId": "c", "assessment": "weak but age-appropriate distractor", "reason": "It ignores the stated change."}
+      ],
+      "reason": "Simple reassessment is appropriate at U7, although the two distractors are intentionally easy.",
+      "proposedRepair": null,
+      "limitations": ["Other safe responses could exist outside the listed choices."]
+    },
+    {
+      "questionId": "cal26-u7-skating-space-001-q6",
+      "contentHash": "87e0d2663befe5cdf215793e7928d3421ba58aa6c0298926730e9aaaab0c853c",
+      "verdict": "retain",
+      "highRisk": false,
+      "sceneEvidence": "Navy2, Gold1 and open areas are all visible; movement is not shown.",
+      "optionReviews": [],
+      "reason": "The open prompt and explanation accept several concrete U7 observations without scoring technique.",
+      "proposedRepair": null,
+      "limitations": ["Human coach judgment is still needed for child-language clarity."]
+    },
+    {
+      "questionId": "cal26-u9-wall-turn-001-q1",
+      "contentHash": "560fac293eef2c1772e32d0f55b87db7274ab43d215092d71395906453b80b33",
+      "verdict": "repair",
+      "highRisk": false,
+      "sceneEvidence": "From YOU (-17,10.5), both Gold1 (-9,6) and Navy2 (-10,1) are sqrt(84.25)=9.18 m away; Gold2 is 18.07 m away.",
+      "optionReviews": [
+        {"optionId": "a", "assessment": "supported only if the stem says opponent", "reason": "Gold1 ties Navy2 overall but is the closest opponent."},
+        {"optionId": "b", "assessment": "also supported by the current stem", "reason": "Navy2 is exactly tied with Gold1 as closest player."},
+        {"optionId": "c", "assessment": "unsupported", "reason": "Gold2 is much farther away."}
+      ],
+      "reason": "The single-answer key is invalid for 'player'; the explanation silently changes the comparison to 'opponent.'",
+      "proposedRepair": {
+        "id": "cal26-u9-wall-turn-001-q1",
+        "type": "choice",
+        "prompt": "Which opponent is closest to YOU in this picture?",
+        "options": [{"id":"a","text":"Gold1"},{"id":"b","text":"Gold2"},{"id":"c","text":"The picture does not show either opponent"}],
+        "answer": ["a"],
+        "basis": "scene",
+        "explanation": "Gold1 is 9.18 m from YOU and Gold2 is 18.07 m away. That is a position comparison, not a prediction of who arrives first."
+      },
+      "limitations": ["Source principles do not determine the key; coordinates do."]
+    },
+    {
+      "questionId": "cal26-u9-wall-turn-001-q2",
+      "contentHash": "75d2baecbd0d44fcb9a720a173a99188e6a496f91c3e840851a3b5b5d5891ace",
+      "verdict": "retain",
+      "highRisk": false,
+      "sceneEvidence": "YOU are at y=10.5 near the side boards; Gold1 is at (-9,6); speed is not represented.",
+      "optionReviews": [
+        {"optionId": "a", "assessment": "supported", "reason": "The boards are a visible constraint."},
+        {"optionId": "b", "assessment": "supported", "reason": "Gold1's wall-side location is visible."},
+        {"optionId": "c", "assessment": "unsupported", "reason": "No measured velocity is present."}
+      ],
+      "reason": "Clear U9 cue recognition within the static-scene boundary.",
+      "proposedRepair": null,
+      "limitations": ["It does not assess turn execution."]
+    },
+    {
+      "questionId": "cal26-u9-wall-turn-001-q3",
+      "contentHash": "858af43adbfe3e0c0d83ef1925177070316b0279b0aac8a3f56d643051706618",
+      "verdict": "retain",
+      "highRisk": true,
+      "sceneEvidence": "The options create a coherent notice, find, recheck suggestion; the scene cannot prove an exclusive ordering.",
+      "optionReviews": [
+        {"optionId": "a", "assessment": "supported as first cue", "reason": "It establishes wall and player constraints."},
+        {"optionId": "b", "assessment": "supported as candidate-space step", "reason": "It follows the initial comparison."},
+        {"optionId": "c", "assessment": "supported as final check", "reason": "It remains necessary before direction changes."}
+      ],
+      "reason": "Retain as a suggested routine; the explanation correctly says it is not a required footwork order.",
+      "proposedRepair": null,
+      "limitations": ["a-c-b can be reasonable when rechecking precedes selecting the final pocket."]
+    },
+    {
+      "questionId": "cal26-u9-wall-turn-001-q4",
+      "contentHash": "1aa59756e1bc7404c09940e2cd8cb1a18de07032ebf228f9edb63af1227e4148",
+      "verdict": "retain",
+      "highRisk": true,
+      "sceneEvidence": "Reference (-20,4) is legal in the rounded renderer, reduces |y| from 10.5 to 4, and increases Gold1 distance from 9.18 m to 11.18 m.",
+      "optionReviews": [],
+      "reason": "The example satisfies both stated comparisons and the explanation avoids claiming a safe or successful turn.",
+      "proposedRepair": null,
+      "limitations": ["No path, speed, reach, or stopping distance is simulated."]
+    },
+    {
+      "questionId": "cal26-u9-wall-turn-001-q5",
+      "contentHash": "88a65e7dc45895ad08112ac7041cd0ecf4b2e5cc0908dba0c394637c7da125c0",
+      "verdict": "retain",
+      "highRisk": false,
+      "sceneEvidence": "Gold2 entering the middle invalidates the prior open-space observation.",
+      "optionReviews": [
+        {"optionId": "a", "assessment": "supported", "reason": "It responds to the changed cue without promising a route."},
+        {"optionId": "b", "assessment": "weak distractor", "reason": "It ignores the new player and removes the required look."},
+        {"optionId": "c", "assessment": "weak distractor", "reason": "It contradicts the hypothetical."}
+      ],
+      "reason": "The easy distractors are acceptable for U9, though they offer limited discrimination.",
+      "proposedRepair": null,
+      "limitations": ["A coach may prefer more plausible novice errors."]
+    },
+    {
+      "questionId": "cal26-u9-wall-turn-001-q6",
+      "contentHash": "5036d5695394dc64df6c37b4b2aada3edfa0e8c961bf48014c3f66d64c25f387",
+      "verdict": "retain",
+      "highRisk": false,
+      "sceneEvidence": "The boards, Gold1 and middle space are visible relationships.",
+      "optionReviews": [],
+      "reason": "Open U9 observation wording fits the source-bounded goal and does not score technique.",
+      "proposedRepair": null,
+      "limitations": ["Default-camera comprehension of 'middle' still needs human child testing."]
+    },
+    {
+      "questionId": "cal26-u11-pivot-lane-001-q1",
+      "contentHash": "556bdaf894f982532f93e098ab3d47922865b01fdd78338f170b74575b964c39",
+      "verdict": "retain",
+      "highRisk": false,
+      "sceneEvidence": "YOU at (8,0) face approximately pi radians toward -x; Gold1 is directly left at (2,0).",
+      "optionReviews": [
+        {"optionId": "a", "assessment": "supported", "reason": "Gold1 lies on the facing ray."},
+        {"optionId": "b", "assessment": "unsupported", "reason": "Navy2 is offset to y=-6."},
+        {"optionId": "c", "assessment": "unsupported", "reason": "Gold2 is offset to y=6."}
+      ],
+      "reason": "Exact facing geometry supports the answer; wording does not infer speed or gaze.",
+      "proposedRepair": null,
+      "limitations": ["Facing is orientation, not proof the player sees or moves toward Gold1."]
+    },
+    {
+      "questionId": "cal26-u11-pivot-lane-001-q2",
+      "contentHash": "63ae387371c989204a03b31f76bf0d5aadb3904c29b2a1c22cf0a77b59881085",
+      "verdict": "retain",
+      "highRisk": false,
+      "sceneEvidence": "Gold1's lane and Navy2's teammate position are visible; exact speed is absent.",
+      "optionReviews": [
+        {"optionId": "a", "assessment": "supported", "reason": "Gold1 is the shown pressure-lane cue."},
+        {"optionId": "b", "assessment": "supported with coaching label", "reason": "Navy2 is a teammate in a separate space, though availability is not guaranteed."},
+        {"optionId": "c", "assessment": "unsupported", "reason": "The freeze contains no speed measurement."}
+      ],
+      "reason": "Adds U11 pressure/support comparison beyond the U7/U9 location-only items.",
+      "proposedRepair": null,
+      "limitations": ["Sources support considering pressure and support, not this exact movement choice."]
+    },
+    {
+      "questionId": "cal26-u11-pivot-lane-001-q3",
+      "contentHash": "b63388aeeef441bd59c168120d6eef817bf5210da950bec93f078566c93cbcbb",
+      "verdict": "retain",
+      "highRisk": true,
+      "sceneEvidence": "Pressure and support are both present, but their scan order is not encoded in the freeze.",
+      "optionReviews": [
+        {"optionId": "a", "assessment": "supported as suggested first check", "reason": "Pressure is immediate and explicitly ahead."},
+        {"optionId": "b", "assessment": "supported as suggested second check", "reason": "Support informs the alternative."},
+        {"optionId": "c", "assessment": "supported as decision step", "reason": "It keeps both branches conditional and includes a recheck."}
+      ],
+      "reason": "The UI presents coaching agreement rather than objective correctness, so the suggested a-b-c order can remain.",
+      "proposedRepair": null,
+      "limitations": ["b-a-c and iterative a/b checks are also defensible."]
+    },
+    {
+      "questionId": "cal26-u11-pivot-lane-001-q4",
+      "contentHash": "bba7ac96aee073caf1c08e3658c909ff9a9ed4cf6a3904709799ffce98d91a7d",
+      "verdict": "retain",
+      "highRisk": true,
+      "sceneEvidence": "Reference (8,-5) is legal, reduces Navy2 distance from 8.49 m to 6.08 m, and increases Gold1 distance from 6.00 m to 7.81 m.",
+      "optionReviews": [],
+      "reason": "The point satisfies the two explicit comparisons; the explanation correctly leaves route and pass outcomes open.",
+      "proposedRepair": null,
+      "limitations": ["Movement path, Gold2's response, and control while turning are not simulated."]
+    },
+    {
+      "questionId": "cal26-u11-pivot-lane-001-q5",
+      "contentHash": "860ff31d549383a5c8080ceba288fed4b37cefa0883c74a078a655391f714d42",
+      "verdict": "retain",
+      "highRisk": false,
+      "sceneEvidence": "The hypothetical removes Gold1 from the faced lane but supplies no new location or route outcome.",
+      "optionReviews": [
+        {"optionId": "a", "assessment": "supported", "reason": "It compares the changed lane with support and keeps both conditional."},
+        {"optionId": "b", "assessment": "weak distractor", "reason": "'Regardless' ignores the changed cue."},
+        {"optionId": "c", "assessment": "weak distractor", "reason": "It proposes an unchecked pass through an opponent."}
+      ],
+      "reason": "The correct response is appropriately conditional, but the two distractors are easier than ideal for U11.",
+      "proposedRepair": null,
+      "limitations": ["Human coach should confirm whether distractor difficulty differentiates U11 from U9."]
+    },
+    {
+      "questionId": "cal26-u11-pivot-lane-001-q6",
+      "contentHash": "d1ce4c8db22188e6cff4138931272a760712f6c3cfe5e87e9fed904dede4b334",
+      "verdict": "retain",
+      "highRisk": false,
+      "sceneEvidence": "Gold1, Navy2, Gold2 and open-space relationships are all visible.",
+      "optionReviews": [],
+      "reason": "The open response accepts multiple grounded relationships and does not infer pivot execution.",
+      "proposedRepair": null,
+      "limitations": ["Coach calibration remains necessary for acceptable answer breadth."]
+    },
+    {
+      "questionId": "cal26-u13-pace-change-001-q1",
+      "contentHash": "11011f44fe270a05bedca7072a6f2d29207fd5e2994247b8c11458deb7703a44",
+      "verdict": "retain",
+      "highRisk": false,
+      "sceneEvidence": "Gold1 is 6.00 m directly along YOU's -x facing ray; Gold2 is 12.04 m away and offset; Navy3 is a teammate.",
+      "optionReviews": [
+        {"optionId": "a", "assessment": "supported", "reason": "Gold1 is the nearest opponent ahead."},
+        {"optionId": "b", "assessment": "unsupported but plausible", "reason": "Gold2 is an opponent but is farther and off the faced lane."},
+        {"optionId": "c", "assessment": "unsupported", "reason": "Navy3 is not a pressure player because Navy3 is a teammate."}
+      ],
+      "reason": "The role and distance claim is exact; the item does not infer successful pressure.",
+      "proposedRepair": null,
+      "limitations": ["The briefing supplies the pressure role; position alone does not prove pressure success."]
+    },
+    {
+      "questionId": "cal26-u13-pace-change-001-q2",
+      "contentHash": "de85a6de32428fb054b1e88304666f707e1cca6b5a4a2320a7d2a8011775ee1b",
+      "verdict": "retain",
+      "highRisk": false,
+      "sceneEvidence": "Gold1's distance/lane and Navy2's location are explicit; acceleration is absent and excluded by the briefing.",
+      "optionReviews": [
+        {"optionId": "a", "assessment": "supported", "reason": "A visible defender relationship can guide discussion."},
+        {"optionId": "b", "assessment": "supported", "reason": "A teammate location can guide the comparison."},
+        {"optionId": "c", "assessment": "unsupported", "reason": "No acceleration measurement exists."}
+      ],
+      "reason": "Appropriate observation boundary for a U13 pace-change discussion; sources do not validate the exact route.",
+      "proposedRepair": null,
+      "limitations": ["The age distinction is conceptual complexity, not demonstrated pace mechanics."]
+    },
+    {
+      "questionId": "cal26-u13-pace-change-001-q3",
+      "contentHash": "5553de24e90698599c58ed7ec32c2c7763ac0dfcd29d3c02324bd499c09abffe",
+      "verdict": "retain",
+      "highRisk": true,
+      "sceneEvidence": "The scene supplies pressure/support locations but no temporal sequence or motion.",
+      "optionReviews": [
+        {"optionId": "a", "assessment": "supported as suggested first step", "reason": "It gathers both decision inputs."},
+        {"optionId": "b", "assessment": "supported as candidate selection", "reason": "It follows the first scan without promising success."},
+        {"optionId": "c", "assessment": "supported as final check", "reason": "It preserves uncertainty before commitment."}
+      ],
+      "reason": "Retain as a suggestion only. The U13 scene adds multiple support sides, but the routine itself remains generic.",
+      "proposedRepair": null,
+      "limitations": ["a-c-b is defensible; sources support scanning/deception themes, not a unique order."]
+    },
+    {
+      "questionId": "cal26-u13-pace-change-001-q4",
+      "contentHash": "e08613f53266c5945c0a4d0e7c5c08f223d8ac6814303ef2c631b22cc4eb19e1",
+      "verdict": "retain",
+      "highRisk": true,
+      "sceneEvidence": "Reference (10,-8) is on ice, moves 4.47 m toward Navy2's side, reduces Navy2 distance from 9.85 m to 7.00 m, and also reduces Gold1 distance from 6.00 m to 5.66 m.",
+      "optionReviews": [],
+      "reason": "The explanation explicitly names the closer-support/closer-pressure tradeoff and does not claim the point is safer or proves a pace change.",
+      "proposedRepair": null,
+      "limitations": ["'Space between pressure and support' has no scoring threshold; this is a comparison marker only."]
+    },
+    {
+      "questionId": "cal26-u13-pace-change-001-q5",
+      "contentHash": "2db9d7506dade81a9d50ab4bb028e1bf3a6e5ccb8b369e9daf957181a2b0f38c",
+      "verdict": "repair",
+      "highRisk": false,
+      "sceneEvidence": "The hypothetical removes Navy2 as a clean support cue; Navy3 and carrying space remain observations, while route outcomes remain unknown.",
+      "optionReviews": [
+        {"optionId": "a", "assessment": "supported", "reason": "It rechecks two alternatives and keeps the choice open."},
+        {"optionId": "b", "assessment": "implausibly reckless for U13", "reason": "It announces a forced pass through the covering opponent."},
+        {"optionId": "c", "assessment": "implausibly reckless for U13", "reason": "It directs movement toward pressure while explicitly refusing to check the gap."}
+      ],
+      "reason": "Both distractors advertise their error, so the item does not add meaningful U13 decision difficulty beyond the younger scenes.",
+      "proposedRepair": {
+        "id": "cal26-u13-pace-change-001-q5",
+        "type": "choice",
+        "prompt": "If Gold2 covers Navy2, which next read uses the changed picture without assuming a route succeeds?",
+        "options": [
+          {"id":"a","text":"Compare Navy3 and available carrying space before choosing"},
+          {"id":"b","text":"Wait for Navy2 to reopen and keep the original plan without checking Navy3"},
+          {"id":"c","text":"Use the lane past Gold1 because the first support option changed"}
+        ],
+        "answer": ["a"],
+        "basis": "coaching",
+        "explanation": "Gold2 changes the Navy2 option, so compare the other teammate and carrying space while rechecking both defenders. The freeze does not establish that any route succeeds."
+      },
+      "limitations": ["A human U13 coach should test whether the revised distractors represent realistic player errors."]
+    },
+    {
+      "questionId": "cal26-u13-pace-change-001-q6",
+      "contentHash": "597ead2e1b073f87cc89913b8899ccf605c313e4454826e7298ef974d3463158",
+      "verdict": "retain",
+      "highRisk": false,
+      "sceneEvidence": "Gold1, both Navy supports, Gold2 and open ice create several visible pairs.",
+      "optionReviews": [],
+      "reason": "The open prompt requires two relationships, which provides more U13 comparison depth than the younger single-cue reflection.",
+      "proposedRepair": null,
+      "limitations": ["It still assesses reasoning about a freeze, not pace-change skill."]
+    },
+    {
+      "questionId": "exp26-u11-001-q1",
+      "contentHash": "9442ea6f5fb5e1e135df35981b087650cc5c99ec93718352d4d8b9017d26ae6a",
+      "verdict": "retain",
+      "highRisk": false,
+      "sceneEvidence": "puck.owner is null and the puck has coordinates (-18,-12.2).",
+      "optionReviews": [
+        {"optionId": "a", "assessment": "unsupported", "reason": "YOU approaches but does not own the puck."},
+        {"optionId": "b", "assessment": "supported", "reason": "Null ownership establishes a loose puck."},
+        {"optionId": "c", "assessment": "unsupported", "reason": "No pass event is shown or stated."}
+      ],
+      "reason": "Clean state question that separates approach from possession.",
+      "proposedRepair": null,
+      "limitations": ["The freeze does not establish who reaches or controls it next."]
+    },
+    {
+      "questionId": "exp26-u11-001-q2",
+      "contentHash": "fe37a3d124147d482a67b23f60cb5d59161fa4883d79600410cf7fedcbe3eda4",
+      "verdict": "retain",
+      "highRisk": false,
+      "sceneEvidence": "F2 is a home teammate and D1 an away opponent; both locations are visible before the pickup.",
+      "optionReviews": [
+        {"optionId": "a", "assessment": "supported with conditional wording", "reason": "F2 is a possible outlet, though not guaranteed available."},
+        {"optionId": "b", "assessment": "supported from briefing", "reason": "The briefing states D1 approaches from up ice."},
+        {"optionId": "c", "assessment": "unsupported", "reason": "Ignoring both players defeats the stated scan objective."}
+      ],
+      "reason": "Direct Hockey Canada vision/scanning support exists for teammate location and pressure source; the source does not certify an exact outcome.",
+      "proposedRepair": null,
+      "limitations": ["D1 motion is declared in text, not animated."]
+    },
+    {
+      "questionId": "exp26-u11-001-q3",
+      "contentHash": "0cdc46438d9d2bad1528b0973b14eb4a68c9f636e07b92888303a0d23416fa15",
+      "verdict": "retain",
+      "highRisk": true,
+      "sceneEvidence": "Pressure and outlet can be checked before the approach; the puck is initially loose, so control is a planned action rather than an established state.",
+      "optionReviews": [
+        {"optionId": "a", "assessment": "supported as suggested pre-scan", "reason": "It identifies both decision inputs."},
+        {"optionId": "b", "assessment": "supported as intended action", "reason": "Approach/control is the plan, not proof that control succeeds."},
+        {"optionId": "c", "assessment": "supported as later recheck", "reason": "Availability can change, though this check can also occur during approach."}
+      ],
+      "reason": "Retain as a non-objective suggested routine; the explanation expressly says real scanning may repeat.",
+      "proposedRepair": null,
+      "limitations": ["a-c-b is defensible if the outlet is rechecked immediately before the touch."]
+    },
+    {
+      "questionId": "exp26-u11-001-q4",
+      "contentHash": "1c4fb989cc431a80536c27af589a34314cee291372b8646cb68544f5acef335b",
+      "verdict": "repair",
+      "highRisk": true,
+      "sceneEvidence": "Reference (-18,-10.5) is legal and 1.70 m inside the loose puck at (-18,-12.2), but moving a coordinate does not change actor facing (-1.883 rad), gaze, camera, or occlusion. The facing direction is not toward F2.",
+      "optionReviews": [],
+      "reason": "The prompt and explanation imply a view that the response type and renderer do not establish.",
+      "proposedRepair": {
+        "id": "exp26-u11-001-q4",
+        "type": "position",
+        "prompt": "Move YOU to an approach point on the middle side of the wall-side puck.",
+        "actorId": "h1",
+        "reference": {"x":-18,"y":-10.5},
+        "basis": "coaching",
+        "explanation": "The example is 1.70 m from the puck and closer to rink middle than the puck. Recheck F2 and D1 before the touch; the marker does not prove where YOU look or whether possession is gained."
+      },
+      "limitations": ["Hockey Canada supports scanning pressure and teammates, not inferring a scan from placement."]
+    },
+    {
+      "questionId": "exp26-u11-001-q5",
+      "contentHash": "67cb025a0e5e028f89be36a35ef254f351be285f77e26656409efa584be1f0d1",
+      "verdict": "retain",
+      "highRisk": false,
+      "sceneEvidence": "The hypothetical closes the middle outlet before pickup; no receipt or successful pass is established.",
+      "optionReviews": [
+        {"optionId": "a", "assessment": "unsupported", "reason": "It ignores the stated lane change."},
+        {"optionId": "b", "assessment": "supported", "reason": "It calls for reassessment without naming an unproven exit."},
+        {"optionId": "c", "assessment": "unsupported", "reason": "F2 has not received a puck that remains loose."}
+      ],
+      "reason": "Clear changed-cue question within the source-supported scanning theme.",
+      "proposedRepair": null,
+      "limitations": ["The exact alternate exit is intentionally unspecified."]
+    },
+    {
+      "questionId": "exp26-u11-001-q6",
+      "contentHash": "ca3d94c47ca7ed453c47b145ef0f16cd3b35e0f5872164d77d287600bd274f7b",
+      "verdict": "retain",
+      "highRisk": false,
+      "sceneEvidence": "D1 pressure and F2 availability are the two declared relationships that may change before touch.",
+      "optionReviews": [],
+      "reason": "The explanation asks for a concrete change rather than accepting vague 'scan,' which suits U11 reasoning.",
+      "proposedRepair": null,
+      "limitations": ["Arrival order and an actual shoulder check are not measurable."]
+    },
+    {
+      "questionId": "exp26-u11-001-q7",
+      "contentHash": "e715052e8d17bce97c8066f8860565914f2aea362e0ca68dabf1ad1d3dc43d0f",
+      "verdict": "retain",
+      "highRisk": false,
+      "sceneEvidence": "Navy attacks +x; D1 at x=-12 is up ice of YOU at x=-16; F2 at y=-1 is more central than YOU at y=-6.",
+      "optionReviews": [
+        {"optionId": "a", "assessment": "supported", "reason": "It accurately names D1 and keeps F2 conditional with 'may.'"},
+        {"optionId": "b", "assessment": "unsupported", "reason": "D1 shares y=-6 with YOU rather than being inside; no wall-side support is shown."},
+        {"optionId": "c", "assessment": "unsupported", "reason": "F2 has not moved and 'behind D1' is not established."}
+      ],
+      "reason": "The key is grounded in attack direction and roster; the distractors are plausible misreads of the diagram.",
+      "proposedRepair": null,
+      "limitations": ["'Up ice' depends on the briefing's explicit +x attack direction."]
+    },
+    {
+      "questionId": "exp26-u11-001-q8",
+      "contentHash": "8f9ea58098e3ada80113bfcc71779d7a37df289d49a8bb2cbe1fceabd371524f",
+      "verdict": "repair",
+      "highRisk": true,
+      "sceneEvidence": "The stem supposes YOU recover the puck. Options a and b weaken the F2 pass. Option c changes that possession premise; if allowed, a still-loose puck also prevents the planned pass.",
+      "optionReviews": [
+        {"optionId": "a", "assessment": "supported", "reason": "D1 closing the lane weakens the outlet."},
+        {"optionId": "b", "assessment": "supported", "reason": "An unreachable F2 is no useful outlet."},
+        {"optionId": "c", "assessment": "defensible alternative under changed-state reading", "reason": "If the puck remains loose, YOU cannot yet make the planned pass; this conflicts with the stem rather than being simply wrong."}
+      ],
+      "reason": "The distractor creates a third defensible answer by undoing the hypothetical possession state.",
+      "proposedRepair": {
+        "id": "exp26-u11-001-q8",
+        "type": "multi",
+        "prompt": "Suppose YOU recover the puck and plan to pass toward F2 in the middle. Which two changes would make that outlet less useful?",
+        "options": [
+          {"id":"a","text":"D1 closes the inside lane"},
+          {"id":"b","text":"F2 is no longer reachable from control"},
+          {"id":"c","text":"F2 stays reachable and the inside lane remains clear"}
+        ],
+        "answer": ["a","b"],
+        "basis": "coaching",
+        "explanation": "D1 closing the inside lane or F2 becoming unreachable weakens the planned pass after recovery. If F2 stays reachable and the lane remains clear, those two observations do not by themselves weaken it."
+      },
+      "limitations": ["A visible lane still does not guarantee a completed pass."]
+    },
+    {
+      "questionId": "exp26-u11-001-q9",
+      "contentHash": "96c3230f13776292641523aa8c08f171414d9a49b44c484c57bfdf7623fb4159",
+      "verdict": "repair",
+      "highRisk": true,
+      "sceneEvidence": "F2 starts at (-10,-1), only 1 m from y=0 middle. The reference (-16,-3.5) increases |y| to 3.5 m, so it moves away from middle. A replacement (-16,0) is legal and leaves D1 about 4.92 m from the puck-to-F2 segment.",
+      "optionReviews": [],
+      "reason": "The hidden reference contradicts 'toward the middle' even though its lane explanation is otherwise cautious.",
+      "proposedRepair": {
+        "id": "exp26-u11-001-q9",
+        "type": "position",
+        "prompt": "Move F2 toward the middle so YOU have a passing option after recovering the puck.",
+        "actorId": "h2",
+        "reference": {"x":-16,"y":0},
+        "basis": "coaching",
+        "explanation": "The example moves F2 to y=0 and leaves D1 about 4.92 m from the straight line between the loose puck and F2. Recheck after recovery; a clear static line does not establish control, timing or a completed pass."
+      },
+      "limitations": ["Lane clearance is geometric only; stick reach, motion and pass physics are not simulated."]
+    },
+    {
+      "questionId": "exp26-u11-001-q10",
+      "contentHash": "825b36213b7f597efb27f8a698e6a0ebd3fe1f667693e979614fa6b02597cb5a",
+      "verdict": "repair",
+      "highRisk": true,
+      "sceneEvidence": "The hypothetical worsens pressure and hides F2 behind D1, but YOU still have not been granted control, and no wall-side escape geometry or arrival order is supplied.",
+      "optionReviews": [],
+      "reason": "The explanation presents a protected touch or wall-side escape too strongly despite unknown possession, timing and exit availability.",
+      "proposedRepair": {
+        "id": "exp26-u11-001-q10",
+        "type": "explain",
+        "prompt": "D1 closes on the puck while F2 moves behind the defender. How could YOUR first action change?",
+        "basis": "coaching",
+        "explanation": "The middle outlet has weakened. Name how you would recheck D1, puck control and another exit before committing; a protected touch or wall-side option is only a possibility if the new picture leaves it available."
+      },
+      "limitations": ["This remains an open coaching reflection; human coach approval is separate."]
+    }
+  ]
+}

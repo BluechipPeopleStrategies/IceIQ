@@ -1,0 +1,65 @@
+{
+  "schemaVersion": 1,
+  "reviewer": "Sol independent",
+  "status": "draft-payload-rechecked-not-human-or-render-approved",
+  "sourceFile": "staged-repairs.json",
+  "integrity": {
+    "directChanges": 5,
+    "affectedQuestionVersions": 16,
+    "scenarioVersions": [
+      {"scenarioId": "cal26-u13-pace-change-001", "version": 2, "questionCount": 6},
+      {"scenarioId": "exp26-u11-001", "version": 4, "questionCount": 10}
+    ],
+    "allDirectAfterHashesRecomputed": true,
+    "allAffectedQuestionHashesRecomputed": true,
+    "hashMethod": "SHA-256 of JSON.stringify({scene,question}), with scenario questions and version excluded from scene"
+  },
+  "rows": [
+    {
+      "questionId": "cal26-u13-pace-change-001-q5",
+      "afterHash": "9ce2116fffe4156f6f13ef577439b28d2b0556d7dc602ec93635ef5b8b1066fb",
+      "verdict": "retain",
+      "evidence": "The prompt declares one exact change: Gold2 enters the direct line to Navy2. The new key b names that affected pass. Options a and c remain possible comparisons rather than advertised reckless actions, and the feedback requires checking Gold1/new pressure without promising Navy3 or carrying space will work.",
+      "limitations": ["Gold2's hypothetical new coordinate is not rendered; the item relies on the prompt's declared line state.", "Human U13 coach approval of distractor realism remains separate."]
+    },
+    {
+      "questionId": "exp26-u11-001-q4",
+      "afterHash": "f955c778d81d105b2849fab65a05d62246b0e7c5a52b4560c057156033ba4062",
+      "verdict": "retain",
+      "evidence": "The reference (-18,-10.5) is 1.70 m from the loose puck (-18,-12.2) and closer to y=0 rink middle. The revised prompt removes the unsupported view claim, while the feedback explicitly says the marker does not prove gaze or possession.",
+      "limitations": ["The reference is a discussion example, not a graded route or control outcome."]
+    },
+    {
+      "questionId": "exp26-u11-001-q8",
+      "afterHash": "334e648eaa4250dfc7215f4778ede8470acfdf313c2deff50652b502d74c761c",
+      "verdict": "retain",
+      "evidence": "Options a and b each weaken the planned F2 outlet. New option c preserves both reachability and lane clarity, so it no longer undoes the stem's recovery premise and is not a third defensible weakening change. The answer remains a+b.",
+      "limitations": ["A clear static lane and reachable receiver still do not guarantee a completed pass."]
+    },
+    {
+      "questionId": "exp26-u11-001-q9",
+      "afterHash": "4cbbdb8dc215a2500a82e57e4e9e4300ae16738d05a2c4d30ec3b5d80e7157ce",
+      "verdict": "retain",
+      "evidence": "F2 moves from (-10,-1) to (-16,0), reducing distance to rink middle from 1.00 m to 0. The loose-puck-to-F2 segment runs from (-18,-12.2) to (-16,0); D1 (-12,-6) lies about 4.92 m from that segment and outside it. The plain-language feedback describes only those static relationships and disclaims a completed pass.",
+      "limitations": ["No interception, stick-reach, timing, possession or pass physics are simulated.", "Rendered-flow approval remains separate."]
+    },
+    {
+      "questionId": "exp26-u11-001-q10",
+      "afterHash": "356d68938e394950507e8f4acfe460c57a9438df7a8110e566723074cf7f6677",
+      "verdict": "retain",
+      "evidence": "The prompt now preserves the loose-puck state and asks how the approach could change, rather than implying a first action with possession. The feedback treats protected touch and wall-side play as conditional possibilities and requires renewed checks of D1, potential control and another exit.",
+      "limitations": ["'Recheck puck control' is read as assessing whether control can be gained or secured, not as declaring current possession.", "The acceptable open responses still require human coach calibration."]
+    }
+  ],
+  "summary": {
+    "retain": 5,
+    "repair": 0,
+    "hold": 0,
+    "remainingPayloadBlockers": []
+  },
+  "approvalBoundaries": [
+    "This is an independent recheck of the staged serialized draft only.",
+    "It is not human coach approval, rendered-flow approval, curriculum admission, live-bank application or deployment approval.",
+    "No packet content was modified during this recheck."
+  ]
+}

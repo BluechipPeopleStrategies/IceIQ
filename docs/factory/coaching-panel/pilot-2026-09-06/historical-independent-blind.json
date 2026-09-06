@@ -1,0 +1,59 @@
+{
+  "schemaVersion": 1,
+  "reviewer": "Sol independent",
+  "status": "blind-complete-before-answer-key",
+  "findings": [
+    {
+      "questionId": "exp26-u11-006-q7",
+      "contentHash": "cd5f60ae441e7c14c538c487cdc004592c021aee2344a94effa9e1656f239003",
+      "verdict": "repair",
+      "finding": "Option a overstates and ambiguously describes the scene. D1 at (22,1) is not on the puck-to-net segment from (23,5) to the right goal near (26,0): its perpendicular offset from that segment is about 2.92 m. 'Below the circle' is also a screen-relative landmark claim that is not established by the supplied scene. Replace the call with observable puck and defender locations without claiming D1 is between puck and net."
+    },
+    {
+      "questionId": "exp26-u11-006-q9",
+      "contentHash": "8ad5841d2624dc4f9a2e36d1bf56af2418230aa0b3f04f54b5aa9e2390d6d8d8",
+      "verdict": "repair",
+      "finding": "The reference contradicts 'toward the loose puck.' YOU starts 8.06 m from the puck (sqrt((23-19)^2+(5-(-2))^2)); the example at (22.2,-4.2) is 9.23 m away. The move goes about 1.17 m farther from the puck. A new reference must reduce puck distance and keep the requested opposite-side approach, while view/visibility claims must remain framed as intent because facing/gaze are not simulated."
+    },
+    {
+      "questionId": "exp26-u11-006-q10",
+      "contentHash": "eafdc89b71040d0051c4428bd9793656c18ab413de1713e85a6318fb2a327be2",
+      "verdict": "repair",
+      "finding": "The prompt explicitly says the goalie covers the puck, which produces a whistle/stoppage. The explanation incorrectly leaves 'next pressure' on the covered puck as an option and asks who has the puck as though play continues. It should say the loose-puck read ends, stop, and identify/prepare for the ensuing faceoff or restart."
+    },
+    {
+      "questionId": "exp26-u11-011-q8",
+      "contentHash": "e7fade4876ce0dc3403bb853a7c1cdad269f84e532475143628798f289765099",
+      "verdict": "repair",
+      "finding": "The roster makes D2 away/gold, an opponent of home/navy F1 and YOU. Option b and the explanation wrongly treat D2 as an available supporting outlet at an 'opposite point.' D2 can shape the bank point as an interception/coverage threat, but cannot be described as support. Rewrite b and the explanation around D2's defensive position and audit the bank route without asserting rebound physics."
+    },
+    {
+      "questionId": "exp26-u11-012-q7",
+      "contentHash": "3c49c167c8393a0340e43490a1955a5fa8e2a971f258246fec9bc306ea735ad1",
+      "verdict": "repair",
+      "finding": "Option a says the puck is 'below me,' but the supplied rink coordinates put the puck at y=-6 and YOU at y=-3; that wording depends on an unstated screen orientation and conflicts with the usual rendered top/down reading. Use board/net/player relationships or say the puck is wider/toward the side boards. The explanation should preserve that D1's reach/control is still unknown."
+    },
+    {
+      "questionId": "exp26-u11-012-q5",
+      "contentHash": "99da1c626be97a4b7855d8e1d91f76f120ac0b51a78dbbbdf7eefb783dd549f3",
+      "verdict": "repair",
+      "finding": "The stem says D1 'reaches the puck first,' but answer b and the explanation silently upgrade arrival to possession/recovery. Arrival alone does not establish control. Change the stem to 'If D1 controls the puck first' or change the answer/explanation to say YOU must re-read whether D1 gains control before choosing to defend or recover."
+    },
+    {
+      "questionId": "exp26-u11-016-q1",
+      "contentHash": "8c4581f8d3d39c2738391e700233deac5d535b0e29bd8bb4b8f828318f1c2a70",
+      "verdict": "repair",
+      "finding": "The prompt has a subject-verb error: 'where does YOU start' must be 'where do YOU start.' Preserve the necessary comparator 'Compared with F1' when repairing. The keyed relationship itself is supported: |2| is closer to the y=0 middle than |7|."
+    },
+    {
+      "questionId": "exp26-u11-016-q7",
+      "contentHash": "01388aeb407c27807fc4304278446db9ae178bcd8596bb6198a7d93a4c79f530",
+      "verdict": "repair",
+      "finding": "YOU is away/gold and F1 is home/navy, so the prompt asks a defender to give tactical instructions to an opponent. The explanation repeats that opponent-coaching error. Recast this as the cue YOU uses for the angle, or direct any communication to a named gold teammate (for example G) and rework every option for that recipient."
+    }
+  ],
+  "limitations": [
+    "This checkpoint used only HISTORICAL-CHECKS.md and historical-cases.json.",
+    "No historical answer key, lead review, source review, snapshot, browser, or live bank was consulted."
+  ]
+}
