@@ -1,13 +1,13 @@
 [
   {
     "id": "exp26-u9-001",
-    "version": 1,
+    "version": 2,
     "ageBand": "U9",
     "title": "Leave the boards to show a target",
     "family": "support-off-boards",
     "topic": "Passing",
     "objective": "Connect a named rink area with becoming available for a pass.",
-    "briefing": "Navy2 holds the puck. YOU wait close to the boards in the attacking end; Gold1 stands directly between you. In this small-area activity, try finding a passing window toward the nearby faceoff circle. Nobody has moved yet. Navy attacks the +x end; gold attacks the -x end. The full rink is an orientation map for this small activity.",
+    "briefing": "Navy2 holds the puck. YOU wait close to the boards in the attacking end; Gold1 stands directly between YOU and Navy2. In this small-area activity, try finding a passing window near the nearby faceoff circle. Nobody has moved yet. Navy attacks the +x end; gold attacks the -x end. The full rink is an orientation map for this small activity.",
     "setup": {
       "actors": [
         {
@@ -45,7 +45,7 @@
     "focusActorId": "home-skater-1",
     "cues": [
       "YOU are near the boards.",
-      "Gold1 is between the current partners.",
+      "Gold1 stands between YOU and Navy2.",
       "The nearby circle provides a named search area."
     ],
     "tags": [
@@ -92,14 +92,14 @@
           },
           {
             "id": "c",
-            "text": "A second puck"
+            "text": "Open ice with nobody in it"
           }
         ],
         "answer": [
           "a"
         ],
         "basis": "scene",
-        "explanation": "Gold1 lies on the straight line joining Navy2 and YOU.",
+        "explanation": "Gold1 lies on the straight line joining Navy2 and YOU, so that lane is not open.",
         "id": "exp26-u9-001-q1"
       },
       {
@@ -116,7 +116,7 @@
           },
           {
             "id": "c",
-            "text": "The colour of a seat in the arena"
+            "text": "Where YOU were standing before"
           }
         ],
         "answer": [
@@ -124,7 +124,7 @@
           "b"
         ],
         "basis": "coaching",
-        "explanation": "The source supports checking teammate location and pressure. The unseen seats are irrelevant.",
+        "explanation": "Check Navy2 with the puck and where Gold1 is now. Your earlier spot can help YOU notice what changed, but it does not tell YOU whether the lane is clear now.",
         "id": "exp26-u9-001-q2"
       },
       {
@@ -175,7 +175,7 @@
           },
           {
             "id": "b",
-            "text": "Stand still because the circle is always right"
+            "text": "Stand still because the circle is the named spot"
           },
           {
             "id": "c",
@@ -200,7 +200,7 @@
   },
   {
     "id": "exp26-u9-002",
-    "version": 1,
+    "version": 2,
     "ageBand": "U9",
     "title": "Too close to the carrier",
     "family": "support-spacing",
@@ -367,28 +367,28 @@
         "id": "exp26-u9-002-q4"
       },
       {
+        "id": "exp26-u9-002-q5",
         "type": "choice",
         "prompt": "Imagine pressure reaches Navy2 and a short outlet is needed. Should YOU always move farther away?",
         "options": [
           {
             "id": "a",
-            "text": "Yes, as far as possible"
+            "text": "Yes, get as far away as possible"
           },
           {
             "id": "b",
-            "text": "No, a nearby clear outlet may help"
+            "text": "No, a nearby clear angle can help"
           },
           {
             "id": "c",
-            "text": "Never support"
+            "text": "No, stay right beside Navy2 and wait"
           }
         ],
         "answer": [
           "b"
         ],
         "basis": "coaching",
-        "explanation": "Useful distance depends on pressure and the available passing route.",
-        "id": "exp26-u9-002-q5"
+        "explanation": "Useful distance depends on the pressure and on the route the pass has to travel. Going as far as possible can put YOU out of reach, and staying right beside Navy2 leaves the crowded space this picture starts with."
       },
       {
         "type": "explain",
@@ -401,7 +401,7 @@
   },
   {
     "id": "exp26-u9-003",
-    "version": 1,
+    "version": 2,
     "ageBand": "U9",
     "title": "Look beyond the nearest jersey",
     "family": "near-far-support",
@@ -514,28 +514,28 @@
         "id": "exp26-u9-003-q1"
       },
       {
+        "id": "exp26-u9-003-q2",
         "type": "choice",
-        "prompt": "Which direct line is occupied by Gold1?",
+        "prompt": "Where is Gold1 standing in this picture?",
         "options": [
           {
             "id": "a",
-            "text": "YOU to Navy2"
+            "text": "Close to YOU, almost on the line to Navy2"
           },
           {
             "id": "b",
-            "text": "YOU to Navy3"
+            "text": "Beside Navy3, far up the ice"
           },
           {
             "id": "c",
-            "text": "Navy3 to the gold goal"
+            "text": "Far behind YOU, near the navy end"
           }
         ],
         "answer": [
           "a"
         ],
         "basis": "scene",
-        "explanation": "Gold1 is between YOU and Navy2.",
-        "id": "exp26-u9-003-q2"
+        "explanation": "Gold1 is two and a half metres from YOU, closer still to the puck, and almost exactly on the line from the puck to Navy2. Gold1 is more than eleven metres from Navy3, and stands ahead of YOU rather than behind."
       },
       {
         "type": "multi",
@@ -575,41 +575,41 @@
         "id": "exp26-u9-003-q4"
       },
       {
+        "id": "exp26-u9-003-q5",
         "type": "choice",
         "prompt": "Imagine Gold2 closes Navy3's line before you pass. What could you do?",
         "options": [
           {
             "id": "a",
-            "text": "Recheck both options"
+            "text": "Recheck both options before passing"
           },
           {
             "id": "b",
-            "text": "Pass to Navy3 because far is always best"
+            "text": "Pass to Navy3 anyway because that was the plan"
           },
           {
             "id": "c",
-            "text": "Forget where defenders are"
+            "text": "Watch Gold1 only and stop tracking Gold2"
           }
         ],
         "answer": [
           "a"
         ],
         "basis": "coaching",
-        "explanation": "The suggested preference changes if the visible line closes.",
-        "id": "exp26-u9-003-q5"
+        "explanation": "The suggested preference changes when a line closes. Passing on the old plan sends the puck toward the new pressure, and tracking one defender only hides the change. If Gold2 stops short and the line stays open, Navy3 can still be a good choice."
       },
       {
+        "id": "exp26-u9-003-q6",
         "type": "explain",
         "prompt": "Why might the farther teammate be worth a look here?",
         "basis": "coaching",
-        "explanation": "Navy3 offers a different angle while Gold1 occupies the near line. Do not claim the pass is physically guaranteed.",
-        "id": "exp26-u9-003-q6"
+        "explanation": "Navy2 is close but Gold1 sits on that line. Navy3 is at a different angle, though Gold1 is also near the start of that longer line in this picture, so neither pass is simply open. A useful answer says the far option is worth checking and that moving the puck first can change both angles."
       }
     ]
   },
   {
     "id": "exp26-u9-004",
-    "version": 1,
+    "version": 2,
     "ageBand": "U9",
     "title": "Receive, then find the next picture",
     "family": "receive-rescan",
@@ -705,6 +705,7 @@
     "limits": "Static experimental illustration. Coaching responses and reference positions are suggestions. No skating, tactical mastery or learning transfer is certified. An adult may read questions and record spoken reflections. ",
     "questions": [
       {
+        "id": "exp26-u9-004-q1",
         "type": "choice",
         "prompt": "Where did YOU receive the puck?",
         "options": [
@@ -718,15 +719,14 @@
           },
           {
             "id": "c",
-            "text": "On the bench"
+            "text": "In the corner behind your own net"
           }
         ],
         "answer": [
           "a"
         ],
         "basis": "scene",
-        "explanation": "YOU are at the circle in the defending end centre in the supplied practice picture.",
-        "id": "exp26-u9-004-q1"
+        "explanation": "YOU are standing on a faceoff dot in the end navy defends, which is where this practice picture places the reception."
       },
       {
         "type": "multi",
@@ -826,7 +826,7 @@
   },
   {
     "id": "exp26-u9-005",
-    "version": 1,
+    "version": 2,
     "ageBand": "U9",
     "title": "Handle the puck beside the boards",
     "family": "board-side-puck-control",
@@ -897,6 +897,7 @@
     "limits": "Static experimental illustration. Coaching responses and reference positions are suggestions. No skating, tactical mastery or learning transfer is certified. An adult may read questions and record spoken reflections. ",
     "questions": [
       {
+        "id": "exp26-u9-005-q1",
         "type": "choice",
         "prompt": "Which teammate is farther from the side boards?",
         "options": [
@@ -917,8 +918,7 @@
           "a"
         ],
         "basis": "scene",
-        "explanation": "Navy2 is at y=3, farther inside than YOU at y=10.",
-        "id": "exp26-u9-005-q1"
+        "explanation": "Navy2 stands well inside the rink. YOU are the one close to the side boards, about three metres from them."
       },
       {
         "type": "multi",
@@ -984,28 +984,28 @@
         "id": "exp26-u9-005-q4"
       },
       {
+        "id": "exp26-u9-005-q5",
         "type": "choice",
         "prompt": "Imagine Gold1 moves inside instead. Should you keep using the same inside spot?",
         "options": [
           {
             "id": "a",
-            "text": "Always"
+            "text": "Yes, the inside spot is always open"
           },
           {
             "id": "b",
-            "text": "Recheck the pressure before deciding"
+            "text": "Recheck where Gold1 actually went before deciding"
           },
           {
             "id": "c",
-            "text": "Stop noticing Gold1"
+            "text": "Turn back toward the boards without looking"
           }
         ],
         "answer": [
           "b"
         ],
         "basis": "coaching",
-        "explanation": "The useful space depends on where pressure actually is.",
-        "id": "exp26-u9-005-q5"
+        "explanation": "The useful space depends on where the pressure actually is. If Gold1 moves inside, that room can close and the board side can open, so the answer comes from looking rather than from a habit."
       },
       {
         "type": "explain",
@@ -1217,7 +1217,7 @@
   },
   {
     "id": "exp26-u9-007",
-    "version": 1,
+    "version": 2,
     "ageBand": "U9",
     "title": "Pressure before a wall reception",
     "family": "wall-reception-pressure",
@@ -1297,28 +1297,28 @@
     "limits": "Static experimental illustration. Coaching responses and reference positions are suggestions. No skating, tactical mastery or learning transfer is certified. An adult may read questions and record spoken reflections. ",
     "questions": [
       {
+        "id": "exp26-u9-007-q1",
         "type": "choice",
         "prompt": "Do YOU control the puck at this freeze?",
         "options": [
           {
             "id": "a",
-            "text": "Yes"
+            "text": "Yes, YOU have it"
           },
           {
             "id": "b",
-            "text": "No"
+            "text": "No, Navy2 still has it"
           },
           {
             "id": "c",
-            "text": "The picture shows a goal"
+            "text": "No, the puck is loose on the ice"
           }
         ],
         "answer": [
           "b"
         ],
         "basis": "scene",
-        "explanation": "Navy2 is still the puck owner; this is before the planned reception.",
-        "id": "exp26-u9-007-q1"
+        "explanation": "Navy2 is still the puck owner in this picture, so this is the moment before the planned reception. The puck is not loose."
       },
       {
         "type": "multi",
@@ -1418,7 +1418,7 @@
   },
   {
     "id": "exp26-u9-008",
-    "version": 1,
+    "version": 2,
     "ageBand": "U9",
     "title": "A waiting pass that is blocked",
     "family": "closed-pass-lane",
@@ -1606,22 +1606,22 @@
         "options": [
           {
             "id": "a",
-            "text": "Yes, after another check"
+            "text": "Yes, if a new check shows the lane is clear"
           },
           {
             "id": "b",
-            "text": "No, a blocked teammate stays blocked forever"
+            "text": "Only if Navy2 first skates to a different spot"
           },
           {
             "id": "c",
-            "text": "Only if Navy2 changes teams"
+            "text": "No, a first plan that gets blocked is finished for that shift"
           }
         ],
         "answer": [
           "a"
         ],
         "basis": "coaching",
-        "explanation": "Availability depends on the current lane, not a permanent label.",
+        "explanation": "Availability depends on the lane right now, not on a permanent label. Navy2 does not have to move for the lane to open, and a blocked first plan is not finished; what matters is what the next look shows.",
         "id": "exp26-u9-008-q5"
       },
       {
@@ -1635,7 +1635,7 @@
   },
   {
     "id": "exp26-u9-009",
-    "version": 1,
+    "version": 2,
     "ageBand": "U9",
     "title": "The other team has it now",
     "family": "turnover-recognition",
@@ -1836,7 +1836,7 @@
   },
   {
     "id": "exp26-u9-010",
-    "version": 1,
+    "version": 2,
     "ageBand": "U9",
     "title": "Face the play while moving back",
     "family": "backward-view-awareness",
@@ -1927,7 +1927,7 @@
           },
           {
             "id": "c",
-            "text": "Straight up in the air"
+            "text": "Sideways toward the side boards"
           }
         ],
         "answer": [
@@ -2033,7 +2033,7 @@
   },
   {
     "id": "exp26-u9-011",
-    "version": 1,
+    "version": 2,
     "ageBand": "U9",
     "title": "The blocked pass is loose",
     "family": "blocked-pass-loose-puck",
@@ -2127,22 +2127,22 @@
         "options": [
           {
             "id": "a",
-            "text": "Yes"
+            "text": "Yes, YOU have it on your stick"
           },
           {
             "id": "b",
-            "text": "No"
+            "text": "No, the puck is loose between the players"
           },
           {
             "id": "c",
-            "text": "The net controls it"
+            "text": "Yes, because the pass was meant for YOU"
           }
         ],
         "answer": [
           "b"
         ],
         "basis": "scene",
-        "explanation": "The briefing and setup identify a loose puck, not a completed reception.",
+        "explanation": "The briefing and setup identify a loose puck between the players, not a completed reception. A pass aimed at YOU still has to be collected before YOU can use it.",
         "id": "exp26-u9-011-q1"
       },
       {
@@ -2234,7 +2234,7 @@
       },
       {
         "type": "explain",
-        "prompt": "Why is attempted pass different from completed pass?",
+        "prompt": "Why is an attempted pass different from a completed pass?",
         "basis": "coaching",
         "explanation": "A pass can be deflected or stay loose. Control by the receiver must actually happen.",
         "id": "exp26-u9-011-q6"
@@ -2243,7 +2243,7 @@
   },
   {
     "id": "exp26-u9-012",
-    "version": 1,
+    "version": 2,
     "ageBand": "U9",
     "title": "Two players crowd the puck",
     "family": "support-under-double-pressure",
@@ -2460,7 +2460,7 @@
   },
   {
     "id": "exp26-u9-013",
-    "version": 1,
+    "version": 2,
     "ageBand": "U9",
     "title": "Our half-ice change signal",
     "family": "half-ice-shift-change",
@@ -2540,18 +2540,18 @@
           },
           {
             "id": "b",
-            "text": "Gold1, who does not have it"
+            "text": "Gold1, the gold player up ice"
           },
           {
             "id": "c",
-            "text": "The net"
+            "text": "Navy2, once YOU pass it there first"
           }
         ],
         "answer": [
           "a"
         ],
         "basis": "scene",
-        "explanation": "YOU are the declared puck owner when the change signal sounds.",
+        "explanation": "YOU are the declared puck owner when the change signal sounds. The named routine asks the carrier to let go of the puck right away, not to move it to a teammate first.",
         "id": "exp26-u9-013-q1"
       },
       {
@@ -2560,7 +2560,7 @@
         "options": [
           {
             "id": "a",
-            "text": "Relinquish the puck"
+            "text": "Let go of the puck right away"
           },
           {
             "id": "b",
@@ -2611,7 +2611,7 @@
         "options": [
           {
             "id": "a",
-            "text": "Yes, always a faceoff"
+            "text": "Yes, the official stops play for a faceoff"
           },
           {
             "id": "b",
@@ -2619,14 +2619,14 @@
           },
           {
             "id": "c",
-            "text": "Only the puck becomes larger"
+            "text": "Yes, everyone waits until the new players are on"
           }
         ],
         "answer": [
           "b"
         ],
         "basis": "scene",
-        "explanation": "The briefing states that play continues under this half-ice model.",
+        "explanation": "The briefing states that play continues in this half-ice model. The new players come on while the puck is still live.",
         "id": "exp26-u9-013-q4"
       },
       {
@@ -2643,7 +2643,7 @@
           },
           {
             "id": "c",
-            "text": "No instruction matters"
+            "text": "Whatever the other players happen to do"
           }
         ],
         "answer": [
@@ -2664,13 +2664,13 @@
   },
   {
     "id": "exp26-u9-014",
-    "version": 2,
+    "version": 3,
     "ageBand": "U9",
     "title": "Make room after the goalie whistle",
     "family": "half-ice-goalie-restart",
     "topic": "Game routines",
     "objective": "Recognize possession and space after a scoped goalie-freeze restart.",
-    "briefing": "In the named Hockey Canada U9 half-ice model, a goalie-freeze whistle gives the defending team possession and asks attackers to retreat. The gold goalie already held the puck and the whistle happened. Gold1 now controls the restart puck near the crease; YOU are a navy attacker asked to back away. Earlier events are stated, not animated. Navy attacks the +x end; gold attacks the -x end. The full rink is an orientation map for this small activity.",
+    "briefing": "In the named Hockey Canada U9 half-ice model, a goalie-freeze whistle asks the attacking team to back off three metres and gives the defending team possession. The gold goalie already held the puck and the whistle happened. Gold1 now controls the restart puck near the crease; YOU are the closest navy attacker and are still about two metres away, inside that cushion. Earlier events are stated, not animated. Navy attacks the +x end; gold attacks the -x end. The full rink is an orientation map for this small activity.",
     "setup": {
       "actors": [
         {
@@ -2678,9 +2678,9 @@
           "label": "YOU",
           "team": "home",
           "role": "skater",
-          "x": 19,
-          "y": 3,
-          "facing": 0.3
+          "x": 21,
+          "y": 2,
+          "facing": -0.4
         },
         {
           "id": "home-skater-2",
@@ -2718,6 +2718,7 @@
     "cues": [
       "The goalie freeze and whistle already happened.",
       "Gold1 now has restart possession.",
+      "YOU are about two metres from the restart puck, inside the three-metre cushion.",
       "The crease is near the gold goal."
     ],
     "tags": [
@@ -2734,7 +2735,7 @@
         "use": "Supports only the explicitly named half-ice model. Local program applicability needs review; no transition-date claim is used."
       }
     ],
-    "limits": "Static experimental illustration. Coaching responses and reference positions are suggestions. No skating, tactical mastery or learning transfer is certified. An adult may read questions and record spoken reflections. Half-ice restart relationships on a full-rink map. Exact Member policy and retreat geometry remain review items.",
+    "limits": "Static experimental illustration. Coaching responses and reference positions are suggestions. No skating, tactical mastery or learning transfer is certified. An adult may read questions and record spoken reflections. Half-ice restart relationships on a full-rink map. The three-metre cushion is quoted from the cited Hockey Canada U9 page; the official on the ice sets the actual restart, and exact Member policy remains a review item.",
     "questions": [
       {
         "type": "choice",
@@ -2815,11 +2816,11 @@
         "prompt": "Move YOU away to give the restarting team room.",
         "actorId": "home-skater-1",
         "reference": {
-          "x": 16,
-          "y": 4
+          "x": 18,
+          "y": 3
         },
         "basis": "coaching",
-        "explanation": "This reference creates more separation. The official directs the exact retreat in the real model; this point is not a certified distance test.",
+        "explanation": "This example backs YOU well clear of the three-metre cushion while the restart stays in front of YOU. The official directs the exact retreat in the real model; this point is not a certified distance test.",
         "id": "exp26-u9-014-q4"
       },
       {
@@ -2858,7 +2859,7 @@
   },
   {
     "id": "exp26-u9-015",
-    "version": 1,
+    "version": 2,
     "ageBand": "U9",
     "title": "A return option around the circle",
     "family": "give-and-go-window",
@@ -3004,7 +3005,7 @@
         "options": [
           {
             "id": "a",
-            "text": "Finish the first reception"
+            "text": "Finish YOUR first pass"
           },
           {
             "id": "b",

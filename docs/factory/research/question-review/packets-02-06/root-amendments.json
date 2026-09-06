@@ -1,0 +1,1209 @@
+{
+  "schemaVersion": 1,
+  "author": "Codex root",
+  "status": "awaiting-independent-recheck",
+  "changes": [
+    {
+      "questionId": "exp26-u7-002-q5",
+      "reason": "An imagined possession change is a coaching check, not the current frozen scene.",
+      "before": {
+        "type": "choice",
+        "prompt": "Imagine Navy2 reaches it first and controls it. Is it still loose?",
+        "options": [
+          {
+            "id": "a",
+            "text": "Yes, every puck is loose"
+          },
+          {
+            "id": "b",
+            "text": "No, Navy2 now has it"
+          },
+          {
+            "id": "c",
+            "text": "Only until YOU skate over to it"
+          }
+        ],
+        "answer": [
+          "b"
+        ],
+        "basis": "scene",
+        "explanation": "A puck is loose until a player controls it. Once Navy2 controls it in the stated event, it is not loose, even if another player is skating toward it.",
+        "id": "exp26-u7-002-q5"
+      },
+      "after": {
+        "type": "choice",
+        "prompt": "Imagine Navy2 reaches it first and controls it. Is it still loose?",
+        "options": [
+          {
+            "id": "a",
+            "text": "Yes, every puck is loose"
+          },
+          {
+            "id": "b",
+            "text": "No, Navy2 now has it"
+          },
+          {
+            "id": "c",
+            "text": "Only until YOU skate over to it"
+          }
+        ],
+        "answer": [
+          "b"
+        ],
+        "basis": "coaching",
+        "explanation": "A puck is loose until a player controls it. Once Navy2 controls it in the stated event, it is not loose, even if another player is skating toward it.",
+        "id": "exp26-u7-002-q5"
+      },
+      "scenarioId": "exp26-u7-002"
+    },
+    {
+      "questionId": "exp26-u7-006-q8",
+      "reason": "The 3D renderer has sticks, but decorative handedness is not an authored teaching cue.",
+      "before": {
+        "id": "exp26-u7-006-q8",
+        "type": "multi",
+        "prompt": "Which two things can YOU see that help YOU get ready?",
+        "options": [
+          {
+            "id": "a",
+            "text": "Navy2 has the puck"
+          },
+          {
+            "id": "b",
+            "text": "The ice between YOU and Navy2 is open"
+          },
+          {
+            "id": "c",
+            "text": "Which hand Navy2 shoots with"
+          }
+        ],
+        "answer": [
+          "a",
+          "b"
+        ],
+        "basis": "scene",
+        "explanation": "The picture shows the puck with Navy2 and no player standing between the partners. It does not show sticks or which hand anyone shoots with, so that is not a cue YOU can read here."
+      },
+      "after": {
+        "id": "exp26-u7-006-q8",
+        "type": "multi",
+        "prompt": "Which two things can YOU see that help YOU get ready?",
+        "options": [
+          {
+            "id": "a",
+            "text": "Navy2 has the puck"
+          },
+          {
+            "id": "b",
+            "text": "The ice between YOU and Navy2 is open"
+          },
+          {
+            "id": "c",
+            "text": "Which hand Navy2 shoots with"
+          }
+        ],
+        "answer": [
+          "a",
+          "b"
+        ],
+        "basis": "scene",
+        "explanation": "The picture shows Navy2 with the puck and no player between the partners. The player artwork does not establish a reliable shooting-hand cue for this question."
+      },
+      "scenarioId": "exp26-u7-006"
+    },
+    {
+      "questionId": "exp26-u7-007-q7",
+      "reason": "A possession change does not guarantee the play has left the goal area.",
+      "before": {
+        "id": "exp26-u7-007-q7",
+        "type": "choice",
+        "prompt": "It is YOUR turn near the navy net. Where should YOU look first?",
+        "options": [
+          {
+            "id": "a",
+            "text": "At Gold1 and the puck"
+          },
+          {
+            "id": "b",
+            "text": "At the far end of the rink"
+          },
+          {
+            "id": "c",
+            "text": "At your own skates"
+          }
+        ],
+        "answer": [
+          "a"
+        ],
+        "basis": "coaching",
+        "explanation": "Gold1 has the puck at your end, so that is where the play is right now. If Navy2 wins the puck, look up the ice instead, because the play moves away from your net."
+      },
+      "after": {
+        "id": "exp26-u7-007-q7",
+        "type": "choice",
+        "prompt": "It is YOUR turn near the navy net. Where should YOU look first?",
+        "options": [
+          {
+            "id": "a",
+            "text": "At Gold1 and the puck"
+          },
+          {
+            "id": "b",
+            "text": "At the far end of the rink"
+          },
+          {
+            "id": "c",
+            "text": "At your own skates"
+          }
+        ],
+        "answer": [
+          "a"
+        ],
+        "basis": "coaching",
+        "explanation": "Gold1 has the puck near your net, so watch Gold1 and the puck. If Navy2 gains control, follow the puck to Navy2 and check what happens next. The play may still be near your net."
+      },
+      "scenarioId": "exp26-u7-007"
+    },
+    {
+      "questionId": "exp26b-u7-005-q5",
+      "reason": "Following a player does not automatically erase all their space.",
+      "before": {
+        "id": "exp26b-u7-005-q5",
+        "type": "choice",
+        "prompt": "Imagine Gold1 leaves the net side and follows YOU. What is a good next read?",
+        "options": [
+          {
+            "id": "a",
+            "text": "Find another clear place and keep Navy2 in view"
+          },
+          {
+            "id": "b",
+            "text": "Stay in the same place because it was open"
+          },
+          {
+            "id": "c",
+            "text": "Skate into Navy2's space"
+          }
+        ],
+        "answer": [
+          "a"
+        ],
+        "basis": "coaching",
+        "explanation": "The freeze does not show Gold1 moving, so this is an imagined change. If Gold1 follows, the space YOU chose is gone. Another angle may help Navy2, but check it against the puck and the new defender position first."
+      },
+      "after": {
+        "id": "exp26b-u7-005-q5",
+        "type": "choice",
+        "prompt": "Imagine Gold1 leaves the net side and follows YOU. What is a good next read?",
+        "options": [
+          {
+            "id": "a",
+            "text": "Find another clear place and keep Navy2 in view"
+          },
+          {
+            "id": "b",
+            "text": "Stay in the same place because it was open"
+          },
+          {
+            "id": "c",
+            "text": "Skate into Navy2's space"
+          }
+        ],
+        "answer": [
+          "a"
+        ],
+        "basis": "coaching",
+        "explanation": "Imagine Gold1 following YOU. Check how much room remains and whether Navy2 can still reach YOU. Another clear angle may help, but the first spot can still work if Gold1 has not closed it."
+      },
+      "scenarioId": "exp26b-u7-005"
+    },
+    {
+      "questionId": "exp26b-u7-006-q1",
+      "reason": "Replace the ambiguous phrase inside YOU with a concrete rink-relative question.",
+      "before": {
+        "id": "exp26b-u7-006-q1",
+        "type": "choice",
+        "prompt": "Who is inside YOU?",
+        "options": [
+          {
+            "id": "a",
+            "text": "Gold1"
+          },
+          {
+            "id": "b",
+            "text": "Navy2"
+          },
+          {
+            "id": "c",
+            "text": "Nobody"
+          }
+        ],
+        "answer": [
+          "a"
+        ],
+        "basis": "scene",
+        "explanation": "Gold1 is on the inside side of YOU. That pressure cue makes a direct inside move less comfortable."
+      },
+      "after": {
+        "id": "exp26b-u7-006-q1",
+        "type": "choice",
+        "prompt": "Which player is closer to the middle of the ice than YOU?",
+        "options": [
+          {
+            "id": "a",
+            "text": "Gold1"
+          },
+          {
+            "id": "b",
+            "text": "Navy2"
+          },
+          {
+            "id": "c",
+            "text": "Nobody"
+          }
+        ],
+        "answer": [
+          "a"
+        ],
+        "basis": "scene",
+        "explanation": "Gold1 is nearer the middle. Navy2 is closer to the side boards. Check Gold1 before moving toward the middle."
+      },
+      "scenarioId": "exp26b-u7-006"
+    },
+    {
+      "questionId": "exp26b-u7-006-q2",
+      "reason": "Shielding and scanning help control, without guaranteeing the next touch.",
+      "before": {
+        "id": "exp26b-u7-006-q2",
+        "type": "multi",
+        "prompt": "What can help protect the puck?",
+        "options": [
+          {
+            "id": "a",
+            "text": "Keep your body between Gold1 and the puck"
+          },
+          {
+            "id": "b",
+            "text": "Look for Navy2 ahead"
+          },
+          {
+            "id": "c",
+            "text": "Send the puck up the wall without looking"
+          }
+        ],
+        "answer": [
+          "a",
+          "b"
+        ],
+        "basis": "coaching",
+        "explanation": "Using your body as a shield and finding a teammate keep the next touch under your control. Sending the puck away before looking gives it up without knowing where Navy2 or Gold1 are."
+      },
+      "after": {
+        "id": "exp26b-u7-006-q2",
+        "type": "multi",
+        "prompt": "What can help protect the puck?",
+        "options": [
+          {
+            "id": "a",
+            "text": "Keep your body between Gold1 and the puck"
+          },
+          {
+            "id": "b",
+            "text": "Look for Navy2 ahead"
+          },
+          {
+            "id": "c",
+            "text": "Send the puck up the wall without looking"
+          }
+        ],
+        "answer": [
+          "a",
+          "b"
+        ],
+        "basis": "coaching",
+        "explanation": "Keeping your body between Gold1 and the puck can help protect it. Looking for Navy2 helps YOU decide whether a pass is available. Sending the puck along the wall without checking can give Gold1 a chance to reach it."
+      },
+      "scenarioId": "exp26b-u7-006"
+    },
+    {
+      "questionId": "exp26b-u7-006-q5",
+      "reason": "Pressure on a side does not categorically remove every option.",
+      "before": {
+        "id": "exp26b-u7-006-q5",
+        "type": "choice",
+        "prompt": "Imagine Gold1 reaches the wall side too. What is a smart update?",
+        "options": [
+          {
+            "id": "a",
+            "text": "Look for another lane before carrying on"
+          },
+          {
+            "id": "b",
+            "text": "Keep the puck there without looking"
+          },
+          {
+            "id": "c",
+            "text": "Send the pass to Navy2 without checking the lane"
+          }
+        ],
+        "answer": [
+          "a"
+        ],
+        "basis": "coaching",
+        "explanation": "The freeze does not show Gold1 moving, so this is an imagined change. If Gold1 takes the wall side, that option is gone. A new look may show a turn, a pass to Navy2, or a safer hold; the picture decides."
+      },
+      "after": {
+        "id": "exp26b-u7-006-q5",
+        "type": "choice",
+        "prompt": "Imagine Gold1 reaches the wall side too. What is a smart update?",
+        "options": [
+          {
+            "id": "a",
+            "text": "Look for another lane before carrying on"
+          },
+          {
+            "id": "b",
+            "text": "Keep the puck there without looking"
+          },
+          {
+            "id": "c",
+            "text": "Send the pass to Navy2 without checking the lane"
+          }
+        ],
+        "answer": [
+          "a"
+        ],
+        "basis": "coaching",
+        "explanation": "Imagine Gold1 moving toward the wall side. Check how much room and reach Gold1 has now. A turn, a clear pass to Navy2 or protecting the puck may help; the next choice depends on what is still open."
+      },
+      "scenarioId": "exp26b-u7-006"
+    },
+    {
+      "questionId": "exp26b-u7-007-q5",
+      "reason": "Moving toward a lane is not proof of covering it.",
+      "before": {
+        "id": "exp26b-u7-007-q5",
+        "type": "choice",
+        "prompt": "Gold1 moves toward your new lane. What could help?",
+        "options": [
+          {
+            "id": "a",
+            "text": "Change to another clear angle"
+          },
+          {
+            "id": "b",
+            "text": "Stay because Navy2 saw you first"
+          },
+          {
+            "id": "c",
+            "text": "Hide behind Gold1"
+          }
+        ],
+        "answer": [
+          "a"
+        ],
+        "basis": "coaching",
+        "explanation": "Gold1 has covered the first angle. A new angle can reopen a target for Navy2, depending on where the carrier and defender move."
+      },
+      "after": {
+        "id": "exp26b-u7-007-q5",
+        "type": "choice",
+        "prompt": "Imagine Gold1 moves toward your new lane. What could help?",
+        "options": [
+          {
+            "id": "a",
+            "text": "Change to another clear angle"
+          },
+          {
+            "id": "b",
+            "text": "Stay because Navy2 saw you first"
+          },
+          {
+            "id": "c",
+            "text": "Hide behind Gold1"
+          }
+        ],
+        "answer": [
+          "a"
+        ],
+        "basis": "coaching",
+        "explanation": "Check whether Gold1 is closing the lane. A different clear angle can help Navy2 if the first one is covered. If Gold1 stays too far away to reach the pass, your first angle may still work."
+      },
+      "scenarioId": "exp26b-u7-007"
+    },
+    {
+      "questionId": "exp26-u9-001-q2",
+      "reason": "Prior position can provide context; avoid unsupported source paraphrase in player feedback.",
+      "before": {
+        "type": "multi",
+        "prompt": "Which cues matter before asking for a pass?",
+        "options": [
+          {
+            "id": "a",
+            "text": "Where Gold1 is"
+          },
+          {
+            "id": "b",
+            "text": "Where Navy2 has the puck"
+          },
+          {
+            "id": "c",
+            "text": "Where YOU were standing before"
+          }
+        ],
+        "answer": [
+          "a",
+          "b"
+        ],
+        "basis": "coaching",
+        "explanation": "Hockey Canada's scanning guidance names two things to find: where your teammates are and where the pressure is coming from. Your old spot does not change either one.",
+        "id": "exp26-u9-001-q2"
+      },
+      "after": {
+        "type": "multi",
+        "prompt": "Which cues matter before asking for a pass?",
+        "options": [
+          {
+            "id": "a",
+            "text": "Where Gold1 is"
+          },
+          {
+            "id": "b",
+            "text": "Where Navy2 has the puck"
+          },
+          {
+            "id": "c",
+            "text": "Where YOU were standing before"
+          }
+        ],
+        "answer": [
+          "a",
+          "b"
+        ],
+        "basis": "coaching",
+        "explanation": "Check Navy2 with the puck and where Gold1 is now. Your earlier spot can help YOU notice what changed, but it does not tell YOU whether the lane is clear now.",
+        "id": "exp26-u9-001-q2"
+      },
+      "scenarioId": "exp26-u9-001"
+    },
+    {
+      "questionId": "exp26-u9-002-q7",
+      "reason": "Reaching the same side is not proof that a passing lane is blocked.",
+      "before": {
+        "id": "exp26-u9-002-q7",
+        "type": "choice",
+        "prompt": "Imagine Gold1 skates across to the same side of Navy2 as YOU. What is a useful first response?",
+        "options": [
+          {
+            "id": "a",
+            "text": "Find a support spot on Navy2's other side"
+          },
+          {
+            "id": "b",
+            "text": "Hold the same spot and wait for the pass"
+          },
+          {
+            "id": "c",
+            "text": "Skate in beside Navy2 for a hand-off"
+          }
+        ],
+        "answer": [
+          "a"
+        ],
+        "basis": "coaching",
+        "explanation": "When the pressure moves to your side, the angle YOU were offering is the one Gold1 now covers, so a spot on Navy2’s other side gives the carrier something new. Holding still leaves Navy2 with the same covered option, and skating in beside Navy2 puts both navy players back in one small space. If Gold1 stops short instead, your first spot can still work."
+      },
+      "after": {
+        "id": "exp26-u9-002-q7",
+        "type": "choice",
+        "prompt": "Imagine Gold1 skates across to the same side of Navy2 as YOU. What is a useful first response?",
+        "options": [
+          {
+            "id": "a",
+            "text": "Find a support spot on Navy2's other side"
+          },
+          {
+            "id": "b",
+            "text": "Hold the same spot and wait for the pass"
+          },
+          {
+            "id": "c",
+            "text": "Skate in beside Navy2 for a hand-off"
+          }
+        ],
+        "answer": [
+          "a"
+        ],
+        "basis": "coaching",
+        "explanation": "Check whether Gold1 has actually closed your angle. If so, a clear spot on Navy2's other side may offer something new. Keep enough room for Navy2 to handle the puck. Your first spot can still work if Gold1 cannot reach that lane."
+      },
+      "scenarioId": "exp26-u9-002"
+    },
+    {
+      "questionId": "exp26-u9-003-q7",
+      "reason": "Approaching straight down a lane does not necessarily open it.",
+      "before": {
+        "id": "exp26-u9-003-q7",
+        "type": "choice",
+        "prompt": "Imagine Gold1 skates at YOU instead of staying on the line to Navy2. What changes?",
+        "options": [
+          {
+            "id": "a",
+            "text": "The line to Navy2 can open up"
+          },
+          {
+            "id": "b",
+            "text": "Navy2 becomes a worse option every time"
+          },
+          {
+            "id": "c",
+            "text": "Nothing changes until YOU pass"
+          }
+        ],
+        "answer": [
+          "a"
+        ],
+        "basis": "coaching",
+        "explanation": "A defender who leaves a lane to chase the puck gives that lane back, so Navy2 can become available. Gold1 is also closer to the puck then, so there is less time to use it. Check that Navy2 is still clear before the pass."
+      },
+      "after": {
+        "id": "exp26-u9-003-q7",
+        "type": "choice",
+        "prompt": "Imagine Gold1 moves off the line to Navy2 and comes at YOU from the side. What can change?",
+        "options": [
+          {
+            "id": "a",
+            "text": "The line to Navy2 can open up"
+          },
+          {
+            "id": "b",
+            "text": "Navy2 becomes a worse option every time"
+          },
+          {
+            "id": "c",
+            "text": "Nothing changes until YOU pass"
+          }
+        ],
+        "answer": [
+          "a"
+        ],
+        "basis": "coaching",
+        "explanation": "Moving off that line may leave Navy2 available, while Gold1 coming closer gives YOU less time. Check Gold1's reach and the lane before passing; movement alone does not guarantee an opening."
+      },
+      "scenarioId": "exp26-u9-003"
+    },
+    {
+      "questionId": "exp26-u9-003-q8",
+      "reason": "Far-target evaluation must include the defender near the puck as well as the far defender.",
+      "before": {
+        "id": "exp26-u9-003-q8",
+        "type": "multi",
+        "prompt": "Which two players decide whether Navy3 is a good target right now?",
+        "options": [
+          {
+            "id": "a",
+            "text": "Navy3, because that is where the puck has to arrive"
+          },
+          {
+            "id": "b",
+            "text": "Gold2, because Gold2 is the nearest gold player to that side"
+          },
+          {
+            "id": "c",
+            "text": "Navy2, because Navy2 is the closest teammate"
+          }
+        ],
+        "answer": [
+          "a",
+          "b"
+        ],
+        "basis": "coaching",
+        "explanation": "The puck has to reach Navy3, and Gold2 is the gold player nearest that side of the ice, so those two shape the choice. Navy2 matters as the other option to compare, not as part of Navy3’s lane. Nothing here proves the pass would arrive."
+      },
+      "after": {
+        "id": "exp26-u9-003-q8",
+        "type": "multi",
+        "prompt": "Which two checks help YOU judge a pass to Navy3?",
+        "options": [
+          {
+            "id": "a",
+            "text": "Whether Navy3 is ready to receive"
+          },
+          {
+            "id": "b",
+            "text": "Whether Gold1 or Gold2 can reach the passing lane"
+          },
+          {
+            "id": "c",
+            "text": "Whether Navy2 is the closest teammate"
+          }
+        ],
+        "answer": [
+          "a",
+          "b"
+        ],
+        "basis": "coaching",
+        "explanation": "Check the receiver and the whole passing lane. Gold1 is close to the puck and Gold2 is nearer Navy3. Either can affect the pass. Navy2 is another option, but being closest does not decide whether Navy3 is available."
+      },
+      "scenarioId": "exp26-u9-003"
+    },
+    {
+      "questionId": "exp26-u9-004-q9",
+      "reason": "Avoid declaring both passing lanes open after a static example move.",
+      "before": {
+        "id": "exp26-u9-004-q9",
+        "type": "position",
+        "prompt": "Place YOU where there is more room from Gold1 before choosing an option.",
+        "actorId": "home-skater-1",
+        "reference": {
+          "x": -23,
+          "y": 3
+        },
+        "basis": "coaching",
+        "explanation": "Gold1 is the nearest gold player and stands close to the puck, so making room can come first. From this example both navy teammates sit on the open side of Gold1 rather than behind Gold1. Gold1 can follow, so check again before passing, and skating up the ice can be better if that lane opens."
+      },
+      "after": {
+        "id": "exp26-u9-004-q9",
+        "type": "position",
+        "prompt": "Place YOU where there is more room from Gold1 before choosing an option.",
+        "actorId": "home-skater-1",
+        "reference": {
+          "x": -23,
+          "y": 3
+        },
+        "basis": "coaching",
+        "explanation": "This example creates more room from Gold1 and changes the angles to both navy teammates. Check each lane again before passing: Gold1 can follow or reach into a lane. Another route may work if it keeps the puck controlled."
+      },
+      "scenarioId": "exp26-u9-004"
+    },
+    {
+      "questionId": "exp26-u9-005-q8",
+      "reason": "A defender near the corner route is not necessarily standing directly on every possible route.",
+      "before": {
+        "id": "exp26-u9-005-q8",
+        "type": "multi",
+        "prompt": "What two things happen if YOU keep going toward the corner?",
+        "options": [
+          {
+            "id": "a",
+            "text": "The boards curve in and the space gets tighter"
+          },
+          {
+            "id": "b",
+            "text": "Gold1 is already standing on that route"
+          },
+          {
+            "id": "c",
+            "text": "Navy2 becomes easier to reach"
+          }
+        ],
+        "answer": [
+          "a",
+          "b"
+        ],
+        "basis": "coaching",
+        "explanation": "Just ahead of YOU the boards start to round into the corner, so the room narrows, and Gold1 already stands on that side. Navy2 is inside and behind that route, so the pass gets longer rather than shorter. A corner can still be a good place to protect the puck; that depends on the pressure."
+      },
+      "after": {
+        "id": "exp26-u9-005-q8",
+        "type": "multi",
+        "prompt": "What two things happen if YOU keep going toward the corner?",
+        "options": [
+          {
+            "id": "a",
+            "text": "The boards curve in and the space gets tighter"
+          },
+          {
+            "id": "b",
+            "text": "Gold1 is already near that route"
+          },
+          {
+            "id": "c",
+            "text": "Navy2 becomes easier to reach"
+          }
+        ],
+        "answer": [
+          "a",
+          "b"
+        ],
+        "basis": "coaching",
+        "explanation": "The boards curve into the corner and Gold1 is nearby. Navy2 is back toward the middle, so continuing toward the corner can make that pass longer. A corner can still help YOU protect the puck; check the pressure and the lane."
+      },
+      "scenarioId": "exp26-u9-005"
+    },
+    {
+      "questionId": "exp26-u9-005-q10",
+      "reason": "YOU own the puck, so communication should request support rather than a pass to YOU.",
+      "before": {
+        "id": "exp26-u9-005-q10",
+        "type": "explain",
+        "prompt": "What would YOU say out loud to Navy2 from this spot?",
+        "basis": "coaching",
+        "explanation": "There is no single right answer. Useful talk tells your partner where YOU are and what YOU need, such as calling for a short pass or naming which side the pressure is on. Talking does not make the play work; it gives Navy2 information the picture cannot."
+      },
+      "after": {
+        "id": "exp26-u9-005-q10",
+        "type": "explain",
+        "prompt": "What would YOU say out loud to Navy2 from this spot?",
+        "basis": "coaching",
+        "explanation": "YOU have the puck. You could tell Navy2 which side Gold1 is on, ask Navy2 to show a target, or say where YOU can send a pass. Useful talk helps your partner understand the next choice; it does not guarantee the play will work."
+      },
+      "scenarioId": "exp26-u9-005"
+    },
+    {
+      "questionId": "exp26-u9-007-q7",
+      "reason": "After the hypothetical reception YOU are the carrier and Navy2 is the receiver.",
+      "before": {
+        "id": "exp26-u9-007-q7",
+        "type": "choice",
+        "prompt": "Imagine YOU receive the pass and Gold1 then covers the line back to Navy2. What can YOU do?",
+        "options": [
+          {
+            "id": "a",
+            "text": "Move to a new angle so Navy2 has another option"
+          },
+          {
+            "id": "b",
+            "text": "Send it back on the covered line anyway"
+          },
+          {
+            "id": "c",
+            "text": "Stand still and wait for Navy2 to skate to YOU"
+          }
+        ],
+        "answer": [
+          "a"
+        ],
+        "basis": "coaching",
+        "explanation": "This asks YOU to imagine a change; the picture only shows the moment before the pass. If a defender takes a lane away, moving gives your partner a different one. Returning it on the covered line puts the puck near Gold1, and standing still leaves Navy2 with nothing new. Navy3 is on this side too and may already be an option."
+      },
+      "after": {
+        "id": "exp26-u9-007-q7",
+        "type": "choice",
+        "prompt": "Imagine YOU receive the pass and Gold1 then covers the line back to Navy2. What can YOU do?",
+        "options": [
+          {
+            "id": "a",
+            "text": "Carry to a new angle and check the pass to Navy2 again"
+          },
+          {
+            "id": "b",
+            "text": "Send it back on the covered line anyway"
+          },
+          {
+            "id": "c",
+            "text": "Stand still and wait for Navy2 to skate to YOU"
+          }
+        ],
+        "answer": [
+          "a"
+        ],
+        "basis": "coaching",
+        "explanation": "Imagine YOU have received the puck. YOU are now the carrier. A controlled move can change your passing angle to Navy2, but check Gold1 again before sending it. Navy3 may also offer a clear pass, or YOU may need to protect the puck."
+      },
+      "scenarioId": "exp26-u9-007"
+    }
+  ],
+  "sceneChanges": [
+    {
+      "scenarioId": "exp26b-u7-009",
+      "reason": "The actual blue line is x=-7.62. Gold1 at x=-6 is beyond it like Navy2, not on the learner side. Browser confirmed this relationship.",
+      "before": {
+        "id": "exp26b-u7-009",
+        "version": 2,
+        "ageBand": "U7",
+        "title": "Use the blue line as a meeting place",
+        "family": "rink-landmark-support",
+        "topic": "Rink awareness",
+        "objective": "Use a named rink area as a shared practice target while keeping space and awareness.",
+        "briefing": "Navy attacks the +x end and gold attacks the -x end. This is a small-area practice activity on part of the sheet, and the coach names the nearby blue line as the meeting line for it. YOU have the puck just behind that line. Navy2 waits beyond it, and Gold1 waits wider on your side, close to the side boards. The coach asks you to approach the line and find Navy2.",
+        "setup": {
+          "actors": [
+            {
+              "id": "home-skater-1",
+              "label": "YOU",
+              "team": "home",
+              "role": "skater",
+              "x": -8,
+              "y": -4,
+              "facing": 0
+            },
+            {
+              "id": "home-skater-2",
+              "label": "Navy2",
+              "team": "home",
+              "role": "skater",
+              "x": -4,
+              "y": -2,
+              "facing": 3
+            },
+            {
+              "id": "away-skater-1",
+              "label": "Gold1",
+              "team": "away",
+              "role": "skater",
+              "x": -6,
+              "y": -9,
+              "facing": 0.6
+            }
+          ],
+          "puck": {
+            "owner": "home-skater-1"
+          }
+        },
+        "focusActorId": "home-skater-1",
+        "cues": [
+          "The coach names the nearby blue line.",
+          "YOU have the puck behind it.",
+          "Navy2 waits beyond it, and Gold1 is wider on your side near the boards."
+        ],
+        "tags": [
+          "blue-line",
+          "landmark",
+          "support",
+          "experimental",
+          "expansion"
+        ],
+        "sources": [
+          {
+            "id": "hc-u7-skills",
+            "title": "Hockey Canada: Fundamental skill development for Timbits U7 hockey",
+            "section": "U7 Skills: skating, puck control, passing and receiving",
+            "url": "https://www.hockeycanada.ca/en-ca/hockey-programs/coaching/under-7/coaches/skills",
+            "use": "Supports age-appropriate skating, puck control and passing practice; the meeting line is a stated activity condition."
+          },
+          {
+            "id": "hc-u7-cross-ice-rules",
+            "title": "Hockey Canada: Set-up, game play and rules for Timbits U7 hockey",
+            "section": "Playing Surface; Game Set-up and Flow",
+            "url": "https://www.hockeycanada.ca/en-ca/hockey-programs/coaching/under-7/associations/game-play-rules",
+            "use": "Supports naming rink areas for activity orientation; it does not make this practice line a match rule."
+          }
+        ],
+        "limits": "The blue line is a named practice landmark for this small-area activity, not an offside judgment or a universal restart rule; Hockey Canada's U7 game format is cross-ice, where this line carries no game meaning. Static art does not show movement. An adult may read the questions aloud.",
+        "questions": [
+          {
+            "id": "exp26b-u7-009-q1",
+            "type": "choice",
+            "prompt": "What rink area did the coach name?",
+            "options": [
+              {
+                "id": "a",
+                "text": "The blue line"
+              },
+              {
+                "id": "b",
+                "text": "The net"
+              },
+              {
+                "id": "c",
+                "text": "The bench"
+              }
+            ],
+            "answer": [
+              "a"
+            ],
+            "basis": "scene",
+            "explanation": "The briefing names the blue line as the meeting line for this activity. It is a landmark here."
+          },
+          {
+            "id": "exp26b-u7-009-q2",
+            "type": "multi",
+            "prompt": "What should you see before moving there?",
+            "options": [
+              {
+                "id": "a",
+                "text": "Navy2 beyond the line"
+              },
+              {
+                "id": "b",
+                "text": "Gold1 wider on your side, near the boards"
+              },
+              {
+                "id": "c",
+                "text": "A rule that says you must pass"
+              }
+            ],
+            "answer": [
+              "a",
+              "b"
+            ],
+            "basis": "scene",
+            "explanation": "Navy2 is the teammate to find and Gold1 is nearby pressure. The picture does not state a must-pass rule."
+          },
+          {
+            "id": "exp26b-u7-009-q3",
+            "type": "position",
+            "prompt": "Place YOU near the named blue line, away from Gold1.",
+            "actorId": "home-skater-1",
+            "reference": {
+              "x": -6,
+              "y": -3
+            },
+            "basis": "coaching",
+            "explanation": "This moves YOU toward the named line while keeping some room from Gold1. It is a practice example, not a required landmark distance."
+          },
+          {
+            "id": "exp26b-u7-009-q4",
+            "type": "sequence",
+            "prompt": "Arrange the meeting-line read.",
+            "options": [
+              {
+                "id": "a",
+                "text": "Find the blue line"
+              },
+              {
+                "id": "b",
+                "text": "Check Navy2 and Gold1"
+              },
+              {
+                "id": "c",
+                "text": "Move or pass when the space is clear"
+              }
+            ],
+            "answer": [
+              "a",
+              "b",
+              "c"
+            ],
+            "basis": "coaching",
+            "explanation": "The landmark gives the activity a shared place, but the players still decide the next safe move. Check both teams before moving or passing."
+          },
+          {
+            "id": "exp26b-u7-009-q5",
+            "type": "choice",
+            "prompt": "Gold1 moves toward the blue line. What should you do?",
+            "options": [
+              {
+                "id": "a",
+                "text": "Look for a clear side before reaching the line"
+              },
+              {
+                "id": "b",
+                "text": "Go straight to the line because the coach named it"
+              },
+              {
+                "id": "c",
+                "text": "Pass to Navy2 through the space Gold1 is entering"
+              }
+            ],
+            "answer": [
+              "a"
+            ],
+            "basis": "coaching",
+            "explanation": "The landmark does not stay empty when Gold1 moves. A clear side may keep the activity useful while preserving puck control."
+          },
+          {
+            "id": "exp26b-u7-009-q6",
+            "type": "explain",
+            "prompt": "How can a named line help your team?",
+            "basis": "coaching",
+            "explanation": "A named line gives YOU and Navy2 a shared place to look for one another. You still need to check Gold1 and the open space before moving or passing."
+          }
+        ]
+      },
+      "after": {
+        "id": "exp26b-u7-009",
+        "version": 2,
+        "ageBand": "U7",
+        "title": "Use the blue line as a meeting place",
+        "family": "rink-landmark-support",
+        "topic": "Rink awareness",
+        "objective": "Use a named rink area as a shared practice target while keeping space and awareness.",
+        "briefing": "Navy attacks the +x end and gold attacks the -x end. This is a small-area practice activity on part of the sheet, and the coach names the nearby blue line as the meeting line for it. YOU have the puck just behind that line. Navy2 waits beyond it, and Gold1 also waits beyond the line, farther toward the side boards. The coach asks you to approach the line and find Navy2.",
+        "setup": {
+          "actors": [
+            {
+              "id": "home-skater-1",
+              "label": "YOU",
+              "team": "home",
+              "role": "skater",
+              "x": -8,
+              "y": -4,
+              "facing": 0
+            },
+            {
+              "id": "home-skater-2",
+              "label": "Navy2",
+              "team": "home",
+              "role": "skater",
+              "x": -4,
+              "y": -2,
+              "facing": 3
+            },
+            {
+              "id": "away-skater-1",
+              "label": "Gold1",
+              "team": "away",
+              "role": "skater",
+              "x": -6,
+              "y": -9,
+              "facing": 0.6
+            }
+          ],
+          "puck": {
+            "owner": "home-skater-1"
+          }
+        },
+        "focusActorId": "home-skater-1",
+        "cues": [
+          "The coach names the nearby blue line.",
+          "YOU have the puck behind it.",
+          "Navy2 waits beyond it, and Gold1 is wider on your side near the boards."
+        ],
+        "tags": [
+          "blue-line",
+          "landmark",
+          "support",
+          "experimental",
+          "expansion"
+        ],
+        "sources": [
+          {
+            "id": "hc-u7-skills",
+            "title": "Hockey Canada: Fundamental skill development for Timbits U7 hockey",
+            "section": "U7 Skills: skating, puck control, passing and receiving",
+            "url": "https://www.hockeycanada.ca/en-ca/hockey-programs/coaching/under-7/coaches/skills",
+            "use": "Supports age-appropriate skating, puck control and passing practice; the meeting line is a stated activity condition."
+          },
+          {
+            "id": "hc-u7-cross-ice-rules",
+            "title": "Hockey Canada: Set-up, game play and rules for Timbits U7 hockey",
+            "section": "Playing Surface; Game Set-up and Flow",
+            "url": "https://www.hockeycanada.ca/en-ca/hockey-programs/coaching/under-7/associations/game-play-rules",
+            "use": "Supports naming rink areas for activity orientation; it does not make this practice line a match rule."
+          }
+        ],
+        "limits": "The blue line is a named practice landmark for this small-area activity, not an offside judgment or a universal restart rule; Hockey Canada's U7 game format is cross-ice, where this line carries no game meaning. Static art does not show movement. An adult may read the questions aloud.",
+        "questions": [
+          {
+            "id": "exp26b-u7-009-q1",
+            "type": "choice",
+            "prompt": "What rink area did the coach name?",
+            "options": [
+              {
+                "id": "a",
+                "text": "The blue line"
+              },
+              {
+                "id": "b",
+                "text": "The net"
+              },
+              {
+                "id": "c",
+                "text": "The bench"
+              }
+            ],
+            "answer": [
+              "a"
+            ],
+            "basis": "scene",
+            "explanation": "The briefing names the blue line as the meeting line for this activity. It is a landmark here."
+          },
+          {
+            "id": "exp26b-u7-009-q2",
+            "type": "multi",
+            "prompt": "What should you see before moving there?",
+            "options": [
+              {
+                "id": "a",
+                "text": "Navy2 beyond the line"
+              },
+              {
+                "id": "b",
+                "text": "Gold1 beyond the line, nearer the side boards"
+              },
+              {
+                "id": "c",
+                "text": "A rule that says you must pass"
+              }
+            ],
+            "answer": [
+              "a",
+              "b"
+            ],
+            "basis": "scene",
+            "explanation": "Navy2 is the teammate to find and Gold1 is nearby pressure. The picture does not state a must-pass rule."
+          },
+          {
+            "id": "exp26b-u7-009-q3",
+            "type": "position",
+            "prompt": "Place YOU near the named blue line, away from Gold1.",
+            "actorId": "home-skater-1",
+            "reference": {
+              "x": -6,
+              "y": -3
+            },
+            "basis": "coaching",
+            "explanation": "This moves YOU toward the named line while keeping some room from Gold1. It is a practice example, not a required landmark distance."
+          },
+          {
+            "id": "exp26b-u7-009-q4",
+            "type": "sequence",
+            "prompt": "Arrange the meeting-line read.",
+            "options": [
+              {
+                "id": "a",
+                "text": "Find the blue line"
+              },
+              {
+                "id": "b",
+                "text": "Check Navy2 and Gold1"
+              },
+              {
+                "id": "c",
+                "text": "Move or pass when the space is clear"
+              }
+            ],
+            "answer": [
+              "a",
+              "b",
+              "c"
+            ],
+            "basis": "coaching",
+            "explanation": "The landmark gives the activity a shared place, but the players still decide the next safe move. Check both teams before moving or passing."
+          },
+          {
+            "id": "exp26b-u7-009-q5",
+            "type": "choice",
+            "prompt": "Gold1 moves toward the blue line. What should you do?",
+            "options": [
+              {
+                "id": "a",
+                "text": "Look for a clear side before reaching the line"
+              },
+              {
+                "id": "b",
+                "text": "Go straight to the line because the coach named it"
+              },
+              {
+                "id": "c",
+                "text": "Pass to Navy2 through the space Gold1 is entering"
+              }
+            ],
+            "answer": [
+              "a"
+            ],
+            "basis": "coaching",
+            "explanation": "The landmark does not stay empty when Gold1 moves. A clear side may keep the activity useful while preserving puck control."
+          },
+          {
+            "id": "exp26b-u7-009-q6",
+            "type": "explain",
+            "prompt": "How can a named line help your team?",
+            "basis": "coaching",
+            "explanation": "A named line gives YOU and Navy2 a shared place to look for one another. You still need to check Gold1 and the open space before moving or passing."
+          }
+        ]
+      },
+      "affectedQuestionIds": [
+        "exp26b-u7-009-q1",
+        "exp26b-u7-009-q2",
+        "exp26b-u7-009-q3",
+        "exp26b-u7-009-q4",
+        "exp26b-u7-009-q5",
+        "exp26b-u7-009-q6"
+      ]
+    }
+  ]
+}

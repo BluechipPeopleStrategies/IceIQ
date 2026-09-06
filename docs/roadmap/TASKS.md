@@ -1,6 +1,6 @@
 # RinkReads — Task List
 
-**Last updated:** 2026-09-05, 16:36 Edmonton · **Claude calibration integrated locally:** validated all 50 returned records; amended five experimental scenarios and independently rechecked all 28 changed question hashes. U11 receiving geometry, net-front angle, grammar, distractors and conditional feedback are repaired; the later rim placement now moves W for a shorter outlet. All 1,600 current question hashes match review receipts; 34 focused tests and isolated production build pass. The original Claude ZIP stays frozen, and a feedback package supplies packet 02. Public UI/content deployment and human-coach approval remain separate. See [calibration decisions](../factory/research/question-review/calibration/calibration-adjudication.md) and [verification](../factory/research/question-review/calibration/verification.json).
+**Last updated:** 2026-09-05 · Approved packet-only release: packets 01–09 included; 02–09 add 37 repaired scenarios / 187 changed question versions. 32 focused tests, full combined audit and isolated build passed. Publication verification follows deployment.
 
 **Scope:** RinkReads **app build + content factory**. Launch/distribution (sending the beta, marketing) and the separate BlueChip business are **out of scope** — parked at the bottom. Priority = position in this list. A new idea that isn't here goes to the **Parking Lot** first, then gets promoted on purpose — that's the scope-creep guard.
 
@@ -56,6 +56,8 @@
 - *(New ideas land here first, then get promoted into NEXT/LATER on purpose.)*
 
 ## Changelog
+
+- **2026-09-05** — Prepared approved packet-only deployment from production f1f4306, carrying the reviewed 02–09 content, immutable receipts, catalogs and exact question manifest. Packet01 calibration was already deployed. Separate player-home, training, coach and unfinished rendering work excluded. No promotion to human-approved content or mastery.
 
 - **2026-09-05, 16:36 Edmonton — Claude calibration repairs:** original return preserved, all 50 records validated, five scenarios updated with 28 exact independent Luna rechecks. A remaining duplicate rim task became a W-support placement; the proposed goalie-contact rewrite was declined. Current combined review has zero unreconciled AI flags, 1,600 matching hashes and preserved historical findings. 34 focused tests and the isolated build pass; selected 390/1280 px placement, feedback and reload checks pass. Public publishing remains blocked by automatic approval review; no deployment claimed.
 

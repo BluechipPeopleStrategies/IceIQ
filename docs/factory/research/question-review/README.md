@@ -5,11 +5,11 @@ September 5, 2026. The mixed expansion adds 1,000 questions: 100 new scenarios w
 | Evidence | Final result |
 |---|---:|
 | Questions with a complete first AI review | 1600 |
-| Questions with an independent second AI review | 468 |
+| Questions with an independent second AI review | 604 |
 | Added questions reviewed | 1000 |
-| Added questions receiving an independent second review | 341 |
-| Added questions checked again after content or scene edits | 327 |
-| Unique question IDs in this turn's repair receipts | 234 |
+| Added questions receiving an independent second review | 477 |
+| Added questions checked again after content or scene edits | 465 |
+| Unique question IDs in this turn's repair receipts | 412 |
 | Open reconciled AI findings | 0 |
 
 Reviewers used GPT-5.6 Luna. The initial 600-question review used medium reasoning. Weak expansion drafts were rejected; replacement authoring and review used Luna with high reasoning effort. A different reviewer checked every flag, high-risk question and subsequent repair. Every receipt is bound to the scene and question actually reviewed.
@@ -23,6 +23,12 @@ The original four repairs remain recorded in revisions.json and revisions-second
 Not every reviewer proposal was accepted. For example, F2 was correctly the nearest player in the disputed U11 loose-puck distance question; a suggested replacement point in the U18 rotation was still too low; and future branches were clarified as hypothetical rather than silently changing the freeze. Earlier findings remain available as history alongside the final adjudications.
 
 The returned Claude calibration packet covered 50 questions. Codex adjudication and independent Luna review produced five scenario updates affecting 28 exact question hashes. Repairs include receiving-side geometry, net-front passing angle, YOU grammar, credible distractors and conditional feedback. A repeated rim-placement task now moves W to offer a shorter board-side outlet after control. The proposed goalie-contact rewrite was declined. A first independent recheck retained one finding; the revised W question resolved it. See [calibration decisions and operating lessons](calibration/calibration-adjudication.md). The original Claude ZIP stays frozen as the historical baseline; its processed packet 01 cannot be re-imported against newer live versions.
+
+## Returned packets 02–06
+
+The September 5 follow-up repairs 23 experimental scenarios and 115 affected question hashes. Codex read the full replacements; Luna independently rechecked 16 further question amendments and all six questions affected by a corrected blue-line briefing. Original Claude returns remain frozen. Packets 07–09 subsequently repaired 14 more scenarios and 72 question versions after an independent Luna recheck, including additional geometry, grammar and conditional-feedback corrections. See [packets 07–09 receipt](packets-07-09/application-receipt.json). Full evidence: [packet application receipt](packets-02-06/application-receipt.json) and [independent recheck](packets-02-06/independent-final-recheck.json).
+
+The U7 support/receiving bindings for exp26b-u7-007 and exp26b-u7-008 remain curriculum holds. A clean exact-content audit is not curriculum admission, human coach approval, or on-ice validation. The current 1,600 authored prompts yield 1,300 non-reflection questions and 200 optional reflections in normal practice (1,500 visible prompts).
 
 ## Use the result
 

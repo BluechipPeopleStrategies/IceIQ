@@ -17,7 +17,7 @@ assert.deepEqual(second.coverage.map(r=>r.questionId).sort(),required,'Every fla
 const laterPath=`${dir}/followup/u9-006-recheck.json`;
 const later=fs.existsSync(laterPath)?read('followup/u9-006-recheck.json'):null;
 const originalIds=new Set(current.map(q=>q.questionId));
-const laterRows=[...(later?.results|| (later?.questionId?[later]:[])),...['original-user-feedback-recheck.json','related-board-recheck.json','calibration-final-recheck.json'].flatMap(file=>fs.existsSync(`${dir}/followup/${file}`)?read(`followup/${file}`).coverage||[]:[])].filter(r=>originalIds.has(r.questionId));
+const laterRows=[...(later?.results|| (later?.questionId?[later]:[])),...['original-user-feedback-recheck.json','related-board-recheck.json','calibration-final-recheck.json','packets-02-06-final-recheck.json','packets-07-09-final-recheck.json'].flatMap(file=>fs.existsSync(`${dir}/followup/${file}`)?read(`followup/${file}`).coverage||[]:[])].filter(r=>originalIds.has(r.questionId));
 const corrected=new Map([...recheck.results,...laterRows.map(r=>({...r,status:r.decision||r.status||(r.verdict==='retain'?'pass':r.verdict)}))].map(r=>[r.questionId,r]));
 const changed=current.filter(q=>q.contentHash!==baseline.find(b=>b.questionId===q.questionId)?.contentHash);
 assert.deepEqual(changed.map(q=>q.questionId).sort(),[...corrected.keys()].sort(),'Every changed question rechecked');
