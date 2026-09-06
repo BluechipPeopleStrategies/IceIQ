@@ -1,6 +1,6 @@
 # RinkReads — Task List
 
-**Last updated:** 2026-09-06 · Production a075efe remains live. Full-bank choice inventory found 83 wording candidates; five U13 drafts staged for independent payload review, not applied. Supabase and calibrated placement grades deferred.
+**Last updated:** 2026-09-06 · Implementation plan saved for choice ordering, review instrumentation, five-scene repair batches and verified releases. Production a075efe unchanged; 83 candidates and five U13 drafts remain in the review queue. Supabase deferred.
 
 **Scope:** RinkReads **app build + content factory**. Launch/distribution (sending the beta, marketing) and the separate BlueChip business are **out of scope** — parked at the bottom. Priority = position in this list. A new idea that isn't here goes to the **Parking Lot** first, then gets promoted on purpose — that's the scope-creep guard.
 
@@ -56,6 +56,8 @@
 - *(New ideas land here first, then get promoted into NEXT/LATER on purpose.)*
 
 ## Changelog
+
+- 2026-09-06: Added the six-task question-choice quality implementation plan, covering stable answer-independent presentation, traceable analytics, independent payload review, guarded source repair, optional-feedback queue and release checks. Planning only; no source question changes. Plan: [question choice quality](../superpowers/plans/2026-09-06-question-choice-quality.md).
 
 - 2026-09-06: Inventoried all 1,600 questions across 200 scenes for wording cues and displayed answer positions. 83 lexical candidates are review leads, not confirmed defects. Added filterable HTML work queue and five exact-source U13 replacement drafts with per-option rationale. Source bank unchanged; independent payload review remains. Two audit tests pass.
 
