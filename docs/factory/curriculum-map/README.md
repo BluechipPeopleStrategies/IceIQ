@@ -1,6 +1,6 @@
 # Curriculum coverage map
 
-Generated 2026-09-05 by tools/build-curriculum-coverage.mjs from tools/experimental-bank-files.mjs and the current composed bank.
+Generated 2026-09-06T18:02:49.683Z by tools/build-curriculum-coverage.mjs from tools/experimental-bank-files.mjs and the current composed bank.
 
 ## What this measures
 
@@ -10,11 +10,15 @@ The report retains each scenario's authored age, topic, family, tags, objective 
 
 ## Delivery formats
 
-Observed current types are: Multiple choice (507), Choose all that apply (300), Move / arrange players (296), Order actions (197), Explain, compare and reconsider (300). The format table also lists delivery modes that are not present in this composed bank, including true/false, feature taps, routes, responsibility matching, mistake spotting, prediction and vocabulary activities. Unseen formats are backlog signals, not automatic quality findings.
+Observed current types are: Multiple choice (508), Choose all that apply (300), Move / arrange players (295), Order actions (197), Explain, compare and reconsider (300). The format table also lists delivery modes that are not present in this composed bank, including true/false, feature taps, routes, responsibility matching, mistake spotting, prediction and vocabulary activities. Unseen formats are backlog signals, not automatic quality findings.
 
 ## Curriculum mapping boundary
 
 The six domains and 31 concepts come from src/data/curriculum-ledger.json. Scenario-level domain counts are transparent signals from the actual tags, topic, family and objective fields. They are an inventory aid; they are not explicit authored concept bindings. Concept rows show exact concept-name/id phrase matches where they exist, alongside each ledger node's age depth. Counts do not estimate mastery, learning transfer or question quality.
+
+The separate **Concept bindings** tab contains explicit provisional scene-level mappings with a rationale, scene version and current question hashes. All 200 scenes are accounted for; six remain taxonomy holds rather than being forced into unsuitable concepts. A scene binding does not assert that every question assesses that skill. Rebuild bindings with tools/build-experimental-curriculum-bindings.mjs after reviewing a content change, then rebuild this report.
+
+Open the linked practice report to connect current-version browser-local views, checks, retries and flags to these bindings. Historical hashes are excluded, small samples are labelled, and exported curriculum feedback contains aggregate counts rather than written responses. Supabase is deferred. The separate four-scene calibration catalog contains 24 draft questions and does not alter these bank totals or close skating-technique gaps.
 
 ## Review before authoring
 

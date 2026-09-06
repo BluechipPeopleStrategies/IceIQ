@@ -1,6 +1,6 @@
 # RinkReads — Task List
 
-**Last updated:** 2026-09-06 · Nine net-overlap scenes repaired in isolated release candidate codex/net-overlap-repairs: six goalies, three skaters, 58 affected question hashes. 28 tests and build passed; 18 opening captures inspected and 10 placement/reload flows verified. No repair push/deployment performed. Supabase remains deferred.
+**Last updated:** 2026-09-06 · Nine net-overlap repairs deployed as fb74d5b and verified on production. Curriculum improvement candidate accounts for 200 scenes with exact-content bindings (194 mapped, six taxonomy holds), local feedback aggregation, and four separate calibration drafts / 24 questions. Screenshot-driven U11 wall retrieval, explicit answer acknowledgement and zone wording are repaired in the candidate. Graded placement-area feedback is designed, not yet implemented. Supabase remains deferred.
 
 **Scope:** RinkReads **app build + content factory**. Launch/distribution (sending the beta, marketing) and the separate BlueChip business are **out of scope** — parked at the bottom. Priority = position in this list. A new idea that isn't here goes to the **Parking Lot** first, then gets promoted on purpose — that's the scope-creep guard.
 
@@ -56,6 +56,8 @@
 - *(New ideas land here first, then get promoted into NEXT/LATER on purpose.)*
 
 ## Changelog
+
+- **2026-09-06** · Approved four-stage improvement loop: repaired release fb74d5b verified live; 200 provisional scene bindings and local flag/attempt coverage built; four calibration scenes kept outside the 1,600-question bank. Follow-up screenshots exposed U11 wall proximity, undefined outlet comparison and an obstructed example lane; repaired with current hashes and independent checks. Added explicit answer acknowledgement and team-relative zone context. [Implementation/evidence](../factory/curriculum-bindings/RELEASE.md), [placement feedback design](../superpowers/specs/2026-09-06-player-placement-feedback.md). Next: human calibration of the draft batch and family-specific placement rubrics; do not bulk grade by distance to an example point.
 
 - **2026-09-06** · Repaired the nine net-overlap findings from the 200-scene audit. Preserved 191 unrelated scenes, bumped affected versions, refreshed 58 hashes and saved independent review plus desktop/phone/placement evidence. [Repair receipt and release notes](../factory/research/question-review/net-overlap-repairs/README.md). Next: admit and release the verified repair payload, then bind stable curriculum concepts and investigate thin coverage. Historical audit and packet reviews remain unchanged.
 

@@ -3,6 +3,9 @@ import { readFile } from 'node:fs/promises';
 const root = new URL('../', import.meta.url);
 // Explicit public teaching artifacts only. Never copy the whole docs tree.
 const artifacts = [
+  ['docs/factory/calibration/index.html', 'docs/factory/calibration/index.html'],
+  ['docs/factory/calibration/README.md', 'docs/factory/calibration/README.md'],
+  ['docs/factory/calibration/skating-movement-2026-09-06.json', 'docs/factory/calibration/skating-movement-2026-09-06.json'],
   ['docs/factory/curriculum-map/index.html', 'docs/factory/curriculum-map/index.html'],
   ['docs/factory/curriculum-map/coverage.json', 'docs/factory/curriculum-map/coverage.json'],
   ['docs/factory/curriculum-map/README.md', 'docs/factory/curriculum-map/README.md'],

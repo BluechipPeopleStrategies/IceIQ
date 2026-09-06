@@ -1,0 +1,2 @@
+import test from 'node:test';import assert from 'node:assert/strict';import {experimentalRinkContext} from './experimentalRinkContext.js';
+test('puck zone and defending team remain independent of camera rotation',()=>{for(const camera of ['overhead','behind-net','broadcast']){assert.match(experimentalRinkContext({puck:{x:-18},camera}),/Navy defensive zone/);assert.match(experimentalRinkContext({puck:{x:18},camera}),/Gold defends/);assert.match(experimentalRinkContext({puck:{x:0},camera}),/Neutral zone/);}});

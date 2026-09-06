@@ -1,6 +1,7 @@
 import { useMemo, useState } from 'react';
 import { buildPracticeInsights, createPracticeAnalyticsStore } from './experimentalPracticeAnalytics.js';
 import './ExperimentalPracticeInsights.css';
+import CurriculumPracticePanel from './CurriculumPracticePanel.jsx';
 
 function downloadJSON(text) {
   if (typeof document === 'undefined' || typeof URL === 'undefined' || typeof Blob === 'undefined') return;
@@ -23,7 +24,7 @@ function completionRows(rows) {
   return <ul className="epi-ranked">{usable.map(row => <li key={row.key}><b>{Math.round(row.rate * 100)}%</b><span>{row.scenarioId} · {row.questionId} · {row.distinctViewIDsWithCheckOrSkip}/{row.totalViews} views checked or skipped</span></li>)}</ul>;
 }
 
-export default function ExperimentalPracticeInsights({ store: suppliedStore, storage }) {
+export default function ExperimentalPracticeInsights({ store: suppliedStore, storage, bank = [], manifest = {questions:{}} }) {
   const store = useMemo(() => suppliedStore || createPracticeAnalyticsStore({ storage }), [suppliedStore, storage]);
   const [snapshot, setSnapshot] = useState(() => store.getState());
   const [notice, setNotice] = useState('');
@@ -40,5 +41,6 @@ export default function ExperimentalPracticeInsights({ store: suppliedStore, sto
     <div className="epi-grid"><article><h3>Most viewed</h3>{rankedRows(insights.mostViewed, 'No question views recorded yet.')}</article><article><h3>Most retried</h3>{rankedRows(insights.mostRetried, 'No retries recorded yet.')}</article><article><h3>Most flagged</h3>{rankedRows(insights.mostFlagged, 'No flags recorded yet.')}</article></div>
     <div className="epi-detail"><div><h3>Scene checks</h3><p>{s.sceneChecks} checked · {s.sceneMatches} matched</p><small>{insights.sceneMatch.rate === null ? 'No scene-match sample yet.' : `${Math.round(insights.sceneMatch.rate * 100)}% of this local sample matched the scene answer.`}</small></div><div><h3>Question formats checked</h3><ul className="epi-plain">{insights.framingUsage.length ? insights.framingUsage.map(row => <li key={row.key}>{row.format}: {row.count}</li>) : <li>No checked formats yet.</li>}</ul></div><div><h3>Camera controls used</h3><ul className="epi-plain">{insights.cameraUsage.length ? insights.cameraUsage.map(row => <li key={row.key}>{row.action}: {row.count}</li>) : <li>No camera-use events yet.</li>}</ul></div><div><h3>View follow-through</h3>{completionRows(insights.completionRates)}</div><div><h3>Retention and storage</h3><p>{insights.droppedCount} dropped events · {insights.storageStatus}</p><small>Events beyond the local cap or invalid restored records are counted. Status reports whether this browser could persist the store.</small></div></div>
     <p className="epi-footnote">Follow-through counts distinct question views with a checked attempt or an optional reflection skip, divided by total views for the exact question identity. Unassociated events are omitted from that rate. These browser-local counts do not award mastery or compare players.</p>
+    <CurriculumPracticePanel bank={bank} manifest={manifest} snapshot={snapshot}/>
   </section>;
 }

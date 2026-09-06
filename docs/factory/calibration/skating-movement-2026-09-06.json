@@ -1,0 +1,974 @@
+{
+  "packetId": "skating-movement-2026-09-06",
+  "status": "draft-awaiting-coach-calibration",
+  "createdOn": "2026-09-06",
+  "purpose": "Four original static 3D scene candidates for age-banded discussion of stopping, turning, pivoting and pace-change decisions. This staged pack is not added to the live experimental bank.",
+  "ageBands": [
+    "U7",
+    "U9",
+    "U11",
+    "U13"
+  ],
+  "globalLimits": [
+    "A static freeze cannot establish speed, edge technique, stopping or pivot quality, scanning behaviour, puck-control quality, success or learning transfer.",
+    "Question answers are either visible-scene observations or conditional coaching suggestions. A coach must calibrate age fit, wording and whether each reference is a useful starting point."
+  ],
+  "references": [
+    {
+      "id": "hc-skating-pathway",
+      "title": "Hockey Canada: Skill Development | Skating",
+      "url": "https://hockeycanada.ca/en-ca/hockey-programs/players/essentials/positions-skills/skating",
+      "section": "The Skating Pathway: introduce basic skills at U7/U9; develop skills at U11/U13; eight skills include balance, edge control, turning, transition and quick feet",
+      "use": "Supports age-appropriate skating themes and progression. It does not validate any answer, infer a player's speed or certify technique from this static scene."
+    },
+    {
+      "id": "usah-8u-fundamentals",
+      "title": "USA Hockey: American Development Model — FUNdamentals Stage",
+      "url": "https://portal.usahockey.com/cx/vice-president/hockey-development/8u_fundamentals_stage-adm.pdf",
+      "section": "FUNdamentals Stage: agility, balance, coordination, forward turns and controlled stop",
+      "use": "Supports age-appropriate movement literacy and practice emphasis. It does not establish a correct route in this authored scene or measure skating execution."
+    },
+    {
+      "id": "usah-12u-learn-to-train",
+      "title": "USA Hockey: American Development Model — Learn to Train Stage",
+      "url": "https://portal.usahockey.com/cx/vice-president/hockey-development/12u_learn_to_train_stage-adm.pdf",
+      "section": "Learn to Train Stage: coordination, skating and puck-control development without early position specialization",
+      "use": "Supports age-appropriate movement literacy and practice emphasis. It does not establish a correct route in this authored scene or measure skating execution."
+    }
+  ],
+  "candidates": [
+    {
+      "id": "cal26-u7-skating-space-001",
+      "version": 1,
+      "ageBand": "U7",
+      "title": "Pause before the turn",
+      "family": "skating-space-awareness",
+      "topic": "Skating decisions",
+      "objective": "Notice a visible space before choosing where to slow down or turn in a simple practice picture.",
+      "briefing": "YOU have the puck. Navy2 is your teammate. Gold1 is an opponent. Find room before choosing where to turn. Navy attacks the right net. This picture shows positions, not skating speed.",
+      "setup": {
+        "actors": [
+          {
+            "id": "home-skater-1",
+            "label": "YOU",
+            "team": "home",
+            "role": "skater",
+            "x": -8,
+            "y": -1,
+            "facing": 0
+          },
+          {
+            "id": "home-skater-2",
+            "label": "Navy2",
+            "team": "home",
+            "role": "skater",
+            "x": -2,
+            "y": -5,
+            "facing": 0.4
+          },
+          {
+            "id": "away-skater-1",
+            "label": "Gold1",
+            "team": "away",
+            "role": "skater",
+            "x": 1,
+            "y": 3,
+            "facing": 3.1
+          }
+        ],
+        "puck": {
+          "owner": "home-skater-1"
+        }
+      },
+      "focusActorId": "home-skater-1",
+      "cues": [
+        "YOU are the puck owner.",
+        "Navy2 is your teammate.",
+        "Space around the players is visible, but no movement is shown."
+      ],
+      "tags": [
+        "skating-space-awareness",
+        "turning-decision",
+        "experimental",
+        "coach-calibration"
+      ],
+      "sources": [
+        {
+          "id": "hc-skating-pathway",
+          "title": "Hockey Canada: Skill Development | Skating",
+          "url": "https://www.hockeycanada.ca/en-ca/hockey-programs/players/essentials/positions-skills/skating",
+          "section": "The Skating Pathway: introduce basic skills at U7/U9; develop skills at U11/U13; eight skills include balance, edge control, turning, transition and quick feet",
+          "use": "Supports age-appropriate skating themes and progression. It does not validate any answer, infer a player's speed or certify technique from this static scene."
+        },
+        {
+          "id": "usah-8u-fundamentals",
+          "title": "USA Hockey: American Development Model — FUNdamentals Stage",
+          "url": "https://portal.usahockey.com/cx/vice-president/hockey-development/8u_fundamentals_stage-adm.pdf",
+          "section": "FUNdamentals Stage: agility, balance, coordination and age-appropriate progression",
+          "use": "Supports age-appropriate movement literacy and practice emphasis. It does not establish a correct route in this authored scene or measure skating execution."
+        }
+      ],
+      "limits": "Static 3D scene candidate for coach calibration. The freeze shows locations, puck ownership and stated context only. It does not assess speed, acceleration, edge technique, stopping quality, turning or pivot execution, scanning behaviour, puck control, success, safety or transfer to live ice. Position answers are discussion starting points; multiple clear spaces may be reasonable. Coaching answers are suggestions, not a certified tactical key.",
+      "questions": [
+        {
+          "id": "cal26-u7-skating-space-001-q1",
+          "type": "choice",
+          "prompt": "What is true about this freeze?",
+          "options": [
+            {
+              "id": "a",
+              "text": "YOU have the puck"
+            },
+            {
+              "id": "b",
+              "text": "Navy2 is holding the puck"
+            },
+            {
+              "id": "c",
+              "text": "Gold1 is holding the puck"
+            }
+          ],
+          "answer": [
+            "a"
+          ],
+          "basis": "scene",
+          "explanation": "YOU have the puck, while the other players are separate from YOU. The picture gives places to look; it does not show how anyone skates."
+        },
+        {
+          "id": "cal26-u7-skating-space-001-q2",
+          "type": "multi",
+          "prompt": "Which two things can you see here?",
+          "options": [
+            {
+              "id": "a",
+              "text": "Where Navy2 is"
+            },
+            {
+              "id": "b",
+              "text": "Where Gold1 is"
+            },
+            {
+              "id": "c",
+              "text": "How fast YOU will skate"
+            }
+          ],
+          "answer": [
+            "a",
+            "b"
+          ],
+          "basis": "scene",
+          "explanation": "The nearby teammate, opponent and open ice are visible cues. A speed result cannot be read from one still picture."
+        },
+        {
+          "id": "cal26-u7-skating-space-001-q3",
+          "type": "sequence",
+          "prompt": "Put this looking routine in order.",
+          "options": [
+            {
+              "id": "a",
+              "text": "Look around the players"
+            },
+            {
+              "id": "b",
+              "text": "Choose a pocket with room"
+            },
+            {
+              "id": "c",
+              "text": "Look again before changing direction"
+            }
+          ],
+          "answer": [
+            "a",
+            "b",
+            "c"
+          ],
+          "basis": "coaching",
+          "explanation": "This is a simple suggested routine: notice the players, choose a visible pocket and then look again as the practice changes. It does not prescribe a measured skating technique."
+        },
+        {
+          "id": "cal26-u7-skating-space-001-q4",
+          "type": "position",
+          "prompt": "Move YOU to a different open practice spot with room from Navy2 and Gold1.",
+          "basis": "coaching",
+          "explanation": "This example leaves room from Navy2 and Gold1. Another clear spot may also work. Moving the marker does not show a turn.",
+          "actorId": "home-skater-1",
+          "reference": {
+            "x": -5,
+            "y": -8
+          }
+        },
+        {
+          "id": "cal26-u7-skating-space-001-q5",
+          "type": "choice",
+          "prompt": "If Navy2 moves into the pocket you chose, what could you do next?",
+          "options": [
+            {
+              "id": "a",
+              "text": "Look for another clear space"
+            },
+            {
+              "id": "b",
+              "text": "Follow very close behind Navy2"
+            },
+            {
+              "id": "c",
+              "text": "Use the same spot without checking"
+            }
+          ],
+          "answer": [
+            "a"
+          ],
+          "basis": "coaching",
+          "explanation": "Navy2 now occupies your planned space. Look again and choose room that is still available."
+        },
+        {
+          "id": "cal26-u7-skating-space-001-q6",
+          "type": "explain",
+          "prompt": "Tell the coach one space or player you would check before changing direction.",
+          "basis": "coaching",
+          "explanation": "Accept any child-specific observation that names Navy2, Gold1 or a visible open area. The response is a reflection, not a skating test."
+        }
+      ],
+      "metadata": {
+        "status": "draft-awaiting-coach-calibration",
+        "conceptIds": [
+          "time-and-space",
+          "scanning"
+        ],
+        "teachingClaim": "Young players can name nearby players and open ice before choosing a simple change of direction.",
+        "visibleEvidence": [
+          "YOU are the puck owner.",
+          "Navy2 is your teammate.",
+          "Space around the players is visible, but no movement is shown."
+        ],
+        "notAssessed": [
+          "straight-line speed",
+          "acceleration rate",
+          "edge technique",
+          "stop or pivot execution",
+          "whether a player actually scanned",
+          "puck-control quality",
+          "whether any choice succeeds on live ice"
+        ],
+        "reviewQuestions": [
+          "Is the pocket clear enough for a U7 child to point to?",
+          "Does the wording keep the focus on noticing rather than performing a stop or turn?"
+        ],
+        "intendedSkatingConcept": "agility-mobility",
+        "admissionLimit": "Movement decision observation only. Does not close the skating-technique assessment gap."
+      }
+    },
+    {
+      "id": "cal26-u9-wall-turn-001",
+      "version": 1,
+      "ageBand": "U9",
+      "title": "Turn away from the wall",
+      "family": "turning-space-choice",
+      "topic": "Skating decisions",
+      "objective": "Compare a wall-side location with a visible middle-space option before choosing a turn discussion.",
+      "briefing": "YOU have the puck near the side boards. Navy2 is toward the middle. Gold1 is the nearest opponent. Compare the room by the boards with the room inside. Navy attacks the right net. Speed and stopping distance are not shown.",
+      "setup": {
+        "actors": [
+          {
+            "id": "home-skater-1",
+            "label": "YOU",
+            "team": "home",
+            "role": "skater",
+            "x": -17,
+            "y": 10.5,
+            "facing": 3.14
+          },
+          {
+            "id": "home-skater-2",
+            "label": "Navy2",
+            "team": "home",
+            "role": "skater",
+            "x": -10,
+            "y": 1,
+            "facing": 0
+          },
+          {
+            "id": "away-skater-1",
+            "label": "Gold1",
+            "team": "away",
+            "role": "skater",
+            "x": -9,
+            "y": 6,
+            "facing": 3.14
+          },
+          {
+            "id": "away-skater-2",
+            "label": "Gold2",
+            "team": "away",
+            "role": "skater",
+            "x": -5,
+            "y": -3,
+            "facing": 2.5
+          }
+        ],
+        "puck": {
+          "owner": "home-skater-1"
+        }
+      },
+      "focusActorId": "home-skater-1",
+      "cues": [
+        "YOU are close to the side boards.",
+        "Gold1 occupies the wall-side lane near YOU.",
+        "The middle of the rink has visible room between the marked players."
+      ],
+      "tags": [
+        "turning-space-choice",
+        "boards-awareness",
+        "experimental",
+        "coach-calibration"
+      ],
+      "sources": [
+        {
+          "id": "hc-skating-pathway",
+          "title": "Hockey Canada: Skill Development | Skating",
+          "url": "https://www.hockeycanada.ca/en-ca/hockey-programs/players/essentials/positions-skills/skating",
+          "section": "The Skating Pathway: introduce basic skills at U7/U9; develop skills at U11/U13; eight skills include balance, edge control, turning, transition and quick feet",
+          "use": "Supports age-appropriate skating themes and progression. It does not validate any answer, infer a player's speed or certify technique from this static scene."
+        },
+        {
+          "id": "usah-8u-fundamentals",
+          "title": "USA Hockey: American Development Model — FUNdamentals Stage",
+          "url": "https://portal.usahockey.com/cx/vice-president/hockey-development/8u_fundamentals_stage-adm.pdf",
+          "section": "FUNdamentals Stage: forward turns, controlled stop, agility, balance and coordination",
+          "use": "Supports age-appropriate movement literacy and practice emphasis. It does not establish a correct route in this authored scene or measure skating execution."
+        }
+      ],
+      "limits": "Static 3D scene candidate for coach calibration. The freeze shows locations, puck ownership and stated context only. It does not assess speed, acceleration, edge technique, stopping quality, turning or pivot execution, scanning behaviour, puck control, success, safety or transfer to live ice. Position answers are discussion starting points; multiple clear spaces may be reasonable. Coaching answers are suggestions, not a certified tactical key.",
+      "questions": [
+        {
+          "id": "cal26-u9-wall-turn-001-q1",
+          "type": "choice",
+          "prompt": "Which player is closest to YOU in this picture?",
+          "options": [
+            {
+              "id": "a",
+              "text": "Gold1"
+            },
+            {
+              "id": "b",
+              "text": "Navy2"
+            },
+            {
+              "id": "c",
+              "text": "Gold2"
+            }
+          ],
+          "answer": [
+            "a"
+          ],
+          "basis": "scene",
+          "explanation": "Gold1 is the nearest visible opponent to YOU along the wall-side area. Distance is a scene observation, not a prediction of who arrives first."
+        },
+        {
+          "id": "cal26-u9-wall-turn-001-q2",
+          "type": "multi",
+          "prompt": "Which visible cues could matter before a turn idea?",
+          "options": [
+            {
+              "id": "a",
+              "text": "The side boards near YOU"
+            },
+            {
+              "id": "b",
+              "text": "Gold1 near the wall-side lane"
+            },
+            {
+              "id": "c",
+              "text": "A measured skating speed"
+            }
+          ],
+          "answer": [
+            "a",
+            "b"
+          ],
+          "basis": "scene",
+          "explanation": "The boards, Gold1 and the room toward the middle are all visible. Straight-line speed is not observable in a freeze."
+        },
+        {
+          "id": "cal26-u9-wall-turn-001-q3",
+          "type": "sequence",
+          "prompt": "Arrange a suggested wall-side decision routine.",
+          "options": [
+            {
+              "id": "a",
+              "text": "Notice the wall and nearby player"
+            },
+            {
+              "id": "b",
+              "text": "Find room toward the middle"
+            },
+            {
+              "id": "c",
+              "text": "Recheck before changing direction"
+            }
+          ],
+          "answer": [
+            "a",
+            "b",
+            "c"
+          ],
+          "basis": "coaching",
+          "explanation": "The sequence keeps the child looking before and after choosing a space. It is a coaching prompt, not a required footwork order."
+        },
+        {
+          "id": "cal26-u9-wall-turn-001-q4",
+          "type": "position",
+          "prompt": "Move YOU toward the middle to compare more room from Gold1.",
+          "basis": "coaching",
+          "explanation": "The example is farther from the side boards and Gold1. Check Navy2 and the next pressure cue; the position does not prove a safe turn.",
+          "actorId": "home-skater-1",
+          "reference": {
+            "x": -20,
+            "y": 4
+          }
+        },
+        {
+          "id": "cal26-u9-wall-turn-001-q5",
+          "type": "choice",
+          "prompt": "If Gold2 moves into the middle space, what might you do?",
+          "options": [
+            {
+              "id": "a",
+              "text": "Recheck and find another space"
+            },
+            {
+              "id": "b",
+              "text": "Turn there without looking"
+            },
+            {
+              "id": "c",
+              "text": "Assume the middle stays empty"
+            }
+          ],
+          "answer": [
+            "a"
+          ],
+          "basis": "coaching",
+          "explanation": "The new player changes the visible picture, so rechecking and choosing another space is a reasonable next discussion. The freeze does not establish which route would succeed."
+        },
+        {
+          "id": "cal26-u9-wall-turn-001-q6",
+          "type": "explain",
+          "prompt": "What did you notice near the wall before thinking about a turn?",
+          "basis": "coaching",
+          "explanation": "Accept a child-specific answer such as the boards, Gold1 or the available middle space. It is not evidence of edge control or turn quality."
+        }
+      ],
+      "metadata": {
+        "status": "draft-awaiting-coach-calibration",
+        "conceptIds": [
+          "time-and-space",
+          "scanning"
+        ],
+        "teachingClaim": "U9 players can compare a wall-side cue with open middle space and explain why the picture should be checked again.",
+        "visibleEvidence": [
+          "YOU are close to the side boards.",
+          "Gold1 occupies the wall-side lane near YOU.",
+          "The middle of the rink has visible room between the marked players."
+        ],
+        "notAssessed": [
+          "straight-line speed",
+          "acceleration rate",
+          "edge technique",
+          "stop or pivot execution",
+          "whether a player actually scanned",
+          "puck-control quality",
+          "whether any choice succeeds on live ice"
+        ],
+        "reviewQuestions": [
+          "Does “middle” remain understandable at the default camera?",
+          "Are the distractors plausible without claiming a route will succeed?"
+        ],
+        "intendedSkatingConcept": "agility-mobility",
+        "admissionLimit": "Movement decision observation only. Does not close the skating-technique assessment gap."
+      }
+    },
+    {
+      "id": "cal26-u11-pivot-lane-001",
+      "version": 1,
+      "ageBand": "U11",
+      "title": "Turn out of pressure",
+      "family": "pivot-decision",
+      "topic": "Skating decisions",
+      "objective": "Read a visible pressure player and support space before discussing a pivot or continuation.",
+      "briefing": "Navy attacks the right net. YOU have the puck but face back toward the left net. Gold1 is directly ahead of the way YOU face. Navy2 is on one side and Gold2 is on the other. Compare those spaces before deciding whether to turn. No movement is shown.",
+      "setup": {
+        "actors": [
+          {
+            "id": "home-skater-1",
+            "label": "YOU",
+            "team": "home",
+            "role": "skater",
+            "x": 8,
+            "y": 0,
+            "facing": 3.14
+          },
+          {
+            "id": "home-skater-2",
+            "label": "Navy2",
+            "team": "home",
+            "role": "skater",
+            "x": 2,
+            "y": -6,
+            "facing": 0.3
+          },
+          {
+            "id": "away-skater-1",
+            "label": "Gold1",
+            "team": "away",
+            "role": "skater",
+            "x": 2,
+            "y": 0,
+            "facing": 0
+          },
+          {
+            "id": "away-skater-2",
+            "label": "Gold2",
+            "team": "away",
+            "role": "skater",
+            "x": 6,
+            "y": 6,
+            "facing": 3.8
+          }
+        ],
+        "puck": {
+          "owner": "home-skater-1"
+        }
+      },
+      "focusActorId": "home-skater-1",
+      "cues": [
+        "Gold1 is directly in front of YOU relative to your facing.",
+        "Navy2 is visible in a separate support space toward the side boards.",
+        "Gold2 is not beside the puck carrier."
+      ],
+      "tags": [
+        "pivot-decision",
+        "support-space",
+        "pressure-read",
+        "experimental",
+        "coach-calibration"
+      ],
+      "sources": [
+        {
+          "id": "hc-skating-pathway",
+          "title": "Hockey Canada: Skill Development | Skating",
+          "url": "https://www.hockeycanada.ca/en-ca/hockey-programs/players/essentials/positions-skills/skating",
+          "section": "The Skating Pathway: introduce basic skills at U7/U9; develop skills at U11/U13; eight skills include balance, edge control, turning, transition and quick feet",
+          "use": "Supports age-appropriate skating themes and progression. It does not validate any answer, infer a player's speed or certify technique from this static scene."
+        },
+        {
+          "id": "usah-12u-learn-to-train",
+          "title": "USA Hockey: American Development Model — Learn to Train Stage",
+          "url": "https://portal.usahockey.com/cx/vice-president/hockey-development/12u_learn_to_train_stage-adm.pdf",
+          "section": "Learn to Train Stage: coordination, basic skating and puck-control skills without early position specialization",
+          "use": "Supports age-appropriate movement literacy and practice emphasis. It does not establish a correct route in this authored scene or measure skating execution."
+        }
+      ],
+      "limits": "Static 3D scene candidate for coach calibration. The freeze shows locations, puck ownership and stated context only. It does not assess speed, acceleration, edge technique, stopping quality, turning or pivot execution, scanning behaviour, puck control, success, safety or transfer to live ice. Position answers are discussion starting points; multiple clear spaces may be reasonable. Coaching answers are suggestions, not a certified tactical key.",
+      "questions": [
+        {
+          "id": "cal26-u11-pivot-lane-001-q1",
+          "type": "choice",
+          "prompt": "Who is directly in front of YOU relative to the way YOU face?",
+          "options": [
+            {
+              "id": "a",
+              "text": "Gold1"
+            },
+            {
+              "id": "b",
+              "text": "Navy2"
+            },
+            {
+              "id": "c",
+              "text": "Gold2"
+            }
+          ],
+          "answer": [
+            "a"
+          ],
+          "basis": "scene",
+          "explanation": "Gold1 is directly ahead of the way YOU face. Facing does not tell us skating speed or where anyone will move next."
+        },
+        {
+          "id": "cal26-u11-pivot-lane-001-q2",
+          "type": "multi",
+          "prompt": "Which two cues help you compare a turn with keeping the puck here?",
+          "options": [
+            {
+              "id": "a",
+              "text": "Gold1 in the lane ahead"
+            },
+            {
+              "id": "b",
+              "text": "Navy2 in support space"
+            },
+            {
+              "id": "c",
+              "text": "YOUR exact speed"
+            }
+          ],
+          "answer": [
+            "a",
+            "b"
+          ],
+          "basis": "scene",
+          "explanation": "Gold1 ahead, Navy2 in support and the separate Gold2 location are visible. A freeze cannot supply a speed number or prove an edge choice."
+        },
+        {
+          "id": "cal26-u11-pivot-lane-001-q3",
+          "type": "sequence",
+          "prompt": "Arrange a suggested pressure-and-support check.",
+          "options": [
+            {
+              "id": "a",
+              "text": "Notice the pressure lane"
+            },
+            {
+              "id": "b",
+              "text": "Check the support space"
+            },
+            {
+              "id": "c",
+              "text": "Choose a pivot or continuation idea and recheck"
+            }
+          ],
+          "answer": [
+            "a",
+            "b",
+            "c"
+          ],
+          "basis": "coaching",
+          "explanation": "This routine names the decision inputs before a player chooses a movement idea. It does not prescribe a technical pivot sequence."
+        },
+        {
+          "id": "cal26-u11-pivot-lane-001-q4",
+          "type": "position",
+          "prompt": "Move YOU toward Navy2’s side to compare an angle away from Gold1.",
+          "basis": "coaching",
+          "explanation": "The example is closer to Navy2 and farther from Gold1. Recheck Gold2 and the passing route; neither a turn nor a completed pass is shown.",
+          "actorId": "home-skater-1",
+          "reference": {
+            "x": 8,
+            "y": -5
+          }
+        },
+        {
+          "id": "cal26-u11-pivot-lane-001-q5",
+          "type": "choice",
+          "prompt": "Gold1 moves out of the lane YOU face. Which option deserves another look?",
+          "options": [
+            {
+              "id": "a",
+              "text": "Compare continuing into that space with turning toward support"
+            },
+            {
+              "id": "b",
+              "text": "Turn toward Navy2 regardless of the new space"
+            },
+            {
+              "id": "c",
+              "text": "Pass through Gold2 without checking"
+            }
+          ],
+          "answer": [
+            "a"
+          ],
+          "basis": "coaching",
+          "explanation": "The changed pressure may make continuing useful. Compare the new space with the support option before choosing; neither is automatically open."
+        },
+        {
+          "id": "cal26-u11-pivot-lane-001-q6",
+          "type": "explain",
+          "prompt": "What visible relationship would you want to recheck before a pivot idea?",
+          "basis": "coaching",
+          "explanation": "Accept Gold1, Navy2, Gold2 or a described open-space relationship. The response is a coaching reflection, not a test of pivot execution."
+        }
+      ],
+      "metadata": {
+        "status": "draft-awaiting-coach-calibration",
+        "conceptIds": [
+          "time-and-space",
+          "scanning"
+        ],
+        "teachingClaim": "U11 players can describe pressure and support as separate visible inputs before choosing a movement idea.",
+        "visibleEvidence": [
+          "Gold1 is directly in front of YOU relative to your facing.",
+          "Navy2 is visible in a separate support space toward the side boards.",
+          "Gold2 is not beside the puck carrier."
+        ],
+        "notAssessed": [
+          "straight-line speed",
+          "acceleration rate",
+          "edge technique",
+          "stop or pivot execution",
+          "whether a player actually scanned",
+          "puck-control quality",
+          "whether any choice succeeds on live ice"
+        ],
+        "reviewQuestions": [
+          "Does the reference preserve a meaningful support relationship?",
+          "Does “pivot or continuation” stay a discussion choice rather than a scored technique?"
+        ],
+        "intendedSkatingConcept": "agility-mobility",
+        "admissionLimit": "Movement decision observation only. Does not close the skating-technique assessment gap."
+      }
+    },
+    {
+      "id": "cal26-u13-pace-change-001",
+      "version": 1,
+      "ageBand": "U13",
+      "title": "Change pace into space",
+      "family": "pace-change-decision",
+      "topic": "Skating decisions",
+      "objective": "Use defender distance, support and open ice as observations when discussing a pace change before a turn.",
+      "briefing": "Navy attacks the right net. YOU have the puck and face back toward the left net. Gold1 is the nearest opponent ahead of the way YOU face. Navy2 is toward the nearby side boards; Navy3 is across the ice. Compare room to turn or change pace. No speed, acceleration or route outcome is shown.",
+      "setup": {
+        "actors": [
+          {
+            "id": "home-skater-1",
+            "label": "YOU",
+            "team": "home",
+            "role": "skater",
+            "x": 12,
+            "y": -4,
+            "facing": 3.14
+          },
+          {
+            "id": "home-skater-2",
+            "label": "Navy2",
+            "team": "home",
+            "role": "skater",
+            "x": 3,
+            "y": -8,
+            "facing": 0.2
+          },
+          {
+            "id": "away-skater-1",
+            "label": "Gold1",
+            "team": "away",
+            "role": "skater",
+            "x": 6,
+            "y": -4,
+            "facing": 0
+          },
+          {
+            "id": "away-skater-2",
+            "label": "Gold2",
+            "team": "away",
+            "role": "skater",
+            "x": 4,
+            "y": 5,
+            "facing": 3.5
+          },
+          {
+            "id": "home-skater-3",
+            "label": "Navy3",
+            "team": "home",
+            "role": "skater",
+            "x": 10,
+            "y": 7,
+            "facing": 3
+          }
+        ],
+        "puck": {
+          "owner": "home-skater-1"
+        }
+      },
+      "focusActorId": "home-skater-1",
+      "cues": [
+        "Gold1 is the nearest pressure player ahead of YOU.",
+        "Navy2 offers a visible support relationship toward the side boards.",
+        "Gold2 is across the play; Navy3 is separate from the puck carrier."
+      ],
+      "tags": [
+        "pace-change-decision",
+        "turning-decision",
+        "support-space",
+        "experimental",
+        "coach-calibration"
+      ],
+      "sources": [
+        {
+          "id": "hc-skating-pathway",
+          "title": "Hockey Canada: Skill Development | Skating",
+          "url": "https://www.hockeycanada.ca/en-ca/hockey-programs/players/essentials/positions-skills/skating",
+          "section": "The Skating Pathway: introduce basic skills at U7/U9; develop skills at U11/U13; eight skills include balance, edge control, turning, transition and quick feet",
+          "use": "Supports age-appropriate skating themes and progression. It does not validate any answer, infer a player's speed or certify technique from this static scene."
+        },
+        {
+          "id": "usah-12u-learn-to-train",
+          "title": "USA Hockey: American Development Model — Learn to Train Stage",
+          "url": "https://portal.usahockey.com/cx/vice-president/hockey-development/12u_learn_to_train_stage-adm.pdf",
+          "section": "Learn to Train Stage: refined coordination, skating and puck-control skills; transfer from practice to games is a development goal, not a static-scene measurement",
+          "use": "Supports age-appropriate movement literacy and practice emphasis. It does not establish a correct route in this authored scene or measure skating execution."
+        }
+      ],
+      "limits": "Static 3D scene candidate for coach calibration. The freeze shows locations, puck ownership and stated context only. It does not assess speed, acceleration, edge technique, stopping quality, turning or pivot execution, scanning behaviour, puck control, success, safety or transfer to live ice. Position answers are discussion starting points; multiple clear spaces may be reasonable. Coaching answers are suggestions, not a certified tactical key.",
+      "questions": [
+        {
+          "id": "cal26-u13-pace-change-001-q1",
+          "type": "choice",
+          "prompt": "Which player is the nearest pressure player ahead of YOU?",
+          "options": [
+            {
+              "id": "a",
+              "text": "Gold1"
+            },
+            {
+              "id": "b",
+              "text": "Gold2"
+            },
+            {
+              "id": "c",
+              "text": "Navy3"
+            }
+          ],
+          "answer": [
+            "a"
+          ],
+          "basis": "scene",
+          "explanation": "Gold1 is nearest and directly ahead of the way YOU face. Distance alone does not predict arrival or successful pressure."
+        },
+        {
+          "id": "cal26-u13-pace-change-001-q2",
+          "type": "multi",
+          "prompt": "Which observations could guide a pace-change discussion?",
+          "options": [
+            {
+              "id": "a",
+              "text": "Gold1's distance and lane"
+            },
+            {
+              "id": "b",
+              "text": "Navy2's support location"
+            },
+            {
+              "id": "c",
+              "text": "YOUR measured acceleration"
+            }
+          ],
+          "answer": [
+            "a",
+            "b"
+          ],
+          "basis": "scene",
+          "explanation": "The visible Gold1 relationship, Navy2 support and open spaces are useful observations. A still image cannot tell us YOUR exact speed or acceleration."
+        },
+        {
+          "id": "cal26-u13-pace-change-001-q3",
+          "type": "sequence",
+          "prompt": "Arrange a suggested pace-change decision routine.",
+          "options": [
+            {
+              "id": "a",
+              "text": "Scan pressure and support"
+            },
+            {
+              "id": "b",
+              "text": "Identify a space for a change of pace or turn"
+            },
+            {
+              "id": "c",
+              "text": "Recheck the picture before committing"
+            }
+          ],
+          "answer": [
+            "a",
+            "b",
+            "c"
+          ],
+          "basis": "coaching",
+          "explanation": "The sequence emphasizes scanning and rechecking while choosing a movement idea. It does not claim that a particular pace or edge technique will beat Gold1."
+        },
+        {
+          "id": "cal26-u13-pace-change-001-q4",
+          "type": "position",
+          "prompt": "Move YOU toward Navy2’s side to compare the space between pressure and support.",
+          "basis": "coaching",
+          "explanation": "The example is closer to Navy2 but also slightly closer to Gold1. Compare that tradeoff and the pass lane; the marker does not demonstrate a change of pace.",
+          "actorId": "home-skater-1",
+          "reference": {
+            "x": 10,
+            "y": -8
+          }
+        },
+        {
+          "id": "cal26-u13-pace-change-001-q5",
+          "type": "choice",
+          "prompt": "If Gold2 covers Navy2, what could you consider?",
+          "options": [
+            {
+              "id": "a",
+              "text": "Compare Navy3 and available carrying space before choosing"
+            },
+            {
+              "id": "b",
+              "text": "Send the planned pass to Navy2 through Gold2"
+            },
+            {
+              "id": "c",
+              "text": "Change pace toward Gold1 without checking the gap"
+            }
+          ],
+          "answer": [
+            "a"
+          ],
+          "basis": "coaching",
+          "explanation": "The support cue changed, so recheck for another support or space before choosing. The freeze does not establish that any one alternative succeeds."
+        },
+        {
+          "id": "cal26-u13-pace-change-001-q6",
+          "type": "explain",
+          "prompt": "Which two visible relationships would you compare before a pace-change idea?",
+          "basis": "coaching",
+          "explanation": "Accept any grounded pair such as Gold1 with Navy2, Gold1 with open ice, or Gold2 with Navy2. This records reasoning and does not assess speed or mechanics."
+        }
+      ],
+      "metadata": {
+        "status": "draft-awaiting-coach-calibration",
+        "conceptIds": [
+          "time-and-space",
+          "scanning"
+        ],
+        "teachingClaim": "U13 players can compare pressure, support and open ice before discussing a pace-change or turn decision.",
+        "visibleEvidence": [
+          "Gold1 is the nearest pressure player ahead of YOU.",
+          "Navy2 offers a visible support relationship toward the side boards.",
+          "Gold2 is across the play; Navy3 is separate from the puck carrier."
+        ],
+        "notAssessed": [
+          "straight-line speed",
+          "acceleration rate",
+          "edge technique",
+          "stop or pivot execution",
+          "whether a player actually scanned",
+          "puck-control quality",
+          "whether any choice succeeds on live ice"
+        ],
+        "reviewQuestions": [
+          "Is the nearest-player wording visibly defensible from the coordinates?",
+          "Does the scene invite a decision without implying acceleration or successful evasion?"
+        ],
+        "intendedSkatingConcept": "deception-with-feet",
+        "admissionLimit": "Movement decision observation only. Does not close the skating-technique assessment gap."
+      }
+    }
+  ],
+  "rootReview": {
+    "date": "2026-09-06",
+    "changes": [
+      "Removed camera-relative lower/higher and technical coordinate directions from player briefings.",
+      "Corrected YOU grammar and displayed player names.",
+      "U9 moved nearer boards; reference now demonstrably farther from boards and Gold1.",
+      "U11/U13 retreat-facing state stated without inventing movement.",
+      "U13 feedback discloses closer-to-pressure tradeoff.",
+      "Used existing ledger IDs; skating-technique gaps remain open."
+    ]
+  }
+}

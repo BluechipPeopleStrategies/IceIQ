@@ -1,0 +1,18 @@
+import {readFileSync,writeFileSync,existsSync} from 'node:fs';
+import assert from 'node:assert/strict';
+import {readBankFiles} from './experimental-bank-files.mjs';
+import {questionContentHash} from './question-batch-core.mjs';
+const receipt='docs/factory/curriculum-bindings/wall-retrieval-repair.json';
+assert(!existsSync(receipt),'Repair already applied.');
+const before=readBankFiles().bank.find(s=>s.id==='exp26-u11-001');
+const path='src/one-on-one/experimental-bank/u11.json',rows=JSON.parse(readFileSync(path));
+const s=rows.find(s=>s.id===before.id);assert.equal(s.version,2);assert.equal(s.setup.puck.y,-8);
+s.version=3;s.setup.puck.y=-12.2;
+s.setup.actors.find(a=>a.id==='h1').facing=Math.atan2(-6.2,-2);
+s.briefing='Navy attacks the right net; gold attacks the left net. YOU are approaching a loose puck near the side boards. F2 is an outlet toward the middle; D1 is approaching from up ice. No player has recovered the puck yet.';
+s.questions.find(q=>q.type==='position').reference={x:-18,y:-10.5};
+writeFileSync(path,JSON.stringify(rows,null,2)+'\n');
+const ap='src/one-on-one/experimental-expansion/u11-additions.json',add=JSON.parse(readFileSync(ap));add.find(a=>a.scenarioId===s.id).scenarioVersion=3;writeFileSync(ap,JSON.stringify(add,null,2)+'\n');
+const bp='docs/factory/curriculum-bindings/junior.json',bindings=JSON.parse(readFileSync(bp));bindings.find(r=>r.scenarioId===s.id).scenarioVersion=3;writeFileSync(bp,JSON.stringify(bindings,null,2)+'\n');
+const after=readBankFiles().bank.find(s=>s.id===before.id);
+writeFileSync(receipt,JSON.stringify({createdAt:new Date().toISOString(),reason:'User screenshot showed the loose puck almost five metres from boards despite wall-side wording. Move it to 0.754 m from the straight side boards, face YOU toward it, and keep the approach reference 1.7 m inside the puck.',humanCoachApproval:false,before,after,hashes:after.questions.map(q=>({id:q.id,before:questionContentHash(before,before.questions.find(x=>x.id===q.id)),after:questionContentHash(after,q)}))},null,2)+'\n');

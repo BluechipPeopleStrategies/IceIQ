@@ -11,6 +11,8 @@ import { selectPracticeQuestions, summarizePracticeRecord } from './practiceQues
 import { createPracticeAnalyticsStore } from './experimentalPracticeAnalytics.js';
 import ExperimentalPracticeInsights from './ExperimentalPracticeInsights.jsx';
 import contentManifest from '../../docs/factory/research/question-review/current-content-manifest.json';
+import calibrationPack from '../../docs/factory/calibration/skating-movement-2026-09-06.json';
+import {experimentalRinkContext} from './experimentalRinkContext.js';
 
 function downloadFile(filename,text,type){
  const url=URL.createObjectURL(new Blob([text],{type})),a=document.createElement('a');a.href=url;a.download=filename;a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);
@@ -83,7 +85,7 @@ function ScenarioQuestions({scenario:s,record,onRecord,onFlag,onMetric}){
   <header><p className="ep-kicker">{s.ageBand} / {s.topic} / {s.id}</p><h2>{s.title}</h2><p className="ep-briefing">{s.briefing}</p></header>
   <nav className="ep-question-nav" aria-label="Scenario questions">{visibleQuestions.map((item,i)=><button key={item.id} type="button" aria-label={`Question ${i+1}: ${QUESTION_TYPES[item.type]}${item.type==='explain'?' (optional)':''}${currentAnswers[item.id]?.reviewed?', reviewed':''}`} title={`${QUESTION_TYPES[item.type]}${item.type==='explain'?' (optional)':''}`} aria-current={i===index?'step':undefined} onClick={()=>{setIndex(i);setNotice('');}}><span aria-hidden="true">{i+1}</span>{currentAnswers[item.id]?.reviewed&&<span className="ep-reviewed-dot" aria-hidden="true"/>}</button>)}</nav>
   <div className="ep-workspace">
-   <div className="ep-rink-column"><div className="ep-view-choice"><span>Navy attacks the right net</span><button type="button" aria-pressed={board} onClick={()=>setBoard(v=>!v)}>{board?'Open 3D rink':'Use overhead board'}</button></div>
+   <div className="ep-rink-column"><div className="ep-view-choice"><span>{experimentalRinkContext(scene)}</span><button type="button" aria-pressed={board} onClick={()=>setBoard(v=>!v)}>{board?'Open 3D rink':'Use overhead board'}</button></div>
     {board||!availability?<ExperimentalBoard scene={scene} onPoint={isPosition?move:null} reference={result&&isPosition?q.reference:null}/>:<ScenarioRinkView state={scene} title={s.title} focusKey={`${s.id}:${s.version}:${q.id}`} focusPoints={isPosition&&q.reference?[q.reference]:[]} focusActorId={isPosition?q.actorId:s.focusActorId} selectedActorId={isPosition?q.actorId:null} editableIds={isPosition?[q.actorId]:[]} onSelect={()=>{}} onMove={(_,point)=>move(point)} onAvailabilityChange={setAvailability} teamLabels={{home:'Navy',away:'Gold'}} onViewUsage={cameraAction=>onMetric('camera',s,q,{cameraAction})}/>}
     {isPosition&&<div className="ep-coordinates"><span>Place {actorDisplayName(actor)}</span>{['x','y'].map(axis=><label key={axis}>{axis==='x'?'Along rink':'Across rink'}<input type="number" step=".25" aria-label={`Player ${axis} coordinate`} value={coordinates[axis]} onChange={e=>setCoordinates(old=>({...old,[axis]:e.target.value}))}/></label>)}<button type="button" onClick={()=>{const point={x:Number(coordinates.x),y:Number(coordinates.y)};if(coordinates.x.trim()&&coordinates.y.trim()&&isCoachRoutePoint(point))move(point);else setNotice('Choose a position inside the rink.');}}>Place player</button><button type="button" onClick={()=>{const original=s.setup.actors.find(a=>a.id===q.actorId);move({x:original.x,y:original.y});}}>Reset position</button></div>}
     {notice&&<p role="alert">{notice}</p>}
@@ -91,17 +93,20 @@ function ScenarioQuestions({scenario:s,record,onRecord,onFlag,onMetric}){
    </div>
    <div className="ep-question"><p className="ep-kicker">QUESTION {index+1} OF {visibleQuestions.length} · {q.basis==='scene'?'READ THE SCENE':'EXPLORE A DECISION'}</p><h3>{q.prompt}</h3><ResponseControls question={q} value={value} onChange={change}/><button type="button" className="ep-primary" disabled={!responseReady(q,value)} onClick={review}>{q.basis==='scene'?'Check the scene':'Compare my thinking'}</button>{q.type==='explain'&&!showReview&&<button type="button" className="ep-skip-reflection" onClick={skipReflection}>Skip reflection / Continue without writing</button>}
     {result&&<div className="ep-response" aria-live="polite"><strong>{result.heading}</strong><p>{result.explanation}</p>{q.answer&&<p><b>{q.basis==='scene'?'Scene answer':'Suggested response'}:</b> {q.answer.map(id=>q.options.find(o=>o.id===id).text).join(q.type==='sequence'?' → ':'; ')}</p>}{isPosition&&<><p>Example position: {q.reference.x}, {q.reference.y} m. Other positions may work; compare the passing lane, pressure and support.</p><button type="button" onClick={()=>setBoard(true)}>Show example on overhead board</button></>}{q.basis==='coaching'&&<small>This draft gives a coaching suggestion. It does not award mastery or grade an exact position.</small>}{index<visibleQuestions.length-1&&<button type="button" className="ep-next" onClick={()=>setIndex(index+1)}>Next question →</button>}</div>}
-    <QuestionFlag key={q.id} onFlag={flag=>onFlag(s,q,{...flag,response:value})}/>
+    {onFlag?<QuestionFlag key={q.id} onFlag={flag=>onFlag(s,q,{...flag,response:value})}/>:<a href="/docs/factory/calibration/index.html">Record coaching feedback in the calibration catalog ↗</a>}
    </div>
   </div>
   <details className="ep-source-review"><summary>Teaching notes, sources and review status</summary><p><b>Learning objective:</b> {s.objective}</p><p><b>Cues:</b> {s.cues.join(' · ')}</p><p><b>Limitations:</b> {s.limits}</p><p>Original experimental scenario. AI coaching review findings are available in the question workshop. Human coach approval, animation physics and approved-bank admission remain separate. The rink is a static illustration, not a verified action simulation.</p><ul>{s.sources.map(source=><li key={source.id}><a href={source.url} target="_blank" rel="noreferrer">{source.title}</a> · {source.section}<p>{source.use}</p></li>)}</ul></details>
  </section>;
 }
 
-export default function ExperimentalPractice({playerId='practice-preview',bank=EXPERIMENTAL_BANK,initialAge=''}){
- const key=attemptStorageKey(playerId),reviewKey=reviewStorageKey(playerId);
+export default function ExperimentalPractice({playerId='practice-preview',bank:suppliedBank=EXPERIMENTAL_BANK,initialAge=''}){
+ const calibration=new URLSearchParams(window.location.search).get('calibration')==='skating-2026-09-06';
+ const bank=calibration?calibrationPack.candidates:suppliedBank;
+ const storagePlayer=calibration?`${playerId}:calibration:skating-2026-09-06`:playerId;
+ const key=attemptStorageKey(storagePlayer),reviewKey=reviewStorageKey(storagePlayer);
  const analytics=useMemo(()=>createPracticeAnalyticsStore(),[]);
- const [showInsights,setShowInsights]=useState(false);
+ const [showInsights,setShowInsights]=useState(()=>new URLSearchParams(window.location.search).get('insights')==='curriculum');
  const metric=useCallback((event,s,q,extra={})=>{
   const identity=contentManifest.questions[q.id];
   if(!identity||identity.scenarioId!==s.id||identity.scenarioVersion!==s.version)return;
@@ -113,7 +118,7 @@ export default function ExperimentalPractice({playerId='practice-preview',bank=E
   if(event==='camera')analytics.recordCameraUse(meta);
  },[analytics]);
  const [reviewState,setReviewState]=useState(()=>{try{return restoreReview(localStorage.getItem(reviewKey));}catch{return restoreReview(null);}});
- const [reviewMode,setReviewMode]=useState(()=>['triage','browse'].includes(new URLSearchParams(window.location.search).get('review')));
+ const [reviewMode,setReviewMode]=useState(()=>!calibration&&['triage','browse'].includes(new URLSearchParams(window.location.search).get('review')));
  const saveReview=next=>{setReviewState(next);try{localStorage.setItem(reviewKey,JSON.stringify(next));setSaveError(false);}catch{setSaveError(true);}};
   const flag=(s,q,value)=>{saveReview(recordFlag(reviewState,s,q,value,undefined,contentManifest.questions[q.id]));metric('flag',s,q,{category:value.category});};
  const toggleReview=next=>{setReviewMode(next);const url=new URL(window.location.href);if(next)url.searchParams.set('review','triage');else url.searchParams.delete('review');history.replaceState(history.state,'',url);};
@@ -132,15 +137,16 @@ export default function ExperimentalPractice({playerId='practice-preview',bank=E
  return <section className="ep-root" aria-label="Experimental scenario bank">
   <header className="ep-heading"><div><p className="ep-kicker">RINKREADS / EXPERIMENTAL PRACTICE</p><h1>One situation.<br/><em>Several ways to read it.</em></h1><p>Explore original hockey situations, place players, spot cues and explain your choices.</p></div><div className="ep-count"><strong>{bank.length}</strong><span>SCENARIOS</span><small>{practiceCount} practice questions · {count} in the authoring bank</small></div></header>
   <p className="ep-experimental">Experimental collection · Teaching answers are drafts for coaching review. Practice here does not award mastery points.</p>
+  {calibration&&<p className="ep-experimental"><strong>Calibration drafts · 4 scenes / 24 authored questions.</strong> These are separate from the normal bank. Static movement decisions do not assess skating technique. Responses save separately on this device; activity is excluded from normal practice analytics. <a href="/docs/factory/calibration/index.html">Review and export coaching feedback ↗</a></p>}
   {stored.error&&<p role="alert">Saved experimental responses could not be restored. Earlier practice history is unchanged.</p>}{saveError&&<p role="alert">Your responses are kept for this visit, but this browser could not save them.</p>}
-  <div className="ep-catalog-actions"><button type="button" onClick={()=>toggleReview(!reviewMode)}>{reviewMode?'Return to practice':'Question workshop · browse and triage'}</button><button type="button" aria-expanded={showInsights} onClick={()=>setShowInsights(v=>!v)}>{showInsights?'Hide practice report':'Practice report'}</button><a href="/docs/factory/curriculum-map/index.html" target="_blank" rel="noreferrer">Curriculum coverage ↗</a><a href="/docs/factory/RinkReads-Claude-Project-2026-09-05.zip" download>Download Claude project</a></div>
-  {showInsights&&<ExperimentalPracticeInsights store={analytics}/>}
-  <p className="ep-hint">Question views, checks, retries, optional skips, camera choices and flag categories are counted on this device to help improve the bank. Export them from Practice report. Written responses are not included in that report.</p>
+  {!calibration&&<div className="ep-catalog-actions"><button type="button" onClick={()=>toggleReview(!reviewMode)}>{reviewMode?'Return to practice':'Question workshop · browse and triage'}</button><button type="button" aria-expanded={showInsights} onClick={()=>setShowInsights(v=>!v)}>{showInsights?'Hide practice report':'Practice report'}</button><a href="/docs/factory/curriculum-map/index.html" target="_blank" rel="noreferrer">Curriculum coverage ↗</a><a href="/docs/factory/RinkReads-Claude-Project-2026-09-05.zip" download>Download Claude project</a></div>}
+  {!calibration&&showInsights&&<ExperimentalPracticeInsights store={analytics} bank={bank} manifest={contentManifest}/>}
+  {!calibration&&<p className="ep-hint">Question views, checks, retries, optional skips, camera choices and flag categories are counted on this device to help improve the bank. Export them from Practice report. Written responses are not included in that report.</p>}
   {reviewMode?<QuestionReviewRoom bank={bank} state={reviewState} onState={saveReview} onOpen={openQuestion}/>:<>
   <div className="ep-filters"><label>Search<input type="search" placeholder="Topic, situation or ID" value={filters.search} onChange={e=>update('search',e.target.value)}/></label><label>Age<select value={filters.age} onChange={e=>update('age',e.target.value)}><option value="">All ages</option>{EXPERIMENTAL_AGES.map(age=><option key={age}>{age}</option>)}</select></label><label>Topic<select value={filters.topic} onChange={e=>update('topic',e.target.value)}><option value="">All topics</option>{topics.map(topic=><option key={topic}>{topic}</option>)}</select></label><label>Question type<select value={filters.type} onChange={e=>update('type',e.target.value)}><option value="">All types</option>{Object.entries(QUESTION_TYPES).map(([id,label])=><option key={id} value={id}>{label}</option>)}</select></label></div>
   <div className="ep-catalog-actions"><span>{filtered.length} of {bank.length} scenarios</span><button type="button" onClick={()=>setShowCatalog(v=>!v)}>{showCatalog?'Hide catalog':'Browse catalog'}</button><button type="button" onClick={()=>downloadFile('rinkreads-experimental-catalog.csv',catalogCsv(bank),'text/csv;charset=utf-8')}>Export question catalog</button><button type="button" onClick={()=>downloadFile('rinkreads-experimental-scenarios.json',JSON.stringify({version:1,status:'experimental-not-approved',scenarios:bank},null,2),'application/json')}>Export scenarios</button></div>
   {showCatalog&&<div className="ep-catalog" role="region" aria-label="Scenario catalog"><table><thead><tr><th>Scenario</th><th>Age / topic</th><th>Practice questions</th><th>Reviewed here</th></tr></thead><tbody>{filtered.map(s=><tr key={s.id} className={s.id===selected?.id?'is-current':''}><td><button type="button" onClick={()=>{setSelectedId(s.id);setShowCatalog(false);}}><strong>{s.title}</strong><small>{s.id} · {s.family}</small></button></td><td>{s.ageBand}<small>{s.topic}</small></td><td>{summarizePracticeRecord(s).questionCount}<small>{[...new Set(s.questions.map(q=>QUESTION_TYPES[q.type]))].join(' · ')}</small></td><td>{summarizePracticeRecord(s,stored.records[s.id]).reviewedCount} / {summarizePracticeRecord(s).questionCount}</td></tr>)}</tbody></table></div>}
-  {!filtered.length?<p className="ep-empty">No scenarios match these filters. Try another age or topic.</p>:<ScenarioQuestions key={`${key}:${selected.id}:${selected.version}`} scenario={selected} record={stored.records[selected.id]} onRecord={record} onFlag={flag} onMetric={metric}/>}
+  {!filtered.length?<p className="ep-empty">No scenarios match these filters. Try another age or topic.</p>:<ScenarioQuestions key={`${key}:${selected.id}:${selected.version}`} scenario={selected} record={stored.records[selected.id]} onRecord={record} onFlag={calibration?null:flag} onMetric={metric}/>}
   </>}
  </section>;
 }
