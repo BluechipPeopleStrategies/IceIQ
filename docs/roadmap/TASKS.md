@@ -1,6 +1,6 @@
 # RinkReads — Task List
 
-**Last updated:** 2026-09-06 · All-scene audit and curriculum map completed over the 200-scene / 1,600-question snapshot. 400 release-app captures, zero load failures/overflow; nine actor/net footprint defects remain to repair. Routine practice has 1,500 questions with 200 optional reflections (13.3%). All 40 packet integrations remain deployed; this audit made no content fixes or deployment. Supabase stays deferred.
+**Last updated:** 2026-09-06 · Shared 3D player/rink design drafted for owner review; model creation and integration remain open. All-scene audit and curriculum map completed over the 200-scene / 1,600-question snapshot. 400 release-app captures, zero load failures/overflow; nine actor/net footprint defects remain to repair. Routine practice has 1,500 questions with 200 optional reflections (13.3%). All 40 packet integrations remain deployed; this audit made no content fixes or deployment. Supabase stays deferred.
 
 **Scope:** RinkReads **app build + content factory**. Launch/distribution (sending the beta, marketing) and the separate BlueChip business are **out of scope** — parked at the bottom. Priority = position in this list. A new idea that isn't here goes to the **Parking Lot** first, then gets promoted on purpose — that's the scope-creep guard.
 
@@ -11,6 +11,8 @@
 ---
 
 ## 🔵 NOW — active front (max 3)
+
+**Shared 3D visual design (Thomas, September 6):** plan consistent, readable animated players and 3D rinks/physical scene elements as part of the active visual upgrade. [Draft design](../superpowers/specs/2026-09-06-shared-3d-players-and-rinks-design.md) proposes one skater/goalie family, shared rink kit, motion/contact contracts and a staged migration of existing renderers. Simplified realism is a working proposal, not a recorded owner selection. Concept art is not a rigged model; asset construction and runtime integration remain open. Unrelated paused gameplay work stays paused.
 
 **Current SGS implementation and next teaching work (owner direction, September 5):** complete and verify the current mixed-read/presentation release, then calibrate a U7 foundation catalog and one U11 causal family before bulk generation. Explanations are optional evidence. Named question focus can move between players; focus, control, selection and possession are separate. The bounded D1 reflection after a real pass is implemented separately from the original attacking branch; applying its new position into further branches remains open. The production design must support variable read graphs, simultaneous cues, and both Frozen and Continuous pacing from the start, independently of Learning/Challenge feedback. Add vocabulary, picture labels, matching/sorting, fill-in-the-blank, player-bag packing and dressing activities with age-appropriate access. Borrow game-based basketball/soccer/rugby relationships and deliberate constraints through hockey-specific sources. **Do not count delivery formats, seeds or shuffled answers as new tactical situations.** Plans: [factory blueprint](../superpowers/specs/2026-09-05-sgs-thousands-question-factory.md), [game-based lesson supplement](../superpowers/specs/2026-09-05-sgs-game-based-learning.md), [question-variety contract](../superpowers/specs/2026-09-05-sgs-question-variety.md). Continuous decisions, generalized named-role content such as D4 recovery, tactical evaluation and the U7 equipment catalog still require implementation/review.
 
@@ -56,6 +58,8 @@
 - *(New ideas land here first, then get promoted into NEXT/LATER on purpose.)*
 
 ## Changelog
+
+- **2026-09-06** · Drafted the [shared 3D players and rinks design](../superpowers/specs/2026-09-06-shared-3d-players-and-rinks-design.md) from Thomas's request. Reviewed existing character references, shared neutral-pose rig and separate practice rig. Proposed a reusable skater/goalie family, readable identity cues, authoritative contact timing, shared rink geometry and staged scene migration. Visual direction awaits owner selection; no model, runtime implementation or deployment is claimed.
 
 - **2026-09-06** · Audited all 200 experimental scenes after the 40-packet release. Preserved 1,600 question IDs, 295 placement measurements, 400 screenshots and reviewer evidence; root overrode six incorrect goalie clear judgments and identified three skater/net overlaps. Added a searchable [audit and nine-item repair queue](../factory/scene-audit-2026-09-06/index.html), then refreshed the [curriculum map](../factory/curriculum-map/index.html) against that exact snapshot. Next: repair net geometry, bind curriculum concept IDs, calibrate weaker coverage; counts are not mastery or human coach approval.
 
