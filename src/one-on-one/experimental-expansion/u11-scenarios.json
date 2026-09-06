@@ -3463,13 +3463,13 @@
   },
   {
     "id": "exp26b-u11-019",
-    "version": 1,
+    "version": 2,
     "ageBand": "U11",
     "title": "Change jobs after the turnover",
     "family": "turnover-job-change",
     "topic": "Transition",
     "objective": "Switch from attacking support to defensive recovery when possession changes.",
-    "briefing": "Navy attacks +x. YOU and F1 were supporting, but D1 has won the puck and F2 is still below the play. Gold now attacks -x toward the left net. The turnover changes the useful relationship immediately.",
+    "briefing": "Navy attacks the right net (+x). Gold D1 has won control, so gold now attacks the left net (-x). YOU and navy F1 must change from attacking support to defence. Gold F2 trails D1 on the other side of the middle.",
     "setup": {
       "actors": [
         {
@@ -3497,7 +3497,7 @@
           "role": "skater",
           "x": 0,
           "y": 0,
-          "facing": 0.3
+          "facing": 3.141592653589793
         },
         {
           "id": "a2",
@@ -3513,9 +3513,9 @@
           "label": "G",
           "team": "home",
           "role": "goalie",
-          "x": 26,
+          "x": -26,
           "y": 0,
-          "facing": 3.1
+          "facing": 0.0416
         }
       ],
       "puck": {
@@ -3524,9 +3524,9 @@
     },
     "focusActorId": "h1",
     "cues": [
-      "D1 now owns the puck.",
-      "Gold attacks -x toward the left net.",
-      "F2 is below the play and needs a new scan."
+      "Gold D1 now owns the puck.",
+      "Gold attacks the left net.",
+      "Gold F2 is a separate trailing option across the middle."
     ],
     "tags": [
       "experimental",
@@ -3546,7 +3546,7 @@
       {
         "id": "exp26b-u11-019-q1",
         "type": "choice",
-        "prompt": "What fact changes YOU's earlier attacking plan?",
+        "prompt": "What fact changes your earlier attacking plan?",
         "options": [
           {
             "id": "a",
@@ -3554,11 +3554,11 @@
           },
           {
             "id": "b",
-            "text": "F2 is below the play"
+            "text": "F2 is on the other side of the middle"
           },
           {
             "id": "c",
-            "text": "YOU is the higher navy skater"
+            "text": "YOU are closer to the left net than navy F1"
           }
         ],
         "answer": [
@@ -3621,19 +3621,19 @@
       {
         "id": "exp26b-u11-019-q4",
         "type": "position",
-        "prompt": "Move YOU toward a recovery position between F2 and the left net.",
+        "prompt": "Move YOU toward the defended left net, then recheck D1 and F2.",
         "actorId": "h1",
         "reference": {
           "x": 1,
           "y": 3.5
         },
         "basis": "coaching",
-        "explanation": "This point moves back toward the gold attacking side while keeping F2 visible."
+        "explanation": "The example moves YOU closer to the left net. D1 is still nearer that net than YOU; keep reading both gold attackers rather than assuming you have recovered ahead of the carrier."
       },
       {
         "id": "exp26b-u11-019-q5",
         "type": "choice",
-        "prompt": "D1 loses the puck back to F1 before F2 receives. What changes first?",
+        "prompt": "Navy F1 gains control back from D1 before gold F2 receives. What changes first?",
         "options": [
           {
             "id": "a",
@@ -3652,7 +3652,7 @@
           "a"
         ],
         "basis": "coaching",
-        "explanation": "The second turnover reverses the role cue again. Confirm the carrier before choosing support or pressure."
+        "explanation": "F1 is your navy teammate. Confirm that regain and look for attacking support toward the right net, while checking gold pressure."
       },
       {
         "id": "exp26b-u11-019-q6",
@@ -3665,13 +3665,13 @@
   },
   {
     "id": "exp26b-u11-020",
-    "version": 1,
+    "version": 2,
     "ageBand": "U11",
     "title": "Close the outlet while forechecking",
     "family": "forecheck-outlet-read",
     "topic": "Forechecking",
     "objective": "Approach the puck carrier while keeping the nearby outlet in the scan.",
-    "briefing": "Gold attacks -x. D1 carries near the right half wall; D2 is a possible outlet near the blue line. YOU forechecks from inside and F2 is lower. The approach should respond if D1 turns away.",
+    "briefing": "Gold attacks the left net (-x). D1 owns the puck inside the faceoff circle at the right end. D2 is near the blue line on the other side of the middle. YOU are approaching from nearer centre ice and slightly nearer the middle; navy F2 is across the middle. Read both the carrier and the outlet.",
     "setup": {
       "actors": [
         {
@@ -3717,9 +3717,9 @@
     },
     "focusActorId": "h1",
     "cues": [
-      "D1 carries near the half wall.",
-      "D2 is a possible blue-line outlet.",
-      "YOU approaches from inside; F2 is lower support."
+      "D1 owns the puck inside the faceoff circle.",
+      "Gold D2 is a possible outlet near the blue line.",
+      "Navy F2 is across the middle and nearer centre ice than YOU."
     ],
     "tags": [
       "experimental",
@@ -3763,7 +3763,7 @@
       {
         "id": "exp26b-u11-020-q2",
         "type": "multi",
-        "prompt": "Which lane checks should shape your acceleration at D1?",
+        "prompt": "Which two checks should shape your approach to D1?",
         "options": [
           {
             "id": "a",
@@ -3796,7 +3796,7 @@
           },
           {
             "id": "b",
-            "text": "Approach on a route that keeps both visible"
+            "text": "Choose an approach while scanning the carrier and outlet"
           },
           {
             "id": "c",
@@ -3814,19 +3814,19 @@
       {
         "id": "exp26b-u11-020-q4",
         "type": "position",
-        "prompt": "Move YOU between D1's half-wall route and D2's outlet.",
+        "prompt": "Move YOU closer to D1 while continuing to check the D2 outlet.",
         "actorId": "h1",
         "reference": {
           "x": 16,
           "y": 3.5
         },
         "basis": "coaching",
-        "explanation": "This point approaches D1 while retaining a view of D2; it does not promise an interception."
+        "explanation": "The example reduces the distance to D1 and changes your angle relative to D2. It does not prove that the outlet is covered or both players remain visible."
       },
       {
         "id": "exp26b-u11-020-q5",
         "type": "choice",
-        "prompt": "D1 turns away from D2 and carries down the wall. What should YOU do with the original approach?",
+        "prompt": "D1 turns toward the side boards and carries away from D2. What should YOU reassess?",
         "options": [
           {
             "id": "a",
@@ -3845,26 +3845,26 @@
           "a"
         ],
         "basis": "coaching",
-        "explanation": "D1 changed the carrier route, so the original approach is stale. Match the new line while scanning D2."
+        "explanation": "Recheck D1’s new route and the D2 outlet. Adjust the approach if needed; a turn alone does not prove the original route is unusable."
       },
       {
         "id": "exp26b-u11-020-q6",
         "type": "explain",
-        "prompt": "How do “half wall” and “blue line” help explain this forecheck?",
+        "prompt": "How do the circle and blue line help explain this forecheck?",
         "basis": "coaching",
-        "explanation": "They name the carrier area and outlet area so YOU can describe the approach and the space to protect as D1 changes direction."
+        "explanation": "D1 is inside the circle and D2 is near the blue line. Use those locations to describe the approach and the outlet you need to keep checking."
       }
     ]
   },
   {
     "id": "exp26b-u11-021",
-    "version": 1,
+    "version": 2,
     "ageBand": "U11",
     "title": "Carry until the lane narrows",
     "family": "two-on-one-carry-read",
     "topic": "Attacking decisions",
     "objective": "Read the defender and teammate before continuing a two-on-one carry.",
-    "briefing": "Navy attacks +x. YOU carries toward the right net with F2 across the ice and D1 between the attackers. The still frame supports a choice among carry, pass, or protection after the next cue.",
+    "briefing": "Navy attacks the right net (+x). YOU have the puck and F2 is across the middle. Gold D1 is farther toward the right goal line than both navy skaters, with a lateral position between your lanes. Recheck the defender and available space before carrying, passing or shooting.",
     "setup": {
       "actors": [
         {
@@ -3910,9 +3910,9 @@
     },
     "focusActorId": "h1",
     "cues": [
-      "One gold defender is between YOU and F2.",
-      "F2 is across the ice.",
-      "The next choice depends on D1 and the passing lane."
+      "D1 is the only gold skater shown, closer to the right goal line than both attackers.",
+      "F2 is across the middle of the rink.",
+      "The next choice depends on D1 and the available lanes."
     ],
     "tags": [
       "experimental",
@@ -3960,7 +3960,7 @@
         "options": [
           {
             "id": "a",
-            "text": "D1's position relative to YOU's lane"
+            "text": "D1's position relative to your lane"
           },
           {
             "id": "b",
@@ -3981,7 +3981,7 @@
       {
         "id": "exp26b-u11-021-q3",
         "type": "sequence",
-        "prompt": "Arrange the carrier routine.",
+        "prompt": "Arrange a carry option when there is usable space.",
         "options": [
           {
             "id": "a",
@@ -3989,7 +3989,7 @@
           },
           {
             "id": "b",
-            "text": "Carry into the usable space"
+            "text": "Use a controlled carry if the lane remains open"
           },
           {
             "id": "c",
@@ -4014,7 +4014,7 @@
           "y": 5.8
         },
         "basis": "coaching",
-        "explanation": "This point advances the carrier while preserving a cross-ice relationship to F2."
+        "explanation": "The example moves YOU and the puck forward while leaving width from F2. It also reduces the distance to D1, so recheck pressure before continuing."
       },
       {
         "id": "exp26b-u11-021-q5",
@@ -4051,13 +4051,13 @@
   },
   {
     "id": "exp26b-u11-022",
-    "version": 1,
+    "version": 2,
     "ageBand": "U11",
     "title": "Support the loose faceoff puck",
     "family": "faceoff-second-support",
     "topic": "Loose-puck support",
     "objective": "Offer a second-play option after a faceoff without assuming who won possession.",
-    "briefing": "Navy attacks +x. The puck is loose at centre ice after the faceoff. YOU is above the dot; both centres are contesting and F2 is wider. The practice rep asks for a support read before committing.",
+    "briefing": "Navy attacks the right net (+x). The puck is loose at centre ice after the faceoff. Navy C and gold C2 are contesting it. YOU and navy F2 are equally wide from the dot, on opposite sides of the centre line. Read who gains control before choosing attacking support or defence.",
     "setup": {
       "actors": [
         {
@@ -4146,7 +4146,7 @@
           "c"
         ],
         "basis": "scene",
-        "explanation": "The puck has owner null at centre ice, so possession is not established."
+        "explanation": "The puck is loose at centre ice; neither team has established control."
       },
       {
         "id": "exp26b-u11-022-q2",
@@ -4159,7 +4159,7 @@
           },
           {
             "id": "b",
-            "text": "Whether F2 can support the new carrier"
+            "text": "How F2 can support navy possession or help defend gold possession"
           },
           {
             "id": "c",
@@ -4171,7 +4171,7 @@
           "b"
         ],
         "basis": "coaching",
-        "explanation": "Possession and support decide the second play; the label does not tell who will control the puck."
+        "explanation": "First identify the controlling player and team. F2 is navy, so the useful job changes with possession."
       },
       {
         "id": "exp26b-u11-022-q3",
@@ -4180,15 +4180,15 @@
         "options": [
           {
             "id": "a",
-            "text": "Watch the centre contest"
+            "text": "Read the centre contest and nearby space"
           },
           {
             "id": "b",
-            "text": "Find the carrier and F2"
+            "text": "Identify who controls the puck and their team"
           },
           {
             "id": "c",
-            "text": "Offer a reachable support route"
+            "text": "Choose support for navy possession or defence against gold"
           }
         ],
         "answer": [
@@ -4197,19 +4197,19 @@
           "c"
         ],
         "basis": "coaching",
-        "explanation": "The support job follows possession and the actual carrier, not a preset faceoff outcome."
+        "explanation": "Keep reading while possession is uncertain. Once control is clear, choose a role that matches the team with the puck."
       },
       {
         "id": "exp26b-u11-022-q4",
         "type": "position",
-        "prompt": "Move YOU into a neutral support space that leaves room for the centre contest.",
+        "prompt": "Move YOU farther from the centre contest while keeping room to react.",
         "actorId": "h1",
         "reference": {
           "x": -2,
           "y": 5.5
         },
         "basis": "coaching",
-        "explanation": "This point offers a lane above the contest without crowding either centre."
+        "explanation": "The example leaves more distance from both centres. Keep scanning the puck and F2; this position alone does not guarantee a passing lane or defensive coverage."
       },
       {
         "id": "exp26b-u11-022-q5",
@@ -4240,19 +4240,19 @@
         "type": "explain",
         "prompt": "How should uncertain possession change your support call?",
         "basis": "coaching",
-        "explanation": "Wait for the centre who controls the puck, then support that carrier or recover against the other team. The faceoff freeze does not choose the job."
+        "explanation": "Call that the puck is loose and keep scanning while leaving room for the contest. If navy gains control, offer support; if gold gains control, communicate a defensive response. You do not need to stand still while waiting to identify control."
       }
     ]
   },
   {
     "id": "exp26b-u11-023",
-    "version": 1,
+    "version": 2,
     "ageBand": "U11",
-    "title": "Stay above the corner retrieval",
+    "title": "Support the loose-puck retrieval",
     "family": "corner-support-separation",
     "topic": "Support",
-    "objective": "Support a corner retrieval from the slot side while leaving the carrier room.",
-    "briefing": "Navy attacks +x. F2 retrieves a loose puck near the right corner; YOU is above the play and D1 closes the corner. The useful support angle is slot-side, with the net and carrier visible.",
+    "objective": "Support a loose-puck retrieval from nearer the middle while leaving the retrieving player room.",
+    "briefing": "Navy attacks the right net (+x). The puck is loose toward the side boards near the right end. F2 is the nearer navy skater and is assigned the retrieval; YOU start nearer the middle. Gold D1 is also near the puck, so F2 gaining control is not guaranteed.",
     "setup": {
       "actors": [
         {
@@ -4300,9 +4300,9 @@
     },
     "focusActorId": "h1",
     "cues": [
-      "F2 is the corner-side navy player.",
-      "YOU is above the corner.",
-      "D1 closes from the corner side."
+      "F2 is the nearer navy skater to the loose puck.",
+      "YOU are closer to the middle than F2.",
+      "Gold D1 is closer to the puck than either navy skater in this freeze."
     ],
     "tags": [
       "experimental",
@@ -4322,7 +4322,7 @@
       {
         "id": "exp26b-u11-023-q1",
         "type": "choice",
-        "prompt": "Why does YOU have a different first job from F2?",
+        "prompt": "Why do YOU have a different first job from F2?",
         "options": [
           {
             "id": "a",
@@ -4330,7 +4330,7 @@
           },
           {
             "id": "b",
-            "text": "YOU owns the puck"
+            "text": "YOU own the puck"
           },
           {
             "id": "c",
@@ -4341,7 +4341,7 @@
           "a"
         ],
         "basis": "scene",
-        "explanation": "F2 is the nearer navy player to the loose puck; YOU can support from above."
+        "explanation": "F2 is slightly closer to the loose puck than YOU and has the retrieval assignment. D1 is closer still; distances alone do not prove who arrives or gains control first."
       },
       {
         "id": "exp26b-u11-023-q2",
@@ -4350,7 +4350,7 @@
         "options": [
           {
             "id": "a",
-            "text": "Whether F2 can see a route out"
+            "text": "Whether an outlet would be reachable if F2 gains control"
           },
           {
             "id": "b",
@@ -4366,7 +4366,7 @@
           "b"
         ],
         "basis": "coaching",
-        "explanation": "The carrier's view and defender response make slot support useful; duplicating the corner route can crowd F2."
+        "explanation": "Look for a possible outlet without crowding the retrieval. F2 does not yet control the puck, so recheck D1 before assuming a pass is available."
       },
       {
         "id": "exp26b-u11-023-q3",
@@ -4383,7 +4383,7 @@
           },
           {
             "id": "c",
-            "text": "Re-check the exit after F2 controls"
+            "text": "Recheck who gains control and update the job"
           }
         ],
         "answer": [
@@ -4392,19 +4392,19 @@
           "c"
         ],
         "basis": "coaching",
-        "explanation": "The support route leaves the carrier space and then updates as the exit changes."
+        "explanation": "Leave room for the retrieval while scanning D1. Offer an outlet if F2 gains control, or change to defence if D1 does."
       },
       {
         "id": "exp26b-u11-023-q4",
         "type": "position",
-        "prompt": "Move YOU to a slot-side support point above F2.",
+        "prompt": "Move YOU toward the middle to offer a possible outlet for F2.",
         "actorId": "h1",
         "reference": {
           "x": 21,
           "y": -4.2
         },
         "basis": "coaching",
-        "explanation": "This point supports above the corner and leaves F2 a route out while D1 remains visible."
+        "explanation": "The example moves YOU nearer the middle and farther from F2. It may leave room for an outlet if F2 gains control, but the pass and D1’s response still need checking."
       },
       {
         "id": "exp26b-u11-023-q5",
@@ -4413,11 +4413,11 @@
         "options": [
           {
             "id": "a",
-            "text": "Switch from support to a defensive relationship with D1 or the next runner"
+            "text": "Change to defence and read D1’s route toward the left net"
           },
           {
             "id": "b",
-            "text": "Stay slot-side as if F2 still controls"
+            "text": "Keep planning a pass from F2 despite D1’s control"
           },
           {
             "id": "c",
@@ -4428,14 +4428,14 @@
           "a"
         ],
         "basis": "coaching",
-        "explanation": "D1 winning possession changes the carrier and direction; re-scan the next gold route."
+        "explanation": "D1 is a gold opponent. With D1 in control, coordinate with F2 to defend the left-net route rather than continuing the attacking support plan."
       },
       {
         "id": "exp26b-u11-023-q6",
         "type": "explain",
-        "prompt": "How can YOU help a corner retrieval without being closest?",
+        "prompt": "How can YOU help the retrieval without being closest?",
         "basis": "coaching",
-        "explanation": "A slot-side angle gives F2 a visible outlet and can receive a pass while leaving the corner carrier room. It remains conditional on D1's coverage."
+        "explanation": "A middle-side support angle can leave F2 room and offer an outlet if F2 gains control and the lane stays clear. Keep checking D1; a pass is not guaranteed."
       }
     ]
   },
