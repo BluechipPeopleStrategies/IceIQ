@@ -1,5 +1,7 @@
 # Curriculum and feedback improvement release
 
+**Production verified:** 0126049ba5ac990199a8ae12a8c727c7c5ac3d60, September 6. Fast-forward pushed to origin/main; Vercel status success. Live checks confirmed four calibration scenes / 24 questions, the revised U11 q8 wording and defensive-zone label, and 31 concept rows in the practice report. Deployment: https://vercel.com/bluechippeoplestrategies-projects/ice-iq/FaoWDmwkwfTsM2642kcKhPMdjJc8 .
+
 September 6, 2026. Built in the isolated packets-production-release checkout, preserving unrelated main-checkout work.
 
 ## Delivered candidate
