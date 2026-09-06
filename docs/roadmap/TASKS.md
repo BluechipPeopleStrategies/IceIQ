@@ -1,6 +1,6 @@
 # RinkReads — Task List
 
-**Last updated:** 2026-09-06 · Steps 1–3 complete: choice ordering and five U13 repairs deployed (5536aed). All 78 remaining candidates reviewed: 18 retained, 60 rewrites queued, 0 context holds. Exact findings and optional-feedback links are in the review report; queued rewrites are not applied. Supabase deferred.
+**Last updated:** 2026-09-06 · All 60 queued choice repairs independently reviewed and applied across 55 scenes. Full-bank comparison preserves 1,540 other questions; 68 regression tests, production build and feedback release boundary pass. Production release verification is next. Supabase deferred.
 
 **Scope:** RinkReads **app build + content factory**. Launch/distribution (sending the beta, marketing) and the separate BlueChip business are **out of scope** — parked at the bottom. Priority = position in this list. A new idea that isn't here goes to the **Parking Lot** first, then gets promoted on purpose — that's the scope-creep guard.
 
@@ -56,6 +56,8 @@
 - *(New ideas land here first, then get promoted into NEXT/LATER on purpose.)*
 
 ## Changelog
+
+- 2026-09-06: Applied all 60 authorized choice-quality rewrites after separate exact-payload independent and root reviews. Preserved failed revisions, corrected ambiguous movement/geometry language, refreshed catalogs and curriculum versions, and added guarded receipt/source-closure checks. See `docs/factory/coaching-panel/choice-repairs-60/index.html` and `VERIFICATION.md`. 68 tests pass; source closure confirms 200 scenes / 1,600 questions / 55 affected scenes / 1,540 unchanged questions. Production release pending verification.
 
 - 2026-09-06: Completed the ordered choice-quality work: stable choice ordering released at e8e31fc, then five exact U13 repairs at 5536aed after independent/root review (55 tests, build, live and phone checks pass). Reviewed all remaining 78 candidates and 234 options: 18 retained, 60 rewrites queued, 0 context holds. Rejected review history preserved and the named U9 restart rule verified. Added the filterable [review work queue](../factory/coaching-panel/choice-quality-remaining-04/index.html). These 60 replacements are not yet authored or applied; no owner rewriting required. Supabase remains deferred.
 

@@ -10,9 +10,15 @@ const directory=join(projectRoot,'docs/factory/claude-question-kit');mkdirSync(d
 const reviewPath=join(projectRoot,'docs/factory/research/question-review/combined-review.json');
 const review=existsSync(reviewPath)?readJson(reviewPath):readJson(join(projectRoot,'docs/factory/research/question-review/catalog-review.json'));
 const coverage=new Map(review.coverage.map(row=>[row.questionId,row]));
+// Preserve historical reviews; a separately verified repair record can describe
+// only the exact current payload and never implies human approval.
+const repairsPath=join(projectRoot,'docs/factory/coaching-panel/choice-repairs-60/release-report.json');
+const repairReport=existsSync(repairsPath)?readJson(repairsPath):null;
+const repairs=new Map(repairReport?.status==='applied-and-source-verified'&&repairReport.humanCoachApproval===false?repairReport.rows.map(r=>[r.questionId,r]):[]);
 const rows=bank.flatMap(s=>s.questions.map(q=>{
  const record=coverage.get(q.id),hash=questionContentHash(s,q);
- return {scenarioId:s.id,questionId:q.id,age:s.ageBand,title:s.title,topic:s.topic,family:s.family,type:q.type,prompt:q.prompt,explanation:q.explanation,hash,review:record?.contentHash===hash?record.status:'awaiting-ai-review'};
+ const repair=repairs.get(q.id),currentRepair=repair?.scenarioId===s.id&&repair?.version===s.version&&repair?.contentHash===hash;
+ return {scenarioId:s.id,questionId:q.id,age:s.ageBand,title:s.title,topic:s.topic,family:s.family,type:q.type,prompt:q.prompt,explanation:q.explanation,hash,review:currentRepair?'independently-reviewed-experimental-repair':record?.contentHash===hash?record.status:'awaiting-ai-review'};
 }));
 const sources=[...new Map(bank.flatMap(s=>s.sources.map(source=>[`${source.id}|${source.url}`,source]))).values()];
 const payload={schemaVersion:1,status:'experimental-not-approved',generatedAt:new Date().toISOString(),counts:{scenarios:bank.length,questions:rows.length},scenarios:bank,questionIndex:rows};

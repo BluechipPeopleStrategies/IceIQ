@@ -401,7 +401,7 @@
   },
   {
     "id": "exp26-u9-003",
-    "version": 2,
+    "version": 3,
     "ageBand": "U9",
     "title": "Look beyond the nearest jersey",
     "family": "near-far-support",
@@ -539,27 +539,27 @@
       },
       {
         "type": "multi",
-        "prompt": "What should you compare besides distance?",
+        "prompt": "Which two observations explain why YOU should compare both teammate passes here?",
         "options": [
           {
             "id": "a",
-            "text": "Defender locations"
+            "text": "Gold 1 is close to the passing line to Navy 2"
           },
           {
             "id": "b",
-            "text": "Available passing angles"
+            "text": "Navy 3 offers a different passing angle across the middle"
           },
           {
             "id": "c",
-            "text": "Whether a teammate is always closest"
+            "text": "Both teammates lie on the same passing line behind Gold 1"
           }
         ],
         "answer": [
           "a",
           "b"
         ],
-        "basis": "coaching",
-        "explanation": "Distance alone does not establish availability.",
+        "basis": "scene",
+        "explanation": "Gold 1 is close to the near pass to Navy 2. Navy 3 offers a different angle across the middle, so the nearer teammate is not the only option to assess. Gold 1 is still near that other line too: check both Gold 1 and Gold 2 before choosing. A different angle does not guarantee a completed pass.",
         "id": "exp26-u9-003-q3"
       },
       {
@@ -1217,7 +1217,7 @@
   },
   {
     "id": "exp26-u9-007",
-    "version": 2,
+    "version": 3,
     "ageBand": "U9",
     "title": "Pressure before a wall reception",
     "family": "wall-reception-pressure",
@@ -1385,26 +1385,22 @@
       },
       {
         "type": "choice",
-        "prompt": "Imagine Gold1 comes along the boards instead. What is a useful response?",
+        "prompt": "If YOU receive the planned pass, which teammate is already farther toward the attacking net along the board side as a possible next option?",
         "options": [
           {
             "id": "a",
-            "text": "Reconsider the receiving angle"
+            "text": "Navy 3"
           },
           {
             "id": "b",
-            "text": "Use the old plan without looking"
-          },
-          {
-            "id": "c",
-            "text": "Shoot before receiving"
+            "text": "Navy 2"
           }
         ],
         "answer": [
           "a"
         ],
         "basis": "coaching",
-        "explanation": "A different pressure side may call for a different touch or route.",
+        "explanation": "Navy 3 is farther toward the attacking net along the same board side. Navy 2 is the passer farther back and can be a return option. Neither pass is owed: after receiving, check Gold 1 and the actual lane before choosing.",
         "id": "exp26-u9-007-q5"
       },
       {

@@ -1,0 +1,303 @@
+[
+  {
+    "scene": {
+      "id": "exp26-u11-018",
+      "ageBand": "U11",
+      "objective": "Separate the carrier\u2019s pressure from a second attacker\u2019s route.",
+      "briefing": "Navy attacks the right net (+x); gold attacks the left net. YOU are gold, returning toward the right net. The coach has assigned gold D1 to the navy puck carrier F1 for this rep. Navy F2 is moving through the other side of the middle; this movement is stated rather than animated.",
+      "setup": {
+        "actors": [
+          {
+            "id": "h1",
+            "label": "F1",
+            "team": "home",
+            "role": "skater",
+            "x": 12,
+            "y": 6,
+            "facing": 0
+          },
+          {
+            "id": "h2",
+            "label": "F2",
+            "team": "home",
+            "role": "skater",
+            "x": 17,
+            "y": -3,
+            "facing": 0
+          },
+          {
+            "id": "a1",
+            "label": "YOU",
+            "team": "away",
+            "role": "skater",
+            "x": 12,
+            "y": -2,
+            "facing": 0.1
+          },
+          {
+            "id": "a2",
+            "label": "D1",
+            "team": "away",
+            "role": "skater",
+            "x": 16,
+            "y": 3,
+            "facing": 2.5
+          },
+          {
+            "id": "g1",
+            "label": "G",
+            "team": "away",
+            "role": "goalie",
+            "x": 26,
+            "y": 0,
+            "facing": 3.141592653589793
+          }
+        ],
+        "puck": {
+          "owner": "h1"
+        }
+      },
+      "cues": [
+        "D1 has the carrier assignment for this rep.",
+        "F2 is a separate navy runner.",
+        "YOU defend the right net."
+      ]
+    },
+    "question": {
+      "id": "exp26-u11-018-q5",
+      "type": "choice",
+      "prompt": "Imagine YOU join D1 near F1, and both defenders stay close to the puck carrier. Which risk should you discuss before making that change?",
+      "options": [
+        {
+          "id": "a",
+          "text": "F2 could have more room away from the two defenders"
+        },
+        {
+          "id": "b",
+          "text": "F1 could have more room away from the two defenders"
+        }
+      ],
+      "basis": "coaching"
+    }
+  },
+  {
+    "scene": {
+      "id": "exp26-u11-020",
+      "ageBand": "U11",
+      "objective": "Use a carrier-and-outlet read to choose an approach instead of following the puck alone.",
+      "briefing": "Navy attacks the right net (+x); gold attacks the left net. YOU are navy, approaching gold D1 near the half wall in the right end. Gold D2 waits near the point on the opposite side, just inside the blue line. Gold is trying to leave this end toward the left. The coach asks for a controlled, no-contact approach.",
+      "setup": {
+        "actors": [
+          {
+            "id": "h1",
+            "label": "YOU",
+            "team": "home",
+            "role": "skater",
+            "x": 14,
+            "y": 6,
+            "facing": 0.15
+          },
+          {
+            "id": "h2",
+            "label": "F2",
+            "team": "home",
+            "role": "skater",
+            "x": 11,
+            "y": -2,
+            "facing": 0.7
+          },
+          {
+            "id": "a1",
+            "label": "D1",
+            "team": "away",
+            "role": "skater",
+            "x": 20,
+            "y": 7,
+            "facing": 3.141592653589793
+          },
+          {
+            "id": "a2",
+            "label": "D2",
+            "team": "away",
+            "role": "skater",
+            "x": 8,
+            "y": -7,
+            "facing": 0.8
+          }
+        ],
+        "puck": {
+          "owner": "a1"
+        }
+      },
+      "cues": [
+        "Gold D1 owns the puck near the half wall.",
+        "Gold D2 is a possible outlet near the opposite point.",
+        "YOU approach from inside the rink."
+      ]
+    },
+    "question": {
+      "id": "exp26-u11-020-q5",
+      "type": "choice",
+      "prompt": "As YOU approach the carrier, which Navy skater is closer to the direct outlet line from D1\u2019s puck to D2 in this view?",
+      "options": [
+        {
+          "id": "a",
+          "text": "F2"
+        },
+        {
+          "id": "b",
+          "text": "YOU"
+        }
+      ],
+      "basis": "scene"
+    }
+  },
+  {
+    "scene": {
+      "id": "exp26b-u11-002",
+      "ageBand": "U11",
+      "objective": "Receive away from pressure while keeping both the passer and next option available.",
+      "briefing": "Navy attacks the right net (+x). F1 has the puck in the left defensive zone and is preparing a pass. YOU are near the left blue line, farther up ice than F1 and closer to the side boards than D1. F2 is farther up ice as a possible next option.",
+      "setup": {
+        "actors": [
+          {
+            "id": "h1",
+            "label": "YOU",
+            "team": "home",
+            "role": "skater",
+            "x": -7,
+            "y": 4,
+            "facing": 2.7
+          },
+          {
+            "id": "h2",
+            "label": "F1",
+            "team": "home",
+            "role": "skater",
+            "x": -14,
+            "y": 1,
+            "facing": 0
+          },
+          {
+            "id": "h3",
+            "label": "F2",
+            "team": "home",
+            "role": "skater",
+            "x": 2,
+            "y": 7,
+            "facing": 0.2
+          },
+          {
+            "id": "a1",
+            "label": "D1",
+            "team": "away",
+            "role": "skater",
+            "x": -5,
+            "y": 1,
+            "facing": 3
+          }
+        ],
+        "puck": {
+          "owner": "h2"
+        }
+      },
+      "cues": [
+        "F1 has the puck and is preparing a pass.",
+        "D1 is farther up ice than YOU and closer to the middle.",
+        "F2 is farther up ice as a possible next option."
+      ]
+    },
+    "question": {
+      "id": "exp26b-u11-002-q2",
+      "type": "multi",
+      "prompt": "Which two current relationships should YOU account for when offering a receiving target?",
+      "options": [
+        {
+          "id": "a",
+          "text": "F1 is behind YOU toward Navy\u2019s defending end"
+        },
+        {
+          "id": "b",
+          "text": "D1 is ahead of YOU and nearer the middle"
+        },
+        {
+          "id": "c",
+          "text": "F2 is behind YOU on the same up-ice side as F1"
+        }
+      ],
+      "basis": "scene"
+    }
+  },
+  {
+    "scene": {
+      "id": "exp26b-u11-004",
+      "ageBand": "U11",
+      "objective": "Keep supporting when the first pass changes the puck carrier and the return lane is shaded.",
+      "briefing": "Navy attacks the right net (+x). YOU have just passed to F2; D1 is on the direct return line between you. F1 is on the other side of the middle of the rink and may offer another option.",
+      "setup": {
+        "actors": [
+          {
+            "id": "h1",
+            "label": "YOU",
+            "team": "home",
+            "role": "skater",
+            "x": 12,
+            "y": 4,
+            "facing": 0
+          },
+          {
+            "id": "h2",
+            "label": "F2",
+            "team": "home",
+            "role": "skater",
+            "x": 17,
+            "y": -1,
+            "facing": 0.2
+          },
+          {
+            "id": "h3",
+            "label": "F1",
+            "team": "home",
+            "role": "skater",
+            "x": 12,
+            "y": -6,
+            "facing": 0.4
+          },
+          {
+            "id": "a1",
+            "label": "D1",
+            "team": "away",
+            "role": "skater",
+            "x": 15,
+            "y": 1,
+            "facing": 2.8
+          }
+        ],
+        "puck": {
+          "owner": "h2"
+        }
+      },
+      "cues": [
+        "F2 now owns the puck.",
+        "D1 shades the old return line.",
+        "F1 is a visible alternate support player."
+      ]
+    },
+    "question": {
+      "id": "exp26b-u11-004-q5",
+      "type": "choice",
+      "prompt": "F2 has two Navy support options. Which direct passing line currently stays farther from D1?",
+      "options": [
+        {
+          "id": "a",
+          "text": "The line from F2\u2019s puck to YOU"
+        },
+        {
+          "id": "b",
+          "text": "The line from F2\u2019s puck to F1"
+        }
+      ],
+      "basis": "coaching"
+    }
+  }
+]

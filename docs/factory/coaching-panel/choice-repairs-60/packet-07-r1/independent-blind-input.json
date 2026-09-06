@@ -1,0 +1,317 @@
+[
+  {
+    "scene": {
+      "id": "exp26b-u11-011",
+      "ageBand": "U11",
+      "objective": "Use a wall option to change the route around a defender, then read the rebound.",
+      "briefing": "Navy attacks the right net (+x). F1 owns the puck between the middle and the side boards. D1 is near the direct route to YOU, who are farther up ice and wider. F2 is closer to the middle; D2 is farther toward the right net. A bank off the side boards is one possible route to assess.",
+      "setup": {
+        "actors": [
+          {
+            "id": "h1",
+            "label": "YOU",
+            "team": "home",
+            "role": "skater",
+            "x": 19,
+            "y": 8,
+            "facing": 3
+          },
+          {
+            "id": "h2",
+            "label": "F1",
+            "team": "home",
+            "role": "skater",
+            "x": 12,
+            "y": 7,
+            "facing": 0
+          },
+          {
+            "id": "h3",
+            "label": "F2",
+            "team": "home",
+            "role": "skater",
+            "x": 18,
+            "y": 1,
+            "facing": 2.8
+          },
+          {
+            "id": "a1",
+            "label": "D1",
+            "team": "away",
+            "role": "skater",
+            "x": 16,
+            "y": 7,
+            "facing": 3.1
+          },
+          {
+            "id": "a2",
+            "label": "D2",
+            "team": "away",
+            "role": "skater",
+            "x": 23,
+            "y": 1,
+            "facing": 3
+          }
+        ],
+        "puck": {
+          "owner": "h2"
+        }
+      },
+      "cues": [
+        "D1 is near the direct passing route.",
+        "YOU are farther up ice and wider than D1.",
+        "F2 is closer to the middle; D2 may affect that option."
+      ]
+    },
+    "question": {
+      "id": "exp26b-u11-011-q5",
+      "type": "choice",
+      "prompt": "Before F1 tries the wall option, which direct passing line is farther from D1 and worth comparing with it?",
+      "options": [
+        {
+          "id": "a",
+          "text": "The line from F1\u2019s puck to YOU"
+        },
+        {
+          "id": "b",
+          "text": "The line from F1\u2019s puck to F2"
+        }
+      ],
+      "basis": "coaching"
+    }
+  },
+  {
+    "scene": {
+      "id": "exp26b-u11-013",
+      "ageBand": "U11",
+      "objective": "Reassess a shooting lane when a defender moves toward another attacker.",
+      "briefing": "Navy attacks the right net (+x). YOU control the puck in the middle of the attacking zone; D1 is between YOU and the net. F2 is wider and farther toward the right goal line. If D1 moves, reassess both the shooting lane and the pass.",
+      "setup": {
+        "actors": [
+          {
+            "id": "h1",
+            "label": "YOU",
+            "team": "home",
+            "role": "skater",
+            "x": 16,
+            "y": 0,
+            "facing": 0
+          },
+          {
+            "id": "h2",
+            "label": "F2",
+            "team": "home",
+            "role": "skater",
+            "x": 18,
+            "y": 8,
+            "facing": -2.6
+          },
+          {
+            "id": "a1",
+            "label": "D1",
+            "team": "away",
+            "role": "skater",
+            "x": 20,
+            "y": 0,
+            "facing": 3.1
+          },
+          {
+            "id": "g",
+            "label": "G",
+            "team": "away",
+            "role": "goalie",
+            "x": 26,
+            "y": 0,
+            "facing": 3.1
+          }
+        ],
+        "puck": {
+          "owner": "h1"
+        }
+      },
+      "cues": [
+        "D1 occupies the direct shooting line.",
+        "F2 is wider and closer to the right goal line than YOU.",
+        "The freeze does not prove a shot will reach the net or score."
+      ]
+    },
+    "question": {
+      "id": "exp26b-u11-013-q5",
+      "type": "choice",
+      "prompt": "Imagine D1 moves onto the passing line to F2 and away from the shooting line. YOU still control the puck. Which option has gained space from D1?",
+      "options": [
+        {
+          "id": "a",
+          "text": "A shot toward the net"
+        },
+        {
+          "id": "b",
+          "text": "A direct pass to F2"
+        }
+      ],
+      "basis": "coaching"
+    }
+  },
+  {
+    "scene": {
+      "id": "exp26b-u11-018",
+      "ageBand": "U11",
+      "objective": "Choose a backcheck relationship for the uncovered attacker while a teammate pressures the puck.",
+      "briefing": "Gold attacks the left net (-x), defended by navy. In this rep, navy D1 is assigned to pressure gold F1, who owns the puck. Gold F2 trails across the middle. YOU start closer to the left net than F2 and must scan that runner while checking whether D1 can maintain pressure.",
+      "setup": {
+        "actors": [
+          {
+            "id": "h1",
+            "label": "YOU",
+            "team": "home",
+            "role": "skater",
+            "x": 12,
+            "y": -2,
+            "facing": 0.2
+          },
+          {
+            "id": "a1",
+            "label": "F1",
+            "team": "away",
+            "role": "skater",
+            "x": 12,
+            "y": 6,
+            "facing": 3.1
+          },
+          {
+            "id": "a2",
+            "label": "F2",
+            "team": "away",
+            "role": "skater",
+            "x": 17,
+            "y": -3,
+            "facing": 0
+          },
+          {
+            "id": "h2",
+            "label": "D1",
+            "team": "home",
+            "role": "skater",
+            "x": 16,
+            "y": 3,
+            "facing": 2.5
+          },
+          {
+            "id": "g",
+            "label": "G",
+            "team": "home",
+            "role": "goalie",
+            "x": -26,
+            "y": 0,
+            "facing": 0
+          }
+        ],
+        "puck": {
+          "owner": "a1"
+        }
+      },
+      "cues": [
+        "D1 is assigned puck pressure; the freeze does not prove successful pressure.",
+        "F2 is a separate trailing gold attacker.",
+        "YOU start closer to the left net than F2, at the same up-ice coordinate as F1."
+      ]
+    },
+    "question": {
+      "id": "exp26b-u11-018-q5",
+      "type": "choice",
+      "prompt": "If YOU consider helping D1 elsewhere, which attacker is currently on YOUR side of the middle and must stay in the read?",
+      "options": [
+        {
+          "id": "a",
+          "text": "F1"
+        },
+        {
+          "id": "b",
+          "text": "F2"
+        }
+      ],
+      "basis": "scene"
+    }
+  },
+  {
+    "scene": {
+      "id": "exp26b-u11-019",
+      "ageBand": "U11",
+      "objective": "Switch from attacking support to defensive recovery when possession changes.",
+      "briefing": "Navy attacks the right net (+x). Gold D1 has won control, so gold now attacks the left net (-x). YOU and navy F1 must change from attacking support to defence. Gold F2 trails D1 on the other side of the middle.",
+      "setup": {
+        "actors": [
+          {
+            "id": "h1",
+            "label": "YOU",
+            "team": "home",
+            "role": "skater",
+            "x": 5,
+            "y": 3,
+            "facing": -2.7
+          },
+          {
+            "id": "h2",
+            "label": "F1",
+            "team": "home",
+            "role": "skater",
+            "x": 8,
+            "y": 2,
+            "facing": 3.1
+          },
+          {
+            "id": "a1",
+            "label": "D1",
+            "team": "away",
+            "role": "skater",
+            "x": 0,
+            "y": 0,
+            "facing": 3.141592653589793
+          },
+          {
+            "id": "a2",
+            "label": "F2",
+            "team": "away",
+            "role": "skater",
+            "x": 4,
+            "y": -6,
+            "facing": 3.1
+          },
+          {
+            "id": "g",
+            "label": "G",
+            "team": "home",
+            "role": "goalie",
+            "x": -26,
+            "y": 0,
+            "facing": 0.0416
+          }
+        ],
+        "puck": {
+          "owner": "a1"
+        }
+      },
+      "cues": [
+        "Gold D1 now owns the puck.",
+        "Gold attacks the left net.",
+        "Gold F2 is a separate trailing option across the middle."
+      ]
+    },
+    "question": {
+      "id": "exp26b-u11-019-q5",
+      "type": "choice",
+      "prompt": "Suppose Navy F1 wins control back from D1. Which carrier-and-direction pairing now matches the play?",
+      "options": [
+        {
+          "id": "a",
+          "text": "Navy F1 has the puck and attacks toward the right net"
+        },
+        {
+          "id": "b",
+          "text": "Navy F1 has the puck and attacks toward the left net"
+        }
+      ],
+      "basis": "coaching"
+    }
+  }
+]

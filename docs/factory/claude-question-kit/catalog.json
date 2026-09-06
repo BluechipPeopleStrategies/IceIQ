@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "status": "experimental-not-approved",
-  "generatedAt": "2026-09-06T21:46:14.209Z",
+  "generatedAt": "2026-09-06T22:33:57.146Z",
   "counts": {
     "scenarios": 200,
     "questions": 1600
@@ -5101,7 +5101,7 @@
     },
     {
       "id": "exp26-u9-003",
-      "version": 2,
+      "version": 3,
       "ageBand": "U9",
       "title": "Look beyond the nearest jersey",
       "family": "near-far-support",
@@ -5239,27 +5239,27 @@
         },
         {
           "type": "multi",
-          "prompt": "What should you compare besides distance?",
+          "prompt": "Which two observations explain why YOU should compare both teammate passes here?",
           "options": [
             {
               "id": "a",
-              "text": "Defender locations"
+              "text": "Gold 1 is close to the passing line to Navy 2"
             },
             {
               "id": "b",
-              "text": "Available passing angles"
+              "text": "Navy 3 offers a different passing angle across the middle"
             },
             {
               "id": "c",
-              "text": "Whether a teammate is always closest"
+              "text": "Both teammates lie on the same passing line behind Gold 1"
             }
           ],
           "answer": [
             "a",
             "b"
           ],
-          "basis": "coaching",
-          "explanation": "Distance alone does not establish availability.",
+          "basis": "scene",
+          "explanation": "Gold 1 is close to the near pass to Navy 2. Navy 3 offers a different angle across the middle, so the nearer teammate is not the only option to assess. Gold 1 is still near that other line too: check both Gold 1 and Gold 2 before choosing. A different angle does not guarantee a completed pass.",
           "id": "exp26-u9-003-q3"
         },
         {
@@ -6189,7 +6189,7 @@
     },
     {
       "id": "exp26-u9-007",
-      "version": 2,
+      "version": 3,
       "ageBand": "U9",
       "title": "Pressure before a wall reception",
       "family": "wall-reception-pressure",
@@ -6357,26 +6357,22 @@
         },
         {
           "type": "choice",
-          "prompt": "Imagine Gold1 comes along the boards instead. What is a useful response?",
+          "prompt": "If YOU receive the planned pass, which teammate is already farther toward the attacking net along the board side as a possible next option?",
           "options": [
             {
               "id": "a",
-              "text": "Reconsider the receiving angle"
+              "text": "Navy 3"
             },
             {
               "id": "b",
-              "text": "Use the old plan without looking"
-            },
-            {
-              "id": "c",
-              "text": "Shoot before receiving"
+              "text": "Navy 2"
             }
           ],
           "answer": [
             "a"
           ],
           "basis": "coaching",
-          "explanation": "A different pressure side may call for a different touch or route.",
+          "explanation": "Navy 3 is farther toward the attacking net along the same board side. Navy 2 is the passer farther back and can be a return option. Neither pass is owed: after receiving, check Gold 1 and the actual lane before choosing.",
           "id": "exp26-u9-007-q5"
         },
         {
@@ -9066,7 +9062,7 @@
     },
     {
       "id": "exp26b-u9-003",
-      "version": 2,
+      "version": 3,
       "ageBand": "U9",
       "title": "Pick up the puck with support in mind",
       "family": "loose-puck-recovery",
@@ -9230,26 +9226,22 @@
         {
           "id": "exp26b-u9-003-q5",
           "type": "choice",
-          "prompt": "Gold1 arrives beside the puck first. What changes?",
+          "prompt": "Imagine Gold 1 arrives beside the loose puck first. Which next observation would show that YOU now need to defend a puck carrier?",
           "options": [
             {
               "id": "a",
-              "text": "Check who controls it and where Navy2 can help"
+              "text": "Gold 1 gets the puck under control"
             },
             {
               "id": "b",
-              "text": "Assume YOU still own it"
-            },
-            {
-              "id": "c",
-              "text": "Reach through Gold1 without looking"
+              "text": "Gold 1 is the closest player to the puck"
             }
           ],
           "answer": [
             "a"
           ],
           "basis": "coaching",
-          "explanation": "Gold1's arrival can change possession and the safe lane. Recheck the owner and Navy2 before acting."
+          "explanation": "Control changes the situation from pursuing a loose puck to defending an opponent with it. Being closest or arriving first does not by itself show control. Keep checking Navy 2 as well when deciding how to help."
         },
         {
           "id": "exp26b-u9-003-q6",
@@ -9262,7 +9254,7 @@
     },
     {
       "id": "exp26b-u9-004",
-      "version": 2,
+      "version": 3,
       "ageBand": "U9",
       "title": "Get back through the middle",
       "family": "transition-defending",
@@ -9424,26 +9416,22 @@
         {
           "id": "exp26b-u9-004-q5",
           "type": "choice",
-          "prompt": "Gold1 cuts wide, toward the boards. What should YOU update?",
+          "prompt": "Which defensive picture should guide YOUR recovery toward Navy’s net in this freeze?",
           "options": [
             {
               "id": "a",
-              "text": "Keep the carrier in view and adjust your lane"
+              "text": "Navy 2 is nearer Navy’s net than Gold 1; YOU are farther from it than Gold 1"
             },
             {
               "id": "b",
-              "text": "Follow Navy2 without checking Gold1"
-            },
-            {
-              "id": "c",
-              "text": "Stay on your old line"
+              "text": "YOU are nearer Navy’s net than Gold 1; Navy 2 is farther from it than Gold 1"
             }
           ],
           "answer": [
             "a"
           ],
-          "basis": "coaching",
-          "explanation": "Gold1's route changes where help is useful. Adjust while watching the carrier and Navy2 rather than following a fixed line."
+          "basis": "scene",
+          "explanation": "Navy 2 is already closer to the defended left net than Gold 1, while YOU are farther up ice. Account for that teammate and the carrier when choosing a recovery lane. The picture does not show who can catch whom or require YOU to copy Navy 2’s route."
         },
         {
           "id": "exp26b-u9-004-q6",
@@ -9456,7 +9444,7 @@
     },
     {
       "id": "exp26b-u9-005",
-      "version": 1,
+      "version": 2,
       "ageBand": "U9",
       "title": "Keep the play in front while moving back",
       "family": "backward-skating-awareness",
@@ -9618,26 +9606,22 @@
         {
           "id": "exp26b-u9-005-q5",
           "type": "choice",
-          "prompt": "Gold1 passes toward the side. What should YOU do?",
+          "prompt": "Before changing your backward route, which arrangement should YOU account for in this view?",
           "options": [
             {
               "id": "a",
-              "text": "Turn your eyes and adjust toward the new puck"
+              "text": "Navy 2 is behind YOU and off to one side; Gold 1 is in front of YOU"
             },
             {
               "id": "b",
-              "text": "Keep watching the old spot"
-            },
-            {
-              "id": "c",
-              "text": "Sprint backward without looking"
+              "text": "Gold 1 is behind YOU and off to one side; Navy 2 is in front of YOU"
             }
           ],
           "answer": [
             "a"
           ],
-          "basis": "coaching",
-          "explanation": "The puck location changed, so the read must change too. Adjust while keeping movement controlled and checking Navy2."
+          "basis": "scene",
+          "explanation": "YOU face Gold 1 ahead, with Navy 2 behind and to the side. Check that support space as well as the carrier before changing route. Facing the play does not prove that YOU have looked behind or that a skating path is clear."
         },
         {
           "id": "exp26b-u9-005-q6",
@@ -10453,7 +10437,7 @@
     },
     {
       "id": "exp26b-u9-010",
-      "version": 2,
+      "version": 3,
       "ageBand": "U9",
       "title": "Support the breakout side",
       "family": "breakout-support",
@@ -10624,26 +10608,22 @@
         {
           "id": "exp26b-u9-010-q5",
           "type": "choice",
-          "prompt": "Gold1 moves into YOUR outlet lane. What might Navy2 use?",
+          "prompt": "Navy 2 is comparing the two outlets. Which pass is shorter to assess when looking for nearby help?",
           "options": [
             {
               "id": "a",
-              "text": "Navy3 or another clear side"
+              "text": "The pass to YOU"
             },
             {
               "id": "b",
-              "text": "Your covered lane without looking"
-            },
-            {
-              "id": "c",
-              "text": "A pass to Gold1"
+              "text": "The pass to Navy 3"
             }
           ],
           "answer": [
             "a"
           ],
           "basis": "coaching",
-          "explanation": "Gold1 changed the outlet. Navy3 or another lane may be safer if the carrier can see it and pressure permits."
+          "explanation": "YOU are the nearby board-side outlet; Navy 3 offers a longer pass farther up ice. A shorter pass can be useful under pressure, but Navy 2 must still check Gold 1 and the receiving space. Distance alone does not make either pass the right choice."
         },
         {
           "id": "exp26b-u9-010-q6",
@@ -11269,7 +11249,7 @@
     },
     {
       "id": "exp26b-u9-014",
-      "version": 2,
+      "version": 3,
       "ageBand": "U9",
       "title": "Use the faceoff circle as a search area",
       "family": "circle-search",
@@ -11431,26 +11411,22 @@
         {
           "id": "exp26b-u9-014-q5",
           "type": "choice",
-          "prompt": "Gold1 moves across the circle. What should guide your choice?",
+          "prompt": "From the puck in this view, which direct line gives more room from Gold 1 to assess?",
           "options": [
             {
               "id": "a",
-              "text": "The new lane to Navy2 and the net-side pressure"
+              "text": "The line toward Navy 2"
             },
             {
               "id": "b",
-              "text": "The circle name by itself"
-            },
-            {
-              "id": "c",
-              "text": "A pass without looking"
+              "text": "The line toward Gold’s net"
             }
           ],
           "answer": [
             "a"
           ],
           "basis": "coaching",
-          "explanation": "Gold1 changed the space around the landmark. Recheck the passing lane and pressure before choosing."
+          "explanation": "The line toward Navy 2 stays farther from Gold 1 than the line toward the net. The circle helps YOU locate the options, but the defender’s position is the useful difference. Recheck before a pass or shot; more space from one player does not guarantee success."
         },
         {
           "id": "exp26b-u9-014-q6",
@@ -11666,7 +11642,7 @@
     },
     {
       "id": "exp26-u11-001",
-      "version": 4,
+      "version": 5,
       "ageBand": "U11",
       "title": "Look beyond the loose puck",
       "family": "retrieval-scan",
@@ -11821,26 +11797,22 @@
         {
           "id": "exp26-u11-001-q5",
           "type": "choice",
-          "prompt": "Suppose D1 closes the middle outlet before the pickup. What could YOU reconsider?",
+          "prompt": "Before planning a pass after the pickup, which relationship should YOU account for in this view?",
           "options": [
             {
               "id": "a",
-              "text": "Use the same middle pass regardless"
+              "text": "D1 and F2 are both up ice from the loose puck"
             },
             {
               "id": "b",
-              "text": "Check another exit before committing"
-            },
-            {
-              "id": "c",
-              "text": "Assume F2 has already received"
+              "text": "D1 is on the net side of the loose puck, opposite F2 along the rink"
             }
           ],
           "answer": [
-            "b"
+            "a"
           ],
-          "basis": "coaching",
-          "explanation": "The old outlet may no longer be useful. A turn, protected hold or different pass depends on the new pressure."
+          "basis": "scene",
+          "explanation": "Both the opponent D1 and teammate F2 are up ice from the loose puck. That puts pressure and the possible outlet in the area YOU need to read before recovery. It does not show who reaches the puck first or establish that a pass to F2 is clear."
         },
         {
           "id": "exp26-u11-001-q6",
@@ -12184,7 +12156,7 @@
     },
     {
       "id": "exp26-u11-003",
-      "version": 2,
+      "version": 3,
       "ageBand": "U11",
       "title": "Step out of the shaded lane",
       "family": "support-angle",
@@ -12346,26 +12318,22 @@
         {
           "id": "exp26-u11-003-q5",
           "type": "choice",
-          "prompt": "Suppose D1 follows your new route. What is a useful next read?",
+          "prompt": "Imagine D1 follows YOU farther from F1, keeping the same distance from YOU. What benefit could that create while F1 still has the puck?",
           "options": [
             {
               "id": "a",
-              "text": "Assume the lane must still be open"
+              "text": "More room for F1 to assess a carry"
             },
             {
               "id": "b",
-              "text": "Stay in the new spot without checking F1"
-            },
-            {
-              "id": "c",
-              "text": "Look for another angle or space opened for F2"
+              "text": "More separation from D1 for YOU to receive"
             }
           ],
           "answer": [
-            "c"
+            "a"
           ],
           "basis": "coaching",
-          "explanation": "A defender’s response changes which lane is useful. Your movement can also help a teammate."
+          "explanation": "Drawing D1 farther from F1 can give the carrier more room to assess a carry, even when YOU remain closely followed. It does not make a pass to YOU clear. F1 should still check F2 and the space ahead before choosing."
         },
         {
           "id": "exp26-u11-003-q6",
@@ -12377,26 +12345,22 @@
         {
           "id": "exp26-u11-003-q7",
           "type": "choice",
-          "prompt": "What is the useful communication after D1 blocks the first line?",
+          "prompt": "Which call best describes the two support options F1 can see in this freeze?",
           "options": [
             {
               "id": "a",
-              "text": "I will offer a different angle; check whether you can reach me"
+              "text": "F2 has a different angle across the ice; D1 is close to the line to me"
             },
             {
               "id": "b",
-              "text": "The first lane is open even if the picture changes"
-            },
-            {
-              "id": "c",
-              "text": "F2 must stay wide and never move"
+              "text": "I have the different angle across the ice; D1 is close to F2’s line"
             }
           ],
           "answer": [
             "a"
           ],
           "basis": "coaching",
-          "explanation": "The message names the changed angle and keeps F1's pass conditional on reachability."
+          "explanation": "YOU are near F1 with D1 close to that direct line; F2 is across the ice at another angle. The call shares the current picture with F1, who must still assess the actual pass. It does not promise that either receiver is open."
         },
         {
           "id": "exp26-u11-003-q8",
@@ -12446,7 +12410,7 @@
     },
     {
       "id": "exp26-u11-004",
-      "version": 1,
+      "version": 2,
       "ageBand": "U11",
       "title": "A new job after your pass",
       "family": "pass-and-support",
@@ -12536,27 +12500,27 @@
         {
           "id": "exp26-u11-004-q2",
           "type": "multi",
-          "prompt": "Which choices keep YOU involved without owning the puck?",
+          "prompt": "Which two visible relationships matter when YOU offer F2 another passing option?",
           "options": [
             {
               "id": "a",
-              "text": "Offer a fresh return angle"
+              "text": "F2 is across the middle from YOU"
             },
             {
               "id": "b",
-              "text": "Notice where D1 follows"
+              "text": "D1 is near the direct return line between F2 and YOU"
             },
             {
               "id": "c",
-              "text": "Remain in the old return line without checking D1"
+              "text": "D1 is closer to the side boards than either Navy skater"
             }
           ],
           "answer": [
             "a",
             "b"
           ],
-          "basis": "coaching",
-          "explanation": "Off-puck support means remaining useful as the carrier and defence change."
+          "basis": "scene",
+          "explanation": "F2 and YOU are on opposite sides of the middle, with D1 near the return line. A new support angle needs to account for that defender, not just the fact that YOU made the earlier pass. The frame does not show D1 following a new movement."
         },
         {
           "id": "exp26-u11-004-q3",
@@ -13225,7 +13189,7 @@
     },
     {
       "id": "exp26-u11-007",
-      "version": 1,
+      "version": 2,
       "ageBand": "U11",
       "title": "Keep the puck away from pressure",
       "family": "puck-protection",
@@ -13378,26 +13342,22 @@
         {
           "id": "exp26-u11-007-q5",
           "type": "choice",
-          "prompt": "If D1 follows toward the wall and F2’s lane opens, what becomes worth checking?",
+          "prompt": "To begin giving the puck more room from D1, which short carry could YOU explore in this view?",
           "options": [
             {
               "id": "a",
-              "text": "Whether an inside pass is now usable"
+              "text": "A small move toward the nearby side boards"
             },
             {
               "id": "b",
-              "text": "Whether staying at the boards is always required"
-            },
-            {
-              "id": "c",
-              "text": "Whether F2’s earlier position still guarantees an outlet"
+              "text": "A small move toward the middle of the rink"
             }
           ],
           "answer": [
             "a"
           ],
           "basis": "coaching",
-          "explanation": "Pressure can change the outlet. A pass still depends on control and a clear actual lane."
+          "explanation": "D1 is on the middle side. A small move toward the boards initially increases the puck’s separation from D1; moving inward initially brings it closer. Keep the puck controlled and leave room to move: this is not an instruction to trap yourself on the wall. Recheck F2 and D1 before continuing or passing."
         },
         {
           "id": "exp26-u11-007-q6",
@@ -13478,7 +13438,7 @@
     },
     {
       "id": "exp26-u11-008",
-      "version": 1,
+      "version": 2,
       "ageBand": "U11",
       "title": "Space to carry before the defender arrives",
       "family": "change-of-pace",
@@ -13631,26 +13591,22 @@
         {
           "id": "exp26-u11-008-q5",
           "type": "choice",
-          "prompt": "Suppose D1 turns and reaches the wide lane before you do. What could YOU change?",
+          "prompt": "YOU are considering a short carry straight toward the attacking end. What should YOU notice about the space to F2 as you advance?",
           "options": [
             {
               "id": "a",
-              "text": "Keep the route because it was open earlier"
+              "text": "The gap to F2 gets smaller, so check that both players still have room"
             },
             {
               "id": "b",
-              "text": "Reconsider pace, direction or F2’s outlet"
-            },
-            {
-              "id": "c",
-              "text": "Assume F2 will remain available without checking"
+              "text": "The gap to F2 gets larger, so check that F2 stays close enough to support"
             }
           ],
           "answer": [
-            "b"
+            "a"
           ],
           "basis": "coaching",
-          "explanation": "A closing lane may call for a different action. The appropriate response depends on the new timing and control."
+          "explanation": "F2 is ahead on the same wide side, so a short forward carry brings YOU closer. That may shorten a pass, but it can also crowd the support space. Keep checking D1; this frame supplies spacing, not a speed or a successful way past the defender."
         },
         {
           "id": "exp26-u11-008-q6",
@@ -14754,7 +14710,7 @@
     },
     {
       "id": "exp26-u11-013",
-      "version": 1,
+      "version": 2,
       "ageBand": "U11",
       "title": "A defender in the slot shooting line",
       "family": "slot-shot-lane",
@@ -14916,26 +14872,22 @@
         {
           "id": "exp26-u11-013-q5",
           "type": "choice",
-          "prompt": "If D1 moves toward F2 and the direct lane clears, what becomes worth reconsidering?",
+          "prompt": "Before choosing between a pass and a shot, which direct line has more space from D1 in this view?",
           "options": [
             {
               "id": "a",
-              "text": "A controlled shot through the newly available lane"
+              "text": "The line from the puck to F2"
             },
             {
               "id": "b",
-              "text": "Only a pass to the same half-wall spot"
-            },
-            {
-              "id": "c",
-              "text": "Shooting without checking the changed pressure"
+              "text": "The line from the puck to the net"
             }
           ],
           "answer": [
             "a"
           ],
           "basis": "coaching",
-          "explanation": "A changed blocker can make a shot more plausible. Control, pressure and the goalie still matter."
+          "explanation": "The line to F2 goes farther around D1 than the direct line to the net. That makes the half-wall pass worth assessing, not automatically the best play. The goalie, puck control and any change in pressure still matter; a later shot may become useful."
         },
         {
           "id": "exp26-u11-013-q6",
@@ -16064,7 +16016,7 @@
     },
     {
       "id": "exp26-u11-018",
-      "version": 1,
+      "version": 2,
       "ageBand": "U11",
       "title": "Backcheck the uncovered runner",
       "family": "backcheck-assignment",
@@ -16236,26 +16188,22 @@
         {
           "id": "exp26-u11-018-q5",
           "type": "choice",
-          "prompt": "If D1 falls behind F1 and calls for help, how should YOU respond?",
+          "prompt": "Imagine YOU join D1 near F1, and both defenders stay close to the puck carrier. Which risk should you discuss before making that change?",
           "options": [
             {
               "id": "a",
-              "text": "Keep the original assignment without looking again."
+              "text": "F2 could have more room away from the two defenders"
             },
             {
               "id": "b",
-              "text": "Recheck the immediate net threat and communicate who can cover F2."
-            },
-            {
-              "id": "c",
-              "text": "Automatically skate to the far corner."
+              "text": "F1 could have more room away from the two defenders"
             }
           ],
           "answer": [
-            "b"
+            "a"
           ],
           "basis": "coaching",
-          "explanation": "New pressure information can change the responsibilities. Helping on the carrier may be needed, but F2’s route should remain part of the decision rather than disappearing from the read."
+          "explanation": "Putting both defenders near F1 can leave the separate runner F2 with less attention. Help may still be needed on F1, but communicate who will account for F2. Being close to the carrier does not prove that either defender wins the puck."
         },
         {
           "id": "exp26-u11-018-q6",
@@ -16607,7 +16555,7 @@
     },
     {
       "id": "exp26-u11-020",
-      "version": 1,
+      "version": 2,
       "ageBand": "U11",
       "title": "Forecheck with the outlet in view",
       "family": "forecheck-outlet",
@@ -16770,26 +16718,22 @@
         {
           "id": "exp26-u11-020-q5",
           "type": "choice",
-          "prompt": "If D1 turns away from D2 and carries down toward the corner, what should YOU do with the original approach?",
+          "prompt": "As YOU approach the carrier, which Navy skater is closer to the direct outlet line from D1’s puck to D2 in this view?",
           "options": [
             {
               "id": "a",
-              "text": "Skate to D2’s old location without looking."
+              "text": "F2"
             },
             {
               "id": "b",
-              "text": "Keep charging the exact original line."
-            },
-            {
-              "id": "c",
-              "text": "Recheck D1’s new route and adjust while keeping support in view."
+              "text": "YOU"
             }
           ],
           "answer": [
-            "c"
+            "a"
           ],
-          "basis": "coaching",
-          "explanation": "The carrier’s turn changes the useful angle. Depending on speed and team support, YOU might follow under control or let a teammate take over; the original point-pass cue is no longer the only cue."
+          "basis": "scene",
+          "explanation": "F2 is closer to the illustrated outlet line than YOU. That is useful information to communicate while YOU assess D1’s approach angle. It does not prove F2 can intercept the pass or require a particular team system; the carrier and both support players can move."
         },
         {
           "id": "exp26-u11-020-q6",
@@ -18365,7 +18309,7 @@
     },
     {
       "id": "exp26b-u11-002",
-      "version": 2,
+      "version": 3,
       "ageBand": "U11",
       "title": "Receive on the far shoulder",
       "family": "shoulder-reception",
@@ -18463,27 +18407,27 @@
         {
           "id": "exp26b-u11-002-q2",
           "type": "multi",
-          "prompt": "Which two observations shape a useful receiving spot?",
+          "prompt": "Which two current relationships should YOU account for when offering a receiving target?",
           "options": [
             {
               "id": "a",
-              "text": "Whether D1 can close the inside shoulder"
+              "text": "F1 is behind YOU toward Navy’s defending end"
             },
             {
               "id": "b",
-              "text": "Whether F1 can reach the new spot cleanly"
+              "text": "D1 is ahead of YOU and nearer the middle"
             },
             {
               "id": "c",
-              "text": "Whether F2 is up ice regardless of the lane"
+              "text": "F2 is behind YOU on the same up-ice side as F1"
             }
           ],
           "answer": [
             "a",
             "b"
           ],
-          "basis": "coaching",
-          "explanation": "D1’s position and F1’s passing lane shape the receiving target. Scan F2’s possible continuation too, without assuming the next pass is open."
+          "basis": "scene",
+          "explanation": "The pass comes from F1 behind YOU, while D1 is ahead and inside. F2 is farther up ice, not behind YOU, and remains a possible next connection to check. These positions help plan a receiving angle; they do not prove either pass is available."
         },
         {
           "id": "exp26b-u11-002-q3",
@@ -18752,7 +18696,7 @@
     },
     {
       "id": "exp26b-u11-004",
-      "version": 2,
+      "version": 3,
       "ageBand": "U11",
       "title": "Support the carrier after a give-and-go look",
       "family": "support-after-pass",
@@ -18913,26 +18857,22 @@
         {
           "id": "exp26b-u11-004-q5",
           "type": "choice",
-          "prompt": "F2 carries toward the middle instead of returning. What should YOU do?",
+          "prompt": "F2 has two Navy support options. Which direct passing line currently stays farther from D1?",
           "options": [
             {
               "id": "a",
-              "text": "Adjust support relative to F2 and call the available lane"
+              "text": "The line from F2’s puck to YOU"
             },
             {
               "id": "b",
-              "text": "Follow F2’s route without checking D1’s new lane"
-            },
-            {
-              "id": "c",
-              "text": "Hold the old return point without checking F2’s route"
+              "text": "The line from F2’s puck to F1"
             }
           ],
           "answer": [
-            "a"
+            "b"
           ],
           "basis": "coaching",
-          "explanation": "Support follows the actual carrier. Update F2’s route and D1’s lane instead of chasing blindly or holding the old return point."
+          "explanation": "The line to F1 stays farther from D1 than the old line back to YOU. F2 can assess that alternative while YOU continue offering support. A larger gap from D1 does not guarantee a pass, and YOU may become useful again as the carrier or defender moves."
         },
         {
           "id": "exp26b-u11-004-q6",
@@ -20078,7 +20018,7 @@
     },
     {
       "id": "exp26b-u11-011",
-      "version": 2,
+      "version": 3,
       "ageBand": "U11",
       "title": "Bank the puck off the wall",
       "family": "wall-bounce-receive",
@@ -20248,26 +20188,22 @@
         {
           "id": "exp26b-u11-011-q5",
           "type": "choice",
-          "prompt": "D1 turns toward the boards before F1 releases. What should you revisit?",
+          "prompt": "Before F1 tries the wall option, which direct passing line is farther from D1 and worth comparing with it?",
           "options": [
             {
               "id": "a",
-              "text": "Whether the wall route or F2 lane is now more reachable"
+              "text": "The line from F1’s puck to YOU"
             },
             {
               "id": "b",
-              "text": "Bank the puck without looking because D1 moved"
-            },
-            {
-              "id": "c",
-              "text": "Pass through D1 to the original spot"
+              "text": "The line from F1’s puck to F2"
             }
           ],
           "answer": [
-            "a"
+            "b"
           ],
           "basis": "coaching",
-          "explanation": "D1 turning toward the boards is a cue to reassess, not proof that a route closed or opened. Compare the bank option with F2 and D2 before choosing."
+          "explanation": "The direct line to F2 stays farther from D1 than the direct line to YOU. F1 can compare it with a possible wall pass, while checking D2 near F2’s area. Neither a direct pass nor a board bounce is proven successful by this freeze."
         },
         {
           "id": "exp26b-u11-011-q6",
@@ -20475,7 +20411,7 @@
     },
     {
       "id": "exp26b-u11-013",
-      "version": 2,
+      "version": 3,
       "ageBand": "U11",
       "title": "Open the shooting lane",
       "family": "slot-lane-change",
@@ -20636,26 +20572,22 @@
         {
           "id": "exp26b-u11-013-q5",
           "type": "choice",
-          "prompt": "D1 moves toward F2 and the direct lane opens. What deserves a new look?",
+          "prompt": "Imagine D1 moves onto the passing line to F2 and away from the shooting line. YOU still control the puck. Which option has gained space from D1?",
           "options": [
             {
               "id": "a",
-              "text": "Whether the open lane supports a shot or a pass now"
+              "text": "A shot toward the net"
             },
             {
               "id": "b",
-              "text": "Force a shot without checking the goalie or lane"
-            },
-            {
-              "id": "c",
-              "text": "Ignore F2 because D1 moved"
+              "text": "A direct pass to F2"
             }
           ],
           "answer": [
             "a"
           ],
           "basis": "coaching",
-          "explanation": "D1's movement changes the lane, but the carrier still reads space and support before choosing."
+          "explanation": "In this stated change, D1 has moved away from the shot line and into the pass line. A shot is therefore worth reassessing, but control, the goalie and any further movement still matter. It is not a guaranteed goal, and another option may become useful if the picture changes."
         },
         {
           "id": "exp26b-u11-013-q6",
@@ -21439,7 +21371,7 @@
     },
     {
       "id": "exp26b-u11-018",
-      "version": 2,
+      "version": 3,
       "ageBand": "U11",
       "title": "Backcheck the open runner",
       "family": "backcheck-open-runner",
@@ -21609,26 +21541,22 @@
         {
           "id": "exp26b-u11-018-q5",
           "type": "choice",
-          "prompt": "D1 cannot stay with F1 and calls for help. What should YOU reassess?",
+          "prompt": "If YOU consider helping D1 elsewhere, which attacker is currently on YOUR side of the middle and must stay in the read?",
           "options": [
             {
               "id": "a",
-              "text": "Whether to help pressure F1 while keeping track of F2"
+              "text": "F1"
             },
             {
               "id": "b",
-              "text": "Leave both attackers to chase the puck"
-            },
-            {
-              "id": "c",
-              "text": "Stay on F2 without checking F1"
+              "text": "F2"
             }
           ],
           "answer": [
-            "a"
+            "b"
           ],
-          "basis": "coaching",
-          "explanation": "F1 is an opponent who may now need defensive pressure, not attacking support. Recheck both attackers and communicate with D1 before changing jobs."
+          "basis": "scene",
+          "explanation": "YOU and F2 are on the same side of the middle; F1 is across it with the puck. YOU also start closer to the defended left net than F2. Account for that runner if discussing help with D1, rather than assuming a particular switch is required."
         },
         {
           "id": "exp26b-u11-018-q6",
@@ -21641,7 +21569,7 @@
     },
     {
       "id": "exp26b-u11-019",
-      "version": 2,
+      "version": 3,
       "ageBand": "U11",
       "title": "Change jobs after the turnover",
       "family": "turnover-job-change",
@@ -21811,26 +21739,22 @@
         {
           "id": "exp26b-u11-019-q5",
           "type": "choice",
-          "prompt": "Navy F1 gains control back from D1 before gold F2 receives. What changes first?",
+          "prompt": "Suppose Navy F1 wins control back from D1. Which carrier-and-direction pairing now matches the play?",
           "options": [
             {
               "id": "a",
-              "text": "Re-check possession and return to an attacking support read"
+              "text": "Navy F1 has the puck and attacks toward the right net"
             },
             {
               "id": "b",
-              "text": "Continue backchecking F2 without looking"
-            },
-            {
-              "id": "c",
-              "text": "Assume F2 still controls the puck"
+              "text": "Navy F1 has the puck and attacks toward the left net"
             }
           ],
           "answer": [
             "a"
           ],
           "basis": "coaching",
-          "explanation": "F1 is your navy teammate. Confirm that regain and look for attacking support toward the right net, while checking gold pressure."
+          "explanation": "F1 is YOUR Navy teammate, so the regain puts Navy back in possession attacking the right net. Locate F1’s current passing options and the gold pressure before supporting. The new possession does not prescribe one skating route or erase the risk of losing it again."
         },
         {
           "id": "exp26b-u11-019-q6",
@@ -22036,7 +21960,7 @@
     },
     {
       "id": "exp26b-u11-021",
-      "version": 2,
+      "version": 3,
       "ageBand": "U11",
       "title": "Carry until the lane narrows",
       "family": "two-on-one-carry-read",
@@ -22197,26 +22121,22 @@
         {
           "id": "exp26b-u11-021-q5",
           "type": "choice",
-          "prompt": "D1 moves into your shooting line and F2 becomes clearly reachable. What deserves a new look?",
+          "prompt": "YOU are comparing the cross-ice pass and the shot. Which direct line currently stays farther from D1?",
           "options": [
             {
               "id": "a",
-              "text": "A cross-ice pass to F2"
+              "text": "The line from the puck to F2"
             },
             {
               "id": "b",
-              "text": "A shot through D1 without checking"
-            },
-            {
-              "id": "c",
-              "text": "Keep carrying toward the right net after D1 enters the shooting line"
+              "text": "The line from the puck to the net"
             }
           ],
           "answer": [
             "a"
           ],
           "basis": "coaching",
-          "explanation": "D1 changed the shooting lane while F2 became more reachable, so the pass deserves a fresh read."
+          "explanation": "The pass line to F2 stays farther from D1 than the direct shooting line. It is an option to assess while the defender is between the attacking lanes. Recheck the receiver, goalie and pressure: distance from D1 alone does not prove the pass is best or will succeed."
         },
         {
           "id": "exp26b-u11-021-q6",
@@ -25125,7 +25045,7 @@
     },
     {
       "id": "exp26-u13-009",
-      "version": 2,
+      "version": 3,
       "ageBand": "U13",
       "title": "Arrive after the carrier’s delay",
       "family": "entry-delay-timing",
@@ -25230,27 +25150,27 @@
         {
           "id": "exp26-u13-009-q2",
           "type": "multi",
-          "prompt": "Which two reads help you stay available?",
+          "prompt": "Which two visible relationships help YOU judge how to arrive in support of F1’s delay?",
           "options": [
             {
               "id": "a",
-              "text": "The assumption that maximum speed always helps"
+              "text": "YOU are still behind F1 toward Navy’s end"
             },
             {
               "id": "b",
-              "text": "The space between the defenders"
+              "text": "Gold 1 is close to F1 on the side nearer the middle"
             },
             {
               "id": "c",
-              "text": "F1’s ability to protect possession"
+              "text": "D1 is farther toward the attacking net than F1"
             }
           ],
           "answer": [
-            "b",
-            "c"
+            "a",
+            "b"
           ],
-          "explanation": "Arrival timing can matter more than simply skating past the puck.",
-          "basis": "coaching"
+          "explanation": "YOU have not overtaken F1, and Gold 1 is near the carrier on the inside side. Those relationships matter when choosing when and where to offer support. D1 is farther back, not beyond F1. The freeze cannot tell YOU an exact arrival speed or prove a protected pass.",
+          "basis": "scene"
         },
         {
           "id": "exp26-u13-009-q3",
@@ -25652,7 +25572,7 @@
     },
     {
       "id": "exp26-u13-011",
-      "version": 3,
+      "version": 4,
       "ageBand": "U13",
       "title": "The point shot has a blocker",
       "family": "shooting-lane",
@@ -25870,19 +25790,19 @@
         },
         {
           "type": "multi",
-          "prompt": "Which two changes could alter the shooting picture?",
+          "prompt": "Which two stated changes would directly change the position from which Navy could next shoot?",
           "options": [
             {
               "id": "a",
-              "text": "D2 moves laterally"
+              "text": "YOU carry the puck to a different position"
             },
             {
               "id": "b",
-              "text": "YOU change the puck’s angle to the net"
+              "text": "D2 receives a pass and controls the puck at D2’s position"
             },
             {
               "id": "c",
-              "text": "Shoot without checking the blocker"
+              "text": "D2 moves while YOU keep the puck at its current spot"
             }
           ],
           "answer": [
@@ -25890,7 +25810,7 @@
             "b"
           ],
           "basis": "coaching",
-          "explanation": "Moving the carrier or finding a lateral pass can change the shooting line. Recheck the blocker and goalie before choosing.",
+          "explanation": "A carry changes the puck’s location; a completed pass and control at D2 gives a different player and position for a possible shot. D2 moving alone can change support or traffic, but it does not move the puck still held by YOU. Every new shooting line still needs checking.",
           "id": "exp26-u13-011-q8"
         },
         {
@@ -26171,7 +26091,7 @@
     },
     {
       "id": "exp26-u13-013",
-      "version": 2,
+      "version": 3,
       "ageBand": "U13",
       "title": "Keep the puck away from nearby pressure",
       "family": "puck-protection",
@@ -26267,27 +26187,27 @@
         {
           "id": "exp26-u13-013-q2",
           "type": "multi",
-          "prompt": "Pick two checks before turning with the puck.",
+          "prompt": "Which two current relationships belong in YOUR protection-and-outlet read?",
           "options": [
             {
               "id": "a",
-              "text": "Room and support after the turn"
+              "text": "Gold 1 is closer to the puck than Gold 2"
             },
             {
               "id": "b",
-              "text": "Pressure on the inside"
+              "text": "F2 is farther up ice and nearer the middle than YOU"
             },
             {
               "id": "c",
-              "text": "A promise that a turn always beats the defender"
+              "text": "Gold 2 is closer to YOU than F2 is"
             }
           ],
           "answer": [
             "a",
             "b"
           ],
-          "explanation": "Protection should preserve a next action rather than simply hide the puck.",
-          "basis": "coaching"
+          "explanation": "Gold 1 is the nearer puck threat, and F2 is an inside option farther up ice. Gold 2 is farther from YOU than F2, but still belongs in the next read. These locations do not prove that turning protects the puck or that F2 can receive.",
+          "basis": "scene"
         },
         {
           "id": "exp26-u13-013-q3",
@@ -26330,26 +26250,22 @@
         {
           "id": "exp26-u13-013-q5",
           "type": "choice",
-          "prompt": "If F2 becomes clearly available while Gold 1 closes, what might be useful?",
+          "prompt": "Before using F2 as an outlet, which opponent is nearer the direct line from YOUR puck to F2 in this view?",
           "options": [
             {
               "id": "a",
-              "text": "Consider moving the puck before the space disappears"
+              "text": "Gold 1"
             },
             {
               "id": "b",
-              "text": "Turn again without checking F2"
-            },
-            {
-              "id": "c",
-              "text": "Carry into Gold 1’s approach by default"
+              "text": "Gold 2"
             }
           ],
           "answer": [
             "a"
           ],
-          "explanation": "A pass can be an alternative to protection if its route and receiver are ready.",
-          "basis": "coaching"
+          "explanation": "Gold 1 is nearer that direct passing line. Finding the teammate is only part of the decision: account for this pressure before moving the puck. Gold 2 remains farther up ice and may affect what happens next; this comparison does not measure either defender’s reach.",
+          "basis": "scene"
         },
         {
           "id": "exp26-u13-013-q6",
@@ -26430,7 +26346,7 @@
     },
     {
       "id": "exp26-u13-014",
-      "version": 3,
+      "version": 4,
       "ageBand": "U13",
       "title": "Receive the rush without going flat-footed",
       "family": "gap-control",
@@ -26644,27 +26560,27 @@
         },
         {
           "type": "multi",
-          "prompt": "Which two cues should change your closing distance?",
+          "prompt": "Which two positions should YOU account for before deciding whether recovering help changes your gap?",
           "options": [
             {
               "id": "a",
-              "text": "Gold 1’s carrier lane"
+              "text": "C is still farther from Navy’s net than Gold 1"
             },
             {
               "id": "b",
-              "text": "C’s recovery position"
+              "text": "Gold 2 is a separate attacker on the other side of the middle from C"
             },
             {
               "id": "c",
-              "text": "A fixed distance rule regardless of the play"
+              "text": "Gold 2 is nearer Navy’s net than Gold 1"
             }
           ],
           "answer": [
             "a",
             "b"
           ],
-          "basis": "coaching",
-          "explanation": "Carrier lane and support position determine a useful close; a fixed rule ignores the scene’s changing options.",
+          "basis": "scene",
+          "explanation": "C is still behind Gold 1 relative to the defended left net, while Gold 2 is a separate threat across the middle. That does not tell YOU whether C can arrive in time. Keep both attackers in the read and communicate before changing responsibilities.",
           "id": "exp26-u13-014-q8"
         },
         {
@@ -26690,7 +26606,7 @@
     },
     {
       "id": "exp26-u13-015",
-      "version": 2,
+      "version": 3,
       "ageBand": "U13",
       "title": "Angle from the middle toward the wall",
       "family": "angling-recovery",
@@ -26849,25 +26765,21 @@
         {
           "id": "exp26-u13-015-q5",
           "type": "choice",
-          "prompt": "Gold 1 passes inside to Gold 2. What deserves attention now?",
+          "prompt": "If Gold 2 receives and controls a pass at the shown position, which Navy defender starts closer to that new carrier?",
           "options": [
             {
               "id": "a",
-              "text": "Remain beside the wall and ignore the pass"
+              "text": "D1"
             },
             {
               "id": "b",
-              "text": "Recover toward the new puck threat"
-            },
-            {
-              "id": "c",
-              "text": "Complete the old approach regardless"
+              "text": "YOU"
             }
           ],
           "answer": [
-            "b"
+            "a"
           ],
-          "explanation": "A release changes the threat. Retaining recovery momentum helps the next defensive action.",
+          "explanation": "D1 starts closer to Gold 2 than YOU do. Use that information when communicating about the new threat and your recovery. It does not establish who can close in time or require both defenders to follow the new puck carrier.",
           "basis": "coaching"
         },
         {
@@ -26949,7 +26861,7 @@
     },
     {
       "id": "exp26-u13-016",
-      "version": 2,
+      "version": 3,
       "ageBand": "U13",
       "title": "See the far-side player in the low slot",
       "family": "weak-side-coverage",
@@ -27117,26 +27029,22 @@
         {
           "id": "exp26-u13-016-q5",
           "type": "choice",
-          "prompt": "If Gold 2 moves higher into the slot, what should you do?",
+          "prompt": "Which relationship needs attention before YOU treat the low-slot threat as covered?",
           "options": [
             {
               "id": "a",
-              "text": "Update the relationship and communicate"
+              "text": "Gold 2 is closer to Navy’s net than YOU are"
             },
             {
               "id": "b",
-              "text": "Keep marking the empty spot Gold 2 left"
-            },
-            {
-              "id": "c",
-              "text": "Chase the half-wall puck without checking"
+              "text": "YOU are closer to Navy’s net than Gold 2 is"
             }
           ],
           "answer": [
             "a"
           ],
-          "explanation": "The assignment concerns a changing threat, not a permanent painted spot.",
-          "basis": "coaching"
+          "explanation": "Gold 2 is currently nearer the defended net than YOU. That is a coverage concern to account for while checking the puck and communicating with D1. A future adjustment should respond to the actual threat; this still frame does not prove a pass, shot or required tracking route.",
+          "basis": "scene"
         },
         {
           "id": "exp26-u13-016-q6",
@@ -27217,7 +27125,7 @@
     },
     {
       "id": "exp26-u13-017",
-      "version": 2,
+      "version": 3,
       "ageBand": "U13",
       "title": "Recover through useful middle ice",
       "family": "backcheck-recovery",
@@ -27313,27 +27221,27 @@
         {
           "id": "exp26-u13-017-q2",
           "type": "multi",
-          "prompt": "What two reads could make your recovery useful?",
+          "prompt": "Which two starting relationships matter when YOU plan to help the recovery?",
           "options": [
             {
               "id": "a",
-              "text": "What D1 is already covering"
+              "text": "YOU are farther from Navy’s end along the rink than both gold attackers"
             },
             {
               "id": "b",
-              "text": "How to chase exactly behind Gold 1 regardless of support"
+              "text": "D1 is closer to Gold 1 than YOU are"
             },
             {
               "id": "c",
-              "text": "Where Gold 2 can become dangerous"
+              "text": "YOU are already between both gold attackers and Navy’s net"
             }
           ],
           "answer": [
             "a",
-            "c"
+            "b"
           ],
-          "explanation": "Recovery should complement the defender and account for the inside option.",
-          "basis": "coaching"
+          "explanation": "YOU are still behind both attackers along the rink, and D1 is nearer Gold 1. Those facts matter when coordinating recovery toward the separate inside threat. They do not prove D1 has stopped the carrier or that YOU can reach a particular target in time.",
+          "basis": "scene"
         },
         {
           "id": "exp26-u13-017-q3",
@@ -28014,7 +27922,7 @@
     },
     {
       "id": "exp26-u13-020",
-      "version": 2,
+      "version": 3,
       "ageBand": "U13",
       "title": "Decide before leaving the net front",
       "family": "defensive-zone-support",
@@ -28110,27 +28018,27 @@
         {
           "id": "exp26-u13-020-q2",
           "type": "multi",
-          "prompt": "Choose two checks before joining the corner.",
+          "prompt": "Which two defender-to-attacker relationships support the stated division of jobs in this view?",
           "options": [
             {
               "id": "a",
-              "text": "Whether D1 needs help"
+              "text": "D1 is nearer Gold 1 than YOU are"
             },
             {
               "id": "b",
-              "text": "Whether two defenders near every puck is always better"
+              "text": "YOU are nearer Gold 2 than D1 is"
             },
             {
               "id": "c",
-              "text": "Who would cover Gold 2"
+              "text": "Gold 2 is farther toward the side boards than either Navy defender"
             }
           ],
           "answer": [
             "a",
-            "c"
+            "b"
           ],
-          "explanation": "Extra puck pressure can leave another threat; the stated assignment matters.",
-          "basis": "coaching"
+          "explanation": "D1 is nearer the corner carrier and YOU are nearer the inside attacker. Those positions fit the stated plan, but do not prove containment or forbid helping. If the puck threat changes, communicate who can account for each attacker before changing jobs.",
+          "basis": "scene"
         },
         {
           "id": "exp26-u13-020-q3",
@@ -28812,7 +28720,7 @@
     },
     {
       "id": "exp26-u13-023",
-      "version": 2,
+      "version": 3,
       "ageBand": "U13",
       "title": "Settle a difficult pass before choosing",
       "family": "receiving-control",
@@ -28973,25 +28881,21 @@
         {
           "id": "exp26-u13-023-q5",
           "type": "choice",
-          "prompt": "If the puck arrives flat and F2’s lane is clearly available, what might change?",
+          "prompt": "When comparing a next touch from the puck’s current position, which teammate line stays farther from Gold 1?",
           "options": [
             {
               "id": "a",
-              "text": "You must always take several extra touches"
+              "text": "The line toward D1"
             },
             {
               "id": "b",
-              "text": "Gold 1 no longer needs to be checked"
-            },
-            {
-              "id": "c",
-              "text": "An earlier pass may be practical"
+              "text": "The line toward F2"
             }
           ],
           "answer": [
-            "c"
+            "a"
           ],
-          "explanation": "A better reception can create an earlier option, but only while the lane remains available.",
+          "explanation": "The line back toward D1 stays farther from Gold 1 than the forward line to F2. That gives YOU another option to assess while reading the difficult puck. Whether to settle or redirect it depends on the bounce, pressure and readiness; this line comparison does not prove either touch is available.",
           "basis": "coaching"
         },
         {
@@ -30856,7 +30760,7 @@
     },
     {
       "id": "exp26b-u13-007",
-      "version": 4,
+      "version": 5,
       "ageBand": "U13",
       "title": "Move the puck around the blocked point lane",
       "family": "point-lane-adjustment",
@@ -30971,27 +30875,27 @@
         },
         {
           "type": "multi",
-          "prompt": "Which two alternatives deserve a look?",
+          "prompt": "Which two current relationships help YOU compare support around D2’s point possession?",
           "options": [
             {
               "id": "a",
-              "text": "Move the puck sideways to change the lane"
+              "text": "W offers width on the opposite side of the middle from D2"
             },
             {
               "id": "b",
-              "text": "Use W if the low lane is visible"
+              "text": "YOU are nearer the net and nearer the middle than D2"
             },
             {
               "id": "c",
-              "text": "Shoot through Gold 1 without checking"
+              "text": "Gold 1 is farther from the middle than D2"
             }
           ],
           "answer": [
             "a",
             "b"
           ],
-          "basis": "coaching",
-          "explanation": "Changing the angle or connecting low can move the problem; forcing a blocked lane ignores the defender.",
+          "basis": "scene",
+          "explanation": "W is across the middle from D2, while YOU provide a nearer-net, more central option. Gold 1 is also nearer the middle than D2, so the support lines still need checking. These positions offer comparisons; they do not prove a screen, an open pass or a clear shot.",
           "id": "exp26b-u13-007-q2"
         },
         {
@@ -31883,7 +31787,7 @@
     },
     {
       "id": "exp26b-u13-012",
-      "version": 3,
+      "version": 4,
       "ageBand": "U13",
       "title": "Backcheck the middle before the puck",
       "family": "backcheck-middle",
@@ -31989,27 +31893,27 @@
         },
         {
           "type": "multi",
-          "prompt": "Which two reads make your backcheck useful?",
+          "prompt": "Which two starting relationships should YOU use when coordinating the backcheck with D1?",
           "options": [
             {
               "id": "a",
-              "text": "Gold 2’s middle route"
+              "text": "YOU are already closer to Navy’s net than both gold attackers"
             },
             {
               "id": "b",
-              "text": "Whether D1 contains Gold 1"
+              "text": "D1 is closer to Gold 1 than YOU are"
             },
             {
               "id": "c",
-              "text": "Skating wide without looking"
+              "text": "Gold 2 is farther toward the side boards than Gold 1"
             }
           ],
           "answer": [
             "a",
             "b"
           ],
-          "basis": "coaching",
-          "explanation": "The middle route identifies danger and D1’s position tells you whether to support inside; blind wide skating can miss the threat.",
+          "basis": "scene",
+          "explanation": "YOU start net-side of both attackers and D1 is nearer the carrier. Gold 2 is central, not the wider attacker. Use that picture to coordinate useful coverage without assuming D1 has contained Gold 1 or that a particular recovery route will succeed.",
           "id": "exp26b-u13-012-q2"
         },
         {
@@ -32287,7 +32191,7 @@
     },
     {
       "id": "exp26b-u13-014",
-      "version": 4,
+      "version": 5,
       "ageBand": "U13",
       "title": "Choose the second rebound job",
       "family": "rebound-role-choice",
@@ -32402,27 +32306,27 @@
         },
         {
           "type": "multi",
-          "prompt": "Which two cues shape your second job?",
+          "prompt": "Which two relationships matter before YOU choose a second rebound job?",
           "options": [
             {
               "id": "a",
-              "text": "Gold 2’s route toward the net"
+              "text": "The goalie is closer to the loose puck than D1 is"
             },
             {
               "id": "b",
-              "text": "D1’s route to the puck"
+              "text": "YOU are nearer Navy’s net than Gold 2 is"
             },
             {
               "id": "c",
-              "text": "The original shooting lane, without checking Gold 2 or D1"
+              "text": "Gold 2 is closer to the loose puck than YOU are"
             }
           ],
           "answer": [
             "a",
             "b"
           ],
-          "basis": "coaching",
-          "explanation": "Gold 2 is another scoring threat while D1 approaches the rebound. Check both that route and the puck contest.",
+          "basis": "scene",
+          "explanation": "The goalie is closest to the puck, and YOU have a net-side position relative to Gold 2. D1 is the nearest skater, but neither proximity nor the prior shot establishes who controls the rebound. Coordinate the puck contest and the attacker instead of assuming the nearest player wins it.",
           "id": "exp26b-u13-014-q2"
         },
         {
@@ -33314,7 +33218,7 @@
     },
     {
       "id": "exp26b-u13-019",
-      "version": 4,
+      "version": 5,
       "ageBand": "U13",
       "title": "Change jobs after a goalie outlet",
       "family": "goalie-outlet-support",
@@ -33428,27 +33332,27 @@
         },
         {
           "type": "multi",
-          "prompt": "Which two changes should YOU make?",
+          "prompt": "Which two relationships should YOU include before offering support for D1’s new possession?",
           "options": [
             {
               "id": "a",
-              "text": "Move toward a visible D1 outlet lane"
+              "text": "D1 has the puck across the middle from YOU"
             },
             {
               "id": "b",
-              "text": "Keep Gold 1 in the pressure scan"
+              "text": "D2 is closer to D1’s puck than YOU are"
             },
             {
               "id": "c",
-              "text": "Stay opposite regardless of puck"
+              "text": "Gold 1 is farther from D1’s puck than YOU are"
             }
           ],
           "answer": [
             "a",
             "b"
           ],
-          "basis": "coaching",
-          "explanation": "The release changes support side and forechecker remains relevant; staying fixed ignores both cues.",
+          "basis": "scene",
+          "explanation": "D1 now has the puck on the other side of the middle, and D2 is a nearer support option. Gold 1 is closer to the puck than YOU, so pressure still matters. Compare the available lines rather than assuming YOU must leave your side or that D2 is open.",
           "id": "exp26b-u13-019-q2"
         },
         {
@@ -33524,7 +33428,7 @@
     },
     {
       "id": "exp26b-u13-020",
-      "version": 3,
+      "version": 4,
       "ageBand": "U13",
       "title": "Keep the third player connected",
       "family": "third-player-balance",
@@ -33701,26 +33605,22 @@
         },
         {
           "type": "choice",
-          "prompt": "If F1 loses control, what should YOU do first?",
+          "prompt": "If Gold 1 wins control from F1, which gold attacker starts nearest YOU to account for during recovery?",
           "options": [
             {
               "id": "a",
-              "text": "Use the connected lane to protect middle"
+              "text": "Gold 1"
             },
             {
               "id": "b",
-              "text": "Continue deep into the offensive zone"
-            },
-            {
-              "id": "c",
-              "text": "Skate beside W without checking Gold 2"
+              "text": "Gold 2"
             }
           ],
           "answer": [
-            "a"
+            "b"
           ],
           "basis": "coaching",
-          "explanation": "Turnover makes recovery first; connected middle preserves coverage; if Navy wins it, attack restarts.",
+          "explanation": "Gold 2 is much nearer YOU than Gold 1 in this setup. After the stated turnover, keep both the new carrier and that nearby attacker in the read while coordinating with F1 and W. It does not automatically assign YOU a chase or require abandoning useful net-side space.",
           "id": "exp26b-u13-020-q5"
         },
         {
@@ -34751,7 +34651,7 @@
     },
     {
       "id": "exp26-u15-001",
-      "version": 1,
+      "version": 2,
       "ageBand": "U15",
       "title": "Pinch only with the declared cover",
       "family": "supported-pinch",
@@ -34894,26 +34794,31 @@
         {
           "id": "exp26-u15-001-q2",
           "type": "multi",
-          "prompt": "Select two checks before acting on the pinch option.",
+          "prompt": "Which three checks belong before considering a pinch under this drill’s stated cover rule?",
           "options": [
             {
               "id": "a",
-              "text": "Whether F3 can establish the agreed cover"
+              "text": "F3 has taken the agreed high-cover responsibility"
             },
             {
               "id": "b",
-              "text": "The quality of the puck contest"
+              "text": "The current wall contest leaves a puck route YOU can reach"
             },
             {
               "id": "c",
-              "text": "Whether a rim always requires a pinch"
+              "text": "D2’s position allows the defenders to coordinate recovery"
+            },
+            {
+              "id": "d",
+              "text": "F2 remaining low has filled the high-cover job assigned to F3"
             }
           ],
           "answer": [
             "a",
-            "b"
+            "b",
+            "c"
           ],
-          "explanation": "The source principle is conditional support; this exercise adds its own explicit cover rule.",
+          "explanation": "Confirm the named F3 cover, assess whether the puck contest is reachable, and account for D2’s recovery support. F2 remaining low does not replace F3 at the high position. These checks do not make the pinch certain to work, and this named cover requirement belongs to the drill rather than every team system.",
           "basis": "coaching"
         },
         {
@@ -35057,7 +34962,7 @@
     },
     {
       "id": "exp26-u15-002",
-      "version": 2,
+      "version": 3,
       "ageBand": "U15",
       "title": "Draw one penalty killer at the half wall",
       "family": "power-play-local-advantage",
@@ -35261,25 +35166,25 @@
         {
           "id": "exp26-u15-002-q5",
           "type": "choice",
-          "prompt": "Gold 1 commits down toward F2. Which option deserves a fresh check?",
+          "prompt": "If Gold 1 moves toward F2, which other shown Gold skater is closest to F3’s current slot position and needs checking before an inside pass?",
           "options": [
             {
               "id": "a",
-              "text": "The same low pass without checking Gold 1"
+              "text": "Gold 2"
             },
             {
               "id": "b",
-              "text": "An automatic shot through Gold 2"
+              "text": "Gold 3"
             },
             {
               "id": "c",
-              "text": "The inside connection toward F3"
+              "text": "Gold 4"
             }
           ],
           "answer": [
-            "c"
+            "a"
           ],
-          "explanation": "F3 may become more accessible, but Gold 2 and the actual seam still matter.",
+          "explanation": "Gold 2 is closest to F3’s shown position. Gold 1 moving toward the low option therefore does not by itself establish an inside pass. Check the actual line and F3’s readiness, as well as whether the other penalty killers move.",
           "basis": "coaching"
         },
         {
@@ -35292,26 +35197,22 @@
         {
           "id": "exp26-u15-002-q7",
           "type": "choice",
-          "prompt": "What should YOU call before moving the puck?",
+          "prompt": "Which pressure call matches the two direct passing lines in this freeze?",
           "options": [
             {
               "id": "a",
-              "text": "Gold 1 is near the inside route; check F2 and F3"
+              "text": "Gold 1 is nearer the line to F3 than the line to F2; check both options"
             },
             {
               "id": "b",
-              "text": "The power play removes all pressure"
-            },
-            {
-              "id": "c",
-              "text": "F2 is the next receiver regardless of Gold 1’s position"
+              "text": "Gold 1 is nearer the line to F2 than the line to F3; check both options"
             }
           ],
           "answer": [
             "a"
           ],
           "basis": "coaching",
-          "explanation": "Name the pressure and both possible receivers. Gold 1 is nearer the route to F3 than the direct route to F2 in this picture."
+          "explanation": "Gold 1 is much nearer the direct inside line to F3. The low line to F2 has more separation from that defender, but the other Gold players and both receivers still matter. This call describes a comparison, not a guaranteed seam or a required next pass."
         },
         {
           "id": "exp26-u15-002-q8",
@@ -35971,7 +35872,7 @@
     },
     {
       "id": "exp26-u15-005",
-      "version": 2,
+      "version": 3,
       "ageBand": "U15",
       "title": "Replace high support after the entry pass",
       "family": "entry-role-replacement",
@@ -36157,25 +36058,21 @@
         {
           "id": "exp26-u15-005-q5",
           "type": "choice",
-          "prompt": "If F2 immediately loses the puck to Gold 2, what takes priority in your read?",
+          "prompt": "If Gold 2 wins control at the shown position, which Navy teammate starts farther back toward Navy’s net to include in the recovery conversation?",
           "options": [
             {
               "id": "a",
-              "text": "Completing the offensive rotation without looking"
+              "text": "D1"
             },
             {
               "id": "b",
-              "text": "Treating F2 as the carrier anyway"
-            },
-            {
-              "id": "c",
-              "text": "Whether high support can help the defensive transition"
+              "text": "F3"
             }
           ],
           "answer": [
-            "c"
+            "a"
           ],
-          "explanation": "A possession change can turn high support into useful defensive support.",
+          "explanation": "D1 is farther back toward Navy’s net than F3, who is deeper in the attacking end. That support matters if Gold 2 gains the puck. Reassess the new carrier and all nearby pressure; D1’s position does not prove successful cover or prescribe YOUR route.",
           "basis": "coaching"
         },
         {
@@ -36534,7 +36431,7 @@
     },
     {
       "id": "exp26-u15-007",
-      "version": 2,
+      "version": 3,
       "ageBand": "U15",
       "title": "Hinge around a two-player forecheck",
       "family": "regroup-under-pressure",
@@ -36729,25 +36626,21 @@
         {
           "id": "exp26-u15-007-q5",
           "type": "choice",
-          "prompt": "Gold 2 leaves F1’s route to close on D2. What deserves attention?",
+          "prompt": "Imagine Gold 2 leaves F1’s line while the other players stay at their shown positions. Which remaining forechecker is still nearer that direct passing line?",
           "options": [
             {
               "id": "a",
-              "text": "Whether F1’s route has reopened"
+              "text": "Gold 1"
             },
             {
               "id": "b",
-              "text": "The reset regardless of Gold 2’s movement"
-            },
-            {
-              "id": "c",
-              "text": "An assumption that both routes are still equally covered"
+              "text": "Gold 3"
             }
           ],
           "answer": [
             "a"
           ],
-          "explanation": "Forecheckers changing jobs can alter the first option; reassess instead of committing mechanically.",
+          "explanation": "Gold 1 is still near the direct line to F1. One forechecker leaving does not establish that the forward pass has reopened. Compare F1, D2 and the other lanes using the remaining pressure rather than choosing the reset or the forward pass by habit.",
           "basis": "coaching"
         },
         {
@@ -37115,7 +37008,7 @@
     },
     {
       "id": "exp26-u15-009",
-      "version": 2,
+      "version": 3,
       "ageBand": "U15",
       "title": "Replace the teammate who cycles below the goal line",
       "family": "cycle-support-rotation",
@@ -37310,25 +37203,25 @@
         {
           "id": "exp26-u15-009-q5",
           "type": "choice",
-          "prompt": "If F1 passes to YOU in that pocket, what should happen next?",
+          "prompt": "Suppose F1’s pass reaches YOU and YOU control it at your shown position. Which Gold skater would then be nearest the direct shooting line?",
           "options": [
             {
               "id": "a",
-              "text": "Return the puck low without looking"
+              "text": "Gold 1"
             },
             {
               "id": "b",
-              "text": "Read the new pressure before choosing shot, pass or carry"
+              "text": "Gold 2"
             },
             {
               "id": "c",
-              "text": "Shoot automatically because YOU are high"
+              "text": "Gold 3"
             }
           ],
           "answer": [
             "b"
           ],
-          "explanation": "The support movement creates a new decision rather than a predetermined finish.",
+          "explanation": "From YOUR shown high position, Gold 2 is nearest the direct line toward the net. Becoming the carrier creates a new pressure read; it does not predetermine a shot or a return pass. Check the low support and any Gold movement before choosing.",
           "basis": "coaching"
         },
         {
@@ -38820,7 +38713,7 @@
     },
     {
       "id": "exp26-u15-015",
-      "version": 2,
+      "version": 3,
       "ageBand": "U15",
       "title": "Keep an attack alive when the slot is crowded",
       "family": "offensive-possession-reset",
@@ -39037,26 +38930,22 @@
         {
           "id": "exp26-u15-015-q7",
           "type": "choice",
-          "prompt": "What could YOU communicate while carrying at the half wall?",
+          "prompt": "Which pressure call matches the current direct passing lines from YOU?",
           "options": [
             {
               "id": "a",
-              "text": "I have the puck; check F1 low and F2 inside"
+              "text": "Gold 1 is nearer the line to F2 than the line to F1; compare the low outlet"
             },
             {
               "id": "b",
-              "text": "The slot is always covered"
-            },
-            {
-              "id": "c",
-              "text": "F1 stays the low outlet even when the carrier angle changes"
+              "text": "Gold 1 is nearer the line to F1 than the line to F2; compare the slot outlet"
             }
           ],
           "answer": [
             "a"
           ],
-          "basis": "coaching",
-          "explanation": "YOU are the carrier, F1 is the low support and F2 is inside. Communicate the available options without treating YOU as the off-puck receiver."
+          "basis": "scene",
+          "explanation": "Gold 1 is close to the direct slot line toward F2. The low line to F1 passes farther away from Gold 1, but Gold 2 and the receiving space still need checking."
         },
         {
           "id": "exp26-u15-015-q8",
@@ -39317,7 +39206,7 @@
     },
     {
       "id": "exp26b-u15-002",
-      "version": 2,
+      "version": 3,
       "ageBand": "U15",
       "title": "Draw one penalty killer",
       "family": "powerplay-draw-out",
@@ -39433,27 +39322,27 @@
         {
           "id": "exp26b-u15-002-q2",
           "type": "multi",
-          "prompt": "Which two cues support moving the puck?",
+          "prompt": "Which two observations describe the passing picture YOU must weigh?",
           "options": [
             {
               "id": "a",
-              "text": "Gold 1’s position relative to both receivers"
+              "text": "Gold 1 is nearer the direct line to F3 than the line to F2"
             },
             {
               "id": "b",
-              "text": "F3's reachable inside lane"
+              "text": "Gold 2 is closer to F3 than to F2"
             },
             {
               "id": "c",
-              "text": "Assuming the same receiver is always open"
+              "text": "Gold D1 is closer to F2 than Gold 2 is"
             }
           ],
           "answer": [
             "a",
             "b"
           ],
-          "basis": "coaching",
-          "explanation": "Coverage and support make the puck move useful; the structure still changes as Gold shifts."
+          "basis": "scene",
+          "explanation": "The inside pass needs attention to Gold 1 along its line and Gold 2 near F3. F2 offers a different angle, but positions alone do not establish a completed pass."
         },
         {
           "id": "exp26b-u15-002-q3",
@@ -39528,7 +39417,7 @@
     },
     {
       "id": "exp26b-u15-003",
-      "version": 2,
+      "version": 3,
       "ageBand": "U15",
       "title": "Shift the penalty kill toward the new side",
       "family": "pk-side-shift",
@@ -39670,27 +39559,27 @@
         {
           "id": "exp26b-u15-003-q2",
           "type": "multi",
-          "prompt": "Which two cues matter during a flank-to-flank shift?",
+          "prompt": "Before a possible pass across to Gold 5, which two current relationships help YOU identify inside coverage?",
           "options": [
             {
               "id": "a",
-              "text": "D1's inside support"
+              "text": "YOU are closer to Gold 3 in the middle than to Gold 5 on the flank"
             },
             {
               "id": "b",
-              "text": "The new receiver’s lane when the puck changes sides"
+              "text": "D1 is closer to Gold 2 than YOU are"
             },
             {
               "id": "c",
-              "text": "The puck side never changes"
+              "text": "F2 is on the same side of the middle as Gold 2"
             }
           ],
           "answer": [
             "a",
             "b"
           ],
-          "basis": "coaching",
-          "explanation": "Inside support and the next receiver guide the exchange; the puck side can change the task."
+          "basis": "scene",
+          "explanation": "YOU are near the middle attacker, while D1 is near Gold 2 on the current puck side. Those relationships help start the coverage conversation if Gold switches sides; they do not assign a fixed chase or guarantee coverage."
         },
         {
           "id": "exp26b-u15-003-q3",
@@ -40005,7 +39894,7 @@
     },
     {
       "id": "exp26b-u15-005",
-      "version": 3,
+      "version": 4,
       "ageBand": "U15",
       "title": "Replace high support after entry",
       "family": "entry-support-replace",
@@ -40121,27 +40010,27 @@
         {
           "id": "exp26b-u15-005-q2",
           "type": "multi",
-          "prompt": "Which two details matter when filling high support?",
+          "prompt": "Which two current relationships should YOU account for when comparing support behind F2 toward the blue line?",
           "options": [
             {
               "id": "a",
-              "text": "F2's puck position"
+              "text": "YOU are farther toward Gold’s goal line than F2 is"
             },
             {
               "id": "b",
-              "text": "Gold's inside coverage"
+              "text": "Gold D1 is farther toward the blue line than F2 is"
             },
             {
               "id": "c",
-              "text": "A high support spot chosen without checking F2’s lane"
+              "text": "F3 is farther toward the blue line than F2 is"
             }
           ],
           "answer": [
             "a",
             "b"
           ],
-          "basis": "coaching",
-          "explanation": "Support follows the carrier and coverage; a fixed spot can crowd or disconnect the play."
+          "basis": "scene",
+          "explanation": "YOU currently sit slightly ahead of F2 in attacking depth, while Gold D1 is behind F2 toward the blue line. F3 is farther toward the goal line. A high-support move therefore needs a fresh check of Gold D1 as well as the passing line from F2."
         },
         {
           "id": "exp26b-u15-005-q3",
@@ -40427,7 +40316,7 @@
     },
     {
       "id": "exp26b-u15-007",
-      "version": 2,
+      "version": 3,
       "ageBand": "U15",
       "title": "Turn the forecheck into a support angle",
       "family": "neutral-regroup-angle",
@@ -40606,26 +40495,22 @@
         {
           "id": "exp26b-u15-007-q5",
           "type": "choice",
-          "prompt": "Gold 2 steps toward F1 while Gold 1 stays wide. What is useful?",
+          "prompt": "Imagine Gold 2 steps toward F1 while Gold 1 stays at the shown spot. Which current direct passing line stays farther from Gold 1?",
           "options": [
             {
               "id": "a",
-              "text": "Protect the puck and compare D2 with the new inside lane"
+              "text": "The line from YOU to D2"
             },
             {
               "id": "b",
-              "text": "Force F1 because Gold 2 moved"
-            },
-            {
-              "id": "c",
-              "text": "Use D2 without checking the carrier angle"
+              "text": "The line from YOU to F1"
             }
           ],
           "answer": [
             "a"
           ],
-          "basis": "coaching",
-          "explanation": "The pressure picture changed, so the reset and forward options need a fresh comparison."
+          "basis": "scene",
+          "explanation": "The reset line toward D2 runs away from Gold 1’s shown position, while Gold 1 is closer to the forward line toward F1. Recheck Gold 2, D2’s receiving space and the live pressure before choosing either pass."
         },
         {
           "id": "exp26b-u15-007-q6",
@@ -40851,7 +40736,7 @@
     },
     {
       "id": "exp26b-u15-009",
-      "version": 3,
+      "version": 4,
       "ageBand": "U15",
       "title": "Offer high support for a low cycle",
       "family": "cycle-high-outlet",
@@ -41030,26 +40915,22 @@
         {
           "id": "exp26b-u15-009-q5",
           "type": "choice",
-          "prompt": "Gold 1 leaves the slot to pressure the puck. What should YOU weigh?",
+          "prompt": "Imagine Gold 1 leaves the slot to pressure F1. With the other skaters at their shown spots, which remaining defender is closer to YOU and needs checking before an inside reoffer?",
           "options": [
             {
               "id": "a",
-              "text": "An inside connection if F1 can reach it, or hold high if Gold 2 covers"
+              "text": "Gold 2"
             },
             {
               "id": "b",
-              "text": "Drop beside F2 without checking the slot"
-            },
-            {
-              "id": "c",
-              "text": "Shoot because the slot defender moved"
+              "text": "Gold 3"
             }
           ],
           "answer": [
             "a"
           ],
-          "basis": "coaching",
-          "explanation": "Gold 1 leaving can open an inside branch, but F1’s passing route and Gold 2’s coverage still need a scan."
+          "basis": "scene",
+          "explanation": "Gold 2 is close to YOU on the high side. Gold 1 leaving the slot does not remove that pressure; check Gold 2 and the new line from F1 before moving or asking for the puck."
         },
         {
           "id": "exp26b-u15-009-q6",
@@ -41903,7 +41784,7 @@
     },
     {
       "id": "exp26b-u15-014",
-      "version": 2,
+      "version": 3,
       "ageBand": "U15",
       "title": "Hold the puck through a line change",
       "family": "line-change-possession",
@@ -42028,27 +41909,27 @@
         {
           "id": "exp26b-u15-014-q2",
           "type": "multi",
-          "prompt": "Which two checks matter with one support option missing?",
+          "prompt": "With F3 unavailable, which two pressure comparisons match the current forward passing lines?",
           "options": [
             {
               "id": "a",
-              "text": "D2's reset connection"
+              "text": "Gold 1 is nearer the line to F1 than the line to F2"
             },
             {
               "id": "b",
-              "text": "F1 or F2's reachable route"
+              "text": "Gold 2 is nearer the line to F2 than the line to F1"
             },
             {
               "id": "c",
-              "text": "The change requires a dump regardless of pressure"
+              "text": "Gold 3 is nearer the line to F2 than Gold 2 is"
             }
           ],
           "answer": [
             "a",
             "b"
           ],
-          "basis": "coaching",
-          "explanation": "A reset and a forward route preserve choices while the line change reduces one support option."
+          "basis": "scene",
+          "explanation": "Gold 1 is nearer F1’s direct line, while Gold 2 is nearer F2’s. Compare those pressures with the reset toward D2; the line change does not select a pass by itself."
         },
         {
           "id": "exp26b-u15-014-q3",
@@ -42091,26 +41972,26 @@
         {
           "id": "exp26b-u15-014-q5",
           "type": "choice",
-          "prompt": "A new F3 appears in a clear middle lane. What can YOU reconsider?",
+          "prompt": "Before an arriving replacement offers support behind YOU toward Navy’s net, which Gold defender is already on that side of YOU?",
           "options": [
             {
               "id": "a",
-              "text": "A middle connection if pressure and support make it reachable"
+              "text": "Gold 1"
             },
             {
               "id": "b",
-              "text": "Leave the puck without checking the new lane"
+              "text": "Gold 2"
             },
             {
               "id": "c",
-              "text": "Assume the change makes every route safe"
+              "text": "Gold 3"
             }
           ],
           "answer": [
-            "a"
+            "c"
           ],
-          "basis": "coaching",
-          "explanation": "The new player changes the support picture, but the carrier still checks access and pressure."
+          "basis": "scene",
+          "explanation": "Gold 3 is behind YOU toward Navy’s net. Check that pressure as well as D2 and the passing line before using a new deeper outlet; the replacement’s exact arrival point and reachability are not shown."
         },
         {
           "id": "exp26b-u15-014-q6",
@@ -42123,7 +42004,7 @@
     },
     {
       "id": "exp26b-u15-015",
-      "version": 3,
+      "version": 4,
       "ageBand": "U15",
       "title": "Reset around a crowded slot",
       "family": "slot-crowding-reset",
@@ -42311,26 +42192,22 @@
         {
           "id": "exp26b-u15-015-q5",
           "type": "choice",
-          "prompt": "Gold 1 leaves F2 to pressure YOU on the wall. What should be weighed?",
+          "prompt": "Imagine Gold 1 leaves F2 to pressure YOU. With Gold 2 staying shown, which current direct passing line is nearer Gold 2?",
           "options": [
             {
               "id": "a",
-              "text": "A quick F2 connection if the slot remains reachable, or F1 support"
+              "text": "The line to F1 below the goal line"
             },
             {
               "id": "b",
-              "text": "Force F2 because the defender moved"
-            },
-            {
-              "id": "c",
-              "text": "Send the puck low without checking F1"
+              "text": "The line to F2 inside"
             }
           ],
           "answer": [
             "a"
           ],
-          "basis": "coaching",
-          "explanation": "The defender move may open F2, but carrier angle and F1 support still determine the connected choice."
+          "basis": "scene",
+          "explanation": "Gold 2 is close to the direct low line toward F1 and farther from the line to F2. That gives YOU a reason to compare F2 again, while checking the new Gold 1 position and the receiving space before passing."
         },
         {
           "id": "exp26b-u15-015-q6",
@@ -42343,7 +42220,7 @@
     },
     {
       "id": "exp26-u18-001",
-      "version": 2,
+      "version": 3,
       "ageBand": "U18",
       "title": "Manage the last minute with a lead",
       "family": "late-game-possession",
@@ -42556,26 +42433,22 @@
         {
           "id": "exp26-u18-001-q5",
           "type": "choice",
-          "prompt": "F1 becomes clearly open beyond Gold 1 with room to retain the puck. What changes?",
+          "prompt": "With the lead and 48 seconds left, compare the current forward lines to F1 and F2. Which line stays farther from Gold 1?",
           "options": [
             {
               "id": "a",
-              "text": "A controlled forward pass may now fit the objective"
+              "text": "The direct pass to F1"
             },
             {
               "id": "b",
-              "text": "The clock makes every forward pass automatically wrong"
-            },
-            {
-              "id": "c",
-              "text": "D2 must receive regardless of the open route"
+              "text": "The direct pass to F2"
             }
           ],
           "answer": [
             "a"
           ],
-          "explanation": "A lower-risk forward option can be consistent with protecting a lead.",
-          "basis": "coaching"
+          "explanation": "The F1 line passes farther from Gold 1 than the F2 line does. That is one useful pressure check for a controlled forward option; receiving pressure, other Gold players and defensive support still matter.",
+          "basis": "scene"
         },
         {
           "id": "exp26-u18-001-q6",
@@ -42587,26 +42460,22 @@
         {
           "id": "exp26-u18-001-q7",
           "type": "choice",
-          "prompt": "What should YOU communicate with 48 seconds left?",
+          "prompt": "Which call accurately compares Gold 1’s pressure on the two support lines to D2 and F3?",
           "options": [
             {
               "id": "a",
-              "text": "We value possession, but I will use a clear forward lane"
+              "text": "Gold 1 is farther from the D2 line than the F3 line; check the reset"
             },
             {
               "id": "b",
-              "text": "The lead removes every forward option"
-            },
-            {
-              "id": "c",
-              "text": "F1 is the first outlet regardless of the pressure route"
+              "text": "Gold 1 is farther from the F3 line than the D2 line; check the middle"
             }
           ],
           "answer": [
             "a"
           ],
-          "basis": "coaching",
-          "explanation": "The message balances the stated lead with a conditional forward choice."
+          "basis": "scene",
+          "explanation": "Gold 1 is closer to the F3 line. The D2 reset deserves comparison with the forward options, while the lead, receiver pressure and next defensive support remain part of the decision."
         },
         {
           "id": "exp26-u18-001-q8",
@@ -42656,7 +42525,7 @@
     },
     {
       "id": "exp26-u18-002",
-      "version": 2,
+      "version": 3,
       "ageBand": "U18",
       "title": "Create another attempt while trailing late",
       "family": "late-game-attack",
@@ -42806,27 +42675,27 @@
         {
           "id": "exp26-u18-002-q2",
           "type": "multi",
-          "prompt": "Choose two considerations for generating a remaining chance.",
+          "prompt": "With 32 seconds left, which two current pressure relationships matter when comparing F1 near the net and F2 across the high slot?",
           "options": [
             {
               "id": "a",
-              "text": "Whether a shot can reach useful traffic"
+              "text": "Gold 1 is nearer the direct line to F1 than the line to F2"
             },
             {
               "id": "b",
-              "text": "A certainty that shooting from the point always scores"
+              "text": "Gold 3 is nearer the direct line to F2 than the line to F1"
             },
             {
               "id": "c",
-              "text": "Whether a pass would create a clearer attempt in time"
+              "text": "Gold 5 is closer to F1 than Gold 2 is"
             }
           ],
           "answer": [
             "a",
-            "c"
+            "b"
           ],
-          "explanation": "Time matters, but a rushed blocked shot and a clearer available connection are different possibilities.",
-          "basis": "coaching"
+          "explanation": "The two connections face different defenders: Gold 1 near the F1 line and Gold 3 near the F2 line. Check whether either connection can create a feasible attempt in the remaining time; the static picture does not establish pass or shot timing.",
+          "basis": "scene"
         },
         {
           "id": "exp26-u18-002-q3",
@@ -43577,7 +43446,7 @@
     },
     {
       "id": "exp26-u18-005",
-      "version": 2,
+      "version": 3,
       "ageBand": "U18",
       "title": "Join the second wave only after checking possession",
       "family": "defender-activation",
@@ -43772,26 +43641,26 @@
         {
           "id": "exp26-u18-005-q5",
           "type": "choice",
-          "prompt": "F1 bobbles the puck as Gold 3 accelerates. What deserves a fresh decision?",
+          "prompt": "Imagine F1 bobbles the puck before YOU join the second wave. Which Gold player is currently closest to both YOU and F1, making that pressure especially relevant to the hold-or-join decision?",
           "options": [
             {
               "id": "a",
-              "text": "The old activation regardless of possession"
+              "text": "Gold 1"
             },
             {
               "id": "b",
-              "text": "A belief that D2 can cover every possible turnover alone"
+              "text": "Gold 2"
             },
             {
               "id": "c",
-              "text": "Whether to hold or recover instead of continuing up ice"
+              "text": "Gold 3"
             }
           ],
           "answer": [
             "c"
           ],
-          "explanation": "Possession quality and pressure changed, so the original support choice may no longer fit.",
-          "basis": "coaching"
+          "explanation": "Gold 3 is near both the supporting defender and F1. Check the actual puck contest and D2’s cover before continuing the activation; a bobble alone does not establish Gold possession.",
+          "basis": "scene"
         },
         {
           "id": "exp26-u18-005-q6",
@@ -44805,7 +44674,7 @@
     },
     {
       "id": "exp26-u18-009",
-      "version": 2,
+      "version": 3,
       "ageBand": "U18",
       "title": "Prepare the first touch but keep a second option",
       "family": "receiving-under-fast-pressure",
@@ -44939,27 +44808,27 @@
         {
           "id": "exp26-u18-009-q2",
           "type": "multi",
-          "prompt": "Which two cues should affect the first-touch option?",
+          "prompt": "While D1’s pass is still travelling toward YOU, which two current receiver-pressure relationships belong in the pre-scan?",
           "options": [
             {
               "id": "a",
-              "text": "A requirement to pass first-time regardless"
+              "text": "Gold 1 is closer to F1 than Gold 2 is"
             },
             {
               "id": "b",
-              "text": "Whether Gold 1 closes F1’s route"
+              "text": "Gold 2 is closer to F2 than Gold 1 is"
             },
             {
               "id": "c",
-              "text": "The arriving pass quality"
+              "text": "Gold 3 is closer to YOU than Gold 2 is"
             }
           ],
           "answer": [
-            "b",
-            "c"
+            "a",
+            "b"
           ],
-          "explanation": "Preparation enables an early option, but a changed route or difficult reception can require another action.",
-          "basis": "coaching"
+          "explanation": "F1 has Gold 1 nearby, and F2 has Gold 2 nearby. Prepare alternatives using those pressures, then update the arriving puck quality and passing lines before choosing a redirect or a controlling touch.",
+          "basis": "scene"
         },
         {
           "id": "exp26-u18-009-q3",
@@ -45415,7 +45284,7 @@
     },
     {
       "id": "exp26b-u18-001",
-      "version": 2,
+      "version": 3,
       "ageBand": "U18",
       "title": "Manage a lead in the final minute",
       "family": "late-lead-possession",
@@ -45594,26 +45463,22 @@
         {
           "id": "exp26b-u18-001-q5",
           "type": "choice",
-          "prompt": "F1 opens with room to retain the puck. What changes?",
+          "prompt": "With one minute left and a one-goal lead, which current forward passing line stays farther from Gold 2?",
           "options": [
             {
               "id": "a",
-              "text": "A controlled pass may reduce pressure while keeping possession"
+              "text": "The direct line from YOU to F1"
             },
             {
               "id": "b",
-              "text": "Force a shot because the lead is close"
-            },
-            {
-              "id": "c",
-              "text": "Dump without checking support"
+              "text": "The direct line from YOU to F2"
             }
           ],
           "answer": [
             "a"
           ],
-          "basis": "coaching",
-          "explanation": "F1 becoming reachable changes the safe-possession branch; the clock does not make one action automatic."
+          "basis": "scene",
+          "explanation": "Gold 2 is much nearer the F2 line than the F1 line. That favours examining F1 as a controlled outlet, but Gold 1, Gold 3 and F1’s receiving space still need checking before a pass."
         },
         {
           "id": "exp26b-u18-001-q6",
@@ -46066,7 +45931,7 @@
     },
     {
       "id": "exp26b-u18-004",
-      "version": 2,
+      "version": 3,
       "ageBand": "U18",
       "title": "Protect the backdoor during rotation",
       "family": "pk-backdoor-rotate",
@@ -46254,26 +46119,22 @@
         {
           "id": "exp26b-u18-004-q5",
           "type": "choice",
-          "prompt": "Gold 2 receives below the line and Gold 3 cuts inward. What needs updating?",
+          "prompt": "Imagine Gold 3 cuts inward while Gold 2 stays at the shown spot. No teammate has confirmed a coverage handoff. Under this drill’s assignment, which attacker remains YOUR low responsibility as YOU call out the new threat?",
           "options": [
             {
               "id": "a",
-              "text": "The low exchange and inside coverage"
+              "text": "Gold 2"
             },
             {
               "id": "b",
-              "text": "Stay on the original Gold 2 spot"
-            },
-            {
-              "id": "c",
-              "text": "Follow the puck without checking the slot"
+              "text": "Gold 3"
             }
           ],
           "answer": [
             "a"
           ],
           "basis": "coaching",
-          "explanation": "Two attacker routes changed, so update who protects the inside and backdoor."
+          "explanation": "Keep responsibility for Gold 2 until a teammate confirms the exchange, while communicating Gold 3’s new threat. If the handoff is confirmed or the attack changes again, update the coverage; this drill condition does not prescribe one skating route."
         },
         {
           "id": "exp26b-u18-004-q6",
@@ -50020,10 +49881,10 @@
       "topic": "Passing",
       "family": "near-far-support",
       "type": "multi",
-      "prompt": "What should you compare besides distance?",
-      "explanation": "Distance alone does not establish availability.",
-      "hash": "557e626538587688575212af3dfe7c86c15ea7e6883b4c0cefcd683025beae82",
-      "review": "no-open-ai-finding"
+      "prompt": "Which two observations explain why YOU should compare both teammate passes here?",
+      "explanation": "Gold 1 is close to the near pass to Navy 2. Navy 3 offers a different angle across the middle, so the nearer teammate is not the only option to assess. Gold 1 is still near that other line too: check both Gold 1 and Gold 2 before choosing. A different angle does not guarantee a completed pass.",
+      "hash": "d08718d098cb034348825db4fe8e00fbea9447f7729c75f001750d58119bfdb3",
+      "review": "independently-reviewed-experimental-repair"
     },
     {
       "scenarioId": "exp26-u9-003",
@@ -50566,10 +50427,10 @@
       "topic": "Receiving",
       "family": "wall-reception-pressure",
       "type": "choice",
-      "prompt": "Imagine Gold1 comes along the boards instead. What is a useful response?",
-      "explanation": "A different pressure side may call for a different touch or route.",
-      "hash": "a4ddff1672eb86c0afe59e5f8994907d5dba56c68bd3466da8474ad38bc04696",
-      "review": "no-open-ai-finding"
+      "prompt": "If YOU receive the planned pass, which teammate is already farther toward the attacking net along the board side as a possible next option?",
+      "explanation": "Navy 3 is farther toward the attacking net along the same board side. Navy 2 is the passer farther back and can be a return option. Neither pass is owed: after receiving, check Gold 1 and the actual lane before choosing.",
+      "hash": "878d2bb8f28f8f7b249e02c7c339fcbc4bed2037569cf0e11ab2487eb09674a0",
+      "review": "independently-reviewed-experimental-repair"
     },
     {
       "scenarioId": "exp26-u9-007",
@@ -51892,10 +51753,10 @@
       "topic": "Puck recovery",
       "family": "loose-puck-recovery",
       "type": "choice",
-      "prompt": "Gold1 arrives beside the puck first. What changes?",
-      "explanation": "Gold1's arrival can change possession and the safe lane. Recheck the owner and Navy2 before acting.",
-      "hash": "c7a1b389884fa8f810f057df64ab731bd0041d8640472a484a0746edcdc61b94",
-      "review": "no-open-ai-finding"
+      "prompt": "Imagine Gold 1 arrives beside the loose puck first. Which next observation would show that YOU now need to defend a puck carrier?",
+      "explanation": "Control changes the situation from pursuing a loose puck to defending an opponent with it. Being closest or arriving first does not by itself show control. Keep checking Navy 2 as well when deciding how to help.",
+      "hash": "5536adb7ad1089f382969865190d882f8c1006e26cf0cc3f454f2e7aca545bd0",
+      "review": "independently-reviewed-experimental-repair"
     },
     {
       "scenarioId": "exp26b-u9-003",
@@ -51970,10 +51831,10 @@
       "topic": "Defending",
       "family": "transition-defending",
       "type": "choice",
-      "prompt": "Gold1 cuts wide, toward the boards. What should YOU update?",
-      "explanation": "Gold1's route changes where help is useful. Adjust while watching the carrier and Navy2 rather than following a fixed line.",
-      "hash": "ab5a2bb67269ed9bd01f995913b0341378f091b2133f049b42ad2219d64f572a",
-      "review": "no-open-ai-finding"
+      "prompt": "Which defensive picture should guide YOUR recovery toward Navy’s net in this freeze?",
+      "explanation": "Navy 2 is already closer to the defended left net than Gold 1, while YOU are farther up ice. Account for that teammate and the carrier when choosing a recovery lane. The picture does not show who can catch whom or require YOU to copy Navy 2’s route.",
+      "hash": "c5913e3b35f20ceed5075fa21b524a0c6ee93990955ac5aef159fdfc69c1846a",
+      "review": "independently-reviewed-experimental-repair"
     },
     {
       "scenarioId": "exp26b-u9-004",
@@ -52048,10 +51909,10 @@
       "topic": "Defending",
       "family": "backward-skating-awareness",
       "type": "choice",
-      "prompt": "Gold1 passes toward the side. What should YOU do?",
-      "explanation": "The puck location changed, so the read must change too. Adjust while keeping movement controlled and checking Navy2.",
-      "hash": "d4395b6c61e63009da01a3809be78d4259aeb50cecd147c5287937cce1ad5cac",
-      "review": "no-open-ai-finding"
+      "prompt": "Before changing your backward route, which arrangement should YOU account for in this view?",
+      "explanation": "YOU face Gold 1 ahead, with Navy 2 behind and to the side. Check that support space as well as the carrier before changing route. Facing the play does not prove that YOU have looked behind or that a skating path is clear.",
+      "hash": "1d4ff3e7803173bd59419725b1a1070df5b32c882c6f2d5f481b63266a3a7e13",
+      "review": "independently-reviewed-experimental-repair"
     },
     {
       "scenarioId": "exp26b-u9-005",
@@ -52438,10 +52299,10 @@
       "topic": "Off-puck support",
       "family": "breakout-support",
       "type": "choice",
-      "prompt": "Gold1 moves into YOUR outlet lane. What might Navy2 use?",
-      "explanation": "Gold1 changed the outlet. Navy3 or another lane may be safer if the carrier can see it and pressure permits.",
-      "hash": "bfa557907a2e3e6d27bb67e15f6ec8e79aec5ff96b11395f2a44933b62d7231a",
-      "review": "no-open-ai-finding"
+      "prompt": "Navy 2 is comparing the two outlets. Which pass is shorter to assess when looking for nearby help?",
+      "explanation": "YOU are the nearby board-side outlet; Navy 3 offers a longer pass farther up ice. A shorter pass can be useful under pressure, but Navy 2 must still check Gold 1 and the receiving space. Distance alone does not make either pass the right choice.",
+      "hash": "061dff769e251cd123f738023fa78648e7c19216bc755946e3b6bf648e082c2b",
+      "review": "independently-reviewed-experimental-repair"
     },
     {
       "scenarioId": "exp26b-u9-010",
@@ -52750,10 +52611,10 @@
       "topic": "Rink awareness",
       "family": "circle-search",
       "type": "choice",
-      "prompt": "Gold1 moves across the circle. What should guide your choice?",
-      "explanation": "Gold1 changed the space around the landmark. Recheck the passing lane and pressure before choosing.",
-      "hash": "101c21f58ba7806c857da507102c0042a2275f688df0189883e82d84cb68bbf7",
-      "review": "no-open-ai-finding"
+      "prompt": "From the puck in this view, which direct line gives more room from Gold 1 to assess?",
+      "explanation": "The line toward Navy 2 stays farther from Gold 1 than the line toward the net. The circle helps YOU locate the options, but the defender’s position is the useful difference. Recheck before a pass or shot; more space from one player does not guarantee success.",
+      "hash": "2809fe7e0c0e3c68479c88d4e88cc351ef382fda868b0185c5829b508df917a0",
+      "review": "independently-reviewed-experimental-repair"
     },
     {
       "scenarioId": "exp26b-u9-014",
@@ -52906,10 +52767,10 @@
       "topic": "Scanning",
       "family": "retrieval-scan",
       "type": "choice",
-      "prompt": "Suppose D1 closes the middle outlet before the pickup. What could YOU reconsider?",
-      "explanation": "The old outlet may no longer be useful. A turn, protected hold or different pass depends on the new pressure.",
-      "hash": "67cb025a0e5e028f89be36a35ef254f351be285f77e26656409efa584be1f0d1",
-      "review": "awaiting-ai-review"
+      "prompt": "Before planning a pass after the pickup, which relationship should YOU account for in this view?",
+      "explanation": "Both the opponent D1 and teammate F2 are up ice from the loose puck. That puts pressure and the possible outlet in the area YOU need to read before recovery. It does not show who reaches the puck first or establish that a pass to F2 is clear.",
+      "hash": "6c344c2f4277c7a2fd8f12caa6b337e1c141b886c7c5abd6805b2abb3ddf32de",
+      "review": "independently-reviewed-experimental-repair"
     },
     {
       "scenarioId": "exp26-u11-001",
@@ -53166,10 +53027,10 @@
       "topic": "Support",
       "family": "support-angle",
       "type": "choice",
-      "prompt": "Suppose D1 follows your new route. What is a useful next read?",
-      "explanation": "A defender’s response changes which lane is useful. Your movement can also help a teammate.",
-      "hash": "753b7286f0b120663c8f8c255337e434cb8f96ddb0f2b8256eec9df3902f027f",
-      "review": "no-open-ai-finding"
+      "prompt": "Imagine D1 follows YOU farther from F1, keeping the same distance from YOU. What benefit could that create while F1 still has the puck?",
+      "explanation": "Drawing D1 farther from F1 can give the carrier more room to assess a carry, even when YOU remain closely followed. It does not make a pass to YOU clear. F1 should still check F2 and the space ahead before choosing.",
+      "hash": "13a5226e19abf830130f1fa2cc6e93aee8b992b64975569d4b744bd607cbfe9b",
+      "review": "independently-reviewed-experimental-repair"
     },
     {
       "scenarioId": "exp26-u11-003",
@@ -53192,10 +53053,10 @@
       "topic": "Support",
       "family": "support-angle",
       "type": "choice",
-      "prompt": "What is the useful communication after D1 blocks the first line?",
-      "explanation": "The message names the changed angle and keeps F1's pass conditional on reachability.",
-      "hash": "133070fb15100341bc652d744b2146d824775c17c4c81533afbc0728b5518131",
-      "review": "no-open-ai-finding"
+      "prompt": "Which call best describes the two support options F1 can see in this freeze?",
+      "explanation": "YOU are near F1 with D1 close to that direct line; F2 is across the ice at another angle. The call shares the current picture with F1, who must still assess the actual pass. It does not promise that either receiver is open.",
+      "hash": "6f866b41c8347810fe22c8daa055dbe3489a28b9ecf2950a755e6b85f79d8547",
+      "review": "independently-reviewed-experimental-repair"
     },
     {
       "scenarioId": "exp26-u11-003",
@@ -53257,10 +53118,10 @@
       "topic": "Passing",
       "family": "pass-and-support",
       "type": "multi",
-      "prompt": "Which choices keep YOU involved without owning the puck?",
-      "explanation": "Off-puck support means remaining useful as the carrier and defence change.",
-      "hash": "0377a8db094b06429af1db8d371c7dfaff33fde8925ad24c80863ee9f3f535ef",
-      "review": "no-open-ai-finding"
+      "prompt": "Which two visible relationships matter when YOU offer F2 another passing option?",
+      "explanation": "F2 and YOU are on opposite sides of the middle, with D1 near the return line. A new support angle needs to account for that defender, not just the fact that YOU made the earlier pass. The frame does not show D1 following a new movement.",
+      "hash": "2ef28d63d4bdb2a81801518ec399f3f32556818a70d29695c02adae18d28c10d",
+      "review": "independently-reviewed-experimental-repair"
     },
     {
       "scenarioId": "exp26-u11-004",
@@ -53686,10 +53547,10 @@
       "topic": "Puck control",
       "family": "puck-protection",
       "type": "choice",
-      "prompt": "If D1 follows toward the wall and F2’s lane opens, what becomes worth checking?",
-      "explanation": "Pressure can change the outlet. A pass still depends on control and a clear actual lane.",
-      "hash": "4b19e7144395402f9b72a7fae4a18c8842fe601046d4af730265e453cb4a14f3",
-      "review": "no-open-ai-finding"
+      "prompt": "To begin giving the puck more room from D1, which short carry could YOU explore in this view?",
+      "explanation": "D1 is on the middle side. A small move toward the boards initially increases the puck’s separation from D1; moving inward initially brings it closer. Keep the puck controlled and leave room to move: this is not an instruction to trap yourself on the wall. Recheck F2 and D1 before continuing or passing.",
+      "hash": "8688fc07987b67d17674d9c5753cb753d4596f911b26824f82fec289c559ab66",
+      "review": "independently-reviewed-experimental-repair"
     },
     {
       "scenarioId": "exp26-u11-007",
@@ -53816,10 +53677,10 @@
       "topic": "Puck control",
       "family": "change-of-pace",
       "type": "choice",
-      "prompt": "Suppose D1 turns and reaches the wide lane before you do. What could YOU change?",
-      "explanation": "A closing lane may call for a different action. The appropriate response depends on the new timing and control.",
-      "hash": "fff785aed1f075143bb17734280c4f7e11185662d11b63711df12b54de7d7d78",
-      "review": "no-open-ai-finding"
+      "prompt": "YOU are considering a short carry straight toward the attacking end. What should YOU notice about the space to F2 as you advance?",
+      "explanation": "F2 is ahead on the same wide side, so a short forward carry brings YOU closer. That may shorten a pass, but it can also crowd the support space. Keep checking D1; this frame supplies spacing, not a speed or a successful way past the defender.",
+      "hash": "46872470de5a9b9791e7def999319ef6750216071e6d9f2c69d60112d863099f",
+      "review": "independently-reviewed-experimental-repair"
     },
     {
       "scenarioId": "exp26-u11-008",
@@ -54466,10 +54327,10 @@
       "topic": "Shooting",
       "family": "slot-shot-lane",
       "type": "choice",
-      "prompt": "If D1 moves toward F2 and the direct lane clears, what becomes worth reconsidering?",
-      "explanation": "A changed blocker can make a shot more plausible. Control, pressure and the goalie still matter.",
-      "hash": "45c2b6a7904a379685f84e1e1aab7ba82da86724dc952d94972d9f7f72934356",
-      "review": "no-open-ai-finding"
+      "prompt": "Before choosing between a pass and a shot, which direct line has more space from D1 in this view?",
+      "explanation": "The line to F2 goes farther around D1 than the direct line to the net. That makes the half-wall pass worth assessing, not automatically the best play. The goalie, puck control and any change in pressure still matter; a later shot may become useful.",
+      "hash": "b2916cc27472cf3fe54d66b5acbf16b43e13a5e66e378d17b3a4b217f970d793",
+      "review": "independently-reviewed-experimental-repair"
     },
     {
       "scenarioId": "exp26-u11-013",
@@ -55116,10 +54977,10 @@
       "topic": "Backchecking",
       "family": "backcheck-assignment",
       "type": "choice",
-      "prompt": "If D1 falls behind F1 and calls for help, how should YOU respond?",
-      "explanation": "New pressure information can change the responsibilities. Helping on the carrier may be needed, but F2’s route should remain part of the decision rather than disappearing from the read.",
-      "hash": "2410c936fdfe3a0542ccc352a6c4bead0a149f5e42bf86837eb7accfc35bc310",
-      "review": "no-open-ai-finding"
+      "prompt": "Imagine YOU join D1 near F1, and both defenders stay close to the puck carrier. Which risk should you discuss before making that change?",
+      "explanation": "Putting both defenders near F1 can leave the separate runner F2 with less attention. Help may still be needed on F1, but communicate who will account for F2. Being close to the carrier does not prove that either defender wins the puck.",
+      "hash": "67998f3af4a5ef9b2cbd90fec4038e045717f7f7064c4fe06ff78da0d5e1c520",
+      "review": "independently-reviewed-experimental-repair"
     },
     {
       "scenarioId": "exp26-u11-018",
@@ -55376,10 +55237,10 @@
       "topic": "Angling",
       "family": "forecheck-outlet",
       "type": "choice",
-      "prompt": "If D1 turns away from D2 and carries down toward the corner, what should YOU do with the original approach?",
-      "explanation": "The carrier’s turn changes the useful angle. Depending on speed and team support, YOU might follow under control or let a teammate take over; the original point-pass cue is no longer the only cue.",
-      "hash": "68fabcc9fd8410bca336e587df655eb997c3c4d24d1f8379534ef72068bc8523",
-      "review": "no-open-ai-finding"
+      "prompt": "As YOU approach the carrier, which Navy skater is closer to the direct outlet line from D1’s puck to D2 in this view?",
+      "explanation": "F2 is closer to the illustrated outlet line than YOU. That is useful information to communicate while YOU assess D1’s approach angle. It does not prove F2 can intercept the pass or require a particular team system; the carrier and both support players can move.",
+      "hash": "3009c143c34c7284913b3b1c037a99a87825b5c8313c8fa163662700fbdf845b",
+      "review": "independently-reviewed-experimental-repair"
     },
     {
       "scenarioId": "exp26-u11-020",
@@ -56195,10 +56056,10 @@
       "topic": "Receiving",
       "family": "shoulder-reception",
       "type": "multi",
-      "prompt": "Which two observations shape a useful receiving spot?",
-      "explanation": "D1’s position and F1’s passing lane shape the receiving target. Scan F2’s possible continuation too, without assuming the next pass is open.",
-      "hash": "6226023c8e8f73fe8b1b9dc61141c903f9c00df00a07e43b4c053ae38b7899e3",
-      "review": "no-open-ai-finding"
+      "prompt": "Which two current relationships should YOU account for when offering a receiving target?",
+      "explanation": "The pass comes from F1 behind YOU, while D1 is ahead and inside. F2 is farther up ice, not behind YOU, and remains a possible next connection to check. These positions help plan a receiving angle; they do not prove either pass is available.",
+      "hash": "2eb02eb6a67388973419984fc8d2d0032043af8be3a57f87720a416a6b68d5e1",
+      "review": "independently-reviewed-experimental-repair"
     },
     {
       "scenarioId": "exp26b-u11-002",
@@ -56390,10 +56251,10 @@
       "topic": "Passing support",
       "family": "support-after-pass",
       "type": "choice",
-      "prompt": "F2 carries toward the middle instead of returning. What should YOU do?",
-      "explanation": "Support follows the actual carrier. Update F2’s route and D1’s lane instead of chasing blindly or holding the old return point.",
-      "hash": "cebce1ea791f3100a5f505fc429d5cb3fa4079c898cf0559cf4f72dd2f675018",
-      "review": "no-open-ai-finding"
+      "prompt": "F2 has two Navy support options. Which direct passing line currently stays farther from D1?",
+      "explanation": "The line to F1 stays farther from D1 than the old line back to YOU. F2 can assess that alternative while YOU continue offering support. A larger gap from D1 does not guarantee a pass, and YOU may become useful again as the carrier or defender moves.",
+      "hash": "de9a8309015feca2cc5b34454d858263b1e32539a8295f036b1e036f15cb9795",
+      "review": "independently-reviewed-experimental-repair"
     },
     {
       "scenarioId": "exp26b-u11-004",
@@ -56936,10 +56797,10 @@
       "topic": "Passing",
       "family": "wall-bounce-receive",
       "type": "choice",
-      "prompt": "D1 turns toward the boards before F1 releases. What should you revisit?",
-      "explanation": "D1 turning toward the boards is a cue to reassess, not proof that a route closed or opened. Compare the bank option with F2 and D2 before choosing.",
-      "hash": "aa10a0c13b2413aa24491c13f207c91e1b58e6ac7a703957e6ad93a153d79099",
-      "review": "no-open-ai-finding"
+      "prompt": "Before F1 tries the wall option, which direct passing line is farther from D1 and worth comparing with it?",
+      "explanation": "The direct line to F2 stays farther from D1 than the direct line to YOU. F1 can compare it with a possible wall pass, while checking D2 near F2’s area. Neither a direct pass nor a board bounce is proven successful by this freeze.",
+      "hash": "ffc46f508bc0e775a4d8639596610c3074d32ed22e8faa0829520125396e13ba",
+      "review": "independently-reviewed-experimental-repair"
     },
     {
       "scenarioId": "exp26b-u11-011",
@@ -57092,10 +56953,10 @@
       "topic": "Shooting",
       "family": "slot-lane-change",
       "type": "choice",
-      "prompt": "D1 moves toward F2 and the direct lane opens. What deserves a new look?",
-      "explanation": "D1's movement changes the lane, but the carrier still reads space and support before choosing.",
-      "hash": "2ea8ddb506e823fde51d30419129ef82cde494500779ca835e104d5eff7d3f09",
-      "review": "no-open-ai-finding"
+      "prompt": "Imagine D1 moves onto the passing line to F2 and away from the shooting line. YOU still control the puck. Which option has gained space from D1?",
+      "explanation": "In this stated change, D1 has moved away from the shot line and into the pass line. A shot is therefore worth reassessing, but control, the goalie and any further movement still matter. It is not a guaranteed goal, and another option may become useful if the picture changes.",
+      "hash": "0a16cc58e067d656769eda4d37d024648fba18efa4cd5ff4e3e4983fcd388668",
+      "review": "independently-reviewed-experimental-repair"
     },
     {
       "scenarioId": "exp26b-u11-013",
@@ -57482,10 +57343,10 @@
       "topic": "Backchecking",
       "family": "backcheck-open-runner",
       "type": "choice",
-      "prompt": "D1 cannot stay with F1 and calls for help. What should YOU reassess?",
-      "explanation": "F1 is an opponent who may now need defensive pressure, not attacking support. Recheck both attackers and communicate with D1 before changing jobs.",
-      "hash": "ad9f4bf64847130ba0bd2f9c214d49060f8538885c4bcaadf0e055272e3c8eed",
-      "review": "no-open-ai-finding"
+      "prompt": "If YOU consider helping D1 elsewhere, which attacker is currently on YOUR side of the middle and must stay in the read?",
+      "explanation": "YOU and F2 are on the same side of the middle; F1 is across it with the puck. YOU also start closer to the defended left net than F2. Account for that runner if discussing help with D1, rather than assuming a particular switch is required.",
+      "hash": "0e8050c8640a9a36052c2d0726287d408e3ea2984e2971a514a85d14c637cba3",
+      "review": "independently-reviewed-experimental-repair"
     },
     {
       "scenarioId": "exp26b-u11-018",
@@ -57560,10 +57421,10 @@
       "topic": "Transition",
       "family": "turnover-job-change",
       "type": "choice",
-      "prompt": "Navy F1 gains control back from D1 before gold F2 receives. What changes first?",
-      "explanation": "F1 is your navy teammate. Confirm that regain and look for attacking support toward the right net, while checking gold pressure.",
-      "hash": "1f36c8b19af8464fefc39fd62d6d7608752b1bb72b01d188674ef5681ae12728",
-      "review": "no-open-ai-finding"
+      "prompt": "Suppose Navy F1 wins control back from D1. Which carrier-and-direction pairing now matches the play?",
+      "explanation": "F1 is YOUR Navy teammate, so the regain puts Navy back in possession attacking the right net. Locate F1’s current passing options and the gold pressure before supporting. The new possession does not prescribe one skating route or erase the risk of losing it again.",
+      "hash": "73591e447f083bcff2cb50de08d3b3b009b9ad0e28bbead2ce6fb5ed518e6e72",
+      "review": "independently-reviewed-experimental-repair"
     },
     {
       "scenarioId": "exp26b-u11-019",
@@ -57716,10 +57577,10 @@
       "topic": "Attacking decisions",
       "family": "two-on-one-carry-read",
       "type": "choice",
-      "prompt": "D1 moves into your shooting line and F2 becomes clearly reachable. What deserves a new look?",
-      "explanation": "D1 changed the shooting lane while F2 became more reachable, so the pass deserves a fresh read.",
-      "hash": "47e7ee2b742dd4d8a062c3e55516ac8e1736d96c01dc9d74aa5134b58284a51e",
-      "review": "no-open-ai-finding"
+      "prompt": "YOU are comparing the cross-ice pass and the shot. Which direct line currently stays farther from D1?",
+      "explanation": "The pass line to F2 stays farther from D1 than the direct shooting line. It is an option to assess while the defender is between the attacking lanes. Recheck the receiver, goalie and pressure: distance from D1 alone does not prove the pass is best or will succeed.",
+      "hash": "47b1eee09e0e2c52813ce2837c1bf74b791e6673fcd1eaa12db9dfb4c92eeef0",
+      "review": "independently-reviewed-experimental-repair"
     },
     {
       "scenarioId": "exp26b-u11-021",
@@ -59107,10 +58968,10 @@
       "topic": "entry delay timing",
       "family": "entry-delay-timing",
       "type": "multi",
-      "prompt": "Which two reads help you stay available?",
-      "explanation": "Arrival timing can matter more than simply skating past the puck.",
-      "hash": "2cf4a8dd69ce1103f31a902f95f0437c80511b02e0698ca81ec14796520aee50",
-      "review": "revised-and-rechecked"
+      "prompt": "Which two visible relationships help YOU judge how to arrive in support of F1’s delay?",
+      "explanation": "YOU have not overtaken F1, and Gold 1 is near the carrier on the inside side. Those relationships matter when choosing when and where to offer support. D1 is farther back, not beyond F1. The freeze cannot tell YOU an exact arrival speed or prove a protected pass.",
+      "hash": "e1b55469e258fc2b1ac6099307e2a5fb67198d0012a08083998d307e05aeeb89",
+      "review": "independently-reviewed-experimental-repair"
     },
     {
       "scenarioId": "exp26-u13-009",
@@ -59445,10 +59306,10 @@
       "topic": "shooting lane",
       "family": "shooting-lane",
       "type": "multi",
-      "prompt": "Which two changes could alter the shooting picture?",
-      "explanation": "Moving the carrier or finding a lateral pass can change the shooting line. Recheck the blocker and goalie before choosing.",
-      "hash": "cce19a2444e7edd8e3edbea1ddd07782222ade01f7de96aec5502601f9d3fe3f",
-      "review": "no-open-ai-finding"
+      "prompt": "Which two stated changes would directly change the position from which Navy could next shoot?",
+      "explanation": "A carry changes the puck’s location; a completed pass and control at D2 gives a different player and position for a possible shot. D2 moving alone can change support or traffic, but it does not move the puck still held by YOU. Every new shooting line still needs checking.",
+      "hash": "1f1e95efbfc9c0c27f7cebb4a7bbf07bd006c719d7e51e368eb8ba04092c8a9c",
+      "review": "independently-reviewed-experimental-repair"
     },
     {
       "scenarioId": "exp26-u13-011",
@@ -59627,10 +59488,10 @@
       "topic": "puck protection",
       "family": "puck-protection",
       "type": "multi",
-      "prompt": "Pick two checks before turning with the puck.",
-      "explanation": "Protection should preserve a next action rather than simply hide the puck.",
-      "hash": "e2baa053eb161efb8a9cb9885049988b718bf1102c6794ff470f2392754110f7",
-      "review": "revised-and-rechecked"
+      "prompt": "Which two current relationships belong in YOUR protection-and-outlet read?",
+      "explanation": "Gold 1 is the nearer puck threat, and F2 is an inside option farther up ice. Gold 2 is farther from YOU than F2, but still belongs in the next read. These locations do not prove that turning protects the puck or that F2 can receive.",
+      "hash": "12f21693ee66b2454fb04e6ae3986c1c4f3161a8f23113d5350f275b4a4f3c73",
+      "review": "independently-reviewed-experimental-repair"
     },
     {
       "scenarioId": "exp26-u13-013",
@@ -59666,10 +59527,10 @@
       "topic": "puck protection",
       "family": "puck-protection",
       "type": "choice",
-      "prompt": "If F2 becomes clearly available while Gold 1 closes, what might be useful?",
-      "explanation": "A pass can be an alternative to protection if its route and receiver are ready.",
-      "hash": "8dbe6fa6e36484ccefdd381f82994857840e36a0390d2ce08291845b1f0fc20e",
-      "review": "revised-and-rechecked"
+      "prompt": "Before using F2 as an outlet, which opponent is nearer the direct line from YOUR puck to F2 in this view?",
+      "explanation": "Gold 1 is nearer that direct passing line. Finding the teammate is only part of the decision: account for this pressure before moving the puck. Gold 2 remains farther up ice and may affect what happens next; this comparison does not measure either defender’s reach.",
+      "hash": "3fef9f13652a09e19722cfcca6db0570ae612cc2465cba0affa6e87a808e000c",
+      "review": "independently-reviewed-experimental-repair"
     },
     {
       "scenarioId": "exp26-u13-013",
@@ -59835,10 +59696,10 @@
       "topic": "gap control",
       "family": "gap-control",
       "type": "multi",
-      "prompt": "Which two cues should change your closing distance?",
-      "explanation": "Carrier lane and support position determine a useful close; a fixed rule ignores the scene’s changing options.",
-      "hash": "7ca66169d3844a2fb44462a2c76a6a49e8a7f94a53635d4f5ae390f9c565f80e",
-      "review": "no-open-ai-finding"
+      "prompt": "Which two positions should YOU account for before deciding whether recovering help changes your gap?",
+      "explanation": "C is still behind Gold 1 relative to the defended left net, while Gold 2 is a separate threat across the middle. That does not tell YOU whether C can arrive in time. Keep both attackers in the read and communicate before changing responsibilities.",
+      "hash": "417c492375c3338e5210517275d810700fcfd6623e241832e314c5bc45b5c232",
+      "review": "independently-reviewed-experimental-repair"
     },
     {
       "scenarioId": "exp26-u13-014",
@@ -59926,10 +59787,10 @@
       "topic": "angling recovery",
       "family": "angling-recovery",
       "type": "choice",
-      "prompt": "Gold 1 passes inside to Gold 2. What deserves attention now?",
-      "explanation": "A release changes the threat. Retaining recovery momentum helps the next defensive action.",
-      "hash": "d29e08f33956f637a4abf392afdf1857642ea7dfce9520ae6db7a504ecf6f0fc",
-      "review": "revised-and-rechecked"
+      "prompt": "If Gold 2 receives and controls a pass at the shown position, which Navy defender starts closer to that new carrier?",
+      "explanation": "D1 starts closer to Gold 2 than YOU do. Use that information when communicating about the new threat and your recovery. It does not establish who can close in time or require both defenders to follow the new puck carrier.",
+      "hash": "d68ce5190247952a5466b4340bdbcf099098e72690c977ed7c6da607420a23a3",
+      "review": "independently-reviewed-experimental-repair"
     },
     {
       "scenarioId": "exp26-u13-015",
@@ -60056,10 +59917,10 @@
       "topic": "weak side coverage",
       "family": "weak-side-coverage",
       "type": "choice",
-      "prompt": "If Gold 2 moves higher into the slot, what should you do?",
-      "explanation": "The assignment concerns a changing threat, not a permanent painted spot.",
-      "hash": "43587afaf839fc34828ef02a173d80733dd310951c26fdecb0d68699087de4f1",
-      "review": "no-open-ai-finding"
+      "prompt": "Which relationship needs attention before YOU treat the low-slot threat as covered?",
+      "explanation": "Gold 2 is currently nearer the defended net than YOU. That is a coverage concern to account for while checking the puck and communicating with D1. A future adjustment should respond to the actual threat; this still frame does not prove a pass, shot or required tracking route.",
+      "hash": "24991bc39d33d1eee492bd312a473ef84c5151545deef40b8a015debae771cc9",
+      "review": "independently-reviewed-experimental-repair"
     },
     {
       "scenarioId": "exp26-u13-016",
@@ -60147,10 +60008,10 @@
       "topic": "backcheck recovery",
       "family": "backcheck-recovery",
       "type": "multi",
-      "prompt": "What two reads could make your recovery useful?",
-      "explanation": "Recovery should complement the defender and account for the inside option.",
-      "hash": "5be5d1c2702da61e3f352e94c0cea91294471024165187d133a2d14cfca4f564",
-      "review": "no-open-ai-finding"
+      "prompt": "Which two starting relationships matter when YOU plan to help the recovery?",
+      "explanation": "YOU are still behind both attackers along the rink, and D1 is nearer Gold 1. Those facts matter when coordinating recovery toward the separate inside threat. They do not prove D1 has stopped the carrier or that YOU can reach a particular target in time.",
+      "hash": "c9d9b4a258e0ec7f8ed9a079a42b4959749bfb07fb5ff33f80ec6040ab4e4e54",
+      "review": "independently-reviewed-experimental-repair"
     },
     {
       "scenarioId": "exp26-u13-017",
@@ -60537,10 +60398,10 @@
       "topic": "defensive zone support",
       "family": "defensive-zone-support",
       "type": "multi",
-      "prompt": "Choose two checks before joining the corner.",
-      "explanation": "Extra puck pressure can leave another threat; the stated assignment matters.",
-      "hash": "1a934032f94b9c0a9710c9dc3e78e37c7950068597276190f2170ce4eccd3d87",
-      "review": "no-open-ai-finding"
+      "prompt": "Which two defender-to-attacker relationships support the stated division of jobs in this view?",
+      "explanation": "D1 is nearer the corner carrier and YOU are nearer the inside attacker. Those positions fit the stated plan, but do not prove containment or forbid helping. If the puck threat changes, communicate who can account for each attacker before changing jobs.",
+      "hash": "616e068fd9f1994bf30e1bda8336380c67240cf63819a430f17438ef63811e86",
+      "review": "independently-reviewed-experimental-repair"
     },
     {
       "scenarioId": "exp26-u13-020",
@@ -60966,10 +60827,10 @@
       "topic": "receiving control",
       "family": "receiving-control",
       "type": "choice",
-      "prompt": "If the puck arrives flat and F2’s lane is clearly available, what might change?",
-      "explanation": "A better reception can create an earlier option, but only while the lane remains available.",
-      "hash": "5224beec30137fbea445e5fdaabd8959eff4f06c7055fb260fbf3db87d517a54",
-      "review": "no-open-ai-finding"
+      "prompt": "When comparing a next touch from the puck’s current position, which teammate line stays farther from Gold 1?",
+      "explanation": "The line back toward D1 stays farther from Gold 1 than the forward line to F2. That gives YOU another option to assess while reading the difficult puck. Whether to settle or redirect it depends on the bounce, pressure and readiness; this line comparison does not prove either touch is available.",
+      "hash": "d9cf82565efc0c1a62817099d0f94ce5878df92e6ede8f705ff9d8fc4d1b9418",
+      "review": "independently-reviewed-experimental-repair"
     },
     {
       "scenarioId": "exp26-u13-023",
@@ -61785,10 +61646,10 @@
       "topic": "point attack",
       "family": "point-lane-adjustment",
       "type": "multi",
-      "prompt": "Which two alternatives deserve a look?",
-      "explanation": "Changing the angle or connecting low can move the problem; forcing a blocked lane ignores the defender.",
-      "hash": "a65d222345547c3084e6bb471fbcfc426c7f2d57c705431c47b40f2afcf6fc6b",
-      "review": "awaiting-ai-review"
+      "prompt": "Which two current relationships help YOU compare support around D2’s point possession?",
+      "explanation": "W is across the middle from D2, while YOU provide a nearer-net, more central option. Gold 1 is also nearer the middle than D2, so the support lines still need checking. These positions offer comparisons; they do not prove a screen, an open pass or a clear shot.",
+      "hash": "5ecb6831cc8841d51ab84ce833d3029afc5a65dcf43047dbb8cf117ededfcfa8",
+      "review": "independently-reviewed-experimental-repair"
     },
     {
       "scenarioId": "exp26b-u13-007",
@@ -62175,10 +62036,10 @@
       "topic": "transition defence",
       "family": "backcheck-middle",
       "type": "multi",
-      "prompt": "Which two reads make your backcheck useful?",
-      "explanation": "The middle route identifies danger and D1’s position tells you whether to support inside; blind wide skating can miss the threat.",
-      "hash": "d9d6242c40b7802243ebe209ffeb0d3401243bbe3f2318e076c872a4a1354c31",
-      "review": "no-open-ai-finding"
+      "prompt": "Which two starting relationships should YOU use when coordinating the backcheck with D1?",
+      "explanation": "YOU start net-side of both attackers and D1 is nearer the carrier. Gold 2 is central, not the wider attacker. Use that picture to coordinate useful coverage without assuming D1 has contained Gold 1 or that a particular recovery route will succeed.",
+      "hash": "ec8a60ffe02f8d806a7053ed5de0652e0a9074219b9aca69f93e4037b8ecce65",
+      "review": "independently-reviewed-experimental-repair"
     },
     {
       "scenarioId": "exp26b-u13-012",
@@ -62331,10 +62192,10 @@
       "topic": "net-front defence",
       "family": "rebound-role-choice",
       "type": "multi",
-      "prompt": "Which two cues shape your second job?",
-      "explanation": "Gold 2 is another scoring threat while D1 approaches the rebound. Check both that route and the puck contest.",
-      "hash": "afcc5b86bba4561f78b42b2954cbf5737a89d48d5d2cc02918407cd9450e85e9",
-      "review": "awaiting-ai-review"
+      "prompt": "Which two relationships matter before YOU choose a second rebound job?",
+      "explanation": "The goalie is closest to the puck, and YOU have a net-side position relative to Gold 2. D1 is the nearest skater, but neither proximity nor the prior shot establishes who controls the rebound. Coordinate the puck contest and the attacker instead of assuming the nearest player wins it.",
+      "hash": "76d58e08eb2255caabccd5e462bd33a0efb7b0943e0d7ffbc0ef24fea198dcde",
+      "review": "independently-reviewed-experimental-repair"
     },
     {
       "scenarioId": "exp26b-u13-014",
@@ -62721,10 +62582,10 @@
       "topic": "defensive-zone breakout",
       "family": "goalie-outlet-support",
       "type": "multi",
-      "prompt": "Which two changes should YOU make?",
-      "explanation": "The release changes support side and forechecker remains relevant; staying fixed ignores both cues.",
-      "hash": "e6c5d1bbadaccfcfca9be0b5d09bc9e58d4c650d79c21d6be3bb249e50de1c28",
-      "review": "awaiting-ai-review"
+      "prompt": "Which two relationships should YOU include before offering support for D1’s new possession?",
+      "explanation": "D1 now has the puck on the other side of the middle, and D2 is a nearer support option. Gold 1 is closer to the puck than YOU, so pressure still matters. Compare the available lines rather than assuming YOU must leave your side or that D2 is open.",
+      "hash": "67683fd76f51bf423270988f54fd1cbf76055df6173a6097001f1317339cabf3",
+      "review": "independently-reviewed-experimental-repair"
     },
     {
       "scenarioId": "exp26b-u13-019",
@@ -62838,10 +62699,10 @@
       "topic": "neutral-zone transition",
       "family": "third-player-balance",
       "type": "choice",
-      "prompt": "If F1 loses control, what should YOU do first?",
-      "explanation": "Turnover makes recovery first; connected middle preserves coverage; if Navy wins it, attack restarts.",
-      "hash": "f33c5c54c2f037a1bf4d0c68bbf22bfc4ed3675fbce605eef88eb4c78b37a078",
-      "review": "no-open-ai-finding"
+      "prompt": "If Gold 1 wins control from F1, which gold attacker starts nearest YOU to account for during recovery?",
+      "explanation": "Gold 2 is much nearer YOU than Gold 1 in this setup. After the stated turnover, keep both the new carrier and that nearby attacker in the read while coordinating with F1 and W. It does not automatically assign YOU a chase or require abandoning useful net-side space.",
+      "hash": "ddcbfa40bdd0778cdf6ff1331bf62e77f703b04e27e93d91b837f5189bc4c225",
+      "review": "independently-reviewed-experimental-repair"
     },
     {
       "scenarioId": "exp26b-u13-020",
@@ -63267,10 +63128,10 @@
       "topic": "Offensive blue line",
       "family": "supported-pinch",
       "type": "multi",
-      "prompt": "Select two checks before acting on the pinch option.",
-      "explanation": "The source principle is conditional support; this exercise adds its own explicit cover rule.",
-      "hash": "0045e4566237fd7637879d1f8195c9a72e6f51c6772ac95d25efdbb0703f9cfd",
-      "review": "no-open-ai-finding"
+      "prompt": "Which three checks belong before considering a pinch under this drill’s stated cover rule?",
+      "explanation": "Confirm the named F3 cover, assess whether the puck contest is reachable, and account for D2’s recovery support. F2 remaining low does not replace F3 at the high position. These checks do not make the pinch certain to work, and this named cover requirement belongs to the drill rather than every team system.",
+      "hash": "659ff70efa06364d789866e0ddb63016875f12bd689519c7ddca981dae8880b9",
+      "review": "independently-reviewed-experimental-repair"
     },
     {
       "scenarioId": "exp26-u15-001",
@@ -63436,10 +63297,10 @@
       "topic": "Power-play support",
       "family": "power-play-local-advantage",
       "type": "choice",
-      "prompt": "Gold 1 commits down toward F2. Which option deserves a fresh check?",
-      "explanation": "F3 may become more accessible, but Gold 2 and the actual seam still matter.",
-      "hash": "fababe7ece71bb791abda3eb5fbfcd3f4bf4dea8cd8ad5a34185b60aeebb9c6c",
-      "review": "no-open-ai-finding"
+      "prompt": "If Gold 1 moves toward F2, which other shown Gold skater is closest to F3’s current slot position and needs checking before an inside pass?",
+      "explanation": "Gold 2 is closest to F3’s shown position. Gold 1 moving toward the low option therefore does not by itself establish an inside pass. Check the actual line and F3’s readiness, as well as whether the other penalty killers move.",
+      "hash": "ccdf49cfe3c391bad183074d024729b4e6384540932fce8cb86dff0c902a15aa",
+      "review": "independently-reviewed-experimental-repair"
     },
     {
       "scenarioId": "exp26-u15-002",
@@ -63462,10 +63323,10 @@
       "topic": "Power-play support",
       "family": "power-play-local-advantage",
       "type": "choice",
-      "prompt": "What should YOU call before moving the puck?",
-      "explanation": "Name the pressure and both possible receivers. Gold 1 is nearer the route to F3 than the direct route to F2 in this picture.",
-      "hash": "0deb5326449ea38b8546739380151503751be9cb175c37fad1db68afc60d04cf",
-      "review": "no-open-ai-finding"
+      "prompt": "Which pressure call matches the two direct passing lines in this freeze?",
+      "explanation": "Gold 1 is much nearer the direct inside line to F3. The low line to F2 has more separation from that defender, but the other Gold players and both receivers still matter. This call describes a comparison, not a guaranteed seam or a required next pass.",
+      "hash": "7a01e77557a079ab3462b9455d92a31cbdbcac79ec68b9c9c18899857297a509",
+      "review": "independently-reviewed-experimental-repair"
     },
     {
       "scenarioId": "exp26-u15-002",
@@ -63826,10 +63687,10 @@
       "topic": "Zone-entry timing",
       "family": "entry-role-replacement",
       "type": "choice",
-      "prompt": "If F2 immediately loses the puck to Gold 2, what takes priority in your read?",
-      "explanation": "A possession change can turn high support into useful defensive support.",
-      "hash": "24dc1d66c68edda1ff678a47bd94a05ccc02981c1960e159236e49dcdcf4b98c",
-      "review": "revised-and-rechecked"
+      "prompt": "If Gold 2 wins control at the shown position, which Navy teammate starts farther back toward Navy’s net to include in the recovery conversation?",
+      "explanation": "D1 is farther back toward Navy’s net than F3, who is deeper in the attacking end. That support matters if Gold 2 gains the puck. Reassess the new carrier and all nearby pressure; D1’s position does not prove successful cover or prescribe YOUR route.",
+      "hash": "b0db6fea6dbd35a485c46cefa12fef8f24575fd180fdea755d790c7c051e0e02",
+      "review": "independently-reviewed-experimental-repair"
     },
     {
       "scenarioId": "exp26-u15-005",
@@ -64086,10 +63947,10 @@
       "topic": "Neutral-zone regroup",
       "family": "regroup-under-pressure",
       "type": "choice",
-      "prompt": "Gold 2 leaves F1’s route to close on D2. What deserves attention?",
-      "explanation": "Forecheckers changing jobs can alter the first option; reassess instead of committing mechanically.",
-      "hash": "53df52aaff1f35d769a3ab5f04e0a4314d2b1e1a03075a63aa87998f92af8e5f",
-      "review": "no-open-ai-finding"
+      "prompt": "Imagine Gold 2 leaves F1’s line while the other players stay at their shown positions. Which remaining forechecker is still nearer that direct passing line?",
+      "explanation": "Gold 1 is still near the direct line to F1. One forechecker leaving does not establish that the forward pass has reopened. Compare F1, D2 and the other lanes using the remaining pressure rather than choosing the reset or the forward pass by habit.",
+      "hash": "09838397cb41e809e806245b5aaabe7fcf16759581c68cc1ebeeaa7880088c3b",
+      "review": "independently-reviewed-experimental-repair"
     },
     {
       "scenarioId": "exp26-u15-007",
@@ -64346,10 +64207,10 @@
       "topic": "Offensive support",
       "family": "cycle-support-rotation",
       "type": "choice",
-      "prompt": "If F1 passes to YOU in that pocket, what should happen next?",
-      "explanation": "The support movement creates a new decision rather than a predetermined finish.",
-      "hash": "b26b7dfe29e5c2fcfbd6b2f66fd953409018f5a24517f4eb90c96c2686a9349c",
-      "review": "revised-and-rechecked"
+      "prompt": "Suppose F1’s pass reaches YOU and YOU control it at your shown position. Which Gold skater would then be nearest the direct shooting line?",
+      "explanation": "From YOUR shown high position, Gold 2 is nearest the direct line toward the net. Becoming the carrier creates a new pressure read; it does not predetermine a shot or a return pass. Check the low support and any Gold movement before choosing.",
+      "hash": "074fa0246e5c141b5233666fcabd6ee55bd510a2d775be8763a2639a006d99ab",
+      "review": "independently-reviewed-experimental-repair"
     },
     {
       "scenarioId": "exp26-u15-009",
@@ -65152,10 +65013,10 @@
       "topic": "Slot and low support",
       "family": "offensive-possession-reset",
       "type": "choice",
-      "prompt": "What could YOU communicate while carrying at the half wall?",
-      "explanation": "YOU are the carrier, F1 is the low support and F2 is inside. Communicate the available options without treating YOU as the off-puck receiver.",
-      "hash": "593c7e4279b8a014131534480543e1cfdc78400fc538c2ab7e09433d3aa50566",
-      "review": "no-open-ai-finding"
+      "prompt": "Which pressure call matches the current direct passing lines from YOU?",
+      "explanation": "Gold 1 is close to the direct slot line toward F2. The low line to F1 passes farther away from Gold 1, but Gold 2 and the receiving space still need checking.",
+      "hash": "0643497665b1fd15fae857ac2cbd98a88d4d34f5b507fd1c1afa0352674852c4",
+      "review": "independently-reviewed-experimental-repair"
     },
     {
       "scenarioId": "exp26-u15-015",
@@ -65295,10 +65156,10 @@
       "topic": "Power-play support",
       "family": "powerplay-draw-out",
       "type": "multi",
-      "prompt": "Which two cues support moving the puck?",
-      "explanation": "Coverage and support make the puck move useful; the structure still changes as Gold shifts.",
-      "hash": "e9e9d1208a7cd09a163d6a6506efe5a479eac940833eb6240cb52e20cb9d8da3",
-      "review": "no-open-ai-finding"
+      "prompt": "Which two observations describe the passing picture YOU must weigh?",
+      "explanation": "The inside pass needs attention to Gold 1 along its line and Gold 2 near F3. F2 offers a different angle, but positions alone do not establish a completed pass.",
+      "hash": "9817a116bd4fb36cb2073a8122a5c5fecf009fcac0189046b5e1d1d7dcb6519e",
+      "review": "independently-reviewed-experimental-repair"
     },
     {
       "scenarioId": "exp26b-u15-002",
@@ -65373,10 +65234,10 @@
       "topic": "Penalty-kill coverage",
       "family": "pk-side-shift",
       "type": "multi",
-      "prompt": "Which two cues matter during a flank-to-flank shift?",
-      "explanation": "Inside support and the next receiver guide the exchange; the puck side can change the task.",
-      "hash": "65bf5aa46948eb106614da70a6deddefe44b63315434bad20d4368f7e41edd8d",
-      "review": "no-open-ai-finding"
+      "prompt": "Before a possible pass across to Gold 5, which two current relationships help YOU identify inside coverage?",
+      "explanation": "YOU are near the middle attacker, while D1 is near Gold 2 on the current puck side. Those relationships help start the coverage conversation if Gold switches sides; they do not assign a fixed chase or guarantee coverage.",
+      "hash": "4f98a233c22945161ed788a3912581f92e1f7d6ddc01f407afe0d71825f679cf",
+      "review": "independently-reviewed-experimental-repair"
     },
     {
       "scenarioId": "exp26b-u15-003",
@@ -65529,10 +65390,10 @@
       "topic": "Zone-entry support",
       "family": "entry-support-replace",
       "type": "multi",
-      "prompt": "Which two details matter when filling high support?",
-      "explanation": "Support follows the carrier and coverage; a fixed spot can crowd or disconnect the play.",
-      "hash": "c698febf45c0463082c96a7c16d933250af18b6b6691df62dbbf429cb131d9dd",
-      "review": "no-open-ai-finding"
+      "prompt": "Which two current relationships should YOU account for when comparing support behind F2 toward the blue line?",
+      "explanation": "YOU currently sit slightly ahead of F2 in attacking depth, while Gold D1 is behind F2 toward the blue line. F3 is farther toward the goal line. A high-support move therefore needs a fresh check of Gold D1 as well as the passing line from F2.",
+      "hash": "f53361499e3096271abc133b657f57998896fd55fec6284940f4ec2c24ca5552",
+      "review": "independently-reviewed-experimental-repair"
     },
     {
       "scenarioId": "exp26b-u15-005",
@@ -65724,10 +65585,10 @@
       "topic": "Neutral-zone regroup",
       "family": "neutral-regroup-angle",
       "type": "choice",
-      "prompt": "Gold 2 steps toward F1 while Gold 1 stays wide. What is useful?",
-      "explanation": "The pressure picture changed, so the reset and forward options need a fresh comparison.",
-      "hash": "029d060b57b47ec6e06d129c86294b2d3771bdca4721dddc133f4e9b246923dc",
-      "review": "no-open-ai-finding"
+      "prompt": "Imagine Gold 2 steps toward F1 while Gold 1 stays at the shown spot. Which current direct passing line stays farther from Gold 1?",
+      "explanation": "The reset line toward D2 runs away from Gold 1’s shown position, while Gold 1 is closer to the forward line toward F1. Recheck Gold 2, D2’s receiving space and the live pressure before choosing either pass.",
+      "hash": "e2517ef3ffd5d6b4eabe382c329f2a5934490e551b262b699762b6d337ff7352",
+      "review": "independently-reviewed-experimental-repair"
     },
     {
       "scenarioId": "exp26b-u15-007",
@@ -65880,10 +65741,10 @@
       "topic": "Offensive support",
       "family": "cycle-high-outlet",
       "type": "choice",
-      "prompt": "Gold 1 leaves the slot to pressure the puck. What should YOU weigh?",
-      "explanation": "Gold 1 leaving can open an inside branch, but F1’s passing route and Gold 2’s coverage still need a scan.",
-      "hash": "03bf3a0b61359bf3ce5acf099abc93dd6636bdd668a4178ec504342a6dafccda",
-      "review": "no-open-ai-finding"
+      "prompt": "Imagine Gold 1 leaves the slot to pressure F1. With the other skaters at their shown spots, which remaining defender is closer to YOU and needs checking before an inside reoffer?",
+      "explanation": "Gold 2 is close to YOU on the high side. Gold 1 leaving the slot does not remove that pressure; check Gold 2 and the new line from F1 before moving or asking for the puck.",
+      "hash": "d31e18a8643bfe7a23dab662b726768ba8840b0de8b5a3c553d75b15fafd357f",
+      "review": "independently-reviewed-experimental-repair"
     },
     {
       "scenarioId": "exp26b-u15-009",
@@ -66231,10 +66092,10 @@
       "topic": "Puck management",
       "family": "line-change-possession",
       "type": "multi",
-      "prompt": "Which two checks matter with one support option missing?",
-      "explanation": "A reset and a forward route preserve choices while the line change reduces one support option.",
-      "hash": "4d3f550348b008bcfa2347b9554ec0ce88397f52c2efc615fd299ab6ae224ef0",
-      "review": "no-open-ai-finding"
+      "prompt": "With F3 unavailable, which two pressure comparisons match the current forward passing lines?",
+      "explanation": "Gold 1 is nearer F1’s direct line, while Gold 2 is nearer F2’s. Compare those pressures with the reset toward D2; the line change does not select a pass by itself.",
+      "hash": "8af4ea6d8f582de439c3d54fb857262d53e139bbcace9aab9bb9b708ff7fb911",
+      "review": "independently-reviewed-experimental-repair"
     },
     {
       "scenarioId": "exp26b-u15-014",
@@ -66270,10 +66131,10 @@
       "topic": "Puck management",
       "family": "line-change-possession",
       "type": "choice",
-      "prompt": "A new F3 appears in a clear middle lane. What can YOU reconsider?",
-      "explanation": "The new player changes the support picture, but the carrier still checks access and pressure.",
-      "hash": "2d9d961db78cbdd8198480d3affc92b7a20ade44a81de69c2b26240c827ed079",
-      "review": "no-open-ai-finding"
+      "prompt": "Before an arriving replacement offers support behind YOU toward Navy’s net, which Gold defender is already on that side of YOU?",
+      "explanation": "Gold 3 is behind YOU toward Navy’s net. Check that pressure as well as D2 and the passing line before using a new deeper outlet; the replacement’s exact arrival point and reachability are not shown.",
+      "hash": "b627f15985334026a27f097e3bea312d8ccc41646a9a22fb795400b943cf5672",
+      "review": "independently-reviewed-experimental-repair"
     },
     {
       "scenarioId": "exp26b-u15-014",
@@ -66348,10 +66209,10 @@
       "topic": "Offensive possession",
       "family": "slot-crowding-reset",
       "type": "choice",
-      "prompt": "Gold 1 leaves F2 to pressure YOU on the wall. What should be weighed?",
-      "explanation": "The defender move may open F2, but carrier angle and F1 support still determine the connected choice.",
-      "hash": "d3102383b8418f617df6fedabd29b2448ba4b39412ae938eee81b8b7c256e6c2",
-      "review": "no-open-ai-finding"
+      "prompt": "Imagine Gold 1 leaves F2 to pressure YOU. With Gold 2 staying shown, which current direct passing line is nearer Gold 2?",
+      "explanation": "Gold 2 is close to the direct low line toward F1 and farther from the line to F2. That gives YOU a reason to compare F2 again, while checking the new Gold 1 position and the receiving space before passing.",
+      "hash": "cb124f2e45dd9ef1c794a52e8ced5748bb7218bfb05e4aa157e0dd132d127979",
+      "review": "independently-reviewed-experimental-repair"
     },
     {
       "scenarioId": "exp26b-u15-015",
@@ -66426,10 +66287,10 @@
       "topic": "Clock and risk",
       "family": "late-game-possession",
       "type": "choice",
-      "prompt": "F1 becomes clearly open beyond Gold 1 with room to retain the puck. What changes?",
-      "explanation": "A lower-risk forward option can be consistent with protecting a lead.",
-      "hash": "9b7dc5a2137d737a3bc7c54c2b87d7c9e7a563d8392724bd120335f0f811c065",
-      "review": "revised-and-rechecked"
+      "prompt": "With the lead and 48 seconds left, compare the current forward lines to F1 and F2. Which line stays farther from Gold 1?",
+      "explanation": "The F1 line passes farther from Gold 1 than the F2 line does. That is one useful pressure check for a controlled forward option; receiving pressure, other Gold players and defensive support still matter.",
+      "hash": "f11a04fb5a7a432410dc1e44cbe9110617c6e3934658d2fd71783b46134631aa",
+      "review": "independently-reviewed-experimental-repair"
     },
     {
       "scenarioId": "exp26-u18-001",
@@ -66452,10 +66313,10 @@
       "topic": "Clock and risk",
       "family": "late-game-possession",
       "type": "choice",
-      "prompt": "What should YOU communicate with 48 seconds left?",
-      "explanation": "The message balances the stated lead with a conditional forward choice.",
-      "hash": "1a1cebf9de92447ca59a832ec6d39e3885cef94c315ad170c40dbbc1a67a9f16",
-      "review": "no-open-ai-finding"
+      "prompt": "Which call accurately compares Gold 1’s pressure on the two support lines to D2 and F3?",
+      "explanation": "Gold 1 is closer to the F3 line. The D2 reset deserves comparison with the forward options, while the lead, receiver pressure and next defensive support remain part of the decision.",
+      "hash": "e0006032007c5987f796b5664d0c69214ddd8a4a9ba12cde7b2d8653f90c8d0c",
+      "review": "independently-reviewed-experimental-repair"
     },
     {
       "scenarioId": "exp26-u18-001",
@@ -66517,10 +66378,10 @@
       "topic": "Clock and attacking support",
       "family": "late-game-attack",
       "type": "multi",
-      "prompt": "Choose two considerations for generating a remaining chance.",
-      "explanation": "Time matters, but a rushed blocked shot and a clearer available connection are different possibilities.",
-      "hash": "fd4f0a55ccf37fd3b8d5c0c56819107d5cb18fb99b2037d6be68eadc7ee8105a",
-      "review": "revised-and-rechecked"
+      "prompt": "With 32 seconds left, which two current pressure relationships matter when comparing F1 near the net and F2 across the high slot?",
+      "explanation": "The two connections face different defenders: Gold 1 near the F1 line and Gold 3 near the F2 line. Check whether either connection can create a feasible attempt in the remaining time; the static picture does not establish pass or shot timing.",
+      "hash": "c7574074fdcba9f06a7ee1b973a10deb879acc1dee41847015bb8c161e757d70",
+      "review": "independently-reviewed-experimental-repair"
     },
     {
       "scenarioId": "exp26-u18-002",
@@ -66946,10 +66807,10 @@
       "topic": "Transition support",
       "family": "defender-activation",
       "type": "choice",
-      "prompt": "F1 bobbles the puck as Gold 3 accelerates. What deserves a fresh decision?",
-      "explanation": "Possession quality and pressure changed, so the original support choice may no longer fit.",
-      "hash": "bb22b037a318a698468c1bc6ae8fd6875a9236c7112455353ff231dd17f04712",
-      "review": "no-open-ai-finding"
+      "prompt": "Imagine F1 bobbles the puck before YOU join the second wave. Which Gold player is currently closest to both YOU and F1, making that pressure especially relevant to the hold-or-join decision?",
+      "explanation": "Gold 3 is near both the supporting defender and F1. Check the actual puck contest and D2’s cover before continuing the activation; a bobble alone does not establish Gold possession.",
+      "hash": "644b13601611fd026a29e2090b475dd253af645e20d9af682451e8d6f360cc48",
+      "review": "independently-reviewed-experimental-repair"
     },
     {
       "scenarioId": "exp26-u18-005",
@@ -67427,10 +67288,10 @@
       "topic": "Receiving and scanning",
       "family": "receiving-under-fast-pressure",
       "type": "multi",
-      "prompt": "Which two cues should affect the first-touch option?",
-      "explanation": "Preparation enables an early option, but a changed route or difficult reception can require another action.",
-      "hash": "118713b99a9c28286b10ab0071e39649b888d3d24df73940e477ea926474da32",
-      "review": "no-open-ai-finding"
+      "prompt": "While D1’s pass is still travelling toward YOU, which two current receiver-pressure relationships belong in the pre-scan?",
+      "explanation": "F1 has Gold 1 nearby, and F2 has Gold 2 nearby. Prepare alternatives using those pressures, then update the arriving puck quality and passing lines before choosing a redirect or a controlling touch.",
+      "hash": "0577ab7a0473c98fef0e35d4d06dde41348eea671cd1a2a8d80d67e897ec5725",
+      "review": "independently-reviewed-experimental-repair"
     },
     {
       "scenarioId": "exp26-u18-009",
@@ -67726,10 +67587,10 @@
       "topic": "Clock and risk",
       "family": "late-lead-possession",
       "type": "choice",
-      "prompt": "F1 opens with room to retain the puck. What changes?",
-      "explanation": "F1 becoming reachable changes the safe-possession branch; the clock does not make one action automatic.",
-      "hash": "7b02d231042631a86645ab680b59ffd0c8eeefb57571001dfac18e5fd3724879",
-      "review": "no-open-ai-finding"
+      "prompt": "With one minute left and a one-goal lead, which current forward passing line stays farther from Gold 2?",
+      "explanation": "Gold 2 is much nearer the F2 line than the F1 line. That favours examining F1 as a controlled outlet, but Gold 1, Gold 3 and F1’s receiving space still need checking before a pass.",
+      "hash": "3d88ff7067496cd7b02cfa29872650744adc8377d0ee2efeff014a04f6122d07",
+      "review": "independently-reviewed-experimental-repair"
     },
     {
       "scenarioId": "exp26b-u18-001",
@@ -67960,10 +67821,10 @@
       "topic": "Special-teams rotation",
       "family": "pk-backdoor-rotate",
       "type": "choice",
-      "prompt": "Gold 2 receives below the line and Gold 3 cuts inward. What needs updating?",
-      "explanation": "Two attacker routes changed, so update who protects the inside and backdoor.",
-      "hash": "13572dfe8493cc73cc97381ffbbe64270456d47e4af57017e81187d7eb0c16d9",
-      "review": "no-open-ai-finding"
+      "prompt": "Imagine Gold 3 cuts inward while Gold 2 stays at the shown spot. No teammate has confirmed a coverage handoff. Under this drill’s assignment, which attacker remains YOUR low responsibility as YOU call out the new threat?",
+      "explanation": "Keep responsibility for Gold 2 until a teammate confirms the exchange, while communicating Gold 3’s new threat. If the handoff is confirmed or the attack changes again, update the coverage; this drill condition does not prescribe one skating route.",
+      "hash": "d939cac2ca29203552ca8bdc8fbbb8416cfd656f4a1f0b2ae1ef7b75c7416ea4",
+      "review": "independently-reviewed-experimental-repair"
     },
     {
       "scenarioId": "exp26b-u18-004",

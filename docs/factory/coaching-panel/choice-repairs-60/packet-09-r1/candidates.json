@@ -1,0 +1,2593 @@
+{
+  "schemaVersion": 1,
+  "status": "draft",
+  "author": "/root/choice_review_strong",
+  "authorQualification": "advisory-only preserved",
+  "humanCoachApproval": false,
+  "applied": false,
+  "packet": "09",
+  "changes": [
+    {
+      "scenarioId": "exp26-u13-015",
+      "questionId": "exp26-u13-015-q5",
+      "fromVersion": 2,
+      "toVersion": 3,
+      "before": {
+        "id": "exp26-u13-015-q5",
+        "type": "choice",
+        "prompt": "Gold 1 passes inside to Gold 2. What deserves attention now?",
+        "options": [
+          {
+            "id": "a",
+            "text": "Remain beside the wall and ignore the pass"
+          },
+          {
+            "id": "b",
+            "text": "Recover toward the new puck threat"
+          },
+          {
+            "id": "c",
+            "text": "Complete the old approach regardless"
+          }
+        ],
+        "answer": [
+          "b"
+        ],
+        "explanation": "A release changes the threat. Retaining recovery momentum helps the next defensive action.",
+        "basis": "coaching"
+      },
+      "after": {
+        "id": "exp26-u13-015-q5",
+        "type": "choice",
+        "prompt": "If Gold 2 receives and controls a pass at the shown position, which Navy defender starts closer to that new carrier?",
+        "options": [
+          {
+            "id": "a",
+            "text": "D1"
+          },
+          {
+            "id": "b",
+            "text": "YOU"
+          }
+        ],
+        "answer": [
+          "a"
+        ],
+        "explanation": "D1 starts closer to Gold 2 than YOU do. Use that information when communicating about the new threat and your recovery. It does not establish who can close in time or require both defenders to follow the new puck carrier.",
+        "basis": "coaching"
+      },
+      "beforeHash": "d29e08f33956f637a4abf392afdf1857642ea7dfce9520ae6db7a504ecf6f0fc",
+      "afterHash": "d68ce5190247952a5466b4340bdbcf099098e72690c977ed7c6da607420a23a3",
+      "optionReasons": [
+        {
+          "optionId": "a",
+          "reason": "D1(-14,0) toGold2(-11,-3) about4.24m; closer actual defender."
+        },
+        {
+          "optionId": "b",
+          "reason": "YOU(-3,3) toGold2 about10m; farther does not remove recovery responsibility."
+        }
+      ],
+      "geometry": {
+        "puck": {
+          "owner": "away-skater-1",
+          "x": -7,
+          "y": 8.3
+        },
+        "actors": [
+          {
+            "id": "home-skater-1",
+            "label": "YOU",
+            "team": "home",
+            "role": "skater",
+            "x": -3,
+            "y": 3,
+            "facing": 2.0344439357957027
+          },
+          {
+            "id": "home-skater-2",
+            "label": "D1",
+            "team": "home",
+            "role": "skater",
+            "x": -14,
+            "y": 0,
+            "facing": 0.844153986113171
+          },
+          {
+            "id": "away-skater-1",
+            "label": "A1",
+            "team": "away",
+            "role": "skater",
+            "x": -6,
+            "y": 9,
+            "facing": 3.141592653589793
+          },
+          {
+            "id": "away-skater-2",
+            "label": "A2",
+            "team": "away",
+            "role": "skater",
+            "x": -11,
+            "y": -3,
+            "facing": 1.176005207095135
+          }
+        ],
+        "actorDistances": [
+          {
+            "a": "YOU",
+            "b": "D1",
+            "distance": 11.40175425099138
+          },
+          {
+            "a": "YOU",
+            "b": "A1",
+            "distance": 6.708203932499369
+          },
+          {
+            "a": "YOU",
+            "b": "A2",
+            "distance": 10
+          },
+          {
+            "a": "D1",
+            "b": "A1",
+            "distance": 12.041594578792296
+          },
+          {
+            "a": "D1",
+            "b": "A2",
+            "distance": 4.242640687119286
+          },
+          {
+            "a": "A1",
+            "b": "A2",
+            "distance": 13
+          }
+        ],
+        "puckToPlayerLines": [
+          {
+            "receiver": "YOU",
+            "distance": 6.640030120413613,
+            "otherSkaterGaps": [
+              {
+                "actor": "D1",
+                "team": "home",
+                "gap": 10.587301371401153
+              },
+              {
+                "actor": "A2",
+                "team": "away",
+                "gap": 9.999954638137078
+              }
+            ]
+          },
+          {
+            "receiver": "D1",
+            "distance": 10.857716150277644,
+            "otherSkaterGaps": [
+              {
+                "actor": "YOU",
+                "team": "home",
+                "gap": 6.474658116587652
+              },
+              {
+                "actor": "A2",
+                "team": "away",
+                "gap": 4.242640687119286
+              }
+            ]
+          },
+          {
+            "receiver": "A2",
+            "distance": 11.987076374162301,
+            "otherSkaterGaps": [
+              {
+                "actor": "YOU",
+                "team": "home",
+                "gap": 5.539298985624447
+              },
+              {
+                "actor": "D1",
+                "team": "home",
+                "gap": 3.829123846990393
+              }
+            ]
+          }
+        ],
+        "method": "Canonical makeScene puck with owner-facing offset; finite point-to-segment geometry and actor distances in metres. Not a reach/timing/safety model."
+      },
+      "authorRationale": "Updates to a specifically controlled new carrier while preserving coordination, not automatic puck-chase.",
+      "otherQuestionsInspected": [
+        {
+          "id": "exp26-u13-015-q1",
+          "prompt": "Where is Gold 1 carrying the puck?"
+        },
+        {
+          "id": "exp26-u13-015-q2",
+          "prompt": "Which two relationships fit the stated angling goal?"
+        },
+        {
+          "id": "exp26-u13-015-q3",
+          "prompt": "Order one angling read from this freeze."
+        },
+        {
+          "id": "exp26-u13-015-q4",
+          "prompt": "Move YOU to compare an inside, net-side approach to Gold 1."
+        },
+        {
+          "id": "exp26-u13-015-q6",
+          "prompt": "Why can a fast approach be unhelpful if it sends you past Gold 1?"
+        },
+        {
+          "id": "exp26-u13-015-q7",
+          "prompt": "Which teammate can support behind YOU if Gold 1 turns inside?"
+        },
+        {
+          "id": "exp26-u13-015-q8",
+          "prompt": "Which two conditions support an inside angle?"
+        },
+        {
+          "id": "exp26-u13-015-q9",
+          "prompt": "Move YOU toward Navy’s net while staying nearer the middle than Gold 1."
+        },
+        {
+          "id": "exp26-u13-015-q10",
+          "prompt": "Why is the wall the preferred direction in this angle, while still requiring a read?"
+        }
+      ],
+      "limits": [
+        "Advisory authorship, not independent approval or human coaching certification.",
+        "Exact setup and all other source metadata preserved; no source-bank write.",
+        "No rendered/mobile view inspected by author; no speed, gaze, contact, pass completion or route safety inferred.",
+        "Verbal hypothetical, when used, explicitly states changed state; old frozen positions do not prove its execution."
+      ],
+      "status": "draft"
+    },
+    {
+      "scenarioId": "exp26-u13-016",
+      "questionId": "exp26-u13-016-q5",
+      "fromVersion": 2,
+      "toVersion": 3,
+      "before": {
+        "id": "exp26-u13-016-q5",
+        "type": "choice",
+        "prompt": "If Gold 2 moves higher into the slot, what should you do?",
+        "options": [
+          {
+            "id": "a",
+            "text": "Update the relationship and communicate"
+          },
+          {
+            "id": "b",
+            "text": "Keep marking the empty spot Gold 2 left"
+          },
+          {
+            "id": "c",
+            "text": "Chase the half-wall puck without checking"
+          }
+        ],
+        "answer": [
+          "a"
+        ],
+        "explanation": "The assignment concerns a changing threat, not a permanent painted spot.",
+        "basis": "coaching"
+      },
+      "after": {
+        "id": "exp26-u13-016-q5",
+        "type": "choice",
+        "prompt": "Which relationship needs attention before YOU treat the low-slot threat as covered?",
+        "options": [
+          {
+            "id": "a",
+            "text": "Gold 2 is closer to Navy’s net than YOU are"
+          },
+          {
+            "id": "b",
+            "text": "YOU are closer to Navy’s net than Gold 2 is"
+          }
+        ],
+        "answer": [
+          "a"
+        ],
+        "explanation": "Gold 2 is currently nearer the defended net than YOU. That is a coverage concern to account for while checking the puck and communicating with D1. A future adjustment should respond to the actual threat; this still frame does not prove a pass, shot or required tracking route.",
+        "basis": "scene"
+      },
+      "beforeHash": "43587afaf839fc34828ef02a173d80733dd310951c26fdecb0d68699087de4f1",
+      "afterHash": "24991bc39d33d1eee492bd312a473ef84c5151545deef40b8a015debae771cc9",
+      "optionReasons": [
+        {
+          "optionId": "a",
+          "reason": "Gold2x-23 versusYOUx-18; canonical left-net distance comparison agrees."
+        },
+        {
+          "optionId": "b",
+          "reason": "Reverses actual net-side relationship; could describe a different coverage position, not current frame."
+        }
+      ],
+      "geometry": {
+        "puck": {
+          "owner": "away-skater-1",
+          "x": -18,
+          "y": 8.3
+        },
+        "actors": [
+          {
+            "id": "home-skater-1",
+            "label": "YOU",
+            "team": "home",
+            "role": "skater",
+            "x": -18,
+            "y": -5,
+            "facing": 1.4994888620096063
+          },
+          {
+            "id": "home-skater-2",
+            "label": "D1",
+            "team": "home",
+            "role": "skater",
+            "x": -18,
+            "y": 6,
+            "facing": 1.2490457723982544
+          },
+          {
+            "id": "away-skater-1",
+            "label": "A1",
+            "team": "away",
+            "role": "skater",
+            "x": -17,
+            "y": 9,
+            "facing": 3.141592653589793
+          },
+          {
+            "id": "away-skater-2",
+            "label": "A2",
+            "team": "away",
+            "role": "skater",
+            "x": -23,
+            "y": -3,
+            "facing": 1.1071487177940904
+          },
+          {
+            "id": "home-goalie-3",
+            "label": "G",
+            "team": "home",
+            "role": "goalie",
+            "x": -26,
+            "y": 0,
+            "facing": 0
+          }
+        ],
+        "actorDistances": [
+          {
+            "a": "YOU",
+            "b": "D1",
+            "distance": 11
+          },
+          {
+            "a": "YOU",
+            "b": "A1",
+            "distance": 14.0356688476182
+          },
+          {
+            "a": "YOU",
+            "b": "A2",
+            "distance": 5.385164807134505
+          },
+          {
+            "a": "YOU",
+            "b": "G",
+            "distance": 9.433981132056603
+          },
+          {
+            "a": "D1",
+            "b": "A1",
+            "distance": 3.1622776601683795
+          },
+          {
+            "a": "D1",
+            "b": "A2",
+            "distance": 10.295630140987
+          },
+          {
+            "a": "D1",
+            "b": "G",
+            "distance": 10
+          },
+          {
+            "a": "A1",
+            "b": "A2",
+            "distance": 13.416407864998739
+          },
+          {
+            "a": "A1",
+            "b": "G",
+            "distance": 12.727922061357857
+          },
+          {
+            "a": "A2",
+            "b": "G",
+            "distance": 4.242640687119286
+          }
+        ],
+        "puckToPlayerLines": [
+          {
+            "receiver": "YOU",
+            "distance": 13.3,
+            "otherSkaterGaps": [
+              {
+                "actor": "D1",
+                "team": "home",
+                "gap": 0
+              },
+              {
+                "actor": "A2",
+                "team": "away",
+                "gap": 5
+              }
+            ]
+          },
+          {
+            "receiver": "D1",
+            "distance": 2.3000000000000007,
+            "otherSkaterGaps": [
+              {
+                "actor": "YOU",
+                "team": "home",
+                "gap": 11
+              },
+              {
+                "actor": "A2",
+                "team": "away",
+                "gap": 10.295630140987
+              }
+            ]
+          },
+          {
+            "receiver": "A2",
+            "distance": 12.356779515715251,
+            "otherSkaterGaps": [
+              {
+                "actor": "YOU",
+                "team": "home",
+                "gap": 5.381661129052748
+              },
+              {
+                "actor": "D1",
+                "team": "home",
+                "gap": 0.9306632027685205
+              }
+            ]
+          },
+          {
+            "receiver": "G",
+            "distance": 11.527792503337315,
+            "otherSkaterGaps": [
+              {
+                "actor": "YOU",
+                "team": "home",
+                "gap": 9.229867727858306
+              },
+              {
+                "actor": "D1",
+                "team": "home",
+                "gap": 1.5961425394040685
+              },
+              {
+                "actor": "A2",
+                "team": "away",
+                "gap": 4.242640687119286
+              }
+            ]
+          }
+        ],
+        "method": "Canonical makeScene puck with owner-facing offset; finite point-to-segment geometry and actor distances in metres. Not a reach/timing/safety model."
+      },
+      "authorRationale": "Makes current coverage vulnerability inspectable rather than following empty spot/unchecked chase; complements assigned-threat identification with actual net relationship.",
+      "otherQuestionsInspected": [
+        {
+          "id": "exp26-u13-016-q1",
+          "prompt": "Which opponent is the assigned off-puck threat?"
+        },
+        {
+          "id": "exp26-u13-016-q2",
+          "prompt": "Select two things to keep in view."
+        },
+        {
+          "id": "exp26-u13-016-q3",
+          "prompt": "Arrange one weak-side checking routine."
+        },
+        {
+          "id": "exp26-u13-016-q4",
+          "prompt": "Move YOU to compare a net-side position near the low slot."
+        },
+        {
+          "id": "exp26-u13-016-q6",
+          "prompt": "Describe a way to check the half wall without forgetting the low-slot threat."
+        },
+        {
+          "id": "exp26-u13-016-q7",
+          "prompt": "What should YOU call while D1 pressures Gold 1 on the wall?"
+        },
+        {
+          "id": "exp26-u13-016-q8",
+          "prompt": "Which two checks let YOU support without puck-chasing?"
+        },
+        {
+          "id": "exp26-u13-016-q9",
+          "prompt": "Move YOU to compare a net-side position near Gold 2."
+        },
+        {
+          "id": "exp26-u13-016-q10",
+          "prompt": "How can you check the puck side without abandoning Gold 2?"
+        }
+      ],
+      "limits": [
+        "Advisory authorship, not independent approval or human coaching certification.",
+        "Exact setup and all other source metadata preserved; no source-bank write.",
+        "No rendered/mobile view inspected by author; no speed, gaze, contact, pass completion or route safety inferred.",
+        "Verbal hypothetical, when used, explicitly states changed state; old frozen positions do not prove its execution."
+      ],
+      "status": "draft"
+    },
+    {
+      "scenarioId": "exp26-u13-017",
+      "questionId": "exp26-u13-017-q2",
+      "fromVersion": 2,
+      "toVersion": 3,
+      "before": {
+        "id": "exp26-u13-017-q2",
+        "type": "multi",
+        "prompt": "What two reads could make your recovery useful?",
+        "options": [
+          {
+            "id": "a",
+            "text": "What D1 is already covering"
+          },
+          {
+            "id": "b",
+            "text": "How to chase exactly behind Gold 1 regardless of support"
+          },
+          {
+            "id": "c",
+            "text": "Where Gold 2 can become dangerous"
+          }
+        ],
+        "answer": [
+          "a",
+          "c"
+        ],
+        "explanation": "Recovery should complement the defender and account for the inside option.",
+        "basis": "coaching"
+      },
+      "after": {
+        "id": "exp26-u13-017-q2",
+        "type": "multi",
+        "prompt": "Which two starting relationships matter when YOU plan to help the recovery?",
+        "options": [
+          {
+            "id": "a",
+            "text": "YOU are farther from Navy’s end along the rink than both gold attackers"
+          },
+          {
+            "id": "b",
+            "text": "D1 is closer to Gold 1 than YOU are"
+          },
+          {
+            "id": "c",
+            "text": "YOU are already between both gold attackers and Navy’s net"
+          }
+        ],
+        "answer": [
+          "a",
+          "b"
+        ],
+        "explanation": "YOU are still behind both attackers along the rink, and D1 is nearer Gold 1. Those facts matter when coordinating recovery toward the separate inside threat. They do not prove D1 has stopped the carrier or that YOU can reach a particular target in time.",
+        "basis": "scene"
+      },
+      "beforeHash": "5be5d1c2702da61e3f352e94c0cea91294471024165187d133a2d14cfca4f564",
+      "afterHash": "c9d9b4a258e0ec7f8ed9a079a42b4959749bfb07fb5ff33f80ec6040ab4e4e54",
+      "optionReasons": [
+        {
+          "optionId": "a",
+          "reason": "YOUx8 versusGold1-3/Gold2-2 is fartherfromdefendedleftend."
+        },
+        {
+          "optionId": "b",
+          "reason": "D1-toGold1 about8.06m versusYOU-toGold1 about11.18m."
+        },
+        {
+          "optionId": "c",
+          "reason": "Opposite of actual longitudinal ordering; YOU are not already net-side."
+        }
+      ],
+      "geometry": {
+        "puck": {
+          "owner": "away-skater-1",
+          "x": -4,
+          "y": 7.3
+        },
+        "actors": [
+          {
+            "id": "home-skater-1",
+            "label": "YOU",
+            "team": "home",
+            "role": "skater",
+            "x": 8,
+            "y": 6,
+            "facing": 2.961739153797315
+          },
+          {
+            "id": "home-skater-2",
+            "label": "D1",
+            "team": "home",
+            "role": "skater",
+            "x": -10,
+            "y": 4,
+            "facing": 0.5191461142465229
+          },
+          {
+            "id": "away-skater-1",
+            "label": "A1",
+            "team": "away",
+            "role": "skater",
+            "x": -3,
+            "y": 8,
+            "facing": 3.141592653589793
+          },
+          {
+            "id": "away-skater-2",
+            "label": "A2",
+            "team": "away",
+            "role": "skater",
+            "x": -2,
+            "y": -1,
+            "facing": 1.6814535479687922
+          }
+        ],
+        "actorDistances": [
+          {
+            "a": "YOU",
+            "b": "D1",
+            "distance": 18.110770276274835
+          },
+          {
+            "a": "YOU",
+            "b": "A1",
+            "distance": 11.180339887498947
+          },
+          {
+            "a": "YOU",
+            "b": "A2",
+            "distance": 12.206555615733702
+          },
+          {
+            "a": "D1",
+            "b": "A1",
+            "distance": 8.06225774829855
+          },
+          {
+            "a": "D1",
+            "b": "A2",
+            "distance": 9.433981132056603
+          },
+          {
+            "a": "A1",
+            "b": "A2",
+            "distance": 9.055385138137417
+          }
+        ],
+        "puckToPlayerLines": [
+          {
+            "receiver": "YOU",
+            "distance": 12.070211265756702,
+            "otherSkaterGaps": [
+              {
+                "actor": "D1",
+                "team": "home",
+                "gap": 6.847627326307997
+              },
+              {
+                "actor": "A2",
+                "team": "away",
+                "gap": 8.036313355607113
+              }
+            ]
+          },
+          {
+            "receiver": "D1",
+            "distance": 6.847627326307997,
+            "otherSkaterGaps": [
+              {
+                "actor": "YOU",
+                "team": "home",
+                "gap": 12.070211265756702
+              },
+              {
+                "actor": "A2",
+                "team": "away",
+                "gap": 8.236429541560483
+              }
+            ]
+          },
+          {
+            "receiver": "A2",
+            "distance": 8.537564055396599,
+            "otherSkaterGaps": [
+              {
+                "actor": "YOU",
+                "team": "home",
+                "gap": 11.361554580511319
+              },
+              {
+                "actor": "D1",
+                "team": "home",
+                "gap": 6.606099776709674
+              }
+            ]
+          }
+        ],
+        "method": "Canonical makeScene puck with owner-facing offset; finite point-to-segment geometry and actor distances in metres. Not a reach/timing/safety model."
+      },
+      "authorRationale": "Checks recovery starting constraints instead of a regardless-of-support chase; no speed or coverage success inferred.",
+      "otherQuestionsInspected": [
+        {
+          "id": "exp26-u13-017-q1",
+          "prompt": "Which attacker is the inside support option?"
+        },
+        {
+          "id": "exp26-u13-017-q3",
+          "prompt": "Arrange one recovery decision."
+        },
+        {
+          "id": "exp26-u13-017-q4",
+          "prompt": "Move YOU to illustrate recovery through the middle toward Gold 2."
+        },
+        {
+          "id": "exp26-u13-017-q5",
+          "prompt": "If Gold 2 receives the pass before you arrive, what changes?"
+        },
+        {
+          "id": "exp26-u13-017-q6",
+          "prompt": "How would you know you are helping D1 rather than duplicating D1’s job?"
+        },
+        {
+          "id": "exp26-u13-017-q7",
+          "prompt": "Which Navy defender starts closer to the net than Gold 1?"
+        },
+        {
+          "id": "exp26-u13-017-q8",
+          "prompt": "Which two facts shape your useful recovery?"
+        },
+        {
+          "id": "exp26-u13-017-q9",
+          "prompt": "Move YOU to an example middle recovery target closer to Navy’s net than Gold 2."
+        },
+        {
+          "id": "exp26-u13-017-q10",
+          "prompt": "How would you know you are helping D1 rather than skating into D1’s job?"
+        }
+      ],
+      "limits": [
+        "Advisory authorship, not independent approval or human coaching certification.",
+        "Exact setup and all other source metadata preserved; no source-bank write.",
+        "No rendered/mobile view inspected by author; no speed, gaze, contact, pass completion or route safety inferred.",
+        "Verbal hypothetical, when used, explicitly states changed state; old frozen positions do not prove its execution."
+      ],
+      "status": "draft"
+    },
+    {
+      "scenarioId": "exp26-u13-020",
+      "questionId": "exp26-u13-020-q2",
+      "fromVersion": 2,
+      "toVersion": 3,
+      "before": {
+        "id": "exp26-u13-020-q2",
+        "type": "multi",
+        "prompt": "Choose two checks before joining the corner.",
+        "options": [
+          {
+            "id": "a",
+            "text": "Whether D1 needs help"
+          },
+          {
+            "id": "b",
+            "text": "Whether two defenders near every puck is always better"
+          },
+          {
+            "id": "c",
+            "text": "Who would cover Gold 2"
+          }
+        ],
+        "answer": [
+          "a",
+          "c"
+        ],
+        "explanation": "Extra puck pressure can leave another threat; the stated assignment matters.",
+        "basis": "coaching"
+      },
+      "after": {
+        "id": "exp26-u13-020-q2",
+        "type": "multi",
+        "prompt": "Which two defender-to-attacker relationships support the stated division of jobs in this view?",
+        "options": [
+          {
+            "id": "a",
+            "text": "D1 is nearer Gold 1 than YOU are"
+          },
+          {
+            "id": "b",
+            "text": "YOU are nearer Gold 2 than D1 is"
+          },
+          {
+            "id": "c",
+            "text": "Gold 2 is farther toward the side boards than either Navy defender"
+          }
+        ],
+        "answer": [
+          "a",
+          "b"
+        ],
+        "explanation": "D1 is nearer the corner carrier and YOU are nearer the inside attacker. Those positions fit the stated plan, but do not prove containment or forbid helping. If the puck threat changes, communicate who can account for each attacker before changing jobs.",
+        "basis": "scene"
+      },
+      "beforeHash": "1a934032f94b9c0a9710c9dc3e78e37c7950068597276190f2170ce4eccd3d87",
+      "afterHash": "616e068fd9f1994bf30e1bda8336380c67240cf63819a430f17438ef63811e86",
+      "optionReasons": [
+        {
+          "optionId": "a",
+          "reason": "D1(-23,-8) toGold1(-25,-9) sqrt5 versusYOU(-23,1) sqrt104."
+        },
+        {
+          "optionId": "b",
+          "reason": "YOUtoGold2(-18,0) sqrt26 versusD1toGold2 sqrt89."
+        },
+        {
+          "optionId": "c",
+          "reason": "Gold2y0 is central; |y|0 smaller thanYOU1/D1 8."
+        }
+      ],
+      "geometry": {
+        "puck": {
+          "owner": "away-skater-1",
+          "x": -26,
+          "y": -9.7
+        },
+        "actors": [
+          {
+            "id": "home-skater-1",
+            "label": "YOU",
+            "team": "home",
+            "role": "skater",
+            "x": -23,
+            "y": 1,
+            "facing": -1.7681918866447774
+          },
+          {
+            "id": "home-skater-2",
+            "label": "D1",
+            "team": "home",
+            "role": "skater",
+            "x": -23,
+            "y": -8,
+            "facing": -2.677945044588987
+          },
+          {
+            "id": "away-skater-1",
+            "label": "A1",
+            "team": "away",
+            "role": "skater",
+            "x": -25,
+            "y": -9,
+            "facing": 3.141592653589793
+          },
+          {
+            "id": "away-skater-2",
+            "label": "A2",
+            "team": "away",
+            "role": "skater",
+            "x": -18,
+            "y": 0,
+            "facing": -2.2318394956455836
+          }
+        ],
+        "actorDistances": [
+          {
+            "a": "YOU",
+            "b": "D1",
+            "distance": 9
+          },
+          {
+            "a": "YOU",
+            "b": "A1",
+            "distance": 10.19803902718557
+          },
+          {
+            "a": "YOU",
+            "b": "A2",
+            "distance": 5.099019513592785
+          },
+          {
+            "a": "D1",
+            "b": "A1",
+            "distance": 2.23606797749979
+          },
+          {
+            "a": "D1",
+            "b": "A2",
+            "distance": 9.433981132056603
+          },
+          {
+            "a": "A1",
+            "b": "A2",
+            "distance": 11.40175425099138
+          }
+        ],
+        "puckToPlayerLines": [
+          {
+            "receiver": "YOU",
+            "distance": 11.112605455067682,
+            "otherSkaterGaps": [
+              {
+                "actor": "D1",
+                "team": "home",
+                "gap": 2.4296732309241835
+              },
+              {
+                "actor": "A2",
+                "team": "away",
+                "gap": 5.099019513592785
+              }
+            ]
+          },
+          {
+            "receiver": "D1",
+            "distance": 3.448187929913333,
+            "otherSkaterGaps": [
+              {
+                "actor": "YOU",
+                "team": "home",
+                "gap": 9
+              },
+              {
+                "actor": "A2",
+                "team": "away",
+                "gap": 9.433981132056603
+              }
+            ]
+          },
+          {
+            "receiver": "A2",
+            "distance": 12.573384588089237,
+            "otherSkaterGaps": [
+              {
+                "actor": "YOU",
+                "team": "home",
+                "gap": 4.493619009596066
+              },
+              {
+                "actor": "D1",
+                "team": "home",
+                "gap": 1.2327627371458236
+              }
+            ]
+          }
+        ],
+        "method": "Canonical makeScene puck with owner-facing offset; finite point-to-segment geometry and actor distances in metres. Not a reach/timing/safety model."
+      },
+      "authorRationale": "Two actual coverage relationships and a plausible alternate spatial account replace fake universal double-pressure rule; positions do not alone dictate assignments.",
+      "otherQuestionsInspected": [
+        {
+          "id": "exp26-u13-020-q1",
+          "prompt": "Where is the off-puck attacker Gold 2?"
+        },
+        {
+          "id": "exp26-u13-020-q3",
+          "prompt": "Arrange a read before leaving the net front."
+        },
+        {
+          "id": "exp26-u13-020-q4",
+          "prompt": "Move YOU to compare another inside position between Gold 2 and the net."
+        },
+        {
+          "id": "exp26-u13-020-q5",
+          "prompt": "D1 falls and Gold 1 gains a path toward the net. What changes?"
+        },
+        {
+          "id": "exp26-u13-020-q6",
+          "prompt": "How could both defenders chasing the corner make Gold 1’s job easier?"
+        },
+        {
+          "id": "exp26-u13-020-q7",
+          "prompt": "Which Navy teammate’s corner pressure should YOU confirm before leaving the net front?"
+        },
+        {
+          "id": "exp26-u13-020-q8",
+          "prompt": "Which two checks precede leaving the net front?"
+        },
+        {
+          "id": "exp26-u13-020-q9",
+          "prompt": "Move YOU closer to the lane between Gold 2 and the Navy net."
+        },
+        {
+          "id": "exp26-u13-020-q10",
+          "prompt": "If YOU decide to leave the net front, what should YOU communicate to D1 before making the move?"
+        }
+      ],
+      "limits": [
+        "Advisory authorship, not independent approval or human coaching certification.",
+        "Exact setup and all other source metadata preserved; no source-bank write.",
+        "No rendered/mobile view inspected by author; no speed, gaze, contact, pass completion or route safety inferred.",
+        "Verbal hypothetical, when used, explicitly states changed state; old frozen positions do not prove its execution."
+      ],
+      "status": "draft"
+    },
+    {
+      "scenarioId": "exp26-u13-023",
+      "questionId": "exp26-u13-023-q5",
+      "fromVersion": 2,
+      "toVersion": 3,
+      "before": {
+        "id": "exp26-u13-023-q5",
+        "type": "choice",
+        "prompt": "If the puck arrives flat and F2’s lane is clearly available, what might change?",
+        "options": [
+          {
+            "id": "a",
+            "text": "You must always take several extra touches"
+          },
+          {
+            "id": "b",
+            "text": "Gold 1 no longer needs to be checked"
+          },
+          {
+            "id": "c",
+            "text": "An earlier pass may be practical"
+          }
+        ],
+        "answer": [
+          "c"
+        ],
+        "explanation": "A better reception can create an earlier option, but only while the lane remains available.",
+        "basis": "coaching"
+      },
+      "after": {
+        "id": "exp26-u13-023-q5",
+        "type": "choice",
+        "prompt": "When comparing a next touch from the puck’s current position, which teammate line stays farther from Gold 1?",
+        "options": [
+          {
+            "id": "a",
+            "text": "The line toward D1"
+          },
+          {
+            "id": "b",
+            "text": "The line toward F2"
+          }
+        ],
+        "answer": [
+          "a"
+        ],
+        "explanation": "The line back toward D1 stays farther from Gold 1 than the forward line to F2. That gives YOU another option to assess while reading the difficult puck. Whether to settle or redirect it depends on the bounce, pressure and readiness; this line comparison does not prove either touch is available.",
+        "basis": "coaching"
+      },
+      "beforeHash": "5224beec30137fbea445e5fdaabd8959eff4f06c7055fb260fbf3db87d517a54",
+      "afterHash": "d9cf82565efc0c1a62817099d0f94ce5878df92e6ede8f705ff9d8fc4d1b9418",
+      "optionReasons": [
+        {
+          "optionId": "a",
+          "reason": "Loosepuck(3,-3) toD1(-8,-7) segment startsawayfromGold1(6,-1), minimumgap sqrt13 about3.606m."
+        },
+        {
+          "optionId": "b",
+          "reason": "Puck-toF2(11,5) diagonal passes about.707m fromGold1; forward continuation remains conditional."
+        }
+      ],
+      "geometry": {
+        "puck": {
+          "owner": null,
+          "x": 3,
+          "y": -3
+        },
+        "actors": [
+          {
+            "id": "home-skater-1",
+            "label": "YOU",
+            "team": "home",
+            "role": "skater",
+            "x": 1,
+            "y": -3,
+            "facing": 0
+          },
+          {
+            "id": "home-skater-2",
+            "label": "F2",
+            "team": "home",
+            "role": "skater",
+            "x": 11,
+            "y": 5,
+            "facing": -2.356194490192345
+          },
+          {
+            "id": "home-skater-3",
+            "label": "D1",
+            "team": "home",
+            "role": "skater",
+            "x": -8,
+            "y": -7,
+            "facing": 0.348771003583907
+          },
+          {
+            "id": "away-skater-1",
+            "label": "A1",
+            "team": "away",
+            "role": "skater",
+            "x": 6,
+            "y": -1,
+            "facing": -2.5535900500422257
+          }
+        ],
+        "actorDistances": [
+          {
+            "a": "YOU",
+            "b": "F2",
+            "distance": 12.806248474865697
+          },
+          {
+            "a": "YOU",
+            "b": "D1",
+            "distance": 9.848857801796104
+          },
+          {
+            "a": "YOU",
+            "b": "A1",
+            "distance": 5.385164807134505
+          },
+          {
+            "a": "F2",
+            "b": "D1",
+            "distance": 22.47220505424423
+          },
+          {
+            "a": "F2",
+            "b": "A1",
+            "distance": 7.810249675906656
+          },
+          {
+            "a": "D1",
+            "b": "A1",
+            "distance": 15.231546211727817
+          }
+        ],
+        "puckToPlayerLines": [
+          {
+            "receiver": "YOU",
+            "distance": 2,
+            "otherSkaterGaps": [
+              {
+                "actor": "F2",
+                "team": "home",
+                "gap": 11.313708498984761
+              },
+              {
+                "actor": "D1",
+                "team": "home",
+                "gap": 9.848857801796104
+              },
+              {
+                "actor": "A1",
+                "team": "away",
+                "gap": 3.6055512754639896
+              }
+            ]
+          },
+          {
+            "receiver": "F2",
+            "distance": 11.313708498984761,
+            "otherSkaterGaps": [
+              {
+                "actor": "YOU",
+                "team": "home",
+                "gap": 2
+              },
+              {
+                "actor": "D1",
+                "team": "home",
+                "gap": 11.704699910719626
+              },
+              {
+                "actor": "A1",
+                "team": "away",
+                "gap": 0.7071067811865476
+              }
+            ]
+          },
+          {
+            "receiver": "D1",
+            "distance": 11.704699910719626,
+            "otherSkaterGaps": [
+              {
+                "actor": "YOU",
+                "team": "home",
+                "gap": 0.6834861261734088
+              },
+              {
+                "actor": "F2",
+                "team": "home",
+                "gap": 11.313708498984761
+              },
+              {
+                "actor": "A1",
+                "team": "away",
+                "gap": 3.6055512754639896
+              }
+            ]
+          },
+          {
+            "receiver": "A1",
+            "distance": 3.6055512754639896,
+            "otherSkaterGaps": [
+              {
+                "actor": "YOU",
+                "team": "home",
+                "gap": 2
+              },
+              {
+                "actor": "F2",
+                "team": "home",
+                "gap": 7.810249675906656
+              },
+              {
+                "actor": "D1",
+                "team": "home",
+                "gap": 11.704699910719626
+              }
+            ]
+          }
+        ],
+        "method": "Canonical makeScene puck with owner-facing offset; finite point-to-segment geometry and actor distances in metres. Not a reach/timing/safety model."
+      },
+      "authorRationale": "Compares two genuine support options without demanding extra touches or assuming possession; current loose-puck origin explicit.",
+      "otherQuestionsInspected": [
+        {
+          "id": "exp26-u13-023-q1",
+          "prompt": "Have YOU established possession in this freeze?"
+        },
+        {
+          "id": "exp26-u13-023-q2",
+          "prompt": "Which two cues affect the next action?"
+        },
+        {
+          "id": "exp26-u13-023-q3",
+          "prompt": "Arrange one response to a difficult neutral-zone pass."
+        },
+        {
+          "id": "exp26-u13-023-q4",
+          "prompt": "Move YOU to an example position for collecting the unsettled puck."
+        },
+        {
+          "id": "exp26-u13-023-q6",
+          "prompt": "If Gold 1 could already reach the puck, how might your response change?"
+        },
+        {
+          "id": "exp26-u13-023-q7",
+          "prompt": "What should YOU call while F2’s lane is available but the puck is unsettled?"
+        },
+        {
+          "id": "exp26-u13-023-q8",
+          "prompt": "Which two cues affect the next touch?"
+        },
+        {
+          "id": "exp26-u13-023-q9",
+          "prompt": "Move YOU closer to the unsettled puck to compare a collecting angle."
+        },
+        {
+          "id": "exp26-u13-023-q10",
+          "prompt": "What would you need to see before recommending a one-touch pass?"
+        }
+      ],
+      "limits": [
+        "Advisory authorship, not independent approval or human coaching certification.",
+        "Exact setup and all other source metadata preserved; no source-bank write.",
+        "No rendered/mobile view inspected by author; no speed, gaze, contact, pass completion or route safety inferred.",
+        "Verbal hypothetical, when used, explicitly states changed state; old frozen positions do not prove its execution."
+      ],
+      "status": "draft"
+    }
+  ],
+  "scenarios": [
+    {
+      "id": "exp26-u13-015",
+      "version": 3,
+      "ageBand": "U13",
+      "title": "Angle from the middle toward the wall",
+      "family": "angling-recovery",
+      "topic": "angling recovery",
+      "objective": "Protect the middle while retaining a route back toward the net.",
+      "briefing": "Gold 1 carries in a wide neutral-zone lane toward Navy’s left net. YOU approach from nearer the middle. The drill asks YOU to influence the carrier toward the boards while preserving a recovery route. D1 is closer to Navy’s net; skating speed is not specified.",
+      "setup": {
+        "actors": [
+          {
+            "id": "home-skater-1",
+            "label": "YOU",
+            "team": "home",
+            "role": "skater",
+            "x": -3,
+            "y": 3,
+            "facing": 2.0344439357957027
+          },
+          {
+            "id": "home-skater-2",
+            "label": "D1",
+            "team": "home",
+            "role": "skater",
+            "x": -14,
+            "y": 0,
+            "facing": 0.844153986113171
+          },
+          {
+            "id": "away-skater-1",
+            "label": "A1",
+            "team": "away",
+            "role": "skater",
+            "x": -6,
+            "y": 9,
+            "facing": 3.141592653589793
+          },
+          {
+            "id": "away-skater-2",
+            "label": "A2",
+            "team": "away",
+            "role": "skater",
+            "x": -11,
+            "y": -3,
+            "facing": 1.176005207095135
+          }
+        ],
+        "puck": {
+          "owner": "away-skater-1"
+        }
+      },
+      "focusActorId": "home-skater-1",
+      "cues": [
+        "Gold 1 is in a wide neutral-zone lane.",
+        "YOU start nearer the middle; D1 is closer to Navy’s net."
+      ],
+      "tags": [
+        "angling-recovery"
+      ],
+      "sources": [
+        {
+          "id": "usa-transition-2019",
+          "title": "Winning in Transition: Angling, Gaps and Creating Turnovers in Today's Game",
+          "url": "https://www.usahockey.com/news_article/show/988313-winning-in-transition-angling-gaps-and-creating-turnovers-in-today-s-game",
+          "section": "A Proper Angle",
+          "use": "Supports the stated coaching principle. The setup, alternatives and suggested answers are original experimental coaching synthesis, not source-certified."
+        }
+      ],
+      "limits": "Age adaptation and tactical alternatives await coaching review. Static setup: no skating speed, interception timing or uniquely optimal route has been validated. Positional references are examples, not scored targets.",
+      "questions": [
+        {
+          "id": "exp26-u13-015-q1",
+          "type": "choice",
+          "prompt": "Where is Gold 1 carrying the puck?",
+          "options": [
+            {
+              "id": "a",
+              "text": "In a wide neutral-zone lane"
+            },
+            {
+              "id": "b",
+              "text": "In the low slot"
+            },
+            {
+              "id": "c",
+              "text": "At the opposite-side point"
+            }
+          ],
+          "answer": [
+            "a"
+          ],
+          "explanation": "Gold 1 is between the blue lines and nearer the side boards than the middle.",
+          "basis": "scene"
+        },
+        {
+          "id": "exp26-u13-015-q2",
+          "type": "multi",
+          "prompt": "Which two relationships fit the stated angling goal?",
+          "options": [
+            {
+              "id": "a",
+              "text": "An approach that gives Gold 1 the middle for free"
+            },
+            {
+              "id": "b",
+              "text": "A route that permits recovery toward the Navy net"
+            },
+            {
+              "id": "c",
+              "text": "An approach from the inside"
+            }
+          ],
+          "answer": [
+            "b",
+            "c"
+          ],
+          "explanation": "The objective is to influence space while preserving recovery, not simply to arrive first.",
+          "basis": "coaching"
+        },
+        {
+          "id": "exp26-u13-015-q3",
+          "type": "sequence",
+          "prompt": "Order one angling read from this freeze.",
+          "options": [
+            {
+              "id": "a",
+              "text": "Notice Gold 1’s route and your net"
+            },
+            {
+              "id": "b",
+              "text": "Choose an inside approach"
+            },
+            {
+              "id": "c",
+              "text": "Update when Gold 1 passes or changes direction"
+            }
+          ],
+          "answer": [
+            "a",
+            "b",
+            "c"
+          ],
+          "basis": "coaching",
+          "explanation": "The approach changes with the carrier; this is not a fixed collision route."
+        },
+        {
+          "id": "exp26-u13-015-q4",
+          "type": "position",
+          "prompt": "Move YOU to compare an inside, net-side approach to Gold 1.",
+          "actorId": "home-skater-1",
+          "reference": {
+            "x": -8,
+            "y": 5
+          },
+          "basis": "coaching",
+          "explanation": "This reference stays inside Gold 1 and closer to the defending net. Several approach angles may satisfy the same relationship."
+        },
+        {
+          "id": "exp26-u13-015-q5",
+          "type": "choice",
+          "prompt": "If Gold 2 receives and controls a pass at the shown position, which Navy defender starts closer to that new carrier?",
+          "options": [
+            {
+              "id": "a",
+              "text": "D1"
+            },
+            {
+              "id": "b",
+              "text": "YOU"
+            }
+          ],
+          "answer": [
+            "a"
+          ],
+          "explanation": "D1 starts closer to Gold 2 than YOU do. Use that information when communicating about the new threat and your recovery. It does not establish who can close in time or require both defenders to follow the new puck carrier.",
+          "basis": "coaching"
+        },
+        {
+          "id": "exp26-u13-015-q6",
+          "type": "explain",
+          "prompt": "Why can a fast approach be unhelpful if it sends you past Gold 1?",
+          "basis": "coaching",
+          "explanation": "Explain how overshooting may leave the middle or recovery route available to the attacker."
+        },
+        {
+          "type": "choice",
+          "prompt": "Which teammate can support behind YOU if Gold 1 turns inside?",
+          "options": [
+            {
+              "id": "a",
+              "text": "Gold 1"
+            },
+            {
+              "id": "b",
+              "text": "D1"
+            },
+            {
+              "id": "c",
+              "text": "Gold 2"
+            }
+          ],
+          "answer": [
+            "b"
+          ],
+          "basis": "coaching",
+          "explanation": "D1 is positioned deeper behind YOU and can support recovery if Gold 1 turns inside; if D1 is pulled away, protect the route back to Navy’s net yourself.",
+          "id": "exp26-u13-015-q7"
+        },
+        {
+          "type": "multi",
+          "prompt": "Which two conditions support an inside angle?",
+          "options": [
+            {
+              "id": "a",
+              "text": "YOU can work toward a net-side approach"
+            },
+            {
+              "id": "b",
+              "text": "D1 remains available behind"
+            },
+            {
+              "id": "c",
+              "text": "YOU skate past the puck"
+            }
+          ],
+          "answer": [
+            "a",
+            "b"
+          ],
+          "basis": "coaching",
+          "explanation": "Inside position protects the net and D1 provides recovery support; skating past loses both control and angle.",
+          "id": "exp26-u13-015-q8"
+        },
+        {
+          "type": "position",
+          "prompt": "Move YOU toward Navy’s net while staying nearer the middle than Gold 1.",
+          "basis": "coaching",
+          "explanation": "The example stays inside Gold 1 but is level along the rink’s length, not clearly net-side. It is a comparison point, not proof the carrier stays outside. Recheck speed, recovery and D1’s coverage.",
+          "actorId": "home-skater-1",
+          "reference": {
+            "x": -6,
+            "y": 2
+          },
+          "id": "exp26-u13-015-q9"
+        },
+        {
+          "type": "explain",
+          "prompt": "Why is the wall the preferred direction in this angle, while still requiring a read?",
+          "basis": "coaching",
+          "explanation": "The drill aims to limit middle access, but speed, passing and support change the next decision. Gold 2 is already inside, so coordinate that threat with D1.",
+          "id": "exp26-u13-015-q10"
+        }
+      ]
+    },
+    {
+      "id": "exp26-u13-016",
+      "version": 3,
+      "ageBand": "U13",
+      "title": "See the far-side player in the low slot",
+      "family": "weak-side-coverage",
+      "topic": "weak side coverage",
+      "objective": "Balance puck awareness with an off-puck threat near the net.",
+      "briefing": "Gold 1 controls the puck at the puck-side half wall. Gold 2 waits across the low slot. YOU are the weak-side defender and the coach has assigned you to stay aware of Gold 2 while D1 pressures the puck. Navy attacks Gold’s net and defends Navy’s net. This is a selected-player teaching view; no movement is implied unless stated.",
+      "setup": {
+        "actors": [
+          {
+            "id": "home-skater-1",
+            "label": "YOU",
+            "team": "home",
+            "role": "skater",
+            "x": -18,
+            "y": -5,
+            "facing": 1.4994888620096063
+          },
+          {
+            "id": "home-skater-2",
+            "label": "D1",
+            "team": "home",
+            "role": "skater",
+            "x": -18,
+            "y": 6,
+            "facing": 1.2490457723982544
+          },
+          {
+            "id": "away-skater-1",
+            "label": "A1",
+            "team": "away",
+            "role": "skater",
+            "x": -17,
+            "y": 9,
+            "facing": 3.141592653589793
+          },
+          {
+            "id": "away-skater-2",
+            "label": "A2",
+            "team": "away",
+            "role": "skater",
+            "x": -23,
+            "y": -3,
+            "facing": 1.1071487177940904
+          },
+          {
+            "id": "home-goalie-3",
+            "label": "G",
+            "team": "home",
+            "role": "goalie",
+            "x": -26,
+            "y": 0,
+            "facing": 0
+          }
+        ],
+        "puck": {
+          "owner": "away-skater-1"
+        }
+      },
+      "focusActorId": "home-skater-1",
+      "cues": [
+        "The briefing names Gold 2 as your off-puck responsibility.",
+        "Gold 1 controls the puck at the puck-side half wall. Gold 2 waits across the low slot. YOU are the weak-side defender and the coach has assigned you to stay aware of Gold 2 while D1 pressures the puck."
+      ],
+      "tags": [
+        "weak-side-coverage"
+      ],
+      "sources": [
+        {
+          "id": "hc-u13-core",
+          "title": "U13 Skills — Core Skills",
+          "url": "https://cdn.hockeycanada.ca/hockey-canada/Hockey-Programs/Players/Downloads/2020/u13-core-skills-e.pdf",
+          "section": "Page 1, individual tactics and team play",
+          "use": "Supports age/topic placement only. The setup, alternatives and suggested answers are original experimental coaching synthesis, not source-certified."
+        }
+      ],
+      "limits": "Age adaptation and tactical alternatives await coaching review. Static setup: no skating speed, interception timing or uniquely optimal route has been validated. Positional references are examples, not scored targets.",
+      "questions": [
+        {
+          "id": "exp26-u13-016-q1",
+          "type": "choice",
+          "prompt": "Which opponent is the assigned off-puck threat?",
+          "options": [
+            {
+              "id": "a",
+              "text": "Gold 1 at the half wall"
+            },
+            {
+              "id": "b",
+              "text": "D1 near the puck"
+            },
+            {
+              "id": "c",
+              "text": "Gold 2 in the low slot"
+            }
+          ],
+          "answer": [
+            "c"
+          ],
+          "explanation": "The briefing names Gold 2 as your off-puck responsibility.",
+          "basis": "scene"
+        },
+        {
+          "id": "exp26-u13-016-q2",
+          "type": "multi",
+          "prompt": "Select two things to keep in view.",
+          "options": [
+            {
+              "id": "a",
+              "text": "Gold 2’s changing position"
+            },
+            {
+              "id": "b",
+              "text": "The puck carrier’s available pass"
+            },
+            {
+              "id": "c",
+              "text": "Only the puck until a pass is made"
+            }
+          ],
+          "answer": [
+            "a",
+            "b"
+          ],
+          "explanation": "Seeing both may require repeated head checks; watching one permanently is not enough.",
+          "basis": "coaching"
+        },
+        {
+          "id": "exp26-u13-016-q3",
+          "type": "sequence",
+          "prompt": "Arrange one weak-side checking routine.",
+          "options": [
+            {
+              "id": "a",
+              "text": "Locate Gold 2 and the net"
+            },
+            {
+              "id": "b",
+              "text": "Check the puck and possible pass"
+            },
+            {
+              "id": "c",
+              "text": "Adjust while renewing both views"
+            }
+          ],
+          "answer": [
+            "a",
+            "b",
+            "c"
+          ],
+          "basis": "coaching",
+          "explanation": "Checks repeat as the situation moves. The routine does not prescribe a single coverage system."
+        },
+        {
+          "id": "exp26-u13-016-q4",
+          "type": "position",
+          "prompt": "Move YOU to compare a net-side position near the low slot.",
+          "actorId": "home-skater-1",
+          "reference": {
+            "x": -24,
+            "y": -1
+          },
+          "basis": "coaching",
+          "explanation": "The example is closer to Navy’s net than Gold 2. Keep checking the puck and opponent; position alone does not establish what YOU can see."
+        },
+        {
+          "id": "exp26-u13-016-q5",
+          "type": "choice",
+          "prompt": "Which relationship needs attention before YOU treat the low-slot threat as covered?",
+          "options": [
+            {
+              "id": "a",
+              "text": "Gold 2 is closer to Navy’s net than YOU are"
+            },
+            {
+              "id": "b",
+              "text": "YOU are closer to Navy’s net than Gold 2 is"
+            }
+          ],
+          "answer": [
+            "a"
+          ],
+          "explanation": "Gold 2 is currently nearer the defended net than YOU. That is a coverage concern to account for while checking the puck and communicating with D1. A future adjustment should respond to the actual threat; this still frame does not prove a pass, shot or required tracking route.",
+          "basis": "scene"
+        },
+        {
+          "id": "exp26-u13-016-q6",
+          "type": "explain",
+          "prompt": "Describe a way to check the half wall without forgetting the low-slot threat.",
+          "basis": "coaching",
+          "explanation": "Mention repeated scans, body orientation or communication with D1; avoid claiming you can see everything continuously."
+        },
+        {
+          "type": "choice",
+          "prompt": "What should YOU call while D1 pressures Gold 1 on the wall?",
+          "options": [
+            {
+              "id": "a",
+              "text": "Gold 2 is in the low slot"
+            },
+            {
+              "id": "b",
+              "text": "I only see the puck"
+            },
+            {
+              "id": "c",
+              "text": "Leave Gold 2 to the goalie"
+            }
+          ],
+          "answer": [
+            "a"
+          ],
+          "basis": "coaching",
+          "explanation": "Calling Gold 2’s low-slot location keeps the off-puck threat in the switch conversation while D1 pressures; if Gold 2 moves higher, update the coverage lane.",
+          "id": "exp26-u13-016-q7"
+        },
+        {
+          "type": "multi",
+          "prompt": "Which two checks let YOU support without puck-chasing?",
+          "options": [
+            {
+              "id": "a",
+              "text": "Gold 2’s net-side route"
+            },
+            {
+              "id": "b",
+              "text": "D1’s pressure on Gold 1"
+            },
+            {
+              "id": "c",
+              "text": "Whether YOU should follow D1’s pressure and leave Gold 2 to the goalie"
+            }
+          ],
+          "answer": [
+            "a",
+            "b"
+          ],
+          "basis": "coaching",
+          "explanation": "The off-puck threat and D1’s pressure define your coverage lane; staring only at puck can lose Gold 2.",
+          "id": "exp26-u13-016-q8"
+        },
+        {
+          "type": "position",
+          "prompt": "Move YOU to compare a net-side position near Gold 2.",
+          "basis": "coaching",
+          "explanation": "The example is closer to Navy’s net than Gold 2. Recheck the puck and threat, and communicate any coverage change rather than following a fixed spot.",
+          "actorId": "home-skater-1",
+          "reference": {
+            "x": -25,
+            "y": -2
+          },
+          "id": "exp26-u13-016-q9"
+        },
+        {
+          "type": "explain",
+          "prompt": "How can you check the puck side without abandoning Gold 2?",
+          "basis": "coaching",
+          "explanation": "Seek a position between Gold 2 and Navy’s net while repeatedly checking the puck and communicating with D1. Do not leave Gold 2 between YOU and the net as a default coverage rule; adjust to the actual threat and team plan.",
+          "id": "exp26-u13-016-q10"
+        }
+      ]
+    },
+    {
+      "id": "exp26-u13-017",
+      "version": 3,
+      "ageBand": "U13",
+      "title": "Recover through useful middle ice",
+      "family": "backcheck-recovery",
+      "topic": "backcheck recovery",
+      "objective": "Choose a recovery relationship to an inside attacking threat.",
+      "briefing": "Gold 1 carries toward the Navy net near the side boards. Gold 2 is the inside support player. YOU are recovering behind the rush; D1 is already between Gold 1 and the net. Navy attacks Gold’s net and defends Navy’s net. This is a selected-player teaching view; no movement is implied unless stated.",
+      "setup": {
+        "actors": [
+          {
+            "id": "home-skater-1",
+            "label": "YOU",
+            "team": "home",
+            "role": "skater",
+            "x": 8,
+            "y": 6,
+            "facing": 2.961739153797315
+          },
+          {
+            "id": "home-skater-2",
+            "label": "D1",
+            "team": "home",
+            "role": "skater",
+            "x": -10,
+            "y": 4,
+            "facing": 0.5191461142465229
+          },
+          {
+            "id": "away-skater-1",
+            "label": "A1",
+            "team": "away",
+            "role": "skater",
+            "x": -3,
+            "y": 8,
+            "facing": 3.141592653589793
+          },
+          {
+            "id": "away-skater-2",
+            "label": "A2",
+            "team": "away",
+            "role": "skater",
+            "x": -2,
+            "y": -1,
+            "facing": 1.6814535479687922
+          }
+        ],
+        "puck": {
+          "owner": "away-skater-1"
+        }
+      },
+      "focusActorId": "home-skater-1",
+      "cues": [
+        "Gold 2 is in the middle of the ice while Gold 1 is wide near the side boards.",
+        "Gold 1 carries toward the Navy net near the side boards. Gold 2 is the inside support player. YOU are recovering behind the rush; D1 is already between Gold 1 and the net."
+      ],
+      "tags": [
+        "backcheck-recovery"
+      ],
+      "sources": [
+        {
+          "id": "usa-transition-drill-2016",
+          "title": "14U Offense-Defense-Out with a Goalie Twist",
+          "url": "https://www.usahockey.com/news_article/show/636604-14u-offense-defense-out-with-a-goalie-twist",
+          "section": "Coaching Points: middle-lane backcheck",
+          "use": "Supports the stated coaching principle. The setup, alternatives and suggested answers are original experimental coaching synthesis, not source-certified."
+        }
+      ],
+      "limits": "U13 adaptation of a 14U role-change drill; route timing is not simulated. Static setup: no skating speed, interception timing or uniquely optimal route has been validated. Positional references are examples, not scored targets.",
+      "questions": [
+        {
+          "id": "exp26-u13-017-q1",
+          "type": "choice",
+          "prompt": "Which attacker is the inside support option?",
+          "options": [
+            {
+              "id": "a",
+              "text": "D1"
+            },
+            {
+              "id": "b",
+              "text": "Gold 2"
+            },
+            {
+              "id": "c",
+              "text": "Gold 1"
+            }
+          ],
+          "answer": [
+            "b"
+          ],
+          "explanation": "Gold 2 is in the middle of the ice while Gold 1 is wide near the side boards.",
+          "basis": "scene"
+        },
+        {
+          "id": "exp26-u13-017-q2",
+          "type": "multi",
+          "prompt": "Which two starting relationships matter when YOU plan to help the recovery?",
+          "options": [
+            {
+              "id": "a",
+              "text": "YOU are farther from Navy’s end along the rink than both gold attackers"
+            },
+            {
+              "id": "b",
+              "text": "D1 is closer to Gold 1 than YOU are"
+            },
+            {
+              "id": "c",
+              "text": "YOU are already between both gold attackers and Navy’s net"
+            }
+          ],
+          "answer": [
+            "a",
+            "b"
+          ],
+          "explanation": "YOU are still behind both attackers along the rink, and D1 is nearer Gold 1. Those facts matter when coordinating recovery toward the separate inside threat. They do not prove D1 has stopped the carrier or that YOU can reach a particular target in time.",
+          "basis": "scene"
+        },
+        {
+          "id": "exp26-u13-017-q3",
+          "type": "sequence",
+          "prompt": "Arrange one recovery decision.",
+          "options": [
+            {
+              "id": "a",
+              "text": "Identify who has the puck"
+            },
+            {
+              "id": "b",
+              "text": "Check the uncovered inside threat"
+            },
+            {
+              "id": "c",
+              "text": "Recover toward a useful net-side relationship"
+            }
+          ],
+          "answer": [
+            "a",
+            "b",
+            "c"
+          ],
+          "basis": "coaching",
+          "explanation": "The reference routine does not prove YOU can win a race from this still picture."
+        },
+        {
+          "id": "exp26-u13-017-q4",
+          "type": "position",
+          "prompt": "Move YOU to illustrate recovery through the middle toward Gold 2.",
+          "actorId": "home-skater-1",
+          "reference": {
+            "x": -5,
+            "y": 0
+          },
+          "basis": "coaching",
+          "explanation": "The example moves toward inside danger rather than duplicating D1’s wide pressure. Whether it is reachable needs timing evidence."
+        },
+        {
+          "id": "exp26-u13-017-q5",
+          "type": "choice",
+          "prompt": "If Gold 2 receives the pass before you arrive, what changes?",
+          "options": [
+            {
+              "id": "a",
+              "text": "Gold 1 remains the puck carrier automatically"
+            },
+            {
+              "id": "b",
+              "text": "Your route no longer depends on the puck"
+            },
+            {
+              "id": "c",
+              "text": "Gold 2 becomes the puck threat to read"
+            }
+          ],
+          "answer": [
+            "c"
+          ],
+          "explanation": "The recovery job updates with possession; communicate with D1 about the new carrier.",
+          "basis": "coaching"
+        },
+        {
+          "id": "exp26-u13-017-q6",
+          "type": "explain",
+          "prompt": "How would you know you are helping D1 rather than duplicating D1’s job?",
+          "basis": "coaching",
+          "explanation": "Describe coverage of another threat or lane while retaining awareness of the carrier."
+        },
+        {
+          "type": "choice",
+          "prompt": "Which Navy defender starts closer to the net than Gold 1?",
+          "options": [
+            {
+              "id": "a",
+              "text": "Gold 2"
+            },
+            {
+              "id": "b",
+              "text": "D1"
+            },
+            {
+              "id": "c",
+              "text": "Gold 1"
+            }
+          ],
+          "answer": [
+            "b"
+          ],
+          "basis": "scene",
+          "explanation": "D1 starts net-side of Gold 1. YOU are still recovering; communicate which threat each defender can cover rather than assuming coverage is complete.",
+          "id": "exp26-u13-017-q7"
+        },
+        {
+          "type": "multi",
+          "prompt": "Which two facts shape your useful recovery?",
+          "options": [
+            {
+              "id": "a",
+              "text": "D1 already sits between Gold 1 and the net"
+            },
+            {
+              "id": "b",
+              "text": "Gold 2 is in middle ice"
+            },
+            {
+              "id": "c",
+              "text": "Whether Gold 1 is the only threat because D1 has the carrier"
+            }
+          ],
+          "answer": [
+            "a",
+            "b"
+          ],
+          "basis": "coaching",
+          "explanation": "D1’s coverage and Gold 2’s inside route divide the jobs; a puck-only chase duplicates D1.",
+          "id": "exp26-u13-017-q8"
+        },
+        {
+          "type": "position",
+          "prompt": "Move YOU to an example middle recovery target closer to Navy’s net than Gold 2.",
+          "basis": "coaching",
+          "explanation": "The target is net-side of Gold 2 and in the middle. The image cannot prove YOU can reach it in time. If possession changes, reassess responsibilities with D1.",
+          "actorId": "home-skater-1",
+          "reference": {
+            "x": -6,
+            "y": 0
+          },
+          "id": "exp26-u13-017-q9"
+        },
+        {
+          "type": "explain",
+          "prompt": "How would you know you are helping D1 rather than skating into D1’s job?",
+          "basis": "coaching",
+          "explanation": "Cover the inside support while D1 faces the wide carrier, then communicate the handoff; if D1 loses the route, switch to the nearest danger.",
+          "id": "exp26-u13-017-q10"
+        }
+      ]
+    },
+    {
+      "id": "exp26-u13-020",
+      "version": 3,
+      "ageBand": "U13",
+      "title": "Decide before leaving the net front",
+      "family": "defensive-zone-support",
+      "topic": "defensive zone support",
+      "objective": "Avoid duplicating a teammate’s pressure without checking coverage.",
+      "briefing": "D1 pressures Gold 1 in the puck-side corner. YOU are near the net front. Gold 2 is in the slot. The coach’s stated plan has D1 contesting the corner while YOU protect the inside threat. Navy attacks Gold’s net and defends Navy’s net. This is a selected-player teaching view; no movement is implied unless stated.",
+      "setup": {
+        "actors": [
+          {
+            "id": "home-skater-1",
+            "label": "YOU",
+            "team": "home",
+            "role": "skater",
+            "x": -23,
+            "y": 1,
+            "facing": -1.7681918866447774
+          },
+          {
+            "id": "home-skater-2",
+            "label": "D1",
+            "team": "home",
+            "role": "skater",
+            "x": -23,
+            "y": -8,
+            "facing": -2.677945044588987
+          },
+          {
+            "id": "away-skater-1",
+            "label": "A1",
+            "team": "away",
+            "role": "skater",
+            "x": -25,
+            "y": -9,
+            "facing": 3.141592653589793
+          },
+          {
+            "id": "away-skater-2",
+            "label": "A2",
+            "team": "away",
+            "role": "skater",
+            "x": -18,
+            "y": 0,
+            "facing": -2.2318394956455836
+          }
+        ],
+        "puck": {
+          "owner": "away-skater-1"
+        }
+      },
+      "focusActorId": "home-skater-1",
+      "cues": [
+        "Gold 2 is central in the defending zone, nearer the slot than either wall.",
+        "D1 pressures Gold 1 in the puck-side corner. YOU are near the net front. Gold 2 is in the slot. The coach’s stated plan has D1 contesting the corner while YOU protect the inside threat."
+      ],
+      "tags": [
+        "defensive-zone-support"
+      ],
+      "sources": [
+        {
+          "id": "hc-u13-core",
+          "title": "U13 Skills — Core Skills",
+          "url": "https://cdn.hockeycanada.ca/hockey-canada/Hockey-Programs/Players/Downloads/2020/u13-core-skills-e.pdf",
+          "section": "Page 1, individual tactics and team play",
+          "use": "Supports age/topic placement only. The setup, alternatives and suggested answers are original experimental coaching synthesis, not source-certified."
+        }
+      ],
+      "limits": "Age adaptation and tactical alternatives await coaching review. Static setup: no skating speed, interception timing or uniquely optimal route has been validated. Positional references are examples, not scored targets.",
+      "questions": [
+        {
+          "id": "exp26-u13-020-q1",
+          "type": "choice",
+          "prompt": "Where is the off-puck attacker Gold 2?",
+          "options": [
+            {
+              "id": "a",
+              "text": "At the attacking blue line on the right"
+            },
+            {
+              "id": "b",
+              "text": "In the slot"
+            },
+            {
+              "id": "c",
+              "text": "Outside the puck-side corner"
+            }
+          ],
+          "answer": [
+            "b"
+          ],
+          "explanation": "Gold 2 is central in the defending zone, nearer the slot than either wall.",
+          "basis": "scene"
+        },
+        {
+          "id": "exp26-u13-020-q2",
+          "type": "multi",
+          "prompt": "Which two defender-to-attacker relationships support the stated division of jobs in this view?",
+          "options": [
+            {
+              "id": "a",
+              "text": "D1 is nearer Gold 1 than YOU are"
+            },
+            {
+              "id": "b",
+              "text": "YOU are nearer Gold 2 than D1 is"
+            },
+            {
+              "id": "c",
+              "text": "Gold 2 is farther toward the side boards than either Navy defender"
+            }
+          ],
+          "answer": [
+            "a",
+            "b"
+          ],
+          "explanation": "D1 is nearer the corner carrier and YOU are nearer the inside attacker. Those positions fit the stated plan, but do not prove containment or forbid helping. If the puck threat changes, communicate who can account for each attacker before changing jobs.",
+          "basis": "scene"
+        },
+        {
+          "id": "exp26-u13-020-q3",
+          "type": "sequence",
+          "prompt": "Arrange a read before leaving the net front.",
+          "options": [
+            {
+              "id": "a",
+              "text": "Check D1’s contest"
+            },
+            {
+              "id": "b",
+              "text": "Locate Gold 2 and available cover"
+            },
+            {
+              "id": "c",
+              "text": "Communicate before changing responsibility"
+            }
+          ],
+          "answer": [
+            "a",
+            "b",
+            "c"
+          ],
+          "basis": "coaching",
+          "explanation": "This follows the exercise’s coverage plan, not a universal requirement for every defensive system."
+        },
+        {
+          "id": "exp26-u13-020-q4",
+          "type": "position",
+          "prompt": "Move YOU to compare another inside position between Gold 2 and the net.",
+          "actorId": "home-skater-1",
+          "reference": {
+            "x": -22,
+            "y": -1
+          },
+          "basis": "coaching",
+          "explanation": "This keeps a net-side relationship while retaining a possible view of the corner. Other coverage shapes may differ."
+        },
+        {
+          "id": "exp26-u13-020-q5",
+          "type": "choice",
+          "prompt": "D1 falls and Gold 1 gains a path toward the net. What changes?",
+          "options": [
+            {
+              "id": "a",
+              "text": "Treat the old corner assignment as unchangeable"
+            },
+            {
+              "id": "b",
+              "text": "Leave Gold 1’s new path out of the read"
+            },
+            {
+              "id": "c",
+              "text": "Reassess the immediate puck threat and coordinate coverage"
+            }
+          ],
+          "answer": [
+            "c"
+          ],
+          "explanation": "A new immediate threat can require an adjustment; the scenario does not dictate a universal switch.",
+          "basis": "coaching"
+        },
+        {
+          "id": "exp26-u13-020-q6",
+          "type": "explain",
+          "prompt": "How could both defenders chasing the corner make Gold 1’s job easier?",
+          "basis": "coaching",
+          "explanation": "Gold 1 may gain a pass to Gold 2 or open inside ice. Explain the tradeoff rather than saying support is always wrong."
+        },
+        {
+          "type": "choice",
+          "prompt": "Which Navy teammate’s corner pressure should YOU confirm before leaving the net front?",
+          "options": [
+            {
+              "id": "a",
+              "text": "D1"
+            },
+            {
+              "id": "b",
+              "text": "Gold 2"
+            },
+            {
+              "id": "c",
+              "text": "Gold 1"
+            }
+          ],
+          "answer": [
+            "a"
+          ],
+          "basis": "scene",
+          "explanation": "D1 is assigned to contest the corner. Before changing position, check the immediate puck danger and who can cover Gold 2. If D1 falls, reassess both threats and communicate.",
+          "id": "exp26-u13-020-q7"
+        },
+        {
+          "type": "multi",
+          "prompt": "Which two checks precede leaving the net front?",
+          "options": [
+            {
+              "id": "a",
+              "text": "Whether D1 has Gold 1 contained"
+            },
+            {
+              "id": "b",
+              "text": "Gold 2’s path to the net"
+            },
+            {
+              "id": "c",
+              "text": "Whether the corner looks busy"
+            }
+          ],
+          "answer": [
+            "a",
+            "b"
+          ],
+          "basis": "coaching",
+          "explanation": "D1’s pressure and Gold 2’s net-side route tell YOU whether leaving helps; corner activity alone does not.",
+          "id": "exp26-u13-020-q8"
+        },
+        {
+          "type": "position",
+          "prompt": "Move YOU closer to the lane between Gold 2 and the Navy net.",
+          "basis": "coaching",
+          "explanation": "The example lies in the lane between Gold 2 and Navy’s net. If Gold 1 wins inside, reassess the immediate threat and coordinate coverage rather than automatically abandoning Gold 2.",
+          "actorId": "home-skater-1",
+          "reference": {
+            "x": -20,
+            "y": 0
+          },
+          "id": "exp26-u13-020-q9"
+        },
+        {
+          "type": "explain",
+          "prompt": "If YOU decide to leave the net front, what should YOU communicate to D1 before making the move?",
+          "basis": "coaching",
+          "explanation": "A short call — such as confirming D1 has Gold 1 contained, or telling D1 that YOU are stepping away from the net front — helps D1 adjust instead of being surprised. There is no single required wording, and what YOU say can change with what D1 signals back.",
+          "id": "exp26-u13-020-q10"
+        }
+      ]
+    },
+    {
+      "id": "exp26-u13-023",
+      "version": 3,
+      "ageBand": "U13",
+      "title": "Settle a difficult pass before choosing",
+      "family": "receiving-control",
+      "topic": "receiving control",
+      "objective": "Notice when control needs to be established before the next action.",
+      "briefing": "A pass has bounced just ahead of YOU in the neutral zone. F2 is higher up ice. Gold 1 is approaching but not yet on the puck. The exercise states that YOU have not settled it. Navy attacks Gold’s net and defends Navy’s net. This is a selected-player teaching view; no movement is implied unless stated.",
+      "setup": {
+        "actors": [
+          {
+            "id": "home-skater-1",
+            "label": "YOU",
+            "team": "home",
+            "role": "skater",
+            "x": 1,
+            "y": -3,
+            "facing": 0
+          },
+          {
+            "id": "home-skater-2",
+            "label": "F2",
+            "team": "home",
+            "role": "skater",
+            "x": 11,
+            "y": 5,
+            "facing": -2.356194490192345
+          },
+          {
+            "id": "home-skater-3",
+            "label": "D1",
+            "team": "home",
+            "role": "skater",
+            "x": -8,
+            "y": -7,
+            "facing": 0.348771003583907
+          },
+          {
+            "id": "away-skater-1",
+            "label": "A1",
+            "team": "away",
+            "role": "skater",
+            "x": 6,
+            "y": -1,
+            "facing": -2.5535900500422257
+          }
+        ],
+        "puck": {
+          "owner": null,
+          "x": 3,
+          "y": -3
+        }
+      },
+      "focusActorId": "home-skater-1",
+      "cues": [
+        "The briefing explicitly says the pass is unsettled, matching the loose marker.",
+        "A pass has bounced just ahead of YOU in the neutral zone. F2 is higher up ice. Gold 1 is approaching but not yet on the puck. The exercise states that YOU have not settled it."
+      ],
+      "tags": [
+        "receiving-control"
+      ],
+      "sources": [
+        {
+          "id": "hc-u13-core",
+          "title": "U13 Skills — Core Skills",
+          "url": "https://cdn.hockeycanada.ca/hockey-canada/Hockey-Programs/Players/Downloads/2020/u13-core-skills-e.pdf",
+          "section": "Page 1, individual tactics and team play",
+          "use": "Supports age/topic placement only. The setup, alternatives and suggested answers are original experimental coaching synthesis, not source-certified."
+        }
+      ],
+      "limits": "Age adaptation and tactical alternatives await coaching review. Static setup: no skating speed, interception timing or uniquely optimal route has been validated. Positional references are examples, not scored targets.",
+      "questions": [
+        {
+          "id": "exp26-u13-023-q1",
+          "type": "choice",
+          "prompt": "Have YOU established possession in this freeze?",
+          "options": [
+            {
+              "id": "a",
+              "text": "F2 already controls the pass"
+            },
+            {
+              "id": "b",
+              "text": "No, the pass is still loose"
+            },
+            {
+              "id": "c",
+              "text": "Yes, the puck is secured on the stick"
+            }
+          ],
+          "answer": [
+            "b"
+          ],
+          "explanation": "The briefing explicitly says the pass is unsettled, matching the loose marker.",
+          "basis": "scene"
+        },
+        {
+          "id": "exp26-u13-023-q2",
+          "type": "multi",
+          "prompt": "Which two cues affect the next action?",
+          "options": [
+            {
+              "id": "a",
+              "text": "The quality of the arriving pass"
+            },
+            {
+              "id": "b",
+              "text": "A rule that every pass must be one-touched"
+            },
+            {
+              "id": "c",
+              "text": "How soon Gold 1 can pressure it"
+            }
+          ],
+          "answer": [
+            "a",
+            "c"
+          ],
+          "explanation": "Control and pressure determine what is practical; one-touch passing is not always available.",
+          "basis": "coaching"
+        },
+        {
+          "id": "exp26-u13-023-q3",
+          "type": "sequence",
+          "prompt": "Arrange one response to a difficult neutral-zone pass.",
+          "options": [
+            {
+              "id": "a",
+              "text": "Read the bounce and approaching pressure"
+            },
+            {
+              "id": "b",
+              "text": "Establish control if there is time"
+            },
+            {
+              "id": "c",
+              "text": "Recheck the forward option"
+            }
+          ],
+          "answer": [
+            "a",
+            "b",
+            "c"
+          ],
+          "basis": "coaching",
+          "explanation": "Emergency touches may be needed under tighter pressure; this sequence assumes time to settle."
+        },
+        {
+          "id": "exp26-u13-023-q4",
+          "type": "position",
+          "prompt": "Move YOU to an example position for collecting the unsettled puck.",
+          "actorId": "home-skater-1",
+          "reference": {
+            "x": 3,
+            "y": -4
+          },
+          "basis": "coaching",
+          "explanation": "The position moves toward the puck without pretending it is already controlled. Stick reach and bounce remain unmodelled."
+        },
+        {
+          "id": "exp26-u13-023-q5",
+          "type": "choice",
+          "prompt": "When comparing a next touch from the puck’s current position, which teammate line stays farther from Gold 1?",
+          "options": [
+            {
+              "id": "a",
+              "text": "The line toward D1"
+            },
+            {
+              "id": "b",
+              "text": "The line toward F2"
+            }
+          ],
+          "answer": [
+            "a"
+          ],
+          "explanation": "The line back toward D1 stays farther from Gold 1 than the forward line to F2. That gives YOU another option to assess while reading the difficult puck. Whether to settle or redirect it depends on the bounce, pressure and readiness; this line comparison does not prove either touch is available.",
+          "basis": "coaching"
+        },
+        {
+          "id": "exp26-u13-023-q6",
+          "type": "explain",
+          "prompt": "If Gold 1 could already reach the puck, how might your response change?",
+          "basis": "coaching",
+          "explanation": "There may be less time to settle it. Compare a controlled touch, protection or an available outlet using the actual pressure and puck path."
+        },
+        {
+          "type": "choice",
+          "prompt": "What should YOU call while F2’s lane is available but the puck is unsettled?",
+          "options": [
+            {
+              "id": "a",
+              "text": "Not settled; give me a short option"
+            },
+            {
+              "id": "b",
+              "text": "One-touch now no matter the pressure"
+            },
+            {
+              "id": "c",
+              "text": "F2 cannot be used"
+            }
+          ],
+          "answer": [
+            "a"
+          ],
+          "basis": "coaching",
+          "explanation": "Communicate that the puck is unsettled and ask for support. Whether to settle, protect or redirect still depends on pressure.",
+          "id": "exp26-u13-023-q7"
+        },
+        {
+          "type": "multi",
+          "prompt": "Which two cues affect the next touch?",
+          "options": [
+            {
+              "id": "a",
+              "text": "F2’s higher position"
+            },
+            {
+              "id": "b",
+              "text": "Gold 1’s approach"
+            },
+            {
+              "id": "c",
+              "text": "The pass being difficult no longer matters"
+            }
+          ],
+          "answer": [
+            "a",
+            "b"
+          ],
+          "basis": "coaching",
+          "explanation": "F2’s lane and Gold 1’s pressure shape whether to settle, protect or move it; a difficult reception remains relevant.",
+          "id": "exp26-u13-023-q8"
+        },
+        {
+          "type": "position",
+          "prompt": "Move YOU closer to the unsettled puck to compare a collecting angle.",
+          "basis": "coaching",
+          "explanation": "The example is nearer the puck. Gold 1 is also approaching, so check time and reach before treating the puck as controlled.",
+          "actorId": "home-skater-1",
+          "reference": {
+            "x": 2,
+            "y": -4
+          },
+          "id": "exp26-u13-023-q9"
+        },
+        {
+          "type": "explain",
+          "prompt": "What would you need to see before recommending a one-touch pass?",
+          "basis": "coaching",
+          "explanation": "Check the arriving puck’s speed and path, F2’s readiness and the passing lane. A one-touch redirects the arriving puck without first settling it; if that touch is not practical, compare other available actions.",
+          "id": "exp26-u13-023-q10"
+        }
+      ]
+    }
+  ]
+}

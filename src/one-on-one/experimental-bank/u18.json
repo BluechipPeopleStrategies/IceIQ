@@ -1,7 +1,7 @@
 [
   {
     "id": "exp26-u18-001",
-    "version": 2,
+    "version": 3,
     "ageBand": "U18",
     "title": "Manage the last minute with a lead",
     "family": "late-game-possession",
@@ -214,26 +214,22 @@
       {
         "id": "exp26-u18-001-q5",
         "type": "choice",
-        "prompt": "F1 becomes clearly open beyond Gold 1 with room to retain the puck. What changes?",
+        "prompt": "With the lead and 48 seconds left, compare the current forward lines to F1 and F2. Which line stays farther from Gold 1?",
         "options": [
           {
             "id": "a",
-            "text": "A controlled forward pass may now fit the objective"
+            "text": "The direct pass to F1"
           },
           {
             "id": "b",
-            "text": "The clock makes every forward pass automatically wrong"
-          },
-          {
-            "id": "c",
-            "text": "D2 must receive regardless of the open route"
+            "text": "The direct pass to F2"
           }
         ],
         "answer": [
           "a"
         ],
-        "explanation": "A lower-risk forward option can be consistent with protecting a lead.",
-        "basis": "coaching"
+        "explanation": "The F1 line passes farther from Gold 1 than the F2 line does. That is one useful pressure check for a controlled forward option; receiving pressure, other Gold players and defensive support still matter.",
+        "basis": "scene"
       },
       {
         "id": "exp26-u18-001-q6",
@@ -246,7 +242,7 @@
   },
   {
     "id": "exp26-u18-002",
-    "version": 2,
+    "version": 3,
     "ageBand": "U18",
     "title": "Create another attempt while trailing late",
     "family": "late-game-attack",
@@ -396,27 +392,27 @@
       {
         "id": "exp26-u18-002-q2",
         "type": "multi",
-        "prompt": "Choose two considerations for generating a remaining chance.",
+        "prompt": "With 32 seconds left, which two current pressure relationships matter when comparing F1 near the net and F2 across the high slot?",
         "options": [
           {
             "id": "a",
-            "text": "Whether a shot can reach useful traffic"
+            "text": "Gold 1 is nearer the direct line to F1 than the line to F2"
           },
           {
             "id": "b",
-            "text": "A certainty that shooting from the point always scores"
+            "text": "Gold 3 is nearer the direct line to F2 than the line to F1"
           },
           {
             "id": "c",
-            "text": "Whether a pass would create a clearer attempt in time"
+            "text": "Gold 5 is closer to F1 than Gold 2 is"
           }
         ],
         "answer": [
           "a",
-          "c"
+          "b"
         ],
-        "explanation": "Time matters, but a rushed blocked shot and a clearer available connection are different possibilities.",
-        "basis": "coaching"
+        "explanation": "The two connections face different defenders: Gold 1 near the F1 line and Gold 3 near the F2 line. Check whether either connection can create a feasible attempt in the remaining time; the static picture does not establish pass or shot timing.",
+        "basis": "scene"
       },
       {
         "id": "exp26-u18-002-q3",
@@ -963,7 +959,7 @@
   },
   {
     "id": "exp26-u18-005",
-    "version": 2,
+    "version": 3,
     "ageBand": "U18",
     "title": "Join the second wave only after checking possession",
     "family": "defender-activation",
@@ -1158,26 +1154,26 @@
       {
         "id": "exp26-u18-005-q5",
         "type": "choice",
-        "prompt": "F1 bobbles the puck as Gold 3 accelerates. What deserves a fresh decision?",
+        "prompt": "Imagine F1 bobbles the puck before YOU join the second wave. Which Gold player is currently closest to both YOU and F1, making that pressure especially relevant to the hold-or-join decision?",
         "options": [
           {
             "id": "a",
-            "text": "The old activation regardless of possession"
+            "text": "Gold 1"
           },
           {
             "id": "b",
-            "text": "A belief that D2 can cover every possible turnover alone"
+            "text": "Gold 2"
           },
           {
             "id": "c",
-            "text": "Whether to hold or recover instead of continuing up ice"
+            "text": "Gold 3"
           }
         ],
         "answer": [
           "c"
         ],
-        "explanation": "Possession quality and pressure changed, so the original support choice may no longer fit.",
-        "basis": "coaching"
+        "explanation": "Gold 3 is near both the supporting defender and F1. Check the actual puck contest and D2’s cover before continuing the activation; a bobble alone does not establish Gold possession.",
+        "basis": "scene"
       },
       {
         "id": "exp26-u18-005-q6",
@@ -1919,7 +1915,7 @@
   },
   {
     "id": "exp26-u18-009",
-    "version": 2,
+    "version": 3,
     "ageBand": "U18",
     "title": "Prepare the first touch but keep a second option",
     "family": "receiving-under-fast-pressure",
@@ -2053,27 +2049,27 @@
       {
         "id": "exp26-u18-009-q2",
         "type": "multi",
-        "prompt": "Which two cues should affect the first-touch option?",
+        "prompt": "While D1’s pass is still travelling toward YOU, which two current receiver-pressure relationships belong in the pre-scan?",
         "options": [
           {
             "id": "a",
-            "text": "A requirement to pass first-time regardless"
+            "text": "Gold 1 is closer to F1 than Gold 2 is"
           },
           {
             "id": "b",
-            "text": "Whether Gold 1 closes F1’s route"
+            "text": "Gold 2 is closer to F2 than Gold 1 is"
           },
           {
             "id": "c",
-            "text": "The arriving pass quality"
+            "text": "Gold 3 is closer to YOU than Gold 2 is"
           }
         ],
         "answer": [
-          "b",
-          "c"
+          "a",
+          "b"
         ],
-        "explanation": "Preparation enables an early option, but a changed route or difficult reception can require another action.",
-        "basis": "coaching"
+        "explanation": "F1 has Gold 1 nearby, and F2 has Gold 2 nearby. Prepare alternatives using those pressures, then update the arriving puck quality and passing lines before choosing a redirect or a controlling touch.",
+        "basis": "scene"
       },
       {
         "id": "exp26-u18-009-q3",

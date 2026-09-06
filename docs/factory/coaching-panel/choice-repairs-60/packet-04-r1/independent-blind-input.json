@@ -1,0 +1,413 @@
+[
+  {
+    "scene": {
+      "id": "exp26b-u9-010",
+      "ageBand": "U9",
+      "objective": "Choose a support lane that helps a carrier exit pressure near the defending end.",
+      "briefing": "Navy attacks the +x end and gold attacks the -x end. Navy2 has the puck in the defending end, off to one side. YOU are closer to the side boards than Navy2. Gold1 is ahead of Navy2 along the rink. Navy3 waits farther ahead, toward the neutral zone. The coach asks you to become a safe outlet.",
+      "setup": {
+        "actors": [
+          {
+            "id": "home-skater-1",
+            "label": "YOU",
+            "team": "home",
+            "role": "skater",
+            "x": -22,
+            "y": -8,
+            "facing": 0.5
+          },
+          {
+            "id": "home-skater-2",
+            "label": "Navy2",
+            "team": "home",
+            "role": "skater",
+            "x": -25,
+            "y": -3,
+            "facing": 0.2
+          },
+          {
+            "id": "home-skater-3",
+            "label": "Navy3",
+            "team": "home",
+            "role": "skater",
+            "x": -14,
+            "y": 1,
+            "facing": 0.1
+          },
+          {
+            "id": "away-skater-1",
+            "label": "Gold1",
+            "team": "away",
+            "role": "skater",
+            "x": -20,
+            "y": -4,
+            "facing": 2.8
+          }
+        ],
+        "puck": {
+          "owner": "home-skater-2"
+        }
+      },
+      "cues": [
+        "Navy2 has the puck in the defending end.",
+        "Gold1 is ahead of Navy2 along the rink.",
+        "Navy3 is farther toward the neutral zone."
+      ]
+    },
+    "question": {
+      "id": "exp26b-u9-010-q5",
+      "type": "choice",
+      "prompt": "Navy 2 is comparing the two outlets. Which pass is shorter to assess when looking for nearby help?",
+      "options": [
+        {
+          "id": "a",
+          "text": "The pass to YOU"
+        },
+        {
+          "id": "b",
+          "text": "The pass to Navy 3"
+        }
+      ],
+      "basis": "coaching"
+    }
+  },
+  {
+    "scene": {
+      "id": "exp26b-u9-014",
+      "ageBand": "U9",
+      "objective": "Use a named rink area to look for support while checking a defender.",
+      "briefing": "Navy attacks the +x end and gold attacks the -x end. YOU have the puck inside the attacking faceoff circle. Navy2 waits outside the circle, closer to the middle across the ice. Gold1 is between you and the net. The coach names the circle as a place to search, not a guaranteed pass spot.",
+      "setup": {
+        "actors": [
+          {
+            "id": "home-skater-1",
+            "label": "YOU",
+            "team": "home",
+            "role": "skater",
+            "x": 20,
+            "y": -7,
+            "facing": 1.2
+          },
+          {
+            "id": "home-skater-2",
+            "label": "Navy2",
+            "team": "home",
+            "role": "skater",
+            "x": 18,
+            "y": -1,
+            "facing": -1.4
+          },
+          {
+            "id": "away-skater-1",
+            "label": "Gold1",
+            "team": "away",
+            "role": "skater",
+            "x": 23,
+            "y": -2,
+            "facing": 2.8
+          }
+        ],
+        "puck": {
+          "owner": "home-skater-1"
+        }
+      },
+      "cues": [
+        "YOU have the puck beside the faceoff circle.",
+        "Navy2 waits above it.",
+        "Gold1 is between YOU and the net."
+      ]
+    },
+    "question": {
+      "id": "exp26b-u9-014-q5",
+      "type": "choice",
+      "prompt": "From the puck in this view, which direct line gives more room from Gold 1 to assess?",
+      "options": [
+        {
+          "id": "a",
+          "text": "The line toward Navy 2"
+        },
+        {
+          "id": "b",
+          "text": "The line toward Gold\u2019s net"
+        }
+      ],
+      "basis": "coaching"
+    }
+  },
+  {
+    "scene": {
+      "id": "exp26-u11-001",
+      "ageBand": "U11",
+      "objective": "Locate an outlet and approaching pressure before planning a retrieval.",
+      "briefing": "You are in Navy\u2019s defensive zone, where Navy defends the nearby net. YOU are approaching a loose puck near the side boards. F2 is a possible outlet toward the middle; D1 is approaching from up ice. No player has recovered the puck yet.",
+      "setup": {
+        "actors": [
+          {
+            "id": "h1",
+            "label": "YOU",
+            "team": "home",
+            "role": "skater",
+            "x": -16,
+            "y": -6,
+            "facing": -1.88283844835743
+          },
+          {
+            "id": "h2",
+            "label": "F2",
+            "team": "home",
+            "role": "skater",
+            "x": -10,
+            "y": -1,
+            "facing": 3.14
+          },
+          {
+            "id": "a1",
+            "label": "D1",
+            "team": "away",
+            "role": "skater",
+            "x": -12,
+            "y": -6,
+            "facing": 3.14
+          }
+        ],
+        "puck": {
+          "owner": null,
+          "x": -18,
+          "y": -12.2
+        }
+      },
+      "cues": [
+        "The puck is loose beside the wall.",
+        "F2 is away from the wall.",
+        "D1 approaches from the up-ice side."
+      ]
+    },
+    "question": {
+      "id": "exp26-u11-001-q5",
+      "type": "choice",
+      "prompt": "Before planning a pass after the pickup, which relationship should YOU account for in this view?",
+      "options": [
+        {
+          "id": "a",
+          "text": "D1 and F2 are both up ice from the loose puck"
+        },
+        {
+          "id": "b",
+          "text": "D1 is on the net side of the loose puck, opposite F2 along the rink"
+        }
+      ],
+      "basis": "scene"
+    }
+  },
+  {
+    "scene": {
+      "id": "exp26-u11-003",
+      "ageBand": "U11",
+      "objective": "Recognize that a teammate can be nearby yet unavailable on a direct passing line.",
+      "briefing": "Navy attacks the right net (+x); gold attacks the left net. F1 has possession. YOU are a nearby receiver, but D1 stands between you and the puck. F2 is farther across the ice. The task is to improve your own availability.",
+      "setup": {
+        "actors": [
+          {
+            "id": "h1",
+            "label": "F1",
+            "team": "home",
+            "role": "skater",
+            "x": 10,
+            "y": -5,
+            "facing": 0
+          },
+          {
+            "id": "h2",
+            "label": "YOU",
+            "team": "home",
+            "role": "skater",
+            "x": 15,
+            "y": -4,
+            "facing": 3.14
+          },
+          {
+            "id": "h3",
+            "label": "F2",
+            "team": "home",
+            "role": "skater",
+            "x": 17,
+            "y": 6,
+            "facing": -2.4
+          },
+          {
+            "id": "a1",
+            "label": "D1",
+            "team": "away",
+            "role": "skater",
+            "x": 12.5,
+            "y": -4.5,
+            "facing": 3.14
+          }
+        ],
+        "puck": {
+          "owner": "h1"
+        }
+      },
+      "cues": [
+        "D1 occupies the direct F1-to-YOU line.",
+        "F2 offers a separate angle.",
+        "Being nearest is different from having a clear lane."
+      ]
+    },
+    "question": {
+      "id": "exp26-u11-003-q5",
+      "type": "choice",
+      "prompt": "Imagine D1 follows YOU away from F1, staying close to YOU. What benefit could that create while F1 still has the puck?",
+      "options": [
+        {
+          "id": "a",
+          "text": "More room for F1 to assess a carry"
+        },
+        {
+          "id": "b",
+          "text": "More separation from D1 for YOU to receive"
+        }
+      ],
+      "basis": "coaching"
+    }
+  },
+  {
+    "scene": {
+      "id": "exp26-u11-003",
+      "ageBand": "U11",
+      "objective": "Recognize that a teammate can be nearby yet unavailable on a direct passing line.",
+      "briefing": "Navy attacks the right net (+x); gold attacks the left net. F1 has possession. YOU are a nearby receiver, but D1 stands between you and the puck. F2 is farther across the ice. The task is to improve your own availability.",
+      "setup": {
+        "actors": [
+          {
+            "id": "h1",
+            "label": "F1",
+            "team": "home",
+            "role": "skater",
+            "x": 10,
+            "y": -5,
+            "facing": 0
+          },
+          {
+            "id": "h2",
+            "label": "YOU",
+            "team": "home",
+            "role": "skater",
+            "x": 15,
+            "y": -4,
+            "facing": 3.14
+          },
+          {
+            "id": "h3",
+            "label": "F2",
+            "team": "home",
+            "role": "skater",
+            "x": 17,
+            "y": 6,
+            "facing": -2.4
+          },
+          {
+            "id": "a1",
+            "label": "D1",
+            "team": "away",
+            "role": "skater",
+            "x": 12.5,
+            "y": -4.5,
+            "facing": 3.14
+          }
+        ],
+        "puck": {
+          "owner": "h1"
+        }
+      },
+      "cues": [
+        "D1 occupies the direct F1-to-YOU line.",
+        "F2 offers a separate angle.",
+        "Being nearest is different from having a clear lane."
+      ]
+    },
+    "question": {
+      "id": "exp26-u11-003-q7",
+      "type": "choice",
+      "prompt": "Which call best describes the two support options F1 can see in this freeze?",
+      "options": [
+        {
+          "id": "a",
+          "text": "F2 has a different angle across the ice; D1 is close to my return line"
+        },
+        {
+          "id": "b",
+          "text": "I have the different angle across the ice; D1 is close to F2\u2019s line"
+        }
+      ],
+      "basis": "coaching"
+    }
+  },
+  {
+    "scene": {
+      "id": "exp26-u11-004",
+      "ageBand": "U11",
+      "objective": "Plan off-puck movement after a completed pass without assuming an immediate return.",
+      "briefing": "Navy attacks the right net (+x); gold attacks the left net. YOU have just passed to F2, who now owns the puck. D1 lies between your old position and F2. This freeze begins after reception, not during flight.",
+      "setup": {
+        "actors": [
+          {
+            "id": "h1",
+            "label": "YOU",
+            "team": "home",
+            "role": "skater",
+            "x": 10,
+            "y": 4,
+            "facing": 0
+          },
+          {
+            "id": "h2",
+            "label": "F2",
+            "team": "home",
+            "role": "skater",
+            "x": 14,
+            "y": -3,
+            "facing": 0
+          },
+          {
+            "id": "a1",
+            "label": "D1",
+            "team": "away",
+            "role": "skater",
+            "x": 12,
+            "y": 0.5,
+            "facing": 2.7
+          }
+        ],
+        "puck": {
+          "owner": "h2"
+        }
+      },
+      "cues": [
+        "F2 owns the puck now.",
+        "YOU no longer need to carry it.",
+        "D1 shades the old return line."
+      ]
+    },
+    "question": {
+      "id": "exp26-u11-004-q2",
+      "type": "multi",
+      "prompt": "Which two visible relationships matter when YOU offer F2 another passing option?",
+      "options": [
+        {
+          "id": "a",
+          "text": "F2 is across the middle from YOU"
+        },
+        {
+          "id": "b",
+          "text": "D1 is near the direct return line between F2 and YOU"
+        },
+        {
+          "id": "c",
+          "text": "D1 is closer to the side boards than either Navy skater"
+        }
+      ],
+      "basis": "scene"
+    }
+  }
+]
