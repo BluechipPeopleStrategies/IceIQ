@@ -1,6 +1,6 @@
 # RinkReads — Task List
 
-**Last updated:** 2026-09-05 · Production 7c2d45c includes reviewed packets 01–13 and the migration-independent player release. Packet 13: eight repairs, 35 tests/build passed, live answer/feedback/reload verified. Coach/goals/training remains held for Supabase sign-in and migration 0024.
+**Last updated:** 2026-09-05 · Packet 14: 50 questions reviewed, six independently rechecked repairs across three scenarios; release verification in progress. Production parent 7c2d45c includes packets 01–13. Coach/goals/training remains held for Supabase sign-in and migration 0024.
 
 **Scope:** RinkReads **app build + content factory**. Launch/distribution (sending the beta, marketing) and the separate BlueChip business are **out of scope** — parked at the bottom. Priority = position in this list. A new idea that isn't here goes to the **Parking Lot** first, then gets promoted on purpose — that's the scope-creep guard.
 
@@ -56,6 +56,8 @@
 - *(New ideas land here first, then get promoted into NEXT/LATER on purpose.)*
 
 ## Changelog
+
+- **2026-09-05** — Adjudicated packet 14: six repairs covering grammar, teammate/opponent communication and conditional support prompts. Exact independent receipt preserves all source returns. [Evidence](../factory/research/question-review/packet-14/root-content-adjudication.md).
 
 - **2026-09-05** — Published packet 13 as 7c2d45c; exact-commit Vercel success and live two-cue answer/feedback persistence verified at 390 px. Reviewed 50 questions, repaired eight across four scenarios. [Deployment evidence](../one-on-one/2026-09-05-packet-13-production.md).
 
