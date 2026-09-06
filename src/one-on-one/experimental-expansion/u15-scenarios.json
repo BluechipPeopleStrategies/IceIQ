@@ -1111,13 +1111,13 @@
   },
   {
     "id": "exp26b-u15-006",
-    "version": 1,
+    "version": 2,
     "ageBand": "U15",
     "title": "Recover behind the puck-side handoff",
     "family": "backcheck-handoff-recovery",
     "topic": "Backchecking communication",
     "objective": "Track the second attacker after a puck-side handoff and keep the net-side lane in view.",
-    "briefing": "Gold attacks the Navy net. Gold 1 carries toward the Navy net, D1 is set near that route, and Gold 2 is inside support. YOU is recovering between the puck side and Gold 2; C trails farther back.",
+    "briefing": "Gold attacks Navy’s left net. Gold 1 carries in a wide lane and is already closer to the net than D1. Gold 2 is inside support. YOU are recovering from farther up ice. In this exercise D1 tries to recover toward the carrier while YOU account for Gold 2; no coverage or arrival time is guaranteed.",
     "setup": {
       "actors": [
         {
@@ -1181,9 +1181,9 @@
     },
     "focusActorId": "h1",
     "cues": [
-      "Gold 1 has the puck.",
-      "D1 is set on the puck-side route.",
-      "YOU is recovering near Gold 2."
+      "Gold 1 controls the puck and is closer to Navy’s net than D1.",
+      "Gold 2 is the inside support attacker.",
+      "YOU are still recovering; C is another Navy player."
     ],
     "tags": [
       "experimental",
@@ -1215,7 +1215,7 @@
           },
           {
             "id": "c",
-            "text": "D1"
+            "text": "Gold 3"
           }
         ],
         "answer": [
@@ -1247,7 +1247,7 @@
           "b"
         ],
         "basis": "coaching",
-        "explanation": "The covered carrier and the inside route define the next recovery relationship."
+        "explanation": "Check whether D1 can recover against Gold 1 and where Gold 2 can become dangerous. The carrier is not already contained in this picture."
       },
       {
         "id": "exp26b-u15-006-q3",
@@ -1278,14 +1278,14 @@
       {
         "id": "exp26b-u15-006-q4",
         "type": "position",
-        "prompt": "Move YOU to a net-side relationship with Gold 2 while keeping D1 visible.",
+        "prompt": "Move YOU to compare a net-side recovery target against Gold 2.",
         "actorId": "h1",
         "reference": {
-          "x": -13,
+          "x": -17,
           "y": -1.5
         },
         "basis": "coaching",
-        "explanation": "This changes YOU toward the inside threat without occupying D1's puck-side line."
+        "explanation": "The example is closer to Navy’s net than Gold 2 and stays separate from D1. Check speed and the carrier before assuming YOU can arrive in time."
       },
       {
         "id": "exp26b-u15-006-q5",
@@ -1316,19 +1316,19 @@
         "type": "explain",
         "prompt": "What makes a recovery call useful after a puck-side handoff?",
         "basis": "coaching",
-        "explanation": "Name the covered carrier, the inside attacker and the lane you are taking. If either route changes, call the new threat before moving."
+        "explanation": "Name the carrier, inside support and intended recovery responsibility. Keep scanning and updating with D1; a call does not prove either threat is covered."
       }
     ]
   },
   {
     "id": "exp26b-u15-007",
-    "version": 1,
+    "version": 2,
     "ageBand": "U15",
     "title": "Turn the forecheck into a support angle",
     "family": "neutral-regroup-angle",
     "topic": "Neutral-zone regroup",
     "objective": "Use a changing forecheck to select a reachable teammate and preserve a reset connection.",
-    "briefing": "Navy attacks the Gold net. YOU owns the puck near the neutral-zone boards; Gold 1 closes the wall and Gold 2 shades F1. D2 is deeper across the rink, while F1 offers a forward connection.",
+    "briefing": "Navy attacks the right net. YOU control the puck in a wide neutral-zone lane. Gold 1 approaches from nearer the boards, and Gold 2 is near the forward-support area. D2 is closer to Navy’s net and across the middle, while F1 is farther up ice.",
     "setup": {
       "actors": [
         {
@@ -1392,9 +1392,9 @@
     },
     "focusActorId": "h1",
     "cues": [
-      "YOU owns the puck.",
-      "Gold 1 pressures the board side.",
-      "D2 is the deeper reset and F1 is ahead."
+      "YOU control the puck.",
+      "D2 is closer to Navy’s net and across the middle.",
+      "Gold 1 and Gold 2 affect the support choices."
     ],
     "tags": [
       "experimental",
@@ -1426,7 +1426,7 @@
           },
           {
             "id": "c",
-            "text": "Gold 2"
+            "text": "YOU"
           }
         ],
         "answer": [
@@ -1489,14 +1489,14 @@
       {
         "id": "exp26b-u15-007-q4",
         "type": "position",
-        "prompt": "Move YOU to a central angle that keeps D2 and F1 visible.",
+        "prompt": "Move YOU nearer the middle to compare the angles toward D2 and F1.",
         "actorId": "h1",
         "reference": {
           "x": -2,
           "y": 3.2
         },
         "basis": "coaching",
-        "explanation": "This opens a view of both the reset and forward connection without copying either player."
+        "explanation": "The example moves YOU nearer Gold 1 and farther from D2. Compare the changed pressure and passing angles rather than assuming a safer connection."
       },
       {
         "id": "exp26b-u15-007-q5",
@@ -1525,7 +1525,7 @@
       {
         "id": "exp26b-u15-007-q6",
         "type": "explain",
-        "prompt": "Why does an angle help a regroup more than simply moving away from the boards?",
+        "prompt": "Why should YOU compare passing angles as well as distance from the boards?",
         "basis": "coaching",
         "explanation": "An angle can keep the puck carrier connected to both D2 and F1 while showing the forecheck. If one route closes, the other remains a live branch only when reachable."
       }
@@ -1533,13 +1533,13 @@
   },
   {
     "id": "exp26b-u15-008",
-    "version": 1,
+    "version": 2,
     "ageBand": "U15",
     "title": "Call the net-side exchange",
     "family": "behind-net-communication",
     "topic": "Defensive coverage communication",
     "objective": "Coordinate a behind-net exchange by naming the puck carrier, inside threat and teammate cover.",
-    "briefing": "Gold attacks the Navy net. Gold 1 carries behind the Navy net; YOU is on the near side, D2 is opposite, and C protects the slot against Gold 2. The handoff depends on which side Gold 1 exits.",
+    "briefing": "Gold attacks Navy’s left net. Gold 1 controls the puck behind that net. YOU and D2 are on opposite sides. C is assigned to account for Gold 2 near the slot, but C starts farther from the net than Gold 2. Coordinate pressure and slot coverage as Gold 1 changes sides.",
     "setup": {
       "actors": [
         {
@@ -1603,9 +1603,9 @@
     },
     "focusActorId": "h1",
     "cues": [
-      "Gold 1 is behind the Navy net.",
+      "Gold 1 controls the puck behind Navy’s net.",
       "YOU and D2 are on opposite sides.",
-      "C is the slot support against Gold 2."
+      "C’s assignment is to account for Gold 2, not proof that coverage is complete."
     ],
     "tags": [
       "experimental",
@@ -1700,14 +1700,14 @@
       {
         "id": "exp26b-u15-008-q4",
         "type": "position",
-        "prompt": "Move YOU to an inside support position on the near side with C visible.",
+        "prompt": "Move YOU nearer the middle on your current side to compare inside support.",
         "actorId": "h1",
         "reference": {
           "x": -21,
           "y": -1
         },
         "basis": "coaching",
-        "explanation": "This keeps YOU connected to the carrier side while preserving C's slot relationship."
+        "explanation": "The example moves YOU toward the middle and stays separate from C. Check Gold 1’s exit and Gold 2’s route before changing responsibility."
       },
       {
         "id": "exp26b-u15-008-q5",
@@ -1744,9 +1744,9 @@
   },
   {
     "id": "exp26b-u15-009",
-    "version": 2,
+    "version": 3,
     "ageBand": "U15",
-    "title": "Stay above a low cycle",
+    "title": "Offer high support for a low cycle",
     "family": "cycle-high-outlet",
     "topic": "Offensive support",
     "objective": "Maintain a separated high outlet while teammates cycle low in the attacking zone.",
@@ -1836,7 +1836,7 @@
       {
         "id": "exp26b-u15-009-q1",
         "type": "choice",
-        "prompt": "Which Navy forward carries below the Gold net?",
+        "prompt": "Which Navy forward controls the puck behind Gold’s goal line?",
         "options": [
           {
             "id": "a",
@@ -1855,7 +1855,7 @@
           "a"
         ],
         "basis": "scene",
-        "explanation": "The setup assigns the puck below the net to F1."
+        "explanation": "F1 controls the puck behind the attacking goal line."
       },
       {
         "id": "exp26b-u15-009-q2",
@@ -1864,7 +1864,7 @@
         "options": [
           {
             "id": "a",
-            "text": "F1's ability to see above support"
+            "text": "Whether F1 can reach a high support option"
           },
           {
             "id": "b",
@@ -1911,14 +1911,14 @@
       {
         "id": "exp26b-u15-009-q4",
         "type": "position",
-        "prompt": "Move YOU to a high pocket away from F2 with F1 visible.",
+        "prompt": "Move YOU to compare a high support point separate from F2.",
         "actorId": "h1",
         "reference": {
           "x": 18,
           "y": 4.5
         },
         "basis": "coaching",
-        "explanation": "This creates a different high connection while leaving the low cycle space open."
+        "explanation": "The example stays nearer the blue line than F1 and F2. It moves farther from Gold 2 but nearer Gold 1, so recheck both before asking for a pass."
       },
       {
         "id": "exp26b-u15-009-q5",
@@ -1955,13 +1955,13 @@
   },
   {
     "id": "exp26b-u15-010",
-    "version": 1,
+    "version": 2,
     "ageBand": "U15",
     "title": "Change the point release picture",
     "family": "point-release-traffic",
     "topic": "Point attack and traffic",
     "objective": "Compare a point release with a screen and a cross-slot option when the defender changes the lane.",
-    "briefing": "Navy attacks the Gold net. YOU controls at the point; F1 is near the Gold crease, F2 is across the high slot, and Gold 1 shades YOU. The visible screen and support are conditional practice cues.",
+    "briefing": "Navy attacks the right net. YOU control the puck near the blue line. F1 is near the net front and F2 is nearer the middle. Gold 1 is nearby on the middle side of YOU. The goalie is not shown, so no effective screen or shot outcome is established.",
     "setup": {
       "actors": [
         {
@@ -2025,9 +2025,9 @@
     },
     "focusActorId": "h1",
     "cues": [
-      "YOU controls at the point.",
-      "F1 is near the net-front lane.",
-      "Gold 1 shades the direct release."
+      "YOU control the puck near the blue line.",
+      "F1 is near the net front and F2 is nearer the middle.",
+      "The goalie’s view and a successful screen are not established."
     ],
     "tags": [
       "experimental",
@@ -2075,7 +2075,7 @@
         "options": [
           {
             "id": "a",
-            "text": "Whether F1 still screens a useful lane"
+            "text": "Whether F1 could provide a useful screen"
           },
           {
             "id": "b",
@@ -2091,7 +2091,7 @@
           "b"
         ],
         "basis": "coaching",
-        "explanation": "Screen quality and the cross-slot connection shape the decision after the defender shifts."
+        "explanation": "Compare the actual goalie view, traffic and route to F2. A net-front position alone does not establish a screen."
       },
       {
         "id": "exp26b-u15-010-q3",
@@ -2117,28 +2117,28 @@
           "c"
         ],
         "basis": "coaching",
-        "explanation": "The direct release is one branch; support and screen cues decide whether it remains useful."
+        "explanation": "Check the defender, net-front traffic and F2 as part of a continuing scan. Recheck the lane before release; this is one suggested order."
       },
       {
         "id": "exp26b-u15-010-q4",
         "type": "position",
-        "prompt": "Move YOU to a point angle that separates the release from F1.",
+        "prompt": "Move YOU to compare another shooting angle toward the net.",
         "actorId": "h1",
         "reference": {
           "x": 12,
           "y": 6.5
         },
         "basis": "coaching",
-        "explanation": "This changes the shooting line while keeping the screen and cross-slot option visible."
+        "explanation": "The example changes the line toward the net and moves YOU closer to Gold 1. Recheck pressure, F1 and F2; a screen is not guaranteed."
       },
       {
         "id": "exp26b-u15-010-q5",
         "type": "choice",
-        "prompt": "Gold 1 opens the point but F1 moves away from the crease. What deserves attention?",
+        "prompt": "If Gold 1 moves away and F1 leaves the net front, what deserves attention?",
         "options": [
           {
             "id": "a",
-            "text": "Compare F2 or a protected release with the lost screen"
+            "text": "Compare F2 with the changed shot and traffic picture"
           },
           {
             "id": "b",
@@ -2146,7 +2146,7 @@
           },
           {
             "id": "c",
-            "text": "Assume the goalie remains screened"
+            "text": "Assume the lane is still fully screened without rechecking"
           }
         ],
         "answer": [
@@ -2160,7 +2160,7 @@
         "type": "explain",
         "prompt": "What makes feedback on a point release useful in this rep?",
         "basis": "coaching",
-        "explanation": "Name Gold 1, F1 and F2, then explain how their lanes affect a release, pass or protected reset. The screen cue can disappear before the choice."
+        "explanation": "Name Gold 1, F1 and F2 and explain the shot, pass or protection options. Check the actual goalie and traffic before describing a useful screen."
       }
     ]
   },
