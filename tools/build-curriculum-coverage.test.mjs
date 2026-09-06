@@ -2,6 +2,16 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { buildCoverageReport } from './build-curriculum-coverage.mjs';
 
+test('audit provenance and routine optional reflection counts remain separate from authored volume', () => {
+  const bank=[{id:'s',ageBand:'U7',title:'Read',topic:'Passing',family:'pass',tags:[],objective:'Pass',setup:{actors:[],puck:{x:0,y:0}},sources:[],questions:[{id:'q1',type:'choice',basis:'scene',prompt:'Who?'},{id:'q2',type:'explain',basis:'coaching',prompt:'Why?'},{id:'q3',type:'explain',basis:'coaching',prompt:'What changed?'}]}];
+  const report=buildCoverageReport({bank,generatedAt:'2026-09-06',audit:{snapshotSha256:'example'}});
+  assert.equal(report.meta.generatedAt,'2026-09-06');
+  assert.equal(report.audit.snapshotSha256,'example');
+  assert.equal(report.overview.questions,3);
+  assert.equal(report.practiceInventory.questions,2);
+  assert.equal(report.practiceInventory.typeCounts.explain,1);
+});
+
 test('curriculum coverage report keeps question volume separate from unique geometry', () => {
   const report = buildCoverageReport({
     bank: [

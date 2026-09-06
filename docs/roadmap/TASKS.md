@@ -1,6 +1,6 @@
 # RinkReads — Task List
 
-**Last updated:** 2026-09-06 · All 40 Claude packets are adjudicated and deployed, covering 1,600 unique questions / 200 scenes. Final packets 37–40 repaired 113 affected question versions across 20 U18 scenes. Release 3851cae passed 49 tests, build and live placement/reload verification. No completed packet remains to integrate. Human coach approval remains separate; Supabase stays deferred.
+**Last updated:** 2026-09-06 · All-scene audit and curriculum map completed over the 200-scene / 1,600-question snapshot. 400 release-app captures, zero load failures/overflow; nine actor/net footprint defects remain to repair. Routine practice has 1,500 questions with 200 optional reflections (13.3%). All 40 packet integrations remain deployed; this audit made no content fixes or deployment. Supabase stays deferred.
 
 **Scope:** RinkReads **app build + content factory**. Launch/distribution (sending the beta, marketing) and the separate BlueChip business are **out of scope** — parked at the bottom. Priority = position in this list. A new idea that isn't here goes to the **Parking Lot** first, then gets promoted on purpose — that's the scope-creep guard.
 
@@ -56,6 +56,8 @@
 - *(New ideas land here first, then get promoted into NEXT/LATER on purpose.)*
 
 ## Changelog
+
+- **2026-09-06** · Audited all 200 experimental scenes after the 40-packet release. Preserved 1,600 question IDs, 295 placement measurements, 400 screenshots and reviewer evidence; root overrode six incorrect goalie clear judgments and identified three skater/net overlaps. Added a searchable [audit and nine-item repair queue](../factory/scene-audit-2026-09-06/index.html), then refreshed the [curriculum map](../factory/curriculum-map/index.html) against that exact snapshot. Next: repair net geometry, bind curriculum concept IDs, calibrate weaker coverage; counts are not mastery or human coach approval.
 
 - 2026-09-06 · All 40 Claude packets are adjudicated and deployed, covering 1,600 unique questions / 200 scenes. Final packets 37–40 repaired 113 affected question versions across 20 U18 scenes. Release 3851cae passed 49 tests, build and live placement/reload verification. No completed packet remains to integrate. Human coach approval remains separate; Supabase stays deferred.
 

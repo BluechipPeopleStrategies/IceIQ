@@ -1,0 +1,116 @@
+{
+  "schemaVersion": 2,
+  "kind": "goalie-coordinate-adjudication",
+  "date": "2026-09-06",
+  "scope": "Re-adjudication using NHL_200X85_PROFILE.landmarks.goalLineRight[0] and Scenario3DStage goal mesh depth 1.2 m; signed positive offset means behind the relevant goal line.",
+  "rows": [
+    {
+      "sceneId": "exp26b-u13-006",
+      "sceneHash": "705dbbc15975db89668edda86694ea5831df06cc5fc0296613ca3d52032367ce",
+      "goalie": {
+        "label": "Gold goalie",
+        "team": "away",
+        "x": 27,
+        "y": 0
+      },
+      "canonicalGoalLineM": 26.91384,
+      "goalMeshDepthM": 1.2,
+      "signedBehindGoalLineM": 0.08616,
+      "goalVolumeEndM": 28.11384,
+      "verdict": "goalie-inside-goal-volume",
+      "reason": "Gold goalie (27,0) is +0.08616 m behind the canonical right goal line 26.91384 and within the 0.9144 m goal-mesh depth. The screen scene explicitly places a goalie near the net; this is a net/goal-volume coordinate, not a behind-net retrieval.",
+      "confidence": "high",
+      "suggestedFix": "Keep coordinate; describe as net-front/inside goal volume and avoid calling it behind-net."
+    },
+    {
+      "sceneId": "exp26b-u13-007",
+      "sceneHash": "70d22c39694f069439a76743e037e95e4291e0c05c6829a1e826b3532a9e1d1b",
+      "goalie": {
+        "label": "Gold goalie",
+        "team": "away",
+        "x": 27,
+        "y": 0
+      },
+      "canonicalGoalLineM": 26.91384,
+      "goalMeshDepthM": 1.2,
+      "signedBehindGoalLineM": 0.08616,
+      "goalVolumeEndM": 28.11384,
+      "verdict": "goalie-inside-goal-volume",
+      "reason": "Gold goalie (27,0) is +0.08616 m behind goal line 26.91384 and within the 0.9144 m goal-mesh depth. The contested point-shot scene says goalie near the net and does not establish a save/finish.",
+      "confidence": "high",
+      "suggestedFix": "Keep coordinate; treat as goal-volume/net context."
+    },
+    {
+      "sceneId": "exp26b-u13-014",
+      "sceneHash": "b9994085efb966a502cf9fc7c64214910850698725538865446bbe51cfc4772b",
+      "goalie": {
+        "label": "Navy goalie",
+        "team": "home",
+        "x": -27,
+        "y": 0
+      },
+      "canonicalGoalLineM": -26.91384,
+      "goalMeshDepthM": 1.2,
+      "signedBehindGoalLineM": 0.08616,
+      "goalVolumeEndM": -28.11384,
+      "verdict": "goalie-inside-goal-volume",
+      "reason": "Navy goalie (-27,0) is +0.08616 m behind the canonical left goal line -26.91384 and within 0.9144 m goal depth. The loose rebound is at (-26,0.6), and the prose explicitly distinguishes goalie proximity from skater control.",
+      "confidence": "high",
+      "suggestedFix": "Keep coordinate; preserve rebound proximity-versus-control wording."
+    },
+    {
+      "sceneId": "exp26b-u13-019",
+      "sceneHash": "ff6cef5710fa6f800a64c9d119fa3c78c0bc661986dc26e5a77cc14304dc166b",
+      "goalie": {
+        "label": "Navy goalie",
+        "team": "home",
+        "x": -27,
+        "y": 0
+      },
+      "canonicalGoalLineM": -26.91384,
+      "goalMeshDepthM": 1.2,
+      "signedBehindGoalLineM": 0.08616,
+      "goalVolumeEndM": -28.11384,
+      "verdict": "goalie-inside-goal-volume",
+      "reason": "Navy goalie (-27,0) is +0.08616 m behind left goal line -26.91384 and within goal depth. The goalie-to-D1 outlet is a release context; D1 owns the puck at (-25.159,-6.115).",
+      "confidence": "high",
+      "suggestedFix": "Keep coordinate; retain outlet-release context, without labeling the goalie behind the net."
+    },
+    {
+      "sceneId": "exp26b-u15-011",
+      "sceneHash": "4de6b899f39508d6d9b418a076b470e71d683208948dadc39bf88c26e6cc10ba",
+      "goalie": {
+        "label": "G",
+        "team": "home",
+        "x": -28,
+        "y": 0
+      },
+      "canonicalGoalLineM": -26.91384,
+      "goalMeshDepthM": 1.2,
+      "signedBehindGoalLineM": 1.08616,
+      "goalVolumeEndM": -28.11384,
+      "verdict": "legitimate-behind-net-outlet",
+      "reason": "Navy goalie (-28,0) is +1.08616 m behind left goal line -26.91384 and remains within the 1.2 m goal-mesh depth (back edge -28.11384). The briefing explicitly says the goalie has released an outlet while the puck remains loose at (-21,-7), so this is a deliberate behind-net outlet origin.",
+      "confidence": "high",
+      "suggestedFix": "Keep coordinate; retain explicit outlet and loose-in-transit wording."
+    },
+    {
+      "sceneId": "exp26b-u15-012",
+      "sceneHash": "c631f4632dcc07fbcef1adc0dc1bed4a66b9cd07f2d4df09db4d61e017055faa",
+      "goalie": {
+        "label": "G",
+        "team": "away",
+        "x": 28,
+        "y": 0
+      },
+      "canonicalGoalLineM": 26.91384,
+      "goalMeshDepthM": 1.2,
+      "signedBehindGoalLineM": 1.08616,
+      "goalVolumeEndM": 28.11384,
+      "verdict": "goalie-inside-goal-volume",
+      "reason": "Gold goalie (28,0) is +1.08616 m behind right goal line 26.91384 and remains within the 1.2 m goal-mesh depth (back edge 28.11384). The briefing says goalie near the net in a 2-on-1 and does not claim a save or finish; the coordinate is deep in the goal volume but not outside the rendered goal.",
+      "confidence": "high",
+      "suggestedFix": "Keep coordinate; if visual teaching clarity matters, describe the goalie as deep in the goal volume and preserve the no-save/no-finish boundary."
+    }
+  ]
+}

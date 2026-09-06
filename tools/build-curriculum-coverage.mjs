@@ -4,6 +4,7 @@ import { resolve, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { readBankFiles } from './experimental-bank-files.mjs';
 import { loadLedger } from './lib/curriculum-ledger.mjs';
+import { selectPracticeQuestions } from '../src/one-on-one/practiceQuestionSelection.js';
 
 const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const OUTPUT = resolve(ROOT, 'docs/factory/curriculum-map');
@@ -133,7 +134,7 @@ function buildScenarioRows(bank, domainNames) {
   });
 }
 
-export function buildCoverageReport({ bank, ledger = loadLedger() } = {}) {
+export function buildCoverageReport({ bank, ledger = loadLedger(), generatedAt = new Date().toISOString(), audit = null } = {}) {
   const inputBank = bank || readBankFiles().bank;
   const domainNames = Object.fromEntries(ledger.domains.map(domain => [domain.id, domain.name]));
   const scenarios = inputBank.map(scenario => ({ ...scenario, geometryHash: geometryHash(scenario) }));
@@ -192,7 +193,9 @@ export function buildCoverageReport({ bank, ledger = loadLedger() } = {}) {
   const sourceRows = [...sourceMap.values()].map(row => ({ ...row, scenarios: row.scenarios.size, ageBands: [...row.ageBands].sort(ageSort) })).sort((a, b) => b.questions - a.questions || a.title.localeCompare(b.title));
   const domainSignalCounts = countBy(scenarios.flatMap(scenario => signalFor(scenario).map(signal => signal.domainId)));
   return {
-    meta: { generatedAt: '2026-09-05', status: 'descriptive inventory / planning aid', source: 'tools/build-curriculum-coverage.mjs', ledgerVersion: ledger.meta?.version || null, ages: AGE_ORDER, signalMethod: 'Scenario-level domain signals use actual tags, topic, family and objective text. They do not replace explicit concept binding or coach review.', currentQuestionFields: 'Question rows retain actual id, type, basis and prompt; scenario rows retain actual tags, objective and source references.' },
+    audit,
+    practiceInventory: { questions: inputBank.reduce((n,s)=>n+selectPracticeQuestions(s).length,0), typeCounts: countBy(inputBank.flatMap(s=>selectPracticeQuestions(s)),q=>q.type), note: 'Routine practice retains one optional reflection per scenario. Direct links can select another authored reflection. Authored counts below include all questions.' },
+    meta: { generatedAt, status: 'descriptive inventory / planning aid', source: 'tools/build-curriculum-coverage.mjs', ledgerVersion: ledger.meta?.version || null, ages: AGE_ORDER, signalMethod: 'Scenario-level domain signals use actual tags, topic, family and objective text. They do not replace explicit concept binding or coach review.', currentQuestionFields: 'Question rows retain actual id, type, basis and prompt; scenario rows retain actual tags, objective and source references.' },
     overview: { scenarios: scenarios.length, questions: questions.length, uniqueOpeningGeometry: new Set(scenarios.map(scenario => scenario.geometryHash)).size, questionPerGeometry: Number((questions.length / Math.max(1, new Set(scenarios.map(scenario => scenario.geometryHash)).size)).toFixed(2)), ages: countBy(scenarios, scenario => scenario.ageBand), topics: new Set(scenarios.map(scenario => scenario.topic)).size, families: new Set(scenarios.map(scenario => scenario.family)).size, sourceReferences: sourceRows.length, observedQuestionTypes: actualTypeCounts, basisCounts: countBy(questions, question => question.basis), domainSignalCounts, caveats: ['Question volume is not mastery coverage.', 'One opening geometry can support several question prompts; unique geometry is counted from canonical setup actors and puck only.', 'Domain signals are transparent text matches over current scenario metadata, not authored curriculum bindings.', 'Unseen delivery formats are backlog candidates, not automatic defects.'] },
     domains: domainRows,
     concepts: directConceptRows,

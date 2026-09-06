@@ -1,0 +1,92 @@
+{
+  "schemaVersion": 1,
+  "kind": "goalie-coordinate-adjudication",
+  "date": "2026-09-06",
+  "scope": "Mechanical goalie-outside-goal-line flags for six U13/U15 scenes; read against complete scene setup and questions.",
+  "rows": [
+    {
+      "sceneId": "exp26b-u13-006",
+      "sceneHash": "705dbbc15975db89668edda86694ea5831df06cc5fc0296613ca3d52032367ce",
+      "goalie": {
+        "label": "Gold goalie",
+        "team": "away",
+        "x": 27,
+        "y": 0
+      },
+      "verdict": "legitimate-context",
+      "reason": "Gold goalie at (27,0) is 3.48 m inside the right goal line x=30.48; the scene explicitly asks for a net-front screen and all six questions treat goalie traffic as a live constraint.",
+      "confidence": "high",
+      "suggestedFix": "Keep coordinate; label it net-front/crease-side in any display copy if needed."
+    },
+    {
+      "sceneId": "exp26b-u13-007",
+      "sceneHash": "70d22c39694f069439a76743e037e95e4291e0c05c6829a1e826b3532a9e1d1b",
+      "goalie": {
+        "label": "Gold goalie",
+        "team": "away",
+        "x": 27,
+        "y": 0
+      },
+      "verdict": "legitimate-context",
+      "reason": "Gold goalie at (27,0) is 3.48 m inside the right goal line x=30.48; this is a contested point shot with no claimed save or finish, and q1-q6 only require lane/traffic reassessment.",
+      "confidence": "high",
+      "suggestedFix": "Keep coordinate; no correction to the goalie position is supported."
+    },
+    {
+      "sceneId": "exp26b-u13-014",
+      "sceneHash": "b9994085efb966a502cf9fc7c64214910850698725538865446bbe51cfc4772b",
+      "goalie": {
+        "label": "Navy goalie",
+        "team": "home",
+        "x": -27,
+        "y": 0
+      },
+      "verdict": "legitimate-context",
+      "reason": "Navy goalie at (-27,0) is 3.48 m inside the left goal line x=-30.48; briefing says goalie is closer still to rebound (-26,0.6), and q1 explicitly distinguishes goalie proximity from skater identity/control.",
+      "confidence": "high",
+      "suggestedFix": "Keep coordinate; preserve loose-rebound wording and proximity-versus-control distinction."
+    },
+    {
+      "sceneId": "exp26b-u13-019",
+      "sceneHash": "ff6cef5710fa6f800a64c9d119fa3c78c0bc661986dc26e5a77cc14304dc166b",
+      "goalie": {
+        "label": "Navy goalie",
+        "team": "home",
+        "x": -27,
+        "y": 0
+      },
+      "verdict": "legitimate-context",
+      "reason": "Navy goalie at (-27,0) is 3.48 m inside the left goal line x=-30.48; briefing says the goalie passed to D1, whose puck marker is (-25.159,-6.115), so goalie is a release origin rather than an out-of-play skater.",
+      "confidence": "high",
+      "suggestedFix": "Keep coordinate; retain outlet-release context."
+    },
+    {
+      "sceneId": "exp26b-u15-011",
+      "sceneHash": "4de6b899f39508d6d9b418a076b470e71d683208948dadc39bf88c26e6cc10ba",
+      "goalie": {
+        "label": "G",
+        "team": "home",
+        "x": -28,
+        "y": 0
+      },
+      "verdict": "legitimate-context",
+      "reason": "Navy goalie at (-28,0) is 2.48 m inside the left goal line x=-30.48; briefing explicitly describes a goalie outlet with the puck loose at (-21,-7), and q1/q3/q5 correctly avoid settled possession.",
+      "confidence": "high",
+      "suggestedFix": "Keep coordinate; retain loose-in-transit and no-clean-reception limits."
+    },
+    {
+      "sceneId": "exp26b-u15-012",
+      "sceneHash": "c631f4632dcc07fbcef1adc0dc1bed4a66b9cd07f2d4df09db4d61e017055faa",
+      "goalie": {
+        "label": "G",
+        "team": "away",
+        "x": 28,
+        "y": 0
+      },
+      "verdict": "legitimate-context",
+      "reason": "Gold goalie at (28,0) is 2.48 m inside the right goal line x=30.48; briefing explicitly places goalie near net in a 2-on-1 and says no save/finish is established, while q2-q6 make outcomes conditional.",
+      "confidence": "high",
+      "suggestedFix": "Keep coordinate; retain no-save/no-finish boundary."
+    }
+  ]
+}

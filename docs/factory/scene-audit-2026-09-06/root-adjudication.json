@@ -1,0 +1,164 @@
+{
+  "findings": [
+    {
+      "sceneId": "exp26b-u13-006",
+      "actorId": "ga",
+      "role": "goalie",
+      "position": [
+        27,
+        0
+      ],
+      "severity": "medium",
+      "status": "confirmed-needs-repair",
+      "category": "actor-in-net-footprint",
+      "evidence": "Actor origin is 0.08616 m behind the goal line at lateral 0 m, within the rendered net floor footprint.",
+      "repair": "For defending, use a crease-side goalie anchor. For an outlet, explicitly place the goalie outside the mesh. Recheck every dependent cue and question."
+    },
+    {
+      "sceneId": "exp26b-u13-007",
+      "actorId": "ga",
+      "role": "goalie",
+      "position": [
+        27,
+        0
+      ],
+      "severity": "medium",
+      "status": "confirmed-needs-repair",
+      "category": "actor-in-net-footprint",
+      "evidence": "Actor origin is 0.08616 m behind the goal line at lateral 0 m, within the rendered net floor footprint.",
+      "repair": "For defending, use a crease-side goalie anchor. For an outlet, explicitly place the goalie outside the mesh. Recheck every dependent cue and question."
+    },
+    {
+      "sceneId": "exp26b-u13-014",
+      "actorId": "nga",
+      "role": "goalie",
+      "position": [
+        -27,
+        0
+      ],
+      "severity": "medium",
+      "status": "confirmed-needs-repair",
+      "category": "actor-in-net-footprint",
+      "evidence": "Actor origin is 0.08616 m behind the goal line at lateral 0 m, within the rendered net floor footprint.",
+      "repair": "For defending, use a crease-side goalie anchor. For an outlet, explicitly place the goalie outside the mesh. Recheck every dependent cue and question."
+    },
+    {
+      "sceneId": "exp26b-u13-019",
+      "actorId": "ng",
+      "role": "goalie",
+      "position": [
+        -27,
+        0
+      ],
+      "severity": "medium",
+      "status": "confirmed-needs-repair",
+      "category": "actor-in-net-footprint",
+      "evidence": "Actor origin is 0.08616 m behind the goal line at lateral 0 m, within the rendered net floor footprint.",
+      "repair": "For defending, use a crease-side goalie anchor. For an outlet, explicitly place the goalie outside the mesh. Recheck every dependent cue and question."
+    },
+    {
+      "sceneId": "exp26b-u15-008",
+      "actorId": "a1",
+      "role": "skater",
+      "position": [
+        -28,
+        0
+      ],
+      "severity": "high",
+      "status": "confirmed-needs-repair",
+      "category": "actor-in-net-footprint",
+      "evidence": "Actor origin is 1.08616 m behind the goal line at lateral 0 m, within the rendered net floor footprint.",
+      "repair": "Place the skater outside the goal mesh, preserving the intended behind-net or net-front situation; recheck puck, distances and question contracts."
+    },
+    {
+      "sceneId": "exp26b-u15-011",
+      "actorId": "g1",
+      "role": "goalie",
+      "position": [
+        -28,
+        0
+      ],
+      "severity": "high",
+      "status": "confirmed-needs-repair",
+      "category": "actor-in-net-footprint",
+      "evidence": "Actor origin is 1.08616 m behind the goal line at lateral 0 m, within the rendered net floor footprint.",
+      "repair": "For defending, use a crease-side goalie anchor. For an outlet, explicitly place the goalie outside the mesh. Recheck every dependent cue and question."
+    },
+    {
+      "sceneId": "exp26b-u15-012",
+      "actorId": "g1",
+      "role": "goalie",
+      "position": [
+        28,
+        0
+      ],
+      "severity": "high",
+      "status": "confirmed-needs-repair",
+      "category": "actor-in-net-footprint",
+      "evidence": "Actor origin is 1.08616 m behind the goal line at lateral 0 m, within the rendered net floor footprint.",
+      "repair": "For defending, use a crease-side goalie anchor. For an outlet, explicitly place the goalie outside the mesh. Recheck every dependent cue and question."
+    },
+    {
+      "sceneId": "exp26-u18-007",
+      "actorId": "home-skater-4",
+      "role": "skater",
+      "position": [
+        28,
+        0
+      ],
+      "severity": "high",
+      "status": "confirmed-needs-repair",
+      "category": "actor-in-net-footprint",
+      "evidence": "Actor origin is 1.08616 m behind the goal line at lateral 0 m, within the rendered net floor footprint.",
+      "repair": "Place the skater outside the goal mesh, preserving the intended behind-net or net-front situation; recheck puck, distances and question contracts."
+    },
+    {
+      "sceneId": "exp26b-u18-007",
+      "actorId": "h3",
+      "role": "skater",
+      "position": [
+        28,
+        0
+      ],
+      "severity": "high",
+      "status": "confirmed-needs-repair",
+      "category": "actor-in-net-footprint",
+      "evidence": "Actor origin is 1.08616 m behind the goal line at lateral 0 m, within the rendered net floor footprint.",
+      "repair": "Place the skater outside the goal mesh, preserving the intended behind-net or net-front situation; recheck puck, distances and question contracts."
+    }
+  ],
+  "dismissed": [
+    {
+      "id": "exp26b-u7-008-0",
+      "category": "grammar",
+      "severity": "review",
+      "evidence": "Who has the puck after the pass? The briefing says the pass to YOU is complete. YOU are the new puck owner in this freeze. YOU Navy2 Gold1",
+      "questionIds": [
+        "exp26b-u7-008-q1"
+      ],
+      "status": "false-positive",
+      "sceneId": "exp26b-u7-008",
+      "reason": "The grammatical subject is a pass to YOU; is agrees with pass."
+    },
+    {
+      "id": "exp26b-u11-014-0",
+      "category": "grammar",
+      "severity": "review",
+      "evidence": "F1 turns to pass instead of shooting. What should YOU check? The carrier changed from shot to pass, so check reachability and D1's reaction before offering the same spot. Whether a pass to YOU is reachable and clear of D1 Stay still because the shot lane is unchanged Move across F1's stick lane",
+      "questionIds": [
+        "exp26b-u11-014-q5"
+      ],
+      "status": "false-positive",
+      "sceneId": "exp26b-u11-014",
+      "reason": "The grammatical subject is a pass to YOU; is agrees with pass."
+    }
+  ],
+  "rendererEvidence": {
+    "file": "src/one-on-one/PracticeScene.jsx",
+    "goalLineX": 26.91384,
+    "netDepth": 1.1,
+    "netBackHalfWidth": 0.74,
+    "worldConversion": "[rinkY, height, -rinkX]"
+  },
+  "supersedes": "goalie-adjudication.json verdicts; underlying reviewer outputs retained"
+}
