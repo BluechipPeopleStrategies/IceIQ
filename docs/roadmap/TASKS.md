@@ -1,6 +1,6 @@
 # RinkReads — Task List
 
-**Last updated:** 2026-09-05 · Packets 15–16 applied and independently rechecked: 88 questions reviewed, 29 question versions repaired across eight scenarios. Release verification in progress. Supabase deferred until tomorrow; no database action.
+**Last updated:** 2026-09-05 · Packets 15–16 applied and independently rechecked: 88 questions reviewed, 29 question versions repaired across eight scenarios. 35 focused tests and isolated build passed; deployed as d3a9458 and representative live screens verified. Packets 01–16 are live. Supabase deferred until tomorrow; no database action.
 
 **Scope:** RinkReads **app build + content factory**. Launch/distribution (sending the beta, marketing) and the separate BlueChip business are **out of scope** — parked at the bottom. Priority = position in this list. A new idea that isn't here goes to the **Parking Lot** first, then gets promoted on purpose — that's the scope-creep guard.
 
@@ -57,7 +57,7 @@
 
 ## Changelog
 
-- 2026-09-05 · Packets 15–16 applied and independently rechecked: 88 questions reviewed, 29 question versions repaired across eight scenarios. Release verification in progress. Supabase deferred until tomorrow; no database action.
+- 2026-09-05 · Packets 15–16 applied and independently rechecked: 88 questions reviewed, 29 question versions repaired across eight scenarios. 35 focused tests and isolated build passed; deployed as d3a9458 and representative live screens verified. Packets 01–16 are live. Supabase deferred until tomorrow; no database action.
 
 - **2026-09-05** — Added [review correction instructions](../factory/CLAUDE-REVIEW-UPDATE.md), eight historical calibration cases and a separately packaged Claude update. Verified all eight before/after/current hashes and ZIP contents. Explicitly records that initial Codex/Luna reviews also missed defects. Frozen project, packets and returns unchanged. Supabase deferred until tomorrow by owner direction.
 
@@ -287,3 +287,4 @@
 - **2026-07-09 (evening)** — Play-engine audit + 4 improvements shipped (waypoint curves, choreography beats, outcome ghost trails, rink anchors; new gate `npm run test:play-engine`, 18 tests; all existing gates green). Earlier today: library source docs committed, gap-control pair QC'd (distinct, keep both), forecheck take-away-the-reverse built. Native rebuild of the inspiration backlog promoted into NEXT #3 (per Thomas); engine backlog captured in LATER; gym items renumbered NEXT #5–#7.
 - **2026-07-09 (later)** — Gym Phase 1 built, tested, committed (8 gym commits); NOW entry converted to the owner's 10-min gate + push decision. Gym Phase 2 added as NEXT #6 (blocked by Daily Faceoff, one streak owner); gym Phase 3 spelled out in LATER; sound pass marked shipped.
 - **2026-07-09** — Created. Folded `2026-07-09-next-7.md` + `docs/BACKLOG.md` into one living doc; archived the dated next-7, session-handoff, and backlog to `docs/roadmap/archive/`. Beta-send moved to Parking Lot (launch, out of scope). Playtest gate + Gym Phase 1 set as NOW.
+
