@@ -1,0 +1,58 @@
+{
+  "reviewer": "choice-quality-rewrite-independent-03",
+  "phase": "blind-before-separate-key",
+  "readSequence": [
+    "Initial mistaken root paths failed",
+    "root CLAUDE.md and ROUTING.md",
+    "OPERATING-CHARTER.md",
+    "historical-cases.json (contains authored keys/feedback)",
+    "HISTORICAL-CHECKS.md (required and supplies historic correction examples)",
+    "rinkFrame.js, rinkAreaGeometry.js, ExperimentalPractice.jsx excerpts, rinkMaterials.js, ScenarioRink3D.jsx excerpts"
+  ],
+  "limitations": [
+    "Blind only to separate answer-key.json and prior reviewers; historical cases themselves contain answers and charter/HISTORICAL-CHECKS prime known error categories.",
+    "No rendered artifact inspected. No external coaching source consulted for these local contradictions."
+  ],
+  "rows": [
+    {
+      "questionId": "exp26-u11-006-q7",
+      "verdict": "repair",
+      "evidence": "a has two false geometry claims. Puck (23,5) lies inside positive-y circle centred (20.7264,6.7056), radius 4.572: distance 2.8422. Not below circle in either goal-line or lateral sense. D1 (22,1) is behind puck in x, not between puck and goal (26.91384,0); perpendicular distance 3.2530 m to shot segment. b promises possession; c assigns unsupported next shooter."
+    },
+    {
+      "questionId": "exp26-u11-006-q9",
+      "verdict": "repair",
+      "evidence": "Distance from YOU (19,-2) to loose puck (23,5) is 8.0623; reference (22.2,-4.2) yields 9.2347: farther, contradicting toward puck. Both start/reference are far from boards y=-12.954 (10.954 and 8.754 m nominal lateral gaps). Rounded corner further qualifies board distance. Facing/gaze not established by endpoint; no arrival/possession conclusion."
+    },
+    {
+      "questionId": "exp26-u11-006-q10",
+      "verdict": "repair",
+      "evidence": "Cover is stipulated hypothetical; actual setup puck remains loose. Feedback must not jump to pressure as if loose/live. Ask whether whistle has stopped play; if covered and whistle, stop and prepare restart. Without explicit whistle, do not claim stoppage is observed; repair prompt to state cover and whistle."
+    },
+    {
+      "questionId": "exp26-u11-011-q8",
+      "verdict": "repair",
+      "evidence": "D2 is away opponent, not outlet. At (23,1), x=23 is deep attacking zone for Navy, not opposite point (near blue x=7.62). Direct line F1(12,7) to YOU(20,7) crosses D1(16,7) at midpoint exactly. a relevant receiver target; b false team/landmark; c unsupported motion and weak cue. Include D1 position and bank receiving space instead; static scene cannot certify bounce."
+    },
+    {
+      "questionId": "exp26-u11-012-q7",
+      "verdict": "repair",
+      "evidence": "a uses screen-relative below without renderer context; puck (7,-6) is toward negative-y boards from YOU (5,-3): 3m wider, 2m farther right. Canonical frame +y bottom means negative-y above; legacy ExperimentalBoard flips y. Replace below with toward side boards. b nonsensical planned target claim; c unproven arrival. Distances YOU-puck sqrt13=3.6056, D1-puck sqrt40=6.3249 do not establish arrival."
+    },
+    {
+      "questionId": "exp26-u11-012-q5",
+      "verdict": "repair",
+      "evidence": "b best intent, but reaches first is not possession/control. Current puck owner null. Require D1 controls puck in hypothetical to justify defending/regaining against carrier. a falsely implies YOU retain ownership despite no current possession; c implausible replay distractor."
+    },
+    {
+      "questionId": "exp26-u11-016-q1",
+      "verdict": "repair",
+      "evidence": "a geometrically correct: abs(yYOU)=2 < abs(yF1)=7 by 5m. b false: corresponding positive-side board gaps 10.954 vs5.954m; c false xYOU=11 < right goal x26.91384. Grammar where does YOU start must become where do YOU start; preserve Compared with F1."
+    },
+    {
+      "questionId": "exp26-u11-016-q7",
+      "verdict": "repair",
+      "evidence": "YOU a1 is away Gold; F1 h1 home Navy is opposing carrier. Communication recipient wrong. Inside position abs2<abs7 does not prove middle protected. Distance YOU to F1-F2 line = 0.6385 m; no dynamic reach/containment. b orders opponent; c removes conditional play. Repair recipient to goalie/Gold teammate and say protecting inside, watching F2, not guarantee protected."
+    }
+  ]
+}

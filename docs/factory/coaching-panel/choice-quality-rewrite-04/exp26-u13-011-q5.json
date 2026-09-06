@@ -1,0 +1,139 @@
+{
+  "scenarioId": "exp26-u13-011",
+  "questionId": "exp26-u13-011-q5",
+  "status": "draft",
+  "fromVersion": 2,
+  "toVersion": 3,
+  "before": {
+    "id": "exp26-u13-011-q5",
+    "type": "choice",
+    "prompt": "Suppose Gold 1 follows your lateral move. What deserves another look?",
+    "options": [
+      {
+        "id": "a",
+        "text": "The original shot as though Gold 1 had stayed still"
+      },
+      {
+        "id": "b",
+        "text": "A shot without checking the blocker"
+      },
+      {
+        "id": "c",
+        "text": "A pass to D2 or another change of angle"
+      }
+    ],
+    "answer": [
+      "c"
+    ],
+    "explanation": "A moving defender can close the new lane, so alternatives remain relevant.",
+    "basis": "coaching"
+  },
+  "after": {
+    "id": "exp26-u13-011-q5",
+    "type": "choice",
+    "prompt": "YOU are weighing the two teammate passes before another shot. Which direct passing line stays farther from Gold 1 in this view?",
+    "options": [
+      {
+        "id": "a",
+        "text": "The pass from YOU to D2"
+      },
+      {
+        "id": "b",
+        "text": "The pass from YOU to F1"
+      }
+    ],
+    "answer": [
+      "a"
+    ],
+    "explanation": "The line to D2 stays farther from Gold 1 than the line to F1. That makes D2 an option to assess around the current blocker. F1 is farther toward the net and may offer a useful attacking option if that lane remains available. More distance from one defender does not guarantee reception or make D2 the best play in every situation.",
+    "basis": "coaching"
+  },
+  "beforeHash": "0f227ae5b386c1f54709c08870b57dc7ce18ceb5359ae7df88bd9f18ffac5a04",
+  "afterHash": "d9d229b0023a4841460469cd215b04212cd312b8501dca57af488cdc29d46a15",
+  "supersededDraft03Hash": "d2a23e78a517ea69b2a05f04c9b7b25cc3613d440086ba81e6e16a70fe92d716",
+  "optionReasons": [
+    {
+      "optionId": "a",
+      "reason": "D2 is a real teammate. The direct puck-to-D2 segment stays farther from Gold1 than the puck-to-F1 segment. D2 may change the angle but a completed pass/next shot is unproven."
+    },
+    {
+      "optionId": "b",
+      "reason": "F1 is a real advanced teammate. Its direct segment has less separation from Gold1 but still several metres of point separation; do not call it blocked or wrong generally. It offers a different attacking tradeoff."
+    }
+  ],
+  "geometry": {
+    "method": "Canonical makeScene rendered puck, player receiving centres, finite direct-pass segments and Euclidean point-to-segment minimum distances. No player motion or pass simulated.",
+    "units": "metres",
+    "puck": [
+      13,
+      0.7
+    ],
+    "ownerId": "home-skater-1",
+    "actors": {
+      "YOU": [
+        12,
+        0
+      ],
+      "D2": [
+        13,
+        -8
+      ],
+      "F1": [
+        23,
+        6
+      ],
+      "A1": [
+        18,
+        0
+      ],
+      "G": [
+        26,
+        0
+      ]
+    },
+    "options": [
+      {
+        "optionId": "a",
+        "receiver": "D2",
+        "passLength": 8.7,
+        "defenderPointGaps": {
+          "A1": 5
+        },
+        "minimumDefenderPointGap": 5
+      },
+      {
+        "optionId": "b",
+        "receiver": "F1",
+        "passLength": 11.317685275708985,
+        "defenderPointGaps": {
+          "A1": 2.9599692148977357
+        },
+        "minimumDefenderPointGap": 2.9599692148977357
+      }
+    ]
+  },
+  "duplicateAudit": {
+    "questionsInspected": [
+      "exp26-u13-011-q1",
+      "exp26-u13-011-q2",
+      "exp26-u13-011-q3",
+      "exp26-u13-011-q4",
+      "exp26-u13-011-q5",
+      "exp26-u13-011-q6",
+      "exp26-u13-011-q7",
+      "exp26-u13-011-q8",
+      "exp26-u13-011-q9",
+      "exp26-u13-011-q10"
+    ],
+    "distinction": "q7 identifies D2 against an opponent/goalie; new q5 compares D2 with actual advanced teammate F1, preserves F1’s conditional value and measures the direct lines."
+  },
+  "limits": [
+    "Two genuine same-category choices used; no third real receiving option exists in these selected-player scenes. Chance success is 50%; response is not mastery proof.",
+    "Static point geometry does not encode stick reach, body width, skating, passing speed, gaze, interceptions or receiver readiness.",
+    "No scene setup or actor moved; no hypothetical event presented as visible.",
+    "Q003 phrasing room around line means spacing to the shown gold skaters, not obstruction by every rink feature. Neither compared segment intersects a net or boards.",
+    "No rendered/mobile check by author. Exact candidate needs independent content and visual checks.",
+    "Author remains advisory-only; no human approval, no source application."
+  ],
+  "sourceScope": "Existing scene sources retained for topic provenance only; no claim they certify these exact comparisons."
+}

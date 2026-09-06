@@ -1,0 +1,109 @@
+{
+  "reviewer": "choice-quality-rewrite-independent-03",
+  "counts": {
+    "approve": 2,
+    "revise": 0,
+    "reject": 0
+  },
+  "candidateSha256": "f61b52bfe48003fb70b076090b97a905039d19add92373f230eb8dc4fbe41701",
+  "freezeCandidateHashMatches": true,
+  "readSequence": [
+    "blind-input-05.json",
+    "blind-results-05.json saved",
+    "FREEZE.json",
+    "candidates.json changes including all keys/reasons/explanations"
+  ],
+  "rows": [
+    {
+      "questionId": "exp26-u13-011-q5",
+      "contentHash": "cff8d1a4b75ffaef952ec342818e78f49448629e126ed5e9be8ba28e7bcdb557",
+      "verdict": "approve",
+      "highRisk": true,
+      "blindAnswer": [
+        "a"
+      ],
+      "sceneEvidence": {
+        "puck": [
+          13,
+          0.7
+        ],
+        "Gold1": [
+          18,
+          0
+        ],
+        "lineToD2Gap": 5,
+        "lineToF1Gap": 2.959969214897736
+      },
+      "optionReviews": [
+        {
+          "optionId": "a",
+          "assessment": "supported",
+          "reason": "D2 segment clearance5m from Gold1 versus2.9600m for F1."
+        },
+        {
+          "optionId": "b",
+          "assessment": "conditionally reasonable attacking option",
+          "reason": "Less separation from Gold1 but legitimate advanced teammate; explanation preserves usefulness."
+        }
+      ],
+      "reason": "Earlier unsupported shot-history clause removed. Static comparison and nuanced feedback supported; it does not instruct automatically passing to D2.",
+      "proposedRepair": null,
+      "limitations": [
+        "AI review only; no human approval.",
+        "No rendered/mobile or source-document verification.",
+        "Prior04 q011 options, geometry and key are known;05 is not independent fresh blinding for that question. Prior03 q012 scene known; new05 wording/key not previously read."
+      ]
+    },
+    {
+      "questionId": "exp26-u13-012-q5",
+      "contentHash": "13069d0386ada38244466a8db7128bc2bef90530dec15fcbb0b5e0de4689911d",
+      "verdict": "approve",
+      "highRisk": true,
+      "blindAnswer": [
+        "a"
+      ],
+      "sceneEvidence": {
+        "F2toGold1": 3.1622776601683795,
+        "F2toGold2": 12.206555615733702,
+        "renderedPuck": [
+          16,
+          8.7
+        ],
+        "puckToGold1": 2.6248809496813372,
+        "puckToGold2": 12.267436570041843,
+        "Gold1x": 18,
+        "Gold2x": 22,
+        "Gold1AbsY": 7,
+        "Gold2AbsY": 2
+      },
+      "optionReviews": [
+        {
+          "optionId": "a",
+          "assessment": "supported",
+          "reason": "Gold1-F2 distance3.1623m vsGold2-F2 12.2066m; Gold2x22>18 and abs y2<7."
+        },
+        {
+          "optionId": "b",
+          "assessment": "false for scene, matched alternative",
+          "reason": "Reverses all three factual relationships; both are actual opponents and syntactically parallel."
+        }
+      ],
+      "reason": "Replaces unsupported retreat with relevant identification of two different pressure locations. All comparative claims and explanation supported; no inferred defender assignment, move or successful return. Introductory spatial recognition rather than a difficult U13 tactical decision, but educationally defensible.",
+      "proposedRepair": null,
+      "limitations": [
+        "AI review only; no human approval.",
+        "No rendered/mobile or source-document verification.",
+        "Prior04 q011 options, geometry and key are known;05 is not independent fresh blinding for that question. Prior03 q012 scene known; new05 wording/key not previously read."
+      ]
+    }
+  ],
+  "evidenceMetadataCorrection": {
+    "scope": "author evidence metadata only, not serialized question defect",
+    "questionId": "exp26-u13-012-q5",
+    "finding": "geometry.Gold1/Gold2.distanceAttackingNet use x26 rather than canonical goal line x26.91384. Correct canonical centre distances below. This does not change the ordering or question verdict; prompt explicitly compares farther toward the net via attacking x.",
+    "correctGold1Distance": 11.333867104638205,
+    "correctGold2Distance": 5.30526375834416,
+    "action": "Correct evidence in a supplemental receipt; do not overwrite frozen candidate."
+  },
+  "priorFindingsPreserved": true
+}

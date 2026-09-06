@@ -1,0 +1,127 @@
+{
+  "scenarioId": "exp26-u13-012",
+  "questionId": "exp26-u13-012-q5",
+  "status": "draft",
+  "fromVersion": 2,
+  "toVersion": 3,
+  "before": {
+    "id": "exp26-u13-012-q5",
+    "type": "choice",
+    "prompt": "If Gold 2 moves into your new route, what could you do?",
+    "options": [
+      {
+        "id": "a",
+        "text": "Follow the route without looking"
+      },
+      {
+        "id": "b",
+        "text": "Change direction or stay as another support option"
+      },
+      {
+        "id": "c",
+        "text": "Insist on the return pass anyway"
+      }
+    ],
+    "answer": [
+      "b"
+    ],
+    "explanation": "The pass does not obligate the receiver to return it; another support action may be better.",
+    "basis": "coaching"
+  },
+  "after": {
+    "id": "exp26-u13-012-q5",
+    "type": "choice",
+    "prompt": "Before offering an inside option, which description matches the two gold defenders in this view?",
+    "options": [
+      {
+        "id": "a",
+        "text": "Gold 1 is closer to F2; Gold 2 is farther toward the attacking net and nearer the middle"
+      },
+      {
+        "id": "b",
+        "text": "Gold 2 is closer to F2; Gold 1 is farther toward the attacking net and nearer the middle"
+      }
+    ],
+    "answer": [
+      "a"
+    ],
+    "explanation": "Gold 1 is close to F2, while Gold 2 is farther toward Gold’s net and nearer the middle across the rink. Account for both the opponent near the carrier and the opponent in the inside space ahead of YOU. Their positions do not prove who will move, which line will stay available or whether F2 will return the puck.",
+    "basis": "scene"
+  },
+  "beforeHash": "69b8ec27bd116b66f6a0bc26d722750b1b3522397f173a5bd23db3aa655f0063",
+  "afterHash": "13069d0386ada38244466a8db7128bc2bef90530dec15fcbb0b5e0de4689911d",
+  "supersededDraft03Hash": "5b052ceb4f30ed3dacd54a09da2185933cdb964dd6eb0bd201be53661402b1d3",
+  "revisionReason": "Replaces unnecessary retreat with observation of the two actual defender relationships. No route or prior movement invented.",
+  "optionReasons": [
+    {
+      "optionId": "a",
+      "reason": "Gold1 is closer to F2, Gold2 has greater attacking x and smaller |y|; all three comparisons agree with this frame. These are spatial cues, not claimed defensive assignments."
+    },
+    {
+      "optionId": "b",
+      "reason": "Reverses all three observed comparisons. Both named players are actual opponents, and this arrangement could exist elsewhere, but is not the shown setup."
+    }
+  ],
+  "geometry": {
+    "units": "metres, actual source rink coordinates",
+    "method": "Euclidean actor distances for stated player relationships; x advances toward attacked right net; |y| measures distance from middle across rink width. makeScene confirms current puck, though this question does not compare puck lanes.",
+    "actors": {
+      "YOU": [
+        11,
+        1
+      ],
+      "F2": [
+        15,
+        8
+      ],
+      "A1": [
+        18,
+        7
+      ],
+      "A2": [
+        22,
+        -2
+      ]
+    },
+    "renderedPuck": [
+      16,
+      8.7
+    ],
+    "ownerId": "home-skater-2",
+    "Gold1": {
+      "distanceF2": 3.1622776601683795,
+      "x": 18,
+      "distanceMiddle": 7,
+      "distanceAttackingNet": 10.63014581273465
+    },
+    "Gold2": {
+      "distanceF2": 12.206555615733702,
+      "x": 22,
+      "distanceMiddle": 2,
+      "distanceAttackingNet": 4.47213595499958
+    }
+  },
+  "duplicateAudit": {
+    "questionsInspected": [
+      "exp26-u13-012-q1",
+      "exp26-u13-012-q2",
+      "exp26-u13-012-q3",
+      "exp26-u13-012-q4",
+      "exp26-u13-012-q5",
+      "exp26-u13-012-q6",
+      "exp26-u13-012-q7",
+      "exp26-u13-012-q8",
+      "exp26-u13-012-q9",
+      "exp26-u13-012-q10"
+    ],
+    "distinction": "q1 identifies F2 possession; q8 mentions Gold1 facing F2. This question compares Gold1/Gold2 locations, including Gold2 inside/up-ice position; it does not repeat possession, prescribe q4/q9 movement, or ask generic reoffer effectiveness from q6/q10."
+  },
+  "limits": [
+    "Advisory author; no independent/human approval claimed.",
+    "Only two matched spatial accounts; random chance 50%, not mastery evidence.",
+    "No actual movement, attention, intended marking assignment, reach, timing or successful pass inferred.",
+    "No setup edits. No rendered/mobile check by author.",
+    "Spatial reading is introductory; challenge and instructional usefulness require independent review."
+  ],
+  "imageDependency": "Prompt and options do not announce which defender occupies each location; player labels and relative positions must be resolved from scene. Briefing provides partial context but does not fully supply Gold2 comparisons."
+}
