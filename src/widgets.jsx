@@ -1,11 +1,13 @@
+import { trainingLocalDate } from './utils/trainingStoreCore.js';
 // Widgets — small eager-loaded components extracted from App.jsx.
 // These render on the first-paint path (Home/Profile/etc.) so they are NOT lazy-loaded.
 
 import { useState, useEffect, useMemo, useId } from "react";
 import { C, FONT, Card, Label } from "./shared.jsx";
-import { getTrainingLog, saveTrainingSession, getTrainingSummary } from "./utils/trainingLog.js";
+import { getTrainingLog, saveTrainingSession, getTrainingSummary, syncTrainingLog } from "./utils/trainingLog.js";
 import { canSelfRate } from "./data/selfRating.js";
 import { canSetGoals } from "./data/goalBands.js";
+import RinkIcon from './ui/RinkIcon.jsx';
 
 // ─────────────────────────────────────────────────────────
 // PRO HOCKEY INTEL WIDGET — small, unobtrusive, rotating stat card
@@ -87,23 +89,22 @@ export function BottomNav({ active, onNav, tier = "FREE", level = "" }) {
   //
   // Hiding the tab is the honest version of a decision already made twice.
   const tabs = [
-    {id:"home",   icon:"🏠", label:"Home"},
-    {id:"quiz",   icon:"🧠", label:"Quiz"},
-    ...(canSelfRate(level) ? [{id:"skills", icon:"📊", label:"Skills"}] : []),
-    ...(canSetGoals(level) ? [{id:"goals",  icon:"🎯", label:"Goals", gated: tier === "FREE"}] : []),
-    {id:"report", icon:"📋", label:"Report"},
+    {id:"home",   icon:"home", label:"Home"},
+    {id:"quiz",   icon:"scan", label:"Quiz"},
+    ...(canSelfRate(level) ? [{id:"skills", icon:"ice", label:"Skills"}] : []),
+    ...(canSetGoals(level) ? [{id:"goals",  icon:"target", label:"Goals", gated: tier === "FREE"}] : []),
+    {id:"report", icon:"report", label:"Report"},
   ];
   return (
-    <div style={{position:"fixed",bottom:0,left:0,right:0,background:`${C.bgCard}f8`,backdropFilter:"blur(16px)",WebkitBackdropFilter:"blur(16px)",borderTop:`1px solid ${C.border}`,display:"flex",zIndex:100}}>
+    <nav className="rr-bottom-nav" aria-label="Player navigation">
       {tabs.map(t => (
-        <button key={t.id} onClick={() => onNav(t.id)} style={{flex:1,background:"none",border:"none",padding:".65rem .25rem",cursor:"pointer",display:"flex",flexDirection:"column",alignItems:"center",gap:".2rem",position:"relative"}}>
-          <span style={{fontSize:18}}>{t.icon}</span>
-          {t.gated && <span style={{position:"absolute",top:"1px",right:"8px",width:"12px",height:"12px",background:C.gold,borderRadius:"50%",fontSize:"8px",display:"flex",alignItems:"center",justifyContent:"center",color:C.bg,fontWeight:800}}>🔒</span>}
-          <span style={{fontSize:10,color:active===t.id?C.gold:C.dimmer,fontFamily:FONT.body,fontWeight:active===t.id?700:400,transition:"color .15s"}}>{t.label}</span>
-          {active===t.id && <div style={{width:4,height:4,borderRadius:"50%",background:C.gold}}/>}
+        <button type="button" key={t.id} onClick={() => onNav(t.id)} aria-current={active===t.id ? 'page' : undefined}>
+          <RinkIcon name={t.icon} />
+          {t.gated && <RinkIcon name="lock" size={10} className="rr-nav-lock" />}
+          <span>{t.label}</span>
         </button>
       ))}
-    </div>
+    </nav>
   );
 }
 
@@ -129,17 +130,19 @@ const ACTIVITIES = [
 // Profile screens embed this card among many others, so it stays collapsed
 // there. The dedicated Off-Ice Training screen has nothing else on it — a
 // collapsed card is the entire body — so it passes `defaultExpanded`.
-export function TrainingLog({ playerId, defaultExpanded = false }) {
+export function TrainingLog(props) { return <TrainingLogSession key={props.playerId} {...props}/>; }
+
+function TrainingLogSession({ playerId, defaultExpanded = false }) {
   // Bump this whenever we save so the running log re-reads fresh LS.
   const [refreshTick, setRefreshTick] = useState(0);
   const log = useMemo(() => getTrainingLog(playerId), [playerId, refreshTick]);
-  const today = new Date().toISOString().slice(0, 10);
+  const today = trainingLocalDate();
   // Floor: only allow logging sessions from the past month — keeps the log
   // honest (no backdating ancient workouts) while still letting parents
   // catch up on a few missed days. True calendar month, not 30d.
   const oneMonthAgo = (() => {
     const d = new Date(); d.setMonth(d.getMonth() - 1);
-    return d.toISOString().slice(0, 10);
+    return trainingLocalDate(d);
   })();
   const [puckCount, setPuckCount] = useState(0);
   const [shotType, setShotType] = useState(null); // "wrist" | "snap" | "slap" | "backhand" | null = mixed
@@ -155,6 +158,13 @@ export function TrainingLog({ playerId, defaultExpanded = false }) {
   const [sessionPrice, setSessionPrice] = useState("");
   const [activeType, setActiveType] = useState(null);
   const [saved, setSaved] = useState(null);
+  const [syncState,setSyncState] = useState(''), [saveError,setSaveError] = useState('');
+  useEffect(()=>{let current=true;setSaveError('');setSyncState('Checking saved sessions…');
+    syncTrainingLog(playerId).then(result=>{if(current){setRefreshTick(t=>t+1);setSyncState(result.status==='synced'?'Cloud history checked.':result.status==='local'?'Sample sessions stay on this device.':'Cloud sync unavailable. Device entries are kept for retry.');}});
+    return()=>{current=false;};
+  },[playerId]);
+  async function retrySync(){setSyncState('Syncing…');const result=await syncTrainingLog(playerId);setRefreshTick(t=>t+1);setSyncState(result.status==='synced'?'Cloud history checked.':result.status==='local'?'Sample sessions stay on this device.':'Device entries are kept. Cloud sync is still unavailable.');}
+
   const [showAllSessions, setShowAllSessions] = useState(false);
   // Header doubles as the expand/collapse toggle. Collapsed unless the host
   // screen asks otherwise (see `defaultExpanded` above). Initial state only —
@@ -214,11 +224,13 @@ export function TrainingLog({ playerId, defaultExpanded = false }) {
     // For pucks_shot, fold the chosen shot type into the label so the
     // running log can surface "Pucks Shot · wrist" without a schema change.
     const finalLabel = type === "pucks_shot" && shotType ? shotType : label;
-    saveTrainingSession(
+    try { saveTrainingSession(
       playerId, type, value, unit, finalLabel,
       sessionDate, sessionNotes.trim(),
       sessionCoach.trim(), sessionPrice,
-    );
+    ); } catch(error) {setSaveError(error.message||'This device could not save your session.');return;}
+    setSaveError('');setSyncState('Saved on this device.');
+    syncTrainingLog(playerId).then(result=>{setRefreshTick(t=>t+1);setSyncState(result.status==='synced'?'Saved on this device and synced.':result.status==='local'?'Sample session saved on this device.':'Saved on this device. Cloud sync pending; use Sync / retry.');});
     setSaved(type);
     setSessionNotes("");
     // Coach deliberately NOT cleared — it was the second place the name got
@@ -276,6 +288,11 @@ export function TrainingLog({ playerId, defaultExpanded = false }) {
           }} aria-hidden>▾</span>
         </span>
       </button>
+      {(saveError||log.error)&&<p role="alert" style={{color:'#ffd2c5',fontSize:13,padding:'.65rem 0'}}>{saveError||log.error}</p>}
+      <div style={{fontSize:12,color:C.dim,padding:'.5rem 0',display:'flex',flexWrap:'wrap',gap:'.5rem',alignItems:'center'}}>
+        <span role="status">{syncState} {log.sessions.filter(row=>row.sync==='pending').length ? `${log.sessions.filter(row=>row.sync==='pending').length} awaiting sync.` : ''}</span>
+        <button type="button" onClick={retrySync} style={{minHeight:44,padding:'.4rem .8rem',border:`1px solid ${C.border}`,borderRadius:10,background:C.bgGlass,color:C.white,cursor:'pointer'}}>Sync / retry</button>
+      </div>
       {!expanded ? null : (
       <div style={{ display: "flex", flexDirection: "column", gap: ".75rem" }}>
         {ACTIVITIES.map(act => {
@@ -421,7 +438,7 @@ export function TrainingLog({ playerId, defaultExpanded = false }) {
                       <button onClick={() => logSession("pucks_shot", puckCount, "pucks")}
                         disabled={puckCount === 0}
                         style={{ background: puckCount > 0 ? act.color : C.dimmest, color: puckCount > 0 ? C.bg : C.dimmer, border: "none", borderRadius: 10, padding: ".75rem", cursor: puckCount > 0 ? "pointer" : "default", fontWeight: 800, fontSize: 14, fontFamily: FONT.body, width: "100%" }}>
-                        {justSaved ? "✓ Logged!" : `Save ${puckCount} Pucks`}
+                        {justSaved ? "✓ Saved on device" : `Save ${puckCount} Pucks`}
                       </button>
                     </div>
                   ) : (
@@ -454,7 +471,7 @@ export function TrainingLog({ playerId, defaultExpanded = false }) {
                         style={{ background: C.bgGlass, border: `1px solid ${C.border}`, borderRadius: 8, padding: ".55rem .75rem", color: C.white, fontFamily: FONT.body, fontSize: 13, outline: "none", width: "100%", resize: "vertical", boxSizing: "border-box" }} />
                       <button onClick={() => logSession(act.type, minutes[act.type], "min", act.type === "other" ? otherLabel : "")}
                         style={{ background: act.color, color: C.bg, border: "none", borderRadius: 10, padding: ".75rem", cursor: "pointer", fontWeight: 800, fontSize: 14, fontFamily: FONT.body, width: "100%" }}>
-                        {justSaved ? "✓ Logged!" : `Log ${minutes[act.type]} min`}
+                        {justSaved ? "✓ Saved on device" : `Log ${minutes[act.type]} min`}
                       </button>
                     </div>
                   )}

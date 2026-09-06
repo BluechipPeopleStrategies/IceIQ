@@ -13,6 +13,7 @@
 // the feature, the quest stays completed.
 
 import { lsGetJSON, lsSetJSON, lsSetStr, lsRemove } from "./storage.js";
+import { moveLineupPlayer } from './lineupMoves.js';
 
 const STORE_KEY = "rinkreads_depth_charts_v1";
 const FLAG_KEY  = "rinkreads_depth_chart_set_v1";
@@ -72,6 +73,22 @@ export function setAssignment(teamId, playerId, slot) {
 
 export function clearAssignment(teamId, playerId) {
   setAssignment(teamId, playerId, null);
+}
+
+/** Save a move/swap in one write to the existing coach-private chart store. */
+export function moveAssignment(teamId, playerId, targetSlot, rosterIds) {
+  if (!teamId) return { ok: false, message: 'Choose a team before moving players.' };
+  const all = readAll();
+  if (!all || typeof all !== 'object' || Array.isArray(all)) return { ok: false, message: 'The saved lineup could not be read.' };
+  const current = all[teamId] || {};
+  let move;
+  try { move = moveLineupPlayer(current, playerId, targetSlot, { rosterIds, slotIds: DEPTH_SLOTS.map(slot => slot.id) }); }
+  catch (error) { return { ok: false, message: error.message }; }
+  if (!move.changed) return { ok: true, ...move };
+  writeAll({ ...all, [teamId]: move.chart });
+  if (JSON.stringify(getDepthChart(teamId)) !== JSON.stringify(move.chart)) return { ok: false, message: 'The move could not be saved on this browser. Your previous lineup is still shown.' };
+  lsSetStr(FLAG_KEY, '1');
+  return { ok: true, ...move };
 }
 
 export function seedDemoDepthChart(teamId, roster) {

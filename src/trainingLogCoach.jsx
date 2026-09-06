@@ -36,22 +36,24 @@ function formatRelDate(d) {
 export function CoachTrainingSection({ teamId, roster }) {
   const [byPlayer, setByPlayer] = useState({}); // playerId -> sessions[]
   const [loading, setLoading] = useState(true);
+  const [loadError,setLoadError] = useState("");
+  const rosterKey=(roster||[]).map(p=>p.id).join("|");
   const [expanded, setExpanded] = useState(null); // playerId currently drilled into
 
   useEffect(() => {
     if (!teamId || !Array.isArray(roster) || !roster.length) { setLoading(false); return; }
-    let cancelled = false;
+    let cancelled = false;setLoading(true);setLoadError("");setByPlayer({});
     (async () => {
       const out = {};
-      await Promise.all(roster.map(async (p) => {
+      try { await Promise.all(roster.map(async (p) => {
         if (!p?.id) return;
-        const sessions = await SB.getTrainingSessionsForPlayer(p.id);
+        const sessions = await SB.getTrainingSessionsForPlayer(p.id,{strict:true});
         if (!cancelled) out[p.id] = sessions || [];
-      }));
+      })); } catch {if(!cancelled){setLoadError("Training history could not be loaded. This is not a zero-activity report.");setLoading(false);}return;}
       if (!cancelled) { setByPlayer(out); setLoading(false); }
     })();
     return () => { cancelled = true; };
-  }, [teamId, roster.length]);
+  }, [teamId, rosterKey]);
 
   if (!roster.length) return null;
 
@@ -75,7 +77,7 @@ export function CoachTrainingSection({ teamId, roster }) {
         </span>
       </div>
 
-      {loading ? (
+      {loadError ? <p role="alert" style={{color:C.dim}}>{loadError}</p> : loading ? (
         <div style={{fontSize: 11, color: C.dimmer, padding: ".5rem 0"}}>Loading…</div>
       ) : ranked.every(r => r.summary.sessionCount === 0) ? (
         <div style={{fontSize: 11, color: C.dimmer, padding: ".5rem 0", fontStyle: "italic"}}>

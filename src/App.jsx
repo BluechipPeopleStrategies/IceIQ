@@ -12,7 +12,8 @@ import { calcPlayerProfile, PROFILE_AXES } from "./utils/playerProfile";
 import { markSignupIntent, logSignupComplete } from "./utils/signupTelemetry";
 // utils/demoTransfer removed — player demo was killed; signup now writes
 // to Supabase from the first interaction, no LS→cloud transfer needed.
-import { DEPTH_SLOTS, getDepthChart, setAssignment as setDepthAssignment, seedDemoDepthChart, clearDemoDepthChart } from "./utils/depthChart";
+import { seedDemoDepthChart, clearDemoDepthChart } from "./utils/depthChart";
+import DepthChartSection from "./coach/LineupCard.jsx";
 import RinkReadsRinkQuestion from "./RinkReadsRinkQuestion.jsx";
 import RinkReadsRink from "./RinkReadsRink";
 import { COMPETENCIES, getJourneyV2, ACTIVITY_METRICS, GAME_SENSE_UNLOCK_SESSIONS, calcCompetencyScores, calcGameSenseScore } from "./utils/gameSense.js";
@@ -488,6 +489,8 @@ function lazyWithReload(factory) {
   }));
 }
 
+const GoalBuilder = lazyWithReload(() => import("./goals/GoalBuilder.jsx"));
+const CoachAssessment = lazyWithReload(() => import("./coach/CoachAssessment.jsx"));
 const PlayerLearningHome = lazyWithReload(() => import("./player/PlayerLearningHome.jsx"));
 const AdminReports = lazyWithReload(() => import("./screens.jsx").then(m => ({ default: m.AdminReports })));
 const QuestionReviewScreen = lazyWithReload(() => import("./screens.jsx").then(m => ({ default: m.QuestionReviewScreen })));
@@ -4666,6 +4669,7 @@ function Report({ player, onBack, demoCoachData, tier, onUpgrade }) {
   const goals = player.goals || {};
   const activeGoals = Object.entries(goals).filter(([,v])=>v?.goal?.trim());
   const [coachRatings, setCoachRatings] = useState(null);
+  const [coachReadError, setCoachReadError] = useState(null);
   const [coachNotes, setCoachNotes] = useState({});
   const [coachList, setCoachList] = useState([]);
   const [activeCoachIdx, setActiveCoachIdx] = useState(-1); // -1 = All (aggregate)
@@ -4681,6 +4685,7 @@ function Report({ player, onBack, demoCoachData, tier, onUpgrade }) {
     }
     if (player.id && !isEphemeralPlayer(player.id)) {
       SB.getCoachRatingsForPlayer(player.id).then(data => {
+        setCoachReadError(data.error || null);
         setCoachRatings(Object.keys(data.ratings || {}).length ? data.ratings : null);
         setCoachNotes(data.notes || {});
         setCoachList([]); // SB path is single-coach today; multi-coach is demo-only for now
@@ -4762,7 +4767,8 @@ function Report({ player, onBack, demoCoachData, tier, onUpgrade }) {
 
       {/* Coach Feedback empty-state — PRO/TEAM have the feature unlocked but
           no coach has rated yet. Nudge them to invite a coach. */}
-      {coachFeedbackAllowed && !loadingCoach && !coachRatings && (
+      {coachFeedbackAllowed && coachReadError && <p role="status">{coachReadError}</p>}
+      {coachFeedbackAllowed && !coachReadError && !loadingCoach && !coachRatings && (
         <Card style={{marginBottom:"1rem",background:`linear-gradient(135deg,${C.bgCard},${C.bgElevated})`,border:`1px solid ${C.purpleBorder}`,padding:"1.25rem"}}>
           <div style={{display:"flex",alignItems:"flex-start",gap:".75rem",marginBottom:".8rem"}}>
             <div style={{fontSize:26,flexShrink:0}}>👨‍🏫</div>
@@ -4917,7 +4923,7 @@ function Report({ player, onBack, demoCoachData, tier, onUpgrade }) {
               })}
             </div>
           ))}
-          {!loadingCoach && !coachRatings && (
+          {!coachReadError && !loadingCoach && !coachRatings && (
             <div style={{fontSize:13,color:C.dimmer,textAlign:"center",padding:".75rem 0"}}>
               No coach ratings yet — share your invite link from Settings.
             </div>
@@ -7141,138 +7147,7 @@ function AuthScreen({ onAuthenticated, onDemo, onDevEnter, onPreview, prefill })
 // lines (LW / C / RW), D pairs (LD / RD), and goalies (Starter / Backup).
 // Coach can reassign a slot by tapping a player cell and picking from the
 // roster (bench includes anyone not yet on a line).
-function DepthChartSection({ teamId, roster, onChange }) {
-  const [open, setOpen] = useState(true);
-  const [chart, setChart] = useState(() => getDepthChart(teamId));
-  const [editingSlot, setEditingSlot] = useState(null);
 
-  // Re-read when teamId changes (e.g., coach toggling between teams).
-  useEffect(() => { setChart(getDepthChart(teamId)); }, [teamId]);
-
-  function assignSlot(slotId, playerId) {
-    // Pin playerId to slotId. If another player already holds the slot,
-    // reverse-lookup + clear them first (storage is keyed by playerId).
-    const current = getDepthChart(teamId);
-    const prevHolderId = Object.entries(current).find(([, s]) => s === slotId)?.[0];
-    if (prevHolderId && prevHolderId !== playerId) {
-      setDepthAssignment(teamId, prevHolderId, null);
-    }
-    if (playerId) {
-      // Also clear the new player's previous slot so a move doesn't leave them
-      // on two cells.
-      setDepthAssignment(teamId, playerId, slotId);
-    }
-    setChart(getDepthChart(teamId));
-    setEditingSlot(null);
-    if (onChange) onChange();
-  }
-
-  const playerForSlot = (slotId) => {
-    const pid = Object.entries(chart).find(([, s]) => s === slotId)?.[0];
-    return pid ? roster.find(p => p.id === pid) : null;
-  };
-  const assignedIds = new Set(Object.keys(chart).filter(k => chart[k]));
-  const bench = roster.filter(p => !assignedIds.has(p.id));
-
-  const SlotCell = ({ slot }) => {
-    const p = playerForSlot(slot.id);
-    const isEditing = editingSlot === slot.id;
-    return (
-      <div style={{flex:1,minWidth:0,background:p?C.bgElevated:C.bgCard,border:`1px solid ${p?C.border:"rgba(255,255,255,0.04)"}`,borderRadius:8,padding:".45rem .55rem",cursor:"pointer",position:"relative"}}
-           onClick={(e) => { e.stopPropagation(); setEditingSlot(isEditing ? null : slot.id); }}>
-        <div style={{fontSize:9,letterSpacing:".14em",textTransform:"uppercase",color:C.dimmer,fontWeight:700,marginBottom:2}}>{slot.label}</div>
-        <div style={{fontSize:12,color:p?C.white:C.dimmer,fontWeight:p?700:500,lineHeight:1.2,textOverflow:"ellipsis",overflow:"hidden",whiteSpace:"nowrap"}}>
-          {p ? p.name : "—"}
-        </div>
-        {p && <div style={{fontSize:9,color:C.gold,marginTop:1,fontWeight:700}}>GS {p.iq}</div>}
-        {isEditing && (
-          <div style={{position:"absolute",top:"100%",left:0,right:0,marginTop:4,background:C.bgElevated,border:`1px solid ${C.goldBorder}`,borderRadius:8,maxHeight:200,overflowY:"auto",zIndex:50,boxShadow:"0 8px 24px rgba(0,0,0,0.5)"}}>
-            <div onClick={(e) => { e.stopPropagation(); assignSlot(slot.id, null); }} style={{padding:".45rem .6rem",fontSize:11,color:C.dimmer,borderBottom:`1px solid ${C.border}`,cursor:"pointer"}}>— Unassign</div>
-            {[...(p ? [] : []), ...bench, ...(p ? [p] : [])].map(op => (
-              <div key={op.id} onClick={(e) => { e.stopPropagation(); assignSlot(slot.id, op.id); }}
-                   style={{padding:".45rem .6rem",fontSize:11,color:C.white,cursor:"pointer",display:"flex",justifyContent:"space-between",gap:".4rem"}}>
-                <span style={{whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis"}}>{op.name}</span>
-                <span style={{fontSize:10,color:C.dimmer}}>{op.position || "TBD"}</span>
-              </div>
-            ))}
-            {bench.length === 0 && !p && (
-              <div style={{padding:".5rem .6rem",fontSize:11,color:C.dimmer,fontStyle:"italic"}}>All players assigned.</div>
-            )}
-          </div>
-        )}
-      </div>
-    );
-  };
-
-  const fSlotsByLine = (n) => DEPTH_SLOTS.filter(s => s.role === "F" && s.line === n).sort((a,b) => a.order - b.order);
-  const dSlotsByPair = (n) => DEPTH_SLOTS.filter(s => s.role === "D" && s.line === n).sort((a,b) => a.order - b.order);
-  const gSlots = DEPTH_SLOTS.filter(s => s.role === "G");
-
-  return (
-    <div style={{marginTop:".85rem",paddingTop:".85rem",borderTop:`1px solid ${C.border}`}}>
-      <div onClick={()=>setOpen(o=>!o)} style={{display:"flex",alignItems:"center",justifyContent:"space-between",cursor:"pointer",marginBottom:".5rem"}}>
-        <div style={{display:"flex",alignItems:"center",gap:".5rem"}}>
-          <Label style={{margin:0}}>🏒 Lineup Card</Label>
-          <span style={{fontSize:9,letterSpacing:".14em",textTransform:"uppercase",color:C.dimmer,fontWeight:700}}>Coach only</span>
-        </div>
-        <span style={{color:C.dimmer,fontSize:12}}>{open ? "▲" : "▼"}</span>
-      </div>
-      {open && (
-        <div onClick={() => setEditingSlot(null)}>
-          {roster.length === 0 ? (
-            <div style={{fontSize:12,color:C.dimmer,fontStyle:"italic"}}>Invite players to start building your lineup.</div>
-          ) : (
-            <div style={{display:"flex",flexDirection:"column",gap:".7rem"}}>
-              {/* Forward lines */}
-              {[1,2,3].map(n => (
-                <div key={`f${n}`}>
-                  <div style={{fontSize:10,letterSpacing:".14em",textTransform:"uppercase",color:C.gold,fontWeight:800,marginBottom:".3rem"}}>Line {n}</div>
-                  <div style={{display:"flex",gap:".35rem"}}>
-                    {fSlotsByLine(n).map(s => <SlotCell key={s.id} slot={s}/>)}
-                  </div>
-                </div>
-              ))}
-              {/* D pairs */}
-              {[1,2,3].map(n => (
-                <div key={`d${n}`}>
-                  <div style={{fontSize:10,letterSpacing:".14em",textTransform:"uppercase",color:C.blue,fontWeight:800,marginBottom:".3rem"}}>Pair {n}</div>
-                  <div style={{display:"flex",gap:".35rem"}}>
-                    {dSlotsByPair(n).map(s => <SlotCell key={s.id} slot={s}/>)}
-                  </div>
-                </div>
-              ))}
-              {/* Goalies */}
-              <div>
-                <div style={{fontSize:10,letterSpacing:".14em",textTransform:"uppercase",color:C.purple,fontWeight:800,marginBottom:".3rem"}}>Goaltenders</div>
-                <div style={{display:"flex",gap:".35rem"}}>
-                  {gSlots.map(s => <SlotCell key={s.id} slot={s}/>)}
-                </div>
-              </div>
-              {/* Bench */}
-              {bench.length > 0 && (
-                <div style={{marginTop:".35rem",paddingTop:".5rem",borderTop:`1px dashed ${C.border}`}}>
-                  <div style={{fontSize:10,letterSpacing:".14em",textTransform:"uppercase",color:C.dimmer,fontWeight:700,marginBottom:".35rem"}}>Bench ({bench.length})</div>
-                  <div style={{display:"flex",flexWrap:"wrap",gap:".35rem"}}>
-                    {bench.map(p => (
-                      <div key={p.id} style={{fontSize:11,color:C.dim,background:C.bgCard,border:`1px solid ${C.border}`,borderRadius:999,padding:".2rem .6rem"}}>
-                        {p.name}<span style={{color:C.dimmer}}> · {p.position || "TBD"}</span>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              )}
-              <div style={{fontSize:10,color:C.dimmer,fontStyle:"italic",marginTop:".35rem"}}>Tap any slot to swap players. Private to you — players never see this.</div>
-            </div>
-          )}
-        </div>
-      )}
-    </div>
-  );
-}
-
-// ─────────────────────────────────────────────────────────
-// COACH HOME — teams list, create team, roster
-// ─────────────────────────────────────────────────────────
 const DEMO_COACH_TEAMS = [
   {id:"demo-t1",name:"U11 AA Edmonton Selects",level:"U11 / Atom",season:SEASONS[0],code:"SELECTS",role:"Head Coach"},
   {id:"demo-t2",name:"U13 AAA River City Rush",level:"U13 / Peewee",season:SEASONS[0],code:"RUSH13",role:"Assistant Coach"},
@@ -7351,7 +7226,7 @@ const DEMO_COACH_ROSTER = [
 // populated with real per-player data, not just a list of names.
 function RosterRow({ player, onRate }) {
   const [expanded, setExpanded] = useState(false);
-  const scores = useMemo(() => calcCompetencyScores(player?.quizHistory || []), [player]);
+  const scores = useMemo(() => calcCompetencyScores(player?.quizHistory || player?.quiz_history || []), [player]);
   const compKeys = Object.keys(COMPETENCIES);
   const real = compKeys.filter(k => (scores[k] || 0) > 0);
   const avg = real.length ? Math.round(real.reduce((a, k) => a + scores[k], 0) / real.length) : null;
@@ -7362,7 +7237,7 @@ function RosterRow({ player, onRate }) {
   // at a glance how much ice time / off-ice / video this athlete has logged.
   const trainingLog = useMemo(() => getTrainingLog(player?.id), [player?.id]);
   const recentSessions = (trainingLog?.sessions || []).slice().sort((a,b) => (a.date < b.date ? 1 : -1));
-  const totalMin = recentSessions.reduce((n,s) => n + (Number(s.value) || 0), 0);
+  const totalMin = recentSessions.filter(s=>s.unit==="min").reduce((n,s) => n + (Number(s.value) || 0), 0);
   const TRAINING_ICONS = {
     // Player-side activity types from widgets.jsx ACTIVITIES
     power_skating:"⛸️", skills_dev:"🏒", pucks_shot:"🎯",
@@ -7938,7 +7813,7 @@ export default function App() {
         const all = JSON.parse(tk);
         let mutated = false;
         if (all && "__demo__" in all) { delete all["__demo__"]; mutated = true; }
-        if (all && "__preview__" in all) { delete all["__preview__"]; mutated = true; }
+        // The active player preview keeps its training history across reloads.
         if (mutated) window.localStorage.setItem("rinkreads_training_log", JSON.stringify(all));
       }
       window.localStorage.removeItem("rinkreads_pending_transfer_v1");
@@ -7984,7 +7859,7 @@ export default function App() {
       // Training log slot under the preview id.
       const tk = window.localStorage.getItem("rinkreads_training_log");
       const all = tk ? JSON.parse(tk) : {};
-      all[PREVIEW_PLAYER_ID] = { sessions: seed.trainingSessions };
+      if (!Object.hasOwn(all, PREVIEW_PLAYER_ID)) all[PREVIEW_PLAYER_ID] = { sessions: seed.trainingSessions };
       window.localStorage.setItem("rinkreads_training_log", JSON.stringify(all));
       // Fake tier. resolveTier reads LS on every render → next render returns PRO.
       window.localStorage.setItem("rinkreads_tier_override", "PRO");
@@ -8587,7 +8462,7 @@ export default function App() {
           button:active { opacity: .8; }
           textarea { resize: none; }
         `}</style>
-        <CoachHome
+        <div hidden={typeof screen === "object" && ["rate", "drills"].includes(screen?.kind)}><CoachHome
           profile={profile}
           onSignOut={handleSignOut}
           demoMode={demoMode}
@@ -8603,6 +8478,7 @@ export default function App() {
             const pk = p.id;
             const playerLevel = p.level || "U11 / Atom";
             // We'll open a rating screen inline
+            window.scrollTo(0, 0);
             setScreen({kind:"rate", player:p, playerLevel});
           }}
           onOpenDrills={(level, competencyKey) => {
@@ -8610,14 +8486,14 @@ export default function App() {
             bumpQuestFlags && bumpQuestFlags();
             setScreen({kind:"drills", level: level || "U11 / Atom", competencyKey});
           }}
-        />
+        /></div>
         {typeof screen === "object" && screen.kind === "rate" && (
-          <CoachRatingScreenAuthed
+          <Suspense fallback={<LazyFallback/>}><CoachAssessment key={`${profile.id}:${screen.player.id}`}
             coach={profile}
             player={screen.player}
             playerLevel={screen.playerLevel}
             onDone={()=>setScreen("home")}
-          />
+          /></Suspense>
         )}
         {typeof screen === "object" && screen.kind === "drills" && (
           <StudyScreen
@@ -8678,12 +8554,9 @@ export default function App() {
         {screen === "skills-onboarding" && <Suspense fallback={<LazyFallback/>}><SkillsOnboarding player={player} tier={tier} onUpgrade={promptUpgrade} onSave={(r, opts) => handleSkillsSave(r, { navigate: opts?.final !== false })} onBack={()=>setScreen("home")}/></Suspense>}
         {screen === "insights" && <Suspense fallback={<LazyFallback/>}><InsightsScreen onBack={()=>setScreen("home")} onInsightRead={bumpQuestFlags}/></Suspense>}
         {screen === "study"   && <StudyScreen player={player} onBack={()=>setScreen("home")} onNav={setScreen}/>}
-        {/* U7 does not set SMART goals -- see src/data/goalBands.js. Gated at the
-            route as well as the tile, so a stale nav or a deep link cannot
-            reach a five-field form the band should never be shown. */}
-        {screen === "goals"   && !canSetGoals(player?.level) && <Screen><div style={{color:C.dimmer,textAlign:"center",paddingTop:"4rem"}}>Goals open up at U9. Keep skating!</div></Screen>}
-        {screen === "goals"   && canSetGoals(player?.level) && (canAccess("smartGoals", tier).allowed
-          ? <GoalsScreen player={player} onSave={handleGoalsSave} onBack={()=>setScreen("home")}/>
+        {/* The new U7 builder is an adult-assisted next-practice phrase, with no SMART or numeric effort form. */}
+        {screen === "goals" && (canSetGoals(player?.level) || levelToBand(player?.level)==="U7") && (canAccess("smartGoals", tier).allowed
+          ? <Suspense fallback={<LazyFallback/>}><GoalBuilder key={player.id} player={player} onSave={handleGoalsSave} onBack={()=>setScreen("home")}/></Suspense>
           : <GatedGoalsScreen onBack={()=>setScreen("home")} onUnlock={()=>promptUpgrade("smartGoals","pro")}/>
         )}
         {screen === "weekly"  && (canAccess("weeklyChallenge", tier).allowed

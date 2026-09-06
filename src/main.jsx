@@ -2,6 +2,7 @@ import React from 'react'
 import ReactDOM from 'react-dom/client'
 import App from './App'
 import './brand.css'
+import './ui/glass.css'
 
 // Inject global animations for Liquid Glass theme
 const style = document.createElement('style');

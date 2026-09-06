@@ -1,38 +1,19 @@
 import { lsGetJSON, lsSetJSON } from "./storage.js";
-import { saveTrainingSessionRemote } from "../supabase.js";
+import { saveTrainingSessionRemote, getTrainingSessionsForPlayer } from "../supabase.js";
 import { isEphemeralPlayer } from "./devBypass.js";
+
+import { createTrainingStore, trainingLocalDate } from "./trainingStoreCore.js";
 
 const TRAINING_KEY = "rinkreads_training_log";
 
+const storage = {getItem:key=>globalThis.localStorage.getItem(key),setItem:(key,value)=>globalThis.localStorage.setItem(key,value)};
+const store = createTrainingStore({storage,remoteSave:saveTrainingSessionRemote,remoteRead:id=>getTrainingSessionsForPlayer(id,{strict:true}),isEphemeral:isEphemeralPlayer});
 export function getTrainingLog(playerId) {
-  const all = lsGetJSON(TRAINING_KEY, {});
-  return all[playerId] || { sessions: [] };
+  try {return store.read(playerId);} catch {return {sessions:[],error:'Training history could not be read. Existing data has been kept.'};}
 }
-
-export function saveTrainingSession(playerId, type, value, unit, label = "", date = "", notes = "", coach = "", price = null) {
-  const all = lsGetJSON(TRAINING_KEY, {});
-  if (!all[playerId]) all[playerId] = { sessions: [] };
-  const today = new Date().toISOString().slice(0, 10);
-  const priceNum = (price === null || price === "" || price === undefined) ? null : Number(price);
-  const session = {
-    date: date || today,
-    type, value: Number(value), unit,
-    ...(label ? { label } : {}),
-    ...(notes ? { notes } : {}),
-    ...(coach ? { coach } : {}),
-    ...(Number.isFinite(priceNum) && priceNum > 0 ? { price: priceNum } : {}),
-  };
-  all[playerId].sessions.push(session);
-  if (all[playerId].sessions.length > 200) {
-    all[playerId].sessions = all[playerId].sessions.slice(-200);
-  }
-  lsSetJSON(TRAINING_KEY, all);
-  // Dual-write to Supabase in the background so coaches can see the activity
-  // on their dashboard. Skip ephemeral ids (demo/preview/dev) since they have
-  // no real auth session — RLS would drop the write anyway.
-  if (!isEphemeralPlayer(playerId)) {
-    saveTrainingSessionRemote(playerId, session);
-  }
+export function syncTrainingLog(playerId) {return store.sync(playerId);}
+export function saveTrainingSession(playerId,type,value,unit,label='',date='',notes='',coach='',price=null) {
+  return store.save(playerId,{type,value,unit,label,date,notes,coach,price});
 }
 
 // Bulk-seed plausible training sessions across a roster. Used by coach demo
@@ -63,7 +44,7 @@ export function seedDemoTrainingForRoster(roster, perPlayer = 4) {
         const daysAgo = i * 3 + (p.id.length % 3);
         const variance = ((p.iq || 70) % 20) / 20;
         const value = t.min + Math.round(variance * (t.max - t.min));
-        const date = new Date(nowMs - daysAgo * 86400000).toISOString().slice(0, 10);
+        const date = trainingLocalDate(new Date(nowMs - daysAgo * 86400000));
         all[p.id].sessions.push({
           date, type: t.type, value, unit: t.unit, label: t.label,
           ...(t.coach ? { coach: t.coach } : {}),
@@ -76,11 +57,11 @@ export function seedDemoTrainingForRoster(roster, perPlayer = 4) {
 
 export function getTrainingSummary(sessions, type) {
   const typed = sessions.filter(s => s.type === type);
-  const today = new Date().toISOString().slice(0, 10);
-  const weekAgo = new Date(Date.now() - 7 * 86400000).toISOString().slice(0, 10);
+  const today = trainingLocalDate();
+  const weekAgo = trainingLocalDate(new Date(Date.now() - 7 * 86400000));
   return {
-    total: typed.reduce((n, s) => n + s.value, 0),
-    week: typed.filter(s => s.date >= weekAgo).reduce((n, s) => n + s.value, 0),
+    total: typed.reduce((n, s) => n + (Number(s.value)||0), 0),
+    week: typed.filter(s => s.date >= weekAgo).reduce((n, s) => n + (Number(s.value)||0), 0),
     todayCount: typed.filter(s => s.date === today).length,
     sessions: typed.length,
   };

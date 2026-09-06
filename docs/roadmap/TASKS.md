@@ -1,6 +1,6 @@
 # RinkReads — Task List
 
-**Last updated:** 2026-09-05, 19:49 Edmonton · **Age-aware world pathways:** U15/U18 no longer promote beginner rink discovery, including empty-mission fallbacks. Nine world tests and actual U15 browser checks pass. App completion work continues locally; no new deployment claimed.
+**Last updated:** 2026-09-05 · **Coach, goals and training ready locally:** glass assessments and age-appropriate goal plans, optional effort check-ins, acknowledged training sync/retry and privacy migration. 48 focused checks and isolated build pass; browser save/reload and phone checks complete. Remote migration/authenticated cloud verification remain pending. [Verification](../one-on-one/2026-09-05-coach-goals-training-verification.md).
 
 **Scope:** RinkReads **app build + content factory**. Launch/distribution (sending the beta, marketing) and the separate BlueChip business are **out of scope** — parked at the bottom. Priority = position in this list. A new idea that isn't here goes to the **Parking Lot** first, then gets promoted on purpose — that's the scope-creep guard.
 
@@ -56,6 +56,8 @@
 - *(New ideas land here first, then get promoted into NEXT/LATER on purpose.)*
 
 ## Changelog
+
+- **2026-09-05 — coach/goals/training release:** completed local assessment and goal modules, lineup integration, durable training history/retry, local-date repair and private-note separation. 48 checks, isolated build and real sample browser flows pass. Database migration tested with synthetic Postgres identities; not remotely deployed. Question banks remain outside this release.
 
 - **2026-09-05 — age-aware world activities:** removed beginner rink discovery promotion from U15/U18 world cards and sent missing-mission actions to the lesson library. Younger discovery and reference navigation remain available. Nine tests pass; isolated U15 browser confirms six relevant activity cards and the library fallback.
 

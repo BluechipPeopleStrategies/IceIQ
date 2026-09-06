@@ -1,6 +1,10 @@
 import { createClient } from "@supabase/supabase-js";
+import { createCoachTrainingRemote } from "./utils/coachTrainingRemote.js";
 
-// Error-handling conventions for this module:
+// Error-handling conventions for legacy functions in this module:
+// Coach/training adapters below use stricter contracts: writes require an
+// acknowledged save, coach editor/private reads throw, report reads carry an
+// explicit error, and training readers can request strict failure handling.
 //
 //   Writes (saveX / createX / updateX / signX):
 //     - If `supabase` is null (env vars missing), return a no-op sentinel
@@ -424,61 +428,11 @@ export async function getSelfRatings(playerId) {
 // ─────────────────────────────────────────────
 // COACH RATINGS
 // ─────────────────────────────────────────────
-export async function saveCoachRatingsForPlayer(coachId, playerId, ratings, notes) {
-  if (!supabase) return;
-  const rows = Object.entries(ratings)
-    .filter(([_, v]) => v)
-    .map(([skill_id, value]) => ({
-      coach_id: coachId, player_id: playerId, skill_id, value,
-      note: notes?.[skill_id] || null,
-      updated_at: new Date().toISOString(),
-    }));
-  if (!rows.length) return;
-  const { error } = await supabase.from("coach_ratings").upsert(rows);
-  if (error) throw error;
-}
-
-export async function getCoachRatingsForPlayer(playerId) {
-  if (!supabase) return { ratings: {}, notes: {} };
-  const { data, error } = await supabase.from("coach_ratings")
-    .select("skill_id, value, note")
-    .eq("player_id", playerId);
-  if (error) { warn("getCoachRatingsForPlayer", error); return { ratings: {}, notes: {} }; }
-  const ratings = {}, notes = {};
-  (data || []).forEach(r => { ratings[r.skill_id] = r.value; if (r.note) notes[r.skill_id] = r.note; });
-  return { ratings, notes };
-}
-
-// Private coach notes per player. Reuses the coach_ratings table with a
-// sentinel skill_id so no new migration is needed — the RLS policies that
-// already govern coach_ratings apply unchanged (coach can only read/write
-// their own rows for players on a team they coach).
-const COACH_NOTE_SENTINEL = "__general_notes__";
-
-export async function saveCoachPlayerNote(coachId, playerId, note) {
-  if (!supabase) return;
-  const row = {
-    coach_id: coachId,
-    player_id: playerId,
-    skill_id: COACH_NOTE_SENTINEL,
-    value: "note",
-    note: note || null,
-    updated_at: new Date().toISOString(),
-  };
-  const { error } = await supabase.from("coach_ratings").upsert(row);
-  if (error) throw error;
-}
-
-export async function getCoachPlayerNote(playerId) {
-  if (!supabase) return "";
-  const { data, error } = await supabase.from("coach_ratings")
-    .select("note")
-    .eq("player_id", playerId)
-    .eq("skill_id", COACH_NOTE_SENTINEL)
-    .maybeSingle();
-  if (error) { warn("getCoachPlayerNote", error); return ""; }
-  return data?.note || "";
-}
+// Editors require acknowledged data; legacy report reads retain their empty fallback.
+export const saveCoachRatingsForPlayer = (...args) => createCoachTrainingRemote(supabase).saveRatings(...args);
+export const getCoachRatingsForPlayer = (...args) => createCoachTrainingRemote(supabase).ratings(...args);
+export const saveCoachPlayerNote = (...args) => createCoachTrainingRemote(supabase).savePrivateNote(...args);
+export const getCoachPlayerNote = (...args) => createCoachTrainingRemote(supabase).privateNote(...args);
 
 // ─────────────────────────────────────────────
 // ASSIGNMENTS (coach → team homework)
@@ -669,47 +623,9 @@ export async function getChallengeCompletionsForPlayer(playerId) {
 // shape mirrors utils/trainingLog.js so the CoachTrainingSection can use
 // the same getTrainingSummary() helper against the remote rows.
 
-export async function saveTrainingSessionRemote(playerId, session) {
-  if (!supabase || !playerId) return;
-  // Silent best-effort — a failed Supabase write must NOT break the LS save
-  // the player already did. Coaches just see slightly stale data.
-  try {
-    const row = {
-      player_id: playerId,
-      session_date: session.date || new Date().toISOString().slice(0, 10),
-      type: session.type,
-      value: Number(session.value) || 0,
-      unit: session.unit || "min",
-      label: session.label || null,
-      notes: session.notes || null,
-      coach: session.coach || null,
-      price: (session.price === null || session.price === undefined || session.price === "") ? null : Number(session.price),
-    };
-    await supabase.from("training_sessions").insert(row);
-  } catch { /* silent */ }
-}
+export const saveTrainingSessionRemote = (...args) => createCoachTrainingRemote(supabase).saveTraining(...args);
+export const getTrainingSessionsForPlayer = (...args) => createCoachTrainingRemote(supabase).training(...args);
 
-export async function getTrainingSessionsForPlayer(playerId) {
-  if (!supabase || !playerId) return [];
-  const { data, error } = await supabase.from("training_sessions")
-    .select("session_date, type, value, unit, label, notes, coach, price")
-    .eq("player_id", playerId)
-    .order("session_date", { ascending: false })
-    .limit(200);
-  if (error) { warn("getTrainingSessionsForPlayer", error); return []; }
-  // Reshape to match the LS "sessions" array shape so existing summary
-  // helpers work unchanged.
-  return (data || []).map(r => ({
-    date: r.session_date,
-    type: r.type,
-    value: Number(r.value),
-    unit: r.unit,
-    ...(r.label ? { label: r.label } : {}),
-    ...(r.notes ? { notes: r.notes } : {}),
-    ...(r.coach ? { coach: r.coach } : {}),
-    ...(r.price ? { price: Number(r.price) } : {}),
-  }));
-}
 
 // ─────────────────────────────────────────────
 // QUIZ FEEDBACK (post-results "what would you like more of?" prompt)
